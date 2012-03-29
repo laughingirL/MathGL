@@ -116,6 +116,8 @@ void mgl_wnd_animation(HMGL gr)
 {	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>(gr);	if(g)	g->Animation();	}
 void mgl_setup_window(HMGL gr, int clf_upd, int showpos)
 {	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>(gr);	if(g)	g->Setup(clf_upd, showpos);	}
+void mgl_set_click_func(HMGL gr, void (*func)(void *p))
+{	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>(gr);	if(g)	g->ClickFunc = func;	}
 //-----------------------------------------------------------------------------
 void mgl_wnd_toggle_alpha_(uintptr_t *gr)
 {	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>((HMGL)(*gr));
@@ -208,17 +210,15 @@ int mgl_qt_run_()	{	return mgl_qt_run();	}
 //	mglDraw class handling
 //
 //-----------------------------------------------------------------------------
-int mgl_draw_class(mglBase *gr, void *p)
+int mgl_draw_class(mglBase *gr, void *p)	// so stupid way to save mglDraw class inheritance :(
 {
-	mglGraph g(gr);
-	mglWindow *w = (mglWindow *)p;	// so stupid way to save mglDraw class inheritance :(
+	mglGraph g(gr);	mglWindow *w = (mglWindow *)p;
 	return (w && w->dr) ? w->dr->Draw(&g) : 0;
 }
-void mgl_reload_class(void *p)
-{
-	mglWindow *w = (mglWindow *)p;	// so stupid way to save mglDraw class inheritance :(
-	if(w && w->dr)	w->dr->Reload();
-}
+void mgl_reload_class(void *p)	// so stupid way to save mglDraw class inheritance :(
+{	mglWindow *w = (mglWindow *)p;	if(w && w->dr)	w->dr->Reload();}
+void mgl_click_class(void *p)	// so stupid way to save mglDraw class inheritance :(
+{	mglWindow *w = (mglWindow *)p;	if(w && w->dr)	w->dr->Click();	}
 //-----------------------------------------------------------------------------
 int mgl_draw_graph(mglBase *gr, void *p)
 {

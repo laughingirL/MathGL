@@ -27,6 +27,7 @@
 class mglCanvasWnd : public mglCanvas
 {
 public:
+	void (*ClickFunc)(void *par);	///< Callback function on click
 	mglCanvasWnd();
 	virtual ~mglCanvasWnd();
 
@@ -59,7 +60,7 @@ public:
 						const char *title, void *par=NULL,
 						void (*reload)(void *p)=NULL, bool maximize=false)=0;
 	void SetDrawFunc(int (*draw)(mglBase *gr, void *p), void *par=NULL, void (*reload)(void *p)=NULL);
-
+	
 private:
 	mglPoint LastMousePos;	///< Last mouse position
 	int CurFig;		///< Current figure in the list.

@@ -208,6 +208,11 @@ int Fl_MathGL::handle(int code)
 			if(key=='f')
 			{	flag = (flag&1) + ((~(flag&2))&2);	update();	return 1;	}
 		}
+		else if(code==FL_PUSH)
+		{
+			mglCanvasWnd *g=dynamic_cast<mglCanvasWnd *>(gr);
+			if(g && g->ClickFunc)	g->ClickFunc(draw_par);
+		}
 		return 0;
 	}
 	else if(code==FL_PUSH)	{	xe=x0=Fl::event_x();	ye=y0=Fl::event_y();	}

@@ -29,6 +29,7 @@ struct mglDraw
 {
 	virtual int Draw(mglGraph *)=0;	///< Function for drawing
 	virtual void Reload()	{}		///< Function for reloading data
+	virtual void Click()	{}		///< Callback function on mouse click
 #if MGL_HAVE_PTHREAD
 	pthread_t thr;
 	bool running;
@@ -42,6 +43,7 @@ typedef int (*draw_func)(mglGraph *gr);
 int mgl_draw_graph(mglBase *gr, void *p);
 // NOTE: mgl_draw_class() and mgl_draw_load() use mglWindow* only. Don't use it with inherited classes
 int mgl_draw_class(mglBase *gr, void *p);
+void mgl_click_class(void *p);
 void mgl_reload_class(void *p);
 //-----------------------------------------------------------------------------
 #if MGL_HAVE_QT
@@ -53,6 +55,7 @@ void mgl_reload_class(void *p);
 class mglWindow : public mglGraph
 {
 friend int mgl_draw_class(mglBase *gr, void *p);
+friend void mgl_click_class(void *p);
 friend void mgl_reload_class(void *p);
 protected:
 	mglDraw *dr;
@@ -80,6 +83,7 @@ public:
 		wnd=kind;	dr=draw;
 		if(wnd==1)	gr = mgl_create_graph_qt(mgl_draw_class,title,this,mgl_reload_class);
 		else		gr = mgl_create_graph_fltk(mgl_draw_class,title,this,mgl_reload_class);
+		mgl_set_click_func(gr, mgl_click_class);
 	}
 	inline int Run()			///< Run main loop for event handling
 	{	return (wnd==1)? mgl_qt_run() : mgl_fltk_run();	}
@@ -107,6 +111,8 @@ public:
 	{	mgl_wnd_prev_frame(gr);	}
 	inline void Animation()		///< Run slideshow (animation) of frames
 	{	mgl_wnd_animation(gr);	}
+	void SetClickFunc(void (*func)(void *p))
+	{	if(!dr)	mgl_set_click_func(gr,func);	}
 
 	inline void SetDelay(float dt)	///< Delay for animation in seconds
 	{	mgl_wnd_set_delay(gr, dt);	}

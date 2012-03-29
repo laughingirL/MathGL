@@ -1446,7 +1446,7 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Функция С} @code{void} mgl_box (@code{HMGL} gr, @code{int} ticks)
 @deftypefnx {Функция С} @code{void} mgl_box_str (@code{HMGL} gr, @code{const char *}col, @code{int} ticks)
 @end ifclear
-Рисует ограничивающий параллелепипед цветом @var{col}.
+Рисует ограничивающий параллелепипед цветом @var{col}. Если @var{col} содержит @samp{@@}, то рисуются закрашенные задние грани. При этом первый цвет используется для граней (по умолчанию светло жёлтый), а последний для рёбер и меток.
 @end deftypefn
 
 @anchor{xlabel}
@@ -1458,11 +1458,11 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {MGL command} {} zlabel 'text' [@code{pos=1 shift=0}]
 @deftypefnx {MGL command} {} tlabel 'text' [@code{pos=1 shift=0}]
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Label (@code{char} dir, @code{const char *}text, @code{float} pos=@code{1}, @code{float} shift=@code{0})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Label (@code{char} dir, @code{const wchar_t *}text, @code{float} pos=@code{1}, @code{float} shift=@code{0})
-@deftypefnx {Функция С} @code{void} mgl_label (@code{HMGL} gr, @code{char} dir, @code{const char *}text)
-@deftypefnx {Функция С} @code{void} mgl_label_ext (@code{HMGL} gr, @code{char} dir, @code{const char *}text, @code{float} pos, @code{float} shift)
-@deftypefnx {Функция С} @code{void} mgl_labelw_ext (@code{HMGL} gr, @code{char} dir, @code{const wchar_t *}text, @code{float} pos, @code{float} shift)
+@deftypefnx {Method on @code{mglGraph}} @code{void} Label (@code{char} dir, @code{const char *}text, @code{float} pos=@code{1}, @code{float} shift=@code{0})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Label (@code{char} dir, @code{const wchar_t *}text, @code{float} pos=@code{1}, @code{float} shift=@code{0})
+@deftypefnx {C function} @code{void} mgl_label (@code{HMGL} gr, @code{char} dir, @code{const char *}text)
+@deftypefnx {C function} @code{void} mgl_label_ext (@code{HMGL} gr, @code{char} dir, @code{const char *}text, @code{float} pos, @code{float} shift)
+@deftypefnx {C function} @code{void} mgl_labelw_ext (@code{HMGL} gr, @code{char} dir, @code{const wchar_t *}text, @code{float} pos, @code{float} shift)
 @end ifclear
 Выводит подпись @var{text} для оси @var{dir}=@samp{x},@samp{y},@samp{z},@samp{t} (где @samp{t} -- ``тернарная'' ось @math{t=1-x-y}). Параметр @var{pos} задает положение подписи: при @var{pos}=0 -- по центру оси, при @var{pos}>0 -- около максимальных значений, при @var{pos}<0 -- около минимальных значений. @xref{Text printing}.
 @end deftypefn
@@ -1481,16 +1481,16 @@ gr.GetBGRN(bits, len(bits));
 @anchor{legend}
 @deftypefn {MGL command} {} legend [@code{pos=3} 'fnt'='#' @code{size=-0.8 llen=0.1}]
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Legend (@code{int} pos=@code{0x3}, @code{const char *}fnt=@code{"#"}, @code{float} size=@code{-0.8}, @code{float} llen=@code{0.1})
-@deftypefnx {Функция С} @code{void} mgl_legend (@code{HMGL} gr, @code{int} pos, @code{const char *}fnt, @code{float} size, @code{float} llen)
+@deftypefnx {Method on @code{mglGraph}} @code{void} Legend (@code{int} pos=@code{0x3}, @code{const char *}fnt=@code{"#"}, @code{float} size=@code{-0.8}, @code{float} llen=@code{0.1})
+@deftypefnx {C function} @code{void} mgl_legend (@code{HMGL} gr, @code{int} pos, @code{const char *}fnt, @code{float} size, @code{float} llen)
 @end ifclear
-Рисует легенду из накопленных записей шрифтом @var{fnt} размером @var{size}. Параметр @var{pos} задает положение легенды: @samp{0} -- в нижнем левом углу, @samp{1} -- нижнем правом углу, @samp{2} -- верхнем левом углу, @samp{3} -- верхнем правом углу (по умолчанию).
+Рисует легенду из накопленных записей шрифтом @var{fnt} размером @var{size}. Параметр @var{pos} задает положение легенды: @samp{0} -- в нижнем левом углу, @samp{1} -- нижнем правом углу, @samp{2} -- верхнем левом углу, @samp{3} -- верхнем правом углу (по умолчанию). Строка @var{fnt} может содержать вет для прямоугольника (1-ый цвет), для его границы (2-ой цвет) и для текста (последний). Если указано менее 3 цветов, то цвет рёбер будет чёрным (2 и менее цвета), а цвет прямоугольника белым (1 и менее цвета). Прямоугольник рисуется если строка @var{fnt} содержит @samp{#}.
 @end deftypefn
 
 @deftypefn {MGL command} {} legend @code{x y} ['fnt'='#' @code{size=-1 llen=0.1}]
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Legend (@code{float} x, @code{float} y, @code{const char *}fnt=@code{"#"}, @code{float} size=@code{-0.8}, @code{float} llen=@code{0.1})
-@deftypefnx {Функция С} @code{void} mgl_legend_xy (@code{HMGL} gr, @code{float} x, @code{float} y, @code{const char *}fnt, @code{float} size, @code{float} llen)
+@deftypefnx {Method on @code{mglGraph}} @code{void} Legend (@code{float} x, @code{float} y, @code{const char *}fnt=@code{"#"}, @code{float} size=@code{-0.8}, @code{float} llen=@code{0.1})
+@deftypefnx {C function} @code{void} mgl_legend_pos (@code{HMGL} gr, @code{float} x, @code{float} y, @code{const char *}fnt, @code{float} size, @code{float} llen)
 @end ifclear
 Рисует легенду из накопленных записей шрифтом @var{fnt} размером @var{size}. Положение легенды задается параметрами @var{x}, @var{y}, которые полагаются нормированными в диапазоне [0,1].
 @end deftypefn
@@ -1498,10 +1498,10 @@ gr.GetBGRN(bits, len(bits));
 @anchor{addlegend}
 @deftypefn {MGL command} {} addlegend 'text' 'stl'
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} AddLegend (@code{const char *}text, @code{const char *}style)
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} AddLegend (@code{const wchar_t *}text, @code{const char *}style)
-@deftypefnx {Функция С} @code{void} mgl_add_legend (@code{HMGL} gr, @code{const char *}text, @code{const char *}style)
-@deftypefnx {Функция С} @code{void} mgl_add_legendw (@code{HMGL} gr, @code{const wchar_t *}text, @code{const char *}style)
+@deftypefnx {Method on @code{mglGraph}} @code{void} AddLegend (@code{const char *}text, @code{const char *}style)
+@deftypefnx {Method on @code{mglGraph}} @code{void} AddLegend (@code{const wchar_t *}text, @code{const char *}style)
+@deftypefnx {C function} @code{void} mgl_add_legend (@code{HMGL} gr, @code{const char *}text, @code{const char *}style)
+@deftypefnx {C function} @code{void} mgl_add_legendw (@code{HMGL} gr, @code{const wchar_t *}text, @code{const char *}style)
 @end ifclear
 Добавляет описание @var{text} кривой со стилем @var{style} (см. @ref{Line styles}) во внутренний массив записей легенды.
 @end deftypefn
@@ -1509,8 +1509,8 @@ gr.GetBGRN(bits, len(bits));
 @anchor{clearlegend}
 @deftypefn {MGL command} {} clearlegend
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} ClearLegend ()
-@deftypefnx {Функция С} @code{void} mgl_clear_legend (@code{HMGL} gr)
+@deftypefnx {Method on @code{mglGraph}} @code{void} ClearLegend ()
+@deftypefnx {C function} @code{void} mgl_clear_legend (@code{HMGL} gr)
 @end ifclear
 Очищает внутренний массив записей легенды.
 @end deftypefn
@@ -1528,616 +1528,569 @@ gr.GetBGRN(bits, len(bits));
 @node 1D plotting, 2D plotting, Legend, MathGL core
 @section 1D графики
 
-Эти функции строят графики для одномерных (1D) массивов. Одномерными считаются массивы, зависящие только от одного параметра (индекса) подобно кривой в параметрической форме @{x(i),y(i),z(i)@}, i=1...n. Есть 5 основных типов 1D графиков: линия (Plot), линия с заполнением (Area), ступеньки (Step), прямоугольники (Bars, Barh) и вертикальные линии (Stem). Все эти типы графиков имеют похожий интерфейс. Есть версии для рисования в пространстве и на плоскости. В последнем случае имеется возможность использования только одного массива. Стиль линии и маркеров указывается строковой переменной. Если она равна "", то используется сплошная линия с цветом из палитры (см. @ref{Palette and colors}). Кроме того, есть еще несколько типов графиков для одномерных массивов, имеющих другой интерфейс и вид: поверхность вращения кривой (Torus), диаграмма (Chart), размер ошибки (Error), маркеры переменного размера (Mark), трубками (Tube) и т.д. @xref{Line styles}. @sref{1D plot sample}
-
-@menu
-* Plot::
-* Radar::
-* Tens::
-* Area::
-* Region::
-* Stem::
-* Bars::
-* Barh::
-* Chart::
-* Step::
-* Torus::
-* Tube::
-* Mark::
-* TextMark::
-* Error::
-* BoxPlot::
-@end menu
-
-@c ==================================================================
-@node Plot, Radar, , 1D plotting
-@subsection Plot
 @cindex Plot
-
-Функции рисуют ломанную линию по точкам. График рисуется для каждой строки если один из массивов матрица. Размер по 1-ой координате @strong{должен быть одинаков} для всех массивов @code{x.nx=y.nx=z.nx}. Строка @var{pen} задает цвет и стиль линии и маркеров (см. @ref{Line styles}). По умолчанию (@code{pen=""}) рисуется сплошная линия с текущим цветом из палитры (см. @ref{Palette and colors}). См. также @ref{Area}, @ref{Step}, @ref{Stem}, @ref{Tube}, @ref{Mark}, @ref{Error}, @ref{Belt}, @ref{Tens}. @sref{Plot sample}
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Plot (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}pen=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_plot_xyz (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}pen)
-Рисует в пространстве линию между точками @{@var{x}[i], @var{y}[i], @var{z}[i]@}.
-@end deftypefn
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Plot (@code{const mglData &}x, @code{const mglData &}y, @code{const char *}pen=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_plot_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const char *}pen)
-Рисует линию между точками @{@var{x}[i], @var{y}[i]@} в плоскости @var{z}=@var{zVal} (по умолчанию в плоскости @var{z}=@var{Min.z}).
-@end deftypefn
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Plot (@code{const mglData &}y, @code{const char *}pen=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_plot (@code{HMGL} gr, @code{const HMDT} y, @code{const char *}pen)
-Рисует линию между точками @{@var{x}[i], @var{y}[i]@} в плоскости @var{z}=@var{zVal} (по умолчанию в плоскости @var{z}=@var{Min.z}), где значения @var{x}[i] равно распределены в интервале [@var{Min}.x, @var{Max}.x].
-@end deftypefn
-
-@c ==================================================================
-@node Radar, Tens, Plot, 1D plotting
-@subsection Radar
 @cindex Radar
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Radar (@code{const mglData &}a, @code{const char *}pen=@code{""}, @code{float} r=@code{-1})
-@deftypefnx {Функция С} @code{void} mgl_radar (@code{HMGL} gr, @code{const HMDT} a, @code{const char *}pen, @code{float} r)
-Функции рисуют radar chart, представляющий собой ломанную с вершинами на радиальных линиях (типа ломанной в полярных координатах). График рисуется для каждой строки если один из массивов матрица. Параметр @var{r} задает дополнительный сдвиг данных (т.е. используется @var{a}+@var{r} вместо @var{a}). Если @code{r<0}, то @code{r=max(0, -min(a)}. Строка @var{pen} задает цвет и стиль линии и маркеров (см. @ref{Line styles}). По умолчанию (@code{pen=""}) используется сплошная линия с текущим цветом из палитры (см. @ref{Palette and colors}). Если @var{pen} содержит символ @samp{#}, то также рисуется "сетка" (радиальные линии и круг для @var{r}). См. также @ref{Plot}. @sref{Radar sample}
-@end deftypefn
-
-@c ==================================================================
-@node Tens, Area, Radar, 1D plotting
-@subsection Tens
 @cindex Tens
-
-Функции рисуют ломанную линию по точкам с цветом, определяемым массивом @var{c} (типа графика натяжений). График рисуется для каждой строки если один из массивов матрица. Размер по 1-ой координате @strong{должен быть одинаков} для всех массивов @code{x.nx=y.nx=z.nx=c.nx}. Строка @var{pen} задает цветовую схему (см. @ref{Color scheme}) и стиль и/или толщину линии (см. @ref{Line styles}). По умолчанию (@code{pen=""}) используется сплошная линия с текущей цветовой схемой. См. также @ref{Plot}, @ref{Mesh}, @ref{Fall}. @sref{Tens sample}
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Tens (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}c, @code{const char *}pen=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_tens_xyz (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const HMDT} c, @code{const char *}pen)
-Рисует в пространстве линию между точками @{@var{x}[i], @var{y}[i], @var{z}[i]@} с цветом @var{c}[i].
-@end deftypefn
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Tens (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}c, @code{const char *}pen=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_tens_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} c, @code{const char *}pen)
-Рисует линию между точками @{@var{x}[i], @var{y}[i]@} в плоскости @var{z}=@var{zVal} (по умолчанию в плоскости @var{z}=@var{Min.z}) с цветом @var{c}[i].
-@end deftypefn
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Tens (@code{const mglData &}y, @code{const mglData &}c, @code{const char *}pen=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_tens (@code{HMGL} gr, @code{const HMDT} y, @code{const HMDT} c, @code{const char *}pen)
-Рисует линию между точками @{@var{x}[i], @var{y}[i]@} в плоскости @var{z}=@var{zVal} (по умолчанию в плоскости @var{z}=@var{Min.z}) с цветом @var{c}[i], где значения @var{x}[i] равно распределены в интервале [@var{Min}.x, @var{Max}.x].
-@end deftypefn
-
-@c ==================================================================
-@node Area, Region, Tens, 1D plotting
-@subsection Area
 @cindex Area
-
-Функции рисуют ломанную линию между точками и закрашивает ее вниз до плоскости осей координат. График рисуется для каждой строки если один из массивов матрица. Размер по 1-ой координате @strong{должен быть одинаков} для всех массивов @code{x.nx=y.nx=z.nx}. Строка @var{pen} задает цвет и стиль линии и маркеров (см. @ref{Line styles}). По умолчанию (@code{pen=""}) используется сплошная линия с текущим цветом из палитры (см. @ref{Palette and colors}). Также можно использовать градиентное закрашивание если число указанных цветов равно удвоенному числу кривых для построения. Если строка содержит символ @samp{a}, то линии рисуются одна поверх другой (с суммированием) -- того же эффекта можно достичь вызовом @code{y.CumSum("y");} перед построением графика. См. также @ref{Plot}, @ref{Bars}, @ref{Stem}. @sref{Area sample}
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Area (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}pen=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_area_xyz (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}pen)
-Рисует в пространстве линию между точками @{@var{x}[i], @var{y}[i], @var{z}[i]@} и закрашивает ее вниз до плоскости @var{z} = Org.z.
-@end deftypefn
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Area (@code{const mglData &}x, @code{const mglData &}y, @code{const char *}pen=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_area_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const char *}pen)
-Рисует линию между точками @{@var{x}[i], @var{y}[i]@} в плоскости @var{z}=@var{zVal} (по умолчанию в плоскости @var{z}=@var{Min.z}) и закрашивает ее до прямой @var{y} = Org.y.
-@end deftypefn
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Area (@code{const mglData &}y, @code{const char *}pen=@code{""}, @code{bool} sum=@code{false})
-@deftypefnx {Функция С} @code{void} mgl_area (@code{HMGL} gr, @code{const HMDT} y, @code{const char *}pen)
-@deftypefnx {Функция С} @code{void} mgl_area_s (@code{HMGL} gr, @code{const HMDT} y, @code{const char *}pen)
-Рисует линию между точками @{@var{x}[i], @var{y}[i]@} в плоскости @var{z}=@var{zVal} (по умолчанию в плоскости @var{z}=@var{Min.z}) и закрашивает ее до прямой @var{y} = Org.y, где значения @var{x}[i] равно распределены в интервале [@var{Min}.x, @var{Max}.x]. Параметр @var{sum} задает режим рисования линий одна поверх другой (с сумированием). Замечу, что того же эффекта можно достичь вызовом @code{y.CumSum("y");} перед построением графика.
-@end deftypefn
-
-@c ==================================================================
-@node Region, Stem, Area, 1D plotting
-@subsection Region
 @cindex Region
-
-Функции закрашивают область между 2 кривыми. График рисуется для каждой строки если один из массивов матрица. Размер по 1-ой координате @strong{должен быть одинаков} для всех массивов @code{x.nx=y1.nx=y2.nx} и размеры массивов @var{y1}, @var{y2} должны быть также одинаковы. Строка @var{pen} задает цвет (см. @ref{Line styles}). По умолчанию (@code{pen=""}) используется текущий цвет из палитры (см. @ref{Palette and colors}). Также можно использовать градиентное закрашивание если число указанных цветов равно удвоенному числу кривых для построения. См. также @ref{Area}, @ref{Bars}, @ref{Stem}. @sref{Region sample}
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Region (@code{const mglData &}x, @code{const mglData &}y1, @code{const mglData &}y2, @code{const char *}pen=@code{""}, @code{float} zVal=@code{NAN}, @code{bool} inside=@code{true})
-@deftypefnx {Функция С} @code{void} mgl_region_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y1, @code{const HMDT} y2, @code{const char *}pen, @code{int} inside)
-Закрашивает область между кривыми @{@var{x}[i], @var{y1}[i]@} и @{@var{x}[i], @var{y2}[i]@} при z=@var{zVal}. При  @code{inside=off} закрашивается только область y1<y<y2, в противном случае также будет закращена область y2<y<y1.
-@end deftypefn
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Region (@code{const mglData &}y1, @code{const mglData &}y2, @code{const char *}pen=@code{""}, @code{float} zVal=@code{NAN}, @code{bool} inside=@code{true})
-@deftypefnx {Функция С} @code{void} mgl_region (@code{HMGL} gr, @code{const HMDT} y1, @code{const HMDT} y2, @code{const char *}pen, @code{int} inside)
-Закрашивает область между кривыми @{@var{x}[i], @var{y1}[i]@} и @{@var{x}[i], @var{y2}[i]@} при z=@var{zVal}, где значения @var{x}[i] равно распределены в интервале [@var{Min}.x, @var{Max}.x].
-@end deftypefn
-
-@c ==================================================================
-@node Stem, Bars, Region, 1D plotting
-@subsection Stem
 @cindex Stem
-
-Функции рисуют вертикальные линии из точек до плоскости осей координат. График рисуется для каждой строки если один из массивов матрица. Размер по 1-ой координате @strong{должен быть одинаков} для всех массивов @code{x.nx=y.nx=z.nx}. Строка @var{pen} задает цвет и стиль линии и маркеров (см. @ref{Line styles}). По умолчанию (@code{pen=""}) используется сплошная линия с текущим цветом из палитры (см. @ref{Palette and colors}). См. также @ref{Area}, @ref{Bars}, @ref{Plot}, @ref{Mark}. @sref{Stem sample}
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Stem (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}pen=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_stem_xyz (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}pen)
-Рисует вертикальные линии из точек @{@var{x}[i], @var{y}[i], @var{z}[i]@} вниз до плоскости @var{z} = Org.z.
-@end deftypefn
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Stem (@code{const mglData &}x, @code{const mglData &}y, @code{const char *}pen=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_stem_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const char *}pen)
-Рисует вертикальные линии из точек @{@var{x}[i], @var{y}[i]@} до @var{y} = Org.y в плоскости @var{z}=@var{zVal} (по умолчанию в плоскости @var{z}=@var{Min.z}).
-@end deftypefn
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Stem (@code{const mglData &}y, @code{const char *}pen=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_stem (@code{HMGL} gr, @code{const HMDT} y, @code{const char *}pen)
-Рисует вертикальные линии из точек @{@var{x}[i], @var{y}[i]@} до @var{y} = Org.y в плоскости @var{z}=@var{zVal} (по умолчанию в плоскости @var{z}=@var{Min.z}), где значения @var{x}[i] равно распределены в интервале [@var{Min}.x, @var{Max}.x].
-@end deftypefn
-
-@c ==================================================================
-@node Bars, Barh, Stem, 1D plotting
-@subsection Bars
 @cindex Bars
-
-Функции рисуют вертикальные полосы (прямоугольники) из точек до плоскости осей координат. График рисуется для каждой строки если один из массивов матрица. Размер по 1-ой координате @strong{должен быть одинаков} для всех массивов @code{x.nx=y.nx=z.nx}. Строка @var{pen} задает цвет и стиль линии и маркеров (см. @ref{Line styles}). По умолчанию (@code{pen=""}) используется сплошная линия с текущим цветом из палитры (см. @ref{Palette and colors}). Если строка содержит символ @samp{a}, то линии рисуются одна поверх другой. Если строка содержит символ @samp{f}, то рисуется график типа waterfall для определения кумулятивного эффекта последовательности положительных и отрицательных значений. Можно использовать разные цвета для положительных и отрицательных значений если число указанных цветов равно удвоенному числу кривых для построения. См. также @ref{Barh}, @ref{Area}, @ref{Stem}, @ref{Chart}, @ref{Default sizes}. @sref{Bars sample}
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Bars (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}pen=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_bars_xyz (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}pen)
-Рисует вертикальные полосы из точек @{@var{x}[i], @var{y}[i], @var{z}[i]@} вниз до плоскости @var{z} = Org.z.
-@end deftypefn
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Bars (@code{const mglData &}x, @code{const mglData &}y, @code{const char *}pen=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_bars_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const char *}pen)
-Рисует вертикальные полосы из точек @{@var{x}[i], @var{y}[i]@} до @var{y} = Org.y в плоскости @var{z}=@var{zVal} (по умолчанию в плоскости @var{z}=@var{Min.z}).
-@end deftypefn
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Bars (@code{const mglData &}y, @code{const char *}pen=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_bars (@code{HMGL} gr, @code{const HMDT} y, @code{const char *}pen)
-Рисует вертикальные полосы из точек @{@var{x}[i], @var{y}[i]@} до @var{y} = Org.y в плоскости @var{z}=@var{zVal} (по умолчанию в плоскости @var{z}=@var{Min.z}), где значения @var{x}[i] равно распределены в интервале [@var{Min}.x, @var{Max}.x].
-@end deftypefn
-
-@c ==================================================================
-@node Barh, Chart, Bars, 1D plotting
-@subsection Barh
 @cindex Barh
-
-Функции рисуют горизонтальные полосы (прямоугольники) из точек до плоскости осей координат. График рисуется для каждой строки если один из массивов матрица. Размер по 1-ой координате @strong{должен быть одинаков} для всех массивов @code{x.nx=y.nx=z.nx}. Строка @var{pen} задает цвет и стиль линии и маркеров (см. @ref{Line styles}). По умолчанию (@code{pen=""}) используется сплошная линия с текущим цветом из палитры (см. @ref{Palette and colors}). Если строка содержит символ @samp{a}, то линии рисуются одна поверх другой. Если строка содержит символ @samp{f}, то рисуется график типа waterfall для определения кумулятивного эффекта последовательности положительных и отрицательных значений. Можно использовать разные цвета для положительных и отрицательных значений если число указанных цветов равно удвоенному числу кривых для построения. См. также @ref{Barh}, @ref{Default sizes}. @sref{Barh sample}
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Barh (@code{const mglData &}y, @code{const mglData &}v, @code{const char *}pen=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_barh_xy (@code{HMGL} gr, @code{const HMDT} y, @code{const HMDT} v, @code{const char *}pen)
-Рисует горизонтальные полосы из точек @{@var{v}[i], @var{y}[i]@} до @var{x} = Org.x в плоскости @var{z}=@var{zVal} (по умолчанию в плоскости @var{z}=@var{Min.z}).
-@end deftypefn
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Barh (@code{const mglData &}v, @code{const char *}pen=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_barh (@code{HMGL} gr, @code{const HMDT} v, @code{const char *}pen)
-Рисует горизонтальные полосы из точек @{@var{v}[i], @var{y}[i]@} до @var{x} = Org.x в плоскости @var{z}=@var{zVal} (по умолчанию в плоскости @var{z}=@var{Min.z}), где значения @var{y}[i] равно распределены в интервале [@var{Min}.y, @var{Max}.y].
-@end deftypefn
-
-@c ==================================================================
-@node Chart, Step, Barh, 1D plotting
-@subsection Chart
 @cindex Chart
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Chart (@code{const mglData &}a, @code{const char *}col=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_chart (@code{HMGL} gr, @code{const HMDT} a, @code{const char *}col)
-Рисует цветные полосы (пояса) для массива данных @var{a}. Число полос равно числу строк @var{a} (равно @var{a.ny}). Цвет полос поочередно меняется из цветов указанных в @var{col} или в палитре (см. @ref{Palette and colors}). Пробел в цветах соответствует прозрачному "цвету", т.е. если @var{col} содержит пробел(ы), то соответствующая полоса не рисуется. Ширина полосы пропорциональна значению элемента в @var{a}. График строится только для массивов не содержащих отрицательных значений. Если строка @var{col} содержит @samp{#}, то рисуется также черная граница полос. График выглядит лучше в (после вращения системы координат) и/или в полярной системе координат (становится Pie chart). @sref{Chart sample}
-@end deftypefn
-
-
-@c ==================================================================
-@node Step, Torus, Chart, 1D plotting
-@subsection Step
 @cindex Step
-
-Функции рисуют ступеньки для точек массива. График рисуется для каждой строки если один из массивов матрица. Размер по 1-ой координате @strong{должен быть одинаков} для всех массивов @code{x.nx=y.nx=z.nx}. Строка @var{pen} задает цвет и стиль линии и маркеров (см. @ref{Line styles}). По умолчанию (@code{pen=""}) используется сплошная линия с текущим цветом из палитры (см. @ref{Palette and colors}). См. также @ref{Plot}, @ref{Stem}, @ref{Tile}, @ref{Boxs}. @sref{Step sample}
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Step (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}pen=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_step_xyz (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}pen)
-Рисует ступеньки для точек @{@var{x}[i], @var{y}[i], @var{z}[i]@}.
-@end deftypefn
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Step (@code{const mglData &}x, @code{const mglData &}y, @code{const char *}pen=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_step_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const char *}pen)
-Рисует ступеньки для точек @{@var{x}[i], @var{y}[i]@} в плоскости @var{z}=@var{zVal} (по умолчанию в плоскости @var{z}=@var{Min.z}).
-@end deftypefn
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Step (@code{const mglData &}y, @code{const char *}pen=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_step (@code{HMGL} gr, @code{const HMDT} y, @code{const char *}pen)
-Рисует ступеньки для точек @{@var{x}[i], @var{y}[i]@} в плоскости @var{z}=@var{zVal} (по умолчанию в плоскости @var{z}=@var{Min.z}), где значения @var{x}[i] равно распределены в интервале [@var{Min}.x, @var{Max}.x].
-@end deftypefn
-
-@c ==================================================================
-@node Torus, Tube, Step, 1D plotting
-@subsection Torus
 @cindex Torus
-
-Функции рисуют поверхность вращения кривой @{@var{r}, @var{z}@} относительно оси. Размер по 1-ой координате @strong{должен быть одинаков} для всех массивов @var{r.nx=z.nx}. Строка @var{pen} задает цвет (см. @ref{Line styles}). По умолчанию (@code{pen=""}) используется цвет из палитры (см. @ref{Palette and colors}). См. также @ref{Plot}, @ref{Axial}. @sref{Torus sample}
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Torus (@code{const mglData &}r, @code{const mglData &}z, @code{const char *}pen=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_torus (@code{HMGL} gr, @code{const HMDT} r, @code{const HMDT} z, @code{const char *}pen)
-Рисует поверхность вращения кривой @{@var{r}[i], @var{z}[i]@}.
-@end deftypefn
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Torus (@code{const mglData &}z, @code{const char *}pen=@code{""})
-Рисует поверхность вращения кривой @{@var{r}[i], @var{z}[i]@}, где значения @var{r}[i] равно распределены в интервале [@var{Min}.x, @var{Max}.x].
-@end deftypefn
-
-@c ==================================================================
-@node Tube, Mark, Torus, 1D plotting
-@subsection Tube
 @cindex Tube
-
-Функции рисуют трубу радиуса @var{r}[i] вдоль кривой между точками @{@var{x}[i], @var{y}[i], @var{z}[i]@}. График рисуется для каждой строки если один из массивов матрица. Размер по 1-ой координате @strong{должен быть одинаков} для всех массивов @code{x.nx=y.nx=z.nx=r.nx}. Строка @var{pen} задает цвет и стиль линии и маркеров (см. @ref{Line styles}). По умолчанию (@code{pen=""}) используется сплошная линия с текущим цветом из палитры (см. @ref{Palette and colors}). См. также @ref{Plot}. @sref{Tube sample}
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Tube (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}r, @code{const char *}pen=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Tube (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{float} r, @code{const char *}pen=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_tube_xyzr (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const HMDT} r, @code{const char *}pen)
-@deftypefnx {Функция С} @code{void} mgl_tube_xyz (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{float} r, @code{const char *}pen)
-Рисует трубу радиуса @var{r}  в пространстве между точками @{@var{x}[i], @var{y}[i], @var{z}[i]@}.
-@end deftypefn
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Tube (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}r, @code{const char *}pen=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Tube (@code{const mglData &}x, @code{const mglData &}y, @code{float} r, @code{const char *}pen=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_tube_xyr (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} r, @code{const char *}pen)
-@deftypefnx {Функция С} @code{void} mgl_tube_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{float} r, @code{const char *}pen)
-Рисует трубу радиуса @var{r} между точками @{@var{x}[i], @var{y}[i]@} в плоскости @var{z}=@var{zVal} (по умолчанию в плоскости @var{z}=@var{Min.z}).
-@end deftypefn
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Tube (@code{const mglData &}y, @code{const mglData &}r, @code{const char *}pen=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Tube (@code{const mglData &}y, @code{float} r, @code{const char *}pen=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_tube_r (@code{HMGL} gr, @code{const HMDT} y, @code{const HMDT} r, @code{const char *}pen)
-@deftypefnx {Функция С} @code{void} mgl_tube (@code{HMGL} gr, @code{const HMDT} y, @code{float} r, @code{const char *}pen)
-Рисует трубу радиуса @var{r} между точками @{@var{x}[i], @var{y}[i]@} в плоскости @var{z}=@var{zVal} (по умолчанию в плоскости @var{z}=@var{Min.z}), где значения @var{x}[i] равно распределены в интервале [@var{Min}.x, @var{Max}.x].
-@end deftypefn
-
-@c ==================================================================
-@node Mark, TextMark, Tube, 1D plotting
-@subsection Mark
 @cindex Mark
-
-Функции рисуют маркеры размером @var{r}*@var{MarkSize} (см. @ref{Default sizes}) в точках @{@var{x}[i], @var{y}[i], @var{z}[i]@}. График рисуется для каждой строки если один из массивов матрица. Размер по 1-ой координате @strong{должен быть одинаков} для всех массивов @code{x.nx=y.nx=z.nx=r.nx}. Строка @var{pen} задает цвет и стиль линии и маркеров (см. @ref{Line styles}). По умолчанию (@code{pen=""}) используется сплошная линия с текущим цветом из палитры (см. @ref{Palette and colors}). Для рисования маркеров одинакового размера можно использовать функцию @ref{Plot} с невидимой линией (со стилем содержащим @samp{ }). См. также @ref{Plot}, @ref{TextMark}, @ref{Stem}, @ref{Error}. @sref{Mark sample}
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Mark (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}r, @code{const char *}pen=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_mark_xyz (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const HMDT} r, @code{const char *}pen)
-Рисует маркеры для точек @{@var{x}[i], @var{y}[i], @var{z}[i]@}.
-@end deftypefn
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Mark (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}r, @code{const char *}pen=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_mark_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} r, @code{const char *}pen)
-Рисует маркеры для точек @{@var{x}[i], @var{y}[i]@} в плоскости @var{z}=@var{zVal} (по умолчанию в плоскости @var{z}=@var{Min.z}).
-@end deftypefn
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Mark (@code{const mglData &}y, @code{const mglData &}r, @code{const char *}pen=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_mark_y (@code{HMGL} gr, @code{const HMDT} y, @code{const HMDT} r, @code{const char *}pen)
-Рисует маркеры для точек @{@var{x}[i], @var{y}[i]@} в плоскости @var{z}=@var{zVal} (по умолчанию в плоскости @var{z}=@var{Min.z}), где значения @var{x}[i] равно распределены в интервале [@var{Min}.x, @var{Max}.x].
-@end deftypefn
-
-@c ==================================================================
-@node TextMark, Error, Mark, 1D plotting
-@subsection TextMark
 @cindex TextMark
-
-Функции рисуют текст @var{text} как маркер с размером пропорциональным @var{r}*@var{MarkSize} (см. @ref{Default sizes}) в точках @{@var{x}[i], @var{y}[i], @var{z}[i]@}. График рисуется для каждой строки если один из массивов матрица. Размер по 1-ой координате @strong{должен быть одинаков} для всех массивов @code{x.nx=y.nx=z.nx=r.nx}. Строка @var{pen} задает цвет и стиль линии и маркеров (см. @ref{Line styles}). По умолчанию (@code{pen=""}) используется сплошная линия с текущим цветом из палитры (см. @ref{Palette and colors}). См. также @ref{Plot}, @ref{Mark}, @ref{Stem}. @sref{TextMark sample}
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} TextMark (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}r, @code{const char *}text, @code{const char *}fnt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} TextMark (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}r, @code{const wchar_t *}text, @code{const char *}fnt=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_textmarkw_xyzr (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const HMDT} r, @code{const wchar_t *}text, @code{const char *}fnt)
-@deftypefnx {Функция С} @code{void} mgl_textmark_xyzr (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const HMDT} r, @code{const char *}text, @code{const char *}fnt)
-Рисует текстовые маркеры в точках @{@var{x}[i], @var{y}[i], @var{z}[i]@}.
-@end deftypefn
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} TextMark (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}r, @code{const char *}text, @code{const char *}fnt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} TextMark (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}r, @code{const wchar_t *}text, @code{const char *}fnt=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_textmarkw_xyr (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} r, @code{const wchar_t *}text, @code{const char *}fnt)
-@deftypefnx {Функция С} @code{void} mgl_textmark_xyr (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} r, @code{const char *}text, @code{const char *}fnt)
-Рисует текстовые маркеры в точках @{@var{x}[i], @var{y}[i]@} в плоскости @var{z}=@var{zVal} (по умолчанию в плоскости @var{z}=@var{Min.z}).
-@end deftypefn
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} TextMark (@code{const mglData &}y, @code{const mglData &}r, @code{const char *}text, @code{const char *}fnt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} TextMark (@code{const mglData &}y, @code{const mglData &}r, @code{const wchar_t *}text, @code{const char *}fnt=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_textmarkw_yr (@code{HMGL} gr, @code{const HMDT} y, @code{const HMDT} r, @code{const wchar_t *}text, @code{const char *}fnt)
-@deftypefnx {Функция С} @code{void} mgl_textmark_yr (@code{HMGL} gr, @code{const HMDT} y, @code{const HMDT} r, @code{const char *}text, @code{const char *}fnt)
-Рисует текстовые маркеры в точках @{@var{x}[i], @var{y}[i]@} в плоскости @var{z}=@var{zVal} (по умолчанию в плоскости @var{z}=@var{Min.z}), где значения @var{x}[i] равно распределены в интервале [@var{Min}.x, @var{Max}.x].
-@end deftypefn
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} TextMark (@code{const mglData &}y, @code{const char *}text, @code{const char *}fnt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} TextMark (@code{const mglData &}y, @code{const wchar_t *}text, @code{const char *}fnt=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_textmarkw (@code{HMGL} gr, @code{const HMDT} y, @code{const wchar_t *}text, @code{const char *}fnt)
-@deftypefnx {Функция С} @code{void} mgl_textmark (@code{HMGL} gr, @code{const HMDT} y, @code{const char *}text, @code{const char *}fnt)
-Рисует текстовые маркеры в точках @{@var{x}[i], @var{y}[i]@} в плоскости @var{z}=@var{zVal} (по умолчанию в плоскости @var{z}=@var{Min.z}), где значения @var{x}[i] равно распределены в интервале [@var{Min}.x, @var{Max}.x]. The mark sizes @var{r}[i]=1 for all points.
-@end deftypefn
-
-@c ==================================================================
-@node Error, BoxPlot, TextMark, 1D plotting
-@subsection Error
 @cindex Error
-
-Функции рисуют размер ошибки в точках @{@var{x}[i], @var{y}[i]@} на плоскости @var{z} = @var{zVal} (по умолчанию @var{z}=@var{Min.z}). Такой график полезен для отображения ошибки эксперимента, вычислений и пр. График рисуется для каждой строки если один из массивов матрица. Размер по 1-ой координате @strong{должен быть одинаков} для всех массивов @code{x.nx=y.nx=z.nx=r.nx}. Строка @var{pen} задает цвет и стиль линии и маркеров (см. @ref{Line styles}). По умолчанию (@code{pen=""}) используется сплошная линия с текущим цветом из палитры (см. @ref{Palette and colors}). См. также @ref{Plot}. @sref{Error sample}
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Error (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}ex, @code{const mglData &}ey, @code{const char *}pen=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_error_exy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} ex, @code{const HMDT} ey, @code{const char *}pen)
-Рисует размер ошибки @{@var{ex}, @var{ey}@} в точках @{@var{x}, @var{y}@}.
-@end deftypefn
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Error (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}ey, @code{const char *}pen=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_error_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} ey, @code{const char *}pen)
-Рисует размер ошибки @var{ey} (только вдоль одного направления) в точках @{@var{x}, @var{y}@}.
-@end deftypefn
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Error (@code{const mglData &}y, @code{const mglData &}ey, @code{const char *}pen=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_error (@code{HMGL} gr, @code{const HMDT} y, @code{const HMDT} ey, @code{const char *}pen)
-Рисует размер ошибки @var{ey}  (только вдоль одного направления) в точках @{@var{x}, @var{y}@}, где значения @var{x}[i] равно распределены в интервале [@var{Min}.x, @var{Max}.x].
-@end deftypefn
-
-@c ==================================================================
-@node BoxPlot, , Error, 1D plotting
-@subsection BoxPlot
 @cindex BoxPlot
+@cindex Candle
+@cindex Tape
+@cindex Label
+@cindex Cones
 
-Функции рисуют boxplot (называемый также как box-and-whisker diagram или как "ящик с усами") в точках @var{x}[i] на плоскости @var{z} = @var{zVal} (по умолчанию @var{z}=@var{Min.z}). Это график, компактно изображающий распределение вероятностей @var{a}[i,j] (минимум, нижний квартиль (Q1), медиана (Q2), верхний квартиль (Q3) и максимум) вдоль второго (j-го) направления. Размер по 1-ой координате @strong{должен быть одинаков} для всех массивов @code{x.nx=a.nx}. Строка @var{pen} задает цвет и стиль линий (см. @ref{Line styles}). По умолчанию (@code{pen=""}) используется сплошная линия с текущим цветом из палитры (см. @ref{Palette and colors}). См. также @ref{Plot}, @ref{Error}, @ref{Bars}, @ref{Default sizes}. @sref{BoxPlot sample}
+Эти функции строят графики для одномерных (1D) массивов. Одномерными считаются массивы, зависящие только от одного параметра (индекса) подобно кривой в параметрической форме @{x(i),y(i),z(i)@}, i=1...n. По умолчанию (если отсутствуют) значения @var{x}[i] равно распределены в диапазоне оси х, и @var{z}[i]=@var{Min}.z. Графики рисуются для каждой строки массива данных если он двумерный. Размер по 1-ой координате @strong{должен быть одинаков} для всех массивов @code{x.nx=y.nx=z.nx}.
 
-@deftypefn {Метод класса @code{mglGraph}} @code{void} BoxPlot (@code{const mglData &}x, @code{const mglData &}a, @code{const char *}pen=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_boxplot_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} a, @code{const char *}pen)
-Рисует boxplot с заданными значениями координат @var{x}[i].
+Строка @var{pen} задает цвет и стиль линии и маркеров (см. @ref{Line styles}). По умолчанию (@code{pen=""}) рисуется сплошная линия с текущим цветом из палитры (см. @ref{Palette and colors}). Символ @samp{!} в строке задает использование нового цвета из палитры для каждой точки данных (не для всей кривой, как по умолчанию). Строка @var{opt} задает опции графика (см. @ref{Command options}). @sref{1D samples}
+
+@anchor{plot}
+@deftypefn {MGL command} {} plot ydat ['stl'='']
+@deftypefnx {MGL command} {} plot xdat ydat ['stl'='']
+@deftypefnx {MGL command} {} plot xdat ydat zdat ['stl'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} Plot (@code{const mglData &}y, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Plot (@code{const mglData &}x, @code{const mglData &}y, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Plot (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_plot (@code{HMGL} gr, @code{HCDT} y, @code{const char *}pen, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_plot_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{const char *}pen, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_plot_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}pen, @code{const char *}opt)
+@end ifclear
+Функции рисуют ломанную линию по точкам. См. также @ref{area}, @ref{step}, @ref{stem}, @ref{tube}, @ref{mark}, @ref{error}, @ref{belt}, @ref{tens}, @ref{tape}. @sref{Plot sample}
 @end deftypefn
 
-@deftypefn {Метод класса @code{mglGraph}} @code{void} BoxPlot (@code{const mglData &}a, @code{const char *}pen=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_boxplot (@code{HMGL} gr, @code{const HMDT} a, @code{const char *}pen)
-Рисует boxplot со значениями @var{x}[i] равно распределенными в интервале [@var{Min}.x, @var{Max}.x].
+@anchor{radar}
+@deftypefn {MGL command} {} radar adat ['stl'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} Radar (@code{const mglData &}a, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_radar (@code{HMGL} gr, @code{HCDT} a, @code{const char *}pen, @code{const char *}opt)
+@end ifclear
+Функции рисуют radar chart, представляющий собой ломанную с вершинами на радиальных линиях (типа ломанной в полярных координатах). Параметр @var{value} в опциях @var{opt} задает дополнительный сдвиг данных (т.е. использование @var{a}+@var{value} вместо @var{a}). Если @var{pen} содержит @samp{#}, то рисуется "сетка" (радиальные линии). См. также @ref{plot}. @sref{Radar sample}
 @end deftypefn
+
+@anchor{step}
+@deftypefn {MGL command} {} step ydat ['stl'='']
+@deftypefnx {MGL command} {} step xdat ydat ['stl'='']
+@deftypefnx {MGL command} {} step xdat ydat zdat ['stl'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} Step (@code{const mglData &}y, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Step (@code{const mglData &}x, @code{const mglData &}y, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Step (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_step (@code{HMGL} gr, @code{HCDT} y, @code{const char *}pen, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_step_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{const char *}pen, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_step_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}pen, @code{const char *}opt)
+@end ifclear
+Функции рисуют ступеньки для точек массива. См. также @ref{plot}, @ref{stem}, @ref{tile}, @ref{boxs}. @sref{Step sample}
+@end deftypefn
+
+@anchor{tens}
+@deftypefn {MGL command} {} tens ydat cdat ['stl'='']
+@deftypefnx {MGL command} {} tens xdat ydat cdat ['stl'='']
+@deftypefnx {MGL command} {} tens xdat ydat zdat cdat ['stl'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} Tens (@code{const mglData &}y, @code{const mglData &}c, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Tens (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}c, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Tens (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}c, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_tens (@code{HMGL} gr, @code{HCDT} y, @code{HCDT} c, @code{const char *}pen, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_tens_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} c, @code{const char *}pen, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_tens_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} c, @code{const char *}pen, @code{const char *}opt)
+@end ifclear
+Функции рисуют ломанную линию по точкам с цветом, определяемым массивом @var{c} (типа графика натяжений). Строка @var{pen} задает цветовую схему (см. @ref{Color scheme}) и стиль линий и/или маркеров (см. @ref{Line styles}). См. также @ref{plot}, @ref{mesh}, @ref{fall}. @sref{Tens sample}
+@end deftypefn
+
+@anchor{tape}
+@deftypefn {MGL command} {} tape ydat ['stl'='']
+@deftypefnx {MGL command} {} tape xdat ydat ['stl'='']
+@deftypefnx {MGL command} {} tape xdat ydat zdat ['stl'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} Tape (@code{const mglData &}y, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Tape (@code{const mglData &}x, @code{const mglData &}y, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Tape (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_tape (@code{HMGL} gr, @code{HCDT} y, @code{const char *}pen, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_tape_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{const char *}pen, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_tape_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}pen, @code{const char *}opt)
+@end ifclear
+Функции рисуют ленты, которые вращаются вокруг кривой @{@var{x}[i], @var{y}[i], @var{z}[i]@} как её нормали. Начальная лента(ы) выбираются в плоскости x-y (для @samp{x} в @var{pen}) и/или y-z (для @samp{x} в @var{pen}). Ширина лент пропорциональна @code{SetBarWidth()}. См. также @ref{plot}, @ref{flow}, @ref{barwidth}. @sref{Tape sample}
+@end deftypefn
+
+@anchor{area}
+@deftypefn {MGL command} {} area ydat ['stl'='']
+@deftypefnx {MGL command} {} area xdat ydat ['stl'='']
+@deftypefnx {MGL command} {} area xdat ydat zdat ['stl'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} Area (@code{const mglData &}y, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Area (@code{const mglData &}x, @code{const mglData &}y, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Area (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_area (@code{HMGL} gr, @code{HCDT} y, @code{const char *}pen, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_area_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{const char *}pen, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_area_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}pen, @code{const char *}opt)
+@end ifclear
+Функции рисуют ломанную линию между точками и закрашивает её вниз до плоскости осей координат. Градиентная заливка используется если число цветов равно удвоенному число кривых. См. также @ref{plot}, @ref{bars}, @ref{stem}, @ref{region}. @sref{Area sample}
+@end deftypefn
+
+@anchor{region}
+@deftypefn {MGL command} {} region ydat1 ydat2 ['stl'='']
+@deftypefnx {MGL command} {} region xdat ydat1 ydat2 ['stl'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} Region (@code{const mglData &}y1, @code{const mglData &}y2, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Region (@code{const mglData &}x, @code{const mglData &}y1, @code{const mglData &}y2, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_region (@code{HMGL} gr, @code{HCDT} y1, @code{HCDT} y2, @code{const char *}pen, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_region_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y1, @code{HCDT} y2, @code{const char *}pen, @code{const char *}opt)
+@end ifclear
+Функции закрашивают область между 2 кривыми. Градиентная заливка используется если число цветов равно удвоенному число кривых. Если @var{pen} содержит @samp{i}, то закрашивается только область y1<y<y2, в противном случае будет закрашена и область y2<y<y1. См. также @ref{area}, @ref{bars}, @ref{stem}. @sref{Region sample}
+@end deftypefn
+
+@anchor{stem}
+@deftypefn {MGL command} {} stem ydat ['stl'='']
+@deftypefnx {MGL command} {} stem xdat ydat ['stl'='']
+@deftypefnx {MGL command} {} stem xdat ydat zdat ['stl'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} Stem (@code{const mglData &}y, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Stem (@code{const mglData &}x, @code{const mglData &}y, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Stem (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_stem (@code{HMGL} gr, @code{HCDT} y, @code{const char *}pen, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_stem_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{const char *}pen, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_stem_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}pen, @code{const char *}opt)
+@end ifclear
+Функции рисуют вертикальные линии из точек до плоскости осей координат. См. также @ref{area}, @ref{bars}, @ref{plot}, @ref{mark}. @sref{Stem sample}
+@end deftypefn
+
+@anchor{bars}
+@deftypefn {MGL command} {} bars ydat ['stl'='']
+@deftypefnx {MGL command} {} bars xdat ydat ['stl'='']
+@deftypefnx {MGL command} {} bars xdat ydat zdat ['stl'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} Bars (@code{const mglData &}y, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Bars (@code{const mglData &}x, @code{const mglData &}y, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Bars (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_bars (@code{HMGL} gr, @code{HCDT} y, @code{const char *}pen, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_bars_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{const char *}pen, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_bars_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}pen, @code{const char *}opt)
+@end ifclear
+Функции рисуют вертикальные полосы (прямоугольники) из точек до плоскости осей координат. Если строка @var{pen} содержит символ @samp{a}, то линии рисуются одна поверх другой. Если строка содержит символ @samp{f}, то рисуется график типа waterfall для определения кумулятивного эффекта последовательности положительных и отрицательных значений. Можно использовать разные цвета для положительных и отрицательных значений если число указанных цветов равно удвоенному числу кривых для построения. См. также @ref{barh}, @ref{cones}, @ref{area}, @ref{stem}, @ref{chart}, @ref{barwidth}. @sref{Bars sample}
+@end deftypefn
+
+@anchor{barh}
+@deftypefn {MGL command} {} barh vdat ['stl'='']
+@deftypefnx {MGL command} {} barh ydat vdat ['stl'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} Barh (@code{const mglData &}v, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Barh (@code{const mglData &}y, @code{const mglData &}v, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_barh (@code{HMGL} gr, @code{HCDT} v, @code{const char *}pen, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_barh_xy (@code{HMGL} gr, @code{HCDT} y, @code{HCDT} v, @code{const char *}pen, @code{const char *}opt)
+@end ifclear
+Функции рисуют горизонтальные полосы (прямоугольники) из точек до плоскости осей координат. Если строка @var{pen} содержит символ @samp{a}, то линии рисуются одна поверх другой. Если строка содержит символ @samp{f}, то рисуется график типа waterfall для определения кумулятивного эффекта последовательности положительных и отрицательных значений. Можно использовать разные цвета для положительных и отрицательных значений если число указанных цветов равно удвоенному числу кривых для построения. См. также @ref{bars}, @ref{barwidth}. @sref{Barh sample}
+@end deftypefn
+
+@anchor{cones}
+@deftypefn {MGL command} {} cones ydat ['stl'='']
+@deftypefnx {MGL command} {} cones xdat ydat ['stl'='']
+@deftypefnx {MGL command} {} cones xdat ydat zdat ['stl'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} Cones (@code{const mglData &}y, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Cones (@code{const mglData &}x, @code{const mglData &}y, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Cones (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_cones (@code{HMGL} gr, @code{HCDT} y, @code{const char *}pen, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_cones_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{const char *}pen, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_cones_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}pen, @code{const char *}opt)
+@end ifclear
+Функции рисуют конусы из точек до плоскости осей координат. Если строка @var{pen} содержит символ @samp{a}, то линии рисуются одна поверх другой. Можно использовать разные цвета для положительных и отрицательных значений если число указанных цветов равно удвоенному числу кривых для построения. См. также @ref{bars}, @ref{barwidth}. @sref{Cones sample}
+@end deftypefn
+
+
+
+@anchor{chart}
+@deftypefn {MGL command} {} chart adat ['col'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} Chart (@code{const mglData &}a, @code{const char *}col=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_chart (@code{HMGL} gr, @code{HCDT} a, @code{const char *}col, @code{const char *}opt)
+@end ifclear
+Рисует цветные полосы (пояса) для массива данных @var{a}. Число полос равно числу строк @var{a} (равно @var{a.ny}). Цвет полос поочерёдно меняется из цветов указанных в @var{col} или в палитре (см. @ref{Palette and colors}). Пробел в цветах соответствует прозрачному "цвету", т.е. если @var{col} содержит пробел(ы), то соответствующая полоса не рисуется. Ширина полосы пропорциональна значению элемента в @var{a}. График строится только для массивов не содержащих отрицательных значений. Если строка @var{col} содержит @samp{#}, то рисуется также чёрная граница полос. График выглядит лучше в (после вращения системы координат) и/или в полярной системе координат (становится Pie chart). @sref{Chart sample}
+@end deftypefn
+
+@anchor{boxplot}
+@deftypefn {MGL command} {} boxplot adat ['stl'='']
+@deftypefnx {MGL command} {} boxplot xdat adat ['stl'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} BoxPlot (@code{const mglData &}a, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} BoxPlot (@code{const mglData &}x, @code{const mglData &}a, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_boxplot (@code{HMGL} gr, @code{HCDT} a, @code{const char *}pen, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_boxplot_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} a, @code{const char *}pen, @code{const char *}opt)
+@end ifclear
+Функции рисуют boxplot (называемый также как box-and-whisker diagram или как "ящик с усами") в точках @var{x}[i] на плоскости @var{z} = @var{zVal} (по умолчанию @var{z}=@var{Min.z}). Это график, компактно изображающий распределение вероятностей @var{a}[i,j] (минимум, нижний квартиль (Q1), медиана (Q2), верхний квартиль (Q3) и максимум) вдоль второго (j-го) направления. См. также @ref{plot}, @ref{error}, @ref{bars}, @ref{barwidth}. @sref{BoxPlot sample}
+@end deftypefn
+
+@anchor{candle}
+@deftypefn {MGL command} {} candle vdat1 ['stl'='']
+@deftypefnx {MGL command} {} candle vdat1 vdat2 ['stl'='']
+@deftypefnx {MGL command} {} candle vdat1 ydat1 ydat2 ['stl'='']
+@deftypefnx {MGL command} {} candle vdat1 vdat2 ydat1 ydat2 ['stl'='']
+@deftypefnx {MGL command} {} candle xdat vdat1 vdat2 ydat1 ydat2 ['stl'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} Candle (@code{const mglData &}v1, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Candle (@code{const mglData &}v1, @code{const mglData &}v2, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Candle (@code{const mglData &}v1, @code{const mglData &}y1, @code{const mglData &}y2, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Candle (@code{const mglData &}v1, @code{const mglData &}v2, @code{const mglData &}y1, @code{const mglData &}y2, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Candle (@code{const mglData &}x, @code{const mglData &}v1, @code{const mglData &}v2, @code{const mglData &}y1, @code{const mglData &}y2, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_candle (@code{HMGL} gr, @code{HCDT} v1, @code{HCDT} y1, @code{HCDT} y2, @code{const char *}pen, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_candle_yv (@code{HMGL} gr, @code{HCDT} v1, @code{HCDT} v2, @code{HCDT} y1, @code{HCDT} y2, @code{const char *}pen, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_candle_xyv (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} v1, @code{HCDT} v2, @code{HCDT} y1, @code{HCDT} y2, @code{const char *}pen, @code{const char *}opt)
+@end ifclear
+Функции рисуют candlestick chart в точках @var{x}[i]. Этот график показывает прямоугольником ("свечой") диапазон изменения величины. Прозрачная (белая) свеча соответствует росту величины @var{v1}[i]<@var{v2}[i], чёрная -- уменьшению. "Тени" показывают минимальное @var{y1} и максимальное @var{y2} значения. Если @var{v2} отсутствует, то он определяется как @var{v2}[i]=@var{v1}[i+1]. См. также @ref{plot}, @ref{bars}, @ref{barwidth}. @sref{Candle sample}
+@end deftypefn
+
+
+@anchor{error}
+@deftypefn {MGL command} {} error ydat yerr ['stl'='']
+@deftypefnx {MGL command} {} error xdat ydat yerr ['stl'='']
+@deftypefnx {MGL command} {} error xdat ydat xerr yerr ['stl'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} Error (@code{const mglData &}y, @code{const mglData &}ey, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Error (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}ey, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Error (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}ex, @code{const mglData &}ey, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_error (@code{HMGL} gr, @code{HCDT} y, @code{HCDT} ey, @code{const char *}pen, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_error_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} ey, @code{const char *}pen, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_error_exy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} ex, @code{HCDT} ey, @code{const char *}pen, @code{const char *}opt)
+@end ifclear
+Функции рисуют размер ошибки в точках @{@var{x}[i], @var{y}[i]@} на плоскости @var{z} = @var{zVal} (по умолчанию @var{z}=@var{Min.z}). Такой график полезен для отображения ошибки эксперимента, вычислений и пр. Если @var{pen} содержит @samp{@@}, то будут использованы большие полупрозрачные маркеры. См. также @ref{plot}, @ref{mark}. @sref{Error sample}
+@end deftypefn
+
+@anchor{mark}
+@deftypefn {MGL command} {} mark ydat rdat ['stl'='']
+@deftypefnx {MGL command} {} mark xdat ydat rdat ['stl'='']
+@deftypefnx {MGL command} {} mark xdat ydat zdat rdat ['stl'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} Mark (@code{const mglData &}y, @code{const mglData &}r, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Mark (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}r, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Mark (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}r, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_mark_y (@code{HMGL} gr, @code{HCDT} y, @code{HCDT} r, @code{const char *}pen, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_mark_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} r, @code{const char *}pen, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_mark_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} r, @code{const char *}pen, @code{const char *}opt)
+@end ifclear
+Функции рисуют маркеры размером @var{r}*@var{MarkSize} (см. @ref{Default sizes}) в точках @{@var{x}[i], @var{y}[i], @var{z}[i]@}. Для рисования маркеров одинакового размера можно использовать функцию @ref{plot} с невидимой линией (со стилем содержащим @samp{ }). Для маркеров с размером как у координат можно использовать @ref{error} со стилем @samp{@@}. См. также @ref{plot}, @ref{textmark}, @ref{error}, @ref{stem}. @sref{Mark sample}
+@end deftypefn
+
+@anchor{textmark}
+@deftypefn {MGL command} {} textmark ydat 'txt' ['stl'='']
+@deftypefnx {MGL command} {} textmark ydat rdat 'txt' ['stl'='']
+@deftypefnx {MGL command} {} textmark xdat ydat rdat 'txt' ['stl'='']
+@deftypefnx {MGL command} {} textmark xdat ydat zdat rdat 'txt' ['stl'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} TextMark (@code{const mglData &}y, @code{const char *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} TextMark (@code{const mglData &}y, @code{const wchar_t *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} TextMark (@code{const mglData &}y, @code{const mglData &}r, @code{const char *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} TextMark (@code{const mglData &}y, @code{const mglData &}r, @code{const wchar_t *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} TextMark (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}r, @code{const char *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} TextMark (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}r, @code{const wchar_t *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} TextMark (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}r, @code{const char *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} TextMark (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}r, @code{const wchar_t *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_textmark (@code{HMGL} gr, @code{HCDT} y, @code{const char *}txt, @code{const char *}fnt, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_textmarkw (@code{HMGL} gr, @code{HCDT} y, @code{const wchar_t *}txt, @code{const char *}fnt, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_textmark_yr (@code{HMGL} gr, @code{HCDT} y, @code{HCDT} r, @code{const char *}txt, @code{const char *}fnt, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_textmarkw_yr (@code{HMGL} gr, @code{HCDT} y, @code{HCDT} r, @code{const wchar_t *}txt, @code{const char *}fnt, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_textmark_xyr (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} r, @code{const char *}txt, @code{const char *}fnt, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_textmarkw_xyr (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} r, @code{const wchar_t *}txt, @code{const char *}fnt, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_textmark_xyzr (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} r, @code{const char *}txt, @code{const char *}fnt, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_textmarkw_xyzr (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} r, @code{const wchar_t *}txt, @code{const char *}fnt, @code{const char *}opt)
+@end ifclear
+Функции рисуют текст @var{text} как маркер с размером пропорциональным @var{r}*@var{MarkSize} (см. @ref{Default sizes}) в точках @{@var{x}[i], @var{y}[i], @var{z}[i]@}. См. также @ref{plot}, @ref{mark}, @ref{stem}. @sref{TextMark sample}
+@end deftypefn
+
+@anchor{label}
+@deftypefn {MGL command} {} label ydat 'txt' ['stl'='']
+@deftypefnx {MGL command} {} label xdat ydat 'txt' ['stl'='']
+@deftypefnx {MGL command} {} label xdat ydat zdat 'txt' ['stl'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} Label (@code{const mglData &}y, @code{const char *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Label (@code{const mglData &}y, @code{const wchar_t *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Label (@code{const mglData &}x, @code{const mglData &}y, @code{const char *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Label (@code{const mglData &}x, @code{const mglData &}y, @code{const wchar_t *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Label (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Label (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const wchar_t *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_label (@code{HMGL} gr, @code{HCDT} y, @code{const char *}txt, @code{const char *}fnt, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_labelw (@code{HMGL} gr, @code{HCDT} y, @code{const wchar_t *}txt, @code{const char *}fnt, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_label_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{const char *}txt, @code{const char *}fnt, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_labelw_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{const wchar_t *}txt, @code{const char *}fnt, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_label_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}txt, @code{const char *}fnt, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_labelw_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const wchar_t *}txt, @code{const char *}fnt, @code{const char *}opt)
+@end ifclear
+Функции выводят текстовую строку @var{txt} в точках @{@var{x}[i], @var{y}[i], @var{z}[i]@}. Если строка @var{txt} содержит @samp{%x}, @samp{%y}, @samp{%z} или @samp{%n}, то они будут заменены на значения соответствующих координат или на номер точки. См. также @ref{plot}, @ref{mark}, @ref{textmark}. @sref{Label sample}
+@end deftypefn
+
+@anchor{tube}
+@deftypefn {MGL command} {} tube ydat rdat ['stl'='']
+@deftypefnx {MGL command} {} tube ydat @code{rval} ['stl'='']
+@deftypefnx {MGL command} {} tube xdat ydat rdat ['stl'='']
+@deftypefnx {MGL command} {} tube xdat ydat @code{rval} ['stl'='']
+@deftypefnx {MGL command} {} tube xdat ydat zdat rdat ['stl'='']
+@deftypefnx {MGL command} {} tube xdat ydat zdat @code{rval} ['stl'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} Tube (@code{const mglData &}y, @code{const mglData &}r, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Tube (@code{const mglData &}y, @code{float} r, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Tube (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}r, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Tube (@code{const mglData &}x, @code{const mglData &}y, @code{float} r, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Tube (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}r, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Tube (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{float} r, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_tube_r (@code{HMGL} gr, @code{HCDT} y, @code{HCDT} r, @code{const char *}pen, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_tube (@code{HMGL} gr, @code{HCDT} y, @code{float} r, @code{const char *}pen, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_tube_xyr (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} r, @code{const char *}pen, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_tube_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{float} r, @code{const char *}pen, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_tube_xyzr (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} r, @code{const char *}pen, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_tube_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{float} r, @code{const char *}pen, @code{const char *}opt)
+@end ifclear
+Функции рисуют трубу радиуса @var{r}[i] вдоль кривой между точками @{@var{x}[i], @var{y}[i], @var{z}[i]@}. См. также @ref{plot}. @sref{Tube sample}
+@end deftypefn
+
+@anchor{torus}
+@deftypefn {MGL command} {} torus rdat zdat ['stl'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} Torus (@code{const mglData &}r, @code{const mglData &}z, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_torus (@code{HMGL} gr, @code{HCDT} r, @code{HCDT} z, @code{const char *}pen, @code{const char *}opt)
+@end ifclear
+Функции рисуют поверхность вращения кривой @{@var{r}, @var{z}@} относительно оси. Если строка @var{pen} содержит @samp{x} или @samp{z}, то ось вращения будет выбрана в указанном направлении (по умолчанию вдоль оси y). См. также @ref{plot}, @ref{axial}. @sref{Torus sample}
+@end deftypefn
+
+
+
 
 @c ##################################################################
 @node 2D plotting, 3D plotting, 1D plotting, MathGL core
 @section 2D графики
-
-Эти функции строят графики для двумерных (2D) массивов. Двумерными считаются массивы, зависящие только от двух параметров (индексов) подобно матрице @math{f(x_i,y_j), i=1...n, j=1...m}. Есть несколько основных типов 2D графиков: сплошная поверхность (Surf), сетчатая поверхность (Mesh), поверхность из ящиков (Boxs), поверхность из плиток (Tile), водопад (Fall), ленточки (Belt), график плотности (Dens), линии уровня (Cont), линии уровня с заполнением (ContF) и результат их вращения (Axial). В функциях Cont(), ContF() и Axial() значения уровней можно задавать автоматически и вручную. Можно также нарисовать сетку (Grid) по массиву данных для улучшения вида графика плотности или линий уровня. Каждый тип графика имеет похожий интерфейс. Есть версия для рисования одного массива с автоматическими координатами и версия для параметрически заданной поверхности. Параметры цветовой схемы задаются строкой @xref{Color scheme}. @sref{2D plot sample}
-
-@menu
-* Mesh::
-* Fall::
-* Belt::
-* Surf::
-* Boxs::
-* Tile::
-* Dens::
-* Cont::
-* ContF::
-* ContD::
-* Axial::
-* Grad::
-* Grid::
-@end menu
-
-@c ==================================================================
-@node Mesh, Fall, , 2D plotting
-@subsection Mesh
 @cindex Mesh
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Mesh (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_mesh_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch)
-Рисует сетчатую поверхность, заданную параметрически @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. Строка @var{sch} задает цветовую схему. Предыдущая цветовая схема используется по умолчанию. Младшие размерности массивов @var{x}, @var{y}, @var{z} должны быть одинаковы @code{x.nx=z.nx && y.nx=z.ny} или @code{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Массивы @var{x} и @var{y} могут быть векторами (не матрицами как @var{z}). График строится для каждого z среза данных. См. также @ref{Surf}, @ref{Fall}, @ref{MeshNum}, @ref{Cont}, @ref{Tens}. @sref{Mesh sample}
-@end deftypefn
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Mesh (@code{const mglData &}z, @code{const char *}sch=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_mesh (@code{HMGL} gr, @code{const HMDT} z, @code{const char *}sch)
-Как предыдущий с @var{x}, @var{y} равно распределенными в интервале [@var{Min}, @var{Max}].
-@end deftypefn
-
-@c ==================================================================
-@node Fall, Belt, Mesh, 2D plotting
-@subsection Fall
 @cindex Fall
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Fall (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_fall_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch)
-Рисует водопад для параметрически заданной поверхности @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. График удобен для построения нескольких кривых, сдвинутых вглубь друг относительно друга. Строка @var{sch} задает цветовую схему. Предыдущая цветовая схема используется по умолчанию. Если @var{sch} содержит @samp{x}, то линии рисуются вдоль x-оси (по умолчанию линии рисуются вдоль y-оси). Младшие размерности массивов @var{x}, @var{y}, @var{z} должны быть одинаковы @code{x.nx=z.nx && y.nx=z.ny} или @code{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Массивы @var{x} и @var{y} могут быть векторами (не матрицами как @var{z}). График строится для каждого z среза данных. См. также @ref{Belt}, @ref{Mesh}, @ref{Tens}, @ref{MeshNum}. @sref{Fall sample}
-@end deftypefn
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Fall (@code{const mglData &}z, @code{const char *}sch=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_fall (@code{HMGL} gr, @code{const HMDT} z, @code{const char *}sch)
-Как предыдущий с @var{x}, @var{y} равно распределенными в интервале [@var{Min}, @var{Max}].
-@end deftypefn
-
-@c ==================================================================
-@node Belt, Surf, Fall, 2D plotting
-@subsection Belt
 @cindex Belt
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Belt (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_belt_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch)
-Рисует ленточки для параметрически заданной поверхности @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. График может использоваться как 3d обобщение графика Plot() (см. @ref{Plot}). Строка @var{sch} задает цветовую схему. Предыдущая цветовая схема используется по умолчанию. Если @var{sch} содержит @samp{x}, то линии рисуются вдоль x-оси (по умолчанию линии рисуются вдоль y-оси). Младшие размерности массивов @var{x}, @var{y}, @var{z} должны быть одинаковы @code{x.nx=z.nx && y.nx=z.ny} или @code{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Массивы @var{x} и @var{y} могут быть векторами (не матрицами как @var{z}). График строится для каждого z среза данных. См. также @ref{Fall}, @ref{Surf}, @ref{Plot}, @ref{MeshNum}. @sref{Belt sample}
-@end deftypefn
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Belt (@code{const mglData &}z, @code{const char *}sch=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_belt (@code{HMGL} gr, @code{const HMDT} z, @code{const char *}sch)
-Как предыдущий с @var{x}, @var{y} равно распределенными в интервале [@var{Min}, @var{Max}].
-@end deftypefn
-
-@c ==================================================================
-@node Surf, Boxs, Belt, 2D plotting
-@subsection Surf
 @cindex Surf
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Surf (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_surf_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch)
-Рисует параметрически заданную поверхность @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. Строка @var{sch} задает цветовую схему. Предыдущая цветовая схема используется по умолчанию. Если @var{sch} содержит @samp{#}, то на поверхности рисуется сетка. Младшие размерности массивов @var{x}, @var{y}, @var{z} должны быть одинаковы @code{x.nx=z.nx && y.nx=z.ny} или @code{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Массивы @var{x} и @var{y} могут быть векторами (не матрицами как @var{z}). График строится для каждого z среза данных. См. также @ref{Mesh}, @ref{Dens}, @ref{Belt}, @ref{Tile}, @ref{Boxs}, @ref{SurfC}, @ref{SurfA}. @sref{Surf sample}
-@end deftypefn
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Surf (@code{const mglData &}z, @code{const char *}sch=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_surf (@code{HMGL} gr, @code{const HMDT} z, @code{const char *}sch)
-Как предыдущий с @var{x}, @var{y} равно распределенными в интервале [@var{Min}, @var{Max}].
-@end deftypefn
-
-@c ==================================================================
-@node Boxs, Tile, Surf, 2D plotting
-@subsection Boxs
 @cindex Boxs
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Boxs (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_boxs_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch)
-Рисует вертикальные ящики для параметрически заданной поверхности @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. Строка @var{sch} задает цветовую схему. Предыдущая цветовая схема используется по умолчанию. Младшие размерности массивов @var{x}, @var{y}, @var{z} должны быть одинаковы @code{x.nx=z.nx && y.nx=z.ny} или @code{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Массивы @var{x} и @var{y} могут быть векторами (не матрицами как @var{z}). График строится для каждого z среза данных. См. также @ref{Surf}, @ref{Dens}, @ref{Tile}, @ref{Step}. @sref{Boxs sample}
-@end deftypefn
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Boxs (@code{const mglData &}z, @code{const char *}sch=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_boxs (@code{HMGL} gr, @code{const HMDT} z, @code{const char *}sch)
-Как предыдущий с @var{x}, @var{y} равно распределенными в интервале [@var{Min}, @var{Max}].
-@end deftypefn
-
-@c ==================================================================
-@node Tile, Dens, Boxs, 2D plotting
-@subsection Tile
 @cindex Tile
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Tile (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_tile_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch)
-Рисует плитки для параметрически заданной поверхности @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. График может использоваться как 3d обобщение Step() (см. @ref{Step}). Строка @var{sch} задает цветовую схему. Предыдущая цветовая схема используется по умолчанию. Младшие размерности массивов @var{x}, @var{y}, @var{z} должны быть одинаковы @code{x.nx=z.nx && y.nx=z.ny} или @code{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Массивы @var{x} и @var{y} могут быть векторами (не матрицами как @var{z}). График строится для каждого z среза данных. См. также @ref{Surf}, @ref{Boxs}, @ref{Step}, @ref{TileS}. @sref{Tile sample}
-@end deftypefn
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Tile (@code{const mglData &}z, @code{const char *}sch=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_tile (@code{HMGL} gr, @code{const HMDT} z, @code{const char *}sch)
-Как предыдущий с @var{x}, @var{y} равно распределенными в интервале [@var{Min}, @var{Max}].
-@end deftypefn
-
-@c ==================================================================
-@node Dens, Cont, Tile, 2D plotting
-@subsection Dens
 @cindex Dens
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Dens (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{float} zVal=@code{NAN})
-@deftypefnx {Функция С} @code{void} mgl_dens_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch, @code{float} zVal)
-Рисует график плотности для параметрически заданной поверхности @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} при @var{z} = @var{zVal}. Строка @var{sch} задает цветовую схему. Предыдущая цветовая схема используется по умолчанию. Если @var{sch} содержит @samp{#}, то рисуется сетка. Младшие размерности массивов @var{x}, @var{y}, @var{z} должны быть одинаковы @code{x.nx=z.nx && y.nx=z.ny} или @code{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Массивы @var{x} и @var{y} могут быть векторами (не матрицами как @var{z}). График строится для каждого z среза данных. См. также @ref{Surf}, @ref{Cont}, @ref{ContF}, @ref{Boxs}, @ref{Tile}, @ref{DensXYZ}. @sref{Dens sample}
-@end deftypefn
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Dens (@code{const mglData &}z, @code{const char *}sch=@code{""}, @code{float} zVal=@code{NAN})
-@deftypefnx {Функция С} @code{void} mgl_dens (@code{HMGL} gr, @code{const HMDT} z, @code{const char *}sch, @code{float} zVal)
-Как предыдущий с @var{x}, @var{y} равно распределенными в интервале [@var{Min}, @var{Max}].
-@end deftypefn
-
-@c ==================================================================
-@node Cont, ContF, Dens, 2D plotting
-@subsection Cont
 @cindex Cont
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Cont (@code{const mglData &}v, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{float} zVal=@code{NAN})
-@deftypefnx {Функция С} @code{void} mgl_cont_xy_val (@code{HMGL} gr, @code{const HMDT} v, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch, @code{float} zVal)
-Рисует линии уровня для параметрически заданной поверхности @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} при @var{z} = @var{zVal} (или при @var{z=v}[k] если @code{zVal==NAN}). Линии уровня рисуются для @var{z}[i,j]=@var{v}[k]. Строка @var{sch} задает цветовую схему. Предыдущая цветовая схема используется по умолчанию. Если @var{sch} содержит @samp{#}, то рисуется сетка. Если @var{sch} содержит @samp{t} или @samp{T}, то значения @var{v}[k] будут выведены вдоль контуров над (или под) кривой. Младшие размерности массивов @var{x}, @var{y}, @var{z} должны быть одинаковы @code{x.nx=z.nx && y.nx=z.ny} или @code{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Массивы @var{x} и @var{y} могут быть векторами (не матрицами как @var{z}). График строится для каждого z среза данных. См. также @ref{Dens}, @ref{ContF}, @ref{ContD}, @ref{Axial}, @ref{ContXYZ}. @sref{Cont sample}
-@end deftypefn
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Cont (@code{const mglData &}v, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{float} zVal=@code{NAN})
-@deftypefnx {Функция С} @code{void} mgl_cont__val (@code{HMGL} gr, @code{const HMDT} v, @code{const HMDT} z, @code{const char *}sch, @code{float} zVal)
-Как предыдущий с @var{x}, @var{y} равно распределенными в интервале [@var{Min}, @var{Max}].
-@end deftypefn
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Cont (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{int} num=@code{7}, @code{float} zVal=@code{NAN})
-@deftypefnx {Функция С} @code{void} mgl_cont_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch, @code{int} num, @code{float} zVal)
-Как предыдущий с вектором @var{v} из @var{num} элементов равно распределенных в интервале [@var{Cmin}, @var{Cmax}].
-@end deftypefn
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Cont (@code{const mglData &}z, @code{const char *}sch=@code{""}, @code{int} num=@code{7}, @code{float} zVal=@code{NAN})
-@deftypefnx {Функция С} @code{void} mgl_cont (@code{HMGL} gr, @code{const HMDT} z, @code{const char *}sch, @code{int} num, @code{float} zVal)
-Как предыдущий с @var{x}, @var{y} равно распределенными в интервале [@var{Min}, @var{Max}].
-@end deftypefn
-
-@c ==================================================================
-@node ContF, ContD, Cont, 2D plotting
-@subsection ContF
 @cindex ContF
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} ContF (@code{const mglData &}v, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{float} zVal=@code{NAN})
-@deftypefnx {Функция С} @code{void} mgl_contf_xy_val (@code{HMGL} gr, @code{const HMDT} v, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch, @code{float} zVal)
-Рисует закрашенные линии (контуры) уровня для параметрически заданной поверхности @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} при @var{z} = @var{zVal} (или при @var{z=v}[k] если @code{zVal==NAN}). Линии уровня рисуются для @var{z}[i,j]=@var{v}[k]. Строка @var{sch} задает цветовую схему. Предыдущая цветовая схема используется по умолчанию. Если @var{sch} содержит @samp{#}, то рисуется сетка. Младшие размерности массивов @var{x}, @var{y}, @var{z} должны быть одинаковы @code{x.nx=z.nx && y.nx=z.ny} или @code{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Массивы @var{x} и @var{y} могут быть векторами (не матрицами как @var{z}). График строится для каждого z среза данных. См. также @ref{Dens}, @ref{Cont}, @ref{Axial}, @ref{ContFXYZ}. @sref{ContF sample}
-@end deftypefn
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} ContF (@code{const mglData &}v, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{float} zVal=@code{NAN})
-@deftypefnx {Функция С} @code{void} mgl_contf_val (@code{HMGL} gr, @code{const HMDT} v, @code{const HMDT} z, @code{const char *}sch, @code{float} zVal)
-Как предыдущий с @var{x}, @var{y} равно распределенными в интервале [@var{Min}, @var{Max}].
-@end deftypefn
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} ContF (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{int} num=@code{7}, @code{float} zVal=@code{NAN})
-@deftypefnx {Функция С} @code{void} mgl_contf_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch, @code{int} num, @code{float} zVal)
-Как предыдущий с вектором @var{v} из @var{num} элементов равно распределенных в интервале [@var{Cmin}, @var{Cmax}].
-@end deftypefn
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} ContF (@code{const mglData &}z, @code{const char *}sch=@code{""}, @code{int} num=@code{7}, @code{float} zVal=@code{NAN})
-@deftypefnx {Функция С} @code{void} mgl_contf (@code{HMGL} gr, @code{const HMDT} z, @code{const char *}sch, @code{int} num, @code{float} zVal)
-Как предыдущий с @var{x}, @var{y} равно распределенными в интервале [@var{Min}, @var{Max}].
-@end deftypefn
-
-@c ==================================================================
-@node ContD, Axial, ContF, 2D plotting
-@subsection ContD
 @cindex ContD
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} ContD (@code{const mglData &}v, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{float} zVal=@code{NAN})
-@deftypefnx {Функция С} @code{void} mgl_contd_xy_val (@code{HMGL} gr, @code{const HMDT} v, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch, @code{float} zVal)
-Рисует закрашенные линии (контуры) уровня для параметрически заданной поверхности @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} при @var{z} = @var{zVal} (или при @var{z=v}[k] если @code{zVal==NAN}) цветами заданными явно. Линии уровня рисуются для @var{z}[i,j]=@var{v}[k] (должно быть @code{v.nx>2}). Строка @var{sch} задает цвет контуров: цвет k-го контура определяется символом @code{sch[k%strlen(sch)]}. Младшие размерности массивов @var{x}, @var{y}, @var{z} должны быть одинаковы @code{x.nx=z.nx && y.nx=z.ny} или @code{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Массивы @var{x} и @var{y} могут быть векторами (не матрицами как @var{z}). График строится для каждого z среза данных. См. также @ref{Dens}, @ref{Cont}, @ref{ContF}. @sref{ContD sample}
-@end deftypefn
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} ContD (@code{const mglData &}v, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{float} zVal=@code{NAN})
-@deftypefnx {Функция С} @code{void} mgl_contd_val (@code{HMGL} gr, @code{const HMDT} v, @code{const HMDT} z, @code{const char *}sch, @code{float} zVal)
-Как предыдущий с @var{x}, @var{y} равно распределенными в интервале [@var{Min}, @var{Max}].
-@end deftypefn
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} ContD (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{int} num=@code{7}, @code{float} zVal=@code{NAN})
-@deftypefnx {Функция С} @code{void} mgl_contd_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch, @code{int} num, @code{float} zVal)
-Как предыдущий с вектором @var{v} из @var{num} элементов равно распределенных в интервале [@var{Cmin}, @var{Cmax}].
-@end deftypefn
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} ContD (@code{const mglData &}z, @code{const char *}sch=@code{""}, @code{int} num=@code{7}, @code{float} zVal=@code{NAN})
-@deftypefnx {Функция С} @code{void} mgl_contd (@code{HMGL} gr, @code{const HMDT} z, @code{const char *}sch, @code{int} num, @code{float} zVal)
-Как предыдущий с @var{x}, @var{y} равно распределенными в интервале [@var{Min}, @var{Max}].
-@end deftypefn
-
-@c ==================================================================
-@node Axial, Grad, ContD, 2D plotting
-@subsection Axial
 @cindex Axial
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Axial (@code{const mglData &}v, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_axial_xy_val (@code{HMGL} gr, @code{const HMDT} v, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch)
-Рисует поверхность вращения линии уровня для параметрически заданной поверхности @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. Линии уровня рисуются для @var{z}[i,j]=@var{v}[k]. Строка @var{sch} задает цветовую схему. Предыдущая цветовая схема используется по умолчанию. Если @var{sch} содержит @samp{#}, то рисуется сетчатая поверхность. Если строка содержит символы @samp{x}, @samp{y} или @samp{z}, то ось вращения устанавливается в указанное направление. Младшие размерности массивов @var{x}, @var{y}, @var{z} должны быть одинаковы @code{x.nx=z.nx && y.nx=z.ny} или @code{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Массивы @var{x} и @var{y} могут быть векторами (не матрицами как @var{z}). График строится для каждого z среза данных. См. также @ref{Cont}, @ref{ContF}, @ref{Torus}, @ref{Surf3}. @sref{Axial sample}
-@end deftypefn
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Axial (@code{const mglData &}v, @code{const mglData &}z, @code{const char *}sch=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_axial_val (@code{HMGL} gr, @code{const HMDT} v, @code{const HMDT} z, @code{const char *}sch)
-Как предыдущий с @var{x}, @var{y} равно распределенными в интервале [@var{Min}, @var{Max}].
-@end deftypefn
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Axial (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{int} num=@code{3})
-@deftypefnx {Функция С} @code{void} mgl_axial_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch, @code{int} num)
-Как предыдущий с вектором @var{v} из @var{num} элементов равно распределенных в интервале [@var{Cmin}, @var{Cmax}].
-@end deftypefn
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Axial (@code{const mglData &}z, @code{const char *}sch=@code{""}, @code{int} num=@code{3})
-@deftypefnx {Функция С} @code{void} mgl_axial (@code{HMGL} gr, @code{const HMDT} z, @code{const char *}sch, @code{int} num)
-Как предыдущий с @var{x}, @var{y} равно распределенными в интервале [@var{Min}, @var{Max}].
-@end deftypefn
-
-@c ==================================================================
-@node Grad, Grid, Axial, 2D plotting
-@subsection Grad
 @cindex Grad
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Grad (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}phi, @code{const char *}sch=@code{""}, @code{int} num=@code{5})
-@deftypefnx {Функция С} @code{void} mgl_grad_xyz (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch, @code{int} num, @code{float} zVal)
-Рисует линии градиента скалярного поля @var{phi}[i,j,k] заданного параметрически @{@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]@}. Строка @var{sch} задает цветовую схему. Предыдущая цветовая схема используется по умолчанию. Число линий пропорционально @var{num}. Линии рисуются только с границ интервала при @var{num}<0. Младшие размерности массивов @var{x}, @var{y}, @var{z}, @var{phi} должны быть одинаковы @code{x.nx=phi.nx && y.nx=phi.ny && z.nx=phi.nz} или @code{x.nx=y.nx=z.nx=phi.nx && x.ny=y.ny=z.ny=phi.ny && x.nz=y.nz=z.nz=phi.nz}. Массивы @var{x}, @var{y} и @var{z} могут быть векторами (не матрицами как @var{phi}). См. также @ref{Dens3}, @ref{Cont3}, @ref{Flow}.
-@end deftypefn
-
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Grad (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{int} num=@code{5}, @code{float} zVal=@code{NAN})
-@deftypefnx {Функция С} @code{void} mgl_grad_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch, @code{int} num, @code{float} zVal)
-Рисует линии градиента скалярного поля @var{phi}[i,j] заданного параметрически @{@var{x}[i,j], @var{y}[i,j]@} при @var{z} = @var{zVal}. Строка @var{sch} задает цветовую схему. Предыдущая цветовая схема используется по умолчанию. Число линий пропорционально @var{num}. Линии рисуются только с границ интервала при @var{num}<0. Младшие размерности массивов @var{x}, @var{y}, @var{phi} должны быть одинаковы @code{x.nx=phi.nx && y.nx=phi.ny} или @code{x.nx=y.nx=phi.nx && x.ny=y.ny=phi.ny}. Массивы @var{x} и @var{y} могут быть векторами (не матрицами как @var{phi}). График строится для каждого z среза данных. См. также @ref{Dens}, @ref{Cont}, @ref{ContF}, @ref{Flow}. @sref{Grad sample}
-@end deftypefn
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Grad (@code{const mglData &}z, @code{const char *}sch=@code{""}, @code{int} num=@code{5}, @code{float} zVal=@code{NAN})
-@deftypefnx {Функция С} @code{void} mgl_grad (@code{HMGL} gr, @code{const HMDT} z, @code{const char *}sch, @code{int} num, @code{float} zVal)
-Как предыдущий с @var{x}, @var{y} равно распределенными в интервале [@var{Min}, @var{Max}].
-@end deftypefn
-
-@c ==================================================================
-@node Grid, , Grad, 2D plotting
-@subsection Grid
 @cindex Grid
 
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Grid (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{float} zVal=@code{NAN})
-@deftypefnx {Функция С} @code{void} mgl_grid_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch, @code{float} zVal)
-Рисует плоскую сету для параметрически заданной поверхности @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} при @var{z} = @var{zVal}. Строка @var{sch} задает цветовую схему. Предыдущая цветовая схема используется по умолчанию. Младшие размерности массивов @var{x}, @var{y}, @var{z} должны быть одинаковы @code{x.nx=z.nx && y.nx=z.ny} или @code{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Массивы @var{x} и @var{y} могут быть векторами (не матрицами как @var{z}). График строится для каждого z среза данных. См. также @ref{Dens}, @ref{Cont}, @ref{ContF}.
+Эти функции строят графики для двумерных (2D) массивов. Двумерными считаются массивы, зависящие только от двух параметров (индексов) подобно матрице @math{f(x_i,y_j), i=1...n, j=1...m}. По умолчанию (если отсутствуют) значения @var{x}, @var{y} равно распределены в диапазоне осей координат. Младшие размерности массивов @var{x}, @var{y}, @var{z} должны быть одинаковы @code{x.nx=z.nx && y.nx=z.ny} или @code{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Массивы @var{x} и @var{y} могут быть векторами (не матрицами как @var{z}). График строится для каждого z среза данных. Строка @var{sch} задает цветовую схему (см. @ref{Color scheme}). Строка @var{opt} задает опции графика (см. @ref{Command options}). @sref{2D samples}
+
+
+@anchor{surf}
+@deftypefn {MGL command} {} surf zdat ['sch'='']
+@deftypefnx {MGL command} {} surf xdat ydat zdat ['sch'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} Surf (@code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Surf (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_surf (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_surf_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
+@end ifclear
+Рисует параметрически заданную поверхность @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. Если @var{sch} содержит @samp{#}, то рисуется сетка на поверхности. См. также @ref{mesh}, @ref{dens}, @ref{belt}, @ref{tile}, @ref{boxs}, @ref{surfc}, @ref{surfa}. @sref{Surf sample}
 @end deftypefn
 
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Grid (@code{const mglData &}z, @code{const char *}sch=@code{""}, @code{float} zVal=@code{NAN})
-@deftypefnx {Функция С} @code{void} mgl_grid (@code{HMGL} gr, @code{const HMDT} z, @code{const char *}sch, @code{float} zVal)
-Как предыдущий с @var{x}, @var{y} равно распределенными в интервале [@var{Min}, @var{Max}].
+@anchor{mesh}
+@deftypefn {MGL command} {} mesh zdat ['sch'='']
+@deftypefnx {MGL command} {} mesh xdat ydat zdat ['sch'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} Mesh (@code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Mesh (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_mesh (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_mesh_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
+@end ifclear
+Рисует сетчатую поверхность, заданную параметрически @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. См. также @ref{surf}, @ref{fall}, @ref{meshnum}, @ref{cont}, @ref{tens}. @sref{Mesh sample}
+@end deftypefn
+
+@anchor{fall}
+@deftypefn {MGL command} {} fall zdat ['sch'='']
+@deftypefnx {MGL command} {} fall xdat ydat zdat ['sch'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} Fall (@code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Fall (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_fall (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_fall_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
+@end ifclear
+Рисует водопад для параметрически заданной поверхности @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. График удобен для построения нескольких кривых, сдвинутых вглубь друг относительно друга. Если @var{sch} содержит @samp{x}, то линии рисуются вдоль оси x, иначе (по умолчанию) вдоль оси y. См. также @ref{belt}, @ref{mesh}, @ref{tens}, @ref{meshnum}. @sref{Fall sample}
+@end deftypefn
+
+@anchor{belt}
+@deftypefn {MGL command} {} belt zdat ['sch'='']
+@deftypefnx {MGL command} {} belt xdat ydat zdat ['sch'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} Belt (@code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Belt (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_belt (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_belt_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
+@end ifclear
+Рисует ленточки для параметрически заданной поверхности @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. График может использоваться как 3d обобщение графика @ref{plot}. Если @var{sch} содержит @samp{x}, то ленточки рисуются вдоль оси x, иначе (по умолчанию) вдоль оси y. См. также @ref{fall}, @ref{surf}, @ref{plot}, @ref{meshnum}. @sref{Belt sample}
+@end deftypefn
+
+@anchor{boxs}
+@deftypefn {MGL command} {} boxs zdat ['sch'='']
+@deftypefnx {MGL command} {} boxs xdat ydat zdat ['sch'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} Boxs (@code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Boxs (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_boxs (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_boxs_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
+@end ifclear
+Рисует вертикальные ящики для параметрически заданной поверхности @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. См. также @ref{surf}, @ref{dens}, @ref{tile}, @ref{step}. @sref{Boxs sample}
+@end deftypefn
+
+@anchor{tile}
+@deftypefn {MGL command} {} tile zdat ['sch'='']
+@deftypefnx {MGL command} {} tile xdat ydat zdat ['sch'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} Tile (@code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Tile (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_tile (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_tile_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
+@end ifclear
+Рисует плитки для параметрически заданной поверхности @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. График может использоваться как 3d обобщение @ref{step}. См. также @ref{surf}, @ref{boxs}, @ref{step}, @ref{tiles}. @sref{Tile sample}
+@end deftypefn
+
+@anchor{dens}
+@deftypefn {MGL command} {} dens zdat ['sch'='']
+@deftypefnx {MGL command} {} dens xdat ydat zdat ['sch'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} Dens (@code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""}, @code{float} zVal=@code{NAN})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Dens (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""}, @code{float} zVal=@code{NAN})
+@deftypefnx {C function} @code{void} mgl_dens (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_dens_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
+@end ifclear
+Рисует график плотности для параметрически заданной поверхности @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} при @var{z} = @var{Min}.z. Если @var{sch} содержит @samp{#}, то рисуется сетка. См. также @ref{surf}, @ref{cont}, @ref{contf}, @ref{boxs}, @ref{tile}, @code{dens[xyz]}. @sref{Dens sample}
+@end deftypefn
+
+@anchor{cont}
+@deftypefn {MGL command} {} cont vdat zdat ['sch'='']
+@deftypefnx {MGL command} {} cont vdat xdat ydat zdat ['sch'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} Cont (@code{const mglData &}v, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Cont (@code{const mglData &}v, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_cont__val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_cont_xy_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
+@end ifclear
+Рисует линии уровня для параметрически заданной поверхности @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} при @var{z=v}[k] или при @var{z} = @var{Min}.z если @var{sch} содержит @samp{_}. Линии уровня рисуются для @var{z}[i,j]=@var{v}[k]. Если @var{sch} содержит @samp{t} или @samp{T}, то значения @var{v}[k] будут выведены вдоль контуров над (или под) кривой. См. также @ref{dens}, @ref{contf}, @ref{contd}, @ref{axial}, @code{cont[xyz]}. @sref{Cont sample}
+@end deftypefn
+
+@deftypefn {MGL command} {} cont zdat ['sch'='']
+@deftypefnx {MGL command} {} cont xdat ydat zdat ['sch'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} Cont (@code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Cont (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_cont (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_cont_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
+@end ifclear
+Как предыдущий с вектором @var{v} из @var{num} элементов равно распределенных в диапазоне изменения цвета. Здесь @var{num} равен значению параметра @var{value} в опциях @var{opt} (по умолчанию 7).
+@end deftypefn
+
+@anchor{contf}
+@deftypefn {MGL command} {} contf vdat zdat ['sch'='']
+@deftypefnx {MGL command} {} contf vdat xdat ydat zdat ['sch'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} ContF (@code{const mglData &}v, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} ContF (@code{const mglData &}v, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_contf_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_contf_xy_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
+@end ifclear
+Рисует закрашенные линии (контуры) уровня для параметрически заданной поверхности @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} при @var{z=v}[k] или при @var{z} = @var{Min}.z если @var{sch} содержит @samp{_}. Линии уровня рисуются для @var{z}[i,j]=@var{v}[k]. См. также @ref{dens}, @ref{cont}, @ref{contd}, @code{contf[xyz]}. @sref{ContF sample}
+@end deftypefn
+
+@deftypefn {MGL command} {} contf zdat ['sch'='']
+@deftypefnx {MGL command} {} contf xdat ydat zdat ['sch'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} ContF (@code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} ContF (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_contf (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_contf_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
+@end ifclear
+Как предыдущий с вектором @var{v} из @var{num} элементов равно распределенных в диапазоне изменения цвета. Здесь @var{num} равен значению параметра @var{value} в опциях @var{opt} (по умолчанию 7).
+@end deftypefn
+
+@anchor{contd}
+@deftypefn {MGL command} {} contd vdat zdat ['sch'='']
+@deftypefnx {MGL command} {} contd vdat xdat ydat zdat ['sch'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} ContD (@code{const mglData &}v, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} ContD (@code{const mglData &}v, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_contd_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_contd_xy_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
+@end ifclear
+Рисует закрашенные линии (контуры) уровня для параметрически заданной поверхности @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} при @var{z=v}[k] или при @var{z} = @var{Min}.z если @var{sch} содержит @samp{_}. Линии уровня рисуются для @var{z}[i,j]=@var{v}[k]. Строка @var{sch} задает цвета контуров: цвет k-го контура определяется как k-ый цвет строки. См. также @ref{dens}, @ref{cont}, @ref{contf}. @sref{ContD sample}
+@end deftypefn
+
+@deftypefn {MGL command} {} contd zdat ['sch'='']
+@deftypefnx {MGL command} {} contd xdat ydat zdat ['sch'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} ContD (@code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} ContD (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_contd (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_contd_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
+@end ifclear
+Как предыдущий с вектором @var{v} из @var{num} элементов равно распределенных в диапазоне изменения цвета. Здесь @var{num} равен значению параметра @var{value} в опциях @var{opt} (по умолчанию 7).
+@end deftypefn
+
+@anchor{contv}
+@deftypefn {MGL command} {} contv vdat zdat ['sch'='']
+@deftypefnx {MGL command} {} contv vdat xdat ydat zdat ['sch'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} ContV (@code{const mglData &}v, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} ContV (@code{const mglData &}v, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_contv_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_contv_xy_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
+@end ifclear
+Рисует вертикальные цилиндры от линий уровня для параметрически заданной поверхности @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} при @var{z=v}[k] или при @var{z} = @var{Min}.z если @var{sch} содержит @samp{_}. Линии уровня рисуются для @var{z}[i,j]=@var{v}[k]. См. также @ref{cont}, @ref{contf}. @sref{ContV sample}
+@end deftypefn
+
+@deftypefn {MGL command} {} contv zdat ['sch'='']
+@deftypefnx {MGL command} {} contv xdat ydat zdat ['sch'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} ContV (@code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} ContV (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_contv (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_contv_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
+@end ifclear
+Как предыдущий с вектором @var{v} из @var{num} элементов равно распределенных в диапазоне изменения цвета. Здесь @var{num} равен значению параметра @var{value} в опциях @var{opt} (по умолчанию 7).
+@end deftypefn
+
+@anchor{axial}
+@deftypefn {MGL command} {} axial vdat zdat ['sch'='']
+@deftypefnx {MGL command} {} axial vdat xdat ydat zdat ['sch'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} Axial (@code{const mglData &}v, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Axial (@code{const mglData &}v, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_axial_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_axial_xy_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
+@end ifclear
+Рисует поверхность вращения линии уровня для параметрически заданной поверхности @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. Линии уровня рисуются для @var{z}[i,j]=@var{v}[k]. Если @var{sch} содержит @samp{#}, то рисуется сетчатая поверхность. Если строка содержит символы @samp{x}, @samp{y} или @samp{z}, то ось вращения устанавливается в указанное направление. См. также @ref{cont}, @ref{contf}, @ref{torus}, @ref{surf3}. @sref{Axial sample}
+@end deftypefn
+
+@deftypefn {MGL command} {} axial zdat ['sch'='']
+@deftypefnx {MGL command} {} axial xdat ydat zdat ['sch'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} Axial (@code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""}, @code{int} num=@code{3})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Axial (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""}, @code{int} num=@code{3})
+@deftypefnx {C function} @code{void} mgl_axial (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_axial_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
+@end ifclear
+Как предыдущий с вектором @var{v} из @var{num} элементов равно распределенных в диапазоне изменения цвета. Здесь @var{num} равен значению параметра @var{value} в опциях @var{opt} (по умолчанию 3).
+@end deftypefn
+
+@anchor{grid2}
+@deftypefn {MGL command} {} grid2 zdat ['sch'='']
+@deftypefnx {MGL command} {} grid2 xdat ydat zdat ['sch'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} Grid (@code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Grid (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_grid (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_grid_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
+@end ifclear
+Рисует плоскую сету для параметрически заданной поверхности @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} при @var{z} = @var{Min}.z. См. также @ref{dens}, @ref{cont}, @ref{contf}, @ref{meshnum}.
 @end deftypefn
 
 
@@ -2497,6 +2450,16 @@ gr.GetBGRN(bits, len(bits));
 * FlowP::
 * Pipe::
 @end menu
+
+@c ==================================================================
+@subsection Grad
+@cindex Grad
+
+@deftypefn {Метод класса @code{mglGraph}} @code{void} Grad (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}phi, @code{const char *}sch=@code{""}, @code{int} num=@code{5})
+@deftypefnx {Функция С} @code{void} mgl_grad_xyz (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch, @code{int} num, @code{float} zVal)
+Рисует линии градиента скалярного поля @var{phi}[i,j,k] заданного параметрически @{@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]@}. Строка @var{sch} задает цветовую схему. Предыдущая цветовая схема используется по умолчанию. Число линий пропорционально @var{num}. Линии рисуются только с границ интервала при @var{num}<0. Младшие размерности массивов @var{x}, @var{y}, @var{z}, @var{phi} должны быть одинаковы @code{x.nx=phi.nx && y.nx=phi.ny && z.nx=phi.nz} или @code{x.nx=y.nx=z.nx=phi.nx && x.ny=y.ny=z.ny=phi.ny && x.nz=y.nz=z.nz=phi.nz}. Массивы @var{x}, @var{y} и @var{z} могут быть векторами (не матрицами как @var{phi}). См. также @ref{Dens3}, @ref{Cont3}, @ref{Flow}.
+@end deftypefn
+
 
 @c ==================================================================
 @node Traj, Vect, , Vector fields

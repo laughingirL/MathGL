@@ -261,6 +261,7 @@ void mgl_perspective_(uintptr_t *graph, float val);
 /*****************************************************************************/
 HMGL mgl_create_graph_qt(int (*draw)(HMGL gr, void *p), const char *title, void *par, void (*load)(void *p));
 HMGL mgl_create_graph_fltk(int (*draw)(HMGL gr, void *p), const char *title, void *par, void (*load)(void *p));
+void mgl_set_click_func(HMGL gr, void (*func)(void *p));
 int mgl_fltk_run();
 int mgl_fltk_thr();
 int mgl_qt_run();

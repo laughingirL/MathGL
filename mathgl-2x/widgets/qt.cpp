@@ -232,6 +232,10 @@ void QMathGL::mousePressEvent(QMouseEvent *ev)
 		mglPoint p = gr->CalcXYZ(ev->x(), ev->y());
 		mousePos.sprintf("x=%g, y=%g, z=%g",p.x,p.y,p.z);
 		repaint();
+		
+		mglCanvasWnd *g=dynamic_cast<mglCanvasWnd *>(gr);
+		if(g && g->ClickFunc)	g->ClickFunc(draw_par);
+		
 		emit mouseClick(p.x,p.y,p.z);
 		emit posChanged(mousePos);
 		emit objChanged(gr->GetObjId(ev->x(),ev->y())-1);

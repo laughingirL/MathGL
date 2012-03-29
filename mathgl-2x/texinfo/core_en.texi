@@ -1581,7 +1581,7 @@ colors for background (first one) and border (second one) of legend. Note, that 
 @deftypefnx {Method on @code{mglGraph}} @code{void} Legend (@code{int} pos=@code{0x3}, @code{const char *}fnt=@code{"#"}, @code{float} size=@code{-0.8}, @code{float} llen=@code{0.1})
 @deftypefnx {C function} @code{void} mgl_legend (@code{HMGL} gr, @code{int} pos, @code{const char *}fnt, @code{float} size, @code{float} llen)
 @end ifclear
-Draws legend of accumulated legend entries by font @var{fnt} with @var{size}. Parameter @var{pos} sets the position of the legend: @samp{0} is bottom left corner, @samp{1} is bottom right corner, @samp{2} is top left corner, @samp{3} is top right corner (is default). Paramater font can contain colors for face (1st one), for border (2nd one) and for text (last one). If less than 3 colors are specified then the color for border is black (for 2 and less colors), and the color for face is white (for 1 or none colors). If string @var{fnt} contain @samp{#} then border around the legend is drawn.
+Draws legend of accumulated legend entries by font @var{fnt} with @var{size}. Parameter @var{pos} sets the position of the legend: @samp{0} is bottom left corner, @samp{1} is bottom right corner, @samp{2} is top left corner, @samp{3} is top right corner (is default). Parameter @var{fnt} can contain colors for face (1st one), for border (2nd one) and for text (last one). If less than 3 colors are specified then the color for border is black (for 2 and less colors), and the color for face is white (for 1 or none colors). If string @var{fnt} contain @samp{#} then border around the legend is drawn.
 @end deftypefn
 
 @deftypefn {MGL command} {} legend @code{x y} ['fnt'='#' @code{size=-1 llen=0.1}]
@@ -1670,7 +1670,7 @@ These functions draw continuous lines between points @{@var{x}[i], @var{y}[i], @
 @deftypefnx {Method on @code{mglGraph}} @code{void} Radar (@code{const mglData &}a, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {C function} @code{void} mgl_radar (@code{HMGL} gr, @code{HCDT} a, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-This functions draws radar chart which is continuous lines between points located on an radial lines (like plot in Polar coordinates). Parameter @var{value} in options @var{opt} set the additional shift of data (i.e. the data @var{a}+@var{value} is used instead of @var{a}). If @code{value<0} then @code{r=max(0, -min(value)}. If @var{pen} containt @samp{#} symbol then "grid" (radial lines and circle for @var{r}) is drawn See also @ref{plot}. @sref{Radar sample}
+This functions draws radar chart which is continuous lines between points located on an radial lines (like plot in Polar coordinates). Parameter @var{value} in options @var{opt} set the additional shift of data (i.e. the data @var{a}+@var{value} is used instead of @var{a}). If @code{value<0} then @code{r=max(0, -min(value)}. If @var{pen} containt @samp{#} symbol then "grid" (radial lines and circle for @var{r}) is drawn. See also @ref{plot}. @sref{Radar sample}
 @end deftypefn
 
 @anchor{step}
@@ -1700,7 +1700,7 @@ These functions draw continuous stairs for points to axis plane. See also @ref{p
 @deftypefnx {C function} @code{void} mgl_tens_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} c, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_tens_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} c, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-These functions draw continuous lines between points @{@var{x}[i], @var{y}[i], @var{z}[i]@} with color defined by the special array @var{c}[i] (look like tension plot). String @var{pen} specifies the color scheme (see @ref{Color scheme}) and style and/or width of line (see @ref{Line styles}). By default (@code{pen=""}) solid line with current color scheme is used. See also @ref{plot}, @ref{mesh}, @ref{fall}. @sref{Tens sample}
+These functions draw continuous lines between points @{@var{x}[i], @var{y}[i], @var{z}[i]@} with color defined by the special array @var{c}[i] (look like tension plot). String @var{pen} specifies the color scheme (see @ref{Color scheme}) and style and/or width of line (see @ref{Line styles}). See also @ref{plot}, @ref{mesh}, @ref{fall}. @sref{Tens sample}
 @end deftypefn
 
 @anchor{tape}
@@ -1772,7 +1772,7 @@ These functions draw vertical lines from points to axis plane. See also @ref{are
 @deftypefnx {C function} @code{void} mgl_bars_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_bars_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-These functions draw vertical bars from points to axis plane. If string contain symbol @samp{a} then lines are drawn one above another (like summation). If string contain symbol @samp{f} then waterfall chart is drawn for determining the cumulative effect of sequentially introduced positive or negative values. You can give different colors for positive and negative values if number of specified colors is equal to 2*number of curves. See also @ref{barh}, @ref{cones}, @ref{area}, @ref{stem}, @ref{chart}, @ref{barwidth}. @sref{Bars sample}
+These functions draw vertical bars from points to axis plane. If string @var{pen} contain symbol @samp{a} then lines are drawn one above another (like summation). If string contain symbol @samp{f} then waterfall chart is drawn for determining the cumulative effect of sequentially introduced positive or negative values. You can give different colors for positive and negative values if number of specified colors is equal to 2*number of curves. See also @ref{barh}, @ref{cones}, @ref{area}, @ref{stem}, @ref{chart}, @ref{barwidth}. @sref{Bars sample}
 @end deftypefn
 
 @anchor{barh}
@@ -2070,7 +2070,7 @@ The function draws density plot for surface specified parametrically @{@var{x}[i
 @deftypefnx {C function} @code{void} mgl_cont__val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_cont_xy_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-The function draws contour lines for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} at @var{z}=@var{v}[k] or at @var{z} = @var{Min}.z if @var{sch} contain symbol @samp{_}. Contours are plotted for @var{z}[i,j]=@var{v}[k] where @var{v}[k] are values of data array @var{v}. If string @var{sch} have symbol @samp{#} then grid lines are drawn. If string @var{sch} have symbol @samp{t} or @samp{T} then contour labels @var{v}[k] will be drawn below (or above) the contours. See also @ref{dens}, @ref{contf}, @ref{contd}, @ref{axial}, @code{cont[xyz]}. @sref{Cont sample}
+The function draws contour lines for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} at @var{z}=@var{v}[k] or at @var{z} = @var{Min}.z if @var{sch} contain symbol @samp{_}. Contours are plotted for @var{z}[i,j]=@var{v}[k] where @var{v}[k] are values of data array @var{v}. If string @var{sch} have symbol @samp{t} or @samp{T} then contour labels @var{v}[k] will be drawn below (or above) the contours. See also @ref{dens}, @ref{contf}, @ref{contd}, @ref{axial}, @code{cont[xyz]}. @sref{Cont sample}
 @end deftypefn
 
 @deftypefn {MGL command} {} cont zdat ['sch'='']
@@ -2093,7 +2093,7 @@ The same as previous with vector @var{v} of @var{num}-th elements equidistantly 
 @deftypefnx {C function} @code{void} mgl_contf_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_contf_xy_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-The function draws solid (or filled) contour lines for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} at @var{z}=@var{v}[k] or at @var{z} = @var{Min}.z if @var{sch} contain symbol @samp{_}. Contours are plotted for @var{z}[i,j]=@var{v}[k] where @var{v}[k] are values of data array @var{v} (must be @code{v.nx>2}). If string @var{sch} have symbol @samp{#} then grid lines are drawn. See also @ref{dens}, @ref{cont}, @ref{contd}, @code{contf[xyz]}. @sref{ContF sample}
+The function draws solid (or filled) contour lines for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} at @var{z}=@var{v}[k] or at @var{z} = @var{Min}.z if @var{sch} contain symbol @samp{_}. Contours are plotted for @var{z}[i,j]=@var{v}[k] where @var{v}[k] are values of data array @var{v} (must be @code{v.nx>2}). See also @ref{dens}, @ref{cont}, @ref{contd}, @code{contf[xyz]}. @sref{ContF sample}
 @end deftypefn
 
 @deftypefn {MGL command} {} contf zdat ['sch'='']
@@ -2139,7 +2139,7 @@ The same as previous with vector @var{v} of @var{num}-th elements equidistantly 
 @deftypefnx {C function} @code{void} mgl_contv_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_contv_xy_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-The function draws vertical cylinder at contour lines for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} at @var{z}=@var{v}[k] or at @var{z} = @var{Min}.z if @var{sch} contain symbol @samp{_}. Contours are plotted for @var{z}[i,j]=@var{v}[k] where @var{v}[k] are values of data array @var{v}. If string @var{sch} have symbol @samp{#} then grid lines are drawn. If string @var{sch} have symbol @samp{t} or @samp{T} then contour labels @var{v}[k] will be drawn below (or above) the contours. See also @ref{cont}, @ref{contf}. @sref{ContV sample}
+The function draws vertical cylinder at contour lines for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} at @var{z}=@var{v}[k] or at @var{z} = @var{Min}.z if @var{sch} contain symbol @samp{_}. Contours are plotted for @var{z}[i,j]=@var{v}[k] where @var{v}[k] are values of data array @var{v}. See also @ref{cont}, @ref{contf}. @sref{ContV sample}
 @end deftypefn
 
 @deftypefn {MGL command} {} contv zdat ['sch'='']
@@ -2185,7 +2185,7 @@ The same as previous with vector @var{v} of @var{num}-th elements equidistantly 
 @deftypefnx {C function} @code{void} mgl_grid (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_grid_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-The function draws grid lines for density plot of surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} at @var{z} = @var{zVal}. String @var{sch} sets the color scheme. The minor dimensions of arrays @var{x}, @var{y}, @var{z} should be equal @code{x.nx=z.nx && y.nx=z.ny} or @code{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{z}). Grid is plotted for each z slice of the data. See also @ref{dens}, @ref{cont}, @ref{contf}, @ref{meshnum}.
+The function draws grid lines for density plot of surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} at @var{z} = @var{Min}.z. See also @ref{dens}, @ref{cont}, @ref{contf}, @ref{meshnum}.
 @end deftypefn
 
 

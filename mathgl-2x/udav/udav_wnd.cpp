@@ -292,8 +292,8 @@ void MainWindow::makeMenu()
 	a->setShortcut(Qt::Key_F1);	o->addAction(a);
 //	a = new QAction(QPixmap(":/xpm/help-faq.png"), tr("&Examples"), this);
 //	connect(a, SIGNAL(triggered()), this, SLOT(showExamples()));
-	a->setToolTip(tr("Show examples of MGL usage (Shift+F1)."));
-	a->setShortcut(Qt::SHIFT+Qt::Key_F1);	o->addAction(a);
+//	a->setToolTip(tr("Show examples of MGL usage (Shift+F1)."));
+//	a->setShortcut(Qt::SHIFT+Qt::Key_F1);	o->addAction(a);
 	a = new QAction(QPixmap(":/xpm/help-faq.png"), tr("H&ints"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(showHint()));
 	a->setToolTip(tr("Show hints of MGL usage."));	o->addAction(a);

@@ -50,16 +50,20 @@ Creates a window for plotting. Parameter @var{draw} sets a pointer to drawing fu
 There are some keys handles for manipulating by the plot: 'a', 'd', 'w', 's' for the rotating; ',', '.' for viewing of the previous or next frames in the list; 'r' for the switching of transparency; 'f' for the switching of lightning; 'x' for hiding (closing) the window.
 @end deftypefn
 
-@deftypefn {Method on @code{mglWindow}} @code{void} RunThr ()
-@c @deftypefnx {C function} @code{HMGL} mgl_qt_run ()
-@deftypefnx {C function} @code{HMGL} mgl_fltk_thr ()
+@deftypefn {Method on @code{mglWindow}} @code{int} RunThr ()
+@deftypefnx {C function} @code{int} mgl_fltk_thr ()
 Run main loop for event handling in separate thread. Note, right now it work for FLTK windows only.
 @end deftypefn
 
-@deftypefn {Method on @code{mglWindow}} @code{void} Run ()
-@deftypefnx {C function} @code{HMGL} mgl_qt_run ()
-@deftypefnx {C function} @code{HMGL} mgl_fltk_run ()
+@deftypefn {Method on @code{mglWindow}} @code{int} Run ()
+@deftypefnx {C function} @code{int} mgl_qt_run ()
+@deftypefnx {C function} @code{int} mgl_fltk_run ()
 Run main loop for event handling. Usually it should be called in a separate thread or as last function call in @code{main()}.
+@end deftypefn
+
+@deftypefn {Method on @code{mglWindow}} @code{void} SetClickFunc (@code{void} (*func)(@code{HMGL} gr, @code{void *}p))
+@deftypefnx {C function} @code{void} mgl_set_click_func (@code{void} (*func)(@code{HMGL} gr, @code{void *}p))
+Set callback function @code{func} which will be called on mouse click.
 @end deftypefn
 
 @deftypefn {Method on @code{mglWindow}} @code{void} ToggleAlpha ()

@@ -38,17 +38,21 @@ int main(int argc,char **argv)
 #ifdef PTHREAD_SAMPLE
 	mglWindow gr("test");
 	gr.RunThr();
-	for(int i=0;i<10;i++)   // do calculation
+	for(int i=0;i<10;i++)	// do calculation
 	{
-		sleep(1);             // which can be very long
+#ifdef WIN32
+		Sleep(1000);
+#else
+		sleep(1);           // which can be very long
+#endif
 		pnt = mglPoint(2*mgl_rnd()-1,2*mgl_rnd()-1);
-		gr.Clf();             // make new drawing
+		gr.Clf();			// make new drawing
 		gr.Line(mglPoint(),pnt,"Ar2");
 		char str[10] = "i=0";	str[3] = '0'+i;
 		gr.Puts(mglPoint(),"");
-		gr.Update();       // update window
+		gr.Update();		// update window
 	}
-	return 0;   // finish calculations and close the window
+	return 0;	// finish calculations and close the window
 #else
 	mglWindow *gr;
 	char key = 0;
