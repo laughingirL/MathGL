@@ -20,11 +20,11 @@ mglCanvasGL::mglCanvasGL() : mglCanvas(1,1)	{}
 //-----------------------------------------------------------------------------
 mglCanvasGL::~mglCanvasGL(){}
 //-----------------------------------------------------------------------------
-void mglCanvasGL::Finish()
+void mglCanvasGL::Finish(bool fast)
 {
 	if(Prm.size()>0)
 	{
-		std::sort(Prm.begin(), Prm.end());
+		PreparePrim(fast);
 		glVertexPointer(3, GL_FLOAT, sizeof(mglPnt), &(Pnt[0].x));
 		glNormalPointer(GL_FLOAT, sizeof(mglPnt), &(Pnt[0].u));
 		glColorPointer(4, GL_FLOAT, sizeof(mglPnt), &(Pnt[0].r));

@@ -166,6 +166,8 @@ using mglCanvasWnd::Window;
 //-----------------------------------------------------------------------------
 void mgl_ask_fltk(const wchar_t *quest, wchar_t *res);
 //-----------------------------------------------------------------------------
+#else
+#error "Please enable FLTK support"
 #endif
 #endif
 #endif

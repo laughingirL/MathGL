@@ -343,6 +343,14 @@ void mglCanvas::pxl_setz(unsigned long id, unsigned long n, const void *)
 	{	mglPrim &q=Prm[i];	q.z = Pnt[q.n1].z;	}
 }
 //-----------------------------------------------------------------------------
+void mglCanvas::PreparePrim(bool fast)
+{
+	mglStartThread(&mglCanvas::pxl_transform,this,Pnt.size());
+	if(fast)	mglStartThread(&mglCanvas::pxl_setz,this,Prm.size());
+	else	mglStartThread(&mglCanvas::pxl_setz_adv,this,Prm.size());
+	std::sort(Prm.begin(), Prm.end());
+}
+//-----------------------------------------------------------------------------
 void mglCanvas::Finish(bool fast)
 {
 	static mglMatrix bp;
@@ -351,10 +359,7 @@ void mglCanvas::Finish(bool fast)
 	if(get(MGL_FINISHED))	return;	// nothing to do
 	if(!(Quality&4) && Prm.size()>0)
 	{
-		mglStartThread(&mglCanvas::pxl_transform,this,Pnt.size());
-		if(fast)	mglStartThread(&mglCanvas::pxl_setz,this,Prm.size());
-		else	mglStartThread(&mglCanvas::pxl_setz_adv,this,Prm.size());
-		std::sort(Prm.begin(), Prm.end());	bp=Bp;
+		PreparePrim(fast);	bp=Bp;
 //		mglStartThread(&mglCanvas::pxl_primdr,this,Prm.size());	// TODO: check conflicts in pthreads
 		pxl_primdr(-1,Prm.size(),NULL);
 	}

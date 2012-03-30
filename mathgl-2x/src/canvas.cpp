@@ -621,13 +621,13 @@ void mglCanvas::arrow_plot(long n1, long n2,char st)
 		q2.xx=q2.x=p1.x-kx-2*lx;	q2.yy=q2.y=p1.y-ky-2*ly;	k2=Pnt.size();	MGL_PUSH(Pnt,q2,mutexPnt);
 		q3.xx=q3.x=p1.x-1.5*lx;		q3.yy=q3.y=p1.y-1.5*ly;		k3=Pnt.size();	MGL_PUSH(Pnt,q3,mutexPnt);
 		q4.xx=q4.x=p1.x+kx-2*lx;	q4.yy=q4.y=p1.y+ky-2*ly;	k4=Pnt.size();	MGL_PUSH(Pnt,q4,mutexPnt);
-		trig_plot(n1,k2,k3);		trig_plot(n1,k4,k3);	break;
+		trig_plot(n1,k2,k3);		trig_plot(n1,k3,k4);	break;
 	case 'K':
 //		q1.xx=q1.x=p1.x;			q1.yy=q1.y=p1.y;			k1=Pnt.size();	MGL_PUSH(Pnt,q1,mutexPnt);
 		q2.xx=q2.x=p1.x-kx-2*lx;	q2.yy=q2.y=p1.y-ky-2*ly;	k2=Pnt.size();	MGL_PUSH(Pnt,q2,mutexPnt);
 		q3.xx=q3.x=p1.x-1.5*lx;		q3.yy=q3.y=p1.y-1.5*ly;		k3=Pnt.size();	MGL_PUSH(Pnt,q3,mutexPnt);
 		q4.xx=q4.x=p1.x+kx-2*lx;	q4.yy=q4.y=p1.y+ky-2*ly;	k4=Pnt.size();	MGL_PUSH(Pnt,q4,mutexPnt);
-		trig_plot(n1,k2,k3);		trig_plot(n1,k4,k3);
+		trig_plot(n1,k2,k3);		trig_plot(n1,k3,k4);
 		q1.xx=q1.x=p1.x+kx;			q1.yy=q1.y=p1.y+ky;			k1=Pnt.size();	MGL_PUSH(Pnt,q1,mutexPnt);
 		q2.xx=q2.x=p1.x-kx;			q2.yy=q2.y=p1.y-ky;			k2=Pnt.size();	MGL_PUSH(Pnt,q2,mutexPnt);
 		line_plot(k1,k2);	break;
@@ -636,7 +636,7 @@ void mglCanvas::arrow_plot(long n1, long n2,char st)
 		q2.xx=q2.x=p1.x-kx+2*lx;	q2.yy=q2.y=p1.y-ky+2*ly;	k2=Pnt.size();	MGL_PUSH(Pnt,q2,mutexPnt);
 		q3.xx=q3.x=p1.x+1.5*lx;		q3.yy=q3.y=p1.y+1.5*ly;		k3=Pnt.size();	MGL_PUSH(Pnt,q3,mutexPnt);
 		q4.xx=q4.x=p1.x+kx+2*lx;	q4.yy=q4.y=p1.y+ky+2*ly;	k4=Pnt.size();	MGL_PUSH(Pnt,q4,mutexPnt);
-		trig_plot(n1,k2,k3);		trig_plot(n1,k4,k3);	break;
+		trig_plot(n1,k2,k3);		trig_plot(n1,k3,k4);	break;
 	case 'O':
 		{
 			q1.xx=q1.x=p1.x;	q1.yy=q1.y=p1.y;	k1=Pnt.size();	MGL_PUSH(Pnt,q1,mutexPnt);
@@ -698,7 +698,7 @@ void mglCanvas::Legend(const std::vector<mglText> &leg, float x, float y, const 
 	if(k4==2)	k2=0;
 	if(k4==1)	k1=k2=0;
 	float c1=AddTexture(char(k1?k1:'w')), c2=AddTexture(char(k2?k2:'k'));
-	if((Flag&3)==2)	{	float cc=c1;	c2=c2;	c2=cc;	};
+	if((Flag&3)==2)	{	float cc=c1;	c2=c1;	c2=cc;	};
 
 	if(strchr(ff,'#'))	// draw bounding box
 	{
@@ -754,7 +754,7 @@ void mglCanvas::Title(const wchar_t *title,const char *stl,float size)
 	if(box)	//	draw boungind box
 	{
 		float c1=AddTexture('w'), c2=AddTexture('k');
-		if((Flag&3)==2)	{	float cc=c1;	c2=c2;	c2=cc;	};
+		if((Flag&3)==2)	{	float cc=c1;	c2=c1;	c2=cc;	};
 		long k1,k2,k3,k4;
 		k1=AddPnt(mglPoint(x,y,Depth),c1,q,-1,0);
 		k2=AddPnt(mglPoint(x+inW,y,Depth),c1,q,-1,0);

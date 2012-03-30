@@ -30,7 +30,7 @@ public:
 	~mglCanvasGL();
 
 	void SetQuality(int =0)	{	Quality=2;	}
-	void Finish();
+	void Finish(bool fast=true);
 	void SetSize(int ,int )	{}
 	void View(float tetX,float tetY,float tetZ);
 	int NewFrame();

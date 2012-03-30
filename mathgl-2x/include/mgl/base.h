@@ -298,7 +298,7 @@ public:
 	{	return (size<0?-size*FontSize:size)*font_factor*fnt->Width(text,(font&&*font)?font:FontDef)/8;	}
 	inline float TextHeight(const char *font, float size) const
 	{	return (size<0?-size*FontSize:size)*font_factor*fnt->Height(font?font:FontDef)/8; }
-	inline float FontFactor()	{	return font_factor;	}
+	inline float FontFactor() const		{	return font_factor;	}
 	virtual float GetRatio() const;
 	/// Set to use or not text rotation
 	inline void SetRotatedText(bool val)	{	set(val,MGL_ENABLE_RTEXT);	}
@@ -332,13 +332,13 @@ public:
 	inline mglPoint GetPntP(long i) const
 	{	const mglPnt &p=Pnt[i];	return mglPoint(p.x,p.y,p.z);	}
 	inline float GetClrC(long i) const	{	return Pnt[i].c;	}
+	inline const mglPnt &GetPnt(long i) const		{	return Pnt[i];		}
 	inline long GetPntNum() const		{	return Pnt.size();	}
-	inline mglPnt &GetPnt(long i)		{	return Pnt[i];		}
 	inline mglPrim &GetPrm(long i)		{	return Prm[i];		}
 	inline long GetPrmNum() const		{	return Prm.size();	}
-	inline mglText &GetPtx(long i)		{	return Ptx[i];		}
+	inline const mglText &GetPtx(long i) const		{	return Ptx[i];		}
 	inline long GetPtxNum() const		{	return Ptx.size();	}
-	inline mglTexture &GetTxt(long i)	{	return Txt[i];		}
+	inline const mglTexture &GetTxt(long i) const	{	return Txt[i];		}
 	inline long GetTxtNum() const		{	return Txt.size();	}
 	/// Scale coordinates and cut off some points
 	virtual bool ScalePoint(mglPoint &p, mglPoint &n, bool use_nan=true) const;

@@ -490,7 +490,7 @@ bool mglCanvas::ExportMGLD(const char *fname, const char *descr)
 	if(!fp)	return true;
 	// NOTE: I'll save Ptx. So prim type=6 is useless,and no LaTeX
 	fprintf(fp,"MGLD %lu %lu %lu\n# %s\n", Pnt.size(), Prm.size(), Txt.size(), (descr && *descr) ? descr : fname);
-	register size_t i,j;
+	register size_t i;
 	fprintf(fp,"# Vertexes: x y z c t u v w r g b a\n");
 	for(i=0;i<Pnt.size();i++)
 	{

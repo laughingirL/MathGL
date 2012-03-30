@@ -374,6 +374,19 @@ protected:
 	void glyph_draw(const mglPrim *P, mglDrawReg *d);
 	bool IsSame(const mglPrim &pr,float wp,mglColor cp,int st);
 
+	// functions for multi-threading
+	void PreparePrim(bool fast);
+	void pxl_combine(unsigned long id, unsigned long n, const void *);
+	void pxl_memcpy(unsigned long id, unsigned long n, const void *);
+	void pxl_backgr(unsigned long id, unsigned long n, const void *);
+	void pxl_primdr(unsigned long id, unsigned long n, const void *);
+	void pxl_transform(unsigned long id, unsigned long n, const void *);
+	void pxl_setz(unsigned long id, unsigned long n, const void *);
+	void pxl_setz_adv(unsigned long id, unsigned long n, const void *);
+	void pxl_other(unsigned long id, unsigned long n, const void *p);
+	/// Put drawing from other mglCanvas (for multithreading, like subplots)
+	void PutDrawReg(mglDrawReg *d, const mglCanvas *gr);
+	
 private:
 //	float _tetx,_tety,_tetz;		// extra angles
 	std::vector<mglMatrix> stack;	///< stack for transformation matrixes
@@ -407,17 +420,6 @@ private:
 	void glyph_fill(const mglPnt &p, float f, int nt, const short *trig, mglDrawReg *d);
 	void glyph_wire(const mglPnt &p, float f, int nl, const short *line, mglDrawReg *d);
 	void glyph_line(const mglPnt &p, float f, bool solid, mglDrawReg *d);
-	// functions for multi-threading
-	void pxl_combine(unsigned long id, unsigned long n, const void *);
-	void pxl_memcpy(unsigned long id, unsigned long n, const void *);
-	void pxl_backgr(unsigned long id, unsigned long n, const void *);
-	void pxl_primdr(unsigned long id, unsigned long n, const void *);
-	void pxl_transform(unsigned long id, unsigned long n, const void *);
-	void pxl_setz(unsigned long id, unsigned long n, const void *);
-	void pxl_setz_adv(unsigned long id, unsigned long n, const void *);
-	void pxl_other(unsigned long id, unsigned long n, const void *p);
-	/// Put drawing from other mglCanvas (for multithreading, like subplots)
-	void PutDrawReg(mglDrawReg *d, const mglCanvas *gr);
 };
 //-----------------------------------------------------------------------------
 struct mglThreadG

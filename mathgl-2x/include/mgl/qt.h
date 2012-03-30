@@ -215,6 +215,8 @@ QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *tet, QSpinBox *phi
 //-----------------------------------------------------------------------------
 void mgl_ask_qt(const wchar_t *quest, wchar_t *res);
 //-----------------------------------------------------------------------------
+#else
+#error "Please enable Qt support"
 #endif
 #endif
 #endif
