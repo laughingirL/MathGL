@@ -484,7 +484,8 @@ void mglCanvas::DrawAxis(mglAxis &aa, bool text, char arr,const char *stl)
 
 	register long i,j,k1,k2;
 	SetPenPal(mgl_have_color(stl) ? stl:AxisStl);
-
+	static int cgid=1;	StartGroup("Axis",cgid++);
+	
 	p = o + d*aa.v1;	k1 = AddPnt(p,CDef,q,-1,3);
 	for(i=1;i<31;i++)	// axis itself
 	{
@@ -517,6 +518,7 @@ void mglCanvas::DrawAxis(mglAxis &aa, bool text, char arr,const char *stl)
 			for(v=v0;v<aa.v2;v+=aa.ds)	tick_draw(o+d*v,da,db,1,stl);
 	}
 	if(text)	DrawLabels(aa);
+	EndGroup();
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::DrawLabels(mglAxis &aa)
@@ -606,9 +608,11 @@ void mglCanvas::Grid(const char *dir, const char *pen)
 	AdjustTicks(dir,false);
 	SetPenPal(pen);
 	// TODO: Ternary axis labeling ...
+	static int cgid=1;	StartGroup("AxisGrid",cgid++);
 	if(strchr(dir,'x'))	DrawGrid(ax);
 	if(strchr(dir,'y'))	DrawGrid(ay);
 	if(strchr(dir,'z'))	DrawGrid(az);
+	EndGroup();
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::DrawGrid(mglAxis &aa)

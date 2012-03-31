@@ -134,10 +134,11 @@ long mglBase::AddPnt(mglPoint p, float c, mglPoint n, float a, int scl)
 		q.c=c;	q.t=a;	q.u=n.x;	q.v=n.y;	q.w=n.z;
 	}
 	q.x=q.xx=int(p.x*100)*0.01;	q.y=q.yy=p.y;	q.z=q.zz=p.z;
-	q.c=c;	q.t=a;	q.u=n.x;	q.v=n.y;	q.w=n.z;
-	Txt[long(c)].GetC(c,a,q);	// RGBA color
+	q.c=c;	q.t=q.ta=a;	q.u=n.x;	q.v=n.y;	q.w=n.z;
+	const mglTexture &txt=Txt[long(c)];
+	txt.GetC(c,a,q);	// RGBA color
 
-	if(!get(MGL_ENABLE_ALPHA))	q.a=1;
+	if(!get(MGL_ENABLE_ALPHA))	{	q.a=1;	if(txt.Smooth!=2)	q.ta=0;	}
 	if(scl&8 && scl>0)	q.a=a;	// bypass palette for enabling alpha in Error()
 	if(!get(MGL_ENABLE_LIGHT) && !(scl&4))	q.u=q.v=NAN;
 	MGL_PUSH(Pnt,q,mutexPnt);	return Pnt.size()-1;

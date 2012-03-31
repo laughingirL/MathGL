@@ -264,7 +264,7 @@ void mgl_write_obj(HMGL gr, const char *fname,const char *descr, int use_png)
 	{
 		mglPnt pp = gr->GetPnt(i);
 		fprintf(fp,"v %g %g %g\n",pp.x,pp.y,pp.z);
-		fprintf(fp,"vt %g %g\n",1-pp.t,pp.c/ntxt);
+		fprintf(fp,"vt %g %g\n",1-pp.ta,pp.c/ntxt);
 //		if(isnan(pp.u))	fprintf(fp,"vn 0 0 0\n");
 //		else fprintf(fp,"vn %g %g %g\n",pp.u,pp.v,pp.w);
 	}
@@ -491,11 +491,11 @@ bool mglCanvas::ExportMGLD(const char *fname, const char *descr)
 	// NOTE: I'll save Ptx. So prim type=6 is useless,and no LaTeX
 	fprintf(fp,"MGLD %lu %lu %lu\n# %s\n", Pnt.size(), Prm.size(), Txt.size(), (descr && *descr) ? descr : fname);
 	register size_t i;
-	fprintf(fp,"# Vertexes: x y z c t u v w r g b a\n");
+	fprintf(fp,"# Vertexes: x y z c t ta u v w r g b a\n");
 	for(i=0;i<Pnt.size();i++)
 	{
 		const mglPnt &q=Pnt[i];
-		fprintf(fp,"%.4g\t%.4g\t%.4g\t%.4g\t%.4g\t%.4g\t%.4g\t%.4g\t%.4g\t%.4g\t%.4g\t%.4g\n", q.xx, q.yy, q.zz, q.c, q.t, q.u, q.v, q.w, q.r, q.g, q.b, q.a);
+		fprintf(fp,"%.4g\t%.4g\t%.4g\t%.4g\t%.4g\t%.4g\t%.4g\t%.4g\t%.4g\t%.4g\t%.4g\t%.4g\t%.4g\n", q.xx, q.yy, q.zz, q.c, q.t, q.ta, q.u, q.v, q.w, q.r, q.g, q.b, q.a);
 	}
 	fprintf(fp,"# Primitives: type n1 n2 n3 n4 id s w p\n");
 	for(i=0;i<Prm.size();i++)
@@ -538,7 +538,7 @@ bool mglCanvas::ImportMGLD(const char *fname, bool add)
 	for(i=0;i<n;i++)
 	{
 		do {	if(!fgets(buf,512,fp))	*buf=0;	mgl_strtrim(buf);	} while(*buf=='#');
-		sscanf(buf,"%g%g%g%g%g%g%g%g%g%g%g%g", &p.xx, &p.yy, &p.zz, &p.c, &p.t, &p.u, &p.v, &p.w, &p.r, &p.g, &p.b, &p.a);
+		sscanf(buf,"%g%g%g%g%g%g%g%g%g%g%g%g%g", &p.xx, &p.yy, &p.zz, &p.c, &p.t, &p.ta, &p.u, &p.v, &p.w, &p.r, &p.g, &p.b, &p.a);
 		Pnt.push_back(p);
 	}
 	mglPrim q;

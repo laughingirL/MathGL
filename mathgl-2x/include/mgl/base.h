@@ -109,7 +109,7 @@ struct mglPnt
 {
 	float xx,yy,zz;	// original coordinates
 	float x,y,z;	// coordinates
-	float c,t;		// index in color scheme
+	float c,t,ta;	// index in color scheme
 	float u,v,w;	// normales
 	float r,g,b,a;	// RGBA color
 	mglPnt()	{	xx=yy=zz=x=y=z=c=t=u=v=w=r=g=b=a=0;	}
