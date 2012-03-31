@@ -36,6 +36,8 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 22. Export to X3D
 23. Try libtcc (TinyCC) as alternative to MGL -- in mgllab???
 24. Use OI & Z for determining {x,y,z} from {xs,ys}. Try to find closest.
+25. More accurate intersections in Region
+26. Add flag for drawing 3d arrows instead of 2d (S,D -- cube, T -- sq.pyramid, I -- square, O -- sphere???, A,K,V -- ???)
 
 ============= UDAV =============
 

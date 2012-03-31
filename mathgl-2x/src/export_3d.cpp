@@ -256,7 +256,7 @@ void mgl_write_obj(HMGL gr, const char *fname,const char *descr, int use_png)
 	delete []ng;
 
 	unsigned len=strlen(fname),ntxt=gr->GetTxtNum();
-	char *tname = new char[len+1];	strcpy(tname,fname);
+	char *tname = new char[len+5];	strcpy(tname,fname);
 	FILE *fp=fopen(fname,"wt");
 	// vertices definition
 	fprintf(fp,"# Created by MathGL library\n# Title: %s\n",(descr && *descr) ? descr : fname);
@@ -298,10 +298,10 @@ void mgl_write_obj(HMGL gr, const char *fname,const char *descr, int use_png)
 	fprintf(fp,"Kd 1.000 1.000 1.000\n");
 	fprintf(fp,"Ks 0.000 0.000 0.000\n");
 	fprintf(fp,"d 1.0\nillum 2\n");
-	if(use_png)
-	{	tname[len-4]='.';	tname[len-3]='p';	tname[len-2]='n';	tname[len-1]='g';	}
-	else
-	{	tname[len-4]='.';	tname[len-3]='t';	tname[len-2]='g';	tname[len-1]='a';	}
+	if(use_png)	strcat(tname,"_txt.png");
+//	{	tname[len-4]='.';	tname[len-3]='p';	tname[len-2]='n';	tname[len-1]='g';	}
+	else		strcat(tname,"_txt.tga");
+//	{	tname[len-4]='.';	tname[len-3]='t';	tname[len-2]='g';	tname[len-1]='a';	}
 	fprintf(fp,"map_Ka %s\nmap_Kd %s\nmap_Ks %s\n",tname,tname,tname);
 	fclose(fp);
 	// prepare texture file (TGA or PNG)

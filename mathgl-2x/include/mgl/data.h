@@ -42,7 +42,7 @@ public:
 	inline mglData(const mglData &d)	{	a=0;	mgl_data_set(this,&d);		}
 	inline mglData(const mglDataA *d)	{	a=0;	mgl_data_set(this, d);		}
 	inline mglData(bool, mglData *d)	// NOTE: Variable d will be deleted!!!
-	{	if(d)	{memcpy(this,d,sizeof(mglData));	d->id=0;	d->link=true;	delete d;	}
+	{	if(d)	{memcpy((void*)this,(void*)d,sizeof(mglData));	d->id=0;	d->link=true;	delete d;	}
 		else	{	a=0;	Create(1);	}	}
 	/// Initiate by flat array
 	inline mglData(int size, const float *d)	{	a=0;	Set(d,size);	}
