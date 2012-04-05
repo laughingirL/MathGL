@@ -81,7 +81,7 @@ Positive aspects are: batch processing of similar data set (for example, a set o
 @item
 @emph{Drawing in memory with the following displaying by other graphical program.}
 
-In this case the programmer has more freedom in selecting the window libraries (not only FLTK, Qt or GLUT), in positioning and surroundings control and so on. I recommend to use such way for ``settled'' programs.
+In this case the programmer has more freedom in selecting the window libraries (not only FLTK, Qt or GLUT), in positioning and surroundings control and so on. I recommend to use such way for ``stand alone'' programs.
 
 @item
 @emph{Using FLTK or Qt widgets provided by MathGL}
@@ -126,7 +126,7 @@ int main(int argc,char **argv)
   return gr.Run();
 }
 @end verbatim
-Here function @code{sample} is defined. This function does all drawing. Other function @code{main} is entry point function for console program. For compilation, just execute the command
+Here callback function @code{sample} is defined. This function does all drawing. Other function @code{main} is entry point function for console program. For compilation, just execute the command
 @verbatim
 gcc test.cpp -lmgl-wnd -lmgl
 @end verbatim
@@ -157,7 +157,7 @@ int main(int argc,char **argv)
 Or use pure C-functions:
 @verbatim
 #include <mgl/mgl_cf.h>
-int sample(HMGL gr)
+int sample(HMGL gr, void *)
 {
   mgl_rotate(gr,60,40,0);
   mgl_box(gr);
@@ -212,7 +212,7 @@ This can be important if you create a console program in computer/cluster where 
 
 The only difference from the previous variant (using windows) is manual switching on the transparency  @code{Alpha} and lightning @code{Light}, if you need it. The usage of frames (see @ref{Animation}) is not advisable since the whole image is prepared each time. If function @code{sample} contains frames then only last one will be saved to the file. In principle, one does not need to separate drawing functions in case of direct file writing in consequence of the single calling of this function for each picture. However, one may use the same drawing procedure to create a plot with changeable parameters, to export in different file types, to emphasize the drawing code and so on. So, in future I will put the drawing in the separate function.
 
-The code for export in vector EPS file looks the same:
+The code for export into other formats (for example, into vector EPS file) looks the same:
 @verbatim
 #include <mgl/mgl.h>
 int main(int ,char **)
@@ -245,7 +245,7 @@ int sample(mglGraph *gr)
   return gr->GetNumFrame();   // returns the frame number
 }
 @end verbatim
-First, the function creates a frame @code{NewFrame()} for rotated axes and draws the bounding box. After the frame drawing the function @code{EndFrame()} @strong{must be} called! The second frame contains the bounding box and axes @code{Axis("xy")} in the initial (unrotated) coordinates. Function @code{sample} returns the number of created frames @code{GetNumFrame()}.
+First, the function creates a frame by calling @code{NewFrame()} for rotated axes and draws the bounding box.  The function @code{EndFrame()} @strong{must be} called after the frame drawing! The second frame contains the bounding box and axes @code{Axis("xy")} in the initial (unrotated) coordinates. Function @code{sample} returns the number of created frames @code{GetNumFrame()}.
 
 Note, that such kind of animation is rather slow and not well suitable for visualization of running calculations. For the last case one can use @code{Update()} function. The most simple case for doing this is to use @code{mglDraw} class and reimplement its @code{Calc()} method.
 @verbatim
@@ -263,9 +263,9 @@ void Foo::Calc()
 {
   for(int i=0;i<30;i++)   // do calculation
   {
-    sleep(2);           // which can be very long
+    sleep(2);             // which can be very long
     pnt = mglPoint(2*mgl_rnd()-1,2*mgl_rnd()-1);
-    Gr->Update();        // update window
+    Gr->Update();         // update window
   }
 }
 //-----------------------------------------------------
@@ -307,6 +307,7 @@ int main(int argc,char **argv)
 
 Pictures with @strong{animation can be saved in file(s)} as well. You can: export in animated GIF, or save each frame in separate file (usually JPEG) and convert these files into the movie (for example, by help of ImageMagic). Let me show both methods.
 
+@anchor{GIF}
 The simplest methods is making animated GIF. There are 3 steps: (1) open GIF file by @code{StartGIF()} function; (2) create the frames by calling @code{NewFrame()} before and @code{EndFrame()} after plotting; (3) close GIF by @code{CloseGIF()} function. So the simplest code for ``running'' sinusoid will look like this:
 @verbatim
 #include <mgl/mgl.h>
@@ -330,6 +331,7 @@ int main(int ,char **)
 }
 @end verbatim
 
+@anchor{MPEG}
 The second way is saving each frame in separate file (usually JPEG) and later make the movie from them. MathGL have special function for saving frames -- it is @code{WriteFrame()}. This function save each frame with automatic name @samp{frame0001.jpg, frame0002.jpg} and so on. Here prefix @samp{frame} is defined by @var{PlotId} variable of @code{mglGraph} class. So the similar code will look like this:
 @verbatim
 #include <mgl/mgl.h>

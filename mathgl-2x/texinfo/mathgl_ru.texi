@@ -70,45 +70,71 @@ supports it in developing GNU and promoting software freedom.''
 @menu
 * Overview::
 * Examples::
+* General concepts::
 * MathGL core::
 * Widget classes::
 * Data processing::
+* MGL scripts::
 * Other classes::
-* Samples::
 * TeX-like symbols::
 * Copying This Manual::
 * Index::
 @end menu
 
+@ifhtml
+@macro fig {fname,text}
+@center @image{../\fname\, 11cm, , \text\, .png}
+@end macro
+@end ifhtml
+
+@ifnothtml
+@iftex
+@macro fig {fname,text}
+@center @image{\fname\, 11cm, , \text\, .png}
+@end macro
+@end iftex
+
+@ifnottex
+@macro fig {fname,text}
+@c @center @image{\fname\, 11cm, , \text\, .png}
+@end macro
+@end ifnottex
+@end ifnothtml
+
+
 @rmacro sref {arg}
 См. раздел @ref{\arg\}, для примеров кода и графика.
 @end rmacro
-@macro tdref{nam}
+@macro tdref {nam}
 @uref{http://mathgl.sourceforge.net/pdf_u3d/\nam\.pdf, 3D pdf}
 @end macro
+
 
 @node Overview, Examples, , Top
 @include overview_ru.texi
 
-@node Examples, MathGL core, Overview, Top
+@node Examples, General concepts, Overview, Top
 @include example_ru.texi
 
-@node MathGL core, Widget classes, Examples, Top
+@node General concepts, MathGL core, Examples, Top
+@include concept_ru.texi
+
+@node MathGL core, Widget classes, General concepts, Top
 @include core_ru.texi
 
-@node Widget classes, Data handling, MathGL core, Top
+@node Widget classes, Data processing, MathGL core, Top
 @include widget_ru.texi
 
-@node Data processing, Other classes, Widget classes, Top
+@node Data processing, MGL scripts, Widget classes, Top
 @include data_ru.texi
 
-@node Other classes, Samples, Data handling, Top
+@node MGL scripts, Other classes, Data processing, Top
+@include parse_ru.texi
+
+@node Other classes, TeX-like symbols, MGL scripts, Top
 @include other_ru.texi
 
-@node Samples, TeX-like symbols, Other classes, Top
-@include samples_ru.texi
-
-@node TeX-like symbols, Copying This Manual, Samples, Top
+@node TeX-like symbols, Copying This Manual, Other classes, Top
 @appendix Символы TeX
 @include appendix_ru.texi
 

@@ -109,7 +109,7 @@ public slots:
 	void exportSTL(QString fname="");	///< export to STL file
 	void exportOFF(QString fname="");	///< export to OFF file
 //	void exportX3D(QString fname="");	///< export to XYZ file
-	void exportIDTF(QString fname="");	///< export to IDTF file
+	void exportPRC(QString fname="");	///< export to PRC file
 	void setMGLFont(QString path);		///< restore/load font for graphics
 
 	void adjust();		///< Adjust plot size to fill entire window

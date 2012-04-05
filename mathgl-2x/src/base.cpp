@@ -634,7 +634,7 @@ void mglTexture::GetC(float u,float v,mglPnt &p) const
 	p.a = (s[0].a*(1-u)+s[2].a*u)*v + (s[1].a*(1-u)+s[3].a*u)*(1-v);	// for alpha use inverted
 }
 //-----------------------------------------------------------------------------
-bool mglTexture::IsSame(mglTexture &t) const
+bool mglTexture::IsSame(const mglTexture &t) const
 {	return n==t.n && !memcmp(col,t.col,514*sizeof(mglColor));	}
 //-----------------------------------------------------------------------------
 long mglBase::AddTexture(const char *cols, int smooth)

@@ -531,7 +531,7 @@ void mglCanvas::View(float tetx,float tetz,float tety)
 //-----------------------------------------------------------------------------
 void mglCanvas::Zoom(float x1, float y1, float x2, float y2)
 {
-	Bp.clear();		ClfZB();
+	Bp.pf=0;	Bp.clear();		ClfZB();
 	if(x1==x2 || y1==y2)	{	x1=y1=0;	x2=y2=1;	}
 	x1=2*x1-1;	x2=2*x2-1;	y1=2*y1-1;	y2=2*y2-1;
 	Bp.b[0]=2/fabs(x2-x1);	Bp.b[4]=2/fabs(y2-y1);
@@ -777,7 +777,9 @@ void mglCanvas::StartAutoGroup (const char *lbl)
 	static int id=1;
 	if(lbl==NULL)	{	id=1;	return;	}
 	if(ObjId<0)	{	ObjId = -id;	id++;	}
-	MGL_PUSH(Grp,mglGroup(lbl,ObjId),mutexGrp);
+	register size_t len = Grp.size();
+	if(ObjId>=0 &&len>0 && ObjId!=Grp[len-1].Id)
+		MGL_PUSH(Grp,mglGroup(lbl,ObjId),mutexGrp);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::EndGroup()	{	LoadState();	}

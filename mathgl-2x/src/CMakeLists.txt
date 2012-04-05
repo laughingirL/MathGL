@@ -16,6 +16,18 @@ set(mgl_hdr
 ../include/mgl/define.h		../include/mgl/other.h	../include/mgl/eval.h
 ../include/mgl/parser.h		../include/mgl/addon.h	../include/mgl/evalc.h )
 
+set(prc_src
+prc/PRCbitStream.cc prc/PRCdouble.cc prc/oPRCFile.cc prc/writePRC.cc prc.cpp
+)
+
+set(prc_hdr
+prc/PRC.h prc/PRCbitStream.h prc/PRCdouble.h prc/oPRCFile.h prc/writePRC.h
+)
+
+set(mgl_src ${mgl_src} ${prc_src} )
+set(mgl_hdr ${mgl_hdr} ${prc_hdr} )
+include_directories(prc)
+
 if(MGL_HAVE_OPENGL)
 	set(mgl_src ${mgl_src} opengl.cpp )
 	set(mgl_hdr ${mgl_hdr} ../include/mgl/opengl.h )

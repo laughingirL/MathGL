@@ -6,10 +6,8 @@ This chapter describe commands for allocation, resizing, loading and saving, mod
 @end ifset
 
 @ifclear UDAV
-Class for working with data array. This class is defined in @code{#include <mgl/data.h>}. The class has functions for easy and safe allocation, resizing, loading and saving, modifying of data arrays. Also it can numerically differentiate and integrate data, interpolate, fill data by formula and so on. Class supports data with dimensions up to 3 (like function of 3 variables -- x,y,z). The internal representation of numbers is float. Float type was chosen because it has smaller size in memory and usually it has enough precision in plotting purposes. You can change it by selecting option @code{--enable-double} at the library configuring (see @ref{Installation}). Data arrays are denoted by Small Caps (like @sc{dat}) if it can be (re-)created by MGL commands.
+This chapter describe class @code{mglData} for working with data array. This class is defined in @code{#include <mgl/data.h>}. The class has functions for easy and safe allocation, resizing, loading and saving, modifying of data arrays. Also it can numerically differentiate and integrate data, interpolate, fill data by formula and so on. Class supports data with dimensions up to 3 (like function of 3 variables -- x,y,z). The internal representation of numbers is float. Float type was chosen because it has smaller size in memory and usually it has enough precision in plotting purposes. You can change it by selecting option @code{--enable-double} at the library configuring (see @ref{Installation}). Data arrays are denoted by Small Caps (like @sc{dat}) if it can be (re-)created by MGL commands.
 @end ifclear
-
-
 
 @menu
 * Public variables::
@@ -56,7 +54,7 @@ Flag to use external data, i.e. don't delete it.
 
 @deftypefn {Method on @code{mglData}} @code{float} GetVal (@code{long} i)
 @deftypefnx {Method on @code{mglData}} @code{void} SetVal (@code{float} val, @code{long} i)
-Gets or sets the value in by "flat" index @var{i} without border checking. Index @var{i} should be in range [0, nx*ny*nz].
+Gets or sets the value in by "flat" index @var{i} without border checking. Index @var{i} should be in range [0, nx*ny*nz-1].
 @end deftypefn
 
 @deftypefn {Method on @code{mglData}} @code{long} GetNx ()
@@ -81,7 +79,7 @@ Returns pointer to internal data array.
 @c ------------------------------------------------------------------
 @node Data constructor, Data resizing, Public variables, Data processing
 @section Data constructor
-@cindex mglData constructor
+@cindex mglData
 
 @ifset UDAV
 There are many functions, which can create data for output (see @ref{Data filling}, @ref{File I/O}, @ref{Make another data}, @ref{Global functions}). Here I put most useful of them.
@@ -96,7 +94,7 @@ There are many functions, which can create data for output (see @ref{Data fillin
 @deftypefnx {C function} @code{HMDT} mgl_create_data ()
 @deftypefnx {C function} @code{HMDT} mgl_create_data_size (@code{int} mx, @code{int} my, @code{int} mz)
 @end ifclear
-Default constructor. Allocates the memory for data array and initializes it by zero. If string @var{eq} is specified then data will be filled by corresponding formula as in @code{Fill()} function.
+Default constructor. Allocates the memory for data array and initializes it by zero. If string @var{eq} is specified then data will be filled by corresponding formula as in @ref{fill} function.
 @end deftypefn
 
 @anchor{copy}
@@ -406,7 +404,7 @@ Sets the symbol @var{ids} for data columns. The string should contain one symbol
 @deftypefnx {Method on @code{mglData}} @code{void} Read (@code{const char *}fname)
 @deftypefnx {C function} @code{void} mgl_data_read (@code{HMDT} dat, @code{const char *}fname)
 @end ifclear
-Reads data from tab-separated text file with auto determining sizes of the data.
+Reads data from tab-separated text file with auto determining sizes of the data. Double newline means the beginning of new z-slice.
 @end deftypefn
 
 @deftypefn {MGL command} {} read @sc{dat} 'fname' @code{mx [my=1 mz=1]}
@@ -533,7 +531,7 @@ Extracts sub-array data from the original data array for indexes specified by ar
 @deftypefnx {Method on @code{mglData}} @code{mglData} Column (@code{const char *}eq) @code{const}
 @deftypefnx {C function} @code{HMDT} mgl_data_column (@code{HCDT} dat, @code{const char *}eq)
 @end ifclear
-Get column (or slice) of the data filled by formula @var{eq} on column ids. For example, @code{Column("n*w^2/exp(t)");}. The column ids must be defined first by @ref{idset} function. In MGL version this command usually is used as inline one @code{dat('eq')}.
+Get column (or slice) of the data filled by formula @var{eq} on column ids. For example, @code{Column("n*w^2/exp(t)");}. The column ids must be defined first by @ref{idset} function or read from files. In MGL version this command usually is used as inline one @code{dat('eq')}.
 @end deftypefn
 
 @anchor{resize}
@@ -766,7 +764,7 @@ Remove value steps (like phase jumps after inverse trigonometric functions) with
 @deftypefnx {Method on @code{mglData}} @code{void} Smooth (@code{const char *}dir=@code{"xyz"}, @code{float} delta=@code{0})
 @deftypefnx {C function} @code{void} mgl_data_smooth (@code{HMDT} dat, @code{const char *}dir, @code{float} delta)
 @end ifclear
-Smooths the data on specified direction or directions. Parameter @var{delta}>0 forbids to change values of array more than @var{delta} from the original ones. String @var{dirs} specifies the dimensions which will be smoothed. It may contain characters: @samp{x} for 1st dimension, @samp{y} for 2nd dimension, @samp{z} for 3d dimension. If string @var{dir} contain: @samp{0} then does nothing for @var{delta}=0 or approaches data to zero with the step @var{delta}, @samp{2} -- linear averaging over 3 points, @samp{5} -- linear averaging over 5 points. By default quadratic averaging over 5 points is used.
+Smooths the data on specified direction or directions. String @var{dirs} specifies the dimensions which will be smoothed. It may contain characters: @samp{x} for 1st dimension, @samp{y} for 2nd dimension, @samp{z} for 3d dimension. If string @var{dir} contain: @samp{0} then does nothing, @samp{3} -- linear averaging over 3 points, @samp{5} -- linear averaging over 5 points. By default quadratic averaging over 5 points is used.
 @end deftypefn
 
 @anchor{envelop}
@@ -805,11 +803,11 @@ Normalizes data slice-by-slice along direction @var{dir} the data in slices to r
 @node Interpolation, Data information, Data changing, Data processing
 @section Interpolation
 
-MGL can use linear interpolation by @ref{subdata} command, or spline interpolation by @ref{evaluate} command. Also you can use @ref{resize} for obtaining a data array with new sizes.
+MGL scripts can use linear interpolation by @ref{subdata} command, or spline interpolation by @ref{evaluate} command. Also you can use @ref{resize} for obtaining a data array with new sizes.
 
 @ifclear UDAV
 
-However, there are much faster functions in other modes (C/C++/Fortran/Python/...).
+However, there are much special faster functions in other modes (C/C++/Fortran/Python/...).
 
 @cindex Spline
 @deftypefn {Method on @code{mglData}} @code{float} Spline (@code{float} x, @code{float} y=@code{0}, @code{float} z=@code{0}) @code{const}
@@ -836,7 +834,7 @@ Interpolates data by linear function to the given point @var{x}, @var{y}, @var{z
 @node Data information, Operators, Interpolation, Data processing
 @section Data information
 
-There are not so many functions for obtaining data properties in MGL language. However most of them can be found using "suffixes". Suffix can get some numerical value of the data array (like its size, maximal or minimal value, the sum of elements and so on) as number. Later it can be used as usual number in command arguments. The suffixes start from point @samp{.} right after (without spaces) variable name or its sub-array. For example, @code{a.nx} give the x-size of data @var{a}, @code{b(1).max} give maximal value of second row of variable @var{b}, @code{(c(:,0)^2).sum} give the sum of squares of elements in the first column of @var{c} and so on.
+There are a set of functions for obtaining data properties in MGL language. However most of them can be found using "suffixes". Suffix can get some numerical value of the data array (like its size, maximal or minimal value, the sum of elements and so on) as number. Later it can be used as usual number in command arguments. The suffixes start from point @samp{.} right after (without spaces) variable name or its sub-array. For example, @code{a.nx} give the x-size of data @var{a}, @code{b(1).max} give maximal value of second row of variable @var{b}, @code{(c(:,0)^2).sum} give the sum of squares of elements in the first column of @var{c} and so on.
 
 
 @cindex PrintInfo
@@ -903,9 +901,9 @@ Gets position of minimum to variables @var{i}, @var{j}, @var{k} and returns the 
 @deftypefnx {C function} @code{float} mgl_data_max_int (@code{HCDT} dat, @code{int} *i, @code{int} *j, @code{int} *k)
 Gets position of maximum to variables @var{i}, @var{j}, @var{k} and returns the maximal value.
 @end deftypefn
-@deftypefn {Method on @code{mglData}} @code{float} Minimal (@code{float} &i, @code{float} &j, @code{float} &k) @code{const}
+@deftypefn {Method on @code{mglData}} @code{float} Minimal (@code{float} &x, @code{float} &y, @code{float} &z) @code{const}
 @deftypefnx {C function} @code{float} mgl_data_min_real (@code{HCDT} dat, @code{float} *x, @code{float} *y, @code{float} *z)
-Gets approximated (interpolated) position of minimum to variables @var{i}, @var{j}, @var{k} and returns the minimal value.
+Gets approximated (interpolated) position of minimum to variables @var{x}, @var{y}, @var{z} and returns the minimal value.
 @end deftypefn
 @end ifclear
 
@@ -914,10 +912,10 @@ Gets approximated (interpolated) position of minimum to variables @var{i}, @var{
 @deftypefnx {MGL suffix} {(dat)} .my
 @deftypefnx {MGL suffix} {(dat)} .mz
 @ifclear UDAV
-@deftypefnx {Method on @code{mglData}} @code{float} Maximal (@code{float} &i, @code{float} &j, @code{float} &k) @code{const}
+@deftypefnx {Method on @code{mglData}} @code{float} Maximal (@code{float} &x, @code{float} &y, @code{float} &z) @code{const}
 @deftypefnx {C function} @code{float} mgl_data_max_real (@code{HCDT} dat, @code{float} *x, @code{float} *y, @code{float} *z)
 @end ifclear
-Gets approximated (interpolated) position of maximum to variables @var{i}, @var{j}, @var{k} and returns the maximal value.
+Gets approximated (interpolated) position of maximum to variables @var{x}, @var{y}, @var{z} and returns the maximal value.
 @end deftypefn
 
 
@@ -1000,7 +998,7 @@ Give first (for @code{.a}, i.e. @code{dat->a[0]}).
 Copies data from other variable.
 @end deftypefn
 
-@deftypefn {MGL command} {} copy dat [val]
+@deftypefn {MGL command} {} copy dat @code{val}
 @ifclear UDAV
 @deftypefnx {Method on @code{float}} @code{void} operator= (@code{float} val)
 @end ifclear
@@ -1009,108 +1007,73 @@ Set all data values equal to @var{val}.
 
 @anchor{multo}
 @deftypefn {MGL command} {} multo dat dat2
+@deftypefnx {MGL command} {} multo dat @code{val}
 @ifclear UDAV
 @deftypefnx {Method on @code{mglData}} @code{void} operator*= (@code{const mglData &}d)
-@deftypefnx {C function} @code{void} mgl_data_mul_dat (@code{HMDT} dat, @code{HCDT} d)
-@end ifclear
-Multiplies the data by the other one for each element.
-@end deftypefn
-
-@deftypefn {MGL command} {} multo dat @code{val}
-@ifclear UDAV
 @deftypefnx {Method on @code{mglData}} @code{void} operator*= (@code{float} d)
-@deftypefnx {C function} @code{void} mgl_data_mul_num (@code{HMDT} dat, @code{float} d)
-@end ifclear
-Multiplies each element by the number.
+@deftypefnx {C function} @code{void} mgl_data_mul_dat (@code{HMDT} dat, @code{HCDT} d)
+@deftypefnx {C function} @code{void} mgl_data_mul_num (@code{HMDT} dat, @code{float} @end ifclear
+Multiplies data element by the other one or by value.
 @end deftypefn
 
 @anchor{divto}
 @deftypefn {MGL command} {} divto dat dat2
+@deftypefnx {MGL command} {} divto dat @code{val}
 @ifclear UDAV
 @deftypefnx {Method on @code{mglData}} @code{void} operator/= (@code{const mglData &}d)
-@deftypefnx {C function} @code{void} mgl_data_div_dat (@code{HMDT} dat, @code{HCDT} d)
-@end ifclear
-Divides the data by the other one for each element.
-@end deftypefn
-
-@deftypefn {MGL command} {} divto dat @code{val}
-@ifclear UDAV
 @deftypefnx {Method on @code{mglData}} @code{void} operator/= (@code{float} d)
+@deftypefnx {C function} @code{void} mgl_data_div_dat (@code{HMDT} dat, @code{HCDT} d)
 @deftypefnx {C function} @code{void} mgl_data_div_num (@code{HMDT} dat, @code{float} d)
 @end ifclear
-Divides each element by the number.
+Divides each data element by the other one or by value.
 @end deftypefn
+
 
 @anchor{addto}
 @deftypefn {MGL command} {} addto dat dat2
+@deftypefnx {MGL command} {} addto dat @code{val}
 @ifclear UDAV
 @deftypefnx {Method on @code{mglData}} @code{void} operator+= (@code{const mglData &}d)
-@deftypefnx {C function} @code{void} mgl_data_add_dat (@code{HMDT} dat, @code{HCDT} d)
-@end ifclear
-Adds the other data.
-@end deftypefn
-
-@deftypefn {MGL command} {} addto dat @code{val}
-@ifclear UDAV
 @deftypefnx {Method on @code{mglData}} @code{void} operator+= (@code{float} d)
-@deftypefnx {C function} @code{void} mgl_data_add_num (@code{HMDT} dat, @code{float} d)
-@end ifclear
-Adds the number to each element.
+@deftypefnx {C function} @code{void} mgl_data_add_dat (@code{HMDT} dat, @code{HCDT} d)
+@deftypefnx {C function} @code{void} mgl_data_add_num (@code{HMDT} dat, @code{float} @end ifclear
+Adds to each data element the other one or the value.
 @end deftypefn
 
 @anchor{subto}
 @deftypefn {MGL command} {} subto dat dat2
-@ifclear UDAV
+@deftypefnx {MGL command} {} subto dat @code{val}
+@@ifclear UDAV
 @deftypefnx {Method on @code{mglData}} @code{void} operator-= (@code{const mglData &}d)
+@deftypefnx {Method on @code{mglData}} @code{void} operator-= (@code{float} d)
 @deftypefnx {C function} @code{void} mgl_data_sub_dat (@code{HMDT} dat, @code{HCDT} d)
-@end ifclear
-Subtracts the other data.
+@deftypefnx {C function} @code{void} mgl_data_sub_num (@code{HMDT} dat, @code{float} @end ifclear
+Subtracts from each data element the other one or the value.
 @end deftypefn
 
-@deftypefn {MGL command} {} subto dat @code{val}
-@ifclear UDAV
-@deftypefnx {Method on @code{mglData}} @code{void} operator-= (@code{float} d)
-@deftypefnx {C function} @code{void} mgl_data_sub_num (@code{HMDT} dat, @code{float} d)
-@end ifclear
-Subtracts the number to each element.
-@end deftypefn
 
 @ifclear UDAV
 @deftypefn {Library Function} mglData operator+ (@code{const mglData &}a, @code{const mglData &}b)
-Adds the other data.
-@end deftypefn
-@deftypefn {Library Function} mglData operator+ (@code{float} a, @code{const mglData &}b)
-Adds the number.
-@end deftypefn
-@deftypefn {Library Function} mglData operator+ (@code{const mglData &}a, @code{float} b)
-Adds the number.
+@deftypefnx {Library Function} mglData operator+ (@code{float} a, @code{const mglData &}b)
+@deftypefnx {Library Function} mglData operator+ (@code{const mglData &}a, @code{float} b)
+Adds the other data or the number.
 @end deftypefn
 
 @deftypefn {Library Function} mglData operator- (@code{const mglData &}a, @code{const mglData &}b)
-Subtracts the other data.
-@end deftypefn
-@deftypefn {Library Function} mglData operator- (@code{float} a, @code{const mglData &}b)
-Subtracts from the number.
-@end deftypefn
-@deftypefn {Library Function} mglData operator- (@code{const mglData &}a, @code{float} b)
-Subtracts the number.
+@deftypefnx {Library Function} mglData operator- (@code{float} a, @code{const mglData &}b)
+@deftypefnx {Library Function} mglData operator- (@code{const mglData &}a, @code{float} b)
+Subtracts the other data or the number.
 @end deftypefn
 
 @deftypefn {Library Function} mglData operator* (@code{const mglData &}a, @code{const mglData &}b)
-Multiplies by the other data.
-@end deftypefn
-@deftypefn {Library Function} mglData operator* (@code{float} a, @code{const mglData &}b)
-Multiplies by the number.
-@end deftypefn
-@deftypefn {Library Function} mglData operator* (@code{const mglData &}a, @code{float} b)
-Multiplies by the number.
+@deftypefnx {Library Function} mglData operator* (@code{float} a, @code{const mglData &}b)
+@deftypefnx {Library Function} mglData operator* (@code{const mglData &}a, @code{float} b)
+Multiplies by the other data or the number.
 @end deftypefn
 
 @deftypefn {Library Function} mglData operator/ (@code{const mglData &}a, @code{const mglData &}b)
-Divides by the other data.
-@end deftypefn
-@deftypefn {Library Function} mglData operator/ (@code{const mglData &}a, @code{float} b)
-Divides by the number.
+@deftypefnx {Library Function} mglData operator/ (@code{const mglData &}a, @code{float} b)
+Divides by the other data or the number.
 @end deftypefn
 @end ifclear
 
@@ -1118,7 +1081,9 @@ Divides by the number.
 @node Global functions, Evaluate expression, Operators, Data processing
 @section Global functions
 
+@ifclear UDAV
 These functions are not methods of @code{mglData} class. However it provide additional functionality to handle data. So I put it in this chapter.
+@end ifclear
 
 @anchor{transform}
 @deftypefn {MGL command} {} transform @sc{dat} 'type' real imag
@@ -1213,7 +1178,7 @@ Computes triangulation for arbitrary placed points with coordinates @{@var{x},@v
 @section Evaluate expression
 
 @ifset UDAV
-You can use arbitrary formulas of existed data arrays or constants as any argument of data processing or data plotting commands. There are only 2 limitations: formula shouldn't contain spaces, and formula cannot be used as argument which will be (re)created by MGL command.
+You can use arbitrary formulas of existed data arrays or constants as any argument of data processing or data plotting commands. There are only 2 limitations: formula shouldn't contain spaces (to be recognized as single argument), and formula cannot be used as argument which will be (re)created by MGL command.
 @end ifset
 
 @ifclear UDAV

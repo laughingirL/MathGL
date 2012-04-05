@@ -467,7 +467,7 @@ void mgl_write_frame(HMGL gr, const char *fname,const char *descr)
 	int len=strlen(fname);
 	if(!strcmp(fname+len-4,".jpg"))	mgl_write_jpg(gr,fname,descr);
 	if(!strcmp(fname+len-5,".jpeg"))mgl_write_jpg(gr,fname,descr);
-	if(!strcmp(fname+len-5,".idtf"))mgl_write_idtf(gr,fname,descr);
+	if(!strcmp(fname+len-4,".prc")) mgl_write_prc(gr,fname,descr,1);
 	if(!strcmp(fname+len-4,".png"))	mgl_write_png(gr,fname,descr);
 	if(!strcmp(fname+len-4,".eps"))	mgl_write_eps(gr,fname,descr);
 	if(!strcmp(fname+len-4,".svg"))	mgl_write_svg(gr,fname,descr);

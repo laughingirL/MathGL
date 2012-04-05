@@ -124,7 +124,7 @@ using mglBase::Light;
 	/// Zoom in or zoom out (if Zoom(0, 0, 1, 1)) a part of picture
 	virtual void Zoom(float x1, float y1, float x2, float y2);
 	/// Restore image after View() and Zoom()
-	virtual void Restore()	{	Bp.clear();	}
+	virtual void Restore()	{	Bp.clear();	Bp.pf=0;	}
 
 	/// Clear transformation matrix.
 	inline void Identity(bool rel=false)	{	InPlot(0,1,0,1,rel);	}

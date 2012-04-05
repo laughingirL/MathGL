@@ -233,7 +233,7 @@ void mgl_obj_prim(const mglPrim &q, const mglPnt &p, FILE *fp, float size)
 			fprintf(fp,"f %ld/%ld %ld/%ld %ld/%ld\n", n1,n1, n2,n2, n3,n3);	break;
 		case 3:
 			fprintf(fp,"f %ld/%ld %ld/%ld %ld/%ld\n", n1,n1, n2,n2, n3,n3);
-			fprintf(fp,"f %ld/%ld %ld/%ld %ld/%ld\n", n4,n4, n2,n2, n3,n3);	break;
+			fprintf(fp,"f %ld/%ld %ld/%ld %ld/%ld\n", n2,n2, n4,n4, n3,n3);	break;
 		case 4:	break;	// TODO: add glyphs export later
 	}
 }

@@ -462,14 +462,14 @@ void QMathGL::exportTGA(QString fname)
 	}
 }
 //-----------------------------------------------------------------------------
-void QMathGL::exportIDTF(QString fname)
+void QMathGL::exportPRC(QString fname)
 {
 	if(fname.isEmpty())	fname = gr->PlotId.c_str();
 	if(fname.isEmpty())	QMessageBox::critical(this, appName, tr("No filename."),QMessageBox::Ok,0,0);
 	else
 	{
 		setlocale(LC_NUMERIC, "C");
-		mgl_write_idtf(gr,setExtension(fname,"svg").toAscii(), appName.toAscii());
+		mgl_write_prc(gr,setExtension(fname,"svg").toAscii(), appName.toAscii(),1);
 		setlocale(LC_NUMERIC, "");
 	}
 }

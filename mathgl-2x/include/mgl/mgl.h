@@ -300,7 +300,7 @@ public:
 	{	mgl_write_gif(gr, fname, descr);	}
 
 	/// Write the frame in file using OBJ format
-	inline void WriteOBJ(const char *fname,const char *descr="",bool use_png=false)
+	inline void WriteOBJ(const char *fname,const char *descr="",bool use_png=true)
 	{	mgl_write_obj(gr, fname, descr, use_png);	}
 	/// Write the frame in file using XYZ format
 	inline void WriteXYZ(const char *fname,const char *descr="")
@@ -314,9 +314,9 @@ public:
 //	/// Write the frame in file using X3D format
 //	inline void WriteX3D(const char *fname,const char *descr="")
 //	{	mgl_write_x3d(gr, fname, descr);	}
-	/// Write the frame in file using IDTF format
-	inline void WriteIDTF(const char *fname,const char *descr="")
-	{	mgl_write_idtf(gr, fname, descr);	}
+	/// Write the frame in file using PRC format
+	inline void WritePRC(const char *fname,const char *descr="",bool make_pdf=true)
+	{	mgl_write_prc(gr, fname, descr, make_pdf);	}
 
 	/// Create new frame.
 	inline void NewFrame()		{	mgl_new_frame(gr);	}

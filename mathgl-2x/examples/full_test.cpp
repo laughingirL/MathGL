@@ -1886,12 +1886,15 @@ static struct option longopts[] =
 	{ "svg",			no_argument,	&type,		2 },
 	{ "solid",			no_argument,	&type,		3 },
 	{ "jpeg",			no_argument,	&type,		4 },
-	{ "idtf",			no_argument,	&type,		5 },
+	{ "prc",			no_argument,	&type,		5 },
 	{ "gif",			no_argument,	&type,		6 },
 	{ "none",			no_argument,	&type,		7 },
 	{ "bps",			no_argument,	&type,		8 },
 	{ "u3d",			no_argument,	&type,		9 },
 	{ "pdf",			no_argument,	&type,		10 },
+	{ "obj",			no_argument,	&type,		11 },
+	{ "off",			no_argument,	&type,		12 },
+	{ "stl",			no_argument,	&type,		13 },
 	{ "help",			no_argument,	NULL,		'?' },
 	{ NULL,				0,				NULL,		0 }
 };
@@ -1911,6 +1914,9 @@ void usage()
 		"-jpeg			- output JPEG\n"
 		"-solid			- output solid PNG\n"
 		"-svg			- output SVG\n"
+		"-obj			- output obj/mtl\n"
+		"-off			- output off\n"
+		"-stl			- output stl\n"
 		"-none			- none output\n"
 		"-srnd			- use the same random numbers in any run\n"
 		"-kind=name		- produce only this picture"
@@ -1939,9 +1945,9 @@ void save(mglGraph *gr,const char *name,const char *suf="")
 		case 4:	// JPEG
 			sprintf(buf,"%s%s.jpg",name,suf);
 			gr->WriteJPEG(buf);	break;
-		case 5:	// IDTF
-			sprintf(buf,"%s%s.idtf",name,suf);
-			gr->WriteIDTF(buf);	break;
+		case 5:	// PRC
+			sprintf(buf,"%s%s.prc",name,suf);
+			gr->WritePRC(buf);	break;
 		case 6:	// GIF
 			sprintf(buf,"%s%s.gif",name,suf);
 			gr->WriteGIF(buf);	break;
@@ -1957,6 +1963,15 @@ void save(mglGraph *gr,const char *name,const char *suf="")
 		case 10:	// PDF
 			sprintf(buf,"%s%s.pdf",name,suf);
 			//gr->WritePDF(buf);	break;	// TODO: Add IDTF support
+		case 11:	// OBJ
+			sprintf(buf,"%s%s.obj",name,suf);
+			gr->WriteOBJ(buf);	break;
+		case 12:	// OFF
+			sprintf(buf,"%s%s.off",name,suf);
+			gr->WriteOFF(buf);	break;
+		case 13:	// STL
+			sprintf(buf,"%s%s.stl",name,suf);
+			gr->WriteSTL(buf);	break;
 		default:// PNG (no alpha)
 			sprintf(buf,"%s%s.png",name,suf);
 			gr->WritePNG(buf,0,false);	break;

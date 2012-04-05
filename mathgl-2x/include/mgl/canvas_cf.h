@@ -89,7 +89,7 @@ void mgl_write_off(HMGL gr, const char *fname,const char *descr, int colored);
 void mgl_write_xyz(HMGL gr, const char *fname,const char *descr);
 //void mgl_write_x3d(HMGL gr, const char *fname,const char *descr);
 void mgl_write_wgl(HMGL gr, const char *fname,const char *descr);
-void mgl_write_idtf(HMGL gr, const char *fname,const char *descr);
+void mgl_write_prc(HMGL gr, const char *fname,const char *descr, int make_pdf);
 void mgl_write_gif(HMGL gr, const char *fname,const char *descr);
 void mgl_start_gif(HMGL gr, const char *fname,int ms);
 void mgl_close_gif(HMGL graph);
@@ -193,7 +193,7 @@ void mgl_write_png_(uintptr_t *graph, const char *fname,const char *descr,int lf
 void mgl_write_png_solid_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
 void mgl_write_eps_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
 void mgl_write_svg_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
-void mgl_write_idtf_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
+void mgl_write_prc_(uintptr_t *graph, const char *fname,const char *descr, int *make_pdf,int lf,int ld);
 void mgl_write_gif_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
 void mgl_start_gif_(uintptr_t *graph, const char *fname,int *ms,int l);
 void mgl_close_gif_(uintptr_t *graph);

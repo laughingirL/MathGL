@@ -2200,7 +2200,7 @@ The function draws grid lines for density plot of surface specified parametrical
 @cindex Cloud
 @cindex Beam
 
-These functions perform plotting of 3D data. 3D means that data depend from 3 independent parameters like matrix @math{f(x_i,y_j,z_k), i=1...n, j=1...m, k=1...l}.By default (if absent) values of @var{x}, @var{y}, @var{z} are equidistantly distributed in axis range. The minor dimensions of arrays @var{x}, @var{y}, @var{z}, @var{a} should be equal @code{x.nx=a.nx && y.nx=a.ny && z.nz=a.nz} or @code{x.nx=y.nx=z.nx=a.nx && x.ny=y.ny=z.ny=a.ny && x.nz=y.nz=z.nz=a.nz}. Arrays @var{x}, @var{y} and @var{z} can be vectors (not matrices as @var{a}). String @var{sch} sets the color scheme (see @ref{Color scheme}) for plot. String @var{opt} contain command options (see @ref{Command options}). @sref{3D samples}
+These functions perform plotting of 3D data. 3D means that data depend from 3 independent parameters like matrix @math{f(x_i,y_j,z_k), i=1...n, j=1...m, k=1...l}. By default (if absent) values of @var{x}, @var{y}, @var{z} are equidistantly distributed in axis range. The minor dimensions of arrays @var{x}, @var{y}, @var{z}, @var{a} should be equal @code{x.nx=a.nx && y.nx=a.ny && z.nz=a.nz} or @code{x.nx=y.nx=z.nx=a.nx && x.ny=y.ny=z.ny=a.ny && x.nz=y.nz=z.nz=a.nz}. Arrays @var{x}, @var{y} and @var{z} can be vectors (not matrices as @var{a}). String @var{sch} sets the color scheme (see @ref{Color scheme}) for plot. String @var{opt} contain command options (see @ref{Command options}). @sref{3D samples}
 
 @anchor{surf3}
 @deftypefn {MGL command} {} surf3 adat @code{val} ['sch'='']
@@ -2234,7 +2234,7 @@ Draws @var{num}-th uniformly distributed in color range isosurfaces for 3d data.
 @deftypefnx {C function} @code{void} mgl_cloud (@code{HMGL} gr, @code{HCDT} a, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_cloud_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-The function draws cloud plot for 3d data specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]). This plot is a set of cubes with color and transparency proportional to value of @var{a}. The resulting plot is like cloud -- low value is transparent but higher ones are not. The number of plotting cells depend on @ref{MeshNum}. If string @var{sch} contain symbol @samp{.} then lower quality plot will produced with much low memory usage. If string @var{sch} contain symbol @samp{!} then transparency will be inversed, i.e. higher become transparent and lower become not transparent. See also @ref{surf3}. @sref{Cloud sample}
+The function draws cloud plot for 3d data specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]). This plot is a set of cubes with color and transparency proportional to value of @var{a}. The resulting plot is like cloud -- low value is transparent but higher ones are not. The number of plotting cells depend on @ref{MeshNum}. If string @var{sch} contain symbol @samp{.} then lower quality plot will produced with much low memory usage. If string @var{sch} contain symbol @samp{!} then transparency will be inversed, i.e. higher become transparent and lower become not transparent. See also @ref{surf3}, @ref{meshnum}. @sref{Cloud sample}
 @end deftypefn
 
 @anchor{dens3}
@@ -2323,7 +2323,6 @@ Draws the isosurface for 3d array @var{a} at constant values of @var{a}=@var{val
 @c ##################################################################
 @node Dual plotting, Vector fields, 3D plotting, MathGL core
 @section Dual plotting
-
 @cindex SurfC
 @cindex SurfA
 @cindex Surf3C
@@ -2391,7 +2390,7 @@ The function draws surface specified parametrically @{@var{x}[i,j], @var{y}[i,j]
 @deftypefnx {C function} @code{void} mgl_surf3a_val (@code{HMGL} gr, @code{float} val, @code{HCDT} a, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_surf3a_xyz_val (@code{HMGL} gr, @code{float} val, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-The function draws isosurface plot for 3d array specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]) at @var{a}(x,y,z)=@var{val}. It is mostly the same as @ref{surf3} function but the color of isosurface depends on values of array @var{c}. If string contain @samp{#} then wire plot is produced. See also @ref{surf3}, @ref{surfc}, @ref{surf3a}. @sref{Surf3C sample}
+The function draws isosurface plot for 3d array specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]) at @var{a}(x,y,z)=@var{val}. It is mostly the same as @ref{surf3} function but the color of isosurface depends on values of array @var{c}. If string contain @samp{#} then wire plot is produced. See also @ref{surf3}, @ref{surfc}, @ref{surf3a}. @sref{Surf3A sample}
 @end deftypefn
 
 @deftypefn {MGL command} {} surf3a adat cdat ['sch'='']
@@ -2438,14 +2437,13 @@ The function draws mapping plot for matrices @{@var{ax}, @var{ay} @} which param
 @deftypefnx {C function} @code{void} mgl_stfa (@code{HMGL} gr, @code{HCDT} re, @code{HCDT} im, @code{int} dn, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_stfa_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} re, @code{HCDT} im, @code{int} dn, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-Draws spectrogram of complex array @var{re}+i*@code{im} for Fourier size of @var{dn} points at plane @var{z}=@var{Min}.z. For example in 1D case, result is density plot of data @math{res[i,j]=|\sum_d^dn exp(I*j*d)*(re[i*dn+d]+I*im[i*dn+d])|/dn} with size @{int(nx/dn), dn, ny@}. At this array @var{re}, @var{im} parametrically depend on coordinates @var{x}, @var{y}. The size of @var{re} and @var{im} must be the same. The minor dimensions of arrays @var{x}, @var{y}, @var{re} should be equal. Arrays @var{x}, @var{y} can be vectors (not matrix as @var{re}).  @sref{STFA sample}
+Draws spectrogram of complex array @var{re}+i*@var{im} for Fourier size of @var{dn} points at plane @var{z}=@var{Min}.z. For example in 1D case, result is density plot of data @math{res[i,j]=|\sum_d^dn exp(I*j*d)*(re[i*dn+d]+I*im[i*dn+d])|/dn} with size @{int(nx/dn), dn, ny@}. At this array @var{re}, @var{im} parametrically depend on coordinates @var{x}, @var{y}. The size of @var{re} and @var{im} must be the same. The minor dimensions of arrays @var{x}, @var{y}, @var{re} should be equal. Arrays @var{x}, @var{y} can be vectors (not matrix as @var{re}).  @sref{STFA sample}
 @end deftypefn
 
 
 @c ##################################################################
 @node Vector fields, Other plotting, Dual plotting, MathGL core
 @section Vector fields
-
 @cindex Traj
 @cindex Vect
 @cindex Dew
@@ -2464,7 +2462,7 @@ These functions perform plotting of 2D and 3D vector fields. There are 5 general
 @deftypefnx {C function} @code{void} mgl_traj_xyz (@code{HMGL} gr, @code{HCDT}x, @code{HCDT}y, @code{HCDT}z, @code{HCDT}ax, @code{HCDT}ay, @code{HCDT}az, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_traj_xy (@code{HMGL} gr, @code{HCDT}x, @code{HCDT}y, @code{HCDT}ax, @code{HCDT}ay, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-The function draws vectors @{@var{ax}, @var{ay}, @var{az}@} along a curve @{@var{x}, @var{y}, @var{z}@}. The length of arrows are proportional to @math{\sqrt@{ax^2+ay^2+az^2@}}. String @var{pen} specifies the color (see @ref{Line styles}). By default (@code{pen=""}) color from palette is used (see @ref{Palette and colors}). Parameter @var{len} set the vector length factor (if non-zero) or vector length to be proportional the distance between curve points (if @var{len}=0). The minor sizes of all arrays must be equal and large 2. The plots are drawn for each row if one of the data is the matrix. See also @ref{vect}. @sref{Traj sample}
+The function draws vectors @{@var{ax}, @var{ay}, @var{az}@} along a curve @{@var{x}, @var{y}, @var{z}@}. The length of arrows are proportional to @math{\sqrt@{ax^2+ay^2+az^2@}}. String @var{pen} specifies the color (see @ref{Line styles}). By default (@code{pen=""}) color from palette is used (see @ref{Palette and colors}). Option @var{value} set the vector length factor (if non-zero) or vector length to be proportional the distance between curve points (if @var{value}=0). The minor sizes of all arrays must be equal and large 2. The plots are drawn for each row if one of the data is the matrix. See also @ref{vect}. @sref{Traj sample}
 @end deftypefn
 
 @anchor{vect}
@@ -2581,7 +2579,7 @@ This is 3D version of the previous functions.
 @deftypefnx {C function} @code{void} mgl_grad_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} phi, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_grad_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} phi, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-The function draws gradient lines for scalar field @var{phi}[i,j,k] specified parametrically @{@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]@}. Number of lines is proportional to @var{value} option (default is 5). If @var{value}<0 then lines start only from edges of axis range. Warm color corresponds to normal flow (like minimum). Cold one corresponds to inverse flow (like maximum). If string @var{sch} contain symbol @samp{v} then arrows are drawn on flow threads. See also @ref{dens}, @ref{cont}, @ref{flow}.
+The function draws gradient lines for scalar field @var{phi}[i,j] (or @var{phi}[i,j,k] in 3d case) specified parametrically @{@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]@}. Number of lines is proportional to @var{value} option (default is 5). If @var{value}<0 then lines start only from edges of axis range. Warm color corresponds to normal flow (like minimum). Cold one corresponds to inverse flow (like maximum). If string @var{sch} contain symbol @samp{v} then arrows are drawn on flow threads. See also @ref{dens}, @ref{cont}, @ref{flow}.
 @end deftypefn
 
 @anchor{pipe}
@@ -2593,7 +2591,7 @@ The function draws gradient lines for scalar field @var{phi}[i,j,k] specified pa
 @deftypefnx {C function} @code{void} mgl_pipe_2d (@code{HMGL} gr, @code{HCDT} ax, @code{HCDT} ay, @code{const char *}sch, @code{float} r0, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_pipe_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} ax, @code{HCDT} ay, @code{const char *}sch, @code{float} r0, @code{const char *}opt)
 @end ifclear
-The function draws flow pipes for the plane vector field @{@var{ax}, @var{ay}@} parametrically depending on coordinates @var{x}, @var{y} at level @var{z} = @var{Min}.z. Number of pipes is proportional to @var{value} option (default is 5). If @samp{#} symbol is specified then pipes start only from edges of axis range. The color of lines is proportional to @math{\sqrt@{ax^2+ay^2@}}. Warm color corresponds to normal flow (like attractor). Cold one corresponds to inverse flow (like source). Parameter @var{r0} set the base pipe radius. If @var{r0}<0 or symbol @samp{i} is specified then pipe radius is inverse proportional to amplitude. The size of @var{ax} and @var{ay} must be equal. The minor dimensions of arrays @var{x}, @var{y} and @var{ax} must be equal too. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{ax}). The vector field is plotted for each z slice of @var{ax}, @var{ay}. See also @ref{flow}, @ref{vect}. @sref{Pipe sample}
+The function draws flow pipes for the plane vector field @{@var{ax}, @var{ay}@} parametrically depending on coordinates @var{x}, @var{y} at level @var{z} = @var{Min}.z. Number of pipes is proportional to @var{value} option (default is 5). If @samp{#} symbol is specified then pipes start only from edges of axis range. The color of lines is proportional to @math{\sqrt@{ax^2+ay^2@}}. Warm color corresponds to normal flow (like attractor). Cold one corresponds to inverse flow (like source). Parameter @var{r0} set the base pipe radius. If @var{r0}<0 or symbol @samp{i} is specified then pipe radius is inverse proportional to amplitude. The vector field is plotted for each z slice of @var{ax}, @var{ay}. See also @ref{flow}, @ref{vect}. @sref{Pipe sample}
 @end deftypefn
 
 @deftypefn {MGL command} {} pipe udat vdat wdat ['sch'='' @code{r0=0.05}]
@@ -2611,7 +2609,6 @@ This is 3D version of the first functions. Here arrays @var{ax}, @var{ay}, @var{
 @c ##################################################################
 @node Other plotting, Nonlinear fitting, Vector fields, MathGL core
 @section Other plotting
-
 @cindex DensXYZ
 @cindex ContXYZ
 @cindex ContFXYZ
@@ -2620,7 +2617,8 @@ This is 3D version of the first functions. Here arrays @var{ax}, @var{ay}, @var{
 @cindex TriPlot
 @cindex TriCont
 @cindex QuadPlot
-@cindex Plots by formula
+@cindex FPlot
+@cindex FSurf
 
 These functions perform miscellaneous plotting. There is unstructured data points plots (Dots), surface reconstruction (Crust), surfaces on the triangular or quadrangular mesh (TriPlot, TriCont, QuadPlot), textual formula plotting (Plots by formula), data plots at edges (Dens[XYZ], Cont[XYZ], ContF[XYZ]). Each type of plotting has similar interface. There are 2 kind of versions which handle the arrays of data and coordinates or only single data array. Parameters of color scheme are specified by the string argument. @xref{Color scheme}.
 

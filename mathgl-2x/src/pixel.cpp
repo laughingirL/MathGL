@@ -385,6 +385,11 @@ void mglCanvas::Clf(mglColor Back)
 	Fog(0);			PDef = 0xffff;	pPos = 0;	StartAutoGroup(NULL);
 	Pnt.clear();	Prm.clear();	Ptx.clear();
 	Sub.clear();	Leg.clear();	Grp.clear();
+
+	Txt.clear();	Txt.reserve(3);
+	Txt.push_back(mglTexture(MGL_DEF_PAL,-1));
+	Txt.push_back(mglTexture("BbcyrR",1));
+	
 	if(Back==0)			Back = 'w';
 	if((Flag&3)==2)	Back = 'k';
 	BDef[0]=Back.r*255;	BDef[1]=Back.g*255;BDef[2]=Back.b*255;	BDef[3]=0;
