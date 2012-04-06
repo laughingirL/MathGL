@@ -626,7 +626,7 @@ void mglTexture::Set(const char *s, int smooth, float alpha)
 void mglTexture::GetC(float u,float v,mglPnt &p) const
 {
 	u -= long(u);
-	register long i=long(256*u);	u = u*256-i;
+	register long i=long(255*u);	u = u*255-i;
 	const mglColor *s=col+2*i;
 	p.r = (s[0].r*(1-u)+s[2].r*u)*(1-v) + (s[1].r*(1-u)+s[3].r*u)*v;
 	p.g = (s[0].g*(1-u)+s[2].g*u)*(1-v) + (s[1].g*(1-u)+s[3].g*u)*v;
@@ -653,9 +653,9 @@ float mglBase::AddTexture(mglColor c)
 	register unsigned long i,j;
 	if(!c.Valid())	return -1;
 	// first lets try an existed one
-	for(i=0;i<Txt.size();i++)	for(j=0;j<256;j++)
+	for(i=0;i<Txt.size();i++)	for(j=0;j<255;j++)
 		if(c==Txt[i].col[2*j])
-			return i+j/256.;
+			return i+j/255.;
 	// add new texture
 	mglTexture t;
 	for(i=0;i<514;i++)	t.col[i]=c;
@@ -684,7 +684,7 @@ float mglBase::NextColor(long &id)
 	}
 	if(!leg_str.empty())
 	{	AddLegend(leg_str.c_str(),last_style);	leg_str.clear();	}
-	CDef = i + (n>0 ? (p+0.5)*(255./256.)/n : 0);	CurrPal++;
+	CDef = i + (n>0 ? (p+0.5)/n : 0);	CurrPal++;
 	return CDef;
 }
 //-----------------------------------------------------------------------------
@@ -750,7 +750,7 @@ char mglBase::SetPenPal(const char *p, long *Id)
 	last_style[6]=mk;
 	long tt, n;
 	tt = AddTexture(p,-1);	n=Txt[tt].n;
-	CDef = tt+((n+CurrPal-1)%n+0.5)*(255./256.)/n;
+	CDef = tt+((n+CurrPal-1)%n+0.5)/n;
 	if(Id)	*Id=long(tt)*256+(n+CurrPal-1)%n;
 	return mk;
 }
