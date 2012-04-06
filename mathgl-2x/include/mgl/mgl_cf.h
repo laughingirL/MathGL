@@ -31,5 +31,6 @@
 #include "mgl/prim.h"
 #include "mgl/other.h"
 #include "mgl/canvas_cf.h"
+#include "mgl/addon.h"
 /*****************************************************************************/
 #endif

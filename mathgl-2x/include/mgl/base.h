@@ -112,7 +112,7 @@ struct mglPnt
 	float c,t,ta;	// index in color scheme
 	float u,v,w;	// normales
 	float r,g,b,a;	// RGBA color
-	mglPnt()	{	xx=yy=zz=x=y=z=c=t=u=v=w=r=g=b=a=0;	}
+	mglPnt()	{	xx=yy=zz=x=y=z=c=t=ta=u=v=w=r=g=b=a=0;	}
 };
 inline mglPnt operator+(const mglPnt &a, const mglPnt &b)
 {	mglPnt c=a;
@@ -133,7 +133,7 @@ inline mglPnt operator*(float b, const mglPnt &a)
 //-----------------------------------------------------------------------------
 struct mglTexture
 {
-	mglColor col[514];	///< Colors itself
+	mglColor col[512];	///< Colors itself
 	long n;				///< Number of initial colors along u
 
 	char Sch[260];		///< Color scheme used

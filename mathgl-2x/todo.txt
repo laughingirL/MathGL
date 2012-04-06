@@ -41,7 +41,8 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 26. Add flag for drawing 3d arrows instead of 2d (S,D -- cube, T -- sq.pyramid, I -- square, O -- sphere???, A,K,V -- ???)
 27. s_hull for triangulation -- add define for any cerr (or exclude streams
 at all) + testing
-
+28. Add extra texture in Error -- for handling transparency of "marks"
+29. Textual colors, like "{0xFF00FF}" ?!?
 
 ============= UDAV =============
 

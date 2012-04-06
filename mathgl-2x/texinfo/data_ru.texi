@@ -1019,7 +1019,8 @@ These functions change the data in some direction like differentiations, integra
 @deftypefnx {Method on @code{mglData}} @code{void} operator*= (@code{const mglData &}d)
 @deftypefnx {Method on @code{mglData}} @code{void} operator*= (@code{float} d)
 @deftypefnx {C function} @code{void} mgl_data_mul_dat (@code{HMDT} dat, @code{HCDT} d)
-@deftypefnx {C function} @code{void} mgl_data_mul_num (@code{HMDT} dat, @code{float} @end ifclear
+@deftypefnx {C function} @code{void} mgl_data_mul_num (@code{HMDT} dat, @code{float} d)
+@end ifclear
 Поэлементно умножает на массив @var{d} или на число @var{val}.
 @end deftypefn
 
@@ -1042,18 +1043,20 @@ These functions change the data in some direction like differentiations, integra
 @deftypefnx {Method on @code{mglData}} @code{void} operator+= (@code{const mglData &}d)
 @deftypefnx {Method on @code{mglData}} @code{void} operator+= (@code{float} d)
 @deftypefnx {C function} @code{void} mgl_data_add_dat (@code{HMDT} dat, @code{HCDT} d)
-@deftypefnx {C function} @code{void} mgl_data_add_num (@code{HMDT} dat, @code{float} @end ifclear
+@deftypefnx {C function} @code{void} mgl_data_add_num (@code{HMDT} dat, @code{float} d)
+@end ifclear
 Поэлементно прибавляет @var{d} или число @var{val}.
 @end deftypefn
 
 @anchor{subto}
 @deftypefn {MGL command} {} subto dat dat2
 @deftypefnx {MGL command} {} subto dat @code{val}
-@@ifclear UDAV
+@ifclear UDAV
 @deftypefnx {Method on @code{mglData}} @code{void} operator-= (@code{const mglData &}d)
 @deftypefnx {Method on @code{mglData}} @code{void} operator-= (@code{float} d)
 @deftypefnx {C function} @code{void} mgl_data_sub_dat (@code{HMDT} dat, @code{HCDT} d)
-@deftypefnx {C function} @code{void} mgl_data_sub_num (@code{HMDT} dat, @code{float} @end ifclear
+@deftypefnx {C function} @code{void} mgl_data_sub_num (@code{HMDT} dat, @code{float} d)
+@end ifclear
 Поэлементно вычитает @var{d} или число @var{val}.
 @end deftypefn
 

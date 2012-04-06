@@ -378,6 +378,41 @@ void mgl_export_eps_cb(Fl_Widget*, void* v)
 	mgl_write_eps(((Fl_MGLView*)v)->FMGL->get_graph(),fname,0);
 }
 //-----------------------------------------------------------------------------
+void mgl_export_prc_cb(Fl_Widget*, void* v)
+{
+	char *fname = fl_file_chooser(gettext("Save File As?"), "*.prc", 0);
+	if(!fname || !fname[0])	return;
+	mgl_write_prc(((Fl_MGLView*)v)->FMGL->get_graph(),fname,0,1);
+}
+//-----------------------------------------------------------------------------
+void mgl_export_tex_cb(Fl_Widget*, void* v)
+{
+	char *fname = fl_file_chooser(gettext("Save File As?"), "*.tex", 0);
+	if(!fname || !fname[0])	return;
+	mgl_write_tex(((Fl_MGLView*)v)->FMGL->get_graph(),fname,0);
+}
+//-----------------------------------------------------------------------------
+void mgl_export_obj_cb(Fl_Widget*, void* v)
+{
+	char *fname = fl_file_chooser(gettext("Save File As?"), "*.obj", 0);
+	if(!fname || !fname[0])	return;
+	mgl_write_obj(((Fl_MGLView*)v)->FMGL->get_graph(),fname,0,1);
+}
+//-----------------------------------------------------------------------------
+void mgl_export_off_cb(Fl_Widget*, void* v)
+{
+	char *fname = fl_file_chooser(gettext("Save File As?"), "*.off", 0);
+	if(!fname || !fname[0])	return;
+	mgl_write_off(((Fl_MGLView*)v)->FMGL->get_graph(),fname,0,0);
+}
+//-----------------------------------------------------------------------------
+void mgl_export_stl_cb(Fl_Widget*, void* v)
+{
+	char *fname = fl_file_chooser(gettext("Save File As?"), "*.stl", 0);
+	if(!fname || !fname[0])	return;
+	mgl_write_stl(((Fl_MGLView*)v)->FMGL->get_graph(),fname,0);
+}
+//-----------------------------------------------------------------------------
 void mgl_su_cb(Fl_Widget*, void* v)
 {
 	Fl_MGLView *e = (Fl_MGLView*)v;	if(!e)	return;
@@ -471,7 +506,7 @@ void mgl_sshow_cb(Fl_Widget *, void *v)
 void mglCanvasFL::Animation()	{	Fl::lock();	mgl_sshow_cb(0,mgl);	Fl::unlock();	}
 void mgl_no_cb(Fl_Widget *, void *)	{}
 //-----------------------------------------------------------------------------
-Fl_Menu_Item pop_graph[15] = {
+Fl_Menu_Item pop_graph[20] = {
 	{ gettext("Export"), 0, mgl_no_cb, 0, FL_SUBMENU,0,0,0,0},
 		{ gettext("... as PNG"),	0, mgl_export_png_cb,0,0,0,0,0,0 },
 		{ gettext("... as PNG (solid)"),	0, mgl_export_pngn_cb,0,0,0,0,0,0 },
@@ -479,6 +514,11 @@ Fl_Menu_Item pop_graph[15] = {
 		{ gettext("... as SVG"),	0, mgl_export_svg_cb,0,0,0,0,0,0 },
 		{ gettext("... as vector EPS"),	0, mgl_export_eps_cb,0,0,0,0,0,0 },
 		{ gettext("... as bitmap EPS"),	0, mgl_export_bps_cb, 0, FL_MENU_DIVIDER,0,0,0,0 },
+		{ gettext("... as TeX"),	0, mgl_export_tex_cb,0,0,0,0,0,0 },
+		{ gettext("... as OBJ"),	0, mgl_export_obj_cb,0,0,0,0,0,0 },
+		{ gettext("... as PRC"),	0, mgl_export_prc_cb,0,0,0,0,0,0 },
+		{ gettext("... as OFF"),	0, mgl_export_off_cb,0,0,0,0,0,0 },
+		{ gettext("... as STL"),	0, mgl_export_stl_cb,0,0,0,0,0,0 },
 		{ 0,0,0,0,0,0,0,0,0 },
 	{ gettext("Copy graphics"),	0, 0, 0, FL_MENU_INACTIVE|FL_MENU_DIVIDER,0,0,0,0},
 	{ gettext("Normal view"),	0, mgl_norm_cb,0,0,0,0,0,0 },

@@ -385,7 +385,7 @@ void QMathGL::exportXYZ(QString fname)
 	else
 	{
 		setlocale(LC_NUMERIC, "C");
-		mgl_write_xyz(gr,setExtension(fname,"svg").toAscii(), appName.toAscii());
+		mgl_write_xyz(gr,setExtension(fname,"xyz").toAscii(), appName.toAscii());
 		setlocale(LC_NUMERIC, "");
 	}
 }
@@ -397,7 +397,7 @@ void QMathGL::exportTEX(QString fname)
 	else
 	{
 		setlocale(LC_NUMERIC, "C");
-		mgl_write_tex(gr,setExtension(fname,"svg").toAscii(), appName.toAscii());
+		mgl_write_tex(gr,setExtension(fname,"tex").toAscii(), appName.toAscii());
 		setlocale(LC_NUMERIC, "");
 	}
 }
@@ -409,7 +409,7 @@ void QMathGL::exportOFF(QString fname)
 	else
 	{
 		setlocale(LC_NUMERIC, "C");
-		mgl_write_off(gr,setExtension(fname,"svg").toAscii(), appName.toAscii(),0);
+		mgl_write_off(gr,setExtension(fname,"off").toAscii(), appName.toAscii(),0);
 		setlocale(LC_NUMERIC, "");
 	}
 }
@@ -421,7 +421,7 @@ void QMathGL::exportOBJ(QString fname)
 	else
 	{
 		setlocale(LC_NUMERIC, "C");
-		mgl_write_obj(gr,setExtension(fname,"svg").toAscii(), appName.toAscii(),0);
+		mgl_write_obj(gr,setExtension(fname,"obj").toAscii(), appName.toAscii(),0);
 		setlocale(LC_NUMERIC, "");
 	}
 }
@@ -433,7 +433,7 @@ void QMathGL::exportSTL(QString fname)
 	else
 	{
 		setlocale(LC_NUMERIC, "C");
-		mgl_write_stl(gr,setExtension(fname,"svg").toAscii(), appName.toAscii());
+		mgl_write_stl(gr,setExtension(fname,"stl").toAscii(), appName.toAscii());
 		setlocale(LC_NUMERIC, "");
 	}
 }
@@ -445,7 +445,7 @@ void QMathGL::exportSTL(QString fname)
 	else
 	{
 		setlocale(LC_NUMERIC, "C");
-		mgl_write_x3d(gr,setExtension(fname,"svg").toAscii(), appName.toAscii());
+		mgl_write_x3d(gr,setExtension(fname,"x3d").toAscii(), appName.toAscii());
 		setlocale(LC_NUMERIC, "");
 	}
 }*/
@@ -457,7 +457,7 @@ void QMathGL::exportTGA(QString fname)
 	else
 	{
 		setlocale(LC_NUMERIC, "C");
-		mgl_write_tga(gr,setExtension(fname,"svg").toAscii(), appName.toAscii());
+		mgl_write_tga(gr,setExtension(fname,"tga").toAscii(), appName.toAscii());
 		setlocale(LC_NUMERIC, "");
 	}
 }
@@ -469,7 +469,7 @@ void QMathGL::exportPRC(QString fname)
 	else
 	{
 		setlocale(LC_NUMERIC, "C");
-		mgl_write_prc(gr,setExtension(fname,"svg").toAscii(), appName.toAscii(),1);
+		mgl_write_prc(gr,setExtension(fname,"prc").toAscii(), appName.toAscii(),1);
 		setlocale(LC_NUMERIC, "");
 	}
 }

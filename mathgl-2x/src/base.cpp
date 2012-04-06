@@ -125,16 +125,16 @@ long mglBase::AddPnt(mglPoint p, float c, mglPoint n, float a, int scl)
 	if(get(MGL_REDUCEACC))
 	{
 		q.x=q.xx=int(p.x*10)*0.1;	q.y=q.yy=int(p.y*10)*0.1;	q.z=q.zz=int(p.z*10)*0.1;
-		q.c=int(c*100)*0.01;	q.t=int(a*100)*0.01;
+		q.c=int(c*100)*0.01;	q.t=q.ta=int(a*100)*0.01;
 		q.u=int(n.x*100)*0.01;	q.v=int(n.y*100)*0.01;	q.w=int(n.z*100)*0.01;
 	}
 	else
 	{
 		q.x=q.xx=p.x;	q.y=q.yy=p.y;	q.z=q.zz=p.z;
-		q.c=c;	q.t=a;	q.u=n.x;	q.v=n.y;	q.w=n.z;
+		q.c=c;	q.t=q.ta=a;	q.u=n.x;	q.v=n.y;	q.w=n.z;
 	}
-	q.x=q.xx=int(p.x*100)*0.01;	q.y=q.yy=p.y;	q.z=q.zz=p.z;
-	q.c=c;	q.t=q.ta=a;	q.u=n.x;	q.v=n.y;	q.w=n.z;
+//	q.x=q.xx=int(p.x*100)*0.01;	q.y=q.yy=p.y;	q.z=q.zz=p.z;
+//	q.c=c;	q.t=q.ta=a;	q.u=n.x;	q.v=n.y;	q.w=n.z;
 	const mglTexture &txt=Txt[long(c)];
 	txt.GetC(c,a,q);	// RGBA color
 
@@ -606,7 +606,7 @@ void mglTexture::Set(const char *s, int smooth, float alpha)
 		{	c[1]=c[4];	c[3]=c[6];	n=2;	}
 	}
 	register float u,v=sm?(n-1)/255.:n/256.;
-	for(i=0;i<256;i++)
+	for(i=0;i<255;i++)
 	{
 		u = v*i;	j = long(u);	u-=j;
 		if(!sm || j==n-1)
@@ -619,7 +619,7 @@ void mglTexture::Set(const char *s, int smooth, float alpha)
 			col[2*i+1]=c[2*j+1]*(1-u)+c[2*j+3]*u;
 		}
 	}
-	col[512]=col[510];	col[513]=col[511];
+	col[510]=col[508];	col[511]=col[509];
 	delete []c;
 }
 //-----------------------------------------------------------------------------
@@ -684,7 +684,7 @@ float mglBase::NextColor(long &id)
 	}
 	if(!leg_str.empty())
 	{	AddLegend(leg_str.c_str(),last_style);	leg_str.clear();	}
-	CDef = i + (n>0 ? (p+0.5)/n : 0);	CurrPal++;
+	CDef = i + (n>0 ? (p+0.5)*(255./256.)/n : 0);	CurrPal++;
 	return CDef;
 }
 //-----------------------------------------------------------------------------
@@ -750,7 +750,7 @@ char mglBase::SetPenPal(const char *p, long *Id)
 	last_style[6]=mk;
 	long tt, n;
 	tt = AddTexture(p,-1);	n=Txt[tt].n;
-	CDef = tt+((n+CurrPal-1)%n+0.5)/n;
+	CDef = tt+((n+CurrPal-1)%n+0.5)*(255./256.)/n;
 	if(Id)	*Id=long(tt)*256+(n+CurrPal-1)%n;
 	return mk;
 }
