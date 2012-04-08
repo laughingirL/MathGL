@@ -59,6 +59,8 @@ public:
 	{	draw = dr;	}
 	inline void setDraw(int (*draw)(mglGraph *gr))
 	{	setDraw(mgl_draw_graph,(void*)draw);	}
+	inline void zoomRegion(float xx1,float xx2,float yy1, float yy2)
+	{	x1=xx1;	y1=yy1;	x2=xx2;	y2=yy2;	}
 
 	int getPer()	{return int(per);};	///< Get perspective value
 	int getPhi()	{return int(phi);};	///< Get Phi-angle value

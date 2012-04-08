@@ -111,7 +111,7 @@ int main(int argc, char *argv[])
 		for(i=0;i<var.size();i++)
 		{
 			gr.NewFrame();
-			printf("frame %d for $0 = \"%ls\"\n",i,var[i].c_str());
+			printf("frame %ld for $0 = \"%ls\"\n",i,var[i].c_str());
 			p.AddParam(0,var[i].c_str());
 			p.Execute(&gr,str.c_str());
 			if(gr.Message()[0])	printf("%s\n",gr.Message());

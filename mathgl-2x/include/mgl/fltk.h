@@ -75,6 +75,9 @@ public:
 	/// Set popup menu pointer
 	inline void set_popup(const Fl_Menu_Item *pmenu, Fl_Widget *wdg, void *v)
 	{	popup = pmenu;	wpar = wdg;	vpar = v;	}
+	inline void zoom_region(float xx1,float xx2,float yy1, float yy2)
+	{	x1=xx1;	y1=yy1;	x2=xx2;	y2=yy2;	}
+	
 protected:
 	mglCanvas *gr;		///< pointer to grapher
 	void *draw_par;		///< Parameters for drawing function mglCanvasWnd::DrawFunc.

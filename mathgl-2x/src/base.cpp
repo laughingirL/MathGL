@@ -139,6 +139,7 @@ long mglBase::AddPnt(mglPoint p, float c, mglPoint n, float a, int scl)
 	txt.GetC(c,a,q);	// RGBA color
 
 	if(!get(MGL_ENABLE_ALPHA))	{	q.a=1;	if(txt.Smooth!=2)	q.ta=1;	}
+	if(q.ta<0.005)	q.ta = 0.005;	// bypass OpenGL/OBJ/PRC bug
 	if(scl&8 && scl>0)	q.a=a;	// bypass palette for enabling alpha in Error()
 	if(!get(MGL_ENABLE_LIGHT) && !(scl&4))	q.u=q.v=NAN;
 	MGL_PUSH(Pnt,q,mutexPnt);	return Pnt.size()-1;
@@ -633,9 +634,6 @@ void mglTexture::GetC(float u,float v,mglPnt &p) const
 	p.b = (s[0].b*(1-u)+s[2].b*u)*(1-v) + (s[1].b*(1-u)+s[3].b*u)*v;
 	p.a = (s[0].a*(1-u)+s[2].a*u)*v + (s[1].a*(1-u)+s[3].a*u)*(1-v);	// for alpha use inverted
 }
-//-----------------------------------------------------------------------------
-bool mglTexture::IsSame(const mglTexture &t) const
-{	return n==t.n && !memcmp(col,t.col,514*sizeof(mglColor));	}
 //-----------------------------------------------------------------------------
 long mglBase::AddTexture(const char *cols, int smooth)
 {

@@ -470,7 +470,7 @@ void mgl_area_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *
 	mglPoint p1,p2,p3,p4,nn;
 	long n1,n2,n3,n4;
 	gr->SetPenPal(pen,&pal);	gr->Reserve(2*n*m);
-	long s=gr->AddTexture(pen,1);
+//	long s=gr->AddTexture(pen,1);
 	for(j=0;j<m;j++)
 	{
 		c2=c1=gr->NextColor(pal);
@@ -514,7 +514,7 @@ void mgl_area_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
 	bool wire = pen && strchr(pen,'#');
 
 	gr->SetPenPal(pen,&pal);	gr->Reserve(2*n*m);
-	long s=gr->AddTexture(pen,1);
+//	long s=gr->AddTexture(pen,1);
 	for(j=0;j<m;j++)
 	{
 		c2=c1=gr->NextColor(pal);
@@ -586,7 +586,7 @@ void mgl_region_xy(HMGL gr, HCDT x, HCDT y1, HCDT y2, const char *pen, const cha
 	bool sh = pen && strchr(pen,'!');
 
 	gr->SetPenPal(pen,&pal);	gr->Reserve(2*n*m);
-	long s=gr->AddTexture(pen,1);
+//	long s=gr->AddTexture(pen,1);
 	for(j=0;j<m;j++)
 	{
 		c2=c1=gr->NextColor(pal);

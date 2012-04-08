@@ -146,7 +146,8 @@ struct mglTexture
 	void Clear()	{	n=0;	}
 	void Set(const char *cols, int smooth=0,float alpha=1);
 	void GetC(float u,float v,mglPnt &p) const;
-	bool IsSame(const mglTexture &t) const;
+	inline bool IsSame(const mglTexture &t) const
+	{	return n==t.n && !memcmp(col,t.col,512*sizeof(mglColor));	}
 	void GetRGBA(unsigned char *f) const;	// Write as BGRA for fastest export to TGA
 };
 //-----------------------------------------------------------------------------
