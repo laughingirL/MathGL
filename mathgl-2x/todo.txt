@@ -3,7 +3,6 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 
 ============= NEW  =============
 
-2. Add help about cmake into the "Installation and using" -- after build system will be ready
 3. Add FAQ about MPEG/GIF and PDF
 
 4. Check RunThr() in python

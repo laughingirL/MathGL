@@ -778,8 +778,10 @@ void mglCanvas::StartAutoGroup (const char *lbl)
 	if(lbl==NULL)	{	id=1;	return;	}
 	if(ObjId<0)	{	ObjId = -id;	id++;	}
 	register size_t len = Grp.size();
-	if(ObjId>=0 &&len>0 && ObjId!=Grp[len-1].Id)
-		MGL_PUSH(Grp,mglGroup(lbl,ObjId),mutexGrp);
+	if(ObjId>=0 && len>0 && ObjId!=Grp[len-1].Id)
+	{	MGL_PUSH(Grp,mglGroup(lbl,ObjId),mutexGrp);	}
+	else if(ObjId<0)
+	{	MGL_PUSH(Grp,mglGroup(lbl,ObjId),mutexGrp);	}
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::EndGroup()	{	LoadState();	}
