@@ -5,7 +5,6 @@ ${CMAKE_BINARY_DIR}/lang/numpy.i
 set(src_imp_dep
 ${CMAKE_SOURCE_DIR}/include/mgl/type.h
 ${CMAKE_SOURCE_DIR}/include/mgl/data.h
-${CMAKE_SOURCE_DIR}/include/mgl/mgl.h
 ${CMAKE_SOURCE_DIR}/include/mgl/mathgl.h
 ${CMAKE_SOURCE_DIR}/include/mgl/window.h
 )
@@ -15,6 +14,9 @@ file(TO_NATIVE_PATH ${MathGL_BINARY_DIR}/lang/mgl.i MGL_I)
 
 file(TO_NATIVE_PATH ${MathGL_SOURCE_DIR}/include SRC_INC)
 file(TO_NATIVE_PATH ${MathGL_BINARY_DIR}/include BIN_INC)
+
+file(TO_NATIVE_PATH ${MathGL_BINARY_DIR}/src MGL_LINK_DIR)
+file(TO_NATIVE_PATH ${MathGL_BINARY_DIR}/widgets MGL_WND_LINK_DIR)
 
 get_directory_property(DEF_LIST COMPILE_DEFINITIONS)
 foreach(def_i ${DEF_LIST})
@@ -29,10 +31,11 @@ if(MGL_HAVE_PYTHON)
 	configure_file(${MathGL_SOURCE_DIR}/lang/setup.py.in ${MathGL_BINARY_DIR}/lang/setup.py)
  	add_custom_command(OUTPUT _mathgl.so mathgl.py
 		COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_BINARY_DIR}/lang/setup.py
-		build -f build_ext 
+		build build_ext 
 		--include-dirs='${BIN_INC}:${SRC_INC}'
-		--library-dirs='$<TARGET_LINKER_FILE_DIR:mgl>:$<TARGET_LINKER_FILE_DIR:mgl-wnd>'
-		--libraries='mgl-wnd mgl'
+#		--library-dirs='$<TARGET_LINKER_FILE_DIR:mgl>:$<TARGET_LINKER_FILE_DIR:mgl-wnd>' #commented out for compatibilty reason with old cmake
+		--library-dirs='${MGL_LINK_DIR}:${MGL_WND_LINK_DIR}'
+#		--libraries='mgl-wnd'
 		--swig ${SWIG_EXECUTABLE}
 		--swig-opts='-c++ -threads -I${BIN_INC} -I${SRC_INC} ${MGL_DEF}'
 		DEPENDS ${dep_libs} ${src_dep}
@@ -54,9 +57,10 @@ if(MGL_HAVE_OCTAVE)
 	execute_process(COMMAND ${oct_prog} -p OCTINCLUDEDIR
 	OUTPUT_VARIABLE oct_inc
 	OUTPUT_STRIP_TRAILING_WHITESPACE)
+message(STATUS "${oct_prog} ${oct_host} ${oct_api}")
 	set(oct_arch ${oct_host}-${oct_api})
 	set(pkg_name mathgl)
-	file(MAKE_DIRECTORY ${pkg_name}/inst/${oct_arch})
+	file(MAKE_DIRECTORY ${MathGL_BINARY_DIR}/lang/${pkg_name}/inst/${oct_arch})
 
 	configure_file(${MathGL_SOURCE_DIR}/COPYING ${MathGL_BINARY_DIR}/lang/${pkg_name} COPYONLY)
 	configure_file(${MathGL_SOURCE_DIR}/lang/DESCRIPTION ${MathGL_BINARY_DIR}/lang/${pkg_name} COPYONLY)
@@ -70,11 +74,13 @@ if(MGL_HAVE_OCTAVE)
 		DEPENDS ${src_dep}
 		IMPLICIT_DEPENDS CXX ${src_imp_dep}
 	)
+#		-L$<TARGET_LINKER_FILE_DIR:mgl>                      #commented out for compatibilty reason with old cmake
+#		-L$<TARGET_LINKER_FILE_DIR:mgl-wnd>                  #commented out for compatibilty reason with old cmake
 	add_custom_command(OUTPUT ${pkg_name}/inst/${oct_arch}/mathgl.oct
-		COMMAND ${oct_mk} -pthread ${MGL_DEF}
-		-I${oct_inc} -I${BIN_INC} -I${SRC_INC} 
-		-L$<TARGET_LINKER_FILE_DIR:mgl>
-		-L$<TARGET_LINKER_FILE_DIR:mgl-wnd>
+		COMMAND ${oct_mk} ${MGL_DEF}
+		-I${oct_inc} -I${BIN_INC} -I${SRC_INC}
+		-L${MGL_LINK_DIR}
+		-L${MGL_WND_LINK_DIR}
 		-lmgl-wnd -lmgl
 		-o ${pkg_name}/inst/${oct_arch}/mathgl.oct mgl_octave.cpp
 		DEPENDS ${dep_libs} ${src_dep} mgl_octave.cpp

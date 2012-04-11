@@ -5,7 +5,7 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 
 3. Add FAQ about MPEG/GIF and PDF
 
-4. Check RunThr() in python
+4. Check RunThr() in python/octave
 
 ============= FOR V.2.1 ========
 
@@ -42,6 +42,11 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 at all) + testing
 28. Add extra texture in Error -- for handling transparency of "marks"
 29. Textual colors, like "{0xFF00FF}" ?!?
+30. Auto axis range for formulas, like AutoRange("y(x)") or AutoRange('x',"x(t)").
+
+31. Check feature:
+* dash for rect, ellipse boundary
+
 
 ============= UDAV =============
 

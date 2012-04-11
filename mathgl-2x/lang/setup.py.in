@@ -2,6 +2,11 @@ from distutils.core import setup, Extension
 import os
 
 mgl_i="${MGL_I}"
+dep_libs="${dep_libs}"
+d_l=[]
+for i in dep_libs.split(';'):
+	d_l.append(i)
+
 def_list="${DEF_LIST}"
 defs=[]
 for i in def_list.split(';'):
@@ -10,7 +15,8 @@ for i in def_list.split(';'):
 	else: defs.append((k[0],k[1]))
 mgl_module = Extension('_mathgl',
 	sources=[mgl_i],
-	define_macros=defs
+	define_macros=defs,
+	libraries=d_l
 )
 
 setup (
