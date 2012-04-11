@@ -29,7 +29,7 @@ if(MGL_HAVE_PYTHON)
 	configure_file(${MathGL_SOURCE_DIR}/lang/setup.py.in ${MathGL_BINARY_DIR}/lang/setup.py)
  	add_custom_command(OUTPUT _mathgl.so mathgl.py
 		COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_BINARY_DIR}/lang/setup.py
-		build build build_ext 
+		build -f build_ext 
 		--include-dirs='${BIN_INC}:${SRC_INC}'
 		--library-dirs='$<TARGET_LINKER_FILE_DIR:mgl>:$<TARGET_LINKER_FILE_DIR:mgl-wnd>'
 		--libraries='mgl-wnd mgl'
