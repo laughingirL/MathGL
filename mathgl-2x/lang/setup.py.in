@@ -1,28 +1,17 @@
 from distutils.core import setup, Extension
 import os
 
-try:
-	source_dir="${SRC_INC}"
-	binary_dir="${BIN_INC}"
-	mgl_i="${MGL_I}"
-	mgl_lib="${MGL_LIB}"
-	mgl_lib_wnd="${MGL_LIB_WND}"
-except KeyError:
-	source_dir="."
-	binary_dir="."
-#	mgl_dir="src/.libs/libmgl.so"
-
+mgl_i="${MGL_I}"
+def_list="${DEF_LIST}"
+defs=[]
+for i in def_list.split(';'):
+	k=i.split('=')
+	if len(k)==1: defs.append((i,None))
+	else: defs.append((k[0],k[1]))
 mgl_module = Extension('_mathgl',
-    sources=[mgl_i],
-    include_dirs=[binary_dir, source_dir],
-    swig_opts=[
-#	"-outdir %s/lang" % binary_dir,
-	'-c++',
-	'-threads',
-	"-I%s" % binary_dir,
-	"-I%s" % source_dir],
-    extra_objects=[mgl_lib,mgl_lib_wnd]
-    )
+	sources=[mgl_i],
+	define_macros=defs
+)
 
 setup (
     name = "mathgl",
