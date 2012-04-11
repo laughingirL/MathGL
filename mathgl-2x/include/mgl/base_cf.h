@@ -69,7 +69,11 @@ void mgl_set_rotated_text(HMGL graph, int enable);
 void mgl_load_font(HMGL gr, const char *name, const char *path);
 void mgl_copy_font(HMGL gr, HMGL gr_from);
 void mgl_restore_font(HMGL gr);
+void mgl_set_color(char id, float r, float g, float b);
+void mgl_set_def_sch(HMGL gr, const char *sch);
 /*****************************************************************************/
+void mgl_set_def_sch_(uintptr_t *gr, const char *sch,int);
+void mgl_set_color_(char *id, float *r, float *g, float *b, int);
 int mgl_get_warn_(uintptr_t *gr);
 void mgl_set_warn_(uintptr_t *gr, int *code, const char *text,int);
 long mgl_use_graph_(uintptr_t *gr, int *inc);

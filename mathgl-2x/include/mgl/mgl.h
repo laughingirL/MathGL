@@ -117,6 +117,8 @@ public:
 
 	/// Set default palette
 	inline void SetPalette(const char *colors)	{	mgl_set_palette(gr, colors);	}
+	/// Set default color scheme
+	inline void SetDefScheme(const char *sch)	{	mgl_set_def_sch(gr, sch);	}
 
 	/// Get last warning code
 	inline int  GetWarn()			{	return mgl_get_warn(gr);}

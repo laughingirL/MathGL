@@ -521,7 +521,7 @@ void mglBase::ClearEq()
 //-----------------------------------------------------------------------------
 //		Colors ids
 //-----------------------------------------------------------------------------
-mglColorID mglColorIds[] = {{'k', mglColor(0,0,0)},
+mglColorID mglColorIds[31] = {{'k', mglColor(0,0,0)},
 	{'r', mglColor(1,0,0)},		{'R', mglColor(0.5,0,0)},
 	{'g', mglColor(0,1,0)},		{'G', mglColor(0,0.5,0)},
 	{'b', mglColor(0,0,1)},		{'B', mglColor(0,0,0.5)},

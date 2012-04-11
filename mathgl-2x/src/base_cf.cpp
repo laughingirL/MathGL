@@ -23,6 +23,18 @@
 //		C interfaces
 //
 //-----------------------------------------------------------------------------
+void mgl_set_color(char id, float r, float g, float b)
+{
+	register size_t i;
+	for(i=0;mglColorIds[i].id;i++)	if(mglColorIds[i].id==id)	mglColorIds[i].col = mglColor(r,g,b);
+}
+void mgl_set_color_(char *id, float *r, float *g, float *b, int)	{	mgl_set_color(*id,*r,*g,*b);	}
+//-----------------------------------------------------------------------------
+void mgl_set_def_sch(HMGL gr, const char *sch)	{	gr->SetDefScheme(sch);	}
+void mgl_set_def_sch_(uintptr_t *gr, const char *sch,int l)
+{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	_GR_->SetDefScheme(s);	delete []s;	}
+//-----------------------------------------------------------------------------
 const char *mgl_get_mess(HMGL gr)	{	return gr->Mess.c_str();	}
 int mgl_get_warn(HMGL gr)	{	return gr->GetWarn();	}
 void mgl_set_warn(HMGL gr, int code, const char *txt)

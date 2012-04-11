@@ -262,7 +262,7 @@ void mgl_write_obj(HMGL gr, const char *fname,const char *descr, int use_png)
 	fprintf(fp,"# Created by MathGL library\n# Title: %s\n",(descr && *descr) ? descr : fname);
 	for(i=0;i<size_t(gr->GetPntNum());i++)
 	{
-		mglPnt pp = gr->GetPnt(i);
+		const mglPnt &pp = gr->GetPnt(i);
 		fprintf(fp,"v %g %g %g\n",pp.x,pp.y,pp.z);
 		fprintf(fp,"vt %g %g\n",1-pp.ta,pp.c/ntxt);
 //		if(isnan(pp.u))	fprintf(fp,"vn 0 0 0\n");
@@ -379,7 +379,7 @@ void mgl_write_xyz(HMGL gr, const char *fname,const char *descr)
 	fprintf(fp,"# List of Vertices, with (x,y,z) coordinates.\n");
 	for(i=0;i<gr->GetPntNum();i++)
 	{
-		mglPnt pp = gr->GetPnt(i);
+		const mglPnt &pp = gr->GetPnt(i);
 		fprintf(fp,"%g %g %g\n",pp.x,pp.y,pp.z);
 	}
 	fclose(fp);
@@ -395,7 +395,7 @@ void mgl_write_xyz(HMGL gr, const char *fname,const char *descr)
 	fprintf(ff,"# Indices of vertices to connect for faces\n");
 	for(i=0;i<gr->GetPrmNum();i++)
 	{
-		const mglPrim q=gr->GetPrm(i);
+		const mglPrim &q=gr->GetPrm(i);
 		if(q.type==1)	fprintf(fp,"%ld %ld\n",q.n1+1,q.n2+1);
 		if(q.type==2)	fprintf(ff,"%ld %ld %ld\n",q.n1+1,q.n2+1,q.n3+1);
 		if(q.type==3)	fprintf(ff,"%ld %ld %ld\n%ld %ld %ld\n",q.n1+1,q.n2+1,q.n3+1,q.n4+1,q.n2+1,q.n3+1);
@@ -412,7 +412,7 @@ void mgl_write_off(HMGL gr, const char *fname,const char *descr, int colored)
 	register long i,nf=0;
 	for(i=0;i<gr->GetPrmNum();i++)	// find number of faces
 	{
-		const mglPrim q=gr->GetPrm(i);
+		const mglPrim &q=gr->GetPrm(i);
 		if(q.type==2 || q.type==3)	nf++;
 	}
 	if(nf<=0)	return;	// nothing to do
@@ -427,7 +427,7 @@ void mgl_write_off(HMGL gr, const char *fname,const char *descr, int colored)
 	fprintf(fp,"%ld %ld 0\n",gr->GetPntNum(), nf);
 	for(i=0;i<gr->GetPntNum();i++)
 	{
-		mglPnt pp = gr->GetPnt(i);
+		const mglPnt &pp = gr->GetPnt(i);
 		if(colored)
 			fprintf(fp,"%g %g %g %g %g %g %g\n", pp.x, pp.y, pp.z, pp.r, pp.g, pp.b, pp.a);
 		else	fprintf(fp,"%g %g %g\n", pp.x, pp.y, pp.z);

@@ -163,7 +163,7 @@ struct mglColorID
 	char id;
 	mglColor col;
 };
-extern mglColorID mglColorIds[];
+extern mglColorID mglColorIds[31];
 //-----------------------------------------------------------------------------
 /// Base class for canvas which handle all basic drawing
 class mglBase
