@@ -7,7 +7,7 @@ This chapter contains a lot of plotting commands for 1D, 2D and 3D data. It also
 @end ifset
 
 @ifclear UDAV
-The core of MathGL is @strong{mglGraph} class defined in @code{#include <mgl/mgl.h>}. It contains a lot of plotting functions for 1D, 2D and 3D data. It also encapsulates parameters for axes drawing. Moreover an arbitrary coordinate transformation can be used for each axis. All plotting functions use data encapsulated in mglData class (see @ref{Data processing}) that allows to check sizes of used arrays easily. Also it have many functions for data handling: modify it by formulas, find momentums and distribution (histogram), apply operator (differentiate, integrate, transpose, Fourier and so on), change data sizes (interpolate, squeeze, crop and so on). Additional information about colors, fonts, formula parsing can be found in @ref{General concepts} and @ref{Other classes}.
+The core of MathGL is @strong{mglGraph} class defined in @code{#include <mgl/mathgl.h>}. It contains a lot of plotting functions for 1D, 2D and 3D data. It also encapsulates parameters for axes drawing. Moreover an arbitrary coordinate transformation can be used for each axis. All plotting functions use data encapsulated in mglData class (see @ref{Data processing}) that allows to check sizes of used arrays easily. Also it have many functions for data handling: modify it by formulas, find momentums and distribution (histogram), apply operator (differentiate, integrate, transpose, Fourier and so on), change data sizes (interpolate, squeeze, crop and so on). Additional information about colors, fonts, formula parsing can be found in @ref{General concepts} and @ref{Other classes}.
 @end ifclear
 
 @menu

@@ -222,7 +222,7 @@ Note, that I use @code{inline} modifier for using the same binary code with diff
 
 So, the complete sample will be
 @verbatim
-#include <mgl/mgl.h>
+#include <mgl/mathgl.h>
 //---------------------------------------------------------
 #ifdef __cplusplus
 extern "C" {
@@ -347,7 +347,7 @@ give access to all element as in single array (@code{vthr}) -- you need this onl
 Let me, for example define class @code{mglComplex} which will handle complex number and draw its amplitude or phase, depending on flag @var{use_abs}:
 @verbatim
 #include <complex>
-#include <mgl/mgl.h>
+#include <mgl/mathgl.h>
 #define dual std::complex<double>
 class mglComplex : public mglDataA
 {
@@ -355,7 +355,7 @@ public:
   long nx;      ///< number of points in 1st dimensions ('x' dimension)
   long ny;      ///< number of points in 2nd dimensions ('y' dimension)
   long nz;      ///< number of points in 3d dimensions ('z' dimension)
-  dual *a;   ///< data array
+  dual *a;      ///< data array
   bool use_abs; ///< flag to use abs() or arg()
 
   inline mglComplex(long xx=1,long yy=1,long zz=1)

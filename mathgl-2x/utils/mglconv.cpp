@@ -21,7 +21,7 @@
 #include <string.h>
 #include <locale.h>
 #include <unistd.h>
-#include "mgl/mgl.h"
+#include "mgl/mathgl.h"
 void mgl_error_print(const char *Message, void *par);
 void mgl_ask_gets(const wchar_t *quest, wchar_t *res);
 //-----------------------------------------------------------------------------

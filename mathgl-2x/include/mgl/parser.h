@@ -21,7 +21,7 @@
 #define _MGL_PARSER_H_
 
 #ifdef __cplusplus
-#include "mgl/mgl.h"
+#include "mgl/mathgl.h"
 #include <string>
 //-----------------------------------------------------------------------------
 /// Structure for the command argument.

@@ -5,7 +5,7 @@ This chapter contain information about basic and advanced MathGL, hints and samp
 
 Note, that MathGL v.2.* have only 2 end-user interfaces: one for C/Fortran and similar languages which don't support classes, another one for C++/Python/Octave and similar languages which support classes. So, most of samples placed in this chapter can be run as is (after minor changes due to different syntaxes for different languages). For example, the C++ code
 @verbatim
-#include <mgl/mgl.h>
+#include <mgl/mathgl.h>
 int main()
 {
   mglGraph gr;
@@ -28,7 +28,7 @@ gr.WriteFrame("test.png");
 @end verbatim
 in C will be as
 @verbatim
-#include <mgl/mgl_cf.h>
+#include <mgl/mathgl_cf.h>
 int main()
 {
   HMGL gr = mgl_create_graph(600,400);
@@ -156,7 +156,7 @@ int main(int argc,char **argv)
 @end verbatim
 Or use pure C-functions:
 @verbatim
-#include <mgl/mgl_cf.h>
+#include <mgl/mathgl_cf.h>
 int sample(HMGL gr, void *)
 {
   mgl_rotate(gr,60,40,0);
@@ -194,7 +194,7 @@ Another way of using MathGL library is the direct writing of the picture to the 
 
 The following code produces a bitmap PNG picture:
 @verbatim
-#include <mgl/mgl.h>
+#include <mgl/mathgl.h>
 int main(int ,char **)
 {
   mglGraph gr;
@@ -214,7 +214,7 @@ The only difference from the previous variant (using windows) is manual switchin
 
 The code for export into other formats (for example, into vector EPS file) looks the same:
 @verbatim
-#include <mgl/mgl.h>
+#include <mgl/mathgl.h>
 int main(int ,char **)
 {
   mglGraph gr;
@@ -310,7 +310,7 @@ Pictures with @strong{animation can be saved in file(s)} as well. You can: expor
 @anchor{GIF}
 The simplest methods is making animated GIF. There are 3 steps: (1) open GIF file by @code{StartGIF()} function; (2) create the frames by calling @code{NewFrame()} before and @code{EndFrame()} after plotting; (3) close GIF by @code{CloseGIF()} function. So the simplest code for ``running'' sinusoid will look like this:
 @verbatim
-#include <mgl/mgl.h>
+#include <mgl/mathgl.h>
 int main(int ,char **)
 {
   mglGraph gr;
@@ -334,7 +334,7 @@ int main(int ,char **)
 @anchor{MPEG}
 The second way is saving each frame in separate file (usually JPEG) and later make the movie from them. MathGL have special function for saving frames -- it is @code{WriteFrame()}. This function save each frame with automatic name @samp{frame0001.jpg, frame0002.jpg} and so on. Here prefix @samp{frame} is defined by @var{PlotId} variable of @code{mglGraph} class. So the similar code will look like this:
 @verbatim
-#include <mgl/mgl.h>
+#include <mgl/mathgl.h>
 int main(int ,char **)
 {
   mglGraph gr;
@@ -3423,7 +3423,7 @@ The standard way is to use Unicode encoding for the text output. But the MathGL 
 There are 3 general ways. First, the point with @code{NAN} value as one of the coordinates will never be plotted. Second, special variables @var{CutMin}, @var{CutMax} or function @code{CutOff}() define the condition when the points should be omitted (see @ref{Cutting}). Last, you may change the transparency of a part of the plot by the help of functions @code{SurfA()}, @code{Surf3A()} (see @ref{Dual plotting}). In this last case the transparency is switched on smoothly.
 
 @item I use VisualStudio, CBuilder or some other compiler (not MinGW/gcc). How can I link the MathGL library?
-In version 2.0, the recommended class @code{mglGraph} (header file @code{#include <mgl/mgl.h>}) contains only @code{inline} functions and is acceptable for any compiler with the same binary files. However, if you plan to access low-level features (i.e. classes mglBase, mglCanvas and so on) then you have to recompile MathGL by yours compiler.
+In version 2.0, the recommended class @code{mglGraph} (header file @code{#include <mgl/mathgl.h>}) contains only @code{inline} functions and is acceptable for any compiler with the same binary files. However, if you plan to access low-level features (i.e. classes mglBase, mglCanvas and so on) then you have to recompile MathGL by yours compiler.
 
 @c @strong{Finally!} Please @emph{do not} ask me Windows-specific questions. I do not use Windows. I know nothing about Visual Basic, Visual C++, CBuiled or .NET. Please find the appropriate Usenet discussion group and ask your question there.
 

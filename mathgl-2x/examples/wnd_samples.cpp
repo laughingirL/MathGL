@@ -22,7 +22,7 @@
 #include <stdlib.h>
 #include <math.h>
 //-----------------------------------------------------------------------------
-#include "mgl/mgl.h"
+#include "mgl/mathgl.h"
 #include "mgl/parser.h"
 //-----------------------------------------------------------------------------
 void mgls_prepare1d(mglData *y, mglData *y1=0, mglData *y2=0, mglData *x1=0, mglData *x2=0);

@@ -21,7 +21,7 @@
 #define _MGL_H_
 
 #include "mgl/define.h"
-#include "mgl/mgl_cf.h"
+#include "mgl/mathgl_cf.h"
 #include "mgl/data.h"
 #ifndef NO_OPENGL
 #include "mgl/opengl.h"

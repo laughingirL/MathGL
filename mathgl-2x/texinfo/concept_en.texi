@@ -284,7 +284,7 @@ Finally, a special command language MGL (see @ref{MGL scripts}) was written for 
 
 The C interface is a base for many other interfaces. It contains the pure C functions for most of the methods of MathGL classes. In distinction to C++ classes, C functions must have an argument HMGL (for graphics) and/or HMDT (for data arrays), which specifies the object for drawing or manipulating (changing). So, firstly, the user has to create this object by the function @code{mgl_create_*()} and has to delete it after the use by function @code{mgl_delete_*()}.
 
-All C functions are described in the header file @code{#include <mgl/mgl_c.h>} and use variables of the following types:
+All C functions are described in the header file @code{#include <mgl/mathgl_cf.h>} and use variables of the following types:
 @itemize
 @item
 @code{HMGL} --- Pointer to class @code{mglGraph} (@pxref{MathGL core}).

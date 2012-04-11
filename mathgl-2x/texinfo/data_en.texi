@@ -1185,7 +1185,7 @@ You can use arbitrary formulas of existed data arrays or constants as any argume
 @end ifset
 
 @ifclear UDAV
-MathGL have a special class @code{mglExpr} for evaluating of formula specified by the string. This class is defined in @code{#include <mgl/mgl.h>}. It is the fast variant of formula evaluation. At creation it will be recognized and compiled to tree-like internal code. At evaluation stage only fast calculations are performed. There is no difference between lower or upper case in formulas. If argument value lie outside the range of function definition then function returns NaN. @xref{Textual formulas}.
+MathGL have a special class @code{mglExpr} for evaluating of formula specified by the string. This class is defined in @code{#include <mgl/mathgl.h>}. It is the fast variant of formula evaluation. At creation it will be recognized and compiled to tree-like internal code. At evaluation stage only fast calculations are performed. There is no difference between lower or upper case in formulas. If argument value lie outside the range of function definition then function returns NaN. @xref{Textual formulas}.
 
 @deftypefn {Constructor on @code{mglExpr}} @code{} mglExpr (@code{const char *}expr)
 @deftypefnx {C function} @code{HMEX} mgl_create_expr (@code{const char *}expr)

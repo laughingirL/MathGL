@@ -29,7 +29,7 @@
 #include <QLayout>
 #include <QLabel>
 #include <QLineEdit>
-#include <mgl/mgl.h>
+#include <mgl/mathgl.h>
 //-----------------------------------------------------------------------------
 #include "xpm/none.xpm"
 #include "xpm/mark_.xpm"

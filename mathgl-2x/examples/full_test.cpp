@@ -25,10 +25,8 @@
 #include <stdlib.h>
 #include <getopt.h>
 #include <vector>
-#include "mgl/mgl.h"
+#include "mgl/mathgl.h"
 #include "mgl/eval.h"
-//#include <mgl/mgl_idtf.h>
-//#include "mgl/parser.h"
 //-----------------------------------------------------------------------------
 void mgls_prepare1d(mglData *y, mglData *y1=0, mglData *y2=0, mglData *x1=0, mglData *x2=0);
 void mgls_prepare2d(mglData *a, mglData *b=0, mglData *v=0);

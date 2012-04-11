@@ -10,8 +10,8 @@ set(mgl_hdr
 ../include/mgl/base_cf.h	../include/mgl/fit.h	../include/mgl/plot.h
 ../include/mgl/base.h		../include/mgl/prim.h	../include/mgl/canvas_cf.h
 ../include/mgl/font.h		../include/mgl/canvas.h	../include/mgl/surf.h
-../include/mgl/mgl_cf.h		../include/mgl/type.h	${MathGL_BINARY_DIR}/include/mgl/config.h
-../include/mgl/cont.h		../include/mgl/mgl.h	../include/mgl/vect.h
+../include/mgl/mathgl_cf.h	../include/mgl/type.h	${MathGL_BINARY_DIR}/include/mgl/config.h
+../include/mgl/cont.h		../include/mgl/mathgl.h	../include/mgl/vect.h
 ../include/mgl/data.h		../include/mgl/volume.h	../include/mgl/data_cf.h
 ../include/mgl/define.h		../include/mgl/other.h	../include/mgl/eval.h
 ../include/mgl/parser.h		../include/mgl/addon.h	../include/mgl/evalc.h )

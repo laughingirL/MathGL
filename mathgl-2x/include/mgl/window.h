@@ -21,7 +21,7 @@
 #ifndef _MGL_WINDOW_H_
 #define _MGL_WINDOW_H_
 /*****************************************************************************/
-#include "mgl/mgl.h"
+#include "mgl/mathgl.h"
 //-----------------------------------------------------------------------------
 /// Class for drawing in windows (like, mglCanvasFL, mglCanvasQT and so on)
 /// Make inherited class and redefine Draw() function if you don't want to use function pointers.

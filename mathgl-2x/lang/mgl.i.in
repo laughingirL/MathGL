@@ -40,7 +40,7 @@
 //#include "mgl/config.h"
 #include "mgl/type.h"
 #include "mgl/data.h"
-#include "mgl/mgl.h"
+#include "mgl/mathgl.h"
 #include "mgl/window.h"
 %}
 
@@ -92,7 +92,7 @@ import_array();
 //%include "mgl/config.h"
 %include "mgl/type.h"
 %include "mgl/data.h"
-%include "mgl/mgl.h"
+%include "mgl/mathgl.h"
 %include "mgl/window.h"
 %extend mglData
 {
