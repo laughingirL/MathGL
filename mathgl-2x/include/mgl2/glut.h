@@ -21,8 +21,8 @@
 #ifndef _MGL_GLUT_H_
 #define _MGL_GLUT_H_
 #ifdef __cplusplus
-#include "mgl/opengl.h"
-#include "mgl/window.h"
+#include "mgl2/opengl.h"
+#include "mgl2/window.h"
 //-----------------------------------------------------------------------------
 extern "C" {
 #endif
@@ -46,7 +46,7 @@ public:
 	mglCanvasGLUT(int (*draw)(mglGraph *gr, void *p), const char *title, void *par=NULL,
 				void (*reload)(int next, void *p)=NULL, bool maximize=false);
 	virtual ~mglCanvasGLUT();
-	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Служебные ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	/// Create a window for plotting. Now implemeted only for GLUT.
 	void Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p),
 						const char *title,void *par=NULL,

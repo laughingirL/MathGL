@@ -29,8 +29,8 @@
 #include <wchar.h>
 #endif
 
-#include "mgl/base.h"
-#include "mgl/font.h"
+#include "mgl2/base.h"
+#include "mgl2/font.h"
 //-----------------------------------------------------------------------------
 extern unsigned mgl_numg, mgl_cur;
 extern float mgl_fact;

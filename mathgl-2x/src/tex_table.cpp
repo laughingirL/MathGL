@@ -17,7 +17,7 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include "mgl/font.h"
+#include "mgl2/font.h"
 
 /// Table of LaTeX symbols and its UTF8 codes. This array MUST BE sorted!!!
 mglTeXsymb mgl_tex_symb[] = {

@@ -22,7 +22,7 @@
 #include <math.h>
 #include <string.h>
 
-#include "mgl/data.h"
+#include "mgl2/data.h"
 
 #if MGL_HAVE_GSL
 #include <gsl/gsl_fft_complex.h>

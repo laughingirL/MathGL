@@ -21,7 +21,7 @@
 #include <QLabel>
 #include <QLayout>
 #include "qmglsyntax.h"
-#include <mgl/parser.h>
+#include <mgl2/parser.h>
 mglParser parser;
 int mgl_cmd_cmp(const void *a, const void *b);
 // comment string keyword option suffix number

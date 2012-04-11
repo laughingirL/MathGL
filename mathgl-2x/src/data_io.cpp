@@ -27,8 +27,8 @@
 #include <glob.h>
 #endif
 
-#include "mgl/data.h"
-#include "mgl/eval.h"
+#include "mgl2/data.h"
+#include "mgl2/eval.h"
 
 #if MGL_HAVE_HDF5
 #include <hdf5.h>

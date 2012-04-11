@@ -21,7 +21,7 @@
 #ifndef _MGL_CANVAS_WND_H_
 #define _MGL_CANVAS_WND_H_
 /*****************************************************************************/
-#include "mgl/window.h"
+#include "mgl2/window.h"
 //-----------------------------------------------------------------------------
 /// Base class for windows containing MathGL graphics
 class mglCanvasWnd : public mglCanvas

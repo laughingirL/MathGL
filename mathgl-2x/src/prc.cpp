@@ -20,8 +20,8 @@
 #include <stdio.h>
 #include <time.h>
 #include <zlib.h>
-#include "mgl/canvas.h"
-#include "mgl/canvas_cf.h"
+#include "mgl2/canvas.h"
+#include "mgl2/canvas_cf.h"
 
 #include "oPRCFile.h"
 #include <map>

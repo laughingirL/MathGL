@@ -33,8 +33,8 @@
 #include <QTextEdit>
 
 #include <QMdiArea>
-#include <mgl/parser.h>
-#include "mgl/qt.h"
+#include <mgl2/parser.h>
+#include "mgl2/qt.h"
 #include "plot_pnl.h"
 #include "anim_dlg.h"
 extern bool mglAutoSave;

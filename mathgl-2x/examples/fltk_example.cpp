@@ -18,8 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include <stdio.h>
-#include "mgl/mathgl.h"
-#include "mgl/fltk.h"
+#include "mgl2/mgl.h"
+#include "mgl2/fltk.h"
 //-----------------------------------------------------------------------------
 int test_wnd(mglGraph *gr);
 int sample(mglGraph *gr);

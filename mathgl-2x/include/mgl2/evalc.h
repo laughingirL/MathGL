@@ -25,10 +25,10 @@
 #ifndef dual
 #define dual std::complex<double>	///< short name for complex numbers
 #endif
-#include "mgl/eval.h"
+#include "mgl2/eval.h"
 //---------------------------------------------------------------------------
 /// Class for evaluating formula specified by the string
-class mglFormulaC					// объект для ввода и вычисления формул
+class mglFormulaC					// пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 {
 public:
 	/// Evaluates the formula for 'x','r'=\a x, 'y','n'=\a y, 'z','t'=\a z, 'u'=\a u

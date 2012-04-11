@@ -13,7 +13,7 @@ if(MGL_HAVE_WX)
 endif(MGL_HAVE_WX)
 if(MGL_HAVE_QT)
 	include(${QT_USE_FILE})
-	qt_wrap_cpp(mgl-qt MGL_MOC_FILES ../include/mgl/mgl_qt.h)
+	qt_wrap_cpp(mgl-qt MGL_MOC_FILES ../include/mgl2/qt.h)
 	set(mgl_wnd_src ${mgl_wnd_src} qt.cpp ${MGL_MOC_FILES})
 endif(MGL_HAVE_QT)
 

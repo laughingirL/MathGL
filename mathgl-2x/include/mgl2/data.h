@@ -20,8 +20,8 @@
 #ifndef _MGL_DATA_H_
 #define _MGL_DATA_H_
 /*****************************************************************************/
-#include "mgl/base.h"
-#include "mgl/data_cf.h"
+#include "mgl2/base.h"
+#include "mgl2/data_cf.h"
 #ifdef __cplusplus
 //-----------------------------------------------------------------------------
 #include <vector>

@@ -25,8 +25,8 @@
 #include <stdlib.h>
 #include <getopt.h>
 #include <vector>
-#include "mgl/mathgl.h"
-#include "mgl/eval.h"
+#include "mgl2/mgl.h"
+#include "mgl2/eval.h"
 //-----------------------------------------------------------------------------
 void mgls_prepare1d(mglData *y, mglData *y1=0, mglData *y2=0, mglData *x1=0, mglData *x2=0);
 void mgls_prepare2d(mglData *a, mglData *b=0, mglData *v=0);
@@ -1964,7 +1964,7 @@ void save(mglGraph *gr,const char *name,const char *suf="")
 int main(int argc,char **argv)
 {
 	const char *suf = "";
-	char name[256]="";
+	char name[256]="", *tmp;
 	int ch;
 //	mglGraphIDTF u3d;
 	mglGraph *gr = NULL;
@@ -1975,7 +1975,8 @@ int main(int argc,char **argv)
 			case 0:		break;
 			case 'w':	width =atoi(optarg);	break;
 			case 'h':	height=atoi(optarg);	break;
-			case 'k':	strcpy(name, optarg);	break;
+			case 'k':	strcpy(name, optarg);	tmp=strchr(name,'.');
+						if(tmp)	*tmp=0;			break;
 			case 't':	mglNumThr=atoi(optarg);	break;
 			case 'l':
 				while(s->name[0])	{	printf("%s ",s->name);	s++;	}

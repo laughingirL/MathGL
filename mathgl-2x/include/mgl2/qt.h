@@ -22,7 +22,7 @@
 /*****************************************************************************/
 #ifdef __cplusplus
 //-----------------------------------------------------------------------------
-#include "mgl/canvas_wnd.h"
+#include "mgl2/canvas_wnd.h"
 #if MGL_HAVE_QT
 #include <QtGui/QWidget>
 #include <QtGui/QPixmap>

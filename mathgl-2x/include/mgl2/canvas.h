@@ -19,7 +19,7 @@
  ***************************************************************************/
 #ifndef MGL_CANVAS_H
 #define MGL_CANVAS_H
-#include "mgl/base.h"
+#include "mgl2/base.h"
 //-----------------------------------------------------------------------------
 #ifndef MGL_STACK_ENTRY
 #define MGL_STACK_ENTRY	10

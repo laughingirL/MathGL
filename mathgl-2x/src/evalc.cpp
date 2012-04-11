@@ -21,9 +21,9 @@
 #include <time.h>
 #include <math.h>
 #include <string.h>
-#include "mgl/evalc.h"
-#include "mgl/addon.h"
-#include "mgl/data.h"
+#include "mgl2/evalc.h"
+#include "mgl2/addon.h"
+#include "mgl2/data.h"
 #if MGL_HAVE_GSL
 #include <gsl/gsl_sf.h>
 #endif

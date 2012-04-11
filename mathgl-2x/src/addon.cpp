@@ -25,8 +25,8 @@
 #include <unistd.h>
 #endif
 #include <string.h>
-#include "mgl/addon.h"
-#include "mgl/data.h"
+#include "mgl2/addon.h"
+#include "mgl2/data.h"
 //---------------------------------------------------------------------------
 void mgl_strcls(char *str)
 {

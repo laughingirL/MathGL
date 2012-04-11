@@ -19,7 +19,7 @@
  ***************************************************************************/
 #ifndef MGL_CANVAS_CF_H
 #define MGL_CANVAS_CF_H
-#include "mgl/base.h"
+#include "mgl2/base.h"
 /*****************************************************************************/
 #ifdef __cplusplus
 extern "C" {

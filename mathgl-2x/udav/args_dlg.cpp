@@ -21,7 +21,7 @@
 #include <QLayout>
 #include <QLineEdit>
 #include <QPushButton>
-#include <mgl/parser.h>
+#include <mgl2/parser.h>
 #include "args_dlg.h"
 extern mglParser parser;
 //-----------------------------------------------------------------------------

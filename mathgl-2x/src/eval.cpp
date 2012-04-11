@@ -23,7 +23,7 @@
 #include <ctype.h>
 #include <string.h>
 
-#include "mgl/eval.h"
+#include "mgl2/eval.h"
 
 #if MGL_HAVE_GSL
 #include <gsl/gsl_sf.h>

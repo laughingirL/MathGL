@@ -26,7 +26,7 @@
 #include <QMessageBox>
 #include <QTextBrowser>
 #include <QToolButton>
-#include <mgl/parser.h>
+#include <mgl2/parser.h>
 
 #include "newcmd_dlg.h"
 #include "opt_dlg.h"

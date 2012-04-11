@@ -39,7 +39,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "mgl/glut.h"
+#include "mgl2/glut.h"
 
 mglCanvasGLUT *_mgl_glwnd;
 void _mgl_key_up(unsigned char ch,int ,int );

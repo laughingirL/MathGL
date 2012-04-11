@@ -32,7 +32,7 @@
 #include <QInputDialog>
 #include <QToolButton>
 #include <QSpinBox>
-#include <mgl/parser.h>
+#include <mgl2/parser.h>
 //-----------------------------------------------------------------------------
 #include "dat_pnl.h"
 #include "info_dlg.h"

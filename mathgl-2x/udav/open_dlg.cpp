@@ -26,7 +26,7 @@
 #include <QFileDialog>
 #include <QTextStream>
 #include <QRadioButton>
-#include <mgl/parser.h>
+#include <mgl2/parser.h>
 #include "open_dlg.h"
 int numDataOpened=0;
 extern mglParser parser;

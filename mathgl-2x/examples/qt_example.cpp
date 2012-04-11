@@ -18,7 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include <stdio.h>
-#include "mgl/window.h"
+#include "mgl2/window.h"
 //-----------------------------------------------------------------------------
 int test_wnd(mglGraph *gr);
 int sample(mglGraph *gr);

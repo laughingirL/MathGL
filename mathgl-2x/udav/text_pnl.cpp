@@ -26,7 +26,7 @@
 #include <QBoxLayout>
 #include <QPrinter>
 #include <QMenu>
-#include <mgl/parser.h>
+#include <mgl2/parser.h>
 //-----------------------------------------------------------------------------
 #include "udav_wnd.h"
 #include "qmglsyntax.h"

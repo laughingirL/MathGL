@@ -21,8 +21,8 @@
 #include <string.h>
 #include <locale.h>
 #include <unistd.h>
-#include "mgl/window.h"
-#include "mgl/parser.h"
+#include "mgl2/window.h"
+#include "mgl2/parser.h"
 //-----------------------------------------------------------------------------
 std::wstring str;
 mglParse p(true);

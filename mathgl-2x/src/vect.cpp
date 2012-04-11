@@ -17,9 +17,9 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include "mgl/vect.h"
-#include "mgl/eval.h"
-#include "mgl/data.h"
+#include "mgl2/vect.h"
+#include "mgl2/eval.h"
+#include "mgl2/data.h"
 #include <stdlib.h>
 //-----------------------------------------------------------------------------
 //
@@ -786,7 +786,7 @@ void flowr(mglBase *gr, float zVal, float u, float v, const mglData &x, const mg
 	mglPoint dx(1/fabs(gr->Max.x-gr->Min.x),1/fabs(gr->Max.y-gr->Min.y),1/fabs(gr->Max.z-gr->Min.z));
 
 	float dt = 0.5/(ax.nx > ax.ny ? ax.nx : ax.ny),e,f,g,ff[4],gg[4],h,s=1;
-	float ss = 	4/mgl_ipow(gr->Max.c - gr->Min.c,2);
+	float ss = 	4./mgl_ipow(gr->Max.c - gr->Min.c,2);
 	if(u<0 || v<0)	{	dt = -dt;	u = -u;		v = -v;		s = -1;}
 	register long k=0,m;
 	bool end = false;
@@ -940,7 +940,7 @@ void flowr(mglBase *gr, float u, float v, float w, const mglData &x, const mglDa
 	nn = (ax.nx > ax.ny ? ax.nx : ax.ny);
 	nn = (nn > ax.nz ? nn : ax.nz);
 	float dt = 0.2/nn, e,f,g,ee[4],ff[4],gg[4],h,s=1,u1,v1,w1;
-	float ss = 	4/mgl_ipow(gr->Max.c - gr->Min.c,2);
+	float ss = 	4./mgl_ipow(gr->Max.c - gr->Min.c,2);
 
 	if(u<0 || v<0 || w<0)
 	{	dt = -dt;	u = -u;		v = -v;		w = -w;		s = -1;}

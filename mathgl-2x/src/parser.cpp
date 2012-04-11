@@ -21,8 +21,8 @@
 #include <ctype.h>
 #include <wchar.h>
 //-----------------------------------------------------------------------------
-#include "mgl/parser.h"
-#include "mgl/canvas_cf.h"
+#include "mgl2/parser.h"
+#include "mgl2/canvas_cf.h"
 //-----------------------------------------------------------------------------
 #ifdef WIN32
 #include <io.h>

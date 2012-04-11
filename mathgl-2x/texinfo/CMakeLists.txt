@@ -3,23 +3,39 @@
 # new files and destination for html docs.
 
 if(MGL_HAVE_DOC)
+	set(MGL_PNG alpha.png area.png aspect.png axial.png axis.png barh.png bars.png belt.png boxplot.png
+	box.png boxs.png candle.png chart.png cloud.png colorbar.png combined.png cones.png conta.png contd.png
+	contfa.png contf.png contf_xyz.png cont.png contv.png cont_xyz.png curvcoor.png cut.png dat_diff.png
+	dat_extra.png densa.png dens.png dens_xyz.png dew.png dots.png error.png fall.png fit.png flow.png
+	fog.png grad.png hist.png inplot.png label.png legend.png loglog.png map.png mark.png mesh.png mirror.png
+	molecule.png parser.png pde.png pipe.png plot.png primitives.png qo2d.png radar.png region.png schemes.png
+	several_light.png stem.png step.png stereo.png stfa.png style.png surf3a.png surf3c.png surf3.png
+	surfa.png surfc.png surf.png tape.png tens.png ternary.png textmark.png text.png ticks.png tile.png
+	tiles.png torus.png traj.png triplot.png tube.png type0.png type1.png type2.png vect.png venn.png)
+
+# 	foreach(SAMPLE ${MGL_PNG})
+# 		add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/texinfo/png/${SAMPLE}
+# 			COMMAND ${CMAKE_BINARY_DIR}/examples/mgl_example --kind=${SAMPLE}
+# 			WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/texinfo/png )
+# 	endforeach(SAMPLE)
+
 	add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/texinfo/png/all.png
-#		COMMAND LD_LIBRARY_PATH=${CMAKE_BINARY_DIR}/mgl ${CMAKE_BINARY_DIR}/examples/mgl_example
 		COMMAND ${CMAKE_BINARY_DIR}/examples/mgl_example
 		COMMAND touch ${CMAKE_SOURCE_DIR}/texinfo/png/all.png
-#		MAIN_DEPENDENCY ${CMAKE_BINARY_DIR}/examples/mgl_example
 		WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/texinfo/png
 	)
-  add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/texinfo/small/all.png
-    COMMAND ${CMAKE_BINARY_DIR}/examples/mgl_example -mini
-    COMMAND touch ${CMAKE_SOURCE_DIR}/texinfo/small/all.png
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/texinfo/small
-  )
+	add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/texinfo/small/all.png
+		COMMAND ${CMAKE_BINARY_DIR}/examples/mgl_example -mini
+		COMMAND touch ${CMAKE_SOURCE_DIR}/texinfo/small/all.png
+		WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/texinfo/small
+	)
 #	set_source_files_properties(${CMAKE_BINARY_DIR}/examples/mgl_example PROPERTIES GENERATED 1)
 #	ADD_CUSTOM_TARGET(gen_all_png DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/png/all.png)
 #	ADD_DEPENDENCIES(gen_all_png mgl_example)
-	set(list_texi_files_en mathgl_en.texi mgl_en.texi overview_en.texi example_en.texi ex_mgl_en.texi parse_en.texi core_en.texi concept_en.texi widget_en.texi data_en.texi other_en.texi appendix_en.texi fdl.texi)
-	set(list_texi_files_ru mathgl_ru.texi mgl_ru.texi overview_ru.texi example_ru.texi ex_mgl_ru.texi parse_ru.texi core_ru.texi concept_ru.texi widget_ru.texi data_ru.texi other_ru.texi appendix_ru.texi fdl.texi)
+	set(list_texi_files_en mathgl_en.texi mgl_en.texi overview_en.texi example_en.texi ex_mgl_en.texi parse_en.texi
+		core_en.texi concept_en.texi widget_en.texi data_en.texi other_en.texi appendix_en.texi fdl.texi)
+	set(list_texi_files_ru mathgl_ru.texi mgl_ru.texi overview_ru.texi example_ru.texi ex_mgl_ru.texi parse_ru.texi
+		core_ru.texi concept_ru.texi widget_ru.texi data_ru.texi other_ru.texi appendix_ru.texi fdl.texi)
 
   add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/texinfo/web_en.pdf
     COMMAND ${findtp} -I ${CMAKE_SOURCE_DIR}/texinfo/png web_en.texi

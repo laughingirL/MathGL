@@ -19,9 +19,9 @@
  ***************************************************************************/
 #include <wchar.h>
 #include <stdlib.h>
-#include "mgl/canvas.h"
-#include "mgl/prim.h"
-#include "mgl/data.h"
+#include "mgl2/canvas.h"
+#include "mgl2/prim.h"
+#include "mgl2/data.h"
 //-----------------------------------------------------------------------------
 //
 //	Mark & Curve series

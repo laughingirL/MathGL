@@ -26,7 +26,7 @@
 #include <unistd.h>
 #endif
 
-#include "mgl/parser.h"
+#include "mgl2/parser.h"
 #define iint(x)	floor((x)+0.5)
 wchar_t *mgl_str_copy(const char *s);
 //-----------------------------------------------------------------------------

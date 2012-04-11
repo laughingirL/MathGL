@@ -17,8 +17,8 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include "mgl/canvas.h"
-#include "mgl/canvas_cf.h"
+#include "mgl2/canvas.h"
+#include "mgl2/canvas_cf.h"
 #include <stdlib.h>
 #include <time.h>
 #include <zlib.h>

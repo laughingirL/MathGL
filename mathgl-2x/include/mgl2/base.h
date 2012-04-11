@@ -26,14 +26,14 @@
 #ifndef _MSC_VER
 #include <stdint.h>
 #endif
-#include "mgl/define.h"
+#include "mgl2/define.h"
 /*****************************************************************************/
 #ifdef __cplusplus
 #include <vector>
 #include <string>
-#include "mgl/type.h"
-#include "mgl/eval.h"
-#include "mgl/font.h"
+#include "mgl2/type.h"
+#include "mgl2/eval.h"
+#include "mgl2/font.h"
 //-----------------------------------------------------------------------------
 /// Abstract class for data array
 class mglDataA

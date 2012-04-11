@@ -19,7 +19,7 @@
  ***************************************************************************/
 #include <stdlib.h>
 #include <wchar.h>
-#include "mgl/canvas.h"
+#include "mgl2/canvas.h"
 //-----------------------------------------------------------------------------
 mglCanvas::mglCanvas(int w, int h) : mglBase()
 {

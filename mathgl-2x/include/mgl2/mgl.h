@@ -20,11 +20,11 @@
 #ifndef _MGL_H_
 #define _MGL_H_
 
-#include "mgl/define.h"
-#include "mgl/mathgl_cf.h"
-#include "mgl/data.h"
+#include "mgl2/define.h"
+#include "mgl2/mgl_cf.h"
+#include "mgl2/data.h"
 #ifndef NO_OPENGL
-#include "mgl/opengl.h"
+#include "mgl2/opengl.h"
 #endif
 //-----------------------------------------------------------------------------
 /// Wrapper class for all graphics

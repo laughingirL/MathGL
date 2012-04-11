@@ -37,7 +37,7 @@
 #include <QFileDialog>
 #include <QInputDialog>
 #include <stdio.h>
-#include "mgl/qt.h"
+#include "mgl2/qt.h"
 //-----------------------------------------------------------------------------
 #if !defined(WIN32) && !defined(__APPLE__)
 #include <X11/Xlib.h>

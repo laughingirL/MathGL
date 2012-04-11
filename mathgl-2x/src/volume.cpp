@@ -17,10 +17,10 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include "mgl/define.h"
-#include "mgl/volume.h"
-#include "mgl/data.h"
-#include "mgl/eval.h"
+#include "mgl2/define.h"
+#include "mgl2/volume.h"
+#include "mgl2/data.h"
+#include "mgl2/eval.h"
 #include <vector>
 //-----------------------------------------------------------------------------
 //

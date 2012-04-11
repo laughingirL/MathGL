@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 2.6)
 
 project( MathGL )
 set(CMAKE_VERBOSE_MAKEFILE ON)
+set(MathGL_VERSION_MAJOR 2)
+set(MathGL_VERSION_MINOR 0)
+
 option(enable-double "Enable double precision in MathGL library")
 option(enable-all "Enable all features")
 option(enable-langall "Enable all language interfaces")

@@ -6,7 +6,7 @@ This chapter describe commands for allocation, resizing, loading and saving, mod
 @end ifset
 
 @ifclear UDAV
-This chapter describe class @code{mglData} for working with data array. This class is defined in @code{#include <mgl/data.h>}. The class has functions for easy and safe allocation, resizing, loading and saving, modifying of data arrays. Also it can numerically differentiate and integrate data, interpolate, fill data by formula and so on. Class supports data with dimensions up to 3 (like function of 3 variables -- x,y,z). The internal representation of numbers is float. Float type was chosen because it has smaller size in memory and usually it has enough precision in plotting purposes. You can change it by selecting option @code{--enable-double} at the library configuring (see @ref{Installation}). Data arrays are denoted by Small Caps (like @sc{dat}) if it can be (re-)created by MGL commands.
+This chapter describe class @code{mglData} for working with data array. This class is defined in @code{#include <mgl2/data.h>}. The class has functions for easy and safe allocation, resizing, loading and saving, modifying of data arrays. Also it can numerically differentiate and integrate data, interpolate, fill data by formula and so on. Class supports data with dimensions up to 3 (like function of 3 variables -- x,y,z). The internal representation of numbers is float. Float type was chosen because it has smaller size in memory and usually it has enough precision in plotting purposes. You can change it by selecting option @code{--enable-double} at the library configuring (see @ref{Installation}). Data arrays are denoted by Small Caps (like @sc{dat}) if it can be (re-)created by MGL commands.
 @end ifclear
 
 @menu
@@ -1185,7 +1185,7 @@ You can use arbitrary formulas of existed data arrays or constants as any argume
 @end ifset
 
 @ifclear UDAV
-MathGL have a special class @code{mglExpr} for evaluating of formula specified by the string. This class is defined in @code{#include <mgl/mathgl.h>}. It is the fast variant of formula evaluation. At creation it will be recognized and compiled to tree-like internal code. At evaluation stage only fast calculations are performed. There is no difference between lower or upper case in formulas. If argument value lie outside the range of function definition then function returns NaN. @xref{Textual formulas}.
+MathGL have a special class @code{mglExpr} for evaluating of formula specified by the string. This class is defined in @code{#include <mgl2/mgl.h>}. It is the fast variant of formula evaluation. At creation it will be recognized and compiled to tree-like internal code. At evaluation stage only fast calculations are performed. There is no difference between lower or upper case in formulas. If argument value lie outside the range of function definition then function returns NaN. @xref{Textual formulas}.
 
 @deftypefn {Constructor on @code{mglExpr}} @code{} mglExpr (@code{const char *}expr)
 @deftypefnx {C function} @code{HMEX} mgl_create_expr (@code{const char *}expr)

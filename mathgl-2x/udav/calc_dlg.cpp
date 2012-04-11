@@ -24,7 +24,7 @@
 #include <QListView>
 #include <QComboBox>
 #include <QTextEdit>
-#include <mgl/parser.h>
+#include <mgl2/parser.h>
 #include "calc_dlg.h"
 extern mglParser parser;
 mglData mglFormulaCalc(const wchar_t *string, mglParser *arg);

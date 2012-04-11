@@ -22,8 +22,8 @@
 #include <stdlib.h>
 #include <math.h>
 //-----------------------------------------------------------------------------
-#include "mgl/mathgl.h"
-#include "mgl/parser.h"
+#include "mgl2/mgl.h"
+#include "mgl2/parser.h"
 //-----------------------------------------------------------------------------
 void mgls_prepare1d(mglData *y, mglData *y1=0, mglData *y2=0, mglData *x1=0, mglData *x2=0);
 void mgls_prepare2d(mglData *a, mglData *b=0, mglData *v=0);

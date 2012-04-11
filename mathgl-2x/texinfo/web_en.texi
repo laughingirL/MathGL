@@ -123,7 +123,7 @@ a library for working in window and console modes and for easy embedding into ot
 a library with large and growing set of graphics.
 @end itemize
 
-At this version (1.11) MathGL has more than 35000 lines of code, more than 55 general types of graphics for 1d, 2d and 3d data arrays, including special ones for chemical and statistical graphics. It can export graphics to raster and vector (EPS or SVG) formats. It has Qt, FLTK, OpenGL interfaces and can be used even from console programs. It has functions for data processing and script MGL language for simplification of data plotting. Also it has several types of transparency and smoothed lightning, vector fonts and TeX-like symbol parsing, arbitrary curvilinear coordinate system and many over useful things. It can be used from code written on C++/C/Fortran/Python/Octave and many other languages. Finally it is platform independent and free (under GPL v.2.0 license).
+Now MathGL has more than 35000 lines of code, more than 55 general types of graphics for 1d, 2d and 3d data arrays, including special ones for chemical and statistical graphics. It can export graphics to raster and vector (EPS or SVG) formats. It has Qt, FLTK, OpenGL interfaces and can be used even from console programs. It has functions for data processing and script MGL language for simplification of data plotting. Also it has several types of transparency and smoothed lightning, vector fonts and TeX-like symbol parsing, arbitrary curvilinear coordinate system and many over useful things. It can be used from code written on C++/C/Fortran/Python/Octave and many other languages. Finally it is platform independent and free (under GPL v.2.0 license).
 
 There is a @uref{http://sourceforge.net/forum/?group_id=152187, forum} where you can ask a question or suggest an improvement. However the @uref{http://groups.google.com/group/mathgl, MathGL group} is preferable for quicker answer.
 
@@ -141,7 +141,7 @@ Generally MathGL is GPL library. However, you can use LGPL license for MathGL co
 
 @strong{Latest news}
 @itemize
-@item @emph{29 March 2012.}
+@item @emph{12 April 2012.}
 New version (v.2.0) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are a lot of new features, which partially denoted @ref{News, here}.
 @end itemize
 
@@ -154,7 +154,7 @@ There is detailed @ref{News, news list}. Sourceforge project page @uref{http://s
 
 @itemize
 @item 
-@strong{29 March 2012.}
+@strong{12 April 2012.}
 New version (v.2.0) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are a lot of new features, which partially denoted below.
 @itemize @bullet
 @item

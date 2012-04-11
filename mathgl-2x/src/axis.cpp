@@ -21,9 +21,9 @@
 #include <wchar.h>
 #include <ctype.h>
 #include <stdlib.h>
-#include "mgl/data.h"
-#include "mgl/canvas.h"
-#include "mgl/prim.h"
+#include "mgl2/data.h"
+#include "mgl2/canvas.h"
+#include "mgl2/prim.h"
 //-----------------------------------------------------------------------------
 #define islog(a, b) (((a)>0 && (b)>10*(a)) || ((b)<0 && (a)<10*(b)))
 #define sign(a)	((a)<0 ? -1:1)

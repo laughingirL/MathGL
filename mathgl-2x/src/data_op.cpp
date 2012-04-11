@@ -22,5 +22,5 @@
 #include <math.h>
 #include <string.h>
 
-#include "mgl/data.h"
+#include "mgl2/data.h"
 //-----------------------------------------------------------------------------

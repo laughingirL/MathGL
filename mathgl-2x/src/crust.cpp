@@ -19,8 +19,8 @@
  ***************************************************************************/
 #include <stdlib.h>
 #include <float.h>
-#include "mgl/other.h"
-#include "mgl/data.h"
+#include "mgl2/other.h"
+#include "mgl2/data.h"
 //-----------------------------------------------------------------------------
 //
 //	TriPlot series

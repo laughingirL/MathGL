@@ -1,14 +1,16 @@
 \input texinfo
-@setfilename mathgl_en.info
+@setfilename mathgl_ru.info
+@c @documentlanguage ru
+@documentencoding UTF-8
 @set VERSION 2.0
 @settitle MathGL @value{VERSION}
 @syncodeindex pg cp
 @comment %**end of header
 
 @copying
-This manual is for MathGL (version @value{VERSION}), a collection of classes and routines for scientific plotting. Please report any errors in this manual to @email{mathgl.abalakin@@gmail.org}.
+Это документация для MathGL (версии @value{VERSION}) -- библиотеки классов и функций для построения научной графики. Пожалуйста сообщайте о любых ошибках в этом руководстве на @email{mathgl.abalakin@@gmail.org}.
 
-Copyright @copyright{} 2008 Alexey Balakin.
+Copyright @copyright{} 2009 Алексей Балакин.
 
 @quotation
 Permission is granted to copy, distribute and/or modify this document
@@ -32,8 +34,8 @@ supports it in developing GNU and promoting software freedom.''
 
 @titlepage
 @title MathGL
-@subtitle for version @value{VERSION}
-@author A.A. Balakin (@uref{http://mathgl.sourceforge.net/})
+@subtitle версия @value{VERSION}
+@author А.А. Балакин (@uref{http://mathgl.sourceforge.net/})
 @page
 @vskip 0pt plus 1filll
 @insertcopying
@@ -45,9 +47,9 @@ supports it in developing GNU and promoting software freedom.''
 @node Top
 @top MathGL
 
-This file documents the Mathematical Graphic Library (MathGL), a collection of classes and routines for scientific plotting. It corresponds to release @value{VERSION} of the library. Please report any errors in this manual to @email{mathgl.abalakin@@gmail.org}. More information about MathGL can be found at the project homepage, @uref{http://mathgl.sourceforge.net/}.
+Это документация для MathGL (версии @value{VERSION}) -- библиотеки классов и функций для построения научной графики. Пожалуйста сообщайте о любых ошибках в этом руководстве на @email{mathgl.abalakin@@gmail.org}. Дополнительную информацию о MathGL можно найти на домашней странице проекта @uref{http://mathgl.sourceforge.net/}.
 
-Copyright @copyright{} 2008 Alexey A. Balakin.
+Copyright @copyright{} 2009 Алексей Балакин.
 
 @quotation
 Permission is granted to copy, distribute and/or modify this document
@@ -101,50 +103,47 @@ supports it in developing GNU and promoting software freedom.''
 
 
 @rmacro sref {arg}
-@xref{\arg\}, for sample code and picture.
+См. раздел @ref{\arg\}, для примеров кода и графика.
 @end rmacro
 @macro tdref {nam}
 @uref{http://mathgl.sourceforge.net/pdf_u3d/\nam\.pdf, 3D pdf}
 @end macro
 
-@macro reklama
-@end macro
-
 
 @node Overview, Examples, , Top
-@include overview_en.texi
+@include overview_ru.texi
 
 @node Examples, General concepts, Overview, Top
-@include example_en.texi
+@include example_ru.texi
 
 @node General concepts, MathGL core, Examples, Top
-@include concept_en.texi
+@include concept_ru.texi
 
 @node MathGL core, Widget classes, General concepts, Top
-@include core_en.texi
+@include core_ru.texi
 
 @node Widget classes, Data processing, MathGL core, Top
-@include widget_en.texi
+@include widget_ru.texi
 
 @node Data processing, MGL scripts, Widget classes, Top
-@include data_en.texi
+@include data_ru.texi
 
 @node MGL scripts, Other classes, Data processing, Top
-@include parse_en.texi
+@include parse_ru.texi
 
 @node Other classes, TeX-like symbols, MGL scripts, Top
-@include other_en.texi
+@include other_ru.texi
 
 @node TeX-like symbols, Copying This Manual, Other classes, Top
-@appendix TeX-like symbols
-@include appendix_en.texi
+@appendix Символы TeX
+@include appendix_ru.texi
 
 @node Copying This Manual, Index, TeX-like symbols, Top
 @appendix GNU Free Documentation License
 @include fdl.texi
 
 @node Index, , Copying This Manual, Top
-@unnumbered Index
+@unnumbered Индекс
 
 @printindex cp
 

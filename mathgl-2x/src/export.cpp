@@ -25,8 +25,8 @@
 #include <stdarg.h>
 #include <png.h>
 
-#include "mgl/canvas.h"
-#include "mgl/canvas_cf.h"
+#include "mgl2/canvas.h"
+#include "mgl2/canvas_cf.h"
 
 #if MGL_HAVE_JPEG
 extern "C" {

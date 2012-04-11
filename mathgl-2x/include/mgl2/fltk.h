@@ -22,7 +22,7 @@
 #define _MGL_FLTK_H_
 /*****************************************************************************/
 #ifdef __cplusplus
-#include "mgl/canvas_wnd.h"
+#include "mgl2/canvas_wnd.h"
 #if MGL_HAVE_FLTK
 //-----------------------------------------------------------------------------
 #ifdef __MWERKS__

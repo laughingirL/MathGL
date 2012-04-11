@@ -23,7 +23,7 @@
 #ifndef _MSC_VER
 #include <stdint.h>
 #endif
-#include "mgl/define.h"
+#include "mgl2/define.h"
 //-----------------------------------------------------------------------------
 const mreal Pi = M_PI;
 const mreal NaN = NAN;

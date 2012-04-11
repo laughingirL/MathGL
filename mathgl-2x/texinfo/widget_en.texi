@@ -10,7 +10,7 @@
 
 There are set of ``window'' classes for making a window with MathGL graphics: @code{mglWindow} and @code{mglGLUT} for whole window, @code{Fl_MathGL} and @code{QMathGL} as widgets. All these classes allow user to show, rotate, export, and change view of the plot using keyboard. Most of them (except @code{mglGLUT}) also have toolbar and menu for simplifying plot manipulation. All window classes have mostly the same set of functions.
 
-For callback drawing you can use: @code{NULL} pointer if you'll update plot manually, global function of type @code{int draw(@code{HMGL} gr, @code{void *}p)} or @code{int draw(@code{mglGraph *}gr)}, or instance of class derived from @code{mglDraw} class. This class is defined in @code{#include <mgl/window.h>} and have only 2 methods:
+For callback drawing you can use: @code{NULL} pointer if you'll update plot manually, global function of type @code{int draw(@code{HMGL} gr, @code{void *}p)} or @code{int draw(@code{mglGraph *}gr)}, or instance of class derived from @code{mglDraw} class. This class is defined in @code{#include <mgl2/window.h>} and have only 2 methods:
 @verbatim
 class mglDraw
 {
@@ -138,7 +138,7 @@ Gets last position of mouse click.
 @cindex Fl_MathGL
 @cindex widgets
 
-Class is FLTK widget which display MathGL graphics (defined in @code{#include <mgl/fltk.h>}).
+Class is FLTK widget which display MathGL graphics (defined in @code{#include <mgl2/fltk.h>}).
 
 @fig{fltk, Example of FLTK window with MathGL plot.}
 
@@ -194,7 +194,7 @@ Pointer to external phi-angle validator.
 @cindex QMathGL
 @cindex widgets
 
-Class is Qt widget which display MathGL graphics (defined in @code{#include <mgl/qt.h>}).
+Class is Qt widget which display MathGL graphics (defined in @code{#include <mgl2/qt.h>}).
 
 @fig{qt, Example of Qt window with MathGL plot.}
 

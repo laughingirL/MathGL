@@ -14,7 +14,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#include <mgl/mathgl.h>
+#include "mgl2/mgl.h"
 #include <string.h>
 #include <FL/Fl_Tabs.H>
 #include <FL/Fl_Round_Button.H>

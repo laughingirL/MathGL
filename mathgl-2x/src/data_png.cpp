@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include <zlib.h>
 #include <png.h>
-#include "mgl/data.h"
+#include "mgl2/data.h"
 //-----------------------------------------------------------------------------
 long mgl_col_dif(unsigned char *c1,unsigned char *c2,bool sum)
 {

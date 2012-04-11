@@ -3,10 +3,10 @@ ${CMAKE_BINARY_DIR}/lang/mgl.i
 ${CMAKE_BINARY_DIR}/lang/numpy.i
 )
 set(src_imp_dep
-${CMAKE_SOURCE_DIR}/include/mgl/type.h
-${CMAKE_SOURCE_DIR}/include/mgl/data.h
-${CMAKE_SOURCE_DIR}/include/mgl/mathgl.h
-${CMAKE_SOURCE_DIR}/include/mgl/window.h
+${CMAKE_SOURCE_DIR}/include/mgl2/type.h
+${CMAKE_SOURCE_DIR}/include/mgl2/data.h
+${CMAKE_SOURCE_DIR}/include/mgl2/mgl.h
+${CMAKE_SOURCE_DIR}/include/mgl2/window.h
 )
 configure_file(${MathGL_SOURCE_DIR}/lang/mgl.i.in ${MathGL_BINARY_DIR}/lang/mgl.i COPYONLY)
 configure_file(${MathGL_SOURCE_DIR}/lang/numpy.i.in ${MathGL_BINARY_DIR}/lang/numpy.i COPYONLY)

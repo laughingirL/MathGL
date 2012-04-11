@@ -17,11 +17,11 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include "mgl/other.h"
-#include "mgl/surf.h"
-#include "mgl/cont.h"
-#include "mgl/eval.h"
-#include "mgl/data.h"
+#include "mgl2/other.h"
+#include "mgl2/surf.h"
+#include "mgl2/cont.h"
+#include "mgl2/eval.h"
+#include "mgl2/data.h"
 #include <stdlib.h>
 //-----------------------------------------------------------------------------
 //

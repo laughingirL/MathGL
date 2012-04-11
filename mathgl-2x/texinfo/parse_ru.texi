@@ -181,7 +181,7 @@ Terminate execution.
 @section mglParse class
 @cindex mglParse
 
-Class for parsing and executing MGL script. This class is defined in @code{#include <mgl/mgl.h>}.
+Class for parsing and executing MGL script. This class is defined in @code{#include <mgl2/mgl.h>}.
 
 Class mglParse is the interpreter for MGL scripts. The main function of mglParse class is @code{Execute()}. Exactly this function parses and executes the script string-by-string. Also there are subservient functions for the finding and creation of a variable. These functions can be useful for displaying values of variables (arrays) in some external program (in window, for example). Function @code{AllowSetSize()} allows one to prevent changing the size of the  picture inside the script (forbids the MGL command @code{setsize}).
 

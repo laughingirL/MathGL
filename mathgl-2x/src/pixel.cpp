@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <algorithm>
-#include "mgl/canvas.h"
+#include "mgl2/canvas.h"
 //-----------------------------------------------------------------------------
 void mglCanvas::SetSize(int w,int h)
 {

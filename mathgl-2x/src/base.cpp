@@ -18,8 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include <stdlib.h>
-#include "mgl/base.h"
-#include "mgl/define.h"
+#include "mgl2/base.h"
+#include "mgl2/define.h"
 //-----------------------------------------------------------------------------
 char *mgl_strdup(const char *s)
 {

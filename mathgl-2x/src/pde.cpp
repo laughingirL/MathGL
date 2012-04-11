@@ -17,7 +17,7 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include "mgl/data.h"
+#include "mgl2/data.h"
 #include <complex>
 #define dual	std::complex<double>
 #define GAMMA	0.1

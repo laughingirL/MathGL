@@ -31,7 +31,7 @@ All plotting functions should use a pointer to @code{mglBase} class (or @code{HM
 
 MathGL tries to remember all vertexes and all primitives and plot creation stage, and to use them for making final picture by demand. Basically for making plot, you need to add vertexes by @code{AddPnt()} function, which return index for new vertex, and call one of primitive drawing function (like @code{mark_plot(), arrow_plot(), line_plot(), trig_plot(), quad_plot(), text_plot()}), using vertex indexes as argument(s). @code{AddPnt()} function use 2 float numbers for color specification. First one is positioning in textures -- integer part is texture index, fractional part is relative coordinate in the texture. Second number is like a transparency of plot (or second coordinate in the 2D texture).
 
-I don't want to put here detailed description of @code{mglBase} class. It was rather well documented in @code{mgl/base.h} file. I just show and example of its usage on the base of circle drawing.
+I don't want to put here detailed description of @code{mglBase} class. It was rather well documented in @code{mgl2/base.h} file. I just show and example of its usage on the base of circle drawing.
 
 First, we should prototype new function @code{circle()} as C function.
 @verbatim
@@ -222,7 +222,7 @@ Note, that I use @code{inline} modifier for using the same binary code with diff
 
 So, the complete sample will be
 @verbatim
-#include <mgl/mathgl.h>
+#include <mgl2/mgl.h>
 //---------------------------------------------------------
 #ifdef __cplusplus
 extern "C" {
@@ -347,7 +347,7 @@ give access to all element as in single array (@code{vthr}) -- you need this onl
 Let me, for example define class @code{mglComplex} which will handle complex number and draw its amplitude or phase, depending on flag @var{use_abs}:
 @verbatim
 #include <complex>
-#include <mgl/mathgl.h>
+#include <mgl2/mgl.h>
 #define dual std::complex<double>
 class mglComplex : public mglDataA
 {
@@ -416,7 +416,7 @@ int main()
 @section mglColor class
 @cindex mglColor
 
-Structure for working with colors. This structure is defined in @code{#include <mgl/type.h>}.
+Structure for working with colors. This structure is defined in @code{#include <mgl2/type.h>}.
 
 There are two ways to set the color in MathGL. First one is using of float values of red, green and blue channels for precise color definition. The second way is the using of character id. There are a set of characters specifying frequently used colors. Normally capital letter gives more dark color than lowercase one. @xref{Line styles}.
 
@@ -485,7 +485,7 @@ Return inverted color.
 @section mglPoint class
 @cindex mglPoint
 
-Structure describes point in space. This structure is defined in @code{#include <mgl/type.h>}
+Structure describes point in space. This structure is defined in @code{#include <mgl2/type.h>}
 
 @deftypecv {Parameter} mglPoint @code{float} {x, y, z, c}
 Point coordinates @{x,y,z@} and one extra value @var{c} used for amplitude, transparency and so on. By default all values are zero.
@@ -559,7 +559,7 @@ Return true if points are different.
 @section mglFont class
 @cindex mglFont
 
-Class for working with font: load, get metrics, parse and draw strings. This class is defined in @code{#include <mgl/font.h>}. This class is accessible only from C++ (and only from GNU compilers in default binary files).
+Class for working with font: load, get metrics, parse and draw strings. This class is defined in @code{#include <mgl2/font.h>}. This class is accessible only from C++ (and only from GNU compilers in default binary files).
 
 The class is based on loading and drawing of vector Hershey font. There are two styles of specifying of the font type and aligning: by integer parameters or by string.
 

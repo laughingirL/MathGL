@@ -20,8 +20,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include "mgl/data.h"
-#include "mgl/eval.h"
+#include "mgl2/data.h"
+#include "mgl2/eval.h"
 
 int mglNumThr=0;
 void mglFillP(long x,long y, const mreal *a,long nx,long ny,mreal _p[4][4]);
@@ -93,7 +93,7 @@ double mgl_ipow(double x,int n)
 	double t;
 	if(n==2)	return x*x;
 	if(n==1)	return x;
-	if(n<0)		return 1/mgl_ipow(x,-n);
+	if(n<0)		return 1./mgl_ipow(x,-n);
 	if(n==0)	return 1;
 	t = mgl_ipow(x,n/2);	t = t*t;
 	if(n%2==1)	t *= x;

@@ -7,14 +7,14 @@ plot.cpp prim.cpp surf.cpp tex_table.cpp vect.cpp volume.cpp evalc.cpp #window.c
 )
 
 set(mgl_hdr
-../include/mgl/base_cf.h	../include/mgl/fit.h	../include/mgl/plot.h
-../include/mgl/base.h		../include/mgl/prim.h	../include/mgl/canvas_cf.h
-../include/mgl/font.h		../include/mgl/canvas.h	../include/mgl/surf.h
-../include/mgl/mathgl_cf.h	../include/mgl/type.h	${MathGL_BINARY_DIR}/include/mgl/config.h
-../include/mgl/cont.h		../include/mgl/mathgl.h	../include/mgl/vect.h
-../include/mgl/data.h		../include/mgl/volume.h	../include/mgl/data_cf.h
-../include/mgl/define.h		../include/mgl/other.h	../include/mgl/eval.h
-../include/mgl/parser.h		../include/mgl/addon.h	../include/mgl/evalc.h )
+../include/mgl2/base_cf.h	../include/mgl2/fit.h		../include/mgl2/plot.h
+../include/mgl2/base.h		../include/mgl2/prim.h		../include/mgl2/canvas_cf.h
+../include/mgl2/font.h		../include/mgl2/canvas.h	../include/mgl2/surf.h
+../include/mgl2/mgl_cf.h	../include/mgl2/type.h		${MathGL_BINARY_DIR}/include/mgl2/config.h
+../include/mgl2/cont.h		../include/mgl2/mgl.h	../include/mgl2/vect.h
+../include/mgl2/data.h		../include/mgl2/volume.h	../include/mgl2/data_cf.h
+../include/mgl2/define.h	../include/mgl2/other.h		../include/mgl2/eval.h
+../include/mgl2/parser.h	../include/mgl2/addon.h		../include/mgl2/evalc.h )
 
 set(prc_src
 prc/PRCbitStream.cc prc/PRCdouble.cc prc/oPRCFile.cc prc/writePRC.cc prc.cpp
@@ -30,7 +30,7 @@ include_directories(prc)
 
 if(MGL_HAVE_OPENGL)
 	set(mgl_src ${mgl_src} opengl.cpp )
-	set(mgl_hdr ${mgl_hdr} ../include/mgl/opengl.h )
+	set(mgl_hdr ${mgl_hdr} ../include/mgl2/opengl.h )
 endif(MGL_HAVE_OPENGL)
 
 add_library(mgl SHARED ${mgl_src} ${mgl_hdr})

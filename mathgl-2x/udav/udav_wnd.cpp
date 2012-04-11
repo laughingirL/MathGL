@@ -33,8 +33,8 @@
 #include <QTextCodec>
 #include <QTranslator>
 //-----------------------------------------------------------------------------
-#include "mgl/parser.h"
-#include "mgl/qt.h"
+#include "mgl2/parser.h"
+#include "mgl2/qt.h"
 #include "udav_wnd.h"
 #include "text_pnl.h"
 #include "plot_pnl.h"

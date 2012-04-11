@@ -22,7 +22,7 @@
 #include <QToolButton>
 #include <QInputDialog>
 #include <QMessageBox>
-#include <mgl/parser.h>
+#include <mgl2/parser.h>
 //-----------------------------------------------------------------------------
 #include "mem_pnl.h"
 #include "info_dlg.h"

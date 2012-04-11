@@ -19,10 +19,10 @@
  ***************************************************************************/
 #include <wchar.h>
 #include <algorithm>
-#include "mgl/surf.h"
-#include "mgl/cont.h"
-#include "mgl/data.h"
-#include "mgl/eval.h"
+#include "mgl2/surf.h"
+#include "mgl2/cont.h"
+#include "mgl2/data.h"
+#include "mgl2/eval.h"
 //-----------------------------------------------------------------------------
 //
 //	Text printing along a curve
