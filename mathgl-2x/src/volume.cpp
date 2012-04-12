@@ -334,7 +334,7 @@ void mgl_surf3_val(HMGL gr, float val, HCDT a, const char *sch, const char *opt)
 void mgl_surf3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, const char *opt)
 {
 	float r = gr->SaveState(opt);
-	long num = isnan(r)?3:long(r+0.5);
+	long num = mgl_isnan(r)?3:long(r+0.5);
 	for(long i=0;i<num;i++)
 	{
 		float v = gr->Max.c + (gr->Min.c-gr->Max.c)*(i+1.)/(num+1);
@@ -345,7 +345,7 @@ void mgl_surf3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, con
 void mgl_surf3(HMGL gr, HCDT a, const char *sch, const char *opt)
 {
 	float r = gr->SaveState(opt);
-	long num = isnan(r)?3:long(r+0.5);
+	long num = mgl_isnan(r)?3:long(r+0.5);
 	for(long i=0;i<num;i++)
 	{
 		float v = gr->Max.c + (gr->Min.c-gr->Max.c)*(i+1.)/(num+1);
@@ -489,7 +489,7 @@ void mgl_surf3a_val(HMGL gr, float val, HCDT a, HCDT b, const char *sch, const c
 void mgl_surf3a_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, HCDT b, const char *sch, const char *opt)
 {
 	float r = gr->SaveState(opt);
-	long num = isnan(r)?3:long(r+0.5);
+	long num = mgl_isnan(r)?3:long(r+0.5);
 	if(b->GetNx()==num && b->GetNy()==1 && b->GetNz()==1)
 	{
 		float v,a0=gr->AlphaDef;
@@ -511,7 +511,7 @@ void mgl_surf3a_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, HCDT b, const char 
 void mgl_surf3a(HMGL gr, HCDT a, HCDT b, const char *sch, const char *opt)
 {
 	float r = gr->SaveState(opt);
-	long num = isnan(r)?3:long(r);
+	long num = mgl_isnan(r)?3:long(r);
 	if(b->GetNx()==num && b->GetNy()==1 && b->GetNz()==1)
 	{
 		float v,a0=gr->AlphaDef;
@@ -667,7 +667,7 @@ void mgl_surf3c_val(HMGL gr, float val, HCDT a, HCDT b, const char *sch, const c
 void mgl_surf3c_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, HCDT b, const char *sch, const char *opt)
 {
 	float r = gr->SaveState(opt);
-	long num = isnan(r)?3:long(r+0.5);
+	long num = mgl_isnan(r)?3:long(r+0.5);
 	for(long i=0;i<num;i++)
 	{
 		float v = gr->Max.c + (gr->Min.c-gr->Max.c)*(i+1.)/(num+1);
@@ -678,7 +678,7 @@ void mgl_surf3c_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, HCDT b, const char 
 void mgl_surf3c(HMGL gr, HCDT a, HCDT b, const char *sch, const char *opt)
 {
 	float r = gr->SaveState(opt);
-	long num = isnan(r)?3:long(r+0.5);
+	long num = mgl_isnan(r)?3:long(r+0.5);
 	for(long i=0;i<num;i++)
 	{
 		float v = gr->Max.c + (gr->Min.c-gr->Max.c)*(i+1.)/(num+1);

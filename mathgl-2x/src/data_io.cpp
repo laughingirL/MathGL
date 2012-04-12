@@ -431,9 +431,9 @@ float mgl_data_max(HCDT d)
 	register long nn=d->GetNN();
 	const mglData *b = dynamic_cast<const mglData *>(d);
 	if(b)	for(long i=0;i<nn;i++)
-	{	v = b->a[i];	if(!isnan(v))	m = m>v ? m:v;	}
+	{	v = b->a[i];	if(!mgl_isnan(v))	m = m>v ? m:v;	}
 	else	for(long i=0;i<nn;i++)
-	{	v = d->vthr(i);	if(!isnan(v))	m = m>v ? m:v;	}
+	{	v = d->vthr(i);	if(!mgl_isnan(v))	m = m>v ? m:v;	}
 	return m;
 }
 float mgl_data_max_(uintptr_t *d)	{	return mgl_data_max(_DT_);	}
@@ -444,9 +444,9 @@ float mgl_data_min(HCDT d)
 	register long nn=d->GetNN();
 	const mglData *b = dynamic_cast<const mglData *>(d);
 	if(b)	for(long i=0;i<nn;i++)
-	{	v = b->a[i];	if(!isnan(v))	m = m<v ? m:v;	}
+	{	v = b->a[i];	if(!mgl_isnan(v))	m = m<v ? m:v;	}
 	else	for(long i=0;i<nn;i++)
-	{	v = d->vthr(i);	if(!isnan(v))	m = m<v ? m:v;	}
+	{	v = d->vthr(i);	if(!mgl_isnan(v))	m = m<v ? m:v;	}
 	return m;
 }
 float mgl_data_min_(uintptr_t *d)	{	return mgl_data_min(_DT_);	}
@@ -458,7 +458,7 @@ float mgl_data_max_int(HCDT d, long *i, long *j, long *k)
 	for(long ii=0;ii<nn;ii++)
 	{
 		v = d->vthr(ii);
-		if(!isnan(v) && m < v)
+		if(!mgl_isnan(v) && m < v)
 		{	m=v;	*i=ii%nx;	*j=(ii/nx)%ny;	*k=ii/(nx*ny);   }
 	}
 	return m;
@@ -474,7 +474,7 @@ float mgl_data_min_int(HCDT d, long *i, long *j, long *k)
 	for(long ii=0;ii<nn;ii++)
 	{
 		v = d->vthr(ii);
-		if(!isnan(v) && m > v)
+		if(!mgl_isnan(v) && m > v)
 		{	m=v;	*i=ii%nx;	*j=(ii/nx)%ny;	*k=ii/(nx*ny);   }
 	}
 	return m;
@@ -567,7 +567,7 @@ void *mgl_fill_x(void *par)
 }
 void mgl_data_fill(HMDT d, float x1,float x2,char dir)
 {
-	if(isnan(x2))	x2=x1;
+	if(mgl_isnan(x2))	x2=x1;
 	if(dir<'x' || dir>'z')	dir='x';
 	long par[2]={d->nx,d->ny};
 	mreal b[2]={x1,x2-x1};
@@ -587,7 +587,7 @@ void mgl_data_norm(HMDT d, float v1,float v2,long sym,long dim)
 	else		s = dim*d->ny;
 	for(i=s;i<nn;i++)	// determines borders of existing data
 	{
-		if(isnan(a[i]))	continue;
+		if(mgl_isnan(a[i]))	continue;
 		a1 = (a1<a[i] ? a1 : a[i]);	a2 = (a2>a[i] ? a2 : a[i]);
 	}
 	if(a1==a2)  {  if(a1!=0)	a1=0.;  else a2=1;  }

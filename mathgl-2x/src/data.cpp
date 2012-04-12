@@ -1256,7 +1256,7 @@ void mgl_omod(mreal *a, mreal da, int nx, int n)
 	for(i=1;i<nx;i++)
 	{
 		ii = i*n;
-		if(isnan(a[ii-n]))	{	qq=true;	continue;	}
+		if(mgl_isnan(a[ii-n]))	{	qq=true;	continue;	}
 		if(qq)
 		{
 			a[ii] += omod(a[ii-n]-a[ii], da);

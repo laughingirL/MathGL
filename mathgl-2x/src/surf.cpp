@@ -47,7 +47,7 @@ void mgl_fsurf(HMGL gr, const char *eqZ, const char *sch, const char *opt)
 {	// TODO: Add strong function variation analisys ???
 	if(eqZ==0 || eqZ[0]==0)	return;		// nothing to plot
 	float r = gr->SaveState(opt);
-	long n = (isnan(r) || r<=0) ? 100:long(r+0.5);
+	long n = (mgl_isnan(r) || r<=0) ? 100:long(r+0.5);
 	mglData z(n,n);
 	mglFormula *eq = new mglFormula(eqZ);
 	register int i,j;
@@ -65,7 +65,7 @@ void mgl_fsurf_xyz(HMGL gr, const char *eqX, const char *eqY, const char *eqZ, c
 {	// TODO: Add strong function variation analisys ???
 	if(eqZ==0 || eqZ[0]==0)	return;		// nothing to plot
 	float r = gr->SaveState(opt);
-	long n = (isnan(r) || r<=0) ? 100:long(r+0.5);
+	long n = (mgl_isnan(r) || r<=0) ? 100:long(r+0.5);
 	mglData x(n,n), y(n,n), z(n,n);
 	if(n<=0)	n=100;
 	mglFormula *ex, *ey, *ez;
@@ -434,7 +434,7 @@ void mgl_dens_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 			if(gr->Stop)	{	delete []pos;	return;	}
 			p = mglPoint(GetX(x,i,j,k).x, GetY(y,i,j,k).x, zVal);
 			zz = z->v(i,j,k);	c = gr->GetC(ss,zz);
-			if(isnan(zz))	p.x = NAN;
+			if(mgl_isnan(zz))	p.x = NAN;
 			pos[i+n*j] = gr->AddPnt(p,c,s);
 		}
 		mgl_surf_plot(gr,pos,n,m);

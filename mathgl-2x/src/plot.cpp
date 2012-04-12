@@ -30,7 +30,7 @@ void mgl_fplot(HMGL gr, const char *eqY, const char *pen, const char *opt)
 {
 	if(eqY==0 || eqY[0]==0)	return;		// nothing to plot
 	float r = gr->SaveState(opt);
-	long n = (isnan(r) || r<=0) ? 100:long(r+0.5);
+	long n = (mgl_isnan(r) || r<=0) ? 100:long(r+0.5);
 
 	float *x = (float *)malloc(n*sizeof(float));
 	float *y = (float *)malloc(n*sizeof(float));
@@ -72,7 +72,7 @@ void mgl_fplot(HMGL gr, const char *eqY, const char *pen, const char *opt)
 void mgl_fplot_xyz(HMGL gr, const char *eqX, const char *eqY, const char *eqZ, const char *pen, const char *opt)
 {
 	float r = gr->SaveState(opt);
-	long n = (isnan(r) || r<=0) ? 100:long(r+0.5);
+	long n = (mgl_isnan(r) || r<=0) ? 100:long(r+0.5);
 
 	float *x = (float *)malloc(n*sizeof(float));
 	float *y = (float *)malloc(n*sizeof(float));
@@ -148,7 +148,7 @@ void mgl_radar(HMGL gr, HCDT a, const char *pen, const char *opt)
 	if(n<2)	{	gr->SetWarn(mglWarnLow,"Radar");	return;	}
 	mglData x(n+1,ny), y(n+1,ny);
 	float m=a->Minimal(), r=gr->SaveState(opt);
-	if(isnan(r) || r<0)	r = m<0 ? -m:0;
+	if(mgl_isnan(r) || r<0)	r = m<0 ? -m:0;
 	register long i,j;
 	for(j=0;j<ny;j++)
 	{
@@ -1075,7 +1075,7 @@ void mgl_boxplot_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
 	{
 		if(gr->Stop)	{	delete []d;	return;	}
 		register long mm,k;
-		for(mm=j=0;j<m;j++)	if(!isnan(y->v(i,j)))
+		for(mm=j=0;j<m;j++)	if(!mgl_isnan(y->v(i,j)))
 		{	d[mm]=y->v(i,j);	mm++;	}
 		if(m==0)	{	b[i]=NAN;	break;	}
 		qsort(d, mm, sizeof(float), mgl_cmp_flt);
@@ -1614,7 +1614,7 @@ void mgl_tape_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *
 	if(n<2)	{	gr->SetWarn(mglWarnLow,"Tape");	return;	}
 	static int cgid=1;	gr->StartGroup("Tape",cgid++);
 	float ll, rr = gr->SaveState(opt);
-	if(rr==0 || isnan(rr))	rr = mgl_norm(gr->Max-gr->Min)*gr->BarWidth/25;
+	if(rr==0 || mgl_isnan(rr))	rr = mgl_norm(gr->Max-gr->Min)*gr->BarWidth/25;
 	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();	m = z->GetNy() > m ? z->GetNy() : m;
 	gr->SetPenPal(pen,&pal);	gr->Reserve(4*n*m);
 	mglPoint p1,p2,q1,q2,l,nn,qn=mglPoint(NAN,NAN);

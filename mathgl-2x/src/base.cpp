@@ -117,7 +117,7 @@ void mglBase::SetWarn(int code, const char *who)
 long mglBase::AddPnt(mglPoint p, float c, mglPoint n, float a, int scl)
 {
 	if(scl>0)	ScalePoint(p,n,!(scl&2));
-	if(isnan(p.x))	return -1;
+	if(mgl_isnan(p.x))	return -1;
 	a = (a>=0 && a<=1) ? a : AlphaDef;
 	c = (c>=0) ? c:CDef;
 
@@ -149,7 +149,7 @@ long mglBase::CopyNtoC(long from, float c)
 {
 	if(from<0)	return -1;
 	mglPnt p=Pnt[from];
-	if(!isnan(c))	{	p.c=c;	p.t=0;	Txt[long(c)].GetC(c,0,p);	}
+	if(!mgl_isnan(c))	{	p.c=c;	p.t=0;	Txt[long(c)].GetC(c,0,p);	}
 	MGL_PUSH(Pnt,p,mutexPnt);	return Pnt.size()-1;
 }
 //-----------------------------------------------------------------------------
@@ -250,7 +250,7 @@ void mglBase::SetFBord(float x,float y,float z)
 bool mglBase::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan) const
 {
 	float &x=p.x, &y=p.y, &z=p.z;
-	if(isnan(x) || isnan(y) || isnan(z))	{	x=NAN;	return false;	}
+	if(mgl_isnan(x) || mgl_isnan(y) || mgl_isnan(z))	{	x=NAN;	return false;	}
 	float x1,y1,z1,x2,y2,z2;
 	x1 = x>0?x*MGL_FLT_EPS:x/MGL_FLT_EPS;	x2 = x<0?x*MGL_FLT_EPS:x/MGL_FLT_EPS;
 	y1 = y>0?y*MGL_FLT_EPS:y/MGL_FLT_EPS;	y2 = y<0?y*MGL_FLT_EPS:y/MGL_FLT_EPS;
@@ -281,7 +281,7 @@ bool mglBase::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan) const
     if(fx)	{	x1 = fx->Calc(x,y,z);	n.x *= fx->CalcD('x',x,y,z);	}
     if(fy)	{	y1 = fy->Calc(x,y,z);	n.y *= fy->CalcD('y',x,y,z);	}
     if(fz)	{	z1 = fz->Calc(x,y,z);	n.z *= fz->CalcD('z',x,y,z);	}
-    if(isnan(x1) || isnan(y1) || isnan(z1))	{	x=NAN;	return false;	}
+    if(mgl_isnan(x1) || mgl_isnan(y1) || mgl_isnan(z1))	{	x=NAN;	return false;	}
 
     x = (2*x1 - FMin.x - FMax.x)/(FMax.x - FMin.x);
     y = (2*y1 - FMin.y - FMax.y)/(FMax.y - FMin.y);
@@ -327,12 +327,12 @@ void mglBase::SetRanges(mglPoint m1, mglPoint m2)
 	else			{	Min.c=Min.z;Max.c=Max.z;}
 //	if(AutoOrg)
 	{
-		if(Org.x<Min.x && !isnan(Org.x))	Org.x = Min.x;
-		if(Org.x>Max.x && !isnan(Org.x))	Org.x = Max.x;
-		if(Org.y<Min.y && !isnan(Org.y))	Org.y = Min.y;
-		if(Org.y>Max.y && !isnan(Org.y))	Org.y = Max.y;
-		if(Org.z<Min.z && !isnan(Org.z))	Org.z = Min.z;
-		if(Org.z>Max.z && !isnan(Org.z))	Org.z = Max.z;
+		if(Org.x<Min.x && !mgl_isnan(Org.x))	Org.x = Min.x;
+		if(Org.x>Max.x && !mgl_isnan(Org.x))	Org.x = Max.x;
+		if(Org.y<Min.y && !mgl_isnan(Org.y))	Org.y = Min.y;
+		if(Org.y>Max.y && !mgl_isnan(Org.y))	Org.y = Max.y;
+		if(Org.z<Min.z && !mgl_isnan(Org.z))	Org.z = Min.z;
+		if(Org.z>Max.z && !mgl_isnan(Org.z))	Org.z = Max.z;
 	}
 	CutMin = mglPoint(0,0,0);	CutMax = mglPoint(0,0,0);
 	RecalcBorder();
@@ -355,8 +355,8 @@ void mglBase::CRange(const mglDataA &a,bool add, float fact)
 		Min.c = v1<Max.c ? v1:Max.c;
 		Max.c = v2>dv ? v2:dv;
 	}
-	if(Org.c<Min.c && !isnan(Org.c))	Org.c = Min.c;
-	if(Org.c>Max.c && !isnan(Org.c))	Org.c = Max.c;
+	if(Org.c<Min.c && !mgl_isnan(Org.c))	Org.c = Min.c;
+	if(Org.c>Max.c && !mgl_isnan(Org.c))	Org.c = Max.c;
 	RecalcCRange();
 }
 //-----------------------------------------------------------------------------
@@ -377,8 +377,8 @@ void mglBase::XRange(const mglDataA &a,bool add,float fact)
 		Min.x = v1<Max.x ? v1:Max.x;
 		Max.x = v2>dv ? v2:dv;
 	}
-	if(Org.x<Min.x && !isnan(Org.x))	Org.x = Min.x;
-	if(Org.x>Max.x && !isnan(Org.x))	Org.x = Max.x;
+	if(Org.x<Min.x && !mgl_isnan(Org.x))	Org.x = Min.x;
+	if(Org.x>Max.x && !mgl_isnan(Org.x))	Org.x = Max.x;
 	RecalcBorder();
 }
 //-----------------------------------------------------------------------------
@@ -399,8 +399,8 @@ void mglBase::YRange(const mglDataA &a,bool add,float fact)
 		Min.y = v1<Max.y ? v1:Max.y;
 		Max.y = v2>dv ? v2:dv;
 	}
-	if(Org.y<Min.y && !isnan(Org.y))	Org.y = Min.y;
-	if(Org.y>Max.y && !isnan(Org.y))	Org.y = Max.y;
+	if(Org.y<Min.y && !mgl_isnan(Org.y))	Org.y = Min.y;
+	if(Org.y>Max.y && !mgl_isnan(Org.y))	Org.y = Max.y;
 	RecalcBorder();
 }
 //-----------------------------------------------------------------------------
@@ -421,8 +421,8 @@ void mglBase::ZRange(const mglDataA &a,bool add,float fact)
 		Min.z = v1<Max.z ? v1:Max.z;
 		Max.z = v2>dv ? v2:dv;
 	}
-	if(Org.z<Min.z && !isnan(Org.z))	Org.z = Min.z;
-	if(Org.z>Max.z && !isnan(Org.z))	Org.z = Max.z;
+	if(Org.z<Min.z && !mgl_isnan(Org.z))	Org.z = Min.z;
+	if(Org.z>Max.z && !mgl_isnan(Org.z))	Org.z = Max.z;
 	RecalcBorder();
 }
 //-----------------------------------------------------------------------------

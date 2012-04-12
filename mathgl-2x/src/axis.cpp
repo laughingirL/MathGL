@@ -266,7 +266,7 @@ void mglCanvas::SetTickTime(char dir, float d, const char *t)
 	if(aa.ch=='z')	aa.v0 = aa.org.z;
 
 	wchar_t buf[64];
-	float v, v0 = isnan(aa.o) ? aa.v0 : aa.o, v1;
+	float v, v0 = mgl_isnan(aa.o) ? aa.v0 : aa.o, v1;
 	if(aa.v2>aa.v1)
 	{	v1 = aa.v2;		v0 = v0 - aa.dv*floor((v0-aa.v1)/aa.dv+1e-3);	}
 	else
@@ -425,7 +425,7 @@ void mglCanvas::LabelTicks(mglAxis &aa)
 		if((TuneTicks&1)==0 && kind==2)	kind=0;
 		if((TuneTicks&2)==0 && kind!=2)	kind=0;
 
-		v0 = isnan(aa.o) ? aa.v0 : aa.o;
+		v0 = mgl_isnan(aa.o) ? aa.v0 : aa.o;
 		if(aa.v2>aa.v1)
 		{	v1 = aa.v2;		v0 = v0 - aa.dv*floor((v0-aa.v1)/aa.dv+1e-3);	}
 		else
@@ -501,7 +501,7 @@ void mglCanvas::DrawAxis(mglAxis &aa, bool text, char arr,const char *stl)
 	}
 
 	k2 = aa.txt.size();
-	float v, u, v0 = isnan(aa.o) ? aa.v0 : aa.o;
+	float v, u, v0 = mgl_isnan(aa.o) ? aa.v0 : aa.o;
 	if(k2>0)	for(i=0;i<k2;i++)
 	{
 		v = aa.txt[i].val;	u = fabs(v);

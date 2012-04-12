@@ -111,7 +111,7 @@ void DatPanel::refresh()
 	for(i=0;i<nx;i++)	for(j=0;j<ny;j++)
 	{
 		f = var->d.GetVal(i,j,kz);
-		if(isnan(f))	s = "nan";
+		if(mgl_isnan(f))	s = "nan";
 		else	s.sprintf("%g",f);
 		tab->item(j,i)->setText(s);
 	}
@@ -161,7 +161,7 @@ void DatPanel::putValue(int r, int c)
 	f = s=="nan" ? NAN : s.toDouble();
 	if(f!=var->d.GetVal(c,r,kz))
 	{
-		if(isnan(f))	s="nan";	else	s.sprintf("%g", f);
+		if(mgl_isnan(f))	s="nan";	else	s.sprintf("%g", f);
 		tab->item(r,c)->setText(s);
 	}
 	var->d.SetVal(f,c,r,kz);

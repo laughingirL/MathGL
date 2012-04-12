@@ -213,7 +213,7 @@ HMDT mgl_ray_trace(const char *ham, float x0, float y0, float z0, float px, floa
 		k3[2] = eqs.CalcD(var,'v');	k3[5] = -eqs.CalcD(var,'z');
 		//		ty = cy/(k2*h);	k3+=k2;	md->H(ty,k2);
 		var['t'-'a']=k*dt+dt;	for(i=0;i<6;i++)
-		{	var[v[i]-'a'] = x[i]+k2[i]*dt;	k3[i] += k2[i];	}
+		{	var[v[i]-'a'] = x[i]+k3[i]*dt;	k3[i] += k2[i];	}
 		k2[0] = eqs.CalcD(var,'p');	k2[3] = -eqs.CalcD(var,'x');
 		k2[1] = eqs.CalcD(var,'q');	k2[4] = -eqs.CalcD(var,'y');
 		k2[2] = eqs.CalcD(var,'v');	k2[5] = -eqs.CalcD(var,'z');

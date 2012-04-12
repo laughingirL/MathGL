@@ -541,21 +541,21 @@ mreal mglFormula::CalcIn(const mreal *a1) const
 		else	return (Kod==EQ_A) ? a1[int(Res)] : Res;
 	}
 	double a = Left->CalcIn(a1);
-	if(!isnan(a))
+	if(!mgl_isnan(a))
 	{
 		if(Kod<EQ_SIN)
 		{
 			// try to bypass calc b if a==0
 			if(a==0 && z2[Kod-EQ_LT]!=3)	return z2[Kod-EQ_LT];
 			double b = Right->CalcIn(a1);
-			return !isnan(b) ? f2[Kod-EQ_LT](a,b) : NAN;
+			return !mgl_isnan(b) ? f2[Kod-EQ_LT](a,b) : NAN;
 		}
 		else if(Kod<EQ_SN)	return f1[Kod-EQ_SIN](a);
 #if MGL_HAVE_GSL
 		else if(Kod<=EQ_DC)
 		{
 			double sn=0,cn=0,dn=0,b = Right->CalcIn(a1);
-			if(isnan(b))	return NAN;
+			if(mgl_isnan(b))	return NAN;
 			gsl_sf_elljac_e(a,b, &sn, &cn, &dn);
 			switch(Kod)
 			{
@@ -655,19 +655,19 @@ mreal mglFormula::CalcDIn(int id, const mreal *a1) const
 	if(Kod<EQ_LT)	return (Kod==EQ_A && id==(int)Res)?1:0;
 
 	double a = Left->CalcIn(a1), d = Left->CalcDIn(id,a1);
-	if(!isnan(a) && !isnan(d))
+	if(!mgl_isnan(a) && !mgl_isnan(d))
 	{
 		if(Kod<EQ_SIN)
 		{
 			double b = Right->CalcIn(a1), c = Right->CalcDIn(id,a1);
-			return !isnan(b) ? (d?f21[Kod-EQ_LT](a,b)*d:0) + (c?f22[Kod-EQ_LT](a,b)*c:0) : NAN;
+			return !mgl_isnan(b) ? (d?f21[Kod-EQ_LT](a,b)*d:0) + (c?f22[Kod-EQ_LT](a,b)*c:0) : NAN;
 		}
 		else if(Kod<EQ_SN)	return (d?f11[Kod-EQ_SIN](a)*d:0);
 #if MGL_HAVE_GSL
 		else if(Kod<=EQ_DC)
 		{
 			double sn=0,cn=0,dn=0,b = Right->CalcIn(a1);
-			if(isnan(b))	return NAN;
+			if(mgl_isnan(b))	return NAN;
 			gsl_sf_elljac_e(a,b, &sn, &cn, &dn);
 			switch(Kod)	// At this moment parse only differentiation or argument NOT mu !!!
 			{

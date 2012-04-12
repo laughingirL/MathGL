@@ -31,7 +31,7 @@
 void mgl_dens_x(HMGL gr, HCDT a, const char *sch, float sv, const char *opt)
 {
 	register long i,j,k,n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
-	if(isnan(sv))	sv = gr->GetOrgX('x');
+	if(mgl_isnan(sv))	sv = gr->GetOrgX('x');
 	if(n<2 || m<2)	{	gr->SetWarn(mglWarnLow,"DensX");	return;	}
 	if(sv<gr->Min.x || sv>gr->Max.x)	{	gr->SetWarn(mglWarnSlc,"DensX");	return;	}
 	mglData xx,yy,zz,aa;
@@ -59,7 +59,7 @@ void mgl_dens_x(HMGL gr, HCDT a, const char *sch, float sv, const char *opt)
 void mgl_dens_y(HMGL gr, HCDT a, const char *sch, float sv, const char *opt)
 {
 	register long i,j,k,n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
-	if(isnan(sv))	sv = gr->GetOrgX('x');
+	if(mgl_isnan(sv))	sv = gr->GetOrgX('x');
 	if(n<2 || m<2)	{	gr->SetWarn(mglWarnLow,"DensY");	return;	}
 	if(sv<gr->Min.x || sv>gr->Max.x)	{	gr->SetWarn(mglWarnSlc,"DensY");	return;	}
 	mglData xx,yy,zz,aa;
@@ -87,7 +87,7 @@ void mgl_dens_y(HMGL gr, HCDT a, const char *sch, float sv, const char *opt)
 void mgl_dens_z(HMGL gr, HCDT a, const char *sch, float sv, const char *opt)
 {
 	register long i,j,k,n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
-	if(isnan(sv))	sv = gr->GetOrgX('x');
+	if(mgl_isnan(sv))	sv = gr->GetOrgX('x');
 	if(n<2 || m<2)	{	gr->SetWarn(mglWarnLow,"DensZ");	return;	}
 	if(sv<gr->Min.x || sv>gr->Max.x)	{	gr->SetWarn(mglWarnSlc,"DensZ");	return;	}
 	mglData xx,yy,zz,aa;
@@ -136,7 +136,7 @@ void mgl_cont_gen(HMGL gr, float val, HCDT a, HCDT x, HCDT y, HCDT z, float c, i
 void mgl_cont_x_val(HMGL gr, HCDT v, HCDT a, const char *sch, float sv, const char *opt)
 {
 	register long i,j,k,n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
-	if(isnan(sv))	sv = gr->GetOrgX('x');
+	if(mgl_isnan(sv))	sv = gr->GetOrgX('x');
 	if(n<2 || m<2)	{	gr->SetWarn(mglWarnLow,"ContX");	return;	}
 	if(sv<gr->Min.x || sv>gr->Max.x)	{	gr->SetWarn(mglWarnSlc,"ContX");	return;	}
 	gr->SaveState(opt);
@@ -174,7 +174,7 @@ void mgl_cont_x_val(HMGL gr, HCDT v, HCDT a, const char *sch, float sv, const ch
 void mgl_cont_y_val(HMGL gr, HCDT v, HCDT a, const char *sch, float sv, const char *opt)
 {
 	register long i,j,k,n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
-	if(isnan(sv))	sv = gr->GetOrgX('x');
+	if(mgl_isnan(sv))	sv = gr->GetOrgX('x');
 	if(n<2 || m<2)	{	gr->SetWarn(mglWarnLow,"ContY");	return;	}
 	if(sv<gr->Min.x || sv>gr->Max.x)	{	gr->SetWarn(mglWarnSlc,"ContY");	return;	}
 	gr->SaveState(opt);
@@ -212,7 +212,7 @@ void mgl_cont_y_val(HMGL gr, HCDT v, HCDT a, const char *sch, float sv, const ch
 void mgl_cont_z_val(HMGL gr, HCDT v, HCDT a, const char *sch, float sv, const char *opt)
 {
 	register long i,j,k,n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
-	if(isnan(sv))	sv = gr->GetOrgX('x');
+	if(mgl_isnan(sv))	sv = gr->GetOrgX('x');
 	if(n<2 || m<2)	{	gr->SetWarn(mglWarnLow,"ContZ");	return;	}
 	if(sv<gr->Min.x || sv>gr->Max.x)	{	gr->SetWarn(mglWarnSlc,"ContZ");	return;	}
 	gr->SaveState(opt);
@@ -249,7 +249,7 @@ void mgl_cont_z_val(HMGL gr, HCDT v, HCDT a, const char *sch, float sv, const ch
 void mgl_cont_x(HMGL gr, HCDT a, const char *sch, float sv, const char *opt)
 {
 	float r = gr->SaveState(opt);
-	long Num = (isnan(r) || r<=0) ? 7:long(r+0.5);
+	long Num = (mgl_isnan(r) || r<=0) ? 7:long(r+0.5);
 	mglData v(Num);
 	for(long i=0;i<Num;i++)	v.a[i] = gr->Min.c + (gr->Max.c-gr->Min.c)*float(i+1)/(Num+1);
 	mgl_cont_x_val(gr,&v,a,sch,sv,0);
@@ -258,7 +258,7 @@ void mgl_cont_x(HMGL gr, HCDT a, const char *sch, float sv, const char *opt)
 void mgl_cont_y(HMGL gr, HCDT a, const char *sch, float sv, const char *opt)
 {
 	float r = gr->SaveState(opt);
-	long Num = (isnan(r) || r<=0) ? 7:long(r+0.5);
+	long Num = (mgl_isnan(r) || r<=0) ? 7:long(r+0.5);
 	mglData v(Num);
 	for(long i=0;i<Num;i++)	v.a[i] = gr->Min.c + (gr->Max.c-gr->Min.c)*float(i+1)/(Num+1);
 	mgl_cont_y_val(gr,&v,a,sch,sv,0);
@@ -267,7 +267,7 @@ void mgl_cont_y(HMGL gr, HCDT a, const char *sch, float sv, const char *opt)
 void mgl_cont_z(HMGL gr, HCDT a, const char *sch, float sv, const char *opt)
 {
 	float r = gr->SaveState(opt);
-	long Num = (isnan(r) || r<=0) ? 7:long(r+0.5);
+	long Num = (mgl_isnan(r) || r<=0) ? 7:long(r+0.5);
 	mglData v(Num);
 	for(long i=0;i<Num;i++)	v.a[i] = gr->Min.c + (gr->Max.c-gr->Min.c)*float(i+1)/(Num+1);
 	mgl_cont_z_val(gr,&v,a,sch,sv,0);
@@ -311,7 +311,7 @@ void mgl_contf_gen(HMGL gr, float v1, float v2, HCDT a, HCDT x, HCDT y, HCDT z, 
 void mgl_contf_x_val(HMGL gr, HCDT v, HCDT a, const char *sch, float sv, const char *opt)
 {
 	register long i,j,k,n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
-	if(isnan(sv))	sv = gr->GetOrgX('x');
+	if(mgl_isnan(sv))	sv = gr->GetOrgX('x');
 	if(n<2 || m<2)	{	gr->SetWarn(mglWarnLow,"ContFX");	return;	}
 	if(sv<gr->Min.x || sv>gr->Max.x)	{	gr->SetWarn(mglWarnSlc,"ContFX");	return;	}
 	gr->SaveState(opt);
@@ -346,7 +346,7 @@ void mgl_contf_x_val(HMGL gr, HCDT v, HCDT a, const char *sch, float sv, const c
 void mgl_contf_y_val(HMGL gr, HCDT v, HCDT a, const char *sch, float sv, const char *opt)
 {
 	register long i,j,k,n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
-	if(isnan(sv))	sv = gr->GetOrgX('x');
+	if(mgl_isnan(sv))	sv = gr->GetOrgX('x');
 	if(n<2 || m<2)	{	gr->SetWarn(mglWarnLow,"ContFY");	return;	}
 	if(sv<gr->Min.x || sv>gr->Max.x)	{	gr->SetWarn(mglWarnSlc,"ContFY");	return;	}
 	gr->SaveState(opt);
@@ -381,7 +381,7 @@ void mgl_contf_y_val(HMGL gr, HCDT v, HCDT a, const char *sch, float sv, const c
 void mgl_contf_z_val(HMGL gr, HCDT v, HCDT a, const char *sch, float sv, const char *opt)
 {
 	register long i,j,k,n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
-	if(isnan(sv))	sv = gr->GetOrgX('x');
+	if(mgl_isnan(sv))	sv = gr->GetOrgX('x');
 	if(n<2 || m<2)	{	gr->SetWarn(mglWarnLow,"ContFZ");	return;	}
 	if(sv<gr->Min.x || sv>gr->Max.x)	{	gr->SetWarn(mglWarnSlc,"ContFZ");	return;	}
 	gr->SaveState(opt);
@@ -415,7 +415,7 @@ void mgl_contf_z_val(HMGL gr, HCDT v, HCDT a, const char *sch, float sv, const c
 void mgl_contf_x(HMGL gr, HCDT a, const char *sch, float sv, const char *opt)
 {
 	float r = gr->SaveState(opt);
-	long Num = (isnan(r) || r<=0) ? 7:long(r+0.5);
+	long Num = (mgl_isnan(r) || r<=0) ? 7:long(r+0.5);
 	mglData v(Num);	v.Fill(gr->Min.c, gr->Max.c);
 	mgl_contf_x_val(gr,&v,a,sch,sv,0);
 }
@@ -423,7 +423,7 @@ void mgl_contf_x(HMGL gr, HCDT a, const char *sch, float sv, const char *opt)
 void mgl_contf_y(HMGL gr, HCDT a, const char *sch, float sv, const char *opt)
 {
 	float r = gr->SaveState(opt);
-	long Num = (isnan(r) || r<=0) ? 7:long(r+0.5);
+	long Num = (mgl_isnan(r) || r<=0) ? 7:long(r+0.5);
 	mglData v(Num);	v.Fill(gr->Min.c, gr->Max.c);
 	mgl_contf_y_val(gr,&v,a,sch,sv,0);
 }
@@ -431,7 +431,7 @@ void mgl_contf_y(HMGL gr, HCDT a, const char *sch, float sv, const char *opt)
 void mgl_contf_z(HMGL gr, HCDT a, const char *sch, float sv, const char *opt)
 {
 	float r = gr->SaveState(opt);
-	long Num = (isnan(r) || r<=0) ? 7:long(r+0.5);
+	long Num = (mgl_isnan(r) || r<=0) ? 7:long(r+0.5);
 	mglData v(Num);	v.Fill(gr->Min.c, gr->Max.c);
 	mgl_contf_z_val(gr,&v,a,sch,sv,0);
 }

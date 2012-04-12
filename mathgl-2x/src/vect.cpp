@@ -32,7 +32,7 @@ void mgl_traj_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 	if(n<2)	{	gr->SetWarn(mglWarnLow,"Traj");	return;	}
 	if(n!=x->GetNx() || z->GetNx()!=n || y->GetNx()!=n || ay->GetNx()!=n || az->GetNx()!=n)
 	{	gr->SetWarn(mglWarnDim,"Traj");	return;	}
-	float len=gr->SaveState(opt);	if(isnan(len))	len = 0;
+	float len=gr->SaveState(opt);	if(mgl_isnan(len))	len = 0;
 	static int cgid=1;	gr->StartGroup("Traj",cgid++);
 
 	register long i, j;
@@ -343,7 +343,7 @@ void mgl_flow_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, con
 	bool both = x->GetNx()==n && y->GetNx()==n && x->GetNy()==m && y->GetNy()==m;
 	if(!(both || (x->GetNx()==n && y->GetNx()==m)))	{	gr->SetWarn(mglWarnDim,"Flow");	return;	}
 	float r = gr->SaveState(opt);
-	long num = isnan(r)?5:long(r+0.5);
+	long num = mgl_isnan(r)?5:long(r+0.5);
 	static int cgid=1;	gr->StartGroup("Flow",cgid++);
 
 	long ss = gr->AddTexture(sch);
@@ -568,7 +568,7 @@ void mgl_flow_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 	if(!(both || (x->GetNx()==n && y->GetNx()==m && z->GetNx()==l)))
 	{	gr->SetWarn(mglWarnDim,"Flow");	return;	}
 	float r = gr->SaveState(opt);
-	long num = isnan(r)?3:long(r+0.5);
+	long num = mgl_isnan(r)?3:long(r+0.5);
 	static int cgid=1;	gr->StartGroup("Flow3",cgid++);
 	bool cnt=!(sch && strchr(sch,'#'));
 	long ss = gr->AddTexture(sch);
@@ -864,7 +864,7 @@ void mgl_pipe_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, flo
 	bool both = x->GetNx()==n && y->GetNx()==n && x->GetNy()==m && y->GetNy()==m;
 	if(!(both || (x->GetNx()==n && y->GetNx()==m)))	{	gr->SetWarn(mglWarnDim,"Pipe");	return;	}
 	float r = gr->SaveState(opt);
-	long num = isnan(r)?5:long(r+0.5);
+	long num = mgl_isnan(r)?5:long(r+0.5);
 	static int cgid=1;	gr->StartGroup("Pipe",cgid++);
 
 	long ss = gr->AddTexture(sch);
@@ -1027,7 +1027,7 @@ void mgl_pipe_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 	if(!(both || (x->GetNx()==n && y->GetNx()==m && z->GetNx()==l)))
 	{	gr->SetWarn(mglWarnDim,"Pipe");	return;	}
 	float r = gr->SaveState(opt);
-	long num = isnan(r)?3:long(r+0.5);
+	long num = mgl_isnan(r)?3:long(r+0.5);
 	static int cgid=1;	gr->StartGroup("Pipe3",cgid++);
 	if(sch && strchr(sch,'i'))	r0 = -fabs(r0);
 

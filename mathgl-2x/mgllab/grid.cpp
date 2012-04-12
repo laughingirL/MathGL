@@ -22,21 +22,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/*
-#ifdef _MSC_VER
-#define	_USE_MATH_DEFINES
-#include <float.h>
-const unsigned long mgl_nan[2] = {0xffffffff, 0x7fffffff};
-#define NANd	(*(double*)mgl_nan)
-#define NANf	(*(float*)&(mgl_nan[1]))
-#define NAN		NANf
-#define isnan	_isnan
-#define isfinite	_finite
-#define copysignf	_copysign
-#define chdir	_chdir
-#endif
-*/
-
 #include <math.h>
 #include "udav.h"
 //-----------------------------------------------------------------------------
@@ -82,7 +67,7 @@ void Fl_Data_Table::draw_cell(TableContext context, int R, int C, int X, int Y, 
 		fl_push_clip(X+3, Y+3, W-6, H-6);
 		fl_font(FL_HELVETICA, 14);
 		fl_color(FL_BLACK);
-		if(isnan(data[C+nx*R]))	strcpy(s,"nan");
+		if(mgl_isnan(data[C+nx*R]))	strcpy(s,"nan");
 		else	sprintf(s,"%g",data[C+nx*R]);
 		fl_draw(s, X+3, Y+3, W-6, H-6, FL_ALIGN_RIGHT);
 		break;
@@ -114,7 +99,7 @@ void Fl_Data_Table::cell_click()
 		find_cell(CONTEXT_CELL, R, C, XX, YY, WW, HH);
 		input->resize(XX,YY,WW,HH);
 		char s[32];
-		if(isnan(data[C+nx*R]))	strcpy(s,"nan");
+		if(mgl_isnan(data[C+nx*R]))	strcpy(s,"nan");
 		else	sprintf(s,"%g",data[C+nx*R]);
 		input->value(s);	input->show();
 		input->take_focus();

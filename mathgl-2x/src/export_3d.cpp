@@ -265,7 +265,7 @@ void mgl_write_obj(HMGL gr, const char *fname,const char *descr, int use_png)
 		const mglPnt &pp = gr->GetPnt(i);
 		fprintf(fp,"v %g %g %g\n",pp.x,pp.y,pp.z);
 		fprintf(fp,"vt %g %g\n",1-pp.ta,pp.c/ntxt);
-//		if(isnan(pp.u))	fprintf(fp,"vn 0 0 0\n");
+//		if(mgl_isnan(pp.u))	fprintf(fp,"vn 0 0 0\n");
 //		else fprintf(fp,"vn %g %g %g\n",pp.u,pp.v,pp.w);
 	}
 	// primitive definition in groups
@@ -754,7 +754,7 @@ void mglCanvas::WriteXGL(const char *fname,const char *descr)
 	fprintf(fp,"<LIGHTING>\n<AMBIENT>%g, %g, %g</AMBIENT>\n",AmbBr, AmbBr, AmbBr);
 	register unsigned long i,j;
 	if(get(MGL_ENABLE_LIGHT))	for(i=0;i<10;i++)
-		if(light[i].n && isnan(light[i].r.x))
+		if(light[i].n && mgl_isnan(light[i].r.x))
 		{
 			fprintf(fp, "<DIRECTIONALLIGHT>\n<DIRECTION>%g, %g, %g</DIRECTION>\n", light[i].d.x, light[i].d.y, light[i].d.z);
 			fprintf(fp, "<SPECULAR>%g, %g, %g</SPECULAR>\n</DIRECTIONALLIGHT>\n", light[i].c.r, light[i].c.g, light[i].c.b);

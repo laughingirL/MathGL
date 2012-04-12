@@ -83,7 +83,7 @@ void mglCanvasGL::AddLight(int n,mglPoint r,mglPoint d,char cc, float br,float /
 	GLenum lght[8] = {GL_LIGHT0,GL_LIGHT1,GL_LIGHT2,GL_LIGHT3,GL_LIGHT4,
 			GL_LIGHT5,GL_LIGHT6,GL_LIGHT7};
 	float amb[4], pos[4],dif[4],dir[4];
-	bool inf = isnan(r.x);
+	bool inf = mgl_isnan(r.x);
 	if(n<0 || n>7)	{	SetWarn(mglWarnLId);	return;	}
 	if(c.Valid())
 	{

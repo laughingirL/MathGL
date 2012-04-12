@@ -51,7 +51,7 @@ void mgl_ball_(uintptr_t *gr, mreal *x,mreal *y,mreal *z)
 void mgl_line(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z2, const char *pen,int n)
 {
 	static int cgid=1;	gr->StartGroup("Line",cgid++);
-	if(isnan(z1) || isnan(z2))	z1=z2=gr->Min.z;
+	if(mgl_isnan(z1) || mgl_isnan(z2))	z1=z2=gr->Min.z;
 	mglPoint p1(x1,y1,z1), p2(x2,y2,z2), p=p1,nn=mglPoint(NAN);
 	gr->SetPenPal(pen);
 	n = (n<2) ? 2 : n;
@@ -139,8 +139,8 @@ void mgl_face(HMGL gr, float x0, float y0, float z0, float x1, float y1, float z
 	gr->SetPenPal(stl,&pal);
 	float c1,c2,c3,c4,zz=(gr->Min.z+gr->Max.z)/2;
 	c1=c2=c3=c4=gr->CDef;
-	if(isnan(z0))	z0 = zz;	if(isnan(z1))	z1 = zz;
-	if(isnan(z2))	z2 = zz;	if(isnan(z3))	z3 = zz;
+	if(mgl_isnan(z0))	z0 = zz;	if(mgl_isnan(z1))	z1 = zz;
+	if(mgl_isnan(z2))	z2 = zz;	if(mgl_isnan(z3))	z3 = zz;
 	mglPoint p1(x0,y0,z0), p2(x1,y1,z1), p3(x2,y2,z2), p4(x3,y3,z3);
 	if(gr->GetNumPal(pal)>=4)
 	{	c2=gr->NextColor(pal);	c3=gr->NextColor(pal);	c4=gr->NextColor(pal);	}
@@ -714,7 +714,7 @@ void mgl_labelw_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const wchar_t *text, const 
 	if(x->GetNx()!=n || z->GetNx()!=n)
 	{	gr->SetWarn(mglWarnDim,"Label");	return;	}
 	if(n<2)	{	gr->SetWarn(mglWarnLow,"Label");	return;	}
-	float size=gr->SaveState(opt);	if(isnan(size))	size=-0.7;
+	float size=gr->SaveState(opt);	if(mgl_isnan(size))	size=-0.7;
 	static int cgid=1;	gr->StartGroup("Label",cgid++);
 	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();	m = z->GetNy() > m ? z->GetNy() : m;
 

@@ -296,7 +296,7 @@ void mgl_tricont_xyzcv(HMGL gr, HCDT v, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT 
 void mgl_tricont_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, const char *opt)
 {
 	float r = gr->SaveState(opt);
-	long n = (isnan(r) || r<=0) ? 7:long(r+0.5);
+	long n = (mgl_isnan(r) || r<=0) ? 7:long(r+0.5);
 	mglData v(n);
 	for(long i=0;i<n;i++)	v.a[i] = gr->Min.c + (gr->Max.c-gr->Min.c)*float(i+1)/(n+1);
 	mgl_tricont_xyzcv(gr,&v,nums,x,y,z,a,sch,0);

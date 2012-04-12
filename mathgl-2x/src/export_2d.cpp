@@ -889,7 +889,7 @@ void mgl_write_tex(HMGL gr, const char *fname,const char *descr)
 		else if(q.type==6)	// text
 		{
 			const mglText &t = gr->GetPtx(q.n3);
-			float ftet = isnan(p1.v)||isnan(p1.u) ? 0:-180*atan2(p1.v,p1.u)/M_PI;
+			float ftet = mgl_isnan(p1.v)||mgl_isnan(p1.u) ? 0:-180*atan2(p1.v,p1.u)/M_PI;
 			int f,a;	mglGetStyle(t.stl.c_str(), &f, &a);
 			std::string ss=cname;
 			if((a&3)==2)	ss.append(",west");	if((a&3)==0)	ss.append(",east");

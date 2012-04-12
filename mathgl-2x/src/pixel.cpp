@@ -96,7 +96,7 @@ long mglCanvas::ProjScale(int nf, long id)
 {
 	const mglPnt &p0=Pnt[id];
 	mglPoint pp(p0.x,p0.y,p0.z), nn(p0.u,p0.v,p0.w);
-	if(isnan(pp.x))	return -1;
+	if(mgl_isnan(pp.x))	return -1;
 	mglPoint q=pp/(2*B.pf), p, n=nn;
 	register float w=B1.b[0]/2, h=B1.b[4]/2, d=B1.b[8]/2, xx=B1.x-w/2, yy=B1.y-h/2;
 	if(TernAxis&1)	// usual ternary axis
@@ -470,15 +470,15 @@ unsigned char* mglCanvas::col2int(const mglPnt &p,unsigned char *r)
 	register float b0=0,b1=0,b2=0, ar,ag,ab;
 	ar = ag = ab = AmbBr;
 
-//	if(get(MGL_ENABLE_LIGHT) && !isnan(p.u))
-	if(!isnan(p.u))
+//	if(get(MGL_ENABLE_LIGHT) && !mgl_isnan(p.u))
+	if(!mgl_isnan(p.u))
 	{
 		float d0,d1,d2,nn;
 		register long i;
 		for(i=0;i<10;i++)
 		{
 			if(!light[i].n)	continue;
-			if(isnan(light[i].q.x))		// source at infinity
+			if(mgl_isnan(light[i].q.x))		// source at infinity
 			{
 				nn = 2*(p.u*light[i].p.x+p.v*light[i].p.y+p.w*light[i].p.z) /
 				(p.u*p.u+p.v*p.v+p.w*p.w+1e-6);
@@ -648,7 +648,7 @@ void mglCanvas::quad_draw(long k1, long k2, long k3, long k4, mglDrawReg *d)
 			if(u*(1.f-u)<0.f || v*(1.f-v)<0.f)	continue;	// second root bad
 		}
 		p = p1+d1*u+d2*v+d3*(u*v);
-		if(isnan(p.u) && !isnan(p.v))
+		if(mgl_isnan(p.u) && !mgl_isnan(p.v))
 		{	p.u = nr.x;	p.v = nr.y;	p.w = nr.z;	}
 		pnt_plot(i,j,p.z,col2int(p,r));
 	}
@@ -698,7 +698,7 @@ void mglCanvas::trig_draw(long k1, long k2, long k3, bool anorm, mglDrawReg *d)
 		if(Quality&2)	// slow but accurate
 		{
 			p = p1+d1*u+d2*v;
-			if(isnan(p.u) && !isnan(p.v) && anorm)
+			if(mgl_isnan(p.u) && !mgl_isnan(p.v) && anorm)
 			{	p.u = nr.x;	p.v = nr.y;	p.w = nr.z;	}
 			pnt_plot(i,j,p.z,col2int(p,r));
 		}
