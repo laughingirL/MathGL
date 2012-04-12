@@ -424,9 +424,9 @@ You may download current version of MathGL for following configurations:
 @item
 @uref{http://downloads.sourceforge.net/mathgl/mathgl-2.0.tar.gz,source} file with autoconf/automake script.
 @item
-@uref{http://downloads.sourceforge.net/mathgl/mathgl-2.0-mingw.i686.zip,Win32 GPL} binaries for MinGW (build for i686)
+@uref{http://downloads.sourceforge.net/mathgl/mathgl-2.0-mingw.i686.7z,Win32 GPL} binaries for MinGW (build for i686)
 @item
-@uref{http://downloads.sourceforge.net/mathgl/mathgl-2.0.LGPL-mingw.i686.zip,Win32 LGPL} binaries for MinGW (build for i686, no GSL and HDF5 support)
+@uref{http://downloads.sourceforge.net/mathgl/mathgl-2.0.LGPL-mingw.i686.7z,Win32 LGPL} binaries for MinGW (build for i686, no GSL and HDF5 support)
 @item
 @uref{http://downloads.sourceforge.net/mathgl/mathgl-2.0-1.DevPack,DevPak} package for Dev-C++ or Code::Blocks (GPL version)
 @item
