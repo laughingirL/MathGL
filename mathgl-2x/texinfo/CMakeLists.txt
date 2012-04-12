@@ -46,7 +46,7 @@ if(MGL_HAVE_DOC)
 
 	add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/texinfo/mathgl_en.info
 		COMMAND ${findth} -I=${CMAKE_SOURCE_DIR}/texinfo/png --split=section mathgl_en.texi -o mathgl_en
-		COMMAND ${findth} -I=${CMAKE_SOURCE_DIR}/texinfo/png --split=node --frames -o mgl_web_en mathgl_en.texi
+		COMMAND ${findth} -I=${CMAKE_SOURCE_DIR}/texinfo/png --split=node --frames -o doc_en mathgl_en.texi
 		COMMAND ${findth} -I=${CMAKE_SOURCE_DIR}/texinfo/png --split=no mgl_en.texi -o mgl_en.html
 		COMMAND ${findmi} --no-validate mathgl_en.texi
 		DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/png/all.png
@@ -55,6 +55,7 @@ if(MGL_HAVE_DOC)
 	)
 	add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/texinfo/mathgl_ru.info
 		COMMAND ${findth} -I=${CMAKE_SOURCE_DIR}/texinfo/png --split=section mathgl_ru.texi -o mathgl_ru
+		COMMAND ${findth} -I=${CMAKE_SOURCE_DIR}/texinfo/png --split=node --frames -o doc_ru mathgl_ru.texi
 		COMMAND ${findth} -I=${CMAKE_SOURCE_DIR}/texinfo/png --split=no mgl_ru.texi -o mgl_ru.html
 		COMMAND ${findmi} --no-validate mathgl_ru.texi
 		DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/png/all.png
