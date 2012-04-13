@@ -258,13 +258,6 @@ using mglBase::Light;
 	void Label(char dir, const char *text, float pos=0, float shift=0);
 	void Labelw(char dir, const wchar_t *text, float pos=0, float shift=0);
 
-	/// Print the \a text at arbitrary position of the picture \a x, \a y in range [0,1]x[0,1].
-	void Label(float x, float y, const char *text, const char *fnt=0, bool rel=false);
-	void Labelw(float x, float y, const wchar_t *text, const char *fnt=0, bool rel=false);
-//	/// Print the title text for the picture
-//	void Title(const wchar_t *text,const char *font=0);
-//	void Title(const char *text,const char *font=0);
-
 	/// Draw colorbar at edge of axis
 	void Colorbar(const char *sch=0);
 	void Colorbar(const char *sch, float x, float y, float w, float h);

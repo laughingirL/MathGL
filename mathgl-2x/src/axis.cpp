@@ -710,29 +710,6 @@ void mglCanvas::Labelw(char dir, const wchar_t *text, float pos, float shift)
 	text_plot(AddPnt(p,-1,q,0,7),text,font,-1.4,0.35+shift);
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::Label(float x, float y, const char *str, const char *font, bool rel)
-{
-	unsigned s = strlen(str)+1;
-	wchar_t *wcs = new wchar_t[s];
-	mbstowcs(wcs,str,s);
-	Labelw(x,y,wcs, font, rel);
-	delete []wcs;
-}
-//-----------------------------------------------------------------------------
-void mglCanvas::Labelw(float x, float y, const wchar_t *text, const char *font, bool rel)
-{
-	Push();	Identity(rel);
-	mglFormula *ox=fx, *oy=fy, *oz=fz;
-	fx = fy = fz = NULL;
-	char *f = new char[strlen(font)+1];	memset(f,0,strlen(font)+1);
-	strcpy(f,font);
-	for(int i=0;f[i];i++)	if(f[i]=='a' || f[i]=='A')	f[i]=' ';
-	mglPoint p((Min.x+Max.x)/2+B.pf*(Max.x-Min.x)*(x-0.5),
-				(Min.y+Max.y)/2+B.pf*(Max.y-Min.y)*(y-0.5), Max.z);
-	text_plot(AddPnt(p,-1,mglPoint(NAN),0,7),text,f,-1.4,1);
-	delete []f;	fx=ox;	fy=oy;	fz=oz;	Pop();
-}
-//-----------------------------------------------------------------------------
 void mglCanvas::Box(const char *col, bool ticks)
 {
 	mglPoint o = Org;
