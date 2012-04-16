@@ -1,3 +1,7 @@
+1.4.3 02.2012
+fixed MSVC Win64 bit compilation - reported by Ingo Wulf
+updated jpeg, png and zlib libraries
+
 1.4.2 05.2011
 fixed Win32 compilation with __stdcall set in IFXAPI.h - reported by Rob Ebbers
 put vtkU3DExporter to the code samples section

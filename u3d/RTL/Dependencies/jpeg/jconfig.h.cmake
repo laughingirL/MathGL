@@ -91,6 +91,15 @@
  */
 #undef INCOMPLETE_TYPES_BROKEN
 
+/* Define "boolean" as unsigned char, not int, on Windows systems.
+ */
+#ifdef _WIN32
+#ifndef __RPCNDR_H__		/* don't conflict if rpcndr.h already read */
+typedef unsigned char boolean;
+#endif
+#define HAVE_BOOLEAN		/* prevent jmorecfg.h from redefining it */
+#endif
+
 
 /*
  * The following options affect code selection within the JPEG library,
@@ -153,29 +162,3 @@
 
 
 #endif /* JPEG_CJPEG_DJPEG */
-
-/*
-#if defined(_WIN32)
-    #if defined(libjpeg_EXPORTS)
-        #define JPEG_EXPORT __declspec(dllexport)
-    #else
-        #define JPEG_EXPORT __declspec(dllimport)
-    #endif
-#else
-    #define JPEG_EXPORT 
-#endif
-
-#define GLOBAL(type) JPEG_EXPORT type
-#define EXTERN(type) JPEG_EXPORT type
-*/
-
-#ifdef _WIN32
-# include <windows.h>
-/* Define "boolean" as unsigned char, not int, per Windows custom */
-# if !defined __RPCNDR_H__ || defined __MINGW32__    /* don't conflict if rpcndr.h already read */
-#  ifndef boolean     /* don't conflict if rpcndr.h already read */
-    typedef unsigned char boolean;
-#  endif /* boolean */
-# endif /* __RPCNDR_H__ */
-# define HAVE_BOOLEAN     /* prevent jmorecfg.h from redefining it */
-#endif /* _WIN32 */

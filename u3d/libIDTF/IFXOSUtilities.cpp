@@ -95,6 +95,7 @@ U32 g_eax=0, g_ebx=0, g_ecx=0, g_edx=0;
 #ifdef _MSC_VER
 static void cpuid(U32 op, U32& eax, U32& ebx, U32& ecx, U32& edx)
 {
+#ifndef _WIN64
   U32 A, B, C, D;
   __asm {
     mov eax, op
@@ -108,6 +109,7 @@ static void cpuid(U32 op, U32& eax, U32& ebx, U32& ecx, U32& edx)
   ebx = B;
   ecx = C;
   edx = D;
+#endif
 }
 #endif
 #ifdef __MINGW32__

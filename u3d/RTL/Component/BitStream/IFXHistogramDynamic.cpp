@@ -427,7 +427,7 @@ void IFXHistogramDynamic::AddSymbolRef(U32 symbol)
   }
 }
 
-#if defined( __GNUC__ ) && !defined( __i386__ )  // NO_ASM ?? &&  !defined(__x86_64__)
+#if (defined( __GNUC__ ) && !defined( __i386__ )) || defined( _WIN64 )  // NO_ASM ?? &&  !defined(__x86_64__)
 void UpdateCumulativeCountSSE2(U32 uLoopCount, U16 *pu16Start)
 {
 }

@@ -175,33 +175,27 @@ else()
   set(M_LIBRARY "")
 endif()
 
-# maybe needs improving, but currently I don't know when we can enable what :)
-set(png_asm_tmp "OFF")
-if(NOT WIN32)
-  find_program(uname_executable NAMES uname PATHS /bin /usr/bin /usr/local/bin)
-  if(uname_executable)
-    exec_program(${uname_executable}
-                 ARGS --machine OUTPUT_VARIABLE uname_output)
-    if("uname_output" MATCHES "^.*i[1-9]86.*$")
-      set(png_asm_tmp "ON")
-    else("uname_output" MATCHES "^.*i[1-9]86.*$")
-      set(png_asm_tmp "OFF")
-    endif("uname_output" MATCHES "^.*i[1-9]86.*$")
-  endif(uname_executable)
-else()
-  # this env var is normally only set on win64
-  set(TEXT "ProgramFiles(x86)")
-  if("$ENV{${TEXT}}" STREQUAL "")
-    set(png_asm_tmp "ON")
-  endif("$ENV{${TEXT}}" STREQUAL "")
-endif()
-
 set(PNG_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/RTL/Dependencies/png)
+# Use the prebuilt pnglibconf.h file from the scripts folder
+# TODO: fix this by building with awk; without this no cmake build can be
+# configured directly (to do so indirectly use your local awk to build a
+# pnglibconf.h in the build directory.)
+configure_file(${PNG_SOURCE_DIR}/scripts/pnglibconf.h.prebuilt
+               ${CMAKE_CURRENT_BINARY_DIR}/pnglibconf.h)
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
 # OUR SOURCES
-set(libpng_sources
+set(libpng_public_hdrs
   ${PNG_SOURCE_DIR}/png.h
   ${PNG_SOURCE_DIR}/pngconf.h
+  ${CMAKE_CURRENT_BINARY_DIR}/pnglibconf.h
+)
+set(libpng_sources
+  ${libpng_public_hdrs}
+  ${PNG_SOURCE_DIR}/pngdebug.h
+  ${PNG_SOURCE_DIR}/pnginfo.h
   ${PNG_SOURCE_DIR}/pngpriv.h
+  ${PNG_SOURCE_DIR}/pngstruct.h
   ${PNG_SOURCE_DIR}/png.c
   ${PNG_SOURCE_DIR}/pngerror.c
   ${PNG_SOURCE_DIR}/pngget.c
@@ -220,21 +214,9 @@ set(libpng_sources
 )
 # SOME NEEDED DEFINITIONS
 
-add_definitions(-DPNG_CONFIGURE_LIBPNG)
-
-if(_AIX)
-  add_definitions(-D_ALL_SOURCE)
-endif(_AIX)
-
 if(MSVC)
-  add_definitions(-DPNG_NO_MODULEDEF -D_CRT_SECURE_NO_DEPRECATE)
+  add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
 endif(MSVC)
-
-add_definitions(-DPNG_NO_CONSOLE_IO)
-
-if(NOT M_LIBRARY AND NOT WIN32)
-  add_definitions(-DPNG_NO_FLOATING_POINT_SUPPORTED)
-endif()
 
 set(ADDITIONAL_LIBRARIES ${ADDITIONAL_LIBRARIES} ${M_LIBRARY})
 include_directories(${PNG_SOURCE_DIR})

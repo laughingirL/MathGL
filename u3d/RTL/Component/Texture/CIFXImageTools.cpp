@@ -2718,9 +2718,10 @@ IFXRESULT CIFXImageTools::CompressImagePng(
 			return iResult;
 		}
 
+		png_bytep io_ptr = (png_bytep)(*ppCompressedData);
 		// Set our own write function 
         png_set_write_fn(
-			png_ptr, (png_voidp)(*ppCompressedData), png_write_data_fn, png_flush);
+			png_ptr, (png_voidp)(&io_ptr), png_write_data_fn, png_flush);
 		
         
 		// Set PNG header 
@@ -2782,7 +2783,7 @@ IFXRESULT CIFXImageTools::CompressImagePng(
 
 		// calculate size of written PNG data
 		pImageInfo->m_size = 
-			(png_bytep)(png_ptr->io_ptr) - (png_bytep)(*ppCompressedData);
+			(*(png_bytepp)(png_get_io_ptr(png_ptr))) - (png_bytep)(*ppCompressedData);
         // and we're done
         
         delete [] ppbRowPointers;
@@ -2872,7 +2873,8 @@ IFXRESULT CIFXImageTools::DecompressImagePng(
 		return iResult;
 	}
 
-	png_set_read_fn(png_ptr, (png_voidp)(pCompressedData), png_read_data_fn);
+	png_bytep io_ptr = (png_bytep)(pCompressedData);
+	png_set_read_fn(png_ptr, (png_voidp)(&io_ptr), png_read_data_fn);
 
     // read all PNG info up to image data
     png_read_info(png_ptr, info_ptr);
@@ -3476,11 +3478,13 @@ static void png_write_data_fn(png_structp png_ptr, png_bytep data, png_size_t le
 {
 	IFXASSERT(length>0);
 	IFXASSERT(png_ptr!=0&&data!=NULL);
-	IFXASSERT(png_ptr->io_ptr!=NULL);
+	IFXASSERT(png_get_io_ptr(png_ptr)!=NULL);
+	png_bytepp pio_ptr = (png_bytepp)png_get_io_ptr(png_ptr);
+	IFXASSERT(*pio_ptr!=NULL);
 
-	//copy from data to png_ptr->io_ptr
-	memcpy( png_ptr->io_ptr, data, length );
-	png_ptr->io_ptr = (png_bytep)(png_ptr->io_ptr) + length;
+	//copy from data to *(png_ptr->io_ptr)
+	memcpy(*pio_ptr, data, length );
+	*pio_ptr = *pio_ptr + length;
 }
 
 static void png_flush(png_structp png_ptr)
@@ -3491,11 +3495,13 @@ static void png_read_data_fn(png_structp png_ptr, png_bytep data, png_size_t len
 {
 	IFXASSERT(length>0);
 	IFXASSERT(png_ptr!=0&&data!=NULL);
-	IFXASSERT(png_ptr->io_ptr!=NULL);
+	IFXASSERT(png_get_io_ptr(png_ptr)!=NULL);
+	png_bytepp pio_ptr = (png_bytepp)png_get_io_ptr(png_ptr);
+	IFXASSERT(*pio_ptr!=NULL);
 
-	//copy from png_ptr->io_ptr (compressed PNG image) to data
-	memcpy( data, png_ptr->io_ptr,  length );
-	png_ptr->io_ptr = (png_bytep)(png_ptr->io_ptr) + length;
+	//copy from *(png_ptr->io_ptr) (compressed PNG image) to data
+	memcpy( data, *pio_ptr,  length );
+	*pio_ptr = *pio_ptr + length;
 }
 
 void* CIFXImageTools::SwapImageToRGB(STextureSourceInfo* pImageInfo, void* pSrcImage) 

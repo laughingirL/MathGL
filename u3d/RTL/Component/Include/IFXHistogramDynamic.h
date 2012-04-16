@@ -42,7 +42,7 @@ public:
   void AddSymbolSSE2(U32 symbol);
   void AddSymbol(U32 symbol)
   {
-#if defined( WIN32 ) || defined( cl ) || defined( icl ) || ( defined( __GNUC__ ) && ( defined( LINUX ) || defined( MAC32 ) || defined( __linux__ ) || defined( __APPLE__ ) ) )
+#if !defined( _WIN64 ) && ( defined( WIN32 ) || defined( cl ) || defined( icl ) || ( defined( __GNUC__ ) && ( defined( LINUX ) || defined( MAC32 ) || defined( __linux__ ) || defined( __APPLE__ ) ) ) )
     switch (m_uOptimizationMode) {
       case IFXOptimization_MMX: AddSymbolMMX(symbol); break;
       case IFXOptimization_SSE2: AddSymbolSSE2(symbol); break;
