@@ -47,24 +47,23 @@ void smgl_combined(mglGraph *gr);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	mglData y;	mgls_prepare1d(&y);	gr->SetOrigin(0,0,0);
-	if(!mini)	{	gr->SubPlot(2,2,0,"");	gr->Title("Area plot (default)");	}
-	gr->Box();	gr->Area(y);
-	if(mini)	return;
-	gr->SubPlot(2,2,1,"");	gr->Title("2 colors");	gr->Box();	gr->Area(y,"cbgGyr");
-	gr->SubPlot(2,2,2,"");	gr->Title("'!' style");	gr->Box();	gr->Area(y,"!");
-	gr->SubPlot(2,2,3);	gr->Title("3d variant");	gr->Rotate(50,60);	gr->Box();
-	mglData yc(30), xc(30), z(30);	z.Modify("2*x-1");
-	yc.Modify("sin(pi*(2*x-1))");	xc.Modify("cos(pi*2*x-pi)");
-	gr->Area(xc,yc,z,"r");
+	gr->SubPlot(2,2,0);	gr->Axis();	gr->Grid();
+	gr->FPlot("x","o");
+	gr->SetMarkSize(2);	gr->FPlot("x","o");
+	gr->SetRotatedText(false);
+	gr->SubPlot(2,2,1);	gr->Axis();	gr->Grid();
+	gr->SetOrigin(1,1);
+	gr->SubPlot(2,2,2);	gr->Axis();	gr->Grid();
+	mgl_set_color('k',1,0,0);
+	gr->SubPlot(2,2,3);	gr->Axis();	gr->Grid();
 	return;
 
-	mglParse par;
+/*	mglParse par;
 	par.AllowSetSize(true);
 	setlocale(LC_CTYPE, "");
 	FILE *fp=fopen("/home/balakin/progr/sfnet/mathgl/mathgl-2x/examples/test.mgl","r");
 	par.Execute(gr,fp,true);
-	fclose(fp);
+	fclose(fp);*/
 }
 //-----------------------------------------------------------------------------
 void fexport(mglGraph *gr)
@@ -2036,8 +2035,8 @@ mglSample samp[] = {
 	{"barh", smgl_barh},
 	{"bars", smgl_bars},
 	{"belt", smgl_belt},
-	{"boxplot", smgl_boxplot},
 	{"box", smgl_box},
+	{"boxplot", smgl_boxplot},
 	{"boxs", smgl_boxs},
 	{"candle", smgl_candle},
 	{"chart", smgl_chart},

@@ -363,7 +363,7 @@ void PlotPanel::toolTop(QBoxLayout *l)
 	oo->addAction(tr("vector EPS"), mgl, SLOT(exportEPS()),Qt::META+Qt::Key_E);
 	oo->addAction(tr("SVG"), mgl, SLOT(exportSVG()),Qt::META+Qt::Key_S);
 //	oo->addAction(tr("C++"), mgl, SLOT(exportCPP()));	// TODO: Add later
-	oo->addAction(tr("IDTF"), mgl, SLOT(exportIDTF()));
+//	oo->addAction(tr("IDTF"), mgl, SLOT(exportIDTF()));
 	o->addMenu(oo);
 	popup->addMenu(oo);
 }

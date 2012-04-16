@@ -23,6 +23,9 @@
 //		C interfaces
 //
 //-----------------------------------------------------------------------------
+int mgl_get_flag(HMGL gr, long flag)			{	return gr->get(flag);	}
+void mgl_set_flag(HMGL gr, int val, long flag)	{	gr->set(val,flag);	}
+//-----------------------------------------------------------------------------
 void mgl_set_color(char id, float r, float g, float b)
 {
 	register size_t i;

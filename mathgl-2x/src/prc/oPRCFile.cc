@@ -478,6 +478,7 @@ void oPRCFile::doGroup(PRCgroup& group)
           }
         map<PRCVector3d,uint32_t> points;
         PRC3DTess *tess = new PRC3DTess();
+        tess->crease_angle = group.options.crease_angle;
         PRCTessFace *tessFace = new PRCTessFace();
         tessFace->used_entities_flag=PRC_FACETESSDATA_Triangle;
         uint32_t triangles = 0;
@@ -539,6 +540,7 @@ void oPRCFile::doGroup(PRCgroup& group)
     {
       map<PRCVector3d,uint32_t> points;
       PRC3DTess *tess = new PRC3DTess();
+      tess->crease_angle = group.options.crease_angle;
       PRCTessFace *tessFace = new PRCTessFace();
       tessFace->used_entities_flag=PRC_FACETESSDATA_Triangle;
       uint32_t triangles = 0;
@@ -696,6 +698,7 @@ void oPRCFile::doGroup(PRCgroup& group)
     {
       for(std::vector<PRCPolyBrepModel*>::iterator pit=group.polymodels.begin(); pit!=group.polymodels.end(); pit++)
       {
+        (*pit)->is_closed = group.options.closed;
         part_definition->addPolyBrepModel(*pit);
       }
     }
@@ -1547,11 +1550,11 @@ void oPRCFile::addTriangles(uint32_t nP, const double P[][3], uint32_t nI, const
  uint32_t nN, const double N[][3],   const uint32_t NI[][3],
  uint32_t nT, const double T[][2],   const uint32_t TI[][3],
  uint32_t nC, const RGBAColour C[],  const uint32_t CI[][3],
- uint32_t nM, const PRCmaterial M[], const uint32_t MI[])
+ uint32_t nM, const PRCmaterial M[], const uint32_t MI[], double ca)
 {
   if(nP==0 || P==NULL || nI==0 || PI==NULL)
      return;
-  const uint32_t tess_index = createTriangleMesh(nP, P, nI, PI, m, nN, N, NI, nT, T, TI, nC, C, CI, nM, M, MI);
+  const uint32_t tess_index = createTriangleMesh(nP, P, nI, PI, m, nN, N, NI, nT, T, TI, nC, C, CI, nM, M, MI, ca);
   useMesh(tess_index,m1);
 }
 
@@ -1559,7 +1562,7 @@ uint32_t oPRCFile::createTriangleMesh(uint32_t nP, const double P[][3], uint32_t
  uint32_t nN, const double N[][3],  const uint32_t NI[][3],
  uint32_t nT, const double T[][2],  const uint32_t TI[][3],
  uint32_t nC, const RGBAColour C[], const uint32_t CI[][3],
- uint32_t nS, const uint32_t S[],   const uint32_t SI[])
+ uint32_t nS, const uint32_t S[],   const uint32_t SI[], double ca)
 {
   if(nP==0 || P==NULL || nI==0 || PI==NULL)
      return m1;
@@ -1590,6 +1593,8 @@ uint32_t oPRCFile::createTriangleMesh(uint32_t nP, const double P[][3], uint32_t
       tess->normal_coordinate.push_back(N[i][2]);
     }
   }
+  else
+    tess->crease_angle = ca;
   if(textured)
   {
     tess->texture_coordinate.reserve(2*nT);
@@ -1668,11 +1673,11 @@ void oPRCFile::addQuads(uint32_t nP, const double P[][3], uint32_t nI, const uin
  uint32_t nN, const double N[][3],   const uint32_t NI[][4],
  uint32_t nT, const double T[][2],   const uint32_t TI[][4],
  uint32_t nC, const RGBAColour C[],  const uint32_t CI[][4],
- uint32_t nM, const PRCmaterial M[], const uint32_t MI[])
+ uint32_t nM, const PRCmaterial M[], const uint32_t MI[], double ca)
 {
   if(nP==0 || P==NULL || nI==0 || PI==NULL)
      return;
-  const uint32_t tess_index = createQuadMesh(nP, P, nI, PI, m, nN, N, NI, nT, T, TI, nC, C, CI, nM, M, MI);
+  const uint32_t tess_index = createQuadMesh(nP, P, nI, PI, m, nN, N, NI, nT, T, TI, nC, C, CI, nM, M, MI, ca);
   useMesh(tess_index,m1);
 }
 
@@ -1680,7 +1685,7 @@ uint32_t oPRCFile::createQuadMesh(uint32_t nP, const double P[][3], uint32_t nI,
  uint32_t nN, const double N[][3],   const uint32_t NI[][4],
  uint32_t nT, const double T[][2],   const uint32_t TI[][4],
  uint32_t nC, const RGBAColour C[],  const uint32_t CI[][4],
- uint32_t nS, const uint32_t S[],    const uint32_t SI[])
+ uint32_t nS, const uint32_t S[],    const uint32_t SI[], double ca)
 {
   if(nP==0 || P==NULL || nI==0 || PI==NULL)
      return m1;
@@ -1711,6 +1716,8 @@ uint32_t oPRCFile::createQuadMesh(uint32_t nP, const double P[][3], uint32_t nI,
       tess->normal_coordinate.push_back(N[i][2]);
     }
   }
+  else
+    tess->crease_angle = ca;
   if(textured)
   {
     tess->texture_coordinate.reserve(2*nT);

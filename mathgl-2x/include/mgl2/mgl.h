@@ -1080,8 +1080,10 @@ public:
 	{	return mglData(true, mgl_hist_xyz(gr, &x, &y, &z, &a, opt));	}
 
 	inline void Compression(bool){}		// NOTE: Add later -- IDTF
-	inline void VertexColor(bool){}		// NOTE: Add later -- IDTF
-	inline void DoubleSided(bool){}		// NOTE: Add later -- IDTF
+	/// Set the preference for vertex color on/off (for formats that support it, now only PRC does).
+	inline void VertexColor(bool enable)	{	mgl_set_flag(gr,enable, MGL_PREFERVC);	}
+	/// Render only front side of surfaces for dubugging purposes (for formats that support it, now only PRC does).
+	inline void DoubleSided(bool enable)	{	mgl_set_flag(gr,!enable, MGL_ONESIDED);	}
 	inline void TextureColor(bool){}	// NOTE: Add later -- IDTF
 };
 //-----------------------------------------------------------------------------

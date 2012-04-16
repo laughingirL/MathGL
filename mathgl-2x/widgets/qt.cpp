@@ -662,11 +662,11 @@ QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *tet, QSpinBox *phi
 		oo->addAction(TR("LaTeX"), QMGL, SLOT(exportTEX()));
 		o->addMenu(oo);		popup->addMenu(oo);
 		oo = new QMenu(TR("&Export as 3D ..."),Wnd);
-		oo->addAction(TR("X3D"), QMGL, SLOT(exportX3D()));
+//		oo->addAction(TR("X3D"), QMGL, SLOT(exportX3D()));
 		oo->addAction(TR("XYZ"), QMGL, SLOT(exportXYZ()));
 		oo->addAction(TR("OBJ"), QMGL, SLOT(exportOBJ()));
 		oo->addAction(TR("STL"), QMGL, SLOT(exportSTL()));
-		oo->addAction(TR("IDTF"), QMGL, SLOT(exportIDTF()));
+//		oo->addAction(TR("IDTF"), QMGL, SLOT(exportIDTF()));
 		o->addMenu(oo);		popup->addMenu(oo);
 
 		o->addSeparator();

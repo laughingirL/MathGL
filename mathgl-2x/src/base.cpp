@@ -606,10 +606,10 @@ void mglTexture::Set(const char *s, int smooth, float alpha)
 		else
 		{	c[1]=c[4];	c[3]=c[6];	n=2;	}
 	}
-	register float u,v=sm?(n-1)/255.:n/256.;
-	for(i=0;i<255;i++)
+	register float u,v=sm?(n-1)/254.:n/256.;
+	for(i=1;i<255;i++)
 	{
-		u = v*i;	j = long(u);	u-=j;
+		u = v*(i-1);	j = long(u);	u-=j;
 		if(!sm || j==n-1)
 		{	col[2*i] = c[2*j];	col[2*i+1] = c[2*j+1];	}
 		else if(j>n-1)	// NOTE: never should be here!
@@ -620,7 +620,7 @@ void mglTexture::Set(const char *s, int smooth, float alpha)
 			col[2*i+1]=c[2*j+1]*(1-u)+c[2*j+3]*u;
 		}
 	}
-	col[510]=col[508];	col[511]=col[509];
+	col[510]=col[508];	col[511]=col[509];	col[0]=col[2];	col[1]=col[3];
 	delete []c;
 }
 //-----------------------------------------------------------------------------

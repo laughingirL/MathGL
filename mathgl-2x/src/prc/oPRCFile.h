@@ -435,11 +435,12 @@ public:
   bool tess;     // use tessellated mesh to store straight patches
   bool do_break; //
   bool no_break; // do not render transparent patches as one-faced nodes
+  double crease_angle; // crease angle for meshes
 
   PRCoptions(double compression=0.0, double granularity=0.0, bool closed=false,
-             bool tess=false, bool do_break=true, bool no_break=false)
+             bool tess=false, bool do_break=true, bool no_break=false, double crease_angle=25.8419)
     : compression(compression), granularity(granularity), closed(closed),
-      tess(tess), do_break(do_break), no_break(no_break) {}
+      tess(tess), do_break(do_break), no_break(no_break), crease_angle(crease_angle) {}
 };
 
 class PRCgroup
@@ -742,17 +743,17 @@ class oPRCFile
                       uint32_t nN, const double N[][3],   const uint32_t NI[][3],
                       uint32_t nT, const double T[][2],   const uint32_t TI[][3],
                       uint32_t nC, const RGBAColour C[],  const uint32_t CI[][3],
-                      uint32_t nM, const PRCmaterial M[], const uint32_t MI[]);
+                      uint32_t nM, const PRCmaterial M[], const uint32_t MI[], double ca);
     uint32_t createTriangleMesh(uint32_t nP, const double P[][3], uint32_t nI, const uint32_t PI[][3], uint32_t style_index,
                       uint32_t nN, const double N[][3],   const uint32_t NI[][3],
                       uint32_t nT, const double T[][2],   const uint32_t TI[][3],
                       uint32_t nC, const RGBAColour C[],  const uint32_t CI[][3],
-                      uint32_t nS, const uint32_t S[], const uint32_t SI[]);
+                      uint32_t nS, const uint32_t S[], const uint32_t SI[], double ca);
     uint32_t createTriangleMesh(uint32_t nP, const double P[][3], uint32_t nI, const uint32_t PI[][3], const PRCmaterial& m,
                       uint32_t nN, const double N[][3],   const uint32_t NI[][3],
                       uint32_t nT, const double T[][2],   const uint32_t TI[][3],
                       uint32_t nC, const RGBAColour C[],  const uint32_t CI[][3],
-                      uint32_t nM, const PRCmaterial M[], const uint32_t MI[])
+                      uint32_t nM, const PRCmaterial M[], const uint32_t MI[], double ca)
             {
                const uint32_t style = addMaterial(m);
                if(M!=NULL && nM>0)
@@ -760,28 +761,28 @@ class oPRCFile
                  uint32_t* const styles = new uint32_t[nM];
                  for(uint32_t i=0; i<nM; i++)
                    styles[i]=addMaterial(M[i]);
-                 const uint32_t meshid =  createTriangleMesh(nP, P, nI, PI, style, nN, N, NI, nT, T, TI, nC, C, CI, nM, styles, MI);
+                 const uint32_t meshid =  createTriangleMesh(nP, P, nI, PI, style, nN, N, NI, nT, T, TI, nC, C, CI, nM, styles, MI, ca);
                  delete[] styles;
                  return meshid;
                }
                else
-                 return createTriangleMesh(nP, P, nI, PI, style, nN, N, NI, nT, T, TI, nC, C, CI, 0, NULL, NULL);
+                 return createTriangleMesh(nP, P, nI, PI, style, nN, N, NI, nT, T, TI, nC, C, CI, 0, NULL, NULL, ca);
             }
     void addQuads(uint32_t nP, const double P[][3], uint32_t nI, const uint32_t PI[][4], const PRCmaterial& m,
                       uint32_t nN, const double N[][3],   const uint32_t NI[][4],
                       uint32_t nT, const double T[][2],   const uint32_t TI[][4],
                       uint32_t nC, const RGBAColour C[],  const uint32_t CI[][4],
-                      uint32_t nM, const PRCmaterial M[], const uint32_t MI[]);
+                      uint32_t nM, const PRCmaterial M[], const uint32_t MI[], double ca);
     uint32_t createQuadMesh(uint32_t nP, const double P[][3], uint32_t nI, const uint32_t PI[][4], uint32_t style_index,
                       uint32_t nN, const double N[][3],   const uint32_t NI[][4],
                       uint32_t nT, const double T[][2],   const uint32_t TI[][4],
                       uint32_t nC, const RGBAColour C[],  const uint32_t CI[][4],
-                      uint32_t nS, const uint32_t S[],    const uint32_t SI[]);
+                      uint32_t nS, const uint32_t S[],    const uint32_t SI[], double ca);
     uint32_t createQuadMesh(uint32_t nP, const double P[][3], uint32_t nI, const uint32_t PI[][4], const PRCmaterial& m,
                       uint32_t nN, const double N[][3],   const uint32_t NI[][4],
                       uint32_t nT, const double T[][2],   const uint32_t TI[][4],
                       uint32_t nC, const RGBAColour C[],  const uint32_t CI[][4],
-                      uint32_t nM, const PRCmaterial M[], const uint32_t MI[])
+                      uint32_t nM, const PRCmaterial M[], const uint32_t MI[], double ca)
             {
                const uint32_t style = addMaterial(m);
                if(M!=NULL && nM>0)
@@ -789,12 +790,12 @@ class oPRCFile
                  uint32_t* const styles = new uint32_t[nM];
                  for(uint32_t i=0; i<nM; i++)
                    styles[i]=addMaterial(M[i]);
-                 const uint32_t meshid =  createQuadMesh(nP, P, nI, PI, style, nN, N, NI, nT, T, TI, nC, C, CI, nM, styles, MI);
+                 const uint32_t meshid =  createQuadMesh(nP, P, nI, PI, style, nN, N, NI, nT, T, TI, nC, C, CI, nM, styles, MI, ca);
                  delete[] styles;
                  return meshid;
                }
                else
-                 return createQuadMesh(nP, P, nI, PI, style, nN, N, NI, nT, T, TI, nC, C, CI, 0, NULL, NULL);
+                 return createQuadMesh(nP, P, nI, PI, style, nN, N, NI, nT, T, TI, nC, C, CI, 0, NULL, NULL, ca);
             }
 #define PRCTRANSFORM const double origin[3]=NULL, const double x_axis[3]=NULL, const double y_axis[3]=NULL, double scale=1, const double* t=NULL
 #define PRCCARTRANSFORM const double origin[3], const double x_axis[3], const double y_axis[3], double scale

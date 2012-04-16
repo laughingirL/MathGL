@@ -323,7 +323,7 @@ float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float siz
 	if(mgl_isnan(ll) || !get(MGL_ENABLE_RTEXT))
 	{
 		fscl = fsize;	ftet = 0;
-		B.x = q.x;	B.y= q.y - shift;
+		B.x = q.x + shift;	B.y= q.y - shift;
 	}
 	else
 	{

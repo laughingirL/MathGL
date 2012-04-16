@@ -547,7 +547,7 @@ class PRC3DTess : public PRCTess
 public:
   PRC3DTess() :
   has_faces(false), has_loops(false),
-  crease_angle(80)
+  crease_angle(25.8419)  // arccos(0.9), default found in Acrobat output
   {}
   ~PRC3DTess() { for(PRCTessFaceList::iterator it=face_tessellation.begin(); it!=face_tessellation.end(); ++it) delete *it; }
   void serialize3DTess(PRCbitStream&);

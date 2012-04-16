@@ -55,16 +55,19 @@ struct prctriangle {
 };
 //-----------------------------------------------------------------------------
 struct prctriangles {
-	prctriangles(const HMGL g) : samecolour(true), colourset(false),
-	gr(g), ntxt(g->GetTxtNum()) {}
+	prctriangles(const HMGL g) : samecolour(true), samealpha(true),
+	gr(g), ntxt(g->GetTxtNum()), vertexcolor(g->get(MGL_PREFERVC)) {}
 	std::map<PRCVector3d,uint32_t> points;
 	std::map<PRCVector2d,uint32_t> texturecoords;
+	std::map<RGBAColour,uint32_t> colours;
 	std::vector<prctriangle> triangles;
-	RGBAColour colour;
+	RGBAColour commoncolour;
 	bool samecolour;
-	bool colourset;
+	float commonalpha;
+	bool samealpha;
 	const HMGL gr;
 	const size_t ntxt;
+	bool vertexcolor;
 	
 	
 	uint32_t addPoint(const mglPnt& p)
@@ -107,45 +110,69 @@ struct prctriangles {
 		}
 	}
 	
-	uint32_t addTextureCoords(const mglPnt& p)
+	uint32_t addColourInfo(const mglPnt& p)
 	{
-		const float u = ((1-p.ta)*(512-2)+1)/512;
-		const float v = ((1-p.c/ntxt)*(512*ntxt-2) + 1)/(512*ntxt);
+		const RGBAColour colour(p.r,p.g,p.b,p.a);
 		
-		const PRCVector2d point(u, v);
+		if (colours.empty() && texturecoords.empty()) {
+			commoncolour = colour;
+			commonalpha = p.a;
+    }
+    if (samecolour) {
+      if (commoncolour != colour)
+        samecolour = false;
+    }
+    if (samealpha) {
+      if (commonalpha != p.a)
+        samealpha = false;
+    }
 		
-		if (colourset) {
-			if (samecolour) {
-				if (colour.R != p.r || colour.G != p.g || colour.B != p.b || colour.A != p.a)
-					samecolour = false;
+		if (vertexcolor) {
+			std::map<RGBAColour,uint32_t>::iterator pColour = colours.find(colour);
+			if(pColour!=colours.end())
+				return pColour->second;
+			else
+			{
+				const uint32_t colour_index = colours.size();
+				colours.insert(std::make_pair(colour,colour_index));
+				return colour_index;
 			}
-		}
-		else {
-			colour.Set(p.r, p.g, p.b, p.a);
-			colourset = true;
-		}
-		
-		
-		std::map<PRCVector2d,uint32_t>::iterator pPoint = texturecoords.find(point);
-		if(pPoint!=texturecoords.end())
-			return pPoint->second;
-		else
-		{
-			const uint32_t point_index = texturecoords.size();
-			texturecoords.insert(std::make_pair(point,point_index));
-			return point_index;
+		} else {
+			const float gap = 0*1./512;
+			const float u = ((1-p.ta)*(1-2*gap)+gap);
+			const float v = 1 - ((p.c-floorf(p.c))*(1-2*gap) + gap + floorf(p.c))/ntxt;;
+			
+			const PRCVector2d point(u, v);
+			std::map<PRCVector2d,uint32_t>::iterator pPoint = texturecoords.find(point);
+			if(pPoint!=texturecoords.end())
+				return pPoint->second;
+			else
+			{
+				const uint32_t point_index = texturecoords.size();
+				texturecoords.insert(std::make_pair(point,point_index));
+				return point_index;
+			}
 		}
 	}
 	
-	void writeTextureCoords(double (*P)[2])
+	void writeTextureCoords(double (*T)[2])
 	{
 		for(std::map<PRCVector2d,uint32_t>::const_iterator pPoint = texturecoords.begin(); pPoint != texturecoords.end(); pPoint++)
 		{
-			P[pPoint->second][0] = pPoint->first.x;
-			P[pPoint->second][1] = pPoint->first.y;
+			T[pPoint->second][0] = pPoint->first.x;
+			T[pPoint->second][1] = pPoint->first.y;
+		}
+	}
+	
+	void writeColours(RGBAColour *C)
+	{
+		for(std::map<RGBAColour,uint32_t>::const_iterator pColour = colours.begin(); pColour != colours.end(); pColour++)
+		{
+			C[pColour->second] = pColour->first;
 		}
 	}
 };
+
 //-----------------------------------------------------------------------------
 /* structure to store PNG image bytes */
 struct png_buf
@@ -180,7 +207,6 @@ void my_png_flush(png_structp png_ptr)
 void mgl_write_prc(HMGL gr, const char *fname,const char *descr, int make_pdf)
 {
 	if(gr->GetPrmNum()<=0)	return;	// nothing to do
-//	register size_t i,j;
 	{
 		long m1=0,m2=0,m;
 		for(size_t i=0;i<gr->Grp.size();i++)	// prepare array of indirect indexing
@@ -204,11 +230,23 @@ void mgl_write_prc(HMGL gr, const char *fname,const char *descr, int make_pdf)
 	oPRCFile file(tname);
 	PRCoptions grpopt;
 	grpopt.tess = true;
-	grpopt.closed = false; // set to true to make only front side visible
-	//	grpopt.no_break = true;
-	//	grpopt.do_break = false;
+	grpopt.closed = gr->get(MGL_ONESIDED); // set to true to make only front side visible
+	// grpopt.no_break = true;
+	// grpopt.do_break = false;
+	grpopt.crease_angle = 80;
 
 	uint32_t materialMathGLid = m1;
+	if (gr->get(MGL_PREFERVC)) {
+		const PRCmaterial materialMathGL(
+			RGBAColour(0.1,0.1,0.1,1), // ambient
+			RGBAColour(1.0,1.0,1.0,1), // diffuse
+			RGBAColour(0.1,0.1,0.1,1), // emissive
+			RGBAColour(0.0,0.0,0.0,1), // spectral
+			1.0,0.1 // alpha, shininess
+			);
+		materialMathGLid = file.addMaterial(materialMathGL);
+	}
+	else
 	{
 		png_buf buffer;
 		buffer.data = (uint8_t*)malloc(1024);;
@@ -219,8 +257,10 @@ void mgl_write_prc(HMGL gr, const char *fname,const char *descr, int make_pdf)
 		const png_uint_32 width=256, height=256*ntxt;
 		png_bytep buf = new png_byte[4*width*height];
 		png_bytepp pbuf= new png_bytep[height];
-		for(size_t i=0;i<height;i++)	pbuf[i] = buf+4*width*i;
-		for(size_t i=0;i<ntxt;i++)	gr->GetTxt(i).GetRGBA(buf+i*256*256*4);
+		for(size_t i=0;i<height;i++)
+			pbuf[i] = buf+4*width*i;
+		for(size_t i=0;i<ntxt;i++)
+			gr->GetTxt(i).GetRGBA(buf+i*256*256*4);
 
 		png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING,0,0,0);
 		png_infop info_ptr = png_create_info_struct(png_ptr);
@@ -229,11 +269,11 @@ void mgl_write_prc(HMGL gr, const char *fname,const char *descr, int make_pdf)
 		png_set_filter(png_ptr, 0, PNG_ALL_FILTERS);
 		png_set_compression_level(png_ptr, Z_BEST_COMPRESSION);
 		png_set_IHDR(png_ptr, info_ptr, width, height, 8,
-					PNG_COLOR_TYPE_RGB_ALPHA,
+				PNG_COLOR_TYPE_RGB_ALPHA,
 				PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT,
 				PNG_FILTER_TYPE_DEFAULT);
 		png_set_rows(png_ptr, info_ptr, pbuf);
-		png_write_png(png_ptr, info_ptr,	PNG_TRANSFORM_IDENTITY, 0);
+		png_write_png(png_ptr, info_ptr, PNG_TRANSFORM_IDENTITY, 0);
 		png_write_end(png_ptr, info_ptr);
 
 		png_destroy_write_struct(&png_ptr, &info_ptr);
@@ -241,8 +281,8 @@ void mgl_write_prc(HMGL gr, const char *fname,const char *descr, int make_pdf)
 		const PRCmaterial materialMathGL(
 			RGBAColour(0.1,0.1,0.1,1), // ambient
 			RGBAColour(1.0,1.0,1.0,1), // diffuse
-			RGBAColour(0.1,0.1,0.1,1), //emissive
-			RGBAColour(0.0,0.0,0.0,1), //spectral
+			RGBAColour(0.1,0.1,0.1,1), // emissive
+			RGBAColour(0.0,0.0,0.0,1), // spectral
 			1.0,0.1, // alpha, shininess
 			buffer.data, KEPRCPicture_PNG, 0, 0, buffer.size, true);
 		materialMathGLid = file.addMaterial(materialMathGL);
@@ -252,9 +292,13 @@ void mgl_write_prc(HMGL gr, const char *fname,const char *descr, int make_pdf)
 	// primitive definition in groups
 
 	mglPnt p0;
-	p0.x = dynamic_cast<mglCanvas *>(gr)->GetWidth()/2.;
-	p0.y = dynamic_cast<mglCanvas *>(gr)->GetHeight()/2.;
-	p0.z = sqrt(p0.x*p0.y);
+	const int width  = dynamic_cast<mglCanvas *>(gr)->GetWidth();
+	const int height = dynamic_cast<mglCanvas *>(gr)->GetHeight();
+	const int depth  = long(sqrt(width*height));
+	
+	p0.x = width/2.;
+	p0.y = height/2.;
+	p0.z = (1.f-sqrt(width*height)/(2*depth))*depth;
 
 	for(size_t i=0;i<gr->Grp.size();i++)
 	{
@@ -354,7 +398,7 @@ void mgl_write_prc(HMGL gr, const char *fname,const char *descr, int make_pdf)
 								break;
 								case 'S':
 								{
-									const uint32_t ti = group.addTextureCoords(p);
+									const uint32_t ti = group.addColourInfo(p);
 
 									const uint32_t pi1 = group.addPoint(p.x-ss,p.y-ss,p.z);
 									const uint32_t pi2 = group.addPoint(p.x+ss,p.y-ss,p.z);
@@ -393,7 +437,7 @@ void mgl_write_prc(HMGL gr, const char *fname,const char *descr, int make_pdf)
 								break;
 								case 'D':
 								{
-									const uint32_t ti = group.addTextureCoords(p);
+									const uint32_t ti = group.addColourInfo(p);
 
 									const uint32_t pi1 = group.addPoint(p.x,p.y-ss,p.z);
 									const uint32_t pi2 = group.addPoint(p.x+ss,p.y,p.z);
@@ -472,7 +516,7 @@ void mgl_write_prc(HMGL gr, const char *fname,const char *descr, int make_pdf)
 								break;
 								case 'T':
 								{
-									const uint32_t ti = group.addTextureCoords(p);
+									const uint32_t ti = group.addColourInfo(p);
 
 									const uint32_t pi1 = group.addPoint(p.x-ss,p.y-ss/2,p.z);
 									const uint32_t pi2 = group.addPoint(p.x+ss,p.y-ss/2,p.z);
@@ -502,7 +546,7 @@ void mgl_write_prc(HMGL gr, const char *fname,const char *descr, int make_pdf)
 								break;
 								case 'V':
 								{
-									const uint32_t ti = group.addTextureCoords(p);
+									const uint32_t ti = group.addColourInfo(p);
 
 									const uint32_t pi1 = group.addPoint(p.x-ss,p.y+ss/2,p.z);
 									const uint32_t pi2 = group.addPoint(p.x,p.y-ss,p.z);
@@ -532,7 +576,7 @@ void mgl_write_prc(HMGL gr, const char *fname,const char *descr, int make_pdf)
 								break;
 								case 'L':
 								{
-									const uint32_t ti = group.addTextureCoords(p);
+									const uint32_t ti = group.addColourInfo(p);
 
 									const uint32_t pi1 = group.addPoint(p.x+ss/2,p.y+ss,p.z);
 									const uint32_t pi2 = group.addPoint(p.x-ss,	p.y,	 p.z);
@@ -562,7 +606,7 @@ void mgl_write_prc(HMGL gr, const char *fname,const char *descr, int make_pdf)
 								break;
 								case 'R':
 								{
-									const uint32_t ti = group.addTextureCoords(p);
+									const uint32_t ti = group.addColourInfo(p);
 
 									const uint32_t pi1 = group.addPoint(p.x-ss/2,p.y+ss,p.z);
 									const uint32_t pi2 = group.addPoint(p.x-ss/2,p.y-ss,p.z);
@@ -592,7 +636,7 @@ void mgl_write_prc(HMGL gr, const char *fname,const char *descr, int make_pdf)
 								break;
 								case 'O':
 								{
-									const uint32_t ti = group.addTextureCoords(p);
+									const uint32_t ti = group.addColourInfo(p);
 
 									const uint32_t cpi=group.addPoint(p);
 									uint32_t pi[21];
@@ -654,9 +698,9 @@ void mgl_write_prc(HMGL gr, const char *fname,const char *descr, int make_pdf)
 									triangle.pi[0] = group.addPoint(p1);
 									triangle.pi[1] = group.addPoint(p2);
 									triangle.pi[2] = group.addPoint(p3);
-									triangle.ti[0] = group.addTextureCoords(p1);
-									triangle.ti[1] = group.addTextureCoords(p2);
-									triangle.ti[2] = group.addTextureCoords(p3);
+									triangle.ti[0] = group.addColourInfo(p1);
+									triangle.ti[1] = group.addColourInfo(p2);
+									triangle.ti[2] = group.addColourInfo(p3);
 									group.triangles.push_back(triangle);
 								}
 								break;
@@ -664,19 +708,19 @@ void mgl_write_prc(HMGL gr, const char *fname,const char *descr, int make_pdf)
 								{
 									const mglPnt p1 = gr->GetPnt(q.n1) - p0;
 									const uint32_t pi1 = group.addPoint(p1);
-									const uint32_t ti1 = group.addTextureCoords(p1);
+									const uint32_t ti1 = group.addColourInfo(p1);
 
 									const mglPnt p2 = gr->GetPnt(q.n2) - p0;
 									const uint32_t pi2 = group.addPoint(p2);
-									const uint32_t ti2 = group.addTextureCoords(p2);
+									const uint32_t ti2 = group.addColourInfo(p2);
 
 									const mglPnt p3 = gr->GetPnt(q.n3) - p0;
 									const uint32_t pi3 = group.addPoint(p3);
-									const uint32_t ti3 = group.addTextureCoords(p3);
+									const uint32_t ti3 = group.addColourInfo(p3);
 
 									const mglPnt p4 = gr->GetPnt(q.n4) - p0;
 									const uint32_t pi4 = group.addPoint(p4);
-									const uint32_t ti4 = group.addTextureCoords(p4);
+									const uint32_t ti4 = group.addColourInfo(p4);
 
 									prctriangle triangle1, triangle2;
 									triangle1.pi[0] = pi1;
@@ -712,29 +756,58 @@ void mgl_write_prc(HMGL gr, const char *fname,const char *descr, int make_pdf)
 				PI[i][2] = group.triangles[i].pi[2];
 			}
 			if (!group.samecolour) {
-				const uint32_t nT = group.texturecoords.size();
-				double (*T)[2] = new double[nT][2];
-				group.writeTextureCoords(T);
-				uint32_t (*TI)[3] = new uint32_t[nI][3];
-				for(uint32_t i = 0; i<nI; i++)
-				{
-					TI[i][0] = group.triangles[i].ti[0];
-					TI[i][1] = group.triangles[i].ti[1];
-					TI[i][2] = group.triangles[i].ti[2];
+				if (gr->get(MGL_PREFERVC)) {
+					const uint32_t nC = group.colours.size();
+					RGBAColour *C = new RGBAColour[nC];
+					group.writeColours(C);
+					uint32_t (*CI)[3] = new uint32_t[nI][3];
+					for(uint32_t i = 0; i<nI; i++)
+					{
+						CI[i][0] = group.triangles[i].ti[0];
+						CI[i][1] = group.triangles[i].ti[1];
+						CI[i][2] = group.triangles[i].ti[2];
+					}
+					const uint32_t tess_index = file.createTriangleMesh(nP, P, nI, PI, m1, 0, NULL, NULL, 0, NULL, NULL, nC, C, CI, 0, NULL, NULL, grpopt.crease_angle);
+					uint32_t materialid = materialMathGLid;
+					if (group.samealpha) { // workaround for transparency ignored in vertex colors, may not work in OpenGL
+						const double a = group.commonalpha;
+						const PRCmaterial materialTransparent(
+							RGBAColour(0.1,0.1,0.1,a), // ambient
+							RGBAColour(1.0,1.0,1.0,a), // diffuse
+							RGBAColour(0.1,0.1,0.1,a), // emissive
+							RGBAColour(0.0,0.0,0.0,a), // spectral
+							a,0.1 // alpha, shininess
+							);
+						materialid = file.addMaterial(materialTransparent);
+					}
+					file.useMesh(tess_index, materialid);
+					delete [] CI;
+					delete [] C;
+				} else {
+					const uint32_t nT = group.texturecoords.size();
+					double (*T)[2] = new double[nT][2];
+					group.writeTextureCoords(T);
+					uint32_t (*TI)[3] = new uint32_t[nI][3];
+					for(uint32_t i = 0; i<nI; i++)
+					{
+						TI[i][0] = group.triangles[i].ti[0];
+						TI[i][1] = group.triangles[i].ti[1];
+						TI[i][2] = group.triangles[i].ti[2];
+					}
+					const uint32_t tess_index = file.createTriangleMesh(nP, P, nI, PI, m1, 0, NULL, NULL, nT, T, TI, 0, NULL, NULL, 0, NULL, NULL, grpopt.crease_angle);
+					file.useMesh(tess_index, materialMathGLid);
+					delete [] TI;
+					delete [] T;
 				}
-				const uint32_t tess_index = file.createTriangleMesh(nP, P, nI, PI, m1, 0, NULL, NULL, nT, T, TI, 0, NULL, NULL, 0, NULL, NULL);
-				file.useMesh(tess_index, materialMathGLid);
-				delete [] TI;
-				delete [] T;
 			} else {
-				const uint32_t tess_index = file.createTriangleMesh(nP, P, nI, PI, m1, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL);
+				const uint32_t tess_index = file.createTriangleMesh(nP, P, nI, PI, m1, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, grpopt.crease_angle);
 
 				const PRCmaterial material(
 					RGBAColour(0.1,0.1,0.1,1), // ambient
-					group.colour, // diffuse
-					RGBAColour(0.1,0.1,0.1,1), //emissive
-					RGBAColour(0.0,0.0,0.0,1), //spectral
-					group.colour.A,0.1); // alpha, shininess
+					group.commoncolour,        // diffuse
+					RGBAColour(0.1,0.1,0.1,1), // emissive
+					RGBAColour(0.0,0.0,0.0,1), // spectral
+					group.commoncolour.A,0.1); // alpha, shininess
 				file.useMesh(tess_index, file.addMaterial(material));
 			}
 			delete [] PI;
@@ -747,9 +820,9 @@ void mgl_write_prc(HMGL gr, const char *fname,const char *descr, int make_pdf)
 
 	if (make_pdf) {
 #if MGL_HAVE_PDF
-		const HPDF_REAL width	= dynamic_cast<mglCanvas *>(gr)->GetWidth();
+		const HPDF_REAL width  = dynamic_cast<mglCanvas *>(gr)->GetWidth();
 		const HPDF_REAL height = dynamic_cast<mglCanvas *>(gr)->GetHeight();
-		const HPDF_REAL depth	= sqrt(width*height);
+		const HPDF_REAL depth  = sqrt(width*height);
 
 		const HPDF_Rect rect = {0, 0, width, height};
 
@@ -791,6 +864,10 @@ void mgl_write_prc(HMGL gr, const char *fname,const char *descr, int make_pdf)
 
 		//	Create annotation
 		annot = HPDF_Page_Create3DAnnot (page, rect, u3d );
+
+    //  Enable toolbar
+    HPDF_Dict action = (HPDF_Dict)HPDF_Dict_GetItem (annot, "3DA", HPDF_OCLASS_DICT);
+    HPDF_Dict_AddBoolean (action, "TB", HPDF_TRUE);
 
 		/* save the document to a file */
 		const size_t len = strlen(tname);
