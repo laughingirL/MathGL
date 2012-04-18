@@ -1358,7 +1358,7 @@ void smgl_cones(mglGraph *gr)
 	if(mini)	return;
 	gr->SubPlot(2,2,1);	gr->Title("2 colors");
 	gr->Rotate(50,60);	gr->Box();	gr->Cones(ys,"cbgGyr");
-	gr->SubPlot(2,2,2);	gr->Title("'#' style");
+	gr->SubPlot(2,2,2);	gr->Title("'\\#' style");
 	gr->Rotate(50,60);	gr->Box();	gr->Cones(ys,"#");
 	gr->SubPlot(2,2,3);	gr->Title("'a' style");
 	gr->SetRange('z',-2,2);	// increase range since summation can exceed [-1,1]

@@ -422,7 +422,7 @@ For more details see @uref{../mathgl_en/mathgl_en_64.html#MGL-scripts, MathGL do
 You may download current version of MathGL for following configurations:
 @itemize @bullet
 @item
-@uref{http://downloads.sourceforge.net/mathgl/mathgl-2.0.tar.gz,source} file with autoconf/automake script.
+@uref{http://downloads.sourceforge.net/mathgl/mathgl-2.0.tar.gz,source} file with cmake build system.
 @item
 @uref{http://downloads.sourceforge.net/mathgl/mathgl-2.0-mingw.i686.zip,Win32 GPL} binaries for MinGW (build for i686)
 @item

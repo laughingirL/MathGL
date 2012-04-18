@@ -510,7 +510,7 @@ void mglCanvas::DrawAxis(mglAxis &aa, bool text, char arr,const char *stl)
 		if(aa.dv==0 && fabs(u-exp(M_LN10*floor(0.1+log10(u))))<0.01*u)
 			for(j=2;j<10 && v*j<aa.v2;j++)	tick_draw(o+d*(v*j),da,db,1,stl);
 	}
-	if(aa.ds>0)
+	if(aa.ds>0 && !get(MGL_NOSUBTICKS))
 	{
 		if(aa.v2>aa.v1)	v0 = v0 - aa.ds*floor((v0-aa.v1)/aa.ds+1e-3);
 		else			v0 = v0 - aa.ds*floor((v0-aa.v2)/aa.ds+1e-3);
@@ -570,8 +570,7 @@ void mglCanvas::DrawLabels(mglAxis &aa)
 		{	ux=qq.u*cos(tet) - qq.v*sin(tet);	uy=qq.v*cos(tet) + qq.u*sin(tet);	}
 		qq.u = ux;	qq.v = uy;
 
-		if(!get(MGL_ENABLE_RTEXT))	pos[2] = nn.x<0 || (nn.x==0 && nn.y<0) ? 'L':'R';
-
+		if(!get(MGL_ENABLE_RTEXT) && nn.x!=0)	pos[2] = nn.x<0 ? 'L':'R';
 		if(aa.ch=='c' && aa.txt[i].text[0]==' ')	qq.u = qq.v = NAN;
 		if(!get(MGL_DISABLE_SCALE))	pos[0]=(qq.u*nn.y-qq.v*nn.x>0) ? 'T':'t';
 		if(aa.ch=='T' && pos[0]=='T')	pos[0]='t';
@@ -715,7 +714,8 @@ void mglCanvas::Box(const char *col, bool ticks)
 	mglPoint o = Org;
 	float tl=TickLen;
 	if(!ticks)	TickLen=0;
-	Org = Min;	Axis("xyz_",col);
+	set(MGL_NOSUBTICKS);	Org = Min;
+	Axis("xyz_",col);
 	if(TernAxis&1)
 	{
 		Org.z=Max.z;	Org.x=Max.x;	Axis("xz_",col);
@@ -770,7 +770,7 @@ void mglCanvas::Box(const char *col, bool ticks)
 			mgl_facez(this, Min.x, Min.y, oo[im].z, Max.x-Min.x, Max.y-Min.y, color,0,0);
 		}
 	}
-	Org=o;	TickLen=tl;
+	clr(MGL_NOSUBTICKS);	Org=o;	TickLen=tl;
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::Colorbar(const char *sch)

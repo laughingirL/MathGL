@@ -320,19 +320,16 @@ float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float siz
 	shift *= h;		B.z= q.z;
 	if(ll==0)	{	Pop();	return 0;	}
 
-	if(mgl_isnan(ll) || !get(MGL_ENABLE_RTEXT))
-	{
-		fscl = fsize;	ftet = 0;
-		B.x = q.x + shift;	B.y= q.y - shift;
-	}
+	int align;	mglGetStyle(font,0,&align);	align = align&3;
+	if(ll==0 || mgl_isnan(ll))
+	{	B.x = q.x + 0;	B.y = q.y - shift;	}
 	else
-	{
-		if(ll==0)	{	Pop();	return 0;	}
-		B.x = q.x+shift*q.v/sqrt(ll);
-		B.y= q.y-shift*q.u/sqrt(ll);
-		fscl = fsize;
-		ftet = -180*atan2(q.v,q.u)/M_PI;
-	}
+	{	B.x = q.x + shift*q.v/sqrt(ll);	B.y = q.y - shift*q.u/sqrt(ll);	}
+	fscl = fsize;
+
+	if(mgl_isnan(ll) || !get(MGL_ENABLE_RTEXT))	ftet = 0;
+	else	ftet = -180*atan2(q.v,q.u)/M_PI;
+
 	memset(B.b,0,9*sizeof(float));
 	B.b[0] = B.b[4] = B.b[8] = fscl;
 	RotateN(ftet,0,0,1);
@@ -340,7 +337,7 @@ float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float siz
 	{
 		long k1,k2,k3,k4;	mglPnt pt;	mglPoint pp;
 		w = fnt->Width(text,font);	h = fnt->Height(font);
-		int align;	mglGetStyle(font,0,&align);	align = align&3;
+//		int align;	mglGetStyle(font,0,&align);	align = align&3;
 		float d=-w*align/2.-h*0.2;	w+=h*0.4;
 		pt = q;	pp = mglPoint(d,-h*0.4);		PostScale(pp);
 		pt.x=pt.xx=pp.x;	pt.y=pt.yy=pp.y;	MGL_PUSH(Pnt,pt,mutexPnt);	k1=Pnt.size()-1;

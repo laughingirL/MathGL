@@ -89,7 +89,7 @@ public:
 	{	return (wnd==1)? mgl_qt_run() : mgl_fltk_run();	}
 #endif
 
-	inline 	void ToggleAlpha()	///< Switch on/off transparency (do not overwrite user settings)
+	inline void ToggleAlpha()	///< Switch on/off transparency (do not overwrite user settings)
 	{	mgl_wnd_toggle_alpha(gr);	}
 	inline void ToggleLight()	///< Switch on/off lighting (do not overwrite user settings)
 	{	mgl_wnd_toggle_light(gr);	}

@@ -390,7 +390,7 @@ int mgl_data_read_mat(HMDT d, const char *fname, long dim)
 	char *buf = mgl_read_gz(fp);
 	long nb = strlen(buf);	gzclose(fp);
 
-	register long j=0;
+	register long j=0,i,l;
 	while(j<nb)
 	{
 		if(buf[j]=='#')	while(!isn(buf[j]))	j++;	// skip comment
@@ -400,23 +400,41 @@ int mgl_data_read_mat(HMDT d, const char *fname, long dim)
 	if(dim==1)
 	{
 		sscanf(buf+j,"%ld",&nx);
-		while(buf[j]>' ')	j++;
+		while(buf[j]!='\n' && j<nb)	j++;	j++;
+//		while(buf[j]>' ')	j++;
 	}
 	else if(dim==2)
 	{
 		sscanf(buf+j,"%ld%ld",&nx,&ny);
-		while(buf[j]>' ' && j<nb)	j++;
-		while(buf[j]<=' ' && j<nb)	j++;
-		while(buf[j]>' ' && j<nb)	j++;
+		while(buf[j]!='\n' && j<nb)	j++;	j++;
+		char *b=buf+j, ch;
+		for(i=l=0;b[i];i++)
+		{
+			while(b[i]=='#')	{	while(!isn(b[i]) && b[i])	i++;	}
+			if(b[i]=='\n')	l++;
+		}
+		if(l==nx*ny || l==nx*ny+1)	// try to read 3d data (i.e. columns of matrix nx*ny)
+		{
+			nz=ny;	ny=nx;	nx=1;
+			bool first = false;
+			for(i=l=0;b[i] && !isn(b[i]);i++)	// determine nx
+			{
+				while(b[i]=='#')	{	while(!isn(b[i]) && b[i])	i++;	}
+				ch = b[i];
+				if(ch>' ' && !first)	first=true;
+				if(first && (ch==' ' || ch=='\t' || ch==',') && b[i+1]>' ') nx++;
+			}
+		}
 	}
 	else if(dim==3)
 	{
 		sscanf(buf+j,"%ld%ld%ld",&nx,&ny,&nz);
-		while(buf[j]>' ' && j<nb)	j++;
+		while(buf[j]!='\n' && j<nb)	j++;	j++;
+/*		while(buf[j]>' ' && j<nb)	j++;
 		while(buf[j]<=' ' && j<nb)	j++;
 		while(buf[j]>' ' && j<nb)	j++;
 		while(buf[j]<=' ' && j<nb)	j++;
-		while(buf[j]>' ' && j<nb)	j++;
+		while(buf[j]>' ' && j<nb)	j++;*/
 	}
 	mglFromStr(d,buf+j,nx,ny,nz);
 	free(buf);	return true;
