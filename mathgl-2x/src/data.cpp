@@ -1569,12 +1569,12 @@ void mgl_data_diff_par_(uintptr_t *d, uintptr_t *v1, uintptr_t *v2, uintptr_t *v
 {	mgl_data_diff_par(_DT_,_DA_(v1),_DA_(v2),_DA_(v3));	}
 //-----------------------------------------------------------------------------
 void mgl_data_set_value(HMDT dat, float v, long i, long j, long k)
-{	dat->a[i+dat->nx*(j+dat->ny*k)]=v;	}
+{	if(i>=0 && i<dat->nx && j>=0 && j<dat->ny && k>=0 && k<dat->nz)	dat->a[i+dat->nx*(j+dat->ny*k)]=v;	}
 void mgl_data_set_value_(uintptr_t *d, float *v, int *i, int *j, int *k)
 {	mgl_data_set_value(_DT_,*v,*i,*j,*k);	}
 //-----------------------------------------------------------------------------
 float mgl_data_get_value(HCDT dat, long i, long j, long k)
-{	return dat->v(i,j,k);	}
+{	return (i>=0 && i<dat->nx && j>=0 && j<dat->ny && k>=0 && k<dat->nz) ? dat->v(i,j,k):NAN;	}
 float mgl_data_get_value_(uintptr_t *d, int *i, int *j, int *k)
 {	return mgl_data_get_value(_DA_(d),*i,*j,*k);	}
 //-----------------------------------------------------------------------------
