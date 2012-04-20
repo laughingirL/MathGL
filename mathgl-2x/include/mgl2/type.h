@@ -28,6 +28,11 @@
 const mreal Pi = M_PI;
 const mreal NaN = NAN;
 //-----------------------------------------------------------------------------
+#define MGL_SET_XYZ(p,xx,yy,zz)		{p.x=(xx);p.y=(yy);p.z=(zz);}
+#define MGL_SET_XY(p,xx,yy)			{p.x=(xx);p.y=(yy);p.z=0;}
+#define MGL_SET_RGBA(p,rr,gg,bb,aa)	{p.r=(rr);p.g=(gg);p.b=(bb);p.a=(aa);}
+#define MGL_SET_RGB(p,rr,gg,bb)		{p.r=(rr);p.g=(gg);p.b=(bb);}
+//-----------------------------------------------------------------------------
 /// Class for incapsulating point in space
 struct mglPoint
 {

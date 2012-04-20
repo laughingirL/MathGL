@@ -489,7 +489,7 @@ bool mglCanvas::ExportMGLD(const char *fname, const char *descr)
 	FILE *fp=fopen(fname,"wt");
 	if(!fp)	return true;
 	// NOTE: I'll save Ptx. So prim type=6 is useless,and no LaTeX
-	fprintf(fp,"MGLD %lu %lu %lu\n# %s\n", Pnt.size(), Prm.size(), Txt.size(), (descr && *descr) ? descr : fname);
+	fprintf(fp,"MGLD %lu %lu %lu\n# %s\n", (unsigned long)Pnt.size(), (unsigned long)Prm.size(), (unsigned long)Txt.size(), (descr && *descr) ? descr : fname);
 	register size_t i;
 	fprintf(fp,"# Vertexes: x y z c t ta u v w r g b a\n");
 	for(i=0;i<Pnt.size();i++)
@@ -528,7 +528,7 @@ bool mglCanvas::ImportMGLD(const char *fname, bool add)
 	if(!fgets(buf,512,fp))	*buf=0;
 	if(strncmp(buf,"MGLD",4))	{	delete []buf;	fclose(fp);	return true;	}
 	register size_t i;
-	size_t n,m,l, npnt;
+	unsigned long n,m,l, npnt;
 	sscanf(buf+5,"%lu%lu%lu",&n,&m,&l);
 	if(n<=0 || m<=0 || l<=0)	{	delete []buf;	fclose(fp);	return true;	}
 	if(!add)	{	Clf();	Txt.clear();	}

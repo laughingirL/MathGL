@@ -5,6 +5,8 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 
 1. Check RunThr() in python/octave
 
+2. mglPoint(), mglColor() -> #define MGL_SET_XYZ(p,xx,yy,zz) {p.x=(xx); p.y=(yy); p.z=(zz);}, ..._XY(), ..._RGB(), ..._RGBA()
+
 ============= FOR V.2.1 ========
 
 1. MPI_Send(), MPI_Recv()
