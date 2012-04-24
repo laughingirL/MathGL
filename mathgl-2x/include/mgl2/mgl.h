@@ -288,7 +288,7 @@ public:
 	/// Write the frame in file using PostScript format
 	inline void WriteEPS(const char *fname,const char *descr="")
 	{	mgl_write_eps(gr, fname, descr);	}
-	/// Write the frame in file using PostScript format
+	/// Write the frame in file using LaTeX format
 	inline void WriteTEX(const char *fname,const char *descr="")
 	{	mgl_write_tex(gr, fname, descr);	}
 	/// Write the frame in file using PostScript format as bitmap
