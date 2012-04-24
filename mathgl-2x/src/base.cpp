@@ -139,7 +139,7 @@ long mglBase::AddPnt(mglPoint p, float c, mglPoint n, float a, int scl)
 	txt.GetC(c,a,q);	// RGBA color
 
 	if(!get(MGL_ENABLE_ALPHA))	{	q.a=1;	if(txt.Smooth!=2)	q.ta=1;	}
-	if(q.ta<0.005)	q.ta = 0.005;	// bypass OpenGL/OBJ/PRC bug
+//	if(q.ta<0.005)	q.ta = 0.005;	// bypass OpenGL/OBJ/PRC bug
 	if(scl&8 && scl>0)	q.a=a;	// bypass palette for enabling alpha in Error()
 	if(!get(MGL_ENABLE_LIGHT) && !(scl&4))	q.u=q.v=NAN;
 	MGL_PUSH(Pnt,q,mutexPnt);	return Pnt.size()-1;
