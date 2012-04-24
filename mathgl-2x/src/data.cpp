@@ -963,43 +963,82 @@ float mgl_data_momentum_val(HCDT dd, char dir, mreal *x, mreal *w, mreal *s, mre
 	long nx=dd->GetNx(),ny=dd->GetNy(),nz=dd->GetNz();
 	mreal i0=0,i1=0,i2=0,i3=0,i4=0,d,t,v;
 	register long i;
-	switch(dir)
+	const mglData *md = dynamic_cast<const mglData *>(dd);
+	if(dd)	switch(dir)
 	{
-		case 'x':
-			for(i=0;i<nx*ny*nz;i++)
-			{
-				d = i%nx;		t = d*d;
-				v = dd->vthr(i);i0+= v;
-				i1+= v*d;		i2+= v*t;
-				i3+= v*d*t;		i4+= v*t*t;
-			}
-			break;
-		case 'y':
-			for(i=0;i<nx*ny*nz;i++)
-			{
-				d = (i/nx)%ny;	t = d*d;
-				v = dd->vthr(i);i0+= v;
-				i1+= v*d;		i2+= v*t;
-				i3+= v*d*t;		i4+= v*t*t;
-			}
-			break;
-		case 'z':
-			for(i=0;i<nx*ny*nz;i++)
-			{
-				d = i/(nx*ny);	t = d*d;
-				v = dd->vthr(i);i0+= v;
-				i1+= v*d;		i2+= v*t;
-				i3+= v*d*t;		i4+= v*t*t;
-			}
-			break;
-		default:	// "self-dispersion"
-			i0 = nx*ny*nz;
-			for(i=0;i<nx*ny*nz;i++)
-			{
-				v=dd->vthr(i);	t  = v*v;
-				i1+= v;			i2+= t;
-				i3+= v*t;		i4+= t*t;
-			}
+	case 'x':
+		for(i=0;i<nx*ny*nz;i++)
+		{
+			d = i%nx;		t = d*d;
+			v = md->a[i];i0+= v;
+			i1+= v*d;		i2+= v*t;
+			i3+= v*d*t;		i4+= v*t*t;
+		}
+		break;
+	case 'y':
+		for(i=0;i<nx*ny*nz;i++)
+		{
+			d = (i/nx)%ny;	t = d*d;
+			v = md->a[i];i0+= v;
+			i1+= v*d;		i2+= v*t;
+			i3+= v*d*t;		i4+= v*t*t;
+		}
+		break;
+	case 'z':
+		for(i=0;i<nx*ny*nz;i++)
+		{
+			d = i/(nx*ny);	t = d*d;
+			v = md->a[i];i0+= v;
+			i1+= v*d;		i2+= v*t;
+			i3+= v*d*t;		i4+= v*t*t;
+		}
+		break;
+	default:	// "self-dispersion"
+		i0 = nx*ny*nz;
+		for(i=0;i<nx*ny*nz;i++)
+		{
+			v=md->a[i];	t  = v*v;
+			i1+= v;			i2+= t;
+			i3+= v*t;		i4+= t*t;
+		}
+	}
+	else	switch(dir)
+	{
+	case 'x':
+		for(i=0;i<nx*ny*nz;i++)
+		{
+			d = i%nx;		t = d*d;
+			v = dd->vthr(i);i0+= v;
+			i1+= v*d;		i2+= v*t;
+			i3+= v*d*t;		i4+= v*t*t;
+		}
+		break;
+	case 'y':
+		for(i=0;i<nx*ny*nz;i++)
+		{
+			d = (i/nx)%ny;	t = d*d;
+			v = dd->vthr(i);i0+= v;
+			i1+= v*d;		i2+= v*t;
+			i3+= v*d*t;		i4+= v*t*t;
+		}
+		break;
+	case 'z':
+		for(i=0;i<nx*ny*nz;i++)
+		{
+			d = i/(nx*ny);	t = d*d;
+			v = dd->vthr(i);i0+= v;
+			i1+= v*d;		i2+= v*t;
+			i3+= v*d*t;		i4+= v*t*t;
+		}
+		break;
+	default:	// "self-dispersion"
+		i0 = nx*ny*nz;
+		for(i=0;i<nx*ny*nz;i++)
+		{
+			v=dd->vthr(i);	t  = v*v;
+			i1+= v;			i2+= t;
+			i3+= v*t;		i4+= t*t;
+		}
 	}
 	if(i0==0)	return 0;	d=i1/i0;
 	if(x)	*x=d;
@@ -1324,59 +1363,61 @@ void mgl_data_put_dat(HMDT d, HCDT v, long xx, long yy, long zz)
 {
 	register long nx=d->nx, ny=d->ny, nz=d->nz;
 	if(xx>=nx || yy>=ny || zz>=nz)	return;
+	const mglData *mv = dynamic_cast<const mglData *>(v);
 	mreal *a=d->a, vv=v->v(0);
+	const mreal *b = mv?mv->a:0;
 	long vx=v->GetNx(), vy=v->GetNy(), vz=v->GetNz();
 	register long i,j,k;
 	if(xx<0 && yy<0 && zz<0)	// whole array
 	{
 		if(vx>=nx && vy>=ny && vz>=nz)
 			for(k=0;k<nz;k++)	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
-				a[i+nx*(j+k*ny)] = v->v(i,j,k);
+				a[i+nx*(j+k*ny)] = b?b[i+vx*(j+k*vy)]:v->v(i,j,k);
 		else if(vx>=nx && vy>=ny)
 			for(k=0;k<nz;k++)	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
-				a[i+nx*(j+k*ny)] = v->v(i,j);
+				a[i+nx*(j+k*ny)] = b?b[i+vx*j]:v->v(i,j);
 		else if(vx>=nx)	for(k=0;k<ny*nz;k++)	for(i=0;i<nx;i++)
-				a[i+nx*k] = v->v(i);
+				a[i+nx*k] = b?b[i]:v->v(i);
 		else	for(i=0;i<nx*ny*nz;i++)	a[i] = vv;
 	}
 	else if(xx<0 && yy<0)	// 2d
 	{
 		if(vx>=nx && vy>=ny)	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
-				a[i+nx*(j+zz*ny)] = v->v(i,j);
+				a[i+nx*(j+zz*ny)] = b?b[i+vx*j]:v->v(i,j);
 		else if(vx>=nx)	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
-				a[i+nx*(j+zz*ny)] = v->v(i);
+				a[i+nx*(j+zz*ny)] = b?b[i]:v->v(i);
 		else	for(i=0;i<nx*ny;i++)	a[i+nx*ny*zz] = vv;
 	}
 	else if(yy<0 && zz<0)	// 2d
 	{
 		if(vx>=ny && vy>=nz)	for(j=0;j<nz;j++)	for(i=0;i<ny;i++)
-				a[xx+nx*(i+j*ny)] = v->v(i,j);
+				a[xx+nx*(i+j*ny)] = b?b[i+vx*j]:v->v(i,j);
 		else if(vx>=ny)	for(j=0;j<nz;j++)	for(i=0;i<ny;i++)
-				a[xx+nx*(i+j*ny)] = v->v(i);
+				a[xx+nx*(i+j*ny)] = b?b[i]:v->v(i);
 		else	for(i=0;i<ny*nz;i++)	a[xx+nx*i] = vv;
 	}
 	else if(xx<0 && zz<0)	// 2d
 	{
 		if(vx>=nx && vy>=nz)	for(j=0;j<nz;j++)	for(i=0;i<nx;i++)
-				a[i+nx*(yy+j*ny)] = v->v(i,j);
+				a[i+nx*(yy+j*ny)] = b?b[i+vx*j]:v->v(i,j);
 		else if(vx>=nx)	for(j=0;j<nz;j++)	for(i=0;i<nx;i++)
-				a[i+nx*(yy+j*ny)] = v->v(i);
+				a[i+nx*(yy+j*ny)] = b?b[i]:v->v(i);
 		else	for(j=0;j<nz;j++)	for(i=0;i<nx;i++)
 				a[i+nx*(yy+j*ny)] = vv;
 	}
 	else if(xx<0)
 	{
-		if(vx>=nx)	for(i=0;i<nx;i++)	a[i+nx*(yy+zz*ny)] = v->v(i);
+		if(vx>=nx)	for(i=0;i<nx;i++)	a[i+nx*(yy+zz*ny)] = b?b[i]:v->v(i);
 		else for(i=0;i<nx;i++)	a[i+nx*(yy+zz*ny)] = vv;
 	}
 	else if(yy<0)
 	{
-		if(vx>=ny)	for(i=0;i<ny;i++)	a[xx+nx*(i+zz*ny)] = v->v(i);
+		if(vx>=ny)	for(i=0;i<ny;i++)	a[xx+nx*(i+zz*ny)] = b?b[i]:v->v(i);
 		else for(i=0;i<ny;i++)	a[xx+nx*(i+zz*ny)] = vv;
 	}
 	else if(zz<0)
 	{
-		if(vx>=nz)	for(i=0;i<nz;i++)	a[xx+nx*(yy+i*ny)] = v->v(i);
+		if(vx>=nz)	for(i=0;i<nz;i++)	a[xx+nx*(yy+i*ny)] = b?b[i]:v->v(i);
 		else for(i=0;i<nz;i++)	a[xx+nx*(yy+i*ny)] = vv;
 	}
 	else	a[xx+nx*(yy+ny*zz)] = vv;

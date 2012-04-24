@@ -596,7 +596,7 @@ void mglTexture::Set(const char *s, int smooth, float alpha)
 		{	alpha = 0.1*(s[i+1]-'0');	i++;	}
 	}
 	for(i=0;i<n;i++)	// default texture
-	{	c[2*i+1]=c[2*i];	c[2*i].a=alpha;	c[2*i+1].a=sm?0:alpha;	}
+	{	c[2*i+1]=c[2*i];	c[2*i].a=sm?0:alpha;	c[2*i+1].a=alpha;	}
 	if(map && sm)		// map texture
 	{
 		if(n==2)
@@ -606,10 +606,10 @@ void mglTexture::Set(const char *s, int smooth, float alpha)
 		else
 		{	c[1]=c[4];	c[3]=c[6];	n=2;	}
 	}
-	register float u,v=sm?(n-1)/254.:n/256.;
-	for(i=1;i<255;i++)
+	register float u,v=sm?(n-1)/255.:n/256.;
+	for(i=0;i<256;i++)
 	{
-		u = v*(i-1);	j = long(u);	u-=j;
+		u = v*i;	j = long(u);	u-=j;
 		if(!sm || j==n-1)
 		{	col[2*i] = c[2*j];	col[2*i+1] = c[2*j+1];	}
 		else if(j>n-1)	// NOTE: never should be here!
@@ -620,7 +620,7 @@ void mglTexture::Set(const char *s, int smooth, float alpha)
 			col[2*i+1]=c[2*j+1]*(1-u)+c[2*j+3]*u;
 		}
 	}
-	col[510]=col[508];	col[511]=col[509];	col[0]=col[2];	col[1]=col[3];
+//	col[510]=col[508];	col[511]=col[509];	col[0]=col[2];	col[1]=col[3];
 	delete []c;
 }
 //-----------------------------------------------------------------------------
@@ -632,7 +632,8 @@ void mglTexture::GetC(float u,float v,mglPnt &p) const
 	p.r = (s[0].r*(1-u)+s[2].r*u)*(1-v) + (s[1].r*(1-u)+s[3].r*u)*v;
 	p.g = (s[0].g*(1-u)+s[2].g*u)*(1-v) + (s[1].g*(1-u)+s[3].g*u)*v;
 	p.b = (s[0].b*(1-u)+s[2].b*u)*(1-v) + (s[1].b*(1-u)+s[3].b*u)*v;
-	p.a = (s[0].a*(1-u)+s[2].a*u)*v + (s[1].a*(1-u)+s[3].a*u)*(1-v);	// for alpha use inverted
+	p.a = (s[0].a*(1-u)+s[2].a*u)*(1-v) + (s[1].a*(1-u)+s[3].a*u)*v;
+//	p.a = (s[0].a*(1-u)+s[2].a*u)*v + (s[1].a*(1-u)+s[3].a*u)*(1-v);	// for alpha use inverted
 }
 //-----------------------------------------------------------------------------
 long mglBase::AddTexture(const char *cols, int smooth)

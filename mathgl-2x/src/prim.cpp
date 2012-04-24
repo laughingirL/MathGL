@@ -260,16 +260,16 @@ void mgl_cone_(uintptr_t* gr, mreal *x1, mreal *y1, mreal *z1, mreal *x2, mreal 
 //-----------------------------------------------------------------------------
 void mgl_cones_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *opt)
 {
-	long i,j,m,mx,my,mz,n=z->GetNx(),nx=x->GetNx(), pal;
+	long i,j,m,mx,my,mz,n=z->GetNx(),nx=x->GetNx(), nz=z->GetNy(), pal;
 	if(x->GetNx()<n || y->GetNx()<n)	{	gr->SetWarn(mglWarnDim,"Cones");	return;	}
 	if(n<2)		{	gr->SetWarn(mglWarnLow,"Cones");	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Cones",cgid++);
-	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();	m = z->GetNy() > m ? z->GetNy() : m;
+	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();	m = nz > m ? nz : m;
 
 	bool above= pen && strchr(pen,'a');
 	bool wire = pen && strchr(pen,'#');
-	float *dd=new float[2*n], x1,z0,zz,d;
+	float *dd=new float[2*n], x1,z0,zz,d, vx,vy,vz,v0,v1;
 	memset(dd,0,n*sizeof(float));
 
 	gr->SetPenPal(pen,&pal);
@@ -278,27 +278,29 @@ void mgl_cones_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char 
 	if(wire)	c1[5]=c2[5]='#';
 	memset(dd,0,2*n*sizeof(float));
 	z0 = gr->GetOrgZ('x');
-	for(i=0;i<n;i++)	for(j=0;j<m;j++)	dd[i] += z->v(i, j<z->GetNy() ? j:0);
+	for(i=0;i<n;i++)	for(j=0;j<m;j++)	dd[i] += z->v(i, j<nz ? j:0);
 	for(j=0;j<m;j++)
 	{
 		gr->NextColor(pal);		memcpy(c1+1,gr->last_line(),4);
 		if(gr->GetNumPal(pal)==2*m)
 		{	gr->NextColor(pal);	memcpy(c2+1,gr->last_line(),4);	}
 		else	memcpy(c2,c1,7);
-		mx = j<x->GetNy() ? j:0;	my = j<y->GetNy() ? j:0;	mz = j<z->GetNy() ? j:0;
+		mx = j<x->GetNy() ? j:0;	my = j<y->GetNy() ? j:0;	mz = j<nz ? j:0;
 		for(i=0;i<n;i++)
 		{
 			if(gr->Stop)	{	delete []dd;	return;	}
-			d = i<nx-1 ? x->v(i+1,mx)-x->v(i,mx) : x->v(i,mx)-x->v(i-1,mx);
-			x1 = (n<nx?(x->v(i,mx)+x->v(i+1,mx))/2:x->v(i,mx)) + d/2*(1-0.7*gr->BarWidth);
+			vx=x->v(i,mx);	vy=y->v(i,my);	vz=z->v(i,mz);
+			v0=y->v(i,0);	v1=i<nx-1 ? x->v(i+1,mx):x->v(i-1,mx);
+			d = i<nx-1 ? v1-vx : vx-v1;
+			x1 = (n<nx ? (vx+v1)/2 : vx) + d/2*(1-0.7*gr->BarWidth);
 			if(above)
 			{
-				zz = j>0?dd[i+n]:z0;	dd[i+n] += z->v(i,mz);
-				mgl_cone(gr, x1,y->v(i,0),zz, x1,y->v(i,0),dd[i+n],
+				zz = j>0?dd[i+n]:z0;	dd[i+n] += vz;
+				mgl_cone(gr, x1,v0,zz, x1,v0,dd[i+n],
 						 0.7*gr->BarWidth*d*(dd[i]-zz)/(dd[i]-z0),
 						 0.7*gr->BarWidth*d*(dd[i]-dd[i+n])/(dd[i]-z0), c1);
 			}
-			else	mgl_cone(gr, x1,y->v(i,my),z0, x1,y->v(i,my),z->v(i,mz), 0.7*gr->BarWidth*d,0, z->v(i,mz)<0?c1:c2);
+			else	mgl_cone(gr, x1,vy,z0, x1,vy,vz, 0.7*gr->BarWidth*d,0, vz<0?c1:c2);
 		}
 	}
 	gr->EndGroup();	delete []dd;
@@ -483,13 +485,8 @@ void mgl_dew_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, cons
 		ym = sqrt(ax->v(i,j,k)*ax->v(i,j,k)+ay->v(i,j,k)*ay->v(i,j,k));
 		xm = xm>ym ? xm : ym;
 	}
-/*	for(i=0,xm=0;i<m*n*ax->GetNz();i++)
-	{
-		ym = hypot(ax->vthr(i),ay->vthr(i));
-		xm = xm>ym ? xm : ym;
-	}*/
 	xm = 1./MGL_FLT_EPS/(xm==0 ? 1:xm);
-	mglPoint p,q;
+	mglPoint q;
 
 	for(k=0;k<ax->GetNz();k++)
 	{
@@ -502,11 +499,10 @@ void mgl_dew_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, cons
 			dy = j<m-1 ? (GetY(y,i,j+1,k).x-yy) : (yy-GetY(y,i,j-1,k).x);
 			dx *= tx;	dy *= ty;
 
-			p = mglPoint(xx, yy, zVal);
-			q = inv ? mglPoint(-ax->v(i,j,k),-ay->v(i,j,k),0) : mglPoint(ax->v(i,j,k),ay->v(i,j,k),0);
-			p = mglPoint(xx, yy, zVal);		dd = q.norm();
+			q = mglPoint(ax->v(i,j,k),ay->v(i,j,k));	dd = q.norm();
+			if(inv)	q = -q;
 			float ccc = gr->GetC(ss,dd*xm,false);
-			mgl_drop(gr,p,q,(dx<dy?dx:dy)/2,ccc,dd*xm,1);
+			mgl_drop(gr,mglPoint(xx, yy, zVal),q,(dx<dy?dx:dy)/2,ccc,dd*xm,1);
 		}
 	}
 	gr->EndGroup();

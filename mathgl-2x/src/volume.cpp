@@ -251,7 +251,7 @@ void mgl_surf3_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, const
 	std::vector<mglPoint> kk;
 	kk.reserve(n*m*l);
 
-	mglPoint p,q,u;
+	mglPoint p,q,u, p0;
 	float a0;
 	for(k=0;k<l;k++)
 	{
@@ -264,15 +264,16 @@ void mgl_surf3_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, const
 			if(gr->Stop)	{	delete []kx1;	delete []kx2;	delete []ky1;
 								delete []ky2;	delete []kz;	return;	}
 			i1 = i+n*j;		a0 = a->v(i,j,k);
+			p0 = both?mglPoint(x->v(i,j,k), y->v(i,j,k), z->v(i,j,k)) : mglPoint(x->v(i), y->v(j), z->v(k));
 			if(i<n-1)
 			{
 				d = mgl_d(val,a0,a->v(i+1,j,k));
 				if(d>=0 && d<1)
 				{
-					if(both)	p = mglPoint(x->v(i,j,k)*(1-d)+x->v(i+1,j,k)*d,
-									y->v(i,j,k)*(1-d)+y->v(i+1,j,k)*d,
-									z->v(i,j,k)*(1-d)+z->v(i+1,j,k)*d);
-					else	p = mglPoint(x->v(i)*(1-d)+x->v(i+1)*d, y->v(j), z->v(k));
+					if(both)	p = mglPoint(p0.x*(1-d)+x->v(i+1,j,k)*d,
+									p0.y*(1-d)+y->v(i+1,j,k)*d,
+									p0.z*(1-d)+z->v(i+1,j,k)*d);
+					else	p = mglPoint(p0.x*(1-d)+x->v(i+1)*d, p0.y, p0.z);
 					u = mglPoint(i+d,j,k);
 					q = mgl_find_norm(both, x,y,z,a, u, inv,n,m,l);
 					pos = gr->AddPnt(p,c,q);	u.c=pos;
@@ -285,10 +286,10 @@ void mgl_surf3_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, const
 				d = mgl_d(val,a0,a->v(i,j+1,k));
 				if(d>=0 && d<1)
 				{
-					if(both)	p = mglPoint(x->v(i,j,k)*(1-d)+x->v(i,j+1,k)*d,
-									y->v(i,j,k)*(1-d)+y->v(i,j+1,k)*d,
-									z->v(i,j,k)*(1-d)+z->v(i,j+1,k)*d);
-					else	p = mglPoint(x->v(i), y->v(j)*(1-d)+y->v(j+1)*d, z->v(k));
+					if(both)	p = mglPoint(p0.x*(1-d)+x->v(i,j+1,k)*d,
+									p0.y*(1-d)+y->v(i,j+1,k)*d,
+									p0.z*(1-d)+z->v(i,j+1,k)*d);
+					else	p = mglPoint(p0.x, p0.y*(1-d)+y->v(j+1)*d, p0.z);
 					u = mglPoint(i,j+d,k);
 					q = mgl_find_norm(both, x,y,z,a, u, inv,n,m,l);
 					pos = gr->AddPnt(p,c,q);	u.c=pos;
@@ -301,10 +302,10 @@ void mgl_surf3_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, const
 				d = mgl_d(val,a->v(i,j,k-1),a0);
 				if(d>=0 && d<1)
 				{
-					if(both)	p = mglPoint(x->v(i,j,k-1)*(1-d)+x->v(i,j,k)*d,
-									y->v(i,j,k-1)*(1-d)+y->v(i,j,k)*d,
-									z->v(i,j,k-1)*(1-d)+z->v(i,j,k)*d);
-					else	p = mglPoint(x->v(i), y->v(j), z->v(k-1)*(1-d)+z->v(k)*d);
+					if(both)	p = mglPoint(x->v(i,j,k-1)*(1-d)+p0.x*d,
+									y->v(i,j,k-1)*(1-d)+p0.y*d,
+									z->v(i,j,k-1)*(1-d)+p0.z*d);
+					else	p = mglPoint(p0.x, p0.y, z->v(k-1)*(1-d)+p0.z*d);
 					u = mglPoint(i,j,k+d-1);
 					q = mgl_find_norm(both, x,y,z,a, u, inv,n,m,l);
 					pos = gr->AddPnt(p,c,q);	u.c=pos;
@@ -401,7 +402,7 @@ void mgl_surf3a_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 	std::vector<mglPoint> kk;
 	kk.reserve(n*m*l);
 
-	mglPoint p,q,u;
+	mglPoint p,q,u, p0;
 	float a0,b0;
 	for(k=0;k<l;k++)
 	{
@@ -415,15 +416,16 @@ void mgl_surf3a_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 								delete []ky2;	delete []kz;	return;	}
 			i1 = i+n*j;
 			a0 = a->v(i,j,k);	b0 = b->v(i,j,k);
+			p0 = both?mglPoint(x->v(i,j,k), y->v(i,j,k), z->v(i,j,k)) : mglPoint(x->v(i), y->v(j), z->v(k));
 			if(i<n-1)
 			{
 				d = mgl_d(val,a0,a->v(i+1,j,k));
 				if(d>=0 && d<1)
 				{
-					if(both)	p = mglPoint(x->v(i,j,k)*(1-d)+x->v(i+1,j,k)*d,
-									y->v(i,j,k)*(1-d)+y->v(i+1,j,k)*d,
-									z->v(i,j,k)*(1-d)+z->v(i+1,j,k)*d);
-					else	p = mglPoint(x->v(i)*(1-d)+x->v(i+1)*d, y->v(j), z->v(k));
+					if(both)	p = mglPoint(p0.x*(1-d)+x->v(i+1,j,k)*d,
+									p0.y*(1-d)+y->v(i+1,j,k)*d,
+									p0.z*(1-d)+z->v(i+1,j,k)*d);
+					else	p = mglPoint(p0.x*(1-d)+x->v(i+1)*d, p0.y, p0.z);
 					aa = gr->GetA(b0*(1-d)+b->v(i+1,j,k)*d);
 					u = mglPoint(i+d,j,k);
 					q = mgl_find_norm(both, x,y,z,a, u, inv,n,m,l);
@@ -437,10 +439,10 @@ void mgl_surf3a_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 				d = mgl_d(val,a0,a->v(i,j+1,k));
 				if(d>=0 && d<1)
 				{
-					if(both)	p = mglPoint(x->v(i,j,k)*(1-d)+x->v(i,j+1,k)*d,
-									y->v(i,j,k)*(1-d)+y->v(i,j+1,k)*d,
-									z->v(i,j,k)*(1-d)+z->v(i,j+1,k)*d);
-					else	p = mglPoint(x->v(i), y->v(j)*(1-d)+y->v(j+1)*d, z->v(k));
+					if(both)	p = mglPoint(p0.x*(1-d)+x->v(i,j+1,k)*d,
+									p0.y*(1-d)+y->v(i,j+1,k)*d,
+									p0.z*(1-d)+z->v(i,j+1,k)*d);
+					else	p = mglPoint(p0.x, p0.y*(1-d)+y->v(j+1)*d, p0.z);
 					aa = gr->GetA(b0*(1-d)+b->v(i,j+1,k)*d);
 					u = mglPoint(i,j+d,k);
 					q = mgl_find_norm(both, x,y,z,a, u, inv,n,m,l);
@@ -454,10 +456,10 @@ void mgl_surf3a_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 				d = mgl_d(val,a->v(i,j,k-1),a0);
 				if(d>=0 && d<1)
 				{
-					if(both)	p = mglPoint(x->v(i,j,k-1)*(1-d)+x->v(i,j,k)*d,
-									y->v(i,j,k-1)*(1-d)+y->v(i,j,k)*d,
-									z->v(i,j,k-1)*(1-d)+z->v(i,j,k)*d);
-					else	p = mglPoint(x->v(i), y->v(j), z->v(k-1)*(1-d)+z->v(k)*d);
+					if(both)	p = mglPoint(x->v(i,j,k-1)*(1-d)+p0.x*d,
+									y->v(i,j,k-1)*(1-d)+p0.y*d,
+									z->v(i,j,k-1)*(1-d)+p0.z*d);
+					else	p = mglPoint(p0.x, p0.y, z->v(k-1)*(1-d)+p0.z*d);
 					aa = gr->GetA(b->v(i,j,k-1)*(1-d)+b0*d);
 					u = mglPoint(i,j,k+d-1);
 					q = mgl_find_norm(both, x,y,z,a, u, inv,n,m,l);
@@ -580,7 +582,7 @@ void mgl_surf3c_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 	std::vector<mglPoint> kk;
 	kk.reserve(n*m*l);
 
-	mglPoint p,q,u;
+	mglPoint p,q,u, p0;
 	float a0,b0;
 	for(k=0;k<l;k++)
 	{
@@ -594,15 +596,16 @@ void mgl_surf3c_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 								delete []ky2;	delete []kz;	return;	}
 			i1 = i+n*j;
 			a0 = a->v(i,j,k);	b0 = b->v(i,j,k);
+			p0 = both?mglPoint(x->v(i,j,k), y->v(i,j,k), z->v(i,j,k)) : mglPoint(x->v(i), y->v(j), z->v(k));
 			if(i<n-1)
 			{
 				d = mgl_d(val,a0,a->v(i+1,j,k));
 				if(d>=0 && d<1)
 				{
-					if(both)	p = mglPoint(x->v(i,j,k)*(1-d)+x->v(i+1,j,k)*d,
-									y->v(i,j,k)*(1-d)+y->v(i+1,j,k)*d,
-									z->v(i,j,k)*(1-d)+z->v(i+1,j,k)*d);
-					else	p = mglPoint(x->v(i)*(1-d)+x->v(i+1)*d, y->v(j), z->v(k));
+					if(both)	p = mglPoint(p0.x*(1-d)+x->v(i+1,j,k)*d,
+									p0.y*(1-d)+y->v(i+1,j,k)*d,
+									p0.z*(1-d)+z->v(i+1,j,k)*d);
+					else	p = mglPoint(p0.x*(1-d)+x->v(i+1)*d, p0.y, p0.z);
 					c = gr->GetC(ss,b0*(1-d)+b->v(i+1,j,k)*d);
 					u = mglPoint(i+d,j,k);
 					q = mgl_find_norm(both, x,y,z,a, u, inv,n,m,l);
@@ -616,10 +619,10 @@ void mgl_surf3c_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 				d = mgl_d(val,a0,a->v(i,j+1,k));
 				if(d>=0 && d<1)
 				{
-					if(both)	p = mglPoint(x->v(i,j,k)*(1-d)+x->v(i,j+1,k)*d,
-									y->v(i,j,k)*(1-d)+y->v(i,j+1,k)*d,
-									z->v(i,j,k)*(1-d)+z->v(i,j+1,k)*d);
-					else	p = mglPoint(x->v(i), y->v(j)*(1-d)+y->v(j+1)*d, z->v(k));
+					if(both)	p = mglPoint(p0.x*(1-d)+x->v(i,j+1,k)*d,
+									p0.y*(1-d)+y->v(i,j+1,k)*d,
+									p0.z*(1-d)+z->v(i,j+1,k)*d);
+					else	p = mglPoint(p0.x, p0.y*(1-d)+y->v(j+1)*d, p0.z);
 					c = gr->GetC(ss,b0*(1-d)+b->v(i,j+1,k)*d);
 					u = mglPoint(i,j+d,k);
 					q = mgl_find_norm(both, x,y,z,a, u, inv,n,m,l);
@@ -633,10 +636,10 @@ void mgl_surf3c_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 				d = mgl_d(val,a->v(i,j,k-1),a0);
 				if(d>=0 && d<1)
 				{
-					if(both)	p = mglPoint(x->v(i,j,k-1)*(1-d)+x->v(i,j,k)*d,
-									y->v(i,j,k-1)*(1-d)+y->v(i,j,k)*d,
-									z->v(i,j,k-1)*(1-d)+z->v(i,j,k)*d);
-					else	p = mglPoint(x->v(i), y->v(j), z->v(k-1)*(1-d)+z->v(k)*d);
+					if(both)	p = mglPoint(x->v(i,j,k-1)*(1-d)+p0.x*d,
+									y->v(i,j,k-1)*(1-d)+p0.y*d,
+									z->v(i,j,k-1)*(1-d)+p0.z*d);
+					else	p = mglPoint(p0.x, p0.y, z->v(k-1)*(1-d)+p0.z*d);
 					c = gr->GetC(ss,b->v(i,j,k-1)*(1-d)+b0*d);
 					u = mglPoint(i,j,k+d-1);
 					q = mgl_find_norm(both, x,y,z,a, u, inv,n,m,l);
@@ -715,8 +718,65 @@ void mgl_surf3c_(uintptr_t *gr, uintptr_t *a, uintptr_t *b, const char *sch, con
 // flag & 0x1	--	accompanied coordinates
 // flag & 0x2	--	project to r*z
 // flag & 0x4	--	normalize field
+void mgl_beam_md(HMGL gr, float val, const mglData *tr, const mglData *g1, const mglData *g2, const mglData *a, float r, const char *stl, int flag)
+{
+	long n = a->nz,m=a->nx,l=a->ny;
+	if(n<2 || m<2 || l<2)	{	gr->SetWarn(mglWarnLow,"Beam");	return;	}
+	if(a->Minimal()<0)		{	gr->SetWarn(mglWarnNeg,"Beam");	return;	}
+	if(tr->nx<3 || tr->ny<n || g1->nx<3 || g1->ny<n || g2->nx<3 || g2->ny<n)
+	{	gr->SetWarn(mglWarnDim,"Beam");	return;	}
+	mglData x(a),y(a),z(a),b(a);
+	register long i,j,k,i0;
+	float asum=1, asum0=1, amax, aa;
+	r = fabs(r);
+	if(flag & 4)	for(j=0;j<m*l;j++)	asum0 += a->a[j]*a->a[j];
+	if(asum0==0)	{	gr->SetWarn(mglWarnZero,"Beam");	return;	}
+	for(i=0;i<n;i++)
+	{
+		asum=amax=0;
+		if(flag & 4)
+		{
+			for(j=0;j<m*l;j++)
+			{
+				aa = a->a[j+m*l*i];
+				asum += aa*aa;
+				amax = amax>aa ? amax : aa;
+			}
+			if(amax==0)	{	asum=0;	amax=1;	}
+			for(j=0;j<m*l;j++)	b.a[j+m*l*i] = b.a[j+m*l*i]*sqrt(asum/asum0)/amax;
+		}
+		for(j=0;j<m;j++)	for(k=0;k<l;k++)
+		{
+			if(gr->Stop)	return;
+			i0 = j+m*(k+l*i);
+			if(flag & 1)
+			{
+				x.a[i0] = 2*j/(m-1.)-1;
+				y.a[i0] = 2*k/(l-1.)-1;
+				z.a[i0] = gr->Max.z*i/(n-1.);
+			}
+			else
+			{
+				x.a[i0] = tr->a[3*i] + g1->a[3*i]*(2*j/(m-1.)-1)*r + g2->a[3*i]*(2*k/(l-1.)-1)*r;
+				y.a[i0] = tr->a[3*i+1] + g1->a[3*i+1]*(2*j/(m-1.)-1)*r + g2->a[3*i+1]*(2*k/(l-1.)-1)*r;
+				z.a[i0] = tr->a[3*i+2] + g1->a[3*i+2]*(2*j/(m-1.)-1)*r + g2->a[3*i+2]*(2*k/(l-1.)-1)*r;
+			}
+			if(flag & 2)	x.a[i0] = hypot(x.a[i0],y.a[i0]);
+		}
+	}
+	mgl_surf3_xyz_val(gr,val,&x,&y,&z,&b,stl,0);
+}
+//-----------------------------------------------------------------------------
 void mgl_beam_val(HMGL gr, float val, HCDT tr, HCDT g1, HCDT g2, HCDT a, float r, const char *stl, int flag)
 {
+
+	const mglData *dtr=dynamic_cast<const mglData *>(tr);
+	const mglData *dg2=dynamic_cast<const mglData *>(g1);
+	const mglData *dg1=dynamic_cast<const mglData *>(g2);
+	const mglData *da=dynamic_cast<const mglData *>(a);
+	if(dtr&&dg1&&dg2&&da)
+	{	mgl_beam_md(gr,val,dtr,dg1,dg2,da,r,stl,flag);	return;	}
+
 	long n = a->GetNz(),m=a->GetNx(),l=a->GetNy();
 	if(n<2 || m<2 || l<2)	{	gr->SetWarn(mglWarnLow);	return;	}
 	if(a->Minimal()<0)		{	gr->SetWarn(mglWarnNeg);	return;	}

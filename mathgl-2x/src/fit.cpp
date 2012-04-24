@@ -349,11 +349,19 @@ HMDT mgl_hist_x(HMGL gr, HCDT x, HCDT a, const char *opt)
 	if(n<mglFitPnts)	n = mglFitPnts;
 	mglData *res = new mglData(n);
 	register long i,j1;
-	for(i=0;i<nn;i++)
+
+	const mglData *dx = dynamic_cast<const mglData *>(x);
+	const mglData *da = dynamic_cast<const mglData *>(a);
+	float vx = n/(gr->Max.x-gr->Min.x);
+	if(dx && da)	for(i=0;i<nn;i++)
 	{
-		if(gr->Stop)	{	delete res;	return 0;	}
-		j1 = long(n*(x->v(i)-gr->Min.x)/(gr->Max.x-gr->Min.x));
-		if(j1>=0 && j1<n)	res->a[j1] += a->v(i);
+		j1 = long((dx->a[i]-gr->Min.x)*vx);
+		if(j1>=0 && j1<n)	res->a[j1] += da->a[i];
+	}
+	else	for(i=0;i<nn;i++)
+	{
+		j1 = long((x->vthr(i)-gr->Min.x)*vx);
+		if(j1>=0 && j1<n)	res->a[j1] += a->vthr(i);
 	}
 	gr->LoadState();	return res;
 }
@@ -367,13 +375,22 @@ HMDT mgl_hist_xy(HMGL gr, HCDT x, HCDT y, HCDT a, const char *opt)
 	if(n<mglFitPnts)	n = mglFitPnts;
 	mglData *res = new mglData(n, n);
 	register long i,j1,j2;
-	for(i=0;i<nn;i++)
+	const mglData *dx = dynamic_cast<const mglData *>(x);
+	const mglData *dy = dynamic_cast<const mglData *>(y);
+	const mglData *da = dynamic_cast<const mglData *>(a);
+	float vx = n/(gr->Max.x-gr->Min.x);
+	float vy = n/(gr->Max.y-gr->Min.y);
+	if(dx && dy && da)	for(i=0;i<nn;i++)
 	{
-		if(gr->Stop)	{	delete res;	return 0;	}
-		j1 = long(n*(x->v(i)-gr->Min.x)/(gr->Max.x-gr->Min.x));
-		j2 = long(n*(y->v(i)-gr->Min.y)/(gr->Max.y-gr->Min.y));
-		if(j1>=0 && j1<n && j2>=0 && j2<n)
-			res->a[j1+n*j2] += a->v(i);
+		j1 = long((dx->a[i]-gr->Min.x)*vx);
+		j2 = long((dy->a[i]-gr->Min.y)*vy);
+		if(j1>=0 && j1<n && j2>=0 && j2<n)	res->a[j1+n*j2] += da->a[i];
+	}
+	else	for(i=0;i<nn;i++)
+	{
+		j1 = long((x->vthr(i)-gr->Min.x)*vx);
+		j2 = long((y->vthr(i)-gr->Min.y)*vy);
+		if(j1>=0 && j1<n && j2>=0 && j2<n)	res->a[j1+n*j2] += a->vthr(i);
 	}
 	gr->LoadState();	return res;
 }
@@ -387,14 +404,27 @@ HMDT mgl_hist_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *opt)
 	if(n<mglFitPnts)	n = mglFitPnts;
 	mglData *res = new mglData(n, n, n);
 	register long i,j1,j2,j3;
-	for(i=0;i<nn;i++)
+	const mglData *dx = dynamic_cast<const mglData *>(x);
+	const mglData *dy = dynamic_cast<const mglData *>(y);
+	const mglData *dz = dynamic_cast<const mglData *>(z);
+	const mglData *da = dynamic_cast<const mglData *>(a);
+	float vx = n/(gr->Max.x-gr->Min.x), vy = n/(gr->Max.y-gr->Min.y), vz = n/(gr->Max.z-gr->Min.z);
+	if(dx && dy && dz && da)	for(i=0;i<nn;i++)
 	{
-		if(gr->Stop)	{	delete res;	return 0;	}
-		j1 = long(n*(x->v(i)-gr->Min.x)/(gr->Max.x-gr->Min.x));
-		j2 = long(n*(y->v(i)-gr->Min.y)/(gr->Max.y-gr->Min.y));
-		j3 = long(n*(z->v(i)-gr->Min.z)/(gr->Max.z-gr->Min.z));
+		j1 = long((dx->a[i]-gr->Min.x)*vx);
+		j2 = long((dy->a[i]-gr->Min.y)*vy);
+		j3 = long((dz->a[i]-gr->Min.z)*vz);
 		if(j1>=0 && j1<n && j2>=0 && j2<n && j3>=0 && j3<n)
-			res->a[j1+n*(j2+n*j3)] += a->v(i);
+			res->a[j1+n*(j2+n*j3)] += da->a[i];
+	}
+	else	for(i=0;i<nn;i++)
+	{
+		if(gr->Stop)	{	res->Create(1,1,1);	return res;	}
+		j1 = long((x->vthr(i)-gr->Min.x)*vx);
+		j2 = long((y->vthr(i)-gr->Min.y)*vy);
+		j3 = long((z->vthr(i)-gr->Min.z)*vz);
+		if(j1>=0 && j1<n && j2>=0 && j2<n && j3>=0 && j3<n)
+			res->a[j1+n*(j2+n*j3)] += a->vthr(i);
 	}
 	gr->LoadState();	return res;
 }

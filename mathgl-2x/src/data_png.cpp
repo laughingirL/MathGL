@@ -112,13 +112,16 @@ void mgl_data_export(HCDT dd, const char *fname, const char *scheme,float v1,flo
 {
 	register long i,j,k;
 	long nx=dd->GetNx(), ny=dd->GetNy(), nz=dd->GetNz();
+	const mglData *md = dynamic_cast<const mglData *>(dd);
 	mreal vv;
 	if(v1>v2)	return;
 	if(ns<0 || ns>=nz)	ns=0;
 	if(v1==v2)
 	{
 		v1 = 1e20;	v2=-1e20;
-		for(i=0;i<nx*ny*nz;i++)
+		if(md)	for(i=0;i<nx*ny*nz;i++)
+		{	vv = md->a[i];	if(vv<v1)	v1=vv;	if(vv>v2)	v2=vv;	}
+		else	for(i=0;i<nx*ny*nz;i++)
 		{	vv = dd->vthr(i);	if(vv<v1)	v1=vv;	if(vv>v2)	v2=vv;	}
 	}
 	if(v1==v2)	return;
@@ -129,7 +132,13 @@ void mgl_data_export(HCDT dd, const char *fname, const char *scheme,float v1,flo
 	unsigned char **p = (unsigned char **)malloc(ny*sizeof(unsigned char *));
 	unsigned char *d = (unsigned char *)malloc(3*nx*ny*sizeof(unsigned char));
 	for(i=0;i<ny;i++)	p[i] = d+3*nx*(ny-1-i);
-	for(i=0;i<ny;i++)	for(j=0;j<nx;j++)
+	if(md)	for(i=0;i<ny;i++)	for(j=0;j<nx;j++)
+	{
+		k = long(num*(md->a[j+nx*(i+ny*nz)]-v1)/(v2-v1));
+		if(k<0)	k=0;	if(k>=num) k=num-1;
+		memcpy(d+3*(j+i*nx),c+3*k,3*sizeof(unsigned char));
+	}
+	else	for(i=0;i<ny;i++)	for(j=0;j<nx;j++)
 	{
 		k = long(num*(dd->v(j,i,ns)-v1)/(v2-v1));
 		if(k<0)	k=0;	if(k>=num) k=num-1;

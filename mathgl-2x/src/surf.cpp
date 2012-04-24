@@ -581,10 +581,10 @@ void mgl_surfa_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char *sch, cons
 		{
 			if(gr->Stop)	{	delete []pos;	return;	}
 			xx = GetX(x,i,j,k);		yy = GetY(y,i,j,k);
-			p = mglPoint(xx.x, yy.x, z->v(i,j,k));
+			float vv = z->v(i,j,k);	p = mglPoint(xx.x, yy.x, vv);
 			q = mglPoint(xx.y, yy.y, z->dvx(i,j,k));
 			s = mglPoint(xx.z, yy.z, z->dvy(i,j,k));
-			pos[i+n*j] = gr->AddPnt(p,gr->GetC(ss,z->v(i,j,k)),q^s,gr->GetA(c->v(i,j,k)));
+			pos[i+n*j] = gr->AddPnt(p,gr->GetC(ss,vv),q^s,gr->GetA(c->v(i,j,k)));
 		}
 		mgl_surf_plot(gr,pos,n,m);
 		if(sch && strchr(sch,'#'))

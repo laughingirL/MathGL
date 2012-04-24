@@ -119,11 +119,13 @@ void mgl_textw_xyz(HMGL gr, HCDT x, HCDT y, HCDT z,const wchar_t *text, const ch
 	long *nn = new long[n], *ff = new long[n];
 	mglPoint p;
 	register long i;
-	for(i=0;i<n;i++)
-	{
-		p = mglPoint(x->v(i),y->v(i),z->v(i));
-		ff[i] = gr->AddPnt(p,-1);
-	}
+	const mglData *mdx = dynamic_cast<const mglData *>(x);
+	const mglData *mdy = dynamic_cast<const mglData *>(y);
+	const mglData *mdz = dynamic_cast<const mglData *>(z);
+	if(mdx && mdy && mdz)	for(i=0;i<n;i++)
+	{	p = mglPoint(mdx->a[i],mdy->a[i],mdz->a[i]);	ff[i] = gr->AddPnt(p,-1);	}
+	else	for(i=0;i<n;i++)
+	{	p = mglPoint(x->v(i),y->v(i),z->v(i));	ff[i] = gr->AddPnt(p,-1);	}
 	for(i=1;i<n;i++)	nn[i-1] = i;
 	nn[n-1]=-1;
 	mgl_string_curve(gr,0,n,ff,nn,text,font,-1);
@@ -263,15 +265,27 @@ long *mgl_cont_prep(float val, HCDT a,long ak, std::vector<mglPnt2> &kk)
 	register long i,j,k, pc=0;
 	kk.clear();
 	// add intersection point of isoline and Y axis
-	for(i=0;i<n-1;i++)	for(j=0;j<m;j++)
+	const mglData *ma = dynamic_cast<const mglData *>(a);
+	if(a)
 	{
-		d = mgl_d(val,a->v(i,j,ak),a->v(i+1,j,ak));
-		if(d>=0 && d<1)	kk.push_back(mglPnt2(i+d,j));
+		for(i=0;i<n-1;i++)	for(j=0;j<m;j++)
+		{
+			d = mgl_d(val,ma->a[i+n*(j+m*ak)],ma->a[i+1+n*(j+m*ak)]);
+			if(d>=0 && d<1)	kk.push_back(mglPnt2(i+d,j));
+		}
+		// add intersection point of isoline and X axis
+		for(i=0;i<n;i++)	for(j=0;j<m-1;j++)
+		{
+			d = mgl_d(val,ma->a[i+n*(j+m*ak)],ma->a[i+n*(j+1+m*ak)]);
+			if(d>=0 && d<1)	kk.push_back(mglPnt2(i,j+d));
+		}
 	}
-	// add intersection point of isoline and X axis
-	for(i=0;i<n;i++)	for(j=0;j<m-1;j++)
+	else	for(i=0;i<n-1;i++)	for(j=0;j<m;j++)
 	{
-		d = mgl_d(val,a->v(i,j,ak),a->v(i,j+1,ak));
+		register float vv = a->v(i,j,ak);
+		d = (i<n-1)?mgl_d(val,vv,a->v(i+1,j,ak)):-1;
+		if(d>=0 && d<1)	kk.push_back(mglPnt2(i+d,j));
+		d = (j<m-1)?mgl_d(val,vv,a->v(i,j+1,ak)):-1;
 		if(d>=0 && d<1)	kk.push_back(mglPnt2(i,j+d));
 	}
 
@@ -400,7 +414,11 @@ void mgl_cont_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, c
 	{
 		xx.Create(z->GetNx(), z->GetNy());
 		yy.Create(z->GetNx(), z->GetNy());
-		for(i=0;i<n;i++)	for(j=0;j<m;j++)
+		const mglData *mx = dynamic_cast<const mglData *>(x);
+		const mglData *my = dynamic_cast<const mglData *>(y);
+		if(mx && my)	for(i=0;i<n;i++)	for(j=0;j<m;j++)
+		{	xx.a[i+n*j] = mx->a[i];	yy.a[i+n*j] = my->a[j];	}
+		else	for(i=0;i<n;i++)	for(j=0;j<m;j++)
 		{	xx.a[i+n*j] = x->v(i);	yy.a[i+n*j] = y->v(j);	}
 		x = &xx;	y = &yy;
 	}
@@ -600,7 +618,11 @@ void mgl_contf_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, 
 	{
 		xx.Create(z->GetNx(), z->GetNy());
 		yy.Create(z->GetNx(), z->GetNy());
-		for(j=0;j<m;j++)	for(i=0;i<n;i++)
+		const mglData *mx = dynamic_cast<const mglData *>(x);
+		const mglData *my = dynamic_cast<const mglData *>(y);
+		if(mx && my)	for(i=0;i<n;i++)	for(j=0;j<m;j++)
+		{	xx.a[i+n*j] = mx->a[i];	yy.a[i+n*j] = my->a[j];	}
+		else	for(i=0;i<n;i++)	for(j=0;j<m;j++)
 		{	xx.a[i+n*j] = x->v(i);	yy.a[i+n*j] = y->v(j);	}
 		x = &xx;	y = &yy;
 	}
@@ -700,7 +722,11 @@ void mgl_contd_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, 
 	{
 		xx.Create(z->GetNx(), z->GetNy());
 		yy.Create(z->GetNx(), z->GetNy());
-		for(i=0;i<n;i++)	for(j=0;j<m;j++)
+		const mglData *mx = dynamic_cast<const mglData *>(x);
+		const mglData *my = dynamic_cast<const mglData *>(y);
+		if(mx && my)	for(i=0;i<n;i++)	for(j=0;j<m;j++)
+		{	xx.a[i+n*j] = mx->a[i];	yy.a[i+n*j] = my->a[j];	}
+		else	for(i=0;i<n;i++)	for(j=0;j<m;j++)
 		{	xx.a[i+n*j] = x->v(i);	yy.a[i+n*j] = y->v(j);	}
 		x = &xx;	y = &yy;
 	}
@@ -814,7 +840,11 @@ void mgl_contv_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, 
 	{
 		xx.Create(z->GetNx(), z->GetNy());
 		yy.Create(z->GetNx(), z->GetNy());
-		for(i=0;i<n;i++)	for(j=0;j<m;j++)
+		const mglData *mx = dynamic_cast<const mglData *>(x);
+		const mglData *my = dynamic_cast<const mglData *>(y);
+		if(mx && my)	for(i=0;i<n;i++)	for(j=0;j<m;j++)
+		{	xx.a[i+n*j] = mx->a[i];	yy.a[i+n*j] = my->a[j];	}
+		else	for(i=0;i<n;i++)	for(j=0;j<m;j++)
 		{	xx.a[i+n*j] = x->v(i);	yy.a[i+n*j] = y->v(j);	}
 		x = &xx;	y = &yy;
 	}
@@ -969,6 +999,83 @@ void mgl_get_slice(_mgl_slice &s, HCDT x, HCDT y, HCDT z, HCDT a, char dir, floa
 	}
 }
 //-----------------------------------------------------------------------------
+void mgl_get_slice_md(_mgl_slice &s, const mglData *x, const mglData *y, const mglData *z, const mglData *a, char dir, float d, bool both)
+{
+	register long i,j,i0,i1,n=a->nx,m=a->ny,l=a->nz, nx=1,ny=1,p;
+
+	if(dir=='x')	{	nx = m;	ny = l;	if(d<0)	d = n/2.;	}
+	if(dir=='y')	{	nx = n;	ny = l;	if(d<0)	d = m/2.;	}
+	if(dir=='z')	{	nx = n;	ny = m;	if(d<0)	d = l/2.;	}
+	s.x.Create(nx,ny);	s.y.Create(nx,ny);
+	s.z.Create(nx,ny);	s.a.Create(nx,ny);
+	p = long(d);	d -= p;
+	if(dir=='x' && p>=n-1)	{	d+=p-n+2;	p=n-2;	}
+	if(dir=='y' && p>=m-1)	{	d+=p-m+2.;	p=m-2;	}
+	if(dir=='z' && p>=l-1)	{	d+=p-l+2;	p=l-2;	}
+	float v;
+
+	if(both)
+	{
+		if(dir=='x')	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
+		{
+			i0 = i+nx*j;	i1 = p+n*(i+m*j);
+			s.x.a[i0] = x->a[i1]*(1-d) + x->a[i1+1]*d;
+			s.y.a[i0] = y->a[i1]*(1-d) + y->a[i1+1]*d;
+			s.z.a[i0] = z->a[i1]*(1-d) + z->a[i1+1]*d;
+			s.a.a[i0] = a->a[i1]*(1-d) + a->a[i1+1]*d;
+		}
+		if(dir=='y')	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
+		{
+			i0 = i+nx*j;	i1 = i+n*(p+m*j);
+			s.x.a[i0] = x->a[i1]*(1-d) + x->a[i1+n]*d;
+			s.y.a[i0] = y->a[i1]*(1-d) + y->a[i1+n]*d;
+			s.z.a[i0] = z->a[i1]*(1-d) + z->a[i1+n]*d;
+			s.a.a[i0] = a->a[i1]*(1-d) + a->a[i1+n]*d;
+		}
+		if(dir=='z')	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
+		{
+			i0 = i+nx*j;	i1 = i+n*(j+m*p);
+			s.x.a[i0] = x->a[i1]*(1-d) + x->a[i1+n*m]*d;
+			s.y.a[i0] = y->a[i1]*(1-d) + y->a[i1+n*m]*d;
+			s.z.a[i0] = z->a[i1]*(1-d) + z->a[i1+n*m]*d;
+			s.a.a[i0] = a->a[i1]*(1-d) + a->a[i1+n*m]*d;
+		}
+	}
+	else	// x, y, z -- vectors
+	{
+		if(dir=='x')
+		{
+			v = x->a[p]*(1-d)+x->a[p+1]*d;
+			for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
+			{
+				i0 = i+nx*j;	s.x.a[i0] = v;	i1 = p+n*(i+m*j);
+				s.y.a[i0] = y->a[i];	s.z.a[i0] = z->a[j];
+				s.a.a[i0] = a->a[i1]*(1-d) + a->a[i1+1]*d;
+			}
+		}
+		if(dir=='y')
+		{
+			v = y->a[p]*(1-d)+y->a[p+1]*d;
+			for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
+			{
+				i0 = i+nx*j;	s.y.a[i0] = v;	i1 = i+n*(p+m*j);
+				s.x.a[i0] = x->a[i];	s.z.a[i0] = z->a[j];
+				s.a.a[i0] = a->a[i1]*(1-d) + a->a[i1+n]*d;
+			}
+		}
+		if(dir=='z')
+		{
+			v = z->a[p]*(1-d)+z->a[p+1]*d;
+			for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
+			{
+				i0 = i+nx*j;	s.z.a[i0] = v;	i1 = i+n*(j+m*p);
+				s.x.a[i0] = x->a[i];	s.y.a[i0] = y->a[j];
+				s.a.a[i0] = a->a[i1]*(1-d) + a->a[i1+n*m]*d;
+			}
+		}
+	}
+}
+//-----------------------------------------------------------------------------
 void mgl_cont3_xyz_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, float sVal, const char *opt)
 {
 	long n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
@@ -987,7 +1094,12 @@ void mgl_cont3_xyz_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, HCDT a, const ch
 	gr->SetPenPal(sch);
 
 	_mgl_slice s;
-	mgl_get_slice(s,x,y,z,a,dir,sVal,both);
+	const mglData *mx = dynamic_cast<const mglData *>(x);
+	const mglData *my = dynamic_cast<const mglData *>(y);
+	const mglData *mz = dynamic_cast<const mglData *>(z);
+	const mglData *ma = dynamic_cast<const mglData *>(a);
+	if(mx&&my&&mz&&ma)	mgl_get_slice_md(s,mx,my,mz,ma,dir,sVal,both);
+	else mgl_get_slice(s,x,y,z,a,dir,sVal,both);
 	for(long i=0;i<v->GetNx();i++)
 	{
 		float v0 = v->v(i);
@@ -1068,7 +1180,12 @@ void mgl_dens3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, flo
 	if(sch && strchr(sch,'z'))	dir='z';
 
 	_mgl_slice s;
-	mgl_get_slice(s,x,y,z,a,dir,sVal,both);
+	const mglData *mx = dynamic_cast<const mglData *>(x);
+	const mglData *my = dynamic_cast<const mglData *>(y);
+	const mglData *mz = dynamic_cast<const mglData *>(z);
+	const mglData *ma = dynamic_cast<const mglData *>(a);
+	if(mx&&my&&mz&&ma)	mgl_get_slice_md(s,mx,my,mz,ma,dir,sVal,both);
+	else mgl_get_slice(s,x,y,z,a,dir,sVal,both);
 	mgl_surfc_xy(gr,&s.x,&s.y,&s.z,&s.a,sch,0);
 }
 //-----------------------------------------------------------------------------
@@ -1113,7 +1230,12 @@ void mgl_grid3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, flo
 	if(sch && strchr(sch,'z'))	dir='z';
 
 	_mgl_slice s;
-	mgl_get_slice(s,x,y,z,a,dir,sVal,both);
+	const mglData *mx = dynamic_cast<const mglData *>(x);
+	const mglData *my = dynamic_cast<const mglData *>(y);
+	const mglData *mz = dynamic_cast<const mglData *>(z);
+	const mglData *ma = dynamic_cast<const mglData *>(a);
+	if(mx&&my&&mz&&ma)	mgl_get_slice_md(s,mx,my,mz,ma,dir,sVal,both);
+	else mgl_get_slice(s,x,y,z,a,dir,sVal,both);
 	mgl_mesh_xy(gr,&s.x,&s.y,&s.z,sch,0);
 }
 //-----------------------------------------------------------------------------
@@ -1159,7 +1281,12 @@ void mgl_contf3_xyz_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, HCDT a, const c
 
 	long ss=gr->AddTexture(sch);
 	_mgl_slice s;
-	mgl_get_slice(s,x,y,z,a,dir,sVal,both);
+	const mglData *mx = dynamic_cast<const mglData *>(x);
+	const mglData *my = dynamic_cast<const mglData *>(y);
+	const mglData *mz = dynamic_cast<const mglData *>(z);
+	const mglData *ma = dynamic_cast<const mglData *>(a);
+	if(mx&&my&&mz&&ma)	mgl_get_slice_md(s,mx,my,mz,ma,dir,sVal,both);
+	else mgl_get_slice(s,x,y,z,a,dir,sVal,both);
 	for(long i=0;i<v->GetNx()-1;i++)
 	{
 		float v0 = v->v(i);
@@ -1281,31 +1408,45 @@ void mgl_axial_gen(HMGL gr, float val, HCDT a, HCDT x, HCDT y, float c, char dir
 
 	mglPoint *kk = new mglPoint[2*n*m],*pp = new mglPoint[2*n*m],p;
 	float d, kx, ky;
-	register long i,j,k, pc=0;
+	register long i,j,k, pc=0,i0;
 	// Usually number of points is much smaller. So, there is no reservation.
 	//	gr->Reserve(2*n*m);
 
-	// add intersection point of isoline and Y axis
-	for(j=0;j<m;j++)	for(i=0;i<n-1;i++)
+	// add intersection point of isoline and X or Y axis
+	const mglData *mx = dynamic_cast<const mglData *>(x);
+	const mglData *my = dynamic_cast<const mglData *>(y);
+	const mglData *ma = dynamic_cast<const mglData *>(a);
+	if(mx&&my&&ma)	for(j=0;j<m;j++)	for(i=0;i<n;i++)
 	{
 		if(gr->Stop)	{	delete []kk;	delete []pp;	return;	}
-		d = mgl_d(val,a->v(i,j,ak),a->v(i+1,j,ak));
+		i0 = i+n*j;
+		d = (i<n-1)?mgl_d(val,ma->a[i0+n*m*ak],ma->a[i0+1+n*m*ak]):-1;
 		if(d>=0 && d<1)
 		{
-			pp[pc] = mglPoint(x->v(i,j)*(1-d)+x->v(i+1,j)*d,
-							  y->v(i,j)*(1-d)+y->v(i+1,j)*d);
+			pp[pc] = mglPoint(mx->a[i0]*(1-d)+mx->a[i0+1]*d, my->a[i0]*(1-d)+my->a[i0+1]*d);
 			kk[pc] = mglPoint(i+d,j);	pc++;
 		}
-	}
-	// add intersection point of isoline and X axis
-	for(j=0;j<m-1;j++)	for(i=0;i<n;i++)
-	{
-		if(gr->Stop)	{	delete []kk;	delete []pp;	return;	}
-		d = mgl_d(val,a->v(i,j,ak),a->v(i,j+1,ak));
+		d = (j<m-1)?mgl_d(val,ma->a[i0+n*m*ak],ma->a[i0+n*m*ak+n]):-1;
 		if(d>=0 && d<1)
 		{
-			pp[pc] = mglPoint(x->v(i,j)*(1-d)+x->v(i,j+1)*d,
-							  y->v(i,j)*(1-d)+y->v(i,j+1)*d);
+			pp[pc] = mglPoint(mx->a[i0]*(1-d)+mx->a[i0+n]*d, my->a[i0]*(1-d)+my->a[i0+n]*d);
+			kk[pc] = mglPoint(i,j+d);	pc++;
+		}
+	}
+	else	for(j=0;j<m;j++)	for(i=0;i<n;i++)
+	{
+		if(gr->Stop)	{	delete []kk;	delete []pp;	return;	}
+		register float va=a->v(i,j,ak),vx=x->v(i,j),vy=y->v(i,j);
+		d = (i<n-1)?mgl_d(val,va,a->v(i+1,j,ak)):-1;
+		if(d>=0 && d<1)
+		{
+			pp[pc] = mglPoint(vx*(1-d)+x->v(i+1,j)*d, vy*(1-d)+y->v(i+1,j)*d);
+			kk[pc] = mglPoint(i+d,j);	pc++;
+		}
+		d = (j<m-1)?mgl_d(val,va,a->v(i,j+1,ak)):-1;
+		if(d>=0 && d<1)
+		{
+			pp[pc] = mglPoint(vx*(1-d)+x->v(i,j+1)*d, vy*(1-d)+y->v(i,j+1)*d);
 			kk[pc] = mglPoint(i,j+d);	pc++;
 		}
 	}
@@ -1373,7 +1514,11 @@ void mgl_axial_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, 
 	{
 		xx.Create(z->GetNx(), z->GetNy());
 		yy.Create(z->GetNx(), z->GetNy());
-		for(j=0;j<m;j++)	for(i=0;i<n;i++)
+		const mglData *mx = dynamic_cast<const mglData *>(x);
+		const mglData *my = dynamic_cast<const mglData *>(y);
+		if(mx && my)	for(i=0;i<n;i++)	for(j=0;j<m;j++)
+		{	xx.a[i+n*j] = mx->a[i];	yy.a[i+n*j] = my->a[j];	}
+		else	for(i=0;i<n;i++)	for(j=0;j<m;j++)
 		{	xx.a[i+n*j] = x->v(i);	yy.a[i+n*j] = y->v(j);	}
 		x = &xx;	y = &yy;
 	}
@@ -1461,9 +1606,16 @@ void mgl_torus(HMGL gr, HCDT r, HCDT z, const char *sch, const char *opt)
 	if(sch && strchr(sch,'z'))	dir = 'z';
 
 	float c = gr->GetC(ss,gr->Min.c);
+	const mglData *mr = dynamic_cast<const mglData *>(r);
+	const mglData *mz = dynamic_cast<const mglData *>(z);
 	for(j=0;j<r->GetNy();j++)
 	{
-		for(i=0;i<n;i++)
+		if(mr&&mz)	for(i=0;i<n;i++)
+		{
+			nn[i] = i<n-1 ? i+1 : -1;
+			pp[i] = mglPoint(mr->a[i+n*j], mz->a[i+n*j]);
+		}
+		else	for(i=0;i<n;i++)
 		{
 			nn[i] = i<n-1 ? i+1 : -1;
 			pp[i] = mglPoint(r->v(i,j), z->v(i,j));

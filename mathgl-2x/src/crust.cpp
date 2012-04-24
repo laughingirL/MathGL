@@ -196,8 +196,7 @@ void mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const
 		for(i=0;i<n;i++)	// add points
 		{
 			if(gr->Stop)	{	delete []kk;	delete []pp;	return;	}
-			q = mglPoint(x->v(i), y->v(i), z->v(i));
-			kk[i] = gr->AddPnt(q,gr->GetC(ss,a->v(i)),pp[i]);
+			kk[i] = gr->AddPnt(mglPoint(x->v(i), y->v(i), z->v(i)),gr->GetC(ss,a->v(i)), pp[i]);
 		}
 		for(i=0;i<m;i++)	// draw quads
 		{

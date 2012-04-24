@@ -1821,14 +1821,17 @@ void smgl_dots(mglGraph *gr)
 	gr->Box();	gr->Surf3(c,"bgrd");
 }*/
 //-----------------------------------------------------------------------------
+const char *mmgl_mirror="new a 30 40 '-pi*x*exp(-(y+1)^2-4*x^2)'\nalpha on:light on:rotate 40 60:box\n"
+"surf a 'r';yrange 0 1\nsurf a 'b';yrange 0 -1\n";
 void smgl_mirror(mglGraph *gr)	// flag #
 {
 	mglData a(30,40);
-	a.Modify("pi*(1-2*x)*exp(-4*y^2-4*(2*x-1)^2)");
+	gr->Fill(a,"-pi*x*exp(-(y+1)^2-4*x^2)");
 
+	if(!mini)	gr->Title("Example of options");
 	gr->Alpha(false);	gr->Rotate(40,60);
 	gr->Light(true);	gr->Box();
-	gr->Surf(a,"r","xrange 0 1"); gr->Surf(a,"b","xrange 0 -1");
+	gr->Surf(a,"r","yrange 0 1"); gr->Surf(a,"b","yrange 0 -1");
 }
 //-----------------------------------------------------------------------------
 //=============================================================================

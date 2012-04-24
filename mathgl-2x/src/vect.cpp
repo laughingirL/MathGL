@@ -58,20 +58,20 @@ void mgl_traj_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 			if(gr->Stop)	return;
 			nx = j<x->GetNy() ? j:0;	ny = j<y->GetNy() ? j:0;	nz = j<z->GetNy() ? j:0;
 			mx = j<ax->GetNy() ? j:0;	my = j<ay->GetNy() ? j:0;	mz = j<az->GetNy() ? j:0;
-			da = sqrt(ax->v(i,mx)*ax->v(i,mx)+ay->v(i,my)*ay->v(i,my)+az->v(i,mz)*az->v(i,mz));
+			p1 = mglPoint(x->v(i,nx), y->v(i,ny), z->v(i,nz));
+			p2 = mglPoint(ax->v(i,mx),ay->v(i,my),az->v(i,mz));
+			da = p2.norm();
 			if(len==0)
 			{
 				if(i<n-1)
-				{	dx=x->v(i+1,nx)-x->v(i,nx);	dy=y->v(i+1,ny)-y->v(i,ny);	dz=z->v(i+1,nz)-z->v(i,nz);	}
+				{	dx=x->v(i+1,nx)-p1.x;	dy=y->v(i+1,ny)-p1.y;	dz=z->v(i+1,nz)-p1.z;	}
 				else
-				{	dx=x->v(i,nx)-x->v(i-1,nx);	dy=y->v(i,ny)-y->v(i-1,ny);	dz=z->v(i,nz)-z->v(i-1,nz);	}
+				{	dx=p1.x-x->v(i-1,nx);	dy=p1.y-y->v(i-1,ny);	dz=p1.z-z->v(i-1,nz);	}
 				dd = da ? 1/da : 0;		dd *= sqrt(dx*dx+dy*dy+dz*dz);
 			}
 			else dd = len;
 
-			p1 = mglPoint(x->v(i,nx), y->v(i,ny), z->v(i,nz));
-			p2 = mglPoint(x->v(i,nx)+dd*ax->v(i,mx), y->v(i,ny)+dd*ay->v(i,my), z->v(i,nz)+dd*az->v(i,mz));
-			nx = gr->AddPnt(p1);	ny = gr->AddPnt(p2);
+			nx = gr->AddPnt(p1);	ny = gr->AddPnt(p1+dd*p2);
 			gr->vect_plot(nx,ny);
 		}
 	}
@@ -128,11 +128,12 @@ void mgl_vect_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, con
 	if(tx<1)	tx=1;	if(ty<1)	ty=1;
 	float xm=0,ym,dx,dy;
 	float dd,dm=(fabs(gr->Max.c)+fabs(gr->Min.c))*1e-5;
+	float vx,vy;
 
 	for(k=0;k<ax->GetNz();k++)	for(j=0;j<m;j++)	for(i=0;i<n;i++)
 	{
-		ym = ax->v(i,j,k)*ax->v(i,j,k)+ay->v(i,j,k)*ay->v(i,j,k);
-		xm = xm>ym ? xm : ym;
+		vx = ax->v(i,j,k);	vy = ay->v(i,j,k);
+		ym = vx*vx+vy*vy;	xm = xm>ym ? xm : ym;
 	}
 	xm = 1./(xm==0 ? 1:sqrt(xm));
 	long n1,n2;
@@ -148,9 +149,10 @@ void mgl_vect_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, con
 			xx = GetX(x,i,j,k).x;	yy = GetY(y,i,j,k).x;
 			dx = i<n-1 ? (GetX(x,i+1,j,k).x-xx) : (xx-GetX(x,i-1,j,k).x);
 			dy = j<m-1 ? (GetY(y,i,j+1,k).x-yy) : (yy-GetY(y,i,j-1,k).x);
-			dx *= tx;	dy *= ty;	dd = hypot(ax->v(i,j,k),ay->v(i,j,k));
-			dx *= fix ? (dd>dm ? ax->v(i,j,k)/dd : 0) : ax->v(i,j,k)*xm;
-			dy *= fix ? (dd>dm ? ay->v(i,j,k)/dd : 0) : ay->v(i,j,k)*xm;
+			vx = ax->v(i,j,k);	vy = ay->v(i,j,k);
+			dx *= tx;	dy *= ty;	dd = hypot(vx,vy);
+			dx *= fix ? (dd>dm ? vx/dd : 0) : vx*xm;
+			dy *= fix ? (dd>dm ? vy/dd : 0) : vy*xm;
 
 			if(end)			{	p1 = mglPoint(xx-dx,yy-dy,zVal);	p2 = mglPoint(xx,yy,zVal);	}
 			else if(beg)	{	p1 = mglPoint(xx,yy,zVal);	p2 = mglPoint(xx+dx,yy+dy,zVal);	}
@@ -214,11 +216,12 @@ void mgl_vect_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 	if(gr->MeshNum>1)
 	{	tx=(n-1)/(gr->MeshNum-1);	ty=(m-1)/(gr->MeshNum-1);	tz=(l-1)/(gr->MeshNum-1);}
 	if(tx<1)	tx=1;	if(ty<1)	ty=1;	if(tz<1)	tz=1;
+	mglPoint p;
 
 	for(k=0;k<l;k++)	for(j=0;j<m;j++)	for(i=0;i<n;i++)
 	{
-		ym = ax->v(i,j,k)*ax->v(i,j,k)+ay->v(i,j,k)*ay->v(i,j,k)+az->v(i,j,k)*az->v(i,j,k);
-		xm = xm>ym ? xm : ym;
+		p = mglPoint(ax->v(i,j,k),ay->v(i,j,k),az->v(i,j,k));
+		ym = p.x*p.x+p.y*p.y+p.z*p.z;	xm = xm>ym ? xm : ym;
 	}
 	xm = 1./(xm==0 ? 1:sqrt(xm));
 
@@ -234,10 +237,10 @@ void mgl_vect_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 		dy = j<m-1 ? (GetY(y,i,j+1,k).x-yy) : (yy-GetY(y,i,j-1,k).x);
 		dz = k<l-1 ? (GetZ(z,i,j,k+1).x-zz) : (zz-GetZ(z,i,j,k-1).x);
 		dx *= tx;	dy *= ty;	dz *= tz;
-		dd = sqrt(ax->v(i,j,k)*ax->v(i,j,k)+ay->v(i,j,k)*ay->v(i,j,k)+az->v(i,j,k)*az->v(i,j,k));
-		dx *= fix ? (dd>dm ? ax->v(i,j,k)/dd : 0) : ax->v(i,j,k)*xm;
-		dy *= fix ? (dd>dm ? ay->v(i,j,k)/dd : 0) : ay->v(i,j,k)*xm;
-		dz *= fix ? (dd>dm ? az->v(i,j,k)/dd : 0) : az->v(i,j,k)*xm;
+		p = mglPoint(ax->v(i,j,k),ay->v(i,j,k),az->v(i,j,k));	dd = p.norm();
+		dx *= fix ? (dd>dm ? p.x/dd : 0) : p.x*xm;
+		dy *= fix ? (dd>dm ? p.y/dd : 0) : p.y*xm;
+		dz *= fix ? (dd>dm ? p.z/dd : 0) : p.z*xm;
 
 		if(end)			{	p1 = mglPoint(xx-dx,yy-dy,zz-dz);	p2 = mglPoint(xx,yy,zz);	}
 		else if(beg)	{	p1 = mglPoint(xx,yy,zz);	p2 = mglPoint(xx+dx,yy+dy,zz+dz);	}
