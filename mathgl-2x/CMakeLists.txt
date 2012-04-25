@@ -30,6 +30,8 @@ option(enable-doc "Enable documentation building")
 
 include_directories( ${MathGL_SOURCE_DIR}/include ${MathGL_BINARY_DIR}/include)
 
+find_library(M_LIB m)
+
 if(enable-double)
 	set(MGL_USE_DOUBLE 1)
 else(enable-double)

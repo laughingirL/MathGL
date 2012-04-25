@@ -93,7 +93,7 @@ if(MGL_HAVE_OPENGL)
 	include_directories(${OPENGL_INCLUDE_DIR} )
 endif(MGL_HAVE_OPENGL)
 
-target_link_libraries(mgl ${PNG_LIBRARIES} ${ZLIB_LIBRARIES} m)
+target_link_libraries(mgl ${PNG_LIBRARIES} ${ZLIB_LIBRARIES} ${M_LIB})
 include_directories(${PNG_INCLUDE_DIR} ${ZLIB_INCLUDE_DIR})
 file(TO_NATIVE_PATH $(MGL_FONT_PATH) MGL_FONT_PATH_SYS)
 #add_definitions(-DMGL_FONT_PATH="${MGL_FONT_PATH_SYS}")
