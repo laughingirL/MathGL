@@ -47,6 +47,8 @@ at all) + testing
 33. Check feature:
 * dash for rect, ellipse boundary
 
+34. Hotkeys
+
 
 ============= UDAV =============
 

@@ -37,9 +37,8 @@ public:
 	{
 		if(kind==-1)	gr=NULL;
 #ifndef NO_OPENGL
-		else if(kind==1)		gr=mgl_create_graph_gl();
+		else if(kind==1)	gr=mgl_create_graph_gl();
 #endif
-//		else if(kind==2)	gr=mgl_create_graph_idtf();
 		else	gr=mgl_create_graph(width, height);
 	}
 	inline mglGraph(const mglGraph &graph)

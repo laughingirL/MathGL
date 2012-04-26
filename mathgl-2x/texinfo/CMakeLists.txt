@@ -23,11 +23,13 @@ if(MGL_HAVE_DOC)
 		COMMAND ${CMAKE_BINARY_DIR}/examples/mgl_example
 		COMMAND touch ${CMAKE_SOURCE_DIR}/texinfo/png/all.png
 		WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/texinfo/png
+		DEPENDS mgl_example
 	)
 	add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/texinfo/small/all.png
 		COMMAND ${CMAKE_BINARY_DIR}/examples/mgl_example -mini
 		COMMAND touch ${CMAKE_SOURCE_DIR}/texinfo/small/all.png
 		WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/texinfo/small
+		DEPENDS mgl_example
 	)
 #	set_source_files_properties(${CMAKE_BINARY_DIR}/examples/mgl_example PROPERTIES GENERATED 1)
 #	ADD_CUSTOM_TARGET(gen_all_png DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/png/all.png)

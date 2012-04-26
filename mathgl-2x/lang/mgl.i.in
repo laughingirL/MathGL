@@ -58,16 +58,13 @@ typedef float mreal;
 %rename(__div) operator/;
 %rename(__eq) operator==;
 %rename(__ne) operator!=;
-//%typemap(in,noblock=1) (double* d, int rows, int cols) (Matrix tmp) {
-//	if (!$input.is_matrix_type()) {
-//		error("A must be a matrix");
-//	SWIG_fail;
-//	}
-//	tmp=$input.matrix_value();
-//	$1=tmp.data();
-//	$2=tmp.rows();
-//	$3=tmp.columns();
-//}
+%typemap(in,noblock=1) (double* d, int rows, int cols) (Matrix tmp) {
+	if (!$input.is_matrix_type())	{	error("A must be a matrix");	SWIG_fail;	}
+	tmp=$input.matrix_value();
+	$1=tmp.data();
+	$2=tmp.rows();
+	$3=tmp.columns();
+}
 #endif
 
 #ifdef SWIGPYTHON

@@ -21,6 +21,10 @@
 #include <math.h>
 #include <algorithm>
 #include "mgl2/canvas.h"
+#ifdef _MSC_VER
+#define fmin(a,b)	((a)<(b))?(a):(b)
+#define fmax(a,b)	((a)>(b))?(a):(b)
+#endif
 //-----------------------------------------------------------------------------
 void mglCanvas::SetSize(int w,int h)
 {

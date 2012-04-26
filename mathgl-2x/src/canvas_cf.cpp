@@ -197,7 +197,7 @@ int mgl_get_spl_id_(uintptr_t *gr, int *x, int *y)	{	return _GR_->GetSplId(*x,*y
 //-----------------------------------------------------------------------------
 HMGL mgl_create_graph(int width, int height)
 {	return new mglCanvas(width,height);	}
-void mgl_delete_graph(HMGL gr)	{	delete gr;	}
+void mgl_delete_graph(HMGL gr)	{	if(gr)	delete gr;	}
 void mgl_set_size(HMGL gr, int width, int height)
 {	_Gr_->SetSize(width, height);	}
 void mgl_set_def_param(HMGL gr)	{	_Gr_->DefaultPlotParam();	}

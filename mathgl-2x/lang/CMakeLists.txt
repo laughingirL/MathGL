@@ -76,19 +76,35 @@ message(STATUS "${oct_prog} ${oct_host} ${oct_api}")
 	)
 #		-L$<TARGET_LINKER_FILE_DIR:mgl>                      #commented out for compatibilty reason with old cmake
 #		-L$<TARGET_LINKER_FILE_DIR:mgl-wnd>                  #commented out for compatibilty reason with old cmake
-	add_custom_command(OUTPUT ${pkg_name}/inst/${oct_arch}/mathgl.oct
-		COMMAND ${oct_mk} ${MGL_DEF}
+	add_custom_command(OUTPUT mgl_octave.o
+		COMMAND ${oct_mk} -c ${MGL_DEF}
 		-I${oct_inc} -I${BIN_INC} -I${SRC_INC}
+		-o mgl_octave.o mgl_octave.cpp
+		DEPENDS ${src_dep} mgl_octave.cpp
+		IMPLICIT_DEPENDS CXX ${src_imp_dep}
+	)
+	add_custom_command(OUTPUT ${pkg_name}/inst/${oct_arch}/mathgl.oct
+		COMMAND ${oct_mk}
 		-L${MGL_LINK_DIR}
 		-L${MGL_WND_LINK_DIR}
 		-lmgl-wnd -lmgl
-		-o ${pkg_name}/inst/${oct_arch}/mathgl.oct mgl_octave.cpp
-		DEPENDS ${dep_libs} ${src_dep} mgl_octave.cpp
-		IMPLICIT_DEPENDS CXX ${src_imp_dep}
+		-o ${pkg_name}/inst/${oct_arch}/mathgl.oct mgl_octave.o
+		DEPENDS ${dep_libs} mgl_octave.o
 	)
+#	add_custom_command(OUTPUT ${pkg_name}/inst/${oct_arch}/mathgl.oct
+#		COMMAND ${oct_mk} ${MGL_DEF}
+#		-I${oct_inc} -I${BIN_INC} -I${SRC_INC}
+#		-L${MGL_LINK_DIR}
+#		-L${MGL_WND_LINK_DIR}
+#		-lmgl-wnd -lmgl
+#		-o ${pkg_name}/inst/${oct_arch}/mathgl.oct mgl_octave.cpp
+#		DEPENDS ${dep_libs} ${src_dep} mgl_octave.cpp
+#	)
 	add_custom_command(OUTPUT mathgl.tar.gz
 		COMMAND ${oct_tar} cpzvf mathgl.tar.gz ${pkg_name}
 		DEPENDS ${pkg_name}/inst/${oct_arch}/mathgl.oct
 	)
 	add_custom_target(mgl_octave_module ALL DEPENDS mathgl.tar.gz)
+	install(CODE "execute_process(COMMAND ${oct_exec} ${CMAKE_SOURCE_DIR}/lang/install.m WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/lang )")
+
 endif(MGL_HAVE_OCTAVE)

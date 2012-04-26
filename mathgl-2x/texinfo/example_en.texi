@@ -296,7 +296,7 @@ int main(int argc,char **argv)
     pnt = mglPoint(2*mgl_rnd()-1,2*mgl_rnd()-1);
     gr.Clf();             // make new drawing
     gr.Line(mglPoint(),pnt,"Ar2");
-    char str[10] = "i=0"; str[3] = '0'+i;
+    char str[10] = "i=0"; str[2] = '0'+i;
     gr.Puts(mglPoint(),"");
     gr.Update();          // update window when you need it
   }
