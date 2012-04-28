@@ -1067,7 +1067,7 @@ int mgl_cmp_flt(const void *a, const void *b)
 void mgl_boxplot_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
 {
 	long n=y->GetNx(), m=y->GetNy(), nx=x->GetNx();
-	if(nx<n)	{	gr->SetWarn(mglWarnDim,"BoxPlot");	return;	}
+	if(nx<n || nx<2)	{	gr->SetWarn(mglWarnDim,"BoxPlot");	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("BoxPlot",cgid++);
 	float *b = new float[5*n], *d = new float[m], x1, x2, dd;
@@ -1128,7 +1128,7 @@ void mgl_boxplot_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
 //-----------------------------------------------------------------------------
 void mgl_boxplot(HMGL gr, HCDT y, const char *pen, const char *opt)
 {
-	if(y->GetNx()<2)	{	gr->SetWarn(mglWarnLow,"BoxPlot");	return;	}
+//	if(y->GetNx()<2)	{	gr->SetWarn(mglWarnLow,"BoxPlot");	return;	}
 	gr->SaveState(opt);
 	mglData x(y->GetNx()+1);
 	x.Fill(gr->Min.x,gr->Max.x);
