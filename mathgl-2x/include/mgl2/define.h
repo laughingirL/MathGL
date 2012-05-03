@@ -28,7 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MGL_VER2	0.0
+#define MGL_VER2	0.1
 
 //#ifdef WIN32
 #ifdef _MSC_VER

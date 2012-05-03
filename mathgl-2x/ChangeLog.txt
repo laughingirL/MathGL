@@ -1,1 +1,11 @@
+2.0.1 Released 4 May 2012
+
+* Improve speed of drawing
+* Add reading 3d data files using mglData::ReadMat()
+* Improve build system
+	- Add multithreading
+	- Add install for Octave
+	- Separate enable-doc option from enable-all
+* Minor bugfixes
+
 2.0 Released 12 April 2012

@@ -47,7 +47,7 @@ void smgl_combined(mglGraph *gr);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	mglData d,x,y,z,v(91);	d.ReadMat("/home/balakin/Downloads/mgl/1.dat");
+	mglData d,x,y,z,v(91);	d.ReadMat("/home/balakin/download/1.dat");
 	x=d.SubData(0);	y=d.SubData(1);	z=d.SubData(2);
 	gr->SetRanges(x,y,z);
 	gr->Dens(x,y,z);
