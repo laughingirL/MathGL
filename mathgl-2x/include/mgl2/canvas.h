@@ -38,7 +38,7 @@ struct mglMatrix
 	float x,y,z,pf;
 	mglMatrix()	{	clear();	}
 	inline void clear()	{	x=y=z=0;	memset(b,0,9*sizeof(float));	b[0]=b[4]=b[8]=1;	}
-	inline mglMatrix &operator=(mglMatrix &a)
+	inline mglMatrix &operator=(const mglMatrix &a)
 	{	x=a.x;	y=a.y;	z=a.z;	pf=a.pf;	memcpy(b,a.b,9*sizeof(float));	return *this;	}
 };
 //-----------------------------------------------------------------------------

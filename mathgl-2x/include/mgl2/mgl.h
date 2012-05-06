@@ -23,9 +23,6 @@
 #include "mgl2/define.h"
 #include "mgl2/mgl_cf.h"
 #include "mgl2/data.h"
-#ifndef NO_OPENGL
-#include "mgl2/opengl.h"
-#endif
 //-----------------------------------------------------------------------------
 /// Wrapper class for all graphics
 class mglGraph

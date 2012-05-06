@@ -33,4 +33,15 @@
 #include "mgl2/canvas_cf.h"
 #include "mgl2/addon.h"
 /*****************************************************************************/
+#ifndef NO_OPENGL
+#ifdef __cplusplus
+extern "C" {
+#endif
+HMGL mgl_create_graph_gl();
+uintptr_t mgl_create_graph_gl_();
+#ifdef __cplusplus
+}
+#endif
+#endif
+/*****************************************************************************/
 #endif
