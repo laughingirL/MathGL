@@ -3141,20 +3141,18 @@ Using the @code{Hist} function(s) for making regular distributions is one of use
 @verbatim
 int sample(mglGraph *gr)
 {
-  mglData a(50, 40), b(50, 40);
-  gr->Puts(mglPoint(0, 0), "\\to", ":C", -1.4);
-  gr->SetRanges(-1,1,-1,1,-2,2);
-
-  gr->SubPlot(2, 1, 0);
-  gr->Fill(a,"x");  gr->Fill(b,"y");
-  gr->Puts(mglPoint(0, 1.1), "\\{x, y\\}", ":C", -2);   gr->Box();
-  gr->Map(a, b, "brgk");
-
-  gr->SubPlot(2, 1, 1);
-  gr->Fill(a,"(x^3+y^3)/2");  gr->Fill(b,"(x-y)/2");
-  gr->Puts(mglPoint(0, 1.1), "\\{\\frac{x^3+y^3}{2}, \\frac{x-y}{2}\\}", ":C", -2);
-  gr->Box();
-  gr->Map(a, b, "brgk");
+  mglData x(10000), y(10000), z(10000);  gr->Fill(x,"2*rnd-1");
+  gr->Fill(y,"2*rnd-1"); gr->Fill(z,"exp(-6*(v^2+w^2))",x,y);
+  mglData xx=gr->Hist(x,z), yy=gr->Hist(y,z);	xx.Norm(0,1);
+  yy.Norm(0,1);
+  gr->MultiPlot(3,3,3,2,2,"");   gr->SetRanges(-1,1,-1,1,0,1);
+  gr->Box();  gr->Dots(x,y,z,"wyrRk");
+  gr->MultiPlot(3,3,0,2,1,"");   gr->SetRanges(-1,1,0,1);
+  gr->Box();  gr->Bars(xx);
+  gr->MultiPlot(3,3,5,1,2,"");   gr->SetRanges(0,1,-1,1);
+  gr->Box();  gr->Barh(yy);
+  gr->SubPlot(3,3,2);
+  gr->Puts(mglPoint(0.5,0.5),"Hist and\nMultiPlot\nsample","a",-6);
   return 0;
 }
 @end verbatim

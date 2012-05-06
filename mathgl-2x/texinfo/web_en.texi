@@ -1,6 +1,6 @@
 \input texinfo
 @setfilename mgl_web_en.info
-@set VERSION 2.0
+@set VERSION 2.0.1
 @settitle MathGL @value{VERSION}
 @syncodeindex pg cp
 @comment %**end of header
@@ -141,6 +141,8 @@ Generally MathGL is GPL library. However, you can use LGPL license for MathGL co
 
 @strong{Latest news}
 @itemize
+@item @emph{8 May 2012.}
+New version (v.@value{VERSION}) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are speeding up and minor bugfixes and improvements, which partially denoted @ref{News, here}.
 @item @emph{12 April 2012.}
 New version (v.2.0) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are a lot of new features, which partially denoted @ref{News, here}.
 @end itemize
@@ -153,6 +155,23 @@ There is detailed @ref{News, news list}. Sourceforge project page @uref{http://s
 @section News
 
 @itemize
+
+@item
+@strong{8 May 2012.}
+New version (v.2.0.1) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are speeding up and minor bugfixes and improvements:
+@itemize @bullet
+@item
+Improve speed of drawing
+@item
+Add reading 3d data files using mglData::ReadMat()
+@item
+Exclude unnecessary dependencies/inclusions
+@item
+Improve build system: add multithreading; add install for Octave; separate enable-doc option from enable-all
+@item
+Minor bugfixes
+@end itemize
+
 @item 
 @strong{12 April 2012.}
 New version (v.2.0) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are a lot of new features, which partially denoted below.
@@ -417,20 +436,20 @@ For more details see @uref{../doc_en/mathgl_en_166.html#MGL-scripts, MathGL docu
 @node Download, Other projects, MGL scripts, Top
 @section Download
 
-@strong{Stable version (v.2.0)}
+@strong{Stable version (v.@value{VERSION})}
 
 You may download current version of MathGL for following configurations:
 @itemize @bullet
 @item
-@uref{http://downloads.sourceforge.net/mathgl/mathgl-2.0.tar.gz,source} file with cmake build system.
+@uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}.tar.gz,source} file with cmake build system.
 @item
-@uref{http://downloads.sourceforge.net/mathgl/mathgl-2.0-mingw.i686.7z,Win32 GPL} binaries for MinGW (build for i686)
+@uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}-mingw.i686.7z,Win32 GPL} binaries for MinGW (build for i686)
 @item
-@uref{http://downloads.sourceforge.net/mathgl/mathgl-2.0.LGPL-mingw.i686.7z,Win32 LGPL} binaries for MinGW (build for i686, no GSL and HDF5 support)
+@uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}.LGPL-mingw.i686.7z,Win32 LGPL} binaries for MinGW (build for i686, no GSL and HDF5 support)
 @item
-@uref{http://downloads.sourceforge.net/mathgl/mathgl-2.0-1.DevPack,DevPak} package for Dev-C++ or Code::Blocks (GPL version)
+@uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}-1.DevPack,DevPak} package for Dev-C++ or Code::Blocks (GPL version)
 @item
-@uref{http://downloads.sourceforge.net/mathgl/mathgl-2.0.eng.pdf,PDF} documentation in English
+@uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}.eng.pdf,PDF} documentation in English
 @c HTML documentation in English
 @c HTML documentation in Russian
 @c @item
