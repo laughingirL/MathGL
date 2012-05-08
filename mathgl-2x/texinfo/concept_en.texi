@@ -87,7 +87,7 @@ Marker types are: @samp{o} -- circle, @samp{+} -- cross, @samp{x} -- skew cross,
 
 One may specify to draw a special symbol (an arrow) at the beginning and at the end of line. This is done if the specification string contains one of the following symbols: @samp{A} -- outer arrow, @samp{V} -- inner arrow, @samp{I} -- transverse hatches, @samp{K} -- arrow with hatches, @samp{T} -- triangle, @samp{S} -- square, @samp{D} -- rhombus, @samp{O} -- circle, @samp{_} -- nothing (the default). The following rule applies: the first symbol specifies the arrow at the end of line, the second specifies the arrow at the beginning of the line. For example, @samp{r-A} defines a red solid line with usual arrow at the end, @samp{b|AI} defines a blue dash line with an arrow at the end and with hatches at the beginning, @samp{_O} defines a line with the current style and with a circle at the beginning. These styles are applicable during the graphics plotting as well (for example, @ref{1D plotting}).
 
-@fig{png/style, Color and line styles.}
+@pfig{style, Color and line styles.}
 
 @c ------------------------------------------------------------------
 @node Color scheme, Font styles, Line styles, General concepts
@@ -101,7 +101,7 @@ The final color is a linear interpolation of color array. The color array is con
 
 There are several useful combinations. String @samp{kw} corresponds to the simplest gray color scheme where higher values are brighter. String @samp{wk} presents the inverse gray color scheme where higher value is darker. Strings @samp{kRryw}, @samp{kGgw}, @samp{kBbcw} present the well-known @emph{hot}, @emph{summer} and @emph{winter} color schemes. Strings @samp{BbwrR} and @samp{bBkRr} allow to view bi-color figure on white or black background, where negative values are blue and positive values are red. String @samp{BbcyrR} gives a color scheme similar to the well-known @emph{jet} color scheme.
 
-@fig{png/schemes, Most popular color schemes.}
+@pfig{schemes, Most popular color schemes.}
 
 When coloring by @emph{coordinate} (used in @ref{map}), the final color is determined by the position of the point in 3d space and is calculated from formula c=x*c[1] + y*c[2]. Here, c[1], c[2] are the first two elements of color array; x, y are normalized to axis range coordinates of the point.
 @c This type of coloring is useful for isosurface plot where color may show the exact position of a piece of surface.
