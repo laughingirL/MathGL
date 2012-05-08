@@ -133,12 +133,16 @@ long mglBase::AddPnt(mglPoint p, float c, mglPoint n, float a, int scl)
 		q.x=q.xx=p.x;	q.y=q.yy=p.y;	q.z=q.zz=p.z;
 		q.c=c;	q.t=q.ta=a;	q.u=n.x;	q.v=n.y;	q.w=n.z;
 	}
-//	q.x=q.xx=int(p.x*100)*0.01;	q.y=q.yy=p.y;	q.z=q.zz=p.z;
-//	q.c=c;	q.t=q.ta=a;	q.u=n.x;	q.v=n.y;	q.w=n.z;
 	const mglTexture &txt=Txt[long(c)];
 	txt.GetC(c,a,q);	// RGBA color
 
-	if(!get(MGL_ENABLE_ALPHA))	{	q.a=1;	if(txt.Smooth!=2)	q.ta=1;	}
+	// add gap for texture coordinates for compatibility with OpenGL
+	const float gap = 1./512;
+	q.c = q.c*(1-2*gap)+gap;
+	q.t = q.t*(1-2*gap)+gap;
+	q.ta = q.t;
+	
+	if(!get(MGL_ENABLE_ALPHA))	{	q.a=1;	if(txt.Smooth!=2)	q.ta=1-gap;	}
 //	if(q.ta<0.005)	q.ta = 0.005;	// bypass OpenGL/OBJ/PRC bug
 	if(scl&8 && scl>0)	q.a=a;	// bypass palette for enabling alpha in Error()
 	if(!get(MGL_ENABLE_LIGHT) && !(scl&4))	q.u=q.v=NAN;
