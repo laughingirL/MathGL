@@ -34,6 +34,7 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 int test_wnd(mglGraph *gr)
 {
 mgl_set_test_mode(true);
+	gr->SetQuality(6);
 	gr->Box();
 	return 0;
 }

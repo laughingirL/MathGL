@@ -79,6 +79,10 @@ inline bool operator==(const mglPoint &a, const mglPoint &b)
 {	return !memcmp(&a, &b, sizeof(mglPoint));	}
 inline bool operator!=(const mglPoint &a, const mglPoint &b)
 {	return memcmp(&a, &b, sizeof(mglPoint));	}
+inline bool operator<(const mglPoint &a, const mglPoint &b)
+{	return a.x<=b.x && a.y<=b.y && a.z<=b.z;	}
+inline bool operator>(const mglPoint &a, const mglPoint &b)
+{	return a.x>=b.x && a.y>=b.y && a.z>=b.z;	}
 inline float mgl_norm(const mglPoint &p)
 {	return sqrt(p.x*p.x+p.y*p.y+p.z*p.z);	}
 #endif

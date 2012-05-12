@@ -48,11 +48,11 @@ public:
 
 	virtual void ToggleAlpha()=0;	///< Switch on/off transparency (do not overwrite user settings)
 	virtual void ToggleLight()=0;	///< Switch on/off lighting (do not overwrite user settings)
-	virtual void ToggleZoom()=0;	///< Switch on/off zooming by mouse
+	virtual void ToggleZoom()=0;		///< Switch on/off zooming by mouse
 	virtual void ToggleRotate()=0;	///< Switch on/off rotation by mouse
 	virtual void ToggleNo()=0;		///< Switch off all zooming and rotation
-	virtual void Update()=0;		///< Update picture by calling user drawing function
-	virtual void Adjust()=0;		///< Adjust size of bitmap to window size
+	virtual void Update()=0;			///< Update picture by calling user drawing function
+	virtual void Adjust()=0;			///< Adjust size of bitmap to window size
 	virtual void GotoFrame(int d)=0;///< Show arbitrary frame (use relative step)
 	virtual void NextFrame()	{GotoFrame(+1);}	///< Show next frame (if one)
 	virtual void PrevFrame()	{GotoFrame(-1);}	///< Show previous frame (if one)
@@ -65,7 +65,7 @@ public:
 	void SetDrawFunc(int (*draw)(mglBase *gr, void *p), void *par=NULL, void (*reload)(void *p)=NULL);
 	
 private:
-	int CurFig;		///< Current figure in the list.
+	int CurFig;			///< Current figure in the list.
 
 	unsigned char *GG;	///< images for all frames (may be too LARGE !!!)
 	int NumFig;			///< Number of figures in the list. If 0 then no list and mglCanvas::DrawFunc will called for each drawing.

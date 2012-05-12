@@ -21,7 +21,7 @@
 //-----------------------------------------------------------------------------
 mglCanvasWnd::mglCanvasWnd() : mglCanvas()
 {
-	Setup();	LoadFunc=0;	FuncPar=0;	DrawFunc=0;
+	Setup();	LoadFunc=0;	FuncPar=0;	DrawFunc=0;	ClickFunc=0;
 	GG = 0;		NumFig = 0;	CurFig = -1;
 //	set(MGL_USEDRWDAT);	// TODO: experimental feature -- test later
 }

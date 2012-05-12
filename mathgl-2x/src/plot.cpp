@@ -1652,8 +1652,12 @@ void mgl_tape_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *
 		q1 = mglPoint(-l.y,l.x,0);	ll = mgl_norm(q1);
 		if(ll)	q1 /= ll;	else	q1 = mglPoint(0,1,0);
 		q2 = (q1^l);
-		if(xo)	{	n1 = gr->AddPnt(p2,c1,q2,-1,3);	n2 = gr->AddPnt(p2+rr*q1,c1,q2,-1,3);	}
-		if(zo)	{	n3 = gr->AddPnt(p2,c2,q1,-1,3);	n4 = gr->AddPnt(p2+rr*q2,c2,q1,-1,3);	}
+		if(p2>gr->Min && p2<gr->Max)
+		{
+			if(xo)	{	n1 = gr->AddPnt(p2,c1,q2,-1,3);	n2 = gr->AddPnt(p2+rr*q1,c1,q2,-1,3);	}
+			if(zo)	{	n3 = gr->AddPnt(p2,c2,q1,-1,3);	n4 = gr->AddPnt(p2+rr*q2,c2,q1,-1,3);	}
+		}
+		else		{	n1=n2=n3=n4=-1;	}
 		register long i;
 		for(i=1;i<n;i++)
 		{
@@ -1662,19 +1666,22 @@ void mgl_tape_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *
 			l = p2-p1;		l /= mgl_norm(l);
 			q1 -= l*(l*q1);	q1/= mgl_norm(q1);	q2 = (q1^l);
 			m1 = n1;	m2 = n2;	m3 = n3;	m4 = n4;
-			if(xo)
+			if(p2>gr->Min && p2<gr->Max)
 			{
-				n1 = gr->AddPnt(p2,c1,wire?qn:q2,-1,3);
-				n2 = gr->AddPnt(p2+rr*q1,c1,wire?qn:q2,-1,3);
-				if(wire)	gr->line_plot(m2,n2);
-				else		gr->quad_plot(n1,n2,m1,m2);
-			}
-			if(zo)
-			{
-				n3 = gr->AddPnt(p2,c2,wire?qn:q1,-1,3);
-				n4 = gr->AddPnt(p2+rr*q2,c2,wire?qn:q1,-1,3);
-				if(wire)	gr->line_plot(m4,n4);
-				else		gr->quad_plot(n3,n4,m3,m4);
+				if(xo)
+				{
+					n1 = gr->AddPnt(p2,c1,wire?qn:q2,-1,3);
+					n2 = gr->AddPnt(p2+rr*q1,c1,wire?qn:q2,-1,3);
+					if(wire)	gr->line_plot(m2,n2);
+					else		gr->quad_plot(n1,n2,m1,m2);
+				}
+				if(zo)
+				{
+					n3 = gr->AddPnt(p2,c2,wire?qn:q1,-1,3);
+					n4 = gr->AddPnt(p2+rr*q2,c2,wire?qn:q1,-1,3);
+					if(wire)	gr->line_plot(m4,n4);
+					else		gr->quad_plot(n3,n4,m3,m4);
+				}
 			}
 			if(sh)	c2=c1=gr->NextColor(pal);
 		}

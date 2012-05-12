@@ -187,9 +187,9 @@ const unsigned char *mgl_get_rgb_(uintptr_t *gr)	{	return gr ? _GR_->GetBits():0
 const unsigned char *mgl_get_rgba_(uintptr_t *gr){	return gr ? _GR_->GetRGBA():0;	}
 int mgl_get_width_(uintptr_t *gr)	{	return gr ? _GR_->GetWidth():0;	}
 int mgl_get_height_(uintptr_t *gr)	{	return gr ? _GR_->GetHeight():0;}
-void mgl_calc_xyz_(uintptr_t *gr, int *xs, int *ys, mreal *x, mreal *y, mreal *z)
+void mgl_calc_xyz_(uintptr_t *gr, int *xs, int *ys, float *x, float *y, float *z)
 {	mglPoint p = _GR_->CalcXYZ(*xs,*ys);	*x = p.x;	*y = p.y;	*z = p.z;	}
-void mgl_calc_scr_(uintptr_t *gr, mreal *x, mreal *y, mreal *z, int *xs, int *ys)
+void mgl_calc_scr_(uintptr_t *gr, float *x, float *y, float *z, int *xs, int *ys)
 {	_GR_->CalcScr(mglPoint(*x,*y,*z),xs,ys);	}
 void mgl_set_obj_id_(uintptr_t *gr, int *id)		{	_GR_->SetObjId(*id);	}
 int mgl_get_obj_id_(uintptr_t *gr, int *x, int *y)	{	return _GR_->GetObjId(*x,*y);	}
@@ -361,7 +361,7 @@ void mgl_mpi_recv(HMGL gr, int id)	{	_Gr_->MPI_Recv(id);	}
 void mgl_mpi_send_(uintptr_t *gr, int *id)	{	mgl_mpi_send(_GR_, *id);	}
 void mgl_mpi_recv_(uintptr_t *gr, int *id)	{	mgl_mpi_recv(_GR_, *id);	}
 //-----------------------------------------------------------------------------
-void mgl_wnd_set_delay_(uintptr_t *gr, mreal *dt)	{	_GR_->SetDelay(*dt);	}
+void mgl_wnd_set_delay_(uintptr_t *gr, float *dt)	{	_GR_->SetDelay(*dt);	}
 void mgl_wnd_set_delay(HMGL gr, float dt)	{	_Gr_->SetDelay(dt);	}
 //-----------------------------------------------------------------------------
 HMEX mgl_create_expr(const char *expr)	{	return new mglFormula(expr);	}

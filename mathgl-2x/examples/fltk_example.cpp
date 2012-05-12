@@ -56,14 +56,14 @@ int main(int argc,char **argv)
 #else
 	mglWindow *gr;
 	char key = 0;
-	if(argc>1 && argv[1][0]!='-')	key = argv[1][0];
+	if(argc>1)	key = argv[1][0]!='-' ? argv[1][0]:argv[1][1];
 	else	printf("You may specify argument '1', '2', '3' or 'd' for viewing examples of 1d, 2d, 3d or dual plotting\n");
 	switch(key)
 	{
 		case '1':	gr = new mglWindow(sample_1,"1D plots",0);	break;
 		case '2':	gr = new mglWindow(sample_2,"2D plots",0);	break;
 		case '3':	gr = new mglWindow(sample_3,"3D plots",0);	break;
-		case 'd':	gr = new mglWindow(sample_d,"Dual plots",0);break;
+		case 'd':	gr = new mglWindow(sample_d,"Dual plots",0);	break;
 		case 't':	gr = new mglWindow(test_wnd,"Testing",0);	break;
 		default:	gr = new mglWindow(sample,"Drop and waves",0);	break;
 	}
