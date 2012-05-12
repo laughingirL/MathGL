@@ -378,6 +378,7 @@ void mglCanvas::Finish(bool fast)
 //-----------------------------------------------------------------------------
 void mglCanvas::ClfZB()
 {
+	if(Quality&4)	return;
 	register long i,n=Width*Height;
 	memset(C,0,12*n);	memset(OI,0,n*sizeof(int));
 	for(i=0;i<3*n;i++)	Z[i] = -1e20f;	// TODO: Parallelization ?!?
@@ -386,7 +387,7 @@ void mglCanvas::ClfZB()
 //-----------------------------------------------------------------------------
 void mglCanvas::Clf(mglColor Back)
 {
-	Fog(0);			PDef = 0xffff;	pPos = 0;	StartAutoGroup(NULL);
+	Fog(0);		PDef = 0xffff;	pPos = 0;	StartAutoGroup(NULL);
 	Pnt.clear();	Prm.clear();	Ptx.clear();
 	Sub.clear();	Leg.clear();	Grp.clear();
 

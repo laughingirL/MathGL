@@ -205,7 +205,7 @@ void QMathGL::update()
 		if(!isHidden())	QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 		setlocale(LC_NUMERIC, "C");	// NOTE: I'm not sure what I should selocale manually???
 		if(draw_func)	draw_func(gr, draw_par);
-		else	{	mglGraph g(gr);	draw->Draw(&g);	}
+		else if(draw)	{	mglGraph g(gr);	draw->Draw(&g);	}
 		setlocale(LC_NUMERIC, "");
 		if(!isHidden())	QApplication::restoreOverrideCursor();
 		emit refreshData();

@@ -88,7 +88,7 @@ Fl_MathGL::Fl_MathGL(int xx, int yy, int ww, int hh, char *lbl) : Fl_Widget(xx,y
 	zoom = rotate = false;
 	flag=x0=y0=xe=ye=0;
 	tet_val = phi_val = 0;
-	draw_par = 0;	draw_func = 0;
+	draw_par = 0;	draw_func = 0;	draw_cl = 0;
 }
 //-----------------------------------------------------------------------------
 Fl_MathGL::~Fl_MathGL()	{}
@@ -121,7 +121,7 @@ void Fl_MathGL::draw()
 //-----------------------------------------------------------------------------
 void Fl_MathGL::update()
 {
-	if(draw_func)
+	if(draw_func || draw_cl)
 	{
 		if(gr->get(MGL_CLF_ON_UPD))	gr->DefaultPlotParam();
 		gr->ResetFrames();
@@ -129,7 +129,8 @@ void Fl_MathGL::update()
 		if(tet_val)	tet = tet_val->value();
 		if(phi_val)	phi = phi_val->value();
 		gr->Zoom(x1,y1,x2,y2);	gr->View(phi,tet);
-		draw_func(gr, draw_par);	// drawing itself
+		if(draw_func)	draw_func(gr, draw_par);	// drawing itself
+		else	if(draw_cl)	{	mglGraph g(gr);	draw_cl->Draw(&g);	}
 		const char *buf = gr->Mess.c_str();
 		if(*buf)	fl_message("%s",buf);
 	}

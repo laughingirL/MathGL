@@ -61,8 +61,7 @@ public:
 	/// Set drawing functions and its parameter
 	inline void set_draw(int (*func)(mglBase *gr, void *par), void *par=0)
 	{	draw_func = func;	draw_par = par;	}
-	inline void set_draw(mglDraw *dr)
-	{	set_draw(mgl_draw_class,(void*)dr);	}
+	inline void set_draw(mglDraw *dr)	{	draw_cl = dr;	}
 	inline void set_draw(int (*dr)(mglGraph *gr))
 	{	set_draw(mgl_draw_graph,(void*)dr);	}
 	void set_state(bool z, bool r)	{	zoom = z;	rotate = r;	}
@@ -83,6 +82,7 @@ protected:
 	void *draw_par;		///< Parameters for drawing function mglCanvasWnd::DrawFunc.
 	/// Drawing function for window procedure. It should return the number of frames.
 	int (*draw_func)(mglBase *gr, void *par);
+	mglDraw *draw_cl;
 
 	const Fl_Menu_Item *popup;	///< pointer to popup menu items
 	Fl_Widget *wpar;			///< widget for popup menu
