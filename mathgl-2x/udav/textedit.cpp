@@ -52,8 +52,9 @@ TextEdit::TextEdit(QWidget *parent) : QTextEdit(parent), c(0)	{}
 //-----------------------------------------------------------------------------
 void TextEdit::setCompleter(QCompleter *completer)
 {
+	if(!completer)	return;
 	if(c)	QObject::disconnect(c, 0, this, 0);
-	c = completer;	if(!c)	return;
+	c = completer;
 	c->setWidget(this);
 	c->setCompletionMode(QCompleter::PopupCompletion);
 	c->setCaseSensitivity(Qt::CaseInsensitive);

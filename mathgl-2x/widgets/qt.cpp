@@ -795,6 +795,7 @@ QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *tet, QSpinBox *phi
 	o = Wnd->menuBar()->addMenu(TR("&Help"));
 	o->addAction(TR("About"), QMGL, SLOT(about()));
 	o->addAction(TR("About &Qt"), QMGL, SLOT(aboutQt()));
+	return popup;
 }
 //-----------------------------------------------------------------------------
 HMGL mgl_create_graph_qt(int (*draw)(HMGL gr, void *p), const char *title, void *par, void (*load)(void *p))

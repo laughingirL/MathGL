@@ -64,7 +64,11 @@ QDialog *createArgsDlg(QWidget *p);
 QWidget *createMemPanel(QWidget *p);
 QWidget *createHlpPanel(QWidget *p);
 void showHelpMGL(QWidget *hlp, QString s);
-void addDataPanel(MainWindow *wnd, QWidget *w, QString name)	{	wnd->addPanel(w, name);	}
+void addDataPanel(QWidget *p, QWidget *w, QString name)
+{
+	MainWindow *wnd = dynamic_cast<MainWindow *>(p);
+	if(wnd)	wnd->addPanel(w, name);
+}
 //-----------------------------------------------------------------------------
 #ifndef UDAV_DIR
 #ifdef WIN32
@@ -399,11 +403,11 @@ void MainWindow::showHelp()
 int mgl_cmd_cmp(const void *a, const void *b);
 void MainWindow::editPosChanged()
 {
-	register int i, n, m;
+	register int i, n;
 	QString text = edit->selection(), dlm(" #;:\t");
 	n = text.length();
 	for(i=0;i<n;i++)	if(dlm.contains(text[i]))	break;
-	text.truncate(i);	m = text.length();
+	text.truncate(i);
 
 	for(n=0;parser.Cmd[n].name[0];n++){};	// determine the number of symbols in parser
 	mglCommand tst, *rts;	tst.name = text.toAscii().data();

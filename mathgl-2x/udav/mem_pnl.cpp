@@ -32,13 +32,13 @@
 //-----------------------------------------------------------------------------
 extern bool mglAutoSave;
 extern mglParser parser;
-QWidget *newDataWnd(InfoDialog *inf, MainWindow *wnd, mglVar *v);
+QWidget *newDataWnd(InfoDialog *inf, QWidget *wnd, mglVar *v);
 void refreshData(QWidget *w);
 //-----------------------------------------------------------------------------
 QWidget *createMemPanel(QWidget *p)	// NOTE: parent should be MainWindow
 {
 	MemPanel *m = new MemPanel(p);
-	m->wnd = (MainWindow *)p;
+	m->wnd = p;	return m;
 }
 //-----------------------------------------------------------------------------
 void refreshMemPanel(QWidget *p)

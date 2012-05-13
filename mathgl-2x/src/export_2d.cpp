@@ -63,7 +63,7 @@ void put_line(HMGL gr, void *fp, bool gz, long i, float wp, mglColor cp,int st, 
 	const mglPnt pp = gr->GetPnt(gr->GetPrm(i).n1);
 	float x0=pp.x, y0=pp.y;
 	bool ok=true;
-	register long k = i,j;	// first point
+	register long j;	// first point
 	while(ok)
 	{
 		for(ok=false,j=i+1;j<gr->GetPrmNum();j++)
@@ -76,12 +76,12 @@ void put_line(HMGL gr, void *fp, bool gz, long i, float wp, mglColor cp,int st, 
 				const mglPnt p2 = gr->GetPnt(q.n2);
 				if(p2.x==x0 && p2.y==y0)
 				{
-					k=j;	ok=true;	q.type = -2;
+					ok=true;	q.type = -2;
 					x0 = p1.x;	y0=p1.y;
 				}
 				else if(p1.x==x0 && p1.y==y0)
 				{
-					k=j;	ok=true;	q.type = -2;
+						ok=true;	q.type = -2;
 					x0 = p2.x;	y0=p2.y;
 				}
 			}
@@ -106,14 +106,14 @@ void put_line(HMGL gr, void *fp, bool gz, long i, float wp, mglColor cp,int st, 
 				const mglPnt p2 = gr->GetPnt(q.n2);
 				if(p1.x==x0 && p1.y==y0)
 				{
-					k=j;	q.type = -1;	x0 = p2.x;	y0=p2.y;
+					q.type = -1;	x0 = p2.x;	y0=p2.y;
 					mgl_printf(fp, gz, nfmt,fc*x0,(neg?_Gr_->GetHeight()-y0:y0)*fc);
 					if(m>10)	{	m=0;	mgl_printf(fp, gz, "\n");	}
 					ok=true;	m++;
 				}
 				else if(p2.x==x0 && p2.y==y0)
 				{
-					k=j;	q.type = -1;	x0 = p1.x;	y0=p1.y;
+					q.type = -1;	x0 = p1.x;	y0=p1.y;
 					mgl_printf(fp, gz, nfmt,fc*x0,(neg?_Gr_->GetHeight()-y0:y0)*fc);
 					if(m>10)	{	m=0;	mgl_printf(fp, gz, "\n");	}
 					ok=true;	m++;

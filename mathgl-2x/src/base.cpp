@@ -60,7 +60,7 @@ mglBase::mglBase()
 	fnt=0;	*FontDef=0;
 	fx=fy=fz=fa=fc=0;
 
-	InUse = 1;
+	InUse = 1;	SetQuality();
 	// Always create default palette txt[0] and default scheme txt[1]
 	Txt.reserve(3);
 	Txt.push_back(mglTexture(MGL_DEF_PAL,-1));

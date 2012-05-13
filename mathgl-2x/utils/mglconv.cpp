@@ -31,8 +31,8 @@ int main(int argc, char *argv[])
 	mglParse p(true);
 	char ch, buf[2048], iname[256]="", oname[256]="";
 	std::vector<std::wstring> var;
-	
-	register long i,n;
+
+	register size_t i, n;
 	while(1)
 	{
 		ch = getopt(argc, argv, "1:2:3:4:5:6:7:8:9:ho:L:C:A:");

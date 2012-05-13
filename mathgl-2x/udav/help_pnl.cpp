@@ -29,7 +29,11 @@ extern QString pathHelp;
 void raisePanel(QWidget *w);
 //-----------------------------------------------------------------------------
 QWidget *createHlpPanel(QWidget *p)		{	return new HelpPanel(p);	}
-void showHelpMGL(QWidget *hlp,QString s){	((HelpPanel *)hlp)->showHelp(s);	}
+void showHelpMGL(QWidget *p,QString s)
+{
+	HelpPanel *hlp = dynamic_cast<HelpPanel *>(p);
+	if(hlp)	hlp->showHelp(s);
+}
 //void showExMGL(QWidget *hlp)			{	((HelpPanel *)hlp)->showExamples();	}
 //-----------------------------------------------------------------------------
 HelpPanel::HelpPanel(QWidget *parent) : QWidget(parent)

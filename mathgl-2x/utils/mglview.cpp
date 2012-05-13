@@ -64,7 +64,6 @@ int main(int argc, char **argv)
 	}
 	if(ch=='h')	return 0;
 
-	long i;
 	mgl_ask_func = mgl_ask_gets;
 #if MGL_HAVE_QT
 	int kind=1;		mgl_ask_func = mgl_ask_qt;

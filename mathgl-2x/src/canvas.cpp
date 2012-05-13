@@ -126,8 +126,8 @@ float mglCanvas::FindOptOrg(char dir, int ind) const
 		m1 = Min;	m2 = Max;	memcpy(&bb,&B,sizeof(mglMatrix));
 		PostScale(pp,8);
 		// find point with minimal y
-		register long i,j;
-		for(i=j=0;i<8;i++)	if(pp[i].y<pp[j].y)	j=i;
+		register long i,j=0;
+		for(i=1;i<8;i++)	if(pp[i].y<pp[j].y)	j=i;
 		pp[0]=pp[j];
 		// find max angle and left point
 		// first select 3 closest points

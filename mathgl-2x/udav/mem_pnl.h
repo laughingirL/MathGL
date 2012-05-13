@@ -23,13 +23,12 @@
 class mglVar;
 class InfoDialog;
 class QTableWidget;
-class MainWindow;
 //-----------------------------------------------------------------------------
 class MemPanel : public QWidget
 {
 Q_OBJECT
 public:
-	MainWindow *wnd;
+	QWidget *wnd;
 	MemPanel(QWidget *parent = 0);
 public slots:
 	void refresh();		///< refresh list of variables

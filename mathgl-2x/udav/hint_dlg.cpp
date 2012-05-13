@@ -83,8 +83,5 @@ void HintDialog::closeEvent(QCloseEvent *)
 }
 //-----------------------------------------------------------------------------
 void udavShowHint(QWidget *p)
-{
-	HintDialog *hd = new HintDialog(p);
-	hd->exec();
-}
+{	HintDialog *hd = new HintDialog(p);	hd->exec();	}
 //-----------------------------------------------------------------------------
