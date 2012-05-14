@@ -133,12 +133,13 @@ long mglBase::AddPnt(mglPoint p, float c, mglPoint n, float a, int scl)
 		q.x=q.xx=p.x;	q.y=q.yy=p.y;	q.z=q.zz=p.z;
 		q.c=c;	q.t=q.ta=a;	q.u=n.x;	q.v=n.y;	q.w=n.z;
 	}
-	const mglTexture &txt=Txt[long(c)];
+	register long ci=long(c);
+	const mglTexture &txt=Txt[ci];
 	txt.GetC(c,a,q);	// RGBA color
 
 	// add gap for texture coordinates for compatibility with OpenGL
 	const float gap = 1./512;
-	q.c = q.c*(1-2*gap)+gap;
+	q.c = ci+(q.c-ci)*(1-2*gap)+gap;
 	q.t = q.t*(1-2*gap)+gap;
 	q.ta = q.t;
 	
