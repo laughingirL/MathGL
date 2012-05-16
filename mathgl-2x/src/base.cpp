@@ -343,9 +343,9 @@ void mglBase::SetRanges(mglPoint m1, mglPoint m2)
 	RecalcBorder();
 }
 //-----------------------------------------------------------------------------
-void mglBase::CRange(const mglDataA &a,bool add, float fact)
+void mglBase::CRange(HCDT a,bool add, float fact)
 {
-	float v1=a.Minimal(), v2=a.Maximal(), dv;
+	float v1=a->Minimal(), v2=a->Maximal(), dv;
 	dv=(v2-v1)*fact;	v1 -= dv;	v2 += dv;
 	if(v1==v2)	return;
 	if(!add)	{	Min.c = v1;	Max.c = v2;	}
@@ -365,9 +365,9 @@ void mglBase::CRange(const mglDataA &a,bool add, float fact)
 	RecalcCRange();
 }
 //-----------------------------------------------------------------------------
-void mglBase::XRange(const mglDataA &a,bool add,float fact)
+void mglBase::XRange(HCDT a,bool add,float fact)
 {
-	float v1=a.Minimal(), v2=a.Maximal(), dv;
+	float v1=a->Minimal(), v2=a->Maximal(), dv;
 	dv=(v2-v1)*fact;	v1 -= dv;	v2 += dv;
 	if(v1==v2)	return;
 	if(!add)	{	Min.x = v1;	Max.x = v2;	}
@@ -387,9 +387,9 @@ void mglBase::XRange(const mglDataA &a,bool add,float fact)
 	RecalcBorder();
 }
 //-----------------------------------------------------------------------------
-void mglBase::YRange(const mglDataA &a,bool add,float fact)
+void mglBase::YRange(HCDT a,bool add,float fact)
 {
-	float v1=a.Minimal(), v2=a.Maximal(), dv;
+	float v1=a->Minimal(), v2=a->Maximal(), dv;
 	dv=(v2-v1)*fact;	v1 -= dv;	v2 += dv;
 	if(v1==v2)	return;
 	if(!add)	{	Min.y = v1;	Max.y = v2;	}
@@ -409,9 +409,9 @@ void mglBase::YRange(const mglDataA &a,bool add,float fact)
 	RecalcBorder();
 }
 //-----------------------------------------------------------------------------
-void mglBase::ZRange(const mglDataA &a,bool add,float fact)
+void mglBase::ZRange(HCDT a,bool add,float fact)
 {
-	float v1=a.Minimal(), v2=a.Maximal(), dv;
+	float v1=a->Minimal(), v2=a->Maximal(), dv;
 	dv=(v2-v1)*fact;	v1 -= dv;	v2 += dv;
 	if(v1==v2)	return;
 	if(!add)	{	Min.z = v1;	Max.z = v2;	}
@@ -767,7 +767,7 @@ float mglBase::GetA(float a) const
 	return a;
 }
 //-----------------------------------------------------------------------------
-mglPoint GetX(const mglDataA *x, int i, int j, int k)
+mglPoint GetX(HCDT x, int i, int j, int k)
 {
 	k = k<x->GetNz() ? k : 0;
 	if(x->GetNy()>1)
@@ -776,7 +776,7 @@ mglPoint GetX(const mglDataA *x, int i, int j, int k)
 		return mglPoint(x->v(i),x->dvx(i),0);
 }
 //-----------------------------------------------------------------------------
-mglPoint GetY(const mglDataA *y, int i, int j, int k)
+mglPoint GetY(HCDT y, int i, int j, int k)
 {
 	k = k<y->GetNz() ? k : 0;
 	if(y->GetNy()>1)
@@ -785,7 +785,7 @@ mglPoint GetY(const mglDataA *y, int i, int j, int k)
 		return mglPoint(y->v(j),0,y->dvx(j));
 }
 //-----------------------------------------------------------------------------
-mglPoint GetZ(const mglDataA *z, int i, int j, int k)
+mglPoint GetZ(HCDT z, int i, int j, int k)
 {
 	if(z->GetNy()>1)
 		return mglPoint(z->v(i,j,k),z->dvx(i,j,k),z->dvy(i,j,k));

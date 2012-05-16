@@ -35,10 +35,25 @@
 #include "mgl2/eval.h"
 #include "mgl2/font.h"
 //-----------------------------------------------------------------------------
+class mglBase;
+class mglData;
+class mglParser;
+class mglFormula;
+typedef mglBase*  HMGL;
+typedef mglData* HMDT;
+typedef mglParser* HMPR;
+typedef mglFormula* HMEX;
+//-----------------------------------------------------------------------------
+#ifdef MGL_NO_DATA_A
+#define mglDataA mglData
+typedef const mglData* HCDT;
+#include "mgl2/data.h"
+#else
 /// Abstract class for data array
 class mglDataA
 {
 public:
+	virtual ~mglDataA()	{};
 	virtual mreal v(long i,long j=0,long k=0) const = 0;
 	virtual mreal vthr(long i) const = 0;
 	virtual long GetNx() const = 0;
@@ -54,18 +69,14 @@ public:
 	virtual mreal dvz(long i,long j=0,long k=0) const = 0;
 //	{	return k>0 ? (k<GetNz()-1 ? (v(i,j,k+1)-v(i,j,k-1))/2 : v(i,j,k)-v(i,j,k-1)) : v(i,j,1)-v(i,j,0);	}
 };
+#endif
+typedef const mglDataA* HCDT;
 //-----------------------------------------------------------------------------
 inline float mgl_d(float v,float v1,float v2) { return v2!=v1?(v-v1)/(v2-v1):NAN; }
 //-----------------------------------------------------------------------------
-mglPoint GetX(const mglDataA *x, int i, int j, int k=0);
-mglPoint GetY(const mglDataA *y, int i, int j, int k=0);
-mglPoint GetZ(const mglDataA *z, int i, int j, int k=0);
-inline mglPoint GetX(const mglDataA &x, int i, int j, int k=0)
-{	return GetX(&x,i,j,k);	}
-inline mglPoint GetY(const mglDataA &y, int i, int j, int k=0)
-{	return GetY(&y,i,j,k);	}
-inline mglPoint GetZ(const mglDataA &z, int i, int j, int k=0)
-{	return GetZ(&z,i,j,k);	}
+mglPoint GetX(HCDT x, int i, int j, int k=0);
+mglPoint GetY(HCDT y, int i, int j, int k=0);
+mglPoint GetZ(HCDT z, int i, int j, int k=0);
 //-----------------------------------------------------------------------------
 /// Structure for simplest primitives
 struct mglPrim
@@ -199,16 +210,16 @@ public:
 	{	SetRanges(mglPoint(x1,y1,z1,c1),mglPoint(x2,y2,z2,c2));	}
 	void SetRanges(mglPoint v1, mglPoint v2);
 	/// Set values of mglGraph::Cmin and mglGraph::Cmax as minimal and maximal values of data a
-	void CRange(const mglDataA &a, bool add = false, float fact=0);
+	void CRange(HCDT a, bool add = false, float fact=0);
 	inline void CRange(float v1,float v2)	{	if(v1!=v2)	{Min.c=v1;	Max.c=v2;	RecalcCRange();}	}
 	/// Set values of mglGraph::Min.x and mglGraph::Max.x as minimal and maximal values of data a
-	void XRange(const mglDataA &a, bool add = false, float fact=0);
+	void XRange(HCDT a, bool add = false, float fact=0);
 	inline void XRange(float v1,float v2)	{	if(v1!=v2)	{Min.x=v1;	Max.x=v2;	RecalcBorder();}	}
 	/// Set values of mglGraph::Min.x and mglGraph::Max.x as minimal and maximal values of data a
-	void YRange(const mglDataA &a, bool add = false, float fact=0);
+	void YRange(HCDT a, bool add = false, float fact=0);
 	inline void YRange(float v1,float v2)	{	if(v1!=v2)	{Min.y=v1;	Max.y=v2;	RecalcBorder();}	}
 	/// Set values of mglGraph::Min.x and mglGraph::Max.x as minimal and maximal values of data a
-	void ZRange(const mglDataA &a, bool add = false, float fact=0);
+	void ZRange(HCDT a, bool add = false, float fact=0);
 	inline void ZRange(float v1,float v2)	{	if(v1!=v2)	{Min.z=v1;	Max.z=v2;	RecalcBorder();}	}
 	/// Set ranges for automatic variables
 	void SetAutoRanges(float x1, float x2, float y1=0, float y2=0, float z1=0, float z2=0, float c1=0, float c2=0);
@@ -441,14 +452,6 @@ private:
 #define _DM_(a)	((mglData *)*(a))
 #define _DT_	((mglData *)*d)
 //-----------------------------------------------------------------------------
-class mglData;
-class mglParser;
-class mglFormula;
-typedef mglBase*  HMGL;
-typedef mglData* HMDT;
-typedef mglParser* HMPR;
-typedef mglFormula* HMEX;
-typedef const mglDataA* HCDT;
 #else
 typedef void *HMGL;
 typedef void *HMDT;

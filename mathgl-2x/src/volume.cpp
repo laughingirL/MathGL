@@ -103,7 +103,7 @@ void mgl_cloud_(uintptr_t *gr, uintptr_t *a, const char *sch, const char *opt,in
 //	Surf3 series
 //
 //-----------------------------------------------------------------------------
-mglPoint mgl_normal_3d(const mglDataA *a, mglPoint p, bool inv, long n,long m,long l)
+mglPoint mgl_normal_3d(HCDT a, mglPoint p, bool inv, long n,long m,long l)
 {
 	register long i,j,k;
 	register float x=p.x, y=p.y, z=p.z;
@@ -121,7 +121,7 @@ mglPoint mgl_normal_3d(const mglDataA *a, mglPoint p, bool inv, long n,long m,lo
 	return inv ? mglPoint(nx,ny,nz) : mglPoint(-nx,-ny,-nz);
 }
 //-----------------------------------------------------------------------------
-float mgl_normal_1d(const mglDataA *a, float x, bool inv, long n)
+float mgl_normal_1d(HCDT a, float x, bool inv, long n)
 {
 	register long i=long(x);	x-=i;
 	float nx = a->dvx(i);

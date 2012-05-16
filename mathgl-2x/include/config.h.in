@@ -3,6 +3,7 @@
 
 /* This define enables double precision in MathGL */
 #define MGL_USE_DOUBLE ${MGL_USE_DOUBLE}
+#define MGL_NO_DATA_A ${MGL_NO_DATA_A}
 
 #define MGL_HAVE_GSL ${MGL_HAVE_GSL}
 #define MGL_HAVE_LTDL ${MGL_HAVE_LTDL}

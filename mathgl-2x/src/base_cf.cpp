@@ -66,19 +66,19 @@ void mgl_set_range_val(HMGL gr, char dir, float v1,float v2)
 	else if(dir=='z')	gr->ZRange(v1,v2);	}
 void mgl_set_range_dat(HMGL gr, char dir, HCDT a, int add)
 {
-	if(dir=='c')		gr->CRange(_Da_(a),add);
-	else if(dir=='x')	gr->XRange(_Da_(a),add);
-	else if(dir=='y')	gr->YRange(_Da_(a),add);
-	else if(dir=='z')	gr->ZRange(_Da_(a),add);	}
+	if(dir=='c')		gr->CRange(a,add);
+	else if(dir=='x')	gr->XRange(a,add);
+	else if(dir=='y')	gr->YRange(a,add);
+	else if(dir=='z')	gr->ZRange(a,add);	}
 void mgl_set_ranges(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z2)
 {	gr->SetRanges(x1,y1,z1,x2,y2,z2);	}
 void mgl_set_func(HMGL gr, const char *EqX,const char *EqY,const char *EqZ,const char *EqA)
 {	gr->SetFunc(EqX,EqY,EqZ,EqA);	}
 void mgl_set_coor(HMGL gr, int how)	{	gr->SetCoor(how);	}
 //-----------------------------------------------------------------------------
-long mgl_data_get_nx(HCDT d)	{	return	_Da_(d).GetNx();	}
-long mgl_data_get_ny(HCDT d)	{	return	_Da_(d).GetNy();	}
-long mgl_data_get_nz(HCDT d)	{	return	_Da_(d).GetNz();	}
+long mgl_data_get_nx(HCDT d)	{	return	d->GetNx();	}
+long mgl_data_get_ny(HCDT d)	{	return	d->GetNy();	}
+long mgl_data_get_nz(HCDT d)	{	return	d->GetNz();	}
 //-----------------------------------------------------------------------------
 void mgl_set_bar_width(HMGL gr, float width)	{	gr->SetBarWidth(width);	}
 //-----------------------------------------------------------------------------
@@ -111,17 +111,9 @@ void mgl_set_cutoff_(uintptr_t *gr, const char *EqC, int l)
 //-----------------------------------------------------------------------------
 void mgl_set_ternary_(uintptr_t *gr, int *enable)	{	_GR_->Ternary(*enable);	}
 void mgl_set_range_val_(uintptr_t *gr, const char *dir, float *v1,float *v2,int)
-{
-	if(*dir=='c')		_GR_->CRange(*v1,*v2);
-	else if(*dir=='x')	_GR_->XRange(*v1,*v2);
-	else if(*dir=='y')	_GR_->YRange(*v1,*v2);
-	else if(*dir=='z')	_GR_->ZRange(*v1,*v2);	}
+{	mgl_set_range_val(_GR_,*dir,*v1,*v2);	}
 void mgl_set_range_dat_(uintptr_t *gr, const char *dir, uintptr_t *a, int *add,int)
-{
-	if(*dir=='c')		_GR_->CRange(*_DA_(a),*add);
-	else if(*dir=='x')	_GR_->XRange(*_DA_(a),*add);
-	else if(*dir=='y')	_GR_->YRange(*_DA_(a),*add);
-	else if(*dir=='z')	_GR_->ZRange(*_DA_(a),*add);	}
+{	mgl_set_range_dat(_GR_,*dir,_DA_(a),*add);	}
 void mgl_set_ranges_(uintptr_t *gr, float *x1, float *y1, float *z1, float *x2, float *y2, float *z2)
 {	_GR_->SetRanges(*x1,*y1,*z1,*x2,*y2,*z2);	}
 void mgl_set_func_(uintptr_t *gr, const char *EqX,const char *EqY,const char *EqZ,const char *EqA,int lx,int ly,int lz,int la)

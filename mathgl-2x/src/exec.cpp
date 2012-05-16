@@ -2021,7 +2021,7 @@ void mglc_surf3a(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt
 int mgls_subplot(mglGraph *gr, long , mglArg *a, int k[10], const char *)
 {
 	if(k[0]==3 && k[1]==3 && k[2]==3)
-		gr->SubPlot(iint(a[0].v), iint(a[1].v), iint(a[2].v), k[3]==2?a[3].s.c_str():"<>_^", k[4]==3?a[3].v:0, k[5]==3?a[4].v:0);
+		gr->SubPlot(iint(a[0].v), iint(a[1].v), iint(a[2].v), k[3]==2?a[3].s.c_str():"<>_^", k[4]==3?a[4].v:0, k[5]==3?a[5].v:0);
 	else	return 1;
 	return 0;
 }

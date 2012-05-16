@@ -138,10 +138,9 @@ struct prctriangles {
 				return colour_index;
 			}
 		} else {
-			const float gap = 0*1./512;
-			const float u = ((1-p.ta)*(1-2*gap)+gap);
-			const float v = 1 - ((p.c-floorf(p.c))*(1-2*gap) + gap + floorf(p.c))/ntxt;;
-			
+			const float u = p.ta;
+			const float v = 1 - p.c/ntxt;
+
 			const PRCVector2d point(u, v);
 			std::map<PRCVector2d,uint32_t>::iterator pPoint = texturecoords.find(point);
 			if(pPoint!=texturecoords.end())

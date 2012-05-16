@@ -153,7 +153,7 @@ void mglCanvasGL::Fog(float d, float)
 {
 	if(d>0)		// TODO: Check fog to OpenGL mode
 	{
-		float back[4]={BDef[0]/255.,BDef[1]/255.,BDef[2]/255.,BDef[3]/255.};
+		float back[4]={BDef[0]/255.f,BDef[1]/255.f,BDef[2]/255.f,BDef[3]/255.f};
 		glFogf(GL_FOG_MODE,GL_EXP);
 		glFogf(GL_FOG_DENSITY,5*d);
 		glFogfv(GL_FOG_COLOR,back);

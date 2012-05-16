@@ -27,7 +27,11 @@
 #include <vector>
 //-----------------------------------------------------------------------------
 /// Class for working with data array
+#ifdef MGL_NO_DATA_A
+class mglData
+#else
 class mglData : public mglDataA
+#endif
 {
 public:
 
@@ -373,7 +377,11 @@ public:
 	inline mreal &operator[](long i)	{	return a[i];	}
 	// NOTE see 13.10 for operator(), operator[] -- m.b. I should add it ???
 #endif
+#ifdef MGL_NO_DATA_A
+	inline long GetNN() const {	return nx*ny*nz;	}
+#else
 protected:
+#endif
 	/// Get the value in given cell of the data without border checking
 	inline mreal v(long i,long j=0,long k=0) const
 #ifdef DEBUG
