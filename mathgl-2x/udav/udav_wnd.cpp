@@ -33,6 +33,10 @@
 #include <QTextCodec>
 #include <QTranslator>
 //-----------------------------------------------------------------------------
+#if !defined(WIN32) && !defined(__APPLE__)
+#include <X11/Xlib.h>
+#endif
+//-----------------------------------------------------------------------------
 #include "mgl2/parser.h"
 #include "mgl2/qt.h"
 #include "udav_wnd.h"
@@ -85,7 +89,12 @@ void mgl_ask_qt(const wchar_t *quest, wchar_t *res);
 //-----------------------------------------------------------------------------
 int main(int argc, char **argv)
 {
-	QCoreApplication::setAttribute(Qt::AA_X11InitThreads);
+//	QCoreApplication::setAttribute(Qt::AA_X11InitThreads);
+#if !defined(WIN32) && !defined(__APPLE__)
+	// try to fix possible multi-threading errors
+	// must be placed before ANY window creation
+	XInitThreads();
+#endif
 	mgl_ask_func = mgl_ask_qt;
 	QApplication a(argc, argv);
 	QTranslator translator;
