@@ -53,7 +53,7 @@ int mgl_chrpos(const char *str,char fnd);
 /** Get uncommented string from file (NOTE: it is not thread safe!!!) */
 char *mgl_fgetstr(FILE *fp);
 /** Check if symbol denote true */
-bool mgl_istrue(char ch);
+int mgl_istrue(char ch);
 /** Print test message */
 void mgl_test(const char *str, ...);
 /** Print info message */

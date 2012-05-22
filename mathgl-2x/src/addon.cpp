@@ -74,7 +74,7 @@ char *mgl_fgetstr(FILE *fp)
 	return s;
 }
 //---------------------------------------------------------------------------
-bool mgl_istrue(char ch)
+int mgl_istrue(char ch)
 {	return (ch=='1' || ch=='t' || ch=='+' || ch=='v');	}
 //---------------------------------------------------------------------------
 void mgl_test(const char *str, ...)

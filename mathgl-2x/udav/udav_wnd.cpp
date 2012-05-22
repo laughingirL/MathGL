@@ -85,6 +85,7 @@ void mgl_ask_qt(const wchar_t *quest, wchar_t *res);
 //-----------------------------------------------------------------------------
 int main(int argc, char **argv)
 {
+	QCoreApplication::setAttribute(Qt::AA_X11InitThreads);
 	mgl_ask_func = mgl_ask_qt;
 	QApplication a(argc, argv);
 	QTranslator translator;

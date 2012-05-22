@@ -39,9 +39,9 @@
 #include <stdio.h>
 #include "mgl2/qt.h"
 //-----------------------------------------------------------------------------
-#if !defined(WIN32) && !defined(__APPLE__)
-#include <X11/Xlib.h>
-#endif
+//#if !defined(WIN32) && !defined(__APPLE__)
+//#include <X11/Xlib.h>
+//#endif
 //-----------------------------------------------------------------------------
 #include "xpm/fileprint.xpm"
 #include "xpm/copy.xpm"
@@ -607,11 +607,12 @@ void mglCanvasQT::Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p
 
 	if(!qApp)
 	{
-#if !defined(WIN32) && !defined(__APPLE__)
-		// try to fix possible multi-threading errors
-		// must be placed before ANY window creation
-		XInitThreads();
-#endif
+		QCoreApplication::setAttribute(Qt::AA_X11InitThreads);
+// #if !defined(WIN32) && !defined(__APPLE__)
+// 		// try to fix possible multi-threading errors
+// 		// must be placed before ANY window creation
+// 		XInitThreads();
+// #endif
 		QApplication *a;
 		if(!argv)
 		{
