@@ -64,8 +64,8 @@ void mglCanvas::PostScale(mglPoint &p) const
 {
 	mglPoint q=p/(2*B.pf);
 	p.x = B.x + q.x*B.b[0] + q.y*B.b[1] + q.z*B.b[2];
-	p.y = B.y+ q.x*B.b[3] + q.y*B.b[4] + q.z*B.b[5];
-	p.z = B.z+ q.x*B.b[6] + q.y*B.b[7] + q.z*B.b[8];
+	p.y = B.y + q.x*B.b[3] + q.y*B.b[4] + q.z*B.b[5];
+	p.z = B.z + q.x*B.b[6] + q.y*B.b[7] + q.z*B.b[8];
 /*	if(Persp)
 	{
 		register float d = (1-Persp*Depth/2)/(1-Persp*p.z);
@@ -81,7 +81,10 @@ bool mglCanvas::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan) const
 	PostScale(p);
 
 	mglPoint y=n;
-	n.x = y.x*B.b[0] + y.y*B.b[1] + y.z*B.b[2];
+//	n.x = (B.b[4]*B.b[8]-B.b[5]*B.b[7])*y.x-(B.b[3]*B.b[8]-B.b[5]*B.b[6])*y.y+(B.b[3]*B.b[7]-B.b[4]*B.b[6])*y.z;
+//	n.y = (B.b[2]*B.b[7]-B.b[1]*B.b[8])*y.x+(B.b[0]*B.b[8]-B.b[2]*B.b[6])*y.y-(B.b[0]*B.b[7]-B.b[1]*B.b[6])*y.z;
+//	n.y = (B.b[1]*B.b[5]-B.b[2]*B.b[4])*y.x-(B.b[0]*B.b[5]-B.b[2]*B.b[3])*y.y+(B.b[0]*B.b[4]-B.b[1]*B.b[3])*y.z;
+	n.x = y.x*B.b[0] + y.y*B.b[1] + y.z*B.b[2];	// simpler for rotation only
 	n.y = y.x*B.b[3] + y.y*B.b[4] + y.z*B.b[5];
 	n.z = y.x*B.b[6] + y.y*B.b[7] + y.z*B.b[8];
 	n.Normalize();
