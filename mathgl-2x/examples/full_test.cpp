@@ -47,15 +47,10 @@ void smgl_combined(mglGraph *gr);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	gr->SetQuality(6);
-	mglData d,x,y,z,v(91);	d.ReadMat("/home/balakin/download/1.dat");
-	x=d.SubData(0);	y=d.SubData(1);	z=d.SubData(2);
-	gr->SetRanges(x,y,z);
-//	gr->Dens(x,y,z);
-	gr->Box();	gr->Axis();
-	v.Fill(-225,225);
-	gr->Cont(v,x,y,z);
-	gr->Colorbar();
+	gr->Light(true);
+	gr->Rotate(60,50);
+	gr->SetRanges(-10,10,-10,10);
+	gr->FSurf("exp(-0.04*(x^2+y^2))");
 	return;
 
 	gr->SubPlot(2,2,0);	gr->Axis();	gr->Grid();

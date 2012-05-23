@@ -485,8 +485,7 @@ unsigned char* mglCanvas::col2int(const mglPnt &p,unsigned char *r)
 			if(!light[i].n)	continue;
 			if(mgl_isnan(light[i].q.x))		// source at infinity
 			{
-				nn = 2*(p.u*light[i].p.x+p.v*light[i].p.y+p.w*light[i].p.z) /
-				(p.u*p.u+p.v*p.v+p.w*p.w+1e-6);
+				nn = 2*(p.u*light[i].p.x+p.v*light[i].p.y+p.w*light[i].p.z) / (p.u*p.u+p.v*p.v+p.w*p.w+1e-6);
 				d0 = light[i].p.x - p.u*nn;
 				d1 = light[i].p.y - p.v*nn;
 				d2 = light[i].p.z - p.w*nn;
