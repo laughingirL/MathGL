@@ -524,7 +524,7 @@ void mglCanvas::DrawAxis(mglAxis &aa, bool text, char arr,const char *stl)
 	EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::DrawLabels(mglAxis &aa, bool rotate)
+void mglCanvas::DrawLabels(mglAxis &aa)
 {
 	if(strchr("xyz",aa.ch))
 		aa.org = mglPoint(GetOrgX(aa.ch), GetOrgY(aa.ch), GetOrgZ(aa.ch));
