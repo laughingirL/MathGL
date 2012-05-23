@@ -453,6 +453,8 @@ void mglCanvas::Axis(const char *dir, const char *stl)
 		if(strchr(dir,ar[i]))	{	arr=ar[i];	break;	}
 	bool adjust = stl && strchr(stl,'a');
 
+	bool ret = get(MGL_ENABLE_RTEXT);
+	if(dir && strchr(dir,'U'))	clr(MGL_ENABLE_RTEXT);
 	AdjustTicks(dir,adjust);
 	// TODO: Ternary axis labeling ...
 	if(strchr(dir,'x'))	DrawAxis(ax, text, arr, stl);
@@ -466,6 +468,7 @@ void mglCanvas::Axis(const char *dir, const char *stl)
 		DrawAxis(ty, text, arr, stl);
 	}
 	else if(strchr(dir,'y'))	DrawAxis(ay, text, arr, stl);
+	set(ret, MGL_ENABLE_RTEXT);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::DrawAxis(mglAxis &aa, bool text, char arr,const char *stl)
@@ -521,7 +524,7 @@ void mglCanvas::DrawAxis(mglAxis &aa, bool text, char arr,const char *stl)
 	EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::DrawLabels(mglAxis &aa)
+void mglCanvas::DrawLabels(mglAxis &aa, bool rotate)
 {
 	if(strchr("xyz",aa.ch))
 		aa.org = mglPoint(GetOrgX(aa.ch), GetOrgY(aa.ch), GetOrgZ(aa.ch));

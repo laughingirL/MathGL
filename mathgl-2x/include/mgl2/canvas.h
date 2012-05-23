@@ -390,7 +390,7 @@ private:
 	/// Draw generic colorbar
 	void colorbar(HCDT v, const float *s, int where, float x, float y, float w, float h);
 	/// Draw labels for ticks
-	void DrawLabels(mglAxis &aa);
+	void DrawLabels(mglAxis &aa, bool rotate=true);
 	/// Draw tick
 	void tick_draw(mglPoint o, mglPoint d1, mglPoint d2, int f, const char *stl);
 	/// Plot point \a p with color \a c
