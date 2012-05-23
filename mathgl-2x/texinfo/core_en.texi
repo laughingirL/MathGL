@@ -1476,6 +1476,8 @@ Draws axes with ticks (see @ref{Axis settings}). Parameter @var{dir} may contain
 @item
 @samp{_} for disabling tick labels;
 @item
+@samp{U} for disabling rotation of tick labels;
+@item
 @samp{AKDTVISO} for drawing arrow at the end of axis;
 @item
 @samp{a} for forced adjusting of axis ticks.

@@ -80,7 +80,7 @@ bool mglCanvas::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan) const
 	if(TernAxis&4)	return res;
 	PostScale(p);
 
-	mglPoint y=n/(2*B.pf);
+	mglPoint y=n;
 	n.x = y.x*B.b[0] + y.y*B.b[1] + y.z*B.b[2];
 	n.y = y.x*B.b[3] + y.y*B.b[4] + y.z*B.b[5];
 	n.z = y.x*B.b[6] + y.y*B.b[7] + y.z*B.b[8];

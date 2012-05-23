@@ -282,18 +282,17 @@ bool mglBase::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan) const
 		if(z2>Max.z)	{z=Max.z;	n=mglPoint(0,0,1);}
 	}
 
-	x1=x;	y1=y;	z1=z;
-	if(fx)	{	x1 = fx->Calc(x,y,z);	n.x *= fx->CalcD('x',x,y,z);	}
-	if(fy)	{	y1 = fy->Calc(x,y,z);	n.y *= fy->CalcD('y',x,y,z);	}
-	if(fz)	{	z1 = fz->Calc(x,y,z);	n.z *= fz->CalcD('z',x,y,z);	}
+	x1=x;	y1=y;	z1=z;	x2=y2=z2=1;
+	if(fx)	{	x1 = fx->Calc(x,y,z);	x2 = fx->CalcD('x',x,y,z);	}
+	if(fy)	{	y1 = fy->Calc(x,y,z);	y2 = fy->CalcD('y',x,y,z);	}
+	if(fz)	{	z1 = fz->Calc(x,y,z);	z2 = fz->CalcD('z',x,y,z);	}
 	if(mgl_isnan(x1) || mgl_isnan(y1) || mgl_isnan(z1))	{	x=NAN;	return false;	}
 
-	x = (2*x1 - FMin.x - FMax.x)/(FMax.x - FMin.x);
-	y = (2*y1 - FMin.y - FMax.y)/(FMax.y - FMin.y);
-	z = (2*z1 - FMin.z - FMax.z)/(FMax.z - FMin.z);
-	n.x *= 2/(FMax.x - FMin.x);
-	n.y *= 2/(FMax.y - FMin.y);
-	n.z *= 2/(FMax.z - FMin.z);
+	register float d;
+	d = 1/(FMax.x - FMin.x);	x = (2*x1 - FMin.x - FMax.x)*d;	x2 *= 2*d;
+	d = 1/(FMax.y - FMin.y);	y = (2*y1 - FMin.y - FMax.y)*d;	y2 *= 2*d;
+	d = 1/(FMax.z - FMin.z);	z = (2*z1 - FMin.z - FMax.z)*d;	z2 *= 2*d;
+	n.x *= y2*z2;	n.y *= x2*z2;	n.z *= x2*y2;
 	if((TernAxis&3)==1)	// usual ternary axis
 	{
 		if(x+y>0)
