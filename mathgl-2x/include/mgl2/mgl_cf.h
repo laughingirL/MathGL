@@ -33,7 +33,7 @@
 #include "mgl2/canvas_cf.h"
 #include "mgl2/addon.h"
 /*****************************************************************************/
-#ifndef NO_OPENGL
+#if MGL_HAVE_OPENGL
 #ifdef __cplusplus
 extern "C" {
 #endif
