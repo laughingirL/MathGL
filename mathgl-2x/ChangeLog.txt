@@ -1,4 +1,4 @@
-2.0.1 Released 8 May 2012
+2.0.1 Released 23 May 2012
 
 * Improve speed of drawing
 * Add reading 3d data files using mglData::ReadMat()
