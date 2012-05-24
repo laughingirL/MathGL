@@ -109,8 +109,9 @@ void Fl_MGL::scripts(char *scr, char *pre)
 //-----------------------------------------------------------------------------
 int Fl_MGL::Draw(mglGraph *gr)
 {
-	Parse->Execute(gr,script_pre,udav_error);
-	Parse->Execute(gr,script,udav_error);
+	Parse->Execute(gr,script_pre);
+	Parse->Execute(gr,script);
+	status->label(gr->Message());
 	return 0;
 }
 //-----------------------------------------------------------------------------
