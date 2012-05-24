@@ -1,6 +1,6 @@
 \input texinfo
 @setfilename mgl_en.info
-@set VERSION 2.0
+@set VERSION 2.0.2
 @settitle MGL script language for version @value{VERSION}
 @syncodeindex pg cp
 @comment %**end of header
