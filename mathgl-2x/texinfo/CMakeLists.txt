@@ -16,12 +16,12 @@ if(MGL_HAVE_DOC)
 	set(MGL_PNG_S )
 
 	foreach(SAMPLE ${MGL_PNG})
-		set(MGL_PNG_N png/${SAMPLE}.png)
+		set(MGL_PNG_N ${MGL_PNG_N} png/${SAMPLE}.png)
 		add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/texinfo/png/${SAMPLE}.png
 			COMMAND ${CMAKE_BINARY_DIR}/examples/mgl_example -kind=${SAMPLE}
 			DEPENDS mgl_example
 			WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/texinfo/png )
-		set(MGL_PNG_S small/${SAMPLE}_sm.png)
+		set(MGL_PNG_S ${MGL_PNG_S} small/${SAMPLE}_sm.png)
 		add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/texinfo/small/${SAMPLE}_sm.png
 			COMMAND ${CMAKE_BINARY_DIR}/examples/mgl_example -kind=${SAMPLE} -mini
 			DEPENDS mgl_example
