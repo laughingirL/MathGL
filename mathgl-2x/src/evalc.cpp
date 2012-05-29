@@ -17,16 +17,18 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include <stdlib.h>
 #include <time.h>
-#include <math.h>
-#include <string.h>
 #include "mgl2/evalc.h"
 #include "mgl2/addon.h"
-#include "mgl2/data.h"
 #if MGL_HAVE_GSL
 #include <gsl/gsl_sf.h>
 #endif
+//-----------------------------------------------------------------------------
+extern "C"{
+void mgl_srnd(long seed);
+double mgl_rnd();
+double mgl_ipow(double x,int n);
+}
 //-----------------------------------------------------------------------------
 //	��������� ��� ������������� ���������
 enum{

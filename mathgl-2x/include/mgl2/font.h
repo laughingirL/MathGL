@@ -21,7 +21,6 @@
 #ifndef _MGL_FONT_H_
 #define _MGL_FONT_H_
 
-#include <stdio.h>
 #include "mgl2/define.h"
 //-----------------------------------------------------------------------------
 #define MGL_FONT_BOLD		0x01000000	// This value is used binary

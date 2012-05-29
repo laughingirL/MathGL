@@ -17,8 +17,6 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include <wchar.h>
-#include <stdlib.h>
 #include "mgl2/canvas.h"
 #include "mgl2/prim.h"
 #include "mgl2/data.h"

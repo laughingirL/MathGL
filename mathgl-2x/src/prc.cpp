@@ -19,7 +19,6 @@
  ***************************************************************************/
 #include <stdio.h>
 #include <time.h>
-#include <zlib.h>
 #include "mgl2/canvas.h"
 #include "mgl2/canvas_cf.h"
 
@@ -33,9 +32,7 @@
 #include <png.h>
 
 #if MGL_HAVE_PDF
-#include <stdlib.h>
 #include <setjmp.h>
-#include <math.h>
 #include <hpdf.h>
 #include <hpdf_u3d.h>
 #include <hpdf_annotation.h>

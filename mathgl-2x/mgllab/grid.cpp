@@ -19,10 +19,6 @@
 #include <FL/Fl_Int_Input.H>
 #include <FL/Fl_Value_Slider.H>
 #include <FL/fl_draw.H>
-#include <stdio.h>
-#include <stdlib.h>
-
-#include <math.h>
 #include "udav.h"
 //-----------------------------------------------------------------------------
 Fl_Callback input_cb;

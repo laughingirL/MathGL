@@ -19,10 +19,6 @@
  ***************************************************************************/
 #ifndef _MGL_BASE_H_
 #define _MGL_BASE_H_
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <math.h>
 #ifndef _MSC_VER
 #include <stdint.h>
 #endif

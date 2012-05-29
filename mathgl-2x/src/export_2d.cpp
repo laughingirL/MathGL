@@ -19,9 +19,7 @@
  ***************************************************************************/
 #include "mgl2/canvas.h"
 #include "mgl2/canvas_cf.h"
-#include <stdlib.h>
 #include <time.h>
-#include <zlib.h>
 #undef _GR_
 #define _GR_	((mglCanvas *)(*gr))
 #define _Gr_	((mglCanvas *)(gr))

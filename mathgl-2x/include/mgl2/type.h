@@ -19,7 +19,6 @@
  ***************************************************************************/
 #ifndef _MGL_TYPE_H_
 #define _MGL_TYPE_H_
-#include <math.h>
 #ifndef _MSC_VER
 #include <stdint.h>
 #endif

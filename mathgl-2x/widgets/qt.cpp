@@ -36,7 +36,6 @@
 #include <QPrintDialog>
 #include <QFileDialog>
 #include <QInputDialog>
-#include <stdio.h>
 #include "mgl2/qt.h"
 //-----------------------------------------------------------------------------
 #if !defined(WIN32) && !defined(__APPLE__)

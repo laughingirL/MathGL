@@ -24,11 +24,18 @@
 #define	_USE_MATH_DEFINES
 #endif
 
+#include <zlib.h>
 #include <math.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <wchar.h>
 
-#define MGL_VER2	0.1
+#ifndef Z_BEST_COMPRESSION
+#define Z_BEST_COMPRESSION 9
+#endif
+
+#define MGL_VER2	0.2
 
 //#ifdef WIN32
 #ifdef _MSC_VER

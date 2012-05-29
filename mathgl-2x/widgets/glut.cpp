@@ -34,11 +34,6 @@
 	#endif
 #endif
 
-#include <math.h>
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
-
 #include "mgl2/glut.h"
 
 mglCanvasGLUT *_mgl_glwnd;

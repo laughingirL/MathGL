@@ -17,10 +17,7 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include <stdlib.h>
 #include <time.h>
-#include <math.h>
-#include <wchar.h>
 #include "mgl2/parser.h"
 #if MGL_HAVE_GSL
 #include <gsl/gsl_sf.h>

@@ -18,9 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include <time.h>
-#include <wchar.h>
 #include <ctype.h>
-#include <stdlib.h>
 #include "mgl2/data.h"
 #include "mgl2/canvas.h"
 #include "mgl2/prim.h"
