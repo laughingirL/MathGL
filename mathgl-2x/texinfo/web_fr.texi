@@ -92,7 +92,7 @@ screen.colorDepth:screen.pixelDepth))+";u"+escape(document.URL)+
 @end html
 @end macro
 @macro fig {plot,text}
-@uref{../\text\, @image{../small/\plot\_sm,3cm, , , .png}}
+@uref{../\text\, @image{../small/\plot\-sm,3cm, , , .png}}
 @end macro
 @end ifhtml
 
@@ -100,7 +100,7 @@ screen.colorDepth:screen.pixelDepth))+";u"+escape(document.URL)+
 @macro external {}
 @end macro
 @macro fig {plot,text}
-@uref{http://mathgl.sourceforge.net/\text\, @image{small/\plot\_sm,3cm, , , .png}}
+@uref{http://mathgl.sourceforge.net/\text\, @image{small/\plot\-sm,3cm, , , .png}}
 @end macro
 @end ifnothtml
 

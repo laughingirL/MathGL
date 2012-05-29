@@ -1973,7 +1973,7 @@ int main(int argc,char **argv)
 			case 'h':	height=atoi(optarg);	break;
 			case 'k':	strcpy(name, optarg);
 						tmp=strchr(name,'.');	if(tmp)	*tmp=0;
-						tmp=strchr(name,'_');	if(tmp)	*tmp=0;
+						tmp=strchr(name,'-');	if(tmp)	*tmp=0;
 						break;
 			case 't':	mglNumThr=atoi(optarg);	break;
 			case 'l':
@@ -1986,9 +1986,9 @@ int main(int argc,char **argv)
 	gr = new mglGraph;
 //	if(type==5 || type==9 || type==10)	{	u3d.unrotate_flag = true;	gr = &u3d;	}
 
-	if(mini)		{	gr->SetSize(190,145);	suf = "_sm";	}
+	if(mini)		{	gr->SetSize(190,145);	suf = "-sm";	}
 	else if(big)
-	{	gr->SetSize(1920,1440);	suf = "_lg";	}
+	{	gr->SetSize(1920,1440);	suf = "-lg";	}
 	else	gr->SetSize(width,height);
 
 	if(dotest)

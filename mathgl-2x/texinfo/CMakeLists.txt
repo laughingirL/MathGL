@@ -16,13 +16,13 @@ if(MGL_HAVE_DOC)
 	set(MGL_PNG_S )
 
 	foreach(SAMPLE ${MGL_PNG})
-		set(MGL_PNG_N ${MGL_PNG_N} png/${SAMPLE}.png)
+		set(MGL_PNG_N ${MGL_PNG_N} ${CMAKE_SOURCE_DIR}/texinfo/png/${SAMPLE}.png)
 		add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/texinfo/png/${SAMPLE}.png
 			COMMAND ${CMAKE_BINARY_DIR}/examples/mgl_example -kind=${SAMPLE}
 			DEPENDS mgl_example
 			WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/texinfo/png )
-		set(MGL_PNG_S ${MGL_PNG_S} small/${SAMPLE}_sm.png)
-		add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/texinfo/small/${SAMPLE}_sm.png
+		set(MGL_PNG_S ${MGL_PNG_S} ${CMAKE_SOURCE_DIR}/texinfo/small/${SAMPLE}-sm.png)
+		add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/texinfo/small/${SAMPLE}-sm.png
 			COMMAND ${CMAKE_BINARY_DIR}/examples/mgl_example -kind=${SAMPLE} -mini
 			DEPENDS mgl_example
 			WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/texinfo/small )
@@ -79,7 +79,7 @@ if(MGL_HAVE_DOC)
 		COMMAND ${findtp} -I ${CMAKE_SOURCE_DIR}/texinfo/png mathgl_en.texi
 		COMMAND ${findtp} -I ${CMAKE_SOURCE_DIR}/texinfo/png mathgl_en.texi
 		COMMAND ${findtp} -I ${CMAKE_SOURCE_DIR}/texinfo/png mathgl_en.texi
-		DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/png/all.png
+#		DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/png/all.png
 		DEPENDS ${list_texi_files_en} ${MGL_PNG_N}
 #		DEPENDS ${list_texi_files_ru}
 		WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/texinfo
