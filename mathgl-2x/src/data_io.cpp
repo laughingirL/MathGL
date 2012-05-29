@@ -302,7 +302,7 @@ int mgl_data_read(HMDT d, const char *fname)
 	char *buf = mgl_read_gz(fp);
 	nb = strlen(buf);	gzclose(fp);
 
-	bool first=false,com=false;
+	bool first=false;
 	register char ch;
 	for(i=nb-1;i>=0;i--)	if(buf[i]>' ')	break;
 	buf[i+1]=0;	nb = i;		// remove tailing spaces
@@ -320,6 +320,7 @@ int mgl_data_read(HMDT d, const char *fname)
 		if(ch=='#')	while(!isn(buf[i]) && i<nb)	i++;
 		if(isn(ch))
 		{
+			while(buf[i+1]==' ' || buf[i+1]=='\t') i++;
 			if(isn(buf[i+1]))	{first=true;	break;	}
 			m++;
 		}
@@ -328,10 +329,12 @@ int mgl_data_read(HMDT d, const char *fname)
 	if(first)	for(i=0;i<nb-1;i++)		// determine nz
 	{
 		ch = buf[i];
-		if(ch=='#')	com = true;	// comment
+		if(ch=='#')	while(!isn(buf[i]) && i<nb)	i++;
+//		if(ch=='#')	com = true;	// comment
 		if(isn(ch))
 		{
-			if(com)	{	com=false;	continue;	}
+//			if(com)	{	com=false;	continue;	}
+			while(buf[i+1]==' ' || buf[i+1]=='\t') i++;
 			if(isn(buf[i+1]))	l++;
 		}
 	}

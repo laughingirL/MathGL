@@ -47,6 +47,10 @@ void smgl_combined(mglGraph *gr);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
+	mglData d("/home/balakin/progr/laqo_gui/scen2_LSM_15/QO_am.dat");
+	d.PrintInfo(stdout);
+	return;
+	
 	gr->Light(true);
 	gr->Rotate(60,50);
 	gr->SetRanges(-10,10,-10,10);
@@ -1967,8 +1971,10 @@ int main(int argc,char **argv)
 			case 0:		break;
 			case 'w':	width =atoi(optarg);	break;
 			case 'h':	height=atoi(optarg);	break;
-			case 'k':	strcpy(name, optarg);	tmp=strchr(name,'.');
-						if(tmp)	*tmp=0;			break;
+			case 'k':	strcpy(name, optarg);
+						tmp=strchr(name,'.');	if(tmp)	*tmp=0;
+						tmp=strchr(name,'_');	if(tmp)	*tmp=0;
+						break;
 			case 't':	mglNumThr=atoi(optarg);	break;
 			case 'l':
 				while(s->name[0])	{	printf("%s ",s->name);	s++;	}

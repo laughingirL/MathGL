@@ -3,34 +3,44 @@
 # new files and destination for html docs.
 
 if(MGL_HAVE_DOC)
-	set(MGL_PNG alpha.png area.png aspect.png axial.png axis.png barh.png bars.png belt.png boxplot.png
-	box.png boxs.png candle.png chart.png cloud.png colorbar.png combined.png cones.png conta.png contd.png
-	contfa.png contf.png contf_xyz.png cont.png contv.png cont_xyz.png curvcoor.png cut.png dat_diff.png
-	dat_extra.png densa.png dens.png dens_xyz.png dew.png dots.png error.png fall.png fit.png flow.png
-	fog.png grad.png hist.png inplot.png label.png legend.png loglog.png map.png mark.png mesh.png mirror.png
-	molecule.png parser.png pde.png pipe.png plot.png primitives.png qo2d.png radar.png region.png schemes.png
-	several_light.png stem.png step.png stereo.png stfa.png style.png surf3a.png surf3c.png surf3.png
-	surfa.png surfc.png surf.png tape.png tens.png ternary.png textmark.png text.png ticks.png tile.png
-	tiles.png torus.png traj.png triplot.png tube.png type0.png type1.png type2.png vect.png venn.png)
+	set(MGL_PNG alpha area aspect axial axis barh bars belt boxplot
+		box boxs candle chart cloud colorbar combined cones conta contd
+		contfa contf contf_xyz cont contv cont_xyz curvcoor cut dat_diff
+		dat_extra densa dens dens_xyz dew dots error fall fit flow
+		fog grad hist inplot label legend loglog map mark mesh mirror
+		molecule parser pde pipe plot primitives qo2d radar region schemes
+		several_light stem step stereo stfa style surf3a surf3c surf3
+		surfa surfc surf tape tens ternary textmark text ticks tile
+		tiles torus traj triplot tube type0 type1 type2 vect venn )
+	set(MGL_PNG_N )
+	set(MGL_PNG_S )
 
-# 	foreach(SAMPLE ${MGL_PNG})
-# 		add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/texinfo/png/${SAMPLE}
-# 			COMMAND ${CMAKE_BINARY_DIR}/examples/mgl_example --kind=${SAMPLE}
-# 			WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/texinfo/png )
-# 	endforeach(SAMPLE)
+	foreach(SAMPLE ${MGL_PNG})
+		set(MGL_PNG_N png/${SAMPLE}.png)
+		add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/texinfo/png/${SAMPLE}.png
+			COMMAND ${CMAKE_BINARY_DIR}/examples/mgl_example -kind=${SAMPLE}
+			DEPENDS mgl_example
+			WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/texinfo/png )
+		set(MGL_PNG_S small/${SAMPLE}_sm.png)
+		add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/texinfo/small/${SAMPLE}_sm.png
+			COMMAND ${CMAKE_BINARY_DIR}/examples/mgl_example -kind=${SAMPLE} -mini
+			DEPENDS mgl_example
+			WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/texinfo/small )
+	endforeach(SAMPLE)
 
-	add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/texinfo/png/all.png
-		COMMAND ${CMAKE_BINARY_DIR}/examples/mgl_example
-		COMMAND touch ${CMAKE_SOURCE_DIR}/texinfo/png/all.png
-		WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/texinfo/png
-		DEPENDS mgl_example
-	)
-	add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/texinfo/small/all.png
-		COMMAND ${CMAKE_BINARY_DIR}/examples/mgl_example -mini
-		COMMAND touch ${CMAKE_SOURCE_DIR}/texinfo/small/all.png
-		WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/texinfo/small
-		DEPENDS mgl_example
-	)
+# 	add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/texinfo/png/all.png
+# 		COMMAND ${CMAKE_BINARY_DIR}/examples/mgl_example
+# 		COMMAND touch ${CMAKE_SOURCE_DIR}/texinfo/png/all.png
+# 		WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/texinfo/png
+# 		DEPENDS mgl_example
+# 	)
+# 	add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/texinfo/small/all.png
+# 		COMMAND ${CMAKE_BINARY_DIR}/examples/mgl_example -mini
+# 		COMMAND touch ${CMAKE_SOURCE_DIR}/texinfo/small/all.png
+# 		WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/texinfo/small
+# 		DEPENDS mgl_example
+# 	)
+
 #	set_source_files_properties(${CMAKE_BINARY_DIR}/examples/mgl_example PROPERTIES GENERATED 1)
 #	ADD_CUSTOM_TARGET(gen_all_png DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/png/all.png)
 #	ADD_DEPENDENCIES(gen_all_png mgl_example)
@@ -40,19 +50,20 @@ if(MGL_HAVE_DOC)
 		core_ru.texi concept_ru.texi widget_ru.texi data_ru.texi other_ru.texi appendix_ru.texi fdl.texi)
 
   add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/texinfo/web_en.pdf
-    COMMAND ${findtp} -I ${CMAKE_SOURCE_DIR}/texinfo/png web_en.texi
-    COMMAND ${findth} -I=${CMAKE_SOURCE_DIR}/texinfo/png --split=section web_en.texi -o web_en
-    DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/small/all.png web_en.texi
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/texinfo
-  )
+		COMMAND ${findtp} -I ${CMAKE_SOURCE_DIR}/texinfo/png web_en.texi
+		COMMAND ${findth} -I=${CMAKE_SOURCE_DIR}/texinfo/png --split=section web_en.texi -o web_en
+#		DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/small/all.png web_en.texi
+		DEPENDS web_en.texi ${MGL_PNG_S}
+		WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/texinfo
+	)
 
 	add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/texinfo/mathgl_en.info
 		COMMAND ${findth} -I=${CMAKE_SOURCE_DIR}/texinfo/png --split=section mathgl_en.texi -o mathgl_en
 		COMMAND ${findth} -I=${CMAKE_SOURCE_DIR}/texinfo/png --split=node --frames -o doc_en mathgl_en.texi
 		COMMAND ${findth} -I=${CMAKE_SOURCE_DIR}/texinfo/png --split=no mgl_en.texi -o mgl_en.html
 		COMMAND ${findmi} --no-validate mathgl_en.texi
-		DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/png/all.png
-		DEPENDS ${list_texi_files_en}
+#		DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/png/all.png
+		DEPENDS ${list_texi_files_en} ${MGL_PNG_N}
 		WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/texinfo
 	)
 	add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/texinfo/mathgl_ru.info
@@ -60,8 +71,8 @@ if(MGL_HAVE_DOC)
 		COMMAND ${findth} -I=${CMAKE_SOURCE_DIR}/texinfo/png --split=node --frames -o doc_ru mathgl_ru.texi
 		COMMAND ${findth} -I=${CMAKE_SOURCE_DIR}/texinfo/png --split=no mgl_ru.texi -o mgl_ru.html
 		COMMAND ${findmi} --no-validate mathgl_ru.texi
-		DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/png/all.png
-		DEPENDS ${list_texi_files_ru}
+#		DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/png/all.png
+		DEPENDS ${list_texi_files_ru} ${MGL_PNG_N}
 		WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/texinfo
 	)
 	add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/texinfo/mathgl_en.pdf
@@ -69,14 +80,14 @@ if(MGL_HAVE_DOC)
 		COMMAND ${findtp} -I ${CMAKE_SOURCE_DIR}/texinfo/png mathgl_en.texi
 		COMMAND ${findtp} -I ${CMAKE_SOURCE_DIR}/texinfo/png mathgl_en.texi
 		DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/png/all.png
-		DEPENDS ${list_texi_files_en}
+		DEPENDS ${list_texi_files_en} ${MGL_PNG_N}
 #		DEPENDS ${list_texi_files_ru}
 		WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/texinfo
 	)
 	add_custom_target(documentation ALL
 		DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/mathgl_en.info
 		DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/mathgl_en.pdf
-    DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/web_en.pdf
+		DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/web_en.pdf
 #		DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/mathgl_ru.info
 #		DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/mathgl_ru.pdf
 	)
