@@ -205,6 +205,13 @@ mglData mglFormulaCalc(const wchar_t *string, mglParser *arg)
 		else			res = mglApplyOper(Buf,Buf+n+1,arg, div);
 		delete []str;		return res;
 	}
+	n=mglFindInText(str,"@");				// high priority -- combine
+	if(n>=0)
+	{
+		wcscpy(Buf,str);	Buf[n]=0;
+		const mglData &a = mglFormulaCalc(Buf,arg), &b = mglFormulaCalc(Buf+n+1,arg);
+		delete []str;		return a.Combine(b);
+	}
 	n=mglFindInText(str,"^");				// highest priority -- power
 	if(n>=0)
 	{

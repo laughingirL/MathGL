@@ -32,5 +32,8 @@ install(
 	TARGETS udav
 	RUNTIME DESTINATION bin
 )
+install(FILES UDAV.desktop DESTINATION ${CMAKE_INSTALL_PREFIX}/share/applications/)
+install(FILES udav.png DESTINATION ${CMAKE_INSTALL_PREFIX}/share/pixmaps/)
+#install(FILES udav_ru.qm DESTINATION ${CMAKE_INSTALL_PREFIX}/share/udav/)
 
 endif(MGL_HAVE_QT)

@@ -269,6 +269,9 @@ int mgls_beam(mglGraph *gr, long , mglArg *a, int k[10], const char *)
 	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1 && k[4]==3)
 		gr->Beam(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),a[4].v,
 				k[5]==2? a[5].s.c_str():"",k[6]==3?iint(a[6].v):0, iint(k[7]==3?a[7].v:3));
+	if(k[0]==3 && k[1]==1 && k[2]==1 && k[3]==1 && k[4]==1 && k[5]==3)
+		gr->Beam(a[0].v,*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),a[5].v,
+				k[6]==2? a[6].s.c_str():"",k[7]==3?iint(a[7].v):0);
 	else	return 1;
 	return 0;
 }
@@ -3547,7 +3550,7 @@ mglCommand mgls_base_cmd[] = {
 	{"colorbar","Draw colorbar","colorbar ['fmt' pos]|Vdat ['fmt' pos]|'sch' pos x y w h|Vdat 'sch' pos x y w h", mgls_colorbar, mglc_colorbar,1},
 	{"column","Get data column filled by formula on column ids","column Res Dat 'eq'", mgls_column, mglc_column,4},
 	{"columnplot","Set position of plot inside cell of column", "columnplot num ind [d]", mgls_columnplot, mglc_columnplot,5},
-	{"combine", "Direct multiplication of arrays", "combine Res Adat Bdat", mgls_combine, mglc_combine,3},
+	{"combine", "Direct multiplication of arrays", "combine Res Adat Bdat", mgls_combine, mglc_combine,4},
 	{"cone","Draw cone","cone x1 y1 z1 x2 y2 z2 r1 [r2 'fmt' edge]", mgls_cone, mglc_cone,1},
 	{"cones","Draw cones for 1D data","cones Ydat ['fmt' above]|Xdat Ydat ['fmt' above]|Xdat Ydat Zdat ['fmt' above]", mgls_cones, mglc_cones,0},
 	{"cont","Draw contour lines","cont Zdat ['fmt' num zpos]|Vdat Zdat ['fmt' zpos]|Xdat Ydat Zdat ['fmt' num zpos]|Vdat Xdat Ydat Zdat ['fmt' zpos]", mgls_cont, mglc_cont,0},
