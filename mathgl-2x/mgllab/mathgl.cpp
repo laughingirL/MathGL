@@ -86,13 +86,13 @@ Fl_MGL::Fl_MGL(int x, int y, int w, int h, char *label) : Fl_MGLView(x,y,w,h,lab
 	script = script_pre = 0;	par = this;
 	next = udav_next;	delay = udav_delay;
 	prev = udav_prev;	reload = udav_reload;
-#ifdef WIN32
+/*#ifdef WIN32
 //	setlocale(LC_TYPE,"russian_Russia.CP1251");
 	char *path;
 	get_doc_dir(path);
-	if(!graph->LoadFont("STIX",path && path[0] ? path : "."))	graph->RestoreFont();
+	if(!FMGL->GetFont()->Load("STIX",path && path[0] ? path : "."))	FMGL->GetFont()->Restore();
 	free(path);
-#endif
+#endif*/
 }
 //-----------------------------------------------------------------------------
 Fl_MGL::~Fl_MGL()	{	clear_scripts();	if(ArgBuf)	delete []ArgBuf;	}
