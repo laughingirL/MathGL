@@ -390,3 +390,8 @@ void mgl_set_plotfactor(HMGL gr, float val)
 void mgl_set_plotfactor_(uintptr_t *gr, float *val)
 {	_GR_->SetPlotFactor(*val);	}
 //-----------------------------------------------------------------------------
+void mgl_set_tick_shift(HMGL gr, float sx, float sy, float sz, float sc)
+{	_Gr_->SetTickShift(mglPoint(sx,sy,sz,sc));	}
+void mgl_set_tick_shift_(uintptr_t *gr, float *sx, float *sy, float *sz, float *sc)
+{	_GR_->SetTickShift(mglPoint(*sx,*sy,*sz,*sc));	}
+//-----------------------------------------------------------------------------

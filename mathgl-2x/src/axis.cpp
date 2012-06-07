@@ -576,7 +576,7 @@ void mglCanvas::DrawLabels(mglAxis &aa)
 		if(!get(MGL_DISABLE_SCALE))	pos[0]=(qq.u*nn.y-qq.v*nn.x>0) ? 'T':'t';
 		if(aa.ch=='T' && pos[0]=='T')	pos[0]='t';
 		if(aa.ch=='T' && pos[0]=='t')	pos[0]='T';
-		text_plot(kk[i], aa.txt[i].text.c_str(), pos, -1, 0.07,CDef,tet?false:true);
+		text_plot(kk[i], aa.txt[i].text.c_str(), pos, -1, aa.sh+0.07,CDef,tet?false:true);
 	}
 	delete []w;	delete []kk;
 }
@@ -671,7 +671,7 @@ void mglCanvas::Labelw(char dir, const wchar_t *text, float pos, float shift)
 		if(ax.dv)	t = (Min.x+Max.x+pos*(Max.x-Min.x))/2;
 		else	t = Min.x*pow(Max.x/Min.x, (pos+1)/2);
 		nn = mglPoint(0,ss.y-y0,ss.z-z0);
-		p = mglPoint(t,y0,z0);	q = mglPoint(1,0,0);
+		p = mglPoint(t,y0,z0);	q = mglPoint(1,0,0);	shift += ax.sh;
 	}
 	if(dir=='y')
 	{
@@ -679,7 +679,7 @@ void mglCanvas::Labelw(char dir, const wchar_t *text, float pos, float shift)
 		if(ay.dv)	t = (Min.y+Max.y+pos*(Max.y-Min.y))/2;
 		else	t = Min.y*pow(Max.y/Min.y, (pos+1)/2);
 		nn = mglPoint(ss.x-x0,0,ss.z-z0);
-		p = mglPoint(x0,t,z0);	q = mglPoint(0,1,0);
+		p = mglPoint(x0,t,z0);	q = mglPoint(0,1,0);	shift += ay.sh;
 		if(TernAxis&3)
 		{
 			q = mglPoint(-1,1,0);	pos=-pos;
@@ -692,7 +692,7 @@ void mglCanvas::Labelw(char dir, const wchar_t *text, float pos, float shift)
 		if(ay.dv)	t = (Min.y+Max.y+pos*(Max.y-Min.y))/2;
 		else	t = Min.y*pow(Max.y/Min.y, (pos+1)/2);
 		nn = mglPoint(ss.x-x0,0,ss.z-z0);
-		p = mglPoint(x0,t,z0);	q = mglPoint(0,1,0);
+		p = mglPoint(x0,t,z0);	q = mglPoint(0,1,0);	shift += ay.sh;
 	}
 	if(dir=='z')
 	{
@@ -700,7 +700,7 @@ void mglCanvas::Labelw(char dir, const wchar_t *text, float pos, float shift)
 		if(az.dv)	t = (Min.z+Max.z+pos*(Max.z-Min.z))/2;
 		else	t = Min.z*pow(Max.z/Min.z, (pos+1)/2);
 		nn = mglPoint(ss.x-x0,ss.y-y0,0);
-		p = mglPoint(x0,y0,t);	q = mglPoint(0,0,1);
+		p = mglPoint(x0,y0,t);	q = mglPoint(0,0,1);	shift += az.sh;
 	}
 	ss = p;	ScalePoint(ss,nn,false);
 	char font[33],ff[3]=":C";

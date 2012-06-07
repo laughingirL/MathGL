@@ -1,3 +1,7 @@
+2.1 Released ?? July 2012
+
+* Add SetTickShift() for additional shift of tick labels
+
 2.0.2 Released 24 May 2012
 
 * Add 'U' style for Axis() which disable ticks rotation.

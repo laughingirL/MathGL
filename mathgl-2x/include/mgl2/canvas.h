@@ -45,7 +45,7 @@ struct mglMatrix
 /// Structure for drawing axis and ticks
 struct mglAxis
 {
-	mglAxis()	{	dv=ds=d=v0=v1=v2=o=0;	ns=f=ch=*t=0;	}
+	mglAxis()	{	dv=ds=d=v0=v1=v2=o=sh=0;	ns=f=ch=*t=0;	}
 	mglAxis(const mglAxis &aa)
 	{	dv=aa.dv;	ds=aa.ds;	d=aa.d;		dir=aa.dir;
 		v0=aa.v0;	v1=aa.v1;	v2=aa.v2;	o=aa.o;
@@ -70,6 +70,7 @@ struct mglAxis
 	int f;			///< Flag 0x1 - time, 0x2 - manual, 0x4 - fixed dv
 	std::vector<mglText> txt;	///< Axis labels
 	char ch;		///< Character of axis (like 'x','y','z','c')
+	float sh;		///< Extra shift of ticks and axis labels
 };
 //-----------------------------------------------------------------------------
 /// Structure for light source
@@ -283,6 +284,9 @@ using mglBase::Light;
 	void EndGroup();
 	/// Retur color for primitive depending lighting
 	mglColor GetColor(const mglPrim &p);
+	/// Set extra shift for tick and axis labels
+	inline void SetTickShift(mglPoint p)
+	{	ax.sh = p.x;	ay.sh = p.y;	az.sh = p.z;	ac.sh = p.c;	}
 
 protected:
 	float Delay;		///< Delay for animation in seconds

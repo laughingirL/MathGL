@@ -202,7 +202,7 @@ Class is Qt widget which display MathGL graphics (defined in @code{#include <mgl
 Sets drawing functions from a class inherited from @code{mglDraw}.
 @end deftypemethod
 @deftypemethod QMathGL @code{void} setDraw (@code{int (*}draw)(@code{mglBase *}gr, @code{void *}p), @code{void *}par=@code{NULL})
-@deftypemethodx QMathGL @code{void} setDraw (@code{int (*}draw)(@code{mglGraph *}gr, @code{void *}p))
+@deftypemethodx QMathGL @code{void} setDraw (@code{int (*}draw)(@code{mglGraph *}gr))
 Sets the drawing function @var{draw}. There is support of a list of plots (frames). So as one can prepare a set of frames at first and redraw it fast later (but it requires more memory). Function should return positive number of frames for the list or zero if it will plot directly. Parameter @var{par} contains pointer to data for the plotting function @var{draw}.
 @end deftypemethod
 

@@ -48,6 +48,7 @@ at all) + testing
 * dash for rect, ellipse boundary
 
 34. Hotkeys
+35. Add color region cutting in SetCutBox()
 
 
 ============= UDAV =============

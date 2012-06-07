@@ -198,6 +198,8 @@ public:
 	/// Tune ticks
 	inline void SetTuneTicks(int tune, float fact_pos=1.15)
 	{	mgl_tune_ticks(gr, tune, fact_pos);	}
+	inline void SetTickShift(mglPoint p)
+	{	mgl_set_tick_shift(gr,p.x,p.y,p.z,p.c);	}
 
 	/// Put further plotting in some region of whole frame surface.
 	inline void SubPlot(int nx,int ny,int m,const char *style="<>_^", float dx=0, float dy=0)
