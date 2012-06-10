@@ -17,8 +17,10 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include <png.h>
 #include "mgl2/data.h"
+#if MGL_HAVE_PNG
+#include <png.h>
+#endif
 //-----------------------------------------------------------------------------
 long mgl_col_dif(unsigned char *c1,unsigned char *c2,bool sum)
 {
@@ -64,6 +66,7 @@ unsigned char *mgl_create_scheme(const char *scheme,long &num)
 //-----------------------------------------------------------------------------
 void mgl_data_import(HMDT d, const char *fname, const char *scheme,float v1,float v2)
 {
+#if MGL_HAVE_PNG
 	if(v1>=v2)	return;
 	long num=0;
 	FILE *fp = fopen(fname, "rb");
@@ -104,10 +107,12 @@ void mgl_data_import(HMDT d, const char *fname, const char *scheme,float v1,floa
 	delete []c;
 	png_destroy_read_struct(&png_ptr, &info_ptr,&end_info);
 	fclose(fp);
+#endif
 }
 //-----------------------------------------------------------------------------
 void mgl_data_export(HCDT dd, const char *fname, const char *scheme,float v1,float v2,long ns)
 {
+#if MGL_HAVE_PNG
 	register long i,j,k;
 	long nx=dd->GetNx(), ny=dd->GetNy(), nz=dd->GetNz();
 	const mglData *md = dynamic_cast<const mglData *>(dd);
@@ -161,6 +166,7 @@ void mgl_data_export(HCDT dd, const char *fname, const char *scheme,float v1,flo
 	png_write_end(png_ptr, info_ptr);
 	png_destroy_write_struct(&png_ptr, &info_ptr);
 	fclose(fp);	free(p);	free(d);
+#endif
 }
 //-----------------------------------------------------------------------------
 void mgl_data_export_(uintptr_t *d, const char *fname, const char *scheme,float *v1,float *v2,int *ns,int l,int n)

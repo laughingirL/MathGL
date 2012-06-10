@@ -20,20 +20,32 @@
 #ifndef _MGL_DEFINE_H_
 #define _MGL_DEFINE_H_
 //-----------------------------------------------------------------------------
+#include "mgl2/config.h"
+//-----------------------------------------------------------------------------
 #ifdef WIN32 //_MSC_VER needs this before math.h
 #define	_USE_MATH_DEFINES
 #endif
 
+#if MGL_HAVE_ZLIB
 #include <zlib.h>
+#ifndef Z_BEST_COMPRESSION
+#define Z_BEST_COMPRESSION 9
+#endif
+#else
+#define gzFile	FILE*
+#define gzread(fp,buf,size)	fread(buf,1,size,fp)
+#define gzopen	fopen
+#define gzclose	fclose
+#define gzprintf	fprintf
+#define gzgets(fp,str,size)	fgets(str,size,fp)
+#define gzgetc	fgetc
+#endif
+
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <wchar.h>
-
-#ifndef Z_BEST_COMPRESSION
-#define Z_BEST_COMPRESSION 9
-#endif
 
 #define MGL_VER2	0.2
 
@@ -66,8 +78,6 @@ const unsigned long mgl_nan[2] = {0xffffffff, 0x7fffffff};
 #endif
 //#define FLT_EPS	1.1920928955078125e-07
 #define MGL_FLT_EPS	(1.+1e-6)
-//-----------------------------------------------------------------------------
-#include "mgl2/config.h"
 //-----------------------------------------------------------------------------
 #if MGL_USE_DOUBLE
 typedef double mreal;

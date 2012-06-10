@@ -40,7 +40,7 @@ typedef mglData* HMDT;
 typedef mglParser* HMPR;
 typedef mglFormula* HMEX;
 //-----------------------------------------------------------------------------
-#ifdef MGL_NO_DATA_A
+#if MGL_NO_DATA_A
 #define mglDataA mglData
 typedef const mglData* HCDT;
 #include "mgl2/data.h"

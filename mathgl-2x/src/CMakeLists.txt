@@ -16,6 +16,7 @@ set(mgl_hdr
 ../include/mgl2/define.h	../include/mgl2/other.h		../include/mgl2/eval.h
 ../include/mgl2/parser.h	../include/mgl2/addon.h		../include/mgl2/evalc.h )
 
+if(MGL_HAVE_PNG)
 set(prc_src
 prc/PRCbitStream.cc prc/PRCdouble.cc prc/oPRCFile.cc prc/writePRC.cc prc.cpp
 )
@@ -27,6 +28,7 @@ prc/PRC.h prc/PRCbitStream.h prc/PRCdouble.h prc/oPRCFile.h prc/writePRC.h
 set(mgl_src ${mgl_src} ${prc_src} )
 set(mgl_hdr ${mgl_hdr} ${prc_hdr} )
 include_directories(prc)
+endif(MGL_HAVE_PNG)
 
 if(MGL_HAVE_OPENGL)
 	set(mgl_src ${mgl_src} opengl.cpp )
@@ -93,8 +95,20 @@ if(MGL_HAVE_OPENGL)
 	include_directories(${OPENGL_INCLUDE_DIR} )
 endif(MGL_HAVE_OPENGL)
 
-target_link_libraries(mgl ${PNG_LIBRARIES} ${ZLIB_LIBRARIES} ${M_LIB})
-include_directories(${PNG_INCLUDE_DIR} ${ZLIB_INCLUDE_DIR})
+
+if(MGL_HAVE_PNG)
+	target_link_libraries(mgl ${PNG_LIBRARIES} )
+	include_directories(${PNG_INCLUDE_DIR})
+endif(MGL_HAVE_PNG)
+
+
+if(MGL_HAVE_ZLIB)
+	target_link_libraries(mgl ${ZLIB_LIBRARIES} )
+	include_directories(${ZLIB_INCLUDE_DIR})
+endif(MGL_HAVE_ZLIB)
+
+target_link_libraries(mgl ${M_LIB})
+#include_directories(${PNG_INCLUDE_DIR} ${ZLIB_INCLUDE_DIR})
 file(TO_NATIVE_PATH $(MGL_FONT_PATH) MGL_FONT_PATH_SYS)
 #add_definitions(-DMGL_FONT_PATH="${MGL_FONT_PATH_SYS}")
 

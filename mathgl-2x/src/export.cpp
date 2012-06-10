@@ -19,10 +19,13 @@
  ***************************************************************************/
 #include <time.h>
 #include <stdarg.h>
-#include <png.h>
 
 #include "mgl2/canvas.h"
 #include "mgl2/canvas_cf.h"
+
+#if MGL_HAVE_PNG
+#include <png.h>
+#endif
 
 #if MGL_HAVE_JPEG
 extern "C" {
@@ -32,6 +35,7 @@ extern "C" {
 //-----------------------------------------------------------------------------
 int mgl_pnga_save(const char *fname, int w, int h, unsigned char **p)
 {
+#if MGL_HAVE_PNG
 	FILE *fp = fopen(fname, "wb");
 	if (!fp)	return 1;
 
@@ -55,10 +59,14 @@ int mgl_pnga_save(const char *fname, int w, int h, unsigned char **p)
 	png_destroy_write_struct(&png_ptr, &info_ptr);
 	fclose(fp);
 	return 0;
+#else
+	return 1;
+#endif
 }
 //-----------------------------------------------------------------------------
 int mgl_png_save(const char *fname, int w, int h, unsigned char **p)
 {
+#if MGL_HAVE_PNG
 	FILE *fp = fopen(fname, "wb");
 	if (!fp)	return 1;
 
@@ -82,6 +90,9 @@ int mgl_png_save(const char *fname, int w, int h, unsigned char **p)
 	png_destroy_write_struct(&png_ptr, &info_ptr);
 	fclose(fp);
 	return 0;
+#else
+	return 1;
+#endif
 }
 //-----------------------------------------------------------------------------
 int mgl_bmp_save(const char *fname, int w, int h, unsigned char **p)
@@ -477,6 +488,7 @@ void mgl_write_frame_(uintptr_t *gr, const char *fname,const char *descr,int l,i
 	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
 	mgl_write_frame(_GR_,s,f);	delete []s;		delete []f;}
 //-----------------------------------------------------------------------------
+#include <unistd.h>
 void mgl_show_image(HMGL gr, const char *viewer, int keep)
 {
 	char fname[128], *cmd = new char [128];
@@ -484,7 +496,7 @@ void mgl_show_image(HMGL gr, const char *viewer, int keep)
 	mgl_write_png_solid(gr,fname,"MathGL ShowImage file");
 	if(!viewer || !viewer[0])
 		viewer = MGL_DEF_VIEWER;
-	#ifdef WIN32
+#ifdef WIN32
 		if(keep)
 		{
 			sprintf(cmd,"%s %s &", viewer,fname);
@@ -493,7 +505,7 @@ void mgl_show_image(HMGL gr, const char *viewer, int keep)
 			sprintf(cmd,"del %s", fname);
 		}
 		else	sprintf(cmd,"%s %s; del %s", viewer,fname,fname);
-		#else
+#else
 		if(keep)
 		{
 			sprintf(cmd,"%s %s &", viewer,fname);
@@ -502,7 +514,7 @@ void mgl_show_image(HMGL gr, const char *viewer, int keep)
 			sprintf(cmd,"rm %s", fname);
 		}
 		else	sprintf(cmd,"%s %s; rm %s", viewer,fname,fname);
-		#endif
+#endif
 		if(system(cmd)==-1)	printf("Error to call external viewer\n");
 		delete []cmd;
 }

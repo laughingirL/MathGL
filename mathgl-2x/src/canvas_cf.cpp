@@ -395,3 +395,8 @@ void mgl_set_tick_shift(HMGL gr, float sx, float sy, float sz, float sc)
 void mgl_set_tick_shift_(uintptr_t *gr, float *sx, float *sy, float *sz, float *sc)
 {	_GR_->SetTickShift(mglPoint(*sx,*sy,*sz,*sc));	}
 //-----------------------------------------------------------------------------
+#if !MGL_HAVE_PNG
+void mgl_write_prc(HMGL gr, const char *fname,const char *descr, int make_pdf){}
+void mgl_write_prc_(uintptr_t *graph, const char *fname,const char *descr, int *make_pdf,int lf,int ld){}
+#endif
+//-----------------------------------------------------------------------------

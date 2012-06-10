@@ -1,6 +1,7 @@
 2.1 Released ?? July 2012
 
 * Add SetTickShift() for additional shift of tick labels
+* Add cmake options 'enable-png' and 'enable-zlib'
 
 2.0.2 Released 24 May 2012
 
