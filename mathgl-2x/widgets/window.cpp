@@ -210,7 +210,7 @@ int mgl_qt_run_()	{	return mgl_qt_run();	}
 //	mglDraw class handling
 //
 //-----------------------------------------------------------------------------
-int mgl_draw_class(mglBase *gr, void *p)	// so stupid way to save mglDraw class inheritance :(
+int mgl_draw_class(HMGL gr, void *p)	// so stupid way to save mglDraw class inheritance :(
 {
 	mglGraph g(gr);	mglWindow *w = (mglWindow *)p;
 	return (w && w->dr) ? w->dr->Draw(&g) : 0;
@@ -220,7 +220,8 @@ void mgl_reload_class(void *p)	// so stupid way to save mglDraw class inheritanc
 void mgl_click_class(void *p)	// so stupid way to save mglDraw class inheritance :(
 {	mglWindow *w = (mglWindow *)p;	if(w && w->dr)	w->dr->Click();	}
 //-----------------------------------------------------------------------------
-int mgl_draw_graph(mglBase *gr, void *p)
+typedef int (*draw_func)(mglGraph *gr);
+int mgl_draw_graph(HMGL gr, void *p)
 {
 	mglGraph g(gr);
 	draw_func func = (draw_func)(p);

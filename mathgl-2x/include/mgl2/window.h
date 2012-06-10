@@ -39,12 +39,14 @@ struct mglDraw
 	{	mgl_draw_thr(this);	}
 #endif
 };
-typedef int (*draw_func)(mglGraph *gr);
-int mgl_draw_graph(mglBase *gr, void *p);
+//-----------------------------------------------------------------------------
+extern "C" {
+int mgl_draw_graph(HMGL gr, void *p);
 // NOTE: mgl_draw_class() and mgl_draw_load() use mglWindow* only. Don't use it with inherited classes
-int mgl_draw_class(mglBase *gr, void *p);
+int mgl_draw_class(HMGL gr, void *p);
 void mgl_click_class(void *p);
 void mgl_reload_class(void *p);
+}
 //-----------------------------------------------------------------------------
 #if MGL_HAVE_QT
 #define MGL_WND_KIND	1

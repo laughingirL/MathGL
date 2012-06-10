@@ -26,6 +26,7 @@ int sample_2(mglGraph *gr);
 int sample_3(mglGraph *gr);
 int sample_d(mglGraph *gr);
 //-----------------------------------------------------------------------------
+typedef int (*draw_func)(mglGraph *gr);
 int main(int argc,char **argv)
 {
 	char key = 0;
