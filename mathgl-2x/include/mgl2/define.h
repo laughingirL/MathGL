@@ -50,7 +50,7 @@
 #define MGL_VER2	0.2
 
 //#ifdef WIN32
-#ifdef _MSC_VER
+#if defined(_MSC_VER) || defined(__BORLANDC__)
 #define hypot _hypot
 #define getcwd _getcwd
 #define isfinite _finite

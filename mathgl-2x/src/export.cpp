@@ -488,7 +488,10 @@ void mgl_write_frame_(uintptr_t *gr, const char *fname,const char *descr,int l,i
 	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
 	mgl_write_frame(_GR_,s,f);	delete []s;		delete []f;}
 //-----------------------------------------------------------------------------
-#include <unistd.h>
+#ifdef WIN32
+#include <io.h>
+#include <direct.h>
+#endif
 void mgl_show_image(HMGL gr, const char *viewer, int keep)
 {
 	char fname[128], *cmd = new char [128];

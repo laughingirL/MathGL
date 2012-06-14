@@ -24,7 +24,7 @@
 	#include <OpenGL/gl.h>
 	#include <GLUT/glut.h>
 #else
-	#ifdef _MSC_VER
+	#if defined(_MSC_VER) || defined(__BORLANDC__)
 		#include <windows.h>
 		#include <GL/gl.h>
 		#include "glut.h"

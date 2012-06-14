@@ -19,7 +19,7 @@
  ***************************************************************************/
 #include <algorithm>
 #include "mgl2/canvas.h"
-#ifdef _MSC_VER
+#if defined(_MSC_VER) || defined(__BORLANDC__)
 #define fmin(a,b)	((a)<(b))?(a):(b)
 #define fmax(a,b)	((a)>(b))?(a):(b)
 #endif

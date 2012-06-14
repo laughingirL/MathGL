@@ -26,8 +26,10 @@ int sample_2(mglGraph *gr);
 int sample_3(mglGraph *gr);
 int sample_d(mglGraph *gr);
 //-----------------------------------------------------------------------------
+//#define PTHREAD_SAMPLE
+#ifdef PTHREAD_SAMPLE
 #include <pthread.h>
-#include <unistd.h>
+#endif
 mglPoint pnt;  // some global variable for changable data
 void *mgl_qt_tmp(void *);
 //-----------------------------------------------------------------------------
@@ -61,7 +63,6 @@ int Foo::Draw(mglGraph *gr)
 	return 0;
 }
 //-----------------------------------------------------
-//#define PTHREAD_SAMPLE
 int main(int argc,char **argv)
 {
 #ifdef PTHREAD_SAMPLE

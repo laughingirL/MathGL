@@ -19,7 +19,7 @@
  ***************************************************************************/
 #ifndef _MGL_TYPE_H_
 #define _MGL_TYPE_H_
-#ifndef _MSC_VER
+#if !defined(_MSC_VER) && !defined(__BORLANDC__)
 #include <stdint.h>
 #endif
 #include "mgl2/define.h"

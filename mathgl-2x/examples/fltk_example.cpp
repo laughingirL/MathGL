@@ -27,7 +27,7 @@ int sample_2(mglGraph *gr);
 int sample_3(mglGraph *gr);
 int sample_d(mglGraph *gr);
 //-----------------------------------------------------------------------------
-#include <unistd.h>
+//#include <unistd.h>
 mglPoint pnt;  // some global variable for changable data
 void *mgl_fltk_tmp(void *)	{	mgl_fltk_run();	return 0;	}
 //#define PTHREAD_SAMPLE

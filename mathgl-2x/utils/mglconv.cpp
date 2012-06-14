@@ -18,7 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include <locale.h>
-#include <unistd.h>
+//#include <unistd.h>
 #include "mgl2/mgl.h"
 void mgl_error_print(const char *Message, void *par);
 void mgl_ask_gets(const wchar_t *quest, wchar_t *res);

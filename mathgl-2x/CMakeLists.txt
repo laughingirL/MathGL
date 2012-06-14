@@ -321,7 +321,6 @@ if(UNIX)
 endif(UNIX)
 
 if(WIN32)
-#	add_definitions(-DWIN32 -D_MSC_VER)
 	add_definitions(-DWIN32)
 endif(WIN32)
 
