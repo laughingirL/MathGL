@@ -18,7 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include <locale.h>
-//#include <unistd.h>
+#include <unistd.h>
 #include "mgl2/window.h"
 #include "mgl2/parser.h"
 //-----------------------------------------------------------------------------
