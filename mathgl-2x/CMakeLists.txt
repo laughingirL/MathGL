@@ -33,7 +33,14 @@ option(enable-doc "Enable documentation building")
 
 include_directories( ${MathGL_SOURCE_DIR}/include ${MathGL_BINARY_DIR}/include)
 
-find_library(M_LIB m)
+if(NOT MSVC)
+	find_library(M_LIB m)
+	if(NOT M_LIB)
+		message(SEND_ERROR "${M_LIB}")
+	endif(NOT M_LIB)
+else(NOT MSVC)
+	set(M_LIB)
+endif(NOT MSVC)
 
 if(enable-double)
 	set(MGL_USE_DOUBLE 1)
