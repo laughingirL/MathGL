@@ -134,7 +134,7 @@ FILE *mgl_next_data(const char *fname,int p)
 	return fp;
 }
 //---------------------------------------------------------------------------
-bool mglDifrGrid(dual *a,int n,dual q,int Border,dual *b,dual *d,int kk)
+bool mgl_difr_grid(dual *a,int n,dual q,int Border,dual *b,dual *d,int kk)
 {
 	register int i,k;
 	//	if(n<=0 || q>=0.5)	return false;
@@ -174,7 +174,7 @@ bool mglDifrGrid(dual *a,int n,dual q,int Border,dual *b,dual *d,int kk)
 	return true;
 }
 //----------------------------------------------------------------------------
-bool mglDifrAxial(dual *a, int n, dual q, int Border,dual *b, dual *d, int kk, double di)
+bool mgl_difr_axial(dual *a, int n, dual q, int Border,dual *b, dual *d, int kk, double di)
 {
 	register int i,k,ii = di<0 ? -int(floor(di)) : 0;
 	dual adt = dual(0.,1.)*q;

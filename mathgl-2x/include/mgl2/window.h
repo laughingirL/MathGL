@@ -53,10 +53,11 @@ void mgl_reload_class(void *p);
 #else
 #define MGL_WND_KIND	0
 #endif
+//-----------------------------------------------------------------------------
 /// Wrapper class for windows displaying graphics
 class mglWindow : public mglGraph
 {
-friend int mgl_draw_class(mglBase *gr, void *p);
+friend int mgl_draw_class(HMGL gr, void *p);
 friend void mgl_click_class(void *p);
 friend void mgl_reload_class(void *p);
 protected:
