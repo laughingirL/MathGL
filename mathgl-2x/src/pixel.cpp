@@ -27,7 +27,7 @@
 void mglCanvas::SetSize(int w,int h)
 {
 	if(w<=0 || h<=0)	{	SetWarn(mglWarnSize,"SetSize");	return;	}
-	Width = w;	Height = h;	Depth = long(sqrt(w*h));
+	Width = w;	Height = h;	Depth = long(sqrt(double(w*h)));
 	if(G)	{	delete []G;	delete []C;	delete []Z;	delete []G4;delete []OI;	}
 	G = new unsigned char[w*h*3];
 	G4= new unsigned char[w*h*4];
@@ -269,7 +269,7 @@ void mglCanvas::pxl_primdr(unsigned long id, unsigned long n, const void *)
 	register unsigned long i;
 	if(id<unsigned(mglNumThr))
 	{
-		for(i=1;i<=unsigned(sqrt(mglNumThr)+0.5);i++)
+		for(i=1;i<=unsigned(sqrt(double(mglNumThr))+0.5);i++)
 			if(mglNumThr%i==0)	ny=i;
 		nx = mglNumThr/ny;
 	}

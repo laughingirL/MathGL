@@ -834,7 +834,7 @@ void mgl_data_cosfft(HMDT d, const char *dir)
 			k = i*nx;	memset(b,0,4*nx*sizeof(double));	b[0] = b[2*nx] = a[k];
 			for(j=1;j<nx;j++)	{	b[2*j] = a[k+j];	b[4*nx-2*j] = a[k+j];	}
 			gsl_fft_complex_transform(b, 1, 2*nx, wt, ws, forward);
-			for(j=0;j<nx;j++)	a[k+j] = b[2*j]/sqrt(2*nx);
+			for(j=0;j<nx;j++)	a[k+j] = b[2*j]/sqrt(2.*nx);
 		}
 	}
 	if(strchr(dir,'y') && ny>1)
@@ -847,7 +847,7 @@ void mgl_data_cosfft(HMDT d, const char *dir)
 			memset(b,0,4*ny*sizeof(double));	b[0] = b[2*ny] = a[i+nx*ny*k];
 			for(j=1;j<ny;j++)	{	b[2*j] = a[i+nx*(ny*k+j)];	b[4*ny-2*j] = a[i+nx*(ny*k+j)];	}
 			gsl_fft_complex_transform(b, 1, 2*ny, wt, ws, forward);
-			for(j=0;j<ny;j++)	a[i+nx*(ny*k+j)] = b[2*j]/sqrt(2*ny);
+			for(j=0;j<ny;j++)	a[i+nx*(ny*k+j)] = b[2*j]/sqrt(2.*ny);
 		}
 	}
 	if(strchr(dir,'z') && nz>1)
@@ -860,7 +860,7 @@ void mgl_data_cosfft(HMDT d, const char *dir)
 			memset(b,0,4*nz*sizeof(double));	b[0] = b[2*nx] = a[i];
 			for(j=1;j<nx;j++)	{	b[2*j] = a[i+k*j];	b[4*nx-2*j] = a[i+k*j];	}
 			gsl_fft_complex_transform(b, 1, 2*nz, wt, ws, forward);
-			for(j=0;j<nz;j++)	a[i+k*j] = b[2*j]/sqrt(2*nz);
+			for(j=0;j<nz;j++)	a[i+k*j] = b[2*j]/sqrt(2.*nz);
 		}
 	}
 	if(b)
@@ -892,7 +892,7 @@ void mgl_data_sinfft(HMDT d, const char *dir)
 			k = i*nx;	memset(b,0,4*nx*sizeof(double));	b[0] = a[k];	b[2*nx] = -a[k];
 			for(j=1;j<nx;j++)	{	b[2*j] = a[k+j];	b[4*nx-2*j] = -a[k+j];	}
 			gsl_fft_complex_transform(b, 1, 2*nx, wt, ws, forward);
-			for(j=0;j<nx;j++)	a[k+j] = -b[2*j+1]/sqrt(2*nx);
+			for(j=0;j<nx;j++)	a[k+j] = -b[2*j+1]/sqrt(2.*nx);
 		}
 	}
 	if(strchr(dir,'y') && ny>1)
@@ -905,7 +905,7 @@ void mgl_data_sinfft(HMDT d, const char *dir)
 			memset(b,0,4*ny*sizeof(double));	b[0] = a[i+nx*ny*k];	b[2*ny] = -a[i+nx*ny*k];
 			for(j=1;j<ny;j++)	{	b[2*j] = a[i+nx*(ny*k+j)];	b[4*ny-2*j] = -a[i+nx*(ny*k+j)];	}
 			gsl_fft_complex_transform(b, 1, 2*ny, wt, ws, forward);
-			for(j=0;j<ny;j++)	a[i+nx*(ny*k+j)] = -b[2*j+1]/sqrt(2*ny);
+			for(j=0;j<ny;j++)	a[i+nx*(ny*k+j)] = -b[2*j+1]/sqrt(2.*ny);
 		}
 	}
 	if(strchr(dir,'z') && nz>1)
@@ -918,7 +918,7 @@ void mgl_data_sinfft(HMDT d, const char *dir)
 			memset(b,0,4*nz*sizeof(double));	b[0] = a[i];	b[2*nx] = -a[i];
 			for(j=1;j<nx;j++)	{	b[2*j] = a[i+k*j];	b[4*nx-2*j] = -a[i+k*j];	}
 			gsl_fft_complex_transform(b, 1, 2*nz, wt, ws, forward);
-			for(j=0;j<nz;j++)	a[i+k*j] = -b[2*j+1]/sqrt(2*nz);
+			for(j=0;j<nz;j++)	a[i+k*j] = -b[2*j+1]/sqrt(2.*nz);
 		}
 	}
 	if(b)

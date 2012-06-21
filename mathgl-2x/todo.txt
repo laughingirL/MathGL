@@ -3,10 +3,7 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 
 ============= NEW  =============
 
-1. Check RunThr() in python/octave
-
-============= FOR V.2.1 ========
-
+0. Check RunThr() in python/octave
 1. MPI_Send(), MPI_Recv()
 2. Use Hershey as built-in font ?!!
 3. Import/Export via GIF (as 3d data) ???
@@ -50,6 +47,9 @@ at all) + testing
 34. Hotkeys
 35. Add color region cutting in SetCutBox()
 
+============= DOCS =============
+
+1. FAQ about widget classes in non-GNU compilers.
 
 ============= UDAV =============
 

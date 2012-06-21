@@ -492,9 +492,9 @@ double arg(double a,double b)	{	return atan2(b,a);	}
 double mgz1(double)	{return 0;}
 double mgz2(double,double)	{return 0;}
 #ifdef WIN32
-double asinh(double x)	{	return log(x+sqrt(x*x+1));	}
-double acosh(double x)	{	return x>1 ? log(x+sqrt(x*x-1)) : NAN;	}
-double atanh(double x)	{	return fabs(x)<1 ? log((1+x)/(1-x))/2 : NAN;	}
+double asinh(double x)	{	return log(x+sqrt(x*x+1.));	}
+double acosh(double x)	{	return x>1 ? log(x+sqrt(x*x-1.)) : NAN;	}
+double atanh(double x)	{	return fabs(x)<1 ? log((1.+x)/(1.-x))/2 : NAN;	}
 #endif
 //-----------------------------------------------------------------------------
 typedef double (*func_1)(double);
@@ -588,18 +588,18 @@ double llg1(double a,double b)	{return 1/(a*log(b));}
 double llg2(double a,double b)	{return -log(a)/(b*log(b)*log(b));}
 double cos_d(double a)	{return -sin(a);}
 double tan_d(double a)	{return 1./(cos(a)*cos(a));}
-double asin_d(double a)	{return 1./sqrt(1-a*a);}
-double acos_d(double a)	{return -1./sqrt(1-a*a);}
-double atan_d(double a)	{return 1./(1+a*a);}
+double asin_d(double a)	{return 1./sqrt(1.-a*a);}
+double acos_d(double a)	{return -1./sqrt(1.-a*a);}
+double atan_d(double a)	{return 1./(1.+a*a);}
 double tanh_d(double a)	{return 1./(cosh(a)*cosh(a));}
-double atanh_d(double a){return 1./(1-a*a);}
-double asinh_d(double a){return 1./sqrt(1+a*a);}
-double acosh_d(double a){return 1./sqrt(a*a-1);}
+double atanh_d(double a){return 1./(1.-a*a);}
+double asinh_d(double a){return 1./sqrt(1.+a*a);}
+double acosh_d(double a){return 1./sqrt(a*a-1.);}
 double sqrt_d(double a)	{return 0.5/sqrt(a);}
 double log10_d(double a){return M_LN10/a;}
-double log_d(double a)	{return 1/a;}
+double log_d(double a)	{return 1./a;}
 double erf_d(double a)	{return 2*exp(-a*a)/sqrt(M_PI);}
-double dilog_d(double a){return log(a)/(1-a);}
+double dilog_d(double a){return log(a)/(1.-a);}
 double ei_d(double a)	{return exp(a)/a;}
 double si_d(double a)	{return a?sin(a)/a:1;}
 double ci_d(double a)	{return cos(a)/a;}
@@ -612,12 +612,12 @@ double gslJnuD(double a,double b)	{return 0.5*(gsl_sf_bessel_Jnu(a-1,b)-gsl_sf_b
 double gslYnuD(double a,double b)	{return 0.5*(gsl_sf_bessel_Ynu(a-1,b)-gsl_sf_bessel_Ynu(a+1,b));}
 double gslKnuD(double a,double b)	{return -(a*gsl_sf_bessel_Knu(a,b)/b +gsl_sf_bessel_Knu(a-1,b));}
 double gslInuD(double a,double b)	{return -(a*gsl_sf_bessel_Inu(a,b)/b -gsl_sf_bessel_Inu(a-1,b));}
-double gslEllE1(double a,double b)	{return sqrt(1-sin(a)*sin(a)*b);}
-double gslEllE2(double a,double b)	{return (gsl_sf_ellint_E(a,b,GSL_PREC_SINGLE) - gsl_sf_ellint_F(a,b,GSL_PREC_SINGLE))/(2*b);}
-double gslEllF1(double a,double b)	{return 1./sqrt(1-sin(a)*sin(a)*b);}
-double gslEllF2(double a,double b)	{return (gsl_sf_ellint_E(a,b,GSL_PREC_SINGLE) - gsl_sf_ellint_F(a,b,GSL_PREC_SINGLE)*(1-b))/(2*b*(1-b)) - sin(2*a)/(sqrt(1-sin(a)*sin(a)*b)*2*(1-b));}
-double gslE_d(double a)	{return (gsl_sf_ellint_Ecomp(a,GSL_PREC_SINGLE) - gsl_sf_ellint_Kcomp(a,GSL_PREC_SINGLE))/(2*a);}
-double gslK_d(double a)	{return (gsl_sf_ellint_Ecomp(a,GSL_PREC_SINGLE) - (1-a)*gsl_sf_ellint_Kcomp(a,GSL_PREC_SINGLE))/(2*a*(1-a));}
+double gslEllE1(double a,double b)	{return sqrt(1.-sin(a)*sin(a)*b);}
+double gslEllE2(double a,double b)	{return (gsl_sf_ellint_E(a,b,GSL_PREC_SINGLE) - gsl_sf_ellint_F(a,b,GSL_PREC_SINGLE))/(2.*b);}
+double gslEllF1(double a,double b)	{return 1./sqrt(1.-sin(a)*sin(a)*b);}
+double gslEllF2(double a,double b)	{return (gsl_sf_ellint_E(a,b,GSL_PREC_SINGLE) - gsl_sf_ellint_F(a,b,GSL_PREC_SINGLE)*(1.-b))/(2*b*(1.-b)) - sin(2.*a)/(sqrt(1.-sin(a)*sin(a)*b)*2.*(1.-b));}
+double gslE_d(double a)	{return (gsl_sf_ellint_Ecomp(a,GSL_PREC_SINGLE) - gsl_sf_ellint_Kcomp(a,GSL_PREC_SINGLE))/(2.*a);}
+double gslK_d(double a)	{return (gsl_sf_ellint_Ecomp(a,GSL_PREC_SINGLE) - (1.-a)*gsl_sf_ellint_Kcomp(a,GSL_PREC_SINGLE))/(2.*a*(1.-a));}
 double gamma_d(double a)	{return gsl_sf_psi(a)*gsl_sf_gamma(a);}
 #endif
 //-----------------------------------------------------------------------------

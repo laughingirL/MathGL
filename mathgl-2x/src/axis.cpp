@@ -196,7 +196,7 @@ void mglCanvas::SetTickTempl(char dir, const char *t)
 //-----------------------------------------------------------------------------
 double mgl_adj_val(double v,float *ds=0)
 {
-	float n = floor(log10(v)), s;
+	double n = floor(log10(v)), s;
 	v = floor(v*pow(10.,-n));	n = pow(10.,n);
 
 	if(v==1)	{	v = n/5;	s=n/10;	}
@@ -232,24 +232,24 @@ void mglCanvas::SetTickTime(char dir, float d, const char *t)
 	}
 	if(!t || !t[0])		// adjust template
 	{
-		t = fabs(t1.tm_yday-t2.tm_yday)>1 ? "%x" : "%X";
-		if(fabs(t1.tm_year-t2.tm_year)>3)	t = "%Y";
+		t = abs(t1.tm_yday-t2.tm_yday)>1 ? "%x" : "%X";
+		if(abs(t1.tm_year-t2.tm_year)>3)	t = "%Y";
 	}
 	if(d==0)	// try to select opimal step
 	{
 
-		if(fabs(t1.tm_year-t2.tm_year)>1)
-			d = 365.25*24*3600*mgl_adj_val(fabs(t1.tm_year-t2.tm_year));	// number of second in year NOTE: improve it
+		if(abs(t1.tm_year-t2.tm_year)>1)
+			d = 365.25*24*3600*mgl_adj_val(abs(t1.tm_year-t2.tm_year));	// number of second in year NOTE: improve it
 		// NOTE here should be months ... but it is too unregular ... so omit it now
 // 		else if(t1.tm_mon!=t2.tm_mon)	d = 30*24*3600;	// number of second in month
-		else if(fabs(t1.tm_yday-t2.tm_yday)>1)	// localtime("%x") cannot print time < 1 day
-		{	d = 24*3600*mgl_adj_val(fabs(t1.tm_yday-t2.tm_yday));	d = d>24*3600?d:24*3600;	}
-		else if(fabs(t1.tm_hour-t2.tm_hour)>1)
-			d = 3600*mgl_adj_val(fabs(t1.tm_hour-t2.tm_hour));
-		else if(fabs(t1.tm_min-t2.tm_min)>1)
-			d = 60*mgl_adj_val(fabs(t1.tm_min-t2.tm_min));
-		else if(fabs(t1.tm_sec-t2.tm_sec)>1)	// localtime("%X") cannot print time < 1 sec
-		{	d = mgl_adj_val(fabs(t1.tm_sec-t2.tm_sec));	d = d>1?d:1;	}
+		else if(abs(t1.tm_yday-t2.tm_yday)>1)	// localtime("%x") cannot print time < 1 day
+		{	d = 24*3600.*mgl_adj_val(abs(t1.tm_yday-t2.tm_yday));	d = d>24*3600?d:24*3600;	}
+		else if(abs(t1.tm_hour-t2.tm_hour)>1)
+			d = 3600.*mgl_adj_val(abs(t1.tm_hour-t2.tm_hour));
+		else if(abs(t1.tm_min-t2.tm_min)>1)
+			d = 60*mgl_adj_val(abs(t1.tm_min-t2.tm_min));
+		else if(abs(t1.tm_sec-t2.tm_sec)>1)	// localtime("%X") cannot print time < 1 sec
+		{	d = mgl_adj_val(abs(t1.tm_sec-t2.tm_sec));	d = d>1?d:1;	}
 		else	// adjust msec. NOTE: this is not supported by localtime() !!!
 			d = mgl_adj_val(fabs(aa.v2-aa.v1));
 	}
@@ -292,12 +292,12 @@ void mglCanvas::AdjustTicks(const char *dir, bool force)
 //-----------------------------------------------------------------------------
 void mglCanvas::AdjustTicks(mglAxis &aa, bool ff)
 {
-	float d = fabs(aa.v2-aa.v1), n;
+	double d = fabs(aa.v2-aa.v1), n;
 	if(aa.f>0)	return;
 	if(ff && islog(aa.v1,aa.v2))
 	{	aa.dv = 0;	aa.ds=0;	}
 	else if(aa.d>0)
-	{	aa.dv = aa.d;	aa.ds = aa.d/(fabs(aa.ns)+1);	}
+	{	aa.dv = aa.d;	aa.ds = aa.d/(abs(aa.ns)+1);	}
 	else if(aa.d>-1.5)	// like =0 or =-1
 	{	aa.dv = mgl_adj_val(d,&aa.ds);	aa.o=0;	}
 	else
@@ -587,7 +587,7 @@ void mglCanvas::tick_draw(mglPoint o, mglPoint d1, mglPoint d2, int f, const cha
 	// try to exclude ticks out of axis range
 	if(f && ((o.x-Min.x)*(o.x-Max.x)>0 || (o.y-Min.y)*(o.y-Max.y)>0 || (o.z-Min.z)*(o.z-Max.z)>0))
 		return;
-	float v = font_factor*TickLen/sqrt(1+f*st_t);
+	float v = font_factor*TickLen/sqrt(1.f+f*st_t);
 	mglPoint p=o;
 	long k1,k2,k3=mgl_have_color(stl);
 
