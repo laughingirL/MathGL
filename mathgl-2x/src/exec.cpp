@@ -3503,18 +3503,18 @@ void mglc_roll(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 int mgls_triangulate(mglGraph *, long , mglArg *a, int k[10], const char *)
 {
 	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1)
-		*(a[0].d) = mglTriangulation(*(a[1].d), *(a[2].d), *(a[3].d), k[4]==3?a[4].v:0);
+		*(a[0].d) = mglTriangulation(*(a[1].d), *(a[2].d), *(a[3].d));
 	else if(k[0]==1 && k[1]==1 && k[2]==1)
-		*(a[0].d) = mglTriangulation(*(a[1].d), *(a[2].d), k[3]==3?a[3].v:0);
+		*(a[0].d) = mglTriangulation(*(a[1].d), *(a[2].d));
 	else	return 1;
 	return 0;
 }
 void mglc_triangulate(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 {
 	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1)
-		mglprintf(out,1024,L"%s = mglTriangulation(%s, %s, %s, %g);",a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str(), a[3].s.c_str(), k[4]==3?a[4].v:0);
+		mglprintf(out,1024,L"%s = mglTriangulation(%s, %s, %s);",a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str(), a[3].s.c_str());
 	else if(k[0]==1 && k[1]==1 && k[2]==1)
-		mglprintf(out,1024,L"%s = mglTriangulation(%s, %s, %g);",a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str(), k[3]==3?a[3].v:0);
+		mglprintf(out,1024,L"%s = mglTriangulation(%s, %s);",a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str());
 }
 //-----------------------------------------------------------------------------
 mglCommand mgls_base_cmd[] = {

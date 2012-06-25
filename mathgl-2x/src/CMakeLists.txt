@@ -1,33 +1,31 @@
 set(mgl_src
-addon.cpp axis.cpp base_cf.cpp base.cpp canvas_cf.cpp canvas.cpp cont.cpp crust.cpp
-data.cpp data_io.cpp data_new.cpp data_png.cpp def_font.cpp
-export_2d.cpp export_3d.cpp eval.cpp evalp.cpp exec.cpp export.cpp
-fit.cpp font.cpp other.cpp parser.cpp pde.cpp pixel.cpp
-plot.cpp prim.cpp surf.cpp tex_table.cpp vect.cpp volume.cpp evalc.cpp #window.cpp
+	addon.cpp axis.cpp base_cf.cpp base.cpp canvas_cf.cpp canvas.cpp cont.cpp crust.cpp
+	data.cpp data_io.cpp data_new.cpp data_png.cpp def_font.cpp
+	export_2d.cpp export_3d.cpp eval.cpp evalp.cpp exec.cpp export.cpp
+	fit.cpp font.cpp other.cpp parser.cpp pde.cpp pixel.cpp
+	plot.cpp prim.cpp surf.cpp tex_table.cpp vect.cpp volume.cpp evalc.cpp
+	s_hull/s_hull.C
 )
 
 set(mgl_hdr
-../include/mgl2/base_cf.h	../include/mgl2/fit.h		../include/mgl2/plot.h
-../include/mgl2/base.h		../include/mgl2/prim.h		../include/mgl2/canvas_cf.h
-../include/mgl2/font.h		../include/mgl2/canvas.h	../include/mgl2/surf.h
-../include/mgl2/mgl_cf.h	../include/mgl2/type.h		${MathGL_BINARY_DIR}/include/mgl2/config.h
-../include/mgl2/cont.h		../include/mgl2/mgl.h	../include/mgl2/vect.h
-../include/mgl2/data.h		../include/mgl2/volume.h	../include/mgl2/data_cf.h
-../include/mgl2/define.h	../include/mgl2/other.h		../include/mgl2/eval.h
-../include/mgl2/parser.h	../include/mgl2/addon.h		../include/mgl2/evalc.h )
+	../include/mgl2/base_cf.h	../include/mgl2/fit.h		../include/mgl2/plot.h
+	../include/mgl2/base.h		../include/mgl2/prim.h		../include/mgl2/canvas_cf.h
+	../include/mgl2/font.h		../include/mgl2/canvas.h	../include/mgl2/surf.h
+	../include/mgl2/mgl_cf.h	../include/mgl2/type.h		${MathGL_BINARY_DIR}/include/mgl2/config.h
+	../include/mgl2/cont.h		../include/mgl2/mgl.h		../include/mgl2/vect.h
+	../include/mgl2/data.h		../include/mgl2/volume.h	../include/mgl2/data_cf.h
+	../include/mgl2/define.h	../include/mgl2/other.h		../include/mgl2/eval.h
+	../include/mgl2/parser.h	../include/mgl2/addon.h		../include/mgl2/evalc.h
+	s_hull/s_hull.h
+)
 
 if(MGL_HAVE_PNG)
-set(prc_src
-prc/PRCbitStream.cc prc/PRCdouble.cc prc/oPRCFile.cc prc/writePRC.cc prc.cpp
-)
+	set(prc_src prc/PRCbitStream.cc prc/PRCdouble.cc prc/oPRCFile.cc prc/writePRC.cc prc.cpp )
+	set(prc_hdr prc/PRC.h prc/PRCbitStream.h prc/PRCdouble.h prc/oPRCFile.h prc/writePRC.h )
 
-set(prc_hdr
-prc/PRC.h prc/PRCbitStream.h prc/PRCdouble.h prc/oPRCFile.h prc/writePRC.h
-)
-
-set(mgl_src ${mgl_src} ${prc_src} )
-set(mgl_hdr ${mgl_hdr} ${prc_hdr} )
-include_directories(prc)
+	set(mgl_src ${mgl_src} ${prc_src} )
+	set(mgl_hdr ${mgl_hdr} ${prc_hdr} )
+	include_directories(prc)
 endif(MGL_HAVE_PNG)
 
 if(MGL_HAVE_OPENGL)

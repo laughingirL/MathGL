@@ -469,10 +469,10 @@ inline mglData mglJacobian(const mglData &x, const mglData &y)
 inline mglData mglJacobian(const mglData &x, const mglData &y, const mglData &z)
 {	return mglData(true, mgl_jacobian_3d(&x, &y, &z));	}
 /// Do something like Delone triangulation
-inline mglData mglTriangulation(const mglData &x, const mglData &y, const mglData &z, float er=0)
-{	return mglData(true,mgl_triangulation_3d(&x,&y,&z,er));	}
-inline mglData mglTriangulation(const mglData &x, const mglData &y, float er=0)
-{	return mglData(true,mgl_triangulation_2d(&x,&y,er));	}
+inline mglData mglTriangulation(const mglData &x, const mglData &y, const mglData &z)
+{	return mglData(true,mgl_triangulation_3d(&x,&y,&z));	}
+inline mglData mglTriangulation(const mglData &x, const mglData &y)
+{	return mglData(true,mgl_triangulation_2d(&x,&y));	}
 //-----------------------------------------------------------------------------
 #endif
 #endif

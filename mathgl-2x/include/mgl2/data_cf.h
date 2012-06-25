@@ -168,8 +168,8 @@ HMDT mgl_transform(HCDT re, HCDT im, const char *tr);
 void mgl_data_fourier(HMDT re, HMDT im, const char *dir);
 HMDT mgl_data_stfa(HCDT re, HCDT im, long dn, char dir);
 
-HMDT mgl_triangulation_3d(HCDT x, HCDT y, HCDT z, float er);
-HMDT mgl_triangulation_2d(HCDT x, HCDT y, float er);
+HMDT mgl_triangulation_3d(HCDT x, HCDT y, HCDT z);
+HMDT mgl_triangulation_2d(HCDT x, HCDT y);
 /*****************************************************************************/
 /*		Data creation functions												 */
 /*****************************************************************************/
@@ -284,8 +284,8 @@ uintptr_t mgl_transform_(uintptr_t *re, uintptr_t *im, const char *tr, int);
 void mgl_data_fourier_(uintptr_t *re, uintptr_t *im, const char *dir, int l);
 uintptr_t mgl_data_stfa_(uintptr_t *re, uintptr_t *im, int *dn, char *dir, int);
 
-uintptr_t mgl_triangulation_3d_(uintptr_t *x, uintptr_t *y, uintptr_t *z, float *er);
-uintptr_t mgl_triangulation_2d_(uintptr_t *x, uintptr_t *y, float *er);
+uintptr_t mgl_triangulation_3d_(uintptr_t *x, uintptr_t *y, uintptr_t *z);
+uintptr_t mgl_triangulation_2d_(uintptr_t *x, uintptr_t *y);
 /*****************************************************************************/
 int mgl_data_read_hdf_(uintptr_t *d, const char *fname, const char *data,int l,int n);
 void mgl_data_link_(uintptr_t *d, float *A, int *nx,int *ny,int *nz);
