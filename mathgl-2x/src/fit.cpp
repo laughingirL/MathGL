@@ -19,6 +19,7 @@
  ***************************************************************************/
 #include <ctype.h>
 #include "mgl2/fit.h"
+#include "mgl2/prim.h"
 #include "mgl2/eval.h"
 #include "mgl2/data.h"
 
@@ -29,6 +30,23 @@
 //-----------------------------------------------------------------------------
 int mglFitPnts=100;		///< Number of output points in fitting
 char mglFitRes[1024];	///< Last fitted formula
+//-----------------------------------------------------------------------------
+void mgl_puts_fit(HMGL gr, float x, float y, float z, const char *pre, const char *font, float size)
+{
+	long n = strlen(mglFitRes)+(pre?strlen(pre):0)+1;
+	char *buf = new char[n];
+	if(pre)	sprintf(buf,"%s%s",pre,mglFitRes);
+	else	strcpy(buf,mglFitRes);
+	mgl_puts(gr,x,y,z,buf,font,size);
+	delete []buf;
+}
+void mgl_puts_fit_(uintptr_t* gr, float *x, float *y, float *z, const char *prefix, const char *font, float *size, int l, int n)
+{
+	char *s=new char[l+1];	memcpy(s,prefix,l);	s[l]=0;
+	char *d=new char[n+1];	memcpy(d,font,n);	d[n]=0;
+	mgl_puts_fit(_GR_, *x,*y,*z, s, d, *size);
+	delete []s;		delete []d;
+}
 //-----------------------------------------------------------------------------
 /// Structure for keeping data and precompiled fitted formula
 struct mglFitData

@@ -677,28 +677,6 @@ void mgl_textmark_(uintptr_t *gr, uintptr_t *y, const char *text, const char *fn
 	mgl_textmarkw(_GR_, _DA_(y),s,f, o);	delete []o;	delete []s;	delete []f;	}
 //-----------------------------------------------------------------------------
 //
-//	PutsFit series
-//
-//-----------------------------------------------------------------------------
-extern char mglFitRes[1024];	///< Last fitted formula
-void mgl_puts_fit(HMGL gr, float x, float y, float z, const char *pre, const char *font, float size)
-{
-	long n = strlen(mglFitRes)+(pre?strlen(pre):0)+1;
-	char *buf = new char[n];
-	if(pre)	sprintf(buf,"%s%s",pre,mglFitRes);
-	else	strcpy(buf,mglFitRes);
-	mgl_puts(gr,x,y,z,buf,font,size);
-	delete []buf;
-}
-void mgl_puts_fit_(uintptr_t* gr, float *x, float *y, float *z, const char *prefix, const char *font, float *size, int l, int n)
-{
-	char *s=new char[l+1];	memcpy(s,prefix,l);	s[l]=0;
-	char *d=new char[n+1];	memcpy(d,font,n);	d[n]=0;
-	mgl_puts_fit(_GR_, *x,*y,*z, s, d, *size);
-	delete []s;		delete []d;
-}
-//-----------------------------------------------------------------------------
-//
 //	TextMark series
 //
 //-----------------------------------------------------------------------------
