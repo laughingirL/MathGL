@@ -254,7 +254,7 @@ mglFormula::mglFormula(const char *string)
 	{
 		Kod = EQ_NUM;
 //		Left = Right = 0;
-		if(str[1]==0 && str[0]>='a' && str[0]<='z')	// avalible variables
+		if((str[1]==0) & (str[0]>='a') & (str[0]<='z'))	// avalible variables
 		{	Kod=EQ_A;	Res = str[0]-'a';	}
 		else if(!strcmp(str,"rnd")) Kod=EQ_RND;
 		else if(!strcmp(str,"pi")) Res=M_PI;
@@ -543,7 +543,7 @@ mreal mglFormula::CalcIn(const mreal *a1) const
 		if(Kod<EQ_SIN)
 		{
 			// try to bypass calc b if a==0
-			if(a==0 && z2[Kod-EQ_LT]!=3)	return z2[Kod-EQ_LT];
+			if((a==0) & (z2[Kod-EQ_LT]!=3))	return z2[Kod-EQ_LT];
 			double b = Right->CalcIn(a1);
 			return !mgl_isnan(b) ? f2[Kod-EQ_LT](a,b) : NAN;
 		}
@@ -648,8 +648,8 @@ mreal mglFormula::CalcDIn(int id, const mreal *a1) const
 			mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1
 #endif
 		};
-//	if(Error)	return 0;
-	if(Kod<EQ_LT)	return (Kod==EQ_A && id==(int)Res)?1:0;
+//	if(Kod<EQ_LT)	return ((Kod==EQ_A) & (id==(int)Res))?1:0;
+	if(Kod<EQ_LT)	return ((Kod==EQ_A) & (id==(int)Res));
 
 	double a = Left->CalcIn(a1), d = Left->CalcDIn(id,a1);
 	if(!mgl_isnan(a) && !mgl_isnan(d))

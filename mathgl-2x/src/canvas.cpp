@@ -149,17 +149,17 @@ float mglCanvas::FindOptOrg(char dir, int ind) const
 		{	cxy /= sqrt(dx*dy);	cxz /= sqrt(dx*dz);	cyz /= sqrt(dz*dy);	}
 		// find points for axis
 		px = py = pz = nn[j];
-		if(cxy<cxz && cxy<cyz)	// xy is lowest
+		if((cxy<cxz) & (cxy<cyz))	// xy is lowest
 		{	// px, py the same as pp
 			if(pp[1].x<pp[2].x)	pz.x = 1-pz.x;
 			else	pz.y = 1-pz.y;
 		}
-		if(cxz<cxy && cxz<cyz)	// xz is lowest
+		if((cxz<cxy) & (cxz<cyz))	// xz is lowest
 		{	// px, pz the same as pp
 			if(pp[1].x<pp[3].x)	py.x = 1-py.x;
 			else	py.z = 1-py.z;
 		}
-		if(cyz<cxz && cyz<cxy)	// yz is lowest
+		if((cyz<cxz) & (cyz<cxy))	// yz is lowest
 		{	// py, pz the same as pp
 			if(pp[3].x<pp[2].x)	px.z = 1-px.z;
 			else	px.y = 1-px.y;
@@ -297,7 +297,7 @@ float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float siz
 	mglPnt q=Pnt[p];
 	float ll = q.u*q.u+q.v*q.v;
 	bool inv=false;
-	if(rot && (q.u<0 || (q.u==0 && q.v<0)))
+	if(rot & ( (q.u<0) | ((q.u==0) & (q.v<0)) ) )
 	{	q.u=-q.u;	q.v=-q.v;	q.w=-q.w;	inv=true;	}
 	if(!(Quality&4))	// add text itself
 	{
@@ -383,10 +383,10 @@ void mglCanvas::InPlot(float x1,float x2,float y1,float y2, const char *st)
 	bool a = !(strchr(st,'a') || strchr(st,'A') || strchr(st,'^') || strchr(st,'g') || strchr(st,'t'));
 	// let use simplified scheme -- i.e. no differences between axis, colorbar and/or title
 	register float xs=(x1+x2)/2, ys=(y1+y2)/2, f1 = 1.3, f2 = 1.1;
-	if(r && l)	{	x2=xs+(x2-xs)*f1;	x1=xs+(x1-xs)*f1;	}
+	if(r & l)	{	x2=xs+(x2-xs)*f1;	x1=xs+(x1-xs)*f1;	}
 	else if(r)	{	x2=xs+(x2-xs)*f1;	x1=xs+(x1-xs)*f2;	}
 	else if(l)	{	x2=xs+(x2-xs)*f2;	x1=xs+(x1-xs)*f1;	}
-	if(a && u)	{	y2=ys+(y2-ys)*f1;	y1=ys+(y1-ys)*f1;	}
+	if(a & u)	{	y2=ys+(y2-ys)*f1;	y1=ys+(y1-ys)*f1;	}
 	else if(a)	{	y2=ys+(y2-ys)*f1;	y1=ys+(y1-ys)*f2;	}
 	else if(u)	{	y2=ys+(y2-ys)*f2;	y1=ys+(y1-ys)*f1;	}
 
@@ -539,7 +539,7 @@ int mglCanvas::GetSplId(long x,long y) const
 	for(i=Sub.size()-1;i>=0;i--)
 	{
 		const mglPrim &p = Sub[i];
-		if(p.n1<=x && p.n2>=x && p.n3<=y && p.n4>=y)
+		if((p.n1<=x) & (p.n2>=x) & (p.n3<=y) & (p.n4>=y))
 		{	id=p.id;	break;	}
 	}
 	return id;
@@ -773,7 +773,7 @@ void mglCanvas::StartAutoGroup (const char *lbl)
 	if(lbl==NULL)	{	id=1;	return;	}
 	if(ObjId<0)	{	ObjId = -id;	id++;	}
 	register size_t len = Grp.size();
-	if(ObjId>=0 && len>0 && ObjId!=Grp[len-1].Id)
+	if((ObjId>=0) & (len>0) & (ObjId!=Grp[len-1].Id))
 	{	MGL_PUSH(Grp,mglGroup(lbl,ObjId),mutexGrp);	}
 	else if(ObjId<0)
 	{	MGL_PUSH(Grp,mglGroup(lbl,ObjId),mutexGrp);	}

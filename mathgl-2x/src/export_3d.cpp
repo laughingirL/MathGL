@@ -249,7 +249,7 @@ void mgl_write_obj(HMGL gr, const char *fname,const char *descr, int use_png)
 	// it is rather expensive (extra 4b per primitive) but need for export to 3D
 	{
 		m = gr->GetPrm(i).id-m1;
-		if(m>=0 && m<m2-m1+1)	gr->Grp[ng[m]].p.push_back(i);
+		if((m>=0) & (m<m2-m1+1))	gr->Grp[ng[m]].p.push_back(i);
 	}
 	delete []ng;
 
@@ -770,7 +770,7 @@ void mglCanvas::WriteXGL(const char *fname,const char *descr)
 	// it is rather expensive (extra 4b per primitive) but need for export to 3D
 	{
 		m = GetPrm(i).id-m1;
-		if(m>=0 && m<m2-m1+1)	Grp[ng[m]].p.push_back(i);
+		if((m>=0) & (m<m2-m1+1))	Grp[ng[m]].p.push_back(i);
 	}
 	delete []ng;
 
@@ -982,7 +982,7 @@ void mgl_write_x3d(HMGL gr, const char *fname,const char *descr)
 	// it is rather expensive (extra 4b per primitive) but need for export to 3D
 	{
 		m = gr->GetPrm(i).id-m1;
-		if(m>=0 && m<m2-m1+1)	gr->Grp[ng[m]].p.push_back(i);
+		if((m>=0) & (m<m2-m1+1))	gr->Grp[ng[m]].p.push_back(i);
 	}
 	delete []ng;
 

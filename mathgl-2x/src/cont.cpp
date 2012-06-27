@@ -55,7 +55,7 @@ void mgl_string_curve(mglBase *gr,long f,long ,long *ff,long *nn,const wchar_t *
 	std::vector<mglPoint> qa, qb;	// curves above and below original
 	mglPoint p=gr->GetPntP(ff[f]), q=p, s=gr->GetPntP(ff[nn[f]]), l=!(s-q), t=l;
 	qa.push_back(q+l*h);	qb.push_back(q-l*h);
-	for(i=nn[f];i>=0 && i!=f;i=nn[i])	// construct curves
+	for(i=nn[f];(i>=0) & (i!=f);i=nn[i])	// construct curves
 	{
 		if(gr->Stop)	{	delete []wdt;	delete []pt;	delete []fnt;	return;	}
 		p=q;	q=s;	l=t;
@@ -90,7 +90,7 @@ void mgl_string_curve(mglBase *gr,long f,long ,long *ff,long *nn,const wchar_t *
 		if(gr->Stop)	{	delete []wdt;	delete []pt;	delete []fnt;	return;	}
 		w = align==1 ? wdt[j] : (wdt[j]+wdt[j+1])/2;	p = pt[j];
 		for(k=i+1;k<m;k++)	if((p-qa[k]).norm()>w)	break;
-		if(k>i+1 && k<m)	tt=-1;
+		if((k>i+1) & (k<m))	tt=-1;
 		i = k<m ? k-1 : m-2;		// check if end of curve
 		q = qa[i];	s = qa[i+1];	// points of line segment
 		a = (q-s)*(q-s);	b = (q-p)*(q-s);	d = (q-p)*(q-p)-w*w;
@@ -270,22 +270,22 @@ long *mgl_cont_prep(float val, HCDT a,long ak, std::vector<mglPnt2> &kk)
 		for(i=0;i<n-1;i++)	for(j=0;j<m;j++)
 		{
 			d = mgl_d(val,ma->a[i+n*(j+m*ak)],ma->a[i+1+n*(j+m*ak)]);
-			if(d>=0 && d<1)	kk.push_back(mglPnt2(i+d,j));
+			if((d>=0) & (d<1))	kk.push_back(mglPnt2(i+d,j));
 		}
 		// add intersection point of isoline and X axis
 		for(i=0;i<n;i++)	for(j=0;j<m-1;j++)
 		{
 			d = mgl_d(val,ma->a[i+n*(j+m*ak)],ma->a[i+n*(j+1+m*ak)]);
-			if(d>=0 && d<1)	kk.push_back(mglPnt2(i,j+d));
+			if((d>=0) & (d<1))	kk.push_back(mglPnt2(i,j+d));
 		}
 	}
 	else	for(i=0;i<n-1;i++)	for(j=0;j<m;j++)
 	{
 		register float vv = a->v(i,j,ak);
 		d = (i<n-1)?mgl_d(val,vv,a->v(i+1,j,ak)):-1;
-		if(d>=0 && d<1)	kk.push_back(mglPnt2(i+d,j));
+		if((d>=0) & (d<1))	kk.push_back(mglPnt2(i+d,j));
 		d = (j<m-1)?mgl_d(val,vv,a->v(i,j+1,ak)):-1;
-		if(d>=0 && d<1)	kk.push_back(mglPnt2(i,j+d));
+		if((d>=0) & (d<1))	kk.push_back(mglPnt2(i,j+d));
 	}
 
 	pc = kk.size();
@@ -310,10 +310,9 @@ long *mgl_cont_prep(float val, HCDT a,long ak, std::vector<mglPnt2> &kk)
 				i21 = long(kk[k].x+1e-5);	i22 = long(kk[k].x-1e-5);
 				j21 = long(kk[k].y+1e-5);	j22 = long(kk[k].y-1e-5);
 				// check if in the same cell
-				register bool cond = (i11==i21 || i11==i22 || i12==i21 || i12==i22) &&
-				(j11==j21 || j11==j22 || j12==j21 || j12==j22);
 				d = hypot(kk[k].x-kx,kk[k].y-ky);	// if several then select closest
-				if(cond && d<r)	{	r=d;	i=k;	}
+				if(((i11==i21) | (i11==i22) | (i12==i21) | (i12==i22)) & ((j11==j21) | (j11==j22) | (j12==j21) | (j12==j22)) & (d<r))
+				{	r=d;	i=k;	}
 			}
 			if(i<0)	j = -1;	// no free close points
 			else			// mark the point
@@ -398,7 +397,7 @@ void mgl_cont_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, c
 	register long i,j,n=z->GetNx(),m=z->GetNy();
 	if(x->GetNx()!=n)	{	gr->SetWarn(mglWarnDim,"Cont");	return;	}
 	if(n<2 || m<2)		{	gr->SetWarn(mglWarnLow,"Cont");	return;	}
-	bool both = x->GetNx()*x->GetNy()==m*n && y->GetNx()*y->GetNy()==m*n;
+	bool both = (x->GetNx()*x->GetNy()==m*n) & (y->GetNx()*y->GetNy()==m*n);
 	if(y->GetNx()!=z->GetNy() && !both)	{	gr->SetWarn(mglWarnDim, "Cont");	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Cont",cgid++);
@@ -493,7 +492,7 @@ mgl_cont(_GR_, _DA_(a), s, o);	delete []o;	delete []s;	}
 long mgl_add_pnt(HMGL gr, float d, HCDT x, HCDT y, HCDT z, long i1, long j1, long i2, long j2, float c, bool edge)
 {
 	long res=-1;
-	if(edge || (d>0 && d<1))
+	if( edge | ((d>0) & (d<1)) )
 	{
 		mglPoint p,u,v;
 		p = mglPoint(x->v(i1,j1)*(1-d)+x->v(i2,j2)*d,
@@ -528,9 +527,9 @@ void mgl_add_edges(HMGL gr, HCDT a, HCDT x, HCDT y, HCDT z, long i1, long j1, lo
 	u1 = u2 = -1;
 
 	float f1 = a->v(i1,j1,ak),	f2 = a->v(i2,j2,ak);
-	if(f1<=v2 && f1>=v1)
+	if((f1<=v2) & (f1>=v1))
 		u1 = mgl_add_pnt(gr,0,x,y,z,i1,j1,i2,j2,c,true);
-	if(f2<=v2 && f2>=v1)
+	if((f2<=v2) & (f2>=v1))
 		u2 = mgl_add_pnt(gr,1,x,y,z,i1,j1,i2,j2,c,true);
 }
 //-----------------------------------------------------------------------------
@@ -605,7 +604,7 @@ void mgl_contf_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, 
 	register long i,j,n=z->GetNx(),m=z->GetNy();
 	if(x->GetNx()!=n)	{	gr->SetWarn(mglWarnDim,"ContF");	return;	}
 	if(n<2 || m<2)		{	gr->SetWarn(mglWarnLow,"ContF");	return;	}
-	bool both = x->GetNx()*x->GetNy()==m*n && y->GetNx()*y->GetNy()==m*n;
+	bool both = (x->GetNx()*x->GetNy()==m*n) & (y->GetNx()*y->GetNy()==m*n);
 	if(y->GetNx()!=z->GetNy() && !both)	{	gr->SetWarn(mglWarnDim, "ContF");	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("ContF",cgid++);
@@ -706,7 +705,7 @@ void mgl_contd_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, 
 	register long i,j=0,n=z->GetNx(),m=z->GetNy();
 	if(x->GetNx()!=n)	{	gr->SetWarn(mglWarnDim,"ContD");	return;	}
 	if(n<2 || m<2)		{	gr->SetWarn(mglWarnLow,"ContD");	return;	}
-	bool both = x->GetNx()*x->GetNy()==m*n && y->GetNx()*y->GetNy()==m*n;
+	bool both = (x->GetNx()*x->GetNy()==m*n) & (y->GetNx()*y->GetNy()==m*n);
 	if(y->GetNx()!=z->GetNy() && !both)	{	gr->SetWarn(mglWarnDim, "ContD");	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("ContD",cgid++);
@@ -825,7 +824,7 @@ void mgl_contv_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, 
 	register long i,j,n=z->GetNx(),m=z->GetNy();
 	if(x->GetNx()!=n)	{	gr->SetWarn(mglWarnDim,"Cont");	return;	}
 	if(n<2 || m<2)		{	gr->SetWarn(mglWarnLow,"Cont");	return;	}
-	bool both = x->GetNx()*x->GetNy()==m*n && y->GetNx()*y->GetNy()==m*n;
+	bool both = (x->GetNx()*x->GetNy()==m*n) & (y->GetNx()*y->GetNy()==m*n);
 	if(y->GetNx()!=z->GetNy() && !both)	{	gr->SetWarn(mglWarnDim, "Cont");	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Cont",cgid++);
@@ -931,9 +930,9 @@ void mgl_get_slice(_mgl_slice &s, HCDT x, HCDT y, HCDT z, HCDT a, char dir, floa
 	s.x.Create(nx,ny);	s.y.Create(nx,ny);
 	s.z.Create(nx,ny);	s.a.Create(nx,ny);
 	p = long(d);	d -= p;
-	if(dir=='x' && p>=n-1)	{	d+=p-n+2;	p=n-2;	}
-	if(dir=='y' && p>=m-1)	{	d+=p-m+2.;	p=m-2;	}
-	if(dir=='z' && p>=l-1)	{	d+=p-l+2;	p=l-2;	}
+	if((dir=='x') & (p>=n-1))	{	d+=p-n+2;	p=n-2;	}
+	if((dir=='y') & (p>=m-1))	{	d+=p-m+2.;	p=m-2;	}
+	if((dir=='z') & (p>=l-1))	{	d+=p-l+2;	p=l-2;	}
 	float v;
 
 	if(both)
@@ -1008,9 +1007,9 @@ void mgl_get_slice_md(_mgl_slice &s, const mglData *x, const mglData *y, const m
 	s.x.Create(nx,ny);	s.y.Create(nx,ny);
 	s.z.Create(nx,ny);	s.a.Create(nx,ny);
 	p = long(d);	d -= p;
-	if(dir=='x' && p>=n-1)	{	d+=p-n+2;	p=n-2;	}
-	if(dir=='y' && p>=m-1)	{	d+=p-m+2.;	p=m-2;	}
-	if(dir=='z' && p>=l-1)	{	d+=p-l+2;	p=l-2;	}
+	if((dir=='x') & (p>=n-1))	{	d+=p-n+2;	p=n-2;	}
+	if((dir=='y') & (p>=m-1))	{	d+=p-m+2.;	p=m-2;	}
+	if((dir=='z') & (p>=l-1))	{	d+=p-l+2;	p=l-2;	}
 	float v;
 
 	if(both)
@@ -1079,8 +1078,8 @@ void mgl_cont3_xyz_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, HCDT a, const ch
 {
 	long n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
 	if(n<2 || m<2 || l<2)	{	gr->SetWarn(mglWarnLow,"Cont3");	return;	}
-	bool both = x->GetNx()*x->GetNy()*x->GetNz()==n*m*l && y->GetNx()*y->GetNy()*y->GetNz()==n*m*l && z->GetNx()*z->GetNy()*z->GetNz()==n*m*l;
-	if(!(both || (x->GetNx()==n && y->GetNx()==m && z->GetNx()==l)))
+	bool both = (x->GetNx()*x->GetNy()*x->GetNz()==n*m*l) & (y->GetNx()*y->GetNy()*y->GetNz()==n*m*l) & (z->GetNx()*z->GetNy()*z->GetNz()==n*m*l);
+	if(!( both | ((x->GetNx()==n) & (y->GetNx()==m) & (z->GetNx()==l)) ))
 	{	gr->SetWarn(mglWarnDim,"Cont3");	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Cont3",cgid++);
@@ -1169,8 +1168,8 @@ void mgl_dens3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, flo
 {
 	long n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
 	if(n<2 || m<2 || l<2)	{	gr->SetWarn(mglWarnLow,"Dens3");	return;	}
-	bool both = x->GetNx()*x->GetNy()*x->GetNz()==n*m*l && y->GetNx()*y->GetNy()*y->GetNz()==n*m*l && z->GetNx()*z->GetNy()*z->GetNz()==n*m*l;
-	if(!(both || (x->GetNx()==n && y->GetNx()==m && z->GetNx()==l)))
+	bool both = (x->GetNx()*x->GetNy()*x->GetNz()==n*m*l) & (y->GetNx()*y->GetNy()*y->GetNz()==n*m*l) & (z->GetNx()*z->GetNy()*z->GetNz()==n*m*l);
+	if(!( both | ((x->GetNx()==n) & (y->GetNx()==m) & (z->GetNx()==l)) ))
 	{	gr->SetWarn(mglWarnDim,"Dens3");	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Dens3",cgid++);
@@ -1219,8 +1218,8 @@ void mgl_grid3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, flo
 {
 	long n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
 	if(n<2 || m<2 || l<2)	{	gr->SetWarn(mglWarnLow,"Grid3");	return;	}
-	bool both = x->GetNx()*x->GetNy()*x->GetNz()==n*m*l && y->GetNx()*y->GetNy()*y->GetNz()==n*m*l && z->GetNx()*z->GetNy()*z->GetNz()==n*m*l;
-	if(!(both || (x->GetNx()==n && y->GetNx()==m && z->GetNx()==l)))
+	bool both = (x->GetNx()*x->GetNy()*x->GetNz()==n*m*l) & (y->GetNx()*y->GetNy()*y->GetNz()==n*m*l) & (z->GetNx()*z->GetNy()*z->GetNz()==n*m*l);
+	if(!( both || ((x->GetNx()==n) & (y->GetNx()==m) & (z->GetNx()==l)) ))
 	{	gr->SetWarn(mglWarnDim,"Grid3");	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Grid3",cgid++);
@@ -1269,8 +1268,8 @@ void mgl_contf3_xyz_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, HCDT a, const c
 {
 	long n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
 	if(n<2 || m<2 || l<2)	{	gr->SetWarn(mglWarnLow,"ContF3");	return;	}
-	bool both = x->GetNx()*x->GetNy()*x->GetNz()==n*m*l && y->GetNx()*y->GetNy()*y->GetNz()==n*m*l && z->GetNx()*z->GetNy()*z->GetNz()==n*m*l;
-	if(!(both || (x->GetNx()==n && y->GetNx()==m && z->GetNx()==l)))
+	bool both = (x->GetNx()*x->GetNy()*x->GetNz()==n*m*l) & (y->GetNx()*y->GetNy()*y->GetNz()==n*m*l) & (z->GetNx()*z->GetNy()*z->GetNz()==n*m*l);
+	if(!( both | ((x->GetNx()==n) & (y->GetNx()==m) & (z->GetNx()==l)) ))
 	{	gr->SetWarn(mglWarnDim,"ContF3");	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("ContF3",cgid++);
@@ -1420,13 +1419,13 @@ void mgl_axial_gen(HMGL gr, float val, HCDT a, HCDT x, HCDT y, float c, char dir
 		if(gr->Stop)	{	delete []kk;	delete []pp;	return;	}
 		i0 = i+n*j;
 		d = (i<n-1)?mgl_d(val,ma->a[i0+n*m*ak],ma->a[i0+1+n*m*ak]):-1;
-		if(d>=0 && d<1)
+		if((d>=0) & (d<1))
 		{
 			pp[pc] = mglPoint(mx->a[i0]*(1-d)+mx->a[i0+1]*d, my->a[i0]*(1-d)+my->a[i0+1]*d);
 			kk[pc] = mglPoint(i+d,j);	pc++;
 		}
 		d = (j<m-1)?mgl_d(val,ma->a[i0+n*m*ak],ma->a[i0+n*m*ak+n]):-1;
-		if(d>=0 && d<1)
+		if((d>=0) & (d<1))
 		{
 			pp[pc] = mglPoint(mx->a[i0]*(1-d)+mx->a[i0+n]*d, my->a[i0]*(1-d)+my->a[i0+n]*d);
 			kk[pc] = mglPoint(i,j+d);	pc++;
@@ -1437,13 +1436,13 @@ void mgl_axial_gen(HMGL gr, float val, HCDT a, HCDT x, HCDT y, float c, char dir
 		if(gr->Stop)	{	delete []kk;	delete []pp;	return;	}
 		register float va=a->v(i,j,ak),vx=x->v(i,j),vy=y->v(i,j);
 		d = (i<n-1)?mgl_d(val,va,a->v(i+1,j,ak)):-1;
-		if(d>=0 && d<1)
+		if((d>=0) & (d<1))
 		{
 			pp[pc] = mglPoint(vx*(1-d)+x->v(i+1,j)*d, vy*(1-d)+y->v(i+1,j)*d);
 			kk[pc] = mglPoint(i+d,j);	pc++;
 		}
 		d = (j<m-1)?mgl_d(val,va,a->v(i,j+1,ak)):-1;
-		if(d>=0 && d<1)
+		if((d>=0) & (d<1))
 		{
 			pp[pc] = mglPoint(vx*(1-d)+x->v(i,j+1)*d, vy*(1-d)+y->v(i,j+1)*d);
 			kk[pc] = mglPoint(i,j+d);	pc++;
@@ -1470,9 +1469,8 @@ void mgl_axial_gen(HMGL gr, float val, HCDT a, HCDT x, HCDT y, float c, char dir
 				i21 = long(kk[k].x+1e-5);	i22 = long(kk[k].x-1e-5);
 				j21 = long(kk[k].y+1e-5);	j22 = long(kk[k].y-1e-5);
 				// check if in the same cell
-				register bool cond = (i11==i21 || i11==i22 || i12==i21 || i12==i22) &&
-				(j11==j21 || j11==j22 || j12==j21 || j12==j22);
-				if(cond){	i=k;	break;	}
+				if(((i11==i21) | (i11==i22) | (i12==i21) | (i12==i22)) & ((j11==j21) | (j11==j22) | (j12==j21) | (j12==j22)))
+				{	i=k;	break;	}
 			}
 			if(i<0)	j = -1;	// no free close points
 			else			// mark the point
@@ -1498,7 +1496,7 @@ void mgl_axial_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, 
 	register long i,j,n=z->GetNx(),m=z->GetNy();
 	if(x->GetNx()!=n)	{	gr->SetWarn(mglWarnDim,"Axial");	return;	}
 	if(n<2 || m<2)		{	gr->SetWarn(mglWarnLow,"Axial");	return;	}
-	bool both = x->GetNx()*x->GetNy()==m*n && y->GetNx()*y->GetNy()==m*n;
+	bool both = (x->GetNx()*x->GetNy()==m*n) & (y->GetNx()*y->GetNy()==m*n);
 	if(y->GetNx()!=z->GetNy() && !both)	{	gr->SetWarn(mglWarnDim, "Axial");	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Axial",cgid++);

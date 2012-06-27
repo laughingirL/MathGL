@@ -178,7 +178,7 @@ mglPoint mglCanvas::CalcXYZ(int xs, int ys) const
 	ys = Height - ys;
 	float xx = xs-B.x, yy = ys-B.y;
 	float d1=B.b[0]*B.b[4]-B.b[1]*B.b[3], d2=B.b[1]*B.b[5]-B.b[2]*B.b[4], d3=B.b[0]*B.b[5]-B.b[2]*B.b[3];
-	if(fabs(d1) > fabs(d2) && fabs(d1) > fabs(d3))	// x-y plane
+	if((fabs(d1) > fabs(d2)) & (fabs(d1) > fabs(d3)))	// x-y plane
 	{
 		z = 0;
 		x = s3*(B.b[4]*xx-B.b[1]*yy)/d1;
@@ -616,7 +616,7 @@ void mglCanvas::quad_draw(long k1, long k2, long k3, long k4, mglDrawReg *d)
 	dsx =-4*(d2.y*d3.x - d2.x*d3.y)*d1.y;
 	dsy = 4*(d2.y*d3.x - d2.x*d3.y)*d1.x;
 
-	if((d1.x==0 && d1.y==0) || (d2.x==0 && d2.y==0) || !(Quality&2))
+	if(((d1.x==0) & (d1.y==0)) | ((d2.x==0) & (d2.y==0)) | !(Quality&2))
 	{	trig_draw(k1,k2,k4,true,d);	trig_draw(k1,k3,k4,true,d);	return;	}
 
 	mglPoint n1 = mglPoint(p2.x-p1.x,p2.y-p1.y,p2.z-p1.z)^mglPoint(p3.x-p1.x,p3.y-p1.y,p3.z-p1.z);
@@ -635,25 +635,25 @@ void mglCanvas::quad_draw(long k1, long k2, long k3, long k4, mglDrawReg *d)
 		qu = d3.x*yy - d3.y*xx + dd + s;
 		qv = d3.y*xx - d3.x*yy + dd + s;
 		u = v = -1.f;
-		if(qu && qv)
+		if((qu!=0) & (qv!=0))
 		{
 			u = 2.f*(d2.y*xx - d2.x*yy)/qu;
 			v = 2.f*(d1.x*yy - d1.y*xx)/qv;
 		}
-		if(u*(1.f-u)<0.f || v*(1.f-v)<0.f)	// first root bad
+		if((u*(1.f-u)<0.f) | (v*(1.f-v)<0.f))	// first root bad
 		{
 			qu = d3.x*yy - d3.y*xx + dd - s;
 			qv = d3.y*xx - d3.x*yy + dd - s;
 			u = v = -1.f;
-			if(qu && qv)
+			if((qu!=0) & (qv!=0))
 			{
 				u = 2.f*(d2.y*xx - d2.x*yy)/qu;
 				v = 2.f*(d1.x*yy - d1.y*xx)/qv;
 			}
-			if(u*(1.f-u)<0.f || v*(1.f-v)<0.f)	continue;	// second root bad
+			if((u*(1.f-u)<0.f) | (v*(1.f-v)<0.f))	continue;	// second root bad
 		}
 		p = p1+d1*u+d2*v+d3*(u*v);
-		if(mgl_isnan(p.u) && !mgl_isnan(p.v))
+		if(mgl_isnan(p.u) & !mgl_isnan(p.v))
 		{	p.u = nr.x;	p.v = nr.y;	p.w = nr.z;	}
 		pnt_plot(i,j,p.z,col2int(p,r));
 	}
@@ -692,18 +692,18 @@ void mglCanvas::trig_draw(long k1, long k2, long k3, bool anorm, mglDrawReg *d)
 	mglPoint nr = mglPoint(p2.x-p1.x,p2.y-p1.y,p2.z-p1.z)^mglPoint(p3.x-p1.x,p3.y-p1.y,p3.z-p1.z);
 
 	register float u,v,xx,yy;
-	register long i,j,g;
+	register long i,j;
 	float x0 = p1.x, y0 = p1.y;
 	for(i=x1;i<=x2;i++)	for(j=y1;j<=y2;j++)
 	{
 		xx = (i-x0);	yy = (j-y0);
 		u = dxu*xx+dyu*yy;	v = dxv*xx+dyv*yy;
-		g = u<0 || v<0 || u+v>1;
-		if(g)	continue;
+//		long g = u<0 || v<0 || u+v>1;
+		if((u<0) | (v<0) | (u+v>1))	continue;
 		if(Quality&2)	// slow but accurate
 		{
 			p = p1+d1*u+d2*v;
-			if(mgl_isnan(p.u) && !mgl_isnan(p.v) && anorm)
+			if(mgl_isnan(p.u) & !mgl_isnan(p.v) & anorm)
 			{	p.u = nr.x;	p.v = nr.y;	p.w = nr.z;	}
 			pnt_plot(i,j,p.z,col2int(p,r));
 		}
@@ -820,7 +820,7 @@ void mglCanvas::pnt_draw(long k, mglDrawReg *dr)
 //		cs[3] = (unsigned char)(cc*exp(-6*v));
 		if(cs[3]==0)	continue;
 		x=p.x+i;	y=p.y+j;
-		if(x>=dr->x1 && x<=dr->x2 && y>=dr->y1 && y<=dr->y2)
+		if((x>=dr->x1) & (x<=dr->x2) & (y>=dr->y1) & (y<=dr->y2))
 			pnt_plot(p.x+i,p.y+j,p.z,cs);
 	}
 }
@@ -1038,9 +1038,9 @@ void mglCanvas::glyph_wire(const mglPnt &pp, float f, int nl, const short *line,
 	for(ik=0;ik<nl;ik++)
 	{
 		ii = 2*ik;
-		if(line[ii]==0x3fff && line[ii+1]==0x3fff)	// line breakthrough
+		if((line[ii]==0x3fff) & (line[ii+1]==0x3fff))	// line breakthrough
 		{	il = ik+1;	continue;	}
-		else if(ik==nl-1 || (line[ii+2]==0x3fff && line[ii+3]==0x3fff))
+		else if((ik==nl-1) | ((line[ii+2]==0x3fff) & (line[ii+3]==0x3fff)))
 		{	// enclose the circle. May be in future this block should be commented
 			p1 = mglPoint(f*line[ii]+pp.u,f*line[ii+1]+pp.v,0);	ii=2*il;
 			p2 = mglPoint(f*line[ii]+pp.u,f*line[ii+1]+pp.v,0);

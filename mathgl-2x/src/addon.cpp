@@ -34,7 +34,7 @@ void mgl_strcls(char *str)
 	char *tmp = new char[len];
 	for(i=0;i<len;i++)
 	{
-		if(i<len-1 && str[i]==' ' && str[i+1]==' ')
+		if(i<len-1 && ((str[i]==' ') & (str[i+1]==' ')))
 			continue;
 		tmp[i] = str[i];
 	}
@@ -70,12 +70,12 @@ char *mgl_fgetstr(FILE *fp)
 		if(!fgets(s,256,fp))	break;
 		mgl_strtrim(s);
 		//		strlwr(s);
-	} while(!feof(fp) && (s[0]==0 || s[0]=='%' || s[0]=='#'));
+	} while(!feof(fp) && ((s[0]==0) | (s[0]=='%') | (s[0]=='#')));
 	return s;
 }
 //---------------------------------------------------------------------------
 int mgl_istrue(char ch)
-{	return (ch=='1' || ch=='t' || ch=='+' || ch=='v');	}
+{	return ((ch=='1') | (ch=='t') | (ch=='+') | (ch=='v'));	}
 //---------------------------------------------------------------------------
 void mgl_test(const char *str, ...)
 {

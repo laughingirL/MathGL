@@ -621,7 +621,7 @@ mreal mglSpline3(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mr
 	z = z>0 ?(z<nz-1 ? z:nz-1):0;
 	//	if(x<0 || y<0 || z<0 || x>nx-1 || y>ny-1 || z>nz-1)		return 0;
 	if(dd)	{	*dx=*dy=*dz=0;	}
-	if(nz>1 && z!=kz)		// 3d interpolation
+	if((nz>1) & (z!=kz))		// 3d interpolation
 	{						// TODO: add dx,dy,dz evaluation
 		mreal b1[4]={0,0,0,0};
 		if(kx>nx-2)	kx = nx-2;
@@ -630,7 +630,7 @@ mreal mglSpline3(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mr
 
 		long kk=1;
 		if(kz==0)	{	kk=0;	}
-		else if(nz>3 && kz==nz-2)	{	kk=2;	}
+		else if((nz>3) & (kz==nz-2))	{	kk=2;	}
 		for(long k=0;k<4;k++)
 		{
 			mglFillP(kx, ky, a+(kz+k-kk)*nx*ny, nx, ny, _p);
@@ -645,7 +645,7 @@ mreal mglSpline3(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mr
 		for(i=0,fx=1,b=0;i<4;i++)
 		{	b += fx*_p[0][i];	fx *= z-kz;	}
 	}
-	else if(ny>1 && y!=ky)	// 2d interpolation
+	else if((ny>1) & (y!=ky))	// 2d interpolation
 	{
 		if(kx>nx-2)	kx = nx-2;
 		if(ky>ny-2)	ky = ny-2;
@@ -668,7 +668,7 @@ mreal mglSpline3(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mr
 		}
 		if(dd)	{	*dx /= x-kx;	*dy /= y-ky;	}
 	}
-	else if(nx>1 && x!=kx)	// 1d interpolation
+	else if((nx>1) & (x!=kx))	// 1d interpolation
 	{
 		if(kx>nx-2)	kx = nx-2;
 		mglFillP(kx, a+(ky+ny*kz)*nx, nx, _p[0]);
@@ -749,7 +749,7 @@ void mglFillP(long x,long y, const mreal *a,long nx,long ny,mreal _p[4][4])
 	if(nx>1)
 	{
 		// ������ d[0]
-		if(y==0 && x==0)
+		if((y==0) & (x==0))
 			d[0]=(a[x+1+nx*(y+1)]-a[x+nx*(y+1)]-a[x+1+nx*y]+a[x+nx*y]);
 		else if(y==0)
 			d[0]=(a[x+1+nx*(y+1)]-a[x-1+nx*(y+1)]-a[x+1+nx*y]+a[x-1+nx*y])/2;
@@ -758,7 +758,7 @@ void mglFillP(long x,long y, const mreal *a,long nx,long ny,mreal _p[4][4])
 		else
 			d[0]=(a[x+1+nx*(y+1)]-a[x-1+nx*(y+1)]-a[x+1+nx*(y-1)]+a[x-1+nx*(y-1)])/4;
 		// ������ d[1]
-		if(y==ny-2 && x==0)
+		if((y==ny-2) & (x==0))
 			d[1]=(a[x+1+nx*(y+1)]-a[x+nx*(y+1)]-a[x+1+nx*y]+a[x+nx*y]);
 		else if(y==ny-2)
 			d[1]=(a[x+1+nx*(y+1)]-a[x-1+nx*(y+1)]-a[x+1+nx*y]+a[x-1+nx*y])/2;
@@ -767,7 +767,7 @@ void mglFillP(long x,long y, const mreal *a,long nx,long ny,mreal _p[4][4])
 		else
 			d[1]=(a[x+1+nx*(y+2)]-a[x-1+nx*(y+2)]-a[x+1+nx*y]+a[x-1+nx*y])/4;
 		// ������ d[2]
-		if(y==0 && x==nx-2)
+		if((y==0) & (x==nx-2))
 			d[2]=(a[x+1+nx*(y+1)]-a[x+nx*(y+1)]-a[x+1+nx*y]+a[x+nx*y]);
 		else if(y==0)
 			d[2]=(a[x+2+nx*(y+1)]-a[x+nx*(y+1)]-a[x+2+nx*y]+a[x+nx*y])/2;
@@ -776,7 +776,7 @@ void mglFillP(long x,long y, const mreal *a,long nx,long ny,mreal _p[4][4])
 		else
 			d[2]=(a[x+2+nx*(y+1)]-a[x+nx*(y+1)]-a[x+2+nx*(y-1)]+a[x+nx*(y-1)])/4;
 		// ������ d[3]
-		if(y==ny-2 && x==nx-2)
+		if((y==ny-2) & (x==nx-2))
 			d[3]=(a[x+1+nx*(y+1)]-a[x+nx*(y+1)]-a[x+1+nx*y]+a[x+nx*y]);
 		else if(y==ny-2)
 			d[3]=(a[x+2+nx*(y+1)]-a[x+nx*(y+1)]-a[x+2+nx*y]+a[x+nx*y])/2;
@@ -924,11 +924,11 @@ long mgl_data_find(HCDT d, const char *cond, char dir, long i, long j, long k)
 	if(!cond)	cond = "u";
 	mglFormula eq(cond);
 	mreal x=i/(nx-1.),y=j/(ny-1.),z=k/(nz-1.);
-	if(dir=='x' && nx>1)	for(m=i;m<nx;m++)
+	if((dir=='x') & (nx>1))	for(m=i;m<nx;m++)
 		if(eq.Calc(m/(nx-1.),y,z,d->v(m,j,k)))	break;
-	if(dir=='y' && ny>1)	for(m=j;m<ny;m++)
+	if((dir=='y') & (ny>1))	for(m=j;m<ny;m++)
 		if(eq.Calc(x,m/(ny-1.),z,d->v(i,m,k)))	break;
-	if(dir=='z' && nz>1)	for(m=k;m<nz;m++)
+	if((dir=='z') & (nz>1))	for(m=k;m<nz;m++)
 		if(eq.Calc(x,y,m/(nz-1.),d->v(i,j,m)))	break;
 	return m;
 }
@@ -1057,7 +1057,7 @@ void mgl_data_norm_slice(HMDT d, float v1,float v2,char dir,long keep_en,long sy
 	register long i,k;
 	register mreal e0=1, e=1, m1, m2, aa;
 	if(sym)	{	v2 = -v1>v2 ? -v1:v2;	v1 = -v2;	}
-	if(dir=='z' && nz>1)
+	if((dir=='z') & (nz>1))
 	{
 		for(k=0;k<nz;k++)
 		{
@@ -1077,7 +1077,7 @@ void mgl_data_norm_slice(HMDT d, float v1,float v2,char dir,long keep_en,long sy
 				b.a[i+nx*ny*k] = (v1 + (v2-v1)*(a[i+nx*ny*k]-m1)/(m2-m1))*e;
 		}
 	}
-	else if(dir=='y' && ny>1)
+	else if((dir=='y') & (ny>1))
 	{
 		register long j;
 		for(j=0;j<ny;j++)
@@ -1272,7 +1272,7 @@ mreal mgl_spline3(mreal y1[3], mreal y2[3], long n1, long n2, mreal d, mreal &dy
 	mreal res=0;
 	if(nx<5)	return 0;	// not interpolation for points < 5 !!!
 	dx = dy = dz = 0;	x*=nx-1;	y*=ny-1;	z*=nz-1;
-	if(ny==1 && nz==1)	// 1D case
+	if((ny==1) & (nz==1))	// 1D case
 	{
 		long n = long(x), n1 = n>1 ? 2:n, n2 = n<nx-3 ? 1:5+n-nx;
 		res = mgl_spline5(a+n+n1-2, a+n-n2, n1, n2, x-n, dx);
@@ -1346,10 +1346,10 @@ void mgl_data_put_val(HMDT d, mreal val, long xx, long yy, long zz)
 	if(xx>=nx || yy>=ny || zz>=nz)	return;
 	mreal *a=d->a;
 	register long i,j;
-	if(xx<0 && yy<0 && zz<0)for(i=0;i<nx*ny*nz;i++)	a[i] = val;
-	else if(xx<0 && yy<0)	for(i=0;i<nx*ny;i++)	a[i+zz*nx*ny] = val;
-	else if(yy<0 && zz<0)	for(i=0;i<nz*ny;i++)	a[xx+i*nx] = val;
-	else if(xx<0 && zz<0)	for(i=0;i<nx;i++)	for(j=0;j<nz;j++)	a[i+nx*(yy+j*ny)] = val;
+	if((xx<0) & (yy<0) & (zz<0))for(i=0;i<nx*ny*nz;i++)	a[i] = val;
+	else if((xx<0) & (yy<0))	for(i=0;i<nx*ny;i++)	a[i+zz*nx*ny] = val;
+	else if((yy<0) & (zz<0))	for(i=0;i<nz*ny;i++)	a[xx+i*nx] = val;
+	else if((xx<0) & (zz<0))	for(i=0;i<nx;i++)	for(j=0;j<nz;j++)	a[i+nx*(yy+j*ny)] = val;
 	else if(xx<0)	for(i=0;i<nx;i++)	a[i+nx*(yy+zz*ny)] = val;
 	else if(yy<0)	for(i=0;i<ny;i++)	a[xx+nx*(i+zz*ny)] = val;
 	else if(zz<0)	for(i=0;i<nz;i++)	a[xx+nx*(yy+i*ny)] = val;
@@ -1365,37 +1365,37 @@ void mgl_data_put_dat(HMDT d, HCDT v, long xx, long yy, long zz)
 	const mreal *b = mv?mv->a:0;
 	long vx=v->GetNx(), vy=v->GetNy(), vz=v->GetNz();
 	register long i,j,k;
-	if(xx<0 && yy<0 && zz<0)	// whole array
+	if((xx<0) & (yy<0) & (zz<0))	// whole array
 	{
-		if(vx>=nx && vy>=ny && vz>=nz)
+		if((vx>=nx) & (vy>=ny) && (vz>=nz))
 			for(k=0;k<nz;k++)	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
 				a[i+nx*(j+k*ny)] = b?b[i+vx*(j+k*vy)]:v->v(i,j,k);
-		else if(vx>=nx && vy>=ny)
+		else if((vx>=nx) & (vy>=ny))
 			for(k=0;k<nz;k++)	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
 				a[i+nx*(j+k*ny)] = b?b[i+vx*j]:v->v(i,j);
 		else if(vx>=nx)	for(k=0;k<ny*nz;k++)	for(i=0;i<nx;i++)
 				a[i+nx*k] = b?b[i]:v->v(i);
 		else	for(i=0;i<nx*ny*nz;i++)	a[i] = vv;
 	}
-	else if(xx<0 && yy<0)	// 2d
+	else if((xx<0) & (yy<0))	// 2d
 	{
-		if(vx>=nx && vy>=ny)	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
+		if((vx>=nx) & (vy>=ny))	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
 				a[i+nx*(j+zz*ny)] = b?b[i+vx*j]:v->v(i,j);
 		else if(vx>=nx)	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
 				a[i+nx*(j+zz*ny)] = b?b[i]:v->v(i);
 		else	for(i=0;i<nx*ny;i++)	a[i+nx*ny*zz] = vv;
 	}
-	else if(yy<0 && zz<0)	// 2d
+	else if((yy<0) & (zz<0))	// 2d
 	{
-		if(vx>=ny && vy>=nz)	for(j=0;j<nz;j++)	for(i=0;i<ny;i++)
+		if((vx>=ny) & (vy>=nz))	for(j=0;j<nz;j++)	for(i=0;i<ny;i++)
 				a[xx+nx*(i+j*ny)] = b?b[i+vx*j]:v->v(i,j);
 		else if(vx>=ny)	for(j=0;j<nz;j++)	for(i=0;i<ny;i++)
 				a[xx+nx*(i+j*ny)] = b?b[i]:v->v(i);
 		else	for(i=0;i<ny*nz;i++)	a[xx+nx*i] = vv;
 	}
-	else if(xx<0 && zz<0)	// 2d
+	else if((xx<0) & (zz<0))	// 2d
 	{
-		if(vx>=nx && vy>=nz)	for(j=0;j<nz;j++)	for(i=0;i<nx;i++)
+		if((vx>=nx) & (vy>=nz))	for(j=0;j<nz;j++)	for(i=0;i<nx;i++)
 				a[i+nx*(yy+j*ny)] = b?b[i+vx*j]:v->v(i,j);
 		else if(vx>=nx)	for(j=0;j<nz;j++)	for(i=0;i<nx;i++)
 				a[i+nx*(yy+j*ny)] = b?b[i]:v->v(i);
@@ -1589,11 +1589,11 @@ void mgl_data_diff_par(HMDT d, HCDT v1, HCDT v2, HCDT v3)
 	mreal *b = new mreal[nn];	memset(b,0,nn*sizeof(mreal));
 	long p[3]={nx,ny,nz};
 
-	if(x&&y&&z && x->nx*x->ny*x->nz==nn && y->nx*y->ny*y->nz==nn && z->nx*z->ny*z->nz==nn)
+	if( x&&y&&z && ((x->nx*x->ny*x->nz==nn) & (y->nx*y->ny*y->nz==nn) & (z->nx*z->ny*z->nz==nn)) )
 		mglStartThread(mgl_diff_3,0,nn,b,d->a,x->a,p,0,y->a,z->a);
-	else if(x&&y && x->nx*x->ny==nx*ny && y->nx*y->ny==nx*ny)
+	else if( x&&y && ((x->nx*x->ny==nx*ny) & (y->nx*y->ny==nx*ny)) )
 	{
-		p[2]=(x->nz==nz && y->nz==nz);
+		p[2]=((x->nz==nz) & (y->nz==nz));
 		mglStartThread(mgl_diff_2,0,nn,b,d->a,x->a,p,0,y->a);
 	}
 	else if(x && x->nx==nx)
@@ -1607,12 +1607,12 @@ void mgl_data_diff_par_(uintptr_t *d, uintptr_t *v1, uintptr_t *v2, uintptr_t *v
 {	mgl_data_diff_par(_DT_,_DA_(v1),_DA_(v2),_DA_(v3));	}
 //-----------------------------------------------------------------------------
 void mgl_data_set_value(HMDT dat, float v, long i, long j, long k)
-{	if(i>=0 && i<dat->nx && j>=0 && j<dat->ny && k>=0 && k<dat->nz)	dat->a[i+dat->nx*(j+dat->ny*k)]=v;	}
+{	if((i>=0) & (i<dat->nx) & (j>=0) & (j<dat->ny) & (k>=0) & (k<dat->nz))		dat->a[i+dat->nx*(j+dat->ny*k)]=v;	}
 void mgl_data_set_value_(uintptr_t *d, float *v, int *i, int *j, int *k)
 {	mgl_data_set_value(_DT_,*v,*i,*j,*k);	}
 //-----------------------------------------------------------------------------
 float mgl_data_get_value(HCDT dat, long i, long j, long k)
-{	return (i>=0 && i<dat->GetNx() && j>=0 && j<dat->GetNy() && k>=0 && k<dat->GetNz()) ? dat->v(i,j,k):NAN;	}
+{	return ((i>=0) & (i<dat->GetNx()) & (j>=0) & (j<dat->GetNy()) & (k>=0) & (k<dat->GetNz())) ? dat->v(i,j,k):NAN;	}
 float mgl_data_get_value_(uintptr_t *d, int *i, int *j, int *k)
 {	return mgl_data_get_value(_DA_(d),*i,*j,*k);	}
 //-----------------------------------------------------------------------------
@@ -1620,5 +1620,5 @@ mreal *mgl_data_data(HMDT dat)	{	return dat->a;	}
 //-----------------------------------------------------------------------------
 mreal *mgl_data_value(HMDT dat, long i,long j,long k)
 {	register long ii=i*dat->nx*(j+dat->ny*k);
-	return	ii>=0 && ii<dat->GetNN() ? dat->a+ii : 0;	}
+	return	((ii>=0) & (ii<dat->GetNN())) ? dat->a+ii : 0;	}
 //-----------------------------------------------------------------------------

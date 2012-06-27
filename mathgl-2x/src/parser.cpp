@@ -36,7 +36,7 @@ mglFunc::mglFunc(long p, const wchar_t *f, mglFunc *prev)
 {
 	pos = p;	next = prev;
 	register long i;
-	for(i=0;(isalnum(f[i]) || f[i]=='_') && i<31;i++)	func[i]=f[i];
+	for(i=0;(isalnum(f[i]) || f[i]=='_') & (i<31);i++)	func[i]=f[i];
 	func[i]=0;
 	narg = wcstol(f+i+1,0,0);
 	if(narg<0 || narg>9)	narg=0;
@@ -320,8 +320,11 @@ int mglFindArg(const wchar_t *str)
 		if(str[i]=='\'') l++;
 		if(str[i]=='{') k++;
 		if(str[i]=='}') k--;
-		if(l%2==0 && k==0 && (str[i]=='#' || str[i]==';'))	return -i;
-		if(l%2==0 && k==0 && (str[i]<=' '))	return i;
+		if((l%2==0) & (k==0))
+		{
+			if((str[i]=='#') | (str[i]==';'))	return -i;
+			if(str[i]<=' ')	return i;
+		}
 	}
 	return 0;
 }
@@ -438,7 +441,7 @@ int mglParser::PreExec(mglGraph *, long k, wchar_t **arg, mglArg *a)
 				if(t==2)	return 2;
 				j++;	t=1;
 			}
-			if(ch=='|' && t==1)		{	nx = j>nx ? j:nx;	j=0;	ny++;	}
+			if((ch=='|') & (t==1))		{	nx = j>nx ? j:nx;	j=0;	ny++;	}
 		}
 		v = AddVar(arg[1]);		n=1;
 		if(t==1)	nx = j>nx ? j:nx;
@@ -498,8 +501,8 @@ void mglParser::PutArg(const wchar_t *string, wchar_t *str, bool def)
 		while((t=wcschr(str,'$'))!=0)
 		{
 			wcscpy(sb,t+2);	t[0]=0;
-			n = t[1]-'0';	if(n>=0 && n<=9 && par[n])	wcscat(str,par[n]);
-			n = t[1]-'a';	if(n>=0 && n<='z'-'a' && par[n+10])	wcscat(str,par[n+10]);
+			n = t[1]-'0';	if(((n>=0) & (n<=9)) && par[n])	wcscat(str,par[n]);
+			n = t[1]-'a';	if(((n>=0) & (n<='z'-'a')) && par[n+10])	wcscat(str,par[n+10]);
 			if(t[1]=='$')	wcscat(str,L"\xffff");
 			wcscat(str,sb);
 		}
@@ -519,13 +522,14 @@ int mglParser::Parse(mglGraph *gr, const wchar_t *string, long pos)
 	// try parse ':' -- several commands in line
 	for(n=0;n<long(wcslen(str));n++)
 	{
-		if(str[n]=='\'' && (n==0 || str[n-1]!='\\'))	k++;
-		if(str[n]=='(' && k%2==0)	m++;
-		if(str[n]==')' && k%2==0)	m--;
-		if(str[n]=='{' && k%2==0)	mm++;
-		if(str[n]=='}' && k%2==0)	mm--;
-		if(str[n]=='#' && k%2==0)	break;
-		if((str[n]==':' || str[n]=='\n') && k%2==0 && m==0 && mm==0)
+		if((str[n]=='\'') & (n==0 || str[n-1]!='\\'))	k++;
+		if(k%2)	continue;
+		if(str[n]=='(')	m++;
+		if(str[n]==')')	m--;
+		if(str[n]=='{')	mm++;
+		if(str[n]=='}')	mm--;
+		if(str[n]=='#')	break;
+		if(((str[n]==':') | (str[n]=='\n')) & (m==0) & (mm==0))
 		{
 			str[n]=0;
 			int res=Parse(gr,str,pos);
@@ -535,14 +539,14 @@ int mglParser::Parse(mglGraph *gr, const wchar_t *string, long pos)
 	}
 	if(k%2 || m || mm)	return 4;	// strings is not closed
 	// define parameters or start cycle
-	if(!skip() && !wcsncmp(str,L"def",3) && (str[6]==' ' || str[6]=='\t'))
+	if(!skip() && !wcsncmp(str,L"def",3) && ((str[6]==' ') | (str[6]=='\t')))
 	{
 		PutArg(string,str,true);
 		if(!wcsncmp(str+3,L"ine",3))
 		{
 			str += 7;	mgl_wcstrim(str);//	int res = 1;
 			int nn = str[1]<='9' ? str[1]-'0' : (str[1]>='a' ? str[1]-'a'+10:-1);
-			if(*str=='$' && nn>=0 && nn<='z'-'a'+10)
+			if((*str=='$') & (nn>=0) & (nn<='z'-'a'+10))
 			{
 				str +=2;	mgl_wcstrim(str);
 				AddParam(nn, str);	delete []s;	return 0;
@@ -552,7 +556,7 @@ int mglParser::Parse(mglGraph *gr, const wchar_t *string, long pos)
 		{
 			str += 7;	mgl_wcstrim(str);	int res = 1;
 			int nn = str[1]<='9' ? str[1]-'0' : (str[1]>='a' ? str[1]-'a'+10:-1);
-			if(*str=='$' && nn>=0 && nn<='z'-'a'+10)
+			if((*str=='$') & (nn>=0) & (nn<='z'-'a'+10))
 			{
 				res = 0;	str +=2;	mgl_wcstrim(str);
 				const mglData &d=mglFormulaCalc(str, this);
@@ -566,7 +570,7 @@ int mglParser::Parse(mglGraph *gr, const wchar_t *string, long pos)
 		{
 			str += 7;	mgl_wcstrim(str);	int res = 1;
 			int nn = str[1]<='9' ? str[1]-'0' : (str[1]>='a' ? str[1]-'a'+10:-1);
-			if(*str=='$' && nn>=0 && nn<='z'-'a'+10)
+			if((*str=='$') & (nn>=0) & (nn<='z'-'a'+10))
 			{
 				res = 0;	str +=2;	mgl_wcstrim(str);
 				const mglData &d=mglFormulaCalc(str, this);
@@ -576,12 +580,12 @@ int mglParser::Parse(mglGraph *gr, const wchar_t *string, long pos)
 			delete []s;	return res;
 		}
 	}
-	if(!skip() && !wcsncmp(str,L"ask",3) && (str[3]==' ' || str[3]=='\t'))
+	if(!skip() && !wcsncmp(str,L"ask",3) && ((str[3]==' ') | (str[3]=='\t')))
 	{
 		PutArg(string,str,true);
 		str += 4;	mgl_wcstrim(str);//	int res = 1;
 		int nn = str[1]<='9' ? str[1]-'0' : (str[1]>='a' ? str[1]-'a'+10:-1);
-		if(*str=='$' && nn>=0 && nn<='z'-'a'+10)
+		if((*str=='$') & (nn>=0) & (nn<='z'-'a'+10))
 		{
 			static wchar_t res[1024];
 			str +=2;	mgl_wcstrim(str);
@@ -592,12 +596,12 @@ int mglParser::Parse(mglGraph *gr, const wchar_t *string, long pos)
 		}
 	}
 	wcscpy(str,string);			mgl_wcstrim(str);
-	if(!skip() && !wcsncmp(str,L"for",3) && (str[3]==' ' || str[3]=='\t'))
+	if(!skip() && !wcsncmp(str,L"for",3) && ((str[3]==' ') | (str[3]=='\t')))
 	{
 		for(t=str+4;*t<=' ';t++);
 		// if command have format 'for $N ...' then change it to 'for N ...'
-		if(*t=='$' && t[1]>='0' && t[1]<='9')	*t = ' ';
-		if(*t=='$' && t[1]>='a' && t[1]<='z')	*t = ' ';
+		if((*t=='$') & (t[1]>='0') & (t[1]<='9'))	*t = ' ';
+		if((*t=='$') & (t[1]>='a') & (t[1]<='z'))	*t = ' ';
 	}
 
 	// parse arguments (parameters $1, ..., $9)
@@ -617,7 +621,7 @@ int mglParser::Parse(mglGraph *gr, const wchar_t *string, long pos)
 		str = str+n+1;	mgl_wcstrim(str);
 	}
 	// try to find last argument
-	if(str[0]!=0 && str[0]!='#' && str[0]!=';')	{	arg[k] = str;	k++;	}
+	if((str[0]!=0) & (str[0]!='#') & (str[0]!=';'))	{	arg[k] = str;	k++;	}
 	if(k<1) n =0;
 	else
 	{
@@ -686,16 +690,16 @@ int mglParser::Parse(mglGraph *gr, const wchar_t *string, long pos)
 			n = 1;
 			char ch = arg[1][0];
 			int r = ch-'0';
-			if(ch>='a' && ch<='z')	r = 10+ch-'a';
+			if((ch>='a') & (ch<='z'))	r = 10+ch-'a';
 //			int r = int(a[0].v);
-			if(arg[1][1]==0 && (r>=0 || r<=39))
+			if((arg[1][1]==0) & ((r>=0) | (r<=39)))
 			{
 				if(a[1].type==0)
 				{
 					n=0;		fval[r] = *(a[1].d);
 					fval[r].nx *= fval[r].ny*fval[r].nz;
 				}
-				else if(a[1].type==2 && a[2].type==2 && a[2].v>a[1].v)
+				else if((a[1].type==2) & (a[2].type==2) & (a[2].v>a[1].v))
 				{
 					mreal step = a[3].type==2?a[3].v:1;
 					mm = int(step>0 ? (a[2].v-a[1].v)/step : 0);
@@ -749,7 +753,7 @@ int mglParser::ParseDat(mglGraph *gr, const wchar_t *string, mglData &res)
 		str = str+n+1;	mgl_wcstrim(str);
 	}
 	// try to find last argument
-	if(str[0]!=0 && str[0]!='#' && str[0]!=';')	{	arg[k] = str;	k++;	}
+	if((str[0]!=0) & (str[0]!='#') & (str[0]!=';'))	{	arg[k] = str;	k++;	}
 	if(k<1) n =0;
 	else
 	{	// fill arguments by its values
@@ -793,9 +797,9 @@ int mglParser::FlowExec(mglGraph *, const wchar_t *com, long m, mglArg *a)
 		else if(a[0].type==0)
 		{
 			n = 0;	a[1].s.assign(a[1].w.begin(),a[1].w.end());
-			cond = a[0].d->FindAny((m>1 && a[1].type==1) ? a[1].s.c_str():"u")?3:0;
+			cond = a[0].d->FindAny(((m>1) & (a[1].type==1)) ? a[1].s.c_str():"u")?3:0;
 			if(out)	mglprintf(out,1024,L"if(%ls.FindAny(\"%s\"))\t{",
-						a[0].w.c_str(), (m>1 && a[1].type==1) ? a[1].s.c_str():"u");
+						a[0].w.c_str(), ((m>1) & (a[1].type==1)) ? a[1].s.c_str():"u");
 		}
 		else n = 1;
 		if(n==0)
@@ -828,9 +832,9 @@ int mglParser::FlowExec(mglGraph *, const wchar_t *com, long m, mglArg *a)
 		else if(a[0].type==0)
 		{
 			n = 0;	a[1].s.assign(a[1].w.begin(),a[1].w.end());
-			cond = a[0].d->FindAny((m>1 && a[1].type==1) ? a[1].s.c_str():"u")?3:0;
+			cond = a[0].d->FindAny(((m>1) & (a[1].type==1)) ? a[1].s.c_str():"u")?3:0;
 			if(out)	mglprintf(out,1024,L"else if(%ls.FindAny(\"%s\"))\t{",
-						a[0].w.c_str(), (m>1 && a[1].type==1) ? a[1].s.c_str():"u");
+						a[0].w.c_str(), ((m>1) & (a[1].type==1)) ? a[1].s.c_str():"u");
 		}
 		else n = 1;
 		if(n==0)	if_stack[if_pos-1] = cond;

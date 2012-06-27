@@ -45,7 +45,7 @@ void mgl_strtrim(char *str)
 void mgl_strlwr(char *str)
 {
 	for(long k=0;k<(long)strlen(str);k++)	// óäàëÿåì íà÷àëüíûå ïðîáåëû
-		str[k] = (str[k]>='A' && str[k]<='Z') ? str[k]+'a'-'A' : str[k];
+		str[k] = ((str[k]>='A') & (str[k]<='Z')) ? str[k]+'a'-'A' : str[k];
 }
 //-----------------------------------------------------------------------------
 mglBase::mglBase()
@@ -100,7 +100,7 @@ const char *mglWarn[mglWarnEnd] = {"data dimension(s) is incompatible",
 void mglBase::SetWarn(int code, const char *who)
 {
 	WarnCode = code>0 ? code:0;
-	if(code>0 && code<mglWarnEnd)
+	if((code>0) & (code<mglWarnEnd))
 	{
 		if(who)	Mess = Mess+"\n"+who+": ";
 		else Mess += "\n";
@@ -117,7 +117,7 @@ long mglBase::AddPnt(mglPoint p, float c, mglPoint n, float a, int scl)
 {
 	if(scl>0)	ScalePoint(p,n,!(scl&2));
 	if(mgl_isnan(p.x))	return -1;
-	a = (a>=0 && a<=1) ? a : AlphaDef;
+	a = ((a>=0) & (a<=1)) ? a : AlphaDef;
 	c = (c>=0) ? c:CDef;
 
 	mglPnt q;
@@ -260,16 +260,15 @@ bool mglBase::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan) const
 	y1 = y>0?y*MGL_FLT_EPS:y/MGL_FLT_EPS;	y2 = y<0?y*MGL_FLT_EPS:y/MGL_FLT_EPS;
 	z1 = z>0?z*MGL_FLT_EPS:z/MGL_FLT_EPS;	z2 = z<0?z*MGL_FLT_EPS:z/MGL_FLT_EPS;
 	bool res = true;
-	if(x2>CutMin.x && x1<CutMax.x && y2>CutMin.y && y1<CutMax.y &&
-		z2>CutMin.z && z1<CutMax.z)	res = false;
+	if((x2>CutMin.x) & (x1<CutMax.x) & (y2>CutMin.y) & (y1<CutMax.y) &
+		(z2>CutMin.z) & (z1<CutMax.z))	res = false;
 	if(fc && fc->Calc(x,y,z))	res = false;
 
 	if(get(MGL_ENABLE_CUT) || !use_nan)
 	{
 //		if(x1<Min.x || x2>Max.x || y1<Min.y || y2>Max.y || z1<Min.z || z2>Max.z)	res = false;
-		if((x1-Min.x)*(x1-Max.x)>0 && (x2-Min.x)*(x2-Max.x)>0)	res = false;
-		if((y1-Min.y)*(y1-Max.y)>0 && (y2-Min.y)*(y2-Max.y)>0)	res = false;
-		if((z1-Min.z)*(z1-Max.z)>0 && (z2-Min.z)*(z2-Max.z)>0)	res = false;
+		if( (((x1-Min.x)*(x1-Max.x)>0) & ((x2-Min.x)*(x2-Max.x)>0)) | (((y1-Min.y)*(y1-Max.y)>0) & ((y2-Min.y)*(y2-Max.y)>0)) | (((z1-Min.z)*(z1-Max.z)>0) & ((z2-Min.z)*(z2-Max.z)>0)) )
+			res = false;
 	}
 	else
 	{
@@ -285,7 +284,7 @@ bool mglBase::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan) const
 	if(fx)	{	x1 = fx->Calc(x,y,z);	x2 = fx->CalcD('x',x,y,z);	}
 	if(fy)	{	y1 = fy->Calc(x,y,z);	y2 = fy->CalcD('y',x,y,z);	}
 	if(fz)	{	z1 = fz->Calc(x,y,z);	z2 = fz->CalcD('z',x,y,z);	}
-	if(mgl_isnan(x1) || mgl_isnan(y1) || mgl_isnan(z1))	{	x=NAN;	return false;	}
+	if(mgl_isnan(x1) | mgl_isnan(y1) | mgl_isnan(z1))	{	x=NAN;	return false;	}
 
 	register float d;	// TODO: should I update normale for infinite light source (x=NAN)?!?
 	d = 1/(FMax.x - FMin.x);	x = (2*x1 - FMin.x - FMax.x)*d;	x2 *= 2*d;
@@ -311,9 +310,8 @@ bool mglBase::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan) const
 		x += 1+(y+z)/2;		y += (z+1)/3;
 		n.x += (n.y+n.z)/2;	n.y += n.z/3;
 	}
-	if(fabs(x)>MGL_FLT_EPS)	res = false;
-	if(fabs(y)>MGL_FLT_EPS)	res = false;
-	if(fabs(z)>MGL_FLT_EPS)	res = false;
+	if((fabs(x)>MGL_FLT_EPS) | (fabs(y)>MGL_FLT_EPS) | (fabs(z)>MGL_FLT_EPS))
+		res = false;
 
 	if(!res && use_nan)	x = NAN;	// extra sign that point shouldn't be plotted
 	return res;
@@ -589,13 +587,13 @@ void mglTexture::Set(const char *s, int smooth, float alpha)
 		if(s[i]=='{')	m++;	if(s[i]=='}')	m--;
 		if(strchr(cols,s[i]) && j<1)		// this is color
 		{
-			if(m>0 && s[i+1]>'0' && s[i+1]<='9')// ext color
+			if(m>0 && ((s[i+1]>'0') & (s[i+1]<='9')))// ext color
 			{	c[2*n] = mglColor(s[i],(s[i+1]-'0')/5.f);	i++;	}
 			else	c[2*n] = mglColor(s[i]);	// usual color
 			n++;
 		}
 		// NOTE: User can change alpha if it placed like {AN}
-		if(s[i]=='A' && j<1 && m>0 && s[i+1]>'0' && s[i+1]<='9')
+		if(s[i]=='A' && j<1 && m>0 && ((s[i+1]>'0') & (s[i+1]<='9')))
 		{	alpha = 0.1*(s[i+1]-'0');	i++;	}
 	}
 	for(i=0;i<n;i++)	// default texture
@@ -816,8 +814,11 @@ int mglFindArg(const char *str)
 		if(str[i]=='\'') l++;
 		if(str[i]=='{') k++;
 		if(str[i]=='}') k--;
-		if(l%2==0 && k==0 && (str[i]=='#' || str[i]==';'))	return -i;
-		if(l%2==0 && k==0 && (str[i]<=' '))	return i;
+		if((l%2==0) & (k==0))
+		{
+			if((str[i]=='#') | (str[i]==';'))	return -i;
+			if(str[i]<=' ')	return i;
+		}
 	}
 	return 0;
 }

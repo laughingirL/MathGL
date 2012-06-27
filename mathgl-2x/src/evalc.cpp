@@ -134,7 +134,7 @@ mglFormulaC::mglFormulaC(const char *string)
 	{
 		Kod = EQ_NUM;
 //		Left = Right = 0;
-		if(str[1]==0 && str[0]>='a' && str[0]<='z')	// ��������� ���������
+		if((str[1]==0) & (str[0]>='a') & (str[0]<='z'))	// ��������� ���������
 		{	Kod=EQ_A;	Res = str[0]-'a';	}
 		else if(!strcmp(str,"rnd")) Kod=EQ_RND;
 		else if(!strcmp(str,"pi")) Res=M_PI;

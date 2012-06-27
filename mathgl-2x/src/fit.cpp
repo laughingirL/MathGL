@@ -270,7 +270,7 @@ HMDT mgl_fit_xyzs(HMGL gr, HCDT xx, HCDT yy, HCDT zz, HCDT ss, const char *eq, c
 	if(xx->GetNx()!=m)		{	gr->SetWarn(mglWarnDim,"Fit[S]");	return fit;	}
 	if(ss->GetNx()*ss->GetNy()*ss->GetNz() != m*n*zz->GetNz())
 	{	gr->SetWarn(mglWarnDim,"FitS");	return fit;	}
-	if(yy->GetNx()!=n && (xx->GetNy()!=n || yy->GetNx()!=m || yy->GetNy()!=n))
+	if((yy->GetNx()!=n) & ((xx->GetNy()!=n) | (yy->GetNx()!=m) | (yy->GetNy()!=n)))
 	{	gr->SetWarn(mglWarnDim);	return fit;	}
 	if(m<2|| n<2)	{	gr->SetWarn(mglWarnLow,"Fit[S]");	return fit;	}
 
@@ -318,8 +318,8 @@ HMDT mgl_fit_xyzas(HMGL gr, HCDT xx, HCDT yy, HCDT zz, HCDT aa, HCDT ss, const c
 	i = n*m*l;
 	if(m<2 || n<2 || l<2)	{	gr->SetWarn(mglWarnLow,"Fit[S]");	return fit;	}
 	if(ss->GetNx()*ss->GetNy()*ss->GetNz() != i)		{	gr->SetWarn(mglWarnDim,"FitS");	return fit;	}
-	bool both = xx->GetNx()*xx->GetNy()*xx->GetNz()==i && yy->GetNx()*yy->GetNy()*yy->GetNz()==i && zz->GetNx()*zz->GetNy()*zz->GetNz()==i;
-	if(!(both || (xx->GetNx()==m && yy->GetNx()==n && zz->GetNx()==l)))
+	bool both = (xx->GetNx()*xx->GetNy()*xx->GetNz()==i) & (yy->GetNx()*yy->GetNy()*yy->GetNz()==i) & (zz->GetNx()*zz->GetNy()*zz->GetNz()==i);
+	if(!( both | ((xx->GetNx()==m) & (yy->GetNx()==n) & (zz->GetNx()==l)) ))
 	{	gr->SetWarn(mglWarnDim,"Fit[S]");	return fit;	}
 
 	long nn = long(0.5+gr->SaveState(opt));
@@ -374,12 +374,12 @@ HMDT mgl_hist_x(HMGL gr, HCDT x, HCDT a, const char *opt)
 	if(dx && da)	for(i=0;i<nn;i++)
 	{
 		j1 = long((dx->a[i]-gr->Min.x)*vx);
-		if(j1>=0 && j1<n)	res->a[j1] += da->a[i];
+		if((j1>=0) & (j1<n))	res->a[j1] += da->a[i];
 	}
 	else	for(i=0;i<nn;i++)
 	{
 		j1 = long((x->vthr(i)-gr->Min.x)*vx);
-		if(j1>=0 && j1<n)	res->a[j1] += a->vthr(i);
+		if((j1>=0) & (j1<n))	res->a[j1] += a->vthr(i);
 	}
 	gr->LoadState();	return res;
 }
@@ -402,13 +402,13 @@ HMDT mgl_hist_xy(HMGL gr, HCDT x, HCDT y, HCDT a, const char *opt)
 	{
 		j1 = long((dx->a[i]-gr->Min.x)*vx);
 		j2 = long((dy->a[i]-gr->Min.y)*vy);
-		if(j1>=0 && j1<n && j2>=0 && j2<n)	res->a[j1+n*j2] += da->a[i];
+		if((j1>=0) & (j1<n) & (j2>=0) & (j2<n))	res->a[j1+n*j2] += da->a[i];
 	}
 	else	for(i=0;i<nn;i++)
 	{
 		j1 = long((x->vthr(i)-gr->Min.x)*vx);
 		j2 = long((y->vthr(i)-gr->Min.y)*vy);
-		if(j1>=0 && j1<n && j2>=0 && j2<n)	res->a[j1+n*j2] += a->vthr(i);
+		if((j1>=0) & (j1<n) & (j2>=0) & (j2<n))	res->a[j1+n*j2] += a->vthr(i);
 	}
 	gr->LoadState();	return res;
 }
@@ -432,7 +432,7 @@ HMDT mgl_hist_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *opt)
 		j1 = long((dx->a[i]-gr->Min.x)*vx);
 		j2 = long((dy->a[i]-gr->Min.y)*vy);
 		j3 = long((dz->a[i]-gr->Min.z)*vz);
-		if(j1>=0 && j1<n && j2>=0 && j2<n && j3>=0 && j3<n)
+		if((j1>=0) & (j1<n) & (j2>=0) & (j2<n) & (j3>=0) & (j3<n))
 			res->a[j1+n*(j2+n*j3)] += da->a[i];
 	}
 	else	for(i=0;i<nn;i++)
@@ -441,7 +441,7 @@ HMDT mgl_hist_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *opt)
 		j1 = long((x->vthr(i)-gr->Min.x)*vx);
 		j2 = long((y->vthr(i)-gr->Min.y)*vy);
 		j3 = long((z->vthr(i)-gr->Min.z)*vz);
-		if(j1>=0 && j1<n && j2>=0 && j2<n && j3>=0 && j3<n)
+		if((j1>=0) & (j1<n) & (j2>=0) & (j2<n) & (j3>=0) & (j3<n))
 			res->a[j1+n*(j2+n*j3)] += a->vthr(i);
 	}
 	gr->LoadState();	return res;

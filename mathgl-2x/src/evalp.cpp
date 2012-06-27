@@ -40,16 +40,16 @@ mglData mglApplyOper(const wchar_t *a1, const wchar_t *a2, mglParser *arg, doubl
 		r.a[i] = func(a.a[i],b.a[0]);
 	else if(a.nx*a.ny*a.nz==1)	for(i=0;i<b.nx*b.ny*b.nz;i++)
 		r.a[i] = func(a.a[0],b.a[i]);
-	else if(a.nx==b.nx && b.ny==a.ny && b.nz==a.nz)	for(i=0;i<n*m*l;i++)
+	else if((a.nx==b.nx) & (b.ny==a.ny) & (b.nz==a.nz))	for(i=0;i<n*m*l;i++)
 		r.a[i] = func(a.a[i], b.a[i]);
-	else if(a.nx==b.nx && b.ny*b.nz==1)	for(i=0;i<n;i++)	for(j=0;j<a.ny*a.nz;j++)
+	else if((a.nx==b.nx) & (b.ny*b.nz==1))	for(i=0;i<n;i++)	for(j=0;j<a.ny*a.nz;j++)
 		r.a[i+n*j] = func(a.a[i+n*j], b.a[i]);
-	else if(a.nx==b.nx && a.ny*a.nz==1)	for(i=0;i<n;i++)	for(j=0;j<b.ny*b.nz;j++)
+	else if((a.nx==b.nx) & (a.ny*a.nz==1))	for(i=0;i<n;i++)	for(j=0;j<b.ny*b.nz;j++)
 		r.a[i+n*j] = func(a.a[i], b.a[i+n*j]);
-	else if(a.nx==b.nx && b.ny==a.ny && b.nz==1)
+	else if((a.nx==b.nx) & (b.ny==a.ny) & (b.nz==1))
 		for(i=0;i<n;i++)	for(j=0;j<m;j++)	for(k=0;k<a.nz;k++)
 			r.a[i+n*(j+m*k)] = func(a.a[i+n*(j+m*k)], b.a[i+n*j]);
-	else if(a.nx==b.nx && b.ny==a.ny && a.nz==1)
+	else if((a.nx==b.nx) & (b.ny==a.ny) & (a.nz==1))
 		for(i=0;i<n;i++)	for(j=0;j<m;j++)	for(k=0;k<b.nz;k++)
 			r.a[i+n*(j+m*k)] = func(a.a[i+n*j], b.a[i+n*(j+m*k)]);
 	return r;
@@ -638,7 +638,7 @@ mglData mglFormulaCalc(const wchar_t *string, mglParser *arg)
 //-----------------------------------------------------------------------------
 void mgl_wcslwr(wchar_t *str)
 {
-	for(long k=0;k<(long)wcslen(str);k++)	// ������� ��������� �������
-		str[k] = (str[k]>='A' && str[k]<='Z') ? str[k]+'a'-'A' : str[k];
+	for(size_t k=0;k<wcslen(str);k++)	// ������� ��������� �������
+		str[k] = ((str[k]>='A') & (str[k]<='Z')) ? str[k]+'a'-'A' : str[k];
 }
 //-----------------------------------------------------------------------------

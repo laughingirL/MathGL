@@ -28,8 +28,8 @@
 void mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, const char *opt)
 {
 	long n = x->GetNx(), m = nums->GetNy();
-	if(y->GetNx()!=n || z->GetNx()!=n || nums->GetNx()<3)	{	gr->SetWarn(mglWarnLow,"TriPlot");	return;	}
-	if(a->GetNx()!=m && a->GetNx()!=n)	{	gr->SetWarn(mglWarnLow,"TriPlot");	return;	}
+	if((y->GetNx()!=n) | (z->GetNx()!=n) | (nums->GetNx()<3))	{	gr->SetWarn(mglWarnLow,"TriPlot");	return;	}
+	if((a->GetNx()!=m) & (a->GetNx()!=n))	{	gr->SetWarn(mglWarnLow,"TriPlot");	return;	}
 	long ss=gr->AddTexture(sch);
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("TriPlot",cgid++);
@@ -38,7 +38,7 @@ void mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const 
 	register long i,k1,k2,k3;
 	bool wire = sch && strchr(sch,'#');
 	long nc = a->GetNx();
-	if(nc!=n && nc>=m)	// colors per triangle
+	if((nc!=n) & (nc>=m))	// colors per triangle
 	{
 		gr->Reserve(m*3);
 		for(i=0;i<m;i++)
@@ -69,12 +69,14 @@ void mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const 
 			k2 = long(nums->v(1,i)+0.5);
 			k3 = long(nums->v(2,i)+0.5);
 			if(!wire)
+			{
 				q = mglPoint(x->v(k2)-x->v(k1), y->v(k2)-y->v(k1), z->v(k2)-z->v(k1)) ^
 					mglPoint(x->v(k3)-x->v(k1), y->v(k3)-y->v(k1), z->v(k3)-z->v(k1));
-			// try be sure that in the same direction ... but it is so slow :(
-			if(pp[k1]*q<0) q*=-1;	pp[k1] += q;
-			if(pp[k2]*q<0) q*=-1;	pp[k2] += q;
-			if(pp[k3]*q<0) q*=-1;	pp[k3] += q;
+				q.Normalize();
+				// try be sure that in the same direction ... 
+				if(q.z<0)	q *= -1;
+				pp[k1] += q;	pp[k2] += q;	pp[k3] += q;
+			}
 		}
 		for(i=0;i<n;i++)	// add points
 		{
@@ -134,8 +136,8 @@ void mgl_triplot_xy_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y,
 void mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, const char *opt)
 {
 	long n = x->GetNx(), m = nums->GetNy();
-	if(y->GetNx()!=n || z->GetNx()!=n || nums->GetNx()<4)	{	gr->SetWarn(mglWarnLow,"QuadPlot");	return;	}
-	if(a->GetNx()!=m && a->GetNx()!=n)	{	gr->SetWarn(mglWarnLow,"QuadPlot");	return;	}
+	if((y->GetNx()!=n) | (z->GetNx()!=n) | (nums->GetNx()<4))	{	gr->SetWarn(mglWarnLow,"QuadPlot");	return;	}
+	if((a->GetNx()!=m) & (a->GetNx()!=n))	{	gr->SetWarn(mglWarnLow,"QuadPlot");	return;	}
 	long ss=gr->AddTexture(sch);
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("QuadPlot",cgid++);
@@ -144,7 +146,7 @@ void mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const
 	register long i,k1,k2,k3,k4;
 	long nc = a->GetNx();
 	bool wire = sch && strchr(sch,'#');
-	if(nc!=n && nc>=m)	// colors per triangle
+	if((nc!=n) & (nc>=m))	// colors per triangle
 	{
 		gr->Reserve(m*4);
 		for(i=0;i<m;i++)
@@ -186,10 +188,10 @@ void mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const
 			if(wire)	pp[k1]=pp[k2]=pp[k3]=pp[k4]=mglPoint(NAN,NAN);
 			else
 			{
-				q = (p2-p1) ^ (p3-p1);	if(pp[k1]*q<0) q*=-1;	pp[k1] += q;
-				q = (p2-p4) ^ (p3-p4);	if(pp[k2]*q<0) q*=-1;	pp[k2] += q;
-				q = (p1-p2) ^ (p4-p2);	if(pp[k3]*q<0) q*=-1;	pp[k3] += q;
-				q = (p1-p4) ^ (p4-p3);	if(pp[k4]*q<0) q*=-1;	pp[k4] += q;
+				q = (p2-p1) ^ (p3-p1);	if(q.z<0) q*=-1;	pp[k1] += q;
+				q = (p2-p4) ^ (p3-p4);	if(q.z<0) q*=-1;	pp[k2] += q;
+				q = (p1-p2) ^ (p4-p2);	if(q.z<0) q*=-1;	pp[k3] += q;
+				q = (p1-p4) ^ (p4-p3);	if(q.z<0) q*=-1;	pp[k4] += q;
 			}
 		}
 		for(i=0;i<n;i++)	// add points
@@ -268,8 +270,8 @@ void mgl_tricont_line(HMGL gr, float val, long k1, long k2, long k3, HCDT x, HCD
 void mgl_tricont_xyzcv(HMGL gr, HCDT v, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, const char *opt)
 {
 	long n = x->GetNx(), m = nums->GetNy();
-	if(y->GetNx()!=n || z->GetNx()!=n || nums->GetNx()<3)	{	gr->SetWarn(mglWarnLow,"TriCont");	return;	}
-	if(a->GetNx()!=m && a->GetNx()!=n)	{	gr->SetWarn(mglWarnLow,"TriCont");	return;	}
+	if((y->GetNx()!=n) | (z->GetNx()!=n) | (nums->GetNx()<3))	{	gr->SetWarn(mglWarnLow,"TriCont");	return;	}
+	if((a->GetNx()!=m) & (a->GetNx()!=n))	{	gr->SetWarn(mglWarnLow,"TriCont");	return;	}
 	long ss=gr->AddTexture(sch);
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("TriCont",cgid++);
@@ -412,7 +414,7 @@ HMDT mgl_triangulation_2d(HCDT x, HCDT y)
 	std::vector<Triad> triads;
 	s_hull_del_ray2(pts, triads);
 	m = triads.size();
-	nums->Create(m);
+	nums->Create(3,m);
 	for(i=0;i<m;i++)
 	{
 		nums->a[3*i]   = triads[i].a;
@@ -471,7 +473,7 @@ long mgl_insert_trig(long i1,long i2,long i3,long **n)
 	for(i=0;i<Cur;i++)	// check if it is unique
 	{
 		nn = *n + 3*i;
-		if(nn[0]==i1 && nn[1]==i2 && nn[2]==i3)	return Cur;
+		if((nn[0]==i1) & (nn[1]==i2) & (nn[2]==i3))	return Cur;
 	}
 	nn = *n + 3*Cur;
 	nn[0]=i1;	nn[1]=i2;	nn[2]=i3;
@@ -516,7 +518,7 @@ long mgl_crust(long n,mglPoint *pp,long **nn,float ff)
 		for(ii=0,j=0;j<n;j++)	// find close vertexes
 		{
 			r = mgl_norm(pp[i]-pp[j]);
-			if(r<=rs && j!=i)	{	ind[ii] = j;	ii++;	if(ii==99)	break;}
+			if((r<=rs) & (j!=i))	{	ind[ii] = j;	ii++;	if(ii==99)	break;}
 		}
 		if(ii<3)	continue;	// nothing to do
 		for(j=0;j<ii;j++)

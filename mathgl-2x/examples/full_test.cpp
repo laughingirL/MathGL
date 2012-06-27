@@ -44,9 +44,12 @@ void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
 	mglData x(100), y(100), z(100);
-	gr->Fill(x,"2*rnd-1");	gr->Fill(y,"2*rnd-1");	gr->Fill(z,"u^2-v^2",x,y);
+	gr->Fill(x,"2*rnd-1");	gr->Fill(y,"2*rnd-1");	gr->Fill(z,"v^2-w^2",x,y);
 	mglData d = mglTriangulation(x,y);
-	gr->TriPlot(d,x,y,z,"#wyrRk");
+
+	gr->Rotate(40,60);
+	gr->Box();	gr->Light(true);
+	gr->TriPlot(d,x,y,z,"k");
 	return;
 	
 	gr->Light(true);

@@ -70,7 +70,7 @@ void mglFromStr(HMDT d,char *buf,long NX,long NY,long NZ)	// TODO: add multithre
 			{
 				while(!isn(buf[j]) && j<nb)
 				{
-					if(buf[j]>='a' && buf[j]<='z')
+					if((buf[j]>='a') & (buf[j]<='z'))
 						d->id[k++] = buf[j];
 					j++;
 				}
@@ -248,7 +248,7 @@ void mgl_data_save(HCDT d, const char *fname,long ns)
 	fp = fopen(fname,"w");
 	register long i,j,k;
 	long nx=d->GetNx(), ny=d->GetNy(), nz=d->GetNz();
-	if(ns<0 || (ns>=nz && nz>1))	for(k=0;k<nz;k++)
+	if((ns<0) | ((ns>=nz) & (nz>1)))	for(k=0;k<nz;k++)
 	{	// ñîõðàíÿåì âñå äàííûå
 		for(i=0;i<ny;i++)
 		{
@@ -307,7 +307,7 @@ int mgl_data_read(HMDT d, const char *fname)
 		while(buf[i]=='#')	{	while(!isn(buf[i]) && i<nb)	i++;	}
 		ch = buf[i];
 		if(ch>' ' && !first)	first=true;
-		if(first && (ch==' ' || ch=='\t' || ch==',') && buf[i+1]>' ') k++;
+		if(first & ((ch==' ') | (ch=='\t') | (ch==',')) & (buf[i+1]>' ')) k++;
 	}
 	first = false;
 	for(i=0;i<nb-1;i++)					// determine ny
@@ -421,7 +421,7 @@ int mgl_data_read_mat(HMDT d, const char *fname, long dim)
 				while(b[i]=='#')	{	while(!isn(b[i]) && b[i])	i++;	}
 				ch = b[i];
 				if(ch>' ' && !first)	first=true;
-				if(first && (ch==' ' || ch=='\t' || ch==',') && b[i+1]>' ') nx++;
+				if(first & ((ch==' ') | (ch=='\t') | (ch==',')) & (b[i+1]>' ')) nx++;
 			}
 		}
 	}
@@ -672,14 +672,14 @@ void mgl_data_extend(HMDT d, long n1, long n2)
 	else
 	{
 		mx = -n1;	my = n2<0 ? -n2 : nx;	mz = n2<0 ? nx : ny;
-		if(n2>0 && ny==1)	mz = n2;
+		if((n2>0) & (ny==1))	mz = n2;
 		b = new mreal[mx*my*mz];
 		register mreal v;
 		if(n2<0)	for(j=0;j<nx;j++)	for(i=0,v=d->a[j];i<mx*my;i++)
 			b[i+mx*my*j] = v;
 		else	for(j=0;j<nx*ny;j++)	for(i=0,v=d->a[j];i<mx;i++)
 			b[i+mx*j] = v;
-		if(n2>0 && ny==1)	for(i=0;i<n2;i++)
+		if((n2>0) & (ny==1))	for(i=0;i<n2;i++)
 			memcpy(b+i*mx*my, d->a, mx*my*sizeof(mreal));
 	}
 	if(!d->link)	delete [](d->a);
@@ -774,7 +774,7 @@ void mgl_data_modify_vw(HMDT d, const char *eq,HCDT vdat,HCDT wdat)
 	const mglData *w = dynamic_cast<const mglData *>(wdat);
 	long nn = d->nx*d->ny*d->nz, par[3]={d->nx,d->ny,d->nz};
 	mglFormula f(eq);
-	if(v && w && v->nx*v->ny*v->nz==nn && w->nx*w->ny*w->nz==nn)
+	if(v && w && ((v->nx*v->ny*v->nz==nn) & (w->nx*w->ny*w->nz==nn)))
 		mglStartThread(mgl_modify,0,nn,d->a,v->a,w->a,par,&f);
 	else if(v && v->nx*v->ny*v->nz==nn)
 		mglStartThread(mgl_modify,0,nn,d->a,v->a,0,par,&f);
@@ -819,6 +819,64 @@ void mgl_data_fill_eq_(uintptr_t *gr, uintptr_t *d, const char *eq, uintptr_t *v
 {	char *s=new char[l+1];	memcpy(s,eq,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_data_fill_eq(_GR_,_DT_,s,_DA_(v),_DA_(w),o);	delete []o;	delete []s;	}
+//-----------------------------------------------------------------------------
+void *mgl_grid_t(void *par)
+{
+	mglThreadD *t=(mglThreadD *)par;
+	long nx=t->p[0],ny=t->p[1];
+	register long i0, k1,k2,k3;
+	mreal *b=t->a;
+	const mreal *x=t->b, *y=t->c, *c=t->d, *z=t->e, *d=(const mreal *)(t->v);
+	for(i0=t->id;i0<t->n;i0+=mglNumThr)
+	{
+		k1 = long(d[3*i0]);		k2 = long(d[3*i0+1]);	k3 = long(d[3*i0+2]);
+		float dxu,dxv,dyu,dyv;
+		mglPoint d1=mglPoint(x[k2]-x[k1],y[k2]-y[k1],z[k2]-z[k1]), d2=mglPoint(x[k3]-x[k1],y[k3]-y[k1],z[k3]-z[k1]), p;
+
+		dxu = d2.x*d1.y - d1.x*d2.y;
+		if(fabs(dxu)<1e-5)	continue;		// points lies on the same line
+		dyv =-d1.x/dxu;	dxv = d1.y/dxu;
+		dyu = d2.x/dxu;	dxu =-d2.y/dxu;
+
+		long x1,y1,x2,y2;
+		x1 = long(fmin(fmin(x[k1],x[k2]),x[k3]));	// bounding box
+		y1 = long(fmin(fmin(y[k1],y[k2]),y[k3]));
+		x2 = long(fmax(fmax(x[k1],x[k2]),x[k3]));
+		y2 = long(fmax(fmax(y[k1],y[k2]),y[k3]));
+		x1 = x1>0 ? x1:0;	x2 = x2<nx ? x2:nx-1;
+		y1 = y1>0 ? y1:0;	y2 = y2<ny ? y2:ny-1;
+		if(x1>x2 || y1>y2)	continue;
+
+		register float u,v,xx,yy,zz, x0 = x[k1], y0 = y[k1];
+		register long i,j;
+		for(i=x1;i<=x2;i++)	for(j=y1;j<=y2;j++)
+		{
+			xx = (i-x0);	yy = (j-y0);
+			u = dxu*xx+dyu*yy;	v = dxv*xx+dyv*yy;
+			if((u<0) | (v<0) | (u+v>1))	continue;
+			b[i+nx*j] = z[k1] + d1.z*u + d2.z*v;
+		}
+	}
+	return 0;
+}
+void mgl_data_grid(HMGL gr, HMDT d, HCDT xdat, HCDT ydat, HCDT zdat)
+{	// NOTE: only for mglData
+	const mglData *x = dynamic_cast<const mglData *>(xdat);
+	const mglData *y = dynamic_cast<const mglData *>(ydat);
+	const mglData *z = dynamic_cast<const mglData *>(zdat);
+	if(!x || !y || !z)	return;
+
+	mglData *nums = mgl_triangulation_2d(x,y);
+	long nn = nums->ny, par[3]={d->nx,d->ny,d->nz};
+	mreal xx[6]={gr->Min.x,0, gr->Min.y,0, gr->Min.z,0};
+	if(d->nx>1)	xx[1] = (gr->Max.x-gr->Min.x)/(d->nx-1.);
+	if(d->ny>1)	xx[3] = (gr->Max.y-gr->Min.y)/(d->ny-1.);
+	if(d->nz>1)	xx[5] = (gr->Max.z-gr->Min.z)/(d->nz-1.);
+
+	for(long i=0;i<d->nx*d->ny*d->nz;i++)	d->a[i] = NAN;
+	mglStartThread(mgl_grid_t,0,nn,d->a,x?x->a:0,y?y->a:0,par,nums->a,xx,z?z->a:0);
+	delete nums;
+}
 //-----------------------------------------------------------------------------
 #if MGL_HAVE_HDF4
 void mgl_data_read_hdf4(HMDT d,const char *fname,const char *data)
@@ -877,7 +935,7 @@ void mgl_data_save_hdf(HCDT dat,const char *fname,const char *data,int rewrite)
 	if(res>0 && !rewrite)	hf = H5Fopen(fname, H5F_ACC_RDWR, H5P_DEFAULT);
 	else	hf = H5Fcreate(fname, H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
 	if(hf<0)	return;
-	if(d->nz==1 && d->ny == 1)	{	rank=1;	dims[0]=d->nx;	}
+	if((d->nz==1) & (d->ny==1))	{	rank=1;	dims[0]=d->nx;	}
 	else if(d->nz==1)	{	rank=2;	dims[0]=d->ny;	dims[1]=d->nx;	}
 	else	{	rank=3;	dims[0]=d->nz;	dims[1]=d->ny;	dims[2]=d->nx;	}
 	hs = H5Screate_simple(rank, dims, 0);
@@ -911,7 +969,7 @@ int mgl_data_read_hdf(HMDT d,const char *fname,const char *data)
 	if(hd<0)	return false;
 	hs = H5Dget_space(hd);
 	rank = H5Sget_simple_extent_ndims(hs);
-	if(rank>0 && rank<=3)
+	if((rank>0) & (rank<=3))
 	{
 		H5Sget_simple_extent_dims(hs,dims,0);
 		if(rank==1)			{	dims[2]=dims[0];	dims[0]=dims[1]=1;	}
@@ -978,14 +1036,14 @@ void mgl_data_save_hdf_(uintptr_t *d, const char *fname, const char *data, int *
 //-----------------------------------------------------------------------------
 bool mgl_add_file(long &kx,long &ky, long &kz, mreal *&b, mglData *d,bool as_slice)
 {
-	if(as_slice && d->nz==1)
+	if(as_slice & (d->nz==1))
 	{
-		if(kx==d->nx && d->ny==1)
+		if((kx==d->nx) & (d->ny==1))
 		{
 			b = (mreal *)realloc(b,kx*(ky+1)*sizeof(mreal));
 			memcpy(b+kx*ky,d->a,kx*sizeof(mreal));		ky++;
 		}
-		else if(kx==d->nx && ky==d->ny)
+		else if((kx==d->nx) & (ky==d->ny))
 		{
 			b = (mreal *)realloc(b,kx*ky*(kz+1)*sizeof(mreal));
 			memcpy(b+kx*ky*kz,d->a,kx*ky*sizeof(mreal));	kz++;
@@ -994,17 +1052,17 @@ bool mgl_add_file(long &kx,long &ky, long &kz, mreal *&b, mglData *d,bool as_sli
 	}
 	else
 	{
-		if(d->ny*d->nz==1 && ky*kz==1)
+		if((d->ny*d->nz==1) & (ky*kz==1))
 		{
 			b = (mreal *)realloc(b,(kx+d->nx)*sizeof(mreal));
 			memcpy(b+kx,d->a,d->nx*sizeof(mreal));	kx+=d->nx;
 		}
-		else if(kx==d->nx && kz==1 && d->nz==1)
+		else if((kx==d->nx) & (kz==1) & (d->nz==1))
 		{
 			b = (mreal *)realloc(b,kx*(ky+d->ny)*sizeof(mreal));
 			memcpy(b+kx*ky,d->a,kx*d->ny*sizeof(mreal));	ky+=d->ny;
 		}
-		else if(kx==d->nx && ky==d->ny)
+		else if((kx==d->nx) & (ky==d->ny))
 		{
 			b = (mreal *)realloc(b,kx*kx*(kz+d->nz)*sizeof(mreal));
 			memcpy(b+kx*ky*kz,d->a,kx*ky*d->nz*sizeof(mreal));	kz+=d->nz;
