@@ -196,7 +196,7 @@ void mgl_face_(uintptr_t* gr, float *x0, float *y0, float *z0, float *x1, float 
 void mgl_cone(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z2, float r1, float r2, const char *stl)
 {
 	if(r2<0)	r2=r1;
-	if(r1==0 && r2==0)	return;
+	if((r1==0) & (r2==0))	return;
 
 	static int cgid=1;	gr->StartGroup("Cone",cgid++);
 	mglPoint p1(x1,y1,z1), p2(x2,y2,z2), p,q, d=p2-p1,a,b;
@@ -207,7 +207,7 @@ void mgl_cone(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z
 	bool edge = stl && strchr(stl,'@');
 	bool wire = stl && strchr(stl,'#');
 	gr->Reserve(edge?166:82);
-	if(edge && !wire)
+	if(edge & !wire)
 	{
 		k1=gr->AddPnt(p1,c1,d,-1,3);
 		k2=gr->AddPnt(p2,c2,d,-1,3);
@@ -222,10 +222,10 @@ void mgl_cone(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z
 		q = (si*a-co*b)^(d + (dr*co)*a + (dr*si)*b);
 		if(wire)	q.x=q.y=NAN;
 		kk[i] = gr->AddPnt(p,c1,q,-1,3);
-		if(edge && !wire)	kk[i+82] = gr->AddPnt(p,c1,d,-1,3);
+		if(edge & !wire)	kk[i+82] = gr->AddPnt(p,c1,d,-1,3);
 		p = p2+(r2*co)*a+(r2*si)*b;
 		kk[i+(wire?13:41)] = gr->AddPnt(p,c2,q,-1,3);
-		if(edge && !wire)	kk[i+123] = gr->AddPnt(p,c2,d,-1,3);
+		if(edge & !wire)	kk[i+123] = gr->AddPnt(p,c2,d,-1,3);
 	}
 	if(wire)	for(i=0;i<12;i++)
 	{
@@ -347,7 +347,7 @@ void mgl_ellipse(HMGL gr, float x1, float y1, float z1, float x2, float y2, floa
 	gr->SetPenPal(stl,&pal);
 	float c=gr->NextColor(pal), d;
 	float k=(gr->GetNumPal(pal)>1)?gr->NextColor(pal):gr->AddTexture('k');
-	bool fill = !(stl && strchr(stl,'#')), box = (stl && strchr(stl,'@')) || !fill;
+	bool fill = !(stl && strchr(stl,'#')), box = (stl && strchr(stl,'@')) | !fill;
 	if(!fill)	k=c;
 
 	gr->Reserve(2*n+1);
@@ -380,7 +380,7 @@ void mgl_rhomb(HMGL gr, float x1, float y1, float z1, float x2, float y2, float 
 	float c=gr->NextColor(pal);
 	float k=(gr->GetNumPal(pal)>1)?gr->NextColor(pal):gr->AddTexture('k');
 	float b=(gr->GetNumPal(pal)>2)?gr->NextColor(pal):c;
-	bool fill = !(stl && strchr(stl,'#')), box = (stl && strchr(stl,'@')) || !fill;
+	bool fill = !(stl && strchr(stl,'#')), box = (stl && strchr(stl,'@')) | !fill;
 	if(!fill)	k=c;
 	gr->Reserve(8);
 	mglPoint p1(x1,y1,z1), p2(x2,y2,z2), u=mglPoint(0,0,1)^(p1-p2), q=u^(p1-p2), p, s,qq;
@@ -464,9 +464,9 @@ void mgl_dew_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, cons
 {
 	long i,j,n=ax->GetNx(),m=ax->GetNy(),k;
 	if(n*m*ax->GetNz()!=ay->GetNx()*ay->GetNy()*ay->GetNz())	{	gr->SetWarn(mglWarnDim,"Dew");	return;	}
-	if(n<2 || m<2)						{	gr->SetWarn(mglWarnLow,"Dew");	return;	}
-	bool both = x->GetNx()==n && y->GetNx()==n && x->GetNy()==m && y->GetNy()==m;
-	if(!(both || (x->GetNx()==n && y->GetNx()==m)))	{	gr->SetWarn(mglWarnDim,"Dew");	return;	}
+	if(n<2 || m<2)	{	gr->SetWarn(mglWarnLow,"Dew");	return;	}
+	bool both = (x->GetNx()==n) & (y->GetNx()==n) & (x->GetNy()==m) & (y->GetNy()==m);
+	if(!( both | ((x->GetNx()==n) & (y->GetNx()==m)) ))	{	gr->SetWarn(mglWarnDim,"Dew");	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("DewXY",cgid++);
 
@@ -548,7 +548,7 @@ void mgl_putsw_dir(HMGL gr, float x, float y, float z, float dx, float dy, float
 {
 	bool a=font && strchr(font,'a'), A=font && strchr(font,'A');
 	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);
-	if(g && (a||A))
+	if(g && (a|A))
 	{
 		g->Push();	g->Identity(a);
 		gr->set(MGL_DISABLE_SCALE);
@@ -558,7 +558,7 @@ void mgl_putsw_dir(HMGL gr, float x, float y, float z, float dx, float dy, float
 	}
 	mglPoint p(x,y,z), d(dx-x,dy-y,dz-z);
 	long k = gr->AddPnt(p,-1,d,-1,7);
-	if(g && (a||A))	{	g->Pop();	gr->clr(MGL_DISABLE_SCALE);	}
+	if(g && (a|A))	{	g->Pop();	gr->clr(MGL_DISABLE_SCALE);	}
 	gr->text_plot(k,text,font,size);
 }
 //-----------------------------------------------------------------------------

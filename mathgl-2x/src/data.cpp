@@ -609,7 +609,7 @@ float mgl_data_spline(HCDT d, float x,float y,float z)
 //-----------------------------------------------------------------------------
 mreal mglSpline3(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z,mreal *dx, mreal *dy, mreal *dz)
 {
-	if(!a || nx<1 || ny<1 || nz<1)	return 0;
+	if(!a | (nx<1) | (ny<1) | (nz<1))	return 0;
 	mreal _p[4][4];
 	register long i,j;
 	register mreal fx=1, fy=1;
@@ -688,7 +688,7 @@ mreal mglSpline3(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mr
 void mglFillP(long x,long y, const mreal *a,long nx,long ny,mreal _p[4][4])
 {
 	mreal sx[4]={0,0,0,0},sy[4]={0,0,0,0},f[4]={0,0,0,0},d[4]={0,0,0,0};
-	if(x<0 || y<0 || x>nx-2 || y>ny-2)
+	if((x<0) | (y<0) | (x>nx-2) | (y>ny-2))
 	{
 		memset(_p[0],0,4*sizeof(mreal));
 		memset(_p[1],0,4*sizeof(mreal));
@@ -808,7 +808,7 @@ void mglFillP(long x,long y, const mreal *a,long nx,long ny,mreal _p[4][4])
 //-----------------------------------------------------------------------------
 void mglFillP(long x, const mreal *a,long nx,mreal _p[4])
 {
-	if(x<0 || x>nx-2)
+	if((x<0) | (x>nx-2))
 	{
 		memset(_p,0,4*sizeof(mreal));
 		return;
@@ -842,7 +842,7 @@ void mgl_data_crop(HMDT d, long n1, long n2, char dir)
 	{
 	case 'x':
 		n2 = n2>0 ? n2 : nx+n2;
-		if(n2<0 || n2>=nx || n2<n1)	n2 = nx;
+		if((n2<0) | (n2>=nx) | (n2<n1))	n2 = nx;
 		nn = n2-n1;	b = new mreal[nn*ny*nz];
 		for(i=0;i<ny*nz;i++)
 			memcpy(b+nn*i,d->a+nx*i+n1,nn*sizeof(mreal));
@@ -851,7 +851,7 @@ void mgl_data_crop(HMDT d, long n1, long n2, char dir)
 		break;
 	case 'y':
 		n2 = n2>0 ? n2 : ny+n2;
-		if(n2<0 || n2>=ny || n2<n1)	n2 = ny;
+		if((n2<0) | (n2>=ny) | (n2<n1))	n2 = ny;
 		nn = n2-n1;	b = new mreal[nn*nx*nz];
 		for(long j=0;j<nz;j++)	for(k=0;k<nn;k++)
 			memcpy(b+nx*(k+nn*j),d->a+nx*(n1+k+ny*j),nx*sizeof(mreal));
@@ -860,7 +860,7 @@ void mgl_data_crop(HMDT d, long n1, long n2, char dir)
 		break;
 	case 'z':
 		n2 = n2>0 ? n2 : nz+n2;
-		if(n2<0 || n2>=nz || n2<n1)	n2 = nz;
+		if((n2<0) | (n2>=nz) | (n2<n1))	n2 = nz;
 		nn = n2-n1;	b = new mreal[nn*nx*ny];
 		memcpy(b,d->a+nx*ny*n1,nn*nx*ny*sizeof(mreal));
 		d->nz = nn;	if(!d->link)	delete []d->a;
@@ -876,9 +876,9 @@ float mgl_data_last(HCDT d, const char *cond, long *i, long *j, long *k)
 	long nx=d->GetNx(),ny=d->GetNy(),nz=d->GetNz();
 	if(!cond)	cond = "u";
 	mglFormula eq(cond);
-	if(*i<0 || *i>=nx)	*i=nx;
-	if(*j<0 || *j>=ny)	*j=ny-1;
-	if(*k<0 || *k>=nz)	*k=nz-1;
+	if((*i<0) | (*i>=nx))	*i=nx;
+	if((*j<0) | (*j>=ny))	*j=ny-1;
+	if((*k<0) | (*k>=nz))	*k=nz-1;
 	register long i0 = *i+nx*(*j+ny*(*k))-1;
 	mreal x,y,z,dx=nx>1?1/(nx-1.):0,dy=ny>1?1/(ny-1.):0,dz=nz>1?1/(nz-1.):0;
 	for(;i0>=0;i0--)
@@ -899,9 +899,9 @@ float mgl_data_first(HCDT d, const char *cond, long *i, long *j, long *k)
 	long nx=d->GetNx(),ny=d->GetNy(),nz=d->GetNz();
 	if(!cond)	cond = "u";
 	mglFormula eq(cond);
-	if(*i<0 || *i>=nx)	*i=nx;
-	if(*j<0 || *j>=ny)	*j=ny-1;
-	if(*k<0 || *k>=nz)	*k=nz-1;
+	if((*i<0) | (*i>=nx))	*i=nx;
+	if((*j<0) | (*j>=ny))	*j=ny-1;
+	if((*k<0) | (*k>=nz))	*k=nz-1;
 	register long i0 = *i+nx*(*j+ny*(*k))-1;
 	mreal x,y,z,dx=nx>1?1/(nx-1.):0,dy=ny>1?1/(ny-1.):0,dz=nz>1?1/(nz-1.):0;
 	for(;i0<nx*ny*nz;i0--)
@@ -1187,7 +1187,7 @@ void mgl_data_insert(HMDT d, char dir, long at, long num)
 //-----------------------------------------------------------------------------
 void mgl_data_delete(HMDT d, char dir, long at, long num)
 {
-	if(num<1 || at<0)	return;
+	if((num<1) | (at<0))	return;
 	mglData b;
 	long nx=d->nx, ny=d->ny, nz=d->nz;
 	register long k,nn;
@@ -1343,7 +1343,7 @@ void mgl_data_sew_(uintptr_t *d, const char *dirs, float *da, int l)
 void mgl_data_put_val(HMDT d, mreal val, long xx, long yy, long zz)
 {
 	register long nx=d->nx, ny=d->ny, nz=d->nz;
-	if(xx>=nx || yy>=ny || zz>=nz)	return;
+	if((xx>=nx) | (yy>=ny) | (zz>=nz))	return;
 	mreal *a=d->a;
 	register long i,j;
 	if((xx<0) & (yy<0) & (zz<0))for(i=0;i<nx*ny*nz;i++)	a[i] = val;
@@ -1359,7 +1359,7 @@ void mgl_data_put_val(HMDT d, mreal val, long xx, long yy, long zz)
 void mgl_data_put_dat(HMDT d, HCDT v, long xx, long yy, long zz)
 {
 	register long nx=d->nx, ny=d->ny, nz=d->nz;
-	if(xx>=nx || yy>=ny || zz>=nz)	return;
+	if((xx>=nx) | (yy>=ny) | (zz>=nz))	return;
 	const mglData *mv = dynamic_cast<const mglData *>(v);
 	mreal *a=d->a, vv=v->v(0);
 	const mreal *b = mv?mv->a:0;
@@ -1585,7 +1585,7 @@ void mgl_data_diff_par(HMDT d, HCDT v1, HCDT v2, HCDT v3)
 	const mglData *y = dynamic_cast<const mglData *>(v2);
 	const mglData *z = dynamic_cast<const mglData *>(v3);
 	long nx=d->nx,ny=d->ny,nz=d->nz, nn=nx*ny*nz;
-	if(nx<2 || ny<2)	return;
+	if((nx<2) | (ny<2))	return;
 	mreal *b = new mreal[nn];	memset(b,0,nn*sizeof(mreal));
 	long p[3]={nx,ny,nz};
 

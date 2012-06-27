@@ -387,7 +387,7 @@ protected:
 	/// Get the value in given cell of the data without border checking
 	inline mreal v(long i,long j=0,long k=0) const
 #ifdef DEBUG
-	{	if(i<0 || j<0 || k<0 || i>=nx || j>=ny || k>=nz)	printf("Wrong index in mglData");
+	{	if((i<0) | (j<0) | (k<0) | (i>=nx) | (j>=ny) | (k>=nz))	printf("Wrong index in mglData");
 		return a[i+nx*(j+ny*k)];	}
 #else
 	{	return a[i+nx*(j+ny*k)];	}
@@ -429,7 +429,7 @@ inline mglData operator/(const mglData &b, const mglData &d)
 inline mglData operator/(const mglData &d, mreal b)
 {	mglData a(d);	a/=b;	return a;	}
 inline bool operator==(const mglData &b, const mglData &d)
-{	if(b.nx!=d.nx || b.ny!=d.ny || b.ny!=d.ny)	return false;
+{	if((b.nx!=d.nx) | (b.ny!=d.ny) | (b.ny!=d.ny))	return false;
 	return !memcmp(b.a,d.a,b.nx*b.ny*b.nz*sizeof(mreal));	}
 #endif
 //-----------------------------------------------------------------------------

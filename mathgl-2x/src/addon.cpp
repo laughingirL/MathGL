@@ -126,9 +126,9 @@ FILE *mgl_next_data(const char *fname,int p)
 	{
 		s = mgl_fgetstr(fp);
 		fflush(stdout);
-		if(s[0]=='$' || s[1]=='$' || s[3]=='$')
+		if((s[0]=='$') & (s[1]=='$') & (s[3]=='$'))
 		{	fclose(fp);	return NULL;	}
-	} while(!feof(fp) && (s[0]!='-' || s[1]!='-' || s[3]!='-'));
+	} while(!feof(fp) & ((s[0]!='-') | (s[1]!='-') | (s[3]!='-')));
 	if(feof(fp))	// no more data
 	{	fclose(fp);	return NULL;	}
 	return fp;
@@ -137,7 +137,7 @@ FILE *mgl_next_data(const char *fname,int p)
 bool mgl_difr_grid(dual *a,int n,dual q,int Border,dual *b,dual *d,int kk)
 {
 	register int i,k;
-	//	if(n<=0 || q>=0.5)	return false;
+//	if((n<=0) | (q>=0.5))	return false;
 	dual adt = dual(0.,1.)*q;
 
 	memcpy(b,a,n*sizeof(dual));

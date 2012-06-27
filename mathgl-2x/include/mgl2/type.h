@@ -37,7 +37,7 @@ struct mglPoint
 {
 	float x,y,z,c;
 	mglPoint(float X=0,float Y=0,float Z=0,float C=0){x=X;y=Y;z=Z;c=C;}
-	inline bool IsNAN()		{	return (x!=x || y!=y || z!=z || c!=c);	}
+	inline bool IsNAN()		{	return ((x!=x) | (y!=y) | (z!=z) | (c!=c));	}
 	inline float val(int i)	{	return (i<2 ? (i==0 ? x:y) : (i==2 ? z:c));	}
 	inline float norm()		{	return sqrt(x*x+y*y+z*z);	}
 	inline void Normalize()	{	float v=norm();	x/=v;	y/=v;	z/=v;	}

@@ -79,7 +79,7 @@ void mgl_obj_prim(const mglPrim &q, const mglPnt &p, FILE *fp, float size)
 	{
 		case 0:
 			if(!strchr("xsSoO",type))	ss *= 1.1;
-			if(type=='.' || ss==0)	fprintf(fp,"p %ld\n", i);
+			if((type=='.') | (ss==0))	fprintf(fp,"p %ld\n", i);
 			else	switch(type)
 			{
 			case 'P':
@@ -411,7 +411,7 @@ void mgl_write_off(HMGL gr, const char *fname,const char *descr, int colored)
 	for(i=0;i<gr->GetPrmNum();i++)	// find number of faces
 	{
 		const mglPrim &q=gr->GetPrm(i);
-		if(q.type==2 || q.type==3)	nf++;
+		if((q.type==2) | (q.type==3))	nf++;
 	}
 	if(nf<=0)	return;	// nothing to do
 
@@ -483,7 +483,7 @@ void mgl_write_idtf_(uintptr_t *gr, const char *fname,const char *descr,int l,in
 };*/
 bool mglCanvas::ExportMGLD(const char *fname, const char *descr)
 {
-	if(Pnt.size()<1 || Prm.size()<1)	return true;
+	if((Pnt.size()<1) | (Prm.size()<1))	return true;
 	FILE *fp=fopen(fname,"wt");
 	if(!fp)	return true;
 	// NOTE: I'll save Ptx. So prim type=6 is useless,and no LaTeX
@@ -528,7 +528,7 @@ bool mglCanvas::ImportMGLD(const char *fname, bool add)
 	register size_t i;
 	unsigned long n,m,l, npnt;
 	sscanf(buf+5,"%lu%lu%lu",&n,&m,&l);
-	if(n<=0 || m<=0 || l<=0)	{	delete []buf;	fclose(fp);	return true;	}
+	if((n<1) | (m<1) | (l<1))	{	delete []buf;	fclose(fp);	return true;	}
 	if(!add)	{	Clf();	Txt.clear();	}
 	else	{	ClfZB();	npnt=Pnt.size();	}
 	Pnt.reserve(n);	Prm.reserve(m);	Txt.reserve(l);
@@ -546,7 +546,7 @@ bool mglCanvas::ImportMGLD(const char *fname, bool add)
 		sscanf(buf,"%d%ld%ld%ld%ld%d%g%g%g", &q.type, &q.n1, &q.n2, &q.n3, &q.n4, &q.id, &q.s, &q.w, &q.p);
 		q.n1 = q.n1>=0?q.n1+npnt:-1;
 		q.n2 = q.n2>=0?q.n2+npnt:-1;
-		if(q.type==2 || q.type==3)
+		if((q.type==2) | (q.type==3))
 		{
 			q.n3 = q.n3>=0?q.n3+npnt:-1;
 			q.n4 = q.n4>=0?q.n4+npnt:-1;
@@ -828,7 +828,7 @@ void mgl_x3d_mdef(HMGL gr, void *fp, bool gz)
 		if(q.n4=='x')	m_x = true;		if(q.n4=='s')	m_s = true;
 		if(q.n4=='d')	m_d = true;		if(q.n4=='v')	m_v = true;
 		if(q.n4=='^')	m_t = true;		if(q.n4=='*')	m_a = true;
-		if(q.n4=='o' || q.n4=='O' || q.n4=='C')	m_o = true;
+		if((q.n4=='o') | (q.n4=='O') | (q.n4=='C'))	m_o = true;
 		if(q.n4=='S')	m_S = true;		if(q.n4=='D')	m_D = true;
 		if(q.n4=='V')	m_V = true;		if(q.n4=='T')	m_T = true;
 		if(q.n4=='<')	m_l = true;		if(q.n4=='L')	m_L = true;

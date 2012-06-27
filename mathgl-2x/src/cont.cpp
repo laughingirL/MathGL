@@ -33,7 +33,7 @@ bool same_chain(long f,long i,long *nn)
 	while(1)
 	{
 		j = nn[j];
-		if(j==f || j<0)	return false;
+		if((j==f) | (j<0))	return false;
 		if(j==i)	return true;
 	}
 }
@@ -97,7 +97,7 @@ void mgl_string_curve(mglBase *gr,long f,long ,long *ff,long *nn,const wchar_t *
 		w = sqrt(b*b-a*d);		// NOTE: b*b>a*d should be here!
 		if(b*b>1e3*a*c)	{	t1 = d/(b+w);	t2 = d/(b-w);	}	// keep precision
 		else			{	t1 = (b-w)/a;	t2 = (b+w)/a;	}
-		if(t1<0 || t1<tt)	t1=t2;	// t1<t2 should be here!
+		if((t1<0) | (t1<tt))	t1=t2;	// t1<t2 should be here!
 		tt=t1;	pt[j+1] = q+(s-q)*tt;
 	}
 	if(rev)	pos=-pos;
@@ -110,7 +110,7 @@ void mgl_string_curve(mglBase *gr,long f,long ,long *ff,long *nn,const wchar_t *
 void mgl_textw_xyz(HMGL gr, HCDT x, HCDT y, HCDT z,const wchar_t *text, const char *font, const char *opt)
 {
 	long n=y->GetNx();
-	if(x->GetNx()!=n || z->GetNx()!=n)	{	gr->SetWarn(mglWarnDim,"Text");	return;	}
+	if((x->GetNx()!=n) | (z->GetNx()!=n))	{	gr->SetWarn(mglWarnDim,"Text");	return;	}
 	if(n<2)	{	gr->SetWarn(mglWarnLow,"Text");	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("TextC",cgid++);
@@ -207,53 +207,6 @@ struct mglSegment
 	mglPoint p1,p2;
 	mglSegment(mglPoint q1,mglPoint q2)	{p1=q1;p2=q2;next=prev=-1;}
 };
-// function for connecting arbitrary line segments
-/*void mgl_connect(HMGL gr, float val, HCDT a, HCDT x, HCDT y, HCDT z, float c, int text,long ak)
-{
-	long n=a->GetNx(), m=a->GetNy();
-	if(n<2 || m<2 || x->GetNx()*x->GetNy()!=n*m || y->GetNx()*y->GetNy()!=n*m || z->GetNx()*z->GetNy()!=n*m)
-	{	gr->SetWarn(mglWarnDim,"ContGen");	return;	}
-	std::vector<mglSegment> ss,cc;
-
-	register long i,j;
-	float d1,d2,d3,d4;
-	bool o1,o2,o3,o4;
-	mglPoint p1,p2,p3,p4,q1,q2,q3,q4;
-	for(i=0;i<n;i++)	for(j=0;j<m;j++)	// prepare segments
-	{
-		if(gr->Stop)	return;
-		d1 = mgl_d(val,a->v(i,j,ak),a->v(i+1,j,ak));		o1 = d1>=0 && d1<1;
-		d2 = mgl_d(val,a->v(i,j,ak),a->v(i,j+1,ak));		o2 = d2>=0 && d2<1;
-		d3 = mgl_d(val,a->v(i+1,j+1,ak),a->v(i+1,j,ak));	o3 = d3>=0 && d3<1;
-		d4 = mgl_d(val,a->v(i+1,j+1,ak),a->v(i,j+1,ak));	o4 = d4>=0 && d4<1;
-		p1 = mglPoint(x->v(i,j), y->v(i,j),z->v(i,j));
-		p2 = mglPoint(x->v(i+1,j), y->v(i+1,j),z->v(i+1,j));
-		p3 = mglPoint(x->v(i,j+1), y->v(i,j+1),z->v(i,j+1));
-		p4 = mglPoint(x->v(i+1,j+1), y->v(i+1,j+1),z->v(i+1,j+1));
-		q1 = p1*(1-d1)+p2*d1;	q2 = p1*(1-d2)+p3*d1;
-		q3 = p4*(1-d3)+p2*d3;	q4 = p4*(1-d4)+p3*d4;
-		if(o1 && o2)	{	o1 = o2 = false;	ss.push_back(mglSegment(q1,q2));	}
-		if(o1 && o3)	{	o1 = o3 = false;	ss.push_back(mglSegment(q1,q3));	}
-		if(o1 && o4)	{	o1 = o4 = false;	ss.push_back(mglSegment(q1,q4));	}
-		if(o2 && o3)	{	o2 = o3 = false;	ss.push_back(mglSegment(q2,q3));	}
-		if(o2 && o4)	{	o2 = o4 = false;	ss.push_back(mglSegment(q2,q4));	}
-		if(o3 && o4)	{	o3 = o4 = false;	ss.push_back(mglSegment(q3,q4));	}
-	}
-	// connect it
-	if(ss.size()==0)	return;
-	for(i=0;i<ss.size();i++)	// lets try most stupid algorithm (can be VERY slow)
-	{
-		mglSegment &s1=ss[i];
-		for(j=0;j<ss.size();j++)
-		{
-			mglSegment &s2=ss[j];
-			if(s2.prev<0 && s1.p2==s2.p1)	{	s1.next = j;	s2.prev=i;	continue;	}
-			if(s2.next<0 && s1.p1==s2.p2)	{	s1.prev = j;	s2.next=i;	continue;	}
-			//			if(s2.prev<0 && s1.p2==s2.p1)
-			//			{	s1.next = j;	s2.prev=i;	continue;	}
-		}
-	}
-}*/
 //-----------------------------------------------------------------------------
 // NOTE! returned must be deleted!!!
 struct mglPnt2	{	float x,y;	mglPnt2(float xx=0,float yy=0)	{x=xx;y=yy;}	};
@@ -336,7 +289,7 @@ long *mgl_cont_prep(float val, HCDT a,long ak, std::vector<mglPnt2> &kk)
 void mgl_cont_gen(HMGL gr, float val, HCDT a, HCDT x, HCDT y, HCDT z, float c, int text,long ak)
 {
 	long n=a->GetNx(), m=a->GetNy();
-	if(n<2 || m<2 || x->GetNx()*x->GetNy()!=n*m || y->GetNx()*y->GetNy()!=n*m || z->GetNx()*z->GetNy()!=n*m)
+	if((n<2) | (m<2) | (x->GetNx()*x->GetNy()!=n*m) | (y->GetNx()*y->GetNy()!=n*m) | (z->GetNx()*z->GetNy()!=n*m))
 	{	gr->SetWarn(mglWarnDim,"ContGen");	return;	}
 
 	std::vector<mglPnt2> kk;
@@ -373,7 +326,7 @@ void mgl_cont_gen(HMGL gr, float val, HCDT a, HCDT x, HCDT y, HCDT z, float c, i
 			t = gr->GetPntP(ff[k]);
 			i = long(t.x/del);	t.x -= i*del;
 			j = long(t.y/del);	t.y -= j*del;
-			if(i<0 || i>=m || j<0 || j>=n)	continue;	// never should be here!
+			if((i<0) | (i>=m) | (j<0) | (j>=n))	continue;	// never should be here!
 			xx = t.x*t.x+t.y*t.y;	i += m*j;
 			if(rr[i]>xx)	{	rr[i]=xx;	oo[i]=k;	}
 		}
@@ -396,14 +349,14 @@ void mgl_cont_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, c
 {
 	register long i,j,n=z->GetNx(),m=z->GetNy();
 	if(x->GetNx()!=n)	{	gr->SetWarn(mglWarnDim,"Cont");	return;	}
-	if(n<2 || m<2)		{	gr->SetWarn(mglWarnLow,"Cont");	return;	}
+	if((n<2) | (m<2))		{	gr->SetWarn(mglWarnLow,"Cont");	return;	}
 	bool both = (x->GetNx()*x->GetNy()==m*n) & (y->GetNx()*y->GetNy()==m*n);
-	if(y->GetNx()!=z->GetNy() && !both)	{	gr->SetWarn(mglWarnDim, "Cont");	return;	}
+	if((y->GetNx()!=z->GetNy()) & !both)	{	gr->SetWarn(mglWarnDim, "Cont");	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Cont",cgid++);
 
 	bool text=(sch && strchr(sch,'t'));
-	bool fixed=(sch && strchr(sch,'_')) || (gr->Min.z==gr->Max.z);
+	bool fixed=(sch && strchr(sch,'_')) | (gr->Min.z==gr->Max.z);
 	long s=gr->AddTexture(sch);
 	gr->SetPenPal(sch);
 
@@ -436,7 +389,6 @@ void mgl_cont_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, c
 //-----------------------------------------------------------------------------
 void mgl_cont_val(HMGL gr, HCDT v, HCDT z, const char *sch, const char *opt)
 {
-	if(z->GetNx()<2 || z->GetNy()<2)	{	gr->SetWarn(mglWarnLow,"Cont");	return;	}
 	gr->SaveState(opt);
 	mglData x(z->GetNx(), z->GetNy()), y(z->GetNx(), z->GetNy());
 	x.Fill(gr->Min.x,gr->Max.x,'x');
@@ -536,7 +488,7 @@ void mgl_add_edges(HMGL gr, HCDT a, HCDT x, HCDT y, HCDT z, long i1, long j1, lo
 void mgl_contf_gen(HMGL gr, float v1, float v2, HCDT a, HCDT x, HCDT y, HCDT z, float c, long ak)
 {
 	long n=a->GetNx(), m=a->GetNy();
-	if(n<2 || m<2 || x->GetNx()*x->GetNy()!=n*m || y->GetNx()*y->GetNy()!=n*m || z->GetNx()*z->GetNy()!=n*m)
+	if((n<2) | (m<2) | (x->GetNx()*x->GetNy()!=n*m) | (y->GetNx()*y->GetNy()!=n*m) | (z->GetNx()*z->GetNy()!=n*m))
 	{	gr->SetWarn(mglWarnDim,"ContFGen");	return;	}
 
 	register long i,j;
@@ -603,14 +555,14 @@ void mgl_contf_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, 
 {
 	register long i,j,n=z->GetNx(),m=z->GetNy();
 	if(x->GetNx()!=n)	{	gr->SetWarn(mglWarnDim,"ContF");	return;	}
-	if(n<2 || m<2)		{	gr->SetWarn(mglWarnLow,"ContF");	return;	}
+	if((n<2) | (m<2))		{	gr->SetWarn(mglWarnLow,"ContF");	return;	}
 	bool both = (x->GetNx()*x->GetNy()==m*n) & (y->GetNx()*y->GetNy()==m*n);
-	if(y->GetNx()!=z->GetNy() && !both)	{	gr->SetWarn(mglWarnDim, "ContF");	return;	}
+	if((y->GetNx()!=z->GetNy()) & !both)	{	gr->SetWarn(mglWarnDim, "ContF");	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("ContF",cgid++);
 	long s=gr->AddTexture(sch);
 
-	bool fixed=(sch && strchr(sch,'_')) || (gr->Min.z==gr->Max.z);
+	bool fixed=(sch && strchr(sch,'_')) | (gr->Min.z==gr->Max.z);
 	mglData xx, yy, zz(z->GetNx(), z->GetNy());
 	if(!both)	// make
 	{
@@ -640,7 +592,6 @@ void mgl_contf_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, 
 //-----------------------------------------------------------------------------
 void mgl_contf_val(HMGL gr, HCDT v, HCDT z, const char *sch, const char *opt)
 {
-	if(z->GetNx()<2 || z->GetNy()<2)	{	gr->SetWarn(mglWarnLow,"Cont");	return;	}
 	gr->SaveState(opt);
 	mglData x(z->GetNx(), z->GetNy()), y(z->GetNx(), z->GetNy());
 	x.Fill(gr->Min.x,gr->Max.x,'x');
@@ -704,13 +655,13 @@ void mgl_contd_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, 
 {
 	register long i,j=0,n=z->GetNx(),m=z->GetNy();
 	if(x->GetNx()!=n)	{	gr->SetWarn(mglWarnDim,"ContD");	return;	}
-	if(n<2 || m<2)		{	gr->SetWarn(mglWarnLow,"ContD");	return;	}
+	if((n<2) | (m<2))		{	gr->SetWarn(mglWarnLow,"ContD");	return;	}
 	bool both = (x->GetNx()*x->GetNy()==m*n) & (y->GetNx()*y->GetNy()==m*n);
-	if(y->GetNx()!=z->GetNy() && !both)	{	gr->SetWarn(mglWarnDim, "ContD");	return;	}
+	if((y->GetNx()!=z->GetNy()) & !both)	{	gr->SetWarn(mglWarnDim, "ContD");	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("ContD",cgid++);
 
-	bool fixed=(sch && strchr(sch,'_')) || (gr->Min.z==gr->Max.z);
+	bool fixed=(sch && strchr(sch,'_')) | (gr->Min.z==gr->Max.z);
 	if(sch)	for(i=0;sch[i];i++)	if(strchr(MGL_COLORS,sch[i]))	j++;
 	if(j==0)	sch = MGL_DEF_PAL;
 	long s = gr->AddTexture(sch,1);
@@ -744,7 +695,6 @@ void mgl_contd_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, 
 //-----------------------------------------------------------------------------
 void mgl_contd_val(HMGL gr, HCDT v, HCDT z, const char *sch, const char *opt)
 {
-	if(z->GetNx()<2 || z->GetNy()<2)	{	gr->SetWarn(mglWarnLow,"ContD");	return;	}
 	gr->SaveState(opt);
 	mglData x(z->GetNx(), z->GetNy()), y(z->GetNx(), z->GetNy());
 	x.Fill(gr->Min.x,gr->Max.x,'x');
@@ -797,7 +747,7 @@ void mgl_contd_(uintptr_t *gr, uintptr_t *a, const char *sch, const char *opt,in
 void mgl_contv_gen(HMGL gr, float val, float dval, HCDT a, HCDT x, HCDT y, HCDT z, float c, long ak)
 {
 	long n=a->GetNx(), m=a->GetNy();
-	if(n<2 || m<2 || x->GetNx()*x->GetNy()!=n*m || y->GetNx()*y->GetNy()!=n*m || z->GetNx()*z->GetNy()!=n*m)
+	if((n<2) | (m<2) | (x->GetNx()*x->GetNy()!=n*m) | (y->GetNx()*y->GetNy()!=n*m) | (z->GetNx()*z->GetNy()!=n*m))
 	{	gr->SetWarn(mglWarnDim,"ContGen");	return;	}
 
 	std::vector<mglPnt2> kk;
@@ -823,13 +773,13 @@ void mgl_contv_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, 
 {
 	register long i,j,n=z->GetNx(),m=z->GetNy();
 	if(x->GetNx()!=n)	{	gr->SetWarn(mglWarnDim,"Cont");	return;	}
-	if(n<2 || m<2)		{	gr->SetWarn(mglWarnLow,"Cont");	return;	}
+	if((n<2) | (m<2))		{	gr->SetWarn(mglWarnLow,"Cont");	return;	}
 	bool both = (x->GetNx()*x->GetNy()==m*n) & (y->GetNx()*y->GetNy()==m*n);
-	if(y->GetNx()!=z->GetNy() && !both)	{	gr->SetWarn(mglWarnDim, "Cont");	return;	}
+	if((y->GetNx()!=z->GetNy()) & !both)	{	gr->SetWarn(mglWarnDim, "Cont");	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Cont",cgid++);
 
-	bool fixed=(sch && strchr(sch,'_')) || (gr->Min.z==gr->Max.z);
+	bool fixed=(sch && strchr(sch,'_')) | (gr->Min.z==gr->Max.z);
 	long s=gr->AddTexture(sch);
 	gr->SetPenPal(sch);
 
@@ -865,7 +815,6 @@ void mgl_contv_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, 
 //-----------------------------------------------------------------------------
 void mgl_contv_val(HMGL gr, HCDT v, HCDT z, const char *sch, const char *opt)
 {
-	if(z->GetNx()<2 || z->GetNy()<2)	{	gr->SetWarn(mglWarnLow,"Cont");	return;	}
 	gr->SaveState(opt);
 	mglData x(z->GetNx(), z->GetNy()), y(z->GetNx(), z->GetNy());
 	x.Fill(gr->Min.x,gr->Max.x,'x');
@@ -1077,7 +1026,7 @@ void mgl_get_slice_md(_mgl_slice &s, const mglData *x, const mglData *y, const m
 void mgl_cont3_xyz_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, float sVal, const char *opt)
 {
 	long n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
-	if(n<2 || m<2 || l<2)	{	gr->SetWarn(mglWarnLow,"Cont3");	return;	}
+	if((n<2) | (m<2) | (l<2))	{	gr->SetWarn(mglWarnLow,"Cont3");	return;	}
 	bool both = (x->GetNx()*x->GetNy()*x->GetNz()==n*m*l) & (y->GetNx()*y->GetNy()*y->GetNz()==n*m*l) & (z->GetNx()*z->GetNy()*z->GetNz()==n*m*l);
 	if(!( both | ((x->GetNx()==n) & (y->GetNx()==m) & (z->GetNx()==l)) ))
 	{	gr->SetWarn(mglWarnDim,"Cont3");	return;	}
@@ -1108,8 +1057,6 @@ void mgl_cont3_xyz_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, HCDT a, const ch
 //-----------------------------------------------------------------------------
 void mgl_cont3_val(HMGL gr, HCDT v, HCDT a, const char *sch, float sVal, const char *opt)
 {
-	if(a->GetNx()<2 || a->GetNy()<2 || a->GetNz()<2)
-	{	gr->SetWarn(mglWarnLow,"Cont3");	return;	}
 	gr->SaveState(opt);
 	mglData x(a->GetNx()), y(a->GetNy()),z(a->GetNz());
 	x.Fill(gr->Min.x,gr->Max.x);
@@ -1167,7 +1114,7 @@ void mgl_cont3_(uintptr_t *gr, uintptr_t *a, const char *sch, float *sVal, const
 void mgl_dens3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, float sVal, const char *opt)
 {
 	long n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
-	if(n<2 || m<2 || l<2)	{	gr->SetWarn(mglWarnLow,"Dens3");	return;	}
+	if((n<2) | (m<2) | (l<2))	{	gr->SetWarn(mglWarnLow,"Dens3");	return;	}
 	bool both = (x->GetNx()*x->GetNy()*x->GetNz()==n*m*l) & (y->GetNx()*y->GetNy()*y->GetNz()==n*m*l) & (z->GetNx()*z->GetNy()*z->GetNz()==n*m*l);
 	if(!( both | ((x->GetNx()==n) & (y->GetNx()==m) & (z->GetNx()==l)) ))
 	{	gr->SetWarn(mglWarnDim,"Dens3");	return;	}
@@ -1189,8 +1136,6 @@ void mgl_dens3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, flo
 //-----------------------------------------------------------------------------
 void mgl_dens3(HMGL gr, HCDT a, const char *sch, float sVal, const char *opt)
 {
-	if(a->GetNx()<2 || a->GetNy()<2 || a->GetNz()<2)
-	{	gr->SetWarn(mglWarnLow,"Dens3");	return;	}
 	gr->SaveState(opt);
 	mglData x(a->GetNx()), y(a->GetNy()),z(a->GetNz());
 	x.Fill(gr->Min.x,gr->Max.x);
@@ -1217,9 +1162,9 @@ mgl_dens3(_GR_, _DA_(a), s, *sVal, o);	delete []o;	delete []s;	}
 void mgl_grid3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, float sVal, const char *opt)
 {
 	long n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
-	if(n<2 || m<2 || l<2)	{	gr->SetWarn(mglWarnLow,"Grid3");	return;	}
+	if((n<2) | (m<2) | (l<2))	{	gr->SetWarn(mglWarnLow,"Grid3");	return;	}
 	bool both = (x->GetNx()*x->GetNy()*x->GetNz()==n*m*l) & (y->GetNx()*y->GetNy()*y->GetNz()==n*m*l) & (z->GetNx()*z->GetNy()*z->GetNz()==n*m*l);
-	if(!( both || ((x->GetNx()==n) & (y->GetNx()==m) & (z->GetNx()==l)) ))
+	if(!( both | ((x->GetNx()==n) & (y->GetNx()==m) & (z->GetNx()==l)) ))
 	{	gr->SetWarn(mglWarnDim,"Grid3");	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Grid3",cgid++);
@@ -1239,8 +1184,6 @@ void mgl_grid3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, flo
 //-----------------------------------------------------------------------------
 void mgl_grid3(HMGL gr, HCDT a, const char *sch, float sVal, const char *opt)
 {
-	if(a->GetNx()<2 || a->GetNy()<2 || a->GetNz()<2)
-	{	gr->SetWarn(mglWarnLow,"Grid3");	return;	}
 	gr->SaveState(opt);
 	mglData x(a->GetNx()), y(a->GetNy()), z(a->GetNz());
 	x.Fill(gr->Min.x,gr->Max.x);
@@ -1267,7 +1210,7 @@ mgl_grid3(_GR_, _DA_(a), s, *sVal, o);	delete []o;	delete []s;	}
 void mgl_contf3_xyz_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, float sVal, const char *opt)
 {
 	long n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
-	if(n<2 || m<2 || l<2)	{	gr->SetWarn(mglWarnLow,"ContF3");	return;	}
+	if((n<2) | (m<2) | (l<2))	{	gr->SetWarn(mglWarnLow,"ContF3");	return;	}
 	bool both = (x->GetNx()*x->GetNy()*x->GetNz()==n*m*l) & (y->GetNx()*y->GetNy()*y->GetNz()==n*m*l) & (z->GetNx()*z->GetNy()*z->GetNz()==n*m*l);
 	if(!( both | ((x->GetNx()==n) & (y->GetNx()==m) & (z->GetNx()==l)) ))
 	{	gr->SetWarn(mglWarnDim,"ContF3");	return;	}
@@ -1295,8 +1238,6 @@ void mgl_contf3_xyz_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, HCDT a, const c
 //-----------------------------------------------------------------------------
 void mgl_contf3_val(HMGL gr, HCDT v, HCDT a, const char *sch, float sVal, const char *opt)
 {
-	if(a->GetNx()<2 || a->GetNy()<2 || a->GetNz()<2)
-	{	gr->SetWarn(mglWarnLow,"ContF3");	return;	}
 	gr->SaveState(opt);
 	mglData x(a->GetNx()), y(a->GetNy()),z(a->GetNz());
 	x.Fill(gr->Min.x,gr->Max.x);
@@ -1401,7 +1342,7 @@ void mgl_axial_plot(mglBase *gr,long pc, mglPoint *ff, long *nn,char dir,float c
 void mgl_axial_gen(HMGL gr, float val, HCDT a, HCDT x, HCDT y, float c, char dir,long ak,bool wire)
 {
 	long n=a->GetNx(), m=a->GetNy();
-	if(n<2 || m<2 || x->GetNx()*x->GetNy()!=n*m || y->GetNx()*y->GetNy()!=n*m)
+	if((n<2) | (m<2) | (x->GetNx()*x->GetNy()!=n*m) | (y->GetNx()*y->GetNy()!=n*m))
 	{	gr->SetWarn(mglWarnDim,"ContGen");	return;	}
 
 	mglPoint *kk = new mglPoint[2*n*m],*pp = new mglPoint[2*n*m],p;
@@ -1495,9 +1436,9 @@ void mgl_axial_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, 
 {
 	register long i,j,n=z->GetNx(),m=z->GetNy();
 	if(x->GetNx()!=n)	{	gr->SetWarn(mglWarnDim,"Axial");	return;	}
-	if(n<2 || m<2)		{	gr->SetWarn(mglWarnLow,"Axial");	return;	}
+	if((n<2) | (m<2))		{	gr->SetWarn(mglWarnLow,"Axial");	return;	}
 	bool both = (x->GetNx()*x->GetNy()==m*n) & (y->GetNx()*y->GetNy()==m*n);
-	if(y->GetNx()!=z->GetNy() && !both)	{	gr->SetWarn(mglWarnDim, "Axial");	return;	}
+	if((y->GetNx()!=z->GetNy()) & !both)	{	gr->SetWarn(mglWarnDim, "Axial");	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Axial",cgid++);
 
@@ -1533,7 +1474,6 @@ void mgl_axial_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, 
 //-----------------------------------------------------------------------------
 void mgl_axial_val(HMGL gr, HCDT v, HCDT a, const char *sch, const char *opt)
 {
-	if(a->GetNx()<2 || a->GetNy()<2)	{	gr->SetWarn(mglWarnLow,"Axial");	return;	}
 	gr->SaveState(opt);
 	mglData x(a->GetNx(),a->GetNy()), y(a->GetNx(),a->GetNy());
 	if(gr->Max.x*gr->Min.x>=0)	x.Fill(gr->Min.x,gr->Max.x,'x');

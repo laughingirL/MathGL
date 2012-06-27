@@ -161,11 +161,11 @@ HMDT mgl_data_subdata_ext(HCDT d, HCDT xx, HCDT yy, HCDT zz)
 		return r;
 	}
 	// this is 1d data -> try as normal SubData()
-	if(xx->GetNx()>1 || vx>=0)	{	n=xx->GetNx();	ix=true;	}
+	if((xx->GetNx()>1) | (vx>=0))	{	n=xx->GetNx();	ix=true;	}
 	else	{	n=nx;	ix=false;	}
-	if(yy->GetNx()>1 || vy>=0)	{	m=yy->GetNx();	iy=true;	}
+	if((yy->GetNx()>1) | (vy>=0))	{	m=yy->GetNx();	iy=true;	}
 	else	{	m=ny;	iy=false;	}
-	if(zz->GetNx()>1 || vz>=0)	{	l=zz->GetNx();	iz=true;	}
+	if((zz->GetNx()>1) | (vz>=0))	{	l=zz->GetNx();	iz=true;	}
 	else	{	l=nz;	iz=false;	}
 	r->Create(n,m,l);
 	for(k=0;k<l;k++)	for(j=0;j<m;j++)	for(i=0;i<n;i++)
@@ -607,7 +607,7 @@ HMDT mgl_data_evaluate(HCDT dat, HCDT idat, HCDT jdat, HCDT kdat, int norm)
 	const mglData *i=dynamic_cast<const mglData *>(idat);
 	const mglData *j=dynamic_cast<const mglData *>(jdat);
 	const mglData *k=dynamic_cast<const mglData *>(kdat);
-	if(!d || !i)	return r;
+	if(!d | !i)	return r;
 
 	long p[4]={i->nx,i->ny,i->nz,norm};
 	register long n=i->nx*i->ny*i->nz;
@@ -1197,7 +1197,7 @@ HMDT mgl_data_hist(HCDT dat, long n, float v1, float v2, long nsub)
 {
 	mglData *b=new mglData;		// NOTE: For mglData only!
 	const mglData *d = dynamic_cast<const mglData *>(dat);
-	if(n<2 || v1==v2 || !d)	return b;
+	if((n<2) | (v1==v2) | !d)	return b;
 	mgl_data_create(b,n,1,1);
 	mreal v[2]={v1,v2};
 	long nx=d->nx, ny=d->ny, nz=d->nz;
@@ -1212,7 +1212,7 @@ HMDT mgl_data_hist_w(HCDT dat, HCDT weight, long n, float v1, float v2, long nsu
 	mglData *b=new mglData;		// NOTE: For mglData only!
 	const mglData *d = dynamic_cast<const mglData *>(dat);
 	const mglData *w = dynamic_cast<const mglData *>(weight);
-	if(n<2 || v1==v2 || !d || !w)	return b;
+	if((n<2) | (v1==v2) | !d | !w)	return b;
 	mgl_data_create(b,n,1,1);
 	mreal v[2]={v1,v2};
 
@@ -1230,11 +1230,11 @@ uintptr_t mgl_data_hist_w_(uintptr_t *d, uintptr_t *w, int *n, float *v1, float 
 //-----------------------------------------------------------------------------
 mreal mglLinear(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z)
 {
-	if(!a || nx<1 || ny<1 || nz<1)	return 0;
+	if(!a | (nx<1) | (ny<1) | (nz<1))	return 0;
 	register long i0;
 	long kx,ky,kz;
 	mreal b=0,dx,dy,dz,b1,b0;
-	if(x<0 || y<0 || z<0 || x>nx-1 || y>ny-1 || z>nz-1)
+	if((x<0) | (y<0) | (z<0) | (x>nx-1) | (y>ny-1) | (z>nz-1))
 		return 0;
 	if((nz>1) & (z!=floor(z)))		// 3d interpolation
 	{
@@ -1276,9 +1276,9 @@ int mgl_cmd_idx(const void *a, const void *b)
 void mgl_data_sort(HMDT dat, long idx, long idy)
 {
 	mglData *d = dynamic_cast<mglData *>(dat);
-	if(!d || idx>=d->nx || idx<0)	return;
-	bool single = (d->nz==1 || idy<0);
-	if(idy<0 || idy>d->ny)	idy=0;
+	if(!d || ((idx>=d->nx) | (idx<0)))	return;
+	bool single = ((d->nz==1) | (idy<0));
+	if((idy<0) | (idy>d->ny))	idy=0;
 	mgl_idx_var = idx+d->nx*idy;	// NOTE: not thread safe!!!
 	if(single)	qsort(d->a, d->ny*d->nz, d->nx*sizeof(mreal), mgl_cmd_idx);
 	else		qsort(d->a, d->nz, d->ny*d->nx*sizeof(mreal), mgl_cmd_idx);

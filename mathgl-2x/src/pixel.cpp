@@ -359,10 +359,10 @@ void mglCanvas::PreparePrim(bool fast)
 void mglCanvas::Finish(bool fast)
 {
 	static mglMatrix bp;
-	if(memcmp(&Bp,&bp,sizeof(mglMatrix)) && !(Quality&4) && Prm.size()>0)
+	if(memcmp(&Bp,&bp,sizeof(mglMatrix)) && (!(Quality&4) & (Prm.size()>0)))
 		clr(MGL_FINISHED);
 	if(get(MGL_FINISHED))	return;	// nothing to do
-	if(!(Quality&4) && Prm.size()>0)
+	if(!(Quality&4) & (Prm.size()>0))
 	{
 		PreparePrim(fast);	bp=Bp;
 //		mglStartThread(&mglCanvas::pxl_primdr,this,Prm.size());	// TODO: check conflicts in pthreads

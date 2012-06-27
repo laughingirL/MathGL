@@ -32,9 +32,9 @@ void mgl_cloud_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, con
 	if(!(gr->GetQuality()&3))	return;	// do nothing in fast_draw
 	long i,j,k,n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
 	register int i0;
-	if(n<2 || m<2 || l<2)	{	gr->SetWarn(mglWarnLow,"Cloud");	return;	}
-	bool both = x->GetNx()*x->GetNy()*x->GetNz()==n*m*l && y->GetNx()*y->GetNy()*y->GetNz()==n*m*l && z->GetNx()*z->GetNy()*z->GetNz()==n*m*l;
-	if(!(both || (x->GetNx()==n && y->GetNx()==m && z->GetNx()==l)))
+	if((m<2) | (n<2) | (l<2))	{	gr->SetWarn(mglWarnLow,"Cloud");	return;	}
+	bool both = (x->GetNx()*x->GetNy()*x->GetNz()==n*m*l) & (y->GetNx()*y->GetNy()*y->GetNz()==n*m*l) & (z->GetNx()*z->GetNy()*z->GetNz()==n*m*l);
+	if(!( both | ((x->GetNx()==n) & (y->GetNx()==m) & (z->GetNx()==l)) ))
 	{	gr->SetWarn(mglWarnDim);	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Cloud",cgid++);
@@ -70,17 +70,15 @@ void mgl_cloud_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, con
 	{
 		if(gr->Stop)	{	delete []pos;	return;	}
 		i0 = i+n*(j+m*k);
-		if(i<n-1 && j<m-1)	gr->quad_plot(pos[i0],pos[i0+1],pos[i0+n],pos[i0+n+1]);
-		if(i<n-1 && k<l-1)	gr->quad_plot(pos[i0],pos[i0+1],pos[i0+n*m],pos[i0+n*m+1]);
-		if(k<l-1 && j<m-1)	gr->quad_plot(pos[i0],pos[i0+n],pos[i0+n*m],pos[i0+n+n*m]);
+		if((i<n-1) & (j<m-1))	gr->quad_plot(pos[i0],pos[i0+1],pos[i0+n],pos[i0+n+1]);
+		if((i<n-1) & (k<l-1))	gr->quad_plot(pos[i0],pos[i0+1],pos[i0+n*m],pos[i0+n*m+1]);
+		if((k<l-1) & (j<m-1))	gr->quad_plot(pos[i0],pos[i0+n],pos[i0+n*m],pos[i0+n+n*m]);
 	}
 	delete []pos;	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
 void mgl_cloud(HMGL gr, HCDT a, const char *sch, const char *opt)
 {
-	if(a->GetNx()<2 || a->GetNy()<2 || a->GetNz()<2)
-	{	gr->SetWarn(mglWarnLow,"Cloud");	return;	}
 	gr->SaveState(opt);
 	mglData x(a->GetNx()), y(a->GetNy()),z(a->GetNz());
 	x.Fill(gr->Min.x,gr->Max.x);
@@ -232,11 +230,11 @@ void mgl_surf3_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, const
 {
 	long i,j,k,i1,n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
 	long *kx1,*kx2,*ky1,*ky2,*kz;
-	bool both, wire = sch && strchr(sch,'#');
+	bool wire = sch && strchr(sch,'#');
 	float d;
-	if(n<2 || m<2 || l<2)	{	gr->SetWarn(mglWarnLow,"Surf3");	return;	}
-	both = x->GetNx()*x->GetNy()*x->GetNz()==n*m*l && y->GetNx()*y->GetNy()*y->GetNz()==n*m*l && z->GetNx()*z->GetNy()*z->GetNz()==n*m*l;
-	if(!(both || (x->GetNx()==n && y->GetNx()==m && z->GetNx()==l)))
+	if((m<2) | (n<2) | (l<2))	{	gr->SetWarn(mglWarnLow,"Surf3");	return;	}
+	bool both = (x->GetNx()*x->GetNy()*x->GetNz()==n*m*l) & (y->GetNx()*y->GetNy()*y->GetNz()==n*m*l) & (z->GetNx()*z->GetNy()*z->GetNz()==n*m*l);
+	if(!( both | ((x->GetNx()==n) & (y->GetNx()==m) & (z->GetNx()==l)) ))
 	{	gr->SetWarn(mglWarnDim,"Surf3");	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Surf3",cgid++);
@@ -268,7 +266,7 @@ void mgl_surf3_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, const
 			if(i<n-1)
 			{
 				d = mgl_d(val,a0,a->v(i+1,j,k));
-				if(d>=0 && d<1)
+				if((d>=0) & (d<1))
 				{
 					if(both)	p = mglPoint(p0.x*(1-d)+x->v(i+1,j,k)*d,
 									p0.y*(1-d)+y->v(i+1,j,k)*d,
@@ -284,7 +282,7 @@ void mgl_surf3_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, const
 			if(j<m-1)
 			{
 				d = mgl_d(val,a0,a->v(i,j+1,k));
-				if(d>=0 && d<1)
+				if((d>=0) & (d<1))
 				{
 					if(both)	p = mglPoint(p0.x*(1-d)+x->v(i,j+1,k)*d,
 									p0.y*(1-d)+y->v(i,j+1,k)*d,
@@ -300,7 +298,7 @@ void mgl_surf3_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, const
 			if(k>0)
 			{
 				d = mgl_d(val,a->v(i,j,k-1),a0);
-				if(d>=0 && d<1)
+				if((d>=0) & (d<1))
 				{
 					if(both)	p = mglPoint(x->v(i,j,k-1)*(1-d)+p0.x*d,
 									y->v(i,j,k-1)*(1-d)+p0.y*d,
@@ -323,7 +321,6 @@ void mgl_surf3_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, const
 //-----------------------------------------------------------------------------
 void mgl_surf3_val(HMGL gr, float val, HCDT a, const char *sch, const char *opt)
 {
-	if(a->GetNx()<2 || a->GetNy()<2 || a->GetNz()<2)	{	gr->SetWarn(mglWarnLow,"Surf3");	return;	}
 	gr->SaveState(opt);
 	mglData x(a->GetNx()), y(a->GetNy()),z(a->GetNz());
 	x.Fill(gr->Min.x,gr->Max.x);
@@ -382,11 +379,11 @@ void mgl_surf3a_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 {
 	long i,j,k,i1,n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
 	long *kx1,*kx2,*ky1,*ky2,*kz;
-	bool both, wire = sch && strchr(sch,'#');
+	bool wire = sch && strchr(sch,'#');
 	float d;
-	if(n<2 || m<2 || l<2)	{	gr->SetWarn(mglWarnLow,"Surf3A");	return;	}
-	both = x->GetNx()*x->GetNy()*x->GetNz()==n*m*l && y->GetNx()*y->GetNy()*y->GetNz()==n*m*l && z->GetNx()*z->GetNy()*z->GetNz()==n*m*l;
-	if(!(both || (x->GetNx()==n && y->GetNx()==m && z->GetNx()==l)))
+	if((m<2) | (n<2) | (l<2))	{	gr->SetWarn(mglWarnLow,"Surf3A");	return;	}
+	bool both = (x->GetNx()*x->GetNy()*x->GetNz()==n*m*l) & (y->GetNx()*y->GetNy()*y->GetNz()==n*m*l) & (z->GetNx()*z->GetNy()*z->GetNz()==n*m*l);
+	if(!( both | ((x->GetNx()==n) & (y->GetNx()==m) & (z->GetNx()==l)) ))
 	{	gr->SetWarn(mglWarnDim,"Surf3A");	return;	}
 	if(b->GetNx()*b->GetNy()*b->GetNz()!=n*m*l)	{	gr->SetWarn(mglWarnDim,"Surf3A");	return;	}
 	gr->SaveState(opt);
@@ -420,7 +417,7 @@ void mgl_surf3a_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 			if(i<n-1)
 			{
 				d = mgl_d(val,a0,a->v(i+1,j,k));
-				if(d>=0 && d<1)
+				if((d>=0) & (d<1))
 				{
 					if(both)	p = mglPoint(p0.x*(1-d)+x->v(i+1,j,k)*d,
 									p0.y*(1-d)+y->v(i+1,j,k)*d,
@@ -437,7 +434,7 @@ void mgl_surf3a_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 			if(j<m-1)
 			{
 				d = mgl_d(val,a0,a->v(i,j+1,k));
-				if(d>=0 && d<1)
+				if((d>=0) & (d<1))
 				{
 					if(both)	p = mglPoint(p0.x*(1-d)+x->v(i,j+1,k)*d,
 									p0.y*(1-d)+y->v(i,j+1,k)*d,
@@ -454,7 +451,7 @@ void mgl_surf3a_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 			if(k>0)
 			{
 				d = mgl_d(val,a->v(i,j,k-1),a0);
-				if(d>=0 && d<1)
+				if((d>=0) & (d<1))
 				{
 					if(both)	p = mglPoint(x->v(i,j,k-1)*(1-d)+p0.x*d,
 									y->v(i,j,k-1)*(1-d)+p0.y*d,
@@ -478,8 +475,6 @@ void mgl_surf3a_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 //-----------------------------------------------------------------------------
 void mgl_surf3a_val(HMGL gr, float val, HCDT a, HCDT b, const char *sch, const char *opt)
 {
-	if(a->GetNx()<2 || a->GetNy()<2 || a->GetNz()<2)
-    {	gr->SetWarn(mglWarnLow,"Surf3A");	return;	}
 	gr->SaveState(opt);
 	mglData x(a->GetNx()), y(a->GetNy()),z(a->GetNz());
 	x.Fill(gr->Min.x,gr->Max.x);
@@ -492,7 +487,7 @@ void mgl_surf3a_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, HCDT b, const char 
 {
 	float r = gr->SaveState(opt);
 	long num = mgl_isnan(r)?3:long(r+0.5);
-	if(b->GetNx()==num && b->GetNy()==1 && b->GetNz()==1)
+	if((b->GetNx()==num) & (b->GetNy()==1) & (b->GetNz()==1))
 	{
 		float v,a0=gr->AlphaDef;
 		for(long i=0;i<num;i++)
@@ -514,7 +509,7 @@ void mgl_surf3a(HMGL gr, HCDT a, HCDT b, const char *sch, const char *opt)
 {
 	float r = gr->SaveState(opt);
 	long num = mgl_isnan(r)?3:long(r);
-	if(b->GetNx()==num && b->GetNy()==1 && b->GetNz()==1)
+	if((b->GetNx()==num) & (b->GetNy()==1) & (b->GetNz()==1))
 	{
 		float v,a0=gr->AlphaDef;
 		for(long i=0;i<num;i++)
@@ -562,11 +557,11 @@ void mgl_surf3c_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 {
 	long i,j,k,i1,n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
 	long *kx1,*kx2,*ky1,*ky2,*kz;
-	bool both, wire = sch && strchr(sch,'#');
+	bool wire = sch && strchr(sch,'#');
 	float d;
-	if(n<2 || m<2 || l<2)	{	gr->SetWarn(mglWarnLow,"Surf3A");	return;	}
-	both = x->GetNx()*x->GetNy()*x->GetNz()==n*m*l && y->GetNx()*y->GetNy()*y->GetNz()==n*m*l && z->GetNx()*z->GetNy()*z->GetNz()==n*m*l;
-	if(!(both || (x->GetNx()==n && y->GetNx()==m && z->GetNx()==l)))
+	if((m<2) | (n<2) | (l<2))	{	gr->SetWarn(mglWarnLow,"Surf3A");	return;	}
+	bool both = (x->GetNx()*x->GetNy()*x->GetNz()==n*m*l) & (y->GetNx()*y->GetNy()*y->GetNz()==n*m*l) & (z->GetNx()*z->GetNy()*z->GetNz()==n*m*l);
+	if(!( both | ((x->GetNx()==n) & (y->GetNx()==m) & (z->GetNx()==l)) ))
 	{	gr->SetWarn(mglWarnDim,"Surf3A");	return;	}
 	if(b->GetNx()*b->GetNy()*b->GetNz()!=n*m*l)	{	gr->SetWarn(mglWarnDim,"Surf3A");	return;	}
 	gr->SaveState(opt);
@@ -600,7 +595,7 @@ void mgl_surf3c_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 			if(i<n-1)
 			{
 				d = mgl_d(val,a0,a->v(i+1,j,k));
-				if(d>=0 && d<1)
+				if((d>=0) & (d<1))
 				{
 					if(both)	p = mglPoint(p0.x*(1-d)+x->v(i+1,j,k)*d,
 									p0.y*(1-d)+y->v(i+1,j,k)*d,
@@ -617,7 +612,7 @@ void mgl_surf3c_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 			if(j<m-1)
 			{
 				d = mgl_d(val,a0,a->v(i,j+1,k));
-				if(d>=0 && d<1)
+				if((d>=0) & (d<1))
 				{
 					if(both)	p = mglPoint(p0.x*(1-d)+x->v(i,j+1,k)*d,
 									p0.y*(1-d)+y->v(i,j+1,k)*d,
@@ -634,7 +629,7 @@ void mgl_surf3c_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 			if(k>0)
 			{
 				d = mgl_d(val,a->v(i,j,k-1),a0);
-				if(d>=0 && d<1)
+				if((d>=0) & (d<1))
 				{
 					if(both)	p = mglPoint(x->v(i,j,k-1)*(1-d)+p0.x*d,
 									y->v(i,j,k-1)*(1-d)+p0.y*d,
@@ -658,7 +653,6 @@ void mgl_surf3c_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 //-----------------------------------------------------------------------------
 void mgl_surf3c_val(HMGL gr, float val, HCDT a, HCDT b, const char *sch, const char *opt)
 {
-	if(a->GetNx()<2 || a->GetNy()<2 || a->GetNz()<2)	{	gr->SetWarn(mglWarnLow,"Surf3C");	return;	}
 	gr->SaveState(opt);
 	mglData x(a->GetNx()), y(a->GetNy()),z(a->GetNz());
 	x.Fill(gr->Min.x,gr->Max.x);
@@ -721,7 +715,7 @@ void mgl_surf3c_(uintptr_t *gr, uintptr_t *a, uintptr_t *b, const char *sch, con
 void mgl_beam_md(HMGL gr, float val, const mglData *tr, const mglData *g1, const mglData *g2, const mglData *a, float r, const char *stl, int flag)
 {
 	long n = a->nz,m=a->nx,l=a->ny;
-	if(n<2 || m<2 || l<2)	{	gr->SetWarn(mglWarnLow,"Beam");	return;	}
+	if((m<2) | (n<2) | (l<2))	{	gr->SetWarn(mglWarnLow,"Beam");	return;	}
 	if(a->Minimal()<0)		{	gr->SetWarn(mglWarnNeg,"Beam");	return;	}
 	if(tr->nx<3 || tr->ny<n || g1->nx<3 || g1->ny<n || g2->nx<3 || g2->ny<n)
 	{	gr->SetWarn(mglWarnDim,"Beam");	return;	}
@@ -778,7 +772,7 @@ void mgl_beam_val(HMGL gr, float val, HCDT tr, HCDT g1, HCDT g2, HCDT a, float r
 	{	mgl_beam_md(gr,val,dtr,dg1,dg2,da,r,stl,flag);	return;	}
 
 	long n = a->GetNz(),m=a->GetNx(),l=a->GetNy();
-	if(n<2 || m<2 || l<2)	{	gr->SetWarn(mglWarnLow);	return;	}
+	if((m<2) | (n<2) | (l<2))	{	gr->SetWarn(mglWarnLow);	return;	}
 	if(a->Minimal()<0)		{	gr->SetWarn(mglWarnNeg);	return;	}
 	if(tr->GetNx()<3 || tr->GetNy()<n || g1->GetNx()<3 || g1->GetNy()<n || g2->GetNx()<3 || g2->GetNy()<n)
 	{	gr->SetWarn(mglWarnDim,"Beam");	return;	}

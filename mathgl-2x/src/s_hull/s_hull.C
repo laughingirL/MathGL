@@ -1,4 +1,4 @@
-/* NOTE: commented by A.Balakin (26 June 2012) for MathGL compatibility
+/* NOTE: commented by A.Balakin (28 June 2012) for MathGL compatibility
 #include <iostream>
 #include <hash_set.h>*/
 #include <algorithm>
@@ -85,7 +85,7 @@ void circle_cent2(float r1,float c1, float r2,float c2, float r3,float c3,
 	return;
 }
 
-/* NOTE: commented by A.Balakin (26 June 2012) for MathGL compatibility
+/* NOTE: commented by A.Balakin (28 June 2012) for MathGL compatibility
 void write_Shx(std::vector<Shx> &pts, char * fname){
    std::ofstream out(fname, ios::out);
 
@@ -105,7 +105,7 @@ void write_Shx(std::vector<Shx> &pts, char * fname){
  write out triangle ids to be compatible with matlab/octave array numbering.
 
  */
-/* NOTE: commented by A.Balakin (26 June 2012) for MathGL compatibility
+/* NOTE: commented by A.Balakin (28 June 2012) for MathGL compatibility
 void write_Triads(std::vector<Triad> &ts, char * fname){
    std::ofstream out(fname, ios::out);
 
@@ -196,7 +196,7 @@ void T_flip2( std::vector<Shx> &pts, std::vector<Triad> &triads, int *slump, int
 			}
 			else
 			{
-				/* NOTE: commented by A.Balakin (26 June 2012) for MathGL compatibility
+				/* NOTE: commented by A.Balakin (28 June 2012) for MathGL compatibility
 					cerr << "fuck up at line 12 dude!" << endl;*/
 			}
 
@@ -300,7 +300,7 @@ void s_hull_del_ray2( std::vector<Shx> &pts, std::vector<Triad> &triads)
 	while (k<nump)
 	{
 		circle_cent2(r1,c1,r2,c2,  pts[k].r,  pts[k].c, r,c,ro2);
-		if( ro2 < romin2 && ro2 > 0 )
+		if( (ro2 < romin2) & (ro2 > 0) )	// changed by A.Balakin (28 June 2012) for speeding up
 		{
 			mid = k;
 			romin2 = ro2;
@@ -418,7 +418,7 @@ void s_hull_del_ray2( std::vector<Shx> &pts, std::vector<Triad> &triads)
 		dr = rx- hull[0].r;
 		dc = cx- hull[0].c;  // outwards pointing from hull[0] to pt.
 
-		/* NOTE: commented by A.Balakin (26 June 2012) for MathGL compatibility
+		/* NOTE: commented by A.Balakin (28 June 2012) for MathGL compatibility
 		    if(0){
 		    cerr << "numt = " << triads.size() << endl;
 		    cerr << "ids = [ " ;
@@ -645,18 +645,13 @@ void s_hull_del_ray2( std::vector<Shx> &pts, std::vector<Triad> &triads)
 
 			// index back into the triads.
 			Triad &txx = triads[tridx[0]];
-			if( ( trx.b == txx.a && trx.c == txx.b) |( trx.b == txx.b && trx.c == txx.a))
-			{
+			// changed by A.Balakin (28 June 2012) for speeding up
+			if( ( (trx.b == txx.a) & (trx.c == txx.b)) | ( (trx.b == txx.b) & (trx.c == txx.a)))
 				txx.ab = numt;
-			}
-			else if( ( trx.b == txx.a && trx.c == txx.c) |( trx.b == txx.c && trx.c == txx.a))
-			{
+			else if( ( (trx.b == txx.a) & (trx.c == txx.c)) | ( (trx.b == txx.c) & (trx.c == txx.a)))
 				txx.ac = numt;
-			}
-			else if( ( trx.b == txx.b && trx.c == txx.c) |( trx.b == txx.c && trx.c == txx.b))
-			{
+			else if( ( (trx.b == txx.b) & (trx.c == txx.c)) | ( (trx.b == txx.c) & (trx.c == txx.b)))
 				txx.bc = numt;
-			}
 
 
 			hull[hidx].trid = numt;
@@ -697,23 +692,16 @@ void s_hull_del_ray2( std::vector<Shx> &pts, std::vector<Triad> &triads)
 
 				// index back into the triads.
 				Triad &txx = triads[tridx[p]];
-				if( ( trx.b == txx.a && trx.c == txx.b) |( trx.b == txx.b && trx.c == txx.a))
-				{
+				// changed by A.Balakin (28 June 2012) for speeding up
+				if( ( (trx.b == txx.a) & (trx.c == txx.b)) | ( (trx.b == txx.b) & (trx.c == txx.a)))
 					txx.ab = numt;
-				}
-				else if( ( trx.b == txx.a && trx.c == txx.c) |( trx.b == txx.c && trx.c == txx.a))
-				{
+				else if( ( (trx.b == txx.a) & (trx.c == txx.c)) | ( (trx.b == txx.c) & (trx.c == txx.a)))
 					txx.ac = numt;
-				}
-				else if( ( trx.b == txx.b && trx.c == txx.c) |( trx.b == txx.c && trx.c == txx.b))
-				{
+				else if( ( (trx.b == txx.b) & (trx.c == txx.c)) | ( (trx.b == txx.c) & (trx.c == txx.b)))
 					txx.bc = numt;
-				}
 
-				if( trx.ab == 26777 || trx.ac == 26777 || trx.bc == 26777)
-				{
-					int foon = 7;
-				}
+				// changed by A.Balakin (28 June 2012) for speeding up
+				//if( (trx.ab == 26777) | (trx.ac == 26777) | (trx.bc == 26777))	int foon = 7;
 
 				triads.push_back( trx );
 				numt++;
@@ -737,7 +725,7 @@ void s_hull_del_ray2( std::vector<Shx> &pts, std::vector<Triad> &triads)
 		//write_Triads(triads, "tris2.mat");
 	}
 
-	/* NOTE: commented by A.Balakin (26 June 2012) for MathGL compatibility
+	/* NOTE: commented by A.Balakin (28 June 2012) for MathGL compatibility
 	  cerr << "of triangles " << triads.size() << " to be flipped. "<< endl;*/
 	//write_Triads(triads, "tris0.mat");
 
@@ -745,7 +733,7 @@ void s_hull_del_ray2( std::vector<Shx> &pts, std::vector<Triad> &triads)
 	T_flip3( pts, triads, slump, numt, 0, ids);
 
 	int nits = ids.size(), nit=1;
-	while(  nits > 0 && nit < 20)
+	while(  (nits > 0) & (nit < 20))		// changed by A.Balakin (28 June 2012) for speeding up
 	{
 		// char nam[128];
 		//sprintf(nam, "tris_%d.mat", nit);
@@ -841,7 +829,7 @@ void T_flip3( std::vector<Shx> &pts, std::vector<Triad> &triads, int *slump, int
 			}
 			else
 			{
-				/* NOTE: commented by A.Balakin (26 June 2012) for MathGL compatibility
+				/* NOTE: commented by A.Balakin (28 June 2012) for MathGL compatibility
 					cerr << "fuck up at line 12 dude! " << t << endl;*/
 			}
 
@@ -855,7 +843,8 @@ void T_flip3( std::vector<Shx> &pts, std::vector<Triad> &triads, int *slump, int
 			{
 				L1 = tri.ab;
 				L2 = tri.ac;
-				if( L1 != L3 && L2 != L4 )   // need this check for stability.
+				// changed by A.Balakin (28 June 2012) for speeding up
+				if( (L1 != L3) & (L2 != L4) )   // need this check for stability.
 				{
 					circle_cent2(pts[pa].r, pts[pa].c, pts[pb].r, pts[pb].c, r3, c3, R, C , rot);
 
@@ -910,7 +899,7 @@ void T_flip3( std::vector<Shx> &pts, std::vector<Triad> &triads, int *slump, int
 			}
 		}
 
-		if(  flipped == 0 && tri.ab >= 0 )
+		if(  (flipped == 0) & (tri.ab >= 0) )	// changed by A.Balakin (28 June 2012) for speeding up
 		{
 			pc = slump[tri.c];
 			pb = slump[tri.b];
@@ -969,7 +958,7 @@ void T_flip3( std::vector<Shx> &pts, std::vector<Triad> &triads, int *slump, int
 			}
 			else
 			{
-				/* NOTE: commented by A.Balakin (26 June 2012) for MathGL compatibility
+				/* NOTE: commented by A.Balakin (28 June 2012) for MathGL compatibility
 					cerr << "fuck up at line 13 dude! " << t << endl;*/
 			}
 
@@ -982,7 +971,8 @@ void T_flip3( std::vector<Shx> &pts, std::vector<Triad> &triads, int *slump, int
 			{
 				L1 = tri.ac;
 				L2 = tri.bc;
-				if( L1 != L3 && L2 != L4 )   // need this check for stability.
+				// changed by A.Balakin (28 June 2012) for speeding up
+				if( (L1 != L3) & (L2 != L4) )   // need this check for stability.
 				{
 					circle_cent2(pts[pa].r, pts[pa].c, pts[pc].r, pts[pc].c, r3, c3, R, C , rot);
 
@@ -1037,7 +1027,7 @@ void T_flip3( std::vector<Shx> &pts, std::vector<Triad> &triads, int *slump, int
 			}
 		}
 
-		if( flipped == 0 && tri.ac >= 0 )
+		if( (flipped == 0) & (tri.ac >= 0) )	// changed by A.Balakin (28 June 2012) for speeding up
 		{
 			pc = slump[tri.c];
 			pb = slump[tri.b];
@@ -1096,7 +1086,7 @@ void T_flip3( std::vector<Shx> &pts, std::vector<Triad> &triads, int *slump, int
 			}
 			else
 			{
-				/* NOTE: commented by A.Balakin (26 June 2012) for MathGL compatibility
+				/* NOTE: commented by A.Balakin (28 June 2012) for MathGL compatibility
 					cerr << "fuck up at line 14 dude! " << t << endl;*/
 			}
 
@@ -1109,7 +1099,8 @@ void T_flip3( std::vector<Shx> &pts, std::vector<Triad> &triads, int *slump, int
 			{
 				L1 = tri.ab;   // .ac shared limb
 				L2 = tri.bc;
-				if( L1 != L3 && L2 != L4 )   // need this check for stability.
+				// changed by A.Balakin (28 June 2012) for speeding up
+				if( (L1 != L3) & (L2 != L4) )   // need this check for stability.
 				{
 					circle_cent2(pts[pa].r, pts[pa].c, pts[pb].r, pts[pb].c, r3, c3, R, C , rot);
 
@@ -1250,7 +1241,7 @@ void T_flip4( std::vector<Shx> &pts, std::vector<Triad> &triads, int *slump, std
 			}
 			else
 			{
-				/* NOTE: commented by A.Balakin (26 June 2012) for MathGL compatibility
+				/* NOTE: commented by A.Balakin (28 June 2012) for MathGL compatibility
 					cerr << "fuck up at line 15 dude! t: " << t << "  T2: " <<  T2<<  endl;*/
 				//	tri.prnt();
 				//t2.prnt();
@@ -1266,7 +1257,8 @@ void T_flip4( std::vector<Shx> &pts, std::vector<Triad> &triads, int *slump, std
 				L1 = tri.ab;
 				L2 = tri.ac;
 
-				if( L1 != L3 && L2 != L4 )   // need this check for stability.
+				// changed by A.Balakin (28 June 2012) for speeding up
+				if( (L1 != L3) & (L2 != L4) )   // need this check for stability.
 				{
 					circle_cent2(pts[pa].r, pts[pa].c, pts[pb].r, pts[pb].c, r3, c3, R, C , rot);
 
@@ -1324,7 +1316,7 @@ void T_flip4( std::vector<Shx> &pts, std::vector<Triad> &triads, int *slump, std
 		}
 
 
-		if( flipped == 0 && tri.ab >= 0 )
+		if( (flipped == 0) & (tri.ab >= 0) )	// changed by A.Balakin (28 June 2012) for speeding up
 		{
 			pc = slump[tri.c];
 			pb = slump[tri.b];
@@ -1383,7 +1375,7 @@ void T_flip4( std::vector<Shx> &pts, std::vector<Triad> &triads, int *slump, std
 			}
 			else
 			{
-				/* NOTE: commented by A.Balakin (26 June 2012) for MathGL compatibility
+				/* NOTE: commented by A.Balakin (28 June 2012) for MathGL compatibility
 					cerr << "fuck up at line 16 dude! " << t <<  endl;*/
 			}
 
@@ -1396,7 +1388,8 @@ void T_flip4( std::vector<Shx> &pts, std::vector<Triad> &triads, int *slump, std
 			{
 				L1 = tri.ac;
 				L2 = tri.bc;
-				if( L1 != L3 && L2 != L4 )   // need this check for stability.
+				// changed by A.Balakin (28 June 2012) for speeding up
+				if( (L1 != L3) & (L2 != L4) )   // need this check for stability.
 				{
 					circle_cent2(pts[pa].r, pts[pa].c, pts[pc].r, pts[pc].c, r3, c3, R, C , rot);
 
@@ -1424,11 +1417,9 @@ void T_flip4( std::vector<Shx> &pts, std::vector<Triad> &triads, int *slump, std
 					tx2.ac = t;
 					tx2.bc = L4;
 
-					if( (tx.ab == 26777 && tx.ac == 26777 && tx.bc == 26777) ||
-							(tx2.ab == 26777 && tx2.ac == 26777 && tx2.bc == 26777) )
-					{
-						int foon = 8;
-					}
+					// changed by A.Balakin (28 June 2012) for speeding up
+					//if( ((tx.ab == 26777) & (tx.ac == 26777) & (tx.bc == 26777)) | ((tx2.ab == 26777) & (tx2.ac == 26777) & (tx2.bc == 26777)) )
+					//{	int foon = 8;	}
 
 					ids2.insert(t);
 					ids2.insert(T2);
@@ -1459,7 +1450,7 @@ void T_flip4( std::vector<Shx> &pts, std::vector<Triad> &triads, int *slump, std
 			}
 		}
 
-		if( flipped == 0 && tri.ac >= 0 )
+		if( (flipped == 0) & (tri.ac >= 0) )		// changed by A.Balakin (28 June 2012) for speeding up
 		{
 			pc = slump[tri.c];
 			pb = slump[tri.b];
@@ -1518,7 +1509,7 @@ void T_flip4( std::vector<Shx> &pts, std::vector<Triad> &triads, int *slump, std
 			}
 			else
 			{
-				/* NOTE: commented by A.Balakin (26 June 2012) for MathGL compatibility
+				/* NOTE: commented by A.Balakin (28 June 2012) for MathGL compatibility
 					cerr << "fuck up at line 17 dude! " << t << endl;*/
 			}
 
@@ -1533,7 +1524,8 @@ void T_flip4( std::vector<Shx> &pts, std::vector<Triad> &triads, int *slump, std
 			{
 				L1 = tri.ab;   // .ac shared limb
 				L2 = tri.bc;
-				if( L1 != L3 && L2 != L4 )   // need this check for stability.
+				// changed by A.Balakin (28 June 2012) for speeding up
+				if( (L1 != L3) & (L2 != L4) )   // need this check for stability.
 				{
 					if( -scubit*1000 > tri.ro )
 						circle_cent2(pts[pa].r, pts[pa].c, pts[pb].r, pts[pb].c, r3, c3, R, C , rot);

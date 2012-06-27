@@ -118,7 +118,7 @@ void mgl_data_export(HCDT dd, const char *fname, const char *scheme,float v1,flo
 	const mglData *md = dynamic_cast<const mglData *>(dd);
 	mreal vv;
 	if(v1>v2)	return;
-	if(ns<0 || ns>=nz)	ns=0;
+	if((ns<0) | (ns>=nz))	ns=0;
 	if(v1==v2)
 	{
 		v1 = 1e20;	v2=-1e20;

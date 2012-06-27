@@ -212,8 +212,8 @@ private:
 	/// Parse $N arguments
 	void PutArg(const wchar_t *string, wchar_t *str, bool def);
 	/// In skip mode
-	bool inline ifskip()	{	return (if_pos>0 && !(if_stack[if_pos-1]&1));	};
-	bool inline skip()		{	return (Skip || ifskip() || for_br);	};
+	bool inline ifskip()	{	return ((if_pos>0) & !(if_stack[if_pos-1]&1));	};
+	bool inline skip()		{	return (Skip | ifskip() | for_br);	};
 };
 //-----------------------------------------------------------------------------
 #endif

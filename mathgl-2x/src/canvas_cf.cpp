@@ -76,8 +76,8 @@ void mgl_multiplot(HMGL gr, int nx,int ny,int m,int dx,int dy,const char *style)
 {
 	float x1,x2,y1,y2;
 	int mx = m%nx, my = m/nx;
-	dx = (dx<1 || dx+mx>nx) ? 1 : dx;
-	dy = (dy<1 || dy+my>ny) ? 1 : dy;
+	dx = ((dx<1) | (dx+mx>nx)) ? 1 : dx;
+	dy = ((dy<1) | (dy+my>ny)) ? 1 : dy;
 	x1 = float(mx)/nx;		x2 = float(mx+dx)/nx;
 	y2 = 1-float(my)/ny;	y1 = 1-float(my+dy)/ny;
 	_Gr_->InPlot(x1,x2,y1,y2,style);

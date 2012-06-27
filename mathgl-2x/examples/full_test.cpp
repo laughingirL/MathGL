@@ -517,7 +517,6 @@ const char *mmgl_type0="alpha on:light on:transptype 0:clf\nsubplot 2 2 0:rotate
 "subplot 2 2 3:rotate 50 60:axial a:box";
 void smgl_type0(mglGraph *gr)	// TranspType = 0
 {
-	//	if(type==5 || type==9 || type==10)	return;
 	gr->Alpha(true);	gr->Light(true);
 	mglData a;	mgls_prepare2d(&a);
 	gr->SetTranspType(0);	gr->Clf();
@@ -532,7 +531,6 @@ const char *mmgl_type1="alpha on:light on:transptype 1:clf\nsubplot 2 2 0:rotate
 "subplot 2 2 3:rotate 50 60:axial a:box";
 void smgl_type1(mglGraph *gr)	// TranspType = 1
 {
-	//	if(type==5 || type==9 || type==10)	return;
 	gr->Alpha(true);	gr->Light(true);
 	mglData a;	mgls_prepare2d(&a);
 	gr->SetTranspType(1);	gr->Clf();
@@ -547,7 +545,6 @@ const char *mmgl_type2="alpha on:light on:transptype 2:clf\nsubplot 2 2 0:rotate
 "subplot 2 2 3:rotate 50 60:axial a:box";
 void smgl_type2(mglGraph *gr)	// TranspType = 2
 {
-	//	if(type==5 || type==9 || type==10)	return;
 	gr->Alpha(true);	gr->Light(true);
 	mglData a;	mgls_prepare2d(&a);
 	gr->SetTranspType(2);	gr->Clf();
@@ -1985,7 +1982,6 @@ int main(int argc,char **argv)
 		}
 
 	gr = new mglGraph;
-//	if(type==5 || type==9 || type==10)	{	u3d.unrotate_flag = true;	gr = &u3d;	}
 
 	if(mini)		{	gr->SetSize(190,145);	suf = "-sm";	}
 	else if(big)

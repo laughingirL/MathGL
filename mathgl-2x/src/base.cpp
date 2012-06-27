@@ -145,7 +145,7 @@ long mglBase::AddPnt(mglPoint p, float c, mglPoint n, float a, int scl)
 	if(!get(MGL_ENABLE_ALPHA))	{	q.a=1;	if(txt.Smooth!=2)	q.ta=1-gap;	}
 //	if(q.ta<0.005)	q.ta = 0.005;	// bypass OpenGL/OBJ/PRC bug
 	if(scl&8 && scl>0)	q.a=a;	// bypass palette for enabling alpha in Error()
-	if(!get(MGL_ENABLE_LIGHT) && !(scl&4))	q.u=q.v=NAN;
+	if(!get(MGL_ENABLE_LIGHT) & !(scl&4))	q.u=q.v=NAN;
 	MGL_PUSH(Pnt,q,mutexPnt);	return Pnt.size()-1;
 }
 //-----------------------------------------------------------------------------
@@ -195,7 +195,7 @@ void mglBase::RecalcCRange()
 //-----------------------------------------------------------------------------
 void mglBase::RecalcBorder()
 {
-	if(!fx &&	!fy &&	!fz)
+	if(!fx & !fy & !fz)
 	{	FMin = Min;	FMax = Max;	}
 	else
 	{
@@ -254,7 +254,7 @@ void mglBase::SetFBord(float x,float y,float z)
 bool mglBase::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan) const
 {
 	float &x=p.x, &y=p.y, &z=p.z;
-	if(mgl_isnan(x) || mgl_isnan(y) || mgl_isnan(z))	{	x=NAN;	return false;	}
+	if(mgl_isnan(x) | mgl_isnan(y) | mgl_isnan(z))	{	x=NAN;	return false;	}
 	float x1,y1,z1,x2,y2,z2;
 	x1 = x>0?x*MGL_FLT_EPS:x/MGL_FLT_EPS;	x2 = x<0?x*MGL_FLT_EPS:x/MGL_FLT_EPS;
 	y1 = y>0?y*MGL_FLT_EPS:y/MGL_FLT_EPS;	y2 = y<0?y*MGL_FLT_EPS:y/MGL_FLT_EPS;
@@ -264,9 +264,8 @@ bool mglBase::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan) const
 		(z2>CutMin.z) & (z1<CutMax.z))	res = false;
 	if(fc && fc->Calc(x,y,z))	res = false;
 
-	if(get(MGL_ENABLE_CUT) || !use_nan)
+	if(get(MGL_ENABLE_CUT) | !use_nan)
 	{
-//		if(x1<Min.x || x2>Max.x || y1<Min.y || y2>Max.y || z1<Min.z || z2>Max.z)	res = false;
 		if( (((x1-Min.x)*(x1-Max.x)>0) & ((x2-Min.x)*(x2-Max.x)>0)) | (((y1-Min.y)*(y1-Max.y)>0) & ((y2-Min.y)*(y2-Max.y)>0)) | (((z1-Min.z)*(z1-Max.z)>0) & ((z2-Min.z)*(z2-Max.z)>0)) )
 			res = false;
 	}
@@ -313,7 +312,7 @@ bool mglBase::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan) const
 	if((fabs(x)>MGL_FLT_EPS) | (fabs(y)>MGL_FLT_EPS) | (fabs(z)>MGL_FLT_EPS))
 		res = false;
 
-	if(!res && use_nan)	x = NAN;	// extra sign that point shouldn't be plotted
+	if(!res & use_nan)	x = NAN;	// extra sign that point shouldn't be plotted
 	return res;
 }
 //-----------------------------------------------------------------------------
@@ -328,12 +327,12 @@ void mglBase::SetRanges(mglPoint m1, mglPoint m2)
 	else			{	Min.c=Min.z;Max.c=Max.z;}
 //	if(AutoOrg)
 	{
-		if(Org.x<Min.x && !mgl_isnan(Org.x))	Org.x = Min.x;
-		if(Org.x>Max.x && !mgl_isnan(Org.x))	Org.x = Max.x;
-		if(Org.y<Min.y && !mgl_isnan(Org.y))	Org.y = Min.y;
-		if(Org.y>Max.y && !mgl_isnan(Org.y))	Org.y = Max.y;
-		if(Org.z<Min.z && !mgl_isnan(Org.z))	Org.z = Min.z;
-		if(Org.z>Max.z && !mgl_isnan(Org.z))	Org.z = Max.z;
+		if((Org.x<Min.x) & !mgl_isnan(Org.x))	Org.x = Min.x;
+		if((Org.x>Max.x) & !mgl_isnan(Org.x))	Org.x = Max.x;
+		if((Org.y<Min.y) & !mgl_isnan(Org.y))	Org.y = Min.y;
+		if((Org.y>Max.y) & !mgl_isnan(Org.y))	Org.y = Max.y;
+		if((Org.z<Min.z) & !mgl_isnan(Org.z))	Org.z = Min.z;
+		if((Org.z>Max.z) & !mgl_isnan(Org.z))	Org.z = Max.z;
 	}
 	CutMin = mglPoint(0,0,0);	CutMax = mglPoint(0,0,0);
 	RecalcBorder();
@@ -356,8 +355,8 @@ void mglBase::CRange(HCDT a,bool add, float fact)
 		Min.c = v1<Max.c ? v1:Max.c;
 		Max.c = v2>dv ? v2:dv;
 	}
-	if(Org.c<Min.c && !mgl_isnan(Org.c))	Org.c = Min.c;
-	if(Org.c>Max.c && !mgl_isnan(Org.c))	Org.c = Max.c;
+	if((Org.c<Min.c) & !mgl_isnan(Org.c))	Org.c = Min.c;
+	if((Org.c>Max.c) & !mgl_isnan(Org.c))	Org.c = Max.c;
 	RecalcCRange();
 }
 //-----------------------------------------------------------------------------
@@ -378,8 +377,8 @@ void mglBase::XRange(HCDT a,bool add,float fact)
 		Min.x = v1<Max.x ? v1:Max.x;
 		Max.x = v2>dv ? v2:dv;
 	}
-	if(Org.x<Min.x && !mgl_isnan(Org.x))	Org.x = Min.x;
-	if(Org.x>Max.x && !mgl_isnan(Org.x))	Org.x = Max.x;
+	if((Org.x<Min.x) & !mgl_isnan(Org.x))	Org.x = Min.x;
+	if((Org.x>Max.x) & !mgl_isnan(Org.x))	Org.x = Max.x;
 	RecalcBorder();
 }
 //-----------------------------------------------------------------------------
@@ -400,8 +399,8 @@ void mglBase::YRange(HCDT a,bool add,float fact)
 		Min.y = v1<Max.y ? v1:Max.y;
 		Max.y = v2>dv ? v2:dv;
 	}
-	if(Org.y<Min.y && !mgl_isnan(Org.y))	Org.y = Min.y;
-	if(Org.y>Max.y && !mgl_isnan(Org.y))	Org.y = Max.y;
+	if((Org.y<Min.y) & !mgl_isnan(Org.y))	Org.y = Min.y;
+	if((Org.y>Max.y) & !mgl_isnan(Org.y))	Org.y = Max.y;
 	RecalcBorder();
 }
 //-----------------------------------------------------------------------------
@@ -422,8 +421,8 @@ void mglBase::ZRange(HCDT a,bool add,float fact)
 		Min.z = v1<Max.z ? v1:Max.z;
 		Max.z = v2>dv ? v2:dv;
 	}
-	if(Org.z<Min.z && !mgl_isnan(Org.z))	Org.z = Min.z;
-	if(Org.z>Max.z && !mgl_isnan(Org.z))	Org.z = Max.z;
+	if((Org.z<Min.z) & !mgl_isnan(Org.z))	Org.z = Min.z;
+	if((Org.z>Max.z) & !mgl_isnan(Org.z))	Org.z = Max.z;
 	RecalcBorder();
 }
 //-----------------------------------------------------------------------------
@@ -456,16 +455,16 @@ void mglBase::SetFunc(const char *EqX,const char *EqY,const char *EqZ,const char
 {
 	if(fa)	delete fa;	if(fx)	delete fx;
 	if(fy)	delete fy;	if(fz)	delete fz;
-	if(EqX && *EqX && (EqX[0]!='x' || EqX[1]!=0))
+	if(EqX && *EqX && ((EqX[0]!='x') | (EqX[1]!=0)))
 		fx = new mglFormula(EqX);
 	else	fx = 0;
-	if(EqY && *EqY && (EqY[0]!='y' || EqY[1]!=0))
+	if(EqY && *EqY && ((EqY[0]!='y') | (EqY[1]!=0)))
 		fy = new mglFormula(EqY);
 	else	fy = 0;
-	if(EqZ && *EqZ && (EqZ[0]!='z' || EqZ[1]!=0))
+	if(EqZ && *EqZ && ((EqZ[0]!='z') | (EqZ[1]!=0)))
 		fz = new mglFormula(EqZ);
 	else	fz = 0;
-	if(EqA && *EqA && ((EqA[0]!='c' && EqA[0]!='a') || EqA[1]!=0))
+	if(EqA && *EqA && (((EqA[0]!='c') & (EqA[0]!='a')) | (EqA[1]!=0)))
 		fa = new mglFormula(EqA);
 	else	fa = 0;
 	RecalcBorder();
@@ -611,7 +610,7 @@ void mglTexture::Set(const char *s, int smooth, float alpha)
 	for(i=0;i<256;i++)
 	{
 		u = v*i;	j = long(u);	u-=j;
-		if(!sm || j==n-1)
+		if(!sm | (j==n-1))
 		{	col[2*i] = c[2*j];	col[2*i+1] = c[2*j+1];	}
 		else if(j>n-1)	// NOTE: never should be here!
 		{	col[2*i] = c[2*n-2];col[2*i+1] = c[2*n-1];	/*printf("AddTexture -- out of bounds");*/	}
@@ -791,7 +790,7 @@ mglPoint GetZ(HCDT z, int i, int j, int k)
 //-----------------------------------------------------------------------------
 void mglBase::vect_plot(long p1, long p2, float s)
 {
-	if(p1<0 || p2<0)	return;
+	if((p1<0) | (p2<0))	return;
 	const mglPnt &q1=Pnt[p1], &q2=Pnt[p2];
 	mglPnt s1=q2,s2=q2;
 	s = s<=0 ? 0.1 : s*0.1;
@@ -868,7 +867,7 @@ float mglBase::SaveState(const char *opt)
 		else if(!strcmp(a,"diffuse"))	SetDifLight(ff);
 		else if(!strcmp(a,"size"))
 		{	SetMarkSize(ff);	SetFontSize(ff);	SetArrowSize(ff);	}
-		else if(!strcmp(a,"num") || !strcmp(a,"number") || !strcmp(a,"value"))	return ff;
+		else if(!strcmp(a,"num") | !strcmp(a,"number") | !strcmp(a,"value"))	return ff;
 		else if(!strcmp(a,"legend"))
 		{	if(*b=='\'')	{	b++;	b[strlen(b)-1]=0;	}	leg_str = b;	}
 	}

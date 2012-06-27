@@ -312,7 +312,7 @@ void mglCanvas::EndFrame()
 	unsigned char *f=0, **l=0;
 	l = GetRGBLines(width, height, f);
 	n = width*height;
-	if(!l || !gif)	return;
+	if(!l | !gif)	return;
 	EGifPutImageDesc(gif, 0, 0, width, height, 0, 0);
 	GifPixelType *line = new GifPixelType[n];
 	register long m;

@@ -105,10 +105,12 @@ void mgl_traj_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uint
 void mgl_vect_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, const char *opt)
 {
 	long i,j,n=ax->GetNx(),m=ax->GetNy(),k;
-	if(n*m*ax->GetNz()!=ay->GetNx()*ay->GetNy()*ay->GetNz())	{	gr->SetWarn(mglWarnDim,"Vect");	return;	}
-	if(n<2 || m<2)						{	gr->SetWarn(mglWarnLow,"Vect");	return;	}
-	bool both = x->GetNx()==n && y->GetNx()==n && x->GetNy()==m && y->GetNy()==m;
-	if(!(both || (x->GetNx()==n && y->GetNx()==m)))	{	gr->SetWarn(mglWarnDim,"Vect");	return;	}
+	if(n*m*ax->GetNz()!=ay->GetNx()*ay->GetNy()*ay->GetNz())
+	{	gr->SetWarn(mglWarnDim,"Vect");	return;	}
+	if((m<2) | (n<2))	{	gr->SetWarn(mglWarnLow,"Vect");	return;	}
+	bool both = (x->GetNx()==n) & (y->GetNx()==n) & (x->GetNy()==m) & (y->GetNy()==m);
+	if(!( both | ((x->GetNx()==n) & (y->GetNx()==m)) ))
+	{	gr->SetWarn(mglWarnDim,"Vect");	return;	}
 
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Vect",cgid++);
@@ -193,11 +195,11 @@ void mgl_vect_2d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, const char *sch, 
 void mgl_vect_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, const char *opt)
 {
 	register long i,j,n=ax->GetNx(),m=ax->GetNy(),l=ax->GetNz(),k;
-	if(n*m*l!=ay->GetNx()*ay->GetNy()*ay->GetNz() || ax->GetNx()*ax->GetNy()*ax->GetNz()!=az->GetNx()*az->GetNy()*az->GetNz())
+	if((n*m*l!=ay->GetNx()*ay->GetNy()*ay->GetNz()) | (n*m*l!=az->GetNx()*az->GetNy()*az->GetNz()))
 	{	gr->SetWarn(mglWarnDim,"Vect");	return;	}
-	if(n<2 || m<2 || l<2)	{	gr->SetWarn(mglWarnLow,"Vect");	return;	}
-	bool both = x->GetNx()*x->GetNy()*x->GetNz()==n*m*l && y->GetNx()*y->GetNy()*y->GetNz()==n*m*l && z->GetNx()*z->GetNy()*z->GetNz()==n*m*l;
-	if(!(both || (x->GetNx()==n && y->GetNx()==m && z->GetNx()==l)))
+	if((m<2) | (n<2) | (l<2))	{	gr->SetWarn(mglWarnLow,"Vect");	return;	}
+	bool both = (x->GetNx()*x->GetNy()*x->GetNz()==n*m*l) & (y->GetNx()*y->GetNy()*y->GetNz()==n*m*l) & (z->GetNx()*z->GetNy()*z->GetNz()==n*m*l);
+	if(!( both | ((x->GetNx()==n) & (y->GetNx()==m) & (z->GetNx()==l)) ))
 	{	gr->SetWarn(mglWarnDim,"Vect");	return;	}
 
 	gr->SaveState(opt);
@@ -281,7 +283,7 @@ void mgl_vect_3d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, co
 void flow(mglBase *gr, float zVal, float u, float v, const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, long ss, bool vv)
 {
 	long n=10*(ax.nx+ax.ny);
-	bool both = x.nx==ax.nx && y.nx==ax.nx && x.ny==ax.ny && y.ny==ax.ny;
+	bool both = (x.nx==ax.nx) & (y.nx==ax.nx) & (x.ny==ax.ny) & (y.ny==ax.ny);
 
 	mglPoint *pp = new mglPoint[n], dp;
 	float *cc = new float[n];
@@ -325,7 +327,7 @@ void flow(mglBase *gr, float zVal, float u, float v, const mglData &x, const mgl
 		for(i=1;i<k;i++)
 		{
 			jj=j;	j = gr->AddPnt(pp[i],cc[i]);
-			if(vv && i%a==0)
+			if(vv & (i%a==0))
 			{
 				if(dt<0)	gr->vect_plot(j,jj,a/5);
 				else		gr->vect_plot(jj,j,a/5);
@@ -341,9 +343,10 @@ void mgl_flow_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, con
 	float u,v;
 	long n=ax->GetNx(), m=ax->GetNy();
 	if(n*m*ax->GetNz()!=ay->GetNx()*ay->GetNy()*ay->GetNz())	{	gr->SetWarn(mglWarnDim,"Flow");	return;	}
-	if(n<2 || m<2)						{	gr->SetWarn(mglWarnLow,"Flow");	return;	}
-	bool both = x->GetNx()==n && y->GetNx()==n && x->GetNy()==m && y->GetNy()==m;
-	if(!(both || (x->GetNx()==n && y->GetNx()==m)))	{	gr->SetWarn(mglWarnDim,"Flow");	return;	}
+	if((m<2) | (n<2))						{	gr->SetWarn(mglWarnLow,"Flow");	return;	}
+	bool both = (x->GetNx()==n) & (y->GetNx()==n) & (x->GetNy()==m) & (y->GetNy()==m);
+	if(!( both | ((x->GetNx()==n) & (y->GetNx()==m)) ))
+	{	gr->SetWarn(mglWarnDim,"Flow");	return;	}
 	float r = gr->SaveState(opt);
 	long num = mgl_isnan(r)?5:long(r+0.5);
 	static int cgid=1;	gr->StartGroup("Flow",cgid++);
@@ -411,9 +414,10 @@ void mgl_flowp_xy(HMGL gr, float x0, float y0, float z0, HCDT x, HCDT y, HCDT ax
 	float u,v;
 	long n=ax->GetNx(), m=ax->GetNy();
 	if(n*m*ax->GetNz()!=ay->GetNx()*ay->GetNy()*ay->GetNz())	{	gr->SetWarn(mglWarnDim,"Flow");	return;	}
-	if(n<2 || m<2)						{	gr->SetWarn(mglWarnLow,"Flow");	return;	}
-	bool both = x->GetNx()==n && y->GetNx()==n && x->GetNy()==m && y->GetNy()==m;
-	if(!(both || (x->GetNx()==n && y->GetNx()==m)))	{	gr->SetWarn(mglWarnDim,"Flow");	return;	}
+	if((m<2) | (n<2))						{	gr->SetWarn(mglWarnLow,"Flow");	return;	}
+	bool both = (x->GetNx()==n) & (y->GetNx()==n) & (x->GetNy()==m) & (y->GetNy()==m);
+	if(!( both | ((x->GetNx()==n) & (y->GetNx()==m)) ))
+	{	gr->SetWarn(mglWarnDim,"Flow");	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("FlowP",cgid++);
 
@@ -480,7 +484,7 @@ void flow(mglBase *gr, float u, float v, float w, const mglData &x, const mglDat
 {
 	static long n=10*(ax.nx+ax.ny);
 	long nn = ax.nx*ax.ny*ax.nz;
-	bool both = x.nx*x.ny*x.nz==nn && y.nx*y.ny*y.nz==nn && z.nx*z.ny*z.nz==nn;
+	bool both = (x.nx*x.ny*x.nz==nn) & (y.nx*y.ny*y.nz==nn) & (z.nx*z.ny*z.nz==nn);
 	mglPoint *pp = new mglPoint[n], dp;
 	float *cc = new float[n];
 	mglPoint dx(1/fabs(gr->Max.x-gr->Min.x),1/fabs(gr->Max.y-gr->Min.y),1/fabs(gr->Max.z-gr->Min.z));
@@ -562,12 +566,12 @@ void mgl_flow_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 {
 	float u,v,w;
 	long i,j,n=ax->GetNx(),m=ax->GetNy(),l=ax->GetNz();
-	if(ax->GetNx()*ax->GetNy()*ax->GetNz()!=ay->GetNx()*ay->GetNy()*ay->GetNz() || ax->GetNx()*ax->GetNy()*ax->GetNz()!=az->GetNx()*az->GetNy()*az->GetNz())
+	if((n*m*l!=ay->GetNx()*ay->GetNy()*ay->GetNz()) | (n*m*l!=az->GetNx()*az->GetNy()*az->GetNz()))
 	{	gr->SetWarn(mglWarnDim,"Flow");	return;	}
-	if(ax->GetNx()<2 || ax->GetNy()<2 || ax->GetNz()<2)
+	if((m<2) | (n<2) | (l<2))
 	{	gr->SetWarn(mglWarnLow,"Flow");	return;	}
-	bool both = x->GetNx()*x->GetNy()*x->GetNz()==n*m*l && y->GetNx()*y->GetNy()*y->GetNz()==n*m*l && z->GetNx()*z->GetNy()*z->GetNz()==n*m*l;
-	if(!(both || (x->GetNx()==n && y->GetNx()==m && z->GetNx()==l)))
+	bool both = (x->GetNx()*x->GetNy()*x->GetNz()==n*m*l) & (y->GetNx()*y->GetNy()*y->GetNz()==n*m*l) & (z->GetNx()*z->GetNy()*z->GetNz()==n*m*l);
+	if(!( both | ((x->GetNx()==n) & (y->GetNx()==m) & (z->GetNx()==l)) ))
 	{	gr->SetWarn(mglWarnDim,"Flow");	return;	}
 	float r = gr->SaveState(opt);
 	long num = mgl_isnan(r)?3:long(r+0.5);
@@ -638,12 +642,12 @@ void mgl_flowp_xyz(HMGL gr, float x0, float y0, float z0, HCDT x, HCDT y, HCDT z
 	mglPoint p(x0,y0,z0);
 	float u,v,w;
 	long n=ax->GetNx(),m=ax->GetNy(),l=ax->GetNz();
-	if(ax->GetNx()*ax->GetNy()*ax->GetNz()!=ay->GetNx()*ay->GetNy()*ay->GetNz() || ax->GetNx()*ax->GetNy()*ax->GetNz()!=az->GetNx()*az->GetNy()*az->GetNz())
+	if((n*m*l!=ay->GetNx()*ay->GetNy()*ay->GetNz()) | (n*m*l!=az->GetNx()*az->GetNy()*az->GetNz()))
 	{	gr->SetWarn(mglWarnDim,"Flow");	return;	}
-	if(ax->GetNx()<2 || ax->GetNy()<2 || ax->GetNz()<2)
+	if((m<2) | (n<2) | (l<2))
 	{	gr->SetWarn(mglWarnLow,"Flow");	return;	}
-	bool both = x->GetNx()*x->GetNy()*x->GetNz()==n*m*l && y->GetNx()*y->GetNy()*y->GetNz()==n*m*l && z->GetNx()*z->GetNy()*z->GetNz()==n*m*l;
-	if(!(both || (x->GetNx()==n && y->GetNx()==m && z->GetNx()==l)))
+	bool both = (x->GetNx()*x->GetNy()*x->GetNz()==n*m*l) & (y->GetNx()*y->GetNy()*y->GetNz()==n*m*l) & (z->GetNx()*z->GetNy()*z->GetNz()==n*m*l);
+	if(!( both | ((x->GetNx()==n) & (y->GetNx()==m) & (z->GetNx()==l)) ))
 	{	gr->SetWarn(mglWarnDim,"Flow");	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("FlowP3",cgid++);
@@ -718,11 +722,12 @@ void mgl_flowp_3d_(uintptr_t *gr, float *x0, float *y0, float *z0, uintptr_t *ax
 //-----------------------------------------------------------------------------
 void mgl_grad_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT phi, const char *sch, const char *opt)
 {
-	mglData ax(phi), ay(phi),az(phi),xx(phi),yy(phi),zz(phi);
+	mglData ax(phi), ay,az,xx,yy,zz;
+	ay.Set(ax);	az.Set(ax);	xx.Set(ax);	yy.Set(ax);	zz.Set(ax);
 	long n=xx.nx, m=xx.ny, l=xx.nz, nn = n*m*l;
-	if(x->GetNx()*x->GetNy()*x->GetNz()==nn && y->GetNx()*y->GetNy()*y->GetNz()==nn && x->GetNx()*x->GetNy()*x->GetNz()==nn)
+	if((x->GetNx()*x->GetNy()*x->GetNz()==nn) & (y->GetNx()*y->GetNy()*y->GetNz()==nn) & (z->GetNx()*z->GetNy()*z->GetNz()==nn))
 	{	xx.Set(x);	yy.Set(y);	zz.Set(z);	}	// nothing to do
-	else if(x->GetNx()==n && y->GetNx()==m && z->GetNx()==l)
+	else if((x->GetNx()==n) & (y->GetNx()==m) & (z->GetNx()==l))
 	{	// prepare data
 		register long i,j,k,i0;
 		for(i=0;i<n;i++)	for(j=0;j<m;j++)	for(k=0;k<l;k++)
@@ -736,10 +741,11 @@ void mgl_grad_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT phi, const char *sch, co
 //-----------------------------------------------------------------------------
 void mgl_grad_xy(HMGL gr, HCDT x, HCDT y, HCDT phi, const char *sch, const char *opt)
 {
-	mglData ax(phi), ay(phi),xx(phi),yy(phi);
+	mglData ax(phi), ay,xx,yy;
+	ay.Set(ax);	xx.Set(ax);	yy.Set(ax);
 	long n = phi->GetNx(), m=phi->GetNy(), nn=n*m;
-	if(x->GetNx()*x->GetNy()==nn && y->GetNx()*y->GetNy()==nn)	{	xx.Set(x);	yy.Set(y);	}
-	else if(x->GetNx()==n && y->GetNx()==m)
+	if((x->GetNx()*x->GetNy()==nn) & (y->GetNx()*y->GetNy()==nn))	{	xx.Set(x);	yy.Set(y);	}
+	else if((x->GetNx()==n) & (y->GetNx()==m))
 	{
 		register long i,j,i0;
 		for(i=0;i<n;i++)	for(j=0;j<m;j++)
@@ -781,7 +787,7 @@ void mgl_grad_(uintptr_t *gr, uintptr_t *ph, const char *sch, const char *opt, i
 void flowr(mglBase *gr, float zVal, float u, float v, const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, float r0,long sc)
 {
 	long n=10*(ax.nx+ax.ny);
-	bool both = x.nx==ax.nx && y.nx==ax.nx && x.ny==ax.ny && y.ny==ax.ny;
+	bool both = (x.nx==ax.nx) & (y.nx==ax.nx) & (x.ny==ax.ny) & (y.ny==ax.ny);
 
 	mglPoint *pp = new mglPoint[n], dp;
 	float *cc = new float[n];
@@ -862,9 +868,10 @@ void mgl_pipe_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, flo
 	float u,v;
 	long n=ax->GetNx(), m=ax->GetNy();
 	if(n*m*ax->GetNz()!=ay->GetNx()*ay->GetNy()*ay->GetNz())	{	gr->SetWarn(mglWarnDim,"Pipe");	return;	}
-	if(n<2 || m<2)						{	gr->SetWarn(mglWarnLow,"Pipe");	return;	}
-	bool both = x->GetNx()==n && y->GetNx()==n && x->GetNy()==m && y->GetNy()==m;
-	if(!(both || (x->GetNx()==n && y->GetNx()==m)))	{	gr->SetWarn(mglWarnDim,"Pipe");	return;	}
+	if((m<2) | (n<2))						{	gr->SetWarn(mglWarnLow,"Pipe");	return;	}
+	bool both = (x->GetNx()==n) & (y->GetNx()==n) & (x->GetNy()==m) & (y->GetNy()==m);
+	if(!( both | ((x->GetNx()==n) & (y->GetNx()==m)) ))
+	{	gr->SetWarn(mglWarnDim,"Pipe");	return;	}
 	float r = gr->SaveState(opt);
 	long num = mgl_isnan(r)?5:long(r+0.5);
 	static int cgid=1;	gr->StartGroup("Pipe",cgid++);
@@ -934,7 +941,7 @@ void flowr(mglBase *gr, float u, float v, float w, const mglData &x, const mglDa
 {
 	static long n=10*(ax.nx+ax.ny);
 	long nn = ax.nx*ax.ny*ax.nz;
-	bool both = x.nx*x.ny*x.nz==nn && y.nx*y.ny*y.nz==nn && z.nx*z.ny*z.nz==nn;
+	bool both = (x.nx*x.ny*x.nz==nn) & (y.nx*y.ny*y.nz==nn) & (z.nx*z.ny*z.nz==nn);
 	mglPoint *pp = new mglPoint[n], dp;
 	float *cc = new float[n];
 	mglPoint dx(1/fabs(gr->Max.x-gr->Min.x),1/fabs(gr->Max.y-gr->Min.y),1/fabs(gr->Max.z-gr->Min.z));
@@ -1021,12 +1028,12 @@ void mgl_pipe_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 {
 	float u,v,w;
 	long i,j,n=ax->GetNx(),m=ax->GetNy(),l=ax->GetNz();
-	if(ax->GetNx()*ax->GetNy()*ax->GetNz()!=ay->GetNx()*ay->GetNy()*ay->GetNz() || ax->GetNx()*ax->GetNy()*ax->GetNz()!=az->GetNx()*az->GetNy()*az->GetNz())
+	if((n*m*l!=ay->GetNx()*ay->GetNy()*ay->GetNz()) | (n*m*l!=az->GetNx()*az->GetNy()*az->GetNz()))
 	{	gr->SetWarn(mglWarnDim,"Pipe");	return;	}
-	if(ax->GetNx()<2 || ax->GetNy()<2 || ax->GetNz()<2)
+	if((m<2) | (n<2) | (l<2))
 	{	gr->SetWarn(mglWarnLow,"Pipe");	return;	}
-	bool both = x->GetNx()*x->GetNy()*x->GetNz()==n*m*l && y->GetNx()*y->GetNy()*y->GetNz()==n*m*l && z->GetNx()*z->GetNy()*z->GetNz()==n*m*l;
-	if(!(both || (x->GetNx()==n && y->GetNx()==m && z->GetNx()==l)))
+	bool both = (x->GetNx()*x->GetNy()*x->GetNz()==n*m*l) & (y->GetNx()*y->GetNy()*y->GetNz()==n*m*l) & (z->GetNx()*z->GetNy()*z->GetNz()==n*m*l);
+	if(!( both | ((x->GetNx()==n) & (y->GetNx()==m) & (z->GetNx()==l)) ))
 	{	gr->SetWarn(mglWarnDim,"Pipe");	return;	}
 	float r = gr->SaveState(opt);
 	long num = mgl_isnan(r)?3:long(r+0.5);

@@ -164,7 +164,7 @@ mglColor mglCanvas::GetColor(const mglPrim &p)
 {
 	unsigned char res[4],buf[4];
 	col2int(Pnt[p.type==1?p.n2:p.n1],res);
-	if(p.type==2 || p.type==3)
+	if((p.type==2) | (p.type==3))
 	{
 		col2int(Pnt[p.n2],buf);			res[0]=(1L*res[0]+buf[0])/2;
 		res[1]=(1L*res[1]+buf[1])/2;	res[2]=(1L*res[2]+buf[2])/2;
@@ -214,7 +214,7 @@ void mgl_write_eps(HMGL gr, const char *fname,const char *descr)
 		if(q.n4=='x')	m_x = true;		if(q.n4=='s')	m_s = true;
 		if(q.n4=='d')	m_d = true;		if(q.n4=='v')	m_v = true;
 		if(q.n4=='^')	m_t = true;		if(q.n4=='*')	m_a = true;
-		if(q.n4=='o' || q.n4=='O' || q.n4=='C')	m_o = true;
+		if((q.n4=='o') | (q.n4=='O') | (q.n4=='C'))	m_o = true;
 		if(q.n4=='S')	m_S = true;		if(q.n4=='D')	m_D = true;
 		if(q.n4=='V')	m_V = true;		if(q.n4=='T')	m_T = true;
 		if(q.n4=='<')	m_l = true;		if(q.n4=='L')	m_L = true;
@@ -785,7 +785,7 @@ void mgl_write_tex(HMGL gr, const char *fname,const char *descr)
 		if(q.n4=='x')	m_x = true;		if(q.n4=='s')	m_s = true;
 		if(q.n4=='d')	m_d = true;		if(q.n4=='v')	m_v = true;
 		if(q.n4=='^')	m_t = true;		if(q.n4=='*')	m_a = true;
-		if(q.n4=='O')	m_O = true;		if(q.n4=='o' || q.n4=='C')	m_o = true;
+		if(q.n4=='O')	m_O = true;		if((q.n4=='o') | (q.n4=='C'))	m_o = true;
 		if(q.n4=='S')	m_S = true;		if(q.n4=='D')	m_D = true;
 		if(q.n4=='V')	m_V = true;		if(q.n4=='T')	m_T = true;
 		if(q.n4=='<')	m_l = true;		if(q.n4=='L')	m_L = true;

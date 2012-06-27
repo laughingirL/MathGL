@@ -474,7 +474,7 @@ void mgl_area_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *
 	for(j=0;j<m;j++)
 	{
 		c2=c1=gr->NextColor(pal);
-		if(gr->GetNumPal(pal)==2*m && !sh)	c2 = gr->NextColor(pal);
+		if((gr->GetNumPal(pal)==2*m) & !sh)	c2 = gr->NextColor(pal);
 		mx = j<x->GetNy() ? j:0;	my = j<y->GetNy() ? j:0;	mz = j<z->GetNy() ? j:0;
 
 		nn = mglPoint(-y->dvx(0,my),x->dvx(0,mx));
@@ -905,7 +905,7 @@ void mgl_bars_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
 	bool sh = pen && strchr(pen,'!');
 
 	bool wire = pen && strchr(pen,'#');
-	bool above = pen && strchr(pen,'a')!=0, fall = pen && strchr(pen,'f')!=0;
+	bool above = pen && strchr(pen,'a'), fall = pen && strchr(pen,'f');
 	if(above)	fall = false;
 	float c1,c2,c;
 	long n1,n2,n3,n4;

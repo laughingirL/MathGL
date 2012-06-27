@@ -27,7 +27,7 @@
 #define sign(a)	((a)<0 ? -1:1)
 //-----------------------------------------------------------------------------
 inline struct tm* mgl_localtime_r (const time_t *clock, struct tm *result)
-{	if (!clock || !result) return NULL;
+{	if (!clock | !result) return NULL;
 	memcpy(result,localtime(clock),sizeof(*result));
 	return result;	}
 //-----------------------------------------------------------------------------
@@ -420,8 +420,8 @@ void mglCanvas::LabelTicks(mglAxis &aa)
 		int kind=0;
 		wchar_t s[32]=L"";
 		if(aa.t[0]==0 && TuneTicks) kind = mgl_tick_ext(aa.v2, aa.v1, s, w);
-		if((TuneTicks&1)==0 && kind==2)	kind=0;
-		if((TuneTicks&2)==0 && kind!=2)	kind=0;
+		if(((TuneTicks&1)==0) & (kind==2))	kind=0;
+		if(((TuneTicks&2)==0) & (kind!=2))	kind=0;
 
 		v0 = mgl_isnan(aa.o) ? aa.v0 : aa.o;
 		if(aa.v2>aa.v1)
@@ -511,7 +511,7 @@ void mglCanvas::DrawAxis(mglAxis &aa, bool text, char arr,const char *stl)
 		if((aa.dv==0) & (fabs(u-exp(M_LN10*floor(0.1+log10(u))))<0.01*u))
 			for(j=2;(j<10) & (v*j<aa.v2);j++)	tick_draw(o+d*(v*j),da,db,1,stl);
 	}
-	if(aa.ds>0 && !get(MGL_NOSUBTICKS))
+	if((aa.ds>0) & !get(MGL_NOSUBTICKS))
 	{
 		if(aa.v2>aa.v1)	v0 = v0 - aa.ds*floor((v0-aa.v1)/aa.ds+1e-3);
 		else			v0 = v0 - aa.ds*floor((v0-aa.v2)/aa.ds+1e-3);
@@ -534,7 +534,7 @@ void mglCanvas::DrawLabels(mglAxis &aa)
 	register long i,n = aa.txt.size();
 	char pos[4]="t:C";
 //	if(get(MGL_DISABLE_SCALE) && ((aa.dir.x==0 && aa.org.x<0) || (aa.dir.y==0 && aa.org.y>0)))	pos[0]='T';
-	if(aa.ch=='c')	pos[0]=(aa.ns==0 || aa.ns==3)?'t':'T';
+	if(aa.ch=='c')	pos[0]=((aa.ns==0) | (aa.ns==3))?'t':'T';
 	if(aa.ch=='T')	pos[0]='T';
 	float *w=new float[n], h = TextHeight(FontDef,-1)/4, c=NAN, l=NAN, tet=0, v, vv;	// find sizes
 	long *kk=new long[n];
@@ -585,7 +585,7 @@ void mglCanvas::tick_draw(mglPoint o, mglPoint d1, mglPoint d2, int f, const cha
 {
 	if(TickLen==0)	return;
 	// try to exclude ticks out of axis range
-	if(f && ((o.x-Min.x)*(o.x-Max.x)>0 || (o.y-Min.y)*(o.y-Max.y)>0 || (o.z-Min.z)*(o.z-Max.z)>0))
+	if(f && (((o.x-Min.x)*(o.x-Max.x)>0) | ((o.y-Min.y)*(o.y-Max.y)>0) | ((o.z-Min.z)*(o.z-Max.z)>0)) )
 		return;
 	float v = font_factor*TickLen/sqrt(1.f+f*st_t);
 	mglPoint p=o;
@@ -706,7 +706,7 @@ void mglCanvas::Labelw(char dir, const wchar_t *text, float pos, float shift)
 	char font[33],ff[3]=":C";
 	if(pos<-0.2)	ff[1]='L';	if(pos>0.2)	ff[1]='R';
 	strcpy(font,FontDef);	strcat(font,ff);
-	strcat(font,nn.y>1e-5 || nn.x<0 ? "T":"t");
+	strcat(font,((nn.y>1e-5) | (nn.x<0)) ? "T":"t");
 	text_plot(AddPnt(p,-1,q,0,7),text,font,-1.4,0.35+shift);
 }
 //-----------------------------------------------------------------------------
