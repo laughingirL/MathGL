@@ -81,7 +81,7 @@ HMDT mgl_pde_solve(HMGL gr, const char *ham, HCDT ini_re, HCDT ini_im, float dz,
 	mglData *res=new mglData;
 	int nx=ini_re->GetNx(), ny=ini_re->GetNy();
 	int nz = int((Max.z-Min.z)/dz)+1;
-	if(nx<2 || nz<2 || Max.x==Min.x)			// Too small data
+	if((nx<2) | (nz<2) | (Max.x==Min.x))			// Too small data
 	{	gr->SetWarn(mglWarnLow,"PDE");	return res;	}
 	if(ini_im->GetNx()*ini_im->GetNy() != nx*ny)// Wrong dimensions
 	{	gr->SetWarn(mglWarnDim,"PDE");	return res;	}
@@ -319,7 +319,7 @@ HMDT mgl_qo2d_solve(const char *ham, HCDT ini_re, HCDT ini_im, HCDT ray_dat, flo
 	const mglData *ray=dynamic_cast<const mglData *>(ray_dat);	// NOTE: Ray must be mglData!
 	if(!ray)	return res;
 	int nx=ini_re->GetNx(), nt=ray->ny;
-	if(nx<2 || ini_im->GetNx()!=nx || nt<2)	return res;
+	if((nx<2) | (ini_im->GetNx()!=nx) | (nt<2))	return res;
 	mgl_data_create(res,nx,nt,1);
 #if MGL_HAVE_GSL
 	dual *a=new dual[2*nx], *hu=new dual[2*nx],  *hx=new dual[2*nx], h0;
@@ -427,7 +427,7 @@ HMDT mgl_jacobian_2d(HCDT x, HCDT y)
 {
 	int nx = x->GetNx(), ny=x->GetNy();
 	mglData *r=new mglData;
-	if(nx!=y->GetNx() || ny!=y->GetNy() || nx<2 || ny<2)	return	r;
+	if((nx!=y->GetNx()) | (ny!=y->GetNy()) | (nx<2) | (ny<2))	return	r;
 	mgl_data_create(r,nx,ny,1);
 	const mglData *xx=dynamic_cast<const mglData *>(x);
 	const mglData *yy=dynamic_cast<const mglData *>(y);
@@ -476,8 +476,8 @@ HMDT mgl_jacobian_3d(HCDT x, HCDT y, HCDT z)
 {
 	int nx = x->GetNx(), ny=x->GetNy(), nz=x->GetNz(), nn = nx*ny*nz;
 	mglData *r=new mglData;
-	if(nx<2 || ny<2 || nz<2)	return	r;
-	if(nn!=y->GetNx()*y->GetNy()*y->GetNz() || nn!=z->GetNx()*z->GetNy()*z->GetNz())	return r;
+	if((nx<2) | (ny<2) | (nz<2))	return	r;
+	if((nn!=y->GetNx()*y->GetNy()*y->GetNz()) | (nn!=z->GetNx()*z->GetNy()*z->GetNz()))	return r;
 	mgl_data_create(r,nx,ny,nz);
 	const mglData *xx=dynamic_cast<const mglData *>(x);
 	const mglData *yy=dynamic_cast<const mglData *>(y);

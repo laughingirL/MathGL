@@ -29,7 +29,7 @@ void mgl_fplot(HMGL gr, const char *eqY, const char *pen, const char *opt)
 {
 	if(eqY==0 || eqY[0]==0)	return;		// nothing to plot
 	float r = gr->SaveState(opt);
-	long n = (mgl_isnan(r) || r<=0) ? 100:long(r+0.5);
+	long n = (mgl_isnan(r) | (r<=0)) ? 100:long(r+0.5);
 
 	float *x = (float *)malloc(n*sizeof(float));
 	float *y = (float *)malloc(n*sizeof(float));
@@ -71,7 +71,7 @@ void mgl_fplot(HMGL gr, const char *eqY, const char *pen, const char *opt)
 void mgl_fplot_xyz(HMGL gr, const char *eqX, const char *eqY, const char *eqZ, const char *pen, const char *opt)
 {
 	float r = gr->SaveState(opt);
-	long n = (mgl_isnan(r) || r<=0) ? 100:long(r+0.5);
+	long n = (mgl_isnan(r) | (r<=0)) ? 100:long(r+0.5);
 
 	float *x = (float *)malloc(n*sizeof(float));
 	float *y = (float *)malloc(n*sizeof(float));
@@ -99,7 +99,7 @@ void mgl_fplot_xyz(HMGL gr, const char *eqX, const char *eqY, const char *eqZ, c
 		xs=(x[i]+x[i+1])/2;	xr=ex->Calc(0,0,ts);
 		ys=(y[i]+y[i+1])/2;	yr=ey->Calc(0,0,ts);
 		zs=(z[i]+z[i+1])/2;	zr=ez->Calc(0,0,ts);
-		if(fabs(xr-xs)>xm || fabs(yr-ys)>ym || fabs(zr-zs)>zm)	// bad approximation here
+		if((fabs(xr-xs)>xm) | (fabs(yr-ys)>ym) | (fabs(zr-zs)>zm))	// bad approximation here
 		{
 			z = (float *)realloc(z,(n+1)*sizeof(float));
 			t = (float *)realloc(t,(n+1)*sizeof(float));
@@ -147,7 +147,7 @@ void mgl_radar(HMGL gr, HCDT a, const char *pen, const char *opt)
 	if(n<2)	{	gr->SetWarn(mglWarnLow,"Radar");	return;	}
 	mglData x(n+1,ny), y(n+1,ny);
 	float m=a->Minimal(), r=gr->SaveState(opt);
-	if(mgl_isnan(r) || r<0)	r = m<0 ? -m:0;
+	if(mgl_isnan(r) | (r<0))	r = m<0 ? -m:0;
 	register long i,j;
 	for(j=0;j<ny;j++)
 	{
@@ -196,7 +196,7 @@ void mgl_candle_xyv(HMGL gr, HCDT x, HCDT v1, HCDT v2, HCDT y1, HCDT y2, const c
 	if(!y1)	{	y1 = new mglData(n);	d1=true;	((mglData *)y1)->Fill(NAN,NAN);	}
 	if(!y2)	{	y2 = new mglData(n);	d2=true;	((mglData *)y2)->Fill(NAN,NAN);	}
 	if(n<2)	{	gr->SetWarn(mglWarnLow,"Candle");	return;	}
-	if(nx<n || v2->GetNx()!=n || y1->GetNx()!=n || y2->GetNx()!=n)
+	if((nx<n) | (v2->GetNx()!=n) | (y1->GetNx()!=n) | (y2->GetNx()!=n))
 	{	gr->SetWarn(mglWarnDim,"Candle");	return;	}
 	static int cgid=1;	gr->StartGroup("Candle",cgid++);
 	gr->SaveState(opt);	gr->SetPenPal(pen,&pal);
@@ -270,7 +270,7 @@ void mgl_candle_(uintptr_t *gr, uintptr_t *y, uintptr_t *y1, uintptr_t *y2, cons
 void mgl_plot_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *opt)
 {
 	long j,m,mx,my,mz,n=y->GetNx(),pal;
-	if(x->GetNx()!=n || z->GetNx()!=n)	{	gr->SetWarn(mglWarnDim,"Plot");	return;	}
+	if((x->GetNx()!=n) | (z->GetNx()!=n))	{	gr->SetWarn(mglWarnDim,"Plot");	return;	}
 	if(n<2)	{	gr->SetWarn(mglWarnLow,"Plot");	return;	}
 	static int cgid=1;	gr->StartGroup("Plot",cgid++);
 	gr->SaveState(opt);
@@ -363,7 +363,7 @@ void mgl_plot_(uintptr_t *gr, uintptr_t *y,	const char *pen, const char *opt,int
 void mgl_tens_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char *pen, const char *opt)
 {
 	long j,m,mx,my,mz,mc,n=y->GetNx(), pal;
-	if(x->GetNx()!=n || z->GetNx()!=n || c->GetNx()!=n)
+	if((x->GetNx()!=n) | (z->GetNx()!=n) | (c->GetNx()!=n))
 	{	gr->SetWarn(mglWarnDim,"Tens");	return;	}
 	if(n<2)					{	gr->SetWarn(mglWarnLow,"Tens");	return;	}
 	gr->SaveState(opt);
@@ -458,7 +458,7 @@ void mgl_area_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *
 {
 	long i,j,n=y->GetNx(),m,mx,my,mz,pal;
 	if(n<2)		{	gr->SetWarn(mglWarnLow,"Area");	return;	}
-	if(x->GetNx()!=n || z->GetNx()!=n)	{	gr->SetWarn(mglWarnDim,"Area");	return;	}
+	if((x->GetNx()!=n) | (z->GetNx()!=n))	{	gr->SetWarn(mglWarnDim,"Area");	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Area3",cgid++);
 	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();	m = z->GetNy() > m ? z->GetNy() : m;
@@ -573,7 +573,7 @@ void mgl_area_(uintptr_t *gr, uintptr_t *y, const char *pen, const char *opt,int
 void mgl_region_xy(HMGL gr, HCDT x, HCDT y1, HCDT y2, const char *pen, const char *opt)
 {
 	long i,j, n=y1->GetNx(), m=y1->GetNy(), mx, pal;
-	if(x->GetNx()!=n || y2->GetNx()!=n || y2->GetNy()!=m)
+	if((x->GetNx()!=n) | (y2->GetNx()!=n) | (y2->GetNy()!=m))
 	{	gr->SetWarn(mglWarnDim,"Region");	return;	}
 	if(n<2)	{	gr->SetWarn(mglWarnLow,"Region");	return;	}
 	gr->SaveState(opt);
@@ -636,7 +636,7 @@ void mgl_region_(uintptr_t *gr, uintptr_t *y1, uintptr_t *y2, const char *pen, c
 void mgl_step_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *opt)
 {
 	long i,j,m,mx,my,mz,n=y->GetNx(), pal;
-	if(x->GetNx()!=n || z->GetNx()!=n)	{	gr->SetWarn(mglWarnDim,"Step");	return;	}
+	if((x->GetNx()!=n) | (z->GetNx()!=n))	{	gr->SetWarn(mglWarnDim,"Step");	return;	}
 	if(n<2)		{	gr->SetWarn(mglWarnLow,"Step");	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Step3",cgid++);
@@ -741,7 +741,7 @@ void mgl_step_(uintptr_t *gr, uintptr_t *y,	const char *pen, const char *opt,int
 void mgl_stem_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *opt)
 {
 	long i,j,m,mx,my,mz,n=y->GetNx(), pal;
-	if(x->GetNx()!=n || z->GetNx()!=n)	{	gr->SetWarn(mglWarnDim,"Stem");	return;	}
+	if((x->GetNx()!=n) | (z->GetNx()!=n))	{	gr->SetWarn(mglWarnDim,"Stem");	return;	}
 	if(n<2)		{	gr->SetWarn(mglWarnLow,"Stem");	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Stem3",cgid++);
@@ -830,7 +830,7 @@ void mgl_stem_(uintptr_t *gr, uintptr_t *y,	const char *pen, const char *opt,int
 void mgl_bars_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *opt)
 {
 	long i,j,m,mx,my,mz,n=z->GetNx(), pal,nx=x->GetNx(),ny=y->GetNx();
-	if(nx<n || ny<n)	{	gr->SetWarn(mglWarnDim,"Bars");	return;	}
+	if((nx<n) | (ny<n))	{	gr->SetWarn(mglWarnDim,"Bars");	return;	}
 	if(n<2)		{	gr->SetWarn(mglWarnLow,"Bars");	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Bars3",cgid++);
@@ -1066,7 +1066,7 @@ int mgl_cmp_flt(const void *a, const void *b)
 void mgl_boxplot_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
 {
 	long n=y->GetNx(), m=y->GetNy(), nx=x->GetNx();
-	if(nx<n || nx<2)	{	gr->SetWarn(mglWarnDim,"BoxPlot");	return;	}
+	if((nx<n) | (nx<2))	{	gr->SetWarn(mglWarnDim,"BoxPlot");	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("BoxPlot",cgid++);
 	float *b = new float[5*n], *d = new float[m], x1, x2, dd;
@@ -1151,7 +1151,7 @@ void mgl_boxplot_(uintptr_t *gr, uintptr_t *y,	const char *pen, const char *opt,
 void mgl_error_exy(HMGL gr, HCDT x, HCDT y, HCDT ex, HCDT ey, const char *pen, const char *opt)
 {
 	long i,j,k,m,mx,my,m1,m2,n=ey->GetNx(),pal;
-	if(x->GetNx()!=n || y->GetNx()!=n || ex->GetNx()!=n )
+	if((x->GetNx()!=n) | (y->GetNx()!=n) | (ex->GetNx()!=n))
 	{	gr->SetWarn(mglWarnDim,"Error");	return;	}
 	if(n<2)		{	gr->SetWarn(mglWarnLow,"Error");	return;	}
 	gr->SaveState(opt);
@@ -1165,7 +1165,7 @@ void mgl_error_exy(HMGL gr, HCDT x, HCDT y, HCDT ex, HCDT ey, const char *pen, c
 	char mk = gr->SetPenPal(pen,&pal);
 	float zVal=gr->Min.z, vx, vy, ve, vf;
 	gr->Reserve(5*n*m);
-	if(ma & (mk==0 || !strchr("PXsSdD+xoOC",mk) ))	mk = 'S';
+	if(ma & ((mk==0) | !strchr("PXsSdD+xoOC",mk) ))	mk = 'S';
 	long n1,n2,n3,n4;
 	mglPoint q(NAN,NAN);
 	for(j=0;j<m;j++)
@@ -1427,7 +1427,7 @@ void mgl_chart_(uintptr_t *gr, uintptr_t *a, const char *col, const char *opt,in
 void mgl_mark_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const char *pen, const char *opt)
 {
 	long j,m,mx,my,mz,mr,n=y->GetNx(),pal;
-	if(x->GetNx()!=n || z->GetNx()!=n || r->GetNx()!=n)
+	if((x->GetNx()!=n) | (z->GetNx()!=n) | (r->GetNx()!=n))
 	{	gr->SetWarn(mglWarnDim,"Mark");	return;	}
 	if(n<2)	{	gr->SetWarn(mglWarnLow,"Mark");	return;	}
 	gr->SaveState(opt);
@@ -1495,7 +1495,7 @@ void mgl_tube_xyzr(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const char *pen, con
 {
 	long j,m,mx,my,mz,mr,n=y->GetNx(),pal;
 	if(n<2)	{	gr->SetWarn(mglWarnLow,"Tube");	return;	}
-	if(x->GetNx()!=n || z->GetNx()!=n || r->GetNx()!=n)
+	if((x->GetNx()!=n) | (z->GetNx()!=n) | (r->GetNx()!=n))
 	{	gr->SetWarn(mglWarnDim,"Tube");	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Tube",cgid++);
@@ -1627,11 +1627,11 @@ void mgl_tube_(uintptr_t *gr, uintptr_t *y, float *r, const char *pen, const cha
 void mgl_tape_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *opt)
 {
 	long j,m,mx,my,mz,n=y->GetNx(),pal;
-	if(x->GetNx()!=n || z->GetNx()!=n)	{	gr->SetWarn(mglWarnDim,"Tape");	return;	}
+	if((x->GetNx()!=n) | (z->GetNx()!=n))	{	gr->SetWarn(mglWarnDim,"Tape");	return;	}
 	if(n<2)	{	gr->SetWarn(mglWarnLow,"Tape");	return;	}
 	static int cgid=1;	gr->StartGroup("Tape",cgid++);
 	float ll, rr = gr->SaveState(opt);
-	if(rr==0 || mgl_isnan(rr))	rr = mgl_norm(gr->Max-gr->Min)*gr->BarWidth/25;
+	if((rr==0) | mgl_isnan(rr))	rr = mgl_norm(gr->Max-gr->Min)*gr->BarWidth/25;
 	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();	m = z->GetNy() > m ? z->GetNy() : m;
 	gr->SetPenPal(pen,&pal);	gr->Reserve(4*n*m);
 	mglPoint p1,p2,q1,q2,l,nn,qn=mglPoint(NAN,NAN);

@@ -39,7 +39,7 @@ mglFunc::mglFunc(long p, const wchar_t *f, mglFunc *prev)
 	for(i=0;(isalnum(f[i]) || f[i]=='_') & (i<31);i++)	func[i]=f[i];
 	func[i]=0;
 	narg = wcstol(f+i+1,0,0);
-	if(narg<0 || narg>9)	narg=0;
+	if((narg<0) | (narg>9))	narg=0;
 }
 //-----------------------------------------------------------------------------
 long mglParser::IsFunc(const wchar_t *name, int *na)
@@ -63,7 +63,7 @@ void mglParser::ScanFunc(const wchar_t *line)
 	num++;
 	if(wcsncmp(line,L"func",4) || line[4]>' ')	return;
 	register long i;
-	for(i=4;line[i]<=' ' || line[i]=='\'';i++);
+	for(i=4;(line[i]<=' ') | (line[i]=='\'');i++);
 	func = new mglFunc(num-1, line+i, func);
 }
 //-----------------------------------------------------------------------------
@@ -822,7 +822,7 @@ int mglParser::FlowExec(mglGraph *, const wchar_t *com, long m, mglArg *a)
 	else if(!Skip && !wcscmp(com,L"elseif"))
 	{
 		int cond;
-		if(if_pos<1 || m<1)	n = 1;
+		if((if_pos<1) | (m<1))	n = 1;
 		else if(if_stack[if_pos-1]&2)	{	n = 0;	cond = 2;	}
 		else if(a[0].type==2)
 		{
@@ -896,7 +896,7 @@ int mglParser::FlowExec(mglGraph *, const wchar_t *com, long m, mglArg *a)
 #include <string>
 void mglParser::Execute(mglGraph *gr, FILE *fp, bool print)
 {
-	if(gr==0 || fp==0)	return;
+	if((gr==0) | (fp==0))	return;
 	std::wstring str;
 	while(!feof(fp))	str.push_back(fgetwc(fp));
 	Execute(gr,str.c_str());
@@ -905,7 +905,7 @@ void mglParser::Execute(mglGraph *gr, FILE *fp, bool print)
 //-----------------------------------------------------------------------------
 void mglParser::Execute(mglGraph *gr, int n, const wchar_t **text)
 {
-	if(n<1 || text==0)	return;
+	if((n<1) | (text==0))	return;
 	long i, r;
 	char buf[64];
 	for_br=Skip=false;	if_pos=fn_pos=0;	ScanFunc(0);

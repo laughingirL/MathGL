@@ -26,7 +26,7 @@
 //-----------------------------------------------------------------------------
 void mglCanvas::SetSize(int w,int h)
 {
-	if(w<=0 || h<=0)	{	SetWarn(mglWarnSize,"SetSize");	return;	}
+	if((w<1) | (h<1))	{	SetWarn(mglWarnSize,"SetSize");	return;	}
 	Width = w;	Height = h;	Depth = long(sqrt(double(w*h)));
 	if(G)	{	delete []G;	delete []C;	delete []Z;	delete []G4;delete []OI;	}
 	G = new unsigned char[w*h*3];
@@ -421,7 +421,7 @@ void mglCanvas::pxl_other(unsigned long id, unsigned long n, const void *p)
 //-----------------------------------------------------------------------------
 void mglCanvas::Combine(const mglCanvas *gr)
 {
-	if(Width!=gr->Width || Height!=gr->Height)	return;	// wrong sizes
+	if((Width!=gr->Width) | (Height!=gr->Height))	return;	// wrong sizes
 	mglStartThread(&mglCanvas::pxl_other,this,Width*Height,gr);
 }
 //-----------------------------------------------------------------------------
@@ -551,7 +551,7 @@ void mglCanvas::combine(unsigned char *c1,unsigned char *c2)
 {
 	if(!c2[3])	return;
 	register unsigned int a1=c1[3], a2=c2[3],b1=255-a2;
-	if(a1==0 || a2==255)	{	memcpy(c1,c2,4);	return; }
+	if((a1==0) | (a2==255))	{	memcpy(c1,c2,4);	return; }
 	if((Flag&3)==0)
 	{
 		c1[0] = (c1[0]*b1 + c2[0]*a2)/256;
@@ -610,7 +610,7 @@ void mglCanvas::quad_draw(long k1, long k2, long k3, long k4, mglDrawReg *d)
 	y2 = long(fmax(fmax(p1.y,p2.y),fmax(p3.y,p4.y)));
 	x1=x1>d->x1?x1:d->x1;	x2=x2<d->x2?x2:d->x2-1;
 	y1=y1>d->y1?y1:d->y1;	y2=y2<d->y2?y2:d->y2-1;
-	if(x1>x2 || y1>y2)	return;
+	if((x1>x2) | (y1>y2))	return;
 
 	dd = d1.x*d2.y-d1.y*d2.x;
 	dsx =-4*(d2.y*d3.x - d2.x*d3.y)*d1.y;
@@ -687,7 +687,7 @@ void mglCanvas::trig_draw(long k1, long k2, long k3, bool anorm, mglDrawReg *d)
 	y2 = long(fmax(fmax(p1.y,p2.y),p3.y));
 	x1=x1>d->x1?x1:d->x1;	x2=x2<d->x2?x2:d->x2-1;
 	y1=y1>d->y1?y1:d->y1;	y2=y2<d->y2?y2:d->y2-1;
-	if(x1>x2 || y1>y2)	return;
+	if((x1>x2) | (y1>y2))	return;
 	// default normale
 	mglPoint nr = mglPoint(p2.x-p1.x,p2.y-p1.y,p2.z-p1.z)^mglPoint(p3.x-p1.x,p3.y-p1.y,p3.z-p1.z);
 
@@ -729,7 +729,7 @@ void mglCanvas::line_draw(long k1, long k2, mglDrawReg *dr)
 	x1=x1>dr->x1?x1:dr->x1;	x2=x2<dr->x2?x2:dr->x2-1;
 	y1=y1>dr->y1?y1:dr->y1;	y2=y2<dr->y2?y2:dr->y2-1;
 	dd = sqrt(d.x*d.x + d.y*d.y);
-	if(x1>x2 || y1>y2 || dd<1e-5)	return;
+	if((x1>x2) | (y1>y2) | (dd<1e-5))	return;
 
 	dxv = d.y/dd;	dyv =-d.x/dd;
 	dxu = d.x/dd;	dyu = d.y/dd;
@@ -795,7 +795,7 @@ void mglCanvas::fast_draw(long k1, long k2, mglDrawReg *dr)
 	x2 = long(fmax(p1.x,p2.x));	y2 = long(fmax(p1.y,p2.y));
 	x1=x1>dr->x1?x1:dr->x1;	x2=x2<dr->x2?x2:dr->x2-1;
 	y1=y1>dr->y1?y1:dr->y1;	y2=y2<dr->y2?y2:dr->y2-1;
-	if(x1>x2 || y1>y2)	return;
+	if((x1>x2) | (y1>y2))	return;
 
 	register long i;
 	if(hor)	for(i=x1;i<=x2;i++)
@@ -836,7 +836,7 @@ void mglCanvas::mark_draw(long k, char type, float size, mglDrawReg *d)
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_lock(&mutexPnt);
 #endif
-	if(type=='.' || ss==0)	pnt_draw(k,d);
+	if((type=='.') | (ss==0))	pnt_draw(k,d);
 	else
 	{
 		float pw = PenWidth;	PenWidth = 1;
@@ -950,7 +950,7 @@ void mglCanvas::mark_draw(long k, char type, float size, mglDrawReg *d)
 			for(j=long(-ss);j<=long(ss);j++)	for(i=long(-ss);i<=long(ss);i++)
 			{
 				register long x=long(q.x)+i, y=long(q.y)+j;
-				if(i*i+j*j>=ss*ss || x<d->x1 || x>d->x2 || y<d->y1 || y>d->y2)	continue;
+				if((i*i+j*j>=ss*ss) | (x<d->x1) | (x>d->x2) | (y<d->y1) | (y>d->y2))	continue;
 				pnt_plot(x,y,q.z+1,cs);
 			}
 		case 'o':
@@ -1008,7 +1008,7 @@ void mglCanvas::glyph_draw(const mglPrim *P, mglDrawReg *d)
 //-----------------------------------------------------------------------------
 void mglCanvas::glyph_fill(const mglPnt &pp, float f, int nt, const short *trig, mglDrawReg *d)
 {
-	if(!trig || nt<=0)	return;
+	if(!trig | (nt<=0))	return;
 	long ik,ii,pos=Pnt.size();
 	mglPnt p=pp;	p.u=p.v=NAN;
 	float pw = Width>2 ? fabs(PenWidth) : 1e-5*Width;
@@ -1029,7 +1029,7 @@ void mglCanvas::glyph_fill(const mglPnt &pp, float f, int nt, const short *trig,
 //-----------------------------------------------------------------------------
 void mglCanvas::glyph_wire(const mglPnt &pp, float f, int nl, const short *line, mglDrawReg *d)
 {
-	if(!line || nl<=0)	return;
+	if(!line | (nl<=0))	return;
 	long ik,ii,il=0,pos=Pnt.size();
 	mglPnt p=pp;	p.u=p.v=NAN;
 	unsigned pdef=PDef;	PDef = 0xffff;

@@ -49,7 +49,7 @@ void mgl_ball_(uintptr_t *gr, float *x,float *y,float *z)
 void mgl_line(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z2, const char *pen,int n)
 {
 	static int cgid=1;	gr->StartGroup("Line",cgid++);
-	if(mgl_isnan(z1) || mgl_isnan(z2))	z1=z2=gr->Min.z;
+	if(mgl_isnan(z1) | mgl_isnan(z2))	z1=z2=gr->Min.z;
 	mglPoint p1(x1,y1,z1), p2(x2,y2,z2), p=p1,nn=mglPoint(NAN);
 	gr->SetPenPal(pen);
 	n = (n<2) ? 2 : n;
@@ -259,7 +259,7 @@ void mgl_cone_(uintptr_t* gr, float *x1, float *y1, float *z1, float *x2, float 
 void mgl_cones_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *opt)
 {
 	long i,j,m,mx,my,mz,n=z->GetNx(),nx=x->GetNx(), nz=z->GetNy(), pal;
-	if(x->GetNx()<n || y->GetNx()<n)	{	gr->SetWarn(mglWarnDim,"Cones");	return;	}
+	if((x->GetNx()<n) | (y->GetNx()<n))	{	gr->SetWarn(mglWarnDim,"Cones");	return;	}
 	if(n<2)		{	gr->SetWarn(mglWarnLow,"Cones");	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Cones",cgid++);
@@ -464,7 +464,7 @@ void mgl_dew_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, cons
 {
 	long i,j,n=ax->GetNx(),m=ax->GetNy(),k;
 	if(n*m*ax->GetNz()!=ay->GetNx()*ay->GetNy()*ay->GetNz())	{	gr->SetWarn(mglWarnDim,"Dew");	return;	}
-	if(n<2 || m<2)	{	gr->SetWarn(mglWarnLow,"Dew");	return;	}
+	if((n<2) | (m<2))	{	gr->SetWarn(mglWarnLow,"Dew");	return;	}
 	bool both = (x->GetNx()==n) & (y->GetNx()==n) & (x->GetNy()==m) & (y->GetNy()==m);
 	if(!( both | ((x->GetNx()==n) & (y->GetNx()==m)) ))	{	gr->SetWarn(mglWarnDim,"Dew");	return;	}
 	gr->SaveState(opt);
@@ -508,7 +508,7 @@ void mgl_dew_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, cons
 //-----------------------------------------------------------------------------
 void mgl_dew_2d(HMGL gr, HCDT ax, HCDT ay, const char *sch, const char *opt)
 {
-	if(ax->GetNx()<2 || ax->GetNy()<2)	{	gr->SetWarn(mglWarnLow,"Vect");	return;	}
+	if((ax->GetNx()<2) | (ax->GetNy()<2))	{	gr->SetWarn(mglWarnLow,"Vect");	return;	}
 	gr->SaveState(opt);
 	mglData x(ax->GetNx()), y(ax->GetNy());
 	x.Fill(gr->Min.x,gr->Max.x);
@@ -581,7 +581,7 @@ void mgl_puts_dir_(uintptr_t *gr, float *x, float *y, float *z, float *dx, float
 void mgl_textmarkw_xyzr(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const wchar_t *text, const char *fnt, const char *opt)
 {
 	long j,m,mx,my,mz,mr,n=y->GetNx();
-	if(x->GetNx()!=n || z->GetNx()!=n || r->GetNx()!=n)
+	if((x->GetNx()!=n) | (z->GetNx()!=n) | (r->GetNx()!=n))
 	{	gr->SetWarn(mglWarnDim,"TextMark");	return;	}
 	if(n<2)	{	gr->SetWarn(mglWarnLow,"TextMark");	return;	}
 	gr->SaveState(opt);
@@ -683,7 +683,7 @@ void mgl_textmark_(uintptr_t *gr, uintptr_t *y, const char *text, const char *fn
 void mgl_labelw_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const wchar_t *text, const char *fnt, const char *opt)
 {
 	long j,m,mx,my,mz,n=y->GetNx();
-	if(x->GetNx()!=n || z->GetNx()!=n)
+	if((x->GetNx()!=n) | (z->GetNx()!=n))
 	{	gr->SetWarn(mglWarnDim,"Label");	return;	}
 	if(n<2)	{	gr->SetWarn(mglWarnLow,"Label");	return;	}
 	float size=gr->SaveState(opt);	if(mgl_isnan(size))	size=-0.7;

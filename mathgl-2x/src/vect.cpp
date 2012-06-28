@@ -29,7 +29,7 @@ void mgl_traj_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 {
 	long m,mx,my,mz,nx,ny,nz,n=ax->GetNx(),pal;
 	if(n<2)	{	gr->SetWarn(mglWarnLow,"Traj");	return;	}
-	if(n!=x->GetNx() || z->GetNx()!=n || y->GetNx()!=n || ay->GetNx()!=n || az->GetNx()!=n)
+	if((n!=x->GetNx()) | (z->GetNx()!=n) | (y->GetNx()!=n) | (ay->GetNx()!=n) | (az->GetNx()!=n))
 	{	gr->SetWarn(mglWarnDim,"Traj");	return;	}
 	float len=gr->SaveState(opt);	if(mgl_isnan(len))	len = 0;
 	static int cgid=1;	gr->StartGroup("Traj",cgid++);
@@ -79,9 +79,6 @@ void mgl_traj_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 //-----------------------------------------------------------------------------
 void mgl_traj_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, const char *opt)
 {
-	if(ax->GetNx()<2)	{	gr->SetWarn(mglWarnLow,"Traj");	return;	}
-	if(x->GetNx()!=ax->GetNx() || y->GetNx()!=ax->GetNx() || ay->GetNx()!=ax->GetNx())
-	{	gr->SetWarn(mglWarnDim,"Traj");	return;	}
 	gr->SaveState(opt);
 	mglData z(x->GetNx()), az(x->GetNx());	z.Fill(gr->Min.z,gr->Min.z);
 	mgl_traj_xyz(gr,x,y,&z,ax,ay,&az,sch,0);
@@ -290,7 +287,7 @@ void flow(mglBase *gr, float zVal, float u, float v, const mglData &x, const mgl
 	mglPoint dx(1/fabs(gr->Max.x-gr->Min.x),1/fabs(gr->Max.y-gr->Min.y),1/fabs(gr->Max.z-gr->Min.z));
 
 	float dt = 0.5/(ax.nx > ax.ny ? ax.nx : ax.ny),e,f,g,ff[4],gg[4],h,s=1;
-	if(u<0 || v<0)	{	dt = -dt;	u = -u;		v = -v;		s = -1;}
+	if((u<0) | (v<0))	{	dt = -dt;	u = -u;		v = -v;		s = -1;}
 	register long k=0,m;
 	bool end = false;
 	do{
@@ -318,7 +315,7 @@ void flow(mglBase *gr, float zVal, float u, float v, const mglData &x, const mgl
 		u += ff[0]/6+ff[1]/3+ff[2]/3+ff[3]/6;
 		v += gg[0]/6+gg[1]/3+gg[2]/3+gg[3]/6;
 		// condition of end
-		end = end || k>=n || u<0 || v<0 || u>1 || v>1;
+		end = end | (k>=n) | (u<0) | (v<0) | (u>1) | (v>1);
 	} while(!end);
 	if(k>1)
 	{
@@ -492,7 +489,7 @@ void flow(mglBase *gr, float u, float v, float w, const mglData &x, const mglDat
 	nn = (ax.nx > ax.ny ? ax.nx : ax.ny);
 	nn = (nn > ax.nz ? nn : ax.nz);
 	float dt = 0.2/nn, e,f,g,ee[4],ff[4],gg[4],h,s=1,u1,v1,w1;
-	if(u<0 || v<0 || w<0)
+	if((u<0) | (v<0) | (w<0))
 	{	dt = -dt;	u = -u;		v = -v;		w = -w;		s = -1;}
 	register long k=0,m;
 	bool end = false;
@@ -525,7 +522,7 @@ void flow(mglBase *gr, float u, float v, float w, const mglData &x, const mglDat
 		v += ff[0]/6+ff[1]/3+ff[2]/3+ff[3]/6;
 		w += gg[0]/6+gg[1]/3+gg[2]/3+gg[3]/6;
 		// condition of end
-		end = end || k>=n || u<0 || v<0 || u>1 || v>1 || w<0 || w>1;
+		end = end | (k>=n) | (u<0) | (v<0) | (u>1) | (v>1) || w<0 || w>1;
 	} while(!end);
 	if(k>1)
 	{
@@ -795,7 +792,7 @@ void flowr(mglBase *gr, float zVal, float u, float v, const mglData &x, const mg
 
 	float dt = 0.5/(ax.nx > ax.ny ? ax.nx : ax.ny),e,f,g,ff[4],gg[4],h,s=1;
 	float ss = 	4./mgl_ipow(gr->Max.c - gr->Min.c,2);
-	if(u<0 || v<0)	{	dt = -dt;	u = -u;		v = -v;		s = -1;}
+	if((u<0) | (v<0))	{	dt = -dt;	u = -u;		v = -v;		s = -1;}
 	register long k=0,m;
 	bool end = false;
 	do{
@@ -824,7 +821,7 @@ void flowr(mglBase *gr, float zVal, float u, float v, const mglData &x, const mg
 		u += ff[0]/6+ff[1]/3+ff[2]/3+ff[3]/6;
 		v += gg[0]/6+gg[1]/3+gg[2]/3+gg[3]/6;
 		// condition of end
-		end = end || k>=n || u<0 || v<0 || u>1 || v>1;
+		end = end | (k>=n) | (u<0) | (v<0) | (u>1) | (v>1);
 	} while(!end);
 	if(k>1)
 	{
@@ -951,7 +948,7 @@ void flowr(mglBase *gr, float u, float v, float w, const mglData &x, const mglDa
 	float dt = 0.2/nn, e,f,g,ee[4],ff[4],gg[4],h,s=1,u1,v1,w1;
 	float ss = 	4./mgl_ipow(gr->Max.c - gr->Min.c,2);
 
-	if(u<0 || v<0 || w<0)
+	if((u<0) | (v<0) | (w<0))
 	{	dt = -dt;	u = -u;		v = -v;		w = -w;		s = -1;}
 	register long k=0,m;
 	bool end = false;
@@ -985,7 +982,7 @@ void flowr(mglBase *gr, float u, float v, float w, const mglData &x, const mglDa
 		v += ff[0]/6+ff[1]/3+ff[2]/3+ff[3]/6;
 		w += gg[0]/6+gg[1]/3+gg[2]/3+gg[3]/6;
 		// condition of end
-		end = end || k>=n || u<0 || v<0 || u>1 || v>1 || w<0 || w>1;
+		end = end | (k>=n) | (u<0) | (v<0) | (u>1) | (v>1) || w<0 || w>1;
 	} while(!end);
 	if(k>1)
 	{
