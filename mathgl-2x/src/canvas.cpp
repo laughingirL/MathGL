@@ -219,7 +219,7 @@ float mglCanvas::GetOrgZ(char dir) const
 							a.n1 = p;	a.n4 = type;	add_prim(a);	}
 void mglCanvas::mark_plot(long p, char type, float size)
 {
-	if((p<0) | mgl_isnan(Pnt[p].x))	return;
+	if(p<0 || mgl_isnan(Pnt[p].x))	return;
 	long pp=p;
 	mglDrawReg d;	d.set(this,1,1,0);
 	if(size>=0)	size *= MarkSize;
@@ -234,7 +234,7 @@ void mglCanvas::mark_plot(long p, char type, float size)
 void mglCanvas::line_plot(long p1, long p2)
 {
 	if(PDef==0)	return;
-	if((p1<0) | (p2<0) | mgl_isnan(Pnt[p1].x) | mgl_isnan(Pnt[p2].x))	return;
+	if(((p1<0) | (p2<0)) || (mgl_isnan(Pnt[p1].x) | mgl_isnan(Pnt[p2].x)))	return;
 	mglDrawReg dd;	dd.set(this,1,1,0);
 	long pp1=p1,pp2=p2;
 	float pw = fabs(PenWidth),d;
@@ -251,7 +251,7 @@ void mglCanvas::line_plot(long p1, long p2)
 							a.n3 = p3;	add_prim(a);}
 void mglCanvas::trig_plot(long p1, long p2, long p3)
 {
-	if((p1<0) | (p2<0) | (p3<0) | mgl_isnan(Pnt[p1].x) | mgl_isnan(Pnt[p2].x) | mgl_isnan(Pnt[p3].x))	return;
+	if(((p1<0) | (p2<0) | (p3<0)) || (mgl_isnan(Pnt[p1].x) | mgl_isnan(Pnt[p2].x) | mgl_isnan(Pnt[p3].x)))	return;
 	long pp1=p1,pp2=p2,pp3=p3;
 	mglDrawReg d;	d.set(this,1,1,0);
 	if(TernAxis&4) for(int i=0;i<4;i++)
@@ -265,10 +265,10 @@ void mglCanvas::trig_plot(long p1, long p2, long p3)
 							a.n3 = p3;	a.n4 = p4;	add_prim(a);	}
 void mglCanvas::quad_plot(long p1, long p2, long p3, long p4)
 {
-	if((p1<0) | mgl_isnan(Pnt[p1].x))	{	trig_plot(p4,p2,p3);	return;	}
-	if((p2<0) | mgl_isnan(Pnt[p2].x))	{	trig_plot(p1,p4,p3);	return;	}
-	if((p3<0) | mgl_isnan(Pnt[p3].x))	{	trig_plot(p1,p2,p4);	return;	}
-	if((p4<0) | mgl_isnan(Pnt[p4].x))	{	trig_plot(p1,p2,p3);	return;	}
+	if(p1<0 || mgl_isnan(Pnt[p1].x))	{	trig_plot(p4,p2,p3);	return;	}
+	if(p2<0 || mgl_isnan(Pnt[p2].x))	{	trig_plot(p1,p4,p3);	return;	}
+	if(p3<0 || mgl_isnan(Pnt[p3].x))	{	trig_plot(p1,p2,p4);	return;	}
+	if(p4<0 || mgl_isnan(Pnt[p4].x))	{	trig_plot(p1,p2,p3);	return;	}
 	long pp1=p1,pp2=p2,pp3=p3,pp4=p4;
 	mglDrawReg d;	d.set(this,1,1,0);
 	if(TernAxis&4) for(int i=0;i<4;i++)
@@ -280,7 +280,7 @@ void mglCanvas::quad_plot(long p1, long p2, long p3, long p4)
 //-----------------------------------------------------------------------------
 float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float size,float sh,float col,bool rot)
 {
-	if((p<0) | mgl_isnan(Pnt[p].x))	return 0;
+	if(p<0 || mgl_isnan(Pnt[p].x))	return 0;
 	if(size<0)	size *= -FontSize;
 	if(!font)	font="";
 
@@ -773,7 +773,7 @@ void mglCanvas::StartAutoGroup (const char *lbl)
 	if(lbl==NULL)	{	id=1;	return;	}
 	if(ObjId<0)	{	ObjId = -id;	id++;	}
 	register size_t len = Grp.size();
-	if((ObjId>=0) & (len>0) & (ObjId!=Grp[len-1].Id))
+	if(((ObjId>=0) & (len>0)) && (ObjId!=Grp[len-1].Id))
 	{	MGL_PUSH(Grp,mglGroup(lbl,ObjId),mutexGrp);	}
 	else if(ObjId<0)
 	{	MGL_PUSH(Grp,mglGroup(lbl,ObjId),mutexGrp);	}

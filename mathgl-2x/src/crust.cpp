@@ -110,6 +110,7 @@ void mgl_triplot_xy(HMGL gr, HCDT nums, HCDT x, HCDT y, const char *sch, const c
 	gr->SaveState(opt);
 	mglData z(x->GetNx());	z.Fill(gr->Min.z,gr->Min.z);
 	mgl_triplot_xyzc(gr,nums,x,y,&z,&z,sch,0);
+	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_triplot_xyzc_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *c, const char *sch, const char *opt,int l,int lo)
@@ -226,6 +227,7 @@ void mgl_quadplot_xy(HMGL gr, HCDT nums, HCDT x, HCDT y, const char *sch, const 
 	gr->SaveState(opt);
 	mglData z(x->GetNx());	z.Fill(gr->Min.z,gr->Min.z);
 	mgl_quadplot_xyzc(gr,nums,x,y,&z,&z,sch,0);
+	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_quadplot_xyzc_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *c, const char *sch, const char *opt,int l,int lo)
@@ -300,6 +302,7 @@ void mgl_tricont_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const 
 	mglData v(n);
 	for(long i=0;i<n;i++)	v.a[i] = gr->Min.c + (gr->Max.c-gr->Min.c)*float(i+1)/(n+1);
 	mgl_tricont_xyzcv(gr,&v,nums,x,y,z,a,sch,0);
+	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_tricont_xyc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt)
@@ -422,14 +425,84 @@ HMDT mgl_triangulation_2d(HCDT x, HCDT y)
 		nums->a[3*i+2] = triads[i].c;
 	}
 	return nums;
-//	mglData z(x->GetNx());
-//	return mgl_triangulation_3d(x,y,&z,er);
 }
 //-----------------------------------------------------------------------------
 uintptr_t mgl_triangulation_3d_(uintptr_t *x, uintptr_t *y, uintptr_t *z)
 {	return uintptr_t(mgl_triangulation_3d(_DA_(x),_DA_(y),_DA_(z)));	}
 uintptr_t mgl_triangulation_2d_(uintptr_t *x, uintptr_t *y)
 {	return uintptr_t(mgl_triangulation_2d(_DA_(x),_DA_(y)));	}
+//-----------------------------------------------------------------------------
+//
+//	DataGrid
+//
+//-----------------------------------------------------------------------------
+void *mgl_grid_t(void *par)
+{
+	mglThreadD *t=(mglThreadD *)par;
+	long nx=t->p[0],ny=t->p[1];
+	register long i0, k1,k2,k3;
+	mreal *b=t->a;
+	const mreal *x=t->b, *y=t->c, *d=t->d, *z=t->e;
+	for(i0=t->id;i0<t->n;i0+=mglNumThr)
+	{
+		k1 = long(d[3*i0]); k2 = long(d[3*i0+1]); k3 = long(d[3*i0+2]);
+		float dxu,dxv,dyu,dyv;
+		mglPoint d1=mglPoint(x[k2]-x[k1],y[k2]-y[k1],z[k2]-z[k1]), d2=mglPoint(x[k3]-x[k1],y[k3]-y[k1],z[k3]-z[k1]), p;
+
+		dxu = d2.x*d1.y - d1.x*d2.y;
+		if(fabs(dxu)<1e-5) continue; // points lies on the same line
+		dyv =-d1.x/dxu; dxv = d1.y/dxu;
+		dyu = d2.x/dxu; dxu =-d2.y/dxu;
+
+		long x1,y1,x2,y2;
+		x1 = long(fmin(fmin(x[k1],x[k2]),x[k3])); // bounding box
+		y1 = long(fmin(fmin(y[k1],y[k2]),y[k3]));
+		x2 = long(fmax(fmax(x[k1],x[k2]),x[k3]));
+		y2 = long(fmax(fmax(y[k1],y[k2]),y[k3]));
+		x1 = x1>0 ? x1:0; x2 = x2<nx ? x2:nx-1;
+		y1 = y1>0 ? y1:0; y2 = y2<ny ? y2:ny-1;
+		if((x1>x2) | (y1>y2)) continue;
+
+		register float u,v,xx,yy,zz, x0 = x[k1], y0 = y[k1];
+		register long i,j;
+		for(i=x1;i<=x2;i++) for(j=y1;j<=y2;j++)
+		{
+			xx = (i-x0); yy = (j-y0);
+			u = dxu*xx+dyu*yy; v = dxv*xx+dyv*yy;
+			if((u<0) | (v<0) | (u+v>1)) continue;
+			b[i+nx*j] = z[k1] + d1.z*u + d2.z*v;
+		}
+	}
+	return 0;
+}
+void mgl_data_grid(HMGL gr, HMDT d, HCDT xdat, HCDT ydat, HCDT zdat, const char *opt)
+{ // NOTE: only for mglData
+	const mglData *x = dynamic_cast<const mglData *>(xdat);
+	const mglData *y = dynamic_cast<const mglData *>(ydat);
+	const mglData *z = dynamic_cast<const mglData *>(zdat);
+	if(!x | !y | !z) return;
+	long n=x->nx;
+	if((n<3) | (y->nx!=n) | (z->nx!=n))	return;
+
+	gr->SaveState(opt);
+	mglData *nums = mgl_triangulation_2d(x,y);
+	if(nums->nx<3)	{	delete nums;	return;	}
+	long nn = nums->ny, par[3]={d->nx,d->ny,d->nz};
+	mreal xx[4]={gr->Min.x,0, gr->Min.y,0};
+	if(d->nx>1) xx[1] = (d->nx-1.)/(gr->Max.x-gr->Min.x);
+	if(d->ny>1) xx[3] = (d->ny-1.)/(gr->Max.y-gr->Min.y);
+
+	register long i;
+	mreal *xc=new mreal[n], *yc=new mreal[n];
+	for(i=0;i<n;i++)	{	xc[i]=xx[1]*(x->a[i]-xx[0]);	yc[i]=xx[3]*(y->a[i]-xx[2]);	}
+	for(long i=0;i<d->nx*d->ny*d->nz;i++) d->a[i] = NAN;
+	
+	mglStartThread(mgl_grid_t,0,nn,d->a,xc,yc,par,0,nums->a,z->a);
+	gr->LoadState();	delete nums;	delete []xc;	delete []yc;
+}
+void mgl_data_grid_(uintptr_t *gr, uintptr_t *d, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *opt,int lo)
+{	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+	mgl_data_grid(_GR_,_DT_,_DA_(x),_DA_(y),_DA_(z),o);	delete []o;	}
 //-----------------------------------------------------------------------------
 //
 //	Crust series

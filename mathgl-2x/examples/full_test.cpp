@@ -45,31 +45,19 @@ void test(mglGraph *gr)
 {
 	mglData x(100), y(100), z(100);
 	gr->Fill(x,"2*rnd-1");	gr->Fill(y,"2*rnd-1");	gr->Fill(z,"v^2-w^2",x,y);
-	mglData d = mglTriangulation(x,y);
+	mglData d = mglTriangulation(x,y), g(30,30);
 
 	gr->Rotate(40,60);
 	gr->Box();	gr->Light(true);
-	gr->TriPlot(d,x,y,z,"k");
-	return;
+	gr->TriPlot(d,x,y,z);
+	gr->TriPlot(d,x,y,z,"#k");
 	
-	gr->Light(true);
-	gr->Rotate(60,50);
-	gr->SetRanges(-10,10,-10,10);
-	gr->FSurf("exp(-0.04*(x^2+y^2))");
+	gr->DataGrid(g,x,y,z);
+	g.Save("1.dat");
+	gr->Mesh(g,"m");
 	return;
 
-	gr->SubPlot(2,2,0);	gr->Axis();	gr->Grid();
-	gr->FPlot("x","o");
-	gr->SetMarkSize(2);	gr->FPlot("x","o");
-	gr->SetRotatedText(false);
-	gr->SubPlot(2,2,1);	gr->Axis();	gr->Grid();
-	gr->SetOrigin(1,1);
-	gr->SubPlot(2,2,2);	gr->Axis();	gr->Grid();
-	mgl_set_color('k',1,0,0);
-	gr->SubPlot(2,2,3);	gr->Axis();	gr->Grid();
-	return;
-
-/*	mglParse par;
+	/*	mglParse par;
 	par.AllowSetSize(true);
 	setlocale(LC_CTYPE, "");
 	FILE *fp=fopen("/home/balakin/progr/sfnet/mathgl/mathgl-2x/examples/test.mgl","r");
@@ -111,6 +99,23 @@ void fexport(mglGraph *gr)
 }
 //-----------------------------------------------------------------------------
 //		Sample functions (v.2.*0)
+//-----------------------------------------------------------------------------
+const char *mmgl_triangulation="new x 100 '2*rnd-1':new y 100 '2*rnd-1':copy z x^2-y^2\n"
+"new g 30 30:triangulate d x y\n"
+"title 'Triangulation'\nrotate 50 60:box:light on\n"
+"triplot d x y z:triplot d x y z '#k'\ndatagrid g x y z:mesh g 'm'\n";
+void smgl_triangulation(mglGraph *gr)	// alpha and lighting
+{
+	mglData x(100), y(100), z(100);
+	gr->Fill(x,"2*rnd-1");	gr->Fill(y,"2*rnd-1");	gr->Fill(z,"v^2-w^2",x,y);
+	mglData d = mglTriangulation(x,y), g(30,30);
+	
+	if(!mini)	gr->Title("Triangulation");
+	gr->Rotate(40,60);	gr->Box();	gr->Light(true);
+	gr->TriPlot(d,x,y,z);	gr->TriPlot(d,x,y,z,"#k");
+
+	gr->DataGrid(g,x,y,z);	gr->Mesh(g,"m");
+}
 //-----------------------------------------------------------------------------
 const char *mmgl_alpha="subplot 2 2 0:title 'default':rotate 50 60:box\nsurf a\n"
 "subplot 2 2 0:title 'light on':rotate 50 60:box\nlight on:surf a\n"
@@ -2106,6 +2111,7 @@ mglSample samp[] = {
 	{"tiles", smgl_tiles},
 	{"torus", smgl_torus},
 	{"traj", smgl_traj},
+	{"triangulation",smgl_triangulation},
 	{"triplot", smgl_triplot},
 	{"tube", smgl_tube},
 	{"type0", smgl_type0},

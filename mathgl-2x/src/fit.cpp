@@ -227,12 +227,14 @@ HMDT mgl_fit_xys(HMGL gr, HCDT xx, HCDT yy, HCDT ss, const char *eq, const char 
 {
 	mglData *fit=new mglData;
 	long m = yy->GetNx();
-	if(xx->GetNx()!=m)	{	gr->SetWarn(mglWarnDim,"Fit[S]");	return fit;	}
-	if(m<2)		{	gr->SetWarn(mglWarnLow,"Fit[S]");	return fit;	}
-	if(ss->GetNx()*ss->GetNy()*ss->GetNz() != m*yy->GetNy()*yy->GetNz())
-	{	gr->SetWarn(mglWarnDim,"FitS");	return fit;	}
-
 	long nn = long(0.5+gr->SaveState(opt));
+	if(xx->GetNx()!=m)
+	{	gr->SetWarn(mglWarnDim,"Fit[S]");	gr->LoadState();	return fit;	}
+	if(m<2)
+	{	gr->SetWarn(mglWarnLow,"Fit[S]");	gr->LoadState();	return fit;	}
+	if(ss->GetNx()*ss->GetNy()*ss->GetNz() != m*yy->GetNy()*yy->GetNz())
+	{	gr->SetWarn(mglWarnDim,"Fit[S]");	gr->LoadState();	return fit;	}
+
 	if(nn<mglFitPnts)	nn = mglFitPnts;
 	mglData x(xx), y(yy), s(ss);
 	mglFitData fd;
@@ -267,14 +269,16 @@ HMDT mgl_fit_xyzs(HMGL gr, HCDT xx, HCDT yy, HCDT zz, HCDT ss, const char *eq, c
 {
 	mglData *fit=new mglData;
 	long m=zz->GetNx(),n=zz->GetNy();
-	if(xx->GetNx()!=m)		{	gr->SetWarn(mglWarnDim,"Fit[S]");	return fit;	}
-	if(ss->GetNx()*ss->GetNy()*ss->GetNz() != m*n*zz->GetNz())
-	{	gr->SetWarn(mglWarnDim,"FitS");	return fit;	}
-	if((yy->GetNx()!=n) & ((xx->GetNy()!=n) | (yy->GetNx()!=m) | (yy->GetNy()!=n)))
-	{	gr->SetWarn(mglWarnDim);	return fit;	}
-	if((m<2) | (n<2))	{	gr->SetWarn(mglWarnLow,"Fit[S]");	return fit;	}
-
 	long nn = long(0.5+gr->SaveState(opt));
+	if(xx->GetNx()!=m)
+	{	gr->SetWarn(mglWarnDim,"Fit[S]");	gr->LoadState();	return fit;	}
+	if(ss->GetNx()*ss->GetNy()*ss->GetNz() != m*n*zz->GetNz())
+	{	gr->SetWarn(mglWarnDim,"Fit[S]");	gr->LoadState();	return fit;	}
+	if((yy->GetNx()!=n) & ((xx->GetNy()!=n) | (yy->GetNx()!=m) | (yy->GetNy()!=n)))
+	{	gr->SetWarn(mglWarnDim,"Fit[S]");	gr->LoadState();	return fit;	}
+	if((m<2) | (n<2))
+	{	gr->SetWarn(mglWarnLow,"Fit[S]");	gr->LoadState();	return fit;	}
+
 	if(nn<mglFitPnts)	nn = mglFitPnts;
 	mglData x(m, n), y(m, n), z(zz), s(ss);
 	register long i,j;
@@ -313,16 +317,17 @@ HMDT mgl_fit_xyzs(HMGL gr, HCDT xx, HCDT yy, HCDT zz, HCDT ss, const char *eq, c
 HMDT mgl_fit_xyzas(HMGL gr, HCDT xx, HCDT yy, HCDT zz, HCDT aa, HCDT ss, const char *eq, const char *var, HMDT ini, const char *opt)
 {
 	mglData *fit=new mglData;
-	register long i,j,k,i0;
 	long m=aa->GetNx(), n=aa->GetNy(), l=aa->GetNz();
-	i = n*m*l;
-	if((m<2) | (n<2) | (l<2))	{	gr->SetWarn(mglWarnLow,"Fit[S]");	return fit;	}
-	if(ss->GetNx()*ss->GetNy()*ss->GetNz() != i)		{	gr->SetWarn(mglWarnDim,"FitS");	return fit;	}
+	register long i=n*m*l,j,k,i0;
+	long nn = long(0.5+gr->SaveState(opt));
+	if((m<2) | (n<2) | (l<2))
+	{	gr->SetWarn(mglWarnLow,"Fit[S]");	gr->LoadState();	return fit;	}
+	if(ss->GetNx()*ss->GetNy()*ss->GetNz() != i)
+	{	gr->SetWarn(mglWarnDim,"Fit[S]");	gr->LoadState();	return fit;	}
 	bool both = (xx->GetNx()*xx->GetNy()*xx->GetNz()==i) & (yy->GetNx()*yy->GetNy()*yy->GetNz()==i) & (zz->GetNx()*zz->GetNy()*zz->GetNz()==i);
 	if(!( both | ((xx->GetNx()==m) & (yy->GetNx()==n) & (zz->GetNx()==l)) ))
-	{	gr->SetWarn(mglWarnDim,"Fit[S]");	return fit;	}
+	{	gr->SetWarn(mglWarnDim,"Fit[S]");	gr->LoadState();	return fit;	}
 
-	long nn = long(0.5+gr->SaveState(opt));
 	if(nn<mglFitPnts)	nn = mglFitPnts;
 	mglData x(aa), y(aa), z(aa), a(aa), s(ss);
 	for(i=0;i<m;i++)	for(j=0;j<n;j++)	for(k=0;k<l;k++)	// ñîçäàåì ìàññèâ òî÷åê

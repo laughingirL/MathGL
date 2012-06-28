@@ -85,6 +85,7 @@ void mgl_cloud(HMGL gr, HCDT a, const char *sch, const char *opt)
 	y.Fill(gr->Min.y,gr->Max.y);
 	z.Fill(gr->Min.z,gr->Max.z);
 	mgl_cloud_xyz(gr,&x,&y,&z,a,sch,0);
+	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_cloud_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
@@ -327,6 +328,7 @@ void mgl_surf3_val(HMGL gr, float val, HCDT a, const char *sch, const char *opt)
 	y.Fill(gr->Min.y,gr->Max.y);
 	z.Fill(gr->Min.z,gr->Max.z);
 	mgl_surf3_xyz_val(gr,val,&x,&y,&z,a,sch,0);
+	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_surf3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, const char *opt)
@@ -338,6 +340,7 @@ void mgl_surf3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, con
 		float v = gr->Max.c + (gr->Min.c-gr->Max.c)*(i+1.)/(num+1);
 		mgl_surf3_xyz_val(gr,v,x,y,z,a,sch,0);
 	}
+	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_surf3(HMGL gr, HCDT a, const char *sch, const char *opt)
@@ -349,6 +352,7 @@ void mgl_surf3(HMGL gr, HCDT a, const char *sch, const char *opt)
 		float v = gr->Max.c + (gr->Min.c-gr->Max.c)*(i+1.)/(num+1);
 		mgl_surf3_val(gr,v,a,sch,0);
 	}
+	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_surf3_xyz_val_(uintptr_t *gr, float *Val, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
@@ -481,6 +485,7 @@ void mgl_surf3a_val(HMGL gr, float val, HCDT a, HCDT b, const char *sch, const c
 	y.Fill(gr->Min.y,gr->Max.y);
 	z.Fill(gr->Min.z,gr->Max.z);
 	mgl_surf3a_xyz_val(gr,val,&x,&y,&z,a,b,sch,0);
+	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_surf3a_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, HCDT b, const char *sch, const char *opt)
@@ -503,6 +508,7 @@ void mgl_surf3a_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, HCDT b, const char 
 		float v = gr->Max.c + (gr->Min.c-gr->Max.c)*(i+1.)/(num+1);
 		mgl_surf3a_xyz_val(gr,v,x,y,z,a,b,sch,0);
 	}
+	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_surf3a(HMGL gr, HCDT a, HCDT b, const char *sch, const char *opt)
@@ -525,6 +531,7 @@ void mgl_surf3a(HMGL gr, HCDT a, HCDT b, const char *sch, const char *opt)
 		float v = gr->Max.c + (gr->Min.c-gr->Max.c)*(i+1.)/(num+1);
 		mgl_surf3a_val(gr,v,a,b,sch,0);
 	}
+	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_surf3a_xyz_val_(uintptr_t *gr, float *Val, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, uintptr_t *b, const char *sch, const char *opt,int l,int lo)
@@ -659,6 +666,7 @@ void mgl_surf3c_val(HMGL gr, float val, HCDT a, HCDT b, const char *sch, const c
 	y.Fill(gr->Min.y,gr->Max.y);
 	z.Fill(gr->Min.z,gr->Max.z);
 	mgl_surf3c_xyz_val(gr,val,&x,&y,&z,a,b,sch,0);
+	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_surf3c_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, HCDT b, const char *sch, const char *opt)
@@ -670,6 +678,7 @@ void mgl_surf3c_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, HCDT b, const char 
 		float v = gr->Max.c + (gr->Min.c-gr->Max.c)*(i+1.)/(num+1);
 		mgl_surf3c_xyz_val(gr,v,x,y,z,a,b,sch,0);
 	}
+	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_surf3c(HMGL gr, HCDT a, HCDT b, const char *sch, const char *opt)
@@ -681,6 +690,7 @@ void mgl_surf3c(HMGL gr, HCDT a, HCDT b, const char *sch, const char *opt)
 		float v = gr->Max.c + (gr->Min.c-gr->Max.c)*(i+1.)/(num+1);
 		mgl_surf3c_val(gr,v,a,b,sch,0);
 	}
+	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_surf3c_xyz_val_(uintptr_t *gr, float *Val, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, uintptr_t *b, const char *sch, const char *opt,int l,int lo)

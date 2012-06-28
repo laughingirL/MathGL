@@ -3500,6 +3500,19 @@ void mglc_roll(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 	    a[0].s.c_str(), a[1].s.c_str()[0], iint(a[2].v));
 }
 //-----------------------------------------------------------------------------
+int mgls_datagrid(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
+{
+	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1)
+		gr->DataGrid(*(a[0].d), *(a[1].d), *(a[2].d), *(a[3].d), opt);
+	else	return 1;
+	return 0;
+}
+void mglc_datagrid(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
+{
+	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1)
+		mglprintf(out,1024,L"gr->DataGrid(%s, %s, %s, %s, \"%s\");",a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str(), a[3].s.c_str(),opt?opt:"");
+}
+//-----------------------------------------------------------------------------
 int mgls_triangulate(mglGraph *, long , mglArg *a, int k[10], const char *)
 {
 	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1)
@@ -3575,6 +3588,7 @@ mglCommand mgls_base_cmd[] = {
 	{"cumsum","Cumulative summation","cumsum Dat 'dir'", mgls_cumsum, mglc_cumsum,3},
 	{"curve","Draw curve","curve x1 y1 dx1 dy1 x2 y2 dx2 dy2 ['fmt']|x1 y1 z1 dx1 dy1 dz1 x2 y2 z2 dx2 dy2 dz2 ['fmt']", mgls_curve, mglc_curve,1},
 	{"cut","Setup plot points cutting","cut val|x1 y1 z1 x2 y2 z2|'cond'", mgls_cut, mglc_cut,2},
+	{"datagrid","Fill data by triangulated values","datagrid Var Xdat Ydat Zdat", mgls_datagrid, mglc_datagrid,3},
 	{"datas","Print list of data names in HDF file","datas 'fname'", mgls_datas, mglc_datas,3},
 	{"defchr","Define parameter as character","defchr $N val", 0, 0, 6},
 	{"define","Define constant or parameter","define $N sth | Var val", 0, 0, 6},

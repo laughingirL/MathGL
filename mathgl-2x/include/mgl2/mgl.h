@@ -1069,6 +1069,10 @@ public:
 	inline void Fill(mglData &u, const char *eq, const mglDataA &v, const mglDataA &w, const char *opt="")
 	{	mgl_data_fill_eq(gr, &u, eq, &v, &w, opt);	}
 
+	/// Set the data by triangulated surface values assuming x,y,z in range [Min, Max]
+	inline void DataGrid(mglData &d, const mglData &x, const mglData &y, const mglData &z, const char *opt="")
+	{	mgl_data_grid(gr,&d,&x,&y,&z,opt);	}
+	
 	/// Make histogram (distribution) of data. This function do not plot data.
 	inline mglData Hist(const mglDataA &x, const mglDataA &a, const char *opt="")
 	{	return mglData(true, mgl_hist_x(gr, &x, &a, opt));	}

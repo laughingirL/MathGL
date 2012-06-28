@@ -2,6 +2,8 @@
 
 * Add SetTickShift() for additional shift of tick labels
 * Add cmake options 'enable-png' and 'enable-zlib'
+* Add mglTriangulation() using s-hull algorithm
+* Add mglData::Grid() and mglGraph::DataGrid() for filling regular data by values of triangulated surface
 
 2.0.2 Released 24 May 2012
 

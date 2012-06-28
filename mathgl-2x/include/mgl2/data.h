@@ -160,6 +160,9 @@ public:
 	/// Eqidistantly fill the data to range [x1,x2] in direction \a dir
 	inline void Fill(mreal x1,mreal x2=NaN,char dir='x')
 	{	return mgl_data_fill(this,x1,x2,dir);	}
+	/// Set the data by triangulated surface values assuming x,y,z in range [r1,r2]
+	inline void Grid(mglBase *gr, const mglData &x, const mglData &y, const mglData &z, const char *opt="")
+	{	mgl_data_grid(gr,this,&x,&y,&z,opt);	}
 	/// Put value to data element(s)
 	inline void Put(mreal val, long i=-1, long j=-1, long k=-1)
 	{	mgl_data_put_val(this,val,i,j,k);	}

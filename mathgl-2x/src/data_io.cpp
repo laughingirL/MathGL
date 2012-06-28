@@ -820,64 +820,6 @@ void mgl_data_fill_eq_(uintptr_t *gr, uintptr_t *d, const char *eq, uintptr_t *v
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_data_fill_eq(_GR_,_DT_,s,_DA_(v),_DA_(w),o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void *mgl_grid_t(void *par)
-{
-	mglThreadD *t=(mglThreadD *)par;
-	long nx=t->p[0],ny=t->p[1];
-	register long i0, k1,k2,k3;
-	mreal *b=t->a;
-	const mreal *x=t->b, *y=t->c, *c=t->d, *z=t->e, *d=(const mreal *)(t->v);
-	for(i0=t->id;i0<t->n;i0+=mglNumThr)
-	{
-		k1 = long(d[3*i0]);		k2 = long(d[3*i0+1]);	k3 = long(d[3*i0+2]);
-		float dxu,dxv,dyu,dyv;
-		mglPoint d1=mglPoint(x[k2]-x[k1],y[k2]-y[k1],z[k2]-z[k1]), d2=mglPoint(x[k3]-x[k1],y[k3]-y[k1],z[k3]-z[k1]), p;
-
-		dxu = d2.x*d1.y - d1.x*d2.y;
-		if(fabs(dxu)<1e-5)	continue;		// points lies on the same line
-		dyv =-d1.x/dxu;	dxv = d1.y/dxu;
-		dyu = d2.x/dxu;	dxu =-d2.y/dxu;
-
-		long x1,y1,x2,y2;
-		x1 = long(fmin(fmin(x[k1],x[k2]),x[k3]));	// bounding box
-		y1 = long(fmin(fmin(y[k1],y[k2]),y[k3]));
-		x2 = long(fmax(fmax(x[k1],x[k2]),x[k3]));
-		y2 = long(fmax(fmax(y[k1],y[k2]),y[k3]));
-		x1 = x1>0 ? x1:0;	x2 = x2<nx ? x2:nx-1;
-		y1 = y1>0 ? y1:0;	y2 = y2<ny ? y2:ny-1;
-		if((x1>x2) | (y1>y2))	continue;
-
-		register float u,v,xx,yy,zz, x0 = x[k1], y0 = y[k1];
-		register long i,j;
-		for(i=x1;i<=x2;i++)	for(j=y1;j<=y2;j++)
-		{
-			xx = (i-x0);	yy = (j-y0);
-			u = dxu*xx+dyu*yy;	v = dxv*xx+dyv*yy;
-			if((u<0) | (v<0) | (u+v>1))	continue;
-			b[i+nx*j] = z[k1] + d1.z*u + d2.z*v;
-		}
-	}
-	return 0;
-}
-void mgl_data_grid(HMGL gr, HMDT d, HCDT xdat, HCDT ydat, HCDT zdat)
-{	// NOTE: only for mglData
-	const mglData *x = dynamic_cast<const mglData *>(xdat);
-	const mglData *y = dynamic_cast<const mglData *>(ydat);
-	const mglData *z = dynamic_cast<const mglData *>(zdat);
-	if(!x | !y | !z)	return;
-
-	mglData *nums = mgl_triangulation_2d(x,y);
-	long nn = nums->ny, par[3]={d->nx,d->ny,d->nz};
-	mreal xx[6]={gr->Min.x,0, gr->Min.y,0, gr->Min.z,0};
-	if(d->nx>1)	xx[1] = (gr->Max.x-gr->Min.x)/(d->nx-1.);
-	if(d->ny>1)	xx[3] = (gr->Max.y-gr->Min.y)/(d->ny-1.);
-	if(d->nz>1)	xx[5] = (gr->Max.z-gr->Min.z)/(d->nz-1.);
-
-	for(long i=0;i<d->nx*d->ny*d->nz;i++)	d->a[i] = NAN;
-	mglStartThread(mgl_grid_t,0,nn,d->a,x?x->a:0,y?y->a:0,par,nums->a,xx,z?z->a:0);
-	delete nums;
-}
-//-----------------------------------------------------------------------------
 #if MGL_HAVE_HDF4
 void mgl_data_read_hdf4(HMDT d,const char *fname,const char *data)
 {
