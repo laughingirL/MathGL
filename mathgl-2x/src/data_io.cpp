@@ -55,7 +55,7 @@ void mgl_delete_data_(uintptr_t *d)
 //-----------------------------------------------------------------------------
 void mglFromStr(HMDT d,char *buf,long NX,long NY,long NZ)	// TODO: add multithreading read
 {
-	if((NX<1) | (NY<1) | (NZ<1))	return;
+	if(NX<1 || NY <1 || NZ<1)	return;
 	mgl_data_create(d, NX,NY,NZ);
 	long nb = strlen(buf);
 	register long i=0, j=0, k=0;
@@ -70,7 +70,7 @@ void mglFromStr(HMDT d,char *buf,long NX,long NY,long NZ)	// TODO: add multithre
 			{
 				while(!isn(buf[j]) && j<nb)
 				{
-					if((buf[j]>='a') & (buf[j]<='z'))
+					if(buf[j]>='a' && buf[j]<='z')
 						d->id[k++] = buf[j];
 					j++;
 				}
@@ -103,7 +103,7 @@ void mgl_data_set_(uintptr_t *d, uintptr_t *a)	{	mgl_data_set(_DT_,_DA_(a));	}
 //-----------------------------------------------------------------------------
 void mgl_data_set_values(HMDT d, const char *v,long NX,long NY,long NZ)
 {
-	if((NX<1) | (NY<1) | (NZ<1))	return;
+	if(NX<1 || NY <1 || NZ<1)	return;
 	register long n=strlen(v)+1;
 	char *buf = new char[n];
 	memcpy(buf,v,n);
@@ -136,7 +136,7 @@ void mgl_data_set_matrix(HMDT d, gsl_matrix *m)
 //-----------------------------------------------------------------------------
 void mgl_data_set_float(HMDT d, const float *A,long NX,long NY,long NZ)
 {
-	if((NX<1) | (NY<1) | (NZ<1))	return;
+	if(NX<=0 || NY<=0 || NZ<=0)	return;
 	mgl_data_create(d, NX,NY,NZ);	if(!A)	return;
 #if MGL_USE_DOUBLE
 	for(long i=0;i<NX*NY*NZ;i++)	d->a[i] = A[i];
@@ -147,7 +147,7 @@ void mgl_data_set_float(HMDT d, const float *A,long NX,long NY,long NZ)
 //-----------------------------------------------------------------------------
 void mgl_data_set_double(HMDT d, const double *A,long NX,long NY,long NZ)
 {
-	if((NX<1) | (NY<1) | (NZ<1))	return;
+	if(NX<=0 || NY<=0 || NZ<=0)	return;
 	mgl_data_create(d, NX,NY,NZ);	if(!A)	return;
 #if MGL_USE_DOUBLE
 	memcpy(d->a,A,NX*NY*NZ*sizeof(double));
@@ -158,7 +158,7 @@ void mgl_data_set_double(HMDT d, const double *A,long NX,long NY,long NZ)
 //-----------------------------------------------------------------------------
 void mgl_data_set_float2(HMDT d, const float **A,long N1,long N2)
 {
-	if((N1<1) | (N2<1))	return;
+	if(N1<=0 || N2<=0)	return;
 	mgl_data_create(d, N2,N1,1);	if(!A)	return;
 #if MGL_USE_DOUBLE
 	for(long i=0;i<N1;i++)	for(long j=0;j<N2;j++)	d->a[j+i*N2] = A[i][j];
@@ -169,7 +169,7 @@ void mgl_data_set_float2(HMDT d, const float **A,long N1,long N2)
 //-----------------------------------------------------------------------------
 void mgl_data_set_double2(HMDT d, const double **A,long N1,long N2)
 {
-	if((N1<1) | (N2<1))	return;
+	if(N1<=0 || N2<=0)	return;
 	mgl_data_create(d, N2,N1,1);	if(!A)	return;
 #if MGL_USE_DOUBLE
 	for(long i=0;i<N1;i++)	memcpy(d->a+i*N2,A[i],N2*sizeof(double));
@@ -180,7 +180,7 @@ void mgl_data_set_double2(HMDT d, const double **A,long N1,long N2)
 //-----------------------------------------------------------------------------
 void mgl_data_set_float3(HMDT d, const float ***A,long N1,long N2,long N3)
 {
-	if((N1<1) | (N2<1) | (N3<1))	return;
+	if(N1<=0 || N2<=0 || N3<=0)	return;
 	mgl_data_create(d, N3,N2,N1);	if(!A)	return;
 #if MGL_USE_DOUBLE
 	for(long i=0;i<N1;i++)	for(long j=0;j<N2;j++)	for(long k=0;k<N3;k++)
@@ -193,7 +193,7 @@ void mgl_data_set_float3(HMDT d, const float ***A,long N1,long N2,long N3)
 //-----------------------------------------------------------------------------
 void mgl_data_set_double3(HMDT d, const double ***A,long N1,long N2,long N3)
 {
-	if((N1<1) | (N2<1) | (N3<1))	return;
+	if(N1<=0 || N2<=0 || N3<=0)	return;
 	mgl_data_create(d, N3,N2,N1);	if(!A)	return;
 #if MGL_USE_DOUBLE
 	for(long i=0;i<N1;i++)	for(long j=0;j<N2;j++)
@@ -227,7 +227,7 @@ void mgl_data_rearrange(HMDT d, long mx,long my,long mz)
 	if(my<1)	{	my = d->nx*d->ny*d->nz/mx;	mz = 1;	}
 	else if(mz<1)	mz = (d->nx*d->ny*d->nz)/(mx*my);
 	long m = mx*my*mz;
-	if((m==0) | (m>d->nx*d->ny*d->nz))	return;	// too high desired dimensions
+	if(m==0 || m>d->nx*d->ny*d->nz)	return;	// too high desired dimensions
 	d->nx = mx;	d->ny = my;	d->nz = mz;	d->NewId();
 }
 void mgl_data_rearrange_(uintptr_t *d, int *mx, int *my, int *mz)
@@ -248,7 +248,7 @@ void mgl_data_save(HCDT d, const char *fname,long ns)
 	fp = fopen(fname,"w");
 	register long i,j,k;
 	long nx=d->GetNx(), ny=d->GetNy(), nz=d->GetNz();
-	if((ns<0) | ((ns>=nz) & (nz>1)))	for(k=0;k<nz;k++)
+	if(ns<0 || (ns>=nz && nz>1))	for(k=0;k<nz;k++)
 	{	// ñîõðàíÿåì âñå äàííûå
 		for(i=0;i<ny;i++)
 		{
@@ -307,7 +307,7 @@ int mgl_data_read(HMDT d, const char *fname)
 		while(buf[i]=='#')	{	while(!isn(buf[i]) && i<nb)	i++;	}
 		ch = buf[i];
 		if(ch>' ' && !first)	first=true;
-		if(first & ((ch==' ') | (ch=='\t') | (ch==',')) & (buf[i+1]>' ')) k++;
+		if(first && (ch==' ' || ch=='\t' || ch==',') && buf[i+1]>' ') k++;
 	}
 	first = false;
 	for(i=0;i<nb-1;i++)					// determine ny
@@ -316,7 +316,7 @@ int mgl_data_read(HMDT d, const char *fname)
 		if(ch=='#')	while(!isn(buf[i]) && i<nb)	i++;
 		if(isn(ch))
 		{
-			while((buf[i+1]==' ') | (buf[i+1]=='\t')) i++;
+			while(buf[i+1]==' ' || buf[i+1]=='\t') i++;
 			if(isn(buf[i+1]))	{first=true;	break;	}
 			m++;
 		}
@@ -330,7 +330,7 @@ int mgl_data_read(HMDT d, const char *fname)
 		if(isn(ch))
 		{
 //			if(com)	{	com=false;	continue;	}
-			while((buf[i+1]==' ') | (buf[i+1]=='\t')) i++;
+			while(buf[i+1]==' ' || buf[i+1]=='\t') i++;
 			if(isn(buf[i+1]))	l++;
 		}
 	}
@@ -368,7 +368,7 @@ void mgl_data_link_(uintptr_t *d, mreal *A, int *nx,int *ny,int *nz)
 //-----------------------------------------------------------------------------
 int mgl_data_read_dim(HMDT d, const char *fname,long mx,long my,long mz)
 {
-	if((mx<1) | (my<1) | (mz<1))	return false;
+	if(mx<=0 || my<=0 || mz<=0)	return false;
 	gzFile fp = gzopen(fname,"r");
 	if(!fp)	return false;
 	char *buf = mgl_read_gz(fp);
@@ -382,7 +382,7 @@ int mgl_data_read_dim_(uintptr_t *d, const char *fname,int *mx,int *my,int *mz,i
 //-----------------------------------------------------------------------------
 int mgl_data_read_mat(HMDT d, const char *fname, long dim)
 {
-	if((dim<1) | (dim>3))	return false;
+	if(dim<=0 || dim>3)	return false;
 	gzFile fp = gzopen(fname,"r");
 	if(!fp)	return false;
 	long nx=1, ny=1, nz=1;
@@ -412,7 +412,7 @@ int mgl_data_read_mat(HMDT d, const char *fname, long dim)
 			while(b[i]=='#')	{	while(!isn(b[i]) && b[i])	i++;	}
 			if(b[i]=='\n')	l++;
 		}
-		if((l==nx*ny) | (l==nx*ny+1))	// try to read 3d data (i.e. columns of matrix nx*ny)
+		if(l==nx*ny || l==nx*ny+1)	// try to read 3d data (i.e. columns of matrix nx*ny)
 		{
 			nz=ny;	ny=nx;	nx=1;
 			bool first = false;
@@ -421,7 +421,7 @@ int mgl_data_read_mat(HMDT d, const char *fname, long dim)
 				while(b[i]=='#')	{	while(!isn(b[i]) && b[i])	i++;	}
 				ch = b[i];
 				if(ch>' ' && !first)	first=true;
-				if(first & ((ch==' ') | (ch=='\t') | (ch==',')) & (b[i+1]>' ')) nx++;
+				if(first && (ch==' ' || ch=='\t' || ch==',') && b[i+1]>' ') nx++;
 			}
 		}
 	}
@@ -585,7 +585,7 @@ void *mgl_fill_x(void *par)
 void mgl_data_fill(HMDT d, float x1,float x2,char dir)
 {
 	if(mgl_isnan(x2))	x2=x1;
-	if((dir<'x') | (dir>'z'))	dir='x';
+	if(dir<'x' || dir>'z')	dir='x';
 	long par[2]={d->nx,d->ny};
 	mreal b[2]={x1,x2-x1};
 	if(dir=='x')	b[1] *= d->nx>1 ? 1./(d->nx-1):0;
@@ -655,7 +655,7 @@ void mgl_data_squeeze_(uintptr_t *d, int *rx,int *ry,int *rz,int *smooth)
 void mgl_data_extend(HMDT d, long n1, long n2)
 {
 	long nx=d->nx, ny=d->ny, nz=d->nz;
-	if((nz>2) | (n1==0))	return;
+	if(nz>2 || n1==0)	return;
 	long mx, my, mz;
 	mreal *b=0;
 	register long i,j;
@@ -672,14 +672,14 @@ void mgl_data_extend(HMDT d, long n1, long n2)
 	else
 	{
 		mx = -n1;	my = n2<0 ? -n2 : nx;	mz = n2<0 ? nx : ny;
-		if((n2>0) & (ny==1))	mz = n2;
+		if(n2>0 && ny==1)	mz = n2;
 		b = new mreal[mx*my*mz];
 		register mreal v;
 		if(n2<0)	for(j=0;j<nx;j++)	for(i=0,v=d->a[j];i<mx*my;i++)
 			b[i+mx*my*j] = v;
 		else	for(j=0;j<nx*ny;j++)	for(i=0,v=d->a[j];i<mx;i++)
 			b[i+mx*j] = v;
-		if((n2>0) & (ny==1))	for(i=0;i<n2;i++)
+		if(n2>0 && ny==1)	for(i=0;i<n2;i++)
 			memcpy(b+i*mx*my, d->a, mx*my*sizeof(mreal));
 	}
 	if(!d->link)	delete [](d->a);
@@ -695,13 +695,13 @@ void mgl_data_transpose(HMDT d, const char *dim)
 	mreal *b=new mreal[nx*ny*nz], *a=d->a;
 	register long i,j,k,n;
 	if(!strcmp(dim,"xyz"))	memcpy(b,a,nx*ny*nz*sizeof(mreal));
-	else if(!strcmp(dim,"xzy") | !strcmp(dim,"zy"))
+	else if(!strcmp(dim,"xzy") || !strcmp(dim,"zy"))
 	{
 		for(j=0;j<ny;j++)	for(k=0;k<nz;k++)	for(i=0;i<nx;i++)
 			b[i+nx*(k+nz*j)] = a[i+nx*(j+ny*k)];
 		n=nz;	nz=ny;	ny=n;
 	}
-	else if(!strcmp(dim,"yxz") | !strcmp(dim,"yx"))
+	else if(!strcmp(dim,"yxz") || !strcmp(dim,"yx"))
 	{
 		for(k=0;k<nz;k++)	for(i=0;i<nx;i++)	for(j=0;j<ny;j++)
 			b[j+ny*(i+nx*k)] = a[i+nx*(j+ny*k)];
@@ -719,7 +719,7 @@ void mgl_data_transpose(HMDT d, const char *dim)
 			b[k+nz*(i+nx*j)] = a[i+nx*(j+ny*k)];
 		n=nx;	nx=nz;	nz=ny;	ny=n;
 	}
-	else if(!strcmp(dim,"zyx") | !strcmp(dim,"zx"))
+	else if(!strcmp(dim,"zyx") || !strcmp(dim,"zx"))
 	{
 		for(i=0;i<nx;i++)	for(j=0;j<ny;j++)	for(k=0;k<nz;k++)
 			b[k+nz*(j+ny*i)] = a[i+nx*(j+ny*k)];
@@ -774,7 +774,7 @@ void mgl_data_modify_vw(HMDT d, const char *eq,HCDT vdat,HCDT wdat)
 	const mglData *w = dynamic_cast<const mglData *>(wdat);
 	long nn = d->nx*d->ny*d->nz, par[3]={d->nx,d->ny,d->nz};
 	mglFormula f(eq);
-	if(v && w && ((v->nx*v->ny*v->nz==nn) & (w->nx*w->ny*w->nz==nn)))
+	if(v && w && v->nx*v->ny*v->nz==nn && w->nx*w->ny*w->nz==nn)
 		mglStartThread(mgl_modify,0,nn,d->a,v->a,w->a,par,&f);
 	else if(v && v->nx*v->ny*v->nz==nn)
 		mglStartThread(mgl_modify,0,nn,d->a,v->a,0,par,&f);
@@ -877,7 +877,7 @@ void mgl_data_save_hdf(HCDT dat,const char *fname,const char *data,int rewrite)
 	if(res>0 && !rewrite)	hf = H5Fopen(fname, H5F_ACC_RDWR, H5P_DEFAULT);
 	else	hf = H5Fcreate(fname, H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
 	if(hf<0)	return;
-	if((d->nz==1) & (d->ny==1))	{	rank=1;	dims[0]=d->nx;	}
+	if(d->nz==1 && d->ny == 1)	{	rank=1;	dims[0]=d->nx;	}
 	else if(d->nz==1)	{	rank=2;	dims[0]=d->ny;	dims[1]=d->nx;	}
 	else	{	rank=3;	dims[0]=d->nz;	dims[1]=d->ny;	dims[2]=d->nx;	}
 	hs = H5Screate_simple(rank, dims, 0);
@@ -911,7 +911,7 @@ int mgl_data_read_hdf(HMDT d,const char *fname,const char *data)
 	if(hd<0)	return false;
 	hs = H5Dget_space(hd);
 	rank = H5Sget_simple_extent_ndims(hs);
-	if((rank>0) & (rank<=3))
+	if(rank>0 && rank<=3)
 	{
 		H5Sget_simple_extent_dims(hs,dims,0);
 		if(rank==1)			{	dims[2]=dims[0];	dims[0]=dims[1]=1;	}
@@ -930,7 +930,7 @@ int mgl_data_read_hdf(HMDT d,const char *fname,const char *data)
 int mgl_datas_hdf(const char *fname, char *buf, long size)
 {
 	hid_t hf,hg,hd,ht;
-	if(!buf | size<1)	return 0;
+	if(!buf || size<1)	return 0;
 	buf[0]=0;
 	hf = H5Fopen(fname, H5F_ACC_RDONLY, H5P_DEFAULT);
 	if(!hf)	return 0;
@@ -978,14 +978,14 @@ void mgl_data_save_hdf_(uintptr_t *d, const char *fname, const char *data, int *
 //-----------------------------------------------------------------------------
 bool mgl_add_file(long &kx,long &ky, long &kz, mreal *&b, mglData *d,bool as_slice)
 {
-	if(as_slice & (d->nz==1))
+	if(as_slice && d->nz==1)
 	{
-		if((kx==d->nx) & (d->ny==1))
+		if(kx==d->nx && d->ny==1)
 		{
 			b = (mreal *)realloc(b,kx*(ky+1)*sizeof(mreal));
 			memcpy(b+kx*ky,d->a,kx*sizeof(mreal));		ky++;
 		}
-		else if((kx==d->nx) & (ky==d->ny))
+		else if(kx==d->nx && ky==d->ny)
 		{
 			b = (mreal *)realloc(b,kx*ky*(kz+1)*sizeof(mreal));
 			memcpy(b+kx*ky*kz,d->a,kx*ky*sizeof(mreal));	kz++;
@@ -994,17 +994,17 @@ bool mgl_add_file(long &kx,long &ky, long &kz, mreal *&b, mglData *d,bool as_sli
 	}
 	else
 	{
-		if((d->ny*d->nz==1) & (ky*kz==1))
+		if(d->ny*d->nz==1 && ky*kz==1)
 		{
 			b = (mreal *)realloc(b,(kx+d->nx)*sizeof(mreal));
 			memcpy(b+kx,d->a,d->nx*sizeof(mreal));	kx+=d->nx;
 		}
-		else if((kx==d->nx) & (kz==1) & (d->nz==1))
+		else if(kx==d->nx && kz==1 && d->nz==1)
 		{
 			b = (mreal *)realloc(b,kx*(ky+d->ny)*sizeof(mreal));
 			memcpy(b+kx*ky,d->a,kx*d->ny*sizeof(mreal));	ky+=d->ny;
 		}
-		else if((kx==d->nx) & (ky==d->ny))
+		else if(kx==d->nx && ky==d->ny)
 		{
 			b = (mreal *)realloc(b,kx*kx*(kz+d->nz)*sizeof(mreal));
 			memcpy(b+kx*ky*kz,d->a,kx*ky*d->nz*sizeof(mreal));	kz+=d->nz;

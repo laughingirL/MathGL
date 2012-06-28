@@ -34,7 +34,7 @@ void mgl_data_envelop(HMDT d, char dir)
 	double *b = new double[2*nn];
 	mreal *a=d->a;
 	for(i=0;i<nn;i++)	{	b[2*i] = a[i];	b[2*i+1] = 0;	}
-	if((dir=='x') & (nx>1))
+	if(dir=='x' && nx>1)
 	{
 		gsl_fft_complex_wavetable *wt = gsl_fft_complex_wavetable_alloc(nx);
 		gsl_fft_complex_workspace *ws = gsl_fft_complex_workspace_alloc(nx);
@@ -48,7 +48,7 @@ void mgl_data_envelop(HMDT d, char dir)
 		gsl_fft_complex_workspace_free(ws);
 		gsl_fft_complex_wavetable_free(wt);
 	}
-	if((dir=='y') & (ny>1))
+	if(dir=='y' && ny>1)
 	{
 		gsl_fft_complex_wavetable *wt = gsl_fft_complex_wavetable_alloc(ny);
 		gsl_fft_complex_workspace *ws = gsl_fft_complex_workspace_alloc(ny);
@@ -63,7 +63,7 @@ void mgl_data_envelop(HMDT d, char dir)
 		gsl_fft_complex_workspace_free(ws);
 		gsl_fft_complex_wavetable_free(wt);
 	}
-	if((dir=='z') & (nz>1))
+	if(dir=='z' && nz>1)
 	{
 		gsl_fft_complex_wavetable *wt = gsl_fft_complex_wavetable_alloc(nz);
 		gsl_fft_complex_workspace *ws = gsl_fft_complex_workspace_alloc(nz);
@@ -90,7 +90,7 @@ HMDT mgl_data_trace(HCDT d)
 	long nx=d->GetNx(),ny=d->GetNy(),nz=d->GetNz();
 	mglData *r=new mglData(nx);
 	register long i;
-	if((ny>=nx) & (nz>=nx))	for(i=0;i<nx;i++)	r->a[i] = d->v(i,i,i);
+	if(ny>=nx && nz>=nx)	for(i=0;i<nx;i++)	r->a[i] = d->v(i,i,i);
 	else if(ny>=nx)		for(i=0;i<nx;i++)	r->a[i] = d->v(i,i);
 	else		for(i=0;i<nx;i++)	r->a[i] = d->v(i);
 	return r;
@@ -107,43 +107,43 @@ HMDT mgl_data_subdata_ext(HCDT d, HCDT xx, HCDT yy, HCDT zz)
 	if(xx->GetNz()>1)	// 3d data
 	{
 		n = xx->GetNx();	m = xx->GetNy();	l = xx->GetNz();
-		j = yy->GetNx()*yy->GetNy()*yy->GetNz();	if((j>1) & (j!=n*m*l))	return r;	// wrong sizes
-		k = zz->GetNx()*zz->GetNy()*zz->GetNz();	if((k>1) & (k!=n*m*l))	return r;	// wrong sizes
+		j = yy->GetNx()*yy->GetNy()*yy->GetNz();	if(j>1 && j!=n*m*l)	return r;	// wrong sizes
+		k = zz->GetNx()*zz->GetNy()*zz->GetNz();	if(k>1 && k!=n*m*l)	return r;	// wrong sizes
 		ix = true;	iy = j>1;	iz = k>1;
 	}
 	else if(yy->GetNz()>1)
 	{
 		n = yy->GetNx();	m = yy->GetNy();	l = yy->GetNz();
-		j = xx->GetNx()*xx->GetNy()*xx->GetNz();	if((j>1) & (j!=n*m*l))	return r;	// wrong sizes
-		k = zz->GetNx()*zz->GetNy()*zz->GetNz();	if((k>1) & (k!=n*m*l))	return r;	// wrong sizes
+		j = xx->GetNx()*xx->GetNy()*xx->GetNz();	if(j>1 && j!=n*m*l)	return r;	// wrong sizes
+		k = zz->GetNx()*zz->GetNy()*zz->GetNz();	if(k>1 && k!=n*m*l)	return r;	// wrong sizes
 		iy = true;	ix = j>1;	iz = k>1;
 	}
 	else if(zz->GetNz()>1)
 	{
 		n = zz->GetNx();	m = zz->GetNy();	l = zz->GetNz();
-		j = yy->GetNx()*yy->GetNy()*yy->GetNz();	if((j>1) & (j!=n*m*l))	return r;	// wrong sizes
-		k = xx->GetNx()*xx->GetNy()*xx->GetNz();	if((k>1) & (k!=n*m*l))	return r;	// wrong sizes
+		j = yy->GetNx()*yy->GetNy()*yy->GetNz();	if(j>1 && j!=n*m*l)	return r;	// wrong sizes
+		k = xx->GetNx()*xx->GetNy()*xx->GetNz();	if(k>1 && k!=n*m*l)	return r;	// wrong sizes
 		iz = true;	iy = j>1;	ix = k>1;
 	}
 	else if(xx->GetNy()>1)	// 2d data
 	{
 		n = xx->GetNx();	m = xx->GetNy();	l = 1;
-		j = yy->GetNx()*yy->GetNy();	if((j>1) & (j!=n*m))	return r;	// wrong sizes
-		k = zz->GetNx()*zz->GetNy();	if((k>1) & (k!=n*m))	return r;	// wrong sizes
+		j = yy->GetNx()*yy->GetNy();	if(j>1 && j!=n*m)	return r;	// wrong sizes
+		k = zz->GetNx()*zz->GetNy();	if(k>1 && k!=n*m)	return r;	// wrong sizes
 		ix = true;	iy = j>1;	iz = k>1;
 	}
 	else if(yy->GetNy()>1)
 	{
 		n = yy->GetNx();	m = yy->GetNy();	l = 1;
-		j = xx->GetNx()*xx->GetNy();	if((j>1) & (j!=n*m))	return r;	// wrong sizes
-		k = zz->GetNx()*zz->GetNy();	if((k>1) & (k!=n*m))	return r;	// wrong sizes
+		j = xx->GetNx()*xx->GetNy();	if(j>1 && j!=n*m)	return r;	// wrong sizes
+		k = zz->GetNx()*zz->GetNy();	if(k>1 && k!=n*m)	return r;	// wrong sizes
 		iy = true;	ix = j>1;	iz = k>1;
 	}
 	else if(zz->GetNy()>1)
 	{
 		n = zz->GetNx();	m = zz->GetNy();	l = 1;
-		j = yy->GetNx()*yy->GetNy();	if((j>1) & (j!=n*m))	return r;	// wrong sizes
-		k = xx->GetNx()*xx->GetNy();	if((k>1) & (k!=n*m))	return r;	// wrong sizes
+		j = yy->GetNx()*yy->GetNy();	if(j>1 && j!=n*m)	return r;	// wrong sizes
+		k = xx->GetNx()*xx->GetNy();	if(k>1 && k!=n*m)	return r;	// wrong sizes
 		iz = true;	iy = j>1;	ix = k>1;
 	}
 	long nx=d->GetNx(),ny=d->GetNy(),nz=d->GetNz();
@@ -161,11 +161,11 @@ HMDT mgl_data_subdata_ext(HCDT d, HCDT xx, HCDT yy, HCDT zz)
 		return r;
 	}
 	// this is 1d data -> try as normal SubData()
-	if((xx->GetNx()>1) | (vx>=0))	{	n=xx->GetNx();	ix=true;	}
+	if(xx->GetNx()>1 || vx>=0)	{	n=xx->GetNx();	ix=true;	}
 	else	{	n=nx;	ix=false;	}
-	if((yy->GetNx()>1) | (vy>=0))	{	m=yy->GetNx();	iy=true;	}
+	if(yy->GetNx()>1 || vy>=0)	{	m=yy->GetNx();	iy=true;	}
 	else	{	m=ny;	iy=false;	}
-	if((zz->GetNx()>1) | (vz>=0))	{	l=zz->GetNx();	iz=true;	}
+	if(zz->GetNx()>1 || vz>=0)	{	l=zz->GetNx();	iz=true;	}
 	else	{	l=nz;	iz=false;	}
 	r->Create(n,m,l);
 	for(k=0;k<l;k++)	for(j=0;j<m;j++)	for(i=0;i<n;i++)
@@ -201,7 +201,7 @@ void *mgl_column(void *par)
 	for(i=t->id;i<t->n;i+=mglNumThr)
 	{
 		for(j=0;j<nx;j++)
-			if((t->s[j]>='a') & (t->s[j]<='z'))
+			if(t->s[j]>='a' && t->s[j]<='z')
 				var[t->s[j]-'a'] = a[j+nx*i];
 		b[i] = f->Calc(var);
 	}
@@ -272,7 +272,7 @@ HMDT mgl_data_combine(HCDT d1, HCDT d2)
 	const mglData *b=dynamic_cast<const mglData *>(d2);
 
 	mglData *r=new mglData;
-	if((a->nz>1) | ((a->ny>1) & (b->ny>1)) | (b->nz>1))	return r;
+	if(a->nz>1 || (a->ny>1 && b->ny>1) || b->nz>1)	return r;
 	long n1=a->ny,n2=b->nx;
 	bool dim2=true;
 	if(a->ny==1)	{	n1=b->nx;	n2=b->ny;	dim2 = false;	}
@@ -607,7 +607,7 @@ HMDT mgl_data_evaluate(HCDT dat, HCDT idat, HCDT jdat, HCDT kdat, int norm)
 	const mglData *i=dynamic_cast<const mglData *>(idat);
 	const mglData *j=dynamic_cast<const mglData *>(jdat);
 	const mglData *k=dynamic_cast<const mglData *>(kdat);
-	if(!d | !i)	return r;
+	if(!d || !i)	return r;
 
 	long p[4]={i->nx,i->ny,i->nz,norm};
 	register long n=i->nx*i->ny*i->nz;
@@ -1027,11 +1027,11 @@ void mgl_data_mul_dat(HMDT d, HCDT a)
 	const mglData *b = dynamic_cast<const mglData *>(a);
 	if(b)
 	{
-		if((b->nz==1) & (b->ny==1) & (nx==b->nx))
+		if(b->nz==1 && b->ny==1 && nx==b->nx)
 		{	n=nx;		mglStartThread(mgl_eqmul,0,nx*ny*nz,d->a,b->a,0,&n);	}
-		else if((b->nz==1) & (ny==b->ny) & (nx==b->nx))
+		else if(b->nz==1 && ny==b->ny && nx==b->nx)
 		{	n=nx*ny;	mglStartThread(mgl_eqmul,0,nx*ny*nz,d->a,b->a,0,&n);	}
-		else if((nz==b->nz) & (ny==b->ny) & (nx==b->nx))
+		else if(nz==b->nz && ny==b->ny && nx==b->nx)
 		{	n=nx*ny*nz;	mglStartThread(mgl_eqmul,0,nx*ny*nz,d->a,b->a,0,&n);	}
 	}
 	else	for(long k=0;k<ny;k++)	for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
@@ -1059,11 +1059,11 @@ void mgl_data_div_dat(HMDT d, HCDT a)
 	const mglData *b = dynamic_cast<const mglData *>(a);
 	if(b)
 	{
-		if((b->nz==1) & (b->ny==1) & (nx==b->nx))
+		if(b->nz==1 && b->ny==1 && nx==b->nx)
 		{	n=nx;		mglStartThread(mgl_eqdiv,0,nx*ny*nz,d->a,b->a,0,&n);	}
-		else if((b->nz==1) & (ny==b->ny) & (nx==b->nx))
+		else if(b->nz==1 && ny==b->ny && nx==b->nx)
 		{	n=nx*ny;	mglStartThread(mgl_eqdiv,0,nx*ny*nz,d->a,b->a,0,&n);	}
-		else if((nz==b->nz) & (ny==b->ny) & (nx==b->nx))
+		else if(nz==b->nz && ny==b->ny && nx==b->nx)
 		{	n=nx*ny*nz;	mglStartThread(mgl_eqdiv,0,nx*ny*nz,d->a,b->a,0,&n);	}
 	}
 	else	for(long k=0;k<ny;k++)	for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
@@ -1091,11 +1091,11 @@ void mgl_data_add_dat(HMDT d, HCDT a)
 	const mglData *b = dynamic_cast<const mglData *>(a);
 	if(b)
 	{
-		if((b->nz==1) & (b->ny==1) & (nx==b->nx))
+		if(b->nz==1 && b->ny==1 && nx==b->nx)
 		{	n=nx;		mglStartThread(mgl_eqadd,0,nx*ny*nz,d->a,b->a,0,&n);	}
-		else if((b->nz==1) & (ny==b->ny) & (nx==b->nx))
+		else if(b->nz==1 && ny==b->ny && nx==b->nx)
 		{	n=nx*ny;	mglStartThread(mgl_eqadd,0,nx*ny*nz,d->a,b->a,0,&n);	}
-		else if((nz==b->nz) & (ny==b->ny) & (nx==b->nx))
+		else if(nz==b->nz && ny==b->ny && nx==b->nx)
 		{	n=nx*ny*nz;	mglStartThread(mgl_eqadd,0,nx*ny*nz,d->a,b->a,0,&n);	}
 	}
 	else	for(long k=0;k<ny;k++)	for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
@@ -1123,11 +1123,11 @@ void mgl_data_sub_dat(HMDT d, HCDT a)
 	const mglData *b = dynamic_cast<const mglData *>(a);
 	if(b)
 	{
-		if((b->nz==1) & (b->ny==1) & (nx==b->nx))
+		if(b->nz==1 && b->ny==1 && nx==b->nx)
 		{	n=nx;		mglStartThread(mgl_eqsub,0,nx*ny*nz,d->a,b->a,0,&n);	}
-		else if((b->nz==1) & (ny==b->ny) & (nx==b->nx))
+		else if(b->nz==1 && ny==b->ny && nx==b->nx)
 		{	n=nx*ny;	mglStartThread(mgl_eqsub,0,nx*ny*nz,d->a,b->a,0,&n);	}
-		else if((nz==b->nz) & (ny==b->ny) & (nx==b->nx))
+		else if(nz==b->nz && ny==b->ny && nx==b->nx)
 		{	n=nx*ny*nz;	mglStartThread(mgl_eqsub,0,nx*ny*nz,d->a,b->a,0,&n);	}
 	}
 	else	for(long k=0;k<ny;k++)	for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
@@ -1169,7 +1169,7 @@ void *mgl_hist_1(void *par)
 	for(i=t->id;i<nn;i+=mglNumThr)
 	{
 		k = long(n*(a[i]-v[0])/(v[1]-v[0]));
-		if((k>=0) & (k<n))	b[k] += c ? c[i]:1.;
+		if(k>=0 && k<n)	b[k] += c ? c[i]:1.;
 	}
 	t->a = b;	return 0;
 }
@@ -1189,7 +1189,7 @@ void *mgl_hist_2(void *par)
 		f = sp ? mglSpline3(a,nx,ny,nz,x,y,z) : mglLinear(a,nx,ny,nz,x,y,z);
 		if(c)	w = sp ? mglSpline3(c,nx,ny,nz,x,y,z) : mglLinear(c,nx,ny,nz,x,y,z);
 		k = long(n*(f-v[0])/(v[1]-v[0]));
-		if((k>=0) & (k<n))	b[k] += w * d*d*d;
+		if(k>=0 && k<n)	b[k] += w * d*d*d;
 	}
 	t->a = b;	return 0;
 }
@@ -1197,7 +1197,7 @@ HMDT mgl_data_hist(HCDT dat, long n, float v1, float v2, long nsub)
 {
 	mglData *b=new mglData;		// NOTE: For mglData only!
 	const mglData *d = dynamic_cast<const mglData *>(dat);
-	if((n<2) | (v1==v2) | !d)	return b;
+	if(n<2 || v1==v2 || !d)	return b;
 	mgl_data_create(b,n,1,1);
 	mreal v[2]={v1,v2};
 	long nx=d->nx, ny=d->ny, nz=d->nz;
@@ -1212,7 +1212,7 @@ HMDT mgl_data_hist_w(HCDT dat, HCDT weight, long n, float v1, float v2, long nsu
 	mglData *b=new mglData;		// NOTE: For mglData only!
 	const mglData *d = dynamic_cast<const mglData *>(dat);
 	const mglData *w = dynamic_cast<const mglData *>(weight);
-	if((n<2) | (v1==v2) | !d | !w)	return b;
+	if(n<2 || v1==v2 || !d || !w)	return b;
 	mgl_data_create(b,n,1,1);
 	mreal v[2]={v1,v2};
 
@@ -1230,13 +1230,13 @@ uintptr_t mgl_data_hist_w_(uintptr_t *d, uintptr_t *w, int *n, float *v1, float 
 //-----------------------------------------------------------------------------
 mreal mglLinear(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z)
 {
-	if(!a | (nx<1) | (ny<1) | (nz<1))	return 0;
+	if(!a || nx<1 || ny<1 || nz<1)	return 0;
 	register long i0;
 	long kx,ky,kz;
 	mreal b=0,dx,dy,dz,b1,b0;
-	if((x<0) | (y<0) | (z<0) | (x>nx-1) | (y>ny-1) | (z>nz-1))
+	if(x<0 || y<0 || z<0 || x>nx-1 || y>ny-1 || z>nz-1)
 		return 0;
-	if((nz>1) & (z!=floor(z)))		// 3d interpolation
+	if(nz>1 && z!=floor(z))		// 3d interpolation
 	{
 		kx=long(x);	ky=long(y);	kz=long(z);
 		dx = x-kx;	dy = y-ky;	dz = z-kz;
@@ -1249,7 +1249,7 @@ mreal mglLinear(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mre
 			dy*(1-dx)*a[i0+nx] + dx*dy*a[i0+nx+1];
 		b = b0 + dz*(b1-b0);
 	}
-	else if((ny>1) & (y!=floor(y)))	// 2d interpolation
+	else if(ny>1 && y!=floor(y))	// 2d interpolation
 	{
 		kx=long(x);	ky=long(y);
 		dx = x-kx;	dy=y-ky;
@@ -1257,7 +1257,7 @@ mreal mglLinear(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mre
 		b = a[i0]*(1-dx-dy+dx*dy) + dx*(1-dy)*a[i0+1] +
 			dy*(1-dx)*a[i0+nx] + dx*dy*a[i0+nx+1];
 	}
-	else if((nx>1) & (x!=floor(x)))	// 1d interpolation
+	else if(nx>1 && x!=floor(x))	// 1d interpolation
 	{
 		kx = long(x);
 		b = a[kx] + (x-kx)*(a[kx+1]-a[kx]);
@@ -1276,9 +1276,9 @@ int mgl_cmd_idx(const void *a, const void *b)
 void mgl_data_sort(HMDT dat, long idx, long idy)
 {
 	mglData *d = dynamic_cast<mglData *>(dat);
-	if(!d || ((idx>=d->nx) | (idx<0)))	return;
-	bool single = ((d->nz==1) | (idy<0));
-	if((idy<0) | (idy>d->ny))	idy=0;
+	if(!d || idx>=d->nx || idx<0)	return;
+	bool single = (d->nz==1 || idy<0);
+	if(idy<0 || idy>d->ny)	idy=0;
 	mgl_idx_var = idx+d->nx*idy;	// NOTE: not thread safe!!!
 	if(single)	qsort(d->a, d->ny*d->nz, d->nx*sizeof(mreal), mgl_cmd_idx);
 	else		qsort(d->a, d->nz, d->ny*d->nx*sizeof(mreal), mgl_cmd_idx);

@@ -28,8 +28,8 @@
 void mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, const char *opt)
 {
 	long n = x->GetNx(), m = nums->GetNy();
-	if((y->GetNx()!=n) | (z->GetNx()!=n) | (nums->GetNx()<3))	{	gr->SetWarn(mglWarnLow,"TriPlot");	return;	}
-	if((a->GetNx()!=m) & (a->GetNx()!=n))	{	gr->SetWarn(mglWarnLow,"TriPlot");	return;	}
+	if(y->GetNx()!=n || z->GetNx()!=n || nums->GetNx()<3)	{	gr->SetWarn(mglWarnLow,"TriPlot");	return;	}
+	if(a->GetNx()!=m && a->GetNx()!=n)	{	gr->SetWarn(mglWarnLow,"TriPlot");	return;	}
 	long ss=gr->AddTexture(sch);
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("TriPlot",cgid++);
@@ -38,7 +38,7 @@ void mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const 
 	register long i,k1,k2,k3;
 	bool wire = sch && strchr(sch,'#');
 	long nc = a->GetNx();
-	if((nc!=n) & (nc>=m))	// colors per triangle
+	if(nc!=n && nc>=m)	// colors per triangle
 	{
 		gr->Reserve(m*3);
 		for(i=0;i<m;i++)
@@ -110,7 +110,6 @@ void mgl_triplot_xy(HMGL gr, HCDT nums, HCDT x, HCDT y, const char *sch, const c
 	gr->SaveState(opt);
 	mglData z(x->GetNx());	z.Fill(gr->Min.z,gr->Min.z);
 	mgl_triplot_xyzc(gr,nums,x,y,&z,&z,sch,0);
-	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_triplot_xyzc_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *c, const char *sch, const char *opt,int l,int lo)
@@ -137,8 +136,8 @@ void mgl_triplot_xy_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y,
 void mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, const char *opt)
 {
 	long n = x->GetNx(), m = nums->GetNy();
-	if((y->GetNx()!=n) | (z->GetNx()!=n) | (nums->GetNx()<4))	{	gr->SetWarn(mglWarnLow,"QuadPlot");	return;	}
-	if((a->GetNx()!=m) & (a->GetNx()!=n))	{	gr->SetWarn(mglWarnLow,"QuadPlot");	return;	}
+	if(y->GetNx()!=n || z->GetNx()!=n || nums->GetNx()<4)	{	gr->SetWarn(mglWarnLow,"QuadPlot");	return;	}
+	if(a->GetNx()!=m && a->GetNx()!=n)	{	gr->SetWarn(mglWarnLow,"QuadPlot");	return;	}
 	long ss=gr->AddTexture(sch);
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("QuadPlot",cgid++);
@@ -147,7 +146,7 @@ void mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const
 	register long i,k1,k2,k3,k4;
 	long nc = a->GetNx();
 	bool wire = sch && strchr(sch,'#');
-	if((nc!=n) & (nc>=m))	// colors per triangle
+	if(nc!=n && nc>=m)	// colors per triangle
 	{
 		gr->Reserve(m*4);
 		for(i=0;i<m;i++)
@@ -227,7 +226,6 @@ void mgl_quadplot_xy(HMGL gr, HCDT nums, HCDT x, HCDT y, const char *sch, const 
 	gr->SaveState(opt);
 	mglData z(x->GetNx());	z.Fill(gr->Min.z,gr->Min.z);
 	mgl_quadplot_xyzc(gr,nums,x,y,&z,&z,sch,0);
-	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_quadplot_xyzc_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *c, const char *sch, const char *opt,int l,int lo)
@@ -257,7 +255,7 @@ void mgl_tricont_line(HMGL gr, float val, long k1, long k2, long k3, HCDT x, HCD
 	mglPoint p1,p2,n;
 	d1 = mgl_d(val,a->v(k1),a->v(k2));
 	d2 = mgl_d(val,a->v(k1),a->v(k3));
-	if((d1<0) | (d1>1) | (d2<0) | (d2>1))	return;
+	if(d1<0 || d1>1 || d2<0 || d2>1)	return;
 	p1 = mglPoint(x->v(k1)*(1-d1)+x->v(k2)*d1, y->v(k1)*(1-d1)+y->v(k2)*d1,
 				zVal?z->v(k1)*(1-d1)+z->v(k2)*d1:gr->Min.z);
 	if(!gr->ScalePoint(p1,n))	return;
@@ -272,8 +270,8 @@ void mgl_tricont_line(HMGL gr, float val, long k1, long k2, long k3, HCDT x, HCD
 void mgl_tricont_xyzcv(HMGL gr, HCDT v, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, const char *opt)
 {
 	long n = x->GetNx(), m = nums->GetNy();
-	if((y->GetNx()!=n) | (z->GetNx()!=n) | (nums->GetNx()<3))	{	gr->SetWarn(mglWarnLow,"TriCont");	return;	}
-	if((a->GetNx()!=m) & (a->GetNx()!=n))	{	gr->SetWarn(mglWarnLow,"TriCont");	return;	}
+	if(y->GetNx()!=n || z->GetNx()!=n || nums->GetNx()<3)	{	gr->SetWarn(mglWarnLow,"TriCont");	return;	}
+	if(a->GetNx()!=m && a->GetNx()!=n)	{	gr->SetWarn(mglWarnLow,"TriCont");	return;	}
 	long ss=gr->AddTexture(sch);
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("TriCont",cgid++);
@@ -284,9 +282,9 @@ void mgl_tricont_xyzcv(HMGL gr, HCDT v, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT 
 	for(k=0;k<v->GetNx();k++)	for(i=0;i<m;i++)
 	{
 		if(gr->Stop)	return;
-		k1 = long(nums->v(0,i)+0.1);	if((k1<0) | (k1>=n))	continue;
-		k2 = long(nums->v(1,i)+0.1);	if((k2<0) | (k2>=n))	continue;
-		k3 = long(nums->v(2,i)+0.1);	if((k3<0) | (k3>=n))	continue;
+		k1 = long(nums->v(0,i)+0.1);	if(k1<0 || k1>=n)	continue;
+		k2 = long(nums->v(1,i)+0.1);	if(k2<0 || k2>=n)	continue;
+		k3 = long(nums->v(2,i)+0.1);	if(k3<0 || k3>=n)	continue;
 		val = v->v(k);
 		float c = gr->GetC(ss,val);
 		mgl_tricont_line(gr,val, k1,k2,k3,x,y,z,a,zVal,c);
@@ -298,11 +296,10 @@ void mgl_tricont_xyzcv(HMGL gr, HCDT v, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT 
 void mgl_tricont_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, const char *opt)
 {
 	float r = gr->SaveState(opt);
-	long n = (mgl_isnan(r) | (r<=0)) ? 7:long(r+0.5);
+	long n = (mgl_isnan(r) || r<=0) ? 7:long(r+0.5);
 	mglData v(n);
 	for(long i=0;i<n;i++)	v.a[i] = gr->Min.c + (gr->Max.c-gr->Min.c)*float(i+1)/(n+1);
 	mgl_tricont_xyzcv(gr,&v,nums,x,y,z,a,sch,0);
-	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_tricont_xyc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt)
@@ -342,7 +339,7 @@ void mgl_tricont_xyc_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y
 void mgl_dots_a(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, const char *opt)
 {
 	long n = x->GetNx();
-	if((y->GetNx()!=n) | (z->GetNx()!=n) | (a->GetNx()!=n))	{	gr->SetWarn(mglWarnDim,"Dots");	return;	}
+	if(y->GetNx()!=n || z->GetNx()!=n || a->GetNx()!=n)	{	gr->SetWarn(mglWarnDim,"Dots");	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Dots",cgid++);
 	char mk=gr->SetPenPal(sch);
@@ -384,7 +381,7 @@ HMDT mgl_triangulation_3d(HCDT x, HCDT y, HCDT z)
 	// TODO: should be used s-hull or q-hull
 	mglData *nums=new mglData;
 	long n = x->GetNx(), m;
-	if((y->GetNx()!=n) | (z->GetNx()!=n))	return nums;
+	if(y->GetNx()!=n || z->GetNx()!=n)	return nums;
 	register long i;
 	mglPoint *pp = new mglPoint[n];
 	long *nn=0;
@@ -510,7 +507,7 @@ void mgl_data_grid_(uintptr_t *gr, uintptr_t *d, uintptr_t *x, uintptr_t *y, uin
 //-----------------------------------------------------------------------------
 void mgl_crust(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt)
 {
-	if((y->GetNx()!=x->GetNx()) | (z->GetNx()!=x->GetNx()))
+	if(y->GetNx()!=x->GetNx() || z->GetNx()!=x->GetNx())
 	{	gr->SetWarn(mglWarnDim,"Crust");	return;	}
 	HMDT nums = mgl_triangulation_3d(x, y, z);
 	mgl_triplot_xyzc(gr,nums,x,y,z,z,sch,opt);
@@ -525,7 +522,7 @@ void mgl_crust_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, const c
 long mgl_insert_trig(long i1,long i2,long i3,long **n)
 {
 	static long Cur=0,Max=0;
-	if((i1<0) | (i2<0) | (i3<0))	return Cur;
+	if(i1<0 || i2<0 || i3<0)	return Cur;
 	if(*n==0)
 	{
 		Max = 1024;		Cur = 0;
@@ -546,7 +543,7 @@ long mgl_insert_trig(long i1,long i2,long i3,long **n)
 	for(i=0;i<Cur;i++)	// check if it is unique
 	{
 		nn = *n + 3*i;
-		if((nn[0]==i1) & (nn[1]==i2) & (nn[2]==i3))	return Cur;
+		if(nn[0]==i1 && nn[1]==i2 && nn[2]==i3)	return Cur;
 	}
 	nn = *n + 3*Cur;
 	nn[0]=i1;	nn[1]=i2;	nn[2]=i3;
@@ -559,7 +556,7 @@ long mgl_get_next(long k1,long n,long *,long *set,mglPoint *qq)
 	float r,rm=FLT_MAX;
 	for(i=0;i<n;i++)
 	{
-		if((i==k1) | (set[i]>0))	continue;
+		if(i==k1 || set[i]>0)	continue;
 		r = mgl_norm(qq[i]-qq[k1]);
 		if(r<rm)	{	rm=r;	j=i;	}
 	}
@@ -591,7 +588,7 @@ long mgl_crust(long n,mglPoint *pp,long **nn,float ff)
 		for(ii=0,j=0;j<n;j++)	// find close vertexes
 		{
 			r = mgl_norm(pp[i]-pp[j]);
-			if((r<=rs) & (j!=i))	{	ind[ii] = j;	ii++;	if(ii==99)	break;}
+			if(r<=rs && j!=i)	{	ind[ii] = j;	ii++;	if(ii==99)	break;}
 		}
 		if(ii<3)	continue;	// nothing to do
 		for(j=0;j<ii;j++)

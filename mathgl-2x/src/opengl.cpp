@@ -84,7 +84,7 @@ void mglCanvasGL::AddLight(int n,mglPoint r,mglPoint d,char cc, float br,float /
 			GL_LIGHT5,GL_LIGHT6,GL_LIGHT7};
 	float amb[4], pos[4],dif[4],dir[4];
 	bool inf = mgl_isnan(r.x);
-	if((n<0) | (n>7))	{	SetWarn(mglWarnLId);	return;	}
+	if(n<0 || n>7)	{	SetWarn(mglWarnLId);	return;	}
 	if(c.Valid())
 	{
 		DifLight = c*br;
@@ -224,7 +224,7 @@ unsigned char **mglCanvasGL::GetRGBLines(long &width, long &height, unsigned cha
 //-----------------------------------------------------------------------------
 void mglCanvasGL::trig_draw(long k1, long k2, long k3, bool, mglDrawReg *)
 {
-	if((k1<0) | (k2<0) | (k3<0))	return;
+	if(k1<0 || k2<0 || k3<0)	return;
 	glBegin(GL_TRIANGLES);
 	glArrayElement(k1);	glArrayElement(k2);	glArrayElement(k3);
 	glEnd();
@@ -232,7 +232,7 @@ void mglCanvasGL::trig_draw(long k1, long k2, long k3, bool, mglDrawReg *)
 //-----------------------------------------------------------------------------
 void mglCanvasGL::quad_draw(long k1, long k2, long k3, long k4, mglDrawReg *)
 {
-	if((k1<0) | (k2<0) | (k3<0) | (k4<0))	return;
+	if(k1<0 || k2<0 || k3<0 || k4<0)	return;
 	glBegin(GL_QUADS);
 	glArrayElement(k1);	glArrayElement(k2);
 	glArrayElement(k4);	glArrayElement(k3);
@@ -241,7 +241,7 @@ void mglCanvasGL::quad_draw(long k1, long k2, long k3, long k4, mglDrawReg *)
 //-----------------------------------------------------------------------------
 void mglCanvasGL::line_draw(long k1, long k2, mglDrawReg *)
 {
-	if((k1<0) | (k2<0) | (PDef==0))	return;
+	if(k1<0 || k2<0 || PDef==0)	return;
 /*	unsigned long pdef = PDef*0x10001;
 	pdef = pdef << (int(100*pPos+0.5)%16);
 	set_pen(pdef&0xffff,PenWidth);*/

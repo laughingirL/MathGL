@@ -252,7 +252,7 @@ unsigned mglFont::Parse(const wchar_t *s) const
 		if(!wcscmp(s,mgl_act_symb[k].tex))
 			return mgl_act_symb[k].kod | MGL_FONT_ZEROW;
 	// arbitrary UTF symbol
-	if((s[0]=='u') & (s[1]=='t') & (s[2]=='f'))
+	if(s[0]=='u' && s[1]=='t' && s[2]=='f')
 //	{	wscanf(s+3,"%lx",&k);	return wchar_t(k);	}
 	{	k = wcstoul(s+3,NULL,16);	return wchar_t(k);	}
 	// font/style changes for next symbol
@@ -311,7 +311,7 @@ void mglFont::Convert(const wchar_t *str, unsigned *res) const
 				}
 			}
 		}
-		else if((ch<=' ') & (ch!='\n'))	res[j++] = ' ';	// no \t at this moment :(
+		else if(ch<=' ' && ch!='\n')	res[j++] = ' ';	// no \t at this moment :(
 		else if(ch=='_')	res[j++] = MGL_FONT_LOWER;
 		else if(ch=='^')	res[j++] = MGL_FONT_UPPER;
 		else if(ch=='@')	res[j++] = MGL_FONT_UPPER|MGL_FONT_LOWER;

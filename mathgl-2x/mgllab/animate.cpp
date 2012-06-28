@@ -87,7 +87,7 @@ void argument_cb(Fl_Widget *, void *)
 //-----------------------------------------------------------------------------
 void argument_set(int n, const char *s)
 {
-	if((n<0) | (n>9))	return;
+	if(n<0 || n>9)	return;
 	Parse->AddParam(n,s);
 	argument_dlg.a[n]->value(s);
 }

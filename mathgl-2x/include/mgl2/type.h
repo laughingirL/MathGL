@@ -37,7 +37,7 @@ struct mglPoint
 {
 	float x,y,z,c;
 	mglPoint(float X=0,float Y=0,float Z=0,float C=0){x=X;y=Y;z=Z;c=C;}
-	inline bool IsNAN()		{	return ((x!=x) | (y!=y) | (z!=z) | (c!=c));	}
+	inline bool IsNAN()		{	return (x!=x || y!=y || z!=z || c!=c);	}
 	inline float val(int i)	{	return (i<2 ? (i==0 ? x:y) : (i==2 ? z:c));	}
 	inline float norm()		{	return sqrt(x*x+y*y+z*z);	}
 	inline void Normalize()	{	float v=norm();	x/=v;	y/=v;	z/=v;	}
@@ -79,9 +79,9 @@ inline bool operator==(const mglPoint &a, const mglPoint &b)
 inline bool operator!=(const mglPoint &a, const mglPoint &b)
 {	return memcmp(&a, &b, sizeof(mglPoint));	}
 inline bool operator<(const mglPoint &a, const mglPoint &b)
-{	return (a.x<=b.x) & (a.y<=b.y) & (a.z<=b.z);	}
+{	return a.x<=b.x && a.y<=b.y && a.z<=b.z;	}
 inline bool operator>(const mglPoint &a, const mglPoint &b)
-{	return (a.x>=b.x) & (a.y>=b.y) & (a.z>=b.z);	}
+{	return a.x>=b.x && a.y>=b.y && a.z>=b.z;	}
 inline float mgl_norm(const mglPoint &p)
 {	return sqrt(p.x*p.x+p.y*p.y+p.z*p.z);	}
 #endif
@@ -104,7 +104,7 @@ struct mglColor
 	void Set(mglColor c, float bright=1);
 	/// Check if color is valid
 	inline bool Valid()
-	{	return ((r>=0) & (r<=1) & (g>=0) & (g<=1) & (b>=0) & (b<=1) & (a>=0) & (a<=1));	}
+	{	return (r>=0 && r<=1 && g>=0 && g<=1 && b>=0 && b<=1 && a>=0 && a<=1);	}
 	/// Get maximal spectral component
 	inline float Norm()
 	{	return r>g ? r : (g>b ? g : b);	}
@@ -114,9 +114,9 @@ struct mglColor
 	void Set(char p, float bright=1);
 	/// Copy color from other one
 	inline bool operator==(const mglColor &c)
-	{	return ((r==c.r) & (g==c.g) & (b==c.b) & (a==c.a));	}
+	{	return (r==c.r && g==c.g && b==c.b && a==c.a);	}
 	inline bool operator!=(const mglColor &c)
-	{	return ((r!=c.r) | (g!=c.g) | (b!=c.b) | (a!=c.a));	}
+	{	return (r!=c.r || g!=c.g || b!=c.b || a!=c.a);	}
 	// transparency still the same
 	inline void operator*=(float v)				{	r*=v;	g*=v;	b*=v;	}
 	inline void operator+=(const mglColor &c)	{	r+=c.r;	g+=c.g;	b+=c.b;	}

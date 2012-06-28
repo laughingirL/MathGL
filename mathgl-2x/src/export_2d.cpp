@@ -49,8 +49,8 @@ char *mgl_get_dash(unsigned short d, float w)
 bool mgl_is_same(HMGL gr, const mglPrim &pr,float wp,mglColor cp,int st)
 {
 	if(abs(pr.type)!=1)	return false;
-	if((pr.w>=1) & (wp!=pr.w))	return false;
-	if((pr.w<1) & (wp!=1))	return false;
+	if(pr.w>=1 && wp!=pr.w)	return false;
+	if(pr.w<1 && wp!=1)	return false;
 	if(st!=pr.n3)			return false;
 	mglColor c=_Gr_->GetColor(pr);
 	return (cp==c);
@@ -68,16 +68,16 @@ void put_line(HMGL gr, void *fp, bool gz, long i, float wp, mglColor cp,int st, 
 		{
 			mglPrim &q = gr->GetPrm(j);
 			if(q.type>1)	break;
-			if(mgl_is_same(gr, q,wp,cp,st) & (q.type==1))	// previous point
+			if(mgl_is_same(gr, q,wp,cp,st) && q.type==1)	// previous point
 			{
 				const mglPnt p1 = gr->GetPnt(q.n1);
 				const mglPnt p2 = gr->GetPnt(q.n2);
-				if((p2.x==x0) & (p2.y==y0))
+				if(p2.x==x0 && p2.y==y0)
 				{
 					ok=true;	q.type = -2;
 					x0 = p1.x;	y0=p1.y;
 				}
-				else if((p1.x==x0) & (p1.y==y0))
+				else if(p1.x==x0 && p1.y==y0)
 				{
 						ok=true;	q.type = -2;
 					x0 = p2.x;	y0=p2.y;
@@ -98,18 +98,18 @@ void put_line(HMGL gr, void *fp, bool gz, long i, float wp, mglColor cp,int st, 
 		{
 			mglPrim &q = gr->GetPrm(j);
 			if(q.type>1)	break;
-			if(mgl_is_same(gr,q,wp,cp,st) & (q.type==1))
+			if(mgl_is_same(gr,q,wp,cp,st) && q.type==1)
 			{
 				const mglPnt p1 = gr->GetPnt(q.n1);
 				const mglPnt p2 = gr->GetPnt(q.n2);
-				if((p1.x==x0) & (p1.y==y0))
+				if(p1.x==x0 && p1.y==y0)
 				{
 					q.type = -1;	x0 = p2.x;	y0=p2.y;
 					mgl_printf(fp, gz, nfmt,fc*x0,(neg?_Gr_->GetHeight()-y0:y0)*fc);
 					if(m>10)	{	m=0;	mgl_printf(fp, gz, "\n");	}
 					ok=true;	m++;
 				}
-				else if((p2.x==x0) & (p2.y==y0))
+				else if(p2.x==x0 && p2.y==y0)
 				{
 					q.type = -1;	x0 = p1.x;	y0=p1.y;
 					mgl_printf(fp, gz, nfmt,fc*x0,(neg?_Gr_->GetHeight()-y0:y0)*fc);
@@ -136,7 +136,7 @@ void put_desc(HMGL gr, void *fp, bool gz, const char *pre, const char *ln1, cons
 		const mglPrim q = gr->GetPrm(i);
 		if(q.type!=4 || (q.n3&8))	continue;	// not a glyph
 		bool is=false;
-		for(j=0;j<n;j++)	if( (g[j]==q.n4) & (s[j]==(q.n3&7)) )	is = true;
+		for(j=0;j<n;j++)	if(g[j]==q.n4 && s[j]==(q.n3&7))	is = true;
 		if(is)	continue;		// glyph is described
 		// have to describe
 		g[n]=q.n4;	s[n]=q.n3&7;	n++;	// add to list of described
@@ -149,7 +149,7 @@ void put_desc(HMGL gr, void *fp, bool gz, const char *pre, const char *ln1, cons
 		if(ln && nl>0)	for(ik=0;ik<nl;ik++)
 		{
 			ii = 2*ik;
-			if((ln[ii]==0x3fff) & (ln[ii+1]==0x3fff))	// line breakthrough
+			if(ln[ii]==0x3fff && ln[ii+1]==0x3fff)	// line breakthrough
 			{	mgl_printf(fp, gz, "%s",ln3);	np=true;	continue;	}
 			else if(np)	mgl_printf(fp, gz, ln1,ln[ii],ln[ii+1]);
 			else		mgl_printf(fp, gz, ln2,ln[ii],ln[ii+1]);
@@ -164,7 +164,7 @@ mglColor mglCanvas::GetColor(const mglPrim &p)
 {
 	unsigned char res[4],buf[4];
 	col2int(Pnt[p.type==1?p.n2:p.n1],res);
-	if((p.type==2) | (p.type==3))
+	if(p.type==2 || p.type==3)
 	{
 		col2int(Pnt[p.n2],buf);			res[0]=(1L*res[0]+buf[0])/2;
 		res[1]=(1L*res[1]+buf[1])/2;	res[2]=(1L*res[2]+buf[2])/2;
@@ -214,7 +214,7 @@ void mgl_write_eps(HMGL gr, const char *fname,const char *descr)
 		if(q.n4=='x')	m_x = true;		if(q.n4=='s')	m_s = true;
 		if(q.n4=='d')	m_d = true;		if(q.n4=='v')	m_v = true;
 		if(q.n4=='^')	m_t = true;		if(q.n4=='*')	m_a = true;
-		if((q.n4=='o') | (q.n4=='O') | (q.n4=='C'))	m_o = true;
+		if(q.n4=='o' || q.n4=='O' || q.n4=='C')	m_o = true;
 		if(q.n4=='S')	m_S = true;		if(q.n4=='D')	m_D = true;
 		if(q.n4=='V')	m_V = true;		if(q.n4=='T')	m_T = true;
 		if(q.n4=='<')	m_l = true;		if(q.n4=='L')	m_L = true;
@@ -443,13 +443,13 @@ void mgl_write_svg(HMGL gr, const char *fname,const char *descr)
 			}
 			mgl_printf(fp, gz, "</g>\n");
 		}
-		else if((q.type==2) & (cp.a>0))
+		else if(q.type==2 && cp.a>0)
 		{
 			const mglPnt p2=gr->GetPnt(q.n2), p3=gr->GetPnt(q.n3);
 			mgl_printf(fp, gz, "<g fill=\"#%02x%02x%02x\" opacity=\"%g\">\n", int(255*cp.r),int(255*cp.g),int(255*cp.b),cp.a);
 			mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g L %g %g Z\"/> </g>\n", p1.x, hh-p1.y, p2.x, hh-p2.y, p3.x, hh-p3.y);
 		}
-		else if((q.type==3) & (cp.a>0))
+		else if(q.type==3 && cp.a>0)
 		{
 			const mglPnt p2=gr->GetPnt(q.n2), p3=gr->GetPnt(q.n3), p4=gr->GetPnt(q.n4);
 			mgl_printf(fp, gz, "<g fill=\"#%02x%02x%02x\" opacity=\"%g\">\n", int(255*cp.r),int(255*cp.g),int(255*cp.b),cp.a);
@@ -785,7 +785,7 @@ void mgl_write_tex(HMGL gr, const char *fname,const char *descr)
 		if(q.n4=='x')	m_x = true;		if(q.n4=='s')	m_s = true;
 		if(q.n4=='d')	m_d = true;		if(q.n4=='v')	m_v = true;
 		if(q.n4=='^')	m_t = true;		if(q.n4=='*')	m_a = true;
-		if(q.n4=='O')	m_O = true;		if((q.n4=='o') | (q.n4=='C'))	m_o = true;
+		if(q.n4=='O')	m_O = true;		if(q.n4=='o' || q.n4=='C')	m_o = true;
 		if(q.n4=='S')	m_S = true;		if(q.n4=='D')	m_D = true;
 		if(q.n4=='V')	m_V = true;		if(q.n4=='T')	m_T = true;
 		if(q.n4=='<')	m_l = true;		if(q.n4=='L')	m_L = true;
@@ -862,12 +862,12 @@ void mgl_write_tex(HMGL gr, const char *fname,const char *descr)
 				default:	fprintf(fp, "\\mglc{%g}{%g}{%s}\n", x,y,cname);	break;
 			}
 		}
-		else if((q.type==2) & (cp.a>0))
+		else if(q.type==2 && cp.a>0)
 		{
 			const mglPnt p2=gr->GetPnt(q.n2), p3=gr->GetPnt(q.n3);
 			fprintf(fp, "\\fill[%s, fill opacity=%g] (%g,%g) -- (%g,%g) -- (%g,%g) -- cycle;\n", cname,cp.a, x,y, p2.x/100,p2.y/100, p3.x/100,p3.y/100);
 		}
-		else if((q.type==3) & (cp.a>0))
+		else if(q.type==3 && cp.a>0)
 		{
 			const mglPnt p2=gr->GetPnt(q.n2), p3=gr->GetPnt(q.n3), p4=gr->GetPnt(q.n4);
 			fprintf(fp, "\\fill[%s, fill opacity=%g] (%g,%g) -- (%g,%g) -- (%g,%g) -- (%g,%g) -- cycle;\n", cname,cp.a, x,y, p2.x/100,p2.y/100, p4.x/100,p4.y/100, p3.x/100,p3.y/100);

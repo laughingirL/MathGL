@@ -23,11 +23,11 @@
 #include "mgl2/canvas.h"
 #include "mgl2/prim.h"
 //-----------------------------------------------------------------------------
-#define islog(a, b) ( ( ((a)>0) & ((b)>10*(a)) ) | ( ((b)<0) & ((a)<10*(b)) ) )
+#define islog(a, b) (((a)>0 && (b)>10*(a)) || ((b)<0 && (a)<10*(b)))
 #define sign(a)	((a)<0 ? -1:1)
 //-----------------------------------------------------------------------------
 inline struct tm* mgl_localtime_r (const time_t *clock, struct tm *result)
-{	if (!clock | !result) return NULL;
+{	if (!clock || !result) return NULL;
 	memcpy(result,localtime(clock),sizeof(*result));
 	return result;	}
 //-----------------------------------------------------------------------------
@@ -101,7 +101,7 @@ void mglCanvas::SetTicksVal(char dir, HCDT v, const wchar_t *lbl, bool add)
 			aa.AddLabel(std::wstring(lbl+l,j-l),v->v(i));
 			i++;	l=j+1;
 		}
-		if(j>1 && ((lbl[j]=='n') & (lbl[j-1]=='\\')))
+		if(j>1 && lbl[j]=='n' && lbl[j-1]=='\\')
 		{
 			aa.AddLabel(std::wstring(lbl+l,j-l-1),v->v(i));
 			i++;	l=j+1;
@@ -123,7 +123,7 @@ void mglCanvas::SetTicksVal(char dir, const wchar_t *lbl, bool add)
 {
 	register long i,j,len=wcslen(lbl);
 	for(i=0,j=1;j<len;j++)
-		if((lbl[j]=='\n') | ((lbl[j]=='n') & (lbl[j-1]=='\\')))	i++;
+		if(lbl[j]=='\n' || (lbl[j]=='n' && lbl[j-1]=='\\'))	i++;
 	if(i>63)	i=63;
 	mglData val(i+1);	val.Fill(Min.x,Max.x);
 	SetTicksVal(dir, &val, lbl, add);
@@ -133,7 +133,7 @@ void mglCanvas::SetTicksVal(char dir, const char *lbl, bool add)
 {
 	register long i,j,len=strlen(lbl);
 	for(i=0,j=1;j<len;j++)
-		if((lbl[j]=='\n') | ((lbl[j]=='n') & (lbl[j-1]=='\\')))	i++;
+		if(lbl[j]=='\n' || (lbl[j]=='n' && lbl[j-1]=='\\'))	i++;
 	if(i>63)	i=63;
 	mglData val(i+1);	val.Fill(Min.x,Max.x);
 	SetTicksVal(dir, &val, lbl, add);
@@ -269,7 +269,7 @@ void mglCanvas::SetTickTime(char dir, float d, const char *t)
 	{	v1 = aa.v2;		v0 = v0 - aa.dv*floor((v0-aa.v1)/aa.dv+1e-3);	}
 	else
 	{	v1 = aa.v1;		v0 = v0 - aa.dv*floor((v0-aa.v2)/aa.dv+1e-3);	}
-	if((v0+aa.dv!=v0) & (v1+aa.dv!=v1))	for(v=v0;v<=v1;v+=aa.dv)
+	if(v0+aa.dv!=v0 && v1+aa.dv!=v1)	for(v=v0;v<=v1;v+=aa.dv)
 	{
 		tt = v;	tm tp;		mgl_localtime_r(&tt,&tp);
 		wcsftime(buf,64,aa.t,&tp);	aa.AddLabel(buf,v);
@@ -294,7 +294,7 @@ void mglCanvas::AdjustTicks(mglAxis &aa, bool ff)
 {
 	double d = fabs(aa.v2-aa.v1), n;
 	if(aa.f>0)	return;
-	if(ff & islog(aa.v1,aa.v2))
+	if(ff && islog(aa.v1,aa.v2))
 	{	aa.dv = 0;	aa.ds=0;	}
 	else if(aa.d>0)
 	{	aa.dv = aa.d;	aa.ds = aa.d/(abs(aa.ns)+1);	}
@@ -354,9 +354,9 @@ int mgl_tick_ext(float a, float b, wchar_t s[32], float &v)
 void mgl_tick_text(float z, float z0, float d, float v, int kind, wchar_t str[64], bool tune)
 {
 	float u = fabs(z)<d ? 0:z;
-	if((kind&1) & (z>z0))	u = fabs(z-z0)<d ? 0:(z-z0);
-	if((kind==2) | ((kind==3) & (z>z0)))	u /= v;
-	if((kind&1) & (z>z0))
+	if((kind&1) && z>z0)	u = fabs(z-z0)<d ? 0:(z-z0);
+	if(kind==2 || (kind==3 && z>z0))	u /= v;
+	if((kind&1) && z>z0)
 	{
 		int n1,n2;
 		mglprintf(str, 64, L"@{(+%.2g)}",u);
@@ -370,7 +370,7 @@ void mgl_tick_text(float z, float z0, float d, float v, int kind, wchar_t str[64
 		int n1,n2;
 		mglprintf(str, 64, fabs(u)<1 ? L"%.2g" :  L"%.3g",u);
 		n1=wcslen(str);	mglprintf(str, 64, L"%g",u);	n2=wcslen(str);
-		if((n1<n2) & tune)	mglprintf(str, 64, fabs(u)<1 ? L"%.2g" :  L"%.3g",u);
+		if(n1<n2 && tune)	mglprintf(str, 64, fabs(u)<1 ? L"%.2g" :  L"%.3g",u);
 	}
 }
 //-----------------------------------------------------------------------------
@@ -387,7 +387,7 @@ void mglCanvas::LabelTicks(mglAxis &aa)
 	int d,ds;
 	if(aa.f)	return;
 	aa.txt.clear();
-	if((aa.dv==0) & (aa.v1>0))	// positive log-scale
+	if(aa.dv==0 && aa.v1>0)	// positive log-scale
 	{
 		v0 = exp(M_LN10*floor(0.1+log10(aa.v1)));
 		ds = int(floor(0.1+log10(aa.v2/v0))/7)+1;
@@ -401,7 +401,7 @@ void mglCanvas::LabelTicks(mglAxis &aa)
 			aa.AddLabel(buf,v);
 		}
 	}
-	else if((aa.dv==0) & (aa.v2<0))	// negative log-scale
+	else if(aa.dv==0 && aa.v2<0)	// negative log-scale
 	{
 		v0 = -exp(M_LN10*floor(0.1+log10(-aa.v2)));
 		ds = int(floor(0.1+log10(aa.v1/v0))/7)+1;
@@ -420,8 +420,8 @@ void mglCanvas::LabelTicks(mglAxis &aa)
 		int kind=0;
 		wchar_t s[32]=L"";
 		if(aa.t[0]==0 && TuneTicks) kind = mgl_tick_ext(aa.v2, aa.v1, s, w);
-		if(((TuneTicks&1)==0) & (kind==2))	kind=0;
-		if(((TuneTicks&2)==0) & (kind!=2))	kind=0;
+		if((TuneTicks&1)==0 && kind==2)	kind=0;
+		if((TuneTicks&2)==0 && kind!=2)	kind=0;
 
 		v0 = mgl_isnan(aa.o) ? aa.v0 : aa.o;
 		if(aa.v2>aa.v1)
@@ -429,7 +429,7 @@ void mglCanvas::LabelTicks(mglAxis &aa)
 		else
 		{	v1 = aa.v1;		v0 = v0 - aa.dv*floor((v0-aa.v2)/aa.dv+1e-3);	}
 
-		if((v0+aa.dv!=v0) & (v1+aa.dv!=v1))	for(v=v0;v<=v1;v+=aa.dv)
+		if(v0+aa.dv!=v0 && v1+aa.dv!=v1)	for(v=v0;v<=v1;v+=aa.dv)
 		{
 			if(aa.t[0])
 				mglprintf(buf, 64, aa.t, fabs(v)<aa.dv/100 ? 0 : v);
@@ -506,16 +506,16 @@ void mglCanvas::DrawAxis(mglAxis &aa, bool text, char arr,const char *stl)
 	if(k2>0)	for(i=0;i<k2;i++)
 	{
 		v = aa.txt[i].val;	u = fabs(v);
-		if((v>=aa.v1) & (v<=aa.v2))	tick_draw(o+d*v, da, db, 0, stl);
+		if(v>=aa.v1 && v<=aa.v2)	tick_draw(o+d*v, da, db, 0, stl);
 //		else	tick_draw(o+d*v, da, db, 0, " ");
-		if((aa.dv==0) & (fabs(u-exp(M_LN10*floor(0.1+log10(u))))<0.01*u))
-			for(j=2;(j<10) & (v*j<aa.v2);j++)	tick_draw(o+d*(v*j),da,db,1,stl);
+		if(aa.dv==0 && fabs(u-exp(M_LN10*floor(0.1+log10(u))))<0.01*u)
+			for(j=2;j<10 && v*j<aa.v2;j++)	tick_draw(o+d*(v*j),da,db,1,stl);
 	}
-	if((aa.ds>0) & !get(MGL_NOSUBTICKS))
+	if(aa.ds>0 && !get(MGL_NOSUBTICKS))
 	{
 		if(aa.v2>aa.v1)	v0 = v0 - aa.ds*floor((v0-aa.v1)/aa.ds+1e-3);
 		else			v0 = v0 - aa.ds*floor((v0-aa.v2)/aa.ds+1e-3);
-		if((v0+aa.ds!=v0) & (aa.v2+aa.ds!=aa.v2))
+		if(v0+aa.ds!=v0 && aa.v2+aa.ds!=aa.v2)
 			for(v=v0;v<aa.v2;v+=aa.ds)	tick_draw(o+d*v,da,db,1,stl);
 	}
 	if(text)	DrawLabels(aa);
@@ -534,7 +534,7 @@ void mglCanvas::DrawLabels(mglAxis &aa)
 	register long i,n = aa.txt.size();
 	char pos[4]="t:C";
 //	if(get(MGL_DISABLE_SCALE) && ((aa.dir.x==0 && aa.org.x<0) || (aa.dir.y==0 && aa.org.y>0)))	pos[0]='T';
-	if(aa.ch=='c')	pos[0]=((aa.ns==0) | (aa.ns==3))?'t':'T';
+	if(aa.ch=='c')	pos[0]=(aa.ns==0 || aa.ns==3)?'t':'T';
 	if(aa.ch=='T')	pos[0]='T';
 	float *w=new float[n], h = TextHeight(FontDef,-1)/4, c=NAN, l=NAN, tet=0, v, vv;	// find sizes
 	long *kk=new long[n];
@@ -547,14 +547,14 @@ void mglCanvas::DrawLabels(mglAxis &aa)
 	for(l=0,c=1e7,i=0;i<n-1;i++)
 	{
 		// exclude factors
-		if((aa.ch!='c') & ((aa.txt[i].val<aa.v1) | (aa.txt[i+1].val<aa.v1) | (aa.txt[i].val>aa.v2) | (aa.txt[i+1].val>aa.v2)))
+		if(aa.ch!='c' && (aa.txt[i].val<aa.v1 || aa.txt[i+1].val<aa.v1 || aa.txt[i].val>aa.v2 || aa.txt[i+1].val>aa.v2))
 			continue;
 		v = (GetPntP(kk[i+1])-GetPntP(kk[i])).norm();	// distance between ticks
 		vv = (w[i]+w[i+1])/2;	// length of labels
 		if(v>0 && l < vv/v)	l = vv/v;
 		if(c>v)	c = v;
 	}
-	if(get(MGL_ENABLE_RTEXT) && get(MGL_TICKS_ROTATE) && ((l>1) & (c>0)))	// try rotate first
+	if(get(MGL_ENABLE_RTEXT) && get(MGL_TICKS_ROTATE) && l>1 && c>0)	// try rotate first
 	{	tet = c>1.1*h ? asin(1.1*h/c) : M_PI/2;	pos[2]=aa.ch=='c'?'R':'L';
 		l=0.99*h/sin(tet)/c;	for(i=0;i<n;i++)	w[i]=l*c;	}
 	// TODO: do clever points exclusion (i.e. longest and so on)
@@ -563,7 +563,7 @@ void mglCanvas::DrawLabels(mglAxis &aa)
 	{
 		if(kk[i]<0)	continue;	// should be never here?!
 		c = aa.txt[i].val;
-		if((c>aa.v1) & (c<aa.v2) & (i%k!=0))	continue;
+		if(c>aa.v1 && c<aa.v2 && i%k!=0)	continue;
 		p = o+d*c;	nn = s-o;	ScalePoint(p,nn);
 		mglPnt &qq = Pnt[kk[i]];
 		float ux=qq.u*cos(tet) + qq.v*sin(tet), uy=qq.v*cos(tet) - qq.u*sin(tet);
@@ -572,10 +572,10 @@ void mglCanvas::DrawLabels(mglAxis &aa)
 		qq.u = ux;	qq.v = uy;
 
 		if(!get(MGL_ENABLE_RTEXT) && nn.x!=0)	pos[2] = nn.x<0 ? 'L':'R';
-		if((aa.ch=='c') & (aa.txt[i].text[0]==' '))	qq.u = qq.v = NAN;
+		if(aa.ch=='c' && aa.txt[i].text[0]==' ')	qq.u = qq.v = NAN;
 		if(!get(MGL_DISABLE_SCALE))	pos[0]=(qq.u*nn.y-qq.v*nn.x>0) ? 'T':'t';
-		if((aa.ch=='T') & (pos[0]=='T'))	pos[0]='t';
-		if((aa.ch=='T') & (pos[0]=='t'))	pos[0]='T';
+		if(aa.ch=='T' && pos[0]=='T')	pos[0]='t';
+		if(aa.ch=='T' && pos[0]=='t')	pos[0]='T';
 		text_plot(kk[i], aa.txt[i].text.c_str(), pos, -1, aa.sh+0.07,CDef,tet?false:true);
 	}
 	delete []w;	delete []kk;
@@ -585,7 +585,7 @@ void mglCanvas::tick_draw(mglPoint o, mglPoint d1, mglPoint d2, int f, const cha
 {
 	if(TickLen==0)	return;
 	// try to exclude ticks out of axis range
-	if(f && (((o.x-Min.x)*(o.x-Max.x)>0) | ((o.y-Min.y)*(o.y-Max.y)>0) | ((o.z-Min.z)*(o.z-Max.z)>0)) )
+	if(f && ((o.x-Min.x)*(o.x-Max.x)>0 || (o.y-Min.y)*(o.y-Max.y)>0 || (o.z-Min.z)*(o.z-Max.z)>0))
 		return;
 	float v = font_factor*TickLen/sqrt(1.f+f*st_t);
 	mglPoint p=o;
@@ -706,7 +706,7 @@ void mglCanvas::Labelw(char dir, const wchar_t *text, float pos, float shift)
 	char font[33],ff[3]=":C";
 	if(pos<-0.2)	ff[1]='L';	if(pos>0.2)	ff[1]='R';
 	strcpy(font,FontDef);	strcat(font,ff);
-	strcat(font,((nn.y>1e-5) | (nn.x<0)) ? "T":"t");
+	strcat(font,nn.y>1e-5 || nn.x<0 ? "T":"t");
 	text_plot(AddPnt(p,-1,q,0,7),text,font,-1.4,0.35+shift);
 }
 //-----------------------------------------------------------------------------
@@ -798,9 +798,9 @@ void mglCanvas::Colorbar(const char *sch, float x, float y, float w, float h)
 	long n=256, s = AddTexture(sch);
 	mglData v(n);
 	if(ac.d || Min.c*Max.c<=0)	v.Fill(Min.c,Max.c);
-	else if((Max.c>Min.c) & (Min.c>0))
+	else if(Max.c>Min.c && Min.c>0)
 	{	v.Fill(log(Min.c), log(Max.c));		v.Modify("exp(u)");		}
-	else if((Min.c<Max.c) & (Max.c<0))
+	else if(Min.c<Max.c && Max.c<0)
 	{	v.Fill(log(-Min.c), log(-Max.c));	v.Modify("-exp(u)");	}
 	float *c=new float[n];
 	for(long i=0;i<n;i++)	c[i] = GetC(s,v.a[i]);

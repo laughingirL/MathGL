@@ -202,7 +202,7 @@ int mgl_bps_save(const char *fname, int w, int h, unsigned char **p)
 			w,h,1+w*h/40);
 	for(j=h-1;j>=0;j--)	for(i=0;i<w;i++)
 	{
-		if( ((i+w*(h-j-1))%40==0) & (i+j>0) )	mgl_printf(fp, gz, "\n");
+		if((i+w*(h-j-1))%40==0 && i+j>0)	mgl_printf(fp, gz, "\n");
 		mgl_printf(fp, gz, "%02x%02x%02x",p[j][3*i],p[j][3*i+1],p[j][3*i+2]);
 	}
 	mgl_printf(fp, gz, "\n\nshowpage\n%%%%EOF\n");
@@ -312,7 +312,7 @@ void mglCanvas::EndFrame()
 	unsigned char *f=0, **l=0;
 	l = GetRGBLines(width, height, f);
 	n = width*height;
-	if(!l | !gif)	return;
+	if(!l || !gif)	return;
 	EGifPutImageDesc(gif, 0, 0, width, height, 0, 0);
 	GifPixelType *line = new GifPixelType[n];
 	register long m;

@@ -47,7 +47,7 @@ void mgl_fsurf(HMGL gr, const char *eqZ, const char *sch, const char *opt)
 {	// TODO: Add strong function variation analisys ???
 	if(eqZ==0 || eqZ[0]==0)	return;		// nothing to plot
 	float r = gr->SaveState(opt);
-	long n = (mgl_isnan(r) | (r<=0)) ? 100:long(r+0.5);
+	long n = (mgl_isnan(r) || r<=0) ? 100:long(r+0.5);
 	mglData z(n,n);
 	mglFormula *eq = new mglFormula(eqZ);
 	register int i,j;
@@ -65,7 +65,7 @@ void mgl_fsurf_xyz(HMGL gr, const char *eqX, const char *eqY, const char *eqZ, c
 {	// TODO: Add strong function variation analisys ???
 	if(eqZ==0 || eqZ[0]==0)	return;		// nothing to plot
 	float r = gr->SaveState(opt);
-	long n = (mgl_isnan(r) | (r<=0)) ? 100:long(r+0.5);
+	long n = (mgl_isnan(r) || r<=0) ? 100:long(r+0.5);
 	mglData x(n,n), y(n,n), z(n,n);
 	if(n<=0)	n=100;
 	mglFormula *ex, *ey, *ez;
@@ -111,8 +111,8 @@ void mgl_mesh_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 {
 	register long i,j,k,n=z->GetNx(),m=z->GetNy();
 	if(x->GetNx()!=n)	{	gr->SetWarn(mglWarnDim,"Mesh");	return;	}
-	if((n<2) | (m<2))		{	gr->SetWarn(mglWarnLow,"Mesh");	return;	}
-	if((y->GetNx()!=m) & ((x->GetNy()!=m) | (y->GetNx()!=n) | (y->GetNy()!=m)))
+	if(n<2 || m<2)		{	gr->SetWarn(mglWarnLow,"Mesh");	return;	}
+	if(y->GetNx()!=m && (x->GetNy()!=m || y->GetNx()!=n || y->GetNy()!=m))
 	{	gr->SetWarn(mglWarnDim);	return;	};
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Mesh",cgid++);
@@ -138,12 +138,13 @@ void mgl_mesh_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 //-----------------------------------------------------------------------------
 void mgl_mesh(HMGL gr, HCDT z, const char *sch, const char *opt)
 {
+	register long n = z->GetNx(), m = z->GetNy();
+	if(n<2 || m<2){	gr->SetWarn(mglWarnLow,"Mesh");	return;	}
 	gr->SaveState(opt);
-	mglData x(z->GetNx()), y(z->GetNy());
+	mglData x(n), y(m);
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	mgl_mesh_xy(gr,&x,&y,z,sch,0);
-	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_mesh_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
@@ -164,8 +165,8 @@ void mgl_fall_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 {
 	register long i,j,k,n=z->GetNx(),m=z->GetNy();
 	if(x->GetNx()!=n)		{	gr->SetWarn(mglWarnDim,"Fall");	return;	}
-	if((n<2) | (m<2)){	gr->SetWarn(mglWarnLow,"Fall");	return;	}
-	if( (y->GetNx()!=m) & ((x->GetNy()!=m) | (y->GetNx()!=n) | (y->GetNy()!=m)) )
+	if(n<2 || m<2){	gr->SetWarn(mglWarnLow,"Fall");	return;	}
+	if(y->GetNx()!=m && (x->GetNy()!=m || y->GetNx()!=n || y->GetNy()!=m))
 	{	gr->SetWarn(mglWarnDim);	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Fall",cgid++);
@@ -191,12 +192,13 @@ void mgl_fall_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 //-----------------------------------------------------------------------------
 void mgl_fall(HMGL gr, HCDT z, const char *sch, const char *opt)
 {
+	register long n = z->GetNx(), m = z->GetNy();
+	if(n<2 || m<2){	gr->SetWarn(mglWarnLow,"Fall");	return;	}
 	gr->SaveState(opt);
-	mglData x(z->GetNx()), y(z->GetNy());
+	mglData x(n), y(m);
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	mgl_fall_xy(gr,&x,&y,z,sch,0);
-	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_fall_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
@@ -217,8 +219,8 @@ void mgl_grid_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 {
 	register long i,j,k,n=z->GetNx(),m=z->GetNy();
 	if(x->GetNx()!=n)		{	gr->SetWarn(mglWarnDim,"Grid");	return;	}
-	if((n<2) | (m<2)){	gr->SetWarn(mglWarnLow,"Grid");	return;	}
-	if( (y->GetNx()!=m) & ((x->GetNy()!=m) | (y->GetNx()!=n) | (y->GetNy()!=m)) )
+	if(n<2 || m<2){	gr->SetWarn(mglWarnLow,"Grid");	return;	}
+	if(y->GetNx()!=m && (x->GetNy()!=m || y->GetNx()!=n || y->GetNy()!=m))
 	{	gr->SetWarn(mglWarnDim);	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Grid",cgid++);
@@ -244,12 +246,13 @@ void mgl_grid_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 //-----------------------------------------------------------------------------
 void mgl_grid(HMGL gr, HCDT z,const char *sch, const char *opt)
 {
+	register long n = z->GetNx(), m = z->GetNy();
+	if(n<2 || m<2){	gr->SetWarn(mglWarnLow,"Grid");	return;	}
 	gr->SaveState(opt);
-	mglData x(z->GetNx()), y(z->GetNy());
+	mglData x(n), y(m);
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	mgl_grid_xy(gr,&x,&y,z,sch,0);
-	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_grid_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
@@ -270,8 +273,8 @@ void mgl_surf_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 {
 	register long i,j,k,n=z->GetNx(),m=z->GetNy();
 	if(x->GetNx()!=n)	{	gr->SetWarn(mglWarnDim,"Surf");	return;	}
-	if((n<2) | (m<2))		{	gr->SetWarn(mglWarnLow,"Surf");	return;	}
-	if( (y->GetNx()!=m) & ((x->GetNy()!=m) | (y->GetNx()!=n) | (y->GetNy()!=m)) )
+	if(n<2 || m<2)		{	gr->SetWarn(mglWarnLow,"Surf");	return;	}
+	if(y->GetNx()!=m && (x->GetNy()!=m || y->GetNx()!=n || y->GetNy()!=m))
 	{	gr->SetWarn(mglWarnDim);	return;	};
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Surf",cgid++);
@@ -307,12 +310,13 @@ void mgl_surf_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 //-----------------------------------------------------------------------------
 void mgl_surf(HMGL gr, HCDT z, const char *sch, const char *opt)
 {
+	register long n=z->GetNx(),m=z->GetNy();
+	if(n<2 || m<2){	gr->SetWarn(mglWarnLow,"Surf");	return;	}
 	gr->SaveState(opt);
-	mglData x(z->GetNx()), y(z->GetNy());
+	mglData x(n), y(m);
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	mgl_surf_xy(gr,&x,&y,z,sch,0);
-	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_surf_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
@@ -332,9 +336,9 @@ void mgl_surf_(uintptr_t *gr, uintptr_t *a, const char *sch, const char *opt,int
 void mgl_belt_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt)
 {
 	register long i,j,k,n=z->GetNx(),m=z->GetNy();
-	if(x->GetNx()!=n)	{	gr->SetWarn(mglWarnDim,"Belt");	return;	}
-	if((n<2) | (m<2)){	gr->SetWarn(mglWarnLow,"Belt");	return;	}
-	if( (y->GetNx()!=m) & ((x->GetNy()!=m) | (y->GetNx()!=n) | (y->GetNy()!=m)) )
+	if(x->GetNx()!=n)		{	gr->SetWarn(mglWarnDim,"Belt");	return;	}
+	if(n<2 || m<2){	gr->SetWarn(mglWarnLow,"Belt");	return;	}
+	if(y->GetNx()!=m && (x->GetNy()!=m || y->GetNx()!=n || y->GetNy()!=m))
 	{	gr->SetWarn(mglWarnDim);	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Belt",cgid++);
@@ -386,12 +390,13 @@ void mgl_belt_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 //-----------------------------------------------------------------------------
 void mgl_belt(HMGL gr, HCDT z, const char *sch, const char *opt)
 {
+	register long n = z->GetNx(), m = z->GetNy();
+	if(n<2 || m<2){	gr->SetWarn(mglWarnLow,"Belt");	return;	}
 	gr->SaveState(opt);
-	mglData x(z->GetNx()), y(z->GetNy());
+	mglData x(n), y(m);
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	mgl_belt_xy(gr,&x,&y,z,sch,0);
-	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_belt_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
@@ -412,8 +417,8 @@ void mgl_dens_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 {
 	register long i,j,k,n=z->GetNx(),m=z->GetNy();
 	if(x->GetNx()!=n)		{	gr->SetWarn(mglWarnDim,"Dens");	return;	}
-	if((n<2) | (m<2)){	gr->SetWarn(mglWarnLow,"Dens");	return;	}
-	if( (y->GetNx()!=m) & ((x->GetNy()!=m) | (y->GetNx()!=n) | (y->GetNy()!=m)) )
+	if(n<2 || m<2){	gr->SetWarn(mglWarnLow,"Dens");	return;	}
+	if(y->GetNx()!=m && (x->GetNy()!=m || y->GetNx()!=n || y->GetNy()!=m))
 	{	gr->SetWarn(mglWarnDim);	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Dens",cgid++);
@@ -451,12 +456,13 @@ void mgl_dens_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 //-----------------------------------------------------------------------------
 void mgl_dens(HMGL gr, HCDT z, const char *sch, const char *opt)
 {
+	register long n = z->GetNx(), m = z->GetNy();
+	if(n<2 || m<2){	gr->SetWarn(mglWarnLow,"Belt");	return;	}
 	gr->SaveState(opt);
-	mglData x(z->GetNx()), y(z->GetNy());
+	mglData x(n), y(m);
 	x.Fill(gr->Min.x, gr->Max.x);
 	y.Fill(gr->Min.y, gr->Max.y);
 	mgl_dens_xy(gr,&x,&y,z,sch,0);
-	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_dens_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
@@ -497,10 +503,10 @@ void mgl_surfc_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char *sch, cons
 {
 	register long i,j,k,n=z->GetNx(),m=z->GetNy();
 	if(x->GetNx()!=n)		{	gr->SetWarn(mglWarnDim,"SurfC");	return;	}
-	if((n<2) | (m<2)){	gr->SetWarn(mglWarnLow,"SurfC");	return;	}
+	if(n<2 || m<2){	gr->SetWarn(mglWarnLow,"SurfC");	return;	}
 	if(n*m*z->GetNz()!=c->GetNx()*c->GetNy()*c->GetNz())
 	{	gr->SetWarn(mglWarnDim);	return;	}
-	if( (y->GetNx()!=m) & ((x->GetNy()!=m) | (y->GetNx()!=n) | (y->GetNy()!=m)) )
+	if(y->GetNx()!=m && (x->GetNy()!=m || y->GetNx()!=n || y->GetNy()!=m))
 	{	gr->SetWarn(mglWarnDim);	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("SurfC",cgid++);
@@ -536,12 +542,13 @@ void mgl_surfc_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char *sch, cons
 //-----------------------------------------------------------------------------
 void mgl_surfc(HMGL gr, HCDT z, HCDT c, const char *sch, const char *opt)
 {
+	register long n = z->GetNx(), m = z->GetNy();
+	if(n<2 || m<2){	gr->SetWarn(mglWarnLow,"SurfC");	return;	}
 	gr->SaveState(opt);
-	mglData x(z->GetNx()), y(z->GetNy());
+	mglData x(n), y(m);
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	mgl_surfc_xy(gr,&x,&y,z,c,sch,0);
-	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_surfc_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
@@ -563,10 +570,10 @@ void mgl_surfa_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char *sch, cons
 	register long i,j;
 	long k,n=z->GetNx(),m=z->GetNy();
 	if(x->GetNx()!=n)		{	gr->SetWarn(mglWarnDim,"SurfA");	return;	}
-	if((n<2) | (m<2)){	gr->SetWarn(mglWarnLow,"SurfA");	return;	}
+	if(n<2 || m<2){	gr->SetWarn(mglWarnLow,"SurfA");	return;	}
 	if(n*m*z->GetNz()!=c->GetNx()*c->GetNy()*c->GetNz())
 	{	gr->SetWarn(mglWarnDim);	return;	}
-	if( (y->GetNx()!=m) & ((x->GetNy()!=m) | (y->GetNx()!=n) | (y->GetNy()!=m)) )
+	if(y->GetNx()!=m && (x->GetNy()!=m || y->GetNx()!=n || y->GetNy()!=m))
 	{	gr->SetWarn(mglWarnDim);	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("SurfA",cgid++);
@@ -600,12 +607,13 @@ void mgl_surfa_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char *sch, cons
 //-----------------------------------------------------------------------------
 void mgl_surfa(HMGL gr, HCDT z, HCDT c, const char *sch, const char *opt)
 {
-	mglData x(z->GetNx()), y(z->GetNy());
+	register long n = z->GetNx(), m = z->GetNy();
+	if(n<2 || m<2){	gr->SetWarn(mglWarnLow,"SurfC");	return;	}
+	mglData x(n), y(m);
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	gr->SaveState(opt);
 	mgl_surfa_xy(gr,&x,&y,z,c,sch,0);
-	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_surfa_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
@@ -626,10 +634,10 @@ void mgl_boxs_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 {
 	register long i,j,k,n=z->GetNx(),m=z->GetNy();
 	if(x->GetNx()<n)		{	gr->SetWarn(mglWarnDim,"Boxs");	return;	}
-	if((n<2) | (m<2)){	gr->SetWarn(mglWarnLow,"Boxs");	return;	}
+	if(n<2 || m<2){	gr->SetWarn(mglWarnLow,"Boxs");	return;	}
 	long ly = x->GetNy()>=m ? y->GetNy() : y->GetNx(), lx = x->GetNx();
 
-	if( (y->GetNx()<m) & ((x->GetNy()<m) | (y->GetNx()<n) | (y->GetNy()<m)) )
+	if(y->GetNx()<m && (x->GetNy()<m || y->GetNx()<n || y->GetNy()<m))
 	{	gr->SetWarn(mglWarnDim);	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Boxs",cgid++);
@@ -639,7 +647,7 @@ void mgl_boxs_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 	bool full = sch && strchr(sch,'@');
 	gr->Reserve(8*n*m*z->GetNz());
 
-	mglPoint p1,p2,p3,p4,q,s,t((wire|full)?NAN:0,0,1),xx,yy;
+	mglPoint p1,p2,p3,p4,q,s,t(wire||full?NAN:0,0,1),xx,yy;
 	float zz,z1,z2,x1,y1,c,z0=gr->GetOrgZ('x');
 	long k1,k2,k3,k4,k5,k6,k7,k8;
 	for(k=0;k<z->GetNz();k++)
@@ -706,12 +714,13 @@ void mgl_boxs_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 //-----------------------------------------------------------------------------
 void mgl_boxs(HMGL gr, HCDT z, const char *sch, const char *opt)
 {
+	register long n = z->GetNx(), m = z->GetNy();
+	if(n<2 || m<2){	gr->SetWarn(mglWarnLow,"Boxs");	return;	}
 	gr->SaveState(opt);
-	mglData x(z->GetNx()+1), y(z->GetNy()+1);
+	mglData x(n+1), y(m+1);
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	mgl_boxs_xy(gr,&x,&y,z,sch,0);
-	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_boxs_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
@@ -732,9 +741,9 @@ void mgl_tile_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 {
 	register long i,j,k,n=z->GetNx(),m=z->GetNy();
 	if(x->GetNx()<n)		{	gr->SetWarn(mglWarnDim,"Tile");	return;	}
-	if((n<2) | (m<2)){	gr->SetWarn(mglWarnLow,"Tile");	return;	}
+	if(n<2 || m<2){	gr->SetWarn(mglWarnLow,"Tile");	return;	}
 	long ly = x->GetNy()>=m ? y->GetNy() : y->GetNx(), lx = x->GetNx();
-	if((y->GetNx()<m) & ((x->GetNy()<m) | (y->GetNx()<n) | (y->GetNy()<m)))
+	if(y->GetNx()<m && (x->GetNy()<m || y->GetNx()<n || y->GetNy()<m))
 	{	gr->SetWarn(mglWarnDim);	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Tile",cgid++);
@@ -767,12 +776,13 @@ void mgl_tile_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 //-----------------------------------------------------------------------------
 void mgl_tile(HMGL gr, HCDT z, const char *sch, const char *opt)
 {
+	register long n = z->GetNx(), m = z->GetNy();
+	if(n<2 || m<2){	gr->SetWarn(mglWarnLow,"Tile");	return;	}
 	gr->SaveState(opt);
-	mglData x(z->GetNx()+1), y(z->GetNy()+1);
+	mglData x(n+1), y(m+1);
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	mgl_tile_xy(gr,&x,&y,z,sch,0);
-	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_tile_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
@@ -788,11 +798,11 @@ void mgl_tile_(uintptr_t *gr, uintptr_t *a, const char *sch, const char *opt,int
 void mgl_tiles_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT s, const char *sch, const char *opt)
 {
 	register long i,j,k,n=z->GetNx(),m=z->GetNy();
-	if((x->GetNx()<n) | (s->GetNx()*s->GetNy()*s->GetNz()!=n*m*z->GetNz()))
+	if(x->GetNx()<n || s->GetNx()*s->GetNy()*s->GetNz()!=n*m*z->GetNz())
 	{	gr->SetWarn(mglWarnDim,"Tile");	return;	}
-	if((n<2) | (m<2)){	gr->SetWarn(mglWarnLow,"Tile");	return;	}
-	long ly = x->GetNy()>=m ? y->GetNy() : y->GetNx(), lx = x->GetNx();
-	if( (y->GetNx()<m) & ((x->GetNy()<m) | (y->GetNx()<n) | (y->GetNy()<m)) )
+	if(n<2 || m<2){	gr->SetWarn(mglWarnLow,"Tile");	return;	}
+	long ly = x->GetNy()>=z->GetNy() ? y->GetNy() : y->GetNx(), lx = x->GetNx();
+	if(y->GetNx()<m && (x->GetNy()<m || y->GetNx()<n || y->GetNy()<m))
 	{	gr->SetWarn(mglWarnDim);	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("TileS",cgid++);
@@ -817,7 +827,7 @@ void mgl_tiles_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT s, const char *sch, cons
 			{	x2 = GetX(x,i+1,j,k).x-x1;	y2 = GetY(y,i+1,j,k).x-y1;	}
 			if(j<ly-1)
 			{	x4 = GetX(x,i,j+1,k).x-x1;	y4 = GetY(y,i,j+1,k).x-y1;	}
-			if((i<lx-1) & (j<ly-1))
+			if(i<lx-1 && j<ly-1)
 			{	x3 = GetX(x,i+1,j+1,k).x-x2-x4-x1;
 				y3 = GetY(y,i+1,j+1,k).x-y2-y4-y1;	}
 
@@ -837,12 +847,13 @@ void mgl_tiles_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT s, const char *sch, cons
 //-----------------------------------------------------------------------------
 void mgl_tiles(HMGL gr, HCDT z, HCDT s, const char *sch, const char *opt)
 {
+	register long n = z->GetNx(), m = z->GetNy();
+	if(n<2 || m<2){	gr->SetWarn(mglWarnLow,"Tile");	return;	}
 	gr->SaveState(opt);
-	mglData x(z->GetNx()+1), y(z->GetNy()+1);
+	mglData x(n+1), y(m+1);
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	mgl_tiles_xy(gr,&x,&y,z,s,sch,0);
-	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_tiles_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *a, uintptr_t *r, const char *sch, const char *opt,int l,int lo)
@@ -863,9 +874,9 @@ void mgl_map_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, cons
 {
 	register long i,j,n=ax->GetNx(),m=ax->GetNy();
 	if(n*m!=ay->GetNx()*ay->GetNy())	{	gr->SetWarn(mglWarnDim,"Map");	return;	}
-	if((n<2) | (m<2))			{	gr->SetWarn(mglWarnLow,"Map");	return;	}
-	bool both = (x->GetNx()==n) & (y->GetNx()==n) & (x->GetNy()==m) & (y->GetNy()==m);
-	if(!( both | ((x->GetNx()==n) & (y->GetNx()==m)) ))
+	if(n<2 || m<2)			{	gr->SetWarn(mglWarnLow,"Map");	return;	}
+	bool both = x->GetNx()==n && y->GetNx()==n && x->GetNy()==m && y->GetNy()==m;
+	if(!(both || (x->GetNx()==n && y->GetNx()==m)))
 	{	gr->SetWarn(mglWarnDim,"Map");	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Map",cgid++);
@@ -911,12 +922,13 @@ void mgl_map_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, cons
 //-----------------------------------------------------------------------------
 void mgl_map(HMGL gr, HCDT ax, HCDT ay, const char *sch, const char *opt)
 {
+	register long n = ax->GetNx(), m = ax->GetNy();
+	if(n<2 || m<2 || ay->GetNx()!=n || ay->GetNy()!=m)	{	gr->SetWarn(mglWarnLow,"Map");	return;	}
 	gr->SaveState(opt);
-	mglData x(ax->GetNx()), y(ax->GetNy());
+	mglData x(n), y(m);
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	mgl_map_xy(gr,&x,&y,ax,ay,sch,0);
-	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_map_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *a, uintptr_t *b, const char *sch, const char *opt,int l,int lo)

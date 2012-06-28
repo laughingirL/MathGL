@@ -40,16 +40,16 @@ mglData mglApplyOper(const wchar_t *a1, const wchar_t *a2, mglParser *arg, doubl
 		r.a[i] = func(a.a[i],b.a[0]);
 	else if(a.nx*a.ny*a.nz==1)	for(i=0;i<b.nx*b.ny*b.nz;i++)
 		r.a[i] = func(a.a[0],b.a[i]);
-	else if((a.nx==b.nx) & (b.ny==a.ny) & (b.nz==a.nz))	for(i=0;i<n*m*l;i++)
+	else if(a.nx==b.nx && b.ny==a.ny && b.nz==a.nz)	for(i=0;i<n*m*l;i++)
 		r.a[i] = func(a.a[i], b.a[i]);
-	else if((a.nx==b.nx) & (b.ny*b.nz==1))	for(i=0;i<n;i++)	for(j=0;j<a.ny*a.nz;j++)
+	else if(a.nx==b.nx && b.ny*b.nz==1)	for(i=0;i<n;i++)	for(j=0;j<a.ny*a.nz;j++)
 		r.a[i+n*j] = func(a.a[i+n*j], b.a[i]);
-	else if((a.nx==b.nx) & (a.ny*a.nz==1))	for(i=0;i<n;i++)	for(j=0;j<b.ny*b.nz;j++)
+	else if(a.nx==b.nx && a.ny*a.nz==1)	for(i=0;i<n;i++)	for(j=0;j<b.ny*b.nz;j++)
 		r.a[i+n*j] = func(a.a[i], b.a[i+n*j]);
-	else if((a.nx==b.nx) & (b.ny==a.ny) & (b.nz==1))
+	else if(a.nx==b.nx && b.ny==a.ny && b.nz==1)
 		for(i=0;i<n;i++)	for(j=0;j<m;j++)	for(k=0;k<a.nz;k++)
 			r.a[i+n*(j+m*k)] = func(a.a[i+n*(j+m*k)], b.a[i+n*j]);
-	else if((a.nx==b.nx) & (b.ny==a.ny) & (a.nz==1))
+	else if(a.nx==b.nx && b.ny==a.ny && a.nz==1)
 		for(i=0;i<n;i++)	for(j=0;j<m;j++)	for(k=0;k<b.nz;k++)
 			r.a[i+n*(j+m*k)] = func(a.a[i+n*j], b.a[i+n*(j+m*k)]);
 	return r;
@@ -393,7 +393,7 @@ mglData mglFormulaCalc(const wchar_t *string, mglParser *arg)
 			if(!wcscmp(name+1,L"os"))
 			{	res=mglFormulaCalc(Buf, arg);
 				for(i=0;i<res.nx*res.ny*res.nz;i++)	res.a[i] = cos(res.a[i]);	}
-			else if(!wcscmp(name+1,L"osh") | !wcscmp(name+1,L"h"))
+			else if(!wcscmp(name+1,L"osh") || !wcscmp(name+1,L"h"))
 			{	res=mglFormulaCalc(Buf, arg);
 				for(i=0;i<res.nx*res.ny*res.nz;i++)	res.a[i] = cosh(res.a[i]);	}
 #if MGL_HAVE_GSL
@@ -442,15 +442,15 @@ mglData mglFormulaCalc(const wchar_t *string, mglParser *arg)
 				for(i=0;i<res.nx*res.ny*res.nz;i++)
 					res.a[i] = gsl_sf_erf(res.a[i]);	}
 //			else if(!wcscmp(name+1,L"n"))	Kod=EQ_EN;	// NOTE: not supported
-			else if(!wcscmp(name+1,L"e") | !wcscmp(name+1,L"lliptic_ec"))
+			else if(!wcscmp(name+1,L"e") || !wcscmp(name+1,L"lliptic_ec"))
 			{	res=mglFormulaCalc(Buf, arg);
 				for(i=0;i<res.nx*res.ny*res.nz;i++)
 					res.a[i] = gsl_sf_ellint_Ecomp(res.a[i],GSL_PREC_SINGLE);	}
-			else if(!wcscmp(name+1,L"k") | !wcscmp(name+1,L"lliptic_kc"))
+			else if(!wcscmp(name+1,L"k") || !wcscmp(name+1,L"lliptic_kc"))
 			{	res=mglFormulaCalc(Buf, arg);
 				for(i=0;i<res.nx*res.ny*res.nz;i++)
 					res.a[i] = gsl_sf_ellint_Kcomp(res.a[i],GSL_PREC_SINGLE);	}
-			else if((name[0]==0) | !wcscmp(name+1,L"lliptic_e"))
+			else if(name[0]==0 || !wcscmp(name+1,L"lliptic_e"))
 			{
 				n=mglFindInText(Buf,",");
 				if(n<=0)	mglFormulaError=true;
@@ -531,7 +531,7 @@ mglData mglFormulaCalc(const wchar_t *string, mglParser *arg)
 			{	res=mglFormulaCalc(Buf, arg);
 				for(i=0;i<res.nx*res.ny*res.nz;i++)
 					res.a[i] = res.a[i]>0?1:(res.a[i]<0?-1:0);	}
-			else if(!wcscmp(name+1,L"inh") | !wcscmp(name+1,L"h"))
+			else if(!wcscmp(name+1,L"inh") || !wcscmp(name+1,L"h"))
 			{	res=mglFormulaCalc(Buf, arg);
 				for(i=0;i<res.nx*res.ny*res.nz;i++)	res.a[i] = sinh(res.a[i]);	}
 #if MGL_HAVE_GSL
@@ -547,10 +547,10 @@ mglData mglFormulaCalc(const wchar_t *string, mglParser *arg)
 		}
 		else if(name[0]=='t')
 		{
-			if(!wcscmp(name+1,L"g") | !wcscmp(name+1,L"an"))
+			if(!wcscmp(name+1,L"g") || !wcscmp(name+1,L"an"))
 			{	res=mglFormulaCalc(Buf, arg);
 				for(i=0;i<res.nx*res.ny*res.nz;i++)	res.a[i] = tan(res.a[i]);	}
-			else if(!wcscmp(name+1,L"anh") | !wcscmp(name+1,L"h"))
+			else if(!wcscmp(name+1,L"anh") || !wcscmp(name+1,L"h"))
 			{	res=mglFormulaCalc(Buf, arg);
 				for(i=0;i<res.nx*res.ny*res.nz;i++)	res.a[i] = tanh(res.a[i]);	}
 		}
@@ -639,6 +639,6 @@ mglData mglFormulaCalc(const wchar_t *string, mglParser *arg)
 void mgl_wcslwr(wchar_t *str)
 {
 	for(size_t k=0;k<wcslen(str);k++)	// ������� ��������� �������
-		str[k] = ((str[k]>='A') & (str[k]<='Z')) ? str[k]+'a'-'A' : str[k];
+		str[k] = (str[k]>='A' && str[k]<='Z') ? str[k]+'a'-'A' : str[k];
 }
 //-----------------------------------------------------------------------------

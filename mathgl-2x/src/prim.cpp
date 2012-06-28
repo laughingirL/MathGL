@@ -49,7 +49,7 @@ void mgl_ball_(uintptr_t *gr, float *x,float *y,float *z)
 void mgl_line(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z2, const char *pen,int n)
 {
 	static int cgid=1;	gr->StartGroup("Line",cgid++);
-	if(mgl_isnan(z1) | mgl_isnan(z2))	z1=z2=gr->Min.z;
+	if(mgl_isnan(z1) || mgl_isnan(z2))	z1=z2=gr->Min.z;
 	mglPoint p1(x1,y1,z1), p2(x2,y2,z2), p=p1,nn=mglPoint(NAN);
 	gr->SetPenPal(pen);
 	n = (n<2) ? 2 : n;
@@ -196,7 +196,7 @@ void mgl_face_(uintptr_t* gr, float *x0, float *y0, float *z0, float *x1, float 
 void mgl_cone(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z2, float r1, float r2, const char *stl)
 {
 	if(r2<0)	r2=r1;
-	if((r1==0) & (r2==0))	return;
+	if(r1==0 && r2==0)	return;
 
 	static int cgid=1;	gr->StartGroup("Cone",cgid++);
 	mglPoint p1(x1,y1,z1), p2(x2,y2,z2), p,q, d=p2-p1,a,b;
@@ -207,7 +207,7 @@ void mgl_cone(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z
 	bool edge = stl && strchr(stl,'@');
 	bool wire = stl && strchr(stl,'#');
 	gr->Reserve(edge?166:82);
-	if(edge & !wire)
+	if(edge && !wire)
 	{
 		k1=gr->AddPnt(p1,c1,d,-1,3);
 		k2=gr->AddPnt(p2,c2,d,-1,3);
@@ -222,10 +222,10 @@ void mgl_cone(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z
 		q = (si*a-co*b)^(d + (dr*co)*a + (dr*si)*b);
 		if(wire)	q.x=q.y=NAN;
 		kk[i] = gr->AddPnt(p,c1,q,-1,3);
-		if(edge & !wire)	kk[i+82] = gr->AddPnt(p,c1,d,-1,3);
+		if(edge && !wire)	kk[i+82] = gr->AddPnt(p,c1,d,-1,3);
 		p = p2+(r2*co)*a+(r2*si)*b;
 		kk[i+(wire?13:41)] = gr->AddPnt(p,c2,q,-1,3);
-		if(edge & !wire)	kk[i+123] = gr->AddPnt(p,c2,d,-1,3);
+		if(edge && !wire)	kk[i+123] = gr->AddPnt(p,c2,d,-1,3);
 	}
 	if(wire)	for(i=0;i<12;i++)
 	{
@@ -259,7 +259,7 @@ void mgl_cone_(uintptr_t* gr, float *x1, float *y1, float *z1, float *x2, float 
 void mgl_cones_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *opt)
 {
 	long i,j,m,mx,my,mz,n=z->GetNx(),nx=x->GetNx(), nz=z->GetNy(), pal;
-	if((x->GetNx()<n) | (y->GetNx()<n))	{	gr->SetWarn(mglWarnDim,"Cones");	return;	}
+	if(x->GetNx()<n || y->GetNx()<n)	{	gr->SetWarn(mglWarnDim,"Cones");	return;	}
 	if(n<2)		{	gr->SetWarn(mglWarnLow,"Cones");	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Cones",cgid++);
@@ -310,16 +310,15 @@ void mgl_cones_xz(HMGL gr, HCDT x, HCDT z, const char *pen, const char *opt)
 	mglData y(z);
 	y.Fill(gr->Min.y,gr->Max.y,'y');
 	mgl_cones_xyz(gr,x,&y,z,pen,0);
-	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_cones(HMGL gr, HCDT z, const char *pen, const char *opt)
 {
+	if(z->GetNx()<2)	{	gr->SetWarn(mglWarnLow,"Bars");	return;	}
 	gr->SaveState(opt);
 	mglData x(z->GetNx()+1);
 	x.Fill(gr->Min.x,gr->Max.x);
 	mgl_cones_xz(gr,&x,z,pen,0);
-	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_cones_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *pen, const char *opt,int l,int lo)
@@ -348,7 +347,7 @@ void mgl_ellipse(HMGL gr, float x1, float y1, float z1, float x2, float y2, floa
 	gr->SetPenPal(stl,&pal);
 	float c=gr->NextColor(pal), d;
 	float k=(gr->GetNumPal(pal)>1)?gr->NextColor(pal):gr->AddTexture('k');
-	bool fill = !(stl && strchr(stl,'#')), box = (stl && strchr(stl,'@')) | !fill;
+	bool fill = !(stl && strchr(stl,'#')), box = (stl && strchr(stl,'@')) || !fill;
 	if(!fill)	k=c;
 
 	gr->Reserve(2*n+1);
@@ -381,7 +380,7 @@ void mgl_rhomb(HMGL gr, float x1, float y1, float z1, float x2, float y2, float 
 	float c=gr->NextColor(pal);
 	float k=(gr->GetNumPal(pal)>1)?gr->NextColor(pal):gr->AddTexture('k');
 	float b=(gr->GetNumPal(pal)>2)?gr->NextColor(pal):c;
-	bool fill = !(stl && strchr(stl,'#')), box = (stl && strchr(stl,'@')) | !fill;
+	bool fill = !(stl && strchr(stl,'#')), box = (stl && strchr(stl,'@')) || !fill;
 	if(!fill)	k=c;
 	gr->Reserve(8);
 	mglPoint p1(x1,y1,z1), p2(x2,y2,z2), u=mglPoint(0,0,1)^(p1-p2), q=u^(p1-p2), p, s,qq;
@@ -465,9 +464,9 @@ void mgl_dew_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, cons
 {
 	long i,j,n=ax->GetNx(),m=ax->GetNy(),k;
 	if(n*m*ax->GetNz()!=ay->GetNx()*ay->GetNy()*ay->GetNz())	{	gr->SetWarn(mglWarnDim,"Dew");	return;	}
-	if((n<2) | (m<2))	{	gr->SetWarn(mglWarnLow,"Dew");	return;	}
-	bool both = (x->GetNx()==n) & (y->GetNx()==n) & (x->GetNy()==m) & (y->GetNy()==m);
-	if(!( both | ((x->GetNx()==n) & (y->GetNx()==m)) ))	{	gr->SetWarn(mglWarnDim,"Dew");	return;	}
+	if(n<2 || m<2)						{	gr->SetWarn(mglWarnLow,"Dew");	return;	}
+	bool both = x->GetNx()==n && y->GetNx()==n && x->GetNy()==m && y->GetNy()==m;
+	if(!(both || (x->GetNx()==n && y->GetNx()==m)))	{	gr->SetWarn(mglWarnDim,"Dew");	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("DewXY",cgid++);
 
@@ -509,12 +508,12 @@ void mgl_dew_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, cons
 //-----------------------------------------------------------------------------
 void mgl_dew_2d(HMGL gr, HCDT ax, HCDT ay, const char *sch, const char *opt)
 {
+	if(ax->GetNx()<2 || ax->GetNy()<2)	{	gr->SetWarn(mglWarnLow,"Vect");	return;	}
 	gr->SaveState(opt);
 	mglData x(ax->GetNx()), y(ax->GetNy());
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	mgl_dew_xy(gr,&x,&y,ax,ay,sch,0);
-	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_dew_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch, const char *opt,int l,int lo)
@@ -549,7 +548,7 @@ void mgl_putsw_dir(HMGL gr, float x, float y, float z, float dx, float dy, float
 {
 	bool a=font && strchr(font,'a'), A=font && strchr(font,'A');
 	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);
-	if(g && (a|A))
+	if(g && (a||A))
 	{
 		g->Push();	g->Identity(a);
 		gr->set(MGL_DISABLE_SCALE);
@@ -559,7 +558,7 @@ void mgl_putsw_dir(HMGL gr, float x, float y, float z, float dx, float dy, float
 	}
 	mglPoint p(x,y,z), d(dx-x,dy-y,dz-z);
 	long k = gr->AddPnt(p,-1,d,-1,7);
-	if(g && (a|A))	{	g->Pop();	gr->clr(MGL_DISABLE_SCALE);	}
+	if(g && (a||A))	{	g->Pop();	gr->clr(MGL_DISABLE_SCALE);	}
 	gr->text_plot(k,text,font,size);
 }
 //-----------------------------------------------------------------------------
@@ -582,7 +581,7 @@ void mgl_puts_dir_(uintptr_t *gr, float *x, float *y, float *z, float *dx, float
 void mgl_textmarkw_xyzr(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const wchar_t *text, const char *fnt, const char *opt)
 {
 	long j,m,mx,my,mz,mr,n=y->GetNx();
-	if((x->GetNx()!=n) | (z->GetNx()!=n) | (r->GetNx()!=n))
+	if(x->GetNx()!=n || z->GetNx()!=n || r->GetNx()!=n)
 	{	gr->SetWarn(mglWarnDim,"TextMark");	return;	}
 	if(n<2)	{	gr->SetWarn(mglWarnLow,"TextMark");	return;	}
 	gr->SaveState(opt);
@@ -614,26 +613,25 @@ void mgl_textmarkw_xyr(HMGL gr, HCDT x, HCDT y, HCDT r, const wchar_t *text, con
 	gr->SaveState(opt);
 	mglData z(y->GetNx());	z.Fill(gr->Min.z,gr->Min.z);
 	mgl_textmarkw_xyzr(gr,x,y,&z,r,text,fnt,0);
-	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_textmarkw_yr(HMGL gr, HCDT y, HCDT r, const wchar_t *text, const char *fnt, const char *opt)
 {
+	if(y->GetNx()<2)	{	gr->SetWarn(mglWarnLow,"TextMark");	return;	}
 	gr->SaveState(opt);
 	mglData x(y->GetNx());	x.Fill(gr->Min.x,gr->Max.x);
 	mglData z(y->GetNx());	z.Fill(gr->Min.z,gr->Min.z);
 	mgl_textmarkw_xyzr(gr,&x,y,&z,r,text,fnt,0);
-	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_textmarkw(HMGL gr, HCDT y, const wchar_t *text, const char *fnt, const char *opt)
 {
+	if(y->GetNx()<2)	{	gr->SetWarn(mglWarnLow,"TextMark");	return;	}
 	gr->SaveState(opt);
 	mglData r(y->GetNx());	r.Fill(1,1);
 	mglData x(y->GetNx());	x.Fill(gr->Min.x,gr->Max.x);
 	mglData z(y->GetNx());	z.Fill(gr->Min.z,gr->Min.z);
 	mgl_textmarkw_xyzr(gr,&x,y,&z,&r,text,fnt,0);
-	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_textmark_xyzr(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const char *str, const char *fnt, const char *opt)
@@ -685,7 +683,7 @@ void mgl_textmark_(uintptr_t *gr, uintptr_t *y, const char *text, const char *fn
 void mgl_labelw_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const wchar_t *text, const char *fnt, const char *opt)
 {
 	long j,m,mx,my,mz,n=y->GetNx();
-	if((x->GetNx()!=n) | (z->GetNx()!=n))
+	if(x->GetNx()!=n || z->GetNx()!=n)
 	{	gr->SetWarn(mglWarnDim,"Label");	return;	}
 	if(n<2)	{	gr->SetWarn(mglWarnLow,"Label");	return;	}
 	float size=gr->SaveState(opt);	if(mgl_isnan(size))	size=-0.7;
@@ -729,16 +727,15 @@ void mgl_labelw_xy(HMGL gr, HCDT x, HCDT y, const wchar_t *text, const char *fnt
 	gr->SaveState(opt);
 	mglData z(y->GetNx());	z.Fill(gr->Min.z,gr->Min.z);
 	mgl_labelw_xyz(gr,x,y,&z,text,fnt,0);
-	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_labelw_y(HMGL gr, HCDT y, const wchar_t *text, const char *fnt, const char *opt)
 {
+	if(y->GetNx()<2)	{	gr->SetWarn(mglWarnLow,"TextMark");	return;	}
 	gr->SaveState(opt);
 	mglData x(y->GetNx());	x.Fill(gr->Min.x,gr->Max.x);
 	mglData z(y->GetNx());	z.Fill(gr->Min.z,gr->Min.z);
 	mgl_labelw_xyz(gr,&x,y,&z,text,fnt,0);
-	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_label_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *str, const char *fnt, const char *opt)

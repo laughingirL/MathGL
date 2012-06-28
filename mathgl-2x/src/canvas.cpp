@@ -119,7 +119,7 @@ float mglCanvas::FindOptOrg(char dir, int ind) const
 					mglPoint(1,0,0), mglPoint(1,0,1), mglPoint(1,1,0), mglPoint(1,1,1)}, pp[8];
 	memcpy(pp, nn, 8*sizeof(mglPoint));
 	// do nothing if transformation matrix the same
-	if(memcmp(B.b,bb.b,9*sizeof(float)) || ((m1!=Min) | (m2!=Max)))
+	if(memcmp(B.b,bb.b,9*sizeof(float)) || m1!=Min || m2!=Max)
 	{
 		m1 = Min;	m2 = Max;	memcpy(&bb,&B,sizeof(mglMatrix));
 		PostScale(pp,8);
@@ -149,17 +149,17 @@ float mglCanvas::FindOptOrg(char dir, int ind) const
 		{	cxy /= sqrt(dx*dy);	cxz /= sqrt(dx*dz);	cyz /= sqrt(dz*dy);	}
 		// find points for axis
 		px = py = pz = nn[j];
-		if((cxy<cxz) & (cxy<cyz))	// xy is lowest
+		if(cxy<cxz && cxy<cyz)	// xy is lowest
 		{	// px, py the same as pp
 			if(pp[1].x<pp[2].x)	pz.x = 1-pz.x;
 			else	pz.y = 1-pz.y;
 		}
-		if((cxz<cxy) & (cxz<cyz))	// xz is lowest
+		if(cxz<cxy && cxz<cyz)	// xz is lowest
 		{	// px, pz the same as pp
 			if(pp[1].x<pp[3].x)	py.x = 1-py.x;
 			else	py.z = 1-py.z;
 		}
-		if((cyz<cxz) & (cyz<cxy))	// yz is lowest
+		if(cyz<cxz && cyz<cxy)	// yz is lowest
 		{	// py, pz the same as pp
 			if(pp[3].x<pp[2].x)	px.z = 1-px.z;
 			else	px.y = 1-px.y;
@@ -234,7 +234,7 @@ void mglCanvas::mark_plot(long p, char type, float size)
 void mglCanvas::line_plot(long p1, long p2)
 {
 	if(PDef==0)	return;
-	if(((p1<0) | (p2<0)) || (mgl_isnan(Pnt[p1].x) | mgl_isnan(Pnt[p2].x)))	return;
+	if(p1<0 || p2<0 || mgl_isnan(Pnt[p1].x) || mgl_isnan(Pnt[p2].x))	return;
 	mglDrawReg dd;	dd.set(this,1,1,0);
 	long pp1=p1,pp2=p2;
 	float pw = fabs(PenWidth),d;
@@ -251,7 +251,7 @@ void mglCanvas::line_plot(long p1, long p2)
 							a.n3 = p3;	add_prim(a);}
 void mglCanvas::trig_plot(long p1, long p2, long p3)
 {
-	if(((p1<0) | (p2<0) | (p3<0)) || (mgl_isnan(Pnt[p1].x) | mgl_isnan(Pnt[p2].x) | mgl_isnan(Pnt[p3].x)))	return;
+	if(p1<0 || p2<0 || p3<0 || mgl_isnan(Pnt[p1].x) || mgl_isnan(Pnt[p2].x) || mgl_isnan(Pnt[p3].x))	return;
 	long pp1=p1,pp2=p2,pp3=p3;
 	mglDrawReg d;	d.set(this,1,1,0);
 	if(TernAxis&4) for(int i=0;i<4;i++)
@@ -297,7 +297,7 @@ float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float siz
 	mglPnt q=Pnt[p];
 	float ll = q.u*q.u+q.v*q.v;
 	bool inv=false;
-	if(rot & ( (q.u<0) | ((q.u==0) & (q.v<0)) ) )
+	if(rot && (q.u<0 || (q.u==0 && q.v<0)))
 	{	q.u=-q.u;	q.v=-q.v;	q.w=-q.w;	inv=true;	}
 	if(!(Quality&4))	// add text itself
 	{
@@ -319,13 +319,13 @@ float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float siz
 	if(ll==0)	{	Pop();	return 0;	}
 
 	int align;	mglGetStyle(font,0,&align);	align = align&3;
-	if((ll==0) | mgl_isnan(ll))
+	if(ll==0 || mgl_isnan(ll))
 	{	B.x = q.x + 0;	B.y = q.y - shift;	}
 	else
 	{	B.x = q.x + shift*q.v/sqrt(ll);	B.y = q.y - shift*q.u/sqrt(ll);	}
 	fscl = fsize;
 
-	if(mgl_isnan(ll) | !get(MGL_ENABLE_RTEXT))	ftet = 0;
+	if(mgl_isnan(ll) || !get(MGL_ENABLE_RTEXT))	ftet = 0;
 	else	ftet = -180*atan2(q.v,q.u)/M_PI;
 
 	memset(B.b,0,9*sizeof(float));
@@ -369,7 +369,7 @@ void mglCanvas::Glyph(float x, float y, float f, int s, long j, float col)
 //-----------------------------------------------------------------------------
 void mglCanvas::InPlot(float x1,float x2,float y1,float y2, const char *st)
 {
-	if((Width<=0) | (Height<=0) | (Depth<=0))	return;
+	if(Width<=0 || Height<=0 || Depth<=0)	return;
 	if(!st)		{	InPlot(x1,x2,y1,y2,false);	return;	}
 	inW = Width*(x2-x1);	inH = Height*(y2-y1);
 	mglPrim p;	p.id = ObjId;
@@ -383,10 +383,10 @@ void mglCanvas::InPlot(float x1,float x2,float y1,float y2, const char *st)
 	bool a = !(strchr(st,'a') || strchr(st,'A') || strchr(st,'^') || strchr(st,'g') || strchr(st,'t'));
 	// let use simplified scheme -- i.e. no differences between axis, colorbar and/or title
 	register float xs=(x1+x2)/2, ys=(y1+y2)/2, f1 = 1.3, f2 = 1.1;
-	if(r & l)	{	x2=xs+(x2-xs)*f1;	x1=xs+(x1-xs)*f1;	}
+	if(r && l)	{	x2=xs+(x2-xs)*f1;	x1=xs+(x1-xs)*f1;	}
 	else if(r)	{	x2=xs+(x2-xs)*f1;	x1=xs+(x1-xs)*f2;	}
 	else if(l)	{	x2=xs+(x2-xs)*f2;	x1=xs+(x1-xs)*f1;	}
-	if(a & u)	{	y2=ys+(y2-ys)*f1;	y1=ys+(y1-ys)*f1;	}
+	if(a && u)	{	y2=ys+(y2-ys)*f1;	y1=ys+(y1-ys)*f1;	}
 	else if(a)	{	y2=ys+(y2-ys)*f1;	y1=ys+(y1-ys)*f2;	}
 	else if(u)	{	y2=ys+(y2-ys)*f2;	y1=ys+(y1-ys)*f1;	}
 
@@ -402,7 +402,7 @@ void mglCanvas::InPlot(float x1,float x2,float y1,float y2, const char *st)
 //-----------------------------------------------------------------------------
 void mglCanvas::InPlot(float x1,float x2,float y1,float y2, bool rel)
 {
-	if((Width<=0) | (Height<=0) | (Depth<=0))	return;
+	if(Width<=0 || Height<=0 || Depth<=0)	return;
 	B.clear();
 	if(get(MGL_AUTO_FACTOR)) B.pf = 1.55;	// Automatically change plot factor !!!
 	if(rel)
@@ -527,7 +527,7 @@ void mglCanvas::View(float tetx,float tetz,float tety)
 void mglCanvas::Zoom(float x1, float y1, float x2, float y2)
 {
 	Bp.pf=0;	Bp.clear();		ClfZB();
-	if((x1==x2) | (y1==y2))	{	x1=y1=0;	x2=y2=1;	}
+	if(x1==x2 || y1==y2)	{	x1=y1=0;	x2=y2=1;	}
 	x1=2*x1-1;	x2=2*x2-1;	y1=2*y1-1;	y2=2*y2-1;
 	Bp.b[0]=2/fabs(x2-x1);	Bp.b[4]=2/fabs(y2-y1);
 	Bp.x=(x1+x2)/2/Bp.b[0];	Bp.y=(y1+y2)/2/Bp.b[4];
@@ -539,7 +539,7 @@ int mglCanvas::GetSplId(long x,long y) const
 	for(i=Sub.size()-1;i>=0;i--)
 	{
 		const mglPrim &p = Sub[i];
-		if((p.n1<=x) & (p.n2>=x) & (p.n3<=y) & (p.n4>=y))
+		if(p.n1<=x && p.n2>=x && p.n3<=y && p.n4>=y)
 		{	id=p.id;	break;	}
 	}
 	return id;
@@ -562,13 +562,13 @@ void mglCanvas::Fog(float d, float dz)	{	FogDist=d;	FogDz = dz;	}
 //-----------------------------------------------------------------------------
 void mglCanvas::Light(int n, bool enable)
 {
-	if((n<0) | (n>9))	{	SetWarn(mglWarnLId);	return;	}
+	if(n<0 || n>9)	{	SetWarn(mglWarnLId);	return;	}
 	light[n].n = enable;
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::AddLight(int n, mglPoint r, mglPoint d, char col, float br, float ap)
 {
-	if((n<0) | (n>9))	{	SetWarn(mglWarnLId);	return;	}
+	if(n<0 || n>9)	{	SetWarn(mglWarnLId);	return;	}
 	light[n].n = true;	light[n].a = ap>0?ap*ap:3;
 	light[n].b = br;	light[n].r = r;
 	light[n].d = d;		light[n].c = mglColor(col);
@@ -576,7 +576,7 @@ void mglCanvas::AddLight(int n, mglPoint r, mglPoint d, char col, float br, floa
 //-----------------------------------------------------------------------------
 void mglCanvas::arrow_plot(long n1, long n2,char st)
 {
-	if((n1<0) | (n2<0) | !strchr("AVKSDTIO",st))	return;
+	if(n1<0 || n2<0 || !strchr("AVKSDTIO",st))	return;
 	const mglPnt &p1=Pnt[n1], &p2=Pnt[n2];
 	mglPnt q1=p1,q2=p1,q3=p1,q4=p1;
 	q1.u=q1.v=q2.u=q2.v=q3.u=q3.v=q4.u=q4.v=NAN;
@@ -658,7 +658,7 @@ void mglCanvas::Legend(const std::vector<mglText> &leg, float x, float y, const 
 	long n=leg.size(), iw, ih;
 	if(n<1)	{	SetWarn(mglWarnLeg);	return;	}
 	static int cgid=1;	StartGroup("Legend",cgid++);
-	if((ll<=0) | mgl_isnan(ll))	ll=0.1;
+	if(ll<=0 || mgl_isnan(ll))	ll=0.1;
 	ll *=font_factor;
 	if(size<0)	size = -size*FontSize;
 	// setup font and parse absolute coordinates
@@ -773,7 +773,7 @@ void mglCanvas::StartAutoGroup (const char *lbl)
 	if(lbl==NULL)	{	id=1;	return;	}
 	if(ObjId<0)	{	ObjId = -id;	id++;	}
 	register size_t len = Grp.size();
-	if(((ObjId>=0) & (len>0)) && (ObjId!=Grp[len-1].Id))
+	if(ObjId>=0 && len>0 && ObjId!=Grp[len-1].Id)
 	{	MGL_PUSH(Grp,mglGroup(lbl,ObjId),mutexGrp);	}
 	else if(ObjId<0)
 	{	MGL_PUSH(Grp,mglGroup(lbl,ObjId),mutexGrp);	}

@@ -472,7 +472,7 @@ void mgls_prepare2v(mglData *a, mglData *b)
 void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez)
 {
 	register long i,j,k,n=10,i0;
-	if(!ex | !ey | !ez)	return;
+	if(!ex || !ey || !ez)	return;
 	ex->Create(n,n,n);	ey->Create(n,n,n);	ez->Create(n,n,n);
 	float x,y,z, r1,r2;
 	for(i=0;i<n;i++)	for(j=0;j<n;j++)	for(k=0;k<n;k++)
