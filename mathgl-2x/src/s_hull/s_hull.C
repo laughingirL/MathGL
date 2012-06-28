@@ -334,7 +334,7 @@ void s_hull_del_ray2( std::vector<Shx> &pts, std::vector<Triad> &triads)
 	pts.insert(pts.begin(), pt1);
 	pts.insert(pts.begin(), pt0);
 
-	int slump [nump];
+	int *slump = new int[nump];	// Changed by A.Balakin (28 June 2012) to be cross-platform
 	for( int k=0; k<nump; k++)
 	{
 		slump[ pts[k].id] = k;
@@ -754,6 +754,7 @@ void s_hull_del_ray2( std::vector<Shx> &pts, std::vector<Triad> &triads)
 		nit ++;
 	}
 	//write_Triads(triads, "triangles3.mat");
+	delete []slump;	// Changed by A.Balakin (28 June 2012) to be cross-platform
 	return;
 }
 

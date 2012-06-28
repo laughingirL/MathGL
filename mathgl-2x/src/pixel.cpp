@@ -19,10 +19,6 @@
  ***************************************************************************/
 #include <algorithm>
 #include "mgl2/canvas.h"
-#if defined(_MSC_VER) || defined(__BORLANDC__)
-#define fmin(a,b)	((a)<(b))?(a):(b)
-#define fmax(a,b)	((a)>(b))?(a):(b)
-#endif
 //-----------------------------------------------------------------------------
 void mglCanvas::SetSize(int w,int h)
 {

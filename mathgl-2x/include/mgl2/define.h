@@ -47,6 +47,11 @@
 #include <string.h>
 #include <wchar.h>
 
+#if defined(_MSC_VER) || defined(__BORLANDC__)
+#define fmin(a,b)	((a)<(b))?(a):(b)
+#define fmax(a,b)	((a)>(b))?(a):(b)
+#endif
+
 #define MGL_VER2	0.2
 
 //#ifdef WIN32
