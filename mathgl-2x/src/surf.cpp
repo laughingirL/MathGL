@@ -145,6 +145,7 @@ void mgl_mesh(HMGL gr, HCDT z, const char *sch, const char *opt)
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	mgl_mesh_xy(gr,&x,&y,z,sch,0);
+	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_mesh_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
@@ -199,6 +200,7 @@ void mgl_fall(HMGL gr, HCDT z, const char *sch, const char *opt)
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	mgl_fall_xy(gr,&x,&y,z,sch,0);
+	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_fall_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
@@ -253,6 +255,7 @@ void mgl_grid(HMGL gr, HCDT z,const char *sch, const char *opt)
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	mgl_grid_xy(gr,&x,&y,z,sch,0);
+	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_grid_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
@@ -317,6 +320,7 @@ void mgl_surf(HMGL gr, HCDT z, const char *sch, const char *opt)
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	mgl_surf_xy(gr,&x,&y,z,sch,0);
+	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_surf_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
@@ -397,6 +401,7 @@ void mgl_belt(HMGL gr, HCDT z, const char *sch, const char *opt)
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	mgl_belt_xy(gr,&x,&y,z,sch,0);
+	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_belt_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
@@ -463,6 +468,7 @@ void mgl_dens(HMGL gr, HCDT z, const char *sch, const char *opt)
 	x.Fill(gr->Min.x, gr->Max.x);
 	y.Fill(gr->Min.y, gr->Max.y);
 	mgl_dens_xy(gr,&x,&y,z,sch,0);
+	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_dens_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
@@ -549,6 +555,7 @@ void mgl_surfc(HMGL gr, HCDT z, HCDT c, const char *sch, const char *opt)
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	mgl_surfc_xy(gr,&x,&y,z,c,sch,0);
+	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_surfc_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
@@ -609,11 +616,12 @@ void mgl_surfa(HMGL gr, HCDT z, HCDT c, const char *sch, const char *opt)
 {
 	register long n = z->GetNx(), m = z->GetNy();
 	if(n<2 || m<2){	gr->SetWarn(mglWarnLow,"SurfC");	return;	}
+	gr->SaveState(opt);
 	mglData x(n), y(m);
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
-	gr->SaveState(opt);
 	mgl_surfa_xy(gr,&x,&y,z,c,sch,0);
+	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_surfa_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
@@ -721,6 +729,7 @@ void mgl_boxs(HMGL gr, HCDT z, const char *sch, const char *opt)
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	mgl_boxs_xy(gr,&x,&y,z,sch,0);
+	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_boxs_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
@@ -783,6 +792,7 @@ void mgl_tile(HMGL gr, HCDT z, const char *sch, const char *opt)
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	mgl_tile_xy(gr,&x,&y,z,sch,0);
+	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_tile_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
@@ -854,6 +864,7 @@ void mgl_tiles(HMGL gr, HCDT z, HCDT s, const char *sch, const char *opt)
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	mgl_tiles_xy(gr,&x,&y,z,s,sch,0);
+	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_tiles_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *a, uintptr_t *r, const char *sch, const char *opt,int l,int lo)
@@ -929,6 +940,7 @@ void mgl_map(HMGL gr, HCDT ax, HCDT ay, const char *sch, const char *opt)
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	mgl_map_xy(gr,&x,&y,ax,ay,sch,0);
+	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_map_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *a, uintptr_t *b, const char *sch, const char *opt,int l,int lo)

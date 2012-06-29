@@ -79,12 +79,10 @@ void mgl_traj_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 //-----------------------------------------------------------------------------
 void mgl_traj_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, const char *opt)
 {
-	if(ax->GetNx()<2)	{	gr->SetWarn(mglWarnLow,"Traj");	return;	}
-	if(x->GetNx()!=ax->GetNx() || y->GetNx()!=ax->GetNx() || ay->GetNx()!=ax->GetNx())
-	{	gr->SetWarn(mglWarnDim,"Traj");	return;	}
 	gr->SaveState(opt);
 	mglData z(x->GetNx()), az(x->GetNx());	z.Fill(gr->Min.z,gr->Min.z);
 	mgl_traj_xyz(gr,x,y,&z,ax,ay,&az,sch,0);
+	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_traj_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch, const char *opt,int l,int lo)
@@ -173,6 +171,7 @@ void mgl_vect_2d(HMGL gr, HCDT ax, HCDT ay, const char *sch, const char *opt)
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	mgl_vect_xy(gr,&x,&y,ax,ay,sch,0);
+	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_vect_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch, const char *opt,int l,int lo)
@@ -261,6 +260,7 @@ void mgl_vect_3d(HMGL gr, HCDT ax, HCDT ay, HCDT az, const char *sch, const char
 	y.Fill(gr->Min.y,gr->Max.y);
 	z.Fill(gr->Min.z,gr->Max.z);
 	mgl_vect_xyz(gr,&x,&y,&z,ax,ay,az,sch,0);
+	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_vect_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, const char *opt,int l,int lo)
@@ -394,6 +394,7 @@ void mgl_flow_2d(HMGL gr, HCDT ax, HCDT ay, const char *sch, const char *opt)
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	mgl_flow_xy(gr,&x,&y,ax,ay,sch,0);
+	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_flow_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch, const char *opt,int l,int lo)
@@ -460,6 +461,7 @@ void mgl_flowp_2d(HMGL gr, float x0, float y0, float z0, HCDT ax, HCDT ay, const
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	mgl_flowp_xy(gr,x0,y0,z0,&x,&y,ax,ay,sch,0);
+	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_flowp_xy_(uintptr_t *gr, float *x0, float *y0, float *z0, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch, const char *opt, int l,int lo)
@@ -622,6 +624,7 @@ void mgl_flow_3d(HMGL gr, HCDT ax, HCDT ay, HCDT az, const char *sch, const char
 	y.Fill(gr->Min.y,gr->Max.y);
 	z.Fill(gr->Min.z,gr->Max.z);
 	mgl_flow_xyz(gr,&x,&y,&z,ax,ay,az,sch,0);
+	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_flow_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, const char *opt,int l,int lo)
@@ -700,6 +703,7 @@ void mgl_flowp_3d(HMGL gr, float x0, float y0, float z0, HCDT ax, HCDT ay, HCDT 
 	y.Fill(gr->Min.y,gr->Max.y);
 	z.Fill(gr->Min.z,gr->Max.z);
 	mgl_flowp_xyz(gr, x0,y0,z0, &x,&y,&z,ax,ay,az,sch,0);
+	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_flowp_xyz_(uintptr_t *gr, float *x0, float *y0, float *z0, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, const char *opt, int l,int lo)
@@ -759,6 +763,7 @@ void mgl_grad(HMGL gr, HCDT phi, const char *sch, const char *opt)
 	x.Fill(gr->Min.x,gr->Max.x);	y.Fill(gr->Min.y,gr->Max.y);	z.Fill(gr->Min.z,gr->Max.z);
 	if(phi->GetNz()==1)	mgl_grad_xy(gr,&x,&y,phi,sch,0);
 	else				mgl_grad_xyz(gr,&x,&y,&z,phi,sch,0);
+	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_grad_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ph, const char *sch, const char *opt, int l,int lo)
@@ -912,16 +917,12 @@ void mgl_pipe_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, flo
 //-----------------------------------------------------------------------------
 void mgl_pipe_2d(HMGL gr, HCDT ax, HCDT ay, const char *sch, float r0, const char *opt)
 {
-	register long n=ax->GetNx(),m=ax->GetNy(),l=ax->GetNz();
-	if(n*m*l!=ay->GetNx()*ay->GetNy()*ay->GetNz())
-	{	gr->SetWarn(mglWarnDim,"Pipe");	return;	}
-	if(n<2 || m<2)
-	{	gr->SetWarn(mglWarnLow,"Pipe");	return;	}
 	gr->SaveState(opt);
-	mglData x(n), y(m);
+	mglData x(ax->GetNx()), y(ax->GetNy());
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	mgl_pipe_xy(gr,&x,&y,ax,ay,sch,r0,0);
+	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_pipe_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch, float *r0, const char *opt,int l,int lo)
@@ -1083,17 +1084,13 @@ void mgl_pipe_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 //-----------------------------------------------------------------------------
 void mgl_pipe_3d(HMGL gr, HCDT ax, HCDT ay, HCDT az, const char *sch, float r0, const char *opt)
 {
-	register long n=ax->GetNx(),m=ax->GetNy(),l=ax->GetNz();
-	if(n*m*l!=ay->GetNx()*ay->GetNy()*ay->GetNz() || n*m*l!=az->GetNx()*az->GetNy()*az->GetNz())
-	{	gr->SetWarn(mglWarnDim,"Pipe");	return;	}
-	if(n<2 || m<2 || l<2)
-	{	gr->SetWarn(mglWarnLow,"Pipe");	return;	}
 	gr->SaveState(opt);
-	mglData x(n), y(m), z(l);
+	mglData x(ax->GetNx()), y(ax->GetNy()), z(ax->GetNz());
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	z.Fill(gr->Min.z,gr->Max.z);
 	mgl_pipe_xyz(gr,&x,&y,&z,ax,ay,az,sch,r0,0);
+	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_pipe_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, float *r0, const char *opt,int l,int lo)

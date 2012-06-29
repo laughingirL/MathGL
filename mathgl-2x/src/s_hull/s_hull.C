@@ -275,7 +275,7 @@ void T_flip2( std::vector<Shx> &pts, std::vector<Triad> &triads, int *slump, int
 
 void s_hull_del_ray2( std::vector<Shx> &pts, std::vector<Triad> &triads)
 {
-	int nump = pts.size();
+	const int nump = pts.size();	// Changed by A.Balakin (28 June 2012) to be cross-platform
 
 	float r = pts[0].r;
 	float c = pts[0].c;
@@ -334,7 +334,7 @@ void s_hull_del_ray2( std::vector<Shx> &pts, std::vector<Triad> &triads)
 	pts.insert(pts.begin(), pt1);
 	pts.insert(pts.begin(), pt0);
 
-	int *slump = new int[nump];	// Changed by A.Balakin (28 June 2012) to be cross-platform
+	int slump[nump];
 	for( int k=0; k<nump; k++)
 	{
 		slump[ pts[k].id] = k;
@@ -754,7 +754,6 @@ void s_hull_del_ray2( std::vector<Shx> &pts, std::vector<Triad> &triads)
 		nit ++;
 	}
 	//write_Triads(triads, "triangles3.mat");
-	delete []slump;	// Changed by A.Balakin (28 June 2012) to be cross-platform
 	return;
 }
 

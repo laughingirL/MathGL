@@ -270,6 +270,7 @@ void mgl_cont_x(HMGL gr, HCDT a, const char *sch, float sv, const char *opt)
 	mglData v(Num);
 	for(long i=0;i<Num;i++)	v.a[i] = gr->Min.c + (gr->Max.c-gr->Min.c)*float(i+1)/(Num+1);
 	mgl_cont_x_val(gr,&v,a,sch,sv,0);
+	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_cont_y(HMGL gr, HCDT a, const char *sch, float sv, const char *opt)
@@ -279,6 +280,7 @@ void mgl_cont_y(HMGL gr, HCDT a, const char *sch, float sv, const char *opt)
 	mglData v(Num);
 	for(long i=0;i<Num;i++)	v.a[i] = gr->Min.c + (gr->Max.c-gr->Min.c)*float(i+1)/(Num+1);
 	mgl_cont_y_val(gr,&v,a,sch,sv,0);
+	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_cont_z(HMGL gr, HCDT a, const char *sch, float sv, const char *opt)
@@ -288,6 +290,7 @@ void mgl_cont_z(HMGL gr, HCDT a, const char *sch, float sv, const char *opt)
 	mglData v(Num);
 	for(long i=0;i<Num;i++)	v.a[i] = gr->Min.c + (gr->Max.c-gr->Min.c)*float(i+1)/(Num+1);
 	mgl_cont_z_val(gr,&v,a,sch,sv,0);
+	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_cont_x_(uintptr_t *gr, uintptr_t *a, const char *sch, float *sv, const char *opt,int l,int lo)
@@ -444,6 +447,7 @@ void mgl_contf_x(HMGL gr, HCDT a, const char *sch, float sv, const char *opt)
 	long Num = (mgl_isnan(r) || r<=0) ? 7:long(r+0.5);
 	mglData v(Num);	v.Fill(gr->Min.c, gr->Max.c);
 	mgl_contf_x_val(gr,&v,a,sch,sv,0);
+	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_contf_y(HMGL gr, HCDT a, const char *sch, float sv, const char *opt)
@@ -452,6 +456,7 @@ void mgl_contf_y(HMGL gr, HCDT a, const char *sch, float sv, const char *opt)
 	long Num = (mgl_isnan(r) || r<=0) ? 7:long(r+0.5);
 	mglData v(Num);	v.Fill(gr->Min.c, gr->Max.c);
 	mgl_contf_y_val(gr,&v,a,sch,sv,0);
+	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_contf_z(HMGL gr, HCDT a, const char *sch, float sv, const char *opt)
@@ -460,6 +465,7 @@ void mgl_contf_z(HMGL gr, HCDT a, const char *sch, float sv, const char *opt)
 	long Num = (mgl_isnan(r) || r<=0) ? 7:long(r+0.5);
 	mglData v(Num);	v.Fill(gr->Min.c, gr->Max.c);
 	mgl_contf_z_val(gr,&v,a,sch,sv,0);
+	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void mgl_contf_x_(uintptr_t *gr, uintptr_t *a, const char *sch, float *sv, const char *opt,int l,int lo)
