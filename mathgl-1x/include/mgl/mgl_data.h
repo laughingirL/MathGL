@@ -85,18 +85,18 @@ public:
 	char *id;		///< column (or slice) names
 
 	/// Initiate by other mglData variable
-	mglData(const mglData &d)			{	a=0;	Set(d);		};
+	mglData(const mglData &d)			{	a=0;	id=0;	Set(d);		};
 	/// Initiate by flat array
-	mglData(int size, const float *d)	{	a=0;	Set(d,size);	};
-	mglData(int rows, int cols, const float *d)	{	a=0;	Set(d,cols,rows);	};
-	mglData(int size, const double *d)	{	a=0;	Set(d,size);	};
-	mglData(int rows, int cols, const double *d)	{	a=0;	Set(d,cols,rows);	};
-	mglData(const double *d, int size)	{	a=0;	Set(d,size);	};
-	mglData(const double *d, int rows, int cols)	{	a=0;	Set(d,cols,rows);	};
+	mglData(int size, const float *d)	{	a=0;	id=0;	Set(d,size);	};
+	mglData(int rows, int cols, const float *d)	{	a=0;	id=0;	Set(d,cols,rows);	};
+	mglData(int size, const double *d)	{	a=0;	id=0;	Set(d,size);	};
+	mglData(int rows, int cols, const double *d)	{	a=0;	id=0;	Set(d,cols,rows);	};
+	mglData(const double *d, int size)	{	a=0;	id=0;	Set(d,size);	};
+	mglData(const double *d, int rows, int cols)	{	a=0;	id=0;	Set(d,cols,rows);	};
 	/// Read data from file
-	mglData(const char *fname)			{	a=0;	Read(fname);	}
+	mglData(const char *fname)			{	a=0;	id=0;	Read(fname);	}
 	/// Allocate the memory for data array and initialize it zero
-	mglData(int xx=1,int yy=1,int zz=1)	{	a=0;	Create(xx,yy,zz);	};
+	mglData(int xx=1,int yy=1,int zz=1)	{	a=0;	id=0;	Create(xx,yy,zz);	};
 	/// Delete the array
 	virtual ~mglData()	{	if(a)	{	delete []a;	delete []id;	}	};
 	// ~~~~~~~~~~~~~~~~~~~~ операции ~~~~~~~~~~~~~~~~~~~~

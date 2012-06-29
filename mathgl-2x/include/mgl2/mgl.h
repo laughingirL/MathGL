@@ -130,15 +130,15 @@ public:
 	inline void SetRange(char dir, const mglDataA &dat, bool add=false)
 	{	mgl_set_range_dat(gr, dir, &dat, add);	}
 	/// Set values of mglGraph::Min and mglGraph::Max as minimal and maximal values of datas
-	inline void SetRanges(const mglData &xx, const mglData &yy, const mglData &zz, const mglData &cc)
+	inline void SetRanges(const mglDataA &xx, const mglDataA &yy, const mglDataA &zz, const mglDataA &cc)
 	{	mgl_set_range_dat(gr,'x',&xx,0);	mgl_set_range_dat(gr,'y',&yy,0);
 		mgl_set_range_dat(gr,'z',&zz,0);	mgl_set_range_dat(gr,'c',&cc,0);	}
 	/// Set values of mglGraph::Min and mglGraph::Max as minimal and maximal values of datas
-	inline void SetRanges(const mglData &xx, const mglData &yy, const mglData &zz)
+	inline void SetRanges(const mglDataA &xx, const mglDataA &yy, const mglDataA &zz)
 	{	mgl_set_range_dat(gr,'x',&xx,0);	mgl_set_range_dat(gr,'y',&yy,0);
 		mgl_set_range_dat(gr,'z',&zz,0);	mgl_set_range_dat(gr,'c',&zz,0);	}
 	/// Set values of mglGraph::Min and mglGraph::Max as minimal and maximal values of datas
-	inline void SetRanges(const mglData &xx, const mglData &yy)
+	inline void SetRanges(const mglDataA &xx, const mglDataA &yy)
 	{	mgl_set_range_dat(gr,'x',&xx,0);	mgl_set_range_dat(gr,'y',&yy,0);	}
 	/// Set values of mglGraph::Min and mglGraph::Max
 	inline void SetRanges(float x1, float x2, float y1, float y2, float z1=0, float z2=0)
@@ -1070,7 +1070,7 @@ public:
 	{	mgl_data_fill_eq(gr, &u, eq, &v, &w, opt);	}
 
 	/// Set the data by triangulated surface values assuming x,y,z in range [Min, Max]
-	inline void DataGrid(mglData &d, const mglData &x, const mglData &y, const mglData &z, const char *opt="")
+	inline void DataGrid(mglData &d, const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *opt="")
 	{	mgl_data_grid(gr,&d,&x,&y,&z,opt);	}
 	
 	/// Make histogram (distribution) of data. This function do not plot data.
