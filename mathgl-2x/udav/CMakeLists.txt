@@ -12,6 +12,10 @@ set(udav_moc_hdr anim_dlg.h files_dlg.h info_dlg.h opt_dlg.h qmglsyntax.h text_p
 
 set(udav_rc udav.qrc)
 
+if(WIN32)
+	set(udav_src ${udav_src} udav.rc)
+endif(WIN32)
+
 if(MGL_HAVE_GSL)
 #	target_link_libraries(mgl ${GSL_LIB} ${GSL_CBLAS_LIB} )
 	include_directories(${GSL_INCLUDE_DIR})

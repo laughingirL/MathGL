@@ -33,8 +33,7 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 24. Use OI & Z for determining {x,y,z} from {xs,ys}. Try to find closest.
 25. More accurate intersections in Region
 26. Add flag for drawing 3d arrows instead of 2d (S,D -- cube, T -- sq.pyramid, I -- square, O -- sphere???, A,K,V -- ???)
-27. s_hull for triangulation -- add define for any cerr (or exclude streams
-at all) + testing
+27. Add color region cutting in SetCutBox() ???
 28. Add extra texture in Error -- for handling transparency of "marks"
 29. Textual colors, like "{0xFF00FF}" ?!?
 30. Auto axis range for formulas, like AutoRange("y(x)") or AutoRange('x',"x(t)").
@@ -45,7 +44,6 @@ at all) + testing
 * dash for rect, ellipse boundary
 
 34. Hotkeys
-35. Add color region cutting in SetCutBox()
 
 ============= DOCS =============
 
