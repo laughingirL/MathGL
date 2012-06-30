@@ -1153,6 +1153,7 @@ void mgl_hist_p(mglThreadD *t,mreal *a)
 {
 	register long i,j,n=t[0].p[0];
 	mreal *b;
+	memset(a,0,n*sizeof(mreal));
 	for(i=0;i<mglNumThr;i++)
 	{
 		b = t[i].a;
@@ -1165,6 +1166,7 @@ void *mgl_hist_1(void *par)
 	mglThreadD *t=(mglThreadD *)par;
 	register long i,k, nn=t->n, n = t->p[0];
 	mreal *b=new mreal[n], *v=(mreal *)t->v;
+	memset(b,0,n*sizeof(mreal));
 	const mreal *a=t->b, *c=t->c;
 	for(i=t->id;i<nn;i+=mglNumThr)
 	{
@@ -1179,6 +1181,7 @@ void *mgl_hist_2(void *par)
 	register long i,k, nn=t->n, n = t->p[0];
 	long ns=t->p[1], nx=t->p[2], ny=t->p[3], nz=t->p[4];
 	mreal *b=new mreal[n], *v=(mreal *)t->v, f,w=1, x,y,z, d=1./ns;
+	memset(b,0,n*sizeof(mreal));
 	const mreal *a=t->b, *c=t->c;
 	bool sp = n>0;
 	for(i=t->id;i<nn;i+=mglNumThr)
