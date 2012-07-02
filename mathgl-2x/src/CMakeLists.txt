@@ -93,12 +93,10 @@ if(MGL_HAVE_OPENGL)
 	include_directories(${OPENGL_INCLUDE_DIR} )
 endif(MGL_HAVE_OPENGL)
 
-
 if(MGL_HAVE_PNG)
 	target_link_libraries(mgl ${PNG_LIBRARIES} )
 	include_directories(${PNG_INCLUDE_DIR})
 endif(MGL_HAVE_PNG)
-
 
 if(MGL_HAVE_ZLIB)
 	target_link_libraries(mgl ${ZLIB_LIBRARIES} )
@@ -107,6 +105,8 @@ endif(MGL_HAVE_ZLIB)
 
 if(MGL_HAVE_MPI)
 	target_link_libraries(mgl ${MPI_LIBRARIES} )
+#	include_directories(${MPI_C_INCLUDE_PATH})
+	include_directories(${MPI_CXX_INCLUDE_PATH})
 endif(MGL_HAVE_MPI)
 
 target_link_libraries(mgl ${M_LIB})

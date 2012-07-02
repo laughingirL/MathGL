@@ -421,9 +421,40 @@ void mglCanvas::Combine(const mglCanvas *gr)
 	mglStartThread(&mglCanvas::pxl_other,this,Width*Height,gr);
 }
 //-----------------------------------------------------------------------------
-#if !defined(MGL_HAVE_MPI) || MGL_HAVE_MPI==0
-void mglCanvas::MPI_Send(int /*id*/)	{}	// TODO: add later
-void mglCanvas::MPI_Recv(int /*id*/)	{}	// TODO: add later
+#if MGL_HAVE_MPI
+#include <mpi.h>
+#define MCW		MPI_COMM_WORLD
+#define TAG_DATA_Z	0
+#define TAG_DATA_C	1
+void mglCanvas::MPI_Send(int id)
+{
+	::MPI_Send(Z,3*Width*Height,MPI_DOUBLE,id,TAG_DATA_Z,MCW);
+	::MPI_Send(C,12*Width*Height,MPI_CHAR,id,TAG_DATA_C,MCW);
+}
+void mglCanvas::MPI_Recv(int id)
+{
+	MPI_Status status;
+	long n = Width*Height;
+	float *zz = new float[3*n];
+	unsigned char *cc = new unsigned char[12*n];
+	::MPI_Recv(Z,3*n,MPI_DOUBLE,id,TAG_DATA_Z,MCW,&status);
+	::MPI_Recv(C,12*n,MPI_CHAR,id,TAG_DATA_C,MCW,&status);
+	// TODO check status for errors
+	register long i,j,k;
+	for(k=0;k<n;k++)
+	{
+		i = k%Width;	j = Height-1-(k/Width);
+		if(Quality&2)
+		{
+			pnt_plot(i,j,zz[3*k+2],cc+12*k+8);
+			pnt_plot(i,j,zz[3*k+1],cc+12*k+4);
+		}
+		pnt_plot(i,j,zz[3*k],cc+12*k);
+	}
+}
+#else
+void mglCanvas::MPI_Send(int /*id*/)	{}
+void mglCanvas::MPI_Recv(int /*id*/)	{}
 #endif
 //-----------------------------------------------------------------------------
 void mglCanvas::pnt_plot(long x,long y,float z,const unsigned char ci[4])
