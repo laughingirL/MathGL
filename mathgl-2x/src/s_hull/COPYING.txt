@@ -41,3 +41,9 @@ copying the code.
 	    or you could email david@s-hull.org and arrange to make a donation of 10 of your local currancy units
 	    to support s-hull.org.
 	    
+-------------------
+
+This is permission to use s-hull-pro mathgl as long as the routines retain
+my copyright notice. I an happy for it to be included in an LGPL product and 
+I am happy for the source to be bundled with mathgl under whatever license you
+use for that.

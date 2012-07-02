@@ -399,7 +399,7 @@ HMDT mgl_triangulation_3d(HCDT x, HCDT y, HCDT z)
 	delete []pp;	free(nn);	return nums;
 }
 //-----------------------------------------------------------------------------
-#include "s_hull/s_hull.h"
+#include "s_hull/s_hull_pro.h"
 HMDT mgl_triangulation_2d(HCDT x, HCDT y)
 {
 	mglData *nums=new mglData;
@@ -415,7 +415,7 @@ HMDT mgl_triangulation_2d(HCDT x, HCDT y)
 		pt.id = i;	pts.push_back(pt);
 	}
 	std::vector<Triad> triads;
-	s_hull_del_ray2(pts, triads);
+	s_hull_pro(pts, triads);
 	m = triads.size();
 	nums->Create(3,m);
 	for(i=0;i<m;i++)
