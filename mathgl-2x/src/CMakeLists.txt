@@ -105,8 +105,11 @@ if(MGL_HAVE_ZLIB)
 	include_directories(${ZLIB_INCLUDE_DIR})
 endif(MGL_HAVE_ZLIB)
 
+if(MGL_HAVE_MPI)
+	target_link_libraries(mgl ${MPI_LIBRARIES} )
+endif(MGL_HAVE_MPI)
+
 target_link_libraries(mgl ${M_LIB})
-#include_directories(${PNG_INCLUDE_DIR} ${ZLIB_INCLUDE_DIR})
 file(TO_NATIVE_PATH $(MGL_FONT_PATH) MGL_FONT_PATH_SYS)
 #add_definitions(-DMGL_FONT_PATH="${MGL_FONT_PATH_SYS}")
 
