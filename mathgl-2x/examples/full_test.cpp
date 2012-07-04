@@ -43,7 +43,22 @@ void smgl_combined(mglGraph *gr);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	mglData x(100), y(100), z(100);
+	gr->AddLegend("sin(\\pi {x^2})","b");
+	gr->AddLegend("sin(\\pi x)","g*");
+	gr->AddLegend("sin(\\pi \\sqrt{x})","rd");
+	gr->AddLegend("just text"," ");
+	gr->AddLegend("no indent for this","");
+	if(!mini)	{gr->SubPlot(2,2,0,"");	gr->Title("Legend (default)");}
+	gr->Box();	gr->Legend();
+	if(mini)	return;
+	gr->Legend(3,"A#");
+	gr->Puts(mglPoint(0.75,0.65),"Absolute position","A");
+	gr->SubPlot(2,2,2,"");	gr->Title("coloring");	gr->Box();
+	gr->Legend(0,"r#");	gr->Legend(1,"Wb#");	gr->Legend(2,"ygr#");
+	gr->SubPlot(2,2,3,"");	gr->Title("manual position");	gr->Box();	gr->Legend(0.5,0.5);
+	return;
+
+/*	mglData x(100), y(100), z(100);
 	gr->Fill(x,"2*rnd-1");	gr->Fill(y,"2*rnd-1");	gr->Fill(z,"v^2-w^2",x,y);
 	mglData d = mglTriangulation(x,y), g(30,30);
 
@@ -55,7 +70,7 @@ void test(mglGraph *gr)
 	gr->DataGrid(g,x,y,z);
 	g.Save("1.dat");
 	gr->Mesh(g,"m");
-	return;
+	return;*/
 
 	/*	mglParse par;
 	par.AllowSetSize(true);
@@ -319,7 +334,7 @@ void smgl_style(mglGraph *gr)	// pen styles
 const char *mmgl_text="subplot 2 2 0 ''\ntext 0 1 'Text can be in ASCII and in Unicode'\ntext 0 0.6 'It can be \\wire{wire}, \\big{big} or #r{colored}'\n"
 "text 0 0.2 'One can change style in string: \\b{bold}, \\i{italic, \\b{both}}'\ntext 0 -0.2 'Easy to \\a{overline} or \\u{underline}'\n"
 "text 0 -0.6 'Easy to change indexes ^{up} _{down} @{center}'\ntext 0 -1 'It parse TeX: \\int \\alpha \\cdot '\n'\\sqrt3{sin(\\pi x)^2 + \\gamma_{i_k}} dx'\n"
-"subplot0 2 2 1 ''\n text 0 0 '\\sqrt{\\frac{\\alpha^{\\gamma^2}+\\overset 1{\\big\\infty}}{\\sqrt3{2+b}}}' '@' -4\n"
+"subplot0 2 2 1 ''\n text 0 0 '\\sqrt{\\frac{\\alpha^{\\gamma^2}+\\overset 1{\\big\\infty}}{\\sqrt3{2+b}}}' '@' -2\n"
 "subplot 2 2 2 '':box:plot y(:,0)\ntext y 'This is very very long string drawn along a curve' 'k'\ntext y 'Another string drawn above a curve' 'r:T'\n"
 "subplot 2 2 3 '':line -1 -1 1 -1 'rA':text 0 -1 1 -1 'Horizontal'\n"
 "line -1 -1 1 1 'rA':text 0 0 1 1 'At angle' '@'\nline -1 0 -1 1 'rA':text -1 0 -1 1 'Vertical'\n";
@@ -338,7 +353,7 @@ void smgl_text(mglGraph *gr)	// text drawing
 	if(mini)	return;
 
 	gr->SubPlot(2,2,1,"");
-	gr->Puts(mglPoint(0,0.5), "\\sqrt{\\frac{\\alpha^{\\gamma^2}+\\overset 1{\\big\\infty}}{\\sqrt3{2+b}}}", "@", -4);
+	gr->Puts(mglPoint(0,0.5), "\\sqrt{\\frac{\\alpha^{\\gamma^2}+\\overset 1{\\big\\infty}}{\\sqrt3{2+b}}}", "@", -2);
 	gr->Puts(mglPoint(0,-0.5),"Text can be printed\non several lines");
 
 	gr->SubPlot(2,2,2,"");

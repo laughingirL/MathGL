@@ -433,6 +433,7 @@ void mglCanvas::MPI_Send(int id)
 }
 void mglCanvas::MPI_Recv(int id)
 {
+	Finish();
 	MPI_Status status;
 	long n = Width*Height;
 	float *zz = new float[3*n];
@@ -451,6 +452,7 @@ void mglCanvas::MPI_Recv(int id)
 		}
 		pnt_plot(i,j,zz[3*k],cc+12*k);
 	}
+	set(MGL_FINISHED);
 }
 #else
 void mglCanvas::MPI_Send(int /*id*/)	{}

@@ -5,6 +5,8 @@
 * Add mglTriangulation() using s_hull_pro algorithm
 * Add mglData::Grid() and mglGraph::DataGrid() for filling regular data by values of triangulated surface
 * Add mglGraph::MPI_Send() and mglGraph::MPI_Recv()
+* Bugfix for setting text size
+* Bugfix for handling NAN color value
 
 2.0.2 Released 24 May 2012
 

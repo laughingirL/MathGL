@@ -115,6 +115,7 @@ void mglBase::SetWarn(int code, const char *who)
 //-----------------------------------------------------------------------------
 long mglBase::AddPnt(mglPoint p, float c, mglPoint n, float a, int scl)
 {
+	if(mgl_isnan(c) || mgl_isnan(a))	return -1;
 	if(scl>0)	ScalePoint(p,n,!(scl&2));
 	if(mgl_isnan(p.x))	return -1;
 	a = (a>=0 && a<=1) ? a : AlphaDef;

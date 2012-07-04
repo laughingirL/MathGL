@@ -308,7 +308,7 @@ float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float siz
 		a.s = size;	a.w = sh;	a.p=col;
 		add_prim(a);
 	}
-	float shift = -sh-0.2, fsize=size/8.*font_factor, h = fnt->Height(font)*fsize, w;
+	float shift = -sh-0.2, fsize=size/6.5*font_factor, h = fnt->Height(font)*fsize, w;
 	// text drawing itself
 	Push();
 	inv = inv ^ (strchr(font,'T')!=0);
@@ -330,7 +330,8 @@ float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float siz
 
 	memset(B.b,0,9*sizeof(float));
 	B.b[0] = B.b[4] = B.b[8] = fscl;
-	RotateN(ftet,0,0,1);
+	register float opf = B.pf;
+	RotateN(ftet,0,0,1);	B.pf = opf;
 	if(strchr(font,'@'))	// draw box around text
 	{
 		long k1,k2,k3,k4;	mglPnt pt;	mglPoint pp;
