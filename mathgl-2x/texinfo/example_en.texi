@@ -3396,7 +3396,7 @@ int sample(mglGraph *gr)
 
 @table @strong
 @item The plot does not appear
-Check that points of the plot lie  inside the bounding box and resize the bounding box using @code{Axis()} function. Check that the data have correct dimensions for selected type of plot. Be sure that  @code{Finish()} is called after the plotting functions (or be sure that the plot is saved to a file). Sometimes the light reflection from flat surfaces (like, @code{Dens()}) can look as if the plot were absent.
+Check that points of the plot lie  inside the bounding box and resize the bounding box using @code{SetRange()}/@code{SetRanges()} function. Check that the data have correct dimensions for selected type of plot. Be sure that  @code{Finish()} is called after the plotting functions (or be sure that the plot is saved to a file). Sometimes the light reflection from flat surfaces (like, @code{Dens()}) can look as if the plot were absent.
 
 @item I can not find some special kind of plot.
 Most ``new'' types of plots can be created by using the existing drawing functions. For example, the surface of curve rotation can be created by a special function @code{Torus()}, or as a parametrically specified surface by @code{Surf()}. See also, @ref{Hints}. If you can not find a specific type of plot, please e-mail me and this plot will appear in the next version of MathGL library.

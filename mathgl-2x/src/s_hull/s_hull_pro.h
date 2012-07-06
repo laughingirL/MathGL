@@ -12,7 +12,7 @@
 
 
 
-/* 
+/*
    for use in s_hull_pro.cpp
 
 S-hull-pro, Copyright (c) 2012
@@ -26,103 +26,103 @@ email david@s-hull.org
 
 struct Triad
 {
-  int a,b, c;
-  int ab, bc, ac;  // adjacent edges index to neighbouring triangle.
-  float ro, R,C;
-  //std::set<int> idx;
-  Triad() {};
-Triad(int x, int y) : a(x), b(y),c(0), ab(-1), bc(-1), ac(-1), ro(-1), R(0), C(0) {};
-Triad(int x, int y, int z) : a(x), b(y), c(z),  ab(-1), bc(-1), ac(-1), ro(-1), R(0), C(0) {};
-Triad(const Triad &p) : a(p.a), b(p.b), c(p.c), ab(p.ab), bc(p.bc), ac(p.ac), ro(p.ro), R(p.R), C(p.C) {};
+	int a,b, c;
+	int ab, bc, ac;  // adjacent edges index to neighbouring triangle.
+	float ro, R,C;
+	//std::set<int> idx;
+	Triad() {a=b=c=ab=bc=ac=0;	ro=R=C=0;};	// added by A.Balakin 6 July 2012 -- uninitialised variable
+	Triad(int x, int y) : a(x), b(y),c(0), ab(-1), bc(-1), ac(-1), ro(-1), R(0), C(0) {};
+	Triad(int x, int y, int z) : a(x), b(y), c(z),  ab(-1), bc(-1), ac(-1), ro(-1), R(0), C(0) {};
+	Triad(const Triad &p) : a(p.a), b(p.b), c(p.c), ab(p.ab), bc(p.bc), ac(p.ac), ro(p.ro), R(p.R), C(p.C) {};
 
-  Triad &operator=(const Triad &p)
-  {
-    a = p.a;
-    b = p.b;
-    c = p.c;
+	Triad &operator=(const Triad &p)
+	{
+		a = p.a;
+		b = p.b;
+		c = p.c;
 
-    ab = p.ab;
-    bc = p.bc;
-    ac = p.ac;
+		ab = p.ab;
+		bc = p.bc;
+		ac = p.ac;
 
-    ro = p.ro;
-    R = p.R;
-    C = p.C;
+		ro = p.ro;
+		R = p.R;
+		C = p.C;
 
-    return *this;
-  };
+		return *this;
+	};
 };
 
 
 
 /* point structure for s_hull only.
    has to keep track of triangle ids as hull evolves.
-
-
 */
 
 
 struct Shx
 {
-  int id, trid;
-  float r,c, tr,tc ;
-  float ro;
-  Shx() {};
-Shx(float a, float b) : r(a), c(b), ro(0.0), tr(0.0), tc(0.0), id(-1) {}; 
-Shx(float a, float b, float x) : r(a), c(b), ro(x), id(-1), tr(0), tc(0) {};
-  Shx(const Shx &p) : id(p.id), trid(p.trid), r(p.r), c(p.c), tr(p.tr), tc(p.tc), ro(p.ro) {};
+	int id, trid;
+	float r,c, tr,tc ;
+	float ro;
+	Shx() {r=c=tr=tc=ro=0;	id=trid=0;};	// added by A.Balakin 6 July 2012 -- uninitialised variable
+	Shx(float a, float b) : r(a), c(b), tr(0.0), tc(0.0), ro(0.0), id(-1)
+	{	trid=0;	};		// added by A.Balakin 6 July 2012 -- uninitialised variable
+	Shx(float a, float b, float x) : r(a), c(b), ro(x), tr(0), tc(0), id(-1)
+	{	trid=0;	};	// added by A.Balakin 6 July 2012 -- uninitialised variable
+	Shx(const Shx &p) : id(p.id), trid(p.trid), r(p.r), c(p.c), tr(p.tr), tc(p.tc), ro(p.ro) {};
 
-  Shx &operator=(const Shx &p)
-  {
-    id = p.id;
-    trid = p.trid;
-    r = p.r;
-    c = p.c;
-    tr = p.tr;
-    tc = p.tc;
-    ro = p.ro;
-    return *this;
-  };
+	Shx &operator=(const Shx &p)
+	{
+		id = p.id;
+		trid = p.trid;
+		r = p.r;
+		c = p.c;
+		tr = p.tr;
+		tc = p.tc;
+		ro = p.ro;
+		return *this;
+	};
 
 };
 
 
 // sort into descending order (for use in corner responce ranking).
-inline bool operator<(const Shx &a, const Shx &b) 
-{ 
-  if( a.ro == b.ro)
-    return a.r < b.r;
-  return a.ro <  b.ro;
+inline bool operator<(const Shx &a, const Shx &b)
+{
+	if( a.ro == b.ro)
+		return a.r < b.r;
+	return a.ro <  b.ro;
 };
 
 
 struct Dupex
 {
-  int id;
-  float r,c;  
+	int id;
+	float r,c;
 
-  Dupex() {};
-  Dupex(float a, float b) : r(a), c(b), id(-1) {}; 
-  Dupex(float a, float b, int x) : r(a), c(b), id(x) {};
-  Dupex(const Dupex &p) : id(p.id),  r(p.r), c(p.c) {};
+	Dupex() {};
+	Dupex(float a, float b) : id(-1), r(a), c(b) {};
+	Dupex(float a, float b, int x) : r(a), c(b), id(x) {};
+	Dupex(const Dupex &p) : id(p.id),  r(p.r), c(p.c) {};
 
-  Dupex &operator=(const Dupex &p)
-  {
-    id = p.id;
-    r = p.r;
-    c = p.c;
-    return *this;
-  };
+	Dupex &operator=(const Dupex &p)
+	{
+		id = p.id;
+		r = p.r;
+		c = p.c;
+		return *this;
+	};
 };
 
 
 
 // sort into descending order (for use in corner responce ranking).
-inline bool operator<(const Dupex &a, const Dupex &b) 
-{ 
-  if( a.r == b.r)
-    return a.c < b.c;
-  return a.r <  b.r;
+inline bool operator<(const Dupex &a, const Dupex &b)
+{
+	if( a.r == b.r)
+		return a.c < b.c;
+	return a.r <  b.r;
 };
 
 

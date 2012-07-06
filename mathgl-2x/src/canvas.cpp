@@ -87,7 +87,7 @@ int Depth;			///< Depth of the image
 int CurFrameId;		///< Number of automaticle created frames
 GifFileType *gif;*/
 	SetTickRotate(true);	SetTickSkip(true);
-	SetWarn(mglWarnNone);	ObjId = -1;
+	SetWarn(mglWarnNone,"");	ObjId = -1;
 	SetFunc(0,0);	Stop=false;	CutOff(0);	Ternary(0);
 	SetRanges(mglPoint(-1,-1,-1,-1), mglPoint(1,1,1,1));
 	SetBarWidth(0.7);	SetMarkSize(1);	SetArrowSize(1);
@@ -563,13 +563,13 @@ void mglCanvas::Fog(float d, float dz)	{	FogDist=d;	FogDz = dz;	}
 //-----------------------------------------------------------------------------
 void mglCanvas::Light(int n, bool enable)
 {
-	if(n<0 || n>9)	{	SetWarn(mglWarnLId);	return;	}
+	if(n<0 || n>9)	{	SetWarn(mglWarnLId,"Light");	return;	}
 	light[n].n = enable;
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::AddLight(int n, mglPoint r, mglPoint d, char col, float br, float ap)
 {
-	if(n<0 || n>9)	{	SetWarn(mglWarnLId);	return;	}
+	if(n<0 || n>9)	{	SetWarn(mglWarnLId,"AddLight");	return;	}
 	light[n].n = true;	light[n].a = ap>0?ap*ap:3;
 	light[n].b = br;	light[n].r = r;
 	light[n].d = d;		light[n].c = mglColor(col);
@@ -657,7 +657,7 @@ void mglCanvas::arrow_plot(long n1, long n2,char st)
 void mglCanvas::Legend(const std::vector<mglText> &leg, float x, float y, const char *font, float size, float ll)
 {
 	long n=leg.size(), iw, ih;
-	if(n<1)	{	SetWarn(mglWarnLeg);	return;	}
+	if(n<1)	{	SetWarn(mglWarnLeg,"Legend");	return;	}
 	static int cgid=1;	StartGroup("Legend",cgid++);
 	if(ll<=0 || mgl_isnan(ll))	ll=0.1;
 	ll *=font_factor;

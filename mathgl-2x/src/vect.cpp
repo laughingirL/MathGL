@@ -28,9 +28,9 @@
 void mgl_traj_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, const char *opt)
 {
 	long m,mx,my,mz,nx,ny,nz,n=ax->GetNx(),pal;
-	if(n<2)	{	gr->SetWarn(mglWarnLow,"Traj");	return;	}
-	if(n!=x->GetNx() || z->GetNx()!=n || y->GetNx()!=n || ay->GetNx()!=n || az->GetNx()!=n)
-	{	gr->SetWarn(mglWarnDim,"Traj");	return;	}
+	if(mgl_check_dim1(gr,x,z,y,ax,"Traj"))	return;
+	if(mgl_check_dim1(gr,ax,az,ay,0,"Traj"))	return;
+
 	float len=gr->SaveState(opt);	if(mgl_isnan(len))	len = 0;
 	static int cgid=1;	gr->StartGroup("Traj",cgid++);
 
@@ -103,10 +103,7 @@ void mgl_traj_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uint
 void mgl_vect_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, const char *opt)
 {
 	long i,j,n=ax->GetNx(),m=ax->GetNy(),k;
-	if(n*m*ax->GetNz()!=ay->GetNx()*ay->GetNy()*ay->GetNz())	{	gr->SetWarn(mglWarnDim,"Vect");	return;	}
-	if(n<2 || m<2)						{	gr->SetWarn(mglWarnLow,"Vect");	return;	}
-	bool both = x->GetNx()==n && y->GetNx()==n && x->GetNy()==m && y->GetNy()==m;
-	if(!(both || (x->GetNx()==n && y->GetNx()==m)))	{	gr->SetWarn(mglWarnDim,"Vect");	return;	}
+	if(mgl_check_dim2(gr,x,y,ax,ay,"Vect"))	return;
 
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Vect",cgid++);
@@ -192,12 +189,7 @@ void mgl_vect_2d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, const char *sch, 
 void mgl_vect_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, const char *opt)
 {
 	register long i,j,n=ax->GetNx(),m=ax->GetNy(),l=ax->GetNz(),k;
-	if(n*m*l!=ay->GetNx()*ay->GetNy()*ay->GetNz() || n*m*l!=az->GetNx()*az->GetNy()*az->GetNz())
-	{	gr->SetWarn(mglWarnDim,"Vect");	return;	}
-	if(n<2 || m<2 || l<2)	{	gr->SetWarn(mglWarnLow,"Vect");	return;	}
-	bool both = x->GetNx()*x->GetNy()*x->GetNz()==n*m*l && y->GetNx()*y->GetNy()*y->GetNz()==n*m*l && z->GetNx()*z->GetNy()*z->GetNz()==n*m*l;
-	if(!(both || (x->GetNx()==n && y->GetNx()==m && z->GetNx()==l)))
-	{	gr->SetWarn(mglWarnDim,"Vect");	return;	}
+	if(mgl_check_vec3(gr,x,y,z,ax,ay,az,"Vect3"))	return;
 
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Vect3",cgid++);
@@ -339,11 +331,8 @@ void flow(mglBase *gr, float zVal, float u, float v, const mglData &x, const mgl
 void mgl_flow_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, const char *opt)
 {
 	float u,v;
-	long n=ax->GetNx(), m=ax->GetNy();
-	if(n*m*ax->GetNz()!=ay->GetNx()*ay->GetNy()*ay->GetNz())	{	gr->SetWarn(mglWarnDim,"Flow");	return;	}
-	if(n<2 || m<2)						{	gr->SetWarn(mglWarnLow,"Flow");	return;	}
-	bool both = x->GetNx()==n && y->GetNx()==n && x->GetNy()==m && y->GetNy()==m;
-	if(!(both || (x->GetNx()==n && y->GetNx()==m)))	{	gr->SetWarn(mglWarnDim,"Flow");	return;	}
+	if(mgl_check_dim2(gr,x,y,ax,ay,"Flow"))	return;
+
 	float r = gr->SaveState(opt);
 	long num = mgl_isnan(r)?5:long(r+0.5);
 	static int cgid=1;	gr->StartGroup("Flow",cgid++);
@@ -411,10 +400,9 @@ void mgl_flowp_xy(HMGL gr, float x0, float y0, float z0, HCDT x, HCDT y, HCDT ax
 	mglPoint p(x0,y0,z0);
 	float u,v;
 	long n=ax->GetNx(), m=ax->GetNy();
-	if(n*m*ax->GetNz()!=ay->GetNx()*ay->GetNy()*ay->GetNz())	{	gr->SetWarn(mglWarnDim,"Flow");	return;	}
-	if(n<2 || m<2)						{	gr->SetWarn(mglWarnLow,"Flow");	return;	}
 	bool both = x->GetNx()==n && y->GetNx()==n && x->GetNy()==m && y->GetNy()==m;
-	if(!(both || (x->GetNx()==n && y->GetNx()==m)))	{	gr->SetWarn(mglWarnDim,"Flow");	return;	}
+	if(mgl_check_dim2(gr,x,y,ax,ay,"FlowP"))	return;
+
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("FlowP",cgid++);
 
@@ -563,14 +551,9 @@ void flow(mglBase *gr, float u, float v, float w, const mglData &x, const mglDat
 void mgl_flow_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, const char *opt)
 {
 	float u,v,w;
-	long i,j,n=ax->GetNx(),m=ax->GetNy(),l=ax->GetNz();
-	if(n*m*l!=ay->GetNx()*ay->GetNy()*ay->GetNz() || n*m*l!=az->GetNx()*az->GetNy()*az->GetNz())
-	{	gr->SetWarn(mglWarnDim,"Flow");	return;	}
-	if(n<2 || m<2 || l<2)
-	{	gr->SetWarn(mglWarnLow,"Flow");	return;	}
-	bool both = x->GetNx()*x->GetNy()*x->GetNz()==n*m*l && y->GetNx()*y->GetNy()*y->GetNz()==n*m*l && z->GetNx()*z->GetNy()*z->GetNz()==n*m*l;
-	if(!(both || (x->GetNx()==n && y->GetNx()==m && z->GetNx()==l)))
-	{	gr->SetWarn(mglWarnDim,"Flow");	return;	}
+	long i,j;
+	if(mgl_check_vec3(gr,x,y,z,ax,ay,az,"Flow3"))	return;
+
 	float r = gr->SaveState(opt);
 	long num = mgl_isnan(r)?3:long(r+0.5);
 	static int cgid=1;	gr->StartGroup("Flow3",cgid++);
@@ -641,13 +624,9 @@ void mgl_flowp_xyz(HMGL gr, float x0, float y0, float z0, HCDT x, HCDT y, HCDT z
 	mglPoint p(x0,y0,z0);
 	float u,v,w;
 	long n=ax->GetNx(),m=ax->GetNy(),l=ax->GetNz();
-	if(n*m*l!=ay->GetNx()*ay->GetNy()*ay->GetNz() || n*m*l!=az->GetNx()*az->GetNy()*az->GetNz())
-	{	gr->SetWarn(mglWarnDim,"Flow");	return;	}
-	if(n<2 || m<2 || l<2)
-	{	gr->SetWarn(mglWarnLow,"Flow");	return;	}
 	bool both = x->GetNx()*x->GetNy()*x->GetNz()==n*m*l && y->GetNx()*y->GetNy()*y->GetNz()==n*m*l && z->GetNx()*z->GetNy()*z->GetNz()==n*m*l;
-	if(!(both || (x->GetNx()==n && y->GetNx()==m && z->GetNx()==l)))
-	{	gr->SetWarn(mglWarnDim,"Flow");	return;	}
+	if(mgl_check_vec3(gr,x,y,z,ax,ay,az,"FlowP3"))	return;
+
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("FlowP3",cgid++);
 	long ss = gr->AddTexture(sch);
@@ -867,11 +846,8 @@ void flowr(mglBase *gr, float zVal, float u, float v, const mglData &x, const mg
 void mgl_pipe_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, float r0, const char *opt)
 {
 	float u,v;
-	long n=ax->GetNx(), m=ax->GetNy();
-	if(n*m*ax->GetNz()!=ay->GetNx()*ay->GetNy()*ay->GetNz())	{	gr->SetWarn(mglWarnDim,"Pipe");	return;	}
-	if(n<2 || m<2)						{	gr->SetWarn(mglWarnLow,"Pipe");	return;	}
-	bool both = x->GetNx()==n && y->GetNx()==n && x->GetNy()==m && y->GetNy()==m;
-	if(!(both || (x->GetNx()==n && y->GetNx()==m)))	{	gr->SetWarn(mglWarnDim,"Pipe");	return;	}
+	if(mgl_check_dim2(gr,x,y,ax,ay,"Pipe"))	return;
+
 	float r = gr->SaveState(opt);
 	long num = mgl_isnan(r)?5:long(r+0.5);
 	static int cgid=1;	gr->StartGroup("Pipe",cgid++);
@@ -1028,14 +1004,9 @@ void flowr(mglBase *gr, float u, float v, float w, const mglData &x, const mglDa
 void mgl_pipe_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, float r0, const char *opt)
 {
 	float u,v,w;
-	long i,j,n=ax->GetNx(),m=ax->GetNy(),l=ax->GetNz();
-	if(n*m*l!=ay->GetNx()*ay->GetNy()*ay->GetNz() || n*m*l!=az->GetNx()*az->GetNy()*az->GetNz())
-	{	gr->SetWarn(mglWarnDim,"Pipe");	return;	}
-	if(n<2 || m<2 || l<2)
-	{	gr->SetWarn(mglWarnLow,"Pipe");	return;	}
-	bool both = x->GetNx()*x->GetNy()*x->GetNz()==n*m*l && y->GetNx()*y->GetNy()*y->GetNz()==n*m*l && z->GetNx()*z->GetNy()*z->GetNz()==n*m*l;
-	if(!(both || (x->GetNx()==n && y->GetNx()==m && z->GetNx()==l)))
-	{	gr->SetWarn(mglWarnDim,"Pipe");	return;	}
+	long i,j;
+	if(mgl_check_vec3(gr,x,y,z,ax,ay,az,"Vect"))	return;
+
 	float r = gr->SaveState(opt);
 	long num = mgl_isnan(r)?3:long(r+0.5);
 	static int cgid=1;	gr->StartGroup("Pipe3",cgid++);

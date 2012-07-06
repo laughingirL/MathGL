@@ -28,8 +28,8 @@
 void mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, const char *opt)
 {
 	long n = x->GetNx(), m = nums->GetNy();
-	if(y->GetNx()!=n || z->GetNx()!=n || nums->GetNx()<3)	{	gr->SetWarn(mglWarnLow,"TriPlot");	return;	}
-	if(a->GetNx()!=m && a->GetNx()!=n)	{	gr->SetWarn(mglWarnLow,"TriPlot");	return;	}
+	if(mgl_check_trig(gr,nums,x,y,z,a,"TriPlot"))	return;
+
 	long ss=gr->AddTexture(sch);
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("TriPlot",cgid++);
@@ -137,8 +137,8 @@ void mgl_triplot_xy_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y,
 void mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, const char *opt)
 {
 	long n = x->GetNx(), m = nums->GetNy();
-	if(y->GetNx()!=n || z->GetNx()!=n || nums->GetNx()<4)	{	gr->SetWarn(mglWarnLow,"QuadPlot");	return;	}
-	if(a->GetNx()!=m && a->GetNx()!=n)	{	gr->SetWarn(mglWarnLow,"QuadPlot");	return;	}
+	if(mgl_check_trig(gr,nums,x,y,z,a,"QuadPlot",4))	return;
+
 	long ss=gr->AddTexture(sch);
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("QuadPlot",cgid++);
@@ -272,8 +272,8 @@ void mgl_tricont_line(HMGL gr, float val, long k1, long k2, long k3, HCDT x, HCD
 void mgl_tricont_xyzcv(HMGL gr, HCDT v, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, const char *opt)
 {
 	long n = x->GetNx(), m = nums->GetNy();
-	if(y->GetNx()!=n || z->GetNx()!=n || nums->GetNx()<3)	{	gr->SetWarn(mglWarnLow,"TriCont");	return;	}
-	if(a->GetNx()!=m && a->GetNx()!=n)	{	gr->SetWarn(mglWarnLow,"TriCont");	return;	}
+	if(mgl_check_trig(gr,nums,x,y,z,a,"TriCont"))	return;
+
 	long ss=gr->AddTexture(sch);
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("TriCont",cgid++);
@@ -380,8 +380,7 @@ void mgl_dots_a_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintpt
 //-----------------------------------------------------------------------------
 long mgl_crust(long n,mglPoint *pp,long **nn,float ff);
 HMDT mgl_triangulation_3d(HCDT x, HCDT y, HCDT z)
-{
-	// TODO: should be used s-hull or q-hull
+{	// TODO: should be used s-hull or q-hull
 	mglData *nums=new mglData;
 	long n = x->GetNx(), m;
 	if(y->GetNx()!=n || z->GetNx()!=n)	return nums;
@@ -463,7 +462,7 @@ void *mgl_grid_t(void *par)
 		y1 = y1>0 ? y1:0; y2 = y2<ny ? y2:ny-1;
 		if((x1>x2) | (y1>y2)) continue;
 
-		register float u,v,xx,yy,zz, x0 = x[k1], y0 = y[k1];
+		register float u,v,xx,yy, x0 = x[k1], y0 = y[k1];
 		register long i,j;
 		for(i=x1;i<=x2;i++) for(j=y1;j<=y2;j++)
 		{

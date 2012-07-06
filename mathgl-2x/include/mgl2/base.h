@@ -273,7 +273,7 @@ public:
 	inline void SetArrowSize(float val)	{	ArrowSize=0.03*val;	}
 
 	/// Set warning code ant fill Message
-	void SetWarn(int code, const char *who="");
+	void SetWarn(int code, const char *who);
 	int inline GetWarn() const	{	return WarnCode;	}
 
 	virtual void StartAutoGroup (const char *)=0;
@@ -439,6 +439,13 @@ private:
 	void SetFBord(float x,float y,float z);	///< Set internal boundng box depending on transformation formula
 	void ClearEq();			///< Clear the used variables for axis transformation
 };
+//-----------------------------------------------------------------------------
+bool mgl_check_dim1(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const char *name, bool less=false);
+bool mgl_check_dim2(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *name, bool less=false);
+bool mgl_check_dim3(HMGL gr, bool both, HCDT x, HCDT y, HCDT z, HCDT a, HCDT b, const char *name);
+bool mgl_check_vec3(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *name);
+bool mgl_check_trig(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const char *name, int d=3);
+bool mgl_isboth(HCDT x, HCDT y, HCDT z, HCDT a);
 //-----------------------------------------------------------------------------
 #define _Da_(d)	(*((const mglDataA *)(d)))
 #define _DA_(a)	((const mglDataA *)*(a))

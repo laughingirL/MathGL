@@ -84,7 +84,7 @@ void mglCanvasGL::AddLight(int n,mglPoint r,mglPoint d,char cc, float br,float /
 			GL_LIGHT5,GL_LIGHT6,GL_LIGHT7};
 	float amb[4], pos[4],dif[4],dir[4];
 	bool inf = mgl_isnan(r.x);
-	if(n<0 || n>7)	{	SetWarn(mglWarnLId);	return;	}
+	if(n<0 || n>7)	{	SetWarn(mglWarnLId,"AddLight");	return;	}
 	if(c.Valid())
 	{
 		DifLight = c*br;

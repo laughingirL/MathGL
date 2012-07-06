@@ -393,7 +393,7 @@ void mgl_write_svg(HMGL gr, const char *fname,const char *descr)
 		const mglPnt p1=gr->GetPnt(q.n1);
 		if(q.type==0)
 		{
-			float x=p1.x,y=p1.y,s=0.4*gr->FontFactor()*q.s;
+			float x=p1.x,y=hh-p1.y,s=0.4*gr->FontFactor()*q.s;
 			if(!strchr("xsSoO",q.n4))	s *= 1.1;
 			wp = 1;
 			if(strchr("SDVTLR",q.n4))
@@ -403,11 +403,13 @@ void mgl_write_svg(HMGL gr, const char *fname,const char *descr)
 			switch(q.n4)
 			{
 			case 'P':
-				mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g M %g %g L %g %g M %g %g L %g %g L %g %g L %g %g L %g %g\"/>\n", x-s,y,x+s,y,x,y-s,x,y+s, x-s,y-s,x+s,y-s,x+s,y+s,x-s,y+s,x-s,y-s);	break;
+				mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g M %g %g L %g %g M %g %g L %g %g L %g %g L %g %g L %g %g\"/>\n",
+							x-s,y,x+s,y,x,y-s,x,y+s, x-s,y-s,x+s,y-s,x+s,y+s,x-s,y+s,x-s,y-s);	break;
 			case '+':
 				mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g M %g %g L %g %g\"/>\n", x-s,y,x+s,y,x,y-s,x,y+s);	break;
 			case 'X':
-				mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g M %g %g L %g %g M %g %g L %g %g L %g %g L %g %g L %g %g\"/>\n", x-s,y-s,x+s,y+s,x+s,y-s,x-s,y+s, x-s,y-s,x+s,y-s,x+s,y+s,x-s,y+s,x-s,y-s);	break;
+				mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g M %g %g L %g %g M %g %g L %g %g L %g %g L %g %g L %g %g\"/>\n",
+							x-s,y-s,x+s,y+s,x+s,y-s,x-s,y+s, x-s,y-s,x+s,y-s,x+s,y+s,x-s,y+s,x-s,y-s);	break;
 			case 'x':
 				mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g M %g %g L %g %g\"/>\n", x-s,y-s,x+s,y+s,x+s,y-s,x-s,y+s);	break;
 			case 's':
@@ -418,10 +420,10 @@ void mgl_write_svg(HMGL gr, const char *fname,const char *descr)
 				mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g L %g %g L %g %gZ\"/>\n", x-s,y,x,y-s,x+s,y,x,y+s);	break;
 			case '^':
 			case 'T':
-				mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g L %g %gZ\"/>\n", x-s,y+s/2,x+s,y+s/2,x,y-s);	break;
+				mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g L %g %gZ\"/>\n", x-s,y-s/2,x+s,y-s/2,x,y+s);	break;
 			case 'v':
 			case 'V':
-				mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g L %g %gZ\"/>\n", x-s,y-s/2,x+s,y-s/2,x,y+s);	break;
+				mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g L %g %gZ\"/>\n", x-s,y+s/2,x+s,y+s/2,x,y-s);	break;
 			case '<':
 			case 'L':
 				mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g L %g %gZ\"/>\n", x+s/2,y+s,x+s/2,y-s,x-s,y);	break;
@@ -429,17 +431,21 @@ void mgl_write_svg(HMGL gr, const char *fname,const char *descr)
 			case 'R':
 				mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g L %g %gZ\"/>\n", x-s/2,y+s,x-s/2,y-s,x+s,y);	break;
 			case 'Y':
-				mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g L %g %g M %g %g L %g %g\"/>\n", x,y+s, x,y, x+s,y-s, x,y, x-s,y-s);	break;
+				mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g L %g %g M %g %g L %g %g\"/>\n", x,y-s, x,y, x+s,y+s, x,y, x-s,y+s);	break;
 			case 'C':
-				mgl_printf(fp, gz, "<circle style=\"fill:#%02x%02x%02x\" cx=\"%g\" cy=\"%g\" r=\"0.15\"/>\n<circle cx=\"%g\" cy=\"%g\" r=\"%g\"/>\n", int(255*cp.r),int(255*cp.g),int(255*cp.b),x,y,x,y,s);	break;
+				mgl_printf(fp, gz, "<circle style=\"fill:#%02x%02x%02x\" cx=\"%g\" cy=\"%g\" r=\"0.15\"/>\n<circle cx=\"%g\" cy=\"%g\" r=\"%g\"/>\n",
+							int(255*cp.r),int(255*cp.g),int(255*cp.b),x,y,x,y,s);	break;
 			case 'o':
 				mgl_printf(fp, gz, "<circle cx=\"%g\" cy=\"%g\" r=\"%g\"/>\n", x,y,s);	break;
 			case 'O':
-				mgl_printf(fp, gz, "<circle style=\"fill:#%02x%02x%02x\" cx=\"%g\" cy=\"%g\" r=\"%g\"/>\n", int(255*cp.r),int(255*cp.g),int(255*cp.b),x,y,s);	break;
+				mgl_printf(fp, gz, "<circle style=\"fill:#%02x%02x%02x\" cx=\"%g\" cy=\"%g\" r=\"%g\"/>\n",
+							int(255*cp.r),int(255*cp.g),int(255*cp.b),x,y,s);	break;
 			case '*':
-				mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g M %g %g L %g %g M %g %g L %g %g\"/>\n", x-s,y,x+s,y,x-0.6*s,y-0.8*s,x+0.6*s,y+0.8*s,x+0.6*s,y-0.8*s,x-0.6*s,y+0.8*s);	break;
+				mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g M %g %g L %g %g M %g %g L %g %g\"/>\n",
+							x-s,y,x+s,y,x-0.6*s,y-0.8*s,x+0.6*s,y+0.8*s,x+0.6*s,y-0.8*s,x-0.6*s,y+0.8*s);	break;
 			default:
-				mgl_printf(fp, gz, "<circle style=\"fill:#%02x%02x%02x\" cx=\"%g\" cy=\"%g\" r=\"0.15\"/>\n", int(255*cp.r),int(255*cp.g),int(255*cp.b),x,y);	break;
+				mgl_printf(fp, gz, "<circle style=\"fill:#%02x%02x%02x\" cx=\"%g\" cy=\"%g\" r=\"0.15\"/>\n",
+							int(255*cp.r),int(255*cp.g),int(255*cp.b),x,y);	break;
 			}
 			mgl_printf(fp, gz, "</g>\n");
 		}

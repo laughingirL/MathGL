@@ -912,7 +912,7 @@ void mglParser::Execute(mglGraph *gr, int n, const wchar_t **text)
 	for(i=0;i<n;i++)	ScanFunc(text[i]);
 	for(i=0;i<n;i++)
 	{
-		gr->SetWarn(-1, NULL);
+		gr->SetWarn(-1, "");
 		gr->SetObjId(i+1);
 		r = Parse(gr,text[i],i+1);
 		if(r<0)	{	i = -r-2;	continue;	}

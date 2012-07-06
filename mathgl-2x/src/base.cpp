@@ -102,12 +102,12 @@ void mglBase::SetWarn(int code, const char *who)
 	WarnCode = code>0 ? code:0;
 	if(code>0 && code<mglWarnEnd)
 	{
-		if(who)	Mess = Mess+"\n"+who+": ";
+		if(who && *who)	Mess = Mess+"\n"+who+": ";
 		else Mess += "\n";
 		Mess = Mess+mglWarn[code-1];
 	}
 	else if(!code)	Mess="";
-	else if(who)	Mess = Mess+(code==-2?"":"\n")+who;
+	else if(who && *who)	Mess = Mess+(code==-2?"":"\n")+who;
 	LoadState();
 }
 //-----------------------------------------------------------------------------
@@ -896,5 +896,86 @@ void mglBase::AddLegend(const char *str,const char *style)
 	mbstowcs(wcs,str,s);
 	AddLegend(wcs, style);
 	delete []wcs;
+}
+//-----------------------------------------------------------------------------
+bool mgl_check_dim2(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *name, bool less)
+{
+	register long n=z->GetNx(),m=z->GetNy();
+	if(n<2 || m<2)	{	gr->SetWarn(mglWarnLow,name);	return true;	}
+	if(a && n*m*z->GetNz()!=a->GetNx()*a->GetNy()*a->GetNz())
+	{	gr->SetWarn(mglWarnDim,name);	return true;	}
+	if(less)
+	{
+		if(x->GetNx()<n)
+		{	gr->SetWarn(mglWarnDim,name);	return true;	}
+		if(y->GetNx()<m && (x->GetNy()<m || y->GetNx()<n || y->GetNy()<m))
+		{	gr->SetWarn(mglWarnDim,name);	return true;	};
+	}
+	else
+	{
+		if(x->GetNx()!=n)
+		{	gr->SetWarn(mglWarnDim,name);	return true;	}
+		if(y->GetNx()!=m && (x->GetNy()!=m || y->GetNx()!=n || y->GetNy()!=m))
+		{	gr->SetWarn(mglWarnDim,name);	return true;	};
+	}
+	return false;
+}
+//-----------------------------------------------------------------------------
+bool mgl_check_dim1(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const char *name, bool less)
+{
+	register long n=y->GetNx();
+	if(n<2)	{	gr->SetWarn(mglWarnLow,name);	return true;	}
+	if(less)
+	{
+		if(x->GetNx()<n)		{	gr->SetWarn(mglWarnDim,name);	return true;	}
+		if(z && z->GetNx()<n)	{	gr->SetWarn(mglWarnDim,name);	return true;	}
+		if(r && r->GetNx()<n)	{	gr->SetWarn(mglWarnDim,name);	return true;	}
+	}
+	else
+	{
+		if(x->GetNx()!=n)		{	gr->SetWarn(mglWarnDim,name);	return true;	}
+		if(z && z->GetNx()!=n)	{	gr->SetWarn(mglWarnDim,name);	return true;	}
+		if(r && r->GetNx()!=n)	{	gr->SetWarn(mglWarnDim,name);	return true;	}
+	}
+	return false;
+}
+//-----------------------------------------------------------------------------
+bool mgl_check_dim3(HMGL gr, bool both, HCDT x, HCDT y, HCDT z, HCDT a, HCDT b, const char *name)
+{
+	register long n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
+	if(n<2 || m<2 || l<2)
+	{	gr->SetWarn(mglWarnLow,name);	return true;	}
+	if(!(both || (x->GetNx()==n && y->GetNx()==m && z->GetNx()==l)))
+	{	gr->SetWarn(mglWarnDim,name);	return true;	}
+	if(b && b->GetNx()*b->GetNy()*b->GetNz()!=n*m*l)
+	{	gr->SetWarn(mglWarnDim,name);	return true;	}
+	return false;
+}
+//-----------------------------------------------------------------------------
+bool mgl_check_trig(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const char *name, int d)
+{
+	long n = x->GetNx(), m = nums->GetNy();
+	if(nums->GetNx()<d)	{	gr->SetWarn(mglWarnLow,name);	return true;	}
+	if(y->GetNx()!=n || z->GetNx()!=n)	{	gr->SetWarn(mglWarnDim,name);	return true;	}
+	if(a->GetNx()!=m && a->GetNx()!=n)	{	gr->SetWarn(mglWarnDim,name);	return true;	}
+	return false;
+}
+//-----------------------------------------------------------------------------
+bool mgl_isboth(HCDT x, HCDT y, HCDT z, HCDT a)
+{
+	register long n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
+	return x->GetNx()*x->GetNy()*x->GetNz()==n*m*l && y->GetNx()*y->GetNy()*y->GetNz()==n*m*l && z->GetNx()*z->GetNy()*z->GetNz()==n*m*l;
+}
+//-----------------------------------------------------------------------------
+bool mgl_check_vec3(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *name)
+{
+	register long n=ax->GetNx(),m=ax->GetNy(),l=ax->GetNz(),k;
+	if(n*m*l!=ay->GetNx()*ay->GetNy()*ay->GetNz() || n*m*l!=az->GetNx()*az->GetNy()*az->GetNz())
+	{	gr->SetWarn(mglWarnDim,"Vect");	return true;	}
+	if(n<2 || m<2 || l<2)	{	gr->SetWarn(mglWarnLow,"Vect");	return true;	}
+	bool both = x->GetNx()*x->GetNy()*x->GetNz()==n*m*l && y->GetNx()*y->GetNy()*y->GetNz()==n*m*l && z->GetNx()*z->GetNy()*z->GetNz()==n*m*l;
+	if(!(both || (x->GetNx()==n && y->GetNx()==m && z->GetNx()==l)))
+	{	gr->SetWarn(mglWarnDim,"Vect");	return true;	}
+	return false;
 }
 //-----------------------------------------------------------------------------

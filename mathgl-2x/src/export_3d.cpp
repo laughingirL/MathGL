@@ -462,7 +462,7 @@ void mgl_write_off_(uintptr_t *gr, const char *fname,const char *descr,int *colo
 	char *d=new char[n+1];	memcpy(d,descr,n);	d[n]=0;
 	mgl_write_off(_GR_,s,d,*colored);	delete []s;		delete []d;	}
 //-----------------------------------------------------------------------------
-void mgl_write_idtf(HMGL gr, const char *fname,const char *descr)
+void mgl_write_idtf(HMGL /*gr*/, const char */*fname*/,const char */*descr*/)
 {	/*_Gr_->WriteIDTF(fname,descr);*/	}	// TODO: Add idtf support later
 void mgl_write_idtf_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;

@@ -31,15 +31,14 @@ void mgl_cloud_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, con
 {
 	if(!(gr->GetQuality()&3))	return;	// do nothing in fast_draw
 	long i,j,k,n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
-	register int i0;
-	if(n<2 || m<2 || l<2)	{	gr->SetWarn(mglWarnLow,"Cloud");	return;	}
-	bool both = x->GetNx()*x->GetNy()*x->GetNz()==n*m*l && y->GetNx()*y->GetNy()*y->GetNz()==n*m*l && z->GetNx()*z->GetNy()*z->GetNz()==n*m*l;
-	if(!(both || (x->GetNx()==n && y->GetNx()==m && z->GetNx()==l)))
-	{	gr->SetWarn(mglWarnDim);	return;	}
+	register long i0;
+	bool both = mgl_isboth(x,y,z,a);
+	if(mgl_check_dim3(gr,both,x,y,z,a,0,"Cloud"))	return;
+
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Cloud",cgid++);
 
-	int tx=1,ty=1,tz=1;
+	long tx=1,ty=1,tz=1;
 	if(gr->MeshNum>1)
 	{	tx=(n-1)/(gr->MeshNum-1);	ty=(m-1)/(gr->MeshNum-1);	tz=(l-1)/(gr->MeshNum-1);}
 	if(tx<1)	tx=1;	if(ty<1)	ty=1;	if(tz<1)	tz=1;
@@ -231,12 +230,10 @@ void mgl_surf3_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, const
 {
 	long i,j,k,i1,n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
 	long *kx1,*kx2,*ky1,*ky2,*kz;
-	bool both, wire = sch && strchr(sch,'#');
+	bool both = mgl_isboth(x,y,z,a), wire = sch && strchr(sch,'#');
 	float d;
-	if(n<2 || m<2 || l<2)	{	gr->SetWarn(mglWarnLow,"Surf3");	return;	}
-	both = x->GetNx()*x->GetNy()*x->GetNz()==n*m*l && y->GetNx()*y->GetNy()*y->GetNz()==n*m*l && z->GetNx()*z->GetNy()*z->GetNz()==n*m*l;
-	if(!(both || (x->GetNx()==n && y->GetNx()==m && z->GetNx()==l)))
-	{	gr->SetWarn(mglWarnDim,"Surf3");	return;	}
+	if(mgl_check_dim3(gr,both,x,y,z,a,0,"Surf3"))	return;
+
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Surf3",cgid++);
 
@@ -382,13 +379,10 @@ void mgl_surf3a_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 {
 	long i,j,k,i1,n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
 	long *kx1,*kx2,*ky1,*ky2,*kz;
-	bool both, wire = sch && strchr(sch,'#');
+	bool both = mgl_isboth(x,y,z,a), wire = sch && strchr(sch,'#');
 	float d;
-	if(n<2 || m<2 || l<2)	{	gr->SetWarn(mglWarnLow,"Surf3A");	return;	}
-	both = x->GetNx()*x->GetNy()*x->GetNz()==n*m*l && y->GetNx()*y->GetNy()*y->GetNz()==n*m*l && z->GetNx()*z->GetNy()*z->GetNz()==n*m*l;
-	if(!(both || (x->GetNx()==n && y->GetNx()==m && z->GetNx()==l)))
-	{	gr->SetWarn(mglWarnDim,"Surf3A");	return;	}
-	if(b->GetNx()*b->GetNy()*b->GetNz()!=n*m*l)	{	gr->SetWarn(mglWarnDim,"Surf3A");	return;	}
+	if(mgl_check_dim3(gr,both,x,y,z,a,b,"Surf3A"))	return;
+
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Surf3A",cgid++);
 
@@ -551,15 +545,12 @@ void mgl_surf3c_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 {
 	long i,j,k,i1,n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
 	long *kx1,*kx2,*ky1,*ky2,*kz;
-	bool both, wire = sch && strchr(sch,'#');
+	bool both = mgl_isboth(x,y,z,a), wire = sch && strchr(sch,'#');
 	float d;
-	if(n<2 || m<2 || l<2)	{	gr->SetWarn(mglWarnLow,"Surf3A");	return;	}
-	both = x->GetNx()*x->GetNy()*x->GetNz()==n*m*l && y->GetNx()*y->GetNy()*y->GetNz()==n*m*l && z->GetNx()*z->GetNy()*z->GetNz()==n*m*l;
-	if(!(both || (x->GetNx()==n && y->GetNx()==m && z->GetNx()==l)))
-	{	gr->SetWarn(mglWarnDim,"Surf3A");	return;	}
-	if(b->GetNx()*b->GetNy()*b->GetNz()!=n*m*l)	{	gr->SetWarn(mglWarnDim,"Surf3A");	return;	}
+	if(mgl_check_dim3(gr,both,x,y,z,a,b,"Surf3C"))	return;
+
 	gr->SaveState(opt);
-	static int cgid=1;	gr->StartGroup("Surf3A",cgid++);
+	static int cgid=1;	gr->StartGroup("Surf3C",cgid++);
 
 	bool inv = (sch && strchr(sch,'-'));
 	long ss = gr->AddTexture(sch), pos;
@@ -768,8 +759,8 @@ void mgl_beam_val(HMGL gr, float val, HCDT tr, HCDT g1, HCDT g2, HCDT a, float r
 	{	mgl_beam_md(gr,val,dtr,dg1,dg2,da,r,stl,flag);	return;	}
 
 	long n = a->GetNz(),m=a->GetNx(),l=a->GetNy();
-	if(n<2 || m<2 || l<2)	{	gr->SetWarn(mglWarnLow);	return;	}
-	if(a->Minimal()<0)		{	gr->SetWarn(mglWarnNeg);	return;	}
+	if(n<2 || m<2 || l<2)	{	gr->SetWarn(mglWarnLow,"Beam");	return;	}
+	if(a->Minimal()<0)		{	gr->SetWarn(mglWarnNeg,"Beam");	return;	}
 	if(tr->GetNx()<3 || tr->GetNy()<n || g1->GetNx()<3 || g1->GetNy()<n || g2->GetNx()<3 || g2->GetNy()<n)
 	{	gr->SetWarn(mglWarnDim,"Beam");	return;	}
 	mglData x(a),y(a),z(a),b(a);

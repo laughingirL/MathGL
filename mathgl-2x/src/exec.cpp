@@ -1493,7 +1493,7 @@ int mgls_read(mglGraph *gr, long n, mglArg *a, int k[10], const char *)
 	else if(n==2)	rr=a[0].d->Read(a[1].s.c_str());
 	else rr=a[0].d->Read(a[1].s.c_str(), k[2]==3?iint(a[2].v):1,
 			k[3]==3?iint(a[3].v):1, k[4]==3?iint(a[4].v):1);
-	if(!rr)	gr->SetWarn(mglWarnFile);
+	if(!rr)	gr->SetWarn(mglWarnFile,"Read");
 	return 0;
 }
 void mglc_read(wchar_t out[1024], long n, mglArg *a, int k[10], const char *)
@@ -1509,7 +1509,7 @@ int mgls_readmat(mglGraph *gr, long , mglArg *a, int k[10], const char *)
 	bool rr=true;
 	if(k[0]!=1 || k[1]!=2)	return 1;
 	else	rr=a[0].d->ReadMat(a[1].s.c_str(), k[2]==3?iint(a[2].v):2);
-	if(!rr)	gr->SetWarn(mglWarnFile);
+	if(!rr)	gr->SetWarn(mglWarnFile,"ReadMat");
 	return 0;
 }
 void mglc_readmat(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
@@ -2924,7 +2924,7 @@ void mglc_var(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 int mgls_chdir(mglGraph *gr, long , mglArg *a, int k[10], const char *)
 {
 	if(k[0]==2)
-	{	int r=chdir(a[0].s.c_str());	if(r)	gr->SetWarn(mglWarnFile);	}
+	{	int r=chdir(a[0].s.c_str());	if(r)	gr->SetWarn(mglWarnFile,"chdir");	}
 	else	return 1;
 	return 0;
 }

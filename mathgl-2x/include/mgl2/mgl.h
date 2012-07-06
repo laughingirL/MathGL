@@ -119,7 +119,7 @@ public:
 	/// Get last warning code
 	inline int  GetWarn()			{	return mgl_get_warn(gr);}
 	/// Set warning code ant fill message
-	inline void SetWarn(int code, const char *info="")	{	mgl_set_warn(gr,code,info);	}
+	inline void SetWarn(int code, const char *info)	{	mgl_set_warn(gr,code,info);	}
 	/// Set buffer for warning messages
 	inline const char *Message()	{	return mgl_get_mess(gr);	}
 

@@ -152,7 +152,7 @@ void _mgl_display()
 //-----------------------------------------------------------------------------
 mglCanvasGLUT::~mglCanvasGLUT()	{	_mgl_glwnd = 0;	}
 //-----------------------------------------------------------------------------
-void mglCanvasGLUT::Window(int argc, char **argv,int (*draw)(mglBase *gr, void *p),const char *title, void *par, void (*reload)(void *p), bool maximize)
+void mglCanvasGLUT::Window(int argc, char **argv,int (*draw)(mglBase *gr, void *p),const char *title, void *par, void (*reload)(void *p), bool /*maximize*/)
 {
 	NumFig=0;	curr_fig=1;	tt=0;
 	_mgl_glwnd = this;

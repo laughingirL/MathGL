@@ -259,8 +259,8 @@ void mgl_cone_(uintptr_t* gr, float *x1, float *y1, float *z1, float *x2, float 
 void mgl_cones_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *opt)
 {
 	long i,j,m,mx,my,mz,n=z->GetNx(),nx=x->GetNx(), nz=z->GetNy(), pal;
-	if(x->GetNx()<n || y->GetNx()<n)	{	gr->SetWarn(mglWarnDim,"Cones");	return;	}
-	if(n<2)		{	gr->SetWarn(mglWarnLow,"Cones");	return;	}
+	if(mgl_check_dim1(gr,x,z,y,0,"Cones",true))	return;
+
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Cones",cgid++);
 	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();	m = nz > m ? nz : m;
@@ -464,10 +464,8 @@ void mgl_drop_(uintptr_t* gr, float *x1, float *y1, float *z1, float *x2, float 
 void mgl_dew_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, const char *opt)
 {
 	long i,j,n=ax->GetNx(),m=ax->GetNy(),k;
-	if(n*m*ax->GetNz()!=ay->GetNx()*ay->GetNy()*ay->GetNz())	{	gr->SetWarn(mglWarnDim,"Dew");	return;	}
-	if(n<2 || m<2)						{	gr->SetWarn(mglWarnLow,"Dew");	return;	}
-	bool both = x->GetNx()==n && y->GetNx()==n && x->GetNy()==m && y->GetNy()==m;
-	if(!(both || (x->GetNx()==n && y->GetNx()==m)))	{	gr->SetWarn(mglWarnDim,"Dew");	return;	}
+	if(mgl_check_dim2(gr,x,y,ax,ay,"Dew"))	return;
+
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("DewXY",cgid++);
 
@@ -582,9 +580,8 @@ void mgl_puts_dir_(uintptr_t *gr, float *x, float *y, float *z, float *dx, float
 void mgl_textmarkw_xyzr(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const wchar_t *text, const char *fnt, const char *opt)
 {
 	long j,m,mx,my,mz,mr,n=y->GetNx();
-	if(x->GetNx()!=n || z->GetNx()!=n || r->GetNx()!=n)
-	{	gr->SetWarn(mglWarnDim,"TextMark");	return;	}
-	if(n<2)	{	gr->SetWarn(mglWarnLow,"TextMark");	return;	}
+	if(mgl_check_dim1(gr,x,y,z,r,"TextMark"))	return;
+
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("TextMark",cgid++);
 	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();
@@ -683,15 +680,14 @@ void mgl_textmark_(uintptr_t *gr, uintptr_t *y, const char *text, const char *fn
 	mgl_textmarkw(_GR_, _DA_(y),s,f, o);	delete []o;	delete []s;	delete []f;	}
 //-----------------------------------------------------------------------------
 //
-//	TextMark series
+//	Label series
 //
 //-----------------------------------------------------------------------------
 void mgl_labelw_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const wchar_t *text, const char *fnt, const char *opt)
 {
 	long j,m,mx,my,mz,n=y->GetNx();
-	if(x->GetNx()!=n || z->GetNx()!=n)
-	{	gr->SetWarn(mglWarnDim,"Label");	return;	}
-	if(n<2)	{	gr->SetWarn(mglWarnLow,"Label");	return;	}
+	if(mgl_check_dim1(gr,x,y,z,0,"Label"))	return;
+
 	float size=gr->SaveState(opt);	if(mgl_isnan(size))	size=-0.7;
 	static int cgid=1;	gr->StartGroup("Label",cgid++);
 	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();	m = z->GetNy() > m ? z->GetNy() : m;

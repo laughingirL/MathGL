@@ -247,7 +247,7 @@ int s_hull_pro( std::vector<Shx> &pts, std::vector<Triad> &triads)
 	float r2 = pts[1].r;
 	float c2 = pts[1].c;
 	int mid = -1;
-	float romin2 = 100000000.0, ro2, R,C;
+	float romin2 = 100000000.0, ro2, R=0,C=0;	// added by A.Balakin 6 July 2012 -- uninitialised variable
 
 	int k=2;
 	while (k<nump)
@@ -387,7 +387,7 @@ int s_hull_pro( std::vector<Shx> &pts, std::vector<Triad> &triads)
 
 	float dr, dc, rx,cx;
 	Shx  ptx;
-	int numt;
+	int numt=0;	// added by A.Balakin 6 July 2012 -- uninitialised variable
 
 	for( int k=3; k<nump; k++)
 	{
@@ -397,7 +397,7 @@ int s_hull_pro( std::vector<Shx> &pts, std::vector<Triad> &triads)
 		ptx.c = cx;
 		ptx.id = pts[k].id;
 
-		int numh = (int) hull.size(), numh_old = numh;
+		int numh = (int) hull.size()/*, numh_old = numh*/;	// commented by A.Balakin 6 July 2012 -- unused variable
 		dr = rx- hull[0].r;
 		dc = cx- hull[0].c;  // outwards pointing from hull[0] to pt.
 
@@ -408,7 +408,7 @@ int s_hull_pro( std::vector<Shx> &pts, std::vector<Triad> &triads)
 		float df = -dc* hull[0].tr + dr*hull[0].tc;    // visibility test vector.
 		if( df < 0 )   // starting with a visible hull facet !!!
 		{
-			int e1 = 1, e2 = numh;
+//			int e1 = 1, e2 = numh;	// commented by A.Balakin 6 July 2012 -- unused variable
 			hidx = 0;
 
 			// check to see if segment numh is also visible
@@ -1238,7 +1238,7 @@ int Cline_Renka_test(float &Ax, float &Ay,
 	if( cosA < 0 && cosD < 0 ) // two obtuse angles
 		return(-1);
 
-	float ADX = Ax-Dx, ADy = Ay-Dy;
+//	float ADX = Ax-Dx, ADy = Ay-Dy;	// commented by A.Balakin 6 July 2012 -- unused variable
 
 
 	if( cosA > 0 && cosD > 0 )  // two acute angles
