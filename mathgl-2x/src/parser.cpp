@@ -198,7 +198,7 @@ mglParser::~mglParser()
 	}
 	for(long i=0;i<40;i++)	if(par[i])	delete [](par[i]);
 	delete []op1;	delete []op2;	delete []fval;
-	if(Cmd!=mgls_base_cmd)	delete []Cmd;
+	if(Cmd && Cmd!=mgls_base_cmd)	delete []Cmd;
 	if(fn_stack)	free(fn_stack);
 }
 //-----------------------------------------------------------------------------
@@ -677,9 +677,17 @@ int mglParser::Parse(mglGraph *gr, const wchar_t *string, long pos)
 					fn_stack[fn_pos].pos = pos;	fn_pos++;	n--;
 				}
 				else
-				{
+				{	// TODO check bugfix here!!!
 					FILE *fp = fopen(a[0].s.c_str(),"rt");
-					if(fp)	{	Execute(gr,fp);	fclose(fp);	}
+					if(fp)
+					{
+						mglParser *par = new mglParser(AllowSetSize);
+						par->DataList=DataList;	par->NumList=NumList;	par->Cmd=Cmd;
+						par->Execute(gr,fp);
+						DataList=par->DataList;	par->DataList=0;
+						NumList =par->NumList;	par->NumList=0;
+						par->Cmd=0;	delete par;	fclose(fp);
+					}
 					else	n=1;
 				}
 			}
@@ -937,6 +945,7 @@ void mglParser::Execute(mglGraph *gr, const wchar_t *text)
 	memcpy(wcs, text, s*sizeof(wchar_t));
 	str[0] = wcs;	n=1;
 	long next=0;
+	Stop = false;
 	for(i=0;i<s;i++)
 	{
 		if(text[i]=='\\')	next = i;

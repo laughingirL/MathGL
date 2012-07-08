@@ -630,7 +630,7 @@ Set the ticks step, number of sub-ticks and initial ticks position to be the mos
 @deftypefnx {C function} @code{void} mgl_set_ticks_dir (@code{HMGL} gr, @code{char} dir, @code{float} d, @code{int} ns, @code{float} org)
 @deftypefnx {C function} @code{void} mgl_set_ticks (@code{HMGL} gr, @code{int} nx, @code{int} ny, @code{int} nz)
 @end ifclear
-Set the ticks step @var{d}, number of sub-ticks @var{ns} and initial ticks position @var{org} for the axis along direction @var{dir} (use 'c' for colorbar ticks). Variable @var{d} set step for axis ticks (if positive) or it's number on the axis range (if negative). Zero value set automatic ticks. If @var{org} value is NAN then axis origin is used.
+Set the ticks step @var{d}, number of sub-ticks @var{ns} (used for positive @var{d}) and initial ticks position @var{org} for the axis along direction @var{dir} (use 'c' for colorbar ticks). Variable @var{d} set step for axis ticks (if positive) or it's number on the axis range (if negative). Zero value set automatic ticks. If @var{org} value is NAN then axis origin is used.
 @end deftypefn
 
 @deftypefn {MGL command} {} xtick @code{val1} 'lbl1' [@code{val2} 'lbl2' ...]

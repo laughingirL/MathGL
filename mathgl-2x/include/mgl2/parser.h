@@ -106,10 +106,10 @@ class mglParser
 friend void mgl_export(wchar_t *out, const wchar_t *in, int type);
 public:
 	mglVar *DataList;	///< List with data and its names
-	mglNum *NumList;	///< List with numbers and its names
+	mglNum *NumList;		///< List with numbers and its names
 	bool AllowSetSize;	///< Allow using setsize command
 	bool Stop;			///< Stop command was. Flag prevent further execution
-	mglCommand *Cmd;	///< Table of MGL commands (can be changed by user). It MUST be sorted by 'name'!!!
+	mglCommand *Cmd;		///< Table of MGL commands (can be changed by user). It MUST be sorted by 'name'!!!
 	wchar_t *op1, *op2;	///< Buffer for options (are used if out!=NULL)
 	long InUse;			///< Smart pointer (number of users)
 
