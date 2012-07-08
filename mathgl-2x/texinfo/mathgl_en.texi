@@ -79,6 +79,9 @@ supports it in developing GNU and promoting software freedom.''
 * Index::
 @end menu
 
+@macro external {}
+@end macro
+
 @ifhtml
 @macro fig {fname,text}
 @center @image{../\fname\, 11cm, , \text\, .png}
@@ -115,9 +118,6 @@ supports it in developing GNU and promoting software freedom.''
 @end rmacro
 @macro tdref {nam}
 @uref{http://mathgl.sourceforge.net/pdf_u3d/\nam\.pdf, 3D pdf}
-@end macro
-
-@macro reklama
 @end macro
 
 

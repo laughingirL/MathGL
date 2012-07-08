@@ -76,6 +76,9 @@ supports it in developing GNU and promoting software freedom.''
 * Index::
 @end menu
 
+@macro external {}
+@end macro
+
 @ifhtml
 @macro fig {fname,text}
 @center @image{../\fname\, 11cm, , \text\, .png}
@@ -111,9 +114,6 @@ supports it in developing GNU and promoting software freedom.''
 @macro tdref {nam}
 @end macro
 @set UDAV
-
-@macro reklama
-@end macro
 
 
 @c @node Overview, Examples, , Top

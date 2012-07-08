@@ -24,6 +24,7 @@ MathGL library supports the simplest scripts for data handling and plotting. The
 
 
 @c ------------------------------------------------------------------
+@external
 @node MGL definition, Program flow commands, , MGL scripts
 @section MGL definition
 
@@ -65,6 +66,7 @@ Command may have several set of possible arguments (for example, @code{plot ydat
 
 
 @c ------------------------------------------------------------------
+@external
 @node Program flow commands, MGL definition, MGL scripts
 @section Program flow commands
 
@@ -177,6 +179,7 @@ Terminate execution.
 
 @ifclear UDAV
 @c ------------------------------------------------------------------
+@external
 @node mglParse class, , Program flow commands, MGL scripts
 @section mglParse class
 @cindex mglParse
@@ -276,3 +279,6 @@ Return the description of MGL command @var{name}.
 @end deftypefn
 
 @end ifclear
+
+@external
+

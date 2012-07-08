@@ -12,6 +12,7 @@ This chapter contain information about basic and advanced MathGL, hints and samp
 @end menu
 
 @c ------------------------------------------------------------------
+@external
 @node Basic usage, Advanced usage, , Examples
 @section Basic usage
 
@@ -40,6 +41,7 @@ fplot 'x^3' # draw some function
 Just type it in UDAV and press F5. Also you can save it in text file @samp{test.mgl} and type in the console @code{mgl2png test.mgl} what produce file @samp{test.mgl.png} with resulting picture.
 
 @c ------------------------------------------------------------------
+@external
 @node Advanced usage, Data handling, Basic usage, Examples
 @section Advanced usage
 
@@ -53,6 +55,7 @@ Now I show several non-obvious features of MGL: several subplots in a single pic
 @end menu
 
 @c ------------------------------------------------------------------
+@external
 @node Subplots, Axis and grids, , Advanced usage
 @subsection Subplots
 
@@ -85,6 +88,7 @@ Note that several commands can be placed in a string if they are separated by @s
 @end float
 
 @c ------------------------------------------------------------------
+@external
 @node Axis and grids, Curvilinear coordinates, Subplots, Advanced usage
 @subsection Axis and grids
 
@@ -132,6 +136,7 @@ This example shows the importance of the correct choosing of the number of ticks
 @end float
 
 @c ------------------------------------------------------------------
+@external
 @node Curvilinear coordinates, Text printing example, Axis and grids, Advanced usage
 @subsection Curvilinear coordinates
 
@@ -173,6 +178,7 @@ text 0 1.3 1 'spiral'
 
 
 @c ------------------------------------------------------------------
+@external
 @node Text printing example, , Curvilinear coordinates, Advanced usage
 @subsection Text printing example
 
@@ -203,6 +209,7 @@ text 0 0 '\sqrt{\frac{\alpha^{\gamma^2}+\overset 1{\big\infty}}{\sqrt3{2+b}}}', 
 
 
 @c ------------------------------------------------------------------
+@external
 @node Data handling, Data plotting, Advanced usage, Examples
 @section Data handling
 
@@ -214,6 +221,7 @@ text 0 0 '\sqrt{\frac{\alpha^{\gamma^2}+\overset 1{\big\infty}}{\sqrt3{2+b}}}', 
 @end menu
 
 @c ------------------------------------------------------------------
+@external
 @node Array creation, Change data, , Data handling
 @subsection Array creation
 
@@ -288,6 +296,7 @@ or loaded from file.
 The only non-obvious thing here is using multidimensional arrays in C/C++, i.e. arrays defined like @code{float dat[40][30];}. Since, formaly this arrays element @code{dat[i]} can address the memory in arbitrary place you should use the proper function to convert such arrays to @code{mglData} object. For C++ this is functions like @code{mglData::Set(float **dat, int N1, int N2}. For C this is functions like @code{mgl_data_set_float2(HMDT d, const float **dat, int N1, int N2}. At this, you should keep in mind that @code{nx=N2} and @code{ny=N1} after conversion.
 
 @c ------------------------------------------------------------------
+@external
 @node Change data, , Array creation, Data handling
 @subsection Change data
 
@@ -337,6 +346,7 @@ legend: box
 Finally one can create new data arrays on base of the existing one: extract slice, row or column of data (@code{SubData}), summarize along some of direction(s) (@code{Sum}), find distribution of data elements (@code{Hist}). Note, that all these functions are not thread-safe because they use static internal variable for output array. In particular, the using of several of them in arguments of the same function will lead to unpredictable result.
 
 @c ------------------------------------------------------------------
+@external
 @node Data plotting, Hints, Data handling, Examples
 @section Data plotting
 
@@ -350,6 +360,7 @@ Let me now show how to plot the data. MathGL generally has 2 types of plotting f
 @end menu
 
 @c ------------------------------------------------------------------
+@external
 @node Plots for 1D data, Plots for 2D data, , Data plotting
 @subsection Plots for 1D data
 
@@ -403,6 +414,7 @@ bars x y0 z 'r':box
 @end float
 
 @c ------------------------------------------------------------------
+@external
 @node Plots for 2D data, Plots for 3D data, Plots for 1D data, Data plotting
 @subsection Plots for 2D data
 
@@ -474,6 +486,7 @@ axial a 'bbcyrr#': box
 @end float
 
 @c ------------------------------------------------------------------
+@external
 @node Plots for 3D data, Surface transparency, Plots for 2D data, Data plotting
 @subsection Plots for 3D data
 
@@ -503,6 +516,7 @@ surf3a b a 'q': box
 
 
 @c ------------------------------------------------------------------
+@external
 @node Surface transparency, , Plots for 3D data, Data plotting
 @subsection Surface transparency
 
@@ -533,6 +547,7 @@ As example I shall show the variant of plot from @ref{Plots for 2D data} (grid d
 
 
 @c ------------------------------------------------------------------
+@external
 @node Hints, , Data plotting, Examples
 @section Hints
 
@@ -555,6 +570,7 @@ In this section I have included some small hints and advices for the improving o
 @end menu
 
 @c ------------------------------------------------------------------
+@external
 @node ``Compound'' graphics, Two axes in one plot, , Hints
 @subsection ``Compound'' graphics
 
@@ -585,6 +601,7 @@ The idea is to divide the color range on 2 parts (dark and bright) and to select
 Similarly, one can plot flow thread over density plot of vector field amplitude (this is another amusing plot from Matlab) and so on. The list of compound graphics can be prolonged but I hope that the general idea is clear.
 
 @c ------------------------------------------------------------------
+@external
 @node Two axes in one plot, Titles for the plot, ``Compound'' graphics, Hints
 @subsection Two axes in one plot
 
@@ -600,12 +617,14 @@ axis: fplot 'cos(4*pi*x^2)' # draw something in second axis
 Note, that the first and the second axes look better if being placed in different corners. In the code presented above the first axis is placed in the left-bottom corner, and the second one is placed in the right-top corner.
 
 @c ------------------------------------------------------------------
+@external
 @node Titles for the plot, Changing of the color range, Two axes in one plot, Hints
 @subsection Titles for the plot
 
 The printing of nice titles for the plot is not so trivial task in general case. The problem is that the rotation and aspect change lead to different looks for titles of different subplots. So, the resulting look is not so good as it could be. The solution is simple -- to print titles exactly after @code{subplot} call and before any rotation, aspect change and so on! Analogously, the title for the whole picture looks better if it is printed first (before any @code{subplot} calls). Alternatively you can use function @code{title} for plotting title for the picture at any time.
 
 @c ------------------------------------------------------------------
+@external
 @node Changing of the color range, Management of a point cutting, Titles for the plot, Hints
 @subsection Changing of the color range
 
@@ -621,6 +640,7 @@ surf a          # bottom of the surface have one-colour filling
 @end verbatim
 
 @c ------------------------------------------------------------------
+@external
 @node Management of a point cutting, Vector field visualization, Changing of the color range, Hints
 @subsection Management of a point cutting
 
@@ -638,18 +658,21 @@ surf a          # and draw the surface
 It is an interesting result, is not it?
 
 @c ------------------------------------------------------------------
+@external
 @node Vector field visualization, Several light sources, Management of a point cutting, Hints
 @subsection Vector field visualization
 
 Vector field visualization (especially in 3d case @code{vect3} or @code{vectc}) may look tangly -- there are too many overlapping lines. I may suggest 2 ways to solve this problem. The first one is to change @code{meshnum} for decreasing the number of hachures. The second way is to use the flow thread chart @code{Flow}. Unfortunately, I don't know any other methods to visualize 3d vector field. If you know any, e-mail me and I shall add it to MathGL.
 
 @c ------------------------------------------------------------------
+@external
 @node Several light sources, CutMin and CutMax features, Vector field visualization, Hints
 @subsection Several light sources
 
 In contrast to the most of other programs, MathGL supports several (up to 10) light sources. Moreover, the color each of them can be different: white (this is usual), yellow, red, cyan, green and so on. The use of several light sources may be interesting for the highlighting of some peculiarities of the plot or just to make an amusing picture. Note, each light source can be switched on/off individually (@pxref{Several light sample}).
 
 @c ------------------------------------------------------------------
+@external
 @node CutMin and CutMax features, Mapping visualization, Several light sources, Hints
 @subsection CutMin and CutMax features
 
@@ -668,6 +691,7 @@ contf3 v c 'z' 0 'bbcyrr':  contf3 v c 'z' 39 'bbcyrr'
 One can also exclude points from arbitrary area in space. This area defined by textual formula @code{cut} (@pxref{Cutting}). The algorithm is the same as shown for ``rectangular cutting''.
 
 @c ------------------------------------------------------------------
+@external
 @node Mapping visualization, Log-scaled plot, CutMin and CutMax features, Hints
 @subsection Mapping visualization
 
@@ -676,12 +700,14 @@ Sometime ago I worked with mapping and have a question about its visualization. 
 I tried to make such plot in @code{map}. It shows the set of points or set of faces, which final position is the result of mapping. At this, the color gives information about their initial position and the height describes Jacobian value of the transformation. Unfortunately, it looks good only for the simplest mapping but for the real multivalent quasi-chaotic mapping it produces a confusion. So, use it if you like :).
 
 @c ------------------------------------------------------------------
+@external
 @node Log-scaled plot, Nonlinear fitting hints, Mapping visualization, Hints
 @subsection Log-scaled plot
 
 Log-scaled plot can be drawn by 2 steps. First, one should change the scale of axis by call @code{axis 'lg(x)' 'lg(y)'} (in this example, x- and y-axis will be log-scaled). Second, one should set logarithmic scale for axis ticks by changing variables: @code{xtick 0: yticks 0}. Finally, one should check (or change) the axis ranges and origin so that their values to be positive. For example of log-log plot @pxref{Log-log sample}.
 
 @c ------------------------------------------------------------------
+@external
 @node Nonlinear fitting hints, PDE solving hints, Log-scaled plot, Hints
 @subsection Nonlinear fitting hints
 
@@ -713,6 +739,7 @@ putsfit 0 -1.8 'y = ' 'C:r' -1
 NOTE! the fitting results may have strong dependence on initial values for coefficients due to algorithm features. The problem is that in general case there are several local 'optimums' for coefficients and the program returns only first found one! There are no guaranties that it will be the best. Try for example to set @code{ini = [0, 0, 0]} in the code above.
 
 @c ------------------------------------------------------------------
+@external
 @node PDE solving hints, Stereo image, Nonlinear fitting hints, Hints
 @subsection PDE solving hints
 
@@ -759,6 +786,7 @@ dens xx yy a 'wyrRk'
 
 
 @c ------------------------------------------------------------------
+@external
 @node Stereo image, , PDE solving hints, Hints
 @subsection Stereo image
 
@@ -771,4 +799,6 @@ subplot 2 1 1   # right image
 rotate 40 60-3
 # draw the same here
 @end verbatim
+
+@external
 

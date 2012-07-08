@@ -198,9 +198,13 @@ public:
 	/// Tune ticks
 	inline void SetTuneTicks(int tune, float fact_pos=1.15)
 	{	mgl_tune_ticks(gr, tune, fact_pos);	}
+	/// Set additional shift of tick labels
 	inline void SetTickShift(mglPoint p)
 	{	mgl_set_tick_shift(gr,p.x,p.y,p.z,p.c);	}
-
+	/// Set to use UTC time instead of local time
+	inline void SetTimeUTC(bool enable)
+	{	mgl_set_flag(gr,enable, MGL_USE_GMTIME);	}
+	
 	/// Put further plotting in some region of whole frame surface.
 	inline void SubPlot(int nx,int ny,int m,const char *style="<>_^", float dx=0, float dy=0)
 	{	mgl_subplot_d(gr, nx, ny, m, style, dx, dy);	}

@@ -63,6 +63,7 @@ and so on.
 @end menu
 
 @c ------------------------------------------------------------------
+@external
 @node Basic usage, Advanced usage, , Examples
 @section Basic usage
 
@@ -105,6 +106,7 @@ Let me consider the aforesaid in more detail.
 
 
 @c ------------------------------------------------------------------
+@external
 @node Using MathGL window, Drawing to file, , Basic usage
 @subsection Using MathGL window
 @cindex window
@@ -187,6 +189,7 @@ The rotation, shift, zooming, switching on/off transparency and lighting can be 
 In this example function @code{sample} rotates axes (@code{Rotate()}, @pxref{Subplots and rotation}) and draws the bounding box (@code{Box()}). Drawing is placed in separate function since it will be used on demand when window canvas needs to be redrawn.
 
 @c ------------------------------------------------------------------
+@external
 @node Drawing to file, Animation, Using MathGL window, Basic usage
 @subsection Drawing to file
 
@@ -227,6 +230,7 @@ int main(int ,char **)
 The difference from the previous one is using other function @code{WriteEPS()} for EPS format instead of function @code{WritePNG()}. Also, there is no switching on of the plot transparency @code{Alpha} since EPS format does not support it.
 
 @c ------------------------------------------------------------------
+@external
 @node Animation, Drawing in memory, Drawing to file, Basic usage
 @subsection Animation
 
@@ -359,6 +363,7 @@ Created files can be converted to movie by help of a lot of programs. For exampl
 Finally, you can use @code{mglconv} tool for doing the same with MGL scripts (@pxref{Utilities}).
 
 @c ------------------------------------------------------------------
+@external
 @node Drawing in memory, Using QMathGL, Animation, Basic usage
 @subsection Drawing in memory
 
@@ -416,6 +421,7 @@ void MyWidget::paintEvent(QPaintEvent *)
 @end verbatim
 
 @c ------------------------------------------------------------------
+@external
 @node Using QMathGL, MathGL and PyQt, Drawing in memory, Basic usage
 @subsection Using QMathGL
 
@@ -453,6 +459,7 @@ int main(int argc,char **argv)
 @end verbatim
 
 @c ------------------------------------------------------------------
+@external
 @node MathGL and PyQt, , Using QMathGL, Basic usage
 @subsection MathGL and PyQt
 
@@ -525,6 +532,7 @@ qw.raise_()
 
 
 @c ------------------------------------------------------------------
+@external
 @node Advanced usage, Data handling, Basic usage, Examples
 @section Advanced usage
 
@@ -543,6 +551,7 @@ Now I show several non-obvious features of MathGL: several subplots in a single 
 @end menu
 
 @c ------------------------------------------------------------------
+@external
 @node Subplots, Axis and ticks, , Advanced usage
 @subsection Subplots
 
@@ -595,6 +604,7 @@ int sample(mglGraph *gr)
 
 
 @c ------------------------------------------------------------------
+@external
 @node Axis and ticks, Curvilinear coordinates, Subplots, Advanced usage
 @subsection Axis and ticks
 
@@ -699,6 +709,7 @@ int sample(mglGraph *gr)
 You can see that MathGL automatically switch to log-ticks as we define log-axis formula (in difference from v.1.*). Moreover, it switch to log-ticks for any formula if axis range will be large enough (see right bottom plot). Another interesting feature is that you not necessary define usual log-axis (i.e. when coordinates are positive), but you can define ``minus-log'' axis when coordinate is negative (see left bottom plot).
 
 @c ------------------------------------------------------------------
+@external
 @node Curvilinear coordinates, Colorbars, Axis and ticks, Advanced usage
 @subsection Curvilinear coordinates
 
@@ -735,6 +746,7 @@ int sample(mglGraph *gr)
 
 
 @c ------------------------------------------------------------------
+@external
 @node Colorbars, Bounding box, Curvilinear coordinates, Advanced usage
 @subsection Colorbars
 
@@ -771,6 +783,7 @@ int sample(mglGraph *gr)
 
 
 @c ------------------------------------------------------------------
+@external
 @node Bounding box, Ternary axis, Colorbars, Advanced usage
 @subsection Bounding box
 
@@ -794,6 +807,7 @@ int sample(mglGraph *gr)
 
 
 @c ------------------------------------------------------------------
+@external
 @node Ternary axis, Text features, Bounding box, Advanced usage
 @subsection Ternary axis
 
@@ -846,6 +860,7 @@ int sample(mglGraph *gr)
 @pfig{ternary, Example of colorbars}
 
 @c ------------------------------------------------------------------
+@external
 @node Text features, Legend sample, Ternary axis, Advanced usage
 @subsection Text features
 
@@ -892,6 +907,7 @@ int sample(mglGraph *gr)
 @pfig{text, Example of text printing}
 
 @c ------------------------------------------------------------------
+@external
 @node Legend sample, Cutting sample, Text features, Advanced usage
 @subsection Legend sample
 
@@ -927,6 +943,7 @@ int sample(mglGraph *gr)
 @pfig{legend, Example of legend}
 
 @c ------------------------------------------------------------------
+@external
 @node Cutting sample, , Legend sample, Advanced usage
 @subsection Cutting sample
 
@@ -974,6 +991,7 @@ int sample(mglGraph *gr)
 
 
 @c ------------------------------------------------------------------
+@external
 @node Data handling, Data plotting, Advanced usage, Examples
 @section Data handling
 
@@ -986,6 +1004,7 @@ Class @code{mglData} contains all functions for the data handling in MathGL (@px
 @end menu
 
 @c ------------------------------------------------------------------
+@external
 @node Array creation, Change data, , Data handling
 @subsection Array creation
 
@@ -1063,6 +1082,7 @@ or by using @code{Modify()} function
 The only non-obvious thing here is using multidimensional arrays in C/C++, i.e. arrays defined like @code{float dat[40][30];}. Since, formally these elements @code{dat[i]} can address the memory in arbitrary place you should use the proper function to convert such arrays to @code{mglData} object. For C++ this is functions like @code{mglData::Set(float **dat, int N1, int N2);}. For C this is functions like @code{mgl_data_set_float2(HMDT d, const float **dat, int N1, int N2);}. At this, you should keep in mind that @code{nx=N2} and @code{ny=N1} after conversion.
 
 @c ------------------------------------------------------------------
+@external
 @node Linking array, Change data, Array creation, Data handling
 @subsection Linking array
 
@@ -1080,6 +1100,7 @@ Creating the link is rather simple -- just the same as using @code{Set} function
 @end verbatim
 
 @c ------------------------------------------------------------------
+@external
 @node Change data, , Linking array, Data handling
 @subsection Change data
 
@@ -1155,6 +1176,7 @@ Finally one can create new data arrays on base of the existing one: extract slic
 
 
 @c ------------------------------------------------------------------
+@external
 @node Data plotting, 1D samples, Data handling, Examples
 @section Data plotting
 
@@ -1275,6 +1297,7 @@ int sample(mglGraph *gr)
 @end verbatim
 
 @c ------------------------------------------------------------------
+@external
 @node 1D samples, 2D samples, Data plotting, Examples
 @section 1D samples
 
@@ -1356,6 +1379,7 @@ void mgls_prepare1d(HMDT y, HMDT y1=0, HMDT y2=0, HMDT x1=0, HMDT x2=0)
 
 
 @c ------------------------------------------------------------------
+@external
 @node Plot sample, Radar sample, , 1D samples
 @subsection Plot sample
 
@@ -1386,6 +1410,7 @@ int sample(mglGraph *gr)
 
 
 @c ------------------------------------------------------------------
+@external
 @node Radar sample, Step sample, Plot sample, 1D samples
 @subsection Radar sample
 
@@ -1403,6 +1428,7 @@ int sample(mglGraph *gr)
 @pfig{radar, Example of Radar()}
 
 @c ------------------------------------------------------------------
+@external
 @node Step sample, Tens sample, Radar sample, 1D samples
 @subsection Step sample
 
@@ -1429,6 +1455,7 @@ int sample(mglGraph *gr)
 @pfig{step, Example of Step()}
 
 @c ------------------------------------------------------------------
+@external
 @node Tens sample, Area sample, Step sample, 1D samples
 @subsection Tens sample
 
@@ -1454,6 +1481,7 @@ int sample(mglGraph *gr)
 @pfig{tens, Example of Tens()}
 
 @c ------------------------------------------------------------------
+@external
 @node Area sample, Region sample, Tens sample, 1D samples
 @subsection Area sample
 
@@ -1483,6 +1511,7 @@ int sample(mglGraph *gr)
 @pfig{area, Example of Area()}
 
 @c ------------------------------------------------------------------
+@external
 @node Region sample, Stem sample, Area sample, 1D samples
 @subsection Region sample
 
@@ -1510,6 +1539,7 @@ int sample(mglGraph *gr)
 @pfig{region, Example of Region()}
 
 @c ------------------------------------------------------------------
+@external
 @node Stem sample, Bars sample, Region sample, 1D samples
 @subsection Stem sample
 
@@ -1535,6 +1565,7 @@ int sample(mglGraph *gr)
 @pfig{stem, Example of Stem()}
 
 @c ------------------------------------------------------------------
+@external
 @node Bars sample, Barh sample, Stem sample, 1D samples
 @subsection Bars sample
 
@@ -1572,6 +1603,7 @@ int sample(mglGraph *gr)
 @pfig{bars, Example of Bars()}
 
 @c ------------------------------------------------------------------
+@external
 @node Barh sample, Cones sample, Bars sample, 1D samples
 @subsection Barh sample
 
@@ -1600,6 +1632,7 @@ int sample(mglGraph *gr)
 @pfig{barh, Example of Barh()}
 
 @c ------------------------------------------------------------------
+@external
 @node Cones sample, Chart sample, Bars sample, 1D samples
 @subsection Cones sample
 
@@ -1628,6 +1661,7 @@ int sample(mglGraph *gr)
 @pfig{cones, Example of Cones()}
 
 @c ------------------------------------------------------------------
+@external
 @node Chart sample, BoxPlot sample, Cones sample, 1D samples
 @subsection Chart sample
 
@@ -1656,6 +1690,7 @@ int sample(mglGraph *gr)
 @pfig{chart, Example of Chart()}
 
 @c ------------------------------------------------------------------
+@external
 @node BoxPlot sample, Candle sample, Chart sample, 1D samples
 @subsection BoxPlot sample
 
@@ -1673,6 +1708,7 @@ int sample(mglGraph *gr)
 @pfig{boxplot, Example of BoxPlot()}
 
 @c ------------------------------------------------------------------
+@external
 @node Candle sample, Error sample, BoxPlot sample, 1D samples
 @subsection Candle sample
 
@@ -1692,6 +1728,7 @@ int sample(mglGraph *gr)
 @pfig{candle, Example of Candle()}
 
 @c ------------------------------------------------------------------
+@external
 @node Error sample, Mark sample, Candle sample, 1D samples
 @subsection Error sample
 
@@ -1731,6 +1768,7 @@ int sample(mglGraph *gr)
 @pfig{error, Example of Error()}
 
 @c ------------------------------------------------------------------
+@external
 @node Mark sample, TextMark sample, Error sample, 1D samples
 @subsection Mark sample
 
@@ -1748,6 +1786,7 @@ int sample(mglGraph *gr)
 @pfig{mark, Example of Mark()}
 
 @c ------------------------------------------------------------------
+@external
 @node TextMark sample, Label sample, Mark sample, 1D samples
 @subsection TextMark sample
 
@@ -1765,6 +1804,7 @@ int sample(mglGraph *gr)
 @pfig{textmark, Example of TextMark()}
 
 @c ------------------------------------------------------------------
+@external
 @node Label sample, Tube sample, TextMark sample, 1D samples
 @subsection Label sample
 
@@ -1783,6 +1823,7 @@ int sample(mglGraph *gr)
 
 
 @c ------------------------------------------------------------------
+@external
 @node Tube sample, Tape sample, Label sample, 1D samples
 @subsection Tube sample
 
@@ -1812,6 +1853,7 @@ int sample(mglGraph *gr)
 
 
 @c ------------------------------------------------------------------
+@external
 @node Tape sample, Torus sample, Tube sample, 1D samples
 @subsection Tape sample
 
@@ -1845,6 +1887,7 @@ int sample(mglGraph *gr)
 
 
 @c ------------------------------------------------------------------
+@external
 @node Torus sample, , Tape sample, 1D samples
 @subsection Torus sample
 
@@ -1873,6 +1916,7 @@ int sample(mglGraph *gr)
 
 
 @c ------------------------------------------------------------------
+@external
 @node 2D samples, 3D samples, 1D samples, Examples
 @section 2D samples
 
@@ -1930,6 +1974,7 @@ void mgls_prepare2d(HMDT a, HMDT b=0, HMDT v=0)
 @end menu
 
 @c ------------------------------------------------------------------
+@external
 @node Surf sample, SurfC sample, , 2D samples
 @subsection Surf sample
 
@@ -1960,6 +2005,7 @@ int sample(mglGraph *gr)
 @pfig{surf, Example of Surf()}
 
 @c ------------------------------------------------------------------
+@external
 @node SurfC sample, SurfA sample, Surf sample, 2D samples
 @subsection SurfC sample
 
@@ -1977,6 +2023,7 @@ int sample(mglGraph *gr)
 @pfig{surfc, Example of SurfC()}
 
 @c ------------------------------------------------------------------
+@external
 @node SurfA sample, Mesh sample, SurfC sample, 2D samples
 @subsection SurfA sample
 
@@ -1996,6 +2043,7 @@ int sample(mglGraph *gr)
 
 
 @c ------------------------------------------------------------------
+@external
 @node Mesh sample, Fall sample, SurfA sample, 2D samples
 @subsection Mesh sample
 
@@ -2013,6 +2061,7 @@ int sample(mglGraph *gr)
 @pfig{mesh, Example of Mesh()}
 
 @c ------------------------------------------------------------------
+@external
 @node Fall sample, Belt sample, Mesh sample, 2D samples
 @subsection Fall sample
 
@@ -2030,6 +2079,7 @@ int sample(mglGraph *gr)
 @pfig{fall, Example of Fall()}
 
 @c ------------------------------------------------------------------
+@external
 @node Belt sample, Boxs sample, Fall sample, 2D samples
 @subsection Belt sample
 
@@ -2047,6 +2097,7 @@ int sample(mglGraph *gr)
 @pfig{belt, Example of Belt()}
 
 @c ------------------------------------------------------------------
+@external
 @node Boxs sample, Tile sample, Fall sample, 2D samples
 @subsection Boxs sample
 
@@ -2074,6 +2125,7 @@ int sample(mglGraph *gr)
 @pfig{boxs, Example of Boxs()}
 
 @c ------------------------------------------------------------------
+@external
 @node Tile sample, TileS sample, Boxs sample, 2D samples
 @subsection Tile sample
 
@@ -2091,6 +2143,7 @@ int sample(mglGraph *gr)
 @pfig{tile, Example of Tile()}
 
 @c ------------------------------------------------------------------
+@external
 @node TileS sample, Dens sample, Tile sample, 2D samples
 @subsection TileS sample
 
@@ -2109,6 +2162,7 @@ int sample(mglGraph *gr)
 
 
 @c ------------------------------------------------------------------
+@external
 @node Dens sample, Cont sample, TileS sample, 2D samples
 @subsection Dens sample
 
@@ -2136,6 +2190,7 @@ int sample(mglGraph *gr)
 @pfig{dens, Example of Dens()}
 
 @c ------------------------------------------------------------------
+@external
 @node Cont sample, ContF sample, Dens sample, 2D samples
 @subsection Cont sample
 
@@ -2162,6 +2217,7 @@ int sample(mglGraph *gr)
 @pfig{cont, Example of Cont()}
 
 @c ------------------------------------------------------------------
+@external
 @node ContF sample, ContD sample, Cont sample, 2D samples
 @subsection ContF sample
 
@@ -2190,6 +2246,7 @@ int sample(mglGraph *gr)
 @pfig{contf, Example of ContF()}
 
 @c ------------------------------------------------------------------
+@external
 @node ContD sample, ContV sample, ContF sample, 2D samples
 @subsection ContD sample
 
@@ -2218,6 +2275,7 @@ int sample(mglGraph *gr)
 @pfig{contd, Example of ContD()}
 
 @c ------------------------------------------------------------------
+@external
 @node ContV sample, Axial sample, ContD sample, 2D samples
 @subsection ContV sample
 
@@ -2246,6 +2304,7 @@ int sample(mglGraph *gr)
 @pfig{contv, Example of ContV()}
 
 @c ------------------------------------------------------------------
+@external
 @node Axial sample, Grad sample, ContV sample, 2D samples
 @subsection Axial sample
 
@@ -2273,6 +2332,7 @@ int sample(mglGraph *gr)
 @pfig{axial, Example of Axial()}
 
 @c ------------------------------------------------------------------
+@external
 @node Grad sample, , Axial sample, 2D samples
 @subsection Grad sample
 
@@ -2291,6 +2351,7 @@ int sample(mglGraph *gr)
 
 
 @c ------------------------------------------------------------------
+@external
 @node 3D samples, Vector field samples, 2D samples, Examples
 @section 3D samples
 
@@ -2342,6 +2403,7 @@ void mgls_prepare3d(HMDT a, HMDT b=0)
 @end menu
 
 @c ------------------------------------------------------------------
+@external
 @node Surf3 sample, Surf3C sample, , 3D samples
 @subsection Surf3 sample
 
@@ -2360,6 +2422,7 @@ int sample(mglGraph *gr)
 @pfig{surf3, Example of Surf3()}
 
 @c ------------------------------------------------------------------
+@external
 @node Surf3C sample, Surf3A sample, Surf3 sample, 3D samples
 @subsection Surf3C sample
 
@@ -2378,6 +2441,7 @@ int sample(mglGraph *gr)
 @pfig{surf3c, Example of Surf3C()}
 
 @c ------------------------------------------------------------------
+@external
 @node Surf3A sample, Cloud sample, Surf3C sample, 3D samples
 @subsection Surf3A sample
 
@@ -2396,6 +2460,7 @@ int sample(mglGraph *gr)
 @pfig{surf3a, Example of Surf3A()}
 
 @c ------------------------------------------------------------------
+@external
 @node Cloud sample, Dens3 sample, Surf3A sample, 3D samples
 @subsection Cloud sample
 
@@ -2423,6 +2488,7 @@ int sample(mglGraph *gr)
 @pfig{cloud, Example of Cloud()}
 
 @c ------------------------------------------------------------------
+@external
 @node Dens3 sample, Cont3 sample, Cloud sample, 3D samples
 @subsection Dens3 sample
 
@@ -2442,6 +2508,7 @@ int sample(mglGraph *gr)
 @pfig{densa, Example of Dens3()}
 
 @c ------------------------------------------------------------------
+@external
 @node Cont3 sample, ContF3 sample, Dens3 sample, 3D samples
 @subsection Cont3 sample
 
@@ -2461,6 +2528,7 @@ int sample(mglGraph *gr)
 @pfig{conta, Example of Cont3()}
 
 @c ------------------------------------------------------------------
+@external
 @node ContF3 sample, Dens projection sample, Cont3 sample, 3D samples
 @subsection ContF3 sample
 
@@ -2481,6 +2549,7 @@ int sample(mglGraph *gr)
 @pfig{contfa, Example of ContF3()}
 
 @c ------------------------------------------------------------------
+@external
 @node Dens projection sample, Cont projection sample, ContF3 sample, 3D samples
 @subsection Dens projection sample
 
@@ -2499,6 +2568,7 @@ int sample(mglGraph *gr)
 @pfig{dens_xyz, {Example of DensX(), DensY(), DensZ()}}
 
 @c ------------------------------------------------------------------
+@external
 @node Cont projection sample, ContF projection sample, Dens projection sample, 3D samples
 @subsection Cont projection sample
 
@@ -2517,6 +2587,7 @@ int sample(mglGraph *gr)
 @pfig{cont_xyz, {Example of ContX(), ContY(), ContZ()}}
 
 @c ------------------------------------------------------------------
+@external
 @node ContF projection sample, TriPlot and QuadPlot, Cont projection sample, 3D samples
 @subsection ContF projection sample
 
@@ -2535,6 +2606,7 @@ int sample(mglGraph *gr)
 @pfig{contf_xyz, {Example of ContFX(), ContFY(), ContFZ()}}
 
 @c ------------------------------------------------------------------
+@external
 @node TriPlot and QuadPlot, Axial sample, ContF projection sample, 3D samples
 @subsection TriPlot and QuadPlot
 
@@ -2563,6 +2635,7 @@ int sample(mglGraph *gr)
 @pfig{triplot, Example of TriPlot() and QuadPlot()}
 
 @c ------------------------------------------------------------------
+@external
 @node Dots sample, , TriPlot and QuadPlot, 3D samples
 @subsection Dots sample
 
@@ -2588,6 +2661,7 @@ int sample(mglGraph *gr)
 @pfig{dots, Example of Dots()}
 
 @c ------------------------------------------------------------------
+@external
 @node Vector field samples, Hints, 3D samples, Examples
 @section Vector field samples
 
@@ -2671,6 +2745,7 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez)
 
 
 @c ------------------------------------------------------------------
+@external
 @node Vect sample, Traj sample, , Vector field samples
 @subsection Vect sample
 
@@ -2704,6 +2779,7 @@ int sample(mglGraph *gr)
 @pfig{vect, Example of Vect()}
 
 @c ------------------------------------------------------------------
+@external
 @node Traj sample, Flow sample, Vect sample, Vector field samples
 @subsection Traj sample
 
@@ -2722,6 +2798,7 @@ int sample(mglGraph *gr)
 
 
 @c ------------------------------------------------------------------
+@external
 @node Flow sample, Pipe sample, Traj sample, Vector field samples
 @subsection Flow sample
 
@@ -2749,6 +2826,7 @@ int sample(mglGraph *gr)
 @pfig{flow, Example of Flow()}
 
 @c ------------------------------------------------------------------
+@external
 @node Pipe sample, Dew sample, Flow sample, Vector field samples
 @subsection Pipe sample
 
@@ -2776,6 +2854,7 @@ int sample(mglGraph *gr)
 @pfig{pipe, Example of Pipe()}
 
 @c ------------------------------------------------------------------
+@external
 @node Dew sample, , Pipe sample, Vector field samples
 @subsection Dew sample
 
@@ -2794,6 +2873,7 @@ int sample(mglGraph *gr)
 
 
 @c ------------------------------------------------------------------
+@external
 @node Hints, FAQ, Vector field samples, Examples
 @section Hints
 
@@ -2817,6 +2897,7 @@ In this section I've included some small hints and advices for the improving of 
 @end menu
 
 @c ------------------------------------------------------------------
+@external
 @node ``Compound'' graphics, Transparency and lighting, , Hints
 @subsection ``Compound'' graphics
 
@@ -2876,6 +2957,7 @@ int sample(mglGraph *gr)
 @pfig{combined, Example of ``combined'' plots}
 
 @c ------------------------------------------------------------------
+@external
 @node Transparency and lighting, Types of transparency, ``Compound'' graphics, Hints
 @subsection Transparency and lighting
 
@@ -2902,6 +2984,7 @@ int sample(mglGraph *gr)
 @pfig{alpha, Example of transparency and lightings}
 
 @c ------------------------------------------------------------------
+@external
 @node Types of transparency, Adding fog, Transparency and lighting, Hints
 @subsection Types of transparency
 
@@ -2934,6 +3017,7 @@ int sample(mglGraph *gr)
 
 
 @c ------------------------------------------------------------------
+@external
 @node Adding fog, Several light sources, Types of transparency, Hints
 @subsection Adding fog
 
@@ -2952,6 +3036,7 @@ int sample(mglGraph *gr)
 @pfig{fog, Example of @code{Fog()}.}
 
 @c ------------------------------------------------------------------
+@external
 @node Several light sources, Using primitives, Adding fog, Hints
 @subsection Several light sources
 
@@ -2973,6 +3058,7 @@ int sample(mglGraph *gr)
 @pfig{several_light, Example of several light sources.}
 
 @c ------------------------------------------------------------------
+@external
 @node Using primitives, STFA sample, Several light sources, Hints
 @subsection Using primitives
 
@@ -3073,6 +3159,7 @@ Of course, the first variant is more suitable if you need to plot a lot of circl
 @pfig{venn, Example of Venn diagram.}
 
 @c ------------------------------------------------------------------
+@external
 @node STFA sample, Mapping visualization, Using primitives, Hints
 @subsection STFA sample
 
@@ -3102,6 +3189,7 @@ int sample(mglGraph *gr)
 @pfig{stfa, Example of STFA().}
 
 @c ------------------------------------------------------------------
+@external
 @node Mapping visualization, Making histogram, STFA sample, Hints
 @subsection Mapping visualization
 
@@ -3134,6 +3222,7 @@ int sample(mglGraph *gr)
 @pfig{map, Example of Map().}
 
 @c ------------------------------------------------------------------
+@external
 @node Making histogram, Nonlinear fitting sample, Mapping visualization, Hints
 @subsection Making histogram
 
@@ -3161,6 +3250,7 @@ int sample(mglGraph *gr)
 
 
 @c ------------------------------------------------------------------
+@external
 @node Nonlinear fitting sample, PDE solving hints, Making histogram, Hints
 @subsection Nonlinear fitting hints
 
@@ -3218,6 +3308,7 @@ int sample(mglGraph *gr)
 @pfig{fit, Example of nonlinear fitting.}
 
 @c ------------------------------------------------------------------
+@external
 @node PDE solving hints, MGL parser using, Nonlinear fitting sample, Hints
 @subsection PDE solving hints
 
@@ -3285,6 +3376,7 @@ int sample(mglGraph *gr)
 
 
 @c ------------------------------------------------------------------
+@external
 @node MGL parser using, ``Templates'', PDE solving hints, Hints
 @subsection MGL parser using
 
@@ -3339,6 +3431,7 @@ int sample(HMGL gr)
 @pfig{parser, Example of MGL script parsing.}
 
 @c ------------------------------------------------------------------
+@external
 @node ``Templates'', Nonlinear fitting sample, MGL parser using, Hints
 @subsection ``Templates''
 
@@ -3370,6 +3463,7 @@ A template-function can also contain settings for font, transparency, lightning,
 I understand that this is obvious thing for any professional programmer, but I several times receive suggestion about ``templates'' ... So, I decide to point out it here.
 
 @c ------------------------------------------------------------------
+@external
 @node Stereo image, , ``Templates'', Hints
 @subsection Stereo image
 
@@ -3391,12 +3485,13 @@ int sample(mglGraph *gr)
 
 @pfig{stereo, Example of stereo image.}
 
+@external
 @node FAQ, , Hints, Examples
 @section FAQ
 
 @table @strong
 @item The plot does not appear
-Check that points of the plot lie  inside the bounding box and resize the bounding box using @code{SetRange()}/@code{SetRanges()} function. Check that the data have correct dimensions for selected type of plot. Be sure that  @code{Finish()} is called after the plotting functions (or be sure that the plot is saved to a file). Sometimes the light reflection from flat surfaces (like, @code{Dens()}) can look as if the plot were absent.
+Check that points of the plot are located inside the bounding box and resize the bounding box using @code{SetRange()}/@code{SetRanges()} function. Check that the data have correct dimensions for selected type of plot. Be sure that  @code{Finish()} is called after the plotting functions (or be sure that the plot is saved to a file). Sometimes the light reflection from flat surfaces (like, @code{Dens()}) can look as if the plot were absent.
 
 @item I can not find some special kind of plot.
 Most ``new'' types of plots can be created by using the existing drawing functions. For example, the surface of curve rotation can be created by a special function @code{Torus()}, or as a parametrically specified surface by @code{Surf()}. See also, @ref{Hints}. If you can not find a specific type of plot, please e-mail me and this plot will appear in the next version of MathGL library.
@@ -3418,15 +3513,13 @@ You can use MathGL as is with @code{gfortran} because it uses by default the AT&
 The standard way is to use Unicode encoding for the text output. But the MathGL library also has interface for 8-bit (char *) strings with internal conversion to Unicode. This conversion depends on the current locale OS. You may change it by @code{setlocale()} function. For example, for Russian text in CP1251 encoding you may use @code{setlocale(LC_CTYPE, "ru_RU.cp1251");} (under MS Windows the name of locale may differ -- @code{setlocale(LC_CTYPE, "russian_russia.1251")}). I strongly recommend not to use the constant @code{LC_ALL} in the conversion. Since it also changes the number format, it may lead to mistakes in formula writing and reading of the text in data files. For example, the program will await a @samp{,} as a decimal point but the user will enter @samp{.}.
 
 @item How can I exclude a point or a region of plot from the drawing?
-There are 3 general ways. First, the point with @code{NAN} value as one of the coordinates will never be plotted. Second, special variables @var{CutMin}, @var{CutMax} or function @code{CutOff}() define the condition when the points should be omitted (see @ref{Cutting}). Last, you may change the transparency of a part of the plot by the help of functions @code{SurfA()}, @code{Surf3A()} (see @ref{Dual plotting}). In this last case the transparency is switched on smoothly.
+There are 3 general ways. First, the point with @code{NAN} value as one of the coordinates (including color/alpha range) will never be plotted. Second, special functions @code{SetCutBox}() and @code{CutOff}() define the condition when the points should be omitted (see @ref{Cutting}). Last, you may change the transparency of a part of the plot by the help of functions @code{SurfA()}, @code{Surf3A()} (see @ref{Dual plotting}). In last case the transparency is switched on smoothly.
 
 @item I use VisualStudio, CBuilder or some other compiler (not MinGW/gcc). How can I link the MathGL library?
-In version 2.0, the recommended class @code{mglGraph} (header file @code{#include <mgl2/mgl.h>}) contains only @code{inline} functions and is acceptable for any compiler with the same binary files. However, if you plan to access low-level features (i.e. classes mglBase, mglCanvas and so on) then you have to recompile MathGL by yours compiler.
-
-@c @strong{Finally!} Please @emph{do not} ask me Windows-specific questions. I do not use Windows. I know nothing about Visual Basic, Visual C++, CBuiled or .NET. Please find the appropriate Usenet discussion group and ask your question there.
+In version 2.0, main classes (@code{mglGraph} and @code{mglData}) contains only @code{inline} functions and are acceptable for any compiler with the same binary files. However, if you plan to use widget classes (QMathGL, Fl_MathGL, ...) or to access low-level features (mglBase, mglCanvas, ...) then you have to recompile MathGL by yours compiler.
 
 @item How I can build MathGL under Windows?
-The simplest way is using the combination CMake+MinGW. Also you need some extra libraries like GSL, PNG, JPEG and so on. All of them can be found at @url{http://gnuwin32.sourceforge.net/packages.html}. After installing all components, just run CMake configurator and make the MathGL itself.
+Generally, it is the same procedure as for Linux or MacOS -- see section @ref{Installation}. The simplest way is using the combination CMake+MinGW. Also you may need some extra libraries like GSL, PNG, JPEG and so on. All of them can be found at @url{http://gnuwin32.sourceforge.net/packages.html}. After installing all components, just run @uref{http://www.cmake.org/cmake/help/runningcmake.html, cmake-gui} configurator and build the MathGL itself.
 
 @item How many people write this library?
 Most of the library was written by one person. This is a result of nearly a year of work (mostly in the evening and on holidays): I spent half a year to write the kernel and half a year to a year on extending, improving the library and writing documentation. This process continues now :). The build system (cmake files) was written mostly by D.Kulagin, and the export to PRC/IDTF was written mostly by M.Vidassov.
@@ -3450,7 +3543,9 @@ Just set a negative value in @var{SetTickLen}. For example, use @code{gr->SetTic
 Just use @code{SetRotatedText(false)}.
 
 @item What is @code{*.so}? What is @code{gcc}? How I can use @code{make}?
-This standard GNU tool. There is special FAQ about its usage under Windows -- @uref{http://www.mingw.org/wiki/FAQ}.
+They are standard GNU tools. There is special FAQ about its usage under Windows -- @uref{http://www.mingw.org/wiki/FAQ}.
 
 @end table
+
+@external
 

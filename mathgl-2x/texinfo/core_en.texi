@@ -28,10 +28,11 @@ The core of MathGL is @strong{mglGraph} class defined in @code{#include <mgl2/mg
 * Other plotting::
 * Nonlinear fitting::
 * Data manipulation::
-* IDTF functions::
+@c * IDTF functions::
 @end menu
 
 @c ##################################################################
+@external
 @node Constructor, Graphics setup, , MathGL core
 @section Create and delete objects
 
@@ -59,6 +60,7 @@ You don't need to create canvas object in MGL.
 @end ifset
 
 @c ##################################################################
+@external
 @node Graphics setup, Axis settings, Constructor, MathGL core
 @section Graphics setup
 @cindex MathGL setup
@@ -89,6 +91,7 @@ Sets name of plot for saving filename (in FLTK window for example).
 @end menu
 
 @c ==================================================================
+@external
 @node Transparency, Lighting, , Graphics setup
 @subsection Transparency
 @cindex Alpha
@@ -138,6 +141,7 @@ Lamp-like transparency (@samp{2}) -- below and upper things are commutable and a
 @end deftypefn
 
 @c ==================================================================
+@external
 @node Lighting, Fog, Transparency, Graphics setup
 @subsection Lighting
 @ifclear UDAV
@@ -196,6 +200,7 @@ Sets the brightness of ambient light. The value should be in range [0,1].
 @end deftypefn
 
 @c ==================================================================
+@external
 @node Fog, Default sizes, Lighting, Graphics setup
 @subsection Fog
 @cindex Fog
@@ -210,6 +215,7 @@ Function imitate a fog in the plot. Fog start from relative distance @var{dz} fr
 @end deftypefn
 
 @c ==================================================================
+@external
 @node Default sizes, Cutting, Fog, Graphics setup
 @subsection Default sizes
 @ifclear UDAV
@@ -264,6 +270,7 @@ Sets approximate number of lines in @ref{mesh}, @ref{fall}, @ref{grid} and also 
 @end deftypefn
 
 @c ==================================================================
+@external
 @node Cutting, Font settings, Default sizes, Graphics setup
 @subsection Cutting
 @ifclear UDAV
@@ -301,6 +308,7 @@ Sets the cutting off condition by formula @var{cond}. This condition determine w
 @end deftypefn
 
 @c ==================================================================
+@external
 @node Font settings, Palette and colors, Cutting, Graphics setup
 @subsection Font settings
 @ifclear UDAV
@@ -367,6 +375,7 @@ Restore font data to default typeface.
 @end ifclear
 
 @c ==================================================================
+@external
 @node Palette and colors, Error handling, Font settings, Graphics setup
 @subsection Palette and colors
 @ifclear UDAV
@@ -395,6 +404,7 @@ Sets RGB values for color with given @var{id}.
 @end ifclear
 
 @c ==================================================================
+@external
 @node Error handling, , Palette and colors, Graphics setup
 @subsection Error handling
 @ifclear UDAV
@@ -454,6 +464,7 @@ Format is not supported for that build
 
 
 @c ==================================================================
+@external
 @node Axis settings, Subplots and rotation, Graphics setup, MathGL core
 @section Axis settings
 
@@ -466,6 +477,7 @@ These large set of variables and functions control how the axis and ticks will b
 @end menu
 
 @c ------------------------------------------------------------------
+@external
 @node Ranges (bounding box), Curved coordinates, , Axis settings
 @subsection Ranges (bounding box)
 @cindex CRange
@@ -538,6 +550,7 @@ Sets center of axis cross section. If one of values is NAN then MathGL try to se
 
 
 @c ------------------------------------------------------------------
+@external
 @node Curved coordinates, Ticks, Ranges (bounding box), Axis settings
 @subsection Curved coordinates
 @cindex Axis
@@ -573,6 +586,7 @@ The function sets to draws Ternary or Quaternary plot. Ternary plot is special p
 @end deftypefn
 
 @c ------------------------------------------------------------------
+@external
 @node Ticks, , Curved coordinates, Axis settings
 @subsection Ticks
 @cindex AxisStl
@@ -665,6 +679,12 @@ Switch on/off ticks enhancing by factoring common multiplier (for small, like fr
 @end deftypefn
 
 @ifclear UDAV
+
+@deftypefn {Method on @code{mglGraph}} @code{void} SetTickShift (@code{mglPoint} d)
+@deftypefnx {C function} @code{void} mgl_set_tick_shift (@code{HMGL} gr, @code{float} dx, @code{float} dy, @code{float} dz, @code{float} dc)
+Set value of additional shift for ticks labels.
+@end deftypefn
+
 @deftypefn {Method on @code{mglGraph}} @code{void} SetTickRotate (@code{bool} val)
 @deftypefnx {C function} @code{void} mgl_set_tick_rotate (@code{HMGL} gr, @code{bool} val)
 Enable/disable ticks rotation if there are too many ticks or ticks labels are too long.
@@ -674,6 +694,12 @@ Enable/disable ticks rotation if there are too many ticks or ticks labels are to
 @deftypefnx {C function} @code{void} mgl_set_tick_skip (@code{HMGL} gr, @code{bool} val)
 Enable/disable ticks skipping if there are too many ticks or ticks labels are too long.
 @end deftypefn
+
+@deftypefn {Method on @code{mglGraph}} @code{void} SetTimeUTC (@code{bool} val)
+@c @deftypefnx {C function} @code{void} mgl_set_tick_skip (@code{HMGL} gr, @code{bool} val)
+Enable/disable using UTC time for ticks labels. In C/Fortran you can use @code{mgl_set_flag(gr,val, MGL_USE_GMTIME);}.
+@end deftypefn
+
 @end ifclear
 
 @anchor{ticklen}
@@ -694,6 +720,7 @@ The line style of axis, (@var{stl}) ticks (@var{tck}) and subticks (@var{sub}). 
 @end deftypefn
 
 @c ##################################################################
+@external
 @node Subplots and rotation, Export picture, Axis settings, MathGL core
 @section Subplots and rotation
 @cindex Aspect
@@ -876,6 +903,7 @@ The function changes the scale of graphics that correspond to zoom in/out of the
 @end ifclear
 
 @c ##################################################################
+@external
 @node Export picture, Primitives, Subplots and rotation, MathGL core
 @section Export picture
 @cindex SetSize
@@ -922,6 +950,7 @@ Ends group definition.
 @end menu
 
 @c ==================================================================
+@external
 @node Export to file, Frames/Animation, , Export picture
 @subsection Export to file
 @cindex Write
@@ -1053,6 +1082,7 @@ Imports points and primitives in file using MGLD format. Later this file can be 
 
 
 @c ##################################################################
+@external
 @node Frames/Animation, Bitmap in memory, Export to file, Export picture
 @subsection Frames/Animation
 
@@ -1102,6 +1132,7 @@ Finish writing animated GIF and close connected pointers.
 @end ifclear
 
 @c ------------------------------------------------------------------
+@external
 @node Bitmap in memory, Parallelization, Frames/Animation, Export picture
 @subsection Bitmap in memory
 
@@ -1170,6 +1201,7 @@ Highlight the object with given @var{id}.
 
 
 @c ------------------------------------------------------------------
+@external
 @node Parallelization, , Bitmap in memory, Export picture
 @subsection Parallelization
 
@@ -1205,6 +1237,7 @@ Receive graphical information from node @var{id} using MPI. The width and height
 
 
 @c ##################################################################
+@external
 @node Primitives, Text printing, Export picture, MathGL core
 @section Primitives
 @cindex Ball
@@ -1382,6 +1415,7 @@ colors for filling and boundary (second one if style @samp{@@} is used, black co
 @end deftypefn
 
 @c ##################################################################
+@external
 @node Text printing, Axis and Colorbar, Primitives, MathGL core
 @section Text printing
 @ifclear UDAV
@@ -1453,6 +1487,7 @@ The function draws @var{text} along the curve between points @{@var{x}[i], @var{
 @end deftypefn
 
 @c ##################################################################
+@external
 @node Axis and Colorbar, Legend, Text printing, MathGL core
 @section Axis and Colorbar
 @cindex Axis
@@ -1567,6 +1602,7 @@ Prints the label @var{text} for axis @var{dir}=@samp{x},@samp{y},@samp{z},@samp{
 @end deftypefn
 
 @c ##################################################################
+@external
 @node Legend, 1D plotting, Axis and Colorbar, MathGL core
 @section Legend
 @cindex Legend
@@ -1635,6 +1671,7 @@ Set the number of marks in the legend. By default 1 mark is used.
 @end deftypefn
 
 @c ##################################################################
+@external
 @node 1D plotting, 2D plotting, Legend, MathGL core
 @section 1D plotting
 @cindex Plot
@@ -1971,6 +2008,7 @@ These functions draw surface which is result of curve @{@var{r}, @var{z}@} rotat
 @end deftypefn
 
 @c ##################################################################
+@external
 @node 2D plotting, 3D plotting, 1D plotting, MathGL core
 @section 2D plotting
 @cindex Mesh
@@ -2203,6 +2241,7 @@ The function draws grid lines for density plot of surface specified parametrical
 
 
 @c ##################################################################
+@external
 @node 3D plotting, Dual plotting, 2D plotting, MathGL core
 @section 3D plotting
 @cindex Surf3
@@ -2334,6 +2373,7 @@ Draws the isosurface for 3d array @var{a} at constant values of @var{a}=@var{val
 
 
 @c ##################################################################
+@external
 @node Dual plotting, Vector fields, 3D plotting, MathGL core
 @section Dual plotting
 @cindex SurfC
@@ -2455,6 +2495,7 @@ Draws spectrogram of complex array @var{re}+i*@var{im} for Fourier size of @var{
 
 
 @c ##################################################################
+@external
 @node Vector fields, Other plotting, Dual plotting, MathGL core
 @section Vector fields
 @cindex Traj
@@ -2620,6 +2661,7 @@ This is 3D version of the first functions. Here arrays @var{ax}, @var{ay}, @var{
 
 
 @c ##################################################################
+@external
 @node Other plotting, Nonlinear fitting, Vector fields, MathGL core
 @section Other plotting
 @cindex DensXYZ
@@ -2810,7 +2852,7 @@ The function draws the surface of quadrangles. Quadrangles vertexes are set by i
 @deftypefnx {C function} @code{void} mgl_dots (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_dots_a (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-The function draws the arbitrary placed points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. String @var{sch} sets the color scheme. If array @var{a} is specified then it define the transparency of dots. Arrays @var{x}, @var{y}, @var{z}, @var{a} must have equal sizes. See also @ref{crust}, @ref{mark}, @ref{plot}. @sref{Dots sample}
+The function draws the arbitrary placed points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. String @var{sch} sets the color scheme. If array @var{a} is specified then it define colors of dots. Arrays @var{x}, @var{y}, @var{z}, @var{a} must have equal sizes. See also @ref{crust}, @ref{mark}, @ref{plot}. @sref{Dots sample}
 @end deftypefn
 
 @anchor{crust}
@@ -2823,6 +2865,7 @@ The function reconstruct and draws the surface for arbitrary placed points @{@va
 @end deftypefn
 
 @c ##################################################################
+@external
 @node Nonlinear fitting, Data manipulation, Other plotting, MathGL core
 @section Nonlinear fitting
 @cindex Fit
@@ -2910,9 +2953,12 @@ Get last fitted formula with found coefficients (as numbers).
 
 
 @c ##################################################################
-@node Data manipulation, IDTF functions, Nonlinear fitting, MathGL core
+@external
+@node Data manipulation, , Nonlinear fitting, MathGL core
 @section Data manipulation
 @cindex Hist
+@cindex Fill
+@cindex DataGrid
 
 @deftypefn {MGL command} {} hist @sc{res} xdat adat
 @deftypefnx {MGL command} {} hist @sc{res} xdat ydat adat
@@ -2941,6 +2987,16 @@ These functions make distribution (histogram) of data. They do not draw the obta
 Fills the value of array according to the formula in string @var{eq}. Formula is an arbitrary expression depending  on variables @samp{x}, @samp{y}, @samp{z}, @samp{u}, @samp{v}, @samp{w}. Coordinates @samp{x}, @samp{y}, @samp{z} are supposed to be normalized in axis range. Variable @samp{u} is the original value of the array. Variables @samp{v} and @samp{w} are values of arrays @var{v}, @var{w} which can be @code{NULL} (i.e. can be omitted).
 @end deftypefn
 
+@deftypefn {MGL command} {} datagrid dat xdat ydat zdat
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} DataGrid (@code{mglData &}u, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_data_grid (@code{HMGL} gr, @code{HMDT} u, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}opt)
+@end ifclear
+Fills the value of array @samp{u} according to the linear interpolation of triangulated surface, found for arbitrary placed points @samp{x}, @samp{y}, @samp{z}. NAN value is used for grid points placed outside of triangulated surface.
+@end deftypefn
+
+
+
 @deftypefn {MGL command} {} pde @sc{res} 'ham' ini_re ini_im [@code{dz=0.1 k0=100}]
 @ifclear UDAV
 @deftypefnx {Method on @code{mglGraph}} @code{mglData} PDE (@code{const char *}ham, @code{const mglData &}ini_re, @code{const mglData &}ini_im, @code{float} dz=@code{0.1}, @code{float} k0=@code{100}, @code{const char *}opt=@code{""})
@@ -2950,22 +3006,26 @@ Solves equation du/dz = i*k0*@var{ham}(p,q,x,y,z,|u|)[u], where p=-i/k0*d/dx, q=
 @end deftypefn
 
 @c ##################################################################
-@node IDTF functions, , Data manipulation, MathGL core
-@section IDTF functions
+@c @external
+@c @node IDTF functions, , Data manipulation, MathGL core
+@c @section IDTF functions
 
-These functions provide IDTF specific features. In all other cases they do nothing.
+@c These functions provide IDTF specific features. In all other cases they do nothing.
 
-@ifclear UDAV
+@c @ifclear UDAV
 
-@deftypefn {Method on @code{mglGraph}} @code{void} VertexColor (@code{bool} enable)
-Enables smooth color change.
-@end deftypefn
+@c @deftypefn {Method on @code{mglGraph}} @code{void} VertexColor (@code{bool} enable)
+@c Enables smooth color change.
+@c @end deftypefn
 
-@deftypefn {Method on @code{mglGraph}} @code{void} Compression (@code{bool} enable)
-Gives smaller files, but quality degrades.
-@end deftypefn
+@c @deftypefn {Method on @code{mglGraph}} @code{void} Compression (@code{bool} enable)
+@c Gives smaller files, but quality degrades.
+@c @end deftypefn
 
-@c	inline void DoubleSided(bool){}		// NOTE: Add later -- IDTF
-@c	inline void TextureColor(bool){}	// NOTE: Add later -- IDTF
+@c inline void DoubleSided(bool){}	// NOTE: Add later -- IDTF
+@c inline void TextureColor(bool){}	// NOTE: Add later -- IDTF
 
-@end ifclear
+@c @end ifclear
+
+@external
+

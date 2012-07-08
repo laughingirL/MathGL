@@ -22,6 +22,7 @@ Below I show how this internal classes can be used.
 
 
 @c ------------------------------------------------------------------
+@external
 @node mglBase class, mglDataA class, , Other classes
 @subsection Define new kind of plot (mglBase class)
 
@@ -325,6 +326,7 @@ int main()
 
 
 @c ------------------------------------------------------------------
+@external
 @node mglDataA class, mglColor class, mglBase class, Other classes
 @subsection User defined types (mglDataA class)
 
@@ -412,6 +414,7 @@ int main()
 
 
 @c ------------------------------------------------------------------
+@external
 @node mglColor class, mglPoint class, mglDataA class, Other classes
 @section mglColor class
 @cindex mglColor
@@ -481,6 +484,7 @@ Return inverted color.
 @end deftypefn
 
 @c ------------------------------------------------------------------
+@external
 @node mglPoint class, mglFont class, mglColor class, Other classes
 @section mglPoint class
 @cindex mglPoint
@@ -555,6 +559,7 @@ Return true if points are different.
 @end deftypefn
 
 @c ------------------------------------------------------------------
+@external
 @node mglFont class, , mglPoint class, Other classes
 @section mglFont class
 @cindex mglFont
@@ -637,6 +642,7 @@ Flag for switching on/off the parsing of TeX commands. Default value is @code{tr
 @end deftypecv
 
 @c ------------------------------------------------------------------
+@external
 @node Format of font files, , , mglFont class
 @subsection Format of font files
 
@@ -657,4 +663,6 @@ The end of file contains the buffer with point coordinates at lines or triangles
 Each font file can be compressed by gzip.
 
 Note: the closing contour line  is done automatically (so the last segment may be absent). For starting new contour use a point with coordinates @code{@{0x3fff, 0x3fff@}}.
+
+@external
 

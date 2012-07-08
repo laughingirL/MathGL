@@ -44,10 +44,8 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 
 ============= DOCS =============
 
-1. FAQ about widget classes in non-GNU compilers.
 2. Text about UDAV
 3. Add FAQ about MPEG/GIF and PDF
-4. Hint that NAN colors can be used for removing points from drawing
 
 ============= UDAV =============
 

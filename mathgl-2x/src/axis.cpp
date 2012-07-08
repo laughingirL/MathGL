@@ -26,9 +26,9 @@
 #define islog(a, b) (((a)>0 && (b)>10*(a)) || ((b)<0 && (a)<10*(b)))
 #define sign(a)	((a)<0 ? -1:1)
 //-----------------------------------------------------------------------------
-inline struct tm* mgl_localtime_r (const time_t *clock, struct tm *result)
+inline struct tm* mgl_localtime (const time_t *clock, struct tm *result, bool use_utc)
 {	if (!clock || !result) return NULL;
-	memcpy(result,localtime(clock),sizeof(*result));
+memcpy(result,use_utc?gmtime(clock):localtime(clock),sizeof(*result));
 	return result;	}
 //-----------------------------------------------------------------------------
 long mgl_have_color(const char *stl)
@@ -214,8 +214,8 @@ void mglCanvas::SetTickTime(char dir, float d, const char *t)
 	UpdateAxis();
 
 	time_t tt;	tm t1,t2;
-	tt=aa.v1;	mgl_localtime_r(&tt,&t1);
-	tt=aa.v2;	mgl_localtime_r(&tt,&t2);
+	tt=aa.v1;	mgl_localtime(&tt, &t1, get(MGL_USE_GMTIME));
+	tt=aa.v2;	mgl_localtime(&tt, &t2, get(MGL_USE_GMTIME));
 	if(aa.v1<aa.v2)	// adjust periodic values
 	{
 		if(abs(t1.tm_year-t2.tm_year)==1)	t2.tm_yday += 365;
@@ -271,7 +271,7 @@ void mglCanvas::SetTickTime(char dir, float d, const char *t)
 	{	v1 = aa.v1;		v0 = v0 - aa.dv*floor((v0-aa.v2)/aa.dv+1e-3);	}
 	if(v0+aa.dv!=v0 && v1+aa.dv!=v1)	for(v=v0;v<=v1;v+=aa.dv)
 	{
-		tt = v;	tm tp;		mgl_localtime_r(&tt,&tp);
+		tt = v;	tm tp;		mgl_localtime(&tt, &tp, get(MGL_USE_GMTIME));
 		wcsftime(buf,64,aa.t,&tp);	aa.AddLabel(buf,v);
 	}
 }

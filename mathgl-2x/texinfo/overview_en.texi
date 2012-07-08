@@ -23,6 +23,7 @@ a library with large and growing set of graphics.
 * Utilities::
 @end menu
 
+@external
 @node What is MathGL?, MathGL features, , Overview
 @section What is MathGL?
 
@@ -30,6 +31,7 @@ A code for making high-quality scientific graphics under Linux and Windows. A  c
 
 At this version (@value{VERSION}) MathGL has more than 50 general types of graphics for 1d, 2d and 3d data arrays. It can export graphics to bitmap and vector (EPS or SVG) files. It has OpenGL interface and can be used from console programs. It has functions for data handling and script MGL language for simplification of data plotting. It also has several types of transparency and smoothed lighting, vector fonts and TeX-like symbol parsing, arbitrary curvilinear coordinate system and many other useful things (see pictures section at @uref{http://mathgl.sf.net/, homepage}). Finally it is platform-independent and free (under GPL v.2.0 or later license).
 
+@external
 @node MathGL features, Installation, What is MathGL?, Overview
 @section MathGL features
 
@@ -61,25 +63,28 @@ Special class mglData is used for data encapsulation (@pxref{Data processing}). 
 
 There is fast evaluation of a textual mathematical expression (@pxref{Textual formulas}). It is based on string precompilation to tree-like code at the creation of class instance. At evaluation stage code performs only fast tree-walk and returns the value of the expression. In addition to changing data values, textual formulas are also used for drawing in @emph{arbitrary} curvilinear coordinates. A set of such curvilinear coordinates is limited only by user's imagination rather than a fixed list like: polar, parabolic, spherical, and so on.
 
+@external
 @node Installation, Quick guide, MathGL features, Overview
 @section Installation
 
 MathGL can be installed in 4 different ways.
 @enumerate
 @item
-Compile from sources. The standard script cmake build system is useded in the library. To run it, one should execute commands: @code{cmake .} twice, after it @code{make} and @code{make install} with root/sudo rights. Sometimes after installation you may need to update the library list -- just execute @code{ldconfig} with root/sudo rights.
+Compile from sources. The cmake build system is useded in the library. To run it, one should execute commands: @code{cmake .} twice, after it @code{make} and @code{make install} with root/sudo rights. Sometimes after installation you may need to update the library list -- just execute @code{ldconfig} with root/sudo rights.
 
 There are several additional options which are switched off by default. They are: @code{enable-fltk, enable-glut, enable-qt} for ebabling FLTK, GLUT and/or Qt windows; @code{enable-jpeg, enable-gif, enable-hdf5} and so on for enabling corresponding file formats; @code{enable-all} for enabling all additional features. For using @code{double} as base internal data type use option @code{enable-double}. For enabling language interfaces use @code{enable-python, enable-octave} or @code{enable-langall} for all languages. You can use WYSIWYG tool (@code{cmake-gui}) to view all of them, or type @code{cmake -D enable-all=on -D enable-langall=on .} in command line for enabling all features.
 
 @item
-Use a precompiled binary. There are binaries for MinGW (platform Win32). For a precompiled variant one needs only to unpack the archive to the location of the compiler (or in any other folder and setup paths). By default, precompiled versions include the support of GSL (www.gsl.org) and PNG. So, one needs to have these libraries installed on system (it can be found, for example, at @uref{http://gnuwin32.sourceforge.net/packages.html}).
+Use a precompiled binary. There are binaries for MinGW (platform Win32). For a precompiled variant one needs only to unpack the archive to the location of the compiler (i.e. mathgl/lib in mingw/lib, mathgl/include in mingw/include and so on) or in arbitrary other folder and setup paths in compiler. By default, precompiled versions include the support of GSL (www.gsl.org) and PNG. So, one needs to have these libraries installed on system (it can be found, for example, at @uref{http://gnuwin32.sourceforge.net/packages.html}).
 
 @item
-Install precompiled versions from standard packages (RPM, deb, DevPak and so on, see @uref{http://mathgl.sf.net/download.html, Download} section at homepage).
+Install precompiled versions from standard packages (RPM, deb, DevPak and so on).
 @end enumerate
 
+Note, you can download the latest sources (which can be not stable) from sourceforge.net SVN by command @code{svn co https://mathgl.svn.sourceforge.net/svnroot/mathgl mathgl} or just download MathGL 2.* sources by command @code{svn co https://mathgl.svn.sourceforge.net/svnroot/mathgl/mathgl-2x mathgl-2x} .
 
 @c ------------------------------------------------------------------
+@external
 @node  Quick guide, Changes from v.1, Installation, Overview
 @section Quick guide
 
@@ -126,6 +131,7 @@ To compile your program, you need to specify the linker option @code{-lmgl}.
 This is enough for a compilation of console program or with external (non-MathGL) window library. If you want to use FLTK or Qt windows provided by MathGL then you need to add the option @code{-lmgl-wnd}. Fortran users also should add C++ library by the option @code{-lstdc++}.
 
 @c ------------------------------------------------------------------
+@external
 @node  Changes from v.1, Utilities, Quick guide, Overview
 @section Changes from v.1.*
 
@@ -156,6 +162,7 @@ Add pipes support in utilities (@code{mglconv, mglview}).
 @end itemize
 
 @c ------------------------------------------------------------------
+@external
 @node  Utilities, , Changes from v.1, Overview
 @section Utilities for parsing MGL
 
@@ -182,4 +189,6 @@ print help message.
 @end itemize
 
 Additionally you can create animated GIF file or a set of JPEG files with names @samp{frameNNNN.jpg} (here @samp{NNNN} is frame index). Values of the parameter @code{$0} for making animation can be specified inside the script by comment @code{##a val} for each value @code{val} (one comment for one value) or by option(s) @samp{-A val}. Also you can specify a cycle for animation by comment @code{##c v1 v2 dv} or by option @code{-C v1:v2:dv}. In the case of found/specified animation parameters, tool will execute script several times -- once for each value of @code{$0}.
+
+@external
 

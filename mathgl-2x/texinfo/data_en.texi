@@ -25,6 +25,7 @@ This chapter describe class @code{mglData} for working with data array. This cla
 @end menu
 
 @c ------------------------------------------------------------------
+@external
 @node Public variables, Data constructor, , Data processing
 @section Public variables
 
@@ -77,6 +78,7 @@ Returns pointer to internal data array.
 @end ifclear
 
 @c ------------------------------------------------------------------
+@external
 @node Data constructor, Data resizing, Public variables, Data processing
 @section Data constructor
 @cindex mglData
@@ -131,6 +133,7 @@ Deletes the instance of class mglData.
 
 
 @c ------------------------------------------------------------------
+@external
 @node Data resizing, Data filling, Data constructor, Data processing
 @section Data resizing
 @cindex Create
@@ -238,6 +241,7 @@ Sort data rows (or slices in 3D case) by values of specified column @var{idx} (o
 
 
 @c ------------------------------------------------------------------
+@external
 @node Data filling, File I/O, Data resizing, Data processing
 @section Data filling
 @cindex Fill
@@ -358,6 +362,16 @@ Fills data by 'x' or 'k' samples for Hankel ('h') or Fourier ('f') transform.
 @end deftypefn
 
 
+@anchor{datagrid}
+@deftypefn {MGL command} {} datagrid dat xdat ydat zdat
+@ifclear UDAV
+@deftypefnx {Method on @code{mglData}} @code{mglData} Grid (@code{HMGL} gr, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_data_grid (@code{HMGL} gr, @code{HMDT} u, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}opt)
+@end ifclear
+Fills the value of array @samp{u} according to the linear interpolation of triangulated surface, found for arbitrary placed points @samp{x}, @samp{y}, @samp{z}. NAN value is used for grid points placed outside of triangulated surface.
+@end deftypefn
+
+
 @anchor{put}
 @deftypefn {MGL command} {} put dat @code{val [i=: j=: k=:]}
 @ifclear UDAV
@@ -386,6 +400,7 @@ Sets the symbol @var{ids} for data columns. The string should contain one symbol
 
 
 @c ------------------------------------------------------------------
+@external
 @node File I/O, Make another data, Data filling, Data processing
 @section File I/O
 @cindex Read
@@ -494,6 +509,7 @@ Saves data matrix (or @code{ns}-th slice for 3d data) to bitmap file (now suppor
 @end deftypefn
 
 @c ------------------------------------------------------------------
+@external
 @node Make another data, Data changing, File I/O, Data processing
 @section Make another data
 @cindex SubData
@@ -630,6 +646,7 @@ Gets array of diagonal elements a[i,i] (for 2D case) or a[i,i,i] (for 3D case) w
 @end deftypefn
 
 @c ------------------------------------------------------------------
+@external
 @node Data changing, Interpolation, Make another data, Data processing
 @section Data changing
 @cindex CumSum
@@ -800,6 +817,7 @@ Normalizes data slice-by-slice along direction @var{dir} the data in slices to r
 @end deftypefn
 
 @c ------------------------------------------------------------------
+@external
 @node Interpolation, Data information, Data changing, Data processing
 @section Interpolation
 
@@ -831,6 +849,7 @@ Interpolates data by linear function to the given point @var{x}, @var{y}, @var{z
 @end ifclear
 
 @c ------------------------------------------------------------------
+@external
 @node Data information, Operators, Interpolation, Data processing
 @section Data information
 
@@ -988,6 +1007,7 @@ Give first (for @code{.a}, i.e. @code{dat->a[0]}).
 
 
 @c ------------------------------------------------------------------
+@external
 @node Operators, Global functions, Data information, Data processing
 @section Operators
 
@@ -1081,6 +1101,7 @@ Divides by the other data or the number.
 @end ifclear
 
 @c ------------------------------------------------------------------
+@external
 @node Global functions, Evaluate expression, Operators, Data processing
 @section Global functions
 
@@ -1165,18 +1186,20 @@ Computes the Jacobian for transformation @{i,j,k@} to @{@var{x},@var{y},@var{z}@
 
 
 @anchor{triangulation}
-@deftypefn {MGL command} {} triangulation @sc{res} xdat ydat [zdat]
+@deftypefn {MGL command} {} triangulation @sc{res} xdat ydat
+@c @deftypefn {MGL command} {} triangulation @sc{res} xdat ydat [zdat]
 @ifclear UDAV
 @deftypefnx {Global function} @code{mglData} mglTriangulation (@code{const mglData &}x, @code{const mglData &}y)
-@deftypefnx {Global function} @code{mglData} mglTriangulation (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z)
+@c @deftypefnx {Global function} @code{mglData} mglTriangulation (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z)
 @deftypefnx {C function} @code{HMDT} mgl_triangulation_2d (@code{HCDT} x, @code{HCDT} y)
-@deftypefnx {C function} @code{HMDT} mgl_triangulation_3d (@code{HCDT} x, @code{HCDT} y, @code{HCDT} z)
+@c @deftypefnx {C function} @code{HMDT} mgl_triangulation_3d (@code{HCDT} x, @code{HCDT} y, @code{HCDT} z)
 @end ifclear
-Computes triangulation for arbitrary placed points with coordinates @{@var{x},@var{y},@var{z}@} (i.e. finds triangles which connect points). The sizes of 1st dimension @strong{must be equal} for all arrays @code{x.nx=y.nx=z.nx}. Resulting array can be used in @ref{triplot} or @ref{tricont} functions for visualization of reconstructed surface.
+Computes triangulation for arbitrary placed points with coordinates @{@var{x},@var{y}@} (i.e. finds triangles which connect points). MathGL use @uref{http://www.s-hull.org/,s-hull} code for triangulation. The sizes of 1st dimension @strong{must be equal} for all arrays @code{x.nx=y.nx}. Resulting array can be used in @ref{triplot} or @ref{tricont} functions for visualization of reconstructed surface.
 @end deftypefn
 
 
 @c ------------------------------------------------------------------
+@external
 @node Evaluate expression, , Global functions, Data processing
 @section Evaluate expression
 
@@ -1219,3 +1242,6 @@ Evaluates the formula derivation respect to @var{dir} for variables in array @va
 @end deftypefn
 
 @end ifclear
+
+@external
+

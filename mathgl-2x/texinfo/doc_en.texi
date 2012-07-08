@@ -1,6 +1,6 @@
 \input texinfo
 @setfilename mathgl_en.info
-@set VERSION 2.0
+@set VERSION 2.0.2
 @settitle MathGL @value{VERSION}
 @syncodeindex pg cp
 @comment %**end of header
@@ -79,12 +79,60 @@ supports it in developing GNU and promoting software freedom.''
 * Index::
 @end menu
 
+@ifhtml
+@macro external {}
+@html
+<!--LiveInternet counter--><script type="text/javascript"><!--
+document.write("<a href='http://www.liveinternet.ru/click' "+
+"target=_blank><img src='http://counter.yadro.ru/hit?t12.2;r"+
+escape(document.referrer)+((typeof(screen)=="undefined")?"":
+";s"+screen.width+"*"+screen.height+"*"+(screen.colorDepth?
+screen.colorDepth:screen.pixelDepth))+";u"+escape(document.URL)+
+";"+Math.random()+
+"' alt='' title='LiveInternet: number of views during 24"+
+" hours, number of visitors during 24 hours and during today' "+
+"border=0 width=88 height=31><\/a>")//--></script><!--/LiveInternet-->
+
+<a target=_blank href="http://sourceforge.net"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=152187&amp;type=2" alt="SourceForge.net Logo" border="0" height="37" width="125"></a>
+
+<a target=_blank href="http://www.thefreecountry.com/"> <img src="http://www.thefreecountry.com/images/tfc88x31green.gif" alt="thefreecountry.com: Free Programmers' Resources, Free Webmasters' Resources, Free Security Resources, Free Software" border="0" height="31" width="88"></a>
+
+<a target=_blank href="http://sourceforge.net/donate/index.php?group_id=152187"><img src="http://images.sourceforge.net/images/project-support.jpg" width="88" height="32" border="0" alt="Support This Project" /> </a>
+@end html
+@end macro
+
 @macro fig {fname,text}
 @center @image{../\fname\, 11cm, , \text\, .png}
 @end macro
-
-@macro reklama
+@macro pfig {fname,text}
+@center @image{../png/\fname\, 11cm, , \text\, .png}
+@c @center @image{../png/\fname\, 11cm, , \text\. See also @uref{../pdf/\fname\.pdf, U3D PDF} sample, .png}
 @end macro
+@end ifhtml
+
+@ifnothtml
+@macro external {}
+@end macro
+
+@iftex
+@macro fig {fname,text}
+@center @image{\fname\, 11cm, , \text\, .png}
+@end macro
+@macro pfig {fname,text}
+@center @image{png/\fname\, 11cm, , \text\, .png}
+@end macro
+@end iftex
+
+@ifnottex
+@macro fig {fname,text}
+@c @center @image{\fname\, 11cm, , \text\, .png}
+@end macro
+@macro pfig {fname,text}
+@c @center @image{png/\fname\, 11cm, , \text\, .png}
+@end macro
+@end ifnottex
+@end ifnothtml
+
 
 @rmacro sref {arg}
 @xref{\arg\}, for sample code and picture.

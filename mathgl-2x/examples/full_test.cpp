@@ -43,19 +43,10 @@ void smgl_combined(mglGraph *gr);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	gr->AddLegend("sin(\\pi {x^2})","b");
-	gr->AddLegend("sin(\\pi x)","g*");
-	gr->AddLegend("sin(\\pi \\sqrt{x})","rd");
-	gr->AddLegend("just text"," ");
-	gr->AddLegend("no indent for this","");
-	if(!mini)	{gr->SubPlot(2,2,0,"");	gr->Title("Legend (default)");}
-	gr->Box();	gr->Legend();
-	if(mini)	return;
-	gr->Legend(3,"A#");
-	gr->Puts(mglPoint(0.75,0.65),"Absolute position","A");
-	gr->SubPlot(2,2,2,"");	gr->Title("coloring");	gr->Box();
-	gr->Legend(0,"r#");	gr->Legend(1,"Wb#");	gr->Legend(2,"ygr#");
-	gr->SubPlot(2,2,3,"");	gr->Title("manual position");	gr->Box();	gr->Legend(0.5,0.5);
+	gr->SubPlot(2,2,0,"");	gr->Title("Dens plot");	gr->Box();
+	gr->SubPlot(2,2,1);		gr->Title("Dens plot");	gr->Rotate(50,60);	gr->Box();
+	gr->SubPlot(2,2,2);		gr->Title("Dens plot");	gr->Box();
+	gr->SubPlot(2,2,3,"");	gr->Title("Dens plot");	gr->Rotate(50,60);	gr->Box();
 	return;
 
 /*	mglData x(100), y(100), z(100);
@@ -1587,7 +1578,7 @@ void smgl_hist(mglGraph *gr)
 	gr->MultiPlot(3,3,3,2,2,"");	gr->SetRanges(-1,1,-1,1,0,1);	gr->Box();	gr->Dots(x,y,z,"wyrRk");
 	gr->MultiPlot(3,3,0,2,1,"");	gr->SetRanges(-1,1,0,1);	gr->Box();	gr->Bars(xx);
 	gr->MultiPlot(3,3,5,1,2,"");	gr->SetRanges(0,1,-1,1);	gr->Box();	gr->Barh(yy);
-	gr->SubPlot(3,3,2);		gr->Puts(mglPoint(0.5,0.5),"Hist and\nMultiPlot\nsample","a",-6);
+	gr->SubPlot(3,3,2);		gr->Puts(mglPoint(0.5,0.5),"Hist and\nMultiPlot\nsample","a",-3);
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_primitives="";	// TODO add later
@@ -1698,16 +1689,16 @@ void smgl_dat_diff(mglGraph *gr)	// differentiate
 	mglData a(30,40);	a.Modify("x*y");
 	gr->SubPlot(2,2,0);	gr->Rotate(60,40);
 	gr->Surf(a);		gr->Box();
-	gr->Puts(mglPoint(0.7,1,1.2),"a(x,y)");
+	gr->Puts(mglPoint(0.7,1,1.2),"a(x,y)","",-2);
 	gr->SubPlot(2,2,1);	gr->Rotate(60,40);
 	a.Diff("x");		gr->Surf(a);	gr->Box();
-	gr->Puts(mglPoint(0.7,1,1.2),"da/dx");
+	gr->Puts(mglPoint(0.7,1,1.2),"da/dx","",-2);
 	gr->SubPlot(2,2,2);	gr->Rotate(60,40);
 	a.Integral("xy");	gr->Surf(a);	gr->Box();
-	gr->Puts(mglPoint(0.7,1,1.2),"\\int da/dx dxdy");
+	gr->Puts(mglPoint(0.7,1,1.2),"\\int da/dx dxdy","",-2);
 	gr->SubPlot(2,2,3);	gr->Rotate(60,40);
 	a.Diff2("y");	gr->Surf(a);	gr->Box();
-	gr->Puts(mglPoint(0.7,1,1.2),"\\int {d^2}a/dxdy dx");
+	gr->Puts(mglPoint(0.7,1,1.2),"\\int {d^2}a/dxdy dx","",-2);
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_data_extra="";		// TODO add later

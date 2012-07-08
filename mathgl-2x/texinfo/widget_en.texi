@@ -29,6 +29,7 @@ You should inherit yours class from @code{mglDraw} and re-implement one or both 
 
 
 @c ------------------------------------------------------------------
+@external
 @node mglWindow class, Fl_MathGL class, , Widget classes
 @section mglWindow class
 @cindex mglWindow
@@ -133,6 +134,7 @@ Gets last position of mouse click.
 @end deftypefn
 
 @c ------------------------------------------------------------------
+@external
 @node Fl_MathGL class, QMathGL class, mglWindow class, Widget classes
 @section Fl_MathGL class
 @cindex Fl_MathGL
@@ -189,6 +191,7 @@ Pointer to external phi-angle validator.
 @end deftypecv
 
 @c ------------------------------------------------------------------
+@external
 @node QMathGL class, , Fl_MathGL class, Widget classes
 @section QMathGL class
 @cindex QMathGL
@@ -437,4 +440,6 @@ Application name for message boxes.
 @deftypecv {QMathGL option} QMathGL @code{bool} autoResize
 Allow auto resizing (default is false).
 @end deftypecv
+
+@external
 
