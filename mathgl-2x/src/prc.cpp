@@ -196,11 +196,11 @@ void my_png_write_data(png_structp png_ptr, png_bytep data, png_size_t length)
 	p->size += length;
 }
 //-----------------------------------------------------------------------------
-void my_png_flush(png_structp png_ptr)
+void my_png_flush(png_structp /*png_ptr*/)
 {
 }
 //-----------------------------------------------------------------------------
-void mgl_write_prc(HMGL gr, const char *fname,const char *descr, int make_pdf)
+void mgl_write_prc(HMGL gr, const char *fname,const char */*descr*/, int make_pdf)
 {
 	if(gr->GetPrmNum()<=0)	return;	// nothing to do
 	{

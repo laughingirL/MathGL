@@ -19,6 +19,8 @@ set(mgl_hdr
 	s_hull/s_hull_pro.h
 )
 
+add_definitions(-DMGL_SRC)
+
 if(MGL_HAVE_PNG)
 	set(prc_src prc/PRCbitStream.cc prc/PRCdouble.cc prc/oPRCFile.cc prc/writePRC.cc prc.cpp )
 	set(prc_hdr prc/PRC.h prc/PRCbitStream.h prc/PRCdouble.h prc/oPRCFile.h prc/writePRC.h )

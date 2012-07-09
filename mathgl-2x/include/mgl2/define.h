@@ -233,7 +233,7 @@ void mgl_strlwr(char *str);
 #ifdef __cplusplus
 }
 #endif
-#if MGL_HAVE_PTHREAD
+#if MGL_HAVE_PTHREAD && defined(MGL_SRC)
 #include <pthread.h>
 #define MGL_PUSH(a,v,m)		{pthread_mutex_lock(&m);	a.push_back(v);	pthread_mutex_unlock(&m);}
 #else

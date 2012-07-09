@@ -969,13 +969,13 @@ bool mgl_isboth(HCDT x, HCDT y, HCDT z, HCDT a)
 //-----------------------------------------------------------------------------
 bool mgl_check_vec3(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *name)
 {
-	register long n=ax->GetNx(),m=ax->GetNy(),l=ax->GetNz(),k;
+	register long n=ax->GetNx(),m=ax->GetNy(),l=ax->GetNz();
 	if(n*m*l!=ay->GetNx()*ay->GetNy()*ay->GetNz() || n*m*l!=az->GetNx()*az->GetNy()*az->GetNz())
-	{	gr->SetWarn(mglWarnDim,"Vect");	return true;	}
-	if(n<2 || m<2 || l<2)	{	gr->SetWarn(mglWarnLow,"Vect");	return true;	}
+	{	gr->SetWarn(mglWarnDim,name);	return true;	}
+	if(n<2 || m<2 || l<2)	{	gr->SetWarn(mglWarnLow,name);	return true;	}
 	bool both = x->GetNx()*x->GetNy()*x->GetNz()==n*m*l && y->GetNx()*y->GetNy()*y->GetNz()==n*m*l && z->GetNx()*z->GetNy()*z->GetNz()==n*m*l;
 	if(!(both || (x->GetNx()==n && y->GetNx()==m && z->GetNx()==l)))
-	{	gr->SetWarn(mglWarnDim,"Vect");	return true;	}
+	{	gr->SetWarn(mglWarnDim,name);	return true;	}
 	return false;
 }
 //-----------------------------------------------------------------------------

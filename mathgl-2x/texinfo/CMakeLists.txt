@@ -100,7 +100,8 @@ if(MGL_HAVE_DOC)
 		COMMAND rm -f * */*
 		WORKING_DIRECTORY ${MGL_OUT}
 	)
-	install(FILES  ${MGL_OUT}/mathgl_en.pdf ${MGL_OUT}/mgl_en.html DESTINATION ${MGL_DOC_PATH})
+	install(FILES ${MGL_TEX}/qt.png ${MGL_TEX}/fltk.png ${MGL_TEX}/classes.png DESTINATION ${MGL_DOC_PATH})
+	install(FILES ${MGL_OUT}/mathgl_en.pdf ${MGL_OUT}/mgl_en.html DESTINATION ${MGL_DOC_PATH})
 	install(DIRECTORY ${MGL_OUT}/mathgl_en DESTINATION ${MGL_DOC_PATH})
 	install(DIRECTORY ${MGL_OUT}/png DESTINATION ${MGL_DOC_PATH})
 	install(FILES ${MGL_TEX}/mglconv.1 ${MGL_TEX}/mglview.1 DESTINATION ${MGL_MAN_PATH}/man1)

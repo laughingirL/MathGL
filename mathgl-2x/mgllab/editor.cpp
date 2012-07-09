@@ -29,15 +29,15 @@ void data_file(char *v);
 // Syntax highlighting stuff...
 Fl_Text_Buffer	 *stylebuf = 0;
 Fl_Text_Display::Style_Table_Entry styletable[] = {	// Style table
-		{ FL_BLACK,		FL_COURIER,			14 },	// A - Plain
-		{ FL_DARK_GREEN,FL_COURIER_ITALIC,	14 },	// B - Line comments
-		{ FL_BLUE,		FL_COURIER,			14 },	// C - Number
-		{ FL_RED,		FL_COURIER,			14 },	// D - Strings
-		{ FL_DARK_BLUE,	FL_COURIER_BOLD,	14 },	// E - Usual ommand
-		{ FL_DARK_CYAN,	FL_COURIER_BOLD,	14 },	// F - Flow command
-		{ FL_DARK_MAGENTA,	FL_COURIER_BOLD,14 },	// G - New-data command
-		{ FL_DARK_RED,	FL_COURIER_BOLD,	14 },	// H - Option
-		{ FL_DARK_GREEN,FL_COURIER_BOLD,	14 }};  // I - Inactive command
+		{ FL_BLACK,		FL_COURIER,			14, 0 },	// A - Plain
+		{ FL_DARK_GREEN,FL_COURIER_ITALIC,	14, 0 },	// B - Line comments
+		{ FL_BLUE,		FL_COURIER,			14, 0 },	// C - Number
+		{ FL_RED,		FL_COURIER,			14, 0 },	// D - Strings
+		{ FL_DARK_BLUE,	FL_COURIER_BOLD,	14, 0 },	// E - Usual ommand
+		{ FL_DARK_CYAN,	FL_COURIER_BOLD,	14, 0 },	// F - Flow command
+		{ FL_DARK_MAGENTA,	FL_COURIER_BOLD,14, 0 },	// G - New-data command
+		{ FL_DARK_RED,	FL_COURIER_BOLD,	14, 0 },	// H - Option
+		{ FL_DARK_GREEN,FL_COURIER_BOLD,	14, 0 }};  // I - Inactive command
 //-----------------------------------------------------------------------------
 bool is_sfx(const char *s)	// suffix
 {
@@ -93,7 +93,7 @@ char is_cmd(const char *s)	// command
 }
 //-----------------------------------------------------------------------------
 // Parse text and produce style data.
-void style_parse(const char *text, char *style, int length)
+void style_parse(const char *text, char *style, int /*length*/)
 {
 	register long i;
 	long n=strlen(text);

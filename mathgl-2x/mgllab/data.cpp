@@ -190,7 +190,7 @@ struct CmdDlg
 void cmd_dlg_cb(Fl_Widget *, void *v)	// add variables checking
 {	cmd_dlg.OK = true;	((Fl_Window *)v)->hide();	}
 //-----------------------------------------------------------------------------
-void type_cmd_cb(Fl_Widget *w, void *v)
+void type_cmd_cb(Fl_Widget *, void *)
 {
 	int val = cmd_dlg.type->value();
 	if(val>=0 && val<16)
@@ -211,7 +211,7 @@ void type_cmd_cb(Fl_Widget *w, void *v)
 	cmd_dlg.cmd->value(0);
 }
 //-----------------------------------------------------------------------------
-void desc_cmd_cb(Fl_Widget *w, void *v)
+void desc_cmd_cb(Fl_Widget *, void *)
 {
 	const char *name = cmd_dlg.cmd->mvalue()->text;
 	cmd_dlg.dsc->copy_label(Parse->CmdDesc(name));
@@ -342,7 +342,7 @@ void command_cb(Fl_Widget *, void *v)
 	}
 }
 //-----------------------------------------------------------------------------
-void plot_dat_cb(Fl_Widget *, void *v)
+void plot_dat_cb(Fl_Widget *, void *)
 {
 	CmdDlg *s = &cmd_dlg;
 	s->OK = false;
