@@ -412,7 +412,7 @@ void mgls_prepare1d(mglData *y, mglData *y1, mglData *y2, mglData *x1, mglData *
 	if(y)	y->Create(n,3);
 	if(x1)	x1->Create(n);		if(x2)	x2->Create(n);
 	if(y1)	y1->Create(n);		if(y2)	y2->Create(n);
-	float xx;
+	double xx;
 	for(i=0;i<n;i++)
 	{
 		xx = i/(n-1.);
@@ -434,7 +434,7 @@ void mgls_prepare2d(mglData *a, mglData *b, mglData *v)
 	register long i,j,n=50,m=40,i0;
 	if(a)	a->Create(n,m);		if(b)	b->Create(n,m);
 	if(v)	{	v->Create(9);	v->Fill(-1,1);	}
-	float x,y;
+	double x,y;
 	for(i=0;i<n;i++)	for(j=0;j<m;j++)
 	{
 		x = i/(n-1.);	y = j/(m-1.);	i0 = i+n*j;
@@ -447,7 +447,7 @@ void mgls_prepare3d(mglData *a, mglData *b)
 {
 	register long i,j,k,n=61,m=50,l=40,i0;
 	if(a)	a->Create(n,m,l);		if(b)	b->Create(n,m,l);
-	float x,y,z;
+	double x,y,z;
 	for(i=0;i<n;i++)	for(j=0;j<m;j++)	for(k=0;k<l;k++)
 	{
 		x=2*i/(n-1.)-1;	y=2*j/(m-1.)-1;	z=2*k/(l-1.)-1;	i0 = i+n*(j+m*k);
@@ -460,7 +460,7 @@ void mgls_prepare2v(mglData *a, mglData *b)
 {
 	register long i,j,n=20,m=30,i0;
 	if(a)	a->Create(n,m);		if(b)	b->Create(n,m);
-	float x,y;
+	double x,y;
 	for(i=0;i<n;i++)	for(j=0;j<m;j++)
 	{
 		x=i/(n-1.);	y=j/(m-1.);	i0 = i+n*j;
@@ -474,7 +474,7 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez)
 	register long i,j,k,n=10,i0;
 	if(!ex || !ey || !ez)	return;
 	ex->Create(n,n,n);	ey->Create(n,n,n);	ez->Create(n,n,n);
-	float x,y,z, r1,r2;
+	double x,y,z, r1,r2;
 	for(i=0;i<n;i++)	for(j=0;j<n;j++)	for(k=0;k<n;k++)
 	{
 		x=2*i/(n-1.)-1;	y=2*j/(n-1.)-1;	z=2*k/(n-1.)-1;	i0 = i+n*(j+k*n);

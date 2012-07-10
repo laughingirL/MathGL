@@ -379,7 +379,7 @@ void MyForm::OnPaint(wxPaintEvent& event)
   gr.Light(true);
   sample(&gr,NULL);
 
-  wxImage img(w,h,gr.GetBits(),true);
+  wxImage img(w,h,gr.GetRGB(),true);
   ToolBar->GetSize(&x,&y);    // gets a height of the toolbar if any
   wxPaintDC dc(this);         // and draws it
   dc.DrawBitmap(wxBitmap(img),0,y);
@@ -395,7 +395,7 @@ void Fl_MyWidget::draw()
   gr.Alpha(true);         // draws something using MathGL
   gr.Light(true);
   sample(&gr,NULL);
-  fl_draw_image(gr.GetBits(), x(), y(), gr.GetWidth(), gr.GetHeight(), 3);
+  fl_draw_image(gr.GetRGB(), x(), y(), gr.GetWidth(), gr.GetHeight(), 3);
 }
 @end verbatim
 Qt code will look like
@@ -3528,7 +3528,7 @@ Most of the library was written by one person. This is a result of nearly a year
 You can import data into a @code{mglData} instance and display it by @code{Dens()} function. For example, for black-and-white bitmap you can use the code: @code{mglData bmp; bmp.Import("fname.png","wk"); gr->Dens(bmp,"wk");}.
 
 @item How can I use MathGL in Qt, FLTK, wxWidgets etc.?
-There are special classes (widgets) for these libraries: QMathGL for Qt, Fl_MathGL for FLTK and so on. If you don't find the appropriate class then you can create your own widget that displays a bitmap using mglCanvas::GetBits().
+There are special classes (widgets) for these libraries: QMathGL for Qt, Fl_MathGL for FLTK and so on. If you don't find the appropriate class then you can create your own widget that displays a bitmap using mglCanvas::GetRGB().
 
 @item How can I create U3D file (make 3D in PDF)?
 There are 2 steps: first you should create IDTF file, and later convert it to U3D. You can use @uref{http://sourceforge.net/project/showfiles.php?group_id=152187&package_id=300628, U3D tools} for converting IDTF file to U3D. It needs @uref{http://libharu.org, libharu} 2.1.0 or later. For installation use @code{./bootstrap, ./configure, make, sudo make install}. It provides  IDTFConverter program for converting text files *.idtf to binary files *.u3d. The latter can be included into PDF.

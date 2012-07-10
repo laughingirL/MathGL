@@ -254,12 +254,12 @@ void mglBase::SetFBord(float x,float y,float z)
 //-----------------------------------------------------------------------------
 bool mglBase::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan) const
 {
-	float &x=p.x, &y=p.y, &z=p.z;
+	mreal &x=p.x, &y=p.y, &z=p.z;
 	if(mgl_isnan(x) || mgl_isnan(y) || mgl_isnan(z))	{	x=NAN;	return false;	}
-	float x1,y1,z1,x2,y2,z2;
-	x1 = x>0?x*MGL_FLT_EPS:x/MGL_FLT_EPS;	x2 = x<0?x*MGL_FLT_EPS:x/MGL_FLT_EPS;
-	y1 = y>0?y*MGL_FLT_EPS:y/MGL_FLT_EPS;	y2 = y<0?y*MGL_FLT_EPS:y/MGL_FLT_EPS;
-	z1 = z>0?z*MGL_FLT_EPS:z/MGL_FLT_EPS;	z2 = z<0?z*MGL_FLT_EPS:z/MGL_FLT_EPS;
+	mreal x1,y1,z1,x2,y2,z2;
+	x1 = x>0?x*MGL_EPSILON:x/MGL_EPSILON;	x2 = x<0?x*MGL_EPSILON:x/MGL_EPSILON;
+	y1 = y>0?y*MGL_EPSILON:y/MGL_EPSILON;	y2 = y<0?y*MGL_EPSILON:y/MGL_EPSILON;
+	z1 = z>0?z*MGL_EPSILON:z/MGL_EPSILON;	z2 = z<0?z*MGL_EPSILON:z/MGL_EPSILON;
 	bool res = true;
 	if(x2>CutMin.x && x1<CutMax.x && y2>CutMin.y && y1<CutMax.y &&
 		z2>CutMin.z && z1<CutMax.z)	res = false;
@@ -312,7 +312,7 @@ bool mglBase::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan) const
 		x += 1+(y+z)/2;		y += (z+1)/3;
 		n.x += (n.y+n.z)/2;	n.y += n.z/3;
 	}
-	if(fabs(x)>MGL_FLT_EPS || fabs(y)>MGL_FLT_EPS || fabs(z)>MGL_FLT_EPS)	res = false;
+	if(fabs(x)>MGL_EPSILON || fabs(y)>MGL_EPSILON || fabs(z)>MGL_EPSILON)	res = false;
 
 	if(!res && use_nan)	x = NAN;	// extra sign that point shouldn't be plotted
 	return res;
@@ -760,7 +760,7 @@ float mglBase::GetA(float a) const
 {
 	if(fa)	a = fa->Calc(0,0,0,a);
 	a = (a-FMin.c)/(FMax.c-FMin.c);
-	a = (a<1?(a>0?a:0):1)/MGL_FLT_EPS;	// for texture a must be <1 always!!!
+	a = (a<1?(a>0?a:0):1)/MGL_EPSILON;	// for texture a must be <1 always!!!
 	return a;
 }
 //-----------------------------------------------------------------------------

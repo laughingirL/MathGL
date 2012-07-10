@@ -680,7 +680,7 @@ void mglCanvas::Legend(const std::vector<mglText> &leg, float x, float y, const 
 		w = w>t ? w:t;
 	}
 	w += ll+0.01*iw;	// add space for lines
-	x = x*(iw-w-2*dx)+B.x-iw/2+dx;
+	x = x*(iw-w-2*dx)+B.x-iw/2+dx;	// TODO bypass very long legends
 	y = y*(ih-h*n-2*dy)+B.y-ih/2+dy;
 	// draw it
 	long k1=0,k2=0,k3=0,k4=0;

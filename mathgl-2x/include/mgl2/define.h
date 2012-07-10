@@ -82,12 +82,13 @@ const unsigned long mgl_nan[2] = {0xffffffff, 0x7fffffff};
 #define mglprintf    swprintf
 #endif
 //#define FLT_EPS	1.1920928955078125e-07
-#define MGL_FLT_EPS	(1.+1e-6)
 //-----------------------------------------------------------------------------
 #if MGL_USE_DOUBLE
 typedef double mreal;
+#define MGL_EPSILON	(1.+1e-10)
 #else
 typedef float mreal;
+#define MGL_EPSILON	(1.+1e-5)
 #endif
 //-----------------------------------------------------------------------------
 #ifndef MGL_CMAP_COLOR

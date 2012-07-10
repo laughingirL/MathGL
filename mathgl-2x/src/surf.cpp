@@ -871,8 +871,8 @@ void mgl_map_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, cons
 			xx = (x->v(i) - gr->Min.x)/(gr->Max.x - gr->Min.x);
 			yy = (y->v(j) - gr->Min.y)/(gr->Max.y - gr->Min.y);
 		}
-		if(xx<0)	xx=0;	if(xx>=1)	xx=1/MGL_FLT_EPS;
-		if(yy<0)	yy=0;	if(yy>=1)	yy=1/MGL_FLT_EPS;
+		if(xx<0)	xx=0;	if(xx>=1)	xx=1/MGL_EPSILON;
+		if(yy<0)	yy=0;	if(yy>=1)	yy=1/MGL_EPSILON;
 		pos[i+n*j] = gr->AddPnt(p,gr->GetC(ss,xx,false),t,yy);
 	}
 	if(sch && strchr(sch,'.'))	for(i=0;i<n*m;i++)	gr->mark_plot(pos[i],'.',-1);

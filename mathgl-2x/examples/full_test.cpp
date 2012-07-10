@@ -204,7 +204,7 @@ const char *mmgl_style="";
 void smgl_style(mglGraph *gr)	// pen styles
 {
 	gr->SubPlot(2,2,0);
-	float d,x1,x2,x0,y=0.95;
+	double d,x1,x2,x0,y=0.95;
 	d=0.3, x0=0.2, x1=0.5, x2=0.6;
 	gr->Line(mglPoint(x0,1-0*d),mglPoint(x1,1-0*d),"k-");	gr->Puts(mglPoint(x2,y-0*d),"Solid '-'",":rL");
 	gr->Line(mglPoint(x0,1-1*d),mglPoint(x1,1-1*d),"k|");	gr->Puts(mglPoint(x2,y-1*d),"Long Dash '|'",":rL");
@@ -242,7 +242,7 @@ void smgl_style(mglGraph *gr)	// pen styles
 	gr->Mark(mglPoint(x1,-5*d,0),"#>");	gr->Puts(mglPoint(x0,y-5*d),"'\\#>'",":rL");
 
 	gr->SubPlot(2,2,1);
-	float a=0.1,b=0.4,c=0.5;
+	double a=0.1,b=0.4,c=0.5;
 	gr->Line(mglPoint(a,1),mglPoint(b,1),"k-A");		gr->Puts(mglPoint(c,1),"Style 'A' or 'A\\_'",":rL");
 	gr->Line(mglPoint(a,0.8),mglPoint(b,0.8),"k-V");	gr->Puts(mglPoint(c,0.8),"Style 'V' or 'V\\_'",":rL");
 	gr->Line(mglPoint(a,0.6),mglPoint(b,0.6),"k-K");	gr->Puts(mglPoint(c,0.6),"Style 'K' or 'K\\_'",":rL");
@@ -364,7 +364,7 @@ const char *mmgl_fonts="loadfont 'bonum':text 0 1.1-2*d 'bonum font'\nloadfont '
 "loadfont 'schola':text 0 1.1-8*d 'schola font'\nloadfont 'termes':text 0 1.1-9*d 'termes font'\nnloadfont ''\n";
 void smgl_fonts(mglGraph *gr)	// font typefaces
 {
-	float h=1.1, d=0.25;
+	double h=1.1, d=0.25;
 	gr->LoadFont("STIX");		gr->Puts(mglPoint(0,h), "default font (STIX)");
 	gr->LoadFont("adventor");	gr->Puts(mglPoint(0,h-d), "adventor font");
 	gr->LoadFont("bonum");		gr->Puts(mglPoint(0,h-2*d), "bonum font");
@@ -657,7 +657,7 @@ void smgl_error(mglGraph *gr)
 {
 	mglData y;	mgls_prepare1d(&y);
 	mglData x0(10), y0(10), ex0(10), ey0(10);
-	float x;
+	double x;
 	for(int i=0;i<10;i++)
 	{
 		x = i/9.;
@@ -1180,7 +1180,7 @@ const char *mmgl_parser="# NOT AVAILABLE\n";
 void smgl_parser(mglGraph *gr)	// example of MGL parsing
 {
 	gr->Title("MGL parser sample");
-	float a[100];   // let a_i = sin(4*pi*x), x=0...1
+	double a[100];   // let a_i = sin(4*pi*x), x=0...1
 	for(int i=0;i<100;i++)a[i]=sin(4*M_PI*i/99);
 	mglParse *parser = new mglParse;
 	mglData *d = parser->AddVar("dat");
@@ -1283,7 +1283,7 @@ void smgl_fit(mglGraph *gr)	// nonlinear fitting
 	mglData rnd(100), in(100), res;
 	gr->Fill(rnd,"0.4*rnd+0.1+sin(2*pi*x)");
 	gr->Fill(in,"0.3+sin(2*pi*x)");
-	float ini[3] = {1,1,3};
+	double ini[3] = {1,1,3};
 	mglData Ini(3,ini);
 	res = gr->Fit(rnd, "a+b*sin(c*x)", "abc", Ini);
 	if(!mini)	gr->Title("Fitting sample");
@@ -1507,7 +1507,7 @@ void smgl_ticks(mglGraph *gr)
 	gr->SetTuneTicks(0);	gr->Axis();
 
 	gr->SubPlot(3,2,2);	gr->Title("Manual ticks");	gr->SetRanges(-M_PI,M_PI, 0, 2);
-	float val[]={-M_PI, -M_PI/2, 0, 0.886, M_PI/2, M_PI};
+	double val[]={-M_PI, -M_PI/2, 0, 0.886, M_PI/2, M_PI};
 	gr->SetTicksVal('x', mglData(6,val), "-\\pi\n-\\pi/2\n0\nx^*\n\\pi/2\n\\pi");
 	gr->Axis();	gr->Grid();	gr->FPlot("2*cos(x^2)^2", "r2");
 
@@ -1789,16 +1789,16 @@ const char *mmgl_triplot="list q 0 1 2 3 | 4 5 6 7 | 0 2 4 6 | 1 3 5 7 | 0 4 1 5
 "triplot t xt yt zt 'b'\ntriplot t xt yt zt '#k'\n";
 void smgl_triplot(mglGraph *gr)
 {
-	float q[] = {0,1,2,3, 4,5,6,7, 0,2,4,6, 1,3,5,7, 0,4,1,5, 2,6,3,7};
-	float xc[] = {-1,1,-1,1,-1,1,-1,1}, yc[] = {-1,-1,1,1,-1,-1,1,1}, zc[] = {-1,-1,-1,-1,1,1,1,1};
+	double q[] = {0,1,2,3, 4,5,6,7, 0,2,4,6, 1,3,5,7, 0,4,1,5, 2,6,3,7};
+	double xc[] = {-1,1,-1,1,-1,1,-1,1}, yc[] = {-1,-1,1,1,-1,-1,1,1}, zc[] = {-1,-1,-1,-1,1,1,1,1};
 	mglData qq(6,4,q), xx(8,xc), yy(8,yc), zz(8,zc);
 	gr->Light(true);	//gr->Alpha(true);
 	gr->SubPlot(2,1,0);	gr->Title("QuadPlot sample");	gr->Rotate(50,60);
 	gr->QuadPlot(qq,xx,yy,zz,"yr");
 	gr->QuadPlot(qq,xx,yy,zz,"k#");
 
-	float t[] = {0,1,2, 0,1,3, 0,2,3, 1,2,3};
-	float xt[] = {-1,1,0,0}, yt[] = {-1,-1,1,0}, zt[] = {-1,-1,-1,1};
+	double t[] = {0,1,2, 0,1,3, 0,2,3, 1,2,3};
+	double xt[] = {-1,1,0,0}, yt[] = {-1,-1,1,0}, zt[] = {-1,-1,-1,1};
 	mglData tt(4,3,t), uu(4,xt), vv(4,yt), ww(4,zt);
 	gr->SubPlot(2,1,1);	gr->Title("TriPlot sample");	gr->Rotate(50,60);
 	gr->TriPlot(tt,uu,vv,ww,"b");
@@ -1814,7 +1814,7 @@ void smgl_dots(mglGraph *gr)
 	mglData x(n),y(n),z(n);
 	for(i=0;i<n;i++)
 	{
-		float t=M_PI*(mgl_rnd()-0.5), f=2*M_PI*mgl_rnd();
+		double t=M_PI*(mgl_rnd()-0.5), f=2*M_PI*mgl_rnd();
 		x.a[i] = 0.9*cos(t)*cos(f);
 		y.a[i] = 0.9*cos(t)*sin(f);
 		z.a[i] = 0.6*sin(t);

@@ -35,19 +35,19 @@ const mreal NaN = NAN;
 /// Class for incapsulating point in space
 struct mglPoint
 {
-	float x,y,z,c;
-	mglPoint(float X=0,float Y=0,float Z=0,float C=0){x=X;y=Y;z=Z;c=C;}
+	mreal x,y,z,c;
+	mglPoint(mreal X=0,mreal Y=0,mreal Z=0,mreal C=0){x=X;y=Y;z=Z;c=C;}
 	inline bool IsNAN()		{	return (x!=x || y!=y || z!=z || c!=c);	}
-	inline float val(int i)	{	return (i<2 ? (i==0 ? x:y) : (i==2 ? z:c));	}
-	inline float norm()		{	return sqrt(x*x+y*y+z*z);	}
-	inline void Normalize()	{	float v=norm();	x/=v;	y/=v;	z/=v;	}
+	inline mreal val(int i)	{	return (i<2 ? (i==0 ? x:y) : (i==2 ? z:c));	}
+	inline mreal norm()		{	return sqrt(x*x+y*y+z*z);	}
+	inline void Normalize()	{	mreal v=norm();	x/=v;	y/=v;	z/=v;	}
 
 	inline void operator+=(const mglPoint &a)	{	x+=a.x;	y+=a.y;	z+=a.z;	c+=a.c;	}
 	inline void operator-=(const mglPoint &a)	{	x-=a.x;	y-=a.y;	z-=a.z;	c-=a.c;	}
-	inline void operator+=(float a)	{	x+=a;	y+=a;	z+=a;	}
-	inline void operator-=(float a)	{	x-=a;	y-=a;	z-=a;	}
-	inline void operator*=(float a)	{	x*=a;	y*=a;	z*=a;	}
-	inline void operator/=(float a)	{	x/=a;	y/=a;	z/=a;	}
+	inline void operator+=(mreal a)	{	x+=a;	y+=a;	z+=a;	}
+	inline void operator-=(mreal a)	{	x-=a;	y-=a;	z-=a;	}
+	inline void operator*=(mreal a)	{	x*=a;	y*=a;	z*=a;	}
+	inline void operator/=(mreal a)	{	x/=a;	y/=a;	z/=a;	}
 };
 #ifndef SWIG
 inline mglPoint operator+(const mglPoint &a, const mglPoint &b)
@@ -56,13 +56,13 @@ inline mglPoint operator-(const mglPoint &a, const mglPoint &b)
 {	return mglPoint(a.x-b.x, a.y-b.y, a.z-b.z, a.c-b.c);	}
 inline mglPoint operator-(const mglPoint &a)
 {	return mglPoint(-a.x, -a.y, -a.z, -a.c);	}
-inline mglPoint operator*(float b, const mglPoint &a)
+inline mglPoint operator*(mreal b, const mglPoint &a)
 {	return mglPoint(a.x*b, a.y*b, a.z*b);	}
-inline mglPoint operator*(const mglPoint &a, float b)
+inline mglPoint operator*(const mglPoint &a, mreal b)
 {	return mglPoint(a.x*b, a.y*b, a.z*b);	}
-inline mglPoint operator/(const mglPoint &a, float b)
+inline mglPoint operator/(const mglPoint &a, mreal b)
 {	return mglPoint(a.x/b, a.y/b, a.z/b);	}
-inline float operator*(const mglPoint &a, const mglPoint &b)
+inline mreal operator*(const mglPoint &a, const mglPoint &b)
 {	return a.x*b.x+a.y*b.y+a.z*b.z;	}
 inline mglPoint operator/(const mglPoint &a, const mglPoint &b)
 {	return mglPoint(a.x*b.x, a.y*b.y, a.z*b.z);	}
@@ -73,7 +73,7 @@ inline mglPoint operator|(const mglPoint &a, const mglPoint &b)
 inline mglPoint operator^(const mglPoint &a, const mglPoint &b)
 {	return mglPoint(a.y*b.z-a.z*b.y, a.z*b.x-a.x*b.z, a.x*b.y-a.y*b.x);	}
 inline mglPoint operator!(const mglPoint &a)
-{	float f=hypot(a.x,a.y);	return f==0?mglPoint(0,1,0):mglPoint(-a.y/f, a.x/f, 0);	}
+{	mreal f=hypot(a.x,a.y);	return f==0?mglPoint(0.,1.,0.):mglPoint(-a.y/f, a.x/f, 0);	}
 inline bool operator==(const mglPoint &a, const mglPoint &b)
 {	return !memcmp(&a, &b, sizeof(mglPoint));	}
 inline bool operator!=(const mglPoint &a, const mglPoint &b)
@@ -82,7 +82,7 @@ inline bool operator<(const mglPoint &a, const mglPoint &b)
 {	return a.x<=b.x && a.y<=b.y && a.z<=b.z;	}
 inline bool operator>(const mglPoint &a, const mglPoint &b)
 {	return a.x>=b.x && a.y>=b.y && a.z>=b.z;	}
-inline float mgl_norm(const mglPoint &p)
+inline mreal mgl_norm(const mglPoint &p)
 {	return sqrt(p.x*p.x+p.y*p.y+p.z*p.z);	}
 #endif
 //-----------------------------------------------------------------------------

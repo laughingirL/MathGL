@@ -29,8 +29,7 @@ void mgl_mark(HMGL gr, float x,float y,float z,const char *mark)
 {
 	char mk = gr->SetPenPal(mark);
 	if(!mk)	mk = '.';
-	mglPoint p(x,y,z);
-	gr->mark_plot(gr->AddPnt(p,gr->CDef,mglPoint(NAN),-1,3),mk);
+	gr->mark_plot(gr->AddPnt(mglPoint(x,y,z),gr->CDef,mglPoint(NAN),-1,3),mk);
 }
 //-----------------------------------------------------------------------------
 void mgl_mark_(uintptr_t *gr, float *x, float *y, float *z, const char *pen,int l)
@@ -39,8 +38,7 @@ void mgl_mark_(uintptr_t *gr, float *x, float *y, float *z, const char *pen,int 
 //-----------------------------------------------------------------------------
 void mgl_ball(HMGL gr, float x,float y,float z)
 {
-	mglPoint p(x,y,z);
-	gr->mark_plot(gr->AddPnt(p,gr->AddTexture('r'),mglPoint(NAN),-1,3),'.');
+	gr->mark_plot(gr->AddPnt(mglPoint(x,y,z),gr->AddTexture('r'),mglPoint(NAN),-1,3),'.');
 }
 //-----------------------------------------------------------------------------
 void mgl_ball_(uintptr_t *gr, float *x,float *y,float *z)
@@ -482,7 +480,7 @@ void mgl_dew_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, cons
 		ym = sqrt(ax->v(i,j,k)*ax->v(i,j,k)+ay->v(i,j,k)*ay->v(i,j,k));
 		xm = xm>ym ? xm : ym;
 	}
-	xm = 1./MGL_FLT_EPS/(xm==0 ? 1:xm);
+	xm = 1./MGL_EPSILON/(xm==0 ? 1:xm);
 	mglPoint q;
 
 	for(k=0;k<ax->GetNz();k++)

@@ -17,6 +17,7 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+#include <png.h>
 #include <stdio.h>
 #include <time.h>
 #include "mgl2/canvas.h"
@@ -29,7 +30,6 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
-#include <png.h>
 
 #if MGL_HAVE_PDF
 #include <setjmp.h>

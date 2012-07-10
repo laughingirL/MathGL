@@ -391,7 +391,7 @@ void mglCanvas::LabelTicks(mglAxis &aa)
 	{
 		v0 = exp(M_LN10*floor(0.1+log10(aa.v1)));
 		ds = int(floor(0.1+log10(aa.v2/v0))/7)+1;
-		for(v=v0;v<=aa.v2*MGL_FLT_EPS;v*=10)	if(v*MGL_FLT_EPS>=aa.v1)
+		for(v=v0;v<=aa.v2*MGL_EPSILON;v*=10)	if(v*MGL_EPSILON>=aa.v1)
 		{
 			d = int(floor(0.1+log10(v)));
 			if(d==0)	wcscpy(buf,L"1");
@@ -405,7 +405,7 @@ void mglCanvas::LabelTicks(mglAxis &aa)
 	{
 		v0 = -exp(M_LN10*floor(0.1+log10(-aa.v2)));
 		ds = int(floor(0.1+log10(aa.v1/v0))/7)+1;
-		for(v=v0;v>=aa.v1*MGL_FLT_EPS;v*=10)	if(v*MGL_FLT_EPS<=aa.v2)
+		for(v=v0;v>=aa.v1*MGL_EPSILON;v*=10)	if(v*MGL_EPSILON<=aa.v2)
 		{
 			d = int(floor(0.1+log10(-v)));
 			if(d==0)	wcscpy(buf,L"-1");
@@ -834,7 +834,7 @@ void mglCanvas::Colorbar(HCDT v, const char *sch, float x, float y, float w, flo
 	if(!mgl_have_color(sch))	sch = MGL_DEF_PAL;
 	long s = AddTexture(sch);
 	int nc = GetNumPal(s*256);
-	float dc = nc>1 ? 1/(MGL_FLT_EPS*(nc-1)):0;
+	float dc = nc>1 ? 1/(MGL_EPSILON*(nc-1)):0;
 	for(long i=0;i<v->GetNx();i++)	c[i] = s+i*dc;
 	colorbar(v, c, where, x, y, w, h);
 	delete []c;

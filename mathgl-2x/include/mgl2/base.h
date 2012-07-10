@@ -56,8 +56,8 @@ public:
 	virtual long GetNy() const = 0;
 	virtual long GetNz() const = 0;
 	inline long GetNN() const {	return GetNx()*GetNy()*GetNz();	}
-	virtual float Maximal() const = 0;
-	virtual float Minimal() const = 0;
+	virtual mreal Maximal() const = 0;
+	virtual mreal Minimal() const = 0;
 	virtual mreal dvx(long i,long j=0,long k=0) const = 0;
 //	{	return i>0 ? (i<GetNx()-1 ? (v(i+1,j,k)-v(i-1,j,k))/2 : v(i,j,k)-v(i-1,j,k)) : v(1,j,k)-v(0,j,k);	}
 	virtual mreal dvy(long i,long j=0,long k=0) const = 0;
@@ -68,23 +68,23 @@ public:
 #endif
 typedef const mglDataA* HCDT;
 //-----------------------------------------------------------------------------
-inline float mgl_d(float v,float v1,float v2) { return v2!=v1?(v-v1)/(v2-v1):NAN; }
+inline mreal mgl_d(mreal v,mreal v1,mreal v2) { return v2!=v1?(v-v1)/(v2-v1):NAN; }
 //-----------------------------------------------------------------------------
 mglPoint GetX(HCDT x, int i, int j, int k=0);
 mglPoint GetY(HCDT y, int i, int j, int k=0);
 mglPoint GetZ(HCDT z, int i, int j, int k=0);
 //-----------------------------------------------------------------------------
 /// Structure for simplest primitives
-struct mglPrim
+struct mglPrim	// NOTE: use float for reducing memory size
 {
 	// NOTE: n4 is used as mark; n3 -- as pen style for type=0,1,4
 	// NOTE: n3 is used as position of txt,font in Ptxt for type=6
 	long n1,n2,n3,n4;	///< coordinates of corners
 	int type;	///< primitive type (0-point, 1-line, 2-trig, 3-quad, 4-glyph, 6-text)
 	int id;		///< object id
-	float z;	///< z-position
-	float s;	///< size (if applicable) or fscl
-	float w;	///< width (if applicable) or ftet
+	float z;		///< z-position
+	float s;		///< size (if applicable) or fscl
+	float w;		///< width (if applicable) or ftet
 	float p;
 
 	mglPrim(int t=0)	{	n1=n2=n3=n4=id=0;	z=s=w=p=0;	type = t;	}
@@ -106,18 +106,18 @@ struct mglText
 {
 	std::wstring text;
 	std::string stl;
-	float val;
-	mglText(const wchar_t *txt=0, const char *fnt=0, float v=0)	{	text=txt;	stl=fnt;	val=v;	}
-	mglText(const std::wstring &txt, float v=0)	{	text=txt;	val=v;	}
+	mreal val;
+	mglText(const wchar_t *txt=0, const char *fnt=0, mreal v=0)	{	text=txt;	stl=fnt;	val=v;	}
+	mglText(const std::wstring &txt, mreal v=0)	{	text=txt;	val=v;	}
 };
 //-----------------------------------------------------------------------------
 /// Structure for internal point represenatation
-struct mglPnt
+struct mglPnt	// NOTE: use float for reducing memory size
 {
 	float xx,yy,zz;	// original coordinates
-	float x,y,z;	// coordinates
+	float x,y,z;		// coordinates
 	float c,t,ta;	// index in color scheme
-	float u,v,w;	// normales
+	float u,v,w;		// normales
 	float r,g,b,a;	// RGBA color
 	mglPnt()	{	xx=yy=zz=x=y=z=c=t=ta=u=v=w=r=g=b=a=0;	}
 };
@@ -145,7 +145,7 @@ struct mglTexture
 
 	char Sch[260];		///< Color scheme used
 	int Smooth;			///< Type of texture (smoothing and so on)
-	float Alpha;		///< Transparency
+	float Alpha;			///< Transparency
 	
 	mglTexture()	{	n=0;	}
 	mglTexture(const char *cols, int smooth=0,float alpha=1)
@@ -357,7 +357,7 @@ public:
 
 	/// Get color depending on single variable z, which should be scaled if scale=true
 	inline float GetC(long s,float z,bool scale = true) const
-	{	return s+(scale?GetA(z):(z>0?z/MGL_FLT_EPS:0));	}
+	{	return s+(scale?GetA(z):(z>0?z/MGL_EPSILON:0));	}
 	/// Get alpha value depending on single variable \a a
 	float GetA(float a) const;
 	/// Set pen/palette

@@ -96,8 +96,8 @@ int main(int argc, char *argv[])
 	n = str.find(L"##c ");
 	if(n!=std::string::npos)
 	{
-		float v1,v2,dv,v;
-		wscanf(str.c_str()+n+4,L"%g%g%g",&v1,&v2,&dv);
+		double v1,v2,dv,v;
+		wscanf(str.c_str()+n+4,L"%lg%lg%lg",&v1,&v2,&dv);
 		wchar_t ss[64];
 		for(v=v1;v<=v2;v+=dv)
 		{	mglprintf(ss,64,L"%g",v);	var.push_back(ss);	}
