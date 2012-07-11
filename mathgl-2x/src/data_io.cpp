@@ -71,7 +71,7 @@ void mglFromStr(HMDT d,char *buf,long NX,long NY,long NZ)	// TODO: add multithre
 				while(!isn(buf[j]) && j<nb)
 				{
 					if(buf[j]>='a' && buf[j]<='z')
-						d->id[k++] = buf[j];
+						d->id.push_back(buf[j]);
 					j++;
 				}
 			}
@@ -233,11 +233,7 @@ void mgl_data_rearrange(HMDT d, long mx,long my,long mz)
 void mgl_data_rearrange_(uintptr_t *d, int *mx, int *my, int *mz)
 {	mgl_data_rearrange(_DT_,*mx,*my,*mz);	}
 //-----------------------------------------------------------------------------
-void mgl_data_set_id(HMDT d, const char *ids)
-{
-	d->NewId();	// clearing + be sure about correct length
-	if(ids)	for(long i=0;i<d->nx && ids[i]!=0;i++)	d->id[i]=ids[i];
-}
+void mgl_data_set_id(HMDT d, const char *ids)	{	d->id = ids;	}
 void mgl_data_set_id_(uintptr_t *d, const char *eq,int l)
 {	char *s=new char[l+1];	memcpy(s,eq,l);	s[l]=0;
 	mgl_data_set_id(_DT_, s);	delete []s;	}
@@ -345,12 +341,10 @@ int mgl_data_read_(uintptr_t *d, const char *fname,int l)
 void mgl_data_create(HMDT d,long mx,long my,long mz)
 {
 	d->nx = mx>0 ? mx:1;	d->ny = my>0 ? my:1;	d->nz = mz>0 ? mz:1;
-	if(d->a && d->id)	delete []d->id;
-	if(d->a && !d->link)	delete []d->a;
+	if(d->a && !d->link)	delete [](d->a);
 	d->a = new mreal[d->nx*d->ny*d->nz];
-	d->id = new char[d->nx];	d->link=false;
+	d->id.clear();	d->link=false;
 	memset(d->a,0,d->nx*d->ny*d->nz*sizeof(mreal));
-	memset(d->id,0,d->nx*sizeof(char));
 }
 void mgl_data_create_(uintptr_t *d, int *nx,int *ny,int *nz)
 {	mgl_data_create(_DT_,*nx,*ny,*nz);	}
@@ -358,10 +352,9 @@ void mgl_data_create_(uintptr_t *d, int *nx,int *ny,int *nz)
 void mgl_data_link(HMDT d, mreal *A, long mx,long my,long mz)
 {
 	if(!A)	return;
-	if(d->id && d->a)		delete []d->id;
-	if(!d->link && d->a)	delete []d->a;
+	if(!d->link && d->a)	delete [](d->a);
 	d->nx = mx>0 ? mx:1;	d->ny = my>0 ? my:1;	d->nz = mz>0 ? mz:1;
-	d->link=true;	d->NewId();
+	d->link=true;	d->a=A;	d->NewId();
 }
 void mgl_data_link_(uintptr_t *d, mreal *A, int *nx,int *ny,int *nz)
 {	mgl_data_link(_DT_,A,*nx,*ny,*nz);	}
@@ -646,7 +639,7 @@ void mgl_data_squeeze(HMDT d, long rx,long ry,long rz,long smooth)
 			s += d->a[i1+nx*(j1+ny*k1)];
 		b[i+kx*(j+ky*k)] = s/dx*dy*dz;
 	}
-	if(!d->link)	delete []d->a;
+	if(!d->link)	delete [](d->a);
 	d->a=b;	d->nx = kx;  d->ny = ky;  d->nz = kz;	d->NewId();	d->link=false;
 }
 void mgl_data_squeeze_(uintptr_t *d, int *rx,int *ry,int *rz,int *smooth)

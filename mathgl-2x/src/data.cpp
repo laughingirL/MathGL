@@ -55,7 +55,7 @@ void mgl_set_num_thr(int)	{	mglNumThr = 1;	}
 #endif
 //-----------------------------------------------------------------------------
 void mglStartThread(void *(*func)(void *), void (*post)(mglThreadD *,mreal *), long n, mreal *a,
-	const mreal *b, const mreal *c, const long *p, void *v, const mreal *d, const mreal *e, char *s)
+	const mreal *b, const mreal *c, const long *p, void *v, const mreal *d, const mreal *e, const char *s)
 {
 	if(!func)	return;
 #if MGL_HAVE_PTHREAD

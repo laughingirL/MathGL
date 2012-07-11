@@ -213,7 +213,7 @@ HMDT mgl_data_column(HCDT dat, const char *eq)
 	mglFormula f(eq);
 	mglData *r=new mglData(ny,nz);
 	const mglData *d=dynamic_cast<const mglData *>(dat);
-	if(d)	mglStartThread(mgl_column,0,ny*nz,r->a,d->a,0,&nx,&f,0,0,d->id);
+	if(d)	mglStartThread(mgl_column,0,ny*nz,r->a,d->a,0,&nx,&f,0,0,d->id.c_str());
 	return r;
 }
 uintptr_t mgl_data_column_(uintptr_t *d, const char *eq,int l)

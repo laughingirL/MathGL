@@ -209,12 +209,12 @@ struct mglThreadD
 	void *v;		// pointer to data/grapher
 	int id;			// thread id
 	long n;			// total number of iteration
-	char *s;
+	const char *s;
 };
 /// Start several thread for the task
 void mglStartThread(void *(*func)(void *), void (*post)(mglThreadD *,mreal *), long n,
 					mreal *a=0, const mreal *b=0, const mreal *c=0, const long *p=0,
-					void *v=0, const mreal *d=0, const mreal *e=0, char *s=0);
+					void *v=0, const mreal *d=0, const mreal *e=0, const char *s=0);
 extern int mglNumThr;		///< Number of thread for plotting and data handling
 //-----------------------------------------------------------------------------
 extern "C" {

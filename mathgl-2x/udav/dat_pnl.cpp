@@ -81,7 +81,7 @@ void DatPanel::refresh()
 	if(ny!=var->d.ny)	{	ny = var->d.ny;	tab->setRowCount(ny);	rc=true;	}
 	if(kz>=var->d.nz)	{	kz = 0;			emit sliceChanged(0);	}
 	if(nz!=var->d.ny)	{	nz = var->d.nz;	emit nzChanged(nz);		}
-	id = QString(var->d.id);
+	id = QString(var->d.id.c_str());
 	if(nz==1 && ny>1 && !id.isEmpty())
 	{
 		QStringList head;

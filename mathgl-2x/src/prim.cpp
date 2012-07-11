@@ -266,7 +266,6 @@ void mgl_cones_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char 
 	bool above= pen && strchr(pen,'a');
 	bool wire = pen && strchr(pen,'#');
 	mreal *dd=new mreal[2*n], x1,z0,zz,d, vx,vy,vz,v0,v1;
-	memset(dd,0,n*sizeof(mreal));
 
 	gr->SetPenPal(pen,&pal);
 	char c1[7];	memset(c1,0,7);	c1[0] ='@';

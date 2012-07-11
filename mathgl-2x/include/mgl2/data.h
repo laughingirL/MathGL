@@ -25,6 +25,7 @@
 #ifdef __cplusplus
 //-----------------------------------------------------------------------------
 #include <vector>
+#include <string>
 //-----------------------------------------------------------------------------
 /// Class for working with data array
 #if MGL_NO_DATA_A
@@ -39,30 +40,31 @@ public:
 	long ny;		///< number of points in 2nd dimensions ('y' dimension)
 	long nz;		///< number of points in 3d dimensions ('z' dimension)
 	mreal *a;		///< data array
-	char *id;		///< column (or slice) names
+	std::string id;	///< column (or slice) names
+//	char *id;		///< column (or slice) names
 	bool link;		///< use external data (i.e. don't free it)
 
 	/// Initiate by other mglData variable
-	inline mglData(const mglData &d)	{	a=0;	id=0;	mgl_data_set(this,&d);		}
-	inline mglData(const mglDataA *d)	{	a=0;	id=0;	mgl_data_set(this, d);		}
+	inline mglData(const mglData &d)	{	a=0;	mgl_data_set(this,&d);		}
+	inline mglData(const mglDataA *d)	{	a=0;	mgl_data_set(this, d);		}
 	inline mglData(bool, mglData *d)	// NOTE: Variable d will be deleted!!!
 	{	if(d)
 		{	nx=d->nx;	ny=d->ny;	nz=d->nz;	a=d->a;	d->a=0;
-			id=d->id;	d->id=0;	link=d->link;	delete d;	}
-		else	{	a=0;	id=0;	Create(1);	}	}
+			id=d->id;	link=d->link;	delete d;	}
+		else	{	a=0;	Create(1);	}	}
 	/// Initiate by flat array
-	inline mglData(int size, const float *d)	{	a=0;	id=0;	Set(d,size);	}
-	inline mglData(int rows, int cols, const float *d)	{	a=0;	id=0;	Set(d,cols,rows);	}
-	inline mglData(int size, const double *d)	{	a=0;	id=0;	Set(d,size);	}
-	inline mglData(int rows, int cols, const double *d)	{	a=0;	id=0;	Set(d,cols,rows);	}
-	inline mglData(const double *d, int size)	{	a=0;	id=0;	Set(d,size);	}
-	inline mglData(const double *d, int rows, int cols)	{	a=0;	id=0;	Set(d,cols,rows);	}
+	inline mglData(int size, const float *d)	{	a=0;	Set(d,size);	}
+	inline mglData(int rows, int cols, const float *d)	{	a=0;	Set(d,cols,rows);	}
+	inline mglData(int size, const double *d)	{	a=0;	Set(d,size);	}
+	inline mglData(int rows, int cols, const double *d)	{	a=0;	Set(d,cols,rows);	}
+	inline mglData(const double *d, int size)	{	a=0;	Set(d,size);	}
+	inline mglData(const double *d, int rows, int cols)	{	a=0;	Set(d,cols,rows);	}
 	/// Read data from file
-	inline mglData(const char *fname)			{	a=0;	id=0;	Read(fname);	}
+	inline mglData(const char *fname)			{	a=0;	Read(fname);	}
 	/// Allocate the memory for data array and initialize it zero
-	inline mglData(long xx=1,long yy=1,long zz=1)	{	a=0;	id=0;	Create(xx,yy,zz);	}
+	inline mglData(long xx=1,long yy=1,long zz=1)	{	a=0;	Create(xx,yy,zz);	}
 	/// Delete the array
-	virtual ~mglData()	{	if(id && a)	delete []id;	if(!link && a)	delete []a;	}
+	virtual ~mglData()	{	if(!link && a)	delete []a;	}
 	inline mreal GetVal(long i, long j=0, long k=0)
 	{	return mgl_data_get_value(this,i,j,k);}
 	inline void SetVal(mreal f, long i, long j=0, long k=0)
@@ -173,8 +175,7 @@ public:
 	inline void SetColumnId(const char *ids)
 	{	mgl_data_set_id(this,ids);	}
 	/// Make new id
-	inline void NewId()
-	{	delete []id;	id=new char[nx];	memset(id,0,nx*sizeof(char));	}
+	inline void NewId()	{	id.clear();	}
 
 	/// Read data from tab-separated text file with auto determining size
 	inline bool Read(const char *fname)

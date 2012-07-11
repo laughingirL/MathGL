@@ -188,7 +188,7 @@ void AnimateDlg::create_dlg()
 void AnimateDlg::FillResult(Fl_MGL* e)
 {
 	e->NArgs = e->ArgCur = 0;
-	if(e->ArgBuf)	delete []e->ArgBuf;	e->ArgBuf = 0;
+	if(e->ArgBuf)	delete [](e->ArgBuf);	e->ArgBuf = 0;
 	e->AnimDelay = atof(dt->value());
 	if(rt->value())
 	{

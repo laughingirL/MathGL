@@ -755,11 +755,11 @@ void mglFont::Clear()
 	if(numg)
 	{
 		delete []id;		free(Buf);			numg = 0;
-		delete []width[0];	delete []width[1];	delete []width[2];	delete []width[3];
-		delete []tr[0];		delete []tr[1];		delete []tr[2];		delete []tr[3];
-		delete []ln[0];		delete []ln[1];		delete []ln[2];		delete []ln[3];
-		delete []numt[0];	delete []numt[1];	delete []numt[2];	delete []numt[3];
-		delete []numl[0];	delete []numl[1];	delete []numl[2];	delete []numl[3];
+		delete [](width[0]);	delete [](width[1]);	delete [](width[2]);	delete [](width[3]);
+		delete [](tr[0]);		delete [](tr[1]);		delete [](tr[2]);		delete [](tr[3]);
+		delete [](ln[0]);		delete [](ln[1]);		delete [](ln[2]);		delete [](ln[3]);
+		delete [](numt[0]);		delete [](numt[1]);		delete [](numt[2]);		delete [](numt[3]);
+		delete [](numl[0]);		delete [](numl[1]);		delete [](numl[2]);		delete [](numl[3]);
 	}
 }
 //-----------------------------------------------------------------------------
