@@ -196,6 +196,7 @@ void mglBase::RecalcCRange()
 //-----------------------------------------------------------------------------
 void mglBase::RecalcBorder()
 {
+	ZMin = 1.;
 	if(!fx && !fy && !fz)
 	{	FMin = Min;	FMax = Max;	}
 	else

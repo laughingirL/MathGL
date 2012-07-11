@@ -372,7 +372,7 @@ void mglCanvas::InPlot(mreal x1,mreal x2,mreal y1,mreal y2, const char *st)
 {
 	if(Width<=0 || Height<=0 || Depth<=0)	return;
 	if(!st)		{	InPlot(x1,x2,y1,y2,false);	return;	}
-	inW = Width*(x2-x1);	inH = Height*(y2-y1);
+	inW = Width*(x2-x1);	inH = Height*(y2-y1);	ZMin=1;
 	mglPrim p;	p.id = ObjId;
 	p.n1=x1*Width;	p.n2=x2*Width;	p.n3=y1*Height;	p.n4=y2*Height;
 	MGL_PUSH(Sub,p,mutexSub);
@@ -423,7 +423,7 @@ void mglCanvas::InPlot(mreal x1,mreal x2,mreal y1,mreal y2, bool rel)
 		B.z = (1.f-B.b[8]/(2*Depth))*Depth;
 		B1=B;
 	}
-	inW = B.b[0];	inH=B.b[4];
+	inW = B.b[0];	inH=B.b[4];	ZMin=1;
 	font_factor = B.b[0] < B.b[4] ? B.b[0] : B.b[4];
 	mglPrim p;	p.id = ObjId;
 	p.n1=x1*Width;	p.n2=x2*Width;	p.n3=y1*Height;	p.n4=y2*Height;

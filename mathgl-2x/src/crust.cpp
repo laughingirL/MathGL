@@ -108,7 +108,8 @@ void mgl_triplot_xyz(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, const char *sch
 void mgl_triplot_xy(HMGL gr, HCDT nums, HCDT x, HCDT y, const char *sch, const char *opt)
 {
 	gr->SaveState(opt);
-	mglData z(x->GetNx());	z.Fill(gr->Min.z,gr->Min.z);
+	mglData z(x->GetNx());
+	mreal zm = gr->AdjustZMin();	z.Fill(zm,zm);
 	mgl_triplot_xyzc(gr,nums,x,y,&z,&z,sch,0);
 	gr->LoadState();
 }

@@ -205,6 +205,7 @@ void mgl_candle_xyv(HMGL gr, HCDT x, HCDT v1, HCDT v2, HCDT y1, HCDT y2, const c
 
 	long n1,n2,n3,n4;
 	mreal m1,m2,xx,x1,x2,d;
+	mreal zm = gr->AdjustZMin();
 	for(i=0;i<n;i++)
 	{
 		if(gr->Stop)	{	if(d1)	delete y1;	if(d2)	delete y2;	return;	}
@@ -212,17 +213,17 @@ void mgl_candle_xyv(HMGL gr, HCDT x, HCDT v1, HCDT v2, HCDT y1, HCDT y2, const c
 		d = i<nx-1 ? x->v(i+1)-xx : xx-x->v(i-1);
 		x1 = xx + d/2*(1-gr->BarWidth);
 		x2 = x1 + gr->BarWidth*d;	xx = (x1+x2)/2;
-		n1 = gr->AddPnt(mglPoint(xx,y1->v(i),gr->Min.z));
-		n2 = gr->AddPnt(mglPoint(xx,m1,gr->Min.z));
+		n1 = gr->AddPnt(mglPoint(xx,y1->v(i),zm));
+		n2 = gr->AddPnt(mglPoint(xx,m1,zm));
 		gr->line_plot(n1,n2);
-		n3 = gr->AddPnt(mglPoint(xx,y2->v(i),gr->Min.z));
-		n4 = gr->AddPnt(mglPoint(xx,m2,gr->Min.z));
+		n3 = gr->AddPnt(mglPoint(xx,y2->v(i),zm));
+		n4 = gr->AddPnt(mglPoint(xx,m2,zm));
 		gr->line_plot(n3,n4);
 
-		n1 = gr->AddPnt(mglPoint(x1,m1,gr->Min.z));
-		n2 = gr->AddPnt(mglPoint(x2,m1,gr->Min.z));
-		n3 = gr->AddPnt(mglPoint(x1,m2,gr->Min.z));
-		n4 = gr->AddPnt(mglPoint(x2,m2,gr->Min.z));
+		n1 = gr->AddPnt(mglPoint(x1,m1,zm));
+		n2 = gr->AddPnt(mglPoint(x2,m1,zm));
+		n3 = gr->AddPnt(mglPoint(x1,m2,zm));
+		n4 = gr->AddPnt(mglPoint(x2,m2,zm));
 		gr->line_plot(n1,n2);	gr->line_plot(n1,n3);
 		gr->line_plot(n4,n2);	gr->line_plot(n4,n3);
 		if(m1>m2)	gr->quad_plot(n1,n2,n3,n4);
@@ -327,7 +328,7 @@ void mgl_plot_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
 {
 	gr->SaveState(opt);
 	mglData z(y->GetNx());
-	z.Fill(gr->Min.z,gr->Min.z);
+	mreal zm = gr->AdjustZMin();	z.Fill(zm,zm);
 	mgl_plot_xyz(gr,x,y,&z,pen,0);
 	gr->LoadState();
 }
@@ -339,7 +340,7 @@ void mgl_plot(HMGL gr, HCDT y, const char *pen, const char *opt)
 	gr->SaveState(opt);
 	mglData x(n), z(n);
 	x.Fill(gr->Min.x,gr->Max.x);
-	z.Fill(gr->Min.z,gr->Min.z);
+	mreal zm = gr->AdjustZMin();	z.Fill(zm,zm);
 	mgl_plot_xyz(gr,&x,y,&z,pen,0);
 	gr->LoadState();
 }
@@ -423,7 +424,7 @@ void mgl_tens_xy(HMGL gr, HCDT x, HCDT y, HCDT c, const char *pen, const char *o
 {
 	gr->SaveState(opt);
 	mglData z(y->GetNx());
-	z.Fill(gr->Min.z,gr->Min.z);
+	mreal zm = gr->AdjustZMin();	z.Fill(zm,zm);
 	mgl_tens_xyz(gr,x,y,&z,c,pen,0);
 	gr->LoadState();
 }
@@ -435,7 +436,7 @@ void mgl_tens(HMGL gr, HCDT y, HCDT c, const char *pen, const char *opt)
 	gr->SaveState(opt);
 	mglData x(n), z(n);
 	x.Fill(gr->Min.x,gr->Max.x);
-	z.Fill(gr->Min.z,gr->Min.z);
+	mreal zm = gr->AdjustZMin();	z.Fill(zm,zm);
 	mgl_tens_xyz(gr,&x,y,&z,c,pen,0);
 	gr->LoadState();
 }
@@ -511,6 +512,7 @@ void mgl_area_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
 
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Curve",cgid++);
+	mreal zm = gr->AdjustZMin();
 	mreal y0=gr->GetOrgY('x'), z0;
 	mreal c1,c2;
 	mglPoint nn=mglPoint(0,0,1);
@@ -525,7 +527,7 @@ void mgl_area_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
 		c2=c1=gr->NextColor(pal);
 		if(gr->GetNumPal(pal)==2*m && !sh)	c2=gr->NextColor(pal);
 		mx = j<x->GetNy() ? j:0;	my = j<y->GetNy() ? j:0;
-		z0 = gr->Min.z + (m-1-j)*(gr->Max.z-gr->Min.z)/m;
+		z0 = zm + (m-1-j)*(gr->Max.z-zm)/m;
 
 		mglPoint p = mglPoint(x->v(0,mx),y->v(0,my),z0);
 		n1 = gr->AddPnt(p,c1,nn);	p.y = y0;	n2 = gr->AddPnt(p,c2,nn);
@@ -587,6 +589,7 @@ void mgl_region_xy(HMGL gr, HCDT x, HCDT y1, HCDT y2, const char *pen, const cha
 	mglPoint nn=mglPoint(0,0,1);
 	long n1,n2,n3,n4;
 	mreal xx,f1,f2,f3,f4;
+	mreal zm = gr->AdjustZMin();
 	bool inside = (pen && strchr(pen,'i'));	// NOTE: check if 'i' is free (used here for inside flag)
 	bool sh = pen && strchr(pen,'!');
 
@@ -597,7 +600,7 @@ void mgl_region_xy(HMGL gr, HCDT x, HCDT y1, HCDT y2, const char *pen, const cha
 		c2=c1=gr->NextColor(pal);
 		if(gr->GetNumPal(pal)==2*m && !sh)	c2=gr->NextColor(pal);
 		mx = j<x->GetNy() ? j:0;
-		mreal z0 = gr->Min.z + (m-1-j)*(gr->Max.z-gr->Min.z)/m;
+		mreal z0 = zm + (m-1-j)*(gr->Max.z-zm)/m;
 
 		f1 = y1->v(0,j);	f2 = y2->v(0,j);	xx = x->v(0,mx);
 		n1 = gr->AddPnt(mglPoint(xx,f1,z0),c1,nn);
@@ -620,7 +623,7 @@ void mgl_region(HMGL gr, HCDT y1, HCDT y2, const char *pen, const char *opt)
 {
 	gr->SaveState(opt);
 	mglData x(y1->GetNx());
-	x.Fill(gr->Min.z, gr->Max.z);
+	x.Fill(gr->Min.x, gr->Max.x);
 	mgl_region_xy(gr,&x,y1,y2,pen,0);
 	gr->LoadState();
 }
@@ -687,7 +690,7 @@ void mgl_step_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
 	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();
 	bool sh = pen && strchr(pen,'!');
 
-	mreal zVal = gr->Min.z;
+	mreal zVal =gr->AdjustZMin();
 	char mk=gr->SetPenPal(pen,&pal);	gr->Reserve(2*n*m);
 	long n1,n2;
 	mglPoint p;
@@ -784,7 +787,7 @@ void mgl_stem_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
 	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();
 	bool sh = pen && strchr(pen,'!');
 
-	mreal zVal = gr->Min.z, y0=gr->GetOrgY('x'), vv;
+	mreal zVal = gr->AdjustZMin(), y0=gr->GetOrgY('x'), vv;
 	char mk=gr->SetPenPal(pen,&pal);	gr->Reserve(2*n*m);
 	long n1,n2;
 	for(j=0;j<m;j++)
@@ -916,6 +919,7 @@ void mgl_bars_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
 	mreal c1,c2,c;
 	long n1,n2,n3,n4;
 	mreal *dd=new mreal[n], x1,x2,yy,y0,yp,d,vv;
+	mreal zm = gr->AdjustZMin();
 	memset(dd,0,n*sizeof(mreal));
 
 	gr->SetPenPal(pen,&pal);
@@ -939,10 +943,10 @@ void mgl_bars_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
 			if(fall)	{	y0 = yp;	yy += y0;	yp = yy;	}
 
 			c = vv<0 ? c1 : c2;
-			n1 = gr->AddPnt(mglPoint(x1,yy,gr->Min.z),c);
-			n2 = gr->AddPnt(mglPoint(x1,y0,gr->Min.z),c);
-			n3 = gr->AddPnt(mglPoint(x2,y0,gr->Min.z),c);
-			n4 = gr->AddPnt(mglPoint(x2,yy,gr->Min.z),c);
+			n1 = gr->AddPnt(mglPoint(x1,yy,zm),c);
+			n2 = gr->AddPnt(mglPoint(x1,y0,zm),c);
+			n3 = gr->AddPnt(mglPoint(x2,y0,zm),c);
+			n4 = gr->AddPnt(mglPoint(x2,yy,zm),c);
 			if(wire)
 			{
 				gr->line_plot(n1,n2);	gr->line_plot(n1,n4);
@@ -999,6 +1003,7 @@ void mgl_barh_yx(HMGL gr, HCDT y, HCDT v, const char *pen, const char *opt)
 	mreal c1,c2,c;
 	long n1,n2,n3,n4;
 	mreal *dd=new mreal[n], y1,y2,xx,x0,xp,d,vv;
+	mreal zm = gr->AdjustZMin();
 	memset(dd,0,n*sizeof(mreal));
 
 	gr->SetPenPal(pen,&pal);
@@ -1022,10 +1027,10 @@ void mgl_barh_yx(HMGL gr, HCDT y, HCDT v, const char *pen, const char *opt)
 			if(fall)	{	x0 = xp;	xx += x0;	xp = xx;	}
 
 			c = vv<0 ? c1 : c2;
-			n1 = gr->AddPnt(mglPoint(xx,y1,gr->Min.z),c);
-			n2 = gr->AddPnt(mglPoint(xx,y2,gr->Min.z),c);
-			n3 = gr->AddPnt(mglPoint(x0,y2,gr->Min.z),c);
-			n4 = gr->AddPnt(mglPoint(x0,y1,gr->Min.z),c);
+			n1 = gr->AddPnt(mglPoint(xx,y1,zm),c);
+			n2 = gr->AddPnt(mglPoint(xx,y2,zm),c);
+			n3 = gr->AddPnt(mglPoint(x0,y2,zm),c);
+			n4 = gr->AddPnt(mglPoint(x0,y1,zm),c);
 			if(wire)
 			{
 				gr->line_plot(n1,n2);	gr->line_plot(n1,n4);
@@ -1076,7 +1081,7 @@ void mgl_boxplot_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("BoxPlot",cgid++);
 	mreal *b = new mreal[5*n], *d = new mreal[m], x1, x2, dd;
-	mreal zVal = gr->Min.z, vv;
+	mreal zVal = gr->AdjustZMin(), vv;
 	bool sh = pen && strchr(pen,'!');
 	register long i,j;
 	for(i=0;i<n;i++)	// find quartiles by itself
@@ -1168,7 +1173,7 @@ void mgl_error_exy(HMGL gr, HCDT x, HCDT y, HCDT ex, HCDT ey, const char *pen, c
 
 	bool ma = pen && strchr(pen,'@');
 	char mk = gr->SetPenPal(pen,&pal);
-	mreal zVal=gr->Min.z, vx, vy, ve, vf;
+	mreal zVal=gr->AdjustZMin(), vx, vy, ve, vf;
 	gr->Reserve(5*n*m);
 	if(ma && (mk==0 || !strchr("PXsSdD+xoOC",mk) ))	mk = 'S';
 	long n1,n2,n3,n4;
@@ -1463,7 +1468,7 @@ void mgl_mark_xy(HMGL gr, HCDT x, HCDT y, HCDT r, const char *pen, const char *o
 {
 	gr->SaveState(opt);
 	mglData z(y->GetNx());
-	z.Fill(gr->Min.z,gr->Min.z);
+	mreal zm = gr->AdjustZMin();	z.Fill(zm,zm);
 	mgl_mark_xyz(gr,x,y,&z,r,pen,0);
 	gr->LoadState();
 }
@@ -1475,7 +1480,7 @@ void mgl_mark_y(HMGL gr, HCDT y, HCDT r, const char *pen, const char *opt)
 	gr->SaveState(opt);
 	mglData x(n), z(n);
 	x.Fill(gr->Min.x,gr->Max.x);
-	z.Fill(gr->Min.z,gr->Min.z);
+	mreal zm = gr->AdjustZMin();	z.Fill(zm,zm);
 	mgl_mark_xyz(gr,&x,y,&z,r,pen,0);
 	gr->LoadState();
 }
@@ -1552,7 +1557,7 @@ void mgl_tube_xyr(HMGL gr, HCDT x, HCDT y, HCDT r, const char *pen, const char *
 {
 	gr->SaveState(opt);
 	mglData z(y->GetNx());
-	z.Fill(gr->Min.z,gr->Min.z);
+	mreal zm = gr->AdjustZMin();	z.Fill(zm,zm);
 	mgl_tube_xyzr(gr,x,y,&z,r,pen,0);
 	gr->LoadState();
 }
@@ -1564,7 +1569,7 @@ void mgl_tube_r(HMGL gr, HCDT y, HCDT r, const char *pen, const char *opt)
 	gr->SaveState(opt);
 	mglData x(n), z(n);
 	x.Fill(gr->Min.x,gr->Max.x);
-	z.Fill(gr->Min.z,gr->Min.z);
+	mreal zm = gr->AdjustZMin();	z.Fill(zm,zm);
 	mgl_tube_xyzr(gr,&x,y,&z,r,pen,0);
 	gr->LoadState();
 }
@@ -1577,7 +1582,7 @@ void mgl_tube(HMGL gr, HCDT y, mreal rr, const char *pen, const char *opt)
 	mglData x(n), r(n), z(n);
 	x.Fill(gr->Min.x,gr->Max.x);
 	r.Fill(rr,rr);
-	z.Fill(gr->Min.z,gr->Min.z);
+	mreal zm = gr->AdjustZMin();	z.Fill(zm,zm);
 	mgl_tube_xyzr(gr,&x,y,&z,&r,pen,0);
 	gr->LoadState();
 }
@@ -1589,7 +1594,7 @@ void mgl_tube_xy(HMGL gr, HCDT x, HCDT y, mreal rr, const char *pen, const char 
 	gr->SaveState(opt);
 	mglData r(n), z(n);
 	r.Fill(rr,rr);
-	z.Fill(gr->Min.z,gr->Min.z);
+	mreal zm = gr->AdjustZMin();	z.Fill(zm,zm);
 	mgl_tube_xyzr(gr,x,y,&z,&r,pen,0);
 	gr->LoadState();
 }
@@ -1707,7 +1712,7 @@ void mgl_tape_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
 {
 	gr->SaveState(opt);
 	mglData z(y->GetNx());
-	z.Fill(gr->Min.z,gr->Min.z);
+	mreal zm = gr->AdjustZMin();	z.Fill(zm,zm);
 	mgl_tape_xyz(gr,x,y,&z,pen,0);
 	gr->LoadState();
 }
@@ -1719,7 +1724,7 @@ void mgl_tape(HMGL gr, HCDT y, const char *pen, const char *opt)
 	gr->SaveState(opt);
 	mglData x(n), z(n);
 	x.Fill(gr->Min.x,gr->Max.x);
-	z.Fill(gr->Min.z,gr->Min.z);
+	mreal zm = gr->AdjustZMin();	z.Fill(zm,zm);
 	mgl_tape_xyz(gr,&x,y,&z,pen,0);
 	gr->LoadState();
 }

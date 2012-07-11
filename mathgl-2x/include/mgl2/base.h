@@ -182,6 +182,7 @@ public:
 	bool Stop;			///< Flag that execution should be terminated.
 	mglPoint Min;		///< Lower edge of bounding box for graphics.
 	mglPoint Max;		///< Upper edge of bounding box for graphics.
+	mreal ZMin;			///< Adjusted minimal z-value 1D plots
 	std::string Mess;	///< Buffer for receiving messages
 	int ObjId;			///< object id for mglPrim
 	int HighId;			///< object id to be highlited
@@ -226,6 +227,8 @@ public:
 	mreal SaveState(const char *opt);
 	/// Load ranges from internal variable
 	void LoadState();
+	/// Increase ZMin
+	mreal AdjustZMin()	{	ZMin /= MGL_EPSILON;	return Max.z - ZMin*(Max.z-Min.z);	}
 
 	/// Safetly set the transformation formulas for coordinate.
 	void SetFunc(const char *EqX, const char *EqY, const char *EqZ=0, const char *EqA=0);

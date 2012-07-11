@@ -136,7 +136,7 @@ void mgl_textw_xy(HMGL gr, HCDT x, HCDT y, const wchar_t *text, const char *font
 {
 	gr->SaveState(opt);
 	mglData z(y->GetNx());
-	z.Fill(gr->Min.z,gr->Min.z);
+	mreal zm = gr->AdjustZMin();	z.Fill(zm,zm);
 	mgl_textw_xyz(gr,x,y,&z,text,font,0);
 	gr->LoadState();
 }
@@ -146,7 +146,7 @@ void mgl_textw_y(HMGL gr, HCDT y, const wchar_t *text, const char *font, const c
 	gr->SaveState(opt);
 	mglData x(y->GetNx()), z(y->GetNx());
 	x.Fill(gr->Min.x,gr->Max.x);
-	z.Fill(gr->Min.z,gr->Min.z);
+	mreal zm = gr->AdjustZMin();	z.Fill(zm,zm);
 	mgl_textw_xyz(gr,&x,y,&z,text,font,0);
 	gr->LoadState();
 }
@@ -163,7 +163,7 @@ void mgl_text_xyz(HMGL gr, HCDT x, HCDT y, HCDT z,const char *text, const char *
 void mgl_text_xy(HMGL gr, HCDT x, HCDT y, const char *text, const char *font, const char *opt)
 {
 	mglData z(y->GetNx());
-	z.Fill(gr->Min.z,gr->Min.z);
+	mreal zm = gr->AdjustZMin();	z.Fill(zm,zm);
 	mgl_text_xyz(gr,x,y,&z,text,font,opt);
 }
 //-----------------------------------------------------------------------------
@@ -171,7 +171,7 @@ void mgl_text_y(HMGL gr, HCDT y, const char *text, const char *font, const char 
 {
 	mglData x(y->GetNx()), z(y->GetNx());
 	x.Fill(gr->Min.x,gr->Max.x);
-	z.Fill(gr->Min.z,gr->Min.z);
+	mreal zm = gr->AdjustZMin();	z.Fill(zm,zm);
 	mgl_text_xyz(gr,&x,y,&z,text,font,opt);
 }
 //-----------------------------------------------------------------------------
