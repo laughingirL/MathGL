@@ -39,7 +39,7 @@ friend void _mgl_display();
 friend void _mgl_key_up(unsigned char ch,int ,int );
 friend void _mgl_timer(int);
 public:
-	float Delay;	///< Delay for animation in seconds
+	mreal Delay;	///< Delay for animation in seconds
 	bool AutoClf;		///< Clear canvas between drawing
 
 	mglCanvasGLUT();

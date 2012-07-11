@@ -70,9 +70,9 @@ void mglTexture::GetRGBA(unsigned char *f) const
 	}
 }*/
 //-----------------------------------------------------------------------------
-void mgl_obj_prim(const mglPrim &q, const mglPnt &p, FILE *fp, float size)
+void mgl_obj_prim(const mglPrim &q, const mglPnt &p, FILE *fp, mreal size)
 {
-	char type = q.n4;	float ss=size*0.35;
+	char type = q.n4;	mreal ss=size*0.35;
 	register long i=q.n1+1,j;
 	register long n1=q.n1+1,n2=q.n2+1,n3=q.n3+1,n4=q.n4+1;
 	switch(q.type)
@@ -476,10 +476,10 @@ void mgl_write_idtf_(uintptr_t *gr, const char *fname,const char *descr,int l,in
 	long n1,n2,n3,n4;	///< coordinates of corners
 	int type;	///< primitive type (0-point, 1-line, 2-trig, 3-quad, 4-glyph, 6-text)
 	int id;		///< object id
-	float z;	///< z-position
-	float s;	///< size (if applicable) or fscl
-	float w;	///< width (if applicable) or ftet
-	float p;
+	mreal z;	///< z-position
+	mreal s;	///< size (if applicable) or fscl
+	mreal w;	///< width (if applicable) or ftet
+	mreal p;
 };*/
 bool mglCanvas::ExportMGLD(const char *fname, const char *descr)
 {
@@ -578,9 +578,9 @@ void mgl_import_mgld_(uintptr_t *gr, const char *fname, int *add, int l)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	mgl_import_mgld(_GR_,s,*add);	delete []s;	}
 //-----------------------------------------------------------------------------
-/*void mgl_xgl_prim(const mglPrim &q, const mglPnt &p, FILE *fp, float size)
+/*void mgl_xgl_prim(const mglPrim &q, const mglPnt &p, FILE *fp, mreal size)
 {
-	char type = q.n4;	float ss=size*0.35;
+	char type = q.n4;	mreal ss=size*0.35;
 	register long i=q.n1,j;
 	switch(q.type)
 	{
@@ -863,12 +863,12 @@ void mgl_x3d_mdef(HMGL gr, void *fp, bool gz)
 	mgl_printf(fp, gz, "\n");
 }
 //-----------------------------------------------------------------------------
-void mgl_x3d_prim(const mglPrim &q, const mglPnt &p, const long *pnt, void *fp,bool gz, float size)
+void mgl_x3d_prim(const mglPrim &q, const mglPnt &p, const long *pnt, void *fp,bool gz, mreal size)
 {
 	// <ProtoInstance name='EmissiveMaterial'/>
 /*		if(q.type==0)	// mark
 		{
-			float x0 = p1.x,y0 = p1.y;
+			mreal x0 = p1.x,y0 = p1.y;
 			sprintf(str,"1 lw %.2g %.2g %.2g rgb ", cp.r,cp.g,cp.b);
 			wp=1;
 			if(q.s!=gr->mark_size()/gr->FontFactor())
@@ -932,12 +932,12 @@ void mgl_x3d_prim(const mglPrim &q, const mglPnt &p, const long *pnt, void *fp,b
 		}
 		else if(q.type==4)	// glyph
 		{
-			float 	ss = q.s/2, xx = p1.u, yy = p1.v, zz = p1.w;
+			mreal 	ss = q.s/2, xx = p1.u, yy = p1.v, zz = p1.w;
 			mgl_printf(fp, gz, "gsave\t%g %g translate %g %g scale %g rotate %s\n",
 					   p1.x, p1.y, ss, ss, -q.w, str);
 			if(q.n3&8)	// this is "line"
 			{
-				float dy = 0.004,f=fabs(zz);
+				mreal dy = 0.004,f=fabs(zz);
 				mgl_printf(fp, gz, "np %g %g mt %g %g ll %g %g ll %g %g ll cp ",
 						   xx,yy+dy, xx+f,yy+dy, xx+f,yy-dy, xx,yy-dy);
 			}

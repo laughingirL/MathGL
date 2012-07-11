@@ -25,24 +25,24 @@
 extern "C" {
 #endif
 /*****************************************************************************/
-void mgl_mark(HMGL gr, float x,float y,float z,const char *mark);
-void mgl_ball(HMGL gr, float x,float y,float z);
+void mgl_mark(HMGL gr, mreal x,mreal y,mreal z,const char *mark);
+void mgl_ball(HMGL gr, mreal x,mreal y,mreal z);
 /*****************************************************************************/
-void mgl_line(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z2, const char *pen,int n);
-void mgl_curve(HMGL gr, float x1, float y1, float z1, float dx1, float dy1, float dz1, float x2, float y2, float z2, float dx2, float dy2, float dz2, const char *pen,int n);
+void mgl_line(HMGL gr, mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mreal z2, const char *pen,int n);
+void mgl_curve(HMGL gr, mreal x1, mreal y1, mreal z1, mreal dx1, mreal dy1, mreal dz1, mreal x2, mreal y2, mreal z2, mreal dx2, mreal dy2, mreal dz2, const char *pen,int n);
 /*****************************************************************************/
-void mgl_error_box(HMGL gr, float x, float y, float z, float ex, float ey, float ez, const char *pen);
+void mgl_error_box(HMGL gr, mreal x, mreal y, mreal z, mreal ex, mreal ey, mreal ez, const char *pen);
 /*****************************************************************************/
-void mgl_face(HMGL gr, float x0, float y0, float z0, float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3, const char *stl);
-void mgl_facex(HMGL gr, float x0, float y0, float z0, float wy, float wz, const char *stl, float dx, float dy);
-void mgl_facey(HMGL gr, float x0, float y0, float z0, float wx, float wz, const char *stl, float dx, float dy);
-void mgl_facez(HMGL gr, float x0, float y0, float z0, float wx, float wy, const char *stl, float dx, float dy);
+void mgl_face(HMGL gr, mreal x0, mreal y0, mreal z0, mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mreal z2, mreal x3, mreal y3, mreal z3, const char *stl);
+void mgl_facex(HMGL gr, mreal x0, mreal y0, mreal z0, mreal wy, mreal wz, const char *stl, mreal dx, mreal dy);
+void mgl_facey(HMGL gr, mreal x0, mreal y0, mreal z0, mreal wx, mreal wz, const char *stl, mreal dx, mreal dy);
+void mgl_facez(HMGL gr, mreal x0, mreal y0, mreal z0, mreal wx, mreal wy, const char *stl, mreal dx, mreal dy);
 /*****************************************************************************/
-void mgl_sphere(HMGL gr, float x, float y, float z, float r, const char *stl);
-void mgl_drop(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z2, float r, const char *stl, float shift, float ap);
-void mgl_cone(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z2, float r1, float r2, const char *stl);
-void mgl_ellipse(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z2, float r, const char *stl);
-void mgl_rhomb(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z2, float r, const char *stl);
+void mgl_sphere(HMGL gr, mreal x, mreal y, mreal z, mreal r, const char *stl);
+void mgl_drop(HMGL gr, mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mreal z2, mreal r, const char *stl, mreal shift, mreal ap);
+void mgl_cone(HMGL gr, mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mreal z2, mreal r1, mreal r2, const char *stl);
+void mgl_ellipse(HMGL gr, mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mreal z2, mreal r, const char *stl);
+void mgl_rhomb(HMGL gr, mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mreal z2, mreal r, const char *stl);
 /*****************************************************************************/
 void mgl_cones_xyz(HMGL graph, HCDT x, HCDT y, HCDT z, const char *pen, const char *opt);
 void mgl_cones_xz(HMGL graph, HCDT x, HCDT z, const char *pen, const char *opt);
@@ -51,11 +51,11 @@ void mgl_cones(HMGL graph, HCDT z,	const char *pen, const char *opt);
 void mgl_dew_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, const char *opt);
 void mgl_dew_2d(HMGL gr, HCDT ax, HCDT ay, const char *sch, const char *optl);
 /*****************************************************************************/
-void mgl_puts(HMGL graph, float x, float y, float z,const char *text, const char *font, float size);
-void mgl_putsw(HMGL graph, float x, float y, float z,const wchar_t *text, const char *font, float size);
+void mgl_puts(HMGL graph, mreal x, mreal y, mreal z,const char *text, const char *font, mreal size);
+void mgl_putsw(HMGL graph, mreal x, mreal y, mreal z,const wchar_t *text, const char *font, mreal size);
 /*****************************************************************************/
-void mgl_puts_dir(HMGL graph, float x, float y, float z, float dx, float dy, float dz, const char *text, const char *font, float size);
-void mgl_putsw_dir(HMGL graph, float x, float y, float z, float dx, float dy, float dz, const wchar_t *text, const char *font, float size);
+void mgl_puts_dir(HMGL graph, mreal x, mreal y, mreal z, mreal dx, mreal dy, mreal dz, const char *text, const char *font, mreal size);
+void mgl_putsw_dir(HMGL graph, mreal x, mreal y, mreal z, mreal dx, mreal dy, mreal dz, const wchar_t *text, const char *font, mreal size);
 /*****************************************************************************/
 void mgl_textmark_xyzr(HMGL graph, HCDT x, HCDT y, HCDT z, HCDT r, const char *text, const char *fnt, const char *opt);
 void mgl_textmark_xyr(HMGL graph, HCDT x, HCDT y, HCDT r, const char *text, const char *fnt, const char *opt);
@@ -74,31 +74,31 @@ void mgl_label_y(HMGL graph, HCDT y, const char *text, const char *fnt, const ch
 void mgl_labelw_y(HMGL graph, HCDT y, const wchar_t *text, const char *fnt, const char *opt);
 /*****************************************************************************/
 /*****************************************************************************/
-void mgl_mark_(uintptr_t *gr, float *x,float *y,float *z,const char *mark,int);
-void mgl_ball_(uintptr_t *gr, float *x,float *y,float *z);
+void mgl_mark_(uintptr_t *gr, mreal *x,mreal *y,mreal *z,const char *mark,int);
+void mgl_ball_(uintptr_t *gr, mreal *x,mreal *y,mreal *z);
 /*****************************************************************************/
-void mgl_line_(uintptr_t *gr, float *x1, float *y1, float *z1, float *x2, float *y2, float *z2, const char *pen,int *n,int);
-void mgl_curve_(uintptr_t* gr, float *x1, float *y1, float *z1, float *dx1, float *dy1, float *dz1, float *x2, float *y2, float *z2, float *dx2, float *dy2, float *dz2, const char *pen,int *n, int l);
+void mgl_line_(uintptr_t *gr, mreal *x1, mreal *y1, mreal *z1, mreal *x2, mreal *y2, mreal *z2, const char *pen,int *n,int);
+void mgl_curve_(uintptr_t* gr, mreal *x1, mreal *y1, mreal *z1, mreal *dx1, mreal *dy1, mreal *dz1, mreal *x2, mreal *y2, mreal *z2, mreal *dx2, mreal *dy2, mreal *dz2, const char *pen,int *n, int l);
 /*****************************************************************************/
-void mgl_error_box_(uintptr_t* gr, float *x, float *y, float *z, float *ex, float *ey, float *ez, const char *pen, int);
+void mgl_error_box_(uintptr_t* gr, mreal *x, mreal *y, mreal *z, mreal *ex, mreal *ey, mreal *ez, const char *pen, int);
 /*****************************************************************************/
-void mgl_face_(uintptr_t* gr, float *x0, float *y0, float *z0, float *x1, float *y1, float *z1, float *x2, float *y2, float *z2, float *x3, float *y3, float *z3, const char *stl, int);
-void mgl_facex_(uintptr_t* gr, float *x0, float *y0, float *z0, float *wy, float *wz, const char *stl, float *dx, float *dy, int l);
-void mgl_facey_(uintptr_t* gr, float *x0, float *y0, float *z0, float *wx, float *wz, const char *stl, float *dx, float *dy, int l);
-void mgl_facez_(uintptr_t* gr, float *x0, float *y0, float *z0, float *wx, float *wy, const char *stl, float *dx, float *dy, int l);
+void mgl_face_(uintptr_t* gr, mreal *x0, mreal *y0, mreal *z0, mreal *x1, mreal *y1, mreal *z1, mreal *x2, mreal *y2, mreal *z2, mreal *x3, mreal *y3, mreal *z3, const char *stl, int);
+void mgl_facex_(uintptr_t* gr, mreal *x0, mreal *y0, mreal *z0, mreal *wy, mreal *wz, const char *stl, mreal *dx, mreal *dy, int l);
+void mgl_facey_(uintptr_t* gr, mreal *x0, mreal *y0, mreal *z0, mreal *wx, mreal *wz, const char *stl, mreal *dx, mreal *dy, int l);
+void mgl_facez_(uintptr_t* gr, mreal *x0, mreal *y0, mreal *z0, mreal *wx, mreal *wy, const char *stl, mreal *dx, mreal *dy, int l);
 /*****************************************************************************/
-void mgl_sphere_(uintptr_t* gr, float *x, float *y, float *z, float *r, const char *stl, int);
-void mgl_drop_(uintptr_t* gr, float *x1, float *y1, float *z1, float *x2, float *y2, float *z2, float *r, const char *stl, float *shift, float *ap, int);
-void mgl_cone_(uintptr_t* gr, float *x1, float *y1, float *z1, float *x2, float *y2, float *z2, float *r1, float *r2, const char *stl, int);
-void mgl_ellipse_(uintptr_t* gr, float *x1, float *y1, float *z1, float *x2, float *y2, float *z2, float *r, const char *stl, int);
-void mgl_rhomb_(uintptr_t* gr, float *x1, float *y1, float *z1, float *x2, float *y2, float *z2, float *r, const char *stl, int);
+void mgl_sphere_(uintptr_t* gr, mreal *x, mreal *y, mreal *z, mreal *r, const char *stl, int);
+void mgl_drop_(uintptr_t* gr, mreal *x1, mreal *y1, mreal *z1, mreal *x2, mreal *y2, mreal *z2, mreal *r, const char *stl, mreal *shift, mreal *ap, int);
+void mgl_cone_(uintptr_t* gr, mreal *x1, mreal *y1, mreal *z1, mreal *x2, mreal *y2, mreal *z2, mreal *r1, mreal *r2, const char *stl, int);
+void mgl_ellipse_(uintptr_t* gr, mreal *x1, mreal *y1, mreal *z1, mreal *x2, mreal *y2, mreal *z2, mreal *r, const char *stl, int);
+void mgl_rhomb_(uintptr_t* gr, mreal *x1, mreal *y1, mreal *z1, mreal *x2, mreal *y2, mreal *z2, mreal *r, const char *stl, int);
 /*****************************************************************************/
 void mgl_cones_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *pen, const char *opt,int,int);
 void mgl_coners_xz_(uintptr_t *graph, uintptr_t *x, uintptr_t *z, const char *pen, const char *opt,int,int);
 void mgl_cones_(uintptr_t *graph, uintptr_t *z,	const char *pen, const char *opt,int,int);
 /*****************************************************************************/
-void mgl_puts_(uintptr_t *graph, float *x, float *y, float *z,const char *text, const char *font, float *size, int, int);
-void mgl_puts_dir_(uintptr_t *graph, float *x, float *y, float *z, float *dx, float *dy, float *dz, const char *text, const char *font, float *size, int, int);
+void mgl_puts_(uintptr_t *graph, mreal *x, mreal *y, mreal *z,const char *text, const char *font, mreal *size, int, int);
+void mgl_puts_dir_(uintptr_t *graph, mreal *x, mreal *y, mreal *z, mreal *dx, mreal *dy, mreal *dz, const char *text, const char *font, mreal *size, int, int);
 /*****************************************************************************/
 void mgl_textmark_xyzr_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *r, const char *text, const char *fnt, const char *opt,int,int,int);
 void mgl_textmark_xyr_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *r, const char *text, const char *fnt, const char *opt,int,int,int);

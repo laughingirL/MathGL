@@ -38,15 +38,15 @@ void mgl_flow_2d(HMGL gr, HCDT ax, HCDT ay, const char *sch, const char *opt);
 void mgl_flow_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, const char *opt);
 void mgl_flow_3d(HMGL gr, HCDT ax, HCDT ay, HCDT az, const char *sch, const char *opt);
 
-void mgl_flowp_xy(HMGL gr, float x0, float y0, float z0, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, const char *opt);
-void mgl_flowp_2d(HMGL gr, float x0, float y0, float z0, HCDT ax, HCDT ay, const char *sch, const char *opt);
-void mgl_flowp_xyz(HMGL gr, float x0, float y0, float z0, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, const char *opt);
-void mgl_flowp_3d(HMGL gr, float x0, float y0, float z0, HCDT ax, HCDT ay, HCDT az, const char *sch, const char *opt);
+void mgl_flowp_xy(HMGL gr, mreal x0, mreal y0, mreal z0, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, const char *opt);
+void mgl_flowp_2d(HMGL gr, mreal x0, mreal y0, mreal z0, HCDT ax, HCDT ay, const char *sch, const char *opt);
+void mgl_flowp_xyz(HMGL gr, mreal x0, mreal y0, mreal z0, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, const char *opt);
+void mgl_flowp_3d(HMGL gr, mreal x0, mreal y0, mreal z0, HCDT ax, HCDT ay, HCDT az, const char *sch, const char *opt);
 
-void mgl_pipe_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, float r0, const char *opt);
-void mgl_pipe_2d(HMGL gr, HCDT ax, HCDT ay, const char *sch, float r0, const char *opt);
-void mgl_pipe_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, float r0, const char *opt);
-void mgl_pipe_3d(HMGL gr, HCDT ax, HCDT ay, HCDT az, const char *sch, float r0, const char *opt);
+void mgl_pipe_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, mreal r0, const char *opt);
+void mgl_pipe_2d(HMGL gr, HCDT ax, HCDT ay, const char *sch, mreal r0, const char *opt);
+void mgl_pipe_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, mreal r0, const char *opt);
+void mgl_pipe_3d(HMGL gr, HCDT ax, HCDT ay, HCDT az, const char *sch, mreal r0, const char *opt);
 
 void mgl_grad_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ph, const char *sch, const char *opt);
 void mgl_grad_xy(HMGL gr, HCDT x, HCDT y, HCDT ph, const char *sch, const char *opt);
@@ -66,15 +66,15 @@ void mgl_flow_2d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, const char *sch, 
 void mgl_flow_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, const char *opt,int,int);
 void mgl_flow_3d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, const char *opt,int,int);
 
-void mgl_flowp_xy_(uintptr_t *gr, float *x0, float *y0, float *z0, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch, const char *opt,int, int);
-void mgl_flowp_2d_(uintptr_t *gr, float *x0, float *y0, float *z0, uintptr_t *ax, uintptr_t *ay, const char *sch, const char *opt,int, int);
-void mgl_flowp_xyz_(uintptr_t *gr, float *x0, float *y0, float *z0, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, const char *opt,int, int);
-void mgl_flowp_3d_(uintptr_t *gr, float *x0, float *y0, float *z0, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, const char *opt,int,int);
+void mgl_flowp_xy_(uintptr_t *gr, mreal *x0, mreal *y0, mreal *z0, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch, const char *opt,int, int);
+void mgl_flowp_2d_(uintptr_t *gr, mreal *x0, mreal *y0, mreal *z0, uintptr_t *ax, uintptr_t *ay, const char *sch, const char *opt,int, int);
+void mgl_flowp_xyz_(uintptr_t *gr, mreal *x0, mreal *y0, mreal *z0, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, const char *opt,int, int);
+void mgl_flowp_3d_(uintptr_t *gr, mreal *x0, mreal *y0, mreal *z0, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, const char *opt,int,int);
 
-void mgl_pipe_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch, float *r0, const char *opt,int,int);
-void mgl_pipe_2d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, const char *sch, float *r0, const char *opt,int,int);
-void mgl_pipe_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, float *r0, const char *opt,int,int);
-void mgl_pipe_3d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, float *r0, const char *opt,int,int);
+void mgl_pipe_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch, mreal *r0, const char *opt,int,int);
+void mgl_pipe_2d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, const char *sch, mreal *r0, const char *opt,int,int);
+void mgl_pipe_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, mreal *r0, const char *opt,int,int);
+void mgl_pipe_3d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, mreal *r0, const char *opt,int,int);
 
 void mgl_grad_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ph, const char *sch, const char *opt,int, int);
 void mgl_grad_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *ph, const char *sch, const char *opt,int,int);

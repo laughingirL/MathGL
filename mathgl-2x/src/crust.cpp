@@ -251,9 +251,9 @@ void mgl_quadplot_xy_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y
 //	TriCont series
 //
 //-----------------------------------------------------------------------------
-void mgl_tricont_line(HMGL gr, float val, long k1, long k2, long k3, HCDT x, HCDT y, HCDT z, HCDT a, bool zVal,float c)
+void mgl_tricont_line(HMGL gr, mreal val, long k1, long k2, long k3, HCDT x, HCDT y, HCDT z, HCDT a, bool zVal,mreal c)
 {
-	float d1,d2;
+	mreal d1,d2;
 	mglPoint p1,p2,n;
 	d1 = mgl_d(val,a->v(k1),a->v(k2));
 	d2 = mgl_d(val,a->v(k1),a->v(k3));
@@ -277,7 +277,7 @@ void mgl_tricont_xyzcv(HMGL gr, HCDT v, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT 
 	long ss=gr->AddTexture(sch);
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("TriCont",cgid++);
-	float val;
+	mreal val;
 	register long i,k;
 	long k1,k2,k3;
 	bool zVal = (sch && strchr(sch,'_'));
@@ -288,7 +288,7 @@ void mgl_tricont_xyzcv(HMGL gr, HCDT v, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT 
 		k2 = long(nums->v(1,i)+0.1);	if(k2<0 || k2>=n)	continue;
 		k3 = long(nums->v(2,i)+0.1);	if(k3<0 || k3>=n)	continue;
 		val = v->v(k);
-		float c = gr->GetC(ss,val);
+		mreal c = gr->GetC(ss,val);
 		mgl_tricont_line(gr,val, k1,k2,k3,x,y,z,a,zVal,c);
 		mgl_tricont_line(gr,val, k2,k1,k3,x,y,z,a,zVal,c);
 		mgl_tricont_line(gr,val, k3,k2,k1,x,y,z,a,zVal,c);
@@ -297,10 +297,10 @@ void mgl_tricont_xyzcv(HMGL gr, HCDT v, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT 
 //-----------------------------------------------------------------------------
 void mgl_tricont_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, const char *opt)
 {
-	float r = gr->SaveState(opt);
+	mreal r = gr->SaveState(opt);
 	long n = (mgl_isnan(r) || r<=0) ? 7:long(r+0.5);
 	mglData v(n);
-	for(long i=0;i<n;i++)	v.a[i] = gr->Min.c + (gr->Max.c-gr->Min.c)*float(i+1)/(n+1);
+	for(long i=0;i<n;i++)	v.a[i] = gr->Min.c + (gr->Max.c-gr->Min.c)*mreal(i+1)/(n+1);
 	mgl_tricont_xyzcv(gr,&v,nums,x,y,z,a,sch,0);
 	gr->LoadState();
 }
@@ -378,7 +378,7 @@ void mgl_dots_a_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintpt
 //	mglTriangulation
 //
 //-----------------------------------------------------------------------------
-long mgl_crust(long n,mglPoint *pp,long **nn,float ff);
+long mgl_crust(long n,mglPoint *pp,long **nn,mreal ff);
 HMDT mgl_triangulation_3d(HCDT x, HCDT y, HCDT z)
 {	// TODO: should be used s-hull or q-hull
 	mglData *nums=new mglData;
@@ -445,7 +445,7 @@ void *mgl_grid_t(void *par)
 	for(i0=t->id;i0<t->n;i0+=mglNumThr)
 	{
 		k1 = long(d[3*i0]); k2 = long(d[3*i0+1]); k3 = long(d[3*i0+2]);
-		float dxu,dxv,dyu,dyv;
+		mreal dxu,dxv,dyu,dyv;
 		mglPoint d1=mglPoint(x[k2]-x[k1],y[k2]-y[k1],z[k2]-z[k1]), d2=mglPoint(x[k3]-x[k1],y[k3]-y[k1],z[k3]-z[k1]), p;
 
 		dxu = d2.x*d1.y - d1.x*d2.y;
@@ -462,7 +462,7 @@ void *mgl_grid_t(void *par)
 		y1 = y1>0 ? y1:0; y2 = y2<ny ? y2:ny-1;
 		if((x1>x2) | (y1>y2)) continue;
 
-		register float u,v,xx,yy, x0 = x[k1], y0 = y[k1];
+		register mreal u,v,xx,yy, x0 = x[k1], y0 = y[k1];
 		register long i,j;
 		for(i=x1;i<=x2;i++) for(j=y1;j<=y2;j++)
 		{
@@ -555,7 +555,7 @@ long mgl_insert_trig(long i1,long i2,long i3,long **n)
 long mgl_get_next(long k1,long n,long *,long *set,mglPoint *qq)
 {
 	long i,j=-1;
-	float r,rm=FLT_MAX;
+	mreal r,rm=FLT_MAX;
 	for(i=0;i<n;i++)
 	{
 		if(i==k1 || set[i]>0)	continue;
@@ -565,10 +565,10 @@ long mgl_get_next(long k1,long n,long *,long *set,mglPoint *qq)
 	return j;
 }
 //-----------------------------------------------------------------------------
-long mgl_crust(long n,mglPoint *pp,long **nn,float ff)
+long mgl_crust(long n,mglPoint *pp,long **nn,mreal ff)
 {	// TODO: update to normal algorithm
 	register long i,j;
-	register float r,rm,rs;
+	register mreal r,rm,rs;
 	if(ff<=0)	ff=2;
 	for(rs=0,i=0;i<n;i++)
 	{

@@ -13,7 +13,7 @@ There are six most general (base) concepts:
 @item
 @strong{All functions have ``simplified'' and ``advanced'' forms.} It is done for user's convenience. One needs to specify only one data array in the ``simplified'' form in order to see the result. But one may set parametric dependence of coordinates and produce rather complex curves and surfaces in the ``advanced'' form. In both cases the order of function arguments is the same: first data arrays, second the string with style, and later string with options for additional plot tuning.
 @item
-@strong{All data arrays for plotting are encapsulated in mglData(A) class.} This reduces the number of errors while working with memory and provides a uniform interface for data of different types (float, double and so on) or for formula plotting.
+@strong{All data arrays for plotting are encapsulated in mglData(A) class.} This reduces the number of errors while working with memory and provides a uniform interface for data of different types (mreal, double and so on) or for formula plotting.
 @item
 @strong{All plots are vector plots.} The MathGL library is intended for handling scientific data which have vector nature (lines, faces, matrices and so on). As a result, vector representation is used in all cases! In addition, the vector representation allows one to scale the plot easily -- change the canvas size by a factor of 2, and the picture will be proportionally scaled.
 @item

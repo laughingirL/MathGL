@@ -112,7 +112,7 @@ Show previous frame if one.
 Run/stop slideshow (animation) of frames.
 @end deftypefn
 
-@deftypefn {Method on @code{mglWindow}} @code{void} SetDelay (@code{float} dt)
+@deftypefn {Method on @code{mglWindow}} @code{void} SetDelay (@code{mreal} dt)
 @deftypefnx {C function} @code{int} mgl_wnd_set_delay (@code{HMGL} gr, @code{int} dt)
 Sets delay for animation in seconds. Default value is 1 sec.
 @end deftypefn
@@ -129,7 +129,7 @@ showing the last mouse click position in the widget.
 @end deftypefn
 
 @deftypefn {Method on @code{mglWindow}} @code{mglPoint} LastMousePos ()
-@deftypefnx {C function} @code{int} mgl_get_last_mouse_pos (@code{HMGL} gr, @code{float *}x, @code{float *}y, @code{float *}z)
+@deftypefnx {C function} @code{int} mgl_get_last_mouse_pos (@code{HMGL} gr, @code{mreal *}x, @code{mreal *}y, @code{mreal *}z)
 Gets last position of mouse click.
 @end deftypefn
 
@@ -152,7 +152,7 @@ Sets drawing function as global function as one from a class @code{mglDraw}. The
 @deftypemethod Fl_MathGL @code{void} update ()
 Update (redraw) plot.
 @end deftypemethod
-@deftypemethod Fl_MathGL @code{void} set_angle (@code{float} t, @code{float} p)
+@deftypemethod Fl_MathGL @code{void} set_angle (@code{mreal} t, @code{mreal} p)
 Set angles for additional plot rotation
 @end deftypemethod
 @deftypemethod Fl_MathGL @code{void} set_flag (@code{int} f)
@@ -164,10 +164,10 @@ Set flags for handling mouse:
 @var{r}=@code{true} allow rotation/shifting/perspective and so on.
 @end deftypemethod
 
-@deftypemethod Fl_MathGL @code{void} set_zoom (@code{float} X1, @code{float} Y1, @code{float} X2, @code{float} Y2)
+@deftypemethod Fl_MathGL @code{void} set_zoom (@code{mreal} X1, @code{mreal} Y1, @code{mreal} X2, @code{mreal} Y2)
 Set zoom in/out region
 @end deftypemethod
-@deftypemethod Fl_MathGL @code{void} get_zoom (@code{float *}X1, @code{float *}Y1, @code{float *}X2, @code{float *}Y2)
+@deftypemethod Fl_MathGL @code{void} get_zoom (@code{mreal *}X1, @code{mreal *}Y1, @code{mreal *}X2, @code{mreal *}Y2)
 Get zoom in/out region
 @end deftypemethod
 
@@ -414,7 +414,7 @@ Zooming changed (by toolbar).
 Rotation changed (by toolbar).
 @end deftypefn
 
-@deftypefn {Signal on @code{QMathGL}} @code{void} mouseClick (@code{float} x, @code{float} y, @code{float} z)
+@deftypefn {Signal on @code{QMathGL}} @code{void} mouseClick (@code{mreal} x, @code{mreal} y, @code{mreal} z)
 Mouse click take place at position @{x,y,z@}.
 @end deftypefn
 @deftypefn {Signal on @code{QMathGL}} @code{void} frameChanged (@code{int} val)

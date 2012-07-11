@@ -298,7 +298,11 @@ void TextPanel::loadHDF5(const QString &fileName)
 					case 3:	nx=dims[2];	ny=dims[1];	nz=dims[0];	break;
 				}
 				v->d.Create(nx, ny, nz);
+#if MGL_USE_DOUBLE
+				H5Dread(hd, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, v->d.a);
+#else
 				H5Dread(hd, H5T_NATIVE_FLOAT, H5S_ALL, H5S_ALL, H5P_DEFAULT, v->d.a);
+#endif
 			}
 		}
 		H5Dclose(hd);	H5Sclose(hs);	H5Tclose(ht);

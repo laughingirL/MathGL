@@ -3172,7 +3172,7 @@ int mgls_fgets(mglGraph *gr, long , mglArg *a, int k[10], const char *)
 	if((k[0]==3 && k[1]==3 && k[2]==3 && k[3]==2) || (k[0]==3 && k[1]==3 && k[2]==2))
 	{
 		int i, j=k[2]==3?1:0, n = (k[j+3]==3?iint(a[j+3].v):0);
-		float vv = k[2]==3 ? a[2].v:0;
+		mreal vv = k[2]==3 ? a[2].v:0;
 		fp = fopen(a[j+2].s.c_str(),"rt");
 		if(!fp)
 		{

@@ -31,7 +31,7 @@ void mgl_traj_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 	if(mgl_check_dim1(gr,x,z,y,ax,"Traj"))	return;
 	if(mgl_check_dim1(gr,ax,az,ay,0,"Traj"))	return;
 
-	float len=gr->SaveState(opt);	if(mgl_isnan(len))	len = 0;
+	mreal len=gr->SaveState(opt);	if(mgl_isnan(len))	len = 0;
 	static int cgid=1;	gr->StartGroup("Traj",cgid++);
 
 	register long i, j;
@@ -40,7 +40,7 @@ void mgl_traj_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 	m = x->GetNy()>y->GetNy() ? x->GetNy():y->GetNy();		if(i>m)	m=i;	if(j>m)	m=j;
 	gr->SetPenPal(sch,&pal);	gr->Reserve(4*n*m);
 
-	float dx,dy,dz,dd,da,xm=0;
+	mreal dx,dy,dz,dd,da,xm=0;
 	mglPoint p1,p2;
 	for(j=0;j<m;j++)	for(i=0;i<n;i++)	// find maximal amplitude of vector field
 	{
@@ -115,14 +115,14 @@ void mgl_vect_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, con
 
 	long ss = gr->AddTexture(sch);
 	gr->Reserve(4*n*m);
-	float	zVal = gr->Min.z;
+	mreal	zVal = gr->Min.z;
 
 	long tx=1,ty=1;
 	if(gr->MeshNum>1)	{	tx=(n-1)/(gr->MeshNum-1);	ty=(m-1)/(gr->MeshNum-1);	}
 	if(tx<1)	tx=1;	if(ty<1)	ty=1;
-	float xm=0,ym,dx,dy;
-	float dd,dm=(fabs(gr->Max.c)+fabs(gr->Min.c))*1e-5;
-	float vx,vy;
+	mreal xm=0,ym,dx,dy;
+	mreal dd,dm=(fabs(gr->Max.c)+fabs(gr->Min.c))*1e-5;
+	mreal vx,vy;
 
 	for(k=0;k<ax->GetNz();k++)	for(j=0;j<m;j++)	for(i=0;i<n;i++)
 	{
@@ -132,11 +132,11 @@ void mgl_vect_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, con
 	xm = 1./(xm==0 ? 1:sqrt(xm));
 	long n1,n2;
 	mglPoint p1,p2;
-	float c1,c2, xx,yy;
+	mreal c1,c2, xx,yy;
 
 	for(k=0;k<ax->GetNz();k++)
 	{
-		if(ax->GetNz()>1)	zVal = gr->Min.z+(gr->Max.z-gr->Min.z)*float(k)/(ax->GetNz()-1);
+		if(ax->GetNz()>1)	zVal = gr->Min.z+(gr->Max.z-gr->Min.z)*mreal(k)/(ax->GetNz()-1);
 		for(i=0;i<n;i+=tx)	for(j=0;j<m;j+=ty)
 		{
 			if(gr->Stop)	return;
@@ -199,7 +199,7 @@ void mgl_vect_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 	bool beg = sch && strchr(sch,'<');
 	bool grd = sch && strchr(sch,'=');
 
-	float xm=0,ym,dx,dy,dz,dd,dm=(fabs(gr->Max.c)+fabs(gr->Min.c))*1e-5;
+	mreal xm=0,ym,dx,dy,dz,dd,dm=(fabs(gr->Max.c)+fabs(gr->Min.c))*1e-5;
 	long ss = gr->AddTexture(sch);
 	gr->Reserve(2*n*m*l);
 	long tx=1,ty=1,tz=1;
@@ -217,7 +217,7 @@ void mgl_vect_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 
 	long n1,n2;
 	mglPoint p1,p2;
-	float c1,c2, xx,yy,zz;
+	mreal c1,c2, xx,yy,zz;
 
 	for(k=0;k<l;k+=tz)	for(i=0;i<n;i+=tx)	for(j=0;j<m;j+=ty)
 	{
@@ -270,16 +270,16 @@ void mgl_vect_3d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, co
 //	Flow 2d series
 //
 //-----------------------------------------------------------------------------
-void flow(mglBase *gr, float zVal, float u, float v, const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, long ss, bool vv)
+void flow(mglBase *gr, mreal zVal, mreal u, mreal v, const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, long ss, bool vv)
 {
 	long n=10*(ax.nx+ax.ny);
 	bool both = x.nx==ax.nx && y.nx==ax.nx && x.ny==ax.ny && y.ny==ax.ny;
 
 	mglPoint *pp = new mglPoint[n], dp;
-	float *cc = new float[n];
+	mreal *cc = new mreal[n];
 	mglPoint dx(1/fabs(gr->Max.x-gr->Min.x),1/fabs(gr->Max.y-gr->Min.y),1/fabs(gr->Max.z-gr->Min.z));
 
-	float dt = 0.5/(ax.nx > ax.ny ? ax.nx : ax.ny),e,f,g,ff[4],gg[4],h,s=1;
+	mreal dt = 0.5/(ax.nx > ax.ny ? ax.nx : ax.ny),e,f,g,ff[4],gg[4],h,s=1;
 	if(u<0 || v<0)	{	dt = -dt;	u = -u;		v = -v;		s = -1;}
 	register long k=0,m;
 	bool end = false;
@@ -330,23 +330,23 @@ void flow(mglBase *gr, float zVal, float u, float v, const mglData &x, const mgl
 //-----------------------------------------------------------------------------
 void mgl_flow_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, const char *opt)
 {
-	float u,v;
+	mreal u,v;
 	if(mgl_check_dim2(gr,x,y,ax,ay,"Flow"))	return;
 
-	float r = gr->SaveState(opt);
+	mreal r = gr->SaveState(opt);
 	long num = mgl_isnan(r)?5:long(r+0.5);
 	static int cgid=1;	gr->StartGroup("Flow",cgid++);
 
 	long ss = gr->AddTexture(sch);
 	bool vv = sch && strchr(sch,'v');
 	// allocate memory
-	float zVal = gr->Min.z;
+	mreal zVal = gr->Min.z;
 	bool cnt=!(sch && strchr(sch,'#'));
 	mglData xx(x), yy(y), bx(ax), by(ay);
 
 	for(long k=0;k<ax->GetNz();k++)
 	{
-		if(ax->GetNz()>1)	zVal = gr->Min.z+(gr->Max.z-gr->Min.z)*float(k)/(ax->GetNz()-1);
+		if(ax->GetNz()>1)	zVal = gr->Min.z+(gr->Max.z-gr->Min.z)*mreal(k)/(ax->GetNz()-1);
 		for(long i=0;i<num;i++)
 		{
 			if(gr->Stop)	return;
@@ -395,10 +395,10 @@ void mgl_flow_2d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, const char *sch, 
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_flow_2d(_GR_, _DA_(ax), _DA_(ay), s, o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_flowp_xy(HMGL gr, float x0, float y0, float z0, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, const char *opt)
+void mgl_flowp_xy(HMGL gr, mreal x0, mreal y0, mreal z0, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, const char *opt)
 {
 	mglPoint p(x0,y0,z0);
-	float u,v;
+	mreal u,v;
 	long n=ax->GetNx(), m=ax->GetNy();
 	bool both = x->GetNx()==n && y->GetNx()==n && x->GetNy()==m && y->GetNy()==m;
 	if(mgl_check_dim2(gr,x,y,ax,ay,"FlowP"))	return;
@@ -410,17 +410,17 @@ void mgl_flowp_xy(HMGL gr, float x0, float y0, float z0, HCDT x, HCDT y, HCDT ax
 	bool vv = sch && strchr(sch,'v');
 	// find coordinates u, v
 	register long i,j;
-	register float d, dm=1e7;
+	register mreal d, dm=1e7;
 	long i0=0,j0=0;
 	for(i=0;i<n;i++)	for(j=0;j<m;j++)	// first find closest
 	{
 		d = both ? hypot(x->v(i,j)-p.x,y->v(i,j)-p.y) : hypot(x->v(i)-p.x,y->v(j)-p.y);
 		if(d<dm)	{	i0=i;	j0=j;	dm=d;	}
 	}
-	if(dm==0)	{	u = i0/float(n);	v = j0/float(m);	}	// we find it
+	if(dm==0)	{	u = i0/mreal(n);	v = j0/mreal(m);	}	// we find it
 	else
 	{
-		float dxu,dxv,dyu,dyv, dx, dy;
+		mreal dxu,dxv,dyu,dyv, dx, dy;
 		if(both)
 		{
 			dx = x->v(i0,j0)-p.x;	dy = y->v(i0,j0)-p.y;
@@ -442,7 +442,7 @@ void mgl_flowp_xy(HMGL gr, float x0, float y0, float z0, HCDT x, HCDT y, HCDT ax
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mgl_flowp_2d(HMGL gr, float x0, float y0, float z0, HCDT ax, HCDT ay, const char *sch, const char *opt)
+void mgl_flowp_2d(HMGL gr, mreal x0, mreal y0, mreal z0, HCDT ax, HCDT ay, const char *sch, const char *opt)
 {
 	gr->SaveState(opt);
 	mglData x(ax->GetNx()), y(ax->GetNy());
@@ -452,12 +452,12 @@ void mgl_flowp_2d(HMGL gr, float x0, float y0, float z0, HCDT ax, HCDT ay, const
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_flowp_xy_(uintptr_t *gr, float *x0, float *y0, float *z0, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch, const char *opt, int l,int lo)
+void mgl_flowp_xy_(uintptr_t *gr, mreal *x0, mreal *y0, mreal *z0, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch, const char *opt, int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_flowp_xy(_GR_, *x0,*y0,*z0, _DA_(x), _DA_(y), _DA_(ax), _DA_(ay), s, o);	delete []o;	delete []s;
 }
-void mgl_flowp_2d_(uintptr_t *gr, float *x0, float *y0, float *z0, uintptr_t *ax, uintptr_t *ay, const char *sch, const char *opt, int l,int lo)
+void mgl_flowp_2d_(uintptr_t *gr, mreal *x0, mreal *y0, mreal *z0, uintptr_t *ax, uintptr_t *ay, const char *sch, const char *opt, int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_flowp_2d(_GR_, *x0,*y0,*z0, _DA_(ax), _DA_(ay), s, o);	delete []o;	delete []s;	}
@@ -466,18 +466,18 @@ void mgl_flowp_2d_(uintptr_t *gr, float *x0, float *y0, float *z0, uintptr_t *ax
 //	Flow 3d series
 //
 //-----------------------------------------------------------------------------
-void flow(mglBase *gr, float u, float v, float w, const mglData &x, const mglData &y, const mglData &z, const mglData &ax, const mglData &ay, const mglData &az,long ss,bool vv, bool xo, bool zo)
+void flow(mglBase *gr, mreal u, mreal v, mreal w, const mglData &x, const mglData &y, const mglData &z, const mglData &ax, const mglData &ay, const mglData &az,long ss,bool vv, bool xo, bool zo)
 {
 	static long n=10*(ax.nx+ax.ny);
 	long nn = ax.nx*ax.ny*ax.nz;
 	bool both = x.nx*x.ny*x.nz==nn && y.nx*y.ny*y.nz==nn && z.nx*z.ny*z.nz==nn;
 	mglPoint *pp = new mglPoint[n], dp;
-	float *cc = new float[n];
+	mreal *cc = new mreal[n];
 	mglPoint dx(1/fabs(gr->Max.x-gr->Min.x),1/fabs(gr->Max.y-gr->Min.y),1/fabs(gr->Max.z-gr->Min.z));
 
 	nn = (ax.nx > ax.ny ? ax.nx : ax.ny);
 	nn = (nn > ax.nz ? nn : ax.nz);
-	float dt = 0.2/nn, e,f,g,ee[4],ff[4],gg[4],h,s=1,u1,v1,w1;
+	mreal dt = 0.2/nn, e,f,g,ee[4],ff[4],gg[4],h,s=1,u1,v1,w1;
 	if(u<0 || v<0 || w<0)
 	{	dt = -dt;	u = -u;		v = -v;		w = -w;		s = -1;}
 	register long k=0,m;
@@ -516,7 +516,7 @@ void flow(mglBase *gr, float u, float v, float w, const mglData &x, const mglDat
 	if(k>1)
 	{
 		long i,j,jj,a=long(1./fabs(dt));
-		float rr = mgl_norm(gr->Max-gr->Min)*gr->BarWidth/25, ll;
+		mreal rr = mgl_norm(gr->Max-gr->Min)*gr->BarWidth/25, ll;
 		mglPoint q1,q2,l;
 		long n1=-1,n2=-1,n3=-1,n4=-1, m1=-1,m2=-1,m3=-1,m4=-1;
 
@@ -550,11 +550,11 @@ void flow(mglBase *gr, float u, float v, float w, const mglData &x, const mglDat
 //-----------------------------------------------------------------------------
 void mgl_flow_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, const char *opt)
 {
-	float u,v,w;
+	mreal u,v,w;
 	long i,j;
 	if(mgl_check_vec3(gr,x,y,z,ax,ay,az,"Flow3"))	return;
 
-	float r = gr->SaveState(opt);
+	mreal r = gr->SaveState(opt);
 	long num = mgl_isnan(r)?3:long(r+0.5);
 	static int cgid=1;	gr->StartGroup("Flow3",cgid++);
 	bool cnt=!(sch && strchr(sch,'#'));
@@ -619,10 +619,10 @@ void mgl_flow_3d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, co
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_flow_3d(_GR_, _DA_(ax), _DA_(ay), _DA_(az), s, o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_flowp_xyz(HMGL gr, float x0, float y0, float z0, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, const char *opt)
+void mgl_flowp_xyz(HMGL gr, mreal x0, mreal y0, mreal z0, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, const char *opt)
 {
 	mglPoint p(x0,y0,z0);
-	float u,v,w;
+	mreal u,v,w;
 	long n=ax->GetNx(),m=ax->GetNy(),l=ax->GetNz();
 	bool both = x->GetNx()*x->GetNy()*x->GetNz()==n*m*l && y->GetNx()*y->GetNy()*y->GetNz()==n*m*l && z->GetNx()*z->GetNy()*z->GetNz()==n*m*l;
 	if(mgl_check_vec3(gr,x,y,z,ax,ay,az,"FlowP3"))	return;
@@ -634,9 +634,9 @@ void mgl_flowp_xyz(HMGL gr, float x0, float y0, float z0, HCDT x, HCDT y, HCDT z
 
 	// find coordinates u, v, w
 	register long i,j,k;
-	register float d, dm=1e7;
+	register mreal d, dm=1e7;
 	long i0=0,j0=0,k0=0;
-	float dx,dy,dz;
+	mreal dx,dy,dz;
 	for(i=0;i<n;i++)	for(j=0;j<m;j++)	for(k=0;k<l;k++)	// first find closest
 	{
 		if(both)
@@ -647,10 +647,10 @@ void mgl_flowp_xyz(HMGL gr, float x0, float y0, float z0, HCDT x, HCDT y, HCDT z
 		if(d<dm)	{	i0=i;	j0=j;	k0=k;	dm=d;	}
 	}
 	if(dm==0)	// we find it
-	{	u=i0/float(n);	v=j0/float(m);	w=k0/float(l);	}
+	{	u=i0/mreal(n);	v=j0/mreal(m);	w=k0/mreal(l);	}
 	else
 	{
-		float dxu,dxv,dxw,dyu,dyv,dyw,dzu,dzv,dzw;
+		mreal dxu,dxv,dxw,dyu,dyv,dyw,dzu,dzv,dzw;
 		if(both)
 		{
 			dx = x->v(i0,j0,k0)-p.x;	dy = y->v(i0,j0,k0)-p.y;	dz = z->v(i0,j0,k0)-p.z;
@@ -674,7 +674,7 @@ void mgl_flowp_xyz(HMGL gr, float x0, float y0, float z0, HCDT x, HCDT y, HCDT z
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mgl_flowp_3d(HMGL gr, float x0, float y0, float z0, HCDT ax, HCDT ay, HCDT az, const char *sch, const char *opt)
+void mgl_flowp_3d(HMGL gr, mreal x0, mreal y0, mreal z0, HCDT ax, HCDT ay, HCDT az, const char *sch, const char *opt)
 {
 	gr->SaveState(opt);
 	mglData x(ax->GetNx()), y(ax->GetNy()), z(ax->GetNz());
@@ -685,12 +685,12 @@ void mgl_flowp_3d(HMGL gr, float x0, float y0, float z0, HCDT ax, HCDT ay, HCDT 
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_flowp_xyz_(uintptr_t *gr, float *x0, float *y0, float *z0, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, const char *opt, int l,int lo)
+void mgl_flowp_xyz_(uintptr_t *gr, mreal *x0, mreal *y0, mreal *z0, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, const char *opt, int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_flowp_xyz(_GR_, *x0,*y0,*z0, _DA_(x), _DA_(y), _DA_(z), _DA_(ax), _DA_(ay), _DA_(az), s, o);
 	delete []o;	delete []s;	}
-void mgl_flowp_3d_(uintptr_t *gr, float *x0, float *y0, float *z0, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, const char *opt, int l,int lo)
+void mgl_flowp_3d_(uintptr_t *gr, mreal *x0, mreal *y0, mreal *z0, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, const char *opt, int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_flowp_3d(_GR_, *x0,*y0,*z0, _DA_(ax), _DA_(ay), _DA_(az), s, o);	delete []o;	delete []s;	}
@@ -764,17 +764,17 @@ void mgl_grad_(uintptr_t *gr, uintptr_t *ph, const char *sch, const char *opt, i
 //	Pipe 2d series
 //
 //-----------------------------------------------------------------------------
-void flowr(mglBase *gr, float zVal, float u, float v, const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, float r0,long sc)
+void flowr(mglBase *gr, mreal zVal, mreal u, mreal v, const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, mreal r0,long sc)
 {
 	long n=10*(ax.nx+ax.ny);
 	bool both = x.nx==ax.nx && y.nx==ax.nx && x.ny==ax.ny && y.ny==ax.ny;
 
 	mglPoint *pp = new mglPoint[n], dp;
-	float *cc = new float[n];
+	mreal *cc = new mreal[n];
 	mglPoint dx(1/fabs(gr->Max.x-gr->Min.x),1/fabs(gr->Max.y-gr->Min.y),1/fabs(gr->Max.z-gr->Min.z));
 
-	float dt = 0.5/(ax.nx > ax.ny ? ax.nx : ax.ny),e,f,g,ff[4],gg[4],h,s=1;
-	float ss = 	4./mgl_ipow(gr->Max.c - gr->Min.c,2);
+	mreal dt = 0.5/(ax.nx > ax.ny ? ax.nx : ax.ny),e,f,g,ff[4],gg[4],h,s=1;
+	mreal ss = 	4./mgl_ipow(gr->Max.c - gr->Min.c,2);
 	if(u<0 || v<0)	{	dt = -dt;	u = -u;		v = -v;		s = -1;}
 	register long k=0,m;
 	bool end = false;
@@ -812,7 +812,7 @@ void flowr(mglBase *gr, float zVal, float u, float v, const mglData &x, const mg
 		long i,j,*id=new long[2*num];
 		mglPoint p,l=pp[1]-pp[0],t,q,d;
 		t = !l;	t.Normalize();	q = t^l;	q.Normalize();
-		float si,co,fi, rr=pp[0].c,dr=l.c;
+		mreal si,co,fi, rr=pp[0].c,dr=l.c;
 		gr->Reserve(num*k);
 
 		for(j=0;j<num;j++)
@@ -843,25 +843,25 @@ void flowr(mglBase *gr, float zVal, float u, float v, const mglData &x, const mg
 	delete []pp;	delete []cc;
 }
 //-----------------------------------------------------------------------------
-void mgl_pipe_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, float r0, const char *opt)
+void mgl_pipe_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, mreal r0, const char *opt)
 {
-	float u,v;
+	mreal u,v;
 	if(mgl_check_dim2(gr,x,y,ax,ay,"Pipe"))	return;
 
-	float r = gr->SaveState(opt);
+	mreal r = gr->SaveState(opt);
 	long num = mgl_isnan(r)?5:long(r+0.5);
 	static int cgid=1;	gr->StartGroup("Pipe",cgid++);
 
 	long ss = gr->AddTexture(sch);
 	// allocate memory
-	float zVal = gr->Min.z;
+	mreal zVal = gr->Min.z;
 	bool cnt=!(sch && strchr(sch,'#'));
 	if(sch && strchr(sch,'i'))	r0 = -fabs(r0);
 
 	mglData xx(x), yy(y), bx(ax), by(ay);
 	for(long k=0;k<ax->GetNz();k++)
 	{
-		if(ax->GetNz()>1)	zVal = gr->Min.z+(gr->Max.z-gr->Min.z)*float(k)/(ax->GetNz()-1);
+		if(ax->GetNz()>1)	zVal = gr->Min.z+(gr->Max.z-gr->Min.z)*mreal(k)/(ax->GetNz()-1);
 		for(long i=0;i<num;i++)
 		{
 			if(gr->Stop)	return;
@@ -891,7 +891,7 @@ void mgl_pipe_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, flo
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mgl_pipe_2d(HMGL gr, HCDT ax, HCDT ay, const char *sch, float r0, const char *opt)
+void mgl_pipe_2d(HMGL gr, HCDT ax, HCDT ay, const char *sch, mreal r0, const char *opt)
 {
 	gr->SaveState(opt);
 	mglData x(ax->GetNx()), y(ax->GetNy());
@@ -901,11 +901,11 @@ void mgl_pipe_2d(HMGL gr, HCDT ax, HCDT ay, const char *sch, float r0, const cha
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_pipe_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch, float *r0, const char *opt,int l,int lo)
+void mgl_pipe_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch, mreal *r0, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_pipe_xy(_GR_, _DA_(x), _DA_(y), _DA_(ax), _DA_(ay), s, *r0, o);	delete []o;	delete []s;	}
-void mgl_pipe_2d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, const char *sch, float *r0, const char *opt,int l,int lo)
+void mgl_pipe_2d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, const char *sch, mreal *r0, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_pipe_2d(_GR_, _DA_(ax), _DA_(ay), s, *r0, o);	delete []o;	delete []s;	}
@@ -914,19 +914,19 @@ void mgl_pipe_2d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, const char *sch, 
 //	Pipe 3d series
 //
 //-----------------------------------------------------------------------------
-void flowr(mglBase *gr, float u, float v, float w, const mglData &x, const mglData &y, const mglData &z, const mglData &ax, const mglData &ay, const mglData &az, float r0,long sc)
+void flowr(mglBase *gr, mreal u, mreal v, mreal w, const mglData &x, const mglData &y, const mglData &z, const mglData &ax, const mglData &ay, const mglData &az, mreal r0,long sc)
 {
 	static long n=10*(ax.nx+ax.ny);
 	long nn = ax.nx*ax.ny*ax.nz;
 	bool both = x.nx*x.ny*x.nz==nn && y.nx*y.ny*y.nz==nn && z.nx*z.ny*z.nz==nn;
 	mglPoint *pp = new mglPoint[n], dp;
-	float *cc = new float[n];
+	mreal *cc = new mreal[n];
 	mglPoint dx(1/fabs(gr->Max.x-gr->Min.x),1/fabs(gr->Max.y-gr->Min.y),1/fabs(gr->Max.z-gr->Min.z));
 
 	nn = (ax.nx > ax.ny ? ax.nx : ax.ny);
 	nn = (nn > ax.nz ? nn : ax.nz);
-	float dt = 0.2/nn, e,f,g,ee[4],ff[4],gg[4],h,s=1,u1,v1,w1;
-	float ss = 	4./mgl_ipow(gr->Max.c - gr->Min.c,2);
+	mreal dt = 0.2/nn, e,f,g,ee[4],ff[4],gg[4],h,s=1,u1,v1,w1;
+	mreal ss = 	4./mgl_ipow(gr->Max.c - gr->Min.c,2);
 
 	if(u<0 || v<0 || w<0)
 	{	dt = -dt;	u = -u;		v = -v;		w = -w;		s = -1;}
@@ -970,7 +970,7 @@ void flowr(mglBase *gr, float u, float v, float w, const mglData &x, const mglDa
 		long i,j,*id=new long[2*num];
 		mglPoint p,l=pp[1]-pp[0],t,q,d;
 		t = !l;	t.Normalize();	q = t^l;	q.Normalize();
-		float si,co,fi, rr=pp[0].c,dr=l.c;
+		mreal si,co,fi, rr=pp[0].c,dr=l.c;
 		gr->Reserve(num*k);
 
 		for(j=0;j<num;j++)
@@ -1001,13 +1001,13 @@ void flowr(mglBase *gr, float u, float v, float w, const mglData &x, const mglDa
 	delete []pp;	delete []cc;
 }
 //-----------------------------------------------------------------------------
-void mgl_pipe_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, float r0, const char *opt)
+void mgl_pipe_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, mreal r0, const char *opt)
 {
-	float u,v,w;
+	mreal u,v,w;
 	long i,j;
 	if(mgl_check_vec3(gr,x,y,z,ax,ay,az,"Vect"))	return;
 
-	float r = gr->SaveState(opt);
+	mreal r = gr->SaveState(opt);
 	long num = mgl_isnan(r)?3:long(r+0.5);
 	static int cgid=1;	gr->StartGroup("Pipe3",cgid++);
 	if(sch && strchr(sch,'i'))	r0 = -fabs(r0);
@@ -1053,7 +1053,7 @@ void mgl_pipe_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mgl_pipe_3d(HMGL gr, HCDT ax, HCDT ay, HCDT az, const char *sch, float r0, const char *opt)
+void mgl_pipe_3d(HMGL gr, HCDT ax, HCDT ay, HCDT az, const char *sch, mreal r0, const char *opt)
 {
 	gr->SaveState(opt);
 	mglData x(ax->GetNx()), y(ax->GetNy()), z(ax->GetNz());
@@ -1064,12 +1064,12 @@ void mgl_pipe_3d(HMGL gr, HCDT ax, HCDT ay, HCDT az, const char *sch, float r0, 
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_pipe_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, float *r0, const char *opt,int l,int lo)
+void mgl_pipe_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, mreal *r0, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];		memcpy(o,opt,lo);	o[lo]=0;
 	mgl_pipe_xyz(_GR_, _DA_(x), _DA_(y), _DA_(z), _DA_(ax), _DA_(ay), _DA_(az), s, *r0, o);
 	delete []o;	delete []s;	}
-void mgl_pipe_3d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, float *r0, const char *opt,int l,int lo)
+void mgl_pipe_3d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, mreal *r0, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];		memcpy(o,opt,lo);	o[lo]=0;
 	mgl_pipe_3d(_GR_, _DA_(ax), _DA_(ay), _DA_(az), s, *r0, o);	delete []o;	delete []s;	}

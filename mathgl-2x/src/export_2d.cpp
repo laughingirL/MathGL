@@ -25,7 +25,7 @@
 #define _Gr_	((mglCanvas *)(gr))
 void mgl_printf(void *fp, bool gz, const char *str, ...);
 //-----------------------------------------------------------------------------
-char *mgl_get_dash(unsigned short d, float w)
+char *mgl_get_dash(unsigned short d, mreal w)
 {
 	static char s[64],b[4];
 	if(d==0xffff)	{	strcpy(s,"");	return s;	}
@@ -46,7 +46,7 @@ char *mgl_get_dash(unsigned short d, float w)
 	return s;
 }
 //-----------------------------------------------------------------------------
-bool mgl_is_same(HMGL gr, const mglPrim &pr,float wp,mglColor cp,int st)
+bool mgl_is_same(HMGL gr, const mglPrim &pr,mreal wp,mglColor cp,int st)
 {
 	if(abs(pr.type)!=1)	return false;
 	if(pr.w>=1 && wp!=pr.w)	return false;
@@ -56,10 +56,10 @@ bool mgl_is_same(HMGL gr, const mglPrim &pr,float wp,mglColor cp,int st)
 	return (cp==c);
 }
 //-----------------------------------------------------------------------------
-void put_line(HMGL gr, void *fp, bool gz, long i, float wp, mglColor cp,int st, const char *ifmt, const char *nfmt, bool neg, float fc)
+void put_line(HMGL gr, void *fp, bool gz, long i, mreal wp, mglColor cp,int st, const char *ifmt, const char *nfmt, bool neg, mreal fc)
 {
 	const mglPnt pp = gr->GetPnt(gr->GetPrm(i).n1);
-	float x0=pp.x, y0=pp.y;
+	mreal x0=pp.x, y0=pp.y;
 	bool ok=true;
 	register long j;	// first point
 	while(ok)
@@ -249,7 +249,7 @@ void mgl_write_eps(HMGL gr, const char *fname,const char *descr)
 	// write definition for all glyphs
 	put_desc(gr,fp,gz,"/%c%c_%04x { np\n", "\t%d %d mt ", "%d %d ll ", "cp\n", "} def\n");
 	// write primitives
-	float wp=-1;
+	mreal wp=-1;
 	mglColor cp;
 	int st=0;
 	char str[256]="";
@@ -263,7 +263,7 @@ void mgl_write_eps(HMGL gr, const char *fname,const char *descr)
 
 		if(q.type==0)	// mark
 		{
-			float x0 = p1.x,y0 = p1.y;
+			mreal x0 = p1.x,y0 = p1.y;
 			sprintf(str,"1 lw %.2g %.2g %.2g rgb ", cp.r,cp.g,cp.b);
 			wp=1;
 			if(q.s!=gr->mark_size()/gr->FontFactor())
@@ -327,12 +327,12 @@ void mgl_write_eps(HMGL gr, const char *fname,const char *descr)
 		}
 		else if(q.type==4)	// glyph
 		{
-			float 	ss = q.s/2, xx = p1.u, yy = p1.v, zz = p1.w;
+			mreal 	ss = q.s/2, xx = p1.u, yy = p1.v, zz = p1.w;
 			mgl_printf(fp, gz, "gsave\t%g %g translate %g %g scale %g rotate %s\n",
 					   p1.x, p1.y, ss, ss, -q.w, str);
 			if(q.n3&8)	// this is "line"
 			{
-				float dy = 0.004,f=fabs(zz);
+				mreal dy = 0.004,f=fabs(zz);
 				mgl_printf(fp, gz, "np %g %g mt %g %g ll %g %g ll %g %g ll cp ",
 						   xx,yy+dy, xx+f,yy+dy, xx+f,yy-dy, xx,yy-dy);
 			}
@@ -380,7 +380,7 @@ void mgl_write_svg(HMGL gr, const char *fname,const char *descr)
 	// currentColor -> inherit ???
 	mgl_printf(fp, gz, "<g fill=\"none\" stroke=\"none\" stroke-width=\"0.5\">\n");
 	// write primitives
-	float wp=-1;
+	mreal wp=-1;
 	register long i;
 	int st=0;
 	mglColor cp;
@@ -393,7 +393,7 @@ void mgl_write_svg(HMGL gr, const char *fname,const char *descr)
 		const mglPnt p1=gr->GetPnt(q.n1);
 		if(q.type==0)
 		{
-			float x=p1.x,y=hh-p1.y,s=0.4*gr->FontFactor()*q.s;
+			mreal x=p1.x,y=hh-p1.y,s=0.4*gr->FontFactor()*q.s;
 			if(!strchr("xsSoO",q.n4))	s *= 1.1;
 			wp = 1;
 			if(strchr("SDVTLR",q.n4))
@@ -477,7 +477,7 @@ void mgl_write_svg(HMGL gr, const char *fname,const char *descr)
 		}
 		else if(q.type==4)
 		{
-			float ss = q.s/2, xx = p1.u, yy = p1.v, zz = p1.w;
+			mreal ss = q.s/2, xx = p1.u, yy = p1.v, zz = p1.w;
 			if(q.n3&8)	// this is "line"
 			{
 				mgl_printf(fp, gz, "<g transform=\"translate(%g,%g) scale(%.3g,%.3g) rotate(%g)\"", p1.x, hh-p1.y, ss, -ss, -q.w);
@@ -485,7 +485,7 @@ void mgl_write_svg(HMGL gr, const char *fname,const char *descr)
 					mgl_printf(fp, gz, " stroke=\"#%02x%02x%02x\">", int(255*cp.r),int(255*cp.g),int(255*cp.b));
 				else
 					mgl_printf(fp, gz, " fill=\"#%02x%02x%02x\">", int(255*cp.r),int(255*cp.g),int(255*cp.b));
-				float dy = 0.004,f=fabs(zz);
+				mreal dy = 0.004,f=fabs(zz);
 				mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g L %g %g L %g %g\"/></g>\n", xx,yy+dy, xx+f,yy+dy, xx+f,yy-dy, xx,yy-dy);
 			}
 			else
@@ -512,7 +512,7 @@ void mgl_write_svg_(uintptr_t *gr, const char *fname,const char *descr,int l,int
 	mgl_write_svg(_GR_,s,d);	delete []s;		delete []d;	}
 //-----------------------------------------------------------------------------
 /// Color names easely parsed by LaTeX
-struct mglSVGName	{	const char *name;	float r,g,b;	};
+struct mglSVGName	{	const char *name;	mreal r,g,b;	};
 mglSVGName mgl_names[]={{"AliceBlue",.94,.972,1},
 {"Apricot", 0.984, 0.725, 0.51},
 {"Aquamarine", 0, 0.71, 0.745},
@@ -747,7 +747,7 @@ mglSVGName mgl_names[]={{"AliceBlue",.94,.972,1},
 const char *mglColorName(mglColor c)	// return closest SVG color
 {
 	register long i;
-	register float d, dm=10;
+	register mreal d, dm=10;
 	const char *name="";
 	for(i=0;mgl_names[i].name[0];i++)
 	{
@@ -770,10 +770,10 @@ void mgl_write_tex(HMGL gr, const char *fname,const char *descr)
 	if(!fp)		{	gr->SetWarn(mglWarnOpen,fname);	return;	}
 	fprintf(fp, "%% Created by MathGL library\n%% Title: %s\n",descr?descr:fname);
 	fprintf(fp, "\\input{mglcolors.tex}\n\\begin{tikzpicture}\n");
-	float ms=0.4*gr->mark_size()/100;
+	mreal ms=0.4*gr->mark_size()/100;
 
 	// write primitives
-	float wp=-1;
+	mreal wp=-1;
 	register long i;
 	int st=0;
 	mglColor cp;
@@ -834,7 +834,7 @@ void mgl_write_tex(HMGL gr, const char *fname,const char *descr)
 		sprintf(cname,"mgl_%d",ii+6*(jj+6*kk));
 //		cname = mglColorName(cp);
 		const mglPnt p1=gr->GetPnt(q.n1);
-		float x=p1.x/100,y=p1.y/100,s=0.4*gr->FontFactor()*q.s/100;
+		mreal x=p1.x/100,y=p1.y/100,s=0.4*gr->FontFactor()*q.s/100;
 		if(q.type==0)
 		{
 			if(!strchr("xsSoO",q.n4))	s *= 1.1;
@@ -893,7 +893,7 @@ void mgl_write_tex(HMGL gr, const char *fname,const char *descr)
 		else if(q.type==6)	// text
 		{
 			const mglText &t = gr->GetPtx(q.n3);
-			float ftet = mgl_isnan(p1.v)||mgl_isnan(p1.u) ? 0:-180*atan2(p1.v,p1.u)/M_PI;
+			mreal ftet = mgl_isnan(p1.v)||mgl_isnan(p1.u) ? 0:-180*atan2(p1.v,p1.u)/M_PI;
 			int f,a;	mglGetStyle(t.stl.c_str(), &f, &a);
 			std::string ss=cname;
 			if((a&3)==2)	ss.append(",west");	if((a&3)==0)	ss.append(",east");

@@ -62,8 +62,8 @@ void mgl_data_set_double3(HMDT d, const double ***A,long N1,long N2,long N3);
 void mgl_data_set(HMDT dat, HCDT a);
 void mgl_data_set_vector(HMDT dat, gsl_vector *v);
 void mgl_data_set_matrix(HMDT dat, gsl_matrix *m);
-void mgl_data_set_value(HMDT dat, float v, long i, long j, long k);
-float mgl_data_get_value(HCDT dat, long i, long j, long k);
+void mgl_data_set_value(HMDT dat, mreal v, long i, long j, long k);
+mreal mgl_data_get_value(HCDT dat, long i, long j, long k);
 void mgl_data_set_values(HMDT dat, const char *val, long nx, long ny, long nz);
 
 int mgl_data_read_hdf(HMDT d,const char *fname,const char *data);
@@ -75,18 +75,18 @@ int mgl_data_read_dim(HMDT dat, const char *fname,long mx,long my,long mz);
 int mgl_data_read_range(HMDT d, const char *templ, double from, double to, double step, int as_slice);
 int mgl_data_read_all(HMDT dat, const char *templ, int as_slice);
 void mgl_data_save(HCDT dat, const char *fname,long ns);
-void mgl_data_export(HCDT dat, const char *fname, const char *scheme,float v1,float v2,long ns);
-void mgl_data_import(HMDT dat, const char *fname, const char *scheme,float v1,float v2);
+void mgl_data_export(HCDT dat, const char *fname, const char *scheme,mreal v1,mreal v2,long ns);
+void mgl_data_import(HMDT dat, const char *fname, const char *scheme,mreal v1,mreal v2);
 
 void mgl_data_create(HMDT dat, long nx,long ny,long nz);
 void mgl_data_transpose(HMDT dat, const char *dim);
-void mgl_data_norm(HMDT dat, float v1,float v2,long sym,long dim);
-void mgl_data_norm_slice(HMDT dat, float v1,float v2,char dir,long keep_en,long sym);
+void mgl_data_norm(HMDT dat, mreal v1,mreal v2,long sym,long dim);
+void mgl_data_norm_slice(HMDT dat, mreal v1,mreal v2,char dir,long keep_en,long sym);
 HMDT mgl_data_subdata(HCDT dat, long xx,long yy,long zz);
 HMDT mgl_data_subdata_ext(HCDT dat, HCDT xx, HCDT yy, HCDT zz);
 HMDT mgl_data_column(HCDT dat, const char *eq);
 void mgl_data_set_id(HMDT d, const char *id);
-void mgl_data_fill(HMDT dat, float x1,float x2,char dir);
+void mgl_data_fill(HMDT dat, mreal x1,mreal x2,char dir);
 void mgl_data_fill_eq(HMGL gr, HMDT dat, const char *eq, HCDT vdat, HCDT wdat,const char *opt);
 void mgl_data_grid(HMGL gr, HMDT d, HCDT xdat, HCDT ydat, HCDT zdat,const char *opt);
 void mgl_data_put_val(HMDT dat, mreal val, long i, long j, long k);
@@ -94,20 +94,20 @@ void mgl_data_put_dat(HMDT dat, HCDT val, long i, long j, long k);
 void mgl_data_modify(HMDT dat, const char *eq,long dim);
 void mgl_data_modify_vw(HMDT dat, const char *eq,HCDT vdat,HCDT wdat);
 void mgl_data_squeeze(HMDT dat, long rx,long ry,long rz,long smooth);
-float mgl_data_max(HCDT dat);
-float mgl_data_min(HCDT dat);
+mreal mgl_data_max(HCDT dat);
+mreal mgl_data_min(HCDT dat);
 mreal *mgl_data_value(HMDT dat, long i,long j,long k);
 mreal *mgl_data_data(HMDT dat);
 
-float mgl_data_first(HCDT dat, const char *cond, long *i, long *j, long *k);
-float mgl_data_last(HCDT dat, const char *cond, long *i, long *j, long *k);
+mreal mgl_data_first(HCDT dat, const char *cond, long *i, long *j, long *k);
+mreal mgl_data_last(HCDT dat, const char *cond, long *i, long *j, long *k);
 long mgl_data_find(HCDT dat, const char *cond, char dir, long i, long j, long k);
 int mgl_data_find_any(HCDT dat, const char *cond);
-float mgl_data_max_int(HCDT dat, long *i, long *j, long *k);
-float mgl_data_max_real(HCDT dat, mreal *x, mreal *y, mreal *z);
-float mgl_data_min_int(HCDT dat, long *i, long *j, long *k);
-float mgl_data_min_real(HCDT dat, mreal *x, mreal *y, mreal *z);
-float mgl_data_momentum_val(HCDT d, char dir, mreal *m, mreal *w, mreal *s, mreal *k);
+mreal mgl_data_max_int(HCDT dat, long *i, long *j, long *k);
+mreal mgl_data_max_real(HCDT dat, mreal *x, mreal *y, mreal *z);
+mreal mgl_data_min_int(HCDT dat, long *i, long *j, long *k);
+mreal mgl_data_min_real(HCDT dat, mreal *x, mreal *y, mreal *z);
+mreal mgl_data_momentum_val(HCDT d, char dir, mreal *m, mreal *w, mreal *s, mreal *k);
 
 HMDT mgl_data_combine(HCDT dat1, HCDT dat2);
 void mgl_data_extend(HMDT dat, long n1, long n2);
@@ -116,7 +116,7 @@ void mgl_data_delete(HMDT dat, char dir, long at, long num);
 /*****************************************************************************/
 /*		Data manipulation functions											 */
 /*****************************************************************************/
-void mgl_data_smooth(HMDT d, const char *dirs, float delta);
+void mgl_data_smooth(HMDT d, const char *dirs, mreal delta);
 HMDT mgl_data_sum(HCDT dat, const char *dir);
 HMDT mgl_data_max_dir(HCDT dat, const char *dir);
 HMDT mgl_data_min_dir(HCDT dat, const char *dir);
@@ -135,17 +135,17 @@ void mgl_data_sinfft(HMDT dat, const char *dir);
 void mgl_data_cosfft(HMDT dat, const char *dir);
 void mgl_data_fill_sample(HMDT dat, const char *how);
 
-float mgl_data_spline(HCDT dat, float x,float y,float z);
-float mgl_data_linear(HCDT dat, float x,float y,float z);
+mreal mgl_data_spline(HCDT dat, mreal x,mreal y,mreal z);
+mreal mgl_data_linear(HCDT dat, mreal x,mreal y,mreal z);
 HMDT mgl_data_trace(HCDT d);
 HMDT mgl_data_resize(HCDT dat, long mx,long my,long mz);
-HMDT mgl_data_resize_box(HCDT dat, long mx,long my,long mz,float x1,float x2,float y1,float y2,float z1,float z2);
-HMDT mgl_data_hist(HCDT dat, long n, float v1, float v2, long nsub);
-HMDT mgl_data_hist_w(HCDT dat, HCDT weight, long n, float v1, float v2, long nsub);
+HMDT mgl_data_resize_box(HCDT dat, long mx,long my,long mz,mreal x1,mreal x2,mreal y1,mreal y2,mreal z1,mreal z2);
+HMDT mgl_data_hist(HCDT dat, long n, mreal v1, mreal v2, long nsub);
+HMDT mgl_data_hist_w(HCDT dat, HCDT weight, long n, mreal v1, mreal v2, long nsub);
 HMDT mgl_data_momentum(HCDT dat, char dir, const char *how);
 HMDT mgl_data_evaluate(HCDT dat, HCDT idat, HCDT jdat, HCDT kdat, int norm);
 void mgl_data_envelop(HMDT dat, char dir);
-void mgl_data_sew(HMDT dat, const char *dirs, float da);
+void mgl_data_sew(HMDT dat, const char *dirs, mreal da);
 void mgl_data_crop(HMDT dat, long n1, long n2, char dir);
 /*****************************************************************************/
 /*		Data operations														 */
@@ -154,14 +154,14 @@ void mgl_data_mul_dat(HMDT dat, HCDT d);
 void mgl_data_div_dat(HMDT dat, HCDT d);
 void mgl_data_add_dat(HMDT dat, HCDT d);
 void mgl_data_sub_dat(HMDT dat, HCDT d);
-void mgl_data_mul_num(HMDT dat, float d);
-void mgl_data_div_num(HMDT dat, float d);
-void mgl_data_add_num(HMDT dat, float d);
-void mgl_data_sub_num(HMDT dat, float d);
+void mgl_data_mul_num(HMDT dat, mreal d);
+void mgl_data_div_num(HMDT dat, mreal d);
+void mgl_data_add_num(HMDT dat, mreal d);
+void mgl_data_sub_num(HMDT dat, mreal d);
 /*****************************************************************************/
-HMDT mgl_pde_solve(HMGL gr, const char *ham, HCDT ini_re, HCDT ini_im, float dz, float k0,const char *opt);
-HMDT mgl_qo2d_solve(const char *ham, HCDT ini_re, HCDT ini_im, HCDT ray, float r, float k0, HMDT xx, HMDT yy);
-HMDT mgl_ray_trace(const char *ham, float x0, float y0, float z0, float px, float py, float pz, float dt, float tmax);
+HMDT mgl_pde_solve(HMGL gr, const char *ham, HCDT ini_re, HCDT ini_im, mreal dz, mreal k0,const char *opt);
+HMDT mgl_qo2d_solve(const char *ham, HCDT ini_re, HCDT ini_im, HCDT ray, mreal r, mreal k0, HMDT xx, HMDT yy);
+HMDT mgl_ray_trace(const char *ham, mreal x0, mreal y0, mreal z0, mreal px, mreal py, mreal pz, mreal dt, mreal tmax);
 HMDT mgl_jacobian_2d(HCDT x, HCDT y);
 HMDT mgl_jacobian_3d(HCDT x, HCDT y, HCDT z);
 HMDT mgl_transform_a(HCDT am, HCDT ph, const char *tr);
@@ -185,43 +185,43 @@ void mgl_data_set_float3_(uintptr_t *d, const float *A,int *N1,int *N2,int *N3);
 void mgl_data_set_double3_(uintptr_t *d, const double *A,int *N1,int *N2,int *N3);
 void mgl_data_set_(uintptr_t *dat, uintptr_t *a);
 
-void mgl_data_set_value_(uintptr_t *d, float *v, int *i, int *j, int *k);
+void mgl_data_set_value_(uintptr_t *d, mreal *v, int *i, int *j, int *k);
 void mgl_data_set_values_(uintptr_t *d, const char *val, int *nx, int *ny, int *nz, int l);
-float mgl_data_get_value_(uintptr_t *d, int *i, int *j, int *k);
+mreal mgl_data_get_value_(uintptr_t *d, int *i, int *j, int *k);
 int mgl_data_read_(uintptr_t *d, const char *fname,int l);
 int mgl_data_read_mat_(uintptr_t *dat, const char *fname, int *dim, int);
 int mgl_data_read_dim_(uintptr_t *dat, const char *fname,int *mx,int *my,int *mz,int);
 void mgl_data_save_(uintptr_t *dat, const char *fname,int *ns,int);
-void mgl_data_export_(uintptr_t *dat, const char *fname, const char *scheme,float *v1,float *v2,int *ns,int,int);
-void mgl_data_import_(uintptr_t *dat, const char *fname, const char *scheme,float *v1,float *v2,int,int);
+void mgl_data_export_(uintptr_t *dat, const char *fname, const char *scheme,mreal *v1,mreal *v2,int *ns,int,int);
+void mgl_data_import_(uintptr_t *dat, const char *fname, const char *scheme,mreal *v1,mreal *v2,int,int);
 void mgl_data_create_(uintptr_t *dat, int *nx,int *ny,int *nz);
 void mgl_data_transpose_(uintptr_t *dat, const char *dim,int);
-void mgl_data_norm_(uintptr_t *dat, float *v1,float *v2,int *sym,int *dim);
-void mgl_data_norm_slice_(uintptr_t *dat, float *v1,float *v2,char *dir,int *keep_en,int *sym,int l);
+void mgl_data_norm_(uintptr_t *dat, mreal *v1,mreal *v2,int *sym,int *dim);
+void mgl_data_norm_slice_(uintptr_t *dat, mreal *v1,mreal *v2,char *dir,int *keep_en,int *sym,int l);
 uintptr_t mgl_data_subdata_(uintptr_t *dat, int *xx,int *yy,int *zz);
 uintptr_t mgl_data_subdata_ext_(uintptr_t *dat, uintptr_t *xx,uintptr_t *yy,uintptr_t *zz);
 uintptr_t mgl_data_column_(uintptr_t *dat, const char *eq,int l);
 void mgl_data_set_id_(uintptr_t *dat, const char *id,int l);
-void mgl_data_fill_(uintptr_t *dat, float *x1,float *x2,const char *dir,int);
+void mgl_data_fill_(uintptr_t *dat, mreal *x1,mreal *x2,const char *dir,int);
 void mgl_data_fill_eq_(uintptr_t *gr, uintptr_t *dat, const char *eq, uintptr_t *vdat, uintptr_t *wdat,const char *opt, int, int);
 void mgl_data_grid_(uintptr_t *gr, uintptr_t *dat, uintptr_t *xdat, uintptr_t *ydat, uintptr_t *zdat, const char *opt,int);
-void mgl_data_put_val_(uintptr_t *dat, float *val, int *i, int *j, int *k);
+void mgl_data_put_val_(uintptr_t *dat, mreal *val, int *i, int *j, int *k);
 void mgl_data_put_dat_(uintptr_t *dat, uintptr_t *val, int *i, int *j, int *k);
 void mgl_data_modify_(uintptr_t *dat, const char *eq,int *dim,int);
 void mgl_data_modify_vw_(uintptr_t *dat, const char *eq, uintptr_t *vdat, uintptr_t *wdat,int);
 void mgl_data_squeeze_(uintptr_t *dat, int *rx,int *ry,int *rz,int *smooth);
-float mgl_data_max_(uintptr_t *dat);
-float mgl_data_min_(uintptr_t *dat);
+mreal mgl_data_max_(uintptr_t *dat);
+mreal mgl_data_min_(uintptr_t *dat);
 
-float mgl_data_first_(uintptr_t *dat, const char *cond, int *i, int *j, int *k, int);
-float mgl_data_last_(uintptr_t *dat, const char *cond, int *i, int *j, int *k, int);
+mreal mgl_data_first_(uintptr_t *dat, const char *cond, int *i, int *j, int *k, int);
+mreal mgl_data_last_(uintptr_t *dat, const char *cond, int *i, int *j, int *k, int);
 int mgl_data_find_(uintptr_t *dat, const char *cond, char *dir, int *i, int *j, int *k, int,int);
 int mgl_data_find_any_(uintptr_t *dat, const char *cond, int);
-float mgl_data_max_int_(uintptr_t *dat, int *i, int *j, int *k);
-float mgl_data_max_real_(uintptr_t *dat, float *x, float *y, float *z);
-float mgl_data_min_int_(uintptr_t *dat, int *i, int *j, int *k);
-float mgl_data_min_real_(uintptr_t *dat, float *x, float *y, float *z);
-float mgl_data_momentum_val_(uintptr_t *dat, char *dir, float *m, float *w, float *s, float *k,int);
+mreal mgl_data_max_int_(uintptr_t *dat, int *i, int *j, int *k);
+mreal mgl_data_max_real_(uintptr_t *dat, mreal *x, mreal *y, mreal *z);
+mreal mgl_data_min_int_(uintptr_t *dat, int *i, int *j, int *k);
+mreal mgl_data_min_real_(uintptr_t *dat, mreal *x, mreal *y, mreal *z);
+mreal mgl_data_momentum_val_(uintptr_t *dat, char *dir, mreal *m, mreal *w, mreal *s, mreal *k,int);
 
 uintptr_t mgl_data_combine_(uintptr_t *dat1, uintptr_t *dat2);
 void mgl_data_extend_(uintptr_t *dat, int *n1, int *n2);
@@ -230,7 +230,7 @@ void mgl_data_delete_(uintptr_t *dat, const char *dir, int *at, int *num, int);
 /*****************************************************************************/
 /*		Data manipulation functions											 */
 /*****************************************************************************/
-void mgl_data_smooth_(uintptr_t *dat, const char *dirs, float *delta,int);
+void mgl_data_smooth_(uintptr_t *dat, const char *dirs, mreal *delta,int);
 uintptr_t mgl_data_sum_(uintptr_t *dat, const char *dir,int);
 uintptr_t mgl_data_max_dir_(uintptr_t *dat, const char *dir,int);
 uintptr_t mgl_data_min_dir_(uintptr_t *dat, const char *dir,int);
@@ -249,17 +249,17 @@ void mgl_data_sinfft_(uintptr_t *dat, const char *dir,int);
 void mgl_data_cosfft_(uintptr_t *dat, const char *dir,int);
 void mgl_data_fill_sample_(uintptr_t *dat, const char *how,int);
 
-float mgl_data_spline_(uintptr_t *dat, float *x,float *y,float *z);
-float mgl_data_linear_(uintptr_t *dat, float *x,float *y,float *z);
+mreal mgl_data_spline_(uintptr_t *dat, mreal *x,mreal *y,mreal *z);
+mreal mgl_data_linear_(uintptr_t *dat, mreal *x,mreal *y,mreal *z);
 uintptr_t mgl_data_trace_(uintptr_t *d);
 uintptr_t mgl_data_resize_(uintptr_t *dat, int *mx,int *my,int *mz);
-uintptr_t mgl_data_resize_box_(uintptr_t *dat, int *mx,int *my,int *mz,float *x1,float *x2,float *y1,float *y2,float *z1,float *z2);
+uintptr_t mgl_data_resize_box_(uintptr_t *dat, int *mx,int *my,int *mz,mreal *x1,mreal *x2,mreal *y1,mreal *y2,mreal *z1,mreal *z2);
 uintptr_t mgl_data_momentum_(uintptr_t *dat, char *dir, const char *how, int,int);
-uintptr_t mgl_data_hist_(uintptr_t *dat, int *n, float *v1, float *v2, int *nsub);
-uintptr_t mgl_data_hist_w_(uintptr_t *dat, uintptr_t *weight, int *n, float *v1, float *v2, int *nsub);
+uintptr_t mgl_data_hist_(uintptr_t *dat, int *n, mreal *v1, mreal *v2, int *nsub);
+uintptr_t mgl_data_hist_w_(uintptr_t *dat, uintptr_t *weight, int *n, mreal *v1, mreal *v2, int *nsub);
 uintptr_t mgl_data_evaluate_(uintptr_t *dat, uintptr_t *idat, uintptr_t *jdat, uintptr_t *kdat, int *norm);
 void mgl_data_envelop_(uintptr_t *dat, const char *dir, int);
-void mgl_data_sew_(uintptr_t *dat, const char *dirs, float *da, int);
+void mgl_data_sew_(uintptr_t *dat, const char *dirs, mreal *da, int);
 void mgl_data_crop_(uintptr_t *dat, int *n1, int *n2, const char *dir,int);
 /*****************************************************************************/
 /*		Data operations														 */
@@ -268,16 +268,16 @@ void mgl_data_mul_dat_(uintptr_t *dat, uintptr_t *d);
 void mgl_data_div_dat_(uintptr_t *dat, uintptr_t *d);
 void mgl_data_add_dat_(uintptr_t *dat, uintptr_t *d);
 void mgl_data_sub_dat_(uintptr_t *dat, uintptr_t *d);
-void mgl_data_mul_num_(uintptr_t *dat, float *d);
-void mgl_data_div_num_(uintptr_t *dat, float *d);
-void mgl_data_add_num_(uintptr_t *dat, float *d);
-void mgl_data_sub_num_(uintptr_t *dat, float *d);
+void mgl_data_mul_num_(uintptr_t *dat, mreal *d);
+void mgl_data_div_num_(uintptr_t *dat, mreal *d);
+void mgl_data_add_num_(uintptr_t *dat, mreal *d);
+void mgl_data_sub_num_(uintptr_t *dat, mreal *d);
 /*****************************************************************************/
 /*		Nonlinear fitting													 */
 /*****************************************************************************/
-uintptr_t mgl_pde_solve_(uintptr_t* gr, const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, float *dz, float *k0,const char *opt,int,int);
-uintptr_t mgl_qo2d_solve_(const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, uintptr_t* ray, float *r, float *k0, uintptr_t* xx, uintptr_t* yy, int);
-uintptr_t mgl_ray_trace_(const char *ham, float *x0, float *y0, float *z0, float *px, float *py, float *pz, float *dt, float *tmax,int);
+uintptr_t mgl_pde_solve_(uintptr_t* gr, const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, mreal *dz, mreal *k0,const char *opt,int,int);
+uintptr_t mgl_qo2d_solve_(const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, uintptr_t* ray, mreal *r, mreal *k0, uintptr_t* xx, uintptr_t* yy, int);
+uintptr_t mgl_ray_trace_(const char *ham, mreal *x0, mreal *y0, mreal *z0, mreal *px, mreal *py, mreal *pz, mreal *dt, mreal *tmax,int);
 uintptr_t mgl_jacobian_2d_(uintptr_t* x, uintptr_t* y);
 uintptr_t mgl_jacobian_3d_(uintptr_t* x, uintptr_t* y, uintptr_t* z);
 

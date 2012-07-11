@@ -116,8 +116,8 @@ Sets the transparency on/off and returns previous value of transparency. It is r
 @anchor{alphadef}
 @deftypefn {MGL command} {} alphadef @code{val}
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} SetAlphaDef (@code{float} val)
-@deftypefnx {C function} @code{void} mgl_set_alpha_default (@code{HMGL} gr, @code{float} alpha)
+@deftypefnx {Method on @code{mglGraph}} @code{void} SetAlphaDef (@code{mreal} val)
+@deftypefnx {C function} @code{void} mgl_set_alpha_default (@code{HMGL} gr, @code{mreal} alpha)
 @end ifclear
 Sets default value of alpha channel (transparency) for all plotting functions. Initial value is 0.5.
 @end deftypefn
@@ -173,11 +173,11 @@ Switch on/off @var{n}-th light source separately.
 @deftypefn {MGL command} {} light @code{num xdir ydir zdir} ['col'='w' @code{br=0.5}]
 @deftypefnx {MGL command} {} light @code{num xdir ydir zdir xpos ypos zpos} ['col'='w' @code{br=0.5}]
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} AddLight (@code{int} n, @code{mglPoint} d, @code{char} c=@code{'w'}, @code{float} bright=@code{0.5}, @code{float} ap=@code{0})
-@deftypefnx {Method on @code{mglGraph}} @code{void} AddLight (@code{int} n, @code{mglPoint} r, @code{mglPoint} d, @code{char} c=@code{'w'}, @code{float} bright=@code{0.5}, @code{float} ap=@code{0})
-@deftypefnx {C function} @code{void} mgl_add_light (@code{HMGL} gr, @code{int} n, @code{float} dx, @code{float} dy, @code{float} dz)
-@deftypefnx {C function} @code{void} mgl_add_light_ext (@code{HMGL} gr, @code{int} n, @code{float} dx, @code{float} dy, @code{float} dz, @code{char} c, @code{float} bright, @code{float} ap)
-@deftypefnx {C function} @code{void} mgl_add_light_loc (@code{HMGL} gr, @code{int} n, @code{float} rx, @code{float} ry, @code{float} rz, @code{float} dx, @code{float} dy, @code{float} dz, @code{char} c, @code{float} bright, @code{float} ap)
+@deftypefnx {Method on @code{mglGraph}} @code{void} AddLight (@code{int} n, @code{mglPoint} d, @code{char} c=@code{'w'}, @code{mreal} bright=@code{0.5}, @code{mreal} ap=@code{0})
+@deftypefnx {Method on @code{mglGraph}} @code{void} AddLight (@code{int} n, @code{mglPoint} r, @code{mglPoint} d, @code{char} c=@code{'w'}, @code{mreal} bright=@code{0.5}, @code{mreal} ap=@code{0})
+@deftypefnx {C function} @code{void} mgl_add_light (@code{HMGL} gr, @code{int} n, @code{mreal} dx, @code{mreal} dy, @code{mreal} dz)
+@deftypefnx {C function} @code{void} mgl_add_light_ext (@code{HMGL} gr, @code{int} n, @code{mreal} dx, @code{mreal} dy, @code{mreal} dz, @code{char} c, @code{mreal} bright, @code{mreal} ap)
+@deftypefnx {C function} @code{void} mgl_add_light_loc (@code{HMGL} gr, @code{int} n, @code{mreal} rx, @code{mreal} ry, @code{mreal} rz, @code{mreal} dx, @code{mreal} dy, @code{mreal} dz, @code{char} c, @code{mreal} bright, @code{mreal} ap)
 @end ifclear
 The function adds a light source with identification @var{n} in direction @var{d} with color @var{c} and with brightness @var{bright} (which must be in range [0,1]). If position @var{r} is specified and isn't NAN then light source is supposed to be local otherwise light source is supposed to be placed at infinity.
 @end deftypefn
@@ -193,8 +193,8 @@ Set on/off to use diffusive light (only for local light sources).
 @anchor{ambient}
 @deftypefn {MGL command} {} ambient @code{val}
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} SetAmbient (@code{float} bright=@code{0.5})
-@deftypefnx {Функция С} @code{void} mgl_set_ambbr (@code{HMGL} gr, @code{float} bright)
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} SetAmbient (@code{mreal} bright=@code{0.5})
+@deftypefnx {Функция С} @code{void} mgl_set_ambbr (@code{HMGL} gr, @code{mreal} bright)
 @end ifclear
 Sets the brightness of ambient light. The value should be in range [0,1].
 @end deftypefn
@@ -208,8 +208,8 @@ Sets the brightness of ambient light. The value should be in range [0,1].
 @anchor{fog}
 @deftypefn {MGL command} {} fog @code{val [dz=0.25]}
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} Fog (@code{float} d, @code{float} dz=@code{0.25})
-@deftypefnx {C function} @code{void} mgl_set_fog (@code{HMGL} gr, @code{float} d, @code{float} dz)
+@deftypefnx {Method on @code{mglGraph}} @code{void} Fog (@code{mreal} d, @code{mreal} dz=@code{0.25})
+@deftypefnx {C function} @code{void} mgl_set_fog (@code{HMGL} gr, @code{mreal} d, @code{mreal} dz)
 @end ifclear
 Function imitate a fog in the plot. Fog start from relative distance @var{dz} from view point and its density growths exponentially in depth. So that the fog influence is determined by law ~ 1-exp(-@emph{d*z}). Here @emph{z} is normalized to 1 depth of the plot. If value @var{d}=@code{0} then the fog is absent. Note, that fog was applied at stage of image creation, not at stage of drawing. @sref{Adding fog}
 @end deftypefn
@@ -235,8 +235,8 @@ These variables control the default (initial) values for most graphics parameter
 @anchor{barwidth}
 @deftypefn {MGL command} {} barwidth @code{val}
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} SetBarWidth ( @code{float} val)
-@deftypefnx {C function} @code{void} mgl_set_bar_width (@code{HMGL} gr, @code{float} val)
+@deftypefnx {Method on @code{mglGraph}} @code{void} SetBarWidth ( @code{mreal} val)
+@deftypefnx {C function} @code{void} mgl_set_bar_width (@code{HMGL} gr, @code{mreal} val)
 @end ifclear
 Sets relative width of rectangles in @ref{bars}, @ref{barh}, @ref{boxplot}, @ref{candle}. Default value is @code{0.7}.
 @end deftypefn
@@ -244,8 +244,8 @@ Sets relative width of rectangles in @ref{bars}, @ref{barh}, @ref{boxplot}, @ref
 @anchor{marksize}
 @deftypefn {MGL command} {} marksize @code{val}
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} SetMarkSize (@code{float} val)
-@deftypefnx {C function} @code{void} mgl_set_mark_size (@code{HMGL} gr, @code{float} val)
+@deftypefnx {Method on @code{mglGraph}} @code{void} SetMarkSize (@code{mreal} val)
+@deftypefnx {C function} @code{void} mgl_set_mark_size (@code{HMGL} gr, @code{mreal} val)
 @end ifclear
 Sets size of marks for @ref{1D plotting}. Default value is @code{0.02}.
 @end deftypefn
@@ -253,8 +253,8 @@ Sets size of marks for @ref{1D plotting}. Default value is @code{0.02}.
 @anchor{arrowsize}
 @deftypefn {MGL command} {} arrowsize @code{val}
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} SetArrowSize (@code{float} val)
-@deftypefnx {C function} @code{void} mgl_set_arrow_size (@code{HMGL} gr, @code{float} val)
+@deftypefnx {Method on @code{mglGraph}} @code{void} SetArrowSize (@code{mreal} val)
+@deftypefnx {C function} @code{void} mgl_set_arrow_size (@code{HMGL} gr, @code{mreal} val)
 @end ifclear
 Sets size of arrows for @ref{1D plotting}, lines and curves (see @ref{Primitives}). Default value is @code{0.03}.
 @end deftypefn
@@ -294,7 +294,7 @@ Flag which determines how points outside bounding box are drawn. If it is @code{
 @deftypefn {MGL command} {} cut @code{x1 y1 z1 x2 y2 z2}
 @ifclear UDAV
 @deftypefnx {Method on @code{mglGraph}} @code{void} SetCutBox (@code{mglPoint} p1, @code{mglPoint} p1)
-@deftypefnx {C function} @code{void} mgl_set_cut_box (@code{HMGL} gr, @code{float} x1, @code{float} y1, @code{float} z1, @code{float} x2, @code{float} y2, @code{float} z2)
+@deftypefnx {C function} @code{void} mgl_set_cut_box (@code{HMGL} gr, @code{mreal} x1, @code{mreal} y1, @code{mreal} z1, @code{mreal} x2, @code{mreal} y2, @code{mreal} z2)
 @end ifclear
 Lower and upper edge of the box in which never points are drawn. If both edges are the same (the variables are equal) then the cutting box is empty.
 @end deftypefn
@@ -343,18 +343,18 @@ Sets to use or not text rotation.
 Sets the font specification (see @ref{Text printing}). Default is @samp{rC} -- Roman font centering.
 @end deftypefn
 
-@deftypefn {Method on @code{mglGraph}} @code{void} SetFontSize (@code{float} val)
-@deftypefnx {C function} @code{void} mgl_set_font_size (@code{HMGL} gr, @code{float} val)
+@deftypefn {Method on @code{mglGraph}} @code{void} SetFontSize (@code{mreal} val)
+@deftypefnx {C function} @code{void} mgl_set_font_size (@code{HMGL} gr, @code{mreal} val)
 Sets the size of font for tick and axis labels. Default font size of axis labels is 1.4 times large than for tick labels.
 @end deftypefn
 
-@deftypefn {Method on @code{mglGraph}} @code{void} SetFontSizePT (@code{float} cm, @code{int} dpi=@code{72})
+@deftypefn {Method on @code{mglGraph}} @code{void} SetFontSizePT (@code{mreal} cm, @code{int} dpi=@code{72})
 Set FontSize by size in pt and picture DPI (default is 16 pt for dpi=72).
 @end deftypefn
-@deftypefn {Method on @code{mglGraph}} @code{inline void} SetFontSizeCM (@code{float} cm, @code{int} dpi=@code{72})
+@deftypefn {Method on @code{mglGraph}} @code{inline void} SetFontSizeCM (@code{mreal} cm, @code{int} dpi=@code{72})
 Set FontSize by size in centimeters and picture DPI (default is 0.56 cm = 16 pt).
 @end deftypefn
-@deftypefn {Method on @code{mglGraph}} @code{inline void} SetFontSizeIN (@code{float} cm, @code{int} dpi=@code{72})
+@deftypefn {Method on @code{mglGraph}} @code{inline void} SetFontSizeIN (@code{mreal} cm, @code{int} dpi=@code{72})
 Set FontSize by size in inch and picture DPI (default is 0.22 in = 16 pt).
 @end deftypefn
 
@@ -398,7 +398,7 @@ Sets the palette as selected colors. Default value is @code{"Hbgrcmyhlnqeup"} th
 Sets the @var{sch} as default color scheme. Default value is @code{"BbcyrR"}.
 @end deftypefn
 
-@deftypefn {C function} @code{void} mgl_set_color (@code{char} id, @code{float} r, @code{float} g, @code{float} b)
+@deftypefn {C function} @code{void} mgl_set_color (@code{char} id, @code{mreal} r, @code{mreal} g, @code{mreal} b)
 Sets RGB values for color with given @var{id}.
 @end deftypefn
 @end ifclear
@@ -501,8 +501,8 @@ These large set of variables and functions control how the axis and ticks will b
 @deftypefnx {MGL command} {} zrange @code{v1 v2}
 @deftypefnx {MGL command} {} crange @code{v1 v2}
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} SetRange (@code{char} dir, @code{float} v1, @code{float} v2)
-@deftypefnx {C function} @code{void} mgl_set_range_val (@code{HMGL} gr, @code{char} dir, @code{float} v1, @code{float} v2)
+@deftypefnx {Method on @code{mglGraph}} @code{void} SetRange (@code{char} dir, @code{mreal} v1, @code{mreal} v2)
+@deftypefnx {C function} @code{void} mgl_set_range_val (@code{HMGL} gr, @code{char} dir, @code{mreal} v1, @code{mreal} v2)
 @end ifclear
 Sets the range for @samp{x}-,@samp{y}-,@samp{z}- coordinate or coloring (@samp{c}). See also @ref{ranges}.
 @end deftypefn
@@ -523,8 +523,8 @@ Sets the range for @samp{x}-,@samp{y}-,@samp{z}- coordinate or coloring (@samp{c
 @deftypefn {MGL command} {} ranges @code{x1 x2 y1 y2 [z1=0 z2=0]}
 @ifclear UDAV
 @deftypefnx {Method on @code{mglGraph}} @code{void} SetRanges (@code{mglPoint} p1, @code{mglPoint} p2)
-@deftypefnx {Method on @code{mglGraph}} @code{void} SetRanges (@code{float} x1, @code{float} x2, @code{float} y1, @code{float} y2, @code{float} z1=@code{0}, @code{float} z2=@code{0})
-@deftypefnx {C function} @code{void} mgl_set_ranges (@code{HMGL} gr, @code{float} x1, @code{float} x2, @code{float} y1, @code{float} y2, @code{float} z1, @code{float} z2)
+@deftypefnx {Method on @code{mglGraph}} @code{void} SetRanges (@code{mreal} x1, @code{mreal} x2, @code{mreal} y1, @code{mreal} y2, @code{mreal} z1=@code{0}, @code{mreal} z2=@code{0})
+@deftypefnx {C function} @code{void} mgl_set_ranges (@code{HMGL} gr, @code{mreal} x1, @code{mreal} x2, @code{mreal} y1, @code{mreal} y2, @code{mreal} z1, @code{mreal} z2)
 @end ifclear
 Sets the ranges of coordinates. If minimal and maximal values of the coordinate are the same then they are ignored. Also it sets the range for coloring (analogous to @code{crange z1 z2}). This is default color range for 2d plots. Initial ranges are [-1, 1].
 @end deftypefn
@@ -541,8 +541,8 @@ Sets the ranges of x-,y-,z-coordinates and coloring as minimal and maximal value
 @deftypefn {MGL command} {} origin @code{x0 y0 [z0=nan]}
 @ifclear UDAV
 @deftypefnx {Method on @code{mglGraph}} @code{void} SetOrigin (@code{mglPoint} p0)
-@deftypefnx {Method on @code{mglGraph}} @code{void} SetOrigin (@code{float} x0, @code{float} y0, @code{float} z0=@code{NAN})
-@deftypefnx {C function} @code{void} mgl_set_origin (@code{HMGL} gr, @code{float} x0, @code{float} y0, @code{float} z0)
+@deftypefnx {Method on @code{mglGraph}} @code{void} SetOrigin (@code{mreal} x0, @code{mreal} y0, @code{mreal} z0=@code{NAN})
+@deftypefnx {C function} @code{void} mgl_set_origin (@code{HMGL} gr, @code{mreal} x0, @code{mreal} y0, @code{mreal} z0)
 @end ifclear
 Sets center of axis cross section. If one of values is NAN then MathGL try to select optimal axis position.
 @end deftypefn
@@ -626,8 +626,8 @@ Set the ticks step, number of sub-ticks and initial ticks position to be the mos
 @deftypefnx {MGL command} {} ztick @code{val [sub=0 org=nan]}
 @deftypefnx {MGL command} {} ctick @code{val [sub=0 org=nan]}
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} SetTicks (@code{char} dir, @code{float} d=@code{0}, @code{int} ns=@code{0}, @code{float} org=@code{NAN})
-@deftypefnx {C function} @code{void} mgl_set_ticks_dir (@code{HMGL} gr, @code{char} dir, @code{float} d, @code{int} ns, @code{float} org)
+@deftypefnx {Method on @code{mglGraph}} @code{void} SetTicks (@code{char} dir, @code{mreal} d=@code{0}, @code{int} ns=@code{0}, @code{mreal} org=@code{NAN})
+@deftypefnx {C function} @code{void} mgl_set_ticks_dir (@code{HMGL} gr, @code{char} dir, @code{mreal} d, @code{int} ns, @code{mreal} org)
 @deftypefnx {C function} @code{void} mgl_set_ticks (@code{HMGL} gr, @code{int} nx, @code{int} ny, @code{int} nz)
 @end ifclear
 Set the ticks step @var{d}, number of sub-ticks @var{ns} (used for positive @var{d}) and initial ticks position @var{org} for the axis along direction @var{dir} (use 'c' for colorbar ticks). Variable @var{d} set step for axis ticks (if positive) or it's number on the axis range (if negative). Zero value set automatic ticks. If @var{org} value is NAN then axis origin is used.
@@ -664,16 +664,16 @@ Set template @var{templ} for x-,y-,z-axis ticks or colorbar ticks. It may contai
 
 @deftypefn {MGL command} {} ticktime 'dir' [@code{dv} 'tmpl']
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} SetTicksTime (@code{char} dir, @code{float} val, @code{const char *}templ)
-@deftypefnx {C function} @code{void} mgl_set_ticks_time (@code{HMGL} gr, @code{float} val, @code{const char *}templ)
+@deftypefnx {Method on @code{mglGraph}} @code{void} SetTicksTime (@code{char} dir, @code{mreal} val, @code{const char *}templ)
+@deftypefnx {C function} @code{void} mgl_set_ticks_time (@code{HMGL} gr, @code{mreal} val, @code{const char *}templ)
 @end ifclear
 Set time labels with step @var{val} and template @var{templ} for x-,y-,z-axis ticks or colorbar ticks. It may contain TeX symbols also. The format of template @var{templ} is the same as described in @url{http://www.manpagez.com/man/3/strftime/}. Most common variants are @samp{%X} for national representation of time, @samp{%x} for national representation of date, @samp{%Y} for year with century. If @var{val}=0 and/or @var{templ}="" then automatic tick step and/or template will be selected.
 @end deftypefn
 
 @deftypefn {MGL command} {} tuneticks @code{val} [@code{pos=1.15}]
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} SetTuneTicks (@code{int} tune, @code{float} pos=@code{1.15})
-@deftypefnx {C function} @code{void} mgl_tune_ticks (@code{HMGL} gr, @code{int} tune, @code{float} pos)
+@deftypefnx {Method on @code{mglGraph}} @code{void} SetTuneTicks (@code{int} tune, @code{mreal} pos=@code{1.15})
+@deftypefnx {C function} @code{void} mgl_tune_ticks (@code{HMGL} gr, @code{int} tune, @code{mreal} pos)
 @end ifclear
 Switch on/off ticks enhancing by factoring common multiplier (for small, like from 0.001 to 0.002, or large, like from 1000 to 2000, coordinate values -- enabled if @var{tune}&1 is nonzero) or common component (for narrow range, like from 0.999 to 1.000 -- enabled if @var{tune}&2 is nonzero). Also set the position @var{pos} of common multiplier/component on the axis: =0 at minimal axis value, =1 at maximal axis value. Default value is 1.15.
 @end deftypefn
@@ -681,7 +681,7 @@ Switch on/off ticks enhancing by factoring common multiplier (for small, like fr
 @ifclear UDAV
 
 @deftypefn {Method on @code{mglGraph}} @code{void} SetTickShift (@code{mglPoint} d)
-@deftypefnx {C function} @code{void} mgl_set_tick_shift (@code{HMGL} gr, @code{float} dx, @code{float} dy, @code{float} dz, @code{float} dc)
+@deftypefnx {C function} @code{void} mgl_set_tick_shift (@code{HMGL} gr, @code{mreal} dx, @code{mreal} dy, @code{mreal} dz, @code{mreal} dc)
 Set value of additional shift for ticks labels.
 @end deftypefn
 
@@ -705,8 +705,8 @@ Enable/disable using UTC time for ticks labels. In C/Fortran you can use @code{m
 @anchor{ticklen}
 @deftypefn {MGL command} {} ticklen @code{val} [@code{stt=1}]
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} SetTickLen (@code{float} val, @code{float} stt=@code{1})
-@deftypefnx {C function} @code{void} mgl_set_tick_len (@code{HMGL} gr, @code{float} val, @code{float} stt)
+@deftypefnx {Method on @code{mglGraph}} @code{void} SetTickLen (@code{mreal} val, @code{mreal} stt=@code{1})
+@deftypefnx {C function} @code{void} mgl_set_tick_len (@code{HMGL} gr, @code{mreal} val, @code{mreal} stt)
 @end ifclear
 The relative length of axis ticks. Default value is @code{0.1}. Parameter @var{stt}>0 set relative length of subticks which is in @code{sqrt(1+stt)} times smaller.
 @end deftypefn
@@ -742,9 +742,9 @@ These functions control how and where further plotting will be placed. There is 
 @anchor{subplot}
 @deftypefn {MGL command} {} subplot @code{nx ny m ['stl'='<>_^' dx=0 dy=0]}
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} SubPlot (@code{int} nx, @code{int} ny, @code{int} m, @code{const char *}stl=@code{"<>_^"}, @code{float} dx=@code{0}, @code{float} dy=@code{0})
+@deftypefnx {Method on @code{mglGraph}} @code{void} SubPlot (@code{int} nx, @code{int} ny, @code{int} m, @code{const char *}stl=@code{"<>_^"}, @code{mreal} dx=@code{0}, @code{mreal} dy=@code{0})
 @deftypefnx {C function} @code{void} mgl_subplot (@code{HMGL} gr, @code{int} nx, @code{int} ny, @code{int} m, @code{const char *}stl)
-@deftypefnx {C function} @code{void} mgl_subplot_d (@code{HMGL} gr, @code{int} nx, @code{int} ny, @code{int} m, @code{const char *}stl, @code{float} dx, @code{float} dy)
+@deftypefnx {C function} @code{void} mgl_subplot_d (@code{HMGL} gr, @code{int} nx, @code{int} ny, @code{int} m, @code{const char *}stl, @code{mreal} dx, @code{mreal} dy)
 @end ifclear
 Puts further plotting in a @var{m}-th cell of @var{nx}*@var{ny} grid of the whole frame area. This function set off any aspects or rotations. So it should be used first for creating the subplot. Extra space will be reserved for axis/colorbar if @var{stl} contain:
 @itemize @bullet
@@ -782,9 +782,9 @@ Puts further plotting in a rectangle of @var{dx}*@var{dy} cells starting from @v
 @anchor{inplot}
 @deftypefn {MGL command} {} inplot @code{x1 x2 y1 y2 [rel=off]}
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} InPlot (@code{float} x1, @code{float} x2, @code{float} y1, @code{float} y2, @code{bool} rel=@code{false})
-@deftypefnx {C function} @code{void} mgl_inplot (@code{HMGL} gr, @code{float} x1, @code{float} x2, @code{float} y1, @code{float} y2)
-@deftypefnx {C function} @code{void} mgl_relplot (@code{HMGL} gr, @code{float} x1, @code{float} x2, @code{float} y1, @code{float} y2)
+@deftypefnx {Method on @code{mglGraph}} @code{void} InPlot (@code{mreal} x1, @code{mreal} x2, @code{mreal} y1, @code{mreal} y2, @code{bool} rel=@code{false})
+@deftypefnx {C function} @code{void} mgl_inplot (@code{HMGL} gr, @code{mreal} x1, @code{mreal} x2, @code{mreal} y1, @code{mreal} y2)
+@deftypefnx {C function} @code{void} mgl_relplot (@code{HMGL} gr, @code{mreal} x1, @code{mreal} x2, @code{mreal} y1, @code{mreal} y2)
 @end ifclear
 Puts further plotting in some region of the whole frame surface. This function allows one to create a plot in arbitrary place of the screen. The position is defined by rectangular coordinates [@var{x1}, @var{x2}]*[@var{y1}, @var{y2}]. The coordinates @var{x1}, @var{x2}, @var{y1}, @var{y2} are normalized to interval [0, 1]. If parameter @var{rel}=@code{true} then the relative position to current @ref{subplot} (or @ref{inplot} with @var{rel}=@code{false}) is used. This function set off any aspects or rotations. So it should be used first for creating subplot.
 @end deftypefn
@@ -792,9 +792,9 @@ Puts further plotting in some region of the whole frame surface. This function a
 @anchor{columnplot}
 @deftypefn {MGL command} {} columnplot @code{num ind [d=0]}
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} ColumnPlot (@code{int} num, @code{int} ind, @code{float} d=@code{0})
+@deftypefnx {Method on @code{mglGraph}} @code{void} ColumnPlot (@code{int} num, @code{int} ind, @code{mreal} d=@code{0})
 @deftypefnx {C function} @code{void} mgl_columnplot (@code{HMGL} gr, @code{int} num, @code{int} ind)
-@deftypefnx {C function} @code{void} mgl_columnplot_d (@code{HMGL} gr, @code{int} num, @code{int} ind, @code{float} d)
+@deftypefnx {C function} @code{void} mgl_columnplot_d (@code{HMGL} gr, @code{int} num, @code{int} ind, @code{mreal} d)
 @end ifclear
 Puts further plotting in @var{ind}-th cell of column with @var{num} cells. The position is relative to previous @ref{subplot} (or @ref{inplot} with @var{rel}=@code{false}). Parameter @var{d} set extra gap between cells.
 @end deftypefn
@@ -802,9 +802,9 @@ Puts further plotting in @var{ind}-th cell of column with @var{num} cells. The p
 @anchor{gridplot}
 @deftypefn {MGL command} {} gridplot @code{nx ny ind [d=0]}
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} GridPlot (@code{int} nx, @code{int} ny, @code{int} ind, @code{float} d=@code{0})
+@deftypefnx {Method on @code{mglGraph}} @code{void} GridPlot (@code{int} nx, @code{int} ny, @code{int} ind, @code{mreal} d=@code{0})
 @deftypefnx {C function} @code{void} mgl_gridplot (@code{HMGL} gr, @code{int} nx, @code{int} ny, @code{int} ind)
-@deftypefnx {C function} @code{void} mgl_gridplot_d (@code{HMGL} gr, @code{int} nx, @code{int} ny, @code{int} ind, @code{float} d)
+@deftypefnx {C function} @code{void} mgl_gridplot_d (@code{HMGL} gr, @code{int} nx, @code{int} ny, @code{int} ind, @code{mreal} d)
 @end ifclear
 Puts further plotting in @var{ind}-th cell of @var{nx}*@var{ny} grid. The position is relative to previous @ref{subplot} (or @ref{inplot} with @var{rel}=@code{false}). Parameter @var{d} set extra gap between cells.
 @end deftypefn
@@ -812,8 +812,8 @@ Puts further plotting in @var{ind}-th cell of @var{nx}*@var{ny} grid. The positi
 @anchor{stickplot}
 @deftypefn {MGL command} {} stickplot @code{num ind tet phi}
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} StickPlot (@code{int} num, @code{int} ind, @code{float} tet, @code{float} phi)
-@deftypefnx {C function} @code{void} mgl_stickplot (@code{HMGL} gr, @code{int} num, @code{int} ind, @code{float} tet, @code{float} phi)
+@deftypefnx {Method on @code{mglGraph}} @code{void} StickPlot (@code{int} num, @code{int} ind, @code{mreal} tet, @code{mreal} phi)
+@deftypefnx {C function} @code{void} mgl_stickplot (@code{HMGL} gr, @code{int} num, @code{int} ind, @code{mreal} tet, @code{mreal} phi)
 @end ifclear
 Puts further plotting in @var{ind}-th cell of stick with @var{num} cells. At this, stick is rotated on angles @var{tet}, @var{phi}. The position is relative to previous @ref{subplot} (or @ref{inplot} with @var{rel}=@code{false}).
 @end deftypefn
@@ -821,10 +821,10 @@ Puts further plotting in @var{ind}-th cell of stick with @var{num} cells. At thi
 @anchor{title}
 @deftypefn {MGL command} {} title 'title' ['stl'='' @code{size=-2}]
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} Title (@code{const char *}txt, @code{const char *}stl=@code{""}, @code{float} size=@code{-2})
-@deftypefnx {Method on @code{mglGraph}} @code{void} Title (@code{const wchar_t *}txt, @code{const char *}stl=@code{""}, @code{float} size=@code{-2})
-@deftypefnx {C function} @code{void} mgl_title (@code{HMGL} gr, @code{const char *}txt, @code{const char *}stl, @code{float} size)
-@deftypefnx {C function} @code{void} mgl_titlew (@code{HMGL} gr, @code{const wchar_t *}txt, @code{const char *}stl, @code{float} size)
+@deftypefnx {Method on @code{mglGraph}} @code{void} Title (@code{const char *}txt, @code{const char *}stl=@code{""}, @code{mreal} size=@code{-2})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Title (@code{const wchar_t *}txt, @code{const char *}stl=@code{""}, @code{mreal} size=@code{-2})
+@deftypefnx {C function} @code{void} mgl_title (@code{HMGL} gr, @code{const char *}txt, @code{const char *}stl, @code{mreal} size)
+@deftypefnx {C function} @code{void} mgl_titlew (@code{HMGL} gr, @code{const wchar_t *}txt, @code{const char *}stl, @code{mreal} size)
 @end ifclear
 Add text @var{title} for current subplot/inplot. Paramater @var{stl} can contain:
 @itemize @bullet
@@ -839,16 +839,16 @@ Parameter @var{size} set font size. This function set off any aspects or rotatio
 @anchor{rotate}
 @deftypefn {MGL command} {} rotate @code{tetz tetx [tety=0]}
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} Rotate (@code{float} TetX, @code{float} TetZ, @code{float} TetY=@code{0})
-@deftypefnx {C function} @code{void} mgl_rotate (@code{HMGL} gr, @code{float} TetX, @code{float} TetZ, @code{float} TetY)
+@deftypefnx {Method on @code{mglGraph}} @code{void} Rotate (@code{mreal} TetX, @code{mreal} TetZ, @code{mreal} TetY=@code{0})
+@deftypefnx {C function} @code{void} mgl_rotate (@code{HMGL} gr, @code{mreal} TetX, @code{mreal} TetZ, @code{mreal} TetY)
 @end ifclear
 Rotates a further plotting relative to each axis @{x, z, y@} consecutively on angles @var{TetX}, @var{TetZ}, @var{TetY}.
 @end deftypefn
 
 @deftypefn {MGL command} {} rotate @code{tet x y z}
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} RotateN (@code{float} Tet, @code{float} x, @code{float} y, @code{float} z)
-@deftypefnx {C function} @code{void} mgl_rotate_vector (@code{HMGL} gr, @code{float Tet}, @code{float x}, @code{float y}, @code{float z})
+@deftypefnx {Method on @code{mglGraph}} @code{void} RotateN (@code{mreal} Tet, @code{mreal} x, @code{mreal} y, @code{mreal} z)
+@deftypefnx {C function} @code{void} mgl_rotate_vector (@code{HMGL} gr, @code{mreal Tet}, @code{mreal x}, @code{mreal y}, @code{mreal z})
 @end ifclear
 Rotates a further plotting around vector @{@var{x}, @var{y}, @var{z}@} on angle @var{Tet}.
 @end deftypefn
@@ -856,8 +856,8 @@ Rotates a further plotting around vector @{@var{x}, @var{y}, @var{z}@} on angle 
 @anchor{aspect}
 @deftypefn {MGL command} {} aspect @code{ax ay [az=1]}
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} Aspect (@code{float} Ax, @code{float} Ay, @code{float} Az=@code{1})
-@deftypefnx {C function} @code{void} mgl_aspect (@code{HMGL} gr, @code{float} Ax, @code{float} Ay, @code{float} Az)
+@deftypefnx {Method on @code{mglGraph}} @code{void} Aspect (@code{mreal} Ax, @code{mreal} Ay, @code{mreal} Az=@code{1})
+@deftypefnx {C function} @code{void} mgl_aspect (@code{HMGL} gr, @code{mreal} Ax, @code{mreal} Ay, @code{mreal} Az)
 @end ifclear
 Defines aspect ratio for the plot. The viewable axes will be related one to another as the ratio @var{Ax:Ay:Az}. For the best effect it should be used after @ref{rotate} function.
 @end deftypefn
@@ -865,8 +865,8 @@ Defines aspect ratio for the plot. The viewable axes will be related one to anot
 @anchor{perspective}
 @deftypefn {MGL command} {} perspective @code{val}
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} Perspective (@code{float} a)
-@deftypefnx {C function} @code{void} mgl_perspective (@code{HMGL} gr, @code{float} a)
+@deftypefnx {Method on @code{mglGraph}} @code{void} Perspective (@code{mreal} a)
+@deftypefnx {C function} @code{void} mgl_perspective (@code{HMGL} gr, @code{mreal} a)
 @end ifclear
 Add (switch on) the perspective to plot. The parameter @math{a ~ 1/z_@{eff@} \in [0,1)}. By default (@code{a=0}) the perspective is off.
 @end deftypefn
@@ -883,20 +883,20 @@ Push transformation matrix into stack. Later you can restore its current state b
 Pop (restore last 'pushed') transformation matrix into stack.
 @end deftypefn
 
-@deftypefn {Method on @code{mglGraph}} @code{void} SetPlotFactor (@code{float} val)
-@deftypefnx {C function} @code{void} mgl_set_plotfactor (@code{HMGL} gr, @code{float} val)
+@deftypefn {Method on @code{mglGraph}} @code{void} SetPlotFactor (@code{mreal} val)
+@deftypefnx {C function} @code{void} mgl_set_plotfactor (@code{HMGL} gr, @code{mreal} val)
 Sets the factor of plot size. It is not recommended to set it lower then 1.5. This is some analogue of function Zoom() but applied not to overall image but for each InPlot. Use negative value or zero to enable automatic selection.
 @end deftypefn
 
 There are 2 functions @code{View()} and @code{Zoom()} which transform whole image. I.e. they act as secondary transformation matrix. They were introduced for rotating/zooming the whole plot by mouse.
 
-@deftypefn {Method on @code{mglGraph}} @code{void} View (@code{float} TetX, @code{float} TetZ, @code{float} TetY=@code{0})
-@deftypefnx {C function} @code{void} mgl_view (@code{HMGL} gr, @code{float} TetX, @code{float} TetZ, @code{float} TetY)
+@deftypefn {Method on @code{mglGraph}} @code{void} View (@code{mreal} TetX, @code{mreal} TetZ, @code{mreal} TetY=@code{0})
+@deftypefnx {C function} @code{void} mgl_view (@code{HMGL} gr, @code{mreal} TetX, @code{mreal} TetZ, @code{mreal} TetY)
 Rotates a further plotting relative to each axis @{x, z, y@} consecutively on angles @var{TetX}, @var{TetZ}, @var{TetY}. Rotation is done independently on @ref{rotate}. Use @code{Zoom(0,0,1,1)} to return default view.
 @end deftypefn
 
-@deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} Zoom (@code{float} x1, @code{float} y1, @code{float} x2, @code{float} y2)
-@deftypefnx {C function} @code{void} mgl_set_zoom (@code{HMGL} gr, @code{float} x1, @code{float} y1, @code{float} x2, @code{float} y2)
+@deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} Zoom (@code{mreal} x1, @code{mreal} y1, @code{mreal} x2, @code{mreal} y2)
+@deftypefnx {C function} @code{void} mgl_set_zoom (@code{HMGL} gr, @code{mreal} x1, @code{mreal} y1, @code{mreal} x2, @code{mreal} y2)
 The function changes the scale of graphics that correspond to zoom in/out of the picture. After function call the current plot will be cleared and further the picture will contain plotting from its part [x1,x2]*[y1,y2]. Here picture coordinates @var{x1}, @var{x2}, @var{y1}, @var{y2} changes from 0 to 1. Attention! this settings can not be overwritten by any other functions. Use @code{Zoom(0,0,1,1)} to return default view.
 @end deftypefn
 
@@ -1168,12 +1168,12 @@ Gets width and height of the image.
 
 
 @deftypefn {Method on @code{mglGraph}} @code{mglPoint} CalcXYZ (@code{int} xs, @code{int} ys)
-@deftypefnx {C function} @code{void} mgl_calc_xyz (@code{HMGL} gr, @code{int} xs, @code{int} ys, @code{float *}x, @code{float *}y, @code{float *}z)
+@deftypefnx {C function} @code{void} mgl_calc_xyz (@code{HMGL} gr, @code{int} xs, @code{int} ys, @code{mreal *}x, @code{mreal *}y, @code{mreal *}z)
 Calculate 3D coordinate @{x,y,z@} for screen point @{xs,ys@}. At this moment it ignore perspective and transformation formulas (curvilinear coordinates). The calculation are done for the last used InPlot (see @ref{Subplots and rotation}).
 @end deftypefn
 
 @deftypefn {Method on @code{mglGraph}} @code{mglPoint} CalcScr (@code{mglPoint} p)
-@deftypefnx {C function} @code{void} mgl_calc_scr (@code{HMGL} gr, @code{float} x, @code{float} y, @code{float} z, @code{int *}xs, @code{int *}ys)
+@deftypefnx {C function} @code{void} mgl_calc_scr (@code{HMGL} gr, @code{mreal} x, @code{mreal} y, @code{mreal} z, @code{int *}xs, @code{int *}ys)
 Calculate screen point @{xs,ys@} for 3D coordinate @{x,y,z@}. The calculation are done for the last used InPlot (see @ref{Subplots and rotation}).
 @end deftypefn
 
@@ -1265,9 +1265,9 @@ These functions draw some simple objects like line, point, sphere, drop, cone an
 @deftypefn {MGL command} {} clf
 @ifclear UDAV
 @deftypefnx {Method on @code{mglGraph}} @code{void} Clf ()
-@deftypefnx {Method on @code{mglGraph}} @code{void} Clf (@code{float} r, @code{float} g, @code{float} b)
+@deftypefnx {Method on @code{mglGraph}} @code{void} Clf (@code{mreal} r, @code{mreal} g, @code{mreal} b)
 @deftypefnx {C function} @code{void} mgl_clf (@code{HMGL} gr)
-@deftypefnx {C function} @code{void} mgl_clf_rgb (@code{HMGL} gr, @code{float} r, @code{float} g, @code{float} b)
+@deftypefnx {C function} @code{void} mgl_clf_rgb (@code{HMGL} gr, @code{mreal} r, @code{mreal} g, @code{mreal} b)
 @end ifclear
 Clear the picture and fill it by color specified color.
 @end deftypefn
@@ -1278,14 +1278,14 @@ Clear the picture and fill it by color specified color.
 @ifclear UDAV
 @deftypefnx {Method on @code{mglGraph}} @code{void} Ball (@code{mglPoint} p, @code{char} col=@code{'r'})
 @deftypefnx {Method on @code{mglGraph}} @code{void} Mark (@code{mglPoint} p, @code{const char *}mark)
-@deftypefnx {C function} @code{void} mgl_mark (@code{HMGL} gr, @code{float} x, @code{float} y, @code{float} z, @code{const char *}mark)
+@deftypefnx {C function} @code{void} mgl_mark (@code{HMGL} gr, @code{mreal} x, @code{mreal} y, @code{mreal} z, @code{const char *}mark)
 @end ifclear
 Draws a mark (point @samp{.} by default) at position @var{p}=@{@var{x}, @var{y}, @var{z}@} with color @var{col}.
 @end deftypefn
 
 @ifclear UDAV
 @deftypefn {Method on @code{mglGraph}} @code{void} Error (@code{mglPoint} p, @code{mglPoint} e, @code{char} *stl=@code{""})
-@deftypefnx {C function} @code{void} mgl_error_box (@code{HMGL} gr, @code{float} px, @code{float} py, @code{float} pz, @code{float} ex, @code{float} ey, @code{float} ez, @code{char *}stl)
+@deftypefnx {C function} @code{void} mgl_error_box (@code{HMGL} gr, @code{mreal} px, @code{mreal} py, @code{mreal} pz, @code{mreal} ex, @code{mreal} ey, @code{mreal} ez, @code{char *}stl)
 Draws a 3d error box at position @var{p} with sizes @var{e} and style @var{stl}. Use NAN for component of @var{e} to reduce number of drawn elements.
 @end deftypefn
 @end ifclear
@@ -1295,7 +1295,7 @@ Draws a 3d error box at position @var{p} with sizes @var{e} and style @var{stl}.
 @deftypefnx {MGL command} {} line @code{x1 y1 z1 x2 y2 z2} ['stl'='']
 @ifclear UDAV
 @deftypefnx {Method on @code{mglGraph}} @code{void} Line (@code{mglPoint} p1, @code{mglPoint} p2, @code{char *}stl=@code{"B"}, @code{int} num=@code{2})
-@deftypefnx {C function} @code{void} mgl_line (@code{HMGL} gr, @code{float} x1, @code{float} y1, @code{float} z1, @code{float} x2, @code{float} y2, @code{float} z2, @code{char *}stl, @code{int} num)
+@deftypefnx {C function} @code{void} mgl_line (@code{HMGL} gr, @code{mreal} x1, @code{mreal} y1, @code{mreal} z1, @code{mreal} x2, @code{mreal} y2, @code{mreal} z2, @code{char *}stl, @code{int} num)
 @end ifclear
 Draws a geodesic line (straight line in Cartesian coordinates) from point @var{p1} to @var{p2} using line style @var{stl}. Parameter @var{num} define the ``quality'' of the line. If @var{num}=@code{2} then the stright line will be drawn in all coordinate system (independently on transformation formulas (see @ref{Curved coordinates}). Contrary, for large values (for example, =@code{100}) the geodesic line will be drawn in corresponding coordinate system (straight line in Cartesian coordinates, circle in polar coordinates and so on). Line will be drawn even if it lies out of bounding box.
 @end deftypefn
@@ -1305,14 +1305,14 @@ Draws a geodesic line (straight line in Cartesian coordinates) from point @var{p
 @deftypefnx {MGL command} {} curve @code{x1 y1 z1 dx1 dy1 dz1 x2 y2 z2 dx2 dy2 dz2} ['stl'='']
 @ifclear UDAV
 @deftypefnx {Method on @code{mglGraph}} @code{void} Curve (@code{mglPoint} p1, @code{mglPoint} d1, @code{mglPoint} p2, @code{mglPoint} d2, @code{const char *}stl=@code{"B"}, @code{int} num=@code{100})
-@deftypefnx {C function} @code{void} mgl_curve (@code{HMGL} gr, @code{float} x1, @code{float} y1, @code{float} z1, @code{float} dx1, @code{float} dy1, @code{float} dz1, @code{float} x2, @code{float} y2, @code{float} z2, @code{float} dx2, @code{float} dy2, @code{float} dz2, @code{const char *}stl, @code{int} num)
+@deftypefnx {C function} @code{void} mgl_curve (@code{HMGL} gr, @code{mreal} x1, @code{mreal} y1, @code{mreal} z1, @code{mreal} dx1, @code{mreal} dy1, @code{mreal} dz1, @code{mreal} x2, @code{mreal} y2, @code{mreal} z2, @code{mreal} dx2, @code{mreal} dy2, @code{mreal} dz2, @code{const char *}stl, @code{int} num)
 @end ifclear
 Draws Bezier-like curve from point @var{p1} to @var{p2} using line style @var{stl}. At this tangent is codirected with @var{d1}, @var{d2} and proportional to its amplitude. Parameter @var{num} define the ``quality'' of the curve. If @var{num}=@code{2} then the straight line will be drawn in all coordinate system (independently on transformation formulas, see @ref{Curved coordinates}). Contrary, for large values (for example, =@code{100}) the spline like Bezier curve will be drawn in corresponding coordinate system. Curve will be drawn even if it lies out of bounding box.
 @end deftypefn
 
 @ifclear UDAV
 @deftypefn {Method on @code{mglGraph}} @code{void} Face (@code{mglPoint} p1, @code{mglPoint} p2, @code{mglPoint} p3, @code{mglPoint} p4, @code{const char *}stl=@code{"w"})
-@deftypefnx {C function} @code{void} mgl_face (@code{HMGL} gr, @code{float} x1, @code{float} y1, @code{float} z1, @code{float} x2, @code{float} y2, @code{float} z2, @code{float} x3, @code{float} y3, @code{float} z3, @code{float} x4, @code{float} y4, @code{float} z4, @code{const char *}stl)
+@deftypefnx {C function} @code{void} mgl_face (@code{HMGL} gr, @code{mreal} x1, @code{mreal} y1, @code{mreal} z1, @code{mreal} x2, @code{mreal} y2, @code{mreal} z2, @code{mreal} x3, @code{mreal} y3, @code{mreal} z3, @code{mreal} x4, @code{mreal} y4, @code{mreal} z4, @code{const char *}stl)
 Draws the solid quadrangle (face) with vertexes @var{p1}, @var{p2}, @var{p3}, @var{p4} and with color(s) @var{stl}. At this colors can be the same for all vertexes or different if all 4 colors are specified for each vertex. Face will be drawn even if it lies out of bounding box.
 @end deftypefn
 @end ifclear
@@ -1323,12 +1323,12 @@ Draws the solid quadrangle (face) with vertexes @var{p1}, @var{p2}, @var{p3}, @v
 @deftypefn {MGL command} {} facex @code{x0 y0 z0 wy wz} ['stl'='' @code{d1=0 d2=0}]
 @deftypefnx {MGL command} {} facey @code{x0 y0 z0 wx wz} ['stl'='' @code{d1=0 d2=0}]
 @deftypefnx {MGL command} {} facez @code{x0 y0 z0 wx wy} ['stl'='' @code{d1=0 d2=0}]
-@deftypefnx {Method on @code{mglGraph}} @code{void} FaceX (@code{float} x0, @code{float} y0, @code{float} z0, @code{float} wy, @code{float} wz, @code{const char *}stl=@code{"w"}, @code{float} d1=@code{0}, @code{float} d2=@code{0})
-@deftypefnx {Method on @code{mglGraph}} @code{void} FaceY (@code{float} x0, @code{float} y0, @code{float} z0, @code{float} wx, @code{float} wz, @code{const char *}stl=@code{"w"}, @code{float} d1=@code{0}, @code{float} d2=@code{0})
-@deftypefnx {Method on @code{mglGraph}} @code{void} FaceZ (@code{float} x0, @code{float} y0, @code{float} z0, @code{float} wx, @code{float} wy, @code{const char *}stl=@code{"w"}, @code{float} d1=@code{0}, @code{float} d2=@code{0})
-@deftypefnx {C function} @code{void} mgl_facex (@code{HMGL} gr, @code{float} x0, @code{float} y0, @code{float} z0, @code{float} wy, @code{float} wz, @code{const char *}stl, @code{float} d1, @code{float} d2)
-@deftypefnx {C function} @code{void} mgl_facey (@code{HMGL} gr, @code{float} x0, @code{float} y0, @code{float} z0, @code{float} wx, @code{float} wz, @code{const char *}stl, @code{float} d1, @code{float} d2)
-@deftypefnx {C function} @code{void} mgl_facez (@code{HMGL} gr, @code{float} x0, @code{float} y0, @code{float} z0, @code{float} wx, @code{float} wy, @code{const char *}stl, @code{float} d1, @code{float} d2)
+@deftypefnx {Method on @code{mglGraph}} @code{void} FaceX (@code{mreal} x0, @code{mreal} y0, @code{mreal} z0, @code{mreal} wy, @code{mreal} wz, @code{const char *}stl=@code{"w"}, @code{mreal} d1=@code{0}, @code{mreal} d2=@code{0})
+@deftypefnx {Method on @code{mglGraph}} @code{void} FaceY (@code{mreal} x0, @code{mreal} y0, @code{mreal} z0, @code{mreal} wx, @code{mreal} wz, @code{const char *}stl=@code{"w"}, @code{mreal} d1=@code{0}, @code{mreal} d2=@code{0})
+@deftypefnx {Method on @code{mglGraph}} @code{void} FaceZ (@code{mreal} x0, @code{mreal} y0, @code{mreal} z0, @code{mreal} wx, @code{mreal} wy, @code{const char *}stl=@code{"w"}, @code{mreal} d1=@code{0}, @code{mreal} d2=@code{0})
+@deftypefnx {C function} @code{void} mgl_facex (@code{HMGL} gr, @code{mreal} x0, @code{mreal} y0, @code{mreal} z0, @code{mreal} wy, @code{mreal} wz, @code{const char *}stl, @code{mreal} d1, @code{mreal} d2)
+@deftypefnx {C function} @code{void} mgl_facey (@code{HMGL} gr, @code{mreal} x0, @code{mreal} y0, @code{mreal} z0, @code{mreal} wx, @code{mreal} wz, @code{const char *}stl, @code{mreal} d1, @code{mreal} d2)
+@deftypefnx {C function} @code{void} mgl_facez (@code{HMGL} gr, @code{mreal} x0, @code{mreal} y0, @code{mreal} z0, @code{mreal} wx, @code{mreal} wy, @code{const char *}stl, @code{mreal} d1, @code{mreal} d2)
 Draws the solid rectangle (face) perpendicular to [x,y,z]-axis correspondingly at position @{@var{x0}, @var{y0}, @var{z0}@} with color @var{stl} and with widths @var{wx}, @var{wy}, @var{wz} along corresponding directions. At this colors can be the same for all vertexes or separately if all 4 colors are specified for each vertex. Parameters @var{d1}!=0, @var{d2}!=0 set additional shift of the last vertex (i.e. to draw quadrangle).
 @end deftypefn
 
@@ -1336,8 +1336,8 @@ Draws the solid rectangle (face) perpendicular to [x,y,z]-axis correspondingly a
 @deftypefn {MGL command} {} sphere @code{x0 y0 r} ['col'='r']
 @deftypefnx {MGL command} {} sphere @code{x0 y0 z0 r} ['col'='r']
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} Sphere (@code{mglPoint} p, @code{float} r, @code{const char *}stl=@code{"r"})
-@deftypefnx {C function} @code{void} mgl_sphere (@code{HMGL} gr, @code{float} x0, @code{float} y0, @code{float} z0, @code{float} r, @code{const char *}stl)
+@deftypefnx {Method on @code{mglGraph}} @code{void} Sphere (@code{mglPoint} p, @code{mreal} r, @code{const char *}stl=@code{"r"})
+@deftypefnx {C function} @code{void} mgl_sphere (@code{HMGL} gr, @code{mreal} x0, @code{mreal} y0, @code{mreal} z0, @code{mreal} r, @code{const char *}stl)
 @end ifclear
 Draw the sphere with radius @var{r} and center at point @var{p}=@{@var{x0}, @var{y0}, @var{z0}@} and color @var{stl}.
 @end deftypefn
@@ -1346,8 +1346,8 @@ Draw the sphere with radius @var{r} and center at point @var{p}=@{@var{x0}, @var
 @deftypefn {MGL command} {} drop @code{x0 y0 dx dy r} ['col'='r' @code{sh=1 asp=1}]
 @deftypefnx {MGL command} {} drop @code{x0 y0 z0 dx dy dz r} ['col'='r' @code{sh=1 asp=1}]
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} Drop (@code{mglPoint} p, @code{mglPoint} d, @code{float} r, @code{const char *}col=@code{"r"}, @code{float} shift=@code{1}, @code{float} ap=@code{1})
-@deftypefnx {C function} @code{void} mgl_drop (@code{HMGL} gr, @code{float} x0, @code{float} y0, @code{float} z0, @code{float} dx, @code{float} dy, @code{float} dz, @code{float} r, @code{const char *}col, @code{float} shift, @code{float} ap)
+@deftypefnx {Method on @code{mglGraph}} @code{void} Drop (@code{mglPoint} p, @code{mglPoint} d, @code{mreal} r, @code{const char *}col=@code{"r"}, @code{mreal} shift=@code{1}, @code{mreal} ap=@code{1})
+@deftypefnx {C function} @code{void} mgl_drop (@code{HMGL} gr, @code{mreal} x0, @code{mreal} y0, @code{mreal} z0, @code{mreal} dx, @code{mreal} dy, @code{mreal} dz, @code{mreal} r, @code{const char *}col, @code{mreal} shift, @code{mreal} ap)
 @end ifclear
 Draw the drop with radius @var{r} at point @var{p} elongated in direction @var{d} and with color @var{col}. Parameter @var{shift} set the degree of drop oblongness: @samp{0} is sphere, @samp{1} is maximally oblongness drop. Parameter @var{ap} set relative width of the drop (this is analogue of ``ellipticity'' for the sphere).
 @end deftypefn
@@ -1355,8 +1355,8 @@ Draw the drop with radius @var{r} at point @var{p} elongated in direction @var{d
 @anchor{cone}
 @deftypefn {MGL command} {} cone @code{x1 y1 z1 x2 y2 z2 r1} [@code{r2=-1} 'stl'='' @code{edge=off}]
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} Cone (@code{mglPoint} p1, @code{mglPoint} p2, @code{float} r1, @code{float} r2=@code{-1}, @code{const char *}stl=@code{"B"}, @code{bool} edge=@code{false})
-@deftypefnx {C function} @code{void} mgl_cone (@code{HMGL} gr, @code{float} x1, @code{float} y1, @code{float} z1, @code{float} x2, @code{float} y2, @code{float} z2, @code{float} r1, @code{float} r2, @code{const char *}stl, @code{int} draw_edge)
+@deftypefnx {Method on @code{mglGraph}} @code{void} Cone (@code{mglPoint} p1, @code{mglPoint} p2, @code{mreal} r1, @code{mreal} r2=@code{-1}, @code{const char *}stl=@code{"B"}, @code{bool} edge=@code{false})
+@deftypefnx {C function} @code{void} mgl_cone (@code{HMGL} gr, @code{mreal} x1, @code{mreal} y1, @code{mreal} z1, @code{mreal} x2, @code{mreal} y2, @code{mreal} z2, @code{mreal} r1, @code{mreal} r2, @code{const char *}stl, @code{int} draw_edge)
 @end ifclear
 Draw tube (or truncated cone if @var{edge}=@code{false}) between points @var{p1}, @var{p2} with radius at the edges @var{r1}, @var{r2}. If @var{r2}<0 then it is supposed that @var{r2}=@var{r1}. The cone color is defined by string @var{stl}.
 @end deftypefn
@@ -1365,7 +1365,7 @@ Draw tube (or truncated cone if @var{edge}=@code{false}) between points @var{p1}
 @deftypefn {MGL command} {} circle @code{x0 y0 r} ['col'='r']
 @deftypefnx {MGL command} {} circle @code{x0 y0 z0 r} ['col'='r']
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} Circle (@code{mglPoint} p, @code{float} r, @code{const char *}stl=@code{"r"})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Circle (@code{mglPoint} p, @code{mreal} r, @code{const char *}stl=@code{"r"})
 @end ifclear
 Draw the circle with radius @var{r} and center at point @var{p}=@{@var{x0}, @var{y0}, @var{z0}@}. Parameter @var{col} may contain
 @itemize @bullet
@@ -1382,8 +1382,8 @@ colors for filling and boundary (second one if style @samp{@@} is used, black co
 @deftypefn {MGL command} {} ellipse @code{x1 y1 x2 y2 r} ['col'='r' @code{sh=1 asp=1}]
 @deftypefnx {MGL command} {} ellipse @code{x1 y1 z1 x2 y2 z2 r} ['col'='r' @code{sh=1 asp=1}]
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} Ellipse (@code{mglPoint} p1, @code{mglPoint} p2, @code{float} r, @code{const char *}col=@code{"r"})
-@deftypefnx {C function} @code{void} mgl_ellipse (@code{HMGL} gr, @code{float} x1, @code{float} y1, @code{float} z1, @code{float} x2, @code{float} y2, @code{float} z2, @code{float} r, @code{const char *}col)
+@deftypefnx {Method on @code{mglGraph}} @code{void} Ellipse (@code{mglPoint} p1, @code{mglPoint} p2, @code{mreal} r, @code{const char *}col=@code{"r"})
+@deftypefnx {C function} @code{void} mgl_ellipse (@code{HMGL} gr, @code{mreal} x1, @code{mreal} y1, @code{mreal} z1, @code{mreal} x2, @code{mreal} y2, @code{mreal} z2, @code{mreal} r, @code{const char *}col)
 @end ifclear
 Draw the ellipse with radius @var{r} and focal points @var{p1}, @var{p2}. Parameter @var{col} may contain
 @itemize @bullet
@@ -1400,8 +1400,8 @@ colors for filling and boundary (second one if style @samp{@@} is used, black co
 @deftypefn {MGL command} {} rhomb @code{x1 y1 x2 y2 r} ['col'='r' @code{sh=1 asp=1}]
 @deftypefnx {MGL command} {} rhomb @code{x1 y1 z1 x2 y2 z2 r} ['col'='r' @code{sh=1 asp=1}]
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} Rhomb (@code{mglPoint} p1, @code{mglPoint} p2, @code{float} r, @code{const char *}col=@code{"r"})
-@deftypefnx {C function} @code{void} mgl_rhomb (@code{HMGL} gr, @code{float} x1, @code{float} y1, @code{float} z1, @code{float} x2, @code{float} y2, @code{float} z2, @code{float} r, @code{const char *}col)
+@deftypefnx {Method on @code{mglGraph}} @code{void} Rhomb (@code{mglPoint} p1, @code{mglPoint} p2, @code{mreal} r, @code{const char *}col=@code{"r"})
+@deftypefnx {C function} @code{void} mgl_rhomb (@code{HMGL} gr, @code{mreal} x1, @code{mreal} y1, @code{mreal} z1, @code{mreal} x2, @code{mreal} y2, @code{mreal} z2, @code{mreal} r, @code{const char *}col)
 @end ifclear
 Draw the rhombus with width @var{r} and edge points @var{p1}, @var{p2}. Parameter @var{col} may contain
 @itemize @bullet
@@ -1438,12 +1438,12 @@ If string contains symbols @samp{aA} then text is printed at absolute position @
 @deftypefn {MGL command} {} text @code{x y} 'text' ['fnt'='' @code{size=-1}]
 @deftypefnx {MGL command} {} text @code{x y z} 'text' ['fnt'='' @code{size=-1}]
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} Puts (@code{mglPoint} p, @code{const char *}text, @code{const char *}fnt=@code{":C"}, @code{float} size=@code{-1})
-@deftypefnx {Method on @code{mglGraph}} @code{void} Putsw (@code{mglPoint} p, @code{const wchar_t *}text, @code{const char *}fnt=@code{":C"}, @code{float} size=@code{-1})
-@deftypefnx {Method on @code{mglGraph}} @code{void} Puts (@code{float} x, @code{float} y, @code{const char *}text, @code{const char *}fnt=@code{":AC"}, @code{float} size=@code{-1})
-@deftypefnx {Method on @code{mglGraph}} @code{void} Putsw (@code{float} x, @code{float} y, @code{const wchar_t *}text, @code{const char *}fnt=@code{":AC"}, @code{float} size=@code{-1})
-@deftypefnx {C function} @code{void} mgl_puts (@code{HMGL} gr, @code{float} x, @code{float} y, @code{float} z, @code{const char *}text, @code{const char *}fnt, @code{float} size)
-@deftypefnx {C function} @code{void} mgl_putsw (@code{HMGL} gr, @code{float} x, @code{float} y, @code{float} z, @code{const wchar_t *}text, @code{const char *}fnt, @code{float} size)
+@deftypefnx {Method on @code{mglGraph}} @code{void} Puts (@code{mglPoint} p, @code{const char *}text, @code{const char *}fnt=@code{":C"}, @code{mreal} size=@code{-1})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Putsw (@code{mglPoint} p, @code{const wchar_t *}text, @code{const char *}fnt=@code{":C"}, @code{mreal} size=@code{-1})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Puts (@code{mreal} x, @code{mreal} y, @code{const char *}text, @code{const char *}fnt=@code{":AC"}, @code{mreal} size=@code{-1})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Putsw (@code{mreal} x, @code{mreal} y, @code{const wchar_t *}text, @code{const char *}fnt=@code{":AC"}, @code{mreal} size=@code{-1})
+@deftypefnx {C function} @code{void} mgl_puts (@code{HMGL} gr, @code{mreal} x, @code{mreal} y, @code{mreal} z, @code{const char *}text, @code{const char *}fnt, @code{mreal} size)
+@deftypefnx {C function} @code{void} mgl_putsw (@code{HMGL} gr, @code{mreal} x, @code{mreal} y, @code{mreal} z, @code{const wchar_t *}text, @code{const char *}fnt, @code{mreal} size)
 @end ifclear
 The function plots the string @var{text} at position @var{p} with fonts specifying by the criteria @var{fnt}. The size of font is set by @var{size} parameter (default is @var{FontSize}).
 @end deftypefn
@@ -1451,10 +1451,10 @@ The function plots the string @var{text} at position @var{p} with fonts specifyi
 @deftypefn {MGL command} {} text @code{x y dx dy} 'text' ['fnt'=':L' @code{size=-1}]
 @deftypefnx {MGL command} {} text @code{x y z dx dy dz} 'text' ['fnt'=':L' @code{size=-1}]
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} Puts (@code{mglPoint} p, @code{mglPoint} d, @code{const char *}text, @code{const char *}fnt=@code{":L"}, @code{float} size=@code{-1})
-@deftypefnx {Method on @code{mglGraph}} @code{void} Putsw (@code{mglPoint} p, @code{mglPoint} d, @code{const wchar_t *}text, @code{const char *}fnt=@code{":L"}, @code{float} size=@code{-1})
-@deftypefnx {C function} @code{void} mgl_puts_dir (@code{HMGL} gr, @code{float} x, @code{float} y, @code{float} z, @code{float} dx, @code{float} dy, @code{float} dz, @code{const char *}text, @code{const char *}fnt, @code{float} size)
-@deftypefnx {C function} @code{void} mgl_putsw_dir (@code{HMGL} gr, @code{float} x, @code{float} y, @code{float} z, @code{float} dx, @code{float} dy, @code{float} dz, @code{const wchar_t *}text, @code{const char *}fnt, @code{float} size)
+@deftypefnx {Method on @code{mglGraph}} @code{void} Puts (@code{mglPoint} p, @code{mglPoint} d, @code{const char *}text, @code{const char *}fnt=@code{":L"}, @code{mreal} size=@code{-1})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Putsw (@code{mglPoint} p, @code{mglPoint} d, @code{const wchar_t *}text, @code{const char *}fnt=@code{":L"}, @code{mreal} size=@code{-1})
+@deftypefnx {C function} @code{void} mgl_puts_dir (@code{HMGL} gr, @code{mreal} x, @code{mreal} y, @code{mreal} z, @code{mreal} dx, @code{mreal} dy, @code{mreal} dz, @code{const char *}text, @code{const char *}fnt, @code{mreal} size)
+@deftypefnx {C function} @code{void} mgl_putsw_dir (@code{HMGL} gr, @code{mreal} x, @code{mreal} y, @code{mreal} z, @code{mreal} dx, @code{mreal} dy, @code{mreal} dz, @code{const wchar_t *}text, @code{const char *}fnt, @code{mreal} size)
 @end ifclear
 The function plots the string @var{text} at position @var{p} along direction @var{d} with specified @var{size}. Parameter @var{fnt} set text style and text position: above (@samp{T}) or under (@samp{t}) the line.
 @end deftypefn
@@ -1550,16 +1550,16 @@ The same as previous but with sharp colors @var{sch} (current palette if @code{s
 
 @deftypefn {MGL command} {} colorbar 'sch' @code{x y [w=1 h=1]}
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} Colorbar (@code{const char *}sch, @code{float} x, @code{float} y, @code{float} w=@code{1}, @code{float} h=@code{1})
-@deftypefnx {C function} @code{void} mgl_colorbar_ext (@code{HMGL} gr, @code{const char *}sch, @code{float} x, @code{float} y, @code{float} w, @code{float} h)
+@deftypefnx {Method on @code{mglGraph}} @code{void} Colorbar (@code{const char *}sch, @code{mreal} x, @code{mreal} y, @code{mreal} w=@code{1}, @code{mreal} h=@code{1})
+@deftypefnx {C function} @code{void} mgl_colorbar_ext (@code{HMGL} gr, @code{const char *}sch, @code{mreal} x, @code{mreal} y, @code{mreal} w, @code{mreal} h)
 @end ifclear
 The same as first one but at arbitrary position of subplot @{@var{x}, @var{y}@} (supposed to be in range [0,1]). Parameters @var{w}, @var{h} set the relative width and height of the colorbar.
 @end deftypefn
 
 @deftypefn {MGL command} {} colorbar vdat 'sch' @code{x y [w=1 h=1]}
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} Colorbar (@code{const mglData &}v, @code{const char *}sch, @code{float} x, @code{float} y, @code{float} w=@code{1}, @code{float} h=@code{1})
-@deftypefnx {C function} @code{void} mgl_colorbar_val_ext (@code{HMGL} gr, @code{HCDT} v, @code{const char *}sch, @code{float} x, @code{float} y, @code{float} w, @code{float} h)
+@deftypefnx {Method on @code{mglGraph}} @code{void} Colorbar (@code{const mglData &}v, @code{const char *}sch, @code{mreal} x, @code{mreal} y, @code{mreal} w=@code{1}, @code{mreal} h=@code{1})
+@deftypefnx {C function} @code{void} mgl_colorbar_val_ext (@code{HMGL} gr, @code{HCDT} v, @code{const char *}sch, @code{mreal} x, @code{mreal} y, @code{mreal} w, @code{mreal} h)
 @end ifclear
 The same as previous but with sharp colors @var{sch} (current palette if @code{sch=""}) for values @var{v}. @sref{ContD sample}
 @end deftypefn
@@ -1592,11 +1592,11 @@ Draws bounding box outside the plotting volume with color @var{col}. If @var{col
 @deftypefnx {MGL command} {} zlabel 'text' [@code{pos=1 shift=0}]
 @deftypefnx {MGL command} {} tlabel 'text' [@code{pos=1 shift=0}]
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} Label (@code{char} dir, @code{const char *}text, @code{float} pos=@code{1}, @code{float} shift=@code{0})
-@deftypefnx {Method on @code{mglGraph}} @code{void} Label (@code{char} dir, @code{const wchar_t *}text, @code{float} pos=@code{1}, @code{float} shift=@code{0})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Label (@code{char} dir, @code{const char *}text, @code{mreal} pos=@code{1}, @code{mreal} shift=@code{0})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Label (@code{char} dir, @code{const wchar_t *}text, @code{mreal} pos=@code{1}, @code{mreal} shift=@code{0})
 @deftypefnx {C function} @code{void} mgl_label (@code{HMGL} gr, @code{char} dir, @code{const char *}text)
-@deftypefnx {C function} @code{void} mgl_label_ext (@code{HMGL} gr, @code{char} dir, @code{const char *}text, @code{float} pos, @code{float} shift)
-@deftypefnx {C function} @code{void} mgl_labelw_ext (@code{HMGL} gr, @code{char} dir, @code{const wchar_t *}text, @code{float} pos, @code{float} shift)
+@deftypefnx {C function} @code{void} mgl_label_ext (@code{HMGL} gr, @code{char} dir, @code{const char *}text, @code{mreal} pos, @code{mreal} shift)
+@deftypefnx {C function} @code{void} mgl_labelw_ext (@code{HMGL} gr, @code{char} dir, @code{const wchar_t *}text, @code{mreal} pos, @code{mreal} shift)
 @end ifclear
 Prints the label @var{text} for axis @var{dir}=@samp{x},@samp{y},@samp{z},@samp{t} (here @samp{t} is ``ternary'' axis @math{t=1-x-y}). The position of label is determined by @var{pos} parameter. If @var{pos}=0 then label is printed at the center of axis. If @var{pos}>0 then label is printed at the maximum of axis. If @var{pos}<0 then label is printed at the minimum of axis. @xref{Text printing}.
 @end deftypefn
@@ -1627,16 +1627,16 @@ colors for background (first one) and border (second one) of legend. Note, that 
 @anchor{legend}
 @deftypefn {MGL command} {} legend [@code{pos=3} 'fnt'='#' @code{size=-0.8 llen=0.1}]
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} Legend (@code{int} pos=@code{0x3}, @code{const char *}fnt=@code{"#"}, @code{float} size=@code{-0.8}, @code{float} llen=@code{0.1})
-@deftypefnx {C function} @code{void} mgl_legend (@code{HMGL} gr, @code{int} pos, @code{const char *}fnt, @code{float} size, @code{float} llen)
+@deftypefnx {Method on @code{mglGraph}} @code{void} Legend (@code{int} pos=@code{0x3}, @code{const char *}fnt=@code{"#"}, @code{mreal} size=@code{-0.8}, @code{mreal} llen=@code{0.1})
+@deftypefnx {C function} @code{void} mgl_legend (@code{HMGL} gr, @code{int} pos, @code{const char *}fnt, @code{mreal} size, @code{mreal} llen)
 @end ifclear
 Draws legend of accumulated legend entries by font @var{fnt} with @var{size}. Parameter @var{pos} sets the position of the legend: @samp{0} is bottom left corner, @samp{1} is bottom right corner, @samp{2} is top left corner, @samp{3} is top right corner (is default). Parameter @var{fnt} can contain colors for face (1st one), for border (2nd one) and for text (last one). If less than 3 colors are specified then the color for border is black (for 2 and less colors), and the color for face is white (for 1 or none colors). If string @var{fnt} contain @samp{#} then border around the legend is drawn.
 @end deftypefn
 
 @deftypefn {MGL command} {} legend @code{x y} ['fnt'='#' @code{size=-1 llen=0.1}]
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} Legend (@code{float} x, @code{float} y, @code{const char *}fnt=@code{"#"}, @code{float} size=@code{-0.8}, @code{float} llen=@code{0.1})
-@deftypefnx {C function} @code{void} mgl_legend_pos (@code{HMGL} gr, @code{float} x, @code{float} y, @code{const char *}fnt, @code{float} size, @code{float} llen)
+@deftypefnx {Method on @code{mglGraph}} @code{void} Legend (@code{mreal} x, @code{mreal} y, @code{const char *}fnt=@code{"#"}, @code{mreal} size=@code{-0.8}, @code{mreal} llen=@code{0.1})
+@deftypefnx {C function} @code{void} mgl_legend_pos (@code{HMGL} gr, @code{mreal} x, @code{mreal} y, @code{const char *}fnt, @code{mreal} size, @code{mreal} llen)
 @end ifclear
 Draws legend of accumulated legend entries by font @var{fnt} with @var{size}. Position of legend is determined by parameter @var{x}, @var{y} which supposed to be normalized to interval [0,1].
 @end deftypefn
@@ -1983,17 +1983,17 @@ These functions draw string @var{txt} at points @{@var{x}[i], @var{y}[i], @var{z
 @deftypefnx {MGL command} {} tube xdat ydat zdat @code{rval} ['stl'='']
 @ifclear UDAV
 @deftypefnx {Method on @code{mglGraph}} @code{void} Tube (@code{const mglData &}y, @code{const mglData &}r, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Method on @code{mglGraph}} @code{void} Tube (@code{const mglData &}y, @code{float} r, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Tube (@code{const mglData &}y, @code{mreal} r, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Method on @code{mglGraph}} @code{void} Tube (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}r, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Method on @code{mglGraph}} @code{void} Tube (@code{const mglData &}x, @code{const mglData &}y, @code{float} r, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Tube (@code{const mglData &}x, @code{const mglData &}y, @code{mreal} r, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Method on @code{mglGraph}} @code{void} Tube (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}r, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Method on @code{mglGraph}} @code{void} Tube (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{float} r, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Tube (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{mreal} r, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {C function} @code{void} mgl_tube_r (@code{HMGL} gr, @code{HCDT} y, @code{HCDT} r, @code{const char *}pen, @code{const char *}opt)
-@deftypefnx {C function} @code{void} mgl_tube (@code{HMGL} gr, @code{HCDT} y, @code{float} r, @code{const char *}pen, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_tube (@code{HMGL} gr, @code{HCDT} y, @code{mreal} r, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_tube_xyr (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} r, @code{const char *}pen, @code{const char *}opt)
-@deftypefnx {C function} @code{void} mgl_tube_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{float} r, @code{const char *}pen, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_tube_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{mreal} r, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_tube_xyzr (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} r, @code{const char *}pen, @code{const char *}opt)
-@deftypefnx {C function} @code{void} mgl_tube_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{float} r, @code{const char *}pen, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_tube_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{mreal} r, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
 These functions draw the tube with variable radius @var{r}[i] along the curve between points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. See also @ref{plot}. @sref{Tube sample}
 @end deftypefn
@@ -2104,8 +2104,8 @@ The function draws horizontal tiles for surface specified parametrically @{@var{
 @deftypefn {MGL command} {} dens zdat ['sch'='']
 @deftypefnx {MGL command} {} dens xdat ydat zdat ['sch'='']
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} Dens (@code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""}, @code{float} zVal=@code{NAN})
-@deftypefnx {Method on @code{mglGraph}} @code{void} Dens (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""}, @code{float} zVal=@code{NAN})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Dens (@code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""}, @code{mreal} zVal=@code{NAN})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Dens (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""}, @code{mreal} zVal=@code{NAN})
 @deftypefnx {C function} @code{void} mgl_dens (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_dens_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
@@ -2258,10 +2258,10 @@ These functions perform plotting of 3D data. 3D means that data depend from 3 in
 @deftypefn {MGL command} {} surf3 adat @code{val} ['sch'='']
 @deftypefnx {MGL command} {} surf3 xdat ydat zdat adat @code{val} ['sch'='']
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} Surf3 (@code{float} val, @code{const mglData &}a, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Method on @code{mglGraph}} @code{void} Surf3 (@code{float} val, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {C function} @code{void} mgl_surf3_val (@code{HMGL} gr, @code{float} val, @code{HCDT} a, @code{const char *}sch, @code{const char *}opt)
-@deftypefnx {C function} @code{void} mgl_surf3_xyz_val (@code{HMGL} gr, @code{float} val, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{const char *}sch, @code{const char *}opt)
+@deftypefnx {Method on @code{mglGraph}} @code{void} Surf3 (@code{mreal} val, @code{const mglData &}a, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Surf3 (@code{mreal} val, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_surf3_val (@code{HMGL} gr, @code{mreal} val, @code{HCDT} a, @code{const char *}sch, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_surf3_xyz_val (@code{HMGL} gr, @code{mreal} val, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
 The function draws isosurface plot for 3d array specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]) at @var{a}(x,y,z)=@var{val}. If string contain @samp{#} then wire plot is produced. Note, that there is possibility of incorrect plotting due to uncertainty of cross-section defining if there are two or more isosurface intersections inside one cell. See also @ref{cloud}, @ref{dens3}, @ref{surf3c}, @ref{surf3a}, @ref{axial}. @sref{Surf3 sample}
 @end deftypefn
@@ -2293,10 +2293,10 @@ The function draws cloud plot for 3d data specified parametrically @var{a}[i,j,k
 @deftypefn {MGL command} {} dens3 adat ['sch'='' @code{sval=-1}]
 @deftypefnx {MGL command} {} dens3 xdat ydat zdat adat ['sch'='' @code{sval=-1}]
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} Dens3 (@code{const mglData &}a, @code{const char *}sch=@code{""}, @code{float} sVal=@code{-1}, @code{const char *}opt=@code{""})
-@deftypefnx {Method on @code{mglGraph}} @code{void} Dens3 (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const char *}sch=@code{""}, @code{float} sVal=@code{-1}, @code{const char *}opt=@code{""})
-@deftypefnx {C function} @code{void} mgl_dens3 (@code{HMGL} gr, @code{HCDT} a, @code{const char *}sch, @code{float} sVal, @code{const char *}opt)
-@deftypefnx {C function} @code{void} mgl_dens3_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{const char *}sch, @code{float} sVal, @code{const char *}opt)
+@deftypefnx {Method on @code{mglGraph}} @code{void} Dens3 (@code{const mglData &}a, @code{const char *}sch=@code{""}, @code{mreal} sVal=@code{-1}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Dens3 (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const char *}sch=@code{""}, @code{mreal} sVal=@code{-1}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_dens3 (@code{HMGL} gr, @code{HCDT} a, @code{const char *}sch, @code{mreal} sVal, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_dens3_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{const char *}sch, @code{mreal} sVal, @code{const char *}opt)
 @end ifclear
 The function draws density plot for 3d data specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]). Density is plotted at slice @var{sVal} in direction @{@samp{x}, @samp{y}, @samp{z}@} if @var{sch} contain corresponding symbol (by default, @samp{y} direction is used). If string @var{stl} have symbol @samp{#} then grid lines are drawn. See also @ref{cont3}, @ref{contf3}, @ref{dens}, @ref{grid3}. @sref{Dens3 sample}
 @end deftypefn
@@ -2305,10 +2305,10 @@ The function draws density plot for 3d data specified parametrically @var{a}[i,j
 @deftypefn {MGL command} {} cont3 vdat adat ['sch'='' @code{sval=-1}]
 @deftypefnx {MGL command} {} cont3 vdat xdat ydat zdat adat ['sch'='' @code{sval=-1}]
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} Cont3 (@code{const mglData &}v, @code{const mglData &}a, @code{const char *}sch=@code{""}, @code{float} sVal=@code{-1}, @code{const char *}opt=@code{""})
-@deftypefnx {Method on @code{mglGraph}} @code{void} Cont3 (@code{const mglData &}v, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const char *}sch=@code{""}, @code{float} sVal=@code{-1}, @code{const char *}opt=@code{""})
-@deftypefnx {C function} @code{void} mgl_cont3_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} a, @code{const char *}sch, @code{float} sVal, @code{const char *}opt)
-@deftypefnx {C function} @code{void} mgl_cont3_xyz_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{const char *}sch, @code{float} sVal, @code{const char *}opt)
+@deftypefnx {Method on @code{mglGraph}} @code{void} Cont3 (@code{const mglData &}v, @code{const mglData &}a, @code{const char *}sch=@code{""}, @code{mreal} sVal=@code{-1}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Cont3 (@code{const mglData &}v, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const char *}sch=@code{""}, @code{mreal} sVal=@code{-1}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_cont3_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} a, @code{const char *}sch, @code{mreal} sVal, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_cont3_xyz_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{const char *}sch, @code{mreal} sVal, @code{const char *}opt)
 @end ifclear
 The function draws contour plot for 3d data specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]). Contours are plotted for values specified in array @var{v} at slice @var{sVal} in direction @{@samp{x}, @samp{y}, @samp{z}@} if @var{sch} contain corresponding symbol (by default, @samp{y} direction is used). If string @var{stl} have symbol @samp{#} then grid lines are drawn. If string @var{stl} have symbol @samp{t} or @samp{T} then contour labels will be drawn below (or above) the contours. See also @ref{dens3}, @ref{contf3}, @ref{cont}, @ref{grid3}. @sref{Cont3 sample}
 @end deftypefn
@@ -2316,10 +2316,10 @@ The function draws contour plot for 3d data specified parametrically @var{a}[i,j
 @deftypefn {MGL command} {} cont3 adat ['sch'='' @code{sval=-1}]
 @deftypefnx {MGL command} {} cont3 xdat ydat zdat adat ['sch'='' @code{sval=-1}]
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} Cont3 (@code{const mglData &}a, @code{const char *}sch=@code{""}, @code{float} sVal=@code{-1}, @code{const char *}opt=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Method on @code{mglGraph}} @code{void} Cont3 (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const char *}sch=@code{""}, @code{float} sVal=@code{-1}, @code{const char *}opt=@code{""})
-@deftypefnx {C function} @code{void} mgl_cont3 (@code{HMGL} gr, @code{HCDT} a, @code{const char *}sch, @code{float} sVal, @code{const char *}opt)
-@deftypefnx {C function} @code{void} mgl_cont3_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{const char *}sch, @code{float} sVal, @code{const char *}opt)
+@deftypefnx {Method on @code{mglGraph}} @code{void} Cont3 (@code{const mglData &}a, @code{const char *}sch=@code{""}, @code{mreal} sVal=@code{-1}, @code{const char *}opt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Cont3 (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const char *}sch=@code{""}, @code{mreal} sVal=@code{-1}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_cont3 (@code{HMGL} gr, @code{HCDT} a, @code{const char *}sch, @code{mreal} sVal, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_cont3_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{const char *}sch, @code{mreal} sVal, @code{const char *}opt)
 @end ifclear
 The same as previous with vector @var{v} of @var{num}-th elements equidistantly distributed in color range. Here @var{num} is equal to parameter @var{value} in options @var{opt} (default is 7).
 @end deftypefn
@@ -2328,10 +2328,10 @@ The same as previous with vector @var{v} of @var{num}-th elements equidistantly 
 @deftypefn {MGL command} {} contf3 vdat adat ['sch'='' @code{sval=-1}]
 @deftypefnx {MGL command} {} contf3 vdat xdat ydat zdat adat ['sch'='' @code{sval=-1}]
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} Contf3 (@code{const mglData &}v, @code{const mglData &}a, @code{const char *}sch=@code{""}, @code{float} sVal=@code{-1}, @code{const char *}opt=@code{""})
-@deftypefnx {Method on @code{mglGraph}} @code{void} Contf3 (@code{const mglData &}v, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const char *}sch=@code{""}, @code{float} sVal=@code{-1}, @code{const char *}opt=@code{""})
-@deftypefnx {C function} @code{void} mgl_contf3_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} a, @code{const char *}sch, @code{float} sVal, @code{const char *}opt)
-@deftypefnx {C function} @code{void} mgl_contf3_xyz_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{const char *}sch, @code{float} sVal, @code{const char *}opt)
+@deftypefnx {Method on @code{mglGraph}} @code{void} Contf3 (@code{const mglData &}v, @code{const mglData &}a, @code{const char *}sch=@code{""}, @code{mreal} sVal=@code{-1}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Contf3 (@code{const mglData &}v, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const char *}sch=@code{""}, @code{mreal} sVal=@code{-1}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_contf3_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} a, @code{const char *}sch, @code{mreal} sVal, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_contf3_xyz_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{const char *}sch, @code{mreal} sVal, @code{const char *}opt)
 @end ifclear
 The function draws solid (or filled) contour plot for 3d data specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]). Contours are plotted for values specified in array @var{v} at slice @var{sVal} in direction @{@samp{x}, @samp{y}, @samp{z}@} if @var{sch} contain corresponding symbol (by default, @samp{y} direction is used). If string @var{stl} have symbol @samp{#} then grid lines are drawn. If string @var{stl} have symbol @samp{t} or @samp{T} then contour labels will be drawn below (or above) the contours. See also @ref{dens3}, @ref{cont3}, @ref{contf}, @ref{grid3}. @sref{Cont3 sample}
 @end deftypefn
@@ -2339,10 +2339,10 @@ The function draws solid (or filled) contour plot for 3d data specified parametr
 @deftypefn {MGL command} {} contf3 adat ['sch'='' @code{sval=-1}]
 @deftypefnx {MGL command} {} contf3 xdat ydat zdat adat ['sch'='' @code{sval=-1}]
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} Contf3 (@code{const mglData &}a, @code{const char *}sch=@code{""}, @code{float} sVal=@code{-1}, @code{const char *}opt=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Method on @code{mglGraph}} @code{void} Contf3 (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const char *}sch=@code{""}, @code{float} sVal=@code{-1}, @code{const char *}opt=@code{""})
-@deftypefnx {C function} @code{void} mgl_contf3 (@code{HMGL} gr, @code{HCDT} a, @code{const char *}sch, @code{float} sVal, @code{const char *}opt)
-@deftypefnx {C function} @code{void} mgl_contf3_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{const char *}sch, @code{float} sVal, @code{const char *}opt)
+@deftypefnx {Method on @code{mglGraph}} @code{void} Contf3 (@code{const mglData &}a, @code{const char *}sch=@code{""}, @code{mreal} sVal=@code{-1}, @code{const char *}opt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Contf3 (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const char *}sch=@code{""}, @code{mreal} sVal=@code{-1}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_contf3 (@code{HMGL} gr, @code{HCDT} a, @code{const char *}sch, @code{mreal} sVal, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_contf3_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{const char *}sch, @code{mreal} sVal, @code{const char *}opt)
 @end ifclear
 The same as previous with vector @var{v} of @var{num}-th elements equidistantly distributed in color range. Here @var{num} is equal to parameter @var{value} in options @var{opt} (default is 7).
 @end deftypefn
@@ -2351,10 +2351,10 @@ The same as previous with vector @var{v} of @var{num}-th elements equidistantly 
 @deftypefn {MGL command} {} grid3 adat ['sch'='' @code{sval=-1}]
 @deftypefnx {MGL command} {} grid3 xdat ydat zdat adat ['sch'='' @code{sval=-1}]
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} Grid3 (@code{const mglData &}a, @code{const char *}sch=@code{""}, @code{float} sVal=@code{-1}, @code{const char *}opt=@code{""})
-@deftypefnx {Method on @code{mglGraph}} @code{void} Grid3 (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const char *}sch=@code{""}, @code{float} sVal=@code{-1}, @code{const char *}opt=@code{""})
-@deftypefnx {C function} @code{void} mgl_grid3 (@code{HMGL} gr, @code{HCDT} a, @code{const char *}sch, @code{float} sVal, @code{const char *}opt)
-@deftypefnx {C function} @code{void} mgl_grid3_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{const char *}sch, @code{float} sVal, @code{const char *}opt)
+@deftypefnx {Method on @code{mglGraph}} @code{void} Grid3 (@code{const mglData &}a, @code{const char *}sch=@code{""}, @code{mreal} sVal=@code{-1}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Grid3 (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const char *}sch=@code{""}, @code{mreal} sVal=@code{-1}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_grid3 (@code{HMGL} gr, @code{HCDT} a, @code{const char *}sch, @code{mreal} sVal, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_grid3_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{const char *}sch, @code{mreal} sVal, @code{const char *}opt)
 @end ifclear
 The function draws grid for 3d data specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]). Grid is plotted at slice @var{sVal} in direction @{@samp{x}, @samp{y}, @samp{z}@} if @var{sch} contain corresponding symbol (by default, @samp{y} direction is used). See also @ref{cont3}, @ref{contf3}, @ref{dens3}, @ref{grid2}, @ref{meshnum}.
 @end deftypefn
@@ -2362,10 +2362,10 @@ The function draws grid for 3d data specified parametrically @var{a}[i,j,k](@var
 @anchor{beam}
 @deftypefn {MGL command} {} beam tr g1 g2 adat @code{rval} ['sch'='' @code{flag=0 num=3}]
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} Beam (@code{const mglData &}tr, @code{const mglData &}g1, @code{const mglData &}g2, @code{const mglData &}a, @code{float} r, @code{const char *}stl=@code{""}, @code{int} flag=@code{0}, @code{int} num=@code{3})
-@deftypefnx {Method on @code{mglGraph}} @code{void} Beam (@code{float} val, @code{const mglData &}tr, @code{const mglData &}g1, @code{const mglData &}g2, @code{const mglData &}a, @code{float} r, @code{const char *}stl=@code{""}, @code{int} flag=@code{0})
-@deftypefnx {C function} @code{void} mgl_beam (@code{HMGL} gr, @code{HCDT} tr, @code{HCDT} g1, @code{HCDT} g2, @code{HCDT} a, @code{float} r, @code{const char *}stl, @code{int} flag, @code{int} num)
-@deftypefnx {C function} @code{void} mgl_beam_val (@code{HMGL} gr, @code{float} val, @code{HCDT} tr, @code{HCDT} g1, @code{HCDT} g2, @code{HCDT} a, @code{float} r, @code{const char *}stl, @code{int} flag)
+@deftypefnx {Method on @code{mglGraph}} @code{void} Beam (@code{const mglData &}tr, @code{const mglData &}g1, @code{const mglData &}g2, @code{const mglData &}a, @code{mreal} r, @code{const char *}stl=@code{""}, @code{int} flag=@code{0}, @code{int} num=@code{3})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Beam (@code{mreal} val, @code{const mglData &}tr, @code{const mglData &}g1, @code{const mglData &}g2, @code{const mglData &}a, @code{mreal} r, @code{const char *}stl=@code{""}, @code{int} flag=@code{0})
+@deftypefnx {C function} @code{void} mgl_beam (@code{HMGL} gr, @code{HCDT} tr, @code{HCDT} g1, @code{HCDT} g2, @code{HCDT} a, @code{mreal} r, @code{const char *}stl, @code{int} flag, @code{int} num)
+@deftypefnx {C function} @code{void} mgl_beam_val (@code{HMGL} gr, @code{mreal} val, @code{HCDT} tr, @code{HCDT} g1, @code{HCDT} g2, @code{HCDT} a, @code{mreal} r, @code{const char *}stl, @code{int} flag)
 @end ifclear
 Draws the isosurface for 3d array @var{a} at constant values of @var{a}=@var{val}. This is special kind of plot for @var{a} specified in accompanied coordinates along curve @var{tr} with orts @var{g1}, @var{g2} and with transverse scale @var{r}. Variable @var{flag} is bitwise: @samp{0x1} - draw in accompanied (not laboratory) coordinates; @samp{0x2} - draw projection to @math{\rho-z} plane; @samp{0x4} - draw normalized in each slice field. The x-size of data arrays @var{tr}, @var{g1}, @var{g2} must be nx>2. The y-size of data arrays @var{tr}, @var{g1}, @var{g2} and z-size of the data array @var{a} must be equal. See also @ref{surf3}.
 @end deftypefn
@@ -2402,10 +2402,10 @@ The function draws surface specified parametrically @{@var{x}[i,j], @var{y}[i,j]
 @deftypefn {MGL command} {} surf3c adat cdat @code{val} ['sch'='']
 @deftypefnx {MGL command} {} surf3c xdat ydat zdat adat cdat @code{val} ['sch'='']
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} Surf3C (@code{float} val, @code{const mglData &}a, @code{const mglData &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Method on @code{mglGraph}} @code{void} Surf3C (@code{float} val, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const mglData &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {C function} @code{void} mgl_surf3c_val (@code{HMGL} gr, @code{float} val, @code{HCDT} a, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
-@deftypefnx {C function} @code{void} mgl_surf3c_xyz_val (@code{HMGL} gr, @code{float} val, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
+@deftypefnx {Method on @code{mglGraph}} @code{void} Surf3C (@code{mreal} val, @code{const mglData &}a, @code{const mglData &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Surf3C (@code{mreal} val, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const mglData &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_surf3c_val (@code{HMGL} gr, @code{mreal} val, @code{HCDT} a, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_surf3c_xyz_val (@code{HMGL} gr, @code{mreal} val, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
 The function draws isosurface plot for 3d array specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]) at @var{a}(x,y,z)=@var{val}. It is mostly the same as @ref{surf3} function but the color of isosurface depends on values of array @var{c}. If string contain @samp{#} then wire plot is produced. See also @ref{surf3}, @ref{surfc}, @ref{surf3a}. @sref{Surf3C sample}
 @end deftypefn
@@ -2438,10 +2438,10 @@ The function draws surface specified parametrically @{@var{x}[i,j], @var{y}[i,j]
 @deftypefn {MGL command} {} surf3a adat cdat @code{val} ['sch'='']
 @deftypefnx {MGL command} {} surf3a xdat ydat zdat adat cdat @code{val} ['sch'='']
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} Surf3A (@code{float} val, @code{const mglData &}a, @code{const mglData &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Method on @code{mglGraph}} @code{void} Surf3A (@code{float} val, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const mglData &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {C function} @code{void} mgl_surf3a_val (@code{HMGL} gr, @code{float} val, @code{HCDT} a, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
-@deftypefnx {C function} @code{void} mgl_surf3a_xyz_val (@code{HMGL} gr, @code{float} val, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
+@deftypefnx {Method on @code{mglGraph}} @code{void} Surf3A (@code{mreal} val, @code{const mglData &}a, @code{const mglData &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Surf3A (@code{mreal} val, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const mglData &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_surf3a_val (@code{HMGL} gr, @code{mreal} val, @code{HCDT} a, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_surf3a_xyz_val (@code{HMGL} gr, @code{mreal} val, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
 The function draws isosurface plot for 3d array specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]) at @var{a}(x,y,z)=@var{val}. It is mostly the same as @ref{surf3} function but the color of isosurface depends on values of array @var{c}. If string contain @samp{#} then wire plot is produced. See also @ref{surf3}, @ref{surfc}, @ref{surf3a}. @sref{Surf3A sample}
 @end deftypefn
@@ -2604,8 +2604,8 @@ This is 3D version of the first functions. Here arrays @var{ax}, @var{ay}, @var{
 @ifclear UDAV
 @deftypefnx {Method on @code{mglGraph}} @code{void} FlowP (@code{mglPoint} p0, @code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Method on @code{mglGraph}} @code{void} FlowP (@code{mglPoint} p0, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {C function} @code{void} mgl_flowp_2d (@code{HMGL} gr, @code{float} x0, @code{float} y0, @code{float} z0, @code{HCDT} ax, @code{HCDT} ay, @code{const char *}sch, @code{const char *}opt)
-@deftypefnx {C function} @code{void} mgl_flowp_xy (@code{HMGL} gr, @code{float} x0, @code{float} y0, @code{float} z0, @code{HCDT} x, @code{HCDT} y, @code{HCDT} ax, @code{HCDT} ay, @code{const char *}sch, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_flowp_2d (@code{HMGL} gr, @code{mreal} x0, @code{mreal} y0, @code{mreal} z0, @code{HCDT} ax, @code{HCDT} ay, @code{const char *}sch, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_flowp_xy (@code{HMGL} gr, @code{mreal} x0, @code{mreal} y0, @code{mreal} z0, @code{HCDT} x, @code{HCDT} y, @code{HCDT} ax, @code{HCDT} ay, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
 The same as first one (@ref{flow}) but draws single flow thread starting from point @var{p0}=@{@var{x0},@var{y0},@var{z0}@}.
 @end deftypefn
@@ -2615,8 +2615,8 @@ The same as first one (@ref{flow}) but draws single flow thread starting from po
 @ifclear UDAV
 @deftypefnx {Method on @code{mglGraph}} @code{void} FlowP (@code{mglPoint} p0, @code{const mglData &}ax, @code{const mglData &}ay, @code{const mglData &}az, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Method on @code{mglGraph}} @code{void} FlowP (@code{mglPoint} p0, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}ax, @code{const mglData &}ay, @code{const mglData &}az, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {C function} @code{void} mgl_flowp_3d (@code{HMGL} gr, @code{float} x0, @code{float} y0, @code{float} z0, @code{HCDT} ax, @code{HCDT} ay, @code{HCDT} az, @code{const char *}sch, @code{const char *}opt)
-@deftypefnx {C function} @code{void} mgl_flowp_xyz (@code{HMGL} gr, @code{float} x0, @code{float} y0, @code{float} z0, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} ax, @code{HCDT} ay, @code{HCDT} az, @code{const char *}sch, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_flowp_3d (@code{HMGL} gr, @code{mreal} x0, @code{mreal} y0, @code{mreal} z0, @code{HCDT} ax, @code{HCDT} ay, @code{HCDT} az, @code{const char *}sch, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_flowp_xyz (@code{HMGL} gr, @code{mreal} x0, @code{mreal} y0, @code{mreal} z0, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} ax, @code{HCDT} ay, @code{HCDT} az, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
 This is 3D version of the previous functions.
 @end deftypefn
@@ -2640,10 +2640,10 @@ The function draws gradient lines for scalar field @var{phi}[i,j] (or @var{phi}[
 @deftypefn {MGL command} {} pipe udat vdat ['sch'='' @code{r0=0.05}]
 @deftypefnx {MGL command} {} pipe xdat ydat udat vdat ['sch'='' @code{r0=0.05}]
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} Pipe (@code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{""}, @code{float} r0=@code{0.05}, @code{const char *}opt=@code{""})
-@deftypefnx {Method on @code{mglGraph}} @code{void} Pipe (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{""}, @code{float} r0=@code{0.05}, @code{const char *}opt=@code{""})
-@deftypefnx {C function} @code{void} mgl_pipe_2d (@code{HMGL} gr, @code{HCDT} ax, @code{HCDT} ay, @code{const char *}sch, @code{float} r0, @code{const char *}opt)
-@deftypefnx {C function} @code{void} mgl_pipe_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} ax, @code{HCDT} ay, @code{const char *}sch, @code{float} r0, @code{const char *}opt)
+@deftypefnx {Method on @code{mglGraph}} @code{void} Pipe (@code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{""}, @code{mreal} r0=@code{0.05}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Pipe (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{""}, @code{mreal} r0=@code{0.05}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_pipe_2d (@code{HMGL} gr, @code{HCDT} ax, @code{HCDT} ay, @code{const char *}sch, @code{mreal} r0, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_pipe_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} ax, @code{HCDT} ay, @code{const char *}sch, @code{mreal} r0, @code{const char *}opt)
 @end ifclear
 The function draws flow pipes for the plane vector field @{@var{ax}, @var{ay}@} parametrically depending on coordinates @var{x}, @var{y} at level @var{z} = @var{Min}.z. Number of pipes is proportional to @var{value} option (default is 5). If @samp{#} symbol is specified then pipes start only from edges of axis range. The color of lines is proportional to @math{\sqrt@{ax^2+ay^2@}}. Warm color corresponds to normal flow (like attractor). Cold one corresponds to inverse flow (like source). Parameter @var{r0} set the base pipe radius. If @var{r0}<0 or symbol @samp{i} is specified then pipe radius is inverse proportional to amplitude. The vector field is plotted for each z slice of @var{ax}, @var{ay}. See also @ref{flow}, @ref{vect}. @sref{Pipe sample}
 @end deftypefn
@@ -2651,10 +2651,10 @@ The function draws flow pipes for the plane vector field @{@var{ax}, @var{ay}@} 
 @deftypefn {MGL command} {} pipe udat vdat wdat ['sch'='' @code{r0=0.05}]
 @deftypefnx {MGL command} {} pipe xdat ydat zdat udat vdat wdat ['sch'='' @code{r0=0.05}]
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} Pipe (@code{const mglData &}ax, @code{const mglData &}ay, @code{const mglData &}az, @code{const char *}sch=@code{""}, @code{float} r0=@code{0.05}, @code{const char *}opt=@code{""})
-@deftypefnx {Method on @code{mglGraph}} @code{void} Pipe (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}ax, @code{const mglData &}ay, @code{const mglData &}az, @code{const char *}sch=@code{""}, @code{float} r0=@code{0.05}, @code{const char *}opt=@code{""})
-@deftypefnx {C function} @code{void} mgl_pipe_3d (@code{HMGL} gr, @code{HCDT} ax, @code{HCDT} ay, @code{HCDT} az, @code{const char *}sch, @code{float} r0, @code{const char *}opt)
-@deftypefnx {C function} @code{void} mgl_pipe_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} ax, @code{HCDT} ay, @code{HCDT} az, @code{const char *}sch, @code{float} r0, @code{const char *}opt)
+@deftypefnx {Method on @code{mglGraph}} @code{void} Pipe (@code{const mglData &}ax, @code{const mglData &}ay, @code{const mglData &}az, @code{const char *}sch=@code{""}, @code{mreal} r0=@code{0.05}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Pipe (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}ax, @code{const mglData &}ay, @code{const mglData &}az, @code{const char *}sch=@code{""}, @code{mreal} r0=@code{0.05}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_pipe_3d (@code{HMGL} gr, @code{HCDT} ax, @code{HCDT} ay, @code{HCDT} az, @code{const char *}sch, @code{mreal} r0, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_pipe_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} ax, @code{HCDT} ay, @code{HCDT} az, @code{const char *}sch, @code{mreal} r0, @code{const char *}opt)
 @end ifclear
 This is 3D version of the first functions. Here arrays @var{ax}, @var{ay}, @var{az} must be 3-ranged tensors with equal sizes and the color of line is proportional to @math{\sqrt@{ax^2+ay^2+az^2@}}.
 @end deftypefn
@@ -2682,12 +2682,12 @@ These functions perform miscellaneous plotting. There is unstructured data point
 @deftypefnx {MGL command} {} densy dat ['sch'='' @code{sval=nan}]
 @deftypefnx {MGL command} {} densz dat ['sch'='' @code{sval=nan}]
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} DensX (@code{const mglData &}a, @code{const char *}stl=@code{""}, @code{float} sVal=@code{NAN}, @code{const char *}opt=@code{""})
-@deftypefnx {Method on @code{mglGraph}} @code{void} DensY (@code{const mglData &}a, @code{const char *}stl=@code{""}, @code{float} sVal=@code{NAN}, @code{const char *}opt=@code{""})
-@deftypefnx {Method on @code{mglGraph}} @code{void} DensZ (@code{const mglData &}a, @code{const char *}stl=@code{""}, @code{float} sVal=@code{NAN}, @code{const char *}opt=@code{""})
-@deftypefnx {C function} @code{void} mgl_dens_x (@code{HMGL} gr, @code{HCDT} a, @code{const char *}stl, @code{float} sVal, @code{const char *}opt)
-@deftypefnx {C function} @code{void} mgl_dens_y (@code{HMGL} gr, @code{HCDT} a, @code{const char *}stl, @code{float} sVal, @code{const char *}opt)
-@deftypefnx {C function} @code{void} mgl_dens_z (@code{HMGL} gr, @code{HCDT} a, @code{const char *}stl, @code{float} sVal, @code{const char *}opt)
+@deftypefnx {Method on @code{mglGraph}} @code{void} DensX (@code{const mglData &}a, @code{const char *}stl=@code{""}, @code{mreal} sVal=@code{NAN}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} DensY (@code{const mglData &}a, @code{const char *}stl=@code{""}, @code{mreal} sVal=@code{NAN}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} DensZ (@code{const mglData &}a, @code{const char *}stl=@code{""}, @code{mreal} sVal=@code{NAN}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_dens_x (@code{HMGL} gr, @code{HCDT} a, @code{const char *}stl, @code{mreal} sVal, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_dens_y (@code{HMGL} gr, @code{HCDT} a, @code{const char *}stl, @code{mreal} sVal, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_dens_z (@code{HMGL} gr, @code{HCDT} a, @code{const char *}stl, @code{mreal} sVal, @code{const char *}opt)
 @end ifclear
 These plotting functions draw density plot in x, y, or z plain. If @var{a} is a tensor (3-dimensional data) then interpolation to a given @var{sVal} is performed. These functions are useful for creating projections of the 3D data array to the bounding box. For example, code like
 @example
@@ -2703,12 +2703,12 @@ will produce the following picture. See also @ref{ContXYZ}, @ref{ContFXYZ}, @ref
 @deftypefnx {MGL command} {} conty dat ['sch'='' @code{sval=nan}]
 @deftypefnx {MGL command} {} contz dat ['sch'='' @code{sval=nan}]
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} ContX (@code{const mglData &}a, @code{const char *}stl=@code{""}, @code{float} sVal=@code{NAN}, @code{const char *}opt=@code{""})
-@deftypefnx {Method on @code{mglGraph}} @code{void} ContY (@code{const mglData &}a, @code{const char *}stl=@code{""}, @code{float} sVal=@code{NAN}, @code{const char *}opt=@code{""})
-@deftypefnx {Method on @code{mglGraph}} @code{void} ContZ (@code{const mglData &}a, @code{const char *}stl=@code{""}, @code{float} sVal=@code{NAN}, @code{const char *}opt=@code{""})
-@deftypefnx {C function} @code{void} mgl_cont_x (@code{HMGL} gr, @code{HCDT} a, @code{const char *}stl, @code{float} sVal, @code{const char *}opt)
-@deftypefnx {C function} @code{void} mgl_cont_y (@code{HMGL} gr, @code{HCDT} a, @code{const char *}stl, @code{float} sVal, @code{const char *}opt)
-@deftypefnx {C function} @code{void} mgl_cont_z (@code{HMGL} gr, @code{HCDT} a, @code{const char *}stl, @code{float} sVal, @code{const char *}opt)
+@deftypefnx {Method on @code{mglGraph}} @code{void} ContX (@code{const mglData &}a, @code{const char *}stl=@code{""}, @code{mreal} sVal=@code{NAN}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} ContY (@code{const mglData &}a, @code{const char *}stl=@code{""}, @code{mreal} sVal=@code{NAN}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} ContZ (@code{const mglData &}a, @code{const char *}stl=@code{""}, @code{mreal} sVal=@code{NAN}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_cont_x (@code{HMGL} gr, @code{HCDT} a, @code{const char *}stl, @code{mreal} sVal, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_cont_y (@code{HMGL} gr, @code{HCDT} a, @code{const char *}stl, @code{mreal} sVal, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_cont_z (@code{HMGL} gr, @code{HCDT} a, @code{const char *}stl, @code{mreal} sVal, @code{const char *}opt)
 @end ifclear
 These plotting functions draw contour lines in x, y, or z plain. If @var{a} is a tensor (3-dimensional data) then interpolation to a given @var{sVal} is performed. These functions are useful for creating projections of the 3D data array to the bounding box. For example, code like
 @example
@@ -2720,12 +2720,12 @@ will produce the following picture. See also @ref{ContFXYZ}, @ref{DensXYZ}, @ref
 @end deftypefn
 
 @ifclear UDAV
-@deftypefn {Method on @code{mglGraph}} @code{void} ContX (@code{const mglData &}v, @code{const mglData &}a, @code{const char *}stl=@code{""}, @code{float} sVal=@code{NAN}, @code{const char *}opt=@code{""})
-@deftypefnx {Method on @code{mglGraph}} @code{void} ContY (@code{const mglData &}v, @code{const mglData &}a, @code{const char *}stl=@code{""}, @code{float} sVal=@code{NAN}, @code{const char *}opt=@code{""})
-@deftypefnx {Method on @code{mglGraph}} @code{void} ContZ (@code{const mglData &}v, @code{const mglData &}a, @code{const char *}stl=@code{""}, @code{float} sVal=@code{NAN}, @code{const char *}opt=@code{""})
-@deftypefnx {C function} @code{void} mgl_cont_x_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} a, @code{const char *}stl, @code{float} sVal, @code{const char *}opt)
-@deftypefnx {C function} @code{void} mgl_cont_y_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} a, @code{const char *}stl, @code{float} sVal, @code{const char *}opt)
-@deftypefnx {C function} @code{void} mgl_cont_z_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} a, @code{const char *}stl, @code{float} sVal, @code{const char *}opt)
+@deftypefn {Method on @code{mglGraph}} @code{void} ContX (@code{const mglData &}v, @code{const mglData &}a, @code{const char *}stl=@code{""}, @code{mreal} sVal=@code{NAN}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} ContY (@code{const mglData &}v, @code{const mglData &}a, @code{const char *}stl=@code{""}, @code{mreal} sVal=@code{NAN}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} ContZ (@code{const mglData &}v, @code{const mglData &}a, @code{const char *}stl=@code{""}, @code{mreal} sVal=@code{NAN}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_cont_x_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} a, @code{const char *}stl, @code{mreal} sVal, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_cont_y_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} a, @code{const char *}stl, @code{mreal} sVal, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_cont_z_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} a, @code{const char *}stl, @code{mreal} sVal, @code{const char *}opt)
 The same as previous with manual contour levels.
 @end deftypefn
 @end ifclear
@@ -2735,12 +2735,12 @@ The same as previous with manual contour levels.
 @deftypefnx {MGL command} {} contfy dat ['sch'='' @code{sval=nan}]
 @deftypefnx {MGL command} {} contfz dat ['sch'='' @code{sval=nan}]
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} ContFX (@code{const mglData &}a, @code{const char *}stl=@code{""}, @code{float} sVal=@code{NAN}, @code{const char *}opt=@code{""})
-@deftypefnx {Method on @code{mglGraph}} @code{void} ContFY (@code{const mglData &}a, @code{const char *}stl=@code{""}, @code{float} sVal=@code{NAN}, @code{const char *}opt=@code{""})
-@deftypefnx {Method on @code{mglGraph}} @code{void} ContFZ (@code{const mglData &}a, @code{const char *}stl=@code{""}, @code{float} sVal=@code{NAN}, @code{const char *}opt=@code{""})
-@deftypefnx {C function} @code{void} mgl_contf_x (@code{HMGL} gr, @code{HCDT} a, @code{const char *}stl, @code{float} sVal, @code{const char *}opt)
-@deftypefnx {C function} @code{void} mgl_contf_y (@code{HMGL} gr, @code{HCDT} a, @code{const char *}stl, @code{float} sVal, @code{const char *}opt)
-@deftypefnx {C function} @code{void} mgl_contf_z (@code{HMGL} gr, @code{HCDT} a, @code{const char *}stl, @code{float} sVal, @code{const char *}opt)
+@deftypefnx {Method on @code{mglGraph}} @code{void} ContFX (@code{const mglData &}a, @code{const char *}stl=@code{""}, @code{mreal} sVal=@code{NAN}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} ContFY (@code{const mglData &}a, @code{const char *}stl=@code{""}, @code{mreal} sVal=@code{NAN}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} ContFZ (@code{const mglData &}a, @code{const char *}stl=@code{""}, @code{mreal} sVal=@code{NAN}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_contf_x (@code{HMGL} gr, @code{HCDT} a, @code{const char *}stl, @code{mreal} sVal, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_contf_y (@code{HMGL} gr, @code{HCDT} a, @code{const char *}stl, @code{mreal} sVal, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_contf_z (@code{HMGL} gr, @code{HCDT} a, @code{const char *}stl, @code{mreal} sVal, @code{const char *}opt)
 @end ifclear
 These plotting functions draw solid contours in x, y, or z plain. If @var{a} is a tensor (3-dimensional data) then interpolation to a given @var{sVal} is performed. These functions are useful for creating projections of the 3D data array to the bounding box. For example, code like
 @example
@@ -2752,12 +2752,12 @@ will produce the following picture. See also @ref{ContFXYZ}, @ref{DensXYZ}, @ref
 @end deftypefn
 
 @ifclear UDAV
-@deftypefn {Method on @code{mglGraph}} @code{void} ContFX (@code{const mglData &}v, @code{const mglData &}a, @code{const char *}stl=@code{""}, @code{float} sVal=@code{NAN}, @code{const char *}opt=@code{""})
-@deftypefnx {Method on @code{mglGraph}} @code{void} ContFY (@code{const mglData &}v, @code{const mglData &}a, @code{const char *}stl=@code{""}, @code{float} sVal=@code{NAN}, @code{const char *}opt=@code{""})
-@deftypefnx {Method on @code{mglGraph}} @code{void} ContFZ (@code{const mglData &}v, @code{const mglData &}a, @code{const char *}stl=@code{""}, @code{float} sVal=@code{NAN}, @code{const char *}opt=@code{""})
-@deftypefnx {C function} @code{void} mgl_contf_x_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} a, @code{const char *}stl, @code{float} sVal, @code{const char *}opt)
-@deftypefnx {C function} @code{void} mgl_contf_y_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} a, @code{const char *}stl, @code{float} sVal, @code{const char *}opt)
-@deftypefnx {C function} @code{void} mgl_contf_z_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} a, @code{const char *}stl, @code{float} sVal, @code{const char *}opt)
+@deftypefn {Method on @code{mglGraph}} @code{void} ContFX (@code{const mglData &}v, @code{const mglData &}a, @code{const char *}stl=@code{""}, @code{mreal} sVal=@code{NAN}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} ContFY (@code{const mglData &}v, @code{const mglData &}a, @code{const char *}stl=@code{""}, @code{mreal} sVal=@code{NAN}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} ContFZ (@code{const mglData &}v, @code{const mglData &}a, @code{const char *}stl=@code{""}, @code{mreal} sVal=@code{NAN}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_contf_x_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} a, @code{const char *}stl, @code{mreal} sVal, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_contf_y_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} a, @code{const char *}stl, @code{mreal} sVal, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_contf_z_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} a, @code{const char *}stl, @code{mreal} sVal, @code{const char *}opt)
 The same as previous with manual contour levels.
 @end deftypefn
 @end ifclear
@@ -2938,8 +2938,8 @@ Fit data along all directions for 2d or 3d arrays @var{a} with @var{s}=1 and @va
 @anchor{putsfit}
 @deftypefn {MGL command} {} putsfit @code{x y} ['pre'='' 'fnt'='' @code{size=-1}]
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} PutsFit (@code{mglPoint} p, @code{const char *}prefix=@code{""}, @code{const char *}font=@code{""}, @code{float} size=@code{-1})
-@deftypefnx {C function} @code{void} mgl_puts_fit (@code{HMGL} gr, @code{float} x, @code{float} y, @code{float} z, @code{const char *}prefix, @code{const char *}font, @code{float} size)
+@deftypefnx {Method on @code{mglGraph}} @code{void} PutsFit (@code{mglPoint} p, @code{const char *}prefix=@code{""}, @code{const char *}font=@code{""}, @code{mreal} size=@code{-1})
+@deftypefnx {C function} @code{void} mgl_puts_fit (@code{HMGL} gr, @code{mreal} x, @code{mreal} y, @code{mreal} z, @code{const char *}prefix, @code{const char *}font, @code{mreal} size)
 @end ifclear
 Print last fitted formula with found coefficients (as numbers) at position @var{p0}. The string @var{prefix} will be printed before formula. All other parameters are the same as in @ref{Text printing}.
 @end deftypefn
@@ -2999,8 +2999,8 @@ Fills the value of array @samp{u} according to the linear interpolation of trian
 
 @deftypefn {MGL command} {} pde @sc{res} 'ham' ini_re ini_im [@code{dz=0.1 k0=100}]
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{mglData} PDE (@code{const char *}ham, @code{const mglData &}ini_re, @code{const mglData &}ini_im, @code{float} dz=@code{0.1}, @code{float} k0=@code{100}, @code{const char *}opt=@code{""})
-@deftypefnx {C function} @code{HMDT} mgl_pde_solve (@code{HMGL} gr, @code{const char *}ham, @code{HCDT} ini_re, @code{HCDT} ini_im, @code{float} dz, @code{float} k0, @code{const char *}opt)
+@deftypefnx {Method on @code{mglGraph}} @code{mglData} PDE (@code{const char *}ham, @code{const mglData &}ini_re, @code{const mglData &}ini_im, @code{mreal} dz=@code{0.1}, @code{mreal} k0=@code{100}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{HMDT} mgl_pde_solve (@code{HMGL} gr, @code{const char *}ham, @code{HCDT} ini_re, @code{HCDT} ini_im, @code{mreal} dz, @code{mreal} k0, @code{const char *}opt)
 @end ifclear
 Solves equation du/dz = i*k0*@var{ham}(p,q,x,y,z,|u|)[u], where p=-i/k0*d/dx, q=-i/k0*d/dy are pseudo-differential operators. Parameters @var{ini_re}, @var{ini_im} specify real and imaginary part of initial field distribution. Parameters @var{Min}, @var{Max} set the bounding box for the solution. Note, that really this ranges are increased by factor 3/2 for purpose of reducing reflection from boundaries. Parameter @var{dz} set the step along evolutionary coordinate z. At this moment, simplified form of function @var{ham} is supported -- all ``mixed'' terms (like @samp{x*p}->x*d/dx) are excluded. For example, in 2D case this function is effectively @math{ham = f(p,z) + g(x,z,u)}. However commutable combinations (like @samp{x*q}->x*d/dy) are allowed. Here variable @samp{u} is used for field amplitude |u|. This allow one solve nonlinear problems -- for example, for nonlinear Shrodinger equation you may set @code{ham="p^2 + q^2 - u^2"}. You may specify imaginary part for wave absorption, like @code{ham = "p^2 + i*x*(x>0)"}, but only if dependence on variable @samp{i} is linear (i.e. @math{ham = hre+i*him}). @sref{PDE solving hints}
 @end deftypefn

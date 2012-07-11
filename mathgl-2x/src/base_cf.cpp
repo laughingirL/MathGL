@@ -26,12 +26,12 @@
 int mgl_get_flag(HMGL gr, long flag)			{	return gr->get(flag);	}
 void mgl_set_flag(HMGL gr, int val, long flag)	{	gr->set(val,flag);	}
 //-----------------------------------------------------------------------------
-void mgl_set_color(char id, float r, float g, float b)
+void mgl_set_color(char id, mreal r, mreal g, mreal b)
 {
 	register size_t i;
 	for(i=0;mglColorIds[i].id;i++)	if(mglColorIds[i].id==id)	mglColorIds[i].col = mglColor(r,g,b);
 }
-void mgl_set_color_(char *id, float *r, float *g, float *b, int)	{	mgl_set_color(*id,*r,*g,*b);	}
+void mgl_set_color_(char *id, mreal *r, mreal *g, mreal *b, int)	{	mgl_set_color(*id,*r,*g,*b);	}
 //-----------------------------------------------------------------------------
 void mgl_set_def_sch(HMGL gr, const char *sch)	{	gr->SetDefScheme(sch);	}
 void mgl_set_def_sch_(uintptr_t *gr, const char *sch,int l)
@@ -42,23 +42,23 @@ const char *mgl_get_mess(HMGL gr)	{	return gr->Mess.c_str();	}
 int mgl_get_warn(HMGL gr)	{	return gr->GetWarn();	}
 void mgl_set_warn(HMGL gr, int code, const char *txt)
 {	gr->SetWarn(code,txt);	}
-void mgl_set_origin(HMGL gr, float x0, float y0, float z0)
+void mgl_set_origin(HMGL gr, mreal x0, mreal y0, mreal z0)
 {	gr->SetOrigin(x0,y0,z0);	}
 void mgl_set_palette(HMGL gr, const char *colors)
 {	gr->SetPalette(colors);	}
 void mgl_set_meshnum(HMGL gr, int num)	{	gr->SetMeshNum(num);	}
-void mgl_set_alpha_default(HMGL gr, float alpha)	{	gr->SetAlphaDef(alpha);	}
+void mgl_set_alpha_default(HMGL gr, mreal alpha)	{	gr->SetAlphaDef(alpha);	}
 void mgl_set_light_dif(HMGL gr, int enable)		{	gr->SetDifLight(enable);	}
 //-----------------------------------------------------------------------------
 void mgl_set_rdc_acc(HMGL gr, int reduce)	{	gr->SetReduceAcc(reduce);	}
 void mgl_highlight(HMGL gr, int id)			{	gr->Highlight(id);	}
 void mgl_set_cut(HMGL gr, int cut)	{	gr->SetCut(cut);	}
-void mgl_set_cut_box(HMGL gr, float x1,float y1,float z1,float x2,float y2,float z2)
+void mgl_set_cut_box(HMGL gr, mreal x1,mreal y1,mreal z1,mreal x2,mreal y2,mreal z2)
 {	gr->SetCutBox(x1,y1,z1,x2,y2,z2);	}
 void mgl_set_cutoff(HMGL gr, const char *EqC)	{	gr->CutOff(EqC);	}
 //-----------------------------------------------------------------------------
 void mgl_set_ternary(HMGL gr, int enable)			{	gr->Ternary(enable);	}
-void mgl_set_range_val(HMGL gr, char dir, float v1,float v2)
+void mgl_set_range_val(HMGL gr, char dir, mreal v1,mreal v2)
 {
 	if(dir=='c')		gr->CRange(v1,v2);
 	else if(dir=='x')	gr->XRange(v1,v2);
@@ -70,7 +70,7 @@ void mgl_set_range_dat(HMGL gr, char dir, HCDT a, int add)
 	else if(dir=='x')	gr->XRange(a,add);
 	else if(dir=='y')	gr->YRange(a,add);
 	else if(dir=='z')	gr->ZRange(a,add);	}
-void mgl_set_ranges(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z2)
+void mgl_set_ranges(HMGL gr, mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mreal z2)
 {	gr->SetRanges(x1,y1,z1,x2,y2,z2);	}
 void mgl_set_func(HMGL gr, const char *EqX,const char *EqY,const char *EqZ,const char *EqA)
 {	gr->SetFunc(EqX,EqY,EqZ,EqA);	}
@@ -80,7 +80,7 @@ long mgl_data_get_nx(HCDT d)	{	return	d->GetNx();	}
 long mgl_data_get_ny(HCDT d)	{	return	d->GetNy();	}
 long mgl_data_get_nz(HCDT d)	{	return	d->GetNz();	}
 //-----------------------------------------------------------------------------
-void mgl_set_bar_width(HMGL gr, float width)	{	gr->SetBarWidth(width);	}
+void mgl_set_bar_width(HMGL gr, mreal width)	{	gr->SetBarWidth(width);	}
 //-----------------------------------------------------------------------------
 //
 //		Fortran interfaces
@@ -89,7 +89,7 @@ void mgl_set_bar_width(HMGL gr, float width)	{	gr->SetBarWidth(width);	}
 void mgl_set_rdc_acc_(uintptr_t *gr, int *reduce)
 {	_GR_->SetReduceAcc(*reduce);	}
 void mgl_highlight_(uintptr_t *gr, int *id)	{	_GR_->Highlight(*id);	}
-void mgl_set_origin_(uintptr_t *gr, float *x0, float *y0, float *z0)
+void mgl_set_origin_(uintptr_t *gr, mreal *x0, mreal *y0, mreal *z0)
 {	_GR_->SetOrigin(*x0,*y0,*z0);	}
 int mgl_get_warn_(uintptr_t *gr)	{	return _GR_->GetWarn();	}
 void mgl_set_warn_(uintptr_t *gr, int *code, const char *txt, int l)
@@ -99,10 +99,10 @@ void mgl_set_palette_(uintptr_t *gr, const char *colors, int l)
 {	char *s=new char[l+1];	memcpy(s,colors,l);	s[l]=0;
 	_GR_->SetPalette(s);	delete []s;	}
 void mgl_set_meshnum_(uintptr_t *gr, int *num)	{	_GR_->SetMeshNum(*num);	}
-void mgl_set_alpha_default_(uintptr_t *gr, float *alpha)	{	_GR_->SetAlphaDef(*alpha);	}
+void mgl_set_alpha_default_(uintptr_t *gr, mreal *alpha)	{	_GR_->SetAlphaDef(*alpha);	}
 void mgl_set_light_dif_(uintptr_t *gr, int *enable)			{	_GR_->SetDifLight(*enable);	}
 //-----------------------------------------------------------------------------
-void mgl_set_cut_box_(uintptr_t *gr, float *x1,float *y1,float *z1,float *x2,float *y2,float *z2)
+void mgl_set_cut_box_(uintptr_t *gr, mreal *x1,mreal *y1,mreal *z1,mreal *x2,mreal *y2,mreal *z2)
 {	_GR_->SetCutBox(*x1,*y1,*z1,*x2,*y2,*z2);	}
 void mgl_set_cut_(uintptr_t *gr, int *cut)	{	_GR_->SetCut(*cut);	}
 void mgl_set_cutoff_(uintptr_t *gr, const char *EqC, int l)
@@ -110,11 +110,11 @@ void mgl_set_cutoff_(uintptr_t *gr, const char *EqC, int l)
 	_GR_->CutOff(s);	delete []s;	}
 //-----------------------------------------------------------------------------
 void mgl_set_ternary_(uintptr_t *gr, int *enable)	{	_GR_->Ternary(*enable);	}
-void mgl_set_range_val_(uintptr_t *gr, const char *dir, float *v1,float *v2,int)
+void mgl_set_range_val_(uintptr_t *gr, const char *dir, mreal *v1,mreal *v2,int)
 {	mgl_set_range_val(_GR_,*dir,*v1,*v2);	}
 void mgl_set_range_dat_(uintptr_t *gr, const char *dir, uintptr_t *a, int *add,int)
 {	mgl_set_range_dat(_GR_,*dir,_DA_(a),*add);	}
-void mgl_set_ranges_(uintptr_t *gr, float *x1, float *y1, float *z1, float *x2, float *y2, float *z2)
+void mgl_set_ranges_(uintptr_t *gr, mreal *x1, mreal *y1, mreal *z1, mreal *x2, mreal *y2, mreal *z2)
 {	_GR_->SetRanges(*x1,*y1,*z1,*x2,*y2,*z2);	}
 void mgl_set_func_(uintptr_t *gr, const char *EqX,const char *EqY,const char *EqZ,const char *EqA,int lx,int ly,int lz,int la)
 {
@@ -138,20 +138,20 @@ void mgl_set_tick_rotate_(uintptr_t *gr,int *enable){	_GR_->SetTickRotate(*enabl
 void mgl_set_tick_skip_(uintptr_t *gr, int *enable)	{	_GR_->SetTickSkip(*enable);	}
 //-----------------------------------------------------------------------------
 void mgl_set_rotated_text(HMGL gr, int enable)	{	gr->SetRotatedText(enable);	}
-void mgl_set_mark_size(HMGL gr, float size)		{	gr->SetMarkSize(size);	}
-void mgl_set_arrow_size(HMGL gr, float size)	{	gr->SetArrowSize(size);	}
-void mgl_set_font_size(HMGL gr, float size)		{	gr->SetFontSize(size);	}
+void mgl_set_mark_size(HMGL gr, mreal size)		{	gr->SetMarkSize(size);	}
+void mgl_set_arrow_size(HMGL gr, mreal size)	{	gr->SetArrowSize(size);	}
+void mgl_set_font_size(HMGL gr, mreal size)		{	gr->SetFontSize(size);	}
 void mgl_set_font_def(HMGL gr, const char *fnt)	{	gr->SetFontDef(fnt);	}
 void mgl_load_font(HMGL gr, const char *name, const char *path)
 {	if(name && *name)	gr->GetFont()->Load(name,path);	else	gr->GetFont()->Restore();	}
 void mgl_copy_font(HMGL gr, HMGL gr_from)		{	gr->GetFont()->Copy(gr_from->GetFont());	}
 void mgl_restore_font(HMGL gr)	{	gr->GetFont()->Restore();	}
 //-----------------------------------------------------------------------------
-void mgl_set_bar_width_(uintptr_t *gr, float *width)	{	_GR_->SetBarWidth(*width);	}
+void mgl_set_bar_width_(uintptr_t *gr, mreal *width)	{	_GR_->SetBarWidth(*width);	}
 void mgl_set_rotated_text_(uintptr_t *gr, int *rotated)	{	_GR_->SetRotatedText(*rotated);	}
-void mgl_set_mark_size_(uintptr_t *gr, float *size)		{	_GR_->SetMarkSize(*size);	}
-void mgl_set_arrow_size_(uintptr_t *gr, float *size)	{	_GR_->SetArrowSize(*size);	}
-void mgl_set_font_size_(uintptr_t *gr, float *size)		{	_GR_->SetFontSize(*size);	}
+void mgl_set_mark_size_(uintptr_t *gr, mreal *size)		{	_GR_->SetMarkSize(*size);	}
+void mgl_set_arrow_size_(uintptr_t *gr, mreal *size)	{	_GR_->SetArrowSize(*size);	}
+void mgl_set_font_size_(uintptr_t *gr, mreal *size)		{	_GR_->SetFontSize(*size);	}
 void mgl_set_font_def_(uintptr_t *gr, char *name, int l)
 {	char *s=new char[l+1];		memcpy(s,name,l);	s[l]=0;
 	_GR_->SetFontDef(s);	delete []s;	}
@@ -192,6 +192,6 @@ long mgl_use_graph(HMGL gr, int inc)
 long mgl_use_graph_(uintptr_t *gr, int *inc)
 {	return mgl_use_graph(_GR_,*inc);	}
 //---------------------------------------------------------------------------
-void mgl_set_ambbr(HMGL gr, float i)		{	gr->SetAmbient(i);	}
-void mgl_set_ambbr_(uintptr_t *gr, float *i){	_GR_->SetAmbient(*i);	}
+void mgl_set_ambbr(HMGL gr, mreal i)		{	gr->SetAmbient(i);	}
+void mgl_set_ambbr_(uintptr_t *gr, mreal *i){	_GR_->SetAmbient(*i);	}
 //---------------------------------------------------------------------------

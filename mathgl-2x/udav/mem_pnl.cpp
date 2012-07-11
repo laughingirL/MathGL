@@ -173,7 +173,7 @@ void MemPanel::refresh()
 		it = new QTableWidgetItem(s);
 		tab->setItem(n,1,it);	it->setFlags(flags);
 		it->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
-		s.sprintf("%12ld", v->d.nx*v->d.ny*v->d.nz*sizeof(float));
+		s.sprintf("%12ld", v->d.nx*v->d.ny*v->d.nz*sizeof(mreal));
 		it = new QTableWidgetItem(s);
 		tab->setItem(n,2,it);	it->setFlags(flags);
 		it->setTextAlignment(Qt::AlignRight|Qt::AlignVCenter);

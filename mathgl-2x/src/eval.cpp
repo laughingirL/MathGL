@@ -396,7 +396,7 @@ mglFormula::mglFormula(const char *string)
 mreal mglFormula::Calc(mreal x,mreal y,mreal t,mreal u) const
 {
 	Error=0;
-	mreal a1[MGL_VS];	memset(a1,0,MGL_VS*sizeof(float));
+	mreal a1[MGL_VS];	memset(a1,0,MGL_VS*sizeof(mreal));
 	a1['a'-'a'] = a1['c'-'a'] = a1['u'-'a'] = u;
 	a1['x'-'a'] = a1['r'-'a'] = x;
 	a1['y'-'a'] = a1['n'-'a'] = a1['v'-'a'] = y;
@@ -409,7 +409,7 @@ mreal mglFormula::Calc(mreal x,mreal y,mreal t,mreal u) const
 mreal mglFormula::Calc(mreal x,mreal y,mreal t,mreal u,mreal v,mreal w) const
 {
 	Error=0;
-	mreal a1[MGL_VS];	memset(a1,0,MGL_VS*sizeof(float));
+	mreal a1[MGL_VS];	memset(a1,0,MGL_VS*sizeof(mreal));
 	a1['c'-'a'] = a1['w'-'a'] = w;
 	a1['b'-'a'] = a1['v'-'a'] = v;
 	a1['a'-'a'] = a1['u'-'a'] = u;
@@ -432,7 +432,7 @@ mreal mglFormula::Calc(const mreal var[MGL_VS]) const
 mreal mglFormula::CalcD(char diff,mreal x,mreal y,mreal t,mreal u) const
 {
 	Error=0;
-	mreal a1[MGL_VS];	memset(a1,0,MGL_VS*sizeof(float));
+	mreal a1[MGL_VS];	memset(a1,0,MGL_VS*sizeof(mreal));
 	a1['a'-'a'] = a1['c'-'a'] = a1['u'-'a'] = u;
 	a1['x'-'a'] = a1['r'-'a'] = x;
 	a1['y'-'a'] = a1['n'-'a'] = a1['v'-'a'] = y;
@@ -445,7 +445,7 @@ mreal mglFormula::CalcD(char diff,mreal x,mreal y,mreal t,mreal u) const
 mreal mglFormula::CalcD(char diff,mreal x,mreal y,mreal t,mreal u,mreal v,mreal w) const
 {
 	Error=0;
-	mreal a1[MGL_VS];	memset(a1,0,MGL_VS*sizeof(float));
+	mreal a1[MGL_VS];	memset(a1,0,MGL_VS*sizeof(mreal));
 	a1['c'-'a'] = a1['w'-'a'] = w;
 	a1['b'-'a'] = a1['v'-'a'] = v;
 	a1['a'-'a'] = a1['u'-'a'] = u;
@@ -502,7 +502,7 @@ typedef double (*func_2)(double, double);
 // evaluation of embedded (included) expressions
 mreal mglFormula::CalcIn(const mreal *a1) const
 {
-	float z2[22] = {3,3,3,3,0,3,3,0,0,0,0,0,NAN,0
+	mreal z2[22] = {3,3,3,3,0,3,3,0,0,0,0,0,NAN,0
 #if MGL_HAVE_GSL
 			,3,NAN, 3,NAN, 0,0,3,1
 #else

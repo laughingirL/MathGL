@@ -33,7 +33,7 @@ void mglCanvasGL::Finish(bool fast)
 		glEnableClientState(GL_COLOR_ARRAY);
 
 		int pdef=PDef;
-		float ss=pPos, ww=PenWidth;
+		mreal ss=pPos, ww=PenWidth;
 		mglPrim p;
 		for(unsigned long i=0;i<Prm.size();i++)
 		{
@@ -75,7 +75,7 @@ bool mglCanvasGL::Alpha(bool enable)
 	return mglCanvas::Alpha(enable);
 }
 //-----------------------------------------------------------------------------
-void mglCanvasGL::AddLight(int n,mglPoint r,mglPoint d,char cc, float br,float /*ap*/)
+void mglCanvasGL::AddLight(int n,mglPoint r,mglPoint d,char cc, mreal br,mreal /*ap*/)
 {
 	mglColor c(cc);
 	mglColor AmbLight = mglColor(AmbBr,AmbBr,AmbBr);
@@ -141,7 +141,7 @@ void mglCanvasGL::LightScale()
 	}
 }
 //-----------------------------------------------------------------------------
-void mglCanvasGL::View(float TetX,float TetY,float TetZ)
+void mglCanvasGL::View(mreal TetX,mreal TetY,mreal TetZ)
 {
 	glMatrixMode(GL_PROJECTION);//GL_PROJECTION GL_VIEWPORT GL_MODELVIEW
 	glRotated(TetX,1.,0.,0.);
@@ -149,7 +149,7 @@ void mglCanvasGL::View(float TetX,float TetY,float TetZ)
 	glRotated(TetZ,0.,0.,1.);
 }
 //-----------------------------------------------------------------------------
-void mglCanvasGL::Fog(float d, float)
+void mglCanvasGL::Fog(mreal d, mreal)
 {
 	if(d>0)		// TODO: Check fog to OpenGL mode
 	{
@@ -179,7 +179,7 @@ void mglCanvasGL::Clf(mglColor Back)
 	glTranslated(-0.5,-0.5,-0.5);
 }
 //-----------------------------------------------------------------------------
-void mglCanvasGL::set_pen(unsigned style,float width)
+void mglCanvasGL::set_pen(unsigned style,mreal width)
 {
 	if(style==0)	return;
 	if(style!=0xffff)

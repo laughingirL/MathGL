@@ -121,7 +121,7 @@ public:
 	const char *AnimBuf;	///< buffer for animation
 	const char **AnimS0;
 	int AnimNum;
-	float AnimDelay;
+	mreal AnimDelay;
 
 	Fl_MGL(int x, int y, int w, int h, char *label=0);
 	~Fl_MGL();

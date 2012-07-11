@@ -95,7 +95,7 @@ void AnimParam::fillRes()
 	{
 		res = "";
 		QString s;
-		float x, x2=p2->text().toDouble(), dx=dp->text().toDouble();
+		double x, x2=p2->text().toDouble(), dx=dp->text().toDouble();
 		for(x=p1->text().toDouble();x<x2;x+=dx)
 			res = res+QString::number(x,'g',4)+"\n";
 		accept();

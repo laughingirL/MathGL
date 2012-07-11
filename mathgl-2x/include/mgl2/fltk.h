@@ -49,7 +49,7 @@ public:
 	/// Update (redraw) plot
 	virtual void update();
 	/// Set angles for additional plot rotation
-	inline void set_angle(float t, float p){	tet = t;	phi = p;	}
+	inline void set_angle(mreal t, mreal p){	tet = t;	phi = p;	}
 	/// Set bitwise flags for general state (1-Alpha, 2-Light)
 	inline void set_flag(int f)	{	flag = f;	}
 	/// Set flags for handling mouse
@@ -74,7 +74,7 @@ public:
 	/// Set popup menu pointer
 	inline void set_popup(const Fl_Menu_Item *pmenu, Fl_Widget *wdg, void *v)
 	{	popup = pmenu;	wpar = wdg;	vpar = v;	}
-	inline void zoom_region(float xx1,float xx2,float yy1, float yy2)
+	inline void zoom_region(mreal xx1,mreal xx2,mreal yy1, mreal yy2)
 	{	x1=xx1;	y1=yy1;	x2=xx2;	y2=yy2;	}
 	
 protected:
@@ -87,11 +87,11 @@ protected:
 	const Fl_Menu_Item *popup;	///< pointer to popup menu items
 	Fl_Widget *wpar;			///< widget for popup menu
 	void *vpar;					///< parameter for popup menu
-	float tet,phi;				///< rotation angles
+	mreal tet,phi;				///< rotation angles
 	bool rotate;				///< flag for handle mouse
 	bool zoom;					///< flag for zoom by mouse
 	bool wire;
-	float x1,x2,y1,y2;			///< zoom region
+	mreal x1,x2,y1,y2;			///< zoom region
 	int flag;					///< bitwise flag for general state (1-Alpha, 2-Light)
 	int x0,y0,xe,ye;			///< mouse position
 	char pos[128];
@@ -111,7 +111,7 @@ public:
 	void *par;				///< Parameter for handling animation
 	void (*next)(void*);	///< Callback function for next frame
 	void (*prev)(void*);	///< Callback function for prev frame
-	float (*delay)(void*);	///< Callback function for delay
+	mreal (*delay)(void*);	///< Callback function for delay
 	void (*reload)(void*);	///< Callback function for reloading
 
 	void toggle_alpha()	{	toggle(alpha, alpha_bt, "Graphics/Alpha");	}

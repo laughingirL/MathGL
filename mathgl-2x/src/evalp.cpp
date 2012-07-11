@@ -264,7 +264,7 @@ mglData mglFormulaCalc(const wchar_t *string, mglParser *arg)
 		else if(!wcscmp(p,L"wa"))	{	d.Momentum('a',x,y);	v=y;	}
 		else if(!wcscmp(p,L"sa"))	{	d.Momentum('a',x,y,z,k);v=z;	}
 		else if(!wcscmp(p,L"ka"))	{	d.Momentum('a',x,y,z,k);v=k;	}
-		// if this is valid suffix when finish parsing (it can be float number)
+		// if this is valid suffix when finish parsing (it can be mreal number)
 		if(!mgl_isnan(v))	{	res.a[0] = v;	delete []str;	return res;	}
 	}
 	for(n=0;n<len;n++)	if(str[n]=='(')	break;

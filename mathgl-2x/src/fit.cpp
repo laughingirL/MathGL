@@ -31,7 +31,7 @@
 int mglFitPnts=100;		///< Number of output points in fitting
 char mglFitRes[1024];	///< Last fitted formula
 //-----------------------------------------------------------------------------
-void mgl_puts_fit(HMGL gr, float x, float y, float z, const char *pre, const char *font, float size)
+void mgl_puts_fit(HMGL gr, mreal x, mreal y, mreal z, const char *pre, const char *font, mreal size)
 {
 	long n = strlen(mglFitRes)+(pre?strlen(pre):0)+1;
 	char *buf = new char[n];
@@ -40,7 +40,7 @@ void mgl_puts_fit(HMGL gr, float x, float y, float z, const char *pre, const cha
 	mgl_puts(gr,x,y,z,buf,font,size);
 	delete []buf;
 }
-void mgl_puts_fit_(uintptr_t* gr, float *x, float *y, float *z, const char *prefix, const char *font, float *size, int l, int n)
+void mgl_puts_fit_(uintptr_t* gr, mreal *x, mreal *y, mreal *z, const char *prefix, const char *font, mreal *size, int l, int n)
 {
 	char *s=new char[l+1];	memcpy(s,prefix,l);	s[l]=0;
 	char *d=new char[n+1];	memcpy(d,font,n);	d[n]=0;
@@ -376,7 +376,7 @@ HMDT mgl_hist_x(HMGL gr, HCDT x, HCDT a, const char *opt)
 
 	const mglData *dx = dynamic_cast<const mglData *>(x);
 	const mglData *da = dynamic_cast<const mglData *>(a);
-	float vx = n/(gr->Max.x-gr->Min.x);
+	mreal vx = n/(gr->Max.x-gr->Min.x);
 	if(dx && da)	for(i=0;i<nn;i++)
 	{
 		j1 = long((dx->a[i]-gr->Min.x)*vx);
@@ -402,8 +402,8 @@ HMDT mgl_hist_xy(HMGL gr, HCDT x, HCDT y, HCDT a, const char *opt)
 	const mglData *dx = dynamic_cast<const mglData *>(x);
 	const mglData *dy = dynamic_cast<const mglData *>(y);
 	const mglData *da = dynamic_cast<const mglData *>(a);
-	float vx = n/(gr->Max.x-gr->Min.x);
-	float vy = n/(gr->Max.y-gr->Min.y);
+	mreal vx = n/(gr->Max.x-gr->Min.x);
+	mreal vy = n/(gr->Max.y-gr->Min.y);
 	if(dx && dy && da)	for(i=0;i<nn;i++)
 	{
 		j1 = long((dx->a[i]-gr->Min.x)*vx);
@@ -432,7 +432,7 @@ HMDT mgl_hist_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *opt)
 	const mglData *dy = dynamic_cast<const mglData *>(y);
 	const mglData *dz = dynamic_cast<const mglData *>(z);
 	const mglData *da = dynamic_cast<const mglData *>(a);
-	float vx = n/(gr->Max.x-gr->Min.x), vy = n/(gr->Max.y-gr->Min.y), vz = n/(gr->Max.z-gr->Min.z);
+	mreal vx = n/(gr->Max.x-gr->Min.x), vy = n/(gr->Max.y-gr->Min.y), vz = n/(gr->Max.z-gr->Min.z);
 	if(dx && dy && dz && da)	for(i=0;i<nn;i++)
 	{
 		j1 = long((dx->a[i]-gr->Min.x)*vx);

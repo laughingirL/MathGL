@@ -82,10 +82,10 @@ Here I used function @code{text} for printing the text in arbitrary position of 
 
 Note that several commands can be placed in a string if they are separated by @samp{:} symbol.
 
-@float
+@mreal
 @image{../png/sample1, 7cm}
 @caption{Example of several subplots on the single picture.}
-@end float
+@end mreal
 
 @c ------------------------------------------------------------------
 @external
@@ -130,10 +130,10 @@ text 0 0 1.2 'decrease number of ticks'
 
 This example shows the importance of the correct choosing of the number of ticks on axis. If tick step is too small then its text may overlap and becomes unreadable. This code has the example of @code{Label} function. It draws label for axis in specified direction. The text position on axis is specified by third argument of @code{Label} function. If it is positive then then text is drawn near the axis maximum, if negative then the same takes place near the minimum of axis, if zero - then at the center of axis.
 
-@float
+@mreal
 @image{../png/sample2, 7cm}
 @caption{Example of setting up axis range and axis ticks.}
-@end float
+@end mreal
 
 @c ------------------------------------------------------------------
 @external
@@ -171,10 +171,10 @@ axis: grid
 text 0 1.3 1 'spiral'
 @end verbatim
 
-@float
+@mreal
 @image{../png/sample3, 7cm}
 @caption{Example of curvilinear coordinates}
-@end float
+@end mreal
 
 
 @c ------------------------------------------------------------------
@@ -192,20 +192,20 @@ text 0 -0.6 'Easy to change indexes ^{up} _{down} @{center}'
 text 0 -1 'It parse TeX: \int \alpha \cdot \sqrt3{sin(\pi x)^2 + \gamma_{i_k}} dx'
 @end verbatim
 
-@float
+@mreal
 @image{../png/sample4, 7cm}
 @caption{Example of text printing with different font effects}
-@end float
+@end mreal
 
 Another example demonstrate the features of TeX formula parsing.
 @verbatim
 text 0 0 '\sqrt{\frac{\alpha^{\gamma^2}+\overset 1{\big\infty}}{\sqrt3{2+b}}}', 0, -4
 @end verbatim
 
-@float
+@mreal
 @image{../png/samplee, 7cm}
 @caption{Example of TeX formula parsing}
-@end float
+@end mreal
 
 
 @c ------------------------------------------------------------------
@@ -213,7 +213,7 @@ text 0 0 '\sqrt{\frac{\alpha^{\gamma^2}+\overset 1{\big\infty}}{\sqrt3{2+b}}}', 
 @node Data handling, Data plotting, Advanced usage, Examples
 @section Data handling
 
-@c Class @code{mglData} contains all functions for the data handling in MathGL (@pxref{mglData class}). There are several matters why I use class @code{mglData} but not a single array: it does not depend on type of data (float or double), sizes of data arrays are kept with data, memory working is simpler and safer.
+@c Class @code{mglData} contains all functions for the data handling in MathGL (@pxref{mglData class}). There are several matters why I use class @code{mglData} but not a single array: it does not depend on type of data (mreal or double), sizes of data arrays are kept with data, memory working is simpler and safer.
 
 @menu
 * Array creation::              
@@ -293,7 +293,7 @@ fill z 'sin(pi*x)*cos(pi*y)'
 @end verbatim
 or loaded from file.
 
-The only non-obvious thing here is using multidimensional arrays in C/C++, i.e. arrays defined like @code{float dat[40][30];}. Since, formaly this arrays element @code{dat[i]} can address the memory in arbitrary place you should use the proper function to convert such arrays to @code{mglData} object. For C++ this is functions like @code{mglData::Set(float **dat, int N1, int N2}. For C this is functions like @code{mgl_data_set_float2(HMDT d, const float **dat, int N1, int N2}. At this, you should keep in mind that @code{nx=N2} and @code{ny=N1} after conversion.
+The only non-obvious thing here is using multidimensional arrays in C/C++, i.e. arrays defined like @code{mreal dat[40][30];}. Since, formaly this arrays element @code{dat[i]} can address the memory in arbitrary place you should use the proper function to convert such arrays to @code{mglData} object. For C++ this is functions like @code{mglData::Set(mreal **dat, int N1, int N2}. For C this is functions like @code{mgl_data_set_mreal2(HMDT d, const mreal **dat, int N1, int N2}. At this, you should keep in mind that @code{nx=N2} and @code{ny=N1} after conversion.
 
 @c ------------------------------------------------------------------
 @external
@@ -318,10 +318,10 @@ diff2 a 'y': surf a: box
 text 0.7 1 1.2 '\int {d^2}a/dxdy dx'
 @end verbatim
 
-@float
+@mreal
 @image{../png/sample6, 7cm}
 @caption{Example of data differentiation and integration}
-@end float
+@end mreal
 
 Data smoothing (function @code{Smooth}) is more interesting and important. This function has 2 main arguments: type of smoothing and its direction. Now 4 methods are supported: @code{0} does nothing for delta=0 or approaches data to zero with the step delta, @code{1} linear averaging by 3 points, @code{2} linear averaging by 5 points, @code{3} quadratic averaging by 5 points. Let me demonstrate it for 1d case:
 @verbatim
@@ -338,10 +338,10 @@ plot y3 'b': addlegend 'quad 5' 'b'
 legend: box
 @end verbatim
 
-@float
+@mreal
 @image{../png/sample7, 7cm}
 @caption{Example of data smoothing}
-@end float
+@end mreal
 
 Finally one can create new data arrays on base of the existing one: extract slice, row or column of data (@code{SubData}), summarize along some of direction(s) (@code{Sum}), find distribution of data elements (@code{Hist}). Note, that all these functions are not thread-safe because they use static internal variable for output array. In particular, the using of several of them in arguments of the same function will lead to unpredictable result.
 
@@ -408,10 +408,10 @@ subplot 2 2 3:rotate 60 40
 bars x y0 z 'r':box
 @end verbatim
 
-@float
+@mreal
 @image{../png/sample8, 7cm}
 @caption{Example of 1D data plot}
-@end float
+@end mreal
 
 @c ------------------------------------------------------------------
 @external
@@ -459,10 +459,10 @@ dens a1: box
 @end verbatim
 Note, that the previous color scheme is used in last plots because there are no direct specification of the one.
 
-@float
+@mreal
 @image{../png/sample9, 7cm}
 @caption{Example of surface plot for 2D data}
-@end float
+@end mreal
 
 Drawing of other 2D plots is analogous. The only peculiarity is the usage of flag @samp{#}. By default this flag switches on the drawing of a grid on plot (@code{grid} or @code{mesh} for plots in plain or in volume). However, for isosurfaces (including surfaces of rotation @code{axial}) this flag switches the  face drawing off. Figure becomes wired. The following code gives example of flag @samp{#} using (compare with normal function drawing as in its description):
 @verbatim
@@ -480,10 +480,10 @@ subplot 2 2 3: rotate 40 60
 axial a 'bbcyrr#': box
 @end verbatim
 
-@float
+@mreal
 @image{../png/samplea, 7cm}
 @caption{Example of 2D data plot with color scheme contained @samp{#} symbol}
-@end float
+@end mreal
 
 @c ------------------------------------------------------------------
 @external
@@ -509,10 +509,10 @@ subplot 2 2 3: rotate 40 60
 surf3a b a 'q': box
 @end verbatim
 
-@float
+@mreal
 @image{../png/sampleb, 7cm}
 @caption{Example of Gaussian beam diffraction (3D data)}
-@end float
+@end mreal
 
 
 @c ------------------------------------------------------------------
@@ -531,18 +531,18 @@ Third feature is the changing of the way how the light goes through overlapped s
 A ``neon-like'' transparency (@code{transptype 2}) has more interesting look. In this case a surface is the light source (like a lamp on the dark background) and just adds some intensity to the color. At this, the library sets automatically the black color for the background and changes the default line color to white.
 
 As example I shall show the variant of plot from @ref{Plots for 2D data} (grid drawing is disabled) for different types of transparency.
-@float
+@mreal
 @image{../png/type0, 7cm}
 @caption{Example of @code{TranspType=0}.}
-@end float
-@float
+@end mreal
+@mreal
 @image{../png/type1, 7cm}
 @caption{Example of @code{TranspType=1}.}
-@end float
-@float
+@end mreal
+@mreal
 @image{../png/type2, 7cm}
 @caption{Example of @code{TranspType=2}.}
-@end float
+@end mreal
 
 
 

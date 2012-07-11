@@ -69,7 +69,7 @@ mglBase::mglBase()
 }
 mglBase::~mglBase()	{	ClearEq();	}
 //-----------------------------------------------------------------------------
-float mglBase::GetRatio() const	{	return 1;	}
+mreal mglBase::GetRatio() const	{	return 1;	}
 //-----------------------------------------------------------------------------
 void mglBase::StartGroup(const char *name, int id)
 {
@@ -113,7 +113,7 @@ void mglBase::SetWarn(int code, const char *who)
 //-----------------------------------------------------------------------------
 //		Add points to the buffer
 //-----------------------------------------------------------------------------
-long mglBase::AddPnt(mglPoint p, float c, mglPoint n, float a, int scl)
+long mglBase::AddPnt(mglPoint p, mreal c, mglPoint n, mreal a, int scl)
 {
 	if(mgl_isnan(c) || mgl_isnan(a))	return -1;
 	if(scl>0)	ScalePoint(p,n,!(scl&2));
@@ -138,7 +138,7 @@ long mglBase::AddPnt(mglPoint p, float c, mglPoint n, float a, int scl)
 	txt.GetC(c,a,q);	// RGBA color
 
 	// add gap for texture coordinates for compatibility with OpenGL
-	const float gap = 1./512;
+	const mreal gap = 1./512;
 	q.c = ci+(q.c-ci)*(1-2*gap)+gap;
 	q.t = q.t*(1-2*gap)+gap;
 	q.ta = q.t;
@@ -150,7 +150,7 @@ long mglBase::AddPnt(mglPoint p, float c, mglPoint n, float a, int scl)
 	MGL_PUSH(Pnt,q,mutexPnt);	return Pnt.size()-1;
 }
 //-----------------------------------------------------------------------------
-long mglBase::CopyNtoC(long from, float c)
+long mglBase::CopyNtoC(long from, mreal c)
 {
 	if(from<0)	return -1;
 	mglPnt p=Pnt[from];
@@ -183,7 +183,7 @@ void mglBase::RecalcCRange()
 	{
 		FMin.c = 1e30;	FMax.c = -1e30;
 		register int i;
-		float a;
+		mreal a;
 		int n=30;
 		for(i=0;i<=n;i++)
 		{
@@ -219,7 +219,7 @@ void mglBase::RecalcBorder()
 			SetFBord(Min.x+i*(Max.x-Min.x)/n, Min.y+j*(Max.y-Min.y)/n, Min.x);
 			SetFBord(Min.x+i*(Max.x-Min.x)/n, Min.y+j*(Max.y-Min.y)/n, Max.z);
 		}
-		float d;
+		mreal d;
 		if(!fx)	{	FMin.x = Min.x;	FMax.x = Max.x;	}
 		else	{	d=0.01*(FMax.x-FMin.x);	FMin.x-=d;	FMax.x+=d;	}
 		if(!fy)	{	FMin.y = Min.y;	FMax.y = Max.y;	}
@@ -230,23 +230,23 @@ void mglBase::RecalcBorder()
 	RecalcCRange();
 }
 //-----------------------------------------------------------------------------
-void mglBase::SetFBord(float x,float y,float z)
+void mglBase::SetFBord(mreal x,mreal y,mreal z)
 {
 	if(fx)
 	{
-		float v = fx->Calc(x,y,z);
+		mreal v = fx->Calc(x,y,z);
 		if(FMax.x < v)	FMax.x = v;
 		if(FMin.x > v)	FMin.x = v;
 	}
 	if(fy)
 	{
-		float v = fy->Calc(x,y,z);
+		mreal v = fy->Calc(x,y,z);
 		if(FMax.y < v)	FMax.y = v;
 		if(FMin.y > v)	FMin.y = v;
 	}
 	if(fz)
 	{
-		float v = fz->Calc(x,y,z);
+		mreal v = fz->Calc(x,y,z);
 		if(FMax.z < v)	FMax.z = v;
 		if(FMin.z > v)	FMin.z = v;
 	}
@@ -288,7 +288,7 @@ bool mglBase::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan) const
 	if(fz)	{	z1 = fz->Calc(x,y,z);	z2 = fz->CalcD('z',x,y,z);	}
 	if(mgl_isnan(x1) || mgl_isnan(y1) || mgl_isnan(z1))	{	x=NAN;	return false;	}
 
-	register float d;	// TODO: should I update normale for infinite light source (x=NAN)?!?
+	register mreal d;	// TODO: should I update normale for infinite light source (x=NAN)?!?
 	d = 1/(FMax.x - FMin.x);	x = (2*x1 - FMin.x - FMax.x)*d;	x2 *= 2*d;
 	d = 1/(FMax.y - FMin.y);	y = (2*y1 - FMin.y - FMax.y)*d;	y2 *= 2*d;
 	d = 1/(FMax.z - FMin.z);	z = (2*z1 - FMin.z - FMax.z)*d;	z2 *= 2*d;
@@ -340,9 +340,9 @@ void mglBase::SetRanges(mglPoint m1, mglPoint m2)
 	RecalcBorder();
 }
 //-----------------------------------------------------------------------------
-void mglBase::CRange(HCDT a,bool add, float fact)
+void mglBase::CRange(HCDT a,bool add, mreal fact)
 {
-	float v1=a->Minimal(), v2=a->Maximal(), dv;
+	mreal v1=a->Minimal(), v2=a->Maximal(), dv;
 	dv=(v2-v1)*fact;	v1 -= dv;	v2 += dv;
 	if(v1==v2)	return;
 	if(!add)	{	Min.c = v1;	Max.c = v2;	}
@@ -362,9 +362,9 @@ void mglBase::CRange(HCDT a,bool add, float fact)
 	RecalcCRange();
 }
 //-----------------------------------------------------------------------------
-void mglBase::XRange(HCDT a,bool add,float fact)
+void mglBase::XRange(HCDT a,bool add,mreal fact)
 {
-	float v1=a->Minimal(), v2=a->Maximal(), dv;
+	mreal v1=a->Minimal(), v2=a->Maximal(), dv;
 	dv=(v2-v1)*fact;	v1 -= dv;	v2 += dv;
 	if(v1==v2)	return;
 	if(!add)	{	Min.x = v1;	Max.x = v2;	}
@@ -384,9 +384,9 @@ void mglBase::XRange(HCDT a,bool add,float fact)
 	RecalcBorder();
 }
 //-----------------------------------------------------------------------------
-void mglBase::YRange(HCDT a,bool add,float fact)
+void mglBase::YRange(HCDT a,bool add,mreal fact)
 {
-	float v1=a->Minimal(), v2=a->Maximal(), dv;
+	mreal v1=a->Minimal(), v2=a->Maximal(), dv;
 	dv=(v2-v1)*fact;	v1 -= dv;	v2 += dv;
 	if(v1==v2)	return;
 	if(!add)	{	Min.y = v1;	Max.y = v2;	}
@@ -406,9 +406,9 @@ void mglBase::YRange(HCDT a,bool add,float fact)
 	RecalcBorder();
 }
 //-----------------------------------------------------------------------------
-void mglBase::ZRange(HCDT a,bool add,float fact)
+void mglBase::ZRange(HCDT a,bool add,mreal fact)
 {
-	float v1=a->Minimal(), v2=a->Maximal(), dv;
+	mreal v1=a->Minimal(), v2=a->Maximal(), dv;
 	dv=(v2-v1)*fact;	v1 -= dv;	v2 += dv;
 	if(v1==v2)	return;
 	if(!add)	{	Min.z = v1;	Max.z = v2;	}
@@ -428,7 +428,7 @@ void mglBase::ZRange(HCDT a,bool add,float fact)
 	RecalcBorder();
 }
 //-----------------------------------------------------------------------------
-void mglBase::SetAutoRanges(float x1, float x2, float y1, float y2, float z1, float z2, float c1, float c2)
+void mglBase::SetAutoRanges(mreal x1, mreal x2, mreal y1, mreal y2, mreal z1, mreal z2, mreal c1, mreal c2)
 {
 	if(x1!=x2)	{	Min.x = x1;	Max.x = x2;	}
 	if(y1!=y2)	{	Min.y = y1;	Max.y = y2;	}
@@ -558,7 +558,7 @@ void mglColor::Set(char p, float bright)
 		{	Set(mglColorIds[i].col, bright);	break;	}
 }
 //-----------------------------------------------------------------------------
-void mglTexture::Set(const char *s, int smooth, float alpha)
+void mglTexture::Set(const char *s, int smooth, mreal alpha)
 {
 	// NOTE: New syntax -- colors are CCCCC or {CNCNCCCN}; options inside []
 	if(!s || !s[0])	return;
@@ -608,7 +608,7 @@ void mglTexture::Set(const char *s, int smooth, float alpha)
 		else
 		{	c[1]=c[4];	c[3]=c[6];	n=2;	}
 	}
-	register float u,v=sm?(n-1)/255.:n/256.;
+	register mreal u,v=sm?(n-1)/255.:n/256.;
 	for(i=0;i<256;i++)
 	{
 		u = v*i;	j = long(u);	u-=j;
@@ -626,7 +626,7 @@ void mglTexture::Set(const char *s, int smooth, float alpha)
 	delete []c;
 }
 //-----------------------------------------------------------------------------
-void mglTexture::GetC(float u,float v,mglPnt &p) const
+void mglTexture::GetC(mreal u,mreal v,mglPnt &p) const
 {
 	u -= long(u);
 	register long i=long(255*u);	u = u*255-i;
@@ -649,7 +649,7 @@ long mglBase::AddTexture(const char *cols, int smooth)
 	MGL_PUSH(Txt,t,mutexTxt);	return Txt.size()-1;
 }
 //-----------------------------------------------------------------------------
-float mglBase::AddTexture(mglColor c)
+mreal mglBase::AddTexture(mglColor c)
 {
 	register unsigned long i,j;
 	if(!c.Valid())	return -1;
@@ -665,12 +665,12 @@ float mglBase::AddTexture(mglColor c)
 //-----------------------------------------------------------------------------
 //		Coloring and palette
 //-----------------------------------------------------------------------------
-float mglBase::NextColor(long &id)
+mreal mglBase::NextColor(long &id)
 {
 	long i=abs(id)/256, n=Txt[i].n, p=abs(id)&0xff;
 	if(id>=0)	{	p=(p+1)%n;	id = 256*i+p;	}
 	mglColor c = Txt[i].col[int(512*(p+0.5)/n)];
-	float dif, dmin=1;
+	mreal dif, dmin=1;
 	// try to find closest color
 	for(long j=0;mglColorIds[j].id;j++)	for(long k=1;k<10;k++)
 	{
@@ -756,7 +756,7 @@ char mglBase::SetPenPal(const char *p, long *Id)
 	return mk;
 }
 //-----------------------------------------------------------------------------
-float mglBase::GetA(float a) const
+mreal mglBase::GetA(mreal a) const
 {
 	if(fa)	a = fa->Calc(0,0,0,a);
 	a = (a-FMin.c)/(FMax.c-FMin.c);
@@ -790,7 +790,7 @@ mglPoint GetZ(HCDT z, int i, int j, int k)
 		return mglPoint(z->v(k),0,0);
 }
 //-----------------------------------------------------------------------------
-void mglBase::vect_plot(long p1, long p2, float s)
+void mglBase::vect_plot(long p1, long p2, mreal s)
 {
 	if(p1<0 || p2<0)	return;
 	const mglPnt &q1=Pnt[p1], &q2=Pnt[p2];
@@ -824,9 +824,9 @@ int mglFindArg(const char *str)
 	return 0;
 }
 //-----------------------------------------------------------------------------
-void mglBase::SetAmbient(float bright)	{	AmbBr = bright;	}
+void mglBase::SetAmbient(mreal bright)	{	AmbBr = bright;	}
 //-----------------------------------------------------------------------------
-float mglBase::SaveState(const char *opt)
+mreal mglBase::SaveState(const char *opt)
 {
 	if(!opt || !opt[0] || saved)	return NAN;
 	MSS=MarkSize;	ASS=ArrowSize;
@@ -849,7 +849,7 @@ float mglBase::SaveState(const char *opt)
 		n=mglFindArg(s);	if(n>0)	{	s[n]=0;		s=s+n+1;	}
 		mgl_strtrim(b);
 
-		float ff=atof(b),ss;
+		mreal ff=atof(b),ss;
 		if(!strcmp(b,"on"))	ff=1;
 		if(!strcmp(a+1,"range"))
 		{

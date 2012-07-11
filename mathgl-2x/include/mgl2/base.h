@@ -145,14 +145,14 @@ struct mglTexture
 
 	char Sch[260];		///< Color scheme used
 	int Smooth;			///< Type of texture (smoothing and so on)
-	float Alpha;			///< Transparency
+	mreal Alpha;			///< Transparency
 	
 	mglTexture()	{	n=0;	}
-	mglTexture(const char *cols, int smooth=0,float alpha=1)
+	mglTexture(const char *cols, int smooth=0,mreal alpha=1)
 	{	n=0;	Set(cols,smooth,alpha);	}
 	void Clear()	{	n=0;	}
-	void Set(const char *cols, int smooth=0,float alpha=1);
-	void GetC(float u,float v,mglPnt &p) const;
+	void Set(const char *cols, int smooth=0,mreal alpha=1);
+	void GetC(mreal u,mreal v,mglPnt &p) const;
 	inline bool IsSame(const mglTexture &t) const
 	{	return n==t.n && !memcmp(col,t.col,512*sizeof(mglColor));	}
 	void GetRGBA(unsigned char *f) const;	// Write as BGRA for fastest export to TGA
@@ -188,9 +188,9 @@ public:
 	std::vector<mglGroup> Grp;	///< List of groups with names -- need for export
 	std::string PlotId;	///< Id of plot for saving filename (in GLUT window for example)
 
-	float CDef;			///< Default (current) color in texture
-	float AlphaDef;		///< Default value of alpha channel (transparency)
-	float BarWidth;		///< Relative width of rectangles in Bars().
+	mreal CDef;			///< Default (current) color in texture
+	mreal AlphaDef;		///< Default value of alpha channel (transparency)
+	mreal BarWidth;		///< Relative width of rectangles in Bars().
 	int MeshNum;		///< Set approximate number of lines in Mesh and Grid. By default (=0) it draw all lines.
 	char Arrow1, Arrow2;///< Style of arrows at end and at start of curve
 	long InUse;			///< Smart pointer (number of users)
@@ -202,28 +202,28 @@ public:
 	inline void set(bool v,long fl)	{	Flag = v ? Flag|fl : Flag&(~fl);	}
 
 	/// Set values of mglGraph::Min and mglGraph::Max
-	inline void SetRanges(float x1, float x2, float y1, float y2, float z1=0, float z2=0, float c1=0, float c2=0)
+	inline void SetRanges(mreal x1, mreal x2, mreal y1, mreal y2, mreal z1=0, mreal z2=0, mreal c1=0, mreal c2=0)
 	{	SetRanges(mglPoint(x1,y1,z1,c1),mglPoint(x2,y2,z2,c2));	}
 	void SetRanges(mglPoint v1, mglPoint v2);
 	/// Set values of mglGraph::Cmin and mglGraph::Cmax as minimal and maximal values of data a
-	void CRange(HCDT a, bool add = false, float fact=0);
-	inline void CRange(float v1,float v2)	{	if(v1!=v2)	{Min.c=v1;	Max.c=v2;	RecalcCRange();}	}
+	void CRange(HCDT a, bool add = false, mreal fact=0);
+	inline void CRange(mreal v1,mreal v2)	{	if(v1!=v2)	{Min.c=v1;	Max.c=v2;	RecalcCRange();}	}
 	/// Set values of mglGraph::Min.x and mglGraph::Max.x as minimal and maximal values of data a
-	void XRange(HCDT a, bool add = false, float fact=0);
-	inline void XRange(float v1,float v2)	{	if(v1!=v2)	{Min.x=v1;	Max.x=v2;	RecalcBorder();}	}
+	void XRange(HCDT a, bool add = false, mreal fact=0);
+	inline void XRange(mreal v1,mreal v2)	{	if(v1!=v2)	{Min.x=v1;	Max.x=v2;	RecalcBorder();}	}
 	/// Set values of mglGraph::Min.x and mglGraph::Max.x as minimal and maximal values of data a
-	void YRange(HCDT a, bool add = false, float fact=0);
-	inline void YRange(float v1,float v2)	{	if(v1!=v2)	{Min.y=v1;	Max.y=v2;	RecalcBorder();}	}
+	void YRange(HCDT a, bool add = false, mreal fact=0);
+	inline void YRange(mreal v1,mreal v2)	{	if(v1!=v2)	{Min.y=v1;	Max.y=v2;	RecalcBorder();}	}
 	/// Set values of mglGraph::Min.x and mglGraph::Max.x as minimal and maximal values of data a
-	void ZRange(HCDT a, bool add = false, float fact=0);
-	inline void ZRange(float v1,float v2)	{	if(v1!=v2)	{Min.z=v1;	Max.z=v2;	RecalcBorder();}	}
+	void ZRange(HCDT a, bool add = false, mreal fact=0);
+	inline void ZRange(mreal v1,mreal v2)	{	if(v1!=v2)	{Min.z=v1;	Max.z=v2;	RecalcBorder();}	}
 	/// Set ranges for automatic variables
-	void SetAutoRanges(float x1, float x2, float y1=0, float y2=0, float z1=0, float z2=0, float c1=0, float c2=0);
+	void SetAutoRanges(mreal x1, mreal x2, mreal y1=0, mreal y2=0, mreal z1=0, mreal z2=0, mreal c1=0, mreal c2=0);
 	/// Set axis origin
-	inline void SetOrigin(float x0, float y0, float z0=NAN, float c0=NAN)
+	inline void SetOrigin(mreal x0, mreal y0, mreal z0=NAN, mreal c0=NAN)
 	{	Org=mglPoint(x0,y0,z0,c0);	}
 	/// Save ranges into internal variable and put parsed
-	float SaveState(const char *opt);
+	mreal SaveState(const char *opt);
 	/// Load ranges from internal variable
 	void LoadState();
 
@@ -239,7 +239,7 @@ public:
 	/// Set cutting for points outside of bounding box
 	inline void SetCut(bool val)	{	set(val, MGL_ENABLE_CUT);	}
 	/// Set additional cutting box
-	inline void SetCutBox(float x1, float y1, float z1, float x2, float y2, float z2)
+	inline void SetCutBox(mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mreal z2)
 	{	CutMin=mglPoint(x1,y1,z1);	CutMax=mglPoint(x2,y2,z2);	}
 	inline void SetCutBox(mglPoint v1, mglPoint v2)	{	CutMin=v1;	CutMax=v2;	}
 
@@ -247,14 +247,14 @@ public:
 	virtual bool Light(bool enable)
 	{	bool t=get(MGL_ENABLE_LIGHT);	set(enable,MGL_ENABLE_LIGHT);	return t;	}
 	/// Set ambient light brightness
-	virtual void SetAmbient(float bright=0.5);
+	virtual void SetAmbient(mreal bright=0.5);
 	/// Use diffusive light (only for local light sources)
 	inline void SetDifLight(bool dif)	{	set(dif,MGL_DIFFUSIVE);	}
 	/// Set the transparency on/off.
 	virtual bool Alpha(bool enable)
 	{	bool t=get(MGL_ENABLE_ALPHA);	set(enable,MGL_ENABLE_ALPHA);	return t;	}
 	/// Set default value of alpha-channel
-	inline void SetAlphaDef(float val)	{	AlphaDef=val;	};
+	inline void SetAlphaDef(mreal val)	{	AlphaDef=val;	};
 	/// Set default palette
 	inline void SetPalette(const char *colors)
 	{	Txt[0].Set(mgl_have_color(colors)?colors:MGL_DEF_PAL,-1);	}
@@ -266,11 +266,11 @@ public:
 	/// Set number of mesh lines
 	inline void SetMeshNum(int val)	{	MeshNum=val;	};
 	/// Set relative width of rectangles in Bars, Barh, BoxPlot
-	inline void SetBarWidth(float val)	{	BarWidth=val;	};
+	inline void SetBarWidth(mreal val)	{	BarWidth=val;	};
 	/// Set size of marks
-	inline void SetMarkSize(float val)	{	MarkSize=0.02*val;	}
+	inline void SetMarkSize(mreal val)	{	MarkSize=0.02*val;	}
 	/// Set size of arrows
-	inline void SetArrowSize(float val)	{	ArrowSize=0.03*val;	}
+	inline void SetArrowSize(mreal val)	{	ArrowSize=0.03*val;	}
 
 	/// Set warning code ant fill Message
 	void SetWarn(int code, const char *who);
@@ -283,11 +283,11 @@ public:
 	inline void Highlight(int id)	{	HighId=id;	}
 
 	/// Set FontSize by size in pt and picture DPI (default is 16 pt for dpi=72)
-	virtual void SetFontSizePT(float pt, int dpi=72){	FontSize = pt*27.f/dpi;	}
+	virtual void SetFontSizePT(mreal pt, int dpi=72){	FontSize = pt*27.f/dpi;	}
 	/// Set FontSize by size in centimeters and picture DPI (default is 0.56 cm = 16 pt)
-	inline void SetFontSizeCM(float cm, int dpi=72)	{	SetFontSizePT(cm*28.45f,dpi);	};
+	inline void SetFontSizeCM(mreal cm, int dpi=72)	{	SetFontSizePT(cm*28.45f,dpi);	};
 	/// Set FontSize by size in inch and picture DPI (default is 0.22 in = 16 pt)
-	inline void SetFontSizeIN(float in, int dpi=72)	{	SetFontSizePT(in*72.27f,dpi);	};
+	inline void SetFontSizeIN(mreal in, int dpi=72)	{	SetFontSizePT(in*72.27f,dpi);	};
 	/// Set font typeface. Note that each mglFont instance can be used with ONLY ONE mglGraph instance at a moment of time!
 	void SetFont(mglFont *f);
 	/// Get current typeface. Note that this variable can be deleted at next SetFont() call!
@@ -300,14 +300,14 @@ public:
 	/// Copy font from another mglGraph instance
 	inline void CopyFont(mglBase *gr)	{	fnt->Copy(gr->GetFont());	}
 	/// Set default font size
-	inline void SetFontSize(float val)	{	FontSize=val>0 ? val:FontSize*val;	}
-	inline float GetFontSize() const	{	return FontSize;	};
-	inline float TextWidth(const wchar_t *text, const char *font, float size) const
+	inline void SetFontSize(mreal val)	{	FontSize=val>0 ? val:FontSize*val;	}
+	inline mreal GetFontSize() const	{	return FontSize;	};
+	inline mreal TextWidth(const wchar_t *text, const char *font, mreal size) const
 	{	return (size<0?-size*FontSize:size)*font_factor*fnt->Width(text,(font&&*font)?font:FontDef)/8;	}
-	inline float TextHeight(const char *font, float size) const
+	inline mreal TextHeight(const char *font, mreal size) const
 	{	return (size<0?-size*FontSize:size)*font_factor*fnt->Height(font?font:FontDef)/8; }
-	inline float FontFactor() const		{	return font_factor;	}
-	virtual float GetRatio() const;
+	inline mreal FontFactor() const		{	return font_factor;	}
+	virtual mreal GetRatio() const;
 	/// Set to use or not text rotation
 	inline void SetRotatedText(bool val)	{	set(val,MGL_ENABLE_RTEXT);	}
 	/// Set default font style and color
@@ -329,8 +329,8 @@ public:
 
 	// ~~~~~~~~~~~~~~~~~~~~~~ Developer functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	/// Add point to the pntN and return its position
-	long AddPnt(mglPoint p, float c=-1, mglPoint n=mglPoint(NAN), float a=-1, int scl=1);
-	long CopyNtoC(long k, float c);
+	long AddPnt(mglPoint p, mreal c=-1, mglPoint n=mglPoint(NAN), mreal a=-1, int scl=1);
+	long CopyNtoC(long k, mreal c);
 	long CopyProj(long from, mglPoint p, mglPoint n);
 	virtual void Reserve(long n);		///< Allocate n-cells for pntC and return current position
 	/// Set to reduce accuracy of points (to reduc size of output files)
@@ -351,34 +351,34 @@ public:
 	/// Scale coordinates and cut off some points
 	virtual bool ScalePoint(mglPoint &p, mglPoint &n, bool use_nan=true) const;
 
-	virtual float GetOrgX(char dir) const=0;	///< Get Org.x (parse NAN value)
-	virtual float GetOrgY(char dir) const=0;	///< Get Org.y (parse NAN value)
-	virtual float GetOrgZ(char dir) const=0;	///< Get Org.z (parse NAN value)
+	virtual mreal GetOrgX(char dir) const=0;	///< Get Org.x (parse NAN value)
+	virtual mreal GetOrgY(char dir) const=0;	///< Get Org.y (parse NAN value)
+	virtual mreal GetOrgZ(char dir) const=0;	///< Get Org.z (parse NAN value)
 
 	/// Get color depending on single variable z, which should be scaled if scale=true
-	inline float GetC(long s,float z,bool scale = true) const
+	inline mreal GetC(long s,mreal z,bool scale = true) const
 	{	return s+(scale?GetA(z):(z>0?z/MGL_EPSILON:0));	}
 	/// Get alpha value depending on single variable \a a
-	float GetA(float a) const;
+	mreal GetA(mreal a) const;
 	/// Set pen/palette
 	char SetPenPal(const char *stl, long *id=0);
 	/// Add texture (like color scheme) and return the position of first color
 	long AddTexture(const char *cols, int smooth=0);
-//	inline float AddTexture(char col)	{	return AddTexture(mglColor(col));	};
-	float AddTexture(mglColor col);
+//	inline mreal AddTexture(char col)	{	return AddTexture(mglColor(col));	};
+	mreal AddTexture(mglColor col);
 	inline void DefColor(mglColor col)	{	CDef = AddTexture(col);	}
 	/// Set next color from palette
-	float NextColor(long &id);
+	mreal NextColor(long &id);
 
-	virtual void mark_plot(long p, char type, float size=1)=0;
+	virtual void mark_plot(long p, char type, mreal size=1)=0;
 	virtual void arrow_plot(long p1, long p2, char st)=0;
 	virtual void line_plot(long p1, long p2)=0;
 	virtual void trig_plot(long p1, long p2, long p3)=0;
 	virtual void quad_plot(long p1, long p2, long p3, long p4)=0;
-	virtual void Glyph(float x, float y, float f, int style, long icode, float col)=0;
-	virtual float text_plot(long p,const wchar_t *text,const char *fnt,float size=-1,float sh=0,float  col=-('k'),bool rot=true)=0;
-	void vect_plot(long p1, long p2, float s=1);
-	inline float mark_size()	{	return MarkSize*font_factor;	}
+	virtual void Glyph(mreal x, mreal y, mreal f, int style, long icode, mreal col)=0;
+	virtual mreal text_plot(long p,const wchar_t *text,const char *fnt,mreal size=-1,mreal sh=0,mreal  col=-('k'),bool rot=true)=0;
+	void vect_plot(long p1, long p2, mreal s=1);
+	inline mreal mark_size()	{	return MarkSize*font_factor;	}
 //	inline char last_color()	{	return last_style[1];	}
 	inline const char *last_line()	{	return last_style;	}
 
@@ -399,13 +399,13 @@ protected:
 
 	int TernAxis;		///< Flag that Ternary axis is used
 	unsigned PDef;		///< Pen bit mask
-	float pPos;			///< Current position in pen mask
-	float PenWidth;		///< Pen width for further line plotting (must be >0 !!!)
+	mreal pPos;			///< Current position in pen mask
+	mreal PenWidth;		///< Pen width for further line plotting (must be >0 !!!)
 //	long numT;			///< Number of textures
-	float AmbBr;		///< Default ambient light brightness
+	mreal AmbBr;		///< Default ambient light brightness
 
 	mglFont *fnt;		///< Class for printing vector text
-	float FontSize;		///< The size of font for tick and axis labels
+	mreal FontSize;		///< The size of font for tick and axis labels
 	char FontDef[32];	///< Font specification (see mglGraph::Puts). Default is Roman with align at center.
 	int Quality;		///< Quality of plot (0x0-pure, 0x1-fast; 0x2-fine; 0x4 - low memory)
 
@@ -416,17 +416,17 @@ protected:
 	mglFormula *fc;		///< Cutting off condition (formula).
 
 	long CurrPal;		///< Current palette index
-	float MarkSize;		///< The size of marks for 1D plots.
-	float ArrowSize;	///< The size of arrows.
+	mreal MarkSize;		///< The size of marks for 1D plots.
+	mreal ArrowSize;	///< The size of arrows.
 	char last_style[64];///< Last pen style
-	float font_factor;	///< Font scaling factor
+	mreal font_factor;	///< Font scaling factor
 
 	virtual void LightScale()=0;			///< Scale positions of light sources
 
 private:
 	mglPoint MinS;		///< Saved lower edge of bounding box for graphics.
 	mglPoint MaxS;		///< Saved upper edge of bounding box for graphics.
-	float MSS, ASS, FSS, ADS, MNS, LSS;	///< Saved state
+	mreal MSS, ASS, FSS, ADS, MNS, LSS;	///< Saved state
 	long CSS;			///< Saved flags
 	bool saved;			///< State is saved
 	std::string leg_str;///< text to be save in legend
@@ -436,7 +436,7 @@ private:
 
 	void RecalcCRange();	///< Recalculate internal parameter for correct coloring.
 	void RecalcBorder();	///< Recalculate internal parameter for correct transformation rules.
-	void SetFBord(float x,float y,float z);	///< Set internal boundng box depending on transformation formula
+	void SetFBord(mreal x,mreal y,mreal z);	///< Set internal boundng box depending on transformation formula
 	void ClearEq();			///< Clear the used variables for axis transformation
 };
 //-----------------------------------------------------------------------------

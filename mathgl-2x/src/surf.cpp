@@ -46,12 +46,12 @@ void mgl_surf_plot(mglBase *gr, long *pos, long n, long m)
 void mgl_fsurf(HMGL gr, const char *eqZ, const char *sch, const char *opt)
 {	// TODO: Add strong function variation analisys ???
 	if(eqZ==0 || eqZ[0]==0)	return;		// nothing to plot
-	float r = gr->SaveState(opt);
+	mreal r = gr->SaveState(opt);
 	long n = (mgl_isnan(r) || r<=0) ? 100:long(r+0.5);
 	mglData z(n,n);
 	mglFormula *eq = new mglFormula(eqZ);
 	register int i,j;
-	float dx = (gr->Max.x - gr->Min.x)/(n-1.), dy = (gr->Max.y - gr->Min.y)/(n-1.);
+	mreal dx = (gr->Max.x - gr->Min.x)/(n-1.), dy = (gr->Max.y - gr->Min.y)/(n-1.);
 	for(j=0;j<n;j++)	for(i=0;i<n;i++)
 	{
 		if(gr->Stop)	{	delete eq;	return;	}
@@ -64,7 +64,7 @@ void mgl_fsurf(HMGL gr, const char *eqZ, const char *sch, const char *opt)
 void mgl_fsurf_xyz(HMGL gr, const char *eqX, const char *eqY, const char *eqZ, const char *sch, const char *opt)
 {	// TODO: Add strong function variation analisys ???
 	if(eqZ==0 || eqZ[0]==0)	return;		// nothing to plot
-	float r = gr->SaveState(opt);
+	mreal r = gr->SaveState(opt);
 	long n = (mgl_isnan(r) || r<=0) ? 100:long(r+0.5);
 	mglData x(n,n), y(n,n), z(n,n);
 	if(n<=0)	n=100;
@@ -73,7 +73,7 @@ void mgl_fsurf_xyz(HMGL gr, const char *eqX, const char *eqY, const char *eqZ, c
 	ey = new mglFormula(eqY ? eqY : "v");
 	ez = new mglFormula(eqZ);
 	register int i,j;
-	register float u,v;
+	register mreal u,v;
 	for(j=0;j<n;j++)	for(i=0;i<n;i++)
 	{
 		if(gr->Stop)	{	delete ex;	delete ey;	delete ez;	return;	}
@@ -120,7 +120,7 @@ void mgl_mesh_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 	gr->Reserve(n*m*z->GetNz());
 
 	mglPoint p;
-	float c;
+	mreal c;
 	for(k=0;k<z->GetNz();k++)
 	{
 		for(j=0;j<m;j++)	for(i=0;i<n;i++)
@@ -171,7 +171,7 @@ void mgl_fall_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 	gr->Reserve(n*m*z->GetNz());
 
 	mglPoint p;
-	float c;
+	mreal c;
 	for(k=0;k<z->GetNz();k++)
 	{
 		for(j=0;j<m;j++)	for(i=0;i<n;i++)
@@ -216,7 +216,7 @@ void mgl_grid_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Grid",cgid++);
-	float	zVal = gr->Min.z;
+	mreal	zVal = gr->Min.z;
 	gr->SetPenPal(sch?sch:"k-");
 	long *pos = new long[n*m];
 	gr->Reserve(n*m*z->GetNz());
@@ -224,7 +224,7 @@ void mgl_grid_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 	mglPoint p;
 	for(k=0;k<z->GetNz();k++)
 	{
-		if(z->GetNz()>1)	zVal = gr->Min.z+(gr->Max.z-gr->Min.z)*float(k)/(z->GetNz()-1);
+		if(z->GetNz()>1)	zVal = gr->Min.z+(gr->Max.z-gr->Min.z)*mreal(k)/(z->GetNz()-1);
 		for(j=0;j<m;j++)	for(i=0;i<n;i++)
 		{
 			if(gr->Stop)	{	delete []pos;	return;	}
@@ -273,7 +273,7 @@ void mgl_surf_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 	gr->Reserve(n*m*z->GetNz()*(wire?2:1));
 
 	mglPoint p,q,s,xx,yy;
-	float c;
+	mreal c;
 	for(k=0;k<z->GetNz();k++)
 	{
 		for(j=0;j<m;j++)	for(i=0;i<n;i++)
@@ -334,7 +334,7 @@ void mgl_belt_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 	bool how = !(sch && strchr(sch,'x'));
 
 	mglPoint p1,p2,q,s,xx,yy;
-	float c;
+	mreal c;
 	for(k=0;k<z->GetNz();k++)
 	{
 		if(how)	for(i=0;i<n-1;i++)
@@ -404,18 +404,18 @@ void mgl_dens_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Dens",cgid++);
-	float	zVal = gr->Min.z;
+	mreal	zVal = gr->Min.z;
 
 	long ss = gr->AddTexture(sch);
 	long *pos = new long[n*m];
 	gr->Reserve(n*m*z->GetNz());
 
 	mglPoint p,s=mglPoint(0,0,1);
-	float zz, c;
+	mreal zz, c;
 	for(k=0;k<z->GetNz();k++)
 	{
 		if(z->GetNz()>1)
-			zVal = gr->Min.z+(gr->Max.z-gr->Min.z)*float(k)/(z->GetNz()-1);
+			zVal = gr->Min.z+(gr->Max.z-gr->Min.z)*mreal(k)/(z->GetNz()-1);
 		for(j=0;j<m;j++)	for(i=0;i<n;i++)	// ñîçäàåì ìàññèâ òî÷åê
 		{
 			if(gr->Stop)	{	delete []pos;	return;	}
@@ -490,7 +490,7 @@ void mgl_surfc_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char *sch, cons
 	long ss = gr->AddTexture(sch);
 	long *pos = new long[n*m];
 	gr->Reserve(n*m*z->GetNz());
-	float col;
+	mreal col;
 
 	mglPoint p,q,s,xx,yy;
 	for(k=0;k<z->GetNz();k++)
@@ -559,7 +559,7 @@ void mgl_surfa_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char *sch, cons
 		{
 			if(gr->Stop)	{	delete []pos;	return;	}
 			xx = GetX(x,i,j,k);		yy = GetY(y,i,j,k);
-			float vv = z->v(i,j,k);	p = mglPoint(xx.x, yy.x, vv);
+			mreal vv = z->v(i,j,k);	p = mglPoint(xx.x, yy.x, vv);
 			q = mglPoint(xx.y, yy.y, z->dvx(i,j,k));
 			s = mglPoint(xx.z, yy.z, z->dvy(i,j,k));
 			pos[i+n*j] = gr->AddPnt(p,gr->GetC(ss,vv),q^s,gr->GetA(c->v(i,j,k)));
@@ -614,7 +614,7 @@ void mgl_boxs_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 	gr->Reserve(8*n*m*z->GetNz());
 
 	mglPoint p1,p2,p3,p4,q,s,t(wire||full?NAN:0,0,1),xx,yy;
-	float zz,z1,z2,x1,y1,c,z0=gr->GetOrgZ('x');
+	mreal zz,z1,z2,x1,y1,c,z0=gr->GetOrgZ('x');
 	long k1,k2,k3,k4,k5,k6,k7,k8;
 	for(k=0;k<z->GetNz();k++)
 	{
@@ -715,7 +715,7 @@ void mgl_tile_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 	gr->Reserve(4*n*m*z->GetNz());
 
 	mglPoint p1,p2,p3,p4,s=mglPoint(0,0,1);
-	float zz,x1,x2,y1,y2,c;
+	mreal zz,x1,x2,y1,y2,c;
 	long k1,k2,k3,k4;
 	for(k=0;k<z->GetNz();k++)
 	{
@@ -774,7 +774,7 @@ void mgl_tiles_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT s, const char *sch, cons
 	gr->Reserve(4*n*m*z->GetNz());
 
 	mglPoint p1,p2,p3,p4,t=mglPoint(0,0,1);
-	float zz,x1,x2,x3,x4,y1,y2,y3,y4,ss,sm,c;
+	mreal zz,x1,x2,x3,x4,y1,y2,y3,y4,ss,sm,c;
 	long k1,k2,k3,k4;
 	for(k=0;k<z->GetNz();k++)
 	{
@@ -844,7 +844,7 @@ void mgl_map_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, cons
 	long ss = gr->AddTexture(mgl_have_color(sch)?sch:"rgb",2);
 	long s = both ? n:1, s1, s2;
 
-	float xdy,xdx,ydx,ydy,xx,yy;
+	mreal xdy,xdx,ydx,ydy,xx,yy;
 	mglPoint p,t=mglPoint(NAN);
 	long *pos = new long[n*m];
 	gr->Reserve(n*m);

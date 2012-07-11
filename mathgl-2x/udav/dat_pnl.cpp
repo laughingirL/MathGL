@@ -95,7 +95,7 @@ void DatPanel::refresh()
 		tab->setHorizontalHeaderLabels(head);
 	}
 	register long i,j,m=var->s.length();
-	register float f;
+	register mreal f;
 	QString s,d;
 	if(rc)
 	{
@@ -156,7 +156,7 @@ void DatPanel::putValue(int r, int c)
 {
 	if(!var || r<0 || c<0 || r>=ny || c>=nx || !ready)	return;
 	QString s = tab->item(r,c)->text().toLower();
-	float f;
+	mreal f;
 	f = s=="nan" ? NAN : s.toDouble();
 	if(f!=var->d.GetVal(c,r,kz))
 	{

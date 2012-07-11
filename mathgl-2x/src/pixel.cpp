@@ -62,7 +62,7 @@ void mglCanvas::PostScale(mglPoint &p) const
 	p.z = B.z + q.x*B.b[6] + q.y*B.b[7] + q.z*B.b[8];
 /*	if(Persp)
 	{
-		register float d = (1-Persp*Depth/2)/(1-Persp*p.z);
+		register mreal d = (1-Persp*Depth/2)/(1-Persp*p.z);
 		p.x = Width/2 + d*(p.x-Width/2);
 		p.y = Height/2 + d*(p.y-Height/2);
 	}*/
@@ -84,9 +84,9 @@ bool mglCanvas::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan) const
 	n.Normalize();
 /*	if(Persp)
 	{
-		register float d = (1-Persp*Depth/2)/(1-Persp*p.z);
+		register mreal d = (1-Persp*Depth/2)/(1-Persp*p.z);
 		// NOTE: No d* since I use transformed p here.
-		register float dd = Persp*n.z/(1-Persp*p.z);
+		register mreal dd = Persp*n.z/(1-Persp*p.z);
 		n.x = d*n.x + dd*(p.x-Width/2);
 		n.y = d*n.y + dd*(p.y-Height/2);
 	}*/
@@ -99,7 +99,7 @@ long mglCanvas::ProjScale(int nf, long id)
 	mglPoint pp(p0.x,p0.y,p0.z), nn(p0.u,p0.v,p0.w);
 	if(mgl_isnan(pp.x))	return -1;
 	mglPoint q=pp/(2*B.pf), p, n=nn;
-	register float w=B1.b[0]/2, h=B1.b[4]/2, d=B1.b[8]/2, xx=B1.x-w/2, yy=B1.y-h/2;
+	mreal w=B1.b[0]/2, h=B1.b[4]/2, d=B1.b[8]/2, xx=B1.x-w/2, yy=B1.y-h/2;
 	if(TernAxis&1)	// usual ternary axis
 	{
 		if(nf==0)
@@ -170,10 +170,10 @@ void mglCanvas::LightScale()
 // NOTE: Perspective, transformation formulas and lists are not support just now !!! Also it use LAST InPlot parameters!!!
 mglPoint mglCanvas::CalcXYZ(int xs, int ys) const
 {
-	float s3 = 2*B.pf, x, y, z;	// TODO: Take into account z-value of z-buffer
+	mreal s3 = 2*B.pf, x, y, z;	// TODO: Take into account z-value of z-buffer
 	ys = Height - ys;
-	float xx = xs-B.x, yy = ys-B.y;
-	float d1=B.b[0]*B.b[4]-B.b[1]*B.b[3], d2=B.b[1]*B.b[5]-B.b[2]*B.b[4], d3=B.b[0]*B.b[5]-B.b[2]*B.b[3];
+	mreal xx = xs-B.x, yy = ys-B.y;
+	mreal d1=B.b[0]*B.b[4]-B.b[1]*B.b[3], d2=B.b[1]*B.b[5]-B.b[2]*B.b[4], d3=B.b[0]*B.b[5]-B.b[2]*B.b[3];
 	if(fabs(d1) > fabs(d2) && fabs(d1) > fabs(d3))	// x-y plane
 	{
 		z = 0;
@@ -271,7 +271,7 @@ void mglCanvas::pxl_primdr(unsigned long id, unsigned long n, const void *)
 	}
 	else	{	nx=ny=1;	id=0;	}
 	mglDrawReg d;	d.set(this,nx,ny,id);
-	float ss=pPos, ww=PenWidth;
+	mreal ss=pPos, ww=PenWidth;
 	mglPrim p;
 	for(i=0;i<n;i++)
 	{
@@ -428,7 +428,7 @@ void mglCanvas::Combine(const mglCanvas *gr)
 #define TAG_DATA_C	1
 void mglCanvas::MPI_Send(int id)
 {
-	::MPI_Send(Z,3*Width*Height,MPI_DOUBLE,id,TAG_DATA_Z,MCW);
+	::MPI_Send(Z,3*Width*Height,MPI_FLOAT,id,TAG_DATA_Z,MCW);
 	::MPI_Send(C,12*Width*Height,MPI_CHAR,id,TAG_DATA_C,MCW);
 }
 void mglCanvas::MPI_Recv(int id)
@@ -438,7 +438,7 @@ void mglCanvas::MPI_Recv(int id)
 	long n = Width*Height;
 	float *zz = new float[3*n];
 	unsigned char *cc = new unsigned char[12*n];
-	::MPI_Recv(Z,3*n,MPI_DOUBLE,id,TAG_DATA_Z,MCW,&status);
+	::MPI_Recv(Z,3*n,MPI_FLOAT,id,TAG_DATA_Z,MCW,&status);
 	::MPI_Recv(C,12*n,MPI_CHAR,id,TAG_DATA_C,MCW,&status);
 	// TODO check status for errors
 	register long i,j,k;
@@ -459,7 +459,7 @@ void mglCanvas::MPI_Send(int /*id*/)	{}
 void mglCanvas::MPI_Recv(int /*id*/)	{}
 #endif
 //-----------------------------------------------------------------------------
-void mglCanvas::pnt_plot(long x,long y,float z,const unsigned char ci[4])
+void mglCanvas::pnt_plot(long x,long y,mreal z,const unsigned char ci[4])
 {
 	long i0=x+Width*(Height-1-y);
 	if(ci[3]==0)	return;
@@ -853,13 +853,13 @@ void mglCanvas::pnt_draw(long k, mglDrawReg *dr)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::mark_draw(long k, char type, float size, mglDrawReg *d)
+void mglCanvas::mark_draw(long k, char type, mreal size, mglDrawReg *d)
 {
 	const mglPnt &q=Pnt[k];
 	unsigned char cs[4];	col2int(q,cs);	cs[3] = size>0 ? 255 : 255*q.t;
 	unsigned long pos = Pnt.size(), qos=pos;
 	mglPnt p=q;
-	float ss=fabs(size)*0.35*font_factor;
+	mreal ss=fabs(size)*0.35*font_factor;
 	register long i,j;
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_lock(&mutexPnt);
@@ -867,7 +867,7 @@ void mglCanvas::mark_draw(long k, char type, float size, mglDrawReg *d)
 	if(type=='.' || ss==0)	pnt_draw(k,d);
 	else
 	{
-		float pw = PenWidth;	PenWidth = 1;
+		mreal pw = PenWidth;	PenWidth = 1;
 		int pd = PDef;	PDef = 0xffff;
 		if(!strchr("xsSoO",type))	ss *= 1.1;
 		switch(type)
@@ -1008,7 +1008,7 @@ void mglCanvas::mark_draw(long k, char type, float size, mglDrawReg *d)
 void mglCanvas::glyph_draw(const mglPrim *P, mglDrawReg *d)
 {
 	mglPnt p=Pnt[P->n1];
-	float f = p.w;
+	mreal f = p.w;
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_lock(&mutexPnt);
 #endif
@@ -1034,12 +1034,12 @@ void mglCanvas::glyph_draw(const mglPrim *P, mglDrawReg *d)
 #endif
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::glyph_fill(const mglPnt &pp, float f, int nt, const short *trig, mglDrawReg *d)
+void mglCanvas::glyph_fill(const mglPnt &pp, mreal f, int nt, const short *trig, mglDrawReg *d)
 {
 	if(!trig || nt<=0)	return;
 	long ik,ii,pos=Pnt.size();
 	mglPnt p=pp;	p.u=p.v=NAN;
-	float pw = Width>2 ? fabs(PenWidth) : 1e-5*Width;
+	mreal pw = Width>2 ? fabs(PenWidth) : 1e-5*Width;
 
 	mglPoint p1,p2,p3;
 	for(ik=0;ik<nt;ik++)
@@ -1055,13 +1055,13 @@ void mglCanvas::glyph_fill(const mglPnt &pp, float f, int nt, const short *trig,
 	Pnt.erase(Pnt.begin()+pos,Pnt.end());
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::glyph_wire(const mglPnt &pp, float f, int nl, const short *line, mglDrawReg *d)
+void mglCanvas::glyph_wire(const mglPnt &pp, mreal f, int nl, const short *line, mglDrawReg *d)
 {
 	if(!line || nl<=0)	return;
 	long ik,ii,il=0,pos=Pnt.size();
 	mglPnt p=pp;	p.u=p.v=NAN;
 	unsigned pdef=PDef;	PDef = 0xffff;
-	float opw=PenWidth;	PenWidth=0.75;
+	mreal opw=PenWidth;	PenWidth=0.75;
 	mglPoint p1,p2;
 	for(ik=0;ik<nl;ik++)
 	{
@@ -1087,16 +1087,16 @@ void mglCanvas::glyph_wire(const mglPnt &pp, float f, int nl, const short *line,
 	Pnt.erase(Pnt.begin()+pos,Pnt.end());
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::glyph_line(const mglPnt &pp, float f, bool solid, mglDrawReg *d)
+void mglCanvas::glyph_line(const mglPnt &pp, mreal f, bool solid, mglDrawReg *d)
 {
 	mglPnt p=pp;	p.u=p.v=NAN;
-	float pw = Width>2 ? fabs(PenWidth) : 1e-5*Width;
+	mreal pw = Width>2 ? fabs(PenWidth) : 1e-5*Width;
 	unsigned pdef=PDef;	PDef = 0xffff;
-	float opw=PenWidth;	PenWidth=1;
+	mreal opw=PenWidth;	PenWidth=1;
 	mglPoint p1,p2,p3,p4;
 	long pos=Pnt.size();
 
-	float dy = 0.004;
+	mreal dy = 0.004;
 	p1 = mglPoint(pp.u,pp.v-dy,0);	PostScale(p1);
 	p2 = mglPoint(pp.u,pp.v+dy,0);	PostScale(p2);
 	p3 = mglPoint(fabs(f)+pp.u,pp.v+dy,0);	PostScale(p3);

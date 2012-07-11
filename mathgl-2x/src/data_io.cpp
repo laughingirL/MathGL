@@ -442,7 +442,7 @@ int mgl_data_read_mat_(uintptr_t *d, const char *fname,int *dim,int l)
 {	char *s=new char[l+1];		memcpy(s,fname,l);	s[l]=0;
 	int r = mgl_data_read_mat(_DT_,s,*dim);	delete []s;	return r;	}
 //-----------------------------------------------------------------------------
-float mgl_data_max(HCDT d)
+mreal mgl_data_max(HCDT d)
 {
 	register mreal m=-1e10, v;
 	register long nn=d->GetNN();
@@ -453,9 +453,9 @@ float mgl_data_max(HCDT d)
 	{	v = d->vthr(i);	if(!mgl_isnan(v))	m = m>v ? m:v;	}
 	return m;
 }
-float mgl_data_max_(uintptr_t *d)	{	return mgl_data_max(_DT_);	}
+mreal mgl_data_max_(uintptr_t *d)	{	return mgl_data_max(_DT_);	}
 //-----------------------------------------------------------------------------
-float mgl_data_min(HCDT d)
+mreal mgl_data_min(HCDT d)
 {
 	register mreal m=1e10, v;
 	register long nn=d->GetNN();
@@ -466,9 +466,9 @@ float mgl_data_min(HCDT d)
 	{	v = d->vthr(i);	if(!mgl_isnan(v))	m = m<v ? m:v;	}
 	return m;
 }
-float mgl_data_min_(uintptr_t *d)	{	return mgl_data_min(_DT_);	}
+mreal mgl_data_min_(uintptr_t *d)	{	return mgl_data_min(_DT_);	}
 //-----------------------------------------------------------------------------
-float mgl_data_max_int(HCDT d, long *i, long *j, long *k)
+mreal mgl_data_max_int(HCDT d, long *i, long *j, long *k)
 {
 	register mreal m=-1e10, v;
 	long nx=d->GetNx(), ny=d->GetNy(), nn=d->GetNN();
@@ -480,11 +480,11 @@ float mgl_data_max_int(HCDT d, long *i, long *j, long *k)
 	}
 	return m;
 }
-float mgl_data_max_int_(uintptr_t *d, int *i, int *j, int *k)
-{	long ii,jj,kk;	float res=mgl_data_max_int(_DT_,&ii,&jj,&kk);
+mreal mgl_data_max_int_(uintptr_t *d, int *i, int *j, int *k)
+{	long ii,jj,kk;	mreal res=mgl_data_max_int(_DT_,&ii,&jj,&kk);
 	*i=ii;	*j=jj;	*k=kk;	return res;	}
 //-----------------------------------------------------------------------------
-float mgl_data_min_int(HCDT d, long *i, long *j, long *k)
+mreal mgl_data_min_int(HCDT d, long *i, long *j, long *k)
 {
 	register mreal m=1e10, v;
 	long nx=d->GetNx(), ny=d->GetNy(), nn=d->GetNN();
@@ -496,11 +496,11 @@ float mgl_data_min_int(HCDT d, long *i, long *j, long *k)
 	}
 	return m;
 }
-float mgl_data_min_int_(uintptr_t *d, int *i, int *j, int *k)
-{	long ii,jj,kk;	float res=mgl_data_min_int(_DT_,&ii,&jj,&kk);
+mreal mgl_data_min_int_(uintptr_t *d, int *i, int *j, int *k)
+{	long ii,jj,kk;	mreal res=mgl_data_min_int(_DT_,&ii,&jj,&kk);
 	*i=ii;	*j=jj;	*k=kk;	return res;	}
 //-----------------------------------------------------------------------------
-float mgl_data_max_real(HCDT d, mreal *x, mreal *y, mreal *z)
+mreal mgl_data_max_real(HCDT d, mreal *x, mreal *y, mreal *z)
 {
 	long im=-1,jm=-1,km=-1;
 	long nx=d->GetNx(), ny=d->GetNy(), nz=d->GetNz();
@@ -531,10 +531,10 @@ float mgl_data_max_real(HCDT d, mreal *x, mreal *y, mreal *z)
 	}
 	return m;
 }
-float mgl_data_max_real_(uintptr_t *d, mreal *x, mreal *y, mreal *z)
+mreal mgl_data_max_real_(uintptr_t *d, mreal *x, mreal *y, mreal *z)
 {	return mgl_data_max_real(_DT_,x,y,z);	}
 //-----------------------------------------------------------------------------
-float mgl_data_min_real(HCDT d, mreal *x, mreal *y, mreal *z)
+mreal mgl_data_min_real(HCDT d, mreal *x, mreal *y, mreal *z)
 {
 	long im=-1,jm=-1,km=-1;
 	long nx=d->GetNx(), ny=d->GetNy(), nz=d->GetNz();
@@ -565,7 +565,7 @@ float mgl_data_min_real(HCDT d, mreal *x, mreal *y, mreal *z)
 	}
 	return m;
 }
-float mgl_data_min_real_(uintptr_t *d, mreal *x, mreal *y, mreal *z)
+mreal mgl_data_min_real_(uintptr_t *d, mreal *x, mreal *y, mreal *z)
 {	return mgl_data_min_real(_DT_,x,y,z);	}
 //-----------------------------------------------------------------------------
 void *mgl_fill_x(void *par)
@@ -582,7 +582,7 @@ void *mgl_fill_x(void *par)
 	}
 	return 0;
 }
-void mgl_data_fill(HMDT d, float x1,float x2,char dir)
+void mgl_data_fill(HMDT d, mreal x1,mreal x2,char dir)
 {
 	if(mgl_isnan(x2))	x2=x1;
 	if(dir<'x' || dir>'z')	dir='x';
@@ -593,10 +593,10 @@ void mgl_data_fill(HMDT d, float x1,float x2,char dir)
 	if(dir=='z')	b[1] *= d->nz>1 ? 1./(d->nz-1):0;
 	mglStartThread(mgl_fill_x,0,d->nx*d->ny*d->nz,d->a,b,0,par,0,0,0,&dir);
 }
-void mgl_data_fill_(uintptr_t *d, float *x1,float *x2,const char *dir,int)
+void mgl_data_fill_(uintptr_t *d, mreal *x1,mreal *x2,const char *dir,int)
 {	mgl_data_fill(_DT_,*x1,*x2,*dir);	}
 //-----------------------------------------------------------------------------
-void mgl_data_norm(HMDT d, float v1,float v2,long sym,long dim)
+void mgl_data_norm(HMDT d, mreal v1,mreal v2,long sym,long dim)
 {
 	long i,s,nn=d->nx*d->ny*d->nz;
 	mreal a1=1e20,a2=-1e20,v,*a=d->a;
@@ -617,7 +617,7 @@ void mgl_data_norm(HMDT d, float v1,float v2,long sym,long dim)
 	for(i=s;i<nn;i++)	// normalize
 		a[i] = v1 + (v2-v1)*(a[i]-a1)/(a2-a1);
 }
-void mgl_data_norm_(uintptr_t *d, float *v1,float *v2,int *sym,int *dim)
+void mgl_data_norm_(uintptr_t *d, mreal *v1,mreal *v2,int *sym,int *dim)
 {	mgl_data_norm(_DT_,*v1,*v2,*sym,*dim);	}
 //-----------------------------------------------------------------------------
 void mgl_data_squeeze(HMDT d, long rx,long ry,long rz,long smooth)

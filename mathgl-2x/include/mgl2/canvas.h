@@ -34,12 +34,12 @@ struct GifFileType;
 /// Structure for transformation matrix
 struct mglMatrix
 {
-	float b[9];
-	float x,y,z,pf;
+	mreal b[9];
+	mreal x,y,z,pf;
 	mglMatrix()	{	clear();	}
-	inline void clear()	{	x=y=z=0;	memset(b,0,9*sizeof(float));	b[0]=b[4]=b[8]=1;	}
+	inline void clear()	{	x=y=z=0;	memset(b,0,9*sizeof(mreal));	b[0]=b[4]=b[8]=1;	}
 	inline mglMatrix &operator=(const mglMatrix &a)
-	{	x=a.x;	y=a.y;	z=a.z;	pf=a.pf;	memcpy(b,a.b,9*sizeof(float));	return *this;	}
+	{	x=a.x;	y=a.y;	z=a.z;	pf=a.pf;	memcpy(b,a.b,9*sizeof(mreal));	return *this;	}
 };
 //-----------------------------------------------------------------------------
 /// Structure for drawing axis and ticks
@@ -51,26 +51,26 @@ struct mglAxis
 		v0=aa.v0;	v1=aa.v1;	v2=aa.v2;	o=aa.o;
 		a = aa.a;	b = aa.b;	org=aa.org;	txt=aa.txt;
 		ns=aa.ns;	f=aa.f;		ch=aa.ch;	wcscpy(t,aa.t);	}
-	inline void AddLabel(const wchar_t *lbl, float v)
+	inline void AddLabel(const wchar_t *lbl, mreal v)
 	{	txt.push_back(mglText(lbl,"",v));	}
-	inline void AddLabel(const std::wstring &lbl, float v)
+	inline void AddLabel(const std::wstring &lbl, mreal v)
 	{	txt.push_back(mglText(lbl,v));	}
 
-	float dv,ds;	///< Actual step for ticks and subticks.
-	float d;		///< Step for axis ticks (if positive) or its number (if negative).
+	mreal dv,ds;	///< Actual step for ticks and subticks.
+	mreal d;		///< Step for axis ticks (if positive) or its number (if negative).
 	int ns;			///< Number of axis subticks.
 	wchar_t t[256];	///< Tick template (set NULL to use default one ("%.2g" in simplest case))
 	mglPoint dir;	///< Axis direction
 	mglPoint a,b;	///< Directions of over axis
 	mglPoint org;
-	float v0;		///< Center of axis cross section
-	float v1;		///< Minimal axis range.
-	float v2;		///< Maximal axis range.
-	float o;		///< Point of starting ticks numbering (if NAN then Org is used).
+	mreal v0;		///< Center of axis cross section
+	mreal v1;		///< Minimal axis range.
+	mreal v2;		///< Maximal axis range.
+	mreal o;		///< Point of starting ticks numbering (if NAN then Org is used).
 	int f;			///< Flag 0x1 - time, 0x2 - manual, 0x4 - fixed dv
 	std::vector<mglText> txt;	///< Axis labels
 	char ch;		///< Character of axis (like 'x','y','z','c')
-	float sh;		///< Extra shift of ticks and axis labels
+	mreal sh;		///< Extra shift of ticks and axis labels
 };
 //-----------------------------------------------------------------------------
 /// Structure for light source
@@ -82,8 +82,8 @@ struct mglLight
 	mglPoint r;		///< Position of light sources (NAN for infinity)
 	mglPoint q;		///< Actual position of light sources (filled by LightScale() function)
 	mglPoint p;		///< Actual direction of light sources (filled by LightScale() function)
-	float a;		///< Aperture of light sources
-	float b;		///< Brightness of light sources
+	mreal a;		///< Aperture of light sources
+	mreal b;		///< Brightness of light sources
 	mglColor c;		///< Color of light sources
 };
 //-----------------------------------------------------------------------------
@@ -121,9 +121,9 @@ using mglBase::Light;
 	void DefaultPlotParam();
 
 	/// Set angle of view indepently from mglCanvas::Rotate()
-	virtual void View(float tetx,float tetz,float tety=0);
+	virtual void View(mreal tetx,mreal tetz,mreal tety=0);
 	/// Zoom in or zoom out (if Zoom(0, 0, 1, 1)) a part of picture
-	virtual void Zoom(float x1, float y1, float x2, float y2);
+	virtual void Zoom(mreal x1, mreal y1, mreal x2, mreal y2);
 	/// Restore image after View() and Zoom()
 	virtual void Restore()	{	Bp.clear();	Bp.pf=0;	}
 
@@ -132,36 +132,36 @@ using mglBase::Light;
 	/// Push transformation matrix into stack
 	inline void Push()	{	stack.push_back(B);	}
 	/// Set PlotFactor
-	inline void SetPlotFactor(float val)
+	inline void SetPlotFactor(mreal val)
 	{	if(val<=0)	{B.pf=1.55;	set(MGL_AUTO_FACTOR);}	else {B.pf=val;	clr(MGL_AUTO_FACTOR);}	}
 	/// Get PlotFactor
-	inline float GetPlotFactor()	{	return B.pf;	}
+	inline mreal GetPlotFactor()	{	return B.pf;	}
 	/// Pop transformation matrix from stack
 	inline void Pop()	{	B = stack.back(); stack.pop_back();	}
 	/// Clear up the frame
 	virtual void Clf(mglColor back=WC);
 
 	/// Put further plotting in cell of stick rotated on angles tet, phi
-	void StickPlot(int num, int i, float tet, float phi);
+	void StickPlot(int num, int i, mreal tet, mreal phi);
 	/// Put further plotting in some region of whole frame surface.
-	void InPlot(float x1,float x2,float y1,float y2,bool rel=true);
-	void InPlot(float x1,float x2,float y1,float y2, const char *style);
+	void InPlot(mreal x1,mreal x2,mreal y1,mreal y2,bool rel=true);
+	void InPlot(mreal x1,mreal x2,mreal y1,mreal y2, const char *style);
 	/// Add title for current subplot/inplot
-	void Title(const char *title,const char *stl="#",float size=-2);
-	void Title(const wchar_t *title,const char *stl="#",float size=-2);
+	void Title(const char *title,const char *stl="#",mreal size=-2);
+	void Title(const wchar_t *title,const char *stl="#",mreal size=-2);
 	/// Set aspect ratio for further plotting.
-	void Aspect(float Ax,float Ay,float Az);
+	void Aspect(mreal Ax,mreal Ay,mreal Az);
 	/// Rotate a further plotting.
-	void Rotate(float TetX,float TetZ,float TetY=0);
+	void Rotate(mreal TetX,mreal TetZ,mreal TetY=0);
 	/// Rotate a further plotting around vector {x,y,z}.
-	void RotateN(float Tet,float x,float y,float z);
+	void RotateN(mreal Tet,mreal x,mreal y,mreal z);
 	/// Set perspective (in range [0,1)) for plot. Set to zero for switching off.
-	void Perspective(float a)	{	Bp.pf = fabs(a);	}
+	void Perspective(mreal a)	{	Bp.pf = fabs(a);	}
 
 	/// Set size of frame in pixels. Normally this function is called internaly.
 	virtual void SetSize(int w,int h);
-	/// Get ratio (float width)/(float height).
-	float GetRatio() const;
+	/// Get ratio (mreal width)/(mreal height).
+	mreal GetRatio() const;
 	/// Get bitmap data prepared for saving to file
 	virtual unsigned char **GetRGBLines(long &w, long &h, unsigned char *&f, bool alpha=false);
 	/// Get RGB bitmap of current state image.
@@ -178,8 +178,8 @@ using mglBase::Light;
 	void MPI_Send(int id);
 	/// Receive graphical information from node id using MPI
 	void MPI_Recv(int id);
-	inline float GetDelay() const	{	return Delay;	}
-	inline void SetDelay(float d)	{	Delay=d;	}
+	inline mreal GetDelay() const	{	return Delay;	}
+	inline void SetDelay(mreal d)	{	Delay=d;	}
 
 	/// Calculate 3D coordinate {x,y,z} for screen point {xs,ys}
 	mglPoint CalcXYZ(int xs, int ys) const;
@@ -217,12 +217,12 @@ using mglBase::Light;
 	inline void SetTranspType(int val)
 	{	Flag=(Flag&(~3)) + (val&3);	SetAxisStl(val==2?"w-":"k-");	}
 	/// Set the fog distance or switch it off (if d=0).
-	virtual void Fog(float d, float dz=0.25);
+	virtual void Fog(mreal d, mreal dz=0.25);
 	/// Switch on/off the specified light source.
 	virtual void Light(int n, bool enable);
 	/// Add a light source.
-	virtual void AddLight(int n,mglPoint r, mglPoint d, char c='w', float bright=0.5, float ap=0);
-	inline void AddLight(int n,mglPoint d, char c='w', float bright=0.5, float ap=0)
+	virtual void AddLight(int n,mglPoint r, mglPoint d, char c='w', mreal bright=0.5, mreal ap=0);
+	inline void AddLight(int n,mglPoint d, char c='w', mreal bright=0.5, mreal ap=0)
 	{	AddLight(n,mglPoint(NAN),d,c,bright,ap);	}
 
 	/// Set ticks position and text (\n separated). Use n=0 to disable this feature.
@@ -236,18 +236,18 @@ using mglBase::Light;
 	void SetTickTempl(char dir, const wchar_t *t);
 	void SetTickTempl(char dir, const char *t);
 	/// Set time templates for ticks
-	void SetTickTime(char dir, float d=0, const char *t="");
+	void SetTickTime(char dir, mreal d=0, const char *t="");
 	/// Set the ticks parameters
-	void SetTicks(char dir, float d=0, int ns=0, float org=NAN);
+	void SetTicks(char dir, mreal d=0, int ns=0, mreal org=NAN);
 	/// Auto adjust ticks
 	void AdjustTicks(const char *dir="xyzc", bool force=false);
 	/// Tune ticks
-	inline void SetTuneTicks(int tune, float pos=1.15)
+	inline void SetTuneTicks(int tune, mreal pos=1.15)
 	{	TuneTicks = tune;	FactorPos = pos;	};
 	/// Set ticks styles
 	void SetAxisStl(const char *stl="k", const char *tck=0, const char *sub=0);
 	/// Set ticks length
-	void SetTickLen(float tlen, float stt=1.);
+	void SetTickLen(mreal tlen, mreal stt=1.);
 
 	/// Draws bounding box outside the plotting volume with color \a c.
 	void Box(const char *col=0, bool ticks=true);
@@ -256,27 +256,27 @@ using mglBase::Light;
 	/// Draw grid lines perpendicular to direction determined by string parameter \a dir.
 	void Grid(const char *dir="xyzt",const char *pen="B-");
 	/// Print the label \a text for axis \a dir.
-	void Label(char dir, const char *text, float pos=0, float shift=0);
-	void Labelw(char dir, const wchar_t *text, float pos=0, float shift=0);
+	void Label(char dir, const char *text, mreal pos=0, mreal shift=0);
+	void Labelw(char dir, const wchar_t *text, mreal pos=0, mreal shift=0);
 
 	/// Draw colorbar at edge of axis
 	void Colorbar(const char *sch=0);
-	void Colorbar(const char *sch, float x, float y, float w, float h);
+	void Colorbar(const char *sch, mreal x, mreal y, mreal w, mreal h);
 	/// Draw colorbar at edge of axis for manual colors
 	void Colorbar(HCDT v, const char *sch=0);
-	void Colorbar(HCDT v, const char *sch, float x, float y, float w, float h);
+	void Colorbar(HCDT v, const char *sch, mreal x, mreal y, mreal w, mreal h);
 
 	/// Draw legend of accumulated strings at position (x, y) by \a font with \a size
-	inline void Legend(float x, float y, const char *font="#", float size=-0.8, float llen=0.1)
+	inline void Legend(mreal x, mreal y, const char *font="#", mreal size=-0.8, mreal llen=0.1)
 	{	Legend(Leg,x,y,font,size,llen);	}
 	/// Draw legend of accumulated strings by \a font with \a size
-	inline void Legend(int where=0x3, const char *font="#", float size=-0.8, float llen=0.1)
+	inline void Legend(int where=0x3, const char *font="#", mreal size=-0.8, mreal llen=0.1)
 	{	Legend(Leg,(where&1)?1:0,(where&2)?1:0,font,size,llen);	}
 	/// Draw legend of accumulated strings by \a font with \a size
-	inline void Legend(const std::vector<mglText> &leg, int where=3, const char *font="#", float size=-0.8, float llen=0)
+	inline void Legend(const std::vector<mglText> &leg, int where=3, const char *font="#", mreal size=-0.8, mreal llen=0)
 	{	Legend(leg,(where&1)?1:0,(where&2)?1:0,font,size,llen);	}
 	/// Draw legend strings \a text at position (x, y) by \a font with \a size
-	void Legend(const std::vector<mglText> &leg, float x, float y, const char *font="#", float size=-0.8, float llen=0);
+	void Legend(const std::vector<mglText> &leg, mreal x, mreal y, const char *font="#", mreal size=-0.8, mreal llen=0);
 	/// Number of marks in legend sample
 	inline void SetLegendMarks(int num=1)	{	LegendMarks = num>0?num:1;	};
 
@@ -289,7 +289,8 @@ using mglBase::Light;
 	{	ax.sh = p.x;	ay.sh = p.y;	az.sh = p.z;	ac.sh = p.c;	}
 
 protected:
-	float Delay;		///< Delay for animation in seconds
+	mreal Delay;		///< Delay for animation in seconds
+	// NOTE: Z should be float for reducing space and for compatibility reasons
 	float *Z;			///< Height for given level in Z-direction
 	unsigned char *C;	///< Picture for given level in Z-direction
 	int *OI;			///< ObjId arrays
@@ -305,12 +306,12 @@ protected:
 	mglAxis ax,ay,az,ac;///< Axis parameters
 
 	int TuneTicks;		///< Draw tuned ticks with extracted common component
-	float FactorPos;	///< Position of axis ticks factor (0 at Min, 1 at Max, 1.1 is default)
-	float TickLen;		///< Length of tiks (subticks length is sqrt(1+st_t)=1.41... times smaller)
+	mreal FactorPos;	///< Position of axis ticks factor (0 at Min, 1 at Max, 1.1 is default)
+	mreal TickLen;		///< Length of tiks (subticks length is sqrt(1+st_t)=1.41... times smaller)
 	char AxisStl[32];	///< Axis line style. Default is "k"
 	char TickStl[32];	///< Tick line style. Default is "k"
 	char SubTStl[32];	///< Subtick line style. Default is "k"
-	float st_t;			///< Subtick-to-tick ratio (ls=lt/sqrt(1+st_t)). Default is 1.
+	mreal st_t;			///< Subtick-to-tick ratio (ls=lt/sqrt(1+st_t)). Default is 1.
 
 	int CurFrameId;		///< Number of automaticle created frames
 	int Width;			///< Width of the image
@@ -319,10 +320,10 @@ protected:
 	mglMatrix Bp;		///< Transformation matrix for View() and Zoom()
 	mglMatrix B;		///< Transformation matrix
 	mglMatrix B1;		///< Transformation matrix for colorbar
-	float inW, inH;		///< Width and height of last InPlot
+	mreal inW, inH;		///< Width and height of last InPlot
 	mglLight light[10];	///< Light sources
-	float FogDist;		///< Inverse fog distance (fog ~ exp(-FogDist*Z))
-	float FogDz;		///< Relative shift of fog
+	mreal FogDist;		///< Inverse fog distance (fog ~ exp(-FogDist*Z))
+	mreal FogDz;		///< Relative shift of fog
 
 	/// Auto adjust ticks
 	void AdjustTicks(mglAxis &aa, bool ff);
@@ -349,27 +350,27 @@ protected:
 	/// Get drawing data for i-th frame.
 	void GetDrwDat(long i);
 
-	float GetOrgX(char dir) const;	///< Get Org.x (parse NAN value)
-	float GetOrgY(char dir) const;	///< Get Org.y (parse NAN value)
-	float GetOrgZ(char dir) const;	///< Get Org.z (parse NAN value)
+	mreal GetOrgX(char dir) const;	///< Get Org.x (parse NAN value)
+	mreal GetOrgY(char dir) const;	///< Get Org.y (parse NAN value)
+	mreal GetOrgZ(char dir) const;	///< Get Org.z (parse NAN value)
 
-	void mark_plot(long p, char type, float size=1);	// position in pntC
+	void mark_plot(long p, char type, mreal size=1);	// position in pntC
 	void arrow_plot(long p1, long p2, char st);			// position in pntC
 	void line_plot(long p1, long p2);	// position in pntC
 	void trig_plot(long p1, long p2, long p3);			// position in pntN
 	void quad_plot(long p1, long p2, long p3, long p4);	// position in pntN
-	void Glyph(float x, float y, float f, int style, long icode, float col);
-	float text_plot(long p,const wchar_t *text,const char *fnt,float size=-1,float sh=0,float  col=-('k'), bool rot=true);	// position in pntN
+	void Glyph(mreal x, mreal y, mreal f, int style, long icode, mreal col);
+	mreal text_plot(long p,const wchar_t *text,const char *fnt,mreal size=-1,mreal sh=0,mreal  col=-('k'), bool rot=true);	// position in pntN
 
 	void add_prim(mglPrim &a);	///< add primitive to list
-	void mark_draw(long p, char type, float size, mglDrawReg *d);
-	void arrow_draw(long p1, long p2, char st, float size, mglDrawReg *d);
+	void mark_draw(long p, char type, mreal size, mglDrawReg *d);
+	void arrow_draw(long p1, long p2, char st, mreal size, mglDrawReg *d);
 	virtual void line_draw(long p1, long p2, mglDrawReg *d);
 	virtual void trig_draw(long p1, long p2, long p3, bool anorm, mglDrawReg *d);
 	virtual void quad_draw(long p1, long p2, long p3, long p4, mglDrawReg *d);
 	virtual void pnt_draw(long p, mglDrawReg *d);
 	void glyph_draw(const mglPrim *P, mglDrawReg *d);
-	bool IsSame(const mglPrim &pr,float wp,mglColor cp,int st);
+	bool IsSame(const mglPrim &pr,mreal wp,mglColor cp,int st);
 
 	// functions for multi-threading
 	void PreparePrim(bool fast);
@@ -385,22 +386,22 @@ protected:
 	void PutDrawReg(mglDrawReg *d, const mglCanvas *gr);
 	
 private:
-//	float _tetx,_tety,_tetz;		// extra angles
+//	mreal _tetx,_tety,_tetz;		// extra angles
 	std::vector<mglMatrix> stack;	///< stack for transformation matrixes
 	int dr_nx1, dr_nx2, dr_ny1, dr_ny2;	// Allowed drawing region
 	GifFileType *gif;
-	float fscl,ftet;	///< last scale and rotation for glyphs
+	mreal fscl,ftet;	///< last scale and rotation for glyphs
 
 	/// Draw generic colorbar
-	void colorbar(HCDT v, const float *s, int where, float x, float y, float w, float h);
+	void colorbar(HCDT v, const mreal *s, int where, mreal x, mreal y, mreal w, mreal h);
 	/// Draw labels for ticks
 	void DrawLabels(mglAxis &aa);
 	/// Draw tick
 	void tick_draw(mglPoint o, mglPoint d1, mglPoint d2, int f, const char *stl);
 	/// Plot point \a p with color \a c
-	void pnt_plot(long x,long y,float z,const unsigned char c[4]);
-	float FindOptOrg(char dir, int ind) const;
-	/// Transform float color and alpha to bits format
+	void pnt_plot(long x,long y,mreal z,const unsigned char c[4]);
+	mreal FindOptOrg(char dir, int ind) const;
+	/// Transform mreal color and alpha to bits format
 	unsigned char* col2int(const mglPnt &p, unsigned char *r);
 	/// Combine colors in 2 plane.
 	void combine(unsigned char *c1,unsigned char *c2);
@@ -414,9 +415,9 @@ private:
 	inline void PostScale(mglPoint *p,long n) const	{	for(long i=0;i<n;i++)	PostScale(p[i]);	}
 
 	// functions for glyph drawing
-	void glyph_fill(const mglPnt &p, float f, int nt, const short *trig, mglDrawReg *d);
-	void glyph_wire(const mglPnt &p, float f, int nl, const short *line, mglDrawReg *d);
-	void glyph_line(const mglPnt &p, float f, bool solid, mglDrawReg *d);
+	void glyph_fill(const mglPnt &p, mreal f, int nt, const short *trig, mglDrawReg *d);
+	void glyph_wire(const mglPnt &p, mreal f, int nl, const short *line, mglDrawReg *d);
+	void glyph_line(const mglPnt &p, mreal f, bool solid, mglDrawReg *d);
 };
 //-----------------------------------------------------------------------------
 struct mglThreadG

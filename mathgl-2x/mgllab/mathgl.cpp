@@ -47,7 +47,7 @@ void get_doc_dir(char *&docdir);
 //-----------------------------------------------------------------------------
 void udav_error(const char *Message, void *v)
 {	((Fl_MGL*)v)->status->label(Message);	}
-float udav_delay(void *v)
+mreal udav_delay(void *v)
 {	return ((Fl_MGL*)v)->AnimDelay;	}
 void udav_reload(void *v)
 {	Parse->RestoreOnce();	((Fl_MGL*)v)->update();	}

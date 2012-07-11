@@ -235,7 +235,7 @@ void *mgl_resize(void *par)
 	}
 	return 0;
 }
-HMDT mgl_data_resize_box(HCDT dat, long mx,long my,long mz, float x1,float x2, float y1,float y2, float z1,float z2)
+HMDT mgl_data_resize_box(HCDT dat, long mx,long my,long mz, mreal x1,mreal x2, mreal y1,mreal y2, mreal z1,mreal z2)
 {	// NOTE: only for mglData (for speeding up)
 	mx = mx<1 ? 1:mx;	my = my<1 ? 1:my;	mz = mz<1 ? 1:mz;
 	mglData *r=new mglData(mx,my,mz);
@@ -254,7 +254,7 @@ HMDT mgl_data_resize(HCDT d, long mx,long my,long mz)
 {	return mgl_data_resize_box(d, mx,my,mz,0,1,0,1,0,1);	}
 uintptr_t mgl_data_resize_(uintptr_t *d, int *mx,int *my,int *mz)
 {	return uintptr_t(mgl_data_resize(_DT_,*mx,*my,*mz));	}
-uintptr_t mgl_data_resize_box_(uintptr_t *d, int *mx,int *my,int *mz, float *x1,float *x2, float *y1,float *y2, float *z1,float *z2)
+uintptr_t mgl_data_resize_box_(uintptr_t *d, int *mx,int *my,int *mz, mreal *x1,mreal *x2, mreal *y1,mreal *y2, mreal *z1,mreal *z2)
 {	return uintptr_t(mgl_data_resize_box(_DT_,*mx,*my,*mz,*x1,*x2,*y1,*y2,*z1,*z2));	}
 //-----------------------------------------------------------------------------
 void *mgl_combine(void *par)
@@ -1038,7 +1038,7 @@ void mgl_data_mul_dat(HMDT d, HCDT a)
 		d->a[i+nx*(j+ny*k)] *= a->v(i,j,k);
 }
 //-----------------------------------------------------------------------------
-void mgl_data_mul_num(HMDT d, float a)
+void mgl_data_mul_num(HMDT d, mreal a)
 {
 	long n=1, nx=d->nx, ny=d->ny, nz=d->nz;	mreal aa=a;
 	mglStartThread(mgl_eqmul,0,nx*ny*nz,d->a,&aa,0,&n);
@@ -1070,7 +1070,7 @@ void mgl_data_div_dat(HMDT d, HCDT a)
 		d->a[i+nx*(j+ny*k)] /= a->v(i,j,k);
 }
 //-----------------------------------------------------------------------------
-void mgl_data_div_num(HMDT d, float a)
+void mgl_data_div_num(HMDT d, mreal a)
 {
 	long n=1, nx=d->nx, ny=d->ny, nz=d->nz;	mreal aa=a;
 	mglStartThread(mgl_eqdiv,0,nx*ny*nz,d->a,&aa,0,&n);
@@ -1102,7 +1102,7 @@ void mgl_data_add_dat(HMDT d, HCDT a)
 		d->a[i+nx*(j+ny*k)] += a->v(i,j,k);
 }
 //-----------------------------------------------------------------------------
-void mgl_data_add_num(HMDT d, float a)
+void mgl_data_add_num(HMDT d, mreal a)
 {
 	long n=1, nx=d->nx, ny=d->ny, nz=d->nz;	mreal aa=a;
 	mglStartThread(mgl_eqadd,0,nx*ny*nz,d->a,&aa,0,&n);
@@ -1134,7 +1134,7 @@ void mgl_data_sub_dat(HMDT d, HCDT a)
 		d->a[i+nx*(j+ny*k)] -= a->v(i,j,k);
 }
 //-----------------------------------------------------------------------------
-void mgl_data_sub_num(HMDT d, float a)
+void mgl_data_sub_num(HMDT d, mreal a)
 {
 	long n=1, nx=d->nx, ny=d->ny, nz=d->nz;	mreal aa=a;
 	mglStartThread(mgl_eqsub,0,nx*ny*nz,d->a,&aa,0,&n);
@@ -1144,10 +1144,10 @@ void mgl_data_mul_dat_(uintptr_t *d, uintptr_t *b)	{	mgl_data_mul_dat(_DT_, _DA_
 void mgl_data_div_dat_(uintptr_t *d, uintptr_t *b)	{	mgl_data_div_dat(_DT_, _DA_(b));	}
 void mgl_data_add_dat_(uintptr_t *d, uintptr_t *b)	{	mgl_data_add_dat(_DT_, _DA_(b));	}
 void mgl_data_sub_dat_(uintptr_t *d, uintptr_t *b)	{	mgl_data_sub_dat(_DT_, _DA_(b));	}
-void mgl_data_mul_num_(uintptr_t *d, float *b)		{	mgl_data_mul_num(_DT_, *b);	}
-void mgl_data_div_num_(uintptr_t *d, float *b)		{	mgl_data_div_num(_DT_, *b);	}
-void mgl_data_add_num_(uintptr_t *d, float *b)		{	mgl_data_add_num(_DT_, *b);	}
-void mgl_data_sub_num_(uintptr_t *d, float *b)		{	mgl_data_sub_num(_DT_, *b);	}
+void mgl_data_mul_num_(uintptr_t *d, mreal *b)		{	mgl_data_mul_num(_DT_, *b);	}
+void mgl_data_div_num_(uintptr_t *d, mreal *b)		{	mgl_data_div_num(_DT_, *b);	}
+void mgl_data_add_num_(uintptr_t *d, mreal *b)		{	mgl_data_add_num(_DT_, *b);	}
+void mgl_data_sub_num_(uintptr_t *d, mreal *b)		{	mgl_data_sub_num(_DT_, *b);	}
 //-----------------------------------------------------------------------------
 void mgl_hist_p(mglThreadD *t,mreal *a)
 {
@@ -1196,7 +1196,7 @@ void *mgl_hist_2(void *par)
 	}
 	t->a = b;	return 0;
 }
-HMDT mgl_data_hist(HCDT dat, long n, float v1, float v2, long nsub)
+HMDT mgl_data_hist(HCDT dat, long n, mreal v1, mreal v2, long nsub)
 {
 	mglData *b=new mglData;		// NOTE: For mglData only!
 	const mglData *d = dynamic_cast<const mglData *>(dat);
@@ -1210,7 +1210,7 @@ HMDT mgl_data_hist(HCDT dat, long n, float v1, float v2, long nsub)
 	return b;
 }
 //-----------------------------------------------------------------------------
-HMDT mgl_data_hist_w(HCDT dat, HCDT weight, long n, float v1, float v2, long nsub)
+HMDT mgl_data_hist_w(HCDT dat, HCDT weight, long n, mreal v1, mreal v2, long nsub)
 {
 	mglData *b=new mglData;		// NOTE: For mglData only!
 	const mglData *d = dynamic_cast<const mglData *>(dat);
@@ -1226,9 +1226,9 @@ HMDT mgl_data_hist_w(HCDT dat, HCDT weight, long n, float v1, float v2, long nsu
 	return b;
 }
 //-----------------------------------------------------------------------------
-uintptr_t mgl_data_hist_(uintptr_t *d, int *n, float *v1, float *v2, int *nsub)
+uintptr_t mgl_data_hist_(uintptr_t *d, int *n, mreal *v1, mreal *v2, int *nsub)
 {	return uintptr_t(mgl_data_hist(_DT_,*n,*v1,*v2,*nsub));	}
-uintptr_t mgl_data_hist_w_(uintptr_t *d, uintptr_t *w, int *n, float *v1, float *v2, int *nsub)
+uintptr_t mgl_data_hist_w_(uintptr_t *d, uintptr_t *w, int *n, mreal *v1, mreal *v2, int *nsub)
 {	return uintptr_t(mgl_data_hist_w(_DT_,_DA_(w),*n,*v1,*v2,*nsub));	}
 //-----------------------------------------------------------------------------
 mreal mglLinear(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z)

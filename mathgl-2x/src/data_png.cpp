@@ -64,7 +64,7 @@ unsigned char *mgl_create_scheme(const char *scheme,long &num)
 	return c;
 }
 //-----------------------------------------------------------------------------
-void mgl_data_import(HMDT d, const char *fname, const char *scheme,float v1,float v2)
+void mgl_data_import(HMDT d, const char *fname, const char *scheme,mreal v1,mreal v2)
 {
 #if MGL_HAVE_PNG
 	if(v1>=v2)	return;
@@ -110,7 +110,7 @@ void mgl_data_import(HMDT d, const char *fname, const char *scheme,float v1,floa
 #endif
 }
 //-----------------------------------------------------------------------------
-void mgl_data_export(HCDT dd, const char *fname, const char *scheme,float v1,float v2,long ns)
+void mgl_data_export(HCDT dd, const char *fname, const char *scheme,mreal v1,mreal v2,long ns)
 {
 #if MGL_HAVE_PNG
 	register long i,j,k;
@@ -169,14 +169,14 @@ void mgl_data_export(HCDT dd, const char *fname, const char *scheme,float v1,flo
 #endif
 }
 //-----------------------------------------------------------------------------
-void mgl_data_export_(uintptr_t *d, const char *fname, const char *scheme,float *v1,float *v2,int *ns,int l,int n)
+void mgl_data_export_(uintptr_t *d, const char *fname, const char *scheme,mreal *v1,mreal *v2,int *ns,int l,int n)
 {
 	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,scheme,n);	f[n]=0;
 	mgl_data_export(_DT_,s,f,*v1,*v2,*ns);
 	delete []s;		delete []f;
 }
-void mgl_data_import_(uintptr_t *d, const char *fname, const char *scheme,float *v1,float *v2,int l,int n)
+void mgl_data_import_(uintptr_t *d, const char *fname, const char *scheme,mreal *v1,mreal *v2,int l,int n)
 {
 	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,scheme,n);	f[n]=0;

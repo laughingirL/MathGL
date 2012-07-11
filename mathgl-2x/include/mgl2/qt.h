@@ -59,7 +59,7 @@ public:
 	{	draw = dr;	}
 	inline void setDraw(int (*draw)(mglGraph *gr))
 	{	setDraw(mgl_draw_graph,(void*)draw);	}
-	inline void zoomRegion(float xx1,float xx2,float yy1, float yy2)
+	inline void zoomRegion(mreal xx1,mreal xx2,mreal yy1, mreal yy2)
 	{	x1=xx1;	y1=yy1;	x2=xx2;	y2=yy2;	}
 
 	int getPer()	{return int(per);};	///< Get perspective value
@@ -129,7 +129,7 @@ signals:
 	void lightChanged(bool);	///< Lighting changed (by toolbar)
 	void zoomChanged(bool);		///< Zooming changed (by toolbar)
 	void rotateChanged(bool);	///< Rotation changed (by toolbar)
-	void mouseClick(float,float,float);	///< Position of mouse click
+	void mouseClick(mreal,mreal,mreal);	///< Position of mouse click
 	void frameChanged(int);		///< Need another frame to show
 	void showWarn(QString);		///< Show warnings
 	void posChanged(QString message);	///< user click to show mouse position
@@ -157,7 +157,7 @@ protected:
 	bool zoom;			///< Mouse zoom state
 	bool grid;			///< Grid drawing state
 	bool rotate;		///< Mouse rotation state
-	float x1,x2,y1,y2;	///< Zoom in region
+	mreal x1,x2,y1,y2;	///< Zoom in region
 	bool showMessage;	///< Flag for showing messages (enabled by each execute())
 	QMenu *popup;		///< Pointer to pop-up menu
 	QTimer *timer;		///< Timer for animation

@@ -32,15 +32,15 @@ public:
 	void SetQuality(int =0)	{	Quality=2;	}
 	void Finish(bool fast=true);
 	void SetSize(int ,int )	{}
-	void View(float tetX,float tetY,float tetZ);
+	void View(mreal tetX,mreal tetY,mreal tetZ);
 	int NewFrame();
 	void EndFrame();
 
 	bool Alpha(bool enable);
-	void Fog(float d, float dz=0.25);
+	void Fog(mreal d, mreal dz=0.25);
 	bool Light(bool enable);
 	void Light(int n, bool enable);
-	void AddLight(int n,mglPoint r,mglPoint d, char c='w', float bright=0.5, float ap=0);
+	void AddLight(int n,mglPoint r,mglPoint d, char c='w', mreal bright=0.5, mreal ap=0);
 	void Clf(mglColor Back=WC);
 
 protected:
@@ -51,7 +51,7 @@ protected:
 
 	unsigned char **GetRGBLines(long &w, long &h, unsigned char *&f, bool solid=true);
 	void LightScale();
-	void set_pen(unsigned style,float width);
+	void set_pen(unsigned style,mreal width);
 };
 extern "C" {
 #endif

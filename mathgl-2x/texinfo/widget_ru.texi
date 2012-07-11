@@ -19,10 +19,10 @@
 Класс реализует элемент интерфейса FLTK для отображения графики MathGL. Класс определен в @code{#include <mgl2/fltk.h>}.
 @end deftp
 
-@float
+@mreal
 @image{fltk, 7cm}
 @caption{Пример окна FLTK с графикой MathGL.}
-@end float
+@end mreal
 
 @deftp {Class} mglGraphQT
 Создает окно используя библиотеку Qt. Окно имеет панель инструментов и меню  для упрощения действий с графиками. ``Присоединенный'' класс элемента интерфейса -- @code{QMathGL}. Класс определен в @code{#include <mgl2/mgl_qt.h>}.
@@ -32,19 +32,19 @@
 Класс реализует элемент интерфейса Qt для отображения графики MathGL. Класс определен в @code{#include <mgl2/qt.h>}.
 @end deftp
 
-@float
+@mreal
 @image{qt, 7cm}
 @caption{Пример окна Qt с графикой MathGL.}
-@end float
+@end mreal
 
 @deftp {Class} mglGraphGLUT
 Создает окно используя библиотеку GLUT. Класс определен в @code{#include <mgl2/glut.h>}.
 @end deftp
 
-@float
+@mreal
 @image{glut, 7cm}
 @caption{Пример окна GLUT с графикой MathGL.}
-@end float
+@end mreal
 
 @menu
 * Fl_MathGL class::             
@@ -65,7 +65,7 @@
 @deftypemethod Fl_MathGL @code{void} update (@code{mglGraph *}gr=@code{NULL})
 Обновляет (перерисовывает) график, используя экземпляр класса @var{gr} (по умолчанию встроенный).
 @end deftypemethod
-@deftypemethod Fl_MathGL @code{void} set_angle (@code{float} t, @code{float} p)
+@deftypemethod Fl_MathGL @code{void} set_angle (@code{mreal} t, @code{mreal} p)
 Задает углы для дополнительного вращения графика.
 @end deftypemethod
 @deftypemethod Fl_MathGL @code{void} set_state (@code{int} f)
@@ -74,10 +74,10 @@
 @deftypemethod Fl_MathGL @code{void} set_state (@code{bool} z, @code{bool} r)
 Задает флаги обработки движений мыши: @var{z}=@code{true} -- разрешает приближение выделения, @var{r}=@code{true} разрешает вращение/сдвиг/приближение/перспективу.
 @end deftypemethod
-@deftypemethod Fl_MathGL @code{void} set_zoom (@code{float} X1, @code{float} Y1, @code{float} X2, @code{float} Y2)
+@deftypemethod Fl_MathGL @code{void} set_zoom (@code{mreal} X1, @code{mreal} Y1, @code{mreal} X2, @code{mreal} Y2)
 Задает область приближения.
 @end deftypemethod
-@deftypemethod Fl_MathGL @code{void} get_zoom (@code{float *}X1, @code{float *}Y1, @code{float *}X2, @code{float *}Y2)
+@deftypemethod Fl_MathGL @code{void} get_zoom (@code{mreal *}X1, @code{mreal *}Y1, @code{mreal *}X2, @code{mreal *}Y2)
 Возвращает область приближения.
 @end deftypemethod
 @deftypemethod Fl_MathGL @code{void} set_popup (@code{const Fl_Menu_Item *}pmenu, @code{Fl_Widget *}w, @code{void *}v)

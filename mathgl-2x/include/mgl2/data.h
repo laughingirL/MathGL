@@ -322,9 +322,9 @@ public:
 	inline void PrintInfo(FILE *fp) const
 	{	if(fp)	{	fprintf(fp,"%s",mgl_data_info(this));	fflush(fp);	}	}
 	/// Get maximal value of the data
-	inline float Maximal() const	{	return mgl_data_max(this);	}
+	inline mreal Maximal() const	{	return mgl_data_max(this);	}
 	/// Get minimal value of the data
-	inline float Minimal() const	{	return mgl_data_min(this);	}
+	inline mreal Minimal() const	{	return mgl_data_min(this);	}
 	/// Get maximal value of the data and its position
 	inline mreal Maximal(long &i,long &j,long &k) const
 	{	return mgl_data_max_int(this,&i,&j,&k);	}

@@ -74,7 +74,7 @@ void *mgl_pde_hprep(void *par)
 	return 0;
 }
 // Solve equation du/dz = ham(p,q,x,y,z,|u|)[u] where p=d/dx, q=d/dy. At this moment simplified form of ham is supported: ham = f(p,q,z) + g(x,y,z,'u'), where variable 'u'=|u| (for allowing solve nonlinear problems). You may specify imaginary part like ham = p^2 + i*x*(x>0) but only if dependence on variable 'i' is linear (i.e. ham = hre+i*him).
-HMDT mgl_pde_solve(HMGL gr, const char *ham, HCDT ini_re, HCDT ini_im, float dz, float k0, const char *opt)
+HMDT mgl_pde_solve(HMGL gr, const char *ham, HCDT ini_re, HCDT ini_im, mreal dz, mreal k0, const char *opt)
 {
 	gr->SaveState(opt);
 	mglPoint Min=gr->Min, Max=gr->Max;
@@ -176,7 +176,7 @@ HMDT mgl_pde_solve(HMGL gr, const char *ham, HCDT ini_re, HCDT ini_im, float dz,
 }
 //-----------------------------------------------------------------------------
 // Solve GO ray equation like dr/dt = d ham/dp, dp/dt = -d ham/dr where ham = ham(x,y,z,p,q,v,t) and px=p, py=q, pz=v. The starting point (at t=0) is r0, p0. Result is array of {x,y,z,p,q,v,t}
-HMDT mgl_ray_trace(const char *ham, float x0, float y0, float z0, float px, float py, float pz, float dt, float tmax)
+HMDT mgl_ray_trace(const char *ham, mreal x0, mreal y0, mreal z0, mreal px, mreal py, mreal pz, mreal dt, mreal tmax)
 {
 	mglData *res=new mglData;
 	if(tmax<dt)	return res;	// nothing to do
@@ -313,7 +313,7 @@ void *mgl_qo2d_hprep(void *par)
 	}
 	return 0;
 }
-HMDT mgl_qo2d_solve(const char *ham, HCDT ini_re, HCDT ini_im, HCDT ray_dat, float r, float k0, HMDT xx, HMDT yy)
+HMDT mgl_qo2d_solve(const char *ham, HCDT ini_re, HCDT ini_im, HCDT ray_dat, mreal r, mreal k0, HMDT xx, HMDT yy)
 {
 	mglData *res=new mglData;
 	const mglData *ray=dynamic_cast<const mglData *>(ray_dat);	// NOTE: Ray must be mglData!
@@ -509,16 +509,16 @@ HMDT mgl_jacobian_3d(HCDT x, HCDT y, HCDT z)
 	return r;
 }
 //-----------------------------------------------------------------------------
-uintptr_t mgl_pde_solve_(uintptr_t* gr, const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, float *dz, float *k0, const char *opt, int l, int lo)
+uintptr_t mgl_pde_solve_(uintptr_t* gr, const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, mreal *dz, mreal *k0, const char *opt, int l, int lo)
 {	char *s=new char[l+1];	memcpy(s,ham,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	uintptr_t res = uintptr_t(mgl_pde_solve(_GR_, s, _DA_(ini_re), _DA_(ini_im), *dz, *k0, o));
 	delete []o;	delete []s;	return res;	}
-uintptr_t mgl_ray_trace_(const char *ham, float *x0, float *y0, float *z0, float *px, float *py, float *pz, float *dt, float *tmax,int l)
+uintptr_t mgl_ray_trace_(const char *ham, mreal *x0, mreal *y0, mreal *z0, mreal *px, mreal *py, mreal *pz, mreal *dt, mreal *tmax,int l)
 {	char *s=new char[l+1];	memcpy(s,ham,l);	s[l]=0;
 	uintptr_t res = uintptr_t(mgl_ray_trace(s, *x0,*y0,*z0, *px,*py,*pz, *dt,*tmax));
 	delete []s;	return res;	}
-uintptr_t mgl_qo2d_solve_(const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, uintptr_t* ray, float *r, float *k0, uintptr_t* xx, uintptr_t* yy, int l)
+uintptr_t mgl_qo2d_solve_(const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, uintptr_t* ray, mreal *r, mreal *k0, uintptr_t* xx, uintptr_t* yy, int l)
 {	char *s=new char[l+1];	memcpy(s,ham,l);	s[l]=0;
 	uintptr_t res = uintptr_t(mgl_qo2d_solve(s, _DA_(ini_re), _DA_(ini_im), _DA_(ray), *r, *k0, _DM_(xx), _DM_(yy)));
 	delete []s;	return res;	}

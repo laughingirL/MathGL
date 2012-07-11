@@ -120,12 +120,12 @@ public:
 	void SetClickFunc(void (*func)(void *p))
 	{	if(!dr)	mgl_set_click_func(gr,func);	}
 
-	inline void SetDelay(float dt)	///< Delay for animation in seconds
+	inline void SetDelay(mreal dt)	///< Delay for animation in seconds
 	{	mgl_wnd_set_delay(gr, dt);	}
 	inline void Setup(bool clf_upd=true, bool showpos=false)
 	{	mgl_setup_window(gr, clf_upd, showpos);	}
 	inline mglPoint LastMousePos()	///< Last mouse position
-	{	float x,y,z;	mgl_get_last_mouse_pos(gr,&x,&y,&z);	return mglPoint(x,y,z);	}
+	{	mreal x,y,z;	mgl_get_last_mouse_pos(gr,&x,&y,&z);	return mglPoint(x,y,z);	}
 };
 //-----------------------------------------------------------------------------
 #endif

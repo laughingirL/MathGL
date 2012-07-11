@@ -54,7 +54,7 @@ public:
 	/// Set the transparency on/off.
 	inline void Alpha(bool enable)			{	mgl_set_alpha(gr, enable);	}
 	/// Set default value of alpha-channel
-	inline void SetAlphaDef(float alpha)	{	mgl_set_alpha_default(gr, alpha);	}
+	inline void SetAlphaDef(mreal alpha)	{	mgl_set_alpha_default(gr, alpha);	}
 	/// Set the transparency type (0 - usual, 1 - glass, 2 - lamp)
 	inline void SetTranspType(int type)		{	mgl_set_transp_type(gr, type);}
 
@@ -65,21 +65,21 @@ public:
 	/// Use diffusive light (only for local light sources)
 	inline void SetDifLight(bool dif)		{	mgl_set_light_dif(gr, dif);	}
 	/// Add a light source.
-	inline void AddLight(int n, mglPoint p, char col='w', float bright=0.5, float ap=0)
+	inline void AddLight(int n, mglPoint p, char col='w', mreal bright=0.5, mreal ap=0)
 	{	mgl_add_light_ext(gr, n, p.x, p.y, p.z, col, bright, ap);	}
-	inline void AddLight(int n, mglPoint r, mglPoint p, char col='w', float bright=0.5, float ap=0)
+	inline void AddLight(int n, mglPoint r, mglPoint p, char col='w', mreal bright=0.5, mreal ap=0)
 	{	mgl_add_light_loc(gr, n, r.x, r.y, r.z, p.x, p.y, p.z, col, bright, ap);	}
 	/// Set ambient light brightness
-	inline void SetAmbient(float i)			{	mgl_set_ambbr(gr, i);	}
+	inline void SetAmbient(mreal i)			{	mgl_set_ambbr(gr, i);	}
 	/// Set the fog distance or switch it off (if d=0).
-	inline void Fog(float d, float dz=0.25)	{	mgl_set_fog(gr, d, dz);		}
+	inline void Fog(mreal d, mreal dz=0.25)	{	mgl_set_fog(gr, d, dz);		}
 
 	/// Set relative width of rectangles in Bars, Barh, BoxPlot
-	inline void SetBarWidth(float width)	{	mgl_set_bar_width(gr, width);	}
+	inline void SetBarWidth(mreal width)	{	mgl_set_bar_width(gr, width);	}
 	/// Set size of marks
-	inline void SetMarkSize(float size)		{	mgl_set_mark_size(gr, size);	}
+	inline void SetMarkSize(mreal size)		{	mgl_set_mark_size(gr, size);	}
 	/// Set size of arrows
-	inline void SetArrowSize(float size)	{	mgl_set_arrow_size(gr, size);	}
+	inline void SetArrowSize(mreal size)	{	mgl_set_arrow_size(gr, size);	}
 	/// Set number of mesh lines
 	inline void SetMeshNum(int num)			{	mgl_set_meshnum(gr, num);		}
 
@@ -92,15 +92,15 @@ public:
 	inline void CutOff(const char *EqC)	{	mgl_set_cutoff(gr, EqC);	}
 
 	/// Set default font size
-	inline void SetFontSize(float size)		{	mgl_set_font_size(gr, size);	}
+	inline void SetFontSize(mreal size)		{	mgl_set_font_size(gr, size);	}
 	/// Set default font style and color
 	inline void SetFontDef(const char *fnt)		{	mgl_set_font_def(gr, fnt);	}
 	/// Set FontSize by size in pt and picture DPI (default is 16 pt for dpi=72)
-	virtual void SetFontSizePT(float pt, int dpi=72){	SetFontSize(pt*27.f/dpi);	}
+	virtual void SetFontSizePT(mreal pt, int dpi=72){	SetFontSize(pt*27.f/dpi);	}
 	/// Set FontSize by size in centimeters and picture DPI (default is 0.56 cm = 16 pt)
-	inline void SetFontSizeCM(float cm, int dpi=72)	{	SetFontSizePT(cm*28.45f,dpi);	}
+	inline void SetFontSizeCM(mreal cm, int dpi=72)	{	SetFontSizePT(cm*28.45f,dpi);	}
 	/// Set FontSize by size in inch and picture DPI (default is 0.22 in = 16 pt)
-	inline void SetFontSizeIN(float in, int dpi=72)	{	SetFontSizePT(in*72.27f,dpi);	}
+	inline void SetFontSizeIN(mreal in, int dpi=72)	{	SetFontSizePT(in*72.27f,dpi);	}
 	/// Load font from file
 	inline void LoadFont(const char *name, const char *path=NULL)
 	{	mgl_load_font(gr, name, path);	}
@@ -124,7 +124,7 @@ public:
 	inline const char *Message()	{	return mgl_get_mess(gr);	}
 
 	/// Set range in direction dir as [v1, v2]
-	inline void SetRange(char dir, float v1, float v2)
+	inline void SetRange(char dir, mreal v1, mreal v2)
 	{	mgl_set_range_val(gr, dir, v1, v2);	}
 	/// Set range in direction dir as minimal and maximal values of data a
 	inline void SetRange(char dir, const mglDataA &dat, bool add=false)
@@ -141,7 +141,7 @@ public:
 	inline void SetRanges(const mglDataA &xx, const mglDataA &yy)
 	{	mgl_set_range_dat(gr,'x',&xx,0);	mgl_set_range_dat(gr,'y',&yy,0);	}
 	/// Set values of mglGraph::Min and mglGraph::Max
-	inline void SetRanges(float x1, float x2, float y1, float y2, float z1=0, float z2=0)
+	inline void SetRanges(mreal x1, mreal x2, mreal y1, mreal y2, mreal z1=0, mreal z2=0)
 	{	mgl_set_ranges(gr, x1, x2, y1, y2, z1, z2);	}
 	/// Set values of mglGraph::Min and mglGraph::Max
 	inline void SetRanges(mglPoint p1, mglPoint p2)
@@ -149,7 +149,7 @@ public:
 	/// Set axis origin
 	inline void SetOrigin(mglPoint p)
 	{	mgl_set_origin(gr, p.x, p.y, p.z);	}
-	inline void SetOrigin(float x0, float y0, float z0=NaN)
+	inline void SetOrigin(mreal x0, mreal y0, mreal z0=NaN)
 	{	mgl_set_origin(gr, x0, y0, z0);	}
 
 	/// Set the transformation formulas for coordinate
@@ -165,14 +165,14 @@ public:
 	/// Set to use or not tick labels skipping
 	inline void SetTickSkip(bool val)	{	mgl_set_tick_skip(gr,val);	}
 	/// Set tick length
-	inline void SetTickLen(float len, float stt=1)
+	inline void SetTickLen(mreal len, mreal stt=1)
 	{	mgl_set_tick_len(gr, len, stt);	}
 	/// Set axis and ticks style
 	inline void SetAxisStl(const char *stl="k", const char *tck=0, const char *sub=0)
 	{	mgl_set_axis_stl(gr, stl, tck, sub);	}
 
 	/// Set time templates for ticks
-	inline void SetTicksTime(char dir, float d=0, const char *t="")
+	inline void SetTicksTime(char dir, mreal d=0, const char *t="")
 	{	mgl_set_ticks_time(gr,dir,d,t);	}
 	/// Set ticks text (\n separated). Use "" to disable this feature.
 	inline void SetTicksVal(char dir, const char *lbl, bool add=false)
@@ -185,7 +185,7 @@ public:
 	inline void SetTicksVal(char dir, const mglDataA &v, const wchar_t *lbl, bool add=false)
 	{	mgl_set_ticks_valw(gr,dir,&v,lbl,add);	}
 	/// Set the ticks parameters
-	inline void SetTicks(char dir, float d=0, int ns=0, float org=NaN)
+	inline void SetTicks(char dir, mreal d=0, int ns=0, mreal org=NaN)
 	{	mgl_set_ticks(gr, dir, d, ns, org);	}
 	/// Auto adjust ticks
 	inline void Adjust(const char *dir="xyzc")
@@ -196,7 +196,7 @@ public:
 	inline void SetTickTempl(char dir, const wchar_t *t)
 	{	mgl_set_tick_templw(gr,dir,t);	}
 	/// Tune ticks
-	inline void SetTuneTicks(int tune, float fact_pos=1.15)
+	inline void SetTuneTicks(int tune, mreal fact_pos=1.15)
 	{	mgl_tune_ticks(gr, tune, fact_pos);	}
 	/// Set additional shift of tick labels
 	inline void SetTickShift(mglPoint p)
@@ -206,27 +206,27 @@ public:
 	{	mgl_set_flag(gr,enable, MGL_USE_GMTIME);	}
 	
 	/// Put further plotting in some region of whole frame surface.
-	inline void SubPlot(int nx,int ny,int m,const char *style="<>_^", float dx=0, float dy=0)
+	inline void SubPlot(int nx,int ny,int m,const char *style="<>_^", mreal dx=0, mreal dy=0)
 	{	mgl_subplot_d(gr, nx, ny, m, style, dx, dy);	}
 	/// Like SubPlot bot "join" several cells
 	inline void MultiPlot(int nx,int ny,int m, int dx, int dy, const char *style="<>_^")
 	{	mgl_multiplot(gr, nx, ny, m, dx, dy, style);	}
 	/// Put further plotting in some region of whole frame surface.
-	inline void InPlot(float x1,float x2,float y1,float y2, bool rel=true)
+	inline void InPlot(mreal x1,mreal x2,mreal y1,mreal y2, bool rel=true)
 	{	if(rel)	mgl_relplot(gr, x1, x2, y1, y2);
 		else	mgl_inplot(gr, x1, x2, y1, y2);	}
 	/// Put further plotting in column cell of previous subplot
-	inline void ColumnPlot(int num, int ind, float d=0)
+	inline void ColumnPlot(int num, int ind, mreal d=0)
 	{	mgl_columnplot(gr,num,ind,d);	}
 	/// Put further plotting in matrix cell of previous subplot
-	inline void GridPlot(int nx, int ny, int ind, float d=0)
+	inline void GridPlot(int nx, int ny, int ind, mreal d=0)
 	{	mgl_gridplot(gr,nx,ny,ind,d);	}
 	/// Put further plotting in cell of stick rotated on angles tet, phi
-	inline void StickPlot(int num, int i, float tet, float phi)
+	inline void StickPlot(int num, int i, mreal tet, mreal phi)
 	{	mgl_stickplot(gr,num,i,tet,phi);	}
 
 	/// Set PlotFactor
-	inline void SetPlotFactor(float val)
+	inline void SetPlotFactor(mreal val)
 	{	mgl_set_plotfactor(gr,val);	}
 	/// Push transformation matrix into stack
 	inline void Push()	{	mgl_mat_push(gr);	}
@@ -234,27 +234,27 @@ public:
 	inline void Pop()	{	mgl_mat_pop(gr);	}
 	
 	/// Add title for current subplot/inplot
-	inline 	void Title(const char *title,const char *stl="",float size=-2)
+	inline 	void Title(const char *title,const char *stl="",mreal size=-2)
 	{	mgl_title(gr,title,stl,size);	}
-	inline 	void Title(const wchar_t *title,const char *stl="",float size=-2)
+	inline 	void Title(const wchar_t *title,const char *stl="",mreal size=-2)
 	{	mgl_titlew(gr,title,stl,size);	}
 	/// Set aspect ratio for further plotting.
-	inline void Aspect(float Ax,float Ay,float Az=1)
+	inline void Aspect(mreal Ax,mreal Ay,mreal Az=1)
 	{	mgl_aspect(gr, Ax, Ay, Az);		}
 	/// Rotate a further plotting.
-	inline void Rotate(float TetX,float TetZ=0,float TetY=0)
+	inline void Rotate(mreal TetX,mreal TetZ=0,mreal TetY=0)
 	{	mgl_rotate(gr, TetX, TetZ, TetY);	}
 	/// Rotate a further plotting around vector {x,y,z}.
-	inline void RotateN(float Tet,float x,float y,float z)
+	inline void RotateN(mreal Tet,mreal x,mreal y,mreal z)
 	{	mgl_rotate_vector(gr, Tet, x, y, z);	}
 	/// Set perspective (in range [0,1)) for plot. Set to zero for switching off.
-	inline void Perspective(float val)
+	inline void Perspective(mreal val)
 	{	mgl_perspective(gr, val);	}
 	/// Set angle of view independently from Rotate().
-	inline void View(float TetX,float TetZ=0,float TetY=0)
+	inline void View(mreal TetX,mreal TetZ=0,mreal TetY=0)
 	{	mgl_view(gr, TetX, TetZ, TetY);	}
 	/// Zoom in or zoom out (if Zoom(0, 0, 1, 1)) a part of picture
-	inline void Zoom(float x1, float y1, float x2, float y2)
+	inline void Zoom(mreal x1, mreal y1, mreal x2, mreal y2)
 	{	mgl_zoom(gr, x1, y1, x2, y2);	}
 
 	/// Set size of frame in pixels. Normally this function is called internaly.
@@ -376,7 +376,7 @@ public:
 	/// Calculate 3D coordinate {x,y,z} for screen point {xs,ys}
 	inline mglPoint CalcXYZ(int xs, int ys)
 	{
-		float x,y,z;
+		mreal x,y,z;
 		mgl_calc_xyz(gr,xs,ys,&x,&y,&z);
 		return mglPoint(x,y,z);
 	}
@@ -402,7 +402,7 @@ public:
 	inline void MPI_Recv(int id)	{	mgl_mpi_recv(gr,id);	}
 
 	/// Clear up the frame
-	inline void Clf(float r, float g, float b)	{	mgl_clf_rgb(gr, r, g, b);	}
+	inline void Clf(mreal r, mreal g, mreal b)	{	mgl_clf_rgb(gr, r, g, b);	}
 	inline void Clf()	{	mgl_clf(gr);	}
 	/// Draws the point (ball) at position {x,y,z} with color c
 	inline void Ball(mglPoint p, char c)
@@ -424,46 +424,46 @@ public:
 	inline void Face(mglPoint p1, mglPoint p2, mglPoint p3, mglPoint p4, const char *stl="r")
 	{	mgl_face(gr, p1.x, p1.y, p1.z, p2.x, p2.y, p2.z, p3.x, p3.y, p3.z, p4.x, p4.y, p4.z, stl);	}
 	/// Draws the face in y-z plane at point p with color stl (include interpolation up to 4 colors).
-	inline void FaceX(mglPoint p, float wy, float wz, const char *stl="w", float dx=0, float dy=0)
+	inline void FaceX(mglPoint p, mreal wy, mreal wz, const char *stl="w", mreal dx=0, mreal dy=0)
 	{	mgl_facex(gr, p.x, p.y, p.z, wy, wz, stl, dx, dy);	}
 	/// Draws the face in x-z plane at point p with color stl (include interpolation up to 4 colors).
-	inline void FaceY(mglPoint p, float wx, float wz, const char *stl="w", float dx=0, float dy=0)
+	inline void FaceY(mglPoint p, mreal wx, mreal wz, const char *stl="w", mreal dx=0, mreal dy=0)
 	{	mgl_facey(gr, p.x, p.y, p.z, wx, wz, stl, dx, dy);	}
 	/// Draws the face in x-y plane at point p with color stl (include interpolation up to 4 colors).
-	inline void FaceZ(mglPoint p, float wx, float wy, const char *stl="w", float dx=0, float dy=0)
+	inline void FaceZ(mglPoint p, mreal wx, mreal wy, const char *stl="w", mreal dx=0, mreal dy=0)
 	{	mgl_facez(gr, p.x, p.y, p.z, wx, wy, stl, dx, dy);	}
 	/// Draws the drop at point p in direction d with color col and radius r
-	inline void Drop(mglPoint p, mglPoint d, float r, const char *col="r", float shift=1, float ap=1)
+	inline void Drop(mglPoint p, mglPoint d, mreal r, const char *col="r", mreal shift=1, mreal ap=1)
 	{	mgl_drop(gr, p.x, p.y, p.z, d.x, d.y, d.z, r, col, shift, ap);	}
 	/// Draws the sphere at point p with color col and radius r
-	inline void Sphere(mglPoint p, float r, const char *col="r")
+	inline void Sphere(mglPoint p, mreal r, const char *col="r")
 	{	mgl_sphere(gr, p.x, p.y, p.z, r, col);	}
 	/// Draws the cone between points p1,p2 with radius r1,r2 with style stl
-	inline void Cone(mglPoint p1, mglPoint p2, float r1, float r2=-1, const char *stl="r@")
+	inline void Cone(mglPoint p1, mglPoint p2, mreal r1, mreal r2=-1, const char *stl="r@")
 	{	mgl_cone(gr, p1.x, p1.y, p1.z, p2.x, p2.y, p2.z,r1,r2,stl);	}
 	/// Draws the ellipse between points p1,p2 with color stl and width r
-	inline void Ellipse(mglPoint p1, mglPoint p2, float r, const char *stl="r")
+	inline void Ellipse(mglPoint p1, mglPoint p2, mreal r, const char *stl="r")
 	{	mgl_ellipse(gr, p1.x, p1.y, p1.z, p2.x, p2.y, p2.z, r,stl);	}
 	/// Draws the circle at point p with color stl and radius r
-	inline void Circle(mglPoint p, float r, const char *stl="r")
+	inline void Circle(mglPoint p, mreal r, const char *stl="r")
 	{	mgl_ellipse(gr, p.x, p.y, p.z, p.x, p.y, p.z, r,stl);	}
 	/// Draws the rhomb between points p1,p2 with color stl and width r
-	inline void Rhomb(mglPoint p1, mglPoint p2, float r, const char *stl="r")
+	inline void Rhomb(mglPoint p1, mglPoint p2, mreal r, const char *stl="r")
 	{	mgl_rhomb(gr, p1.x, p1.y, p1.z, p2.x, p2.y, p2.z, r,stl);	}
 
 	/// Print text in position p with specified font
-	inline void Putsw(mglPoint p,const wchar_t *text,const char *font=":C",float size=-1)
+	inline void Putsw(mglPoint p,const wchar_t *text,const char *font=":C",mreal size=-1)
 	{	mgl_putsw(gr, p.x, p.y, p.z, text, font, size);	}
-	inline void Puts(mglPoint p,const char *text,const char *font=":C",float size=-1)
+	inline void Puts(mglPoint p,const char *text,const char *font=":C",mreal size=-1)
 	{	mgl_puts(gr, p.x, p.y, p.z, text, font, size);	}
-	inline void Putsw(float x, float y,const wchar_t *text,const char *font=":AC",float size=-1)
+	inline void Putsw(mreal x, mreal y,const wchar_t *text,const char *font=":AC",mreal size=-1)
 	{	mgl_putsw(gr, x, y, 0, text, font, size);	}
-	inline void Puts(float x, float y,const char *text,const char *font=":AC",float size=-1)
+	inline void Puts(mreal x, mreal y,const char *text,const char *font=":AC",mreal size=-1)
 	{	mgl_puts(gr, x, y, 0, text, font, size);	}
 	/// Print text in position p along direction d with specified font
-	inline void Putsw(mglPoint p, mglPoint d, const wchar_t *text, const char *font=":L", float size=-1)
+	inline void Putsw(mglPoint p, mglPoint d, const wchar_t *text, const char *font=":L", mreal size=-1)
 	{	mgl_putsw_dir(gr, p.x, p.y, p.z, d.x, d.y, d.z, text, font, size);	}
-	inline void Puts(mglPoint p, mglPoint d, const char *text, const char *font=":L", float size=-1)
+	inline void Puts(mglPoint p, mglPoint d, const char *text, const char *font=":L", mreal size=-1)
 	{	mgl_puts_dir(gr, p.x, p.y, p.z, d.x, d.y, d.z, text, font, size);	}
 
 	/// Print text along the curve
@@ -490,20 +490,20 @@ public:
 	inline void Grid(const char *dir="xyzt",const char *pen="B")
 	{	mgl_axis_grid(gr, dir, pen);	}
 	/// Print the label \a text for axis \a dir.
-	inline void Label(char dir, const char *text, float pos=+1, float shift=0)
+	inline void Label(char dir, const char *text, mreal pos=+1, mreal shift=0)
 	{	mgl_label_ext(gr, dir, text, pos, shift);	}
-	inline void Label(char dir, const wchar_t *text, float pos=+1, float shift=0)
+	inline void Label(char dir, const wchar_t *text, mreal pos=+1, mreal shift=0)
 	{	mgl_labelw_ext(gr, dir, text, pos, shift);	}
 
 	/// Draw colorbar at edge of axis
 	inline void Colorbar(const char *sch="")
 	{	mgl_colorbar(gr, sch);	}
-	inline void Colorbar(const char *sch,float x,float y,float w=1,float h=1)
+	inline void Colorbar(const char *sch,mreal x,mreal y,mreal w=1,mreal h=1)
 	{	mgl_colorbar_ext(gr, sch, x,y,w,h);	}
 	/// Draw colorbar with manual colors at edge of axis
 	inline void Colorbar(const mglDataA &val, const char *sch="")
 	{	mgl_colorbar_val(gr, &val, sch);	}
-	inline void Colorbar(const mglDataA &val, const char *sch,float x,float y,float w=1,float h=1)
+	inline void Colorbar(const mglDataA &val, const char *sch,mreal x,mreal y,mreal w=1,mreal h=1)
 	{	mgl_colorbar_val_ext(gr, &val, sch, x,y,w,h);	}
 
 	/// Add string to legend
@@ -515,10 +515,10 @@ public:
 	inline void ClearLegend()
 	{	mgl_clear_legend(gr);	}
 	/// Draw legend of accumulated strings at position {x,y}
-	inline void Legend(float x, float y, const char *font="#", float size=-0.8, float llen=0)
+	inline void Legend(mreal x, mreal y, const char *font="#", mreal size=-0.8, mreal llen=0)
 	{	mgl_legend_pos(gr, x, y, font, size, llen);	}
 	/// Draw legend of accumulated strings
-	inline void Legend(int where=3, const char *font="#", float size=-0.8, float llen=0)
+	inline void Legend(int where=3, const char *font="#", mreal size=-0.8, mreal llen=0)
 	{	mgl_legend(gr, where, font, size, llen);	}
 	/// Set number of marks in legend sample
 	inline void SetLegendMarks(int num)		{	mgl_set_legend_marks(gr, num);	}
@@ -662,15 +662,15 @@ public:
 	/// Draw tube with radius r for points in arrays {x,y,z}
 	inline void Tube(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &r, const char *pen="", const char *opt="")
 	{	mgl_tube_xyzr(gr, &x, &y, &z, &r, pen, opt);	}
-	inline void Tube(const mglDataA &x, const mglDataA &y, const mglDataA &z, float r, const char *pen="", const char *opt="")
+	inline void Tube(const mglDataA &x, const mglDataA &y, const mglDataA &z, mreal r, const char *pen="", const char *opt="")
 	{	mgl_tube_xyz(gr, &x, &y, &z, r, pen, opt);	}
 	inline void Tube(const mglDataA &x, const mglDataA &y, const mglDataA &r, const char *pen="", const char *opt="")
 	{	mgl_tube_xyr(gr, &x, &y, &r, pen, opt);	}
-	inline void Tube(const mglDataA &x, const mglDataA &y, float r, const char *pen="", const char *opt="")
+	inline void Tube(const mglDataA &x, const mglDataA &y, mreal r, const char *pen="", const char *opt="")
 	{	mgl_tube_xy(gr, &x, &y, r, pen, opt);	}
 	inline void Tube(const mglDataA &y, const mglDataA &r, const char *pen="", const char *opt="")
 	{	mgl_tube_r(gr, &y, &r, pen, opt);	}
-	inline void Tube(const mglDataA &y, float r, const char *pen="", const char *opt="")
+	inline void Tube(const mglDataA &y, mreal r, const char *pen="", const char *opt="")
 	{	mgl_tube(gr, &y, r, pen, opt);	}
 	/// Draw surface of curve {r,z} rotatation around axis
 	inline void Torus(const mglDataA &r, const mglDataA &z, const char *pen="", const char *opt="")
@@ -764,20 +764,20 @@ public:
 	{	mgl_axial(gr, &z, sch, opt);	}
 
 	/// Draw grid lines for density plot at slice for 3d data specified parametrically
-	inline void Grid3(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *stl="", float sVal=-1, const char *opt="")
+	inline void Grid3(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *stl="", mreal sVal=-1, const char *opt="")
 	{	mgl_grid3_xyz(gr, &x, &y, &z, &a, stl, sVal, opt);	}
-	inline void Grid3(const mglDataA &a, const char *stl="", float sVal=-1, const char *opt="")
+	inline void Grid3(const mglDataA &a, const char *stl="", mreal sVal=-1, const char *opt="")
 	{	mgl_grid3(gr, &a, stl, sVal, opt);	}
 	/// Draw density plot at slice for 3d data specified parametrically
-	inline void Dens3(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *stl="", float sVal=-1, const char *opt="")
+	inline void Dens3(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *stl="", mreal sVal=-1, const char *opt="")
 	{	mgl_dens3_xyz(gr, &x, &y, &z, &a, stl, sVal, opt);	}
-	inline void Dens3(const mglDataA &a, const char *stl="", float sVal=-1, const char *opt="")
+	inline void Dens3(const mglDataA &a, const char *stl="", mreal sVal=-1, const char *opt="")
 	{	mgl_dens3(gr, &a, stl, sVal, opt);	}
 
 	/// Draw isosurface(s) for 3d data specified parametrically
-	inline void Surf3(float Val, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *stl="", const char *opt="")
+	inline void Surf3(mreal Val, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *stl="", const char *opt="")
 	{	mgl_surf3_xyz_val(gr, Val, &x, &y, &z, &a, stl, opt);	}
-	inline void Surf3(float Val, const mglDataA &a, const char *stl="", const char *opt="")
+	inline void Surf3(mreal Val, const mglDataA &a, const char *stl="", const char *opt="")
 	{	mgl_surf3_val(gr, Val, &a, stl, opt);	}
 	inline void Surf3(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *stl="", const char *opt="")
 	{	mgl_surf3_xyz(gr, &x, &y, &z, &a, stl, opt);	}
@@ -791,29 +791,29 @@ public:
 	{	mgl_cloud(gr, &a, stl, opt);	}
 
 	/// Draw contour lines at slice for 3d data specified parametrically
-	inline void Cont3(const mglDataA &v, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *sch="", float sVal=-1, const char *opt="")
+	inline void Cont3(const mglDataA &v, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *sch="", mreal sVal=-1, const char *opt="")
 	{	mgl_cont3_xyz_val(gr, &v, &x, &y, &z, &a, sch, sVal, opt);	}
-	inline void Cont3(const mglDataA &v, const mglDataA &a, const char *sch="", float sVal=-1, const char *opt="")
+	inline void Cont3(const mglDataA &v, const mglDataA &a, const char *sch="", mreal sVal=-1, const char *opt="")
 	{	mgl_cont3_val(gr, &v, &a, sch, sVal, opt);	}
-	inline void Cont3(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *sch="", float sVal=-1, const char *opt="")
+	inline void Cont3(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *sch="", mreal sVal=-1, const char *opt="")
 	{	mgl_cont3_xyz(gr, &x, &y, &z, &a, sch, sVal, opt);	}
-	inline void Cont3(const mglDataA &a, const char *sch="", float sVal=-1, const char *opt="")
+	inline void Cont3(const mglDataA &a, const char *sch="", mreal sVal=-1, const char *opt="")
 	{	mgl_cont3(gr, &a, sch, sVal, opt);	}
 
 	/// Draw solid contours at slice for 3d data specified parametrically
-	inline void ContF3(const mglDataA &v, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *sch="", float sVal=-1, const char *opt="")
+	inline void ContF3(const mglDataA &v, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *sch="", mreal sVal=-1, const char *opt="")
 	{	mgl_contf3_xyz_val(gr, &v, &x, &y, &z, &a, sch, sVal, opt);	}
-	inline void ContF3(const mglDataA &v, const mglDataA &a, const char *sch="", float sVal=-1, const char *opt="")
+	inline void ContF3(const mglDataA &v, const mglDataA &a, const char *sch="", mreal sVal=-1, const char *opt="")
 	{	mgl_contf3_val(gr, &v, &a, sch, sVal, opt);	}
-	inline void ContF3(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *sch="", float sVal=-1, const char *opt="")
+	inline void ContF3(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *sch="", mreal sVal=-1, const char *opt="")
 	{	mgl_contf3_xyz(gr, &x, &y, &z, &a, sch, sVal, opt);	}
-	inline void ContF3(const mglDataA &a, const char *sch="", float sVal=-1, const char *opt="")
+	inline void ContF3(const mglDataA &a, const char *sch="", mreal sVal=-1, const char *opt="")
 	{	mgl_contf3(gr, &a, sch, sVal, opt);	}
 
 	/// Draw several isosurfaces for 3d beam in curvilinear coordinates
-	inline void Beam(const mglDataA &tr, const mglDataA &g1, const mglDataA &g2, const mglDataA &a, float r, const char *stl=0, int flag=0, int num=3)
+	inline void Beam(const mglDataA &tr, const mglDataA &g1, const mglDataA &g2, const mglDataA &a, mreal r, const char *stl=0, int flag=0, int num=3)
 	{	mgl_beam(gr, &tr,&g1,&g2,&a,r,stl,flag,num);	}
-	inline void Beam(float val, const mglDataA &tr, const mglDataA &g1, const mglDataA &g2, const mglDataA &a, float r, const char *stl=NULL, int flag=0)
+	inline void Beam(mreal val, const mglDataA &tr, const mglDataA &g1, const mglDataA &g2, const mglDataA &a, mreal r, const char *stl=NULL, int flag=0)
 	{	mgl_beam_val(gr,val,&tr,&g1,&g2,&a,r,stl,flag);	}
 
 	/// Draw vertical tiles with variable size for 2d data specified parametrically
@@ -843,18 +843,18 @@ public:
 	{	mgl_stfa(gr, &re, &im, dn, sch, opt);	}
 
 	/// Draw isosurface(s) for 3d data specified parametrically with alpha proportional to b
-	inline void Surf3A(float Val, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const mglDataA &b, const char *stl="", const char *opt="")
+	inline void Surf3A(mreal Val, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const mglDataA &b, const char *stl="", const char *opt="")
 	{	mgl_surf3a_xyz_val(gr, Val, &x, &y, &z, &a, &b, stl, opt);	}
-	inline void Surf3A(float Val, const mglDataA &a, const mglDataA &b, const char *stl="", const char *opt="")
+	inline void Surf3A(mreal Val, const mglDataA &a, const mglDataA &b, const char *stl="", const char *opt="")
 	{	mgl_surf3a_val(gr, Val, &a, &b, stl, opt);	}
 	inline void Surf3A(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const mglDataA &b, const char *stl="", const char *opt="")
 	{	mgl_surf3a_xyz(gr, &x, &y, &z, &a, &b, stl, opt);	}
 	inline void Surf3A(const mglDataA &a, const mglDataA &b, const char *stl="", const char *opt="")
 	{	mgl_surf3a(gr, &a, &b, stl, opt);	}
 	/// Draw isosurface(s) for 3d data specified parametrically with color proportional to b
-	inline void Surf3C(float Val, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const mglDataA &b, const char *stl="", const char *opt="")
+	inline void Surf3C(mreal Val, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const mglDataA &b, const char *stl="", const char *opt="")
 	{	mgl_surf3c_xyz_val(gr, Val, &x, &y, &z, &a, &b, stl,opt);	}
-	inline void Surf3C(float Val, const mglDataA &a, const mglDataA &b, const char *stl="", const char *opt="")
+	inline void Surf3C(mreal Val, const mglDataA &a, const mglDataA &b, const char *stl="", const char *opt="")
 	{	mgl_surf3c_val(gr, Val, &a, &b, stl, opt);	}
 	inline void Surf3C(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const mglDataA &b, const char *stl="", const char *opt="")
 	{	mgl_surf3c_xyz(gr, &x, &y, &z, &a, &b, stl, opt);	}
@@ -909,53 +909,53 @@ public:
 	{	mgl_grad(gr,&phi,sch,opt);	}
 
 	/// Plot flow pipes for vector field {ax,ay,ay} parametrically depended on coordinate {x,y,z} with color proportional to |a|
-	inline void Pipe(const mglDataA &x, const mglDataA &y, const mglDataA &ax, const mglDataA &ay, const char *sch="", float r0=0.05, const char *opt="")
+	inline void Pipe(const mglDataA &x, const mglDataA &y, const mglDataA &ax, const mglDataA &ay, const char *sch="", mreal r0=0.05, const char *opt="")
 	{	mgl_pipe_xy(gr, &x, &y, &ax, &ay, sch, r0, opt);	}
-	inline void Pipe(const mglDataA &ax, const mglDataA &ay, const char *sch="", float r0=0.05, const char *opt="")
+	inline void Pipe(const mglDataA &ax, const mglDataA &ay, const char *sch="", mreal r0=0.05, const char *opt="")
 	{	mgl_pipe_2d(gr, &ax, &ay, sch, r0, opt);	}
-	inline void Pipe(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &ax, const mglDataA &ay, const mglDataA &az, const char *sch="", float r0=0.05, const char *opt="")
+	inline void Pipe(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &ax, const mglDataA &ay, const mglDataA &az, const char *sch="", mreal r0=0.05, const char *opt="")
 	{	mgl_pipe_xyz(gr, &x, &y, &z, &ax, &ay, &az, sch, r0, opt);	}
-	inline void Pipe(const mglDataA &ax, const mglDataA &ay, const mglDataA &az, const char *sch="", float r0=0.05, const char *opt="")
+	inline void Pipe(const mglDataA &ax, const mglDataA &ay, const mglDataA &az, const char *sch="", mreal r0=0.05, const char *opt="")
 	{	mgl_pipe_3d(gr, &ax, &ay, &az, sch, r0, opt);	}
 
 	/// Draw density plot for data at x = sVal
-	inline void DensX(const mglDataA &a, const char *stl="", float sVal=NaN, const char *opt="")
+	inline void DensX(const mglDataA &a, const char *stl="", mreal sVal=NaN, const char *opt="")
 	{	mgl_dens_x(gr, &a, stl, sVal, opt);	}
 	/// Draw density plot for data at y = sVal
-	inline void DensY(const mglDataA &a, const char *stl="", float sVal=NaN, const char *opt="")
+	inline void DensY(const mglDataA &a, const char *stl="", mreal sVal=NaN, const char *opt="")
 	{	mgl_dens_y(gr, &a, stl, sVal, opt);	}
 	/// Draw density plot for data at z = sVal
-	inline void DensZ(const mglDataA &a, const char *stl="", float sVal=NaN, const char *opt="")
+	inline void DensZ(const mglDataA &a, const char *stl="", mreal sVal=NaN, const char *opt="")
 	{	mgl_dens_z(gr, &a, stl, sVal, opt);	}
 	/// Draw contour plots for data at x = sVal
-	inline void ContX(const mglDataA &a, const char *stl="", float sVal=NaN, const char *opt="")
+	inline void ContX(const mglDataA &a, const char *stl="", mreal sVal=NaN, const char *opt="")
 	{	mgl_cont_x(gr, &a, stl, sVal, opt);	}
-	inline void ContX(const mglDataA &v, const mglDataA &a, const char *stl="", float sVal=NaN, const char *opt="")
+	inline void ContX(const mglDataA &v, const mglDataA &a, const char *stl="", mreal sVal=NaN, const char *opt="")
 	{	mgl_cont_x_val(gr, &v, &a, stl, sVal, opt);	}
 	/// Draw contour plots for data at y = sVal
-	inline void ContY(const mglDataA &a, const char *stl="", float sVal=NaN, const char *opt="")
+	inline void ContY(const mglDataA &a, const char *stl="", mreal sVal=NaN, const char *opt="")
 	{	mgl_cont_y(gr, &a, stl, sVal, opt);	}
-	inline void ContY(const mglDataA &v, const mglDataA &a, const char *stl="", float sVal=NaN, const char *opt="")
+	inline void ContY(const mglDataA &v, const mglDataA &a, const char *stl="", mreal sVal=NaN, const char *opt="")
 	{	mgl_cont_y_val(gr, &v, &a, stl, sVal, opt);	}
 	/// Draw contour plots for data at z = sVal
-	inline void ContZ(const mglDataA &a, const char *stl="", float sVal=NaN, const char *opt="")
+	inline void ContZ(const mglDataA &a, const char *stl="", mreal sVal=NaN, const char *opt="")
 	{	mgl_cont_z(gr, &a, stl, sVal, opt);	}
-	inline void ContZ(const mglDataA &v, const mglDataA &a, const char *stl="", float sVal=NaN, const char *opt="")
+	inline void ContZ(const mglDataA &v, const mglDataA &a, const char *stl="", mreal sVal=NaN, const char *opt="")
 	{	mgl_cont_z_val(gr, &v, &a, stl, sVal, opt);	}
 	/// Draw solid contour plots for data at x = sVal
-	inline void ContFX(const mglDataA &a, const char *stl="", float sVal=NaN, const char *opt="")
+	inline void ContFX(const mglDataA &a, const char *stl="", mreal sVal=NaN, const char *opt="")
 	{	mgl_contf_x(gr, &a, stl, sVal, opt);	}
-	inline void ContFX(const mglDataA &v, const mglDataA &a, const char *stl="", float sVal=NaN, const char *opt="")
+	inline void ContFX(const mglDataA &v, const mglDataA &a, const char *stl="", mreal sVal=NaN, const char *opt="")
 	{	mgl_contf_x_val(gr, &v, &a, stl, sVal, opt);	}
 	/// Draw solid contour plots for data at y = sVal
-	inline void ContFY(const mglDataA &a, const char *stl="", float sVal=NaN, const char *opt="")
+	inline void ContFY(const mglDataA &a, const char *stl="", mreal sVal=NaN, const char *opt="")
 	{	mgl_contf_y(gr, &a, stl, sVal, opt);	}
-	inline void ContFY(const mglDataA &v, const mglDataA &a, const char *stl="", float sVal=NaN, const char *opt="")
+	inline void ContFY(const mglDataA &v, const mglDataA &a, const char *stl="", mreal sVal=NaN, const char *opt="")
 	{	mgl_contf_y_val(gr, &v, &a, stl, sVal, opt);	}
 	/// Draw solid contour plots for data at z = sVal
-	inline void ContFZ(const mglDataA &a, const char *stl="", float sVal=NaN, const char *opt="")
+	inline void ContFZ(const mglDataA &a, const char *stl="", mreal sVal=NaN, const char *opt="")
 	{	mgl_contf_z(gr, &a, stl, sVal, opt);	}
-	inline void ContFZ(const mglDataA &v, const mglDataA &a, const char *stl="", float sVal=NaN, const char *opt="")
+	inline void ContFZ(const mglDataA &v, const mglDataA &a, const char *stl="", mreal sVal=NaN, const char *opt="")
 	{	mgl_contf_z_val(gr, &v, &a, stl, sVal, opt);	}
 
 	/// Draw curve for formula with x in range [Min.x, Max.x]
@@ -1056,14 +1056,14 @@ public:
 	inline mglData FitS(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const mglDataA &s, const char *eq, const char *var, mglData &ini, const char *opt="")
 	{	return mglData(true,mgl_fit_xyzas(gr, &x, &y, &z, &a, &s, eq, var, &ini, opt));	}
 	/// Print fitted last formula (with coefficients)
-	inline void PutsFit(mglPoint p, const char *prefix=0, const char *font=0, float size=-1)
+	inline void PutsFit(mglPoint p, const char *prefix=0, const char *font=0, mreal size=-1)
 	{	mgl_puts_fit(gr, p.x, p.y, p.z, prefix, font, size);	}
 	/// Get last fitted formula
 	inline const char *GetFit()
 	{	return mgl_get_fit(gr);	}
 
 	/// Solve PDE with x,y,z in range [Min, Max]
-	inline mglData PDE(const char *ham, const mglDataA &ini_re, const mglDataA &ini_im, float dz=0.1, float k0=100, const char *opt="")
+	inline mglData PDE(const char *ham, const mglDataA &ini_re, const mglDataA &ini_im, mreal dz=0.1, mreal k0=100, const char *opt="")
 	{	return mglData(true,mgl_pde_solve(gr,ham,&ini_re,&ini_im,dz,k0, opt));	}
 	/// Fill data by formula with x,y,z in range [Min, Max]
 	inline void Fill(mglData &u, const char *eq, const char *opt="")
