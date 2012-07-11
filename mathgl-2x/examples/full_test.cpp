@@ -43,10 +43,42 @@ void smgl_combined(mglGraph *gr);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	gr->SubPlot(2,2,0,"");	gr->Title("Dens plot");	gr->Box();
-	gr->SubPlot(2,2,1);		gr->Title("Dens plot");	gr->Rotate(50,60);	gr->Box();
-	gr->SubPlot(2,2,2);		gr->Title("Dens plot");	gr->Box();
-	gr->SubPlot(2,2,3,"");	gr->Title("Dens plot");	gr->Rotate(50,60);	gr->Box();
+	gr->SetRanges(0,1,0,1,0,1);
+	mglData x(50),y(50),z(50),rx(10),ry(10), a(20,30);
+	a.Modify("30*x*y*(1-x-y)^2*(x+y<1)");
+	x.Modify("0.25*(1+cos(2*pi*x))");
+	y.Modify("0.25*(1+sin(2*pi*x))");
+	rx.Modify("rnd"); ry.Modify("(1-v)*rnd",rx);
+	z.Modify("x");
+	
+	gr->SubPlot(2,2,0);	gr->Title("Ordinary axis 3D");
+	gr->Rotate(50,60);		gr->Light(true);
+	gr->Plot(x,y,z,"r2");	gr->Surf(a,"BbcyrR#");
+	gr->Axis(); gr->Grid();	gr->Box();
+	gr->Label('x',"B",1);	gr->Label('y',"C",1);	gr->Label('z',"Z",1);
+	
+	gr->SubPlot(2,2,1);	gr->Title("Ternary axis (x+y+t=1)");
+	gr->Ternary(1);
+	gr->Plot(x,y,"r2");	gr->Plot(rx,ry,"q^ ");	gr->Cont(a,"BbcyrR");
+	gr->Line(mglPoint(0.5,0), mglPoint(0,0.75), "g2");
+	gr->Axis(); gr->Grid("xyz","B;");
+	gr->Label('x',"B");	gr->Label('y',"C");	gr->Label('t',"A");
+	
+/*	gr->SubPlot(2,2,2);	gr->Title("Quaternary axis 3D");
+	gr->Rotate(50,60);		gr->Light(true);
+	gr->Ternary(2);
+	gr->Plot(x,y,z,"r2");	gr->Surf(a,"BbcyrR#");
+	gr->Axis(); gr->Grid();	gr->Box();
+	gr->Label('t',"A",1);	gr->Label('x',"B",1);
+	gr->Label('y',"C",1);	gr->Label('z',"D",1);
+	
+	gr->SubPlot(2,2,3);	gr->Title("Ternary axis 3D");
+	gr->Rotate(50,60);		gr->Light(true);
+	gr->Ternary(1);
+	gr->Plot(x,y,z,"r2");	gr->Surf(a,"BbcyrR#");
+	gr->Axis(); gr->Grid();	gr->Box();
+	gr->Label('t',"A",1);	gr->Label('x',"B",1);
+	gr->Label('y',"C",1);	gr->Label('z',"Z",1);*/
 	return;
 
 /*	mglData x(100), y(100), z(100);

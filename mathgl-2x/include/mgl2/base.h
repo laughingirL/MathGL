@@ -147,7 +147,7 @@ struct mglTexture
 	int Smooth;			///< Type of texture (smoothing and so on)
 	mreal Alpha;			///< Transparency
 	
-	mglTexture()	{	n=0;	}
+	mglTexture()	{	n=Smooth=0;	Alpha=1;	}
 	mglTexture(const char *cols, int smooth=0,mreal alpha=1)
 	{	n=0;	Set(cols,smooth,alpha);	}
 	void Clear()	{	n=0;	}

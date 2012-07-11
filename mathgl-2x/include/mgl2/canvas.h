@@ -47,7 +47,7 @@ struct mglAxis
 {
 	mglAxis()	{	dv=ds=d=v0=v1=v2=o=sh=0;	ns=f=ch=*t=0;	}
 	mglAxis(const mglAxis &aa)
-	{	dv=aa.dv;	ds=aa.ds;	d=aa.d;		dir=aa.dir;
+	{	dv=aa.dv;	ds=aa.ds;	d=aa.d;		dir=aa.dir;	sh=aa.sh;
 		v0=aa.v0;	v1=aa.v1;	v2=aa.v2;	o=aa.o;
 		a = aa.a;	b = aa.b;	org=aa.org;	txt=aa.txt;
 		ns=aa.ns;	f=aa.f;		ch=aa.ch;	wcscpy(t,aa.t);	}
@@ -56,8 +56,8 @@ struct mglAxis
 	inline void AddLabel(const std::wstring &lbl, mreal v)
 	{	txt.push_back(mglText(lbl,v));	}
 
-	mreal dv,ds;	///< Actual step for ticks and subticks.
-	mreal d;		///< Step for axis ticks (if positive) or its number (if negative).
+	mreal dv,ds;		///< Actual step for ticks and subticks.
+	mreal d;			///< Step for axis ticks (if positive) or its number (if negative).
 	int ns;			///< Number of axis subticks.
 	wchar_t t[256];	///< Tick template (set NULL to use default one ("%.2g" in simplest case))
 	mglPoint dir;	///< Axis direction
@@ -66,10 +66,10 @@ struct mglAxis
 	mreal v0;		///< Center of axis cross section
 	mreal v1;		///< Minimal axis range.
 	mreal v2;		///< Maximal axis range.
-	mreal o;		///< Point of starting ticks numbering (if NAN then Org is used).
+	mreal o;			///< Point of starting ticks numbering (if NAN then Org is used).
 	int f;			///< Flag 0x1 - time, 0x2 - manual, 0x4 - fixed dv
 	std::vector<mglText> txt;	///< Axis labels
-	char ch;		///< Character of axis (like 'x','y','z','c')
+	char ch;			///< Character of axis (like 'x','y','z','c')
 	mreal sh;		///< Extra shift of ticks and axis labels
 };
 //-----------------------------------------------------------------------------

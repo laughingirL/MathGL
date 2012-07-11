@@ -835,7 +835,7 @@ mreal mglBase::SaveState(const char *opt)
 	MNS=MeshNum;	CSS=Flag;	LSS=AmbBr;
 	MinS=Min;		MaxS=Max;	saved=true;
 	// parse option
-	char *q=mgl_strdup(opt),*s,*a,*b,*c;
+	char *qi=mgl_strdup(opt),*q=qi, *s,*a,*b,*c;
 	long n;
 	mgl_strtrim(q);
 	// NOTE: not consider '#' inside legend entry !!!
@@ -874,7 +874,7 @@ mreal mglBase::SaveState(const char *opt)
 		else if(!strcmp(a,"legend"))
 		{	if(*b=='\'')	{	b++;	b[strlen(b)-1]=0;	}	leg_str = b;	}
 	}
-	free(q);	return NAN;
+	free(qi);	return NAN;
 }
 //-----------------------------------------------------------------------------
 void mglBase::LoadState()

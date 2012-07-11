@@ -87,7 +87,8 @@ int Depth;			///< Depth of the image
 int CurFrameId;		///< Number of automaticle created frames
 GifFileType *gif;*/
 	SetTickRotate(true);	SetTickSkip(true);
-	SetWarn(mglWarnNone,"");	ObjId = -1;
+	SetWarn(mglWarnNone,"");
+	ObjId = -1;	HighId = -2;	Flag = 0;
 	SetFunc(0,0);	Stop=false;	CutOff(0);	Ternary(0);
 	SetRanges(mglPoint(-1,-1,-1,-1), mglPoint(1,1,1,1));
 	SetBarWidth(0.7);	SetMarkSize(1);	SetArrowSize(1);
@@ -101,12 +102,12 @@ GifFileType *gif;*/
 	SetPenPal("k-1");
 	SetTicks('x');	SetTicks('y');	SetTicks('z');	SetTicks('c');
 	stack.clear();	Restore();	Alpha(false);
+	SetPlotFactor(0);	InPlot(0,1,0,1,false);
 	SetTickLen(0);	SetCut(true);
 	AdjustTicks("xyzc",true);	Clf();
 
 	for(int i=0;i<10;i++)	{	AddLight(i, mglPoint(0,0,1));	Light(i,false);	}
 	Light(0,true);		Light(false);	SetDifLight(true);
-	SetPlotFactor(0);	InPlot(0,1,0,1,false);
 }
 //-----------------------------------------------------------------------------
 //	Optimal axis position
@@ -115,8 +116,8 @@ mreal mglCanvas::FindOptOrg(char dir, int ind) const
 {
 	static mglPoint px, py, pz, m1, m2;
 	static mglMatrix bb;	bb.b[0]=1e30;
-	mglPoint nn[8]={mglPoint(0,0,0), mglPoint(0,0,1), mglPoint(0,1,0), mglPoint(0,1,1),
-					mglPoint(1,0,0), mglPoint(1,0,1), mglPoint(1,1,0), mglPoint(1,1,1)}, pp[8];
+	mglPoint nn[8]={mglPoint(0,0,0), mglPoint(0,0,1), mglPoint(0,1,0,0), mglPoint(0,1,1),
+	mglPoint(1,0,0), mglPoint(1,0,1), mglPoint(1,1,0), mglPoint(1,1,1)}, pp[8];
 	memcpy(pp, nn, 8*sizeof(mglPoint));
 	// do nothing if transformation matrix the same
 	if(memcmp(B.b,bb.b,9*sizeof(mreal)) || m1!=Min || m2!=Max)
@@ -308,21 +309,19 @@ mreal mglCanvas::text_plot(long p,const wchar_t *text,const char *font,mreal siz
 		a.s = size;	a.w = sh;	a.p=col;
 		add_prim(a);
 	}
+	if(ll==0)	return 0;
+
 	mreal shift = -sh-0.2, fsize=size/6.5*font_factor, h = fnt->Height(font)*fsize, w;
 	// text drawing itself
 	Push();
 	inv = inv ^ (strchr(font,'T')!=0);
 	if(inv)	shift = sh+0.2;
 	shift += 0.11;	// Correction for glyph rotation around proper point
-
-	shift *= h;		B.z= q.z;
-	if(ll==0)	{	Pop();	return 0;	}
+	shift *= h;
 
 	int align;	mglGetStyle(font,0,&align);	align = align&3;
-	if(ll==0 || mgl_isnan(ll))
-	{	B.x = q.x + 0;	B.y = q.y - shift;	}
-	else
-	{	B.x = q.x + shift*q.v/sqrt(ll);	B.y = q.y - shift*q.u/sqrt(ll);	}
+	B.x = q.x;	B.y = q.y - shift;	B.z = q.z;
+	if(ll>0)	{	B.x += shift*q.v/sqrt(ll);	B.y += shift*(1-q.u/sqrt(ll));	}
 	fscl = fsize;
 
 	if(mgl_isnan(ll) || !get(MGL_ENABLE_RTEXT))	ftet = 0;
