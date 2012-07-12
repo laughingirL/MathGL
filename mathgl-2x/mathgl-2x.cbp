@@ -22,6 +22,7 @@
 			<Add option="-pg" />
 			<Add option="-g" />
 			<Add option="-fexceptions" />
+			<Add option="-I include/" />
 		</Compiler>
 		<Linker>
 			<Add option="-pg" />
