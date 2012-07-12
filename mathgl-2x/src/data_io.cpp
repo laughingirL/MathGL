@@ -58,7 +58,7 @@ void mglFromStr(HMDT d,char *buf,long NX,long NY,long NZ)	// TODO: add multithre
 	if(NX<1 || NY <1 || NZ<1)	return;
 	mgl_data_create(d, NX,NY,NZ);
 	long nb = strlen(buf);
-	register long i=0, j=0, k=0;
+	register long i=0, j=0;
 	while(j<nb)
 	{
 		while(buf[j]<=' ' && j<nb)	j++;

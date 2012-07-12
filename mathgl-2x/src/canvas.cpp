@@ -17,6 +17,7 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+#include <limits.h>
 #include "mgl2/canvas.h"
 //-----------------------------------------------------------------------------
 mglCanvas::mglCanvas(int w, int h) : mglBase()
@@ -88,7 +89,7 @@ int CurFrameId;		///< Number of automaticle created frames
 GifFileType *gif;*/
 	SetTickRotate(true);	SetTickSkip(true);
 	SetWarn(mglWarnNone,"");
-	ObjId = -1;	HighId = -2;	Flag = 0;
+	ObjId = -1;	HighId = INT_MIN;	Flag = 0;
 	SetFunc(0,0);	Stop=false;	CutOff(0);	Ternary(0);
 	SetRanges(mglPoint(-1,-1,-1,-1), mglPoint(1,1,1,1));
 	SetBarWidth(0.7);	SetMarkSize(1);	SetArrowSize(1);

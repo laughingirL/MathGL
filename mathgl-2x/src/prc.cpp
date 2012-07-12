@@ -23,7 +23,7 @@
 #include "mgl2/canvas.h"
 #include "mgl2/canvas_cf.h"
 
-#include "oPRCFile.h"
+#include "prc/oPRCFile.h"
 #include <map>
 #include <utility>
 #include <string.h>
@@ -65,12 +65,12 @@ struct prctriangles {
 	const HMGL gr;
 	const size_t ntxt;
 	bool vertexcolor;
-	
-	
+
+
 	uint32_t addPoint(const mglPnt& p)
 	{
 		const PRCVector3d point(p.x,p.y,p.z);
-		
+
 		std::map<PRCVector3d,uint32_t>::iterator pPoint = points.find(point);
 		if(pPoint!=points.end())
 			return pPoint->second;
@@ -81,11 +81,11 @@ struct prctriangles {
 			return point_index;
 		}
 	}
-	
+
 	uint32_t addPoint(float x, float y, float z)
 	{
 		const PRCVector3d point(x,y,z);
-		
+
 		std::map<PRCVector3d,uint32_t>::iterator pPoint = points.find(point);
 		if(pPoint!=points.end())
 			return pPoint->second;
@@ -96,7 +96,7 @@ struct prctriangles {
 			return point_index;
 		}
 	}
-	
+
 	void writePoints(double (*P)[3])
 	{
 		for(std::map<PRCVector3d,uint32_t>::const_iterator pPoint = points.begin(); pPoint != points.end(); pPoint++)
@@ -106,11 +106,11 @@ struct prctriangles {
 			P[pPoint->second][2] = pPoint->first.z;
 		}
 	}
-	
+
 	uint32_t addColourInfo(const mglPnt& p)
 	{
 		const RGBAColour colour(p.r,p.g,p.b,p.a);
-		
+
 		if (colours.empty() && texturecoords.empty()) {
 			commoncolour = colour;
 			commonalpha = p.a;
@@ -123,7 +123,7 @@ struct prctriangles {
       if (commonalpha != p.a)
         samealpha = false;
     }
-		
+
 		if (vertexcolor) {
 			std::map<RGBAColour,uint32_t>::iterator pColour = colours.find(colour);
 			if(pColour!=colours.end())
@@ -150,7 +150,7 @@ struct prctriangles {
 			}
 		}
 	}
-	
+
 	void writeTextureCoords(double (*T)[2])
 	{
 		for(std::map<PRCVector2d,uint32_t>::const_iterator pPoint = texturecoords.begin(); pPoint != texturecoords.end(); pPoint++)
@@ -159,7 +159,7 @@ struct prctriangles {
 			T[pPoint->second][1] = pPoint->first.y;
 		}
 	}
-	
+
 	void writeColours(RGBAColour *C)
 	{
 		for(std::map<RGBAColour,uint32_t>::const_iterator pColour = colours.begin(); pColour != colours.end(); pColour++)
@@ -181,16 +181,16 @@ void my_png_write_data(png_structp png_ptr, png_bytep data, png_size_t length)
 {
 	struct png_buf* p=(struct png_buf*)png_get_io_ptr(png_ptr);
 	size_t nsize = p->size + length;
-	
+
 	/* allocate or grow buffer */
 	if(p->data)
 		p->data = (uint8_t*)realloc(p->data, nsize);
 	else
 		p->data = (uint8_t*)malloc(nsize);
-	
+
 	if(!p->data)
 		png_error(png_ptr, "Write Error - no mem");
-	
+
 	/* copy new bytes to end of buffer */
 	memcpy(p->data + p->size, data, length);
 	p->size += length;
@@ -291,7 +291,7 @@ void mgl_write_prc(HMGL gr, const char *fname,const char */*descr*/, int make_pd
 	const int width  = dynamic_cast<mglCanvas *>(gr)->GetWidth();
 	const int height = dynamic_cast<mglCanvas *>(gr)->GetHeight();
 	const int depth  = long(sqrt(width*height));
-	
+
 	p0.x = width/2.;
 	p0.y = height/2.;
 	p0.z = (1.f-sqrt(width*height)/(2*depth))*depth;

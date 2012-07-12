@@ -263,7 +263,7 @@ long *mgl_cont_prep(mreal val, HCDT a,long ak, std::vector<mglPnt2> &kk)
 	kk.clear();
 	// add intersection point of isoline and Y axis
 	const mglData *ma = dynamic_cast<const mglData *>(a);
-	if(a)
+	if(ma)
 	{
 		for(i=0;i<n-1;i++)	for(j=0;j<m;j++)
 		{
