@@ -342,6 +342,7 @@ void mgl_ellipse(HMGL gr, mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mrea
 {
 	const int n = 41;
 	long pal=0,n0,n1=-1,n2,m1=-1,m2;
+	static int cgid=1;	gr->StartGroup("Ellipse",cgid++);
 	gr->SetPenPal(stl,&pal);
 	mreal c=gr->NextColor(pal), d;
 	mreal k=(gr->GetNumPal(pal)>1)?gr->NextColor(pal):gr->AddTexture('k');
@@ -369,11 +370,13 @@ void mgl_ellipse(HMGL gr, mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mrea
 			if(box)		gr->line_plot(m1,m2);
 		}
 	}
+	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
 void mgl_rhomb(HMGL gr, mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mreal z2, mreal r, const char *stl)
 {
 	long pal=0, n1,n2,n3,n4;
+	static int cgid=1;	gr->StartGroup("Rhomb",cgid++);
 	gr->SetPenPal(stl,&pal);
 	mreal c=gr->NextColor(pal);
 	mreal k=(gr->GetNumPal(pal)>1)?gr->NextColor(pal):gr->AddTexture('k');
@@ -393,6 +396,7 @@ void mgl_rhomb(HMGL gr, mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mreal 
 	if(box)
 	{	gr->line_plot(n1,n2);	gr->line_plot(n2,n3);
 		gr->line_plot(n3,n4);	gr->line_plot(n4,n1);	}
+	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
 void mgl_ellipse_(uintptr_t* gr, mreal *x1, mreal *y1, mreal *z1, mreal *x2, mreal *y2, mreal *z2, mreal *r, const char *stl,int l)
