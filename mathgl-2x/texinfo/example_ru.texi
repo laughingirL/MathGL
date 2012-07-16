@@ -82,7 +82,7 @@ Positive aspects are: batch processing of similar data set (for example, a set o
 @item
 @emph{Drawing in memory with the following displaying by other graphical program.}
 
-In this case the programmer has more freedom in selecting the window libraries (not only FLTK, Qt or GLUT), in positioning and surroundings control and so on. I recommend to use such way for ``settled'' programs.
+In this case the programmer has more freedom in selecting the window libraries (not only FLTK, Qt or GLUT), in positioning and surroundings control and so on. I recommend to use such way for ``stand alone'' programs.
 
 @item
 @emph{Using FLTK or Qt widgets provided by MathGL}
@@ -128,7 +128,7 @@ int main(int argc,char **argv)
   return gr.Run();
 }
 @end verbatim
-Here function @code{sample} is defined. This function does all drawing. Other function @code{main} is entry point function for console program. For compilation, just execute the command
+Here callback function @code{sample} is defined. This function does all drawing. Other function @code{main} is entry point function for console program. For compilation, just execute the command
 @verbatim
 gcc test.cpp -lmgl-wnd -lmgl
 @end verbatim
@@ -159,7 +159,7 @@ int main(int argc,char **argv)
 Or use pure C-functions:
 @verbatim
 #include <mgl2/mgl_cf.h>
-int sample(HMGL gr)
+int sample(HMGL gr, void *)
 {
   mgl_rotate(gr,60,40,0);
   mgl_box(gr);
@@ -215,7 +215,7 @@ This can be important if you create a console program in computer/cluster where 
 
 The only difference from the previous variant (using windows) is manual switching on the transparency  @code{Alpha} and lightning @code{Light}, if you need it. The usage of frames (see @ref{Animation}) is not advisable since the whole image is prepared each time. If function @code{sample} contains frames then only last one will be saved to the file. In principle, one does not need to separate drawing functions in case of direct file writing in consequence of the single calling of this function for each picture. However, one may use the same drawing procedure to create a plot with changeable parameters, to export in different file types, to emphasize the drawing code and so on. So, in future I will put the drawing in the separate function.
 
-The code for export in vector EPS file looks the same:
+The code for export into other formats (for example, into vector EPS file) looks the same:
 @verbatim
 #include <mgl2/mgl.h>
 int main(int ,char **)
@@ -249,7 +249,7 @@ int sample(mglGraph *gr)
   return gr->GetNumFrame();   // returns the frame number
 }
 @end verbatim
-First, the function creates a frame @code{NewFrame()} for rotated axes and draws the bounding box. After the frame drawing the function @code{EndFrame()} @strong{must be} called! The second frame contains the bounding box and axes @code{Axis("xy")} in the initial (unrotated) coordinates. Function @code{sample} returns the number of created frames @code{GetNumFrame()}.
+First, the function creates a frame by calling @code{NewFrame()} for rotated axes and draws the bounding box.  The function @code{EndFrame()} @strong{must be} called after the frame drawing! The second frame contains the bounding box and axes @code{Axis("xy")} in the initial (unrotated) coordinates. Function @code{sample} returns the number of created frames @code{GetNumFrame()}.
 
 Note, that such kind of animation is rather slow and not well suitable for visualization of running calculations. For the last case one can use @code{Update()} function. The most simple case for doing this is to use @code{mglDraw} class and reimplement its @code{Calc()} method.
 @verbatim
@@ -267,9 +267,9 @@ void Foo::Calc()
 {
   for(int i=0;i<30;i++)   // do calculation
   {
-    sleep(2);           // which can be very long
+    sleep(2);             // which can be very long
     pnt = mglPoint(2*mgl_rnd()-1,2*mgl_rnd()-1);
-    Gr->Update();        // update window
+    Gr->Update();         // update window
   }
 }
 //-----------------------------------------------------
@@ -300,7 +300,7 @@ int main(int argc,char **argv)
     pnt = mglPoint(2*mgl_rnd()-1,2*mgl_rnd()-1);
     gr.Clf();             // make new drawing
     gr.Line(mglPoint(),pnt,"Ar2");
-    char str[10] = "i=0"; str[3] = '0'+i;
+    char str[10] = "i=0"; str[2] = '0'+i;
     gr.Puts(mglPoint(),"");
     gr.Update();          // update window when you need it
   }
@@ -311,6 +311,7 @@ int main(int argc,char **argv)
 
 Pictures with @strong{animation can be saved in file(s)} as well. You can: export in animated GIF, or save each frame in separate file (usually JPEG) and convert these files into the movie (for example, by help of ImageMagic). Let me show both methods.
 
+@anchor{GIF}
 The simplest methods is making animated GIF. There are 3 steps: (1) open GIF file by @code{StartGIF()} function; (2) create the frames by calling @code{NewFrame()} before and @code{EndFrame()} after plotting; (3) close GIF by @code{CloseGIF()} function. So the simplest code for ``running'' sinusoid will look like this:
 @verbatim
 #include <mgl2/mgl.h>
@@ -334,6 +335,7 @@ int main(int ,char **)
 }
 @end verbatim
 
+@anchor{MPEG}
 The second way is saving each frame in separate file (usually JPEG) and later make the movie from them. MathGL have special function for saving frames -- it is @code{WriteFrame()}. This function save each frame with automatic name @samp{frame0001.jpg, frame0002.jpg} and so on. Here prefix @samp{frame} is defined by @var{PlotId} variable of @code{mglGraph} class. So the similar code will look like this:
 @verbatim
 #include <mgl2/mgl.h>
@@ -377,7 +379,7 @@ void MyForm::OnPaint(wxPaintEvent& event)
   gr.Light(true);
   sample(&gr,NULL);
 
-  wxImage img(w,h,gr.GetBits(),true);
+  wxImage img(w,h,gr.GetRGB(),true);
   ToolBar->GetSize(&x,&y);    // gets a height of the toolbar if any
   wxPaintDC dc(this);         // and draws it
   dc.DrawBitmap(wxBitmap(img),0,y);
@@ -393,7 +395,7 @@ void Fl_MyWidget::draw()
   gr.Alpha(true);         // draws something using MathGL
   gr.Light(true);
   sample(&gr,NULL);
-  fl_draw_image(gr.GetBits(), x(), y(), gr.GetWidth(), gr.GetHeight(), 3);
+  fl_draw_image(gr.GetRGB(), x(), y(), gr.GetWidth(), gr.GetHeight(), 3);
 }
 @end verbatim
 Qt code will look like
@@ -3228,20 +3230,18 @@ Using the @code{Hist} function(s) for making regular distributions is one of use
 @verbatim
 int sample(mglGraph *gr)
 {
-  mglData a(50, 40), b(50, 40);
-  gr->Puts(mglPoint(0, 0), "\\to", ":C", -1.4);
-  gr->SetRanges(-1,1,-1,1,-2,2);
-
-  gr->SubPlot(2, 1, 0);
-  gr->Fill(a,"x");  gr->Fill(b,"y");
-  gr->Puts(mglPoint(0, 1.1), "\\{x, y\\}", ":C", -2);   gr->Box();
-  gr->Map(a, b, "brgk");
-
-  gr->SubPlot(2, 1, 1);
-  gr->Fill(a,"(x^3+y^3)/2");  gr->Fill(b,"(x-y)/2");
-  gr->Puts(mglPoint(0, 1.1), "\\{\\frac{x^3+y^3}{2}, \\frac{x-y}{2}\\}", ":C", -2);
-  gr->Box();
-  gr->Map(a, b, "brgk");
+  mglData x(10000), y(10000), z(10000);  gr->Fill(x,"2*rnd-1");
+  gr->Fill(y,"2*rnd-1"); gr->Fill(z,"exp(-6*(v^2+w^2))",x,y);
+  mglData xx=gr->Hist(x,z), yy=gr->Hist(y,z);	xx.Norm(0,1);
+  yy.Norm(0,1);
+  gr->MultiPlot(3,3,3,2,2,"");   gr->SetRanges(-1,1,-1,1,0,1);
+  gr->Box();  gr->Dots(x,y,z,"wyrRk");
+  gr->MultiPlot(3,3,0,2,1,"");   gr->SetRanges(-1,1,0,1);
+  gr->Box();  gr->Bars(xx);
+  gr->MultiPlot(3,3,5,1,2,"");   gr->SetRanges(0,1,-1,1);
+  gr->Box();  gr->Barh(yy);
+  gr->SubPlot(3,3,2);
+  gr->Puts(mglPoint(0.5,0.5),"Hist and\nMultiPlot\nsample","a",-6);
   return 0;
 }
 @end verbatim
@@ -3487,66 +3487,131 @@ int sample(mglGraph *gr)
 
 @external
 @node FAQ, , Hints, Examples
-@section FAQ
+@section FAQ -- TODO: UPDATE!!!
 
 @table @strong
-@item The plot does not appear
-Check that points of the plot lie  inside the bounding box and resize the bounding box using @code{Axis()} function. Check that the data have correct dimensions for selected type of plot. Be sure that  @code{Finish()} is called after the plotting functions (or be sure that the plot is saved to a file). Sometimes the light reflection from flat surfaces (like, @code{Dens()}) can look as if the plot were absent.
+@item График не рисуется?!
+Проверьте, что точки графика находятся внутри ограничивающего параллелепипеда, при необходимости увеличьте его с помощью функции @code{Axis()}. Проверьте, что размерность массива правильная для выбранного типа графика. Убедитесь, что функция  @code{Finish()} была вызвана после построения графика (или график был сохранен в файл). Иногда отражение света от плоских поверхностей (типа, @code{Dens()}) может выглядеть как отсутствие графика.
 
-@item I can not find some special kind of plot.
-Most ``new'' types of plots can be created by using the existing drawing functions. For example, the surface of curve rotation can be created by a special function @code{Torus()}, or as a parametrically specified surface by @code{Surf()}. See also, @ref{Hints}. If you can not find a specific type of plot, please e-mail me and this plot will appear in the next version of MathGL library.
+@item Не нашел нужного графика?!
+Многие ``новые'' графики можно строить, используя уже существующие функции. Например, поверхность вращения кривой относительно оси можно построить, используя специальную функцию @code{Torus()}, а можно построить как параметрически заданную поверхность @code{Surf()}. См. также @ref{Hints} и @ref{Examples} MathGL. Если же нужного типа графика все равно нет, то пишите мне @email{mathgl.abalakin@@gmail.com, e-mail} и в следующей версии этот график появится.
 
-@item Should I know some graphical libraries (like OpenGL) before using the MathGL library?
-No. The MathGL library is self-contained and does not require the knowledge of external libraries.
+@item Требуется ли знание сторонних библиотек (например, OpenGL) для использования библиотеки MathGL?
+Нет. Библиотека MathGL самодостаточна и не требует знания сторонних библиотек.
 
-@item In which language is the library written? For which languages does it have an interface?
-The core of the MathGL library is written in C++. But there are interfaces for: pure C, Fortran, Pascal, Forth, and its own command language MGL. Also there is a large set of interpreted languages, which are supported (Python, Java,  ALLEGROCL, CHICKEN, Lisp, CFFI, C#, Guile, Lua, Modula 3, Mzscheme, Ocaml, Octave, Perl, PHP, Pike, R, Ruby, Tcl). These interfaces are written using SWIG (both pure C functions and classes) but only the interface for Python and Octave is included in the autoconf/automake script. The reason is that I don't know any other interpreted languages :(. Note that most other languages can use (link to) the pure C functions.
+@item На каком языке написана библиотека? Для каких языков у нее есть интерфейсы?
+Ядро библиотеки написано на С++. Кроме него, есть интерфейсы для чистого С, фортрана, паскаля, форта и собственный командный язык MGL. Также есть поддержка большого числа интерпретируемых языков (Python, Java,  ALLEGROCL, CHICKEN, Lisp, CFFI, C#, Guile, Lua, Modula 3, Mzscheme, Ocaml, Octave, Perl, PHP, Pike, R, Ruby, Tcl). Эти интерфейсы написаны с помощью SWIG (и функции чистого С и классы). Однако на данный момент только интерфейсы для Python и Octave включены в скрипты сборки. Причина в том, что я не знаю других языков, чтобы проверить качество интерфейса :(. Замечу, что большинство прочих языков могут использовать С функции напрямую.
 
-@item How can I use MathGL with Fortran?
-You can use MathGL as is with @code{gfortran} because it uses by default the AT&T notation for external functions. For other compilers (like Visual Fortran) you have to switch on the AT&T notation manually. The AT&T notation requires that the symbol @samp{_} is added at the end of each function name, function argument(s) is passed by pointers and the string length(s) is passed at the end of the argument list. For example:
+@item Как мне использовать MathGL с Фортраном?
+Библиотеку MathGL можно использовать как есть с компилятором @code{gfortran} поскольку он использует по умолчанию AT&T нотацию для внешних функций. Для других компиляторов (например, Visual Fortran) необходимо включить использование AT&T нотации вручную. AT&T нотация требует, чтобы имя функции завершалось символом @samp{_}, аргументы функции передавались по указателю и длины строк передавались в конце списка аргументов. Например:
 
-@emph{C function} -- @code{void mgl_fplot(HMGL graph, const char *fy, const char *stl, int n);}
+@emph{C функция} -- @code{void mgl_fplot(HMGL graph, const char *fy, const char *stl, int n);}
 
-@emph{AT&T function} -- @code{void mgl_fplot_(uintptr_t *graph, const char *fy, const char *stl, int *n, int ly, int ls);}
+@emph{AT&T функция} -- @code{void mgl_fplot_(uintptr_t *graph, const char *fy, const char *stl, int *n, int ly, int ls);}
 
-@item How can I print in Russian/Spanish/Arabic/Japanese, and so on?
-The standard way is to use Unicode encoding for the text output. But the MathGL library also has interface for 8-bit (char *) strings with internal conversion to Unicode. This conversion depends on the current locale OS. You may change it by @code{setlocale()} function. For example, for Russian text in CP1251 encoding you may use @code{setlocale(LC_CTYPE, "ru_RU.cp1251");} (under MS Windows the name of locale may differ -- @code{setlocale(LC_CTYPE, "russian_russia.1251")}). I strongly recommend not to use the constant @code{LC_ALL} in the conversion. Since it also changes the number format, it may lead to mistakes in formula writing and reading of the text in data files. For example, the program will await a @samp{,} as a decimal point but the user will enter @samp{.}.
+@item У меня есть класс Foo и в нем метод рисования Foo::draw(mglGraph *gr). Как мне нарисовать что-то в окне FLTK, GLUT или Qt?
+Функции-члены класса в С++ имеют ``скрытый'' параметр -- указатель на экземпляр класса и их прямое использование невозможно. Решением будет определение интерфейсной функции:
+@example
+int foo_draw(mglGraph *gr, void *par)
+@{   ((Foo *)foo)->draw(gr);    @}
+@end example
+и подстановка именно ее в вызов функции @code{Window()}:
+@example
+gr->Window(argc,argv,foo_draw,"Title",this);
+@end example
 
-@item How can I exclude a point or a region of plot from the drawing?
-There are 3 general ways. First, the point with @code{NAN} value as one of the coordinates will never be plotted. Second, special variables @var{CutMin}, @var{CutMax} or function @code{CutOff}() define the condition when the points should be omitted (see @ref{Cutting}). Last, you may change the transparency of a part of the plot by the help of functions @code{SurfA()}, @code{Surf3A()} (see @ref{Dual plotting}). In this last case the transparency is switched on smoothly.
+Можно также наследовать Ваш класс от класса @code{mglDraw} и использовать функцию типа @code{gr->Window(argc, argv, foo, "Title");}.
 
-@item I use VisualStudio, CBuilder or some other compiler (not MinGW/gcc). How can I link the MathGL library?
-In version 2.0, the recommended class @code{mglGraph} (header file @code{#include <mgl2/mgl.h>}) contains only @code{inline} functions and is acceptable for any compiler with the same binary files. However, if you plan to access low-level features (i.e. classes mglBase, mglCanvas and so on) then you have to recompile MathGL by yours compiler.
+@item Как мне вывести текст на русском/испанском/арабском/японском и т.д.?
+Стандартный путь состоит в использовании кодировки UTF-8 для вывода текста. Кроме того, все функции вывода текста имеют интерфейс для 8-битных (char *) строк. Однако в последнем случае Вам может потребоваться установить используемую в исходном тексте локаль. Например, для русского языка в кодировке CP1251 можно использовать @code{setlocale(LC_CTYPE, "ru_RU.cp1251");} (под MS Windows имена локали другие --  @code{setlocale(LC_CTYPE, "russian_russia.1251")}). Настоятельно не рекомендую использовать константу @code{LC_ALL}, поскольку при этом меняется и формат чисел (в частности, десятичная точка), что может, например, вызвать сложности (неудобство) при написании формул и чтении текстовых файлов. Например, программа ожидает @samp{,} в качестве разделителя целой и дробной части, а пользователь вводит @samp{.}.
 
-@c @strong{Finally!} Please @emph{do not} ask me Windows-specific questions. I do not use Windows. I know nothing about Visual Basic, Visual C++, CBuiled or .NET. Please find the appropriate Usenet discussion group and ask your question there.
+@item Как мне вырезать (исключить из рисования) точку или область на графике?
+Есть три основных способа. Во-первых, можно вырезать точку, задав одну из ее координат равной @code{NAN}. Во-вторых, можно воспользоваться функцией @code{SetCutBox()} или @code{CutOff()} для удаления точек из некоторой области (@pxref{Cutting}). Наконец, можно сделать эти точки прозрачными (невидимыми) с помощью функций @code{SurfA()}, @code{Surf3A()} (@pxref{Dual plotting}). В последнем случае обеспечивается еще и плавность включения прозрачности.
 
-@item How I can build MathGL under Windows?
-The simplest way is using the combination CMake+MinGW. Also you need some extra libraries like GSL, PNG, JPEG and so on. All of them can be found at @url{http://gnuwin32.sourceforge.net/packages.html}. After installing all components, just run CMake configurator and make the MathGL itself.
+@item Я использую VisualStudio, CBuilder или другой компилятор (не MinGW/gcc). Как мне подключить библиотеку MathGL?
+Начиная с версии 2.0, рекомендуемый к использованию класс mglGraph (заголовочный файл @code{#include <mgl2/mgl.h>}) содержbn только с @code{inline} функции и может использоваться с любым компилятором без перекомпиляции бинарной версии библиотеки. Однако, если Вы планируете использовать низкоуровневые возможности (т.е. классы mglBase, mglCanvas и т.д.), то Вам следует перекомпилировать библиотеку MathGL с использованием Вашего компилятора.
 
-@item How many people write this library?
-Most of the library was written by one person. This is a result of nearly a year of work (mostly in the evening and on holidays): I spent half a year to write the kernel and half a year to a year on extending, improving the library and writing documentation. This process continues now :). The autoconf/automake script was written mostly by D.Kulagin, and the export to IDTF was written mostly by M.Vidassov.
+@item Как мне собрать MathGL под Windows?
+Простейший путь -- использование комбинации CMake и MinGW. Также Вам может потребоваться дополнительные библиотеки, такие как GSL, PNG, JPEG и пр. Все они могут быть найдены на @url{http://gnuwin32.sourceforge.net/packages.html}. После установки всех компонент, просто запустите конфигуратор CMake и соберите MathGL командой make.
 
-@item How can I display a bitmap on the figure?
-You can import data into a @code{mglData} instance and display it by @code{Dens()} function. For example, for black-and-white bitmap you can use the code: @code{mglData bmp; bmp.Import("fname.png","wk"); gr->Dens(bmp,"wk");}.
+@item Как создать окно FLTK/GLUT/Qt с текущими результатами параллельно с выполнением основных вычислений?
+Следует создать отдельный поток для обработки сообщений в окно. Кросс-платформенный путь -- использование библиотеки @code{pthread}. Обновление данных в окне можно выполнить вызовом функции @code{mglGraphFLTK::Update()}. Пример код имеет вид:
+@verbatim
+//-----------------------------------------------------------------------------
+#include <mgl2/window.h>
+#include <pthread.h>
 
-@item How can I use MathGL in Qt, FLTK, wxWidgets etc.?
-There are special classes (widgets) for these libraries: QMathGL for Qt, Fl_MathGL for FLTK and so on. If you don't find the appropriate class then you can create your own widget that displays a bitmap using mglCanvas::GetBits().
+mglPoint pnt;  // some global variable for changable data
+//-----------------------------------------------------------------------------
+int sample(mglGraph *gr)
+{
+  gr->Box();  gr->Line(mglPoint(),pnt,"Ar2"); // just draw a vector
+  return 0;
+}
+//-----------------------------------------------------------------------------
+void *mgl_fltk_tmp(void *)      {       mglFlRun();     return 0;       }
+int main (int argc, char ** argv)
+{
+  mglWindow gr(0,sample,"test");  // create window
+  static pthread_t tmp;
+  pthread_create(&tmp, 0, mgl_fltk_tmp, 0);
+  pthread_detach(tmp);    // run window handling in the separate thread
+  for(int i=0;i<10;i++)   // do calculation
+  {
+    sleep(1);             // which can be very long
+    pnt = mglPoint(2*mgl_rnd()-1,2*mgl_rnd()-1);
+    gr.Update();          // update window
+  }
+  return 0;   // finish calculations and close the window
+}
+//-----------------------------------------------------------------------------
+@end verbatim
+В случае если требуется вывести статичную картинку с текущими результатами расчетов, то достаточно передать @code{NULL} вместо функции рисования и вызывать @code{Update()} по мере необходимости для обновления графика. Такой способ подходит и для пользователей фортрана.
+@verbatim
+//-----------------------------------------------------------------------------
+#include <mgl2/window.h>
+//-----------------------------------------------------------------------------
+int sample(mglGraph *gr)
+{
+  gr->Box();  gr->Line(mglPoint(),pnt,"Ar2"); // just draw a vector
+  return 0;
+}
+//-----------------------------------------------------------------------------
+void *mgl_fltk_tmp(void *)      {       mglFlRun();     return 0;       }
+int main (int argc, char ** argv)
+{
+  mglWindow gr(0,NULL,"test");  // create window
+  for(int i=0;i<10;i++)   // do calculation
+  {
+    sleep(1);             // which can be very long
+    pnt = mglPoint(2*mgl_rnd()-1,2*mgl_rnd()-1);
+    sample(&gr);          // draw picture
+    gr.Update();          // update window
+  }
+  return 0;   // finish calculations and close the window
+}
+//-----------------------------------------------------------------------------
+@end verbatim
 
-@item How can I create U3D file (make 3D in PDF)?
-There are 2 steps: first you should create IDTF file, and later convert it to U3D. You can use @uref{http://sourceforge.net/project/showfiles.php?group_id=152187&package_id=300628, U3D tools} for converting IDTF file to U3D. It needs @uref{http://libharu.org, libharu} 2.1.0 or later. For installation use @code{./bootstrap, ./configure, make, sudo make install}. It provides  IDTFConverter program for converting text files *.idtf to binary files *.u3d. The latter can be included into PDF.
+@item Сколько человек участвовало в создании библиотеки?
+Большую часть библиотеки написал один человек. Это результат примерно года работы на написание ядра библиотеки и базовых функций (в основном вечерами и по выходным). Процесс усовершенствования продолжается и теперь :). Скрипты сборки в основном написаны Д.Кулагиным, а экспорт в IDTF написан М.Видассовым.
 
-@item How I can change the font family?
-First, you should download new font files from @uref{http://mathgl.sourceforge.net/download.html, here} or from @uref{http://sourceforge.net/project/showfiles.php?group_id=152187&package_id=267177, here}. Next, you should load the font files into mglGraph class instance @var{gr} by the following command: @code{gr->LoadFont(fontname,path);}. Here @var{fontname} is the base font name like @samp{STIX} and @var{path} sets the location of font files. Use @code{gr->RestoreFont();} to start using the default font.
+@item Как мне показать растровую картинку на рисунке?
+Можно импортировать ее в экземпляр @code{mglData} и построить с помощью функции @code{Dens()}. Например, для черно-белого рисунка можно использовать код: @code{mglData bmp; bmp.Import("fname.png","wk"); gr->Dens(bmp,"wk");}.
 
-@item How can I draw tick out of a bounding box?
-Just set a negative value in @var{SetTickLen}. For example, use @code{gr->SetTickLen(-0.1);}.
+@item Как использовать MathGL в Qt, FLTK, wxWidgets ...?
+Есть специальные классы (виджеты) для этих библиотек: QMathGL для Qt, Fl_MathGL для FLTK и т.д. Если Вы не нашли подходящий класс, то можете создать свой собственный виджет, рисующий растровое изображение из mglCanvas::GetBits().
 
-@item How can I prevent text rotation?
-Just use @code{SetRotatedText(false)}.
+@item Как мне создать U3D файл (3D in PDF)?
+Процедура состоит из двух шагов: создания файла IDTF и его конвертация в U3D. Можно использовать @uref{http://sourceforge.net/project/showfiles.php?group_id=152187&package_id=300628, U3D tools} для конвертации IDTF в U3D. Ему требуется библиотека @uref{http://libharu.org, libharu} 2.1.0 или более поздняя. Для установки используйте обычную процедуру @code{./bootstrap, ./configure, make, sudo make install}. В результате появится программа IDTFConverter для конвертации файлов *.idtf в бинарные файлы *.u3d. Последние можно включить в PDF.
 
-@item What is @code{*.so}? What is @code{gcc}? How I can use @code{make}?
-This standard GNU tool. There is special FAQ about its usage under Windows -- @uref{http://www.mingw.org/wiki/FAQ}.
+@item Как сменить шрифт (семейство шрифтов)?
+Во-первых, надо загрузить файлы @uref{http://mathgl.sourceforge.net/download.html, отсюда} или @uref{http://sourceforge.net/project/showfiles.php?group_id=152187&package_id=267177, отсюда}. Далее, в экземпляре mglGraph загружаем шрифты: @code{gr->LoadFont(fontname,path);}. Здесь @var{fontname} -- базовое имя шрифта, например @samp{STIX}, и @var{path} -- путь к папке с файлами шрифтов. Вызовите @code{gr->RestoreFont();} для использования шрифта по умолчанию.
+
+@item Как нарисовать метки оси снаружи от графика?
+Просто используйте отрицательные значения длины меток, например @code{gr->SetTickLen(-0.1);}.
 
 @end table
+
 @external
 

@@ -1,16 +1,14 @@
 \input texinfo
-@setfilename mathgl_ru.info
-@c @documentlanguage ru
-@documentencoding UTF-8
-@set VERSION 2.0
+@setfilename mathgl_en.info
+@set VERSION 2.0.3
 @settitle MathGL @value{VERSION}
 @syncodeindex pg cp
 @comment %**end of header
 
 @copying
-Это документация для MathGL (версии @value{VERSION}) -- библиотеки классов и функций для построения научной графики. Пожалуйста сообщайте о любых ошибках в этом руководстве на @email{mathgl.abalakin@@gmail.org}.
+This manual is for MathGL (version @value{VERSION}), a collection of classes and routines for scientific plotting. Please report any errors in this manual to @email{mathgl.abalakin@@gmail.org}.
 
-Copyright @copyright{} 2009 Алексей Балакин.
+Copyright @copyright{} 2008 Alexey Balakin.
 
 @quotation
 Permission is granted to copy, distribute and/or modify this document
@@ -34,8 +32,8 @@ supports it in developing GNU and promoting software freedom.''
 
 @titlepage
 @title MathGL
-@subtitle версия @value{VERSION}
-@author А.А. Балакин (@uref{http://mathgl.sourceforge.net/})
+@subtitle for version @value{VERSION}
+@author A.A. Balakin (@uref{http://mathgl.sourceforge.net/})
 @page
 @vskip 0pt plus 1filll
 @insertcopying
@@ -47,9 +45,9 @@ supports it in developing GNU and promoting software freedom.''
 @node Top
 @top MathGL
 
-Это документация для MathGL (версии @value{VERSION}) -- библиотеки классов и функций для построения научной графики. Пожалуйста сообщайте о любых ошибках в этом руководстве на @email{mathgl.abalakin@@gmail.org}. Дополнительную информацию о MathGL можно найти на домашней странице проекта @uref{http://mathgl.sourceforge.net/}.
+This file documents the Mathematical Graphic Library (MathGL), a collection of classes and routines for scientific plotting. It corresponds to release @value{VERSION} of the library. Please report any errors in this manual to @email{mathgl.abalakin@@gmail.org}. More information about MathGL can be found at the project homepage, @uref{http://mathgl.sourceforge.net/}.
 
-Copyright @copyright{} 2009 Алексей Балакин.
+Copyright @copyright{} 2008 Alexey A. Balakin.
 
 @quotation
 Permission is granted to copy, distribute and/or modify this document
@@ -82,21 +80,55 @@ supports it in developing GNU and promoting software freedom.''
 @end menu
 
 @ifhtml
+@macro external {}
+@html
+<!--LiveInternet counter--><script type="text/javascript"><!--
+document.write("<a href='http://www.liveinternet.ru/click' "+
+"target=_blank><img src='http://counter.yadro.ru/hit?t12.2;r"+
+escape(document.referrer)+((typeof(screen)=="undefined")?"":
+";s"+screen.width+"*"+screen.height+"*"+(screen.colorDepth?
+screen.colorDepth:screen.pixelDepth))+";u"+escape(document.URL)+
+";"+Math.random()+
+"' alt='' title='LiveInternet: number of views during 24"+
+" hours, number of visitors during 24 hours and during today' "+
+"border=0 width=88 height=31><\/a>")//--></script><!--/LiveInternet-->
+
+<a target=_blank href="http://sourceforge.net"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=152187&amp;type=2" alt="SourceForge.net Logo" border="0" height="37" width="125"></a>
+
+<a target=_blank href="http://www.thefreecountry.com/"> <img src="http://www.thefreecountry.com/images/tfc88x31green.gif" alt="thefreecountry.com: Free Programmers' Resources, Free Webmasters' Resources, Free Security Resources, Free Software" border="0" height="31" width="88"></a>
+
+<a target=_blank href="http://sourceforge.net/donate/index.php?group_id=152187"><img src="http://images.sourceforge.net/images/project-support.jpg" width="88" height="32" border="0" alt="Support This Project" /> </a>
+@end html
+@end macro
+
 @macro fig {fname,text}
 @center @image{../\fname\, 11cm, , \text\, .png}
+@end macro
+@macro pfig {fname,text}
+@center @image{../png/\fname\, 11cm, , \text\, .png}
+@c @center @image{../png/\fname\, 11cm, , \text\. See also @uref{../pdf/\fname\.pdf, U3D PDF} sample, .png}
 @end macro
 @end ifhtml
 
 @ifnothtml
+@macro external {}
+@end macro
+
 @iftex
 @macro fig {fname,text}
 @center @image{\fname\, 11cm, , \text\, .png}
+@end macro
+@macro pfig {fname,text}
+@center @image{png/\fname\, 11cm, , \text\, .png}
 @end macro
 @end iftex
 
 @ifnottex
 @macro fig {fname,text}
 @c @center @image{\fname\, 11cm, , \text\, .png}
+@end macro
+@macro pfig {fname,text}
+@c @center @image{png/\fname\, 11cm, , \text\, .png}
 @end macro
 @end ifnottex
 @end ifnothtml
@@ -135,7 +167,7 @@ supports it in developing GNU and promoting software freedom.''
 @include other_ru.texi
 
 @node TeX-like symbols, Copying This Manual, Other classes, Top
-@appendix Символы TeX
+@appendix TeX-like symbols
 @include appendix_ru.texi
 
 @node Copying This Manual, Index, TeX-like symbols, Top
@@ -143,7 +175,7 @@ supports it in developing GNU and promoting software freedom.''
 @include fdl.texi
 
 @node Index, , Copying This Manual, Top
-@unnumbered Индекс
+@unnumbered Index
 
 @printindex cp
 

@@ -68,44 +68,79 @@ supports it in developing GNU and promoting software freedom.''
 @end ifnottex
 
 @menu
-* Overview::
-* Examples::
+@c * Overview::
+@c * Examples::
+* MGL scripts::
+* General concepts::
 * MathGL core::
 * Data processing::
-* Samples::
 * Copying This Manual::
 * Index::
 @end menu
 
+@macro external {}
+@end macro
+
+@ifhtml
+@macro fig {fname,text}
+@center @image{../\fname\, 11cm, , \text\, .png}
+@end macro
+@macro pfig {fname,text}
+@center @image{../png/\fname\, 11cm, , \text\, .png}
+@c @center @image{../png/\fname\, 11cm, , \text\. See also @uref{../pdf/\fname\.pdf, U3D PDF} sample, .png}
+@end macro
+@end ifhtml
+
+@ifnothtml
+@iftex
+@macro fig {fname,text}
+@center @image{\fname\, 11cm, , \text\, .png}
+@end macro
+@macro pfig {fname,text}
+@center @image{png/\fname\, 11cm, , \text\, .png}
+@end macro
+@end iftex
+
+@ifnottex
+@macro fig {fname,text}
+@c @center @image{\fname\, 11cm, , \text\, .png}
+@end macro
+@macro pfig {fname,text}
+@c @center @image{png/\fname\, 11cm, , \text\, .png}
+@end macro
+@end ifnottex
+@end ifnothtml
+
 @rmacro sref {arg}
-См. раздел @ref{\arg\}, для примеров кода и графика.
 @end rmacro
-@macro tdref{nam}
-@uref{http://mathgl.sourceforge.net/pdf_u3d/\nam\.pdf, 3D pdf}
+@macro tdref {nam}
 @end macro
 @set UDAV
 
-@node Overview, Examples, , Top
-@include overview_ru.texi
+@c @node Overview, Examples, , Top
+@c @include overview_ru.texi
 
-@node Examples, MathGL core, Overview, Top
-@include ex_mgl_ru.texi
+@c @node Examples, MGL scripts, Overview, Top
+@c @include ex_mgl_ru.texi
 
-@node MathGL core, Data handling, Examples, Top
+@node MGL scripts, General concepts, , Top
+@include parse_ru.texi
+
+@node General concepts, MathGL core, MGL scripts, Top
+@include concept_ru.texi
+
+@node MathGL core, Data processing, General concepts, Top
 @include core_ru.texi
 
-@node Data processing, Samples, MathGL core, Top
+@node Data processing, Copying This Manual, MathGL core, Top
 @include data_ru.texi
 
-@node Samples, Copying This Manual, Data handling, Top
-@include samples_ru.texi
-
-@node Copying This Manual, Index, Samples, Top
+@node Copying This Manual, Index, Data processing, Top
 @appendix GNU Free Documentation License
 @include fdl.texi
 
 @node Index, , Copying This Manual, Top
-@unnumbered Индекс
+@unnumbered Index
 
 @printindex cp
 

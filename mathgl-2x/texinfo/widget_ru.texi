@@ -1,6 +1,6 @@
 
 @c ------------------------------------------------------------------
-@chapter ``Оконные'' классы
+@chapter ``Оконные'' классы -- TODO: UPDATE!!!
 @cindex mglGraphFLTK
 @cindex mglGraphQT
 @cindex mglGraphGLUT
@@ -52,6 +52,7 @@
 @end menu
 
 @c ------------------------------------------------------------------
+@external
 @node Fl_MathGL class, QMathGL class, , Widget classes
 @section Класс Fl_MathGL
 @cindex Fl_MathGL
@@ -104,6 +105,7 @@
 @end deftypecv
 
 @c ------------------------------------------------------------------
+@external
 @node QMathGL class, , Fl_MathGL class, Widget classes
 @section QMathGL class
 @cindex QMathGL

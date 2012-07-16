@@ -24,47 +24,49 @@ MathGL library supports the simplest scripts for data handling and plotting. The
 
 
 @c ------------------------------------------------------------------
+@external
 @node MGL definition, Program flow commands, , MGL scripts
 @section MGL definition
 
-MGL script language is rather simple. Each string is a command. First word of string is the name of command. Other words are command arguments. Command may have up to 1000 arguments (at least for now). Words are separated from each other by space or tabulation symbol. The upper or lower case of words is important, i.e. variables @var{a} and @var{A} are different variables. Symbol @samp{#} starts the comment (all characters after # will be ignored). The exception is situation when @samp{#} is a part of some string. Also options can be specified after symbol @samp{;} (@pxref{Command options}). Symbol @samp{:} starts new command (like new line character) if it is not placed inside a string or inside brackets.
+Язык MGL достаточно простой. Каждая строка -- отдельная команда. Первое слово -- имя команды, а все остальные ее аргументы. Команда может иметь до 1000 аргументов (по крайней мере сейчас). Слова разделяются одно от другого пробелом или символом табуляции. Различий между верхним и нижним индексом нет, т.е. переменные @var{a} и @var{A} идентичны. Символ @samp{#} начинает комментарий -- все символы после него игнорируются до конца строки. Исключением является случай, когда @samp{#} входит в строку. Опции команды указываются после символа @samp{;} (@pxref{Command options}). Символ @samp{:} начинает новую команду (подобно переводу строки) если он расположен не внутри скобок или строки.
 
-If string contain references to external parameters (substrings @samp{$0}, @samp{$1} ... @samp{$9}) or definitions (substrings @samp{$a}, @samp{$b} ... @samp{$z}) then before execution the values of parameter/definition will be substituted instead of reference. It allows to use the same MGL script for different parameters (filenames, paths, condition and so on).
+Если строка содержит ссылки на внешние параметры (@samp{$0}, @samp{$1} ... @samp{$9}) или макроопределения (@samp{$a}, @samp{$b} ... @samp{$z}), то текущие значения параметров/макроопределений подставляются в строку вместо ссылки до выполнением команды. Это позволяет использовать один и тот же скрипт при различных входных параметрах командной строки или вводить макроопределения по ходу исполнения команд скрипта.
 
-Argument can be a string, a variable (data arrays) or a number (scalars).
+Аргументы команды могут быть строками, переменными или числами.
 @itemize @bullet
 @item
-The string is any symbols between ordinary marks @samp{'}. Long strings can be concatenated from several lines by @samp{\} symbol. I.e. the string @samp{'a +'\<br>' b'} will give string @samp{'a + b'} (here @samp{<br>} is newline).
+Строка -- произвольный набор символов между метками @samp{'}.
 
 @item
-Usually variable have a name which is arbitrary combination of symbols (except spaces and @samp{'}) started from a letter and with length less than 64. A temporary array can be used as variable:
+Обычно переменная имеет имя, состоящее из букв и чисел (должно начинаться с буквы и не быть длиннее 64 символов). В качестве переменной можно использовать временные массивы, включающие в себя:
 @itemize @bullet
 @item
-sub-arrays (like in @ref{subdata} command) as command argument. For example, @code{a(1)} or @code{a(1,:)} or @code{a(1,:,:)} is second row, @code{a(:,2)} or @code{a(:,2,:)} is third column, @code{a(:,:,0)} is first slice and so on. Also you can extract a part of array from m-th to n-th element by code @code{a(m:n,:,:)} or just @code{a(m:n)}.
+срезы (``подмассивы'') массивов данных (подобно команде @ref{subdata}). Например, @code{a(1)} или @code{a(1,:)} или @code{a(1,:,:)} -- вторая строка массива @var{a}, @code{a(:,2)} или @code{a(:,2,:)} -- третий столбец, @code{a(:,:,0)} -- первый срез и т.д. Также можно выделить часть массива с m-го по n-ый элемент @code{a(m:n,:,:)} или просто @code{a(m:n)}.
 
 @item
-any column combinations defined by formulas, like @code{a('n*w^2/exp(t)')} if names for data columns was specified (by @ref{idset} command or in the file at string started with @code{##}).
+произвольные комбинации столбцов данных (например, @code{a('n*w^2/exp(t)')}), если столбцы данных были именованы командой @ref{idset} или в файле данных (в строке начинающейся с @code{##}).
 
 @item
-any expression (without spaces) of existed variables produce temporary variable. For example, @samp{sqrt(dat(:,5)+1)} will produce temporary variable with data values equal to @code{tmp[i,j] = sqrt(dat[i,5,j]+1)}.
+произвольное выражение из существующих переменных и констант. Например, @samp{sqrt(dat(:,5)+1)} даст временный массив данных с элементами равными @code{tmp[i,j] = sqrt(dat[i,5,j]+1)}.
 
 @item
-temporary variable of higher dimensions by help of []. For example, @samp{[1,2,3]} will produce a temporary vector of 3 elements @{1, 2, 3@}; @samp{[[11,12],[21,22]]} will produce matrix 2*2 and so on. Here you can join even an arrays of the same dimensions by construction like @samp{[v1,v2,...,vn]}.
+массивы с элементами заданными в квадратных скобках [], разделенные @samp{,}. При этом внутри выражения не должно быть пробелов! Например, @samp{[1,2,3]} даст временный массив из 3 элементов @{1, 2, 3@}; @samp{[[11,12],[21,22]]} даст матрицу 2*2 и т.д. Элементами такой конструкции могут быть и массивы если их размерности одинаковые, например @samp{[v1,v2,...,vn]}.
 
 @item
-result of code for making new data (@pxref{Make another data}) inside @{@}. For example, @samp{@{sum dat 'x'@}} produce temporary variable which contain result of summation of @var{dat} along direction 'x'. This is the same array @var{tmp} as produced by command @samp{sum tmp dat 'x'}. You can use nested constructions, like @samp{@{sum @{max dat 'z'@} 'x'@}}.
+результат команд построения новых данных (@pxref{Make another data}), если они заключены в фигурные скобки @{@}. Например, @samp{@{sum dat 'x'@}} даст временный массив, который есть результат суммирования @var{dat} вдоль 'x'. Это такой же массив как и @var{tmp}, полученный командой @samp{sum tmp dat 'x'}. При этом можно использовать вложенные конструкции, например @samp{@{sum @{max dat 'z'@} 'x'@}}.
 @end itemize
-Temporary variables can not be used as 1st argument for commands which create (return) the data (like @samp{new}, @samp{read}, @samp{hist} and so on).
+Временные массивы не могут стоять в качестве первого аргумента команд, создающих массивы (например, @samp{new}, @samp{read}, @samp{hist} и т.д.).
 
 @item
-Special names @code{nan=#QNAN, pi=3.1415926..., on=1, off=0, :=-1} are treated as number if they were not redefined by user. Variables with suffixes are treated as numbers (@pxref{Data information}). Names defined by @ref{define} command are treated as number. Also results of formulas with sizes 1x1x1 are treated as number (for example, @samp{pi/dat.nx}).
+К скалярным переменным, кроме собственно чисел, относятся: специальные переменные @code{nan=#QNAN, pi=3.1415926..., on=1, off=0, :=-1}, переменные с суффиксами (@pxref{Data information}), переменные определенные командой @ref{define}. Также массивы размером 1x1x1 считаются скалярами (например, @samp{pi/dat.nx}).
 @end itemize
-Before the first using all variables must be defined with the help of commands, like, @ref{new}, @ref{var}, @ref{list}, @ref{copy}, @ref{read}, @ref{hist}, @ref{sum} and so on (see sections @ref{Data constructor}, @ref{Data filling} and @ref{Make another data}).
+Перед первым использованием все переменные должны быть определены с помощью команд, создающих массивы (@ref{new}, @ref{var}, @ref{list}, @ref{copy}, @ref{read}, @ref{hist}, @ref{sum} и др., @pxref{Data create} и @ref{Make another data}).
 
-Command may have several set of possible arguments (for example, @code{plot ydat} and @code{plot xdat ydat}). All command arguments for a selected set must be specified. However, some arguments can have default values. These argument are printed in [], like @code{text ydat ['stl'='']} or @code{text x y 'txt' ['fnt'='' size=-1]}. At this, the record @code{[arg1 arg2 arg3 ...]} means @code{[arg1 [arg2 [arg3 ...]]]}, i.e. you can omit only tailing arguments if you agree with its default values. For example, @code{text x y 'txt' '' 1} or @code{text x y 'txt' ''} is correct, but @code{text x y 'txt' 1} is incorrect (argument @code{'fnt'} is missed).
+Команды могут иметь несколько наборов аргументов (например, @code{plot ydat} и @code{plot xdat ydat}). Все аргументы команды для выбранного набора должны быть указаны, однако часть из них могут иметь значения по умолчанию. Такие аргументы в описании команд будут помещены в квадратные скобки [], например @code{plot ydat ['stl'='' zval=nan]}. При этом запись @code{[arg1 arg2 arg3 ...]} подразумевает @code{[arg1 [arg2 [arg3 ...]]]}, т.е. опускать можно только аргументы с конца, если вы согласны с их значениями по умолчанию. Например, @code{plot ydat '' 1} или @code{plot ydat ''} правильно, а @code{plot ydat 1} не правильно (аргумент @code{'stl'} пропущен).
 
 
 @c ------------------------------------------------------------------
+@external
 @node Program flow commands, MGL definition, MGL scripts
 @section Program flow commands
 
@@ -177,6 +179,7 @@ Terminate execution.
 
 @ifclear UDAV
 @c ------------------------------------------------------------------
+@external
 @node mglParse class, , Program flow commands, MGL scripts
 @section mglParse class
 @cindex mglParse
@@ -276,3 +279,6 @@ Return the description of MGL command @var{name}.
 @end deftypefn
 
 @end ifclear
+
+@external
+
