@@ -19,7 +19,9 @@
  ***************************************************************************/
 #include <time.h>
 #include <locale.h>
+#if !defined(_MSC_VER) && !defined(__BORLANDC__)
 #include <getopt.h>
+#endif
 #include <vector>
 #include "mgl2/mgl.h"
 #include "mgl2/eval.h"
@@ -1846,6 +1848,7 @@ int mgl_cmd_smp(const void *a, const void *b)
 	return strcmp(aa->name, bb->name);
 }
 //-----------------------------------------------------------------------------
+#if !defined(_MSC_VER) && !defined(__BORLANDC__)
 static struct option longopts[] =
 {
 	{ "test",			no_argument,	&dotest,	1 },
@@ -1899,7 +1902,8 @@ void usage()
 		"-thread=num	- number of threads used"
 		"-test			- perform test\n"
 	);
-};
+}
+#endif
 //-----------------------------------------------------------------------------
 void save(mglGraph *gr,const char *name,const char *suf="")
 {
@@ -1962,6 +1966,7 @@ int main(int argc,char **argv)
 //	mglGraphIDTF u3d;
 	mglGraph *gr = NULL;
 	mglSample *s=samp;
+#if !defined(_MSC_VER) && !defined(__BORLANDC__)
 	while(( ch = getopt_long_only(argc, argv, "", longopts, NULL)) != -1)
 		switch(ch)
 		{
@@ -1979,6 +1984,7 @@ int main(int argc,char **argv)
 			case '?':
 			default:	usage();	return 0;
 		}
+#endif
 
 	gr = new mglGraph;
 
