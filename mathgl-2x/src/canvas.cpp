@@ -282,7 +282,7 @@ void mglCanvas::quad_plot(long p1, long p2, long p3, long p4)
 //-----------------------------------------------------------------------------
 mreal mglCanvas::text_plot(long p,const wchar_t *text,const char *font,mreal size,mreal sh,mreal col,bool rot)
 {
-	if(p<0 || mgl_isnan(Pnt[p].x))	return 0;
+	if(p<0 || mgl_isnan(Pnt[p].x) || !text || *text==0)	return 0;
 	if(size<0)	size *= -FontSize;
 	if(!font)	font="";
 

@@ -825,11 +825,19 @@ void mglCanvas::fast_draw(long k1, long k2, mglDrawReg *dr)
 	y1=y1>dr->y1?y1:dr->y1;	y2=y2<dr->y2?y2:dr->y2-1;
 	if(x1>x2 || y1>y2)	return;
 
-	register long i;
+	register long i, c;
 	if(hor)	for(i=x1;i<=x2;i++)
-		pnt_plot(i, p1.y+d.y*(i-p1.x)/d.x, p1.z+d.z*(i-p1.x)/d.x+pw, r);
+	{
+		c = long(p1.y+d.y*(i-p1.x)/d.x);
+		if(c>=y1 && c<=y2)
+			pnt_plot(i, c, p1.z+d.z*(i-p1.x)/d.x+pw, r);
+	}
 	else	for(i=y1;i<=y2;i++)
-		pnt_plot(p1.x+d.x*(i-p1.y)/d.y, i, p1.z+d.z*(i-p1.y)/d.y+pw, r);
+	{
+		c = long(p1.x+d.x*(i-p1.y)/d.y);
+		if(c>=x1 && c<=x2)
+			pnt_plot(c, i, p1.z+d.z*(i-p1.y)/d.y+pw, r);
+	}
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::pnt_draw(long k, mglDrawReg *dr)

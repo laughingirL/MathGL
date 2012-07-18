@@ -43,7 +43,9 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 34. Hotkeys
 35. Check disabling completer in UDAV
 36. Add line numbers in editor.
-37. Curved coordinates shouldn't influence on legend (and any arbitrary placed objects) -- check!!!
+
+37. Check triangulation sample!!!
+38. Check time label rotation (see -test)
 
 ============= DOCS =============
 

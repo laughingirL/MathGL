@@ -19,10 +19,10 @@
 Класс реализует элемент интерфейса FLTK для отображения графики MathGL. Класс определен в @code{#include <mgl2/fltk.h>}.
 @end deftp
 
-@mreal
+@float
 @image{fltk, 7cm}
 @caption{Пример окна FLTK с графикой MathGL.}
-@end mreal
+@end float
 
 @deftp {Class} mglGraphQT
 Создает окно используя библиотеку Qt. Окно имеет панель инструментов и меню  для упрощения действий с графиками. ``Присоединенный'' класс элемента интерфейса -- @code{QMathGL}. Класс определен в @code{#include <mgl2/mgl_qt.h>}.
@@ -32,19 +32,19 @@
 Класс реализует элемент интерфейса Qt для отображения графики MathGL. Класс определен в @code{#include <mgl2/qt.h>}.
 @end deftp
 
-@mreal
+@float
 @image{qt, 7cm}
 @caption{Пример окна Qt с графикой MathGL.}
-@end mreal
+@end float
 
 @deftp {Class} mglGraphGLUT
 Создает окно используя библиотеку GLUT. Класс определен в @code{#include <mgl2/glut.h>}.
 @end deftp
 
-@mreal
+@float
 @image{glut, 7cm}
 @caption{Пример окна GLUT с графикой MathGL.}
-@end mreal
+@end float
 
 @menu
 * Fl_MathGL class::             

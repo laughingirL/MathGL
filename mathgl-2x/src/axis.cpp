@@ -50,9 +50,8 @@ void mgl_wcstrim(wchar_t *str)
 	wchar_t *c = mgl_wcsdup(str);
 	unsigned long n=wcslen(str);
 	long k;
-	for(k=0;k<long(wcslen(str));k++)		if(str[k]>' ')	break;
-	wcscpy(c,&(str[k]));
-	n = wcslen(c);
+	for(k=0;k<n;k++)	if(str[k]>' ')	break;
+	wcscpy(c,str+k);	n = wcslen(c);
 	for(k=n-1;k>=0;k--)	if(c[k]>' ')	break;
 	c[k+1] = 0;
 	wcscpy(str,c);	free(c);
@@ -252,6 +251,7 @@ void mglCanvas::SetTickTime(char dir, mreal d, const char *t)
 		{	d = mgl_adj_val(abs(t1.tm_sec-t2.tm_sec));	d = d>1?d:1;	}
 		else	// adjust msec. NOTE: this is not supported by localtime() !!!
 			d = mgl_adj_val(fabs(aa.v2-aa.v1));
+		aa.ds = 0;
 	}
 
 	aa.dv = d;	aa.f = 1;	aa.txt.clear();
@@ -382,7 +382,7 @@ void mglCanvas::LabelTicks(mglAxis &aa)
 	if(aa.ch=='y')	aa.v0 = aa.org.y;
 	if(aa.ch=='z')	aa.v0 = aa.org.z;
 
-	wchar_t buf[64];
+	wchar_t buf[64]=L"";
 	mreal v,v0,v1,w;
 	int d,ds;
 	if(aa.f)	return;

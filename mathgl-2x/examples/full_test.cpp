@@ -45,12 +45,9 @@ void smgl_combined(mglGraph *gr);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	gr->SubPlot(2,2,0,"");
-	gr->Line(mglPoint(-1,-1),mglPoint(-0.5,1),"qAI");
-	gr->Curve(mglPoint(-0.6,-1),mglPoint(1,1),mglPoint(0,1),mglPoint(1,1),"rA");
-	
-	gr->Light(true);
-	gr->SubPlot(2,2,1);	gr->Title("Face[xyz]");
+	gr->SetRange('x',1341610306,1341612408);
+	gr->SetTicksTime('x');
+	gr->Axis();
 	return;
 
 	/*	mglParse par;
@@ -1986,7 +1983,7 @@ int main(int argc,char **argv)
 		}
 #endif
 
-	gr = new mglGraph;
+	gr = new mglGraph;	//gr->SetQuality(0);
 
 	if(mini)		{	gr->SetSize(190,145);	suf = "-sm";	}
 	else if(big)

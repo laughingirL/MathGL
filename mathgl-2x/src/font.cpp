@@ -107,7 +107,7 @@ float mglFont::Width(const wchar_t *str,const char *how) const
 //-----------------------------------------------------------------------------
 float mglFont::Puts(const wchar_t *str,int font,int align, float col) const
 {
-	if(numg==0)	return 0;
+	if(numg==0 || !str || *str==0)	return 0;
 	float ww=0,w=0,h = (align&4) ? 500./fact[0] : 0;
 	size_t size = wcslen(str)+1,i,num=0;
 	if(parse)
@@ -156,7 +156,7 @@ float mglFont::Puts(const wchar_t *str,int font,int align, float col) const
 //-----------------------------------------------------------------------------
 float mglFont::Width(const wchar_t *str,int font) const
 {
-	if(numg==0)	return 0;
+	if(numg==0 || !str || *str==0)	return 0;
 	float ww=0,w=0;
 	unsigned size = wcslen(str)+1,i;
 	if(parse)
@@ -287,7 +287,7 @@ unsigned mglFont::Parse(const wchar_t *s) const
 void mglFont::Convert(const wchar_t *str, unsigned *res) const
 {
 	register unsigned r,i,j,k,i0;
-	wchar_t s[128], ch;		// TeX command and current char
+	wchar_t s[128]=L"", ch;		// TeX command and current char
 	for(i=j=0;str[i];i++)
 	{
 		ch = str[i];
@@ -743,8 +743,8 @@ mglFont::mglFont(const char *name, const char *path)
 	parse = true;	numg=0;	gr=0;
 //	if(this==&mglDefFont)	Load(name, path);	else	Copy(&mglDefFont);
 	if(this!=&mglDefFont)	Copy(&mglDefFont);
-	if(this==&mglDefFont && (!name || name[0]==0))	Load(MGL_DEF_FONT_NAME,0);
-	else if(name && name[0])	Load(name, path);
+	else if(name && *name)	Load(name, path);
+	else	Load(MGL_DEF_FONT_NAME,0);
 }
 mglFont::~mglFont()	{	Clear();	}
 void mglFont::Restore()	{	Copy(&mglDefFont);	}
