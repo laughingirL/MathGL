@@ -719,7 +719,7 @@ void mgl_labelw_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const wchar_t *text, const 
 				else if(text[k+1]=='z')	mglprintf(buf+l,nn-l,L"%.2g",zz);
 				l=wcslen(buf);	k++;
 			}
-			gr->text_plot(kk, buf, fnt, size, 0.03);
+			gr->text_plot(kk, buf, fnt, size, 0.05);
 		}
 	}
 	delete []buf;	gr->EndGroup();

@@ -536,7 +536,7 @@ void mglCanvas::DrawLabels(mglAxis &aa)
 //	if(get(MGL_DISABLE_SCALE) && ((aa.dir.x==0 && aa.org.x<0) || (aa.dir.y==0 && aa.org.y>0)))	pos[0]='T';
 	if(aa.ch=='c')	pos[0]=(aa.ns==0 || aa.ns==3)?'t':'T';
 	if(aa.ch=='T')	pos[0]='T';
-	mreal *w=new mreal[n], h = TextHeight(FontDef,-1)/4, c=NAN, l=NAN, tet=0, v, vv;	// find sizes
+	mreal *w=new mreal[n], h = TextHeight(FontDef,-1)/3, c=NAN, l=NAN, tet=0, v, vv;	// find sizes
 	long *kk=new long[n];
 	for(i=0;i<n;i++)
 	{

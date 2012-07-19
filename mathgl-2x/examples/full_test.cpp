@@ -45,6 +45,33 @@ void smgl_combined(mglGraph *gr);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
+	mglData ys(10), y;
+	ys.Modify("0.8*sin(pi*2*x)+0.2*rnd");
+	mgls_prepare1d(&y);
+
+	gr->SubPlot(2,2,0);
+	gr->SetOrigin(mglPoint(-1,-1,-1));	gr->Axis();
+	gr->SetOrigin(mglPoint(1,1,1));	gr->Axis();
+	gr->Box();	gr->Plot(ys," *");	gr->Label(ys,"y=%y");
+	gr->Label('x',"x_y label");	gr->Label('y',"y_y label");	gr->Label('z',"z_y label");
+
+	gr->SubPlot(2,2,1);	gr->Rotate(40,60);
+	gr->SetOrigin(mglPoint(-1,-1,-1));	gr->Axis();
+	gr->SetOrigin(mglPoint(1,1,1));	gr->Axis();
+	gr->SetOrigin(mglPoint(NAN,NAN,NAN));	gr->Axis();
+	gr->Label('x',"x_y label");	gr->Label('y',"y_y label");	gr->Label('z',"z_y label");
+
+	gr->SubPlot(2,2,2);
+	gr->Box();	gr->Plot(y.SubData(-1,0));
+	gr->Text(y,"This is very very long string drawn along a curve",":k");
+	gr->Text(y,"Another string drawn above a curve","T:r");
+
+	gr->SubPlot(2,2,3);
+	mglPoint p;
+	gr->Mark(p,".r");
+	gr->Puts(p,"A","@:C",-1);
+	gr->Puts(p,"A","@:C",-2);
+	
 	gr->SetRange('x',1341610306,1341612408);
 	gr->SetTicksTime('x');
 	gr->Axis();

@@ -87,9 +87,9 @@ int Height;			///< Height of the image
 int Depth;			///< Depth of the image
 int CurFrameId;		///< Number of automaticle created frames
 GifFileType *gif;*/
-	SetTickRotate(true);	SetTickSkip(true);
+	Flag = 0;	SetTickRotate(true);	SetTickSkip(true);
 	SetWarn(mglWarnNone,"");
-	ObjId = -1;	HighId = INT_MIN;	Flag = 0;
+	ObjId = -1;	HighId = INT_MIN;
 	SetFunc(0,0);	Stop=false;	CutOff(0);	Ternary(0);
 	SetRanges(mglPoint(-1,-1,-1,-1), mglPoint(1,1,1,1));
 	SetBarWidth(0.7);	SetMarkSize(1);	SetArrowSize(1);
@@ -312,13 +312,13 @@ mreal mglCanvas::text_plot(long p,const wchar_t *text,const char *font,mreal siz
 	}
 	if(ll==0)	return 0;
 
-	mreal shift = -sh-0.2, fsize=size/6.5*font_factor, h = fnt->Height(font)*fsize, w;
+	mreal fsize=size/6.5*font_factor, h = fnt->Height(font)*fsize, w, shift = -sh*h-2;
 	// text drawing itself
 	Push();
 	inv = inv ^ (strchr(font,'T')!=0);
-	if(inv)	shift = sh+0.2;
-	shift += 0.11;	// Correction for glyph rotation around proper point
-	shift *= h;
+	if(inv)	shift = 0.17*h-shift;
+	shift += 1.1;	// Correction for glyph rotation around proper point
+//	shift *= h;
 
 	int align;	mglGetStyle(font,0,&align);	align = align&3;
 	B.x = q.x;	B.y = q.y - shift;	B.z = q.z;

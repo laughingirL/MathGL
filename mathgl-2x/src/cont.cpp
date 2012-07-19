@@ -103,7 +103,7 @@ void mgl_string_curve(mglBase *gr,long f,long ,long *ff,long *nn,const wchar_t *
 	if(rev)	pos=-pos;
 	for(j=0;j<len;j++)	// draw text
 	{	L[0] = text[align!=2?j:len-1-j];	s = pt[j+1]-pt[j];	l = !s;
-	gr->text_plot(gr->AddPnt(pt[j]-(pos*h)*l,c,s,-1,-1),L,font,size,0,c);	}
+	gr->text_plot(gr->AddPnt(pt[j]-(pos*h)*l,c,s,-1,-1),L,font,size,0.05,c);	}
 	delete []wdt;	delete []pt;	delete []fnt;
 }
 //-----------------------------------------------------------------------------
