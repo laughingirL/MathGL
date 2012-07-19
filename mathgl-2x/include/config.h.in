@@ -7,7 +7,11 @@
 
 #define MGL_HAVE_GSL ${MGL_HAVE_GSL}
 #define MGL_HAVE_LTDL ${MGL_HAVE_LTDL}
+#if defined(_MSC_VER) || defined(__BORLANDC__)
+#define MGL_HAVE_PTHREAD 0
+#else
 #define MGL_HAVE_PTHREAD ${MGL_HAVE_PTHREAD}
+#endif
 #define MGL_HAVE_HDF4 ${MGL_HAVE_HDF4}
 #define MGL_HAVE_HDF5 ${MGL_HAVE_HDF5}
 #define MGL_HAVE_HDF5_18 ${MGL_HAVE_HDF5_18}

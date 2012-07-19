@@ -134,7 +134,7 @@ bool mglCheck(char *str,int n);
 int mglFindInText(char *str,const char *lst);
 //-----------------------------------------------------------------------------
 #if MGL_HAVE_GSL
-gsl_rng *mgl_rng=0;
+gsl_rng *mgl_rng=0;	// TODO: should be deleted by gsl_rng_free() but I don't know where :(
 #endif
 void mgl_srnd(long seed)
 {
