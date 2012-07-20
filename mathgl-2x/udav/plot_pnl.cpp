@@ -80,6 +80,7 @@ void PlotPanel::execute()
 {
 	if(mglAutoSave)	save();
 	raisePanel(this);
+	emit clearWarn();
 	QTime t;	t.start();
 	draw->text=textMGL->toPlainText();
 	draw->line=curPos;	mgl->update();

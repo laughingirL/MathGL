@@ -2687,13 +2687,15 @@ int mgls_info(mglGraph *gr, long , mglArg *a, int k[10], const char *)
 {
 	if(k[0]==1)	gr->SetWarn(-1,a[0].d->PrintInfo());
 	else if(k[0]==2)	gr->SetWarn(-1,a[0].s.c_str());
-	else	return 1;
+	else
+	{	char buf[128];	sprintf(buf,"value = %g",a[0].v);	gr->SetWarn(-1,buf);	}
 	return 0;
 }
 void mglc_info(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 {
 	if(k[0]==1)	mglprintf(out,1024,L"gr->SetWarn(-1,%s.PrintInfo());", a[0].s.c_str());
 	if(k[0]==2)	mglprintf(out,1024,L"gr->SetWarn(-1,\"%s\");",a[0].s.c_str());
+	else	mglprintf(out,1024,L"gr->SetWarn(-1,\"value = %g\");",a[0].v);
 }
 //-----------------------------------------------------------------------------
 int mgls_integrate(mglGraph *, long , mglArg *a, int k[10], const char *)

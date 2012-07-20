@@ -60,6 +60,7 @@ signals:
 	void setStatus(const QString &);
 	void animSwitch(bool);
 	void giveFocus();
+	void clearWarn();
 
 private slots:
 	void animText(const QString &);

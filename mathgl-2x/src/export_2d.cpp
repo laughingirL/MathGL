@@ -79,13 +79,13 @@ void put_line(HMGL gr, void *fp, bool gz, long i, mreal wp, mglColor cp,int st, 
 				}
 				else if(p1.x==x0 && p1.y==y0)
 				{
-						ok=true;	q.type = -2;
+					ok=true;	q.type = -2;
 					x0 = p2.x;	y0=p2.y;
 				}
 			}
 		}
 	}
-	for(j=i;j<gr->GetPrmNum();j++)
+	for(j=0;j<gr->GetPrmNum();j++)
 	{
 		mglPrim &q = gr->GetPrm(j);
 		if(q.type==-2)	q.type = 1;

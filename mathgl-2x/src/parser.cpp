@@ -32,24 +32,25 @@ void (*mgl_ask_func)(const wchar_t *, wchar_t *)=0;
 void mgl_ask_gets(const wchar_t *quest, wchar_t *res)
 {	printf("%ls\n",quest);	if(!fgetws(res,1024,stdin))	*res=0;	}
 //-----------------------------------------------------------------------------
-mglFunc::mglFunc(long p, const wchar_t *f, mglFunc *prev)
+mglFunc::mglFunc(const mglFunc &f)
+{	pos=f.pos;	narg=f.narg;	wcsncpy(func,f.func,64);	}
+mglFunc::mglFunc(long p, const wchar_t *f)
 {
-	pos = p;	next = prev;
-	register long i;
-	for(i=0;(isalnum(f[i]) || f[i]=='_') && i<31;i++)	func[i]=f[i];
-	func[i]=0;
-	narg = wcstol(f+i+1,0,0);
+	pos = p;
+	register size_t i;
+	for(i=0;(isalnum(f[i]) || f[i]=='_') && i<63;i++)	func[i]=f[i];
+	func[i]=0;	narg = wcstol(f+i+1,0,0);
 	if(narg<0 || narg>9)	narg=0;
 }
 //-----------------------------------------------------------------------------
 long mglParser::IsFunc(const wchar_t *name, int *na)
 {
-	mglFunc *f=func;
-	while(f)
+	register size_t i;
+	for(i=0;i<func.size();i++)
 	{
-		if(!wcscmp(f->func.c_str(), name))
-		{	if(na)	*na=f->narg;	return f->pos;	}
-		f = f->next;
+		const mglFunc &f = func[i];
+		if(!wcscmp(f.func, name))
+		{	if(na)	*na=f.narg;	return f.pos;	}
 	}
 	return 0;
 }
@@ -58,13 +59,12 @@ void mglParser::ScanFunc(const wchar_t *line)
 {
 	static long num=0;
 	if(!line)
-	{	if(func)	delete func;
-		num=0;	func=0;	return;	}
+	{	func.clear();	num=0;	return;	}
 	num++;
 	if(wcsncmp(line,L"func",4) || line[4]>' ')	return;
 	register long i;
 	for(i=4;line[i]<=' ' || line[i]=='\'';i++);
-	func = new mglFunc(num-1, line+i, func);
+	func.push_back(mglFunc(num-1, line+i));
 }
 //-----------------------------------------------------------------------------
 wchar_t *mgl_str_copy(const char *s)
@@ -172,7 +172,7 @@ mglNum::~mglNum()
 //-----------------------------------------------------------------------------
 mglParser::mglParser(bool setsize)
 {
-	DataList=0;	NumList=0;	func=0;	fn_stack=0;
+	DataList=0;	NumList=0;	fn_stack=0;
 //	wchar_t *par[40];	///< Parameter for substituting instead of $1, ..., $9
 	out=0;	*leg=0;	InUse = 1;
 	Skip=Stop=for_br=false;

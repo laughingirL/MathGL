@@ -220,6 +220,7 @@ MainWindow::MainWindow(QWidget *wp) : QMainWindow(wp)
 	edit = new TextPanel(this);	edit->graph = graph;
 	graph->textMGL = edit->edit;
 	connect(graph->mgl,SIGNAL(showWarn(QString)),mess,SLOT(setText(QString)));
+	connect(graph,SIGNAL(clearWarn()),mess,SLOT(clear()));
 	ltab->addTab(edit,QPixmap(":/xpm/text-x-generic.png"),tr("Script"));
 
 	calcWnd->setWidget(createCalcDlg(this, edit->edit));

@@ -87,7 +87,7 @@ int Height;			///< Height of the image
 int Depth;			///< Depth of the image
 int CurFrameId;		///< Number of automaticle created frames
 GifFileType *gif;*/
-	Flag = 0;	SetTickRotate(true);	SetTickSkip(true);
+	SetTickRotate(true);	SetTickSkip(true);
 	SetWarn(mglWarnNone,"");
 	ObjId = -1;	HighId = INT_MIN;
 	SetFunc(0,0);	Stop=false;	CutOff(0);	Ternary(0);
@@ -97,12 +97,14 @@ GifFileType *gif;*/
 	SetTranspType(0);		SetMeshNum(0);	// NOTE: default MeshNum=0
 	SetRotatedText(true);	CurrPal = 0;
 	SetLegendMarks();		SetFontSize(4);
-	SetTuneTicks(-1);	SetAmbient();
+	SetTuneTicks(-1);		SetAmbient();
 	PlotId = "frame";		clr(MGL_DISABLE_SCALE);
+	clr(MGL_USE_GMTIME);	clr(MGL_NOSUBTICKS);
+	SetDifLight(false);		SetReduceAcc(false);
 	SetDefScheme("BbcyrR");	SetPalette(MGL_DEF_PAL);
-	SetPenPal("k-1");
+	SetPenPal("k-1");		Alpha(false);
 	SetTicks('x');	SetTicks('y');	SetTicks('z');	SetTicks('c');
-	stack.clear();	Restore();	Alpha(false);
+	stack.clear();	Restore();
 	SetPlotFactor(0);	InPlot(0,1,0,1,false);
 	SetTickLen(0);	SetCut(true);
 	AdjustTicks("xyzc",true);	Clf();

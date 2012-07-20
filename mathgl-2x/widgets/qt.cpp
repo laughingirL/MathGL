@@ -209,8 +209,7 @@ void QMathGL::update()
 		if(!isHidden())	QApplication::restoreOverrideCursor();
 		emit refreshData();
 
-		QString buf = gr->Mess.c_str();
-		emit showWarn(buf);
+		emit showWarn(gr->Mess.c_str());
 		mousePos="";
 	}
 	refresh();
