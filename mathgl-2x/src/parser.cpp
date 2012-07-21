@@ -681,12 +681,15 @@ int mglParser::Parse(mglGraph *gr, const wchar_t *string, long pos)
 					FILE *fp = fopen(a[0].s.c_str(),"rt");
 					if(fp)
 					{
-						mglParser *par = new mglParser(AllowSetSize);
-						par->DataList=DataList;	par->NumList=NumList;	par->Cmd=Cmd;
-						par->Execute(gr,fp);
-						DataList=par->DataList;	par->DataList=0;
-						NumList =par->NumList;	par->NumList=0;
-						par->Cmd=0;	delete par;	fclose(fp);
+						register int i;
+						mglParser *prs = new mglParser(AllowSetSize);
+						prs->DataList=DataList;	prs->NumList=NumList;	prs->Cmd=Cmd;
+						for(i=10;i<30;i++)	prs->AddParam(i,par[i]);
+						prs->Execute(gr,fp);
+						for(i=10;i<30;i++)	AddParam(i,prs->par[i]);
+						DataList=prs->DataList;	prs->DataList=0;
+						NumList =prs->NumList;	prs->NumList=0;
+						prs->Cmd=0;	delete par;	fclose(fp);
 					}
 					else	n=1;
 				}

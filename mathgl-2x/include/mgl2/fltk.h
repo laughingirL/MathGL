@@ -86,18 +86,18 @@ protected:
 
 	const Fl_Menu_Item *popup;	///< pointer to popup menu items
 	Fl_Widget *wpar;			///< widget for popup menu
-	void *vpar;					///< parameter for popup menu
-	mreal tet,phi;				///< rotation angles
+	void *vpar;				///< parameter for popup menu
+	mreal tet,phi;			///< rotation angles
 	bool rotate;				///< flag for handle mouse
-	bool zoom;					///< flag for zoom by mouse
+	bool zoom;				///< flag for zoom by mouse
 	bool wire;
-	mreal x1,x2,y1,y2;			///< zoom region
-	int flag;					///< bitwise flag for general state (1-Alpha, 2-Light)
+	mreal x1,x2,y1,y2;		///< zoom region
+	int flag;				///< bitwise flag for general state (1-Alpha, 2-Light)
 	int x0,y0,xe,ye;			///< mouse position
 	char pos[128];
 
 	virtual void draw();		///< quick drawing function
-	int handle(int code);		///< handle mouse events
+	int handle(int code);	///< handle mouse events
 	void resize(int x, int y, int w, int h);	///< resize control
 };
 //-----------------------------------------------------------------------------
@@ -120,7 +120,7 @@ public:
 	void toggle_wire()	{	toggle(wire, wire_bt, "Graphics/Wire");	}
 	void toggle_zoom()	{	toggle(zoom, zoom_bt);	}
 	void toggle_rotate(){	toggle(rotate, rotate_bt);	}
-	void setoff_zoom()	{	setoff(zoom,zoom_bt);	}
+	void setoff_zoom()	{	setoff(zoom, zoom_bt);	}
 	void setoff_rotate(){	setoff(rotate, rotate_bt);	}
 	bool is_sshow()		{	return sshow;	}
 
