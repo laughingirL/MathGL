@@ -20,6 +20,8 @@
 #include "mgl2/canvas.h"
 #include "mgl2/canvas_cf.h"
 #include <time.h>
+#include <algorithm>
+#include <vector>
 #undef _GR_
 #define _GR_	((mglCanvas *)(*gr))
 #define _Gr_	((mglCanvas *)(gr))
@@ -58,66 +60,67 @@ bool mgl_is_same(HMGL gr, const mglPrim &pr,mreal wp,mglColor cp,int st)
 //-----------------------------------------------------------------------------
 void put_line(HMGL gr, void *fp, bool gz, long i, mreal wp, mglColor cp,int st, const char *ifmt, const char *nfmt, bool neg, mreal fc)
 {
-	const mglPnt pp = gr->GetPnt(gr->GetPrm(i).n1);
-	mreal x0=pp.x, y0=pp.y;
+	register long n1=gr->GetPrm(i).n1, n2=gr->GetPrm(i).n2;
+	if(n1<0 || n2<0)	return;
+	const mglPnt &pp1 = gr->GetPnt(n1), &pp2 = gr->GetPnt(n2);
+	mreal x0=pp1.x, y0=pp1.y;
 	bool ok=true;
 	register long j;	// first point
-	while(ok)
+	std::vector<long> ids;
+	while(ok)	// try to find starting point
 	{
 		for(ok=false,j=i+1;j<gr->GetPrmNum();j++)
 		{
 			mglPrim &q = gr->GetPrm(j);
 			if(q.type>1)	break;
-			if(mgl_is_same(gr, q,wp,cp,st) && q.type==1)	// previous point
+			if(mgl_is_same(gr, q,wp,cp,st) && q.type==1 && q.n1>=0 && q.n2>=0)	// previous point
 			{
-				const mglPnt p1 = gr->GetPnt(q.n1);
-				const mglPnt p2 = gr->GetPnt(q.n2);
+				const mglPnt &p1 = gr->GetPnt(q.n1);
+				const mglPnt &p2 = gr->GetPnt(q.n2);
 				if(p2.x==x0 && p2.y==y0)
 				{
-					ok=true;	q.type = -2;
-					x0 = p1.x;	y0=p1.y;
+					ok = true;	ids.push_back(q.n1);
+					x0 = p1.x;	y0 = p1.y;	q.type = -1;
 				}
 				else if(p1.x==x0 && p1.y==y0)
 				{
-					ok=true;	q.type = -2;
-					x0 = p2.x;	y0=p2.y;
+					ok = true;	ids.push_back(q.n2);
+					x0 = p2.x;	y0 = p2.y;	q.type = -1;
 				}
 			}
 		}
 	}
-	for(j=0;j<gr->GetPrmNum();j++)
+	std::reverse(ids.begin(),ids.end());
+	ids.push_back(n1);	ids.push_back(n2);
+	x0 = pp2.x;	y0 = pp2.y;	ok = true;
+	while(ok)	// try to find starting point
 	{
-		mglPrim &q = gr->GetPrm(j);
-		if(q.type==-2)	q.type = 1;
-	}
-	mgl_printf(fp, gz, ifmt,fc*x0,(neg?_Gr_->GetHeight()-y0:y0)*fc);	ok=true;
-	long m=1;
-	while(ok)
-	{
-		for(ok=false,j=i;j<gr->GetPrmNum();j++)
+		for(ok=false,j=i+1;j<gr->GetPrmNum();j++)
 		{
 			mglPrim &q = gr->GetPrm(j);
 			if(q.type>1)	break;
-			if(mgl_is_same(gr,q,wp,cp,st) && q.type==1)
+			if(mgl_is_same(gr, q,wp,cp,st) && q.type==1 && q.n1>=0 && q.n2>=0)	// next point
 			{
-				const mglPnt p1 = gr->GetPnt(q.n1);
-				const mglPnt p2 = gr->GetPnt(q.n2);
-				if(p1.x==x0 && p1.y==y0)
+				const mglPnt &p1 = gr->GetPnt(q.n1);
+				const mglPnt &p2 = gr->GetPnt(q.n2);
+				if(p2.x==x0 && p2.y==y0)
 				{
-					q.type = -1;	x0 = p2.x;	y0=p2.y;
-					mgl_printf(fp, gz, nfmt,fc*x0,(neg?_Gr_->GetHeight()-y0:y0)*fc);
-					if(m>10)	{	m=0;	mgl_printf(fp, gz, "\n");	}
-					ok=true;	m++;
+					ok = true;	ids.push_back(q.n1);
+					x0 = p1.x;	y0 = p1.y;	q.type = -1;
 				}
-				else if(p2.x==x0 && p2.y==y0)
+				else if(p1.x==x0 && p1.y==y0)
 				{
-					q.type = -1;	x0 = p1.x;	y0=p1.y;
-					mgl_printf(fp, gz, nfmt,fc*x0,(neg?_Gr_->GetHeight()-y0:y0)*fc);
-					if(m>10)	{	m=0;	mgl_printf(fp, gz, "\n");	}
-					ok=true;	m++;
+					ok = true;	ids.push_back(q.n2);
+					x0 = p2.x;	y0 = p2.y;	q.type = -1;
 				}
 			}
 		}
+	}
+	for(j=0;j<ids.size();j++)
+	{
+		const mglPnt &p = gr->GetPnt(ids[j]);
+		x0 = p.x;	y0 = p.y;
+		mgl_printf(fp, gz, j>0?nfmt:ifmt,fc*x0,(neg?_Gr_->GetHeight()-y0:y0)*fc);
 	}
 }
 //-----------------------------------------------------------------------------

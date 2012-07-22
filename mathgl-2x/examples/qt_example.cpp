@@ -18,6 +18,9 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include "mgl2/window.h"
+#if defined(WIN32) || defined(_MSC_VER) || defined(__BORLANDC__)
+#include <windows.h>
+#endif
 //-----------------------------------------------------------------------------
 int test_wnd(mglGraph *gr);
 int sample(mglGraph *gr);
@@ -46,7 +49,7 @@ void Foo::Calc()
 {
 	for(int i=0;i<30;i++)   // do calculation
 	{
-#ifdef WIN32
+#if defined(WIN32) || defined(_MSC_VER) || defined(__BORLANDC__)
 		Sleep(1000);
 #else
 		sleep(1);           // which can be very long

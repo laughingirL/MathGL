@@ -104,7 +104,7 @@ GifFileType *gif;*/
 	SetDefScheme("BbcyrR");	SetPalette(MGL_DEF_PAL);
 	SetPenPal("k-1");		Alpha(false);
 	SetTicks('x');	SetTicks('y');	SetTicks('z');	SetTicks('c');
-	stack.clear();	Restore();
+	stack.clear();	Restore();	DefColor('k');
 	SetPlotFactor(0);	InPlot(0,1,0,1,false);
 	SetTickLen(0);	SetCut(true);
 	AdjustTicks("xyzc",true);	Clf();

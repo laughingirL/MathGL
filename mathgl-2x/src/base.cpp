@@ -134,6 +134,7 @@ long mglBase::AddPnt(mglPoint p, mreal c, mglPoint n, mreal a, int scl)
 		q.c=c;	q.t=q.ta=a;	q.u=n.x;	q.v=n.y;	q.w=n.z;
 	}
 	register long ci=long(c);
+	if(ci<0 || ci>=Txt.size())	ci=0;	// NOTE never should be here!!!
 	const mglTexture &txt=Txt[ci];
 	txt.GetC(c,a,q);	// RGBA color
 

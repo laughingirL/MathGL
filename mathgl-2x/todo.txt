@@ -22,7 +22,6 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 
 17. curved text (in new sample) look not so good
 18. emulate fog in EPS/SVG
-19. line segment losses in EPS ???
 
 20. Add mglDataC for complex data -- main diff is reading/saving data
 21. MGL testing system ???
