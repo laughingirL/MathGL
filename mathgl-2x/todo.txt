@@ -43,7 +43,7 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 35. Check disabling completer in UDAV
 36. Add line numbers in editor.
 
-37. Check triangulation sample!!!
+37. Center ticks labels + check gap for axis labels (at axis rotation)
 
 ============= DOCS =============
 

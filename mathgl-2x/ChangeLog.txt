@@ -1,15 +1,19 @@
-2.1 Released ?? July 2012
+2.0.3 Released ?? July 2012
 
-* Add gap between 1d plots for avoiding possible undetermined overlapping.
-* Add SetTimeUTC() for using UTC time instead of local one
-* Add SetTickShift() for additional shift of tick labels
-* Add cmake options 'enable-png' and 'enable-zlib'
+* Make code compilable by compilers GNU/MinGW GCC, Clang, MS VisualStudio
 * Add mglTriangulation() using s_hull_pro algorithm
 * Add mglData::Grid() and mglGraph::DataGrid() for filling regular data by values of triangulated surface
+* Add cmake options 'enable-png' and 'enable-zlib'
+* Add SetTimeUTC() for using UTC time instead of local one
+* Add SetTickShift() for additional shift of tick labels
 * Add mglGraph::MPI_Send() and mglGraph::MPI_Recv()
+* Vector plots now draw vector at edges, which are directed out of bounding box
+* Add gap between 1d plots for avoiding possible undetermined overlapping.
 * Add parallel build for documentation
+* Bugfixes for memory leaks and uninitialized variables
 * Bugfix for setting text size
 * Bugfix for handling NAN color value
+* Bugfix for missing lines in export to EPS/SVG
 
 2.0.2 Released 24 May 2012
 

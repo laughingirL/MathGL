@@ -70,7 +70,7 @@ void mgl_traj_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 			}
 			else dd = len;
 
-			nx = gr->AddPnt(p1);	ny = gr->AddPnt(p1+dd*p2);
+			nx = gr->AddPnt(p1);	ny = gr->AddPnt(p1+dd*p2,-1,mglPoint(NAN),-1,2);
 			gr->vect_plot(nx,ny);
 		}
 	}
@@ -154,6 +154,9 @@ void mgl_vect_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, con
 			if(grd)	{	c1=gr->GetC(ss,dd*xm-0.5,false);	c2=gr->GetC(ss,dd*xm,false);}
 			else	c1 = c2 = gr->GetC(ss,dd*xm,false);
 			n1=gr->AddPnt(p1,c1);	n2=gr->AddPnt(p2,c2);
+			// allow vectors outside bounding box
+			if(n1<0 && n2>=0)	n1=gr->AddPnt(p1,c1,mglPoint(NAN),-1,2);
+			if(n2<0 && n1>=0)	n2=gr->AddPnt(p2,c2,mglPoint(NAN),-1,2);
 			if(dot)	{	gr->line_plot(n1,n2);	gr->mark_plot(n1,'.');	}
 			else	gr->vect_plot(n1,n2);
 		}
@@ -238,6 +241,9 @@ void mgl_vect_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 		if(grd)	{	c1=gr->GetC(ss,dd*xm-0.5,false);	c2=gr->GetC(ss,dd*xm,false);	}
 		else	c1 = c2 = gr->GetC(ss,dd*xm,false);
 		n1=gr->AddPnt(p1,c1);	n2=gr->AddPnt(p2,c2);
+		// allow vectors outside bounding box
+		if(n1<0 && n2>=0)	n1=gr->AddPnt(p1,c1,mglPoint(NAN),-1,2);
+		if(n2<0 && n1>=0)	n2=gr->AddPnt(p2,c2,mglPoint(NAN),-1,2);
 		if(dot)	{	gr->line_plot(n1,n2);	gr->mark_plot(n1,'.');	}
 		else	gr->vect_plot(n1,n2);
 	}
