@@ -52,7 +52,7 @@
 #define fmax(a,b)	((a)>(b))?(a):(b)
 #endif
 
-#define MGL_VER2	0.2
+#define MGL_VER2	0.3
 
 //#ifdef WIN32
 #if defined(_MSC_VER) || defined(__BORLANDC__)

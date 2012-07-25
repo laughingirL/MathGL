@@ -96,7 +96,7 @@ There are many functions, which can create data for output (see @ref{Data fillin
 @deftypefnx {C function} @code{HMDT} mgl_create_data ()
 @deftypefnx {C function} @code{HMDT} mgl_create_data_size (@code{int} mx, @code{int} my, @code{int} mz)
 @end ifclear
-Default constructor. Allocates the memory for data array and initializes it by zero. If string @var{eq} is specified then data will be filled by corresponding formula as in @ref{fill} function.
+Default constructor. Allocates the memory for data array and initializes it by zero. If string @var{eq} is specified then data will be filled by corresponding formula as in @ref{fill}.
 @end deftypefn
 
 @anchor{copy}
@@ -112,7 +112,7 @@ Default constructor. Allocates the memory for data array and initializes it by z
 @deftypefnx {Constructor on @code{mglData}} {} mglData (@code{const double *}dat2, @code{int} size)
 @deftypefnx {Constructor on @code{mglData}} {} mglData (@code{const double *}dat2, @code{int} size, @code{int} cols)
 @end ifclear
-Copy constructor. Allocates the memory for data array and copy values from other array. At this, if parameter @var{eq} is specified then the data will be modified by corresponding formula similarly to @ref{fill} function.
+Copy constructor. Allocates the memory for data array and copy values from other array. At this, if parameter @var{eq} is specified then the data will be modified by corresponding formula similarly to @ref{fill}.
 @end deftypefn
 
 @deftypefn {MGL command} {} read @sc{dat} 'fname'
@@ -160,7 +160,7 @@ Creates or recreates the array with specified size and fills it by zero. This fu
 @deftypefnx {Method on @code{mglData}} @code{void} Rearrange (@code{int} mx, @code{int} my=@code{0}, @code{int} mz=@code{0})
 @deftypefnx {C function} @code{void} mgl_data_rearrange (@code{HMDT} dat, @code{int} mx, @code{int} my, @code{int} mz)
 @end ifclear
-Rearrange dimensions without changing data array so that resulting sizes should  be @var{mx}*@var{my}*@var{mz} < nx*ny*nz. If some of parameter @var{my} or @var{mz} are zero then it will be selected to optimal fill of data array. For example, if @var{my}=0 then it will be change to @var{my}=nx*ny*nz/@var{mx} and @var{mz} will be 1.
+Rearrange dimensions without changing data array so that resulting sizes should  be @var{mx}*@var{my}*@var{mz} < nx*ny*nz. If some of parameter @var{my} or @var{mz} are zero then it will be selected to optimal fill of data array. For example, if @var{my}=0 then it will be change to @var{my}=nx*ny*nz/@var{mx} and @var{mz}=1.
 @end deftypefn
 
 @anchor{transpose}
@@ -239,7 +239,6 @@ Sort data rows (or slices in 3D case) by values of specified column @var{idx} (o
 @end deftypefn
 
 
-
 @c ------------------------------------------------------------------
 @external
 @node Data filling, File I/O, Data resizing, Data processing
@@ -308,7 +307,7 @@ Allocates memory and scanf the data from the string.
 @deftypefn {Method on @code{mglData}} @code{void} Link (@code{const mglData &}from)
 @deftypefnx {Method on @code{mglData}} @code{void} Link (@code{const mreal *}A, @code{int} NX, @code{int} NY=@code{1}, @code{int} NZ=@code{1})
 @deftypefnx {C function} @code{void} mgl_data_link (@code{HMDT} dat, @code{const mreal *}A, @code{int} NX, @code{int} NY, @code{int} NZ)
-Links external data array, i.e. don't delete it at exit.
+Links external data array, i.e. don't delete this array at exit.
 @end deftypefn
 @end ifclear
 
@@ -395,7 +394,7 @@ Copies value(s) from array @var{v} to the range of original array. Negative inde
 @deftypefnx {Method on @code{mglData}} @code{void} SetColumnId (@code{const char *}ids)
 @deftypefnx mglData @code{void} mgl_data_set_id (@code{const char *}ids)
 @end ifclear
-Sets the symbol @var{ids} for data columns. The string should contain one symbol 'a'...'z' per column. These ids are used in @ref{column} function.
+Sets the symbol @var{ids} for data columns. The string should contain one symbol 'a'...'z' per column. These ids are used in @ref{column}.
 @end deftypefn
 
 
@@ -591,14 +590,14 @@ Creates @var{n}-th points distribution of the data values in range [@var{v1}, @v
 @deftypefnx {Method on @code{mglData}} @code{mglData} Momentum (@code{char} dir, @code{const char *}how) @code{const}
 @deftypefnx {C function} @code{HMDT} mgl_data_momentum (@code{HCDT} dat, @code{char} dir, @code{const char *}how)
 @end ifclear
-Gets momentum (1D-array) of the data along direction @var{dir}. String @var{how} contain kind of momentum. The momentum is defined like as
+Gets momentum (1d-array) of the data along direction @var{dir}. String @var{how} contain kind of momentum. The momentum is defined like as
 @iftex
 @math{res_k = \sum_{ij} how(x_i,y_j,z_k) a_{ij}/\sum_{ij} a_{ij}}
 @end iftex
 @ifnottex
 res_k = \sum_ij how(x_i,y_j,z_k) a_ij/ \sum_ij a_ij
 @end ifnottex
-if @var{var}=@samp{z} and so on. Coordinates @samp{x}, @samp{y}, @samp{z} are data indexes normalized in range [0,1].
+if @var{dir}=@samp{z} and so on. Coordinates @samp{x}, @samp{y}, @samp{z} are data indexes normalized in range [0,1].
 @end deftypefn
 
 @anchor{sum}
@@ -754,7 +753,7 @@ Swaps the left and right part of the data in given direction (useful for Fourier
 @deftypefnx {Method on @code{mglData}} @code{void} Roll (@code{char} dir, @code{num})
 @deftypefnx {C function} @code{void} mgl_data_roll (@code{HMDT} dat, @code{char} dir, @code{num})
 @end ifclear
-Rolls the data along direction @var{dir}. Resulting array will be out[i] = ini[(i+num)%nx] if @code{dir='x'}.
+Rolls the data along direction @var{dir}. Resulting array will be out[i] = ini[(i+@var{num})%nx] if @code{dir='x'}.
 @end deftypefn
 
 @anchor{mirror}
@@ -869,6 +868,10 @@ Gets or prints to file @var{fp} or as message (in MGL) information about the dat
 
 @deftypefn {MGL command} {} info 'txt'
 Prints string @var{txt} as message.
+@end deftypefn
+
+@deftypefn {MGL command} {} info val
+Prints value of number @var{val} as message.
 @end deftypefn
 
 @cindex GetNx
@@ -1049,7 +1052,6 @@ Multiplies data element by the other one or by value.
 Divides each data element by the other one or by value.
 @end deftypefn
 
-
 @anchor{addto}
 @deftypefn {MGL command} {} addto dat dat2
 @deftypefnx {MGL command} {} addto dat @code{val}
@@ -1073,7 +1075,6 @@ Adds to each data element the other one or the value.
 @end ifclear
 Subtracts from each data element the other one or the value.
 @end deftypefn
-
 
 @ifclear UDAV
 @deftypefn {Library Function} mglData operator+ (@code{const mglData &}a, @code{const mglData &}b)
@@ -1183,7 +1184,6 @@ Solves equation du/dt = i*k0*@var{ham}(p,q,x,y,|u|)[u], where p=-i/k0*d/dx, q=-i
 @end ifclear
 Computes the Jacobian for transformation @{i,j,k@} to @{@var{x},@var{y},@var{z}@} where initial coordinates  @{i,j,k@} are data indexes normalized in range [0,1]. The Jacobian is determined by formula det||@math{dr_\alpha/d\xi_\beta}|| where @math{r}=@{@var{x},@var{y},@var{z}@} and @math{\xi}=@{i,j,k@}. All dimensions must be the same for all data arrays. Data must be 3D if all 3 arrays @{@var{x},@var{y},@var{z}@} are specified or 2D if only 2 arrays @{@var{x},@var{y}@} are specified.
 @end deftypefn
-
 
 @anchor{triangulation}
 @deftypefn {MGL command} {} triangulation @sc{res} xdat ydat

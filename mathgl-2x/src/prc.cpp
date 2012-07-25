@@ -288,9 +288,9 @@ void mgl_write_prc(HMGL gr, const char *fname,const char */*descr*/, int make_pd
 	// primitive definition in groups
 
 	mglPnt p0;
-	const int width  = dynamic_cast<mglCanvas *>(gr)->GetWidth();
-	const int height = dynamic_cast<mglCanvas *>(gr)->GetHeight();
-	const int depth  = long(sqrt(width*height));
+	const double width  = dynamic_cast<mglCanvas *>(gr)->GetWidth();
+	const double height = dynamic_cast<mglCanvas *>(gr)->GetHeight();
+	const double depth  = sqrt(width*height);
 
 	p0.x = width/2.;
 	p0.y = height/2.;

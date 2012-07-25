@@ -47,6 +47,9 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 
 ============= DOCS =============
 
+0. Option sample (_mirror)
+1. Add back-references from samples
+
 2. Text about UDAV
 3. Add FAQ about MPEG/GIF and PDF
 
