@@ -247,7 +247,7 @@ MGL не требует создания данного типа объекто�
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} SetArrowSize (@code{mreal} val)
 @deftypefnx {Функция С} @code{void} mgl_set_arrow_size (@code{HMGL} gr, @code{mreal} val)
 @end ifclear
-Задает размер стрелок для @ref{1D plotting}, линий и кривых (см. @ref{Primitives drawing}). Значение по умолчанию @code{1}.
+Задает размер стрелок для @ref{1D plotting}, линий и кривых (см. @ref{Primitives}). Значение по умолчанию @code{1}.
 @end deftypefn
 
 @anchor{meshnum}
@@ -287,7 +287,7 @@ MGL не требует создания данного типа объекто�
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} SetCutBox (@code{mglPoint} p1, @code{mglPoint} p1)
 @deftypefnx {Функция С} @code{void} mgl_set_cut_box (@code{HMGL} gr, @code{mreal} x1, @code{mreal} y1, @code{mreal} z1, @code{mreal} x2, @code{mreal} y2, @code{mreal} z2)
 @end ifclear
-Задает границы параллелепипеда внутри которого точки не рисуются. Если границы одинаковы (переменные равны), то параллелепипеда считается пустым. @sref{CutMinMax sample}
+Задает границы параллелепипеда внутри которого точки не рисуются. Если границы одинаковы (переменные равны), то параллелепипеда считается пустым.
 @end deftypefn
 
 @deftypefn {Команда MGL} {} cut 'cond'
@@ -1049,7 +1049,7 @@ Setsize: размер(ы) равны нулю или отрицательны
 @subsection Кадры/Анимация
 
 @ifset UDAV
-В MGL нет специальных команд для создания анимации. Однако можно воспользоваться возможностями утилит @code{mglconv} и @code{mglview} (см. @ref{Utilities}). Например, используя комментарии спеиального вида @samp{##a } или @samp{##c }.
+В MGL нет специальных команд для создания анимации. Однако можно воспользоваться возможностями утилит @code{mglconv} и @code{mglview}. Например, используя комментарии спеиального вида @samp{##a } или @samp{##c }.
 @end ifset
 
 @ifclear UDAV
@@ -1310,7 +1310,7 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} Drop (@code{mglPoint} p, @code{mglPoint} d, @code{mreal} r, @code{const char *}col=@code{"r"}, @code{mreal} shift=@code{1}, @code{mreal} ap=@code{1})
 @deftypefnx {Функция С} @code{void} mgl_drop (@code{HMGL} gr, @code{mreal} x0, @code{mreal} y0, @code{mreal} z0, @code{mreal} dx, @code{mreal} dy, @code{mreal} dz, @code{mreal} r, @code{const char *}col, @code{mreal} shift, @code{mreal} ap)
 @end ifclear
-Рисует каплю радиуса @var{r} в точке @var{p} вытянутую вдоль направления @var{d} цветом @var{col}. Параметр @var{shift} определяет степень вытянутости: @samp{0} -- сфера, @samp{1} -- классическая капля. Параметр @var{ap} определяет относительную ширину капли (аналог "эллиптичности" для сферы). @sref{Drops sample}
+Рисует каплю радиуса @var{r} в точке @var{p} вытянутую вдоль направления @var{d} цветом @var{col}. Параметр @var{shift} определяет степень вытянутости: @samp{0} -- сфера, @samp{1} -- классическая капля. Параметр @var{ap} определяет относительную ширину капли (аналог "эллиптичности" для сферы).
 @end deftypefn
 
 @anchor{cone}
@@ -1338,7 +1338,7 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} Ellipse (@code{mglPoint} p1, @code{mglPoint} p2, @code{mreal} r, @code{const char *}col=@code{"r"})
 @deftypefnx {Функция С} @code{void} mgl_ellipse(@code{HMGL} gr, @code{mreal} x1, @code{mreal} y1, @code{mreal} z1, @code{mreal} x2, @code{mreal} y2, @code{mreal} z2, @code{mreal} r, @code{const char *}col)
 @end ifclear
-Рисует круг радиуса @var{r} с фокусами в точках @var{p1}, @var{p2} цветом @var{stl}. Если @var{col} содержит: @samp{#} то рисуется только граница, @samp{@@} то рисуется граница (вторым цветом из @var{col} или черными). @sref{Ellipse sample}
+Рисует круг радиуса @var{r} с фокусами в точках @var{p1}, @var{p2} цветом @var{stl}. Если @var{col} содержит: @samp{#} то рисуется только граница, @samp{@@} то рисуется граница (вторым цветом из @var{col} или черными).
 @end deftypefn
 
 @anchor{rhomb}
@@ -1348,7 +1348,7 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} Rhomb (@code{mglPoint} p1, @code{mglPoint} p2, @code{mreal} r, @code{const char *}col=@code{"r"})
 @deftypefnx {Функция С} @code{void} mgl_rhomb(@code{HMGL} gr, @code{mreal} x1, @code{mreal} y1, @code{mreal} z1, @code{mreal} x2, @code{mreal} y2, @code{mreal} z2, @code{mreal} r, @code{const char *}col)
 @end ifclear
-Рисует ромб ширины @var{r} с вершинами в точках @var{p1}, @var{p2} цветом @var{stl}. Если @var{col} содержит: @samp{#} то рисуется только граница, @samp{@@} то рисуется граница (вторым цветом из @var{col} или черными). Если @var{col} содержит 3 цвета, то используется градиентная заливка. @sref{Ellipse sample}
+Рисует ромб ширины @var{r} с вершинами в точках @var{p1}, @var{p2} цветом @var{stl}. Если @var{col} содержит: @samp{#} то рисуется только граница, @samp{@@} то рисуется граница (вторым цветом из @var{col} или черными). Если @var{col} содержит 3 цвета, то используется градиентная заливка.
 @end deftypefn
 
 @c ##################################################################
@@ -1399,14 +1399,14 @@ gr.GetBGRN(bits, len(bits));
 @anchor{fgets}
 @deftypefn {Команда MGL} {} fgets @code{x y} 'fname' [@code{n=0} 'fnt'='' @code{size=-1.4}]
 @deftypefnx {Команда MGL} {} fgets @code{x y z} 'fname' [@code{n=0} 'fnt'='' @code{size=-1.4}]
-Выводит @var{n}-ую строку файла @var{fname} от точки @{@var{x},@var{y},@var{z}@} шрифтом @var{fnt} и размером @var{size}.
+Выводит @var{n}-ую строку файла @var{fname} от точки @{@var{x},@var{y},@var{z}@} шрифтом @var{fnt} и размером @var{size}. По умолчанию используются параметры заданные командой @ref{font}.
 @end deftypefn
 
 @deftypefn {Команда MGL} {} text ydat 'text' ['fnt'='']
 @deftypefnx {Команда MGL} {} text xdat ydat 'text' ['fnt'='' @code{size=-1 zval=nan}]
 @deftypefnx {Команда MGL} {} text xdat ydat zdat 'text' ['fnt'='' @code{size=-1}]
 @ifclear UDAV
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Text (@code{const mglData &}y, @code{const char *}text, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Text (@code{const mglData &}y, @code{const char *}text, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} Text (@code{const mglData &}y, @code{const wchar_t *}text, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} Text (@code{const mglData &}x, @code{const mglData &}y, @code{const char *}text, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} Text (@code{const mglData &}x, @code{const mglData &}y, @code{const wchar_t *}text, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})

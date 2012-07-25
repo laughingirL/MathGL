@@ -1088,7 +1088,7 @@ Imports points and primitives in file using MGLD format. Later this file can be 
 @subsection Frames/Animation
 
 @ifset UDAV
-There are no commands for making animation in MGL. However you can use features of @code{mglconv} and @code{mglview} utilities (see @ref{Utilities}). For example, by busing special comments @samp{##a } or @samp{##c }.
+There are no commands for making animation in MGL. However you can use features of @code{mglconv} and @code{mglview} utilities. For example, by busing special comments @samp{##a } or @samp{##c }.
 @end ifset
 
 @ifclear UDAV
@@ -1462,7 +1462,7 @@ The function plots the string @var{text} at position @var{p} along direction @va
 @anchor{fgets}
 @deftypefn {MGL command} {} fgets @code{x y} 'fname' [@code{n=0} 'fnt'='' @code{size=-1.4}]
 @deftypefnx {MGL command} {} fgets @code{x y z} 'fname' [@code{n=0} 'fnt'='' @code{size=-1.4}]
-Draws unrotated @var{n}-th line of file @var{fname} at position @{@var{x},@var{y},@var{z}@} with specified @var{size}. By default parameters from @ref{fnt} command are used.
+Draws unrotated @var{n}-th line of file @var{fname} at position @{@var{x},@var{y},@var{z}@} with specified @var{size}. By default parameters from @ref{font} command are used.
 @end deftypefn
 
 @deftypefn {MGL command} {} text ydat 'text' ['fnt'='']

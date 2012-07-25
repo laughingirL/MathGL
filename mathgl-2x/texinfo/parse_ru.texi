@@ -1,6 +1,8 @@
 
 @c ------------------------------------------------------------------
-@chapter MGL scripts
+@chapter Скрипты MGL
+
+@c TODO Translate it!
 
 MathGL library supports the simplest scripts for data handling and plotting. These scripts can be used independently (with the help of UDAV, mglconv, mglview programs and others
 @ifclear UDAV
@@ -26,7 +28,7 @@ MathGL library supports the simplest scripts for data handling and plotting. The
 @c ------------------------------------------------------------------
 @external
 @node MGL definition, Program flow commands, , MGL scripts
-@section MGL definition
+@section Основы MGL
 
 Язык MGL достаточно простой. Каждая строка -- отдельная команда. Первое слово -- имя команды, а все остальные ее аргументы. Команда может иметь до 1000 аргументов (по крайней мере сейчас). Слова разделяются одно от другого пробелом или символом табуляции. Различий между верхним и нижним индексом нет, т.е. переменные @var{a} и @var{A} идентичны. Символ @samp{#} начинает комментарий -- все символы после него игнорируются до конца строки. Исключением является случай, когда @samp{#} входит в строку. Опции команды указываются после символа @samp{;} (@pxref{Command options}). Символ @samp{:} начинает новую команду (подобно переводу строки) если он расположен не внутри скобок или строки.
 
@@ -35,7 +37,7 @@ MathGL library supports the simplest scripts for data handling and plotting. The
 Аргументы команды могут быть строками, переменными или числами.
 @itemize @bullet
 @item
-Строка -- произвольный набор символов между метками @samp{'}.
+Строка -- произвольный набор символов между метками @samp{'}. Длинные строки могут быть соединены из нескольких линий файла символом @samp{\}. Т.е. строки файла @samp{'a +'\<br>' b'} дадут строку @samp{'a + b'} (здесь @samp{<br>} -- перевод строки).
 
 @item
 Обычно переменная имеет имя, состоящее из букв и чисел (должно начинаться с буквы и не быть длиннее 64 символов). В качестве переменной можно использовать временные массивы, включающие в себя:
@@ -60,10 +62,13 @@ MathGL library supports the simplest scripts for data handling and plotting. The
 @item
 К скалярным переменным, кроме собственно чисел, относятся: специальные переменные @code{nan=#QNAN, pi=3.1415926..., on=1, off=0, :=-1}, переменные с суффиксами (@pxref{Data information}), переменные определенные командой @ref{define}. Также массивы размером 1x1x1 считаются скалярами (например, @samp{pi/dat.nx}).
 @end itemize
-Перед первым использованием все переменные должны быть определены с помощью команд, создающих массивы (@ref{new}, @ref{var}, @ref{list}, @ref{copy}, @ref{read}, @ref{hist}, @ref{sum} и др., @pxref{Data create} и @ref{Make another data}).
+Перед первым использованием все переменные должны быть определены с помощью команд, создающих массивы (@ref{new}, @ref{var}, @ref{list}, @ref{copy}, @ref{read}, @ref{hist}, @ref{sum} и др., см. @ref{Data constructor}, @ref{Data filling} и @ref{Make another data}).
 
 Команды могут иметь несколько наборов аргументов (например, @code{plot ydat} и @code{plot xdat ydat}). Все аргументы команды для выбранного набора должны быть указаны, однако часть из них могут иметь значения по умолчанию. Такие аргументы в описании команд будут помещены в квадратные скобки [], например @code{plot ydat ['stl'='' zval=nan]}. При этом запись @code{[arg1 arg2 arg3 ...]} подразумевает @code{[arg1 [arg2 [arg3 ...]]]}, т.е. опускать можно только аргументы с конца, если вы согласны с их значениями по умолчанию. Например, @code{plot ydat '' 1} или @code{plot ydat ''} правильно, а @code{plot ydat 1} не правильно (аргумент @code{'stl'} пропущен).
 
+
+
+@c TODO Translate it!
 
 @c ------------------------------------------------------------------
 @external

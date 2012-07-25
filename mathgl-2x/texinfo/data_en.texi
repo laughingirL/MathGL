@@ -2,7 +2,7 @@
 @chapter Data processing
 
 @ifset UDAV
-This chapter describe commands for allocation, resizing, loading and saving, modifying of data arrays. Also it can numerically differentiate and integrate data, interpolate, fill data by formula and so on. Class supports data with dimensions up to 3 (like function of 3 variables -- x,y,z). The internal representation of numbers is mreal. Float type was chosen because it has smaller size in memory and usually it has enough precision in plotting purposes. Data arrays are denoted by Small Caps (like @sc{dat}) if it can be (re-)created by MGL commands.
+This chapter describe commands for allocation, resizing, loading and saving, modifying of data arrays. Also it can numerically differentiate and integrate data, interpolate, fill data by formula and so on. Class supports data with dimensions up to 3 (like function of 3 variables -- x,y,z). Data arrays are denoted by Small Caps (like @sc{dat}) if it can be (re-)created by MGL commands.
 @end ifset
 
 @ifclear UDAV

@@ -15,7 +15,7 @@
 @item
 @strong{Все элементы рисунков векторные.} Изначально библиотека MathGL была ориентированна на работу с научными данными, которые по своей природе векторные (линии, грани, матрицы и т.д.). Поэтому векторность используется во всех рисунках! Причем иногда даже в ущерб производительности (например, при выводе шрифтов). Помимо всего прочего, векторность позволяет легко масштабировать рисунок -- измените размер картинки в 2 раза, и рисунок пропорционально растянется.
 @item
-@strong{Новые графики не удаляют уже нарисованное.} Этот, в чем-то неожиданный, подход позволяет создавать огромное количество ``комбинированных'' графиков. Например, поверхность с наложенными линиями уровня строится двумя последовательными вызовами функций рисования поверхности и линий уровня (в любом порядке). И совершенно не надо писать специальную функцию (как в Matlab и некоторых других программах) для рисования этого графика. Примеров таких графиков можно привести множество (см. раздел @ref{Hints} и сайт программы @uref{http://mathgl.sf.net/index.html}).
+@strong{Новые графики не удаляют уже нарисованное.} Этот, в чем-то неожиданный, подход позволяет создавать огромное количество ``комбинированных'' графиков. Например, поверхность с наложенными линиями уровня строится двумя последовательными вызовами функций рисования поверхности и линий уровня (в любом порядке). И совершенно не надо писать специальную функцию (как в Matlab и некоторых других программах) для рисования этого графика.
 @end enumerate
 
 Кроме основных концепций я хотел бы остановиться на нескольких, как оказалось, нетривиальных моментах -- способе указания положения графика, осей координат и строковых параметров линий, поверхностей, текста.
@@ -33,23 +33,38 @@
 
 @c ------------------------------------------------------------------
 @external
-@node Coordinate axes, Line styles, , General concepts
-@subsection Оси координат
+@node Coordinate axes, Color styles, , General concepts
+@section Оси координат
 
-Представление системы координат в MathGL состоит из двух частей. Вначале координаты нормируются в интервал @var{Min}x@var{Max} (@pxref{Axis settings}). Если флаг @var{Cut} установлен, то точки вне интервала отбрасываются, в противном случае, они проецируются на ограничивающий параллелепипед (@pxref{Cutting}). Кроме того, отбрасываются точки внутри границ, определенных переменными @var{CutMin}x@var{CutMax} и точки, для которых значение функции @code{CutOff}() не равно нулю. После этого формулы перехода в криволинейную систему координат @code{SetFunc()}применяются к каждой точке. Наконец, точка данных отображается с помощью одной из графических функций.
+Представление системы координат в MathGL состоит из двух частей. Вначале координаты нормируются в интервал @var{Min}x@var{Max} (@pxref{Axis settings}). Если флаг @code{SetCut()} установлен, то точки вне интервала отбрасываются, в противном случае, они проецируются на ограничивающий параллелепипед (см. @ref{Cutting}). Кроме того, отбрасываются точки внутри границ, определенных переменными @var{CutMin}x@var{CutMax} и точки, для которых значение функции @code{CutOff}() не равно нулю. После этого формулы перехода в криволинейную систему координат @code{SetFunc()}применяются к каждой точке. Наконец, точка данных отображается с помощью одной из графических функций.
 
-Величины @var{Max}, @var{Min} можно изменять вручную. Однако, после этого необходимо вызвать функцию @code{RecalcBorder()} для настройки графика. Более удобный и безопасный путь состоит в вызове функций @code{Axis(), SetRanges()} и др. В последнем случае функция @code{RecalcBorder()} вызывается автоматически. Размеры осей можно задавать и автоматически по минимальному и максимальному значениям массива данных. Для этого предназначены функции @code{XRange(), YRange(), ZRange()}. Второй не обязательный аргумент указывает, заменять ли новые значения диапазона изменения оси координат (по умолчанию) или только расширить уже существующий диапазон.
+Диапазон изменения @emph{x, y, z}-координат задается функциями @code{SetRange()} или @code{SetRanges()}. Точка пересечения осей координат задается функцией @code{SetOrigin()}. При этом можно использовать NAN значения для автоматического выбора положения оси.
 
-Точка пересечения осей координат задается переменной @var{Org} и действует на последующие вызовы функций рисования осей координат и сетки. По умолчанию, если точка пересечения осей координат попадает вне диапазона осей координат, то она проецируется на границу области. Изменить такое поведение можно, задав @var{AutoOrg}=@code{false}. В случае, если одно из значений @var{Org} равно NAN, то соответствующее значение будет выбрано автоматически.
+Кроме привычных осей @emph{x, y, z} есть еще одна ось -- цветовая шкала -- ось @emph{c}. Она используется при окрашивании поверхностей и задает границы изменения функции при окрашивании. Ее границы автоматически устанавливаются равными Min.z и Max.z при вызове @code{SetRanges()}. Возможно и ручное изменение границ цветового интервала посредством вызова @code{SetRange('c', ...)}. Используйте @code{Colorbar()} для отображения цветовой шкалы.
 
-Кроме привычных осей @emph{x, y, z} есть еще одна ось -- цветовая шкала -- ось @emph{c}. Она используется при окрашивании поверхностей и задает границы изменения функции при окрашивании. При вызове @code{Axis()} ее границы автоматически устанавливаются равными Min.z и Max.z. Возможно и ручное изменение границ цветового интервала посредством вызова функции @code{CAxis()} или изменение границ по заданному массиву @code{CRange()}. Используйте @code{Colorbar()} для отображения цветовой шкалы.
-
-Вид меток по осям определяется функцией @code{SetTicks()} (@pxref{Axis settings}). Она имеет 3 аргумента: первый @var{d} задает шаг меток (если положительны) или их число (если отрицательны) или логарифмические метки (если равны нулю); второ @var{ns} задает число "подметок"; последний определяет начальную точку для меток (по умолчанию это точка пересечения осей). Функция @var{SetTuneTicks} включает/выключает выделение общего множителя (большого или малого факторов в диапазоне) для меток осей координат. Наконец, если стандартный вид меток не устраивает пользователя, то их шаблон можно задать явно (можно использовать и ТеХ символы), воспользовавшись функциями  @code{SetXTT(), SetYTT(). SetZTT(). SetCTT()}. Кроме того, в качестве меток можно вывести произвольный текст использовав функцию @code{SetTicksVal()}.
+Вид меток по осям определяется функцией @code{SetTicks()} (@pxref{Ticks}). Функция @var{SetTuneTicks} включает/выключает выделение общего множителя (большого или малого факторов в диапазоне) для меток осей координат. Наконец, если стандартный вид меток не устраивает пользователя, то их шаблон можно задать явно (можно использовать и ТеХ символы), воспользовавшись функцией  @code{SetTickTempl()}. Кроме того, в качестве меток можно вывести произвольный текст использовав функцию @code{SetTicksVal()}.
 
 @c ------------------------------------------------------------------
 @external
-@node Line styles, Color scheme, Coordinate axes, General concepts
-@subsection Стиль линий
+@node Color styles, Line styles, Coordinate axes, General concepts
+@section Цвета
+
+Base colors are defined by one of symbol @samp{wkrgbcymhRGBCYMHWlenupqLENUPQ}.
+@ifhtml
+@html
+<p>Символы цвета: &lsquo;<samp>k</samp>&rsquo; -- черный, &lsquo;<samp>r</samp>&rsquo; -- <span style="color: rgb(255, 0, 0);">красный</span>, &lsquo;<samp>R</samp>&rsquo; -- <span style="color: rgb(127, 0, 0);">темно красный</span>, &lsquo;<samp>g</samp>&rsquo; -- <span style="color: rgb(0, 255, 0);">зеленый</span>, &lsquo;<samp>G</samp>&rsquo; -- <span style="color: rgb(0, 127, 0);">темно зеленый</span>, &lsquo;<samp>b</samp>&rsquo; -- <span style="color: rgb(0, 0, 255);">синий</span>, &lsquo;<samp>B</samp>&rsquo; -- <span style="color: rgb(0, 0, 127);">темно синий</span>, &lsquo;<samp>c</samp>&rsquo; -- <span style="color: rgb(0, 255, 255);">голубой</span>, &lsquo;<samp>C</samp>&rsquo; -- <span style="color: rgb(0, 127, 127);">темно голубой</span>, &lsquo;<samp>m</samp>&rsquo; -- <span style="color: rgb(255, 0, 255);">пурпурный</span>, &lsquo;<samp>M</samp>&rsquo; -- <span style="color: rgb(127, 0, 127);">темно пурпурный</span>, &lsquo;<samp>y</samp>&rsquo; -- <span style="color: rgb(255, 255, 0);">желтый</span>, &lsquo;<samp>Y</samp>&rsquo; -- <span style="color: rgb(127, 127, 0);">темно желтый (золотой)</span>, &lsquo;<samp>h</samp>&rsquo; -- <span style="color: rgb(127, 127, 127);">серый</span>, &lsquo;<samp>H</samp>&rsquo; -- <span style="color: rgb(76, 76, 76);">темно серый</span>, &lsquo;<samp>w</samp>&rsquo; -- белый, &lsquo;<samp>W</samp>&rsquo; -- <span style="color: rgb(178, 178, 178);">светло серый</span>, &lsquo;<samp>l</samp>&rsquo; -- <span style="color: rgb(0, 255, 127);">сине-зеленый</span>, &lsquo;<samp>L</samp>&rsquo; -- <span style="color: rgb(0, 127, 63);">темно сине-зеленый</span>, &lsquo;<samp>e</samp>&rsquo; -- <span style="color: rgb(127, 255, 0);">желто-зеленый</span>, &lsquo;<samp>E</samp>&rsquo; -- <span style="color: rgb(63, 127, 0);">темно желто-зеленый</span>, &lsquo;<samp>n</samp>&rsquo; -- <span style="color: rgb(0, 127, 255);">небесно-синий</span>, &lsquo;<samp>N</samp>&rsquo; -- <span style="color: rgb(0, 63, 127);">темно небесно-синий</span>, &lsquo;<samp>u</samp>&rsquo; -- <span style="color: rgb(127, 0, 255);">сине-фиолетовый</span>, &lsquo;<samp>U</samp>&rsquo; -- <span style="color: rgb(63, 0, 127);">темно сине-фиолетовый</span>, &lsquo;<samp>p</samp>&rsquo; -- <span style="color: rgb(255, 0, 127);">фиолетовый</span>, &lsquo;<samp>P</samp>&rsquo; -- <span style="color: rgb(127, 0, 63);">темно фиолетовый</span>, &lsquo;<samp>q</samp>&rsquo; -- <span style="color: rgb(255, 127, 0);">оранжевый</span>, &lsquo;<samp>Q</samp>&rsquo; -- <span style="color: rgb(127, 63, 0);">темно оранжевый (коричневый)</span>.</p>
+@end html
+@end ifhtml
+@ifnothtml
+Символы цвета: @samp{k} -- черный, @samp{r} -- красный, @samp{R} -- темно красный, @samp{g} -- зеленый, @samp{G} -- темно зеленый, @samp{b} -- синий, @samp{B} -- темно синий, @samp{c} -- голубой, @samp{C} -- темно голубой, @samp{m} -- пурпурный, @samp{M} -- темно пурпурный, @samp{y} -- желтый, @samp{Y} -- темно желтый (золотой), @samp{h} -- серый, @samp{H} -- темно серый, @samp{w} -- белый, @samp{W} -- светло серый, @samp{l} -- сине-зеленый, @samp{L} -- темно сине-зеленый, @samp{e} -- желто-зеленый, @samp{E} -- темно желто-зеленый, @samp{n} -- небесно-синий, @samp{N} -- темно небесно-синий, @samp{u} -- сине-фиолетовый, @samp{U} -- темно сине-фиолетовый, @samp{p} -- фиолетовый, @samp{P} -- темно фиолетовый, @samp{q} -- оранжевый, @samp{Q} -- темно оранжевый (коричневый).
+@end ifnothtml
+
+В цветовой схеме можно использовать тональные (``подсвеченные'') цвета. Тональный цвет задается двумя символами в фигурных скобках @samp{@{cN@}: первый -- обычный цвет, второй -- его яркость цифрой. Цифра может быть в диапазоне @samp{1}...@samp{9}. При этом @samp{5} соответствует нормальному цвету, @samp{1} -- очень темная версия цвета (почти черный), @samp{9} -- очень светлая версия цвета (почти белый). Например, цвета могут быть @samp{@{b2@}} @samp{@{b7@}} @samp{@{r7@}} и т.д.
+
+@c ------------------------------------------------------------------
+@external
+@node Line styles, Color scheme, Color styles, General concepts
+@section Стиль линий
 
 @cindex Стиль линий
 @cindex Стиль маркеров
@@ -60,72 +75,49 @@
 @html
 По умолчанию палитры содержит следующие цвета: <span style="color: rgb(76, 76, 76);">темно серый</span> &lsquo;<samp>H</samp>&rsquo;, <span style="color: rgb(0, 0, 255);">синий</span> &lsquo;<samp>b</samp>&rsquo;, <span style="color: rgb(0, 255, 0);">зеленый</span> &lsquo;<samp>g</samp>&rsquo;, <span style="color: rgb(255, 0, 0);">красный</span> &lsquo;<samp>r</samp>&rsquo;, <span style="color: rgb(0, 255, 255);">голубой</span> &lsquo;<samp>c</samp>&rsquo;, <span style="color: rgb(255, 0, 255);">пурпурный</span> &lsquo;<samp>m</samp>&rsquo;, <span style="color: rgb(255, 255, 0);">yellow</span> &lsquo;<samp>y</samp>&rsquo;, <span style="color: rgb(127, 127, 127);">серый</span> &lsquo;<samp>h</samp>&rsquo;, <span style="color: rgb(0, 255, 127);">сине-зеленый</span> &lsquo;<samp>l</samp>&rsquo;, <span style="color: rgb(0, 127, 255);">небесно-синий</span> &lsquo;<samp>n</samp>&rsquo;, <span style="color: rgb(255, 127, 0);">оранжевый</span> &lsquo;<samp>q</samp>&rsquo;, <span style="color: rgb(127, 255, 0);">желто-зеленый</span> &lsquo;<samp>e</samp>&rsquo;, <span style="color: rgb(127, 0, 255);">сине-фиолетовый</span> &lsquo;<samp>u</samp>&rsquo;, <span style="color: rgb(255, 0, 127);">фиолетовый</span> &lsquo;<samp>p</samp>&rsquo;.
 
-<p>Символы цвета: &lsquo;<samp>k</samp>&rsquo; -- черный, &lsquo;<samp>r</samp>&rsquo; -- <span style="color: rgb(255, 0, 0);">красный</span>, &lsquo;<samp>R</samp>&rsquo; -- <span style="color: rgb(127, 0, 0);">темно красный</span>, &lsquo;<samp>g</samp>&rsquo; -- <span style="color: rgb(0, 255, 0);">зеленый</span>, &lsquo;<samp>G</samp>&rsquo; -- <span style="color: rgb(0, 127, 0);">темно зеленый</span>, &lsquo;<samp>b</samp>&rsquo; -- <span style="color: rgb(0, 0, 255);">синий</span>, &lsquo;<samp>B</samp>&rsquo; -- <span style="color: rgb(0, 0, 127);">темно синий</span>, &lsquo;<samp>c</samp>&rsquo; -- <span style="color: rgb(0, 255, 255);">голубой</span>, &lsquo;<samp>C</samp>&rsquo; -- <span style="color: rgb(0, 127, 127);">темно голубой</span>, &lsquo;<samp>m</samp>&rsquo; -- <span style="color: rgb(255, 0, 255);">пурпурный</span>, &lsquo;<samp>M</samp>&rsquo; -- <span style="color: rgb(127, 0, 127);">темно пурпурный</span>, &lsquo;<samp>y</samp>&rsquo; -- <span style="color: rgb(255, 255, 0);">желтый</span>, &lsquo;<samp>Y</samp>&rsquo; -- <span style="color: rgb(127, 127, 0);">темно желтый (золотой)</span>, &lsquo;<samp>h</samp>&rsquo; -- <span style="color: rgb(127, 127, 127);">серый</span>, &lsquo;<samp>H</samp>&rsquo; -- <span style="color: rgb(76, 76, 76);">темно серый</span>, &lsquo;<samp>w</samp>&rsquo; -- белый, &lsquo;<samp>W</samp>&rsquo; -- <span style="color: rgb(178, 178, 178);">светло серый</span>, &lsquo;<samp>l</samp>&rsquo; -- <span style="color: rgb(0, 255, 127);">сине-зеленый</span>, &lsquo;<samp>L</samp>&rsquo; -- <span style="color: rgb(0, 127, 63);">темно сине-зеленый</span>, &lsquo;<samp>e</samp>&rsquo; -- <span style="color: rgb(127, 255, 0);">желто-зеленый</span>, &lsquo;<samp>E</samp>&rsquo; -- <span style="color: rgb(63, 127, 0);">темно желто-зеленый</span>, &lsquo;<samp>n</samp>&rsquo; -- <span style="color: rgb(0, 127, 255);">небесно-синий</span>, &lsquo;<samp>N</samp>&rsquo; -- <span style="color: rgb(0, 63, 127);">темно небесно-синий</span>, &lsquo;<samp>u</samp>&rsquo; -- <span style="color: rgb(127, 0, 255);">сине-фиолетовый</span>, &lsquo;<samp>U</samp>&rsquo; -- <span style="color: rgb(63, 0, 127);">темно сине-фиолетовый</span>, &lsquo;<samp>p</samp>&rsquo; -- <span style="color: rgb(255, 0, 127);">фиолетовый</span>, &lsquo;<samp>P</samp>&rsquo; -- <span style="color: rgb(127, 0, 63);">темно фиолетовый</span>, &lsquo;<samp>q</samp>&rsquo; -- <span style="color: rgb(255, 127, 0);">оранжевый</span>, &lsquo;<samp>Q</samp>&rsquo; -- <span style="color: rgb(127, 63, 0);">темно оранжевый (коричневый)</span>.</p>
-
-Тип пунктира: пробел -- нет линии (для рисования только маркеров), &lsquo;<samp>-</samp>&rsquo; -- сплошная линия (&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;), &lsquo;<samp>|</samp>&rsquo; -- длинный пунктир (&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9633;&#9633;&#9633;&#9633;&#9633;&#9633;&#9633;&#9633;), &lsquo;<samp>;</samp>&rsquo; -- пунктир (&#9632;&#9632;&#9632;&#9632;&#9633;&#9633;&#9633;&#9633;&#9632;&#9632;&#9632;&#9632;&#9633;&#9633;&#9633;&#9633;), &lsquo;<samp>=</samp>&rsquo; -- короткий пунктир (&#9632;&#9632;&#9633;&#9633;&#9632;&#9632;&#9633;&#9633;&#9632;&#9632;&#9633;&#9633;&#9632;&#9632;&#9633;&#9633;), &lsquo;<samp>:</samp>&rsquo; -- точки (&#9632;&#9633;&#9633;&#9633;&#9632;&#9633;&#9633;&#9633;&#9632;&#9633;&#9633;&#9633;&#9632;&#9633;&#9633;&#9633;), &lsquo;<samp>j</samp>&rsquo; -- пунктир с точками  (&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9633;&#9633;&#9633;&#9633;&#9632;&#9633;&#9633;&#9633;&#9633;), &lsquo;<samp>i</samp>&rsquo; -- мелкий пунктир с точками (&#9632;&#9632;&#9632;&#9633;&#9633;&#9632;&#9633;&#9633;&#9632;&#9632;&#9632;&#9633;&#9633;&#9632;&#9633;&#9633;).
+<p>Тип пунктира: пробел -- нет линии (для рисования только маркеров), &lsquo;<samp>-</samp>&rsquo; -- сплошная линия (&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;), &lsquo;<samp>|</samp>&rsquo; -- длинный пунктир (&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9633;&#9633;&#9633;&#9633;&#9633;&#9633;&#9633;&#9633;), &lsquo;<samp>;</samp>&rsquo; -- пунктир (&#9632;&#9632;&#9632;&#9632;&#9633;&#9633;&#9633;&#9633;&#9632;&#9632;&#9632;&#9632;&#9633;&#9633;&#9633;&#9633;), &lsquo;<samp>=</samp>&rsquo; -- короткий пунктир (&#9632;&#9632;&#9633;&#9633;&#9632;&#9632;&#9633;&#9633;&#9632;&#9632;&#9633;&#9633;&#9632;&#9632;&#9633;&#9633;), &lsquo;<samp>:</samp>&rsquo; -- точки (&#9632;&#9633;&#9633;&#9633;&#9632;&#9633;&#9633;&#9633;&#9632;&#9633;&#9633;&#9633;&#9632;&#9633;&#9633;&#9633;), &lsquo;<samp>j</samp>&rsquo; -- пунктир с точками  (&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9633;&#9633;&#9633;&#9633;&#9632;&#9633;&#9633;&#9633;&#9633;), &lsquo;<samp>i</samp>&rsquo; -- мелкий пунктир с точками (&#9632;&#9632;&#9632;&#9633;&#9633;&#9632;&#9633;&#9633;&#9632;&#9632;&#9632;&#9633;&#9633;&#9632;&#9633;&#9633;).</p>
 @end html
 @end ifhtml
 @ifnothtml
-По умолчанию палитры содержит следующие цвета: темно серый @samp{H}, синий @samp{b}, зеленый @samp{g}, красный @samp{r}, голубой @samp{c}, пурпурный @samp{m}, yellow @samp{y}, серый @samp{h}, сине-зеленый @samp{l}, небесно-синий @samp{n}, оранжевый @samp{q}, желто-зеленый @samp{e}, сине-фиолетовый @samp{u}, фиолетовый @samp{p}.
-
-Символы цвета те же, что и в классе mglColor (@pxref{mglColor class}): @samp{k} -- черный, @samp{r} -- красный, @samp{R} -- темно красный, @samp{g} -- зеленый, @samp{G} -- темно зеленый, @samp{b} -- синий, @samp{B} -- темно синий, @samp{c} -- голубой, @samp{C} -- темно голубой, @samp{m} -- пурпурный, @samp{M} -- темно пурпурный, @samp{y} -- желтый, @samp{Y} -- темно желтый (золотой), @samp{h} -- серый, @samp{H} -- темно серый, @samp{w} -- белый, @samp{W} -- светло серый, @samp{l} -- сине-зеленый, @samp{L} -- темно сине-зеленый, @samp{e} -- желто-зеленый, @samp{E} -- темно желто-зеленый, @samp{n} -- небесно-синий, @samp{N} -- темно небесно-синий, @samp{u} -- сине-фиолетовый, @samp{U} -- темно сине-фиолетовый, @samp{p} -- фиолетовый, @samp{P} -- темно фиолетовый, @samp{q} -- оранжевый, @samp{Q} -- темно оранжевый (коричневый).
+По умолчанию палитра содержит следующие цвета: темно серый @samp{H}, синий @samp{b}, зеленый @samp{g}, красный @samp{r}, голубой @samp{c}, пурпурный @samp{m}, yellow @samp{y}, серый @samp{h}, сине-зеленый @samp{l}, небесно-синий @samp{n}, оранжевый @samp{q}, желто-зеленый @samp{e}, сине-фиолетовый @samp{u}, фиолетовый @samp{p}.
 
 Тип пунктира: пробел -- нет линии (для рисования только маркеров), @samp{-} -- сплошная линия (################), @samp{|} -- длинный пунктир (########________), @samp{;} -- пунктир (####____####____), @samp{=} -- короткий пунктир (##__##__##__##__), @samp{:} -- точки (#___#___#___#___), @samp{j} -- пунктир с точками  (#######____#____), @samp{i} -- мелкий пунктир с точками (###__#__###__#__).
 @end ifnothtml
 
 Типы маркеров: @samp{o} -- окружность, @samp{+} -- крест, @samp{x} -- косой крест, @samp{s} - квадрат, @samp{d} - ромб, @samp{.} -- точка, @samp{^} -- треугольник вверх, @samp{v} -- треугольник вниз, @samp{<} -- треугольник влево, @samp{>} -- треугольник вправо, @samp{#*} -- знак Y, @samp{#+} -- крест в квадрате, @samp{#x} -- косой крест в квадрате, @samp{#.} -- точка в окружности. Если в строке присутствует символ @samp{#}, то используются символы с заполнением.
 
-@float
-@image{../png/sample5, 7cm}
-@caption{Стили линий и маркеров.}
-@end float
-
 На конце и в начале линии можно выводить специальный символ (стрелку), если в строке указать один из символов: @samp{A} -- стрелка наружу, @samp{V} -- стрелка внутрь, @samp{I} -- поперечная черта, @samp{K} -- стрелка с чертой, @samp{T} -- треугольник, @samp{S} -- квадрат, @samp{D} -- ромб, @samp{O} -- круг, @samp{_} -- нет стрелки (по умолчанию). При этом действует следующее правило: первый символ определяет стрелку на конце линии, второй символ -- стрелку в начале линии. Например, @samp{r-A} -- красная сплошная линия со стрелкой на конце, @samp{b|AI} -- синий пунктир со стрелкой на конце и чертой вначале, @samp{_O} -- линия с текущим стилем и кружком вначале. Эти стили действуют и при построении графиков (например, @ref{1D plotting}).
 
-@float
-@image{../png/sampled, 7cm}
-@caption{Стили стрелок.}
-@end float
+@pfig{style, Color and line styles.}
 
 @c ------------------------------------------------------------------
 @external
 @node Color scheme, Font styles, Line styles, General concepts
-@subsection Цветовая схема
+@section Цветовая схема
 
 @cindex Цветовая схема
 
-Цветовая схема используется для определения цвета поверхностей, линий уровня и пр. Цветовая схема задается строкой @emph{s}, которая содержит символы цвета (@pxref{Line styles}) или символы @samp{d#:|}. Символ @samp{d} указывает на определение цвета в зависимости от положения точки в пространстве, а не по амплитуде данных. Символ @samp{#} переключает рисование поверхности на сетчатое (для трехмерных поверхностей) или включает рисование сетки на поверхности. Символ @samp{|} отключает интерполяцию цвета в цветовой схеме. Это может быть полезно для ``резких'' цветов, например, при рисовании матриц. Если в строке встречается символ @samp{:}, то он принудительно заканчивает разбор строки для стиля поверхности. После этого символа могут идти описание стиля текста или оси вращения кривой/линий уровня. Цветовая схема может содержать до 32 значений цвета.
+Цветовая схема используется для определения цвета поверхностей, линий уровня и пр. Цветовая схема задается строкой @emph{s}, которая содержит символы цвета (@pxref{Line styles}) или символы @samp{#:|}. Символ @samp{#} переключает рисование поверхности на сетчатое (для трехмерных поверхностей) или включает рисование сетки на поверхности. Символ @samp{|} отключает интерполяцию цвета в цветовой схеме. Это может быть полезно для ``резких'' цветов, например, при рисовании матриц. Если в строке встречается символ @samp{:}, то он принудительно заканчивает разбор строки для стиля поверхности. После этого символа могут идти описание стиля текста или оси вращения кривой/линий уровня. Цветовая схема может содержать до 32 значений цвета.
 
-В цветовой схеме можно использовать тональные (``подсвеченные'') цвета (@emph{не в стиле линий!}). Тональный цвет задается двумя символами: первый -- обычный цвет, второй -- его яркость цифрой. Цифра может быть в диапазоне @samp{1}...@samp{9}. При этом @samp{5} соответствует нормальному цвету, @samp{1} -- очень темная версия цвета (почти черный), @samp{9} -- очень светлая версия цвета (почти белый). Например цветовая схема может быть @samp{b2b7wr7r2}.
-
-@float
-@image{../png/colors, 7cm}
-@caption{Цвета и их идентификаторы.}
-@end float
-
-При определении цвета по @emph{амплитуде} (наиболее часто используется) окончательный цвет определяется путем линейной интерполяции массива цветов. Массив цветов формируется из цветов, указанных в строке спецификации. Аргумент -- амплитуда, нормированная между @var{Cmin} -- @var{Cmax} (@pxref{Axis settings}). Например, строка из 4 символов @samp{bcyr} соответствует изменению цвета от синего (минимальное значение) через голубой и желтый (промежуточные значения) к красному (максимальное значение). Строка @samp{kw} соответствует изменению цвета от черного (минимальное значение) к белому (максимальное значение). Строка из одного символа (например, @samp{g}) соответствует однотонному цвету (в данному случае зеленому).
+При определении цвета по @emph{амплитуде} (наиболее часто используется) окончательный цвет определяется путем линейной интерполяции массива цветов. Массив цветов формируется из цветов, указанных в строке спецификации. Аргумент -- амплитуда, нормированная между @var{Cmin} -- @var{Cmax} (см. @ref{Axis settings}). Например, строка из 4 символов @samp{bcyr} соответствует изменению цвета от синего (минимальное значение) через голубой и желтый (промежуточные значения) к красному (максимальное значение). Строка @samp{kw} соответствует изменению цвета от черного (минимальное значение) к белому (максимальное значение). Строка из одного символа (например, @samp{g}) соответствует однотонному цвету (в данному случае зеленому).
 
 Есть несколько полезных цветовых схем. Строка @samp{kw} дает обычную серую (черно-белую) схему, когда большие значения светлее. Строка @samp{wk} представляет обратную серую схему, когда большие значения темнее. Строки @samp{kRryw}, @samp{kGgw}, @samp{kBbcw} представляют собой хорошо известные схемы @emph{hot}, @emph{summer} и @emph{winter}. Строки @samp{BbwrR} и @samp{bBkRr} позволяют рисовать двухцветные фигуры на белом или черном фоне, когда отрицательные значения показаны синим цветом, а положительные -- красным. Строка @samp{BbcyrR} дает цветовую схему, близкую к хорошо известной схеме @emph{jet}.
 
+@pfig{schemes, Most popular color schemes.}
 
-@float
-@image{../png/color_schemes, 7cm}
-@caption{Наиболее популярные цветовые схемы.}
-@end float
-
-При определении цвета по @emph{положению точки в пространстве} окончательный цвет определяется по формуле c=x*c[1] + y*c[2] + z*c[3]. Здесь c[1], c[2], c[3] -- первые три цвета в цветовом массиве; x, y, z -- координаты точки, нормированные на @var{Min}x@var{Max}. Такой тип определения цвета полезен, например, при построении поверхностей уровня, когда цвет дает представление о положении точки в пространстве.
+При определении цвета по @emph{положению точки в пространстве} (используется в @ref{map}) окончательный цвет определяется по формуле c=x*c[1] + y*c[2]. Здесь c[1], c[2] -- первые три цвета в цветовом массиве; x, y -- координаты точки, нормированные на @var{Min}x@var{Max}.
+@c Такой тип определения цвета полезен, например, при построении поверхностей уровня, когда цвет дает представление о положении точки в пространстве.
 
 @c ------------------------------------------------------------------
 @external
 @node Font styles, Textual formulas, Color scheme, General concepts
-@subsection Стиль текста
+@section Стиль текста
 
 @cindex Стиль текста
 
-Стиль текста задается строкой, которая может содержать несколько символов: тип шрифта (@samp{ribwou}) и/или выравнивания (@samp{LRC}), а также цвет текста @samp{wkrgbcymhRGBCYMHW} (@pxref{Line styles}) после символа @samp{:}. Например, @samp{r:iCb} соответствует жирному курсиву с выравниванием по центру красного цвета.
+Стиль текста задается строкой, которая может содержать цвет текста @samp{wkrgbcymhRGBCYMHW} (см. @ref{Color styles}), а также тип шрифта (@samp{ribwou}) и/или выравнивания (@samp{LRC}) после символа @samp{:}. Например, @samp{r:iCb} соответствует жирному (@samp{b}) курсиву (@samp{i}) с выравниванием по центру (@samp{C} красного цвета (@samp{r}).
 
-Начертания шрифта: @samp{r} -- прямой шрифт, @samp{i} -- курсив, @samp{b} -- жирный. По умолчанию используется прямой шрифт. Типы выравнивания текста: @samp{L} -- по левому краю (по умолчанию), @samp{C} -- по центру, @samp{R} -- по правому краю. Дополнительные эффекты шрифта: @samp{w} -- контурный, @samp{o} -- надчеркнутый, @samp{u} -- подчеркнутый. 
-@c Синтаксический разбор LaTeX-их команд по умолчанию включен (подробнее см. @pxref{mglFont class} и @ref{Font settings}).
+Начертания шрифта: @samp{r} -- прямой шрифт, @samp{i} -- курсив, @samp{b} -- жирный. По умолчанию используется прямой шрифт. Типы выравнивания текста: @samp{L} -- по левому краю (по умолчанию), @samp{C} -- по центру, @samp{R} -- по правому краю. Дополнительные эффекты шрифта: @samp{w} -- контурный, @samp{o} -- надчеркнутый, @samp{u} -- подчеркнутый.
 
 Синтаксический разбор LaTeX-их команд по умолчанию включен. Это команды смены стиля текста (например, \b для жирного текста): \a или \overline -- надчеркивание, \b или \textbf -- жирный, \i или \textit -- курсив, \r или \textrm -- прямой (отменяет стили жирного и курсива), \u или \underline -- подчеркнутый, \w или \wire -- контурный, \big -- большего размера, @@ -- меньшего размера. Нижний и верхний индексы задаются символами @samp{_} и @samp{^}. При этом изменение стиля применяется только к следующему символу или к символам в фигурных скобках @{@}, которые понимаются как единый блок. Например, сравните строки @samp{sin (x^@{2^3@})} и @samp{sin (x^2^3)}. Можно также менять цвет текста внутри строки с помощью команд #? или \color?, где @samp{?} -- символ цвета (@pxref{Line styles}). Например, слова @samp{Blue} и @samp{red} будут окрашены в соответствующий цвет в строке @samp{#b@{Blue@} and \colorr@{red@} text}. Большинство функций понимает символ новой строки @samp{\n} и позволяет выводить много строчный текст. Наконец, можно использовать символы с произвольным UTF кодом с помощью команды @code{\utf0x????}. Например, @code{\utf0x3b1} даст символ 
 @ifhtml
@@ -144,7 +136,7 @@
 В частности, распознаются греческие буквы: &alpha; &ndash; \alpha, &beta; &ndash; \beta, &gamma; &ndash; \gamma, &delta; &ndash; \delta, &epsilon; &ndash; \epsilon, &eta; &ndash; \eta, &iota; &ndash; \iota, &chi; &ndash; \chi, &kappa; &ndash; \kappa, &lambda; &ndash; \lambda, &mu; &ndash; \mu, &nu; &ndash; \nu, o &ndash; \o, &omega; &ndash; \omega, &#981; &ndash; \phi, &pi; &ndash; \pi, &psi; &ndash; \psi, &rho; &ndash; \rho, &sigma; &ndash; \sigma, &theta; &ndash; \theta, &tau; &ndash; \tau, &upsilon; &ndash; \upsilon, &xi; &ndash; \xi, &zeta; &ndash; \zeta, &sigmaf; &ndash; \varsigma, &#603; &ndash; \varepsilon, &thetasym; &ndash; \vartheta, &phi; &ndash; \varphi, &#1008; &ndash; \varkappa; A &ndash; \Alpha, B &ndash; \Beta, &Gamma; &ndash; \Gamma, &Delta; &ndash; \Delta, E &ndash; \Epsilon, H &ndash; \Eta, I &ndash; \Iota, C &ndash; \Chi, K &ndash; \Kappa, &Lambda; &ndash; \Lambda, M &ndash; \Mu, N &ndash; \Nu, O &ndash; \O, &Omega; &ndash; \Omega, &Phi; &ndash; \Phi, &Pi; &ndash; \Pi, &Psi; &ndash; \Psi, R &ndash; \Rho, &Sigma; &ndash; \Sigma, &Theta; &ndash; \Theta, T &ndash; \Tau, &Upsilon; &ndash; \Upsilon, &Xi; &ndash; \Xi, Z &ndash; \Zeta.
 
 <p>Еще примеры наиболее общеупотребительных TeX-их символов: &ang; &ndash; \angle, &sdot; &ndash; \cdot, &clubs; &ndash; \clubsuit, &#10003; &ndash; \checkmark, &cup; &ndash; \cup, &cap; &ndash; \cap, &#9826; &ndash; \diamondsuit, &#9671; &ndash; \diamond, &divide;
- &ndash; \div, 
+ &ndash; \div,
 &darr; &ndash; \downarrow, &dagger; &ndash; \dag, &Dagger; &ndash; \ddag, &equiv; &ndash; \equiv, &exist; &ndash; \exists, &#8994; &ndash; \frown, &#9837; &ndash; \flat, &ge; &ndash; \ge, &ge; &ndash; \geq, &#8807; &ndash; \geqq, &larr; &ndash; \gets, &#9825; &ndash; \heartsuit, &infin; &ndash; \infty, &int; &ndash; \int, \Int, &image;  &ndash; \Im, &#9826; &ndash; \lozenge, &#10216; &ndash; \langle, &le; &ndash; \le, &le; &ndash; \leq, &#8806; &ndash; \leqq, &larr; &ndash; \leftarrow, &#8723; &ndash; \mp, &nabla; &ndash; \nabla, &ne; &ndash; \ne, &ne; &ndash; \neq, &#9838; &ndash; \natural, &#8750; &ndash; \oint, &#8857; &ndash; \odot, &oplus; &ndash; \oplus, &part; &ndash; \partial, &#8741; &ndash; \parallel, &perp; &ndash;\perp, &plusmn; &ndash; \pm, &prop; &ndash; \propto, &prod; &ndash; \prod, &real; &ndash; \Re, &rarr; &ndash; \rightarrow, &#10217; &ndash; \rangle, &spades; &ndash; \spadesuit, ~ &ndash; \sim, &#8995; &ndash; \smile, &sub;  &ndash; \subset, &sup; &ndash; \supset, &radic; &ndash; \sqrt or \surd, &sect; &ndash; \S, &#9839; &ndash; \sharp, &sum; &ndash; \sum, &times; &ndash; \times, &rarr; &ndash; \to, &there4; &ndash; \therefore, &uarr; &ndash; \uparrow, &weierp; &ndash; \wp. </p>
 @end html
 @end ifhtml
@@ -159,13 +151,13 @@
 @c ------------------------------------------------------------------
 @external
 @node Textual formulas, Command options, Font styles, General concepts
-@subsection Текстовые формулы
+@section Текстовые формулы
 
 @cindex Текстовые формулы
 
 MathGL имеет быстрый парсер текстовых формул
 @ifclear UDAV
- (@pxref{mglFormula class})
+(@pxref{Evaluate expression})
 @end ifclear
 , понимающий большое число функций и операций. Базовые операции: @samp{+} -- сложение, @samp{-} -- вычитание, @samp{*} -- умножение, @samp{/} -- деление, @samp{^} -- возведение в целосичленную степень. Также есть логические операции: @samp{<} -- истина если if x<y, @samp{>} -- истина если x>y, @samp{=} -- истина если x=y, @samp{&} -- истина если x и y оба не равны нулю, @samp{|} -- истина если x или y не нуль. Логические операции имеют наинизший приоритет и возвращают 1 если истина или 0 если ложно.
 
@@ -204,15 +196,13 @@ MathGL имеет быстрый парсер текстовых формул
 
 Функции Якоби: @samp{sn(u,m)}, @samp{cn(u,m)}, @samp{dn(u,m)}, @samp{sc(u,m)}, @samp{sd(u,m)}, @samp{ns(u,m)}, @samp{cs(u,m)}, @samp{cd(u,m)}, @samp{nc(u,m)}, @samp{ds(u,m)}, @samp{dc(u,m)}, @samp{nd(u,m)}.
 
-Некоторые из функций могут быть недоступны если флаг NO_GSL был определен при компиляции библиотеки MathGL. 
+Некоторые из функций могут быть недоступны если не была включена поддержка GSL при компиляции библиотеки MathGL. 
 
 При разборе формул нет различия между верхним и нижним регистром. Если аргумент лежит вне области определения функции, то возвращается NaN.
 
 @c ------------------------------------------------------------------
 @external
-@node  Command options, , Textual formulas, General concepts
-@section Command options
-
+@node  Command options, Interfaces, Textual formulas, General concepts
 @section Опции команд
 
 Опции команд позволяют легко настроить вид отдельного графика не меняя глобальных настроек для все рисунка. Каждая опция отделяется от предыдущей символом @samp{;}. Опции работают так, что запоминают текущие настройки рисунка, применяют собственные настройки, выполняют команду и возвращают глобальные настройки обратно. Поэтому использование опций для команд обработки данных или настройки графика бесполезно.
@@ -223,17 +213,17 @@ MathGL имеет быстрый парсер текстовых формул
 @cindex alpha
 @cindex alphadef
 @deffn {Опция MGL} alpha @code{val}
-@deffnx {Опция MGL} alphadef @code{val}
 Задает величину прозрачности поверхности. Значение должно быть в диапазоне [0, 1]. См. также @ref{alphadef}
 @end deffn
 @cindex ambient
 @deffn {Опция MGL} ambient @code{val}
 Задает яркость фонового освещения. Значение должно быть в диапазоне [0, 1]. См. также @ref{ambient}
 @end deffn
-@cindex crange
-@deffn {Опция MGL} crange @code{val1 val2}
-Задает границы цветовой шкалы. См. также @ref{crange}
+@cindex diffuse
+@deffn {Опция MGL} diffuse @code{val}
+Задает яркость диффузного освещения для поверхности. Значение должно быть в диапазоне [0, 1]. См. также @ref{diffuse}.
 @end deffn
+
 @cindex xrange
 @deffn {Опция MGL} xrange @code{val1 val2}
 Задает границы изменения координаты x. См. также @ref{xrange}
@@ -246,22 +236,20 @@ MathGL имеет быстрый парсер текстовых формул
 @deffn {Опция MGL} zrange @code{val1 val2}
 Задает границы изменения координаты z. См. также @ref{zrange}
 @end deffn
+
 @cindex cut
 @deffn {Опция MGL} cut @code{val}
-Задает обрезание точек за пределами осей координат. См. также @ref{cut}
+Задает обрезание точек за пределами осей координат. См. также @ref{cut}.
 @end deffn
 @cindex fontsize
-@deffn {Опция MGL} fontsize @code{val}
-Задает размер текста. См. также @ref{font}
-@end deffn
-@cindex marksize
-@deffn {Опция MGL} marksize @code{val}
-Задает размер маркеров. См. также @ref{marksize}
+@deffn {Опция MGL} size @code{val}
+Задает размер текста, маркеров и стрелок. См. также @ref{font}, @ref{marksize}, @ref{arrowsize}.
 @end deffn
 @cindex meshnum
 @deffn {Опция MGL} meshnum @code{val}
 Задает ориентировочное число линий, стрелок, ячеек и пр. См. также @ref{meshnum}
 @end deffn
+
 @cindex legend
 @deffn {Опция MGL} legend 'txt'
 Добавляет строку 'txt' во внутренний массив записей легенды. Стиль линии и маркера аргумента последней вызванной команды построения @ref{1D plotting}. См. также @ref{legend}
@@ -270,3 +258,86 @@ MathGL имеет быстрый парсер текстовых формул
 @deffn {MGL option} value @code{val}
 Задает значение, которое будет использовано как дополнительный числовой параметр при построении графика.
 @end deffn
+
+
+
+@c ------------------------------------------------------------------
+@external
+@node Interfaces, , Command options, General concepts
+@section Интерфейсы
+
+@c TODO Translate it!!!
+
+@ifset UDAV
+You can use @code{mglParse} class for executing MGL scripts from different languages.
+@end ifset
+
+@ifclear UDAV
+
+The MathGL library has interfaces for a set of languages. Most of them are based on the C interface via SWIG tool. There are Python, Java, Octave, Lisp, C#, Guile, Lua, Modula 3, Ocaml, Perl, PHP, Pike, R, Ruby, and Tcl interfaces. Also there is a Fortran interface which has a similar set of functions, but slightly different types of arguments (integers instead of pointers). These functions are marked as [C function].
+
+Some of the languages listed above support classes (like C++ or Python). The name of functions for them is the same as in C++ (see @ref{MathGL core} and @ref{Data processing}) and marked like [Method on mglGraph].
+
+Finally, a special command language MGL (see @ref{MGL scripts}) was written for a faster access to plotting functions. Corresponding scripts can be executed separately (by UDAV, mglconv, mglview and so on) or from the C/C++/Python/... code (@pxref{mglParse class}).
+
+@menu
+* C interface::
+* C++ interface::
+@end menu
+
+@external
+@node C interface, C++ interface, , Interfaces
+@subsection C/Fortran interface
+
+The C interface is a base for many other interfaces. It contains the pure C functions for most of the methods of MathGL classes. In distinction to C++ classes, C functions must have an argument HMGL (for graphics) and/or HMDT (for data arrays), which specifies the object for drawing or manipulating (changing). So, firstly, the user has to create this object by the function @code{mgl_create_*()} and has to delete it after the use by function @code{mgl_delete_*()}.
+
+All C functions are described in the header file @code{#include <mgl2/mgl_cf.h>} and use variables of the following types:
+@itemize
+@item
+@code{HMGL} --- Pointer to class @code{mglGraph} (@pxref{MathGL core}).
+@item
+@code{HMDT} --- Pointer to class @code{mglData} (@pxref{Data processing}).
+@item
+@code{HMPR} --- Pointer to class @code{mglParse} (@pxref{mglParse class}).
+@end itemize
+These variables contain identifiers for graphics drawing objects and for the data objects.
+
+Fortran functions/subroutines have the same names as C functions. However, there is a difference. Variable of type @code{HMGL, HMDT} must be an integer with sufficient size (@code{integer*4} in the 32-bit operating system or @code{integer*8} in the 64-bit operating system). All C functions are subroutines in Fortran, which are called by operator @code{call}. The exceptions are functions, which return variables of types @code{HMGL} or @code{HMDT}. These functions should be declared as integer in Fortran code. Also, one should keep in mind that strings in Fortran are denoted by @code{'} symbol, not the @code{"} symbol.
+
+@external
+@node C++ interface, , C interface, Interfaces
+@subsection C++/Python interface
+
+MathGL provides the interface to a set of languages via SWIG library. Some of these languages support classes. The typical example is Python -- which is named in this chapter's title. Exactly the same classes are used for high-level C++ API. Its feature is using only inline member-functions what make high-level API to be independent on compiler even for binary build.
+
+There are 3 classes in:
+@itemize
+@item @code{mglGraph}
+-- provide most plotting functions (see @ref{MathGL core}).
+@item @code{mglData}
+-- provide base data processing (see @ref{Data processing}). It have an additional feature to access data values. You can use a construct like this: @code{dat[i]=sth;} or @code{sth=dat[i]} where flat representation of data is used (i.e., @var{i} can be in range 0...nx*nx*nz-1). You can also import NumPy arrays as input arguments in Python: @code{mgl_dat = mglData(numpy_dat);}.
+@item @code{mglParse}
+-- provide functions for parsing MGL scripts (see @ref{MGL scripts}).
+@end itemize
+
+
+To use Python classes just execute @samp{import mathgl}. The simplest example will be:
+@verbatim
+import mathgl
+a=mathgl.mglGraph()
+a.Box()
+a.WritePNG("test.png")
+@end verbatim
+Alternatively you can import all classes from @code{mathgl} module and easily access MathGL classes like this:
+@verbatim
+from mathgl import *
+a=mglGraph()
+a.Box()
+a.WritePNG("test.png")
+@end verbatim
+This becomes useful if you create many @code{mglData} objects, for example.
+
+@end ifclear
+
+@external
+

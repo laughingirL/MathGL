@@ -38,7 +38,7 @@ In addition to the general concepts I want to comment on some non-trivial or les
 @node Coordinate axes, Color styles, , General concepts
 @section Coordinate axes
 
-Two axis representations are used in MathGL. The first one consists of normalizing coordinates of data points in a box @var{Min} x @var{Max} (see @ref{Axis settings}). If @code{SetCut()} is @code{true} then the outlier points are omitted, otherwise they are projected to the bounding box (see @ref{Cutting}). Also, the point will be omitted if it lies inside the box defined by @code{SetCutBox()} or if the value of formula @code{CutOff()} is nonzero for its coordinates. After that, transformation formulas defined by @code{SetFunc()} or @code{SetCoor()} are applied to the data point (see @ref{Curved coordinates}). Finally, the data point is plotted by one of the functions.
+Two axis representations are used in MathGL. The first one consists of normalizing coordinates of data points in a box @var{Min}x@var{Max} (see @ref{Axis settings}). If @code{SetCut()} is @code{true} then the outlier points are omitted, otherwise they are projected to the bounding box (see @ref{Cutting}). Also, the point will be omitted if it lies inside the box defined by @code{SetCutBox()} or if the value of formula @code{CutOff()} is nonzero for its coordinates. After that, transformation formulas defined by @code{SetFunc()} or @code{SetCoor()} are applied to the data point (see @ref{Curved coordinates}). Finally, the data point is plotted by one of the functions.
 
 The range of @emph{x, y, z}-axis can be specified by @code{SetRange()} or @code{SetRanges()} functions. Its origin is specified by @code{SetOrigin()} function. At this you can you can use @code{NAN} values for selecting axis origin automatically.
 
@@ -46,7 +46,7 @@ There is 4-th axis @emph{c} (color axis or colorbar) in addition to the usual ax
 
 The form (appearence) of tick labels is controlled by @code{SetTicks()} function (@pxref{Ticks}). Function @var{SetTuneTicks} switches on/off tick enhancing by factoring out acommon multiplier (for small coordinate values, like 0.001 to 0.002, or large, like from 1000 to 2000) or common component (for narrow range, like from 0.999 to 1.000). Finally, you may use functions @code{SetTickTempl()} for setting templates for tick labels (it supports TeX symbols). Also, there is a possibility to print arbitrary text as tick labels the by help of @code{SetTicksVal()} function.
 
-
+@c ------------------------------------------------------------------
 @external
 @node Color styles, Line styles, Coordinate axes, General concepts
 @section Color styles
@@ -54,7 +54,7 @@ The form (appearence) of tick labels is controlled by @code{SetTicks()} function
 Base colors are defined by one of symbol @samp{wkrgbcymhRGBCYMHWlenupqLENUPQ}.
 @ifhtml
 @html
-The color types are: &lsquo;<samp>k</samp>&rsquo; -- black, &lsquo;<samp>r</samp>&rsquo; -- <span style="color: rgb(255, 0, 0);">red</span>, &lsquo;<samp>R</samp>&rsquo; -- <span style="color: rgb(127, 0, 0);">dark red</span>, &lsquo;<samp>g</samp>&rsquo; -- <span style="color: rgb(0, 255, 0);">green</span>, &lsquo;<samp>G</samp>&rsquo; -- <span style="color: rgb(0, 127, 0);">dark green</span>, &lsquo;<samp>b</samp>&rsquo; -- <span style="color: rgb(0, 0, 255);">blue</span>, &lsquo;<samp>B</samp>&rsquo; -- <span style="color: rgb(0, 0, 127);">dark blue</span>, &lsquo;<samp>c</samp>&rsquo; -- <span style="color: rgb(0, 255, 255);">cyan</span>, &lsquo;<samp>C</samp>&rsquo; -- <span style="color: rgb(0, 127, 127);">dark cyan</span>, &lsquo;<samp>m</samp>&rsquo; -- <span style="color: rgb(255, 0, 255);">magenta</span>, &lsquo;<samp>M</samp>&rsquo; -- <span style="color: rgb(127, 0, 127);">dark magenta</span>, &lsquo;<samp>y</samp>&rsquo; -- <span style="color: rgb(255, 255, 0);">yellow</span>, &lsquo;<samp>Y</samp>&rsquo; -- <span style="color: rgb(127, 127, 0);">dark yellow (gold)</span>, &lsquo;<samp>h</samp>&rsquo; -- <span style="color: rgb(127, 127, 127);">gray</span>, &lsquo;<samp>H</samp>&rsquo; -- <span style="color: rgb(76, 76, 76);">dark gray</span>, &lsquo;<samp>w</samp>&rsquo; -- white, &lsquo;<samp>W</samp>&rsquo; -- <span style="color: rgb(178, 178, 178);">bright gray</span>, &lsquo;<samp>l</samp>&rsquo; -- <span style="color: rgb(0, 255, 127);">green-blue</span>, &lsquo;<samp>L</samp>&rsquo; -- <span style="color: rgb(0, 127, 63);">dark green-blue</span>, &lsquo;<samp>e</samp>&rsquo; -- <span style="color: rgb(127, 255, 0);">green-yellow</span>, &lsquo;<samp>E</samp>&rsquo; -- <span style="color: rgb(63, 127, 0);">dark green-yellow</span>, &lsquo;<samp>n</samp>&rsquo; -- <span style="color: rgb(0, 127, 255);">sky-blue</span>, &lsquo;<samp>N</samp>&rsquo; -- <span style="color: rgb(0, 63, 127);">dark sky-blue</span>, &lsquo;<samp>u</samp>&rsquo; -- <span style="color: rgb(127, 0, 255);">blue-violet</span>, &lsquo;<samp>U</samp>&rsquo; -- <span style="color: rgb(63, 0, 127);">dark blue-violet</span>, &lsquo;<samp>p</samp>&rsquo; -- <span style="color: rgb(255, 0, 127);">purple</span>, &lsquo;<samp>P</samp>&rsquo; -- <span style="color: rgb(127, 0, 63);">dark purple</span>, &lsquo;<samp>q</samp>&rsquo; -- <span style="color: rgb(255, 127, 0);">orange</span>, &lsquo;<samp>Q</samp>&rsquo; -- <span style="color: rgb(127, 63, 0);">dark orange (brown)</span>.</p>
+<p>The color types are: &lsquo;<samp>k</samp>&rsquo; -- black, &lsquo;<samp>r</samp>&rsquo; -- <span style="color: rgb(255, 0, 0);">red</span>, &lsquo;<samp>R</samp>&rsquo; -- <span style="color: rgb(127, 0, 0);">dark red</span>, &lsquo;<samp>g</samp>&rsquo; -- <span style="color: rgb(0, 255, 0);">green</span>, &lsquo;<samp>G</samp>&rsquo; -- <span style="color: rgb(0, 127, 0);">dark green</span>, &lsquo;<samp>b</samp>&rsquo; -- <span style="color: rgb(0, 0, 255);">blue</span>, &lsquo;<samp>B</samp>&rsquo; -- <span style="color: rgb(0, 0, 127);">dark blue</span>, &lsquo;<samp>c</samp>&rsquo; -- <span style="color: rgb(0, 255, 255);">cyan</span>, &lsquo;<samp>C</samp>&rsquo; -- <span style="color: rgb(0, 127, 127);">dark cyan</span>, &lsquo;<samp>m</samp>&rsquo; -- <span style="color: rgb(255, 0, 255);">magenta</span>, &lsquo;<samp>M</samp>&rsquo; -- <span style="color: rgb(127, 0, 127);">dark magenta</span>, &lsquo;<samp>y</samp>&rsquo; -- <span style="color: rgb(255, 255, 0);">yellow</span>, &lsquo;<samp>Y</samp>&rsquo; -- <span style="color: rgb(127, 127, 0);">dark yellow (gold)</span>, &lsquo;<samp>h</samp>&rsquo; -- <span style="color: rgb(127, 127, 127);">gray</span>, &lsquo;<samp>H</samp>&rsquo; -- <span style="color: rgb(76, 76, 76);">dark gray</span>, &lsquo;<samp>w</samp>&rsquo; -- white, &lsquo;<samp>W</samp>&rsquo; -- <span style="color: rgb(178, 178, 178);">bright gray</span>, &lsquo;<samp>l</samp>&rsquo; -- <span style="color: rgb(0, 255, 127);">green-blue</span>, &lsquo;<samp>L</samp>&rsquo; -- <span style="color: rgb(0, 127, 63);">dark green-blue</span>, &lsquo;<samp>e</samp>&rsquo; -- <span style="color: rgb(127, 255, 0);">green-yellow</span>, &lsquo;<samp>E</samp>&rsquo; -- <span style="color: rgb(63, 127, 0);">dark green-yellow</span>, &lsquo;<samp>n</samp>&rsquo; -- <span style="color: rgb(0, 127, 255);">sky-blue</span>, &lsquo;<samp>N</samp>&rsquo; -- <span style="color: rgb(0, 63, 127);">dark sky-blue</span>, &lsquo;<samp>u</samp>&rsquo; -- <span style="color: rgb(127, 0, 255);">blue-violet</span>, &lsquo;<samp>U</samp>&rsquo; -- <span style="color: rgb(63, 0, 127);">dark blue-violet</span>, &lsquo;<samp>p</samp>&rsquo; -- <span style="color: rgb(255, 0, 127);">purple</span>, &lsquo;<samp>P</samp>&rsquo; -- <span style="color: rgb(127, 0, 63);">dark purple</span>, &lsquo;<samp>q</samp>&rsquo; -- <span style="color: rgb(255, 127, 0);">orange</span>, &lsquo;<samp>Q</samp>&rsquo; -- <span style="color: rgb(127, 63, 0);">dark orange (brown)</span>.</p>
 @end html
 @end ifhtml
 @ifnothtml
@@ -63,7 +63,7 @@ The color types are: @samp{k} -- black, @samp{r} -- red, @samp{R} -- dark red, @
 
 You can also use ``bright'' colors. The ``bright'' color contain 2 symbols in brackets @samp{@{cN@}}: first one is the usual symbol for color id, the second one is a digit for its brightness. The digit can be in range @samp{1}...@samp{9}. Number @samp{5} corresponds to a normal color, @samp{1} is a very dark version of the color (practically black), and @samp{9} is a very bright version of the color (practically white). For example, the colors can be @samp{@{b2@}} @samp{@{b7@}} @samp{@{r7@}} and so on.
 
-
+@c ------------------------------------------------------------------
 @external
 @node Line styles, Color scheme, Color styles, General concepts
 @section Line styles
@@ -150,7 +150,6 @@ The small part of most common special TeX symbols are: @math{\angle} -- \angle, 
 
 The font size can be defined explicitly (if @var{size}>0) or relatively to a base font size as |@var{size}|*@var{FontSize} (if @var{size}<0). The value @var{size}=0 specifies that the string will not be printed. The base font size is measured in internal ``MathGL'' units. Special functions @code{SetFontSizePT(), SetFontSizeCM(), SetFontSizeIN()} (see @ref{Font settings}) allow one to set it in more ``common'' variables for a given dpi value of the picture.
 
-
 @c ------------------------------------------------------------------
 @external
 @node Textual formulas, Command options, Font styles, General concepts
@@ -173,7 +172,6 @@ The basic functions are: @samp{sqrt(x)} -- square root of @var{x}, @samp{pow(x,y
 @ifnothtml
 @math{\pi=3.1415926...}
 @end ifnothtml
-
 
 Trigonometric functions are: @samp{sin(x)}, @samp{cos(x)}, @samp{tan(x)} (or @samp{tg(x)}). Inverse trigonometric functions are: @samp{asin(x)}, @samp{acos(x)}, @samp{atan(x)}. Hyperbolic functions are: @samp{sinh(x)} (or @samp{sh(x)}), @samp{cosh(x)} (or @samp{ch(x)}), @samp{tanh(x)} (or @samp{th(x)}). Inverse hyperbolic functions are: @samp{asinh(x)}, @samp{acosh(x)}, @samp{atanh(x)}.
 
@@ -203,7 +201,6 @@ Jacobi elliptic functions are: @samp{sn(u,m)}, @samp{cn(u,m)}, @samp{dn(u,m)}, @
 Note, some of these functions are unavailable if MathGL was compiled without GSL support.
 
 There is no difference between lower or upper case in formulas. If argument value lie outside the range of function definition then function returns NaN.
-
 
 @c ------------------------------------------------------------------
 @external
@@ -266,6 +263,7 @@ Set the value to be used as additional numeric parameter in plotting command.
 
 
 
+@c ------------------------------------------------------------------
 @external
 @node Interfaces, , Command options, General concepts
 @section Interfaces

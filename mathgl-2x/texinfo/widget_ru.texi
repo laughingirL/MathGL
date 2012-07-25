@@ -1,13 +1,16 @@
 
 @c ------------------------------------------------------------------
-@chapter ``Оконные'' классы -- TODO: UPDATE!!!
-@cindex mglGraphFLTK
-@cindex mglGraphQT
-@cindex mglGraphGLUT
+@chapter ``Оконные'' классы
+@cindex mglWindow
+@cindex mglGLUT
 @cindex Fl_MathGL
 @cindex QMathGL
 @cindex window
 @cindex widgets
+
+
+@c TODO Translate it!
+
 
 Есть целый набор ``оконных'' классов для создания окон с графикой MathGL: @code{mglGraphFLTK}, @code{mglGraphQT}, @code{mglGraphGLUT}. Все эти классы позволяют пользователю просмотривать, вращать, экспортировать рисунок. Большинство из них (кроме @code{mglGraphGLUT}) являются наследниками класса @code{mglGraphZB} и используют ``присоединенный'' класс для центрального виджета окна. Все оконные классы имеют схожий набор функций (@pxref{mglGraphAB class}). Ниже приведен список классов с краткими комментариями.
 
