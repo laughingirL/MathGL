@@ -689,7 +689,7 @@ int mglParser::Parse(mglGraph *gr, const wchar_t *string, long pos)
 						for(i=10;i<30;i++)	AddParam(i,prs->par[i]);
 						DataList=prs->DataList;	prs->DataList=0;
 						NumList =prs->NumList;	prs->NumList=0;
-						prs->Cmd=0;	delete par;	fclose(fp);
+						prs->Cmd=0;	delete prs;	fclose(fp);
 					}
 					else	n=1;
 				}

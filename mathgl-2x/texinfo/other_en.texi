@@ -24,7 +24,7 @@ Below I show how this internal classes can be used.
 @c ------------------------------------------------------------------
 @external
 @node mglBase class, mglDataA class, , Other classes
-@subsection Define new kind of plot (mglBase class)
+@section Define new kind of plot (mglBase class)
 
 Basically most of new kinds of plot can be created using just MathGL primitives (see @ref{Primitives}). However the usage of @code{mglBase} methods can give you higher speed of drawing and better control of plot settings. 
 
@@ -328,7 +328,7 @@ int main()
 @c ------------------------------------------------------------------
 @external
 @node mglDataA class, mglColor class, mglBase class, Other classes
-@subsection User defined types (mglDataA class)
+@section User defined types (mglDataA class)
 
 @code{mglData} class have abstract predecessor class @code{mglDataA}. Exactly the pointers to @code{mglDataA} instances are used in all plotting functions and some of data processing functions. This was done for taking possibility to define yours own class, which will handle yours own data (for example, complex numbers, or differently organized data). And this new class will be almost the same as @code{mglData} for plotting purposes.
 
