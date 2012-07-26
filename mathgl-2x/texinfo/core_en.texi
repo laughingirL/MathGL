@@ -2969,7 +2969,7 @@ Fills the value of array @samp{u} according to the formula in string @var{eq}. F
 @deftypefnx {Method on @code{mglGraph}} @code{void} DataGrid (@code{mglData &}u, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}opt=@code{""})
 @deftypefnx {C function} @code{void} mgl_data_grid (@code{HMGL} gr, @code{HMDT} u, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}opt)
 @end ifclear
-Fills the value of array @samp{u} according to the linear interpolation of triangulated surface, found for arbitrary placed points @samp{x}, @samp{y}, @samp{z}. NAN value is used for grid points placed outside of triangulated surface.
+Fills the value of array @samp{u} according to the linear interpolation of triangulated surface, found for arbitrary placed points @samp{x}, @samp{y}, @samp{z}. Interpolation is done at points equidistantly distributed in axis range. NAN value is used for grid points placed outside of triangulated surface.
 @end deftypefn
 
 

@@ -10,7 +10,7 @@
 
 There are set of ``window'' classes for making a window with MathGL graphics: @code{mglWindow} and @code{mglGLUT} for whole window, @code{Fl_MathGL} and @code{QMathGL} as widgets. All these classes allow user to show, rotate, export, and change view of the plot using keyboard. Most of them (except @code{mglGLUT}) also have toolbar and menu for simplifying plot manipulation. All window classes have mostly the same set of functions.
 
-For callback drawing you can use: @code{NULL} pointer if you'll update plot manually, global function of type @code{int draw(@code{HMGL} gr, @code{void *}p)} or @code{int draw(@code{mglGraph *}gr)}, or instance of class derived from @code{mglDraw} class. This class is defined in @code{#include <mgl2/window.h>} and have only 2 methods:
+For drawing you can use: @code{NULL} pointer if you'll update plot manually, global callback function of type @code{int draw(@code{HMGL} gr, @code{void *}p)} or @code{int draw(@code{mglGraph *}gr)}, or instance of class derived from @code{mglDraw} class. This class is defined in @code{#include <mgl2/window.h>} and have only 2 methods:
 @verbatim
 class mglDraw
 {
@@ -36,7 +36,7 @@ You should inherit yours class from @code{mglDraw} and re-implement one or both 
 @cindex window
 @c @cindex mglDraw
 
-This class is derived from mglGraph class (@pxref{MathGL core}). It provide methods for handling window with MathGL graphics.
+This class is derived from mglGraph class (see @ref{MathGL core}). It is defined in @code{#include <mgl2/window.h>}. It provide methods for handling window with MathGL graphics.
 
 @deftypefn {Constructor on @code{mglWindow}} {} mglWindow (@code{const char *}title=@code{"MathGL"})
 @deftypefnx {Constructor on @code{mglWindow}} {} mglWindow (@code{int} (*draw)(@code{HMGL} gr, @code{void *}p), @code{const char *}title=@code{"MathGL"}, @code{void *}par=@code{NULL}, @code{int} kind=@code{0}, @code{void} (*reload)(@code{HMGL} gr, @code{void *}p)=0)
@@ -140,14 +140,14 @@ Gets last position of mouse click.
 @cindex Fl_MathGL
 @cindex widgets
 
-Class is FLTK widget which display MathGL graphics (defined in @code{#include <mgl2/fltk.h>}).
+Class is FLTK widget which display MathGL graphics. It is defined in @code{#include <mgl2/fltk.h>}.
 
 @fig{fltk, Example of FLTK window with MathGL plot.}
 
 @deftypemethod Fl_MathGL @code{void} set_draw (@code{int} (*draw)(@code{HMGL} gr, @code{void *}p))
 @deftypemethodx Fl_MathGL @code{void} set_draw (@code{int} (*draw)(@code{mglGraph *}gr))
 @deftypemethodx Fl_MathGL @code{void} set_draw (@code{mglDraw *}draw)
-Sets drawing function as global function as one from a class @code{mglDraw}. There is support of a list of plots (frames). So as one can prepare a set of frames at first and redraw it fast later (but it requires more memory). Function should return positive number of frames for the list or zero if it will plot directly. Parameter @var{par} contains pointer to data for the plotting function @var{draw}.
+Sets drawing function as global function or as one from a class @code{mglDraw}. There is support of a list of plots (frames). So as one can prepare a set of frames at first and redraw it fast later (but it requires more memory). Function should return positive number of frames for the list or zero if it will plot directly. Parameter @var{par} contains pointer to data for the plotting function @var{draw}.
 @end deftypemethod
 @deftypemethod Fl_MathGL @code{void} update ()
 Update (redraw) plot.
@@ -177,7 +177,7 @@ Set popup menu pointer
 
 @deftypemethod Fl_MathGL @code{void} set_graph (@code{mglCanvas *}gr)
 @deftypemethodx Fl_MathGL @code{void} set_graph (@code{mglGraph *}gr)
-Set new grapher instead of built-in one. Note that Fl_MathGL will automatically delete this object at destruction or at new @code{setGraph()} call.
+Set new grapher instead of built-in one. Note that Fl_MathGL will automatically delete this object at destruction or at new @code{set_graph()} call.
 @end deftypemethod
 @deftypemethod Fl_MathGL @code{HMGL} get_graph ()
 Get pointer to grapher.
@@ -197,7 +197,7 @@ Pointer to external phi-angle validator.
 @cindex QMathGL
 @cindex widgets
 
-Class is Qt widget which display MathGL graphics (defined in @code{#include <mgl2/qt.h>}).
+Class is Qt widget which display MathGL graphics. It is defined in @code{#include <mgl2/qt.h>}.
 
 @fig{qt, Example of Qt window with MathGL plot.}
 
@@ -211,7 +211,7 @@ Sets the drawing function @var{draw}. There is support of a list of plots (frame
 
 @deftypemethod QMathGL @code{void} setGraph (@code{mglCanvas *}gr)
 @deftypemethodx QMathGL @code{void} setGraph (@code{mglGraph *}gr)
-Set pointer to external grapher (instead of built-in @code{mglCanvas}). Note that QMathGL will automatically delete this object at destruction or at new @code{setGraph()} call.
+Set pointer to external grapher (instead of built-in one). Note that QMathGL will automatically delete this object at destruction or at new @code{setGraph()} call.
 @end deftypemethod
 @deftypemethod QMathGL @code{HMGL} getGraph ()
 Get pointer to grapher.
@@ -330,6 +330,7 @@ Restore zoom and rotation to default values.
 @c @deftypefn {Slot on @code{QMathGL}} @code{void} reload ()
 @c Reload data and redraw graphics.
 @c @end deftypefn
+
 @deftypefn {Slot on @code{QMathGL}} @code{void} exportPNG (@code{QString} fname=@code{""})
 Export current picture to PNG file.
 @end deftypefn
