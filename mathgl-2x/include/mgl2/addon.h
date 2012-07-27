@@ -61,6 +61,6 @@ void mgl_info(const char *str, ...);
 FILE *mgl_next_data(const char *fname,int p);
 /***************************************************************************/
 #ifdef __cplusplus
-};
+}
 #endif
 #endif

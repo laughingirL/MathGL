@@ -48,12 +48,11 @@ wchar_t *mgl_wcsdup(const wchar_t *s)
 void mgl_wcstrim(wchar_t *str)
 {
 	wchar_t *c = mgl_wcsdup(str);
-	unsigned long n=wcslen(str);
-	long k;
+	size_t n=wcslen(str), k;
 	for(k=0;k<n;k++)	if(str[k]>' ')	break;
 	wcscpy(c,str+k);	n = wcslen(c);
-	for(k=n-1;k>=0;k--)	if(c[k]>' ')	break;
-	c[k+1] = 0;
+	for(k=n;k>0;k--)	if(c[k-1]>' ')	break;
+	c[k] = 0;
 	wcscpy(str,c);	free(c);
 }
 //-----------------------------------------------------------------------------
@@ -358,7 +357,7 @@ void mgl_tick_text(mreal z, mreal z0, mreal d, mreal v, int kind, wchar_t str[64
 	if(kind==2 || (kind==3 && z>z0))	u /= v;
 	if((kind&1) && z>z0)
 	{
-		int n1,n2;
+		size_t n1,n2;
 		mglprintf(str, 64, L"@{(+%.2g)}",u);
 //		mglprintf(str, 64, fabs(u)<1 ? L"@{(+%.2g)}" : L"@{(+%.3g)}",u);
 		n1=wcslen(str);	mglprintf(str, 64, L"@{(+%g)}",u);	n2=wcslen(str);
@@ -367,7 +366,7 @@ void mgl_tick_text(mreal z, mreal z0, mreal d, mreal v, int kind, wchar_t str[64
 	}
 	else
 	{
-		int n1,n2;
+		size_t n1,n2;
 		mglprintf(str, 64, fabs(u)<1 ? L"%.2g" :  L"%.3g",u);
 		n1=wcslen(str);	mglprintf(str, 64, L"%g",u);	n2=wcslen(str);
 		if(n1<n2 && tune)	mglprintf(str, 64, fabs(u)<1 ? L"%.2g" :  L"%.3g",u);

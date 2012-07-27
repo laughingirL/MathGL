@@ -261,7 +261,7 @@ public:
 	/// Set default palette
 	inline void SetPalette(const char *colors)
 	{	Txt[0].Set(mgl_have_color(colors)?colors:MGL_DEF_PAL,-1);	}
-	inline long GetNumPal(long id) const	{	return Txt[abs(id)/256].n;	}
+	inline long GetNumPal(long id) const	{	return Txt[labs(id)/256].n;	}
 	/// Set default color scheme
 	inline void SetDefScheme(const char *colors)
 	{	Txt[1].Set(mgl_have_color(colors)?colors:"BbcyrR");	}

@@ -51,7 +51,7 @@ uintptr_t mgl_create_data_file_(const char *fname,int l)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	uintptr_t r = uintptr_t(new mglData(s));	delete []s;	return r;	}
 void mgl_delete_data_(uintptr_t *d)
-{	if(_DT_)	delete _DT_;	};
+{	if(_DT_)	delete _DT_;	}
 //-----------------------------------------------------------------------------
 void mglFromStr(HMDT d,char *buf,long NX,long NY,long NZ)	// TODO: add multithreading read
 {
