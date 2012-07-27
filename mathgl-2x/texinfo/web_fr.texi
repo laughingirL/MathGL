@@ -1,6 +1,6 @@
 \input texinfo
 @setfilename mgl_web_en.info
-@set VERSION 2.0
+@set VERSION 2.0.3
 @settitle MathGL @value{VERSION}
 @syncodeindex pg cp
 @comment %**end of header
@@ -73,6 +73,19 @@ supports it in developing GNU and promoting software freedom.''
 @ifhtml
 @macro external {}
 @html
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-1128070552722622";
+/* 728x90, создано 23.12.09 */
+google_ad_slot = "9958083480";
+google_ad_width = 728;
+google_ad_height = 90;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+<br/>
+
 <!--LiveInternet counter--><script type="text/javascript"><!--
 document.write("<a href='http://www.liveinternet.ru/click' "+
 "target=_blank><img src='http://counter.yadro.ru/hit?t12.2;r"+
@@ -141,7 +154,7 @@ Generally MathGL is GPL library. However, you can use LGPL license for MathGL co
 
 @strong{Latest news}
 @itemize
-@item @emph{29 March 2012.}
+@item @emph{12 April 2012.}
 New version (v.2.0) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are a lot of new features, which partially denoted @ref{News, here}.
 @end itemize
 
@@ -153,8 +166,37 @@ There is detailed @ref{News, news list}. Sourceforge project page @uref{http://s
 @section News
 
 @itemize
+
+@item
+@strong{27 July 2012.}
+New version (v.2.0.3) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are speeding up and minor bugfixes and improvements:
+@itemize @bullet
+@item
+Make code compilable by compilers GNU/MinGW GCC, Clang, MS VisualStudio
+@item
+Add mglTriangulation() using s_hull_pro algorithm
+@item
+Add mglData::Grid() and mglGraph::DataGrid() for filling regular data by values of triangulated surface
+@item
+Add cmake options 'enable-png' and 'enable-zlib'
+@item
+Add SetTimeUTC() for using UTC time instead of local one
+@item
+Add SetTickShift() for additional shift of tick labels
+@item
+Add mglGraph::MPI_Send() and mglGraph::MPI_Recv()
+@item
+Vector plots now draw vector at edges, which are directed out of bounding box
+@item
+Add gap between 1d plots for avoiding possible undetermined overlapping.
+@item
+Add parallel build for documentation
+@item
+Bugfixes for memory leaks and uninitialized variables, for setting text size, for handling NAN color value, for missing lines in export to EPS/SVG.
+@end itemize
+
 @item 
-@strong{29 March 2012.}
+@strong{12 April 2012.}
 New version (v.2.0) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are a lot of new features, which partially denoted below.
 @itemize @bullet
 @item

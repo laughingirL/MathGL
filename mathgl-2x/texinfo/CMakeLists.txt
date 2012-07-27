@@ -15,7 +15,7 @@ if(MGL_HAVE_DOC)
 	set(MGL_TEX ${CMAKE_SOURCE_DIR}/texinfo)
 	file(MAKE_DIRECTORY ${MGL_OUT}/png)
 	file(MAKE_DIRECTORY ${MGL_OUT}/small)
-	file(COPY ${MGL_TEX}/qt.png ${MGL_TEX}/fltk.png ${MGL_TEX}/classes.png DESTINATION ${MGL_OUT})
+	file(COPY ${MGL_TEX}/qt.png ${MGL_TEX}/fltk.png ${MGL_TEX}/classes.png ${MGL_TEX}/emblem_sm.png DESTINATION ${MGL_OUT})
 	file(COPY ${MGL_TEX}/toc_ru.html ${MGL_TEX}/toc_fr.html ${MGL_TEX}/toc_en.html ${MGL_TEX}/title.html ${MGL_TEX}/index.html DESTINATION ${MGL_OUT})
 
 	foreach(SAMPLE ${MGL_PNG})
@@ -31,9 +31,9 @@ if(MGL_HAVE_DOC)
 			WORKING_DIRECTORY ${MGL_OUT}/small )
 	endforeach(SAMPLE)
 
-	set(list_texi_files_en mathgl_en.texi mgl_en.texi overview_en.texi example_en.texi ex_mgl_en.texi parse_en.texi
+	set(list_texi_files_en overview_en.texi example_en.texi ex_mgl_en.texi parse_en.texi
 		core_en.texi concept_en.texi widget_en.texi data_en.texi other_en.texi appendix_en.texi fdl.texi)
-	set(list_texi_files_ru mathgl_ru.texi mgl_ru.texi overview_ru.texi example_ru.texi ex_mgl_ru.texi parse_ru.texi
+	set(list_texi_files_ru overview_ru.texi example_ru.texi ex_mgl_ru.texi parse_ru.texi
 		core_ru.texi concept_ru.texi widget_ru.texi data_ru.texi other_ru.texi appendix_ru.texi fdl.texi)
 
 	add_custom_command(OUTPUT ${MGL_OUT}/web_en.pdf
@@ -51,22 +51,22 @@ if(MGL_HAVE_DOC)
 
 	add_custom_command(OUTPUT ${MGL_OUT}/mathgl_en.info
 		COMMAND ${findmi} --no-validate ${MGL_TEX}/mathgl_en.texi
-		DEPENDS ${list_texi_files_en} ${MGL_PNG_N}
+		DEPENDS ${list_texi_files_en} mathgl_en.texi ${MGL_PNG_N}
 		WORKING_DIRECTORY ${MGL_OUT}
 	)
 	add_custom_command(OUTPUT ${MGL_OUT}/mathgl_en/mathgl_en.html
 		COMMAND ${findth} -I=${MGL_OUT}/png --split=section -o mathgl_en ${MGL_TEX}/mathgl_en.texi
-		DEPENDS ${list_texi_files_en} ${MGL_PNG_N}
+		DEPENDS ${list_texi_files_en} mathgl_en.texi ${MGL_PNG_N}
 		WORKING_DIRECTORY ${MGL_OUT}
 	)
 	add_custom_command(OUTPUT ${MGL_OUT}/doc_en/doc_en.html
 		COMMAND ${findth} -I=${MGL_OUT}/png --split=node --frames -o doc_en ${MGL_TEX}/doc_en.texi
-		DEPENDS ${list_texi_files_en} ${MGL_PNG_N}
+		DEPENDS ${list_texi_files_en} doc_en.texi ${MGL_PNG_N}
 		WORKING_DIRECTORY ${MGL_OUT}
 	)
 	add_custom_command(OUTPUT ${MGL_OUT}/mgl_en.html
 		COMMAND ${findth} -I=${MGL_OUT}/png --split=no -o mgl_en.html ${MGL_TEX}/mgl_en.texi
-		DEPENDS ${list_texi_files_en} ${MGL_PNG_N}
+		DEPENDS ${list_texi_files_en} mgl_en.texi ${MGL_PNG_N}
 		WORKING_DIRECTORY ${MGL_OUT}
 	)
 
@@ -74,7 +74,7 @@ if(MGL_HAVE_DOC)
 		COMMAND ${findtp} -I ${MGL_OUT}/png ${MGL_TEX}/mathgl_en.texi
 		COMMAND ${findtp} -I ${MGL_OUT}/png ${MGL_TEX}/mathgl_en.texi
 		COMMAND ${findtp} -I ${MGL_OUT}/png ${MGL_TEX}/mathgl_en.texi
-		DEPENDS ${list_texi_files_en} ${MGL_PNG_N}
+		DEPENDS ${list_texi_files_en} mathgl_en.texi ${MGL_PNG_N}
 		WORKING_DIRECTORY ${MGL_OUT}
 	)
 
@@ -93,22 +93,22 @@ if(MGL_HAVE_DOC)
 
 	add_custom_command(OUTPUT ${MGL_OUT}/mathgl_ru.info
 		COMMAND ${findmi} --no-validate ${MGL_TEX}/mathgl_ru.texi
-		DEPENDS ${list_texi_files_ru} ${MGL_PNG_N}
+		DEPENDS ${list_texi_files_ru} mathgl_ru.texi ${MGL_PNG_N}
 		WORKING_DIRECTORY ${MGL_OUT}
 	)
 	add_custom_command(OUTPUT ${MGL_OUT}/mathgl_ru/mathgl_ru.html
 		COMMAND ${findth} -I=${MGL_OUT}/png --split=section -o mathgl_ru ${MGL_TEX}/mathgl_ru.texi
-		DEPENDS ${list_texi_files_ru} ${MGL_PNG_N}
+		DEPENDS ${list_texi_files_ru} mathgl_ru.texi ${MGL_PNG_N}
 		WORKING_DIRECTORY ${MGL_OUT}
 	)
 	add_custom_command(OUTPUT ${MGL_OUT}/doc_ru/doc_ru.html
 		COMMAND ${findth} -I=${MGL_OUT}/png --split=node --frames -o doc_ru ${MGL_TEX}/doc_ru.texi
-		DEPENDS ${list_texi_files_ru} ${MGL_PNG_N}
+		DEPENDS ${list_texi_files_ru} doc_ru.texi ${MGL_PNG_N}
 		WORKING_DIRECTORY ${MGL_OUT}
 	)
 	add_custom_command(OUTPUT ${MGL_OUT}/mgl_ru.html
 		COMMAND ${findth} -I=${MGL_OUT}/png --split=no -o mgl_ru.html ${MGL_TEX}/mgl_ru.texi
-		DEPENDS ${list_texi_files_ru} ${MGL_PNG_N}
+		DEPENDS ${list_texi_files_ru} mgl_ru.texi ${MGL_PNG_N}
 		WORKING_DIRECTORY ${MGL_OUT}
 	)
 
@@ -116,7 +116,7 @@ if(MGL_HAVE_DOC)
 		COMMAND ${findtp} -I ${MGL_OUT}/png ${MGL_TEX}/mathgl_ru.texi
 		COMMAND ${findtp} -I ${MGL_OUT}/png ${MGL_TEX}/mathgl_ru.texi
 		COMMAND ${findtp} -I ${MGL_OUT}/png ${MGL_TEX}/mathgl_ru.texi
-		DEPENDS ${list_texi_files_ru} ${MGL_PNG_N}
+		DEPENDS ${list_texi_files_ru} mathgl_ru.texi ${MGL_PNG_N}
 		WORKING_DIRECTORY ${MGL_OUT}
 	)
 
@@ -134,8 +134,8 @@ if(MGL_HAVE_DOC)
 		DEPENDS ${MGL_OUT}/mgl_ru.html
 		DEPENDS ${MGL_OUT}/mathgl_ru/mathgl_ru.html
 
-# 		DEPENDS ${MGL_OUT}/doc_ru/doc_ru.html
-# 		DEPENDS ${MGL_OUT}/web_ru/web_ru.html
+		DEPENDS ${MGL_OUT}/doc_ru/doc_ru.html
+		DEPENDS ${MGL_OUT}/web_ru/web_ru.html
 	)
 # 	add_custom_target(clean
 # 		COMMAND rm -f * */*

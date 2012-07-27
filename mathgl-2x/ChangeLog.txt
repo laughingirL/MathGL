@@ -1,4 +1,4 @@
-2.0.3 Released ?? July 2012
+2.0.3 Released 27 July 2012
 
 * Make code compilable by compilers GNU/MinGW GCC, Clang, MS VisualStudio
 * Add mglTriangulation() using s_hull_pro algorithm
