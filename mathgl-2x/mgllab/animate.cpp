@@ -29,8 +29,8 @@ public:
 	int OK;
 	Fl_Input *a[10];
 
-	ArgumentDlg()	{	memset(this,0,sizeof(ArgumentDlg));	create_dlg();	};
-	~ArgumentDlg()	{	delete wnd;	};
+	ArgumentDlg()	{	memset(this,0,sizeof(ArgumentDlg));	create_dlg();	}
+	~ArgumentDlg()	{	delete wnd;	}
 	void FillResult();
 protected:
 	void create_dlg();

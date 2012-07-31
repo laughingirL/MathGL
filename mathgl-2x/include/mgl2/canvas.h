@@ -243,7 +243,7 @@ using mglBase::Light;
 	void AdjustTicks(const char *dir="xyzc", bool force=false);
 	/// Tune ticks
 	inline void SetTuneTicks(int tune, mreal pos=1.15)
-	{	TuneTicks = tune;	FactorPos = pos;	};
+	{	TuneTicks = tune;	FactorPos = pos;	}
 	/// Set ticks styles
 	void SetAxisStl(const char *stl="k", const char *tck=0, const char *sub=0);
 	/// Set ticks length
@@ -278,7 +278,7 @@ using mglBase::Light;
 	/// Draw legend strings \a text at position (x, y) by \a font with \a size
 	void Legend(const std::vector<mglText> &leg, mreal x, mreal y, const char *font="#", mreal size=-0.8, mreal llen=0);
 	/// Number of marks in legend sample
-	inline void SetLegendMarks(int num=1)	{	LegendMarks = num>0?num:1;	};
+	inline void SetLegendMarks(int num=1)	{	LegendMarks = num>0?num:1;	}
 
 	void StartAutoGroup (const char *);
 	void EndGroup();
@@ -391,6 +391,7 @@ private:
 	int dr_nx1, dr_nx2, dr_ny1, dr_ny2;	// Allowed drawing region
 	GifFileType *gif;
 	mreal fscl,ftet;	///< last scale and rotation for glyphs
+	size_t grp_counter;	///< Counter for StartGroup(); EndGroup();
 
 	/// Draw generic colorbar
 	void colorbar(HCDT v, const mreal *s, int where, mreal x, mreal y, mreal w, mreal h);

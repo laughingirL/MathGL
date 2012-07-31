@@ -44,9 +44,9 @@ HMDT mgl_create_data_file(const char *fname)		{	return new mglData(fname);	}
 void mgl_delete_data(HMDT d)	{	if(d)	delete d;	}
 //-----------------------------------------------------------------------------
 uintptr_t mgl_create_data_()
-{	return uintptr_t(new mglData());	};
+{	return uintptr_t(new mglData());	}
 uintptr_t mgl_create_data_size_(int *nx, int *ny, int *nz)
-{	return uintptr_t(new mglData(*nx,*ny,*nz));	};
+{	return uintptr_t(new mglData(*nx,*ny,*nz));	}
 uintptr_t mgl_create_data_file_(const char *fname,int l)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	uintptr_t r = uintptr_t(new mglData(s));	delete []s;	return r;	}

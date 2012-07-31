@@ -44,8 +44,8 @@ public:
 
 	QMathGL(QWidget *parent = 0, Qt::WindowFlags f = 0);
 	~QMathGL();
-	double getRatio()	{	return double(gr->GetWidth())/gr->GetHeight();	};
-	void setPopup(QMenu *p)	{	popup = p;	};	///< Set popup menu pointer
+	double getRatio()	{	return double(gr->GetWidth())/gr->GetHeight();	}
+	void setPopup(QMenu *p)	{	popup = p;	}	///< Set popup menu pointer
 	void setSize(int w, int h);		///< Set window/picture sizes
 	void setGraph(mglCanvas *GR)	///< Set grapher object
 	{	if(gr)	{	delete gr;	gr=GR;	}	}
@@ -62,13 +62,13 @@ public:
 	inline void zoomRegion(mreal xx1,mreal xx2,mreal yy1, mreal yy2)
 	{	x1=xx1;	y1=yy1;	x2=xx2;	y2=yy2;	}
 
-	int getPer()	{return int(per);};	///< Get perspective value
-	int getPhi()	{return int(phi);};	///< Get Phi-angle value
-	int getTet()	{return int(tet);};	///< Get Theta-angle value
-	bool getAlpha()	{return alpha;};	///< Get transparency state
-	bool getLight()	{return light;};	///< Get lightning state
-	bool getZoom()	{return zoom;};		///< Get mouse zooming state
-	bool getRotate(){return rotate;};	///< Get mouse rotation state
+	int getPer()	{return int(per);}	///< Get perspective value
+	int getPhi()	{return int(phi);}	///< Get Phi-angle value
+	int getTet()	{return int(tet);}	///< Get Theta-angle value
+	bool getAlpha()	{return alpha;}		///< Get transparency state
+	bool getLight()	{return light;}		///< Get lightning state
+	bool getZoom()	{return zoom;}		///< Get mouse zooming state
+	bool getRotate(){return rotate;}	///< Get mouse rotation state
 
 public slots:
 	void refresh();

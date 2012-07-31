@@ -110,7 +110,8 @@ GifFileType *gif;*/
 	AdjustTicks("xyzc",true);	Clf();
 
 	for(int i=0;i<10;i++)	{	AddLight(i, mglPoint(0,0,1));	Light(i,false);	}
-	Light(0,true);		Light(false);	SetDifLight(true);
+	Light(0,true);	Light(false);	SetDifLight(true);
+	grp_counter=0;
 }
 //-----------------------------------------------------------------------------
 //	Optimal axis position
@@ -698,7 +699,7 @@ void mglCanvas::Legend(const std::vector<mglText> &leg, mreal x, mreal y, const 
 	if(k4==2)	k2=0;
 	if(k4==1)	k1=k2=0;
 	mreal c1=AddTexture(char(k1?k1:'w')), c2=AddTexture(char(k2?k2:'k'));
-	if((Flag&3)==2)	{	mreal cc=c1;	c2=c1;	c2=cc;	};
+	if((Flag&3)==2)	{	mreal cc=c1;	c2=c1;	c2=cc;	}
 
 	if(strchr(ff,'#'))	// draw bounding box
 	{
@@ -754,7 +755,7 @@ void mglCanvas::Title(const wchar_t *title,const char *stl,mreal size)
 	if(box)	//	draw boungind box
 	{
 		mreal c1=AddTexture('w'), c2=AddTexture('k');
-		if((Flag&3)==2)	{	mreal cc=c1;	c2=c1;	c2=cc;	};
+		if((Flag&3)==2)	{	mreal cc=c1;	c2=c1;	c2=cc;	}
 		long k1,k2,k3,k4;
 		k1=AddPnt(mglPoint(x,y,Depth),c1,q,-1,0);
 		k2=AddPnt(mglPoint(x+inW,y,Depth),c1,q,-1,0);
@@ -773,6 +774,8 @@ void mglCanvas::Title(const wchar_t *title,const char *stl,mreal size)
 void mglCanvas::StartAutoGroup (const char *lbl)
 {
 	static int id=1;
+	grp_counter++;
+	if(grp_counter>1)	return;	// do nothing in "subgroups"
 	if(lbl==NULL)	{	id=1;	return;	}
 	if(ObjId<0)	{	ObjId = -id;	id++;	}
 	register size_t len = Grp.size();
@@ -782,5 +785,9 @@ void mglCanvas::StartAutoGroup (const char *lbl)
 	{	MGL_PUSH(Grp,mglGroup(lbl,ObjId),mutexGrp);	}
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::EndGroup()	{	LoadState();	}
+void mglCanvas::EndGroup()
+{
+	LoadState();
+	if(grp_counter>0)	grp_counter--;
+}
 //-----------------------------------------------------------------------------

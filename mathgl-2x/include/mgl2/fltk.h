@@ -67,10 +67,10 @@ public:
 	void set_state(bool z, bool r)	{	zoom = z;	rotate = r;	}
 	/// Set zoom in/out region
 	inline void set_zoom(mreal X1, mreal Y1, mreal X2, mreal Y2)
-	{	x1 = X1;	x2 = X2;	y1 = Y1;	y2 = Y2;	update();	};
+	{	x1 = X1;	x2 = X2;	y1 = Y1;	y2 = Y2;	update();	}
 	/// Get zoom region
 	inline void get_zoom(mreal *X1, mreal *Y1, mreal *X2, mreal *Y2)
-	{	*X1 = x1;	*X2 = x2;	*Y1 = y1;	*Y2 = y2;	};
+	{	*X1 = x1;	*X2 = x2;	*Y1 = y1;	*Y2 = y2;	}
 	/// Set popup menu pointer
 	inline void set_popup(const Fl_Menu_Item *pmenu, Fl_Widget *wdg, void *v)
 	{	popup = pmenu;	wpar = wdg;	vpar = v;	}

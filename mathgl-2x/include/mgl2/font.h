@@ -66,7 +66,7 @@ public:
 	/// Restore default font
 	void Restore();
 	/// Return true if font is loaded
-	inline bool Ready() const	{	return numg!=0;	};
+	inline bool Ready() const	{	return numg!=0;	}
 
 	/// Get height of text
 	float Height(int font) const;
@@ -84,11 +84,11 @@ public:
 	/// Return number of glyphs
 	inline unsigned GetNumGlyph() const	{	return numg;	};
 	/// Return some of pointers
-	inline const short *GetTr(int s, long j) const	{	return Buf+tr[s][j];	};
-	inline const short *GetLn(int s, long j) const	{	return Buf+ln[s][j];	};
-	inline int GetNt(int s, long j) const	{	return numt[s][j];	};
-	inline int GetNl(int s, long j) const	{	return numl[s][j];	};
-	inline float GetFact(int s) const		{	return fact[s];	};
+	inline const short *GetTr(int s, long j) const	{	return Buf+tr[s][j];	}
+	inline const short *GetLn(int s, long j) const	{	return Buf+ln[s][j];	}
+	inline int GetNt(int s, long j) const	{	return numt[s][j];	}
+	inline int GetNl(int s, long j) const	{	return numl[s][j];	}
+	inline float GetFact(int s) const		{	return fact[s];	}
 protected:
 	wchar_t *id;		///< Unicode ID for glyph
 	unsigned *tr[4];	///< Shift of glyph description by triangles (for solid font)

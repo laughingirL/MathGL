@@ -230,7 +230,7 @@ struct mgl_ap
 {
 	double x0,y0,x1,y1;	// vectors {l, g1, g2}
 	double t1,ch,q1,pt,dt,d1;	// theta_{1,2}, chi, q_{1,2}, p_t, dtau, dq_{1,2}
-	mgl_ap()	{	memset(this,0,sizeof(mgl_ap));	};
+	mgl_ap()	{	memset(this,0,sizeof(mgl_ap));	}
 };
 //-----------------------------------------------------------------------------
 void mgl_init_ra(int n, const mreal *r, mgl_ap *ra)	// prepare some intermediate data for mglPDE2d

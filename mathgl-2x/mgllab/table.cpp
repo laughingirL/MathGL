@@ -57,8 +57,8 @@ struct XYZDlg
 	Fl_Box *box;
 	Fl_Check_Button *ch;
 	Fl_Spinner *mx, *my, *mz;
-	XYZDlg()	{	memset(this,0,sizeof(XYZDlg));	create_dlg();	};
-	~XYZDlg()	{	delete wnd;	};
+	XYZDlg()	{	memset(this,0,sizeof(XYZDlg));	create_dlg();	}
+	~XYZDlg()	{	delete wnd;	}
 	void create_dlg();
 } xyz_dlg;
 //-----------------------------------------------------------------------------
@@ -142,8 +142,8 @@ struct ChngDlg
 
 	Fl_Check_Button *dx, *dy, *dz;
 	Fl_Choice *kind, *type;
-	ChngDlg()	{	memset(this,0,sizeof(ChngDlg));	create_dlg();	};
-	~ChngDlg()	{	delete wnd;	};
+	ChngDlg()	{	memset(this,0,sizeof(ChngDlg));	create_dlg();	}
+	~ChngDlg()	{	delete wnd;	}
 	void create_dlg();
 	void execute(mglData *d);
 } chng_dlg;
@@ -267,8 +267,8 @@ struct NwdtDlg
 	Fl_Check_Button *dx, *dy, *dz;
 	Fl_Choice *kind;
 	Fl_Input *name;
-	NwdtDlg()	{	memset(this,0,sizeof(NwdtDlg));	create_dlg();	};
-	~NwdtDlg()	{	delete wnd;	};
+	NwdtDlg()	{	memset(this,0,sizeof(NwdtDlg));	create_dlg();	}
+	~NwdtDlg()	{	delete wnd;	}
 	void create_dlg();
 } nwdt_dlg;
 //-----------------------------------------------------------------------------
@@ -447,8 +447,8 @@ struct NrmDlg
 	Fl_Value_Input *min, *max;
 	Fl_Choice *dir;
 	Fl_Check_Button *sym;
-	NrmDlg()	{	memset(this,0,sizeof(NrmDlg));	create_dlg();	};
-	~NrmDlg()	{	delete wnd;	};
+	NrmDlg()	{	memset(this,0,sizeof(NrmDlg));	create_dlg();	}
+	~NrmDlg()	{	delete wnd;	}
 	void create_dlg();
 } nrm_dlg;
 //-----------------------------------------------------------------------------
@@ -518,8 +518,8 @@ struct CropDlg
 	bool OK;
 
 	Fl_Input *x1,*x2, *y1,*y2, *z1,*z2;
-	CropDlg()	{	memset(this,0,sizeof(CropDlg));	create_dlg();	};
-	~CropDlg()	{	delete wnd;	};
+	CropDlg()	{	memset(this,0,sizeof(CropDlg));	create_dlg();	}
+	~CropDlg()	{	delete wnd;	}
 	void create_dlg();
 } crop_dlg;
 //-----------------------------------------------------------------------------
@@ -580,8 +580,8 @@ struct TrspDlg
 	bool OK;
 
 	Fl_Round_Button *xyz, *xzy, *yxz, *yzx, *zxy, *zyx;
-	TrspDlg()	{	memset(this,0,sizeof(TrspDlg));	create_dlg();	};
-	~TrspDlg()	{	delete wnd;	};
+	TrspDlg()	{	memset(this,0,sizeof(TrspDlg));	create_dlg();	}
+	~TrspDlg()	{	delete wnd;	}
 	void create_dlg();
 } trsp_dlg;
 //-----------------------------------------------------------------------------

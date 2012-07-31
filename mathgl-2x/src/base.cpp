@@ -911,14 +911,14 @@ bool mgl_check_dim2(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *name, b
 		if(x->GetNx()<n)
 		{	gr->SetWarn(mglWarnDim,name);	return true;	}
 		if(y->GetNx()<m && (x->GetNy()<m || y->GetNx()<n || y->GetNy()<m))
-		{	gr->SetWarn(mglWarnDim,name);	return true;	};
+		{	gr->SetWarn(mglWarnDim,name);	return true;	}
 	}
 	else
 	{
 		if(x->GetNx()!=n)
 		{	gr->SetWarn(mglWarnDim,name);	return true;	}
 		if(y->GetNx()!=m && (x->GetNy()!=m || y->GetNx()!=n || y->GetNy()!=m))
-		{	gr->SetWarn(mglWarnDim,name);	return true;	};
+		{	gr->SetWarn(mglWarnDim,name);	return true;	}
 	}
 	return false;
 }

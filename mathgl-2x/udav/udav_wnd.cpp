@@ -149,8 +149,8 @@ void udavAddCommands(const mglCommand *cmd)
 {
 	int i, mp, mc;
 	// determine the number of symbols
-	for(i=0;parser.Cmd[i].name[0];i++){};	mp = i;
-	for(i=0;cmd[i].name[0];i++){};			mc = i;
+	for(i=0;parser.Cmd[i].name[0];i++);	mp = i;
+	for(i=0;cmd[i].name[0];i++);			mc = i;
 	mglCommand *buf = new mglCommand[mp+mc+1];
 	memcpy(buf, parser.Cmd, mp*sizeof(mglCommand));
 	memcpy(buf+mp, cmd, (mc+1)*sizeof(mglCommand));
@@ -425,7 +425,7 @@ void MainWindow::editPosChanged()
 	for(i=0;i<n;i++)	if(dlm.contains(text[i]))	break;
 	text.truncate(i);
 
-	for(n=0;parser.Cmd[n].name[0];n++){};	// determine the number of symbols in parser
+	for(n=0;parser.Cmd[n].name[0];n++);	// determine the number of symbols in parser
 	mglCommand tst, *rts;	tst.name = text.toAscii().data();
 	rts = (mglCommand *)bsearch(&tst, parser.Cmd, n, sizeof(mglCommand), mgl_cmd_cmp);
 	if(rts)	setStatus(QString::fromAscii(rts->desc)+": "+QString::fromAscii(rts->form));

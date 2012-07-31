@@ -31,7 +31,7 @@ class HintDialog : public QDialog
 Q_OBJECT
 public:
 	HintDialog(QWidget *parent = 0);
-	~HintDialog()	{};
+	~HintDialog()	{}
 protected:
 	void closeEvent(QCloseEvent *event);
 private slots:

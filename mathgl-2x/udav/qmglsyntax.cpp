@@ -32,7 +32,7 @@ QMGLSyntax::QMGLSyntax(QTextEdit *textEdit) : QSyntaxHighlighter(textEdit)	{}
 void QMGLSyntax::highlightBlock(const QString &text)
 {
 	register int i, j, n, m = text.length(),s=0;
-	for(n=0;parser.Cmd[n].name[0];n++){};	// determine the number of symbols in parser
+	for(n=0;parser.Cmd[n].name[0];n++);	// determine the number of symbols in parser
 	bool arg = false, nl = true;
 	QString num("+-.0123456789:");
 	for(i=0;i<m;i++)				// highlight paragraph
@@ -44,7 +44,7 @@ void QMGLSyntax::highlightBlock(const QString &text)
 		else if(text[i]=='\'')	// string
 		{
 			j=i;	i++;
-			for(;i<m && text[i]!='\'';i++){};
+			for(;i<m && text[i]!='\'';i++);
 			setFormat(j,i-j+1,mglColorScheme[1]);
 		}
 		else if(nl)				// keyword

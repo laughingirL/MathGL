@@ -37,7 +37,7 @@ public:
 	InfoDialog(QWidget *parent = 0);
 	~InfoDialog();
 	void setVar(mglVar *v);
-	void setSlice(int k)	{	kz=k;	refresh();	};
+	void setSlice(int k)	{	kz=k;	refresh();	}
 	bool allowRefresh;
 //	void setName(QString &name);
 	void showEvent(QShowEvent *ev);

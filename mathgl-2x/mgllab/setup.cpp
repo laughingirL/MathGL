@@ -338,8 +338,8 @@ struct PropDlg
 
 	Fl_Input *path, *locale, *font, *fpath;
 	Fl_Check_Button *plast, *aexec, *ifont;
-	PropDlg()	{	memset(this,0,sizeof(PropDlg));	create_dlg();	};
-	~PropDlg()	{	delete wnd;	};
+	PropDlg()	{	memset(this,0,sizeof(PropDlg));	create_dlg();	}
+	~PropDlg()	{	delete wnd;	}
 	void create_dlg();
 	void finish();
 	void init();

@@ -715,6 +715,7 @@ void mglCanvas::Box(const char *col, bool ticks)
 	mreal tl=TickLen;
 	if(!ticks)	TickLen=0;
 	set(MGL_NOSUBTICKS);	Org = Min;
+	static int cgid=1;	StartGroup("Box",cgid++);
 	Axis("xyz_",col);
 	if(TernAxis&1)
 	{
@@ -770,6 +771,7 @@ void mglCanvas::Box(const char *col, bool ticks)
 			mgl_facez(this, Min.x, Min.y, oo[im].z, Max.x-Min.x, Max.y-Min.y, color,0,0);
 		}
 	}
+	EndGroup();
 	clr(MGL_NOSUBTICKS);	Org=o;	TickLen=tl;
 }
 //-----------------------------------------------------------------------------

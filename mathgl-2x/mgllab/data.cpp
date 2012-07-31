@@ -31,8 +31,8 @@ struct VarDlg
 
 	Fl_Choice *var;
 	Fl_Spinner *dim1, *dim2, *dim3;
-	VarDlg()	{	memset(this,0,sizeof(VarDlg));	create_dlg();	};
-	~VarDlg()	{	delete wnd;	};
+	VarDlg()	{	memset(this,0,sizeof(VarDlg));	create_dlg();	}
+	~VarDlg()	{	delete wnd;	}
 	void create_dlg();
 	char *get_result();
 	void init();
@@ -181,8 +181,8 @@ struct CmdDlg
 	Fl_Input *stl, *zval, *par1, *par2, *opt;
 	Fl_Help_View *help;
 
-	CmdDlg()	{	memset(this,0,sizeof(CmdDlg));	create_dlg();	};
-	~CmdDlg()	{	delete wnd;	};
+	CmdDlg()	{	memset(this,0,sizeof(CmdDlg));	create_dlg();	}
+	~CmdDlg()	{	delete wnd;	}
 	void create_dlg();
 	char *get_result();
 } cmd_dlg;

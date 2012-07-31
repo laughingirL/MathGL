@@ -49,7 +49,7 @@ typedef const mglData* HCDT;
 class mglDataA
 {
 public:
-	virtual ~mglDataA()	{};
+	virtual ~mglDataA()	{}
 	virtual mreal v(long i,long j=0,long k=0) const = 0;
 	virtual mreal vthr(long i) const = 0;
 	virtual long GetNx() const = 0;
@@ -257,7 +257,7 @@ public:
 	virtual bool Alpha(bool enable)
 	{	bool t=get(MGL_ENABLE_ALPHA);	set(enable,MGL_ENABLE_ALPHA);	return t;	}
 	/// Set default value of alpha-channel
-	inline void SetAlphaDef(mreal val)	{	AlphaDef=val;	};
+	inline void SetAlphaDef(mreal val)	{	AlphaDef=val;	}
 	/// Set default palette
 	inline void SetPalette(const char *colors)
 	{	Txt[0].Set(mgl_have_color(colors)?colors:MGL_DEF_PAL,-1);	}
@@ -267,9 +267,9 @@ public:
 	{	Txt[1].Set(mgl_have_color(colors)?colors:"BbcyrR");	}
 
 	/// Set number of mesh lines
-	inline void SetMeshNum(int val)	{	MeshNum=val;	};
+	inline void SetMeshNum(int val)	{	MeshNum=val;	}
 	/// Set relative width of rectangles in Bars, Barh, BoxPlot
-	inline void SetBarWidth(mreal val)	{	BarWidth=val;	};
+	inline void SetBarWidth(mreal val)	{	BarWidth=val;	}
 	/// Set size of marks
 	inline void SetMarkSize(mreal val)	{	MarkSize=0.02*val;	}
 	/// Set size of arrows
@@ -288,9 +288,9 @@ public:
 	/// Set FontSize by size in pt and picture DPI (default is 16 pt for dpi=72)
 	virtual void SetFontSizePT(mreal pt, int dpi=72){	FontSize = pt*27.f/dpi;	}
 	/// Set FontSize by size in centimeters and picture DPI (default is 0.56 cm = 16 pt)
-	inline void SetFontSizeCM(mreal cm, int dpi=72)	{	SetFontSizePT(cm*28.45f,dpi);	};
+	inline void SetFontSizeCM(mreal cm, int dpi=72)	{	SetFontSizePT(cm*28.45f,dpi);	}
 	/// Set FontSize by size in inch and picture DPI (default is 0.22 in = 16 pt)
-	inline void SetFontSizeIN(mreal in, int dpi=72)	{	SetFontSizePT(in*72.27f,dpi);	};
+	inline void SetFontSizeIN(mreal in, int dpi=72)	{	SetFontSizePT(in*72.27f,dpi);	}
 	/// Set font typeface. Note that each mglFont instance can be used with ONLY ONE mglGraph instance at a moment of time!
 	void SetFont(mglFont *f);
 	/// Get current typeface. Note that this variable can be deleted at next SetFont() call!
@@ -299,12 +299,12 @@ public:
 	inline void RestoreFont()	{	fnt->Restore();	}
 	/// Load font from file
 	inline void LoadFont (const char *name, const char *path=NULL)
-	{	fnt->Load(name,path);	};
+	{	fnt->Load(name,path);	}
 	/// Copy font from another mglGraph instance
 	inline void CopyFont(mglBase *gr)	{	fnt->Copy(gr->GetFont());	}
 	/// Set default font size
 	inline void SetFontSize(mreal val)	{	FontSize=val>0 ? val:FontSize*val;	}
-	inline mreal GetFontSize() const	{	return FontSize;	};
+	inline mreal GetFontSize() const	{	return FontSize;	}
 	inline mreal TextWidth(const wchar_t *text, const char *font, mreal size) const
 	{	return (size<0?-size*FontSize:size)*font_factor*fnt->Width(text,(font&&*font)?font:FontDef)/8;	}
 	inline mreal TextHeight(const char *font, mreal size) const
@@ -367,7 +367,7 @@ public:
 	char SetPenPal(const char *stl, long *id=0);
 	/// Add texture (like color scheme) and return the position of first color
 	long AddTexture(const char *cols, int smooth=0);
-//	inline mreal AddTexture(char col)	{	return AddTexture(mglColor(col));	};
+//	inline mreal AddTexture(char col)	{	return AddTexture(mglColor(col));	}
 	mreal AddTexture(mglColor col);
 	inline void DefColor(mglColor col)	{	CDef = AddTexture(col);	}
 	/// Set next color from palette

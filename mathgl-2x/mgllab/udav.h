@@ -75,7 +75,7 @@ private:
 protected:
 	void draw_cell(TableContext context, int R, int C, int X, int Y, int W, int H);
 	static void event_callback(Fl_Widget*, void*v)
-	{	((Fl_Data_Table*)v)->cell_click();	};
+	{	((Fl_Data_Table*)v)->cell_click();	}
 	void cell_click();
 
 public:
@@ -101,8 +101,8 @@ struct AnimateDlg
 public:
 	Fl_Window* wnd;
 	int OK;
-	AnimateDlg()	{	memset(this,0,sizeof(AnimateDlg));	create_dlg();	};
-	~AnimateDlg()	{	delete wnd;	};
+	AnimateDlg()	{	memset(this,0,sizeof(AnimateDlg));	create_dlg();	}
+	~AnimateDlg()	{	delete wnd;	}
 	void FillResult(Fl_MGL* e);
 protected:
 	bool swap;
@@ -155,8 +155,8 @@ public:
 	void update(mglVar *v);
 	void refresh();
 	void set_slice(long s);
-	inline long get_slice() { return sl; };
-	inline long num_slice()	{	return nz;	};
+	inline long get_slice() { return sl; }
+	inline long num_slice()	{	return nz;	}
 	void go_home();
 
 	Fl_Data_Table *data;
@@ -178,8 +178,8 @@ public:
 	bool OK;
 	Fl_Input *templ;
 
-	SetupDlg()	{	memset(this,0,sizeof(SetupDlg));	};
-	~SetupDlg()	{	delete wnd;	};
+	SetupDlg()	{	memset(this,0,sizeof(SetupDlg));	}
+	~SetupDlg()	{	delete wnd;	}
 	void CreateDlg();
 	char *ToScript();
 private:

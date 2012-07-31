@@ -32,7 +32,7 @@ struct mglArg
 	std::wstring w;	///< String with parameters
 	std::string s;	///< String with parameters
 	mreal v;		///< Numerical value (used if type==2)
-	mglArg()	{	type=-1;	d=0;	v=0;	};
+	mglArg()	{	type=-1;	d=0;	v=0;	}
 };
 //-----------------------------------------------------------------------------
 /// Structure for MGL command
@@ -60,7 +60,7 @@ struct mglVar
 	bool temp;		///< This temporar variable
 	void (*func)(void *);	///< Callback function for destroying
 
-	mglVar()	{	o=0;	next=prev=0;	func=0;	temp=false;	};
+	mglVar()	{	o=0;	next=prev=0;	func=0;	temp=false;	}
 	~mglVar();
 	/// Move variable after \a var and copy \a func from \a var (if \a func is 0)
 	void MoveAfter(mglVar *var);
@@ -73,7 +73,7 @@ struct mglNum
 	std::wstring s;	///< Number name
 	mglNum *next;	///< Pointer to next instance in list
 	mglNum *prev;	///< Pointer to prev instance in list
-	mglNum()	{	d=0;	next=prev=0;	};
+	mglNum()	{	d=0;	next=prev=0;	}
 	~mglNum();
 	/// Move variable after \a var and copy \a func from \a var (if \a func is 0)
 	void MoveAfter(mglNum *var);
@@ -174,7 +174,7 @@ public:
 	/// Add new MGL command(s) (last command MUST HAVE name[0]=0 !!!)
 	void AddCommand(mglCommand *cmd, int num=0);
 	/// Restore Once flag
-	inline void RestoreOnce()	{	Once = true;	};
+	inline void RestoreOnce()	{	Once = true;	}
 	/// Delete variable
 	void DeleteVar(mglVar *v);
 	/// Delete variable by its name
@@ -213,8 +213,8 @@ private:
 	/// Parse $N arguments
 	void PutArg(const wchar_t *string, wchar_t *str, bool def);
 	/// In skip mode
-	bool inline ifskip()	{	return (if_pos>0 && !(if_stack[if_pos-1]&1));	};
-	bool inline skip()		{	return (Skip || ifskip() || for_br);	};
+	bool inline ifskip()	{	return (if_pos>0 && !(if_stack[if_pos-1]&1));	}
+	bool inline skip()		{	return (Skip || ifskip() || for_br);	}
 };
 //-----------------------------------------------------------------------------
 #endif

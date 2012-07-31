@@ -33,7 +33,7 @@ Q_OBJECT
 public:
 	bool gifOn, jpgOn;
 	/// string with resulting animation parameters
-	const QString &getResult()	{	return res;	};
+	const QString &getResult()	{	return res;	}
 	void setResult(const QString &s);
 	void setResult(double a1,double a2,double da);
 	AnimParam(QWidget *parent=0);

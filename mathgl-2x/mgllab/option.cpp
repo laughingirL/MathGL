@@ -40,8 +40,8 @@ public:
 	Fl_Window* wnd;
 	int OK;
 	char result[256];
-	OptionDlg()	{	memset(this,0,sizeof(OptionDlg));	create_dlg();	};
-	~OptionDlg()	{	delete wnd;	};
+	OptionDlg()	{	memset(this,0,sizeof(OptionDlg));	create_dlg();	}
+	~OptionDlg()	{	delete wnd;	}
 	void FillResult();
 protected:
 	Fl_Input *xmin, *xmax, *ymin, *ymax, *zmin, *zmax, *cmin, *cmax;
@@ -62,8 +62,8 @@ friend void face_cb(Fl_Widget *, void *v);
 	Fl_Window* wnd;
 	int OK;
 	char result[16];
-	StyleDlg()	{	memset(this,0,sizeof(StyleDlg));	create_dlg();	};
-	~StyleDlg()	{	delete wnd;	};
+	StyleDlg()	{	memset(this,0,sizeof(StyleDlg));	create_dlg();	}
+	~StyleDlg()	{	delete wnd;	}
 protected:
 	Fl_Tabs *tab;
 	Fl_Group *ltab, *stab, *ftab;

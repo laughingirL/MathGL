@@ -29,7 +29,9 @@ void mgl_mark(HMGL gr, mreal x,mreal y,mreal z,const char *mark)
 {
 	char mk = gr->SetPenPal(mark);
 	if(!mk)	mk = '.';
+	static int cgid=1;	gr->StartGroup("MarkS",cgid++);
 	gr->mark_plot(gr->AddPnt(mglPoint(x,y,z),gr->CDef,mglPoint(NAN),-1,3),mk);
+	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
 void mgl_mark_(uintptr_t *gr, mreal *x, mreal *y, mreal *z, const char *pen,int l)
@@ -38,7 +40,9 @@ void mgl_mark_(uintptr_t *gr, mreal *x, mreal *y, mreal *z, const char *pen,int 
 //-----------------------------------------------------------------------------
 void mgl_ball(HMGL gr, mreal x,mreal y,mreal z)
 {
+	static int cgid=1;	gr->StartGroup("Ball",cgid++);
 	gr->mark_plot(gr->AddPnt(mglPoint(x,y,z),gr->AddTexture('r'),mglPoint(NAN),-1,3),'.');
+	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
 void mgl_ball_(uintptr_t *gr, mreal *x,mreal *y,mreal *z)

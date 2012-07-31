@@ -52,7 +52,7 @@ QString hints[] = {
 extern "C"{double mgl_rnd();}
 HintDialog::HintDialog(QWidget *parent) : QDialog(parent)
 {
-	for(numHints=0;!hints[numHints].isEmpty();numHints++){};
+	for(numHints=0;!hints[numHints].isEmpty();numHints++);
 	cur = int(mgl_rnd()*numHints);
 	setWindowTitle(tr("UDAV - Hint"));
 	QHBoxLayout *a;
