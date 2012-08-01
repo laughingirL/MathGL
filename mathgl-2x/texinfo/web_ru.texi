@@ -435,15 +435,19 @@ For more details see @uref{../mathgl_en/mathgl_en_64.html#MGL-scripts, MathGL do
 You may download current version of MathGL for following configurations:
 @itemize @bullet
 @item
-@uref{http://downloads.sourceforge.net/mathgl/mathgl-2.0.tar.gz,source} file with cmake build system.
+@uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}.tar.gz,source} file with cmake build system.
 @item
-@uref{http://downloads.sourceforge.net/mathgl/mathgl-2.0-mingw.i686.zip,Win32 GPL} binaries for MinGW (build for i686)
+@uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}-mingw.i686.7z,Win32 GPL} binaries for MinGW (build for i686)
 @item
-@uref{http://downloads.sourceforge.net/mathgl/mathgl-2.0.LGPL-mingw.i686.zip,Win32 LGPL} binaries for MinGW (build for i686, no GSL and HDF5 support)
+@uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}.LGPL-mingw.i686.7z,Win32 LGPL} binaries for MinGW (build for i686, no GSL and HDF5 support)
 @item
-@uref{http://downloads.sourceforge.net/mathgl/mathgl-2.0-1.DevPack,DevPak} package for Dev-C++ or Code::Blocks (GPL version)
+@uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}.LGPL-win64.7z,Win64 LGPL} binaries for MSVS 2010 (build by Walter Kaufmann)
 @item
-@uref{http://downloads.sourceforge.net/mathgl/mathgl-2.0.eng.pdf,PDF} documentation in English
+@uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}-1.DevPack,DevPak} package for Dev-C++ or Code::Blocks (GPL version)
+@item
+@uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}.eng.pdf,PDF} documentation in English
+@item
+@uref{http://downloads.sourceforge.net/mathgl/mgl_scripts-@value{VERSION}.7z,utilities} with all required DLL files (build for i686)
 @c HTML documentation in English
 @c HTML documentation in Russian
 @c @item

@@ -168,9 +168,9 @@ public:
 	/// Find number or create it if absent
 	mglNum *AddNum(const wchar_t *name);
 	/// Add string for parameter $1, ..., $9
-	bool AddParam(int n, const char *str, bool isstr=true);
+	void AddParam(int n, const char *str, bool isstr=true);
 	/// Add unicode string for parameter $1, ..., $9
-	bool AddParam(int n, const wchar_t *str, bool isstr=true);
+	void AddParam(int n, const wchar_t *str, bool isstr=true);
 	/// Add new MGL command(s) (last command MUST HAVE name[0]=0 !!!)
 	void AddCommand(mglCommand *cmd, int num=0);
 	/// Restore Once flag
@@ -185,7 +185,7 @@ private:
 	long parlen;		///< Length of parameter strings
 	wchar_t *par[40];	///< Parameter for substituting instead of $1, ..., $9
 	wchar_t *out;		///< Buffer for writing C++ code (if not NULL)
-	wchar_t leg[128];	///< Buffer for legend
+//	wchar_t leg[128];	///< Buffer for legend
 	bool Once;			///< Flag for command which should be executed only once
 	bool Skip;			///< Flag that commands should be skiped (inside 'once' block)
 	int if_stack[40];	///< Stack for if-else-endif commands

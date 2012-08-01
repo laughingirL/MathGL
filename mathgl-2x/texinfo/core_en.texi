@@ -629,8 +629,7 @@ Set the ticks step, number of sub-ticks and initial ticks position to be the mos
 @deftypefnx {MGL command} {} ctick @code{val [sub=0 org=nan]}
 @ifclear UDAV
 @deftypefnx {Method on @code{mglGraph}} @code{void} SetTicks (@code{char} dir, @code{mreal} d=@code{0}, @code{int} ns=@code{0}, @code{mreal} org=@code{NAN})
-@deftypefnx {C function} @code{void} mgl_set_ticks_dir (@code{HMGL} gr, @code{char} dir, @code{mreal} d, @code{int} ns, @code{mreal} org)
-@deftypefnx {C function} @code{void} mgl_set_ticks (@code{HMGL} gr, @code{int} nx, @code{int} ny, @code{int} nz)
+@deftypefnx {C function} @code{void} mgl_set_ticks (@code{HMGL} gr, @code{char} dir, @code{mreal} d, @code{int} ns, @code{mreal} org)
 @end ifclear
 Set the ticks step @var{d}, number of sub-ticks @var{ns} (used for positive @var{d}) and initial ticks position @var{org} for the axis along direction @var{dir} (use 'c' for colorbar ticks). Variable @var{d} set step for axis ticks (if positive) or it's number on the axis range (if negative). Zero value set automatic ticks. If @var{org} value is NAN then axis origin is used.
 @end deftypefn

@@ -43,50 +43,32 @@ int srnd = 0;
 void smgl_colorbar(mglGraph *gr);
 void smgl_combined(mglGraph *gr);
 void save(mglGraph *gr,const char *name,const char *suf);
+#include "../src/s_hull/s_hull_pro.h"
 void test(mglGraph *gr)
 {
-	gr->Box();
-	gr->WriteOBJ("1.obj");
-	return;
-	
-	mglData ys(10), y;
-	ys.Modify("0.8*sin(pi*2*x)+0.2*rnd");
-	mgls_prepare1d(&y);
+/*	std::vector<Shx> pts;
+	Shx pt;
+	FILE *fx = fopen("/home/balakin/tmp/triangulation/x.dat","rt");
+	FILE *fy = fopen("/home/balakin/tmp/triangulation/y.dat","rt");
+	double xval,yval;
+	for(int i=0;i<100;i++)	// prepare data
+	{
+		fscanf(fx,"%lg",&xval);
+		fscanf(fy,"%lg",&yval);
+		pt.r = xval;	pt.c = yval;
+		pt.id = i;	pts.push_back(pt);
+	}
+	std::vector<Triad> triads;
+	s_hull_pro(pts, triads);	// perform triangulation -- ERROR here!!!
+	fclose(fx);	fclose(fy);
+	return;*/
 
-	gr->SubPlot(2,2,0);
-	gr->SetOrigin(mglPoint(-1,-1,-1));	gr->Axis();
-	gr->SetOrigin(mglPoint(1,1,1));	gr->Axis();
-	gr->Box();	gr->Plot(ys," *");	gr->Label(ys,"y=%y");
-	gr->Label('x',"x_y label");	gr->Label('y',"y_y label");	gr->Label('z',"z_y label");
-
-	gr->SubPlot(2,2,1);	gr->Rotate(40,60);
-	gr->SetOrigin(mglPoint(-1,-1,-1));	gr->Axis();
-	gr->SetOrigin(mglPoint(1,1,1));	gr->Axis();
-	gr->SetOrigin(mglPoint(NAN,NAN,NAN));	gr->Axis();
-	gr->Label('x',"x_y label");	gr->Label('y',"y_y label");	gr->Label('z',"z_y label");
-
-	gr->SubPlot(2,2,2);
-	gr->Box();	gr->Plot(y.SubData(-1,0));
-	gr->Text(y,"This is very very long string drawn along a curve",":k");
-	gr->Text(y,"Another string drawn above a curve","T:r");
-
-	gr->SubPlot(2,2,3);
-	mglPoint p;
-	gr->Mark(p,".r");
-	gr->Puts(p,"A","@:C",-1);
-	gr->Puts(p,"A","@:C",-2);
-	
-	gr->SetRange('x',1341610306,1341612408);
-	gr->SetTicksTime('x');
-	gr->Axis();
-	return;
-
-	/*	mglParse par;
+	mglParse par;
 	par.AllowSetSize(true);
 	setlocale(LC_CTYPE, "");
-	FILE *fp=fopen("/home/balakin/progr/sfnet/mathgl/mathgl-2x/examples/test.mgl","r");
+	FILE *fp=fopen("/home/balakin/tmp/test_main.mgl","r");
 	par.Execute(gr,fp,true);
-	fclose(fp);*/
+	fclose(fp);
 }
 //-----------------------------------------------------------------------------
 void fexport(mglGraph *gr)

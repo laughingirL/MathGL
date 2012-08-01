@@ -619,8 +619,7 @@ Setsize: размер(ы) равны нулю или отрицательны
 @deftypefnx {Команда MGL} {} ctick @code{val [sub=0 org=nan]}
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} SetTicks (@code{char} dir, @code{mreal} d=@code{0}, @code{int} ns=@code{0}, @code{mreal} org=@code{NAN})
-@deftypefnx {Функция С} @code{void} mgl_set_ticks_dir (@code{HMGL} gr, @code{char} dir, @code{mreal} d, @code{int} ns, @code{mreal} org)
-@deftypefnx {Функция С} @code{void} mgl_set_ticks (@code{HMGL} gr, @code{int} nx, @code{int} ny, @code{int} nz)
+@deftypefnx {Функция С} @code{void} mgl_set_ticks (@code{HMGL} gr, @code{char} dir, @code{mreal} d, @code{int} ns, @code{mreal} org)
 @end ifclear
 Задает шаг меток осей @var{d}, число подметок @var{ns} и начальное положение меток @var{org} для оси вдоль направления @var{dir} (используйте 'c' для меток colorbar). Переменная @var{d} задает шаг меток (если положительна) или их число на оси (если отрицательна). Нулевое значение задает автоматическую расстановку меток. Если @var{org}=@code{NAN}, то используется значение из переменной @var{Org}.
 @end deftypefn

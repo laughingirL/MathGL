@@ -174,7 +174,7 @@ mglParser::mglParser(bool setsize)
 {
 	DataList=0;	NumList=0;	fn_stack=0;
 //	wchar_t *par[40];	///< Parameter for substituting instead of $1, ..., $9
-	out=0;	*leg=0;	InUse = 1;
+	out=0;	InUse = 1;
 	Skip=Stop=for_br=false;
 	memset(for_stack,0,40*sizeof(int));
 	memset(if_stack,0,40*sizeof(int));
@@ -202,13 +202,13 @@ mglParser::~mglParser()
 	if(fn_stack)	free(fn_stack);
 }
 //-----------------------------------------------------------------------------
-bool mglParser::AddParam(int n, const char *str, bool isstr)
+void mglParser::AddParam(int n, const char *str, bool isstr)
 {
 	unsigned s = strlen(str)+1;
 	wchar_t *wcs = new wchar_t[s];
 	mbstowcs(wcs,str,s);
-	bool r = AddParam(n,wcs,isstr);
-	delete []wcs;	return r;
+	AddParam(n,wcs,isstr);
+	delete []wcs;
 }
 //-----------------------------------------------------------------------------
 int mglParser::Parse(mglGraph *gr, const char *str, long pos)
@@ -260,14 +260,16 @@ mglNum *mglParser::FindNum(const char *str)
 	return v;
 }
 //-----------------------------------------------------------------------------
-bool mglParser::AddParam(int n, const wchar_t *str, bool isstr)
+void mglParser::AddParam(int n, const wchar_t *str, bool isstr)
 {
-	if(n<0 || n>39 || wcschr(str,'$'))	return false;
-	if(!isstr)	parlen += wcslen(str);
-	if(par[n])	delete [](par[n]);
-	par[n] = new wchar_t[wcslen(str)+1];
-	wcscpy(par[n],str);
-	return true;
+	if(str)
+	{
+		if(n<0 || n>39 || wcschr(str,'$'))	return;
+		if(!isstr)	parlen += wcslen(str);
+		if(par[n])	delete [](par[n]);
+		par[n] = new wchar_t[wcslen(str)+1];
+		wcscpy(par[n],str);
+	}
 }
 //-----------------------------------------------------------------------------
 mglVar *mglParser::FindVar(const wchar_t *name)
