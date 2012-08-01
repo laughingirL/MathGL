@@ -113,10 +113,12 @@ struct mglColor
 	/// Set color from symbolic id
 	void Set(char p, float bright=1);
 	/// Copy color from other one
-	inline bool operator==(const mglColor &c)
+	inline bool operator==(const mglColor &c) const
 	{	return (r==c.r && g==c.g && b==c.b && a==c.a);	}
-	inline bool operator!=(const mglColor &c)
+	inline bool operator!=(const mglColor &c) const
 	{	return (r!=c.r || g!=c.g || b!=c.b || a!=c.a);	}
+	inline bool operator<(const mglColor &c) const
+	{	return r<c.r && g<c.g && b<c.b;		}
 	// transparency still the same
 	inline void operator*=(float v)				{	r*=v;	g*=v;	b*=v;	}
 	inline void operator+=(const mglColor &c)	{	r+=c.r;	g+=c.g;	b+=c.b;	}

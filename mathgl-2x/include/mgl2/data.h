@@ -435,6 +435,10 @@ inline mglData operator/(const mglData &d, mreal b)
 inline bool operator==(const mglData &b, const mglData &d)
 {	if(b.nx!=d.nx || b.ny!=d.ny || b.ny!=d.ny)	return false;
 	return !memcmp(b.a,d.a,b.nx*b.ny*b.nz*sizeof(mreal));	}
+inline bool operator<(const mglData &b, const mglData &d)
+{	return b.Maximal()<d.Maximal();	}
+inline bool operator>(const mglData &b, const mglData &d)
+{	return b.Minimal()>d.Minimal();	}
 #endif
 //-----------------------------------------------------------------------------
 #ifndef SWIG

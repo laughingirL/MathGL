@@ -45,44 +45,8 @@ void smgl_combined(mglGraph *gr);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	float itime =0, ltime=100;
-	
-	gr->MultiPlot(10,1,2, 8,1);
-	gr->SetTickLen(-.02);
-	gr->SetTickShift(mglPoint(0.2,0.2));
-	gr->SetRanges((float) itime,(float) ltime,-3.,3);
-	gr->SetOrigin(NAN,NAN);
-	gr->SetTimeUTC(true);
-	
-	gr->SetTicksTime('x');
-	gr->Axis("y", "b");
-	gr->Axis("x");
-	gr->SetOrigin(itime,3);gr->Axis("x_");
-	gr->Label('y',"y_1",0);
-	gr->FPlot("2.5","k");
-	gr->SetRanges((float) itime,(float) ltime,-10,10);
-	gr->SetOrigin(ltime,-10); // second axis
-	gr->Axis("y","r");  gr->Label('y',"#r{y_r}",0.2);
-	gr->FPlot("5.5","r");
-	gr->SetRanges((float) itime,(float) ltime,-1,1);
-	gr->SetOrigin(itime-(ltime-itime)/7.,-1); // second axis
-	gr->Axis("y","b");  gr->Label('y',"#r{y_2}",0.2);
-	gr->FPlot("0.5","r");
-	gr->SetRanges((float) itime,(float) ltime,-2,1);
-	gr->SetOrigin(itime-2*(ltime-itime)/7.,-2); // second axis
-	gr->Axis("y","b");  gr->Label('y',"#r{y_2}",0.2);
-	gr->FPlot("0.5","r");
-	gr->SetRanges((float) itime,(float) ltime,-2,2);
-	gr->SetOrigin(itime-3*(ltime-itime)/7.,-2); // second axis
-	gr->Axis("y","r");  gr->Label('y',"#r{y_3}",0.2);
-	gr->FPlot("-1.5","r");
-	gr->SetRanges((float) itime,(float) ltime,-20,20);
-	gr->SetOrigin(itime-4*(ltime-itime)/7.,-20); // second axis
-	gr->Axis("y","r");  gr->Label('y',"#r{y_3}",0.2);
-	gr->FPlot("-15","r");
-	
-	gr->WriteJPEG("1.jpg");
-	gr->WriteEPS("1.eps");
+	gr->Box();
+	gr->WriteOBJ("1.obj");
 	return;
 	
 	mglData ys(10), y;

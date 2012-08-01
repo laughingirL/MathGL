@@ -21,10 +21,6 @@
 #ifndef _MGL_EVALC_H_
 #define _MGL_EVALC_H_
 //---------------------------------------------------------------------------
-#include <complex>
-#ifndef dual
-#define dual std::complex<double>	///< short name for complex numbers
-#endif
 #include "mgl2/eval.h"
 //---------------------------------------------------------------------------
 /// Class for evaluating formula specified by the string

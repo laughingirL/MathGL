@@ -201,6 +201,9 @@ enum{	// Codes for warnings/messages
 //-----------------------------------------------------------------------------
 #ifdef __cplusplus
 //-----------------------------------------------------------------------------
+#include <complex>
+typedef std::complex<mreal> dual;
+//-----------------------------------------------------------------------------
 struct mglThreadD
 {
 	mreal *a;		// float* array with parameters or results

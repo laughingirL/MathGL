@@ -111,7 +111,6 @@ GifFileType *gif;*/
 
 	for(int i=0;i<10;i++)	{	AddLight(i, mglPoint(0,0,1));	Light(i,false);	}
 	Light(0,true);	Light(false);	SetDifLight(true);
-	grp_counter=0;
 }
 //-----------------------------------------------------------------------------
 //	Optimal axis position
@@ -774,9 +773,9 @@ void mglCanvas::Title(const wchar_t *title,const char *stl,mreal size)
 void mglCanvas::StartAutoGroup (const char *lbl)
 {
 	static int id=1;
+	if(lbl==NULL)	{	id=1;	grp_counter=0;	return;	}
 	grp_counter++;
 	if(grp_counter>1)	return;	// do nothing in "subgroups"
-	if(lbl==NULL)	{	id=1;	return;	}
 	if(ObjId<0)	{	ObjId = -id;	id++;	}
 	register size_t len = Grp.size();
 	if(ObjId>=0 && len>0 && ObjId!=Grp[len-1].Id)

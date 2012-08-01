@@ -21,11 +21,7 @@
 #define _MGL_ADDON_H_
 /***************************************************************************/
 #ifdef __cplusplus
-/***************************************************************************/
-#include <complex>
-#ifndef dual
-#define dual std::complex<double>
-#endif
+#include "mgl2/define.h"
 //---------------------------------------------------------------------------
 dual mgl_ipowc(dual x,int n);
 dual expi(dual a);
