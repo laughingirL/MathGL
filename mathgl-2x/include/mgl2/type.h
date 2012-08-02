@@ -114,11 +114,11 @@ struct mglColor
 	void Set(char p, float bright=1);
 	/// Copy color from other one
 	inline bool operator==(const mglColor &c) const
-	{	return !memcmp(this, &c, sizeof(mglColor));}
+	{	return !memcmp(this, &c, sizeof(mglColor));	}
 	inline bool operator!=(const mglColor &c) const
-	{	return memcmp(this, &c, sizeof(mglColor));	}
+	{	return memcmp(this, &c, sizeof(mglColor));		}
 	inline bool operator<(const mglColor &c) const
-	{	return r+g+b+a < c.r+c.g+c.b+c.a;		}
+	{	return memcmp(this, &c, sizeof(mglColor))<0;	}
 	// transparency still the same
 	inline void operator*=(float v)				{	r*=v;	g*=v;	b*=v;	}
 	inline void operator+=(const mglColor &c)	{	r+=c.r;	g+=c.g;	b+=c.b;	}
