@@ -229,18 +229,18 @@ dual expi(dual a)	{	return exp(dual(0,1)*a);	}
 dual expi(double a)	{	return dual(cos(a),sin(a));	}
 //-----------------------------------------------------------------------------
 dual ic = dual(0,1);
-dual asinhc(dual x)	{	return log(x+sqrt(x*x+1.));	}
-dual acoshc(dual x)	{	return log(x+sqrt(x*x-1.));	}
-dual atanhc(dual x)	{	return log((1.+x)/(1.-x))/2.;	}
+dual asinhc(dual x)	{	return log(x+sqrt(x*x+mreal(1)));	}
+dual acoshc(dual x)	{	return log(x+sqrt(x*x-mreal(1)));	}
+dual atanhc(dual x)	{	return log((mreal(1)+x)/(mreal(1)-x))/mreal(2);	}
 dual sinc(dual x)	{	return sin(x);	}
 dual cosc(dual x)	{	return cos(x);	}
 dual tanc(dual x)	{	return tan(x);	}
 dual sinhc(dual x)	{	return sinh(x);	}
 dual coshc(dual x)	{	return cosh(x);	}
 dual tanhc(dual x)	{	return tanh(x);	}
-dual asinc(dual x)	{	return log(ic*x+sqrt(1.-x*x))/ic;	}
-dual acosc(dual x)	{	return log(x+sqrt(x*x-1.))/ic;	}
-dual atanc(dual x)	{	return log((ic-x)/(ic+x))/(2.*ic);	}
+dual asinc(dual x)	{	return log(ic*x+sqrt(mreal(1)-x*x))/ic;	}
+dual acosc(dual x)	{	return log(x+sqrt(x*x-mreal(1)))/ic;	}
+dual atanc(dual x)	{	return log((ic-x)/(ic+x))/(mreal(2)*ic);	}
 dual expc(dual x)	{	return exp(x);	}
 dual sqrtc(dual x)	{	return sqrt(x);	}
 dual logc(dual x)	{	return log(x);	}
@@ -278,8 +278,8 @@ dual mgl_ipowc(dual x,int n)
 	dual t;
 	if(n==2)	return x*x;
 	if(n==1)	return x;
-	if(n<0)		return 1./mgl_ipowc(x,-n);
-	if(n==0)	return 1.;
+	if(n<0)		return mreal(1)/mgl_ipowc(x,-n);
+	if(n==0)	return mreal(1);
 	t = mgl_ipowc(x,n/2);	t = t*t;
 	if(n%2==1)	t *= x;
 	return t;

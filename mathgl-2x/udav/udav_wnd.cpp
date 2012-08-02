@@ -109,6 +109,9 @@ int main(int argc, char **argv)
 	settings.setPath(QSettings::IniFormat, QSettings::UserScope, "UDAV");
 	settings.beginGroup("/UDAV");
 	pathHelp = settings.value("/helpPath", MGL_DOC_DIR).toString();
+#if defined(WIN32)
+	if(pathHelp.isEmpty())	pathHelp = a.applicationDirPath()+"\\";
+#endif
 	pathFont = settings.value("/userFont", "").toString();
 	lang = settings.value("/udavLang", "").toString();
 	bool showHint = settings.value("/showHint", true).toBool();

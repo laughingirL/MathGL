@@ -144,21 +144,21 @@ bool mgl_difr_grid(dual *a,int n,dual q,int Border,dual *b,dual *d,int kk)
 	for(k=kk;k>0;k--)	// 3 iterations
 	{
 		for(i=1;i<n-1;i++)
-			d[i] = a[i] + adt*(b[i-1]+b[i+1]-2.*b[i])/double(k);
+			d[i] = a[i] + adt*(b[i-1]+b[i+1]-mreal(2)*b[i])/mreal(k);
 		memcpy(b,d,n*sizeof(dual));
 		switch(Border)
 		{
 			case 0:		// zero at border
-				b[0] = 0;		b[n-1] = 0;		break;
+				b[0] = 0;	b[n-1] = 0;		break;
 			case 1:		// constant at border
 				b[0] = b[1];	b[n-1] = b[n-2];	break;
 			case 2:		// linear at border
-				b[0] = 2.*b[1]-b[2];
-				b[n-1] = 2.*b[n-2]-b[n-3];
+				b[0] = mreal(2)*b[1]-b[2];
+				b[n-1] = mreal(2)*b[n-2]-b[n-3];
 				break;
 			case 3:		// square at border
-				b[0] = b[3]+3.*(b[1]-b[2]);
-				b[n-1] = b[n-4]+3.*(b[n-2]-b[n-3]);
+				b[0] = b[3]+mreal(3)*(b[1]-b[2]);
+				b[n-1] = b[n-4]+mreal(3)*(b[n-2]-b[n-3]);
 				break;
 			case -1:		// exponent at border
 				b[0] = norm(b[2])<norm(b[1]) ? b[1] : b[1]*b[1]/b[2];
@@ -178,7 +178,7 @@ bool mgl_difr_axial(dual *a, int n, dual q, int Border,dual *b, dual *d, int kk,
 {
 	register int i,k,ii = di<0 ? -int(floor(di)) : 0;
 	dual adt = dual(0.,1.)*q;
-	register double dd,ff= di==floor(di) ? 4. : 2.,gg;
+	register mreal dd,ff= di==floor(di) ? 4. : 2.,gg;
 
 	memcpy(b,a,n*sizeof(dual));
 	for(k=kk;k>0;k--)	// kk iterations
@@ -190,7 +190,7 @@ bool mgl_difr_axial(dual *a, int n, dual q, int Border,dual *b, dual *d, int kk,
 			dd = 1./(sqrt(dd*dd+1.)+dd);	// corrections for "axiality"
 			gg = 1+dd*dd;
 			d[i] = a[i] + adt*( b[i-1]*((gg-dd)/k) -
-			b[i]*(gg*2./k) + b[i+1]*((gg+dd)/k) );
+			b[i]*(2*gg/k) + b[i+1]*((gg+dd)/k) );
 		}
 		memcpy(b,d,n*sizeof(dual));
 		switch(Border)
@@ -200,10 +200,10 @@ bool mgl_difr_axial(dual *a, int n, dual q, int Border,dual *b, dual *d, int kk,
 			case 1:		// constant at border
 				b[n-1] = b[n-2];	break;
 			case 2:		// linear at border
-				b[n-1] = -b[n-3] + 2.*b[n-2];
+				b[n-1] = -b[n-3] + mreal(2)*b[n-2];
 				break;
 			case 3:		// square at border
-				b[n-1] = b[n-4] + 3.*(b[n-2]-b[n-3]);
+				b[n-1] = b[n-4] + mreal(3)*(b[n-2]-b[n-3]);
 				break;
 			case -1:		// exponent at border
 				b[n-1] = norm(b[n-3])<norm(b[n-2]) ? b[n-2] : b[n-2]*b[n-2]/b[n-3];
