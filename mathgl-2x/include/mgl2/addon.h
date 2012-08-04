@@ -23,6 +23,9 @@
 #ifdef __cplusplus
 #include "mgl2/define.h"
 //---------------------------------------------------------------------------
+#include <complex>
+typedef std::complex<mreal> dual;
+//-----------------------------------------------------------------------------
 dual mgl_ipowc(dual x,int n);
 dual expi(dual a);
 dual expi(double a);

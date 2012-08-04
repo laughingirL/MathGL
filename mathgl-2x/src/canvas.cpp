@@ -324,7 +324,11 @@ mreal mglCanvas::text_plot(long p,const wchar_t *text,const char *font,mreal siz
 
 	int align;	mglGetStyle(font,0,&align);	align = align&3;
 	B.x = q.x;	B.y = q.y - shift;	B.z = q.z;
-	if(ll>0)	{	B.x += shift*q.v/sqrt(ll);	B.y += shift*(1-q.u/sqrt(ll));	}
+	if(ll>0)
+	{
+		B.x += shift*q.v/sqrt(ll);	B.y += shift*(1-q.u/sqrt(ll));
+		if(q.u==0 && !get(MGL_ENABLE_RTEXT))	B.y -= 0.1*h;
+	}
 	fscl = fsize;
 
 	if(mgl_isnan(ll) || !get(MGL_ENABLE_RTEXT))	ftet = 0;

@@ -63,6 +63,9 @@ void test(mglGraph *gr)
 	fclose(fx);	fclose(fy);
 	return;*/
 
+	gr->Axis("Uxyz");
+	return;
+
 	mglParse par;
 	par.AllowSetSize(true);
 	setlocale(LC_CTYPE, "");

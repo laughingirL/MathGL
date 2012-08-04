@@ -58,7 +58,7 @@
 #if defined(_MSC_VER) || defined(__BORLANDC__)
 #define hypot _hypot
 #define getcwd _getcwd
-//#define isfinite _finite
+#define isfinite _finite
 #define chdir	_chdir // BORLAND has chdir
 #include <float.h>
 
@@ -200,9 +200,6 @@ enum{	// Codes for warnings/messages
 //#define mgl_realloc(T,o,no,nn) {T *_tmp = new T[nn]; memcpy(_tmp,o,(no)*sizeof(T)); delete []o; o=_tmp;}
 //-----------------------------------------------------------------------------
 #ifdef __cplusplus
-//-----------------------------------------------------------------------------
-#include <complex>
-typedef std::complex<mreal> dual;
 //-----------------------------------------------------------------------------
 struct mglThreadD
 {

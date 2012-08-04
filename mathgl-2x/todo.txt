@@ -44,6 +44,9 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 31. Check feature: dash for rect/ellipse boundary
 32. 2D textures as one of standard way for coloring
 33. Check "gray" solid marks in style.png/eps
+34. Shifted image in GLUT window
+35. Draw centered vector if central point inside box
+36. Add #include <complex> into define.h (bug with isfinite in GCC 4.7)
 
 ============= DOCS =============
 
