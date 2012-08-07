@@ -47,6 +47,7 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 34. Shifted image in GLUT window
 35. Draw centered vector if central point inside box
 36. Add #include <complex> into define.h (bug with isfinite in GCC 4.7)
+37. void SetDefScheme(const mglDataA &val, const char *sch);
 
 ============= DOCS =============
 

@@ -407,6 +407,7 @@ HMDT mgl_triangulation_2d(HCDT x, HCDT y)
 	if(y->GetNx()!=n)	return nums;
 	// use s-hull here
 	std::vector<Shx> pts;
+	std::vector<size_t> out;
 	Shx pt;
 
 	for(i=0;i<n;i++)
@@ -415,6 +416,8 @@ HMDT mgl_triangulation_2d(HCDT x, HCDT y)
 		pt.id = i;	pts.push_back(pt);
 	}
 	std::vector<Triad> triads;
+	if(de_duplicate(pts, out))
+		mglGlobalMess += "There are duplicated points for triangulation.\n";
 	s_hull_pro(pts, triads);
 	m = triads.size();
 	nums->Create(3,m);

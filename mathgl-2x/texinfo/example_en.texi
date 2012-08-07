@@ -677,7 +677,7 @@ int sample(mglGraph *gr)
 
 @pfig{ticks, Features of axis ticks.}
 
-The last sample I want to show in this subsection is Log-axis. From MathGL's point of vew, the log-axis is particular case of general curvilinear coordinates. So, we need first define new coordinates (see also @ref{Curvilinear coordinates}) by help of @code{SetFunc} or @code{SetCoor} functions. At this one should wary about proper axis range. So the code looks as following:
+The last sample I want to show in this subsection is Log-axis. From MathGL's point of view, the log-axis is particular case of general curvilinear coordinates. So, we need first define new coordinates (see also @ref{Curvilinear coordinates}) by help of @code{SetFunc} or @code{SetCoor} functions. At this one should wary about proper axis range. So the code looks as following:
 @verbatim
 int sample(mglGraph *gr)
 {

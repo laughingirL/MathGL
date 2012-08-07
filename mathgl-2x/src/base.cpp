@@ -609,6 +609,7 @@ void mglTexture::Set(const char *s, int smooth, mreal alpha)
 		{	c[1]=c[2];	c[2]=c[0];	c[0]=BC;	c[3]=c[4];	n=2;}
 		else
 		{	c[1]=c[4];	c[3]=c[6];	n=2;	}
+		for(i=0;i<4;i++)	c[i].a=alpha;
 	}
 	register mreal u,v=sm?(n-1)/255.:n/256.;
 	for(i=0;i<256;i++)
@@ -642,7 +643,7 @@ void mglTexture::GetC(mreal u,mreal v,mglPnt &p) const
 //-----------------------------------------------------------------------------
 long mglBase::AddTexture(const char *cols, int smooth)
 {
-	mglTexture t(cols,smooth);
+	mglTexture t(cols,smooth,smooth==2?AlphaDef:1);
 	if(t.n==0)	return smooth<0 ? 0:1;
 	if(smooth<0)	CurrPal=0;
 	// check if already exist

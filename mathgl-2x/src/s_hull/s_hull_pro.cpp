@@ -25,6 +25,7 @@ using namespace std;
  */
 
 
+// Global replace int->long by A.Balakin 7 August 2012 -- 64bit version can handle huge data arrays
 
 
 void circle_cent2(float r1,float c1, float r2,float c2, float r3,float c3,
@@ -73,10 +74,10 @@ void circle_cent2(float r1,float c1, float r2,float c2, float r3,float c3,
 
  */
 
-int read_Shx(std::vector<Shx> &pts, char * fname)
+long read_Shx(std::vector<Shx> &pts, char * fname)
 {
 	char s0[513];
-	int nump =0;
+	long nump =0;
 	float p1,p2;
 
 	Shx pt;
@@ -91,10 +92,10 @@ int read_Shx(std::vector<Shx> &pts, char * fname)
 	{
 
 		getline (myfile,line);
-		//int numc = line.length();
+		//long numc = line.length();
 
 		// check string for the string "points"
-		int n = (int) line.find( points_str);
+		long n = (long) line.find( points_str);
 		if( n > 0)
 		{
 			while ( myfile.good() )
@@ -104,7 +105,7 @@ int read_Shx(std::vector<Shx> &pts, char * fname)
 				{
 					copy( line.begin(), line.end(), s0);
 					s0[line.length()] = 0;
-					int v = sscanf( s0, "%g %g", &p1,&p2);
+					long v = sscanf( s0, "%g %g", &p1,&p2);
 					if( v>0 )
 					{
 						pt.id = nump;
@@ -122,7 +123,7 @@ int read_Shx(std::vector<Shx> &pts, char * fname)
 			{
 				copy( line.begin(), line.end(), s0);
 				s0[line.length()] = 0;
-				int v = sscanf( s0, "%g %g", &p1,&p2);
+				long v = sscanf( s0, "%g %g", &p1,&p2);
 				if( v>0 )
 				{
 					pt.id = nump;
@@ -140,7 +141,7 @@ int read_Shx(std::vector<Shx> &pts, char * fname)
 				{
 					copy( line.begin(), line.end(), s0);
 					s0[line.length()] = 0;
-					int v = sscanf( s0, "%g %g", &p1,&p2);
+					long v = sscanf( s0, "%g %g", &p1,&p2);
 					if( v>0 )
 					{
 						pt.id = nump;
@@ -155,7 +156,7 @@ int read_Shx(std::vector<Shx> &pts, char * fname)
 		myfile.close();
 	}
 
-	nump = (int) pts.size();
+	nump = (long) pts.size();
 
 	return(nump);
 };
@@ -170,10 +171,10 @@ void write_Shx(std::vector<Shx> &pts, char * fname)
 {
 	std::ofstream out(fname, ios::out);
 
-	int nr = (int) pts.size();
+	long nr = (long) pts.size();
 	out << nr << " 2 points" << endl;
 
-	for (int r = 0; r < nr; r++)
+	for (long r = 0; r < nr; r++)
 	{
 		out << pts[r].r << ' ' << pts[r].c <<  endl;
 	}
@@ -192,10 +193,10 @@ void write_Triads(std::vector<Triad> &ts, char * fname)
 {
 	std::ofstream out(fname, ios::out);
 
-	int nr = (int) ts.size();
+	long nr = (long) ts.size();
 	out << nr << " 6   point-ids (1,2,3)  adjacent triangle-ids ( limbs ab  ac  bc )" << endl;
 
-	for (int r = 0; r < nr; r++)
+	for (long r = 0; r < nr; r++)
 	{
 		out << ts[r].a+1 << ' ' << ts[r].b+1 <<' ' << ts[r].c+1 <<' '
 			<< ts[r].ab+1 <<' ' << ts[r].ac+1 <<' ' << ts[r].bc+1 << endl; //" " << ts[r].ro <<  endl;
@@ -214,10 +215,10 @@ void write_Triads(std::vector<Triad> &ts, char * fname)
 
  */
 
-int s_hull_pro( std::vector<Shx> &pts, std::vector<Triad> &triads)
+long s_hull_pro( std::vector<Shx> &pts, std::vector<Triad> &triads)
 {
 
-	int nump = (int) pts.size();
+	long nump = (long) pts.size();
 
 	if( nump < 3 )
 	{
@@ -229,7 +230,7 @@ int s_hull_pro( std::vector<Shx> &pts, std::vector<Triad> &triads)
 
 	float r = pts[0].r;
 	float c = pts[0].c;
-	for( int k=0; k<nump; k++)
+	for( long k=0; k<nump; k++)
 	{
 		float dr = pts[k].r-r;
 		float dc = pts[k].c-c;
@@ -246,10 +247,10 @@ int s_hull_pro( std::vector<Shx> &pts, std::vector<Triad> &triads)
 
 	float r2 = pts[1].r;
 	float c2 = pts[1].c;
-	int mid = -1;
+	long mid = -1;
 	float romin2 = 100000000.0, ro2, R=0,C=0;	// added by A.Balakin 6 July 2012 -- uninitialised variable
 
-	int k=2;
+	long k=2;
 	while (k<nump)
 	{
 
@@ -284,7 +285,7 @@ int s_hull_pro( std::vector<Shx> &pts, std::vector<Triad> &triads)
 	pts.erase(pts.begin() );
 	pts.erase(pts.begin() );
 
-	for( int k=0; k<nump-3; k++)
+	for( long k=0; k<nump-3; k++)
 	{
 		float dr = pts[k].r-R;
 		float dc = pts[k].c-C;
@@ -299,12 +300,12 @@ int s_hull_pro( std::vector<Shx> &pts, std::vector<Triad> &triads)
 	pts.insert(pts.begin(), pt1);
 	pts.insert(pts.begin(), pt0);
 
-	//  int slump [nump];
-//  int * slump  = new int [nump];
-	std::vector<int> slump;
+	//  long slump [nump];
+//  long * slump  = new long [nump];
+	std::vector<long> slump;
 	slump.resize(nump);
 
-	for( int k=0; k<nump; k++)
+	for( long k=0; k<nump; k++)
 	{
 		if( pts[k].id < nump)
 		{
@@ -312,8 +313,8 @@ int s_hull_pro( std::vector<Shx> &pts, std::vector<Triad> &triads)
 		}
 		else
 		{
-			int mx = pts[k].id+1;
-			while( (int) slump.size() <= mx)
+			long mx = pts[k].id+1;
+			while( (long) slump.size() <= mx)
 			{
 				slump.push_back(0);
 			}
@@ -387,9 +388,9 @@ int s_hull_pro( std::vector<Shx> &pts, std::vector<Triad> &triads)
 
 	float dr, dc, rx,cx;
 	Shx  ptx;
-	int numt=0;	// added by A.Balakin 6 July 2012 -- uninitialised variable
+	long numt=0;	// added by A.Balakin 6 July 2012 -- uninitialised variable
 
-	for( int k=3; k<nump; k++)
+	for( long k=3; k<nump; k++)
 	{
 		rx = pts[k].r;
 		cx = pts[k].c;
@@ -397,18 +398,18 @@ int s_hull_pro( std::vector<Shx> &pts, std::vector<Triad> &triads)
 		ptx.c = cx;
 		ptx.id = pts[k].id;
 
-		int numh = (int) hull.size()/*, numh_old = numh*/;	// commented by A.Balakin 6 July 2012 -- unused variable
+		long numh = (long) hull.size()/*, numh_old = numh*/;	// commented by A.Balakin 6 July 2012 -- unused variable
 		dr = rx- hull[0].r;
 		dc = cx- hull[0].c;  // outwards pointing from hull[0] to pt.
 
-		std::vector<int> pidx, tridx;
-		int hidx;  // new hull point location within hull.....
+		std::vector<long> pidx, tridx;
+		long hidx;  // new hull point location within hull.....
 
 
 		float df = -dc* hull[0].tr + dr*hull[0].tc;    // visibility test vector.
 		if( df < 0 )   // starting with a visible hull facet !!!
 		{
-//			int e1 = 1, e2 = numh;	// commented by A.Balakin 6 July 2012 -- unused variable
+//			long e1 = 1, e2 = numh;	// commented by A.Balakin 6 July 2012 -- unused variable
 			hidx = 0;
 
 			// check to see if segment numh is also visible
@@ -420,7 +421,7 @@ int s_hull_pro( std::vector<Shx> &pts, std::vector<Triad> &triads)
 				tridx.push_back(hull[numh-1].trid);
 
 
-				for( int h=0; h<numh-1; h++)
+				for( long h=0; h<numh-1; h++)
 				{
 					// if segment h is visible delete h
 					dr = rx- hull[h].r;
@@ -446,7 +447,7 @@ int s_hull_pro( std::vector<Shx> &pts, std::vector<Triad> &triads)
 				}
 				// look backwards through the hull structure.
 
-				for( int h=numh-2; h>0; h--)
+				for( long h=numh-2; h>0; h--)
 				{
 					// if segment h is visible delete h + 1
 					dr = rx- hull[h].r;
@@ -463,7 +464,7 @@ int s_hull_pro( std::vector<Shx> &pts, std::vector<Triad> &triads)
 					else
 					{
 
-						h = (int) hull.size()-1;
+						h = (long) hull.size()-1;
 						hull[h].tr = -hull[h].r + ptx.r;   // points at start of chain.
 						hull[h].tc = -hull[h].c + ptx.c;
 						break;
@@ -480,7 +481,7 @@ int s_hull_pro( std::vector<Shx> &pts, std::vector<Triad> &triads)
 				tridx.push_back(hull[0].trid);
 				pidx.push_back(hull[0].id);
 
-				for( int h=1; h<numh; h++)
+				for( long h=1; h<numh; h++)
 				{
 					// if segment h is visible delete h
 					dr = rx- hull[h].r;
@@ -513,8 +514,8 @@ int s_hull_pro( std::vector<Shx> &pts, std::vector<Triad> &triads)
 		}
 		else
 		{
-			int e1 = -1,  e2 = numh;
-			for( int h=1; h<numh; h++)
+			long e1 = -1,  e2 = numh;
+			for( long h=1; h<numh; h++)
 			{
 				dr = rx- hull[h].r;
 				dc = cx- hull[h].c;
@@ -538,7 +539,7 @@ int s_hull_pro( std::vector<Shx> &pts, std::vector<Triad> &triads)
 			// triangle pidx starts at e1 and ends at e2 (inclusive).
 			if( e2 < numh )
 			{
-				for( int e=e1; e<=e2; e++)
+				for( long e=e1; e<=e2; e++)
 				{
 					pidx.push_back(hull[e].id);
 					tridx.push_back(hull[e].trid);
@@ -546,7 +547,7 @@ int s_hull_pro( std::vector<Shx> &pts, std::vector<Triad> &triads)
 			}
 			else
 			{
-				for( int e=e1; e<e2; e++)
+				for( long e=e1; e<e2; e++)
 				{
 					pidx.push_back(hull[e].id);
 					tridx.push_back(hull[e].trid);   // there are only n-1 triangles from n hull pts.
@@ -583,13 +584,13 @@ int s_hull_pro( std::vector<Shx> &pts, std::vector<Triad> &triads)
 		}
 
 
-		int a = ptx.id, T0;
+		long a = ptx.id, T0;
 		Triad trx( a, 0,0);
 		r1 = pts[slump[a]].r;
 		c1 = pts[slump[a]].c;
 
-		int npx = (int) pidx.size()-1;
-		numt = (int) triads.size();
+		long npx = (long) pidx.size()-1;
+		numt = (long) triads.size();
 		T0 = numt;
 
 		if( npx == 1)
@@ -622,7 +623,7 @@ int s_hull_pro( std::vector<Shx> &pts, std::vector<Triad> &triads)
 				hull[hidx-1].trid = numt;
 			else
 			{
-				numh = (int) hull.size();
+				numh = (long) hull.size();
 				hull[numh-1].trid = numt;
 			}
 			triads.push_back( trx );
@@ -632,7 +633,7 @@ int s_hull_pro( std::vector<Shx> &pts, std::vector<Triad> &triads)
 		else
 		{
 			trx.ab = -1;
-			for(int p=0; p<npx; p++)
+			for(long p=0; p<npx; p++)
 			{
 				trx.b = pidx[p];
 				trx.c = pidx[p+1];
@@ -668,7 +669,7 @@ int s_hull_pro( std::vector<Shx> &pts, std::vector<Triad> &triads)
 				hull[hidx-1].trid = T0;
 			else
 			{
-				numh = (int) hull.size();
+				numh = (long) hull.size();
 				hull[numh-1].trid = T0;
 			}
 
@@ -682,9 +683,9 @@ int s_hull_pro( std::vector<Shx> &pts, std::vector<Triad> &triads)
 
 	//  write_Triads(triads, "tris0.mat");
 
-	std::set<int> ids, ids2;
+	std::set<long> ids, ids2;
 
-	int tf = T_flip_pro( pts, triads, slump, numt, 0, ids);
+	long tf = T_flip_pro( pts, triads, slump, numt, 0, ids);
 	if( tf < 0 )
 	{
 // Commented by A.Balakin 2 July 2012 -- library shouldn't print anything
@@ -694,12 +695,12 @@ int s_hull_pro( std::vector<Shx> &pts, std::vector<Triad> &triads)
 
 	//  write_Triads(triads, "tris1.mat");
 
-	int nits = (int) ids.size(), nit=1;
+	long nits = (long) ids.size(), nit=1;
 	while(  nits > 0 && nit < 50)
 	{
 
 		tf = T_flip_pro_idx( pts, triads, slump, ids);
-		nits = (int) ids.size();
+		nits = (long) ids.size();
 		nit ++;
 		if( tf < 0 )
 		{
@@ -755,14 +756,15 @@ void circle_cent4(float r1,float c1, float r2,float c2, float r3,float c3,
    erase duplicate points, do not change point ids.
 
 */
+// Change return type to size_t to be 64 bit compatible -- by A.Balakin 7 August 2012
 
-int de_duplicate( std::vector<Shx> &pts, std::vector<int> &outx )
+size_t de_duplicate( std::vector<Shx> &pts, std::vector<size_t> &outx )
 {
 
-	int nump = (int) pts.size();
+	size_t nump = pts.size();
 	std::vector<Dupex> dpx;
 	Dupex d;
-	for( int k=0; k<nump; k++)
+	for( size_t k=0; k<nump; k++)
 	{
 		d.r = pts[k].r;
 		d.c = pts[k].c;
@@ -772,7 +774,7 @@ int de_duplicate( std::vector<Shx> &pts, std::vector<int> &outx )
 
 	sort(dpx.begin(), dpx.end());
 
-	for( int k=0; k<nump-1; k++)
+	for( size_t k=0; k<nump-1; k++)
 	{
 		if( dpx[k].r == dpx[k+1].r && dpx[k].c == dpx[k+1].c )
 		{
@@ -787,10 +789,10 @@ int de_duplicate( std::vector<Shx> &pts, std::vector<int> &outx )
 
 	sort(outx.begin(), outx.end());
 
-	int nx = (int) outx.size();
-	for( int k=nx-1; k>=0; k--)
+	size_t nx = outx.size();
+	for( size_t k=nx; k>0; k--)
 	{
-		pts.erase(pts.begin()+outx[k]);
+		pts.erase(pts.begin()+outx[k-1]);
 	}
 
 	return(nx);
@@ -809,22 +811,22 @@ int de_duplicate( std::vector<Shx> &pts, std::vector<int> &outx )
  */
 
 
-int T_flip_pro( std::vector<Shx> &pts, std::vector<Triad> &triads, std::vector<int> &slump, int numt, int start, std::set<int> &ids)
+long T_flip_pro( std::vector<Shx> &pts, std::vector<Triad> &triads, std::vector<long> &slump, long numt, long start, std::set<long> &ids)
 {
 
 	float r3,c3;
-	int pa,pb,pc, pd, D, L1, L2, L3, L4, T2;
+	long pa,pb,pc, pd, D, L1, L2, L3, L4, T2;
 
 	Triad tx, tx2;
 
 
-	for( int t=start; t<numt; t++)
+	for( long t=start; t<numt; t++)
 	{
 
 		Triad &tri = triads[t];
 		// test all 3 neighbours of tri
 
-		int flipped = 0;
+		long flipped = 0;
 
 		if( tri.bc >= 0 )
 		{
@@ -894,7 +896,7 @@ int T_flip_pro( std::vector<Shx> &pts, std::vector<Triad> &triads, std::vector<i
 			r3 = pts[pd].r;
 			c3 = pts[pd].c;
 
-			int XX = Cline_Renka_test( pts[pa].r, pts[pa].c, pts[pb].r, pts[pb].c,
+			long XX = Cline_Renka_test( pts[pa].r, pts[pa].c, pts[pb].r, pts[pb].c,
 									   pts[pc].r, pts[pc].c, r3, c3 );
 
 			if( XX < 0 )
@@ -1020,7 +1022,7 @@ int T_flip_pro( std::vector<Shx> &pts, std::vector<Triad> &triads, std::vector<i
 			r3 = pts[pd].r;
 			c3 = pts[pd].c;
 
-			int XX = Cline_Renka_test( pts[pc].r, pts[pc].c, pts[pb].r, pts[pb].c,
+			long XX = Cline_Renka_test( pts[pc].r, pts[pc].c, pts[pb].r, pts[pb].c,
 									   pts[pa].r, pts[pa].c,r3, c3);
 
 			if( XX < 0)
@@ -1149,7 +1151,7 @@ int T_flip_pro( std::vector<Shx> &pts, std::vector<Triad> &triads, std::vector<i
 			r3 = pts[pd].r;
 			c3 = pts[pd].c;
 
-			int XX = Cline_Renka_test( pts[pb].r, pts[pb].c, pts[pa].r, pts[pa].c,
+			long XX = Cline_Renka_test( pts[pb].r, pts[pb].c, pts[pa].r, pts[pa].c,
 									   pts[pc].r, pts[pc].c,r3, c3);
 
 			if( XX < 0 )
@@ -1224,7 +1226,7 @@ int T_flip_pro( std::vector<Shx> &pts, std::vector<Triad> &triads, std::vector<i
 
  */
 
-int Cline_Renka_test(float &Ax, float &Ay,
+long Cline_Renka_test(float &Ax, float &Ay,
 					 float &Bx, float &By,
 					 float &Cx, float &Cy,
 					 float &Dx, float &Dy)
@@ -1261,26 +1263,26 @@ int Cline_Renka_test(float &Ax, float &Ay,
 // same again but with set of triangle ids to be iterated over.
 
 
-int T_flip_pro_idx( std::vector<Shx> &pts, std::vector<Triad> &triads, std::vector<int> &slump, std::set<int> &ids)
+long T_flip_pro_idx( std::vector<Shx> &pts, std::vector<Triad> &triads, std::vector<long> &slump, std::set<long> &ids)
 {
 
 	float  r3,c3;
-	int pa,pb,pc, pd,  D, L1, L2, L3, L4, T2;
+	long pa,pb,pc, pd,  D, L1, L2, L3, L4, T2;
 
 	Triad tx, tx2;
-	std::set<int> ids2;
+	std::set<long> ids2;
 	ids2.clear();
 
-	std::set<int> :: const_iterator x=ids.begin();
+	std::set<long> :: const_iterator x=ids.begin();
 	while(x != ids.end() )
 	{
-		int t = *x;
+		long t = *x;
 		x++;
 
 
 		Triad &tri = triads[t];
 		// test all 3 neighbours of tri
-		int flipped = 0;
+		long flipped = 0;
 
 
 
@@ -1352,7 +1354,7 @@ int T_flip_pro_idx( std::vector<Shx> &pts, std::vector<Triad> &triads, std::vect
 			r3 = pts[pd].r;
 			c3 = pts[pd].c;
 
-			int XX = Cline_Renka_test( pts[pa].r, pts[pa].c, pts[pb].r, pts[pb].c,
+			long XX = Cline_Renka_test( pts[pa].r, pts[pa].c, pts[pb].r, pts[pb].c,
 									   pts[pc].r, pts[pc].c,r3, c3);
 
 			if( XX < 0 )
@@ -1479,7 +1481,7 @@ int T_flip_pro_idx( std::vector<Shx> &pts, std::vector<Triad> &triads, std::vect
 			r3 = pts[pd].r;
 			c3 = pts[pd].c;
 
-			int XX = Cline_Renka_test( pts[pc].r, pts[pc].c, pts[pb].r, pts[pb].c,
+			long XX = Cline_Renka_test( pts[pc].r, pts[pc].c, pts[pb].r, pts[pb].c,
 									   pts[pa].r, pts[pa].c,r3, c3);
 
 			if( XX < 0 )
@@ -1605,7 +1607,7 @@ int T_flip_pro_idx( std::vector<Shx> &pts, std::vector<Triad> &triads, std::vect
 			r3 = pts[pd].r;
 			c3 = pts[pd].c;
 
-			int XX = Cline_Renka_test( pts[pb].r, pts[pb].c, pts[pc].r, pts[pc].c,
+			long XX = Cline_Renka_test( pts[pb].r, pts[pb].c, pts[pc].r, pts[pc].c,
 									   pts[pa].r, pts[pa].c,r3, c3);
 
 			if( XX < 0 )

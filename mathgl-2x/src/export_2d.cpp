@@ -60,7 +60,7 @@ bool mgl_is_same(HMGL gr, const mglPrim &pr,mreal wp,mglColor cp,int st)
 //-----------------------------------------------------------------------------
 void put_line(HMGL gr, void *fp, bool gz, long i, mreal wp, mglColor cp,int st, const char *ifmt, const char *nfmt, bool neg, mreal fc)
 {
-	register long n1=gr->GetPrm(i).n1, n2=gr->GetPrm(i).n2;
+	long n1=gr->GetPrm(i).n1, n2=gr->GetPrm(i).n2;
 	if(n1<0 || n2<0)	return;
 	const mglPnt &pp1 = gr->GetPnt(n1), &pp2 = gr->GetPnt(n2);
 	mreal x0=pp1.x, y0=pp1.y;

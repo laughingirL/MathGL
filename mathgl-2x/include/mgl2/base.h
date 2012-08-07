@@ -171,6 +171,7 @@ struct mglColorID
 	mglColor col;
 };
 extern mglColorID mglColorIds[31];
+extern std::string mglGlobalMess;	///< Buffer for receiving global messages
 //-----------------------------------------------------------------------------
 /// Base class for canvas which handle all basic drawing
 class mglBase

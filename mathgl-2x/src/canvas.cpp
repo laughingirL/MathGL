@@ -20,6 +20,8 @@
 #include <limits.h>
 #include "mgl2/canvas.h"
 //-----------------------------------------------------------------------------
+std::string mglGlobalMess;	///< Buffer for receiving global messages
+//-----------------------------------------------------------------------------
 mglCanvas::mglCanvas(int w, int h) : mglBase()
 {
 	clr(MGL_DISABLE_SCALE);
@@ -88,7 +90,7 @@ int Depth;			///< Depth of the image
 int CurFrameId;		///< Number of automaticle created frames
 GifFileType *gif;*/
 	SetTickRotate(true);	SetTickSkip(true);
-	SetWarn(mglWarnNone,"");
+	SetWarn(mglWarnNone,"");	mglGlobalMess = "";
 	ObjId = -1;	HighId = INT_MIN;
 	SetFunc(0,0);	Stop=false;	CutOff(0);	Ternary(0);
 	SetRanges(mglPoint(-1,-1,-1,-1), mglPoint(1,1,1,1));

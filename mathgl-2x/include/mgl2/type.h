@@ -120,9 +120,9 @@ struct mglColor
 	inline bool operator<(const mglColor &c) const
 	{	return memcmp(this, &c, sizeof(mglColor))<0;	}
 	// transparency still the same
-	inline void operator*=(float v)				{	r*=v;	g*=v;	b*=v;	}
-	inline void operator+=(const mglColor &c)	{	r+=c.r;	g+=c.g;	b+=c.b;	}
-	inline void operator-=(const mglColor &c)	{	r-=c.r;	g-=c.g;	b-=c.b;	}
+	inline void operator*=(float v)				{	r*=v;	g*=v;	b*=v;	a*=v;	}
+	inline void operator+=(const mglColor &c)	{	r+=c.r;	g+=c.g;	b+=c.b;	a+=c.a;	}
+	inline void operator-=(const mglColor &c)	{	r-=c.r;	g-=c.g;	b-=c.b;	a-=c.a;	}
 };
 #ifndef SWIG
 inline mglColor operator+(const mglColor &a, const mglColor &b)

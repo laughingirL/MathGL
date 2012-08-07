@@ -46,7 +46,8 @@ void save(mglGraph *gr,const char *name,const char *suf);
 #include "../src/s_hull/s_hull_pro.h"
 void test(mglGraph *gr)
 {
-/*	std::vector<Shx> pts;
+	std::vector<Shx> pts;
+	std::vector<size_t> out;
 	Shx pt;
 	FILE *fx = fopen("/home/balakin/tmp/triangulation/x.dat","rt");
 	FILE *fy = fopen("/home/balakin/tmp/triangulation/y.dat","rt");
@@ -58,10 +59,12 @@ void test(mglGraph *gr)
 		pt.r = xval;	pt.c = yval;
 		pt.id = i;	pts.push_back(pt);
 	}
+	if(de_duplicate(pts, out))
+		printf("There are duplicated points for triangulation.\n");
 	std::vector<Triad> triads;
 	s_hull_pro(pts, triads);	// perform triangulation -- ERROR here!!!
 	fclose(fx);	fclose(fy);
-	return;*/
+	return;
 
 	gr->Axis("Uxyz");
 	return;
