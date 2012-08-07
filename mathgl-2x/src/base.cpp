@@ -583,7 +583,7 @@ void mglTexture::Set(const char *s, int smooth, mreal alpha)
 	}
 	if(strchr(s,'|') && !smooth)	smooth = -1;
 	mglColor *c = new mglColor[2*n];		// Colors itself
-	bool map = (smooth==2), sm = smooth>=0;	// Use mapping, smoothed colors
+	bool map = (smooth==2), sm = smooth>=0, man=sm;	// Use mapping, smoothed colors
 	for(i=j=n=0;i<l;i++)	// fill colors
 	{
 		if(s[i]=='[')	j++;	if(s[i]==']')	j--;
@@ -597,10 +597,10 @@ void mglTexture::Set(const char *s, int smooth, mreal alpha)
 		}
 		// NOTE: User can change alpha if it placed like {AN}
 		if(s[i]=='A' && j<1 && m>0 && s[i+1]>'0' && s[i+1]<='9')
-		{	alpha = 0.1*(s[i+1]-'0');	i++;	}
+		{	man=false;	alpha = 0.1*(s[i+1]-'0');	i++;	}
 	}
 	for(i=0;i<n;i++)	// default texture
-	{	c[2*i+1]=c[2*i];	c[2*i].a=sm?0:alpha;	c[2*i+1].a=alpha;	}
+	{	c[2*i+1]=c[2*i];	c[2*i].a=man?0:alpha;	c[2*i+1].a=alpha;	}
 	if(map && sm)		// map texture
 	{
 		if(n==2)
@@ -980,5 +980,59 @@ bool mgl_check_vec3(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, 
 	if(!(both || (x->GetNx()==n && y->GetNx()==m && z->GetNx()==l)))
 	{	gr->SetWarn(mglWarnDim,name);	return true;	}
 	return false;
+}
+//-----------------------------------------------------------------------------
+void mglBase::SetDefScheme(HCDT a, const char *s)
+{
+	if(!s || !s[0])	return;
+	mreal v1=a->Minimal(), v2=a->Maximal();
+	CRange(v1,v2);
+
+
+	register long i,j=0,m=0,n=0,l=strlen(s);
+	const char *cols = MGL_COLORS;
+	for(i=0;i<l;i++)		// find number of colors
+	{
+		if(s[i]=='[')	j++;	if(s[i]==']')	j--;
+		if(strchr(cols,s[i]) && j<1)	n++;
+		if(s[i]==':' && j<1)	break;	// NOTE: should use []
+	}
+	if(n!=a->GetNx()+1)	{	SetWarn(mglWarnDim,"SetDefScheme");	return;	}
+
+	mglColor *c = new mglColor[n];		// Colors itself
+	double alpha = 1;
+	bool man = true;
+	for(i=j=n=0;i<l;i++)	// fill colors
+	{
+		if(s[i]=='[')	j++;	if(s[i]==']')	j--;
+		if(s[i]=='{')	m++;	if(s[i]=='}')	m--;
+		if(strchr(cols,s[i]) && j<1)		// this is color
+		{
+			if(m>0 && s[i+1]>'0' && s[i+1]<='9')// ext color
+			{	c[n] = mglColor(s[i],(s[i+1]-'0')/5.f);	i++;	}
+			else	c[n] = mglColor(s[i]);	// usual color
+			n++;
+		}
+		// NOTE: User can change alpha if it placed like {AN}
+		if(s[i]=='A' && j<1 && m>0 && s[i+1]>'0' && s[i+1]<='9')
+		{	man = false;	alpha = 0.1*(s[i+1]-'0');	i++;	}
+	}
+	for(i=0;i<n;i++)	c[i].a = alpha;
+	mglTexture &t = Txt[1];
+
+	for(j=0;j<n;j++)
+	{
+		register mreal u,d1=a->v(j)*(n-1)/((v2-v1)*255),d2=a->v(j+1)*(n-1)/((v2-v1)*255);
+		for(i=d1;i<d2;i++)
+		{
+			u = d1+(d2-d1)*i;	l = long(u);	u -= l;
+			if(l>n-1)	// NOTE: never should be here!
+			{	t.col[2*i] = t.col[2*i+1] = c[n-1];	/*printf("AddTexture -- out of bounds");*/	}
+			else
+			{	t.col[2*i] = t.col[2*i+1] = c[l]*(1-u)+c[l+1]*u;	}
+			if(man)	t.col[2*i].a = 0;
+		}
+	}
+	delete []c;
 }
 //-----------------------------------------------------------------------------

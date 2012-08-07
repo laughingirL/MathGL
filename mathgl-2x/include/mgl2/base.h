@@ -152,6 +152,7 @@ struct mglTexture
 	{	n=0;	Set(cols,smooth,alpha);	}
 	void Clear()	{	n=0;	}
 	void Set(const char *cols, int smooth=0,mreal alpha=1);
+	void Set(HCDT val, const char *cols);
 	void GetC(mreal u,mreal v,mglPnt &p) const;
 	inline bool IsSame(const mglTexture &t) const
 	{	return n==t.n && !memcmp(col,t.col,512*sizeof(mglColor));	}
@@ -266,6 +267,8 @@ public:
 	/// Set default color scheme
 	inline void SetDefScheme(const char *colors)
 	{	Txt[1].Set(mgl_have_color(colors)?colors:"BbcyrR");	}
+	/// Set default color scheme
+	void SetDefScheme(HCDT val, const char *colors);
 
 	/// Set number of mesh lines
 	inline void SetMeshNum(int val)	{	MeshNum=val;	}

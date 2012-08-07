@@ -36,7 +36,11 @@ void mgl_set_color_(char *id, mreal *r, mreal *g, mreal *b, int)	{	mgl_set_color
 void mgl_set_def_sch(HMGL gr, const char *sch)	{	gr->SetDefScheme(sch);	}
 void mgl_set_def_sch_(uintptr_t *gr, const char *sch,int l)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
-	_GR_->SetDefScheme(s);	delete []s;	}
+	mgl_set_def_sch(_GR_, s);	delete []s;	}
+void mgl_set_def_schv(HMGL gr, HCDT val, const char *sch)	{	gr->SetDefScheme(val, sch);	}
+void mgl_set_def_schv_(uintptr_t *gr, uintptr_t *val, const char *sch,int l)
+{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	mgl_set_def_schv(_GR_,(mglDataA*)(*val),s);	delete []s;	}
 //-----------------------------------------------------------------------------
 const char *mgl_get_mess(HMGL gr)	{	return gr->Mess.c_str();	}
 int mgl_get_warn(HMGL gr)	{	return gr->GetWarn();	}
