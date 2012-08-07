@@ -401,6 +401,11 @@ Sets the palette as selected colors. Default value is @code{"Hbgrcmyhlnqeup"} th
 Sets the @var{sch} as default color scheme. Default value is @code{"BbcyrR"}.
 @end deftypefn
 
+@deftypefn {Method on @code{mglGraph}} @code{void} SetDefScheme (@code{const mglData &}val, @code{const char *}sch)
+@deftypefnx {C function} @code{void} mgl_set_def_schv (@code{HMGL} gr, @code{HCDT} val, @code{const char *}sch)
+Sets the @var{sch} as default color scheme. At this color correspond to color values defined in @var{val}. The value of @var{val}.nx-1 should be equal to the number of specified colors.
+@end deftypefn
+
 @deftypefn {C function} @code{void} mgl_set_color (@code{char} id, @code{mreal} r, @code{mreal} g, @code{mreal} b)
 Sets RGB values for color with given @var{id}.
 @end deftypefn

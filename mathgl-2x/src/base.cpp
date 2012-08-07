@@ -982,7 +982,7 @@ bool mgl_check_vec3(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, 
 	return false;
 }
 //-----------------------------------------------------------------------------
-void mglBase::SetDefScheme(HCDT a, const char *s)
+void mglBase::SetDefScheme(HCDT a, const char* s)
 {
 	if(!s || !s[0])	return;
 	mreal v1=a->Minimal(), v2=a->Maximal();

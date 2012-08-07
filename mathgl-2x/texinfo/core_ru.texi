@@ -387,12 +387,17 @@ MGL не требует создания данного типа объекто�
 @end deftypefn
 
 @ifclear UDAV
-@deftypefn {Method on @code{mglGraph}} @code{void} SetDefScheme (@code{const char *}sch)
-@deftypefnx {C function} @code{void} mgl_set_def_sch (@code{HMGL} gr, @code{const char *}sch)
+@deftypefn {Метод класса @code{mglGraph}} @code{void} SetDefScheme (@code{const char *}sch)
+@deftypefnx {Функция С} @code{void} mgl_set_def_sch (@code{HMGL} gr, @code{const char *}sch)
 Устанавливает @var{sch} в качестве цветовой схемы по умолчанию. Начальное значение @code{"BbcyrR"}.
 @end deftypefn
 
-@deftypefn {C function} @code{void} mgl_set_color (@code{char} id, @code{mreal} r, @code{mreal} g, @code{mreal} b)
+@deftypefn {Метод класса @code{mglGraph}} @code{void} SetDefScheme (@code{const mglData &}val, @code{const char *}sch)
+@deftypefnx {Функция С} @code{void} mgl_set_def_schv (@code{HMGL} gr, @code{HCDT} val, @code{const char *}sch)
+Устанавливает @var{sch} в качестве цветовой схемы по умолчанию. При этом цвета соответствуют значениям цветовой шкалы, определенной в @var{val}. Значение @var{val}.nx-1 должно быть равно цвету указанных цветов.
+@end deftypefn
+
+@deftypefn {Функция С} @code{void} mgl_set_color (@code{char} id, @code{mreal} r, @code{mreal} g, @code{mreal} b)
 Задает RGB значения для цвета с заданным @var{id}.
 @end deftypefn
 @end ifclear
@@ -671,8 +676,8 @@ Setsize: размер(ы) равны нулю или отрицательны
 
 @ifclear UDAV
 
-@deftypefn {Method on @code{mglGraph}} @code{void} SetTickShift (@code{mglPoint} d)
-@deftypefnx {C function} @code{void} mgl_set_tick_shift (@code{HMGL} gr, @code{mreal} dx, @code{mreal} dy, @code{mreal} dz, @code{mreal} dc)
+@deftypefn {Метод класса @code{mglGraph}} @code{void} SetTickShift (@code{mglPoint} d)
+@deftypefnx {Функция С} @code{void} mgl_set_tick_shift (@code{HMGL} gr, @code{mreal} dx, @code{mreal} dy, @code{mreal} dz, @code{mreal} dc)
 Задает значение дополнительного сдвига меток осей координат.
 @end deftypefn
 
@@ -686,8 +691,8 @@ Setsize: размер(ы) равны нулю или отрицательны
 Включает/выключает пропуск меток если их число или длина меток слишком велики.
 @end deftypefn
 
-@deftypefn {Method on @code{mglGraph}} @code{void} SetTimeUTC (@code{bool} val)
-@c @deftypefnx {C function} @code{void} mgl_set_tick_skip (@code{HMGL} gr, @code{bool} val)
+@deftypefn {Метод класса @code{mglGraph}} @code{void} SetTimeUTC (@code{bool} val)
+@c @deftypefnx {Функция С} @code{void} mgl_set_tick_skip (@code{HMGL} gr, @code{bool} val)
 Разрешает/запрещает использование UTC времени в метках осей координат. В C/Fortran следует использовать @code{mgl_set_flag(gr,val, MGL_USE_GMTIME);}.
 @end deftypefn
 
@@ -2872,8 +2877,8 @@ gr.GetBGRN(bits, len(bits));
 
 @deftypefn {MGL command} {} datagrid dat xdat ydat zdat
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} DataGrid (@code{mglData &}u, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}opt=@code{""})
-@deftypefnx {C function} @code{void} mgl_data_grid (@code{HMGL} gr, @code{HMDT} u, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}opt)
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} DataGrid (@code{mglData &}u, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}opt=@code{""})
+@deftypefnx {Функция С} @code{void} mgl_data_grid (@code{HMGL} gr, @code{HMDT} u, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}opt)
 @end ifclear
 Заполняет значения массива @samp{u} результатом линейной интерполяции по триангулированной поверхности, найденной по произвольно расположенным точкам @samp{x}, @samp{y}, @samp{z}. NAN значение используется для точек сетки вне триангулированной поверхности.
 @end deftypefn
