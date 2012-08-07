@@ -43,27 +43,16 @@ int srnd = 0;
 void smgl_colorbar(mglGraph *gr);
 void smgl_combined(mglGraph *gr);
 void save(mglGraph *gr,const char *name,const char *suf);
-#include "../src/s_hull/s_hull_pro.h"
 void test(mglGraph *gr)
 {
-	std::vector<Shx> pts;
-	std::vector<size_t> out;
-	Shx pt;
-	FILE *fx = fopen("/home/balakin/tmp/triangulation/x.dat","rt");
-	FILE *fy = fopen("/home/balakin/tmp/triangulation/y.dat","rt");
-	double xval,yval;
-	for(int i=0;i<100;i++)	// prepare data
-	{
-		fscanf(fx,"%lg",&xval);
-		fscanf(fy,"%lg",&yval);
-		pt.r = xval;	pt.c = yval;
-		pt.id = i;	pts.push_back(pt);
-	}
-	if(de_duplicate(pts, out))
-		printf("There are duplicated points for triangulation.\n");
-	std::vector<Triad> triads;
-	s_hull_pro(pts, triads);	// perform triangulation -- ERROR here!!!
-	fclose(fx);	fclose(fy);
+	mglPoint p;
+	gr->Ball(p,'r');
+	gr->Puts(p,"B",":C",-1);
+	gr->Puts(p,"B","r:tC",-2);
+	gr->Puts(p,"B","m:tC",-3);
+	gr->Puts(p,"B","c:TC",-3);
+	gr->Puts(p,"B","g:TC",-1);
+	gr->Puts(p,"B","b:TC",-2);
 	return;
 
 	gr->Axis("Uxyz");

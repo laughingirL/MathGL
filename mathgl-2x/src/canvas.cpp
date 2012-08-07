@@ -320,7 +320,7 @@ mreal mglCanvas::text_plot(long p,const wchar_t *text,const char *font,mreal siz
 	// text drawing itself
 	Push();
 	inv = inv ^ (strchr(font,'T')!=0);
-	if(inv)	shift = 0.17*h-shift;
+	if(inv)	shift = 0.2*h-shift;
 	shift += 1.1;	// Correction for glyph rotation around proper point
 //	shift *= h;
 
