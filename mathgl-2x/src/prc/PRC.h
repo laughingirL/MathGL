@@ -12,6 +12,8 @@ typedef unsigned char uint8_t;
 typedef unsigned short uint16_t;
 typedef unsigned long uint32_t;
 #endif // _MSC_VER >= 1600
+#elif defined __BORLANDC__
+#include <stdint.h>
 #else
 #include <inttypes.h>
 #endif // _MSC_VER

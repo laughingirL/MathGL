@@ -987,7 +987,7 @@ std::string oPRCFile::calculate_unique_name(const ContentPRCBase *prc_entity,con
 // WriteUnsignedInteger (unique_identifier)
     serialization << prc_occurence->getPRCID();
   }
-  ss << (prc_entity->name.empty()?"node":prc_entity->name) << '.';
+  ss << (prc_entity->name.empty()?"node":prc_entity->name.c_str()) << '.';
   const uint32_t size_serialization = serialization.getSize();
   for(size_t j=0; j<size_serialization; j++)
     ss << hex << setfill('0') << setw(2) << (uint32_t)(serialization_buffer[j]);

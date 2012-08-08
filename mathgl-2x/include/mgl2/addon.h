@@ -20,8 +20,8 @@
 #ifndef _MGL_ADDON_H_
 #define _MGL_ADDON_H_
 /***************************************************************************/
-#ifdef __cplusplus
 #include "mgl2/define.h"
+#ifdef __cplusplus
 //---------------------------------------------------------------------------
 #include <complex>
 typedef std::complex<mreal> dual;

@@ -265,7 +265,7 @@ bool mglBase::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan) const
 	bool res = true;
 	if(x2>CutMin.x && x1<CutMax.x && y2>CutMin.y && y1<CutMax.y &&
 		z2>CutMin.z && z1<CutMax.z)	res = false;
-	if(fc && fc->Calc(x,y,z))	res = false;
+	if(fc && fc->Calc(x,y,z)!=0)	res = false;
 
 	if(get(MGL_ENABLE_CUT) || !use_nan)
 	{

@@ -13,6 +13,10 @@ if(MGL_HAVE_FLTK)
 	set(mgl_wnd_hdr ${mgl_wnd_hdr} ../include/mgl2/fltk.h)
 endif(MGL_HAVE_FLTK)
 
+if(MGL_HAVE_ZLIB)
+	include_directories(${ZLIB_INCLUDE_DIR})
+endif(MGL_HAVE_ZLIB)
+
 if(MGL_HAVE_GLUT)
 	include_directories(${GLUT_INCLUDE_DIR})
 	set(mgl_glut_src glut.cpp window.cpp)
@@ -77,6 +81,10 @@ endif(MGL_HAVE_WX)
 if(MGL_HAVE_QT)
 	target_link_libraries(mgl-wnd ${QT_LIBRARIES})
 endif(MGL_HAVE_QT)
+
+if(MGL_HAVE_ZLIB)
+	target_link_libraries(mgl-wnd ${ZLIB_LIBRARIES} )
+endif(MGL_HAVE_ZLIB)
 
 install(
 	TARGETS mgl-wnd mgl-wnd-static

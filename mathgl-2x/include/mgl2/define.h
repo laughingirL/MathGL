@@ -54,12 +54,14 @@
 
 #define MGL_VER2	0.3
 
-//#ifdef WIN32
-#if defined(_MSC_VER) || defined(__BORLANDC__)
-#define hypot _hypot
-#define getcwd _getcwd
-#define isfinite _finite
+#if defined(_MSC_VER)
+#define hypot	_hypot
+#define getcwd	_getcwd
 #define chdir	_chdir // BORLAND has chdir
+#endif
+
+#if defined(_MSC_VER) || defined(__BORLANDC__)
+#define isfinite _finite
 #include <float.h>
 
 const unsigned long mgl_nan[2] = {0xffffffff, 0x7fffffff};

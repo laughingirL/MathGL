@@ -68,9 +68,9 @@ struct Shx
 	float r,c, tr,tc ;
 	float ro;
 	Shx() {r=c=tr=tc=ro=0;	id=trid=0;}	// added by A.Balakin 6 July 2012 -- uninitialised variable
-	Shx(float a, float b) : r(a), c(b), tr(0.0), tc(0.0), ro(0.0), id(-1)
+	Shx(float a, float b) : id(-1), r(a), c(b), tr(0.0), tc(0.0), ro(0.0)
 	{	trid=0;	}		// added by A.Balakin 6 July 2012 -- uninitialised variable
-	Shx(float a, float b, float x) : r(a), c(b), ro(x), tr(0), tc(0), id(-1)
+	Shx(float a, float b, float x) : id(-1), r(a), c(b), tr(0), tc(0), ro(x)
 	{	trid=0;	}	// added by A.Balakin 6 July 2012 -- uninitialised variable
 	Shx(const Shx &p) : id(p.id), trid(p.trid), r(p.r), c(p.c), tr(p.tr), tc(p.tc), ro(p.ro) {}
 
@@ -105,7 +105,7 @@ struct Dupex
 
 	Dupex() {}
 	Dupex(float a, float b) : id(-1), r(a), c(b) {}
-	Dupex(float a, float b, long x) : r(a), c(b), id(x) {}
+	Dupex(float a, float b, long x) : id(x), r(a), c(b) {}
 	Dupex(const Dupex &p) : id(p.id),  r(p.r), c(p.c) {}
 
 	Dupex &operator=(const Dupex &p)

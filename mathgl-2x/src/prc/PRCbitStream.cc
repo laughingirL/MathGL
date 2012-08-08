@@ -23,6 +23,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <cassert>
+#include <math.h>
 #include "PRCbitStream.h"
 #include "PRCdouble.h"
 
