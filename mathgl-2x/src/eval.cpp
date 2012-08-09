@@ -401,8 +401,7 @@ mreal mglFormula::Calc(mreal x,mreal y,mreal t,mreal u) const
 	a1['x'-'a'] = a1['r'-'a'] = x;
 	a1['y'-'a'] = a1['n'-'a'] = a1['v'-'a'] = y;
 	a1['z'-'a'] = a1['t'-'a'] = t;
-	mreal a = CalcIn(a1);
-	return isfinite(a) ? a : NAN;
+	return CalcIn(a1);
 }
 //-----------------------------------------------------------------------------
 // evaluate formula for 'x'='r', 'y'='n', 't'='z', 'u'='a', 'v'='b', 'w'='c' variables
@@ -416,16 +415,14 @@ mreal mglFormula::Calc(mreal x,mreal y,mreal t,mreal u,mreal v,mreal w) const
 	a1['x'-'a'] = a1['r'-'a'] = x;
 	a1['y'-'a'] = a1['n'-'a'] = y;
 	a1['z'-'a'] = a1['t'-'a'] = t;
-	mreal a = CalcIn(a1);
-	return isfinite(a) ? a : NAN;
+	return CalcIn(a1);
 }
 //-----------------------------------------------------------------------------
 // evaluate formula for arbitrary set of variables
 mreal mglFormula::Calc(const mreal var[MGL_VS]) const
 {
 	Error=0;
-	mreal a = CalcIn(var);
-	return isfinite(a) ? a : NAN;
+	return CalcIn(var);
 }
 //-----------------------------------------------------------------------------
 // evaluate formula for 'x'='r', 'y'='n'='v', 't'='z', 'u'='a' variables
@@ -437,8 +434,7 @@ mreal mglFormula::CalcD(char diff,mreal x,mreal y,mreal t,mreal u) const
 	a1['x'-'a'] = a1['r'-'a'] = x;
 	a1['y'-'a'] = a1['n'-'a'] = a1['v'-'a'] = y;
 	a1['z'-'a'] = a1['t'-'a'] = t;
-	mreal a = CalcDIn(diff-'a', a1);
-	return isfinite(a) ? a : NAN;
+	return CalcDIn(diff-'a', a1);
 }
 //-----------------------------------------------------------------------------
 // evaluate formula for 'x'='r', 'y'='n', 't'='z', 'u'='a', 'v'='b', 'w'='c' variables
@@ -452,16 +448,14 @@ mreal mglFormula::CalcD(char diff,mreal x,mreal y,mreal t,mreal u,mreal v,mreal 
 	a1['x'-'a'] = a1['r'-'a'] = x;
 	a1['y'-'a'] = a1['n'-'a'] = y;
 	a1['z'-'a'] = a1['t'-'a'] = t;
-	mreal a = CalcDIn(diff-'a', a1);
-	return isfinite(a) ? a : NAN;
+	return CalcDIn(diff-'a', a1);
 }
 //-----------------------------------------------------------------------------
 // evaluate derivate of formula respect to 'diff' variable for arbitrary set of other variables
 mreal mglFormula::CalcD(const mreal var[MGL_VS], char diff) const
 {
 	Error=0;
-	mreal a = CalcDIn(diff-'a', var);
-	return isfinite(a) ? a : NAN;
+	return CalcDIn(diff-'a', var);
 }
 //-----------------------------------------------------------------------------
 double cand(double a,double b)	{return a&&b?1:0;}

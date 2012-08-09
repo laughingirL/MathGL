@@ -1184,6 +1184,7 @@ void mgl_dens3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, mre
 	if(mx&&my&&mz&&ma)	mgl_get_slice_md(s,mx,my,mz,ma,dir,sVal,both);
 	else mgl_get_slice(s,x,y,z,a,dir,sVal,both);
 	mgl_surfc_xy(gr,&s.x,&s.y,&s.z,&s.a,sch,0);
+	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
 void mgl_dens3(HMGL gr, HCDT a, const char *sch, mreal sVal, const char *opt)
@@ -1231,6 +1232,7 @@ void mgl_grid3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, mre
 	if(mx&&my&&mz&&ma)	mgl_get_slice_md(s,mx,my,mz,ma,dir,sVal,both);
 	else mgl_get_slice(s,x,y,z,a,dir,sVal,both);
 	mgl_mesh_xy(gr,&s.x,&s.y,&s.z,sch,0);
+	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
 void mgl_grid3(HMGL gr, HCDT a, const char *sch, mreal sVal, const char *opt)

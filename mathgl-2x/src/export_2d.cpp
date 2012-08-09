@@ -309,13 +309,15 @@ void mgl_write_eps(HMGL gr, const char *fname,const char *descr)
 		}
 		else if(q.type==3)	// quad
 		{
-			const mglPnt p2=gr->GetPnt(q.n2), p3=gr->GetPnt(q.n3), p4=gr->GetPnt(q.n4);
+			const mglPnt &p2=gr->GetPnt(q.n2), &p3=gr->GetPnt(q.n3), &p4=gr->GetPnt(q.n4);
+if(p1.a>mgl_min_a || p2.a>mgl_min_a || p3.a>mgl_min_a || p4.a>mgl_min_a)
 			mgl_printf(fp, gz, "np %g %g mt %g %g ll %g %g ll %g %g ll cp %sfill\n",
 					   p1.x, p1.y, p2.x, p2.y, p4.x, p4.y, p3.x, p3.y, str);
 		}
 		else if(q.type==2)	// trig
 		{
-			const mglPnt p2=gr->GetPnt(q.n2), p3=gr->GetPnt(q.n3);
+			const mglPnt &p2=gr->GetPnt(q.n2), &p3=gr->GetPnt(q.n3);
+if(p1.a>mgl_min_a || p2.a>mgl_min_a || p3.a>mgl_min_a)
 			mgl_printf(fp, gz, "np %g %g mt %g %g ll %g %g ll cp %sfill\n",
 					   p1.x, p1.y, p2.x, p2.y, p3.x, p3.y, str);
 		}
@@ -454,15 +456,21 @@ void mgl_write_svg(HMGL gr, const char *fname,const char *descr)
 		}
 		else if(q.type==2 && cp.a>0)
 		{
-			const mglPnt p2=gr->GetPnt(q.n2), p3=gr->GetPnt(q.n3);
+			const mglPnt &p2=gr->GetPnt(q.n2), &p3=gr->GetPnt(q.n3);
+if(p1.a>mgl_min_a || p2.a>mgl_min_a || p3.a>mgl_min_a)
+{
 			mgl_printf(fp, gz, "<g fill=\"#%02x%02x%02x\" opacity=\"%g\">\n", int(255*cp.r),int(255*cp.g),int(255*cp.b),cp.a);
 			mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g L %g %g Z\"/> </g>\n", p1.x, hh-p1.y, p2.x, hh-p2.y, p3.x, hh-p3.y);
+}
 		}
 		else if(q.type==3 && cp.a>0)
 		{
-			const mglPnt p2=gr->GetPnt(q.n2), p3=gr->GetPnt(q.n3), p4=gr->GetPnt(q.n4);
+			const mglPnt &p2=gr->GetPnt(q.n2), &p3=gr->GetPnt(q.n3), &p4=gr->GetPnt(q.n4);
+if(p1.a>mgl_min_a || p2.a>mgl_min_a || p3.a>mgl_min_a || p4.a>mgl_min_a)
+{
 			mgl_printf(fp, gz, "<g fill=\"#%02x%02x%02x\" opacity=\"%g\">\n", int(255*cp.r),int(255*cp.g),int(255*cp.b),cp.a);
 			mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g L %g %g L %g %g Z\"/> </g>\n", p1.x, hh-p1.y, p2.x, hh-p2.y, p4.x, hh-p4.y, p3.x, hh-p3.y);
+}
 		}
 		else if(q.type==1)
 		{

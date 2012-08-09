@@ -61,7 +61,6 @@
 #endif
 
 #if defined(_MSC_VER) || defined(__BORLANDC__)
-#define isfinite _finite
 #include <float.h>
 
 const unsigned long mgl_nan[2] = {0xffffffff, 0x7fffffff};
@@ -199,9 +198,10 @@ enum{	// Codes for warnings/messages
 #define MGL_PREFERVC		0x040000	///< Prefer vertex color instead of texture if output format supports
 #define MGL_ONESIDED		0x080000	///< Render only front side of surfaces if output format supports (for debugging)
 //-----------------------------------------------------------------------------
-//#define mgl_realloc(T,o,no,nn) {T *_tmp = new T[nn]; memcpy(_tmp,o,(no)*sizeof(T)); delete []o; o=_tmp;}
-//-----------------------------------------------------------------------------
 #ifdef __cplusplus
+//-----------------------------------------------------------------------------
+#include <complex>
+typedef std::complex<mreal> dual;
 //-----------------------------------------------------------------------------
 struct mglThreadD
 {

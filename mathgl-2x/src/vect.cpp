@@ -192,10 +192,10 @@ void mgl_vect_2d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, const char *sch, 
 void mgl_vect_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, const char *opt)
 {
 	register long i,j,n=ax->GetNx(),m=ax->GetNy(),l=ax->GetNz(),k;
-	if(mgl_check_vec3(gr,x,y,z,ax,ay,az,"Vect3"))	return;
+	if(mgl_check_vec3(gr,x,y,z,ax,ay,az,"Vect_3d"))	return;
 
 	gr->SaveState(opt);
-	static int cgid=1;	gr->StartGroup("Vect3",cgid++);
+	static int cgid=1;	gr->StartGroup("Vect_3d",cgid++);
 	bool dot = sch && strchr(sch,'.');
 	bool fix = sch && strchr(sch,'f');
 	bool end = sch && strchr(sch,'>');
@@ -271,6 +271,107 @@ void mgl_vect_3d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, co
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_vect_3d(_GR_, _DA_(ax), _DA_(ay), _DA_(az), s, o);	delete []o;	delete []s;	}
+//-----------------------------------------------------------------------------
+//
+//	Vect3 series
+//
+//-----------------------------------------------------------------------------
+void mgl_vect3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, mreal sVal, const char *opt)
+{
+	bool both = mgl_isboth(x,y,z,a);
+	if(mgl_check_vec3(gr,x,y,z,ax,ay,az,"Vect3"))	return;
+
+	gr->SaveState(opt);
+	static int cgid=1;	gr->StartGroup("Vect3",cgid++);
+	char dir='y';
+	if(sch && strchr(sch,'x'))	dir='x';
+	if(sch && strchr(sch,'z'))	dir='z';
+
+	bool dot = sch && strchr(sch,'.');
+	bool fix = sch && strchr(sch,'f');
+	bool end = sch && strchr(sch,'>');
+	bool beg = sch && strchr(sch,'<');
+	bool grd = sch && strchr(sch,'=');
+
+	_mgl_slice s;
+	const mglData *mx = dynamic_cast<const mglData *>(x);
+	const mglData *my = dynamic_cast<const mglData *>(y);
+	const mglData *mz = dynamic_cast<const mglData *>(z);
+	const mglData *max = dynamic_cast<const mglData *>(ax);
+	const mglData *may = dynamic_cast<const mglData *>(ay);
+	const mglData *maz = dynamic_cast<const mglData *>(az);
+	if(mx&&my&&mz&&max&&may&&maz)
+		mgl_get_slice_md(s,mx,my,mz,ma,dir,sVal,both);
+	else
+		mgl_get_slice(s,x,y,z,a,dir,sVal,both);
+
+	long i,j,n=s.ax.nx,m=s.ax.ny,k;
+	long tx=1,ty=1;
+	if(gr->MeshNum>1)	{	tx=(n-1)/(gr->MeshNum-1);	ty=(m-1)/(gr->MeshNum-1);	}
+	if(tx<1)	tx=1;	if(ty<1)	ty=1;
+	mreal xm=0,ym,dx,dy;
+	mreal dd,dm=(fabs(gr->Max.c)+fabs(gr->Min.c))*1e-5;
+	mreal vx,vy;
+	// use whole array for determining maximal vectors length 
+	for(k=0;k<ax->GetNz();k++)	for(j=0;j<m;j++)	for(i=0;i<n;i++)
+	{
+		vx = ax->v(i,j,k);	vy = ay->v(i,j,k);	vz = az->v(i,j,k);
+		ym = vx*vx+vy*vy+vz*vz;
+		xm = xm>ym ? xm : ym;
+	}
+	xm = 1./(xm==0 ? 1:sqrt(xm));
+	long n1,n2;
+	mglPoint p1,p2;
+	mreal c1,c2, xx,yy;
+
+	for(i=0;i<n;i+=tx)	for(j=0;j<m;j+=ty)
+	{
+		if(gr->Stop)	return;
+		xx = s.x.a[i+n*j];	yy = s.y.a[i+n*j];	zz = s.z.a[i+n*j];
+		dx = i<n-1 ? (s.x.a[i+n*j+1]-xx) : (xx-s.x.a[i+n*j-1]);
+		dy = j<m-1 ? (s.x.a[i+n*j+1]-yy) : (yy-s.x.a[i+n*j-n]);
+		vx = s.ax.a[i+n*j];	vy = s.ay.a[i+n*j];	vz = s.az.a[i+n*j];
+		dx *= tx;	dy *= ty;	dd = hypot(vx,vy);
+		dx *= fix ? (dd>dm ? vx/dd : 0) : vx*xm;
+		dy *= fix ? (dd>dm ? vy/dd : 0) : vy*xm;
+		dz *= fix ? (dd>dm ? vz/dd : 0) : vz*xm;
+
+		if(end)			{	p1 = mglPoint(xx-dx,yy-dy,zz-dz);	p2 = mglPoint(xx,yy,zz);	}
+		else if(beg)	{	p1 = mglPoint(xx,yy,zz);	p2 = mglPoint(xx+dx,yy+dy,zz+dz);	}
+		else	{	p1=mglPoint(xx-dx/2,yy-dy/2,zz-dz/2);	p2=mglPoint(xx+dx/2,yy+dy/2,zz+dz/2);	}
+		if(grd)	{	c1=gr->GetC(ss,dd*xm-0.5,false);	c2=gr->GetC(ss,dd*xm,false);}
+		else	c1 = c2 = gr->GetC(ss,dd*xm,false);
+		n1=gr->AddPnt(p1,c1);	n2=gr->AddPnt(p2,c2);
+		// allow vectors outside bounding box
+		if(n1<0 && n2>=0)	n1=gr->AddPnt(p1,c1,mglPoint(NAN),-1,2);
+		if(n2<0 && n1>=0)	n2=gr->AddPnt(p2,c2,mglPoint(NAN),-1,2);
+		if(dot)	{	gr->line_plot(n1,n2);	gr->mark_plot(n1,'.');	}
+		else	gr->vect_plot(n1,n2);
+	}
+	gr->EndGroup();
+}
+//-----------------------------------------------------------------------------
+void mgl_vect3(HMGL gr, HCDT ax, HCDT ay, HCDT az, const char *sch, mreal sVal, const char *opt)
+{
+	gr->SaveState(opt);
+	mglData x(a->GetNx()), y(a->GetNy()),z(a->GetNz());
+	x.Fill(gr->Min.x,gr->Max.x);
+	y.Fill(gr->Min.y,gr->Max.y);
+	z.Fill(gr->Min.z,gr->Max.z);
+	mgl_vect3_xyz(gr,&x,&y,&z,ax,ay,az,sch,sVal,0);
+	gr->LoadState();
+}
+//-----------------------------------------------------------------------------
+void mgl_vect3_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, mreal *sVal, const char *opt,int l,int lo)
+{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+	mgl_vect3_xyz(_GR_, _DA_(x), _DA_(y), _DA_(z), _DA_(ax), _DA_(ay), _DA_(az), s, *sVal, o);
+	delete []o;	delete []s;	}
+//-----------------------------------------------------------------------------
+void mgl_vect3_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, mreal *sVal, const char *opt,int l,int lo)
+{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+	mgl_vect3(_GR_, _DA_(ax), _DA_(ay), _DA_(az), s, *sVal, o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
 //
 //	Flow 2d series

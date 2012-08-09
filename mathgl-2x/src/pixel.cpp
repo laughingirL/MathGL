@@ -172,8 +172,36 @@ mglPoint mglCanvas::CalcXYZ(int xs, int ys) const
 {
 	mreal s3 = 2*B.pf, x, y, z;	// TODO: Take into account z-value of z-buffer
 	ys = Height - ys;
-	mreal xx = xs-B.x, yy = ys-B.y;
+	mreal xx = xs-B.x, yy = ys-B.y, zz;
 	mreal d1=B.b[0]*B.b[4]-B.b[1]*B.b[3], d2=B.b[1]*B.b[5]-B.b[2]*B.b[4], d3=B.b[0]*B.b[5]-B.b[2]*B.b[3];
+
+// TODO: take into account view() and zoom()
+
+// try to use z-values
+zz = Z[xs+Width *ys]-B.z;
+if(zz>-1e20f)
+{
+	// put inverse matrix here: [x,y,z]=B^(-1)[xx,yy,zz]
+}
+/*	mglPoint q=p/(2*B.pf);
+	p.x = B.x + q.x*B.b[0] + q.y*B.b[1] + q.z*B.b[2];
+	p.y = B.y + q.x*B.b[3] + q.y*B.b[4] + q.z*B.b[5];
+	p.z = B.z + q.x*B.b[6] + q.y*B.b[7] + q.z*B.b[8];
+
+
+		mglPnt &p=Pnt[i];
+		x = p.xx-Width/2.;	y = p.yy-Height/2.;	z = p.zz-Depth/2.;
+		p.x = Width/2 - Bp.x*Width/2 + Bp.b[0]*x + Bp.b[1]*y + Bp.b[2]*z;
+		p.y = Height/2- Bp.y*Height/2+ Bp.b[3]*x + Bp.b[4]*y + Bp.b[5]*z;
+		p.z = Depth/2. + Bp.b[6]*x + Bp.b[7]*y + Bp.b[8]*z;
+		if(Bp.pf)
+		{
+			register float d = (1-Bp.pf*Depth/2)/(1-Bp.pf*p.z);
+			p.x = Width/2 + d*(p.x-Width/2);
+			p.y = Height/2 + d*(p.y-Height/2);
+		}
+*/
+
 	if(fabs(d1) > fabs(d2) && fabs(d1) > fabs(d3))	// x-y plane
 	{
 		z = 0;

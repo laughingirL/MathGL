@@ -882,6 +882,12 @@ public:
 	inline void Vect(const mglDataA &ax, const mglDataA &ay, const mglDataA &az, const char *sch="", const char *opt="")
 	{	mgl_vect_3d(gr, &ax, &ay, &az, sch, opt);	}
 
+	/// Draw density plot at slice for 3d data specified parametrically
+	inline void Vect3(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *stl="", mreal sVal=-1, const char *opt="")
+	{	mgl_vect3_xyz(gr, &x, &y, &z, &ax,&ay,&az, stl, sVal, opt);	}
+	inline void Vect3(const mglDataA &a, const char *stl="", mreal sVal=-1, const char *opt="")
+	{	mgl_vect3(gr, &ax,&ay,&az, stl, sVal, opt);	}
+
 	/// Plot flows for vector field {ax,ay,ay} parametrically depended on coordinate {x,y,z} with color proportional to |a|
 	inline void Flow(const mglDataA &x, const mglDataA &y, const mglDataA &ax, const mglDataA &ay, const char *sch="", const char *opt="")
 	{	mgl_flow_xy(gr, &x, &y, &ax, &ay, sch, opt);	}

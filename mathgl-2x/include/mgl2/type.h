@@ -26,6 +26,7 @@
 //-----------------------------------------------------------------------------
 const mreal Pi = M_PI;
 const mreal NaN = NAN;
+const mreal mgl_min_a = 1./256;
 //-----------------------------------------------------------------------------
 #define MGL_SET_XYZ(p,xx,yy,zz)		{p.x=(xx);p.y=(yy);p.z=(zz);}
 #define MGL_SET_XY(p,xx,yy)			{p.x=(xx);p.y=(yy);p.z=0;}

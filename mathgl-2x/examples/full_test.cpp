@@ -39,6 +39,7 @@ int height = 600;
 int mini = 0;
 int big  = 0;
 int srnd = 0;
+int use_mgl = 0;
 //-----------------------------------------------------------------------------
 void smgl_colorbar(mglGraph *gr);
 void smgl_combined(mglGraph *gr);
@@ -96,7 +97,7 @@ void fexport(mglGraph *gr)
 	gr->WriteOFF("test.off");
 	gr->WriteTEX("test.tex");
 	gr->WriteOBJ("test.obj","",true);
-	//	gr->WriteX3D("test.x3d");
+//	gr->WriteX3D("test.x3d");
 }
 //-----------------------------------------------------------------------------
 //		Sample functions (v.2.*0)
@@ -1843,6 +1844,7 @@ struct mglSample	/// Structure for list of samples
 {
 	const char *name;
 	void (*func)(mglGraph*);
+	const char *mgl;
 };
 extern mglSample samp[];
 //-----------------------------------------------------------------------------
@@ -1858,27 +1860,28 @@ static struct option longopts[] =
 {
 	{ "test",			no_argument,	&dotest,	1 },
 	{ "srnd",			no_argument,	&srnd,		1 },
-	{ "width",			required_argument,	NULL,	'w' },
-	{ "height",			required_argument,	NULL,	'h' },
+	{ "width",		required_argument,	NULL,	'w' },
+	{ "height",		required_argument,	NULL,	'h' },
 	{ "list",			no_argument,	NULL,		'l' },
 	{ "kind",			required_argument,	NULL,	'k' },
-	{ "thread",			required_argument,	NULL,	't' },
+	{ "thread",		required_argument,	NULL,	't' },
 	{ "mini",			no_argument,	&mini,		1 },
 	{ "big",			no_argument,	&big,		1 },
 	{ "png",			no_argument,	&type,		0 },
 	{ "eps",			no_argument,	&type,		1 },
 	{ "svg",			no_argument,	&type,		2 },
-	{ "solid",			no_argument,	&type,		3 },
+	{ "solid",		no_argument,	&type,		3 },
 	{ "jpeg",			no_argument,	&type,		4 },
 	{ "prc",			no_argument,	&type,		5 },
 	{ "gif",			no_argument,	&type,		6 },
-	{ "none",			no_argument,	&type,		7 },
+	{ "none",		no_argument,	&type,		7 },
 	{ "bps",			no_argument,	&type,		8 },
 	{ "u3d",			no_argument,	&type,		9 },
 	{ "pdf",			no_argument,	&type,		10 },
 	{ "obj",			no_argument,	&type,		11 },
 	{ "off",			no_argument,	&type,		12 },
 	{ "stl",			no_argument,	&type,		13 },
+	{ "mgl",			no_argument,	&use_mgl,	1 },
 	{ "help",			no_argument,	NULL,		'?' },
 	{ NULL,				0,				NULL,		0 }
 };
@@ -1906,6 +1909,7 @@ void usage()
 		"--list		- print list of sample names\n"
 		"--kind=name	- produce only this sample\n"
 		"--thread=num	- number of threads used\n"
+		"--mgl		- use MGL scripts for samples\n"
 		"--test		- perform test\n"
 	);
 }
@@ -2025,7 +2029,15 @@ int main(int argc,char **argv)
 		if(s)
 		{
 			gr->DefaultPlotParam();	gr->Clf();
-			s->func(gr);	save(gr, s->name, suf);
+			if(use_mgl)
+			{
+				mglParse par;
+				par.AllowSetSize(true);
+				setlocale(LC_CTYPE, "");
+				par.Execute(gr,s->mgl);
+			}
+			else	s->func(gr);
+			save(gr, s->name, suf);
 		}
 		else	printf("no sample %s\n",name);
 	}
@@ -2034,95 +2046,95 @@ int main(int argc,char **argv)
 }
 //-----------------------------------------------------------------------------
 mglSample samp[] = {
-	{"alpha", smgl_alpha},
-	{"area", smgl_area},
-	{"aspect", smgl_aspect},
-	{"axial", smgl_axial},
-	{"axis", smgl_axis},
-	{"barh", smgl_barh},
-	{"bars", smgl_bars},
-	{"belt", smgl_belt},
-	{"box", smgl_box},
-	{"boxplot", smgl_boxplot},
-	{"boxs", smgl_boxs},
-	{"candle", smgl_candle},
-	{"chart", smgl_chart},
-	{"cloud", smgl_cloud},
-	{"colorbar", smgl_colorbar},
-	{"combined", smgl_combined},
-	{"cones", smgl_cones},
-	{"cont", smgl_cont},
-	{"cont_xyz", smgl_cont_xyz},
-	{"conta", smgl_conta},
-	{"contd", smgl_contd},
-	{"contf", smgl_contf},
-	{"contf_xyz", smgl_contf_xyz},
-	{"contfa", smgl_contfa},
-	{"contv", smgl_contv},
-//	{"crust", smgl_crust},	// TODO: open after triangulation
-	{"curvcoor", smgl_curvcoor},
-	{"cut", smgl_cut},
-	{"dat_diff", smgl_dat_diff},
-	{"dat_extra", smgl_dat_extra},
-	{"dens", smgl_dens},
-	{"dens_xyz", smgl_dens_xyz},
-	{"densa", smgl_densa},
-	{"dew", smgl_dew},
-	{"dots", smgl_dots},
-	{"error", smgl_error},
-	{"fall", smgl_fall},
-	{"fit", smgl_fit},
-	{"flow", smgl_flow},
-	{"fog", smgl_fog},
+	{"alpha", smgl_alpha, mmgl_alpha },
+	{"area", smgl_area, mmgl_area},
+	{"aspect", smgl_aspect, mmgl_aspect },
+	{"axial", smgl_axial, mmgl_axial },
+	{"axis", smgl_axis, mmgl_axis},
+	{"barh", smgl_barh, mmgl_barh},
+	{"bars", smgl_bars, mmgl_bars},
+	{"belt", smgl_belt, mmgl_belt},
+	{"box", smgl_box, mmgl_box},
+	{"boxplot", smgl_boxplot, mmgl_boxplot},
+	{"boxs", smgl_boxs, mmgl_boxs},
+	{"candle", smgl_candle, mmgl_candle},
+	{"chart", smgl_chart, mmgl_chart},
+	{"cloud", smgl_cloud, mmgl_cloud },
+	{"colorbar", smgl_colorbar, mmgl_colorbar},
+	{"combined", smgl_combined, mmgl_combined },
+	{"cones", smgl_cones, mmgl_cones},
+	{"cont", smgl_cont, mmgl_cont},
+	{"cont_xyz", smgl_cont_xyz, mmgl_cont_xyz},
+	{"conta", smgl_conta, mmgl_conta},
+	{"contd", smgl_contd, mmgl_contd},
+	{"contf", smgl_contf, mmgl_contf},
+	{"contf_xyz", smgl_contf_xyz, mmgl_contf_xyz},
+	{"contfa", smgl_contfa, mmgl_contfa},
+	{"contv", smgl_contv, mmgl_contv},
+//	{"crust", smgl_crust, mmgl_crust},	// TODO: open after triangulation
+	{"curvcoor", smgl_curvcoor, mmgl_curvcoor},
+	{"cut", smgl_cut, mmgl_cut},
+	{"dat_diff", smgl_dat_diff, mmgl_diff},
+	{"dat_extra", smgl_dat_extra, mmgl_extra },
+	{"dens", smgl_dens, mmgl_dens},
+	{"dens_xyz", smgl_dens_xyz, mmgl_dens_xyz},
+	{"densa", smgl_densa, mmgl_densa},
+	{"dew", smgl_dew, mmgl_dew},
+	{"dots", smgl_dots, mmgl_dots},
+	{"error", smgl_error, mmgl_error },
+	{"fall", smgl_fall, mmgl_fall},
+	{"fit", smgl_fit, mmgl_fit},
+	{"flow", smgl_flow, mmgl_flow},
+	{"fog", smgl_fog, mmgl_fog},
 //	{"fonts", smgl_fonts},	// TODO enable later
-	{"grad", smgl_grad},
-	{"hist", smgl_hist},
-	{"inplot", smgl_inplot},
-	{"label", smgl_label},
-	{"legend", smgl_legend},
-	{"loglog", smgl_loglog},
-	{"map",		smgl_map},
-	{"mark", smgl_mark},
-	{"mesh", smgl_mesh},
-	{"mirror", smgl_mirror},
-	{"molecule", smgl_molecule},
-	{"parser", smgl_parser},
-	{"pde", smgl_pde},
-	{"pipe", smgl_pipe},
-	{"plot", smgl_plot},
-	{"primitives", smgl_primitives},
-	{"qo2d", smgl_qo2d},
-	{"radar", smgl_radar},
-	{"region", smgl_region},
-	{"schemes", smgl_schemes},
-	{"several_light", smgl_several_light},
-	{"stem", smgl_stem},
-	{"step", smgl_step},
-	{"stereo", smgl_stereo},
-	{"stfa", smgl_stfa},
-	{"style", smgl_style},
-	{"surf", smgl_surf},
-	{"surf3", smgl_surf3},
-	{"surf3a", smgl_surf3a},
-	{"surf3c", smgl_surf3c},
-	{"surfa", smgl_surfa},
-	{"surfc", smgl_surfc},
-	{"tape", smgl_tape},
-	{"tens", smgl_tens},
-	{"ternary", smgl_ternary},
-	{"text", smgl_text},
-	{"textmark", smgl_textmark},
-	{"ticks", smgl_ticks},
-	{"tile", smgl_tile},
-	{"tiles", smgl_tiles},
-	{"torus", smgl_torus},
-	{"traj", smgl_traj},
-	{"triangulation",smgl_triangulation},
-	{"triplot", smgl_triplot},
-	{"tube", smgl_tube},
-	{"type0", smgl_type0},
-	{"type1", smgl_type1},
-	{"type2", smgl_type2},
-	{"vect", smgl_vect},
-	{"venn", smgl_venn},
+	{"grad", smgl_grad, mmgl_grad},
+	{"hist", smgl_hist, mmgl_hist},
+	{"inplot", smgl_inplot, mmgl_inplot},
+	{"label", smgl_label, mmgl_label},
+	{"legend", smgl_legend, mmgl_legend },
+	{"loglog", smgl_loglog, mmgl_loglog},
+	{"map", smgl_map, mmgl_map},
+	{"mark", smgl_mark, mmgl_mark},
+	{"mesh", smgl_mesh, mmgl_mesh},
+	{"mirror", smgl_mirror, mmgl_mirror },
+	{"molecule", smgl_molecule, mmgl_molecule },
+	{"parser", smgl_parser, mmgl_parser},
+	{"pde", smgl_pde, mmgl_pde},
+	{"pipe", smgl_pipe, mmgl_pipe},
+	{"plot", smgl_plot, mmgl_plot},
+	{"primitives", smgl_primitives, mmgl_primitives },
+	{"qo2d", smgl_qo2d, mmgl_qo2d},
+	{"radar", smgl_radar, mmgl_radar},
+	{"region", smgl_region, mmgl_region},
+	{"schemes", smgl_schemes, mmgl_schemes },
+	{"several_light", smgl_several_light, mmgl_light },
+	{"stem", smgl_stem, mmgl_stem},
+	{"step", smgl_step, mmgl_step},
+	{"stereo", smgl_stereo, mmgl_stereo},
+	{"stfa", smgl_stfa, mmgl_stfa},
+	{"style", smgl_style, mmgl_style },
+	{"surf", smgl_surf, mmgl_surf},
+	{"surf3", smgl_surf3, mmgl_surf3},
+	{"surf3a", smgl_surf3a, mmgl_3a},
+	{"surf3c", smgl_surf3c, mmgl_surf3c},
+	{"surfa", smgl_surfa, mmgl_surfa},
+	{"surfc", smgl_surfc, mmgl_surfc},
+	{"tape", smgl_tape, mmgl_tape},
+	{"tens", smgl_tens, mmgl_tens},
+	{"ternary", smgl_ternary, mmgl_ternary },
+	{"text", smgl_text, mmgl_text},
+	{"textmark", smgl_textmark, mmgl_textmark},
+	{"ticks", smgl_ticks, mmgl_ticks},
+	{"tile", smgl_tile, mmgl_tile},
+	{"tiles", smgl_tiles, mmgl_tiles},
+	{"torus", smgl_torus, mmgl_torus },
+	{"traj", smgl_traj, mmgl_traj},
+	{"triangulation",smgl_triangulation, mmgl_triangulation },
+	{"triplot", smgl_triplot, mmgl_triplot},
+	{"tube", smgl_tube, mmgl_tube},
+	{"type0", smgl_type0, mmgl_type0},
+	{"type1", smgl_type1, mmgl_type1},
+	{"type2", smgl_type2, mmgl_type2},
+	{"vect", smgl_vect, mmgl_vect},
+	{"venn", smgl_venn, mmgl_venn},
 {"", NULL}};
