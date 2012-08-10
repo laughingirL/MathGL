@@ -46,6 +46,21 @@ void smgl_combined(mglGraph *gr);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
+	mglData a;	mgls_prepare2d(&a);
+// 	gr->SubPlot(2,2,0);	gr->Title("Surf plot (default)");
+// 	gr->Light(true);	gr->Rotate(50,60);	gr->Box();	gr->Surf(a,"rgb");
+// 	gr->Colorbar("rgb");
+// 	gr->SubPlot(2,2,1);	gr->Title("'\\#' style; meshnum 10");
+	gr->Rotate(50,60);	gr->Surf(a,"{r,0.5}{g,0.9}{b,1}");
+	gr->Colorbar("{r,0.5}{g,0.9}{b,1}");	gr->Box();
+// 	gr->SubPlot(2,2,2);	gr->Title("'|' style");
+// 	gr->Rotate(50,60);	gr->Box();	gr->Surf(a,"rgb|");
+// 	gr->Colorbar("rgb|");
+// 	gr->SubPlot(2,2,3);	gr->Title("parametric form");
+// 	gr->Rotate(50,60);	gr->Box();	gr->Surf(a,"r{g,0.1}{b,1}");
+// 	gr->Colorbar("r{g,0.3}{b,1}");
+	return;
+
 	mglPoint p;
 	gr->Ball(p,'r');
 	gr->Puts(p,"B",":C",-1);
@@ -167,7 +182,7 @@ void smgl_schemes(mglGraph *gr)	// Color table
 	gr->SubPlot(2,10,19,NULL,0.2);	gr->Dens(a,"bgr");		gr->Puts(0.57, 0.02, "bgr", "A");
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_curvcor="origin -1 1 -1\nsubplot 2 2 0:title 'Cartesian':rotate 50 60:fplot '2*t-1' '0.5' '0':axis:grid\n"
+const char *mmgl_curvcoor="origin -1 1 -1\nsubplot 2 2 0:title 'Cartesian':rotate 50 60:fplot '2*t-1' '0.5' '0':axis:grid\n"
 "axis 'y*sin(pi*x)' 'y*cos(pi*x)':subplot 2 2 1:title 'Cylindrical':rotate 50 60:fplot '2*t-1' '0.5' '0':axis:grid\n"
 "axis '2*y*x' 'y*y - x*x':subplot 2 2 2:title 'Parabolic':rotate 50 60:fplot '2*t-1' '0.5' '0':axis:grid\n"
 "axis 'y*sin(pi*x)' 'y*cos(pi*x)' 'x+z':subplot 2 2 3:title 'Spiral':rotate 50 60:fplot '2*t-1' '0.5' '0':axis:grid\n";
@@ -1269,7 +1284,7 @@ void smgl_boxs(mglGraph *gr)
 	gr->Rotate(50,60);	gr->Box();	gr->Tile(a);
 }
 //-----------------------------------------------------------------------------
-const char *fit="new rnd 100 '0.4*rnd+0.1+sin(2*pi*x)'\nnew in 100 '0.3+sin(2*pi*x)'\n"
+const char *mmgl_fit="new rnd 100 '0.4*rnd+0.1+sin(2*pi*x)'\nnew in 100 '0.3+sin(2*pi*x)'\n"
 "list ini 1 1 3:fit res rnd 'a+b*sin(c*x)' 'abc' ini\n"
 "title 'Fitting sample':yrange -2 2:box:axis:plot rnd '. '\n"
 "plot res 'r':plot in 'b'\ntext -0.9 -1.3 'fitted:' 'r:L'\n"
@@ -1678,7 +1693,7 @@ void smgl_legend(mglGraph *gr)
 	gr->SubPlot(2,2,3,"");	gr->Title("manual position");	gr->Box();	gr->Legend(0.5,0.5);
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_data_diff="";		// TODO add later
+const char *mmgl_dat_diff="";		// TODO add later
 void smgl_dat_diff(mglGraph *gr)	// differentiate
 {
 	gr->SetRanges(0,1,0,1,0,1);
@@ -1697,7 +1712,7 @@ void smgl_dat_diff(mglGraph *gr)	// differentiate
 	gr->Puts(mglPoint(0.7,1,1.2),"\\int {d^2}a/dxdy dx","",-2);
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_data_extra="";		// TODO add later
+const char *mmgl_dat_extra="";		// TODO add later
 void smgl_dat_extra(mglGraph *gr)	// differentiate
 {
 	gr->SubPlot(2,2,0,"");	gr->Title("Envelop sample");
@@ -2074,8 +2089,8 @@ mglSample samp[] = {
 //	{"crust", smgl_crust, mmgl_crust},	// TODO: open after triangulation
 	{"curvcoor", smgl_curvcoor, mmgl_curvcoor},
 	{"cut", smgl_cut, mmgl_cut},
-	{"dat_diff", smgl_dat_diff, mmgl_diff},
-	{"dat_extra", smgl_dat_extra, mmgl_extra },
+	{"dat_diff", smgl_dat_diff, mmgl_dat_diff},
+	{"dat_extra", smgl_dat_extra, mmgl_dat_extra },
 	{"dens", smgl_dens, mmgl_dens},
 	{"dens_xyz", smgl_dens_xyz, mmgl_dens_xyz},
 	{"densa", smgl_densa, mmgl_densa},
@@ -2107,7 +2122,7 @@ mglSample samp[] = {
 	{"radar", smgl_radar, mmgl_radar},
 	{"region", smgl_region, mmgl_region},
 	{"schemes", smgl_schemes, mmgl_schemes },
-	{"several_light", smgl_several_light, mmgl_light },
+	{"several_light", smgl_several_light, mmgl_several_light },
 	{"stem", smgl_stem, mmgl_stem},
 	{"step", smgl_step, mmgl_step},
 	{"stereo", smgl_stereo, mmgl_stereo},
@@ -2115,7 +2130,7 @@ mglSample samp[] = {
 	{"style", smgl_style, mmgl_style },
 	{"surf", smgl_surf, mmgl_surf},
 	{"surf3", smgl_surf3, mmgl_surf3},
-	{"surf3a", smgl_surf3a, mmgl_3a},
+	{"surf3a", smgl_surf3a, mmgl_surf3a},
 	{"surf3c", smgl_surf3c, mmgl_surf3c},
 	{"surfa", smgl_surfa, mmgl_surfa},
 	{"surfc", smgl_surfc, mmgl_surfc},

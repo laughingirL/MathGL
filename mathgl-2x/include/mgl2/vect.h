@@ -52,7 +52,7 @@ void mgl_grad_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ph, const char *sch, con
 void mgl_grad_xy(HMGL gr, HCDT x, HCDT y, HCDT ph, const char *sch, const char *opt);
 void mgl_grad(HMGL gr, HCDT ph, const char *sch, const char *opt);
 
-oid mgl_vect3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, mreal sVal, const char *opt);
+void mgl_vect3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, mreal sVal, const char *opt);
 void mgl_vect3(HMGL gr, HCDT ax, HCDT ay, HCDT az, const char *sch, mreal sVal, const char *opt);
 
 /*****************************************************************************/

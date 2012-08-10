@@ -53,6 +53,7 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 +38. Exclude faces with alpha≤mgl_min_a
 
 39. check: plotfactor 1.5:font '' 3:aspect ? ?:axis 'xyU'
+40. check red labels (see -test)
 
 ============= DOCS =============
 

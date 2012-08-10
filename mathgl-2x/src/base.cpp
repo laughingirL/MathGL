@@ -567,12 +567,12 @@ void mglTexture::Set(const char *s, int smooth, mreal alpha)
 	strncpy(Sch,s,259);	Smooth=smooth;	Alpha=alpha;
 
 	register long i,j=0,m=0,l=strlen(s);
-	const char *cols = MGL_COLORS;
+	const char *cols = MGL_COLORS, *dig = "0123456789abcdefABCDEF";
 	for(i=0;i<l;i++)		// find number of colors
 	{
 		if(s[i]=='[')	j++;	if(s[i]==']')	j--;
 		if(strchr(cols,s[i]) && j<1)	n++;
-if(s[i]=='x' && j<1)	n++;
+		if(s[i]=='x' && i>0 && s[i-1]=='{' && j<1)	n++;
 //		if(smooth && s[i]==':')	break;	// NOTE: should use []
 	}
 	if(!n)
@@ -584,30 +584,31 @@ if(s[i]=='x' && j<1)	n++;
 	}
 	if(strchr(s,'|') && !smooth)	smooth = -1;
 	mglColor *c = new mglColor[2*n];		// Colors itself
-	mreal *val = new mreal[n];
+	mreal *val = new mreal[n], pos;
 	bool map = (smooth==2), sm = smooth>=0, man=sm;	// Use mapping, smoothed colors
 	for(i=j=n=0;i<l;i++)	// fill colors
 	{
 		if(s[i]=='[')	j++;	if(s[i]==']')	j--;
 		if(s[i]=='{')	m++;	if(s[i]=='}')	m--;
-		if(strchr(cols,s[i]) && j<1)		// this is color
+		if(strchr(cols,s[i]) && j<1)	// {CN,val} format, where val in [0,1]
 		{
- // now support format {CN,val} or {xRRGGBB,val}, where val in [0,1]
 			if(m>0 && s[i+1]>'0' && s[i+1]<='9')// ext color
 			{	c[2*n] = mglColor(s[i],(s[i+1]-'0')/5.f);	i++;	}
 			else	c[2*n] = mglColor(s[i]);	// usual color
-if(s[i]==',') 	val[n]=atof(s+i);
-else 	val[n]=-1;
-			n++;
+			val[n] = -1;	n++;
 		}
-if(s[i]=='x' && j<1)	// xRRGGBB format
-{
-	unsigned  col=atoi(s+i);	i+=7;
-	// TODO: add alpha + check format ?!
-	c[2*n]=mglColor((col%256)/255.,((col/256)%256)/255.,(col/65536)/255.);
-	if(s[i]==',') 	val[n]=atof(s+i);
-	else 	val[n]=-1;
-}
+		if(s[i]=='x' && i>0 && s[i-1]=='{' && j<1)	// {xRRGGBB,val} format, where val in [0,1]
+		{
+			if(strchr(dig,s[i+1]) && strchr(dig,s[i+2]) && strchr(dig,s[i+3]) && strchr(dig,s[i+4]) && strchr(dig,s[i+5]) && strchr(dig,s[i+6]))
+			{
+				unsigned  col=atoi(s+i);	i+=7;
+				// TODO: add alpha ?!
+				c[2*n]=mglColor((col%256)/255.,((col/256)%256)/255.,(col/65536)/255.);
+				val[n] = -1;	n++;
+			}
+		}
+		if(s[i]==',' && m>0 && j<1 && n>0)
+			val[n-1] = atof(s+i+1);
 		// NOTE: User can change alpha if it placed like {AN}
 		if(s[i]=='A' && j<1 && m>0 && s[i+1]>'0' && s[i+1]<='9')
 		{	man=false;	alpha = 0.1*(s[i+1]-'0');	i++;	}
@@ -623,23 +624,24 @@ if(s[i]=='x' && j<1)	// xRRGGBB format
 		else
 		{	c[1]=c[4];	c[3]=c[6];	n=2;	}
 		for(i=0;i<4;i++)	c[i].a=alpha;
-val[0]=val[1]=-1;
+		val[0]=val[1]=-1;
 	}
 
-// fill missed values  of val[]
-float  v1=0,v2=1;
-std::vector <long>  def;
-val[0]=0;	val[n-1]=1;	// boundary have to be [0,1]
-for(i=0;i<n;i++) if(val[i]>0 && val[i]<1) 	def.push_back(i);
-def.push_back(n-1);
-long i1=0,i2;
-for(size_t j=0;j<def.size();j++)	for(i=i1+1;i<def[j];i++)
-{
-	i2 = def[j];	v1=val[i1];	v2=val[i2];
-	v2 = i2-i1>1?(v2-v1)/(i2-i1):0;
-	val[i]=v1+v2*(i-i1);
-}
-
+	// fill missed values  of val[]
+	float  v1=0,v2=1;
+	std::vector <long>  def;
+	val[0]=0;	val[n-1]=1;	// boundary have to be [0,1]
+	for(i=0;i<n;i++) if(val[i]>0 && val[i]<1) 	def.push_back(i);
+	def.push_back(n-1);
+	long i1=0,i2;
+	for(size_t j=0;j<def.size();j++)	for(i=i1+1;i<def[j];i++)
+	{
+		i1 = j>0?def[j-1]:0;	i2 = def[j];
+		v1 = val[i1];	v2 = val[i2];
+		v2 = i2-i1>1?(v2-v1)/(i2-i1):0;
+		val[i]=v1+v2*(i-i1);
+	}
+	// fill texture itself
 	register mreal u,v=sm?(n-1)/255.:n/256.;
 	for(i=0,i1=0;i<256;i++)
 	{
@@ -650,17 +652,16 @@ for(size_t j=0;j<def.size();j++)	for(i=i1+1;i<def[j];i++)
 		{	col[2*i] = c[2*n-2];col[2*i+1] = c[2*n-1];	/*printf("AddTexture -- out of bounds");*/	}
 		else
 		{
-// advanced scheme using val
-for(;i1<n-1 && v<val[i1];i1++);
-v2 = i1<n-1?1/(val[i1+1]-val[i1]):0;
-j=i1;	u=(v-val[j])*v2;
+			// advanced scheme using val
+			for(;i1<n-1 && i>=255*val[i1];i1++);
+			v2 = i1<n?1/(val[i1]-val[i1-1]):0;
+			j=i1-1;	u=(i/255.-val[j])*v2;
 
 			col[2*i] = c[2*j]*(1-u)+c[2*j+2]*u;
 			col[2*i+1]=c[2*j+1]*(1-u)+c[2*j+3]*u;
 		}
 	}
-//	col[510]=col[508];	col[511]=col[509];	col[0]=col[2];	col[1]=col[3];
-	delete []c;	delete  []val;
+	delete []c;	delete []val;
 }
 //-----------------------------------------------------------------------------
 void mglTexture::GetC(mreal u,mreal v,mglPnt &p) const

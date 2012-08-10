@@ -276,9 +276,189 @@ void mgl_vect_3d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, co
 //	Vect3 series
 //
 //-----------------------------------------------------------------------------
+struct _mgl_vec_slice	{	mglData x,y,z,ax,ay,az;	};
+//-----------------------------------------------------------------------------
+void mgl_get_slice(_mgl_vec_slice &s, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, char dir, mreal d, bool both)
+{
+	register long i,j,i0,n=ax->GetNx(),m=ax->GetNy(),l=ax->GetNz(), nx=1,ny=1,p;
+
+	if(dir=='x')	{	nx = m;	ny = l;	if(d<0)	d = n/2.;	}
+	if(dir=='y')	{	nx = n;	ny = l;	if(d<0)	d = m/2.;	}
+	if(dir=='z')	{	nx = n;	ny = m;	if(d<0)	d = l/2.;	}
+	s.x.Create(nx,ny);	s.y.Create(nx,ny);	s.z.Create(nx,ny);
+	s.ax.Create(nx,ny);	s.ay.Create(nx,ny);	s.az.Create(nx,ny);
+	p = long(d);	d -= p;
+	if(dir=='x' && p>=n-1)	{	d+=p-n+2;	p=n-2;	}
+	if(dir=='y' && p>=m-1)	{	d+=p-m+2.;	p=m-2;	}
+	if(dir=='z' && p>=l-1)	{	d+=p-l+2;	p=l-2;	}
+	mreal v;
+
+	if(both)
+	{
+		if(dir=='x')	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
+		{
+			i0 = i+nx*j;
+			s.x.a[i0] = x->v(p,i,j)*(1-d) + x->v(p+1,i,j)*d;
+			s.y.a[i0] = y->v(p,i,j)*(1-d) + y->v(p+1,i,j)*d;
+			s.z.a[i0] = z->v(p,i,j)*(1-d) + z->v(p+1,i,j)*d;
+			s.ax.a[i0] = ax->v(p,i,j)*(1-d) + ax->v(p+1,i,j)*d;
+			s.ay.a[i0] = ay->v(p,i,j)*(1-d) + ay->v(p+1,i,j)*d;
+			s.az.a[i0] = az->v(p,i,j)*(1-d) + az->v(p+1,i,j)*d;
+		}
+		if(dir=='y')	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
+		{
+			i0 = i+nx*j;
+			s.x.a[i0] = x->v(i,p,j)*(1-d) + x->v(i,p+1,j)*d;
+			s.y.a[i0] = y->v(i,p,j)*(1-d) + y->v(i,p+1,j)*d;
+			s.z.a[i0] = z->v(i,p,j)*(1-d) + z->v(i,p+1,j)*d;
+			s.ax.a[i0] = ax->v(i,p,j)*(1-d) + ax->v(i,p+1,j)*d;
+			s.ay.a[i0] = ay->v(i,p,j)*(1-d) + ay->v(i,p+1,j)*d;
+			s.az.a[i0] = az->v(i,p,j)*(1-d) + az->v(i,p+1,j)*d;
+		}
+		if(dir=='z')	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
+		{
+			i0 = i+nx*j;
+			s.x.a[i0] = x->v(i,j,p)*(1-d) + x->v(i,j,p+1)*d;
+			s.y.a[i0] = y->v(i,j,p)*(1-d) + y->v(i,j,p+1)*d;
+			s.z.a[i0] = z->v(i,j,p)*(1-d) + z->v(i,j,p+1)*d;
+			s.ax.a[i0] = ax->v(i,j,p)*(1-d) + ax->v(i,j,p+1)*d;
+			s.ay.a[i0] = ay->v(i,j,p)*(1-d) + ay->v(i,j,p+1)*d;
+			s.az.a[i0] = az->v(i,j,p)*(1-d) + az->v(i,j,p+1)*d;
+		}
+	}
+	else	// x, y, z -- vectors
+	{
+		if(dir=='x')
+		{
+			v = x->v(p)*(1-d)+x->v(p+1)*d;
+			for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
+			{
+				i0 = i+nx*j;	s.x.a[i0] = v;
+				s.y.a[i0] = y->v(i);	s.z.a[i0] = z->v(j);
+				s.ax.a[i0] = ax->v(p,i,j)*(1-d) + ax->v(p+1,i,j)*d;
+				s.ay.a[i0] = ay->v(p,i,j)*(1-d) + ay->v(p+1,i,j)*d;
+				s.az.a[i0] = az->v(p,i,j)*(1-d) + az->v(p+1,i,j)*d;
+			}
+		}
+		if(dir=='y')
+		{
+			v = y->v(p)*(1-d)+y->v(p+1)*d;
+			for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
+			{
+				i0 = i+nx*j;	s.y.a[i0] = v;
+				s.x.a[i0] = x->v(i);	s.z.a[i0] = z->v(j);
+				s.ax.a[i0] = ax->v(i,p,j)*(1-d) + ax->v(i,p+1,j)*d;
+				s.ay.a[i0] = ay->v(i,p,j)*(1-d) + ay->v(i,p+1,j)*d;
+				s.az.a[i0] = az->v(i,p,j)*(1-d) + az->v(i,p+1,j)*d;
+			}
+		}
+		if(dir=='z')
+		{
+			v = z->v(p)*(1-d)+z->v(p+1)*d;
+			for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
+			{
+				i0 = i+nx*j;	s.z.a[i0] = v;
+				s.x.a[i0] = x->v(i);	s.y.a[i0] = y->v(j);
+				s.ax.a[i0] = ax->v(i,j,p)*(1-d) + ax->v(i,j,p+1)*d;
+				s.ay.a[i0] = ay->v(i,j,p)*(1-d) + ay->v(i,j,p+1)*d;
+				s.az.a[i0] = az->v(i,j,p)*(1-d) + az->v(i,j,p+1)*d;
+			}
+		}
+	}
+}
+//-----------------------------------------------------------------------------
+void mgl_get_slice_md(_mgl_vec_slice &s, const mglData *x, const mglData *y, const mglData *z, const mglData *ax, const mglData *ay, const mglData *az, char dir, mreal d, bool both)
+{
+	register long i,j,i0,i1,n=ax->nx,m=ax->ny,l=ax->nz, nx=1,ny=1,p;
+
+	if(dir=='x')	{	nx = m;	ny = l;	if(d<0)	d = n/2.;	}
+	if(dir=='y')	{	nx = n;	ny = l;	if(d<0)	d = m/2.;	}
+	if(dir=='z')	{	nx = n;	ny = m;	if(d<0)	d = l/2.;	}
+	s.x.Create(nx,ny);	s.y.Create(nx,ny);	s.z.Create(nx,ny);
+	s.ax.Create(nx,ny);	s.ay.Create(nx,ny);	s.az.Create(nx,ny);
+	p = long(d);	d -= p;
+	if(dir=='x' && p>=n-1)	{	d+=p-n+2;	p=n-2;	}
+	if(dir=='y' && p>=m-1)	{	d+=p-m+2.;	p=m-2;	}
+	if(dir=='z' && p>=l-1)	{	d+=p-l+2;	p=l-2;	}
+	mreal v;
+
+	if(both)
+	{
+		if(dir=='x')	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
+		{
+			i0 = i+nx*j;	i1 = p+n*(i+m*j);
+			s.x.a[i0] = x->a[i1]*(1-d) + x->a[i1+1]*d;
+			s.y.a[i0] = y->a[i1]*(1-d) + y->a[i1+1]*d;
+			s.z.a[i0] = z->a[i1]*(1-d) + z->a[i1+1]*d;
+			s.ax.a[i0] = ax->a[i1]*(1-d) + ax->a[i1+1]*d;
+			s.ay.a[i0] = ay->a[i1]*(1-d) + ay->a[i1+1]*d;
+			s.az.a[i0] = az->a[i1]*(1-d) + az->a[i1+1]*d;
+		}
+		if(dir=='y')	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
+		{
+			i0 = i+nx*j;	i1 = i+n*(p+m*j);
+			s.x.a[i0] = x->a[i1]*(1-d) + x->a[i1+n]*d;
+			s.y.a[i0] = y->a[i1]*(1-d) + y->a[i1+n]*d;
+			s.z.a[i0] = z->a[i1]*(1-d) + z->a[i1+n]*d;
+			s.ax.a[i0] = ax->a[i1]*(1-d) + ax->a[i1+n]*d;
+			s.ay.a[i0] = ay->a[i1]*(1-d) + ay->a[i1+n]*d;
+			s.az.a[i0] = az->a[i1]*(1-d) + az->a[i1+n]*d;
+		}
+		if(dir=='z')	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
+		{
+			i0 = i+nx*j;	i1 = i+n*(j+m*p);
+			s.x.a[i0] = x->a[i1]*(1-d) + x->a[i1+n*m]*d;
+			s.y.a[i0] = y->a[i1]*(1-d) + y->a[i1+n*m]*d;
+			s.z.a[i0] = z->a[i1]*(1-d) + z->a[i1+n*m]*d;
+			s.ax.a[i0] = ax->a[i1]*(1-d) + ax->a[i1+n*m]*d;
+			s.ay.a[i0] = ay->a[i1]*(1-d) + ay->a[i1+n*m]*d;
+			s.az.a[i0] = az->a[i1]*(1-d) + az->a[i1+n*m]*d;
+		}
+	}
+	else	// x, y, z -- vectors
+	{
+		if(dir=='x')
+		{
+			v = x->a[p]*(1-d)+x->a[p+1]*d;
+			for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
+			{
+				i0 = i+nx*j;	s.x.a[i0] = v;	i1 = p+n*(i+m*j);
+				s.y.a[i0] = y->a[i];	s.z.a[i0] = z->a[j];
+				s.ax.a[i0] = ax->a[i1]*(1-d) + ax->a[i1+1]*d;
+				s.ay.a[i0] = ay->a[i1]*(1-d) + ay->a[i1+1]*d;
+				s.az.a[i0] = az->a[i1]*(1-d) + az->a[i1+1]*d;
+			}
+		}
+		if(dir=='y')
+		{
+			v = y->a[p]*(1-d)+y->a[p+1]*d;
+			for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
+			{
+				i0 = i+nx*j;	s.y.a[i0] = v;	i1 = i+n*(p+m*j);
+				s.x.a[i0] = x->a[i];	s.z.a[i0] = z->a[j];
+				s.ax.a[i0] = ax->a[i1]*(1-d) + ax->a[i1+n]*d;
+				s.ay.a[i0] = ay->a[i1]*(1-d) + ay->a[i1+n]*d;
+				s.az.a[i0] = az->a[i1]*(1-d) + az->a[i1+n]*d;
+			}
+		}
+		if(dir=='z')
+		{
+			v = z->a[p]*(1-d)+z->a[p+1]*d;
+			for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
+			{
+				i0 = i+nx*j;	s.z.a[i0] = v;	i1 = i+n*(j+m*p);
+				s.x.a[i0] = x->a[i];	s.y.a[i0] = y->a[j];
+				s.ax.a[i0] = ax->a[i1]*(1-d) + ax->a[i1+n*m]*d;
+				s.ay.a[i0] = ay->a[i1]*(1-d) + ay->a[i1+n*m]*d;
+				s.az.a[i0] = az->a[i1]*(1-d) + az->a[i1+n*m]*d;
+			}
+		}
+	}
+}
+//-----------------------------------------------------------------------------
 void mgl_vect3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, mreal sVal, const char *opt)
 {
-	bool both = mgl_isboth(x,y,z,a);
+	bool both = mgl_isboth(x,y,z,ax);
 	if(mgl_check_vec3(gr,x,y,z,ax,ay,az,"Vect3"))	return;
 
 	gr->SaveState(opt);
@@ -292,8 +472,9 @@ void mgl_vect3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, c
 	bool end = sch && strchr(sch,'>');
 	bool beg = sch && strchr(sch,'<');
 	bool grd = sch && strchr(sch,'=');
+	long ss = gr->AddTexture(sch);
 
-	_mgl_slice s;
+	_mgl_vec_slice s;
 	const mglData *mx = dynamic_cast<const mglData *>(x);
 	const mglData *my = dynamic_cast<const mglData *>(y);
 	const mglData *mz = dynamic_cast<const mglData *>(z);
@@ -301,17 +482,17 @@ void mgl_vect3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, c
 	const mglData *may = dynamic_cast<const mglData *>(ay);
 	const mglData *maz = dynamic_cast<const mglData *>(az);
 	if(mx&&my&&mz&&max&&may&&maz)
-		mgl_get_slice_md(s,mx,my,mz,ma,dir,sVal,both);
+		mgl_get_slice_md(s,mx,my,mz,max,may,maz,dir,sVal,both);
 	else
-		mgl_get_slice(s,x,y,z,a,dir,sVal,both);
+		mgl_get_slice(s,x,y,z,ax,ay,az,dir,sVal,both);
 
 	long i,j,n=s.ax.nx,m=s.ax.ny,k;
 	long tx=1,ty=1;
 	if(gr->MeshNum>1)	{	tx=(n-1)/(gr->MeshNum-1);	ty=(m-1)/(gr->MeshNum-1);	}
 	if(tx<1)	tx=1;	if(ty<1)	ty=1;
-	mreal xm=0,ym,dx,dy;
+	mreal xm=0,ym,dx,dy,dz;
 	mreal dd,dm=(fabs(gr->Max.c)+fabs(gr->Min.c))*1e-5;
-	mreal vx,vy;
+	mreal vx,vy,vz;
 	// use whole array for determining maximal vectors length 
 	for(k=0;k<ax->GetNz();k++)	for(j=0;j<m;j++)	for(i=0;i<n;i++)
 	{
@@ -322,7 +503,7 @@ void mgl_vect3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, c
 	xm = 1./(xm==0 ? 1:sqrt(xm));
 	long n1,n2;
 	mglPoint p1,p2;
-	mreal c1,c2, xx,yy;
+	mreal c1,c2, xx,yy,zz;
 
 	for(i=0;i<n;i+=tx)	for(j=0;j<m;j+=ty)
 	{
@@ -330,6 +511,7 @@ void mgl_vect3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, c
 		xx = s.x.a[i+n*j];	yy = s.y.a[i+n*j];	zz = s.z.a[i+n*j];
 		dx = i<n-1 ? (s.x.a[i+n*j+1]-xx) : (xx-s.x.a[i+n*j-1]);
 		dy = j<m-1 ? (s.x.a[i+n*j+1]-yy) : (yy-s.x.a[i+n*j-n]);
+		dz = fmin(dx,dy);
 		vx = s.ax.a[i+n*j];	vy = s.ay.a[i+n*j];	vz = s.az.a[i+n*j];
 		dx *= tx;	dy *= ty;	dd = hypot(vx,vy);
 		dx *= fix ? (dd>dm ? vx/dd : 0) : vx*xm;
@@ -354,7 +536,7 @@ void mgl_vect3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, c
 void mgl_vect3(HMGL gr, HCDT ax, HCDT ay, HCDT az, const char *sch, mreal sVal, const char *opt)
 {
 	gr->SaveState(opt);
-	mglData x(a->GetNx()), y(a->GetNy()),z(a->GetNz());
+	mglData x(ax->GetNx()), y(ax->GetNy()),z(ax->GetNz());
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	z.Fill(gr->Min.z,gr->Max.z);
