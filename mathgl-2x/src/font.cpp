@@ -40,13 +40,12 @@ mglFont mglDefFont;
 //-----------------------------------------------------------------------------
 char mglGetStyle(const char *how, int *font, int *align)
 {
-	const char *cols = MGL_COLORS;
 	char col=0;
 	if(align)	*align = 1;	// centering text by default
 	if(!how || *how==0)	return col;
 	// NOTE: no brightness for text color
 	for(;*how && *how!=':';how++)
-		if(strchr(cols,*how))	col=*how;
+		if(strchr(MGL_COLORS,*how))	col=*how;
 	if(align)
 	{
 		*align = 1;

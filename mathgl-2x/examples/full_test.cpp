@@ -46,19 +46,10 @@ void smgl_combined(mglGraph *gr);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	mglData a;	mgls_prepare2d(&a);
-// 	gr->SubPlot(2,2,0);	gr->Title("Surf plot (default)");
-// 	gr->Light(true);	gr->Rotate(50,60);	gr->Box();	gr->Surf(a,"rgb");
-// 	gr->Colorbar("rgb");
-// 	gr->SubPlot(2,2,1);	gr->Title("'\\#' style; meshnum 10");
-	gr->Rotate(50,60);	gr->Surf(a,"{r,0.5}{g,0.9}{b,1}");
-	gr->Colorbar("{r,0.5}{g,0.9}{b,1}");	gr->Box();
-// 	gr->SubPlot(2,2,2);	gr->Title("'|' style");
-// 	gr->Rotate(50,60);	gr->Box();	gr->Surf(a,"rgb|");
-// 	gr->Colorbar("rgb|");
-// 	gr->SubPlot(2,2,3);	gr->Title("parametric form");
-// 	gr->Rotate(50,60);	gr->Box();	gr->Surf(a,"r{g,0.1}{b,1}");
-// 	gr->Colorbar("r{g,0.3}{b,1}");
+	mglData ex,ey,ez;	mgls_prepare3v(&ex,&ey,&ez);
+	if(!mini)	gr->Title("Vect3 sample");
+	gr->Rotate(50,60);	gr->SetOrigin(0,0,0);	gr->Axis("_xyz");	gr->Box();
+	gr->Vect3(ex,ey,ez,"x");	gr->Vect3(ex,ey,ez);	gr->Vect3(ex,ey,ez,"z");
 	return;
 
 	mglPoint p;
@@ -1306,6 +1297,16 @@ void smgl_fit(mglGraph *gr)	// nonlinear fitting
 //	gr->SetRanges(mglPoint(-1,-1,-1),mglPoint(1,1,1));	gr->SetOrigin(0,0,0);
 }
 //-----------------------------------------------------------------------------
+const char *mmgl_vecta="title 'Vect3 sample':rotate 50 60\n"
+"origin 0 0 0:box:axis '_xyz'\nvect3 ex ey ez 'x':vect3 ex ey ez ':y':vect3 ex ey ez 'z'\n";
+void smgl_vecta(mglGraph *gr)
+{
+	mglData ex,ey,ez;	mgls_prepare3v(&ex,&ey,&ez);
+	if(!mini)	gr->Title("Vect3 sample");
+	gr->Rotate(50,60);	gr->SetOrigin(0,0,0);	gr->Axis("_xyz");	gr->Box();
+	gr->Vect3(ex,ey,ez,"x");	gr->Vect3(ex,ey,ez);	gr->Vect3(ex,ey,ez,"z");
+}
+//-----------------------------------------------------------------------------
 const char *mmgl_vect="subplot 3 2 0 '':title 'Vect plot (default)':box:vect a b\n"
 "subplot 3 2 1 '':title '\\\'.\\\' style; \\\'=\\\' style':box:vect a b '.='\n"
 "subplot 3 2 2 '':title '\\\'f\\\' style':box:vect a b 'f'\n"
@@ -2050,6 +2051,9 @@ int main(int argc,char **argv)
 				par.AllowSetSize(true);
 				setlocale(LC_CTYPE, "");
 				par.Execute(gr,s->mgl);
+				printf("-------\n%s\n-------\n",s->mgl);
+				const char *mess = gr->Message();
+				if(mess)	printf("Warnings: %s\n-------\n",mess);
 			}
 			else	s->func(gr);
 			save(gr, s->name, suf);
@@ -2151,5 +2155,6 @@ mglSample samp[] = {
 	{"type1", smgl_type1, mmgl_type1},
 	{"type2", smgl_type2, mmgl_type2},
 	{"vect", smgl_vect, mmgl_vect},
+	{"vecta", smgl_vecta, mmgl_vecta},
 	{"venn", smgl_venn, mmgl_venn},
 {"", NULL}};

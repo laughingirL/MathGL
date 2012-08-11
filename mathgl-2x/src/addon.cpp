@@ -55,7 +55,7 @@ int mgl_strpos(const char *str,char *fnd)
 //---------------------------------------------------------------------------
 int mgl_chrpos(const char *str,char ch)
 {
-	const char *p=strchr(str,ch);
+	const char *p=str?strchr(str,ch):0;
 	int res;
 	if(p)	res = p-str;
 	else	res = -1;

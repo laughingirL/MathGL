@@ -327,6 +327,7 @@ void *mgl_sum_x(void *par)
 }
 HMDT mgl_data_sum(HCDT dat, const char *dir)
 {
+	if(!dir || *dir==0)	return 0;
 	long nx=dat->GetNx(),ny=dat->GetNy(),nz=dat->GetNz();
 	long p[3]={nx,ny,nz};
 	mreal *b = new mreal[nx*ny*nz];
@@ -397,6 +398,7 @@ void *mgl_max_x(void *par)
 }
 HMDT mgl_data_max_dir(HCDT dat, const char *dir)
 {
+	if(!dir || *dir==0)	return 0;
 	long nx=dat->GetNx(),ny=dat->GetNy(),nz=dat->GetNz();
 	long p[3]={nx,ny,nz};
 	mreal *b = new mreal[nx*ny*nz];
@@ -467,6 +469,7 @@ void *mgl_min_x(void *par)
 }
 HMDT mgl_data_min_dir(HCDT dat, const char *dir)
 {
+	if(!dir || *dir==0)	return 0;
 	long nx=dat->GetNx(),ny=dat->GetNy(),nz=dat->GetNz();
 	long p[3]={nx,ny,nz};
 	mreal *b = new mreal[nx*ny*nz];
@@ -623,6 +626,7 @@ uintptr_t mgl_data_evaluate_(uintptr_t *d, uintptr_t *idat, uintptr_t *jdat, uin
 void mgl_data_fourier(HMDT re, HMDT im, const char *dir)
 {
 #if MGL_HAVE_GSL
+	if(!dir || *dir==0)	return;
 	long nx = re->nx, ny = re->ny, nz = re->nz;
 	if(nx*ny*nz != im->nx*im->ny*im->nz || !dir || dir[0]==0)	return;
 	double *a = new double[2*nx*ny*nz];
@@ -741,6 +745,7 @@ uintptr_t mgl_data_stfa_(uintptr_t *re, uintptr_t *im, int *dn, char *dir, int)
 //-----------------------------------------------------------------------------
 void mgl_data_fill_sample(HMDT d, const char *how)
 {
+	if(!how || *how==0)	return;
 	bool xx = strchr(how,'x');
 	register long i,n=d->nx;
 	mreal *aa=d->a;
@@ -767,6 +772,7 @@ void mgl_data_fill_sample_(uintptr_t *d, const char *how,int l)
 void mgl_data_hankel(HMDT d, const char *dir)
 {
 #if MGL_HAVE_GSL
+	if(!dir || *dir==0)	return;
 	double *ai=0, *af=0, mm;
 	gsl_dht *dht=0;
 	register long i,j,k;
@@ -818,6 +824,7 @@ void mgl_data_hankel_(uintptr_t *d, const char *dir,int l)
 void mgl_data_cosfft(HMDT d, const char *dir)
 {
 #if MGL_HAVE_GSL
+	if(!dir || *dir==0)	return;
 	double *b = 0;
 	gsl_fft_complex_wavetable *wt=0;
 	gsl_fft_complex_workspace *ws=0;
@@ -876,6 +883,7 @@ void mgl_data_cosfft_(uintptr_t *d, const char *dir,int l)
 void mgl_data_sinfft(HMDT d, const char *dir)
 {
 #if MGL_HAVE_GSL
+	if(!dir || *dir==0)	return;
 	double *b = 0;
 	gsl_fft_complex_wavetable *wt=0;
 	gsl_fft_complex_workspace *ws=0;
@@ -950,6 +958,7 @@ HMDT mgl_transform_a(HCDT am, HCDT ph, const char *tr)
 //-----------------------------------------------------------------------------
 HMDT mgl_transform(HCDT re, HCDT im, const char *tr)
 {
+	if(!tr || *tr==0)	return 0;
 	long nx = re->GetNx(), ny = re->GetNy(), nz = re->GetNz();
 	if(nx*ny*nz != im->GetNx()*im->GetNy()*im->GetNz() || !tr || tr[0]==0)
 		return (new mglData);

@@ -1,3 +1,12 @@
+2.0.4 Released ?? September 2012
+
+* Color can be specified as its RGB[A] values. i.e. like "{xFFFFFF}" or "{xFFFFFFFF}".
+* Color in color scheme  may have position in range [0,1]. Format is {CN,pos} or {xNNNNNN,pos}.
+* Vectors is drawn now even if only starting or ending points are placed in bounding box.
+* Add Vect3() plot for drawing vectors on slice of 3d vector field.
+* CalcXYZ() function now use data from z-buffer for better determining {x,y,z} coordinates.
+* Different bugfixes
+
 2.0.3 Released 27 July 2012
 
 * Make code compilable by compilers GNU/MinGW GCC, Clang, MS VisualStudio

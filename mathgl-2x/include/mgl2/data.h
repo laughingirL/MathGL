@@ -448,10 +448,10 @@ mreal mglSpline3(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mr
 //-----------------------------------------------------------------------------
 /// Integral data transformation (like Fourier 'f' or 'i', Hankel 'h' or None 'n') for amplitude and phase
 inline mglData mglTransformA(const mglDataA &am, const mglDataA &ph, const char *tr)
-{	return mgl_transform_a(&am,&ph,tr);	}
+{	return mglData(true,mgl_transform_a(&am,&ph,tr));	}
 /// Integral data transformation (like Fourier 'f' or 'i', Hankel 'h' or None 'n') for real and imaginary parts
 inline mglData mglTransform(const mglDataA &re, const mglDataA &im, const char *tr)
-{	return mgl_transform(&re,&im,tr);	}
+{	return mglData(true,mgl_transform(&re,&im,tr));	}
 /// Apply Fourier transform for the data and save result into it
 inline void mglFourier(mglData &re, mglData &im, const char *dir)
 {	mgl_data_fourier(&re,&im,dir);	}

@@ -567,11 +567,11 @@ void mglTexture::Set(const char *s, int smooth, mreal alpha)
 	strncpy(Sch,s,259);	Smooth=smooth;	Alpha=alpha;
 
 	register long i,j=0,m=0,l=strlen(s);
-	const char *cols = MGL_COLORS, *dig = "0123456789abcdefABCDEF";
+	const char *dig = "0123456789abcdefABCDEF";
 	for(i=0;i<l;i++)		// find number of colors
 	{
 		if(s[i]=='[')	j++;	if(s[i]==']')	j--;
-		if(strchr(cols,s[i]) && j<1)	n++;
+		if(strchr(MGL_COLORS,s[i]) && j<1)	n++;
 		if(s[i]=='x' && i>0 && s[i-1]=='{' && j<1)	n++;
 //		if(smooth && s[i]==':')	break;	// NOTE: should use []
 	}
@@ -590,21 +590,24 @@ void mglTexture::Set(const char *s, int smooth, mreal alpha)
 	{
 		if(s[i]=='[')	j++;	if(s[i]==']')	j--;
 		if(s[i]=='{')	m++;	if(s[i]=='}')	m--;
-		if(strchr(cols,s[i]) && j<1)	// {CN,val} format, where val in [0,1]
+		if(strchr(MGL_COLORS,s[i]) && j<1 && (m==0 || s[i-1]=='{'))	// {CN,val} format, where val in [0,1]
 		{
 			if(m>0 && s[i+1]>'0' && s[i+1]<='9')// ext color
 			{	c[2*n] = mglColor(s[i],(s[i+1]-'0')/5.f);	i++;	}
 			else	c[2*n] = mglColor(s[i]);	// usual color
-			val[n] = -1;	n++;
+			val[n]=-1;	n++;
 		}
 		if(s[i]=='x' && i>0 && s[i-1]=='{' && j<1)	// {xRRGGBB,val} format, where val in [0,1]
 		{
 			if(strchr(dig,s[i+1]) && strchr(dig,s[i+2]) && strchr(dig,s[i+3]) && strchr(dig,s[i+4]) && strchr(dig,s[i+5]) && strchr(dig,s[i+6]))
 			{
-				unsigned  col=atoi(s+i);	i+=7;
-				// TODO: add alpha ?!
-				c[2*n]=mglColor((col%256)/255.,((col/256)%256)/255.,(col/65536)/255.);
-				val[n] = -1;	n++;
+				char ss[3]="00";	c[2*n].a = 1;
+				ss[0] = s[i+1];	ss[1] = s[i+2];	c[2*n].r = strtol(ss,0,16)/255.;
+				ss[0] = s[i+3];	ss[1] = s[i+4];	c[2*n].g = strtol(ss,0,16)/255.;
+				ss[0] = s[i+5];	ss[1] = s[i+6];	c[2*n].b = strtol(ss,0,16)/255.;
+				if(strchr(dig,s[i+7]) && strchr(dig,s[i+8]))
+				{	ss[0] = s[i+7];	ss[1] = s[i+8];	c[2*n].a = strtol(ss,0,16)/255.;	i+=2;	}
+				val[n]=-1;	i+=6;	n++;
 			}
 		}
 		if(s[i]==',' && m>0 && j<1 && n>0)
@@ -1025,11 +1028,10 @@ void mglBase::SetDefScheme(HCDT a, const char* s)
 
 
 	register long i,j=0,m=0,n=0,l=strlen(s);
-	const char *cols = MGL_COLORS;
 	for(i=0;i<l;i++)		// find number of colors
 	{
 		if(s[i]=='[')	j++;	if(s[i]==']')	j--;
-		if(strchr(cols,s[i]) && j<1)	n++;
+		if(strchr(MGL_COLORS,s[i]) && j<1)	n++;
 		if(s[i]==':' && j<1)	break;	// NOTE: should use []
 	}
 	if(n!=a->GetNx()+1)	{	SetWarn(mglWarnDim,"SetDefScheme");	return;	}
@@ -1041,7 +1043,7 @@ void mglBase::SetDefScheme(HCDT a, const char* s)
 	{
 		if(s[i]=='[')	j++;	if(s[i]==']')	j--;
 		if(s[i]=='{')	m++;	if(s[i]=='}')	m--;
-		if(strchr(cols,s[i]) && j<1)		// this is color
+		if(strchr(MGL_COLORS,s[i]) && j<1)		// this is color
 		{
 			if(m>0 && s[i+1]>'0' && s[i+1]<='9')// ext color
 			{	c[n] = mglColor(s[i],(s[i+1]-'0')/5.f);	i++;	}

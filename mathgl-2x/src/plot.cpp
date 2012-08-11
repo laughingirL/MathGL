@@ -1389,12 +1389,12 @@ void mgl_chart(HMGL gr, HCDT a, const char *cols, const char *opt)
 	bool wire = cols && strchr(cols,'#');	// draw edges
 	register long n=a->GetNx(),i,j=0;
 	if(cols)	for(i=0;i<long(strlen(cols));i++)
-		if(strchr("wkrgbcymhRGBCYMHWlenuqpLENUQP ",cols[i]))	j++;
+		if(strchr(MGL_COLORS,cols[i]) || cols[i]==' ')	j++;
 	if(j==0)	cols = MGL_DEF_PAL;
 	mreal *c = new mreal[strlen(cols)+1],cc;
 	long nc=0;			// number of colors
 	for(i=0;i<long(strlen(cols));i++)
-		if(strchr("wkrgbcymhRGBCYMHWlenuqpLENUQP ",cols[i]))
+		if(strchr(MGL_COLORS,cols[i]) || cols[i]==' ')
 		{	c[nc]=gr->AddTexture(cols[i]);	nc++;	}
 
 	mreal dy = (gr->Max.y-gr->Min.y)/a->GetNy(), dx, ss, cs, x1, y1, dz=gr->Max.z-gr->Min.z, vv;

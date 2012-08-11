@@ -279,7 +279,7 @@ void mglCanvas::AdjustTicks(const char *dir, bool force)
 {
 	if(force)	SetTuneTicks(-1);
 	UpdateAxis();
-	if(strchr(dir,'x'))
+	if(strchr(dir,'x'))	// NOTE dir have to be non-NULL here !!!
 	{	if(force)	ax.d=0;	AdjustTicks(ax,fx);	}
 	if(strchr(dir,'y'))
 	{	if(force)	ay.d=0;	AdjustTicks(ay,fy);	}
@@ -442,7 +442,7 @@ void mglCanvas::LabelTicks(mglAxis &aa)
 //-----------------------------------------------------------------------------
 void mglCanvas::Axis(const char *dir, const char *stl)
 {
-	if(!dir || !dir[0])	return;
+	if(!dir || !dir[0])	dir="xyz";
 	bool text = !strchr(dir,'_');
 	const char *ar = "AKDTVISO";
 	char arr=0;
@@ -603,7 +603,7 @@ void mglCanvas::tick_draw(mglPoint o, mglPoint d1, mglPoint d2, int f, const cha
 //-----------------------------------------------------------------------------
 void mglCanvas::Grid(const char *dir, const char *pen)
 {
-	if(!dir || !dir[0])	return;
+	if(!dir || !dir[0])	dir="xyz";
 	AdjustTicks(dir,false);
 	SetPenPal(pen);
 	// TODO: Ternary axis labeling ...
@@ -888,7 +888,7 @@ void mglCanvas::colorbar(HCDT vv, const mreal *c, int where, mreal x, mreal y, m
 	}
 	else	{	UpdateAxis();	AdjustTicks(ac,fa);	}
 	// hint for using standard label drawing function
-	mreal cc=AddTexture('k');
+	SetPenPal(*TickStl ? TickStl:"k-1");
 	for(i=0;i<ac.txt.size();i++)
 	{
 		d = ac.txt[i].val = GetA(ac.txt[i].val)*2-1;
@@ -900,7 +900,7 @@ void mglCanvas::colorbar(HCDT vv, const mreal *c, int where, mreal x, mreal y, m
 			case 3:	p1.y = y;	p2.y = y+0.1*h;	break;
 			default:p1.x = x-0.1*w;	p2.x = x;	break;
 		}
-		n1 = AddPnt(p1,cc);	n2 = AddPnt(p2,cc);
+		n1 = AddPnt(p1);	n2 = AddPnt(p2);
 		line_plot(n1,n2);
 	}
 	ac.dir = mglPoint(ss*w,ss*h,0);

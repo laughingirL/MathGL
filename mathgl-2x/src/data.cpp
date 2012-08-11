@@ -178,6 +178,7 @@ void *mgl_smth_z(void *par)
 void mgl_data_smooth(HMDT d, const char *dirs, mreal delta)
 {
 	long Type = SMOOTH_QUAD_5;
+	if(!dirs || *dirs==0)	dirs = "xyz";
 	if(strchr(dirs,'0') || strchr(dirs,'1'))	return;
 	if(strchr(dirs,'3'))	Type = SMOOTH_LINE_3;
 	if(strchr(dirs,'5'))	Type = SMOOTH_LINE_5;
@@ -251,6 +252,7 @@ void *mgl_csum_x(void *par)
 }
 void mgl_data_cumsum(HMDT d, const char *dir)
 {
+	if(!dir || *dir==0)	return;
 	long nx=d->nx,ny=d->ny,nz=d->nz,nn=nx*ny*nz;
 	long p[3]={nx,ny,nz};
 	mreal *b = new mreal[nn];
@@ -317,6 +319,7 @@ void *mgl_int_x(void *par)
 }
 void mgl_data_integral(HMDT d, const char *dir)
 {
+	if(!dir || *dir==0)	return;
 	long nx=d->nx,ny=d->ny,nz=d->nz,nn=nx*ny*nz;
 	long p[3]={nx,ny,nz};
 	mreal *b = new mreal[nn];
@@ -388,6 +391,7 @@ void *mgl_dif_x(void *par)
 }
 void mgl_data_diff(HMDT d, const char *dir)
 {
+	if(!dir || *dir==0)	return;
 	long nx=d->nx,ny=d->ny,nz=d->nz,nn=nx*ny*nz;
 	long p[3]={nx,ny,nz};
 	mreal *b = new mreal[nn];
@@ -453,6 +457,7 @@ void *mgl_dif2_x(void *par)
 }
 void mgl_data_diff2(HMDT d, const char *dir)
 {
+	if(!dir || *dir==0)	return;
 	long nx=d->nx,ny=d->ny,nz=d->nz,nn=nx*ny*nz;
 	long p[3]={nx,ny,nz};
 	mreal *b = new mreal[nn];
@@ -479,6 +484,7 @@ void mgl_data_diff2_(uintptr_t *d, const char *dir,int l)
 //-----------------------------------------------------------------------------
 void mgl_data_swap(HMDT d, const char *dir)
 {
+	if(!dir || *dir==0)	return;
 	if(strchr(dir,'z') && d->nz>1)	mgl_data_roll(d,'z',d->nz/2);
 	if(strchr(dir,'y') && d->ny>1)	mgl_data_roll(d,'y',d->ny/2);
 	if(strchr(dir,'x') && d->nx>1)	mgl_data_roll(d,'x',d->nx/2);
@@ -527,6 +533,7 @@ void mgl_data_roll_(uintptr_t *d, const char *dir, int *num, int)
 //-----------------------------------------------------------------------------
 void mgl_data_mirror(HMDT d, const char *dir)
 {
+	if(!dir || *dir==0)	return;
 	long nx=d->nx,ny=d->ny,nz=d->nz;
 	register long i,j,k,i0,j0;
 	mreal b, *a=d->a;
@@ -1329,6 +1336,7 @@ void *mgl_sew_x(void *par)
 }
 void mgl_data_sew(HMDT d, const char *dirs, mreal delta)
 {
+	if(!dirs || *dirs==0)	return;
 	long nx=d->nx, ny=d->ny, nz=d->nz;
 	long p[3]={nx,ny,nz};
 	mreal da = delta;

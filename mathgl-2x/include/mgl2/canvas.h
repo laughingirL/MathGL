@@ -59,7 +59,7 @@ struct mglAxis
 	mreal dv,ds;		///< Actual step for ticks and subticks.
 	mreal d;			///< Step for axis ticks (if positive) or its number (if negative).
 	int ns;			///< Number of axis subticks.
-	wchar_t t[256];	///< Tick template (set NULL to use default one ("%.2g" in simplest case))
+	wchar_t t[256];	///< Tick template (set "" to use default one ("%.2g" in simplest case))
 	mglPoint dir;	///< Axis direction
 	mglPoint a,b;	///< Directions of over axis
 	mglPoint org;

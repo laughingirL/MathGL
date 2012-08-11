@@ -3,7 +3,7 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 
 ============= NEW  =============
 
-0. Check RunThr() in python/octave
+1. Check RunThr() in python/octave
 
 2. Use Hershey as built-in font ?!!
 3. Import/Export via GIF (as 3d data) ???
@@ -21,39 +21,24 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 
 13. Check gap for axis labels (at axis rotation)
 14. Axis -- projection (ternary + quaternary)
+15. 2D textures as one of standard way for coloring
+16. Add extra texture in Error -- for handling transparency of "marks" ???
 
 17. curved text (in new sample) look not so good
 18. emulate fog in EPS/SVG
+19. Auto axis range for formulas, like AutoRange("y(x)") or AutoRange('x',"x(t)").
 
 20. Add mglDataC for complex data -- main diff is reading/saving data
-+21. MGL testing system ???
-
+21. Add flag for drawing 3d arrows instead of 2d (S,D -- cube, T -- sq.pyramid, I -- square, O -- sphere???, A,K,V -- ???)
 22. Export to X3D
-
 23. Try libtcc (TinyCC) as alternative to MGL -- in mgllab???
 
-*24. Use Z for determining {x,y,z} from {xs,ys}. Try to find closest.
+
++21. MGL testing system ???
 25. More accurate intersections in Region
-26. Add flag for drawing 3d arrows instead of 2d (S,D -- cube, T -- sq.pyramid, I -- square, O -- sphere???, A,K,V -- ???)
-+27. Add Vect3 for vectors on slice
-
-28. Add extra texture in Error -- for handling transparency of "marks" ???
-+29. Textual colors, like "{0xFF00FF}" ?!?
-30. Auto axis range for formulas, like AutoRange("y(x)") or AutoRange('x',"x(t)").
-
 31. Check feature: dash for rect/ellipse boundary
-32. 2D textures as one of standard way for coloring
 33. Check "gray" solid marks in style.png/eps
 34. Shifted image in GLUT window
-
--35. Draw centered vector if central point inside box -- no, too many extra points!
-
-+36. Add #include <complex> into define.h (bug with isfinite in GCC 4.7)
-+37. Color in color scheme  may have position in range [0,1]. Format is {CN,pos}
-+38. Exclude faces with alpha≤mgl_min_a
-
-39. check: plotfactor 1.5:font '' 3:aspect ? ?:axis 'xyU'
-40. check red labels (see -test)
 
 ============= DOCS =============
 

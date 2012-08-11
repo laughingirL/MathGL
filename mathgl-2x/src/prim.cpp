@@ -153,7 +153,7 @@ void mgl_face(HMGL gr, mreal x0, mreal y0, mreal z0, mreal x1, mreal y1, mreal z
 	k1 = gr->AddPnt(p1,c1,q1,a,11);	k2 = gr->AddPnt(p2,c2,q2,a,11);
 	k3 = gr->AddPnt(p3,c3,q3,a,11);	k4 = gr->AddPnt(p4,c4,q4,a,11);
 	gr->quad_plot(k1,k2,k3,k4);
-	if(strchr(stl,'#'))
+	if(stl && strchr(stl,'#'))
 	{
 		gr->Reserve(4);
 		pal = gr->AddTexture('k');
