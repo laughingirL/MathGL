@@ -40,6 +40,8 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 33. Check "gray" solid marks in style.png/eps
 34. Shifted image in GLUT window
 
+35. Add mgl_min_a into export_3d.cpp
+
 ============= DOCS =============
 
 0. Option sample (_mirror)

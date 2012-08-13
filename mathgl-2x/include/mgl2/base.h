@@ -267,8 +267,6 @@ public:
 	/// Set default color scheme
 	inline void SetDefScheme(const char *colors)
 	{	Txt[1].Set(mgl_have_color(colors)?colors:"BbcyrR");	}
-	/// Set default color scheme
-	void SetDefScheme(HCDT val, const char *colors);
 
 	/// Set number of mesh lines
 	inline void SetMeshNum(int val)	{	MeshNum=val;	}
