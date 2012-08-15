@@ -15,7 +15,7 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 8. Replace all unsigned by size_t if possible (except C/Fortran functions)
 9. Save primitives for frames (not bitmap) ??? -- see MGL_USEDRWDAT
 10. Enable several fonts at the same picture -- global std::vector<mglFont> + index in this set
-11. Table(mreal x, mreal y, HCDT dat, char *xlabels, char *ylabels, char *stl) -- draw table with values (+ auto reduce font size?)
+11. Table(mreal x, mreal y, HCDT dat, char *xlabels, char *ylabels, char *stl) -- draw table with values (+ auto reduce font size?) -- format in [] like "[%.2g]".
 
 12. Palatalization of drawing (MathGL level) -- bug with primitives drawing --> pixel.cpp
 
