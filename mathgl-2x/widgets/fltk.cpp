@@ -226,7 +226,7 @@ int Fl_MathGL::handle(int code)
 	else if(code==FL_DRAG)
 	{
 		xe=Fl::event_x();	ye=Fl::event_y();
-		mreal ff = 240./sqrt(w()*h());
+		mreal ff = 240./sqrt(mreal(w()*h()));
 		if(rotate)
 		{
 			phi += (x0-xe)*ff;
