@@ -245,20 +245,20 @@ void mgl_data_save(HCDT d, const char *fname,long ns)
 	register long i,j,k;
 	long nx=d->GetNx(), ny=d->GetNy(), nz=d->GetNz();
 	if(ns<0 || (ns>=nz && nz>1))	for(k=0;k<nz;k++)
-	{	// ñîõðàíÿåì âñå äàííûå
+	{	// save whole data
 		for(i=0;i<ny;i++)
 		{
-			for(j=0;j<nx;j++)	fprintf(fp,"%g\t",d->v(j,i,k));
-			fprintf(fp,"\n");
+			for(j=0;j<nx-1;j++)	fprintf(fp,"%g\t",d->v(j,i,k));
+			fprintf(fp,"%g\n",d->v(nx-1,i,k));
 		}
 		fprintf(fp,"\n");
 	}
 	else
-	{	// ñîõðàíÿåì òîëüêî ñðåç
+	{	// save selected slice
 		if(nz>1)	for(i=0;i<ny;i++)
 		{
-			for(j=0;j<nx;j++)	fprintf(fp,"%g\t",d->v(j,i,ns));
-			fprintf(fp,"\n");
+			for(j=0;j<nx-1;j++)	fprintf(fp,"%g\t",d->v(j,i,ns));
+			fprintf(fp,"%g\n",d->v(nx-1,i,ns));
 		}
 		else if(ns<ny)	for(j=0;j<nx;j++)
 			fprintf(fp,"%g\t",d->v(j,ns));

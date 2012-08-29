@@ -77,15 +77,25 @@ private:
 	int tt;			///< Temporal variable
 };
 //-----------------------------------------------------------------------------
+extern "C" {
+	// NOTE: mgl_draw_class() and mgl_draw_load() use mglWindow* only. Don't use it with inherited classes
+	int mgl_draw_glut(HMGL gr, void *p);
+	void mgl_reload_glut(void *p);
+}
+//-----------------------------------------------------------------------------
 class mglGLUT: public mglGraph
 {
+friend int mgl_draw_glut(HMGL gr, void *p);
+friend void mgl_reload_glut(void *p);
+protected:
+	mglDraw *dr;
 public:
 	mglGLUT(int (*draw)(HMGL gr, void *p), const char *title="MathGL", void *par=0, void (*load)(void *p)=0) : mglGraph(-1)
 	{	gr = mgl_create_graph_glut(draw,title,par,load);	}
 	mglGLUT(int (*draw)(mglGraph *gr), const char *title="MathGL") : mglGraph(-1)
 	{	gr = mgl_create_graph_glut(mgl_draw_graph,title,(void*)draw,0);	}
-	mglGLUT(mglDraw *dr=0, const char *title="MathGL") : mglGraph(-1)
-	{	mgl_create_graph_glut(mgl_draw_class,title,dr,0);	}
+	mglGLUT(mglDraw *draw=0, const char *title="MathGL") : mglGraph(-1)
+	{	dr=draw;		mgl_create_graph_glut(mgl_draw_glut,title,this,mgl_reload_glut);	}
 };
 //-----------------------------------------------------------------------------
 #endif

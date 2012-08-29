@@ -39,6 +39,14 @@
 mglCanvasGLUT *_mgl_glwnd;
 void _mgl_key_up(unsigned char ch,int ,int );
 //-----------------------------------------------------------------------------
+int mgl_draw_glut(HMGL gr, void *p)	// so stupid way to save mglDraw class inheritance :(
+{
+	mglGraph g(gr);	mglGLUT *w = (mglGLUT *)p;
+	return (w && w->dr) ? w->dr->Draw(&g) : 0;
+}
+void mgl_reload_glut(void *p)	// so stupid way to save mglDraw class inheritance :(
+	{	mglGLUT *w = (mglGLUT *)p;	if(w && w->dr)	w->dr->Reload();}
+//-----------------------------------------------------------------------------
 void _mgl_timer(int)
 {
 	if(!_mgl_glwnd)	return;
