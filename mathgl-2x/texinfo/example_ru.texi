@@ -555,7 +555,7 @@ Now I show several non-obvious features of MathGL: several subplots in a single 
 @node Subplots, Axis and ticks, , Advanced usage
 @subsection Subplots
 
-Let me demonstrate possibilities of plot positioning and rotation. MathGL has a set of functions: @code{SubPlot}, @code{InPlot}, @code{Title}, @code{Aspect} and @code{Rotate} and so on (see @ref{Subplots and rotation}). The order of their calling is strictly determined. First, one changes the position of plot in image area (functions @code{SubPlot}, @code{InPlot} and @code{MultiPlot}). Secondly, you can add the title of plot by @code{Title} function. After that one may rotate the plot (function @code{Rotate}). Finally, one may change aspects of axes (function @code{Aspect}). The following code illustrates the aforesaid it:
+Let me demonstrate possibilities of plot positioning and rotation. MathGL has a set of functions: @ref{subplot}, @ref{inplot}, @ref{title}, @ref{aspect} and @ref{rotate} and so on (see @ref{Subplots and rotation}). The order of their calling is strictly determined. First, one changes the position of plot in image area (functions @ref{subplot}, @ref{inplot} and @ref{multiplot}). Secondly, you can add the title of plot by @ref{title} function. After that one may rotate the plot (function @ref{rotate}). Finally, one may change aspects of axes (function @ref{aspect}). The following code illustrates the aforesaid it:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -610,7 +610,7 @@ int sample(mglGraph *gr)
 
 MathGL library can draw not only the bounding box but also the axes, grids, labels and so on. The ranges of axes and their origin (the point of intersection) are determined by functions @code{SetRange()}, @code{SetRanges()}, @code{SetOrigin()} (see @ref{Ranges (bounding box)}). Ticks on axis are specified by function @code{SetTicks}, @code{SetTicksVal}, @code{SetTicksTime} (see @ref{Ticks}). But usually
 
-Function @code{Axis} draws axes. Its textual string shows in which directions the axis or axes will be drawn (by default @code{"xyz"}, function draws axes in all directions). Function @code{Grid} draws grid perpendicularly to specified directions. Example of axes and grid drawing is:
+Function @ref{axis} draws axes. Its textual string shows in which directions the axis or axes will be drawn (by default @code{"xyz"}, function draws axes in all directions). Function @ref{grid} draws grid perpendicularly to specified directions. Example of axes and grid drawing is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -677,7 +677,7 @@ int sample(mglGraph *gr)
 
 @pfig{ticks, Features of axis ticks.}
 
-The last sample I want to show in this subsection is Log-axis. From MathGL's point of vew, the log-axis is particular case of general curvilinear coordinates. So, we need first define new coordinates (see also @ref{Curvilinear coordinates}) by help of @code{SetFunc} or @code{SetCoor} functions. At this one should wary about proper axis range. So the code looks as following:
+The last sample I want to show in this subsection is Log-axis. From MathGL's point of view, the log-axis is particular case of general curvilinear coordinates. So, we need first define new coordinates (see also @ref{Curvilinear coordinates}) by help of @code{SetFunc} or @code{SetCoor} functions. At this one should wary about proper axis range. So the code looks as following:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -750,7 +750,7 @@ int sample(mglGraph *gr)
 @node Colorbars, Bounding box, Curvilinear coordinates, Advanced usage
 @subsection Colorbars
 
-MathGL handle colorbar as special kind of axis. So, most of functions for axis and ticks setup will work for colorbar too. Colorbars can be in log-scale, and generally as arbitrary function scale; common factor of colorbar labels can be separated; and so on.
+MathGL handle @ref{colorbar} as special kind of axis. So, most of functions for axis and ticks setup will work for colorbar too. Colorbars can be in log-scale, and generally as arbitrary function scale; common factor of colorbar labels can be separated; and so on.
 
 But of course, there are differences -- colorbars usually located out of bounding box. At this, colorbars can be at subplot boundaries (by default), or at bounding box (if symbol @samp{I} is specified). Colorbars can handle sharp colors. And they can be located at arbitrary position too. The sample code, which demonstrate colorbar features is:
 @verbatim
@@ -770,11 +770,16 @@ int sample(mglGraph *gr)
   gr->Colorbar(v,"<");  gr->Colorbar(v,">");
   gr->Colorbar(v,"_");  gr->Colorbar(v,"^");
 
-  gr->SubPlot(2,2,3); gr->Title("log-scale");
+  gr->SubPlot(2,2,3);   gr->Title(" ");
+  gr->Puts(mglPoint(-0.5,1.55),"Color positions",":C",-2);
+  gr->Colorbar("bwr>",0.25,0);  gr->Puts(mglPoint(-0.9,1.2),"Default");
+  gr->Colorbar("b{w,0.3}r>",0.5,0); gr->Puts(mglPoint(-0.1,1.2),"Manual");
+
+  gr->Puts(mglPoint(1,1.55),"log-scale",":C",-2);
   gr->SetRange('c',0.01,1e3);
-  gr->Colorbar(">",0.5,0);  gr->Puts(mglPoint(0,1.2),"Normal scale");
+  gr->Colorbar(">",0.75,0);  gr->Puts(mglPoint(0.65,1.2),"Normal scale");
   gr->SetFunc("","","","lg(c)");
-  gr->Colorbar(">");    gr->Puts(mglPoint(1.3,1.2),"Log scale");
+  gr->Colorbar(">");    gr->Puts(mglPoint(1.35,1.2),"Log scale");
   return 0;
 }
 @end verbatim
@@ -787,7 +792,7 @@ int sample(mglGraph *gr)
 @node Bounding box, Ternary axis, Colorbars, Advanced usage
 @subsection Bounding box
 
-Box around the plot is rather useful thing because it allows one to: see the plot boundaries, and better estimate points position since box contain another set of ticks. MathGL provide special function for drawing such box -- @code{Box()} function. By default, it draw black or white box with ticks (color depend on transparency type, see @ref{Types of transparency}). However, you can change the color of box, or add drawing of rectangles at rear faces of box. Also you can disable ticks drawing, but I don't know why anybody will want it. The sample code, which demonstrate @code{Box()} features is:
+Box around the plot is rather useful thing because it allows one to: see the plot boundaries, and better estimate points position since box contain another set of ticks. MathGL provide special function for drawing such box -- @ref{box} function. By default, it draw black or white box with ticks (color depend on transparency type, see @ref{Types of transparency}). However, you can change the color of box, or add drawing of rectangles at rear faces of box. Also you can disable ticks drawing, but I don't know why anybody will want it. The sample code, which demonstrate @ref{box} features is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -813,7 +818,7 @@ int sample(mglGraph *gr)
 
 There are another unusual axis types which are supported by MathGL. These are ternary and quaternary axis. Ternary axis is special axis of 3 coordinates @var{a}, @var{b}, @var{c} which satisfy relation @var{a}+@var{b}+@var{c}=1. Correspondingly, quaternary axis is special axis of 4 coordinates @var{a}, @var{b}, @var{c}, @var{d} which satisfy relation @var{a}+@var{b}+@var{c}+@var{d}=1.
 
-Generally speaking, only 2 of coordinates (3 for quaternary) are independent. So, MathGL just introduce some special transformation formulas which treat @var{a} as @samp{x}, @var{b} as @samp{y} (and @var{c} as @samp{z} for quaternary). As result, all plotting functions (curves, surfaces, contours and so on) work as usual, but in new axis. You should use @code{Ternary} function for switching to ternary/quaternary coordinates. The sample code is:
+Generally speaking, only 2 of coordinates (3 for quaternary) are independent. So, MathGL just introduce some special transformation formulas which treat @var{a} as @samp{x}, @var{b} as @samp{y} (and @var{c} as @samp{z} for quaternary). As result, all plotting functions (curves, surfaces, contours and so on) work as usual, but in new axis. You should use @ref{ternary} function for switching to ternary/quaternary coordinates. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -911,11 +916,11 @@ int sample(mglGraph *gr)
 @node Legend sample, Cutting sample, Text features, Advanced usage
 @subsection Legend sample
 
-Legend is one of standard ways to show plot annotations. Basically you need to connect the plot style (line style, marker and color) with some text. In MathGL, you can do it by 2 methods: manually using @code{AddLegend} function (see @ref{Legend}); or use @samp{legend} option (see @ref{Command options}), which will use last plot style. In both cases, legend entries will be added into internal accumulator, which later used for legend drawing itself. @code{ClearLegend} function allow you to remove all saved legend entries.
+Legend is one of standard ways to show plot annotations. Basically you need to connect the plot style (line style, marker and color) with some text. In MathGL, you can do it by 2 methods: manually using @ref{addlegend} function; or use @samp{legend} option (see @ref{Command options}), which will use last plot style. In both cases, legend entries will be added into internal accumulator, which later used for legend drawing itself. @ref{clearlegend} function allow you to remove all saved legend entries.
 
 There are 2 features. If plot style is empty then text will be printed without indent. If you want to plot the text with indent but without plot sample then you need to use space @samp{ } as plot style. Such style @samp{ } will draw a plot sample (line with marker(s)) which is invisible line (i.e. nothing) and print the text with indent as usual one.
 
-Function @code{Legend} draw legend on the plot. The position of the legend can be selected automatic or manually. You can change the size and style of text labels, as well as setup the plot sample. The sample code demonstrating legend features is:
+Function @ref{legend} draw legend on the plot. The position of the legend can be selected automatic or manually. You can change the size and style of text labels, as well as setup the plot sample. The sample code demonstrating legend features is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -1128,7 +1133,7 @@ int sample(mglGraph *gr)
 
 @pfig{dat_diff, Example of data differentiation and integration}
 
-Data smoothing (function @code{Smooth()}) is more interesting and important. This function has single argument which define type of smoothing and its direction. Now 3 methods are supported: @samp{3} -- linear averaging by 3 points, @samp{5} -- linear averaging by 5 points, and default one -- quadratic averaging by 5 points.
+Data smoothing (function @ref{smooth}) is more interesting and important. This function has single argument which define type of smoothing and its direction. Now 3 methods are supported: @samp{3} -- linear averaging by 3 points, @samp{5} -- linear averaging by 5 points, and default one -- quadratic averaging by 5 points.
 
 MathGL also have some amazing functions which is not so important for data processing as useful for data plotting. There are functions for finding envelope (useful for plotting rapidly oscillating data), for data sewing (useful to removing jumps on the phase), for data resizing (interpolation). Let me demonstrate it:
 @verbatim
@@ -1172,7 +1177,7 @@ int sample(mglGraph *gr)
 
 @pfig{dat_extra, Example of data smoothing}
 
-Finally one can create new data arrays on base of the existing one: extract slice, row or column of data (@code{SubData()}), summarize along a direction(s) (@code{Sum()}), find distribution of data elements (@code{Hist()}) and so on.
+Finally one can create new data arrays on base of the existing one: extract slice, row or column of data (@ref{subdata}), summarize along a direction(s) (@ref{sum}), find distribution of data elements (@ref{hist}) and so on.
 
 
 @c ------------------------------------------------------------------
@@ -1186,7 +1191,7 @@ Note, that the call of drawing function adds something to picture but does not c
 
 Let start for plots for 1D data. Term ``1D data'' means that data depend on single index (parameter) like curve in parametric form @{x(i),y(i),z(i)@}, i=1...n. The textual argument allow you specify styles of line and marks (see @ref{Line styles}). If this parameter is @code{NULL} or empty then solid line with color from palette is used (see @ref{Palette and colors}).
 
-Below I shall show the features of 1D plotting on base of @code{Plot()} function (see @ref{plot}). Let us start from sinus plot:
+Below I shall show the features of 1D plotting on base of @ref{plot} function. Let us start from sinus plot:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -1194,7 +1199,7 @@ int sample(mglGraph *gr)
   gr->SubPlot(2,2,0);
   gr->Plot(y0);   	gr->Box();
 @end verbatim
-Style of line is not specified in @code{Plot()} function. So MathGL uses the solid line with first color of palette (this is blue). Next subplot shows array @var{y1} with 2 rows:
+Style of line is not specified in @ref{plot} function. So MathGL uses the solid line with first color of palette (this is blue). Next subplot shows array @var{y1} with 2 rows:
 @verbatim
   gr->SubPlot(2,2,1);
   mglData y1(50,2);
@@ -1207,7 +1212,7 @@ As previously I did not specify the style of lines. As a result, MathGL again us
   mglData x(50);  	x.Modify("cos(pi*2*x-pi)");
   gr->Plot(x,y0,"Y+");
 @end verbatim
-Note that solid line is used because I did not specify the type of line. The same picture can be achieved by @code{Plot()} and @code{SubData())} functions. Let us draw ellipse by orange dash line:
+Note that solid line is used because I did not specify the type of line. The same picture can be achieved by @ref{plot} and @ref{subdata} functions. Let us draw ellipse by orange dash line:
 @verbatim
   gr->Plot(y1.SubData(-1,0),y1.SubData(-1,1),"q|");
 @end verbatim
@@ -1218,7 +1223,7 @@ Drawing in 3D space is mostly the same. Let us draw spiral with default line sty
   mglData z(50);  	z.Modify("2*x-1");
   gr->Plot(x,y0,z);	gr->Box();
 @end verbatim
-Functions @code{Plot()} and @code{SubData())} make 3D curve plot but for single array. Use it to put circle marks on the previous plot:
+Functions @ref{plot} and @ref{subdata} make 3D curve plot but for single array. Use it to put circle marks on the previous plot:
 @verbatim
   mglData y2(10,3);	y2.Modify("cos(pi*(2*x-1+y))");
   y2.Modify("2*x-1",2);
@@ -1232,7 +1237,7 @@ Note that line style is empty @samp{ } here. Usage of other 1D plotting function
 }
 @end verbatim
 
-Surfaces @code{Surf()} and other 2D plots (@pxref{2D plotting}) are drown the same simpler as 1D one. The difference is that the string parameter specifies not the line style but the color scheme of the plot (see @ref{Color scheme}). Here I draw attention on 4 most interesting color schemes. There is gray scheme where color is changed from black to white (string @samp{kw}) or from white to black (string @samp{wk}). Another scheme is useful for accentuation of negative (by blue color) and positive (by red color) regions on plot (string @samp{"BbwrR"}). Last one is the popular ``jet'' scheme (string @samp{"BbcyrR"}).
+Surfaces @ref{surf} and other 2D plots (@pxref{2D plotting}) are drown the same simpler as 1D one. The difference is that the string parameter specifies not the line style but the color scheme of the plot (see @ref{Color scheme}). Here I draw attention on 4 most interesting color schemes. There is gray scheme where color is changed from black to white (string @samp{kw}) or from white to black (string @samp{wk}). Another scheme is useful for accentuation of negative (by blue color) and positive (by red color) regions on plot (string @samp{"BbwrR"}). Last one is the popular ``jet'' scheme (string @samp{"BbcyrR"}).
 
 Now I shall show the example of a surface drawing. At first let us switch lightning on
 @verbatim
@@ -1276,7 +1281,7 @@ Note, that it may entail a confusion. However, if one will use density plot then
 }
 @end verbatim
 
-Drawing of other 2D plots is analogous. The only peculiarity is the usage of flag @samp{#}. By default this flag switches on the drawing of a grid on plot (@code{Grid()} or @code{Mesh()} for plots in plain or in volume). However, for isosurfaces (including surfaces of rotation @code{Axial()}) this flag switches the  face drawing off. Figure becomes wired. The following code gives example of flag @samp{#} using (compare with normal function drawing as in its description):
+Drawing of other 2D plots is analogous. The only peculiarity is the usage of flag @samp{#}. By default this flag switches on the drawing of a grid on plot (@ref{grid} or @ref{mesh} for plots in plain or in volume). However, for isosurfaces (including surfaces of rotation @ref{axial}) this flag switches the  face drawing off. Figure becomes wired. The following code gives example of flag @samp{#} using (compare with normal function drawing as in its description):
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -1383,7 +1388,7 @@ void mgls_prepare1d(HMDT y, HMDT y1=0, HMDT y2=0, HMDT x1=0, HMDT x2=0)
 @node Plot sample, Radar sample, , 1D samples
 @subsection Plot sample
 
-@code{Plot} is most standard way to visualize 1D data array. By default, @code{Plot} use colors from palette. However, you can specify manual color/palette, and even set to use new color for each points by using @samp{!} style. Another feature is @samp{ } style which draw only markers without line between points. The sample code is:
+Function @ref{plot} is most standard way to visualize 1D data array. By default, @code{Plot} use colors from palette. However, you can specify manual color/palette, and even set to use new color for each points by using @samp{!} style. Another feature is @samp{ } style which draw only markers without line between points. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -1414,7 +1419,7 @@ int sample(mglGraph *gr)
 @node Radar sample, Step sample, Plot sample, 1D samples
 @subsection Radar sample
 
-@code{Radar} plot is variant of @code{Plot} one, which make plot in polar coordinates and draw radial rays in point directions. If you just need a plot in polar coordinates then I recommend to use @ref{Curvilinear coordinates} or @code{Plot} in parabolic form with @code{x=r*cos(fi); y=r*sin(fi);}. The sample code is:
+Function @ref{radar} plot is variant of @code{Plot} one, which make plot in polar coordinates and draw radial rays in point directions. If you just need a plot in polar coordinates then I recommend to use @ref{Curvilinear coordinates} or @code{Plot} in parabolic form with @code{x=r*cos(fi); y=r*sin(fi);}. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -1432,7 +1437,7 @@ int sample(mglGraph *gr)
 @node Step sample, Tens sample, Radar sample, 1D samples
 @subsection Step sample
 
-@code{Step} plot data as stairs. It have the same options as @code{Plot}. The sample code is:
+Function @ref{step} plot data as stairs. It have the same options as @code{Plot}. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -1459,7 +1464,7 @@ int sample(mglGraph *gr)
 @node Tens sample, Area sample, Step sample, 1D samples
 @subsection Tens sample
 
-@code{Tens} is variant of @code{Plot} with smooth coloring along the curves. At this, color is determined as for surfaces (see @ref{Color scheme}). The sample code is:
+Function @ref{tens} is variant of @ref{plot} with smooth coloring along the curves. At this, color is determined as for surfaces (see @ref{Color scheme}). The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -1485,7 +1490,7 @@ int sample(mglGraph *gr)
 @node Area sample, Region sample, Tens sample, 1D samples
 @subsection Area sample
 
-@code{Area} fill the area between curve and axis plane. It support gradient filling if 2 colors per curve is specified. The sample code is:
+Function @ref{area} fill the area between curve and axis plane. It support gradient filling if 2 colors per curve is specified. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -1515,7 +1520,7 @@ int sample(mglGraph *gr)
 @node Region sample, Stem sample, Area sample, 1D samples
 @subsection Region sample
 
-@code{Region} fill the area between 2 curves. It support gradient filling if 2 colors per curve is specified. Also it can fill only the region y1<y<y2 if style @samp{i} is used. The sample code is:
+Function @ref{region} fill the area between 2 curves. It support gradient filling if 2 colors per curve is specified. Also it can fill only the region y1<y<y2 if style @samp{i} is used. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -1543,7 +1548,7 @@ int sample(mglGraph *gr)
 @node Stem sample, Bars sample, Region sample, 1D samples
 @subsection Stem sample
 
-@code{Stem} draw vertical bars. It is most attractive if markers are drawn too. The sample code is:
+Function @ref{stem} draw vertical bars. It is most attractive if markers are drawn too. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -1569,7 +1574,7 @@ int sample(mglGraph *gr)
 @node Bars sample, Barh sample, Stem sample, 1D samples
 @subsection Bars sample
 
-@code{Bars} draw vertical bars. It have a lot of options: bar-above-bar (@samp{a} style), fall like (@samp{f} style), 2 colors for positive and negative values, wired bars (@samp{#} style), 3D variant. The sample code is:
+Function @ref{bars} draw vertical bars. It have a lot of options: bar-above-bar (@samp{a} style), fall like (@samp{f} style), 2 colors for positive and negative values, wired bars (@samp{#} style), 3D variant. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -1607,7 +1612,7 @@ int sample(mglGraph *gr)
 @node Barh sample, Cones sample, Bars sample, 1D samples
 @subsection Barh sample
 
-@code{Barh} is the similar to @code{Bars} but draw horizontal bars. The sample code is:
+Function @ref{barh} is the similar to @code{Bars} but draw horizontal bars. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -1636,7 +1641,7 @@ int sample(mglGraph *gr)
 @node Cones sample, Chart sample, Bars sample, 1D samples
 @subsection Cones sample
 
-@code{Cones} is similar to @code{Bars} but draw cones. The sample code is:
+Function @ref{cones} is similar to @code{Bars} but draw cones. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -1665,7 +1670,7 @@ int sample(mglGraph *gr)
 @node Chart sample, BoxPlot sample, Cones sample, 1D samples
 @subsection Chart sample
 
-@code{Chart} draw colored boxes with width proportional to data values. Use @samp{ } for empty box. Plot looks most attractive in polar coordinates -- well known pie chart. The sample code is:
+Function @ref{chart} draw colored boxes with width proportional to data values. Use @samp{ } for empty box. Plot looks most attractive in polar coordinates -- well known pie chart. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -1694,7 +1699,7 @@ int sample(mglGraph *gr)
 @node BoxPlot sample, Candle sample, Chart sample, 1D samples
 @subsection BoxPlot sample
 
-@code{BoxPlot} draw box-and-whisker diagram. The sample code is:
+Function @ref{boxplot} draw box-and-whisker diagram. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -1712,7 +1717,7 @@ int sample(mglGraph *gr)
 @node Candle sample, Error sample, BoxPlot sample, 1D samples
 @subsection Candle sample
 
-@code{Candle} draw candlestick chart. This is a combination of a line-chart and a bar-chart, in that each bar represents the range of price movement over a given time interval. The sample code is:
+Function @ref{candle} draw candlestick chart. This is a combination of a line-chart and a bar-chart, in that each bar represents the range of price movement over a given time interval. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -1732,7 +1737,7 @@ int sample(mglGraph *gr)
 @node Error sample, Mark sample, Candle sample, 1D samples
 @subsection Error sample
 
-@code{Error} draw error boxes around the points. You can draw default boxes or semi-transparent symbol (like marker, see @ref{Line styles}). Also you can set individual color for each box. The sample code is:
+Function @ref{error} draw error boxes around the points. You can draw default boxes or semi-transparent symbol (like marker, see @ref{Line styles}). Also you can set individual color for each box. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -1772,7 +1777,7 @@ int sample(mglGraph *gr)
 @node Mark sample, TextMark sample, Error sample, 1D samples
 @subsection Mark sample
 
-@code{Mark} draw markers at points. It is mostly the same as @code{Plot} but marker size can be variable. The sample code is:
+Function @ref{mark} draw markers at points. It is mostly the same as @code{Plot} but marker size can be variable. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -1790,7 +1795,7 @@ int sample(mglGraph *gr)
 @node TextMark sample, Label sample, Mark sample, 1D samples
 @subsection TextMark sample
 
-@code{TextMark} like @code{Mark} but draw text instead of markers. The sample code is:
+Function @ref{textmark} like @code{Mark} but draw text instead of markers. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -1808,7 +1813,7 @@ int sample(mglGraph *gr)
 @node Label sample, Tube sample, TextMark sample, 1D samples
 @subsection Label sample
 
-@code{Label} print text at data points. The string may contain @samp{%x}, @samp{%y}, @samp{%z} for x-, y-, z-coordinates of points, @samp{%n} for point index. The sample code is:
+Function @ref{label} print text at data points. The string may contain @samp{%x}, @samp{%y}, @samp{%z} for x-, y-, z-coordinates of points, @samp{%n} for point index. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -1827,7 +1832,7 @@ int sample(mglGraph *gr)
 @node Tube sample, Tape sample, Label sample, 1D samples
 @subsection Tube sample
 
-@code{Tube} draw tube with variable radius. The sample code is:
+Function @ref{tube} draw tube with variable radius. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -1857,7 +1862,7 @@ int sample(mglGraph *gr)
 @node Tape sample, Torus sample, Tube sample, 1D samples
 @subsection Tape sample
 
-@code{Tape} draw tapes which rotate around the curve as normal and binormal. The sample code is:
+Function @ref{tape} draw tapes which rotate around the curve as normal and binormal. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -1891,7 +1896,7 @@ int sample(mglGraph *gr)
 @node Torus sample, , Tape sample, 1D samples
 @subsection Torus sample
 
-@code{Torus} draw surface of the curve rotation. The sample code is:
+Function @ref{torus} draw surface of the curve rotation. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -1978,7 +1983,7 @@ void mgls_prepare2d(HMDT a, HMDT b=0, HMDT v=0)
 @node Surf sample, SurfC sample, , 2D samples
 @subsection Surf sample
 
-@code{Surf} is most standard way to visualize 2D data array. @code{Surf} use color scheme for coloring (see @ref{Color scheme}). You can use @samp{#} style for drawing black meshes on the surface. The sample code is:
+Function @ref{surf} is most standard way to visualize 2D data array. @code{Surf} use color scheme for coloring (see @ref{Color scheme}). You can use @samp{#} style for drawing black meshes on the surface. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -2009,7 +2014,7 @@ int sample(mglGraph *gr)
 @node SurfC sample, SurfA sample, Surf sample, 2D samples
 @subsection SurfC sample
 
-@code{SurfC} is similar to @code{Surf} but its coloring is determined by another data. The sample code is:
+Function @ref{surfc} is similar to @ref{surf} but its coloring is determined by another data. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -2027,7 +2032,7 @@ int sample(mglGraph *gr)
 @node SurfA sample, Mesh sample, SurfC sample, 2D samples
 @subsection SurfA sample
 
-@code{SurfA} is similar to @code{Surf} but its transparency is determined by another data. The sample code is:
+Function @ref{surfa} is similar to @ref{surf} but its transparency is determined by another data. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -2047,7 +2052,7 @@ int sample(mglGraph *gr)
 @node Mesh sample, Fall sample, SurfA sample, 2D samples
 @subsection Mesh sample
 
-@code{Mesh} draw wired surface. You can use @code{SetMeshNum} for changing number of lines to be drawn. The sample code is:
+Function @ref{mesh} draw wired surface. You can use @ref{meshnum} for changing number of lines to be drawn. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -2065,7 +2070,7 @@ int sample(mglGraph *gr)
 @node Fall sample, Belt sample, Mesh sample, 2D samples
 @subsection Fall sample
 
-@code{Fall} draw waterfall surface. You can use @code{SetMeshNum} for changing number of lines to be drawn. Also you can use @samp{x} style for drawing lines in other direction. The sample code is:
+Function @ref{fall} draw waterfall surface. You can use @ref{meshnum} for changing number of lines to be drawn. Also you can use @samp{x} style for drawing lines in other direction. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -2083,7 +2088,7 @@ int sample(mglGraph *gr)
 @node Belt sample, Boxs sample, Fall sample, 2D samples
 @subsection Belt sample
 
-@code{Belt} draw surface by belts. You can use @samp{x} style for drawing lines in other direction. The sample code is:
+Function @ref{belt} draw surface by belts. You can use @samp{x} style for drawing lines in other direction. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -2101,7 +2106,7 @@ int sample(mglGraph *gr)
 @node Boxs sample, Tile sample, Fall sample, 2D samples
 @subsection Boxs sample
 
-@code{Boxs} draw surface by boxes. You can use @samp{#} for drawing wire plot. The sample code is:
+Function @ref{boxs} draw surface by boxes. You can use @samp{#} for drawing wire plot. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -2129,7 +2134,7 @@ int sample(mglGraph *gr)
 @node Tile sample, TileS sample, Boxs sample, 2D samples
 @subsection Tile sample
 
-@code{Tile} draw surface by tiles. The sample code is:
+Function @ref{tile} draw surface by tiles. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -2147,7 +2152,7 @@ int sample(mglGraph *gr)
 @node TileS sample, Dens sample, Tile sample, 2D samples
 @subsection TileS sample
 
-@code{TileS} is similar to @code{Tile} but tile sizes is determined by another data. This allows one to simulate transparency of the plot. The sample code is:
+Function @ref{tiles} is similar to @code{Tile} but tile sizes is determined by another data. This allows one to simulate transparency of the plot. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -2166,7 +2171,7 @@ int sample(mglGraph *gr)
 @node Dens sample, Cont sample, TileS sample, 2D samples
 @subsection Dens sample
 
-@code{Dens} draw density plot for surface. The sample code is:
+Function @ref{dens} draw density plot for surface. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -2194,7 +2199,7 @@ int sample(mglGraph *gr)
 @node Cont sample, ContF sample, Dens sample, 2D samples
 @subsection Cont sample
 
-@code{Cont} draw contour lines for surface. You can select automatic (default) or manual levels for contours, print contour labels, draw it on the surface (default) or at plane (as @code{Dens}). The sample code is:
+Function @ref{cont} draw contour lines for surface. You can select automatic (default) or manual levels for contours, print contour labels, draw it on the surface (default) or at plane (as @code{Dens}). The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -2221,7 +2226,7 @@ int sample(mglGraph *gr)
 @node ContF sample, ContD sample, Cont sample, 2D samples
 @subsection ContF sample
 
-@code{ContF} draw filled contours.  You can select automatic (default) or manual levels for contours. The sample code is:
+Function @ref{contf} draw filled contours.  You can select automatic (default) or manual levels for contours. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -2250,7 +2255,7 @@ int sample(mglGraph *gr)
 @node ContD sample, ContV sample, ContF sample, 2D samples
 @subsection ContD sample
 
-@code{ContD} is similar to @code{ContF} but with manual contour colors. The sample code is:
+Function @ref{contd} is similar to @code{ContF} but with manual contour colors. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -2279,7 +2284,7 @@ int sample(mglGraph *gr)
 @node ContV sample, Axial sample, ContD sample, 2D samples
 @subsection ContV sample
 
-@code{ContV} draw vertical cylinders (belts) at contour lines. The sample code is:
+Function @ref{contv} draw vertical cylinders (belts) at contour lines. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -2308,7 +2313,7 @@ int sample(mglGraph *gr)
 @node Axial sample, Grad sample, ContV sample, 2D samples
 @subsection Axial sample
 
-@code{Axial} draw surfaces of rotation for contour lines. You can draw wire surfaces (@samp{#} style) or ones rotated in other directions (@samp{x}, @samp{z} styles). The sample code is:
+Function @ref{axial} draw surfaces of rotation for contour lines. You can draw wire surfaces (@samp{#} style) or ones rotated in other directions (@samp{x}, @samp{z} styles). The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -2336,7 +2341,7 @@ int sample(mglGraph *gr)
 @node Grad sample, , Axial sample, 2D samples
 @subsection Grad sample
 
-@code{Grad} draw gradient lines for matrix. The sample code is:
+Function @ref{grad} draw gradient lines for matrix. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -2407,7 +2412,7 @@ void mgls_prepare3d(HMDT a, HMDT b=0)
 @node Surf3 sample, Surf3C sample, , 3D samples
 @subsection Surf3 sample
 
-@code{Surf3} is one of most suitable (for my opinion) functions to visualize 3D data. It draw the isosurface(s) -- surface(s) of constant amplitude (3D analogue of contour lines). You can draw wired isosurfaces if specify @samp{#} style. The sample code is:
+Function @ref{surf3} is one of most suitable (for my opinion) functions to visualize 3D data. It draw the isosurface(s) -- surface(s) of constant amplitude (3D analogue of contour lines). You can draw wired isosurfaces if specify @samp{#} style. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -2426,7 +2431,7 @@ int sample(mglGraph *gr)
 @node Surf3C sample, Surf3A sample, Surf3 sample, 3D samples
 @subsection Surf3C sample
 
-@code{Surf3C} is similar to @code{Surf3} but its coloring is determined by another data. The sample code is:
+Function @ref{surf3c} is similar to @ref{surf3} but its coloring is determined by another data. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -2445,7 +2450,7 @@ int sample(mglGraph *gr)
 @node Surf3A sample, Cloud sample, Surf3C sample, 3D samples
 @subsection Surf3A sample
 
-@code{Surf3A} is similar to @code{Surf3} but its transparency is determined by another data. The sample code is:
+Function @ref{surf3a} is similar to @ref{surf3} but its transparency is determined by another data. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -2464,7 +2469,7 @@ int sample(mglGraph *gr)
 @node Cloud sample, Dens3 sample, Surf3A sample, 3D samples
 @subsection Cloud sample
 
-@code{Cloud} draw cloud-like object which is less transparent for higher data values. Similar plot can be created using many (about 10-20) @code{Surf3A(a,a)} isosurfaces. The sample code is:
+Function @ref{cloud} draw cloud-like object which is less transparent for higher data values. Similar plot can be created using many (about 10-20) @code{Surf3A(a,a)} isosurfaces. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -2492,7 +2497,7 @@ int sample(mglGraph *gr)
 @node Dens3 sample, Cont3 sample, Cloud sample, 3D samples
 @subsection Dens3 sample
 
-@code{Dens3} draw just usual density plot but at slices of 3D data. The sample code is:
+Function @ref{dens3} draw just usual density plot but at slices of 3D data. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -2512,7 +2517,7 @@ int sample(mglGraph *gr)
 @node Cont3 sample, ContF3 sample, Dens3 sample, 3D samples
 @subsection Cont3 sample
 
-@code{Cont3} draw just usual contour lines but at slices of 3D data. The sample code is:
+Function @ref{cont3} draw just usual contour lines but at slices of 3D data. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -2532,7 +2537,7 @@ int sample(mglGraph *gr)
 @node ContF3 sample, Dens projection sample, Cont3 sample, 3D samples
 @subsection ContF3 sample
 
-@code{ContF3} draw just usual filled contours but at slices of 3D data. The sample code is:
+Function @ref{contf3} draw just usual filled contours but at slices of 3D data. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -2553,7 +2558,7 @@ int sample(mglGraph *gr)
 @node Dens projection sample, Cont projection sample, ContF3 sample, 3D samples
 @subsection Dens projection sample
 
-@code{Dens[XYZ]} draw density plot on plane perpendicular to corresponding axis. One of possible application is drawing projections of 3D field. The sample code is:
+Functions @ref{DensXYZ} draw density plot on plane perpendicular to corresponding axis. One of possible application is drawing projections of 3D field. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -2572,7 +2577,7 @@ int sample(mglGraph *gr)
 @node Cont projection sample, ContF projection sample, Dens projection sample, 3D samples
 @subsection Cont projection sample
 
-@code{Cont[XYZ]} draw contour lines on plane perpendicular to corresponding axis. One of possible application is drawing projections of 3D field. The sample code is:
+Functions @ref{ContXYZ} draw contour lines on plane perpendicular to corresponding axis. One of possible application is drawing projections of 3D field. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -2591,7 +2596,7 @@ int sample(mglGraph *gr)
 @node ContF projection sample, TriPlot and QuadPlot, Cont projection sample, 3D samples
 @subsection ContF projection sample
 
-@code{Dens[XYZ]} draw filled contours on plane perpendicular to corresponding axis. One of possible application is drawing projections of 3D field. The sample code is:
+Functions @code{ContFXYZ} draw filled contours on plane perpendicular to corresponding axis. One of possible application is drawing projections of 3D field. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -2610,7 +2615,7 @@ int sample(mglGraph *gr)
 @node TriPlot and QuadPlot, Axial sample, ContF projection sample, 3D samples
 @subsection TriPlot and QuadPlot
 
-@code{TriPlot} and @code{QuadPlot} draw set of triangles (or quadrangles for @code{QuadPlot}) for irregular data arrays. Note, that you have to provide not only vertexes, but also the indexes of triangles or quadrangles. I.e. perform triangulation by some other library. The sample code is:
+Function @ref{triplot} and @ref{quadplot} draw set of triangles (or quadrangles for @code{QuadPlot}) for irregular data arrays. Note, that you have to provide not only vertexes, but also the indexes of triangles or quadrangles. I.e. perform triangulation by some other library. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -2639,7 +2644,7 @@ int sample(mglGraph *gr)
 @node Dots sample, , TriPlot and QuadPlot, 3D samples
 @subsection Dots sample
 
-@code{Dots} is another way to draw irregular points. @code{Dots} use color scheme for coloring (see @ref{Color scheme}). The sample code is:
+Function @ref{dots} is another way to draw irregular points. @code{Dots} use color scheme for coloring (see @ref{Color scheme}). The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -2749,7 +2754,7 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez)
 @node Vect sample, Traj sample, , Vector field samples
 @subsection Vect sample
 
-@code{Vect} is most standard way to visualize vector fields -- it draw a lot of arrows or hachures for each data cell. It have a lot of options which can be seen on the figure (and in the sample code). @code{Vect} use color scheme for coloring (see @ref{Color scheme}). The sample code is:
+Function @ref{vect} is most standard way to visualize vector fields -- it draw a lot of arrows or hachures for each data cell. It have a lot of options which can be seen on the figure (and in the sample code). @code{Vect} use color scheme for coloring (see @ref{Color scheme}). The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -2783,7 +2788,7 @@ int sample(mglGraph *gr)
 @node Traj sample, Flow sample, Vect sample, Vector field samples
 @subsection Traj sample
 
-@code{Traj} is 1D analogue of @code{Vect}. It draw vectors from specified points. The sample code is:
+Function @ref{traj} is 1D analogue of @code{Vect}. It draw vectors from specified points. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -2802,7 +2807,7 @@ int sample(mglGraph *gr)
 @node Flow sample, Pipe sample, Traj sample, Vector field samples
 @subsection Flow sample
 
-@code{Flow} is another standard way to visualize vector fields -- it draw lines (threads) which is tangent to local vector field direction. MathGL draw threads from edges of bounding box and from central slices. Sometimes it is not most appropriate variant -- you may want to use @code{FlowP} to specify manual position of threads. @code{Flow} use color scheme for coloring (see @ref{Color scheme}). At this warm color corresponds to normal flow (like attractor), cold one corresponds to inverse flow (like source). The sample code is:
+Function @ref{flow} is another standard way to visualize vector fields -- it draw lines (threads) which is tangent to local vector field direction. MathGL draw threads from edges of bounding box and from central slices. Sometimes it is not most appropriate variant -- you may want to use @code{FlowP} to specify manual position of threads. @code{Flow} use color scheme for coloring (see @ref{Color scheme}). At this warm color corresponds to normal flow (like attractor), cold one corresponds to inverse flow (like source). The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -2830,7 +2835,7 @@ int sample(mglGraph *gr)
 @node Pipe sample, Dew sample, Flow sample, Vector field samples
 @subsection Pipe sample
 
-@code{Pipe} is similar to @code{Flow} but draw pipes (tubes) which radius is proportional to the amplitude of vector field. @code{Pipe} use color scheme for coloring (see @ref{Color scheme}). At this warm color corresponds to normal flow (like attractor), cold one corresponds to inverse flow (like source). The sample code is:
+Function @ref{pipe} is similar to @ref{flow} but draw pipes (tubes) which radius is proportional to the amplitude of vector field. @code{Pipe} use color scheme for coloring (see @ref{Color scheme}). At this warm color corresponds to normal flow (like attractor), cold one corresponds to inverse flow (like source). The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -2858,7 +2863,7 @@ int sample(mglGraph *gr)
 @node Dew sample, , Pipe sample, Vector field samples
 @subsection Dew sample
 
-@code{Dew} is similar to @code{Vect} but use drops instead of arrows. The sample code is:
+Function @ref{dew} is similar to @code{Vect} but use drops instead of arrows. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -2988,7 +2993,7 @@ int sample(mglGraph *gr)
 @node Types of transparency, Adding fog, Transparency and lighting, Hints
 @subsection Types of transparency
 
-MathGL library has advanced features for setting and handling the surface transparency. The simplest way to add transparency is the using of function @code{Alpha()}. As a result, all further surfaces (and isosurfaces, density plots and so on) become transparent. However, their  look can be additionally improved.
+MathGL library has advanced features for setting and handling the surface transparency. The simplest way to add transparency is the using of function @ref{alpha}. As a result, all further surfaces (and isosurfaces, density plots and so on) become transparent. However, their  look can be additionally improved.
 
 The value of transparency can be different from surface to surface. To do it just use @code{SetAlphaDef} before the drawing of the surface, or use option @code{alpha} (see @ref{Command options}). If its value is close to 0 then the surface becomes more and more transparent. Contrary, if its value is close to 1 then the surface becomes practically non-transparent.
 
@@ -3021,7 +3026,7 @@ int sample(mglGraph *gr)
 @node Adding fog, Several light sources, Types of transparency, Hints
 @subsection Adding fog
 
-MathGL can add a fog to the image. Its switching on is rather simple -- just use @code{Fog} function. There is the only feature -- fog is applied for whole image. Not to particular subplot. The sample code is:
+MathGL can add a fog to the image. Its switching on is rather simple -- just use @ref{fog} function. There is the only feature -- fog is applied for whole image. Not to particular subplot. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -3066,7 +3071,7 @@ MathGL provide a set of functions for drawing primitives (see @ref{Primitives}).
 
 @pfig{primitives, Primitives in MathGL.}
 
-Generally, you can create arbitrary new kind of plot using primitives. For example, MathGL don't provide any special functions for drawing molecules. However, you can do it using only one type of primitives @code{Drop}. The sample code is:
+Generally, you can create arbitrary new kind of plot using primitives. For example, MathGL don't provide any special functions for drawing molecules. However, you can do it using only one type of primitives @ref{drop}. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -3143,7 +3148,7 @@ int sample(mglGraph *gr)
   return 0;
 }
 @end verbatim
-You see that you have to specify and fill 3 data arrays. The same picture can be produced by just 3 calls of @code{Circle} function:
+You see that you have to specify and fill 3 data arrays. The same picture can be produced by just 3 calls of @ref{circle} function:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -3163,7 +3168,7 @@ Of course, the first variant is more suitable if you need to plot a lot of circl
 @node STFA sample, Mapping visualization, Using primitives, Hints
 @subsection STFA sample
 
-Short-time Fourier Analysis (STFA) is one of informative method for analyzing long rapidly oscillating 1D data arrays. It is used to determine the sinusoidal frequency and phase content of local sections of a signal as it changes over time.
+Short-time Fourier Analysis (@ref{stfa}) is one of informative method for analyzing long rapidly oscillating 1D data arrays. It is used to determine the sinusoidal frequency and phase content of local sections of a signal as it changes over time.
 
 MathGL can find and draw STFA result. Just to show this feature I give following sample. Initial data arrays is 1D arrays with step-like frequency. Exactly this you can see at bottom on the STFA plot. The sample code is:
 @verbatim
@@ -3193,9 +3198,9 @@ int sample(mglGraph *gr)
 @node Mapping visualization, Making histogram, STFA sample, Hints
 @subsection Mapping visualization
 
-Sometime ago I worked with mapping and have a question about its visualization. Let me remember you that mapping is some transformation rule for one set of number to another one. The 1d mapping is just an ordinary function -- it takes a number and transforms it to another one. The 2d mapping (which I used) is a pair of functions which take 2 numbers and transform them to another 2 ones. Except general plots (like @code{SurfC}, @code{SurfA}) there is a special plot -- Arnold diagram. It shows the area which is the result of mapping of some initial area (usually square).
+Sometime ago I worked with mapping and have a question about its visualization. Let me remember you that mapping is some transformation rule for one set of number to another one. The 1d mapping is just an ordinary function -- it takes a number and transforms it to another one. The 2d mapping (which I used) is a pair of functions which take 2 numbers and transform them to another 2 ones. Except general plots (like @ref{surfc}, @ref{surfa}) there is a special plot -- Arnold diagram. It shows the area which is the result of mapping of some initial area (usually square).
 
-I tried to make such plot in @code{Map}. It shows the set of points or set of faces, which final position is the result of mapping. At this, the color gives information about their initial position and the height describes Jacobian value of the transformation. Unfortunately, it looks good only for the simplest mapping but for the  real multivalent quasi-chaotic mapping it produces a confusion. So, use it if you like :).
+I tried to make such plot in @ref{map}. It shows the set of points or set of faces, which final position is the result of mapping. At this, the color gives information about their initial position and the height describes Jacobian value of the transformation. Unfortunately, it looks good only for the simplest mapping but for the  real multivalent quasi-chaotic mapping it produces a confusion. So, use it if you like :).
 
 The sample code for mapping visualization is:
 @verbatim
@@ -3226,7 +3231,7 @@ int sample(mglGraph *gr)
 @node Making histogram, Nonlinear fitting sample, Mapping visualization, Hints
 @subsection Making histogram
 
-Using the @code{Hist} function(s) for making regular distributions is one of useful fast methods to process and plot irregular data. @code{Hist} can be used to find some momentum of set of points by specifying weight function. It is possible to create not only 1D distributions but also 2D and 3D ones. Below I place the simplest sample code which demonstrate @code{Hist} usage:
+Using the @ref{hist} function(s) for making regular distributions is one of useful fast methods to process and plot irregular data. @code{Hist} can be used to find some momentum of set of points by specifying weight function. It is possible to create not only 1D distributions but also 2D and 3D ones. Below I place the simplest sample code which demonstrate @ref{hist} usage:
 @verbatim
 int sample(mglGraph *gr)
 {

@@ -33,6 +33,7 @@ public:
 	void Finish(bool fast=true);
 	void SetSize(int ,int )	{}
 	void View(mreal tetX,mreal tetY,mreal tetZ);
+	void Zoom(mreal x1, mreal y1, mreal x2, mreal y2);
 	int NewFrame();
 	void EndFrame();
 

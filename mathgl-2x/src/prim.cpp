@@ -153,7 +153,7 @@ void mgl_face(HMGL gr, mreal x0, mreal y0, mreal z0, mreal x1, mreal y1, mreal z
 	k1 = gr->AddPnt(p1,c1,q1,a,11);	k2 = gr->AddPnt(p2,c2,q2,a,11);
 	k3 = gr->AddPnt(p3,c3,q3,a,11);	k4 = gr->AddPnt(p4,c4,q4,a,11);
 	gr->quad_plot(k1,k2,k3,k4);
-	if(stl && strchr(stl,'#'))
+	if(mglchr(stl,'#'))
 	{
 		gr->Reserve(4);
 		pal = gr->AddTexture('k');
@@ -206,8 +206,8 @@ void mgl_cone(HMGL gr, mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mreal z
 	long ss=gr->AddTexture(stl);
 	mreal c1=gr->GetC(ss,p1.z), c2=gr->GetC(ss,p2.z);
 	long *kk=new long[164],k1=-1,k2=-1;
-	bool edge = stl && strchr(stl,'@');
-	bool wire = stl && strchr(stl,'#');
+	bool edge = mglchr(stl,'@');
+	bool wire = mglchr(stl,'#');
 	gr->Reserve(edge?166:82);
 	if(edge && !wire)
 	{
@@ -267,8 +267,8 @@ void mgl_cones_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char 
 	static int cgid=1;	gr->StartGroup("Cones",cgid++);
 	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();	m = nz > m ? nz : m;
 
-	bool above= pen && strchr(pen,'a');
-	bool wire = pen && strchr(pen,'#');
+	bool above= mglchr(pen,'a');
+	bool wire = mglchr(pen,'#');
 	mreal *dd=new mreal[2*n], x1,z0,zz,d, vx,vy,vz,v0,v1;
 
 	gr->SetPenPal(pen,&pal);
@@ -350,7 +350,7 @@ void mgl_ellipse(HMGL gr, mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mrea
 	gr->SetPenPal(stl,&pal);
 	mreal c=gr->NextColor(pal), d;
 	mreal k=(gr->GetNumPal(pal)>1)?gr->NextColor(pal):gr->AddTexture('k');
-	bool fill = !(stl && strchr(stl,'#')), box = (stl && strchr(stl,'@')) || !fill;
+	bool fill = !mglchr(stl,'#'), box = mglchr(stl,'@') || !fill;
 	if(!fill)	k=c;
 
 	gr->Reserve(2*n+1);
@@ -385,7 +385,7 @@ void mgl_rhomb(HMGL gr, mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mreal 
 	mreal c=gr->NextColor(pal);
 	mreal k=(gr->GetNumPal(pal)>1)?gr->NextColor(pal):gr->AddTexture('k');
 	mreal b=(gr->GetNumPal(pal)>2)?gr->NextColor(pal):c;
-	bool fill = !(stl && strchr(stl,'#')), box = (stl && strchr(stl,'@')) || !fill;
+	bool fill = !mglchr(stl,'#'), box = mglchr(stl,'@') || !fill;
 	if(!fill)	k=c;
 	gr->Reserve(8);
 	mglPoint p1(x1,y1,z1), p2(x2,y2,z2), u=mglPoint(0,0,1)^(p1-p2), q=u^(p1-p2), p, s,qq;
@@ -476,7 +476,7 @@ void mgl_dew_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, cons
 
 	mreal xm,ym,dx,dy,dd;
 	long ss = gr->AddTexture(sch);
-	bool inv = sch && strchr(sch,'A');
+	bool inv = mglchr(sch,'A');
 	mreal	zVal = gr->Min.z;
 	long tx=1,ty=1;
 	if(gr->MeshNum>1)	{	tx=(n-1)/(gr->MeshNum-1);	ty=(m-1)/(gr->MeshNum-1);	}
@@ -550,7 +550,7 @@ void mgl_puts_dir(HMGL gr, mreal x, mreal y, mreal z, mreal dx, mreal dy, mreal 
 //-----------------------------------------------------------------------------
 void mgl_putsw_dir(HMGL gr, mreal x, mreal y, mreal z, mreal dx, mreal dy, mreal dz, const wchar_t *text, const char *font, mreal size)
 {
-	bool a=font && strchr(font,'a'), A=font && strchr(font,'A');
+	bool a=mglchr(font,'a'), A=mglchr(font,'A');
 	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);
 	if(g && (a||A))
 	{

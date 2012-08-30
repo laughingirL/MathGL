@@ -89,7 +89,7 @@ void _mgl_key_up(unsigned char ch,int ,int )
 	if(ch=='d')	_mgl_glwnd->View(0,10,0);
 	if(ch=='q')	_mgl_glwnd->View(0,0,-10);
 	if(ch=='e')	_mgl_glwnd->View(0,0,10);
-	if(ch=='n')	_mgl_glwnd->Identity();
+	if(ch=='n')	_mgl_glwnd->Restore();
 	if(ch==',')
 		_mgl_glwnd->curr_fig = _mgl_glwnd->curr_fig == 1 ? _mgl_glwnd->NumFig : _mgl_glwnd->curr_fig-1;
 	if(ch=='.')

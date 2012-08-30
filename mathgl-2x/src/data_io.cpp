@@ -1043,7 +1043,7 @@ int mgl_data_read_all(HMDT dat, const char *templ, int as_slice)
 #ifndef WIN32
 	mglData d;
 	glob_t res;
-	unsigned long i;
+	size_t i;
 	mreal *b;
 	long kx,ky,kz;
 	char *fname = new char[256];

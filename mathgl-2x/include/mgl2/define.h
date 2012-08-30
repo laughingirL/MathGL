@@ -221,6 +221,8 @@ extern int mglNumThr;		///< Number of thread for plotting and data handling
 //-----------------------------------------------------------------------------
 extern "C" {
 #endif
+/** Find symbol in string excluding {} and return its position or NULL */
+const char *mglchr(const char *str, char ch);
 /** Set number of thread for plotting and data handling*/
 void mgl_set_num_thr(int n);
 void mgl_test_txt(const char *str, ...);

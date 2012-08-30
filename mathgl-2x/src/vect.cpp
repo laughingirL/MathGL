@@ -107,11 +107,11 @@ void mgl_vect_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, con
 
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Vect",cgid++);
-	bool dot = sch && strchr(sch,'.');
-	bool fix = sch && strchr(sch,'f');
-	bool end = sch && strchr(sch,'>');
-	bool beg = sch && strchr(sch,'<');
-	bool grd = sch && strchr(sch,'=');
+	bool dot = sch && mglchr(sch,'.');
+	bool fix = mglchr(sch,'f');
+	bool end = mglchr(sch,'>');
+	bool beg = mglchr(sch,'<');
+	bool grd = mglchr(sch,'=');
 
 	long ss = gr->AddTexture(sch);
 	gr->Reserve(4*n*m);
@@ -196,11 +196,11 @@ void mgl_vect_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Vect_3d",cgid++);
-	bool dot = sch && strchr(sch,'.');
-	bool fix = sch && strchr(sch,'f');
-	bool end = sch && strchr(sch,'>');
-	bool beg = sch && strchr(sch,'<');
-	bool grd = sch && strchr(sch,'=');
+	bool dot = mglchr(sch,'.');
+	bool fix = mglchr(sch,'f');
+	bool end = mglchr(sch,'>');
+	bool beg = mglchr(sch,'<');
+	bool grd = mglchr(sch,'=');
 
 	mreal xm=0,ym,dx,dy,dz,dd,dm=(fabs(gr->Max.c)+fabs(gr->Min.c))*1e-5;
 	long ss = gr->AddTexture(sch);
@@ -464,14 +464,14 @@ void mgl_vect3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, c
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Vect3",cgid++);
 	char dir='y';
-	if(sch && strchr(sch,'x'))	dir='x';
-	if(sch && strchr(sch,'z'))	dir='z';
+	if(mglchr(sch,'x'))	dir='x';
+	if(mglchr(sch,'z'))	dir='z';
 
-	bool dot = sch && strchr(sch,'.');
-	bool fix = sch && strchr(sch,'f');
-	bool end = sch && strchr(sch,'>');
-	bool beg = sch && strchr(sch,'<');
-	bool grd = sch && strchr(sch,'=');
+	bool dot = mglchr(sch,'.');
+	bool fix = mglchr(sch,'f');
+	bool end = mglchr(sch,'>');
+	bool beg = mglchr(sch,'<');
+	bool grd = mglchr(sch,'=');
 	long ss = gr->AddTexture(sch);
 
 	_mgl_vec_slice s;
@@ -627,10 +627,10 @@ void mgl_flow_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, con
 	static int cgid=1;	gr->StartGroup("Flow",cgid++);
 
 	long ss = gr->AddTexture(sch);
-	bool vv = sch && strchr(sch,'v');
+	bool vv = mglchr(sch,'v');
 	// allocate memory
 	mreal zVal = gr->Min.z;
-	bool cnt=!(sch && strchr(sch,'#'));
+	bool cnt=!mglchr(sch,'#');
 	mglData xx(x), yy(y), bx(ax), by(ay);
 
 	for(long k=0;k<ax->GetNz();k++)
@@ -696,7 +696,7 @@ void mgl_flowp_xy(HMGL gr, mreal x0, mreal y0, mreal z0, HCDT x, HCDT y, HCDT ax
 	static int cgid=1;	gr->StartGroup("FlowP",cgid++);
 
 	long ss = gr->AddTexture(sch);
-	bool vv = sch && strchr(sch,'v');
+	bool vv = mglchr(sch,'v');
 	// find coordinates u, v
 	register long i,j;
 	register mreal d, dm=1e7;
@@ -846,9 +846,9 @@ void mgl_flow_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 	mreal r = gr->SaveState(opt);
 	long num = mgl_isnan(r)?3:long(r+0.5);
 	static int cgid=1;	gr->StartGroup("Flow3",cgid++);
-	bool cnt=!(sch && strchr(sch,'#'));
+	bool cnt=!mglchr(sch,'#');
 	long ss = gr->AddTexture(sch);
-	bool vv = sch && strchr(sch,'v'), xo = sch && strchr(sch,'x'), zo = sch && strchr(sch,'z');
+	bool vv = mglchr(sch,'v'), xo = mglchr(sch,'x'), zo = mglchr(sch,'z');
 
 	mglData xx(x), yy(y), zz(z), bx(ax), by(ay), bz(az);
 	for(i=0;i<num;i++)	for(j=0;j<num;j++)
@@ -919,7 +919,7 @@ void mgl_flowp_xyz(HMGL gr, mreal x0, mreal y0, mreal z0, HCDT x, HCDT y, HCDT z
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("FlowP3",cgid++);
 	long ss = gr->AddTexture(sch);
-	bool vv = sch && strchr(sch,'v'), xo = sch && strchr(sch,'x'), zo = sch && strchr(sch,'z');
+	bool vv = mglchr(sch,'v'), xo = mglchr(sch,'x'), zo = mglchr(sch,'z');
 
 	// find coordinates u, v, w
 	register long i,j,k;
@@ -1144,8 +1144,8 @@ void mgl_pipe_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, mre
 	long ss = gr->AddTexture(sch);
 	// allocate memory
 	mreal zVal = gr->Min.z;
-	bool cnt=!(sch && strchr(sch,'#'));
-	if(sch && strchr(sch,'i'))	r0 = -fabs(r0);
+	bool cnt=!mglchr(sch,'#');
+	if(mglchr(sch,'i'))	r0 = -fabs(r0);
 
 	mglData xx(x), yy(y), bx(ax), by(ay);
 	for(long k=0;k<ax->GetNz();k++)
@@ -1299,10 +1299,10 @@ void mgl_pipe_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 	mreal r = gr->SaveState(opt);
 	long num = mgl_isnan(r)?3:long(r+0.5);
 	static int cgid=1;	gr->StartGroup("Pipe3",cgid++);
-	if(sch && strchr(sch,'i'))	r0 = -fabs(r0);
+	if(mglchr(sch,'i'))	r0 = -fabs(r0);
 
 	long ss = gr->AddTexture(sch);
-	bool cnt=!(sch && strchr(sch,'#'));
+	bool cnt=!mglchr(sch,'#');
 
 	mglData xx(x), yy(y), zz(z), bx(ax), by(ay), bz(az);
 	for(i=0;i<num;i++)	for(j=0;j<num;j++)

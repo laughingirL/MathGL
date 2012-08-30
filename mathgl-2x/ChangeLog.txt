@@ -6,6 +6,10 @@
 * Add Vect3() plot for drawing vectors on slice of 3d vector field.
 * CalcXYZ() function now use data from z-buffer for better determining {x,y,z} coordinates.
 * Make code compilable by Borland compiler.
+* Improve output in OpenGL mode.
+* Add fog for export in EPS/SVG formats.
+* Update samples
+* Update documentation
 * Different bugfixes
 
 2.0.3 Released 27 July 2012

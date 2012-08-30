@@ -44,8 +44,8 @@ void mgl_cloud_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, con
 	if(tx<1)	tx=1;	if(ty<1)	ty=1;	if(tz<1)	tz=1;
 
 	mreal	alpha = gr->AlphaDef;
-	bool inv = sch && strchr(sch,'!');
-	bool dot = sch && strchr(sch,'.');
+	bool inv = mglchr(sch,'!');
+	bool dot = mglchr(sch,'.');
 	alpha /= pow(n/tx*m/ty*l/tz,1./3)/20;
 	mreal aa,bb;
 	if(alpha>1)	alpha = 1;
@@ -230,14 +230,14 @@ void mgl_surf3_xyz_val(HMGL gr, mreal val, HCDT x, HCDT y, HCDT z, HCDT a, const
 {
 	long i,j,k,i1,n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
 	long *kx1,*kx2,*ky1,*ky2,*kz;
-	bool both = mgl_isboth(x,y,z,a), wire = sch && strchr(sch,'#');
+	bool both = mgl_isboth(x,y,z,a), wire = mglchr(sch,'#');
 	mreal d;
 	if(mgl_check_dim3(gr,both,x,y,z,a,0,"Surf3"))	return;
 
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Surf3",cgid++);
 
-	bool inv = (sch && strchr(sch,'-'));
+	bool inv = (mglchr(sch,'-'));
 	long ss = gr->AddTexture(sch), pos;
 
 	kx1 = new long[n*m];	kx2 = new long[n*m];
@@ -379,14 +379,14 @@ void mgl_surf3a_xyz_val(HMGL gr, mreal val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 {
 	long i,j,k,i1,n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
 	long *kx1,*kx2,*ky1,*ky2,*kz;
-	bool both = mgl_isboth(x,y,z,a), wire = sch && strchr(sch,'#');
+	bool both = mgl_isboth(x,y,z,a), wire = mglchr(sch,'#');
 	mreal d;
 	if(mgl_check_dim3(gr,both,x,y,z,a,b,"Surf3A"))	return;
 
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Surf3A",cgid++);
 
-	bool inv = (sch && strchr(sch,'-'));
+	bool inv = (mglchr(sch,'-'));
 	long ss = gr->AddTexture(sch), pos;
 
 	kx1 = new long[n*m];	kx2 = new long[n*m];
@@ -545,14 +545,14 @@ void mgl_surf3c_xyz_val(HMGL gr, mreal val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 {
 	long i,j,k,i1,n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
 	long *kx1,*kx2,*ky1,*ky2,*kz;
-	bool both = mgl_isboth(x,y,z,a), wire = sch && strchr(sch,'#');
+	bool both = mgl_isboth(x,y,z,a), wire = mglchr(sch,'#');
 	mreal d;
 	if(mgl_check_dim3(gr,both,x,y,z,a,b,"Surf3C"))	return;
 
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Surf3C",cgid++);
 
-	bool inv = (sch && strchr(sch,'-'));
+	bool inv = (mglchr(sch,'-'));
 	long ss = gr->AddTexture(sch), pos;
 
 	kx1 = new long[n*m];	kx2 = new long[n*m];

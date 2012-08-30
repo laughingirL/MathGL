@@ -36,7 +36,7 @@ void mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const 
 	mglPoint p1,p2,p3,q=mglPoint(NAN,NAN);
 
 	register long i,k1,k2,k3;
-	bool wire = sch && strchr(sch,'#');
+	bool wire = mglchr(sch,'#');
 	long nc = a->GetNx();
 	if(nc!=n && nc>=m)	// colors per triangle
 	{
@@ -147,7 +147,7 @@ void mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const
 
 	register long i,k1,k2,k3,k4;
 	long nc = a->GetNx();
-	bool wire = sch && strchr(sch,'#');
+	bool wire = mglchr(sch,'#');
 	if(nc!=n && nc>=m)	// colors per triangle
 	{
 		gr->Reserve(m*4);
@@ -281,7 +281,7 @@ void mgl_tricont_xyzcv(HMGL gr, HCDT v, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT 
 	mreal val;
 	register long i,k;
 	long k1,k2,k3;
-	bool zVal = (sch && strchr(sch,'_'));
+	bool zVal = (mglchr(sch,'_'));
 	for(k=0;k<v->GetNx();k++)	for(i=0;i<m;i++)
 	{
 		if(gr->Stop)	return;

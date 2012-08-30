@@ -161,7 +161,7 @@ void mglCanvas::SetTicksVal(char dir, HCDT v, const char **lbl, bool add)
 	if(add)	{	UpdateAxis();	AdjustTicks(aa,ff);	}
 	if(!v || !lbl)	{	aa.f = 0;	return;	}
 	aa.f = 2;	aa.ns=0;	aa.ds=0;
-	register unsigned long i,n=v->GetNx(),l=0;
+	register size_t i,n=v->GetNx(),l=0;
 	for(i=0;i<n;i++)	if(strlen(lbl[i])>l)	l=strlen(lbl[i]);
 	wchar_t *str=new wchar_t[l+1];
 	for(i=0;i<n;i++)
@@ -446,12 +446,12 @@ void mglCanvas::Axis(const char *dir, const char *stl)
 	bool text = !strchr(dir,'_');
 	const char *ar = "AKDTVISO";
 	char arr=0;
-	for(unsigned i=0;i<strlen(ar);i++)
+	for(size_t i=0;i<strlen(ar);i++)
 		if(strchr(dir,ar[i]))	{	arr=ar[i];	break;	}
-	bool adjust = stl && strchr(stl,'a');
+	bool adjust = mglchr(stl,'a');
 
 	bool ret = get(MGL_ENABLE_RTEXT);
-	if(dir && strchr(dir,'U'))	clr(MGL_ENABLE_RTEXT);
+	if(strchr(dir,'U'))	clr(MGL_ENABLE_RTEXT);
 	AdjustTicks(dir,adjust);
 	// TODO: Ternary axis labeling ...
 	if(strchr(dir,'x'))	DrawAxis(ax, text, arr, stl);
@@ -651,7 +651,7 @@ void mglCanvas::DrawGrid(mglAxis &aa)
 //-----------------------------------------------------------------------------
 void mglCanvas::Label(char dir, const char *str, mreal pos, mreal shift)
 {
-	unsigned s = strlen(str)+1;
+	size_t s = strlen(str)+1;
 	wchar_t *wcs = new wchar_t[s];
 	mbstowcs(wcs,str,s);
 	Labelw(dir, wcs, pos, shift);
@@ -777,24 +777,24 @@ void mglCanvas::Box(const char *col, bool ticks)
 //-----------------------------------------------------------------------------
 void mglCanvas::Colorbar(const char *sch)
 {
-	bool in = sch && strchr(sch,'I');
+	bool in = mglchr(sch,'I');
 	mreal s=1/B.pf, x=1, y=0;
-	if(sch && strchr(sch,'>'))	{	x=in?(1+s)/2:1;	y=0;	}
-	if(sch && strchr(sch,'<'))	{	x=in?(1-s)/2:0;	y=0;	}
-	if(sch && strchr(sch,'^'))	{	x=0;	y=in?(1+s)/2:1;	}
-	if(sch && strchr(sch,'_'))	{	x=0;	y=in?(1-s)/2:0;	}
+	if(mglchr(sch,'>'))	{	x=in?(1+s)/2:1;	y=0;	}
+	if(mglchr(sch,'<'))	{	x=in?(1-s)/2:0;	y=0;	}
+	if(mglchr(sch,'^'))	{	x=0;	y=in?(1+s)/2:1;	}
+	if(mglchr(sch,'_'))	{	x=0;	y=in?(1-s)/2:0;	}
 	Colorbar(sch, x, y, 1, 1);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::Colorbar(const char *sch, mreal x, mreal y, mreal w, mreal h)
 {
-	bool in = sch && strchr(sch,'I');
+	bool in = mglchr(sch,'I');
 	int where = 0;		// ‘0’ - right, ‘1’ - left, ‘2’ - above, ‘3’ - under
-	if(sch && strchr(sch,'>'))	where = in?1:0;
-	if(sch && strchr(sch,'<'))	where = in?0:1;
-	if(sch && strchr(sch,'^'))	where = in?3:2;
-	if(sch && strchr(sch,'_'))	where = in?2:3;
-	if(sch && strchr(sch,'A'))	{	Push();	Identity();	}
+	if(mglchr(sch,'>'))	where = in?1:0;
+	if(mglchr(sch,'<'))	where = in?0:1;
+	if(mglchr(sch,'^'))	where = in?3:2;
+	if(mglchr(sch,'_'))	where = in?2:3;
+	if(mglchr(sch,'A'))	{	Push();	Identity();	}
 
 	long n=256, s = AddTexture(sch);
 	mglData v(n);
@@ -807,29 +807,29 @@ void mglCanvas::Colorbar(const char *sch, mreal x, mreal y, mreal w, mreal h)
 	for(long i=0;i<n;i++)	c[i] = GetC(s,v.a[i]);
 	colorbar(&v, c, where, x, y, w, h);
 	delete []c;
-	if(sch && strchr(sch,'A'))	Pop();
+	if(mglchr(sch,'A'))	Pop();
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::Colorbar(HCDT v, const char *sch)
 {
-	bool in = sch && strchr(sch,'I');
+	bool in = mglchr(sch,'I');
 	mreal s=1/B.pf, x=1, y=0;
-	if(sch && strchr(sch,'>'))	{	x=in?(1+s)/2:1;	y=0;	}
-	if(sch && strchr(sch,'<'))	{	x=in?(1-s)/2:0;	y=0;	}
-	if(sch && strchr(sch,'^'))	{	x=0;	y=in?(1+s)/2:1;	}
-	if(sch && strchr(sch,'_'))	{	x=0;	y=in?(1-s)/2:0;	}
+	if(mglchr(sch,'>'))	{	x=in?(1+s)/2:1;	y=0;	}
+	if(mglchr(sch,'<'))	{	x=in?(1-s)/2:0;	y=0;	}
+	if(mglchr(sch,'^'))	{	x=0;	y=in?(1+s)/2:1;	}
+	if(mglchr(sch,'_'))	{	x=0;	y=in?(1-s)/2:0;	}
 	Colorbar(v, sch, x, y, 1, 1);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::Colorbar(HCDT v, const char *sch, mreal x, mreal y, mreal w, mreal h)
 {
-	bool in = sch && strchr(sch,'I');
+	bool in = mglchr(sch,'I');
 	int where = 0;
-	if(sch && strchr(sch,'>'))	where = in?1:0;
-	if(sch && strchr(sch,'<'))	where = in?0:1;
-	if(sch && strchr(sch,'^'))	where = in?3:2;
-	if(sch && strchr(sch,'_'))	where = in?2:3;
-	if(sch && strchr(sch,'A'))	{	Push();	Identity();	}
+	if(mglchr(sch,'>'))	where = in?1:0;
+	if(mglchr(sch,'<'))	where = in?0:1;
+	if(mglchr(sch,'^'))	where = in?3:2;
+	if(mglchr(sch,'_'))	where = in?2:3;
+	if(mglchr(sch,'A'))	{	Push();	Identity();	}
 
 	mreal *c=new mreal[v->GetNx()];
 	if(!mgl_have_color(sch))	sch = MGL_DEF_PAL;
@@ -839,13 +839,13 @@ void mglCanvas::Colorbar(HCDT v, const char *sch, mreal x, mreal y, mreal w, mre
 	for(long i=0;i<v->GetNx();i++)	c[i] = s+i*dc;
 	colorbar(v, c, where, x, y, w, h);
 	delete []c;
-	if(sch && strchr(sch,'A'))	Pop();
+	if(mglchr(sch,'A'))	Pop();
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::colorbar(HCDT vv, const mreal *c, int where, mreal x, mreal y, mreal w, mreal h)
 {
 	static int cgid=1;	StartGroup("Colorbar",cgid++);
-	register unsigned long i,n=vv->GetNx();
+	register size_t i,n=vv->GetNx();
 	long n1,n2,n3,n4;
 	mreal d,s3=B.pf,ss=1/s3;		// NOTE: colorbar was wider ss=0.9;
 	mglPoint p1,p2;

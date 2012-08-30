@@ -3,68 +3,56 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 
 ============= NEW  =============
 
-1. Check RunThr() in python/octave
+1. Use Hershey as built-in font ?!!
+2. Export to X3D
+3. Export to JavaScript (WebGL, canvas) + function for rotate, zoom, CalcXYZ(ask server).
+4. GTK and WX window/widgets
+5. Labels at TriCont()
 
-2. Use Hershey as built-in font ?!!
-3. Import/Export via GIF (as 3d data) ???
-4. Read DICOM files ???
-5. Export to JavaScript (WebGL, canvas) + function for rotate, zoom, CalcXYZ(ask server).
-6. GTK and WX window/widgets
-7. Labels at TriCont()
-
-8. Replace all unsigned by size_t if possible (except C/Fortran functions)
-9. Save primitives for frames (not bitmap) ??? -- see MGL_USEDRWDAT
-10. Enable several fonts at the same picture -- global std::vector<mglFont> + index in this set
-11. Table(mreal x, mreal y, HCDT dat, char *xlabels, char *ylabels, char *stl) -- draw table with values (+ auto reduce font size?) -- format in [] like "[%.2g]".
+6. Save primitives for frames (not bitmap) ??? -- see MGL_USEDRWDAT ==> frames in OpenGL mode
+7. Enable several fonts at the same picture -- global std::vector<mglFont> + index in this set
+8. Table(mreal x, mreal y, HCDT dat, char *xlabels, char *ylabels, char *stl) -- draw table with values (+ auto reduce font size?) -- format in [] like "[%.2g]".
+9. Graph(names, styles, font, size); -- names = "node1[node2,node3,node4[node5,node6]]", styles -- the same + apply for subnodes if absent. Styles are colors (fill,border,line), dash (to subnodes), marks "dos^v><", arrows.
+10. Legend in several columns
+11. Add flag for drawing 3d arrows instead of 2d (S,D -- cube, T -- sq.pyramid, I -- square, O -- sphere???, A,K,V -- ???)
 
 12. Use multi-threading in drawing (MathGL level) -- bug with primitives drawing --> pixel.cpp
 
 13. Check gap for axis labels (at axis rotation)
 14. Axis -- projection (ternary + quaternary)
 15. 2D textures as one of standard way for coloring
-16. Add extra mesh-texture in Error -- for handling transparency of "marks" ???
 
-17. curved text (in new sample) look not so good
-18. emulate fog in EPS/SVG
-19. Auto axis range for formulas, like AutoRange("y(x)") or AutoRange('x',"x(t)").
+16. curved text (in new sample) look not so good
+17. Auto axis range for formulas, like AutoRange("y(x)") or AutoRange('x',"x(t)").
 
-20. Add mglDataC for complex data -- main diff is reading/saving data
-21. Add flag for drawing 3d arrows instead of 2d (S,D -- cube, T -- sq.pyramid, I -- square, O -- sphere???, A,K,V -- ???)
-22. Export to X3D
-23. Try libtcc (TinyCC) as alternative to MGL -- in mgllab???
+18. Add mglDataC for complex data -- main diff is reading/saving data
+19. Try libtcc (TinyCC) as alternative to MGL -- in mgllab???
 
-24. Graph(names, styles, font, size); -- names = "node1[node2,node3,node4[node5,node6]]", styles -- the same + apply for subnodes if absent. Styles are colors (fill,border,line), dash (to subnodes), marks "dos^v><", arrows.
-25. TextHeight(char *txt) should take into account new line symbols
+20. More accurate intersections in Region
+21. Check "gray" solid marks in style.png/eps
+22. Option sample (_mirror)
+23. Add HEX colors into "style" sample
 
-+21. MGL testing system ???
-25. More accurate intersections in Region
-33. Check "gray" solid marks in style.png/eps
-34. Shifted image in GLUT window
-
-35. Add mgl_min_a into export_3d.cpp
-36. Legend in several columns
++24. MGL testing system ???
 
 ============= DOCS =============
 
-0. Option sample (_mirror)
-1. Add back-references from samples
-
+1. Text about manual color positions + xRRGGBBAA colors
 2. Text about UDAV
 3. Add FAQ about MPEG/GIF and PDF
-
 4. Examples of animation, u3d, x3d, js and so on
 
 ============= UDAV =============
 
 01. Dialog for data input
------------------------------------------------
-| [Data name |V|]				      |
-| [x1]     [x2]		[func]		{ADD} |
-| [y1]     [y2]		[suf|V]		{ADD} |
-| [z1]     [z2]	[oper|V] [dir]	{ADD} |
-| Reuslt [						]	  |
-| 			{Cancel}		{OK}			  |
------------------------------------------------
+----------------------------------------
+| [Data name |V|]                      |
+| [x1]     [x2]     [func]       {ADD} |
+| [y1]     [y2]     [suf|V]      {ADD} |
+| [z1]     [z2] [oper|V] [dir]   {ADD} |
+| Reuslt [                   ]         |
+|           {Cancel}    {OK}           |
+----------------------------------------
 Ranges can be inverted.
 Remove other setting if data name is changed.
 
@@ -100,3 +88,5 @@ Remove other setting if data name is changed.
 4. "Cut off" curves if text is printed inside it (for contour labels) ?!?
 5. String variables in MGL + readstr command.
 6. Pool of threads for speeding up ???
+7. Read DICOM files
+8. Check RunThr() in python/octave

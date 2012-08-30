@@ -160,7 +160,7 @@ void mgl_radar(HMGL gr, HCDT a, const char *pen, const char *opt)
 		x.a[n+(n+1)*j] = r+a->v(0,j);	y.a[n+(n+1)*j] = 0;
 	}
 	mgl_plot_xy(gr,&x,&y,pen,0);
-	if(pen && strchr(pen,'#'))	// draw "grid"
+	if(mglchr(pen,'#'))	// draw "grid"
 	{
 		m = 1.1*(a->Maximal()+r);
 		x.Create(2);	y.Create(2);
@@ -201,7 +201,7 @@ void mgl_candle_xyv(HMGL gr, HCDT x, HCDT v1, HCDT v2, HCDT y1, HCDT y2, const c
 	static int cgid=1;	gr->StartGroup("Candle",cgid++);
 	gr->SaveState(opt);	gr->SetPenPal(pen,&pal);
 	gr->NextColor(pal);	gr->Reserve(8*n);
-	bool sh = pen && strchr(pen,'!');
+	bool sh = mglchr(pen,'!');
 
 	long n1,n2,n3,n4;
 	mreal m1,m2,xx,x1,x2,d;
@@ -280,7 +280,7 @@ void mgl_plot_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *
 	bool t1,t2,t3;
 	mglPoint p1,nn,p2,pt;
 	long n1=-1,n2=-1,n3=-1;
-	bool sh = pen && strchr(pen,'!');
+	bool sh = mglchr(pen,'!');
 
 	for(j=0;j<m;j++)
 	{
@@ -468,8 +468,8 @@ void mgl_area_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Area3",cgid++);
 	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();	m = z->GetNy() > m ? z->GetNy() : m;
-	bool sh = pen && strchr(pen,'!');
-	bool wire = pen && strchr(pen,'#');
+	bool sh = mglchr(pen,'!');
+	bool wire = mglchr(pen,'#');
 
 	mreal z0=gr->GetOrgZ('x');
 	mreal c1,c2;
@@ -517,8 +517,8 @@ void mgl_area_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
 	mreal c1,c2;
 	mglPoint nn=mglPoint(0,0,1);
 	long n1,n2,n3,n4;
-	bool sh = pen && strchr(pen,'!');
-	bool wire = pen && strchr(pen,'#');
+	bool sh = mglchr(pen,'!');
+	bool wire = mglchr(pen,'#');
 
 	gr->SetPenPal(pen,&pal);	gr->Reserve(2*n*m);
 //	long s=gr->AddTexture(pen,1);
@@ -590,8 +590,8 @@ void mgl_region_xy(HMGL gr, HCDT x, HCDT y1, HCDT y2, const char *pen, const cha
 	long n1,n2,n3,n4;
 	mreal xx,f1,f2,f3,f4;
 	mreal zm = gr->AdjustZMin();
-	bool inside = (pen && strchr(pen,'i'));	// NOTE: check if 'i' is free (used here for inside flag)
-	bool sh = pen && strchr(pen,'!');
+	bool inside = (mglchr(pen,'i'));	// NOTE: check if 'i' is free (used here for inside flag)
+	bool sh = mglchr(pen,'!');
 
 	gr->SetPenPal(pen,&pal);	gr->Reserve(2*n*m);
 //	long s=gr->AddTexture(pen,1);
@@ -650,7 +650,7 @@ void mgl_step_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Step3",cgid++);
 	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();	m = z->GetNy() > m ? z->GetNy() : m;
-	bool sh = pen && strchr(pen,'!');
+	bool sh = mglchr(pen,'!');
 
 	char mk=gr->SetPenPal(pen,&pal);	gr->Reserve(2*n*m);
 	long n1,n2;
@@ -688,7 +688,7 @@ void mgl_step_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Step",cgid++);
 	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();
-	bool sh = pen && strchr(pen,'!');
+	bool sh = mglchr(pen,'!');
 
 	mreal zVal =gr->AdjustZMin();
 	char mk=gr->SetPenPal(pen,&pal);	gr->Reserve(2*n*m);
@@ -755,7 +755,7 @@ void mgl_stem_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Stem3",cgid++);
 	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();	m = z->GetNy() > m ? z->GetNy() : m;
-	bool sh = pen && strchr(pen,'!');
+	bool sh = mglchr(pen,'!');
 
 	mreal z0=gr->GetOrgZ('x');
 	char mk=gr->SetPenPal(pen,&pal);	gr->Reserve(2*n*m);
@@ -785,7 +785,7 @@ void mgl_stem_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Stem",cgid++);
 	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();
-	bool sh = pen && strchr(pen,'!');
+	bool sh = mglchr(pen,'!');
 
 	mreal zVal = gr->AdjustZMin(), y0=gr->GetOrgY('x'), vv;
 	char mk=gr->SetPenPal(pen,&pal);	gr->Reserve(2*n*m);
@@ -844,10 +844,10 @@ void mgl_bars_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Bars3",cgid++);
 	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();	m = z->GetNy() > m ? z->GetNy() : m;
-	bool sh = pen && strchr(pen,'!');
+	bool sh = mglchr(pen,'!');
 
-	bool wire = pen && strchr(pen,'#');
-	bool above = pen && strchr(pen,'a'), fall = pen && strchr(pen,'f');
+	bool wire = mglchr(pen,'#');
+	bool above = mglchr(pen,'a'), fall = mglchr(pen,'f');
 	if(above)	fall = false;
 	mreal c1,c2,c;
 	mglPoint p1,p2,p3,p4,nn;
@@ -911,10 +911,10 @@ void mgl_bars_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Bars",cgid++);
 	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();
-	bool sh = pen && strchr(pen,'!');
+	bool sh = mglchr(pen,'!');
 
-	bool wire = pen && strchr(pen,'#');
-	bool above = pen && strchr(pen,'a'), fall = pen && strchr(pen,'f');
+	bool wire = mglchr(pen,'#');
+	bool above = mglchr(pen,'a'), fall = mglchr(pen,'f');
 	if(above)	fall = false;
 	mreal c1,c2,c;
 	long n1,n2,n3,n4;
@@ -995,10 +995,10 @@ void mgl_barh_yx(HMGL gr, HCDT y, HCDT v, const char *pen, const char *opt)
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Barh",cgid++);
 	m = y->GetNy() > v->GetNy() ? y->GetNy() : v->GetNy();
-	bool sh = pen && strchr(pen,'!');
+	bool sh = mglchr(pen,'!');
 
-	bool wire = pen && strchr(pen,'#');
-	bool above = pen && strchr(pen,'a'), fall = pen && strchr(pen,'f');
+	bool wire = mglchr(pen,'#');
+	bool above = mglchr(pen,'a'), fall = mglchr(pen,'f');
 	if(above)	fall = false;
 	mreal c1,c2,c;
 	long n1,n2,n3,n4;
@@ -1082,7 +1082,7 @@ void mgl_boxplot_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
 	static int cgid=1;	gr->StartGroup("BoxPlot",cgid++);
 	mreal *b = new mreal[5*n], *d = new mreal[m], x1, x2, dd;
 	mreal zVal = gr->AdjustZMin(), vv;
-	bool sh = pen && strchr(pen,'!');
+	bool sh = mglchr(pen,'!');
 	register long i,j;
 	for(i=0;i<n;i++)	// find quartiles by itself
 	{
@@ -1169,9 +1169,9 @@ void mgl_error_exy(HMGL gr, HCDT x, HCDT y, HCDT ex, HCDT ey, const char *pen, c
 	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();
 	m = ex->GetNy() > m ? ex->GetNy() : m;
 	m = ey->GetNy() > m ? ey->GetNy() : m;
-	bool sh = pen && strchr(pen,'!');
+	bool sh = mglchr(pen,'!');
 
-	bool ma = pen && strchr(pen,'@');
+	bool ma = mglchr(pen,'@');
 	char mk = gr->SetPenPal(pen,&pal);
 	mreal zVal=gr->AdjustZMin(), vx, vy, ve, vf;
 	gr->Reserve(5*n*m);
@@ -1386,7 +1386,7 @@ void mgl_chart(HMGL gr, HCDT a, const char *cols, const char *opt)
 	if(a->Minimal()<0)	{	gr->SetWarn(mglWarnNeg,"Chart");	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Chart",cgid++);
-	bool wire = cols && strchr(cols,'#');	// draw edges
+	bool wire = mglchr(cols,'#');	// draw edges
 	register long n=a->GetNx(),i,j=0;
 	if(cols)	for(i=0;i<long(strlen(cols));i++)
 		if(strchr(MGL_COLORS,cols[i]) || cols[i]==' ')	j++;
@@ -1447,7 +1447,7 @@ void mgl_mark_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const char *pen, cons
 	m = z->GetNy() > m ? z->GetNy() : m;
 	char mk=gr->SetPenPal(pen,&pal);	gr->Reserve(n*m);
 	if(mk==0)	return;
-	bool sh = pen && strchr(pen,'!');
+	bool sh = mglchr(pen,'!');
 
 	for(j=0;j<m;j++)
 	{
@@ -1515,8 +1515,8 @@ void mgl_tube_xyzr(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const char *pen, con
 	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();
 	m = z->GetNy() > m ? z->GetNy() : m;
 	m = r->GetNy() > m ? r->GetNy() : m;
-	bool sh = pen && strchr(pen,'!');
-	bool wire = pen && strchr(pen,'#');
+	bool sh = mglchr(pen,'!');
+	bool wire = mglchr(pen,'#');
 
 	const int num=41;
 	gr->SetPenPal(pen,&pal);
@@ -1656,7 +1656,7 @@ void mgl_tape_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *
 	gr->SetPenPal(pen,&pal);	gr->Reserve(4*n*m);
 	mglPoint p1,p2,q1,q2,l,nn,qn=mglPoint(NAN,NAN);
 	long n1=-1,n2=-1,n3=-1,n4=-1, m1=-1,m2=-1,m3=-1,m4=-1;
-	bool sh = pen && strchr(pen,'!'), xo = pen && strchr(pen,'x'), zo = pen && strchr(pen,'z'), wire = pen && strchr(pen,'#');
+	bool sh = mglchr(pen,'!'), xo = mglchr(pen,'x'), zo = mglchr(pen,'z'), wire = mglchr(pen,'#');
 	if(!xo && !zo)	xo = zo = true;
 	mreal c1,c2;
 

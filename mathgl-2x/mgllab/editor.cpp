@@ -291,7 +291,7 @@ void load_file(char *newfile, int ipos)
 
 		char *t = textbuf->text();
 #ifndef WIN32
-		for(unsigned long i=0;i<strlen(t);i++)	if(t[i]=='\r')	t[i]=' ';
+		for(size_t i=0;i<strlen(t);i++)	if(t[i]=='\r')	t[i]=' ';
 		textbuf->text(t);
 #endif
 		fill_animate(t);	free(t);

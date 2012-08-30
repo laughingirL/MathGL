@@ -213,7 +213,7 @@ void mglParser::AddParam(int n, const char *str, bool isstr)
 //-----------------------------------------------------------------------------
 int mglParser::Parse(mglGraph *gr, const char *str, long pos)
 {
-	unsigned s = strlen(str)+1;
+	size_t s = strlen(str)+1;
 	wchar_t *wcs = new wchar_t[s];
 	mbstowcs(wcs,str,s);
 	int r = Parse(gr,wcs,pos);
@@ -222,7 +222,7 @@ int mglParser::Parse(mglGraph *gr, const char *str, long pos)
 //-----------------------------------------------------------------------------
 mglVar *mglParser::AddVar(const char *str)
 {
-	unsigned s = strlen(str)+1;
+	size_t s = strlen(str)+1;
 	wchar_t *wcs = new wchar_t[s];
 	mbstowcs(wcs,str,s);
 	mglVar *v = AddVar(wcs);
@@ -232,7 +232,7 @@ mglVar *mglParser::AddVar(const char *str)
 //-----------------------------------------------------------------------------
 mglVar *mglParser::FindVar(const char *str)
 {
-	unsigned s = strlen(str)+1;
+	size_t s = strlen(str)+1;
 	wchar_t *wcs = new wchar_t[s];
 	mbstowcs(wcs,str,s);
 	mglVar *v = FindVar(wcs);
@@ -242,7 +242,7 @@ mglVar *mglParser::FindVar(const char *str)
 //-----------------------------------------------------------------------------
 mglNum *mglParser::AddNum(const char *str)
 {
-	unsigned s = strlen(str)+1;
+	size_t s = strlen(str)+1;
 	wchar_t *wcs = new wchar_t[s];
 	mbstowcs(wcs,str,s);
 	mglNum *v = AddNum(wcs);
@@ -252,7 +252,7 @@ mglNum *mglParser::AddNum(const char *str)
 //-----------------------------------------------------------------------------
 mglNum *mglParser::FindNum(const char *str)
 {
-	unsigned s = strlen(str)+1;
+	size_t s = strlen(str)+1;
 	wchar_t *wcs = new wchar_t[s];
 	mbstowcs(wcs,str,s);
 	mglNum *v = FindNum(wcs);
@@ -941,10 +941,10 @@ void mglParser::Execute(mglGraph *gr, int n, const wchar_t **text)
 //-----------------------------------------------------------------------------
 void mglParser::Execute(mglGraph *gr, const wchar_t *text)
 {
-	unsigned s = wcslen(text)+1;
+	size_t s = wcslen(text)+1;
 	wchar_t *wcs = new wchar_t[s];
 	const wchar_t **str;
-	register unsigned i, n=1;
+	register size_t i, n=1;
 	for(i=0;i<s;i++)	if(text[i]=='\n')	n++;
 	str = (const wchar_t **)malloc(n*sizeof(wchar_t *));
 	memcpy(wcs, text, s*sizeof(wchar_t));
@@ -972,7 +972,7 @@ void mglParser::Execute(mglGraph *gr, const wchar_t *text)
 //-----------------------------------------------------------------------------
 void mglParser::Execute(mglGraph *gr, const char *text)
 {
-	unsigned s = strlen(text)+1;
+	size_t s = strlen(text)+1;
 	wchar_t *wcs = new wchar_t[s];
 	mbstowcs(wcs,text,s);
 	Execute(gr, wcs);

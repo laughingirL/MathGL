@@ -153,7 +153,7 @@ void mgl_textw_y(HMGL gr, HCDT y, const wchar_t *text, const char *font, const c
 //-----------------------------------------------------------------------------
 void mgl_text_xyz(HMGL gr, HCDT x, HCDT y, HCDT z,const char *text, const char *font, const char *opt)
 {
-	unsigned s = strlen(text)+1;
+	size_t s = strlen(text)+1;
 	wchar_t *wcs = new wchar_t[s];
 	mbstowcs(wcs,text,s);
 	mgl_textw_xyz(gr,x,y,z, wcs, font, opt);
@@ -386,7 +386,7 @@ void mgl_cont_gen(HMGL gr, mreal val, HCDT a, HCDT x, HCDT y, HCDT z, mreal c, i
 //-----------------------------------------------------------------------------
 void mgl_cont_gen(HMGL gr, mreal val, HCDT a, HCDT x, HCDT y, HCDT z, const char *sch)
 {
-	bool text=(sch && strchr(sch,'t'));
+	bool text=(mglchr(sch,'t'));
 	gr->SetPenPal(sch);
 	mgl_cont_gen(gr,val,a,x,y,z,gr->CDef,text,0);
 }
@@ -399,8 +399,8 @@ void mgl_cont_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, c
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Cont",cgid++);
 
-	bool text=(sch && strchr(sch,'t'));
-	bool fixed=(sch && strchr(sch,'_')) || (gr->Min.z==gr->Max.z);
+	bool text=(mglchr(sch,'t'));
+	bool fixed=(mglchr(sch,'_')) || (gr->Min.z==gr->Max.z);
 	long s=gr->AddTexture(sch);
 	gr->SetPenPal(sch);
 
@@ -608,7 +608,7 @@ void mgl_contf_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, 
 	static int cgid=1;	gr->StartGroup("ContF",cgid++);
 	long s=gr->AddTexture(sch);
 
-	bool fixed=(sch && strchr(sch,'_')) || (gr->Min.z==gr->Max.z);
+	bool fixed=(mglchr(sch,'_')) || (gr->Min.z==gr->Max.z);
 	mglData xx, yy, zz(n, m);
 	if(x->GetNx()*x->GetNy()!=m*n || y->GetNx()*y->GetNy()!=m*n)	// make
 	{
@@ -709,7 +709,7 @@ void mgl_contd_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, 
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("ContD",cgid++);
 
-	bool fixed=(sch && strchr(sch,'_')) || (gr->Min.z==gr->Max.z);
+	bool fixed=(mglchr(sch,'_')) || (gr->Min.z==gr->Max.z);
 	if(sch)	for(i=0;sch[i];i++)	if(strchr(MGL_COLORS,sch[i]))	j++;
 	if(j==0)	sch = MGL_DEF_PAL;
 	long s = gr->AddTexture(sch,1);
@@ -828,7 +828,7 @@ void mgl_contv_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, 
 
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("ContV",cgid++);
-	bool fixed=(sch && strchr(sch,'_')) || (gr->Min.z==gr->Max.z);
+	bool fixed=(mglchr(sch,'_')) || (gr->Min.z==gr->Max.z);
 	long s=gr->AddTexture(sch);
 	gr->SetPenPal(sch);
 
@@ -1084,10 +1084,10 @@ void mgl_cont3_xyz_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, HCDT a, const ch
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Cont3",cgid++);
 	char dir='y';
-	if(sch && strchr(sch,'x'))	dir='x';
-	if(sch && strchr(sch,'z'))	dir='z';
+	if(mglchr(sch,'x'))	dir='x';
+	if(mglchr(sch,'z'))	dir='z';
 
-	bool text=(sch && strchr(sch,'t'));
+	bool text=(mglchr(sch,'t'));
 	long ss=gr->AddTexture(sch);
 	gr->SetPenPal(sch);
 
@@ -1173,8 +1173,8 @@ void mgl_dens3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, mre
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Dens3",cgid++);
 	char dir='y';
-	if(sch && strchr(sch,'x'))	dir='x';
-	if(sch && strchr(sch,'z'))	dir='z';
+	if(mglchr(sch,'x'))	dir='x';
+	if(mglchr(sch,'z'))	dir='z';
 
 	_mgl_slice s;
 	const mglData *mx = dynamic_cast<const mglData *>(x);
@@ -1221,8 +1221,8 @@ void mgl_grid3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, mre
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Grid3",cgid++);
 	char dir='y';
-	if(sch && strchr(sch,'x'))	dir='x';
-	if(sch && strchr(sch,'z'))	dir='z';
+	if(mglchr(sch,'x'))	dir='x';
+	if(mglchr(sch,'z'))	dir='z';
 
 	_mgl_slice s;
 	const mglData *mx = dynamic_cast<const mglData *>(x);
@@ -1269,8 +1269,8 @@ void mgl_contf3_xyz_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, HCDT a, const c
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("ContF3",cgid++);
 	char dir='y';
-	if(sch && strchr(sch,'x'))	dir='x';
-	if(sch && strchr(sch,'z'))	dir='z';
+	if(mglchr(sch,'x'))	dir='x';
+	if(mglchr(sch,'z'))	dir='z';
 
 	long ss=gr->AddTexture(sch);
 	_mgl_slice s;
@@ -1498,8 +1498,8 @@ void mgl_axial_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, 
 
 	long s=gr->AddTexture(sch);
 	char dir='y';
-	if(sch && strchr(sch,'x'))	dir = 'x';
-	if(sch && strchr(sch,'z'))	dir = 'z';
+	if(mglchr(sch,'x'))	dir = 'x';
+	if(mglchr(sch,'z'))	dir = 'z';
 
 	mglData xx, yy;
 	if(x->GetNx()*x->GetNy()!=m*n || y->GetNx()*y->GetNy()!=m*n)	// make
@@ -1515,7 +1515,7 @@ void mgl_axial_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, 
 	}
 	// x, y -- have the same size z
 	mreal v0;
-	bool wire = sch && strchr(sch,'#');
+	bool wire = mglchr(sch,'#');
 	for(j=0;j<z->GetNz();j++)	for(i=0;i<v->GetNx();i++)
 	{
 		if(gr->Stop)	return;
@@ -1597,8 +1597,8 @@ void mgl_torus(HMGL gr, HCDT r, HCDT z, const char *sch, const char *opt)
 	long *nn = new long[n];
 	long ss=gr->AddTexture(sch);
 	char dir='y';
-	if(sch && strchr(sch,'x'))	dir = 'x';
-	if(sch && strchr(sch,'z'))	dir = 'z';
+	if(mglchr(sch,'x'))	dir = 'x';
+	if(mglchr(sch,'z'))	dir = 'z';
 
 	mreal c = gr->GetC(ss,gr->Min.c);
 	const mglData *mr = dynamic_cast<const mglData *>(r);
@@ -1615,7 +1615,7 @@ void mgl_torus(HMGL gr, HCDT r, HCDT z, const char *sch, const char *opt)
 			nn[i] = i<n-1 ? i+1 : -1;
 			pp[i] = mglPoint(r->v(i,j), z->v(i,j));
 		}
-		mgl_axial_plot(gr,n,pp,nn,dir,c,sch && strchr(sch,'#'));
+		mgl_axial_plot(gr,n,pp,nn,dir,c,mglchr(sch,'#'));
 	}
 	gr->EndGroup();
 	delete []nn;	delete []pp;

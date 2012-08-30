@@ -253,7 +253,7 @@ void mgl_write_obj(HMGL gr, const char *fname,const char *descr, int use_png)
 	}
 	delete []ng;
 
-	unsigned len=strlen(fname),ntxt=gr->GetTxtNum();
+	size_t len=strlen(fname),ntxt=gr->GetTxtNum();
 	char *tname = new char[len+5];	strcpy(tname,fname);
 	FILE *fp=fopen(fname,"wt");
 	// vertices definition
@@ -383,7 +383,7 @@ void mgl_write_xyz(HMGL gr, const char *fname,const char *descr)
 	fclose(fp);
 
 	// primitive definition
-	unsigned len=strlen(fname);
+	size_t len=strlen(fname);
 	char *tname = new char[len+2];	strcpy(tname,fname);	tname[len+1]=tname[len]=0;
 	tname[len]='l';	fp = fopen(tname,"wt");
 	tname[len]='f';	ff = fopen(tname,"wt");
@@ -446,12 +446,16 @@ void mgl_write_off(HMGL gr, const char *fname,const char *descr, int colored)
 			if(q.type==2)
 			{
 				const mglPnt &p2=gr->GetPnt(q.n2), &p3=gr->GetPnt(q.n3);
-				fprintf(fp,"3 %ld %ld %ld %.2g %.2g %.2g %.2g\n",q.n1,q.n2,q.n3, (p1.r+p2.r+p3.r)/3, (p1.g+p2.g+p3.g)/3, (p1.b+p2.b+p3.b)/3, (p1.a+p2.a+p3.a)/3);
+				if(p1.a>mgl_min_a || p2.a>mgl_min_a || p3.a>mgl_min_a)
+					fprintf(fp,"3 %ld %ld %ld %.2g %.2g %.2g %.2g\n",q.n1,q.n2,q.n3,
+							(p1.r+p2.r+p3.r)/3, (p1.g+p2.g+p3.g)/3, (p1.b+p2.b+p3.b)/3, (p1.a+p2.a+p3.a)/3);
 			}
 			if(q.type==3)
 			{
 				const mglPnt &p2=gr->GetPnt(q.n2), &p3=gr->GetPnt(q.n3), &p4=gr->GetPnt(q.n4);
-				fprintf(fp,"4 %ld %ld %ld %ld %.2g %.2g %.2g %.2g\n",q.n1,q.n2,q.n4,q.n3, (p1.r+p2.r+p3.r+p4.r)/4, (p1.g+p2.g+p3.g+p4.g)/4, (p1.b+p2.b+p3.b+p4.b)/4, (p1.a+p2.a+p3.a+p4.a)/4);
+				if(p1.a>mgl_min_a || p2.a>mgl_min_a || p3.a>mgl_min_a || p4.a>mgl_min_a)
+					fprintf(fp,"4 %ld %ld %ld %ld %.2g %.2g %.2g %.2g\n",q.n1,q.n2,q.n4,q.n3,
+							(p1.r+p2.r+p3.r+p4.r)/4, (p1.g+p2.g+p3.g+p4.g)/4, (p1.b+p2.b+p3.b+p4.b)/4, (p1.a+p2.a+p3.a+p4.a)/4);
 			}
 		}
 	}
@@ -526,7 +530,7 @@ bool mglCanvas::ImportMGLD(const char *fname, bool add)
 	if(!fgets(buf,512,fp))	*buf=0;
 	if(strncmp(buf,"MGLD",4))	{	delete []buf;	fclose(fp);	return true;	}
 	register size_t i;
-	unsigned long n,m,l, npnt=0;
+	size_t n,m,l, npnt=0;
 	sscanf(buf+5,"%lu%lu%lu",&n,&m,&l);
 	if(n<=0 || m<=0 || l<=0)	{	delete []buf;	fclose(fp);	return true;	}
 	if(!add)	{	Clf();	Txt.clear();	}
@@ -558,7 +562,7 @@ bool mglCanvas::ImportMGLD(const char *fname, bool add)
 	{
 		int sm=0;	float a;
 		do {	if(!fgets(buf,512,fp))	*buf=0;	mgl_strtrim(buf);	} while(*buf=='#');
-		register unsigned j,k=0;
+		register size_t j,k=0;
 		for(j=0;buf[j];j++)
 		{
 			if(buf[j]<=' ' && k)	{	sm++;	k=0;	}
@@ -750,7 +754,7 @@ void mglCanvas::WriteXGL(const char *fname,const char *descr)
 	fprintf(fp,"<WORLD>\n<NAME>%s</NAME>\n", (descr && *descr)?descr:fname);
 	fprintf(fp,"<BACKGROUND><BACKCOLOR>%g, %g, %g</BACKCOLOR></BACKGROUND>\n", BDef[0]/255., BDef[1]/255., BDef[2]/255.);
 	fprintf(fp,"<LIGHTING>\n<AMBIENT>%g, %g, %g</AMBIENT>\n",AmbBr, AmbBr, AmbBr);
-	register unsigned long i,j;
+	register size_t i,j;
 	if(get(MGL_ENABLE_LIGHT))	for(i=0;i<10;i++)
 		if(light[i].n && mgl_isnan(light[i].r.x))
 		{
@@ -973,7 +977,7 @@ void mgl_write_x3d(HMGL gr, const char *fname,const char *descr)
 
 	// 2. now find group for primitives
 	long m1=0,m2=0,m;
-	register unsigned long i,j;
+	register size_t i,j;
 	for(i=0;i<gr->Grp.size();i++)	// prepare array of indirect indexing
 	{	m = gr->Grp[i].Id;	if(m<m1) m1=m;	if(m>m2) m2=m;	}
 	long *ng = new long[m2-m1+1];

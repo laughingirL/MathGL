@@ -35,7 +35,7 @@ void mglCanvasGL::Finish(bool fast)
 		int pdef=PDef;
 		mreal ss=pPos, ww=PenWidth;
 		mglPrim p;
-		for(unsigned long i=0;i<Prm.size();i++)
+		for(size_t i=0;i<Prm.size();i++)
 		{
 			p=Prm[i];	PDef=p.n3;	pPos=p.s;	PenWidth=p.w;
 			switch(p.type)
@@ -141,6 +141,14 @@ void mglCanvasGL::LightScale()
 	}
 }
 //-----------------------------------------------------------------------------
+void mglCanvasGL::Zoom(mreal x1, mreal y1, mreal x2, mreal y2)
+{
+	glMatrixMode(GL_PROJECTION);//GL_PROJECTION GL_VIEWPORT GL_MODELVIEW
+	glLoadIdentity();
+	glScaled(x2-x1,y2-y1,1);
+	glTranslated((x1+x2-1)/2,(y1+y2-1)/2,0);
+}
+//-----------------------------------------------------------------------------
 void mglCanvasGL::View(mreal TetX,mreal TetY,mreal TetZ)
 {
 	glMatrixMode(GL_PROJECTION);//GL_PROJECTION GL_VIEWPORT GL_MODELVIEW
@@ -175,8 +183,8 @@ void mglCanvasGL::Clf(mglColor Back)
 
 	glMatrixMode(GL_MODELVIEW);//GL_MODELVIEW GL_VIEWPORT GL_PROJECTION
 	glLoadIdentity();
-	glScaled(2,2,1.5);
-	glTranslated(-0.5,-0.5,-0.5);
+//	glScaled(1.5,1.5,1.5);
+//	glTranslated(-0.5,-0.5,-0.5);
 }
 //-----------------------------------------------------------------------------
 void mglCanvasGL::set_pen(unsigned style,mreal width)
@@ -242,7 +250,7 @@ void mglCanvasGL::quad_draw(long k1, long k2, long k3, long k4, mglDrawReg *)
 void mglCanvasGL::line_draw(long k1, long k2, mglDrawReg *)
 {
 	if(k1<0 || k2<0 || PDef==0)	return;
-/*	unsigned long pdef = PDef*0x10001;
+/*	unsigned pdef = PDef*0x10001;
 	pdef = pdef << (int(100*pPos+0.5)%16);
 	set_pen(pdef&0xffff,PenWidth);*/
 	set_pen(PDef,PenWidth);

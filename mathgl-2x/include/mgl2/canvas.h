@@ -125,7 +125,7 @@ using mglBase::Light;
 	/// Zoom in or zoom out (if Zoom(0, 0, 1, 1)) a part of picture
 	virtual void Zoom(mreal x1, mreal y1, mreal x2, mreal y2);
 	/// Restore image after View() and Zoom()
-	virtual void Restore()	{	Bp.clear();	Bp.pf=0;	}
+	inline void Restore()	{	Zoom(0,0,1,1);	}
 
 	/// Clear transformation matrix.
 	inline void Identity(bool rel=false)	{	InPlot(0,1,0,1,rel);	}
@@ -374,14 +374,14 @@ protected:
 
 	// functions for multi-threading
 	void PreparePrim(bool fast);
-	void pxl_combine(unsigned long id, unsigned long n, const void *);
-	void pxl_memcpy(unsigned long id, unsigned long n, const void *);
-	void pxl_backgr(unsigned long id, unsigned long n, const void *);
-	void pxl_primdr(unsigned long id, unsigned long n, const void *);
-	void pxl_transform(unsigned long id, unsigned long n, const void *);
-	void pxl_setz(unsigned long id, unsigned long n, const void *);
-	void pxl_setz_adv(unsigned long id, unsigned long n, const void *);
-	void pxl_other(unsigned long id, unsigned long n, const void *p);
+	void pxl_combine(size_t id, size_t n, const void *);
+	void pxl_memcpy(size_t id, size_t n, const void *);
+	void pxl_backgr(size_t id, size_t n, const void *);
+	void pxl_primdr(size_t id, size_t n, const void *);
+	void pxl_transform(size_t id, size_t n, const void *);
+	void pxl_setz(size_t id, size_t n, const void *);
+	void pxl_setz_adv(size_t id, size_t n, const void *);
+	void pxl_other(size_t id, size_t n, const void *p);
 	/// Put drawing from other mglCanvas (for multithreading, like subplots)
 	void PutDrawReg(mglDrawReg *d, const mglCanvas *gr);
 	
@@ -405,7 +405,7 @@ private:
 	/// Transform mreal color and alpha to bits format
 	unsigned char* col2int(const mglPnt &p, unsigned char *r);
 	/// Combine colors in 2 plane.
-	void combine(unsigned char *c1,unsigned char *c2);
+	void combine(unsigned char *c1, const unsigned char *c2);
 	/// Fast drawing of line between 2 points
 	void fast_draw(long p1, long p2, mglDrawReg *d);
 
@@ -424,12 +424,12 @@ private:
 struct mglThreadG
 {
 	mglCanvas *gr;		// grapher
-	void (mglCanvas::*f)(unsigned long i, unsigned long n, const void *);
+	void (mglCanvas::*f)(size_t i, size_t n, const void *);
 	unsigned id;		// thread id
-	unsigned long n;	// total number of iteration
+	size_t n;	// total number of iteration
 	const void *p;		// external parameter
 };
 /// Start several thread for the task
-void mglStartThread(void (mglCanvas::*func)(unsigned long i, unsigned long n), mglCanvas *gr, unsigned long n);
+void mglStartThread(void (mglCanvas::*func)(size_t i, size_t n), mglCanvas *gr, size_t n);
 //-----------------------------------------------------------------------------
 #endif

@@ -30,7 +30,7 @@ char *mgl_strdup(const char *s)
 void mgl_strtrim(char *str)
 {
 	char *c = mgl_strdup(str);
-	unsigned long n=strlen(str);
+	size_t n=strlen(str);
 	long k;
 	for(k=0;k<long(strlen(str));k++)	// óäàëÿåì íà÷àëüíûå ïðîáåëû
 		if(str[k]>' ')	break;
@@ -685,14 +685,14 @@ long mglBase::AddTexture(const char *cols, int smooth)
 	if(t.n==0)	return smooth<0 ? 0:1;
 	if(smooth<0)	CurrPal=0;
 	// check if already exist
-	for(unsigned long i=0;i<Txt.size();i++)	if(t.IsSame(Txt[i]))	return i;
+	for(size_t i=0;i<Txt.size();i++)	if(t.IsSame(Txt[i]))	return i;
 	// create new one
 	MGL_PUSH(Txt,t,mutexTxt);	return Txt.size()-1;
 }
 //-----------------------------------------------------------------------------
 mreal mglBase::AddTexture(mglColor c)
 {
-	register unsigned long i,j;
+	register size_t i,j;
 	if(!c.Valid())	return -1;
 	// first lets try an existed one
 	for(i=0;i<Txt.size();i++)	for(j=0;j<255;j++)
@@ -730,6 +730,21 @@ mreal mglBase::NextColor(long &id)
 	return CDef;
 }
 //-----------------------------------------------------------------------------
+const char *mglchr(const char *str, char ch)
+{
+	if(!str || !str[0])	return NULL;
+	register char c;
+	register size_t l=strlen(str),i,k=0;
+	for(i=0;i<l;i++)
+	{
+		c = str[i];
+		if(c=='{')	k++;
+		if(c=='}')	k--;
+		if(c==ch && k==0)	return str+i;
+	}
+	return NULL;
+}
+//-----------------------------------------------------------------------------
 char mglBase::SetPenPal(const char *p, long *Id)
 {
 	char mk=0;
@@ -745,11 +760,11 @@ char mglBase::SetPenPal(const char *p, long *Id)
 		const char *wdh = "123456789";
 		const char *arr = "AKDTVISO_";
 		long m=0;
-		for(unsigned i=0;i<strlen(p);i++)
+		for(size_t i=0;i<strlen(p);i++)
 		{
 			if(p[i]=='{')	m++;	if(p[i]=='}')	m--;
 			if(m>0)	continue;
-			if(strchr(stl,p[i]))
+			if(mglchr(stl,p[i]))
 			{
 				switch(p[i])
 				{
@@ -764,17 +779,17 @@ char mglBase::SetPenPal(const char *p, long *Id)
 				}
 				last_style[4]=p[i];
 			}
-			else if(strchr(mrk,p[i]))	mk = p[i];
-			else if(strchr(wdh,p[i]))
+			else if(mglchr(mrk,p[i]))	mk = p[i];
+			else if(mglchr(wdh,p[i]))
 			{	last_style[5] = p[i];	PenWidth = p[i]-'0';	}
-			else if(strchr(arr,p[i]))
+			else if(mglchr(arr,p[i]))
 			{
 				if(!Arrow2)	Arrow2 = p[i];
 				else	Arrow1 = p[i];
 			}
 		}
 		if(Arrow1=='_')	Arrow1=0;	if(Arrow2=='_')	Arrow2=0;
-		if(strchr(p,'#'))
+		if(mglchr(p,'#'))
 		{
 			if(mk=='.')	mk = 'C';
 			if(mk=='+')	mk = 'P';
@@ -932,7 +947,7 @@ void mglBase::AddLegend(const wchar_t *text,const char *style)
 void mglBase::AddLegend(const char *str,const char *style)
 {
 	if(!str)	return;
-	unsigned s = strlen(str)+1;
+	size_t s = strlen(str)+1;
 	wchar_t *wcs = new wchar_t[s];
 	mbstowcs(wcs,str,s);
 	AddLegend(wcs, style);

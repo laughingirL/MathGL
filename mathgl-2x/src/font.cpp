@@ -70,7 +70,7 @@ float mglFont::Puts(const char *str,const char *how,float col) const
 {
 	int font=0, align=1;
 	char cc=mglGetStyle(how,&font,&align);
-	unsigned size = strlen(str)+1;
+	size_t size = strlen(str)+1;
 	wchar_t *wcs = new wchar_t[size];
 	mbstowcs(wcs,str,size);
 	float w = Puts(wcs,font,align,cc?-cc:col);
@@ -82,7 +82,7 @@ float mglFont::Width(const char *str,const char *how) const
 {
 	int font=0;
 	mglGetStyle(how,&font);
-	unsigned size = strlen(str)+1;
+	size_t size = strlen(str)+1;
 	wchar_t *wcs = new wchar_t[size];
 	mbstowcs(wcs,str,size);
 	float w = Width(wcs,font);
@@ -157,7 +157,7 @@ float mglFont::Width(const wchar_t *str,int font) const
 {
 	if(numg==0 || !str || *str==0)	return 0;
 	float ww=0,w=0;
-	unsigned size = wcslen(str)+1,i;
+	size_t size = wcslen(str)+1,i;
 	if(parse)
 	{
 		unsigned *wcs = new unsigned[size], *buf=wcs;
@@ -285,7 +285,7 @@ unsigned mglFont::Parse(const wchar_t *s) const
 //-----------------------------------------------------------------------------
 void mglFont::Convert(const wchar_t *str, unsigned *res) const
 {
-	register unsigned r,i,j,k,i0;
+	register size_t r,i,j,k,i0;
 	wchar_t s[128]=L"", ch;		// TeX command and current char
 	for(i=j=0;str[i];i++)
 	{

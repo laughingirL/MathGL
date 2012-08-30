@@ -235,8 +235,8 @@ mglPoint mglCanvas::CalcScr(mglPoint p) const
 //mglCanvas *mgl_tmp_gr;
 bool operator<(const mglPrim &a, const mglPrim &b)
 {
-	if( a.z < b.z-0.5 )	return true;
-	if( a.z > b.z+0.5 )	return false;
+	if( a.z < b.z )	return true;
+	if( a.z > b.z )	return false;
 	if( a.w < b.w )		return true;
 	if( a.w > b.w )		return false;
 	if( a.n3 < b.n3 )	return true;
@@ -251,8 +251,8 @@ bool operator<(const mglPrim &a, const mglPrim &b)
 //-----------------------------------------------------------------------------
 bool operator>(const mglPrim &a, const mglPrim &b)
 {
-	if( a.z < b.z-0.5 )	return false;
-	if( a.z > b.z+0.5 )	return true;
+	if( a.z < b.z )	return false;
+	if( a.z > b.z )	return true;
 	if( a.w < b.w )		return false;
 	if( a.w > b.w )		return true;
 	if( a.n3 < b.n3 )	return false;
@@ -262,7 +262,7 @@ bool operator>(const mglPrim &a, const mglPrim &b)
 //-----------------------------------------------------------------------------
 void *mgl_canvas_thr(void *par)
 {	mglThreadG *t=(mglThreadG *)par;	(t->gr->*(t->f))(t->id, t->n, t->p);	return NULL;	}
-void mglStartThread(void (mglCanvas::*func)(unsigned long i, unsigned long n, const void *p), mglCanvas *gr, unsigned long n, const void *p=NULL)
+void mglStartThread(void (mglCanvas::*func)(size_t i, size_t n, const void *p), mglCanvas *gr, size_t n, const void *p=NULL)
 {
 	if(!func || !gr)	return;
 #if MGL_HAVE_PTHREAD
@@ -283,10 +283,10 @@ void mglStartThread(void (mglCanvas::*func)(unsigned long i, unsigned long n, co
 	{	mglNumThr = 1;	(gr->*func)(0,n,p);	}
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::pxl_primdr(unsigned long id, unsigned long n, const void *)
+void mglCanvas::pxl_primdr(size_t id, size_t n, const void *)
 {
 	int nx=1,ny=1,pdef=PDef;
-	register unsigned long i;
+	register size_t i;
 	if(id<unsigned(mglNumThr))
 	{
 		for(i=1;i<=unsigned(sqrt(double(mglNumThr))+0.5);i++)
@@ -313,29 +313,29 @@ void mglCanvas::pxl_primdr(unsigned long id, unsigned long n, const void *)
 	PDef=pdef;	pPos=ss;	PenWidth=ww;	ObjId=-1;
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::pxl_combine(unsigned long id, unsigned long n, const void *)
+void mglCanvas::pxl_combine(size_t id, size_t n, const void *)
 {
 	unsigned char c[4],*cc;
-	for(unsigned long i=id;i<n;i+=mglNumThr)
+	for(size_t i=id;i<n;i+=mglNumThr)
 	{	cc = C+12*i;		memcpy(c,BDef,4);
 		combine(c,cc+8);	combine(c,cc+4);
 		combine(c,cc);		memcpy(G4+4*i,c,4);	}
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::pxl_memcpy(unsigned long id, unsigned long n, const void *)
-{	for(unsigned long i=id;i<n;i+=mglNumThr)	memcpy(G4+4*i,C+12*i,4);	}
+void mglCanvas::pxl_memcpy(size_t id, size_t n, const void *)
+{	for(size_t i=id;i<n;i+=mglNumThr)	memcpy(G4+4*i,C+12*i,4);	}
 //-----------------------------------------------------------------------------
-void mglCanvas::pxl_backgr(unsigned long id, unsigned long n, const void *)
+void mglCanvas::pxl_backgr(size_t id, size_t n, const void *)
 {
 	unsigned char c[4];
-	for(unsigned long i=id;i<n;i+=mglNumThr)
+	for(size_t i=id;i<n;i+=mglNumThr)
 	{	memcpy(c,BDef,4);	combine(c,G4+4*i);	memcpy(G+3*i,c,3);	}
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::pxl_transform(unsigned long id, unsigned long n, const void *)
+void mglCanvas::pxl_transform(size_t id, size_t n, const void *)
 {
 	register float x,y,z;
-	for(unsigned long i=id;i<n;i+=mglNumThr)
+	for(size_t i=id;i<n;i+=mglNumThr)
 	{
 		mglPnt &p=Pnt[i];
 		x = p.xx-Width/2.;	y = p.yy-Height/2.;	z = p.zz-Depth/2.;
@@ -351,9 +351,9 @@ void mglCanvas::pxl_transform(unsigned long id, unsigned long n, const void *)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::pxl_setz_adv(unsigned long id, unsigned long n, const void *)
+void mglCanvas::pxl_setz_adv(size_t id, size_t n, const void *)
 {
-	for(unsigned long i=id;i<n;i+=mglNumThr)
+	for(size_t i=id;i<n;i+=mglNumThr)
 	{
 		mglPrim &q=Prm[i];	q.z = Pnt[q.n1].z;
 		if(q.type==1)	q.z = (q.z + Pnt[q.n2].z)/2;
@@ -362,9 +362,9 @@ void mglCanvas::pxl_setz_adv(unsigned long id, unsigned long n, const void *)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::pxl_setz(unsigned long id, unsigned long n, const void *)
+void mglCanvas::pxl_setz(size_t id, size_t n, const void *)
 {
-	for(unsigned long i=id;i<n;i+=mglNumThr)
+	for(size_t i=id;i<n;i+=mglNumThr)
 	{	mglPrim &q=Prm[i];	q.z = Pnt[q.n1].z;	}
 }
 //-----------------------------------------------------------------------------
@@ -388,7 +388,7 @@ void mglCanvas::Finish(bool fast)
 //		mglStartThread(&mglCanvas::pxl_primdr,this,Prm.size());	// TODO: check conflicts in pthreads
 		pxl_primdr(-1,Prm.size(),NULL);
 	}
-	unsigned long n=Width*Height;
+	size_t n=Width*Height;
 	BDef[3] = (Flag&3)!=2 ? 0:255;
 	if(Quality&2)	mglStartThread(&mglCanvas::pxl_combine,this,n);
 	else	mglStartThread(&mglCanvas::pxl_memcpy,this,n);
@@ -422,9 +422,9 @@ void mglCanvas::Clf(mglColor Back)
 	ClfZB();
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::pxl_other(unsigned long id, unsigned long n, const void *p)
+void mglCanvas::pxl_other(size_t id, size_t n, const void *p)
 {
-	unsigned long i,j,k;
+	size_t i,j,k;
 	const mglCanvas *gr = (const mglCanvas *)p;
 	if(!gr)	return;
 	for(k=id;k<n;k+=mglNumThr)
@@ -600,7 +600,7 @@ unsigned char* mglCanvas::col2int(const mglPnt &p,unsigned char *r)
 }
 //-----------------------------------------------------------------------------
 /// color mixing: color c1 is under color c2 !!!
-void mglCanvas::combine(unsigned char *c1,unsigned char *c2)
+void mglCanvas::combine(unsigned char *c1, const unsigned char *c2)
 {
 	if(!c2[3])	return;
 	register unsigned int a1=c1[3], a2=c2[3],b1=255-a2;
@@ -889,7 +889,7 @@ void mglCanvas::mark_draw(long k, char type, mreal size, mglDrawReg *d)
 {
 	const mglPnt &q=Pnt[k];
 	unsigned char cs[4];	col2int(q,cs);	cs[3] = size>0 ? 255 : 255*q.t;
-	unsigned long pos = Pnt.size(), qos=pos;
+	size_t pos = Pnt.size(), qos=pos;
 	mglPnt p=q;
 	mreal ss=fabs(size)*0.35*font_factor;
 	register long i,j;
@@ -1010,7 +1010,7 @@ void mglCanvas::mark_draw(long k, char type, mreal size, mglDrawReg *d)
 			for(j=long(-ss);j<=long(ss);j++)	for(i=long(-ss);i<=long(ss);i++)
 			{
 				register long x=long(q.x)+i, y=long(q.y)+j;
-				if(i*i+j*j>=ss*ss || x<d->x1 || x>d->x2 || y<d->y1 || y>d->y2)	continue;
+				if(i*i+j*j>=ss*ss || !d || x<d->x1 || x>d->x2 || y<d->y1 || y>d->y2)	continue;
 				pnt_plot(x,y,q.z+1,cs);
 			}
 		case 'o':

@@ -169,16 +169,26 @@ mglColor mglCanvas::GetColor(const mglPrim &p)
 	col2int(Pnt[p.type==1?p.n2:p.n1],res);
 	if(p.type==2 || p.type==3)
 	{
-		col2int(Pnt[p.n2],buf);			res[0]=(1L*res[0]+buf[0])/2;
+		col2int(Pnt[p.n2],buf);		res[0]=(1L*res[0]+buf[0])/2;
 		res[1]=(1L*res[1]+buf[1])/2;	res[2]=(1L*res[2]+buf[2])/2;
-		col2int(Pnt[p.n3],buf);			res[0]=(2L*res[0]+buf[0])/3;
+		col2int(Pnt[p.n3],buf);		res[0]=(2L*res[0]+buf[0])/3;
 		res[1]=(2L*res[1]+buf[1])/3;	res[2]=(2L*res[2]+buf[2])/3;
 	}
 	if(p.type==3)
 	{
-		col2int(Pnt[p.n4],buf);			res[0]=(3L*res[0]+buf[0])/4;
+		col2int(Pnt[p.n4],buf);		res[0]=(3L*res[0]+buf[0])/4;
 		res[1]=(3L*res[1]+buf[1])/4;	res[2]=(3L*res[2]+buf[2])/4;
 	}
+
+	// add fog into resulting color
+	float zf = FogDist*(p.z/Depth-0.5-FogDz);
+	if(zf<0)	// add fog
+	{
+		int d = int(255.f-255.f*exp(5.f*zf));
+		unsigned char cb[4] = {BDef[0], BDef[1], BDef[2], d};
+		if(d<255)	combine(res,cb);
+	}
+
 	return mglColor(res[0]/255.,res[1]/255.,res[2]/255.,res[3]/255.);
 }
 //-----------------------------------------------------------------------------

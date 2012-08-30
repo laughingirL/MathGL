@@ -36,7 +36,7 @@ extern "C" {
 #endif
 /***************************************************************************/
 double mgl_gauss_rnd();
-void mgl_fft_freq(double *freq,unsigned nn);
+void mgl_fft_freq(double *freq,size_t nn);
 /***************************************************************************/
 /** Remove double spaces from the string */
 void mgl_strcls(char *str);

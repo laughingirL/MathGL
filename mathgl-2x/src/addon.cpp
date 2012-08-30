@@ -30,7 +30,7 @@
 //---------------------------------------------------------------------------
 void mgl_strcls(char *str)
 {
-	unsigned len = strlen(str),i,n;
+	size_t len = strlen(str),i,n;
 	char *tmp = new char[len];
 	for(i=0;i<len;i++)
 	{
@@ -225,9 +225,9 @@ double mgl_gauss_rnd()
 	return v1!=0 ? sqrt(-2.*log(v1))*cos(2*M_PI*v2) : 0;
 }
 //----------------------------------------------------------------------------
-void mgl_fft_freq(double *freq,unsigned nn)
+void mgl_fft_freq(double *freq, size_t nn)
 {
-	for(unsigned i=0;i<=nn/2;i++)
+	for(size_t i=0;i<=nn/2;i++)
 	{
 		freq[i] = i;
 		if(i>0) freq[nn-i] = -(double)(i);

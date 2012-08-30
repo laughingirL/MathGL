@@ -740,7 +740,7 @@ void mglCanvas::Title(const char *title,const char *stl,mreal size)
 	wchar_t *wcs = 0;
 	if(title)
 	{
-		unsigned s = strlen(title)+1;
+		size_t s = strlen(title)+1;
 		wcs = new wchar_t[s];
 		mbstowcs(wcs,title,s);
 	}
@@ -752,7 +752,7 @@ void mglCanvas::Title(const wchar_t *title,const char *stl,mreal size)
 {
 	mreal s = size>0 ? size/FontSize:-size, h=TextHeight(stl,size)*s/4;
 	if(h>=inH)	{	SetWarn(mglWarnSpc,"Title");	return;	}
-	bool box=(stl && strchr(stl,'#'));
+	bool box=mglchr(stl,'#');
 	int align;	mglGetStyle(stl,0,&align);	align = align&3;
 	mreal x=B1.x-inW/2, y=B1.y+inH/2-h;
 	mglPoint p(B1.x + inW/2.1*(align-1),y,Depth),q(NAN);

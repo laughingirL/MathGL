@@ -46,30 +46,13 @@ void smgl_combined(mglGraph *gr);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	mglData ex,ey,ez;	mgls_prepare3v(&ex,&ey,&ez);
-	if(!mini)	gr->Title("Vect3 sample");
-	gr->Rotate(50,60);	gr->SetOrigin(0,0,0);	gr->Axis("_xyz");	gr->Box();
-	gr->Vect3(ex,ey,ez,"x");	gr->Vect3(ex,ey,ez);	gr->Vect3(ex,ey,ez,"z");
-	return;
-
-	mglPoint p;
-	gr->Ball(p,'r');
-	gr->Puts(p,"B",":C",-1);
-	gr->Puts(p,"B","r:tC",-2);
-	gr->Puts(p,"B","m:tC",-3);
-	gr->Puts(p,"B","c:TC",-3);
-	gr->Puts(p,"B","g:TC",-1);
-	gr->Puts(p,"B","b:TC",-2);
-	return;
-
-	gr->Axis("Uxyz");
-	return;
-
 	mglParse par;
 	par.AllowSetSize(true);
 	setlocale(LC_CTYPE, "");
-	FILE *fp=fopen("/home/balakin/tmp/test_main.mgl","r");
+	FILE *fp=fopen("/home/balakin/download/data3.mgl","r");
 	par.Execute(gr,fp,true);
+	gr->Zoom(0.4,0.4,0.6,0.6);
+	gr->GetRGB();
 	fclose(fp);
 }
 //-----------------------------------------------------------------------------
@@ -146,7 +129,7 @@ const char *mmgl_schemes="call 'sch' 0 'kw'\ncall 'sch' 1 'wk'\ncall 'sch' 2 'kH
 "call 'sch' 4 'kRryw'\ncall 'sch' 5 'kGgew'\ncall 'sch' 6 'BbwrR'\ncall 'sch' 7 'BbwgG'\n"
 "call 'sch' 8 'GgwmM'\ncall 'sch' 9 'UuwqR'\ncall 'sch' 10 'QqwcC'\ncall 'sch' 11 'CcwyY'\n"
 "call 'sch' 12 'bcwyr'\ncall 'sch' 13 'bwr'\ncall 'sch' 13 'BbcyrR'\ncall 'sch' 15 'UbcyqR'\n"
-"call 'sch' 16 'BbcwyrR'\ncall 'sch' 17 'bcyr'\ncall 'sch' 18 'BbcyrR|'\ncall 'sch' 19 'bgr'\n"
+"call 'sch' 16 'BbcwyrR'\ncall 'sch' 17 'bgr'\ncall 'sch' 18 'BbcyrR|'\ncall 'sch' 19 'b\\{g,0.3\\}r'\n"
 "stop\nfunc 'sch' 2\nsubplot 2 10 $1 0.2 0:fsurf 'x' '$2':text -1.4 -0.3 '$2' ':C' -8\nreturn\n";
 void smgl_schemes(mglGraph *gr)	// Color table
 {
@@ -168,9 +151,9 @@ void smgl_schemes(mglGraph *gr)	// Color table
 	gr->SubPlot(2,10,14,NULL,0.2);	gr->Dens(a,"BbcyrR");	gr->Puts(0.07, 0.22, "BbcyrR", "A");
 	gr->SubPlot(2,10,15,NULL,0.2);	gr->Dens(a,"UbcyqR");	gr->Puts(0.57, 0.22, "UbcyqR", "A");
 	gr->SubPlot(2,10,16,NULL,0.2);	gr->Dens(a,"BbcwyrR");	gr->Puts(0.07, 0.12, "BbcwyrR", "A");
-	gr->SubPlot(2,10,17,NULL,0.2);	gr->Dens(a,"bcyr");		gr->Puts(0.57, 0.12, "bcyr", "A");
+	gr->SubPlot(2,10,17,NULL,0.2);	gr->Dens(a,"bgr");		gr->Puts(0.57, 0.12, "bgr", "A");
 	gr->SubPlot(2,10,18,NULL,0.2);	gr->Dens(a,"BbcyrR|");	gr->Puts(0.07, 0.02, "BbcyrR|", "A");
-	gr->SubPlot(2,10,19,NULL,0.2);	gr->Dens(a,"bgr");		gr->Puts(0.57, 0.02, "bgr", "A");
+	gr->SubPlot(2,10,19,NULL,0.2);	gr->Dens(a,"b{g,0.3}r");		gr->Puts(0.57, 0.02, "b\\{g,0.3\\}r", "A");
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_curvcoor="origin -1 1 -1\nsubplot 2 2 0:title 'Cartesian':rotate 50 60:fplot '2*t-1' '0.5' '0':axis:grid\n"
@@ -1664,11 +1647,17 @@ void smgl_colorbar(mglGraph *gr)
 	mglData a,v;	mgls_prepare2d(&a,0,&v);
 	gr->Box();	gr->ContD(v,a);
 	gr->Colorbar(v,"<");	gr->Colorbar(v,">");	gr->Colorbar(v,"_");	gr->Colorbar(v,"^");
-	gr->SubPlot(2,2,3);	gr->Title("log-scale");
+	
+	gr->SubPlot(2,2,3);	gr->Title(" ");
+	gr->Puts(mglPoint(-0.5,1.55),"Color positions",":C",-2);
+	gr->Colorbar("bwr>",0.25,0);	gr->Puts(mglPoint(-0.9,1.2),"Default");
+	gr->Colorbar("b{w,0.3}r>",0.5,0);	gr->Puts(mglPoint(-0.1,1.2),"Manual");
+	
+	gr->Puts(mglPoint(1,1.55),"log-scale",":C",-2);
 	gr->SetRange('c',0.01,1e3);
-	gr->Colorbar(">",0.5,0);	gr->Puts(mglPoint(0,1.2),"Normal scale");
+	gr->Colorbar(">",0.75,0);	gr->Puts(mglPoint(0.65,1.2),"Normal scale");
 	gr->SetFunc("","","","lg(c)");
-	gr->Colorbar(">");		gr->Puts(mglPoint(1.3,1.2),"Log scale");
+	gr->Colorbar(">");		gr->Puts(mglPoint(1.35,1.2),"Log scale");
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_legend="addlegend 'sin(\\pi {x^2})' 'b':addlegend 'sin(\\pi x)' 'g*'\n"

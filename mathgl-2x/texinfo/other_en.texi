@@ -69,7 +69,7 @@ I use global setting for determining the number of points in circle approximatio
 @end verbatim
 Let try to determine plot specific flags. MathGL functions expect that most of flags will be sent in string. In our case it is symbol @samp{@@} which set to draw filled circle instead of border only (last will be default). Note, you have to handle @code{NULL} as string pointer.
 @verbatim
-  bool fill = stl && strchr(stl,'@');
+  bool fill = mglchr(stl,'@');
 @end verbatim
 Now, time for coloring. I use palette mechanism because circle have few colors: one for filling and another for border. @code{SetPenPal()} function parse input string and write resulting texture index in @var{pal}. Function return the character for marker, which can be specified in string @var{str}. Marker will be plotted at the center of circle. I'll show on next sample how you can use color schemes (smooth colors) too.
 @verbatim
@@ -159,7 +159,7 @@ In this case let allow negative radius too. Formally it is not the problem for p
   static int cgid=1;  gr->StartGroup("CircleCS",cgid++);
   gr->SaveState(opt);
   const int n = gr->MeshNum>1?gr->MeshNum : 41;
-  bool fill = stl && strchr(stl,'@');
+  bool fill = mglchr(stl,'@');
 @end verbatim
 Here is main difference. We need to create texture for color scheme specified by user
 @verbatim
@@ -249,7 +249,7 @@ void circle(HMGL gr, mreal x, mreal y, mreal z, mreal r, const char *stl, const 
   static int cgid=1;  gr->StartGroup("Circle",cgid++);
   gr->SaveState(opt);
   const int n = gr->MeshNum>1?gr->MeshNum : 41;
-  bool fill = stl && strchr(stl,'@');
+  bool fill = mglchr(stl,'@');
   long pal=0;
   char mk=gr->SetPenPal(stl,&pal);
   mreal c=gr->NextColor(pal), d;
@@ -279,7 +279,7 @@ void circle_cs(HMGL gr, mreal x, mreal y, mreal z, mreal r, const char *stl, con
   static int cgid=1;  gr->StartGroup("CircleCS",cgid++);
   gr->SaveState(opt);
   const int n = gr->MeshNum>1?gr->MeshNum : 41;
-  bool fill = stl && strchr(stl,'@');
+  bool fill = mglchr(stl,'@');
   long ss = gr->AddTexture(stl);
   const char *pen=0;
   if(stl) pen = strchr(stl,':');
