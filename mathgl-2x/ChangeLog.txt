@@ -1,4 +1,4 @@
-2.0.4 Released ?? September 2012
+2.0.4 Released ?? October 2012
 
 * Color can be specified as its RGB[A] values. i.e. like "{xFFFFFF}" or "{xFFFFFFFF}".
 * Color in color scheme  may have position in range [0,1]. Format is {CN,pos} or {xNNNNNN,pos}.

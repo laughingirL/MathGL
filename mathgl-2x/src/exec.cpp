@@ -1328,17 +1328,17 @@ void mglc_line(wchar_t out[1024], long n, mglArg *a, int [10], const char *)
 int mgls_legend(mglGraph *gr, long , mglArg *a, int k[10], const char *)
 {
 	if(k[0]==3 && k[1]==3)
-		gr->Legend(a[0].v, a[1].v, k[2]==2?a[2].s.c_str():"rL", k[3]==3?a[3].v:-1, k[4]==3?a[4].v:0.1);
+		gr->Legend(a[0].v, a[1].v, k[2]==2?a[2].s.c_str():"#", k[3]==3?a[3].v:-1, k[4]==3?a[4].v:0.1);
 	else
-		gr->Legend(k[0]==3?iint(a[0].v):3, k[1]==2?a[1].s.c_str():"rL", k[2]==3?a[2].v:-1, k[3]==3?a[3].v:0.1);
+		gr->Legend(k[0]==3?iint(a[0].v):3, k[1]==2?a[1].s.c_str():"#", k[2]==3?a[2].v:-1, k[3]==3?a[3].v:0.1);
 	return 0;
 }
 void mglc_legend(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 {
 	if(k[0]==3 && k[1]==3)
-		mglprintf(out,1024,L"gr->Legend(%g, %g, \"%s\", %g, %g);", a[0].v, a[1].v, k[2]==2?a[2].s.c_str():"rL", k[3]==3?a[3].v:-1, k[4]==3?a[4].v:0.1);
+		mglprintf(out,1024,L"gr->Legend(%g, %g, \"%s\", %g, %g);", a[0].v, a[1].v, k[2]==2?a[2].s.c_str():"#", k[3]==3?a[3].v:-1, k[4]==3?a[4].v:0.1);
 	else
-		mglprintf(out,1024,L"gr->Legend(%d, \"%s\", %g, %g);", k[0]==3?iint(a[0].v):3, k[1]==2?a[1].s.c_str():"rL", k[2]==3?a[2].v:-1, k[4]==3?a[4].v:0.1);
+		mglprintf(out,1024,L"gr->Legend(%d, \"%s\", %g, %g);", k[0]==3?iint(a[0].v):3, k[1]==2?a[1].s.c_str():"#", k[2]==3?a[2].v:-1, k[4]==3?a[4].v:0.1);
 }
 //-----------------------------------------------------------------------------
 int mgls_barwidth(mglGraph *gr, long , mglArg *a, int k[10], const char *)
@@ -3559,6 +3559,7 @@ mglCommand mgls_base_cmd[] = {
 	{"candle","Draw candlestick chart","candle candle Vdat1 ['fmt']|Vdat1 Vdat2 ['fmt']|Vdat1 Ydat1 Ydat2 ['fmt']||Vdat1 Vdat2 Ydat1 Ydat2 ['fmt']|Xdat Vdat1 Vdat2 Ydat1 Ydat2 ['fmt']", mgls_candle, mglc_candle,0},
 	{"chart","Draw chart","chart Dat ['fmt']", mgls_chart, mglc_chart,0},
 	{"chdir","Change current directory","chdir 'dir'", mgls_chdir, mglc_chdir,2},
+	{"circle","Draw circle","circle x y r ['fmt']|x y z r ['fmt']", mgls_circle, mglc_circle,1},
 	{"clearlegend","Clear legend antries","clearlegend", mgls_clearlegend, mglc_clearlegend,2},
 	{"clf","Clear picture","clf", mgls_clf, mglc_clf,1},
 	{"cloud","Draw cloud","cloud Adat ['fmt']|Xdat Ydat Zdat Adat ['fmt']", mgls_cloud, mglc_cloud,0},
@@ -3608,6 +3609,7 @@ mglCommand mgls_base_cmd[] = {
 	{"divto","Divide by data or number","divto Var Dat|Var num", mgls_divto, mglc_divto,3},
 	{"dots","Draw dots for arbitrary data points","dots Xdat Ydat Zdat ['fmt']", mgls_dots, mglc_dots,0},
 	{"drop","Draw drop","drop x0 y0 dx dy r ['col' sh asp]|x0 y0 z0 dx dy dz r ['col' sh asp]", mgls_drop, mglc_drop,0},
+	{"ellipse","Draw ellipse","ellipse x1 y1 x2 y2 r ['fmt']|x1 y1 z1 x2 y2 z2 r ['fmt']", mgls_ellipse, mglc_ellipse,1},
 	{"else","Execute if condition is false","else", 0, 0, 6},
 	{"elseif","Conditional operator","elseif val|Dat ['cond']", 0, 0, 6},
 	{"endif","Finish if/else block","endif", 0, 0, 6},
@@ -3695,6 +3697,7 @@ mglCommand mgls_base_cmd[] = {
 	{"region","Draw filled region between 2 curves","region Ydat1 Ydat2 ['fmt' inside]|Xdat Ydat1 Ydat2 ['fmt' inside]", mgls_region, mglc_region,0},
 	{"resize","Resize data","resize Res Dat mx [my mz]", mgls_resize, mglc_resize,4},
 	{"return","Return from function","return", 0, 0, 6},
+	{"rhomb","Draw rhombus","rhomb x1 y1 x2 y2 r ['fmt']|x1 y1 z1 x2 y2 z2 r ['fmt']", mgls_rhomb, mglc_rhomb,1},
 	{"roll","Roll data along direction","roll Dat 'dir' num", mgls_roll, mglc_roll,0},
 	{"rotate","Rotate plot","rotate tetz tetx [tety] | tet x y z", mgls_rotate, mglc_rotate,5},
 	{"rotatetext","Set to auto rotate text or not","rotatetext val", mgls_rotatetext, mglc_rotatetext,2},

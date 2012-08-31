@@ -585,6 +585,7 @@ void mglTexture::Set(const char *s, int smooth, mreal alpha)
 	if(strchr(s,'|') && !smooth)	smooth = -1;
 	mglColor *c = new mglColor[2*n];		// Colors itself
 	mreal *val = new mreal[n], pos;
+	if(mglchr(s,'%'))	smooth = 2;		// use coordinates in AddPnt() too !!!
 	bool map = (smooth==2), sm = smooth>=0, man=sm;	// Use mapping, smoothed colors
 	for(i=j=n=0;i<l;i++)	// fill colors
 	{

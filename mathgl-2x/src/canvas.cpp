@@ -692,7 +692,7 @@ void mglCanvas::Legend(const std::vector<mglText> &leg, mreal x, mreal y, const 
 	y = y*(ih-h*n-2*dy)+B.y-ih/2+dy;
 	// draw it
 	long k1=0,k2=0,k3=0,k4=0;
-	mglPoint p,q=mglPoint(NAN);
+	mglPoint p,q=mglPoint(NAN,NAN);
 
 	for(i=0;ff[i] && ff[i]!=':';i++)	if(strchr(MGL_COLORS,ff[i]))
 	{

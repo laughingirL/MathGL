@@ -1378,8 +1378,8 @@ colors for filling and boundary (second one if style @samp{@@} is used, black co
 @end deftypefn
 
 @anchor{ellipse}
-@deftypefn {MGL command} {} ellipse @code{x1 y1 x2 y2 r} ['col'='r' @code{sh=1 asp=1}]
-@deftypefnx {MGL command} {} ellipse @code{x1 y1 z1 x2 y2 z2 r} ['col'='r' @code{sh=1 asp=1}]
+@deftypefn {MGL command} {} ellipse @code{x1 y1 x2 y2 r} ['col'='r']
+@deftypefnx {MGL command} {} ellipse @code{x1 y1 z1 x2 y2 z2 r} ['col'='r']
 @ifclear UDAV
 @deftypefnx {Method on @code{mglGraph}} @code{void} Ellipse (@code{mglPoint} p1, @code{mglPoint} p2, @code{mreal} r, @code{const char *}col=@code{"r"})
 @deftypefnx {C function} @code{void} mgl_ellipse (@code{HMGL} gr, @code{mreal} x1, @code{mreal} y1, @code{mreal} z1, @code{mreal} x2, @code{mreal} y2, @code{mreal} z2, @code{mreal} r, @code{const char *}col)
@@ -1396,8 +1396,8 @@ colors for filling and boundary (second one if style @samp{@@} is used, black co
 @end deftypefn
 
 @anchor{rhomb}
-@deftypefn {MGL command} {} rhomb @code{x1 y1 x2 y2 r} ['col'='r' @code{sh=1 asp=1}]
-@deftypefnx {MGL command} {} rhomb @code{x1 y1 z1 x2 y2 z2 r} ['col'='r' @code{sh=1 asp=1}]
+@deftypefn {MGL command} {} rhomb @code{x1 y1 x2 y2 r} ['col'='r']
+@deftypefnx {MGL command} {} rhomb @code{x1 y1 z1 x2 y2 z2 r} ['col'='r']
 @ifclear UDAV
 @deftypefnx {Method on @code{mglGraph}} @code{void} Rhomb (@code{mglPoint} p1, @code{mglPoint} p2, @code{mreal} r, @code{const char *}col=@code{"r"})
 @deftypefnx {C function} @code{void} mgl_rhomb (@code{HMGL} gr, @code{mreal} x1, @code{mreal} y1, @code{mreal} z1, @code{mreal} x2, @code{mreal} y2, @code{mreal} z2, @code{mreal} r, @code{const char *}col)

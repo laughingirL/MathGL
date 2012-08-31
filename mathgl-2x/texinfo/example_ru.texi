@@ -2897,6 +2897,7 @@ In this section I've included some small hints and advices for the improving of 
 * Nonlinear fitting sample::
 * PDE solving hints::
 * MGL parser using::
+* Using options::
 * ``Templates''::
 * Stereo image::
 @end menu
@@ -3382,7 +3383,7 @@ int sample(mglGraph *gr)
 
 @c ------------------------------------------------------------------
 @external
-@node MGL parser using, ``Templates'', PDE solving hints, Hints
+@node MGL parser using, Using options, PDE solving hints, Hints
 @subsection MGL parser using
 
 Sometimes you may prefer to use MGL scripts in yours code. It is simpler (especially in comparison with C/Fortran interfaces) and provide faster way to plot the data with annotations, labels and so on. Class @code{mglParse} (@pxref{mglParse class} parse MGL scripts in C++. It have also the corresponding interface for C/Fortran.
@@ -3437,7 +3438,38 @@ int sample(HMGL gr)
 
 @c ------------------------------------------------------------------
 @external
-@node ``Templates'', Nonlinear fitting sample, MGL parser using, Hints
+@node Using options, ``Templates'', MGL parser using, Hints
+@subsection Using options
+
+@ref{Command options} allow the easy setup of the selected plot by changing global settings only for this plot. Often, options are used for specifying the range of automatic variables (coordinates). However, options allows easily change plot transparency, numbers of line or faces to be drawn, or add legend entries. The sample function for options usage is:
+@verbatim
+void template(mglGraph *gr)
+{
+  mglData a(31,41);
+  gr->Fill(a,"-pi*x*exp(-(y+1)^2-4*x^2)");
+
+  if(!mini)	{	gr->SubPlot(2,2,0);	gr->Title("Options for coordinates");	}
+  gr->Alpha(true);	gr->Light(true);
+  gr->Rotate(40,60);    gr->Box();
+  gr->Surf(a,"r","yrange 0 1"); gr->Surf(a,"b","yrange 0 -1");
+  if(mini)	return;
+  gr->SubPlot(2,2,1);   gr->Title("Option 'meshnum'");
+  gr->Rotate(40,60);    gr->Box();
+  gr->Mesh(a,"r","yrange 0 1"); gr->Mesh(a,"b","yrange 0 -1; meshnum 5");
+  gr->SubPlot(2,2,2);   gr->Title("Option 'alpha'");
+  gr->Rotate(40,60);    gr->Box();
+  gr->Surf(a,"r","yrange 0 1; alpha 0.7"); gr->Surf(a,"b","yrange 0 -1; alpha 0.3");
+  gr->SubPlot(2,2,3,"<_");  gr->Title("Option 'legend'");
+  gr->FPlot("x^3","r","legend 'y = x^3'"); gr->FPlot("cos(pi*x)","b","legend 'y = cos \\pi x'");
+  gr->Box();    gr->Axis(); gr->Legend(2,"");
+}
+@end verbatim
+
+@pfig{mirror, Example of options usage.}
+
+@c ------------------------------------------------------------------
+@external
+@node ``Templates'', Nonlinear fitting sample, Using options, Hints
 @subsection ``Templates''
 
 As I have noted before, the change of settings will influence only for the further plotting commands. This allows one to create ``template'' function which will contain settings and primitive drawing for often used plots. Correspondingly one may call this template-function for drawing simplification.

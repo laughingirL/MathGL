@@ -46,6 +46,13 @@ void smgl_combined(mglGraph *gr);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
+	mglData a;	mgls_prepare2d(&a);	gr->Light(true);	
+	gr->SubPlot(2,2,0);	gr->Rotate(50,60);	gr->Box();	gr->Surf(a);
+	gr->SubPlot(2,2,1);	gr->Rotate(50,60);	gr->Box();	gr->Surf(a,"%br");
+	gr->SubPlot(2,2,2);	gr->Rotate(50,60);	gr->Box();	gr->Surf(a,"%");
+	gr->SubPlot(2,2,3);	gr->Rotate(50,60);	gr->Box();	gr->Surf(a,"%!");
+	return;
+
 	mglParse par;
 	par.AllowSetSize(true);
 	setlocale(LC_CTYPE, "");
@@ -201,30 +208,30 @@ void smgl_style(mglGraph *gr)	// pen styles
 	gr->Line(mglPoint(x0,1-7*d),mglPoint(x1,1-7*d),"k ");	gr->Puts(mglPoint(x2,y-7*d),"None ' '",":rL");
 
 	d=0.25; x1=-1; x0=-0.8;	y = -0.05;
-	gr->Mark(mglPoint(x1,5*d),".");		gr->Puts(mglPoint(x0,y+5*d),"'.'",":rL");
-	gr->Mark(mglPoint(x1,4*d),"+");		gr->Puts(mglPoint(x0,y+4*d),"'+'",":rL");
-	gr->Mark(mglPoint(x1,3*d),"x");		gr->Puts(mglPoint(x0,y+3*d),"'x'",":rL");
-	gr->Mark(mglPoint(x1,2*d),"*");		gr->Puts(mglPoint(x0,y+2*d),"'*'",":rL");
-	gr->Mark(mglPoint(x1,d),"s");		gr->Puts(mglPoint(x0,y+d),"'s'",":rL");
-	gr->Mark(mglPoint(x1,0),"d");		gr->Puts(mglPoint(x0,y),"'d'",":rL");
-	gr->Mark(mglPoint(x1,-d,0),"o");	gr->Puts(mglPoint(x0,y-d),"'o'",":rL");
-	gr->Mark(mglPoint(x1,-2*d,0),"^");	gr->Puts(mglPoint(x0,y-2*d),"'\\^'",":rL");
-	gr->Mark(mglPoint(x1,-3*d,0),"v");	gr->Puts(mglPoint(x0,y-3*d),"'v'",":rL");
-	gr->Mark(mglPoint(x1,-4*d,0),"<");	gr->Puts(mglPoint(x0,y-4*d),"'<'",":rL");
-	gr->Mark(mglPoint(x1,-5*d,0),">");	gr->Puts(mglPoint(x0,y-5*d),"'>'",":rL");
+	gr->Mark(mglPoint(x1,5*d),"k.");		gr->Puts(mglPoint(x0,y+5*d),"'.'",":rL");
+	gr->Mark(mglPoint(x1,4*d),"k+");		gr->Puts(mglPoint(x0,y+4*d),"'+'",":rL");
+	gr->Mark(mglPoint(x1,3*d),"kx");		gr->Puts(mglPoint(x0,y+3*d),"'x'",":rL");
+	gr->Mark(mglPoint(x1,2*d),"k*");		gr->Puts(mglPoint(x0,y+2*d),"'*'",":rL");
+	gr->Mark(mglPoint(x1,d),"ks");		gr->Puts(mglPoint(x0,y+d),"'s'",":rL");
+	gr->Mark(mglPoint(x1,0),"kd");		gr->Puts(mglPoint(x0,y),"'d'",":rL");
+	gr->Mark(mglPoint(x1,-d,0),"ko");	gr->Puts(mglPoint(x0,y-d),"'o'",":rL");
+	gr->Mark(mglPoint(x1,-2*d,0),"k^");	gr->Puts(mglPoint(x0,y-2*d),"'\\^'",":rL");
+	gr->Mark(mglPoint(x1,-3*d,0),"kv");	gr->Puts(mglPoint(x0,y-3*d),"'v'",":rL");
+	gr->Mark(mglPoint(x1,-4*d,0),"k<");	gr->Puts(mglPoint(x0,y-4*d),"'<'",":rL");
+	gr->Mark(mglPoint(x1,-5*d,0),"k>");	gr->Puts(mglPoint(x0,y-5*d),"'>'",":rL");
 
 	d=0.25; x1=-0.5; x0=-0.3;	y = -0.05;
-	gr->Mark(mglPoint(x1,5*d),"#.");	gr->Puts(mglPoint(x0,y+5*d),"'\\#.'",":rL");
-	gr->Mark(mglPoint(x1,4*d),"#+");	gr->Puts(mglPoint(x0,y+4*d),"'\\#+'",":rL");
-	gr->Mark(mglPoint(x1,3*d),"#x");	gr->Puts(mglPoint(x0,y+3*d),"'\\#x'",":rL");
-	gr->Mark(mglPoint(x1,2*d),"#*");	gr->Puts(mglPoint(x0,y+2*d),"'\\#*'",":rL");
-	gr->Mark(mglPoint(x1,d),"#s");		gr->Puts(mglPoint(x0,y+d),"'\\#s'",":rL");
-	gr->Mark(mglPoint(x1,0),"#d");		gr->Puts(mglPoint(x0,y),"'\\#d'",":rL");
-	gr->Mark(mglPoint(x1,-d,0),"#o");	gr->Puts(mglPoint(x0,y-d),"'\\#o'",":rL");
-	gr->Mark(mglPoint(x1,-2*d,0),"#^");	gr->Puts(mglPoint(x0,y-2*d),"'\\#\\^'",":rL");
-	gr->Mark(mglPoint(x1,-3*d,0),"#v");	gr->Puts(mglPoint(x0,y-3*d),"'\\#v'",":rL");
-	gr->Mark(mglPoint(x1,-4*d,0),"#<");	gr->Puts(mglPoint(x0,y-4*d),"'\\#<'",":rL");
-	gr->Mark(mglPoint(x1,-5*d,0),"#>");	gr->Puts(mglPoint(x0,y-5*d),"'\\#>'",":rL");
+	gr->Mark(mglPoint(x1,5*d),"k#.");	gr->Puts(mglPoint(x0,y+5*d),"'\\#.'",":rL");
+	gr->Mark(mglPoint(x1,4*d),"k#+");	gr->Puts(mglPoint(x0,y+4*d),"'\\#+'",":rL");
+	gr->Mark(mglPoint(x1,3*d),"k#x");	gr->Puts(mglPoint(x0,y+3*d),"'\\#x'",":rL");
+	gr->Mark(mglPoint(x1,2*d),"k#*");	gr->Puts(mglPoint(x0,y+2*d),"'\\#*'",":rL");
+	gr->Mark(mglPoint(x1,d),"k#s");		gr->Puts(mglPoint(x0,y+d),"'\\#s'",":rL");
+	gr->Mark(mglPoint(x1,0),"k#d");		gr->Puts(mglPoint(x0,y),"'\\#d'",":rL");
+	gr->Mark(mglPoint(x1,-d,0),"k#o");	gr->Puts(mglPoint(x0,y-d),"'\\#o'",":rL");
+	gr->Mark(mglPoint(x1,-2*d,0),"k#^");	gr->Puts(mglPoint(x0,y-2*d),"'\\#\\^'",":rL");
+	gr->Mark(mglPoint(x1,-3*d,0),"k#v");	gr->Puts(mglPoint(x0,y-3*d),"'\\#v'",":rL");
+	gr->Mark(mglPoint(x1,-4*d,0),"k#<");	gr->Puts(mglPoint(x0,y-4*d),"'\\#<'",":rL");
+	gr->Mark(mglPoint(x1,-5*d,0),"k#>");	gr->Puts(mglPoint(x0,y-5*d),"'\\#>'",":rL");
 
 	gr->SubPlot(2,2,1);
 	double a=0.1,b=0.4,c=0.5;
@@ -296,6 +303,9 @@ void smgl_style(mglGraph *gr)	// pen styles
 	gr->FaceZ(mglPoint(-0.2,0.8), 0.4, 0.3, "{r5}#");	gr->Puts(mglPoint(0,   0.9), "\\{r5\\}", "k:C", -1.4);
 	gr->FaceZ(mglPoint(0.2,	0.8), 0.4, 0.3, "{r7}#");	gr->Puts(mglPoint(0.4, 0.9), "\\{r7\\}", "k:C", -1.4);
 	gr->FaceZ(mglPoint(0.6,	0.8), 0.4, 0.3, "{r9}#");	gr->Puts(mglPoint(0.8, 0.9), "\\{r9\\}", "k:C", -1.4);
+	// HEX
+	gr->FaceZ(mglPoint(-1, -1.3), 1, 0.3, "{xff9966}#");	gr->Puts(mglPoint(-0.5,-1.2), "\\{xff9966\\}", "k:C", -1.4);
+	gr->FaceZ(mglPoint(0,  -1.3), 1, 0.3, "{x83CAFF}#");	gr->Puts(mglPoint( 0.5,-1.2), "\\{x83CAFF\\}", "k:C", -1.4);
 
 	gr->SubPlot(2,2,3);
 	char stl[3]="r1", txt[4]="'1'";
@@ -1835,13 +1845,23 @@ const char *mmgl_mirror="new a 30 40 '-pi*x*exp(-(y+1)^2-4*x^2)'\nalpha on:light
 "surf a 'r';yrange 0 1\nsurf a 'b';yrange 0 -1\n";
 void smgl_mirror(mglGraph *gr)	// flag #
 {
-	mglData a(30,40);
+	mglData a(31,41);
 	gr->Fill(a,"-pi*x*exp(-(y+1)^2-4*x^2)");
-
-	if(!mini)	gr->Title("Example of options");
-	gr->Alpha(false);	gr->Rotate(40,60);
-	gr->Light(true);	gr->Box();
+	
+	if(!mini)	{	gr->SubPlot(2,2,0);	gr->Title("Options for coordinates");	}
+	gr->Alpha(true);	gr->Light(true);
+	gr->Rotate(40,60);	gr->Box();
 	gr->Surf(a,"r","yrange 0 1"); gr->Surf(a,"b","yrange 0 -1");
+	if(mini)	return;
+	gr->SubPlot(2,2,1);	gr->Title("Option 'meshnum'");
+	gr->Rotate(40,60);	gr->Box();
+	gr->Mesh(a,"r","yrange 0 1"); gr->Mesh(a,"b","yrange 0 -1; meshnum 5");
+	gr->SubPlot(2,2,2);	gr->Title("Option 'alpha'");
+	gr->Rotate(40,60);	gr->Box();
+	gr->Surf(a,"r","yrange 0 1; alpha 0.7"); gr->Surf(a,"b","yrange 0 -1; alpha 0.3");
+	gr->SubPlot(2,2,3,"<_");	gr->Title("Option 'legend'");
+	gr->FPlot("x^3","r","legend 'y = x^3'"); gr->FPlot("cos(pi*x)","b","legend 'y = cos \\pi x'");
+	gr->Box();	gr->Axis();	gr->Legend(2,"");
 }
 //-----------------------------------------------------------------------------
 //=============================================================================

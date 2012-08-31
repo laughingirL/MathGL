@@ -20,24 +20,22 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 
 13. Check gap for axis labels (at axis rotation)
 14. Axis -- projection (ternary + quaternary)
-15. 2D textures as one of standard way for coloring
+15. 2D textures as one of standard way for coloring -- if '%' present in color scheme
 
 16. curved text (in new sample) look not so good
 17. Auto axis range for formulas, like AutoRange("y(x)") or AutoRange('x',"x(t)").
 
 18. Add mglDataC for complex data -- main diff is reading/saving data
-19. Try libtcc (TinyCC) as alternative to MGL -- in mgllab???
 
-20. More accurate intersections in Region
-21. Check "gray" solid marks in style.png/eps
-22. Option sample (_mirror)
-23. Add HEX colors into "style" sample
+19. Drawing of saddle quadrangles
+20. Add ZoomCoor() for shifting/zooming on axis range (influence on SetRange[s] only) + parse log-coor!!!
+21. CalcXYZ should take into account Zoom/View
+22. Vect3 sample
 
 +24. MGL testing system ???
 
 ============= DOCS =============
 
-1. Text about manual color positions + xRRGGBBAA colors
 2. Text about UDAV
 3. Add FAQ about MPEG/GIF and PDF
 4. Examples of animation, u3d, x3d, js and so on
@@ -90,3 +88,4 @@ Remove other setting if data name is changed.
 6. Pool of threads for speeding up ???
 7. Read DICOM files
 8. Check RunThr() in python/octave
+9. Try libtcc (TinyCC) as alternative to MGL -- how to handle ^ operator???

@@ -54,7 +54,7 @@ The form (appearence) of tick labels is controlled by @code{SetTicks()} function
 Base colors are defined by one of symbol @samp{wkrgbcymhRGBCYMHWlenupqLENUPQ}.
 @ifhtml
 @html
-<p>The color types are: &lsquo;<samp>k</samp>&rsquo; -- black, &lsquo;<samp>r</samp>&rsquo; -- <span style="color: rgb(255, 0, 0);">red</span>, &lsquo;<samp>R</samp>&rsquo; -- <span style="color: rgb(127, 0, 0);">dark red</span>, &lsquo;<samp>g</samp>&rsquo; -- <span style="color: rgb(0, 255, 0);">green</span>, &lsquo;<samp>G</samp>&rsquo; -- <span style="color: rgb(0, 127, 0);">dark green</span>, &lsquo;<samp>b</samp>&rsquo; -- <span style="color: rgb(0, 0, 255);">blue</span>, &lsquo;<samp>B</samp>&rsquo; -- <span style="color: rgb(0, 0, 127);">dark blue</span>, &lsquo;<samp>c</samp>&rsquo; -- <span style="color: rgb(0, 255, 255);">cyan</span>, &lsquo;<samp>C</samp>&rsquo; -- <span style="color: rgb(0, 127, 127);">dark cyan</span>, &lsquo;<samp>m</samp>&rsquo; -- <span style="color: rgb(255, 0, 255);">magenta</span>, &lsquo;<samp>M</samp>&rsquo; -- <span style="color: rgb(127, 0, 127);">dark magenta</span>, &lsquo;<samp>y</samp>&rsquo; -- <span style="color: rgb(255, 255, 0);">yellow</span>, &lsquo;<samp>Y</samp>&rsquo; -- <span style="color: rgb(127, 127, 0);">dark yellow (gold)</span>, &lsquo;<samp>h</samp>&rsquo; -- <span style="color: rgb(127, 127, 127);">gray</span>, &lsquo;<samp>H</samp>&rsquo; -- <span style="color: rgb(76, 76, 76);">dark gray</span>, &lsquo;<samp>w</samp>&rsquo; -- white, &lsquo;<samp>W</samp>&rsquo; -- <span style="color: rgb(178, 178, 178);">bright gray</span>, &lsquo;<samp>l</samp>&rsquo; -- <span style="color: rgb(0, 255, 127);">green-blue</span>, &lsquo;<samp>L</samp>&rsquo; -- <span style="color: rgb(0, 127, 63);">dark green-blue</span>, &lsquo;<samp>e</samp>&rsquo; -- <span style="color: rgb(127, 255, 0);">green-yellow</span>, &lsquo;<samp>E</samp>&rsquo; -- <span style="color: rgb(63, 127, 0);">dark green-yellow</span>, &lsquo;<samp>n</samp>&rsquo; -- <span style="color: rgb(0, 127, 255);">sky-blue</span>, &lsquo;<samp>N</samp>&rsquo; -- <span style="color: rgb(0, 63, 127);">dark sky-blue</span>, &lsquo;<samp>u</samp>&rsquo; -- <span style="color: rgb(127, 0, 255);">blue-violet</span>, &lsquo;<samp>U</samp>&rsquo; -- <span style="color: rgb(63, 0, 127);">dark blue-violet</span>, &lsquo;<samp>p</samp>&rsquo; -- <span style="color: rgb(255, 0, 127);">purple</span>, &lsquo;<samp>P</samp>&rsquo; -- <span style="color: rgb(127, 0, 63);">dark purple</span>, &lsquo;<samp>q</samp>&rsquo; -- <span style="color: rgb(255, 127, 0);">orange</span>, &lsquo;<samp>Q</samp>&rsquo; -- <span style="color: rgb(127, 63, 0);">dark orange (brown)</span>.</p>
+<p>The color types are: &lsquo;<samp>k</samp>&rsquo; &ndash; black, &lsquo;<samp>r</samp>&rsquo; &ndash; <span style="color: rgb(255, 0, 0);">red</span>, &lsquo;<samp>R</samp>&rsquo; &ndash; <span style="color: rgb(127, 0, 0);">dark red</span>, &lsquo;<samp>g</samp>&rsquo; &ndash; <span style="color: rgb(0, 255, 0);">green</span>, &lsquo;<samp>G</samp>&rsquo; &ndash; <span style="color: rgb(0, 127, 0);">dark green</span>, &lsquo;<samp>b</samp>&rsquo; &ndash; <span style="color: rgb(0, 0, 255);">blue</span>, &lsquo;<samp>B</samp>&rsquo; &ndash; <span style="color: rgb(0, 0, 127);">dark blue</span>, &lsquo;<samp>c</samp>&rsquo; &ndash; <span style="color: rgb(0, 255, 255);">cyan</span>, &lsquo;<samp>C</samp>&rsquo; &ndash; <span style="color: rgb(0, 127, 127);">dark cyan</span>, &lsquo;<samp>m</samp>&rsquo; &ndash; <span style="color: rgb(255, 0, 255);">magenta</span>, &lsquo;<samp>M</samp>&rsquo; &ndash; <span style="color: rgb(127, 0, 127);">dark magenta</span>, &lsquo;<samp>y</samp>&rsquo; &ndash; <span style="color: rgb(255, 255, 0);">yellow</span>, &lsquo;<samp>Y</samp>&rsquo; &ndash; <span style="color: rgb(127, 127, 0);">dark yellow (gold)</span>, &lsquo;<samp>h</samp>&rsquo; &ndash; <span style="color: rgb(127, 127, 127);">gray</span>, &lsquo;<samp>H</samp>&rsquo; &ndash; <span style="color: rgb(76, 76, 76);">dark gray</span>, &lsquo;<samp>w</samp>&rsquo; &ndash; white, &lsquo;<samp>W</samp>&rsquo; &ndash; <span style="color: rgb(178, 178, 178);">bright gray</span>, &lsquo;<samp>l</samp>&rsquo; &ndash; <span style="color: rgb(0, 255, 127);">green-blue</span>, &lsquo;<samp>L</samp>&rsquo; &ndash; <span style="color: rgb(0, 127, 63);">dark green-blue</span>, &lsquo;<samp>e</samp>&rsquo; &ndash; <span style="color: rgb(127, 255, 0);">green-yellow</span>, &lsquo;<samp>E</samp>&rsquo; &ndash; <span style="color: rgb(63, 127, 0);">dark green-yellow</span>, &lsquo;<samp>n</samp>&rsquo; &ndash; <span style="color: rgb(0, 127, 255);">sky-blue</span>, &lsquo;<samp>N</samp>&rsquo; &ndash; <span style="color: rgb(0, 63, 127);">dark sky-blue</span>, &lsquo;<samp>u</samp>&rsquo; &ndash; <span style="color: rgb(127, 0, 255);">blue-violet</span>, &lsquo;<samp>U</samp>&rsquo; &ndash; <span style="color: rgb(63, 0, 127);">dark blue-violet</span>, &lsquo;<samp>p</samp>&rsquo; &ndash; <span style="color: rgb(255, 0, 127);">purple</span>, &lsquo;<samp>P</samp>&rsquo; &ndash; <span style="color: rgb(127, 0, 63);">dark purple</span>, &lsquo;<samp>q</samp>&rsquo; &ndash; <span style="color: rgb(255, 127, 0);">orange</span>, &lsquo;<samp>Q</samp>&rsquo; &ndash; <span style="color: rgb(127, 63, 0);">dark orange (brown)</span>.</p>
 @end html
 @end ifhtml
 @ifnothtml
@@ -62,6 +62,16 @@ The color types are: @samp{k} -- black, @samp{r} -- red, @samp{R} -- dark red, @
 @end ifnothtml
 
 You can also use ``bright'' colors. The ``bright'' color contain 2 symbols in brackets @samp{@{cN@}}: first one is the usual symbol for color id, the second one is a digit for its brightness. The digit can be in range @samp{1}...@samp{9}. Number @samp{5} corresponds to a normal color, @samp{1} is a very dark version of the color (practically black), and @samp{9} is a very bright version of the color (practically white). For example, the colors can be @samp{@{b2@}} @samp{@{b7@}} @samp{@{r7@}} and so on.
+
+Finally, you can specify RGB or RGBA values of a color using format @samp{@{xRRGGBB@}} or @samp{@{xRRGGBBAA@}} correspondingly. For example, @samp{@{xFF9966@}} give you 
+@ifhtml
+@html
+<span style="color: rgb(255, 153, 102);">melone</span> color.
+@end html
+@end ifhtml
+@ifnothtml
+melone color.
+@end ifnothtml
 
 @c ------------------------------------------------------------------
 @external
@@ -77,7 +87,7 @@ The line style is defined by the string which may contain specifications for col
 @html
 By default palette contain following colors: <span style="color: rgb(76, 76, 76);">dark gray</span> &lsquo;<samp>H</samp>&rsquo;, <span style="color: rgb(0, 0, 255);">blue</span> &lsquo;<samp>b</samp>&rsquo;, <span style="color: rgb(0, 255, 0);">green</span> &lsquo;<samp>g</samp>&rsquo;, <span style="color: rgb(255, 0, 0);">red</span> &lsquo;<samp>r</samp>&rsquo;, <span style="color: rgb(0, 255, 255);">cyan</span> &lsquo;<samp>c</samp>&rsquo;, <span style="color: rgb(255, 0, 255);">magenta</span> &lsquo;<samp>m</samp>&rsquo;, <span style="color: rgb(255, 255, 0);">yellow</span> &lsquo;<samp>y</samp>&rsquo;, <span style="color: rgb(127, 127, 127);">gray</span> &lsquo;<samp>h</samp>&rsquo;, <span style="color: rgb(0, 255, 127);">green-blue</span> &lsquo;<samp>l</samp>&rsquo;, <span style="color: rgb(0, 127, 255);">sky-blue</span> &lsquo;<samp>n</samp>&rsquo;, <span style="color: rgb(255, 127, 0);">orange</span> &lsquo;<samp>q</samp>&rsquo;, <span style="color: rgb(127, 255, 0);">green-yellow</span> &lsquo;<samp>e</samp>&rsquo;, <span style="color: rgb(127, 0, 255);">blue-violet</span> &lsquo;<samp>u</samp>&rsquo;, <span style="color: rgb(255, 0, 127);">purple</span> &lsquo;<samp>p</samp>&rsquo;.
 
-<p>Dashing style has the following meaning: space -- no line (usable for plotting only marks), &lsquo;<samp>-</samp>&rsquo; -- solid line (&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;), &lsquo;<samp>|</samp>&rsquo; -- long dashed line (&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9633;&#9633;&#9633;&#9633;&#9633;&#9633;&#9633;&#9633;), &lsquo;<samp>;</samp>&rsquo; -- dashed line (&#9632;&#9632;&#9632;&#9632;&#9633;&#9633;&#9633;&#9633;&#9632;&#9632;&#9632;&#9632;&#9633;&#9633;&#9633;&#9633;), &lsquo;<samp>=</samp>&rsquo; -- small dashed line (&#9632;&#9632;&#9633;&#9633;&#9632;&#9632;&#9633;&#9633;&#9632;&#9632;&#9633;&#9633;&#9632;&#9632;&#9633;&#9633;), &lsquo;<samp>:</samp>&rsquo; -- dotted line (&#9632;&#9633;&#9633;&#9633;&#9632;&#9633;&#9633;&#9633;&#9632;&#9633;&#9633;&#9633;&#9632;&#9633;&#9633;&#9633;), &lsquo;<samp>j</samp>&rsquo; -- dash-dotted line (&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9633;&#9633;&#9633;&#9633;&#9632;&#9633;&#9633;&#9633;&#9633;), &lsquo;<samp>i</samp>&rsquo; -- small dash-dotted line (&#9632;&#9632;&#9632;&#9633;&#9633;&#9632;&#9633;&#9633;&#9632;&#9632;&#9632;&#9633;&#9633;&#9632;&#9633;&#9633;).</p>
+<p>Dashing style has the following meaning: space &ndash; no line (usable for plotting only marks), &lsquo;<samp>-</samp>&rsquo; &ndash; solid line (&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;), &lsquo;<samp>|</samp>&rsquo; &ndash; long dashed line (&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9633;&#9633;&#9633;&#9633;&#9633;&#9633;&#9633;&#9633;), &lsquo;<samp>;</samp>&rsquo; &ndash; dashed line (&#9632;&#9632;&#9632;&#9632;&#9633;&#9633;&#9633;&#9633;&#9632;&#9632;&#9632;&#9632;&#9633;&#9633;&#9633;&#9633;), &lsquo;<samp>=</samp>&rsquo; &ndash; small dashed line (&#9632;&#9632;&#9633;&#9633;&#9632;&#9632;&#9633;&#9633;&#9632;&#9632;&#9633;&#9633;&#9632;&#9632;&#9633;&#9633;), &lsquo;<samp>:</samp>&rsquo; &ndash; dotted line (&#9632;&#9633;&#9633;&#9633;&#9632;&#9633;&#9633;&#9633;&#9632;&#9633;&#9633;&#9633;&#9632;&#9633;&#9633;&#9633;), &lsquo;<samp>j</samp>&rsquo; &ndash; dash-dotted line (&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9633;&#9633;&#9633;&#9633;&#9632;&#9633;&#9633;&#9633;&#9633;), &lsquo;<samp>i</samp>&rsquo; &ndash; small dash-dotted line (&#9632;&#9632;&#9632;&#9633;&#9633;&#9632;&#9633;&#9633;&#9632;&#9632;&#9632;&#9633;&#9633;&#9632;&#9633;&#9633;).</p>
 @end html
 @end ifhtml
 @ifnothtml
@@ -104,6 +114,8 @@ The color scheme is used for determining the color of surfaces, isolines, isosur
 The final color is a linear interpolation of color array. The color array is constructed from the string ids (including ``bright'' colors, see @ref{Color styles}). The argument is the amplitude normalized between @var{Cmin} -- @var{Cmax} (see @ref{Axis settings}). For example, string containing 4 characters @samp{bcyr} corresponds to a colorbar from blue (lowest value) through cyan (next value) through yellow (next value) to the red (highest value). String @samp{kw} corresponds to a colorbar from black (lowest value) to white (highest value). String @samp{m} corresponds to a simple magenta color.
 
 There are several useful combinations. String @samp{kw} corresponds to the simplest gray color scheme where higher values are brighter. String @samp{wk} presents the inverse gray color scheme where higher value is darker. Strings @samp{kRryw}, @samp{kGgw}, @samp{kBbcw} present the well-known @emph{hot}, @emph{summer} and @emph{winter} color schemes. Strings @samp{BbwrR} and @samp{bBkRr} allow to view bi-color figure on white or black background, where negative values are blue and positive values are red. String @samp{BbcyrR} gives a color scheme similar to the well-known @emph{jet} color scheme.
+
+For more precise coloring, you can change default (equidistant) position of colors in color scheme. The format is @samp{@{CN,pos@}}, @samp{@{CN,pos@}} or @samp{@{xRRGGBB,pos@}}. The position value @var{pos} should be in range [0, 1]. Note, that alternative method for fine tuning of the color scheme is using the formula for coloring (see @ref{Curved coordinates}).
 
 @pfig{schemes, Most popular color schemes.}
 
@@ -209,7 +221,7 @@ There is no difference between lower or upper case in formulas. If argument valu
 
 Command options allow the easy setup of the selected plot by changing global settings only for this plot. Each option start from symbol @samp{;}. Options work so that MathGL remember the current settings, change settings as it being set in the option, execute function and return the original settings back. So, the options are most usable for plotting functions.
 
-The most useful options are @code{xrange, yrange, zrange}. They sets the boundaries for data change. This boundaries are used for automatically filled variables. So, these options allow one to change the position of some plots. For example, in command @code{Plot(y,"","xrange 0.1 0.9");} or @code{plot y; xrange 0.1 0.9} the x coordinate will be equidistantly distributed in range 0.1 ... 0.9.
+The most useful options are @code{xrange, yrange, zrange}. They sets the boundaries for data change. This boundaries are used for automatically filled variables. So, these options allow one to change the position of some plots. For example, in command @code{Plot(y,"","xrange 0.1 0.9");} or @code{plot y; xrange 0.1 0.9} the x coordinate will be equidistantly distributed in range 0.1 ... 0.9. The sample @ref{Using options} show some basic options.
 
 The full list of options are:
 @cindex alpha
@@ -217,14 +229,14 @@ The full list of options are:
 @deffn {MGL option} alpha @code{val}
 Sets alpha value (transparency) of the plot. The value should be in range [0, 1]. See also @ref{alphadef}.
 @end deffn
-@cindex ambient
-@deffn {MGL option} ambient @code{val}
-Sets brightness of ambient light for the plot. The value should be in range [0, 1]. See also @ref{ambient}.
-@end deffn
-@cindex diffuse
-@deffn {MGL option} diffuse @code{val}
-Sets brightness of diffuse light for the plot. The value should be in range [0, 1]. See also @ref{diffuse}.
-@end deffn
+@c @cindex ambient
+@c @deffn {MGL option} ambient @code{val}
+@c Sets brightness of ambient light for the plot. The value should be in range [0, 1]. See also @ref{ambient}.
+@c @end deffn
+@c @cindex diffuse
+@c @deffn {MGL option} diffuse @code{val}
+@c Sets brightness of diffuse light for the plot. The value should be in range [0, 1]. See also @ref{diffuse}.
+@c @end deffn
 
 @cindex xrange
 @deffn {MGL option} xrange @code{val1 val2}

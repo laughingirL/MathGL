@@ -52,7 +52,7 @@
 Base colors are defined by one of symbol @samp{wkrgbcymhRGBCYMHWlenupqLENUPQ}.
 @ifhtml
 @html
-<p>Символы цвета: &lsquo;<samp>k</samp>&rsquo; -- черный, &lsquo;<samp>r</samp>&rsquo; -- <span style="color: rgb(255, 0, 0);">красный</span>, &lsquo;<samp>R</samp>&rsquo; -- <span style="color: rgb(127, 0, 0);">темно красный</span>, &lsquo;<samp>g</samp>&rsquo; -- <span style="color: rgb(0, 255, 0);">зеленый</span>, &lsquo;<samp>G</samp>&rsquo; -- <span style="color: rgb(0, 127, 0);">темно зеленый</span>, &lsquo;<samp>b</samp>&rsquo; -- <span style="color: rgb(0, 0, 255);">синий</span>, &lsquo;<samp>B</samp>&rsquo; -- <span style="color: rgb(0, 0, 127);">темно синий</span>, &lsquo;<samp>c</samp>&rsquo; -- <span style="color: rgb(0, 255, 255);">голубой</span>, &lsquo;<samp>C</samp>&rsquo; -- <span style="color: rgb(0, 127, 127);">темно голубой</span>, &lsquo;<samp>m</samp>&rsquo; -- <span style="color: rgb(255, 0, 255);">пурпурный</span>, &lsquo;<samp>M</samp>&rsquo; -- <span style="color: rgb(127, 0, 127);">темно пурпурный</span>, &lsquo;<samp>y</samp>&rsquo; -- <span style="color: rgb(255, 255, 0);">желтый</span>, &lsquo;<samp>Y</samp>&rsquo; -- <span style="color: rgb(127, 127, 0);">темно желтый (золотой)</span>, &lsquo;<samp>h</samp>&rsquo; -- <span style="color: rgb(127, 127, 127);">серый</span>, &lsquo;<samp>H</samp>&rsquo; -- <span style="color: rgb(76, 76, 76);">темно серый</span>, &lsquo;<samp>w</samp>&rsquo; -- белый, &lsquo;<samp>W</samp>&rsquo; -- <span style="color: rgb(178, 178, 178);">светло серый</span>, &lsquo;<samp>l</samp>&rsquo; -- <span style="color: rgb(0, 255, 127);">сине-зеленый</span>, &lsquo;<samp>L</samp>&rsquo; -- <span style="color: rgb(0, 127, 63);">темно сине-зеленый</span>, &lsquo;<samp>e</samp>&rsquo; -- <span style="color: rgb(127, 255, 0);">желто-зеленый</span>, &lsquo;<samp>E</samp>&rsquo; -- <span style="color: rgb(63, 127, 0);">темно желто-зеленый</span>, &lsquo;<samp>n</samp>&rsquo; -- <span style="color: rgb(0, 127, 255);">небесно-синий</span>, &lsquo;<samp>N</samp>&rsquo; -- <span style="color: rgb(0, 63, 127);">темно небесно-синий</span>, &lsquo;<samp>u</samp>&rsquo; -- <span style="color: rgb(127, 0, 255);">сине-фиолетовый</span>, &lsquo;<samp>U</samp>&rsquo; -- <span style="color: rgb(63, 0, 127);">темно сине-фиолетовый</span>, &lsquo;<samp>p</samp>&rsquo; -- <span style="color: rgb(255, 0, 127);">фиолетовый</span>, &lsquo;<samp>P</samp>&rsquo; -- <span style="color: rgb(127, 0, 63);">темно фиолетовый</span>, &lsquo;<samp>q</samp>&rsquo; -- <span style="color: rgb(255, 127, 0);">оранжевый</span>, &lsquo;<samp>Q</samp>&rsquo; -- <span style="color: rgb(127, 63, 0);">темно оранжевый (коричневый)</span>.</p>
+<p>Символы цвета: &lsquo;<samp>k</samp>&rsquo; &ndash; черный, &lsquo;<samp>r</samp>&rsquo; &ndash; <span style="color: rgb(255, 0, 0);">красный</span>, &lsquo;<samp>R</samp>&rsquo; &ndash; <span style="color: rgb(127, 0, 0);">темно красный</span>, &lsquo;<samp>g</samp>&rsquo; &ndash; <span style="color: rgb(0, 255, 0);">зеленый</span>, &lsquo;<samp>G</samp>&rsquo; &ndash; <span style="color: rgb(0, 127, 0);">темно зеленый</span>, &lsquo;<samp>b</samp>&rsquo; &ndash; <span style="color: rgb(0, 0, 255);">синий</span>, &lsquo;<samp>B</samp>&rsquo; &ndash; <span style="color: rgb(0, 0, 127);">темно синий</span>, &lsquo;<samp>c</samp>&rsquo; &ndash; <span style="color: rgb(0, 255, 255);">голубой</span>, &lsquo;<samp>C</samp>&rsquo; &ndash; <span style="color: rgb(0, 127, 127);">темно голубой</span>, &lsquo;<samp>m</samp>&rsquo; &ndash; <span style="color: rgb(255, 0, 255);">пурпурный</span>, &lsquo;<samp>M</samp>&rsquo; &ndash; <span style="color: rgb(127, 0, 127);">темно пурпурный</span>, &lsquo;<samp>y</samp>&rsquo; &ndash; <span style="color: rgb(255, 255, 0);">желтый</span>, &lsquo;<samp>Y</samp>&rsquo; &ndash; <span style="color: rgb(127, 127, 0);">темно желтый (золотой)</span>, &lsquo;<samp>h</samp>&rsquo; &ndash; <span style="color: rgb(127, 127, 127);">серый</span>, &lsquo;<samp>H</samp>&rsquo; &ndash; <span style="color: rgb(76, 76, 76);">темно серый</span>, &lsquo;<samp>w</samp>&rsquo; &ndash; белый, &lsquo;<samp>W</samp>&rsquo; &ndash; <span style="color: rgb(178, 178, 178);">светло серый</span>, &lsquo;<samp>l</samp>&rsquo; &ndash; <span style="color: rgb(0, 255, 127);">сине-зеленый</span>, &lsquo;<samp>L</samp>&rsquo; &ndash; <span style="color: rgb(0, 127, 63);">темно сине-зеленый</span>, &lsquo;<samp>e</samp>&rsquo; &ndash; <span style="color: rgb(127, 255, 0);">желто-зеленый</span>, &lsquo;<samp>E</samp>&rsquo; &ndash; <span style="color: rgb(63, 127, 0);">темно желто-зеленый</span>, &lsquo;<samp>n</samp>&rsquo; &ndash; <span style="color: rgb(0, 127, 255);">небесно-синий</span>, &lsquo;<samp>N</samp>&rsquo; &ndash; <span style="color: rgb(0, 63, 127);">темно небесно-синий</span>, &lsquo;<samp>u</samp>&rsquo; &ndash; <span style="color: rgb(127, 0, 255);">сине-фиолетовый</span>, &lsquo;<samp>U</samp>&rsquo; &ndash; <span style="color: rgb(63, 0, 127);">темно сине-фиолетовый</span>, &lsquo;<samp>p</samp>&rsquo; &ndash; <span style="color: rgb(255, 0, 127);">фиолетовый</span>, &lsquo;<samp>P</samp>&rsquo; &ndash; <span style="color: rgb(127, 0, 63);">темно фиолетовый</span>, &lsquo;<samp>q</samp>&rsquo; &ndash; <span style="color: rgb(255, 127, 0);">оранжевый</span>, &lsquo;<samp>Q</samp>&rsquo; &ndash; <span style="color: rgb(127, 63, 0);">темно оранжевый (коричневый)</span>.</p>
 @end html
 @end ifhtml
 @ifnothtml
@@ -60,6 +60,16 @@ Base colors are defined by one of symbol @samp{wkrgbcymhRGBCYMHWlenupqLENUPQ}.
 @end ifnothtml
 
 В цветовой схеме можно использовать тональные (``подсвеченные'') цвета. Тональный цвет задается двумя символами в фигурных скобках @samp{@{cN@}: первый -- обычный цвет, второй -- его яркость цифрой. Цифра может быть в диапазоне @samp{1}...@samp{9}. При этом @samp{5} соответствует нормальному цвету, @samp{1} -- очень темная версия цвета (почти черный), @samp{9} -- очень светлая версия цвета (почти белый). Например, цвета могут быть @samp{@{b2@}} @samp{@{b7@}} @samp{@{r7@}} и т.д.
+
+Наконец, можно указать явно RGB или RGBA значения цвета, используя формат @samp{@{xRRGGBB@}} или @samp{@{xRRGGBBAA@}} соответственно. Например, @samp{@{xFF9966@}} даст цвет
+@ifhtml
+@html
+<span style="color: rgb(255, 153, 102);">дыни</span>.
+@end html
+@end ifhtml
+@ifnothtml
+дыни.
+@end ifnothtml
 
 @c ------------------------------------------------------------------
 @external
@@ -75,7 +85,7 @@ Base colors are defined by one of symbol @samp{wkrgbcymhRGBCYMHWlenupqLENUPQ}.
 @html
 По умолчанию палитры содержит следующие цвета: <span style="color: rgb(76, 76, 76);">темно серый</span> &lsquo;<samp>H</samp>&rsquo;, <span style="color: rgb(0, 0, 255);">синий</span> &lsquo;<samp>b</samp>&rsquo;, <span style="color: rgb(0, 255, 0);">зеленый</span> &lsquo;<samp>g</samp>&rsquo;, <span style="color: rgb(255, 0, 0);">красный</span> &lsquo;<samp>r</samp>&rsquo;, <span style="color: rgb(0, 255, 255);">голубой</span> &lsquo;<samp>c</samp>&rsquo;, <span style="color: rgb(255, 0, 255);">пурпурный</span> &lsquo;<samp>m</samp>&rsquo;, <span style="color: rgb(255, 255, 0);">yellow</span> &lsquo;<samp>y</samp>&rsquo;, <span style="color: rgb(127, 127, 127);">серый</span> &lsquo;<samp>h</samp>&rsquo;, <span style="color: rgb(0, 255, 127);">сине-зеленый</span> &lsquo;<samp>l</samp>&rsquo;, <span style="color: rgb(0, 127, 255);">небесно-синий</span> &lsquo;<samp>n</samp>&rsquo;, <span style="color: rgb(255, 127, 0);">оранжевый</span> &lsquo;<samp>q</samp>&rsquo;, <span style="color: rgb(127, 255, 0);">желто-зеленый</span> &lsquo;<samp>e</samp>&rsquo;, <span style="color: rgb(127, 0, 255);">сине-фиолетовый</span> &lsquo;<samp>u</samp>&rsquo;, <span style="color: rgb(255, 0, 127);">фиолетовый</span> &lsquo;<samp>p</samp>&rsquo;.
 
-<p>Тип пунктира: пробел -- нет линии (для рисования только маркеров), &lsquo;<samp>-</samp>&rsquo; -- сплошная линия (&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;), &lsquo;<samp>|</samp>&rsquo; -- длинный пунктир (&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9633;&#9633;&#9633;&#9633;&#9633;&#9633;&#9633;&#9633;), &lsquo;<samp>;</samp>&rsquo; -- пунктир (&#9632;&#9632;&#9632;&#9632;&#9633;&#9633;&#9633;&#9633;&#9632;&#9632;&#9632;&#9632;&#9633;&#9633;&#9633;&#9633;), &lsquo;<samp>=</samp>&rsquo; -- короткий пунктир (&#9632;&#9632;&#9633;&#9633;&#9632;&#9632;&#9633;&#9633;&#9632;&#9632;&#9633;&#9633;&#9632;&#9632;&#9633;&#9633;), &lsquo;<samp>:</samp>&rsquo; -- точки (&#9632;&#9633;&#9633;&#9633;&#9632;&#9633;&#9633;&#9633;&#9632;&#9633;&#9633;&#9633;&#9632;&#9633;&#9633;&#9633;), &lsquo;<samp>j</samp>&rsquo; -- пунктир с точками  (&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9633;&#9633;&#9633;&#9633;&#9632;&#9633;&#9633;&#9633;&#9633;), &lsquo;<samp>i</samp>&rsquo; -- мелкий пунктир с точками (&#9632;&#9632;&#9632;&#9633;&#9633;&#9632;&#9633;&#9633;&#9632;&#9632;&#9632;&#9633;&#9633;&#9632;&#9633;&#9633;).</p>
+<p>Тип пунктира: пробел &ndash; нет линии (для рисования только маркеров), &lsquo;<samp>-</samp>&rsquo; &ndash; сплошная линия (&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;), &lsquo;<samp>|</samp>&rsquo; &ndash; длинный пунктир (&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9633;&#9633;&#9633;&#9633;&#9633;&#9633;&#9633;&#9633;), &lsquo;<samp>;</samp>&rsquo; &ndash; пунктир (&#9632;&#9632;&#9632;&#9632;&#9633;&#9633;&#9633;&#9633;&#9632;&#9632;&#9632;&#9632;&#9633;&#9633;&#9633;&#9633;), &lsquo;<samp>=</samp>&rsquo; &ndash; короткий пунктир (&#9632;&#9632;&#9633;&#9633;&#9632;&#9632;&#9633;&#9633;&#9632;&#9632;&#9633;&#9633;&#9632;&#9632;&#9633;&#9633;), &lsquo;<samp>:</samp>&rsquo; &ndash; точки (&#9632;&#9633;&#9633;&#9633;&#9632;&#9633;&#9633;&#9633;&#9632;&#9633;&#9633;&#9633;&#9632;&#9633;&#9633;&#9633;), &lsquo;<samp>j</samp>&rsquo; &ndash; пунктир с точками  (&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9633;&#9633;&#9633;&#9633;&#9632;&#9633;&#9633;&#9633;&#9633;), &lsquo;<samp>i</samp>&rsquo; &ndash; мелкий пунктир с точками (&#9632;&#9632;&#9632;&#9633;&#9633;&#9632;&#9633;&#9633;&#9632;&#9632;&#9632;&#9633;&#9633;&#9632;&#9633;&#9633;).</p>
 @end html
 @end ifhtml
 @ifnothtml
@@ -84,7 +94,7 @@ Base colors are defined by one of symbol @samp{wkrgbcymhRGBCYMHWlenupqLENUPQ}.
 Тип пунктира: пробел -- нет линии (для рисования только маркеров), @samp{-} -- сплошная линия (################), @samp{|} -- длинный пунктир (########________), @samp{;} -- пунктир (####____####____), @samp{=} -- короткий пунктир (##__##__##__##__), @samp{:} -- точки (#___#___#___#___), @samp{j} -- пунктир с точками  (#######____#____), @samp{i} -- мелкий пунктир с точками (###__#__###__#__).
 @end ifnothtml
 
-Типы маркеров: @samp{o} -- окружность, @samp{+} -- крест, @samp{x} -- косой крест, @samp{s} - квадрат, @samp{d} - ромб, @samp{.} -- точка, @samp{^} -- треугольник вверх, @samp{v} -- треугольник вниз, @samp{<} -- треугольник влево, @samp{>} -- треугольник вправо, @samp{#*} -- знак Y, @samp{#+} -- крест в квадрате, @samp{#x} -- косой крест в квадрате, @samp{#.} -- точка в окружности. Если в строке присутствует символ @samp{#}, то используются символы с заполнением.
+Типы маркеров: @samp{o} -- окружность, @samp{+} -- крест, @samp{x} -- косой крест, @samp{s} -- квадрат, @samp{d} - ромб, @samp{.} -- точка, @samp{^} -- треугольник вверх, @samp{v} -- треугольник вниз, @samp{<} -- треугольник влево, @samp{>} -- треугольник вправо, @samp{#*} -- знак Y, @samp{#+} -- крест в квадрате, @samp{#x} -- косой крест в квадрате, @samp{#.} -- точка в окружности. Если в строке присутствует символ @samp{#}, то используются символы с заполнением.
 
 На конце и в начале линии можно выводить специальный символ (стрелку), если в строке указать один из символов: @samp{A} -- стрелка наружу, @samp{V} -- стрелка внутрь, @samp{I} -- поперечная черта, @samp{K} -- стрелка с чертой, @samp{T} -- треугольник, @samp{S} -- квадрат, @samp{D} -- ромб, @samp{O} -- круг, @samp{_} -- нет стрелки (по умолчанию). При этом действует следующее правило: первый символ определяет стрелку на конце линии, второй символ -- стрелку в начале линии. Например, @samp{r-A} -- красная сплошная линия со стрелкой на конце, @samp{b|AI} -- синий пунктир со стрелкой на конце и чертой вначале, @samp{_O} -- линия с текущим стилем и кружком вначале. Эти стили действуют и при построении графиков (например, @ref{1D plotting}).
 
@@ -102,6 +112,8 @@ Base colors are defined by one of symbol @samp{wkrgbcymhRGBCYMHWlenupqLENUPQ}.
 При определении цвета по @emph{амплитуде} (наиболее часто используется) окончательный цвет определяется путем линейной интерполяции массива цветов. Массив цветов формируется из цветов, указанных в строке спецификации. Аргумент -- амплитуда, нормированная между @var{Cmin} -- @var{Cmax} (см. @ref{Axis settings}). Например, строка из 4 символов @samp{bcyr} соответствует изменению цвета от синего (минимальное значение) через голубой и желтый (промежуточные значения) к красному (максимальное значение). Строка @samp{kw} соответствует изменению цвета от черного (минимальное значение) к белому (максимальное значение). Строка из одного символа (например, @samp{g}) соответствует однотонному цвету (в данному случае зеленому).
 
 Есть несколько полезных цветовых схем. Строка @samp{kw} дает обычную серую (черно-белую) схему, когда большие значения светлее. Строка @samp{wk} представляет обратную серую схему, когда большие значения темнее. Строки @samp{kRryw}, @samp{kGgw}, @samp{kBbcw} представляют собой хорошо известные схемы @emph{hot}, @emph{summer} и @emph{winter}. Строки @samp{BbwrR} и @samp{bBkRr} позволяют рисовать двухцветные фигуры на белом или черном фоне, когда отрицательные значения показаны синим цветом, а положительные -- красным. Строка @samp{BbcyrR} дает цветовую схему, близкую к хорошо известной схеме @emph{jet}.
+
+Для более точно раскрашивания поверхностей можно изменить равномерное (по умолчанию) положение цветов в цветовой схеме. Формат следующий: @samp{@{CN,pos@}}, @samp{@{CN,pos@}} или @samp{@{xRRGGBB,pos@}}. Здесь значение @var{pos} положения цвета должно быть в диапазоне [0, 1]. Отмечу, что альтернативным механизмом тонкой настройки цветовой схемы может служить использование формул для цветовой координаты (см. @ref{Curved coordinates}).
 
 @pfig{schemes, Most popular color schemes.}
 
@@ -207,7 +219,7 @@ MathGL имеет быстрый парсер текстовых формул
 
 Опции команд позволяют легко настроить вид отдельного графика не меняя глобальных настроек для все рисунка. Каждая опция отделяется от предыдущей символом @samp{;}. Опции работают так, что запоминают текущие настройки рисунка, применяют собственные настройки, выполняют команду и возвращают глобальные настройки обратно. Поэтому использование опций для команд обработки данных или настройки графика бесполезно.
 
-Наиболее часто используемые опции -- @code{xrange, yrange, zrange}, устанавливают границы изменения осей координат (и тем самым автоматических массивов). Например, команда @code{Plot(y,"","xrange 0.1 0.9");} или @code{plot y; xrange 0.1 0.9} построит кривую с x-координатой равно распределенной в интервале 0.1 ... 0.9, а не вдоль текущей оси x.
+Наиболее часто используемые опции -- @code{xrange, yrange, zrange}, устанавливают границы изменения осей координат (и тем самым автоматических массивов). Например, команда @code{Plot(y,"","xrange 0.1 0.9");} или @code{plot y; xrange 0.1 0.9} построит кривую с x-координатой равно распределенной в интервале 0.1 ... 0.9, а не вдоль текущей оси x. Пример @ref{Using options} показывает использование опций.
 
 Полный список опций:
 @cindex alpha
@@ -215,14 +227,14 @@ MathGL имеет быстрый парсер текстовых формул
 @deffn {Опция MGL} alpha @code{val}
 Задает величину прозрачности поверхности. Значение должно быть в диапазоне [0, 1]. См. также @ref{alphadef}
 @end deffn
-@cindex ambient
-@deffn {Опция MGL} ambient @code{val}
-Задает яркость фонового освещения. Значение должно быть в диапазоне [0, 1]. См. также @ref{ambient}
-@end deffn
-@cindex diffuse
-@deffn {Опция MGL} diffuse @code{val}
-Задает яркость диффузного освещения для поверхности. Значение должно быть в диапазоне [0, 1]. См. также @ref{diffuse}.
-@end deffn
+@c @cindex ambient
+@c @deffn {Опция MGL} ambient @code{val}
+@c Задает яркость фонового освещения. Значение должно быть в диапазоне [0, 1]. См. также @ref{ambient}
+@c @end deffn
+@c @cindex diffuse
+@c @deffn {Опция MGL} diffuse @code{val}
+@c Задает яркость диффузного освещения для поверхности. Значение должно быть в диапазоне [0, 1]. См. также @ref{diffuse}.
+@c @end deffn
 
 @cindex xrange
 @deffn {Опция MGL} xrange @code{val1 val2}
