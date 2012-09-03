@@ -168,7 +168,7 @@ void mglCanvas::LightScale()
 }
 //-----------------------------------------------------------------------------
 // NOTE: Perspective, transformation formulas and lists are not support just now !!! Also it use LAST InPlot parameters!!!
-mglPoint mglCanvas::CalcXYZ(int xs, int ys) const
+mglPoint mglCanvas::CalcXYZ(int xs, int ys, bool real) const
 {
 	mreal s3 = 2*B.pf, x, y, z;	// TODO: Take into account z-value of z-buffer
 	ys = Height - ys;
@@ -194,9 +194,11 @@ mglPoint mglCanvas::CalcXYZ(int xs, int ys) const
 	{
 		// put inverse matrix here: [x,y,z]=B^(-1)[xx,yy,zz]
 		mreal det = -B.b[0]*B.b[4]*B.b[8]+B.b[1]*B.b[3]*B.b[8]+B.b[0]*B.b[5]*B.b[7]-B.b[2]*B.b[3]*B.b[7]-B.b[1]*B.b[5]*B.b[6]+B.b[2]*B.b[4]*B.b[6];
+		det /= 2*B.pf;
 		x = (B.b[2]*B.b[4]-B.b[1]*B.b[5])*zz+(B.b[1]*B.b[8]-B.b[2]*B.b[7])*yy+(B.b[5]*B.b[7]-B.b[4]*B.b[8])*xx;	x /= det;
 		y = (B.b[0]*B.b[5]-B.b[2]*B.b[3])*zz+(B.b[2]*B.b[6]-B.b[0]*B.b[8])*yy+(B.b[3]*B.b[8]-B.b[5]*B.b[6])*xx;	y /= det;
 		z = (B.b[1]*B.b[3]-B.b[0]*B.b[4])*zz+(B.b[0]*B.b[7]-B.b[1]*B.b[6])*yy+(B.b[4]*B.b[6]-B.b[3]*B.b[7])*xx;	z /= det;
+		real = false;
 	}
 	else if(fabs(d1) > fabs(d2) && fabs(d1) > fabs(d3))	// x-y plane
 	{
@@ -216,9 +218,8 @@ mglPoint mglCanvas::CalcXYZ(int xs, int ys) const
 		x = s3*(B.b[5]*xx-B.b[2]*yy)/d3;
 		z = s3*(B.b[0]*yy-B.b[3]*xx)/d3;
 	}
-	return mglPoint(Min.x + (Max.x-Min.x)*(x+1)/2,
-					Min.y + (Max.y-Min.y)*(y+1)/2,
-					Min.z + (Max.z-Min.z)*(z+1)/2);
+	return real ? mglPoint(NAN,NAN,NAN) : mglPoint(Min.x + (Max.x-Min.x)*(x+1)/2,
+				Min.y + (Max.y-Min.y)*(y+1)/2, Min.z + (Max.z-Min.z)*(z+1)/2);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::CalcScr(mglPoint p, int *xs, int *ys) const

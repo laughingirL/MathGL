@@ -17,59 +17,39 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef NEWCMDDIALOG_H
-#define NEWCMDDIALOG_H
+#ifndef DATADIALOG_H
+#define DATADIALOG_H
 //-----------------------------------------------------------------------------
-#include <QDialog>
-#include <QStringList>
-#define NUM_CH	16		// number of argument sets for a command
+#include <qdialog.h>
 class QComboBox;
-class QLabel;
 class QLineEdit;
-class QTableWidget;
-class QTextBrowser;
-class OptionDialog;
-class StyleDialog;
-class DataDialog;
+class QSpinBox;
+class QLabel;
+class QShowEvent;
 //-----------------------------------------------------------------------------
-class NewCmdDialog : public QDialog
+/// Selecting styles of command (like line style, color scheme, font style, axis style)
+class DataDialog : public QDialog
 {
-Q_OBJECT
+	Q_OBJECT
 public:
-	NewCmdDialog(QWidget *p);
-	const QString &getCommand()	{	return cmd;	}
-
+	QString getData()	{	return result;	};
+	void updateNames();
+	DataDialog(QWidget *parent = 0);
+	~DataDialog(){};
+protected:
+	virtual void showEvent(QShowEvent *ev)
+	{	updateNames();	QDialog::showEvent(ev);	}
 private slots:
-	void typeChanged(int);
-	void nameChanged(int);
-	void kindChanged(int);
-	void insertData();
-	void insertOpt();
-	void insertStl();
-	void finish();
-	void zoomIn();
-	void zoomOut();
-
-public slots:
-	void parseCmd(const QString &txt);
-
-signals:
-	void result(const QString &txt);
-
+	void nameChanged();
+	void updateRes();
+	void userRes();
 private:
-	QTextBrowser *help;
-	QComboBox *type, *name, *kind;
-	QLineEdit *opt;
-	QLabel *info;
-	QTableWidget *args;
-	QString cmd;
-	QStringList types, cmds[17], argn[NUM_CH], kinds;
-	OptionDialog *optDialog;
-	StyleDialog *stlDialog;
-	DataDialog *datDialog;
-
-	void fillList();
+	QString result;
+	QComboBox *name, *suffix, *oper, *dirs;
+	QLineEdit *res, *func;
+	QSpinBox  *x1, *y1, *z1, *x2, *y2, *z2;
+	QLabel *sizes;
 };
 //-----------------------------------------------------------------------------
-#endif // NEWCMDDIALOG_H
+#endif
 //-----------------------------------------------------------------------------

@@ -12,7 +12,7 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 6. Save primitives for frames (not bitmap) ??? -- see MGL_USEDRWDAT ==> frames in OpenGL mode
 7. Enable several fonts at the same picture -- global std::vector<mglFont> + index in this set
 8. Table(mreal x, mreal y, HCDT dat, char *xlabels, char *ylabels, char *stl) -- draw table with values (+ auto reduce font size?) -- format in [] like "[%.2g]".
-9. Graph(names, styles, font, size); -- names = "node1[node2,node3,node4[node5,node6]]", styles -- the same + apply for subnodes if absent. Styles are colors (fill,border,line), dash (to subnodes), marks "dos^v><", arrows.
+9. Graph(mreal x, mreal y, names, styles, font, size); -- names = "node1[node2,node3,node4[node5,node6]]", styles -- the same + apply for subnodes if absent. Styles are colors (fill,border,line), dash (to subnodes), marks "dos^v><", arrows.
 10. Legend in several columns
 11. Add flag for drawing 3d arrows instead of 2d (S,D -- cube, T -- sq.pyramid, I -- square, O -- sphere???, A,K,V -- ???)
 
@@ -42,41 +42,33 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 
 ============= UDAV =============
 
-01. Dialog for data input
-----------------------------------------
-| [Data name |V|]                      |
-| [x1]     [x2]     [func]       {ADD} |
-| [y1]     [y2]     [suf|V]      {ADD} |
-| [z1]     [z2] [oper|V] [dir]   {ADD} |
-| Reuslt [                   ]         |
-|           {Cancel}    {OK}           |
-----------------------------------------
-Ranges can be inverted.
-Remove other setting if data name is changed.
+00. Kind of plot in newcmd should save already entered arguments (by its name) + high group don't switch correctly for external command
+01. Show plot at creation stage (if option is enabled -- can be long process!!!) + auto axis range or [-1,1] by default
 
 02. Double click -> jump to string + setup dialog (optionally)
+
 03. Dialog for InPlot(s):
 {SubPlot,MultiPlot}	-- enable rotate,aspect,title
 {ColumnPlot}		-- enable rotate,several
 {StickPlot}		-- enable several
 {InPlot}		-- enable rotate,aspect,title
 
-04. Group/ungroup if command in single line, separated by ':'
-05. Hide plot/group by putting "#h " at beginning of line
-06. Annotation of plot/group -- comment before it
+04. QTreeWidgetItem -- ICON (if,for,once,subplot,...); Cmd text; LINE - POS in group/line. After editing/changing --> put text to editor.
+Buttons: new,load,save // newcmd,hide,annotation,collapse on/off,setup // calc. Click on item cause change of line number in editor.
+05. Group/ungroup if command in single line, separated by ':'
+06. Hide plot/group by putting "#h " at beginning of line
+07. Annotation of plot/group -- comment before it
 
-07. Create default plot dependently of selected row/column/range in data table
-08. Show plot at creation stage (if option is enabled -- can be size_t process!!!)
+08. Drag&drop plot/group between inplots
 
-09. Data change via menu/toolbar -- save to internal script => enable undo + save initial array(?)
-10. Add primitives by mouse at beginning of script + change its size/position by mouse + "attraction" points
-11. Drag&drop plot/group between inplots
-12. QTreeWidgetItem -- ICON (if,for,once,subplot,...); Cmd text; LINE - POS in group/line. After editing/changing --> put text to editor.
+09. Create default plot dependently of selected row/column/range in data table
+10. Data change via menu/toolbar -- save to internal script => enable undo + save initial array(?)
+
+11. Add primitives by mouse at beginning of script + change its size/position by mouse + "attraction" points
+
+12. Add line numbers in editor.
 
 13. Check disabling completer in UDAV
-14. Add line numbers in editor.
-
-15. Status bar messages. should be displayed longer.
 
 ============= UNSURE ===========
 

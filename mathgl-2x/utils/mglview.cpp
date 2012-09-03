@@ -73,8 +73,11 @@ int main(int argc, char **argv)
 	{
 		setlocale(LC_CTYPE, "");
 		FILE *fp = *iname?fopen(iname,"r"):stdin;
-		while(!feof(fp))	str.push_back(fgetwc(fp));
-		if(*iname)	fclose(fp);
+		if(fp)
+		{
+			while(!feof(fp))	str.push_back(fgetwc(fp));
+			fclose(fp);
+		}
 	}
 	mglWindow gr(mgld?NULL:show, *iname?iname:"mglview", kind);
 	if(mgld)

@@ -19,9 +19,18 @@
 #include <locale.h>
 #include "udav.h"
 //-----------------------------------------------------------------------------
+#ifndef MGL_DOC_DIR
+#ifdef WIN32
+#define MGL_DOC_DIR ""
+#else
+#define MGL_DOC_DIR "/usr/local/share/doc/mathgl/"
+#endif
+#endif
+//-----------------------------------------------------------------------------
 char	title[256];
 int num_windows = 0, auto_exec=1, plastic_scheme=1, internal_font=0;
-Fl_Preferences pref(Fl_Preferences::USER,"abalakin","UDAV");
+Fl_Preferences pref(Fl_Preferences::USER,"abalakin","mgllab");
+char *docdir=0;
 //-----------------------------------------------------------------------------
 void set_title(Fl_Window* w)
 {
@@ -131,31 +140,23 @@ void saveas_cb(Fl_Widget*, void*)
 }
 //-----------------------------------------------------------------------------
 ScriptWindow *new_view();
-//-----------------------------------------------------------------------------
 void view_cb(Fl_Widget*, void*)
 {	Fl_Window* w = new_view();	w->show();	}
 //-----------------------------------------------------------------------------
 void hint_cb(Fl_Widget*, void*)	{}
 //-----------------------------------------------------------------------------
 Fl_Menu_Item menuitems[] = {
-	{ gettext("File"), 0, 0, 0, FL_SUBMENU },
-		{ gettext("New File"),			0, new_cb },
-		{ gettext("Open File..."),		FL_CTRL + 'o', open_cb },
-		{ gettext("Insert File..."),	FL_CTRL + 'i', insert_cb },
-		{ gettext("Save File"),			FL_CTRL + 's', save_cb },
-		{ gettext("Save File As..."),	FL_CTRL + FL_SHIFT + 's', saveas_cb, 0, FL_MENU_DIVIDER },
-/*		{ gettext("Export"), 0, 0, 0, 	FL_SUBMENU },
-			{ gettext("... as PNG"),	FL_ALT + 'p', export_png_cb },
-			{ gettext("... as PNG (solid)"),	FL_ALT + 'f', export_pngn_cb },
-			{ gettext("... as JPEG"),	FL_ALT + 'j', export_jpeg_cb },
-			{ gettext("... as SVG"),	FL_ALT + 's', export_svg_cb },
-			{ gettext("... as vector EPS"),	FL_ALT + 'e', export_eps_cb },
-			{ gettext("... as bitmap EPS"),	0, export_bps_cb, 0, FL_MENU_DIVIDER },
-			{0},*/
-		{ gettext("New View"),		FL_ALT + 'w', view_cb },
-		{ gettext("Close View"),	FL_CTRL + 'w', close_cb, 0, FL_MENU_DIVIDER },
-		{ gettext("Exit"),			FL_ALT + 'x', quit_cb },
-		{ 0 },
+//	{ gettext("File"), 0, 0, 0, FL_SUBMENU },
+	{ gettext("File/New File"),			0, new_cb },
+	{ gettext("File/Open File..."),		FL_CTRL + 'o', open_cb },
+	{ gettext("File/Insert File..."),	FL_CTRL + 'i', insert_cb },
+	{ gettext("File/Save File"),			FL_CTRL + 's', save_cb },
+	{ gettext("File/Save File As..._"),	FL_CTRL + FL_SHIFT + 's', saveas_cb, 0, FL_MENU_DIVIDER },
+/*TODO	{ gettext("Export"), 0, 0, 0, 	FL_SUBMENU },*/
+	{ gettext("File/New View"),		FL_ALT + 'w', view_cb },
+	{ gettext("File/Close View_"),	FL_CTRL + 'w', close_cb, 0, FL_MENU_DIVIDER },
+	{ gettext("File/Exit"),			FL_ALT + 'x', quit_cb },
+//		{ 0 },
 	{ gettext("Edit"), 0, 0, 0, FL_SUBMENU },
 		{ gettext("Cut"),			FL_CTRL + 'x', cut_cb },
 		{ gettext("Copy"),			FL_CTRL + 'c', copy_cb },
@@ -175,28 +176,8 @@ Fl_Menu_Item menuitems[] = {
 		{ gettext("Replace..."),	FL_CTRL + 'r', replace_cb },
 		{ gettext("Replace Again"), FL_F + 4, replace2_cb },
 		{ 0 },
-/*	{ gettext("Animate"), 0, 0, 0, FL_SUBMENU },
-		{ gettext("Slideshow"),	FL_CTRL + FL_F + 5, sshow_cb, 0, FL_MENU_TOGGLE },
-		{ gettext("Next slide"),0, snext_cb },
-		{ gettext("Prev slide"),0, sprev_cb },
-		{ gettext("Parameters"),0, animate_cb },
-		{ 0 },
-	{ gettext("Graphics"), 0, 0, 0, FL_SUBMENU },
-		{ gettext("Alpha"),			FL_ALT + 'a', alpha_cb, 0, FL_MENU_TOGGLE },
-		{ gettext("Light"),			FL_ALT + 'l', light_cb, 0, FL_MENU_TOGGLE },
-		{ gettext("Settings"),		FL_F + 2, setup_cb },
-		{ gettext("Copy graphics"),	0, 0, 0, FL_MENU_INACTIVE|FL_MENU_DIVIDER},
-		{ gettext("Normal view"),	FL_ALT + ' ', norm_cb },
-		{ gettext("Execute script"),FL_F + 5, draw_cb },
-		{ gettext("Adjust size"),	FL_F + 6, adjust_cb },
-		{ gettext("Reload data"),	FL_F + 9, oncemore_cb },
-		{ gettext("Script arguments"),	0, argument_cb },
-		{ 0 },*/
-/*	{ gettext("Data"), 0, 0, 0, FL_SUBMENU },
-		{ gettext("Edit data"),		FL_ALT + 'd', table_cb },
-		{ gettext("List of data"),	FL_ALT + 'v', variables_cb },
-		{ gettext("Reload data"),	FL_F + 9, oncemore_cb },
-		{ 0 },*/
+/*TODO{ gettext("Graphics"), 0, 0, 0, FL_SUBMENU },*/
+/*TODO{ gettext("Data"), 0, 0, 0, FL_SUBMENU },*/
 	{ gettext("Help"), 0, 0, 0, FL_SUBMENU },
 		{ gettext("MGL Help"),		FL_F + 1, help_cb },
 		{ gettext("MGL Examples"),	0, example_cb },
@@ -216,21 +197,33 @@ ScriptWindow *new_view()
 	ScriptWindow *w = new ScriptWindow(930, 510, title);
 	w->begin();
 	w->menu = new Fl_Menu_Bar(0, 0, 930, 30);
-	w->menu->copy(menuitems, w);
+
+//	w->menu->add(gettext("File"), 0, 0, 0, FL_SUBMENU);	
+	w->menu->add(gettext("File/New File"), "", new_cb);
+	w->menu->add(gettext("File/Open File..."), "^o", open_cb, w);
+	w->menu->add(gettext("File/Insert File..."),	"^i", insert_cb, w);
+	w->menu->add(gettext("File/Save File"), "^s", save_cb, w);
+	w->menu->add(gettext("File/Save File As..."), 0, saveas_cb, w, FL_MENU_DIVIDER);
+	/*TODO	{ gettext("Export"), 0, 0, 0, 	FL_SUBMENU },*/
+	w->menu->add(gettext("File/New View"), "#w", view_cb, w);
+	w->menu->add(gettext("File/Close View"), "^w", close_cb, w, FL_MENU_DIVIDER);
+	w->menu->add(gettext("File/Exit"), "#x", quit_cb);
+//	w->menu->copy(menuitems, w);
 
 	Fl_Tile *t = new Fl_Tile(0,30,930,455);
-	tt = new Fl_Tabs(0,30,300,455,0);	tt->box(UDAV_UP_BOX);
+	tt = new Fl_Tabs(0,30,300,455,0);	tt->box(UDAV_UP_BOX);	w->ltab = tt;
 	gg = new Fl_Group(0,30,300,430);	gg->label(gettext("Script"));
 	add_editor(w);	gg->end();
-	tt->end();		w->ltab = tt;
+	tt->end();
 
-	tt = new Fl_Tabs(300,30,930,455,0);	tt->box(UDAV_UP_BOX);
-	w->graph = new Fl_MGL(300,30,930,430,gettext("Canvas"));
-	gg = new Fl_Group(300,30,930,430,gettext("Help"));
-	add_help(w);	gg->end();	w->ghelp = gg;
-	gg = new Fl_Group(300,30,930,430,gettext("Memory"));
+	tt = new Fl_Tabs(300,30,630,455,0);	tt->box(UDAV_UP_BOX);	w->rtab = tt;
+	gg = new Fl_Group(300,30,630,430,gettext("Canvas"));
+	w->graph = new Fl_MGL(300,30,630,430);	gg->end();
+	gg = new Fl_Group(300,30,630,430,gettext("Help"));
+	w->ghelp = gg;	add_help(w);	gg->end();
+	gg = new Fl_Group(300,30,630,430,gettext("Memory"));
 	add_mem(w);		gg->end();
-	tt->end();		w->rtab = tt;
+	tt->end();
 
 	w->status = new Fl_Box(0,485,930,25,"Ready");
 	w->status->align(FL_ALIGN_LEFT|FL_ALIGN_INSIDE);
@@ -238,8 +231,7 @@ ScriptWindow *new_view()
 	w->status->box(FL_DOWN_BOX);
 	w->graph->status = w->status;
 
-	t->end();	t->resizable(t);
-	w->end();	w->resizable(t);
+	t->end();	w->end();	w->resizable(t);
 	tt->callback(mem_upd_cb, w);
 	w->callback((Fl_Callback *)close_cb, w);
 
@@ -252,24 +244,22 @@ int main(int argc, char **argv)
 {
 //	Fl::lock();
 	mgl_ask_func = mgl_ask_fltk;
-	char *buf, *buf2;
+	char *buf, *buf2, ch;
 	pref.get("locale",buf,"ru_RU.cp1251");	setlocale(LC_CTYPE, buf);	free(buf);
 	pref.get("plastic_scheme",plastic_scheme,1);
 	pref.get("internal_font",internal_font,0);
 	pref.get("auto_exec",auto_exec,1);
+	pref.get("help_dir",docdir,MGL_DOC_DIR);	// docdir should be freed at exit
+
+	Fl::visual(FL_DOUBLE|FL_RGB);
+	if(plastic_scheme) Fl::scheme("gtk+");
+
 #ifdef USE_GETTEXT
 //	setlocale (LC_NUMERIC, "");
 //	bindtextdomain (PACKAGE, LOCALEDIR);
 //	textdomain (PACKAGE);
 #endif
 
-	Fl::visual(FL_DOUBLE);
-	if(plastic_scheme) Fl::scheme("plastic");
-#ifdef DOC_DIR
-	char dir[64];
-	if(!pref.get("help_dir",dir,"",64));
-		pref.set("help_dir",DOC_DIR);
-#endif
 	textbuf = new Fl_Text_Buffer;
 	style_init();
 	ScriptWindow *w = new_view();
@@ -277,22 +267,37 @@ int main(int argc, char **argv)
 	pref.get("font_dir",buf2,"");
 	pref.get("font_name",buf,"");
 	mgl_load_font(w->graph->FMGL->get_graph(),buf,buf2);
-	if(buf)		free(buf);
+	if(buf)	free(buf);
 	if(buf2)	free(buf2);
 
-	w->show(1, argv);
-	for(int i=1;i<argc;i++)
+	buf = 0;
+	while(1)
 	{
-		if(argv[i][0]!='-')
+		ch = getopt(argc, argv, "1:2:3:4:5:6:7:8:9:ho:L:");
+		if(ch>='1' && ch<='9')	argument_set(ch-'0', optarg);
+		else if(ch=='L')	setlocale(LC_CTYPE, optarg);
+		else if(ch=='h')
 		{
-			load_file(argv[i], -1);
-			if(auto_exec)	w->graph->update();
+			printf("mglconv convert mgl script to bitmap png file.\nCurrent version is 2.%g\n",MGL_VER2);
+			printf("Usage:\tmgllab [parameter(s)] scriptfile\n");
+			printf(	"\t-1 str       set str as argument $1 for script\n"
+					"\t...          ...\n"
+					"\t-9 str       set str as argument $9 for script\n"
+					"\t-L loc       set locale to loc\n"
+//					"\t-            get script from standard input\n"
+					"\t-h           print this message\n" );
+			free(docdir);	return 0;
 		}
-		else
-		{
-			char ch = argv[i][1];
-			if(ch>='0' && ch<='9')	argument_set(ch-'0',argv[i]+2);
-		}
+		// NOTE: I will not parse stdin here
+		else if(ch==-1 && optind<argc)	buf = argv[optind];
+		else if(ch==-1 && optind>=argc)	break;
+	}
+
+	w->show(1, argv);
+	if(buf && *buf && *buf!='-')
+	{
+		load_file(buf, -1);
+		if(auto_exec)	w->graph->update();
 	}
 	return Fl::run();
 }

@@ -36,7 +36,7 @@ Fl_Text_Display::Style_Table_Entry styletable[] = {	// Style table
 		{ FL_DARK_BLUE,	FL_COURIER_BOLD,	14, 0 },	// E - Usual ommand
 		{ FL_DARK_CYAN,	FL_COURIER_BOLD,	14, 0 },	// F - Flow command
 		{ FL_DARK_MAGENTA,	FL_COURIER_BOLD,14, 0 },	// G - New-data command
-		{ FL_DARK_RED,	FL_COURIER_BOLD,	14, 0 },	// H - Option
+		{ FL_DARK_RED,	FL_COURIER,	14, 0 },	// H - Option
 		{ FL_DARK_GREEN,FL_COURIER_BOLD,	14, 0 }};  // I - Inactive command
 //-----------------------------------------------------------------------------
 bool is_sfx(const char *s)	// suffix
@@ -55,11 +55,10 @@ bool is_sfx(const char *s)	// suffix
 bool is_opt(const char *s)	// option
 {
 	const char *o[]={"xrange","yrange","zrange","crange","alpha",
-					"cut","ambient","meshnum","fontsize","alphadef",
-	 				"marksize","legend"};
-	int l[12] = {6, 6, 6, 6, 5, 3, 7, 7, 8, 8, 8, 6};
+					"cut","value","meshnum","size","legend"};
+	int l[10] = {6, 6, 6, 6, 5, 3, 5, 7, 4, 6};
 	register long i;
-	for(i=0;i<12;i++)	if(!strncmp(o[i],s,l[i]) && s[l[i]]<=' ')	return true;
+	for(i=0;i<10;i++)	if(!strncmp(o[i],s,l[i]) && s[l[i]]<=' ')	return true;
 	return false;
 }
 //-----------------------------------------------------------------------------
@@ -83,7 +82,7 @@ bool is_num(const char *s)	// number
 char is_cmd(const char *s)	// command
 {
 	register long i,n=strlen(s)+1;
-	char res=0, *w=new char[n];
+	char res=0, *w=new char[n];	strcpy(w,s);
 	for(i=0;i<n;i++)	if(!isalnum(s[i]))	w[i]=0;
 	int rts = Parse->CmdType(w);
 	if(rts==5)		res = 'G';
@@ -462,26 +461,26 @@ Fl_Widget *add_editor(ScriptWindow *w)
 
 	o = new Fl_Button(0, 1, 25, 25);	o->image(new Fl_Pixmap(document_new_xpm));
 	o->tooltip(gettext("New script"));	o->callback(new_cb,w);
-	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
+//	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 	o = new Fl_Button(25, 1, 25, 25);	o->tooltip(gettext("Open script or data file"));
 	o->image(new Fl_Pixmap(document_open_xpm));	o->callback(open_cb,w);
-	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
+//	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 	o = new Fl_Button(50, 1, 25, 25);	o->tooltip(gettext("Save script to file"));
 	o->image(new Fl_Pixmap(document_save_xpm));	o->callback(save_cb,w);
-	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
+//	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 
 	o = new Fl_Button(80, 1, 25, 25);	o->tooltip(gettext("Cut selection to clipboard"));
 	o->image(new Fl_Pixmap(edit_cut_xpm));	o->callback(cut_cb,w);
-	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
+//	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 	o = new Fl_Button(105, 1, 25, 25);	o->tooltip(gettext("Copy selection to clipboard"));
 	o->image(new Fl_Pixmap(edit_copy_xpm));	o->callback(copy_cb,w);
-	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
+//	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 	o = new Fl_Button(130, 1, 25, 25);	o->tooltip(gettext("Paste text from clipboard"));
 	o->image(new Fl_Pixmap(edit_paste_xpm));	o->callback(paste_cb,w);
-	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
+//	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 	o = new Fl_Button(155, 1, 25, 25);	o->tooltip(gettext("Find text"));
 	o->image(new Fl_Pixmap(edit_find_xpm));	o->callback(find_cb,w);
-	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
+//	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 
 	o = new Fl_Button(185, 1, 25, 25);	o->tooltip(gettext("Insert MGL command"));
 	o->image(new Fl_Pixmap(plot_xpm));	o->callback(command_cb,w);
@@ -497,7 +496,7 @@ Fl_Widget *add_editor(ScriptWindow *w)
 //	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 	o = new Fl_Button(210, 1, 25, 25);	o->tooltip(gettext("Show help window"));
 	o->image(new Fl_Pixmap(help_contents_xpm));	o->callback(help_cb,w);
-	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
+//	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 	g->end();	g->resizable(0);
 
 	w->editor = new Fl_Text_Editor(0, 28, 300, 400);

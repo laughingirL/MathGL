@@ -20,7 +20,6 @@
 #include <FL/Fl_Check_Button.H>
 #include "udav.h"
 //-----------------------------------------------------------------------------
-void get_doc_dir(char *&docdir);
 void option_in_cb(Fl_Widget *, void *v);
 void style_in_cb(Fl_Widget *, void *v);
 //-----------------------------------------------------------------------------
@@ -200,13 +199,12 @@ void type_cmd_cb(Fl_Widget *, void *)
 		cmd_dlg.fmt->copy_label(Parse->CmdFormat(first[val]));
 
 		static char str[300];	// load help for command
-		char *docdir;	get_doc_dir(docdir);
 #ifdef WIN32
 		sprintf(str,"%s\\mgl_en.html#%s",docdir,first[val]);
 #else
 		sprintf(str,"%s/mgl_en.html#%s",docdir,first[val]);
 #endif
-		free(docdir);	cmd_dlg.help->load(str);
+		cmd_dlg.help->load(str);
 	}
 	cmd_dlg.cmd->value(0);
 }
@@ -218,13 +216,12 @@ void desc_cmd_cb(Fl_Widget *, void *)
 	cmd_dlg.fmt->copy_label(Parse->CmdFormat(name));
 
 	static char str[300];	// load help for command
-	char *docdir;	get_doc_dir(docdir);
 #ifdef WIN32
 	sprintf(str,"%s\\mgl_en.html#%s",docdir,name);
 #else
 	sprintf(str,"%s/mgl_en.html#%s",docdir,name);
 #endif
-	free(docdir);	cmd_dlg.help->load(str);
+	cmd_dlg.help->load(str);
 }
 //-----------------------------------------------------------------------------
 void CmdDlg::create_dlg()

@@ -55,7 +55,7 @@ PlotPanel::PlotPanel(QWidget *parent) : QWidget(parent)
 	popup = new QMenu(this);
 	mgl = new QMathGL(this);
 	draw = new mglDrawScript(&parser);
-	mgl->setDraw(draw);
+	mgl->getGraph()->set(MGL_SHOW_POS);	mgl->setDraw(draw);
 
 	QBoxLayout *v,*h,*m;
 	v = new QVBoxLayout(this);
@@ -376,7 +376,7 @@ void PlotPanel::toolLeft(QBoxLayout *l)
 	QToolButton *bb;
 
 	// zooming menu
-/*	oo = o->addMenu(tr("Zoom/move"));
+	oo = o->addMenu(tr("Zoom/move"));
 	a = new QAction(QPixmap(":/xpm/go-previous.png"), tr("Move &left"), this);
 	connect(a, SIGNAL(triggered()), mgl, SLOT(shiftLeft()));
 	a->setShortcut(Qt::CTRL+Qt::META+Qt::Key_Left);
@@ -417,7 +417,7 @@ void PlotPanel::toolLeft(QBoxLayout *l)
 	a->setShortcut(Qt::CTRL+Qt::META+Qt::Key_Right);
 	a->setToolTip(tr("Move graphics right by 1/3 of its width."));
 	oo->addAction(a);
-	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);*/
+	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
 	// rotate menu
 	oo = o->addMenu(tr("Rotate"));

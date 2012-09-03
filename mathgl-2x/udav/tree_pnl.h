@@ -17,59 +17,41 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef NEWCMDDIALOG_H
-#define NEWCMDDIALOG_H
+#ifndef TREE_PNL_H
+#define TREE_PNL_H
 //-----------------------------------------------------------------------------
-#include <QDialog>
+#include <QWidget>
 #include <QStringList>
-#define NUM_CH	16		// number of argument sets for a command
-class QComboBox;
-class QLabel;
-class QLineEdit;
-class QTableWidget;
-class QTextBrowser;
-class OptionDialog;
-class StyleDialog;
-class DataDialog;
 //-----------------------------------------------------------------------------
-class NewCmdDialog : public QDialog
+class QMenu;
+class QBoxLayout;
+class OptionDialog;
+class NewCmdDialog;
+class PlotPanel;
+class TextEdit;
+//-----------------------------------------------------------------------------
+class TreePanel : public QWidget
 {
 Q_OBJECT
 public:
-	NewCmdDialog(QWidget *p);
-	const QString &getCommand()	{	return cmd;	}
+	// NOTE: these 3 pointers have to be filled!!!
+	TextEdit *edit;		///< script itself
+	PlotPanel *graph;	
+	NewCmdDialog *newCmdDlg;
 
-private slots:
-	void typeChanged(int);
-	void nameChanged(int);
-	void kindChanged(int);
-	void insertData();
-	void insertOpt();
-	void insertStl();
-	void finish();
-	void zoomIn();
-	void zoomOut();
+	TreePanel(QWidget *parent = 0);
+	~TreePanel();
 
 public slots:
-	void parseCmd(const QString &txt);
-
-signals:
-	void result(const QString &txt);
+	void refresh();			///< refresh tree according new script
+	void setPosition(int);	///< select item for given line number
+	void hidePlot(int);		///< hide plot for given item
+	void annotatePlot(int);	///< add annotation for given item
+	void newCmd();			///< add new command + refresh tree
 
 private:
-	QTextBrowser *help;
-	QComboBox *type, *name, *kind;
-	QLineEdit *opt;
-	QLabel *info;
-	QTableWidget *args;
-	QString cmd;
-	QStringList types, cmds[17], argn[NUM_CH], kinds;
-	OptionDialog *optDialog;
-	StyleDialog *stlDialog;
-	DataDialog *datDialog;
-
-	void fillList();
+	void toolTop(QBoxLayout *l);
 };
 //-----------------------------------------------------------------------------
-#endif // NEWCMDDIALOG_H
+#endif // TREE_PNL_H
 //-----------------------------------------------------------------------------

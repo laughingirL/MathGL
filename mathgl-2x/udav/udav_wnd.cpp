@@ -242,7 +242,7 @@ MainWindow::MainWindow(QWidget *wp) : QMainWindow(wp)
 	connect(graph, SIGNAL(animPutText(const QString &)), edit, SLOT(animPutText(const QString &)));
 	connect(graph,SIGNAL(giveFocus()),edit->edit,SLOT(setFocus()));
 	connect(graph->mgl, SIGNAL(objChanged(int)), edit, SLOT(setCursorPosition(int)));
-	connect(graph->mgl, SIGNAL(posChanged(QString)), statusBar(), SLOT(showMessage(QString)));
+//	connect(graph->mgl, SIGNAL(posChanged(QString)), statusBar(), SLOT(showMessage(QString)));
 	connect(graph->mgl, SIGNAL(refreshData()), this, SLOT(refresh()));
 	connect(graph->mgl, SIGNAL(refreshData()), edit, SLOT(refreshData()));
 

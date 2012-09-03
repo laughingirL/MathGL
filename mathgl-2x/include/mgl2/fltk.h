@@ -43,7 +43,7 @@ public:
 	Fl_Valuator	*tet_val;	///< pointer to external tet-angle validator
 	Fl_Valuator	*phi_val;	///< pointer to external phi-angle validator
 
-	Fl_MathGL(int x, int y, int w, int h, char *label=0);
+	Fl_MathGL(int x, int y, int w, int h, const char *label=0);
 	~Fl_MathGL();
 
 	/// Update (redraw) plot
@@ -117,21 +117,21 @@ public:
 	void toggle_alpha()	{	toggle(alpha, alpha_bt, "Graphics/Alpha");	}
 	void toggle_light()	{	toggle(light, light_bt, "Graphics/Light");	}
 	void toggle_sshow()	{	toggle(sshow, anim_bt, "Graphics/Slideshow");	}
-	void toggle_wire()	{	toggle(wire, wire_bt, "Graphics/Wire");	}
+	void toggle_grid()	{	toggle(grid, grid_bt, "Graphics/Grid");	}
 	void toggle_zoom()	{	toggle(zoom, zoom_bt);	}
 	void toggle_rotate(){	toggle(rotate, rotate_bt);	}
 	void setoff_zoom()	{	setoff(zoom, zoom_bt);	}
 	void setoff_rotate(){	setoff(rotate, rotate_bt);	}
 	bool is_sshow()		{	return sshow;	}
 
-	Fl_MGLView(int x, int y, int w, int h, char *label=0);
+	Fl_MGLView(int x, int y, int w, int h, const char *label=0);
 	~Fl_MGLView();
 	void update();			///< Update picture by calling user drawing function
 protected:
-	Fl_Button *alpha_bt, *light_bt, *rotate_bt, *anim_bt, *zoom_bt, *wire_bt;
+	Fl_Button *alpha_bt, *light_bt, *rotate_bt, *anim_bt, *zoom_bt, *grid_bt;
 //	Fl_Counter *tet, *phi;
 
-	int wire, alpha, light;	///< Current states of wire, alpha, light switches (toggle buttons)
+	int grid, alpha, light;	///< Current states of wire, alpha, light switches (toggle buttons)
 	int sshow, rotate, zoom;///< Current states of slideshow, rotate, zoom switches (toggle buttons)
 
 	void toggle(int &val, Fl_Button *b, const char *txt=NULL);
@@ -168,6 +168,7 @@ using mglCanvasWnd::Window;
 };
 //-----------------------------------------------------------------------------
 void mgl_ask_fltk(const wchar_t *quest, wchar_t *res);
+void mgl_makemenu_fltk(Fl_Menu_ *m, Fl_MGLView *w);
 //-----------------------------------------------------------------------------
 #else
 #error "Please enable FLTK support"

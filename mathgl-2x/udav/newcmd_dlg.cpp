@@ -31,6 +31,7 @@
 #include "newcmd_dlg.h"
 #include "opt_dlg.h"
 #include "style_dlg.h"
+#include "data_dlg.h"
 extern mglParser parser;
 extern QString pathHelp;
 //-----------------------------------------------------------------------------
@@ -43,6 +44,7 @@ NewCmdDialog::NewCmdDialog(QWidget *p) : QDialog(p,Qt::WindowStaysOnTopHint)
 	QVBoxLayout *o = new QVBoxLayout;	m->addLayout(o);
 	optDialog = new OptionDialog(this);
 	stlDialog = new StyleDialog(this);
+	datDialog = new DataDialog(this);
 	type = new QComboBox(this);		o->addWidget(type);
 	type->setToolTip(tr("Groups of MGL commands"));
 	name = new QComboBox(this);		o->addWidget(name);
@@ -62,6 +64,7 @@ NewCmdDialog::NewCmdDialog(QWidget *p) : QDialog(p,Qt::WindowStaysOnTopHint)
 						"You can use '' for default format. See help at right\nfor default values."));
 	QStringList sl;	sl<<tr("Argument")<<tr("Value");
 	args->setHorizontalHeaderLabels(sl);
+	connect(args,SIGNAL(cellDoubleClicked(int,int)), this, SLOT(insertData()));
 
 	a = new QHBoxLayout;	o->addLayout(a);
 	b = new QPushButton(tr("Add style"),this);	a->addWidget(b);
@@ -146,7 +149,7 @@ void NewCmdDialog::parseCmd(const QString &txt)
 	}
 }
 //-----------------------------------------------------------------------------
-void NewCmdDialog::fillList()
+void NewCmdDialog::fillList()	// TODO update list !!!
 {
 	types<<tr("1D plots")<<tr("2D plots")<<tr("3D plots")<<tr("Dual plots")
 			<<tr("Vector plots")<<tr("Other plots")<<tr("Text and legend")
@@ -281,10 +284,20 @@ void NewCmdDialog::kindChanged(int s)
 	}
 }
 //-----------------------------------------------------------------------------
-void NewCmdDialog::insertData()	{}	// TODO !!!
-//-----------------------------------------------------------------------------
 void NewCmdDialog::insertOpt()
 {	if(optDialog->exec())	opt->setText(optDialog->getOption());	}
+//-----------------------------------------------------------------------------
+void NewCmdDialog::insertData()
+{
+	int row = args->currentRow(), col = args->currentColumn();
+	QString a = args->item(row,0)->text();
+	if(a[0].isUpper())
+	{
+		if(datDialog->exec())	args->item(row,1)->setText(datDialog->getData());
+	}
+	else		QMessageBox::warning(this,tr("New command"), tr("This argument is not data"));
+
+}
 //-----------------------------------------------------------------------------
 void NewCmdDialog::insertStl()
 {

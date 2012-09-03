@@ -24,8 +24,6 @@
 #include "udav.h"
 //-----------------------------------------------------------------------------
 extern int auto_exec, plastic_scheme, internal_font;
-extern Fl_Preferences pref;
-void get_doc_dir(char *&docdir);
 //-----------------------------------------------------------------------------
 void setup_dlg_cb(Fl_Widget *, void *v)
 {	SetupDlg *s = (SetupDlg *)v;	s->OK = true;	s->wnd->hide();	}
@@ -352,7 +350,7 @@ void PropDlg::init()
 	pref.get("plastic_scheme",p,1);	plast->value(p);
 	pref.get("auto_exec",a,1);		aexec->value(a);
 	pref.get("internal_font",a,0);	ifont->value(a);
-	get_doc_dir(buf);				path->value(buf);	free(buf);
+	path->value(docdir);
 	pref.get("font_dir",buf,"");	fpath->value(buf);	free(buf);
 	pref.get("font_name",buf,"");	font->value(buf);	free(buf);
 	pref.get("locale",buf,"ru_RU.cp1251");	locale->value(buf);	free(buf);

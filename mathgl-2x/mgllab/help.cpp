@@ -18,26 +18,6 @@
 #include <ctype.h>
 #include <FL/Fl_Select_Browser.H>
 //-----------------------------------------------------------------------------
-void get_doc_dir(char *&docdir)
-{
-	static char str[300];
-	pref.get("help_dir",docdir,"");
-#ifdef WIN32
-	sprintf(str,"%s\\mgl_en.html",docdir);
-#else
-	sprintf(str,"%s/mgl_en.html",docdir);
-#endif
-	FILE *fp = fopen(str,"r");
-	if(fp)	fclose(fp);
-	else
-	{
-		const char *p=0;
-		if((p=fl_input("Please enter a path for help/font files:","")))
-			pref.set("help_dir",p);
-		pref.get("help_dir",docdir,"");
-	}
-}
-//-----------------------------------------------------------------------------
 void help_cb(Fl_Widget*, void*v)
 {
 	ScriptWindow* e = (ScriptWindow*)v;
@@ -49,13 +29,12 @@ void help_cb(Fl_Widget*, void*v)
 	for(j=j0;!isspace(buf[j]) && buf[j]!='#' && buf[j]!=';' && j<31+j0;j++)
 		s[j-j0] = buf[j];
 	free(buf);
-	get_doc_dir(buf);
 #ifdef WIN32
-	sprintf(str,"%s\\mgl_en.html#%s",buf,s);
+	sprintf(str,"%s\\mgl_en.html#%s",docdir,s);
 #else
-	sprintf(str,"%s/mgl_en.html#%s",buf,s);
+	sprintf(str,"%s/mgl_en.html#%s",docdir,s);
 #endif
-	free(buf);	e->hd->load(str);
+	e->hd->load(str);
 	if(e->rtab)	e->rtab->value(e->ghelp);
 }
 //-----------------------------------------------------------------------------
@@ -63,29 +42,25 @@ void link_cb(Fl_Widget*, void*v)
 {
 	ScriptWindow* e = (ScriptWindow*)v;
 	static char str[300];
-	char *docdir;
-	get_doc_dir(docdir);
 #ifdef WIN32
 	sprintf(str,"%s\\mgl_en.html#%s",docdir,e->link_cmd->value());
 #else
 	sprintf(str,"%s/mgl_en.html#%s",docdir,e->link_cmd->value());
 #endif
-	free(docdir);	e->hd->load(str);
+	e->hd->load(str);
 	if(e->rtab)	e->rtab->value(e->ghelp);
 }
 //-----------------------------------------------------------------------------
 void example_cb(Fl_Widget*, void*v)
 {
-	char *docdir;
 	static char str[300];
 	ScriptWindow* e = (ScriptWindow*)v;
-	get_doc_dir(docdir);
 #ifdef WIN32
 	sprintf(str,"%s\\mgl_en.html\\mgl_en_2.html",docdir);
 #else
 	sprintf(str,"%s/mgl_en.html/mgl_en_2.html",docdir);
 #endif
-	free(docdir);	e->hd->load(str);	e->rtab->value(e->ghelp);
+	e->hd->load(str);	e->rtab->value(e->ghelp);
 	if(e->rtab)	e->rtab->value(e->ghelp);
 }
 //-----------------------------------------------------------------------------
@@ -132,13 +107,13 @@ Fl_Widget *add_help(ScriptWindow *w)
 
 	o = new Fl_Button(155, 1, 25, 25);	o->tooltip(gettext("MGL samples and hints"));
 	o->image(new Fl_Pixmap(help_faq_xpm));	o->callback(example_cb,w);
-	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
+//	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 	o = new Fl_Button(180, 1, 25, 25);	o->tooltip(gettext("Increase font size"));
 	o->image(new Fl_Pixmap(zoom_in_xpm));	o->callback(help_in_cb,w);
-	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
+//	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 	o = new Fl_Button(205, 1, 25, 25);	o->tooltip(gettext("Decrease font size"));
 	o->image(new Fl_Pixmap(zoom_out_xpm));	o->callback(help_out_cb,w);
-	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
+//	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 
 	g->end();	g->resizable(0);
 

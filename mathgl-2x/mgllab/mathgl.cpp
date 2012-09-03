@@ -43,7 +43,6 @@
 //-----------------------------------------------------------------------------
 extern int internal_font;
 mglParse *Parse=0;
-void get_doc_dir(char *&docdir);
 //-----------------------------------------------------------------------------
 void udav_error(const char *Message, void *v)
 {	((Fl_MGL*)v)->status->label(Message);	}
@@ -78,7 +77,7 @@ void Fl_MGL::prev_frame()
 	update();
 }
 //-----------------------------------------------------------------------------
-Fl_MGL::Fl_MGL(int x, int y, int w, int h, char *label) : Fl_MGLView(x,y,w,h,label)
+Fl_MGL::Fl_MGL(int x, int y, int w, int h, const char *label) : Fl_MGLView(x,y,w,h,label)
 {
 	if(!Parse)	Parse = new mglParse;
 	Parse->AllowSetSize(true);

@@ -72,10 +72,10 @@ QMathGL::QMathGL(QWidget *parent, Qt::WindowFlags f) : QWidget(parent, f)
 {
 	autoResize = false;	draw_par = 0;	draw_func = 0;
 	gr = new mglCanvas;		appName = "MathGL";
-	popup = 0;		grBuf = 0;	draw = 0;
+	popup = 0;	grBuf = 0;	draw = 0;
 	phi = tet = per = 0;
-	x1 = y1 = 0;	x2 = y2 = 1;
-	alpha = light = zoom = rotate = grid = false;
+	x1 = y1 = ax1 = ay1 = 0;	x2 = y2 = ax2 = ay2 = 1;
+	alpha = light = zoom = rotate = grid = axis = false;
 	resize(600, 400);	gr->set(MGL_CLF_ON_UPD);
 	timer = new QTimer(this);
 //	resize(graph->GetWidth(), graph->GetHeight());
@@ -129,6 +129,9 @@ void QMathGL::setTet(int t)
 //-----------------------------------------------------------------------------
 void QMathGL::setAlpha(bool a)
 {	if(alpha!=a)	{	alpha = a;	emit alphaChanged(a);	update();	}	}
+//-----------------------------------------------------------------------------
+void QMathGL::setAxis(bool a)
+{	if(axis!=a)	{	axis = a;	emit axisChanged(a);	update();	}	}
 //-----------------------------------------------------------------------------
 void QMathGL::setLight(bool l)
 {	if(light!=l)	{	light = l;	emit lightChanged(l);	update();	}	}
@@ -230,13 +233,15 @@ void QMathGL::mousePressEvent(QMouseEvent *ev)
 		mglPoint p = gr->CalcXYZ(ev->x(), ev->y());
 		mglCanvasWnd *g=dynamic_cast<mglCanvasWnd *>(gr);
 		if(g)	g->LastMousePos = p;
-		mousePos.sprintf("x=%g, y=%g, z=%g",p.x,p.y,p.z);
-		repaint();
-
 		if(g && g->ClickFunc)	g->ClickFunc(draw_par);
 		emit mouseClick(p.x,p.y,p.z);
-		emit posChanged(mousePos);
 		emit objChanged(gr->GetObjId(ev->x(),ev->y())-1);
+		
+		p = gr->CalcXYZ(ev->x(), ev->y(), true);
+		if(mgl_isnan(p.x))	mousePos = "";
+		else		mousePos.sprintf("x=%g, y=%g, z=%g",p.x,p.y,p.z);
+		emit posChanged(mousePos);
+		repaint();
 	}
 	xe=x0=ev->x();	ye=y0=ev->y();	ev->accept();
 }

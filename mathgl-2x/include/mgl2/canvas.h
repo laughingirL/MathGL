@@ -182,7 +182,7 @@ using mglBase::Light;
 	inline void SetDelay(mreal d)	{	Delay=d;	}
 
 	/// Calculate 3D coordinate {x,y,z} for screen point {xs,ys}
-	mglPoint CalcXYZ(int xs, int ys) const;
+	mglPoint CalcXYZ(int xs, int ys, bool real=false) const;
 	/// Calculate screen point {xs,ys} for 3D coordinate {x,y,z}
 	void CalcScr(mglPoint p, int *xs, int *ys) const;
 	mglPoint CalcScr(mglPoint p) const;

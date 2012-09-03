@@ -91,6 +91,8 @@ public slots:
 	void zoomOut();			///< Zoom out graphics
 	void restore();			///< Restore zoom and rotation to default values
 	//	void reload();			///< Reload data and execute script
+
+	void setAxis(bool a);	///< Switch on/off axis shifting instead of just zoom
 	void shiftLeft();		///< Shift graphics to left direction
 	void shiftRight();		///< Shift graphics to right direction
 	void shiftUp();			///< Shift graphics to up direction
@@ -125,8 +127,9 @@ signals:
 	void phiChanged(int);		///< Phi angle changed (by mouse or by toolbar)
 	void tetChanged(int);		///< Tet angle changed (by mouse or by toolbar)
 	void perChanged(int);		///< Perspective changed (by mouse or by toolbar)
-	void alphaChanged(bool);	///< Transparency changed (by toolbar)
-	void lightChanged(bool);	///< Lighting changed (by toolbar)
+	void alphaChanged(bool);		///< Transparency changed (by toolbar)
+	void lightChanged(bool);		///< Lighting changed (by toolbar)
+	void axisChanged(bool);		///< Axis shift changed (by toolbar)
 	void zoomChanged(bool);		///< Zooming changed (by toolbar)
 	void rotateChanged(bool);	///< Rotation changed (by toolbar)
 	void mouseClick(mreal,mreal,mreal);	///< Position of mouse click
@@ -149,15 +152,17 @@ protected:
 	int (*draw_func)(mglBase *gr, void *par);
 	mglDraw *draw;		///< Class for drawing -- need to call directly due to inheritance mechanism
 	QString mousePos;	///< Last mouse position
-	QPixmap pic;		///< Pixmap for drawing (changed by update)
-	double tet, phi;	///< Rotation angles
+	QPixmap pic;			///< Pixmap for drawing (changed by update)
+	double tet, phi;		///< Rotation angles
 	double per;			///< Value of perspective ( must be in [0,1) )
 	bool alpha;			///< Transparency state
 	bool light;			///< Lightning state
 	bool zoom;			///< Mouse zoom state
 	bool grid;			///< Grid drawing state
-	bool rotate;		///< Mouse rotation state
+	bool rotate;			///< Mouse rotation state
 	mreal x1,x2,y1,y2;	///< Zoom in region
+	mreal ax1,ax2,ay1,ay2;	///< Axis range zoom
+	bool axis;			///< Axis shift state
 	bool showMessage;	///< Flag for showing messages (enabled by each execute())
 	QMenu *popup;		///< Pointer to pop-up menu
 	QTimer *timer;		///< Timer for animation

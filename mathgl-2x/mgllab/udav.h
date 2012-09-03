@@ -65,6 +65,7 @@
 extern mglParse *Parse;
 extern Fl_Menu_Item colors[];
 extern Fl_Preferences pref;
+extern char *docdir;
 class Fl_MGL;
 //-----------------------------------------------------------------------------
 class Fl_Data_Table : public Fl_Table
@@ -118,12 +119,12 @@ class Fl_MGL : public Fl_MGLView, public mglDraw
 friend class AnimateDlg;
 public:
 	Fl_Widget *status;		///< StatusBar for mouse coordinates
-	const char *AnimBuf;	///< buffer for animation
+	const char *AnimBuf;		///< buffer for animation
 	const char **AnimS0;
 	int AnimNum;
 	mreal AnimDelay;
 
-	Fl_MGL(int x, int y, int w, int h, char *label=0);
+	Fl_MGL(int x, int y, int w, int h, const char *label=0);
 	~Fl_MGL();
 
 	/// Drawing itself
