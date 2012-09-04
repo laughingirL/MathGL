@@ -1,2 +1,2 @@
-pkg prefix ${enable-octave-path-to-install} ${enable-octave-path-to-install}
+pkg prefix ${OCT_INST_PATH} ${OCT_INST_PATH}
 pkg install mathgl.tar.gz
