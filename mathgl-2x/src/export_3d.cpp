@@ -238,7 +238,7 @@ void mgl_obj_prim(const mglPrim &q, const mglPnt &p, FILE *fp, mreal size)
 //-----------------------------------------------------------------------------
 void mgl_write_obj(HMGL gr, const char *fname,const char *descr, int use_png)
 {
-	if(gr->GetPrmNum()<=0)	return;	// nothing to do
+	if(gr->GetPrmNum()==0)	return;	// nothing to do
 	register size_t i,j;
 	long m1=0,m2=0,m;
 	for(i=0;i<gr->Grp.size();i++)	// prepare array of indirect indexing
@@ -319,7 +319,7 @@ void mgl_write_obj_(uintptr_t *gr, const char *fname,const char *descr, int *use
 //-----------------------------------------------------------------------------
 void mgl_write_stl(HMGL gr, const char *fname,const char *descr)
 {
-	if(gr->GetPrmNum()<=0)	return;	// nothing to do
+	if(gr->GetPrmNum()==0)	return;	// nothing to do
 	FILE *fp = fopen(fname,"wt");
 	fprintf(fp,"solid %s\n",(descr && *descr)?descr:"mathgl");
 	register long i;
@@ -369,7 +369,7 @@ void mgl_write_stl_(uintptr_t *gr, const char *fname,const char *descr,int l,int
 //-----------------------------------------------------------------------------
 void mgl_write_xyz(HMGL gr, const char *fname,const char *descr)
 {
-	if(gr->GetPrmNum()<=0)	return;	// nothing to do
+	if(gr->GetPrmNum()==0)	return;	// nothing to do
 
 	register long i;
 	FILE *fp=fopen(fname,"wt"), *ff;	// vertices definition
@@ -748,7 +748,7 @@ void mgl_import_mgld_(uintptr_t *gr, const char *fname, int *add, int l)
 //-----------------------------------------------------------------------------
 void mglCanvas::WriteXGL(const char *fname,const char *descr)
 {
-	if(GetPrmNum()<=0)	return;	// nothing to do
+	if(GetPrmNum()==0)	return;	// nothing to do
 	FILE *fp=fopen(fname,"wt");
 	if(!fp)	return true;
 	fprintf(fp,"<WORLD>\n<NAME>%s</NAME>\n", (descr && *descr)?descr:fname);

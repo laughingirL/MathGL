@@ -277,7 +277,7 @@ two-dimensional plots: Mesh, Surf, Dens, Cont, ContF, Boxs, Axial, Fall, Belt, T
 three-dimensional plots: Surf3, Dens3, Cont3, ContF3, Cloud-like, including isosurfaces transparent (Surf3A) or colored (Surf3C) by another data (@ref{3D plotting});
 
 @item
-vector fields plots: vector fields Vect and Traj, flow threads Flow, flow pipes Pipe, mapping chart Map, and so on (@ref{Vector fields});
+vector fields plots: vector fields Vect, Vect3 and Traj, flow threads Flow, flow pipes Pipe, mapping chart Map, and so on (@ref{Vector fields});
 
 @item
 and so on. See also @ref{Extra samples}.
@@ -373,9 +373,11 @@ There are samples for @ref{1D plotting, 1D arrays}, @ref{2D plotting, 2D arrays}
 @subsection Examples of graphics for vector fields
 
 @fig{vect, doc_en/doc_en_83.html#Vect-sample}
-@fig{traj, doc_en/doc_en_84.html#Tra-sjample}
+@fig{vecta, doc_en/doc_en_83.html#Vect3-sample}
 @fig{flow, doc_en/doc_en_85.html#Flow-sample}
 @fig{pipe, doc_en/doc_en_86.html#Pipe-sample}
+
+@fig{traj, doc_en/doc_en_84.html#Tra-sjample}
 
 @anchor{Extra samples}
 @subsection Examples of additional features

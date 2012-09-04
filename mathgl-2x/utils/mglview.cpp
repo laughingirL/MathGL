@@ -88,6 +88,7 @@ int main(int argc, char **argv)
 		setlocale(LC_NUMERIC, "");
 		gr.Update();
 	}
+	if(!mglGlobalMess.empty())	printf("%s",mglGlobalMess.c_str());
 	gr.Run();
 	return 0;
 }

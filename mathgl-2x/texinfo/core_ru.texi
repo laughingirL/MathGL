@@ -2454,6 +2454,29 @@ gr.GetBGRN(bits, len(bits));
 Это 3d версия графика. Здесь массивы @var{ax}, @var{ay}, @var{az} должны трёхмерными тензорами и длина вектора пропорциональна @math{\sqrt@{ax^2+ay^2+az^2@}}.
 @end deftypefn
 
+@anchor{vect3}
+@deftypefn {MGL command} {} vect3 udat vdat wdat ['sch'='' sval]
+@deftypefnx {MGL command} {} vect3 xdat ydat zdat udat vdat wdat ['sch'='' sval]
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} Vect3 (@code{const mglData &}ax, @code{const mglData &}ay, @code{const mglData &}az, @code{const char *}sch=@code{""}, @code{mreal} sVal=@code{-1}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Vect3 (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}ax, @code{const mglData &}ay, @code{const mglData &}az, @code{const char *}sch=@code{""}, @code{mreal} sVal=@code{-1}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_vect3 (@code{HMGL} gr, @code{HCDT} ax, @code{HCDT} ay, @code{HCDT} az, @code{const char *}sch, @code{mreal} sVal, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_vect3_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} ax, @code{HCDT} ay, @code{HCDT} az, @code{const char *}sch, @code{mreal} sVal, @code{const char *}opt)
+@end ifclear
+Рисует 3D векторное поле @{@var{ax}, @var{ay}, @var{az}@} параметрически зависящее от координат @var{x}, @var{y}, @var{z}. График рисуется на срезе @var{sVal} в направлении @{@samp{x}, @samp{y}, @samp{z}@}, указанном в строке @var{sch} (по умолчанию, в напралении @samp{y}). Длина и цвет векторов пропорциональна @math{\sqrt@{ax^2+ay^2+az^2@}}. Число рисуемых векторов зависит от @ref{meshnum}. Вид стрелок/штрихов может быть изменён символами:
+@itemize @bullet
+@item
+@samp{f} для стрелок одинаковой длины,
+@item
+@samp{>}, @samp{<} для стрелок начинающихся или заканчивающихся в ячейке сетки (по умолчанию центрированы),
+@item
+@samp{.} для рисования штрихов с точкой в начале вместо стрелок,
+@item
+@samp{=} для использования градиента цвета вдоль стрелок.
+@end itemize
+См. также @ref{vect}, @ref{flow}, @ref{dew}. @sref{Vect sample}
+@end deftypefn
+
 @anchor{dew}
 @deftypefn {Команда MGL} {} dew udat vdat ['sch'='']
 @deftypefnx {Команда MGL} {} dew xdat ydat udat vdat ['sch'='']

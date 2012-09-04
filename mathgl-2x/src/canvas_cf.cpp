@@ -396,7 +396,10 @@ void mgl_set_tick_shift_(uintptr_t *gr, mreal *sx, mreal *sy, mreal *sz, mreal *
 {	_GR_->SetTickShift(mglPoint(*sx,*sy,*sz,*sc));	}
 //-----------------------------------------------------------------------------
 #if !MGL_HAVE_PNG
-void mgl_write_prc(HMGL gr, const char *fname,const char *descr, int make_pdf){}
-void mgl_write_prc_(uintptr_t *graph, const char *fname,const char *descr, int *make_pdf,int lf,int ld){}
+void mgl_write_prc(HMGL gr, const char *fname,const char *descr, int make_pdf)
+{	mglGlobalMess += "PNG support was disabled. Please, enable it and rebuild MathGL.\n";	}
+void mgl_write_prc_(uintptr_t *graph, const char *fname,const char *descr, int *make_pdf,int lf,int ld)
+{	mglGlobalMess += "PNG support was disabled. Please, enable it and rebuild MathGL.\n";	}
+}
 #endif
 //-----------------------------------------------------------------------------

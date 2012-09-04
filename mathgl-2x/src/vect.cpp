@@ -102,7 +102,7 @@ void mgl_traj_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uint
 //-----------------------------------------------------------------------------
 void mgl_vect_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, const char *opt)
 {
-	long i,j,n=ax->GetNx(),m=ax->GetNy(),k;
+	long i,j,n=ax->GetNx(),m=ax->GetNy(),l=ax->GetNz(),k;
 	if(mgl_check_dim2(gr,x,y,ax,ay,"Vect"))	return;
 
 	gr->SaveState(opt);
@@ -120,37 +120,43 @@ void mgl_vect_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, con
 	long tx=1,ty=1;
 	if(gr->MeshNum>1)	{	tx=(n-1)/(gr->MeshNum-1);	ty=(m-1)/(gr->MeshNum-1);	}
 	if(tx<1)	tx=1;	if(ty<1)	ty=1;
-	mreal xm=0,ym,dx,dy;
+
+	mreal xm=0,cm=0,ca=0;
 	mreal dd,dm=(fabs(gr->Max.c)+fabs(gr->Min.c))*1e-5;
-	mreal vx,vy;
-
-	for(k=0;k<ax->GetNz();k++)	for(j=0;j<m;j++)	for(i=0;i<n;i++)
+	// use whole array for determining maximal vectors length
+	mglPoint p1,p2, v, d;
+	mreal c1,c2,xx;
+	
+	for(k=0;k<l;k++)	for(i=0;i<n;i+=tx)	for(j=0;j<m;j+=ty)
 	{
-		vx = ax->v(i,j,k);	vy = ay->v(i,j,k);
-		ym = vx*vx+vy*vy;	xm = xm>ym ? xm : ym;
+		d = mglPoint(GetX(x,i,j,k).x, GetY(y,i,j,k).x);
+		v = mglPoint(ax->v(i,j,k),ay->v(i,j,k));
+		c1 = v.norm();	xm = xm<c1 ? c1:xm;	// handle NAN values
+		p1 = i<n-1 ? mglPoint(GetX(x,i+tx,j,k).x, GetY(y,i+tx,j,k).x)-d : d-mglPoint(GetX(x,i-tx,j,k).x, GetY(y,i-tx,j,k).x);
+		c1 = fabs(v*p1);	xx = p1.norm();	c1 *= xx?1/(xx*xx):0;
+		p1 = j<m-1 ? mglPoint(GetX(x,i,j+ty,k).x, GetY(y,i,j+ty,k).x)-d : d-mglPoint(GetX(x,i,j-ty,k).x, GetY(y,i,j-ty,k).x);
+		c2 = fabs(v*p1);	xx = p1.norm();	c2 *= xx?1/(xx*xx):0;
+		c1 = c1<c2 ? c2:c1;	ca+=c1;	cm = cm<c1 ? c1:cm;
 	}
-	xm = 1./(xm==0 ? 1:sqrt(xm));
-	long n1,n2;
-	mglPoint p1,p2;
-	mreal c1,c2, xx,yy;
+	ca /= (n*m*l)/(tx*ty);
+	//	if(cm>2*ca)	cm = 2*ca;	// disable too narrow grid steps
+	xm = xm?1./xm:0;	cm = cm?1./cm:0;
 
-	for(k=0;k<ax->GetNz();k++)
+
+	long n1,n2;
+	for(k=0;k<l;k++)
 	{
 		if(ax->GetNz()>1)	zVal = gr->Min.z+(gr->Max.z-gr->Min.z)*mreal(k)/(ax->GetNz()-1);
 		for(i=0;i<n;i+=tx)	for(j=0;j<m;j+=ty)
 		{
 			if(gr->Stop)	return;
-			xx = GetX(x,i,j,k).x;	yy = GetY(y,i,j,k).x;
-			dx = i<n-1 ? (GetX(x,i+1,j,k).x-xx) : (xx-GetX(x,i-1,j,k).x);
-			dy = j<m-1 ? (GetY(y,i,j+1,k).x-yy) : (yy-GetY(y,i,j-1,k).x);
-			vx = ax->v(i,j,k);	vy = ay->v(i,j,k);
-			dx *= tx;	dy *= ty;	dd = hypot(vx,vy);
-			dx *= fix ? (dd>dm ? vx/dd : 0) : vx*xm;
-			dy *= fix ? (dd>dm ? vy/dd : 0) : vy*xm;
-
-			if(end)			{	p1 = mglPoint(xx-dx,yy-dy,zVal);	p2 = mglPoint(xx,yy,zVal);	}
-			else if(beg)	{	p1 = mglPoint(xx,yy,zVal);	p2 = mglPoint(xx+dx,yy+dy,zVal);	}
-			else	{	p1=mglPoint(xx-dx/2,yy-dy/2,zVal);	p2=mglPoint(xx+dx/2,yy+dy/2,zVal);	}
+			d = mglPoint(GetX(x,i,j,k).x, GetY(y,i,j,k).x, zVal);
+			v = mglPoint(ax->v(i,j,k),ay->v(i,j,k));
+			dd = v.norm();	v *= cm*(fix?(dd>dm ? 1./dd : 0) : xm);
+			
+			if(end)		{	p1 = d-v;	p2 = d;	}
+			else if(beg)	{	p1 = d;	p2 = d+v;	}
+			else		{	p1=d-v/2.;	p2=d+v/2.;	}
 			if(grd)	{	c1=gr->GetC(ss,dd*xm-0.5,false);	c2=gr->GetC(ss,dd*xm,false);}
 			else	c1 = c2 = gr->GetC(ss,dd*xm,false);
 			n1=gr->AddPnt(p1,c1);	n2=gr->AddPnt(p2,c2);
@@ -202,42 +208,48 @@ void mgl_vect_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 	bool beg = mglchr(sch,'<');
 	bool grd = mglchr(sch,'=');
 
-	mreal xm=0,ym,dx,dy,dz,dd,dm=(fabs(gr->Max.c)+fabs(gr->Min.c))*1e-5;
 	long ss = gr->AddTexture(sch);
 	gr->Reserve(2*n*m*l);
 	long tx=1,ty=1,tz=1;
 	if(gr->MeshNum>1)
 	{	tx=(n-1)/(gr->MeshNum-1);	ty=(m-1)/(gr->MeshNum-1);	tz=(l-1)/(gr->MeshNum-1);}
 	if(tx<1)	tx=1;	if(ty<1)	ty=1;	if(tz<1)	tz=1;
-	mglPoint p;
 
-	for(k=0;k<l;k++)	for(j=0;j<m;j++)	for(i=0;i<n;i++)
+	mreal xm=0,cm=0,ca=0;
+	mreal dd,dm=(fabs(gr->Max.c)+fabs(gr->Min.c))*1e-5;
+	// use whole array for determining maximal vectors length
+	mglPoint p1,p2,p3, v, d;
+	mreal c1,c2,c3,xx;
+	
+	for(k=0;k<l;k+=tz)	for(i=0;i<n;i+=tx)	for(j=0;j<m;j+=ty)
 	{
-		p = mglPoint(ax->v(i,j,k),ay->v(i,j,k),az->v(i,j,k));
-		ym = p.x*p.x+p.y*p.y+p.z*p.z;	xm = xm>ym ? xm : ym;
+		d = mglPoint(GetX(x,i,j,k).x, GetY(y,i,j,k).x, GetZ(z,i,j,k).x);
+		v = mglPoint(ax->v(i,j,k),ay->v(i,j,k),az->v(i,j,k));
+		c1 = v.norm();	xm = xm<c1 ? c1:xm;	// handle NAN values
+		p1 = i<n-1 ? mglPoint(GetX(x,i+tx,j,k).x, GetY(y,i+tx,j,k).x, GetZ(z,i+tx,j,k).x)-d : d-mglPoint(GetX(x,i-tx,j,k).x, GetY(y,i-tx,j,k).x, GetZ(z,i-tx,j,k).x);
+		c1 = fabs(v*p1);	xx = p1.norm();	c1 *= xx?1/(xx*xx):0;
+		p1 = j<m-1 ? mglPoint(GetX(x,i,j+ty,k).x, GetY(y,i,j+ty,k).x, GetZ(z,i,j+ty,k).x)-d : d-mglPoint(GetX(x,i,j-ty,k).x, GetY(y,i,j-ty,k).x, GetZ(z,i,j-ty,k).x);
+		c2 = fabs(v*p1);	xx = p1.norm();	c2 *= xx?1/(xx*xx):0;
+		p1 = k<l-1 ? mglPoint(GetX(x,i,j,k+tz).x, GetY(y,i,j,k+tz).x, GetZ(z,i,j,k+tz).x)-d : d-mglPoint(GetX(x,i,j,k-tz).x, GetY(y,i,j,k-tz).x, GetZ(z,i,j,k-tz).x);
+		c3 = fabs(v*p1);	xx = p1.norm();	c3 *= xx?1/(xx*xx):0;
+		c1 = c1<c2 ? c2:c1;	c1 = c1<c3 ? c3:c1;
+		ca+=c1;	cm = cm<c1 ? c1:cm;
 	}
-	xm = 1./(xm==0 ? 1:sqrt(xm));
+	ca /= (n*m*l)/(tx*ty*tz);
+	//	if(cm>2*ca)	cm = 2*ca;	// disable too narrow grid steps
+	xm = xm?1./xm:0;	cm = cm?1./cm:0;
 
 	long n1,n2;
-	mglPoint p1,p2;
-	mreal c1,c2, xx,yy,zz;
-
 	for(k=0;k<l;k+=tz)	for(i=0;i<n;i+=tx)	for(j=0;j<m;j+=ty)
 	{
 		if(gr->Stop)	return;
-		xx = GetX(x,i,j,k).x;	yy = GetY(y,i,j,k).x;	zz = GetZ(z,i,j,k).x;
-		dx = i<n-1 ? (GetX(x,i+1,j,k).x-xx) : (xx-GetX(x,i-1,j,k).x);
-		dy = j<m-1 ? (GetY(y,i,j+1,k).x-yy) : (yy-GetY(y,i,j-1,k).x);
-		dz = k<l-1 ? (GetZ(z,i,j,k+1).x-zz) : (zz-GetZ(z,i,j,k-1).x);
-		dx *= tx;	dy *= ty;	dz *= tz;
-		p = mglPoint(ax->v(i,j,k),ay->v(i,j,k),az->v(i,j,k));	dd = p.norm();
-		dx *= fix ? (dd>dm ? p.x/dd : 0) : p.x*xm;
-		dy *= fix ? (dd>dm ? p.y/dd : 0) : p.y*xm;
-		dz *= fix ? (dd>dm ? p.z/dd : 0) : p.z*xm;
-
-		if(end)			{	p1 = mglPoint(xx-dx,yy-dy,zz-dz);	p2 = mglPoint(xx,yy,zz);	}
-		else if(beg)	{	p1 = mglPoint(xx,yy,zz);	p2 = mglPoint(xx+dx,yy+dy,zz+dz);	}
-		else	{	p1=mglPoint(xx-dx/2,yy-dy/2,zz-dz/2);	p2=mglPoint(xx+dx/2,yy+dy/2,zz+dz/2);	}
+		d=mglPoint(GetX(x,i,j,k).x, GetY(y,i,j,k).x, GetZ(z,i,j,k).x);
+		v = mglPoint(ax->v(i,j,k),ay->v(i,j,k),az->v(i,j,k));
+		dd = v.norm();	v *= cm*(fix?(dd>dm ? 1./dd : 0) : xm);
+		
+		if(end)		{	p1 = d-v;	p2 = d;	}
+		else if(beg)	{	p1 = d;	p2 = d+v;	}
+		else		{	p1=d-v/2.;	p2=d+v/2.;	}
 		if(grd)	{	c1=gr->GetC(ss,dd*xm-0.5,false);	c2=gr->GetC(ss,dd*xm,false);	}
 		else	c1 = c2 = gr->GetC(ss,dd*xm,false);
 		n1=gr->AddPnt(p1,c1);	n2=gr->AddPnt(p2,c2);
@@ -486,41 +498,46 @@ void mgl_vect3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, c
 	else
 		mgl_get_slice(s,x,y,z,ax,ay,az,dir,sVal,both);
 
-	long i,j,n=s.ax.nx,m=s.ax.ny,k;
+	long i,j,n=s.ax.nx,m=s.ax.ny;
 	long tx=1,ty=1;
 	if(gr->MeshNum>1)	{	tx=(n-1)/(gr->MeshNum-1);	ty=(m-1)/(gr->MeshNum-1);	}
 	if(tx<1)	tx=1;	if(ty<1)	ty=1;
-	mreal xm=0,ym,dx,dy,dz;
+	mreal xm=0,cm=0,ca=0;
 	mreal dd,dm=(fabs(gr->Max.c)+fabs(gr->Min.c))*1e-5;
-	mreal vx,vy,vz;
 	// use whole array for determining maximal vectors length 
-	for(k=0;k<ax->GetNz();k++)	for(j=0;j<m;j++)	for(i=0;i<n;i++)
-	{
-		vx = ax->v(i,j,k);	vy = ay->v(i,j,k);	vz = az->v(i,j,k);
-		ym = vx*vx+vy*vy+vz*vz;
-		xm = xm>ym ? xm : ym;
-	}
-	xm = 1./(xm==0 ? 1:sqrt(xm));
-	long n1,n2;
-	mglPoint p1,p2;
+	mglPoint p1,p2, v, d=(gr->Max-gr->Min)/mglPoint(1./ax->GetNx(),1./ax->GetNy(),1./ax->GetNz());
 	mreal c1,c2, xx,yy,zz;
 
+	register long i0, tn=ty*n;
+	for(i=0;i<n;i+=tx)	for(j=0;j<m;j+=ty)
+	{
+		i0 = i+n*j;	xx = s.x.a[i0];	yy = s.y.a[i0];	zz = s.z.a[i0];
+		p1 = i<n-1 ? mglPoint(s.x.a[i0+tx]-xx, s.y.a[i0+tx]-yy, s.z.a[i0+tx]-zz) : mglPoint(xx-s.x.a[i0-tx], yy-s.y.a[i0-tx], zz-s.z.a[i0-tx]);
+		p2 = j<m-1 ? mglPoint(s.x.a[i0+tn]-xx, s.y.a[i0+tn]-yy, s.z.a[i0+tn]-zz) : mglPoint(xx-s.x.a[i0-tn], yy-s.y.a[i0-tn], zz-s.z.a[i0-tn]);
+		v = mglPoint(s.ax.a[i0], s.ay.a[i0], s.az.a[i0]);
+		c1 = v.norm();	xm = xm<c1 ? c1:xm;	// handle NAN values
+		yy = fabs(v*d);	xx = d.norm();	yy *= xx?1/(xx*xx):0;
+		c1 = fabs(v*p1);	xx = p1.norm();	c1 *= xx?1/(xx*xx):0;
+		c2 = fabs(v*p2);	xx = p2.norm();	c2 *= xx?1/(xx*xx):0;
+		c1 = c1<c2 ? c2:c1;	c1 = c1<yy ? yy:c1;
+		ca+=c1;	cm = cm<c1 ? c1:cm;
+	}
+	ca /= (n*m)/(tx*ty);
+//	if(cm>2*ca)	cm = 2*ca;	// disable too narrow grid steps
+	xm = xm?1./xm:0;	cm = cm?1./cm:0;
+
+	long n1,n2;
 	for(i=0;i<n;i+=tx)	for(j=0;j<m;j+=ty)
 	{
 		if(gr->Stop)	return;
-		xx = s.x.a[i+n*j];	yy = s.y.a[i+n*j];	zz = s.z.a[i+n*j];
-		dx = i<n-1 ? (s.x.a[i+n*j+1]-xx) : (xx-s.x.a[i+n*j-1]);
-		dy = j<m-1 ? (s.x.a[i+n*j+1]-yy) : (yy-s.x.a[i+n*j-n]);
-		dz = fmin(dx,dy);
-		vx = s.ax.a[i+n*j];	vy = s.ay.a[i+n*j];	vz = s.az.a[i+n*j];
-		dx *= tx;	dy *= ty;	dd = hypot(vx,vy);
-		dx *= fix ? (dd>dm ? vx/dd : 0) : vx*xm;
-		dy *= fix ? (dd>dm ? vy/dd : 0) : vy*xm;
-		dz *= fix ? (dd>dm ? vz/dd : 0) : vz*xm;
+		i0 = i+n*j;
+		d = mglPoint(s.x.a[i0], s.y.a[i0], s.z.a[i0]);
+		v = mglPoint(s.ax.a[i0], s.ay.a[i0], s.az.a[i0]);
+		dd = v.norm();	v *= cm*(fix?(dd>dm ? 1./dd : 0) : xm);
 
-		if(end)			{	p1 = mglPoint(xx-dx,yy-dy,zz-dz);	p2 = mglPoint(xx,yy,zz);	}
-		else if(beg)	{	p1 = mglPoint(xx,yy,zz);	p2 = mglPoint(xx+dx,yy+dy,zz+dz);	}
-		else	{	p1=mglPoint(xx-dx/2,yy-dy/2,zz-dz/2);	p2=mglPoint(xx+dx/2,yy+dy/2,zz+dz/2);	}
+		if(end)		{	p1 = d-v;	p2 = d;	}
+		else if(beg)	{	p1 = d;	p2 = d+v;	}
+		else		{	p1=d-v/2.;	p2=d+v/2.;	}
 		if(grd)	{	c1=gr->GetC(ss,dd*xm-0.5,false);	c2=gr->GetC(ss,dd*xm,false);}
 		else	c1 = c2 = gr->GetC(ss,dd*xm,false);
 		n1=gr->AddPnt(p1,c1);	n2=gr->AddPnt(p2,c2);

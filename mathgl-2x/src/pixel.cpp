@@ -480,8 +480,8 @@ void mglCanvas::MPI_Recv(int id)
 	set(MGL_FINISHED);
 }
 #else
-void mglCanvas::MPI_Send(int /*id*/)	{}
-void mglCanvas::MPI_Recv(int /*id*/)	{}
+void mglCanvas::MPI_Send(int /*id*/)	{	mglGlobalMess += "MPI support was disabled. Please, enable it and rebuild MathGL.\n";	}
+void mglCanvas::MPI_Recv(int /*id*/)	{	mglGlobalMess += "MPI support was disabled. Please, enable it and rebuild MathGL.\n";	}
 #endif
 //-----------------------------------------------------------------------------
 void mglCanvas::pnt_plot(long x,long y,mreal z,const unsigned char ci[4])

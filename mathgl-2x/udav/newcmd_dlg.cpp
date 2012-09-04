@@ -289,7 +289,7 @@ void NewCmdDialog::insertOpt()
 //-----------------------------------------------------------------------------
 void NewCmdDialog::insertData()
 {
-	int row = args->currentRow(), col = args->currentColumn();
+	int row = args->currentRow();
 	QString a = args->item(row,0)->text();
 	if(a[0].isUpper())
 	{

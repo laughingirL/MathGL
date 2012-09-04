@@ -60,6 +60,7 @@ int mgl_pnga_save(const char *fname, int w, int h, unsigned char **p)
 	fclose(fp);
 	return 0;
 #else
+	mglGlobalMess += "PNG support was disabled. Please, enable it and rebuild MathGL.\n";
 	return 1;
 #endif
 }
@@ -91,6 +92,7 @@ int mgl_png_save(const char *fname, int w, int h, unsigned char **p)
 	fclose(fp);
 	return 0;
 #else
+	mglGlobalMess += "PNG support was disabled. Please, enable it and rebuild MathGL.\n";
 	return 1;
 #endif
 }
@@ -173,6 +175,7 @@ int mgl_jpeg_save(const char *fname, int w, int h, unsigned char **p)
 	fclose(outfile);
 	return 0;
 #else
+	mglGlobalMess += "JPEG support was disabled. Please, enable it and rebuild MathGL.\n";
 	return 1;
 #endif
 }
@@ -245,6 +248,7 @@ int mgl_gif_save(const char *fname, int w, int h, unsigned char **l)
 	EGifCloseFile(fg);
 	delete []line;	return 0;
 #else
+	mglGlobalMess += "GIF support was disabled. Please, enable it and rebuild MathGL.\n";
 	return 1;
 #endif
 }
@@ -288,6 +292,8 @@ void mglCanvas::StartGIF(const char *fname, int ms)
 	EGifPutExtensionFirst(gif,0xff,11,ext1);
 	EGifPutExtensionLast(gif,0xff,3,ext3);
 	EGifPutExtension(gif,0xf9,4,ext2);
+#else
+	mglGlobalMess += "GIF support was disabled. Please, enable it and rebuild MathGL.\n";
 #endif
 }
 //-----------------------------------------------------------------------------
@@ -295,6 +301,8 @@ void mglCanvas::CloseGIF()
 {
 #if MGL_HAVE_GIF
 	if(gif)	EGifCloseFile(gif);
+#else
+	mglGlobalMess += "GIF support was disabled. Please, enable it and rebuild MathGL.\n";
 #endif
 	gif = 0;
 }
@@ -329,6 +337,7 @@ void mglCanvas::EndFrame()
 	delete []line;	free(l);
 	if(f)	free(f);
 #else
+	mglGlobalMess += "GIF support was disabled. Please, enable it and rebuild MathGL.\n";
 	if(get(MGL_USEDRWDAT))	PushDrwDat();
 	Finish();
 #endif

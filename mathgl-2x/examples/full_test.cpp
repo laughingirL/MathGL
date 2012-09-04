@@ -46,7 +46,7 @@ void smgl_combined(mglGraph *gr);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	mglData a;	mgls_prepare2d(&a);	gr->Light(true);	
+	mglData a;	mgls_prepare2d(&a);	gr->Light(true);
 	gr->SubPlot(2,2,0);	gr->Rotate(50,60);	gr->Box();	gr->Surf(a);
 	gr->SubPlot(2,2,1);	gr->Rotate(50,60);	gr->Box();	gr->Surf(a,"%br");
 	gr->SubPlot(2,2,2);	gr->Rotate(50,60);	gr->Box();	gr->Surf(a,"%");
@@ -1295,9 +1295,13 @@ const char *mmgl_vecta="title 'Vect3 sample':rotate 50 60\n"
 void smgl_vecta(mglGraph *gr)
 {
 	mglData ex,ey,ez;	mgls_prepare3v(&ex,&ey,&ez);
-	if(!mini)	gr->Title("Vect3 sample");
+	if(!mini)	{	gr->SubPlot(2,1,0);	gr->Title("Vect3 sample");	}
 	gr->Rotate(50,60);	gr->SetOrigin(0,0,0);	gr->Axis("_xyz");	gr->Box();
 	gr->Vect3(ex,ey,ez,"x");	gr->Vect3(ex,ey,ez);	gr->Vect3(ex,ey,ez,"z");
+	gr->SubPlot(2,1,1);	gr->Title("'f' style");
+	gr->Rotate(50,60);	gr->SetOrigin(0,0,0);	gr->Axis("_xyz");	gr->Box();
+	gr->Vect3(ex,ey,ez,"fx");	gr->Vect3(ex,ey,ez,"f");	gr->Vect3(ex,ey,ez,"fz");
+	gr->Grid3(ex,"Wx");	gr->Grid3(ex,"W");	gr->Grid3(ex,"Wz");
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_vect="subplot 3 2 0 '':title 'Vect plot (default)':box:vect a b\n"

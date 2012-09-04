@@ -851,7 +851,8 @@ void mgl_data_read_hdf4(HMDT d,const char *fname,const char *data)
 	SDend(sd);
 }
 #else
-void mgl_data_read_hdf4(HMDT ,const char *,const char *){}
+void mgl_data_read_hdf4(HMDT ,const char *,const char *)
+{	mglGlobalMess += "HDF4 support was disabled. Please, enable it and rebuild MathGL.\n";	}
 #endif
 //-----------------------------------------------------------------------------
 #if MGL_HAVE_HDF5
@@ -955,9 +956,12 @@ int mgl_datas_hdf(const char *fname, char *buf, long size)
 	return i;
 }
 #else
-void mgl_data_save_hdf(HCDT ,const char *,const char *,int ){}
-int mgl_datas_hdf(const char *, char *, long ){return 0;}
-int mgl_data_read_hdf(HMDT ,const char *,const char *){return false;}
+void mgl_data_save_hdf(HCDT ,const char *,const char *,int )
+{	mglGlobalMess += "HDF5 support was disabled. Please, enable it and rebuild MathGL.\n";	}
+int mgl_datas_hdf(const char *, char *, long )
+{	mglGlobalMess += "HDF5 support was disabled. Please, enable it and rebuild MathGL.\n";	return 0;}
+int mgl_data_read_hdf(HMDT ,const char *,const char *)
+{	mglGlobalMess += "HDF5 support was disabled. Please, enable it and rebuild MathGL.\n";	return false;}
 #endif
 //-----------------------------------------------------------------------------
 int mgl_data_read_hdf_(uintptr_t *d, const char *fname, const char *data,int l,int n)

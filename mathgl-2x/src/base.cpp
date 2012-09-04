@@ -56,8 +56,8 @@ mglBase::mglBase()
 	pthread_mutex_init(&mutexPnt,0);
 	pthread_mutex_init(&mutexTxt,0);
 #endif
-	fnt=0;	*FontDef=0;
-	fx=fy=fz=fa=fc=0;
+	fnt=0;	*FontDef=0;	fx=fy=fz=fa=fc=0;
+	AMin = mglPoint(0,0,0,0);	AMax = mglPoint(1,1,1,1);
 
 	InUse = 1;	SetQuality();
 	// Always create default palette txt[0] and default scheme txt[1]
@@ -322,6 +322,16 @@ bool mglBase::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan) const
 //-----------------------------------------------------------------------------
 //		Ranges
 //-----------------------------------------------------------------------------
+void mglScaleAxis(mreal &v1, mreal &v2, mreal x1, mreal x2)
+{
+	if(x1==x2 || v1==v2)	return;
+	mreal dv;	x2-=1;
+	if(v1*v2>0 && (v2/v1>=100 || v2/v1<=0.01))	// log scale
+	{	dv=log(v2/v1);	v1*=exp(dv*x1);	v2*=exp(dv*x2);	}
+	else
+	{	dv=v2-v1;	v1+=dv*x1;	v2+=dv*x2;	}
+}
+//-----------------------------------------------------------------------------
 void mglBase::SetRanges(mglPoint m1, mglPoint m2)
 {
 	if(m1.x!=m2.x)	{	Min.x=m1.x;	Max.x=m2.x;	}
@@ -329,15 +339,20 @@ void mglBase::SetRanges(mglPoint m1, mglPoint m2)
 	if(m1.z!=m2.z)	{	Min.z=m1.z;	Max.z=m2.z;	}
 	if(m1.c!=m2.c)	{	Min.c=m1.c;	Max.c=m2.c;	}
 	else			{	Min.c=Min.z;Max.c=Max.z;}
-//	if(AutoOrg)
+	if(!TernAxis)
 	{
-		if(Org.x<Min.x && !mgl_isnan(Org.x))	Org.x = Min.x;
-		if(Org.x>Max.x && !mgl_isnan(Org.x))	Org.x = Max.x;
-		if(Org.y<Min.y && !mgl_isnan(Org.y))	Org.y = Min.y;
-		if(Org.y>Max.y && !mgl_isnan(Org.y))	Org.y = Max.y;
-		if(Org.z<Min.z && !mgl_isnan(Org.z))	Org.z = Min.z;
-		if(Org.z>Max.z && !mgl_isnan(Org.z))	Org.z = Max.z;
-	}
+		mglScaleAxis(Min.x, Max.x, AMin.x, AMax.x);
+		mglScaleAxis(Min.y, Max.y, AMin.y, AMax.y);
+		mglScaleAxis(Min.z, Max.z, AMin.z, AMax.z);
+		mglScaleAxis(Min.c, Max.c, AMin.c, AMax.c);
+	}	
+	if(Org.x<Min.x && !mgl_isnan(Org.x))	Org.x = Min.x;
+	if(Org.x>Max.x && !mgl_isnan(Org.x))	Org.x = Max.x;
+	if(Org.y<Min.y && !mgl_isnan(Org.y))	Org.y = Min.y;
+	if(Org.y>Max.y && !mgl_isnan(Org.y))	Org.y = Max.y;
+	if(Org.z<Min.z && !mgl_isnan(Org.z))	Org.z = Min.z;
+	if(Org.z>Max.z && !mgl_isnan(Org.z))	Org.z = Max.z;
+
 	CutMin = mglPoint(0,0,0);	CutMax = mglPoint(0,0,0);
 	RecalcBorder();
 }
@@ -359,6 +374,7 @@ void mglBase::CRange(HCDT a,bool add, mreal fact)
 		Min.c = v1<Max.c ? v1:Max.c;
 		Max.c = v2>dv ? v2:dv;
 	}
+	if(!TernAxis)	mglScaleAxis(Min.c, Max.c, AMin.c, AMax.c);
 	if(Org.c<Min.c && !mgl_isnan(Org.c))	Org.c = Min.c;
 	if(Org.c>Max.c && !mgl_isnan(Org.c))	Org.c = Max.c;
 	RecalcCRange();
@@ -381,6 +397,7 @@ void mglBase::XRange(HCDT a,bool add,mreal fact)
 		Min.x = v1<Max.x ? v1:Max.x;
 		Max.x = v2>dv ? v2:dv;
 	}
+	if(!TernAxis)	mglScaleAxis(Min.x, Max.x, AMin.x, AMax.x);
 	if(Org.x<Min.x && !mgl_isnan(Org.x))	Org.x = Min.x;
 	if(Org.x>Max.x && !mgl_isnan(Org.x))	Org.x = Max.x;
 	RecalcBorder();
@@ -403,6 +420,7 @@ void mglBase::YRange(HCDT a,bool add,mreal fact)
 		Min.y = v1<Max.y ? v1:Max.y;
 		Max.y = v2>dv ? v2:dv;
 	}
+	if(!TernAxis)	mglScaleAxis(Min.y, Max.y, AMin.y, AMax.y);
 	if(Org.y<Min.y && !mgl_isnan(Org.y))	Org.y = Min.y;
 	if(Org.y>Max.y && !mgl_isnan(Org.y))	Org.y = Max.y;
 	RecalcBorder();
@@ -425,6 +443,7 @@ void mglBase::ZRange(HCDT a,bool add,mreal fact)
 		Min.z = v1<Max.z ? v1:Max.z;
 		Max.z = v2>dv ? v2:dv;
 	}
+	if(!TernAxis)	mglScaleAxis(Min.z, Max.z, AMin.z, AMax.z);
 	if(Org.z<Min.z && !mgl_isnan(Org.z))	Org.z = Min.z;
 	if(Org.z>Max.z && !mgl_isnan(Org.z))	Org.z = Max.z;
 	RecalcBorder();
@@ -584,7 +603,7 @@ void mglTexture::Set(const char *s, int smooth, mreal alpha)
 	}
 	if(strchr(s,'|') && !smooth)	smooth = -1;
 	mglColor *c = new mglColor[2*n];		// Colors itself
-	mreal *val = new mreal[n], pos;
+	mreal *val = new mreal[n];
 	if(mglchr(s,'%'))	smooth = 2;		// use coordinates in AddPnt() too !!!
 	bool map = (smooth==2), sm = smooth>=0, man=sm;	// Use mapping, smoothed colors
 	for(i=j=n=0;i<l;i++)	// fill colors

@@ -2742,6 +2742,7 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez)
 
 @menu
 * Vect sample::
+* Vect3 sample::
 * Traj sample::
 * Flow sample::
 * Pipe sample::
@@ -2751,7 +2752,7 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez)
 
 @c ------------------------------------------------------------------
 @external
-@node Vect sample, Traj sample, , Vector field samples
+@node Vect sample, Vect3 sample, , Vector field samples
 @subsection Vect sample
 
 Function @ref{vect} is most standard way to visualize vector fields -- it draw a lot of arrows or hachures for each data cell. It have a lot of options which can be seen on the figure (and in the sample code). @code{Vect} use color scheme for coloring (see @ref{Color scheme}). The sample code is:
@@ -2785,7 +2786,31 @@ int sample(mglGraph *gr)
 
 @c ------------------------------------------------------------------
 @external
-@node Traj sample, Flow sample, Vect sample, Vector field samples
+@node Vect3 sample, Traj sample, Vect sample, Vector field samples
+@subsection Vect3 sample
+
+Function @ref{vect3} draw just usual vector field plot but at slices of 3D data. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData ex,ey,ez; mgls_prepare3v(&ex,&ey,&ez);
+  gr->SubPlot(2,1,0); gr->Title("Vect3 sample");    gr->SetOrigin(0,0,0);
+  gr->Rotate(50,60);    gr->Axis("_xyz");   gr->Box();
+  gr->Vect3(ex,ey,ez,"x");  gr->Vect3(ex,ey,ez);    gr->Vect3(ex,ey,ez,"z");
+
+  gr->SubPlot(2,1,1);   gr->Title("'f' style");
+  gr->Rotate(50,60);    gr->Axis("_xyz");   gr->Box();
+  gr->Vect3(ex,ey,ez,"fx"); gr->Vect3(ex,ey,ez,"f");gr->Vect3(ex,ey,ez,"fz");
+  gr->Grid3(ex,"Wx");   gr->Grid3(ex,"W");  gr->Grid3(ex,"Wz");
+  return 0;
+}
+@end verbatim
+
+@pfig{vecta, Example of Vect3()}
+
+@c ------------------------------------------------------------------
+@external
+@node Traj sample, Flow sample, Vect3 sample, Vector field samples
 @subsection Traj sample
 
 Function @ref{traj} is 1D analogue of @code{Vect}. It draw vectors from specified points. The sample code is:

@@ -2405,6 +2405,29 @@ void mglc_vect(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 		mglprintf(out,1024,L"gr->Vect(%s, %s, %s, %s, %s, %s, \"%s\", \"%s\");", a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str(), a[3].s.c_str(), a[4].s.c_str(), a[5].s.c_str(), k[6]==2?a[6].s.c_str():"",opt);
 }
 //-----------------------------------------------------------------------------
+int mgls_vect3(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
+{
+	int i;
+	for(i=0;i<7;i++)	if(k[i]!=1)	break;
+	if(i==3)
+		gr->Vect3(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s.c_str():"",k[4]==3?a[4].v:-1,opt);
+	else if(i==6)
+		gr->Vect3(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),*(a[5].d),k[6]==2?a[6].s.c_str():"",k[7]==3?a[7].v:-1,opt);
+	else	return 1;
+	return 0;
+}
+void mglc_vect3(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
+{
+	int i;
+	for(i=0;i<7;i++)	if(k[i]!=1)	break;
+	if(i==3)
+		mglprintf(out,1024,L"gr->Vect3(%s, %s, %s, \"%s\", %g, \"%s\");",
+					a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str(), k[3]==2?a[3].s.c_str():"",k[4]==3?a[4].v:-1,opt);
+	else if(i==6)
+		mglprintf(out,1024,L"gr->Vect3(%s, %s, %s, %s, %s, %s, \"%s\", %g, \"%s\");", a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str(),
+					a[3].s.c_str(), a[4].s.c_str(), a[5].s.c_str(), k[6]==2?a[6].s.c_str():"",k[7]==3?a[7].v:-1,opt);
+}
+//-----------------------------------------------------------------------------
 int mgls_traj(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	int i;
@@ -3751,7 +3774,8 @@ mglCommand mgls_base_cmd[] = {
 	{"tube","Draw curve by tube","tube Ydat Rdat ['fmt']|Ydat rval ['fmt']|Xdat Ydat Rdat ['fmt']|Xdat Ydat rval ['fmt']|Xdat Ydat Zdat Rdat ['fmt']|Xdat Ydat Zdat rval ['fmt']", mgls_tube, mglc_tube,0},
 	{"tuneticks","Set ticks tuning","tuneticks val [fctr]", mgls_tuneticks, mglc_tuneticks,2},
 	{"var","Create new 1D data and fill it in range","var Dat nx x1 [x2]", mgls_var, mglc_var,4},
-	{"vect","Draw vector field","vect Udat Vdat ['fmt' kind]|Xdat Ydat Udat Vdat ['fmt' kind]|Udat Vdat Wdat ['fmt' kind]|Xdat Ydat Zdat Udat Vdat Wdat ['fmt' kind]", mgls_vect, mglc_vect,0},
+	{"vect","Draw vector field","vect Udat Vdat ['fmt']|Xdat Ydat Udat Vdat ['fmt']|Udat Vdat Wdat ['fmt']|Xdat Ydat Zdat Udat Vdat Wdat ['fmt']", mgls_vect, mglc_vect,0},
+	{"vect3","Draw vector field at slices of 3D data","vect Udat Vdat Wdat ['fmt' sval]|Xdat Ydat Zdat Udat Vdat Wdat ['fmt' sval]", mgls_vect3, mglc_vect3,0},
 	{"write","Write current image to graphical file","write 'fname' [solid]", mgls_write, mglc_write,2},
 	{"xlabel","Draw label for x-axis","xlabel 'txt' [pos size shift]", mgls_xlabel, mglc_xlabel,1},
 	{"xrange","Set range for x-axis","xrange Dat [add] | x1 x2", mgls_xrange, mglc_xrange,2},

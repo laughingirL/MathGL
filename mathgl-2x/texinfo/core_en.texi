@@ -2522,7 +2522,7 @@ The function draws vectors @{@var{ax}, @var{ay}, @var{az}@} along a curve @{@var
 @deftypefnx {C function} @code{void} mgl_vect_2d (@code{HMGL} gr, @code{HCDT} ax, @code{HCDT} ay, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_vect_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} ax, @code{HCDT} ay, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-The function draws plane vector field plot for the field @{@var{ax}, @var{ay}@} depending parametrically on coordinates @var{x}, @var{y} at level @var{z}=@var{Min}.z. The length and color of arrows are proportional to @math{\sqrt@{ax^2+ay^2@}}. The number of arrows depend on @ref{meshnum}. The apperance of the hachures (arrows) can be changed by symbols:
+The function draws plane vector field plot for the field @{@var{ax}, @var{ay}@} depending parametrically on coordinates @var{x}, @var{y} at level @var{z}=@var{Min}.z. The length and color of arrows are proportional to @math{\sqrt@{ax^2+ay^2@}}. The number of arrows depend on @ref{meshnum}. The appearance of the hachures (arrows) can be changed by symbols:
 @itemize @bullet
 @item
 @samp{f} for drawing arrows with fixed lengths,
@@ -2545,6 +2545,29 @@ See also @ref{flow}, @ref{dew}. @sref{Vect sample}
 @deftypefnx {C function} @code{void} mgl_vect_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} ax, @code{HCDT} ay, @code{HCDT} az, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
 This is 3D version of the first functions. Here arrays @var{ax}, @var{ay}, @var{az} must be 3-ranged tensors with equal sizes and the length and color of arrows is proportional to @math{\sqrt@{ax^2+ay^2+az^2@}}.
+@end deftypefn
+
+@anchor{vect3}
+@deftypefn {MGL command} {} vect3 udat vdat wdat ['sch'='' sval]
+@deftypefnx {MGL command} {} vect3 xdat ydat zdat udat vdat wdat ['sch'='' sval]
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} Vect3 (@code{const mglData &}ax, @code{const mglData &}ay, @code{const mglData &}az, @code{const char *}sch=@code{""}, @code{mreal} sVal=@code{-1}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Vect3 (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}ax, @code{const mglData &}ay, @code{const mglData &}az, @code{const char *}sch=@code{""}, @code{mreal} sVal=@code{-1}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_vect3 (@code{HMGL} gr, @code{HCDT} ax, @code{HCDT} ay, @code{HCDT} az, @code{const char *}sch, @code{mreal} sVal, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_vect3_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} ax, @code{HCDT} ay, @code{HCDT} az, @code{const char *}sch, @code{mreal} sVal, @code{const char *}opt)
+@end ifclear
+The function draws 3D vector field plot for the field @{@var{ax}, @var{ay}, @var{az}@} depending parametrically on coordinates @var{x}, @var{y}, @var{z}. Vector field is drawn at slice @var{sVal} in direction @{@samp{x}, @samp{y}, @samp{z}@} if @var{sch} contain corresponding symbol (by default, @samp{y} direction is used). The length and color of arrows are proportional to @math{\sqrt@{ax^2+ay^2+az^2@}}. The number of arrows depend on @ref{meshnum}. The appearance of the hachures (arrows) can be changed by symbols:
+@itemize @bullet
+@item
+@samp{f} for drawing arrows with fixed lengths,
+@item
+@samp{>}, @samp{<} for drawing arrows to or from the cell point (default is centering),
+@item
+@samp{.} for drawing hachures with dots instead of arrows,
+@item
+@samp{=} for enabling color gradient along arrows.
+@end itemize
+See also @ref{vect}, @ref{flow}, @ref{dew}. @sref{Vect3 sample}
 @end deftypefn
 
 @anchor{dew}

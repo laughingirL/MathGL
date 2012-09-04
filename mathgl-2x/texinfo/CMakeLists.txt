@@ -6,8 +6,8 @@ if(MGL_HAVE_DOC)
 		fog grad hist inplot label legend loglog map mark mesh mirror
 		molecule parser pde pipe plot primitives qo2d radar region schemes
 		several_light stem step stereo stfa style surf3a surf3c surf3
-		surfa surfc surf tape tens ternary textmark text ticks tile
-		tiles torus traj triangulation triplot tube type0 type1 type2 vect venn )
+		surfa surfc surf tape tens ternary textmark text ticks tile tiles
+		torus traj triangulation triplot tube type0 type1 type2 vect vecta venn )
 	set(MGL_PNG_N )
 	set(MGL_PNG_S )
 

@@ -107,6 +107,8 @@ void mgl_data_import(HMDT d, const char *fname, const char *scheme,mreal v1,mrea
 	delete []c;
 	png_destroy_read_struct(&png_ptr, &info_ptr,&end_info);
 	fclose(fp);
+#else
+	mglGlobalMess += "PNG support was disabled. Please, enable it and rebuild MathGL.\n";
 #endif
 }
 //-----------------------------------------------------------------------------
@@ -166,6 +168,8 @@ void mgl_data_export(HCDT dd, const char *fname, const char *scheme,mreal v1,mre
 	png_write_end(png_ptr, info_ptr);
 	png_destroy_write_struct(&png_ptr, &info_ptr);
 	fclose(fp);	free(p);	free(d);
+#else
+	mglGlobalMess += "PNG support was disabled. Please, enable it and rebuild MathGL.\n";
 #endif
 }
 //-----------------------------------------------------------------------------

@@ -204,6 +204,8 @@ public:
 	inline void clr(long fl)	{	Flag &=~fl;	}
 	inline void set(bool v,long fl)	{	Flag = v ? Flag|fl : Flag&(~fl);	}
 
+	/// Set axis range scaling -- simplified way to shift/zoom axis range -- need to replot whole image!
+	inline void ZoomAxis(mglPoint p1=mglPoint(0,0,0,0), mglPoint p2=mglPoint(1,1,1,1))	{	AMin = p1;	AMax = p2;	}
 	/// Set values of mglGraph::Min and mglGraph::Max
 	inline void SetRanges(mreal x1, mreal x2, mreal y1, mreal y2, mreal z1=0, mreal z2=0, mreal c1=0, mreal c2=0)
 	{	SetRanges(mglPoint(x1,y1,z1,c1),mglPoint(x2,y2,z2,c2));	}
@@ -388,6 +390,8 @@ public:
 	inline const char *last_line()	{	return last_style;	}
 
 protected:
+	mglPoint AMin;		///< Lower edge for axis scaling
+	mglPoint AMax;		///< Upper edge for axis scaling
 	mglPoint FMin;		///< Actual lower edge after transformation formulas.
 	mglPoint FMax;		///< Actual upper edge after transformation formulas.
 	mglPoint Org;		///< Center of axis cross section.

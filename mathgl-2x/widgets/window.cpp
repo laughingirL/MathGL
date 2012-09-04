@@ -166,7 +166,7 @@ void mgl_get_last_mouse_pos_(uintptr_t *gr, mreal *x, mreal *y, mreal *z)
 //-----------------------------------------------------------------------------
 #if MGL_HAVE_FLTK==0
 HMGL mgl_create_graph_fltk(int (*)(HMGL gr, void *p), const char *, void *, void (*)(void *p))
-{	return NULL;	}
+{	mglGlobalMess += "FLTK support was disabled. Please, enable it and rebuild MathGL.\n";	return NULL;	}
 int mgl_fltk_run(){return 0;}
 #endif
 //-----------------------------------------------------------------------------
@@ -194,7 +194,7 @@ int mgl_fltk_thr()		// NOTE: Qt couldn't be running in non-primary thread
 
 #if MGL_HAVE_QT==0
 HMGL mgl_create_graph_qt(int (*)(HMGL gr, void *p), const char *, void *, void (*)(void *p))
-{	return NULL;	}
+{	mglGlobalMess += "Qt support was disabled. Please, enable it and rebuild MathGL.\n";	return NULL;	}
 int mgl_qt_run(){return 0;}
 #endif
 //-----------------------------------------------------------------------------

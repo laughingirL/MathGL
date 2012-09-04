@@ -195,3 +195,8 @@ long mgl_use_graph_(uintptr_t *gr, int *inc)
 void mgl_set_ambbr(HMGL gr, mreal i)		{	gr->SetAmbient(i);	}
 void mgl_set_ambbr_(uintptr_t *gr, mreal *i){	_GR_->SetAmbient(*i);	}
 //---------------------------------------------------------------------------
+void mgl_zoom_axis(HMGL gr, mreal x1,mreal y1,mreal z1,mreal c1,mreal x2,mreal y2,mreal z2,mreal c2)
+{	gr->ZoomAxis(mglPoint(x1,y1,z1,c1), mglPoint(x2,y2,z2,c2));	}
+void mgl_zoom_axis_(uintptr_t *gr, mreal *x1,mreal *y1,mreal *z1,mreal *c1,mreal *x2,mreal *y2,mreal *z2,mreal *c2)
+{	_GR_->ZoomAxis(mglPoint(*x1,*y1,*z1,*c1), mglPoint(*x2,*y2,*z2,*c2));	}
+//---------------------------------------------------------------------------

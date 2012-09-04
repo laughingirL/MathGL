@@ -125,6 +125,7 @@ int main(int argc, char *argv[])
 		printf("%s\n",gr.Message());
 		gr.WriteFrame(oname);
 	}
+	if(!mglGlobalMess.empty())	printf("%s",mglGlobalMess.c_str());
 	printf("Write output to %s\n",oname);
 	return 0;
 }

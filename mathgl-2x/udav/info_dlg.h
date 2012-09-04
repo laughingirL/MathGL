@@ -35,7 +35,7 @@ class InfoDialog : public QDialog
 Q_OBJECT
 public:
 	InfoDialog(QWidget *parent = 0);
-	~InfoDialog();
+	virtual ~InfoDialog();
 	void setVar(mglVar *v);
 	void setSlice(int k)	{	kz=k;	refresh();	}
 	bool allowRefresh;

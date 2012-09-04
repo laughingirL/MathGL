@@ -35,6 +35,10 @@ public:
 		if(kind==-1)	gr=NULL;
 #if MGL_HAVE_OPENGL
 		else if(kind==1)	gr=mgl_create_graph_gl();
+#else
+		else if(kind==1)
+		{	gr=mgl_create_graph(width, height);
+			mglGlobalMess += "OpenGL support was disabled. Please, enable it and rebuild MathGL.\n";	}
 #endif
 		else	gr=mgl_create_graph(width, height);
 	}
@@ -123,6 +127,9 @@ public:
 	/// Set buffer for warning messages
 	inline const char *Message()	{	return mgl_get_mess(gr);	}
 
+	/// Set axis range scaling -- simplified way to shift/zoom axis range -- need to replot whole image!
+	inline void ZoomAxis(mglPoint p1=mglPoint(0,0,0,0), mglPoint p2=mglPoint(1,1,1,1))
+	{	mgl_zoom_axis(gr, p1.x,p1.y,p1.z,p1.c, p2.x,p2.y,p2.z,p2.c);	}
 	/// Set range in direction dir as [v1, v2]
 	inline void SetRange(char dir, mreal v1, mreal v2)
 	{	mgl_set_range_val(gr, dir, v1, v2);	}
@@ -753,6 +760,7 @@ public:
 	{	mgl_contv_xy(gr, &x, &y, &z, sch, opt);	}
 	inline void ContV(const mglDataA &z, const char *sch="", const char *opt="")
 	{	mgl_contv(gr, &z, sch, opt);	}
+
 	/// Draw axial-symmetric isosurfaces for 2d data specified parametrically
 	inline void Axial(const mglDataA &v, const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *sch="", const char *opt="")
 	{	mgl_axial_xy_val(gr, &v, &x, &y, &z, sch,opt);	}
@@ -831,6 +839,7 @@ public:
 	{	mgl_surfa_xy(gr, &x, &y, &z, &c, sch,opt);	}
 	inline void SurfA(const mglDataA &z, const mglDataA &c, const char *sch="", const char *opt="")
 	{	mgl_surfa(gr, &z, &c, sch,opt);	}
+
 	/// Color map of matrix a to matrix b, both matrix can parametrically depend on coordinates
 	inline void Map(const mglDataA &x, const mglDataA &y, const mglDataA &a, const mglDataA &b, const char *sch="", const char *opt="")
 	{	mgl_map_xy(gr, &x, &y, &a, &b, sch, opt);	}
@@ -871,6 +880,7 @@ public:
 	{	mgl_traj_xy(gr, &x, &y, &ax, &ay, sch, opt);	}
 	inline void Traj(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &ax, const mglDataA &ay, const mglDataA &az, const char *sch="", const char *opt="")
 	{	mgl_traj_xyz(gr, &x, &y, &z, &ax, &ay, &az, sch, opt);	}
+
 	/// Plot vector field {ax,ay,ay} parametrically depended on coordinate {x,y,z} with length/color proportional to |a|
 	inline void Vect(const mglDataA &x, const mglDataA &y, const mglDataA &ax, const mglDataA &ay, const char *sch="", const char *opt="")
 	{	mgl_vect_xy(gr, &x, &y, &ax, &ay, sch, opt);	}

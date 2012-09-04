@@ -32,7 +32,6 @@ extern mglParser parser;
 DataDialog::DataDialog(QWidget* parent): QDialog(parent)
 {
 	setWindowTitle(tr("UDAV - Insert style/scheme"));
-	QWidget *p;
 	QHBoxLayout *h;
 	QVBoxLayout *v;
 	QGridLayout *g;

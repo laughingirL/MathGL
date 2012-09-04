@@ -49,6 +49,7 @@ void mgl_set_cut_box(HMGL gr, mreal x1,mreal y1,mreal z1,mreal x2,mreal y2,mreal
 void mgl_set_ranges(HMGL graph, mreal x1, mreal x2, mreal y1, mreal y2, mreal z1, mreal z2);
 void mgl_set_range_val(HMGL gr, char dir, mreal v1,mreal v2);
 void mgl_set_range_dat(HMGL gr, char dir, HCDT a, int add);
+void mgl_zoom_axis(HMGL gr, mreal x1,mreal y1,mreal z1,mreal c1,mreal x2,mreal y2,mreal z2,mreal c2);
 
 void mgl_set_origin(HMGL graph, mreal x0, mreal y0, mreal z0);
 void mgl_set_func(HMGL graph, const char *EqX,const char *EqY,const char *EqZ,const char *EqA);
@@ -101,6 +102,7 @@ void mgl_set_cut_box_(uintptr_t *gr, mreal *x1,mreal *y1,mreal *z1,mreal *x2,mre
 void mgl_set_ranges_(uintptr_t *graph, mreal *x1, mreal *x2, mreal *y1, mreal *y2, mreal *z1, mreal *z2);
 void mgl_set_range_val_(uintptr_t *gr, const char *dir, mreal *v1,mreal *v2,int);
 void mgl_set_range_dat_(uintptr_t *gr, const char *dir, uintptr_t *a, int *add,int);
+void mgl_zoom_axis_(uintptr_t *gr, mreal *x1,mreal *y1,mreal *z1,mreal *c1,mreal *x2,mreal *y2,mreal *z2,mreal *c2);
 
 void mgl_set_origin_(uintptr_t *gr, mreal *x0, mreal *y0, mreal *z0);
 void mgl_set_func_(uintptr_t *graph, const char *EqX, const char *EqY, const char *EqZ, const char *EqA, int, int, int, int);
