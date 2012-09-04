@@ -18,6 +18,14 @@ file(TO_NATIVE_PATH ${MathGL_BINARY_DIR}/include BIN_INC)
 file(TO_NATIVE_PATH ${MathGL_BINARY_DIR}/src MGL_LINK_DIR)
 file(TO_NATIVE_PATH ${MathGL_BINARY_DIR}/widgets MGL_WND_LINK_DIR)
 
+if(WIN32)
+	set(MGL_ALL_INC ${BIN_INC};${SRC_INC})
+	set(MGL_ALL_LINK ${MGL_LINK_DIR};${MGL_WND_LINK_DIR})
+else(WIN32)
+	set(MGL_ALL_INC ${BIN_INC}:${SRC_INC})
+	set(MGL_ALL_LINK ${MGL_LINK_DIR}:${MGL_WND_LINK_DIR})
+endif(WIN32)
+
 get_directory_property(DEF_LIST COMPILE_DEFINITIONS)
 foreach(def_i ${DEF_LIST})
 	if(MGL_DEF)
@@ -32,9 +40,9 @@ if(MGL_HAVE_PYTHON)
  	add_custom_command(OUTPUT _mathgl.so mathgl.py
 		COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_BINARY_DIR}/lang/setup.py
 		build build_ext 
-		--include-dirs='${BIN_INC}:${SRC_INC}'
+		--include-dirs='${MGL_ALL_INC}'
 #		--library-dirs='$<TARGET_LINKER_FILE_DIR:mgl>:$<TARGET_LINKER_FILE_DIR:mgl-wnd>' #commented out for compatibilty reason with old cmake
-		--library-dirs='${MGL_LINK_DIR}:${MGL_WND_LINK_DIR}'
+		--library-dirs='${MGL_ALL_LINK}'
 #		--libraries='mgl-wnd'
 		--swig ${SWIG_EXECUTABLE}
 		--swig-opts='-c++ -threads -I${BIN_INC} -I${SRC_INC} ${MGL_DEF}'

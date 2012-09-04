@@ -277,6 +277,15 @@ if((enable-langall OR enable-python) AND (NOT enable-lgpl) )
 	if(NOT PYTHONLIBS_FOUND)
 		message(SEND_ERROR "Couldn't find python development libraries.")
 	endif(NOT PYTHONLIBS_FOUND)
+	execute_process(
+		COMMAND ${PYTHON_EXECUTABLE} -c "import numpy; print numpy.get_include()"
+		OUTPUT_VARIABLE NUMPY_INCLUDE_PATH
+		RESULT_VARIABLE NUMPY_ERR
+		OUTPUT_STRIP_TRAILING_WHITESPACE
+	)
+	if(NOT NUMPY_INCLUDE_PATH)
+		message(SEND_ERROR "Couldn't find numpy.")
+	endif(NOT NUMPY_INCLUDE_PATH)
 else((enable-langall OR enable-python) AND (NOT enable-lgpl) )
 	set(MGL_HAVE_PYTHON 0)
 endif((enable-langall OR enable-python) AND (NOT enable-lgpl) )
