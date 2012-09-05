@@ -37,7 +37,7 @@ void mglDrawReg::set(mglCanvas *gr, int nx, int ny, int m)
 {
 	int mx = m%nx, my = m/nx;
 	x1 = gr->GetWidth()*mx/nx;		y1 = gr->GetHeight()-gr->GetHeight()*(my+1)/ny;
-	x2 = gr->GetWidth()*(mx+1)/nx;	y2 = gr->GetHeight()-gr->GetHeight()*my/ny;
+	x2 = gr->GetWidth()*(mx+1)/nx-1;	y2 = gr->GetHeight()-gr->GetHeight()*my/ny-1;
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::PutDrawReg(mglDrawReg *d, const mglCanvas *gr)
