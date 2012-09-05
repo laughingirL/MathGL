@@ -1,5 +1,5 @@
 /***************************************************************************
- * mgl2png.cpp is part of Math Graphic Library
+ * mglconv.cpp is part of Math Graphic Library
  * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *

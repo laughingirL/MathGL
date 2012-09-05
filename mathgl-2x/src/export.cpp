@@ -36,28 +36,30 @@ extern "C" {
 int mgl_pnga_save(const char *fname, int w, int h, unsigned char **p)
 {
 #if MGL_HAVE_PNG
-	FILE *fp = fopen(fname, "wb");
+	bool fl = strcmp(fname,"-");
+	FILE *fp = fl ? fopen(fname, "wb") : stdout;
 	if (!fp)	return 1;
 
 	png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING,0,0,0);
-	if (!png_ptr)	{	fclose(fp);	return 1;	}
-	png_infop info_ptr = png_create_info_struct(png_ptr);
-	if (!info_ptr)
-	{	png_destroy_write_struct(&png_ptr,0);	fclose(fp);	return 1;	}
-
-	png_init_io(png_ptr, fp);
-	png_set_filter(png_ptr, 0, PNG_ALL_FILTERS);
-	png_set_compression_level(png_ptr, Z_BEST_COMPRESSION);
-	png_set_IHDR(png_ptr, info_ptr, w, h, 8,
-				PNG_COLOR_TYPE_RGB_ALPHA,
-				PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT,
-				PNG_FILTER_TYPE_DEFAULT);
-	png_set_rows(png_ptr, info_ptr, p);
-	png_write_png(png_ptr, info_ptr,  PNG_TRANSFORM_IDENTITY, 0);
-	png_write_end(png_ptr, info_ptr);
-
-	png_destroy_write_struct(&png_ptr, &info_ptr);
-	fclose(fp);
+	if (png_ptr)
+	{
+		png_infop info_ptr = png_create_info_struct(png_ptr);
+		if (info_ptr)
+		{
+			png_init_io(png_ptr, fp);
+			png_set_filter(png_ptr, 0, PNG_ALL_FILTERS);
+			png_set_compression_level(png_ptr, Z_BEST_COMPRESSION);
+			png_set_IHDR(png_ptr, info_ptr, w, h, 8,
+						PNG_COLOR_TYPE_RGB_ALPHA,
+						PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT,
+						PNG_FILTER_TYPE_DEFAULT);
+			png_set_rows(png_ptr, info_ptr, p);
+			png_write_png(png_ptr, info_ptr,  PNG_TRANSFORM_IDENTITY, 0);
+			png_write_end(png_ptr, info_ptr);
+		}
+		png_destroy_write_struct(&png_ptr, &info_ptr);
+	}
+	if(fl)	fclose(fp);
 	return 0;
 #else
 	mglGlobalMess += "PNG support was disabled. Please, enable it and rebuild MathGL.\n";
@@ -68,28 +70,30 @@ int mgl_pnga_save(const char *fname, int w, int h, unsigned char **p)
 int mgl_png_save(const char *fname, int w, int h, unsigned char **p)
 {
 #if MGL_HAVE_PNG
-	FILE *fp = fopen(fname, "wb");
+	bool fl = strcmp(fname,"-");
+	FILE *fp = fl ? fopen(fname, "wb") : stdout;
 	if (!fp)	return 1;
 
 	png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING,0,0,0);
-	if (!png_ptr)	{	fclose(fp);	return 1;	}
-	png_infop info_ptr = png_create_info_struct(png_ptr);
-	if (!info_ptr)
-	{	png_destroy_write_struct(&png_ptr,0);	fclose(fp);	return 1;	}
-
-	png_init_io(png_ptr, fp);
-	png_set_filter(png_ptr, 0, PNG_ALL_FILTERS);
-	png_set_compression_level(png_ptr, Z_BEST_COMPRESSION);
-	png_set_IHDR(png_ptr, info_ptr, w, h, 8,
-				PNG_COLOR_TYPE_RGB,
-				PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT,
-				PNG_FILTER_TYPE_DEFAULT);
-	png_set_rows(png_ptr, info_ptr, p);
-	png_write_png(png_ptr, info_ptr,  PNG_TRANSFORM_IDENTITY, 0);
-	png_write_end(png_ptr, info_ptr);
-
-	png_destroy_write_struct(&png_ptr, &info_ptr);
-	fclose(fp);
+	if (png_ptr)
+	{
+		png_infop info_ptr = png_create_info_struct(png_ptr);
+		if (info_ptr)
+		{
+			png_init_io(png_ptr, fp);
+			png_set_filter(png_ptr, 0, PNG_ALL_FILTERS);
+			png_set_compression_level(png_ptr, Z_BEST_COMPRESSION);
+			png_set_IHDR(png_ptr, info_ptr, w, h, 8,
+						PNG_COLOR_TYPE_RGB,
+						PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT,
+						PNG_FILTER_TYPE_DEFAULT);
+			png_set_rows(png_ptr, info_ptr, p);
+			png_write_png(png_ptr, info_ptr,  PNG_TRANSFORM_IDENTITY, 0);
+			png_write_end(png_ptr, info_ptr);
+		}
+		png_destroy_write_struct(&png_ptr, &info_ptr);
+	}
+	if(fl)	fclose(fp);
 	return 0;
 #else
 	mglGlobalMess += "PNG support was disabled. Please, enable it and rebuild MathGL.\n";
@@ -99,7 +103,8 @@ int mgl_png_save(const char *fname, int w, int h, unsigned char **p)
 //-----------------------------------------------------------------------------
 int mgl_bmp_save(const char *fname, int w, int h, unsigned char **p)
 {
-	FILE *fp = fopen(fname,"wb");
+	bool fl = strcmp(fname,"-");
+	FILE *fp = fl ? fopen(fname, "wb") : stdout;
 	if (!fp)	return 1;
 
 	char z[4] = {0,0,0,0};
@@ -124,13 +129,14 @@ int mgl_bmp_save(const char *fname, int w, int h, unsigned char **p)
 		fwrite(q+1,1,1,fp);
 		fwrite(q+0,1,1,fp);
 	}
-	fclose(fp);
+	if(fl)	fclose(fp);
 	return 0;
 }
 //-----------------------------------------------------------------------------
 int mgl_tga_save(const char *fname, int w, int h, unsigned char **p)
 {
-	FILE *fp = fopen(fname,"wb");
+	bool fl = strcmp(fname,"-");
+	FILE *fp = fl ? fopen(fname, "wb") : stdout;
 	if (!fp)	return 1;
 	// header
 	char head[14]={0,0,2, 0,0,0,0,0, 0,0,0,0, 32,0};
@@ -148,7 +154,7 @@ int mgl_tga_save(const char *fname, int w, int h, unsigned char **p)
 		fwrite(q+0,1,1,fp);
 		fwrite(q+3,1,1,fp);
 	}
-	fclose(fp);
+	if(fl)	fclose(fp);
 	return 0;
 }
 //-----------------------------------------------------------------------------
@@ -157,12 +163,14 @@ int mgl_jpeg_save(const char *fname, int w, int h, unsigned char **p)
 #if MGL_HAVE_JPEG
 	struct jpeg_compress_struct cinfo;
 	struct jpeg_error_mgr jerr;
-	FILE * outfile;
+
+	bool fl = strcmp(fname,"-");
+	FILE *fp = fl ? fopen(fname, "wb") : stdout;
+	if (!fp)	return 1;
 
 	cinfo.err = jpeg_std_error(&jerr);
 	jpeg_create_compress(&cinfo);
-	if((outfile = fopen(fname, "wb")) == 0)	return 1;
-	jpeg_stdio_dest(&cinfo, outfile);
+	jpeg_stdio_dest(&cinfo, fp);
 	cinfo.image_width = w;
 	cinfo.image_height = h;
 	cinfo.input_components = 3;
@@ -172,7 +180,7 @@ int mgl_jpeg_save(const char *fname, int w, int h, unsigned char **p)
 	jpeg_write_scanlines(&cinfo, p, h);
 	jpeg_finish_compress(&cinfo);
 	jpeg_destroy_compress(&cinfo);
-	fclose(outfile);
+	if(fl)	fclose(fp);
 	return 0;
 #else
 	mglGlobalMess += "JPEG support was disabled. Please, enable it and rebuild MathGL.\n";
@@ -197,7 +205,9 @@ int mgl_bps_save(const char *fname, int w, int h, unsigned char **p)
 	register long i,j;
 	bool gz = fname[strlen(fname)-1]=='z';
 
-	void *fp = gz ? (void*)gzopen(fname,"wt") : (void*)fopen(fname,"wt");
+	void *fp;
+	if(!strcmp(fname,"-"))	fp = stdout;		// allow to write in stdout
+	else		fp = gz ? (void*)gzopen(fname,"wt") : (void*)fopen(fname,"wt");
 	mgl_printf(fp, gz, "%%!PS-Adobe-3.0 EPSF-3.0\n%%%%BoundingBox: 0 0 %d %d\n",w,h);
 	mgl_printf(fp, gz, "%%%%Created by MathGL library\n%%%%Title: %s\n", fname);
 	mgl_printf(fp, gz, "%%%%CreationDate: %s\n",ctime(&now));
@@ -209,7 +219,7 @@ int mgl_bps_save(const char *fname, int w, int h, unsigned char **p)
 		mgl_printf(fp, gz, "%02x%02x%02x",p[j][3*i],p[j][3*i+1],p[j][3*i+2]);
 	}
 	mgl_printf(fp, gz, "\n\nshowpage\n%%%%EOF\n");
-	if(gz)	gzclose((gzFile)fp);	else	fclose((FILE *)fp);
+	if(strcmp(fname,"-"))	{	if(gz)	gzclose((gzFile)fp);	else	fclose((FILE *)fp);	}
 	return 0;
 }
 //-----------------------------------------------------------------------------

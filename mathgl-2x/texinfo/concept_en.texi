@@ -221,7 +221,7 @@ There is no difference between lower or upper case in formulas. If argument valu
 
 Command options allow the easy setup of the selected plot by changing global settings only for this plot. Each option start from symbol @samp{;}. Options work so that MathGL remember the current settings, change settings as it being set in the option, execute function and return the original settings back. So, the options are most usable for plotting functions.
 
-The most useful options are @code{xrange, yrange, zrange}. They sets the boundaries for data change. This boundaries are used for automatically filled variables. So, these options allow one to change the position of some plots. For example, in command @code{Plot(y,"","xrange 0.1 0.9");} or @code{plot y; xrange 0.1 0.9} the x coordinate will be equidistantly distributed in range 0.1 ... 0.9. The sample @ref{Using options} show some basic options.
+The most useful options are @code{xrange, yrange, zrange}. They sets the boundaries for data change. This boundaries are used for automatically filled variables. So, these options allow one to change the position of some plots. For example, in command @code{Plot(y,"","xrange 0.1 0.9");} or @code{plot y; xrange 0.1 0.9} the x coordinate will be equidistantly distributed in range 0.1 ... 0.9.  @sref{Using options}
 
 The full list of options are:
 @cindex alpha

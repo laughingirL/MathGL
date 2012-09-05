@@ -485,6 +485,40 @@ void mgl_write_idtf_(uintptr_t *gr, const char *fname,const char *descr,int l,in
 	mreal w;	///< width (if applicable) or ftet
 	mreal p;
 };*/
+bool mglCanvas::WriteJSON(const char *fname)
+{
+	bool fl = strcmp(fname,"-");
+	FILE *fp = fl ? fopen(fname, "wb") : stdout;
+	if (!fp)	return true;
+	// first save coordinates
+	size_t i,l=Pnt.size();
+	fprintf(fp,"{\n\"width\" : %d,\t\"height\" : %d,\t\"npnts\" : %lu,\t\"pnts\" : [\n",
+			Width, Height,(unsigned long)l);
+	for(i=0;i<l;i++)
+	{
+		const mglPnt &q=Pnt[i];
+		fprintf(fp,"[%.4g, %.4g, %.4g]%c\n", q.xx, q.yy, q.zz, i+1<l?',':' ');
+	}
+	l = Prm.size();
+	fprintf(fp,"],\t\"nprim\" : %lu,\t\"prim\" : [\n",(unsigned long)l);
+	for(i=0;i<l;i++)
+	{
+		const mglPrim &p=Prm[i];		mglColor c = GetColor(p);
+		fprintf(fp,"[%d, %ld, %ld, %ld, %ld, %d, %.4g, %.4g, %.4g, %.4g, %.4g, %.4g, %.4g]%c\n",
+				p.type, p.n1, p.n2, p.n3, p.n4, p.id, p.s, p.w, p.p, c.r, c.g, c.b, c.a, i+1<l?',':' ');
+	}
+	fprintf(fp,"]\n}\n");
+	if(fl)	fclose(fp);
+	return false;
+}
+//-----------------------------------------------------------------------------
+void mgl_write_json(HMGL gr, const char *fname,const char *)
+{	_Gr_->WriteJSON(fname);	}
+void mgl_write_json_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
+{	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
+	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
+	mgl_write_json(_GR_,s,f);	delete []s;		delete []f;	}
+//-----------------------------------------------------------------------------
 bool mglCanvas::ExportMGLD(const char *fname, const char *descr)
 {
 	if(Pnt.size()<1 || Prm.size()<1)	return true;

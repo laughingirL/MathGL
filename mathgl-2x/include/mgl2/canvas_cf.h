@@ -97,6 +97,7 @@ void mgl_close_gif(HMGL graph);
 void mgl_set_plotid(HMGL gr, const char *id);
 void mgl_export_mgld(HMGL gr, const char *fname,const char *descr);
 void mgl_import_mgld(HMGL gr, const char *fname, int add);
+void mgl_write_json(HMGL gr, const char *fname,const char *descr);
 
 const unsigned char *mgl_get_rgb(HMGL graph);
 const unsigned char *mgl_get_rgba(HMGL graph);
@@ -209,6 +210,7 @@ void mgl_write_wgl_(uintptr_t *graph, const char *fname,const char *descr,int lf
 void mgl_set_plotid_(uintptr_t *gr, const char *id,int l);
 void mgl_export_mgld_(uintptr_t *gr, const char *fname,const char *descr,int l,int n);
 void mgl_import_mgld_(uintptr_t *gr, const char *fname, int *add, int l);
+void mgl_write_json_(uintptr_t *gr, const char *fname,const char *descr,int l,int n);
 
 const unsigned char *mgl_get_rgb_(uintptr_t *graph);
 const unsigned char *mgl_get_rgba_(uintptr_t *graph);

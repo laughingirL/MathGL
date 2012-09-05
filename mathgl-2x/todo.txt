@@ -5,7 +5,23 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 
 1. Use Hershey as built-in font ?!!
 2. Export to X3D
-3. Export to JavaScript (WebGL, canvas) + function for rotate, zoom, CalcXYZ(ask server).
+3. JavaScript (WebGL, canvas) based on JSON + function for rotate, zoom, CalcXYZ(ask server).
+
+var the_object;
+var http_request = new XMLHttpRequest();
+http_request.open( "GET", url, true );
+http_request.send(null);
+http_request.onreadystatechange = function () {
+	if ( http_request.readyState == 4 ) {
+		if ( http_request.status == 200 ) {
+			the_object = JSON.parse(http_request.responseText);
+		} else {
+			alert( "There was a problem with the URL." );
+		}
+		http_request = null;
+	}
+};
+
 4. GTK and WX window/widgets
 5. Labels at TriCont()
 
@@ -28,16 +44,20 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 18. Add mglDataC for complex data -- main diff is reading/saving data
 
 19. Drawing of saddle quadrangles
-21. CalcXYZ should take into account Zoom/View
+
+20. Test mglcgi
 
 +24. MGL testing system ???
 
 ============= DOCS =============
 
 1. Update web_*.texi -- links
-2. Text about UDAV
+2. Text about UDAV (tabs,dialogs,hotkeys)
+* known feature -- if you draw something in function then highlighted all similar objects
 3. Add FAQ about MPEG/GIF and PDF
 4. Examples of animation, u3d, x3d, js and so on
+
+5. Docs about WriteJSON()
 
 ============= UDAV =============
 

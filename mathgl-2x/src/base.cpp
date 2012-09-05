@@ -976,6 +976,7 @@ void mglBase::AddLegend(const char *str,const char *style)
 //-----------------------------------------------------------------------------
 bool mgl_check_dim2(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *name, bool less)
 {
+//	if(!gr || !x || !y || !z)	return true;		// if data is absent then should be segfault!!!
 	register long n=z->GetNx(),m=z->GetNy();
 	if(n<2 || m<2)	{	gr->SetWarn(mglWarnLow,name);	return true;	}
 	if(a && n*m*z->GetNz()!=a->GetNx()*a->GetNy()*a->GetNz())
@@ -999,6 +1000,7 @@ bool mgl_check_dim2(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *name, b
 //-----------------------------------------------------------------------------
 bool mgl_check_dim1(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const char *name, bool less)
 {
+//	if(!gr || !x || !y)	return true;		// if data is absent then should be segfault!!!
 	register long n=y->GetNx();
 	if(n<2)	{	gr->SetWarn(mglWarnLow,name);	return true;	}
 	if(less)
@@ -1018,6 +1020,7 @@ bool mgl_check_dim1(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const char *name, b
 //-----------------------------------------------------------------------------
 bool mgl_check_dim3(HMGL gr, bool both, HCDT x, HCDT y, HCDT z, HCDT a, HCDT b, const char *name)
 {
+// 	if(!gr || !x || !y || !z || !a)	return true;		// if data is absent then should be segfault!!!
 	register long n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
 	if(n<2 || m<2 || l<2)
 	{	gr->SetWarn(mglWarnLow,name);	return true;	}
@@ -1030,6 +1033,7 @@ bool mgl_check_dim3(HMGL gr, bool both, HCDT x, HCDT y, HCDT z, HCDT a, HCDT b, 
 //-----------------------------------------------------------------------------
 bool mgl_check_trig(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const char *name, int d)
 {
+// 	if(!gr || !x || !y || !z || !a || !nums)	return true;		// if data is absent then should be segfault!!!
 	long n = x->GetNx(), m = nums->GetNy();
 	if(nums->GetNx()<d)	{	gr->SetWarn(mglWarnLow,name);	return true;	}
 	if(y->GetNx()!=n || z->GetNx()!=n)	{	gr->SetWarn(mglWarnDim,name);	return true;	}
@@ -1045,6 +1049,7 @@ bool mgl_isboth(HCDT x, HCDT y, HCDT z, HCDT a)
 //-----------------------------------------------------------------------------
 bool mgl_check_vec3(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *name)
 {
+// 	if(!gr || !x || !y || !z || !ax || !ay || !az)	return true;		// if data is absent then should be segfault!!!
 	register long n=ax->GetNx(),m=ax->GetNy(),l=ax->GetNz();
 	if(n*m*l!=ay->GetNx()*ay->GetNy()*ay->GetNz() || n*m*l!=az->GetNx()*az->GetNy()*az->GetNz())
 	{	gr->SetWarn(mglWarnDim,name);	return true;	}

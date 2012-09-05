@@ -292,7 +292,7 @@ void fill_animate(const char *text)
 			register long j=0,l=strlen(str);
 			char *s=new char[l+1],*s1=0,*s2=0,*s3=0;
 			bool sp=true;	strcpy(s,str);
-			for(j=0;j<l && isspace(s[j]);j++);
+			for(j=0;j<l;j++)
 			{
 				if(isspace(s[j]))	{	s[j]=0;	sp=true;	}
 				else if(sp)

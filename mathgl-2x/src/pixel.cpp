@@ -167,56 +167,177 @@ void mglCanvas::LightScale()
 	}
 }
 //-----------------------------------------------------------------------------
+/*mglPoint mglCanvas::CalcXYZ(int xs, int ys, bool real) const
+{
+	mglPoint p;
+	mreal zs = Z[3*(xs+Width*(Height-1-ys))];
+	if(zs<=-1e20f)	return mglPoint(NAN,NAN,NAN);
+	mreal b0=B.b[0], b1=B.b[1], b2=B.b[2], b3=B.b[3], b4=B.b[4], b5=B.b[5], b6=B.b[6], b7=B.b[7], b8=B.b[8];
+	mreal r0=Bp.b[0], r1=Bp.b[1], r2=Bp.b[2], r3=Bp.b[3], r4=Bp.b[4], r5=Bp.b[5], r6=Bp.b[6], r7=Bp.b[7], r8=Bp.b[8];
+	mreal W=Width, H=Height, D=Depth, Bx=B.x, By=B.y, Bz=B.z, Rx=Bp.x, Ry=Bp.y, Rz=Bp.z, pf=Bp.pf;
+
+	p.x = ((((((b4*b8-b5*b7)*pf*r4+(b1*b8-b2*b7)*pf*r3)*r8+((b5*b7-b4*b8)*pf*r5+(b1*b5-b2*b4)*pf*r3)*r7+((b2*b7-b1*b8)*pf*r5+(b2*b4-b1*b5)*pf*r4)*r6)*Rx+
+	((b4*b8-b5*b7)*pf*r0*r4+(b5*b7-b4*b8)*pf*r1*r3)*r8+((b5*b7-b4*b8)*pf*r0*r5+(b4*b8-b5*b7)*pf*r2*r3)*r7+((b4*b8-b5*b7)*pf*r1*r5+(b5*b7-b4*b8)*pf*r2*r4)*r6)*D+
+	(((2*b5*b7-2*b4*b8)*pf*r4+(2*b2*b7-2*b1*b8)*pf*r3)*r8+((2*b4*b8-2*b5*b7)*pf*r5+(2*b2*b4-2*b1*b5)*pf*r3)*r7+((2*b1*b8-2*b2*b7)*pf*r5+(2*b1*b5-2*b2*b4)*pf*r4)*r6)*zs+
+	(((2*b5*b7-2*b4*b8)*r4+(2*b2*b7-2*b1*b8)*r3)*r8+((2*b4*b8-2*b5*b7)*r5+(2*b2*b4-2*b1*b5)*r3)*r7+((2*b1*b8-2*b2*b7)*r5+(2*b1*b5-2*b2*b4)*r4)*r6)*Rx+
+	(((2*b5*b7-2*b4*b8)*r0+2*b4*b8-2*b5*b7)*r4+((2*b4*b8-2*b5*b7)*r1+2*b1*b8-2*b2*b7)*r3)*r8+(((2*b4*b8-2*b5*b7)*r0-2*b4*b8+2*b5*b7)*r5+((2*b5*b7-2*b4*b8)*r2+2*b1*b5-2*b2*b4)*r3)*r7+
+	(((2*b5*b7-2*b4*b8)*r1-2*b1*b8+2*b2*b7)*r5+((2*b4*b8-2*b5*b7)*r2-2*b1*b5+2*b2*b4)*r4)*r6)*W+((
+	(((b5*b7-b4*b8)*pf*r1+(b2*b7-b1*b8)*pf*r0)*r8+((b4*b8-b5*b7)*pf*r2+(b2*b4-b1*b5)*pf*r0)*r7+((b1*b8-b2*b7)*pf*r2+(b1*b5-b2*b4)*pf*r1)*r6)*Ry+
+	((b2*b7-b1*b8)*pf*r0*r4+(b1*b8-b2*b7)*pf*r1*r3)*r8+((b1*b8-b2*b7)*pf*r0*r5+(b2*b7-b1*b8)*pf*r2*r3)*r7+((b2*b7-b1*b8)*pf*r1*r5+(b1*b8-b2*b7)*pf*r2*r4)*r6)*D+
+	(((2*b4*b8-2*b5*b7)*pf*r1+(2*b1*b8-2*b2*b7)*pf*r0)*r8+((2*b5*b7-2*b4*b8)*pf*r2+(2*b1*b5-2*b2*b4)*pf*r0)*r7+((2*b2*b7-2*b1*b8)*pf*r2+(2*b2*b4-2*b1*b5)*pf*r1)*r6)*zs+
+	(((2*b4*b8-2*b5*b7)*r1+(2*b1*b8-2*b2*b7)*r0)*r8+((2*b5*b7-2*b4*b8)*r2+(2*b1*b5-2*b2*b4)*r0)*r7+((2*b2*b7-2*b1*b8)*r2+(2*b2*b4-2*b1*b5)*r1)*r6)*Ry+
+	((2*b1*b8-2*b2*b7)*r0*r4+(2*b2*b7-2*b1*b8)*r1*r3+(2*b5*b7-2*b4*b8)*r1+(2*b2*b7-2*b1*b8)*r0)*r8+((2*b2*b7-2*b1*b8)*r0*r5+(2*b1*b8-2*b2*b7)*r2*r3+(2*b4*b8-2*b5*b7)*r2+(2*b2*b4-2*b1*b5)*r0)*r7
+	+((2*b1*b8-2*b2*b7)*r1*r5+(2*b2*b7-2*b1*b8)*r2*r4+(2*b1*b8-2*b2*b7)*r2+(2*b1*b5-2*b2*b4)*r1)*r6)*H+(
+	(((b4*b8-b5*b7)*pf*r1+(b1*b8-b2*b7)*pf*r0)*r5+((b5*b7-b4*b8)*pf*r2+(b1*b5-b2*b4)*pf*r0)*r4+((b2*b7-b1*b8)*pf*r2+(b2*b4-b1*b5)*pf*r1)*r3)*Rz+
+	((b1*b5-b2*b4)*pf*r0*r4+(b2*b4-b1*b5)*pf*r1*r3)*r8+((b2*b4-b1*b5)*pf*r0*r5+(b1*b5-b2*b4)*pf*r2*r3)*r7+((b1*b5-b2*b4)*pf*r1*r5+(b2*b4-b1*b5)*pf*r2*r4)*r6+
+	((b5*b7-b4*b8)*pf*r1+(b2*b7-b1*b8)*pf*r0)*r5+((b4*b8-b5*b7)*pf*r2+(b2*b4-b1*b5)*pf*r0)*r4+((b1*b8-b2*b7)*pf*r2+(b1*b5-b2*b4)*pf*r1)*r3)*D*D+(
+	(((2*b4*b8-2*b5*b7)*pf*r1+(2*b1*b8-2*b2*b7)*pf*r0)*r5+((2*b5*b7-2*b4*b8)*pf*r2+(2*b1*b5-2*b2*b4)*pf*r0)*r4+((2*b2*b7-2*b1*b8)*pf*r2+(2*b2*b4-2*b1*b5)*pf*r1)*r3)*zs+
+	(((2*b5*b7-2*b4*b8)*r1+(2*b2*b7-2*b1*b8)*r0)*r5+((2*b4*b8-2*b5*b7)*r2+(2*b2*b4-2*b1*b5)*r0)*r4+((2*b1*b8-2*b2*b7)*r2+(2*b1*b5-2*b2*b4)*r1)*r3)*Rz+
+	((((2*b2*b4-2*b1*b5)*Bz+(2*b1*b8-2*b2*b7)*By+(2*b5*b7-2*b4*b8)*Bx)*pf-2*b1*b5+2*b2*b4)*r0*r4+(((2*b1*b5-2*b2*b4)*Bz+(2*b2*b7-2*b1*b8)*By+(2*b4*b8-2*b5*b7)*Bx)*pf+2*b1*b5-2*b2*b4)*r1*r3)*r8
+	+((((2*b1*b5-2*b2*b4)*Bz+(2*b2*b7-2*b1*b8)*By+(2*b4*b8-2*b5*b7)*Bx)*pf+2*b1*b5-2*b2*b4)*r0*r5+(((2*b2*b4-2*b1*b5)*Bz+(2*b1*b8-2*b2*b7)*By+(2*b5*b7-2*b4*b8)*Bx)*pf-2*b1*b5+2*b2*b4)*r2*r3)*r7+
+	((((2*b2*b4-2*b1*b5)*Bz+(2*b1*b8-2*b2*b7)*By+(2*b5*b7-2*b4*b8)*Bx)*pf-2*b1*b5+2*b2*b4)*r1*r5+(((2*b1*b5-2*b2*b4)*Bz+(2*b2*b7-2*b1*b8)*By+(2*b4*b8-2*b5*b7)*Bx)*pf+2*b1*b5-2*b2*b4)*r2*r4)*r6
+	+((2*b4*b8-2*b5*b7)*r1+(2*b1*b8-2*b2*b7)*r0)*r5+((2*b5*b7-2*b4*b8)*r2+(2*b1*b5-2*b2*b4)*r0)*r4+((2*b2*b7-2*b1*b8)*r2+(2*b2*b4-2*b1*b5)*r1)*r3)*D+(
+	(((4*b5*b7-4*b4*b8)*pf*r1+(4*b2*b7-4*b1*b8)*pf*r0)*r8+((4*b4*b8-4*b5*b7)*pf*r2+(4*b2*b4-4*b1*b5)*pf*r0)*r7+((4*b1*b8-4*b2*b7)*pf*r2+(4*b1*b5-4*b2*b4)*pf*r1)*r6)*ys+
+	(((4*b4*b8-4*b5*b7)*pf*r4+(4*b1*b8-4*b2*b7)*pf*r3)*r8+((4*b5*b7-4*b4*b8)*pf*r5+(4*b1*b5-4*b2*b4)*pf*r3)*r7+((4*b2*b7-4*b1*b8)*pf*r5+(4*b2*b4-4*b1*b5)*pf*r4)*r6)*xs+
+	((4*b5*b7-4*b4*b8)*r1+(4*b2*b7-4*b1*b8)*r0)*r5+((4*b4*b8-4*b5*b7)*r2+(4*b2*b4-4*b1*b5)*r0)*r4+((4*b1*b8-4*b2*b7)*r2+(4*b1*b5-4*b2*b4)*r1)*r3)*zs+
+	(((4*b4*b8-4*b5*b7)*r1+(4*b1*b8-4*b2*b7)*r0)*r8+((4*b5*b7-4*b4*b8)*r2+(4*b1*b5-4*b2*b4)*r0)*r7+((4*b2*b7-4*b1*b8)*r2+(4*b2*b4-4*b1*b5)*r1)*r6)*ys+
+	(((4*b5*b7-4*b4*b8)*r4+(4*b2*b7-4*b1*b8)*r3)*r8+((4*b4*b8-4*b5*b7)*r5+(4*b2*b4-4*b1*b5)*r3)*r7+((4*b1*b8-4*b2*b7)*r5+(4*b1*b5-4*b2*b4)*r4)*r6)*xs+
+	(((4*b1*b5-4*b2*b4)*Bz+(4*b2*b7-4*b1*b8)*By+(4*b4*b8-4*b5*b7)*Bx)*r0*r4+((4*b2*b4-4*b1*b5)*Bz+(4*b1*b8-4*b2*b7)*By+(4*b5*b7-4*b4*b8)*Bx)*r1*r3)*r8+
+	(((4*b2*b4-4*b1*b5)*Bz+(4*b1*b8-4*b2*b7)*By+(4*b5*b7-4*b4*b8)*Bx)*r0*r5+((4*b1*b5-4*b2*b4)*Bz+(4*b2*b7-4*b1*b8)*By+(4*b4*b8-4*b5*b7)*Bx)*r2*r3)*r7+
+	(((4*b1*b5-4*b2*b4)*Bz+(4*b2*b7-4*b1*b8)*By+(4*b4*b8-4*b5*b7)*Bx)*r1*r5+((4*b2*b4-4*b1*b5)*Bz+(4*b1*b8-4*b2*b7)*By+(4*b5*b7-4*b4*b8)*Bx)*r2*r4)*r6)/((
+	(((2*b0*b4-2*b1*b3)*b8+(2*b2*b3-2*b0*b5)*b7+(2*b1*b5-2*b2*b4)*b6)*pf*r0*r4+((2*b1*b3-2*b0*b4)*b8+(2*b0*b5-2*b2*b3)*b7+(2*b2*b4-2*b1*b5)*b6)*pf*r1*r3)*r8+
+	(((2*b1*b3-2*b0*b4)*b8+(2*b0*b5-2*b2*b3)*b7+(2*b2*b4-2*b1*b5)*b6)*pf*r0*r5+((2*b0*b4-2*b1*b3)*b8+(2*b2*b3-2*b0*b5)*b7+(2*b1*b5-2*b2*b4)*b6)*pf*r2*r3)*r7+
+	(((2*b0*b4-2*b1*b3)*b8+(2*b2*b3-2*b0*b5)*b7+(2*b1*b5-2*b2*b4)*b6)*pf*r1*r5+((2*b1*b3-2*b0*b4)*b8+(2*b0*b5-2*b2*b3)*b7+(2*b2*b4-2*b1*b5)*b6)*pf*r2*r4)*r6)*D+
+	(((4*b1*b3-4*b0*b4)*b8+(4*b0*b5-4*b2*b3)*b7+(4*b2*b4-4*b1*b5)*b6)*r0*r4+((4*b0*b4-4*b1*b3)*b8+(4*b2*b3-4*b0*b5)*b7+(4*b1*b5-4*b2*b4)*b6)*r1*r3)*r8+
+	(((4*b0*b4-4*b1*b3)*b8+(4*b2*b3-4*b0*b5)*b7+(4*b1*b5-4*b2*b4)*b6)*r0*r5+((4*b1*b3-4*b0*b4)*b8+(4*b0*b5-4*b2*b3)*b7+(4*b2*b4-4*b1*b5)*b6)*r2*r3)*r7+
+	(((4*b1*b3-4*b0*b4)*b8+(4*b0*b5-4*b2*b3)*b7+(4*b2*b4-4*b1*b5)*b6)*r1*r5+((4*b0*b4-4*b1*b3)*b8+(4*b2*b3-4*b0*b5)*b7+(4*b1*b5-4*b2*b4)*b6)*r2*r4)*r6);
+
+	p.y = -((((((b3*b8-b5*b6)*pf*r4+(b0*b8-b2*b6)*pf*r3)*r8+((b5*b6-b3*b8)*pf*r5+(b0*b5-b2*b3)*pf*r3)*r7+((b2*b6-b0*b8)*pf*r5+(b2*b3-b0*b5)*pf*r4)*r6)*Rx+
+	((b3*b8-b5*b6)*pf*r0*r4+(b5*b6-b3*b8)*pf*r1*r3)*r8+((b5*b6-b3*b8)*pf*r0*r5+(b3*b8-b5*b6)*pf*r2*r3)*r7+((b3*b8-b5*b6)*pf*r1*r5+(b5*b6-b3*b8)*pf*r2*r4)*r6)*D+
+	(((2*b5*b6-2*b3*b8)*pf*r4+(2*b2*b6-2*b0*b8)*pf*r3)*r8+((2*b3*b8-2*b5*b6)*pf*r5+(2*b2*b3-2*b0*b5)*pf*r3)*r7+((2*b0*b8-2*b2*b6)*pf*r5+(2*b0*b5-2*b2*b3)*pf*r4)*r6)*zs+
+	(((2*b5*b6-2*b3*b8)*r4+(2*b2*b6-2*b0*b8)*r3)*r8+((2*b3*b8-2*b5*b6)*r5+(2*b2*b3-2*b0*b5)*r3)*r7+((2*b0*b8-2*b2*b6)*r5+(2*b0*b5-2*b2*b3)*r4)*r6)*Rx+
+	(((2*b5*b6-2*b3*b8)*r0+2*b3*b8-2*b5*b6)*r4+((2*b3*b8-2*b5*b6)*r1+2*b0*b8-2*b2*b6)*r3)*r8+(((2*b3*b8-2*b5*b6)*r0-2*b3*b8+2*b5*b6)*r5+((2*b5*b6-2*b3*b8)*r2+2*b0*b5-2*b2*b3)*r3)*r7+
+	(((2*b5*b6-2*b3*b8)*r1-2*b0*b8+2*b2*b6)*r5+((2*b3*b8-2*b5*b6)*r2-2*b0*b5+2*b2*b3)*r4)*r6)*W+((
+	(((b5*b6-b3*b8)*pf*r1+(b2*b6-b0*b8)*pf*r0)*r8+((b3*b8-b5*b6)*pf*r2+(b2*b3-b0*b5)*pf*r0)*r7+((b0*b8-b2*b6)*pf*r2+(b0*b5-b2*b3)*pf*r1)*r6)*Ry+
+	((b2*b6-b0*b8)*pf*r0*r4+(b0*b8-b2*b6)*pf*r1*r3)*r8+((b0*b8-b2*b6)*pf*r0*r5+(b2*b6-b0*b8)*pf*r2*r3)*r7+((b2*b6-b0*b8)*pf*r1*r5+(b0*b8-b2*b6)*pf*r2*r4)*r6)*D+
+	(((2*b3*b8-2*b5*b6)*pf*r1+(2*b0*b8-2*b2*b6)*pf*r0)*r8+((2*b5*b6-2*b3*b8)*pf*r2+(2*b0*b5-2*b2*b3)*pf*r0)*r7+((2*b2*b6-2*b0*b8)*pf*r2+(2*b2*b3-2*b0*b5)*pf*r1)*r6)*zs+
+	(((2*b3*b8-2*b5*b6)*r1+(2*b0*b8-2*b2*b6)*r0)*r8+((2*b5*b6-2*b3*b8)*r2+(2*b0*b5-2*b2*b3)*r0)*r7+((2*b2*b6-2*b0*b8)*r2+(2*b2*b3-2*b0*b5)*r1)*r6)*Ry+
+	((2*b0*b8-2*b2*b6)*r0*r4+(2*b2*b6-2*b0*b8)*r1*r3+(2*b5*b6-2*b3*b8)*r1+(2*b2*b6-2*b0*b8)*r0)*r8+((2*b2*b6-2*b0*b8)*r0*r5+(2*b0*b8-2*b2*b6)*r2*r3+(2*b3*b8-2*b5*b6)*r2+(2*b2*b3-2*b0*b5)*r0)*r7
+	+((2*b0*b8-2*b2*b6)*r1*r5+(2*b2*b6-2*b0*b8)*r2*r4+(2*b0*b8-2*b2*b6)*r2+(2*b0*b5-2*b2*b3)*r1)*r6)*H+(
+	(((b3*b8-b5*b6)*pf*r1+(b0*b8-b2*b6)*pf*r0)*r5+((b5*b6-b3*b8)*pf*r2+(b0*b5-b2*b3)*pf*r0)*r4+((b2*b6-b0*b8)*pf*r2+(b2*b3-b0*b5)*pf*r1)*r3)*Rz+
+	((b0*b5-b2*b3)*pf*r0*r4+(b2*b3-b0*b5)*pf*r1*r3)*r8+((b2*b3-b0*b5)*pf*r0*r5+(b0*b5-b2*b3)*pf*r2*r3)*r7+((b0*b5-b2*b3)*pf*r1*r5+(b2*b3-b0*b5)*pf*r2*r4)*r6+
+	((b5*b6-b3*b8)*pf*r1+(b2*b6-b0*b8)*pf*r0)*r5+((b3*b8-b5*b6)*pf*r2+(b2*b3-b0*b5)*pf*r0)*r4+((b0*b8-b2*b6)*pf*r2+(b0*b5-b2*b3)*pf*r1)*r3)*D*D+(
+	(((2*b3*b8-2*b5*b6)*pf*r1+(2*b0*b8-2*b2*b6)*pf*r0)*r5+((2*b5*b6-2*b3*b8)*pf*r2+(2*b0*b5-2*b2*b3)*pf*r0)*r4+((2*b2*b6-2*b0*b8)*pf*r2+(2*b2*b3-2*b0*b5)*pf*r1)*r3)*zs+
+	(((2*b5*b6-2*b3*b8)*r1+(2*b2*b6-2*b0*b8)*r0)*r5+((2*b3*b8-2*b5*b6)*r2+(2*b2*b3-2*b0*b5)*r0)*r4+((2*b0*b8-2*b2*b6)*r2+(2*b0*b5-2*b2*b3)*r1)*r3)*Rz+
+	((((2*b2*b3-2*b0*b5)*Bz+(2*b0*b8-2*b2*b6)*By+(2*b5*b6-2*b3*b8)*Bx)*pf-2*b0*b5+2*b2*b3)*r0*r4+(((2*b0*b5-2*b2*b3)*Bz+(2*b2*b6-2*b0*b8)*By+(2*b3*b8-2*b5*b6)*Bx)*pf+2*b0*b5-2*b2*b3)*r1*r3)*r8
+	+((((2*b0*b5-2*b2*b3)*Bz+(2*b2*b6-2*b0*b8)*By+(2*b3*b8-2*b5*b6)*Bx)*pf+2*b0*b5-2*b2*b3)*r0*r5+(((2*b2*b3-2*b0*b5)*Bz+(2*b0*b8-2*b2*b6)*By+(2*b5*b6-2*b3*b8)*Bx)*pf-2*b0*b5+2*b2*b3)*r2*r3)*r7+
+	((((2*b2*b3-2*b0*b5)*Bz+(2*b0*b8-2*b2*b6)*By+(2*b5*b6-2*b3*b8)*Bx)*pf-2*b0*b5+2*b2*b3)*r1*r5+(((2*b0*b5-2*b2*b3)*Bz+(2*b2*b6-2*b0*b8)*By+(2*b3*b8-2*b5*b6)*Bx)*pf+2*b0*b5-2*b2*b3)*r2*r4)*r6
+	+((2*b3*b8-2*b5*b6)*r1+(2*b0*b8-2*b2*b6)*r0)*r5+((2*b5*b6-2*b3*b8)*r2+(2*b0*b5-2*b2*b3)*r0)*r4+((2*b2*b6-2*b0*b8)*r2+(2*b2*b3-2*b0*b5)*r1)*r3)*D+(
+	(((4*b5*b6-4*b3*b8)*pf*r1+(4*b2*b6-4*b0*b8)*pf*r0)*r8+((4*b3*b8-4*b5*b6)*pf*r2+(4*b2*b3-4*b0*b5)*pf*r0)*r7+((4*b0*b8-4*b2*b6)*pf*r2+(4*b0*b5-4*b2*b3)*pf*r1)*r6)*ys+
+	(((4*b3*b8-4*b5*b6)*pf*r4+(4*b0*b8-4*b2*b6)*pf*r3)*r8+((4*b5*b6-4*b3*b8)*pf*r5+(4*b0*b5-4*b2*b3)*pf*r3)*r7+((4*b2*b6-4*b0*b8)*pf*r5+(4*b2*b3-4*b0*b5)*pf*r4)*r6)*xs+
+	((4*b5*b6-4*b3*b8)*r1+(4*b2*b6-4*b0*b8)*r0)*r5+((4*b3*b8-4*b5*b6)*r2+(4*b2*b3-4*b0*b5)*r0)*r4+((4*b0*b8-4*b2*b6)*r2+(4*b0*b5-4*b2*b3)*r1)*r3)*zs+
+	(((4*b3*b8-4*b5*b6)*r1+(4*b0*b8-4*b2*b6)*r0)*r8+((4*b5*b6-4*b3*b8)*r2+(4*b0*b5-4*b2*b3)*r0)*r7+((4*b2*b6-4*b0*b8)*r2+(4*b2*b3-4*b0*b5)*r1)*r6)*ys+
+	(((4*b5*b6-4*b3*b8)*r4+(4*b2*b6-4*b0*b8)*r3)*r8+((4*b3*b8-4*b5*b6)*r5+(4*b2*b3-4*b0*b5)*r3)*r7+((4*b0*b8-4*b2*b6)*r5+(4*b0*b5-4*b2*b3)*r4)*r6)*xs+
+	(((4*b0*b5-4*b2*b3)*Bz+(4*b2*b6-4*b0*b8)*By+(4*b3*b8-4*b5*b6)*Bx)*r0*r4+((4*b2*b3-4*b0*b5)*Bz+(4*b0*b8-4*b2*b6)*By+(4*b5*b6-4*b3*b8)*Bx)*r1*r3)*r8+
+	(((4*b2*b3-4*b0*b5)*Bz+(4*b0*b8-4*b2*b6)*By+(4*b5*b6-4*b3*b8)*Bx)*r0*r5+((4*b0*b5-4*b2*b3)*Bz+(4*b2*b6-4*b0*b8)*By+(4*b3*b8-4*b5*b6)*Bx)*r2*r3)*r7+
+	(((4*b0*b5-4*b2*b3)*Bz+(4*b2*b6-4*b0*b8)*By+(4*b3*b8-4*b5*b6)*Bx)*r1*r5+((4*b2*b3-4*b0*b5)*Bz+(4*b0*b8-4*b2*b6)*By+(4*b5*b6-4*b3*b8)*Bx)*r2*r4)*r6)/((
+	(((2*b0*b4-2*b1*b3)*b8+(2*b2*b3-2*b0*b5)*b7+(2*b1*b5-2*b2*b4)*b6)*pf*r0*r4+((2*b1*b3-2*b0*b4)*b8+(2*b0*b5-2*b2*b3)*b7+(2*b2*b4-2*b1*b5)*b6)*pf*r1*r3)*r8+
+	(((2*b1*b3-2*b0*b4)*b8+(2*b0*b5-2*b2*b3)*b7+(2*b2*b4-2*b1*b5)*b6)*pf*r0*r5+((2*b0*b4-2*b1*b3)*b8+(2*b2*b3-2*b0*b5)*b7+(2*b1*b5-2*b2*b4)*b6)*pf*r2*r3)*r7+
+	(((2*b0*b4-2*b1*b3)*b8+(2*b2*b3-2*b0*b5)*b7+(2*b1*b5-2*b2*b4)*b6)*pf*r1*r5+((2*b1*b3-2*b0*b4)*b8+(2*b0*b5-2*b2*b3)*b7+(2*b2*b4-2*b1*b5)*b6)*pf*r2*r4)*r6)*D+
+	(((4*b1*b3-4*b0*b4)*b8+(4*b0*b5-4*b2*b3)*b7+(4*b2*b4-4*b1*b5)*b6)*r0*r4+((4*b0*b4-4*b1*b3)*b8+(4*b2*b3-4*b0*b5)*b7+(4*b1*b5-4*b2*b4)*b6)*r1*r3)*r8+
+	(((4*b0*b4-4*b1*b3)*b8+(4*b2*b3-4*b0*b5)*b7+(4*b1*b5-4*b2*b4)*b6)*r0*r5+((4*b1*b3-4*b0*b4)*b8+(4*b0*b5-4*b2*b3)*b7+(4*b2*b4-4*b1*b5)*b6)*r2*r3)*r7+
+	(((4*b1*b3-4*b0*b4)*b8+(4*b0*b5-4*b2*b3)*b7+(4*b2*b4-4*b1*b5)*b6)*r1*r5+((4*b0*b4-4*b1*b3)*b8+(4*b2*b3-4*b0*b5)*b7+(4*b1*b5-4*b2*b4)*b6)*r2*r4)*r6);
+	
+	p.z = ((((((b3*b7-b4*b6)*pf*r4+(b0*b7-b1*b6)*pf*r3)*r8+((b4*b6-b3*b7)*pf*r5+(b0*b4-b1*b3)*pf*r3)*r7+((b1*b6-b0*b7)*pf*r5+(b1*b3-b0*b4)*pf*r4)*r6)*Rx+
+	((b3*b7-b4*b6)*pf*r0*r4+(b4*b6-b3*b7)*pf*r1*r3)*r8+((b4*b6-b3*b7)*pf*r0*r5+(b3*b7-b4*b6)*pf*r2*r3)*r7+((b3*b7-b4*b6)*pf*r1*r5+(b4*b6-b3*b7)*pf*r2*r4)*r6)*D+
+	(((2*b4*b6-2*b3*b7)*pf*r4+(2*b1*b6-2*b0*b7)*pf*r3)*r8+((2*b3*b7-2*b4*b6)*pf*r5+(2*b1*b3-2*b0*b4)*pf*r3)*r7+((2*b0*b7-2*b1*b6)*pf*r5+(2*b0*b4-2*b1*b3)*pf*r4)*r6)*zs+
+	(((2*b4*b6-2*b3*b7)*r4+(2*b1*b6-2*b0*b7)*r3)*r8+((2*b3*b7-2*b4*b6)*r5+(2*b1*b3-2*b0*b4)*r3)*r7+((2*b0*b7-2*b1*b6)*r5+(2*b0*b4-2*b1*b3)*r4)*r6)*Rx+
+	(((2*b4*b6-2*b3*b7)*r0+2*b3*b7-2*b4*b6)*r4+((2*b3*b7-2*b4*b6)*r1+2*b0*b7-2*b1*b6)*r3)*r8+(((2*b3*b7-2*b4*b6)*r0-2*b3*b7+2*b4*b6)*r5+((2*b4*b6-2*b3*b7)*r2+2*b0*b4-2*b1*b3)*r3)*r7+
+	(((2*b4*b6-2*b3*b7)*r1-2*b0*b7+2*b1*b6)*r5+((2*b3*b7-2*b4*b6)*r2-2*b0*b4+2*b1*b3)*r4)*r6)*W+((
+	(((b4*b6-b3*b7)*pf*r1+(b1*b6-b0*b7)*pf*r0)*r8+((b3*b7-b4*b6)*pf*r2+(b1*b3-b0*b4)*pf*r0)*r7+((b0*b7-b1*b6)*pf*r2+(b0*b4-b1*b3)*pf*r1)*r6)*Ry+
+	((b1*b6-b0*b7)*pf*r0*r4+(b0*b7-b1*b6)*pf*r1*r3)*r8+((b0*b7-b1*b6)*pf*r0*r5+(b1*b6-b0*b7)*pf*r2*r3)*r7+((b1*b6-b0*b7)*pf*r1*r5+(b0*b7-b1*b6)*pf*r2*r4)*r6)*D+
+	(((2*b3*b7-2*b4*b6)*pf*r1+(2*b0*b7-2*b1*b6)*pf*r0)*r8+((2*b4*b6-2*b3*b7)*pf*r2+(2*b0*b4-2*b1*b3)*pf*r0)*r7+((2*b1*b6-2*b0*b7)*pf*r2+(2*b1*b3-2*b0*b4)*pf*r1)*r6)*zs+
+	(((2*b3*b7-2*b4*b6)*r1+(2*b0*b7-2*b1*b6)*r0)*r8+((2*b4*b6-2*b3*b7)*r2+(2*b0*b4-2*b1*b3)*r0)*r7+((2*b1*b6-2*b0*b7)*r2+(2*b1*b3-2*b0*b4)*r1)*r6)*Ry+
+	((2*b0*b7-2*b1*b6)*r0*r4+(2*b1*b6-2*b0*b7)*r1*r3+(2*b4*b6-2*b3*b7)*r1+(2*b1*b6-2*b0*b7)*r0)*r8+((2*b1*b6-2*b0*b7)*r0*r5+(2*b0*b7-2*b1*b6)*r2*r3+(2*b3*b7-2*b4*b6)*r2+(2*b1*b3-2*b0*b4)*r0)*r7
+	+((2*b0*b7-2*b1*b6)*r1*r5+(2*b1*b6-2*b0*b7)*r2*r4+(2*b0*b7-2*b1*b6)*r2+(2*b0*b4-2*b1*b3)*r1)*r6)*H+(
+	(((b3*b7-b4*b6)*pf*r1+(b0*b7-b1*b6)*pf*r0)*r5+((b4*b6-b3*b7)*pf*r2+(b0*b4-b1*b3)*pf*r0)*r4+((b1*b6-b0*b7)*pf*r2+(b1*b3-b0*b4)*pf*r1)*r3)*Rz+
+	((b0*b4-b1*b3)*pf*r0*r4+(b1*b3-b0*b4)*pf*r1*r3)*r8+((b1*b3-b0*b4)*pf*r0*r5+(b0*b4-b1*b3)*pf*r2*r3)*r7+((b0*b4-b1*b3)*pf*r1*r5+(b1*b3-b0*b4)*pf*r2*r4)*r6+
+	((b4*b6-b3*b7)*pf*r1+(b1*b6-b0*b7)*pf*r0)*r5+((b3*b7-b4*b6)*pf*r2+(b1*b3-b0*b4)*pf*r0)*r4+((b0*b7-b1*b6)*pf*r2+(b0*b4-b1*b3)*pf*r1)*r3)*D*D+(
+	(((2*b3*b7-2*b4*b6)*pf*r1+(2*b0*b7-2*b1*b6)*pf*r0)*r5+((2*b4*b6-2*b3*b7)*pf*r2+(2*b0*b4-2*b1*b3)*pf*r0)*r4+((2*b1*b6-2*b0*b7)*pf*r2+(2*b1*b3-2*b0*b4)*pf*r1)*r3)*zs+
+	(((2*b4*b6-2*b3*b7)*r1+(2*b1*b6-2*b0*b7)*r0)*r5+((2*b3*b7-2*b4*b6)*r2+(2*b1*b3-2*b0*b4)*r0)*r4+((2*b0*b7-2*b1*b6)*r2+(2*b0*b4-2*b1*b3)*r1)*r3)*Rz+
+	((((2*b1*b3-2*b0*b4)*Bz+(2*b0*b7-2*b1*b6)*By+(2*b4*b6-2*b3*b7)*Bx)*pf-2*b0*b4+2*b1*b3)*r0*r4+(((2*b0*b4-2*b1*b3)*Bz+(2*b1*b6-2*b0*b7)*By+(2*b3*b7-2*b4*b6)*Bx)*pf+2*b0*b4-2*b1*b3)*r1*r3)*r8
+	+((((2*b0*b4-2*b1*b3)*Bz+(2*b1*b6-2*b0*b7)*By+(2*b3*b7-2*b4*b6)*Bx)*pf+2*b0*b4-2*b1*b3)*r0*r5+(((2*b1*b3-2*b0*b4)*Bz+(2*b0*b7-2*b1*b6)*By+(2*b4*b6-2*b3*b7)*Bx)*pf-2*b0*b4+2*b1*b3)*r2*r3)*r7+
+	((((2*b1*b3-2*b0*b4)*Bz+(2*b0*b7-2*b1*b6)*By+(2*b4*b6-2*b3*b7)*Bx)*pf-2*b0*b4+2*b1*b3)*r1*r5+(((2*b0*b4-2*b1*b3)*Bz+(2*b1*b6-2*b0*b7)*By+(2*b3*b7-2*b4*b6)*Bx)*pf+2*b0*b4-2*b1*b3)*r2*r4)*r6
+	+((2*b3*b7-2*b4*b6)*r1+(2*b0*b7-2*b1*b6)*r0)*r5+((2*b4*b6-2*b3*b7)*r2+(2*b0*b4-2*b1*b3)*r0)*r4+((2*b1*b6-2*b0*b7)*r2+(2*b1*b3-2*b0*b4)*r1)*r3)*D+(
+	(((4*b4*b6-4*b3*b7)*pf*r1+(4*b1*b6-4*b0*b7)*pf*r0)*r8+((4*b3*b7-4*b4*b6)*pf*r2+(4*b1*b3-4*b0*b4)*pf*r0)*r7+((4*b0*b7-4*b1*b6)*pf*r2+(4*b0*b4-4*b1*b3)*pf*r1)*r6)*ys+
+	(((4*b3*b7-4*b4*b6)*pf*r4+(4*b0*b7-4*b1*b6)*pf*r3)*r8+((4*b4*b6-4*b3*b7)*pf*r5+(4*b0*b4-4*b1*b3)*pf*r3)*r7+((4*b1*b6-4*b0*b7)*pf*r5+(4*b1*b3-4*b0*b4)*pf*r4)*r6)*xs+
+	((4*b4*b6-4*b3*b7)*r1+(4*b1*b6-4*b0*b7)*r0)*r5+((4*b3*b7-4*b4*b6)*r2+(4*b1*b3-4*b0*b4)*r0)*r4+((4*b0*b7-4*b1*b6)*r2+(4*b0*b4-4*b1*b3)*r1)*r3)*zs+
+	(((4*b3*b7-4*b4*b6)*r1+(4*b0*b7-4*b1*b6)*r0)*r8+((4*b4*b6-4*b3*b7)*r2+(4*b0*b4-4*b1*b3)*r0)*r7+((4*b1*b6-4*b0*b7)*r2+(4*b1*b3-4*b0*b4)*r1)*r6)*ys+
+	(((4*b4*b6-4*b3*b7)*r4+(4*b1*b6-4*b0*b7)*r3)*r8+((4*b3*b7-4*b4*b6)*r5+(4*b1*b3-4*b0*b4)*r3)*r7+((4*b0*b7-4*b1*b6)*r5+(4*b0*b4-4*b1*b3)*r4)*r6)*xs+
+	(((4*b0*b4-4*b1*b3)*Bz+(4*b1*b6-4*b0*b7)*By+(4*b3*b7-4*b4*b6)*Bx)*r0*r4+((4*b1*b3-4*b0*b4)*Bz+(4*b0*b7-4*b1*b6)*By+(4*b4*b6-4*b3*b7)*Bx)*r1*r3)*r8+
+	(((4*b1*b3-4*b0*b4)*Bz+(4*b0*b7-4*b1*b6)*By+(4*b4*b6-4*b3*b7)*Bx)*r0*r5+((4*b0*b4-4*b1*b3)*Bz+(4*b1*b6-4*b0*b7)*By+(4*b3*b7-4*b4*b6)*Bx)*r2*r3)*r7+
+	(((4*b0*b4-4*b1*b3)*Bz+(4*b1*b6-4*b0*b7)*By+(4*b3*b7-4*b4*b6)*Bx)*r1*r5+((4*b1*b3-4*b0*b4)*Bz+(4*b0*b7-4*b1*b6)*By+(4*b4*b6-4*b3*b7)*Bx)*r2*r4)*r6)/((
+	(((2*b0*b4-2*b1*b3)*b8+(2*b2*b3-2*b0*b5)*b7+(2*b1*b5-2*b2*b4)*b6)*pf*r0*r4+((2*b1*b3-2*b0*b4)*b8+(2*b0*b5-2*b2*b3)*b7+(2*b2*b4-2*b1*b5)*b6)*pf*r1*r3)*r8+
+	(((2*b1*b3-2*b0*b4)*b8+(2*b0*b5-2*b2*b3)*b7+(2*b2*b4-2*b1*b5)*b6)*pf*r0*r5+((2*b0*b4-2*b1*b3)*b8+(2*b2*b3-2*b0*b5)*b7+(2*b1*b5-2*b2*b4)*b6)*pf*r2*r3)*r7+
+	(((2*b0*b4-2*b1*b3)*b8+(2*b2*b3-2*b0*b5)*b7+(2*b1*b5-2*b2*b4)*b6)*pf*r1*r5+((2*b1*b3-2*b0*b4)*b8+(2*b0*b5-2*b2*b3)*b7+(2*b2*b4-2*b1*b5)*b6)*pf*r2*r4)*r6)*D+
+	(((4*b1*b3-4*b0*b4)*b8+(4*b0*b5-4*b2*b3)*b7+(4*b2*b4-4*b1*b5)*b6)*r0*r4+((4*b0*b4-4*b1*b3)*b8+(4*b2*b3-4*b0*b5)*b7+(4*b1*b5-4*b2*b4)*b6)*r1*r3)*r8+
+	(((4*b0*b4-4*b1*b3)*b8+(4*b2*b3-4*b0*b5)*b7+(4*b1*b5-4*b2*b4)*b6)*r0*r5+((4*b1*b3-4*b0*b4)*b8+(4*b0*b5-4*b2*b3)*b7+(4*b2*b4-4*b1*b5)*b6)*r2*r3)*r7+
+	(((4*b1*b3-4*b0*b4)*b8+(4*b0*b5-4*b2*b3)*b7+(4*b2*b4-4*b1*b5)*b6)*r1*r5+((4*b0*b4-4*b1*b3)*b8+(4*b2*b3-4*b0*b5)*b7+(4*b1*b5-4*b2*b4)*b6)*r2*r4)*r6);
+	
+	return p*(2*B.pf);
+}*/
 // NOTE: Perspective, transformation formulas and lists are not support just now !!! Also it use LAST InPlot parameters!!!
 mglPoint mglCanvas::CalcXYZ(int xs, int ys, bool real) const
 {
-	mreal s3 = 2*B.pf, x, y, z;	// TODO: Take into account z-value of z-buffer
+	mreal s3 = 2*B.pf, x, y, z;
 	ys = Height - ys;
-	mreal xx = xs-B.x, yy = ys-B.y, zz;
-	mreal d1=B.b[0]*B.b[4]-B.b[1]*B.b[3], d2=B.b[1]*B.b[5]-B.b[2]*B.b[4], d3=B.b[0]*B.b[5]-B.b[2]*B.b[3];
 
-// TODO: take into account view() and zoom() ???
-/*		mglPnt &p=Pnt[i];
-		x = p.xx-Width/2.;	y = p.yy-Height/2.;	z = p.zz-Depth/2.;
-		p.x = Width/2 - Bp.x*Width/2 + Bp.b[0]*x + Bp.b[1]*y + Bp.b[2]*z;
-		p.y = Height/2- Bp.y*Height/2+ Bp.b[3]*x + Bp.b[4]*y + Bp.b[5]*z;
-		p.z = Depth/2. + Bp.b[6]*x + Bp.b[7]*y + Bp.b[8]*z;
-		if(Bp.pf)
-		{
-			register float d = (1-Bp.pf*Depth/2)/(1-Bp.pf*p.z);
-			p.x = Width/2 + d*(p.x-Width/2);
-			p.y = Height/2 + d*(p.y-Height/2);
-		}*/
-
+	mreal W=Width/2, H=Height/2, D=Depth/2;
+	mreal cx = B.z*Bp.b[2]+B.y*Bp.b[1]+B.x*Bp.b[0]-Bp.x*W-Bp.b[0]*W+W-Bp.b[1]*H-Bp.b[2]*D;
+	mreal c0 = B.b[6]*Bp.b[2]+B.b[3]*Bp.b[1]+B.b[0]*Bp.b[0];
+	mreal c1 = B.b[7]*Bp.b[2]+B.b[4]*Bp.b[1]+B.b[1]*Bp.b[0];
+	mreal c2 = B.b[8]*Bp.b[2]+B.b[5]*Bp.b[1]+B.b[2]*Bp.b[0];
+	mreal cy = B.z*Bp.b[5]+B.y*Bp.b[4]+B.x*Bp.b[3]-Bp.b[3]*W-Bp.y*H-Bp.b[4]*H+H-Bp.b[5]*D;
+	mreal c3 = B.b[6]*Bp.b[5]+B.b[3]*Bp.b[4]+B.b[0]*Bp.b[3];
+	mreal c4 = B.b[7]*Bp.b[5]+B.b[4]*Bp.b[4]+B.b[1]*Bp.b[3];
+	mreal c5 = B.b[8]*Bp.b[5]+B.b[5]*Bp.b[4]+B.b[2]*Bp.b[3];
+	mreal cz = B.z*Bp.b[8]+B.y*Bp.b[7]+B.x*Bp.b[6]-Bp.b[6]*W-Bp.b[7]*H-Bp.z*D-Bp.b[8]*D+D;
+	mreal c6 = B.b[6]*Bp.b[8]+B.b[3]*Bp.b[7]+B.b[0]*Bp.b[6];
+	mreal c7 = B.b[7]*Bp.b[8]+B.b[4]*Bp.b[7]+B.b[1]*Bp.b[6];
+	mreal c8 = B.b[8]*Bp.b[8]+B.b[5]*Bp.b[7]+B.b[2]*Bp.b[6];
+	
+	mreal xx = xs-cx, yy = ys-cy, zz;
+	mreal d1=c0*c4-c1*c3, d2=c1*c5-c2*c4, d3=c0*c5-c2*c3;
+	
 	// try to use z-values
-	zz = Z[3*(xs+Width*(Height-1-ys))]-B.z;
+	zz = Z[3*(xs+Width*(Height-1-ys))]-cz;
 	if(zz>-1e20f)
 	{
 		// put inverse matrix here: [x,y,z]=B^(-1)[xx,yy,zz]
-		mreal det = -B.b[0]*B.b[4]*B.b[8]+B.b[1]*B.b[3]*B.b[8]+B.b[0]*B.b[5]*B.b[7]-B.b[2]*B.b[3]*B.b[7]-B.b[1]*B.b[5]*B.b[6]+B.b[2]*B.b[4]*B.b[6];
+		mreal det = -c0*c4*c8+c1*c3*c8+c0*c5*c7-c2*c3*c7-c1*c5*c6+c2*c4*c6;
 		det /= 2*B.pf;
-		x = (B.b[2]*B.b[4]-B.b[1]*B.b[5])*zz+(B.b[1]*B.b[8]-B.b[2]*B.b[7])*yy+(B.b[5]*B.b[7]-B.b[4]*B.b[8])*xx;	x /= det;
-		y = (B.b[0]*B.b[5]-B.b[2]*B.b[3])*zz+(B.b[2]*B.b[6]-B.b[0]*B.b[8])*yy+(B.b[3]*B.b[8]-B.b[5]*B.b[6])*xx;	y /= det;
-		z = (B.b[1]*B.b[3]-B.b[0]*B.b[4])*zz+(B.b[0]*B.b[7]-B.b[1]*B.b[6])*yy+(B.b[4]*B.b[6]-B.b[3]*B.b[7])*xx;	z /= det;
+		x = (c2*c4-c1*c5)*zz+(c1*c8-c2*c7)*yy+(c5*c7-c4*c8)*xx;	x /= det;
+		y = (c0*c5-c2*c3)*zz+(c2*c6-c0*c8)*yy+(c3*c8-c5*c6)*xx;	y /= det;
+		z = (c1*c3-c0*c4)*zz+(c0*c7-c1*c6)*yy+(c4*c6-c3*c7)*xx;	z /= det;
 		real = false;
 	}
 	else if(fabs(d1) > fabs(d2) && fabs(d1) > fabs(d3))	// x-y plane
 	{
 		z = 0;
-		x = s3*(B.b[4]*xx-B.b[1]*yy)/d1;
-		y = s3*(B.b[0]*yy-B.b[3]*xx)/d1;
+		x = s3*(c4*xx-c1*yy)/d1;
+		y = s3*(c0*yy-c3*xx)/d1;
 	}
 	else if(fabs(d2) > fabs(d3))	// y-z
 	{
 		x = 0;
-		y = s3*(B.b[5]*xx-B.b[2]*yy)/d2;
-		z = s3*(B.b[1]*yy-B.b[4]*xx)/d2;
+		y = s3*(c5*xx-c2*yy)/d2;
+		z = s3*(c1*yy-c4*xx)/d2;
 	}
 	else	// x-z
 	{
 		y = 0;
-		x = s3*(B.b[5]*xx-B.b[2]*yy)/d3;
-		z = s3*(B.b[0]*yy-B.b[3]*xx)/d3;
+		x = s3*(c5*xx-c2*yy)/d3;
+		z = s3*(c0*yy-c3*xx)/d3;
 	}
 	return real ? mglPoint(NAN,NAN,NAN) : mglPoint(Min.x + (Max.x-Min.x)*(x+1)/2,
 				Min.y + (Max.y-Min.y)*(y+1)/2, Min.z + (Max.z-Min.z)*(z+1)/2);

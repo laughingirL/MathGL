@@ -152,8 +152,8 @@ void udavAddCommands(const mglCommand *cmd)
 {
 	int i, mp, mc;
 	// determine the number of symbols
-	for(i=0;parser.Cmd[i].name[0];i++);	mp = i;
-	for(i=0;cmd[i].name[0];i++);			mc = i;
+	for(i=0;parser.Cmd[i].name[0];i++){};	mp = i;
+	for(i=0;cmd[i].name[0];i++){};			mc = i;
 	mglCommand *buf = new mglCommand[mp+mc+1];
 	memcpy(buf, parser.Cmd, mp*sizeof(mglCommand));
 	memcpy(buf+mp, cmd, (mc+1)*sizeof(mglCommand));

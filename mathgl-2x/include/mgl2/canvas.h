@@ -212,6 +212,8 @@ using mglBase::Light;
 	bool ExportMGLD(const char *fname, const char *descr=0);
 	/// Import points and primitives from file using MGLD format
 	bool ImportMGLD(const char *fname, bool add=false);
+	/// Export in JSON format suitable for later drawing by JavaScript
+	bool WriteJSON(const char *fname);
 
 	/// Set the transparency type
 	inline void SetTranspType(int val)

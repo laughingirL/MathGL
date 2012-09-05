@@ -46,20 +46,23 @@ void smgl_combined(mglGraph *gr);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
+/*	mglData c;	mgls_prepare3d(&c);	gr->Light(true);	gr->Alpha(true);
+	gr->SubPlot(2,1,0);	gr->Rotate(50,60);	gr->Box();	gr->Surf3(c);
+	gr->SubPlot(2,1,1);	gr->Rotate(50,60);	gr->Box();	gr->Surf3(c,"","zrange 0 2");
+	return;
+
 	mglData a;	mgls_prepare2d(&a);	gr->Light(true);
 	gr->SubPlot(2,2,0);	gr->Rotate(50,60);	gr->Box();	gr->Surf(a);
 	gr->SubPlot(2,2,1);	gr->Rotate(50,60);	gr->Box();	gr->Surf(a,"%br");
 	gr->SubPlot(2,2,2);	gr->Rotate(50,60);	gr->Box();	gr->Surf(a,"%");
 	gr->SubPlot(2,2,3);	gr->Rotate(50,60);	gr->Box();	gr->Surf(a,"%!");
-	return;
+	return;*/
 
 	mglParse par;
 	par.AllowSetSize(true);
 	setlocale(LC_CTYPE, "");
-	FILE *fp=fopen("/home/balakin/download/data3.mgl","r");
+	FILE *fp=fopen("test.mgl","r");
 	par.Execute(gr,fp,true);
-	gr->Zoom(0.4,0.4,0.6,0.6);
-	gr->GetRGB();
 	fclose(fp);
 }
 //-----------------------------------------------------------------------------

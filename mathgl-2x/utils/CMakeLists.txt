@@ -26,6 +26,13 @@ install(
 	RUNTIME DESTINATION bin
 )
 
+add_executable(mglcgi mglcgi.cpp)
+target_link_libraries(mglcgi mgl)
+install(
+	TARGETS mglcgi
+	RUNTIME DESTINATION bin
+)
+
 if(MGL_HAVE_FLTK OR MGL_HAVE_QT)
 add_executable(mglview mglview.cpp)
 target_link_libraries(mglview mgl-wnd)
