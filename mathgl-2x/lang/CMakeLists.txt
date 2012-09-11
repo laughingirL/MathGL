@@ -70,7 +70,10 @@ message(STATUS "${oct_prog} ${oct_host} ${oct_api}")
 	set(pkg_name mathgl)
 	file(MAKE_DIRECTORY ${MathGL_BINARY_DIR}/lang/${pkg_name}/inst/${oct_arch})
 
-	file(TO_NATIVE_PATH ${enable-octave-path-to-install} OCT_INST_PATH)
+	if(${enable-octave-path-to-install})
+		file(TO_NATIVE_PATH ${enable-octave-path-to-install} OCT_INST_PATH)
+	endif(${enable-octave-path-to-install})
+
 	configure_file(${MathGL_SOURCE_DIR}/lang/install.m.in ${MathGL_BINARY_DIR}/lang/install.m)
 	configure_file(${MathGL_SOURCE_DIR}/lang/install-path.m.in ${MathGL_BINARY_DIR}/lang/install-path.m)
 	configure_file(${MathGL_SOURCE_DIR}/COPYING ${MathGL_BINARY_DIR}/lang/${pkg_name} COPYONLY)
