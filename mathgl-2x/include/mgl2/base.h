@@ -23,7 +23,7 @@
 #include <stdint.h>
 #endif
 #include "mgl2/define.h"
-/*****************************************************************************/
+
 #ifdef __cplusplus
 #include <vector>
 #include <string>
@@ -471,5 +471,4 @@ typedef void *HMEX;
 typedef void *HMPR;
 typedef const void *HCDT;
 #endif
-/*****************************************************************************/
 #endif

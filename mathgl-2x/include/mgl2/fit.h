@@ -20,11 +20,11 @@
 #ifndef _MGL_FIT_H_
 #define _MGL_FIT_H_
 #include "mgl2/base.h"
-/*****************************************************************************/
+/******************************************************************************/
 #ifdef __cplusplus
 extern "C" {
 #endif
-/*****************************************************************************/
+/******************************************************************************/
 extern int mglFitPnts;			///< Number of output points in fitting
 extern char mglFitRes[1024];	///< Last fitted formula
 HMDT mgl_fit_1(HMGL gr, HCDT y, const char *eq, const char *var, HMDT ini, const char *opt);
@@ -45,7 +45,7 @@ HMDT mgl_hist_xy(HMGL gr, HCDT x, HCDT y, HCDT a, const char *opt);
 HMDT mgl_hist_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *opt);
 
 void mgl_puts_fit(HMGL gr, mreal x, mreal y, mreal z, const char *prefix, const char *font, mreal size);
-/*****************************************************************************/
+/******************************************************************************/
 uintptr_t mgl_fit_1_(uintptr_t* gr, uintptr_t* y, const char *eq, const char *var, uintptr_t *ini, const char *opt,int, int l, int n);
 uintptr_t mgl_fit_2_(uintptr_t* gr, uintptr_t* z, const char *eq, const char *var, uintptr_t *ini, const char *opt,int, int l, int n);
 uintptr_t mgl_fit_3_(uintptr_t* gr, uintptr_t* a, const char *eq, const char *var, uintptr_t *ini, const char *opt,int, int l, int n);
@@ -62,9 +62,9 @@ uintptr_t mgl_hist_xy_(uintptr_t* gr, uintptr_t* x, uintptr_t* y, uintptr_t* a, 
 uintptr_t mgl_hist_xyz_(uintptr_t* gr, uintptr_t* x, uintptr_t* y, uintptr_t* z, uintptr_t* a, const char *opt,int);
 
 void mgl_puts_fit_(uintptr_t* gr, mreal *x, mreal *y, mreal *z, const char *prefix, const char *font, mreal *size, int l, int n);
-/*****************************************************************************/
+/******************************************************************************/
 #ifdef __cplusplus
 }
 #endif
-/*****************************************************************************/
+/******************************************************************************/
 #endif

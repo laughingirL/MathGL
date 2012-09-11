@@ -33,6 +33,8 @@
 #include <vector>
 #endif
 
+#include <iterator>
+
 using namespace std;
 
 #ifndef __GNUC_PREREQ
@@ -166,6 +168,68 @@ bool PRCVector2d::Normalize()
   return true;
 }
 
+void PRCVector2d::serializeVector2d(PRCbitStream &pbs)
+{
+  WriteDouble (x)
+  WriteDouble (y)
+}
+
+uint32_t makeCADID()
+{
+  static uint32_t ID = 1;
+  return ID++;
+}
+
+uint32_t makePRCID()
+{
+  static uint32_t ID = 1;
+  return ID++;
+}
+
+bool type_eligible_for_reference(uint32_t type)
+{
+  if(
+     type == PRC_TYPE_MISC_EntityReference ||
+     type == PRC_TYPE_MISC_MarkupLinkedItem ||
+     type == PRC_TYPE_RI_BrepModel ||
+     type == PRC_TYPE_RI_Curve ||
+     type == PRC_TYPE_RI_Direction ||
+     type == PRC_TYPE_RI_Plane ||
+     type == PRC_TYPE_RI_PointSet ||
+     type == PRC_TYPE_RI_PolyBrepModel ||
+     type == PRC_TYPE_RI_PolyWire ||
+     type == PRC_TYPE_RI_Set ||
+     type == PRC_TYPE_RI_CoordinateSystem ||
+     type == PRC_TYPE_ASM_ProductOccurence ||
+     type == PRC_TYPE_ASM_PartDefinition ||
+     type == PRC_TYPE_ASM_Filter ||
+     type == PRC_TYPE_MKP_View ||
+     type == PRC_TYPE_MKP_Markup ||
+     type == PRC_TYPE_MKP_Leader ||
+     type == PRC_TYPE_MKP_AnnotationItem ||
+     type == PRC_TYPE_MKP_AnnotationSet ||
+     type == PRC_TYPE_MKP_AnnotationReference ||
+     type == PRC_TYPE_GRAPH_Style ||
+     type == PRC_TYPE_GRAPH_Material ||
+     type == PRC_TYPE_GRAPH_TextureApplication ||
+     type == PRC_TYPE_GRAPH_TextureDefinition ||
+     type == PRC_TYPE_GRAPH_LinePattern ||
+     type == PRC_TYPE_GRAPH_DottingPattern ||
+     type == PRC_TYPE_GRAPH_HatchingPattern ||
+     type == PRC_TYPE_GRAPH_SolidPattern ||
+     type == PRC_TYPE_GRAPH_VPicturePattern ||
+     type == PRC_TYPE_GRAPH_AmbientLight ||
+     type == PRC_TYPE_GRAPH_PointLight ||
+     type == PRC_TYPE_GRAPH_DirectionalLight ||
+     type == PRC_TYPE_GRAPH_SpotLight ||
+     type == PRC_TYPE_GRAPH_SceneDisplayParameters ||
+     type == PRC_TYPE_GRAPH_Camera
+    )
+    return true;
+  else
+    return false;
+}
+
 void UserData::write(PRCbitStream &pbs)
 {
   pbs << size;
@@ -265,6 +329,18 @@ void PRCReferenceUniqueIdentifier::serializeReferenceUniqueIdentifier(PRCbitStre
 // if (!reference_in_same_file_structure)
 //    SerializeCompressedUniqueId (target_file_structure)
   WriteUnsignedInteger (unique_identifier)
+}
+
+void PRCUncompressedFile::serializeUncompressedFile(ostream &out) const
+{
+  WriteUncompressedUnsignedInteger (file_contents.size())
+  std::ostream_iterator<uint8_t> out_it (out);
+  copy ( file_contents.begin(), file_contents.end(), out_it );
+}
+
+uint32_t PRCUncompressedFile::getSize() const
+{
+  return sizeof(uint32_t)+file_contents.size();
 }
 
 void PRCRgbColor::serializeRgbColor(PRCbitStream &pbs)
@@ -1001,68 +1077,6 @@ void  PRCMarkupTess::serializeMarkupTess(PRCbitStream &pbs)
      WriteString (texts[i])
   WriteString (label) // label of tessellation
   WriteCharacter (behaviour)
-}
-
-void PRCVector2d::serializeVector2d(PRCbitStream &pbs)
-{
-  WriteDouble (x)
-  WriteDouble (y)
-}
-
-uint32_t makeCADID()
-{
-  static uint32_t ID = 1;
-  return ID++;
-}
-
-uint32_t makePRCID()
-{
-  static uint32_t ID = 1;
-  return ID++;
-}
-
-bool type_eligible_for_reference(uint32_t type)
-{
-  if(
-     type == PRC_TYPE_MISC_EntityReference ||
-     type == PRC_TYPE_MISC_MarkupLinkedItem ||
-     type == PRC_TYPE_RI_BrepModel ||
-     type == PRC_TYPE_RI_Curve ||
-     type == PRC_TYPE_RI_Direction ||
-     type == PRC_TYPE_RI_Plane ||
-     type == PRC_TYPE_RI_PointSet ||
-     type == PRC_TYPE_RI_PolyBrepModel ||
-     type == PRC_TYPE_RI_PolyWire ||
-     type == PRC_TYPE_RI_Set ||
-     type == PRC_TYPE_RI_CoordinateSystem ||
-     type == PRC_TYPE_ASM_ProductOccurence ||
-     type == PRC_TYPE_ASM_PartDefinition ||
-     type == PRC_TYPE_ASM_Filter ||
-     type == PRC_TYPE_MKP_View ||
-     type == PRC_TYPE_MKP_Markup ||
-     type == PRC_TYPE_MKP_Leader ||
-     type == PRC_TYPE_MKP_AnnotationItem ||
-     type == PRC_TYPE_MKP_AnnotationSet ||
-     type == PRC_TYPE_MKP_AnnotationReference ||
-     type == PRC_TYPE_GRAPH_Style ||
-     type == PRC_TYPE_GRAPH_Material ||
-     type == PRC_TYPE_GRAPH_TextureApplication ||
-     type == PRC_TYPE_GRAPH_TextureDefinition ||
-     type == PRC_TYPE_GRAPH_LinePattern ||
-     type == PRC_TYPE_GRAPH_DottingPattern ||
-     type == PRC_TYPE_GRAPH_HatchingPattern ||
-     type == PRC_TYPE_GRAPH_SolidPattern ||
-     type == PRC_TYPE_GRAPH_VPicturePattern ||
-     type == PRC_TYPE_GRAPH_AmbientLight ||
-     type == PRC_TYPE_GRAPH_PointLight ||
-     type == PRC_TYPE_GRAPH_DirectionalLight ||
-     type == PRC_TYPE_GRAPH_SpotLight ||
-     type == PRC_TYPE_GRAPH_SceneDisplayParameters ||
-     type == PRC_TYPE_GRAPH_Camera
-    )
-    return true;
-  else
-    return false;
 }
 
 void writeUnit(PRCbitStream &out,bool fromCAD,double unit)

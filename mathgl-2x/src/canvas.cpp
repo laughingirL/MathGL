@@ -708,6 +708,7 @@ void mglCanvas::Legend(const std::vector<mglText> &leg, mreal x, mreal y, const 
 
 	if(strchr(ff,'#'))	// draw bounding box
 	{
+		SetPenPal("k-");
 		k1=AddPnt(mglPoint(x,y,Depth),c1,q,-1,0);
 		k2=AddPnt(mglPoint(x+w,y,Depth),c1,q,-1,0);
 		k3=AddPnt(mglPoint(x,y+h*n,Depth),c1,q,-1,0);

@@ -571,30 +571,9 @@ void mgl_data_mirror_(uintptr_t *d, const char *dir,int l)
 {	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
 	mgl_data_mirror(_DT_,s);	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_data_clean(HMDT d, long id)
-{
-	if(id<0 || id+1>d->nx)	return;
-	register long i,j,k,n=d->nx,m=d->ny;
-	mreal *b = new mreal[m*n], *a=d->a;
-	for(i=j=0;i+1<m;i++)
-	{
-		if(a[id+n*i]!=a[id+n*i+n])	// this can be saved
-		{
-			for(k=0;k<n;k++)		b[k+n*j]=a[k+n*i];
-			j++;
-		}
-	}
-	// always save last row
-	for(k=0, i=n*(m-1);k<n;k++)		b[k+n*j]=a[k+i];
-	j++;
-	memcpy(a,b,n*j*sizeof(mreal));	d->ny = j;
-	delete []b;
-}
-void mgl_data_clean_(uintptr_t *d, int *id)	{	mgl_data_clean(_DT_,*id);	}
-//-----------------------------------------------------------------------------
 mreal mgl_data_solve(HCDT d, mreal val, int spl)
 {
-	mreal x=0, y1, y2, a, a0, dx,dy,dz, da = 1e-5*(val?fabs(val):1);
+	mreal x=0, y1, y2, a, dx,dy,dz, da = 1e-5*(val?fabs(val):1);
 	const mglData *dd=dynamic_cast<const mglData *>(d);
 	if(dd)	for(long i=1;i<dd->nx;i++)
 	{
@@ -604,19 +583,15 @@ mreal mgl_data_solve(HCDT d, mreal val, int spl)
 		if((y1-val)*(y2-val)<0)
 		{
 			x = i-1 + (val-y1)/(y2-y1);
-			a0 = a = mgl_data_spline_ext(d, x,0,0, &dx,&dy,&dz);
-			unsigned k=0;
-			if(spl)	while(fabs(a-val)>da || dx==0)
+			a = mgl_data_spline_ext(d, x,0,0, &dx,&dy,&dz);
+			if(spl)	while(fabs(a-val)<da || dx==0)
 			{
-				x += (val-a)/dx;		k++;
+				x += (val-a)/dx;
 				a = mgl_data_spline_ext(d, x,0,0, &dx,&dy,&dz);
-				if(k>=10)
-					return fabs(a-val)<fabs(a0-val) ? x:i-1 + (val-y1)/(y2-y1);
 			}
 			return x;
 		}
 	}
-	return NAN;
 }
 //-----------------------------------------------------------------------------
 mreal mgl_data_linear_ext(HCDT d, mreal x,mreal y,mreal z, mreal *dx,mreal *dy,mreal *dz)
@@ -678,17 +653,6 @@ mreal mgl_data_spline_ext(HCDT d, mreal x,mreal y,mreal z, mreal *dx,mreal *dy,m
 	if(!d)	return 0;	// NOTE: don't support general arrays
 	return mglSpline3(dd->a,dd->nx,dd->ny,dd->nz,x,y,z,dx,dy,dz);
 }
-//-----------------------------------------------------------------------------
-mreal mgl_data_spline_(uintptr_t *d, mreal *x,mreal *y,mreal *z)
-{	return mgl_data_spline(_DA_(d),*x,*y,*z);	}
-mreal mgl_data_linear_(uintptr_t *d, mreal *x,mreal *y,mreal *z)
-{	return mgl_data_linear(_DA_(d),*x,*y,*z);	}
-mreal mgl_data_spline_ext_(uintptr_t *d, mreal *x,mreal *y,mreal *z, mreal *dx,mreal *dy,mreal *dz)
-{	return mgl_data_spline_ext(_DA_(d),*x,*y,*z,dx,dy,dz);	}
-mreal mgl_data_linear_ext_(uintptr_t *d, mreal *x,mreal *y,mreal *z, mreal *dx,mreal *dy,mreal *dz)
-{	return mgl_data_linear_ext(_DA_(d),*x,*y,*z,dx,dy,dz);	}
-mreal mgl_data_solve_(uintptr_t *d, mreal *val, int *spl)
-{	return mgl_data_solve(_DA_(d),*val, *spl);	}
 //-----------------------------------------------------------------------------
 mreal mglSpline3(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z,mreal *dx, mreal *dy, mreal *dz)
 {
@@ -909,6 +873,11 @@ void mglFillP(long x, const mreal *a,long nx,mreal _p[4])
 	_p[2]=3*(f[1]-f[0])-2*s[0]-s[1];
 	_p[3]=s[0]+s[1]+2*(f[0]-f[1]);
 }
+//-----------------------------------------------------------------------------
+mreal mgl_data_spline_(uintptr_t *d, mreal *x,mreal *y,mreal *z)
+{	return mgl_data_spline(_DA_(d),*x,*y,*z);	}
+mreal mgl_data_linear_(uintptr_t *d, mreal *x,mreal *y,mreal *z)
+{	return mgl_data_linear(_DA_(d),*x,*y,*z);	}
 //-----------------------------------------------------------------------------
 void mgl_data_crop(HMDT d, long n1, long n2, char dir)
 {

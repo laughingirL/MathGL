@@ -20,11 +20,11 @@
 #ifndef _MGL_VECT_H_
 #define _MGL_VECT_H_
 #include "mgl2/base.h"
-/*****************************************************************************/
+/******************************************************************************/
 #ifdef __cplusplus
 extern "C" {
 #endif
-/*****************************************************************************/
+/******************************************************************************/
 void mgl_traj_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, const char *opt);
 void mgl_traj_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, const char *opt);
 
@@ -55,7 +55,7 @@ void mgl_grad(HMGL gr, HCDT ph, const char *sch, const char *opt);
 void mgl_vect3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, mreal sVal, const char *opt);
 void mgl_vect3(HMGL gr, HCDT ax, HCDT ay, HCDT az, const char *sch, mreal sVal, const char *opt);
 
-/*****************************************************************************/
+/******************************************************************************/
 void mgl_traj_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch, const char *opt,int,int);
 void mgl_traj_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, const char *opt,int,int);
 
@@ -86,9 +86,9 @@ void mgl_grad_(uintptr_t *gr, uintptr_t *ph, const char *sch, const char *opt,in
 void mgl_vect3_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, mreal *sVal, const char *opt,int,int);
 void mgl_vect3_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, mreal *sVal, const char *opt,int,int);
 
-/*****************************************************************************/
+/******************************************************************************/
 #ifdef __cplusplus
 }
 #endif
-/*****************************************************************************/
+/******************************************************************************/
 #endif

@@ -26,10 +26,10 @@ install(
 	RUNTIME DESTINATION bin
 )
 
-add_executable(mglcgi mglcgi.cpp)
-target_link_libraries(mglcgi mgl)
+add_executable(mgl.cgi mglcgi.cpp)
+target_link_libraries(mgl.cgi mgl)
 install(
-	TARGETS mglcgi
+	TARGETS mgl.cgi
 	RUNTIME DESTINATION bin
 )
 

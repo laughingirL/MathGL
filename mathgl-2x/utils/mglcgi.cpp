@@ -20,8 +20,35 @@
 #include <locale.h>
 #include <unistd.h>
 #include "mgl2/mgl.h"
-void mgl_error_print(const char *Message, void *par);
-void mgl_ask_gets(const wchar_t *quest, wchar_t *res);
+//-----------------------------------------------------------------------------
+int mgl_hex(char ch)
+{
+	int res=-1;
+	if(ch>='0' && ch<='9')	res = ch-'0';
+	if(ch>='a' && ch<='f')	res = ch-'a'+10;
+	return res;
+}
+//-----------------------------------------------------------------------------
+/// Parse CGI string \a buf and return usual string as \a val for given \a name.
+/// The size of \a val should be the same as size of \a buf.
+void mgl_get_value(const char *buf, const char *name, char *val)
+{
+	const char *pos = strstr(buf,name);
+	memset(val,0,strlen(buf)+1);
+	if(pos && (pos==buf || pos[-1]=='&'))
+	{
+		register size_t i,j,l=strlen(pos);
+		for(i=j=0;i<l;i++,j++)
+		{
+			register char ch=pos[i];
+			if(ch=='&')	break;
+			else if(ch=='+')	val[j]=' ';
+			else if(ch=='%' && i+2<l)
+			{	val[j] = 16*mgl_hex(pos[i+1]) + mgl_hex(pos[i+2]);	i+=2;	}
+			else		val[j]=ch;
+		}
+	}
+}
 //-----------------------------------------------------------------------------
 int main(int argc, char *argv[])
 {
@@ -30,24 +57,27 @@ int main(int argc, char *argv[])
 
 	mgl_ask_func = 0;
 	// read script
-	std::wstring str;
 	setlocale(LC_CTYPE, "");
-	FILE *fp = stdin;
-	while(!feof(fp))	str.push_back(fgetwc(fp));
 
-	// test output
-	FILE *tmp = fopen("/home/balakin/cgi.txt","wt");
-	fprintf(tmp,"argv = %d\n",argc);
-	for(int i=0;i<argc;i++)	fprintf(tmp,"%d:%s\n",i,argv[i]);
-	fprintf(tmp,"------\n%ls\n",str.c_str());
-	fclose(tmp);
-	
-	p.Execute(&gr,str.c_str());
+	char *str, *buf;
+	const char *method = getenv("REQUEST_METHOD");
+	if(strcmp(method,"GET"))
+	{
+		long len=atol(getenv("CONTENT_LENGTH"));
+		buf = new char[len+1];
+		fread(buf,len,1,stdin);
+		buf[len]=0;
+	}
+	else		buf = getenv("QUERY_STRING");
+	str = new char[strlen(buf)+1];
+	mgl_get_value(buf,"mgl",str);
 
-	printf("Content-Type: multipart/alternative; boundary=\"myboundary\"\n");
-	printf("--myboundary\nContent-Type: image/png\n");
+	p.Execute(&gr,str);
+
+	printf("Content-Type: multipart/alternative; boundary=\"myboundary\"\n\n");
+	printf("--myboundary\nContent-Type: image/png\n\n");
 	gr.WritePNG("-");
-	printf("--myboundary\nContent-Type: image/svg\n");
+	printf("--myboundary\nContent-Type: image/svg\n\n");
 	gr.WriteSVG("-");
 	return 0;
 }

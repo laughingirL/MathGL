@@ -20,11 +20,11 @@
 #ifndef _MGL_CONT_H_
 #define _MGL_CONT_H_
 #include "mgl2/base.h"
-/*****************************************************************************/
+/******************************************************************************/
 #ifdef __cplusplus
 extern "C" {
 #endif
-/*****************************************************************************/
+/******************************************************************************/
 void mgl_textw_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const wchar_t *text, const char *font, const char *opt);
 void mgl_textw_xy(HMGL gr, HCDT x, HCDT y, const wchar_t *text, const char *font, const char *opt);
 void mgl_textw_y(HMGL gr, HCDT y, const wchar_t *text, const char *font, const char *opt);
@@ -78,7 +78,7 @@ void mgl_contf3_val(HMGL graph, HCDT v, HCDT a, const char *sch, mreal sVal, con
 void mgl_contf3_xyz(HMGL graph, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, mreal sVal, const char *opt);
 void mgl_contf3(HMGL graph, HCDT a, const char *sch, mreal sVal, const char *opt);
 
-/*****************************************************************************/
+/******************************************************************************/
 void mgl_text_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z,const char *text,const char *font, const char *opt,int,int l,int n);
 void mgl_text_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, const char *text, const char *font, const char *opt,int, int l,int n);
 void mgl_text_y_(uintptr_t *gr, uintptr_t *y, const char *text, const char *font, const char *opt,int, int l,int n);
@@ -126,9 +126,9 @@ void mgl_contf3_val_(uintptr_t *graph, uintptr_t *v, uintptr_t *a, const char *s
 void mgl_contf3_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, mreal *sVal, const char *opt,int,int);
 void mgl_contf3_(uintptr_t *graph, uintptr_t *a, const char *sch, mreal *sVal, const char *opt,int,int);
 
-/*****************************************************************************/
+/******************************************************************************/
 #ifdef __cplusplus
 }
 #endif
-/*****************************************************************************/
+/******************************************************************************/
 #endif

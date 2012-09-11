@@ -47,6 +47,8 @@ http_request.onreadystatechange = function () {
 
 20. Test mglcgi
 
+21. Add Evaluate() sample
+
 +24. MGL testing system ???
 
 ============= DOCS =============

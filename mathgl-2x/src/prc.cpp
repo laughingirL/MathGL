@@ -1,5 +1,5 @@
 /***************************************************************************
- * export_3d.cpp is part of Math Graphic Library
+ * prc.cpp is part of Math Graphic Library
  * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -76,7 +76,7 @@ struct prctriangles {
 			return pPoint->second;
 		else
 		{
-			const uint32_t point_index = points.size();
+			const uint32_t point_index = (uint32_t)points.size();
 			points.insert(std::make_pair(point,point_index));
 			return point_index;
 		}
@@ -91,7 +91,7 @@ struct prctriangles {
 			return pPoint->second;
 		else
 		{
-			const uint32_t point_index = points.size();
+			const uint32_t point_index = (uint32_t)points.size();
 			points.insert(std::make_pair(point,point_index));
 			return point_index;
 		}
@@ -107,6 +107,28 @@ struct prctriangles {
 		}
 	}
 
+	void addTriangle(uint32_t ti, uint32_t pi1, uint32_t pi2, uint32_t pi3)
+	{
+		prctriangle triangle;
+		triangle.pi[0] = pi1;
+		triangle.pi[1] = pi2;
+		triangle.pi[2] = pi3;
+		triangle.ti[0] = ti;
+		triangle.ti[1] = ti;
+		triangle.ti[2] = ti;
+		triangles.push_back(triangle);
+	}
+	void addTriangle(uint32_t pi1, uint32_t ti1, uint32_t pi2, uint32_t ti2, uint32_t pi3, uint32_t ti3)
+	{
+		prctriangle triangle;
+		triangle.pi[0] = pi1;
+		triangle.pi[1] = pi2;
+		triangle.pi[2] = pi3;
+		triangle.ti[0] = ti1;
+		triangle.ti[1] = ti2;
+		triangle.ti[2] = ti3;
+		triangles.push_back(triangle);
+	}
 	uint32_t addColourInfo(const mglPnt& p)
 	{
 		const RGBAColour colour(p.r,p.g,p.b,p.a);
@@ -114,15 +136,15 @@ struct prctriangles {
 		if (colours.empty() && texturecoords.empty()) {
 			commoncolour = colour;
 			commonalpha = p.a;
-    }
-    if (samecolour) {
-      if (commoncolour != colour)
-        samecolour = false;
-    }
-    if (samealpha) {
-      if (commonalpha != p.a)
-        samealpha = false;
-    }
+		}
+		if (samecolour) {
+			if (commoncolour != colour)
+				samecolour = false;
+		}
+		if (samealpha) {
+			if (commonalpha != p.a)
+				samealpha = false;
+		}
 
 		if (vertexcolor) {
 			std::map<RGBAColour,uint32_t>::iterator pColour = colours.find(colour);
@@ -130,13 +152,13 @@ struct prctriangles {
 				return pColour->second;
 			else
 			{
-				const uint32_t colour_index = colours.size();
+				const uint32_t colour_index = (uint32_t)colours.size();
 				colours.insert(std::make_pair(colour,colour_index));
 				return colour_index;
 			}
 		} else {
 			const float u = p.ta;
-			const float v = 1 - p.c/ntxt;
+			const float v = p.c/ntxt;
 
 			const PRCVector2d point(u, v);
 			std::map<PRCVector2d,uint32_t>::iterator pPoint = texturecoords.find(point);
@@ -144,7 +166,7 @@ struct prctriangles {
 				return pPoint->second;
 			else
 			{
-				const uint32_t point_index = texturecoords.size();
+				const uint32_t point_index = (uint32_t)texturecoords.size();
 				texturecoords.insert(std::make_pair(point,point_index));
 				return point_index;
 			}
@@ -200,24 +222,24 @@ void my_png_flush(png_structp /*png_ptr*/)
 {
 }
 //-----------------------------------------------------------------------------
-void mgl_write_prc(HMGL gr, const char *fname,const char */*descr*/, int make_pdf)
+void mgl_write_prc(HMGL gr, const char *fname,const char* /*descr*/, int make_pdf)
 {
-	if(gr->GetPrmNum()<=0)	return;	// nothing to do
+	if(gr->GetPrmNum()==0)	return;	// nothing to do
 	{
-		long m1=0,m2=0,m;
+		long mmin=0,mmax=0,m;
 		for(size_t i=0;i<gr->Grp.size();i++)	// prepare array of indirect indexing
-		{	m = gr->Grp[i].Id;	if(m<m1) m1=m;	if(m>m2) m2=m;	}
-		long *ng = new long[m2-m1+1];
-		for(size_t i=0;i<gr->Grp.size();i++)	ng[gr->Grp[i].Id-m1] = i;
+		{	m = gr->Grp[i].Id;	if(m<mmin) mmin=m;	if(m>mmax) mmax=m;	}
+		long *ng = new long[mmax-mmin+1];
+		for(size_t i=0;i<gr->Grp.size();i++)	ng[gr->Grp[i].Id-mmin] = i;
 		for(size_t i=0;i<size_t(gr->GetPrmNum());i++)	// collect data for groups
 		// it is rather expensive (extra 4b per primitive) but need for export to 3D
 		{
-			m = gr->GetPrm(i).id-m1;
-			if(m>=0 && m<m2-m1+1)	gr->Grp[ng[m]].p.push_back(i);
+			m = gr->GetPrm(i).id-mmin;
+			if(m>=0 && m<mmax-mmin+1)	gr->Grp[ng[m]].p.push_back(i);
 		}
 		delete []ng;
 	}
-	const unsigned len=strlen(fname);
+	const size_t len=strlen(fname);
 	char * const tname = new char[len+9];	strcpy(tname,fname);
 	if (strncmp(tname+len-4, ".prc", 4)!=0)
 	{
@@ -250,13 +272,13 @@ void mgl_write_prc(HMGL gr, const char *fname,const char */*descr*/, int make_pd
 		const size_t ntxt = gr->GetTxtNum();
 
 		// prepare texture file (PNG)
-		const png_uint_32 width=256, height=256*ntxt;
+		const png_uint_32 width=256, height=256*png_uint_32(ntxt);
 		png_bytep buf = new png_byte[4*width*height];
 		png_bytepp pbuf= new png_bytep[height];
 		for(size_t i=0;i<height;i++)
 			pbuf[i] = buf+4*width*i;
 		for(size_t i=0;i<ntxt;i++)
-			gr->GetTxt(i).GetRGBA(buf+i*256*256*4);
+			gr->GetTxt(i).GetRGBA(buf+(ntxt-1-i)*256*256*4);
 
 		png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING,0,0,0);
 		png_infop info_ptr = png_create_info_struct(png_ptr);
@@ -274,14 +296,28 @@ void mgl_write_prc(HMGL gr, const char *fname,const char */*descr*/, int make_pd
 
 		png_destroy_write_struct(&png_ptr, &info_ptr);
 		delete []pbuf;	delete []buf;
-		const PRCmaterial materialMathGL(
-			RGBAColour(0.1,0.1,0.1,1), // ambient
-			RGBAColour(1.0,1.0,1.0,1), // diffuse
-			RGBAColour(0.1,0.1,0.1,1), // emissive
-			RGBAColour(0.0,0.0,0.0,1), // spectral
-			1.0,0.1, // alpha, shininess
-			buffer.data, KEPRCPicture_PNG, 0, 0, buffer.size, true);
-		materialMathGLid = file.addMaterial(materialMathGL);
+    
+		PRCtexture* t = new PRCtexture();
+		t->mapping = PRC_TEXTURE_MAPPING_DIFFUSE;
+		t->components = PRC_TEXTURE_MAPPING_COMPONENTS_RGBA;
+		// Modulate for OBJ compatibilty, Replace is a better setting
+		t->function = KEPRCTextureFunction_Modulate;
+		// Repeat for OBJ compatibilty, ClampToEdge is a better setting
+		t->wrapping_mode_S = KEPRCTextureWrappingMode_Repeat; // KEPRCTextureWrappingMode_ClampToEdge
+		t->wrapping_mode_T = KEPRCTextureWrappingMode_Repeat; // KEPRCTextureWrappingMode_ClampToEdge
+		t->data = buffer.data;
+		t->size	= buffer.size;
+		t->format = KEPRCPicture_PNG;
+
+		PRCmaterial m(
+									RGBAColour(0.0,0.0,0.0,1), // ambient
+									RGBAColour(1.0,1.0,1.0,1), // diffuse
+									RGBAColour(0.0,0.0,0.0,1), // emissive
+									RGBAColour(0.0,0.0,0.0,1), // spectral
+									1.0,0.1); // alpha, shininess
+
+		materialMathGLid = file.addTexturedMaterial(m,1,&t);
+
 		free(buffer.data); buffer.data = NULL;
 	}
 
@@ -298,22 +334,26 @@ void mgl_write_prc(HMGL gr, const char *fname,const char */*descr*/, int make_pd
 
 	for(size_t i=0;i<gr->Grp.size();i++)
 	{
-		const	std::vector<long>& p = gr->Grp[i].p;
+		mglGroup& grp = gr->Grp[i];
+		std::vector<long>& prm = grp.p;
 		prctriangles group(gr);
-		file.begingroup(gr->Grp[i].Lbl.c_str(),&grpopt);
-		for(size_t j=0;j<p.size();j++)
+		file.begingroup(grp.Lbl.c_str(),&grpopt);
+		for(size_t j=0;j<prm.size();j++)
 		{
-			const mglPrim &q=gr->GetPrm(p[j]);
+			const mglPrim &q=gr->GetPrm(prm[j]);
 			const double w = (q.w>1)?(q.w*sqrt(gr->FontFactor()/400.)):1;
 
 			const mglPnt p = gr->GetPnt(q.n1) - p0;
-			const float size = q.s*gr->FontFactor();
+			const mreal size = q.s*gr->FontFactor();
 			{
-				char type = q.n4;	float ss=size*0.35;
-				const RGBAColour c(p.r, p.g, p.b, p.a);
 				switch(q.type)
 				{
 					case 0:
+					if (gr->GetPnt(q.n1).a > mgl_min_a) {
+						const char type = q.n4;
+						float ss=size*0.35;
+						const RGBAColour c(p.r, p.g, p.b, p.a);
+
 						if(!strchr("xsSoO",type))	ss *= 1.1;
 						if(type=='.' || ss==0)
 						{
@@ -401,21 +441,8 @@ void mgl_write_prc(HMGL gr, const char *fname,const char */*descr*/, int make_pd
 									const uint32_t pi3 = group.addPoint(p.x-ss,p.y+ss,p.z);
 									const uint32_t pi4 = group.addPoint(p.x+ss,p.y+ss,p.z);
 
-									prctriangle triangle1, triangle2;
-									triangle1.pi[0] = pi1;
-									triangle1.pi[1] = pi2;
-									triangle1.pi[2] = pi3;
-									triangle1.ti[0] = ti;
-									triangle1.ti[1] = ti;
-									triangle1.ti[2] = ti;
-									group.triangles.push_back(triangle1);
-									triangle2.pi[0] = pi4;
-									triangle2.pi[1] = pi3;
-									triangle2.pi[2] = pi2;
-									triangle2.ti[0] = ti;
-									triangle2.ti[1] = ti;
-									triangle2.ti[2] = ti;
-									group.triangles.push_back(triangle2);
+									group.addTriangle(ti, pi1, pi2, pi3);
+									group.addTriangle(ti, pi4, pi3, pi2);
 								}
 								break;
 								case 's':
@@ -440,21 +467,8 @@ void mgl_write_prc(HMGL gr, const char *fname,const char */*descr*/, int make_pd
 									const uint32_t pi3 = group.addPoint(p.x-ss,p.y,p.z);
 									const uint32_t pi4 = group.addPoint(p.x,p.y+ss,p.z);
 
-									prctriangle triangle1, triangle2;
-									triangle1.pi[0] = pi1;
-									triangle1.pi[1] = pi2;
-									triangle1.pi[2] = pi3;
-									triangle1.ti[0] = ti;
-									triangle1.ti[1] = ti;
-									triangle1.ti[2] = ti;
-									group.triangles.push_back(triangle1);
-									triangle2.pi[0] = pi4;
-									triangle2.pi[1] = pi3;
-									triangle2.pi[2] = pi2;
-									triangle2.ti[0] = ti;
-									triangle2.ti[1] = ti;
-									triangle2.ti[2] = ti;
-									group.triangles.push_back(triangle2);
+									group.addTriangle(ti, pi1, pi2, pi3);
+									group.addTriangle(ti, pi4, pi3, pi2);
 								}
 								break;
 								case 'd':
@@ -518,14 +532,7 @@ void mgl_write_prc(HMGL gr, const char *fname,const char */*descr*/, int make_pd
 									const uint32_t pi2 = group.addPoint(p.x+ss,p.y-ss/2,p.z);
 									const uint32_t pi3 = group.addPoint(p.x,p.y+ss,p.z);
 
-									prctriangle triangle;
-									triangle.pi[0] = pi1;
-									triangle.pi[1] = pi2;
-									triangle.pi[2] = pi3;
-									triangle.ti[0] = ti;
-									triangle.ti[1] = ti;
-									triangle.ti[2] = ti;
-									group.triangles.push_back(triangle);
+									group.addTriangle(ti, pi1, pi2, pi3);
 								}
 								break;
 								case '^':
@@ -548,14 +555,7 @@ void mgl_write_prc(HMGL gr, const char *fname,const char */*descr*/, int make_pd
 									const uint32_t pi2 = group.addPoint(p.x,p.y-ss,p.z);
 									const uint32_t pi3 = group.addPoint(p.x+ss,p.y+ss/2,p.z);
 
-									prctriangle triangle;
-									triangle.pi[0] = pi1;
-									triangle.pi[1] = pi2;
-									triangle.pi[2] = pi3;
-									triangle.ti[0] = ti;
-									triangle.ti[1] = ti;
-									triangle.ti[2] = ti;
-									group.triangles.push_back(triangle);
+									group.addTriangle(ti, pi1, pi2, pi3);
 								}
 								break;
 								case 'v':
@@ -578,14 +578,7 @@ void mgl_write_prc(HMGL gr, const char *fname,const char */*descr*/, int make_pd
 									const uint32_t pi2 = group.addPoint(p.x-ss,	p.y,	 p.z);
 									const uint32_t pi3 = group.addPoint(p.x+ss/2,p.y-ss,p.z);
 
-									prctriangle triangle;
-									triangle.pi[0] = pi1;
-									triangle.pi[1] = pi2;
-									triangle.pi[2] = pi3;
-									triangle.ti[0] = ti;
-									triangle.ti[1] = ti;
-									triangle.ti[2] = ti;
-									group.triangles.push_back(triangle);
+									group.addTriangle(ti, pi1, pi2, pi3);
 								}
 								break;
 								case '<':
@@ -608,14 +601,7 @@ void mgl_write_prc(HMGL gr, const char *fname,const char */*descr*/, int make_pd
 									const uint32_t pi2 = group.addPoint(p.x-ss/2,p.y-ss,p.z);
 									const uint32_t pi3 = group.addPoint(p.x+ss,	p.y,	 p.z);
 
-									prctriangle triangle;
-									triangle.pi[0] = pi1;
-									triangle.pi[1] = pi2;
-									triangle.pi[2] = pi3;
-									triangle.ti[0] = ti;
-									triangle.ti[1] = ti;
-									triangle.ti[2] = ti;
-									group.triangles.push_back(triangle);
+									group.addTriangle(ti, pi1, pi2, pi3);
 								}
 								break;
 								case '>':
@@ -635,18 +621,11 @@ void mgl_write_prc(HMGL gr, const char *fname,const char */*descr*/, int make_pd
 									const uint32_t ti = group.addColourInfo(p);
 
 									const uint32_t cpi=group.addPoint(p);
-									uint32_t pi[21];
-									for(size_t j=0;j<=20;j++)
-										pi[j]=group.addPoint(p.x+ss*cos(j*M_PI/10),p.y+ss*sin(j*M_PI/10),p.z);
-									for(size_t j=0;j<=20;j++) {
-										prctriangle triangle;
-										triangle.pi[0] = pi[j];
-										triangle.pi[1] = pi[j+1];
-										triangle.pi[2] = cpi;
-										triangle.ti[0] = ti;
-										triangle.ti[1] = ti;
-										triangle.ti[2] = ti;
-										group.triangles.push_back(triangle);
+									uint32_t pnti[21];
+									for(size_t k=0;k<=20;k++)
+										pnti[k]=group.addPoint(p.x+ss*cos(k*M_PI/10),p.y+ss*sin(k*M_PI/10),p.z);
+									for(size_t k=0;k<=20;k++) {
+										group.addTriangle(ti, pnti[k], pnti[k+1], cpi);
 									}
 								}
 								break;
@@ -658,110 +637,111 @@ void mgl_write_prc(HMGL gr, const char *fname,const char */*descr*/, int make_pd
 								case 'o':
 								{
 									double P[21][3];
-									for(size_t j=0;j<=20;j++) {
-										P[j][0] = p.x+ss*cos(j*M_PI/10);
-										P[j][1] = p.y+ss*sin(j*M_PI/10);
-										P[j][2] = p.z;
+									for(size_t k=0;k<=20;k++) {
+										P[k][0] = p.x+ss*cos(k*M_PI/10);
+										P[k][1] = p.y+ss*sin(k*M_PI/10);
+										P[k][2] = p.z;
 									}
 									file.addLine(21, P, c, w);
 								}
 								break;
-							}
-							break;
+						}
+					}
+					break;
 
-								case 1:
-								{
-									const mglPnt p1 = gr->GetPnt(q.n1) - p0, p2 = gr->GetPnt(q.n2) - p0;
+					case 1:
+					if (gr->GetPnt(q.n1).a > mgl_min_a || gr->GetPnt(q.n2).a > mgl_min_a) {
+						const mglPnt p1 = gr->GetPnt(q.n1) - p0, p2 = gr->GetPnt(q.n2) - p0;
 
-									const uint32_t n = 2;
-									double P[2][3];
-									P[0][0] = p1.x;
-									P[0][1] = p1.y;
-									P[0][2] = p1.z;
-									P[1][0] = p2.x;
-									P[1][1] = p2.y;
-									P[1][2] = p2.z;
-									const RGBAColour colour((p1.r+p2.r)/2, (p1.g+p2.g)/2, (p1.b+p2.b)/2, (p1.a+p2.a)/2);
-									file.addLine(n, P, colour, w);
-								}
-								break;
+						const uint32_t n = 2;
+						double P[2][3];
+						P[0][0] = p1.x;
+						P[0][1] = p1.y;
+						P[0][2] = p1.z;
+						P[1][0] = p2.x;
+						P[1][1] = p2.y;
+						P[1][2] = p2.z;
+						const RGBAColour colour((p1.r+p2.r)/2, (p1.g+p2.g)/2, (p1.b+p2.b)/2, (p1.a+p2.a)/2);
+						file.addLine(n, P, colour, w);
+					}
+					break;
 
-								case 2:
-								{
-									const mglPnt p1 = gr->GetPnt(q.n1)	- p0, p2 = gr->GetPnt(q.n2) - p0, p3 = gr->GetPnt(q.n3) - p0;
+					case 2:
+					if (gr->GetPnt(q.n1).a > mgl_min_a || gr->GetPnt(q.n2).a > mgl_min_a || gr->GetPnt(q.n3).a > mgl_min_a) {
+						const mglPnt p1 = gr->GetPnt(q.n1)	- p0, p2 = gr->GetPnt(q.n2) - p0, p3 = gr->GetPnt(q.n3) - p0;
 
-									prctriangle triangle;
-									triangle.pi[0] = group.addPoint(p1);
-									triangle.pi[1] = group.addPoint(p2);
-									triangle.pi[2] = group.addPoint(p3);
-									triangle.ti[0] = group.addColourInfo(p1);
-									triangle.ti[1] = group.addColourInfo(p2);
-									triangle.ti[2] = group.addColourInfo(p3);
-									group.triangles.push_back(triangle);
-								}
-								break;
-								case 3:
-								{
-									const mglPnt p1 = gr->GetPnt(q.n1) - p0;
-									const uint32_t pi1 = group.addPoint(p1);
-									const uint32_t ti1 = group.addColourInfo(p1);
+						prctriangle triangle;
+						triangle.pi[0] = group.addPoint(p1);
+						triangle.pi[1] = group.addPoint(p2);
+						triangle.pi[2] = group.addPoint(p3);
+						triangle.ti[0] = group.addColourInfo(p1);
+						triangle.ti[1] = group.addColourInfo(p2);
+						triangle.ti[2] = group.addColourInfo(p3);
+						group.triangles.push_back(triangle);
+					}
+					break;
+					case 3:
+					if (gr->GetPnt(q.n1).a > mgl_min_a || gr->GetPnt(q.n2).a > mgl_min_a || gr->GetPnt(q.n3).a > mgl_min_a || gr->GetPnt(q.n4).a > mgl_min_a) {
+						const mglPnt p1 = gr->GetPnt(q.n1) - p0;
+						const uint32_t pi1 = group.addPoint(p1);
+						const uint32_t ti1 = group.addColourInfo(p1);
 
-									const mglPnt p2 = gr->GetPnt(q.n2) - p0;
-									const uint32_t pi2 = group.addPoint(p2);
-									const uint32_t ti2 = group.addColourInfo(p2);
+						const mglPnt p2 = gr->GetPnt(q.n2) - p0;
+						const uint32_t pi2 = group.addPoint(p2);
+						const uint32_t ti2 = group.addColourInfo(p2);
 
-									const mglPnt p3 = gr->GetPnt(q.n3) - p0;
-									const uint32_t pi3 = group.addPoint(p3);
-									const uint32_t ti3 = group.addColourInfo(p3);
+						const mglPnt p3 = gr->GetPnt(q.n3) - p0;
+						const uint32_t pi3 = group.addPoint(p3);
+						const uint32_t ti3 = group.addColourInfo(p3);
 
-									const mglPnt p4 = gr->GetPnt(q.n4) - p0;
-									const uint32_t pi4 = group.addPoint(p4);
-									const uint32_t ti4 = group.addColourInfo(p4);
+						const mglPnt p4 = gr->GetPnt(q.n4) - p0;
+						const uint32_t pi4 = group.addPoint(p4);
+						const uint32_t ti4 = group.addColourInfo(p4);
 
-									prctriangle triangle1, triangle2;
-									triangle1.pi[0] = pi1;
-									triangle1.pi[1] = pi2;
-									triangle1.pi[2] = pi3;
-									triangle1.ti[0] = ti1;
-									triangle1.ti[1] = ti2;
-									triangle1.ti[2] = ti3;
-									group.triangles.push_back(triangle1);
-									triangle2.pi[0] = pi4;
-									triangle2.pi[1] = pi3;
-									triangle2.pi[2] = pi2;
-									triangle2.ti[0] = ti4;
-									triangle2.ti[1] = ti3;
-									triangle2.ti[2] = ti2;
-									group.triangles.push_back(triangle2);
-								}
-								break;
-								case 4:	break;	// TODO: add glyphs export later
+						prctriangle triangle1, triangle2;
+						triangle1.pi[0] = pi1;
+						triangle1.pi[1] = pi2;
+						triangle1.pi[2] = pi3;
+						triangle1.ti[0] = ti1;
+						triangle1.ti[1] = ti2;
+						triangle1.ti[2] = ti3;
+						group.triangles.push_back(triangle1);
+						triangle2.pi[0] = pi4;
+						triangle2.pi[1] = pi3;
+						triangle2.pi[2] = pi2;
+						triangle2.ti[0] = ti4;
+						triangle2.ti[1] = ti3;
+						triangle2.ti[2] = ti2;
+						group.triangles.push_back(triangle2);
+					}
+					break;
+					case 4:	break;	// TODO: add glyphs export later
 				}
 			}
 		}
 		if (!group.triangles.empty()) {
-			const uint32_t nP = group.points.size();
+			const uint32_t nP = (uint32_t)group.points.size();
 			double (*P)[3] = new double[nP][3];
 			group.writePoints(P);
-			const uint32_t nI = group.triangles.size();
+			const uint32_t nI = (uint32_t)group.triangles.size();
 			uint32_t (*PI)[3] = new uint32_t[nI][3];
-			for(uint32_t i = 0; i<nI; i++)
+			for(uint32_t k = 0; k<nI; k++)
 			{
-				PI[i][0] = group.triangles[i].pi[0];
-				PI[i][1] = group.triangles[i].pi[1];
-				PI[i][2] = group.triangles[i].pi[2];
+				PI[k][0] = group.triangles[k].pi[0];
+				PI[k][1] = group.triangles[k].pi[1];
+				PI[k][2] = group.triangles[k].pi[2];
 			}
 			if (!group.samecolour) {
 				if (gr->get(MGL_PREFERVC)) {
-					const uint32_t nC = group.colours.size();
+					const uint32_t nC = (uint32_t)group.colours.size();
 					RGBAColour *C = new RGBAColour[nC];
 					group.writeColours(C);
 					uint32_t (*CI)[3] = new uint32_t[nI][3];
-					for(uint32_t i = 0; i<nI; i++)
+					for(uint32_t k = 0; k<nI; k++)
 					{
-						CI[i][0] = group.triangles[i].ti[0];
-						CI[i][1] = group.triangles[i].ti[1];
-						CI[i][2] = group.triangles[i].ti[2];
+						CI[k][0] = group.triangles[k].ti[0];
+						CI[k][1] = group.triangles[k].ti[1];
+						CI[k][2] = group.triangles[k].ti[2];
 					}
 					const uint32_t tess_index = file.createTriangleMesh(nP, P, nI, PI, m1, 0, NULL, NULL, 0, NULL, NULL, nC, C, CI, 0, NULL, NULL, grpopt.crease_angle);
 					uint32_t materialid = materialMathGLid;
@@ -780,15 +760,15 @@ void mgl_write_prc(HMGL gr, const char *fname,const char */*descr*/, int make_pd
 					delete [] CI;
 					delete [] C;
 				} else {
-					const uint32_t nT = group.texturecoords.size();
+					const uint32_t nT = (uint32_t)group.texturecoords.size();
 					double (*T)[2] = new double[nT][2];
 					group.writeTextureCoords(T);
 					uint32_t (*TI)[3] = new uint32_t[nI][3];
-					for(uint32_t i = 0; i<nI; i++)
+					for(uint32_t k = 0; k<nI; k++)
 					{
-						TI[i][0] = group.triangles[i].ti[0];
-						TI[i][1] = group.triangles[i].ti[1];
-						TI[i][2] = group.triangles[i].ti[2];
+						TI[k][0] = group.triangles[k].ti[0];
+						TI[k][1] = group.triangles[k].ti[1];
+						TI[k][2] = group.triangles[k].ti[2];
 					}
 					const uint32_t tess_index = file.createTriangleMesh(nP, P, nI, PI, m1, 0, NULL, NULL, nT, T, TI, 0, NULL, NULL, 0, NULL, NULL, grpopt.crease_angle);
 					file.useMesh(tess_index, materialMathGLid);
@@ -810,15 +790,15 @@ void mgl_write_prc(HMGL gr, const char *fname,const char */*descr*/, int make_pd
 			delete [] P;
 		}
 		file.endgroup();
-		gr->Grp[i].p.clear();	// we don't need indexes anymore
+		prm.clear();	// we don't need indexes anymore
 	}
 	file.finish();
 
 	if (make_pdf) {
 #if MGL_HAVE_PDF
-		const HPDF_REAL width  = dynamic_cast<mglCanvas *>(gr)->GetWidth();
-		const HPDF_REAL height = dynamic_cast<mglCanvas *>(gr)->GetHeight();
-		const HPDF_REAL depth  = sqrt(width*height);
+//		const HPDF_REAL width  = dynamic_cast<mglCanvas *>(gr)->GetWidth();
+//		const HPDF_REAL height = dynamic_cast<mglCanvas *>(gr)->GetHeight();
+//		const HPDF_REAL depth  = sqrt(width*height);
 
 		const HPDF_Rect rect = {0, 0, width, height};
 
@@ -861,21 +841,21 @@ void mgl_write_prc(HMGL gr, const char *fname,const char */*descr*/, int make_pd
 		//	Create annotation
 		annot = HPDF_Page_Create3DAnnot (page, rect, u3d );
 
-    //  Enable toolbar
-    HPDF_Dict action = (HPDF_Dict)HPDF_Dict_GetItem (annot, "3DA", HPDF_OCLASS_DICT);
-    HPDF_Dict_AddBoolean (action, "TB", HPDF_TRUE);
+		//  Enable toolbar
+		HPDF_Dict action = (HPDF_Dict)HPDF_Dict_GetItem (annot, "3DA", HPDF_OCLASS_DICT);
+		HPDF_Dict_AddBoolean (action, "TB", HPDF_TRUE);
 
 		/* save the document to a file */
-		const size_t len = strlen(tname);
-		tname[len-2]='p';	tname[len-2]='d';	tname[len-1]='f';
+		const size_t tlen = strlen(tname);
+		tname[tlen-2]='p';	tname[tlen-2]='d';	tname[tlen-1]='f';
 		HPDF_SaveToFile (pdf, tname);
 
 		/* clean up */
 		HPDF_Free (pdf);
 #else
-		const size_t len = strlen(tname);
-		tname[len-2]='p';	tname[len-2]='d';	tname[len-1]='f';
-		tname[len+0]='.';	tname[len+1]='t';	tname[len+2]='x';	tname[len+3]='t'; tname[len+4]='\0';
+		const size_t tlen = strlen(tname);
+		tname[tlen-2]='p';	tname[tlen-2]='d';	tname[tlen-1]='f';
+		tname[tlen+0]='.';	tname[tlen+1]='t';	tname[tlen+2]='x';	tname[tlen+3]='t'; tname[tlen+4]='\0';
 		FILE *fp=fopen(tname,"wt");
 		fputs("Can not produce PDF file, MathGL compiled without PDF output support\n", fp);
 		fclose(fp);

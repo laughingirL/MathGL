@@ -20,11 +20,11 @@
 #ifndef _MGL_VOL_H_
 #define _MGL_VOL_H_
 #include "mgl2/base.h"
-/*****************************************************************************/
+/******************************************************************************/
 #ifdef __cplusplus
 extern "C" {
 #endif
-/*****************************************************************************/
+/******************************************************************************/
 void mgl_surf3_xyz_val(HMGL graph, mreal Val, HCDT x, HCDT y, HCDT z, HCDT a, const char *stl, const char *opt);
 void mgl_surf3_val(HMGL graph, mreal Val, HCDT a, const char *stl, const char *opt);
 void mgl_surf3_xyz(HMGL graph, HCDT x, HCDT y, HCDT z, HCDT a, const char *stl, const char *opt);
@@ -47,7 +47,7 @@ void mgl_cloud(HMGL graph, HCDT a, const char *stl, const char *opt);
 void mgl_beam_val(HMGL graph, mreal Val, HCDT tr, HCDT g1, HCDT g2, HCDT a, mreal r, const char *stl, int norm);
 void mgl_beam(HMGL graph, HCDT tr, HCDT g1, HCDT g2, HCDT a, mreal r, const char *stl, int norm, int num);
 
-/*****************************************************************************/
+/******************************************************************************/
 void mgl_surf3_xyz_val_(uintptr_t *graph, mreal *Val, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *stl, const char *opt,int,int);
 void mgl_surf3_val_(uintptr_t *graph, mreal *Val, uintptr_t *a, const char *stl, const char *opt,int,int);
 void mgl_surf3_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *stl, const char *opt,int,int);
@@ -71,9 +71,9 @@ void mgl_cloud_(uintptr_t *graph, uintptr_t *a, const char *stl, const char *opt
 void mgl_beam_val_(uintptr_t *gr, mreal *val, uintptr_t *tr, uintptr_t *g1, uintptr_t *g2, uintptr_t *a, mreal *r, const char *sch, int *norm,int l);
 void mgl_beam_(uintptr_t *gr, uintptr_t *tr, uintptr_t *g1, uintptr_t *g2, uintptr_t *a, mreal *r, const char *sch, int *norm, int *num,int l);
 
-/*****************************************************************************/
+/******************************************************************************/
 #ifdef __cplusplus
 }
 #endif
-/*****************************************************************************/
+/******************************************************************************/
 #endif

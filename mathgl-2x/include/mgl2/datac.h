@@ -21,6 +21,7 @@
 #define _MGL_DATA_H_
 
 #include "mgl2/data_cf.h"
+#include "mgl2/datac_cf.h"
 #ifdef __cplusplus
 //-----------------------------------------------------------------------------
 #include <vector>
@@ -141,10 +142,7 @@ public:
 	/// Delete data
 	inline void Delete(char dir, long at=0, long num=1)
 	{	mgl_data_delete(this,dir,at,num);	}
-	/// Remove rows with duplicate values in column \a id
-	inline void Clean(long id)
-	{	mgl_data_clean(this,id);	}
-	
+
 	/// Modify the data by specified formula
 	inline void Modify(const char *eq,long dim=0)
 	{	mgl_data_modify(this, eq, dim);	}

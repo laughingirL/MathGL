@@ -20,11 +20,11 @@
 #ifndef MGL_CANVAS_CF_H
 #define MGL_CANVAS_CF_H
 #include "mgl2/base.h"
-/*****************************************************************************/
+/******************************************************************************/
 #ifdef __cplusplus
 extern "C" {
 #endif
-/*****************************************************************************/
+/******************************************************************************/
 HMGL mgl_create_graph(int width, int height);
 void mgl_delete_graph(HMGL graph);
 void mgl_set_size(HMGL gr, int width, int height);
@@ -145,7 +145,7 @@ void mgl_rotate_vector(HMGL gr, mreal Tet,mreal x,mreal y,mreal z);
 void mgl_perspective(HMGL gr, mreal val);
 
 void mgl_draw_thr(void *);
-/*****************************************************************************/
+/******************************************************************************/
 uintptr_t mgl_create_graph_(int *width, int *height);
 void mgl_delete_graph_(uintptr_t *graph);
 void mgl_set_size_(uintptr_t *graph, int *width, int *height);
@@ -170,7 +170,7 @@ void mgl_axis_(uintptr_t *gr, const char *dir, const char *stl,int,int);
 void mgl_axis_grid_(uintptr_t *gr, const char *dir,const char *pen,int l,int n);
 void mgl_label_(uintptr_t *gr, const char *dir, const char *text,int,int l);
 void mgl_label_ext_(uintptr_t *gr, const char *dir, const char *text, mreal *pos, mreal *shift,int,int l);
-/*****************************************************************************/
+/******************************************************************************/
 void mgl_colorbar_(uintptr_t *gr, const char *sch,int l);
 void mgl_colorbar_ext_(uintptr_t *gr, const char *sch, mreal *x, mreal *y, mreal *w, mreal *h, int l);
 void mgl_colorbar_val_(uintptr_t *gr, uintptr_t *dat, const char *sch,int l);
@@ -262,19 +262,19 @@ void mgl_view_(uintptr_t *graph, mreal *TetX,mreal *TetZ,mreal *TetY);
 void mgl_zoom_(uintptr_t *graph, mreal *x1, mreal *y1, mreal *x2, mreal *y2);
 void mgl_rotate_vector_(uintptr_t *graph, mreal *Tet,mreal *x,mreal *y,mreal *z);
 void mgl_perspective_(uintptr_t *graph, mreal val);
-/*****************************************************************************/
+/******************************************************************************/
 HMGL mgl_create_graph_qt(int (*draw)(HMGL gr, void *p), const char *title, void *par, void (*load)(void *p));
 HMGL mgl_create_graph_fltk(int (*draw)(HMGL gr, void *p), const char *title, void *par, void (*load)(void *p));
 void mgl_set_click_func(HMGL gr, void (*func)(void *p));
 int mgl_fltk_run();
 int mgl_fltk_thr();
 int mgl_qt_run();
-/*****************************************************************************/
+/******************************************************************************/
 uintptr_t mgl_create_graph_qt_(const char *title, int);
 uintptr_t mgl_create_graph_fltk_(const char *title, int);
 int mgl_fltk_run_();
 int mgl_qt_run_();
-/*****************************************************************************/
+/******************************************************************************/
 void mgl_wnd_set_delay(HMGL gr, mreal dt);
 void mgl_setup_window(HMGL gr, int clf_upd, int showpos);
 void mgl_wnd_toggle_alpha(HMGL gr);
@@ -289,7 +289,7 @@ void mgl_wnd_next_frame(HMGL gr);
 void mgl_wnd_prev_frame(HMGL gr);
 void mgl_wnd_animation(HMGL gr);
 void mgl_get_last_mouse_pos(HMGL gr, mreal *x, mreal *y, mreal *z);
-/*****************************************************************************/
+/******************************************************************************/
 void mgl_get_last_mouse_pos_(uintptr_t *gr, mreal *x, mreal *y, mreal *z);
 void mgl_wnd_set_delay_(uintptr_t *gr, mreal *dt);
 void mgl_setup_window_(uintptr_t *gr, int *clf_upd, int *showpos);
@@ -304,12 +304,12 @@ void mgl_wnd_adjust_(uintptr_t *gr);
 void mgl_wnd_next_frame_(uintptr_t *gr);
 void mgl_wnd_prev_frame_(uintptr_t *gr);
 void mgl_wnd_animation_(uintptr_t *gr);
-/*****************************************************************************/
+/******************************************************************************/
 void mgl_mpi_send(HMGL gr, int id);
 void mgl_mpi_recv(HMGL gr, int id);
 void mgl_mpi_send_(uintptr_t *gr, int *id);
 void mgl_mpi_recv_(uintptr_t *gr, int *id);
-/*****************************************************************************/
+/******************************************************************************/
 HMPR mgl_create_parser();
 long mgl_use_parser(HMPR p, int inc);
 void mgl_delete_parser(HMPR p);
@@ -332,7 +332,7 @@ int mgl_cmd_type(HMPR pr, const char *name);
 const char *mgl_cmd_desc(HMPR pr, const char *name);
 const char *mgl_cmd_frmt(HMPR pr, const char *name);
 //int mgl_parser_find_cmdw(HMPR pr, const wchar_t *name);
-/*****************************************************************************/
+/******************************************************************************/
 uintptr_t mgl_create_parser_();
 long mgl_use_parser_(uintptr_t* , int *inc);
 void mgl_delete_parser_(uintptr_t* p);
@@ -348,10 +348,10 @@ void mgl_restore_once_(uintptr_t* p);
 void mgl_parser_allow_setsize_(uintptr_t* p, int *a);
 void mgl_parser_stop_(uintptr_t* p);
 int mgl_cmd_type_(uintptr_t* p, const char *name, int l);
-/*****************************************************************************/
+/******************************************************************************/
 #ifdef __cplusplus
 }
 #endif
-/*****************************************************************************/
+/******************************************************************************/
 #endif
 

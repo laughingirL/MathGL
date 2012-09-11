@@ -20,11 +20,11 @@
 #ifndef _MGL_BASE_CF_H_
 #define _MGL_BASE_CF_H_
 #include "mgl2/base.h"
-/*****************************************************************************/
+/******************************************************************************/
 #ifdef __cplusplus
 extern "C" {
 #endif
-/*****************************************************************************/
+/******************************************************************************/
 int mgl_get_warn(HMGL gr);
 void mgl_set_warn(HMGL gr, int code, const char *text);
 const char *mgl_get_mess(HMGL gr);
@@ -76,7 +76,7 @@ void mgl_restore_font(HMGL gr);
 void mgl_set_color(char id, mreal r, mreal g, mreal b);
 void mgl_set_def_sch(HMGL gr, const char *sch);
 void mgl_set_def_schv(HMGL gr, HCDT val, const char *sch);
-/*****************************************************************************/
+/******************************************************************************/
 void mgl_set_def_sch_(uintptr_t *gr, const char *sch,int);
 void mgl_set_def_schv_(uintptr_t *gr, uintptr_t *val, const char *sch,int);
 void mgl_set_color_(char *id, mreal *r, mreal *g, mreal *b, int);
@@ -126,9 +126,9 @@ void mgl_set_rotated_text_(uintptr_t *graph, int *enable);
 void mgl_load_font_(uintptr_t *gr, char *name, char *path, int l, int n);
 void mgl_copy_font_(uintptr_t *gr, uintptr_t *gr_from);
 void mgl_restore_font_(uintptr_t *gr);
-/*****************************************************************************/
+/******************************************************************************/
 #ifdef __cplusplus
 }
 #endif
-/*****************************************************************************/
+/******************************************************************************/
 #endif

@@ -46,30 +46,7 @@ void mglTexture::GetRGBA(unsigned char *f) const
 	}
 }
 //-----------------------------------------------------------------------------
-// I'm not sure that it is good idea -- a lot of memory used, but gain only for small files
-/*void mgl_rearrange_pnt(HMGL gr, std::vector<size_t> &on, std::vector<size_t> &no, bool coor=false)
-{
-	// on -- for old-to-new index;	no -- for new-to-old index
-	on.clear();	on.resize(gr->GetPntNum(),-1);	no.clear();
-	register size_t i,j;
-	for(i=0;i<gr->GetPntNum();i++)	// collect data for groups
-	// it is rather expensive (extra 4b per primitive) but need for export to 3D
-	{
-		const mglPnt &q = gr->GetPnt(i);
-		if(coor)	for(j=0;j<no.size();j++)
-		{
-			const mglPnt &p = gr->GetPnt(no[j]);
-			if(p.x==q.x && p.y==q.y && p.z==q.z)	on[i]=j;
-		}
-		else	for(j=0;j<no.size();j++)
-		{
-			const mglPnt &p = gr->GetPnt(no[j]);
-			if(p.x==q.x && p.y==q.y && p.z==q.z && p.c==q.c && p.t==q.t)	on[i]=j;
-		}
-		if(on[j]<0)		{	no.push_back(i);	on[j]=no.size()-1;	}
-	}
-}*/
-//-----------------------------------------------------------------------------
+/* M.Vidassov take/move it into src/obj.cpp
 void mgl_obj_prim(const mglPrim &q, const mglPnt &p, FILE *fp, mreal size)
 {
 	char type = q.n4;	mreal ss=size*0.35;
@@ -280,13 +257,6 @@ void mgl_write_obj(HMGL gr, const char *fname,const char *descr, int use_png)
 		gr->Grp[i].p.clear();	// we don't need indexes anymore
 	}
 	// try to save "ungrouped" primitives
-/*	fprintf(fp,"g ungrouped\n");	// I think this can be omitted
-	for(i=0;i<gr->GetPrmNum();i++)
-	{
-		const mglPrim q=gr->GetPrm(p[j]);	m = q.id-m1;
-		if(m<0 || m>=m2-m1+1)
-			mgl_obj_prim(q, gr->GetPnt(q.n1), fp, q.s*gr->FontFactor());
-	}*/
 	fclose(fp);
 	// prepare MTL file
 	tname[len-4]='.';	tname[len-3]='m';	tname[len-2]='t';	tname[len-1]='l';
@@ -315,7 +285,7 @@ void mgl_write_obj(HMGL gr, const char *fname,const char *descr, int use_png)
 void mgl_write_obj_(uintptr_t *gr, const char *fname,const char *descr, int *use_png,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *d=new char[n+1];	memcpy(d,descr,n);	d[n]=0;
-	mgl_write_obj(_GR_,s,d,*use_png);	delete []s;		delete []d;	}
+	mgl_write_obj(_GR_,s,d,*use_png);	delete []s;		delete []d;	}*/
 //-----------------------------------------------------------------------------
 void mgl_write_stl(HMGL gr, const char *fname,const char *descr)
 {

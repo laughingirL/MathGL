@@ -13,7 +13,11 @@
 * Export functions now can write in stdout if file name is "-".
 
 * Add WriteJSON() function for exporting in JSON format suitable for later drawing by JavaScript
-* Add mglcgi for parsing MGL script as CGI request which return PNG or SVG image. 
+* Add mglcgi for parsing MGL script as CGI request which return PNG or SVG image.
+* Add mglData::Solve() for finding x-value where dat(x)=val.
+* Add mglData::Clean() for removing rows with duplicate values for given column.
+* Functions mglData::Spline*, mglData::Linear* now can return gradient at the point.
+
 
 * Add dialog for data arguments in UDAV.
 * Mouse position at an object click now is displayed on the image itself.

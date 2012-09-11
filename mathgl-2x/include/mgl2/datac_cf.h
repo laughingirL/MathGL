@@ -31,153 +31,78 @@ struct gsl_matrix;
 #endif
 /******************************************************************************/
 #ifdef __cplusplus
+class mglDataC;
+typedef mglDataC* HADT;
 extern "C" {
 #endif
 /******************************************************************************/
-void mgl_srnd(long seed);
-double mgl_rnd();
-double mgl_ipow(double x,int n);
+HADT mgl_create_datac();
+HADT mgl_create_datac_size(long nx, long ny, long nz);
+HADT mgl_create_datac_file(const char *fname);
+void mgl_delete_datac(HADT dat);
 /******************************************************************************/
-HMDT mgl_create_data();
-HMDT mgl_create_data_size(long nx, long ny, long nz);
-HMDT mgl_create_data_file(const char *fname);
-void mgl_delete_data(HMDT dat);
-const char *mgl_data_info(HCDT dat);
+uintptr_t mgl_create_datac_();
+uintptr_t mgl_create_datac_size_(int *nx, int *ny, int *nz);
+uintptr_t mgl_create_datac_file_(const char *fname, int len);
+void mgl_delete_datac_(uintptr_t *dat);
 /******************************************************************************/
-uintptr_t mgl_create_data_();
-uintptr_t mgl_create_data_size_(int *nx, int *ny, int *nz);
-uintptr_t mgl_create_data_file_(const char *fname, int len);
-void mgl_delete_data_(uintptr_t *dat);
+/*		Data creation functions												*/
 /******************************************************************************/
-/*		Data creation functions												 */
-/******************************************************************************/
-void mgl_data_rearrange(HMDT dat, long mx,long my,long mz);
-void mgl_data_link(HMDT dat, mreal *A,long mx,long my,long mz);
-void mgl_data_set_float(HMDT dat, const float *A,long mx,long my,long mz);
-void mgl_data_set_double(HMDT dat, const double *A,long mx,long my,long mz);
-void mgl_data_set_float2(HMDT d, const float **A,long N1,long N2);
-void mgl_data_set_double2(HMDT d, const double **A,long N1,long N2);
-void mgl_data_set_float3(HMDT d, const float ***A,long N1,long N2,long N3);
-void mgl_data_set_double3(HMDT d, const double ***A,long N1,long N2,long N3);
-void mgl_data_set(HMDT dat, HCDT a);
-void mgl_data_set_vector(HMDT dat, gsl_vector *v);
-void mgl_data_set_matrix(HMDT dat, gsl_matrix *m);
-void mgl_data_set_value(HMDT dat, mreal v, long i, long j, long k);
-mreal mgl_data_get_value(HCDT dat, long i, long j, long k);
-void mgl_data_set_values(HMDT dat, const char *val, long nx, long ny, long nz);
+void mgl_datac_rearrange(HADT dat, long mx,long my,long mz);
+void mgl_datac_link(HADT dat, mreal *A,long mx,long my,long mz);
+void mgl_datac_set_float(HADT dat, const float *A,long mx,long my,long mz);
+void mgl_datac_set_double(HADT dat, const double *A,long mx,long my,long mz);
+void mgl_datac_set_float2(HADT d, const float **A,long N1,long N2);
+void mgl_datac_set_double2(HADT d, const double **A,long N1,long N2);
+void mgl_datac_set_float3(HADT d, const float ***A,long N1,long N2,long N3);
+void mgl_datac_set_double3(HADT d, const double ***A,long N1,long N2,long N3);
+void mgl_datac_set(HADT dat, HCDT a);
+void mgl_datac_set_vector(HADT dat, gsl_vector *v);
+void mgl_datac_set_matrix(HADT dat, gsl_matrix *m);
+void mgl_datac_set_value(HADT dat, mreal v, long i, long j, long k);
+void mgl_datac_set_values(HADT dat, const char *val, long nx, long ny, long nz);
 
-int mgl_data_read_hdf(HMDT d,const char *fname,const char *data);
-void mgl_data_save_hdf(HCDT d,const char *fname,const char *data,int rewrite);
-int mgl_datas_hdf(const char *fname, char *buf, long size);
-int mgl_data_read(HMDT dat, const char *fname);
-int mgl_data_read_mat(HMDT dat, const char *fname, long dim);
-int mgl_data_read_dim(HMDT dat, const char *fname,long mx,long my,long mz);
-int mgl_data_read_range(HMDT d, const char *templ, double from, double to, double step, int as_slice);
-int mgl_data_read_all(HMDT dat, const char *templ, int as_slice);
-void mgl_data_save(HCDT dat, const char *fname,long ns);
-void mgl_data_export(HCDT dat, const char *fname, const char *scheme,mreal v1,mreal v2,long ns);
-void mgl_data_import(HMDT dat, const char *fname, const char *scheme,mreal v1,mreal v2);
+int mgl_datac_read(HADT dat, const char *fname);
+int mgl_datac_read_mat(HADT dat, const char *fname, long dim);
+int mgl_datac_read_dim(HADT dat, const char *fname,long mx,long my,long mz);
+int mgl_datac_read_range(HADT d, const char *templ, double from, double to, double step, int as_slice);
+int mgl_datac_read_all(HADT dat, const char *templ, int as_slice);
+void mgl_datac_save(HADT dat, const char *fname,long ns);
 
-void mgl_data_create(HMDT dat, long nx,long ny,long nz);
-void mgl_data_transpose(HMDT dat, const char *dim);
-void mgl_data_norm(HMDT dat, mreal v1,mreal v2,long sym,long dim);
-void mgl_data_norm_slice(HMDT dat, mreal v1,mreal v2,char dir,long keep_en,long sym);
-HMDT mgl_data_subdata(HCDT dat, long xx,long yy,long zz);
-HMDT mgl_data_subdata_ext(HCDT dat, HCDT xx, HCDT yy, HCDT zz);
-HMDT mgl_data_column(HCDT dat, const char *eq);
-void mgl_data_set_id(HMDT d, const char *id);
-void mgl_data_fill(HMDT dat, mreal x1,mreal x2,char dir);
-void mgl_data_fill_eq(HMGL gr, HMDT dat, const char *eq, HCDT vdat, HCDT wdat,const char *opt);
-void mgl_data_grid(HMGL gr, HMDT d, HCDT xdat, HCDT ydat, HCDT zdat,const char *opt);
-void mgl_data_put_val(HMDT dat, mreal val, long i, long j, long k);
-void mgl_data_put_dat(HMDT dat, HCDT val, long i, long j, long k);
-void mgl_data_modify(HMDT dat, const char *eq,long dim);
-void mgl_data_modify_vw(HMDT dat, const char *eq,HCDT vdat,HCDT wdat);
-void mgl_data_squeeze(HMDT dat, long rx,long ry,long rz,long smooth);
-mreal mgl_data_max(HCDT dat);
-mreal mgl_data_min(HCDT dat);
-mreal *mgl_data_value(HMDT dat, long i,long j,long k);
-mreal *mgl_data_data(HMDT dat);
+void mgl_datac_create(HADT dat, long nx,long ny,long nz);
+void mgl_datac_transpose(HADT dat, const char *dim);
+void mgl_datac_set_id(HADT d, const char *id);
+void mgl_datac_fill(HADT dat, mreal x1,mreal x2,char dir);
+void mgl_datac_fill_eq(HMGL gr, HADT dat, const char *eq, HCDT vdat, HCDT wdat,const char *opt);
 
-mreal mgl_data_first(HCDT dat, const char *cond, long *i, long *j, long *k);
-mreal mgl_data_last(HCDT dat, const char *cond, long *i, long *j, long *k);
-long mgl_data_find(HCDT dat, const char *cond, char dir, long i, long j, long k);
-int mgl_data_find_any(HCDT dat, const char *cond);
-mreal mgl_data_max_int(HCDT dat, long *i, long *j, long *k);
-mreal mgl_data_max_real(HCDT dat, mreal *x, mreal *y, mreal *z);
-mreal mgl_data_min_int(HCDT dat, long *i, long *j, long *k);
-mreal mgl_data_min_real(HCDT dat, mreal *x, mreal *y, mreal *z);
-mreal mgl_data_momentum_val(HCDT d, char dir, mreal *m, mreal *w, mreal *s, mreal *k);
+void mgl_datac_modify(HADT dat, const char *eq,long dim);
+void mgl_datac_modify_vw(HADT dat, const char *eq,HCDT vdat,HCDT wdat);
+void mgl_datac_modify_cvw(HADT dat, const char *eq,HADT vdat,HADT wdat);
+void mgl_datac_squeeze(HADT dat, long rx,long ry,long rz,long smooth);
 
-HMDT mgl_data_combine(HCDT dat1, HCDT dat2);
-void mgl_data_extend(HMDT dat, long n1, long n2);
-void mgl_data_insert(HMDT dat, char dir, long at, long num);
-void mgl_data_delete(HMDT dat, char dir, long at, long num);
+void mgl_datac_extend(HADT dat, long n1, long n2);
+void mgl_datac_insert(HADT dat, char dir, long at, long num);
+void mgl_datac_delete(HADT dat, char dir, long at, long num);
 /******************************************************************************/
-/*		Data manipulation functions											 */
+/*		Data manipulation functions											*/
 /******************************************************************************/
-void mgl_data_smooth(HMDT d, const char *dirs, mreal delta);
-HMDT mgl_data_sum(HCDT dat, const char *dir);
-HMDT mgl_data_max_dir(HCDT dat, const char *dir);
-HMDT mgl_data_min_dir(HCDT dat, const char *dir);
-void mgl_data_cumsum(HMDT dat, const char *dir);
-void mgl_data_integral(HMDT dat, const char *dir);
-void mgl_data_diff(HMDT dat, const char *dir);
-void mgl_data_diff_par(HMDT dat, HCDT v1, HCDT v2, HCDT v3);
-void mgl_data_diff2(HMDT dat, const char *dir);
-void mgl_data_swap(HMDT dat, const char *dir);
-void mgl_data_roll(HMDT dat, char dir, long num);
-void mgl_data_mirror(HMDT dat, const char *dir);
-void mgl_data_sort(HMDT dat, long idx, long idy);
+void mgl_datac_smooth(HADT d, const char *dirs, mreal delta);
+void mgl_datac_cumsum(HADT dat, const char *dir);
+void mgl_datac_integral(HADT dat, const char *dir);
+void mgl_datac_diff(HADT dat, const char *dir);
+void mgl_datac_diff_par(HADT dat, HCDT v1, HCDT v2, HCDT v3);
+void mgl_datac_diff2(HADT dat, const char *dir);
+void mgl_datac_swap(HADT dat, const char *dir);
+void mgl_datac_roll(HADT dat, char dir, long num);
+void mgl_datac_mirror(HADT dat, const char *dir);
+void mgl_datac_crop(HADT dat, long n1, long n2, char dir);
 
-void mgl_data_hankel(HMDT dat, const char *dir);
-void mgl_data_sinfft(HMDT dat, const char *dir);
-void mgl_data_cosfft(HMDT dat, const char *dir);
-void mgl_data_fill_sample(HMDT dat, const char *how);
-
-mreal mgl_data_spline(HCDT dat, mreal x,mreal y,mreal z);
-mreal mgl_data_linear(HCDT dat, mreal x,mreal y,mreal z);
-mreal mgl_data_spline_ext(HCDT dat, mreal x,mreal y,mreal z, mreal *dx,mreal *dy,mreal *dz);
-mreal mgl_data_linear_ext(HCDT dat, mreal x,mreal y,mreal z, mreal *dx,mreal *dy,mreal *dz);
-mreal mgl_data_solve(HCDT dat, mreal val, int spl);
-
-HMDT mgl_data_trace(HCDT d);
-HMDT mgl_data_resize(HCDT dat, long mx,long my,long mz);
-HMDT mgl_data_resize_box(HCDT dat, long mx,long my,long mz,mreal x1,mreal x2,mreal y1,mreal y2,mreal z1,mreal z2);
-HMDT mgl_data_hist(HCDT dat, long n, mreal v1, mreal v2, long nsub);
-HMDT mgl_data_hist_w(HCDT dat, HCDT weight, long n, mreal v1, mreal v2, long nsub);
-HMDT mgl_data_momentum(HCDT dat, char dir, const char *how);
-HMDT mgl_data_evaluate(HCDT dat, HCDT idat, HCDT jdat, HCDT kdat, int norm);
-void mgl_data_envelop(HMDT dat, char dir);
-void mgl_data_sew(HMDT dat, const char *dirs, mreal da);
-void mgl_data_crop(HMDT dat, long n1, long n2, char dir);
-void mgl_data_clean(HMDT dat, long id);
+void mgl_datac_hankel(HADT dat, const char *dir);
+void mgl_datac_fft(HADT dat, const char *dir);
+void mgl_datac_sinfft(HADT dat, const char *dir);
+void mgl_datac_cosfft(HADT dat, const char *dir);
 /******************************************************************************/
-/*		Data operations														 */
-/******************************************************************************/
-void mgl_data_mul_dat(HMDT dat, HCDT d);
-void mgl_data_div_dat(HMDT dat, HCDT d);
-void mgl_data_add_dat(HMDT dat, HCDT d);
-void mgl_data_sub_dat(HMDT dat, HCDT d);
-void mgl_data_mul_num(HMDT dat, mreal d);
-void mgl_data_div_num(HMDT dat, mreal d);
-void mgl_data_add_num(HMDT dat, mreal d);
-void mgl_data_sub_num(HMDT dat, mreal d);
-/******************************************************************************/
-HMDT mgl_pde_solve(HMGL gr, const char *ham, HCDT ini_re, HCDT ini_im, mreal dz, mreal k0,const char *opt);
-HMDT mgl_qo2d_solve(const char *ham, HCDT ini_re, HCDT ini_im, HCDT ray, mreal r, mreal k0, HMDT xx, HMDT yy);
-HMDT mgl_ray_trace(const char *ham, mreal x0, mreal y0, mreal z0, mreal px, mreal py, mreal pz, mreal dt, mreal tmax);
-HMDT mgl_jacobian_2d(HCDT x, HCDT y);
-HMDT mgl_jacobian_3d(HCDT x, HCDT y, HCDT z);
-HMDT mgl_transform_a(HCDT am, HCDT ph, const char *tr);
-HMDT mgl_transform(HCDT re, HCDT im, const char *tr);
-void mgl_data_fourier(HMDT re, HMDT im, const char *dir);
-HMDT mgl_data_stfa(HCDT re, HCDT im, long dn, char dir);
-
-HMDT mgl_triangulation_3d(HCDT x, HCDT y, HCDT z);
-HMDT mgl_triangulation_2d(HCDT x, HCDT y);
-/******************************************************************************/
-/*		Data creation functions												 */
+/*		Data creation functions												*/
 /******************************************************************************/
 void mgl_data_rearrange_(uintptr_t *dat, int *mx, int *my, int *mz);
 void mgl_data_set_float_(uintptr_t *dat, const float *A,int *NX,int *NY,int *NZ);
@@ -227,7 +152,6 @@ mreal mgl_data_max_real_(uintptr_t *dat, mreal *x, mreal *y, mreal *z);
 mreal mgl_data_min_int_(uintptr_t *dat, int *i, int *j, int *k);
 mreal mgl_data_min_real_(uintptr_t *dat, mreal *x, mreal *y, mreal *z);
 mreal mgl_data_momentum_val_(uintptr_t *dat, char *dir, mreal *m, mreal *w, mreal *s, mreal *k,int);
-void mgl_data_clean_(uintptr_t *dat, int *id);
 
 uintptr_t mgl_data_combine_(uintptr_t *dat1, uintptr_t *dat2);
 void mgl_data_extend_(uintptr_t *dat, int *n1, int *n2);
@@ -257,10 +181,6 @@ void mgl_data_fill_sample_(uintptr_t *dat, const char *how,int);
 
 mreal mgl_data_spline_(uintptr_t *dat, mreal *x,mreal *y,mreal *z);
 mreal mgl_data_linear_(uintptr_t *dat, mreal *x,mreal *y,mreal *z);
-mreal mgl_data_spline_ext_(uintptr_t *dat, mreal *x,mreal *y,mreal *z, mreal *dx,mreal *dy,mreal *dz);
-mreal mgl_data_linear_ext_(uintptr_t *dat, mreal *x,mreal *y,mreal *z, mreal *dx,mreal *dy,mreal *dz);
-mreal mgl_data_solve_(uintptr_t *dat, mreal *val, int *spl);
-
 uintptr_t mgl_data_trace_(uintptr_t *d);
 uintptr_t mgl_data_resize_(uintptr_t *dat, int *mx,int *my,int *mz);
 uintptr_t mgl_data_resize_box_(uintptr_t *dat, int *mx,int *my,int *mz,mreal *x1,mreal *x2,mreal *y1,mreal *y2,mreal *z1,mreal *z2);

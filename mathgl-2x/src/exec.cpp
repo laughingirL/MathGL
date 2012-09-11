@@ -347,6 +347,19 @@ void mglc_crop(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 		mglprintf(out,1024,L"%s.Crop(%d, %d, '%c');",a[0].s.c_str(), iint(a[1].v), iint(a[2].v), a[3].s.c_str()[0]);
 }
 //-----------------------------------------------------------------------------
+int mgls_clean(mglGraph *, long , mglArg *a, int k[10], const char *)
+{
+	if(k[0]==1 && k[1]==3)
+		a[0].d->Clean(iint(a[1].v));
+	else	return 1;
+	return 0;
+}
+void mglc_clean(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
+{
+	if(k[0]==1 && k[1]==3)
+		mglprintf(out,1024,L"%s.Clean(%d);",a[0].s.c_str(), iint(a[1].v));
+}
+//-----------------------------------------------------------------------------
 int mgls_cumsum(mglGraph *, long , mglArg *a, int k[10], const char *)
 {
 	if(k[0]==1 && k[1]==2)	a[0].d->CumSum(a[1].s.c_str());
@@ -3583,6 +3596,7 @@ mglCommand mgls_base_cmd[] = {
 	{"chart","Draw chart","chart Dat ['fmt']", mgls_chart, mglc_chart,0},
 	{"chdir","Change current directory","chdir 'dir'", mgls_chdir, mglc_chdir,2},
 	{"circle","Draw circle","circle x y r ['fmt']|x y z r ['fmt']", mgls_circle, mglc_circle,1},
+	{"clean","Remove duplicate rows","clean Dat id", mgls_clean, mglc_clean,3},
 	{"clearlegend","Clear legend antries","clearlegend", mgls_clearlegend, mglc_clearlegend,2},
 	{"clf","Clear picture","clf", mgls_clf, mglc_clf,1},
 	{"cloud","Draw cloud","cloud Adat ['fmt']|Xdat Ydat Zdat Adat ['fmt']", mgls_cloud, mglc_cloud,0},
