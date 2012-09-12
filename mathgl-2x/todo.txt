@@ -41,7 +41,7 @@ http_request.onreadystatechange = function () {
 16. curved text (in new sample) look not so good
 17. Auto axis range for formulas, like AutoRange("y(x)") or AutoRange('x',"x(t)").
 
-18. Add mglDataC for complex data -- main diff is reading/saving data
+18. Test mglDataC -- main diff is reading/saving data
 
 19. Drawing of saddle quadrangles
 
@@ -60,6 +60,7 @@ http_request.onreadystatechange = function () {
 4. Examples of animation, u3d, x3d, js and so on
 
 5. Docs about WriteJSON()
+6. Docs about mglDataC
 
 ============= UDAV =============
 

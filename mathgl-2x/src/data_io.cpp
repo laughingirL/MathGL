@@ -637,7 +637,7 @@ void mgl_data_squeeze(HMDT d, long rx,long ry,long rz,long smooth)
 		mreal s = 0;
 		for(k1=k*rz;k1<k*rz+dz;k1++)	for(j1=j*ry;j1<j*ry+dz;j1++)	for(i1=i*rx;i1<i*rx+dx;i1++)
 			s += d->a[i1+nx*(j1+ny*k1)];
-		b[i+kx*(j+ky*k)] = s/dx*dy*dz;
+		b[i+kx*(j+ky*k)] = s/(dx*dy*dz);
 	}
 	if(!d->link)	delete [](d->a);
 	d->a=b;	d->nx = kx;  d->ny = ky;  d->nz = kz;	d->NewId();	d->link=false;

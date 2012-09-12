@@ -17,6 +17,7 @@
 * Add mglData::Solve() for finding x-value where dat(x)=val.
 * Add mglData::Clean() for removing rows with duplicate values for given column.
 * Functions mglData::Spline*, mglData::Linear* now can return gradient at the point.
+* Add class mglDataC for complex data arrays.
 
 
 * Add dialog for data arguments in UDAV.

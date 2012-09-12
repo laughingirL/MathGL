@@ -1200,6 +1200,7 @@ void *mgl_hist_2(void *par)
 		z = d*(i/(nx*ny*ns*ns));
 		f = sp ? mglSpline3(a,nx,ny,nz,x,y,z) : mglLinear(a,nx,ny,nz,x,y,z);
 		if(c)	w = sp ? mglSpline3(c,nx,ny,nz,x,y,z) : mglLinear(c,nx,ny,nz,x,y,z);
+		if(mgl_isnan(f) || mgl_isnan(w))	continue;
 		k = long(n*(f-v[0])/(v[1]-v[0]));
 		if(k>=0 && k<n)	b[k] += w * d*d*d;
 	}

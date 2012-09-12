@@ -228,10 +228,10 @@ public:
 	inline mglData Trace() const
 	{	return mglData(true,mgl_data_trace(this));	}
 	/// Create n-th points distribution of this data values in range [v1, v2]
-	mglData Hist(long n,mreal v1=0,mreal v2=1, long nsub=0) const
+	inline mglData Hist(long n,mreal v1=0,mreal v2=1, long nsub=0) const
 	{	return mglData(true,mgl_data_hist(this,n,v1,v2,nsub));	}
 	/// Create n-th points distribution of this data values in range [v1, v2] with weight \a w
-	mglData Hist(const mglData &w, long n,mreal v1=0,mreal v2=1, long nsub=0) const
+	inline mglData Hist(const mglData &w, long n,mreal v1=0,mreal v2=1, long nsub=0) const
 	{	return mglData(true,mgl_data_hist_w(this,&w,n,v1,v2,nsub));	}
 	/// Get array which is result of summation in given direction or directions
 	inline mglData Sum(const char *dir) const

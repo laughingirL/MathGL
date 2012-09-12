@@ -51,7 +51,7 @@ public:
 	/// Get pointer to internal mglCanvas object
 	inline HMGL Self()	{	return gr;	}
 	/// Set default parameter for plotting
-	inline void DefaultPlotParam()	{	mgl_set_def_param(gr);	}
+	inline void DefaultPlotParam()			{	mgl_set_def_param(gr);	}
 	/// Set name of plot for saving filename
 	inline void SetPlotId(const char *id)	{	mgl_set_plotid(gr,id);	}
 
@@ -60,7 +60,7 @@ public:
 	/// Set default value of alpha-channel
 	inline void SetAlphaDef(mreal alpha)	{	mgl_set_alpha_default(gr, alpha);	}
 	/// Set the transparency type (0 - usual, 1 - glass, 2 - lamp)
-	inline void SetTranspType(int type)		{	mgl_set_transp_type(gr, type);}
+	inline void SetTranspType(int type)		{	mgl_set_transp_type(gr, type);	}
 
 	/// Set the using of light on/off.
 	inline void Light(bool enable)			{	mgl_set_light(gr, enable);	}
@@ -85,15 +85,15 @@ public:
 	/// Set size of arrows
 	inline void SetArrowSize(mreal size)	{	mgl_set_arrow_size(gr, size);	}
 	/// Set number of mesh lines
-	inline void SetMeshNum(int num)			{	mgl_set_meshnum(gr, num);		}
+	inline void SetMeshNum(int num)			{	mgl_set_meshnum(gr, num);	}
 
 	/// Set cutting for points outside of bounding box
-	inline void SetCut(bool cut)			{	mgl_set_cut(gr, cut);	}
+	inline void SetCut(bool cut)				{	mgl_set_cut(gr, cut);	}
 	/// Set additional cutting box
 	inline void SetCutBox(mglPoint p1, mglPoint p2)
 	{	mgl_set_cut_box(gr, p1.x, p1.y, p1.z, p2.x, p2.y, p2.z);	}
 	/// Set the cutting off condition (formula)
-	inline void CutOff(const char *EqC)	{	mgl_set_cutoff(gr, EqC);	}
+	inline void CutOff(const char *EqC)		{	mgl_set_cutoff(gr, EqC);	}
 
 	/// Set default font size
 	inline void SetFontSize(mreal size)		{	mgl_set_font_size(gr, size);	}
@@ -121,7 +121,7 @@ public:
 	inline void SetDefScheme(const char *sch)	{	mgl_set_def_sch(gr, sch);	}
 
 	/// Get last warning code
-	inline int  GetWarn()			{	return mgl_get_warn(gr);}
+	inline int  GetWarn()	{	return mgl_get_warn(gr);}
 	/// Set warning code ant fill message
 	inline void SetWarn(int code, const char *info)	{	mgl_set_warn(gr,code,info);	}
 	/// Set buffer for warning messages
