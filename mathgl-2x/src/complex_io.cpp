@@ -26,7 +26,6 @@
 #include "mgl2/datac.h"
 #include "mgl2/evalc.h"
 
-//#define isn(ch)		((ch)<' ' && (ch)!='\t')
 #define isn(ch)		((ch)=='\n')
 char *mgl_read_gz(gzFile fp);
 //-----------------------------------------------------------------------------
@@ -47,7 +46,6 @@ void mgl_delete_datac_(uintptr_t *d)
 //-----------------------------------------------------------------------------
 void mglFromStr(HADT d,char *buf,long NX,long NY,long NZ)	// TODO: add multithreading read
 {
-// TODO: add parsing complex numbers, like N1+N2i or N1+iN2 or (N1,N2) + possible spaces
 	if(NX<1 || NY <1 || NZ<1)	return;
 	mgl_datac_create(d, NX,NY,NZ);
 	long nb = strlen(buf);
@@ -71,9 +69,15 @@ void mglFromStr(HADT d,char *buf,long NX,long NY,long NZ)	// TODO: add multithre
 			while(buf[j]<=' ' && j<nb)	j++;
 		}
 		char *s=buf+j;
-		while(buf[j]>' ' && buf[j]!=',' && j<nb)	j++;
+		while(buf[j]>=' ' && buf[j]!=';' && j<nb)	j++;
 		buf[j]=0;
-		d->a[i] = atof(s);
+		double re=0,im=0;	size_t ll=strlen(s);
+		if(*s=='(')		sscanf(s,"(%lg,%lg)",&re,&im);
+		else if(*s=='[')	sscanf(s,"[%lg,%lg]",&re,&im);
+		else if(*s=='{')	sscanf(s,"{%lg,%lg}",&re,&im);
+		else if(s[ll]=='i')	{	s[ll] = 0;	sscanf(s,"%lg+%lg)",&re,&im);	}
+		else		sscanf(s,"%lg+i%lg",&re,&im);
+		d->a[i] = dual(re,im);
 		i++;	if(i>=NX*NY*NZ)	break;
 	}
 }
@@ -239,7 +243,7 @@ int mgl_datac_read(HADT d, const char *fname)
 		while(buf[i]=='#')	{	while(!isn(buf[i]) && i<nb)	i++;	}
 		ch = buf[i];
 		if(ch>' ' && !first)	first=true;
-		if(first && (ch=='\t' || ch==',') && buf[i+1]>' ') k++;
+		if(first && (ch=='\t' || ch==';') && buf[i+1]!='\t') k++;	// ',' is not valid delimiter for complex arrays
 	}
 	first = false;
 	for(i=0;i<nb-1;i++)					// determine ny
@@ -350,7 +354,7 @@ int mgl_datac_read_mat(HADT d, const char *fname, long dim)
 				while(b[i]=='#')	{	while(!isn(b[i]) && b[i])	i++;	}
 				ch = b[i];
 				if(ch>' ' && !first)	first=true;
-				if(first && (ch==' ' || ch=='\t' || ch==',') && b[i+1]>' ') nx++;
+				if(first && (ch=='\t' || ch==';') && b[i+1]!='\t') nx++;
 			}
 		}
 	}
@@ -526,7 +530,7 @@ void *mgl_cmodify(void *par)
 void mgl_datac_modify(HADT d, const char *eq,long dim)
 {
 	long nx=d->nx, ny=d->ny, nz=d->nz, par[3]={nx,ny,nz};
-	mglFormula f(eq);
+	mglFormulaC f(eq);
 	if(dim<0)	dim=0;
 	if(nz>1)	// 3D array
 	{
@@ -548,7 +552,7 @@ void mgl_datac_modify_vw(HADT d, const char *eq,HCDT vdat,HCDT wdat)
 	const mglDataC *v = dynamic_cast<const mglDataC *>(vdat);
 	const mglDataC *w = dynamic_cast<const mglDataC *>(wdat);
 	long nn = d->nx*d->ny*d->nz, par[3]={d->nx,d->ny,d->nz};
-	mglFormula f(eq);
+	mglFormulaC f(eq);
 	if(v && w && v->nx*v->ny*v->nz==nn && w->nx*w->ny*w->nz==nn)
 		mglStartThreadC(mgl_cmodify,0,nn,d->a,v->a,w->a,par,&f);
 	else if(v && v->nx*v->ny*v->nz==nn)
@@ -587,7 +591,7 @@ void mgl_datac_fill_eq(HMGL gr, HADT d, const char *eq, HCDT vdat, HCDT wdat, co
 	if(d->nx>1)	xx[1] = (gr->Max.x-gr->Min.x)/(d->nx-1.);
 	if(d->ny>1)	xx[3] = (gr->Max.y-gr->Min.y)/(d->ny-1.);
 	if(d->nz>1)	xx[5] = (gr->Max.z-gr->Min.z)/(d->nz-1.);
-	mglFormula f(eq);
+	mglFormulaC f(eq);
 	mglStartThreadC(mgl_cfill_f,0,nn,d->a,v?v->a:0,w?w->a:0,par,&f,xx);
 	gr->LoadState();
 }

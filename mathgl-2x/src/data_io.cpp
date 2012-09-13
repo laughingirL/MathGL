@@ -78,7 +78,7 @@ void mglFromStr(HMDT d,char *buf,long NX,long NY,long NZ)	// TODO: add multithre
 			while(buf[j]<=' ' && j<nb)	j++;
 		}
 		char *s=buf+j;
-		while(buf[j]>' ' && buf[j]!=',' && j<nb)	j++;
+		while(buf[j]>' ' && buf[j]!=',' && buf[j]!=';' && j<nb)	j++;
 		buf[j]=0;
 		d->a[i] = atof(s);
 		i++;	if(i>=NX*NY*NZ)	break;
@@ -303,7 +303,7 @@ int mgl_data_read(HMDT d, const char *fname)
 		while(buf[i]=='#')	{	while(!isn(buf[i]) && i<nb)	i++;	}
 		ch = buf[i];
 		if(ch>' ' && !first)	first=true;
-		if(first && (ch==' ' || ch=='\t' || ch==',') && buf[i+1]>' ') k++;
+		if(first && (ch==' ' || ch=='\t' || ch==',' || ch==';') && buf[i+1]>' ') k++;
 	}
 	first = false;
 	for(i=0;i<nb-1;i++)					// determine ny
@@ -414,7 +414,7 @@ int mgl_data_read_mat(HMDT d, const char *fname, long dim)
 				while(b[i]=='#')	{	while(!isn(b[i]) && b[i])	i++;	}
 				ch = b[i];
 				if(ch>' ' && !first)	first=true;
-				if(first && (ch==' ' || ch=='\t' || ch==',') && b[i+1]>' ') nx++;
+				if(first && (ch==' ' || ch=='\t' || ch==',' || ch==';') && b[i+1]>' ') nx++;
 			}
 		}
 	}

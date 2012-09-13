@@ -22,6 +22,7 @@
 /******************************************************************************/
 #include "mgl2/base_cf.h"
 #include "mgl2/data_cf.h"
+#include "mgl2/datac_cf.h"
 #include "mgl2/cont.h"
 #include "mgl2/fit.h"
 #include "mgl2/plot.h"

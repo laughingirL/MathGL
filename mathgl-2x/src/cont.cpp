@@ -856,7 +856,7 @@ void mgl_contv_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, 
 		if(i>0)	dv = v->v(i-1)-v->v(i);
 		else if(i<v->GetNx()-1)	dv = v->v(i)-v->v(i+1);
 		if(fixed)	dv=-dv;
-		mgl_contv_gen(gr,v0,dv,z,x,y,&zz,gr->GetC(s,v0),j);	// TODO: ContV -- change here!!!
+		mgl_contv_gen(gr,v0,dv,z,x,y,&zz,gr->GetC(s,v0),j);
 	}
 	gr->EndGroup();
 }

@@ -53,7 +53,7 @@ void mgl_cloud_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, con
 
 	// x, y, z -- have the same size as a
 	n /= tx;	m /= ty;	l /= tz;
-	long *pos=new long[n*m*l];		// TODO check if n<tx
+	long *pos=new long[n*m*l];
 	gr->Reserve(n*m*l);
 	mglPoint p,q=mglPoint(NAN);
 	for(k=0;k<l;k++)	for(j=0;j<m;j++)	for(i=0;i<n;i++)
@@ -62,7 +62,7 @@ void mgl_cloud_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, con
 		p = both ? mglPoint(x->v(i*tx,j*ty,k*tz),y->v(i*tx,j*ty,k*tz),z->v(i*tx,j*ty,k*tz)) : mglPoint(x->v(i*tx),y->v(j*ty),z->v(k*tz));
 		aa = gr->GetA(a->v(i*tx,j*ty,k*tz));
 		bb = inv ? (1-aa)*(1-aa)*alpha : aa*aa*alpha;
-		pos[i+n*(j+m*k)] = gr->AddPnt(p,gr->GetC(ss,aa,false),q,bb);	// TODO check boundary
+		pos[i+n*(j+m*k)] = gr->AddPnt(p,gr->GetC(ss,aa,false),q,bb);
 	}
 	if(dot)	for(i=0;i<n*m*l;i++)	gr->mark_plot(pos[i],'.');
 	else	for(i=0;i<n;i++)	for(j=0;j<m;j++)	for(k=0;k<l;k++)

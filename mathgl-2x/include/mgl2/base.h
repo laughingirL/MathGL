@@ -309,6 +309,8 @@ public:
 	/// Set default font size
 	inline void SetFontSize(mreal val)	{	FontSize=val>0 ? val:FontSize*val;	}
 	inline mreal GetFontSize() const	{	return FontSize;	}
+	inline mreal TextWidth(const char *text, const char *font, mreal size) const
+	{	return (size<0?-size*FontSize:size)*font_factor*fnt->Width(text,(font&&*font)?font:FontDef)/8;	}
 	inline mreal TextWidth(const wchar_t *text, const char *font, mreal size) const
 	{	return (size<0?-size*FontSize:size)*font_factor*fnt->Width(text,(font&&*font)?font:FontDef)/8;	}
 	inline mreal TextHeight(const char *font, mreal size) const

@@ -73,6 +73,9 @@ void mgl_labelw_xy(HMGL graph, HCDT x, HCDT y, const wchar_t *text, const char *
 void mgl_label_y(HMGL graph, HCDT y, const char *text, const char *fnt, const char *opt);
 void mgl_labelw_y(HMGL graph, HCDT y, const wchar_t *text, const char *fnt, const char *opt);
 /******************************************************************************/
+void mgl_tablew(HMGL gr, HCDT val, const wchar_t *text, const char *fnt, const char *opt);
+void mgl_table(HMGL gr, HCDT val, const char *text, const char *fnt, const char *opt);
+/******************************************************************************/
 /******************************************************************************/
 void mgl_mark_(uintptr_t *gr, mreal *x,mreal *y,mreal *z,const char *mark,int);
 void mgl_ball_(uintptr_t *gr, mreal *x,mreal *y,mreal *z);
@@ -108,6 +111,8 @@ void mgl_textmark_(uintptr_t *graph, uintptr_t *y, const char *text, const char 
 void mgl_label_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *text, const char *fnt, const char *opt,int,int,int);
 void mgl_label_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, const char *text, const char *fnt, const char *opt,int,int,int);
 void mgl_label_y_(uintptr_t *graph, uintptr_t *y, const char *text, const char *fnt, const char *opt,int,int,int);
+/******************************************************************************/
+void mgl_table_(uintptr_t *gr, uintptr_t *val, const char *text, const char *fnt, const char *opt,int,int,int);
 /******************************************************************************/
 void mgl_dew_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch, const char *opt,int,int);
 void mgl_dew_2d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, const char *sch, const char *opt,int,int l);

@@ -46,6 +46,17 @@ void smgl_combined(mglGraph *gr);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
+	gr->Light(true);
+	const char *p = MGL_DEF_PAL;
+	size_t i,l=strlen(p);
+	char stl[2] = "r";
+	gr->SetQuality(6);
+	for(i=0;i<1000;i++)
+	{
+		stl[0] = p[int(l*mgl_rnd())];
+		gr->Sphere(mglPoint(mgl_rnd()*2-1,mgl_rnd()*2-1),0.05,stl);
+	}
+	printf("pnt = %ld, prm = %ld\n",gr->Self()->GetPntNum(),gr->Self()->GetPrmNum());
 /*	mglData c;	mgls_prepare3d(&c);	gr->Light(true);	gr->Alpha(true);
 	gr->SubPlot(2,1,0);	gr->Rotate(50,60);	gr->Box();	gr->Surf3(c);
 	gr->SubPlot(2,1,1);	gr->Rotate(50,60);	gr->Box();	gr->Surf3(c,"","zrange 0 2");

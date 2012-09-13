@@ -706,7 +706,7 @@ void mgl_write_tex(HMGL gr, const char *fname,const char *descr)
 		{
 			if(!strchr("xsSoO",q.n4))	s *= 1.1;
 			wp = 1;
-			switch(q.n4)	// TODO up to here !!!!!!!!!!!!!!!!!!!!
+			switch(q.n4)
 			{
 				case 'P':
 					fprintf(fp, "\\mglp{%g}{%g}{%s} \\mgls{%g}{%g}{%s}\n", x,y,cname,x,y,cname);	break;
@@ -747,7 +747,7 @@ void mgl_write_tex(HMGL gr, const char *fname,const char *descr)
 		}
 		else if(q.type==1)	// lines
 		{
-			//			const char *dash[]={"", "8 8","4 4","1 3","7 4 1 4","3 2 1 2"};
+			//const char *dash[]={"", "8 8","4 4","1 3","7 4 1 4","3 2 1 2"};
 			const char *w[]={"semithick","thick","very thick","ultra thick"};
 			register int iw=int(q.w-0.5);	if(iw>3)	iw=3;
 			if(iw<0)	fprintf(fp,"\\draw[%s] ",cname);

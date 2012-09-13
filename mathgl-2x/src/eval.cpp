@@ -43,16 +43,16 @@ EQ_ADD,		// addition x+y
 EQ_SUB,		// substraction x-y
 EQ_MUL,		// multiplication x*y
 EQ_DIV,		// division x/y
-EQ_IPOW,	// power x^n for integer n
+EQ_IPOW,		// power x^n for integer n
 EQ_POW,		// power x^y
 EQ_MOD,		// x modulo y
 EQ_LOG,		// logarithm of x on base a, log_a(x) = ln(x)/ln(a)
 EQ_ARG,		// argument of complex number arg(x,y) = atan2(x,y)
 // special functions of 2 arguments
-EQ_BESJ,	// regular cylindrical Bessel function of fractional order
-EQ_BESY,	// irregular cylindrical Bessel function of fractional order
-EQ_BESI,	// regular modified Bessel function of fractional order
-EQ_BESK,	// irregular modified Bessel function of fractional order
+EQ_BESJ,		// regular cylindrical Bessel function of fractional order
+EQ_BESY,		// irregular cylindrical Bessel function of fractional order
+EQ_BESI,		// regular modified Bessel function of fractional order
+EQ_BESK,		// irregular modified Bessel function of fractional order
 EQ_ELE,		// elliptic integral E(\phi,k) = \int_0^\phi dt   \sqrt((1 - k^2 \sin^2(t)))
 EQ_ELF,		// elliptic integral F(\phi,k) = \int_0^\phi dt 1/\sqrt((1 - k^2 \sin^2(t)))
 EQ_LP,		// Legendre polynomial P_l(x), (|x|<=1, l>=0)
@@ -61,27 +61,27 @@ EQ_BETA,	// beta function B(x,y) = Gamma(x)*Gamma(y)/Gamma(x+y)
 EQ_SIN,		// sine function \sin(x).			!!! MUST BE FIRST 1-PLACE FUNCTION
 EQ_COS,		// cosine function \cos(x).
 EQ_TAN,		// tangent function \tan(x).
-EQ_ASIN,	// inverse sine function \sin(x).
-EQ_ACOS,	// inverse cosine function \sin(x).
-EQ_ATAN,	// inverse tangent function \tan(x).
-EQ_SINH,	// hyperbolic sine function \sin(x).
-EQ_COSH,	// hyperbolic cosine function \sin(x).
-EQ_TANH,	// hyperbolic tangent function \tan(x).
+EQ_ASIN,		// inverse sine function \sin(x).
+EQ_ACOS,		// inverse cosine function \sin(x).
+EQ_ATAN,		// inverse tangent function \tan(x).
+EQ_SINH,		// hyperbolic sine function \sin(x).
+EQ_COSH,		// hyperbolic cosine function \sin(x).
+EQ_TANH,		// hyperbolic tangent function \tan(x).
 EQ_ASINH,	// inverse hyperbolic sine function \sin(x).
 EQ_ACOSH,	// inverse hyperbolic cosine function \sin(x).
 EQ_ATANH,	// inverse hyperbolic tangent function \tan(x).
-EQ_SQRT,	// square root function \sqrt(x)
+EQ_SQRT,		// square root function \sqrt(x)
 EQ_EXP,		// exponential function \exp(x)
 EQ_LN,		// logarithm of x, ln(x)
 EQ_LG,		// decimal logarithm of x, lg(x) = ln(x)/ln(10)
 EQ_SIGN,	// sign of number
-EQ_STEP,	// step function
+EQ_STEP,		// step function
 EQ_INT,		// integer part [x]
 EQ_ABS,		// absolute value of x
 // special functions of 1 argument
 EQ_LI2,		// dilogarithm for a real argument Li2(x) = - \Re \int_0^x ds \log(1-s)/s.
-EQ_ELLE,	// complete elliptic integral is denoted by E(k) = E(\pi/2, k).
-EQ_ELLK,	// complete elliptic integral is denoted by K(k) = F(\pi/2, k).
+EQ_ELLE,		// complete elliptic integral is denoted by E(k) = E(\pi/2, k).
+EQ_ELLK,		// complete elliptic integral is denoted by K(k) = F(\pi/2, k).
 EQ_AI,		// Airy function Ai(x)
 EQ_BI,		// Airy function Bi(x)
 EQ_ERF,		// error function erf(x) = (2/\sqrt(\pi)) \int_0^x dt \exp(-t^2).
@@ -134,7 +134,7 @@ bool mglCheck(char *str,int n);
 int mglFindInText(char *str,const char *lst);
 //-----------------------------------------------------------------------------
 #if MGL_HAVE_GSL
-gsl_rng *mgl_rng=0;	// TODO: should be deleted by gsl_rng_free() but I don't know where :(
+gsl_rng *mgl_rng=0;	// NOTE: should be deleted by gsl_rng_free() but I don't know where :(
 #endif
 void mgl_srnd(long seed)
 {
@@ -250,11 +250,11 @@ mglFormula::mglFormula(const char *string)
 	}
 
 	for(n=0;n<len;n++)	if(str[n]=='(')	break;
-	if(n>=len)							// this is number or variable
+	if(n>=len)								// this is number or variable
 	{
 		Kod = EQ_NUM;
 //		Left = Right = 0;
-		if(str[1]==0 && str[0]>='a' && str[0]<='z')	// avalible variables
+		if(str[1]==0 && str[0]>='a' && str[0]<='z')	// available variables
 		{	Kod=EQ_A;	Res = str[0]-'a';	}
 		else if(!strcmp(str,"rnd")) Kod=EQ_RND;
 		else if(!strcmp(str,"pi")) Res=M_PI;

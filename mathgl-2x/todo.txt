@@ -40,14 +40,9 @@ http_request.onreadystatechange = function () {
 
 16. curved text (in new sample) look not so good
 17. Auto axis range for formulas, like AutoRange("y(x)") or AutoRange('x',"x(t)").
-
-18. Test mglDataC -- main diff is reading/saving data
-
-19. Drawing of saddle quadrangles
+18. Drawing of saddle quadrangles
 
 20. Test mglcgi
-
-21. Add Evaluate() sample
 
 +24. MGL testing system ???
 
@@ -61,6 +56,15 @@ http_request.onreadystatechange = function () {
 
 5. Docs about WriteJSON()
 6. Docs about mglDataC
+7. Docs about MGLD format
+8. Docs about VFM format
+
+9. Hint about low memory usage -- SetQuality(6)
+	gr->SetQuality(6);
+	for(i=0;i<1000;i++)
+		gr->Sphere(mglPoint(mgl_rnd()*2-1,mgl_rnd()*2-1),0.05);
+
+10. Add Evaluate() sample
 
 ============= UDAV =============
 
@@ -94,6 +98,8 @@ The primitives are: ball, line, ellipse/circle, rect, rhomb, text, curve. May be
 13. Check disabling completer in UDAV
 
 14. Zoom by mouse wheel + shift by right button
+
+15. Button to switch between Zoom/ZoomAxis + remove any zoom at switching
 
 ============= UNSURE ===========
 

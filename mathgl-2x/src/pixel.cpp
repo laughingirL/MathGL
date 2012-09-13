@@ -524,7 +524,7 @@ void mglCanvas::ClfZB()
 	if(Quality&4)	return;
 	register long i,n=Width*Height;
 	memset(C,0,12*n);	memset(OI,0,n*sizeof(int));
-	for(i=0;i<3*n;i++)	Z[i] = -1e20f;	// TODO: Parallelization ?!?
+	for(i=0;i<3*n;i++)	Z[i] = -1e20f;
 	clr(MGL_FINISHED);
 }
 //-----------------------------------------------------------------------------

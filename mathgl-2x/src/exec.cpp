@@ -35,7 +35,7 @@ int mgls_addlegend(mglGraph *gr, long , mglArg *a, int k[10], const char *)
 	return 0;
 }
 void mglc_addlegend(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
-{	if(k[0]==2 && k[1]==2)	mglprintf(out,1024,L"gr->AddLegend(\"%ls\", \"%s\");",a[0].w.c_str(),a[1].s.c_str());	}
+{	if(k[0]==2 && k[1]==2)	mglprintf(out,1024,L"gr->AddLegend(L\"%ls\", \"%s\");",a[0].w.c_str(),a[1].s.c_str());	}
 //-----------------------------------------------------------------------------
 int mgls_addto(mglGraph *, long , mglArg *a, int k[10], const char *)
 {
@@ -2520,11 +2520,24 @@ int mgls_label(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 void mglc_label(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==2)
-		mglprintf(out,1024,L"gr->Label(%s, %s, %s, \"%ls\", \"%s\", \"%s\");", a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str(), a[3].w.c_str(), k[4]==2?a[4].s.c_str():"",opt);
+		mglprintf(out,1024,L"gr->Label(%s, %s, %s, L\"%ls\", \"%s\", \"%s\");", a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str(), a[3].w.c_str(), k[4]==2?a[4].s.c_str():"",opt);
 	else if(k[0]==1 && k[1]==1 && k[2]==2)
-		mglprintf(out,1024,L"gr->Label(%s, %s, \"%ls\", \"%s\", \"%s\");", a[0].s.c_str(), a[1].s.c_str(), a[2].w.c_str(), k[3]==2?a[3].s.c_str():"",opt);
+		mglprintf(out,1024,L"gr->Label(%s, %s, L\"%ls\", \"%s\", \"%s\");", a[0].s.c_str(), a[1].s.c_str(), a[2].w.c_str(), k[3]==2?a[3].s.c_str():"",opt);
 	else if(k[0]==1 && k[1]==2)
-		mglprintf(out,1024,L"gr->Label(%s, \"%ls\", \"%s\", \"%s\");", a[0].s.c_str(), a[1].w.c_str(), k[2]==2?a[2].s.c_str():"",opt);
+		mglprintf(out,1024,L"gr->Label(%s, L\"%ls\", \"%s\", \"%s\");", a[0].s.c_str(), a[1].w.c_str(), k[2]==2?a[2].s.c_str():"",opt);
+}
+//-----------------------------------------------------------------------------
+int mgls_table(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
+{
+	if(k[0]==1)
+		gr->Table(*(a[0].d), k[1]==2?a[1].w.c_str():L"", k[2]==2?a[2].s.c_str():":x#",opt);
+	else	return 1;
+	return 0;
+}
+void mglc_table(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
+{
+	if(k[0]==1)
+		mglprintf(out,1024,L"gr->Table(%s, L\"%ls\", \"%s\", \"%s\");", a[0].s.c_str(), k[1]==2?a[1].w.c_str():L"", k[2]==2?a[2].s.c_str():"",opt);
 }
 //-----------------------------------------------------------------------------
 int mgls_xrange(mglGraph *gr, long , mglArg *a, int k[10], const char *)
@@ -3764,6 +3777,7 @@ mglCommand mgls_base_cmd[] = {
 	{"surfa","Draw solid surface transpared by other data","surfa Zdat Cdat ['fmt']|Xdat Ydat Zdat Cdat ['fmt']", mgls_surfa, mglc_surfa,0},
 	{"surfc","Draw solid surface colored by other data","surfc Zdat Cdat ['fmt']|Xdat Ydat Zdat Cdat ['fmt']", mgls_surfc, mglc_surfc,0},
 	{"swap","Swap data (usefull after Fourier transform)","swap Dat 'dir'", mgls_swap, mglc_swap,0},
+	{"table","Draw table with data values","label ydat ['txt' 'stl'='']", mgls_table, mglc_table,1},
 	{"tape","Draw binormales for 1D data","tape Ydat ['fmt']|Xdat Ydat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_tape, mglc_tape,0},
 	{"tens","Draw tension plot for 1D data","tens Ydat Cdat ['fmt']|Xdat Ydat Cdat ['fmt']|Xdat Ydat Zdat Cdat ['fmt']", mgls_tens, mglc_tens,0},
 	{"ternary","Switch on/off to use ternary axis","ternary val", mgls_ternary, mglc_ternary,2},

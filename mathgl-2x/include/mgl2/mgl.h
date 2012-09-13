@@ -23,6 +23,7 @@
 #include "mgl2/define.h"
 #include "mgl2/mgl_cf.h"
 #include "mgl2/data.h"
+#include "mgl2/datac.h"
 //-----------------------------------------------------------------------------
 /// Wrapper class for all graphics
 class mglGraph
@@ -669,6 +670,12 @@ public:
 	inline void Label(const mglDataA &y, const wchar_t *text, const char *fnt="", const char *opt="")
 	{	mgl_labelw_y(gr, &y, text, fnt, opt);	}
 
+	/// Draw table for values \a val along given direction with row labels \a text
+	inline void Table(const mglDataA &val, const char *text="", const char *fnt=":#x", const char *opt="")
+	{	mgl_table(gr, &val, text, fnt, opt);	}
+	inline void Table(const mglDataA &val, const wchar_t *text=L"", const char *fnt=":#x", const char *opt="")
+	{	mgl_tablew(gr, &val, text, fnt, opt);	}
+
 	/// Draw tube with radius r for points in arrays {x,y,z}
 	inline void Tube(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &r, const char *pen="", const char *opt="")
 	{	mgl_tube_xyzr(gr, &x, &y, &z, &r, pen, opt);	}
@@ -1091,7 +1098,14 @@ public:
 	{	mgl_data_fill_eq(gr, &u, eq, &v, 0, opt);	}
 	inline void Fill(mglData &u, const char *eq, const mglDataA &v, const mglDataA &w, const char *opt="")
 	{	mgl_data_fill_eq(gr, &u, eq, &v, &w, opt);	}
-
+	/// Fill data by formula with x,y,z in range [Min, Max]
+	inline void Fill(mglDataC &u, const char *eq, const char *opt="")
+	{	mgl_datac_fill_eq(gr, &u, eq, 0, 0, opt);	}
+	inline void Fill(mglDataC &u, const char *eq, const mglDataA &v, const char *opt="")
+	{	mgl_datac_fill_eq(gr, &u, eq, &v, 0, opt);	}
+	inline void Fill(mglDataC &u, const char *eq, const mglDataA &v, const mglDataA &w, const char *opt="")
+	{	mgl_datac_fill_eq(gr, &u, eq, &v, &w, opt);	}
+	
 	/// Set the data by triangulated surface values assuming x,y,z in range [Min, Max]
 	inline void DataGrid(mglData &d, const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *opt="")
 	{	mgl_data_grid(gr,&d,&x,&y,&z,opt);	}

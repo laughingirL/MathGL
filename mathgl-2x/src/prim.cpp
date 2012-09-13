@@ -693,7 +693,7 @@ void mgl_labelw_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const wchar_t *text, const 
 	long j,m,mx,my,mz,n=y->GetNx();
 	if(mgl_check_dim1(gr,x,y,z,0,"Label"))	return;
 
-	mreal size=gr->SaveState(opt);	if(mgl_isnan(size))	size=-0.7;
+	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Label",cgid++);
 	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();	m = z->GetNy() > m ? z->GetNy() : m;
 
@@ -723,7 +723,7 @@ void mgl_labelw_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const wchar_t *text, const 
 				else if(text[k+1]=='z')	mglprintf(buf+l,nn-l,L"%.2g",zz);
 				l=wcslen(buf);	k++;
 			}
-			gr->text_plot(kk, buf, fnt, size, 0.05);
+			gr->text_plot(kk, buf, fnt, -0.7, 0.05);
 		}
 	}
 	delete []buf;	gr->EndGroup();
@@ -779,4 +779,47 @@ void mgl_label_y_(uintptr_t *gr, uintptr_t *y, const char *text, const char *fnt
 	char *f=new char[n+1];	memcpy(f,fnt,n);	f[n]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_labelw_y(_GR_, _DA_(y),s,f, o);	delete []o;	delete []s;	delete []f;	}
+//-----------------------------------------------------------------------------
+//
+//	Table series
+//
+//-----------------------------------------------------------------------------
+void mgl_tablew(HMGL gr, HCDT val, const wchar_t *text, const char *fnt, const char *opt)
+{
+	long i,j,m=val->GetNy(),n=val->GetNx();
+	mreal pos=gr->SaveState(opt);
+	static int cgid=1;	gr->StartGroup("Table",cgid++);
+	bool grid = mglchr(fnt,'#');
+	if(!text)	text=L"";
+	
+	char *buf = new char[m*32], sng[32];
+	std::vector<std::string> str;
+	for(i=0;i<n;i++)		// prepare list of strings first
+	{
+		*buf=0;
+		for(j=0;j+1<m;j++)
+		{
+			sprintf(sng,"%.3g\n",val->v(i,j));
+			strcat(buf,sng);
+		}
+		sprintf(sng,"%.3g",val->v(i,m-1));
+		str.push_back(buf);
+	}
+	delete []buf;
+
+	mreal w = gr->TextWidth(text,fnt,-1);
+	for(i=0;i<n;i++)		// find width for given font size
+		w+= gr->TextWidth(str[i].c_str(),fnt,-1);
+}
+//-----------------------------------------------------------------------------
+void mgl_table(HMGL gr, HCDT val, const char *text, const char *fnt, const char *opt)
+{	long s = strlen(text)+1;	wchar_t *wcs = new wchar_t[s];	mbstowcs(wcs,text,s);
+	mgl_tablew(gr, val, wcs, fnt, opt);	delete []wcs;	}
+//-----------------------------------------------------------------------------
+void mgl_table_(uintptr_t *gr, uintptr_t *val, const char *text, const char *fnt, const char *opt,int l,int n,int lo)
+{	wchar_t *s=new wchar_t[l+1];	mbstowcs(s,text,l);	s[l]=0;
+	char *f=new char[n+1];	memcpy(f,fnt,n);	f[n]=0;
+	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+	mgl_tablew(_GR_, _DA_(val),s,f, o);
+	delete []o;	delete []s;	delete []f;	}
 //-----------------------------------------------------------------------------

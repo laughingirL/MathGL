@@ -391,7 +391,7 @@ void mglParser::FillArg(mglGraph *gr, int k, wchar_t **arg, mglArg *a)
 			if(DataList)	u->MoveAfter(DataList);
 			else			DataList = u;
 			a[n-1].type = 0;	a[n-1].d = &(u->d);
-			ParseDat(gr, arg[n]+1, u->d);	// TODO: Check it
+			ParseDat(gr, arg[n]+1, u->d);
 		}
 		else if((v = FindVar(arg[n]))!=0)	// have to find normal variables (for data creation)
 		{	a[n-1].type=0;	a[n-1].d=&(v->d);	a[n-1].w=v->s;	}
@@ -679,7 +679,7 @@ int mglParser::Parse(mglGraph *gr, const wchar_t *string, long pos)
 					fn_stack[fn_pos].pos = pos;	fn_pos++;	n--;
 				}
 				else
-				{	// TODO check bugfix here!!!
+				{
 					FILE *fp = fopen(a[0].s.c_str(),"rt");
 					if(fp)
 					{

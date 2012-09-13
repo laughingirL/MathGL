@@ -56,7 +56,7 @@ protected:
 	mreal CalcDIn(int id, const mreal *a1) const;
 	mglFormula *Left,*Right;	// first and second argument of the function
 	int Kod;					// the function ID
-	mreal Res;					// the number or the variable ID
+	mreal Res;				// the number or the variable ID
 	static int Error;
 };
 //---------------------------------------------------------------------------

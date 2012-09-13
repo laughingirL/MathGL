@@ -30,35 +30,35 @@ double mgl_rnd();
 double mgl_ipow(double x,int n);
 }
 //-----------------------------------------------------------------------------
-//	��������� ��� ������������� ���������
+//	constants for expression parsing
 enum{
 EQ_NUM=0,	// a variable substitution
 EQ_RND,		// random number
 EQ_A,		// numeric constant
-// ���������� �������
+// normal functions of 2 arguments
 EQ_ADD,		// addition x+y
 EQ_SUB,		// substraction x-y
 EQ_MUL,		// multiplication x*y
 EQ_DIV,		// division x/y
-EQ_IPOW,	// power x^n for integer n
+EQ_IPOW,		// power x^n for integer n
 EQ_POW,		// power x^y
 EQ_LOG,		// logarithm of x on base a, log_a(x) = ln(x)/ln(a)
-// ����������� �������
+// normal functions of 1 argument
 EQ_SIN,		// sine function \sin(x).			!!! MUST BE FIRST 1-PLACE FUNCTION
 EQ_COS,		// cosine function \cos(x).
 EQ_TAN,		// tangent function \tan(x).
-EQ_ASIN,	// inverse sine function \asin(x).
-EQ_ACOS,	// inverse cosine function \acos(x).
-EQ_ATAN,	// inverse tangent function \atan(x).
-EQ_SINH,	// hyperbolic sine function \sinh(x).
-EQ_COSH,	// hyperbolic cosine function \cosh(x).
-EQ_TANH,	// hyperbolic tangent function \tanh(x).
+EQ_ASIN,		// inverse sine function \asin(x).
+EQ_ACOS,		// inverse cosine function \acos(x).
+EQ_ATAN,		// inverse tangent function \atan(x).
+EQ_SINH,		// hyperbolic sine function \sinh(x).
+EQ_COSH,		// hyperbolic cosine function \cosh(x).
+EQ_TANH,		// hyperbolic tangent function \tanh(x).
 EQ_ASINH,	// inverse hyperbolic sine function \asinh(x).
 EQ_ACOSH,	// inverse hyperbolic cosine function \acosh(x).
 EQ_ATANH,	// inverse hyperbolic tangent function \atanh(x).
-EQ_SQRT,	// square root function \sqrt(x)
+EQ_SQRT,		// square root function \sqrt(x)
 EQ_EXP,		// exponential function \exp(x)
-EQ_EXPI,	// exponential function \exp(i*x)
+EQ_EXPI,		// exponential function \exp(i*x)
 EQ_LN,		// logarithm of x, ln(x)
 EQ_LG,		// decimal logarithm of x, lg(x) = ln(x)/ln(10)
 EQ_ABS		// absolute value
@@ -68,14 +68,13 @@ int mglFormulaC::Error=0;
 bool mglCheck(char *str,int n);
 int mglFindInText(char *str,const char *lst);
 //-----------------------------------------------------------------------------
-// ���������� �������
 mglFormulaC::~mglFormulaC()
 {
 	if(Left) delete Left;
 	if(Right) delete Right;
 }
 //-----------------------------------------------------------------------------
-// ����������� ������� (������������� ���������� � "�����������" �������)
+// Formula constructor (automatically parse and "compile" formula)
 mglFormulaC::mglFormulaC(const char *string)
 {
 	Error=0;
@@ -91,14 +90,14 @@ mglFormulaC::mglFormulaC(const char *string)
 	mgl_strlwr(str);
 	len=strlen(str);
 	if(str[0]==0) {	delete []str;	return;	}
-	if(str[0]=='(' && mglCheck(&(str[1]),len-2))	// ���� ��� ��������� � ������, �� �������  ��
+	if(str[0]=='(' && mglCheck(&(str[1]),len-2))	// remove braces
 	{
 		strcpy(Buf,str+1);
 		len-=2;	Buf[len]=0;
 		strcpy(str,Buf);
 	}
 	len=strlen(str);
-	n=mglFindInText(str,"+-");				// ������� ��������� - ��������, ���������
+	n=mglFindInText(str,"+-");				// normal priority -- additions
 	if(n>=0)
 	{
 		if(str[n]=='+') Kod=EQ_ADD; else Kod=EQ_SUB;
@@ -108,7 +107,7 @@ mglFormulaC::mglFormulaC(const char *string)
 		delete []str;
 		return;
 	}
-	n=mglFindInText(str,"*/");				// ������� ��������� - ���������, �������
+	n=mglFindInText(str,"*/");				// high priority -- multiplications
 	if(n>=0)
 	{
 		if(str[n]=='*') Kod=EQ_MUL; else Kod=EQ_DIV;
@@ -118,7 +117,7 @@ mglFormulaC::mglFormulaC(const char *string)
 		delete []str;
 		return;
 	}
-	n=mglFindInText(str,"^");				// ������� ��������� - ���������� � �������
+	n=mglFindInText(str,"^");				// highest priority -- power
 	if(n>=0)
 	{
 		Kod=EQ_IPOW;
@@ -130,16 +129,16 @@ mglFormulaC::mglFormulaC(const char *string)
 	}
 
 	for(n=0;n<len;n++)	if(str[n]=='(')	break;
-	if(n>=len)							// ��� ����� ��� ����������
+	if(n>=len)								// this is number or variable
 	{
 		Kod = EQ_NUM;
 //		Left = Right = 0;
-		if(str[1]==0 && str[0]>='a' && str[0]<='z')	// ��������� ���������
+		if(str[1]==0 && str[0]>='a' && str[0]<='z')	// available variables
 		{	Kod=EQ_A;	Res = str[0]-'a';	}
 		else if(!strcmp(str,"rnd")) Kod=EQ_RND;
 		else if(!strcmp(str,"pi")) Res=M_PI;
 		else if(str[0]=='i')	Res = dual(0,str[1]>' '?atof(str+1):1);
-		else Res=atof(str);				// ��� �����
+		else Res=atof(str);					// this is number
 	}
 	else
 	{
@@ -194,6 +193,7 @@ dual mglFormulaC::Calc(dual x,dual y,dual t,dual u) const
 	a1['x'-'a'] = a1['r'-'a'] = x;
 	a1['y'-'a'] = a1['n'-'a'] = a1['v'-'a'] = y;
 	a1['z'-'a'] = a1['t'-'a'] = t;
+	a1['i'-'a'] = dual(0,1);
 	return CalcIn(a1);
 }
 //-----------------------------------------------------------------------------
@@ -208,6 +208,7 @@ dual mglFormulaC::Calc(dual x,dual y,dual t,dual u,dual v,dual w) const
 	a1['x'-'a'] = a1['r'-'a'] = x;
 	a1['y'-'a'] = a1['n'-'a'] = y;
 	a1['z'-'a'] = a1['t'-'a'] = t;
+	a1['i'-'a'] = dual(0,1);
 	return CalcIn(a1);
 }
 //-----------------------------------------------------------------------------

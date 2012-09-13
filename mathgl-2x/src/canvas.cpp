@@ -794,6 +794,7 @@ void mglCanvas::StartAutoGroup (const char *lbl)
 void mglCanvas::EndGroup()
 {
 	LoadState();
+	if(Quality&4)	{	Pnt.clear();		Prm.clear();		Ptx.clear();		}
 	if(grp_counter>0)	grp_counter--;
 }
 //-----------------------------------------------------------------------------

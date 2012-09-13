@@ -37,6 +37,7 @@
 #include <QCloseEvent>
 #include <QTextCodec>
 #include <QTranslator>
+#include <QVariant>
 //-----------------------------------------------------------------------------
 #if !defined(WIN32) && !defined(__APPLE__)
 #include <X11/Xlib.h>
