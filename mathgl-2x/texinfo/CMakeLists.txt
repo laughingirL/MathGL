@@ -2,7 +2,7 @@ if(MGL_HAVE_DOC)
 	set(MGL_PNG alpha area aspect axial axis barh bars belt boxplot
 		box boxs candle chart cloud colorbar combined cones conta contd
 		contfa contf contf_xyz cont contv cont_xyz curvcoor cut dat_diff
-		dat_extra densa dens dens_xyz dew dots error fall fit flow
+		dat_extra densa dens dens_xyz dew dots error fall fit flow fonts
 		fog grad hist inplot label legend loglog map mark mesh mirror
 		molecule parser pde pipe plot primitives qo2d radar region schemes
 		several_light stem step stereo stfa style surf3a surf3c surf3

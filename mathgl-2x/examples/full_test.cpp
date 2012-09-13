@@ -46,17 +46,29 @@ void smgl_combined(mglGraph *gr);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
+//	gr->ImportMGLD("fonts.mgld");
+//	return;
+	
+	gr->Puts(mglPoint(0),"\\sqrt{a}");
+	printf("pnt = %ld, prm = %ld, glf = %ld\n", gr->Self()->GetPntNum(), gr->Self()->GetPrmNum(), gr->Self()->GetGlfNum());
+	gr->ExportMGLD("fonts.mgld");
+	return;
+
 	gr->Light(true);
 	const char *p = MGL_DEF_PAL;
 	size_t i,l=strlen(p);
 	char stl[2] = "r";
 	gr->SetQuality(6);
-	for(i=0;i<1000;i++)
+	for(i=0;i<100;i++)
 	{
 		stl[0] = p[int(l*mgl_rnd())];
 		gr->Sphere(mglPoint(mgl_rnd()*2-1,mgl_rnd()*2-1),0.05,stl);
 	}
-	printf("pnt = %ld, prm = %ld\n",gr->Self()->GetPntNum(),gr->Self()->GetPrmNum());
+	gr->Axis();
+	gr->Puts(mglPoint(0),"aa\\i aaa");
+	printf("pnt = %ld, prm = %ld, glf = %ld\n", gr->Self()->GetPntNum(), gr->Self()->GetPrmNum(), gr->Self()->GetGlfNum());
+	return;
+	
 /*	mglData c;	mgls_prepare3d(&c);	gr->Light(true);	gr->Alpha(true);
 	gr->SubPlot(2,1,0);	gr->Rotate(50,60);	gr->Box();	gr->Surf3(c);
 	gr->SubPlot(2,1,1);	gr->Rotate(50,60);	gr->Box();	gr->Surf3(c,"","zrange 0 2");
@@ -2132,7 +2144,7 @@ mglSample samp[] = {
 	{"fit", smgl_fit, mmgl_fit},
 	{"flow", smgl_flow, mmgl_flow},
 	{"fog", smgl_fog, mmgl_fog},
-//	{"fonts", smgl_fonts},	// TODO enable later
+	{"fonts", smgl_fonts},
 	{"grad", smgl_grad, mmgl_grad},
 	{"hist", smgl_hist, mmgl_hist},
 	{"inplot", smgl_inplot, mmgl_inplot},

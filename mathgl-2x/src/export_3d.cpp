@@ -477,6 +477,18 @@ bool mglCanvas::WriteJSON(const char *fname)
 		fprintf(fp,"[%d, %ld, %ld, %ld, %ld, %d, %.4g, %.4g, %.4g, %.4g, %.4g, %.4g, %.4g]%c\n",
 				p.type, p.n1, p.n2, p.n3, p.n4, p.id, p.s, p.w, p.p, c.r, c.g, c.b, c.a, i+1<l?',':' ');
 	}
+	l = Glf.size();
+	fprintf(fp,"],\t\"nglfs\" : %lu,\t\"glfs\" : [\n",(unsigned long)l);
+	for(i=0;i<l;i++)
+	{
+		const mglGlyph &g=Glf[i];
+		fprintf(fp,"[%ld, %ld, \n\t[", g.nt, g.nl);
+		register long j;
+		for(j=0;j<6*g.nt;j++)	fprintf(fp,"%d%c ", g.trig[j], j+1<6*g.nt?',':' ');
+		fprintf(fp,"]\n\t[");
+		for(j=0;j<4*g.nl;j++)	fprintf(fp,"%d%c ", g.line[j], j+1<4*g.nl?',':' ');
+		fprintf(fp,"]\n]\n");
+	}
 	fprintf(fp,"]\n}\n");
 	if(fl)	fclose(fp);
 	return false;
@@ -495,7 +507,7 @@ bool mglCanvas::ExportMGLD(const char *fname, const char *descr)
 	FILE *fp=fopen(fname,"wt");
 	if(!fp)	return true;
 	// NOTE: I'll save Ptx. So prim type=6 is useless,and no LaTeX
-	fprintf(fp,"MGLD %lu %lu %lu\n# %s\n", (unsigned long)Pnt.size(), (unsigned long)Prm.size(), (unsigned long)Txt.size(), (descr && *descr) ? descr : fname);
+	fprintf(fp,"MGLD %lu %lu %lu %lu\n# %s\n", (unsigned long)Pnt.size(), (unsigned long)Prm.size(), (unsigned long)Txt.size(), (unsigned long)Glf.size(), (descr && *descr) ? descr : fname);
 	register size_t i;
 	fprintf(fp,"# Vertexes: x y z c t ta u v w r g b a\n");
 	for(i=0;i<Pnt.size();i++)
@@ -514,6 +526,22 @@ bool mglCanvas::ExportMGLD(const char *fname, const char *descr)
 	{
 		const mglTexture &t=Txt[i];
 		fprintf(fp,"%d\t%.4g\t%s\n",t.Smooth,t.Alpha,t.Sch);
+	}
+	fprintf(fp,"# Glyphs: nt nl [trig] [line]\n");
+	for(i=0;i<Glf.size();i++)
+	{
+		const mglGlyph &g=Glf[i];
+		fprintf(fp,"%ld\t%ld\n", g.nt, g.nl);
+		if(g.trig)
+		{
+			for(long j=0;j<6*g.nt;j++)	fprintf(fp,"%d\t",g.trig[j]);
+			fprintf(fp,"\n");
+		}
+		if(g.line)
+		{
+			for(long j=0;j<4*g.nl;j++)	fprintf(fp,"%d\t",g.line[j]);
+			fprintf(fp,"\n");
+		}
 	}
 	fclose(fp);
 	return false;
@@ -534,12 +562,12 @@ bool mglCanvas::ImportMGLD(const char *fname, bool add)
 	if(!fgets(buf,512,fp))	*buf=0;
 	if(strncmp(buf,"MGLD",4))	{	delete []buf;	fclose(fp);	return true;	}
 	register size_t i;
-	size_t n,m,l, npnt=0;
-	sscanf(buf+5,"%lu%lu%lu",&n,&m,&l);
+	unsigned long n=0,m=0,l=0,k=0, npnt=0, nglf=0;
+	sscanf(buf+5,"%lu%lu%lu%lu",&n,&m,&l,&k);
 	if(n<=0 || m<=0 || l<=0)	{	delete []buf;	fclose(fp);	return true;	}
 	if(!add)	{	Clf();	Txt.clear();	}
-	else	{	ClfZB();	npnt=Pnt.size();	}
-	Pnt.reserve(n);	Prm.reserve(m);	Txt.reserve(l);
+	else	{	ClfZB();	npnt=Pnt.size();	nglf=Glf.size();	}
+	Pnt.reserve(n);	Prm.reserve(m);	Txt.reserve(l);	Glf.reserve(k);
 	mglPnt p;
 	for(i=0;i<n;i++)
 	{
@@ -555,11 +583,9 @@ bool mglCanvas::ImportMGLD(const char *fname, bool add)
 		q.n1 = q.n1>=0?q.n1+npnt:-1;
 		q.n2 = q.n2>=0?q.n2+npnt:-1;
 		if(q.type==2 || q.type==3)
-		{
-			q.n3 = q.n3>=0?q.n3+npnt:-1;
-			q.n4 = q.n4>=0?q.n4+npnt:-1;
-		}
-		if(q.type<5)	Prm.push_back(q);
+		{	q.n3 = q.n3>=0?q.n3+npnt:-1;		q.n4 = q.n4>=0?q.n4+npnt:-1;	}
+		if(q.type==4)	q.n4 = q.n4>=0?q.n4+nglf:-1;
+		if(q.type<5)		Prm.push_back(q);
 	}
 	mglTexture t;
 	for(i=0;i<l;i++)
@@ -576,6 +602,17 @@ bool mglCanvas::ImportMGLD(const char *fname, bool add)
 		sscanf(buf,"%d%g", &sm, &a);
 		t.Set(buf+j, sm, a);
 		Txt.push_back(t);
+	}
+	mglGlyph g;
+	for(i=0;i<k;i++)
+	{
+		do {	if(!fgets(buf,512,fp))	*buf=0;	mgl_strtrim(buf);	} while(*buf=='#' || *buf==0);
+		long nt=0,nl=0;
+		sscanf(buf,"%ld%ld", &nt, &nl);	g.Create(nt,nl);
+		register long j;
+		for(j=0;j<6*nt;j++)	fscanf(fp,"%hd",g.trig+j);
+		for(j=0;j<4*nl;j++)	fscanf(fp,"%hd",g.line+j);
+		Glf.push_back(g);
 	}
 	delete []buf;	fclose(fp);	return false;
 }

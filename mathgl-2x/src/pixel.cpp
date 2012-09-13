@@ -531,7 +531,7 @@ void mglCanvas::ClfZB()
 void mglCanvas::Clf(mglColor Back)
 {
 	Fog(0);		PDef = 0xffff;	pPos = 0;	StartAutoGroup(NULL);
-	Pnt.clear();	Prm.clear();	Ptx.clear();
+	Pnt.clear();	Prm.clear();	Ptx.clear();	Glf.clear();
 	Sub.clear();	Leg.clear();	Grp.clear();
 
 	Txt.clear();	Txt.reserve(3);
@@ -1171,7 +1171,7 @@ void mglCanvas::glyph_draw(const mglPrim *P, mglDrawReg *d)
 	RotateN(P->w,0,0,1);	B.pf = P->p;
 	B.x=p.x;	B.y=p.y;	B.z=p.z;
 
-	int ss=P->n3&3;
+	const mglGlyph &g = Glf[P->n4];
 	if(P->n3&8)
 	{
 		if(!(P->n3&4))	glyph_line(p,f,true, d);
@@ -1179,8 +1179,8 @@ void mglCanvas::glyph_draw(const mglPrim *P, mglDrawReg *d)
 	}
 	else
 	{
-		if(!(P->n3&4))	glyph_fill(p,f,fnt->GetNt(ss,P->n4),fnt->GetTr(ss,P->n4), d);
-		glyph_wire(p,f,fnt->GetNl(ss,P->n4),fnt->GetLn(ss,P->n4), d);
+		if(!(P->n3&4))	glyph_fill(p,f,g, d);
+		glyph_wire(p,f,g, d);
 	}
 	Pop();
 #if MGL_HAVE_PTHREAD
@@ -1188,19 +1188,19 @@ void mglCanvas::glyph_draw(const mglPrim *P, mglDrawReg *d)
 #endif
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::glyph_fill(const mglPnt &pp, mreal f, int nt, const short *trig, mglDrawReg *d)
+void mglCanvas::glyph_fill(const mglPnt &pp, mreal f, const mglGlyph &g, mglDrawReg *d)
 {
-	if(!trig || nt<=0)	return;
+	if(!g.trig || g.nt<=0)	return;
 	long ik,ii,pos=Pnt.size();
 	mglPnt p=pp;	p.u=p.v=NAN;
 	mreal pw = Width>2 ? fabs(PenWidth) : 1e-5*Width;
 
 	mglPoint p1,p2,p3;
-	for(ik=0;ik<nt;ik++)
+	for(ik=0;ik<g.nt;ik++)
 	{
-		ii = 6*ik;	p1 = mglPoint(f*trig[ii]+pp.u,f*trig[ii+1]+pp.v,0);	PostScale(p1);
-		ii+=2;		p2 = mglPoint(f*trig[ii]+pp.u,f*trig[ii+1]+pp.v,0);	PostScale(p2);
-		ii+=2;		p3 = mglPoint(f*trig[ii]+pp.u,f*trig[ii+1]+pp.v,0);	PostScale(p3);
+		ii = 6*ik;	p1 = mglPoint(f*g.trig[ii]+pp.u,f*g.trig[ii+1]+pp.v,0);	PostScale(p1);
+		ii+=2;		p2 = mglPoint(f*g.trig[ii]+pp.u,f*g.trig[ii+1]+pp.v,0);	PostScale(p2);
+		ii+=2;		p3 = mglPoint(f*g.trig[ii]+pp.u,f*g.trig[ii+1]+pp.v,0);	PostScale(p3);
 		p.x = p1.x;	p.y = p1.y;	p.z = p1.z+pw;	Pnt.push_back(p);
 		p.x = p2.x;	p.y = p2.y;	p.z = p2.z+pw;	Pnt.push_back(p);
 		p.x = p3.x;	p.y = p3.y;	p.z = p3.z+pw;	Pnt.push_back(p);
@@ -1209,28 +1209,28 @@ void mglCanvas::glyph_fill(const mglPnt &pp, mreal f, int nt, const short *trig,
 	Pnt.erase(Pnt.begin()+pos,Pnt.end());
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::glyph_wire(const mglPnt &pp, mreal f, int nl, const short *line, mglDrawReg *d)
+void mglCanvas::glyph_wire(const mglPnt &pp, mreal f, const mglGlyph &g, mglDrawReg *d)
 {
-	if(!line || nl<=0)	return;
+	if(!g.line || g.nl<=0)	return;
 	long ik,ii,il=0,pos=Pnt.size();
 	mglPnt p=pp;	p.u=p.v=NAN;
 	unsigned pdef=PDef;	PDef = 0xffff;
 	mreal opw=PenWidth;	PenWidth=0.75;
 	mglPoint p1,p2;
-	for(ik=0;ik<nl;ik++)
+	for(ik=0;ik<g.nl;ik++)
 	{
 		ii = 2*ik;
-		if(line[ii]==0x3fff && line[ii+1]==0x3fff)	// line breakthrough
+		if(g.line[ii]==0x3fff && g.line[ii+1]==0x3fff)	// line breakthrough
 		{	il = ik+1;	continue;	}
-		else if(ik==nl-1 || (line[ii+2]==0x3fff && line[ii+3]==0x3fff))
+		else if(ik==g.nl-1 || (g.line[ii+2]==0x3fff && g.line[ii+3]==0x3fff))
 		{	// enclose the circle. May be in future this block should be commented
-			p1 = mglPoint(f*line[ii]+pp.u,f*line[ii+1]+pp.v,0);	ii=2*il;
-			p2 = mglPoint(f*line[ii]+pp.u,f*line[ii+1]+pp.v,0);
+			p1 = mglPoint(f*g.line[ii]+pp.u,f*g.line[ii+1]+pp.v,0);	ii=2*il;
+			p2 = mglPoint(f*g.line[ii]+pp.u,f*g.line[ii+1]+pp.v,0);
 		}
 		else
 		{	// normal line
-			p1 = mglPoint(f*line[ii]+pp.u,f*line[ii+1]+pp.v,0);	ii+=2;
-			p2 = mglPoint(f*line[ii]+pp.u,f*line[ii+1]+pp.v,0);
+			p1 = mglPoint(f*g.line[ii]+pp.u,f*g.line[ii+1]+pp.v,0);	ii+=2;
+			p2 = mglPoint(f*g.line[ii]+pp.u,f*g.line[ii+1]+pp.v,0);
 		}
 		PostScale(p1);	PostScale(p2);
 		p.x = p1.x;	p.y = p1.y;	p.z = p1.z;	Pnt.push_back(p);

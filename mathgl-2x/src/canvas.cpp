@@ -367,7 +367,7 @@ void mglCanvas::Glyph(mreal x, mreal y, mreal f, int s, long j, mreal col)
 	mreal cc = col<0 ? AddTexture(char(0.5-col)):col;
 	if(cc<0)	cc = CDef;
 	a.n1 = AddPnt(mglPoint(B.x,B.y,B.z), cc, mglPoint(x,y,f/fnt->GetFact(s&3)), -1, -1);
-	a.n3 = s;	a.n4 = j;
+	a.n3 = s;	a.n4 = AddGlyph(s,j);
 	if(a.n1<0)	return;
 	mglDrawReg d;	d.set(this,1,1,0);
 	if(Quality&4)	glyph_draw(&a,&d);
@@ -794,7 +794,8 @@ void mglCanvas::StartAutoGroup (const char *lbl)
 void mglCanvas::EndGroup()
 {
 	LoadState();
-	if(Quality&4)	{	Pnt.clear();		Prm.clear();		Ptx.clear();		}
+	if(Quality&4)
+	{	Pnt.clear();		Prm.clear();		Ptx.clear();		Glf.clear();		}
 	if(grp_counter>0)	grp_counter--;
 }
 //-----------------------------------------------------------------------------

@@ -403,3 +403,6 @@ void mgl_write_prc_(uintptr_t *graph, const char *fname,const char *descr, int *
 }
 #endif
 //-----------------------------------------------------------------------------
+void mgl_finish(HMGL gr)	{	_Gr_->Finish();	}
+void mgl_finish_(uintptr_t *gr)	{	_GR_->Finish();	}
+//-----------------------------------------------------------------------------

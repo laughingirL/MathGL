@@ -111,6 +111,40 @@ void mglBase::SetWarn(int code, const char *who)
 	LoadState();
 }
 //-----------------------------------------------------------------------------
+//		Add glyph to the buffer
+//-----------------------------------------------------------------------------
+void mglGlyph::Create(long Nt, long Nl)
+{
+	if(Nt<0 || Nl<0)	return;
+	nt=Nt;	nl=Nl;	
+	if(trig)	delete []trig;
+	trig = nt>0?new short[6*nt]:0;
+	if(line)	delete []line;
+	line = nl>0?new short[4*nl]:0;
+}
+//-----------------------------------------------------------------------------
+bool mglGlyph::operator==(const mglGlyph &g)
+{
+	if(nl!=g.nl || nt!=g.nt)	return false;
+	if(trig && memcmp(trig,g.trig,6*nt*sizeof(short)))	return false;
+	if(line && memcmp(line,g.line,4*nl*sizeof(short)))	return false;
+	return true;
+}
+//-----------------------------------------------------------------------------
+long mglBase::AddGlyph(int s, long j)
+{
+	// first create glyph for current typeface
+	s = s&3;
+	mglGlyph g(fnt->GetNt(s,j), fnt->GetNl(s,j));	
+	memcpy(g.trig, fnt->GetTr(s,j), 6*g.nt*sizeof(short));
+	memcpy(g.line, fnt->GetLn(s,j), 4*g.nl*sizeof(short));
+	// now let find the similar glyph
+	register size_t i;
+	for(i=0;i<Glf.size();i++)	if(g==Glf[i])	return i;
+	// if no one then let add it
+	Glf.push_back(g);	return Glf.size()-1;
+}
+//-----------------------------------------------------------------------------
 //		Add points to the buffer
 //-----------------------------------------------------------------------------
 long mglBase::AddPnt(mglPoint p, mreal c, mglPoint n, mreal a, int scl)

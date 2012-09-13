@@ -52,7 +52,7 @@
 #define fmax(a,b)	((a)>(b))?(a):(b)
 #endif
 
-#define MGL_VER2	0.3
+#define MGL_VER2 	0.4
 
 #if defined(_MSC_VER)
 #define hypot	_hypot

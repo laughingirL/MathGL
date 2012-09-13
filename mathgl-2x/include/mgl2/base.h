@@ -138,6 +138,24 @@ inline mglPnt operator*(float b, const mglPnt &a)
 	c.x*=b;	c.y*=b;	c.z*=b;	c.u*=b;	c.v*=b;	c.w*=b;
 	c.r*=b;	c.g*=b;	c.b*=b;	c.a*=b;	return c;	}
 //-----------------------------------------------------------------------------
+/// Structure for glyph represenatation
+struct mglGlyph
+{
+	long nt, nl;			///< number of triangles and lines
+	short *trig, *line;	///< vertexes of triangles and lines
+
+	mglGlyph()	{	nl=nt=0;	trig=line=0;	}
+	mglGlyph(const mglGlyph &a)	{	trig=line=0;	*this=a;	}
+	mglGlyph(long Nt, long Nl)		{	trig=line=0;	Create(Nt,Nl);	}
+	~mglGlyph()	{	if(trig)	delete []trig;	if(line)	delete []line;	}
+
+	void Create(long Nt, long Nl);
+	bool operator==(const mglGlyph &g);
+	inline mglGlyph &operator=(const mglGlyph &a)
+	{	Create(a.nt, a.nl);	memcpy(trig, a.trig, 6*nt*sizeof(short));
+		memcpy(line, a.line, 4*nl*sizeof(short));	return *this;	}
+};
+//-----------------------------------------------------------------------------
 struct mglTexture
 {
 	mglColor col[512];	///< Colors itself
@@ -337,23 +355,26 @@ public:
 	inline int GetQuality() const	{	return Quality;	}
 
 	// ~~~~~~~~~~~~~~~~~~~~~~ Developer functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	/// Add point to the pntN and return its position
+	/// Add point to the Pnt and return its position
 	long AddPnt(mglPoint p, mreal c=-1, mglPoint n=mglPoint(NAN), mreal a=-1, int scl=1);
 	long CopyNtoC(long k, mreal c);
 	long CopyProj(long from, mglPoint p, mglPoint n);
-	virtual void Reserve(long n);		///< Allocate n-cells for pntC and return current position
-	/// Set to reduce accuracy of points (to reduc size of output files)
+	virtual void Reserve(long n);		///< Allocate n-cells for Pnt and return current position
+	/// Set to reduce accuracy of points (to reduce size of output files)
 	inline void SetReduceAcc(bool val)	{	set(val, MGL_REDUCEACC);	}
-
-//	inline long GetPos()	{	return Pnt.size()-1;	}
+	/// Add glyph of current font to the Glf and return its position
+	long AddGlyph(int s, long j);
+	
 	inline mglPoint GetPntP(long i) const
 	{	const mglPnt &p=Pnt[i];	return mglPoint(p.x,p.y,p.z);	}
 	inline float GetClrC(long i) const	{	return Pnt[i].c;	}
-	inline const mglPnt &GetPnt(long i) const		{	return Pnt[i];		}
+	inline const mglGlyph &GetGlf(long i) const	{	return Glf[i];		}
+	inline long GetGlfNum() const		{	return Glf.size();	}
+	inline const mglPnt &GetPnt(long i) const	{	return Pnt[i];		}
 	inline long GetPntNum() const		{	return Pnt.size();	}
 	inline mglPrim &GetPrm(long i)		{	return Prm[i];		}
 	inline long GetPrmNum() const		{	return Prm.size();	}
-	inline const mglText &GetPtx(long i) const		{	return Ptx[i];		}
+	inline const mglText &GetPtx(long i) const	{	return Ptx[i];		}
 	inline long GetPtxNum() const		{	return Ptx.size();	}
 	inline const mglTexture &GetTxt(long i) const	{	return Txt[i];		}
 	inline long GetTxtNum() const		{	return Txt.size();	}
@@ -403,6 +424,7 @@ protected:
 	std::vector<mglPrim> Sub;	///< InPlot regions {n1=x1,n2=x2,n3=y1,n4=y2,id}
 	std::vector<mglText> Ptx;	///< Text labels for mglPrim
 	std::vector<mglText> Leg;	///< Text labels for legend
+	std::vector<mglGlyph> Glf;	///< Glyphs data 
 	std::vector<mglTexture> Txt;///< Pointer to textures
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_t mutexPnt, mutexTxt, mutexLeg;

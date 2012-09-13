@@ -145,8 +145,9 @@ void put_desc(HMGL gr, void *fp, bool gz, const char *pre, const char *ln1, cons
 		g[n]=q.n4;	s[n]=q.n3&7;	n++;	// add to list of described
 		// "%c%c%c_%04x {"
 		mgl_printf(fp, gz, pre, q.n3&1?'b':'n', q.n3&2?'i':'n', q.n4);
-		int nl=gr->GetFont()->GetNl(q.n3&3,q.n4);
-		const short *ln=gr->GetFont()->GetLn(q.n3&3,q.n4);
+		const mglGlyph &g = gr->GetGlf(q.n4);
+		int nl=g.nl;
+		const short *ln=g.line;
 		long ik,ii;
 		bool np=true;
 		if(ln && nl>0)	for(ik=0;ik<nl;ik++)

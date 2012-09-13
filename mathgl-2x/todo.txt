@@ -26,7 +26,6 @@ http_request.onreadystatechange = function () {
 5. Labels at TriCont()
 
 6. Save primitives for frames (not bitmap) ??? -- see MGL_USEDRWDAT ==> frames in OpenGL mode
-7. Enable several fonts at the same picture -- global std::vector<mglFont> + index in this set
 8. Table(mreal x, mreal y, HCDT dat, char *xlabels, char *ylabels, char *stl) -- draw table with values (+ auto reduce font size?) -- format in [] like "[%.2g]".
 9. Graph(mreal x, mreal y, names, styles, font, size); -- names = "node1[node2,node3,node4[node5,node6]]", styles -- the same + apply for subnodes if absent. Styles are colors (fill,border,line), dash (to subnodes), marks "dos^v><", arrows.
 10. Legend in several columns

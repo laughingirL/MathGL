@@ -332,7 +332,9 @@ public:
 	/// Export in JSON format suitable for later drawing by JavaScript
 	inline void WriteJSON(const char *fname,const char *descr="")
 	{	mgl_write_json(gr, fname, descr);	}
-	
+
+	/// Force preparing the image. It can be useful for OpenGL mode mostly.
+	inline void Finish()			{	mgl_finish(gr);	}
 	/// Create new frame.
 	inline void NewFrame()		{	mgl_new_frame(gr);	}
 	/// Finish frame drawing

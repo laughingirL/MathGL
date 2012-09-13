@@ -418,8 +418,8 @@ private:
 	inline void PostScale(mglPoint *p,long n) const	{	for(long i=0;i<n;i++)	PostScale(p[i]);	}
 
 	// functions for glyph drawing
-	void glyph_fill(const mglPnt &p, mreal f, int nt, const short *trig, mglDrawReg *d);
-	void glyph_wire(const mglPnt &p, mreal f, int nl, const short *line, mglDrawReg *d);
+	void glyph_fill(const mglPnt &p, mreal f, const mglGlyph &g, mglDrawReg *d);
+	void glyph_wire(const mglPnt &p, mreal f, const mglGlyph &g, mglDrawReg *d);
 	void glyph_line(const mglPnt &p, mreal f, bool solid, mglDrawReg *d);
 };
 //-----------------------------------------------------------------------------
