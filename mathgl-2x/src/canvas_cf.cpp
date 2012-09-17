@@ -402,7 +402,6 @@ void mgl_write_prc(HMGL gr, const char *fname,const char *descr, int make_pdf)
 {	mglGlobalMess += "PNG support was disabled. Please, enable it and rebuild MathGL.\n";	}
 void mgl_write_prc_(uintptr_t *graph, const char *fname,const char *descr, int *make_pdf,int lf,int ld)
 {	mglGlobalMess += "PNG support was disabled. Please, enable it and rebuild MathGL.\n";	}
-}
 #endif
 //-----------------------------------------------------------------------------
 void mgl_finish(HMGL gr)	{	_Gr_->Finish();	}
