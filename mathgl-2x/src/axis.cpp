@@ -440,7 +440,7 @@ void mglCanvas::LabelTicks(mglAxis &aa)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::Axis(const char *dir, const char *stl)
+void mglCanvas::Axis(const char *dir, const char *stl, const char *opt)
 {
 	if(!dir || !dir[0])	dir="xyz";
 	bool text = !strchr(dir,'_');
@@ -452,24 +452,27 @@ void mglCanvas::Axis(const char *dir, const char *stl)
 
 	bool ret = get(MGL_ENABLE_RTEXT);
 	if(strchr(dir,'U'))	clr(MGL_ENABLE_RTEXT);
+	SaveState(opt);
 	AdjustTicks(dir,adjust);
+	LoadState();
 	// TODO: Ternary axis labeling ...
-	if(strchr(dir,'x'))	DrawAxis(ax, text, arr, stl);
-	if(strchr(dir,'z'))	DrawAxis(az, text, arr, stl);
+	if(strchr(dir,'x'))	DrawAxis(ax, text, arr, stl, opt);
+	if(strchr(dir,'z'))	DrawAxis(az, text, arr, stl, opt);
 	if((TernAxis&3))
 	{
 		mglAxis ty(ay);					ty.ch='T';
 		ty.dir = mglPoint(-1,1);		ty.org = mglPoint(1,0,ay.org.z);
-		DrawAxis(ty, text, arr, stl);	ty.ch='t';
+		DrawAxis(ty, text, arr, stl, opt);	ty.ch='t';
 		ty.dir = mglPoint(0,-1);		ty.org = mglPoint(0,1,ay.org.z);
-		DrawAxis(ty, text, arr, stl);
+		DrawAxis(ty, text, arr, stl, opt);
 	}
-	else if(strchr(dir,'y'))	DrawAxis(ay, text, arr, stl);
+	else if(strchr(dir,'y'))	DrawAxis(ay, text, arr, stl, opt);
 	set(ret, MGL_ENABLE_RTEXT);
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::DrawAxis(mglAxis &aa, bool text, char arr,const char *stl)
+void mglCanvas::DrawAxis(mglAxis &aa, bool text, char arr,const char *stl,const char *opt)
 {
+	SaveState(opt);
 	if(strchr("xyz",aa.ch))
 		aa.org = mglPoint(GetOrgX(aa.ch), GetOrgY(aa.ch), GetOrgZ(aa.ch));
 	if(aa.ch=='x')	aa.v0 = aa.org.x;
@@ -535,11 +538,11 @@ void mglCanvas::DrawLabels(mglAxis &aa)
 //	if(get(MGL_DISABLE_SCALE) && ((aa.dir.x==0 && aa.org.x<0) || (aa.dir.y==0 && aa.org.y>0)))	pos[0]='T';
 	if(aa.ch=='c')	pos[0]=(aa.ns==0 || aa.ns==3)?'t':'T';
 	if(aa.ch=='T')	pos[0]='T';
-	mreal *w=new mreal[n], h = TextHeight(FontDef,-1)/3, c=NAN, l=NAN, tet=0, v, vv;	// find sizes
+	mreal *w=new mreal[n], h = TextHeight(FontDef,-1), c=NAN, l=NAN, tet=0, v, vv;	// find sizes
 	long *kk=new long[n];
 	for(i=0;i<n;i++)
 	{
-		w[i] = TextWidth(aa.txt[i].text.c_str(),FontDef,-1)/2;
+		w[i] = TextWidth(aa.txt[i].text.c_str(),FontDef,-1);
 		kk[i] = AddPnt(o+d*aa.txt[i].val,-1,d,0,7);
 	}
 
@@ -580,6 +583,29 @@ void mglCanvas::DrawLabels(mglAxis &aa)
 	delete []w;	delete []kk;
 }
 //-----------------------------------------------------------------------------
+char mglCanvas::GetLabelPos(mreal c, long kk, mglAxis &aa)
+{
+	if(strchr("xyz",aa.ch))
+		aa.org = mglPoint(GetOrgX(aa.ch), GetOrgY(aa.ch), GetOrgZ(aa.ch));
+	mglPoint d = aa.dir, o = aa.org;	// "transverse" org
+	if(strchr("xyz",aa.ch))	o -= d*(o*d);
+	mglPoint p,q, s=(Min+Max)/2, nn;
+	s = s - d*(s*d);
+
+	char pos='t';
+	if(aa.ch=='c')	pos=(aa.ns==0 || aa.ns==3)?'t':'T';
+	if(aa.ch=='T')	pos='T';
+	
+	p = o+d*c;	nn = s-o;	ScalePoint(p,nn);
+	mglPnt &qq = Pnt[kk];
+	
+	if(aa.ch=='c')	qq.u = qq.v = NAN;
+	if(!get(MGL_DISABLE_SCALE))	pos=(qq.u*nn.y-qq.v*nn.x>0) ? 'T':'t';
+	if(aa.ch=='T' && pos=='T')	pos='t';
+	if(aa.ch=='T' && pos=='t')	pos='T';
+	return pos;
+}
+//-----------------------------------------------------------------------------
 void mglCanvas::tick_draw(mglPoint o, mglPoint d1, mglPoint d2, int f, const char *stl)
 {
 	if(TickLen==0)	return;
@@ -601,8 +627,9 @@ void mglCanvas::tick_draw(mglPoint o, mglPoint d1, mglPoint d2, int f, const cha
 	line_plot(k1,k2);	line_plot(k2,k3);
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::Grid(const char *dir, const char *pen)
+void mglCanvas::Grid(const char *dir, const char *pen, const char *opt)
 {
+	SaveState(opt);
 	if(!dir || !dir[0])	dir="xyz";
 	AdjustTicks(dir,false);
 	SetPenPal(pen);
@@ -649,64 +676,62 @@ void mglCanvas::DrawGrid(mglAxis &aa)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::Label(char dir, const char *str, mreal pos, mreal shift)
+void mglCanvas::Label(char dir, const char *str, mreal pos, const char *opt)
 {
 	size_t s = strlen(str)+1;
 	wchar_t *wcs = new wchar_t[s];
 	mbstowcs(wcs,str,s);
-	Labelw(dir, wcs, pos, shift);
+	Labelw(dir, wcs, pos, opt);
 	delete []wcs;
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::Labelw(char dir, const wchar_t *text, mreal pos, mreal shift)
+void mglCanvas::Labelw(char dir, const wchar_t *text, mreal pos, const char *opt)
 {
+	mreal shift =  SaveState(opt);	if(mgl_isnan(shift))	shift=0;
 	mreal t, x0, y0, z0;
 	x0 = GetOrgX(dir);	y0 = GetOrgY(dir);	z0 = GetOrgZ(dir);
-	mglPoint p,ss=(Min+Max)/2,q,qq,nn;
+	mglPoint p,q;
+	mglAxis *aa=0;
 
 	if(dir=='x')	//	TODO: Tern axis & colorbar labels!!!
 	{
-		AdjustTicks(ax,fx);
+		AdjustTicks(ax,fx);	aa = &ax;
 		if(ax.dv)	t = (Min.x+Max.x+pos*(Max.x-Min.x))/2;
 		else	t = Min.x*pow(Max.x/Min.x, (pos+1)/2);
-		nn = mglPoint(0,ss.y-y0,ss.z-z0);
 		p = mglPoint(t,y0,z0);	q = mglPoint(1,0,0);	shift += ax.sh;
 	}
 	if(dir=='y')
 	{
-		AdjustTicks(ay,fy);
+		AdjustTicks(ay,fy);	aa = &ay;
 		if(ay.dv)	t = (Min.y+Max.y+pos*(Max.y-Min.y))/2;
 		else	t = Min.y*pow(Max.y/Min.y, (pos+1)/2);
-		nn = mglPoint(ss.x-x0,0,ss.z-z0);
 		p = mglPoint(x0,t,z0);	q = mglPoint(0,1,0);	shift += ay.sh;
 		if(TernAxis&3)
 		{
 			q = mglPoint(-1,1,0);	pos=-pos;
-			nn = mglPoint((ss.x-x0)/2,(ss.y-y0)/2,ss.z-z0);
 		}
 	}
 	if(dir=='t' && (TernAxis&3))
 	{
-		AdjustTicks(ay,fy);	pos = -pos;
+		AdjustTicks(ay,fy);	pos = -pos;	aa = &ay;
 		if(ay.dv)	t = (Min.y+Max.y+pos*(Max.y-Min.y))/2;
 		else	t = Min.y*pow(Max.y/Min.y, (pos+1)/2);
-		nn = mglPoint(ss.x-x0,0,ss.z-z0);
 		p = mglPoint(x0,t,z0);	q = mglPoint(0,1,0);	shift += ay.sh;
 	}
 	if(dir=='z')
 	{
-		AdjustTicks(az,fz);
+		AdjustTicks(az,fz);	aa = &az;
 		if(az.dv)	t = (Min.z+Max.z+pos*(Max.z-Min.z))/2;
 		else	t = Min.z*pow(Max.z/Min.z, (pos+1)/2);
-		nn = mglPoint(ss.x-x0,ss.y-y0,0);
 		p = mglPoint(x0,y0,t);	q = mglPoint(0,0,1);	shift += az.sh;
 	}
-	ss = p;	ScalePoint(ss,nn,false);
-	char font[33],ff[3]=":C";
+	char font[64],ff[3]=":C";
 	if(pos<-0.2)	ff[1]='L';	if(pos>0.2)	ff[1]='R';
 	strcpy(font,FontDef);	strcat(font,ff);
-	strcat(font,nn.y>1e-5 || nn.x<0 ? "T":"t");
-	text_plot(AddPnt(p,-1,q,0,7),text,font,-1.4,0.35+shift);
+	long kk = AddPnt(p,-1,q,0,7);	ff[1]=0;
+	ff[0] = GetLabelPos(t, kk, *aa);	strcat(font,ff);
+	text_plot(kk,text,font,-1.4,0.35+shift);
+	LoadState();
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::Box(const char *col, bool ticks)

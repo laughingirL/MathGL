@@ -91,6 +91,9 @@ class mglCanvas;
 /// Structure for light source
 struct mglDrawReg
 {
+	unsigned PDef;
+	int ObjId;
+	mreal PenWidth, pPos;
 	int x1,x2,y1,y2;
 	void set(mglCanvas *gr, int nx, int ny, int m);
 };
@@ -98,13 +101,11 @@ struct mglDrawReg
 /// Structure contains everything for drawing
 struct mglDrawDat
 {
-	std::vector<mglGroup> Grp;	///< List of groups with names -- need for export
-	std::vector<mglPnt> Pnt;	///< Internal points
+	std::vector<mglPnt>  Pnt;	///< Internal points
 	std::vector<mglPrim> Prm;	///< Primitives (lines, triangles and so on) -- need for export
-	std::vector<mglPrim> Sub;	///< InPlot regions {n1=x1,n2=x2,n3=y1,n4=y2,id}
 	std::vector<mglText> Ptx;	///< Text labels for mglPrim
-	std::vector<mglText> Leg;	///< Text labels for legend
-	std::vector<mglTexture> Txt;///< Pointer to textures
+	std::vector<mglGlyph> Glf;	///< Glyphs data
+	std::vector<mglTexture> Txt;	///< Pointer to textures
 };
 //-----------------------------------------------------------------------------
 /// Class contains all functionality for creating different mathematical plots
@@ -130,7 +131,7 @@ using mglBase::Light;
 	/// Clear transformation matrix.
 	inline void Identity(bool rel=false)	{	InPlot(0,1,0,1,rel);	}
 	/// Push transformation matrix into stack
-	inline void Push()	{	stack.push_back(B);	}
+	inline void Push()	{	MGL_PUSH(stack,B,mutexStk);	}
 	/// Set PlotFactor
 	inline void SetPlotFactor(mreal val)
 	{	if(val<=0)	{B.pf=1.55;	set(MGL_AUTO_FACTOR);}	else {B.pf=val;	clr(MGL_AUTO_FACTOR);}	}
@@ -189,10 +190,12 @@ using mglBase::Light;
 	/// Set object/subplot id
 	inline void SetObjId(long id)	{	ObjId = id;	}
 	/// Get object id
-	inline int GetObjId(long x,long y) const	{	return OI[x+Width*y];	}
+	inline int GetObjId(long xs,long ys) const	{	return OI[xs+Width*ys];	}
 	/// Get subplot id
-	int GetSplId(long x,long y) const;
-
+	int GetSplId(long xs,long ys) const;
+	/// Check if there is active point or primitive (n=-1)
+	int IsActive(int xs, int ys,int &n);
+	
 	/// Create new frame.
 	virtual int NewFrame();
 	/// Finish frame drawing
@@ -201,7 +204,9 @@ using mglBase::Light;
 	inline int GetNumFrame() const	{	return CurFrameId;	}
 	/// Reset frames counter (start it from zero)
 	inline void ResetFrames()	{	CurFrameId=0;	DrwDat.clear();	}
-
+	/// Get drawing data for i-th frame.
+	void GetFrame(long i);
+	
 	/// Start write frames to cinema using GIF format
 	void StartGIF(const char *fname, int ms=100);
 	/// Stop writing cinema using GIF format
@@ -254,12 +259,12 @@ using mglBase::Light;
 	/// Draws bounding box outside the plotting volume with color \a c.
 	void Box(const char *col=0, bool ticks=true);
 	/// Draw axises with ticks in directions determined by string parameter \a dir.
-	void Axis(const char *dir="xyzt", const char *stl="");
+	void Axis(const char *dir="xyzt", const char *stl="", const char *opt="");
 	/// Draw grid lines perpendicular to direction determined by string parameter \a dir.
-	void Grid(const char *dir="xyzt",const char *pen="B-");
+	void Grid(const char *dir="xyzt",const char *pen="B-", const char *opt="");
 	/// Print the label \a text for axis \a dir.
-	void Label(char dir, const char *text, mreal pos=0, mreal shift=0);
-	void Labelw(char dir, const wchar_t *text, mreal pos=0, mreal shift=0);
+	void Label(char dir, const char *text, mreal pos=0, const char *opt="");
+	void Labelw(char dir, const wchar_t *text, mreal pos=0, const char *opt="");
 
 	/// Draw colorbar at edge of axis
 	void Colorbar(const char *sch=0);
@@ -269,18 +274,21 @@ using mglBase::Light;
 	void Colorbar(HCDT v, const char *sch, mreal x, mreal y, mreal w, mreal h);
 
 	/// Draw legend of accumulated strings at position (x, y) by \a font with \a size
-	inline void Legend(mreal x, mreal y, const char *font="#", mreal size=-0.8, mreal llen=0.1)
-	{	Legend(Leg,x,y,font,size,llen);	}
+	inline void Legend(mreal x, mreal y, const char *font="#", const char *opt="")
+	{	Legend(Leg,x,y,font,opt);	}
 	/// Draw legend of accumulated strings by \a font with \a size
-	inline void Legend(int where=0x3, const char *font="#", mreal size=-0.8, mreal llen=0.1)
-	{	Legend(Leg,(where&1)?1:0,(where&2)?1:0,font,size,llen);	}
+	inline void Legend(int where=0x3, const char *font="#", const char *opt="")
+	{	Legend(Leg,(where&1)?1:0,(where&2)?1:0,font,opt);	}
 	/// Draw legend of accumulated strings by \a font with \a size
-	inline void Legend(const std::vector<mglText> &leg, int where=3, const char *font="#", mreal size=-0.8, mreal llen=0)
-	{	Legend(leg,(where&1)?1:0,(where&2)?1:0,font,size,llen);	}
+	inline void Legend(const std::vector<mglText> &leg, int where=3, const char *font="#", const char *opt="")
+	{	Legend(leg,(where&1)?1:0,(where&2)?1:0,font,opt);	}
 	/// Draw legend strings \a text at position (x, y) by \a font with \a size
-	void Legend(const std::vector<mglText> &leg, mreal x, mreal y, const char *font="#", mreal size=-0.8, mreal llen=0);
+	void Legend(const std::vector<mglText> &leg, mreal x, mreal y, const char *font="#", const char *opt="");
 	/// Number of marks in legend sample
 	inline void SetLegendMarks(int num=1)	{	LegendMarks = num>0?num:1;	}
+
+	/// Draw table for values \a val along given direction with row labels \a text at given position
+	void Table(mreal x, mreal y, HCDT val, const wchar_t *text, const char *fnt, const char *opt);
 
 	void StartAutoGroup (const char *);
 	void EndGroup();
@@ -299,9 +307,6 @@ protected:
 	unsigned char *G4;	///< Final picture in RGBA format. Prepared in Finish().
 	unsigned char *G;	///< Final picture in RGB format. Prepared in Finish().
 	std::vector<mglDrawDat> DrwDat;	///< Set of ALL drawing data for each frames
-#if MGL_HAVE_PTHREAD
-	pthread_mutex_t mutexSub, mutexPrm, mutexPtx, mutexStk, mutexGrp;
-#endif
 
 	int LegendMarks;	///< Number of marks in the Legend
 	unsigned char BDef[4];	///< Background color
@@ -323,6 +328,7 @@ protected:
 	mglMatrix B;		///< Transformation matrix
 	mglMatrix B1;		///< Transformation matrix for colorbar
 	mreal inW, inH;		///< Width and height of last InPlot
+	mreal inX, inY;		///< Coordinates of last InPlot
 	mglLight light[10];	///< Light sources
 	mreal FogDist;		///< Inverse fog distance (fog ~ exp(-FogDist*Z))
 	mreal FogDz;		///< Relative shift of fog
@@ -332,7 +338,7 @@ protected:
 	/// Prepare labels for ticks
 	void LabelTicks(mglAxis &aa);
 	/// Draw axis
-	void DrawAxis(mglAxis &aa, bool text=true, char arr=0,const char *stl="");
+	void DrawAxis(mglAxis &aa, bool text=true, char arr=0,const char *stl="",const char *opt="");
 	/// Draw axis grid lines
 	void DrawGrid(mglAxis &aa);
 	/// Update axis ranges
@@ -346,12 +352,9 @@ protected:
 	/// Scale coordinates and cut off some points
 	bool ScalePoint(mglPoint &p, mglPoint &n, bool use_nan=true) const;
 	void LightScale();	///< Additionally scale positions of light sources
-
 	/// Push drawing data (for frames only). NOTE: can be VERY large
 	long PushDrwDat();
-	/// Get drawing data for i-th frame.
-	void GetDrwDat(long i);
-
+	
 	mreal GetOrgX(char dir) const;	///< Get Org.x (parse NAN value)
 	mreal GetOrgY(char dir) const;	///< Get Org.y (parse NAN value)
 	mreal GetOrgZ(char dir) const;	///< Get Org.z (parse NAN value)
@@ -399,13 +402,15 @@ private:
 	void colorbar(HCDT v, const mreal *s, int where, mreal x, mreal y, mreal w, mreal h);
 	/// Draw labels for ticks
 	void DrawLabels(mglAxis &aa);
+	/// Get label style
+	char GetLabelPos(mreal c, long kk, mglAxis &aa);
 	/// Draw tick
 	void tick_draw(mglPoint o, mglPoint d1, mglPoint d2, int f, const char *stl);
 	/// Plot point \a p with color \a c
-	void pnt_plot(long x,long y,mreal z,const unsigned char c[4]);
+	void pnt_plot(long x,long y,mreal z,const unsigned char c[4], int obj_id);
 	mreal FindOptOrg(char dir, int ind) const;
 	/// Transform mreal color and alpha to bits format
-	unsigned char* col2int(const mglPnt &p, unsigned char *r);
+	unsigned char* col2int(const mglPnt &p, unsigned char *r, int obj_id);
 	/// Combine colors in 2 plane.
 	void combine(unsigned char *c1, const unsigned char *c2);
 	/// Fast drawing of line between 2 points

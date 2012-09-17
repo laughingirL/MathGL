@@ -41,7 +41,7 @@ void VarDlg::init()
 {
 	char ss[1024];
 	var->clear();
-	mglVar *v=Parse->Self()->DataList;
+	mglVar *v=Parse->FindVar("");
 	while(v)
 	{
 		wcstombs(ss,v->s.c_str(),1024);
@@ -87,9 +87,9 @@ void var_chg_cb(Fl_Widget *, void *)
 	if(m.text[0] && m.user_data())
 	{
 		mglVar *a = (mglVar *)m.user_data();
-		var_dlg.dim1->range(-1,a->d.nx-1);
-		var_dlg.dim2->range(-1,a->d.ny-1);
-		var_dlg.dim3->range(-1,a->d.nz-1);
+		var_dlg.dim1->range(-1,a->nx-1);
+		var_dlg.dim2->range(-1,a->ny-1);
+		var_dlg.dim3->range(-1,a->nz-1);
 	}
 }
 //-----------------------------------------------------------------------------

@@ -24,9 +24,9 @@
 #include <QLabel>
 #include <QLineEdit>
 //-----------------------------------------------------------------------------
-#include <mgl2/parser.h>
+#include <mgl2/mgl.h>
 mglData mglFormulaCalc(const wchar_t *string, mglParser *arg);
-extern mglParser parser;
+extern mglParse parser;
 #include "data_dlg.h"
 //-----------------------------------------------------------------------------
 DataDialog::DataDialog(QWidget* parent): QDialog(parent)
@@ -100,7 +100,7 @@ void DataDialog::nameChanged()
 	QString var = name->currentText();
 	wchar_t *txt=new wchar_t[var.length()+1];
 	var.toWCharArray(txt);	txt[var.length()]=0;
-	mglData dat=mglFormulaCalc(txt, &parser);	delete []txt;
+	mglData dat=parser.Calc(txt);	delete []txt;
 	x1->setMaximum(dat.nx-1);	x1->setValue(-1);
 	x2->setMaximum(dat.nx-1);	x2->setValue(-1);
 	y1->setMaximum(dat.ny-1);	y1->setValue(-1);
@@ -121,7 +121,7 @@ void DataDialog::updateRes()
 		result = "{" + oper->currentText() + " " + result + " '" + dirs->currentText() + "'}";
 	wchar_t *txt=new wchar_t[result.length()+1];
 	result.toWCharArray(txt);	txt[result.length()]=0;
-	mglData dat=mglFormulaCalc(txt, &parser);	delete []txt;
+	mglData dat=parser.Calc(txt);	delete []txt;
 	sizes->setText(tr("Result (will have sizes ") + QString::number(dat.nx)+"*"+QString::number(dat.ny)+"*"+QString::number(dat.nz)+")"	);
 	res->setText(result);
 }
@@ -129,7 +129,7 @@ void DataDialog::updateRes()
 void DataDialog::updateNames()
 {
 	name->clear();
-	mglVar *v = parser.DataList;
+	mglVar *v = parser.FindVar("");
 	QString s;
 	while(v)
 	{	name->addItem(QString::fromStdWString(v->s));		v = v->next;		}

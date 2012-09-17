@@ -26,7 +26,7 @@
 #include <QBoxLayout>
 #include <QPrinter>
 #include <QMenu>
-#include <mgl2/parser.h>
+#include <mgl2/mgl.h>
 //-----------------------------------------------------------------------------
 #include "udav_wnd.h"
 #include "qmglsyntax.h"
@@ -43,7 +43,7 @@ FilesDialog *files_dlg=0;
 QString defFontFamily;
 int defFontSize;
 bool mglAutoExecute = true;
-extern mglParser parser;
+extern mglParse parser;
 extern bool mglCompleter;
 QWidget *createDataOpenDlg(QWidget *p);
 QString getOpenDataFile(QWidget *w, QString filename);
@@ -59,9 +59,8 @@ TextPanel::TextPanel(QWidget *parent) : QWidget(parent)
 	dataOpenDlg = createDataOpenDlg(this);
 	if(!files_dlg)	files_dlg= new FilesDialog;
 
-	register int i;
-	for(i=0;mgls_base_cmd[i].name[0];i++)
-		words<<QString::fromAscii(mgls_base_cmd[i].name);
+	register int i,n=parser.GetCmdNum();
+	for(i=0;i<n;i++) 	words<<QString::fromAscii(parser.GetCmdName(i));
 	completer = new QCompleter(words, this);
 	completer->setCaseSensitivity(Qt::CaseInsensitive);
 
@@ -74,7 +73,7 @@ TextPanel::TextPanel(QWidget *parent) : QWidget(parent)
 	new QMGLSyntax(edit);
 	defFontFamily = edit->fontFamily();
 	defFontSize = int(edit->fontPointSize());
-//	completer->setCompletionMode(QCompleter::PopupCompletion);
+	completer->setCompletionMode(QCompleter::PopupCompletion);
 //	edit->setCompleter(completer);
 	edit->setLineWrapMode(QTextEdit::NoWrap);
 	setCompleter(mglCompleter);
@@ -101,7 +100,7 @@ void TextPanel::insNVal()
 	if(sel.isEmpty())	return;
 	wchar_t *txt=new wchar_t[sel.length()+1];
 	sel.toWCharArray(txt);	txt[sel.length()]=0;
-	mglData res=mglFormulaCalc(txt, &parser);
+	mglData res=mglFormulaCalc(txt, parser.Self());
 	delete []txt;
 	edit->textCursor().insertText(QString::number(res.GetVal(0)));
 }
@@ -130,7 +129,7 @@ void TextPanel::insPath()
 void TextPanel::refreshData()
 {
 	QStringList vars=words;
-	mglVar *v = parser.DataList;
+	mglVar *v = parser.FindVar("");
 	while(v)
 	{
 		if(v->s.length()>2)	vars<<QString::fromStdWString(v->s);
@@ -140,7 +139,7 @@ void TextPanel::refreshData()
 	completer = new QCompleter(vars, this);
 	completer->setCaseSensitivity(Qt::CaseInsensitive);
 	completer->setCompletionMode(QCompleter::PopupCompletion);
-	edit->setCompleter(completer);
+	setCompleter(mglCompleter);
 }
 //-----------------------------------------------------------------------------
 void TextPanel::printText()
@@ -297,11 +296,11 @@ void TextPanel::loadHDF5(const QString &fileName)
 					case 2:	nx=dims[1];	ny=dims[0];	break;
 					case 3:	nx=dims[2];	ny=dims[1];	nz=dims[0];	break;
 				}
-				v->d.Create(nx, ny, nz);
+				v->Create(nx, ny, nz);
 #if MGL_USE_DOUBLE
-				H5Dread(hd, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, v->d.a);
+				H5Dread(hd, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, v->a);
 #else
-				H5Dread(hd, H5T_NATIVE_FLOAT, H5S_ALL, H5S_ALL, H5P_DEFAULT, v->d.a);
+				H5Dread(hd, H5T_NATIVE_FLOAT, H5S_ALL, H5S_ALL, H5P_DEFAULT, v->a);
 #endif
 			}
 		}
@@ -335,21 +334,21 @@ void TextPanel::saveHDF5(const QString &fileName)
 		H5Dclose(hd);	H5Sclose(hs);
 		delete []buf;
 	}
-	mglVar *v = parser.DataList;
+	mglVar *v = parser.FindVar("");
 	char name[256];
 	while(v)
 	{
 		wcstombs(name,v->s.c_str(),v->s.length()+1);
-		if(v->d.nz==1 && v->d.ny == 1)
-		{	rank = 1;	dims[0] = v->d.nx;	}
-		else if(v->d.nz==1)
-		{	rank = 2;	dims[0] = v->d.ny;	dims[1] = v->d.nx;	}
+		if(v->nz==1 && v->ny == 1)
+		{	rank = 1;	dims[0] = v->nx;	}
+		else if(v->nz==1)
+		{	rank = 2;	dims[0] = v->ny;	dims[1] = v->nx;	}
 		else
-		{	rank = 3;	dims[0] = v->d.nz;	dims[1] = v->d.ny;	dims[2] = v->d.nx;	}
+		{	rank = 3;	dims[0] = v->nz;	dims[1] = v->ny;	dims[2] = v->nx;	}
 		hs = H5Screate_simple(rank, dims, 0);
 		hd = H5Dcreate(hf, name, H5T_IEEE_F32LE, hs, H5P_DEFAULT);
 
-		H5Dwrite(hd, H5T_NATIVE_FLOAT, hs, hs, H5P_DEFAULT, v->d.a);
+		H5Dwrite(hd, H5T_NATIVE_FLOAT, hs, hs, H5P_DEFAULT, v->a);
 		H5Dclose(hd);	H5Sclose(hs);
 		v = v->next;
 	}

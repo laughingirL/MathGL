@@ -47,7 +47,7 @@ void mgl_string_curve(mglBase *gr,long f,long ,long *ff,long *nn,const wchar_t *
 	mreal c=cc ? -cc : gr->GetClrC(ff[f]);
 	long len = wcslen(text);
 	char *fnt = new char[strlen(font)+3];	strcpy(fnt,font);
-	mreal *wdt=new mreal[len+1], h=gr->TextHeight(font,size)/4, tet, tt;	// TODO optimaze ratio
+	mreal *wdt=new mreal[len+1], h=gr->TextHeight(font,size), tet, tt;	// TODO optimaze ratio
 	mglPoint *pt=new mglPoint[len+1];
 	wchar_t L[2]=L"a";
 	register long i,j,k,m;
@@ -79,7 +79,7 @@ void mgl_string_curve(mglBase *gr,long f,long ,long *ff,long *nn,const wchar_t *
 		else		{	strcat(fnt,":L");	align=0;	}
 	}
 	if(rev)	reverse(qa.begin(),qa.end());
-	for(j=0;j<len;j++)	{	L[0]=text[j];	wdt[j]=gr->TextWidth(L,font,size)/2;	}
+	for(j=0;j<len;j++)	{	L[0]=text[j];	wdt[j]=gr->TextWidth(L,font,size);	}
 	wdt[len]=0;
 
 	// place glyphs points

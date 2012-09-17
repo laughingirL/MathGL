@@ -24,9 +24,9 @@
 #include <QListView>
 #include <QComboBox>
 #include <QTextEdit>
-#include <mgl2/parser.h>
+#include <mgl2/mgl.h>
 #include "calc_dlg.h"
-extern mglParser parser;
+extern mglParse parser;
 mglData mglFormulaCalc(const wchar_t *string, mglParser *arg);
 //-----------------------------------------------------------------------------
 //
@@ -181,7 +181,7 @@ void CalcDialog::evaluate()
 	wchar_t *txt=new wchar_t[sel.length()+1];
 	sel.toWCharArray(txt);	txt[sel.length()]=0;
 	setlocale(LC_NUMERIC, "C");
-	mglData res=mglFormulaCalc(txt, &parser);
+	mglData res=parser.Calc(txt);
 	setlocale(LC_NUMERIC, "");
 //	result->setText(QString::fromWCharArray(txt));
 	delete []txt;

@@ -51,6 +51,7 @@ void mgl_cones(HMGL graph, HCDT z,	const char *pen, const char *opt);
 void mgl_dew_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, const char *opt);
 void mgl_dew_2d(HMGL gr, HCDT ax, HCDT ay, const char *sch, const char *optl);
 /******************************************************************************/
+/* NOTE don't use options -- Puts can be part of group*/
 void mgl_puts(HMGL graph, mreal x, mreal y, mreal z,const char *text, const char *font, mreal size);
 void mgl_putsw(HMGL graph, mreal x, mreal y, mreal z,const wchar_t *text, const char *font, mreal size);
 /******************************************************************************/
@@ -73,8 +74,8 @@ void mgl_labelw_xy(HMGL graph, HCDT x, HCDT y, const wchar_t *text, const char *
 void mgl_label_y(HMGL graph, HCDT y, const char *text, const char *fnt, const char *opt);
 void mgl_labelw_y(HMGL graph, HCDT y, const wchar_t *text, const char *fnt, const char *opt);
 /******************************************************************************/
-void mgl_tablew(HMGL gr, HCDT val, const wchar_t *text, const char *fnt, const char *opt);
-void mgl_table(HMGL gr, HCDT val, const char *text, const char *fnt, const char *opt);
+void mgl_tablew(HMGL gr, mreal x, mreal y, HCDT val, const wchar_t *text, const char *fnt, const char *opt);
+void mgl_table(HMGL gr, mreal x, mreal y, HCDT val, const char *text, const char *fnt, const char *opt);
 /******************************************************************************/
 /******************************************************************************/
 void mgl_mark_(uintptr_t *gr, mreal *x,mreal *y,mreal *z,const char *mark,int);
@@ -112,7 +113,7 @@ void mgl_label_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, 
 void mgl_label_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, const char *text, const char *fnt, const char *opt,int,int,int);
 void mgl_label_y_(uintptr_t *graph, uintptr_t *y, const char *text, const char *fnt, const char *opt,int,int,int);
 /******************************************************************************/
-void mgl_table_(uintptr_t *gr, uintptr_t *val, const char *text, const char *fnt, const char *opt,int,int,int);
+void mgl_table_(uintptr_t *gr, mreal *x, mreal *y, uintptr_t *val, const char *text, const char *fnt, const char *opt,int,int,int);
 /******************************************************************************/
 void mgl_dew_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch, const char *opt,int,int);
 void mgl_dew_2d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, const char *sch, const char *opt,int,int l);

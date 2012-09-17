@@ -46,19 +46,53 @@ void smgl_combined(mglGraph *gr);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-//	gr->ImportMGLD("fonts.mgld");
-//	return;
+	gr->SubPlot(2,2,0,"");	gr->Box();
+	gr->AddLegend("1","r");
+	gr->AddLegend("2","g");
+	gr->AddLegend("3","b");
+	gr->Legend();
 	
-	gr->Puts(mglPoint(0),"\\sqrt{a}");
-	printf("pnt = %ld, prm = %ld, glf = %ld\n", gr->Self()->GetPntNum(), gr->Self()->GetPrmNum(), gr->Self()->GetGlfNum());
-	gr->ExportMGLD("fonts.mgld");
+	gr->SubPlot(2,2,1,"");	gr->Box();
+	gr->AddLegend("4","r");
+	gr->AddLegend("5","g");
+	gr->AddLegend("6","b");
+	gr->AddLegend("7","r");
+	gr->AddLegend("8","g");
+	gr->AddLegend("9","b");
+	gr->Legend();
+	
+	gr->SubPlot(2,2,2,"");	gr->Box();
+	gr->AddLegend("a","r");
+	gr->AddLegend("b","g");
+	gr->AddLegend("c","b");
+	gr->AddLegend("d","r");
+	gr->AddLegend("e","g");
+	gr->AddLegend("f","b");
+	gr->AddLegend("g","r");
+	gr->AddLegend("h","g");
+	gr->AddLegend("i","b");
+	gr->AddLegend("j","r");
+	gr->AddLegend("k","g");
+	gr->AddLegend("l","b");
+	gr->Legend();
+	
+	gr->SubPlot(2,2,3,"");	gr->Box();
 	return;
 
-	gr->Light(true);
+	mglData ys(10,61);	ys.Modify("0.8*sin(pi*2*x+pi*y)+0.2*rnd");
+	gr->Box();
+	char id[16];
+	std::string str;
+	for(int i=0;i<61;i++)
+	{	sprintf(id,"%d\n",i);	str += id;	}
+	gr->Table(0,1,ys,str.c_str(),"r#|:C");
+	return;
+	
+	gr->Light(true);	gr->Alpha(true);
 	const char *p = MGL_DEF_PAL;
 	size_t i,l=strlen(p);
 	char stl[2] = "r";
-	gr->SetQuality(6);
+//	gr->SetQuality(6);
 	for(i=0;i<100;i++)
 	{
 		stl[0] = p[int(l*mgl_rnd())];
@@ -866,7 +900,7 @@ void smgl_qo2d(mglGraph *gr)
 	r = mglRay(ham, mglPoint(-0.7, -1), mglPoint(0, 0.5), 0.02, 2);
 	if(!mini)	{gr->SubPlot(1,1,0,"<_");	gr->Title("Beam and ray tracing");}
 	gr->Plot(r.SubData(0), r.SubData(1), "k");
-	gr->Axis();	gr->Label('x', "\\i x");	gr->Label('y', "\\i z");
+	gr->Axis();	gr->Label('x', "\\i x");	gr->Label('y', "\\i y");
 	// now start beam tracing
 	gr->Fill(re,"exp(-48*x^2)");
 	a = mglQO2d(ham, re, im, r, xx, yy, 1, 30);
@@ -893,8 +927,7 @@ void smgl_pde(mglGraph *gr)	// PDE sample
 	gr->SetRange('c',0,1);	gr->Dens(a,"wyrRk");
 	gr->Axis();	gr->Label('x', "\\i x");	gr->Label('y', "\\i z");
 	gr->FPlot("-x", "k|");
-	gr->Puts(mglPoint(0, 0.85), "absorption: (x+z)/2 for x+z>0");
-	gr->Puts(mglPoint(0,1.1),"Equation: ik_0\\partial_zu + \\Delta u + x\\cdot u + i \\frac{x+z}{2}\\cdot u = 0");
+	gr->Puts(mglPoint(0, 0.95), "Equation: ik_0\\partial_zu + \\Delta u + x\\cdot u + i \\frac{x+z}{2}\\cdot u = 0\nabsorption: (x+z)/2 for x+z>0");
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_conta="title 'Cont3 sample':rotate 50 60:box\ncont3 c 'x':cont3 c:cont3 c 'z'";
@@ -1619,7 +1652,7 @@ void smgl_hist(mglGraph *gr)
 const char *mmgl_primitives="";	// TODO add later
 void smgl_primitives(mglGraph *gr)	// flag #
 {
-	gr->SubPlot(2,2,0,"");	gr->Title("Line, Curve, Rhomb, Ellipse");
+	gr->SubPlot(2,2,0,"");	gr->Title("Line, Curve, Rhomb, Ellipse","",-1.5);
 	gr->Line(mglPoint(-1,-1),mglPoint(-0.5,1),"qAI");
 	gr->Curve(mglPoint(-0.6,-1),mglPoint(1,1),mglPoint(0,1),mglPoint(1,1),"rA");
 	gr->Rhomb(mglPoint(0,0.4),mglPoint(1,0.9),0.2,"b#");

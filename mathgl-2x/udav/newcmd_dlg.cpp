@@ -26,13 +26,13 @@
 #include <QMessageBox>
 #include <QTextBrowser>
 #include <QToolButton>
-#include <mgl2/parser.h>
+#include <mgl2/mgl.h>
 
 #include "newcmd_dlg.h"
 #include "opt_dlg.h"
 #include "style_dlg.h"
 #include "data_dlg.h"
-extern mglParser parser;
+extern mglParse parser;
 extern QString pathHelp;
 //-----------------------------------------------------------------------------
 NewCmdDialog::NewCmdDialog(QWidget *p) : QDialog(p,Qt::WindowStaysOnTopHint)
@@ -153,43 +153,35 @@ void NewCmdDialog::fillList()	// TODO update list !!!
 {
 	types<<tr("1D plots")<<tr("2D plots")<<tr("3D plots")<<tr("Dual plots")
 			<<tr("Vector plots")<<tr("Other plots")<<tr("Text and legend")
-			<<tr("Create data and I/O")<<tr("Data handling")<<tr("Data extraction")
-			<<tr("Axis and colorbar")<<tr("General setup")<<tr("Axis setup")
-			<<tr("Scale and rotate")<<tr("Program flow")<<tr("Nonlinear fitting")
-			<<tr("Primitives");
-	cmds[0]<<"plot"<<"area"<<"bars"<<"barh"<<"boxplot"<<"chart"<<"error"<<"mark"
-			<<"region"<<"stem"<<"step"<<"tens"<<"textmark"<<"torus"<<"tube";
-	cmds[1]<<"surf"<<"axial"<<"belt"<<"boxs"<<"cont"<<"contd"<<"contf"<<"dens"
-			<<"fall"<<"grid2"<<"mesh"<<"tile"<<"grad";
-	cmds[2]<<"surf3"<<"cloud"<<"beam"<<"cont3"<<"conta"<<"contf3"<<"contfa"
-			<<"dens3"<<"densa"<<"grid3"<<"grida";
-	cmds[3]<<"map"<<"stfa"<<"surfa"<<"surfc"<<"tile"<<"surf3a"<<"surf3c";
-	cmds[4]<<"flow"<<"pipe"<<"traj"<<"vect"<<"vectc"<<"vectl"<<"dew";
-	cmds[5]<<"contx"<<"conty"<<"contz"<<"contfx"<<"contfy"<<"contfz"<<"densx"
-			<<"densy"<<"densz"<<"triplot"<<"tricont"<<"quadplot"<<"crust"<<"dots";
-	cmds[6]<<"text"<<"title"<<"fgets"<<"legend"<<"addlegend"<<"clearlegend"	<<"legendbox";
-	cmds[7]<<"new"<<"var"<<"copy"<<"delete"<<"insert"<<"read"<<"readmat"<<"readall"
-			<<"readhdf"<<"save"<<"savehdf"<<"export"<<"import"<<"info"<<"idset";
-	cmds[8]<<"fill"<<"fillsample"<<"modify"<<"put"<<"crop"<<"extend"<<"rearrange"<<"squeeze"
-			<<"transpose"<<"cumsum"<<"diff"<<"diff2"<<"sinfft"<<"cosfft"<<"hankel"
-			<<"envelop"<<"integrate"<<"mirror"<<"norm"<<"normsl"<<"sew"<<"smooth"
-			<<"swap"<<"roll"<<"addto"<<"subto"<<"divto"<<"multo";
-	cmds[9]<<"combine"<<"evaluate"<<"max"<<"min"<<"hist"<<"jacobian"<<"momentum"
-			<<"resize"<<"sum"<<"trace"<<"transform"<<"transforma"<<"stfad"<<"pde"
-			<<"qo2d"<<"ray";
-	cmds[10]<<"axis"<<"box"<<"colorbar"<<"grid"<<"xlabel"<<"ylabel"<<"zlabel"<<"tlabel";
-	cmds[11]<<"alpha"<<"alphadef"<<"transparent"<<"transptype"<<"ambient"<<"light"
-			<<"fog"<<"arrowsize"<<"barwidth"<<"linewidth"<<"marksize"<<"plotfactor"
-			<<"zoom"<<"cut"<<"axialdir"<<"mesgnum"<<"font"<<"palette"<<"rotatetext";
-	cmds[12]<<"axis"<<"ranges"<<"caxis"<<"crange"<<"xrange"<<"yrange"<<"zrange"
-			<<"origin"<<"ternary"<<"adjust"<<"ctick"<<"xtick"<<"ytick"<<"ztick"
-			<<"ticklen"<<"tickstl";
-	cmds[13]<<"subplot"<<"inplot"<<"rotate"<<"aspect"<<"columnplot"<<"perspective";
-	cmds[14]<<"call"<<"func"<<"chdir"<<"define"<<"if"<<"elseif"<<"else"<<"endif"<<"for"
-			<<"next"<<"once"<<"stop"<<"write"<<"setsize";
-	cmds[15]<<"fit"<<"fits"<<"putsfit";
-	cmds[16]<<"fplot"<<"fsurf"<<"ball"<<"cone"<<"curve"<<"drop"<<"facex"<<"facey"
-			<<"facez"<<"line"<<"rect"<<"sphere";
+			<<tr("Create data and I/O")<<tr("Data transform")<<tr("Data handling")
+			<<tr("Axis and colorbar")<<tr("Axis setup")<<tr("General setup")
+			<<tr("Scale and rotate")<<tr("Program flow")<<tr("Primitives");
+	// now fill it automatically from parser for all categories
+	long i, n = parser.GetCmdNum();
+	for(i=0;i<n;i++)
+	{
+		const char *name = parser.GetCmdName(i);
+		switch(parser.CmdType(name))
+		{
+		case 1:	cmds[5]<<name;	break;
+		case 2:	cmds[5]<<name;	break;
+		case 3:	cmds[12]<<name;	break;
+		case 4:	cmds[9]<<name;	break;
+		case 5:	cmds[7]<<name;	break;
+		case 6:	cmds[13]<<name;	break;
+		case 7:	cmds[14]<<name;	break;
+		case 8:	cmds[0]<<name;	break;
+		case 9:	cmds[1]<<name;	break;
+		case 10:	cmds[2]<<name;	break;
+		case 11:	cmds[3]<<name;	break;
+		case 12:	cmds[4]<<name;	break;
+		case 13:	cmds[10]<<name;	break;
+		case 14:	cmds[15]<<name;	break;
+		case 15:	cmds[11]<<name;	break;
+		case 16:	cmds[6]<<name;	break;
+		case 17:	cmds[8]<<name;	break;
+		}
+	}
 }
 //-----------------------------------------------------------------------------
 void NewCmdDialog::typeChanged(int s)
@@ -221,14 +213,6 @@ void parse(QStringList &sl, const QString &s)
 	if(!sp)	sl<<s.mid(i1);
 }
 //-----------------------------------------------------------------------------
-mglCommand *getCmd(const QString &cmd)
-{
-	wchar_t *c = new wchar_t[cmd.length()+1];
-	cmd.toWCharArray(c);	c[cmd.length()]=0;
-	mglCommand *rts = parser.FindCommand(c);
-	delete []c;		return rts;
-}
-//-----------------------------------------------------------------------------
 void NewCmdDialog::nameChanged(int s)
 {
 	QString n=name->itemText(s), par, a;
@@ -240,11 +224,10 @@ void NewCmdDialog::nameChanged(int s)
 	// clear old
 	kind->clear();	kinds.clear();	for(k=0;k<NUM_CH;k++)	argn[k].clear();
 	// try to find the keyword
-	mglCommand *rts=getCmd(n);
-	if(!rts)	return;
-	info->setText(QString::fromAscii(rts->desc));
+	if(!parser.CmdType(n.toAscii()))	return;
+	info->setText(QString::fromAscii(parser.CmdDesc(n.toAscii())));
 
-	par = QString::fromAscii(rts->form);
+	par = QString::fromAscii(parser.CmdFormat(n.toAscii()));
 	int i0 = par.indexOf(' ');	// first space if present
 	if(i0<0)	{	kind->addItem(par);	return;	}	// no arguments
 	// parse kind of arguments
@@ -265,6 +248,9 @@ void NewCmdDialog::kindChanged(int s)
 	if(s<0 || s>NUM_CH-1)	return;
 	cmd="";
 	int nn = argn[s].count();
+	QStringList lst;
+	for(int i=0;i<args->rowCount();i++)
+		lst<<args->item(i,0)->text()+"~ "+args->item(i,1)->text();
 //return;
 	args->setRowCount(nn);	args->setColumnCount(2);
 	QTableWidgetItem *it;
@@ -281,6 +267,9 @@ void NewCmdDialog::kindChanged(int s)
 		args->item(i,0)->setText(a);	args->item(i,0)->setFont(f);
 		args->item(i,0)->setFlags(Qt::ItemIsEnabled);
 		args->item(i,1)->setFlags(Qt::ItemIsEditable|Qt::ItemIsEnabled);
+		for(int j=0;j<lst.count();j++)
+			if(lst[j].section('~',0,0)==a)
+				args->item(i,1)->setText(lst[j].section('~',1).trimmed());
 	}
 }
 //-----------------------------------------------------------------------------

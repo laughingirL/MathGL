@@ -21,9 +21,9 @@
 #include <QLayout>
 #include <QLineEdit>
 #include <QPushButton>
-#include <mgl2/parser.h>
+#include <mgl2/mgl.h>
 #include "args_dlg.h"
-extern mglParser parser;
+extern mglParse parser;
 //-----------------------------------------------------------------------------
 QDialog *createArgsDlg(QWidget *p)	{	return new ArgsDialog(p);	}
 //-----------------------------------------------------------------------------

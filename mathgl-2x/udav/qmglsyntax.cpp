@@ -21,8 +21,8 @@
 #include <QLabel>
 #include <QLayout>
 #include "qmglsyntax.h"
-#include <mgl2/parser.h>
-mglParser parser;
+#include <mgl2/mgl.h>
+mglParse parser;
 int mgl_cmd_cmp(const void *a, const void *b);
 // comment string keyword option suffix number
 QColor mglColorScheme[9] = {QColor(0,127,0), QColor(255,0,0), QColor(0,0,127), QColor(127,0,0), QColor(127,0,0), QColor(0,0,255), QColor(127,0,127), QColor(0,127,127), QColor(0,0,127)};
@@ -31,8 +31,7 @@ QMGLSyntax::QMGLSyntax(QTextEdit *textEdit) : QSyntaxHighlighter(textEdit)	{}
 //-----------------------------------------------------------------------------
 void QMGLSyntax::highlightBlock(const QString &text)
 {
-	register int i, j, n, m = text.length(),s=0;
-	for(n=0;parser.Cmd[n].name[0];n++);	// determine the number of symbols in parser
+	register int i, j, m = text.length(),s=0;
 	bool arg = false, nl = true;
 	QString num("+-.0123456789:");
 	for(i=0;i<m;i++)				// highlight paragraph
@@ -49,12 +48,12 @@ void QMGLSyntax::highlightBlock(const QString &text)
 		}
 		else if(nl)				// keyword
 		{
-			wchar_t *s = new wchar_t[m+1];
+			char *s = new char[m+1];
 			for(j=i;j<text.length() && !text[j].isSpace() && text[j]!=':';j++)
 				s[j-i] = text[j].toLatin1();
 			s[j-i]=0;
-			mglCommand *rts = parser.FindCommand(s);
-			if(rts)	setFormat(i,j-i+1,rts->type!=6 ? (rts->type==4 ? mglColorScheme[6] : mglColorScheme[2]) : mglColorScheme[7]);
+			int type = parser.CmdType(s);
+			if(type)	setFormat(i,j-i+1,type!=7 ? (type==5 ? mglColorScheme[6] : mglColorScheme[2]) : mglColorScheme[7]);
 			delete []s;
 		}
 		else if(text[i]==';')	{	arg = true;	nl = false;	continue;	}

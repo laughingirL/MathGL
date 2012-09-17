@@ -134,22 +134,22 @@ void mglc_axial(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 		mglprintf(out,1024,L"gr->Axial(%s, %s, %s, \"%s\", \"%s\");", a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str(), k[3]==2?a[3].s.c_str():"",opt);
 }
 //-----------------------------------------------------------------------------
-int mgls_axis(mglGraph *gr, long , mglArg *a, int k[10], const char *)
+int mgls_axis(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]==2 && k[1]==2)	gr->SetFunc(a[0].s.c_str(),a[1].s.c_str(),k[2]==2?a[2].s.c_str():"",k[3]==2?a[3].s.c_str():"");
-	else if(k[0]==2)	gr->Axis(a[0].s.c_str(), k[1]==2?a[1].s.c_str():"");
+	else if(k[0]==2)	gr->Axis(a[0].s.c_str(), k[1]==2?a[1].s.c_str():"",opt);
 	else if(k[0]==3)	gr->SetCoor(iint(a[0].v));
-	else if(k[0]==0)	gr->Axis("xyz");
+	else if(k[0]==0)	gr->Axis("xyz","",opt);
 	else return 1;
 	return 0;
 }
-void mglc_axis(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
+void mglc_axis(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]==2 && k[1]==2 && k[2]==2)
 		mglprintf(out,1024,L"gr->SetFunc(\"%s\", \"%s\", \"%s\", \"%s\");", a[0].s.c_str(),a[1].s.c_str(),a[2].s.c_str(),k[2]==2?a[2].s.c_str():"",k[3]==2?a[3].s.c_str():"");
-	else if(k[0]==2)	mglprintf(out,1024,L"gr->Axis(\"%s\", \"%s\");", a[0].s.c_str(), k[1]==2?a[1].s.c_str():"");
+	else if(k[0]==2)	mglprintf(out,1024,L"gr->Axis(\"%s\", \"%s\",\"%s\");", a[0].s.c_str(), k[1]==2?a[1].s.c_str():"",opt);
 	else if(k[0]==3)	mglprintf(out,1024,L"gr->SetCoor(\"%d\");", iint(a[0].v));
-	else if(k[0]==0)	mglprintf(out,1024,L"gr->Axis(\"xyz\");");
+	else if(k[0]==0)	mglprintf(out,1024,L"gr->Axis(\"xyz\",\"\",\"%s\");",opt);
 }
 //-----------------------------------------------------------------------------
 int mgls_ball(mglGraph *gr, long , mglArg *a, int k[10], const char *)
@@ -264,7 +264,7 @@ void mglc_boxs(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 		mglprintf(out,1024,L"gr->Boxs(%s, %s, %s, \"%s\", \"%s\");", a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str(), k[3]==2?a[3].s.c_str():"",opt);
 }
 //-----------------------------------------------------------------------------
-int mgls_beam(mglGraph *gr, long , mglArg *a, int k[10], const char *)
+int mgls_beam(mglGraph *gr, long , mglArg *a, int k[10], const char *)		// NOTE beam can be made obsolete ???
 {
 	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1 && k[4]==3)
 		gr->Beam(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),a[4].v,
@@ -1228,14 +1228,14 @@ void mglc_loadfont(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 		mglprintf(out,1024,L"gr->RestoreFont();");
 }
 //-----------------------------------------------------------------------------
-int mgls_grid(mglGraph *gr, long , mglArg *a, int k[10], const char *)
+int mgls_grid(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
-	gr->Grid(k[0]==2?a[0].s.c_str():"xyzt", k[1]==2?a[1].s.c_str():"B-");
+	gr->Grid(k[0]==2?a[0].s.c_str():"xyzt", k[1]==2?a[1].s.c_str():"B-",opt);
 	return 0;
 }
-void mglc_grid(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
+void mglc_grid(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 {
-	mglprintf(out,1024,L"gr->Grid(\"%s\", \"%s\");", k[0]==2?a[0].s.c_str():"xyz", k[1]==2?a[1].s.c_str():"B-");
+	mglprintf(out,1024,L"gr->Grid(\"%s\", \"%s\", \"%s\");", k[0]==2?a[0].s.c_str():"xyz", k[1]==2?a[1].s.c_str():"B-",opt);
 }
 //-----------------------------------------------------------------------------
 int mgls_grid2(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
@@ -1338,20 +1338,20 @@ void mglc_line(wchar_t out[1024], long n, mglArg *a, int [10], const char *)
 	}
 }
 //-----------------------------------------------------------------------------
-int mgls_legend(mglGraph *gr, long , mglArg *a, int k[10], const char *)
+int mgls_legend(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]==3 && k[1]==3)
-		gr->Legend(a[0].v, a[1].v, k[2]==2?a[2].s.c_str():"#", k[3]==3?a[3].v:-1, k[4]==3?a[4].v:0.1);
+		gr->Legend(a[0].v, a[1].v, k[2]==2?a[2].s.c_str():"#", opt);
 	else
-		gr->Legend(k[0]==3?iint(a[0].v):3, k[1]==2?a[1].s.c_str():"#", k[2]==3?a[2].v:-1, k[3]==3?a[3].v:0.1);
+		gr->Legend(k[0]==3?iint(a[0].v):3, k[1]==2?a[1].s.c_str():"#", opt);
 	return 0;
 }
-void mglc_legend(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
+void mglc_legend(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]==3 && k[1]==3)
-		mglprintf(out,1024,L"gr->Legend(%g, %g, \"%s\", %g, %g);", a[0].v, a[1].v, k[2]==2?a[2].s.c_str():"#", k[3]==3?a[3].v:-1, k[4]==3?a[4].v:0.1);
+		mglprintf(out,1024,L"gr->Legend(%g, %g, \"%s\", \"%s\");", a[0].v, a[1].v, k[2]==2?a[2].s.c_str():"#", opt);
 	else
-		mglprintf(out,1024,L"gr->Legend(%d, \"%s\", %g, %g);", k[0]==3?iint(a[0].v):3, k[1]==2?a[1].s.c_str():"#", k[2]==3?a[2].v:-1, k[4]==3?a[4].v:0.1);
+		mglprintf(out,1024,L"gr->Legend(%d, \"%s\", \"%s\");", k[0]==3?iint(a[0].v):3, k[1]==2?a[1].s.c_str():"#", opt);
 }
 //-----------------------------------------------------------------------------
 int mgls_barwidth(mglGraph *gr, long , mglArg *a, int k[10], const char *)
@@ -2143,7 +2143,7 @@ void mglc_tiles(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 		mglprintf(out,1024,L"gr->TileS(%s, %s, %s, %s, \"%s\", \"%s\");", a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str(), a[3].s.c_str(), k[4]==2?a[4].s.c_str():"",opt);
 }
 //-----------------------------------------------------------------------------
-int mgls_text(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
+int mgls_text(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)		// NOTE don't use options -- Puts can be part of group
 {
 	if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==2)
 		gr->Putsw(mglPoint(a[0].v,a[1].v,a[2].v),a[3].w.c_str(),
@@ -2462,48 +2462,48 @@ void mglc_traj(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 		mglprintf(out,1024,L"gr->Traj(%s, %s, %s, %s, %s, %s, \"%s\", \"%s\");", a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str(), a[3].s.c_str(), a[4].s.c_str(), a[5].s.c_str(), k[6]==2?a[6].s.c_str():"",opt);
 }
 //-----------------------------------------------------------------------------
-int mgls_xlabel(mglGraph *gr, long , mglArg *a, int k[10], const char *)
+int mgls_xlabel(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
-	if(k[0]==2)	gr->Label('x', a[0].w.c_str(), k[1]==3?a[1].v:1, k[2]==3?a[2].v:0);
+	if(k[0]==2)	gr->Label('x', a[0].w.c_str(), k[1]==3?a[1].v:1, opt);
 	else	return 1;
 	return 0;
 }
-void mglc_xlabel(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
+void mglc_xlabel(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 {
-	if(k[0]==2)	mglprintf(out,1024,L"gr->Label('x', L\"%ls\", %g, %g);", a[0].w.c_str(), k[1]==3?a[1].v:1, k[2]==3?a[2].v:0);
+	if(k[0]==2)	mglprintf(out,1024,L"gr->Label('x', L\"%ls\", %g, \"%ls\");", a[0].w.c_str(), k[1]==3?a[1].v:1, opt);
 }
 //-----------------------------------------------------------------------------
-int mgls_ylabel(mglGraph *gr, long , mglArg *a, int k[10], const char *)
+int mgls_ylabel(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
-	if(k[0]==2)	gr->Label('y', a[0].w.c_str(), k[1]==3?a[1].v:1, k[2]==3?a[2].v:0);
+	if(k[0]==2)	gr->Label('y', a[0].w.c_str(), k[1]==3?a[1].v:1, opt);
 	else	return 1;
 	return 0;
 }
-void mglc_ylabel(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
+void mglc_ylabel(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 {
-	if(k[0]==2)	mglprintf(out,1024,L"gr->Label('y', L\"%ls\", %g, %g);", a[0].w.c_str(), k[1]==3?a[1].v:1, k[2]==3?a[2].v:0);
+	if(k[0]==2)	mglprintf(out,1024,L"gr->Label('y', L\"%ls\", %g, \"%ls\");", a[0].w.c_str(), k[1]==3?a[1].v:1, opt);
 }
 //-----------------------------------------------------------------------------
-int mgls_zlabel(mglGraph *gr, long , mglArg *a, int k[10], const char *)
+int mgls_zlabel(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
-	if(k[0]==2)	gr->Label('z', a[0].w.c_str(), k[1]==3?a[1].v:1, k[2]==3?a[2].v:0);
+	if(k[0]==2)	gr->Label('z', a[0].w.c_str(), k[1]==3?a[1].v:1, opt);
 	else	return 1;
 	return 0;
 }
-void mglc_zlabel(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
+void mglc_zlabel(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 {
-	if(k[0]==2)	mglprintf(out,1024,L"gr->Label('z', L\"%ls\", %g, %g);", a[0].w.c_str(), k[1]==3?a[1].v:1, k[2]==3?a[2].v:0);
+	if(k[0]==2)	mglprintf(out,1024,L"gr->Label('z', L\"%ls\", %g, \"%ls\");", a[0].w.c_str(), k[1]==3?a[1].v:1, opt);
 }
 //-----------------------------------------------------------------------------
-int mgls_tlabel(mglGraph *gr, long , mglArg *a, int k[10], const char *)
+int mgls_tlabel(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
-	if(k[0]==2)	gr->Label('t', a[0].w.c_str(), k[1]==3?a[1].v:1, k[2]==3?a[2].v:0);
+	if(k[0]==2)	gr->Label('t', a[0].w.c_str(), k[1]==3?a[1].v:1, opt);
 	else	return 1;
 	return 0;
 }
-void mglc_tlabel(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
+void mglc_tlabel(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 {
-	if(k[0]==2)	mglprintf(out,1024,L"gr->Label('t', L\"%ls\", %g, %g);", a[0].w.c_str(), k[1]==3?a[1].v:1, k[2]==3?a[2].v:0);
+	if(k[0]==2)	mglprintf(out,1024,L"gr->Label('t', L\"%ls\", %g, \"%ls\");", a[0].w.c_str(), k[1]==3?a[1].v:1, opt);
 }
 //-----------------------------------------------------------------------------
 int mgls_label(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
@@ -2529,15 +2529,19 @@ void mglc_label(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 //-----------------------------------------------------------------------------
 int mgls_table(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
-	if(k[0]==1)
-		gr->Table(*(a[0].d), k[1]==2?a[1].w.c_str():L"", k[2]==2?a[2].s.c_str():":x#",opt);
+	if(k[0]==3 && k[1]==3 && k[2]==1)
+		gr->Table(a[0].v, a[1].v, *(a[2].d), k[3]==2?a[3].w.c_str():L"", k[4]==2?a[4].s.c_str():"#",opt);
+	else if(k[0]==1)
+		gr->Table(*(a[0].d), k[1]==2?a[1].w.c_str():L"", k[2]==2?a[2].s.c_str():"#",opt);
 	else	return 1;
 	return 0;
 }
 void mglc_table(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 {
-	if(k[0]==1)
-		mglprintf(out,1024,L"gr->Table(%s, L\"%ls\", \"%s\", \"%s\");", a[0].s.c_str(), k[1]==2?a[1].w.c_str():L"", k[2]==2?a[2].s.c_str():"",opt);
+	if(k[0]==3 && k[1]==3 && k[2]==1)
+		mglprintf(out,1024,L"gr->Table(%g, %g, %s, L\"%ls\", \"%s\", \"%s\");", a[0].v, a[1].v, a[2].s.c_str(), k[3]==2?a[3].w.c_str():L"", k[4]==2?a[4].s.c_str():"#",opt);
+	else if(k[0]==1)
+		mglprintf(out,1024,L"gr->Table(%s, L\"%ls\", \"%s\", \"%s\");", a[0].s.c_str(), k[1]==2?a[1].w.c_str():L"", k[2]==2?a[2].s.c_str():"#",opt);
 }
 //-----------------------------------------------------------------------------
 int mgls_xrange(mglGraph *gr, long , mglArg *a, int k[10], const char *)
@@ -3137,15 +3141,6 @@ void mglc_putsfit(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 		mglprintf(out,1024,L"gr->PutsFit(mglPoint(%g, %g, %g), \"%s\", \"%s\", %g);", a[0].v,a[1].v,a[2].v, k[3]==2?a[3].s.c_str():"", k[4]==2?a[4].s.c_str():"", k[5]==3?a[5].v:-1);
 	else if(k[0]==3 && k[1]==3)
 		mglprintf(out,1024,L"gr->PutsFit(mglPoint(%g, %g), \"%s\", \"%s\", %g);", a[0].v,a[1].v, k[2]==2?a[2].s.c_str():"", k[3]==2?a[3].s.c_str():"", k[4]==3?a[4].v:-1);
-
-	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1 && k[4]==1 && k[5]==1 && k[6]==2 && k[7]==2)
-		mglprintf(out,1024,L"gr->FitS(%s, %s, %s, %s, %s, %s, \"%s\", \"%s\", %s, %s);", a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str(), a[3].s.c_str(), a[4].s.c_str(), a[5].s.c_str(), a[6].s.c_str(), a[7].s.c_str(), (k[8]==1 && a[8].d->nx>=long(strlen(a[7].s.c_str())))?a[8].s.c_str():"NULL", (k[9]==3&&a[9].v!=0)?"true":"false");
-	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1 && k[4]==1 && k[5]==2 && k[6]==2)
-		mglprintf(out,1024,L"gr->FitS(%s, %s, %s, %s, %s, \"%s\", \"%s\", %s, %s);", a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str(), a[3].s.c_str(), a[4].s.c_str(), a[5].s.c_str(), a[6].s.c_str(), (k[7]==1 && a[7].d->nx>=long(strlen(a[6].s.c_str())))?a[7].s.c_str():"NULL", (k[8]==3&&a[8].v!=0)?"true":"false");
-	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1 && k[4]==2 && k[5]==2)
-		mglprintf(out,1024,L"gr->FitS(%s, %s, %s, %s, \"%s\", \"%s\", %s, %s);", a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str(), a[3].s.c_str(), a[4].s.c_str(), a[5].s.c_str(), (k[6]==1 && a[6].d->nx>=long(strlen(a[5].s.c_str())))?a[6].s.c_str():"NULL", (k[7]==3&&a[7].v!=0)?"true":"false");
-	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==2 && k[4]==2)
-		mglprintf(out,1024,L"gr->FitS(%s, %s, %s, \"%s\", \"%s\", %s, %s);", a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str(), a[3].s.c_str(), a[4].s.c_str(), (k[5]==1 && a[5].d->nx>=long(strlen(a[4].s.c_str())))?a[5].s.c_str():"NULL", (k[6]==3&&a[6].v!=0)?"true":"false");
 }
 //-----------------------------------------------------------------------------
 int mgls_arrowsize(mglGraph *gr, long , mglArg *a, int k[10], const char *)
@@ -3216,7 +3211,7 @@ void mglc_fsurf(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 		mglprintf(out,1024,L"gr->FSurf(\"%s\", \"%s\", \"%s\");", a[0].s.c_str(), k[1]==2?a[1].s.c_str():"",opt);
 }
 //-----------------------------------------------------------------------------
-int mgls_fgets(mglGraph *gr, long , mglArg *a, int k[10], const char *)
+int mgls_fgets(mglGraph *gr, long , mglArg *a, int k[10], const char *)		// NOTE don't use options -- Puts can be part of group
 {
 	char buf[1024];
 	FILE *fp;
@@ -3239,7 +3234,7 @@ int mgls_fgets(mglGraph *gr, long , mglArg *a, int k[10], const char *)
 			fclose(fp);	return 0;
 		}
 		fclose(fp);
-		gr->Puts(mglPoint(a[0].v,a[1].v,vv),buf, (k[j+4]==2)?a[j+4].s.c_str():"", k[j+5]==3?a[j+5].v:-1.4);
+		gr->Puts(mglPoint(a[0].v,a[1].v,vv),buf, (k[j+4]==2)?a[j+4].s.c_str():"", k[j+5]==3?a[j+5].v:-1);
 	}
 	else	return 1;
 	return 0;
@@ -3582,48 +3577,48 @@ void mglc_triangulate(wchar_t out[1024], long , mglArg *a, int k[10], const char
 }
 //-----------------------------------------------------------------------------
 mglCommand mgls_base_cmd[] = {
-	{"addlegend","Add legend entry","addlegend 'txt' 'fmt'", mgls_addlegend, mglc_addlegend,2},
+	{"addlegend","Add legend entry","addlegend 'txt' 'fmt'", mgls_addlegend, mglc_addlegend,15},
 	{"addto","Add data or number","addto Var Dat|Var num", mgls_addto, mglc_addto,3},
-	{"adjust","Adjust ticks for best view","adjust ['dir']", mgls_adjust, mglc_adjust,2},
+	{"adjust","Adjust ticks for best view","adjust ['dir']", mgls_adjust, mglc_adjust,14},
 	{"alpha","Switch on/off transparency","alpha [val]", mgls_alpha, mglc_alpha,2},
 	{"alphadef","Set default transparency","alphadef val", mgls_alphadef, mglc_alphadef,2},
 	{"ambient","Set ambient light brightness","ambient val", mgls_ambient, mglc_ambient,2},
-	{"area","Draw area plot for 1D data","area Ydat ['fmt']|Xdat Ydat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_area, mglc_area,0},
+	{"area","Draw area plot for 1D data","area Ydat ['fmt']|Xdat Ydat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_area, mglc_area,7},
 	{"arrowsize","Set size of arrows","arrowsize val", mgls_arrowsize, mglc_arrowsize,2},
 	{"aspect","Set aspect ration","aspect valx valy [valz]", mgls_aspect, mglc_aspect,5},
-	{"axial","Draw surfaces of contour lines rotation","axial Zdat ['fmt' num]|Xdat Ydat Zdat ['fmt' num]", mgls_axial, mglc_axial,0},
-	{"axis","Setup or draw axis","axis ['dir' adjust]|'fx' 'fy' ['fz' 'fc']|how", mgls_axis, mglc_axis,1},
-	{"axisstl","Set axis and tick style","axisstl 'stl' ['sub']", mgls_axisstl, mglc_axisstl,2},
-	{"ball","Draw point (ball)","ball posx posy ['fmt']|posx posy posz ['fmt']", mgls_ball, mglc_ball,1},
-	{"barh","Draw horizontal bars for 1D data", "barh Ydat ['fmt' above]|Xdat Ydat ['fmt' above]", mgls_barh, mglc_barh,0},
-	{"bars","Draw bars for 1D data","bars Ydat ['fmt' above]|Xdat Ydat ['fmt' above]|Xdat Ydat Zdat ['fmt' above]", mgls_bars, mglc_bars,0},
+	{"axial","Draw surfaces of contour lines rotation","axial Zdat ['fmt' num]|Xdat Ydat Zdat ['fmt' num]", mgls_axial, mglc_axial,8},
+	{"axis","Setup or draw axis","axis ['dir' adjust]|'fx' 'fy' ['fz' 'fc']|how", mgls_axis, mglc_axis,12},
+	{"axisstl","Set axis and tick style","axisstl 'stl' ['sub']", mgls_axisstl, mglc_axisstl,14},
+	{"ball","Draw point (ball)","ball posx posy ['fmt']|posx posy posz ['fmt']", mgls_ball, mglc_ball,13},
+	{"barh","Draw horizontal bars for 1D data", "barh Ydat ['fmt' above]|Xdat Ydat ['fmt' above]", mgls_barh, mglc_barh,7},
+	{"bars","Draw bars for 1D data","bars Ydat ['fmt' above]|Xdat Ydat ['fmt' above]|Xdat Ydat Zdat ['fmt' above]", mgls_bars, mglc_bars,7},
 	{"barwidth","Set default bars width","barwidth val", mgls_barwidth, mglc_barwidth,2},
-	{"beam","Draw quasioptical beam","beam Tr G1 G2 Adat r ['sch' flag num] ", mgls_beam, mglc_beam,0},
-	{"belt","Draw belts","belt Zdat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_belt, mglc_belt,0},
-	{"box","Draw bounding box","box ['fmt' ticks]", mgls_box, mglc_box,1},
-	{"boxplot","Draw boxplot for 2D data","boxplot Ydat ['fmt']|Xdat Ydat ['fmt']", mgls_boxplot, mglc_boxplot,0},
-	{"boxs","Draw boxes","boxs Zdat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_boxs, mglc_boxs,0},
+	{"beam","Draw quasioptical beam","beam Tr G1 G2 Adat r ['sch' flag num] ", mgls_beam, mglc_beam,9},
+	{"belt","Draw belts","belt Zdat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_belt, mglc_belt,8},
+	{"box","Draw bounding box","box ['fmt' ticks]", mgls_box, mglc_box,12},
+	{"boxplot","Draw boxplot for 2D data","boxplot Ydat ['fmt']|Xdat Ydat ['fmt']", mgls_boxplot, mglc_boxplot,7},
+	{"boxs","Draw boxes","boxs Zdat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_boxs, mglc_boxs,8},
 	{"break","Break for-cycle","break", 0, 0, 6},
 	{"call","Execute script in external file","call 'name' [args]", 0, 0, 6},
-	{"candle","Draw candlestick chart","candle candle Vdat1 ['fmt']|Vdat1 Vdat2 ['fmt']|Vdat1 Ydat1 Ydat2 ['fmt']||Vdat1 Vdat2 Ydat1 Ydat2 ['fmt']|Xdat Vdat1 Vdat2 Ydat1 Ydat2 ['fmt']", mgls_candle, mglc_candle,0},
-	{"chart","Draw chart","chart Dat ['fmt']", mgls_chart, mglc_chart,0},
-	{"chdir","Change current directory","chdir 'dir'", mgls_chdir, mglc_chdir,2},
-	{"circle","Draw circle","circle x y r ['fmt']|x y z r ['fmt']", mgls_circle, mglc_circle,1},
+	{"candle","Draw candlestick chart","candle candle Vdat1 ['fmt']|Vdat1 Vdat2 ['fmt']|Vdat1 Ydat1 Ydat2 ['fmt']||Vdat1 Vdat2 Ydat1 Ydat2 ['fmt']|Xdat Vdat1 Vdat2 Ydat1 Ydat2 ['fmt']", mgls_candle, mglc_candle,7},
+	{"chart","Draw chart","chart Dat ['fmt']", mgls_chart, mglc_chart,7},
+	{"chdir","Change current directory","chdir 'path'", mgls_chdir, mglc_chdir,2},
+	{"circle","Draw circle","circle x y r ['fmt']|x y z r ['fmt']", mgls_circle, mglc_circle,13},
 	{"clean","Remove duplicate rows","clean Dat id", mgls_clean, mglc_clean,3},
-	{"clearlegend","Clear legend antries","clearlegend", mgls_clearlegend, mglc_clearlegend,2},
-	{"clf","Clear picture","clf", mgls_clf, mglc_clf,1},
-	{"cloud","Draw cloud","cloud Adat ['fmt']|Xdat Ydat Zdat Adat ['fmt']", mgls_cloud, mglc_cloud,0},
-	{"colorbar","Draw colorbar","colorbar ['fmt' pos]|Vdat ['fmt' pos]|'sch' pos x y w h|Vdat 'sch' pos x y w h", mgls_colorbar, mglc_colorbar,1},
+	{"clearlegend","Clear legend antries","clearlegend", mgls_clearlegend, mglc_clearlegend,15},
+	{"clf","Clear picture","clf", mgls_clf, mglc_clf,12},
+	{"cloud","Draw cloud","cloud Adat ['fmt']|Xdat Ydat Zdat Adat ['fmt']", mgls_cloud, mglc_cloud,9},
+	{"colorbar","Draw colorbar","colorbar ['fmt' pos]|Vdat ['fmt' pos]|'sch' pos x y w h|Vdat 'sch' pos x y w h", mgls_colorbar, mglc_colorbar,12},
 	{"column","Get data column filled by formula on column ids","column Res Dat 'eq'", mgls_column, mglc_column,4},
 	{"columnplot","Set position of plot inside cell of column", "columnplot num ind [d]", mgls_columnplot, mglc_columnplot,5},
 	{"combine", "Direct multiplication of arrays", "combine Res Adat Bdat", mgls_combine, mglc_combine,4},
-	{"cone","Draw cone","cone x1 y1 z1 x2 y2 z2 r1 [r2 'fmt' edge]", mgls_cone, mglc_cone,1},
-	{"cones","Draw cones for 1D data","cones Ydat ['fmt' above]|Xdat Ydat ['fmt' above]|Xdat Ydat Zdat ['fmt' above]", mgls_cones, mglc_cones,0},
-	{"cont","Draw contour lines","cont Zdat ['fmt' num zpos]|Vdat Zdat ['fmt' zpos]|Xdat Ydat Zdat ['fmt' num zpos]|Vdat Xdat Ydat Zdat ['fmt' zpos]", mgls_cont, mglc_cont,0},
-	{"cont3","Draw contour lines for 3D data","cont3 Adat 'dir' [val 'fmt' num]|Vdat Adat 'dir' [val 'fmt']|Xdat Ydat Zdat Adat 'dir' [val 'fmt' num]|Vdat Xdat Ydat Zdar Adat 'dir' [val 'fmt']", mgls_cont3, mglc_cont3,0},
-	{"contd","Draw solid contours with manual colors","contd Zdat ['fmt' num zpos]|Vdat Zdat ['fmt' zpos]|Xdat Ydat Zdat ['fmt' num zpos]|Vdat Xdat Ydat Zdat ['fmt' zpos]", mgls_contd, mglc_contd,0},
-	{"contf","Draw solid contours","contf Zdat ['fmt' num zpos]|Vdat Zdat ['fmt' zpos]|Xdat Ydat Zdat ['fmt' num zpos]|Vdat Xdat Ydat Zdat ['fmt' zpos]", mgls_contf, mglc_contf,0},
-	{"contf3","Draw solid contour lines for 3D data","contf3 Adat 'dir' [val 'fmt' num]|Vdat Adat 'dir' [val 'fmt']|Xdat Ydat Zdat Adat 'dir' [val 'fmt' num]|Vdat Xdat Ydat Zdar Adat 'dir' [val 'fmt']", mgls_contf3, mglc_contf3,0},
+	{"cone","Draw cone","cone x1 y1 z1 x2 y2 z2 r1 [r2 'fmt' edge]", mgls_cone, mglc_cone,13},
+	{"cones","Draw cones for 1D data","cones Ydat ['fmt' above]|Xdat Ydat ['fmt' above]|Xdat Ydat Zdat ['fmt' above]", mgls_cones, mglc_cones,7},
+	{"cont","Draw contour lines","cont Zdat ['fmt' num zpos]|Vdat Zdat ['fmt' zpos]|Xdat Ydat Zdat ['fmt' num zpos]|Vdat Xdat Ydat Zdat ['fmt' zpos]", mgls_cont, mglc_cont,8},
+	{"cont3","Draw contour lines for 3D data","cont3 Adat 'dir' [val 'fmt' num]|Vdat Adat 'dir' [val 'fmt']|Xdat Ydat Zdat Adat 'dir' [val 'fmt' num]|Vdat Xdat Ydat Zdar Adat 'dir' [val 'fmt']", mgls_cont3, mglc_cont3,9},
+	{"contd","Draw solid contours with manual colors","contd Zdat ['fmt' num zpos]|Vdat Zdat ['fmt' zpos]|Xdat Ydat Zdat ['fmt' num zpos]|Vdat Xdat Ydat Zdat ['fmt' zpos]", mgls_contd, mglc_contd,8},
+	{"contf","Draw solid contours","contf Zdat ['fmt' num zpos]|Vdat Zdat ['fmt' zpos]|Xdat Ydat Zdat ['fmt' num zpos]|Vdat Xdat Ydat Zdat ['fmt' zpos]", mgls_contf, mglc_contf,8},
+	{"contf3","Draw solid contour lines for 3D data","contf3 Adat 'dir' [val 'fmt' num]|Vdat Adat 'dir' [val 'fmt']|Xdat Ydat Zdat Adat 'dir' [val 'fmt' num]|Vdat Xdat Ydat Zdar Adat 'dir' [val 'fmt']", mgls_contf3, mglc_contf3,9},
 	{"contfx","Draw solid contour lines at x-slice (or x-plane)","contfx Dat ['fmt' pos num]", mgls_contfx, mglc_contfx,0},
 	{"contfy","Draw solid contour lines at y-slice (or y-plane)","contfy Dat ['fmt' pos num]", mgls_contfy, mglc_contfy,0},
 	{"contfz","Draw solid contour lines at z-slice (or z-plane)","contfz Dat ['fmt' pos num]", mgls_contfz, mglc_contfz,0},
@@ -3633,13 +3628,13 @@ mglCommand mgls_base_cmd[] = {
 	{"conty","Draw contour lines at y-slice (or y-plane)","conty Dat ['fmt' pos num]", mgls_conty, mglc_conty,0},
 	{"contz","Draw contour lines at z-slice (or z-plane)","contz Dat ['fmt' pos num]", mgls_contz, mglc_contz,0},
 	{"copy","Copy data from another variable","copy Dat1 Dat2 ['eq' onaxis]", mgls_copy, mglc_copy,4},
-	{"cosfft","Cos-Fourier transform at some direction","cosfft Dat 'dir'", mgls_cosfft, mglc_cosfft,3},
-	{"crange","Set color range","crange Dat [sym] | c1 c2", mgls_crange, mglc_crange,2},
-	{"crop","Crop edge of data","crop Dat n1 n2 'dir'", mgls_crop, mglc_crop,3},
+	{"cosfft","Cos-Fourier transform at some direction","cosfft Dat 'dir'", mgls_cosfft, mglc_cosfft,16},
+	{"crange","Set color range","crange Dat [sym] | c1 c2", mgls_crange, mglc_crange,14},
+	{"crop","Crop edge of data","crop Dat n1 n2 'dir'", mgls_crop, mglc_crop,16},
 	{"crust","Draw reconstructed surface for arbitrary data points","crust Xdat Ydat Zdat ['fmt']", mgls_crust, mglc_crust,0},
-	{"ctick","Set ticks for colorbar","ctick 'tmpl' | dx", mgls_ctick, mglc_ctick,2},
-	{"cumsum","Cumulative summation","cumsum Dat 'dir'", mgls_cumsum, mglc_cumsum,3},
-	{"curve","Draw curve","curve x1 y1 dx1 dy1 x2 y2 dx2 dy2 ['fmt']|x1 y1 z1 dx1 dy1 dz1 x2 y2 z2 dx2 dy2 dz2 ['fmt']", mgls_curve, mglc_curve,1},
+	{"ctick","Set ticks for colorbar","ctick 'tmpl' | dx", mgls_ctick, mglc_ctick,14},
+	{"cumsum","Cumulative summation","cumsum Dat 'dir'", mgls_cumsum, mglc_cumsum,16},
+	{"curve","Draw curve","curve x1 y1 dx1 dy1 x2 y2 dx2 dy2 ['fmt']|x1 y1 z1 dx1 dy1 dz1 x2 y2 z2 dx2 dy2 dz2 ['fmt']", mgls_curve, mglc_curve,13},
 	{"cut","Setup plot points cutting","cut val|x1 y1 z1 x2 y2 z2|'cond'", mgls_cut, mglc_cut,2},
 	{"datagrid","Fill data by triangulated values","datagrid Var Xdat Ydat Zdat", mgls_datagrid, mglc_datagrid,3},
 	{"datas","Print list of data names in HDF file","datas 'fname'", mgls_datas, mglc_datas,3},
@@ -3648,50 +3643,50 @@ mglCommand mgls_base_cmd[] = {
 	{"defnum","Define parameter as numerical value","defnum $N val", 0, 0, 6},
 	{"defpal","Define parameter as palette color","defpal $N val", 0, 0, 6},
 	{"delete","Delete slice of data","delete Dat 'dir' [pos=0 num=1]", mgls_delete, mglc_delete,3},
-	{"dens","Draw density plot","dens Zdat ['fmt' zpos]|Xdat Ydat Zdat ['fmt' zpos]", mgls_dens, mglc_dens,0},
-	{"dens3","Draw density plot at slices of 3D data","dens3 Adat 'dir' [pos 'fmt']|Xdat Ydat Zdat Adat 'dir' [pos 'fmt']", mgls_dens3, mglc_dens3,0},
+	{"dens","Draw density plot","dens Zdat ['fmt' zpos]|Xdat Ydat Zdat ['fmt' zpos]", mgls_dens, mglc_dens,8},
+	{"dens3","Draw density plot at slices of 3D data","dens3 Adat 'dir' [pos 'fmt']|Xdat Ydat Zdat Adat 'dir' [pos 'fmt']", mgls_dens3, mglc_dens3,9},
 	{"densx","Draw density plot at x-slice (or x-plane)","densx Dat ['fmt' pos]", mgls_densx, mglc_densx,0},
 	{"densy","Draw density plot at y-slice (or y-plane)","densy Dat ['fmt' pos]", mgls_densy, mglc_densy,0},
 	{"densz","Draw density plot at z-slice (or z-plane)","densz Dat ['fmt' pos]", mgls_densz, mglc_densz,0},
-	{"dew","Draw dew plot","dew Udat Vdat ['fmt']|Xdat Ydat Udat Vdat ['fmt']", mgls_dew, mglc_dew,0},
-	{"diff","Numerically differentiate data","diff Var 'dir'", mgls_diff, mglc_diff,3},
-	{"diff2","Numerically double differentiate data","diff2 Var 'dir'", mgls_diff2, mglc_diff2,3},
+	{"dew","Draw dew plot","dew Udat Vdat ['fmt']|Xdat Ydat Udat Vdat ['fmt']", mgls_dew, mglc_dew,11},
+	{"diff","Numerically differentiate data","diff Var 'dir'", mgls_diff, mglc_diff,16},
+	{"diff2","Numerically double differentiate data","diff2 Var 'dir'", mgls_diff2, mglc_diff2,16},
 	{"divto","Divide by data or number","divto Var Dat|Var num", mgls_divto, mglc_divto,3},
-	{"dots","Draw dots for arbitrary data points","dots Xdat Ydat Zdat ['fmt']", mgls_dots, mglc_dots,0},
-	{"drop","Draw drop","drop x0 y0 dx dy r ['col' sh asp]|x0 y0 z0 dx dy dz r ['col' sh asp]", mgls_drop, mglc_drop,0},
-	{"ellipse","Draw ellipse","ellipse x1 y1 x2 y2 r ['fmt']|x1 y1 z1 x2 y2 z2 r ['fmt']", mgls_ellipse, mglc_ellipse,1},
+	{"dots","Draw dots for arbitrary data points","dots Xdat Ydat Zdat ['fmt']", mgls_dots, mglc_dots,9},
+	{"drop","Draw drop","drop x0 y0 dx dy r ['col' sh asp]|x0 y0 z0 dx dy dz r ['col' sh asp]", mgls_drop, mglc_drop,13},
+	{"ellipse","Draw ellipse","ellipse x1 y1 x2 y2 r ['fmt']|x1 y1 z1 x2 y2 z2 r ['fmt']", mgls_ellipse, mglc_ellipse,13},
 	{"else","Execute if condition is false","else", 0, 0, 6},
 	{"elseif","Conditional operator","elseif val|Dat ['cond']", 0, 0, 6},
 	{"endif","Finish if/else block","endif", 0, 0, 6},
-	{"envelop","Find envelop for the data","envelop Dat ['dir']", mgls_envelop, mglc_envelop,3},
-	{"error","Draw error boxes","error Ydat Yerr ['fmt']|Xdat Ydat Yerr ['fmt']|Xdat Ydat Xerr Yerr ['fmt']", mgls_error, mglc_error,0},
+	{"envelop","Find envelop for the data","envelop Dat ['dir']", mgls_envelop, mglc_envelop,16},
+	{"error","Draw error boxes","error Ydat Yerr ['fmt']|Xdat Ydat Yerr ['fmt']|Xdat Ydat Xerr Yerr ['fmt']", mgls_error, mglc_error,7},
 	{"evaluate","Evaluate (interpolate) values of array Dat at points i=idat,j=jdat,k=kdat","evaluate Res Dat Idat [norm]|Res Dat Idat Jdat [norm]|Res Dat Idat Jdat Kdat [norm]", mgls_evaluate, mglc_evaluate,4},
 	{"export","Export data to PNG picture","export Dat 'fname' 'sch' [v1 v2]", mgls_import, mglc_import,3},
 	{"extend","Extend data array","extend Dat dim1 [dim2]", mgls_extend, mglc_extend,3},
-	{"facex","Draw face perpendicular to x-axis","facex x0 y0 z0 wy wz ['fmt' d1 d2]", mgls_facex, mglc_facex,1},
-	{"facey","Draw face perpendicular to y-axis","facex x0 y0 z0 wx wz ['fmt' d1 d2]", mgls_facey, mglc_facey,1},
-	{"facez","Draw face perpendicular to z-axis","facex x0 y0 z0 wy wz ['fmt' d1 d2]", mgls_facez, mglc_facez,1},
-	{"fall","Draw waterfalls","fall Zdat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_fall, mglc_fall,0},
-	{"fgets","Print string from file","fgets x y z 'fname' [pos=0 'fmt' size]|x y z 'fname' [pos=0 'fmt' size]", mgls_fgets, mglc_fgets,1},
+	{"facex","Draw face perpendicular to x-axis","facex x0 y0 z0 wy wz ['fmt' d1 d2]", mgls_facex, mglc_facex,13},
+	{"facey","Draw face perpendicular to y-axis","facex x0 y0 z0 wx wz ['fmt' d1 d2]", mgls_facey, mglc_facey,13},
+	{"facez","Draw face perpendicular to z-axis","facex x0 y0 z0 wy wz ['fmt' d1 d2]", mgls_facez, mglc_facez,13},
+	{"fall","Draw waterfalls","fall Zdat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_fall, mglc_fall,8},
+	{"fgets","Print string from file","fgets x y z 'fname' [pos=0 'fmt' size]|x y z 'fname' [pos=0 'fmt' size]", mgls_fgets, mglc_fgets,15},
 	{"fill","Fill data linearly in range [v1, v2]","fill Var v1 v2 ['dir'] | Var 'eq' [Vdat Wdat]", mgls_fill, mglc_fill,3},
 	{"fillsample","Fill x-,k-samples for transforms","fillsample Var 'how'", mgls_fillsample, mglc_fillsample,3},
 	{"fit","Fit data to formula","fit Res A 'eq' 'var' [Ini]|Res X A 'eq' 'var' [Ini]|Res X Y A 'eq' 'var' [Ini]|Res X Y Z A 'eq' 'var' [Ini]", mgls_fit, mglc_fit,4},
 	{"fits","Fit data to formula","fits Res A S 'eq' 'var' [Ini]|Res X A S 'eq' 'var' [Ini]|Res X Y A S 'eq' 'var' [Ini]|Res X Y Z A S 'eq' 'var' [Ini]", mgls_fits, mglc_fits,4},
 	{"flow","Draw flow threads for vector field","flow Udat Vdat ['fmt' num]|Xdat Ydat Udat Vdat ['fmt' num]|Udat Vdat Wdat ['fmt' num]|Xdat Ydat Zdat Udat Vdat ['fmt' num]|\
-	x0 y0 Udat Vdat ['fmt']|x0 y0 Xdat Ydat Udat Vdat ['fmt']|x0 y0 z0 Udat Vdat Wdat ['fmt']|x0 y0 z0 Xdat Ydat Zdat Udat Vdat Wdat ['fmt']", mgls_flow, mglc_flow,0},
+	x0 y0 Udat Vdat ['fmt']|x0 y0 Xdat Ydat Udat Vdat ['fmt']|x0 y0 z0 Udat Vdat Wdat ['fmt']|x0 y0 z0 Xdat Ydat Zdat Udat Vdat Wdat ['fmt']", mgls_flow, mglc_flow,11},
 	{"fog","Switch on/off fog","fog val [pos]", mgls_fog, mglc_fog,2},
-	{"font","Setup font","font 'fmt' [size]", mgls_font, mglc_font,2},
+	{"font","Setup font","font 'fmt' [size]", mgls_font, mglc_font,15},
 	{"for","For cycle","for $N v1 v2 [dv] | $N Dat", 0, 0, 6},
-	{"fourier","In-place Fourier transform","fourier ReDat ImDat 'dir'", mgls_fourier, mglc_fourier, 3},
+	{"fourier","In-place Fourier transform","fourier ReDat ImDat 'dir'", mgls_fourier, mglc_fourier, 16},
 	{"fplot","Plot curve by formula","fplot 'y(x)' ['fmt' num]|'x(t)' 'y(t)' 'z(t)' ['fmt' num]", mgls_fplot, mglc_fplot,1},
 	{"fsurf","Plot surface by formula","fsurf 'z(x,y)' ['fmt' num]|'x(u,v)' 'y(u,v)' 'z(u,v)' ['fmt' num]", mgls_fsurf, mglc_fsurf,1},
 	{"func","Start function definition and stop execution of main script","func 'name' [narg]", 0, 0, 6},
-	{"grad","Draw gradient lines for scalar field","grad Phi ['fmt' num]|Xdat Ydat Phi ['fmt' num]|Xdat Ydat Zdat Phi ['fmt' num]", mgls_grad, mglc_grad,0},
-	{"grid","Draw grid","grid ['dir' 'fmt']", mgls_grid, mglc_grid,0},
-	{"grid2","Draw grid for data array(s)","grid Zdat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_grid2, mglc_grid2,0},
-	{"grid3","Draw grid at slices of 3D data","grid3 Adat 'dir' [pos 'fmt']|Xdat Ydat Zdat Adat 'dir' [pos 'fmt']", mgls_grid3, mglc_grid3,0},
+	{"grad","Draw gradient lines for scalar field","grad Phi ['fmt' num]|Xdat Ydat Phi ['fmt' num]|Xdat Ydat Zdat Phi ['fmt' num]", mgls_grad, mglc_grad,8},
+	{"grid","Draw grid","grid ['dir' 'fmt']", mgls_grid, mglc_grid,12},
+	{"grid2","Draw grid for data array(s)","grid Zdat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_grid2, mglc_grid2,8},
+	{"grid3","Draw grid at slices of 3D data","grid3 Adat 'dir' [pos 'fmt']|Xdat Ydat Zdat Adat 'dir' [pos 'fmt']", mgls_grid3, mglc_grid3,9},
 	{"gridplot","Set position of plot inside cell of matrix", "gridplot nx ny ind [d]", mgls_gridplot, mglc_gridplot,5},
-	{"hankel","Hankel transform at some direction","hankel Dat 'dir'", mgls_hankel, mglc_hankel,3},
+	{"hankel","Hankel transform at some direction","hankel Dat 'dir'", mgls_hankel, mglc_hankel,16},
 	{"hist","Create histogram (distribution) of data values","hist Res Dat num v1 v2 [nsub]|Res Dat Wdat num v1 v2 [nsub]", mgls_hist, mglc_hist,4},
 	{"idset","Set column id for data","idset Dat 'ids'", mgls_idset, mglc_idset,3},
 	{"if","Conditional operator","if val|Dat ['cond']", 0, 0, 6},
@@ -3699,70 +3694,70 @@ mglCommand mgls_base_cmd[] = {
 	{"info","Print information about data","info Dat [detail]|'message'", mgls_info, mglc_info,3},
 	{"inplot","Set position of plot in picture","x1 x2 y1 y2 [rel]", mgls_inplot, mglc_inplot,5},
 	{"insert","Insert slice of data","insert Dat 'dir' [pos=0 num=1]", mgls_insert, mglc_insert,3},
-	{"integrate","Integrate data","integrate Dat 'dir'", mgls_integrate, mglc_integrate,3},
+	{"integrate","Integrate data","integrate Dat 'dir'", mgls_integrate, mglc_integrate,16},
 	{"jacobian","Get Jacobian","jacobian Res Xdat Ydat [Zdat]", mgls_jacobian, mglc_jacobian,4},
-	{"label","Draw label at arbitrary position","label ydat 'txt' ['stl'='']|xdat ydat 'txt' ['stl'='']|xdat ydat zdat 'txt' ['stl'='']|x y 'txt' ['fmt' size]", mgls_label, mglc_label,1},
-	{"legend","Draw legend","legend [pos 'fmt' size llen]|x y ['fmt' size llen]", mgls_legend, mglc_legend,1},
-	{"legendmarks","Set number of marks in the legend","legendmarks val", mgls_legendmarks, mglc_legendmarks,2},
+	{"label","Draw label at arbitrary position","label Ydat 'txt' ['fmt'='']|Xdat Ydat 'txt' ['fmt'='']|Xdat Ydat Zdat 'txt' ['fmt'='']", mgls_label, mglc_label,7},
+	{"legend","Draw legend","legend [pos 'fmt']|x y ['fmt']", mgls_legend, mglc_legend,15},
+	{"legendmarks","Set number of marks in the legend","legendmarks val", mgls_legendmarks, mglc_legendmarks,15},
 	{"light","Setup light","light [val] | val num | num xpos ypos zpos ['fmt' br]", mgls_light, mglc_light,2},
-	{"line","Draw line","line x1 y1 x2 y2 ['fmt']|x1 y1 z1 x2 y2 z2 ['fmt']", mgls_line, mglc_line,1},
-	{"loadfont","Load fontfaces","loadfont ['fmt']", mgls_loadfont, mglc_loadfont,2},
-	{"map","Draw mapping plot","map Udat Vdat ['fmt']|Xdat Ydat Udat Vdat ['fmt']", mgls_map, mglc_map,0},
-	{"mark","Draw mark plot for 1D data","mark Ydat Rdat ['fmt']|Xdat Ydat Rdat ['fmt']|Xdat Ydat Zdat Rdat ['fmt']", mgls_mark, mglc_mark,0},
+	{"line","Draw line","line x1 y1 x2 y2 ['fmt']|x1 y1 z1 x2 y2 z2 ['fmt']", mgls_line, mglc_line,13},
+	{"loadfont","Load fontfaces","loadfont ['fmt']", mgls_loadfont, mglc_loadfont,15},
+	{"map","Draw mapping plot","map Udat Vdat ['fmt']|Xdat Ydat Udat Vdat ['fmt']", mgls_map, mglc_map,10},
+	{"mark","Draw mark plot for 1D data","mark Ydat Rdat ['fmt']|Xdat Ydat Rdat ['fmt']|Xdat Ydat Zdat Rdat ['fmt']", mgls_mark, mglc_mark,7},
 	{"marksize","Set size of markers","marksize val", mgls_marksize, mglc_marksize,2},
 	{"max","Find maximal value over direction","max Res Dat 'dir'", mgls_max, mglc_max,4},
-	{"mesh","Draw mesh surface","mesh Zdat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_mesh, mglc_mesh,0},
+	{"mesh","Draw mesh surface","mesh Zdat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_mesh, mglc_mesh,8},
 	{"meshnum","Set number of lines in mesh/fall/vect and so on","meshnum val", mgls_meshnum, mglc_meshnum,2},
 	{"min","Find minimal value over direction","min Res Dat 'dir'", mgls_min, mglc_min,4},
-	{"mirror","Mirror data at some direction","mirror Dat 'dir'", mgls_mirror, mglc_mirror,3},
+	{"mirror","Mirror data at some direction","mirror Dat 'dir'", mgls_mirror, mglc_mirror,16},
 	{"modify","Modify data values by formula","modify Dat 'eq' [num] | Dat 'eq' Vdat [Wdat]", mgls_modify, mglc_modify,3},
 	{"momentum","Get momentum along direction","momentum Res Dat 'how' ['dir']", mgls_momentum, mglc_momentum,4},
 	{"multiplot","Set position of plot","multiplot m n pos dx dy 'style'", mgls_multiplot, mglc_multiplot,5},
 	{"multo","Multiply by data or number","multo Var Dat|Var num", mgls_multo, mglc_multo,3},
 	{"new","Create new data","new Dat nx ny nz ['eq']|new Dat nx ny ['eq']|new Dat nx ['eq']", mgls_new, mglc_new,4},
 	{"next","Start next for-cycle iteration","next", 0, 0, 6},
-	{"norm","Normalize data","norm Dat v1 v2 [sym dim]", mgls_norm, mglc_norm,3},
-	{"normsl","Normalize data slice by slice","normsl Dat v1 v2 ['dir' keep sym] ", mgls_normsl, mglc_normsl,3},
+	{"norm","Normalize data","norm Dat v1 v2 [sym dim]", mgls_norm, mglc_norm,16},
+	{"normsl","Normalize data slice by slice","normsl Dat v1 v2 ['dir' keep sym] ", mgls_normsl, mglc_normsl,16},
 	{"once","Start/close commands which should executed only once","once val", 0, 0, 6},
-	{"origin","Set axis origin","origin x0 y0 [z0]", mgls_origin, mglc_origin,2},
+	{"origin","Set axis origin","origin x0 y0 [z0]", mgls_origin, mglc_origin,14},
 	{"palette","Set palette for 1D plots","palette 'colors'", mgls_palette, mglc_palette,2},
 	{"pde","Solve PDE","pde Res 'ham' IniRe IniIm [dz k0]", mgls_pde, mglc_pde,4},
 	{"perspective","Set perspective","perspective val", mgls_perspective, mglc_perspective,2},
-	{"pipe","Draw flow pipes for vector field","pipe Udat Vdat ['fmt' rad num]|Xdat Ydat Udat Vdat ['fmt' rad num]|Udat Vdat Wdat ['fmt' rad num]|Xdat Ydat Zdat Udat Vdat Wdat ['fmt' rad num]", mgls_pipe, mglc_pipe,0},
-	{"plot","Draw usual plot for 1D data","plot Ydat ['fmt']|Xdat Ydat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_plot, mglc_plot,0},
+	{"pipe","Draw flow pipes for vector field","pipe Udat Vdat ['fmt' rad num]|Xdat Ydat Udat Vdat ['fmt' rad num]|Udat Vdat Wdat ['fmt' rad num]|Xdat Ydat Zdat Udat Vdat Wdat ['fmt' rad num]", mgls_pipe, mglc_pipe,11},
+	{"plot","Draw usual plot for 1D data","plot Ydat ['fmt']|Xdat Ydat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_plot, mglc_plot,7},
 	{"put","Put value (numeric or array) to given data element","put Dat val [i j k] | Dat Val [i j k]", mgls_put, mglc_put,3},
-	{"putsfit","Print fitted formula","putsfit x y ['pre' 'font' size]|x y z ['pre' 'font' size]", mgls_putsfit, mglc_putsfit,0},
+	{"putsfit","Print fitted formula","putsfit x y ['pre' 'font' size]|x y z ['pre' 'font' size]", mgls_putsfit, mglc_putsfit,15},
 	{"qo2d","Solve PDE in accompanied coordinates","qo2d Res 'ham' IniRe IniIm Ray [r k0 Xout Yout]", mgls_qo2d, mglc_qo2d,4},
 	{"quadplot","Draw surface of quadrangles","quadplot Idat Xdat Ydat ['fmt']|Idat Xdat Ydat Zdat ['fmt']|Idat Xdat Ydat Zdat Cdat ['fmt'] ", mgls_quadplot, mglc_quadplot,0},
 	{"quality","Set plot quality","quality val", mgls_quality, mglc_quality,2},
-	{"radar","Draw radar chart","radar Rdat ['fmt']", mgls_radar, mglc_radar,0},
-	{"ranges","Set axis ranges","ranges x1 x2 y1 y2 [z1 z2]", mgls_ranges, mglc_ranges,2},
+	{"radar","Draw radar chart","radar Rdat ['fmt']", mgls_radar, mglc_radar,7},
+	{"ranges","Set axis ranges","ranges x1 x2 y1 y2 [z1 z2]", mgls_ranges, mglc_ranges,14},
 	{"ray","Solve Hamiltonian ODE (find GO ray or trajectory)","ray Res 'ham' x0 y0 z0 px0 py0 pz0 [dz=0.1 tmax=10]", mgls_ray, mglc_ray,4},
 	{"read","Read data from file","read Dat 'file' [nx ny nz]", mgls_read, mglc_read,4},
 	{"readall","Read and join data from several files","readall Dat 'templ' [slice]", mgls_readall, mglc_readall,4},
 	{"readhdf","Read data from HDF5 file","readhdf Dat 'file' 'id'", mgls_readhdf, mglc_readhdf,4},
 	{"readmat","Read data from file with sizes specified in first row","readmat Dat 'file' [dim]", mgls_readmat, mglc_readmat,4},
 	{"rearrange","Rearrange data dimensions","rearrange Dat mx [my mz]", mgls_rearrange, mglc_rearrange,3},
-	{"rect","Draw rectangle","rect x1 y1 x2 y2 ['fmt']|x1 y1 z1 x2 y2 z2 ['fmt']", mgls_rect, mglc_rect,1},
-	{"region","Draw filled region between 2 curves","region Ydat1 Ydat2 ['fmt' inside]|Xdat Ydat1 Ydat2 ['fmt' inside]", mgls_region, mglc_region,0},
+	{"rect","Draw rectangle","rect x1 y1 x2 y2 ['fmt']|x1 y1 z1 x2 y2 z2 ['fmt']", mgls_rect, mglc_rect,13},
+	{"region","Draw filled region between 2 curves","region Ydat1 Ydat2 ['fmt' inside]|Xdat Ydat1 Ydat2 ['fmt' inside]", mgls_region, mglc_region,7},
 	{"resize","Resize data","resize Res Dat mx [my mz]", mgls_resize, mglc_resize,4},
 	{"return","Return from function","return", 0, 0, 6},
-	{"rhomb","Draw rhombus","rhomb x1 y1 x2 y2 r ['fmt']|x1 y1 z1 x2 y2 z2 r ['fmt']", mgls_rhomb, mglc_rhomb,1},
-	{"roll","Roll data along direction","roll Dat 'dir' num", mgls_roll, mglc_roll,0},
+	{"rhomb","Draw rhombus","rhomb x1 y1 x2 y2 r ['fmt']|x1 y1 z1 x2 y2 z2 r ['fmt']", mgls_rhomb, mglc_rhomb,13},
+	{"roll","Roll data along direction","roll Dat 'dir' num", mgls_roll, mglc_roll,16},
 	{"rotate","Rotate plot","rotate tetz tetx [tety] | tet x y z", mgls_rotate, mglc_rotate,5},
-	{"rotatetext","Set to auto rotate text or not","rotatetext val", mgls_rotatetext, mglc_rotatetext,2},
+	{"rotatetext","Set to auto rotate text or not","rotatetext val", mgls_rotatetext, mglc_rotatetext,15},
 	{"save","Save data to file","save Dat 'file'", mgls_save, mglc_save,3},
 	{"savehdf","Save data to HDF5 file","savehdf Dat 'file' 'id'", mgls_savehdf, mglc_savehdf,3},
 	{"setsize","Set picture size","setsize width height", mgls_setsize, mglc_setsize,2},
-	{"sew","Remove jump into the data, like phase jumps","sew Dat ['dir' da]", mgls_sew, mglc_sew,3},
-	{"sinfft","Sin-Fourier transform at some direction","sinfft Dat 'dir'", mgls_sinfft, mglc_sinfft,3},
-	{"smooth","Smooth data","smooth Dat [kind 'dir']", mgls_smooth, mglc_smooth,3},
+	{"sew","Remove jump into the data, like phase jumps","sew Dat ['dir' da]", mgls_sew, mglc_sew,16},
+	{"sinfft","Sin-Fourier transform at some direction","sinfft Dat 'dir'", mgls_sinfft, mglc_sinfft,16},
+	{"smooth","Smooth data","smooth Dat [kind 'dir']", mgls_smooth, mglc_smooth,16},
 	{"sort","Sort data by values in column","sort Dat idx [idy]", mgls_sort, mglc_sort,3},
-	{"sphere","Draw sphere","sphere x0 y0 r ['fmt']|x0 y0 z0 r ['fmt']", mgls_sphere, mglc_sphere,1},
+	{"sphere","Draw sphere","sphere x0 y0 r ['fmt']|x0 y0 z0 r ['fmt']", mgls_sphere, mglc_sphere,13},
 	{"squeeze","Squeeze data","squeeze Dat kx [ky kz]", mgls_squeeze, mglc_squeeze,3},
-	{"stem","Draw stem plot for 1D data","stem Ydat ['fmt']|Xdat Ydat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_stem, mglc_stem,0},
-	{"step","Draw step plot for 1D data","step Ydat ['fmt']|Xdat Ydat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_step, mglc_step,0},
-	{"stfa","Draw STFA diagram","stfa Udat Vdat dn ['fmt']|Xdat Ydat Udat Vdat dn ['fmt']", mgls_stfa, mglc_stfa,0},
+	{"stem","Draw stem plot for 1D data","stem Ydat ['fmt']|Xdat Ydat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_stem, mglc_stem,7},
+	{"step","Draw step plot for 1D data","step Ydat ['fmt']|Xdat Ydat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_step, mglc_step,7},
+	{"stfa","Draw STFA diagram","stfa Udat Vdat dn ['fmt']|Xdat Ydat Udat Vdat dn ['fmt']", mgls_stfa, mglc_stfa,10},
 	{"stfad","Do STFA transform","stfad Res Real Imag dn ['dir']", mgls_stfad, mglc_stfad,4},
 	{"stickplot","Set position of plot inside cell of stick", "stickplot num ind tet phi", mgls_stickplot, mglc_stickplot,5},
 	{"stop","Stop execution","stop", 0, 0, 6},
@@ -3770,49 +3765,49 @@ mglCommand mgls_base_cmd[] = {
 	{"subplot","Set position of plot","subplot m n pos ['style' dx dy]", mgls_subplot, mglc_subplot,5},
 	{"subto","Subtract data or number","subto Var Dat|Var num", mgls_subto, mglc_subto,3},
 	{"sum","Find summation over direction","sum Res Dat 'dir'", mgls_sum, mglc_sum,4},
-	{"surf","Draw solid surface","surf Zdat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_surf, mglc_surf,0},
-	{"surf3","Draw isosurface for 3D data","surf3 Adat ['fmt' num]|Xdat Ydat Zdat Adat ['fmt' num]|Adat val ['fmt']|Xdat Ydat Zdat Adat val ['fmt']", mgls_surf3, mglc_surf3,0},
-	{"surf3a","Draw isosurface for 3D data transpared by other data","surf3a Adat Cdat ['fmt' num]|Xdat Ydat Zdat Adat Cdat ['fmt' num]|Adat Cdat val ['fmt']|Xdat Ydat Zdat Adat Cdat val ['fmt']", mgls_surf3a, mglc_surf3a,0},
-	{"surf3c","Draw isosurface for 3D data colored by other data","surf3c Adat Cdat ['fmt' num]|Xdat Ydat Zdat Adat Cdat ['fmt' num]|Adat Cdat val ['fmt']|Xdat Ydat Zdat Adat Cdat val ['fmt']", mgls_surf3c, mglc_surf3c,0},
-	{"surfa","Draw solid surface transpared by other data","surfa Zdat Cdat ['fmt']|Xdat Ydat Zdat Cdat ['fmt']", mgls_surfa, mglc_surfa,0},
-	{"surfc","Draw solid surface colored by other data","surfc Zdat Cdat ['fmt']|Xdat Ydat Zdat Cdat ['fmt']", mgls_surfc, mglc_surfc,0},
-	{"swap","Swap data (usefull after Fourier transform)","swap Dat 'dir'", mgls_swap, mglc_swap,0},
-	{"table","Draw table with data values","label ydat ['txt' 'stl'='']", mgls_table, mglc_table,1},
-	{"tape","Draw binormales for 1D data","tape Ydat ['fmt']|Xdat Ydat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_tape, mglc_tape,0},
-	{"tens","Draw tension plot for 1D data","tens Ydat Cdat ['fmt']|Xdat Ydat Cdat ['fmt']|Xdat Ydat Zdat Cdat ['fmt']", mgls_tens, mglc_tens,0},
-	{"ternary","Switch on/off to use ternary axis","ternary val", mgls_ternary, mglc_ternary,2},
-	{"text","Draw text at some position or along curve","text x y 'txt' ['fmt' size]|x y z 'txt' ['fmt' size]|x y dx dy 'txt' ['fmt' size]|x y z dx dy dz 'txt' ['fmt' size]|Ydat 'txt' ['font' sise]|Xdat Ydat 'txt' ['font' sise]", mgls_text, mglc_text,0},
-	{"textmark","Draw TeX mark at point position","textmark Ydat Rdat 'text' ['fmt']|Xdat Ydat Rdat 'text' ['fmt']|Xdat Ydat Zdat Rdat 'text' ['fmt']", mgls_textmark, mglc_textmark,0},
-	{"ticklen","Set tick length","ticklen val [stt]", mgls_ticklen, mglc_ticklen,2},
-	{"ticktime","Set ticks in time format","ticktime 'dir' [dv 'tmpl']", mgls_ticktime, mglc_ticktime,2},
-	{"tile","Draw horizontal tiles","tile Zdat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_tile, mglc_tile,0},
-	{"tiles","Draw horizontal tiles with variable size","tiles Zdat Rdat ['fmt']|Xdat Ydat Zdat Rdat ['fmt']", mgls_tiles, mglc_tiles,0},
-	{"title","Add title for current subplot/inplot","title 'txt' ['fmt' size]", mgls_title, mglc_title,0},
-	{"tlabel","Draw label for t-axis","tlabel 'txt' [pos size shift]", mgls_tlabel, mglc_tlabel,1},
-	{"torus","Draw surface of curve rotation","torus Rdat ['fmt']|Zdat Rdat ['fmt']", mgls_torus, mglc_torus,0},
+	{"surf","Draw solid surface","surf Zdat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_surf, mglc_surf,8},
+	{"surf3","Draw isosurface for 3D data","surf3 Adat ['fmt' num]|Xdat Ydat Zdat Adat ['fmt' num]|Adat val ['fmt']|Xdat Ydat Zdat Adat val ['fmt']", mgls_surf3, mglc_surf3,9},
+	{"surf3a","Draw isosurface for 3D data transpared by other data","surf3a Adat Cdat ['fmt' num]|Xdat Ydat Zdat Adat Cdat ['fmt' num]|Adat Cdat val ['fmt']|Xdat Ydat Zdat Adat Cdat val ['fmt']", mgls_surf3a, mglc_surf3a,10},
+	{"surf3c","Draw isosurface for 3D data colored by other data","surf3c Adat Cdat ['fmt' num]|Xdat Ydat Zdat Adat Cdat ['fmt' num]|Adat Cdat val ['fmt']|Xdat Ydat Zdat Adat Cdat val ['fmt']", mgls_surf3c, mglc_surf3c,10},
+	{"surfa","Draw solid surface transpared by other data","surfa Zdat Cdat ['fmt']|Xdat Ydat Zdat Cdat ['fmt']", mgls_surfa, mglc_surfa,10},
+	{"surfc","Draw solid surface colored by other data","surfc Zdat Cdat ['fmt']|Xdat Ydat Zdat Cdat ['fmt']", mgls_surfc, mglc_surfc,10},
+	{"swap","Swap data (usefull after Fourier transform)","swap Dat 'dir'", mgls_swap, mglc_swap,16},
+	{"table","Draw table with data values","table Dat ['txt' 'fmt']|x y Dat ['txt' 'fmt']", mgls_table, mglc_table,7},
+	{"tape","Draw binormales for 1D data","tape Ydat ['fmt']|Xdat Ydat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_tape, mglc_tape,7},
+	{"tens","Draw tension plot for 1D data","tens Ydat Cdat ['fmt']|Xdat Ydat Cdat ['fmt']|Xdat Ydat Zdat Cdat ['fmt']", mgls_tens, mglc_tens,7},
+	{"ternary","Switch on/off to use ternary axis","ternary val", mgls_ternary, mglc_ternary,14},
+	{"text","Draw text at some position or along curve","text x y 'txt' ['fmt' size]|x y z 'txt' ['fmt' size]|x y dx dy 'txt' ['fmt' size]|x y z dx dy dz 'txt' ['fmt' size]|Ydat 'txt' ['font' sise]|Xdat Ydat 'txt' ['font' sise]", mgls_text, mglc_text,15},
+	{"textmark","Draw TeX mark at point position","textmark Ydat Rdat 'text' ['fmt']|Xdat Ydat Rdat 'text' ['fmt']|Xdat Ydat Zdat Rdat 'text' ['fmt']", mgls_textmark, mglc_textmark,7},
+	{"ticklen","Set tick length","ticklen val [stt]", mgls_ticklen, mglc_ticklen,14},
+	{"ticktime","Set ticks in time format","ticktime 'dir' [dv 'tmpl']", mgls_ticktime, mglc_ticktime,14},
+	{"tile","Draw horizontal tiles","tile Zdat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_tile, mglc_tile,8},
+	{"tiles","Draw horizontal tiles with variable size","tiles Zdat Rdat ['fmt']|Xdat Ydat Zdat Rdat ['fmt']", mgls_tiles, mglc_tiles,10},
+	{"title","Add title for current subplot/inplot","title 'txt' ['fmt' size]", mgls_title, mglc_title,5},
+	{"tlabel","Draw label for t-axis","tlabel 'txt' [pos]", mgls_tlabel, mglc_tlabel,12},
+	{"torus","Draw surface of curve rotation","torus Rdat ['fmt']|Zdat Rdat ['fmt']", mgls_torus, mglc_torus,7},
 	{"trace","Get trace of array","trace Res Dat", mgls_trace, mglc_trace,4},
-	{"traj","Draw vectors along a curve","traj Xdat Ydat Udat Vdat ['fmt' len]|Xdat Ydat Zdat Udat Vdat Wdat ['fmt' len]", mgls_traj, mglc_traj,0},
+	{"traj","Draw vectors along a curve","traj Xdat Ydat Udat Vdat ['fmt' len]|Xdat Ydat Zdat Udat Vdat Wdat ['fmt' len]", mgls_traj, mglc_traj,11},
 	{"transform","Do integral transform of data","transform Res 'how' Rdat Idat", mgls_transform, mglc_transform,4},
 	{"transforma","Do integral transform of data","transforma Res 'how' Adat Pdat", mgls_transforma, mglc_transforma,4},
-	{"transpose","Transpose data array","transpose Dat ['dir']", mgls_transpose, mglc_transpose,3},
+	{"transpose","Transpose data array","transpose Dat ['dir']", mgls_transpose, mglc_transpose,16},
 	{"transptype","Set type transparency","transptype val", mgls_transptype, mglc_transptype,2},
 	{"triangulate","Find triangles of randomly placed points","triangulate Res Xdat Ydat [er]|Res Xdat Ydat Zdat [er]", mgls_triangulate, mglc_triangulate,4},
 	{"tricont","Draw contour lines for surface of triangles","tricont Vdat Idat Xdat Ydat ['fmt']|Vdat Idat Xdat Ydat Zdat ['fmt']|Vdat Idat Xdat Ydat Zdat Cdat ['fmt'] ", mgls_tricont, mglc_tricont,0},
 	{"triplot","Draw surface of triangles","triplot Idat Xdat Ydat ['fmt']|Idat Xdat Ydat Zdat ['fmt']|Idat Xdat Ydat Zdat Cdat ['fmt'] ", mgls_triplot, mglc_triplot,0},
-	{"tube","Draw curve by tube","tube Ydat Rdat ['fmt']|Ydat rval ['fmt']|Xdat Ydat Rdat ['fmt']|Xdat Ydat rval ['fmt']|Xdat Ydat Zdat Rdat ['fmt']|Xdat Ydat Zdat rval ['fmt']", mgls_tube, mglc_tube,0},
-	{"tuneticks","Set ticks tuning","tuneticks val [fctr]", mgls_tuneticks, mglc_tuneticks,2},
+	{"tube","Draw curve by tube","tube Ydat Rdat ['fmt']|Ydat rval ['fmt']|Xdat Ydat Rdat ['fmt']|Xdat Ydat rval ['fmt']|Xdat Ydat Zdat Rdat ['fmt']|Xdat Ydat Zdat rval ['fmt']", mgls_tube, mglc_tube,7},
+	{"tuneticks","Set ticks tuning","tuneticks val [fctr]", mgls_tuneticks, mglc_tuneticks,14},
 	{"var","Create new 1D data and fill it in range","var Dat nx x1 [x2]", mgls_var, mglc_var,4},
-	{"vect","Draw vector field","vect Udat Vdat ['fmt']|Xdat Ydat Udat Vdat ['fmt']|Udat Vdat Wdat ['fmt']|Xdat Ydat Zdat Udat Vdat Wdat ['fmt']", mgls_vect, mglc_vect,0},
-	{"vect3","Draw vector field at slices of 3D data","vect Udat Vdat Wdat ['fmt' sval]|Xdat Ydat Zdat Udat Vdat Wdat ['fmt' sval]", mgls_vect3, mglc_vect3,0},
+	{"vect","Draw vector field","vect Udat Vdat ['fmt']|Xdat Ydat Udat Vdat ['fmt']|Udat Vdat Wdat ['fmt']|Xdat Ydat Zdat Udat Vdat Wdat ['fmt']", mgls_vect, mglc_vect,11},
+	{"vect3","Draw vector field at slices of 3D data","vect Udat Vdat Wdat ['fmt' sval]|Xdat Ydat Zdat Udat Vdat Wdat ['fmt' sval]", mgls_vect3, mglc_vect3,11},
 	{"write","Write current image to graphical file","write 'fname' [solid]", mgls_write, mglc_write,2},
-	{"xlabel","Draw label for x-axis","xlabel 'txt' [pos size shift]", mgls_xlabel, mglc_xlabel,1},
-	{"xrange","Set range for x-axis","xrange Dat [add] | x1 x2", mgls_xrange, mglc_xrange,2},
-	{"xtick","Set ticks for x-axis","xtick dx [sx tx] | 'tmpl' | Xdat 'lbl' [add] | v1 'lbl1' ...", mgls_xtick, mglc_xtick,2},
-	{"ylabel","Draw label for y-axis","ylabel 'txt' [pos size shift]", mgls_ylabel, mglc_ylabel,1},
-	{"yrange","Set range for y-axis","yrange Dat [add] | y1 y2", mgls_yrange, mglc_yrange,2},
-	{"ytick","Set ticks for y-axis","ytick dy [sy ty] | 'tmpl' | Ydat 'lbl' [add] | v1 'lbl1' ...", mgls_ytick, mglc_ytick,2},
-	{"zlabel","Draw label for z-axis","zlabel 'txt' [pos size shift]", mgls_zlabel, mglc_zlabel,1},
-	{"zrange","Set range for z-axis","yrange Dat [add] | z1 z2", mgls_zrange, mglc_zrange,2},
-	{"ztick","Set ticks for z-axis","ztick dz [sz tz] | 'tmpl' | Zdat 'lbl' [add] | v1 'lbl1' ...", mgls_ztick, mglc_ztick,2},
+	{"xlabel","Draw label for x-axis","xlabel 'txt' [pos]", mgls_xlabel, mglc_xlabel,12},
+	{"xrange","Set range for x-axis","xrange Dat [add] | x1 x2", mgls_xrange, mglc_xrange,14},
+	{"xtick","Set ticks for x-axis","xtick dx [sx tx] | 'tmpl' | Xdat 'lbl' [add] | v1 'lbl1' ...", mgls_xtick, mglc_xtick,14},
+	{"ylabel","Draw label for y-axis","ylabel 'txt' [pos]", mgls_ylabel, mglc_ylabel,12},
+	{"yrange","Set range for y-axis","yrange Dat [add] | y1 y2", mgls_yrange, mglc_yrange,14},
+	{"ytick","Set ticks for y-axis","ytick dy [sy ty] | 'tmpl' | Ydat 'lbl' [add] | v1 'lbl1' ...", mgls_ytick, mglc_ytick,14},
+	{"zlabel","Draw label for z-axis","zlabel 'txt' [pos]", mgls_zlabel, mglc_zlabel,12},
+	{"zrange","Set range for z-axis","yrange Dat [add] | z1 z2", mgls_zrange, mglc_zrange,14},
+	{"ztick","Set ticks for z-axis","ztick dz [sz tz] | 'tmpl' | Zdat 'lbl' [add] | v1 'lbl1' ...", mgls_ztick, mglc_ztick,14},
 {"","","",NULL,NULL,0}};
 //-----------------------------------------------------------------------------

@@ -273,7 +273,7 @@ mglData mglFormulaCalc(const wchar_t *string, mglParser *arg)
 	{
 		mglVar *v = arg->FindVar(str);
 		mglNum *f = arg->FindNum(str);
-		if(v)	res = v->d;
+		if(v)	res = v;
 		else if(f)	res.a[0] = f->d;
 		else if(!wcscmp(str,L"rnd"))	res.a[0] = mgl_rnd();
 		else if(!wcscmp(str,L"nan"))	res.a[0] = NAN;
@@ -303,7 +303,7 @@ mglData mglFormulaCalc(const wchar_t *string, mglParser *arg)
 			{
 				char *buf = new char[len];
 				Buf[len-1]=0;	mgl_wcstombs(buf, Buf+1, len-1);
-				res=v->d.Column(buf);	delete []buf;
+				res=v->Column(buf);	delete []buf;
 			}
 			else
 			{
@@ -328,7 +328,7 @@ mglData mglFormulaCalc(const wchar_t *string, mglParser *arg)
 					}
 				}
 				else	a1 = mglFormulaCalc(Buf, arg);
-				res = v->d.SubData(a1,a2,a3);
+				res = v->SubData(a1,a2,a3);
 			}
 		}
 		else if(name[0]=='a')	// function

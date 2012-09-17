@@ -45,6 +45,7 @@ typedef mglFormula* HMEX;
 typedef const mglData* HCDT;
 #include "mgl2/data.h"
 #else
+//-----------------------------------------------------------------------------
 /// Abstract class for data array
 class mglDataA
 {
@@ -95,9 +96,9 @@ bool operator>(const mglPrim &a,const mglPrim &b);
 /// Structure for group of primitives
 struct mglGroup
 {
-	std::vector<long> p;///< list of primitives (not filled!!!)
+	std::vector<long> p;	///< list of primitives (not filled!!!)
 	int Id;				///< Current list of primitives
-	std::string Lbl;	///< Group label
+	std::string Lbl;		///< Group label
 	mglGroup(const char *lbl="", int id=0)	{	Lbl=lbl;	Id=id;	}
 };
 //-----------------------------------------------------------------------------
@@ -111,7 +112,7 @@ struct mglText
 	mglText(const std::wstring &txt, mreal v=0)	{	text=txt;	val=v;	}
 };
 //-----------------------------------------------------------------------------
-/// Structure for internal point represenatation
+/// Structure for internal point representation
 struct mglPnt	// NOTE: use float for reducing memory size
 {
 	float xx,yy,zz;	// original coordinates
@@ -138,7 +139,7 @@ inline mglPnt operator*(float b, const mglPnt &a)
 	c.x*=b;	c.y*=b;	c.z*=b;	c.u*=b;	c.v*=b;	c.w*=b;
 	c.r*=b;	c.g*=b;	c.b*=b;	c.a*=b;	return c;	}
 //-----------------------------------------------------------------------------
-/// Structure for glyph represenatation
+/// Structure for glyph representation
 struct mglGlyph
 {
 	long nt, nl;			///< number of triangles and lines
@@ -156,6 +157,7 @@ struct mglGlyph
 		memcpy(line, a.line, 4*nl*sizeof(short));	return *this;	}
 };
 //-----------------------------------------------------------------------------
+/// Structure for texture (color scheme + palette) representation
 struct mglTexture
 {
 	mglColor col[512];	///< Colors itself
@@ -192,6 +194,12 @@ struct mglColorID
 extern mglColorID mglColorIds[31];
 extern std::string mglGlobalMess;	///< Buffer for receiving global messages
 //-----------------------------------------------------------------------------
+/// Structure active points
+struct mglActivePos
+{
+	int x,y,id,n;
+};
+//-----------------------------------------------------------------------------
 /// Base class for canvas which handle all basic drawing
 class mglBase
 {
@@ -206,7 +214,8 @@ public:
 	std::string Mess;	///< Buffer for receiving messages
 	int ObjId;			///< object id for mglPrim
 	int HighId;			///< object id to be highlited
-	std::vector<mglGroup> Grp;	///< List of groups with names -- need for export
+	std::vector<mglGroup> Grp;		///< List of groups with names -- need for export
+	std::vector<mglActivePos> Act;	///< Position of active points
 	std::string PlotId;	///< Id of plot for saving filename (in GLUT window for example)
 
 	mreal CDef;			///< Default (current) color in texture
@@ -325,14 +334,14 @@ public:
 	/// Copy font from another mglGraph instance
 	inline void CopyFont(mglBase *gr)	{	fnt->Copy(gr->GetFont());	}
 	/// Set default font size
-	inline void SetFontSize(mreal val)	{	FontSize=val>0 ? val:FontSize*val;	}
+	inline void SetFontSize(mreal val)	{	FontSize=val>0 ? val:-FontSize*val;	}
 	inline mreal GetFontSize() const	{	return FontSize;	}
 	inline mreal TextWidth(const char *text, const char *font, mreal size) const
-	{	return (size<0?-size*FontSize:size)*font_factor*fnt->Width(text,(font&&*font)?font:FontDef)/8;	}
+	{	return (size<0?-size*FontSize:size)*font_factor*fnt->Width(text,(font&&*font)?font:FontDef)/20.16;	}
 	inline mreal TextWidth(const wchar_t *text, const char *font, mreal size) const
-	{	return (size<0?-size*FontSize:size)*font_factor*fnt->Width(text,(font&&*font)?font:FontDef)/8;	}
+	{	return (size<0?-size*FontSize:size)*font_factor*fnt->Width(text,(font&&*font)?font:FontDef)/20.16;	}
 	inline mreal TextHeight(const char *font, mreal size) const
-	{	return (size<0?-size*FontSize:size)*font_factor*fnt->Height(font?font:FontDef)/8; }
+	{	return (size<0?-size*FontSize:size)*font_factor*fnt->Height(font?font:FontDef)/20.16; }
 	inline mreal FontFactor() const		{	return font_factor;	}
 	virtual mreal GetRatio() const;
 	/// Set to use or not text rotation
@@ -364,6 +373,8 @@ public:
 	inline void SetReduceAcc(bool val)	{	set(val, MGL_REDUCEACC);	}
 	/// Add glyph of current font to the Glf and return its position
 	long AddGlyph(int s, long j);
+	/// Add active point as k-th element of Pnt
+	void AddActive(long k,int n=0);
 	
 	inline mglPoint GetPntP(long i) const
 	{	const mglPnt &p=Pnt[i];	return mglPoint(p.x,p.y,p.z);	}
@@ -419,15 +430,16 @@ protected:
 	mglPoint FMax;		///< Actual upper edge after transformation formulas.
 	mglPoint Org;		///< Center of axis cross section.
 	int WarnCode;		///< Warning code
-	std::vector<mglPnt> Pnt;	///< Internal points
+	std::vector<mglPnt> Pnt; 	///< Internal points
 	std::vector<mglPrim> Prm;	///< Primitives (lines, triangles and so on) -- need for export
 	std::vector<mglPrim> Sub;	///< InPlot regions {n1=x1,n2=x2,n3=y1,n4=y2,id}
 	std::vector<mglText> Ptx;	///< Text labels for mglPrim
 	std::vector<mglText> Leg;	///< Text labels for legend
 	std::vector<mglGlyph> Glf;	///< Glyphs data 
-	std::vector<mglTexture> Txt;///< Pointer to textures
+	std::vector<mglTexture> Txt;	///< Pointer to textures
 #if MGL_HAVE_PTHREAD
-	pthread_mutex_t mutexPnt, mutexTxt, mutexLeg;
+	pthread_mutex_t mutexPnt, mutexTxt, mutexLeg, mutexGlf, mutexAct, mutexDrw;
+	pthread_mutex_t mutexSub, mutexPrm, mutexPtx, mutexStk, mutexGrp;
 #endif
 
 	int TernAxis;		///< Flag that Ternary axis is used

@@ -52,7 +52,7 @@
 #define fmax(a,b)	((a)>(b))?(a):(b)
 #endif
 
-#define MGL_VER2 	0.4
+#define MGL_VER2 	1.0
 
 #if defined(_MSC_VER)
 #define hypot	_hypot
@@ -152,20 +152,20 @@ enum{	// types of predefined curvelinear coordinate systems
 enum{	// Codes for warnings/messages
 	mglWarnNone = 0,// Everything OK
 	mglWarnDim,		// Data dimension(s) is incompatible
-	mglWarnLow, 	// Data dimension(s) is too small
-	mglWarnNeg, 	// Minimal data value is negative
-	mglWarnFile,	// No file or wrong data dimensions
+	mglWarnLow, 		// Data dimension(s) is too small
+	mglWarnNeg,	 	// Minimal data value is negative
+	mglWarnFile, 	// No file or wrong data dimensions
 	mglWarnMem,		// Not enough memory
-	mglWarnZero,	// Data values are zero
+	mglWarnZero, 	// Data values are zero
 	mglWarnLeg,		// No legend entries
 	mglWarnSlc,		// Slice value is out of range
 	mglWarnCnt,		// Number of contours is zero or negative
-	mglWarnOpen,	// Couldn't open file
+	mglWarnOpen, 	// Couldn't open file
 	mglWarnLId,		// Light: ID is out of range
-	mglWarnSize,	// Setsize: size(s) is zero or negative
+	mglWarnSize, 	// Setsize: size(s) is zero or negative
 	mglWarnFmt,		// Format is not supported for that build
-	mglWarnTern,	// Axis ranges are incompatible
-	mglWarnNull,	// Pointer is NULL
+	mglWarnTern, 	// Axis ranges are incompatible
+	mglWarnNull, 	// Pointer is NULL
 	mglWarnSpc,		// Not enough space for plot
 	mglWarnEnd		// Maximal number of warnings (must be last)
 };
@@ -176,27 +176,27 @@ enum{	// Codes for warnings/messages
 #define MGL_COLORS	"kwrgbcymhWRGBCYMHlenpquLENPQU"
 //-----------------------------------------------------------------------------
 #define MGL_TRANSP_NORM		0x000000
-#define MGL_TRANSP_GLASS	0x000001
+#define MGL_TRANSP_GLASS 	0x000001
 #define MGL_TRANSP_LAMP		0x000002
 #define MGL_ENABLE_CUT		0x000004	///< Flag which determines how points outside bounding box are drown.
-#define MGL_ENABLE_RTEXT	0x000008	///< Use text rotation along axis
+#define MGL_ENABLE_RTEXT 	0x000008	///< Use text rotation along axis
 #define MGL_AUTO_FACTOR		0x000010	///< Enable autochange PlotFactor
-#define MGL_ENABLE_ALPHA	0x000020	///< Flag that Alpha is used
-#define MGL_ENABLE_LIGHT	0x000040	///< Flag of using lightning
-#define MGL_TICKS_ROTATE	0x000080	///< Allow ticks rotation
+#define MGL_ENABLE_ALPHA 	0x000020	///< Flag that Alpha is used
+#define MGL_ENABLE_LIGHT 	0x000040	///< Flag of using lightning
+#define MGL_TICKS_ROTATE 	0x000080	///< Allow ticks rotation
 #define MGL_TICKS_SKIP		0x000100	///< Allow ticks rotation
 // flags for internal use only
 #define MGL_DISABLE_SCALE	0x000200	///< Temporary flag for disable scaling (used for axis)
-#define MGL_FINISHED		0x000400	///< Flag that final picture (i.e. mglCanvas::G) is ready
+#define MGL_FINISHED 		0x000400	///< Flag that final picture (i.e. mglCanvas::G) is ready
 #define MGL_USE_GMTIME		0x000800	///< Use gmtime instead of localtime
-#define MGL_SHOW_POS		0x001000	///< Switch to show or not mouse click position
+#define MGL_SHOW_POS			0x001000	///< Switch to show or not mouse click position
 #define MGL_CLF_ON_UPD		0x002000	///< Clear plot before Update()
 #define MGL_NOSUBTICKS		0x004000	///< Disable subticks drawing (for bounding box)
 #define MGL_DIFFUSIVE		0x008000	///< Use diffusive light instead of specular
-#define MGL_USEDRWDAT		0x010000	///< Use DrwDat to remember all data of frames
+#define MGL_VECT_FRAME		0x010000	///< Use DrwDat to remember all data of frames
 #define MGL_REDUCEACC		0x020000	///< Reduce accuracy of points (to reduc size of output files)
-#define MGL_PREFERVC		0x040000	///< Prefer vertex color instead of texture if output format supports
-#define MGL_ONESIDED		0x080000	///< Render only front side of surfaces if output format supports (for debugging)
+#define MGL_PREFERVC 		0x040000	///< Prefer vertex color instead of texture if output format supports
+#define MGL_ONESIDED 		0x080000	///< Render only front side of surfaces if output format supports (for debugging)
 //-----------------------------------------------------------------------------
 #ifdef __cplusplus
 //-----------------------------------------------------------------------------

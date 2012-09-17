@@ -325,6 +325,8 @@ int mglCanvas::NewFrame()
 //-----------------------------------------------------------------------------
 void mglCanvas::EndFrame()
 {
+	Finish();
+	if(get(MGL_VECT_FRAME))	PushDrwDat();
 #if MGL_HAVE_GIF
 	long width, height, n;
 	unsigned char *f=0, **l=0;
@@ -348,8 +350,6 @@ void mglCanvas::EndFrame()
 	if(f)	free(f);
 #else
 	mglGlobalMess += "GIF support was disabled. Please, enable it and rebuild MathGL.\n";
-	if(get(MGL_USEDRWDAT))	PushDrwDat();
-	Finish();
 #endif
 }
 //-----------------------------------------------------------------------------

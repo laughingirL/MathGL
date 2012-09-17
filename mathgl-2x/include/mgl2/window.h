@@ -29,6 +29,7 @@ struct mglDraw
 	virtual int Draw(mglGraph *)=0;	///< Function for drawing
 	virtual void Reload()	{}		///< Function for reloading data
 	virtual void Click()	{}		///< Callback function on mouse click
+	virtual ~mglDraw()	{}
 #if MGL_HAVE_PTHREAD
 	pthread_t thr;
 	bool running;
@@ -36,6 +37,8 @@ struct mglDraw
 	virtual void Calc()	{}			///< Function for calculations
 	inline void Run()				///< Run calculations in other thread
 	{	mgl_draw_thr(this);	}
+#else
+	mglDraw(){}
 #endif
 };
 //-----------------------------------------------------------------------------

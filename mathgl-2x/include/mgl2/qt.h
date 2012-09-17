@@ -92,7 +92,6 @@ public slots:
 	void restore();			///< Restore zoom and rotation to default values
 	//	void reload();			///< Reload data and execute script
 
-	void setAxis(bool a);	///< Switch on/off axis shifting instead of just zoom
 	void shiftLeft();		///< Shift graphics to left direction
 	void shiftRight();		///< Shift graphics to right direction
 	void shiftUp();			///< Shift graphics to up direction
@@ -116,6 +115,16 @@ public slots:
 	void exportPRC(QString fname="");	///< export to PRC file
 	void setMGLFont(QString path);		///< restore/load font for graphics
 
+	void addMark();						///< add marker into primitives
+	void addLine();						///< add line into primitives
+	void addRect();						///< add rectangle into primitives
+	void addCurve();						///< add curve into primitives
+	void addRhomb();						///< add rhombus into primitives
+	void addEllipse();					///< add ellipse into primitives
+	void addText(QString txt="");		///< add text into primitives
+
+	void SetUsePrimitives(bool use)	{	mglUserPrim=use;	emit usePrimChanged(use);	}
+
 	void adjust();		///< Adjust plot size to fill entire window
 	void nextSlide();	///< Show next slide
 	void prevSlide();	///< Show previous slide
@@ -129,7 +138,6 @@ signals:
 	void perChanged(int);		///< Perspective changed (by mouse or by toolbar)
 	void alphaChanged(bool);		///< Transparency changed (by toolbar)
 	void lightChanged(bool);		///< Lighting changed (by toolbar)
-	void axisChanged(bool);		///< Axis shift changed (by toolbar)
 	void zoomChanged(bool);		///< Zooming changed (by toolbar)
 	void rotateChanged(bool);	///< Rotation changed (by toolbar)
 	void mouseClick(mreal,mreal,mreal);	///< Position of mouse click
@@ -137,6 +145,7 @@ signals:
 	void showWarn(QString);		///< Show warnings
 	void posChanged(QString message);	///< user click to show mouse position
 	void objChanged(int objId);			///< User double-click to select object/line
+	void usePrimChanged(bool);	///< Flag mglUserPrim is changed
 	void refreshData();
 
 protected:
@@ -145,7 +154,10 @@ protected:
 	void mousePressEvent(QMouseEvent *);
 	void mouseReleaseEvent(QMouseEvent *);
 	void mouseMoveEvent(QMouseEvent *);
+	void wheelEvent(QWheelEvent *);
 
+	static bool mglUserPrim;
+	QString primitives;	///< Manual primitives, defined by user
 	mglCanvas *gr;		///< Built-in mglCanvasQT-er instance (used by default)
 	void *draw_par;		///< Parameters for drawing function mglCanvasWnd::DrawFunc.
 	/// Drawing function for window procedure. It should return the number of frames.
@@ -162,7 +174,6 @@ protected:
 	bool rotate;			///< Mouse rotation state
 	mreal x1,x2,y1,y2;	///< Zoom in region
 	mreal ax1,ax2,ay1,ay2;	///< Axis range zoom
-	bool axis;			///< Axis shift state
 	bool showMessage;	///< Flag for showing messages (enabled by each execute())
 	QMenu *popup;		///< Pointer to pop-up menu
 	QTimer *timer;		///< Timer for animation
@@ -210,7 +221,8 @@ struct mglDrawScript : public mglDraw
 	HMPR par;		///< Parser to be used
 	QString text;	///< Script to be drawn
 	long line;		///< Line which will be highlited
-	mglDrawScript(HMPR p)	{	par=p;	line=-1;	}
+	mglDrawScript(HMPR p):mglDraw()	{	par=p;	line=-1;	}
+	virtual ~mglDrawScript() {}
 	int Draw(mglGraph *gr)
 	{	gr->Highlight(line+1);	mgl_parse_text(gr->Self(),par,text.toAscii());	return 0;	}
 };
@@ -218,7 +230,7 @@ struct mglDrawScript : public mglDraw
 /// Convert bitmap from mglCanvasWnd to QPixmap
 void mglConvertFromGraph(QPixmap &pic, mglCanvas *gr, uchar **buf);
 /// Make menu, toolbars and return popup menu for MainWindow
-QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *tet, QSpinBox *phi);
+QMenu *mglMakeMenu(QMainWindow* Wnd, QMathGL* QMGL, QSpinBox*& tet, QSpinBox*& phi);
 //-----------------------------------------------------------------------------
 void mgl_ask_qt(const wchar_t *quest, wchar_t *res);
 //-----------------------------------------------------------------------------

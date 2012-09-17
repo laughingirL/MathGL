@@ -30,7 +30,8 @@ void mgl_mark(HMGL gr, mreal x,mreal y,mreal z,const char *mark)
 	char mk = gr->SetPenPal(mark);
 	if(!mk)	mk = '.';
 	static int cgid=1;	gr->StartGroup("MarkS",cgid++);
-	gr->mark_plot(gr->AddPnt(mglPoint(x,y,z),gr->CDef,mglPoint(NAN),-1,3),mk);
+	long k = gr->AddPnt(mglPoint(x,y,z),gr->CDef,mglPoint(NAN),-1,3);
+	gr->mark_plot(k,mk); 	gr->AddActive(k);
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
@@ -41,7 +42,8 @@ void mgl_mark_(uintptr_t *gr, mreal *x, mreal *y, mreal *z, const char *pen,int 
 void mgl_ball(HMGL gr, mreal x,mreal y,mreal z)
 {
 	static int cgid=1;	gr->StartGroup("Ball",cgid++);
-	gr->mark_plot(gr->AddPnt(mglPoint(x,y,z),gr->AddTexture('r'),mglPoint(NAN),-1,3),'.');
+	long k = gr->AddPnt(mglPoint(x,y,z),gr->AddTexture('r'),mglPoint(NAN),-1,3);
+	gr->mark_plot(k,'.');	gr->AddActive(k);
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
@@ -59,7 +61,7 @@ void mgl_line(HMGL gr, mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mreal z
 	register long i,k1,k2;
 	register mreal s;
 	gr->Reserve(n);
-	k1 = gr->AddPnt(p,gr->CDef,nn,-1,3);
+	k1 = gr->AddPnt(p,gr->CDef,nn,-1,3);	gr->AddActive(k1);
 	for(i=1;i<n;i++)
 	{
 		if(gr->Stop)	return;
@@ -69,7 +71,7 @@ void mgl_line(HMGL gr, mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mreal z
 		if(i==1)	gr->arrow_plot(k2,k1,gr->Arrow1);
 		if(i==n-1)	gr->arrow_plot(k1,k2,gr->Arrow2);
 	}
-	gr->EndGroup();
+	gr->AddActive(k1,1);	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
 void mgl_line_(uintptr_t *gr, mreal *x1, mreal *y1, mreal *z1, mreal *x2, mreal *y2, mreal *z2, const char *pen,int *n,int l)
@@ -87,7 +89,7 @@ void mgl_curve(HMGL gr, mreal x1, mreal y1, mreal z1, mreal dx1, mreal dy1, mrea
 	register long i,k1,k2;
 	register mreal s;
 	gr->Reserve(n);
-	k1=gr->AddPnt(p,gr->CDef,nn,-1,3);
+	k1=gr->AddPnt(p,gr->CDef,nn,-1,3);	gr->AddActive(k1);
 	for(i=0;i<n;i++)
 	{
 		if(gr->Stop)	return;
@@ -97,7 +99,9 @@ void mgl_curve(HMGL gr, mreal x1, mreal y1, mreal z1, mreal dx1, mreal dy1, mrea
 		if(i==1)	gr->arrow_plot(k2,k1,gr->Arrow1);
 		if(i==n-1)	gr->arrow_plot(k1,k2,gr->Arrow2);
 	}
-	gr->EndGroup();
+	gr->AddActive(gr->AddPnt(p1+d1,gr->CDef,nn,-1,3),1);
+	gr->AddActive(gr->AddPnt(p2-d2,gr->CDef,nn,-1,3),3);
+	gr->AddActive(k1,2);	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
 void mgl_curve_(uintptr_t* gr, mreal *x1, mreal *y1, mreal *z1, mreal *dx1, mreal *dy1, mreal *dz1, mreal *x2, mreal *y2, mreal *z2, mreal *dx2, mreal *dy2, mreal *dz2, const char *pen,int *n, int l)
@@ -121,6 +125,8 @@ void mgl_error_box(HMGL gr, mreal x, mreal y, mreal z, mreal ex, mreal ey, mreal
 	q = p;	q.z -= ez;	k2 = gr->AddPnt(q,gr->CDef,nn,0,3);
 	gr->line_plot(k1,k2);	gr->arrow_plot(k1,k2,'I');	gr->arrow_plot(k2,k1,'I');
 	if(mk)	gr->mark_plot(gr->AddPnt(p,gr->CDef,nn,0,3),mk);
+	gr->AddActive(gr->AddPnt(p,gr->CDef,nn,-1,3),0);
+	gr->AddActive(gr->AddPnt(p+mglPoint(ex,ey),gr->CDef,nn,-1,3),1);
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
@@ -150,8 +156,10 @@ void mgl_face(HMGL gr, mreal x0, mreal y0, mreal z0, mreal x1, mreal y1, mreal z
 	gr->Reserve(4);
 	long k1,k2,k3,k4;
 	double a = gr->get(MGL_ENABLE_ALPHA)?-1:1;
-	k1 = gr->AddPnt(p1,c1,q1,a,11);	k2 = gr->AddPnt(p2,c2,q2,a,11);
-	k3 = gr->AddPnt(p3,c3,q3,a,11);	k4 = gr->AddPnt(p4,c4,q4,a,11);
+	k1 = gr->AddPnt(p1,c1,q1,a,11);	gr->AddActive(k1,0);
+	k2 = gr->AddPnt(p2,c2,q2,a,11);	gr->AddActive(k2,1);
+	k3 = gr->AddPnt(p3,c3,q3,a,11);	gr->AddActive(k3,2);
+	k4 = gr->AddPnt(p4,c4,q4,a,11);	gr->AddActive(k4,3);
 	gr->quad_plot(k1,k2,k3,k4);
 	if(mglchr(stl,'#'))
 	{
@@ -360,18 +368,20 @@ void mgl_ellipse(HMGL gr, mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mrea
 	mglPoint u=mglPoint(0,0,1)^v, q=u^v, p, s=(p1+p2)/2.;
 	u *= r;		v *= sqrt(d*d/4+r*r);
 	// central point first
-	n0 = gr->AddPnt(p1,c,q,-1,11);
+	n0 = gr->AddPnt(p1,c,q,-1,11);	gr->AddActive(n0);
+	gr->AddActive(gr->AddPnt(p2,c,q,-1,11),1);
 	for(long i=0;i<n;i++)
 	{
 		if(gr->Stop)	return;
 		mreal t = i*2*M_PI/(n-1.);
 		p = s+v*cos(t)+u*sin(t);
 		n2 = n1;	n1 = gr->AddPnt(p,c,q,-1,11);
+		if(i==n/4)	gr->AddActive(n1,3);
 		m2 = m1;	m1 = gr->CopyNtoC(n1,k);
 		if(i>0)
 		{
 			if(fill)	gr->trig_plot(n0,n1,n2);
-			if(box)		gr->line_plot(m1,m2);
+			if(box)	gr->line_plot(m1,m2);
 		}
 	}
 	gr->EndGroup();
@@ -394,6 +404,7 @@ void mgl_rhomb(HMGL gr, mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mreal 
 	p = s+u;q = qq;	n2 = gr->AddPnt(p,b==c?c:k,qq,-1,11);
 	p = p2;	q = qq;	n3 = gr->AddPnt(p,b,qq,-1,11);
 	p = s-u;q = qq;	n4 = gr->AddPnt(p,b==c?c:k,qq,-1,11);
+	gr->AddActive(n1,0);	gr->AddActive(n2,2);	gr->AddActive(n3,1);
 	if(fill)	gr->quad_plot(n1,n2,n4,n3);
 	n1 = gr->CopyNtoC(n1,k);	n2 = gr->CopyNtoC(n2,k);
 	n3 = gr->CopyNtoC(n3,k);	n4 = gr->CopyNtoC(n4,k);
@@ -562,6 +573,8 @@ void mgl_putsw_dir(HMGL gr, mreal x, mreal y, mreal z, mreal dx, mreal dy, mreal
 	}
 	mglPoint p(x,y,z), d(dx-x,dy-y,dz-z);
 	long k = gr->AddPnt(p,-1,d,-1,7);
+	gr->AddActive(k,0);
+	gr->AddActive(gr->AddPnt(mglPoint(dx,dy,dz),-1,d,-1,7),1);
 	if(g && (a||A))	{	g->Pop();	gr->clr(MGL_DISABLE_SCALE);	}
 	gr->text_plot(k,text,font,size);
 }
@@ -784,42 +797,19 @@ void mgl_label_y_(uintptr_t *gr, uintptr_t *y, const char *text, const char *fnt
 //	Table series
 //
 //-----------------------------------------------------------------------------
-void mgl_tablew(HMGL gr, HCDT val, const wchar_t *text, const char *fnt, const char *opt)
+void mgl_tablew(HMGL gr, mreal x, mreal y, HCDT val, const wchar_t *text, const char *fnt, const char *opt)
 {
-	long i,j,m=val->GetNy(),n=val->GetNx();
-	mreal pos=gr->SaveState(opt);
-	static int cgid=1;	gr->StartGroup("Table",cgid++);
-	bool grid = mglchr(fnt,'#');
-	if(!text)	text=L"";
-	
-	char *buf = new char[m*32], sng[32];
-	std::vector<std::string> str;
-	for(i=0;i<n;i++)		// prepare list of strings first
-	{
-		*buf=0;
-		for(j=0;j+1<m;j++)
-		{
-			sprintf(sng,"%.3g\n",val->v(i,j));
-			strcat(buf,sng);
-		}
-		sprintf(sng,"%.3g",val->v(i,m-1));
-		str.push_back(buf);
-	}
-	delete []buf;
-
-	mreal w = gr->TextWidth(text,fnt,-1);
-	for(i=0;i<n;i++)		// find width for given font size
-		w+= gr->TextWidth(str[i].c_str(),fnt,-1);
+	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);
+	if(g)	g->Table(x,y,val,text,fnt,opt);
 }
-//-----------------------------------------------------------------------------
-void mgl_table(HMGL gr, HCDT val, const char *text, const char *fnt, const char *opt)
+void mgl_table(HMGL gr, mreal x, mreal y, HCDT val, const char *text, const char *fnt, const char *opt)
 {	long s = strlen(text)+1;	wchar_t *wcs = new wchar_t[s];	mbstowcs(wcs,text,s);
-	mgl_tablew(gr, val, wcs, fnt, opt);	delete []wcs;	}
+	mgl_tablew(gr, x, y, val, wcs, fnt, opt);	delete []wcs;	}
 //-----------------------------------------------------------------------------
-void mgl_table_(uintptr_t *gr, uintptr_t *val, const char *text, const char *fnt, const char *opt,int l,int n,int lo)
+void mgl_table_(uintptr_t *gr, mreal *x, mreal *y, uintptr_t *val, const char *text, const char *fnt, const char *opt,int l,int n,int lo)
 {	wchar_t *s=new wchar_t[l+1];	mbstowcs(s,text,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,fnt,n);	f[n]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
-	mgl_tablew(_GR_, _DA_(val),s,f, o);
+	mgl_tablew(_GR_, *x, *y, _DA_(val),s,f, o);
 	delete []o;	delete []s;	delete []f;	}
 //-----------------------------------------------------------------------------

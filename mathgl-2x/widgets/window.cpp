@@ -23,12 +23,15 @@ mglCanvasWnd::mglCanvasWnd() : mglCanvas()
 {
 	Setup();	LoadFunc=0;	FuncPar=0;	DrawFunc=0;	ClickFunc=0;
 	GG = 0;		NumFig = 0;	CurFig = -1;
-//	set(MGL_USEDRWDAT);	// TODO: experimental feature -- test later
 }
 //-----------------------------------------------------------------------------
 mglCanvasWnd::~mglCanvasWnd()	{	if(GG) free(GG);	}
 //-----------------------------------------------------------------------------
-void mglCanvasWnd::SetCurFig(int c)	{	CurFig=c;	if(get(MGL_USEDRWDAT))	GetDrwDat(c);	}
+void mglCanvasWnd::SetCurFig(int c)
+{
+	CurFig=c;
+	if(get(MGL_VECT_FRAME) && c>=0 && c<(long)DrwDat.size())	GetFrame(c);
+}
 //-----------------------------------------------------------------------------
 void mglCanvasWnd::ClearFrames()
 {
@@ -74,7 +77,7 @@ void mglCanvasWnd::SetDrawFunc(int (*draw)(mglBase *gr, void *p), void *par, voi
 const unsigned char *mglCanvasWnd::GetBits()
 {
 	const unsigned char *g = mglCanvas::GetBits();
-	if(GG && NumFig>0 && CurFig<NumFig && CurFig>=0)
+	if(GG && NumFig>0 && CurFig<NumFig && CurFig>=0 && !get(MGL_VECT_FRAME))
 		g = GG + CurFig*Width*Height*3;
 	return g;
 }

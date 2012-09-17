@@ -1,7 +1,7 @@
 2.0.4 Released ?? October 2012
 
-* Color can be specified as its RGB[A] values. i.e. like "{xFFFFFF}" or "{xFFFFFFFF}".
-* Color in color scheme  may have position in range [0,1]. Format is {CN,pos} or {xNNNNNN,pos}.
+* Color can be specified as its RGB[A] values, i.e. like "{xFFFFFF}" or "{xFFFFFFFF}".
+* Color in color scheme  may have position in range [0,1]. Format is {CN,pos} or {xFFFFFF,pos}.
 * Vectors is drawn now even if only starting or ending points are placed in bounding box.
 * Strongly rewrite the algorithm of vector field plotting.
 * Add Vect3() plot for drawing vectors on slice of 3d vector field.
@@ -9,6 +9,7 @@
 * Make code compilable by Borland compiler too.
 * Improve output in OpenGL mode.
 * Add fog at export in EPS/SVG formats.
+
 * Add ZoomAxis() for zooming/shifting axis range as whole.
 * Export functions now can write in stdout if file name is "-".
 
@@ -19,9 +20,17 @@
 * Functions mglData::Spline*, mglData::Linear* now can return gradient at the point.
 * Add class mglDataC for complex data arrays.
 * Now you can use different fontfaces in the plot.
+* Frames now save 3D information if MGL_VECT_FRAME is set (by default).
+* Picture drawing now use multi-threading for each stage.
+* Add Table() function for drawing table with data values.
+* Now Legend() automatically use several columns if it contain too many legend entries.
 
-* Add dialog for data arguments in UDAV.
+* Add dialog for data arguments in "New command" dialog of UDAV.
+* Value of arguments are saved while the kind of command is changed in "New command" dialog of UDAV.
+* Extend classification of commands in "New command" dialog of UDAV and make it automatic.
 * Mouse position at an object click now is displayed on the image itself.
+* Add zoom in/out by mouse wheel.
+* Add zoom in/out of axis range by mouse wheel, and shift of axis range by middle button.
 
 * Update samples
 * Update documentation

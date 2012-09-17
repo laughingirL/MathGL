@@ -25,6 +25,7 @@ std::string mglGlobalMess;	///< Buffer for receiving global messages
 mglCanvas::mglCanvas(int w, int h) : mglBase()
 {
 	clr(MGL_DISABLE_SCALE);
+	set(MGL_VECT_FRAME);	// NOTE: require a lot of memory!
 	Z=0;	C=G=G4=0;	OI=0;	gif=0;
 	CurFrameId=0;	Delay=0.5;
 	Width=Height=Depth=0;	ObjId=-1;
@@ -35,11 +36,7 @@ mglCanvas::mglCanvas(int w, int h) : mglBase()
 	ax.dir = mglPoint(1,0,0);	ax.a = mglPoint(0,1,0);	ax.b = mglPoint(0,0,1);	ax.ch='x';
 	ay.dir = mglPoint(0,1,0);	ay.a = mglPoint(1,0,0);	ay.b = mglPoint(0,0,1);	ay.ch='y';
 	az.dir = mglPoint(0,0,1);	az.a = mglPoint(0,1,0);	az.b = mglPoint(1,0,0);	az.ch='z';
-#if MGL_HAVE_PTHREAD
-	pthread_mutex_init(&mutexSub,0);	pthread_mutex_init(&mutexLeg,0);
-	pthread_mutex_init(&mutexPrm,0);	pthread_mutex_init(&mutexPtx,0);
-	pthread_mutex_init(&mutexStk,0);	pthread_mutex_init(&mutexGrp,0);
-#endif
+
 	SetSize(w,h);	SetQuality(MGL_DRAW_NORM);	DefaultPlotParam();
 }
 //-----------------------------------------------------------------------------
@@ -52,17 +49,17 @@ mglCanvas::~mglCanvas()
 long mglCanvas::PushDrwDat()
 {
 	mglDrawDat d;
-	d.Grp=Grp;	d.Leg=Leg;	d.Pnt=Pnt;	d.Prm=Prm;
-	d.Ptx=Ptx;	d.Sub=Sub;	d.Txt=Txt;
-	DrwDat.push_back(d);
+	d.Pnt=Pnt;	d.Prm=Prm;	d.Glf=Glf;	d.Ptx=Ptx;	d.Txt=Txt;
+	MGL_PUSH(DrwDat,d,mutexDrw);
 	return DrwDat.size();
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::GetDrwDat(long i)
+void mglCanvas::GetFrame(long i)
 {
-	mglDrawDat &d=DrwDat[i];
-	Grp=d.Grp;	Leg=d.Leg;	Pnt=d.Pnt;	Prm=d.Prm;
-	Ptx=d.Ptx;	Sub=d.Sub;	Txt=d.Txt;
+	if(i<0 || (size_t)i>=DrwDat.size())	return;
+	Clf();
+	const mglDrawDat &d=DrwDat[i];
+	Pnt=d.Pnt;	Prm=d.Prm;	Glf=d.Glf;	Ptx=d.Ptx;	Txt=d.Txt;
 }
 //-----------------------------------------------------------------------------
 const unsigned char *mglCanvas::GetBits()	{	Finish();	return G;	}
@@ -380,7 +377,8 @@ void mglCanvas::InPlot(mreal x1,mreal x2,mreal y1,mreal y2, const char *st)
 {
 	if(Width<=0 || Height<=0 || Depth<=0)	return;
 	if(!st)		{	InPlot(x1,x2,y1,y2,false);	return;	}
-	inW = Width*(x2-x1);	inH = Height*(y2-y1);	ZMin=1;
+	inW = Width*(x2-x1);	inH = Height*(y2-y1);
+	inX=Width*x1;	inY=Height*y1;	ZMin=1;
 	mglPrim p;	p.id = ObjId;
 	p.n1=x1*Width;	p.n2=x2*Width;	p.n3=y1*Height;	p.n4=y2*Height;
 	MGL_PUSH(Sub,p,mutexSub);
@@ -392,6 +390,7 @@ void mglCanvas::InPlot(mreal x1,mreal x2,mreal y1,mreal y2, const char *st)
 	bool a = !(strchr(st,'a') || strchr(st,'A') || strchr(st,'^') || strchr(st,'g') || strchr(st,'t'));
 	// let use simplified scheme -- i.e. no differences between axis, colorbar and/or title
 	register mreal xs=(x1+x2)/2, ys=(y1+y2)/2, f1 = 1.3, f2 = 1.1;
+	if(strchr(st,'#'))	f1=f2=1.55;
 	if(r && l)	{	x2=xs+(x2-xs)*f1;	x1=xs+(x1-xs)*f1;	}
 	else if(r)	{	x2=xs+(x2-xs)*f1;	x1=xs+(x1-xs)*f2;	}
 	else if(l)	{	x2=xs+(x2-xs)*f2;	x1=xs+(x1-xs)*f1;	}
@@ -431,7 +430,8 @@ void mglCanvas::InPlot(mreal x1,mreal x2,mreal y1,mreal y2, bool rel)
 		B.z = (1.f-B.b[8]/(2*Depth))*Depth;
 		B1=B;
 	}
-	inW = B.b[0];	inH=B.b[4];	ZMin=1;
+	inW=B.b[0];	inH=B.b[4];	ZMin=1;
+	inX=Width*x1;	inY=Height*y1;
 	font_factor = B.b[0] < B.b[4] ? B.b[0] : B.b[4];
 	mglPrim p;	p.id = ObjId;
 	p.n1=x1*Width;	p.n2=x2*Width;	p.n3=y1*Height;	p.n4=y2*Height;
@@ -539,7 +539,7 @@ void mglCanvas::Zoom(mreal x1, mreal y1, mreal x2, mreal y2)
 	if(x1==x2 || y1==y2)	{	x1=y1=0;	x2=y2=1;	}
 	x1=2*x1-1;	x2=2*x2-1;	y1=2*y1-1;	y2=2*y2-1;
 	Bp.b[0]=2/fabs(x2-x1);	Bp.b[4]=2/fabs(y2-y1);
-	Bp.x=(x1+x2)/2/Bp.b[0];	Bp.y=(y1+y2)/2/Bp.b[4];
+	Bp.x=(x1+x2)/fabs(x2-x1);Bp.y=(y1+y2)/fabs(y2-y1);
 }
 //-----------------------------------------------------------------------------
 int mglCanvas::GetSplId(long x,long y) const
@@ -662,14 +662,15 @@ void mglCanvas::arrow_plot(long n1, long n2,char st)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::Legend(const std::vector<mglText> &leg, mreal x, mreal y, const char *font, mreal size, mreal ll)
+void mglCanvas::Legend(const std::vector<mglText> &leg, mreal x, mreal y, const char *font, const char *opt)
 {
 	long n=leg.size(), iw, ih;
 	if(n<1)	{	SetWarn(mglWarnLeg,"Legend");	return;	}
+	mreal ll = SaveState(opt);	if(mgl_isnan(ll))	ll=0.1;
 	static int cgid=1;	StartGroup("Legend",cgid++);
 	if(ll<=0 || mgl_isnan(ll))	ll=0.1;
 	ll *=font_factor;
-	if(size<0)	size = -size*FontSize;
+	mreal size = 0.8*FontSize;
 	// setup font and parse absolute coordinates
 	if(!font)	font="#";
 	char *pA, *ff = new char[strlen(font)+3];
@@ -678,18 +679,20 @@ void mglCanvas::Legend(const std::vector<mglText> &leg, mreal x, mreal y, const 
 	{	*pA = ' ';	InPlot(0,1,0,1,false);	iw=B1.b[0];	ih=B1.b[4];	}
 	else	{	iw=B1.b[0]/B1.pf;	ih=B1.b[4]/B1.pf;	}
 	// find sizes
-	mreal h=TextHeight(font,size)/2;
-	mreal dx = 0.03*iw, dy = 0.03*ih, w=0, t;
+	mreal h=TextHeight(font,size);
+	mreal dx = 0.03*iw, dy = 0.03*ih, w=0, t, sp=TextWidth(" ",font,size);
 	register long i,j;
 	for(i=0;i<n;i++)		// find text length
 	{
-		t = TextWidth(leg[i].text.c_str(),font,size)/2;
+		t = TextWidth(leg[i].text.c_str(),font,size)+sp;
 		if(leg[i].stl.empty())	t -= ll;
 		w = w>t ? w:t;
 	}
 	w += ll+0.01*iw;	// add space for lines
-	x = x*(iw-w-2*dx)+B.x-iw/2+dx;	// TODO bypass very long legends
-	y = y*(ih-h*n-2*dy)+B.y-ih/2+dy;
+	j = long((ih*0.95)/h);
+	long ncol = 1+(n-1)/j, nrow = (n+ncol-1)/ncol;
+	x = x*(iw-w*ncol-2*dx)+B.x-iw/2+dx;	// TODO bypass very long legends
+	y = y*(ih-h*nrow-2*dy)+B.y-ih/2+dy;
 	// draw it
 	long k1=0,k2=0,k3=0,k4=0;
 	mglPoint p,q=mglPoint(NAN,NAN);
@@ -710,9 +713,9 @@ void mglCanvas::Legend(const std::vector<mglText> &leg, mreal x, mreal y, const 
 	{
 		SetPenPal("k-");
 		k1=AddPnt(mglPoint(x,y,Depth),c1,q,-1,0);
-		k2=AddPnt(mglPoint(x+w,y,Depth),c1,q,-1,0);
-		k3=AddPnt(mglPoint(x,y+h*n,Depth),c1,q,-1,0);
-		k4=AddPnt(mglPoint(x+w,y+h*n,Depth),c1,q,-1,0);
+		k2=AddPnt(mglPoint(x+w*ncol,y,Depth),c1,q,-1,0);
+		k3=AddPnt(mglPoint(x,y+h*nrow,Depth),c1,q,-1,0);
+		k4=AddPnt(mglPoint(x+w*ncol,y+h*nrow,Depth),c1,q,-1,0);
 		quad_plot(k1,k2,k3,k4);
 		k1=CopyNtoC(k1,c2);	k2=CopyNtoC(k2,c2);
 		k3=CopyNtoC(k3,c2);	k4=CopyNtoC(k4,c2);
@@ -721,19 +724,102 @@ void mglCanvas::Legend(const std::vector<mglText> &leg, mreal x, mreal y, const 
 	}
 	for(i=0;i<n;i++)	// draw lines and legend
 	{
+		register long iy=nrow-(i%nrow)-1,ix=i/nrow;
 		char m=SetPenPal(leg[i].stl.c_str());
-		k1=AddPnt(mglPoint(x+0.1*ll,y+(n-i-1)*h+0.45*h,Depth),CDef,q,-1,0);
-		k2=AddPnt(mglPoint(x+0.9*ll,y+(n-i-1)*h+0.45*h,Depth),CDef,q,-1,0);	pPos=0;
+		k1=AddPnt(mglPoint(x+ix*w+0.1*ll,y+iy*h+0.45*h,Depth),CDef,q,-1,0);
+		k2=AddPnt(mglPoint(x+ix*w+0.9*ll,y+iy*h+0.45*h,Depth),CDef,q,-1,0);	pPos=0;
 		if(!leg[i].stl.empty())	line_plot(k1,k2);
 		if(m)	for(j=0;j<LegendMarks;j++)
 		{
-			p = mglPoint(x+0.1f*ll + (j+1)*0.8f*ll/(1.+LegendMarks),y+(n-i-1)*h+0.45*h,Depth);
+			p = mglPoint(x+ix*w+0.1f*ll + (j+1)*0.8f*ll/(1.+LegendMarks),y+iy*h+0.45*h,Depth);
 			mark_plot(AddPnt(p,CDef,q,-1,0),m);
 		}
-		p = mglPoint(x+((!leg[i].stl.empty())?ll:0.01*iw), y+(n-i-1)*h+0.15*h, Depth);
+		p = mglPoint(x+ix*w+((!leg[i].stl.empty())?ll:0.01*iw), y+iy*h+0.15*h, Depth);
 		text_plot(AddPnt(p,-1,q,-1,0), leg[i].text.c_str(), ff, size);
 	}
 	Pop();	EndGroup();	delete []ff;
+}
+//-----------------------------------------------------------------------------
+void mglCanvas::Table(mreal x, mreal y, HCDT val, const wchar_t *text, const char *frm, const char *opt)
+{
+	if(x>=1) 	{	SetWarn(mglWarnSpc,"Table");	return;	}
+	long i,j,m=val->GetNy(),n=val->GetNx();
+//	mreal pos=SaveState(opt);
+	SaveState(opt);
+	static int cgid=1;	StartGroup("Table",cgid++);
+	bool grid = mglchr(frm,'#'), eqd = mglchr(frm,'='), lim = mglchr(frm,'|');
+	if(!text)	text=L"";
+	if(x<0)	x=0; 	if(y<0)	y=0; 	if(y>1)	y=1;
+
+	wchar_t *buf = new wchar_t[m*32], sng[32];
+	std::vector<std::wstring> str;
+	for(i=0;i<n;i++)		// prepare list of strings first
+	{
+		*buf=0;
+		for(j=0;j+1<m;j++)
+		{
+			mglprintf(sng,32,L"%.3g\n",val->v(i,j));
+			wcscat(buf,sng);
+		}
+		mglprintf(sng,32,L"%.3g",val->v(i,m-1));
+		wcscat(buf,sng);		str.push_back(buf);
+	}
+	delete []buf;
+
+	mreal w = TextWidth(text,frm,-1), w1=0, ww, h;
+	for(i=0;i<n;i++)		// find width for given font size
+	{
+		ww = TextWidth(str[i].c_str(),frm,-1);
+		w1 = w1<ww?ww:w1;
+		if(!eqd)	w += ww;
+	}
+	if(eqd)	w += n*w1;
+	// reduce font size if table have to be inside inplot
+	if(lim && w>(1-x)*inW)
+	{	SetFontSize((x-1)*inW/w);	w = (1-x)*inW; 	w1 *= (1-x)*inW/w;	}
+	h = TextHeight(frm,-1);	// now we can determine text height
+
+	x = x*(inW-w)+B.x-inW/2;
+	y = y*(inH-h*m)+B.y-inH/2;
+
+	mglPoint p,q=mglPoint(NAN,NAN);
+	long k1,k2;
+	mreal xx,yy;
+	if(grid)	// draw bounding box
+	{
+		SetPenPal("k-");
+		k1=AddPnt(mglPoint(x,y,Depth),-1,q,-1,0);
+		k2=AddPnt(mglPoint(x,y+m*h,Depth),-1,q,-1,0);
+		line_plot(k1,k2);
+		ww = TextWidth(text,frm,-1);
+		k1=AddPnt(mglPoint(x+ww,y,Depth),-1,q,-1,0);
+		k2=AddPnt(mglPoint(x+ww,y+m*h,Depth),-1,q,-1,0);
+		line_plot(k1,k2);
+		for(i=0,xx=x+ww,yy=y;i<n;i++)
+		{
+			xx += eqd ? w1:TextWidth(str[i].c_str(),frm,-1);
+			k1=AddPnt(mglPoint(xx,yy,Depth),-1,q,-1,0);
+			k2=AddPnt(mglPoint(xx,yy+m*h,Depth),-1,q,-1,0);
+			line_plot(k1,k2);
+		}
+		for(i=0,xx=x,yy=y;i<=m;i++)
+		{
+			k1=AddPnt(mglPoint(xx,yy,Depth),-1,q,-1,0);
+			k2=AddPnt(mglPoint(xx+w,yy,Depth),-1,q,-1,0);
+			line_plot(k1,k2);	yy += h;
+		}
+	}
+	int align;	mglGetStyle(frm, 0, &align);
+	ww = TextWidth(text,frm,-1);
+	k1=AddPnt(mglPoint(x+ww*align/2.,y+h*(m-1),Depth),-1,q,-1,0);
+	text_plot(k1,text,frm);
+	for(i=0,xx=x+ww,yy=y+h*(m-1);i<n;i++)	// draw lines and legend
+	{
+		ww = eqd ? w1:TextWidth(str[i].c_str(),frm,-1);
+		k1=AddPnt(mglPoint(xx+ww*align/2.,yy,Depth),-1,q,-1,0);
+		text_plot(k1,str[i].c_str(),frm);	xx += ww;
+	}
+	EndGroup();
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::Title(const char *title,const char *stl,mreal size)
@@ -751,22 +837,22 @@ void mglCanvas::Title(const char *title,const char *stl,mreal size)
 //-----------------------------------------------------------------------------
 void mglCanvas::Title(const wchar_t *title,const char *stl,mreal size)
 {
-	mreal s = size>0 ? size/FontSize:-size, h=TextHeight(stl,size)*s/4;
+	mreal s = size>0 ? size/FontSize:-size, h=TextHeight(stl,size)*s/2;
 	if(h>=inH)	{	SetWarn(mglWarnSpc,"Title");	return;	}
 	bool box=mglchr(stl,'#');
 	int align;	mglGetStyle(stl,0,&align);	align = align&3;
-	mreal x=B1.x-inW/2, y=B1.y+inH/2-h;
-	mglPoint p(B1.x + inW/2.1*(align-1),y,Depth),q(NAN);
+	mreal y=inY+inH-h;
+	mglPoint p(inX + inW*align/2.,y,Depth),q(NAN);
 	if(title)	text_plot(AddPnt(p,-1,q,-1,0),title,stl,size);
 	if(box)	//	draw boungind box
 	{
 		mreal c1=AddTexture('w'), c2=AddTexture('k');
 		if((Flag&3)==2)	{	mreal cc=c1;	c2=c1;	c2=cc;	}
 		long k1,k2,k3,k4;
-		k1=AddPnt(mglPoint(x,y,Depth),c1,q,-1,0);
-		k2=AddPnt(mglPoint(x+inW,y,Depth),c1,q,-1,0);
-		k3=AddPnt(mglPoint(x,y+h,Depth),c1,q,-1,0);
-		k4=AddPnt(mglPoint(x+inW,y+h,Depth),c1,q,-1,0);
+		k1=AddPnt(mglPoint(inX,y,Depth),c1,q,-1,0);
+		k2=AddPnt(mglPoint(inX+inW,y,Depth),c1,q,-1,0);
+		k3=AddPnt(mglPoint(inX,y+h,Depth),c1,q,-1,0);
+		k4=AddPnt(mglPoint(inX+inW,y+h,Depth),c1,q,-1,0);
 		quad_plot(k1,k2,k3,k4);
 		k1=CopyNtoC(k1,c2);	k2=CopyNtoC(k2,c2);
 		k3=CopyNtoC(k3,c2);	k4=CopyNtoC(k4,c2);
@@ -797,5 +883,17 @@ void mglCanvas::EndGroup()
 	if(Quality&4)
 	{	Pnt.clear();		Prm.clear();		Ptx.clear();		Glf.clear();		}
 	if(grp_counter>0)	grp_counter--;
+}
+//-----------------------------------------------------------------------------
+int mglCanvas::IsActive(int xs, int ys,int &n)
+{
+	long i, h = (Width>Height ? Height:Width)/100;
+	for(i=0;i<(long)Act.size();i++)
+	{
+		const mglActivePos &p=Act[i];
+		if(abs(xs-p.x)<=h && abs(ys-p.y)<=h)
+		{	n=p.n;	return p.id;		}
+	}
+	n=-1;	return GetObjId(xs,ys);
 }
 //-----------------------------------------------------------------------------

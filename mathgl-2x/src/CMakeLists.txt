@@ -116,7 +116,7 @@ target_link_libraries(mgl ${M_LIB})
 file(TO_NATIVE_PATH $(MGL_FONT_PATH) MGL_FONT_PATH_SYS)
 #add_definitions(-DMGL_FONT_PATH="${MGL_FONT_PATH_SYS}")
 
-set_target_properties(mgl PROPERTIES SOVERSION 6.1.0)
+set_target_properties(mgl PROPERTIES SOVERSION 7.0.0)
 install(
 	TARGETS mgl mgl-static
 	RUNTIME DESTINATION bin

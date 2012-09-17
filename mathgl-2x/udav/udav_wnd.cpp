@@ -43,8 +43,8 @@
 #include <X11/Xlib.h>
 #endif
 //-----------------------------------------------------------------------------
-#include "mgl2/parser.h"
-#include "mgl2/qt.h"
+#include <mgl2/mgl.h>
+#include <mgl2/qt.h>
 #include "udav_wnd.h"
 #include "text_pnl.h"
 #include "plot_pnl.h"
@@ -62,7 +62,7 @@ bool mglAutoPure = true;
 bool mglCompleter = true;
 bool loadInNewWnd = false;
 QString pathHelp;
-extern mglParser parser;
+extern mglParse parser;
 extern QColor mglColorScheme[9];
 extern QString defFontFamily;
 extern int defFontSize;
@@ -116,6 +116,7 @@ int main(int argc, char **argv)
 	pathFont = settings.value("/userFont", "").toString();
 	lang = settings.value("/udavLang", "").toString();
 	bool showHint = settings.value("/showHint", true).toBool();
+	mglCompleter = settings.value("/completer",  true).toBool();
 	settings.endGroup();
 	if(pathHelp.isEmpty())	pathHelp=MGL_DOC_DIR;
 
@@ -133,7 +134,7 @@ int main(int argc, char **argv)
 		QTextCodec *codec = QTextCodec::codecForLocale();
 		mw->load(codec->toUnicode(argv[1]), true);
 	}
-	mw->show();	parser.AllowSetSize = true;
+	mw->show();	parser.AllowSetSize(true);
 	a.connect(&a, SIGNAL(lastWindowClosed()), &a, SLOT(quit()));
 	if(showHint)	udavShowHint(mw);
 	return a.exec();
@@ -147,9 +148,9 @@ int main(int argc, char **argv)
 	{L"fplot",L"Plot curve by formula",L"fplot 'func' ['stl'='' num=100]", mgls_fplot, mglc_fplot},
 	{L"fsurf",L"Plot surface by formula",L"fsurf 'func' ['stl'='' numx=100 numy=100]", mgls_fsurf, mglc_fsurf},
 	{L"fgets",L"Print string from file",L"fgets x y {z} 'fname' [pos=0 'stl'='' size=-1.4]", mgls_fgets, mglc_fgets},
-{L"",0,0,0,0}};*/
+{L"",0,0,0,0}};
 //-----------------------------------------------------------------------------
-void udavAddCommands(const mglCommand *cmd)
+void udavAddCommands(const mglCommand *cmd)	// NOTE it work but I don't how I can use it
 {
 	int i, mp, mc;
 	// determine the number of symbols
@@ -161,7 +162,7 @@ void udavAddCommands(const mglCommand *cmd)
 	qsort(buf, mp+mc, sizeof(mglCommand), mgl_cmd_cmp);
 	if(parser.Cmd!=mgls_base_cmd)	delete []parser.Cmd;
 	parser.Cmd = buf;
-}
+}*/
 //-----------------------------------------------------------------------------
 void udavLoadDefCommands()	{}	//{	udavAddCommands(udav_base_cmd);	}
 //-----------------------------------------------------------------------------
@@ -429,10 +430,9 @@ void MainWindow::editPosChanged()
 	for(i=0;i<n;i++)	if(dlm.contains(text[i]))	break;
 	text.truncate(i);
 
-	for(n=0;parser.Cmd[n].name[0];n++);	// determine the number of symbols in parser
-	mglCommand tst, *rts;	tst.name = text.toAscii().data();
-	rts = (mglCommand *)bsearch(&tst, parser.Cmd, n, sizeof(mglCommand), mgl_cmd_cmp);
-	if(rts)	setStatus(QString::fromAscii(rts->desc)+": "+QString::fromAscii(rts->form));
+	const char *desc = parser.CmdDesc(text.toAscii());
+	const char *form = parser.CmdFormat(text.toAscii());
+	if(form)	setStatus(QString::fromAscii(desc)+": "+QString::fromAscii(form));
 	else	setStatus(tr("Not recognized"));
 }
 //-----------------------------------------------------------------------------
@@ -558,7 +558,7 @@ void MainWindow::readSettings()
 }
 //-----------------------------------------------------------------------------
 void MainWindow::setStatus(const QString &txt)
-{	statusBar()->showMessage(txt, 2000);	}
+{	statusBar()->showMessage(txt, 5000);	}
 //-----------------------------------------------------------------------------
 void MainWindow::setCurrentFile(const QString &fileName)
 {

@@ -842,7 +842,7 @@ void TableWindow::update(mglVar *v)
 	wcstombs(ss,v->s.c_str(),1024);
 	label(ss);	v->func = delete_cb;
 //	if(var)	var->o = 0;
-	var = &(v->d);	v->o = this;
+	var = v; 	v->o = this;
 	refresh();
 }
 //-----------------------------------------------------------------------------

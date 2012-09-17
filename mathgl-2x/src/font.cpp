@@ -169,7 +169,7 @@ float mglFont::Width(const wchar_t *str,int font) const
 			buf=wcs+i+1;	if(w>ww)	ww=w;
 		}
 		w = Puts(buf,0,0,1.,0x10|font,'k');
-		if(w>ww)	ww=w;
+		if(w<ww)	w=ww;
 		delete []wcs;
 	}
 	else

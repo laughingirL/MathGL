@@ -55,6 +55,15 @@ mglBase::mglBase()
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_init(&mutexPnt,0);
 	pthread_mutex_init(&mutexTxt,0);
+	pthread_mutex_init(&mutexSub,0);
+	pthread_mutex_init(&mutexLeg,0);
+	pthread_mutex_init(&mutexPrm,0);
+	pthread_mutex_init(&mutexPtx,0);
+	pthread_mutex_init(&mutexStk,0);
+	pthread_mutex_init(&mutexGrp,0);
+	pthread_mutex_init(&mutexGlf,0);
+	pthread_mutex_init(&mutexAct,0);
+	pthread_mutex_init(&mutexDrw,0);
 #endif
 	fnt=0;	*FontDef=0;	fx=fy=fz=fa=fc=0;
 	AMin = mglPoint(0,0,0,0);	AMax = mglPoint(1,1,1,1);
@@ -62,12 +71,21 @@ mglBase::mglBase()
 	InUse = 1;	SetQuality();
 	// Always create default palette txt[0] and default scheme txt[1]
 	Txt.reserve(3);
-	Txt.push_back(mglTexture(MGL_DEF_PAL,-1));
-	Txt.push_back(mglTexture("BbcyrR",1));
+	MGL_PUSH(Txt,mglTexture(MGL_DEF_PAL,-1),mutexTxt);
+	MGL_PUSH(Txt,mglTexture("BbcyrR",1),mutexTxt);
 	memcpy(last_style,"{k5}-1\0",8);
 	MinS=mglPoint(-1,-1,-1);	MaxS=mglPoint(1,1,1);
 }
 mglBase::~mglBase()	{	ClearEq();	}
+//-----------------------------------------------------------------------------
+void mglBase::AddActive(long k,int n)
+{
+	if(k<0 || (size_t)k>=Pnt.size())	return;
+	mglActivePos p;
+	const mglPnt &q=Pnt[k];
+	p.x = int(q.x);	p.y = int(q.y);	p.id = ObjId;	p.n = n;
+	MGL_PUSH(Act,p,mutexAct);
+}
 //-----------------------------------------------------------------------------
 mreal mglBase::GetRatio() const	{	return 1;	}
 //-----------------------------------------------------------------------------
@@ -142,7 +160,7 @@ long mglBase::AddGlyph(int s, long j)
 	register size_t i;
 	for(i=0;i<Glf.size();i++)	if(g==Glf[i])	return i;
 	// if no one then let add it
-	Glf.push_back(g);	return Glf.size()-1;
+	MGL_PUSH(Glf,g,mutexGlf);	return Glf.size()-1;
 }
 //-----------------------------------------------------------------------------
 //		Add points to the buffer
@@ -168,7 +186,7 @@ long mglBase::AddPnt(mglPoint p, mreal c, mglPoint n, mreal a, int scl)
 		q.c=c;	q.t=q.ta=a;	q.u=n.x;	q.v=n.y;	q.w=n.z;
 	}
 	register long ci=long(c);
-	if(ci<0 || ci>=Txt.size())	ci=0;	// NOTE never should be here!!!
+	if(ci<0 || ci>=(long)Txt.size())	ci=0;	// NOTE never should be here!!!
 	const mglTexture &txt=Txt[ci];
 	txt.GetC(c,a,q);	// RGBA color
 
@@ -949,6 +967,7 @@ mreal mglBase::SaveState(const char *opt)
 	mgl_strtrim(q);
 	// NOTE: not consider '#' inside legend entry !!!
 	s=strchr(q,'#');	if(s)	*s=0;
+	mreal res=NAN;
 	while(q && *q)
 	{
 		s=q;	q=strchr(s,';');
@@ -979,11 +998,11 @@ mreal mglBase::SaveState(const char *opt)
 		else if(!strcmp(a,"diffuse"))	SetDifLight(ff);
 		else if(!strcmp(a,"size"))
 		{	SetMarkSize(ff);	SetFontSize(ff);	SetArrowSize(ff);	}
-		else if(!strcmp(a,"num") || !strcmp(a,"number") || !strcmp(a,"value"))	return ff;
+		else if(!strcmp(a,"num") || !strcmp(a,"number") || !strcmp(a,"value"))	res=ff;
 		else if(!strcmp(a,"legend"))
 		{	if(*b=='\'')	{	b++;	b[strlen(b)-1]=0;	}	leg_str = b;	}
 	}
-	free(qi);	return NAN;
+	free(qi);	return res;
 }
 //-----------------------------------------------------------------------------
 void mglBase::LoadState()

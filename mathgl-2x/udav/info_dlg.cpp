@@ -22,10 +22,10 @@
 #include <QComboBox>
 #include <QTextEdit>
 #include <QTabWidget>
-#include "mgl2/parser.h"
-#include "mgl2/qt.h"
+#include <mgl2/mgl.h>
+#include <mgl2/qt.h>
 #include "info_dlg.h"
-extern mglParser parser;
+extern mglParse parser;
 //-----------------------------------------------------------------------------
 InfoDialog::InfoDialog(QWidget *parent) : QDialog(parent)
 {
@@ -43,7 +43,7 @@ InfoDialog::InfoDialog(QWidget *parent) : QDialog(parent)
 	mgl->autoResize = true;		mgl->appName = tr("Data preview");
 	mgl->setToolTip(tr("Data preview for current slice."));
 
-	draw = new mglDrawScript(&parser);	mgl->setDraw(draw);
+	draw = new mglDrawScript(parser.Self());	mgl->setDraw(draw);
 
 	kind->addItem(tr("1D plot"));	kind->addItem(tr("2D plot"));
 	kind->setCurrentIndex(0);	//	kind->addItem(tr("3D plot"));
@@ -76,7 +76,7 @@ void InfoDialog::refresh(bool force)
 void InfoDialog::setVar(mglVar *v)
 {
 	var=v;
-	if(v)	kind->setCurrentIndex(v->d.ny>1 ? 1:0);
+	if(v)	kind->setCurrentIndex(v->ny>1 ? 1:0);
 	refresh();
 }
 //-----------------------------------------------------------------------------

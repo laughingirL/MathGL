@@ -179,11 +179,10 @@ void ScriptWindow::mem_init()
 {
 	char str[128];
 	var->clear();
-	mglVar *v=Parse->Self()->DataList;
+	mglVar *v=Parse->FindVar("");
 	while(v)
 	{
-		sprintf(str,"%ls\t%ld*%ld*%ld\t%ld\t", v->s.c_str(), v->d.nx, v->d.ny,
-				v->d.nz, 4*v->d.nx*v->d.ny*v->d.nz);
+		sprintf(str,"%ls\t%ld*%ld*%ld\t%ld\t", v->s.c_str(), v->nx, v->ny, v->nz, sizeof(mreal)*v->nx*v->ny*v->nz);
 		var->add(str,v);
 		v = v->next;
 	}
@@ -212,21 +211,18 @@ void ScriptWindow::mem_pressed(int kind)
 	}
 	else if(kind==1)
 	{
-		if(v->d.nz>1)		sprintf(res,"box\nsurf3 %ls\n",v->s.c_str());
-		else if(v->d.ny>1)	sprintf(res,"box\nsurf %ls\n",v->s.c_str());
+		if(v->nz>1)		sprintf(res,"box\nsurf3 %ls\n",v->s.c_str());
+		else if(v->ny>1)	sprintf(res,"box\nsurf %ls\n",v->s.c_str());
 		else				sprintf(res,"box\nplot %ls\n",v->s.c_str());
 		textbuf->text(res);
 	}
 	else if(kind==2)
-	{
-		if(Parse->Self()->DataList==v)	Parse->Self()->DataList = v->next;
-		delete v;
-	}
+		Parse->DeleteVar(v->s.c_str());
 	else if(kind==3)
 	{
 		const char *name = fl_input(gettext("Enter name for new variable"),"dat");
 		if(!name)	return;
-		v = Parse->Self()->AddVar(name);
+		v = Parse->AddVar(name);
 
 		ltab->begin();
 		Fl_Group *gg = new Fl_Group(0,30,300,430);

@@ -120,7 +120,7 @@ void Fl_MGL::update()
 
 	Fl_MGLView::update();
 
-	mglVar *v = Parse->Self()->DataList;
+	mglVar *v = Parse->FindVar("");
 	while(v)
 	{
 		if(v->o)	((TableWindow *)v->o)->update(v);

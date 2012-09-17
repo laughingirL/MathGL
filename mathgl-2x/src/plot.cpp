@@ -230,6 +230,7 @@ void mgl_candle_xyv(HMGL gr, HCDT x, HCDT v1, HCDT v2, HCDT y1, HCDT y2, const c
 		if(sh)	gr->NextColor(pal);
 	}
 	if(d1)	delete y1;	if(d2)	delete y2;
+	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
 void mgl_candle_yv(HMGL gr, HCDT v1, HCDT v2, HCDT y1, HCDT y2, const char *pen, const char *opt)

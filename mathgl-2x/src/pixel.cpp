@@ -60,12 +60,6 @@ void mglCanvas::PostScale(mglPoint &p) const
 	p.x = B.x + q.x*B.b[0] + q.y*B.b[1] + q.z*B.b[2];
 	p.y = B.y + q.x*B.b[3] + q.y*B.b[4] + q.z*B.b[5];
 	p.z = B.z + q.x*B.b[6] + q.y*B.b[7] + q.z*B.b[8];
-/*	if(Persp)
-	{
-		register mreal d = (1-Persp*Depth/2)/(1-Persp*p.z);
-		p.x = Width/2 + d*(p.x-Width/2);
-		p.y = Height/2 + d*(p.y-Height/2);
-	}*/
 }
 //-----------------------------------------------------------------------------
 bool mglCanvas::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan) const
@@ -75,21 +69,10 @@ bool mglCanvas::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan) const
 	PostScale(p);
 
 	mglPoint y=n;
-//	n.x = (B.b[4]*B.b[8]-B.b[5]*B.b[7])*y.x-(B.b[3]*B.b[8]-B.b[5]*B.b[6])*y.y+(B.b[3]*B.b[7]-B.b[4]*B.b[6])*y.z;
-//	n.y = (B.b[2]*B.b[7]-B.b[1]*B.b[8])*y.x+(B.b[0]*B.b[8]-B.b[2]*B.b[6])*y.y-(B.b[0]*B.b[7]-B.b[1]*B.b[6])*y.z;
-//	n.y = (B.b[1]*B.b[5]-B.b[2]*B.b[4])*y.x-(B.b[0]*B.b[5]-B.b[2]*B.b[3])*y.y+(B.b[0]*B.b[4]-B.b[1]*B.b[3])*y.z;
 	n.x = y.x*B.b[0] + y.y*B.b[1] + y.z*B.b[2];	// simpler for rotation only
 	n.y = y.x*B.b[3] + y.y*B.b[4] + y.z*B.b[5];
 	n.z = y.x*B.b[6] + y.y*B.b[7] + y.z*B.b[8];
 	n.Normalize();
-/*	if(Persp)
-	{
-		register mreal d = (1-Persp*Depth/2)/(1-Persp*p.z);
-		// NOTE: No d* since I use transformed p here.
-		register mreal dd = Persp*n.z/(1-Persp*p.z);
-		n.x = d*n.x + dd*(p.x-Width/2);
-		n.y = d*n.y + dd*(p.y-Height/2);
-	}*/
 	return res;
 }
 //-----------------------------------------------------------------------------
@@ -167,126 +150,7 @@ void mglCanvas::LightScale()
 	}
 }
 //-----------------------------------------------------------------------------
-/*mglPoint mglCanvas::CalcXYZ(int xs, int ys, bool real) const
-{
-	mglPoint p;
-	mreal zs = Z[3*(xs+Width*(Height-1-ys))];
-	if(zs<=-1e20f)	return mglPoint(NAN,NAN,NAN);
-	mreal b0=B.b[0], b1=B.b[1], b2=B.b[2], b3=B.b[3], b4=B.b[4], b5=B.b[5], b6=B.b[6], b7=B.b[7], b8=B.b[8];
-	mreal r0=Bp.b[0], r1=Bp.b[1], r2=Bp.b[2], r3=Bp.b[3], r4=Bp.b[4], r5=Bp.b[5], r6=Bp.b[6], r7=Bp.b[7], r8=Bp.b[8];
-	mreal W=Width, H=Height, D=Depth, Bx=B.x, By=B.y, Bz=B.z, Rx=Bp.x, Ry=Bp.y, Rz=Bp.z, pf=Bp.pf;
-
-	p.x = ((((((b4*b8-b5*b7)*pf*r4+(b1*b8-b2*b7)*pf*r3)*r8+((b5*b7-b4*b8)*pf*r5+(b1*b5-b2*b4)*pf*r3)*r7+((b2*b7-b1*b8)*pf*r5+(b2*b4-b1*b5)*pf*r4)*r6)*Rx+
-	((b4*b8-b5*b7)*pf*r0*r4+(b5*b7-b4*b8)*pf*r1*r3)*r8+((b5*b7-b4*b8)*pf*r0*r5+(b4*b8-b5*b7)*pf*r2*r3)*r7+((b4*b8-b5*b7)*pf*r1*r5+(b5*b7-b4*b8)*pf*r2*r4)*r6)*D+
-	(((2*b5*b7-2*b4*b8)*pf*r4+(2*b2*b7-2*b1*b8)*pf*r3)*r8+((2*b4*b8-2*b5*b7)*pf*r5+(2*b2*b4-2*b1*b5)*pf*r3)*r7+((2*b1*b8-2*b2*b7)*pf*r5+(2*b1*b5-2*b2*b4)*pf*r4)*r6)*zs+
-	(((2*b5*b7-2*b4*b8)*r4+(2*b2*b7-2*b1*b8)*r3)*r8+((2*b4*b8-2*b5*b7)*r5+(2*b2*b4-2*b1*b5)*r3)*r7+((2*b1*b8-2*b2*b7)*r5+(2*b1*b5-2*b2*b4)*r4)*r6)*Rx+
-	(((2*b5*b7-2*b4*b8)*r0+2*b4*b8-2*b5*b7)*r4+((2*b4*b8-2*b5*b7)*r1+2*b1*b8-2*b2*b7)*r3)*r8+(((2*b4*b8-2*b5*b7)*r0-2*b4*b8+2*b5*b7)*r5+((2*b5*b7-2*b4*b8)*r2+2*b1*b5-2*b2*b4)*r3)*r7+
-	(((2*b5*b7-2*b4*b8)*r1-2*b1*b8+2*b2*b7)*r5+((2*b4*b8-2*b5*b7)*r2-2*b1*b5+2*b2*b4)*r4)*r6)*W+((
-	(((b5*b7-b4*b8)*pf*r1+(b2*b7-b1*b8)*pf*r0)*r8+((b4*b8-b5*b7)*pf*r2+(b2*b4-b1*b5)*pf*r0)*r7+((b1*b8-b2*b7)*pf*r2+(b1*b5-b2*b4)*pf*r1)*r6)*Ry+
-	((b2*b7-b1*b8)*pf*r0*r4+(b1*b8-b2*b7)*pf*r1*r3)*r8+((b1*b8-b2*b7)*pf*r0*r5+(b2*b7-b1*b8)*pf*r2*r3)*r7+((b2*b7-b1*b8)*pf*r1*r5+(b1*b8-b2*b7)*pf*r2*r4)*r6)*D+
-	(((2*b4*b8-2*b5*b7)*pf*r1+(2*b1*b8-2*b2*b7)*pf*r0)*r8+((2*b5*b7-2*b4*b8)*pf*r2+(2*b1*b5-2*b2*b4)*pf*r0)*r7+((2*b2*b7-2*b1*b8)*pf*r2+(2*b2*b4-2*b1*b5)*pf*r1)*r6)*zs+
-	(((2*b4*b8-2*b5*b7)*r1+(2*b1*b8-2*b2*b7)*r0)*r8+((2*b5*b7-2*b4*b8)*r2+(2*b1*b5-2*b2*b4)*r0)*r7+((2*b2*b7-2*b1*b8)*r2+(2*b2*b4-2*b1*b5)*r1)*r6)*Ry+
-	((2*b1*b8-2*b2*b7)*r0*r4+(2*b2*b7-2*b1*b8)*r1*r3+(2*b5*b7-2*b4*b8)*r1+(2*b2*b7-2*b1*b8)*r0)*r8+((2*b2*b7-2*b1*b8)*r0*r5+(2*b1*b8-2*b2*b7)*r2*r3+(2*b4*b8-2*b5*b7)*r2+(2*b2*b4-2*b1*b5)*r0)*r7
-	+((2*b1*b8-2*b2*b7)*r1*r5+(2*b2*b7-2*b1*b8)*r2*r4+(2*b1*b8-2*b2*b7)*r2+(2*b1*b5-2*b2*b4)*r1)*r6)*H+(
-	(((b4*b8-b5*b7)*pf*r1+(b1*b8-b2*b7)*pf*r0)*r5+((b5*b7-b4*b8)*pf*r2+(b1*b5-b2*b4)*pf*r0)*r4+((b2*b7-b1*b8)*pf*r2+(b2*b4-b1*b5)*pf*r1)*r3)*Rz+
-	((b1*b5-b2*b4)*pf*r0*r4+(b2*b4-b1*b5)*pf*r1*r3)*r8+((b2*b4-b1*b5)*pf*r0*r5+(b1*b5-b2*b4)*pf*r2*r3)*r7+((b1*b5-b2*b4)*pf*r1*r5+(b2*b4-b1*b5)*pf*r2*r4)*r6+
-	((b5*b7-b4*b8)*pf*r1+(b2*b7-b1*b8)*pf*r0)*r5+((b4*b8-b5*b7)*pf*r2+(b2*b4-b1*b5)*pf*r0)*r4+((b1*b8-b2*b7)*pf*r2+(b1*b5-b2*b4)*pf*r1)*r3)*D*D+(
-	(((2*b4*b8-2*b5*b7)*pf*r1+(2*b1*b8-2*b2*b7)*pf*r0)*r5+((2*b5*b7-2*b4*b8)*pf*r2+(2*b1*b5-2*b2*b4)*pf*r0)*r4+((2*b2*b7-2*b1*b8)*pf*r2+(2*b2*b4-2*b1*b5)*pf*r1)*r3)*zs+
-	(((2*b5*b7-2*b4*b8)*r1+(2*b2*b7-2*b1*b8)*r0)*r5+((2*b4*b8-2*b5*b7)*r2+(2*b2*b4-2*b1*b5)*r0)*r4+((2*b1*b8-2*b2*b7)*r2+(2*b1*b5-2*b2*b4)*r1)*r3)*Rz+
-	((((2*b2*b4-2*b1*b5)*Bz+(2*b1*b8-2*b2*b7)*By+(2*b5*b7-2*b4*b8)*Bx)*pf-2*b1*b5+2*b2*b4)*r0*r4+(((2*b1*b5-2*b2*b4)*Bz+(2*b2*b7-2*b1*b8)*By+(2*b4*b8-2*b5*b7)*Bx)*pf+2*b1*b5-2*b2*b4)*r1*r3)*r8
-	+((((2*b1*b5-2*b2*b4)*Bz+(2*b2*b7-2*b1*b8)*By+(2*b4*b8-2*b5*b7)*Bx)*pf+2*b1*b5-2*b2*b4)*r0*r5+(((2*b2*b4-2*b1*b5)*Bz+(2*b1*b8-2*b2*b7)*By+(2*b5*b7-2*b4*b8)*Bx)*pf-2*b1*b5+2*b2*b4)*r2*r3)*r7+
-	((((2*b2*b4-2*b1*b5)*Bz+(2*b1*b8-2*b2*b7)*By+(2*b5*b7-2*b4*b8)*Bx)*pf-2*b1*b5+2*b2*b4)*r1*r5+(((2*b1*b5-2*b2*b4)*Bz+(2*b2*b7-2*b1*b8)*By+(2*b4*b8-2*b5*b7)*Bx)*pf+2*b1*b5-2*b2*b4)*r2*r4)*r6
-	+((2*b4*b8-2*b5*b7)*r1+(2*b1*b8-2*b2*b7)*r0)*r5+((2*b5*b7-2*b4*b8)*r2+(2*b1*b5-2*b2*b4)*r0)*r4+((2*b2*b7-2*b1*b8)*r2+(2*b2*b4-2*b1*b5)*r1)*r3)*D+(
-	(((4*b5*b7-4*b4*b8)*pf*r1+(4*b2*b7-4*b1*b8)*pf*r0)*r8+((4*b4*b8-4*b5*b7)*pf*r2+(4*b2*b4-4*b1*b5)*pf*r0)*r7+((4*b1*b8-4*b2*b7)*pf*r2+(4*b1*b5-4*b2*b4)*pf*r1)*r6)*ys+
-	(((4*b4*b8-4*b5*b7)*pf*r4+(4*b1*b8-4*b2*b7)*pf*r3)*r8+((4*b5*b7-4*b4*b8)*pf*r5+(4*b1*b5-4*b2*b4)*pf*r3)*r7+((4*b2*b7-4*b1*b8)*pf*r5+(4*b2*b4-4*b1*b5)*pf*r4)*r6)*xs+
-	((4*b5*b7-4*b4*b8)*r1+(4*b2*b7-4*b1*b8)*r0)*r5+((4*b4*b8-4*b5*b7)*r2+(4*b2*b4-4*b1*b5)*r0)*r4+((4*b1*b8-4*b2*b7)*r2+(4*b1*b5-4*b2*b4)*r1)*r3)*zs+
-	(((4*b4*b8-4*b5*b7)*r1+(4*b1*b8-4*b2*b7)*r0)*r8+((4*b5*b7-4*b4*b8)*r2+(4*b1*b5-4*b2*b4)*r0)*r7+((4*b2*b7-4*b1*b8)*r2+(4*b2*b4-4*b1*b5)*r1)*r6)*ys+
-	(((4*b5*b7-4*b4*b8)*r4+(4*b2*b7-4*b1*b8)*r3)*r8+((4*b4*b8-4*b5*b7)*r5+(4*b2*b4-4*b1*b5)*r3)*r7+((4*b1*b8-4*b2*b7)*r5+(4*b1*b5-4*b2*b4)*r4)*r6)*xs+
-	(((4*b1*b5-4*b2*b4)*Bz+(4*b2*b7-4*b1*b8)*By+(4*b4*b8-4*b5*b7)*Bx)*r0*r4+((4*b2*b4-4*b1*b5)*Bz+(4*b1*b8-4*b2*b7)*By+(4*b5*b7-4*b4*b8)*Bx)*r1*r3)*r8+
-	(((4*b2*b4-4*b1*b5)*Bz+(4*b1*b8-4*b2*b7)*By+(4*b5*b7-4*b4*b8)*Bx)*r0*r5+((4*b1*b5-4*b2*b4)*Bz+(4*b2*b7-4*b1*b8)*By+(4*b4*b8-4*b5*b7)*Bx)*r2*r3)*r7+
-	(((4*b1*b5-4*b2*b4)*Bz+(4*b2*b7-4*b1*b8)*By+(4*b4*b8-4*b5*b7)*Bx)*r1*r5+((4*b2*b4-4*b1*b5)*Bz+(4*b1*b8-4*b2*b7)*By+(4*b5*b7-4*b4*b8)*Bx)*r2*r4)*r6)/((
-	(((2*b0*b4-2*b1*b3)*b8+(2*b2*b3-2*b0*b5)*b7+(2*b1*b5-2*b2*b4)*b6)*pf*r0*r4+((2*b1*b3-2*b0*b4)*b8+(2*b0*b5-2*b2*b3)*b7+(2*b2*b4-2*b1*b5)*b6)*pf*r1*r3)*r8+
-	(((2*b1*b3-2*b0*b4)*b8+(2*b0*b5-2*b2*b3)*b7+(2*b2*b4-2*b1*b5)*b6)*pf*r0*r5+((2*b0*b4-2*b1*b3)*b8+(2*b2*b3-2*b0*b5)*b7+(2*b1*b5-2*b2*b4)*b6)*pf*r2*r3)*r7+
-	(((2*b0*b4-2*b1*b3)*b8+(2*b2*b3-2*b0*b5)*b7+(2*b1*b5-2*b2*b4)*b6)*pf*r1*r5+((2*b1*b3-2*b0*b4)*b8+(2*b0*b5-2*b2*b3)*b7+(2*b2*b4-2*b1*b5)*b6)*pf*r2*r4)*r6)*D+
-	(((4*b1*b3-4*b0*b4)*b8+(4*b0*b5-4*b2*b3)*b7+(4*b2*b4-4*b1*b5)*b6)*r0*r4+((4*b0*b4-4*b1*b3)*b8+(4*b2*b3-4*b0*b5)*b7+(4*b1*b5-4*b2*b4)*b6)*r1*r3)*r8+
-	(((4*b0*b4-4*b1*b3)*b8+(4*b2*b3-4*b0*b5)*b7+(4*b1*b5-4*b2*b4)*b6)*r0*r5+((4*b1*b3-4*b0*b4)*b8+(4*b0*b5-4*b2*b3)*b7+(4*b2*b4-4*b1*b5)*b6)*r2*r3)*r7+
-	(((4*b1*b3-4*b0*b4)*b8+(4*b0*b5-4*b2*b3)*b7+(4*b2*b4-4*b1*b5)*b6)*r1*r5+((4*b0*b4-4*b1*b3)*b8+(4*b2*b3-4*b0*b5)*b7+(4*b1*b5-4*b2*b4)*b6)*r2*r4)*r6);
-
-	p.y = -((((((b3*b8-b5*b6)*pf*r4+(b0*b8-b2*b6)*pf*r3)*r8+((b5*b6-b3*b8)*pf*r5+(b0*b5-b2*b3)*pf*r3)*r7+((b2*b6-b0*b8)*pf*r5+(b2*b3-b0*b5)*pf*r4)*r6)*Rx+
-	((b3*b8-b5*b6)*pf*r0*r4+(b5*b6-b3*b8)*pf*r1*r3)*r8+((b5*b6-b3*b8)*pf*r0*r5+(b3*b8-b5*b6)*pf*r2*r3)*r7+((b3*b8-b5*b6)*pf*r1*r5+(b5*b6-b3*b8)*pf*r2*r4)*r6)*D+
-	(((2*b5*b6-2*b3*b8)*pf*r4+(2*b2*b6-2*b0*b8)*pf*r3)*r8+((2*b3*b8-2*b5*b6)*pf*r5+(2*b2*b3-2*b0*b5)*pf*r3)*r7+((2*b0*b8-2*b2*b6)*pf*r5+(2*b0*b5-2*b2*b3)*pf*r4)*r6)*zs+
-	(((2*b5*b6-2*b3*b8)*r4+(2*b2*b6-2*b0*b8)*r3)*r8+((2*b3*b8-2*b5*b6)*r5+(2*b2*b3-2*b0*b5)*r3)*r7+((2*b0*b8-2*b2*b6)*r5+(2*b0*b5-2*b2*b3)*r4)*r6)*Rx+
-	(((2*b5*b6-2*b3*b8)*r0+2*b3*b8-2*b5*b6)*r4+((2*b3*b8-2*b5*b6)*r1+2*b0*b8-2*b2*b6)*r3)*r8+(((2*b3*b8-2*b5*b6)*r0-2*b3*b8+2*b5*b6)*r5+((2*b5*b6-2*b3*b8)*r2+2*b0*b5-2*b2*b3)*r3)*r7+
-	(((2*b5*b6-2*b3*b8)*r1-2*b0*b8+2*b2*b6)*r5+((2*b3*b8-2*b5*b6)*r2-2*b0*b5+2*b2*b3)*r4)*r6)*W+((
-	(((b5*b6-b3*b8)*pf*r1+(b2*b6-b0*b8)*pf*r0)*r8+((b3*b8-b5*b6)*pf*r2+(b2*b3-b0*b5)*pf*r0)*r7+((b0*b8-b2*b6)*pf*r2+(b0*b5-b2*b3)*pf*r1)*r6)*Ry+
-	((b2*b6-b0*b8)*pf*r0*r4+(b0*b8-b2*b6)*pf*r1*r3)*r8+((b0*b8-b2*b6)*pf*r0*r5+(b2*b6-b0*b8)*pf*r2*r3)*r7+((b2*b6-b0*b8)*pf*r1*r5+(b0*b8-b2*b6)*pf*r2*r4)*r6)*D+
-	(((2*b3*b8-2*b5*b6)*pf*r1+(2*b0*b8-2*b2*b6)*pf*r0)*r8+((2*b5*b6-2*b3*b8)*pf*r2+(2*b0*b5-2*b2*b3)*pf*r0)*r7+((2*b2*b6-2*b0*b8)*pf*r2+(2*b2*b3-2*b0*b5)*pf*r1)*r6)*zs+
-	(((2*b3*b8-2*b5*b6)*r1+(2*b0*b8-2*b2*b6)*r0)*r8+((2*b5*b6-2*b3*b8)*r2+(2*b0*b5-2*b2*b3)*r0)*r7+((2*b2*b6-2*b0*b8)*r2+(2*b2*b3-2*b0*b5)*r1)*r6)*Ry+
-	((2*b0*b8-2*b2*b6)*r0*r4+(2*b2*b6-2*b0*b8)*r1*r3+(2*b5*b6-2*b3*b8)*r1+(2*b2*b6-2*b0*b8)*r0)*r8+((2*b2*b6-2*b0*b8)*r0*r5+(2*b0*b8-2*b2*b6)*r2*r3+(2*b3*b8-2*b5*b6)*r2+(2*b2*b3-2*b0*b5)*r0)*r7
-	+((2*b0*b8-2*b2*b6)*r1*r5+(2*b2*b6-2*b0*b8)*r2*r4+(2*b0*b8-2*b2*b6)*r2+(2*b0*b5-2*b2*b3)*r1)*r6)*H+(
-	(((b3*b8-b5*b6)*pf*r1+(b0*b8-b2*b6)*pf*r0)*r5+((b5*b6-b3*b8)*pf*r2+(b0*b5-b2*b3)*pf*r0)*r4+((b2*b6-b0*b8)*pf*r2+(b2*b3-b0*b5)*pf*r1)*r3)*Rz+
-	((b0*b5-b2*b3)*pf*r0*r4+(b2*b3-b0*b5)*pf*r1*r3)*r8+((b2*b3-b0*b5)*pf*r0*r5+(b0*b5-b2*b3)*pf*r2*r3)*r7+((b0*b5-b2*b3)*pf*r1*r5+(b2*b3-b0*b5)*pf*r2*r4)*r6+
-	((b5*b6-b3*b8)*pf*r1+(b2*b6-b0*b8)*pf*r0)*r5+((b3*b8-b5*b6)*pf*r2+(b2*b3-b0*b5)*pf*r0)*r4+((b0*b8-b2*b6)*pf*r2+(b0*b5-b2*b3)*pf*r1)*r3)*D*D+(
-	(((2*b3*b8-2*b5*b6)*pf*r1+(2*b0*b8-2*b2*b6)*pf*r0)*r5+((2*b5*b6-2*b3*b8)*pf*r2+(2*b0*b5-2*b2*b3)*pf*r0)*r4+((2*b2*b6-2*b0*b8)*pf*r2+(2*b2*b3-2*b0*b5)*pf*r1)*r3)*zs+
-	(((2*b5*b6-2*b3*b8)*r1+(2*b2*b6-2*b0*b8)*r0)*r5+((2*b3*b8-2*b5*b6)*r2+(2*b2*b3-2*b0*b5)*r0)*r4+((2*b0*b8-2*b2*b6)*r2+(2*b0*b5-2*b2*b3)*r1)*r3)*Rz+
-	((((2*b2*b3-2*b0*b5)*Bz+(2*b0*b8-2*b2*b6)*By+(2*b5*b6-2*b3*b8)*Bx)*pf-2*b0*b5+2*b2*b3)*r0*r4+(((2*b0*b5-2*b2*b3)*Bz+(2*b2*b6-2*b0*b8)*By+(2*b3*b8-2*b5*b6)*Bx)*pf+2*b0*b5-2*b2*b3)*r1*r3)*r8
-	+((((2*b0*b5-2*b2*b3)*Bz+(2*b2*b6-2*b0*b8)*By+(2*b3*b8-2*b5*b6)*Bx)*pf+2*b0*b5-2*b2*b3)*r0*r5+(((2*b2*b3-2*b0*b5)*Bz+(2*b0*b8-2*b2*b6)*By+(2*b5*b6-2*b3*b8)*Bx)*pf-2*b0*b5+2*b2*b3)*r2*r3)*r7+
-	((((2*b2*b3-2*b0*b5)*Bz+(2*b0*b8-2*b2*b6)*By+(2*b5*b6-2*b3*b8)*Bx)*pf-2*b0*b5+2*b2*b3)*r1*r5+(((2*b0*b5-2*b2*b3)*Bz+(2*b2*b6-2*b0*b8)*By+(2*b3*b8-2*b5*b6)*Bx)*pf+2*b0*b5-2*b2*b3)*r2*r4)*r6
-	+((2*b3*b8-2*b5*b6)*r1+(2*b0*b8-2*b2*b6)*r0)*r5+((2*b5*b6-2*b3*b8)*r2+(2*b0*b5-2*b2*b3)*r0)*r4+((2*b2*b6-2*b0*b8)*r2+(2*b2*b3-2*b0*b5)*r1)*r3)*D+(
-	(((4*b5*b6-4*b3*b8)*pf*r1+(4*b2*b6-4*b0*b8)*pf*r0)*r8+((4*b3*b8-4*b5*b6)*pf*r2+(4*b2*b3-4*b0*b5)*pf*r0)*r7+((4*b0*b8-4*b2*b6)*pf*r2+(4*b0*b5-4*b2*b3)*pf*r1)*r6)*ys+
-	(((4*b3*b8-4*b5*b6)*pf*r4+(4*b0*b8-4*b2*b6)*pf*r3)*r8+((4*b5*b6-4*b3*b8)*pf*r5+(4*b0*b5-4*b2*b3)*pf*r3)*r7+((4*b2*b6-4*b0*b8)*pf*r5+(4*b2*b3-4*b0*b5)*pf*r4)*r6)*xs+
-	((4*b5*b6-4*b3*b8)*r1+(4*b2*b6-4*b0*b8)*r0)*r5+((4*b3*b8-4*b5*b6)*r2+(4*b2*b3-4*b0*b5)*r0)*r4+((4*b0*b8-4*b2*b6)*r2+(4*b0*b5-4*b2*b3)*r1)*r3)*zs+
-	(((4*b3*b8-4*b5*b6)*r1+(4*b0*b8-4*b2*b6)*r0)*r8+((4*b5*b6-4*b3*b8)*r2+(4*b0*b5-4*b2*b3)*r0)*r7+((4*b2*b6-4*b0*b8)*r2+(4*b2*b3-4*b0*b5)*r1)*r6)*ys+
-	(((4*b5*b6-4*b3*b8)*r4+(4*b2*b6-4*b0*b8)*r3)*r8+((4*b3*b8-4*b5*b6)*r5+(4*b2*b3-4*b0*b5)*r3)*r7+((4*b0*b8-4*b2*b6)*r5+(4*b0*b5-4*b2*b3)*r4)*r6)*xs+
-	(((4*b0*b5-4*b2*b3)*Bz+(4*b2*b6-4*b0*b8)*By+(4*b3*b8-4*b5*b6)*Bx)*r0*r4+((4*b2*b3-4*b0*b5)*Bz+(4*b0*b8-4*b2*b6)*By+(4*b5*b6-4*b3*b8)*Bx)*r1*r3)*r8+
-	(((4*b2*b3-4*b0*b5)*Bz+(4*b0*b8-4*b2*b6)*By+(4*b5*b6-4*b3*b8)*Bx)*r0*r5+((4*b0*b5-4*b2*b3)*Bz+(4*b2*b6-4*b0*b8)*By+(4*b3*b8-4*b5*b6)*Bx)*r2*r3)*r7+
-	(((4*b0*b5-4*b2*b3)*Bz+(4*b2*b6-4*b0*b8)*By+(4*b3*b8-4*b5*b6)*Bx)*r1*r5+((4*b2*b3-4*b0*b5)*Bz+(4*b0*b8-4*b2*b6)*By+(4*b5*b6-4*b3*b8)*Bx)*r2*r4)*r6)/((
-	(((2*b0*b4-2*b1*b3)*b8+(2*b2*b3-2*b0*b5)*b7+(2*b1*b5-2*b2*b4)*b6)*pf*r0*r4+((2*b1*b3-2*b0*b4)*b8+(2*b0*b5-2*b2*b3)*b7+(2*b2*b4-2*b1*b5)*b6)*pf*r1*r3)*r8+
-	(((2*b1*b3-2*b0*b4)*b8+(2*b0*b5-2*b2*b3)*b7+(2*b2*b4-2*b1*b5)*b6)*pf*r0*r5+((2*b0*b4-2*b1*b3)*b8+(2*b2*b3-2*b0*b5)*b7+(2*b1*b5-2*b2*b4)*b6)*pf*r2*r3)*r7+
-	(((2*b0*b4-2*b1*b3)*b8+(2*b2*b3-2*b0*b5)*b7+(2*b1*b5-2*b2*b4)*b6)*pf*r1*r5+((2*b1*b3-2*b0*b4)*b8+(2*b0*b5-2*b2*b3)*b7+(2*b2*b4-2*b1*b5)*b6)*pf*r2*r4)*r6)*D+
-	(((4*b1*b3-4*b0*b4)*b8+(4*b0*b5-4*b2*b3)*b7+(4*b2*b4-4*b1*b5)*b6)*r0*r4+((4*b0*b4-4*b1*b3)*b8+(4*b2*b3-4*b0*b5)*b7+(4*b1*b5-4*b2*b4)*b6)*r1*r3)*r8+
-	(((4*b0*b4-4*b1*b3)*b8+(4*b2*b3-4*b0*b5)*b7+(4*b1*b5-4*b2*b4)*b6)*r0*r5+((4*b1*b3-4*b0*b4)*b8+(4*b0*b5-4*b2*b3)*b7+(4*b2*b4-4*b1*b5)*b6)*r2*r3)*r7+
-	(((4*b1*b3-4*b0*b4)*b8+(4*b0*b5-4*b2*b3)*b7+(4*b2*b4-4*b1*b5)*b6)*r1*r5+((4*b0*b4-4*b1*b3)*b8+(4*b2*b3-4*b0*b5)*b7+(4*b1*b5-4*b2*b4)*b6)*r2*r4)*r6);
-	
-	p.z = ((((((b3*b7-b4*b6)*pf*r4+(b0*b7-b1*b6)*pf*r3)*r8+((b4*b6-b3*b7)*pf*r5+(b0*b4-b1*b3)*pf*r3)*r7+((b1*b6-b0*b7)*pf*r5+(b1*b3-b0*b4)*pf*r4)*r6)*Rx+
-	((b3*b7-b4*b6)*pf*r0*r4+(b4*b6-b3*b7)*pf*r1*r3)*r8+((b4*b6-b3*b7)*pf*r0*r5+(b3*b7-b4*b6)*pf*r2*r3)*r7+((b3*b7-b4*b6)*pf*r1*r5+(b4*b6-b3*b7)*pf*r2*r4)*r6)*D+
-	(((2*b4*b6-2*b3*b7)*pf*r4+(2*b1*b6-2*b0*b7)*pf*r3)*r8+((2*b3*b7-2*b4*b6)*pf*r5+(2*b1*b3-2*b0*b4)*pf*r3)*r7+((2*b0*b7-2*b1*b6)*pf*r5+(2*b0*b4-2*b1*b3)*pf*r4)*r6)*zs+
-	(((2*b4*b6-2*b3*b7)*r4+(2*b1*b6-2*b0*b7)*r3)*r8+((2*b3*b7-2*b4*b6)*r5+(2*b1*b3-2*b0*b4)*r3)*r7+((2*b0*b7-2*b1*b6)*r5+(2*b0*b4-2*b1*b3)*r4)*r6)*Rx+
-	(((2*b4*b6-2*b3*b7)*r0+2*b3*b7-2*b4*b6)*r4+((2*b3*b7-2*b4*b6)*r1+2*b0*b7-2*b1*b6)*r3)*r8+(((2*b3*b7-2*b4*b6)*r0-2*b3*b7+2*b4*b6)*r5+((2*b4*b6-2*b3*b7)*r2+2*b0*b4-2*b1*b3)*r3)*r7+
-	(((2*b4*b6-2*b3*b7)*r1-2*b0*b7+2*b1*b6)*r5+((2*b3*b7-2*b4*b6)*r2-2*b0*b4+2*b1*b3)*r4)*r6)*W+((
-	(((b4*b6-b3*b7)*pf*r1+(b1*b6-b0*b7)*pf*r0)*r8+((b3*b7-b4*b6)*pf*r2+(b1*b3-b0*b4)*pf*r0)*r7+((b0*b7-b1*b6)*pf*r2+(b0*b4-b1*b3)*pf*r1)*r6)*Ry+
-	((b1*b6-b0*b7)*pf*r0*r4+(b0*b7-b1*b6)*pf*r1*r3)*r8+((b0*b7-b1*b6)*pf*r0*r5+(b1*b6-b0*b7)*pf*r2*r3)*r7+((b1*b6-b0*b7)*pf*r1*r5+(b0*b7-b1*b6)*pf*r2*r4)*r6)*D+
-	(((2*b3*b7-2*b4*b6)*pf*r1+(2*b0*b7-2*b1*b6)*pf*r0)*r8+((2*b4*b6-2*b3*b7)*pf*r2+(2*b0*b4-2*b1*b3)*pf*r0)*r7+((2*b1*b6-2*b0*b7)*pf*r2+(2*b1*b3-2*b0*b4)*pf*r1)*r6)*zs+
-	(((2*b3*b7-2*b4*b6)*r1+(2*b0*b7-2*b1*b6)*r0)*r8+((2*b4*b6-2*b3*b7)*r2+(2*b0*b4-2*b1*b3)*r0)*r7+((2*b1*b6-2*b0*b7)*r2+(2*b1*b3-2*b0*b4)*r1)*r6)*Ry+
-	((2*b0*b7-2*b1*b6)*r0*r4+(2*b1*b6-2*b0*b7)*r1*r3+(2*b4*b6-2*b3*b7)*r1+(2*b1*b6-2*b0*b7)*r0)*r8+((2*b1*b6-2*b0*b7)*r0*r5+(2*b0*b7-2*b1*b6)*r2*r3+(2*b3*b7-2*b4*b6)*r2+(2*b1*b3-2*b0*b4)*r0)*r7
-	+((2*b0*b7-2*b1*b6)*r1*r5+(2*b1*b6-2*b0*b7)*r2*r4+(2*b0*b7-2*b1*b6)*r2+(2*b0*b4-2*b1*b3)*r1)*r6)*H+(
-	(((b3*b7-b4*b6)*pf*r1+(b0*b7-b1*b6)*pf*r0)*r5+((b4*b6-b3*b7)*pf*r2+(b0*b4-b1*b3)*pf*r0)*r4+((b1*b6-b0*b7)*pf*r2+(b1*b3-b0*b4)*pf*r1)*r3)*Rz+
-	((b0*b4-b1*b3)*pf*r0*r4+(b1*b3-b0*b4)*pf*r1*r3)*r8+((b1*b3-b0*b4)*pf*r0*r5+(b0*b4-b1*b3)*pf*r2*r3)*r7+((b0*b4-b1*b3)*pf*r1*r5+(b1*b3-b0*b4)*pf*r2*r4)*r6+
-	((b4*b6-b3*b7)*pf*r1+(b1*b6-b0*b7)*pf*r0)*r5+((b3*b7-b4*b6)*pf*r2+(b1*b3-b0*b4)*pf*r0)*r4+((b0*b7-b1*b6)*pf*r2+(b0*b4-b1*b3)*pf*r1)*r3)*D*D+(
-	(((2*b3*b7-2*b4*b6)*pf*r1+(2*b0*b7-2*b1*b6)*pf*r0)*r5+((2*b4*b6-2*b3*b7)*pf*r2+(2*b0*b4-2*b1*b3)*pf*r0)*r4+((2*b1*b6-2*b0*b7)*pf*r2+(2*b1*b3-2*b0*b4)*pf*r1)*r3)*zs+
-	(((2*b4*b6-2*b3*b7)*r1+(2*b1*b6-2*b0*b7)*r0)*r5+((2*b3*b7-2*b4*b6)*r2+(2*b1*b3-2*b0*b4)*r0)*r4+((2*b0*b7-2*b1*b6)*r2+(2*b0*b4-2*b1*b3)*r1)*r3)*Rz+
-	((((2*b1*b3-2*b0*b4)*Bz+(2*b0*b7-2*b1*b6)*By+(2*b4*b6-2*b3*b7)*Bx)*pf-2*b0*b4+2*b1*b3)*r0*r4+(((2*b0*b4-2*b1*b3)*Bz+(2*b1*b6-2*b0*b7)*By+(2*b3*b7-2*b4*b6)*Bx)*pf+2*b0*b4-2*b1*b3)*r1*r3)*r8
-	+((((2*b0*b4-2*b1*b3)*Bz+(2*b1*b6-2*b0*b7)*By+(2*b3*b7-2*b4*b6)*Bx)*pf+2*b0*b4-2*b1*b3)*r0*r5+(((2*b1*b3-2*b0*b4)*Bz+(2*b0*b7-2*b1*b6)*By+(2*b4*b6-2*b3*b7)*Bx)*pf-2*b0*b4+2*b1*b3)*r2*r3)*r7+
-	((((2*b1*b3-2*b0*b4)*Bz+(2*b0*b7-2*b1*b6)*By+(2*b4*b6-2*b3*b7)*Bx)*pf-2*b0*b4+2*b1*b3)*r1*r5+(((2*b0*b4-2*b1*b3)*Bz+(2*b1*b6-2*b0*b7)*By+(2*b3*b7-2*b4*b6)*Bx)*pf+2*b0*b4-2*b1*b3)*r2*r4)*r6
-	+((2*b3*b7-2*b4*b6)*r1+(2*b0*b7-2*b1*b6)*r0)*r5+((2*b4*b6-2*b3*b7)*r2+(2*b0*b4-2*b1*b3)*r0)*r4+((2*b1*b6-2*b0*b7)*r2+(2*b1*b3-2*b0*b4)*r1)*r3)*D+(
-	(((4*b4*b6-4*b3*b7)*pf*r1+(4*b1*b6-4*b0*b7)*pf*r0)*r8+((4*b3*b7-4*b4*b6)*pf*r2+(4*b1*b3-4*b0*b4)*pf*r0)*r7+((4*b0*b7-4*b1*b6)*pf*r2+(4*b0*b4-4*b1*b3)*pf*r1)*r6)*ys+
-	(((4*b3*b7-4*b4*b6)*pf*r4+(4*b0*b7-4*b1*b6)*pf*r3)*r8+((4*b4*b6-4*b3*b7)*pf*r5+(4*b0*b4-4*b1*b3)*pf*r3)*r7+((4*b1*b6-4*b0*b7)*pf*r5+(4*b1*b3-4*b0*b4)*pf*r4)*r6)*xs+
-	((4*b4*b6-4*b3*b7)*r1+(4*b1*b6-4*b0*b7)*r0)*r5+((4*b3*b7-4*b4*b6)*r2+(4*b1*b3-4*b0*b4)*r0)*r4+((4*b0*b7-4*b1*b6)*r2+(4*b0*b4-4*b1*b3)*r1)*r3)*zs+
-	(((4*b3*b7-4*b4*b6)*r1+(4*b0*b7-4*b1*b6)*r0)*r8+((4*b4*b6-4*b3*b7)*r2+(4*b0*b4-4*b1*b3)*r0)*r7+((4*b1*b6-4*b0*b7)*r2+(4*b1*b3-4*b0*b4)*r1)*r6)*ys+
-	(((4*b4*b6-4*b3*b7)*r4+(4*b1*b6-4*b0*b7)*r3)*r8+((4*b3*b7-4*b4*b6)*r5+(4*b1*b3-4*b0*b4)*r3)*r7+((4*b0*b7-4*b1*b6)*r5+(4*b0*b4-4*b1*b3)*r4)*r6)*xs+
-	(((4*b0*b4-4*b1*b3)*Bz+(4*b1*b6-4*b0*b7)*By+(4*b3*b7-4*b4*b6)*Bx)*r0*r4+((4*b1*b3-4*b0*b4)*Bz+(4*b0*b7-4*b1*b6)*By+(4*b4*b6-4*b3*b7)*Bx)*r1*r3)*r8+
-	(((4*b1*b3-4*b0*b4)*Bz+(4*b0*b7-4*b1*b6)*By+(4*b4*b6-4*b3*b7)*Bx)*r0*r5+((4*b0*b4-4*b1*b3)*Bz+(4*b1*b6-4*b0*b7)*By+(4*b3*b7-4*b4*b6)*Bx)*r2*r3)*r7+
-	(((4*b0*b4-4*b1*b3)*Bz+(4*b1*b6-4*b0*b7)*By+(4*b3*b7-4*b4*b6)*Bx)*r1*r5+((4*b1*b3-4*b0*b4)*Bz+(4*b0*b7-4*b1*b6)*By+(4*b4*b6-4*b3*b7)*Bx)*r2*r4)*r6)/((
-	(((2*b0*b4-2*b1*b3)*b8+(2*b2*b3-2*b0*b5)*b7+(2*b1*b5-2*b2*b4)*b6)*pf*r0*r4+((2*b1*b3-2*b0*b4)*b8+(2*b0*b5-2*b2*b3)*b7+(2*b2*b4-2*b1*b5)*b6)*pf*r1*r3)*r8+
-	(((2*b1*b3-2*b0*b4)*b8+(2*b0*b5-2*b2*b3)*b7+(2*b2*b4-2*b1*b5)*b6)*pf*r0*r5+((2*b0*b4-2*b1*b3)*b8+(2*b2*b3-2*b0*b5)*b7+(2*b1*b5-2*b2*b4)*b6)*pf*r2*r3)*r7+
-	(((2*b0*b4-2*b1*b3)*b8+(2*b2*b3-2*b0*b5)*b7+(2*b1*b5-2*b2*b4)*b6)*pf*r1*r5+((2*b1*b3-2*b0*b4)*b8+(2*b0*b5-2*b2*b3)*b7+(2*b2*b4-2*b1*b5)*b6)*pf*r2*r4)*r6)*D+
-	(((4*b1*b3-4*b0*b4)*b8+(4*b0*b5-4*b2*b3)*b7+(4*b2*b4-4*b1*b5)*b6)*r0*r4+((4*b0*b4-4*b1*b3)*b8+(4*b2*b3-4*b0*b5)*b7+(4*b1*b5-4*b2*b4)*b6)*r1*r3)*r8+
-	(((4*b0*b4-4*b1*b3)*b8+(4*b2*b3-4*b0*b5)*b7+(4*b1*b5-4*b2*b4)*b6)*r0*r5+((4*b1*b3-4*b0*b4)*b8+(4*b0*b5-4*b2*b3)*b7+(4*b2*b4-4*b1*b5)*b6)*r2*r3)*r7+
-	(((4*b1*b3-4*b0*b4)*b8+(4*b0*b5-4*b2*b3)*b7+(4*b2*b4-4*b1*b5)*b6)*r1*r5+((4*b0*b4-4*b1*b3)*b8+(4*b2*b3-4*b0*b5)*b7+(4*b1*b5-4*b2*b4)*b6)*r2*r4)*r6);
-	
-	return p*(2*B.pf);
-}*/
-// NOTE: Perspective, transformation formulas and lists are not support just now !!! Also it use LAST InPlot parameters!!!
+// NOTE: Perspective is not support just now !!! Also it use LAST InPlot parameters!!!
 mglPoint mglCanvas::CalcXYZ(int xs, int ys, bool real) const
 {
 	mreal s3 = 2*B.pf, x, y, z;
@@ -364,11 +228,6 @@ bool operator<(const mglPrim &a, const mglPrim &b)
 	if( a.n3 < b.n3 )	return true;
 	if( a.n3 > b.n3 )	return false;
 	return a.type < b.type;
-//	if( type != a.type )	return type < a.type;
-//	if( a1->type==1 && (a1->xx(mgl_tmp_gr)!=a2->xx(mgl_tmp_gr)) )
-//		return (a2->xx(mgl_tmp_gr)<a1->xx(mgl_tmp_gr)) ? 1 : -1;
-//	if( a1->type==1 )	return (a2->yy(mgl_tmp_gr)<a1->yy(mgl_tmp_gr)) ? 1 : -1;
-//	return 0;
 }
 //-----------------------------------------------------------------------------
 bool operator>(const mglPrim &a, const mglPrim &b)
@@ -403,36 +262,6 @@ void mglStartThread(void (mglCanvas::*func)(size_t i, size_t n, const void *p), 
 	else
 #endif
 	{	mglNumThr = 1;	(gr->*func)(0,n,p);	}
-}
-//-----------------------------------------------------------------------------
-void mglCanvas::pxl_primdr(size_t id, size_t n, const void *)
-{
-	int nx=1,ny=1,pdef=PDef;
-	register size_t i;
-	if(id<unsigned(mglNumThr))
-	{
-		for(i=1;i<=unsigned(sqrt(double(mglNumThr))+0.5);i++)
-			if(mglNumThr%i==0)	ny=i;
-		nx = mglNumThr/ny;
-	}
-	else	{	nx=ny=1;	id=0;	}
-	mglDrawReg d;	d.set(this,nx,ny,id);
-	mreal ss=pPos, ww=PenWidth;
-	mglPrim p;
-	for(i=0;i<n;i++)
-	{
-		p=Prm[i];	PDef=p.n3;	pPos=p.s;
-		ObjId = p.id;	PenWidth=p.w;
-		switch(p.type)
-		{
-		case 0:	mark_draw(p.n1,p.n4,p.s,&d);	break;
-		case 1:	line_draw(p.n1,p.n2,&d);		break;
-		case 2:	trig_draw(p.n1,p.n2,p.n3,true,&d);	break;
-		case 3:	quad_draw(p.n1,p.n2,p.n3,p.n4,&d);	break;
-		case 4:	glyph_draw(&p,&d);	break;
-		}
-	}
-	PDef=pdef;	pPos=ss;	PenWidth=ww;	ObjId=-1;
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::pxl_combine(size_t id, size_t n, const void *)
@@ -498,6 +327,36 @@ void mglCanvas::PreparePrim(bool fast)
 	std::sort(Prm.begin(), Prm.end());
 }
 //-----------------------------------------------------------------------------
+void mglCanvas::pxl_primdr(size_t id, size_t , const void *)
+{
+	int nx=1,ny=1;
+	register size_t i;
+	if(id<unsigned(mglNumThr))
+	{
+		for(i=1;i<=unsigned(sqrt(double(mglNumThr))+0.5);i++)
+			if(mglNumThr%i==0)	ny=i;
+		nx = mglNumThr/ny;
+	}
+	else 	{	nx=ny=1;	id=0;	}
+	mglDrawReg d;	d.set(this,nx,ny,id);
+
+	mglPrim p;
+	for(i=0;i<Prm.size();i++)
+	{
+		p=Prm[i];
+		d.PDef = p.n3;	d.pPos = p.s;
+		d.ObjId = p.id;	d.PenWidth=p.w;
+		switch(p.type)
+		{
+		case 0:	mark_draw(p.n1,p.n4,p.s,&d);	break;
+		case 1:	line_draw(p.n1,p.n2,&d);		break;
+		case 2:	trig_draw(p.n1,p.n2,p.n3,true,&d);	break;
+		case 3:	quad_draw(p.n1,p.n2,p.n3,p.n4,&d);	break;
+		case 4:	glyph_draw(&p,&d);	break;
+		}
+	}
+}
+//-----------------------------------------------------------------------------
 void mglCanvas::Finish(bool fast)
 {
 	static mglMatrix bp;
@@ -507,13 +366,13 @@ void mglCanvas::Finish(bool fast)
 	if(!(Quality&4) && Prm.size()>0)
 	{
 		PreparePrim(fast);	bp=Bp;
-//		mglStartThread(&mglCanvas::pxl_primdr,this,Prm.size());	// TODO: check conflicts in pthreads
-		pxl_primdr(-1,Prm.size(),NULL);
+		clr(MGL_FINISHED);
+		mglStartThread(&mglCanvas::pxl_primdr,this,Prm.size());
 	}
 	size_t n=Width*Height;
 	BDef[3] = (Flag&3)!=2 ? 0:255;
 	if(Quality&2)	mglStartThread(&mglCanvas::pxl_combine,this,n);
-	else	mglStartThread(&mglCanvas::pxl_memcpy,this,n);
+	else 			mglStartThread(&mglCanvas::pxl_memcpy,this,n);
 	BDef[3] = 255;
 	mglStartThread(&mglCanvas::pxl_backgr,this,n);
 	set(MGL_FINISHED);
@@ -532,11 +391,11 @@ void mglCanvas::Clf(mglColor Back)
 {
 	Fog(0);		PDef = 0xffff;	pPos = 0;	StartAutoGroup(NULL);
 	Pnt.clear();	Prm.clear();	Ptx.clear();	Glf.clear();
-	Sub.clear();	Leg.clear();	Grp.clear();
+	Sub.clear();	Leg.clear();	Grp.clear();	Act.clear();
 
 	Txt.clear();	Txt.reserve(3);
-	Txt.push_back(mglTexture(MGL_DEF_PAL,-1));
-	Txt.push_back(mglTexture("BbcyrR",1));
+	MGL_PUSH(Txt,mglTexture(MGL_DEF_PAL,-1),mutexTxt);
+	MGL_PUSH(Txt,mglTexture("BbcyrR",1),mutexTxt);
 	
 	if(Back==0)			Back = 'w';
 	if((Flag&3)==2)	Back = 'k';
@@ -554,10 +413,10 @@ void mglCanvas::pxl_other(size_t id, size_t n, const void *p)
 		i = k%Width;	j = Height-1-(k/Width);
 		if(Quality&2)
 		{
-			pnt_plot(i,j,gr->Z[3*k+2],gr->C+12*k+8);
-			pnt_plot(i,j,gr->Z[3*k+1],gr->C+12*k+4);
+			pnt_plot(i,j,gr->Z[3*k+2],gr->C+12*k+8,gr->OI[k]);
+			pnt_plot(i,j,gr->Z[3*k+1],gr->C+12*k+4,gr->OI[k]);
 		}
-		pnt_plot(i,j,gr->Z[3*k],gr->C+12*k);
+		pnt_plot(i,j,gr->Z[3*k],gr->C+12*k,gr->OI[k]);
 	}
 }
 //-----------------------------------------------------------------------------
@@ -605,7 +464,7 @@ void mglCanvas::MPI_Send(int /*id*/)	{	mglGlobalMess += "MPI support was disable
 void mglCanvas::MPI_Recv(int /*id*/)	{	mglGlobalMess += "MPI support was disabled. Please, enable it and rebuild MathGL.\n";	}
 #endif
 //-----------------------------------------------------------------------------
-void mglCanvas::pnt_plot(long x,long y,mreal z,const unsigned char ci[4])
+void mglCanvas::pnt_plot(long x,long y,mreal z,const unsigned char ci[4], int obj_id)
 {
 	long i0=x+Width*(Height-1-y);
 	if(ci[3]==0)	return;
@@ -615,7 +474,7 @@ void mglCanvas::pnt_plot(long x,long y,mreal z,const unsigned char ci[4])
 	if(zf<0)	// add fog
 	{
 		int d = int(255.f-255.f*exp(5.f*zf));
-		unsigned char cb[4] = {BDef[0], BDef[1], BDef[2], d};
+		unsigned char cb[4] = {BDef[0], BDef[1], BDef[2], (unsigned char)d};
 		if(d==255)	return;
 		combine(c,cb);
 	}
@@ -625,7 +484,7 @@ void mglCanvas::pnt_plot(long x,long y,mreal z,const unsigned char ci[4])
 		{
 			zz[2] = zz[1];	combine(cc+8,cc+4);
 			if(z>zz[0])
-			{	zz[1] = zz[0];	zz[0] = z;	OI[i0]=ObjId;
+			{	zz[1] = zz[0];	zz[0] = z;	OI[i0]=obj_id;
 				memcpy(cc+4,cc,4);	memcpy(cc,c,4);		}
 			else	{	zz[1] = z;	memcpy(cc+4,c,4);	}
 		}
@@ -640,11 +499,11 @@ void mglCanvas::pnt_plot(long x,long y,mreal z,const unsigned char ci[4])
 	else
 	{
 		if(z>zz[0])	// point upper the background
-		{	zz[0]=z;	memcpy(cc,c,4);		OI[i0]=ObjId;	}
+		{	zz[0]=z;	memcpy(cc,c,4);		OI[i0]=obj_id;	}
 	}
 }
 //-----------------------------------------------------------------------------
-unsigned char* mglCanvas::col2int(const mglPnt &p,unsigned char *r)
+unsigned char* mglCanvas::col2int(const mglPnt &p,unsigned char *r, int obj_id)
 {
 	if(!r)	return r;
 	if(p.a<=0)	{	memset(r,0,4*sizeof(unsigned char));	return r;	}
@@ -712,7 +571,7 @@ unsigned char* mglCanvas::col2int(const mglPnt &p,unsigned char *r)
 	else
 	{	b0=p.r;	b1=p.g;	b2=p.b;	}
 	// try to highlight faces
-	if(ObjId==HighId)	{	b0*=0.7;	b1*=0.7;	b2*=0.7;	}
+	if(obj_id==HighId)	{	b0*=0.7;	b1*=0.7;	b2*=0.7;	}
 	r[0] = (unsigned char)(255*b0);
 	r[1] = (unsigned char)(255*b1);
 	r[2] = (unsigned char)(255*b2);
@@ -772,7 +631,6 @@ void mglCanvas::quad_draw(long k1, long k2, long k3, long k4, mglDrawReg *d)
 		fast_draw(k1,k2,d);	fast_draw(k1,k3,d);
 		fast_draw(k4,k2,d);	fast_draw(k4,k3,d);	return;
 	}
-	clr(MGL_FINISHED);
 	unsigned char r[4];
 	long y1,x1,y2,x2;
 	float dd,dsx,dsy;
@@ -783,8 +641,8 @@ void mglCanvas::quad_draw(long k1, long k2, long k3, long k4, mglDrawReg *d)
 	y1 = long(fmin(fmin(p1.y,p2.y),fmin(p3.y,p4.y)));
 	x2 = long(fmax(fmax(p1.x,p2.x),fmax(p3.x,p4.x)));
 	y2 = long(fmax(fmax(p1.y,p2.y),fmax(p3.y,p4.y)));
-	x1=x1>d->x1?x1:d->x1;	x2=x2<d->x2?x2:d->x2-1;
-	y1=y1>d->y1?y1:d->y1;	y2=y2<d->y2?y2:d->y2-1;
+	x1=x1>d->x1?x1:d->x1;	x2=x2<d->x2?x2:d->x2;
+	y1=y1>d->y1?y1:d->y1;	y2=y2<d->y2?y2:d->y2;
 	if(x1>x2 || y1>y2)	return;
 
 	dd = d1.x*d2.y-d1.y*d2.x;
@@ -830,7 +688,7 @@ void mglCanvas::quad_draw(long k1, long k2, long k3, long k4, mglDrawReg *d)
 		p = p1+d1*u+d2*v+d3*(u*v);
 		if(mgl_isnan(p.u) && !mgl_isnan(p.v))
 		{	p.u = nr.x;	p.v = nr.y;	p.w = nr.z;	}
-		pnt_plot(i,j,p.z,col2int(p,r));
+		pnt_plot(i,j,p.z,col2int(p,r,d->ObjId),d->ObjId);
 	}
 }
 //-----------------------------------------------------------------------------
@@ -844,7 +702,6 @@ void mglCanvas::trig_draw(long k1, long k2, long k3, bool anorm, mglDrawReg *d)
 		fast_draw(k1,k2,d);	fast_draw(k1,k3,d);
 		fast_draw(k2,k3,d);	return;
 	}
-	clr(MGL_FINISHED);
 	unsigned char r[4];
 	long y1,x1,y2,x2;
 	float dxu,dxv,dyu,dyv;
@@ -860,8 +717,8 @@ void mglCanvas::trig_draw(long k1, long k2, long k3, bool anorm, mglDrawReg *d)
 	y1 = long(fmin(fmin(p1.y,p2.y),p3.y));
 	x2 = long(fmax(fmax(p1.x,p2.x),p3.x));
 	y2 = long(fmax(fmax(p1.y,p2.y),p3.y));
-	x1=x1>d->x1?x1:d->x1;	x2=x2<d->x2?x2:d->x2-1;
-	y1=y1>d->y1?y1:d->y1;	y2=y2<d->y2?y2:d->y2-1;
+	x1=x1>d->x1?x1:d->x1;	x2=x2<d->x2?x2:d->x2;
+	y1=y1>d->y1?y1:d->y1;	y2=y2<d->y2?y2:d->y2;
 	if(x1>x2 || y1>y2)	return;
 	// default normale
 	mglPoint nr = mglPoint(p2.x-p1.x,p2.y-p1.y,p2.z-p1.z)^mglPoint(p3.x-p1.x,p3.y-p1.y,p3.z-p1.z);
@@ -879,29 +736,28 @@ void mglCanvas::trig_draw(long k1, long k2, long k3, bool anorm, mglDrawReg *d)
 			p = p1+d1*u+d2*v;
 			if(mgl_isnan(p.u) && !mgl_isnan(p.v) && anorm)
 			{	p.u = nr.x;	p.v = nr.y;	p.w = nr.z;	}
-			pnt_plot(i,j,p.z,col2int(p,r));
+			pnt_plot(i,j,p.z,col2int(p,r,d->ObjId),d->ObjId);
 		}
-		else	pnt_plot(i,j,p1.z,col2int(p1,r));
+		else 	pnt_plot(i,j,p1.z,col2int(p1,r,d->ObjId),d->ObjId);
 	}
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::line_draw(long k1, long k2, mglDrawReg *dr)
 {
 	if(!(Quality&3))	{	fast_draw(k1,k2,dr);	return;	}
-	clr(MGL_FINISHED);
 	unsigned char r[4];
 	long y1,x1,y2,x2;
 
-	float pw=PenWidth*sqrt(font_factor/400), dxu,dxv,dyu,dyv,dd,dpw=3;
-	if(ObjId==HighId)	{	pw *= 2;	dpw=2;	}
+	float pw=dr->PenWidth*sqrt(font_factor/400), dxu,dxv,dyu,dyv,dd,dpw=3;
+	if(dr->ObjId==HighId)	{	pw *= 2;	dpw=2;	}
 	const mglPnt &p1=Pnt[k1], &p2=Pnt[k2];
 	mglPnt d=p2-p1, p;
 	bool hor = fabs(d.x)>fabs(d.y);
 
 	x1 = long(fmin(p1.x,p2.x));	y1 = long(fmin(p1.y,p2.y));	// bounding box
 	x2 = long(fmax(p1.x,p2.x));	y2 = long(fmax(p1.y,p2.y));
-	x1=x1>dr->x1?x1:dr->x1;	x2=x2<dr->x2?x2:dr->x2-1;
-	y1=y1>dr->y1?y1:dr->y1;	y2=y2<dr->y2?y2:dr->y2-1;
+	x1=x1>dr->x1?x1:dr->x1;	x2=x2<dr->x2?x2:dr->x2;
+	y1=y1>dr->y1?y1:dr->y1;	y2=y2<dr->y2?y2:dr->y2;
 	dd = sqrt(d.x*d.x + d.y*d.y);
 	if(x1>x2 || y1>y2 || dd<1e-5)	return;
 
@@ -916,7 +772,7 @@ void mglCanvas::line_draw(long k1, long k2, mglDrawReg *dr)
 	{
 		y1 = int(p1.y+d.y*(i-p1.x)/d.x - pw - 3.5);
 		y2 = int(p1.y+d.y*(i-p1.x)/d.x + pw + 3.5);
-		y1=y1>dr->y1?y1:dr->y1;	y2=y2<dr->y2?y2:dr->y2-1;
+		y1=y1>dr->y1?y1:dr->y1;	y2=y2<dr->y2?y2:dr->y2;
 		if(y1>y2)	continue;
 		for(j=y1;j<=y2;j++)
 		{
@@ -925,17 +781,17 @@ void mglCanvas::line_draw(long k1, long k2, mglDrawReg *dr)
 			if(u<0)			{	v += u*u;			u = 0;	}
 			else if(u>dd)	{	v += (u-dd)*(u-dd);	u = dd;	}
 			if(v>pw*pw)		continue;
-			if(!( PDef & ( 1<<long(fmod(pPos+u/pw/1.5, 16)) ) ))	continue;
-			p = p1+d*(u/dd);	col2int(p,r);
+			if(!(dr->PDef & ( 1<<long(fmod(dr->pPos+u/pw/1.5, 16)) ) ))	continue;
+			p = p1+d*(u/dd);	col2int(p,r,dr->ObjId);
 			r[3] = v<(pw-1)*(pw-1)/4 ? 255 : (unsigned char)(255/cosh(dpw*(sqrt(v)+(1-pw)/2)));
-			pnt_plot(i,j,p.z+pw,r);
+			pnt_plot(i,j,p.z+pw,r,dr->ObjId);
 		}
 	}
 	else	for(j=y1;j<=y2;j++)
 	{
 		x1 = int(p1.x+d.x*(j-p1.y)/d.y - pw - 3.5);
 		x2 = int(p1.x+d.x*(j-p1.y)/d.y + pw + 3.5);
-		x1=x1>dr->x1?x1:dr->x1;	x2=x2<dr->x2?x2:dr->x2-1;
+		x1=x1>dr->x1?x1:dr->x1;	x2=x2<dr->x2?x2:dr->x2;
 		if(x1>x2)	continue;
 
 		for(i=x1;i<=x2;i++)
@@ -945,10 +801,10 @@ void mglCanvas::line_draw(long k1, long k2, mglDrawReg *dr)
 			if(u<0)			{	v += u*u;			u = 0;	}
 			else if(u>dd)	{	v += (u-dd)*(u-dd);	u = dd;	}
 			if(v>pw*pw)		continue;
-			if(!(PDef & (1<<long(fmod(pPos+u/pw/1.5, 16)))))		continue;
-			p = p1+d*(u/dd);	col2int(p,r);
+			if(!(dr->PDef & (1<<long(fmod(dr->pPos+u/pw/1.5, 16)))))		continue;
+			p = p1+d*(u/dd);	col2int(p,r,dr->ObjId);
 			r[3] = v<(pw-1)*(pw-1)/4 ? 255 : (unsigned char)(255/cosh(dpw*(sqrt(v)+(1-pw)/2)));
-			pnt_plot(i,j,p.z+pw,r);
+			pnt_plot(i,j,p.z+pw,r,dr->ObjId);
 		}
 	}
 	set(aa,MGL_ENABLE_ALPHA);
@@ -956,13 +812,12 @@ void mglCanvas::line_draw(long k1, long k2, mglDrawReg *dr)
 //-----------------------------------------------------------------------------
 void mglCanvas::fast_draw(long k1, long k2, mglDrawReg *dr)
 {
-	clr(MGL_FINISHED);
 	const mglPnt &p1=Pnt[k1], &p2=Pnt[k2];
 	mglPnt d=p2-p1;
-	unsigned char r[4];	col2int(p1,r);
+	unsigned char r[4];	col2int(p1,r,dr->ObjId);
 	long y1,x1,y2,x2;
 
-	float pw = PenWidth*sqrt(font_factor/400);
+	float pw = dr->PenWidth*sqrt(font_factor/400);
 	bool hor = fabs(d.x)>fabs(d.y);
 
 	x1 = long(fmin(p1.x,p2.x));	y1 = long(fmin(p1.y,p2.y));	// bounding box
@@ -976,23 +831,24 @@ void mglCanvas::fast_draw(long k1, long k2, mglDrawReg *dr)
 	{
 		c = long(p1.y+d.y*(i-p1.x)/d.x);
 		if(c>=y1 && c<=y2)
-			pnt_plot(i, c, p1.z+d.z*(i-p1.x)/d.x+pw, r);
+			pnt_plot(i, c, p1.z+d.z*(i-p1.x)/d.x+pw, r,dr->ObjId);
 	}
 	else if(d.y!=0)		for(i=y1;i<=y2;i++)
 	{
 		c = long(p1.x+d.x*(i-p1.y)/d.y);
 		if(c>=x1 && c<=x2)
-			pnt_plot(c, i, p1.z+d.z*(i-p1.y)/d.y+pw, r);
+			pnt_plot(c, i, p1.z+d.z*(i-p1.y)/d.y+pw, r,dr->ObjId);
 	}
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::pnt_draw(long k, mglDrawReg *dr)
 {
 	register long i,j,s,x,y;
-	register float v,pw=2*PenWidth*sqrt(font_factor/400),dpw=3;
-	if(ObjId==HighId)	{	pw *= 2;	dpw=2;	}
+	register float v,pw=2*dr->PenWidth*sqrt(font_factor/400),dpw=3;
+	if(dr->ObjId==HighId)	{	pw *= 2;	dpw=2;	}
 	const mglPnt &p=Pnt[k];
-	unsigned char cs[4], cc;	col2int(p,cs);	cc = cs[3];
+	unsigned char cs[4], cc;
+	col2int(p,cs,dr->ObjId);	cc = cs[3];
 	if(cc==0)	return;
 	s = long(5.5+fabs(pw));
 	for(j=-s;j<=s;j++)	for(i=-s;i<=s;i++)
@@ -1003,26 +859,25 @@ void mglCanvas::pnt_draw(long k, mglDrawReg *dr)
 		if(cs[3]==0)	continue;
 		x=p.x+i;	y=p.y+j;
 		if(x>=dr->x1 && x<=dr->x2 && y>=dr->y1 && y<=dr->y2)
-			pnt_plot(p.x+i,p.y+j,p.z,cs);
+			pnt_plot(p.x+i,p.y+j,p.z,cs,dr->ObjId);
 	}
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::mark_draw(long k, char type, mreal size, mglDrawReg *d)
 {
 	const mglPnt &q=Pnt[k];
-	unsigned char cs[4];	col2int(q,cs);	cs[3] = size>0 ? 255 : 255*q.t;
-	size_t pos = Pnt.size(), qos=pos;
+	unsigned char cs[4];	col2int(q,cs,d->ObjId);	cs[3] = size>0 ? 255 : 255*q.t;
 	mglPnt p=q;
 	mreal ss=fabs(size)*0.35*font_factor;
 	register long i,j;
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_lock(&mutexPnt);
 #endif
+	size_t pos = Pnt.size(), qos=pos;
 	if(type=='.' || ss==0)	pnt_draw(k,d);
 	else
 	{
-		mreal pw = PenWidth;	PenWidth = 1;
-		int pd = PDef;	PDef = 0xffff;
+		d->PenWidth = 1;		d->PDef = 0xffff;
 		if(!strchr("xsSoO",type))	ss *= 1.1;
 		switch(type)
 		{
@@ -1133,7 +988,7 @@ void mglCanvas::mark_draw(long k, char type, mreal size, mglDrawReg *d)
 			{
 				register long x=long(q.x)+i, y=long(q.y)+j;
 				if(i*i+j*j>=ss*ss || !d || x<d->x1 || x>d->x2 || y<d->y1 || y>d->y2)	continue;
-				pnt_plot(x,y,q.z+1,cs);
+				pnt_plot(x,y,q.z+1,cs,d->ObjId);
 			}
 		case 'o':
 			for(i=0;i<=20;i++)
@@ -1151,7 +1006,6 @@ void mglCanvas::mark_draw(long k, char type, mreal size, mglDrawReg *d)
 			}
 			break;
 		}
-		PDef = pd;	PenWidth = pw;
 		Pnt.erase(Pnt.begin()+pos,Pnt.end());
 	}
 #if MGL_HAVE_PTHREAD
@@ -1193,8 +1047,7 @@ void mglCanvas::glyph_fill(const mglPnt &pp, mreal f, const mglGlyph &g, mglDraw
 	if(!g.trig || g.nt<=0)	return;
 	long ik,ii,pos=Pnt.size();
 	mglPnt p=pp;	p.u=p.v=NAN;
-	mreal pw = Width>2 ? fabs(PenWidth) : 1e-5*Width;
-
+	mreal pw = Width>2 ? fabs(d->PenWidth) : 1e-5*Width;
 	mglPoint p1,p2,p3;
 	for(ik=0;ik<g.nt;ik++)
 	{
@@ -1214,8 +1067,7 @@ void mglCanvas::glyph_wire(const mglPnt &pp, mreal f, const mglGlyph &g, mglDraw
 	if(!g.line || g.nl<=0)	return;
 	long ik,ii,il=0,pos=Pnt.size();
 	mglPnt p=pp;	p.u=p.v=NAN;
-	unsigned pdef=PDef;	PDef = 0xffff;
-	mreal opw=PenWidth;	PenWidth=0.75;
+	d->PDef = 0xffff;	d->PenWidth=0.75;
 	mglPoint p1,p2;
 	for(ik=0;ik<g.nl;ik++)
 	{
@@ -1237,16 +1089,14 @@ void mglCanvas::glyph_wire(const mglPnt &pp, mreal f, const mglGlyph &g, mglDraw
 		p.x = p2.x;	p.y = p2.y;	p.z = p2.z;	Pnt.push_back(p);
 		ii = Pnt.size()-2;	line_draw(ii,ii+1,d);
 	}
-	PDef = pdef;	PenWidth = opw;
 	Pnt.erase(Pnt.begin()+pos,Pnt.end());
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::glyph_line(const mglPnt &pp, mreal f, bool solid, mglDrawReg *d)
 {
 	mglPnt p=pp;	p.u=p.v=NAN;
-	mreal pw = Width>2 ? fabs(PenWidth) : 1e-5*Width;
-	unsigned pdef=PDef;	PDef = 0xffff;
-	mreal opw=PenWidth;	PenWidth=1;
+	mreal pw = Width>2 ? fabs(d->PenWidth) : 1e-5*Width;
+	d->PDef = 0xffff;	d->PenWidth=1;
 	mglPoint p1,p2,p3,p4;
 	long pos=Pnt.size();
 
@@ -1267,7 +1117,6 @@ void mglCanvas::glyph_line(const mglPnt &pp, mreal f, bool solid, mglDrawReg *d)
 		line_draw(pos,pos+1,d);	line_draw(pos+2,pos+1,d);
 		line_draw(pos,pos+3,d);	line_draw(pos+2,pos+3,d);
 	}
-	PDef = pdef;	PenWidth=opw;
 	Pnt.erase(Pnt.begin()+pos,Pnt.end());
 }
 //-----------------------------------------------------------------------------

@@ -110,7 +110,7 @@ public:
 	inline void LoadFont(const char *name, const char *path=NULL)
 	{	mgl_load_font(gr, name, path);	}
 	/// Copy font from another mglGraph instance
-	inline void CopyFont(mglGraph *GR)		{	mgl_copy_font(gr, GR->Self());}
+	inline void CopyFont(const mglGraph *GR)	{	mgl_copy_font(gr, GR->gr);}
 	/// Restore font
 	inline void RestoreFont()				{	mgl_restore_font(gr);	}
 	/// Set to use or not text rotation
@@ -343,6 +343,9 @@ public:
 	inline int GetNumFrame()	{	return mgl_get_num_frame(gr);	}
 	/// Reset frames counter (start it from zero)
 	inline void ResetFrames()	{	mgl_reset_frames(gr);	}
+	/// Get drawing data for i-th frame (work if MGL_VECT_FRAME is set on)
+	inline void GetFrame(long i)	{	mgl_get_frame(gr, i);	}
+	
 	/// Start write frames to cinema using GIF format
 	inline void StartGIF(const char *fname, int ms=100)
 	{	mgl_start_gif(gr, fname,ms);	}
@@ -497,16 +500,16 @@ public:
 	inline void Box(const char *col="", bool ticks=true)
 	{	mgl_box_str(gr, col, ticks);	}
 	/// Draw axises with ticks in directions determined by string parameter \a dir.
-	inline void Axis(const char *dir="xyzt", const char *stl="")
-	{	mgl_axis(gr, dir,stl);	}
+	inline void Axis(const char *dir="xyzt", const char *stl="", const char *opt="")
+	{	mgl_axis(gr, dir,stl,opt);	}
 	/// Draw grid lines perpendicular to direction determined by string parameter \a dir.
-	inline void Grid(const char *dir="xyzt",const char *pen="B")
-	{	mgl_axis_grid(gr, dir, pen);	}
+	inline void Grid(const char *dir="xyzt",const char *pen="B", const char *opt="")
+	{	mgl_axis_grid(gr, dir, pen, opt);	}
 	/// Print the label \a text for axis \a dir.
-	inline void Label(char dir, const char *text, mreal pos=+1, mreal shift=0)
-	{	mgl_label_ext(gr, dir, text, pos, shift);	}
-	inline void Label(char dir, const wchar_t *text, mreal pos=+1, mreal shift=0)
-	{	mgl_labelw_ext(gr, dir, text, pos, shift);	}
+	inline void Label(char dir, const char *text, mreal pos=+1, const char *opt="")
+	{	mgl_label(gr, dir, text, pos, opt);	}
+	inline void Label(char dir, const wchar_t *text, mreal pos=+1, const char *opt="")
+	{	mgl_labelw(gr, dir, text, pos, opt);	}
 
 	/// Draw colorbar at edge of axis
 	inline void Colorbar(const char *sch="")
@@ -528,11 +531,11 @@ public:
 	inline void ClearLegend()
 	{	mgl_clear_legend(gr);	}
 	/// Draw legend of accumulated strings at position {x,y}
-	inline void Legend(mreal x, mreal y, const char *font="#", mreal size=-0.8, mreal llen=0)
-	{	mgl_legend_pos(gr, x, y, font, size, llen);	}
+	inline void Legend(mreal x, mreal y, const char *font="#", const char *opt="")
+	{	mgl_legend_pos(gr, x, y, font, opt);	}
 	/// Draw legend of accumulated strings
-	inline void Legend(int where=3, const char *font="#", mreal size=-0.8, mreal llen=0)
-	{	mgl_legend(gr, where, font, size, llen);	}
+	inline void Legend(int where=3, const char *font="#", const char *opt="")
+	{	mgl_legend(gr, where, font, opt);	}
 	/// Set number of marks in legend sample
 	inline void SetLegendMarks(int num)		{	mgl_set_legend_marks(gr, num);	}
 
@@ -673,11 +676,16 @@ public:
 	{	mgl_labelw_y(gr, &y, text, fnt, opt);	}
 
 	/// Draw table for values \a val along given direction with row labels \a text
-	inline void Table(const mglDataA &val, const char *text="", const char *fnt=":#x", const char *opt="")
-	{	mgl_table(gr, &val, text, fnt, opt);	}
-	inline void Table(const mglDataA &val, const wchar_t *text=L"", const char *fnt=":#x", const char *opt="")
-	{	mgl_tablew(gr, &val, text, fnt, opt);	}
-
+	inline void Table(const mglDataA &val, const char *text="", const char *fnt="#", const char *opt="")
+	{	mgl_table(gr, 0, 0, &val, text, fnt, opt);	}
+	inline void Table(const mglDataA &val, const wchar_t *text=L"", const char *fnt="#", const char *opt="")
+	{	mgl_tablew(gr, 0, 0, &val, text, fnt, opt);	}
+	/// Draw table for values \a val along given direction with row labels \a text at given position
+	inline void Table(mreal x, mreal y, const mglDataA &val, const char *text="", const char *fnt="#", const char *opt="")
+	{	mgl_table(gr, x, y, &val, text, fnt, opt);	}
+	inline void Table(mreal x, mreal y, const mglDataA &val, const wchar_t *text=L"", const char *fnt="#", const char *opt="")
+	{	mgl_tablew(gr, x, y, &val, text, fnt, opt);	}
+	
 	/// Draw tube with radius r for points in arrays {x,y,z}
 	inline void Tube(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &r, const char *pen="", const char *opt="")
 	{	mgl_tube_xyzr(gr, &x, &y, &z, &r, pen, opt);	}
@@ -1084,7 +1092,7 @@ public:
 	inline mglData FitS(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const mglDataA &s, const char *eq, const char *var, mglData &ini, const char *opt="")
 	{	return mglData(true,mgl_fit_xyzas(gr, &x, &y, &z, &a, &s, eq, var, &ini, opt));	}
 	/// Print fitted last formula (with coefficients)
-	inline void PutsFit(mglPoint p, const char *prefix=0, const char *font=0, mreal size=-1)
+	inline void PutsFit(mglPoint p, const char *prefix=0, const char *font="", mreal size=-1)
 	{	mgl_puts_fit(gr, p.x, p.y, p.z, prefix, font, size);	}
 	/// Get last fitted formula
 	inline const char *GetFit()
@@ -1131,6 +1139,40 @@ public:
 /// Callback function for asking user a question. Result shouldn't exceed 1024.
 extern void (*mgl_ask_func)(const wchar_t *quest, wchar_t *res);
 //-----------------------------------------------------------------------------
+/// Structure for handling named mglData (used by mglParse class).
+class mglVar : public mglData
+{
+public:
+	std::wstring s;	///< Data name
+	void *o;		///< Pointer to external object
+	mglVar *next;	///< Pointer to next instance in list
+	mglVar *prev;	///< Pointer to prev instance in list
+	bool temp;		///< This temporar variable
+	void (*func)(void *);	///< Callback function for destroying
+	
+	mglVar():mglData()	{	o=0;	next=prev=0;	func=0;	temp=false;	}
+	virtual ~mglVar()
+	{
+		if(func)	func(o);
+		if(prev)	prev->next = next;
+		if(next)	next->prev = prev;
+	}
+	/// Move variable after \a var and copy \a func from \a var (if \a func is 0)
+	void MoveAfter(mglVar *var)
+	{
+		if(prev)	prev->next = next;
+		if(next)	next->prev = prev;
+		prev = next = 0;
+		if(var)
+		{
+			prev = var;	next = var->next;
+			var->next = this;
+			if(func==0)	func = var->func;
+		}
+		if(next)	next->prev = this;
+	}
+};
+//-----------------------------------------------------------------------------
 /// Wrapper class for MGL parsing
 class mglParse
 {
@@ -1141,35 +1183,76 @@ public:
 	mglParse(bool setsize=false)
 	{	pr=mgl_create_parser();	mgl_parser_allow_setsize(pr, setsize);	}
 	~mglParse()	{	if(mgl_use_parser(pr,-1)<1)	mgl_delete_parser(pr);	}
+	/// Get pointer to internal mglParser object
 	inline HMPR Self()	{	return pr;	}
+	/// Parse and draw single line of the MGL script
 	inline int Parse(mglGraph *gr, const char *str, int pos)
 	{	return mgl_parse(gr->Self(), pr, str, pos);	}
 	inline int Parse(mglGraph *gr, const wchar_t *str, int pos)
 	{	return mgl_parsew(gr->Self(), pr, str, pos);	}
+	/// Execute MGL script text with '\n' separated lines
 	inline void Execute(mglGraph *gr, const char *str)
 	{	mgl_parse_text(gr->Self(), pr, str);	}
 	inline void Execute(mglGraph *gr, const wchar_t *str)
-	{	mgl_parsew_text(gr->Self(), pr, str);	}
+	{	mgl_parse_textw(gr->Self(), pr, str);	}
+	/// Execute and draw script from the file
 	inline void Execute(mglGraph *gr, FILE *fp, bool print=false)
 	{	mgl_parse_file(gr->Self(), pr, fp, print);	}
+
+	/// Return type of command: 0 - not found, 1 - data plot, 2 - other plot,
+	///		3 - setup, 4 - data handle, 5 - data create, 6 - subplot, 7 - program
+	///		8 - 1d plot, 9 - 2d plot, 10 - 3d plot, 11 - dd plot, 12 - vector plot
+	///		13 - axis, 14 - primitives, 15 - axis setup, 16 - text/legend, 17 - data transform
 	inline int CmdType(const char *name)
-	{	return mgl_cmd_type(pr, name);	}
+	{	return mgl_parse_cmd_type(pr, name);	}
+	/// Return string of command format (command name and its argument[s])
 	inline const char *CmdFormat(const char *name)
-	{	return mgl_cmd_frmt(pr, name);	}
+	{	return mgl_parse_cmd_frmt(pr, name);	}
+	/// Return description of MGL command
 	inline const char *CmdDesc(const char *name)
-	{	return mgl_cmd_desc(pr, name);	}
+	{	return mgl_parse_cmd_desc(pr, name);	}
+	/// Get name of command with nmber \a n
+	inline const char *GetCmdName(long n)
+	{	return mgl_parse_cmd_name(pr,n);	}
+	/// Get number of defined commands
+	inline long GetCmdNum()
+	{	return mgl_parse_cmd_num(pr);	}
 
-	inline void AddParam(int id, const char *str)	{	mgl_add_param(pr, id, str);	}
-	inline void AddParam(int id, const wchar_t *str){	mgl_add_paramw(pr, id, str);	}
-	inline void RestoreOnce()	{	mgl_restore_once(pr);	}
+	/// Set value for parameter $N
+	inline void AddParam(int id, const char *str)
+	{	mgl_parse_add_param(pr, id, str);	}
+	inline void AddParam(int id, const wchar_t *str)
+	{	mgl_parse_add_paramw(pr, id, str);	}
+	/// Restore once flag
+	inline void RestoreOnce()	{	mgl_parse_restore_once(pr);	}
+	/// Allow changing size of the picture
 	inline void AllowSetSize(bool allow)	{	mgl_parser_allow_setsize(pr, allow);	}
-
-	/*===!!! NOTE !!! You must not delete obtained data arrays !!!===============*/
-	inline mglData *AddVar(const char *name)	{	return mgl_add_var(pr, name);	}
-	/*===!!! NOTE !!! You must not delete obtained data arrays !!!===============*/
-	inline mglData *FindVar(const char *name)	{	return mgl_find_var(pr, name);	}
-	inline void DeleteVar(const char *name)		{	mgl_del_var(pr, name);		}
+	/// Set flag to stop script parsing
 	inline void Stop()	{	mgl_parser_stop(pr);	}
+
+	/// Return result of formula evaluation
+	inline mglData Calc(const char *formula)
+	{	return mglData(true,mgl_parse_calc(pr,formula)); 	}
+	inline mglData Calc(const wchar_t *formula)
+	{	return mglData(true,mgl_parse_calcw(pr,formula));	}
+	
+	/// Find variable with given name or add a new one
+	/// NOTE !!! You must not delete obtained data arrays !!!
+	inline mglVar *AddVar(const char *name)
+	{	return dynamic_cast<mglVar *>(mgl_parse_add_var(pr, name));	}
+	inline mglVar *AddVar(const wchar_t *name)
+	{	return dynamic_cast<mglVar *>(mgl_parse_add_varw(pr, name));	}
+	/// Find variable with given name or return NULL if no one
+	/// NOTE !!! You must not delete obtained data arrays !!!
+	inline mglVar *FindVar(const char *name)
+	{	return dynamic_cast<mglVar *>(mgl_parse_find_var(pr, name));	}
+	inline mglVar *FindVar(const wchar_t *name)
+	{	return dynamic_cast<mglVar *>(mgl_parse_find_varw(pr, name));	}
+	/// Delete variable with name
+	inline void DeleteVar(const char *name)		{	mgl_parse_del_var(pr, name);		}
+	inline void DeleteVar(const wchar_t *name)	{	mgl_parse_del_varw(pr, name);		}
+	/// Delete all data variables
+	void DeleteAll()	{	mgl_parse_del_all(pr);	}
 };
 //-----------------------------------------------------------------------------
 /// Wrapper class expression evaluating

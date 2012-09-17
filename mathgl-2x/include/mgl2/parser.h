@@ -49,23 +49,6 @@ struct mglCommand
 };
 extern mglCommand mgls_base_cmd[];
 //-----------------------------------------------------------------------------
-/// Structure for the mglData handling (see mglParse class).
-struct mglVar
-{
-	mglData d;		///< Data itself
-	std::wstring s;	///< Data name
-	void *o;		///< Pointer to external object
-	mglVar *next;	///< Pointer to next instance in list
-	mglVar *prev;	///< Pointer to prev instance in list
-	bool temp;		///< This temporar variable
-	void (*func)(void *);	///< Callback function for destroying
-
-	mglVar()	{	o=0;	next=prev=0;	func=0;	temp=false;	}
-	~mglVar();
-	/// Move variable after \a var and copy \a func from \a var (if \a func is 0)
-	void MoveAfter(mglVar *var);
-};
-//-----------------------------------------------------------------------------
 /// Structure for the number handling (see mglParse class).
 struct mglNum
 {
@@ -153,23 +136,18 @@ public:
 	long IsFunc(const wchar_t *name, int *narg=0);
 	/// Find variable or return 0 if absent
 	mglVar *FindVar(const char *name);
-	/// Find variable or return 0 if absent
 	mglVar *FindVar(const wchar_t *name);
 	/// Find variable or create it if absent
 	mglVar *AddVar(const char *name);
-	/// Find variable or create it if absent
 	mglVar *AddVar(const wchar_t *name);
 	/// Find number or return 0 if absent
 	mglNum *FindNum(const char *name);
-	/// Find number or return 0 if absent
 	mglNum *FindNum(const wchar_t *name);
 	/// Find number or create it if absent
 	mglNum *AddNum(const char *name);
-	/// Find number or create it if absent
 	mglNum *AddNum(const wchar_t *name);
 	/// Add string for parameter $1, ..., $9
 	void AddParam(int n, const char *str, bool isstr=true);
-	/// Add unicode string for parameter $1, ..., $9
 	void AddParam(int n, const wchar_t *str, bool isstr=true);
 	/// Add new MGL command(s) (last command MUST HAVE name[0]=0 !!!)
 	void AddCommand(mglCommand *cmd, int num=0);
@@ -179,8 +157,9 @@ public:
 	void DeleteVar(mglVar *v);
 	/// Delete variable by its name
 	void DeleteVar(const char *name);
-	/// Delete variable by its name
 	void DeleteVar(const wchar_t *name);
+	/// Delete all data variables
+	void DeleteAll();
 private:
 	long parlen;		///< Length of parameter strings
 	wchar_t *par[40];	///< Parameter for substituting instead of $1, ..., $9

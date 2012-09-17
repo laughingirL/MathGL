@@ -49,11 +49,10 @@ void mgl_set_tick_shift(HMGL gr, mreal sx, mreal sy, mreal sz, mreal sc);
 
 void mgl_box(HMGL graph);
 void mgl_box_str(HMGL gr, const char *col, int ticks);
-void mgl_axis(HMGL gr, const char *dir, const char *stl);
-void mgl_axis_grid(HMGL gr, const char *dir,const char *pen);
-void mgl_label(HMGL gr, char dir, const char *text);
-void mgl_label_ext(HMGL gr, char dir, const char *text, mreal pos, mreal shift);
-void mgl_labelw_ext(HMGL gr, char dir, const wchar_t *text, mreal pos, mreal shift);
+void mgl_axis(HMGL gr, const char *dir, const char *stl, const char *opt);
+void mgl_axis_grid(HMGL gr, const char *dir,const char *pen, const char *opt);
+void mgl_label(HMGL gr, char dir, const char *text, mreal pos, const char *opt);
+void mgl_labelw(HMGL gr, char dir, const wchar_t *text, mreal pos, const char *opt);
 
 void mgl_colorbar(HMGL gr, const char *sch);
 void mgl_colorbar_ext(HMGL gr, const char *sch, mreal x, mreal y, mreal w, mreal h);
@@ -63,8 +62,8 @@ void mgl_colorbar_val_ext(HMGL gr, HCDT dat, const char *sch,mreal x, mreal y, m
 void mgl_add_legend(HMGL gr, const char *text,const char *style);
 void mgl_add_legendw(HMGL gr, const wchar_t *text,const char *style);
 void mgl_clear_legend(HMGL graph);
-void mgl_legend_pos(HMGL gr, mreal x, mreal y, const char *font, mreal size, mreal llen);
-void mgl_legend(HMGL gr, int where, const char *font, mreal size, mreal llen);
+void mgl_legend_pos(HMGL gr, mreal x, mreal y, const char *font, const char *opt);
+void mgl_legend(HMGL gr, int where, const char *font, const char *opt);
 void mgl_set_legend_marks(HMGL gr, int num);
 
 HMEX mgl_create_expr(const char *expr);
@@ -114,6 +113,7 @@ int mgl_new_frame(HMGL graph);
 void mgl_end_frame(HMGL graph);
 int mgl_get_num_frame(HMGL graph);
 void mgl_reset_frames(HMGL graph);
+void mgl_get_frame(HMGL graph, int i);
 
 void mgl_set_transp_type(HMGL gr, int type);
 void mgl_set_alpha(HMGL gr, int enable);
@@ -168,10 +168,9 @@ void mgl_set_tick_templ_(uintptr_t *gr, const char *dir, const char *templ,int,i
 void mgl_set_ticks_time_(uintptr_t *gr, const char *dir, mreal *d, const char *t,int,int l);
 void mgl_box_(uintptr_t *gr);
 void mgl_box_str_(uintptr_t *gr, const char *col, int *ticks, int l);
-void mgl_axis_(uintptr_t *gr, const char *dir, const char *stl,int,int);
-void mgl_axis_grid_(uintptr_t *gr, const char *dir,const char *pen,int l,int n);
-void mgl_label_(uintptr_t *gr, const char *dir, const char *text,int,int l);
-void mgl_label_ext_(uintptr_t *gr, const char *dir, const char *text, mreal *pos, mreal *shift,int,int l);
+void mgl_axis_(uintptr_t *gr, const char *dir, const char *stl, const char *opt,int,int,int);
+void mgl_axis_grid_(uintptr_t *gr, const char *dir,const char *pen, const char *opt,int,int,int);
+void mgl_label_(uintptr_t *gr, const char *dir, const char *text, const char *opt,int,int,int);
 /******************************************************************************/
 void mgl_colorbar_(uintptr_t *gr, const char *sch,int l);
 void mgl_colorbar_ext_(uintptr_t *gr, const char *sch, mreal *x, mreal *y, mreal *w, mreal *h, int l);
@@ -180,8 +179,8 @@ void mgl_colorbar_val_ext_(uintptr_t *gr, uintptr_t *dat, const char *sch, mreal
 
 void mgl_add_legend_(uintptr_t *gr, const char *text,const char *style,int l,int n);
 void mgl_clear_legend_(uintptr_t *gr);
-void mgl_legend_pos_(uintptr_t *gr, mreal *x, mreal *y, const char *font, mreal *size, mreal *llen,int l);
-void mgl_legend_(uintptr_t *gr, int *where, const char *font, mreal *size, mreal *llen,int l);
+void mgl_legend_pos_(uintptr_t *gr, mreal *x, mreal *y, const char *font, const char *opt,int,int);
+void mgl_legend_(uintptr_t *gr, int *where, const char *font, const char *opt,int,int);
 void mgl_set_legend_marks_(uintptr_t *gr, int *num);
 
 uintptr_t mgl_create_expr_(const char *expr, int);
@@ -228,6 +227,7 @@ int mgl_new_frame_(uintptr_t *graph);
 void mgl_end_frame_(uintptr_t *graph);
 int mgl_get_num_frame_(uintptr_t *graph);
 void mgl_reset_frames_(uintptr_t *graph);
+void mgl_get_frame_(uintptr_t *graph, int *i);
 
 void mgl_set_transp_type_(uintptr_t *graph, int *type);
 void mgl_set_alpha_(uintptr_t *graph, int *enable);
@@ -315,41 +315,51 @@ void mgl_mpi_recv_(uintptr_t *gr, int *id);
 HMPR mgl_create_parser();
 long mgl_use_parser(HMPR p, int inc);
 void mgl_delete_parser(HMPR p);
-void mgl_add_param(HMPR p, int id, const char *str);
-void mgl_add_paramw(HMPR p, int id, const wchar_t *str);
+void mgl_parse_add_param(HMPR p, int id, const char *str);
+void mgl_parse_add_paramw(HMPR p, int id, const wchar_t *str);
 /*===!!! NOTE !!! You must not delete obtained data arrays !!!===============*/
-HMDT mgl_add_var(HMPR p, const char *name);
+HMDT mgl_parse_add_var(HMPR p, const char *name);
+HMDT mgl_parse_add_varw(HMPR p, const wchar_t *name);
 /*===!!! NOTE !!! You must not delete obtained data arrays !!!===============*/
-HMDT mgl_find_var(HMPR p, const char *name);
-void mgl_del_var(HMPR p, const char *name);
+HMDT mgl_parse_find_var(HMPR p, const char *name);
+HMDT mgl_parse_find_varw(HMPR p, const wchar_t *name);
+void mgl_parse_del_var(HMPR p, const char *name);
+void mgl_parse_del_varw(HMPR p, const wchar_t *name);
+void mgl_parse_del_all(HMPR p);
 int mgl_parse(HMGL gr, HMPR p, const char *str, int pos);
 int mgl_parsew(HMGL gr, HMPR p, const wchar_t *str, int pos);
 void mgl_parse_file(HMGL gr, HMPR p, FILE *fp, int print);
 void mgl_parse_text(HMGL gr, HMPR p, const char *str);
-void mgl_parsew_text(HMGL gr, HMPR p, const wchar_t *str);
-void mgl_restore_once(HMPR p);
+void mgl_parse_textw(HMGL gr, HMPR p, const wchar_t *str);
+void mgl_parse_restore_once(HMPR p);
 void mgl_parser_allow_setsize(HMPR p, int a);
 void mgl_parser_stop(HMPR p);
-int mgl_cmd_type(HMPR pr, const char *name);
-const char *mgl_cmd_desc(HMPR pr, const char *name);
-const char *mgl_cmd_frmt(HMPR pr, const char *name);
+int mgl_parse_cmd_type(HMPR pr, const char *name);
+const char *mgl_parse_cmd_desc(HMPR pr, const char *name);
+const char *mgl_parse_cmd_frmt(HMPR pr, const char *name);
+const char *mgl_parse_cmd_name(HMPR pr, long id);
+long mgl_parse_cmd_num(HMPR pr);
+HMDT mgl_parse_calc(HMPR pr, const char *formula);
+HMDT mgl_parse_calcw(HMPR pr, const wchar_t *formula);
 //int mgl_parser_find_cmdw(HMPR pr, const wchar_t *name);
 /******************************************************************************/
 uintptr_t mgl_create_parser_();
 long mgl_use_parser_(uintptr_t* , int *inc);
 void mgl_delete_parser_(uintptr_t* p);
-void mgl_add_param_(uintptr_t* p, int *id, const char *str, int l);
+void mgl_parse_add_param_(uintptr_t* p, int *id, const char *str, int l);
 /*===!!! NOTE !!! You must not delete obtained data arrays !!!===============*/
-uintptr_t mgl_add_var_(uintptr_t* p, const char *name, int l);
+uintptr_t mgl_parse_add_var_(uintptr_t* p, const char *name, int l);
 /*===!!! NOTE !!! You must not delete obtained data arrays !!!===============*/
-uintptr_t mgl_find_var_(uintptr_t* p, const char *name, int l);
-void mgl_del_var_(uintptr_t* p, const char *name, int l);
+uintptr_t mgl_parse_find_var_(uintptr_t* p, const char *name, int l);
+void mgl_parse_del_var_(uintptr_t* p, const char *name, int l);
+void mgl_parse_del_all_(uintptr_t *p);
 int mgl_parse_(uintptr_t* gr, uintptr_t* p, const char *str, int *pos, int l);
 void mgl_parse_text_(uintptr_t* gr, uintptr_t* p, const char *str, int l);
-void mgl_restore_once_(uintptr_t* p);
+void mgl_parse_restore_once_(uintptr_t* p);
 void mgl_parser_allow_setsize_(uintptr_t* p, int *a);
 void mgl_parser_stop_(uintptr_t* p);
-int mgl_cmd_type_(uintptr_t* p, const char *name, int l);
+int mgl_parse_cmd_type_(uintptr_t* p, const char *name, int l);
+uintptr_t mgl_parse_calc_(uintptr_t *pr, const char *formula,int l);
 /******************************************************************************/
 #ifdef __cplusplus
 }

@@ -116,7 +116,7 @@ void put_line(HMGL gr, void *fp, bool gz, long i, mreal wp, mglColor cp,int st, 
 			}
 		}
 	}
-	for(j=0;j<ids.size();j++)
+	for(size_t j=0;j<ids.size();j++)
 	{
 		const mglPnt &p = gr->GetPnt(ids[j]);
 		x0 = p.x;	y0 = p.y;
@@ -167,17 +167,17 @@ void put_desc(HMGL gr, void *fp, bool gz, const char *pre, const char *ln1, cons
 mglColor mglCanvas::GetColor(const mglPrim &p)
 {
 	unsigned char res[4],buf[4];
-	col2int(Pnt[p.type==1?p.n2:p.n1],res);
+	col2int(Pnt[p.type==1?p.n2:p.n1],res,p.id);
 	if(p.type==2 || p.type==3)
 	{
-		col2int(Pnt[p.n2],buf);		res[0]=(1L*res[0]+buf[0])/2;
+		col2int(Pnt[p.n2],buf,p.id);	res[0]=(1L*res[0]+buf[0])/2;
 		res[1]=(1L*res[1]+buf[1])/2;	res[2]=(1L*res[2]+buf[2])/2;
-		col2int(Pnt[p.n3],buf);		res[0]=(2L*res[0]+buf[0])/3;
+		col2int(Pnt[p.n3],buf,p.id);	res[0]=(2L*res[0]+buf[0])/3;
 		res[1]=(2L*res[1]+buf[1])/3;	res[2]=(2L*res[2]+buf[2])/3;
 	}
 	if(p.type==3)
 	{
-		col2int(Pnt[p.n4],buf);		res[0]=(3L*res[0]+buf[0])/4;
+		col2int(Pnt[p.n4],buf,p.id);	res[0]=(3L*res[0]+buf[0])/4;
 		res[1]=(3L*res[1]+buf[1])/4;	res[2]=(3L*res[2]+buf[2])/4;
 	}
 
@@ -186,7 +186,7 @@ mglColor mglCanvas::GetColor(const mglPrim &p)
 	if(zf<0)	// add fog
 	{
 		int d = int(255.f-255.f*exp(5.f*zf));
-		unsigned char cb[4] = {BDef[0], BDef[1], BDef[2], d};
+		unsigned char cb[4] = {BDef[0], BDef[1], BDef[2], (unsigned char)d};
 		if(d<255)	combine(res,cb);
 	}
 

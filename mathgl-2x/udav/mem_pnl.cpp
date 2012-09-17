@@ -22,7 +22,7 @@
 #include <QToolButton>
 #include <QInputDialog>
 #include <QMessageBox>
-#include <mgl2/parser.h>
+#include <mgl2/mgl.h>
 //-----------------------------------------------------------------------------
 #include "mem_pnl.h"
 #include "info_dlg.h"
@@ -31,7 +31,7 @@
 #include "xpm/preview.xpm"
 //-----------------------------------------------------------------------------
 extern bool mglAutoSave;
-extern mglParser parser;
+extern mglParse parser;
 QWidget *newDataWnd(InfoDialog *inf, QWidget *wnd, mglVar *v);
 void refreshData(QWidget *w);
 //-----------------------------------------------------------------------------
@@ -125,9 +125,8 @@ void MemPanel::delData()
 	int	n = tab->currentRow();
 	if(n<0)	n = 0;
 	mglVar *v = parser.FindVar(tab->item(n,0)->text().toAscii());
-	if(!v)	return;
-	if(v->o)	((QWidget *)v->o)->close();
-	parser.DeleteVar(v);
+	if(!v && v->o)	((QWidget *)v->o)->close();
+	parser.DeleteVar(tab->item(n,0)->text().toAscii());
 	refresh();
 }
 //-----------------------------------------------------------------------------
@@ -136,8 +135,7 @@ void MemPanel::delAllData()
 	if(QMessageBox::information(this, tr("UDAV - delete all data"),
 			tr("Do you want to delete all data?"), QMessageBox::No,
 			QMessageBox::Yes)!=QMessageBox::Yes)	return;
-	while(parser.DataList)	parser.DeleteVar(parser.DataList);
-	refresh();
+	parser.DeleteAll();	refresh();
 }
 //-----------------------------------------------------------------------------
 void MemPanel::infoData()
@@ -156,11 +154,11 @@ void MemPanel::infoData()
 //-----------------------------------------------------------------------------
 void MemPanel::refresh()
 {
-	mglVar *v = parser.DataList;
+	mglVar *v = parser.FindVar("");
 	int n = 0;
 	while(v)	{	v = v->next;	n++;	}
 	tab->setRowCount(n);
-	v = parser.DataList;	n = 0;
+	v = parser.FindVar("");	n = 0;
 	QString s;
 	QTableWidgetItem *it;
 	Qt::ItemFlags flags=Qt::ItemIsSelectable|Qt::ItemIsEnabled;
@@ -169,11 +167,11 @@ void MemPanel::refresh()
 		s = QString::fromStdWString(v->s);
 		it = new QTableWidgetItem(s);
 		tab->setItem(n,0,it);	it->setFlags(flags);
-		s.sprintf("%ld * %ld * %ld", v->d.nx, v->d.ny, v->d.nz);
+		s.sprintf("%ld * %ld * %ld", v->nx, v->ny, v->nz);
 		it = new QTableWidgetItem(s);
 		tab->setItem(n,1,it);	it->setFlags(flags);
 		it->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
-		s.sprintf("%12ld", v->d.nx*v->d.ny*v->d.nz*sizeof(mreal));
+		s.sprintf("%12ld", v->nx*v->ny*v->nz*sizeof(mreal));
 		it = new QTableWidgetItem(s);
 		tab->setItem(n,2,it);	it->setFlags(flags);
 		it->setTextAlignment(Qt::AlignRight|Qt::AlignVCenter);

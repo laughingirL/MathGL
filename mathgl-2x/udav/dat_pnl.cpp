@@ -32,13 +32,13 @@
 #include <QInputDialog>
 #include <QToolButton>
 #include <QSpinBox>
-#include <mgl2/parser.h>
+#include <mgl2/mgl.h>
 //-----------------------------------------------------------------------------
 #include "dat_pnl.h"
 #include "info_dlg.h"
 #include "xpm/table.xpm"
 //-----------------------------------------------------------------------------
-extern mglParser parser;
+extern mglParse parser;
 void updateDataItems();
 void addDataPanel(QWidget *wnd, QWidget *w, QString name);
 void deleteDat(void *o)		{	if(o)	delete ((DatPanel *)o);	}
@@ -77,11 +77,11 @@ void DatPanel::refresh()
 	bool rc = false;
 	if(!var)	return;
 	infoDlg->allowRefresh=false;
-	if(nx!=var->d.nx)	{	nx = var->d.nx;	tab->setColumnCount(nx);rc=true;	}
-	if(ny!=var->d.ny)	{	ny = var->d.ny;	tab->setRowCount(ny);	rc=true;	}
-	if(kz>=var->d.nz)	{	kz = 0;			emit sliceChanged(0);	}
-	if(nz!=var->d.ny)	{	nz = var->d.nz;	emit nzChanged(nz);		}
-	id = QString(var->d.id.c_str());
+	if(nx!=var->nx)	{	nx = var->nx;	tab->setColumnCount(nx);	rc=true;	}
+	if(ny!=var->ny)	{	ny = var->ny;	tab->setRowCount(ny);	rc=true;	}
+	if(kz>=var->nz)	{	kz = 0;			emit sliceChanged(0);	}
+	if(nz!=var->ny)	{	nz = var->nz;	emit nzChanged(nz);		}
+	id = QString(var->id.c_str());
 	if(nz==1 && ny>1 && !id.isEmpty())
 	{
 		QStringList head;
@@ -109,7 +109,7 @@ void DatPanel::refresh()
 	}
 	for(i=0;i<nx;i++)	for(j=0;j<ny;j++)
 	{
-		f = var->d.GetVal(i,j,kz);
+		f = var->GetVal(i,j,kz);
 		if(mgl_isnan(f))	s = "nan";
 		else	s.sprintf("%g",f);
 		tab->item(j,i)->setText(s);
@@ -158,12 +158,12 @@ void DatPanel::putValue(int r, int c)
 	QString s = tab->item(r,c)->text().toLower();
 	mreal f;
 	f = s=="nan" ? NAN : s.toDouble();
-	if(f!=var->d.GetVal(c,r,kz))
+	if(f!=var->GetVal(c,r,kz))
 	{
 		if(mgl_isnan(f))	s="nan";	else	s.sprintf("%g", f);
 		tab->item(r,c)->setText(s);
 	}
-	var->d.SetVal(f,c,r,kz);
+	var->SetVal(f,c,r,kz);
 	infoDlg->refresh();
 }
 //-----------------------------------------------------------------------------
@@ -174,7 +174,7 @@ void DatPanel::imprt()
 	{
 		bool ok;
 		QString s = QInputDialog::getText(this, tr("UDAV - Export to PNG"), tr("Enter color scheme for picture.\nNote that data will be normalized in range [0,1]."), QLineEdit::Normal, "BbcyrR", &ok);
-		if(ok)	var->d.Import(fn.toAscii(), s.toAscii());
+		if(ok)	var->Import(fn.toAscii(), s.toAscii());
 		refresh();
 	}
 }
@@ -186,20 +186,20 @@ void DatPanel::exprt()
 	{
 		bool ok;
 		QString s = QInputDialog::getText(this, tr("UDAV - Export to PNG"), tr("Enter color scheme for picture"), QLineEdit::Normal, "BbcyrR", &ok);
-		if(ok)	var->d.Export(fn.toAscii(), s.toAscii());
+		if(ok)	var->Export(fn.toAscii(), s.toAscii());
 	}
 }
 //-----------------------------------------------------------------------------
 void DatPanel::save()
 {
 	QString fn = QFileDialog::getSaveFileName(this, tr("UDAV - Save data"), "", tr("Data files (*.dat)\nAll files (*.*)"));
-	if(!fn.isEmpty())	var->d.Save(fn.toAscii());
+	if(!fn.isEmpty())	var->Save(fn.toAscii());
 }
 //-----------------------------------------------------------------------------
 void DatPanel::load()
 {
 	QString fn = QFileDialog::getOpenFileName(this, tr("UDAV - Load data"), "", tr("Data files (*.dat)\nAll files (*.*)"));
-	if(!fn.isEmpty())	{	var->d.Read(fn.toAscii());	refresh();	}
+	if(!fn.isEmpty())	{	var->Read(fn.toAscii());	refresh();	}
 }
 //-----------------------------------------------------------------------------
 void DatPanel::copy()
@@ -232,7 +232,7 @@ void DatPanel::paste()
 		{
 			t = s.section('\t',j,j,QString::SectionSkipEmpty);
 			if(t.isEmpty())	{	j=nx;	continue;	}
-			var->d.SetVal(t.toDouble(),j+c,i+r,kz);
+			var->SetVal(t.toDouble(),j+c,i+r,kz);
 		}
 	}
 	refresh();
@@ -266,7 +266,7 @@ void DatPanel::byformula()
 {
 	bool ok;
 	QString s = QInputDialog::getText(this, tr("UDAV - Fill data"), tr("Enter formula for data filling.\nNote that variables x,y,z supposed to be in range [0,1]."), QLineEdit::Normal, "", &ok);
-	if(ok)	{	var->d.Modify(s.toAscii());	refresh();	}
+	if(ok)	{	var->Modify(s.toAscii());	refresh();	}
 }
 //-----------------------------------------------------------------------------
 void DatPanel::inrange()
@@ -274,7 +274,7 @@ void DatPanel::inrange()
 	QString v1("-1"), v2("1"), dir("x");
 	if(sizesDialog(tr("UDAV - Fill data"), tr("Enter range for data and direction of filling"), tr("From"), tr("To"), tr("Direction"), v1, v2, dir))
 	{
-		var->d.Fill(v1.toDouble(), v2.toDouble(), dir[0].toLatin1());
+		var->Fill(v1.toDouble(), v2.toDouble(), dir[0].toLatin1());
 		refresh();
 	}
 }
@@ -284,7 +284,7 @@ void DatPanel::norm()
 	QString v1("0"), v2("1"), how;
 	if(sizesDialog(tr("UDAV - Normalize data"), tr("Enter range for final data"), tr("From"), tr("To"), tr("Symmetrical?"), v1, v2, how))
 	{
-		var->d.Norm(v1.toDouble(), v2.toDouble(), (how=="on" || how.contains('s')));
+		var->Norm(v1.toDouble(), v2.toDouble(), (how=="on" || how.contains('s')));
 		refresh();
 	}
 }
@@ -294,7 +294,7 @@ void DatPanel::normsl()
 	QString v1("0"), v2("1"), dir("z");
 	if(sizesDialog(tr("UDAV - Normalize by slice"), tr("Enter range for final data"), tr("From"), tr("To"), tr("Direction"), v1, v2, dir))
 	{
-		var->d.NormSl(v1.toDouble(), v2.toDouble(), dir[0].toLatin1());
+		var->NormSl(v1.toDouble(), v2.toDouble(), dir[0].toLatin1());
 		refresh();
 	}
 }
@@ -304,7 +304,7 @@ void DatPanel::create()
 	QString mx, my("1"), mz("1");
 	if(sizesDialog(tr("UDAV - Clear data"), tr("Enter new data sizes"), tr("X-size"), tr("Y-size"), tr("Z-size"), mx, my, mz))
 	{
-		var->d.Create(mx.toInt(), my.toInt(), mz.toInt());
+		var->Create(mx.toInt(), my.toInt(), mz.toInt());
 		refresh();	updateDataItems();
 	}
 }
@@ -315,7 +315,7 @@ void DatPanel::reSize()
 	mx.sprintf("%d",nx);	my.sprintf("%d",ny);	mz.sprintf("%d",nz);
 	if(sizesDialog(tr("UDAV - Resize data"), tr("Enter new data sizes"), tr("X-size"), tr("Y-size"), tr("Z-size"), mx, my, mz))
 	{
-		var->d = var->d.Resize(mx.toInt(), my.toInt(), mz.toInt());
+		var->Set(var->Resize(mx.toInt(), my.toInt(), mz.toInt()));
 		refresh();	updateDataItems();
 	}
 }
@@ -325,7 +325,7 @@ void DatPanel::squize()
 	QString mx("1"), my("1"), mz("1");
 	if(sizesDialog(tr("UDAV - Squeeze data"), tr("Enter step of saved points. For example, '1' save all, '2' save each 2nd point, '3' save each 3d and so on."), tr("X-direction"), tr("Y-direction"), tr("Z-direction"), mx, my, mz))
 	{
-		var->d.Squeeze(mx.toInt(), my.toInt(), mz.toInt());
+		var->Squeeze(mx.toInt(), my.toInt(), mz.toInt());
 		refresh();	updateDataItems();
 	}
 }
@@ -335,7 +335,7 @@ void DatPanel::crop()
 	QString n1("1"), n2("1"), dir;
 	if(sizesDialog(tr("UDAV - Crop data"), tr("Enter range of saved date."), tr("From"), tr("To"), tr("Direction"), n1, n2, dir))
 	{
-		var->d.Squeeze(n1.toInt(), n2.toInt(), dir[0].toLatin1());
+		var->Squeeze(n1.toInt(), n2.toInt(), dir[0].toLatin1());
 		refresh();	updateDataItems();
 	}
 }
@@ -346,7 +346,7 @@ void DatPanel::rearrange()
 	mx.sprintf("%d",nx);	my.sprintf("%d",ny);	mz.sprintf("%d",nz);
 	if(sizesDialog(tr("UDAV - Rearrange data"), tr("Enter new data sizes"), tr("X-size"), tr("Y-size"), tr("Z-size"), mx, my, mz))
 	{
-		var->d.Rearrange(mx.toInt(), my.toInt(), mz.toInt());
+		var->Rearrange(mx.toInt(), my.toInt(), mz.toInt());
 		refresh();	updateDataItems();
 	}
 }
@@ -355,56 +355,56 @@ void DatPanel::transp()
 {
 	bool ok;
 	QString s = QInputDialog::getText(this, tr("UDAV - Transpose data"), tr("Enter new order of dimensions.\nFor example, 'yx' or 'yxz' for transpose x-y, 'zyx' for transposing x-z and so on."), QLineEdit::Normal, "yx", &ok);
-	if(ok)	{	var->d.Transpose(s.toAscii());	refresh();	updateDataItems();	}
+	if(ok)	{	var->Transpose(s.toAscii());	refresh();	updateDataItems();	}
 }
 //-----------------------------------------------------------------------------
 void DatPanel::smooth()
 {
 	bool ok;
 	QString s = QInputDialog::getText(this, tr("UDAV - Smooth data"), tr("Enter direction(s) for smoothing.\nOptionally you may enter the kind of smoothing by 3 or by 5 points. For example 'xy3' - smooth only in x and y directions and use 3-points scheme."), QLineEdit::Normal, "xyz", &ok);
-	if(ok)	{	var->d.Smooth(s.toAscii().constData());	refresh();	}
+	if(ok)	{	var->Smooth(s.toAscii().constData());	refresh();	}
 }
 //-----------------------------------------------------------------------------
 void DatPanel::cumsum()
 {
 	bool ok;
 	QString s = QInputDialog::getText(this, tr("UDAV - Summarize data"), tr("Enter direction(s) for cumulative summation.\nFor example 'xy' - summate along x and y directions."), QLineEdit::Normal, "", &ok);
-	if(ok)	{	var->d.CumSum(s.toAscii());	refresh();	}
+	if(ok)	{	var->CumSum(s.toAscii());	refresh();	}
 }
 //-----------------------------------------------------------------------------
 void DatPanel::integr()
 {
 	bool ok;
 	QString s = QInputDialog::getText(this, tr("UDAV - Integrate data"), tr("Enter direction(s) for integration.\nFor example 'xy' - integrate along x and y directions."), QLineEdit::Normal, "", &ok);
-	if(ok)	{	var->d.Integral(s.toAscii());	refresh();	}
+	if(ok)	{	var->Integral(s.toAscii());	refresh();	}
 }
 //-----------------------------------------------------------------------------
 void DatPanel::diff()
 {
 	bool ok;
 	QString s = QInputDialog::getText(this, tr("UDAV - Differentiate data"), tr("Enter direction(s) for differentiation.\nFor example 'xy' - differentiate along x and y directions."), QLineEdit::Normal, "", &ok);
-	if(ok)	{	var->d.Diff(s.toAscii());		refresh();	}
+	if(ok)	{	var->Diff(s.toAscii());		refresh();	}
 }
 //-----------------------------------------------------------------------------
 void DatPanel::diff2()
 {
 	bool ok;
 	QString s = QInputDialog::getText(this, tr("UDAV - Laplace transform"), tr("Enter direction(s) for laplace transform.\nFor example 'xy' - do transform along x and y directions."), QLineEdit::Normal, "", &ok);
-	if(ok)	{	var->d.Diff2(s.toAscii());	refresh();	}
+	if(ok)	{	var->Diff2(s.toAscii());	refresh();	}
 }
 //-----------------------------------------------------------------------------
 void DatPanel::swap()
 {
 	bool ok;
 	QString s = QInputDialog::getText(this, tr("UDAV - Swap data"), tr("Enter direction(s) for swapping (exchange left and right parts).\nFor example 'xy' - swap along x and y directions. Useful for Fourier spectrum."), QLineEdit::Normal, "", &ok);
-	if(ok)	{	var->d.Swap(s.toAscii());		refresh();	}
+	if(ok)	{	var->Swap(s.toAscii());		refresh();	}
 }
 //-----------------------------------------------------------------------------
 void DatPanel::mirror()
 {
 	bool ok;
 	QString s = QInputDialog::getText(this, tr("UDAV - Mirror data"), tr("Enter direction(s) for mirroring.\nFor example 'xy' - mirror along x and y directions."), QLineEdit::Normal, "", &ok);
-	if(ok)	{	var->d.Swap(s.toAscii());	refresh();	}
+	if(ok)	{	var->Swap(s.toAscii());	refresh();	}
 }
 //-----------------------------------------------------------------------------
 void DatPanel::sumof()
@@ -413,7 +413,7 @@ void DatPanel::sumof()
 	if(namesDialog(tr("UDAV - Sum along ..."), tr("Specify direction(s) of summation"), name, val))
 	{
 		mglVar *v = parser.AddVar(name.toAscii());
-		v->d = var->d.Sum(val.toAscii());
+		v->Set(var->Sum(val.toAscii()));
 		updateDataItems();
 	}
 }
@@ -424,7 +424,7 @@ void DatPanel::maxof()
 	if(namesDialog(tr("UDAV - Max along ..."), tr("Specify direction(s) of maximal values"), name, val))
 	{
 		mglVar *v = parser.AddVar(name.toAscii());
-		v->d = var->d.Max(val.toAscii());
+		v->Set(var->Max(val.toAscii()));
 		updateDataItems();
 	}
 }
@@ -435,7 +435,7 @@ void DatPanel::minof()
 	if(namesDialog(tr("UDAV - Min along ..."), tr("Specify direction(s) of minimal values"), name, val))
 	{
 		mglVar *v = parser.AddVar(name.toAscii());
-		v->d = var->d.Min(val.toAscii());
+		v->Set(var->Min(val.toAscii()));
 		updateDataItems();
 	}
 }
@@ -447,7 +447,7 @@ void DatPanel::momentx()
 		tr("Specify which momentum evaluate.\nThe momentum is res_i = sum_jk how(x_i,y_j,z_k) a_jk/ sum_jk a_jk.\nCoordinates x, y, z are data indexes normalized in range [0,1]."), name, val))
 	{
 		mglVar *v = parser.AddVar(name.toAscii());
-		v->d = var->d.Momentum('x', val.toAscii());
+		v->Set(var->Momentum('x', val.toAscii()));
 		updateDataItems();
 	}
 }
@@ -459,7 +459,7 @@ void DatPanel::momenty()
 		tr("Specify which momentum evaluate.\nThe momentum is res_j = sum_ik how(x_i,y_j,z_k) a_ik/ sum_ik a_ik.\nCoordinates x, y, z are data indexes normalized in range [0,1]."), name, val))
 	{
 		mglVar *v = parser.AddVar(name.toAscii());
-		v->d = var->d.Momentum('y', val.toAscii());
+		v->Set(var->Momentum('y', val.toAscii()));
 		updateDataItems();
 	}
 }
@@ -471,7 +471,7 @@ void DatPanel::momentz()
 		tr("Specify which momentum evaluate.\nThe momentum is res_k = sum_ij how(x_i,y_j,z_k) a_ij/ sum_ij a_ij.\nCoordinates x, y, z are data indexes normalized in range [0,1]."), name, val))
 	{
 		mglVar *v = parser.AddVar(name.toAscii());
-		v->d = var->d.Momentum('z', val.toAscii());
+		v->Set(var->Momentum('z', val.toAscii()));
 		updateDataItems();
 	}
 }
@@ -502,7 +502,7 @@ void DatPanel::hist()
 	{
 		mglVar *vv = parser.AddVar(id->text().toAscii());
 		if(!vv)	return;
-		vv->d = var->d.Hist(nm->value(), v1->text().toDouble(), v2->text().toDouble());
+		vv->Set(var->Hist(nm->value(), v1->text().toDouble(), v2->text().toDouble()));
 		updateDataItems();
 	}
 }
@@ -511,28 +511,28 @@ void DatPanel::addto()
 {
 	bool ok;
 	QString s = QInputDialog::getText(this, tr("UDAV - Change data"), tr("Enter number for adding to data elements:"), QLineEdit::Normal, "", &ok);
-	if(ok)	{	var->d += s.toDouble();		refresh();	}
+	if(ok)	{	*var += s.toDouble();		refresh();	}
 }
 //-----------------------------------------------------------------------------
 void DatPanel::subto()
 {
 	bool ok;
 	QString s = QInputDialog::getText(this, tr("UDAV - Change data"), tr("Enter number for subtraction from data elements:"), QLineEdit::Normal, "", &ok);
-	if(ok)	{	var->d -= s.toDouble();		refresh();	}
+	if(ok)	{	*var -= s.toDouble();		refresh();	}
 }
 //-----------------------------------------------------------------------------
 void DatPanel::divto()
 {
 	bool ok;
 	QString s = QInputDialog::getText(this, tr("UDAV - Change data"), tr("Enter number for division of data elements:"), QLineEdit::Normal, "", &ok);
-	if(ok)	{	var->d /= s.toDouble();		refresh();	}
+	if(ok)	{	*var /= s.toDouble();		refresh();	}
 }
 //-----------------------------------------------------------------------------
 void DatPanel::multo()
 {
 	bool ok;
 	QString s = QInputDialog::getText(this, tr("UDAV - Change data"), tr("Enter number for multiplication of data elements:"), QLineEdit::Normal, "", &ok);
-	if(ok)	{	var->d *= s.toDouble();		refresh();	}
+	if(ok)	{	*var *= s.toDouble();		refresh();	}
 }
 //-----------------------------------------------------------------------------
 void DatPanel::first()	{	setSlice(0);	}

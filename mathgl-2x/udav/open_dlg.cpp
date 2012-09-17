@@ -26,10 +26,10 @@
 #include <QFileDialog>
 #include <QTextStream>
 #include <QRadioButton>
-#include <mgl2/parser.h>
+#include <mgl2/mgl.h>
 #include "open_dlg.h"
 int numDataOpened=0;
-extern mglParser parser;
+extern mglParse parser;
 QStringList dataScr;
 //-----------------------------------------------------------------------------
 QWidget *createDataOpenDlg(QWidget *p)	{	return new DataOpenDialog(p);	}
@@ -119,31 +119,31 @@ void DataOpenDialog::prepareResult()
 	bool dd=0;
 	if(rA->isChecked())	//	auto sizes
 	{
-		setlocale(LC_NUMERIC, "C");	v->d.Read(file.toAscii().constData());	setlocale(LC_NUMERIC, "");
-		if(v->d.nx==1)	{	v->d.nx = v->d.ny;	v->d.ny = v->d.nz;	}
+		setlocale(LC_NUMERIC, "C");	v->Read(file.toAscii().constData());	setlocale(LC_NUMERIC, "");
+		if(v->nx==1)	{	v->nx = v->ny;	v->ny = v->nz;	}
 		code=QString("#read %1 '%2'\n").arg(data).arg(file);
 	}
 	else if(rM->isChecked())	//	manual sizes
 	{
 		int x=nx->text().toInt(), y=ny->text().toInt(), z=nz->text().toInt();
-		setlocale(LC_NUMERIC, "C");	v->d.Read(file.toAscii().constData(),x,y,z);	setlocale(LC_NUMERIC, "");
+		setlocale(LC_NUMERIC, "C");	v->Read(file.toAscii().constData(),x,y,z);	setlocale(LC_NUMERIC, "");
 		code=QString("#read %1 '%2' %3 %4 %5\n").arg(data).arg(file).arg(x).arg(y).arg(z);
 	}
 	else if(r2->isChecked())	//	matrix
 	{
-		setlocale(LC_NUMERIC, "C");	v->d.ReadMat(file.toAscii().constData());	setlocale(LC_NUMERIC, "");
+		setlocale(LC_NUMERIC, "C");	v->ReadMat(file.toAscii().constData());	setlocale(LC_NUMERIC, "");
 		code=QString("#readmat %1 '%2'\n").arg(data).arg(file);		dd=1;
 	}
 	else if(r3->isChecked())	//	3d-data
 	{
-		setlocale(LC_NUMERIC, "C");	v->d.ReadMat(file.toAscii().constData(),3);	setlocale(LC_NUMERIC, "");
+		setlocale(LC_NUMERIC, "C");	v->ReadMat(file.toAscii().constData(),3);	setlocale(LC_NUMERIC, "");
 		code=QString("#readmat %1 '%2' 3\n").arg(data).arg(file);	dd=2;
 	}
 	if(scr->lineEdit()->text().isEmpty() || scr->lineEdit()->text()==tr("default"))
 	{
-		if(v->d.nz>1 || dd==2)
+		if(v->nz>1 || dd==2)
 			code+=QString("rotate 40 60\ncrange %1:box\nsurf3 %1\n").arg(data);
-		else if(v->d.ny>1 || dd==1)
+		else if(v->ny>1 || dd==1)
 			code+=QString("rotate 40 60\ncrange %1:zrange %1:box\nsurf %1\n").arg(data);
 		else	code+=QString("yrange %1:box\nplot %1\n").arg(data);
 	}

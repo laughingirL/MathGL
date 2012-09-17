@@ -568,6 +568,12 @@ bool mglCanvas::ImportMGLD(const char *fname, bool add)
 	if(!add)	{	Clf();	Txt.clear();	}
 	else	{	ClfZB();	npnt=Pnt.size();	nglf=Glf.size();	}
 	Pnt.reserve(n);	Prm.reserve(m);	Txt.reserve(l);	Glf.reserve(k);
+#if MGL_HAVE_PTHREAD
+	pthread_mutex_lock(&mutexGlf);
+	pthread_mutex_lock(&mutexPnt);
+	pthread_mutex_lock(&mutexPrm);
+	pthread_mutex_lock(&mutexTxt);
+#endif
 	mglPnt p;
 	for(i=0;i<n;i++)
 	{
@@ -614,6 +620,12 @@ bool mglCanvas::ImportMGLD(const char *fname, bool add)
 		for(j=0;j<4*nl;j++)	fscanf(fp,"%hd",g.line+j);
 		Glf.push_back(g);
 	}
+#if MGL_HAVE_PTHREAD
+	pthread_mutex_unlock(&mutexGlf);
+	pthread_mutex_unlock(&mutexPnt);
+	pthread_mutex_unlock(&mutexPrm);
+	pthread_mutex_unlock(&mutexTxt);
+#endif
 	delete []buf;	fclose(fp);	return false;
 }
 //-----------------------------------------------------------------------------

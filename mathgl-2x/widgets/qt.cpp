@@ -42,24 +42,7 @@
 #include <X11/Xlib.h>
 #endif
 //-----------------------------------------------------------------------------
-#include "xpm/fileprint.xpm"
-#include "xpm/copy.xpm"
-#include "xpm/left_1.xpm"
-#include "xpm/right_1.xpm"
-#include "xpm/down_1.xpm"
-#include "xpm/norm_1.xpm"
-#include "xpm/zoom_1.xpm"
-#include "xpm/up_1.xpm"
-#include "xpm/alpha.xpm"
-#include "xpm/light.xpm"
-#include "xpm/zoom_in.xpm"
-#include "xpm/zoom_out.xpm"
-#include "xpm/rotate.xpm"
-#include "xpm/ok.xpm"
-#include "xpm/show_sl.xpm"
-#include "xpm/next_sl.xpm"
-#include "xpm/prev_sl.xpm"
-//-----------------------------------------------------------------------------
+bool QMathGL::mglUserPrim = false;
 void mgl_ask_qt(const wchar_t *quest, wchar_t *res)
 {	QInputDialog::getText(QApplication::activeWindow(), "MathGL",
 						QString::fromWCharArray(quest)).toWCharArray(res);	}
@@ -72,10 +55,10 @@ QMathGL::QMathGL(QWidget *parent, Qt::WindowFlags f) : QWidget(parent, f)
 {
 	autoResize = false;	draw_par = 0;	draw_func = 0;
 	gr = new mglCanvas;		appName = "MathGL";
-	popup = 0;	grBuf = 0;	draw = 0;
+	popup = 0;	grBuf = 0;	draw = 0;	mglUserPrim = true;	
 	phi = tet = per = 0;
 	x1 = y1 = ax1 = ay1 = 0;	x2 = y2 = ax2 = ay2 = 1;
-	alpha = light = zoom = rotate = grid = axis = false;
+	alpha = light = zoom = rotate = grid = false;
 	resize(600, 400);	gr->set(MGL_CLF_ON_UPD);
 	timer = new QTimer(this);
 //	resize(graph->GetWidth(), graph->GetHeight());
@@ -95,7 +78,7 @@ void QMathGL::paintEvent(QPaintEvent *)
 		paint.drawText(0,12,mousePos);
 	if(grid)
 	{
-		int i, h=pic.height(), w=pic.width();
+		long i, d, h=pic.height(), w=pic.width();
 		paint.setPen(QColor(192,192,192));
 		for(i=1;i<10;i++)
 		{
@@ -103,6 +86,15 @@ void QMathGL::paintEvent(QPaintEvent *)
 			paint.drawLine(0,i*h/10,w,i*h/10);
 			paint.drawText(i*w/10,h,QString::number(i*0.1));
 			paint.drawLine(i*w/10,0,i*w/10,h);
+		}
+		paint.setPen(QColor(0,0,0));
+		d = (h>w?w:h)/100;
+		if(mglUserPrim)	for(i=0;i<(long)gr->Act.size();i++)
+		{
+			const mglActivePos &p=gr->Act[i];
+			QRect rf(p.x-d/2,h-p.y-d/2-1,d,d);
+			paint.drawRect(rf);
+			paint.fillRect(rf,QBrush(QColor(127,255,63)));
 		}
 	}
 	paint.end();
@@ -130,14 +122,11 @@ void QMathGL::setTet(int t)
 void QMathGL::setAlpha(bool a)
 {	if(alpha!=a)	{	alpha = a;	emit alphaChanged(a);	update();	}	}
 //-----------------------------------------------------------------------------
-void QMathGL::setAxis(bool a)
-{	if(axis!=a)	{	axis = a;	emit axisChanged(a);	update();	}	}
-//-----------------------------------------------------------------------------
 void QMathGL::setLight(bool l)
 {	if(light!=l)	{	light = l;	emit lightChanged(l);	update();	}	}
 //-----------------------------------------------------------------------------
 void QMathGL::setGrid(bool g)
-{	if(grid!=g)	{	grid = g;	emit gridChanged(g);	refresh();	}	}
+{	if(grid!=g)	{	grid = g;	emit gridChanged(g); 	refresh();	}	}
 //-----------------------------------------------------------------------------
 void QMathGL::setRotate(bool r)
 {
@@ -153,37 +142,37 @@ void QMathGL::setZoom(bool z)
 }
 //-----------------------------------------------------------------------------
 void QMathGL::shiftDown()
-{	mreal d=(y2-y1)/3;	y1+=d;	y2+=d;	refresh();	}
+{	mreal d=(y2-y1)/4;	y1+=d;	y2+=d;	refresh();	}
 //-----------------------------------------------------------------------------
 void QMathGL::shiftUp()
-{	mreal d=(y2-y1)/3;	y1-=d;	y2-=d;	refresh();	}
+{	mreal d=(y2-y1)/4;	y1-=d;	y2-=d;	refresh();	}
 //-----------------------------------------------------------------------------
 void QMathGL::shiftRight()
-{	mreal d=(x2-x1)/3;	x1-=d;	x2-=d;	refresh();	}
+{	mreal d=(x2-x1)/4;	x1-=d;	x2-=d;	refresh();	}
 //-----------------------------------------------------------------------------
 void QMathGL::shiftLeft()
-{	mreal d=(x2-x1)/3;	x1+=d;	x2+=d;	refresh();	}
+{	mreal d=(x2-x1)/4;	x1+=d;	x2+=d;	refresh();	}
 //-----------------------------------------------------------------------------
 void QMathGL::zoomIn()
 {
-	mreal d;
-	d = (y2-y1)/4;	y1 += d;	y2 -= d;
-	d = (x2-x1)/4;	x1 += d;	x2 -= d;
+	mreal d,c;
+	d = (y2-y1)/4;	c = (y2+y1)/2;	y1 = c-d;	y2 = c+d;
+	d = (x2-x1)/4;	c = (x2+x1)/2;	x1 = c-d;	x2 = c+d;
 	refresh();
 }
 //-----------------------------------------------------------------------------
 void QMathGL::zoomOut()
 {
-	mreal d;
-	d = (y2-y1)/2;	y1 -= d;	y2 += d;
-	d = (x2-x1)/2;	x1 -= d;	x2 += d;
+	mreal d,c;
+	d = (y2-y1);	c = (y2+y1)/2;	y1 = c-d;	y2 = c+d;
+	d = (x2-x1);	c = (x2+x1)/2;	x1 = c-d;	x2 = c+d;
 	refresh();
 }
 //-----------------------------------------------------------------------------
 void QMathGL::restore()
 {
 	setPhi(0);	setTet(0);	setPer(0);
-	x1=y1=0;	x2=y2=1;	zoom=rotate=false;
+	ax1=ay1=x1=y1=0;	ax2=ay2=x2=y2=1;	zoom=rotate=false;
 	emit zoomChanged(false);	emit rotateChanged(false);
 	refresh();
 }
@@ -202,24 +191,40 @@ void QMathGL::update()
 
 	if(draw_func || draw)
 	{
+		gr->ResetFrames();	// remove previous frames
 		if(gr->get(MGL_CLF_ON_UPD))	gr->DefaultPlotParam();
 		gr->Alpha(alpha);	gr->Light(light);
 		if(!isHidden())	QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-		setlocale(LC_NUMERIC, "C");	// NOTE: I'm not sure what I should selocale manually???
+		setlocale(LC_NUMERIC, "C");
+		if(mglUserPrim)	gr->NewFrame();	// use frames for quickly redrawing while adding/change primitives
 		if(draw_func)	draw_func(gr, draw_par);
 		else if(draw)	{	mglGraph g(gr);	draw->Draw(&g);	}
+		if(mglUserPrim)	gr->EndFrame();
 		setlocale(LC_NUMERIC, "");
 		if(!isHidden())	QApplication::restoreOverrideCursor();
 		emit refreshData();
 
-		emit showWarn(gr->Mess.c_str());
-		mousePos="";
+		emit showWarn(gr->Mess.c_str());		mousePos="";
 	}
 	refresh();
 }
 //-----------------------------------------------------------------------------
 void QMathGL::refresh()
 {
+	if(mglUserPrim)
+	{
+		gr->Clf();	gr->GetFrame(0);
+		mglParse pr;
+		size_t i, n=primitives.count('\n');
+		mglGraph gg(gr);
+		gr->set(MGL_DISABLE_SCALE);	setlocale(LC_NUMERIC, "C");
+		for(i=0;i<n;i++)
+		{
+			QString tst = primitives.section('\n',i,i);
+			pr.Parse(&gg,primitives.section('\n',i,i).toAscii().constData(),-int(i)-10);
+		}
+		gr->clr(MGL_DISABLE_SCALE);	setlocale(LC_NUMERIC, "");
+	}
 	gr->Zoom(x1,y1,x2,y2);	gr->View(phi,tet);	gr->Perspective(per);
 	mglConvertFromGraph(pic, gr, &grBuf);
 	if(pic.size()!=size())	setSize(pic.width(), pic.height());
@@ -303,8 +308,40 @@ void QMathGL::mouseMoveEvent(QMouseEvent *ev)
 		x0 = xe;	y0 = ye;
 		refresh();
 	}
-	if(zoom)	refresh();
+	else if(zoom)	refresh();
+	else if(ev->buttons()&Qt::MidButton)	// shift axis
+	{
+		mreal ff = 1./sqrt(mreal(width()*height()));
+		mreal dx = (x0-xe)*ff*(ax2-ax1), dy = (y0-ye)*ff*(ay2-ay1);
+		ax1 += dx;	ax2 += dx;	ay1 -= dy;	ay2 -= dy;
+		gr->ZoomAxis(mglPoint(ax1,ay1),mglPoint(ax2,ay2));
+		update();	x0 = xe;	y0 = ye;
+	}
+/*	else if(ev->buttons()&Qt::MidButton)	// move primitives
+	{
+		int id, pos;
+		id = gr->IsActive(ev->x(),ev->y(),pos);
+	}*/
 	ev->accept();
+}
+//-----------------------------------------------------------------------------
+void QMathGL::wheelEvent(QWheelEvent *ev)
+{
+	if(rotate)	// zoom
+	{
+		mreal d,c,f=exp(0.001*ev->delta())/2;
+		d = (y2-y1)*f;	c = (y2+y1)/2;	y1 = c-d;	y2 = c+d;
+		d = (x2-x1)*f;	c = (x2+x1)/2;	x1 = c-d;	x2 = c+d;
+		refresh();	ev->accept();
+	}
+	else 		// zoom axis
+	{
+		mreal d,c,f=exp(0.001*ev->delta())/2;
+		d = (ay2-ay1)*f;	c = (ay2+ay1)/2;	ay1 = c-d;	ay2 = c+d;
+		d = (ax2-ax1)*f;	c = (ax2+ax1)/2;	ax1 = c-d;	ax2 = c+d;
+		gr->ZoomAxis(mglPoint(ax1,ay1),mglPoint(ax2,ay2));
+		update();	ev->accept();
+	}
 }
 //-----------------------------------------------------------------------------
 void QMathGL::imgSize(int w, int h)
@@ -565,6 +602,32 @@ void QMathGL::adjust()
 	update();
 }
 //-----------------------------------------------------------------------------
+void QMathGL::addMark()
+{	primitives += "mark 0 0 '*'\n";	refresh();	}
+//-----------------------------------------------------------------------------
+void QMathGL::addLine()
+{	primitives += "line -0.2 0 0.2 0 'r2'\n";	refresh();	}
+//-----------------------------------------------------------------------------
+void QMathGL::addRect()
+{	primitives += "rect -0.2 -0.2 0.2 0.2 'r'\n";	refresh();	}
+//-----------------------------------------------------------------------------
+void QMathGL::addCurve()
+{	primitives += "curve -0.2 0 0 0.5 0.2 0 0 0.5 'r2'\n";	refresh();	}
+//-----------------------------------------------------------------------------
+void QMathGL::addRhomb()
+{	primitives += "rhomb -0.2 0 0.2 0 0.1 'r'\n";	refresh();	}
+//-----------------------------------------------------------------------------
+void QMathGL::addEllipse()
+{	primitives += "ellipse -0.2 0 0.2 0 0.1 'r'\n";	refresh();	}
+//-----------------------------------------------------------------------------
+void QMathGL::addText(QString txt)
+{
+	if(txt.isEmpty())
+		txt = QInputDialog::getText(QApplication::activeWindow(), "MathGL", tr("Enter text"));
+	if(txt.isEmpty())
+	{	primitives += "text 0 0 '"+txt+"' ''\n";	refresh();	}
+}
+//-----------------------------------------------------------------------------
 //
 //		class mglCanvasQT
 //
@@ -586,7 +649,7 @@ void mglCanvasQT::ToggleAlpha()	{	QMGL->setAlpha(!QMGL->getAlpha());	}
 //-----------------------------------------------------------------------------
 void mglCanvasQT::ToggleLight()	{	QMGL->setLight(!QMGL->getLight());	}
 //-----------------------------------------------------------------------------
-void mglCanvasQT::ToggleNo()	{	QMGL->restore();	}
+void mglCanvasQT::ToggleNo()		{	QMGL->restore();	}
 //-----------------------------------------------------------------------------
 void mglCanvasQT::ToggleZoom()	{	QMGL->setZoom(!QMGL->getZoom());	}
 //-----------------------------------------------------------------------------
@@ -644,8 +707,33 @@ void mglCanvasQT::Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p
 	else	Wnd->showMaximized();
 }
 //-----------------------------------------------------------------------------
+#include "xpm/fileprint.xpm"
+#include "xpm/copy.xpm"
+#include "xpm/left_1.xpm"
+#include "xpm/right_1.xpm"
+#include "xpm/down_1.xpm"
+#include "xpm/norm_1.xpm"
+#include "xpm/zoom_1.xpm"
+#include "xpm/up_1.xpm"
+#include "xpm/alpha.xpm"
+#include "xpm/light.xpm"
+#include "xpm/zoom_in.xpm"
+#include "xpm/zoom_out.xpm"
+#include "xpm/rotate.xpm"
+#include "xpm/ok.xpm"
+#include "xpm/show_sl.xpm"
+#include "xpm/next_sl.xpm"
+#include "xpm/prev_sl.xpm"
+#include "xpm/text.xpm"
+#include "xpm/line.xpm"
+#include "xpm/curve.xpm"
+#include "xpm/mark_o.xpm"
+#include "xpm/mark_s.xpm"
+#include "xpm/mark_a.xpm"
+#include "xpm/mark_d.xpm"
+//-----------------------------------------------------------------------------
 #define TR	QObject::tr
-QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *tet, QSpinBox *phi)
+QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *&tet, QSpinBox *&phi)
 {
 	QAction *a;
 	QMenu *o, *oo;
@@ -730,6 +818,46 @@ QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *tet, QSpinBox *phi
 		a->setToolTip(TR("Copy graphics to clipboard (CTRl+C)."));
 		a->setShortcut(Qt::CTRL+Qt::Key_C);
 		o->addAction(a);		bb->addAction(a);	popup->addAction(a);
+
+		bb->addSeparator();
+		oo = new QMenu(TR("Primitives ..."),Wnd);
+		a = new QAction(QPixmap(line_xpm), TR("Add line"), Wnd);
+		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(addLine()));
+		Wnd->connect(QMGL, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
+		a->setToolTip(TR("Add line which properties can be changed later by mouse."));
+		bb->addAction(a);	oo->addAction(a);
+		a = new QAction(QPixmap(curve_xpm), TR("Add curve"), Wnd);
+		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(addCurve()));
+		Wnd->connect(QMGL, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
+		a->setToolTip(TR("Add curve which properties can be changed later by mouse."));
+		bb->addAction(a);	oo->addAction(a);
+		a = new QAction(QPixmap(mark_s_xpm), TR("Add rect"), Wnd);
+		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(addRect()));
+		Wnd->connect(QMGL, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
+		a->setToolTip(TR("Add rectangle which properties can be changed later by mouse."));
+		bb->addAction(a);	oo->addAction(a);
+		a = new QAction(QPixmap(mark_d_xpm), TR("Add rhombus"), Wnd);
+		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(addRhomb()));
+		Wnd->connect(QMGL, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
+		a->setToolTip(TR("Add rhombus which properties can be changed later by mouse."));
+		bb->addAction(a);	oo->addAction(a);
+		a = new QAction(QPixmap(mark_o_xpm), TR("Add ellipse"), Wnd);
+		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(addEllipse()));
+		Wnd->connect(QMGL, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
+		a->setToolTip(TR("Add ellipse which properties can be changed later by mouse."));
+		bb->addAction(a);	oo->addAction(a);
+		a = new QAction(QPixmap(mark_a_xpm), TR("Add mark"), Wnd);
+		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(addMark()));
+		Wnd->connect(QMGL, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
+		a->setToolTip(TR("Add marker which properties can be changed later by mouse."));
+		bb->addAction(a);	oo->addAction(a);
+		a = new QAction(QPixmap(text_xpm), TR("Add text"), Wnd);
+		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(addText()));
+		Wnd->connect(QMGL, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
+		a->setToolTip(TR("Add text which properties can be changed later by mouse."));
+		bb->addAction(a);	oo->addAction(a);
+		o->addMenu(oo);
+
 		bb->addSeparator();
 		tet = new QSpinBox(Wnd);	tet->setWrapping(true);
 		bb->addWidget(tet);	tet->setRange(-180, 180);	tet->setSingleStep(10);

@@ -20,13 +20,13 @@
 #include <locale.h>
 #include <unistd.h>
 #include "mgl2/window.h"
-#include "mgl2/parser.h"
 //-----------------------------------------------------------------------------
 std::wstring str;
 mglParse p(true);
 void mgl_error_print(const char *Message, void *par);
 void mgl_ask_fltk(const wchar_t *quest, wchar_t *res);
 void mgl_ask_qt(const wchar_t *quest, wchar_t *res);
+void mgl_ask_gets(const wchar_t *quest, wchar_t *res);
 //-----------------------------------------------------------------------------
 int show(mglGraph *gr)
 {

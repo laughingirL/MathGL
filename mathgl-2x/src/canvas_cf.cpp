@@ -40,6 +40,7 @@ int mgl_new_frame(HMGL gr)		{	return _Gr_->NewFrame();	}
 void mgl_end_frame(HMGL gr)		{	_Gr_->EndFrame();	}
 int mgl_get_num_frame(HMGL gr)	{	return _Gr_->GetNumFrame();	}
 void mgl_reset_frames(HMGL gr)	{	_Gr_->ResetFrames();	}
+void mgl_get_frame(HMGL gr, int i)	{	_Gr_->GetFrame(i);	}
 //-----------------------------------------------------------------------------
 void mgl_set_transp_type(HMGL gr, int type)			{	_Gr_->SetTranspType(type);	}
 void mgl_set_alpha(HMGL gr, int enable)				{	_Gr_->Alpha(enable);	}
@@ -125,6 +126,7 @@ int mgl_new_frame_(uintptr_t *gr)		{	return _GR_->NewFrame();	}
 void mgl_end_frame_(uintptr_t *gr)		{	_GR_->EndFrame();	}
 int mgl_get_num_frame_(uintptr_t *gr)	{	return _GR_->GetNumFrame();	}
 void mgl_reset_frames_(uintptr_t *gr)	{	_GR_->ResetFrames();	}
+void mgl_get_frame_(uintptr_t *gr, int *i)	{	_GR_->GetFrame(*i);	}
 //-----------------------------------------------------------------------------
 void mgl_set_transp_type_(uintptr_t *gr, int *type)		{	_GR_->SetTranspType(*type);	}
 void mgl_set_alpha_(uintptr_t *gr, int *enable)			{	_GR_->Alpha(*enable);	}
@@ -233,16 +235,14 @@ void mgl_set_ticks_time(HMGL gr, char dir, mreal d, const char *t)
 void mgl_box(HMGL gr)	{	_Gr_->Box();	}
 void mgl_box_str(HMGL gr, const char *col, int ticks)
 {	_Gr_->Box(col,ticks);	}
-void mgl_axis(HMGL gr, const char *dir, const char *stl)
-{	_Gr_->Axis(dir,stl);	}
-void mgl_axis_grid(HMGL gr, const char *dir,const char *pen)
-{	_Gr_->Grid(dir,pen);	}
-void mgl_label(HMGL gr, char dir, const char *text)
-{	_Gr_->Label(dir,text);	}
-void mgl_label_ext(HMGL gr, char dir, const char *text, mreal pos, mreal shift)
-{	_Gr_->Label(dir,text,pos,shift);	}
-void mgl_labelw_ext(HMGL gr, char dir, const wchar_t *text, mreal pos, mreal shift)
-{	_Gr_->Labelw(dir,text,pos,shift);	}
+void mgl_axis(HMGL gr, const char *dir, const char *stl, const char *opt)
+{	_Gr_->Axis(dir,stl,opt);	}
+void mgl_axis_grid(HMGL gr, const char *dir,const char *pen, const char *opt)
+{	_Gr_->Grid(dir,pen,opt);	}
+void mgl_label(HMGL gr, char dir, const char *text, mreal pos, const char *opt)
+{	_Gr_->Label(dir,text,pos,opt);	}
+void mgl_labelw(HMGL gr, char dir, const wchar_t *text, mreal pos, const char *opt)
+{	_Gr_->Labelw(dir,text,pos,opt);	}
 //-----------------------------------------------------------------------------
 void mgl_colorbar(HMGL gr, const char *sch)
 {	_Gr_->Colorbar(sch);	}
@@ -259,10 +259,10 @@ void mgl_add_legendw(HMGL gr, const wchar_t *text,const char *style)
 {	_Gr_->AddLegend(text,style);	}
 void mgl_clear_legend(HMGL gr)
 {	_Gr_->ClearLegend();	}
-void mgl_legend_pos(HMGL gr, mreal x, mreal y, const char *font, mreal size, mreal llen)
-{	_Gr_->Legend(x,y,font,size,llen);	}
-void mgl_legend(HMGL gr, int where, const char *font, mreal size, mreal llen)
-{	_Gr_->Legend(where,font,size,llen);	}
+void mgl_legend_pos(HMGL gr, mreal x, mreal y, const char *font, const char *opt)
+{	_Gr_->Legend(x,y,font,opt);	}
+void mgl_legend(HMGL gr, int where, const char *font, const char *opt)
+{	_Gr_->Legend(where,font,opt);	}
 void mgl_set_legend_marks(HMGL gr, int num)
 {	_Gr_->SetLegendMarks(num);	}
 //-----------------------------------------------------------------------------
@@ -306,20 +306,20 @@ void mgl_box_(uintptr_t *gr)	{	_GR_->Box();	}
 void mgl_box_str_(uintptr_t *gr, const char *col, int *ticks, int l)
 {	char *s=new char[l+1];	memcpy(s,col,l);	s[l]=0;
 	_GR_->Box(s,*ticks);	delete []s;	}
-void mgl_axis_(uintptr_t *gr, const char *dir, const char *stl,int l,int n)
+void mgl_axis_(uintptr_t *gr, const char *dir, const char *stl, const char *opt,int l,int n,int m)
 {	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
 	char *p=new char[n+1];	memcpy(p,stl,l);	p[n]=0;
-	_GR_->Axis(s,p);	delete []s;	delete []p;	}
-void mgl_axis_grid_(uintptr_t *gr, const char *dir,const char *pen,int l,int n)
+	char *o=new char[m+1];	memcpy(o,opt,m);	o[m]=0;
+	_GR_->Axis(s,p,o);	delete []s;	delete []p;	delete []o;	}
+void mgl_axis_grid_(uintptr_t *gr, const char *dir,const char *pen, const char *opt,int l,int n,int m)
 {	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
 	char *p=new char[n+1];	memcpy(p,pen,n);	p[n]=0;
-	_GR_->Grid(s,p);	delete []s;	delete []p;	}
-void mgl_label_(uintptr_t *gr, const char *dir, const char *text,int,int l)
+	char *o=new char[m+1];	memcpy(o,opt,m);	o[m]=0;
+	_GR_->Grid(s,p,o);	delete []s;	delete []p;	delete []o;	}
+	void mgl_label_(uintptr_t *gr, const char *dir, const char *text, mreal *pos, const char *opt,int,int l,int m)
 {	char *s=new char[l+1];	memcpy(s,text,l);	s[l]=0;
-	_GR_->Label(*dir, s);	delete []s;	}
-void mgl_label_ext_(uintptr_t *gr, const char *dir, const char *text, mreal *pos, mreal *shift,int,int l)
-{	char *s=new char[l+1];	memcpy(s,text,l);	s[l]=0;
-	_GR_->Label(*dir, s, *pos, *shift);	delete []s;	}
+	char *o=new char[m+1];	memcpy(o,opt,m);	o[m]=0;
+	_GR_->Label(*dir, s, *pos, o);	delete []s;	delete []o;	}
 //-----------------------------------------------------------------------------
 void mgl_colorbar_(uintptr_t *gr, const char *sch,int l)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
@@ -339,12 +339,14 @@ void mgl_add_legend_(uintptr_t *gr, const char *text,const char *style,int l,int
 	char *f=new char[n+1];	memcpy(f,style,n);	f[n]=0;
 	_GR_->AddLegend(s,f);	delete []s;	delete []f;	}
 void mgl_clear_legend_(uintptr_t *gr)	{	if(gr)	_GR_->ClearLegend();	}
-void mgl_legend_pos_(uintptr_t *gr, mreal *x, mreal *y, const char *font, mreal *size, mreal *llen,int l)
+void mgl_legend_pos_(uintptr_t *gr, mreal *x, mreal *y, const char *font, const char *opt,int l,int m)
 {	char *s=new char[l+1];	memcpy(s,font,l);	s[l]=0;
-	_GR_->Legend(*x, *y, s, *size,*llen);	delete []s;	}
-void mgl_legend_(uintptr_t *gr, int *where, const char *font, mreal *size, mreal *llen,int l)
+	char *o=new char[m+1];	memcpy(o,opt,m);	o[m]=0;
+	_GR_->Legend(*x, *y, s, o);	delete []s;	delete []o;	}
+void mgl_legend_(uintptr_t *gr, int *where, const char *font, const char *opt,int l,int m)
 {	char *s=new char[l+1];	memcpy(s,font,l);	s[l]=0;
-	_GR_->Legend(*where, s, *size,*llen);	delete []s;	}
+	char *o=new char[m+1];	memcpy(o,opt,m);	o[m]=0;
+	_GR_->Legend(*where, s, o);	delete []s;	delete []o;	}
 void mgl_set_legend_marks_(uintptr_t *gr, int *num)
 {	_GR_->SetLegendMarks(*num);	}
 //-----------------------------------------------------------------------------
