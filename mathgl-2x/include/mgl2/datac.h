@@ -26,6 +26,9 @@
 //-----------------------------------------------------------------------------
 #include <vector>
 #include <string>
+#define mgl2 	mreal(2)
+#define mgl3 	mreal(3)
+#define mgl4 	mreal(4)
 //-----------------------------------------------------------------------------
 /// Class for working with data array
 class mglDataC : public mglDataA
@@ -325,13 +328,13 @@ protected:
 	// add for speeding up !!!
 	inline mreal dvx(long i,long j=0,long k=0) const
 	{   register long i0=i+nx*(j+ny*k);
-		return i>0? abs(i<nx-1? (a[i0+1]-a[i0-1])/2.:a[i0]-a[i0-1]) : abs(a[i0+1]-a[i0]);	}
+		return i>0? abs(i<nx-1? (a[i0+1]-a[i0-1])/mgl2:a[i0]-a[i0-1]) : abs(a[i0+1]-a[i0]);	}
 	inline mreal dvy(long i,long j=0,long k=0) const
 	{   register long i0=i+nx*(j+ny*k);
-	return j>0? abs(j<ny-1? (a[i0+nx]-a[i0-nx])/2.:a[i0]-a[i0-nx]) : abs(a[i0+nx]-a[i0]);}
+	return j>0? abs(j<ny-1? (a[i0+nx]-a[i0-nx])/mgl2:a[i0]-a[i0-nx]) : abs(a[i0+nx]-a[i0]);}
 	inline mreal dvz(long i,long j=0,long k=0) const
 	{   register long i0=i+nx*(j+ny*k), n=nx*ny;
-	return k>0? abs(k<nz-1? (a[i0+n]-a[i0-n])/2.:a[i0]-a[i0-n]) : abs(a[i0+n]-a[i0]);	}
+	return k>0? abs(k<nz-1? (a[i0+n]-a[i0-n])/mgl2:a[i0]-a[i0-n]) : abs(a[i0+n]-a[i0]);	}
 };
 //-----------------------------------------------------------------------------
 #define _DN_(a)	((mglDataC *)*(a))

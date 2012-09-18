@@ -73,12 +73,12 @@ void *mgl_csmth_x(void *par)
 		if(j==nx-2)	{	d5 = -1;}
 		y3 = (a[i+d3-1] + a[i+d3] + a[i+d3+1]);
 		y5 = (a[i+d5-2] + a[i+d5-1] + a[i+d5] + a[i+d5+1] + a[i+d5+2]);
-		x2y= (a[i+d5+1] + 4.*a[i+d5+2] + 4.*a[i+d5-2] + a[i+d5-1]);
+		x2y= (a[i+d5+1] + mgl4*a[i+d5+2] + mgl4*a[i+d5-2] + a[i+d5-1]);
 		j = t->p[2];
 		if(d3)	b[i] = a[i];
-		else if(j==SMOOTH_LINE_3 || d5)	b[i] = y3/3.;
-		else if(j==SMOOTH_LINE_5)		b[i] = y5/5.;
-		else if(j==SMOOTH_QUAD_5)		b[i] = (17.*y5-5.*x2y)/35.;
+		else if(j==SMOOTH_LINE_3 || d5)	b[i] = y3/mgl3;
+		else if(j==SMOOTH_LINE_5)		b[i] = y5/mreal(5);
+		else if(j==SMOOTH_QUAD_5)		b[i] = (mreal(17)*y5-mreal(5)*x2y)/mreal(35);
 	}
 	return 0;
 }
@@ -98,12 +98,12 @@ void *mgl_csmth_y(void *par)
 		if(j==ny-2)	{	d5 = -1;}
 		y3 = (a[i+nx*(d3-1)] + a[i+nx*d3] + a[i+nx*(d3+1)]);
 		y5 = (a[i+nx*(d5-2)] + a[i+nx*(d5-1)] + a[i+nx*d5] + a[i+nx*(d5+1)] + a[i+nx*(d5+2)]);
-		x2y= (a[i+nx*(d5+1)] + 4.*a[i+nx*(d5+2)] + 4.*a[i+nx*(d5-2)] + a[i+nx*(d5-1)]);
+		x2y= (a[i+nx*(d5+1)] + mgl4*a[i+nx*(d5+2)] + mgl4*a[i+nx*(d5-2)] + a[i+nx*(d5-1)]);
 		j = t->p[2];
 		if(d3)	b[i] = a[i];
-		else if(j==SMOOTH_LINE_3 || d5)	b[i] = y3/3.;
-		else if(j==SMOOTH_LINE_5)		b[i] = y5/5.;
-		else if(j==SMOOTH_QUAD_5)		b[i] = (17.*y5-5.*x2y)/35.;
+		else if(j==SMOOTH_LINE_3 || d5)	b[i] = y3/mgl3;
+		else if(j==SMOOTH_LINE_5)		b[i] = y5/mreal(5);
+		else if(j==SMOOTH_QUAD_5)		b[i] = (mreal(17)*y5-mreal(5)*x2y)/mreal(35);
 	}
 	return 0;
 }
@@ -123,12 +123,12 @@ void *mgl_csmth_z(void *par)
 		if(j==nz-2)	{	d5 = -1;}
 		y3 = (a[i+nn*(d3-1)] + a[i+nn*d3] + a[i+nn*(d3+1)]);
 		y5 = (a[i+nn*(d5-2)] + a[i+nn*(d5-1)] + a[i+nn*d5] + a[i+nn*(d5+1)] + a[i+nn*(d5+2)]);
-		x2y= (a[i+nn*(d5+1)] + 4.*a[i+nn*(d5+2)] + 4.*a[i+nn*(d5-2)] + a[i+nn*(d5-1)]);
+		x2y= (a[i+nn*(d5+1)] + mgl4*a[i+nn*(d5+2)] + mgl4*a[i+nn*(d5-2)] + a[i+nn*(d5-1)]);
 		j = t->p[2];
 		if(d3)	b[i] = a[i];
-		else if(j==SMOOTH_LINE_3 || d5)	b[i] = y3/3.;
-		else if(j==SMOOTH_LINE_5)		b[i] = y5/5.;
-		else if(j==SMOOTH_QUAD_5)		b[i] = (17.*y5-5.*x2y)/35.;
+		else if(j==SMOOTH_LINE_3 || d5)	b[i] = y3/mgl3;
+		else if(j==SMOOTH_LINE_5)		b[i] = y5/mreal(5);
+		else if(j==SMOOTH_QUAD_5)		b[i] = (mreal(17)*y5-mreal(5)*x2y)/mreal(35);
 	}
 	return 0;
 }
@@ -310,8 +310,8 @@ void *mgl_cdif_z(void *par)
 	const dual *a=t->b;
 	for(i=t->id;i<nn;i+=mglNumThr)
 	{
-		b[i] = -(3.*a[i]-4.*a[i+nn]+a[i+2*nn])*dd;
-		b[i+(nz-1)*nn] = (3.*a[i+(nz-1)*nn]-4.*a[i+(nz-2)*nn]+a[i+(nz-3)*nn])*dd;
+		b[i] = -(mgl3*a[i]-mgl4*a[i+nn]+a[i+2*nn])*dd;
+		b[i+(nz-1)*nn] = (mgl3*a[i+(nz-1)*nn]-mgl4*a[i+(nz-2)*nn]+a[i+(nz-3)*nn])*dd;
 		for(j=1;j<nz-1;j++)		b[i+j*nn] = (a[i+j*nn+nn]-a[i+j*nn-nn])*dd;
 	}
 	return 0;
@@ -325,8 +325,8 @@ void *mgl_cdif_y(void *par)
 	for(i=t->id;i<nn;i+=mglNumThr)
 	{
 		k = (i%nx)+nx*ny*(i/nx);
-		b[k] = -(3.*a[k]-4.*a[k+nx]+a[k+2*nx])*dd;
-		b[k+(ny-1)*nx] = (3.*a[k+(ny-1)*nx]-4.*a[k+(ny-2)*nx]+a[k+(ny-3)*nx])*dd;
+		b[k] = -(mgl3*a[k]-mgl4*a[k+nx]+a[k+2*nx])*dd;
+		b[k+(ny-1)*nx] = (mgl3*a[k+(ny-1)*nx]-mgl4*a[k+(ny-2)*nx]+a[k+(ny-3)*nx])*dd;
 		for(j=1;j<ny-1;j++)	b[k+j*nx] = (a[k+j*nx+nx]-a[k+j*nx-nx])*dd;
 	}
 	return 0;
@@ -340,8 +340,8 @@ void *mgl_cdif_x(void *par)
 	for(i=t->id;i<nn;i+=mglNumThr)
 	{
 		k = i*nx;
-		b[k] = -(3.*a[k]-4.*a[k+1]+a[k+2])*dd;
-		b[k+nx-1] = (3.*a[k+nx-1]-4.*a[k+nx-2]+a[k+nx-3])*dd;
+		b[k] = -(mgl3*a[k]-mgl4*a[k+1]+a[k+2])*dd;
+		b[k+nx-1] = (mgl3*a[k+nx-1]-mgl4*a[k+nx-2]+a[k+nx-3])*dd;
 		for(j=1;j<nx-1;j++)	b[j+k] = (a[j+k+1]-a[j+k-1])*dd;
 	}
 	return 0;
@@ -382,7 +382,7 @@ void *mgl_cdif2_z(void *par)
 	for(i=t->id;i<nn;i+=mglNumThr)
 	{
 		b[i] = b[i+(nz-1)*nn] = 0;
-		for(j=1;j<nz-1;j++)		b[i+j*nn] = (a[i+j*nn+nn]+a[i+j*nn-nn]-2.*a[i+j*nn])*dd;
+		for(j=1;j<nz-1;j++)		b[i+j*nn] = (a[i+j*nn+nn]+a[i+j*nn-nn]-mgl2*a[i+j*nn])*dd;
 	}
 	return 0;
 }
@@ -395,7 +395,7 @@ void *mgl_cdif2_y(void *par)
 	for(i=t->id;i<nn;i+=mglNumThr)
 	{
 		k = (i%nx)+nx*ny*(i/nx);	b[k] = b[k+(ny-1)*nx] = 0;
-		for(j=1;j<ny-1;j++)	b[k+j*nx] = (a[k+j*nx+nx]+a[k+j*nx-nx]-2.*a[k+j*nx])*dd;
+		for(j=1;j<ny-1;j++)	b[k+j*nx] = (a[k+j*nx+nx]+a[k+j*nx-nx]-mgl2*a[k+j*nx])*dd;
 	}
 	return 0;
 }
@@ -408,7 +408,7 @@ void *mgl_cdif2_x(void *par)
 	for(i=t->id;i<nn;i+=mglNumThr)
 	{
 		k = i*nx;			b[k] = b[k+nx-1] = 0;
-		for(j=1;j<nx-1;j++)	b[j+k] = (a[j+k+1]+a[j+k-1]-2.*a[j+k])*dd;
+		for(j=1;j<nx-1;j++)	b[j+k] = (a[j+k+1]+a[j+k-1]-mgl2*a[j+k])*dd;
 	}
 	return 0;
 }
@@ -775,7 +775,8 @@ void mgl_datac_hankel(HADT d, const char *dir)
 {
 	#if MGL_HAVE_GSL
 	if(!dir || *dir==0)	return;
-	double *ai=0, *af=0, *ag=0, mm;
+	double *ai=0, *af=0, *ag=0;
+	mreal mm;
 	gsl_dht *dht=0;
 	register long i,j,k;
 	long nx=d->nx, ny=d->ny, nz=d->nz;

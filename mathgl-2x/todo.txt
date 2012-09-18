@@ -32,6 +32,8 @@ http_request.onreadystatechange = function () {
 10. Axis -- projection (ternary + quaternary)
 11. Add flag for drawing 3d arrows instead of 2d (S,D -- cube, T -- sq.pyramid, I -- square, O -- sphere???, A,K,V -- cone???)
 
+12. Add mgl_data_getnx(), ..., mgl_data_data() for C & Fortran!!! 
+
 +20. Test mglcgi
 
 +24. MGL testing system ???
