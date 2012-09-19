@@ -32,8 +32,6 @@ http_request.onreadystatechange = function () {
 10. Axis -- projection (ternary + quaternary)
 11. Add flag for drawing 3d arrows instead of 2d (S,D -- cube, T -- sq.pyramid, I -- square, O -- sphere???, A,K,V -- cone???)
 
-12. Add mgl_data_getnx(), ..., mgl_data_data() for C & Fortran!!! 
-
 +20. Test mglcgi
 
 +24. MGL testing system ???
@@ -74,6 +72,8 @@ void mgl_legend(HMGL gr, int where, const char *font, const char *opt);
 14. SubPlot/InPlot style '#' will remove any borders
 
 15. Table(mreal x, mreal y, HCDT dat, char *ylabels, char *font, char *stl) -- draw table with values (+ auto reduce font size if '|' + grid if '#', +equdistant if '=')
+
+16. Add mgl_data_n[xyz](HCDT dat) for C & Fortran!!!
 
 ============= UDAV =============
 

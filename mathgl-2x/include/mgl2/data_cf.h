@@ -98,6 +98,9 @@ mreal mgl_data_max(HCDT dat);
 mreal mgl_data_min(HCDT dat);
 mreal *mgl_data_value(HMDT dat, long i,long j,long k);
 mreal *mgl_data_data(HMDT dat);
+long mgl_data_nx(HCDT dat);
+long mgl_data_ny(HCDT dat);
+long mgl_data_nz(HCDT dat);
 
 mreal mgl_data_first(HCDT dat, const char *cond, long *i, long *j, long *k);
 mreal mgl_data_last(HCDT dat, const char *cond, long *i, long *j, long *k);
@@ -193,6 +196,10 @@ void mgl_data_set_(uintptr_t *dat, uintptr_t *a);
 void mgl_data_set_value_(uintptr_t *d, mreal *v, int *i, int *j, int *k);
 void mgl_data_set_values_(uintptr_t *d, const char *val, int *nx, int *ny, int *nz, int l);
 mreal mgl_data_get_value_(uintptr_t *d, int *i, int *j, int *k);
+long mgl_data_nx_(uintptr_t *dat);
+long mgl_data_ny_(uintptr_t *dat);
+long mgl_data_nz_(uintptr_t *dat);
+
 int mgl_data_read_(uintptr_t *d, const char *fname,int l);
 int mgl_data_read_mat_(uintptr_t *dat, const char *fname, int *dim, int);
 int mgl_data_read_dim_(uintptr_t *dat, const char *fname,int *mx,int *my,int *mz,int);

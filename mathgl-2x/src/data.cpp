@@ -1701,3 +1701,10 @@ mreal *mgl_data_value(HMDT dat, long i,long j,long k)
 {	register long ii=i*dat->nx*(j+dat->ny*k);
 	return	ii>=0 && ii<dat->GetNN() ? dat->a+ii : 0;	}
 //-----------------------------------------------------------------------------
+long mgl_data_nx(HCDT dat)	{	return dat->GetNx();	}
+long mgl_data_ny(HCDT dat)	{	return dat->GetNy();	}
+long mgl_data_nz(HCDT dat)	{	return dat->GetNz();	}
+long mgl_data_nx_(uintptr_t *d)	{	return _DA_(d)->GetNx();	}
+long mgl_data_ny_(uintptr_t *d)	{	return _DA_(d)->GetNy();	}
+long mgl_data_nz_(uintptr_t *d)	{	return _DA_(d)->GetNz();	}
+//-----------------------------------------------------------------------------

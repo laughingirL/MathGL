@@ -421,7 +421,7 @@ public:
 	inline void Clf(mreal r, mreal g, mreal b)	{	mgl_clf_rgb(gr, r, g, b);	}
 	inline void Clf()	{	mgl_clf(gr);	}
 	/// Draws the point (ball) at position {x,y,z} with color c
-	inline void Ball(mglPoint p, char c)
+	inline void Ball(mglPoint p, char c='r')
 	{	char s[3]={'.',c,0};	mgl_mark(gr, p.x, p.y, p.z, s);	}
 	/// Draws the mark at position p
 	inline void Mark(mglPoint p, const char *mark)

@@ -167,7 +167,9 @@ void put_desc(HMGL gr, void *fp, bool gz, const char *pre, const char *ln1, cons
 mglColor mglCanvas::GetColor(const mglPrim &p)
 {
 	unsigned char res[4],buf[4];
-	col2int(Pnt[p.type==1?p.n2:p.n1],res,p.id);
+	mglPnt pp=Pnt[p.type==1?p.n2:p.n1];
+	if(p.type==4)	pp.u=pp.v=NAN;
+	col2int(pp,res,p.id);
 	if(p.type==2 || p.type==3)
 	{
 		col2int(Pnt[p.n2],buf,p.id);	res[0]=(1L*res[0]+buf[0])/2;

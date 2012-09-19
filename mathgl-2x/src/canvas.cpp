@@ -745,11 +745,13 @@ void mglCanvas::Table(mreal x, mreal y, HCDT val, const wchar_t *text, const cha
 	if(x>=1) 	{	SetWarn(mglWarnSpc,"Table");	return;	}
 	long i,j,m=val->GetNy(),n=val->GetNx();
 //	mreal pos=SaveState(opt);
-	SaveState(opt);
+	mreal vw = SaveState(opt);
 	static int cgid=1;	StartGroup("Table",cgid++);
 	bool grid = mglchr(frm,'#'), eqd = mglchr(frm,'='), lim = mglchr(frm,'|');
+	if(mgl_isnan(vw))	vw=1;	else 	lim = true;
 	if(!text)	text=L"";
 	if(x<0)	x=0; 	if(y<0)	y=0; 	if(y>1)	y=1;
+//	if(vw>1-x)	vw=1-x;
 
 	wchar_t *buf = new wchar_t[m*32], sng[32];
 	std::vector<std::wstring> str;
@@ -766,17 +768,17 @@ void mglCanvas::Table(mreal x, mreal y, HCDT val, const wchar_t *text, const cha
 	}
 	delete []buf;
 
-	mreal w = TextWidth(text,frm,-1), w1=0, ww, h;
+	mreal sp=2*TextWidth(" ",frm,-1), w=sp+TextWidth(text,frm,-1), w1=0, ww, h;
 	for(i=0;i<n;i++)		// find width for given font size
 	{
-		ww = TextWidth(str[i].c_str(),frm,-1);
+		ww = TextWidth(str[i].c_str(),frm,-1)+sp;
 		w1 = w1<ww?ww:w1;
 		if(!eqd)	w += ww;
 	}
 	if(eqd)	w += n*w1;
 	// reduce font size if table have to be inside inplot
-	if(lim && w>(1-x)*inW)
-	{	SetFontSize((x-1)*inW/w);	w = (1-x)*inW; 	w1 *= (1-x)*inW/w;	}
+	if(lim && w>vw*inW)
+	{	h=vw*inW/w;	SetFontSize(-h); 	w*=h; 	w1*=h;	sp*=h;	}
 	h = TextHeight(frm,-1);	// now we can determine text height
 
 	x = x*(inW-w)+B.x-inW/2;
@@ -791,13 +793,13 @@ void mglCanvas::Table(mreal x, mreal y, HCDT val, const wchar_t *text, const cha
 		k1=AddPnt(mglPoint(x,y,Depth),-1,q,-1,0);
 		k2=AddPnt(mglPoint(x,y+m*h,Depth),-1,q,-1,0);
 		line_plot(k1,k2);
-		ww = TextWidth(text,frm,-1);
+		ww = TextWidth(text,frm,-1)+sp;
 		k1=AddPnt(mglPoint(x+ww,y,Depth),-1,q,-1,0);
 		k2=AddPnt(mglPoint(x+ww,y+m*h,Depth),-1,q,-1,0);
 		line_plot(k1,k2);
 		for(i=0,xx=x+ww,yy=y;i<n;i++)
 		{
-			xx += eqd ? w1:TextWidth(str[i].c_str(),frm,-1);
+			xx += eqd ? w1:(TextWidth(str[i].c_str(),frm,-1)+sp);
 			k1=AddPnt(mglPoint(xx,yy,Depth),-1,q,-1,0);
 			k2=AddPnt(mglPoint(xx,yy+m*h,Depth),-1,q,-1,0);
 			line_plot(k1,k2);
@@ -810,12 +812,12 @@ void mglCanvas::Table(mreal x, mreal y, HCDT val, const wchar_t *text, const cha
 		}
 	}
 	int align;	mglGetStyle(frm, 0, &align);
-	ww = TextWidth(text,frm,-1);
+	ww = TextWidth(text,frm,-1)+sp;
 	k1=AddPnt(mglPoint(x+ww*align/2.,y+h*(m-1),Depth),-1,q,-1,0);
 	text_plot(k1,text,frm);
 	for(i=0,xx=x+ww,yy=y+h*(m-1);i<n;i++)	// draw lines and legend
 	{
-		ww = eqd ? w1:TextWidth(str[i].c_str(),frm,-1);
+		ww = eqd ? w1:(TextWidth(str[i].c_str(),frm,-1)+sp);
 		k1=AddPnt(mglPoint(xx+ww*align/2.,yy,Depth),-1,q,-1,0);
 		text_plot(k1,str[i].c_str(),frm);	xx += ww;
 	}
@@ -881,7 +883,10 @@ void mglCanvas::EndGroup()
 {
 	LoadState();
 	if(Quality&4)
-	{	Pnt.clear();		Prm.clear();		Ptx.clear();		Glf.clear();		}
+	{
+		Pnt.clear();		Prm.clear();		Ptx.clear();
+		Glf.clear();		Act.clear(); 	Grp.clear();
+	}
 	if(grp_counter>0)	grp_counter--;
 }
 //-----------------------------------------------------------------------------

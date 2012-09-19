@@ -46,63 +46,15 @@ void smgl_combined(mglGraph *gr);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	gr->SubPlot(2,2,0,"");	gr->Box();
-	gr->AddLegend("1","r");
-	gr->AddLegend("2","g");
-	gr->AddLegend("3","b");
-	gr->Legend();
-	
-	gr->SubPlot(2,2,1,"");	gr->Box();
-	gr->AddLegend("4","r");
-	gr->AddLegend("5","g");
-	gr->AddLegend("6","b");
-	gr->AddLegend("7","r");
-	gr->AddLegend("8","g");
-	gr->AddLegend("9","b");
-	gr->Legend();
-	
-	gr->SubPlot(2,2,2,"");	gr->Box();
-	gr->AddLegend("a","r");
-	gr->AddLegend("b","g");
-	gr->AddLegend("c","b");
-	gr->AddLegend("d","r");
-	gr->AddLegend("e","g");
-	gr->AddLegend("f","b");
-	gr->AddLegend("g","r");
-	gr->AddLegend("h","g");
-	gr->AddLegend("i","b");
-	gr->AddLegend("j","r");
-	gr->AddLegend("k","g");
-	gr->AddLegend("l","b");
-	gr->Legend();
-	
-	gr->SubPlot(2,2,3,"");	gr->Box();
-	return;
-
-	mglData ys(10,61);	ys.Modify("0.8*sin(pi*2*x+pi*y)+0.2*rnd");
+	mglData ys(10,5);	ys.Modify("0.8*sin(pi*2*x+pi*y)+0.2*rnd");
 	gr->Box();
 	char id[16];
 	std::string str;
-	for(int i=0;i<61;i++)
-	{	sprintf(id,"%d\n",i);	str += id;	}
-	gr->Table(0,1,ys,str.c_str(),"r#|:C");
+	for(int i=0;i<5;i++)
+	{	sprintf(id,"y_%d\n",i);	str += id;	}
+	gr->Table(0.5,1,ys,str.c_str(),"#|:C","value 0.7");
 	return;
-	
-	gr->Light(true);	gr->Alpha(true);
-	const char *p = MGL_DEF_PAL;
-	size_t i,l=strlen(p);
-	char stl[2] = "r";
-//	gr->SetQuality(6);
-	for(i=0;i<100;i++)
-	{
-		stl[0] = p[int(l*mgl_rnd())];
-		gr->Sphere(mglPoint(mgl_rnd()*2-1,mgl_rnd()*2-1),0.05,stl);
-	}
-	gr->Axis();
-	gr->Puts(mglPoint(0),"aa\\i aaa");
-	printf("pnt = %ld, prm = %ld, glf = %ld\n", gr->Self()->GetPntNum(), gr->Self()->GetPrmNum(), gr->Self()->GetGlfNum());
-	return;
-	
+
 /*	mglData c;	mgls_prepare3d(&c);	gr->Light(true);	gr->Alpha(true);
 	gr->SubPlot(2,1,0);	gr->Rotate(50,60);	gr->Box();	gr->Surf3(c);
 	gr->SubPlot(2,1,1);	gr->Rotate(50,60);	gr->Box();	gr->Surf3(c,"","zrange 0 2");

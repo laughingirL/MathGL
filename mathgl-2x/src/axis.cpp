@@ -688,7 +688,7 @@ void mglCanvas::Label(char dir, const char *str, mreal pos, const char *opt)
 void mglCanvas::Labelw(char dir, const wchar_t *text, mreal pos, const char *opt)
 {
 	mreal shift =  SaveState(opt);	if(mgl_isnan(shift))	shift=0;
-	mreal t, x0, y0, z0;
+	mreal t=0, x0, y0, z0;
 	x0 = GetOrgX(dir);	y0 = GetOrgY(dir);	z0 = GetOrgZ(dir);
 	mglPoint p,q;
 	mglAxis *aa=0;

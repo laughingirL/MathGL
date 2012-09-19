@@ -562,6 +562,7 @@ void mgl_puts_dir(HMGL gr, mreal x, mreal y, mreal z, mreal dx, mreal dy, mreal 
 void mgl_putsw_dir(HMGL gr, mreal x, mreal y, mreal z, mreal dx, mreal dy, mreal dz, const wchar_t *text, const char *font, mreal size)
 {
 	bool a=mglchr(font,'a'), A=mglchr(font,'A');
+	static int cgid=1;	gr->StartGroup("Puts",cgid++);
 	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);
 	if(g && (a||A))
 	{
@@ -577,6 +578,7 @@ void mgl_putsw_dir(HMGL gr, mreal x, mreal y, mreal z, mreal dx, mreal dy, mreal
 	gr->AddActive(gr->AddPnt(mglPoint(dx,dy,dz),-1,d,-1,7),1);
 	if(g && (a||A))	{	g->Pop();	gr->clr(MGL_DISABLE_SCALE);	}
 	gr->text_plot(k,text,font,size);
+	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
 void mgl_puts_(uintptr_t *gr, mreal *x, mreal *y, mreal *z,const char *text, const char *font, mreal *size, int l, int n)
