@@ -247,13 +247,15 @@ struct ObjGroup {
   }
   void addLines(size_t m, size_t n, const mreal P[][3])
   {
-    size_t p[n];
+    if(n==0)	return;
+    size_t *p=new size_t[n];
     for (size_t i=0; i<n; i++) {
       p[i] = vertexcoords.addVertexCoords(P[i][0], P[i][1], P[i][2]);
     }
     for (size_t i=0; i<n-1; i++) {
       lines[m].push_back(ObjLine(p[i],p[i+1]));
     }
+    delete []p;
   }
   
   void addPoint(size_t m, size_t p)
