@@ -46,7 +46,7 @@ endif(MGL_HAVE_GLUT)
 if(MGL_HAVE_WX)
 	include(${wxWidgets_USE_FILE})
 	set(mgl_wnd_src ${mgl_wnd_src} wx.cpp)
-	set(mgl_wnd_hdr ${mgl_wnd_hdr} ../include/mgl2/fltk.h)
+	set(mgl_wnd_hdr ${mgl_wnd_hdr} ../include/mgl2/wx.h)
 endif(MGL_HAVE_WX)
 
 if(MGL_HAVE_QT)

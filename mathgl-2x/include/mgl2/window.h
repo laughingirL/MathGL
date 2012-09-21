@@ -75,6 +75,7 @@ public:
 	{
 		wnd=kind;	dr=0;
 		if(wnd==1)	gr = mgl_create_graph_qt(draw,title,par,load);
+		else if(wnd==2)	gr = mgl_create_graph_wx(draw,title,par,load);
 		else		gr = mgl_create_graph_fltk(draw,title,par,load);
 		mgl_use_graph(gr,1);
 	}
@@ -82,6 +83,7 @@ public:
 	{
 		wnd=kind;	dr=0;
 		if(wnd==1)	gr = mgl_create_graph_qt(mgl_draw_graph,title,(void*)draw,0);
+		else if(wnd==2)	gr = mgl_create_graph_wx(mgl_draw_graph,title,(void*)draw,0);
 		else		gr = mgl_create_graph_fltk(mgl_draw_graph,title,(void*)draw,0);
 		mgl_use_graph(gr,1);
 	}
@@ -89,6 +91,7 @@ public:
 	{
 		wnd=kind;	dr=draw;
 		if(wnd==1)	gr = mgl_create_graph_qt(mgl_draw_class,title,this,mgl_reload_class);
+		else if(wnd==1)	gr = mgl_create_graph_wx(mgl_draw_class,title,this,mgl_reload_class);
 		else		gr = mgl_create_graph_fltk(mgl_draw_class,title,this,mgl_reload_class);
 		mgl_use_graph(gr,1);
 		mgl_set_click_func(gr, mgl_click_class);

@@ -210,3 +210,9 @@ HMGL mgl_create_graph_qt(int (*)(HMGL gr, void *p), const char *, void *, void (
 int mgl_qt_run(){return 0;}
 #endif
 //-----------------------------------------------------------------------------
+#if MGL_HAVE_WX
+HMGL mgl_create_graph_wx(int (*)(HMGL gr, void *p), const char *, void *, void (*)(void *p))
+{	return NULL;	}
+int mgl_wx_run(){return 0;}
+#endif
+//-----------------------------------------------------------------------------

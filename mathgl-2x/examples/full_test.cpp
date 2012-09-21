@@ -46,6 +46,11 @@ void smgl_combined(mglGraph *gr);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
+	gr->Axis();
+	gr->Label('y',"YYY");
+	gr->Label('x',"XXX");
+	gr->Ball(mglPoint(0,0,1),'k');
+	return;
 	mglData ys(10,5);	ys.Modify("0.8*sin(pi*2*x+pi*y)+0.2*rnd");
 	gr->Box();
 	char id[16];

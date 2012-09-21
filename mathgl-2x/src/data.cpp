@@ -592,11 +592,13 @@ void mgl_data_clean(HMDT d, long id)
 }
 void mgl_data_clean_(uintptr_t *d, int *id)	{	mgl_data_clean(_DT_,*id);	}
 //-----------------------------------------------------------------------------
-mreal mgl_data_solve(HCDT d, mreal val, int spl)
+mreal mgl_data_solve(HCDT d, mreal val, int spl, long i0)
 {
 	mreal x=0, y1, y2, a, a0, dx,dy,dz, da = 1e-5*(val?fabs(val):1);
+	long nx = d->GetNx();
+	if(i0<0 || i0>=nx)	i0=0;
 	const mglData *dd=dynamic_cast<const mglData *>(d);
-	if(dd)	for(long i=1;i<dd->nx;i++)
+	if(dd)	for(long i=i0+1;i<nx;i++)
 	{
 		y1=dd->a[i-1];	y2=dd->a[i];
 		if(val==y1)	return i-1;
@@ -615,6 +617,15 @@ mreal mgl_data_solve(HCDT d, mreal val, int spl)
 			}
 			return x;
 		}
+	}
+	else 	for(long i=i0+1;i<nx;i++)
+	{
+		y1=d->v(i-1);	y2=d->v(i);
+		if(val==y1)	return i-1;
+		if(val==y2)	return i;
+		if((y1-val)*(y2-val)<0)
+			return i-1 + (val-y1)/(y2-y1);
+			
 	}
 	return NAN;
 }
@@ -687,8 +698,8 @@ mreal mgl_data_spline_ext_(uintptr_t *d, mreal *x,mreal *y,mreal *z, mreal *dx,m
 {	return mgl_data_spline_ext(_DA_(d),*x,*y,*z,dx,dy,dz);	}
 mreal mgl_data_linear_ext_(uintptr_t *d, mreal *x,mreal *y,mreal *z, mreal *dx,mreal *dy,mreal *dz)
 {	return mgl_data_linear_ext(_DA_(d),*x,*y,*z,dx,dy,dz);	}
-mreal mgl_data_solve_(uintptr_t *d, mreal *val, int *spl)
-{	return mgl_data_solve(_DA_(d),*val, *spl);	}
+mreal mgl_data_solve_(uintptr_t *d, mreal *val, int *spl, int *i0)
+{	return mgl_data_solve(_DA_(d),*val, *spl, *i0);	}
 //-----------------------------------------------------------------------------
 mreal mglSpline3(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z,mreal *dx, mreal *dy, mreal *dz)
 {
@@ -1701,10 +1712,10 @@ mreal *mgl_data_value(HMDT dat, long i,long j,long k)
 {	register long ii=i*dat->nx*(j+dat->ny*k);
 	return	ii>=0 && ii<dat->GetNN() ? dat->a+ii : 0;	}
 //-----------------------------------------------------------------------------
-long mgl_data_nx(HCDT dat)	{	return dat->GetNx();	}
-long mgl_data_ny(HCDT dat)	{	return dat->GetNy();	}
-long mgl_data_nz(HCDT dat)	{	return dat->GetNz();	}
-long mgl_data_nx_(uintptr_t *d)	{	return _DA_(d)->GetNx();	}
-long mgl_data_ny_(uintptr_t *d)	{	return _DA_(d)->GetNy();	}
-long mgl_data_nz_(uintptr_t *d)	{	return _DA_(d)->GetNz();	}
+long mgl_data_get_nx(HCDT dat)	{	return dat->GetNx();	}
+long mgl_data_get_ny(HCDT dat)	{	return dat->GetNy();	}
+long mgl_data_get_nz(HCDT dat)	{	return dat->GetNz();	}
+long mgl_data_get_nx_(uintptr_t *d)	{	return _DA_(d)->GetNx();	}
+long mgl_data_get_ny_(uintptr_t *d)	{	return _DA_(d)->GetNy();	}
+long mgl_data_get_nz_(uintptr_t *d)	{	return _DA_(d)->GetNz();	}
 //-----------------------------------------------------------------------------

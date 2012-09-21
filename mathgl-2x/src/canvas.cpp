@@ -313,12 +313,12 @@ mreal mglCanvas::text_plot(long p,const wchar_t *text,const char *font,mreal siz
 	}
 	if(ll==0)	return 0;
 
-	mreal fsize=size/6.5*font_factor, h = fnt->Height(font)*fsize, w, shift = -sh*h-2;
+	mreal fsize=size/6.5*font_factor, h = fnt->Height(font)*fsize, w, shift = -(sh+0.02)*h;
 	// text drawing itself
 	Push();
 	inv = inv ^ (strchr(font,'T')!=0);
 	if(inv)	shift = 0.2*h-shift;
-	shift += 1.1;	// Correction for glyph rotation around proper point
+	shift += 0.015*h;	// Correction for glyph rotation around proper point
 //	shift *= h;
 
 	int align;	mglGetStyle(font,0,&align);	align = align&3;
@@ -583,7 +583,15 @@ void mglCanvas::AddLight(int n, mglPoint r, mglPoint d, char col, mreal br, mrea
 	light[n].d = d;		light[n].c = mglColor(col);
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::arrow_plot(long n1, long n2,char st)
+void mglCanvas::arrow_plot(long n1, long n2, char st)
+{
+	if(get(MGL_3D_ARROW))
+		arrow_plot_3d(n1, n2, st);
+	else
+		arrow_plot_2d(n1, n2, st);
+}
+//-----------------------------------------------------------------------------
+void mglCanvas::arrow_plot_2d(long n1, long n2, char st)
 {
 	if(n1<0 || n2<0 || !strchr("AVKSDTIO",st))	return;
 	const mglPnt &p1=Pnt[n1], &p2=Pnt[n2];
@@ -644,6 +652,85 @@ void mglCanvas::arrow_plot(long n1, long n2,char st)
 		q4.xx=q4.x=p1.x+kx+2*lx;	q4.yy=q4.y=p1.y+ky+2*ly;	q4.zz=q4.z=p1.z-2*lz;	k4=Pnt.size();	MGL_PUSH(Pnt,q4,mutexPnt);
 		trig_plot(n1,k2,k3);		trig_plot(n1,k3,k4);	break;
 	case 'O':
+		{
+			q1.xx=q1.x=p1.x;	q1.yy=q1.y=p1.y;	k1=Pnt.size();	MGL_PUSH(Pnt,q1,mutexPnt);
+			double t,c,s;
+			for(int i=0;i<16;i++)
+			{
+				t = M_PI*i/8.;		s=sin(t);	c=cos(t);
+				q2.xx=q2.x=p1.x+kx*s+lx*c;	q2.yy=q2.y=p1.y+ky*s+ly*c;	q2.zz=q2.z=p1.z+c*lz;
+				k2=Pnt.size();	MGL_PUSH(Pnt,q2,mutexPnt);
+				t = M_PI*(i+1)/8.;	s=sin(t);	c=cos(t);
+				q3.xx=q3.x=p1.x+kx*s+lx*c;	q3.yy=q3.y=p1.y+ky*s+ly*c;	q3.zz=q2.z=p1.z+c*lz;
+				k3=Pnt.size();	MGL_PUSH(Pnt,q3,mutexPnt);
+				trig_plot(k1,k2,k3);
+			}
+			break;
+		}
+	}
+}
+//-----------------------------------------------------------------------------
+void mglCanvas::arrow_plot_3d(long n1, long n2, char st)
+{
+	if(n1<0 || n2<0 || !strchr("AVKSDTIO",st))	return;
+	const mglPnt &p1=Pnt[n1], &p2=Pnt[n2];
+	mglPnt q1=p1,q2=p1,q3=p1,q4=p1;
+	q1.u=q1.v=q2.u=q2.v=q3.u=q3.v=q4.u=q4.v=NAN;
+	
+	mreal lx=p1.x-p2.x, ly=p1.y-p2.y, ll, kx,ky;
+	ll = hypot(lx,ly)/(PenWidth*ArrowSize*0.35*font_factor);
+	if(ll==0)	return;
+	lx /= ll;	ly /= ll;	kx = ly;	ky = -lx;
+	mreal lz = (p2.z-p1.z)/ll;
+	
+	Reserve(6);
+	long k1,k2,k3,k4;
+	
+	switch(st)
+	{
+		case 'I':
+			q1.xx=q1.x=p1.x+kx;		q1.yy=q1.y=p1.y+ky;		k1=Pnt.size();	MGL_PUSH(Pnt,q1,mutexPnt);
+			q2.xx=q2.x=p1.x-kx;		q2.yy=q2.y=p1.y-ky;		k2=Pnt.size();	MGL_PUSH(Pnt,q2,mutexPnt);
+			line_plot(k1,k2);	break;
+		case 'D':
+			q1.xx=q1.x=p1.x+kx;		q1.yy=q1.y=p1.y+ky;							k1=Pnt.size();	MGL_PUSH(Pnt,q1,mutexPnt);
+			q2.xx=q2.x=p1.x+lx;		q2.yy=q2.y=p1.y+ly;		q2.zz=q2.z=p1.z+lz;	k2=Pnt.size();	MGL_PUSH(Pnt,q2,mutexPnt);
+			q3.xx=q3.x=p1.x-kx;		q3.yy=q3.y=p1.y-ky;							k3=Pnt.size();	MGL_PUSH(Pnt,q3,mutexPnt);
+			q4.xx=q4.x=p1.x-lx;		q4.yy=q4.y=p1.y-ly;		q4.zz=q4.z=p1.z-lz;	k4=Pnt.size();	MGL_PUSH(Pnt,q4,mutexPnt);
+			quad_plot(k1,k2,k4,k3);	break;
+		case 'S':
+			q1.xx=q1.x=p1.x+kx-lx;	q1.yy=q1.y=p1.y+ky-ly;	q1.zz=q1.z=p1.z-lz;	k1=Pnt.size();	MGL_PUSH(Pnt,q1,mutexPnt);
+			q2.xx=q2.x=p1.x-kx-lx;	q2.yy=q2.y=p1.y-ky-ly;	q2.zz=q2.z=p1.z-lz;	k2=Pnt.size();	MGL_PUSH(Pnt,q2,mutexPnt);
+			q3.xx=q3.x=p1.x-kx+lx;	q3.yy=q3.y=p1.y-ky+ly;	q3.zz=q3.z=p1.z+lz;	k3=Pnt.size();	MGL_PUSH(Pnt,q3,mutexPnt);
+			q4.xx=q4.x=p1.x+kx+lx;	q4.yy=q4.y=p1.y+ky+ly;	q4.zz=q4.z=p1.z+lz;	k4=Pnt.size();	MGL_PUSH(Pnt,q4,mutexPnt);
+			quad_plot(k1,k2,k4,k3);	break;
+		case 'T':
+			q1.xx=q1.x=p1.x+kx-lx;	q1.yy=q1.y=p1.y+ky-ly;	q1.zz=q1.z=p1.z-lz;	k1=Pnt.size();	MGL_PUSH(Pnt,q1,mutexPnt);
+			q2.xx=q2.x=p1.x-kx-lx;	q2.yy=q2.y=p1.y-ky-ly;	q2.zz=q2.z=p1.z-lz;	k2=Pnt.size();	MGL_PUSH(Pnt,q2,mutexPnt);
+			q3.xx=q3.x=p1.x+lx;		q3.yy=q3.y=p1.y+ly;		q3.zz=q3.z=p1.z+lz;	k3=Pnt.size();	MGL_PUSH(Pnt,q3,mutexPnt);
+			trig_plot(k1,k2,k3);	break;
+		case 'A':
+			//		q1.xx=q1.x=p1.x;			q1.yy=q1.y=p1.y;			k1=Pnt.size();	MGL_PUSH(Pnt,q1,mutexPnt);
+			q2.xx=q2.x=p1.x-kx-2*lx;	q2.yy=q2.y=p1.y-ky-2*ly;	q2.zz=q2.z=p1.z-2*lz;	k2=Pnt.size();	MGL_PUSH(Pnt,q2,mutexPnt);
+			q3.xx=q3.x=p1.x-1.5*lx;		q3.yy=q3.y=p1.y-1.5*ly;		q3.zz=q3.z=p1.z-1.5*lz;	k3=Pnt.size();	MGL_PUSH(Pnt,q3,mutexPnt);
+			q4.xx=q4.x=p1.x+kx-2*lx;	q4.yy=q4.y=p1.y+ky-2*ly;	q4.zz=q4.z=p1.z-2*lz;	k4=Pnt.size();	MGL_PUSH(Pnt,q4,mutexPnt);
+			trig_plot(n1,k2,k3);		trig_plot(n1,k3,k4);	break;
+		case 'K':
+			//		q1.xx=q1.x=p1.x;			q1.yy=q1.y=p1.y;			k1=Pnt.size();	MGL_PUSH(Pnt,q1,mutexPnt);
+			q2.xx=q2.x=p1.x-kx-2*lx;	q2.yy=q2.y=p1.y-ky-2*ly;	q2.zz=q2.z=p1.z-2*lz;	k2=Pnt.size();	MGL_PUSH(Pnt,q2,mutexPnt);
+			q3.xx=q3.x=p1.x-1.5*lx;		q3.yy=q3.y=p1.y-1.5*ly;		q3.zz=q3.z=p1.z-1.5*lz;	k3=Pnt.size();	MGL_PUSH(Pnt,q3,mutexPnt);
+			q4.xx=q4.x=p1.x+kx-2*lx;	q4.yy=q4.y=p1.y+ky-2*ly;	q4.zz=q4.z=p1.z-2*lz;	k4=Pnt.size();	MGL_PUSH(Pnt,q4,mutexPnt);
+			trig_plot(n1,k2,k3);		trig_plot(n1,k3,k4);
+			q1.xx=q1.x=p1.x+kx;			q1.yy=q1.y=p1.y+ky;			k1=Pnt.size();	MGL_PUSH(Pnt,q1,mutexPnt);
+			q2.xx=q2.x=p1.x-kx;			q2.yy=q2.y=p1.y-ky;			k2=Pnt.size();	MGL_PUSH(Pnt,q2,mutexPnt);
+			line_plot(k1,k2);	break;
+		case 'V':
+			//		q1.xx=q1.x=p1.x;			q1.yy=q1.y=p1.y;			k1=Pnt.size();	MGL_PUSH(Pnt,q1,mutexPnt);
+			q2.xx=q2.x=p1.x-kx+2*lx;	q2.yy=q2.y=p1.y-ky+2*ly;	q2.zz=q2.z=p1.z-2*lz;	k2=Pnt.size();	MGL_PUSH(Pnt,q2,mutexPnt);
+			q3.xx=q3.x=p1.x+1.5*lx;		q3.yy=q3.y=p1.y+1.5*ly;		q3.zz=q3.z=p1.z-1.5*lz;	k3=Pnt.size();	MGL_PUSH(Pnt,q3,mutexPnt);
+			q4.xx=q4.x=p1.x+kx+2*lx;	q4.yy=q4.y=p1.y+ky+2*ly;	q4.zz=q4.z=p1.z-2*lz;	k4=Pnt.size();	MGL_PUSH(Pnt,q4,mutexPnt);
+			trig_plot(n1,k2,k3);		trig_plot(n1,k3,k4);	break;
+		case 'O':
 		{
 			q1.xx=q1.x=p1.x;	q1.yy=q1.y=p1.y;	k1=Pnt.size();	MGL_PUSH(Pnt,q1,mutexPnt);
 			double t,c,s;

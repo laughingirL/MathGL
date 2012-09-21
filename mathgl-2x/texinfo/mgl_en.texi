@@ -72,6 +72,7 @@ supports it in developing GNU and promoting software freedom.''
 * General concepts::
 * MathGL core::
 * Data processing::
+* Symbols and hot-keys::
 * Copying This Manual::
 * Index::
 @end menu
@@ -131,10 +132,14 @@ supports it in developing GNU and promoting software freedom.''
 @node MathGL core, Data processing, General concepts, Top
 @include core_en.texi
 
-@node Data processing, Copying This Manual, MathGL core, Top
+@node Data processing, Symbols and hot-keys, MathGL core, Top
 @include data_en.texi
 
-@node Copying This Manual, Index, Data processing, Top
+@node Symbols and hot-keys, Copying This Manual, Data processing, Top
+@appendix Symbols and hot-keys
+@include symbols_en.texi
+
+@node Copying This Manual, Index, Symbols and hot-keys, Top
 @appendix GNU Free Documentation License
 @include fdl.texi
 

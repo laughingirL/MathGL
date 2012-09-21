@@ -15,9 +15,8 @@ Below I show how this internal classes can be used.
 @menu
 * mglBase class::
 * mglDataA class::
-* mglColor class::              
-* mglPoint class::              
-* mglFont class::
+* mglColor class::
+* mglPoint class::
 @end menu
 
 
@@ -485,7 +484,7 @@ Return inverted color.
 
 @c ------------------------------------------------------------------
 @external
-@node mglPoint class, mglFont class, mglColor class, Other classes
+@node mglPoint class, , mglColor class, Other classes
 @section mglPoint class
 @cindex mglPoint
 
@@ -557,112 +556,6 @@ Return true if points are the same.
 @deftypefn {Library Function} @code{bool} operator!= (@code{const mglPoint &}a, @code{const mglPoint &}b)
 Return true if points are different.
 @end deftypefn
-
-@c ------------------------------------------------------------------
-@external
-@node mglFont class, , mglPoint class, Other classes
-@section mglFont class
-@cindex mglFont
-
-Class for working with font: load, get metrics, parse and draw strings. This class is defined in @code{#include <mgl2/font.h>}. This class is accessible only from C++ (and only from GNU compilers in default binary files).
-
-The class is based on loading and drawing of vector Hershey font. There are two styles of specifying of the font type and aligning: by integer parameters or by string.
-
-The string can be any combination of characters: @samp{rbiLCRwou}. The font types are: @samp{r} -- roman font, @samp{i} -- italic style, @samp{b} -- bold style. By default roman font (that is @samp{} or @samp{r}) is used. The align types are: @samp{L} -- align left (default), @samp{C} -- align center, @samp{R} -- align right. Additional font effects are: @samp{w} -- wire, @samp{o} -- over-lined, @samp{u} -- underlined. Parsing of the string to special (TeX-like) commands will be done if variable @var{parse} is true (it's default). See also @pxref{Font styles}.
-
-The over way of font and alignment setting is the using of the integer constant. Integer font Id can be one of predefined constants: @code{MGL_FONT_ITAL, MGL_FONT_BOLD, MGL_FONT_BOLD_ITAL = MGL_FONT_ITAL+MGL_FONT_BOLD}. Default font is @code{MGL_FONT_ROMAN}. Also there are flags @code{MGL_FONT_ULINE, MGL_FONT_OLINE, MGL_FONT_WIRE} for additional font effects. Align parameter controls the text alignment: 0 -- align left, 1 -- align center, 2 -- align right.
-
-
-@menu
-* Format of font files::
-@end menu
-
-
-@deftypemethod mglFont @code{} mglFont (@code{const char *}name=@code{MGL_DEF_FONT_NAME}, @code{const char *}path=@code{NULL})
-Initialize the font and load data from file @var{name} (default name is "STIX" for Linux and MacOS) or if  @var{name}=@code{NULL} limited data from memory (default for Windows).
-@end deftypemethod
-@deftypemethod mglFont @code{bool} Load (@code{const char *} base, @code{const char *}path=@code{NULL})
-Load font from file @var{path}/@var{base} into the memory. The font may contain 4 files: @var{base}.vfm, @var{base}_b.vfm, @var{base}_i.vfm, @var{base}_bi.vfm. Appendix contain detailed description of font format.
-@end deftypemethod
-@deftypemethod mglFont @code{void} Restore ()
-Restore default font.
-@end deftypemethod
-@deftypemethod mglFont @code{void} Copy (@code{mglFont *}fnt)
-Copy data from other font instance.
-@end deftypemethod
-@deftypemethod mglFont @code{void} Clear ()
-Clear memory by deleting the loaded font.
-@end deftypemethod
-@deftypemethod mglFont @code{unsigned} GetNumGlyph ()
-Return the number of glyphs in the font.
-@end deftypemethod
-@deftypemethod mglFont @code{bool} Ready ()
-Return true if font is loaded and ready for use.
-@end deftypemethod
-
-
-@deftypemethod mglFont @code{mreal} Height (@code{int} font)
-Gets height of text for font specified by integer constant.
-@end deftypemethod
-@deftypemethod mglFont @code{mreal} Puts (@code{const char *}str, @code{int} font=@code{0}, @code{int} align=@code{0})
-Prints 8-bit text string for font specified by integer constant.
-@end deftypemethod
-@deftypemethod mglFont @code{mreal} Width (@code{const char *}str, @code{int} font=@code{0})
-Gets width of 8-bit text string for font specified by integer constant.
-@end deftypemethod
-@deftypemethod mglFont @code{mreal} Puts (@code{const wchar_t *}str, @code{int} font=@code{0}, @code{int} align=@code{0})
-Prints Unicode text string for font specified by integer constant.
-@end deftypemethod
-@deftypemethod mglFont @code{mreal} Width (@code{const wchar_t *}str, @code{int} font=@code{0})
-Gets width of Unicode text string for font specified by integer constant.
-@end deftypemethod
-
-
-@deftypemethod mglFont @code{mreal} Height (@code{const char *}how)
-Gets height of text for font specified by string.
-@end deftypemethod
-@deftypemethod mglFont @code{mreal} Puts (@code{const char *}str, @code{const char *}how)
-Prints 8-bit text string for font specified by string.
-@end deftypemethod
-@deftypemethod mglFont @code{mreal} Width (@code{const char *}str, @code{const char *}how)
-Gets width of 8-bit text string for font specified by string.
-@end deftypemethod
-@deftypemethod mglFont @code{mreal} Puts (@code{const wchar_t *}str, @code{const char *}how)
-Prints Unicode text string for font specified by string.
-@end deftypemethod
-@deftypemethod mglFont @code{mreal} Width (@code{const wchar_t *}str, @code{const char *}how)
-Gets width of Unicode text string for font specified by string.
-@end deftypemethod
-
-@deftypecv {Parameter} mglFont @code{HMGL} gr
-Instance of mglGraph class which is used for character drawing.
-@end deftypecv
-@deftypecv {Parameter} mglFont @code{bool} parse
-Flag for switching on/off the parsing of TeX commands. Default value is @code{true}.
-@end deftypecv
-
-@c ------------------------------------------------------------------
-@external
-@node Format of font files, , , mglFont class
-@subsection Format of font files
-
-Starting from v.1.6 the MathGL library uses new font files. The font is defined in 4 files with suffixes @samp{*.vfm}, @samp{*_b.vfm}, @samp{*_i.vfm}, @samp{*_bi.vfm}. These files are text files containing the data for roman font, bold font, italic font and bold italic font. The files (or some symbols in the files) for bold, italic or bold italic fonts can be absent. In this case the roman glyph will be used for them. By analogy, if the bold italic font is absent but the bold font is present then bold glyph will be used for bold italic. You may create these font files by yourself from *.ttf, *.otf files with the help of program @code{font_tools}. This program can be found at MathGL home site.
-
-The format of font files (*.vfm -- vector font for MathGL) is the following.
-@enumerate
-@item
-First string contains human readable comment and is always ignored.
-@item
-Second string contains 3 numbers, delimited by space or tabulation. The order of numbers is the following: @var{numg} -- the number of glyphs in the file (integer), @var{fact} -- the factor for glyph sizing (mreal), @var{size} -- the size of buffer for glyph description (integer).
-@item
-After it @var{numg}-th strings with glyphs description are placed. Each string contains 6 positive numbers, delimited by space of tabulation. The order of numbers is the following: Unicode glyph ID, glyph width, number of lines in glyph, position of lines coordinates in the buffer (length is 2*number of lines), number of triangles in glyph, position of triangles coordinates in the buffer (length is 6*number of triangles).
-@item
-The end of file contains the buffer with point coordinates at lines or triangles vertexes. The size of buffer (the number of integer) is @var{size}.
-@end enumerate
-
-Each font file can be compressed by gzip.
-
-Note: the closing contour line  is done automatically (so the last segment may be absent). For starting new contour use a point with coordinates @code{@{0x3fff, 0x3fff@}}.
 
 @external
 

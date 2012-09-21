@@ -60,11 +60,6 @@ void mgl_set_cutoff(HMGL graph, const char *EqC);
 void mgl_set_tick_rotate(HMGL graph, int enable);
 void mgl_set_tick_skip(HMGL graph, int enable);
 
-mreal mgl_data_get_value(HCDT d, long i, long j, long k);
-long mgl_data_get_nx(HCDT d);
-long mgl_data_get_ny(HCDT d);
-long mgl_data_get_nz(HCDT d);
-
 void mgl_set_mark_size(HMGL graph, mreal size);
 void mgl_set_arrow_size(HMGL graph, mreal size);
 void mgl_set_font_size(HMGL graph, mreal size);
@@ -112,11 +107,6 @@ void mgl_set_cutoff_(uintptr_t *graph, const char *EqC, int);
 
 void mgl_set_tick_rotate_(uintptr_t *graph, int *enable);
 void mgl_set_tick_skip_(uintptr_t *graph, int *enable);
-
-mreal mgl_data_get_value_(uintptr_t *d, int *i, int *j, int *k);
-long mgl_data_get_nx_(uintptr_t *d);
-long mgl_data_get_ny_(uintptr_t *d);
-long mgl_data_get_nz_(uintptr_t *d);
 
 void mgl_set_mark_size_(uintptr_t *graph, mreal *size);
 void mgl_set_arrow_size_(uintptr_t *graph, mreal *size);

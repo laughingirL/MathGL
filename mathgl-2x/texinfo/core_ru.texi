@@ -506,7 +506,7 @@ Setsize: размер(ы) равны нулю или отрицательны
 @deftypefnx {Команда MGL} {} zrange dat [@code{add=off}]
 @deftypefnx {Команда MGL} {} crange dat [@code{add=off}]
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} SetRange (@code{char} dir, @code{const mglData &}dat, @code{bool} add=@code{false})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} SetRange (@code{char} dir, @code{const mglDataA &}dat, @code{bool} add=@code{false})
 @deftypefnx {Функция С} @code{void} mgl_set_range_dat (@code{HMGL} gr, @code{char} dir, @code{const HCDT} a, @code{int} add)
 @end ifclear
 Задает диапазон изменения @samp{x}-,@samp{y}-,@samp{z}-,@samp{c}-координат как минимальное и максимальное значение массива @var{dat}. Параметр @code{add=on} указывает добавлять новый диапазон к существующему (не заменять его).
@@ -523,9 +523,9 @@ Setsize: размер(ы) равны нулю или отрицательны
 @end deftypefn
 
 @ifclear UDAV
-@deftypefn {Метод класса @code{mglGraph}} @code{void} SetRanges (@code{const mglData &}xx, @code{const mglData &}yy)
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} SetRanges (@code{const mglData &}xx, @code{const mglData &}yy, @code{const mglData &}zz)
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} SetRanges (@code{const mglData &}xx, @code{const mglData &}yy, @code{const mglData &}zz, @code{const mglData &}cc)
+@deftypefn {Метод класса @code{mglGraph}} @code{void} SetRanges (@code{const mglDataA &}xx, @code{const mglDataA &}yy)
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} SetRanges (@code{const mglDataA &}xx, @code{const mglDataA &}yy, @code{const mglDataA &}zz)
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} SetRanges (@code{const mglDataA &}xx, @code{const mglDataA &}yy, @code{const mglDataA &}zz, @code{const mglDataA &}cc)
 Задает диапазон изменения @samp{x}-,@samp{y}-,@samp{z}-,@samp{c}-координат как минимальное и максимальное значение массивов @var{xx}, @var{yy}, @var{zz}, @var{cc} соответственно.
 @end deftypefn
 @end ifclear
@@ -630,8 +630,8 @@ Setsize: размер(ы) равны нулю или отрицательны
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} SetTicksVal (@code{char} dir, @code{const char *}lbl, @code{bool} add=@code{false})
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} SetTicksVal (@code{char} dir, @code{const wchar_t *}lbl, @code{bool} add=@code{false})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} SetTicksVal (@code{char} dir, @code{const mglData &}val, @code{const char *}lbl, @code{bool} add=@code{false})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} SetTicksVal (@code{char} dir, @code{const mglData &}val, @code{const wchar_t *}lbl, @code{bool} add=@code{false})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} SetTicksVal (@code{char} dir, @code{const mglDataA &}val, @code{const char *}lbl, @code{bool} add=@code{false})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} SetTicksVal (@code{char} dir, @code{const mglDataA &}val, @code{const wchar_t *}lbl, @code{bool} add=@code{false})
 @deftypefnx {Функция С} @code{void} mgl_set_ticks_str (@code{HMGL} gr, @code{char} dir, @code{const char *}lbl, @code{bool} add)
 @deftypefnx {Функция С} @code{void} mgl_set_ticks_wcs (@code{HMGL} gr, @code{char} dir, @code{const wchar_t *}lbl, @code{bool} add)
 @deftypefnx {Функция С} @code{void} mgl_set_ticks_val (@code{HMGL} gr, @code{char} dir, @code{HCDT} val, @code{const char *}lbl, @code{bool} add)
@@ -1275,10 +1275,16 @@ gr.GetBGRN(bits, len(bits));
 @end deftypefn
 @end ifclear
 
+@anchor{rect}
+@deftypefn {MGL command} {} rect @code{x1 y1 x2 y2} ['stl'='']
+@deftypefnx {MGL command} {} rect @code{x1 y1 z1 x2 y2 z2} ['stl'='']
+Рисует закрашенный прямоугольник (грань) с вершинами @{@var{x1}, @var{y1}, @var{z1}@} и @{@var{x2}, @var{y2}, @var{z2}@} цветом @var{stl}. При этом цвет может быть один для всей грани, или различным для разных вершин если указаны все 4 цвета. Грань будет нарисована даже если часть ее лежит вне диапазона осей координат.
+@end deftypefn
+
 @anchor{facex}
 @anchor{facey}
 @anchor{facez}
-@deftypefn {Команда MGL} {} facex @code{x0 y0 z0 wy wz} ['stl'='' @code{d1=0 d2=0}]
+@deftypefn {MGL command} {} facex @code{x0 y0 z0 wy wz} ['stl'='' @code{d1=0 d2=0}]
 @deftypefnx {Команда MGL} {} facey @code{x0 y0 z0 wx wz} ['stl'='' @code{d1=0 d2=0}]
 @deftypefnx {Команда MGL} {} facez @code{x0 y0 z0 wx wy} ['stl'='' @code{d1=0 d2=0}]
 @ifclear UDAV
@@ -1405,12 +1411,12 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Команда MGL} {} text xdat ydat 'text' ['fnt'='' @code{size=-1 zval=nan}]
 @deftypefnx {Команда MGL} {} text xdat ydat zdat 'text' ['fnt'='' @code{size=-1}]
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Text (@code{const mglData &}y, @code{const char *}text, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Text (@code{const mglData &}y, @code{const wchar_t *}text, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Text (@code{const mglData &}x, @code{const mglData &}y, @code{const char *}text, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Text (@code{const mglData &}x, @code{const mglData &}y, @code{const wchar_t *}text, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Text (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}text, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Text (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const wchar_t *}text, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Text (@code{const mglDataA &}y, @code{const char *}text, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Text (@code{const mglDataA &}y, @code{const wchar_t *}text, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Text (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const char *}text, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Text (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const wchar_t *}text, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Text (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const char *}text, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Text (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const wchar_t *}text, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_text_y (@code{HMGL} gr, @code{HCDT} y, @code{const char *}text, @code{const char *}fnt, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_textw_y (@code{HMGL} gr, @code{HCDT} y, @code{const wchar_t *}text, @code{const char *}fnt, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_text_xy (@code{HCDT} x, @code{HCDT} y, @code{const char *}text, @code{const char *}fnt, @code{const char *}opt)
@@ -1436,8 +1442,8 @@ gr.GetBGRN(bits, len(bits));
 @anchor{axis}
 @deftypefn {Команда MGL} {} axis ['dir'='xyz' 'stl'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Axis (@code{const char *}dir=@code{"xyz"}, @code{const char *}stl=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_axis (@code{HMGL} gr, @code{const char *}dir, @code{const char *}stl)
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Axis (@code{const char *}dir=@code{"xyz"}, @code{const char *}stl=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Функция С} @code{void} mgl_axis (@code{HMGL} gr, @code{const char *}dir, @code{const char *}stl, @code{const char *}opt)
 @end ifclear
 Рисует оси координат и метки на них (см. @ref{Axis settings}) в направлениях @samp{xyz}, указанных строкой @var{dir}. Если строка содержит символ @samp{_}, то подписи меток отображаться не будут. Если строка содержит символ @samp{AKDTVISO}, то будет нарисована соответствующая стрелка на конце оси. Стиль меток и оси(ей) задается строкой @var{stl}. @sref{Axis and ticks}
 @end deftypefn
@@ -1453,7 +1459,7 @@ gr.GetBGRN(bits, len(bits));
 
 @deftypefn {Команда MGL} {} colorbar vdat ['sch'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Colorbar (@code{const mglData &}v, @code{const char *}sch=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Colorbar (@code{const mglDataA &}v, @code{const char *}sch=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_colorbar_val (@code{HMGL} gr, @code{HCDT} v, @code{const char *}sch)
 @end ifclear
 Аналогично предыдущему, но для цветовой схемы без сглаживания с заданными значениями @var{v}. @sref{ContD sample}
@@ -1469,7 +1475,7 @@ gr.GetBGRN(bits, len(bits));
 
 @deftypefn {Команда MGL} {} colorbar vdat 'sch' @code{x y [w=1 h=1]}
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Colorbar (@code{const mglData &}v, @code{const char *}sch, @code{mreal} x, @code{mreal} y, @code{mreal} w=@code{1}, @code{mreal} h=@code{1})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Colorbar (@code{const mglDataA &}v, @code{const char *}sch, @code{mreal} x, @code{mreal} y, @code{mreal} w=@code{1}, @code{mreal} h=@code{1})
 @deftypefnx {Функция С} @code{void} mgl_colorbar_val_ext (@code{HMGL} gr, @code{HCDT} v, @code{const char *}sch, @code{mreal} x, @code{mreal} y, @code{mreal} w, @code{mreal} h)
 @end ifclear
 Аналогично предыдущему, но для цветовой схемы @var{sch} без сглаживания с заданными значениями @var{v}. @sref{ContD sample}
@@ -1478,8 +1484,8 @@ gr.GetBGRN(bits, len(bits));
 @anchor{grid}
 @deftypefn {Команда MGL} {} grid ['dir'='xyz' 'pen'='B']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Grid (@code{const char *}dir=@code{"xyz"}, @code{const char *}pen=@code{"B"})
-@deftypefnx {Функция С} @code{void} mgl_axis_grid (@code{HMGL} gr, @code{const char *}dir, @code{const char *}pen)
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Grid (@code{const char *}dir=@code{"xyz"}, @code{const char *}pen=@code{"B"}, @code{const char *}opt=@code{""})
+@deftypefnx {Функция С} @code{void} mgl_axis_grid (@code{HMGL} gr, @code{const char *}dir, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
 Рисует линии сетки в направлениях перпендикулярным @var{dir}. Шаг сетки такой же как у меток осей координат. Стиль линий задается параметром @var{pen} (по умолчанию -- сплошная темно синяя линия @samp{B-}).
 @end deftypefn
@@ -1498,16 +1504,15 @@ gr.GetBGRN(bits, len(bits));
 @anchor{ylabel}
 @anchor{zlabel}
 @anchor{tlabel}
-@deftypefn {Команда MGL} {} xlabel 'text' [@code{pos=1 shift=0}]
-@deftypefnx {Команда MGL} {} ylabel 'text' [@code{pos=1 shift=0}]
-@deftypefnx {Команда MGL} {} zlabel 'text' [@code{pos=1 shift=0}]
-@deftypefnx {Команда MGL} {} tlabel 'text' [@code{pos=1 shift=0}]
+@deftypefn {Команда MGL} {} xlabel 'text' [@code{pos=1}]
+@deftypefnx {Команда MGL} {} ylabel 'text' [@code{pos=1}]
+@deftypefnx {Команда MGL} {} zlabel 'text' [@code{pos=1}]
+@deftypefnx {Команда MGL} {} tlabel 'text' [@code{pos=1}]
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Label (@code{char} dir, @code{const char *}text, @code{mreal} pos=@code{1}, @code{mreal} shift=@code{0})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Label (@code{char} dir, @code{const wchar_t *}text, @code{mreal} pos=@code{1}, @code{mreal} shift=@code{0})
-@deftypefnx {Функция С} @code{void} mgl_label (@code{HMGL} gr, @code{char} dir, @code{const char *}text)
-@deftypefnx {Функция С} @code{void} mgl_label_ext (@code{HMGL} gr, @code{char} dir, @code{const char *}text, @code{mreal} pos, @code{mreal} shift)
-@deftypefnx {Функция С} @code{void} mgl_labelw_ext (@code{HMGL} gr, @code{char} dir, @code{const wchar_t *}text, @code{mreal} pos, @code{mreal} shift)
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Label (@code{char} dir, @code{const char *}text, @code{mreal} pos=@code{1}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Label (@code{char} dir, @code{const wchar_t *}text, @code{mreal} pos=@code{1}, @code{const char *}opt=@code{""})
+@deftypefnx {Функция С} @code{void} mgl_label (@code{HMGL} gr, @code{char} dir, @code{const char *}text, @code{mreal} pos, @code{const char *}opt)
+@deftypefnx {Функция С} @code{void} mgl_labelw (@code{HMGL} gr, @code{char} dir, @code{const wchar_t *}text, @code{mreal} pos, @code{const char *}opt)
 @end ifclear
 Выводит подпись @var{text} для оси @var{dir}=@samp{x},@samp{y},@samp{z},@samp{t} (где @samp{t} -- ``тернарная'' ось @math{t=1-x-y}). Параметр @var{pos} задает положение подписи: при @var{pos}=0 -- по центру оси, при @var{pos}>0 -- около максимальных значений, при @var{pos}<0 -- около минимальных значений. @xref{Text printing}.
 @end deftypefn
@@ -1525,18 +1530,18 @@ gr.GetBGRN(bits, len(bits));
 Эти функции обеспечивают рисование легенды графика (полезно для @ref{1D plotting}). Запись в легенде состоит из двух строк: одна для стиля линии и маркеров, другая с текстом описания (с включенным разбором TeX-их команд). Можно использовать непосредственно массивы строк, или накопление во внутренние массивы с помощью функции AddLegend() с последующим отображением. Положение легенды можно задать автоматически или вручную. Параметры @var{fnt} и @var{size} задают стиль и размер шрифта (см. @ref{Font settings}). Параметр @var{llen} задает относительную ширину примера линии. Ели стиль линии пустой, то соответствующий текст печатается без отступа. Если строка @var{fnt} содержит символ @samp{A}, то координаты легенды считаются относительно картинки (а не текущего subplot). Если строка @var{fnt} содержит символ @samp{#}, то рисуется прямоугольник вокруг легенды. @sref{Legend sample}
 
 @anchor{legend}
-@deftypefn {Команда MGL} {} legend [@code{pos=3} 'fnt'='#' @code{size=-0.8 llen=0.1}]
+@deftypefn {Команда MGL} {} legend [@code{pos=3} 'fnt'='#']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Legend (@code{int} pos=@code{0x3}, @code{const char *}fnt=@code{"#"}, @code{mreal} size=@code{-0.8}, @code{mreal} llen=@code{0.1})
-@deftypefnx {Функция С} @code{void} mgl_legend (@code{HMGL} gr, @code{int} pos, @code{const char *}fnt, @code{mreal} size, @code{mreal} llen)
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Legend (@code{int} pos=@code{0x3}, @code{const char *}fnt=@code{"#"}, @code{const char *}opt=@code{""})
+@deftypefnx {Функция С} @code{void} mgl_legend (@code{HMGL} gr, @code{int} pos, @code{const char *}fnt, @code{const char *}opt)
 @end ifclear
 Рисует легенду из накопленных записей шрифтом @var{fnt} размером @var{size}. Параметр @var{pos} задает положение легенды: @samp{0} -- в нижнем левом углу, @samp{1} -- нижнем правом углу, @samp{2} -- верхнем левом углу, @samp{3} -- верхнем правом углу (по умолчанию). Строка @var{fnt} может содержать вет для прямоугольника (1-ый цвет), для его границы (2-ой цвет) и для текста (последний). Если указано менее 3 цветов, то цвет рёбер будет чёрным (2 и менее цвета), а цвет прямоугольника белым (1 и менее цвета). Прямоугольник рисуется если строка @var{fnt} содержит @samp{#}.
 @end deftypefn
 
-@deftypefn {Команда MGL} {} legend @code{x y} ['fnt'='#' @code{size=-1 llen=0.1}]
+@deftypefn {Команда MGL} {} legend @code{x y} ['fnt'='#']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Legend (@code{mreal} x, @code{mreal} y, @code{const char *}fnt=@code{"#"}, @code{mreal} size=@code{-0.8}, @code{mreal} llen=@code{0.1})
-@deftypefnx {Функция С} @code{void} mgl_legend_pos (@code{HMGL} gr, @code{mreal} x, @code{mreal} y, @code{const char *}fnt, @code{mreal} size, @code{mreal} llen)
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Legend (@code{mreal} x, @code{mreal} y, @code{const char *}fnt=@code{"#"}, @code{const char *}opt=@code{""})
+@deftypefnx {Функция С} @code{void} mgl_legend_pos (@code{HMGL} gr, @code{mreal} x, @code{mreal} y, @code{const char *}fnt, @code{const char *}opt)
 @end ifclear
 Рисует легенду из накопленных записей шрифтом @var{fnt} размером @var{size}. Положение легенды задается параметрами @var{x}, @var{y}, которые полагаются нормированными в диапазоне [0,1].
 @end deftypefn
@@ -1604,9 +1609,9 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Команда MGL} {} plot xdat ydat ['stl'='']
 @deftypefnx {Команда MGL} {} plot xdat ydat zdat ['stl'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Plot (@code{const mglData &}y, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Plot (@code{const mglData &}x, @code{const mglData &}y, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Plot (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Plot (@code{const mglDataA &}y, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Plot (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Plot (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_plot (@code{HMGL} gr, @code{HCDT} y, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_plot_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_plot_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}pen, @code{const char *}opt)
@@ -1617,7 +1622,7 @@ gr.GetBGRN(bits, len(bits));
 @anchor{radar}
 @deftypefn {Команда MGL} {} radar adat ['stl'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Radar (@code{const mglData &}a, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Radar (@code{const mglDataA &}a, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_radar (@code{HMGL} gr, @code{HCDT} a, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
 Функции рисуют radar chart, представляющий собой ломанную с вершинами на радиальных линиях (типа ломанной в полярных координатах). Параметр @var{value} в опциях @var{opt} задает дополнительный сдвиг данных (т.е. использование @var{a}+@var{value} вместо @var{a}). Если @var{pen} содержит @samp{#}, то рисуется "сетка" (радиальные линии). См. также @ref{plot}. @sref{Radar sample}
@@ -1628,9 +1633,9 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Команда MGL} {} step xdat ydat ['stl'='']
 @deftypefnx {Команда MGL} {} step xdat ydat zdat ['stl'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Step (@code{const mglData &}y, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Step (@code{const mglData &}x, @code{const mglData &}y, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Step (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Step (@code{const mglDataA &}y, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Step (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Step (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_step (@code{HMGL} gr, @code{HCDT} y, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_step_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_step_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}pen, @code{const char *}opt)
@@ -1643,9 +1648,9 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Команда MGL} {} tens xdat ydat cdat ['stl'='']
 @deftypefnx {Команда MGL} {} tens xdat ydat zdat cdat ['stl'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Tens (@code{const mglData &}y, @code{const mglData &}c, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Tens (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}c, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Tens (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}c, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Tens (@code{const mglDataA &}y, @code{const mglDataA &}c, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Tens (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}c, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Tens (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}c, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_tens (@code{HMGL} gr, @code{HCDT} y, @code{HCDT} c, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_tens_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} c, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_tens_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} c, @code{const char *}pen, @code{const char *}opt)
@@ -1658,9 +1663,9 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Команда MGL} {} tape xdat ydat ['stl'='']
 @deftypefnx {Команда MGL} {} tape xdat ydat zdat ['stl'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Tape (@code{const mglData &}y, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Tape (@code{const mglData &}x, @code{const mglData &}y, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Tape (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Tape (@code{const mglDataA &}y, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Tape (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Tape (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_tape (@code{HMGL} gr, @code{HCDT} y, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_tape_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_tape_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}pen, @code{const char *}opt)
@@ -1673,9 +1678,9 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Команда MGL} {} area xdat ydat ['stl'='']
 @deftypefnx {Команда MGL} {} area xdat ydat zdat ['stl'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Area (@code{const mglData &}y, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Area (@code{const mglData &}x, @code{const mglData &}y, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Area (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Area (@code{const mglDataA &}y, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Area (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Area (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_area (@code{HMGL} gr, @code{HCDT} y, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_area_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_area_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}pen, @code{const char *}opt)
@@ -1687,8 +1692,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} region ydat1 ydat2 ['stl'='']
 @deftypefnx {Команда MGL} {} region xdat ydat1 ydat2 ['stl'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Region (@code{const mglData &}y1, @code{const mglData &}y2, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Region (@code{const mglData &}x, @code{const mglData &}y1, @code{const mglData &}y2, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Region (@code{const mglDataA &}y1, @code{const mglDataA &}y2, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Region (@code{const mglDataA &}x, @code{const mglDataA &}y1, @code{const mglDataA &}y2, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_region (@code{HMGL} gr, @code{HCDT} y1, @code{HCDT} y2, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_region_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y1, @code{HCDT} y2, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
@@ -1700,9 +1705,9 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Команда MGL} {} stem xdat ydat ['stl'='']
 @deftypefnx {Команда MGL} {} stem xdat ydat zdat ['stl'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Stem (@code{const mglData &}y, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Stem (@code{const mglData &}x, @code{const mglData &}y, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Stem (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Stem (@code{const mglDataA &}y, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Stem (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Stem (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_stem (@code{HMGL} gr, @code{HCDT} y, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_stem_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_stem_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}pen, @code{const char *}opt)
@@ -1715,9 +1720,9 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Команда MGL} {} bars xdat ydat ['stl'='']
 @deftypefnx {Команда MGL} {} bars xdat ydat zdat ['stl'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Bars (@code{const mglData &}y, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Bars (@code{const mglData &}x, @code{const mglData &}y, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Bars (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Bars (@code{const mglDataA &}y, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Bars (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Bars (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_bars (@code{HMGL} gr, @code{HCDT} y, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_bars_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_bars_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}pen, @code{const char *}opt)
@@ -1729,8 +1734,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} barh vdat ['stl'='']
 @deftypefnx {Команда MGL} {} barh ydat vdat ['stl'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Barh (@code{const mglData &}v, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Barh (@code{const mglData &}y, @code{const mglData &}v, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Barh (@code{const mglDataA &}v, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Barh (@code{const mglDataA &}y, @code{const mglDataA &}v, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_barh (@code{HMGL} gr, @code{HCDT} v, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_barh_xy (@code{HMGL} gr, @code{HCDT} y, @code{HCDT} v, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
@@ -1742,9 +1747,9 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Команда MGL} {} cones xdat ydat ['stl'='']
 @deftypefnx {Команда MGL} {} cones xdat ydat zdat ['stl'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Cones (@code{const mglData &}y, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Cones (@code{const mglData &}x, @code{const mglData &}y, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Cones (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Cones (@code{const mglDataA &}y, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Cones (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Cones (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_cones (@code{HMGL} gr, @code{HCDT} y, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_cones_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_cones_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}pen, @code{const char *}opt)
@@ -1757,7 +1762,7 @@ gr.GetBGRN(bits, len(bits));
 @anchor{chart}
 @deftypefn {Команда MGL} {} chart adat ['col'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Chart (@code{const mglData &}a, @code{const char *}col=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Chart (@code{const mglDataA &}a, @code{const char *}col=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_chart (@code{HMGL} gr, @code{HCDT} a, @code{const char *}col, @code{const char *}opt)
 @end ifclear
 Рисует цветные полосы (пояса) для массива данных @var{a}. Число полос равно числу строк @var{a} (равно @var{a.ny}). Цвет полос поочерёдно меняется из цветов указанных в @var{col} или в палитре (см. @ref{Palette and colors}). Пробел в цветах соответствует прозрачному "цвету", т.е. если @var{col} содержит пробел(ы), то соответствующая полоса не рисуется. Ширина полосы пропорциональна значению элемента в @var{a}. График строится только для массивов не содержащих отрицательных значений. Если строка @var{col} содержит @samp{#}, то рисуется также чёрная граница полос. График выглядит лучше в (после вращения системы координат) и/или в полярной системе координат (становится Pie chart). @sref{Chart sample}
@@ -1767,8 +1772,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} boxplot adat ['stl'='']
 @deftypefnx {Команда MGL} {} boxplot xdat adat ['stl'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} BoxPlot (@code{const mglData &}a, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} BoxPlot (@code{const mglData &}x, @code{const mglData &}a, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} BoxPlot (@code{const mglDataA &}a, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} BoxPlot (@code{const mglDataA &}x, @code{const mglDataA &}a, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_boxplot (@code{HMGL} gr, @code{HCDT} a, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_boxplot_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} a, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
@@ -1782,11 +1787,11 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Команда MGL} {} candle vdat1 vdat2 ydat1 ydat2 ['stl'='']
 @deftypefnx {Команда MGL} {} candle xdat vdat1 vdat2 ydat1 ydat2 ['stl'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Candle (@code{const mglData &}v1, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Candle (@code{const mglData &}v1, @code{const mglData &}v2, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Candle (@code{const mglData &}v1, @code{const mglData &}y1, @code{const mglData &}y2, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Candle (@code{const mglData &}v1, @code{const mglData &}v2, @code{const mglData &}y1, @code{const mglData &}y2, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Candle (@code{const mglData &}x, @code{const mglData &}v1, @code{const mglData &}v2, @code{const mglData &}y1, @code{const mglData &}y2, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Candle (@code{const mglDataA &}v1, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Candle (@code{const mglDataA &}v1, @code{const mglDataA &}v2, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Candle (@code{const mglDataA &}v1, @code{const mglDataA &}y1, @code{const mglDataA &}y2, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Candle (@code{const mglDataA &}v1, @code{const mglDataA &}v2, @code{const mglDataA &}y1, @code{const mglDataA &}y2, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Candle (@code{const mglDataA &}x, @code{const mglDataA &}v1, @code{const mglDataA &}v2, @code{const mglDataA &}y1, @code{const mglDataA &}y2, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_candle (@code{HMGL} gr, @code{HCDT} v1, @code{HCDT} y1, @code{HCDT} y2, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_candle_yv (@code{HMGL} gr, @code{HCDT} v1, @code{HCDT} v2, @code{HCDT} y1, @code{HCDT} y2, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_candle_xyv (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} v1, @code{HCDT} v2, @code{HCDT} y1, @code{HCDT} y2, @code{const char *}pen, @code{const char *}opt)
@@ -1800,9 +1805,9 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Команда MGL} {} error xdat ydat yerr ['stl'='']
 @deftypefnx {Команда MGL} {} error xdat ydat xerr yerr ['stl'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Error (@code{const mglData &}y, @code{const mglData &}ey, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Error (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}ey, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Error (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}ex, @code{const mglData &}ey, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Error (@code{const mglDataA &}y, @code{const mglDataA &}ey, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Error (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}ey, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Error (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}ex, @code{const mglDataA &}ey, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_error (@code{HMGL} gr, @code{HCDT} y, @code{HCDT} ey, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_error_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} ey, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_error_exy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} ex, @code{HCDT} ey, @code{const char *}pen, @code{const char *}opt)
@@ -1815,9 +1820,9 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Команда MGL} {} mark xdat ydat rdat ['stl'='']
 @deftypefnx {Команда MGL} {} mark xdat ydat zdat rdat ['stl'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Mark (@code{const mglData &}y, @code{const mglData &}r, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Mark (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}r, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Mark (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}r, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Mark (@code{const mglDataA &}y, @code{const mglDataA &}r, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Mark (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}r, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Mark (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}r, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_mark_y (@code{HMGL} gr, @code{HCDT} y, @code{HCDT} r, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_mark_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} r, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_mark_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} r, @code{const char *}pen, @code{const char *}opt)
@@ -1831,14 +1836,14 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Команда MGL} {} textmark xdat ydat rdat 'txt' ['stl'='']
 @deftypefnx {Команда MGL} {} textmark xdat ydat zdat rdat 'txt' ['stl'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} TextMark (@code{const mglData &}y, @code{const char *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} TextMark (@code{const mglData &}y, @code{const wchar_t *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} TextMark (@code{const mglData &}y, @code{const mglData &}r, @code{const char *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} TextMark (@code{const mglData &}y, @code{const mglData &}r, @code{const wchar_t *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} TextMark (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}r, @code{const char *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} TextMark (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}r, @code{const wchar_t *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} TextMark (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}r, @code{const char *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} TextMark (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}r, @code{const wchar_t *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} TextMark (@code{const mglDataA &}y, @code{const char *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} TextMark (@code{const mglDataA &}y, @code{const wchar_t *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} TextMark (@code{const mglDataA &}y, @code{const mglDataA &}r, @code{const char *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} TextMark (@code{const mglDataA &}y, @code{const mglDataA &}r, @code{const wchar_t *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} TextMark (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}r, @code{const char *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} TextMark (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}r, @code{const wchar_t *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} TextMark (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}r, @code{const char *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} TextMark (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}r, @code{const wchar_t *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_textmark (@code{HMGL} gr, @code{HCDT} y, @code{const char *}txt, @code{const char *}fnt, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_textmarkw (@code{HMGL} gr, @code{HCDT} y, @code{const wchar_t *}txt, @code{const char *}fnt, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_textmark_yr (@code{HMGL} gr, @code{HCDT} y, @code{HCDT} r, @code{const char *}txt, @code{const char *}fnt, @code{const char *}opt)
@@ -1856,12 +1861,12 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Команда MGL} {} label xdat ydat 'txt' ['stl'='']
 @deftypefnx {Команда MGL} {} label xdat ydat zdat 'txt' ['stl'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Label (@code{const mglData &}y, @code{const char *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Label (@code{const mglData &}y, @code{const wchar_t *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Label (@code{const mglData &}x, @code{const mglData &}y, @code{const char *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Label (@code{const mglData &}x, @code{const mglData &}y, @code{const wchar_t *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Label (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Label (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const wchar_t *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Label (@code{const mglDataA &}y, @code{const char *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Label (@code{const mglDataA &}y, @code{const wchar_t *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Label (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const char *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Label (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const wchar_t *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Label (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const char *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Label (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const wchar_t *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_label (@code{HMGL} gr, @code{HCDT} y, @code{const char *}txt, @code{const char *}fnt, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_labelw (@code{HMGL} gr, @code{HCDT} y, @code{const wchar_t *}txt, @code{const char *}fnt, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_label_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{const char *}txt, @code{const char *}fnt, @code{const char *}opt)
@@ -1880,12 +1885,12 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Команда MGL} {} tube xdat ydat zdat rdat ['stl'='']
 @deftypefnx {Команда MGL} {} tube xdat ydat zdat @code{rval} ['stl'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Tube (@code{const mglData &}y, @code{const mglData &}r, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Tube (@code{const mglData &}y, @code{mreal} r, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Tube (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}r, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Tube (@code{const mglData &}x, @code{const mglData &}y, @code{mreal} r, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Tube (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}r, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Tube (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{mreal} r, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Tube (@code{const mglDataA &}y, @code{const mglDataA &}r, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Tube (@code{const mglDataA &}y, @code{mreal} r, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Tube (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}r, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Tube (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{mreal} r, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Tube (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}r, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Tube (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{mreal} r, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_tube_r (@code{HMGL} gr, @code{HCDT} y, @code{HCDT} r, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_tube (@code{HMGL} gr, @code{HCDT} y, @code{mreal} r, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_tube_xyr (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} r, @code{const char *}pen, @code{const char *}opt)
@@ -1899,7 +1904,7 @@ gr.GetBGRN(bits, len(bits));
 @anchor{torus}
 @deftypefn {Команда MGL} {} torus rdat zdat ['stl'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Torus (@code{const mglData &}r, @code{const mglData &}z, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Torus (@code{const mglDataA &}r, @code{const mglDataA &}z, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_torus (@code{HMGL} gr, @code{HCDT} r, @code{HCDT} z, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
 Функции рисуют поверхность вращения кривой @{@var{r}, @var{z}@} относительно оси. Если строка @var{pen} содержит @samp{x} или @samp{z}, то ось вращения будет выбрана в указанном направлении (по умолчанию вдоль оси y). См. также @ref{plot}, @ref{axial}. @sref{Torus sample}
@@ -1932,8 +1937,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} surf zdat ['sch'='']
 @deftypefnx {Команда MGL} {} surf xdat ydat zdat ['sch'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Surf (@code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Surf (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Surf (@code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Surf (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_surf (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_surf_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
@@ -1944,8 +1949,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} mesh zdat ['sch'='']
 @deftypefnx {Команда MGL} {} mesh xdat ydat zdat ['sch'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Mesh (@code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Mesh (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Mesh (@code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Mesh (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_mesh (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_mesh_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
@@ -1956,8 +1961,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} fall zdat ['sch'='']
 @deftypefnx {Команда MGL} {} fall xdat ydat zdat ['sch'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Fall (@code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Fall (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Fall (@code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Fall (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_fall (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_fall_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
@@ -1968,8 +1973,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} belt zdat ['sch'='']
 @deftypefnx {Команда MGL} {} belt xdat ydat zdat ['sch'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Belt (@code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Belt (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Belt (@code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Belt (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_belt (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_belt_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
@@ -1980,8 +1985,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} boxs zdat ['sch'='']
 @deftypefnx {Команда MGL} {} boxs xdat ydat zdat ['sch'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Boxs (@code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Boxs (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Boxs (@code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Boxs (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_boxs (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_boxs_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
@@ -1992,8 +1997,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} tile zdat ['sch'='']
 @deftypefnx {Команда MGL} {} tile xdat ydat zdat ['sch'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Tile (@code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Tile (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Tile (@code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Tile (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_tile (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_tile_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
@@ -2004,8 +2009,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} dens zdat ['sch'='']
 @deftypefnx {Команда MGL} {} dens xdat ydat zdat ['sch'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Dens (@code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""}, @code{mreal} zVal=@code{NAN})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Dens (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""}, @code{mreal} zVal=@code{NAN})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Dens (@code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""}, @code{mreal} zVal=@code{NAN})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Dens (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""}, @code{mreal} zVal=@code{NAN})
 @deftypefnx {Функция С} @code{void} mgl_dens (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_dens_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
@@ -2016,8 +2021,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} cont vdat zdat ['sch'='']
 @deftypefnx {Команда MGL} {} cont vdat xdat ydat zdat ['sch'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Cont (@code{const mglData &}v, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Cont (@code{const mglData &}v, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Cont (@code{const mglDataA &}v, @code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Cont (@code{const mglDataA &}v, @code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_cont__val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_cont_xy_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
@@ -2027,8 +2032,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} cont zdat ['sch'='']
 @deftypefnx {Команда MGL} {} cont xdat ydat zdat ['sch'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Cont (@code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Cont (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Cont (@code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Cont (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_cont (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_cont_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
@@ -2039,8 +2044,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} contf vdat zdat ['sch'='']
 @deftypefnx {Команда MGL} {} contf vdat xdat ydat zdat ['sch'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} ContF (@code{const mglData &}v, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} ContF (@code{const mglData &}v, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} ContF (@code{const mglDataA &}v, @code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} ContF (@code{const mglDataA &}v, @code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_contf_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_contf_xy_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
@@ -2050,8 +2055,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} contf zdat ['sch'='']
 @deftypefnx {Команда MGL} {} contf xdat ydat zdat ['sch'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} ContF (@code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} ContF (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} ContF (@code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} ContF (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_contf (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_contf_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
@@ -2062,8 +2067,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} contd vdat zdat ['sch'='']
 @deftypefnx {Команда MGL} {} contd vdat xdat ydat zdat ['sch'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} ContD (@code{const mglData &}v, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} ContD (@code{const mglData &}v, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} ContD (@code{const mglDataA &}v, @code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} ContD (@code{const mglDataA &}v, @code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_contd_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_contd_xy_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
@@ -2073,8 +2078,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} contd zdat ['sch'='']
 @deftypefnx {Команда MGL} {} contd xdat ydat zdat ['sch'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} ContD (@code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} ContD (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} ContD (@code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} ContD (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_contd (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_contd_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
@@ -2085,8 +2090,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} contv vdat zdat ['sch'='']
 @deftypefnx {Команда MGL} {} contv vdat xdat ydat zdat ['sch'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} ContV (@code{const mglData &}v, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} ContV (@code{const mglData &}v, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} ContV (@code{const mglDataA &}v, @code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} ContV (@code{const mglDataA &}v, @code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_contv_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_contv_xy_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
@@ -2096,8 +2101,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} contv zdat ['sch'='']
 @deftypefnx {Команда MGL} {} contv xdat ydat zdat ['sch'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} ContV (@code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} ContV (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} ContV (@code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} ContV (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_contv (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_contv_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
@@ -2108,8 +2113,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} axial vdat zdat ['sch'='']
 @deftypefnx {Команда MGL} {} axial vdat xdat ydat zdat ['sch'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Axial (@code{const mglData &}v, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Axial (@code{const mglData &}v, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Axial (@code{const mglDataA &}v, @code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Axial (@code{const mglDataA &}v, @code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_axial_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_axial_xy_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
@@ -2119,8 +2124,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} axial zdat ['sch'='']
 @deftypefnx {Команда MGL} {} axial xdat ydat zdat ['sch'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Axial (@code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""}, @code{int} num=@code{3})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Axial (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""}, @code{int} num=@code{3})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Axial (@code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""}, @code{int} num=@code{3})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Axial (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""}, @code{int} num=@code{3})
 @deftypefnx {Функция С} @code{void} mgl_axial (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_axial_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
@@ -2131,8 +2136,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} grid2 zdat ['sch'='']
 @deftypefnx {Команда MGL} {} grid2 xdat ydat zdat ['sch'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Grid (@code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Grid (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Grid (@code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Grid (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_grid (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_grid_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
@@ -2159,8 +2164,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} surf3 adat @code{val} ['sch'='']
 @deftypefnx {Команда MGL} {} surf3 xdat ydat zdat adat @code{val} ['sch'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Surf3 (@code{mreal} val, @code{const mglData &}a, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Surf3 (@code{mreal} val, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Surf3 (@code{mreal} val, @code{const mglDataA &}a, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Surf3 (@code{mreal} val, @code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}a, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_surf3_val (@code{HMGL} gr, @code{mreal} val, @code{HCDT} a, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_surf3_xyz_val (@code{HMGL} gr, @code{mreal} val, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
@@ -2170,8 +2175,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} surf3 adat ['sch'='']
 @deftypefnx {Команда MGL} {} surf3 xdat ydat zdat adat ['sch'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Surf3 (@code{const mglData &}a, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Surf3 (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Surf3 (@code{const mglDataA &}a, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Surf3 (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}a, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_surf3 (@code{HMGL} gr, @code{HCDT} a, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_surf3_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
@@ -2182,20 +2187,20 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} cloud adat ['sch'='']
 @deftypefnx {Команда MGL} {} cloud xdat ydat zdat adat ['sch'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Cloud (@code{const mglData &}a, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Cloud (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Cloud (@code{const mglDataA &}a, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Cloud (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}a, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_cloud (@code{HMGL} gr, @code{HCDT} a, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_cloud_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-Рисует облачный график для 3d массива, заданного параметрически @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]). График состоит из кубиков с цветом и прозрачностью пропорциональной значениям @var{a}. Результат похож на облако -- малые значения прозрачны, а большие нет. Число кубиков зависит от @ref{meshnum}. Если @var{sch} содержит @samp{.}, то будет построен график более низкого качества, но с заметно меньшим использованием памяти. Если @var{sch} содержит @samp{!}, то прозрачность будет инвертирована, т.е. области с более высокими значениями будут более прозрачны, а с более низким -- менее прозрачны. См. также @ref{surf3}, @ref{meshnum}. @sref{Cloud sample}
+Рисует облачный график для 3d массива, заданного параметрически @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]). График состоит из кубиков с цветом и прозрачностью пропорциональной значениям @var{a}. Результат похож на облако -- малые значения прозрачны, а большие нет. Число кубиков зависит от @ref{meshnum}. Если @var{sch} содержит @samp{.}, то будет построен график более низкого качества, но с заметно меньшим использованием памяти. Если @var{sch} содержит @samp{i}, то прозрачность будет инвертирована, т.е. области с более высокими значениями будут более прозрачны, а с более низким -- менее прозрачны. См. также @ref{surf3}, @ref{meshnum}. @sref{Cloud sample}
 @end deftypefn
 
 @anchor{dens3}
 @deftypefn {Команда MGL} {} dens3 adat ['sch'='' @code{sval=-1}]
 @deftypefnx {Команда MGL} {} dens3 xdat ydat zdat adat ['sch'='' @code{sval=-1}]
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Dens3 (@code{const mglData &}a, @code{const char *}sch=@code{""}, @code{mreal} sVal=@code{-1}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Dens3 (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const char *}sch=@code{""}, @code{mreal} sVal=@code{-1}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Dens3 (@code{const mglDataA &}a, @code{const char *}sch=@code{""}, @code{mreal} sVal=@code{-1}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Dens3 (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}a, @code{const char *}sch=@code{""}, @code{mreal} sVal=@code{-1}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_dens3 (@code{HMGL} gr, @code{HCDT} a, @code{const char *}sch, @code{mreal} sVal, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_dens3_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{const char *}sch, @code{mreal} sVal, @code{const char *}opt)
 @end ifclear
@@ -2206,8 +2211,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} cont3 vdat adat ['sch'='' @code{sval=-1}]
 @deftypefnx {Команда MGL} {} cont3 vdat xdat ydat zdat adat ['sch'='' @code{sval=-1}]
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Cont3 (@code{const mglData &}v, @code{const mglData &}a, @code{const char *}sch=@code{""}, @code{mreal} sVal=@code{-1}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Cont3 (@code{const mglData &}v, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const char *}sch=@code{""}, @code{mreal} sVal=@code{-1}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Cont3 (@code{const mglDataA &}v, @code{const mglDataA &}a, @code{const char *}sch=@code{""}, @code{mreal} sVal=@code{-1}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Cont3 (@code{const mglDataA &}v, @code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}a, @code{const char *}sch=@code{""}, @code{mreal} sVal=@code{-1}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_cont3_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} a, @code{const char *}sch, @code{mreal} sVal, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_cont3_xyz_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{const char *}sch, @code{mreal} sVal, @code{const char *}opt)
 @end ifclear
@@ -2217,8 +2222,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} cont3 adat ['sch'='' @code{sval=-1}]
 @deftypefnx {Команда MGL} {} cont3 xdat ydat zdat adat ['sch'='' @code{sval=-1}]
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Cont3 (@code{const mglData &}a, @code{const char *}sch=@code{""}, @code{mreal} sVal=@code{-1}, @code{const char *}opt=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Cont3 (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const char *}sch=@code{""}, @code{mreal} sVal=@code{-1}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Cont3 (@code{const mglDataA &}a, @code{const char *}sch=@code{""}, @code{mreal} sVal=@code{-1}, @code{const char *}opt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Cont3 (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}a, @code{const char *}sch=@code{""}, @code{mreal} sVal=@code{-1}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_cont3 (@code{HMGL} gr, @code{HCDT} a, @code{const char *}sch, @code{mreal} sVal, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_cont3_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{const char *}sch, @code{mreal} sVal, @code{const char *}opt)
 @end ifclear
@@ -2229,8 +2234,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} contf3 vdat adat ['sch'='' @code{sval=-1}]
 @deftypefnx {Команда MGL} {} contf3 vdat xdat ydat zdat adat ['sch'='' @code{sval=-1}]
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Contf3 (@code{const mglData &}v, @code{const mglData &}a, @code{const char *}sch=@code{""}, @code{mreal} sVal=@code{-1}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Contf3 (@code{const mglData &}v, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const char *}sch=@code{""}, @code{mreal} sVal=@code{-1}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Contf3 (@code{const mglDataA &}v, @code{const mglDataA &}a, @code{const char *}sch=@code{""}, @code{mreal} sVal=@code{-1}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Contf3 (@code{const mglDataA &}v, @code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}a, @code{const char *}sch=@code{""}, @code{mreal} sVal=@code{-1}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_contf3_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} a, @code{const char *}sch, @code{mreal} sVal, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_contf3_xyz_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{const char *}sch, @code{mreal} sVal, @code{const char *}opt)
 @end ifclear
@@ -2240,8 +2245,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} contf3 adat ['sch'='' @code{sval=-1}]
 @deftypefnx {Команда MGL} {} contf3 xdat ydat zdat adat ['sch'='' @code{sval=-1}]
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Contf3 (@code{const mglData &}a, @code{const char *}sch=@code{""}, @code{mreal} sVal=@code{-1}, @code{const char *}opt=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Contf3 (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const char *}sch=@code{""}, @code{mreal} sVal=@code{-1}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Contf3 (@code{const mglDataA &}a, @code{const char *}sch=@code{""}, @code{mreal} sVal=@code{-1}, @code{const char *}opt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Contf3 (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}a, @code{const char *}sch=@code{""}, @code{mreal} sVal=@code{-1}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_contf3 (@code{HMGL} gr, @code{HCDT} a, @code{const char *}sch, @code{mreal} sVal, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_contf3_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{const char *}sch, @code{mreal} sVal, @code{const char *}opt)
 @end ifclear
@@ -2252,8 +2257,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} grid3 adat ['sch'='' @code{sval=-1}]
 @deftypefnx {Команда MGL} {} grid3 xdat ydat zdat adat ['sch'='' @code{sval=-1}]
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Grid3 (@code{const mglData &}a, @code{const char *}sch=@code{""}, @code{mreal} sVal=@code{-1}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Grid3 (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const char *}sch=@code{""}, @code{mreal} sVal=@code{-1}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Grid3 (@code{const mglDataA &}a, @code{const char *}sch=@code{""}, @code{mreal} sVal=@code{-1}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Grid3 (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}a, @code{const char *}sch=@code{""}, @code{mreal} sVal=@code{-1}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_grid3 (@code{HMGL} gr, @code{HCDT} a, @code{const char *}sch, @code{mreal} sVal, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_grid3_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{const char *}sch, @code{mreal} sVal, @code{const char *}opt)
 @end ifclear
@@ -2263,8 +2268,8 @@ gr.GetBGRN(bits, len(bits));
 @anchor{beam}
 @deftypefn {Команда MGL} {} beam tr g1 g2 adat @code{rval} ['sch'='' @code{flag=0 num=3}]
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Beam (@code{const mglData &}tr, @code{const mglData &}g1, @code{const mglData &}g2, @code{const mglData &}a, @code{mreal} r, @code{const char *}stl=@code{""}, @code{int} flag=@code{0}, @code{int} num=@code{3})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Beam (@code{mreal} val, @code{const mglData &}tr, @code{const mglData &}g1, @code{const mglData &}g2, @code{const mglData &}a, @code{mreal} r, @code{const char *}stl=@code{""}, @code{int} flag=@code{0})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Beam (@code{const mglDataA &}tr, @code{const mglDataA &}g1, @code{const mglDataA &}g2, @code{const mglDataA &}a, @code{mreal} r, @code{const char *}stl=@code{""}, @code{int} flag=@code{0}, @code{int} num=@code{3})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Beam (@code{mreal} val, @code{const mglDataA &}tr, @code{const mglDataA &}g1, @code{const mglDataA &}g2, @code{const mglDataA &}a, @code{mreal} r, @code{const char *}stl=@code{""}, @code{int} flag=@code{0})
 @deftypefnx {Функция С} @code{void} mgl_beam (@code{HMGL} gr, @code{HCDT} tr, @code{HCDT} g1, @code{HCDT} g2, @code{HCDT} a, @code{mreal} r, @code{const char *}stl, @code{int} flag, @code{int} num)
 @deftypefnx {Функция С} @code{void} mgl_beam_val (@code{HMGL} gr, @code{mreal} val, @code{HCDT} tr, @code{HCDT} g1, @code{HCDT} g2, @code{HCDT} a, @code{mreal} r, @code{const char *}stl, @code{int} flag)
 @end ifclear
@@ -2291,8 +2296,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} surfc zdat cdat ['sch'='']
 @deftypefnx {Команда MGL} {} surfc xdat ydat zdat cdat ['sch'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} SurfC (@code{const mglData &}z, @code{const mglData &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} SurfC (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} SurfC (@code{const mglDataA &}z, @code{const mglDataA &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} SurfC (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_surfc (@code{HMGL} gr, @code{HCDT} z, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_surfc_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
@@ -2303,8 +2308,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} surf3c adat cdat @code{val} ['sch'='']
 @deftypefnx {Команда MGL} {} surf3c xdat ydat zdat adat cdat @code{val} ['sch'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Surf3C (@code{mreal} val, @code{const mglData &}a, @code{const mglData &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Surf3C (@code{mreal} val, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const mglData &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Surf3C (@code{mreal} val, @code{const mglDataA &}a, @code{const mglDataA &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Surf3C (@code{mreal} val, @code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}a, @code{const mglDataA &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_surf3c_val (@code{HMGL} gr, @code{mreal} val, @code{HCDT} a, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_surf3c_xyz_val (@code{HMGL} gr, @code{mreal} val, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
@@ -2314,8 +2319,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} surf3c adat cdat ['sch'='']
 @deftypefnx {Команда MGL} {} surf3c xdat ydat zdat adat cdat ['sch'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Surf3C (@code{const mglData &}a, @code{const mglData &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Surf3C (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const mglData &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Surf3C (@code{const mglDataA &}a, @code{const mglDataA &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Surf3C (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}a, @code{const mglDataA &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_surf3c (@code{HMGL} gr, @code{HCDT} a, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_surf3c_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
@@ -2327,8 +2332,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} surfa zdat cdat ['sch'='']
 @deftypefnx {Команда MGL} {} surfa xdat ydat zdat cdat ['sch'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} SurfA (@code{const mglData &}z, @code{const mglData &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} SurfA (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} SurfA (@code{const mglDataA &}z, @code{const mglDataA &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} SurfA (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_surfa (@code{HMGL} gr, @code{HCDT} z, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_surfa_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
@@ -2339,8 +2344,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} surf3a adat cdat @code{val} ['sch'='']
 @deftypefnx {Команда MGL} {} surf3a xdat ydat zdat adat cdat @code{val} ['sch'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Surf3A (@code{mreal} val, @code{const mglData &}a, @code{const mglData &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Surf3A (@code{mreal} val, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const mglData &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Surf3A (@code{mreal} val, @code{const mglDataA &}a, @code{const mglDataA &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Surf3A (@code{mreal} val, @code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}a, @code{const mglDataA &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_surf3a_val (@code{HMGL} gr, @code{mreal} val, @code{HCDT} a, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_surf3a_xyz_val (@code{HMGL} gr, @code{mreal} val, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
@@ -2350,8 +2355,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} surf3a adat cdat ['sch'='']
 @deftypefnx {Команда MGL} {} surf3a xdat ydat zdat adat cdat ['sch'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Surf3A (@code{const mglData &}a, @code{const mglData &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Surf3A (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const mglData &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Surf3A (@code{const mglDataA &}a, @code{const mglDataA &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Surf3A (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}a, @code{const mglDataA &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_surf3a (@code{HMGL} gr, @code{HCDT} a, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_surf3a_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
@@ -2362,8 +2367,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} tiles zdat rdat ['sch'='']
 @deftypefnx {Команда MGL} {} tiles xdat ydat zdat rdat ['sch'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} TileS (@code{const mglData &}z, @code{const mglData &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} TileS (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}r, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} TileS (@code{const mglDataA &}z, @code{const mglDataA &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} TileS (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}r, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_tiles (@code{HMGL} gr, @code{HCDT} z, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_tiles_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} r, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
@@ -2374,8 +2379,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} map udat vdat ['sch'='']
 @deftypefnx {Команда MGL} {} map xdat ydat udat vdat ['sch'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Map (@code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Map (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Map (@code{const mglDataA &}ax, @code{const mglDataA &}ay, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Map (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}ax, @code{const mglDataA &}ay, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_map (@code{HMGL} gr, @code{HCDT} ax, @code{HCDT} ay, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_map_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} ax, @code{HCDT} ay, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
@@ -2386,8 +2391,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} stfa re im @code{dn} ['sch'='']
 @deftypefnx {Команда MGL} {} stfa xdat ydat re im @code{dn} ['sch'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} STFA (@code{const mglData &}re, @code{const mglData &}im, @code{int} dn, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} STFA (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}re, @code{const mglData &}im, @code{int} dn, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} STFA (@code{const mglDataA &}re, @code{const mglDataA &}im, @code{int} dn, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} STFA (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}re, @code{const mglDataA &}im, @code{int} dn, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_stfa (@code{HMGL} gr, @code{HCDT} re, @code{HCDT} im, @code{int} dn, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_stfa_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} re, @code{HCDT} im, @code{int} dn, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
@@ -2412,8 +2417,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} traj xdat ydat udat vdat ['sch'='']
 @deftypefnx {Команда MGL} {} traj xdat ydat zdat udat vdat wdat ['sch'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Traj (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Traj (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}ax, @code{const mglData &}ay, @code{const mglData &}az, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Traj (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}ax, @code{const mglDataA &}ay, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Traj (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}ax, @code{const mglDataA &}ay, @code{const mglDataA &}az, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_traj_xyz (@code{HMGL} gr, @code{HCDT}x, @code{HCDT}y, @code{HCDT}z, @code{HCDT}ax, @code{HCDT}ay, @code{HCDT}az, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_traj_xy (@code{HMGL} gr, @code{HCDT}x, @code{HCDT}y, @code{HCDT}ax, @code{HCDT}ay, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
@@ -2424,8 +2429,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} vect udat vdat ['sch'='']
 @deftypefnx {Команда MGL} {} vect xdat ydat udat vdat ['sch'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Vect (@code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Vect (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Vect (@code{const mglDataA &}ax, @code{const mglDataA &}ay, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Vect (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}ax, @code{const mglDataA &}ay, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_vect_2d (@code{HMGL} gr, @code{HCDT} ax, @code{HCDT} ay, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_vect_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} ax, @code{HCDT} ay, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
@@ -2446,8 +2451,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} vect udat vdat wdat ['sch'='']
 @deftypefnx {Команда MGL} {} vect xdat ydat zdat udat vdat wdat ['sch'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Vect (@code{const mglData &}ax, @code{const mglData &}ay, @code{const mglData &}az, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Vect (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}ax, @code{const mglData &}ay, @code{const mglData &}az, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Vect (@code{const mglDataA &}ax, @code{const mglDataA &}ay, @code{const mglDataA &}az, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Vect (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}ax, @code{const mglDataA &}ay, @code{const mglDataA &}az, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_vect_3d (@code{HMGL} gr, @code{HCDT} ax, @code{HCDT} ay, @code{HCDT} az, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_vect_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} ax, @code{HCDT} ay, @code{HCDT} az, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
@@ -2458,8 +2463,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {MGL command} {} vect3 udat vdat wdat ['sch'='' sval]
 @deftypefnx {MGL command} {} vect3 xdat ydat zdat udat vdat wdat ['sch'='' sval]
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} Vect3 (@code{const mglData &}ax, @code{const mglData &}ay, @code{const mglData &}az, @code{const char *}sch=@code{""}, @code{mreal} sVal=@code{-1}, @code{const char *}opt=@code{""})
-@deftypefnx {Method on @code{mglGraph}} @code{void} Vect3 (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}ax, @code{const mglData &}ay, @code{const mglData &}az, @code{const char *}sch=@code{""}, @code{mreal} sVal=@code{-1}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Vect3 (@code{const mglDataA &}ax, @code{const mglDataA &}ay, @code{const mglDataA &}az, @code{const char *}sch=@code{""}, @code{mreal} sVal=@code{-1}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Vect3 (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}ax, @code{const mglDataA &}ay, @code{const mglDataA &}az, @code{const char *}sch=@code{""}, @code{mreal} sVal=@code{-1}, @code{const char *}opt=@code{""})
 @deftypefnx {C function} @code{void} mgl_vect3 (@code{HMGL} gr, @code{HCDT} ax, @code{HCDT} ay, @code{HCDT} az, @code{const char *}sch, @code{mreal} sVal, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_vect3_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} ax, @code{HCDT} ay, @code{HCDT} az, @code{const char *}sch, @code{mreal} sVal, @code{const char *}opt)
 @end ifclear
@@ -2481,8 +2486,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} dew udat vdat ['sch'='']
 @deftypefnx {Команда MGL} {} dew xdat ydat udat vdat ['sch'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Dew (@code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Dew (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Dew (@code{const mglDataA &}ax, @code{const mglDataA &}ay, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Dew (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}ax, @code{const mglDataA &}ay, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_dew (@code{HMGL} gr, @code{HCDT} ax, @code{HCDT} ay, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_dew_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} ax, @code{HCDT} ay, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
@@ -2493,8 +2498,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} flow udat vdat ['sch'='']
 @deftypefnx {Команда MGL} {} flow xdat ydat udat vdat ['sch'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Flow (@code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Flow (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Flow (@code{const mglDataA &}ax, @code{const mglDataA &}ay, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Flow (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}ax, @code{const mglDataA &}ay, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_flow_2d (@code{HMGL} gr, @code{HCDT} ax, @code{HCDT} ay, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_flow_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} ax, @code{HCDT} ay, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
@@ -2515,8 +2520,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} flow udat vdat wdat ['sch'='']
 @deftypefnx {Команда MGL} {} flow xdat ydat zdat udat vdat wdat ['sch'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Flow (@code{const mglData &}ax, @code{const mglData &}ay, @code{const mglData &}az, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Flow (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}ax, @code{const mglData &}ay, @code{const mglData &}az, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Flow (@code{const mglDataA &}ax, @code{const mglDataA &}ay, @code{const mglDataA &}az, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Flow (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}ax, @code{const mglDataA &}ay, @code{const mglDataA &}az, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_flow_3d (@code{HMGL} gr, @code{HCDT} ax, @code{HCDT} ay, @code{HCDT} az, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_flow_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} ax, @code{HCDT} ay, @code{HCDT} az, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
@@ -2526,8 +2531,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} flow @code{x0 y0} udat vdat ['sch'='']
 @deftypefnx {Команда MGL} {} flow @code{x0 y0} xdat ydat udat vdat ['sch'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} FlowP (@code{mglPoint} p0, @code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} FlowP (@code{mglPoint} p0, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} FlowP (@code{mglPoint} p0, @code{const mglDataA &}ax, @code{const mglDataA &}ay, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} FlowP (@code{mglPoint} p0, @code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}ax, @code{const mglDataA &}ay, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_flowp_2d (@code{HMGL} gr, @code{mreal} x0, @code{mreal} y0, @code{mreal} z0, @code{HCDT} ax, @code{HCDT} ay, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_flowp_xy (@code{HMGL} gr, @code{mreal} x0, @code{mreal} y0, @code{mreal} z0, @code{HCDT} x, @code{HCDT} y, @code{HCDT} ax, @code{HCDT} ay, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
@@ -2537,8 +2542,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} flow @code{x0 y0 z0} udat vdat wdat ['sch'='']
 @deftypefnx {Команда MGL} {} flow @code{x0 y0 z0} xdat ydat zdat udat vdat wdat ['sch'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} FlowP (@code{mglPoint} p0, @code{const mglData &}ax, @code{const mglData &}ay, @code{const mglData &}az, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} FlowP (@code{mglPoint} p0, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}ax, @code{const mglData &}ay, @code{const mglData &}az, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} FlowP (@code{mglPoint} p0, @code{const mglDataA &}ax, @code{const mglDataA &}ay, @code{const mglDataA &}az, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} FlowP (@code{mglPoint} p0, @code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}ax, @code{const mglDataA &}ay, @code{const mglDataA &}az, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_flowp_3d (@code{HMGL} gr, @code{mreal} x0, @code{mreal} y0, @code{mreal} z0, @code{HCDT} ax, @code{HCDT} ay, @code{HCDT} az, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_flowp_xyz (@code{HMGL} gr, @code{mreal} x0, @code{mreal} y0, @code{mreal} z0, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} ax, @code{HCDT} ay, @code{HCDT} az, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
@@ -2550,9 +2555,9 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Команда MGL} {} grad xdat ydat pdat ['sch'='']
 @deftypefnx {Команда MGL} {} grad xdat ydat zdat pdat ['sch'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Grad (@code{const mglData &}phi, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Grad (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}phi, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Grad (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}phi, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Grad (@code{const mglDataA &}phi, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Grad (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}phi, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Grad (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}phi, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_grad (@code{HMGL} gr, @code{HCDT} phi, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_grad_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} phi, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_grad_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} phi, @code{const char *}sch, @code{const char *}opt)
@@ -2564,8 +2569,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} pipe udat vdat ['sch'='' @code{r0=0.05}]
 @deftypefnx {Команда MGL} {} pipe xdat ydat udat vdat ['sch'='' @code{r0=0.05}]
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Pipe (@code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{""}, @code{mreal} r0=@code{0.05}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Pipe (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{""}, @code{mreal} r0=@code{0.05}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Pipe (@code{const mglDataA &}ax, @code{const mglDataA &}ay, @code{const char *}sch=@code{""}, @code{mreal} r0=@code{0.05}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Pipe (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}ax, @code{const mglDataA &}ay, @code{const char *}sch=@code{""}, @code{mreal} r0=@code{0.05}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_pipe_2d (@code{HMGL} gr, @code{HCDT} ax, @code{HCDT} ay, @code{const char *}sch, @code{mreal} r0, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_pipe_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} ax, @code{HCDT} ay, @code{const char *}sch, @code{mreal} r0, @code{const char *}opt)
 @end ifclear
@@ -2575,8 +2580,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} pipe udat vdat wdat ['sch'='' @code{r0=0.05}]
 @deftypefnx {Команда MGL} {} pipe xdat ydat zdat udat vdat wdat ['sch'='' @code{r0=0.05}]
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Pipe (@code{const mglData &}ax, @code{const mglData &}ay, @code{const mglData &}az, @code{const char *}sch=@code{""}, @code{mreal} r0=@code{0.05}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Pipe (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}ax, @code{const mglData &}ay, @code{const mglData &}az, @code{const char *}sch=@code{""}, @code{mreal} r0=@code{0.05}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Pipe (@code{const mglDataA &}ax, @code{const mglDataA &}ay, @code{const mglDataA &}az, @code{const char *}sch=@code{""}, @code{mreal} r0=@code{0.05}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Pipe (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}ax, @code{const mglDataA &}ay, @code{const mglDataA &}az, @code{const char *}sch=@code{""}, @code{mreal} r0=@code{0.05}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_pipe_3d (@code{HMGL} gr, @code{HCDT} ax, @code{HCDT} ay, @code{HCDT} az, @code{const char *}sch, @code{mreal} r0, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_pipe_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} ax, @code{HCDT} ay, @code{HCDT} az, @code{const char *}sch, @code{mreal} r0, @code{const char *}opt)
 @end ifclear
@@ -2606,9 +2611,9 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Команда MGL} {} densy dat ['sch'='' @code{sval=nan}]
 @deftypefnx {Команда MGL} {} densz dat ['sch'='' @code{sval=nan}]
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} DensX (@code{const mglData &}a, @code{const char *}stl=@code{""}, @code{mreal} sVal=@code{NAN}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} DensY (@code{const mglData &}a, @code{const char *}stl=@code{""}, @code{mreal} sVal=@code{NAN}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} DensZ (@code{const mglData &}a, @code{const char *}stl=@code{""}, @code{mreal} sVal=@code{NAN}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} DensX (@code{const mglDataA &}a, @code{const char *}stl=@code{""}, @code{mreal} sVal=@code{NAN}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} DensY (@code{const mglDataA &}a, @code{const char *}stl=@code{""}, @code{mreal} sVal=@code{NAN}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} DensZ (@code{const mglDataA &}a, @code{const char *}stl=@code{""}, @code{mreal} sVal=@code{NAN}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_dens_x (@code{HMGL} gr, @code{HCDT} a, @code{const char *}stl, @code{mreal} sVal, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_dens_y (@code{HMGL} gr, @code{HCDT} a, @code{const char *}stl, @code{mreal} sVal, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_dens_z (@code{HMGL} gr, @code{HCDT} a, @code{const char *}stl, @code{mreal} sVal, @code{const char *}opt)
@@ -2621,9 +2626,9 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Команда MGL} {} conty dat ['sch'='' @code{sval=nan}]
 @deftypefnx {Команда MGL} {} contz dat ['sch'='' @code{sval=nan}]
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} ContX (@code{const mglData &}a, @code{const char *}stl=@code{""}, @code{mreal} sVal=@code{NAN}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} ContY (@code{const mglData &}a, @code{const char *}stl=@code{""}, @code{mreal} sVal=@code{NAN}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} ContZ (@code{const mglData &}a, @code{const char *}stl=@code{""}, @code{mreal} sVal=@code{NAN}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} ContX (@code{const mglDataA &}a, @code{const char *}stl=@code{""}, @code{mreal} sVal=@code{NAN}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} ContY (@code{const mglDataA &}a, @code{const char *}stl=@code{""}, @code{mreal} sVal=@code{NAN}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} ContZ (@code{const mglDataA &}a, @code{const char *}stl=@code{""}, @code{mreal} sVal=@code{NAN}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_cont_x (@code{HMGL} gr, @code{HCDT} a, @code{const char *}stl, @code{mreal} sVal, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_cont_y (@code{HMGL} gr, @code{HCDT} a, @code{const char *}stl, @code{mreal} sVal, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_cont_z (@code{HMGL} gr, @code{HCDT} a, @code{const char *}stl, @code{mreal} sVal, @code{const char *}opt)
@@ -2632,9 +2637,9 @@ gr.GetBGRN(bits, len(bits));
 @end deftypefn
 
 @ifclear UDAV
-@deftypefn {Метод класса @code{mglGraph}} @code{void} ContX (@code{const mglData &}v, @code{const mglData &}a, @code{const char *}stl=@code{""}, @code{mreal} sVal=@code{NAN}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} ContY (@code{const mglData &}v, @code{const mglData &}a, @code{const char *}stl=@code{""}, @code{mreal} sVal=@code{NAN}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} ContZ (@code{const mglData &}v, @code{const mglData &}a, @code{const char *}stl=@code{""}, @code{mreal} sVal=@code{NAN}, @code{const char *}opt=@code{""})
+@deftypefn {Метод класса @code{mglGraph}} @code{void} ContX (@code{const mglDataA &}v, @code{const mglDataA &}a, @code{const char *}stl=@code{""}, @code{mreal} sVal=@code{NAN}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} ContY (@code{const mglDataA &}v, @code{const mglDataA &}a, @code{const char *}stl=@code{""}, @code{mreal} sVal=@code{NAN}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} ContZ (@code{const mglDataA &}v, @code{const mglDataA &}a, @code{const char *}stl=@code{""}, @code{mreal} sVal=@code{NAN}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_cont_x_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} a, @code{const char *}stl, @code{mreal} sVal, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_cont_y_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} a, @code{const char *}stl, @code{mreal} sVal, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_cont_z_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} a, @code{const char *}stl, @code{mreal} sVal, @code{const char *}opt)
@@ -2647,9 +2652,9 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Команда MGL} {} contfy dat ['sch'='' @code{sval=nan}]
 @deftypefnx {Команда MGL} {} contfz dat ['sch'='' @code{sval=nan}]
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} ContFX (@code{const mglData &}a, @code{const char *}stl=@code{""}, @code{mreal} sVal=@code{NAN}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} ContFY (@code{const mglData &}a, @code{const char *}stl=@code{""}, @code{mreal} sVal=@code{NAN}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} ContFZ (@code{const mglData &}a, @code{const char *}stl=@code{""}, @code{mreal} sVal=@code{NAN}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} ContFX (@code{const mglDataA &}a, @code{const char *}stl=@code{""}, @code{mreal} sVal=@code{NAN}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} ContFY (@code{const mglDataA &}a, @code{const char *}stl=@code{""}, @code{mreal} sVal=@code{NAN}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} ContFZ (@code{const mglDataA &}a, @code{const char *}stl=@code{""}, @code{mreal} sVal=@code{NAN}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_contf_x (@code{HMGL} gr, @code{HCDT} a, @code{const char *}stl, @code{mreal} sVal, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_contf_y (@code{HMGL} gr, @code{HCDT} a, @code{const char *}stl, @code{mreal} sVal, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_contf_z (@code{HMGL} gr, @code{HCDT} a, @code{const char *}stl, @code{mreal} sVal, @code{const char *}opt)
@@ -2658,9 +2663,9 @@ gr.GetBGRN(bits, len(bits));
 @end deftypefn
 
 @ifclear UDAV
-@deftypefn {Метод класса @code{mglGraph}} @code{void} ContFX (@code{const mglData &}v, @code{const mglData &}a, @code{const char *}stl=@code{""}, @code{mreal} sVal=@code{NAN}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} ContFY (@code{const mglData &}v, @code{const mglData &}a, @code{const char *}stl=@code{""}, @code{mreal} sVal=@code{NAN}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} ContFZ (@code{const mglData &}v, @code{const mglData &}a, @code{const char *}stl=@code{""}, @code{mreal} sVal=@code{NAN}, @code{const char *}opt=@code{""})
+@deftypefn {Метод класса @code{mglGraph}} @code{void} ContFX (@code{const mglDataA &}v, @code{const mglDataA &}a, @code{const char *}stl=@code{""}, @code{mreal} sVal=@code{NAN}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} ContFY (@code{const mglDataA &}v, @code{const mglDataA &}a, @code{const char *}stl=@code{""}, @code{mreal} sVal=@code{NAN}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} ContFZ (@code{const mglDataA &}v, @code{const mglDataA &}a, @code{const char *}stl=@code{""}, @code{mreal} sVal=@code{NAN}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_contf_x_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} a, @code{const char *}stl, @code{mreal} sVal, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_contf_y_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} a, @code{const char *}stl, @code{mreal} sVal, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_contf_z_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} a, @code{const char *}stl, @code{mreal} sVal, @code{const char *}opt)
@@ -2707,9 +2712,9 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Команда MGL} {} triplot idat xdat ydat zdat ['sch'='']
 @deftypefnx {Команда MGL} {} triplot idat xdat ydat zdat cdat ['sch'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} TriPlot (@code{const mglData &}id, @code{const mglData &}x, @code{const mglData &}y, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} TriPlot (@code{const mglData &}id, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} TriPlot (@code{const mglData &}id, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} TriPlot (@code{const mglDataA &}id, @code{const mglDataA &}x, @code{const mglDataA &}y, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} TriPlot (@code{const mglDataA &}id, @code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} TriPlot (@code{const mglDataA &}id, @code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_triplot_xy (@code{HMGL} gr, @code{HCDT} id, @code{HCDT} x, @code{HCDT} y, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_triplot_xyz (@code{HMGL} gr, @code{HCDT} id, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_triplot_xyzc (@code{HMGL} gr, @code{HCDT} id, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
@@ -2722,10 +2727,10 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Команда MGL} {} tricont vdat idat xdat ydat zdat ['sch'='']
 @deftypefnx {Команда MGL} {} tricont idat xdat ydat zdat ['sch'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} TriCont (@code{const mglData &}id, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} TriCont (@code{const mglData &}id, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} TriContV (@code{const mglData &}v, @code{const mglData &}id, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} TriContV (@code{const mglData &}v, @code{const mglData &}id, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} TriCont (@code{const mglDataA &}id, @code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} TriCont (@code{const mglDataA &}id, @code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} TriContV (@code{const mglDataA &}v, @code{const mglDataA &}id, @code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} TriContV (@code{const mglDataA &}v, @code{const mglDataA &}id, @code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_tricont_xyzc (@code{HMGL} gr, @code{HCDT} id, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_tricont_xyz (@code{HMGL} gr, @code{HCDT} id, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_tricont_xyzcv (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} id, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
@@ -2739,9 +2744,9 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Команда MGL} {} quadplot idat xdat ydat zdat ['sch'='']
 @deftypefnx {Команда MGL} {} quadplot idat xdat ydat zdat cdat ['sch'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} QuadPlot (@code{const mglData &}id, @code{const mglData &}x, @code{const mglData &}y, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} QuadPlot (@code{const mglData &}id, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} QuadPlot (@code{const mglData &}id, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} QuadPlot (@code{const mglDataA &}id, @code{const mglDataA &}x, @code{const mglDataA &}y, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} QuadPlot (@code{const mglDataA &}id, @code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}c, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} QuadPlot (@code{const mglDataA &}id, @code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_quadplot_xy (@code{HMGL} gr, @code{HCDT} id, @code{HCDT} x, @code{HCDT} y, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_quadplot_xyz (@code{HMGL} gr, @code{HCDT} id, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_quadplot_xyzc (@code{HMGL} gr, @code{HCDT} id, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
@@ -2753,8 +2758,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} dots xdat ydat zdat ['sch'='']
 @deftypefnx {Команда MGL} {} dots xdat ydat zdat adat ['sch'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Dots (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Dots (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Dots (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Dots (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}a, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_dots (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_dots_a (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
@@ -2764,7 +2769,7 @@ gr.GetBGRN(bits, len(bits));
 @anchor{crust}
 @deftypefn {Команда MGL} {} crust xdat ydat zdat ['sch'='']
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Crust (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Crust (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_crust (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
 Реконструирует и рисует поверхность по произвольно расположенным точкам @{@var{x}[i], @var{y}[i], @var{z}[i]@}. Опция @var{value} задает радиус ошибки (увеличите для удаления дыр). Строка @var{sch} задает цветовую схему. Если строка содержит @samp{#}, то рисуется сетчатая поверхность. Массивы @var{x}, @var{y}, @var{z} должны иметь одинаковые размеры. См. также @ref{dots}, @ref{triplot}. @c @sref{Crust sample}
@@ -2791,14 +2796,14 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Команда MGL} {} fits res xdat ydat adat sdat 'func' 'var' [ini=0]
 @deftypefnx {Команда MGL} {} fits res xdat ydat zdat adat sdat 'func' 'var' [ini=0]
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{mglData} FitS (@code{const mglData &}a, @code{const mglData &}s, @code{const char *}func, @code{const char *}var, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{mglData} FitS (@code{const mglData &}a, @code{const mglData &}s, @code{const char *}func, @code{const char *}var, @code{mglData &}ini, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{mglData} FitS (@code{const mglData &}x, @code{const mglData &}a, @code{const mglData &}s, @code{const char *}func, @code{const char *}var, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{mglData} FitS (@code{const mglData &}x, @code{const mglData &}a, @code{const mglData &}s, @code{const char *}func, @code{const char *}var, @code{mglData &}ini, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{mglData} FitS (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}a, @code{const mglData &}s, @code{const char *}func, @code{const char *}var, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{mglData} FitS (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}a, @code{const mglData &}s, @code{const char *}func, @code{const char *}var, @code{mglData &}ini, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{mglData} FitS (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const mglData &}s, @code{const char *}func, @code{const char *}var, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{mglData} FitS (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const mglData &}s, @code{const char *}func, @code{const char *}var, @code{mglData &}ini, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{mglData} FitS (@code{const mglDataA &}a, @code{const mglDataA &}s, @code{const char *}func, @code{const char *}var, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{mglData} FitS (@code{const mglDataA &}a, @code{const mglDataA &}s, @code{const char *}func, @code{const char *}var, @code{mglData &}ini, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{mglData} FitS (@code{const mglDataA &}x, @code{const mglDataA &}a, @code{const mglDataA &}s, @code{const char *}func, @code{const char *}var, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{mglData} FitS (@code{const mglDataA &}x, @code{const mglDataA &}a, @code{const mglDataA &}s, @code{const char *}func, @code{const char *}var, @code{mglData &}ini, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{mglData} FitS (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}a, @code{const mglDataA &}s, @code{const char *}func, @code{const char *}var, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{mglData} FitS (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}a, @code{const mglDataA &}s, @code{const char *}func, @code{const char *}var, @code{mglData &}ini, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{mglData} FitS (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}a, @code{const mglDataA &}s, @code{const char *}func, @code{const char *}var, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{mglData} FitS (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}a, @code{const mglDataA &}s, @code{const char *}func, @code{const char *}var, @code{mglData &}ini, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{HMDT} mgl_fit_ys (@code{HMGL} gr, @code{HCDT} a, @code{HCDT} s, @code{const char *}func, @code{const char *}var, @code{HMDT} ini, @code{const char *}opt)
 @deftypefnx {Функция С} @code{HMDT} mgl_fit_xys (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} a, @code{HCDT} s, @code{const char *}func, @code{const char *}var, @code{HMDT} ini, @code{const char *}opt)
 @deftypefnx {Функция С} @code{HMDT} mgl_fit_xyzs (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} a, @code{HCDT} s, @code{const char *}func, @code{const char *}var, @code{HMDT} ini, @code{const char *}opt)
@@ -2813,14 +2818,14 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Команда MGL} {} fit res xdat ydat adat sdat 'func' 'var' [ini=0]
 @deftypefnx {Команда MGL} {} fit res xdat ydat zdat adat sdat 'func' 'var' [ini=0]
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{mglData} Fit (@code{const mglData &}a, @code{const char *}func, @code{const char *}var, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{mglData} Fit (@code{const mglData &}a, @code{const char *}func, @code{const char *}var, @code{mglData &}ini, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{mglData} Fit (@code{const mglData &}x, @code{const mglData &}a, @code{const char *}func, @code{const char *}var, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{mglData} Fit (@code{const mglData &}x, @code{const mglData &}a, @code{const char *}func, @code{const char *}var, @code{mglData &}ini, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{mglData} Fit (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}a, @code{const char *}func, @code{const char *}var, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{mglData} Fit (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}a, @code{const char *}func, @code{const char *}var, @code{mglData &}ini, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{mglData} Fit (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const char *}func, @code{const char *}var, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{mglData} Fit (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const char *}func, @code{const char *}var, @code{mglData &}ini, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{mglData} Fit (@code{const mglDataA &}a, @code{const char *}func, @code{const char *}var, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{mglData} Fit (@code{const mglDataA &}a, @code{const char *}func, @code{const char *}var, @code{mglData &}ini, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{mglData} Fit (@code{const mglDataA &}x, @code{const mglDataA &}a, @code{const char *}func, @code{const char *}var, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{mglData} Fit (@code{const mglDataA &}x, @code{const mglDataA &}a, @code{const char *}func, @code{const char *}var, @code{mglData &}ini, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{mglData} Fit (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}a, @code{const char *}func, @code{const char *}var, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{mglData} Fit (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}a, @code{const char *}func, @code{const char *}var, @code{mglData &}ini, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{mglData} Fit (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}a, @code{const char *}func, @code{const char *}var, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{mglData} Fit (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}a, @code{const char *}func, @code{const char *}var, @code{mglData &}ini, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{HMDT} mgl_fit_y (@code{HMGL} gr, @code{HCDT} a, @code{const char *}func, @code{const char *}var, @code{HMDT} ini, @code{const char *}opt)
 @deftypefnx {Функция С} @code{HMDT} mgl_fit_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} a, @code{const char *}func, @code{const char *}var, @code{HMDT} ini, @code{const char *}opt)
 @deftypefnx {Функция С} @code{HMDT} mgl_fit_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} a, @code{const char *}func, @code{const char *}var, @code{HMDT} ini, @code{const char *}opt)
@@ -2831,10 +2836,10 @@ gr.GetBGRN(bits, len(bits));
 
 
 @ifclear UDAV
-@deftypefn {Метод класса @code{mglGraph}} @code{mglData} Fit2 (@code{const mglData &}a, @code{const char *}func, @code{const char *}var, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{mglData} Fit2 (@code{mglData &}fit, @code{const mglData &}a, @code{const char *}func, @code{const char *}var, @code{mglData &}ini, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{mglData} Fit3 (@code{mglData &}fit, @code{const mglData &}a, @code{const char *}func, @code{const char *}var, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{mglData} Fit3 (@code{mglData &}fit, @code{const mglData &}a, @code{const char *}func, @code{const char *}var, @code{mglData &}ini, @code{const char *}opt=@code{""})
+@deftypefn {Метод класса @code{mglGraph}} @code{mglData} Fit2 (@code{const mglDataA &}a, @code{const char *}func, @code{const char *}var, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{mglData} Fit2 (@code{mglData &}fit, @code{const mglDataA &}a, @code{const char *}func, @code{const char *}var, @code{mglData &}ini, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{mglData} Fit3 (@code{mglData &}fit, @code{const mglDataA &}a, @code{const char *}func, @code{const char *}var, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{mglData} Fit3 (@code{mglData &}fit, @code{const mglDataA &}a, @code{const char *}func, @code{const char *}var, @code{mglData &}ini, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{HMDT} mgl_fit_2 (@code{HMGL} gr, @code{HCDT} a, @code{const char *}func, @code{const char *}var, @code{HMDT} ini, @code{const char *}opt)
 @deftypefnx {Функция С} @code{HMDT} mgl_fit_3 (@code{HMGL} gr, @code{HCDT} a, @code{const char *}func, @code{const char *}var, @code{HMDT} ini, @code{const char *}opt)
 "Подгоняют" формулу вдоль всех направлений для 2d или 3d массива @var{a} с @var{s}=1 и @var{x}, @var{y}, @var{z} равно распределёнными в диапазоне осей координат.
@@ -2870,9 +2875,9 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Команда MGL} {} hist @sc{res} xdat ydat adat
 @deftypefnx {Команда MGL} {} hist @sc{res} xdat ydat zdat adat
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{mglData} Hist (@code{const mglData &}x, @code{const mglData &}a, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{mglData} Hist (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}a, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{mglData} Hist (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{mglData} Hist (@code{const mglDataA &}x, @code{const mglDataA &}a, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{mglData} Hist (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}a, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{mglData} Hist (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}a, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{HMDT} mgl_hist_x (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} a, @code{const char *}opt)
 @deftypefnx {Функция С} @code{HMDT} mgl_hist_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} a, @code{const char *}opt)
 @deftypefnx {Функция С} @code{HMDT} mgl_hist_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{const char *}opt)
@@ -2886,8 +2891,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Команда MGL} {} fill dat 'eq' vdat wdat
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} Fill (@code{mglData &}u, @code{const char *}eq, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Fill (@code{mglData &}u, @code{const char *}eq, @code{const mglData &}v, @code{const char *}opt=@code{""})
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Fill (@code{mglData &}u, @code{const char *}eq, @code{const mglData &}v, @code{const mglData &}w, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Fill (@code{mglData &}u, @code{const char *}eq, @code{const mglDataA &}v, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Fill (@code{mglData &}u, @code{const char *}eq, @code{const mglDataA &}v, @code{const mglDataA &}w, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_data_fill_eq (@code{HMGL} gr, @code{HMDT} u, @code{const char *}eq, @code{HCDT}v, @code{HCDT}w, @code{const char *}opt)
 @end ifclear
 Заполняют значения массива @samp{u} в соответствии с формулой в строке @var{eq}. Формула -- произвольное выражение, зависящее от переменных @samp{x}, @samp{y}, @samp{z}, @samp{u}, @samp{v}, @samp{w}. Координаты @samp{x}, @samp{y}, @samp{z} полагаются в диапазоне изменения осей координат. Переменная @samp{u} -- значение исходного массива. Переменные @samp{v} и @samp{w} -- значения массивов @var{v}, @var{w}, которые могут быть @code{NULL} (т.е. могут быть опущены).
@@ -2895,7 +2900,7 @@ gr.GetBGRN(bits, len(bits));
 
 @deftypefn {MGL command} {} datagrid dat xdat ydat zdat
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} DataGrid (@code{mglData &}u, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} DataGrid (@code{mglData &}u, @code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_data_grid (@code{HMGL} gr, @code{HMDT} u, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}opt)
 @end ifclear
 Заполняет значения массива @samp{u} результатом линейной интерполяции по триангулированной поверхности, найденной по произвольно расположенным точкам @samp{x}, @samp{y}, @samp{z}. NAN значение используется для точек сетки вне триангулированной поверхности.
@@ -2905,7 +2910,7 @@ gr.GetBGRN(bits, len(bits));
 
 @deftypefn {Команда MGL} {} pde @sc{res} 'ham' ini_re ini_im [@code{dz=0.1 k0=100}]
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{mglData} PDE (@code{const char *}ham, @code{const mglData &}ini_re, @code{const mglData &}ini_im, @code{mreal} dz=@code{0.1}, @code{mreal} k0=@code{100}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{mglData} PDE (@code{const char *}ham, @code{const mglDataA &}ini_re, @code{const mglDataA &}ini_im, @code{mreal} dz=@code{0.1}, @code{mreal} k0=@code{100}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{HMDT} mgl_pde_solve (@code{HMGL} gr, @code{const char *}ham, @code{HCDT} ini_re, @code{HCDT} ini_im, @code{mreal} dz, @code{mreal} k0, @code{const char *}opt)
 @end ifclear
 Решает уравнение в частных производных du/dz = i*k0*@var{ham}(p,q,x,y,z,|u|)[u], где p=-i/k0*d/dx, q=-i/k0*d/dy -- псевдо-дифференциальные оперторы. Параметры @var{ini_re}, @var{ini_im} задают действительную и мнимую часть начального распределения поля. Координаты @samp{x}, @samp{y}, @samp{z} полагаются в диапазоне изменения осей координат. Отмечу, ято в действительности этот диапазон увеличен на 3/2 для уменьшения отражения от границ сетки. Параметр @var{dz} задает шаг по эволюционной координате z. Сейчас используется упрощенный вид функции @var{ham} -- исключены все ``смешанные'' члены (типа @samp{x*p}->x*d/dx). Например, в 2D случае это функция вида @math{ham = f(p,z) + g(x,z,u)}. Однако, коммутирующие члены (типа @samp{x*q}->x*d/dy) разрешены. Переменная @samp{u} используется для амплитуды поля |u|, что позволяет решать нелинейные задачи -- например уравнение Шредингера @code{ham="p^2 + q^2 - u^2"}. Вы можете задавать мнимую часть для поглощения волн, например @code{ham = "p^2 + i*x*(x>0)"}, но только для линейной зависимости от переменной @samp{i} (т.е. @math{ham = hre+i*him}). @sref{PDE solving hints}

@@ -44,6 +44,7 @@
 #include <QTextEdit>
 
 class QCompleter;
+class Numb;
 
 class TextEdit : public QTextEdit
 {	Q_OBJECT
@@ -51,17 +52,39 @@ public:
 	TextEdit(QWidget *parent = 0);
 	void setCompleter(QCompleter *c);
 	QCompleter *completer() const {	return c;	}
-
+	void numbPaintEvent(QPaintEvent *event);
+	int numbWidth();
+	
 protected:
 	void keyPressEvent(QKeyEvent *e);
 	void focusInEvent(QFocusEvent *e);
-
+	void resizeEvent(QResizeEvent *event);
+	
 private slots:
 	void insertCompletion(const QString &completion);
+	void updateNumbWidth();
+	void highlight();
+	void updateNumb(const QRect &, int);
 
 private:
 	QString textUnderCursor() const;
 	QCompleter *c;
+	QWidget *numb;
 };
+
+class LineNumb : public QWidget
+{
+public:
+	LineNumb(TextEdit *editor) : QWidget(editor)
+	{	codeEditor = editor;	}
+	QSize sizeHint() const
+	{	return QSize(codeEditor->numbWidth(), 0);	}
+protected:
+	void paintEvent(QPaintEvent *event)
+	{	codeEditor->numbPaintEvent(event);	}
+private:
+	TextEdit *codeEditor;
+};
+
 
 #endif // TEXTEDIT_H

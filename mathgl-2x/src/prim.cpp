@@ -487,7 +487,7 @@ void mgl_dew_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, cons
 
 	mreal xm,ym,dx,dy,dd;
 	long ss = gr->AddTexture(sch);
-	bool inv = mglchr(sch,'A');
+	bool inv = mglchr(sch,'i');
 	mreal	zVal = gr->Min.z;
 	long tx=1,ty=1;
 	if(gr->MeshNum>1)	{	tx=(n-1)/(gr->MeshNum-1);	ty=(m-1)/(gr->MeshNum-1);	}

@@ -267,15 +267,19 @@ void mgl_perspective_(uintptr_t *graph, mreal val);
 /******************************************************************************/
 HMGL mgl_create_graph_qt(int (*draw)(HMGL gr, void *p), const char *title, void *par, void (*load)(void *p));
 HMGL mgl_create_graph_fltk(int (*draw)(HMGL gr, void *p), const char *title, void *par, void (*load)(void *p));
+HMGL mgl_create_graph_wx(int (*draw)(HMGL gr, void *p), const char *title, void *par, void (*load)(void *p));
 void mgl_set_click_func(HMGL gr, void (*func)(void *p));
 int mgl_fltk_run();
 int mgl_fltk_thr();
 int mgl_qt_run();
+int mgl_wx_run();
 /******************************************************************************/
+uintptr_t mgl_create_graph_wx_(const char *title, int);
 uintptr_t mgl_create_graph_qt_(const char *title, int);
 uintptr_t mgl_create_graph_fltk_(const char *title, int);
 int mgl_fltk_run_();
 int mgl_qt_run_();
+int mgl_wx_run_();
 /******************************************************************************/
 void mgl_wnd_set_delay(HMGL gr, mreal dt);
 void mgl_setup_window(HMGL gr, int clf_upd, int showpos);
@@ -315,51 +319,51 @@ void mgl_mpi_recv_(uintptr_t *gr, int *id);
 HMPR mgl_create_parser();
 long mgl_use_parser(HMPR p, int inc);
 void mgl_delete_parser(HMPR p);
-void mgl_parse_add_param(HMPR p, int id, const char *str);
-void mgl_parse_add_paramw(HMPR p, int id, const wchar_t *str);
+void mgl_parser_add_param(HMPR p, int id, const char *str);
+void mgl_parser_add_paramw(HMPR p, int id, const wchar_t *str);
 /*===!!! NOTE !!! You must not delete obtained data arrays !!!===============*/
-HMDT mgl_parse_add_var(HMPR p, const char *name);
-HMDT mgl_parse_add_varw(HMPR p, const wchar_t *name);
+HMDT mgl_parser_add_var(HMPR p, const char *name);
+HMDT mgl_parser_add_varw(HMPR p, const wchar_t *name);
 /*===!!! NOTE !!! You must not delete obtained data arrays !!!===============*/
-HMDT mgl_parse_find_var(HMPR p, const char *name);
-HMDT mgl_parse_find_varw(HMPR p, const wchar_t *name);
-void mgl_parse_del_var(HMPR p, const char *name);
-void mgl_parse_del_varw(HMPR p, const wchar_t *name);
-void mgl_parse_del_all(HMPR p);
-int mgl_parse(HMGL gr, HMPR p, const char *str, int pos);
-int mgl_parsew(HMGL gr, HMPR p, const wchar_t *str, int pos);
+HMDT mgl_parser_find_var(HMPR p, const char *name);
+HMDT mgl_parser_find_varw(HMPR p, const wchar_t *name);
+void mgl_parser_del_var(HMPR p, const char *name);
+void mgl_parser_del_varw(HMPR p, const wchar_t *name);
+void mgl_parser_del_all(HMPR p);
+int mgl_parse_line(HMGL gr, HMPR p, const char *str, int pos);
+int mgl_parse_linew(HMGL gr, HMPR p, const wchar_t *str, int pos);
 void mgl_parse_file(HMGL gr, HMPR p, FILE *fp, int print);
 void mgl_parse_text(HMGL gr, HMPR p, const char *str);
 void mgl_parse_textw(HMGL gr, HMPR p, const wchar_t *str);
-void mgl_parse_restore_once(HMPR p);
+void mgl_parser_restore_once(HMPR p);
 void mgl_parser_allow_setsize(HMPR p, int a);
 void mgl_parser_stop(HMPR p);
-int mgl_parse_cmd_type(HMPR pr, const char *name);
-const char *mgl_parse_cmd_desc(HMPR pr, const char *name);
-const char *mgl_parse_cmd_frmt(HMPR pr, const char *name);
-const char *mgl_parse_cmd_name(HMPR pr, long id);
-long mgl_parse_cmd_num(HMPR pr);
-HMDT mgl_parse_calc(HMPR pr, const char *formula);
-HMDT mgl_parse_calcw(HMPR pr, const wchar_t *formula);
+int mgl_parser_cmd_type(HMPR pr, const char *name);
+const char *mgl_parser_cmd_desc(HMPR pr, const char *name);
+const char *mgl_parser_cmd_frmt(HMPR pr, const char *name);
+const char *mgl_parser_cmd_name(HMPR pr, long id);
+long mgl_parser_cmd_num(HMPR pr);
+HMDT mgl_parser_calc(HMPR pr, const char *formula);
+HMDT mgl_parser_calcw(HMPR pr, const wchar_t *formula);
 //int mgl_parser_find_cmdw(HMPR pr, const wchar_t *name);
 /******************************************************************************/
 uintptr_t mgl_create_parser_();
 long mgl_use_parser_(uintptr_t* , int *inc);
 void mgl_delete_parser_(uintptr_t* p);
-void mgl_parse_add_param_(uintptr_t* p, int *id, const char *str, int l);
+void mgl_parser_add_param_(uintptr_t* p, int *id, const char *str, int l);
 /*===!!! NOTE !!! You must not delete obtained data arrays !!!===============*/
-uintptr_t mgl_parse_add_var_(uintptr_t* p, const char *name, int l);
+uintptr_t mgl_parser_add_var_(uintptr_t* p, const char *name, int l);
 /*===!!! NOTE !!! You must not delete obtained data arrays !!!===============*/
-uintptr_t mgl_parse_find_var_(uintptr_t* p, const char *name, int l);
-void mgl_parse_del_var_(uintptr_t* p, const char *name, int l);
-void mgl_parse_del_all_(uintptr_t *p);
-int mgl_parse_(uintptr_t* gr, uintptr_t* p, const char *str, int *pos, int l);
+uintptr_t mgl_parser_find_var_(uintptr_t* p, const char *name, int l);
+void mgl_parser_del_var_(uintptr_t* p, const char *name, int l);
+void mgl_parser_del_all_(uintptr_t *p);
+int mgl_parse_line_(uintptr_t* gr, uintptr_t* p, const char *str, int *pos, int l);
 void mgl_parse_text_(uintptr_t* gr, uintptr_t* p, const char *str, int l);
-void mgl_parse_restore_once_(uintptr_t* p);
+void mgl_parser_restore_once_(uintptr_t* p);
 void mgl_parser_allow_setsize_(uintptr_t* p, int *a);
 void mgl_parser_stop_(uintptr_t* p);
-int mgl_parse_cmd_type_(uintptr_t* p, const char *name, int l);
-uintptr_t mgl_parse_calc_(uintptr_t *pr, const char *formula,int l);
+int mgl_parser_cmd_type_(uintptr_t* p, const char *name, int l);
+uintptr_t mgl_parser_calc_(uintptr_t *pr, const char *formula,int l);
 /******************************************************************************/
 #ifdef __cplusplus
 }

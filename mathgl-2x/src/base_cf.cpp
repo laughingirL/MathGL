@@ -76,10 +76,6 @@ void mgl_set_func(HMGL gr, const char *EqX,const char *EqY,const char *EqZ,const
 {	gr->SetFunc(EqX,EqY,EqZ,EqA);	}
 void mgl_set_coor(HMGL gr, int how)	{	gr->SetCoor(how);	}
 //-----------------------------------------------------------------------------
-long mgl_data_get_nx(HCDT d)	{	return	d->GetNx();	}
-long mgl_data_get_ny(HCDT d)	{	return	d->GetNy();	}
-long mgl_data_get_nz(HCDT d)	{	return	d->GetNz();	}
-//-----------------------------------------------------------------------------
 void mgl_set_bar_width(HMGL gr, mreal width)	{	gr->SetBarWidth(width);	}
 //-----------------------------------------------------------------------------
 //
@@ -127,10 +123,6 @@ void mgl_set_func_(uintptr_t *gr, const char *EqX,const char *EqY,const char *Eq
 }
 void mgl_set_coor_(uintptr_t *gr, int *how)
 {	_GR_->SetCoor(*how);	}
-//-----------------------------------------------------------------------------
-long mgl_data_get_nx_(uintptr_t *d)	{	return	_DA_(d)->GetNx();	}
-long mgl_data_get_ny_(uintptr_t *d)	{	return	_DA_(d)->GetNy();	}
-long mgl_data_get_nz_(uintptr_t *d)	{	return	_DA_(d)->GetNz();	}
 //-----------------------------------------------------------------------------
 void mgl_set_tick_rotate(HMGL gr, int enable){	gr->SetTickRotate(enable);	}
 void mgl_set_tick_skip(HMGL gr, int enable)	{	gr->SetTickSkip(enable);	}

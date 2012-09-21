@@ -1144,10 +1144,10 @@ class mglVar : public mglData
 {
 public:
 	std::wstring s;	///< Data name
-	void *o;		///< Pointer to external object
+	void *o; 		///< Pointer to external object
 	mglVar *next;	///< Pointer to next instance in list
-	mglVar *prev;	///< Pointer to prev instance in list
-	bool temp;		///< This temporar variable
+	mglVar *prev;	///< Pointer to previous instance in list
+	bool temp;		///< This is temporary variable
 	void (*func)(void *);	///< Callback function for destroying
 	
 	mglVar():mglData()	{	o=0;	next=prev=0;	func=0;	temp=false;	}
@@ -1187,9 +1187,9 @@ public:
 	inline HMPR Self()	{	return pr;	}
 	/// Parse and draw single line of the MGL script
 	inline int Parse(mglGraph *gr, const char *str, int pos)
-	{	return mgl_parse(gr->Self(), pr, str, pos);	}
+	{	return mgl_parse_line(gr->Self(), pr, str, pos);	}
 	inline int Parse(mglGraph *gr, const wchar_t *str, int pos)
-	{	return mgl_parsew(gr->Self(), pr, str, pos);	}
+	{	return mgl_parse_linew(gr->Self(), pr, str, pos);	}
 	/// Execute MGL script text with '\n' separated lines
 	inline void Execute(mglGraph *gr, const char *str)
 	{	mgl_parse_text(gr->Self(), pr, str);	}
@@ -1204,27 +1204,27 @@ public:
 	///		8 - 1d plot, 9 - 2d plot, 10 - 3d plot, 11 - dd plot, 12 - vector plot
 	///		13 - axis, 14 - primitives, 15 - axis setup, 16 - text/legend, 17 - data transform
 	inline int CmdType(const char *name)
-	{	return mgl_parse_cmd_type(pr, name);	}
+	{	return mgl_parser_cmd_type(pr, name);	}
 	/// Return string of command format (command name and its argument[s])
 	inline const char *CmdFormat(const char *name)
-	{	return mgl_parse_cmd_frmt(pr, name);	}
+	{	return mgl_parser_cmd_frmt(pr, name);	}
 	/// Return description of MGL command
 	inline const char *CmdDesc(const char *name)
-	{	return mgl_parse_cmd_desc(pr, name);	}
+	{	return mgl_parser_cmd_desc(pr, name);	}
 	/// Get name of command with nmber \a n
 	inline const char *GetCmdName(long n)
-	{	return mgl_parse_cmd_name(pr,n);	}
+	{	return mgl_parser_cmd_name(pr,n);	}
 	/// Get number of defined commands
 	inline long GetCmdNum()
-	{	return mgl_parse_cmd_num(pr);	}
+	{	return mgl_parser_cmd_num(pr);	}
 
 	/// Set value for parameter $N
 	inline void AddParam(int id, const char *str)
-	{	mgl_parse_add_param(pr, id, str);	}
+	{	mgl_parser_add_param(pr, id, str);	}
 	inline void AddParam(int id, const wchar_t *str)
-	{	mgl_parse_add_paramw(pr, id, str);	}
+	{	mgl_parser_add_paramw(pr, id, str);	}
 	/// Restore once flag
-	inline void RestoreOnce()	{	mgl_parse_restore_once(pr);	}
+	inline void RestoreOnce()	{	mgl_parser_restore_once(pr);	}
 	/// Allow changing size of the picture
 	inline void AllowSetSize(bool allow)	{	mgl_parser_allow_setsize(pr, allow);	}
 	/// Set flag to stop script parsing
@@ -1232,27 +1232,27 @@ public:
 
 	/// Return result of formula evaluation
 	inline mglData Calc(const char *formula)
-	{	return mglData(true,mgl_parse_calc(pr,formula)); 	}
+	{	return mglData(true,mgl_parser_calc(pr,formula)); 	}
 	inline mglData Calc(const wchar_t *formula)
-	{	return mglData(true,mgl_parse_calcw(pr,formula));	}
+	{	return mglData(true,mgl_parser_calcw(pr,formula));	}
 	
 	/// Find variable with given name or add a new one
 	/// NOTE !!! You must not delete obtained data arrays !!!
 	inline mglVar *AddVar(const char *name)
-	{	return dynamic_cast<mglVar *>(mgl_parse_add_var(pr, name));	}
+	{	return dynamic_cast<mglVar *>(mgl_parser_add_var(pr, name));	}
 	inline mglVar *AddVar(const wchar_t *name)
-	{	return dynamic_cast<mglVar *>(mgl_parse_add_varw(pr, name));	}
+	{	return dynamic_cast<mglVar *>(mgl_parser_add_varw(pr, name));	}
 	/// Find variable with given name or return NULL if no one
 	/// NOTE !!! You must not delete obtained data arrays !!!
 	inline mglVar *FindVar(const char *name)
-	{	return dynamic_cast<mglVar *>(mgl_parse_find_var(pr, name));	}
+	{	return dynamic_cast<mglVar *>(mgl_parser_find_var(pr, name));	}
 	inline mglVar *FindVar(const wchar_t *name)
-	{	return dynamic_cast<mglVar *>(mgl_parse_find_varw(pr, name));	}
+	{	return dynamic_cast<mglVar *>(mgl_parser_find_varw(pr, name));	}
 	/// Delete variable with name
-	inline void DeleteVar(const char *name)		{	mgl_parse_del_var(pr, name);		}
-	inline void DeleteVar(const wchar_t *name)	{	mgl_parse_del_varw(pr, name);		}
+	inline void DeleteVar(const char *name)		{	mgl_parser_del_var(pr, name);		}
+	inline void DeleteVar(const wchar_t *name)	{	mgl_parser_del_varw(pr, name);		}
 	/// Delete all data variables
-	void DeleteAll()	{	mgl_parse_del_all(pr);	}
+	void DeleteAll()	{	mgl_parser_del_all(pr);	}
 };
 //-----------------------------------------------------------------------------
 /// Wrapper class expression evaluating

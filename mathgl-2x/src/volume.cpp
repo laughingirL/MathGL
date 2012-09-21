@@ -44,7 +44,7 @@ void mgl_cloud_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, con
 	if(tx<1)	tx=1;	if(ty<1)	ty=1;	if(tz<1)	tz=1;
 
 	mreal	alpha = gr->AlphaDef;
-	bool inv = mglchr(sch,'!');
+	bool inv = mglchr(sch,'i');
 	bool dot = mglchr(sch,'.');
 	alpha /= pow(n/tx*m/ty*l/tz,1./3)/20;
 	mreal aa,bb;

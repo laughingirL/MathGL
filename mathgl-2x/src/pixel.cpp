@@ -877,7 +877,7 @@ void mglCanvas::mark_draw(long k, char type, mreal size, mglDrawReg *d)
 	if(type=='.' || ss==0)	pnt_draw(k,d);
 	else
 	{
-		d->PenWidth = 1;		d->PDef = 0xffff;
+		if(d)	{	d->PDef = 0xffff;	d->PenWidth=1;	}
 		if(!strchr("xsSoO",type))	ss *= 1.1;
 		switch(type)
 		{
@@ -1047,7 +1047,7 @@ void mglCanvas::glyph_fill(const mglPnt &pp, mreal f, const mglGlyph &g, mglDraw
 	if(!g.trig || g.nt<=0)	return;
 	long ik,ii,pos=Pnt.size();
 	mglPnt p=pp;	p.u=p.v=NAN;
-	mreal pw = Width>2 ? fabs(d->PenWidth) : 1e-5*Width;
+	mreal pw = Width>2 && d ? fabs(d->PenWidth) : 1e-5*Width;
 	mglPoint p1,p2,p3;
 	for(ik=0;ik<g.nt;ik++)
 	{
@@ -1067,7 +1067,7 @@ void mglCanvas::glyph_wire(const mglPnt &pp, mreal f, const mglGlyph &g, mglDraw
 	if(!g.line || g.nl<=0)	return;
 	long ik,ii,il=0,pos=Pnt.size();
 	mglPnt p=pp;	p.u=p.v=NAN;
-	d->PDef = 0xffff;	d->PenWidth=0.75;
+	if(d)	{	d->PDef = 0xffff;	d->PenWidth=0.75;	}
 	mglPoint p1,p2;
 	for(ik=0;ik<g.nl;ik++)
 	{
@@ -1095,8 +1095,8 @@ void mglCanvas::glyph_wire(const mglPnt &pp, mreal f, const mglGlyph &g, mglDraw
 void mglCanvas::glyph_line(const mglPnt &pp, mreal f, bool solid, mglDrawReg *d)
 {
 	mglPnt p=pp;	p.u=p.v=NAN;
-	mreal pw = Width>2 ? fabs(d->PenWidth) : 1e-5*Width;
-	d->PDef = 0xffff;	d->PenWidth=1;
+	mreal pw = Width>2 && d ? fabs(d->PenWidth) : 1e-5*Width;
+	if(d)	{	d->PDef = 0xffff;	d->PenWidth=1;	}
 	mglPoint p1,p2,p3,p4;
 	long pos=Pnt.size();
 

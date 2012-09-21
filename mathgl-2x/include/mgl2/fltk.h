@@ -150,7 +150,6 @@ using mglCanvasWnd::Window;
 	mglCanvasFL();
 	~mglCanvasFL();
 
-	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Ñëóæåáíûå ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	/// Create a window for plotting. Now implemeted only for GLUT.
 	void Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p), const char *title,
 						void *par=NULL, void (*reload)(void *p)=NULL, bool maximize=false);

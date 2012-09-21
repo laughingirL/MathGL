@@ -39,16 +39,18 @@ http_request.onreadystatechange = function () {
 ============= DOCS =============
 
 1. Update web_*.texi -- links
+
 2. Text about UDAV (tabs,dialogs,hotkeys,hints,mouse)
 * known feature -- if you draw something in function then highlighted all similar objects
 * need to restart for disabling completion
+
 3. Add FAQ about MPEG/GIF and PDF
 4. Examples of animation, u3d, x3d, js and so on
 
 5. Docs about WriteJSON()
-6. Docs about mglDataC
-7. Docs about MGLD format
-8. Docs about VFM format
+6. Docs about mglDataC -- as part of data_*.texi
+7. Docs about MGLD format -- in appendix
+8. mglVar class
 
 9. Hint about low memory usage -- SetQuality(6)
 	gr->SetQuality(6);
@@ -56,24 +58,15 @@ http_request.onreadystatechange = function () {
 		gr->Sphere(mglPoint(mgl_rnd()*2-1,mgl_rnd()*2-1),0.05);
 
 10. Add Evaluate() and Table() sample
-11. Hint about several fonts usage
+11. Sample about several fonts usage
 
-12. Incompatible changes
-mglParse
-void mgl_axis(HMGL gr, const char *dir, const char *stl, const char *opt);
-void mgl_axis_grid(HMGL gr, const char *dir,const char *pen, const char *opt);
-void mgl_label(HMGL gr, char dir, const char *text, mreal pos, const char *opt);
-void mgl_labelw(HMGL gr, char dir, const wchar_t *text, mreal pos, const char *opt);
-void mgl_legend_pos(HMGL gr, mreal x, mreal y, const char *font, const char *opt);
-void mgl_legend(HMGL gr, int where, const char *font, const char *opt);
-
-13. mglUserPrim -- allow user primitives (mouse) in QMathGL but double memory usage
+13. QMathGL::mglUserPrim -- allow user primitives (mouse) in QMathGL but double memory usage
 
 14. SubPlot/InPlot style '#' will remove any borders
 
 15. Table(mreal x, mreal y, HCDT dat, char *ylabels, char *font, char *stl) -- draw table with values (+ auto reduce font size if '|' + grid if '#', +equdistant if '=')
 
-16. Add mgl_data_n[xyz](HCDT dat) for C & Fortran!!!
+16. mgl_data_solve()
 
 ============= UDAV =============
 
@@ -105,7 +98,7 @@ Dbl.click on primitive --> dialog for styles
 Dbl.click on active point -->remove primitive
 Save/load into script between blocks "#----- MathGL block -----" +  hide it in editor
 
-12. Add line numbers in editor.
+12. Add line numbers in editor. -- case of too long file -- need scrolling
 
 13. Manual rotate (i.e. change rotate arguments) by spinboxes ???
 

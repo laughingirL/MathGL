@@ -454,6 +454,7 @@ void MainWindow::messClicked()
 			int n = s.toInt()-1;	if(n<0)	return;
 			edit->moveCursor(QTextCursor::Start);
 			for(int i=0;i<n;i++)	edit->moveCursor(QTextCursor::NextBlock);
+			break;
 		}
 	}
 	edit->setFocus();

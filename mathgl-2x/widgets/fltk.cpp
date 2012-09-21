@@ -119,6 +119,7 @@ void Fl_MathGL::draw()
 			fl_line(30+i*ww/10,30,30+i*ww/10,30+hh);
 		}
 //		if(*MouseBuf)	fl_draw(MouseBuf,30,50);
+// TODO: add active points drawing here (from Qt)
 	}
 }
 //-----------------------------------------------------------------------------

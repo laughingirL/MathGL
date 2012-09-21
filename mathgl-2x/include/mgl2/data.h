@@ -319,8 +319,8 @@ public:
 	inline mreal Linear1(mreal x,mreal y=0,mreal z=0) const
 	{	return mgl_data_linear(this,x*(nx-1),y*(ny-1),z*(nz-1));	}
 	/// Return an approximated x-value (root) when dat(x) = val
-	inline mreal Solve(mreal val, bool use_spline=true)
-	{	return mgl_data_solve(this, val, use_spline);		}
+	inline mreal Solve(mreal val, bool use_spline=true, long i0=0)
+	{	return mgl_data_solve(this, val, use_spline, i0);		}
 
 	/// Interpolate by qubic splain the data and return its derivatives at given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
 	inline mreal Spline(mglPoint &dif, mreal x,mreal y=0,mreal z=0) const

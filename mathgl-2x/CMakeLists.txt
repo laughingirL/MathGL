@@ -259,7 +259,7 @@ else((enable-all OR enable-fltk) AND (NOT enable-lgpl) )
 endif((enable-all OR enable-fltk) AND (NOT enable-lgpl) )
 
 if((enable-all OR enable-wx) AND (NOT enable-lgpl) )
-	set(MGL_HAVE_WX 0)
+	set(MGL_HAVE_WX 1)
 	FIND_PACKAGE(wxWidgets COMPONENTS base core gl)
 	if(NOT wxWidgets_FOUND)
 		message(SEND_ERROR "Couldn't find wxWidgets library.")

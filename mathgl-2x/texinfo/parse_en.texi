@@ -209,46 +209,64 @@ Returns the pointer to internal object of type @code{HMPR}.
 @deftypefn {Method on @code{mglParse}} @code{void} Execute (@code{mglGraph *}gr, @code{const char *}text)
 @deftypefnx{Method on @code{mglParse}} @code{void} Execute (@code{mglGraph *}gr, @code{const wchar_t *}text)
 @deftypefnx {C function} @code{void} mgl_parse_text (@code{HMGL} gr, @code{HMPR} p, @code{const char *}text)
-@deftypefnx {C function} @code{void} mgl_parsew_text (@code{HMGL} gr, @code{HMPR} p, @code{const wchar_t *}text)
+@deftypefnx {C function} @code{void} mgl_parse_textw (@code{HMGL} gr, @code{HMPR} p, @code{const wchar_t *}text)
 Main function in the class. Function parse and execute line-by-line MGL script in array @var{text}. Lines are separated by newline symbol @samp{\n} as usual.
 @end deftypefn
 
 @deftypefn {Method on @code{mglParse}} @code{void} Execute (@code{mglGraph *}gr, @code{FILE *}fp, @code{bool} print=@code{false})
-@deftypefnx {C function} @code{int} mgl_parse_file (@code{HMGL} gr, @code{HMPR} p, @code{FILE *}fp, @code{int} print)
+@deftypefnx {C function} @code{void} mgl_parse_file (@code{HMGL} gr, @code{HMPR} p, @code{FILE *}fp, @code{int} print)
 The same as previous but read script from the file @var{fp}. If @var{print}=@code{true} then all warnings and information will be printed in stdout.
 @end deftypefn
 
 @deftypefn {Method on @code{mglParse}} @code{int} Parse (@code{mglGraph *}gr, @code{const char *}str, @code{long} pos=@code{0})
 @deftypefnx {Method on @code{mglParse}} @code{int} Parse (@code{mglGraph *}gr, @code{const wchar_t *}str, @code{long} pos=@code{0})
-@deftypefnx {C function} @code{int} mgl_parse (@code{HMGL} gr, @code{HMPR} p, @code{const char *}str, @code{int} pos)
-@deftypefnx {C function} @code{int} mgl_parsew (@code{HMGL} gr, @code{HMPR} p, @code{const wchar_t *}str, @code{int} pos)
+@deftypefnx {C function} @code{int} mgl_parse_line (@code{HMGL} gr, @code{HMPR} p, @code{const char *}str, @code{int} pos)
+@deftypefnx {C function} @code{int} mgl_parse_linew (@code{HMGL} gr, @code{HMPR} p, @code{const wchar_t *}str, @code{int} pos)
 Function parses the string @var{str} and executes it by  using @var{gr} as a graphics plotter. Returns the value depending on an error presence in the string @var{str}: 0 -- no error, 1 -- wrong command argument(s), 2 -- unknown command, 3 -- string is too long. Optional argument @var{pos} allows to save the string position in the document (or file) for using @code{for|next} command.
+@end deftypefn
+
+@deftypefn {Method on @code{mglParse}} @code{mglData} Calc (@code{const char *}formula)
+@deftypefnx {Method on @code{mglParse}} @code{mglData} Calc (@code{const wchar_t *}formula)
+@deftypefnx {C function} @code{HMDT} mgl_parser_calc (@code{HMPR} p, @code{const char *}formula)
+@deftypefnx {C function} @code{HMDT} mgl_parser_calcw (@code{HMPR} p, @code{const wchar_t *}formula)
+Function parses the string @var{formula} and return resulting data array. In difference to @code{AddVar()} or @code{FindVar()}, it is usual data array which should be deleted after usage.
 @end deftypefn
 
 
 @deftypefn {Method on @code{mglParse}} @code{void} AddParam (@code{int} n, @code{const char *}str)
 @deftypefnx {Method on @code{mglParse}} @code{void} AddParam (@code{int} n, @code{const wchar_t *}str)
-@deftypefnx {C function} @code{void} mgl_add_param (@code{HMPR} p, @code{int} id, @code{const char *}val)
-@deftypefnx {C function} @code{void} mgl_add_paramw (@code{HMPR} p, @code{int} id, @code{const wchar_t *}val)
+@deftypefnx {C function} @code{void} mgl_parser_add_param (@code{HMPR} p, @code{int} id, @code{const char *}val)
+@deftypefnx {C function} @code{void} mgl_parser_add_paramw (@code{HMPR} p, @code{int} id, @code{const wchar_t *}val)
 Function set the value of @var{n}-th parameter as string @var{str} (@var{n}=0, 1 ... 'z'-'a'+10). String @var{str} shouldn't contain @samp{$} symbol.
 @end deftypefn
 
-@deftypefn {Method on @code{mglParse}} @code{mglData *} FindVar (@code{const char *}name)
-@deftypefnx {C function} @code{HMDT} mgl_find_var  (@code{HMPR} p, @code{const char *}name)
+@deftypefn {Method on @code{mglParse}} @code{mglVar *} FindVar (@code{const char *}name)
+@deftypefnx {Method on @code{mglParse}} @code{mglVar *} FindVar (@code{const wchar_t *}name)
+@deftypefnx {C function} @code{HMDT} mgl_parser_find_var  (@code{HMPR} p, @code{const char *}name)
+@deftypefnx {C function} @code{HMDT} mgl_parser_find_varw  (@code{HMPR} p, @code{const wchar_t *}name)
 Function returns the pointer to variable with name @var{name} or zero if variable is absent. Use this function to put external data array to the script or get the data from the script. You must @strong{not delete} obtained data arrays!
 @end deftypefn
-@deftypefn {Method on @code{mglParse}} @code{mglData *} AddVar (@code{const char *}name)
-@deftypefnx {C function} @code{HMDT} mgl_add_var (@code{HMPR} p, @code{const char *}name)
+@deftypefn {Method on @code{mglParse}} @code{mglVar *} AddVar (@code{const char *}name)
+@deftypefnx {Method on @code{mglParse}} @code{mglVar *} AddVar (@code{const wchar_t *}name)
+@deftypefnx {C function} @code{HMDT} mgl_parser_add_var (@code{HMPR} p, @code{const char *}name)
+@deftypefnx {C function} @code{HMDT} mgl_parser_add_varw (@code{HMPR} p, @code{const wchar_t *}name)
 Function returns the pointer to variable with name @var{name}. If variable is absent then new variable is created with name @var{name}. Use this function to put external data array to the script or get the data from the script. You must @strong{not delete} obtained data arrays!
 @end deftypefn
 
 @deftypefn{Method on @code{mglParse} (C++)} @code{void} DeleteVar (@code{const char *}name)
-@deftypefnx {C function} @code{void} mgl_del_var (@code{HMPR} p, @code{const char *}name)
+@deftypefnx{Method on @code{mglParse} (C++)} @code{void} DeleteVar (@code{const wchar_t *}name)
+@deftypefnx {C function} @code{void} mgl_parser_del_var (@code{HMPR} p, @code{const char *}name)
+@deftypefnx {C function} @code{void} mgl_parser_del_varw (@code{HMPR} p, @code{const wchar_t *}name)
 Function delete the variable specified by its name or by its pointer.
 @end deftypefn
 
+@deftypefn{Method on @code{mglParse} (C++)} @code{void} DeleteAll ()
+@deftypefnx {C function} @code{void} mgl_parser_del_all (@code{HMPR} p)
+Function delete all variables in this parser.
+@end deftypefn
+
 @deftypefn {Method on @code{mglParse}} @code{void} RestoreOnce ()
-@deftypefnx {C function} @code{void} mgl_restore_once (@code{HMPR} p)
+@deftypefnx {C function} @code{void} mgl_parser_restore_once (@code{HMPR} p)
 Restore Once flag.
 @end deftypefn
 
@@ -263,18 +281,28 @@ Sends stop signal which terminate execution at next command.
 @end deftypefn
 
 
+@deftypefn {Method on @code{mglParse}} @code{long} GetCmdNum ()
+@deftypefnx {C function} @code{long} mgl_parser_cmd_num (@code{HMPR} p)
+Return the number of registered MGL commands.
+@end deftypefn
+
+@deftypefn {Method on @code{mglParse}} @code{const char *} GetCmdName (@code{long} id)
+@deftypefnx {C function} @code{const char *} mgl_parser_cmd_name (@code{HMPR} p, @code{long} id)
+Return the name of command with given @var{id}.
+@end deftypefn
+
 @deftypefn {Method on @code{mglParse}} @code{int} CmdType (@code{const char *}name)
-@deftypefnx {C function} @code{int} mgl_cmd_type (@code{HMPR} p, @code{const char *}name)
-Return the type of MGL command @var{name}. Type of commands are: 0 -- not the command, 1 - data plot, 2 - other plot, 3 - setup, 4 - data handle, 5 - create data, 6 - define subplot, 7 - program flow.
+@deftypefnx {C function} @code{int} mgl_parser_cmd_type (@code{HMPR} p, @code{const char *}name)
+Return the type of MGL command @var{name}. Type of commands are: 0 -- not the command, 1 - data plot, 2 - other plot, 3 - setup, 4 - data handle, 5 - data create, 6 - subplot, 7 - program, 8 - 1d plot, 9 - 2d plot, 10 - 3d plot, 11 - dd plot, 12 - vector plot, 13 - axis, 14 - primitives, 15 - axis setup, 16 - text/legend, 17 - data transform.
 @end deftypefn
 
 @deftypefn {Method on @code{mglParse}} @code{const char *} CmdFormat (@code{const char *}name)
-@deftypefnx {C function} @code{const char *} mgl_cmd_frmt (@code{HMPR} p, @code{const char *}name)
+@deftypefnx {C function} @code{const char *} mgl_parser_cmd_frmt (@code{HMPR} p, @code{const char *}name)
 Return the format of arguments for MGL command @var{name}.
 @end deftypefn
 
 @deftypefn {Method on @code{mglParse}} @code{const char *} CmdDesc (@code{const char *}name)
-@deftypefnx {C function} @code{const char *} mgl_cmd_desc (@code{HMPR} p, @code{const char *}name)
+@deftypefnx {C function} @code{const char *} mgl_parser_cmd_desc (@code{HMPR} p, @code{const char *}name)
 Return the description of MGL command @var{name}.
 @end deftypefn
 

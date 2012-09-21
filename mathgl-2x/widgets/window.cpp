@@ -194,7 +194,6 @@ int mgl_fltk_thr()		// NOTE: Qt couldn't be running in non-primary thread
 	return 0;	// stupid, but I don't want keep result returned by Fl::Run()
 }
 //-----------------------------------------------------------------------------
-
 #if MGL_HAVE_QT==0
 HMGL mgl_create_graph_qt(int (*)(HMGL gr, void *p), const char *, void *, void (*)(void *p))
 {	mglGlobalMess += "Qt support was disabled. Please, enable it and rebuild MathGL.\n";	return NULL;	}
@@ -208,6 +207,20 @@ uintptr_t mgl_create_graph_qt_(const char *title, int l)
 	delete []s;	return t;
 }
 int mgl_qt_run_()	{	return mgl_qt_run();	}
+//-----------------------------------------------------------------------------
+#if MGL_HAVE_WX==0
+HMGL mgl_create_graph_wx(int (*)(HMGL gr, void *p), const char *, void *, void (*)(void *p))
+{	mglGlobalMess += "Qt support was disabled. Please, enable it and rebuild MathGL.\n";	return NULL;	}
+int mgl_wx_run(){return 0;}
+#endif
+//-----------------------------------------------------------------------------
+uintptr_t mgl_create_graph_wx_(const char *title, int l)
+{
+	char *s = new char[l+1];	memcpy(s,title,l);	s[l]=0;
+	uintptr_t t = uintptr_t(mgl_create_graph_wx(0,s,0,0));
+	delete []s;	return t;
+}
+int mgl_wx_run_()	{	return mgl_wx_run();	}
 //-----------------------------------------------------------------------------
 //
 //	mglDraw class handling

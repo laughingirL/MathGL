@@ -47,8 +47,91 @@
 #include <QModelIndex>
 #include <QAbstractItemModel>
 #include <QScrollBar>
+#include <QPainter>
+#include <QTextBlock>
 //-----------------------------------------------------------------------------
-TextEdit::TextEdit(QWidget *parent) : QTextEdit(parent), c(0)	{}
+TextEdit::TextEdit(QWidget *parent) : QTextEdit(parent), c(0)
+{
+//	numb = new LineNumb(this);
+	
+//	connect(this, SIGNAL(cursorPositionChanged()), this, SLOT(updateNumbWidth()));
+//	connect(this, SIGNAL(updateRequest(QRect,int)), this, SLOT(updateNumb(QRect,int)));
+	connect(this, SIGNAL(cursorPositionChanged()), this, SLOT(highlight()));
+	
+	updateNumbWidth();
+	highlight();
+}
+//-----------------------------------------------------------------------------
+int TextEdit::numbWidth()
+{
+	int digits = 1;
+	int max = qMax(1, document()->blockCount());
+	while (max >= 10)
+	{	max /= 10;	digits++;	}
+	int space = 3 + fontMetrics().width(QLatin1Char('9')) * digits;
+	return space;
+}
+//-----------------------------------------------------------------------------
+void TextEdit::updateNumbWidth()
+{
+//	setViewportMargins(numbWidth(), 0, 0, 0);
+
+//	//	numb->scroll(0,h);
+//	numb->repaint();
+}
+//-----------------------------------------------------------------------------
+void TextEdit::updateNumb(const QRect &rect, int dy)
+{
+/*	if (dy)	numb->scroll(0, dy);
+	else		numb->update(0, rect.y(), numb->width(), rect.height());
+
+	if (rect.contains(viewport()->rect()))	updateNumbWidth();*/
+}
+//-----------------------------------------------------------------------------
+void TextEdit::resizeEvent(QResizeEvent *e)
+{
+	QTextEdit::resizeEvent(e);
+	
+//	QRect cr = contentsRect();
+//	numb->setGeometry(QRect(cr.left(), cr.top(), numbWidth(), cr.height()));
+}
+//-----------------------------------------------------------------------------
+void TextEdit::highlight()
+{
+	QList<QTextEdit::ExtraSelection> extraSelections;
+	if (!isReadOnly())
+	{
+		QTextEdit::ExtraSelection selection;
+		
+		QColor lineColor = QColor(Qt::yellow).lighter(180);
+		
+		selection.format.setBackground(lineColor);
+		selection.format.setProperty(QTextFormat::FullWidthSelection, true);
+		selection.cursor = textCursor();
+		selection.cursor.clearSelection();
+		extraSelections.append(selection);
+	}
+	setExtraSelections(extraSelections);
+}
+//-----------------------------------------------------------------------------
+void TextEdit::numbPaintEvent(QPaintEvent *event)
+{
+/*	QPainter painter(numb);
+	painter.fillRect(event->rect(), Qt::lightGray);
+	QTextBlock block = document()->firstBlock();
+	int h=0, dh = cursorRect().height(), sh = cursorRect().bottom()%dh;
+	while(block.isValid())
+	{
+		if(block.isVisible())
+		{
+			QString number = QString::number(block.blockNumber() + 1);
+			painter.setPen(Qt::black);
+			painter.drawText(0, h+sh, numb->width(), fontMetrics().height(), Qt::AlignRight, number);
+			h += dh;
+		}
+		block = block.next();
+	}*/
+}
 //-----------------------------------------------------------------------------
 void TextEdit::setCompleter(QCompleter *completer)
 {

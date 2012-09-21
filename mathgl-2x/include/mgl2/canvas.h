@@ -359,13 +359,15 @@ protected:
 	mreal GetOrgY(char dir) const;	///< Get Org.y (parse NAN value)
 	mreal GetOrgZ(char dir) const;	///< Get Org.z (parse NAN value)
 
-	void mark_plot(long p, char type, mreal size=1);	// position in pntC
-	void arrow_plot(long p1, long p2, char st);			// position in pntC
-	void line_plot(long p1, long p2);	// position in pntC
-	void trig_plot(long p1, long p2, long p3);			// position in pntN
-	void quad_plot(long p1, long p2, long p3, long p4);	// position in pntN
+	void mark_plot(long p, char type, mreal size=1);
+	void arrow_plot(long p1, long p2, char st);
+	void arrow_plot_2d(long p1, long p2, char st);
+	void arrow_plot_3d(long p1, long p2, char st);
+	void line_plot(long p1, long p2);
+	void trig_plot(long p1, long p2, long p3);
+	void quad_plot(long p1, long p2, long p3, long p4);
 	void Glyph(mreal x, mreal y, mreal f, int style, long icode, mreal col);
-	mreal text_plot(long p,const wchar_t *text,const char *fnt,mreal size=-1,mreal sh=0,mreal  col=-('k'), bool rot=true);	// position in pntN
+	mreal text_plot(long p,const wchar_t *text,const char *fnt,mreal size=-1,mreal sh=0,mreal  col=-('k'), bool rot=true);
 
 	void add_prim(mglPrim &a);	///< add primitive to list
 	void mark_draw(long p, char type, mreal size, mglDrawReg *d);

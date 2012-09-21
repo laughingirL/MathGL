@@ -98,9 +98,11 @@ mreal mgl_data_max(HCDT dat);
 mreal mgl_data_min(HCDT dat);
 mreal *mgl_data_value(HMDT dat, long i,long j,long k);
 mreal *mgl_data_data(HMDT dat);
-long mgl_data_nx(HCDT dat);
-long mgl_data_ny(HCDT dat);
-long mgl_data_nz(HCDT dat);
+
+mreal mgl_data_get_value(HCDT d, long i, long j, long k);
+long mgl_data_get_nx(HCDT d);
+long mgl_data_get_ny(HCDT d);
+long mgl_data_get_nz(HCDT d);
 
 mreal mgl_data_first(HCDT dat, const char *cond, long *i, long *j, long *k);
 mreal mgl_data_last(HCDT dat, const char *cond, long *i, long *j, long *k);
@@ -142,7 +144,7 @@ mreal mgl_data_spline(HCDT dat, mreal x,mreal y,mreal z);
 mreal mgl_data_linear(HCDT dat, mreal x,mreal y,mreal z);
 mreal mgl_data_spline_ext(HCDT dat, mreal x,mreal y,mreal z, mreal *dx,mreal *dy,mreal *dz);
 mreal mgl_data_linear_ext(HCDT dat, mreal x,mreal y,mreal z, mreal *dx,mreal *dy,mreal *dz);
-mreal mgl_data_solve(HCDT dat, mreal val, int spl);
+mreal mgl_data_solve(HCDT dat, mreal val, int spl, long i0);
 
 HMDT mgl_data_trace(HCDT d);
 HMDT mgl_data_resize(HCDT dat, long mx,long my,long mz);
@@ -196,9 +198,9 @@ void mgl_data_set_(uintptr_t *dat, uintptr_t *a);
 void mgl_data_set_value_(uintptr_t *d, mreal *v, int *i, int *j, int *k);
 void mgl_data_set_values_(uintptr_t *d, const char *val, int *nx, int *ny, int *nz, int l);
 mreal mgl_data_get_value_(uintptr_t *d, int *i, int *j, int *k);
-long mgl_data_nx_(uintptr_t *dat);
-long mgl_data_ny_(uintptr_t *dat);
-long mgl_data_nz_(uintptr_t *dat);
+long mgl_data_get_nx_(uintptr_t *d);
+long mgl_data_get_ny_(uintptr_t *d);
+long mgl_data_get_nz_(uintptr_t *d);
 
 int mgl_data_read_(uintptr_t *d, const char *fname,int l);
 int mgl_data_read_mat_(uintptr_t *dat, const char *fname, int *dim, int);
@@ -266,7 +268,7 @@ mreal mgl_data_spline_(uintptr_t *dat, mreal *x,mreal *y,mreal *z);
 mreal mgl_data_linear_(uintptr_t *dat, mreal *x,mreal *y,mreal *z);
 mreal mgl_data_spline_ext_(uintptr_t *dat, mreal *x,mreal *y,mreal *z, mreal *dx,mreal *dy,mreal *dz);
 mreal mgl_data_linear_ext_(uintptr_t *dat, mreal *x,mreal *y,mreal *z, mreal *dx,mreal *dy,mreal *dz);
-mreal mgl_data_solve_(uintptr_t *dat, mreal *val, int *spl);
+mreal mgl_data_solve_(uintptr_t *dat, mreal *val, int *spl, int *i0);
 
 uintptr_t mgl_data_trace_(uintptr_t *d);
 uintptr_t mgl_data_resize_(uintptr_t *dat, int *mx,int *my,int *mz);
