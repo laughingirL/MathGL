@@ -179,6 +179,7 @@ MainWindow::MainWindow(QWidget *wp) : QMainWindow(wp)
 	split = new QSplitter(this);
 	ltab = new QTabWidget(split);
 	ltab->setMovable(true);	ltab->setTabPosition(QTabWidget::South);
+//	ltab->setTabsClosable(true);
 	rtab = new QTabWidget(split);
 	rtab->setMovable(true);	rtab->setTabPosition(QTabWidget::South);
 
@@ -651,7 +652,7 @@ void MainWindow::choose()
 void MainWindow::load(const QString &fileName, bool noNewWnd)
 {
 	// save current path
-	QFileInfo fi(fileName);
+	QFileInfo fi(fileName);		filename = fileName;
 	QSettings settings("udav","UDAV");
 	settings.setPath(QSettings::IniFormat, QSettings::UserScope, "UDAV");
 	settings.beginGroup("/UDAV");

@@ -42,13 +42,11 @@ http_request.onreadystatechange = function () {
 
 2. Text about UDAV (tabs,dialogs,hotkeys,hints,mouse)
 * known feature -- if you draw something in function then highlighted all similar objects
-* need to restart for disabling completion
 
 3. Add FAQ about MPEG/GIF and PDF
 4. Examples of animation, u3d, x3d, js and so on
 
 5. Docs about WriteJSON()
-6. Docs about mglDataC -- as part of data_*.texi
 7. Docs about MGLD format -- in appendix
 8. mglVar class
 
@@ -72,7 +70,7 @@ http_request.onreadystatechange = function () {
 
 01. Show plot at creation stage (if option is enabled -- can be long process!!!) + auto axis range or [-1,1] by default
 
-02. Double click -> jump to string + setup dialog (optionally -- after QTreeWidgetItem)
+02. Double click -> setup dialog (optionally -- after QTreeWidgetItem)
 
 03. Dialog for InPlot(s):
 {SubPlot,MultiPlot}	-- enable rotate,aspect,title
@@ -98,11 +96,9 @@ Dbl.click on primitive --> dialog for styles
 Dbl.click on active point -->remove primitive
 Save/load into script between blocks "#----- MathGL block -----" +  hide it in editor
 
-12. Add line numbers in editor. -- case of too long file -- need scrolling
-
 13. Manual rotate (i.e. change rotate arguments) by spinboxes ???
 
-14. Close button on data tabs ?!!
+14. Close button on data tabs ?!?
 
 ============= UNSURE ===========
 
