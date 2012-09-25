@@ -483,9 +483,9 @@ void mgl_data_grid(HMGL gr, HMDT d, HCDT xdat, HCDT ydat, HCDT zdat, const char 
 	const mglData *x = dynamic_cast<const mglData *>(xdat);
 	const mglData *y = dynamic_cast<const mglData *>(ydat);
 	const mglData *z = dynamic_cast<const mglData *>(zdat);
-	if(!x | !y | !z) return;
+	if(!x || !y || !z) return;
 	long n=x->nx;
-	if((n<3) | (y->nx!=n) | (z->nx!=n))	return;
+	if((n<3) || (y->nx!=n) || (z->nx!=n))	return;
 
 	gr->SaveState(opt);
 	mglData *nums = mgl_triangulation_2d(x,y);

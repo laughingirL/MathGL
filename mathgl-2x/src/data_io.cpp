@@ -761,18 +761,34 @@ void mgl_data_modify_(uintptr_t *d, const char *eq,int *dim,int l)
 {	char *s=new char[l+1];	memcpy(s,eq,l);	s[l]=0;
 	mgl_data_modify(_DT_,s,*dim);	delete []s;	}
 //-----------------------------------------------------------------------------
+void *mgl_modify_gen(void *par)
+{
+	mglThreadV *t=(mglThreadV *)par;
+	mglFormula *f = (mglFormula *)(t->v);
+	register long i,j,k,i0, nx=t->p[0],ny=t->p[1],nz=t->p[2];
+	mreal *b=t->a, dx,dy,dz;
+	HCDT v=(HCDT)t->b, w=(HCDT)t->c;
+	dx=nx>1?1/(nx-1.):0;	dy=ny>1?1/(ny-1.):0;	dz=nz>1?1/(nz-1.):0;
+	for(i0=t->id;i0<t->n;i0+=mglNumThr)
+	{
+		i=i0%nx;	j=((i0/nx)%ny);	k=i0/(nx*ny);
+		b[i0] = f->Calc(i*dx, j*dy, k*dz, b[i0], v?v->vthr(i0):0, w?w->vthr(i0):0);
+	}
+	return 0;
+}
 void mgl_data_modify_vw(HMDT d, const char *eq,HCDT vdat,HCDT wdat)
-{	// NOTE: only for mglData
+{
 	const mglData *v = dynamic_cast<const mglData *>(vdat);
 	const mglData *w = dynamic_cast<const mglData *>(wdat);
 	long nn = d->nx*d->ny*d->nz, par[3]={d->nx,d->ny,d->nz};
+	if(vdat && vdat->GetNN()!=nn)	return;
+	if(wdat && wdat->GetNN()!=nn)	return;
 	mglFormula f(eq);
-	if(v && w && v->nx*v->ny*v->nz==nn && w->nx*w->ny*w->nz==nn)
-		mglStartThread(mgl_modify,0,nn,d->a,v->a,w->a,par,&f);
-	else if(v && v->nx*v->ny*v->nz==nn)
-		mglStartThread(mgl_modify,0,nn,d->a,v->a,0,par,&f);
-	else
-		mglStartThread(mgl_modify,0,nn,d->a,0,0,par,&f);
+	if(v && w)	mglStartThread(mgl_modify,0,nn,d->a,v->a,w->a,par,&f);
+	else if(vdat && wdat)	mglStartThreadV(mgl_modify_gen,nn,d->a,vdat,wdat,par,&f);
+	else if(v)	mglStartThread(mgl_modify,0,nn,d->a,v->a,0,par,&f);
+	else if(vdat)	mglStartThreadV(mgl_modify_gen,nn,d->a,vdat,0,par,&f);
+	else	mglStartThread(mgl_modify,0,nn,d->a,0,0,par,&f);
 }
 void mgl_data_modify_vw_(uintptr_t *d, const char *eq, uintptr_t *v, uintptr_t *w,int l)
 {	char *s=new char[l+1];	memcpy(s,eq,l);	s[l]=0;
@@ -792,20 +808,39 @@ void *mgl_fill_f(void *par)
 	}
 	return 0;
 }
+void *mgl_fill_fgen(void *par)
+{
+	mglThreadD *t=(mglThreadD *)par;
+	mglFormula *f = (mglFormula *)(t->v);
+	register long i,j,k,i0, nx=t->p[0],ny=t->p[1];
+	mreal *b=t->a;
+	HCDT v=(HCDT)t->b, w=(HCDT)t->c;
+	const mreal *x=t->d;
+	for(i0=t->id;i0<t->n;i0+=mglNumThr)
+	{
+		i=i0%nx;	j=((i0/nx)%ny);	k=i0/(nx*ny);
+		b[i0] = f->Calc(x[0]+i*x[1], x[2]+j*x[3], x[4]+k*x[5], b[i0], v?v->vthr(i0):0, w?w->vthr(i0):0);
+	}
+	return 0;
+}
 void mgl_data_fill_eq(HMGL gr, HMDT d, const char *eq, HCDT vdat, HCDT wdat, const char *opt)
-{	// NOTE: only for mglData
+{
 	const mglData *v = dynamic_cast<const mglData *>(vdat);
 	const mglData *w = dynamic_cast<const mglData *>(wdat);
 	long nn = d->nx*d->ny*d->nz, par[3]={d->nx,d->ny,d->nz};
-	if(v && v->nx*v->ny*v->nz!=nn)	return;
-	if(w && w->nx*w->ny*w->nz!=nn)	return;
+	if(vdat && vdat->GetNN()!=nn)	return;
+	if(wdat && wdat->GetNN()!=nn)	return;
 	gr->SaveState(opt);
 	mreal xx[6]={gr->Min.x,0, gr->Min.y,0, gr->Min.z,0};
 	if(d->nx>1)	xx[1] = (gr->Max.x-gr->Min.x)/(d->nx-1.);
 	if(d->ny>1)	xx[3] = (gr->Max.y-gr->Min.y)/(d->ny-1.);
 	if(d->nz>1)	xx[5] = (gr->Max.z-gr->Min.z)/(d->nz-1.);
 	mglFormula f(eq);
-	mglStartThread(mgl_fill_f,0,nn,d->a,v?v->a:0,w?w->a:0,par,&f,xx);
+	if(v && w)	mglStartThread(mgl_fill_f,0,nn,d->a,v->a,w->a,par,&f,xx);
+	else if(vdat && wdat)	mglStartThreadV(mgl_fill_fgen,nn,d->a,vdat,wdat,par,&f,xx);
+	else if(v)	mglStartThread(mgl_fill_f,0,nn,d->a,v->a,0,par,&f,xx);
+	else if(vdat)	mglStartThreadV(mgl_fill_fgen,nn,d->a,vdat,0,par,&f,xx);
+	else	mglStartThread(mgl_fill_f,0,nn,d->a,0,0,par,&f,xx);
 	gr->LoadState();
 }
 void mgl_data_fill_eq_(uintptr_t *gr, uintptr_t *d, const char *eq, uintptr_t *v, uintptr_t *w, const char *opt,int l,int lo)
@@ -814,10 +849,10 @@ void mgl_data_fill_eq_(uintptr_t *gr, uintptr_t *d, const char *eq, uintptr_t *v
 	mgl_data_fill_eq(_GR_,_DT_,s,_DA_(v),_DA_(w),o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
 #if MGL_HAVE_HDF4
-void mgl_data_read_hdf4(HMDT d,const char *fname,const char *data)
+int mgl_data_read_hdf4(HMDT d,const char *fname,const char *data)
 {
 	int32 sd = SDstart(fname,DFACC_READ), nn, i;
-	if(sd==-1)	return;	// is not a HDF4 file
+	if(sd==-1)	return false;	// is not a HDF4 file
 	char name[64];
 	SDfileinfo(sd,&nn,&i);
 	for(i=0;i<nn;i++)
@@ -849,6 +884,7 @@ void mgl_data_read_hdf4(HMDT d,const char *fname,const char *data)
 		SDendaccess(sds);
 	}
 	SDend(sd);
+	return true;
 }
 #else
 void mgl_data_read_hdf4(HMDT ,const char *,const char *)
@@ -859,6 +895,7 @@ void mgl_data_read_hdf4(HMDT ,const char *,const char *)
 void mgl_data_save_hdf(HCDT dat,const char *fname,const char *data,int rewrite)
 {
 	const mglData *d = dynamic_cast<const mglData *>(dat);	// NOTE: only for mglData
+	if(!d)	{	mglData d(dat);	mgl_data_save_hdf(&d,fname,data,rewrite);	return;	}
 	hid_t hf,hd,hs;
 	hsize_t dims[3];
 	long rank = 3, res;
@@ -894,7 +931,7 @@ int mgl_data_read_hdf(HMDT d,const char *fname,const char *data)
 	hid_t hf,hd,hs;
 	hsize_t dims[3];
 	long rank, res = H5Fis_hdf5(fname);
-	if(res<=0)	{	mgl_data_read_hdf4(d,fname,data);	return false;	}
+	if(res<=0)	return mgl_data_read_hdf4(d,fname,data);
 	hf = H5Fopen(fname, H5F_ACC_RDONLY, H5P_DEFAULT);
 	if(hf<0)	return false;
 #if MGL_HAVE_HDF5_18

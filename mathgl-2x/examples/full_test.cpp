@@ -46,11 +46,21 @@ void smgl_combined(mglGraph *gr);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	gr->Axis();
-	gr->Label('y',"YYY");
-	gr->Label('x',"XXX");
-	gr->Ball(mglPoint(0,0,1),'k');
+	gr->AddLegend("sin(\\pi {x^2})","b");
+	gr->AddLegend("sin(\\pi x)","g*");
+	gr->AddLegend("sin(\\pi \\sqrt{x})","rd");
+	gr->AddLegend("just text"," ");
+	gr->AddLegend("no indent for this","");
+	if(!mini)	{gr->SubPlot(2,2,0,"");	gr->Title("Legend (default)");}
+	gr->Box();	gr->Legend();
+	if(mini)	return;
+	gr->Legend(3,"A#");
+	gr->Puts(mglPoint(0.75,0.65),"Absolute position","A");
+	gr->SubPlot(2,2,2,"");	gr->Title("coloring");	gr->Box();
+	gr->Legend(0,"r#");	gr->Legend(1,"Wb#");	gr->Legend(2,"ygr#");
+	gr->SubPlot(2,2,3,"");	gr->Title("manual position");	gr->Box();	gr->Legend(0.5,0.5);
 	return;
+	
 	mglData ys(10,5);	ys.Modify("0.8*sin(pi*2*x+pi*y)+0.2*rnd");
 	gr->Box();
 	char id[16];

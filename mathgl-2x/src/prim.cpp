@@ -805,8 +805,12 @@ void mgl_tablew(HMGL gr, mreal x, mreal y, HCDT val, const wchar_t *text, const 
 	if(g)	g->Table(x,y,val,text,fnt,opt);
 }
 void mgl_table(HMGL gr, mreal x, mreal y, HCDT val, const char *text, const char *fnt, const char *opt)
-{	long s = strlen(text)+1;	wchar_t *wcs = new wchar_t[s];	mbstowcs(wcs,text,s);
-	mgl_tablew(gr, x, y, val, wcs, fnt, opt);	delete []wcs;	}
+{
+	if(!text)	mgl_tablew(gr,x,y,val,L"",fnt,opt);
+	else
+	{	long s = strlen(text)+1;	wchar_t *wcs = new wchar_t[s];	mbstowcs(wcs,text,s);
+		mgl_tablew(gr, x, y, val, wcs, fnt, opt);	delete []wcs;	}
+}
 //-----------------------------------------------------------------------------
 void mgl_table_(uintptr_t *gr, mreal *x, mreal *y, uintptr_t *val, const char *text, const char *fnt, const char *opt,int l,int n,int lo)
 {	wchar_t *s=new wchar_t[l+1];	mbstowcs(s,text,l);	s[l]=0;

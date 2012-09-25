@@ -57,6 +57,34 @@ void mglStartThreadC(void *(*func)(void *), void (*post)(mglThreadC *,dual *), l
 	}
 }
 //-----------------------------------------------------------------------------
+void mglStartThreadV(void *(*func)(void *), long n, dual *a, const void *b, const void *c, const long *p, void *v, const mreal *d)
+{
+	if(!func)	return;
+#if MGL_HAVE_PTHREAD
+	if(mglNumThr<1)	mgl_set_num_thr(0);
+	if(mglNumThr>1)
+	{
+		pthread_t *tmp=new pthread_t[mglNumThr];
+		mglThreadV *par=new mglThreadV[mglNumThr];
+		register long i;
+		for(i=0;i<mglNumThr;i++)	// put parameters into the structure
+		{	par[i].n=n;	par[i].a=0;	par[i].b=b;	par[i].c=c;	par[i].d=d;
+			par[i].p=p;	par[i].v=v;	par[i].id=i;par[i].aa=a;	}
+		for(i=0;i<mglNumThr;i++)	pthread_create(tmp+i, 0, func, par+i);
+		for(i=0;i<mglNumThr;i++)	pthread_join(tmp[i], 0);
+		delete []tmp;	delete []par;
+	}
+	else
+#endif
+	{
+		mglNumThr = 1;
+		mglThreadV par;
+		par.n=n;	par.a=0;	par.b=b;	par.c=c;	par.d=d;
+		par.p=p;	par.v=v;	par.id=0;	par.aa=a;
+		func(&par);
+	}
+}
+//-----------------------------------------------------------------------------
 void *mgl_csmth_x(void *par)
 {
 	mglThreadC *t=(mglThreadC *)par;

@@ -385,7 +385,7 @@ void mglParser::FillArg(mglGraph *gr, int k, wchar_t **arg, mglArg *a)
 		{	a[n-1].type=2;	a[n-1].d=0;	a[n-1].v=f->d;	a[n-1].w = f->s;	}
 		else
 		{	// parse all numbers and formulas by unified way
-			const mglData &d=mglFormulaCalc(arg[n], this);
+			mglData d = mglFormulaCalc(arg[n], this);
 			if(d.nx*d.ny*d.nz==1)
 			{	a[n-1].type = 2;	a[n-1].v = d.a[0];	}
 			else
@@ -547,9 +547,9 @@ int mglParser::Parse(mglGraph *gr, const wchar_t *string, long pos)
 			if(*str=='$' && nn>=0 && nn<='z'-'a'+10)
 			{
 				res = 0;	str +=2;	mgl_wcstrim(str);
-				const mglData &d=mglFormulaCalc(str, this);
+				mreal d = mglFormulaCalc(str, this).a[0];
 				char *buf=new char[128];
-				sprintf(buf,"%g",d.a[0]);
+				sprintf(buf,"%g",d);
 				AddParam(nn, buf);	delete []buf;
 			}
 			delete []s;	return res;
@@ -561,8 +561,8 @@ int mglParser::Parse(mglGraph *gr, const wchar_t *string, long pos)
 			if(*str=='$' && nn>=0 && nn<='z'-'a'+10)
 			{
 				res = 0;	str +=2;	mgl_wcstrim(str);
-				const mglData &d=mglFormulaCalc(str, this);
-				wchar_t buf[2]={0,0};	buf[0] = wchar_t(d.a[0]);
+				mreal d=mglFormulaCalc(str, this).a[0];
+				wchar_t buf[2]={0,0};	buf[0] = wchar_t(d);
 				AddParam(nn, buf);
 			}
 			delete []s;	return res;
@@ -629,8 +629,7 @@ int mglParser::Parse(mglGraph *gr, const wchar_t *string, long pos)
 			if(k==3)
 			{
 				mglNum *v=AddNum(arg[1]);
-				mglData d=mglFormulaCalc(arg[2],this);
-				v->d = d.a[0];
+				v->d = mglFormulaCalc(arg[2],this).a[0];
 			}
 			delete []s;	delete []a;	return k==3?0:1;
 		}

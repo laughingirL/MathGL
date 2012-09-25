@@ -40,11 +40,10 @@ public:
 	long nz;		///< number of points in 3d dimensions ('z' dimension)
 	mreal *a;		///< data array
 	std::string id;	///< column (or slice) names
-//	char *id;		///< column (or slice) names
 	bool link;		///< use external data (i.e. don't free it)
 
 	/// Initiate by other mglData variable
-	inline mglData(const mglData &d)	{	a=0;	mgl_data_set(this,&d);		}
+	inline mglData(const mglData &d)	{	a=0;	mgl_data_set(this,&d);		}	// NOTE: must be constructor for mglData& to exclude copy one
 	inline mglData(const mglDataA *d)	{	a=0;	mgl_data_set(this, d);		}
 	inline mglData(bool, mglData *d)	// NOTE: Variable d will be deleted!!!
 	{	if(d)
@@ -76,7 +75,7 @@ public:
 	/// Link external data array (don't delete it at exit)
 	inline void Link(mreal *A, long NX, long NY=1, long NZ=1)
 	{	mgl_data_link(this,A,NX,NY,NZ);	}
-	inline void Link(mglData *d)	{	Link(d->a,d->nx,d->ny,d->nz);	}
+	inline void Link(mglData &d)	{	Link(d.a,d.nx,d.ny,d.nz);	}
 	/// Allocate memory and copy the data from the gsl_vector
 	inline void Set(gsl_vector *m)	{	mgl_data_set_vector(this,m);	}
 	/// Allocate memory and copy the data from the gsl_matrix
@@ -105,7 +104,7 @@ public:
 	{	mgl_data_set_values(this,str,NX,NY,NZ);	}
 	/// Import data from abstract type
 	inline void Set(HCDT dat)	{	mgl_data_set(this, dat);	}
-	inline void Set(const mglData &dat)	{	mgl_data_set(this, &dat);	}
+	inline void Set(const mglDataA &dat)	{	mgl_data_set(this, &dat);	}
 	/// Allocate memory and copy data from std::vector<T>
 	inline void Set(const std::vector<int> &d)
 	{	if(d.size()<1)	return;
@@ -149,29 +148,29 @@ public:
 	inline void Modify(const char *eq,long dim=0)
 	{	mgl_data_modify(this, eq, dim);	}
 	/// Modify the data by specified formula
-	inline void Modify(const char *eq,const mglData &vdat, const mglData &wdat)
+	inline void Modify(const char *eq,const mglDataA &vdat, const mglDataA &wdat)
 	{	mgl_data_modify_vw(this,eq,&vdat,&wdat);	}
 	/// Modify the data by specified formula
-	inline void Modify(const char *eq,const mglData &vdat)
+	inline void Modify(const char *eq,const mglDataA &vdat)
 	{	mgl_data_modify_vw(this,eq,&vdat,0);	}
 	/// Modify the data by specified formula assuming x,y,z in range [r1,r2]
 	inline void Fill(mglBase *gr, const char *eq, const char *opt="")
 	{	mgl_data_fill_eq(gr,this,eq,0,0,opt);	}
-	inline void Fill(mglBase *gr, const char *eq, const mglData &vdat, const char *opt="")
+	inline void Fill(mglBase *gr, const char *eq, const mglDataA &vdat, const char *opt="")
 	{	mgl_data_fill_eq(gr,this,eq,&vdat,0,opt);	}
-	inline void Fill(mglBase *gr, const char *eq, const mglData &vdat, const mglData &wdat,const char *opt="")
+	inline void Fill(mglBase *gr, const char *eq, const mglDataA &vdat, const mglDataA &wdat,const char *opt="")
 	{	mgl_data_fill_eq(gr,this,eq,&vdat,&wdat,opt);	}
 	/// Eqidistantly fill the data to range [x1,x2] in direction \a dir
 	inline void Fill(mreal x1,mreal x2=NaN,char dir='x')
 	{	return mgl_data_fill(this,x1,x2,dir);	}
 	/// Set the data by triangulated surface values assuming x,y,z in range [r1,r2]
-	inline void Grid(mglBase *gr, const mglData &x, const mglData &y, const mglData &z, const char *opt="")
+	inline void Grid(mglBase *gr, const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *opt="")
 	{	mgl_data_grid(gr,this,&x,&y,&z,opt);	}
 	/// Put value to data element(s)
 	inline void Put(mreal val, long i=-1, long j=-1, long k=-1)
 	{	mgl_data_put_val(this,val,i,j,k);	}
 	/// Put array to data element(s)
-	inline void Put(const mglData &dat, long i=-1, long j=-1, long k=-1)
+	inline void Put(const mglDataA &dat, long i=-1, long j=-1, long k=-1)
 	{	mgl_data_put_dat(this,&dat,i,j,k);	}
 	/// Set names for columns (slices)
 	inline void SetColumnId(const char *ids)
@@ -210,7 +209,7 @@ public:
 	inline void SaveHDF(const char *fname,const char *data,bool rewrite=false) const
 	{	mgl_data_save_hdf(this,fname,data,rewrite);	}
 	/// Put HDF data names into buf as '\t' separated.
-	inline int DatasHDF(const char *fname, char *buf, long size) const
+	inline static int DatasHDF(const char *fname, char *buf, long size)
 	{	return mgl_datas_hdf(fname,buf,size);	}
 
 	/// Get column (or slice) of the data filled by formulas of named columns
@@ -222,7 +221,7 @@ public:
 	/// Get sub-array of the data with given fixed indexes
 	inline mglData SubData(long xx,long yy=-1,long zz=-1) const
 	{	return mglData(true,mgl_data_subdata(this,xx,yy,zz));	}
-	inline mglData SubData(const mglData &xx, const mglData &yy, const mglData &zz) const
+	inline mglData SubData(const mglDataA &xx, const mglDataA &yy, const mglDataA &zz) const
 	{	return mglData(true,mgl_data_subdata_ext(this,&xx,&yy,&zz));	}
 	/// Get trace of the data array
 	inline mglData Trace() const
@@ -231,7 +230,7 @@ public:
 	inline mglData Hist(long n,mreal v1=0,mreal v2=1, long nsub=0) const
 	{	return mglData(true,mgl_data_hist(this,n,v1,v2,nsub));	}
 	/// Create n-th points distribution of this data values in range [v1, v2] with weight \a w
-	inline mglData Hist(const mglData &w, long n,mreal v1=0,mreal v2=1, long nsub=0) const
+	inline mglData Hist(const mglDataA &w, long n,mreal v1=0,mreal v2=1, long nsub=0) const
 	{	return mglData(true,mgl_data_hist_w(this,&w,n,v1,v2,nsub));	}
 	/// Get array which is result of summation in given direction or directions
 	inline mglData Sum(const char *dir) const
@@ -243,17 +242,17 @@ public:
 	inline mglData Min(const char *dir) const
 	{	return mglData(true,mgl_data_min_dir(this,dir));	}
 	/// Get the data which is direct multiplication (like, d[i,j] = this[i]*a[j] and so on)
-	inline mglData Combine(const mglData &dat) const
+	inline mglData Combine(const mglDataA &dat) const
 	{	return mglData(true,mgl_data_combine(this,&dat));	}
 	/// Resize the data to new size of box [x1,x2]*[y1,y2]*[z1,z2]
 	inline mglData Resize(long mx,long my=1,long mz=1, mreal x1=0,mreal x2=1, mreal y1=0,mreal y2=1, mreal z1=0,mreal z2=1) const
 	{	return mglData(true,mgl_data_resize_box(this,mx,my,mz,x1,x2,y1,y2,z1,z2));	}
 	/// Get array which values is result of interpolation this for coordinates from other arrays
-	inline mglData Evaluate(const mglData &idat, bool norm=true) const
+	inline mglData Evaluate(const mglDataA &idat, bool norm=true) const
 	{	return mglData(true,mgl_data_evaluate(this,&idat,0,0,norm));	}
-	inline mglData Evaluate(const mglData &idat, const mglData &jdat, bool norm=true) const
+	inline mglData Evaluate(const mglDataA &idat, const mglDataA &jdat, bool norm=true) const
 	{	return mglData(true,mgl_data_evaluate(this,&idat,&jdat,0,norm));	}
-	inline mglData Evaluate(const mglData &idat, const mglData &jdat, const mglData &kdat, bool norm=true) const
+	inline mglData Evaluate(const mglDataA &idat, const mglDataA &jdat, const mglDataA &kdat, bool norm=true) const
 	{	return mglData(true,mgl_data_evaluate(this,&idat,&jdat,&kdat,norm));	}
 
 	/// Cumulative summation the data in given direction or directions
@@ -263,10 +262,10 @@ public:
 	/// Differentiate the data in given direction or directions
 	inline void Diff(const char *dir)	{	mgl_data_diff(this,dir);	}
 	/// Differentiate the parametrically specified data along direction v1 with v2=const
-	inline void Diff(const mglData &v1, const mglData &v2)
+	inline void Diff(const mglDataA &v1, const mglDataA &v2)
 	{	mgl_data_diff_par(this,&v1,&v2,0);	}
 	/// Differentiate the parametrically specified data along direction v1 with v2,v3=const
-	inline void Diff(const mglData &v1, const mglData &v2, const mglData &v3)
+	inline void Diff(const mglDataA &v1, const mglDataA &v2, const mglDataA &v3)
 	{	mgl_data_diff_par(this,&v1,&v2,&v3);	}
 	/// Double-differentiate (like laplace operator) the data in given direction
 	inline void Diff2(const char *dir)	{	mgl_data_diff2(this,dir);	}
@@ -383,13 +382,13 @@ public:
 	inline mreal operator=(mreal val)
 	{	for(long i=0;i<nx*ny*nz;i++)	a[i]=val;	return val;	}
 	/// Multiplicate the data by other one for each element
-	inline void operator*=(const mglData &d)	{	mgl_data_mul_dat(this,&d);	}
+	inline void operator*=(const mglDataA &d)	{	mgl_data_mul_dat(this,&d);	}
 	/// Divide the data by other one for each element
-	inline void operator/=(const mglData &d)	{	mgl_data_div_dat(this,&d);	}
+	inline void operator/=(const mglDataA &d)	{	mgl_data_div_dat(this,&d);	}
 	/// Add the other data
-	inline void operator+=(const mglData &d)	{	mgl_data_add_dat(this,&d);	}
+	inline void operator+=(const mglDataA &d)	{	mgl_data_add_dat(this,&d);	}
 	/// Substract the other data
-	inline void operator-=(const mglData &d)	{	mgl_data_sub_dat(this,&d);	}
+	inline void operator-=(const mglDataA &d)	{	mgl_data_sub_dat(this,&d);	}
 	/// Multiplicate each element by the number
 	inline void operator*=(mreal d)		{	mgl_data_mul_num(this,d);	}
 	/// Divide each element by the number
@@ -430,34 +429,34 @@ protected:
 };
 //-----------------------------------------------------------------------------
 #ifndef SWIG
-inline mglData operator*(const mglData &b, const mglData &d)
-{	mglData a(b);	a*=d;	return a;	}
-inline mglData operator*(mreal b, const mglData &d)
-{	mglData a(d);	a*=b;	return a;	}
-inline mglData operator*(const mglData &d, mreal b)
-{	mglData a(d);	a*=b;	return a;	}
-inline mglData operator-(const mglData &b, const mglData &d)
-{	mglData a(b);	a-=d;	return a;	}
-inline mglData operator-(mreal b, const mglData &d)
-{	mglData a(d);	a-=b;	return a;	}
-inline mglData operator-(const mglData &d, mreal b)
-{	mglData a(d);	a-=b;	return a;	}
-inline mglData operator+(const mglData &b, const mglData &d)
-{	mglData a(b);	a+=d;	return a;	}
-inline mglData operator+(mreal b, const mglData &d)
-{	mglData a(d);	a+=b;	return a;	}
-inline mglData operator+(const mglData &d, mreal b)
-{	mglData a(d);	a+=b;	return a;	}
-inline mglData operator/(const mglData &b, const mglData &d)
-{	mglData a(b);	a/=d;	return a;	}
-inline mglData operator/(const mglData &d, mreal b)
-{	mglData a(d);	a/=b;	return a;	}
+inline mglData operator*(const mglDataA &b, const mglDataA &d)
+{	mglData a(&b);	a*=d;	return a;	}
+inline mglData operator*(mreal b, const mglDataA &d)
+{	mglData a(&d);	a*=b;	return a;	}
+inline mglData operator*(const mglDataA &d, mreal b)
+{	mglData a(&d);	a*=b;	return a;	}
+inline mglData operator-(const mglDataA &b, const mglDataA &d)
+{	mglData a(&b);	a-=d;	return a;	}
+inline mglData operator-(mreal b, const mglDataA &d)
+{	mglData a(&d);	a-=b;	return a;	}
+inline mglData operator-(const mglDataA &d, mreal b)
+{	mglData a(&d);	a-=b;	return a;	}
+inline mglData operator+(const mglDataA &b, const mglDataA &d)
+{	mglData a(&b);	a+=d;	return a;	}
+inline mglData operator+(mreal b, const mglDataA &d)
+{	mglData a(&d);	a+=b;	return a;	}
+inline mglData operator+(const mglDataA &d, mreal b)
+{	mglData a(&d);	a+=b;	return a;	}
+inline mglData operator/(const mglDataA &b, const mglDataA &d)
+{	mglData a(&b);	a/=d;	return a;	}
+inline mglData operator/(const mglDataA &d, mreal b)
+{	mglData a(&d);	a/=b;	return a;	}
 inline bool operator==(const mglData &b, const mglData &d)
 {	if(b.nx!=d.nx || b.ny!=d.ny || b.ny!=d.ny)	return false;
 	return !memcmp(b.a,d.a,b.nx*b.ny*b.nz*sizeof(mreal));	}
-inline bool operator<(const mglData &b, const mglData &d)
+inline bool operator<(const mglDataA &b, const mglDataA &d)
 {	return b.Maximal()<d.Maximal();	}
-inline bool operator>(const mglData &b, const mglData &d)
+inline bool operator>(const mglDataA &b, const mglDataA &d)
 {	return b.Minimal()>d.Minimal();	}
 #endif
 //-----------------------------------------------------------------------------
@@ -480,26 +479,26 @@ inline mglData mglSTFA(const mglDataA &re, const mglDataA &im, long dn, char dir
 {	return mglData(true, mgl_data_stfa(&re,&im,dn,dir));	}
 //-----------------------------------------------------------------------------
 /// Saves result of PDE solving (|u|^2) for "Hamiltonian" \a ham with initial conditions \a ini
-inline mglData mglPDE(mglBase *gr, const char *ham, const mglData &ini_re, const mglData &ini_im, mreal dz=0.1, mreal k0=100,const char *opt="")
+inline mglData mglPDE(mglBase *gr, const char *ham, const mglDataA &ini_re, const mglDataA &ini_im, mreal dz=0.1, mreal k0=100,const char *opt="")
 {	return mglData(true, mgl_pde_solve(gr,ham, &ini_re, &ini_im, dz, k0,opt));	}
 /// Saves result of PDE solving for "Hamiltonian" \a ham with initial conditions \a ini along a curve \a ray (must have nx>=7 - x,y,z,px,py,pz,tau or nx=5 - x,y,px,py,tau)
-inline mglData mglQO2d(const char *ham, const mglData &ini_re, const mglData &ini_im, const mglData &ray, mreal r=1, mreal k0=100)
+inline mglData mglQO2d(const char *ham, const mglDataA &ini_re, const mglDataA &ini_im, const mglDataA &ray, mreal r=1, mreal k0=100)
 {	return mglData(true, mgl_qo2d_solve(ham, &ini_re, &ini_im, &ray, r, k0, 0, 0));	}
-inline mglData mglQO2d(const char *ham, const mglData &ini_re, const mglData &ini_im, const mglData &ray, mglData &xx, mglData &yy, mreal r=1, mreal k0=100)
+inline mglData mglQO2d(const char *ham, const mglDataA &ini_re, const mglDataA &ini_im, const mglDataA &ray, mglData &xx, mglData &yy, mreal r=1, mreal k0=100)
 {	return mglData(true, mgl_qo2d_solve(ham, &ini_re, &ini_im, &ray, r, k0, &xx, &yy));	}
 /// Prepares ray data for mglQO_PDE with starting point \a r0, \a p0
 inline mglData mglRay(const char *ham, mglPoint r0, mglPoint p0, mreal dt=0.1, mreal tmax=10)
 {	return mglData(true, mgl_ray_trace(ham, r0.x, r0.y, r0.z, p0.x, p0.y, p0.z, dt, tmax));	}
 /// Calculate Jacobian determinant for D{x(u,v), y(u,v)} = dx/du*dy/dv-dx/dv*dy/du
-inline mglData mglJacobian(const mglData &x, const mglData &y)
+inline mglData mglJacobian(const mglDataA &x, const mglDataA &y)
 {	return mglData(true, mgl_jacobian_2d(&x, &y));	}
 /// Calculate Jacobian determinant for D{x(u,v,w), y(u,v,w), z(u,v,w)}
-inline mglData mglJacobian(const mglData &x, const mglData &y, const mglData &z)
+inline mglData mglJacobian(const mglDataA &x, const mglDataA &y, const mglDataA &z)
 {	return mglData(true, mgl_jacobian_3d(&x, &y, &z));	}
 /// Do something like Delone triangulation
-inline mglData mglTriangulation(const mglData &x, const mglData &y, const mglData &z)
+inline mglData mglTriangulation(const mglDataA &x, const mglDataA &y, const mglDataA &z)
 {	return mglData(true,mgl_triangulation_3d(&x,&y,&z));	}
-inline mglData mglTriangulation(const mglData &x, const mglData &y)
+inline mglData mglTriangulation(const mglDataA &x, const mglDataA &y)
 {	return mglData(true,mgl_triangulation_2d(&x,&y));	}
 //-----------------------------------------------------------------------------
 #endif

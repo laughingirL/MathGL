@@ -6,7 +6,7 @@
 @end ifset
 
 @ifclear UDAV
-В данной главе описывается класс @code{mglData} для работы с массивами данных, определённый в @code{#include <mgl2/data.h>}. Он содержит функции для выделения памяти и изменения размера данных, чтения данных из файла, численного дифференцирования, интегрирования, интерполяции и пр., заполнения по текстовой формуле и т.д. Класс позволяет работать с данными размерности не более 3 (как функции от трёх переменных -- x,y,z). По умолчанию внутреннее представление данных -- mreal, выбранный в силу меньшего размера занимаемой памяти и достаточной для построения графиков точности. Базовый тип можно сменить на этапе установки указав опцию @code{--enable-double} (см. @ref{Installation}). Однако, в дальнейшем в документации будет использован тип @code{mreal}. Массивы которые могут быть созданы командами MGL отображаются Small Caps шрифтом (например, @sc{dat}).
+В данной главе описываются классы @code{mglData} и @code{mglDataC} для работы с массивами действительных и комплексных данных, определённые в @code{#include <mgl2/data.h>} и @code{#include <mgl2/datac.h>} соответственно. Они содержат функции для выделения памяти и изменения размера данных, чтения данных из файла, численного дифференцирования, интегрирования, интерполяции и пр., заполнения по текстовой формуле и т.д. Классы позволяют работать с данными размерности не более 3 (как функции от трёх переменных -- x,y,z). По умолчанию внутреннее представление данных использует тип mreal (и dual=std::complex<mreal> для @code{mglDataC}), который может быть сконфигурирован как float или double на этапе установки указав опцию @code{--enable-double} (см. @ref{Installation}). Тип float удобен в силу меньшего размера занимаемой памяти и, как правило, достаточной для построения графиков точности. Однако, тип double имеет большую точность, что может быть важно, например, для осей с метками времени. Массивы которые могут быть созданы командами MGL отображаются Small Caps шрифтом (например, @sc{dat}).
 @end ifclear
 
 @menu
@@ -35,32 +35,43 @@ MGL не поддерживает прямой доступ к элемента�
 
 @ifclear UDAV
 @deftypecv {Variable} mglData @code{mreal *} a
+@deftypecvx {Variable} mglDataC @code{dual *} a
 Указатель на массив данных. Это одномерный массив. Например, матрица [nx x ny x nz] представляется одномерным массивом длиной nx*ny*nz, где элемент с индексами @{i, j, k@} находится как a[i+nx*j+nx*ny*k] (индексы отсчитываются от нуля).
 @end deftypecv
 @deftypecv {Variable} mglData @code{int} nx
+@deftypecvx {Variable} mglDataC @code{long} nx
 Размер массива по 1-ой размерности ('x' размерности).
 @end deftypecv
 @deftypecv {Variable} mglData @code{int} ny
+@deftypecvx {Variable} mglDataC @code{long} ny
 Размер массива по 2-ой размерности ('y' размерности).
 @end deftypecv
 @deftypecv {Variable} mglData @code{int} nz
+@deftypecvx {Variable} mglDataC @code{long} nz
 Размер массива по 3-ей размерности ('z' размерности).
 @end deftypecv
-@deftypecv {Variable} mglData @code{char *} id
+@deftypecv {Variable} mglData @code{std::string} id
+@deftypecvx {Variable} mglDataC @code{std::string} id
 Имена колонки (или среза при nz>1) -- один символ на колонку.
 @end deftypecv
 @deftypecv {Variable} mglData @code{bool} link
+@deftypecvx {Variable} mglDataC @code{bool} link
 Флаг использования указателя на внешние данные, включает запрет на удаление массива данных.
 @end deftypecv
 
 @deftypefn {Метод класса @code{mglData}} @code{mreal} GetVal (@code{long} i)
+@deftypefnx {Метод класса @code{mglDataC}} @code{mreal} GetVal (@code{long} i)
 @deftypefnx {Метод класса @code{mglData}} @code{void} SetVal (@code{mreal} val, @code{long} i)
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} SetVal (@code{mreal} val, @code{long} i)
 Присваивает или возвращает значение используя "непрерывную" индексацию без проверки выхода за границы массива. Индекс @var{i} должен быть в диапазоне [0, nx*ny*nz-1].
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglData}} @code{long} GetNx ()
+@deftypefnx {Метод класса @code{mglDataC}} @code{long} GetNx ()
 @deftypefnx {Метод класса @code{mglData}} @code{long} GetNy ()
+@deftypefnx {Метод класса @code{mglDataC}} @code{long} GetNy ()
 @deftypefnx {Метод класса @code{mglData}} @code{long} GetNz ()
+@deftypefnx {Метод класса @code{mglDataC}} @code{long} GetNz ()
 @deftypefnx {Функция С} @code{long} mgl_data_get_nx (@code{HCDT} dat)
 @deftypefnx {Функция С} @code{long} mgl_data_get_ny (@code{HCDT} dat)
 @deftypefnx {Функция С} @code{long} mgl_data_get_nz (@code{HCDT} dat)
@@ -68,8 +79,11 @@ MGL не поддерживает прямой доступ к элемента�
 @end deftypefn
 
 @deftypefn {Функция С} @code{mreal} mgl_data_get_value (@code{HCDT} dat, @code{int} i, @code{int} j, @code{int} k)
+@deftypefnx {Функция С} @code{dual} mgl_datac_get_value (@code{HCDT} dat, @code{int} i, @code{int} j, @code{int} k)
 @deftypefnx {Функция С} @code{mreal *} mgl_data_value (@code{HMDT} dat, @code{int} i, @code{int} j, @code{int} k)
+@deftypefnx {Функция С} @code{dual *} mgl_datac_value (@code{HADT} dat, @code{int} i, @code{int} j, @code{int} k)
 @deftypefnx {Функция С} @code{void} mgl_data_set_value (@code{HMDT} dat, @code{mreal} v, @code{int} i, @code{int} j, @code{int} k)
+@deftypefnx {Функция С} @code{void} mgl_datac_set_value (@code{HADT} dat, @code{dual} v, @code{int} i, @code{int} j, @code{int} k)
 Присваивает или возвращает значение ячейки данных с проверкой выхода за пределы массива.
 @end deftypefn
 @deftypefn {Функция С} @code{const mreal *} mgl_data_data (@code{HCDT} dat)
@@ -93,6 +107,7 @@ There are many functions, which can create data for output (see @ref{Data fillin
 @deftypefnx {Команда MGL} {} new @sc{dat} @code{nx ny nz} ['eq']
 @ifclear UDAV
 @deftypefnx {Конструктор класса @code{mglData}} {} mglData (@code{int} mx=@code{1}, @code{int} my=@code{1}, @code{int} mz=@code{1})
+@deftypefnx {Конструктор класса @code{mglDataC}} {} mglDataC (@code{int} mx=@code{1}, @code{int} my=@code{1}, @code{int} mz=@code{1})
 @deftypefnx {Функция С} @code{HMDT} mgl_create_data ()
 @deftypefnx {Функция С} @code{HMDT} mgl_create_data_size (@code{int} mx, @code{int} my, @code{int} mz)
 @end ifclear
@@ -111,6 +126,14 @@ There are many functions, which can create data for output (see @ref{Data fillin
 @deftypefnx {Конструктор класса @code{mglData}} {} mglData (@code{int} size, @code{int} cols, @code{const double *}dat2)
 @deftypefnx {Конструктор класса @code{mglData}} {} mglData (@code{const double *}dat2, @code{int} size)
 @deftypefnx {Конструктор класса @code{mglData}} {} mglData (@code{const double *}dat2, @code{int} size, @code{int} cols)
+@deftypefnx {Конструктор класса @code{mglDataC}} {} mglDataC (@code{const mglDataA &}dat2)
+@deftypefnx {Конструктор класса @code{mglDataC}} {} mglDataC (@code{const mglDataA *}dat2)
+@deftypefnx {Конструктор класса @code{mglDataC}} {} mglDataC (@code{int} size, @code{const float *}dat2)
+@deftypefnx {Конструктор класса @code{mglDataC}} {} mglDataC (@code{int} size, @code{int} cols, @code{const float *}dat2)
+@deftypefnx {Конструктор класса @code{mglDataC}} {} mglDataC (@code{int} size, @code{const double *}dat2)
+@deftypefnx {Конструктор класса @code{mglDataC}} {} mglDataC (@code{int} size, @code{int} cols, @code{const double *}dat2)
+@deftypefnx {Конструктор класса @code{mglDataC}} {} mglDataC (@code{int} size, @code{const dual *}dat2)
+@deftypefnx {Конструктор класса @code{mglDataC}} {} mglDataC (@code{int} size, @code{int} cols, @code{const dual *}dat2)
 @end ifclear
 Копирует данные из другого экземпляра данных. Если указана формула @var{eq}, то данные заполняются также как при использовании @ref{fill}.
 @end deftypefn
@@ -118,7 +141,9 @@ There are many functions, which can create data for output (see @ref{Data fillin
 @deftypefn {Команда MGL} {} read @sc{dat} 'fname'
 @ifclear UDAV
 @deftypefnx {Конструктор класса @code{mglData}} {} mglData (@code{const char *}fname)
+@deftypefnx {Конструктор класса @code{mglDataC}} {} mglDataC (@code{const char *}fname)
 @deftypefnx {Функция С} @code{HMDT} mgl_create_data_file (@code{const char *}fname)
+@deftypefnx {Функция С} @code{HADT} mgl_create_datac_file (@code{const char *}fname)
 @end ifclear
 Читает данные из текстового файла с автоматическим определением размеров массива.
 @end deftypefn
@@ -127,6 +152,8 @@ There are many functions, which can create data for output (see @ref{Data fillin
 @ifclear UDAV
 @deftypefnx {Destructor on @code{mglData}} {} ~mglData ()
 @deftypefnx {Функция С} @code{void} mgl_delete_data (@code{HMDT} dat)
+@deftypefnx {Destructor on @code{mglDataC}} {} ~mglDataC ()
+@deftypefnx {Функция С} @code{void} mgl_delete_datac (@code{HADT} dat)
 @end ifclear
 Удаляет массив данных из памяти.
 @end deftypefn
@@ -149,7 +176,9 @@ There are many functions, which can create data for output (see @ref{Data fillin
 @deftypefn {Команда MGL} {} new @sc{dat} [@code{nx=1 ny=1 nz=1}]
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{void} Create (@code{int} mx, @code{int} my=@code{1}, @code{int} mz=@code{1})
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} Create (@code{int} mx, @code{int} my=@code{1}, @code{int} mz=@code{1})
 @deftypefnx {Функция С} @code{void} mgl_data_create (@code{HMDT} dat, @code{int} mx, @code{int} my, @code{int} mz)
+@deftypefnx {Функция С} @code{void} mgl_datac_create (@code{HADT} dat, @code{int} mx, @code{int} my, @code{int} mz)
 @end ifclear
 Создает/пересоздает массив данных указанного размера и заполняет его нулями. Ничего не делает при @var{mx}, @var{my}, @var{mz} отрицательных или равных нулю.
 @end deftypefn
@@ -158,7 +187,9 @@ There are many functions, which can create data for output (see @ref{Data fillin
 @deftypefn {Команда MGL} {} rearrange dat @code{mx [my=0 mz=0]}
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{void} Rearrange (@code{int} mx, @code{int} my=@code{0}, @code{int} mz=@code{0})
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} Rearrange (@code{int} mx, @code{int} my=@code{0}, @code{int} mz=@code{0})
 @deftypefnx {Функция С} @code{void} mgl_data_rearrange (@code{HMDT} dat, @code{int} mx, @code{int} my, @code{int} mz)
+@deftypefnx {Функция С} @code{void} mgl_datac_rearrange (@code{HADT} dat, @code{int} mx, @code{int} my, @code{int} mz)
 @end ifclear
 Изменяет размерность данных без изменения самого массива данных, так что результирующий массив @var{mx}*@var{my}*@var{mz} < nx*ny*nz. Если один из параметров @var{my} или @var{mz} ноль, то он будет выбран оптимальным образом. Например, если @var{my}=0, то будет @var{my}=nx*ny*nz/@var{mx} и @var{mz}=1.
 @end deftypefn
@@ -167,7 +198,9 @@ There are many functions, which can create data for output (see @ref{Data fillin
 @deftypefn {Команда MGL} {} transpose dat ['dim'='yxz']
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{void} Transpose (@code{const char *}dim=@code{"yx"})
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} Transpose (@code{const char *}dim=@code{"yx"})
 @deftypefnx {Функция С} @code{void} mgl_data_transpose (@code{const char *}dim)
+@deftypefnx {Функция С} @code{void} mgl_datac_transpose (@code{HADT} dat, @code{const char *}dim)
 @end ifclear
 Транспонирует (меняет порядок размерностей) массив данных. Новый порядок размерностей задается строкой @var{dim}. Функция может быть полезна для транспонирования одномерных (или квазиодномерных) массивов после чтения их из файла.
 @end deftypefn
@@ -176,7 +209,9 @@ There are many functions, which can create data for output (see @ref{Data fillin
 @deftypefn {Команда MGL} {} extend dat @code{n1 [n2=0]}
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{void} Extend (@code{int} n1, @code{int} n2=@code{0})
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} Extend (@code{int} n1, @code{int} n2=@code{0})
 @deftypefnx {Функция С} @code{void} mgl_data_extend (@code{HMDT} dat, @code{int} n1, @code{int} n2)
+@deftypefnx {Функция С} @code{void} mgl_datac_extend (@code{HADT} dat, @code{int} n1, @code{int} n2)
 @end ifclear
 Увеличивает размер данных путем вставки (|@var{n1}|+1) новых срезов после (для @var{n1}>0) или перед (для @var{n1}<0) существующими данными. Можно добавить сразу 2 размерности для 1d массива, используя второй параметр @var{n2}. Данные в новые срезы будут скопированы из существующих. Например, для @var{n1}>0 новый массив будет
 @iftex
@@ -191,7 +226,9 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @deftypefn {Команда MGL} {} squeeze dat @code{rx [ry=1 rz=1 sm=off]}
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{void} Squeeze (@code{int} rx, @code{int} ry=@code{1}, @code{int} rz=@code{1}, @code{bool} smooth=@code{false})
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} Squeeze (@code{int} rx, @code{int} ry=@code{1}, @code{int} rz=@code{1}, @code{bool} smooth=@code{false})
 @deftypefnx {Функция С} @code{void} mgl_data_squeeze (@code{HMDT} dat, @code{int} rx, @code{int} ry, @code{int} rz, @code{int} smooth)
+@deftypefnx {Функция С} @code{void} mgl_datac_squeeze (@code{HADT} dat, @code{int} rx, @code{int} ry, @code{int} rz, @code{int} smooth)
 @end ifclear
 Уменьшает размер данных путём удаления элементов с индексами не кратными @var{rx}, @var{ry}, @var{rz} соответственно. Параметр @var{smooth} задает использовать сглаживания
 @iftex
@@ -206,7 +243,9 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @deftypefn {Команда MGL} {} crop dat @code{n1 n2} 'dir'
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{void} Crop (@code{int} n1, @code{int} n2, @code{char} dir=@code{'x'})
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} Crop (@code{int} n1, @code{int} n2, @code{char} dir=@code{'x'})
 @deftypefnx {Функция С} @code{void} mgl_data_crop (@code{HMDT} dat, @code{int} n1, @code{int} n2, @code{char} dir)
+@deftypefnx {Функция С} @code{void} mgl_datac_crop (@code{HADT} dat, @code{int} n1, @code{int} n2, @code{char} dir)
 @end ifclear
 Обрезает границы данных при @var{i}<@var{n1} и @var{i}>@var{n2} (при @var{n2}>0) или @var{i}>@code{n[xyz]}-@var{n2} (при @var{n2}<=0) вдоль направления @var{dir}.
 @end deftypefn
@@ -215,7 +254,9 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @deftypefn {Команда MGL} {} insert dat 'dir' @code{[pos=off num=0]}
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{void} Insert (@code{char} dir, @code{int} pos=@code{0}, @code{int} num=@code{1})
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} Insert (@code{char} dir, @code{int} pos=@code{0}, @code{int} num=@code{1})
 @deftypefnx {Функция С} @code{void} mgl_data_insert (@code{HMDT} dat, @code{char} dir, @code{int} pos, @code{char} num)
+@deftypefnx {Функция С} @code{void} mgl_datac_insert (@code{HADT} dat, @code{char} dir, @code{int} pos, @code{char} num)
 @end ifclear
 Вставляет @var{num} срезов вдоль направления @var{dir} с позиции @var{pos} и заполняет их нулями.
 @end deftypefn
@@ -224,7 +265,9 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @deftypefn {Команда MGL} {} delete dat 'dir' @code{[pos=off num=0]}
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{void} Delete (@code{char} dir, @code{int} pos=@code{0}, @code{int} num=@code{1})
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} Delete (@code{char} dir, @code{int} pos=@code{0}, @code{int} num=@code{1})
 @deftypefnx {Функция С} @code{void} mgl_data_delete (@code{HMDT} dat, @code{char} dir, @code{int} pos, @code{char} num)
+@deftypefnx {Функция С} @code{void} mgl_datac_delete (@code{HADT} dat, @code{char} dir, @code{int} pos, @code{char} num)
 @end ifclear
 Удаляет @var{num} срезов вдоль направления @var{dir} с позиции @var{pos}.
 @end deftypefn
@@ -262,6 +305,12 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @deftypefnx {Метод класса @code{mglData}} @code{void} Set (@code{const double *}A, @code{int} NX, @code{int} NY=@code{1}, @code{int} NZ=@code{1})
 @deftypefnx {Функция С} @code{void} mgl_data_set_mreal (@code{HMDT} dat, @code{const mreal *}A, @code{int} NX, @code{int} NY, @code{int} NZ)
 @deftypefnx {Функция С} @code{void} mgl_data_set_double (@code{HMDT} dat, @code{const double *}A, @code{int} NX, @code{int} NY, @code{int} NZ)
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} Set (@code{const float *}A, @code{int} NX, @code{int} NY=@code{1}, @code{int} NZ=@code{1})
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} Set (@code{const double *}A, @code{int} NX, @code{int} NY=@code{1}, @code{int} NZ=@code{1})
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} Set (@code{const dual *}A, @code{int} NX, @code{int} NY=@code{1}, @code{int} NZ=@code{1})
+@deftypefnx {Функция С} @code{void} mgl_datac_set_float (@code{HADT} dat, @code{const mreal *}A, @code{int} NX, @code{int} NY, @code{int} NZ)
+@deftypefnx {Функция С} @code{void} mgl_datac_set_double (@code{HADT} dat, @code{const double *}A, @code{int} NX, @code{int} NY, @code{int} NZ)
+@deftypefnx {Функция С} @code{void} mgl_datac_set_complex (@code{HADT} dat, @code{const dual *}A, @code{int} NX, @code{int} NY, @code{int} NZ)
 Выделяет память и копирует данные из массивов типа @code{mreal*} или @code{double*}, т.е. из массивов определённых как @code{mreal a[NX*NY*NZ];}.
 @end deftypefn
 
@@ -280,33 +329,57 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglData}} @code{void} Set (@code{gsl_vector *}v)
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} Set (@code{gsl_vector *}v)
 @deftypefnx {Функция С} @code{void} mgl_data_set_vector (@code{HMDT} dat, @code{gsl_vector *}v)
+@deftypefnx {Функция С} @code{void} mgl_datac_set_vector (@code{HADT} dat, @code{gsl_vector *}v)
 Выделяет память и копирует данные из структуры типа @code{gsl_vector *}.
 @end deftypefn
 @deftypefn {Метод класса @code{mglData}} @code{void} Set (@code{gsl_matrix *}m)
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} Set (@code{gsl_matrix *}m)
 @deftypefnx {Функция С} @code{void} mgl_data_set_matrix (@code{HMDT} dat, @code{gsl_matrix *}m)
+@deftypefnx {Функция С} @code{void} mgl_datac_set_matrix (@code{HADT} dat, @code{gsl_matrix *}m)
 Выделяет память и копирует данные из структуры типа @code{gsl_matrix *}.
 @end deftypefn
 @deftypefn {Метод класса @code{mglData}} @code{void} Set (@code{const mglData &}from)
 @deftypefnx {Метод класса @code{mglData}} @code{void} Set (@code{HCDT} from)
 @deftypefnx {Функция С} @code{void} mgl_data_set (@code{HMDT} dat, @code{HCDT} from)
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} Set (@code{const mglDataA &}from)
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} Set (@code{HCDT} from)
+@deftypefnx {Функция С} @code{void} mgl_datac_set (@code{HADT} dat, @code{HCDT} from)
 Выделяет память и копирует данные из другого экземпляра данных @var{from}.
 @end deftypefn
 
+@deftypefn {Метод класса @code{mglDataC}} @code{void} Set (@code{const mglDataA &}re, @code{const mglDataA &}im)
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} Set (@code{HCDT} re, @code{HCDT} im)
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} SetAmpl (@code{HCDT} ampl, @code{const mglDataA &}phase)
+@deftypefnx {Функция С} @code{void} mgl_datac_set_ri (@code{HADT} dat, @code{HCDT} re, @code{HCDT} im)
+@deftypefnx {Функция С} @code{void} mgl_datac_set_ap (@code{HADT} dat, @code{HCDT} ampl, @code{HCDT} phase)
+Выделяет память и копирует данные из экземпляра данных для действительной @var{re} и мнимой @var{im} частей комплексного массива данных.
+@end deftypefn
+
 @deftypefn {Метод класса @code{mglData}} @code{void} Set (@code{const std::vector<int> &}d)
-@deftypefnx {Метод класса @code{mglData}} @code{void} Set (@code{const std::vector<mreal> &}d)
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} Set (@code{const std::vector<int> &}d)
+@deftypefnx {Метод класса @code{mglData}} @code{void} Set (@code{const std::vector<float> &}d)
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} Set (@code{const std::vector<float> &}d)
 @deftypefnx {Метод класса @code{mglData}} @code{void} Set (@code{const std::vector<double> &}d)
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} Set (@code{const std::vector<double> &}d)
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} Set (@code{const std::vector<dual> &}d)
 Выделяет память и копирует данные из массива типа @code{std::vector<T>}.
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglData}} @code{void} Set (@code{const char *}str, @code{int} NX, @code{int} NY=@code{1}, @code{int} NZ=@code{1})
 @deftypefnx {Функция С} @code{void} mgl_data_set_values (@code{const char *}str, @code{int} NX, @code{int} NY, @code{int} NZ)
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} Set (@code{const char *}str, @code{int} NX, @code{int} NY=@code{1}, @code{int} NZ=@code{1})
+@deftypefnx {Функция С} @code{void} mgl_datac_set_values (@code{const char *}str, @code{int} NX, @code{int} NY, @code{int} NZ)
 Выделяет память и сканирует массив данных из строки.
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglData}} @code{void} Link (@code{const mglData &}from)
 @deftypefnx {Метод класса @code{mglData}} @code{void} Link (@code{const mreal *}A, @code{int} NX, @code{int} NY=@code{1}, @code{int} NZ=@code{1})
 @deftypefnx {Функция С} @code{void} mgl_data_link (@code{HMDT} dat, @code{const mreal *}A, @code{int} NX, @code{int} NY, @code{int} NZ)
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} Link (@code{mglDataC &}from)
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} Link (@code{dual *}A, @code{int} NX, @code{int} NY=@code{1}, @code{int} NZ=@code{1})
+@deftypefnx {Функция С} @code{void} mgl_datac_link (@code{HADT} dat, @code{const mreal *}A, @code{int} NX, @code{int} NY, @code{int} NZ)
 Устанавливает флаг использования внешнего массива данных, которые не будут удалены. Флаг может быть возвращён в исходное состояние и создан новый внутренний массив если использовались функции изменяющие размер данных.
 @end deftypefn
 @end ifclear
@@ -320,7 +393,9 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @deftypefn {Команда MGL} {} fill dat v1 v2 ['dir'='x']
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{void} Fill (@code{mreal} v1, @code{mreal} v2, @code{char} dir=@code{'x'})
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} Fill (@code{dual} v1, @code{dual} v2, @code{char} dir=@code{'x'})
 @deftypefnx {Функция С} @code{void} mgl_data_fill (@code{HMDT} dat, @code{mreal} v1, @code{mreal} v2, @code{char} dir)
+@deftypefnx {Функция С} @code{void} mgl_datac_fill (@code{HADT} dat, @code{dual} v1, @code{dual} v2, @code{char} dir)
 @end ifclear
 Заполняет значениями равно распределёнными в диапазоне [@var{x1}, @var{x2}] в направлении @var{dir}=@{@samp{x},@samp{y},@samp{z}@}.
 @end deftypefn
@@ -332,7 +407,11 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @deftypefnx {Метод класса @code{mglData}} @code{void} Fill (@code{HMGL} gr, @code{const char *}eq, @code{const char *}opt=@code{""})
 @deftypefnx {Метод класса @code{mglData}} @code{void} Fill (@code{HMGL} gr, @code{const char *}eq, @code{const mglData &}vdat, @code{const char *}opt=@code{""})
 @deftypefnx {Метод класса @code{mglData}} @code{void} Fill (@code{HMGL} gr, @code{const char *}eq, @code{const mglData &}vdat, @code{const mglData &}wdat, @code{const char *}opt=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_data_fill_eq (@code{HMGL} gr, @code{HMDT} dat, @code{const char *}eq, @code{const HMDT *}vdat, @code{const HMDT *}wdat, @code{const char *}opt)
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} Fill (@code{HMGL} gr, @code{const char *}eq, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} Fill (@code{HMGL} gr, @code{const char *}eq, @code{const mglDataA &}vdat, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} Fill (@code{HMGL} gr, @code{const char *}eq, @code{const mglDataA &}vdat, @code{const mglDataA &}wdat, @code{const char *}opt=@code{""})
+@deftypefnx {Функция С} @code{void} mgl_data_fill_eq (@code{HMGL} gr, @code{HMDT} dat, @code{const char *}eq, @code{HCDT} vdat, @code{HCDT} wdat, @code{const char *}opt)
+@deftypefnx {Функция С} @code{void} mgl_datac_fill_eq (@code{HMGL} gr, @code{HADT} dat, @code{const char *}eq, @code{HCDT} vdat, @code{HCDT} wdat, @code{const char *}opt)
 @end ifclear
 Заполняет значениями вычисленными по формуле @var{eq}. Формула представляет собой произвольное выражение, зависящее от переменных @samp{x}, @samp{y}, @samp{z}, @samp{u}, @samp{v}, @samp{w}. Координаты @samp{x}, @samp{y}, @samp{z} полагаются меняющимися в диапазоне @var{Min} x @var{Max} (в отличие от функции @code{Modify}). Переменная @samp{u} -- значения исходного массива, переменные @samp{v}, @samp{w} -- значения массивов @var{vdat}, @var{wdat}. Последние могут быть @code{NULL}, т.е. опущены.
 @end deftypefn
@@ -345,8 +424,13 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @deftypefnx {Метод класса @code{mglData}} @code{void} Modify (@code{const char *}eq, @code{int} dim=@code{0})
 @deftypefnx {Метод класса @code{mglData}} @code{void} Modify (@code{const char *}eq, @code{const mglData &}v)
 @deftypefnx {Метод класса @code{mglData}} @code{void} Modify (@code{const char *}eq, @code{const mglData &}v, @code{const mglData &}w)
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} Modify (@code{const char *}eq, @code{int} dim=@code{0})
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} Modify (@code{const char *}eq, @code{const mglDataA &}v)
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} Modify (@code{const char *}eq, @code{const mglDataA &}v, @code{const mglDataA &}w)
 @deftypefnx {Функция С} @code{void} mgl_data_modify (@code{HMDT} dat, @code{const char *}eq, @code{int} dim)
 @deftypefnx {Функция С} @code{void} mgl_data_modify_vw (@code{HMDT} dat, @code{const char *}eq, @code{HCDT} v, @code{HCDT} w)
+@deftypefnx {Функция С} @code{void} mgl_datac_modify (@code{HADT} dat, @code{const char *}eq, @code{int} dim)
+@deftypefnx {Функция С} @code{void} mgl_datac_modify_vw (@code{HADT} dat, @code{const char *}eq, @code{HCDT} v, @code{HCDT} w)
 @end ifclear
 Аналогично предыдущему с координатами @samp{x}, @samp{y}, @samp{z}, меняющимися в диапазоне [0,1]. Если указан @var{dim}>0, то изменяются только слои >=@var{dim}.
 @end deftypefn
@@ -393,6 +477,8 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{void} SetColumnId (@code{const char *}ids)
 @deftypefnx mglData @code{void} mgl_data_set_id (@code{const char *}ids)
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} SetColumnId (@code{const char *}ids)
+@deftypefnx mglData @code{void} mgl_datac_set_id (@code{HADT} a, @code{const char *}ids)
 @end ifclear
 Задает названия @var{ids} для колонок массива данных. Строка должна содержать один символ 'a'...'z' на колонку. Эти названия используются в функции @ref{column}.
 @end deftypefn
@@ -416,7 +502,9 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @deftypefn {Команда MGL} {} read @sc{dat} 'fname'
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{void} Read (@code{const char *}fname)
-@deftypefnx {Функция С} @code{void} mgl_data_read (@code{HMDT} dat, @code{const char *}fname)
+@deftypefnx {Метод класса @code{mglDataC}} @code{bool} Read (@code{const char *}fname)
+@deftypefnx {Функция С} @code{int} mgl_data_read (@code{HMDT} dat, @code{const char *}fname)
+@deftypefnx {Функция С} @code{int} mgl_datac_read (@code{HADT} dat, @code{const char *}fname)
 @end ifclear
 Читает данные из текстового файла с разделителями символом пробела/табуляции с автоматическим определением размера массива. Двойной перевод строки начинает новый срез данных (по направлению z).
 @end deftypefn
@@ -424,7 +512,9 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @deftypefn {Команда MGL} {} read @sc{dat} 'fname' @code{mx [my=1 mz=1]}
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{void} Read (@code{const char *}fname, @code{int} mx, @code{int} my=@code{1}, @code{int} mz=@code{1})
-@deftypefnx {Функция С} @code{void} mgl_data_read_dim (@code{HMDT} dat, @code{const char *}fname, @code{int} mx, @code{int} my, @code{int} mz)
+@deftypefnx {Метод класса @code{mglDataC}} @code{bool} Read (@code{const char *}fname, @code{int} mx, @code{int} my=@code{1}, @code{int} mz=@code{1})
+@deftypefnx {Функция С} @code{int} mgl_data_read_dim (@code{HMDT} dat, @code{const char *}fname, @code{int} mx, @code{int} my, @code{int} mz)
+@deftypefnx {Функция С} @code{int} mgl_datac_read_dim (@code{HADT} dat, @code{const char *}fname, @code{int} mx, @code{int} my, @code{int} mz)
 @end ifclear
 Читает данные из текстового файла с заданными размерами. Ничего не делается если параметры @var{mx}, @var{my} или @var{mz} равны нулю или отрицательны.
 @end deftypefn
@@ -433,7 +523,9 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @deftypefn {Команда MGL} {} readmat @sc{dat} 'fname' [@code{dim=2}]
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{void} ReadMat (@code{const char *}fname, @code{int} dim=@code{2})
-@deftypefnx {Функция С} @code{void} mgl_data_read_mat (@code{HMDT} dat, @code{const char *}fname, @code{int} dim)
+@deftypefnx {Метод класса @code{mglDataC}} @code{bool} ReadMat (@code{const char *}fname, @code{int} dim=@code{2})
+@deftypefnx {Функция С} @code{int} mgl_data_read_mat (@code{HMDT} dat, @code{const char *}fname, @code{int} dim)
+@deftypefnx {Функция С} @code{int} mgl_datac_read_mat (@code{HADT} dat, @code{const char *}fname, @code{int} dim)
 @end ifclear
 Читает данные из текстового файла с размерами, указанными в первых @var{dim} числах файла. При этом переменная @var{dim} задает размерность (1d, 2d, 3d) данных.
 @end deftypefn
@@ -442,6 +534,9 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @deftypefn {Команда MGL} {} readall @sc{dat} 'templ' @code{v1 v2 [dv=1 slice=off]}
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{void} ReadRange (@code{const char *}templ, @code{mreal} from, @code{mreal} to, @code{mreal} step=@code{1.f}, @code{bool} as_slice=@code{false})
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} ReadRange (@code{const char *}templ, @code{mreal} from, @code{mreal} to, @code{mreal} step=@code{1}, @code{bool} as_slice=@code{false})
+@deftypefnx {Функция С} @code{int} mgl_data_read_range (@code{HMDT} dat, @code{const char *}templ, @code{mreal} from, @code{mreal} to, @code{mreal} step, @code{int} as_slice)
+@deftypefnx {Функция С} @code{int} mgl_datac_read_range (@code{HADT} dat, @code{const char *}templ, @code{mreal} from, @code{mreal} to, @code{mreal} step, @code{int} as_slice)
 @end ifclear
 Объединяет данные из нескольких текстовых файлов. Имена файлов определяются вызовом функции @code{sprintf(fname,templ,val);}, где @var{val} меняется от @var{from} до @var{to} с шагом @var{step}. Данные загружаются один за другим в один и тот же срез данных (при @var{as_slice}=@code{false}) или срез-за-срезом (при @var{as_slice}=@code{true}).
 @end deftypefn
@@ -449,6 +544,9 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @deftypefn {Команда MGL} {} readall @sc{dat} 'templ' @code{[slice=off]}
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{void} ReadAll (@code{const char *}templ, @code{bool} as_slice=@code{false})
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} ReadAll (@code{const char *}templ, @code{bool} as_slice=@code{false})
+@deftypefnx {Функция С} @code{int} mgl_data_read_all (@code{HMDT} dat, @code{const char *}templ, @code{int} as_slice)
+@deftypefnx {Функция С} @code{int} mgl_datac_read_all (@code{HADT} dat, @code{const char *}templ, @code{int} as_slice)
 @end ifclear
 Объединяет данные из нескольких текстовых файлов, чьи имена удовлетворяют шаблону @var{templ} (например, @var{templ}=@code{"t_*.dat"}). Данные загружаются один за другим в один и тот же срез данных (при @var{as_slice}=@code{false}) или срез-за-срезом (при @var{as_slice}=@code{true}).
 @end deftypefn
@@ -457,7 +555,9 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @deftypefn {Команда MGL} {} save dat 'fname'
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{void} Save (@code{const char *}fname, @code{int} ns=@code{-1}) @code{const}
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} Save (@code{const char *}fname, @code{int} ns=@code{-1}) @code{const}
 @deftypefnx {Функция С} @code{void} mgl_data_save (@code{HCDT} dat, @code{const char *}fname, @code{int} ns)
+@deftypefnx {Функция С} @code{void} mgl_datac_save (@code{HCDT} dat, @code{const char *}fname, @code{int} ns)
 @end ifclear
 Сохраняет весь массив данных при @var{ns}=@code{-1} или только @var{ns}-ый срез в текстовый файл.
 @end deftypefn
@@ -466,7 +566,9 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @deftypefn {Команда MGL} {} readhdf @sc{dat} 'fname' 'dname'
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{void} ReadHDF (@code{const char *}fname, @code{const char *}dname)
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} ReadHDF (@code{const char *}fname, @code{const char *}dname)
 @deftypefnx {Функция С} @code{void} mgl_data_read_hdf (@code{HMDT} dat, @code{const char *}fname, @code{const char *}dname)
+@deftypefnx {Функция С} @code{void} mgl_datac_read_hdf (@code{HADT} dat, @code{const char *}fname, @code{const char *}dname)
 @end ifclear
 Читает массив с именем @var{dname} из HDF5 или HDF4 файла @var{fname}. Функция ничего не делает если библиотека была собрана без поддержки HDF5|HDF4.
 @end deftypefn
@@ -475,7 +577,9 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @deftypefn {Команда MGL} {} savehdf dat 'fname' 'dname'
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{void} SaveHDF (@code{const char *}fname, @code{const char *}dname, @code{bool} rewrite=@code{false}) @code{const}
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} SaveHDF (@code{const char *}fname, @code{const char *}dname, @code{bool} rewrite=@code{false}) @code{const}
 @deftypefnx {Функция С} @code{void} mgl_data_save_hdf (@code{HCDT} dat, @code{const char *}fname, @code{const char *}dname, @code{int} rewrite)
+@deftypefnx {Функция С} @code{void} mgl_datac_save_hdf (@code{HCDT} dat, @code{const char *}fname, @code{const char *}dname, @code{int} rewrite)
 @end ifclear
 Сохраняет массив под именем @var{dname} в HDF5 или HDF4 файл @var{fname}. Функция ничего не делает если библиотека была собрана без поддержки HDF5|HDF4.
 @end deftypefn
@@ -483,7 +587,8 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @anchor{datas}
 @deftypefn {Команда MGL} {} datas 'fname'
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglData}} @code{void} DatasHDF (@code{const char *}fname, @code{char *}buf, @code{long} size) @code{const}
+@deftypefnx {Метод класса @code{mglData}} @code{void} DatasHDF (@code{const char *}fname, @code{char *}buf, @code{long} size) @code{static}
+@deftypefnx {Метод класса @code{mglDataC}} @code{int} DatasHDF (@code{const char *}fname, @code{char *}buf, @code{long} size) @code{static}
 @deftypefnx {Функция С} @code{void} mgl_datas_hdf (@code{const char *}fname, @code{char *}buf, @code{long} size)
 @end ifclear
 Помещает имена массивов данных в HDF5 файле @var{fname} в строку @var{buf} разделёнными символом табуляции '\t'. В версии MGL имена массивов будут выведены как сообщение. Функция ничего не делает если библиотека была собрана без поддержки HDF5.
@@ -527,6 +632,7 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @deftypefn {Команда MGL} {} subdata @sc{res} dat @code{xx [yy=: zz=:]}
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{mglData} SubData (@code{mreal} xx, @code{mreal} yy=@code{-1}, @code{mreal} zz=@code{-1}) @code{const}
+@deftypefnx {Метод класса @code{mglDataC}} @code{mglData} SubData (@code{mreal} xx, @code{mreal} yy=@code{-1}, @code{mreal} zz=@code{-1}) @code{const}
 @deftypefnx {Функция С} @code{HMDT} mgl_data_subdata (@code{HCDT} dat, @code{mreal} xx, @code{mreal} yy, @code{mreal} zz)
 @end ifclear
 Возвращает в @var{res} подмассив массива данных @var{dat} с фиксированными значениями индексов с положительными значениями. Например, @code{SubData(-1,2)} выделяет третью строку (индексы начинаются с нуля), @code{SubData(4,-1)} выделяет 5-ую колонку, @code{SubData(-1,-1,3)} выделяет 4-ый срез и т.д. В MGL скриптах обычно используется упрощенная версия @code{dat(xx,yy,zz)}.
@@ -535,6 +641,7 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @deftypefn {Команда MGL} {} subdata @sc{res} dat xdat [ydat=: zdat=:]
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{mglData} SubData (@code{const mglData &}xx, @code{const mglData &}yy, @code{const mglData &}zz) @code{const}
+@deftypefnx {Метод класса @code{mglDataC}} @code{mglData} SubData (@code{const mglDataA &}xx, @code{const mglDataA &}yy, @code{const mglDataA &}zz) @code{const}
 @deftypefnx {Функция С} @code{HMDT} mgl_data_subdata_ext (@code{HCDT} dat, @code{HCDT} xx, @code{HCDT} yy, @code{HCDT} zz)
 @end ifclear
 Возвращает в @var{res} подмассив массива данных @var{dat} с индексами, заданными в массивах @var{xx}, @var{yy}, @var{zz} (косвенная адресация). Результат будет иметь размерность массивов с индексами. Размеры массивов @var{xx}, @var{yy}, @var{zz} с индексами должна быть одинакова, либо должны быть "скаляром" (т.е. 1*1*1). В MGL скриптах обычно используется упрощенная версия @code{dat(xx,yy,zz)}.
@@ -544,6 +651,7 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @deftypefn {Команда MGL} {} column @sc{res} dat 'eq'
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{mglData} Column (@code{const char *}eq) @code{const}
+@deftypefnx {Метод класса @code{mglDataC}} @code{mglData} Column (@code{const char *}eq) @code{const}
 @deftypefnx {Функция С} @code{HMDT} mgl_data_column (@code{HCDT} dat, @code{const char *}eq)
 @end ifclear
 Возвращает массив данных заполненный по формуле @var{eq}, вычисленной для именованных колонок (или срезов). Например, @code{Column("n*w^2/exp(t)");}. Имена колонок должны быть предварительно заданы функцией @ref{idset} или при чтении файлов данных. В MGL скриптах обычно используется упрощенная версия @code{dat('eq')}.
@@ -553,6 +661,7 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @deftypefn {Команда MGL} {} resize @sc{res} dat @code{mx [my=1 mz=1]}
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{mglData} Resize (@code{int} mx, @code{int} my=@code{1}, @code{int} mz=@code{1}, @code{mreal} x1=@code{0}, @code{mreal} x2=@code{1}, @code{mreal} y1=@code{0}, @code{mreal} y2=@code{1}, @code{mreal} z1=@code{0}, @code{mreal} z2=@code{1}) @code{const}
+@deftypefnx {Метод класса @code{mglDataC}} @code{mglData} Resize (@code{int} mx, @code{int} my=@code{1}, @code{int} mz=@code{1}, @code{mreal} x1=@code{0}, @code{mreal} x2=@code{1}, @code{mreal} y1=@code{0}, @code{mreal} y2=@code{1}, @code{mreal} z1=@code{0}, @code{mreal} z2=@code{1}) @code{const}
 @deftypefnx {Функция С} @code{HMDT} mgl_data_resize (@code{HCDT} dat, @code{int} mx, @code{int} my, @code{int} mz)
 @deftypefnx {Функция С} @code{HMDT} mgl_data_resize_box (@code{HCDT} dat, @code{int} mx, @code{int} my, @code{int} mz, @code{mreal} x1, @code{mreal} x2, @code{mreal} y1, @code{mreal} y2, @code{mreal} z1, @code{mreal} z2)
 @end ifclear
@@ -567,6 +676,9 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @deftypefnx {Метод класса @code{mglData}} @code{mglData} Evaluate (@code{const mglData &}idat, @code{bool} norm=@code{true}) @code{const}
 @deftypefnx {Метод класса @code{mglData}} @code{mglData} Evaluate (@code{const mglData &}idat, @code{const mglData &}jdat, @code{bool} norm=@code{true}) @code{const}
 @deftypefnx {Метод класса @code{mglData}} @code{mglData} Evaluate (@code{const mglData &}idat, @code{const mglData &}jdat, @code{const mglData &}kdat, @code{bool} norm=@code{true}) @code{const}
+@deftypefnx {Метод класса @code{mglDataC}} @code{mglData} Evaluate (@code{const mglDataA &}idat, @code{bool} norm=@code{true}) @code{const}
+@deftypefnx {Метод класса @code{mglDataC}} @code{mglData} Evaluate (@code{const mglDataA &}idat, @code{const mglDataA &}jdat, @code{bool} norm=@code{true}) @code{const}
+@deftypefnx {Метод класса @code{mglDataC}} @code{mglData} Evaluate (@code{const mglDataA &}idat, @code{const mglDataA &}jdat, @code{const mglDataA &}kdat, @code{bool} norm=@code{true}) @code{const}
 @deftypefnx {Функция С} @code{HMDT} mgl_data_evaluate (@code{HCDT} dat, @code{HCDT} idat, @code{HCDT} jdat, @code{HCDT} kdat, @code{int} norm)
 @end ifclear
 Возвращает массив данных, полученный в результате интерполяции исходного массива в точках других массивов (например, res[i,j]=dat[idat[i,j],jdat[i,j]]). Размеры массивов @var{idat}, @var{jdat}, @var{kdat} должны совпадать. Координаты в @var{idat}, @var{jdat}, @var{kdat} полагаются нормированными в диапазон [0,1] (при @var{norm}=@code{true}) или в диапазоны [0,nx], [0,ny], [0,nz] соответственно.
@@ -578,6 +690,8 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{mglData} Hist (@code{int} n, @code{mreal} v1=@code{0}, @code{mreal} v2=@code{1}, @code{int} nsub=@code{0}) @code{const}
 @deftypefnx {Метод класса @code{mglData}} @code{mglData} Hist (@code{const mglData &}w, @code{int} n, @code{mreal} v1=@code{0}, @code{mreal} v2=@code{1}, @code{int} nsub=@code{0}) @code{const}
+@deftypefnx {Метод класса @code{mglDataC}} @code{mglData} Hist (@code{int} n, @code{mreal} v1=@code{0}, @code{mreal} v2=@code{1}, @code{int} nsub=@code{0}) @code{const}
+@deftypefnx {Метод класса @code{mglDataC}} @code{mglData} Hist (@code{const mglDataA &}w, @code{int} n, @code{mreal} v1=@code{0}, @code{mreal} v2=@code{1}, @code{int} nsub=@code{0}) @code{const}
 @deftypefnx {Функция С} @code{HMDT} mgl_data_hist (@code{HCDT} dat, @code{int} n, @code{mreal} v1, @code{mreal} v2, @code{int} nsub)
 @deftypefnx {Функция С} @code{HMDT} mgl_data_hist_w (@code{HCDT} dat, @code{HCDT} w, @code{int} n, @code{mreal} v1, @code{mreal} v2, @code{int} nsub)
 @end ifclear
@@ -588,6 +702,7 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @deftypefn {Команда MGL} {} momentum @sc{res} dat 'how' ['dir'='z']
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{mglData} Momentum (@code{char} dir, @code{const char *}how) @code{const}
+@deftypefnx {Метод класса @code{mglDataC}} @code{mglData} Momentum (@code{char} dir, @code{const char *}how) @code{const}
 @deftypefnx {Функция С} @code{HMDT} mgl_data_momentum (@code{HCDT} dat, @code{char} dir, @code{const char *}how)
 @end ifclear
 Возвращает момент (1d массив) данных вдоль направления @var{dir}. Строка @var{how} определяет тип момента. Момент определяется как
@@ -604,6 +719,7 @@ res_k = \sum_ij how(x_i,y_j,z_k) a_ij/ \sum_ij a_ij
 @deftypefn {Команда MGL} {} sum @sc{res} dat 'dir'
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{mglData} Sum (@code{const char *}dir) @code{const}
+@deftypefnx {Метод класса @code{mglDataC}} @code{mglData} Sum (@code{const char *}dir) @code{const}
 @deftypefnx {Функция С} @code{HMDT} mgl_data_sum (@code{HCDT} dat, @code{const char *}dir)
 @end ifclear
 Возвращает результат суммирования данных вдоль направления(ий) @var{dir}.
@@ -613,6 +729,7 @@ res_k = \sum_ij how(x_i,y_j,z_k) a_ij/ \sum_ij a_ij
 @deftypefn {Команда MGL} {} max @sc{res} dat 'dir'
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{mglData} Max (@code{const char *}dir) @code{const}
+@deftypefnx {Метод класса @code{mglDataC}} @code{mglData} Max (@code{const char *}dir) @code{const}
 @deftypefnx {Функция С} @code{HMDT} mgl_data_max_dir (@code{HCDT} dat, @code{const char *}dir)
 @end ifclear
 Возвращает максимальное значение данных вдоль направления(ий) @var{dir}.
@@ -622,6 +739,7 @@ res_k = \sum_ij how(x_i,y_j,z_k) a_ij/ \sum_ij a_ij
 @deftypefn {Команда MGL} {} min @sc{res} dat 'dir'
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{mglData} Min (@code{const char *}dir) @code{const}
+@deftypefnx {Метод класса @code{mglDataC}} @code{mglData} Min (@code{const char *}dir) @code{const}
 @deftypefnx {Функция С} @code{HMDT} mgl_data_min_dir (@code{HCDT} dat, @code{const char *}dir)
 @end ifclear
 Возвращает минимальное значение данных вдоль направления(ий) @var{dir}.
@@ -631,6 +749,7 @@ res_k = \sum_ij how(x_i,y_j,z_k) a_ij/ \sum_ij a_ij
 @deftypefn {Команда MGL} {} combine @sc{res} adat bdat
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{mglData} Combine (@code{const mglData &}a) @code{const}
+@deftypefnx {Метод класса @code{mglDataC}} @code{mglData} Combine (@code{const mglDataA &}a) @code{const}
 @deftypefnx {Функция С} @code{HMDT} mgl_data_combine (@code{HCDT} dat, @code{HCDT} a)
 @end ifclear
 Возвращает прямое произведение массивов (наподобие, res[i,j] = adat[i]*bdat[j] и т.д.).
@@ -640,9 +759,30 @@ res_k = \sum_ij how(x_i,y_j,z_k) a_ij/ \sum_ij a_ij
 @deftypefn {Команда MGL} {} trace @sc{res} dat
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{mglData} Trace () @code{const}
+@deftypefnx {Метод класса @code{mglDataC}} @code{mglData} Trace () @code{const}
+@deftypefnx {Функция С} @code{HMDT} mgl_data_trace (@code{HCDT} dat)
 @end ifclear
 Возвращает массив диагональных элементов a[i,i] (для 2D данных) или a[i,i,i] (для 3D данных) где i=0...nx-1. В 1D случае возвращается сам массив данных. Размеры массива данных должен быть ny,nz >= nx или ny,nz = 1.
 @end deftypefn
+
+@ifclear UDAV
+@deftypefn {Метод класса @code{mglDataC}} @code{mglData} Real () @code{const}
+@deftypefnx {Функция С} @code{HMDT} mgl_datac_real (@code{HCDT} dat)
+Возвращает массив действительных частей массива данных.
+@end deftypefn
+@deftypefn {Метод класса @code{mglDataC}} @code{mglData} Imag () @code{const}
+@deftypefnx {Функция С} @code{HMDT} mgl_datac_imag (@code{HCDT} dat)
+Возвращает массив мнимых частей массива данных.
+@end deftypefn
+@deftypefn {Метод класса @code{mglDataC}} @code{mglData} Abs () @code{const}
+@deftypefnx {Функция С} @code{HMDT} mgl_datac_abs (@code{HCDT} dat)
+Возвращает массив абсолютных значений массива данных.
+@end deftypefn
+@deftypefn {Метод класса @code{mglDataC}} @code{mglData} Arg () @code{const}
+@deftypefnx {Функция С} @code{HMDT} mgl_datac_arg (@code{HCDT} dat)
+Возвращает массив аргументов массива данных.
+@end deftypefn
+@end ifclear
 
 @c ------------------------------------------------------------------
 @external
@@ -670,7 +810,9 @@ These functions change the data in some direction like differentiations, integra
 @deftypefn {Команда MGL} {} cumsum dat 'dir'
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{void} CumSum (@code{const char *}dir)
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} CumSum (@code{const char *}dir)
 @deftypefnx {Функция С} @code{void} mgl_data_cumsum (@code{HMDT} dat, @code{const char *}dir)
+@deftypefnx {Функция С} @code{void} mgl_datac_cumsum (@code{HADT} dat, @code{const char *}dir)
 @end ifclear
 Суммирует с накоплением в выбранном направлении(ях).
 @end deftypefn
@@ -679,7 +821,9 @@ These functions change the data in some direction like differentiations, integra
 @deftypefn {Команда MGL} {} integrate dat 'dir'
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{void} Integral (@code{const char *}dir)
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} Integral (@code{const char *}dir)
 @deftypefnx {Функция С} @code{void} mgl_data_integral (@code{HMDT} dat, @code{const char *}dir)
+@deftypefnx {Функция С} @code{void} mgl_datac_integral (@code{HADT} dat, @code{const char *}dir)
 @end ifclear
 Выполняет интегрирование (методом трапеций) в выбранном направлении(ях).
 @end deftypefn
@@ -688,7 +832,9 @@ These functions change the data in some direction like differentiations, integra
 @deftypefn {Команда MGL} {} diff dat 'dir'
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{void} Diff (@code{const char *}dir)
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} Diff (@code{const char *}dir)
 @deftypefnx {Функция С} @code{void} mgl_data_diff (@code{HMDT} dat, @code{const char *}dir)
+@deftypefnx {Функция С} @code{void} mgl_datac_diff (@code{HADT} dat, @code{const char *}dir)
 @end ifclear
 Выполняет дифференцирование в выбранном направлении(ях).
 @end deftypefn
@@ -706,7 +852,9 @@ These functions change the data in some direction like differentiations, integra
 @deftypefn {Команда MGL} {} diff2 dat 'dir'
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{void} Diff2 (@code{const char *}dir)
-@deftypefnx {Функция С} @code{void} mgl_data_diff2 (@code{const char *}dir)
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} Diff2 (@code{const char *}dir)
+@deftypefnx {Функция С} @code{void} mgl_data_diff2 (@code{HMDT} dat, @code{const char *}dir)
+@deftypefnx {Функция С} @code{void} mgl_datac_diff2 (@code{HADT} dat, @code{const char *}dir)
 @end ifclear
 Выполняет двойное дифференцирование (как в операторе Лапласа) в выбранном направлении(ях).
 @end deftypefn
@@ -717,7 +865,7 @@ These functions change the data in some direction like differentiations, integra
 @deftypefnx {Метод класса @code{mglData}} @code{void} SinFFT (@code{const char *}dir)
 @deftypefnx {Функция С} @code{void} mgl_data_sinfft (@code{HMDT} dat, @code{const char *}dir)
 @end ifclear
-Выполняет синус преобразование в выбранном направлении(ях). Синус преобразование есть @math{\sum a_i \sin(k i)}.
+Выполняет синус преобразование в выбранном направлении(ях). Синус преобразование есть @math{\sum a_j \sin(k j)}.
 @end deftypefn
 
 @anchor{cosfft}
@@ -726,23 +874,34 @@ These functions change the data in some direction like differentiations, integra
 @deftypefnx {Метод класса @code{mglData}} @code{void} CosFFT (@code{const char *}dir)
 @deftypefnx {Функция С} @code{void} mgl_data_cosfft (@code{HMDT} dat, @code{const char *}dir)
 @end ifclear
-Выполняет косинус преобразование в выбранном направлении(ях). Синус преобразование есть @math{\sum a_i \cos(k i)}.
+Выполняет косинус преобразование в выбранном направлении(ях). Синус преобразование есть @math{\sum a_j \cos(k j)}.
 @end deftypefn
+
+@ifclear UDAV
+@deftypefn {Метод класса @code{mglDataC}} @code{void} FFT (@code{const char *}dir)
+@deftypefnx {Функция С} @code{void} mgl_datac_fft (@code{HADT} dat, @code{const char *}dir)
+Выполняет фурье преобразование в выбранном направлении(ях). Фурье преобразование есть @math{\sum a_j \exp(i k j)}.
+@end deftypefn
+@end ifclear
 
 @anchor{hankel}
 @deftypefn {Команда MGL} {} hankel dat 'dir'
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{void} Hankel (@code{const char *}dir)
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} Hankel (@code{const char *}dir)
 @deftypefnx {Функция С} @code{void} mgl_data_hankel (@code{HMDT} dat, @code{const char *}dir)
+@deftypefnx {Функция С} @code{void} mgl_datac_hankel (@code{HADT} dat, @code{const char *}dir)
 @end ifclear
-Выполняет преобразование Ханкеля в выбранном направлении(ях). Преобразование Ханкеля есть @math{\sum a_i J_0(k i)}.
+Выполняет преобразование Ханкеля в выбранном направлении(ях). Преобразование Ханкеля есть @math{\sum a_j J_0(k j)}.
 @end deftypefn
 
 @anchor{swap}
 @deftypefn {Команда MGL} {} swap dat 'dir'
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{void} Swap (@code{const char *}dir)
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} Swap (@code{const char *}dir)
 @deftypefnx {Функция С} @code{void} mgl_data_swap (@code{HMDT} dat, @code{const char *}dir)
+@deftypefnx {Функция С} @code{void} mgl_datac_swap (@code{HADT} dat, @code{const char *}dir)
 @end ifclear
 Меняет местами левую и правую части данных в выбранном направлении(ях). Полезно для отображения результата FFT.
 @end deftypefn
@@ -751,7 +910,9 @@ These functions change the data in some direction like differentiations, integra
 @deftypefn {Команда MGL} {} roll dat 'dir' num
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{void} Roll (@code{char} dir, @code{num})
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} Roll (@code{char} dir, @code{num})
 @deftypefnx {Функция С} @code{void} mgl_data_roll (@code{HMDT} dat, @code{char} dir, @code{num})
+@deftypefnx {Функция С} @code{void} mgl_datac_roll (@code{HADT} dat, @code{char} dir, @code{num})
 @end ifclear
 Сдвигает данные на @var{num} ячеек в выбранном направлении(ях). Соответствует замене индекса на @var{i}->(i+@var{num})%nx при @code{dir='x'}.
 @end deftypefn
@@ -760,7 +921,9 @@ These functions change the data in some direction like differentiations, integra
 @deftypefn {Команда MGL} {} mirror dat 'dir'
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{void} Mirror (@code{const char *}dir)
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} Mirror (@code{const char *}dir)
 @deftypefnx {Функция С} @code{void} mgl_data_mirror (@code{HMDT} dat, @code{const char *}dir)
+@deftypefnx {Функция С} @code{void} mgl_datac_mirror (@code{HADT} dat, @code{const char *}dir)
 @end ifclear
 Отражает данные в выбранном направлении(ях). Соответствует замене индекса на @var{i}->@var{n}-@var{i}. Отмечу, что похожего эффекта на графике можно достичь используя опции (@pxref{Command options}), например, @code{surf dat; xrange 1 -1}.
 @end deftypefn
@@ -778,7 +941,9 @@ These functions change the data in some direction like differentiations, integra
 @deftypefn {Команда MGL} {} smooth data @code{type} ['dir'='xyz']
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{void} Smooth (@code{const char *}dir=@code{"xyz"}, @code{mreal} delta=@code{0})
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} Smooth (@code{const char *}dir=@code{"xyz"}, @code{mreal} delta=@code{0})
 @deftypefnx {Функция С} @code{void} mgl_data_smooth (@code{HMDT} dat, @code{const char *}dir, @code{mreal} delta)
+@deftypefnx {Функция С} @code{void} mgl_datac_smooth (@code{HADT} dat, @code{const char *}dir, @code{mreal} delta)
 @end ifclear
 Сглаживает данные в выбранном направлении(ях) @var{dir}. Строка @var{dirs} задает направления вдоль которых будет производиться сглаживание. Если @var{dirs} содержит: @samp{0} -- ничего не делает, @samp{3} линейное усреднение по 3 точкам, @samp{5} линейное усреднение по 5 точкам. По умолчанию используется квадратичное усреднение по 5 точкам.
 @end deftypefn
@@ -835,14 +1000,40 @@ These functions change the data in some direction like differentiations, integra
 @deftypefn {Метод класса @code{mglData}} @code{mreal} Spline1 (@code{mreal} x, @code{mreal} y=@code{0}, @code{mreal} z=@code{0}) @code{const}
 Интерполирует данные кубическим сплайном в точке @var{x}, @var{y}, @var{z}, где координаты полагаются в интервале [0, 1].
 @end deftypefn
+
+@deftypefn {Метод класса @code{mglData}} @code{mreal} Spline (@code{mglPoint} &dif, @code{mreal} x, @code{mreal} y=@code{0}, @code{mreal} z=@code{0}) @code{const}
+@deftypefnx {Функция С} @code{mreal} mgl_data_spline_ext (@code{HCDT} dat, @code{mreal} x, @code{mreal} y, @code{mreal} z, @code{mreal *}dx, @code{mreal *}dy, @code{mreal *}dz)
+Интерполирует данные кубическим сплайном в точке @var{x} в [0...nx-1], @var{y} в [0...ny-1], @var{z} в [0...nz-1]. Значения производных в точке записываются в @var{dif}.
+@end deftypefn
+@cindex Spline1
+@deftypefn {Метод класса @code{mglData}} @code{mreal} Spline1 (@code{mglPoint} &dif, @code{mreal} x, @code{mreal} y=@code{0}, @code{mreal} z=@code{0}) @code{const}
+Интерполирует данные кубическим сплайном в точке @var{x}, @var{y}, @var{z}, где координаты полагаются в интервале [0, 1]. Значения производных в точке записываются в @var{dif}.
+@end deftypefn
+
+
 @cindex Linear
 @deftypefn {Метод класса @code{mglData}} @code{mreal} Linear (@code{mreal} x, @code{mreal} y=@code{0}, @code{mreal} z=@code{0}) @code{const}
+@deftypefnx {Метод класса @code{mglDataC}} @code{dual} Linear (@code{mreal} x, @code{mreal} y=@code{0}, @code{mreal} z=@code{0}) @code{const}
 @deftypefnx {Функция С} @code{mreal} mgl_data_linear (@code{HCDT} dat, @code{mreal} x, @code{mreal} y, @code{mreal} z)
+@deftypefnx {Функция С} @code{dual} mgl_datac_linear (@code{HCDT} dat, @code{mreal} x, @code{mreal} y, @code{mreal} z)
 Интерполирует данные линейной функцией в точке @var{x} в [0...nx-1], @var{y} в [0...ny-1], @var{z} в [0...nz-1].
 @end deftypefn
 @cindex Linear1
 @deftypefn {Метод класса @code{mglData}} @code{mreal} Linear1 (@code{mreal} x, @code{mreal} y=@code{0}, @code{mreal} z=@code{0}) @code{const}
+@deftypefnx {Метод класса @code{mglDataC}} @code{dual} Linear1 (@code{mreal} x, @code{mreal} y=@code{0}, @code{mreal} z=@code{0}) @code{const}
 Интерполирует данные линейной функцией в точке @var{x}, @var{y}, @var{z}, где координаты полагаются в интервале [0, 1].
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglData}} @code{mreal} Linear (@code{mglPoint} &dif, @code{mreal} x, @code{mreal} y=@code{0}, @code{mreal} z=@code{0}) @code{const}
+@deftypefnx {Метод класса @code{mglDataC}} @code{dual} Linear (@code{mglPoint} &dif, @code{mreal} x, @code{mreal} y=@code{0}, @code{mreal} z=@code{0}) @code{const}
+@deftypefnx {Функция С} @code{mreal} mgl_data_linear_ext (@code{HCDT} dat, @code{mreal} x, @code{mreal} y, @code{mreal} z, @code{mreal *}dx, @code{mreal *}dy, @code{mreal *}dz)
+@deftypefnx {Функция С} @code{dual} mgl_datac_linear_ext (@code{HCDT} dat, @code{mreal} x, @code{mreal} y, @code{mreal} z, @code{dual *}dx, @code{dual *}dy, @code{dual *}dz)
+Интерполирует данные линейной функцией в точке @var{x}, @var{y}, @var{z}, где координаты полагаются в интервале [0, 1]. Значения производных в точке записываются в @var{dif}.
+@end deftypefn
+@cindex Linear1
+@deftypefn {Метод класса @code{mglData}} @code{mreal} Linear1 (@code{mglPoint} &dif, @code{mreal} x, @code{mreal} y=@code{0}, @code{mreal} z=@code{0}) @code{const}
+@deftypefnx {Метод класса @code{mglDataC}} @code{dual} Linear1 (@code{mglPoint} &dif, @code{mreal} x, @code{mreal} y=@code{0}, @code{mreal} z=@code{0}) @code{const}
+Интерполирует данные линейной функцией в точке @var{x}, @var{y}, @var{z}, где координаты полагаются в интервале [0, 1]. Значения производных в точке записываются в @var{dif}.
 @end deftypefn
 
 @end ifclear
@@ -861,6 +1052,8 @@ These functions change the data in some direction like differentiations, integra
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{const char *} PrintInfo () @code{const}
 @deftypefnx {Метод класса @code{mglData}} @code{void} PrintInfo (@code{FILE *}fp) @code{const}
+@deftypefnx {Метод класса @code{mglDataC}} @code{const char *} PrintInfo () @code{const}
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} PrintInfo (@code{FILE *}fp) @code{const}
 @deftypefnx {Функция С} @code{const char *} mgl_data_info (@code{HCDT} dat)
 @end ifclear
 Возвращает строку с информацией о данных (размеры, моменты и пр.) или пишет её в файл. В MGL скрипте печатает её как сообщение.
@@ -885,6 +1078,9 @@ These functions change the data in some direction like differentiations, integra
 @deftypefnx {Метод класса @code{mglData}} @code{long} GetNx ()
 @deftypefnx {Метод класса @code{mglData}} @code{long} GetNy ()
 @deftypefnx {Метод класса @code{mglData}} @code{long} GetNz ()
+@deftypefnx {Метод класса @code{mglDataC}} @code{long} GetNx ()
+@deftypefnx {Метод класса @code{mglDataC}} @code{long} GetNy ()
+@deftypefnx {Метод класса @code{mglDataC}} @code{long} GetNz ()
 @deftypefnx {Функция С} @code{long} mgl_data_get_nx (@code{HCDT} dat)
 @deftypefnx {Функция С} @code{long} mgl_data_get_ny (@code{HCDT} dat)
 @deftypefnx {Функция С} @code{long} mgl_data_get_nz (@code{HCDT} dat)
@@ -899,6 +1095,7 @@ These functions change the data in some direction like differentiations, integra
 @deftypefn {MGL suffix} {(dat)} .max
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{mreal} Maximal () @code{const}
+@deftypefnx {Метод класса @code{mglDataC}} @code{mreal} Maximal () @code{const}
 @deftypefnx {Функция С} @code{mreal} mgl_data_max (@code{HCDT} dat)
 @end ifclear
 Возвращает максимальное значение массива данных.
@@ -909,6 +1106,7 @@ These functions change the data in some direction like differentiations, integra
 @deftypefn {MGL suffix} {(dat)} .min
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{mreal} Minimal () @code{const}
+@deftypefnx {Метод класса @code{mglDataC}} @code{mreal} Minimal () @code{const}
 @deftypefnx {Функция С} @code{mreal} mgl_data_min (@code{HMDT} dat) @code{const}
 @end ifclear
 Возвращает минимальное значение массива данных.
@@ -916,14 +1114,17 @@ These functions change the data in some direction like differentiations, integra
 
 @ifclear UDAV
 @deftypefn {Метод класса @code{mglData}} @code{mreal} Minimal (@code{int} &i, @code{int} &j, @code{int} &k) @code{const}
+@deftypefnx {Метод класса @code{mglDataC}} @code{mreal} Minimal (@code{int} &i, @code{int} &j, @code{int} &k) @code{const}
 @deftypefnx {Функция С} @code{mreal} mgl_data_min_int (@code{HCDT} dat, @code{int} *i, @code{int} *j, @code{int} *k)
 Возвращает максимальное значение массива данных и сохраняет его положение в переменные @var{i}, @var{j}, @var{k}.
 @end deftypefn
 @deftypefn {Метод класса @code{mglData}} @code{mreal} Maximal (@code{int} &i, @code{int} &j, @code{int} &k) @code{const}
+@deftypefnx {Метод класса @code{mglDataC}} @code{mreal} Maximal (@code{int} &i, @code{int} &j, @code{int} &k) @code{const}
 @deftypefnx {Функция С} @code{mreal} mgl_data_max_int (@code{HCDT} dat, @code{int} *i, @code{int} *j, @code{int} *k)
 Возвращает минимальное значение массива данных и сохраняет его положение в переменные @var{i}, @var{j}, @var{k}.
 @end deftypefn
 @deftypefn {Метод класса @code{mglData}} @code{mreal} Minimal (@code{mreal} &x, @code{mreal} &y, @code{mreal} &z) @code{const}
+@deftypefnx {Метод класса @code{mglDataC}} @code{mreal} Minimal (@code{mreal} &x, @code{mreal} &y, @code{mreal} &z) @code{const}
 @deftypefnx {Функция С} @code{mreal} mgl_data_min_real (@code{HCDT} dat, @code{mreal} *x, @code{mreal} *y, @code{mreal} *z)
 Возвращает максимальное значение массива данных и его приближенное (интерполированное) положение в переменные @var{x}, @var{y}, @var{z}.
 @end deftypefn
@@ -935,6 +1136,7 @@ These functions change the data in some direction like differentiations, integra
 @deftypefnx {MGL suffix} {(dat)} .mz
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{mreal} Maximal (@code{mreal} &x, @code{mreal} &y, @code{mreal} &z) @code{const}
+@deftypefnx {Метод класса @code{mglDataC}} @code{mreal} Maximal (@code{mreal} &x, @code{mreal} &y, @code{mreal} &z) @code{const}
 @deftypefnx {Функция С} @code{mreal} mgl_data_max_real (@code{HCDT} dat, @code{mreal} *x, @code{mreal} *y, @code{mreal} *z)
 @end ifclear
 Возвращает минимальное значение массива данных и его приближенное (интерполированное) положение в переменные @var{x}, @var{y}, @var{z}.

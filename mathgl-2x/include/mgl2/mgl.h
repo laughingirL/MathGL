@@ -676,14 +676,14 @@ public:
 	{	mgl_labelw_y(gr, &y, text, fnt, opt);	}
 
 	/// Draw table for values \a val along given direction with row labels \a text
-	inline void Table(const mglDataA &val, const char *text="", const char *fnt="#", const char *opt="")
+	inline void Table(const mglDataA &val, const char *text, const char *fnt="#", const char *opt="")
 	{	mgl_table(gr, 0, 0, &val, text, fnt, opt);	}
-	inline void Table(const mglDataA &val, const wchar_t *text=L"", const char *fnt="#", const char *opt="")
+	inline void Table(const mglDataA &val, const wchar_t *text, const char *fnt="#", const char *opt="")
 	{	mgl_tablew(gr, 0, 0, &val, text, fnt, opt);	}
 	/// Draw table for values \a val along given direction with row labels \a text at given position
-	inline void Table(mreal x, mreal y, const mglDataA &val, const char *text="", const char *fnt="#", const char *opt="")
+	inline void Table(mreal x, mreal y, const mglDataA &val, const char *text, const char *fnt="#", const char *opt="")
 	{	mgl_table(gr, x, y, &val, text, fnt, opt);	}
-	inline void Table(mreal x, mreal y, const mglDataA &val, const wchar_t *text=L"", const char *fnt="#", const char *opt="")
+	inline void Table(mreal x, mreal y, const mglDataA &val, const wchar_t *text, const char *fnt="#", const char *opt="")
 	{	mgl_tablew(gr, x, y, &val, text, fnt, opt);	}
 	
 	/// Draw tube with radius r for points in arrays {x,y,z}

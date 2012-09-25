@@ -26,6 +26,10 @@
 #include "mgl2/datac.h"
 #include "mgl2/evalc.h"
 
+#if MGL_HAVE_HDF5
+#include <hdf5.h>
+#endif
+
 #define isn(ch)		((ch)=='\n')
 char *mgl_read_gz(gzFile fp);
 //-----------------------------------------------------------------------------
@@ -547,18 +551,35 @@ void mgl_datac_modify_(uintptr_t *d, const char *eq,int *dim,int l)
 {	char *s=new char[l+1];	memcpy(s,eq,l);	s[l]=0;
 	mgl_datac_modify(_DC_,s,*dim);	delete []s;	}
 //-----------------------------------------------------------------------------
+void *mgl_cmodify_gen(void *par)
+{
+	mglThreadC *t=(mglThreadC *)par;
+	mglFormulaC *f = (mglFormulaC *)(t->v);
+	register long i,j,k,i0, nx=t->p[0],ny=t->p[1],nz=t->p[2];
+	dual *b=t->a;
+	mreal dx,dy,dz;
+	HCDT v=(HCDT)t->b, w=(HCDT)t->c;
+	dx=nx>1?1/(nx-1.):0;	dy=ny>1?1/(ny-1.):0;	dz=nz>1?1/(nz-1.):0;
+	for(i0=t->id;i0<t->n;i0+=mglNumThr)
+	{
+		i=i0%nx;	j=((i0/nx)%ny);	k=i0/(nx*ny);
+		b[i0] = f->Calc(i*dx, j*dy, k*dz, b[i0], v?v->vthr(i0):0, w?w->vthr(i0):0);
+	}
+	return 0;
+}
 void mgl_datac_modify_vw(HADT d, const char *eq,HCDT vdat,HCDT wdat)
-{	// NOTE: only for mglData
+{
 	const mglDataC *v = dynamic_cast<const mglDataC *>(vdat);
 	const mglDataC *w = dynamic_cast<const mglDataC *>(wdat);
 	long nn = d->nx*d->ny*d->nz, par[3]={d->nx,d->ny,d->nz};
+	if(vdat && vdat->GetNN()!=nn)	return;
+	if(wdat && wdat->GetNN()!=nn)	return;
 	mglFormulaC f(eq);
-	if(v && w && v->nx*v->ny*v->nz==nn && w->nx*w->ny*w->nz==nn)
-		mglStartThreadC(mgl_cmodify,0,nn,d->a,v->a,w->a,par,&f);
-	else if(v && v->nx*v->ny*v->nz==nn)
-		mglStartThreadC(mgl_cmodify,0,nn,d->a,v->a,0,par,&f);
-	else
-		mglStartThreadC(mgl_cmodify,0,nn,d->a,0,0,par,&f);
+	if(v && w)	mglStartThreadC(mgl_cmodify,0,nn,d->a,v->a,w->a,par,&f);
+	else if(vdat && wdat)	mglStartThreadV(mgl_cmodify_gen,nn,d->a,vdat,wdat,par,&f);
+	else if(v)	mglStartThreadC(mgl_cmodify,0,nn,d->a,v->a,0,par,&f);
+	else if(vdat)	mglStartThreadV(mgl_cmodify_gen,nn,d->a,vdat,0,par,&f);
+	else	mglStartThreadC(mgl_cmodify,0,nn,d->a,0,0,par,&f);
 }
 void mgl_datac_modify_vw_(uintptr_t *d, const char *eq, uintptr_t *v, uintptr_t *w,int l)
 {	char *s=new char[l+1];	memcpy(s,eq,l);	s[l]=0;
@@ -579,20 +600,41 @@ void *mgl_cfill_f(void *par)
 	}
 	return 0;
 }
+void *mgl_cfill_fgen(void *par)
+{
+	mglThreadC *t=(mglThreadC *)par;
+	mglFormulaC *f = (mglFormulaC *)(t->v);
+	register long i,j,k,i0, nx=t->p[0],ny=t->p[1];
+	dual *b=t->a;
+	HCDT v=(HCDT)t->b, w=(HCDT)t->c;
+	const dual *x=t->d;
+	for(i0=t->id;i0<t->n;i0+=mglNumThr)
+	{
+		i=i0%nx;	j=((i0/nx)%ny);	k=i0/(nx*ny);
+		b[i0] = f->Calc(x[0]+mreal(i)*x[1], x[2]+mreal(j)*x[3], x[4]+mreal(k)*x[5],
+						b[i0], v?v->vthr(i0):0, w?w->vthr(i0):0);
+	}
+	return 0;
+}
 void mgl_datac_fill_eq(HMGL gr, HADT d, const char *eq, HCDT vdat, HCDT wdat, const char *opt)
-{	// NOTE: only for mglData
+{
 	const mglDataC *v = dynamic_cast<const mglDataC *>(vdat);
 	const mglDataC *w = dynamic_cast<const mglDataC *>(wdat);
 	long nn = d->nx*d->ny*d->nz, par[3]={d->nx,d->ny,d->nz};
 	if(v && v->nx*v->ny*v->nz!=nn)	return;
 	if(w && w->nx*w->ny*w->nz!=nn)	return;
 	gr->SaveState(opt);
-	dual xx[6]={gr->Min.x,0, gr->Min.y,0, gr->Min.z,0};
+	mreal xx[6]={gr->Min.x,0, gr->Min.y,0, gr->Min.z,0};
 	if(d->nx>1)	xx[1] = (gr->Max.x-gr->Min.x)/(d->nx-1.);
 	if(d->ny>1)	xx[3] = (gr->Max.y-gr->Min.y)/(d->ny-1.);
 	if(d->nz>1)	xx[5] = (gr->Max.z-gr->Min.z)/(d->nz-1.);
+	dual cc[6]={xx[0],xx[1],xx[2],xx[3],xx[4],xx[5]};
 	mglFormulaC f(eq);
-	mglStartThreadC(mgl_cfill_f,0,nn,d->a,v?v->a:0,w?w->a:0,par,&f,xx);
+	if(v && w)	mglStartThreadC(mgl_cfill_f,0,nn,d->a,v->a,w->a,par,&f,cc);
+	else if(vdat && wdat)	mglStartThreadV(mgl_cfill_fgen,nn,d->a,vdat,wdat,par,&f,xx);
+	else if(v)	mglStartThreadC(mgl_cfill_f,0,nn,d->a,v->a,0,par,&f,cc);
+	else if(vdat)	mglStartThreadV(mgl_cfill_fgen,nn,d->a,vdat,0,par,&f,xx);
+	else	mglStartThreadC(mgl_cfill_f,0,nn,d->a,0,0,par,&f,cc);
 	gr->LoadState();
 }
 void mgl_datac_fill_eq_(uintptr_t *gr, uintptr_t *d, const char *eq, uintptr_t *v, uintptr_t *w, const char *opt,int l,int lo)
@@ -741,7 +783,7 @@ HMDT mgl_datac_abs(HCDT d)
 	const mglDataC *dd = dynamic_cast<const mglDataC*>(d);
 	register long i;
 	if(dd)	for(i=0;i<nx*ny*nz;i++)	r->a[i] = abs(dd->a[i]);
-	else		for(i=0;i<nx*ny*nz;i++)	r->a[i] = fabs(d->vthr(i));
+	else	for(i=0;i<nx*ny*nz;i++)	r->a[i] = fabs(d->vthr(i));
 	return r;
 }
 uintptr_t mgl_datac_abs_(uintptr_t *d)
@@ -783,4 +825,87 @@ void mgl_datac_set_ap(HADT d, HCDT a, HCDT p)
 }
 void mgl_datac_set_ap_(uintptr_t *d, uintptr_t *a, uintptr_t *p)
 {	mgl_datac_set_ap(_DC_,_DA_(a),_DA_(p));	}
+//-----------------------------------------------------------------------------
+#if MGL_HAVE_HDF5
+void mgl_datac_save_hdf(HCDT dat,const char *fname,const char *data,int rewrite)
+{
+	const mglDataC *d = dynamic_cast<const mglDataC *>(dat);	// NOTE: only for mglDataC
+	if(!d)	{	mgl_data_save_hdf(dat,fname,data,rewrite);	return;	}
+	hid_t hf,hd,hs;
+	hsize_t dims[4];
+	long rank = 3, res;
+#if MGL_HAVE_HDF5_18
+	H5Eset_auto(H5E_DEFAULT,0,0);
+#else
+	H5Eset_auto(0,0);
+#endif
+	res=H5Fis_hdf5(fname);
+	if(res>0 && !rewrite)	hf = H5Fopen(fname, H5F_ACC_RDWR, H5P_DEFAULT);
+	else	hf = H5Fcreate(fname, H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
+	if(hf<0)	return;
+	if(d->nz==1 && d->ny == 1)	{	rank=2;	dims[0]=d->nx;	dims[1]=2;	}
+	else if(d->nz==1)	{	rank=3;	dims[0]=d->ny;	dims[1]=d->nx;	dims[2]=2;	}
+	else	{	rank=4;	dims[0]=d->nz;	dims[1]=d->ny;	dims[2]=d->nx;	dims[3]=2;	}
+	hs = H5Screate_simple(rank, dims, 0);
+#if MGL_USE_DOUBLE
+	hid_t mem_type_id = H5T_NATIVE_DOUBLE;
+#else
+	hid_t mem_type_id = H5T_NATIVE_FLOAT;
+#endif
+#if MGL_HAVE_HDF5_18
+	hd = H5Dcreate(hf, data, mem_type_id, hs, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+#else
+	hd = H5Dcreate(hf, data, mem_type_id, hs, H5P_DEFAULT);
+#endif
+	H5Dwrite(hd, mem_type_id, hs, hs, H5P_DEFAULT, d->a);
+	H5Dclose(hd);	H5Sclose(hs);	H5Fclose(hf);
+}
+//-----------------------------------------------------------------------------
+int mgl_datac_read_hdf(HADT d,const char *fname,const char *data)
+{
+	hid_t hf,hd,hs;
+	hsize_t dims[4];
+	long rank, res = H5Fis_hdf5(fname);
+	if(res<=0)	{	return false;	}
+	hf = H5Fopen(fname, H5F_ACC_RDONLY, H5P_DEFAULT);
+	if(hf<0)	return false;
+#if MGL_HAVE_HDF5_18
+	hd = H5Dopen(hf,data,H5P_DEFAULT);
+#else
+	hd = H5Dopen(hf,data);
+#endif
+	if(hd<0)	return false;
+	hs = H5Dget_space(hd);
+	rank = H5Sget_simple_extent_ndims(hs);
+	if(rank>0 && rank<=3)
+	{
+		H5Sget_simple_extent_dims(hs,dims,0);
+		if(rank==2)			{	dims[2]=dims[0];	dims[0]=dims[1]=1;	}
+		else if(rank==3)	{	dims[2]=dims[1];	dims[1]=dims[0];	dims[0]=1;	}
+//		else if(rank>3)		continue;
+		mgl_datac_create(d,dims[2],dims[1],dims[0]);
+#if MGL_USE_DOUBLE
+		H5Dread(hd, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, d->a);
+#else
+		H5Dread(hd, H5T_NATIVE_FLOAT, H5S_ALL, H5S_ALL, H5P_DEFAULT, d->a);
+#endif
+	}
+	H5Sclose(hs);	H5Dclose(hd);	H5Fclose(hf);	return true;
+}
+//-----------------------------------------------------------------------------
+#else
+void mgl_datac_save_hdf(HCDT ,const char *,const char *,int )
+{	mglGlobalMess += "HDF5 support was disabled. Please, enable it and rebuild MathGL.\n";	}
+int mgl_datac_read_hdf(HMDT ,const char *,const char *)
+{	mglGlobalMess += "HDF5 support was disabled. Please, enable it and rebuild MathGL.\n";	return false;}
+#endif
+//-----------------------------------------------------------------------------
+int mgl_datac_read_hdf_(uintptr_t *d, const char *fname, const char *data,int l,int n)
+{	char *s=new char[l+1];		memcpy(s,fname,l);	s[l]=0;
+	char *t=new char[n+1];		memcpy(t,data,n);	t[n]=0;
+	int r = mgl_datac_read_hdf(_DC_,s,t);	delete []s;	delete []t;	return r;	}
+void mgl_datac_save_hdf_(uintptr_t *d, const char *fname, const char *data, int *rewrite,int l,int n)
+{	char *s=new char[l+1];		memcpy(s,fname,l);	s[l]=0;
+	char *t=new char[n+1];		memcpy(t,data,n);	t[n]=0;
+	mgl_datac_save_hdf(_DC_,s,t,*rewrite);	delete []s;	delete []t;	}
 //-----------------------------------------------------------------------------

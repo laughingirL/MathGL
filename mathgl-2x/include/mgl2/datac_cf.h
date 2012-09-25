@@ -46,7 +46,7 @@ uintptr_t mgl_create_datac_size_(int *nx, int *ny, int *nz);
 uintptr_t mgl_create_datac_file_(const char *fname, int len);
 void mgl_delete_datac_(uintptr_t *dat);
 /******************************************************************************/
-/*		Data creation functions												*/
+/*		Data creation functions													*/
 /******************************************************************************/
 void mgl_datac_rearrange(HADT dat, long mx,long my,long mz);
 void mgl_datac_link(HADT dat, dual *A,long mx,long my,long mz);
@@ -71,6 +71,10 @@ int mgl_datac_read_dim(HADT dat, const char *fname,long mx,long my,long mz);
 int mgl_datac_read_range(HADT d, const char *templ, double from, double to, double step, int as_slice);
 int mgl_datac_read_all(HADT dat, const char *templ, int as_slice);
 void mgl_datac_save(HCDT dat, const char *fname,long ns);
+
+int mgl_datac_read_hdf(HADT d,const char *fname,const char *data);
+void mgl_datac_save_hdf(HCDT d,const char *fname,const char *data,int rewrite);
+int mgl_datas_hdf(const char *fname, char *buf, long size);
 
 void mgl_datac_create(HADT dat, long nx,long ny,long nz);
 void mgl_datac_transpose(HADT dat, const char *dim);
@@ -166,6 +170,9 @@ void mgl_datac_hankel_(uintptr_t *dat, const char *dir,int);
 void mgl_datac_fft_(uintptr_t *dat, const char *dir,int);
 void mgl_datac_sinfft_(uintptr_t *dat, const char *dir,int);
 void mgl_datac_cosfft_(uintptr_t *dat, const char *dir,int);
+
+int mgl_datac_read_hdf_(uintptr_t *d, const char *fname, const char *data,int l,int n);
+void mgl_datac_save_hdf_(uintptr_t *d, const char *fname, const char *data, int *rewrite,int l,int n);
 /******************************************************************************/
 #ifdef __cplusplus
 }
