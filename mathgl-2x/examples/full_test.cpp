@@ -58,7 +58,7 @@ return\n\nfunc 'prepare2d'\n\
 new a 50 40 '0.6*sin(pi*(x+1))*sin(1.5*pi*(y+1))+0.4*cos(0.75*pi*(x+1)*(y+1))'\n\
 new b 50 40 '0.6*cos(pi*(x+1))*cos(1.5*pi*(y+1))+0.4*cos(0.75*pi*(x+1)*(y+1))'\n\
 return\n\nfunc 'prepare3d'\n\
-new c 61 50 40 '2*(x^2+y^2+z^4-z^2)-0.2'\n\
+new c 61 50 40 '-2*(x^2+y^2+z^4-z^2)+0.2'\n\
 new d 61 50 40 '1-2*tanh((x+y)*(x+y))'\n\
 return\n\nfunc 'prepare2v'\n\
 new a 20 30 '0.6*sin(pi*(x+1))*sin(1.5*pi*(y+1))+0.4*cos(0.75*pi*(x+1)*(y+1))'\n\
@@ -856,8 +856,8 @@ void smgl_map(mglGraph *gr)	// example of mapping
 	gr->Map(a, b, "brgk");
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_stfa="new a 2000:new b 2000\nfill a 'cos(50*pi*x)*(x<-.5)+cos(100*pi*x)*(x<0)*(x>-.5)+'\n"
-"'cos(200*pi*x)*(x<.5)*(x>0)+cos(400*pi*x)*(x>.5)'\n"
+const char *mmgl_stfa="new a 2000:new b 2000\nfill a 'cos(50*pi*x)*(x<-.5)+cos(100*pi*x)*(x<0)*(x>-.5)+\\\n"
+"cos(200*pi*x)*(x<.5)*(x>0)+cos(400*pi*x)*(x>.5)'\n"
 "subplot 1 2 0:plot a:axis:xlabel '\\i t'\n"
 "subplot 1 2 1:stfa a b 64:axis:ylabel '\\omega' 0:xlabel '\\i t'\n";
 void smgl_stfa(mglGraph *gr)	// STFA sample
@@ -2171,7 +2171,7 @@ mglSample samp[] = {
 	{"fit", smgl_fit, mmgl_fit},
 	{"flow", smgl_flow, mmgl_flow},
 	{"fog", smgl_fog, mmgl_fog},
-	{"fonts", smgl_fonts},
+	{"fonts", smgl_fonts, mmgl_fonts},
 	{"grad", smgl_grad, mmgl_grad},
 	{"hist", smgl_hist, mmgl_hist},
 	{"inplot", smgl_inplot, mmgl_inplot},

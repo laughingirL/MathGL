@@ -34,7 +34,21 @@ void QMGLSyntax::highlightBlock(const QString &text)
 	register int i, j, m = text.length(),s=0;
 	bool arg = false, nl = true;
 	QString num("+-.0123456789:");
-	for(i=0;i<m;i++)				// highlight paragraph
+	i=0;
+	setCurrentBlockState(-1);
+	if(previousBlockState()==1)
+	{
+		bool cont=false;
+		j=i;	i++;
+		for(;i<m && text[i]!='\'';i++)
+		{
+			if(text[i]>' ')		cont=false;
+			if(text[i]=='\\')	cont=true;
+		}
+		setFormat(j,i-j+1,mglColorScheme[1]);
+		if(cont && i==m)	setCurrentBlockState(1);
+	}
+	for(;i<m;i++)				// highlight paragraph
 	{
 		if(text[i]=='(')	s++;	if(text[i]==')')	s--;
 		if(text[i]==' ' || text[i]=='\t')	continue;
@@ -42,9 +56,15 @@ void QMGLSyntax::highlightBlock(const QString &text)
 		{	setFormat(i,m-i,mglColorScheme[0]);	break;	}
 		else if(text[i]=='\'')	// string
 		{
+			bool cont=false;
 			j=i;	i++;
-			for(;i<m && text[i]!='\'';i++);
+			for(;i<m && text[i]!='\'';i++)
+			{
+				if(text[i]>' ')		cont=false;
+				if(text[i]=='\\')	cont=true;
+			}
 			setFormat(j,i-j+1,mglColorScheme[1]);
+			if(cont && i==m)	setCurrentBlockState(1);
 		}
 		else if(nl)				// keyword
 		{

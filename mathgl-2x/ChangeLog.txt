@@ -33,6 +33,7 @@
 * Add zoom in/out of axis range by mouse wheel, and shift of axis range by middle button.
 * Text editor in UDAV now show line number and highlight current one.
 * Completer can be switched off correctly now.
+* Multi-line strings (i.e. separated by "\" symbol) are highlighted correctly now.
 
 * Update samples
 * Update documentation

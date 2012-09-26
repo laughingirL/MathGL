@@ -48,7 +48,7 @@ size_t mglParser::GetParLen()
 	register size_t i,s=0,t;
 	for(i=0;i<40;i++)
 	{	t = par[i].length();	s = s<t?t:s;	}
-	return 0;
+	return s;
 }
 //-----------------------------------------------------------------------------
 size_t mglParser::GetParLen(const wchar_t *str)
@@ -115,7 +115,8 @@ mglCommand *mglParser::FindCommand(const char *com)
 //-----------------------------------------------------------------------------
 mglCommand *mglParser::FindCommand(const wchar_t *com)
 {
-	char cmd[16];	wcstombs(cmd,com,wcslen(com)+1);
+	size_t s = 15<wcslen(com)?15:wcslen(com);
+	char cmd[16];	wcstombs(cmd,com,s+1);	cmd[s]=0;
 	return FindCommand(cmd);
 }
 //-----------------------------------------------------------------------------
