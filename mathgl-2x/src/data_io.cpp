@@ -888,7 +888,7 @@ int mgl_data_read_hdf4(HMDT d,const char *fname,const char *data)
 }
 #else
 int mgl_data_read_hdf4(HMDT ,const char *,const char *)
-{	mglGlobalMess += "HDF4 support was disabled. Please, enable it and rebuild MathGL.\n";	}
+{	mglGlobalMess += "HDF4 support was disabled. Please, enable it and rebuild MathGL.\n";	return false;	}
 #endif
 //-----------------------------------------------------------------------------
 #if MGL_HAVE_HDF5
