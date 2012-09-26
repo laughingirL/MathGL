@@ -256,9 +256,6 @@ const char *mglchr(const char *str, char ch);
 void mgl_set_num_thr(int n);
 void mgl_test_txt(const char *str, ...);
 void mgl_set_test_mode(int enable);
-/** Duplicate string (returned pointer must be free() after usage) */
-char *mgl_strdup(const char *s);
-wchar_t *mgl_wcsdup(const wchar_t *s);
 /** Remove spaces at begining and at the end of the string */
 void mgl_strtrim(char *str);
 void mgl_wcstrim(wchar_t *str);

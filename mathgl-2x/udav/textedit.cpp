@@ -50,8 +50,9 @@
 #include <QPainter>
 #include <QTextBlock>
 //-----------------------------------------------------------------------------
-TextEdit::TextEdit(QWidget *parent) : QTextEdit(parent), c(0)
+TextEdit::TextEdit(QWidget *parent) : QTextEdit(parent)
 {
+	c=0;
 	connect(this, SIGNAL(cursorPositionChanged()), this, SLOT(highlight()));
 }
 //-----------------------------------------------------------------------------
@@ -75,7 +76,8 @@ void TextEdit::highlight()
 //-----------------------------------------------------------------------------
 void TextEdit::setCompleter(QCompleter *completer)
 {
-	if(c)	{	QObject::disconnect(c);	c->setWidget(0);	delete c;	c=0;	}
+	if(c && c!=completer)
+	{	QObject::disconnect(c);	c->setWidget(0);	delete c;	c=0;	}
 	if(!completer)	return;
 	c = completer;
 	c->setWidget(this);

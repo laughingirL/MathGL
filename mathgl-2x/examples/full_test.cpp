@@ -32,6 +32,44 @@ void mgls_prepare3d(mglData *a, mglData *b=0);
 void mgls_prepare2v(mglData *a, mglData *b);
 void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 //-----------------------------------------------------------------------------
+struct mglSample	/// Structure for list of samples
+{
+	const char *name;
+	void (*func)(mglGraph*);
+	const char *mgl;
+};
+extern mglSample samp[];
+//-----------------------------------------------------------------------------
+int mgl_cmd_smp(const void *a, const void *b)
+{
+	const mglSample *aa = (const mglSample *)a;
+	const mglSample *bb = (const mglSample *)b;
+	return strcmp(aa->name, bb->name);
+}
+//-----------------------------------------------------------------------------
+//		MGL functions for preparing data
+//-----------------------------------------------------------------------------
+const char *mmgl_dat_prepare = "\nstop\n\nfunc 'prepare1d'\n\
+new y 50 3\nmodify y '0.7*sin(2*pi*x)+0.5*cos(3*pi*x)+0.2*sin(pi*x)'\n\
+modify y 'sin(2*pi*x)' 1\nmodify y 'cos(2*pi*x)' 2\n\
+new x1 50 'x'\nnew x2 50 '0.05-0.03*cos(pi*x)'\n\
+new y1 50 '0.5-0.3*cos(pi*x)'\nnew y2 50 '-0.3*sin(pi*x)'\n\
+return\n\nfunc 'prepare2d'\n\
+new a 50 40 '0.6*sin(pi*(x+1))*sin(1.5*pi*(y+1))+0.4*cos(0.75*pi*(x+1)*(y+1))'\n\
+new b 50 40 '0.6*cos(pi*(x+1))*cos(1.5*pi*(y+1))+0.4*cos(0.75*pi*(x+1)*(y+1))'\n\
+return\n\nfunc 'prepare3d'\n\
+new a 61 50 40 '2*(x^2+y^2+z^4-z^2)-0.2'\n\
+new b 61 50 40 '1-2*tanh((x+y)*(x+y))'\n\
+return\n\nfunc 'prepare2v'\n\
+new a 20 30 '0.6*sin(pi*(x+1))*sin(1.5*pi*(y+1))+0.4*cos(0.75*pi*(x+1)*(y+1))'\n\
+new b 20 30 '0.6*cos(pi*(x+1))*cos(1.5*pi*(y+1))+0.4*cos(0.75*pi*(x+1)*(y+1))'\n\
+return\n\nfunc 'prepare3v'\n\
+define $1 pow(x*x+y*y+(z-0.3)*(z-0.3)+0.03,1.5)\n\
+define $2 pow(x*x+y*y+(z+0.3)*(z+0.3)+0.03,1.5)\n\
+new ex 10 10 10 '0.2*x/$1-0.2*x/$2'\n\
+new ey 10 10 10 '0.2*y/$1-0.2*y/$2'\n\
+new ez 10 10 10 '0.2*(z-0.3)/$1-0.2*(z+0.3)/$2'\nreturn\n";
+//-----------------------------------------------------------------------------
 int type = 0;
 int dotest  = 0;
 int width  = 800;
@@ -46,29 +84,14 @@ void smgl_combined(mglGraph *gr);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	gr->AddLegend("sin(\\pi {x^2})","b");
-	gr->AddLegend("sin(\\pi x)","g*");
-	gr->AddLegend("sin(\\pi \\sqrt{x})","rd");
-	gr->AddLegend("just text"," ");
-	gr->AddLegend("no indent for this","");
-	if(!mini)	{gr->SubPlot(2,2,0,"");	gr->Title("Legend (default)");}
-	gr->Box();	gr->Legend();
-	if(mini)	return;
-	gr->Legend(3,"A#");
-	gr->Puts(mglPoint(0.75,0.65),"Absolute position","A");
-	gr->SubPlot(2,2,2,"");	gr->Title("coloring");	gr->Box();
-	gr->Legend(0,"r#");	gr->Legend(1,"Wb#");	gr->Legend(2,"ygr#");
-	gr->SubPlot(2,2,3,"");	gr->Title("manual position");	gr->Box();	gr->Legend(0.5,0.5);
-	return;
-	
-	mglData ys(10,5);	ys.Modify("0.8*sin(pi*2*x+pi*y)+0.2*rnd");
+/*	mglData ys(10,5);	ys.Modify("0.8*sin(pi*2*x+pi*y)+0.2*rnd");
 	gr->Box();
 	char id[16];
 	std::string str;
 	for(int i=0;i<5;i++)
 	{	sprintf(id,"y_%d\n",i);	str += id;	}
 	gr->Table(0.5,1,ys,str.c_str(),"#|:C","value 0.7");
-	return;
+	return;*/
 
 /*	mglData c;	mgls_prepare3d(&c);	gr->Light(true);	gr->Alpha(true);
 	gr->SubPlot(2,1,0);	gr->Rotate(50,60);	gr->Box();	gr->Surf3(c);
@@ -142,10 +165,10 @@ void smgl_triangulation(mglGraph *gr)	// alpha and lighting
 	gr->DataGrid(g,x,y,z);	gr->Mesh(g,"m");
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_alpha="subplot 2 2 0:title 'default':rotate 50 60:box\nsurf a\n"
-"subplot 2 2 0:title 'light on':rotate 50 60:box\nlight on:surf a\n"
-"subplot 2 2 0:title 'light on; alpha on':rotate 50 60:box\nalpha on:surf a\n"
-"subplot 2 2 0:title 'alpha on':rotate 50 60:box\nnlight off:surf a\n";
+const char *mmgl_alpha="call 'prepare2d'\nsubplot 2 2 0:title 'default':rotate 50 60:box\nsurf a\n"
+"subplot 2 2 1:title 'light on':rotate 50 60:box\nlight on:surf a\n"
+"subplot 2 2 2:title 'light on; alpha on':rotate 50 60:box\nalpha on:surf a\n"
+"subplot 2 2 3:title 'alpha on':rotate 50 60:box\nlight off:surf a\n";
 void smgl_alpha(mglGraph *gr)	// alpha and lighting
 {
 	mglData a;	mgls_prepare2d(&a);
@@ -190,10 +213,10 @@ void smgl_schemes(mglGraph *gr)	// Color table
 	gr->SubPlot(2,10,19,NULL,0.2);	gr->Dens(a,"b{g,0.3}r");		gr->Puts(0.57, 0.02, "b\\{g,0.3\\}r", "A");
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_curvcoor="origin -1 1 -1\nsubplot 2 2 0:title 'Cartesian':rotate 50 60:fplot '2*t-1' '0.5' '0':axis:grid\n"
-"axis 'y*sin(pi*x)' 'y*cos(pi*x)':subplot 2 2 1:title 'Cylindrical':rotate 50 60:fplot '2*t-1' '0.5' '0':axis:grid\n"
-"axis '2*y*x' 'y*y - x*x':subplot 2 2 2:title 'Parabolic':rotate 50 60:fplot '2*t-1' '0.5' '0':axis:grid\n"
-"axis 'y*sin(pi*x)' 'y*cos(pi*x)' 'x+z':subplot 2 2 3:title 'Spiral':rotate 50 60:fplot '2*t-1' '0.5' '0':axis:grid\n";
+const char *mmgl_curvcoor="origin -1 1 -1\nsubplot 2 2 0:title 'Cartesian':rotate 50 60:fplot '2*t-1' '0.5' '0' '2r':axis:grid\n"
+"axis 'y*sin(pi*x)' 'y*cos(pi*x)':subplot 2 2 1:title 'Cylindrical':rotate 50 60:fplot '2*t-1' '0.5' '0' '2r':axis:grid\n"
+"axis '2*y*x' 'y*y - x*x':subplot 2 2 2:title 'Parabolic':rotate 50 60:fplot '2*t-1' '0.5' '0' '2r':axis:grid\n"
+"axis 'y*sin(pi*x)' 'y*cos(pi*x)' 'x+z':subplot 2 2 3:title 'Spiral':rotate 50 60:fplot '2*t-1' '0.5' '0' '2r':axis:grid\n";
 void smgl_curvcoor(mglGraph *gr)	// curvilinear coordinates
 {
 	gr->SetOrigin(-1,1,-1);
@@ -344,7 +367,7 @@ void smgl_style(mglGraph *gr)	// pen styles
 	}
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_text="subplot 2 2 0 ''\ntext 0 1 'Text can be in ASCII and in Unicode'\ntext 0 0.6 'It can be \\wire{wire}, \\big{big} or #r{colored}'\n"
+const char *mmgl_text="call 'prepare1d'\nsubplot 2 2 0 ''\ntext 0 1 'Text can be in ASCII and in Unicode'\ntext 0 0.6 'It can be \\wire{wire}, \\big{big} or #r{colored}'\n"
 "text 0 0.2 'One can change style in string: \\b{bold}, \\i{italic, \\b{both}}'\ntext 0 -0.2 'Easy to \\a{overline} or \\u{underline}'\n"
 "text 0 -0.6 'Easy to change indexes ^{up} _{down} @{center}'\ntext 0 -1 'It parse TeX: \\int \\alpha \\cdot '\n'\\sqrt3{sin(\\pi x)^2 + \\gamma_{i_k}} dx'\n"
 "subplot0 2 2 1 ''\n text 0 0 '\\sqrt{\\frac{\\alpha^{\\gamma^2}+\\overset 1{\\big\\infty}}{\\sqrt3{2+b}}}' '@' -2\n"
@@ -402,9 +425,9 @@ void smgl_fonts(mglGraph *gr)	// font typefaces
 //-----------------------------------------------------------------------------
 const char *mmgl_bars="new ys 10 3 '0.8*sin(pi*(x+y/4+1.25))+0.2*rnd':origin 0 0 0\n"
 "subplot 3 2 0 '':title 'Bars plot (default)':box:bars ys\nsubplot 3 2 1 '':title '2 colors':box:bars ys 'cbgGyr'\n"
-"subplot 3 2 4 '':title '\\\'\\#\\\' style':box:bars ys '#'\n"
+"subplot 3 2 4 '':title '\"\\#\" style':box:bars ys '#'\n"
 "new yc 30 'sin(pi*x)':new xc 30 'cos(pi*x)':new z 30 'x'\nsubplot 3 2 5:title '3d variant':rotate 50 60:box:bars xc yc z 'r'\n"
-"ranges -1 1 -3 3:subplot 3 2 2 '':title '\\\'a\\\' style':box:bars ys 'a'\nsubplot 3 2 3 '':title '\\\'f\\\' style':box:bars ys 'f'\n";
+"ranges -1 1 -3 3:subplot 3 2 2 '':title '\"a\" style':box:bars ys 'a'\nsubplot 3 2 3 '':title '\"f\" style':box:bars ys 'f'\n";
 void smgl_bars(mglGraph *gr)
 {
 	mglData ys(10,3);	ys.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
@@ -424,8 +447,8 @@ void smgl_bars(mglGraph *gr)
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_barh="new ys 10 3 '0.8*sin(pi*(x+y/4+1.25))+0.2*rnd':origin 0 0 0\n"
-"subplot 2 2 0 '':title 'Barh plot (default)':box:barh ys\nsubplot 2 2 1 '':title '2 colors':box:barh y 'cbgGyr's\n"
-"ranges -3 3 -1 1:subplot 2 2 2 '':title '\\\'a\\\' style':box:barh ys 'a'\nsubplot 2 2 3 '': title '\\\'f\\\' style':box:barh ys 'f'\n";
+"subplot 2 2 0 '':title 'Barh plot (default)':box:barh ys\nsubplot 2 2 1 '':title '2 colors':box:barh ys 'cbgGyr'\n"
+"ranges -3 3 -1 1:subplot 2 2 2 '':title '\"a\" style':box:barh ys 'a'\nsubplot 2 2 3 '': title '\"f\" style':box:barh ys 'f'\n";
 void smgl_barh(mglGraph *gr)
 {
 	mglData ys(10,3);	ys.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
@@ -439,8 +462,8 @@ void smgl_barh(mglGraph *gr)
 	gr->SubPlot(2,2,3,"");	gr->Title("'f' style");	gr->Box();	gr->Barh(ys,"f");
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_area="origin 0 0 0\nsubplot 2 2 0 '':title 'Area plot (default)':box:area y\n"
-"subplot 2 2 1 '':title '2 colors':box:area y 'cbgGyr'\nsubplot 2 2 2 '':title '\\\'!\\\' style':box:area y '!'\n"
+const char *mmgl_area="call 'prepare1d'\norigin 0 0 0\nsubplot 2 2 0 '':title 'Area plot (default)':box:area y\n"
+"subplot 2 2 1 '':title '2 colors':box:area y 'cbgGyr'\nsubplot 2 2 2 '':title '\"!\" style':box:area y '!'\n"
 "new yc 30 'sin(pi*x)':new xc 30 'cos(pi*x)':new z 30 'x'\nsubplot 2 2 3:title '3d variant':rotate 50 60:box:area xc yc z 'r'\n";
 void smgl_area(mglGraph *gr)
 {
@@ -456,7 +479,7 @@ void smgl_area(mglGraph *gr)
 	gr->Area(xc,yc,z,"r");
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_plot="subplot 2 2 0 '':title 'Plot plot (default)':box:plot y\n"
+const char *mmgl_plot="call 'prepare1d'\nsubplot 2 2 0 '':title 'Plot plot (default)':box:plot y\n"
 "subplot 2 2 2 '':title ''!' style; 'rgb' palette':box:plot y 'o!rgb'\nsubplot 2 2 3 '':title 'just markers':box:plot y ' +'\n"
 "new yc 30 'sin(pi*x)':new xc 30 'cos(pi*x)':new z 30 'x'\nsubplot 2 2 1:title '3d variant':rotate 50 60:box:plot xc yc z 'rs'\n";
 void smgl_plot(mglGraph *gr)
@@ -473,7 +496,7 @@ void smgl_plot(mglGraph *gr)
 	gr->Plot(xc,yc,z,"rs");
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_tens="subplot 2 2 0 '':title 'Tens plot (default)':box:tens y(:.0) y(:,1)\nsubplot 2 2 1 '':title '' ' style':box:plot y(:.0) y(:,1) 'o '\n"
+const char *mmgl_tens="call 'prepare1d'\nsubplot 2 2 0 '':title 'Tens plot (default)':box:tens y(:.0) y(:,1)\nsubplot 2 2 1 '':title '' ' style':box:plot y(:.0) y(:,1) 'o '\n"
 "new yc 30 'sin(pi*x)':new xc 30 'cos(pi*x)':new z 30 'x'\nsubplot 2 2 1:title '3d variant':rotate 50 60:box:tens xc yc z z 's'\n";
 void smgl_tens(mglGraph *gr)
 {
@@ -488,11 +511,11 @@ void smgl_tens(mglGraph *gr)
 	gr->Tens(xc,yc,z,z,"s");
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_region="copy y1 y(:,1):copy y2 y(:,2)\n"
+const char *mmgl_region="call 'prepare1d'\ncopy y1 y(:,1):copy y2 y(:,2)\n"
 "subplot 2 2 0 '':title 'Region plot (default)':box:region y1 y2:plot y1 'k2':plot y2 'k2'\n"
 "subplot 2 2 1 '':title '2 colors':box:region y1 y2 'yr':plot y1 'k2':plot y2 'k2'\n"
-"subplot 2 2 2 '':title '\\\'!\\\' style':box:region y1 y2 '!':plot y1 'k2':plot y2 'k2'\n"
-"subplot 2 2 3 '':title '\\\'i\\\' style':box:region y1 y2 'ir':plot y1 'k2':plot y2 'k2'\n";
+"subplot 2 2 2 '':title '\"!\" style':box:region y1 y2 '!':plot y1 'k2':plot y2 'k2'\n"
+"subplot 2 2 3 '':title '\"i\" style':box:region y1 y2 'ir':plot y1 'k2':plot y2 'k2'\n";
 void smgl_region(mglGraph *gr)
 {
 	mglData y;	mgls_prepare1d(&y);
@@ -505,9 +528,9 @@ void smgl_region(mglGraph *gr)
 	gr->SubPlot(2,2,3,"");	gr->Title("'i' style");	gr->Box();	gr->Region(y1,y2,"ir");	gr->Plot(y1,"k2");	gr->Plot(y2,"k2");
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_stem="origin 0 0 0:subplot 2 2 0 '':title 'Stem plot (default)':box:stem y\n"
+const char *mmgl_stem="call 'prepare1d'\norigin 0 0 0:subplot 2 2 0 '':title 'Stem plot (default)':box:stem y\n"
 "new yc 30 'sin(pi*x)':new xc 30 'cos(pi*x)':new z 30 'x'\nsubplot 2 2 1:title '3d variant':rotate 50 60:box:stem xc yc z 'rx'\n"
-"subplot 2 2 2 '':title '\\\\'!\\\' style':box:stem y 'o!rgb'\n";
+"subplot 2 2 2 '':title '\"!\" style':box:stem y 'o!rgb'\n";
 void smgl_stem(mglGraph *gr)
 {
 	mglData y;	mgls_prepare1d(&y);	gr->SetOrigin(0,0,0);
@@ -521,9 +544,9 @@ void smgl_stem(mglGraph *gr)
 	gr->SubPlot(2,2,2,"");	gr->Title("'!' style");	gr->Box();	gr->Stem(y,"o!rgb");
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_step="origin 0 0 0:subplot 2 2 0 '':title 'Step plot (default)':box:step y\n"
+const char *mmgl_step="call 'prepare1d'\norigin 0 0 0:subplot 2 2 0 '':title 'Step plot (default)':box:step y\n"
 "new yc 30 'sin(pi*x)':new xc 30 'cos(pi*x)':new z 30 'x'\nsubplot 2 2 1:title '3d variant':rotate 50 60:box:step xc yc z 'r'\n"
-"subplot 2 2 2 '':title '\\\\'!\\\' style':box:step y 's!rgb'\n";
+"subplot 2 2 2 '':title '\"!\" style':box:step y 's!rgb'\n";
 void smgl_step(mglGraph *gr)
 {
 	mglData y;	mgls_prepare1d(&y);	gr->SetOrigin(0,0,0);
@@ -545,7 +568,7 @@ void smgl_boxplot(mglGraph *gr)	// flow threads and density plot
 	gr->Box();	gr->BoxPlot(a);
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_type0="alpha on:light on:transptype 0:clf\nsubplot 2 2 0:rotate 50 60:surf a:box\n"
+const char *mmgl_type0="call 'prepare2d'\nalpha on:light on:transptype 0:clf\nsubplot 2 2 0:rotate 50 60:surf a:box\n"
 "subplot 2 2 1:rotate 50 60:dens a:box\nsubplot 2 2 2:rotate 50 60:cont a:box\n"
 "subplot 2 2 3:rotate 50 60:axial a:box";
 void smgl_type0(mglGraph *gr)	// TranspType = 0
@@ -559,7 +582,7 @@ void smgl_type0(mglGraph *gr)	// TranspType = 0
 	gr->SubPlot(2,2,3);	gr->Rotate(50,60);	gr->Axial(a);	gr->Box();
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_type1="alpha on:light on:transptype 1:clf\nsubplot 2 2 0:rotate 50 60:surf a:box\n"
+const char *mmgl_type1="call 'prepare2d'\nalpha on:light on:transptype 1:clf\nsubplot 2 2 0:rotate 50 60:surf a:box\n"
 "subplot 2 2 1:rotate 50 60:dens a:box\nsubplot 2 2 2:rotate 50 60:cont a:box\n"
 "subplot 2 2 3:rotate 50 60:axial a:box";
 void smgl_type1(mglGraph *gr)	// TranspType = 1
@@ -573,7 +596,7 @@ void smgl_type1(mglGraph *gr)	// TranspType = 1
 	gr->SubPlot(2,2,3);	gr->Rotate(50,60);	gr->Axial(a);	gr->Box();
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_type2="alpha on:light on:transptype 2:clf\nsubplot 2 2 0:rotate 50 60:surf a:box\n"
+const char *mmgl_type2="call 'prepare2d'\nalpha on:light on:transptype 2:clf\nsubplot 2 2 0:rotate 50 60:surf a:box\n"
 "subplot 2 2 1:rotate 50 60:dens a:box\nsubplot 2 2 2:rotate 50 60:cont a:box\n"
 "subplot 2 2 3:rotate 50 60:axial a:box";
 void smgl_type2(mglGraph *gr)	// TranspType = 2
@@ -667,12 +690,12 @@ void smgl_molecule(mglGraph *gr)	// example of moleculas
 	gr->DoubleSided( true ); // put back
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_error="new y 50 '0.7*sin(pi*x-pi) + 0.5*cos(3*pi*(x+1)/2) + 0.2*sin(pi*(x+1)/2)'\n"
+const char *mmgl_error="call 'prepare1d'\nnew y 50 '0.7*sin(pi*x-pi) + 0.5*cos(3*pi*(x+1)/2) + 0.2*sin(pi*(x+1)/2)'\n"
 "new x0 10 'x + 0.1*rnd-0.05':new ex 10 '0.1':new ey 10 '0.2'\n"
 "new y0 10 '0.7*sin(pi*x-pi) + 0.5*cos(3*pi*(x+1)/2) + 0.2*sin(pi*(x+1)/2) + 0.2*rnd-0.1'\n"
 "subplot 2 2 0 '':title 'Error plot (default)':box:plot y:error x0 y0 ex ey 'k'\n"
-"subplot 2 2 1 '':title '\\\'!\\\' style; no e_x':box:plot y:error x0 y0 ex ey 'o!rgb'\n"
-"subplot 2 2 2 '':title '\\\'\\@\\\' style':box:plot y:error x0 y0 ex ey '@'; alpha 0.5\n"
+"subplot 2 2 1 '':title '\"!\" style; no e_x':box:plot y:error x0 y0 ey 'o!rgb'\n"
+"subplot 2 2 2 '':title '\"\\@\" style':box:plot y:error x0 y0 ex ey '@'; alpha 0.5\n"
 "subplot 2 2 3 '':title '3d variant':rotate 50 60:axis\n"
 "for $1 0 9\n\terror 2*rnd-1 2*rnd-1 2*rnd-1 0.2 0.2 0.2 'bo'\nnext\n";
 void smgl_error(mglGraph *gr)
@@ -702,10 +725,10 @@ void smgl_error(mglGraph *gr)
 //-----------------------------------------------------------------------------
 const char *mmgl_chart="new ch 7 2 'rnd+0.1':light on\n"
 "subplot 2 2 0:title 'Chart plot (default)':rotate 50 60:box:chart ch\n"
-"subplot 2 2 1:title '\\\'\\#\\\' style':rotate 50 60:box:chart ch '#'\n"
-"subplot 2 2 2:title 'Pie chart; \\\'\\\' style':rotate 50 60:\n"
+"subplot 2 2 1:title '\"\\#\" style':rotate 50 60:box:chart ch '#'\n"
+"subplot 2 2 2:title 'Pie chart; \" \" color':rotate 50 60:\n"
 "axis '(y+1)/2*cos(pi*x)' '(y+1)/2*sin(pi*x)':box:chart ch 'bgr cmy#'\n"
-"subplot 2 2 2:title 'Ring chart; \\\'\\\' style':rotate 50 60:\n"
+"subplot 2 2 3:title 'Ring chart; \" \" color':rotate 50 60:\n"
 "axis '(y+2)/3*cos(pi*x)' '(y+2)/3*sin(pi*x)':box:chart ch 'bgr cmy#'\n";
 void smgl_chart(mglGraph *gr)
 {
@@ -723,7 +746,7 @@ void smgl_chart(mglGraph *gr)
 	gr->Rotate(50,60);	gr->Box();	gr->Chart(ch,"bgr cmy#");
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_mark="subplot 1 1 0:title 'Mark plot (default)':box:mark y y1 's'\n";
+const char *mmgl_mark="call 'prepare1d'\nsubplot 1 1 0:title 'Mark plot (default)':box:mark y y1 's'\n";
 void smgl_mark(mglGraph *gr)
 {
 	mglData y,y1;	mgls_prepare1d(&y,&y1);
@@ -732,7 +755,7 @@ void smgl_mark(mglGraph *gr)
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_radar="new yr 10 3 '0.4*sin(pi*(x+1.5+y/2)+0.1*rnd)'\n"
-"subplot 1 1 0 '':title 'Radar plot (with grid, \\\'\\#\\\')':box:radar yr '#'\n";
+"subplot 1 1 0 '':title 'Radar plot (with grid, \"\\#\")':box:radar yr '#'\n";
 void smgl_radar(mglGraph *gr)
 {
 	mglData yr(10,3);	yr.Modify("0.4*sin(pi*(2*x+y))+0.1*rnd");
@@ -741,7 +764,7 @@ void smgl_radar(mglGraph *gr)
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_candle="new y 30 'sin(pi*x/2)^2':copy y1 y/2:copy y2 (y+1)/2\n"
-"subplot 1 1 0 '':title 'Candle plot (with grid, \\\'\\#\\\')'\nyrange 0 1:box:candle y y1 y2\n";
+"subplot 1 1 0 '':title 'Candle plot (default)'\nyrange 0 1:box:candle y y1 y2\n";
 void smgl_candle(mglGraph *gr)
 {
 	mglData y(30);	gr->Fill(y,"sin(pi*x/2)^2");
@@ -751,7 +774,7 @@ void smgl_candle(mglGraph *gr)
 	gr->SetRange('y',0,1);	gr->Box();	gr->Candle(y,y1,y2);
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_textmark="subplot 1 1 0 '':title 'TextMark plot (default)':box:textmark y y1 '\\gamma' 'r'\n";
+const char *mmgl_textmark="call 'prepare1d'\nsubplot 1 1 0 '':title 'TextMark plot (default)':box:textmark y y1 '\\gamma' 'r'\n";
 void smgl_textmark(mglGraph *gr)
 {
 	mglData y,y1;	mgls_prepare1d(&y,&y1);
@@ -759,10 +782,10 @@ void smgl_textmark(mglGraph *gr)
 	gr->Box();	gr->TextMark(y,y1,"\\gamma","r");
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_tube="new yc 50 'sin(pi*x)':new xc 50 'cos(pi*x)':new z 50 'x':divto y1 20\n"
+const char *mmgl_tube="call 'prepare1d'\nnew yc 50 'sin(pi*x)':new xc 50 'cos(pi*x)':new z 50 'x':divto y1 20\n"
 "subplot 2 2 0 '':title 'Tube plot (default)':box:tube y 0.05\n"
 "subplot 2 2 1 '':title 'variable radius':box:tube y y1\n"
-"subplot 2 2 2 '':title '\\\'\\#\\\' style':box:tube y 0.05 '#'\n"
+"subplot 2 2 2 '':title '\"\\#\" style':box:tube y 0.05 '#'\n"
 "subplot 2 2 3:title '3d variant':rotate 50 60:box:tube xc yc z y2 'r'\n";
 void smgl_tube(mglGraph *gr)
 {
@@ -777,7 +800,7 @@ void smgl_tube(mglGraph *gr)
 	gr->SubPlot(2,2,3);	gr->Title("3d variant");	gr->Rotate(50,60);	gr->Box();	gr->Tube(xc,yc,z,y2,"r");
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_tape="new yc 50 'sin(pi*x)':new xc 50 'cos(pi*x)':new z 50 'x'\n"
+const char *mmgl_tape="call 'prepare1d'\nnew yc 50 'sin(pi*x)':new xc 50 'cos(pi*x)':new z 50 'x'\n"
 "subplot 2 2 0 '':title 'Tape plot (default)':box:tape y:plot y 'k'\n"
 "subplot 2 2 1:title '3d variant, 2 colors':rotate 50 60:light on\n"
 "box:plot xc yc z 'k':tape xc yc z 'rg'\n"
@@ -802,7 +825,7 @@ void smgl_tape(mglGraph *gr)
 	gr->Box();	gr->Plot(xc,yc,z,"k");	gr->Tape(xc,yc,z,"zg");	gr->Tape(xc,yc,z,"zg#");
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_fog="rotate 50 60:light on:fog 1\nbox:surf a\n";
+const char *mmgl_fog="call 'prepare2d'\ntitle 'Fog sample':rotate 50 60:light on:fog 1\nbox:surf a\n";
 void smgl_fog(mglGraph *gr)
 {
 	mglData a;	mgls_prepare2d(&a);
@@ -897,7 +920,7 @@ void smgl_pde(mglGraph *gr)	// PDE sample
 	gr->Puts(mglPoint(0, 0.95), "Equation: ik_0\\partial_zu + \\Delta u + x\\cdot u + i \\frac{x+z}{2}\\cdot u = 0\nabsorption: (x+z)/2 for x+z>0");
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_conta="title 'Cont3 sample':rotate 50 60:box\ncont3 c 'x':cont3 c:cont3 c 'z'";
+const char *mmgl_conta="call 'prepare3d'\ntitle 'Cont3 sample':rotate 50 60:box\ncont3 c 'x':cont3 c:cont3 c 'z'";
 void smgl_conta(mglGraph *gr)
 {
 	mglData c;	mgls_prepare3d(&c);
@@ -906,7 +929,7 @@ void smgl_conta(mglGraph *gr)
 	gr->Cont3(c,"x");	gr->Cont3(c);	gr->Cont3(c,"z");
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_contfa="title 'Cont3 sample':rotate 50 60:light on:box\n"
+const char *mmgl_contfa="call 'prepare3d'\ntitle 'Cont3 sample':rotate 50 60:light on:box\n"
 "contf3 c 'x':contf3 c:contf3 c 'z'\ncont3 c 'xk':cont3 c 'k':cont3 c 'zk'\n";
 void smgl_contfa(mglGraph *gr)
 {
@@ -917,7 +940,7 @@ void smgl_contfa(mglGraph *gr)
 	gr->Cont3(c,"kx");	gr->Cont3(c,"k");	gr->Cont3(c,"kz");
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_densa="title 'Dens3 sample':rotate 50 60:alpha on:alphadef 0.7\n"
+const char *mmgl_densa="call 'prepare3d'\ntitle 'Dens3 sample':rotate 50 60:alpha on:alphadef 0.7\n"
 "origin 0 0 0:box:axis '_xyz'\ndens3 c 'x':dens3 c ':y':dens3 c 'z'";
 void smgl_densa(mglGraph *gr)
 {
@@ -928,7 +951,7 @@ void smgl_densa(mglGraph *gr)
 	gr->Dens3(c,"x");	gr->Dens3(c);	gr->Dens3(c,"z");
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_dens_xyz="title 'Dens[XYZ] sample':rotate 50 60:light on:box\n"
+const char *mmgl_dens_xyz="call 'prepare3d'\ntitle 'Dens[XYZ] sample':rotate 50 60:light on:box\n"
 "densx c.sum('x') '' -1:densy c.sum('y') '' 1:densz c.sum('z') '' -1";
 void smgl_dens_xyz(mglGraph *gr)
 {
@@ -938,7 +961,7 @@ void smgl_dens_xyz(mglGraph *gr)
 	gr->DensY(c.Sum("y"),0,1);		gr->DensZ(c.Sum("z"),0,-1);
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_cont_xyz="title 'Cont[XYZ] sample':rotate 50 60:light on:box\n"
+const char *mmgl_cont_xyz="call 'prepare3d'\ntitle 'Cont[XYZ] sample':rotate 50 60:light on:box\n"
 "contx c.sum('x') '' -1:conty c.sum('y') '' 1:contz c.sum('z') '' -1";
 void smgl_cont_xyz(mglGraph *gr)
 {
@@ -948,7 +971,7 @@ void smgl_cont_xyz(mglGraph *gr)
 	gr->ContY(c.Sum("y"),"",1);		gr->ContZ(c.Sum("z"),"",-1);
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_contf_xyz="title 'ContF[XYZ] sample':rotate 50 60:light on:box\n"
+const char *mmgl_contf_xyz="call 'prepare3d'\ntitle 'ContF[XYZ] sample':rotate 50 60:light on:box\n"
 "contfx c.sum('x') '' -1:contfy c.sum('y') '' 1:contfz c.sum('z') '' -1";
 void smgl_contf_xyz(mglGraph *gr)
 {
@@ -958,10 +981,10 @@ void smgl_contf_xyz(mglGraph *gr)
 	gr->ContFY(c.Sum("y"),"",1);	gr->ContFZ(c.Sum("z"),"",-1);
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_cloud="subplot 2 2 0:title 'Cloud plot':rotate 50 60:alpha on:box:cloud c 'wyrRk'"
-"subplot 2 2 1:title '\\\'!\\\' style':rotate 50 60:box:cloud c '!wyrRk'"
-"subplot 2 2 2:title '\\\'.\\\' style':rotate 50 60:box:cloud c '.wyrRk'"
-"subplot 2 2 3:title 'meshnum 10':rotate 50 60:box:cloud c 'wyrRk'; meshnum 10";
+const char *mmgl_cloud="call 'prepare3d'\nsubplot 2 2 0:title 'Cloud plot':rotate 50 60:alpha on:box:cloud c 'wyrRk'\n"
+"subplot 2 2 1:title '\"!\" style':rotate 50 60:box:cloud c '!wyrRk'\n"
+"subplot 2 2 2:title '\".\" style':rotate 50 60:box:cloud c '.wyrRk'\n"
+"subplot 2 2 3:title 'meshnum 10':rotate 50 60:box:cloud c 'wyrRk'; meshnum 10\n";
 void smgl_cloud(mglGraph *gr)
 {
 	mglData c;	mgls_prepare3d(&c);
@@ -977,10 +1000,10 @@ void smgl_cloud(mglGraph *gr)
 	gr->Rotate(50,60);	gr->Box();	gr->Cloud(c,"wyrRk","meshnum 10");
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_cont="list v -0.5 -0.15 0 0.15 0.5\nsubplot 2 2 0:title 'Cont plot (default)':rotate 50 60:box:cont a\n"
+const char *mmgl_cont="call 'prepare2d'\nlist v -0.5 -0.15 0 0.15 0.5\nsubplot 2 2 0:title 'Cont plot (default)':rotate 50 60:box:cont a\n"
 "subplot 2 2 1:title 'manual levels':rotate 50 60:box:cont v a\n"
-"subplot 2 2 2:title '\\\'\\_\\\' style':rotate 50 60:box:cont a '_'\n"
-"subplot 2 2 3 '':title '\\\'t\\\' style':box:cont a 't'\n";
+"subplot 2 2 2:title '\"\\_\" style':rotate 50 60:box:cont a '_'\n"
+"subplot 2 2 3 '':title '\"t\" style':box:cont a 't'\n";
 void smgl_cont(mglGraph *gr)
 {
 	mglData a,v(5);	mgls_prepare2d(&a);	v.a[0]=-0.5;	v.a[1]=-0.15;	v.a[2]=0;	v.a[3]=0.15;	v.a[4]=0.5;
@@ -995,11 +1018,11 @@ void smgl_cont(mglGraph *gr)
 	gr->Box();	gr->Cont(a,"t");
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_contf="list v -0.5 -0.15 0 0.15 0.5\n"
-"new a1 30 40 3 '0.6*sin(2*pi*x+pi*(z+1)/2)*sin(3*pi*y+pi*z) + 0.4*cos(3*pi*(x*y)+pi*(z+1)^2/2)'"
+const char *mmgl_contf="call 'prepare2d'\nlist v -0.5 -0.15 0 0.15 0.5\n"
+"new a1 30 40 3 '0.6*sin(2*pi*x+pi*(z+1)/2)*sin(3*pi*y+pi*z) + 0.4*cos(3*pi*(x*y)+pi*(z+1)^2/2)'\n"
 "subplot 2 2 0:title 'ContF plot (default)':rotate 50 60:box:contf a\n"
 "subplot 2 2 1:title 'manual levels':rotate 50 60:box:contf v a\n"
-"subplot 2 2 2:title '\\\'\\_\\\' style':rotate 50 60:box:contf a '_'\n"
+"subplot 2 2 2:title '\"\\_\" style':rotate 50 60:box:contf a '_'\n"
 "subplot 2 2 3:title 'several slices':rotate 50 60:box:contf a1\n";
 void smgl_contf(mglGraph *gr)
 {
@@ -1018,11 +1041,11 @@ void smgl_contf(mglGraph *gr)
 	gr->Rotate(50,60);	gr->Box();	gr->ContF(a1);
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_contd="list v -0.5 -0.15 0 0.15 0.5\n"
-"new a1 30 40 3 '0.6*sin(2*pi*x+pi*(z+1)/2)*sin(3*pi*y+pi*z) + 0.4*cos(3*pi*(x*y)+pi*(z+1)^2/2)'"
+const char *mmgl_contd="call 'prepare2d'\nlist v -0.5 -0.15 0 0.15 0.5\n"
+"new a1 30 40 3 '0.6*sin(2*pi*x+pi*(z+1)/2)*sin(3*pi*y+pi*z) + 0.4*cos(3*pi*(x*y)+pi*(z+1)^2/2)'\n"
 "subplot 2 2 0:title 'ContD plot (default)':rotate 50 60:box:contd a\n"
 "subplot 2 2 1:title 'manual levels':rotate 50 60:box:contd v a\n"
-"subplot 2 2 2:title '\\\'\\_\\\' style':rotate 50 60:box:contd a '_'\n"
+"subplot 2 2 2:title '\"\\_\" style':rotate 50 60:box:contd a '_'\n"
 "subplot 2 2 3:title 'several slices':rotate 50 60:box:contd a1\n";
 void smgl_contd(mglGraph *gr)
 {
@@ -1041,10 +1064,10 @@ void smgl_contd(mglGraph *gr)
 	gr->Rotate(50,60);	gr->Box();	gr->ContD(a1);
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_contv="list v -0.5 -0.15 0 0.15 0.5\n"
+const char *mmgl_contv="call 'prepare2d'\nlist v -0.5 -0.15 0 0.15 0.5\n"
 "subplot 2 2 0:title 'ContV plot (default)':rotate 50 60:box:contv a\n"
 "subplot 2 2 1:title 'manual levels':rotate 50 60:box:contv v a\n"
-"subplot 2 2 2:title '\\\'\\_\\\' style':rotate 50 60:box:contv a '_'\n"
+"subplot 2 2 2:title '\"\\_\" style':rotate 50 60:box:contv a '_'\n"
 "subplot 2 2 3:title 'ContV and ContF':rotate 50 60:light on:box\ncontv a:contf a:cont a 'k'\n";
 void smgl_contv(mglGraph *gr)
 {
@@ -1063,9 +1086,9 @@ void smgl_contv(mglGraph *gr)
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_torus="subplot 2 2 0:title 'Torus plot (default)':light on:rotate 50 60:box:torus y1 y2\n"
-"subplot 2 2 0:title '\\\'x\\\' style':light on:rotate 50 60:box:torus y1 y2 'x'\n"
-"subplot 2 2 0:title '\\\'z\\\' style':light on:rotate 50 60:box:torus y1 y2 'z'\n"
-"subplot 2 2 0:title '\\\'\\#\\\' style':light on:rotate 50 60:box:torus y1 y2 '#'\n";
+"subplot 2 2 0:title '\"x\"' style':light on:rotate 50 60:box:torus y1 y2 'x'\n"
+"subplot 2 2 0:title '\"z\" style':light on:rotate 50 60:box:torus y1 y2 'z'\n"
+"subplot 2 2 0:title '\"\\#\" style':light on:rotate 50 60:box:torus y1 y2 '#'\n";
 void smgl_torus(mglGraph *gr)
 {
 	mglData y1,y2;	mgls_prepare1d(0,&y1,&y2);
@@ -1077,10 +1100,10 @@ void smgl_torus(mglGraph *gr)
 	gr->SubPlot(2,2,3);	gr->Title("'\\#' style");	gr->Rotate(50,60);	gr->Box();	gr->Torus(y1,y2,"#");
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_axial="subplot 2 2 0:title 'Axial plot (default)':light on:rotate 50 60:box:axial a\n"
-"subplot 2 2 0:title '\\\'x\\\' style':light on:rotate 50 60:box:axial a 'x'\n"
-"subplot 2 2 0:title '\\\'z\\\' style':light on:rotate 50 60:box:axial a 'z'\n"
-"subplot 2 2 0:title '\\\'\\#\\\' style':light on:rotate 50 60:box:axial a '#'\n";
+const char *mmgl_axial="call 'prepare2d'\nsubplot 2 2 0:title 'Axial plot (default)':light on:alpha on:rotate 50 60:box:axial a\n"
+"subplot 2 2 1:title '\"x\" style':light on:rotate 50 60:box:axial a 'x'\n"
+"subplot 2 2 2:title '\"z\" style':light on:rotate 50 60:box:axial a 'z'\n"
+"subplot 2 2 3:title '\"\\#\" style':light on:rotate 50 60:box:axial a '#'\n";
 void smgl_axial(mglGraph *gr)
 {
 	mglData a;	mgls_prepare2d(&a);
@@ -1166,7 +1189,7 @@ void smgl_mesh(mglGraph *gr)
 	gr->Rotate(50,60);	gr->Box();	gr->Mesh(a);
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_fall="title 'Fall plot':rotate 50 60:box:fall a\n";
+const char *mmgl_fall="call 'prepare2d'\ntitle 'Fall plot':rotate 50 60:box:fall a\n";
 void smgl_fall(mglGraph *gr)
 {
 	mglData a;	mgls_prepare2d(&a);
@@ -1175,8 +1198,8 @@ void smgl_fall(mglGraph *gr)
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_surf="subplot 2 2 0:title 'Surf plot (default)':rotate 50 60:light on:box:surf a\n"
-"subplot 2 2 1:title '\\\'\\#\\\' style; meshnum 10':rotate 50 60:box:surf a '#'; meshnum 10\n"
-"subplot 2 2 2:title '\\\'|\\\' style':rotate 50 60:box:surf a '|'\n"
+"subplot 2 2 1:title '\"\\#\" style; meshnum 10':rotate 50 60:box:surf a '#'; meshnum 10\n"
+"subplot 2 2 2:title '\"|\" style':rotate 50 60:box:surf a '|'\n"
 "new x 50 40 '0.8*sin(pi*x)*sin(pi*(y+1)/2)'\nnew y 50 40 '0.8*cos(pi*x)*sin(pi*(y+1)/2)'\nnew z 50 40 '0.8*cos(pi*(y+1)/2)'\n"
 "subplot 2 2 3:title 'parametric form':rotate 50 60:box:surf x y z 'BbwrR'\n";
 void smgl_surf(mglGraph *gr)
@@ -1215,7 +1238,7 @@ void smgl_parser(mglGraph *gr)	// example of MGL parsing
 	delete parser;
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_belt="title 'Fall plot':rotate 50 60:box:fall a\n";
+const char *mmgl_belt="call 'prepare2d'\ntitle 'Belt plot':rotate 50 60:box:belt a\n";
 void smgl_belt(mglGraph *gr)
 {
 	mglData a;	mgls_prepare2d(&a);
@@ -1223,10 +1246,10 @@ void smgl_belt(mglGraph *gr)
 	gr->Rotate(50,60);	gr->Box();	gr->Belt(a);
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_dens="new a1 30 40 3 '0.6*sin(2*pi*x+pi*(z+1)/2)*sin(3*pi*y+pi*z) + 0.4*cos(3*pi*(x*y)+pi*(z+1)^2/2)'\n"
+const char *mmgl_dens="call 'prepare2d'\nnew a1 30 40 3 '0.6*sin(2*pi*x+pi*(z+1)/2)*sin(3*pi*y+pi*z) + 0.4*cos(3*pi*(x*y)+pi*(z+1)^2/2)'\n"
 "subplot 2 2 0 '':title 'Dens plot (default)':box:dens a\n"
 "subplot 2 2 1:title '3d variant':rotate 50 60:box:dens a\n"
-"subplot 2 2 2 '':title '\\\'\\#\\\' style; meshnum 10':box:dens a '#'; meshnum 10\n"
+"subplot 2 2 2 '':title '\"\\#\" style; meshnum 10':box:dens a '#'; meshnum 10\n"
 "subplot 2 2 3:title 'several slices':rotate 50 60:box:dens a1\n";
 void smgl_dens(mglGraph *gr)
 {
@@ -1275,9 +1298,9 @@ void smgl_tiles(mglGraph *gr)
 	gr->Box();	gr->TileS(a,b);
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_boxs="subplot 2 2 0 '':title 'Boxs plot (default)':light on:box:boxs a\n"
-"subplot 2 2 1:title '\\\'\\@\\\' style':rotate 50 60:box:boxs a '@'\n"
-"subplot 2 2 2:title '\\\'\\#\\\' style':box:boxs a '#'\n"
+const char *mmgl_boxs="call 'prepare2d'\nsubplot 2 2 0:title 'Boxs plot (default)':rotate 40 60:light on:box:boxs a\n"
+"subplot 2 2 1:title '\"\\@\" style':rotate 50 60:box:boxs a '@'\n"
+"subplot 2 2 2:title '\"\\#\" style':rotate 50 60:box:boxs a '#'\n"
 "subplot 2 2 3:title 'compare with Tile':rotate 50 60:box:tile a\n";
 void smgl_boxs(mglGraph *gr)
 {
@@ -1331,10 +1354,10 @@ void smgl_vecta(mglGraph *gr)
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_vect="subplot 3 2 0 '':title 'Vect plot (default)':box:vect a b\n"
-"subplot 3 2 1 '':title '\\\'.\\\' style; \\\'=\\\' style':box:vect a b '.='\n"
-"subplot 3 2 2 '':title '\\\'f\\\' style':box:vect a b 'f'\n"
-"subplot 3 2 3 '':title '\\\'>\\\' style':box:vect a b '>'\n"
-"subplot 3 2 4 '':title '\\\'<\\\' style':box:vect a b '<'\n"
+"subplot 3 2 1 '':title '\".\" style; \"=\" style':box:vect a b '.='\n"
+"subplot 3 2 2 '':title '\"f\" style':box:vect a b 'f'\n"
+"subplot 3 2 3 '':title '\">\" style':box:vect a b '>'\n"
+"subplot 3 2 4 '':title '\"<\" style':box:vect a b '<'\n"
 "subplot 3 2 5:title '3d variant':rotate 50 60:box:vect ex ey ez\n";
 void smgl_vect(mglGraph *gr)
 {
@@ -1352,7 +1375,7 @@ void smgl_vect(mglGraph *gr)
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_flow="subplot 2 2 0 '':title 'Flow plot (default)':box:flow a b\n"
-"subplot 2 2 1 '':title '\\\'v\\\' style':box:flow a b 'v'\n"
+"subplot 2 2 1 '':title '\"v\" style':box:flow a b 'v'\n"
 "subplot 2 2 2 '':title 'from edges only':box:flow a b '#'\n"
 "subplot 2 2 3:title '3d variant':rotate 50 60:box:flow ex ey ez\n";
 void smgl_flow(mglGraph *gr)
@@ -1369,7 +1392,7 @@ void smgl_flow(mglGraph *gr)
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_pipe="subplot 2 2 0 '':title 'Pipe plot (default)':light on:box:pipe a b\n"
-"subplot 2 2 1 '':title '\\\'i\\\' style':box:pipe a b 'i'\n"
+"subplot 2 2 1 '':title '\"i\" style':box:pipe a b 'i'\n"
 "subplot 2 2 2 '':title 'from edges only':box:pipe a b '#'\n"
 "subplot 2 2 3:title '3d variant':rotate 50 60:box:pipe ex ey ez '' 0.1\n";
 void smgl_pipe(mglGraph *gr)
@@ -1401,8 +1424,11 @@ void smgl_grad(mglGraph *gr)
 	gr->Box();	gr->Grad(a);	gr->Dens(a,"{u8}w{q8}");
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_cones="new ys 10 3 '0.8*sin(pi*(x+y/4+1.25))+0.2*rnd'"
-"title 'Cones plot':rotate 50 60:light on:origin 0 0 0:box:cones ys\n";
+const char *mmgl_cones="new ys 10 3 '0.8*sin(pi*(x+y/4+1.25))+0.2*rnd'\n"
+"subplot 2 2 0:title 'Cones plot':rotate 50 60:light on:origin 0 0 0:box:cones ys\n"
+"subplot 2 2 1:title '2 colors':rotate 50 60:light on:origin 0 0 0:box:cones ys 'cbgGyr'\n"
+"subplot 2 2 2:title '\"\\#\" style':rotate 50 60:light on:origin 0 0 0:box:cones ys '#'\n"
+"subplot 2 2 3:title '\"a\" style':rotate 50 60:light on:origin 0 0 0:box:cones ys 'a'\n";
 void smgl_cones(mglGraph *gr)
 {
 	mglData ys(10,3);	ys.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
@@ -1464,7 +1490,7 @@ void smgl_inplot(mglGraph *gr)
 	gr->MultiPlot(3,2,1, 2, 1,"");	gr->Title("MultiPlot");	gr->Box();
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_combined="new v 10:fill v -0.5 1:copy d sqrt(a^2+b^2)\n"
+const char *mmgl_combined="call 'prepare2v'\ncall 'prepare3d'\nnew v 10:fill v -0.5 1:copy d sqrt(a^2+b^2)\n"
 "subplot 2 2 0:title 'Surf + Cont':rotate 50 60:light on:box:surf a:cont a 'y'\n"
 "subplot 2 2 1 '':title 'Flow + Dens':box:flow a b 'br':dens d\n"
 "subplot 2 2 2:title 'Mesh + Cont':rotate 50 60:box:mesh a:cont a '_'\n"
@@ -1494,10 +1520,10 @@ const char *mmgl_axis="subplot 2 2 0:title 'Axis origin, Grid':origin 0 0:axis:g
 "subplot 2 2 3:title 'More axis':origin nan nan:xrange -1 1:axis:xlabel 'x':ylabel 'y':fplot 'x^2' 'k'\n"
 "yrange -1 1:origin -1.3 -1:axis 'y' 'r':ylabel '#r{y_2}' 0.2:fplot 'x^3' 'r'\n\n"
 "subplot 2 2 2:title '4 segments, inverted axis':origin 0 0:\n"
-"inplot 0.5 1 0.5 1:ranges 0 10 0 2:axis\nfplot 'sqrt(x/2)':xlabel 'W' 1:ylabel 'U' 1\n"
-"inplot 0 0.5 0.5 1:ranges 1 0 0 2:axis 'x':fplot 'sqrt(x)+x^3':xlabel '\\tau' 1\n"
-"inplot 0.5 1 0 0.5:ranges 0 10 4 0:axis 'y':fplot 'x/4':ylabel 'L' -1\n"
-"inplot 0 0.5 0 0.5:ranges 1 0 4 0:fplot '4*x^2'\n";
+"relplot 0.5 1 0.5 1:ranges 0 10 0 2:axis\nfplot 'sqrt(x/2)':xlabel 'W' 1:ylabel 'U' 1\n"
+"relplot 0 0.5 0.5 1:ranges 1 0 0 2:axis 'x':fplot 'sqrt(x)+x^3':xlabel '\\tau' 1\n"
+"relplot 0.5 1 0 0.5:ranges 0 10 4 0:axis 'y':fplot 'x/4':ylabel 'L' -1\n"
+"relplot 0 0.5 0 0.5:ranges 1 0 4 0:fplot '4*x^2'\n";
 void smgl_axis(mglGraph *gr)
 {
 	gr->SubPlot(2,2,0);	gr->Title("Axis origin, Grid");	gr->SetOrigin(0,0);
@@ -1551,9 +1577,9 @@ void smgl_ticks(mglGraph *gr)
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_box="subplot 2 2 0:title 'Box (default)':rotate 50 60:box\n"
-"subplot 2 2 0:title 'colored':rotate 50 60:box 'r'\n"
-"subplot 2 2 0:title 'with faces':rotate 50 60:box '@'\n"
-"subplot 2 2 0:title 'both':rotate 50 60:box '@cm'\n";
+"subplot 2 2 1:title 'colored':rotate 50 60:box 'r'\n"
+"subplot 2 2 2:title 'with faces':rotate 50 60:box '@'\n"
+"subplot 2 2 3:title 'both':rotate 50 60:box '@cm'\n";
 void smgl_box(mglGraph *gr)
 {
 	gr->SubPlot(2,2,0);	gr->Title("Box (default)");	gr->Rotate(50,60);	gr->Box();
@@ -1671,11 +1697,11 @@ void smgl_label(mglGraph *gr)
 //-----------------------------------------------------------------------------
 const char *mmgl_colorbar="subplot 2 2 0:title 'Colorbar out of box':box\n"
 "colorbar '<':colorbar '>':colorbar '_':colorbar '^'\n"
-"subplot 2 2 0:title 'Colorbar near box':box\n"
+"subplot 2 2 10:title 'Colorbar near box':box\n"
 "colorbar '<I':colorbar '>I':colorbar '_I':colorbar '^I'\n"
-"subplot 2 2 0:title 'manual colors':box:contd v a\n"
+"subplot 2 2 2:title 'manual colors':box:contd v a\n"
 "colorbar v '<':colorbar v '>':colorbar v '_':colorbar v '^'\n"
-"subplot 2 2 0:title 'log-scale'\n"
+"subplot 2 2 3:title 'log-scale'\n"
 "colorbar '>' 0.5 0:text 0 1.2 'Normal scale':colorbar '>':text 1.3 1.2 'Log scale'\n";
 void smgl_colorbar(mglGraph *gr)
 {
@@ -1893,23 +1919,7 @@ void smgl_mirror(mglGraph *gr)	// flag #
 	gr->FPlot("x^3","r","legend 'y = x^3'"); gr->FPlot("cos(pi*x)","b","legend 'y = cos \\pi x'");
 	gr->Box();	gr->Axis();	gr->Legend(2,"");
 }
-//-----------------------------------------------------------------------------
 //=============================================================================
-struct mglSample	/// Structure for list of samples
-{
-	const char *name;
-	void (*func)(mglGraph*);
-	const char *mgl;
-};
-extern mglSample samp[];
-//-----------------------------------------------------------------------------
-int mgl_cmd_smp(const void *a, const void *b)
-{
-	const mglSample *aa = (const mglSample *)a;
-	const mglSample *bb = (const mglSample *)b;
-	return strcmp(aa->name, bb->name);
-}
-//-----------------------------------------------------------------------------
 #if !defined(_MSC_VER) && !defined(__BORLANDC__)
 static struct option longopts[] =
 {
@@ -2072,7 +2082,21 @@ int main(int argc,char **argv)
 	if(name[0]==0)	while(s->name[0])	// all samples
 	{
 		gr->DefaultPlotParam();	gr->Clf();
-		s->func(gr);	save(gr, s->name, suf);
+		if(use_mgl)
+		{
+			mglParse par;
+			par.AllowSetSize(true);
+			setlocale(LC_CTYPE, "");
+			char *buf = new char[strlen(s->mgl)+strlen(mmgl_dat_prepare)+1];
+			strcpy(buf,s->mgl);		strcat(buf,mmgl_dat_prepare);
+printf("\n-------\n%s\n-------\n",buf);	fflush(stdout);
+			par.Execute(gr,buf);	delete []buf;
+			printf("\n-------\n%s\n-------\n",s->mgl);
+			const char *mess = gr->Message();
+			if(mess)	printf("Warnings: %s\n-------\n",mess);
+		}
+		else	s->func(gr);
+		save(gr, s->name, suf);
 		fflush(stdout);	s++;
 	}
 	else	// manual sample
@@ -2089,8 +2113,10 @@ int main(int argc,char **argv)
 				mglParse par;
 				par.AllowSetSize(true);
 				setlocale(LC_CTYPE, "");
-				par.Execute(gr,s->mgl);
-				printf("-------\n%s\n-------\n",s->mgl);
+				char *buf = new char[strlen(s->mgl)+strlen(mmgl_dat_prepare)+1];
+				strcpy(buf,s->mgl);		strcat(buf,mmgl_dat_prepare);
+				par.Execute(gr,buf);	delete []buf;
+				printf("\n-------\n%s\n-------\n",s->mgl);
 				const char *mess = gr->Message();
 				if(mess)	printf("Warnings: %s\n-------\n",mess);
 			}

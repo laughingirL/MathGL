@@ -108,7 +108,7 @@ struct mglText
 	std::wstring text;
 	std::string stl;
 	mreal val;
-	mglText(const wchar_t *txt=0, const char *fnt=0, mreal v=0)	{	text=txt;	stl=fnt;	val=v;	}
+	mglText(const wchar_t *txt=L"", const char *fnt="", mreal v=0)	{	text=txt;	stl=fnt;	val=v;	}
 	mglText(const std::wstring &txt, mreal v=0)	{	text=txt;	val=v;	}
 };
 //-----------------------------------------------------------------------------

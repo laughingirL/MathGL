@@ -191,7 +191,7 @@ long mglBase::AddPnt(mglPoint p, mreal c, mglPoint n, mreal a, int scl)
 	txt.GetC(c,a,q);	// RGBA color
 
 	// add gap for texture coordinates for compatibility with OpenGL
-	const mreal gap = 1./512;
+	const mreal gap = 0./512;
 	q.c = ci+(q.c-ci)*(1-2*gap)+gap;
 	q.t = q.t*(1-2*gap)+gap;
 	q.ta = q.t;

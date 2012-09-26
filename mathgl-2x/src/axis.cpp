@@ -38,22 +38,13 @@ long mgl_have_color(const char *stl)
 	return j;
 }
 //-----------------------------------------------------------------------------
-wchar_t *mgl_wcsdup(const wchar_t *s)
-{
-	wchar_t *r = (wchar_t *)malloc((wcslen(s)+1)*sizeof(wchar_t));
-	memcpy(r,s,(wcslen(s)+1)*sizeof(wchar_t));
-	return r;
-}
-//-----------------------------------------------------------------------------
 void mgl_wcstrim(wchar_t *str)
 {
-	wchar_t *c = mgl_wcsdup(str);
-	size_t n=wcslen(str), k;
+	size_t n=wcslen(str), k, i;
 	for(k=0;k<n;k++)	if(str[k]>' ')	break;
-	wcscpy(c,str+k);	n = wcslen(c);
-	for(k=n;k>0;k--)	if(c[k-1]>' ')	break;
-	c[k] = 0;
-	wcscpy(str,c);	free(c);
+	for(i=n;i>0;i--)	if(str[i-1]>' ')	break;
+	memmove(str, str+k, (i-k)*sizeof(wchar_t));
+	str[i-k]=0;
 }
 //-----------------------------------------------------------------------------
 //		Ticks setup
