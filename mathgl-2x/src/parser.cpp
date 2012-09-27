@@ -384,7 +384,7 @@ void mglParser::FillArg(mglGraph *gr, int k, wchar_t **arg, mglArg *a)
 		{	// this is temp data
 			arg[n][wcslen(arg[n])-1] = 0;
 			u=new mglVar;	u->temp=true;
-			a[n-1].w = L"/*"+std::wstring(arg[n])+L"*/";
+			a[n-1].w = L"/*"+std::wstring(arg[n]+1)+L"*/";
 			if(DataList)	u->MoveAfter(DataList);
 			else			DataList = u;
 			a[n-1].type = 0;	a[n-1].d = u;
@@ -748,7 +748,7 @@ int mglParser::ParseDat(mglGraph *gr, const wchar_t *string, mglData &res)
 	for(k=0;k<32;k++)	// parse string to substrings (by spaces)
 	{
 		n = mglFindArg(str);
-		if(n<0)	{	str[-n]=0;	break;	}
+		if(n<1)	{	if(n<0)	str[-n]=0;	break;	}
 		str[n]=0;	arg[k] = str;//	k++;
 		str = str+n+1;	mgl_wcstrim(str);
 	}

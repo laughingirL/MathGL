@@ -136,7 +136,7 @@ void mglc_axial(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 //-----------------------------------------------------------------------------
 int mgls_axis(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
-	if(k[0]==2 && k[1]==2)	gr->SetFunc(a[0].s.c_str(),a[1].s.c_str(),k[2]==2?a[2].s.c_str():"",k[3]==2?a[3].s.c_str():"");
+	if(k[0]==2 && k[1]==2 && k[2]==2)	gr->SetFunc(a[0].s.c_str(),a[1].s.c_str(),a[2].s.c_str(),k[3]==2?a[3].s.c_str():"");
 	else if(k[0]==2)	gr->Axis(a[0].s.c_str(), k[1]==2?a[1].s.c_str():"",opt);
 	else if(k[0]==3)	gr->SetCoor(iint(a[0].v));
 	else if(k[0]==0)	gr->Axis("xyz","",opt);
@@ -3587,7 +3587,7 @@ mglCommand mgls_base_cmd[] = {
 	{"arrowsize","Set size of arrows","arrowsize val", mgls_arrowsize, mglc_arrowsize,2},
 	{"aspect","Set aspect ration","aspect valx valy [valz]", mgls_aspect, mglc_aspect,5},
 	{"axial","Draw surfaces of contour lines rotation","axial Zdat ['fmt' num]|Xdat Ydat Zdat ['fmt' num]", mgls_axial, mglc_axial,8},
-	{"axis","Setup or draw axis","axis ['dir' adjust]|'fx' 'fy' ['fz' 'fc']|how", mgls_axis, mglc_axis,12},
+	{"axis","Setup or draw axis","axis ['dir' 'fmt']|'fx' 'fy' 'fz' ['fc']|how", mgls_axis, mglc_axis,12},
 	{"axisstl","Set axis and tick style","axisstl 'stl' ['sub']", mgls_axisstl, mglc_axisstl,14},
 	{"ball","Draw point (ball)","ball posx posy ['fmt']|posx posy posz ['fmt']", mgls_ball, mglc_ball,13},
 	{"barh","Draw horizontal bars for 1D data", "barh Ydat ['fmt' above]|Xdat Ydat ['fmt' above]", mgls_barh, mglc_barh,7},

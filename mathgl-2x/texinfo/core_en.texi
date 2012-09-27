@@ -562,7 +562,7 @@ Sets center of axis cross section. If one of values is NAN then MathGL try to se
 @cindex Ternary
 @end ifclear
 
-@deftypefn {MGL command} {} axis 'fx' 'fy' ['fz'='' 'fa'='']
+@deftypefn {MGL command} {} axis 'fx' 'fy' 'fz' ['fa'='']
 @ifclear UDAV
 @deftypefnx {Method on @code{mglGraph}} @code{void} SetFunc (@code{const char *}EqX, @code{const char *}EqY, @code{const char *}EqZ=@code{""}, @code{const char *}EqA=@code{""})
 @deftypefnx {C function} @code{void} mgl_set_func (@code{HMGL} gr, @code{const char *}EqX, @code{const char *}EqY, @code{const char *}EqZ, @code{const char *}EqA)
@@ -1591,17 +1591,17 @@ Draws bounding box outside the plotting volume with color @var{col}. If @var{col
 @anchor{ylabel}
 @anchor{zlabel}
 @anchor{tlabel}
-@deftypefn {MGL command} {} xlabel 'text' [@code{pos=1 shift=0}]
-@deftypefnx {MGL command} {} ylabel 'text' [@code{pos=1 shift=0}]
-@deftypefnx {MGL command} {} zlabel 'text' [@code{pos=1 shift=0}]
-@deftypefnx {MGL command} {} tlabel 'text' [@code{pos=1 shift=0}]
+@deftypefn {MGL command} {} xlabel 'text' [@code{pos=1}]
+@deftypefnx {MGL command} {} ylabel 'text' [@code{pos=1}]
+@deftypefnx {MGL command} {} zlabel 'text' [@code{pos=1}]
+@deftypefnx {MGL command} {} tlabel 'text' [@code{pos=1}]
 @ifclear UDAV
 @deftypefnx {Method on @code{mglGraph}} @code{void} Label (@code{char} dir, @code{const char *}text, @code{mreal} pos=@code{1}, @code{const char *}opt=@code{""})
 @deftypefnx {Method on @code{mglGraph}} @code{void} Label (@code{char} dir, @code{const wchar_t *}text, @code{mreal} pos=@code{1}, @code{const char *}opt=@code{""})
 @deftypefnx {C function} @code{void} mgl_label (@code{HMGL} gr, @code{char} dir, @code{const char *}text, @code{mreal} pos, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_labelw (@code{HMGL} gr, @code{char} dir, @code{const wchar_t *}text, @code{mreal} pos, @code{const char *}opt)
 @end ifclear
-Prints the label @var{text} for axis @var{dir}=@samp{x},@samp{y},@samp{z},@samp{t} (here @samp{t} is ``ternary'' axis @math{t=1-x-y}). The position of label is determined by @var{pos} parameter. If @var{pos}=0 then label is printed at the center of axis. If @var{pos}>0 then label is printed at the maximum of axis. If @var{pos}<0 then label is printed at the minimum of axis. @xref{Text printing}.
+Prints the label @var{text} for axis @var{dir}=@samp{x},@samp{y},@samp{z},@samp{t} (here @samp{t} is ``ternary'' axis @math{t=1-x-y}). The position of label is determined by @var{pos} parameter. If @var{pos}=0 then label is printed at the center of axis. If @var{pos}>0 then label is printed at the maximum of axis. If @var{pos}<0 then label is printed at the minimum of axis. Value option set additional shifting of the label. @xref{Text printing}.
 @end deftypefn
 
 @c ##################################################################

@@ -1514,7 +1514,7 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Функция С} @code{void} mgl_label (@code{HMGL} gr, @code{char} dir, @code{const char *}text, @code{mreal} pos, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_labelw (@code{HMGL} gr, @code{char} dir, @code{const wchar_t *}text, @code{mreal} pos, @code{const char *}opt)
 @end ifclear
-Выводит подпись @var{text} для оси @var{dir}=@samp{x},@samp{y},@samp{z},@samp{t} (где @samp{t} -- ``тернарная'' ось @math{t=1-x-y}). Параметр @var{pos} задает положение подписи: при @var{pos}=0 -- по центру оси, при @var{pos}>0 -- около максимальных значений, при @var{pos}<0 -- около минимальных значений. @xref{Text printing}.
+Выводит подпись @var{text} для оси @var{dir}=@samp{x},@samp{y},@samp{z},@samp{t} (где @samp{t} -- ``тернарная'' ось @math{t=1-x-y}). Параметр @var{pos} задает положение подписи: при @var{pos}=0 -- по центру оси, при @var{pos}>0 -- около максимальных значений, при @var{pos}<0 -- около минимальных значений. Опция @code{value} задает дополнительный сдвиг текста. @xref{Text printing}.
 @end deftypefn
 
 @c ##################################################################
