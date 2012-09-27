@@ -114,11 +114,20 @@ float mglFont::Puts(const wchar_t *str,int font,int align, float col) const
 		unsigned *wcs = new unsigned[size], *buf=wcs;
 		memcpy(wcs,str,size*sizeof(wchar_t));
 		Convert(str, wcs);
-		for(i=0;wcs[i];i++)	if(wcs[i]=='\n')	// parse '\n' symbol
+		for(i=0;wcs[i];i++)
 		{
-			wcs[i]=0;	w = Puts(buf,0,0,1.f,0x10|font,col);	// find width
-			Puts(buf,-w*(align&3)/2.f,-h - 500.*num/fact[0],1.f,font,col);	// draw it really
-			buf=wcs+i+1;	num++;	if(w>ww)	ww=w;
+			if(wcs[i]=='\n')	// parse '\n' symbol
+			{
+				wcs[i]=0;	w = Puts(buf,0,0,1.f,0x10|font,col);	// find width
+				Puts(buf,-w*(align&3)/2.f,-h - 500.*num/fact[0],1.f,font,col);	// draw it really
+				buf=wcs+i+1;	num++;	if(w>ww)	ww=w;
+			}
+			if(wcs[i]=='\\' && wcs[i+1]=='n' && (wcs[i+2]>' ' || wcschr(L"{}[]()!@#$%^&*/-?.,_=+\\\"", wcs[i+2])))	// parse '\n' symbol
+			{
+				wcs[i]=0;	w = Puts(buf,0,0,1.f,0x10|font,col);	// find width
+				Puts(buf,-w*(align&3)/2.f,-h - 500.*num/fact[0],1.f,font,col);	// draw it really
+				buf=wcs+i+2;	num++;	if(w>ww)	ww=w;
+			}
 		}
 		// draw string itself
 		w = Puts(buf,0,0,1.f,0x10|font,col);	// find width

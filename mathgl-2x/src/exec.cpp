@@ -455,8 +455,7 @@ int mgls_copy(mglGraph *gr, long , mglArg *a, int k[10], const char *)
 	if(k[0]==1 && k[1]==1)
 	{
 		a[0].d->Set(*(a[1].d));
-		if(k[2]==2 && (k[3]!=3 || a[3].v!=0))	gr->Fill(*(a[0].d), a[2].s.c_str());
-		else if(k[2]==2)	a[0].d->Modify(a[2].s.c_str());
+		if(k[2]==2)	gr->Fill(*(a[0].d), a[2].s.c_str());
 	}
 	else if(k[0]==1 && k[1]==3)		*(a[0].d) = a[1].v;
 	else	return 1;
@@ -464,10 +463,8 @@ int mgls_copy(mglGraph *gr, long , mglArg *a, int k[10], const char *)
 }
 void mglc_copy(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 {
-	if(k[0]==1 && k[1]==1 && k[2]==2 && (k[3]!=3 || a[3].v!=0))
+	if(k[0]==1 && k[1]==1 && k[2]==2)
 		mglprintf(out,1024,L"%s.Set(%s);\tgr->Fill(%s,\"%s\");", a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str());
-	else if(k[0]==1 && k[1]==1 && k[2]==2)
-		mglprintf(out,1024,L"%s.Set(%s);\t%s.Modify(\"%s\");", a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str());
 	else if(k[0]==1 && k[1]==1)
 		mglprintf(out,1024,L"%s.Set(%s);", a[0].s.c_str(), a[1].s.c_str());
 	else if(k[0]==1 && k[1]==3)
@@ -1335,6 +1332,50 @@ void mglc_line(wchar_t out[1024], long n, mglArg *a, int [10], const char *)
 		for(i=0;i<4;i++)	if(a[i].type!=2)	ok=false;
 		if(ok)
 			mglprintf(out,1024,L"gr->Line(mglPoint(%g, %g, gr->Min.z), mglPoint(%g, %g, gr->Min.z), \"%s\", 100);", a[0].v,a[1].v,a[2].v, a[3].v, (n==5 && a[4].type==1) ? a[4].s.c_str() : "");
+	}
+}
+//-----------------------------------------------------------------------------
+int mgls_errbox(mglGraph *gr, long n, mglArg *a, int [10], const char *)
+{
+	int i;
+	if(n>5)
+	{
+		bool ok=true;
+		for(i=0;i<6;i++)	if(a[i].type!=2)	ok=false;
+		if(ok)
+			gr->Error(mglPoint(a[0].v,a[1].v,a[2].v),
+					 mglPoint(a[3].v,a[4].v,a[5].v),
+					 (n==7 && a[6].type==1) ? a[6].s.c_str() : "");
+			else	return 1;
+	}
+	else if(n>3)
+	{
+		bool ok=true;
+		for(i=0;i<4;i++)	if(a[i].type!=2)	ok=false;
+		if(ok)
+			gr->Error(mglPoint(a[0].v,a[1].v,NAN), mglPoint(a[2].v,a[3].v,NAN),
+					 (n==5 && a[4].type==1) ? a[4].s.c_str() : "");
+			else	return 1;
+	}
+	else	return 1;
+	return 0;
+}
+void mglc_errbox(wchar_t out[1024], long n, mglArg *a, int [10], const char *)
+{
+	int i;
+	if(n>5)
+	{
+		bool ok=true;
+		for(i=0;i<6;i++)	if(a[i].type!=2)	ok=false;
+		if(ok)
+			mglprintf(out,1024,L"gr->Error(mglPoint(%g, %g, %g), mglPoint(%g, %g, %g), \"%s\");", a[0].v,a[1].v,a[2].v, a[3].v,a[4].v,a[5].v, (n==7 && a[6].type==1) ? a[6].s.c_str() : "");
+	}
+	else if(n>3)
+	{
+		bool ok=true;
+		for(i=0;i<4;i++)	if(a[i].type!=2)	ok=false;
+		if(ok)
+			mglprintf(out,1024,L"gr->Error(mglPoint(%g, %g, gr->Min.z), mglPoint(%g, %g, gr->Min.z), \"%s\");", a[0].v,a[1].v,a[2].v, a[3].v, (n==5 && a[4].type==1) ? a[4].s.c_str() : "");
 	}
 }
 //-----------------------------------------------------------------------------
@@ -3659,6 +3700,7 @@ mglCommand mgls_base_cmd[] = {
 	{"elseif","Conditional operator","elseif val|Dat ['cond']", 0, 0, 6},
 	{"endif","Finish if/else block","endif", 0, 0, 6},
 	{"envelop","Find envelop for the data","envelop Dat ['dir']", mgls_envelop, mglc_envelop,16},
+	{"errbox","Draw error box","errbox x y ex ey ['fmt']|x y z ex ey ez ['fmt']", mgls_errbox, mglc_errbox,13},
 	{"error","Draw error boxes","error Ydat Yerr ['fmt']|Xdat Ydat Yerr ['fmt']|Xdat Ydat Xerr Yerr ['fmt']", mgls_error, mglc_error,7},
 	{"evaluate","Evaluate (interpolate) values of array Dat at points i=idat,j=jdat,k=kdat","evaluate Res Dat Idat [norm]|Res Dat Idat Jdat [norm]|Res Dat Idat Jdat Kdat [norm]", mgls_evaluate, mglc_evaluate,4},
 	{"export","Export data to PNG picture","export Dat 'fname' 'sch' [v1 v2]", mgls_import, mglc_import,3},

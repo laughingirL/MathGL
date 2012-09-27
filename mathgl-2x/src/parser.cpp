@@ -514,8 +514,7 @@ int mglParser::Parse(mglGraph *gr, const wchar_t *string, long pos)
 	size_t lstr = wcslen(string)+2+GetParLen(string);
 	wchar_t *str, *arg[1024],*t;
 	wchar_t *s = new wchar_t[lstr];
-	str = s;	wcscpy(s,string);
-	mgl_wcstrim(str);
+	wcscpy(s,string);	mgl_wcstrim(s);	str = s;
 	long n,k=0,m=0,mm=0;
 	// try parse ':' -- several commands in line
 	for(n=0;n<long(wcslen(str));n++)
@@ -549,6 +548,7 @@ int mglParser::Parse(mglGraph *gr, const wchar_t *string, long pos)
 				str +=2;	mgl_wcstrim(str);
 				AddParam(nn, str);	delete []s;	return 0;
 			}
+			else	str -= 7;
 		}
 		if(!wcsncmp(str+3,L"num",3))
 		{
@@ -592,6 +592,7 @@ int mglParser::Parse(mglGraph *gr, const wchar_t *string, long pos)
 			{	mgl_ask_func(str,res);	if(*res)	AddParam(nn, res);	}
 			delete []s;	return mgl_ask_func?0:1;
 		}
+		else	return 1;
 	}
 	wcscpy(str,string);			mgl_wcstrim(str);
 	if(!skip() && !wcsncmp(str,L"for",3) && (str[3]==' ' || str[3]=='\t'))

@@ -639,8 +639,10 @@ void mglTexture::Set(const char *s, int smooth, mreal alpha)
 
 	register long i,j=0,m=0,l=strlen(s);
 	const char *dig = "0123456789abcdefABCDEF";
+	bool map = smooth==2 || mglchr(s,'%'), sm = smooth>=0 && !strchr(s,'|');	// Use mapping, smoothed colors
 	for(i=0;i<l;i++)		// find number of colors
 	{
+		if(smooth>=0 && s[i]==':' && j<1)	break;
 		if(s[i]=='[')	j++;	if(s[i]==']')	j--;
 		if(strchr(MGL_COLORS,s[i]) && j<1)	n++;
 		if(s[i]=='x' && i>0 && s[i-1]=='{' && j<1)	n++;
@@ -648,18 +650,18 @@ void mglTexture::Set(const char *s, int smooth, mreal alpha)
 	}
 	if(!n)
 	{
-		// it seems to be the only case where new color scheme should be
-		if((strchr(s,'|') || strchr(s,'!')) && !smooth)
-		{	n=l=6;	s="BbcyrR";	smooth = -1;	}
+		if((strchr(s,'|') || strchr(s,'!')) && !smooth)	// sharp colors
+		{	n=l=6;	s="BbcyrR";	sm = false;	}
+		else if(smooth==0)		// none colors but color scheme
+		{	n=l=6;	s="BbcyrR";	}
 		else	return;
 	}
-	if(strchr(s,'|') && !smooth)	smooth = -1;
+	bool man=sm;
 	mglColor *c = new mglColor[2*n];		// Colors itself
 	mreal *val = new mreal[n];
-	if(mglchr(s,'%'))	smooth = 2;		// use coordinates in AddPnt() too !!!
-	bool map = (smooth==2), sm = smooth>=0, man=sm;	// Use mapping, smoothed colors
 	for(i=j=n=0;i<l;i++)	// fill colors
 	{
+		if(smooth>=0 && s[i]==':' && j<1)	break;
 		if(s[i]=='[')	j++;	if(s[i]==']')	j--;
 		if(s[i]=='{')	m++;	if(s[i]=='}')	m--;
 		if(strchr(MGL_COLORS,s[i]) && j<1 && (m==0 || s[i-1]=='{'))	// {CN,val} format, where val in [0,1]
@@ -701,6 +703,7 @@ void mglTexture::Set(const char *s, int smooth, mreal alpha)
 		for(i=0;i<4;i++)	c[i].a=alpha;
 		val[0]=val[1]=-1;
 	}
+	// TODO if(!sm && n==1)	then try to find color in palette ???
 
 	// fill missed values  of val[]
 	float  v1=0,v2=1;

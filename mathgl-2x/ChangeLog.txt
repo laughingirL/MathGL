@@ -35,6 +35,8 @@
 * Completer can be switched off correctly now.
 * Multi-line strings (i.e. separated by "\" symbol) are highlighted correctly now.
 
+* Add MGL command 'errbox'
+
 * Update samples
 * Update documentation
 * Different bugfixes

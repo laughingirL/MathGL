@@ -1280,12 +1280,15 @@ Clear the picture and fill it by color specified color.
 Draws a mark (point @samp{.} by default) at position @var{p}=@{@var{x}, @var{y}, @var{z}@} with color @var{col}.
 @end deftypefn
 
+@anchor{errbox}
+@deftypefn {MGL command} {} errbox @code{x y ex ey} ['stl'='']
+@deftypefnx {MGL command} {} errbox @code{x y z ex ey ez} ['stl'='']
 @ifclear UDAV
 @deftypefn {Method on @code{mglGraph}} @code{void} Error (@code{mglPoint} p, @code{mglPoint} e, @code{char} *stl=@code{""})
-@deftypefnx {C function} @code{void} mgl_error_box (@code{HMGL} gr, @code{mreal} px, @code{mreal} py, @code{mreal} pz, @code{mreal} ex, @code{mreal} ey, @code{mreal} ez, @code{char *}stl)
-Draws a 3d error box at position @var{p} with sizes @var{e} and style @var{stl}. Use NAN for component of @var{e} to reduce number of drawn elements.
-@end deftypefn
+@deftypefnx {C function} @code{void} mgl_error_box (@code{HMGL} gr, @code{mreal} x, @code{mreal} y, @code{mreal} z, @code{mreal} ex, @code{mreal} ey, @code{mreal} ez, @code{char *}stl)
 @end ifclear
+Draws a 3d error box at position @var{p}=@{@var{x}, @var{y}, @var{z}@} with sizes @var{e}=@{@var{ex}, @var{ey}, @var{ez}@} and style @var{stl}. Use NAN for component of @var{e} to reduce number of drawn elements.
+@end deftypefn
 
 @anchor{line}
 @deftypefn {MGL command} {} line @code{x1 y1 x2 y2} ['stl'='']

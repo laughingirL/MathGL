@@ -1241,12 +1241,15 @@ gr.GetBGRN(bits, len(bits));
 Рисует маркер (точку по умолчанию) с координатами @var{p}=@{@var{x}, @var{y}, @var{z}@} и цветом @var{col}.
 @end deftypefn
 
+@anchor{errbox}
+@deftypefn {Команда MGL} {} errbox @code{x y ex ey} ['stl'='']
+@deftypefnx {Команда MGL} {} errbox @code{x y z ex ey ez} ['stl'='']
 @ifclear UDAV
 @deftypefn {Метод класса @code{mglGraph}} @code{void} Error (@code{mglPoint} p, @code{mglPoint} e, @code{char} *stl=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_error_box (@code{HMGL} gr, @code{mreal} px, @code{mreal} py, @code{mreal} pz, @code{mreal} ex, @code{mreal} ey, @code{mreal} ez, @code{char *}stl)
-Рисует 3d error box в точке @var{p} размером @var{e} и стилем @var{stl}. Используйте NAN в компонентах @var{e} для уменьшения рисуемых элементов.
-@end deftypefn
 @end ifclear
+Рисует 3d error box в точке @var{p}=@{@var{x}, @var{y}, @var{z}@} размером @var{e}=@{@var{ex}, @var{ey}, @var{ez}@} и стилем @var{stl}. Используйте NAN в компонентах @var{e} для уменьшения рисуемых элементов.
+@end deftypefn
 
 @anchor{line}
 @deftypefn {Команда MGL} {} line @code{x1 y1 x2 y2} ['stl'='']
