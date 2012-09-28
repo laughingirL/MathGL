@@ -67,7 +67,7 @@ supports it in developing GNU and promoting software freedom.''
 
 @menu
 @c * Overview::
-@c * Examples::
+* Examples::
 * MGL scripts::
 * General concepts::
 * MathGL core::
@@ -120,10 +120,10 @@ supports it in developing GNU and promoting software freedom.''
 @c @node Overview, Examples, , Top
 @c @include overview_en.texi
 
-@c @node Examples, MGL scripts, Overview, Top
-@c @include ex_mgl_en.texi
+@node Examples, MGL scripts, , Top
+@include ex_mgl_en.texi
 
-@node MGL scripts, General concepts, , Top
+@node MGL scripts, General concepts, Examples, Top
 @include parse_en.texi
 
 @node General concepts, MathGL core, MGL scripts, Top

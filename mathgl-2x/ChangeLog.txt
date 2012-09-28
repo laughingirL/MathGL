@@ -24,6 +24,7 @@
 * Picture drawing now use multi-threading for each stage.
 * Add Table() function for drawing table with data values.
 * Now Legend() automatically use several columns if it contain too many legend entries.
+* Add mglParse::AllowFileIO() for enable/disable I/O commands in MGL scripts.
 
 * Add dialog for data arguments in "New command" dialog of UDAV.
 * Value of arguments are saved while the kind of command is changed in "New command" dialog of UDAV.

@@ -32,9 +32,9 @@ http_request.onreadystatechange = function () {
 10. Axis -- projection (ternary + quaternary)
 11. Add flag for drawing 3d arrows instead of 2d (S,D -- cube, T -- sq.pyramid, I -- square, O -- sphere???, A,K,V -- cone???)
 
-+20. Test mglcgi
+12. Allow only vertical or horizontal lines in Table() by using style '-' or '|' ???
 
-+24. MGL testing system ???
++20. Test mglcgi
 
 ============= DOCS =============
 
@@ -47,6 +47,7 @@ http_request.onreadystatechange = function () {
 4. Examples of animation, u3d, x3d, js and so on
 
 5. Docs about WriteJSON()
+6. Add MGL samples in example_*.texi
 7. Docs about MGLD format -- in appendix
 8. mglVar class
 

@@ -105,6 +105,8 @@ bool check_for_name(const wchar_t *s)
 //-----------------------------------------------------------------------------
 mglCommand *mglParser::FindCommand(const char *com)
 {
+	if(!AllowFileIO && (!strncmp(com,"read",4) || !strncmp(com,"save",4) || !strcmp(com,"fgets")))
+		return 0;
 	mglCommand tst, *rts, *cmd = Cmd;
 	long i;
 	for(i=0;cmd[i].name[0];i++);	// determine the number of symbols
@@ -178,7 +180,7 @@ mglParser::mglParser(bool setsize)
 	for(long i=0;i<40;i++)	par[i]=L"";
 
 	Cmd = mgls_base_cmd;
-	AllowSetSize=setsize;
+	AllowSetSize=setsize;	AllowFileIO=true;
 	Once = true;
 	op1 = new wchar_t[4096];	op2 = new wchar_t[4096];
 	fval = new mglData[40];
@@ -1032,7 +1034,8 @@ void mgl_parse_file(HMGL gr, HMPR p, FILE *fp, int print)
 {	p->Execute(gr,fp,print);	}
 void mgl_parser_restore_once(HMPR p)	{	p->RestoreOnce();	}
 void mgl_parser_stop(HMPR p)	{	p->Stop = true;		}
-void mgl_parser_allow_setsize(HMPR p, int a)	{	p->AllowSetSize = a;	}
+void mgl_parser_allow_setsize(HMPR p, int a)	{	p->AllowSetSize= a;	}
+void mgl_parser_allow_file_io(HMPR p, int a)	{	p->AllowFileIO = a;	}
 //-----------------------------------------------------------------------------
 #define _PR_	((mglParser *)(*p))
 uintptr_t mgl_create_parser_()	{	return uintptr_t(new mglParser);	}
@@ -1058,8 +1061,8 @@ void mgl_parse_text_(uintptr_t* gr, uintptr_t* p, const char *str, int l)
 {	char *s=new char[l+1];		memcpy(s,str,l);	s[l]=0;
 	_PR_->Execute(_GR_, s);	delete []s;	}
 void mgl_parser_restore_once_(uintptr_t* p)	{	_PR_->RestoreOnce();	}
-void mgl_parser_allow_setsize_(uintptr_t* p, int *a)
-{	_PR_->AllowSetSize = *a;	}
+void mgl_parser_allow_setsize_(uintptr_t* p, int *a)	{	_PR_->AllowSetSize= *a;	}
+void mgl_parser_allow_file_io_(uintptr_t* p, int *a)	{	_PR_->AllowFileIO = *a;	}
 void mgl_parser_stop_(uintptr_t* p)	{	_PR_->Stop = true;	}
 //-----------------------------------------------------------------------------
 long mgl_use_parser(HMPR pr, int inc)

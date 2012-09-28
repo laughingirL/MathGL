@@ -1284,7 +1284,7 @@ Draws a mark (point @samp{.} by default) at position @var{p}=@{@var{x}, @var{y},
 @deftypefn {MGL command} {} errbox @code{x y ex ey} ['stl'='']
 @deftypefnx {MGL command} {} errbox @code{x y z ex ey ez} ['stl'='']
 @ifclear UDAV
-@deftypefn {Method on @code{mglGraph}} @code{void} Error (@code{mglPoint} p, @code{mglPoint} e, @code{char} *stl=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Error (@code{mglPoint} p, @code{mglPoint} e, @code{char} *stl=@code{""})
 @deftypefnx {C function} @code{void} mgl_error_box (@code{HMGL} gr, @code{mreal} x, @code{mreal} y, @code{mreal} z, @code{mreal} ex, @code{mreal} ey, @code{mreal} ez, @code{char *}stl)
 @end ifclear
 Draws a 3d error box at position @var{p}=@{@var{x}, @var{y}, @var{z}@} with sizes @var{e}=@{@var{ex}, @var{ey}, @var{ez}@} and style @var{stl}. Use NAN for component of @var{e} to reduce number of drawn elements.
@@ -1310,12 +1310,15 @@ Draws a geodesic line (straight line in Cartesian coordinates) from point @var{p
 Draws Bezier-like curve from point @var{p1} to @var{p2} using line style @var{stl}. At this tangent is codirected with @var{d1}, @var{d2} and proportional to its amplitude. Parameter @var{num} define the ``quality'' of the curve. If @var{num}=@code{2} then the straight line will be drawn in all coordinate system (independently on transformation formulas, see @ref{Curved coordinates}). Contrary, for large values (for example, =@code{100}) the spline like Bezier curve will be drawn in corresponding coordinate system. Curve will be drawn even if it lies out of bounding box.
 @end deftypefn
 
+@anchor{face}
+@deftypefn {MGL command} {} face @code{x1 y1 x2 y2 x3 y3 x4 y4} ['stl'='']
+@deftypefnx {MGL command} {} face @code{x1 y1 z1 x2 y2 z2 x3 y3 z3 x4 y4 z4} ['stl'='']
 @ifclear UDAV
-@deftypefn {Method on @code{mglGraph}} @code{void} Face (@code{mglPoint} p1, @code{mglPoint} p2, @code{mglPoint} p3, @code{mglPoint} p4, @code{const char *}stl=@code{"w"})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Face (@code{mglPoint} p1, @code{mglPoint} p2, @code{mglPoint} p3, @code{mglPoint} p4, @code{const char *}stl=@code{"w"})
 @deftypefnx {C function} @code{void} mgl_face (@code{HMGL} gr, @code{mreal} x1, @code{mreal} y1, @code{mreal} z1, @code{mreal} x2, @code{mreal} y2, @code{mreal} z2, @code{mreal} x3, @code{mreal} y3, @code{mreal} z3, @code{mreal} x4, @code{mreal} y4, @code{mreal} z4, @code{const char *}stl)
+@end ifclear
 Draws the solid quadrangle (face) with vertexes @var{p1}, @var{p2}, @var{p3}, @var{p4} and with color(s) @var{stl}. At this colors can be the same for all vertexes or different if all 4 colors are specified for each vertex. Face will be drawn even if it lies out of bounding box.
 @end deftypefn
-@end ifclear
 
 @anchor{rect}
 @deftypefn {MGL command} {} rect @code{x1 y1 x2 y2} ['stl'='']

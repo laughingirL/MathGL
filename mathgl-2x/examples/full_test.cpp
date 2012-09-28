@@ -80,8 +80,6 @@ int srnd = 0;
 int use_mgl = 0;
 int verbose = 0;
 //-----------------------------------------------------------------------------
-void smgl_colorbar(mglGraph *gr);
-void smgl_combined(mglGraph *gr);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
@@ -195,30 +193,31 @@ const char *mmgl_schemes="call 'sch' 0 'kw'\ncall 'sch' 1 'wk'\ncall 'sch' 2 'kH
 "call 'sch' 8 'GgwmM'\ncall 'sch' 9 'UuwqR'\ncall 'sch' 10 'QqwcC'\ncall 'sch' 11 'CcwyY'\n"
 "call 'sch' 12 'bcwyr'\ncall 'sch' 13 'bwr'\ncall 'sch' 14 'BbcyrR'\ncall 'sch' 15 'UbcyqR'\n"
 "call 'sch' 16 'BbcwyrR'\ncall 'sch' 17 'bgr'\ncall 'sch' 18 'BbcyrR|'\ncall 'sch' 19 'b\\{g,0.3\\}r'\n"
-"stop\nfunc 'sch' 2\nsubplot 2 10 $1 0.2 0:fsurf 'x' '$2':text 0.07 0.12 '$2' 'a'\nreturn\n";
+"stop\nfunc 'sch' 2\nsubplot 2 10 $1 '<>_^' 0.2 0:fsurf 'x' '$2'\n"
+"text 0.07+0.5*mod($1,2) 0.92-0.1*int($1/2) '$2' 'A'\nreturn\n";
 void smgl_schemes(mglGraph *gr)	// Color table
 {
 	mglData a(256,2);	a.Fill(-1,1);
-	gr->SubPlot(2,10,0,NULL,0.2);	gr->Dens(a,"kw");		gr->Puts(0.07, 0.92, "kw", "A");
-	gr->SubPlot(2,10,1,NULL,0.2);	gr->Dens(a,"wk");		gr->Puts(0.57, 0.92, "wk", "A");
-	gr->SubPlot(2,10,2,NULL,0.2);	gr->Dens(a,"kHCcw");	gr->Puts(0.07, 0.82, "kHCcw", "A");
-	gr->SubPlot(2,10,3,NULL,0.2);	gr->Dens(a,"kBbcw");	gr->Puts(0.57, 0.82, "kBbcw", "A");
-	gr->SubPlot(2,10,4,NULL,0.2);	gr->Dens(a,"kRryw");	gr->Puts(0.07, 0.72, "kRryw", "A");
-	gr->SubPlot(2,10,5,NULL,0.2);	gr->Dens(a,"kGgew");	gr->Puts(0.57, 0.72, "kGgew", "A");
-	gr->SubPlot(2,10,6,NULL,0.2);	gr->Dens(a,"BbwrR");	gr->Puts(0.07, 0.62, "BbwrR", "A");
-	gr->SubPlot(2,10,7,NULL,0.2);	gr->Dens(a,"BbwgG");	gr->Puts(0.57, 0.62, "BbwgG", "A");
-	gr->SubPlot(2,10,8,NULL,0.2);	gr->Dens(a,"GgwmM");	gr->Puts(0.07, 0.52, "GgwmM", "A");
-	gr->SubPlot(2,10,9,NULL,0.2);	gr->Dens(a,"UuwqR");	gr->Puts(0.57, 0.52, "UuwqR", "A");
-	gr->SubPlot(2,10,10,NULL,0.2);	gr->Dens(a,"QqwcC");	gr->Puts(0.07, 0.42, "QqwcC", "A");
-	gr->SubPlot(2,10,11,NULL,0.2);	gr->Dens(a,"CcwyY");	gr->Puts(0.57, 0.42, "CcwyY", "A");
-	gr->SubPlot(2,10,12,NULL,0.2);	gr->Dens(a,"bcwyr");	gr->Puts(0.07, 0.32, "bcwyr", "A");
-	gr->SubPlot(2,10,13,NULL,0.2);	gr->Dens(a,"bwr");		gr->Puts(0.57, 0.32, "bwr", "A");
-	gr->SubPlot(2,10,14,NULL,0.2);	gr->Dens(a,"BbcyrR");	gr->Puts(0.07, 0.22, "BbcyrR", "A");
-	gr->SubPlot(2,10,15,NULL,0.2);	gr->Dens(a,"UbcyqR");	gr->Puts(0.57, 0.22, "UbcyqR", "A");
-	gr->SubPlot(2,10,16,NULL,0.2);	gr->Dens(a,"BbcwyrR");	gr->Puts(0.07, 0.12, "BbcwyrR", "A");
-	gr->SubPlot(2,10,17,NULL,0.2);	gr->Dens(a,"bgr");		gr->Puts(0.57, 0.12, "bgr", "A");
-	gr->SubPlot(2,10,18,NULL,0.2);	gr->Dens(a,"BbcyrR|");	gr->Puts(0.07, 0.02, "BbcyrR|", "A");
-	gr->SubPlot(2,10,19,NULL,0.2);	gr->Dens(a,"b{g,0.3}r");		gr->Puts(0.57, 0.02, "b\\{g,0.3\\}r", "A");
+	gr->SubPlot(2,10,0,NULL,0.2);	gr->Dens(a,"kw");		gr->Puts(0.07, 0.92, "'kw'", "A");
+	gr->SubPlot(2,10,1,NULL,0.2);	gr->Dens(a,"wk");		gr->Puts(0.57, 0.92, "'wk'", "A");
+	gr->SubPlot(2,10,2,NULL,0.2);	gr->Dens(a,"kHCcw");	gr->Puts(0.07, 0.82, "'kHCcw'", "A");
+	gr->SubPlot(2,10,3,NULL,0.2);	gr->Dens(a,"kBbcw");	gr->Puts(0.57, 0.82, "'kBbcw'", "A");
+	gr->SubPlot(2,10,4,NULL,0.2);	gr->Dens(a,"kRryw");	gr->Puts(0.07, 0.72, "'kRryw'", "A");
+	gr->SubPlot(2,10,5,NULL,0.2);	gr->Dens(a,"kGgew");	gr->Puts(0.57, 0.72, "'kGgew'", "A");
+	gr->SubPlot(2,10,6,NULL,0.2);	gr->Dens(a,"BbwrR");	gr->Puts(0.07, 0.62, "'BbwrR'", "A");
+	gr->SubPlot(2,10,7,NULL,0.2);	gr->Dens(a,"BbwgG");	gr->Puts(0.57, 0.62, "'BbwgG'", "A");
+	gr->SubPlot(2,10,8,NULL,0.2);	gr->Dens(a,"GgwmM");	gr->Puts(0.07, 0.52, "'GgwmM'", "A");
+	gr->SubPlot(2,10,9,NULL,0.2);	gr->Dens(a,"UuwqR");	gr->Puts(0.57, 0.52, "'UuwqR'", "A");
+	gr->SubPlot(2,10,10,NULL,0.2);	gr->Dens(a,"QqwcC");	gr->Puts(0.07, 0.42, "'QqwcC'", "A");
+	gr->SubPlot(2,10,11,NULL,0.2);	gr->Dens(a,"CcwyY");	gr->Puts(0.57, 0.42, "'CcwyY'", "A");
+	gr->SubPlot(2,10,12,NULL,0.2);	gr->Dens(a,"bcwyr");	gr->Puts(0.07, 0.32, "'bcwyr'", "A");
+	gr->SubPlot(2,10,13,NULL,0.2);	gr->Dens(a,"bwr");		gr->Puts(0.57, 0.32, "'bwr'", "A");
+	gr->SubPlot(2,10,14,NULL,0.2);	gr->Dens(a,"BbcyrR");	gr->Puts(0.07, 0.22, "'BbcyrR'", "A");
+	gr->SubPlot(2,10,15,NULL,0.2);	gr->Dens(a,"UbcyqR");	gr->Puts(0.57, 0.22, "'UbcyqR'", "A");
+	gr->SubPlot(2,10,16,NULL,0.2);	gr->Dens(a,"BbcwyrR");	gr->Puts(0.07, 0.12, "'BbcwyrR'", "A");
+	gr->SubPlot(2,10,17,NULL,0.2);	gr->Dens(a,"bgr");		gr->Puts(0.57, 0.12, "'bgr'", "A");
+	gr->SubPlot(2,10,18,NULL,0.2);	gr->Dens(a,"BbcyrR|");	gr->Puts(0.07, 0.02, "'BbcyrR|'", "A");
+	gr->SubPlot(2,10,19,NULL,0.2);	gr->Dens(a,"b{g,0.3}r");		gr->Puts(0.57, 0.02, "'b\\{g,0.3\\}r'", "A");
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_curvcoor="origin -1 1 -1\nsubplot 2 2 0:title 'Cartesian':rotate 50 60:fplot '2*t-1' '0.5' '0' '2r':axis:grid\n"
@@ -380,8 +379,8 @@ const char *mmgl_text="call 'prepare1d'\nsubplot 2 2 0 ''\ntext 0 1 'Text can be
 "text 0 0.2 'One can change style in string: \\b{bold}, \\i{italic, \\b{both}}'\n"
 "text 0 -0.2 'Easy to \\a{overline} or \\u{underline}'\n"
 "text 0 -0.6 'Easy to change indexes ^{up} _{down} @{center}'\n"
-"text 0 -1 'It parse TeX: \\int \\alpha \\cdot '\n'\\sqrt3{sin(\\pi x)^2 + \\gamma_{i_k}} dx'\n"
-"subplot 2 2 1 ''\n text 0 0 '\\sqrt{\\frac{\\alpha^{\\gamma^2}+\\overset 1{\\big\\infty}}{\\sqrt3{2+b}}}' '@' -2\n"
+"text 0 -1 'It parse TeX: \\int \\alpha \\cdot \\\n\\sqrt3{sin(\\pi x)^2 + \\gamma_{i_k}} dx'\n"
+"subplot 2 2 1 ''\n text 0 0.5 '\\sqrt{\\frac{\\alpha^{\\gamma^2}+\\overset 1{\\big\\infty}}{\\sqrt3{2+b}}}' '@' -2\n"
 "text 0 -0.5 'Text can be printed\\n{}on several lines'\n"
 "subplot 2 2 2 '':box:plot y(:,0)\ntext y 'This is very very long string drawn along a curve' 'k'\ntext y 'Another string drawn above a curve' 'Tr'\n"
 "subplot 2 2 3 '':line -1 -1 1 -1 'rA':text 0 -1 1 -1 'Horizontal'\n"
@@ -1102,7 +1101,7 @@ void smgl_contv(mglGraph *gr)
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_torus="call 'prepare1d'\nsubplot 2 2 0:title 'Torus plot (default)':light on:rotate 50 60:box:torus y1 y2\n"
-"subplot 2 2 1:title '\"x\"' style':light on:rotate 50 60:box:torus y1 y2 'x'\n"
+"subplot 2 2 1:title '\"x\" style':light on:rotate 50 60:box:torus y1 y2 'x'\n"
 "subplot 2 2 2:title '\"z\" style':light on:rotate 50 60:box:torus y1 y2 'z'\n"
 "subplot 2 2 3:title '\"\\#\" style':light on:rotate 50 60:box:torus y1 y2 '#'\n";
 void smgl_torus(mglGraph *gr)
@@ -1632,7 +1631,7 @@ void smgl_loglog(mglGraph *gr)	// log-log axis
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_venn="list x -0.3 0 0.3:list y 0.3 -0.3 0.3:list e 0.7 0.7 0.7\n"
-"subplot 1 1 0 '':title 'Venn-like diagram':alpha on:error x y e e '!rgb@#o'";
+"subplot 1 1 0:title 'Venn-like diagram':alpha on:error x y e e '!rgb@#o'";
 void smgl_venn(mglGraph *gr)
 {
 	double xx[3]={-0.3,0,0.3}, yy[3]={0.3,-0.3,0.3}, ee[3]={0.7,0.7,0.7};
@@ -1666,10 +1665,12 @@ void smgl_hist(mglGraph *gr)
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_primitives="subplot 2 2 0 '':title 'Line, Curve, Rhomb, Ellipse' '' -1.5\n"
-"line -1 -1 -0.5 1 'qAI'\ncurve -0.6 -1 1 1 0 1 1 1 'rA'\nmark 0 -0.5 '*':mark 1 -0.1 '*'\n"
-"rhomb 0 0 .4 1 0.9 0.2 'b#'\nellipse 0 -0.5 1 -0.1 0.2 'u#'\nellipse 0 -1 1 -0.6 0.2 'm@'\n\n"
+"line -1 -1 -0.5 1 'qAI'\ncurve -0.6 -1 1 1 0 1 1 1 'rA'\nball 0 -0.5 '*':ball 1 -0.1 '*'\n"
+"rhomb 0 0.4 1 0.9 0.2 'b#'\nrhomb 0 0 1 0.4 0.2 'cg@'\n"
+"ellipse 0 -0.5 1 -0.1 0.2 'u#'\nellipse 0 -1 1 -0.6 0.2 'm@'\n\n"
 "light on\nsubplot 2 2 1:title 'Face[xyz]':rotate 50 60:box\n"
-"facex 1 0 -1 1 1 'r':facey -1 -1 -1 1 1 'g':facez -1 -1 1 -1 1 'b'\n\n"
+"facex 1 0 -1 1 1 'r':facey -1 -1 -1 1 1 'g':facez 1 -1 -1 -1 1 'b'\n"
+"face -1 -1 1 -1 1 1 1 -1 0 1 1 1 'm'\n\n"
 "subplot 2 2 3 '':title 'Cone'\n"
 "cone -0.7 -0.3 0 -0.7 0.7 0.5 0.2 0.1 'b':text -0.7 -0.7 'no edges\\n(default)'\n"
 "cone 0 -0.3 0 0 0.7 0.5 0.2 0.1 'g@':text 0 -0.7 'with edges\\n('\\@' style)'\n"
@@ -1739,7 +1740,7 @@ const char *mmgl_colorbar="call 'prepare2d'\nnew v 9 'x'\nsubplot 2 2 0:title 'C
 "colorbar v '<':colorbar v '>':colorbar v '_':colorbar v '^'\n"
 "subplot 2 2 3:title '':text -0.5 1.55 'Color positions' ':C' -2\n"
 "colorbar 'bwr>' 0.25 0:text -0.9 1.2 'Default'\n"
-"colorbar 'b{w,0.3}r>' 0.5 0:text -0.9 1.2 'Manual'\ncrange 0.01 1e3\n"
+"colorbar 'b{w,0.3}r>' 0.5 0:text -0.1 1.2 'Manual'\ncrange 0.01 1e3\n"
 "colorbar '>' 0.75 0:text 0.65 1.2 'Normal scale':colorbar '>':text 1.35 1.2 'Log scale'\n";
 void smgl_colorbar(mglGraph *gr)
 {
@@ -1810,7 +1811,7 @@ const char *mmgl_dat_extra="subplot 2 2 0 '':title 'Envelop sample':new d1 1000 
 "axis:plot d1 'b':envelop d1 'x':plot d1 'r'\n"
 "subplot 2 2 1 '':title 'Smooth sample':ranges 0 1 0 1\nnew y0 30 '0.4*sin(pi*x) + 0.3*cos(1.5*pi*x) - 0.4*sin(2*pi*x)+0.5*rnd'\n"
 "copy y1 y0:smooth y1 'x3':plot y1 'r';legend '\"3\" style'\ncopy y2 y0:smooth y2 'x5':plot y2 'g';legend '\"5\" style'\n"
-"copy y3 y0:smooth y3 'x':plot y3 'b';legend 'default'\nplot y0 '{m7}:s';legend 'none'\n"
+"copy y3 y0:smooth y3 'x':plot y3 'b';legend 'default'\nplot y0 '{m7}:s';legend 'none'\nlegend:box\n"
 "subplot 2 2 2:title 'Sew sample':rotate 50 60:light on:alpha on\nnew d2 100 100 'mod((y^2-(1-x)^2)/2,0.1)'\n"
 "box:surf d2 'b':sew d2 'xy' 0.1:surf d2 'r'\n"
 "subplot 2 2 3:title 'Resize sample (interpolation)'\nnew x0 10 'rnd':new v0 10 'rnd'\n"
@@ -1851,7 +1852,17 @@ void smgl_dat_extra(mglGraph *gr)	// differentiate
 	gr->Label(x0,v0,"%n");
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_ternary="";	// TODO add later
+const char *mmgl_ternary="ranges 0 1 0 1 0 1\nnew x 50 '0.25*(1+cos(2*pi*x))'\n"
+"new y 50 '0.25*(1+sin(2*pi*x))'\nnew z 50 'x'\nnew a 20 30 '30*x*y*(1-x-y)^2*(x+y<1)'\n"
+"new rx 10 'rnd':copy ry (1-rx)*rnd\nlight on\n\n"
+"subplot 2 2 0:title 'Ordinary axis 3D':rotate 50 60\nbox:axis:grid\n"
+"plot x y z 'r2':surf a '#'\nxlabel 'B':ylabel 'C':zlabel 'Z'\n\n"
+"subplot 2 2 1:title 'Ternary axis (x+y+t=1)':ternary 1\nbox:axis:grid 'xyz' 'B;'\n"
+"plot x y 'r2':plot rx ry 'q^ ':cont a:line 0.5 0 0 0.75 'g2'\nxlabel 'B':ylabel 'C':tlabel 'A'\n\n"
+"subplot 2 2 2:title 'Quaternary axis 3D':rotate 50 60:ternary 2\nbox:axis:grid 'xyz' 'B;'\n"
+"plot x y z 'r2':surf a '#'\nxlabel 'B':ylabel 'C':tlabel 'A':zlabel 'D'\n\n"
+"subplot 2 2 3:title 'Ternary axis 3D':rotate 50 60:ternary 1\nbox:axis:grid 'xyz' 'B;'\n"
+"plot x y z 'r2':surf a '#'\nxlabel 'B':ylabel 'C':tlabel 'A':zlabel 'Z'\n\n";
 void smgl_ternary(mglGraph *gr)	// flag #
 {
 	gr->SetRanges(0,1,0,1,0,1);

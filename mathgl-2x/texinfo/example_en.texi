@@ -1281,7 +1281,7 @@ Note, that it may entail a confusion. However, if one will use density plot then
 }
 @end verbatim
 
-Drawing of other 2D plots is analogous. The only peculiarity is the usage of flag @samp{#}. By default this flag switches on the drawing of a grid on plot (@ref{grid} or @ref{mesh} for plots in plain or in volume). However, for isosurfaces (including surfaces of rotation @ref{axial}) this flag switches the  face drawing off. Figure becomes wired. The following code gives example of flag @samp{#} using (compare with normal function drawing as in its description):
+Drawing of other 2D plots is analogous. The only peculiarity is the usage of flag @samp{#}. By default this flag switches on the drawing of a grid on plot (@ref{grid} or @ref{mesh} for plots in plain or in volume). However, for isosurfaces (including surfaces of rotation @ref{axial}) this flag switches the  face drawing off and figure becomes wired. The following code gives example of flag @samp{#} using (compare with normal function drawing as in its description):
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -2152,7 +2152,7 @@ int sample(mglGraph *gr)
 @node TileS sample, Dens sample, Tile sample, 2D samples
 @subsection TileS sample
 
-Function @ref{tiles} is similar to @code{Tile} but tile sizes is determined by another data. This allows one to simulate transparency of the plot. The sample code is:
+Function @ref{tiles} is similar to @ref{tile} but tile sizes is determined by another data. This allows one to simulate transparency of the plot. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {

@@ -1227,6 +1227,8 @@ public:
 	inline void RestoreOnce()	{	mgl_parser_restore_once(pr);	}
 	/// Allow changing size of the picture
 	inline void AllowSetSize(bool allow)	{	mgl_parser_allow_setsize(pr, allow);	}
+	/// Allow reading/saving files
+	inline void AllowFileIO(bool allow)		{	mgl_parser_allow_file_io(pr, allow);	}
 	/// Set flag to stop script parsing
 	inline void Stop()	{	mgl_parser_stop(pr);	}
 

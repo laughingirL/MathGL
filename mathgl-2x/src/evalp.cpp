@@ -569,7 +569,7 @@ mglData mglFormulaCalc(const wchar_t *string, mglParser *arg)
 			else
 			{	Buf[n]=0;	res = mglApplyOper(Buf,Buf+n+1,arg, fmod);	}
 		}
-		else if(!wcscmp(name+1,L"int"))
+		else if(!wcscmp(name,L"int"))
 		{	res=mglFormulaCalc(Buf, arg);
 			for(i=0;i<res.nx*res.ny*res.nz;i++)	res.a[i] = floor(res.a[i]);	}
 #if MGL_HAVE_GSL

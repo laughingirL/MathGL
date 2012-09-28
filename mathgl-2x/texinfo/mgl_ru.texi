@@ -69,11 +69,12 @@ supports it in developing GNU and promoting software freedom.''
 
 @menu
 @c * Overview::
-@c * Examples::
+* Examples::
 * MGL scripts::
 * General concepts::
 * MathGL core::
 * Data processing::
+* Symbols and hot-keys::
 * Copying This Manual::
 * Index::
 @end menu
@@ -120,10 +121,10 @@ supports it in developing GNU and promoting software freedom.''
 @c @node Overview, Examples, , Top
 @c @include overview_ru.texi
 
-@c @node Examples, MGL scripts, Overview, Top
-@c @include ex_mgl_ru.texi
+@node Examples, MGL scripts, , Top
+@include ex_mgl_ru.texi
 
-@node MGL scripts, General concepts, , Top
+@node MGL scripts, General concepts, Examples, Top
 @include parse_ru.texi
 
 @node General concepts, MathGL core, MGL scripts, Top
@@ -135,7 +136,11 @@ supports it in developing GNU and promoting software freedom.''
 @node Data processing, Copying This Manual, MathGL core, Top
 @include data_ru.texi
 
-@node Copying This Manual, Index, Data processing, Top
+@node Symbols and hot-keys, Copying This Manual, Data processing, Top
+@appendix Symbols and hot-keys
+@include symbols_ru.texi
+
+@node Copying This Manual, Index, Symbols and hot-keys, Top
 @appendix GNU Free Documentation License
 @include fdl.texi
 

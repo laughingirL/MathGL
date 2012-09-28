@@ -684,6 +684,8 @@ void mglCanvas::Labelw(char dir, const wchar_t *text, mreal pos, const char *opt
 	mglPoint p,q;
 	mglAxis *aa=0;
 
+	mglAxis ty(ay);
+
 	if(dir=='x')	//	TODO: Tern axis & colorbar labels!!!
 	{
 		AdjustTicks(ax,fx);	aa = &ax;
@@ -691,7 +693,7 @@ void mglCanvas::Labelw(char dir, const wchar_t *text, mreal pos, const char *opt
 		else	t = Min.x*pow(Max.x/Min.x, (pos+1)/2);
 		p = mglPoint(t,y0,z0);	q = mglPoint(1,0,0);	shift += ax.sh;
 	}
-	if(dir=='y')
+	if(dir=='y' && !(TernAxis&3))
 	{
 		AdjustTicks(ay,fy);	aa = &ay;
 		if(ay.dv)	t = (Min.y+Max.y+pos*(Max.y-Min.y))/2;
@@ -702,12 +704,25 @@ void mglCanvas::Labelw(char dir, const wchar_t *text, mreal pos, const char *opt
 			q = mglPoint(-1,1,0);	pos=-pos;
 		}
 	}
+	if(dir=='y' && (TernAxis&3))
+	{
+		ty.ch='T';	ty.dir = mglPoint(-1,1);	ty.org = mglPoint(1,0,ay.org.z);
+		AdjustTicks(ty,fy);	aa = &ty;
+		if(ty.dv)	t = (Min.y+Max.y+pos*(Max.y-Min.y))/2;
+		else	t = Min.y*pow(Max.y/Min.y, (pos+1)/2);
+		p = mglPoint(x0,t,z0);	q = mglPoint(0,1,0);	shift += ty.sh;
+		if(TernAxis&3)
+		{
+			q = mglPoint(-1,1,0);	pos=-pos;
+		}
+	}
 	if(dir=='t' && (TernAxis&3))
 	{
-		AdjustTicks(ay,fy);	pos = -pos;	aa = &ay;
-		if(ay.dv)	t = (Min.y+Max.y+pos*(Max.y-Min.y))/2;
+		ty.ch='t';	ty.dir = mglPoint(0,-1);	ty.org = mglPoint(0,1,ay.org.z);
+		AdjustTicks(ty,fy);	pos = -pos;	aa = &ty;
+		if(ty.dv)	t = (Min.y+Max.y+pos*(Max.y-Min.y))/2;
 		else	t = Min.y*pow(Max.y/Min.y, (pos+1)/2);
-		p = mglPoint(x0,t,z0);	q = mglPoint(0,1,0);	shift += ay.sh;
+		p = mglPoint(x0,t,z0);	q = mglPoint(0,1,0);	shift += ty.sh;
 	}
 	if(dir=='z')
 	{

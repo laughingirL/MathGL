@@ -1245,7 +1245,7 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} errbox @code{x y ex ey} ['stl'='']
 @deftypefnx {Команда MGL} {} errbox @code{x y z ex ey ez} ['stl'='']
 @ifclear UDAV
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Error (@code{mglPoint} p, @code{mglPoint} e, @code{char} *stl=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Error (@code{mglPoint} p, @code{mglPoint} e, @code{char} *stl=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_error_box (@code{HMGL} gr, @code{mreal} px, @code{mreal} py, @code{mreal} pz, @code{mreal} ex, @code{mreal} ey, @code{mreal} ez, @code{char *}stl)
 @end ifclear
 Рисует 3d error box в точке @var{p}=@{@var{x}, @var{y}, @var{z}@} размером @var{e}=@{@var{ex}, @var{ey}, @var{ez}@} и стилем @var{stl}. Используйте NAN в компонентах @var{e} для уменьшения рисуемых элементов.
@@ -1271,12 +1271,15 @@ gr.GetBGRN(bits, len(bits));
 Рисует кривую Безье из точки @var{p1} в @var{p2} используя стиль линии @var{stl}. Касательные в точках пропорциональны @var{d1}, @var{d2}. Параметр @var{num} определяет гладкость линии (число точек на линии). Если @var{num}=@code{2}, то рисуется прямая даже в криволинейных координатах (см. @ref{Curved coordinates}). Наоборот, для больших значений (например, =@code{100}) рисуется геодезическая линия (окружность в полярных координатах, парабола в параболических и т.д.). Кривая рисуется даже если часть ее лежит вне диапазона осей координат.
 @end deftypefn
 
+@anchor{face}
+@deftypefn {Команда MGL} {} face @code{x1 y1 x2 y2 x3 y3 x4 y4} ['stl'='']
+@deftypefnx {Команда MGL} {} face @code{x1 y1 z1 x2 y2 z2 x3 y3 z3 x4 y4 z4} ['stl'='']
 @ifclear UDAV
-@deftypefn {Метод класса @code{mglGraph}} @code{void} Face (@code{mglPoint} p1, @code{mglPoint} p2, @code{mglPoint} p3, @code{mglPoint} p4, @code{const char *}stl=@code{"w"})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Face (@code{mglPoint} p1, @code{mglPoint} p2, @code{mglPoint} p3, @code{mglPoint} p4, @code{const char *}stl=@code{"w"})
 @deftypefnx {Функция С} @code{void} mgl_face (@code{HMGL} gr, @code{mreal} x1, @code{mreal} y1, @code{mreal} z1, @code{mreal} x2, @code{mreal} y2, @code{mreal} z2, @code{mreal} x3, @code{mreal} y3, @code{mreal} z3, @code{mreal} x4, @code{mreal} y4, @code{mreal} z4, @code{const char *}stl)
+@end ifclear
 Рисует заполненный четырехугольник (грань) с углами в точках @var{p1}, @var{p2}, @var{p3}, @var{p4} и цветом(-ами) @var{stl}. При этом цвет может быть один для всей грани, или различным если указаны все 4 цвета. Грань будет нарисована даже если часть ее лежит вне диапазона осей координат.
 @end deftypefn
-@end ifclear
 
 @anchor{rect}
 @deftypefn {MGL command} {} rect @code{x1 y1 x2 y2} ['stl'='']
@@ -1287,7 +1290,7 @@ gr.GetBGRN(bits, len(bits));
 @anchor{facex}
 @anchor{facey}
 @anchor{facez}
-@deftypefn {MGL command} {} facex @code{x0 y0 z0 wy wz} ['stl'='' @code{d1=0 d2=0}]
+@deftypefn {Команда MGL} {} facex @code{x0 y0 z0 wy wz} ['stl'='' @code{d1=0 d2=0}]
 @deftypefnx {Команда MGL} {} facey @code{x0 y0 z0 wx wz} ['stl'='' @code{d1=0 d2=0}]
 @deftypefnx {Команда MGL} {} facez @code{x0 y0 z0 wx wy} ['stl'='' @code{d1=0 d2=0}]
 @ifclear UDAV

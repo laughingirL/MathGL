@@ -337,6 +337,7 @@ void mgl_parse_text(HMGL gr, HMPR p, const char *str);
 void mgl_parse_textw(HMGL gr, HMPR p, const wchar_t *str);
 void mgl_parser_restore_once(HMPR p);
 void mgl_parser_allow_setsize(HMPR p, int a);
+void mgl_parser_allow_file_io(HMPR p, int a);
 void mgl_parser_stop(HMPR p);
 int mgl_parser_cmd_type(HMPR pr, const char *name);
 const char *mgl_parser_cmd_desc(HMPR pr, const char *name);
@@ -361,6 +362,7 @@ int mgl_parse_line_(uintptr_t* gr, uintptr_t* p, const char *str, int *pos, int 
 void mgl_parse_text_(uintptr_t* gr, uintptr_t* p, const char *str, int l);
 void mgl_parser_restore_once_(uintptr_t* p);
 void mgl_parser_allow_setsize_(uintptr_t* p, int *a);
+void mgl_parser_allow_file_io_(uintptr_t* p, int *a);
 void mgl_parser_stop_(uintptr_t* p);
 int mgl_parser_cmd_type_(uintptr_t* p, const char *name, int l);
 uintptr_t mgl_parser_calc_(uintptr_t *pr, const char *formula,int l);

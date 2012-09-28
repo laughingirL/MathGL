@@ -280,6 +280,11 @@ Restore Once flag.
 Allow to parse 'setsize' command or not.
 @end deftypefn
 
+@deftypefn {Method on @code{mglParse}} @code{void} AllowFileIO (@code{bool} a)
+@deftypefnx {C function} @code{void} mgl_parser_allow_file_io (@code{HMPR} p, @code{int} a)
+Allow reading/saving files or not.
+@end deftypefn
+
 @deftypefn {Method on @code{mglParse}} @code{void} Stop ()
 @deftypefnx {C function} @code{void} mgl_parser_stop (@code{HMPR} p)
 Sends stop signal which terminate execution at next command.
