@@ -75,7 +75,7 @@ MathGL library supports the simplest scripts for data handling and plotting. The
 @node Program flow commands, MGL definition, MGL scripts
 @section Program flow commands
 
-Below I show commands to control program flow, like, conditions, loops, define script arguments and so on. Other commands can be found in chapters @ref{MathGL core} and @ref{Data processing}.
+Below I show commands to control program flow, like, conditions, loops, define script arguments and so on. Other commands can be found in chapters @ref{MathGL core} and @ref{Data processing}. Note, that some of program flow commands (like @ref{define}, @ref{ask}, @ref{call}, @ref{for}, @ref{func}) should be placed alone in the string.
 
 @cindex chdir
 @anchor{chdir}

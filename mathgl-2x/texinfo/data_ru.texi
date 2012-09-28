@@ -6,7 +6,7 @@
 @end ifset
 
 @ifclear UDAV
-В данной главе описываются классы @code{mglData} и @code{mglDataC} для работы с массивами действительных и комплексных данных, определённые в @code{#include <mgl2/data.h>} и @code{#include <mgl2/datac.h>} соответственно. Они содержат функции для выделения памяти и изменения размера данных, чтения данных из файла, численного дифференцирования, интегрирования, интерполяции и пр., заполнения по текстовой формуле и т.д. Классы позволяют работать с данными размерности не более 3 (как функции от трёх переменных -- x,y,z). По умолчанию внутреннее представление данных использует тип mreal (и dual=std::complex<mreal> для @code{mglDataC}), который может быть сконфигурирован как float или double на этапе установки указав опцию @code{--enable-double} (см. @ref{Installation}). Тип float удобен в силу меньшего размера занимаемой памяти и, как правило, достаточной для построения графиков точности. Однако, тип double имеет большую точность, что может быть важно, например, для осей с метками времени. Массивы которые могут быть созданы командами MGL отображаются Small Caps шрифтом (например, @sc{dat}).
+В данной главе описываются классы @code{mglData} и @code{mglDataC} для работы с массивами действительных и комплексных данных, определённые в @code{#include <mgl2/data.h>} и @code{#include <mgl2/datac.h>} соответственно. Оба класса являются наследниками абстрактного класса @code{mglDataA}, и могут быть использованы в аргументах всех функций рисования (см. @ref{MathGL core}). Классы содержат функции для выделения памяти и изменения размера данных, чтения данных из файла, численного дифференцирования, интегрирования, интерполяции и пр., заполнения по текстовой формуле и т.д. Классы позволяют работать с данными размерности не более 3 (как функции от трёх переменных -- x,y,z). По умолчанию внутреннее представление данных использует тип mreal (и dual=std::complex<mreal> для @code{mglDataC}), который может быть сконфигурирован как float или double на этапе установки указав опцию @code{--enable-double} (см. @ref{Installation}). Тип float удобен в силу меньшего размера занимаемой памяти и, как правило, достаточной для построения графиков точности. Однако, тип double имеет большую точность, что может быть важно, например, для осей с метками времени. Массивы которые могут быть созданы командами MGL отображаются Small Caps шрифтом (например, @sc{dat}).
 @end ifclear
 
 @menu
@@ -22,6 +22,7 @@
 * Operators::
 * Global functions::
 * Evaluate expression::
+* MGL variables::
 @end menu
 
 @c ------------------------------------------------------------------
@@ -1402,7 +1403,7 @@ These functions change the data in some direction like differentiations, integra
 
 @c ------------------------------------------------------------------
 @external
-@node Evaluate expression, , Global functions, Data processing
+@node Evaluate expression, MGL variables, Global functions, Data processing
 @section Вычисление выражений
 
 @ifset UDAV
@@ -1441,6 +1442,57 @@ These functions change the data in some direction like differentiations, integra
 @deftypefn {Метод класса @code{mglExpr}} @code{mreal} Diff (@code{char} dir, @code{mreal} var[26])
 @deftypefnx {Функция С} @code{mreal} mgl_expr_diff_v (@code{HMEX} ex, @code{char} dir, @code{mreal *}var)
 Вычисляет производную от формулы по переменной @var{dir} для переменных в массиве @var{var}[0,...,'z'-'a'].
+@end deftypefn
+
+@end ifclear
+
+@external
+
+
+@c ------------------------------------------------------------------
+@external
+@node MGL variables, , Evaluate expression, Data processing
+@section MGL variables
+
+@ifset UDAV
+For information about MGL variables see @ref{MGL definition}.
+@end ifset
+
+@ifclear UDAV
+
+Class mglVar represent MGL variables. It is needed for parsing MGL scripts (see @ref{mglParse class}). This class is derived from @code{mglData} and is defined in @code{#include <mgl2/mgl.h>}.
+
+@deftypecv {Variable} mglVar @code{std::wstring} s
+Name of variable.
+@end deftypecv
+
+@deftypecv {Variable} mglVar @code{mglVar *} next
+@deftypecvx {Variable} mglVar @code{mglVar *} prev
+Next and previous variable in the list.
+@end deftypecv
+
+@deftypecv {Variable} mglVar @code{bool} temp
+Flag of the temporary variable. If @code{true} the this variable will be removed after script execution.
+@end deftypecv
+
+@deftypecv {Variable} mglVar @code{void (*}func@code{)(void *)}
+Callback function, which will be called at variable destroying.
+@end deftypecv
+
+@deftypecv {Variable} mglVar @code{void *} o
+Pointer to external object for callback function.
+@end deftypecv
+
+@deftypefn {Constructor on @code{mglVar}} @code{} mglVar ()
+Create variable with size 1*1*1.
+@end deftypefn
+
+@deftypefn {Destructor on @code{mglVar}} @code{} ~mglVar ()
+Deletes the instance of class mglVar.
+@end deftypefn
+
+@deftypefn {Method on @code{mglVar}} @code{void} MoveAfter (@code{mglVar *}var)
+Evaluates the formula for @code{'x','r'}=@var{x}, @code{'y','n'}=@var{y}, @code{'z','t'}=@var{z}, @code{'a','u'}=@var{u}.
 @end deftypefn
 
 @end ifclear

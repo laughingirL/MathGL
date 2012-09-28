@@ -69,11 +69,11 @@ supports it in developing GNU and promoting software freedom.''
 
 @menu
 @c * Overview::
-* Examples::
 * MGL scripts::
 * General concepts::
 * MathGL core::
 * Data processing::
+* Examples::
 * Symbols and hot-keys::
 * Copying This Manual::
 * Index::
@@ -113,6 +113,7 @@ supports it in developing GNU and promoting software freedom.''
 @end ifnothtml
 
 @rmacro sref {arg}
+См. @ref{\arg\}, для примеров кода и графика.
 @end rmacro
 @macro tdref {nam}
 @end macro
@@ -121,10 +122,7 @@ supports it in developing GNU and promoting software freedom.''
 @c @node Overview, Examples, , Top
 @c @include overview_ru.texi
 
-@node Examples, MGL scripts, , Top
-@include ex_mgl_ru.texi
-
-@node MGL scripts, General concepts, Examples, Top
+@node MGL scripts, General concepts, , Top
 @include parse_ru.texi
 
 @node General concepts, MathGL core, MGL scripts, Top
@@ -133,10 +131,13 @@ supports it in developing GNU and promoting software freedom.''
 @node MathGL core, Data processing, General concepts, Top
 @include core_ru.texi
 
-@node Data processing, Copying This Manual, MathGL core, Top
+@node Data processing, Examples, MathGL core, Top
 @include data_ru.texi
 
-@node Symbols and hot-keys, Copying This Manual, Data processing, Top
+@node Examples, Symbols and hot-keys, Data processing, Top
+@include ex_mgl_ru.texi
+
+@node Symbols and hot-keys, Copying This Manual, Examples, Top
 @appendix Symbols and hot-keys
 @include symbols_ru.texi
 

@@ -339,6 +339,15 @@ Font style for text and labels (see text). Initial style is 'fnt'=':rC' give Rom
 Sets to use or not text rotation.
 @end deftypefn
 
+@anchor{loadfont}
+@deftypefn {MGL command} {} loadfont ['name'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} LoadFont (@code{const char *}name, @code{const char *}path=@code{""})
+@deftypefnx {C function} @code{void} mgl_load_font (@code{HMGL} gr, @code{const char *}name, @code{const char *}path)
+@end ifclear
+Load font typeface from @var{path}/@var{name}. Empty name will load default font.
+@end deftypefn
+
 @ifclear UDAV
 @deftypefn {Method on @code{mglGraph}} @code{void} SetFontDef (@code{const char *}fnt)
 @deftypefnx {C function} @code{void} mgl_set_font_def (@code{HMGL} gr, @code{const char *} val)
@@ -921,7 +930,7 @@ Sets size of picture in pixels. This function @strong{must be} called before any
 @end deftypefn
 
 @anchor{quality}
-@deftypefn {MGL command} {} quality @code{val}
+@deftypefn {MGL command} {} quality [@code{val}=2]
 @ifclear UDAV
 @deftypefnx {Method on @code{mglGraph}} @code{void} SetQuality (@code{int} val=@code{MGL_DRAW_NORM})
 @deftypefnx {C function} @code{void} mgl_set_quality (@code{HMGL} gr, @code{int} val)
@@ -1978,7 +1987,21 @@ These functions draw string @var{txt} as marks with size proportional to @var{r}
 @deftypefnx {C function} @code{void} mgl_label_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}txt, @code{const char *}fnt, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_labelw_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const wchar_t *}txt, @code{const char *}fnt, @code{const char *}opt)
 @end ifclear
-These functions draw string @var{txt} at points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. If string @var{txt} contain @samp{%x}, @samp{%y}, @samp{%z} or @samp{%n} then it will be replaced by the value of x-,y-,z-coordinate of the point or its index. See also @ref{plot}, @ref{mark}, @ref{textmark}. @sref{Label sample}
+These functions draw string @var{txt} at points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. If string @var{txt} contain @samp{%x}, @samp{%y}, @samp{%z} or @samp{%n} then it will be replaced by the value of x-,y-,z-coordinate of the point or its index. See also @ref{plot}, @ref{mark}, @ref{textmark}, @ref{table}. @sref{Label sample}
+@end deftypefn
+
+@anchor{table}
+@deftypefn {MGL command} {} table vdat 'txt' ['stl'='#']
+@deftypefnx {MGL command} {} table x y vdat 'txt' ['stl'='#']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} Table (@code{const mglDataA &}val, @code{const char *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Table (@code{const mglDataA &}val, @code{const wchar_t *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Table (@code{mreal} x, @code{mreal} y, @code{const mglDataA &}val, @code{const char *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Table (@code{mreal} x, @code{mreal} y, @code{const mglDataA &}val, @code{const wchar_t *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_table (@code{HMGL} gr, @code{mreal} x, @code{mreal} y, @code{HCDT} val, @code{const char *}txt, @code{const char *}fnt, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_tablew (@code{HMGL} gr, @code{mreal} x, @code{mreal} y, @code{HCDT} val, @code{const wchar_t *}txt, @code{const char *}fnt, @code{const char *}opt)
+@end ifclear
+These functions draw table with values of @var{val} and captions from string @var{txt} (separated by newline symbol @samp{\n}) at points @{@var{x}, @var{y}@} (default at @{0,0@}) related to current subplot. If string @var{fnt} contain @samp{#} then cell border will be drawn. If string @var{fnt} contain @samp{|} then table width is limited by subplot width (equivalent option @samp{value 1}). If string @var{fnt} contain @samp{=} then widths of all cells are the same. Option @code{value} set the width of the table (default is 1). See also @ref{plot}, @ref{label}. @sref{Table sample}
 @end deftypefn
 
 @anchor{tube}

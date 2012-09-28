@@ -6,7 +6,7 @@ This chapter describe commands for allocation, resizing, loading and saving, mod
 @end ifset
 
 @ifclear UDAV
-This chapter describe classes @code{mglData} and @code{mglDataC} for working with data arrays of real and complex numbers. This classes are defined in @code{#include <mgl2/data.h>} and @code{#include <mgl2/datac.h>} correspondengly. The classes have mostly the same set of functions for easy and safe allocation, resizing, loading, saving, modifying of data arrays. Also it can numerically differentiate and integrate data, interpolate, fill data by formula and so on. Classes support data with dimensions up to 3 (like function of 3 variables -- x,y,z). The internal representation of numbers is mreal (or dual=std::complex<mreal> for @code{mglDataC}), which can be configured as float or double by selecting option @code{--enable-double} at the MathGL configuring (see @ref{Installation}). Float type have smaller size in memory and usually it has enough precision in plotting purposes. However, double type provide high accuracy what can be important for time-axis, for example. Data arrays are denoted by Small Caps (like @sc{dat}) if it can be (re-)created by MGL commands.
+This chapter describe classes @code{mglData} and @code{mglDataC} for working with data arrays of real and complex numbers. Both classes are derived from abstract class @code{mglDataA}, and can be used as arguments of any plotting functions (see @ref{MathGL core}). These classes are defined in @code{#include <mgl2/data.h>} and @code{#include <mgl2/datac.h>} correspondengly. The classes have mostly the same set of functions for easy and safe allocation, resizing, loading, saving, modifying of data arrays. Also it can numerically differentiate and integrate data, interpolate, fill data by formula and so on. Classes support data with dimensions up to 3 (like function of 3 variables -- x,y,z). The internal representation of numbers is mreal (or dual=std::complex<mreal> for @code{mglDataC}), which can be configured as float or double by selecting option @code{--enable-double} at the MathGL configuring (see @ref{Installation}). Float type have smaller size in memory and usually it has enough precision in plotting purposes. However, double type provide high accuracy what can be important for time-axis, for example. Data arrays are denoted by Small Caps (like @sc{dat}) if it can be (re-)created by MGL commands.
 @end ifclear
 
 @menu
@@ -22,6 +22,7 @@ This chapter describe classes @code{mglData} and @code{mglDataC} for working wit
 * Operators::
 * Global functions::
 * Evaluate expression::
+* MGL variables::
 @end menu
 
 @c ------------------------------------------------------------------
@@ -1405,7 +1406,7 @@ Computes triangulation for arbitrary placed points with coordinates @{@var{x},@v
 
 @c ------------------------------------------------------------------
 @external
-@node Evaluate expression, , Global functions, Data processing
+@node Evaluate expression, MGL variables, Global functions, Data processing
 @section Evaluate expression
 
 @ifset UDAV
@@ -1444,6 +1445,56 @@ Evaluates the formula derivation respect to @var{dir} for @code{'x','r'}=@var{x}
 @deftypefn {Method on @code{mglExpr}} @code{mreal} Diff (@code{char} dir, @code{mreal} var[26])
 @deftypefnx {C function} @code{mreal} mgl_expr_diff_v (@code{HMEX} ex, @code{char} dir, @code{mreal *}var)
 Evaluates the formula derivation respect to @var{dir} for variables in array @var{var}[0,...,'z'-'a'].
+@end deftypefn
+
+@end ifclear
+
+@external
+
+@c ------------------------------------------------------------------
+@external
+@node MGL variables, , Evaluate expression, Data processing
+@section MGL variables
+
+@ifset UDAV
+For information about MGL variables see @ref{MGL definition}.
+@end ifset
+
+@ifclear UDAV
+
+Class mglVar represent MGL variables. It is needed for parsing MGL scripts (see @ref{mglParse class}). This class is derived from @code{mglData} and is defined in @code{#include <mgl2/mgl.h>}.
+
+@deftypecv {Variable} mglVar @code{std::wstring} s
+Name of variable.
+@end deftypecv
+
+@deftypecv {Variable} mglVar @code{mglVar *} next
+@deftypecvx {Variable} mglVar @code{mglVar *} prev
+Next and previous variable in the list.
+@end deftypecv
+
+@deftypecv {Variable} mglVar @code{bool} temp
+Flag of the temporary variable. If @code{true} the this variable will be removed after script execution.
+@end deftypecv
+
+@deftypecv {Variable} mglVar @code{void} (*func)(void *)
+Callback function, which will be called at variable destroying.
+@end deftypecv
+
+@deftypecv {Variable} mglVar @code{void *} o
+Pointer to external object for callback function.
+@end deftypecv
+
+@deftypefn {Constructor on @code{mglVar}} @code{} mglVar ()
+Create variable with size 1*1*1.
+@end deftypefn
+
+@deftypefn {Destructor on @code{mglVar}} @code{} ~mglVar ()
+Deletes the instance of class mglVar.
+@end deftypefn
+
+@deftypefn {Method on @code{mglVar}} @code{void} MoveAfter (@code{mglVar *}var)
+Evaluates the formula for @code{'x','r'}=@var{x}, @code{'y','n'}=@var{y}, @code{'z','t'}=@var{z}, @code{'a','u'}=@var{u}.
 @end deftypefn
 
 @end ifclear

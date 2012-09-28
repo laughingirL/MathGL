@@ -330,7 +330,7 @@ public:
 	inline void RestoreFont()	{	fnt->Restore();	}
 	/// Load font from file
 	inline void LoadFont (const char *name, const char *path=NULL)
-	{	fnt->Load(name,path);	}
+	{	if(name && *name)	fnt->Load(name,path);	else	fnt->Restore();	}
 	/// Copy font from another mglGraph instance
 	inline void CopyFont(mglBase *gr)	{	fnt->Copy(gr->GetFont());	}
 	/// Set default font size

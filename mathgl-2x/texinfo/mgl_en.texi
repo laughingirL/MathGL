@@ -67,11 +67,11 @@ supports it in developing GNU and promoting software freedom.''
 
 @menu
 @c * Overview::
-* Examples::
 * MGL scripts::
 * General concepts::
 * MathGL core::
 * Data processing::
+* Examples::
 * Symbols and hot-keys::
 * Copying This Manual::
 * Index::
@@ -82,10 +82,10 @@ supports it in developing GNU and promoting software freedom.''
 
 @ifhtml
 @macro fig {fname,text}
-@center @image{../\fname\, 11cm, , \text\, .png}
+@center @image{\fname\, 11cm, , \text\, png}
 @end macro
 @macro pfig {fname,text}
-@center @image{../png/\fname\, 11cm, , \text\, .png}
+@center @image{png/\fname\, 11cm, , \text\, png}
 @c @center @image{../png/\fname\, 11cm, , \text\. See also @uref{../pdf/\fname\.pdf, U3D PDF} sample, .png}
 @end macro
 @end ifhtml
@@ -111,19 +111,14 @@ supports it in developing GNU and promoting software freedom.''
 @end ifnothtml
 
 @rmacro sref {arg}
+@xref{\arg\}, for sample code and picture.
 @end rmacro
 @macro tdref {nam}
 @end macro
 @set UDAV
 
 
-@c @node Overview, Examples, , Top
-@c @include overview_en.texi
-
-@node Examples, MGL scripts, , Top
-@include ex_mgl_en.texi
-
-@node MGL scripts, General concepts, Examples, Top
+@node MGL scripts, General concepts, , Top
 @include parse_en.texi
 
 @node General concepts, MathGL core, MGL scripts, Top
@@ -132,10 +127,13 @@ supports it in developing GNU and promoting software freedom.''
 @node MathGL core, Data processing, General concepts, Top
 @include core_en.texi
 
-@node Data processing, Symbols and hot-keys, MathGL core, Top
+@node Data processing, Examples, MathGL core, Top
 @include data_en.texi
 
-@node Symbols and hot-keys, Copying This Manual, Data processing, Top
+@node Examples, Symbols and hot-keys, Data processing, Top
+@include ex_mgl_en.texi
+
+@node Symbols and hot-keys, Copying This Manual, Examples, Top
 @appendix Symbols and hot-keys
 @include symbols_en.texi
 

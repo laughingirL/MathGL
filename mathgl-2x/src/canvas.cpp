@@ -829,7 +829,7 @@ void mglCanvas::Legend(const std::vector<mglText> &leg, mreal x, mreal y, const 
 //-----------------------------------------------------------------------------
 void mglCanvas::Table(mreal x, mreal y, HCDT val, const wchar_t *text, const char *frm, const char *opt)
 {
-	if(x>=1) 	{	SetWarn(mglWarnSpc,"Table");	return;	}
+//	if(x>=1) 	{	SetWarn(mglWarnSpc,"Table");	return;	}
 	long i,j,m=val->GetNy(),n=val->GetNx();
 //	mreal pos=SaveState(opt);
 	mreal vw = SaveState(opt);
@@ -864,6 +864,7 @@ void mglCanvas::Table(mreal x, mreal y, HCDT val, const wchar_t *text, const cha
 	}
 	if(eqd)	w += n*w1;
 	// reduce font size if table have to be inside inplot
+	mreal fsize=FontSize;
 	if(lim && w>vw*inW)
 	{	h=vw*inW/w;	SetFontSize(-h); 	w*=h; 	w1*=h;	sp*=h;	}
 	h = TextHeight(frm,-1);	// now we can determine text height
@@ -908,7 +909,7 @@ void mglCanvas::Table(mreal x, mreal y, HCDT val, const wchar_t *text, const cha
 		k1=AddPnt(mglPoint(xx+ww*align/2.,yy,Depth),-1,q,-1,0);
 		text_plot(k1,str[i].c_str(),frm);	xx += ww;
 	}
-	EndGroup();
+	FontSize = fsize;	EndGroup();
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::Title(const char *title,const char *stl,mreal size)

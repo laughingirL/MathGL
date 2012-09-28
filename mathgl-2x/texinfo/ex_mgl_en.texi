@@ -64,7 +64,7 @@ MGL script can be used by several manners. Each has positive and negative sides:
 @item
 @emph{Using UDAV.}
 
-Positive sides are possibilities to view the plot at once and to modify it, rotate, zoom or switch on transparency or lighting by hands or by mouse. Negative side is the needness of the X-terminal. For more details, see @ref{UDAV}.
+Positive sides are possibilities to view the plot at once and to modify it, rotate, zoom or switch on transparency or lighting by hands or by mouse. Negative side is the needness of the X-terminal. @c For more details, see @ref{UDAV}.
 
 @item
 @emph{Using command line tools.}
@@ -72,6 +72,17 @@ Positive sides are possibilities to view the plot at once and to modify it, rota
 Positive aspects are: batch processing of similar data set, for example, a set of resulting data files for different calculation parameters), running from the console program, including the cluster calculation), fast and automated drawing, saving pictures for further analysis, or demonstration). Negative sides are: the usage of the external program for picture viewing. Also, the data plotting is non-visual. So, you have to imagine the picture, view angles, lighting and so on) before the plotting. I recommend to use graphical window for determining the optimal parameters of plotting on the base of some typical data set. And later use these parameters for batch processing in console program.
 
 In this case you can use the program: @code{mglconv} or @code{mglview} for viewing.
+
+@item
+@emph{Using C/C++/... code.}
+
+You can easily execute MGL script within C/C++/Fortan code. This can be useful for fast data plotting, for example, in web applications, where textual string (MGL script) may contain all necessary information for plot. The basic C++ code may look as following
+@verbatim
+const char *mgl_script; // script itself, can be of type const wchar_t*
+mglGraph gr;
+mglParse pr;
+pr.Execute(&gr, mgl_script);
+@end verbatim
 @end itemize
 
 The simplest script is
@@ -82,17 +93,6 @@ fplot 'x^3' # draw some function
 @end verbatim
 
 Just type it in UDAV and press F5. Also you can save it in text file @samp{test.mgl} and type in the console @code{mglconv test.mgl} what produce file @samp{test.mgl.png} with resulting picture.
-
-@item
-@emph{Using C/C++ code.}
-
-You can easily execute MGL script within C/C++/Fortan code. This can be useful for fast data plotting, for example, in web applications, where textual string (MGL script) may contain all necessary information for plot. The basic C++ code may look as following
-@verbatim
-const char *mgl_script; // script itself, can be of type const wchar_t*
-mglGraph gr;
-mglParse pr;
-pr.Execute(&gr, mgl_script);
-@end verbatim
 
 @c ------------------------------------------------------------------
 @external
@@ -115,10 +115,10 @@ Now I show several non-obvious features of MGL: several subplots in a single pic
 
 @c ------------------------------------------------------------------
 @external
-@node Subplots, Axis and grids, , Advanced usage
+@node Subplots, Axis and ticks, , Advanced usage
 @subsection Subplots
 
-Let me demonstrate possibilities of plot positioning and rotation. MathGL has a set of functions: @ref{subplot}, @ref{inplot}, @ref{title}, @ref{aspect} and @ref{rotate} and so on (see @ref{Subplots and rotation}). The order of their calling is strictly determined. First, one changes the position of plot in image area (functions @ref{subplot}, @ref{inplot} and @ref{multiplot}). Secondly, you can add the title of plot by @ref{title} function. After that one may rotate the plot (function @ref{rotate}). Finally, one may change aspects of axes (function @ref{aspect}). The following code illustrates the aforesaid it:
+Let me demonstrate possibilities of plot positioning and rotation. MathGL has a set of functions: @ref{subplot}, @ref{inplot}, @ref{title}, @ref{aspect} and @ref{rotate} and so on (see @ref{Subplots and rotation}). The order of their calling is strictly determined. First, one changes the position of plot in image area (functions @ref{subplot}, @ref{inplot} and @ref{multiplot}). Secondly, you can add the title of plot by @ref{title} function. After that one may rotate the plot (command @ref{rotate}). Finally, one may change aspects of axes (command @ref{aspect}). The following code illustrates the aforesaid it:
 @verbatim
 subplot 2 2 0
 box:text -1 1.1 'Just box' ':L'
@@ -168,12 +168,12 @@ multiplot 3 2 1 2 1 '':title 'MultiPlot':box
 
 @c ------------------------------------------------------------------
 @external
-@node Axis and grids, Curvilinear coordinates, Subplots, Advanced usage
-@subsection Axis and grids
+@node Axis and ticks, Curvilinear coordinates, Subplots, Advanced usage
+@subsection Axis and ticks
 
 MathGL library can draw not only the bounding box but also the axes, grids, labels and so on. The ranges of axes and their origin (the point of intersection) are determined by functions @code{SetRange()}, @code{SetRanges()}, @code{SetOrigin()} (see @ref{Ranges (bounding box)}). Ticks on axis are specified by function @code{SetTicks}, @code{SetTicksVal}, @code{SetTicksTime} (see @ref{Ticks}). But usually
 
-Function @ref{axis} draws axes. Its textual string shows in which directions the axis or axes will be drawn (by default @code{"xyz"}, function draws axes in all directions). Function @ref{grid} draws grid perpendicularly to specified directions. Example of axes and grid drawing is:
+Command @ref{axis} draws axes. Its textual string shows in which directions the axis or axes will be drawn (by default @code{"xyz"}, function draws axes in all directions). Command @ref{grid} draws grid perpendicularly to specified directions. Example of axes and grid drawing is:
 @verbatim
 subplot 2 2 0:title 'Axis origin, Grid'
 origin 0 0:axis:grid:fplot 'x^3'
@@ -419,6 +419,23 @@ line -1 -1 -1 1 'rA':text -1 0 -1 1 'Vertical'
 
 @pfig{text, Example of text printing}
 
+You can change font faces by loading font files by function @ref{loadfont}. Note, that this is long-run procedure. Font faces can be downloaded from @uref{http://mathgl.sourceforge.net/download.html, MathGL website} or from @uref{http://sourceforge.net/project/showfiles.php?group_id=152187&package_id=267177, here}. The sample code is:
+@verbatim
+define d 0.25
+loadfont 'STIX':text 0 1.1 'default font (STIX)'
+loadfont 'adventor':text 0 1.1-d 'adventor font'
+loadfont 'bonum':text 0 1.1-2*d 'bonum font'
+loadfont 'chorus':text 0 1.1-3*d 'chorus font'
+loadfont 'cursor':text 0 1.1-4*d 'cursor font'
+loadfont 'heros':text 0 1.1-5*d 'heros font'
+loadfont 'heroscn':text 0 1.1-6*d 'heroscn font'
+loadfont 'pagella':text 0 1.1-7*d 'pagella font'
+loadfont 'schola':text 0 1.1-8*d 'schola font'
+loadfont 'termes':text 0 1.1-9*d 'termes font'
+@end verbatim
+
+@pfig{fonts, Example of font faces}
+
 @c ------------------------------------------------------------------
 @external
 @node Legend sample, Cutting sample, Text features, Advanced usage
@@ -428,7 +445,7 @@ Legend is one of standard ways to show plot annotations. Basically you need to c
 
 There are 2 features. If plot style is empty then text will be printed without indent. If you want to plot the text with indent but without plot sample then you need to use space @samp{ } as plot style. Such style @samp{ } will draw a plot sample (line with marker(s)) which is invisible line (i.e. nothing) and print the text with indent as usual one.
 
-Function @ref{legend} draw legend on the plot. The position of the legend can be selected automatic or manually. You can change the size and style of text labels, as well as setup the plot sample. The sample code demonstrating legend features is:
+Command @ref{legend} draw legend on the plot. The position of the legend can be selected automatic or manually. You can change the size and style of text labels, as well as setup the plot sample. The sample code demonstrating legend features is:
 @verbatim
 addlegend 'sin(\pi {x^2})' 'b'
 addlegend 'sin(\pi x)' 'g*'
@@ -605,7 +622,7 @@ diff2 a 'y':surf a:box
 
 @pfig{dat_diff, Example of data differentiation and integration}
 
-Data smoothing (function @ref{smooth}) is more interesting and important. This function has single argument which define type of smoothing and its direction. Now 3 methods are supported: @samp{3} -- linear averaging by 3 points, @samp{5} -- linear averaging by 5 points, and default one -- quadratic averaging by 5 points.
+Data smoothing (command @ref{smooth}) is more interesting and important. This function has single argument which define type of smoothing and its direction. Now 3 methods are supported: @samp{3} -- linear averaging by 3 points, @samp{5} -- linear averaging by 5 points, and default one -- quadratic averaging by 5 points.
 
 MathGL also have some amazing functions which is not so important for data processing as useful for data plotting. There are functions for finding envelope (useful for plotting rapidly oscillating data), for data sewing (useful to removing jumps on the phase), for data resizing (interpolation). Let me demonstrate it:
 @verbatim
@@ -768,6 +785,7 @@ Basically, you can put this text after the script. Note, that you need to termin
 * Mark sample::
 * TextMark sample::
 * Label sample::
+* Table sample::
 * Tube sample::
 * Tape sample::
 * Torus sample::
@@ -779,7 +797,7 @@ Basically, you can put this text after the script. Note, that you need to termin
 @node Plot sample, Radar sample, , 1D samples
 @subsection Plot sample
 
-Function @ref{plot} is most standard way to visualize 1D data array. By default, @code{Plot} use colors from palette. However, you can specify manual color/palette, and even set to use new color for each points by using @samp{!} style. Another feature is @samp{ } style which draw only markers without line between points. The sample code is:
+Command @ref{plot} is most standard way to visualize 1D data array. By default, @code{Plot} use colors from palette. However, you can specify manual color/palette, and even set to use new color for each points by using @samp{!} style. Another feature is @samp{ } style which draw only markers without line between points. The sample code is:
 @verbatim
 call 'prepare1d'
 subplot 2 2 0 '':title 'Plot plot (default)':box
@@ -804,7 +822,7 @@ plot xc yc z 'rs'
 @node Radar sample, Step sample, Plot sample, 1D samples
 @subsection Radar sample
 
-Function @ref{radar} plot is variant of @code{Plot} one, which make plot in polar coordinates and draw radial rays in point directions. If you just need a plot in polar coordinates then I recommend to use @ref{Curvilinear coordinates} or @code{Plot} in parabolic form with @code{x=r*cos(fi); y=r*sin(fi);}. The sample code is:
+Command @ref{radar} plot is variant of @code{Plot} one, which make plot in polar coordinates and draw radial rays in point directions. If you just need a plot in polar coordinates then I recommend to use @ref{Curvilinear coordinates} or @code{Plot} in parabolic form with @code{x=r*cos(fi); y=r*sin(fi);}. The sample code is:
 @verbatim
 new yr 10 3 '0.4*sin(pi*(x+1.5+y/2)+0.1*rnd)'
 subplot 1 1 0 '':title 'Radar plot (with grid, "\#")'
@@ -818,7 +836,7 @@ radar yr '#'
 @node Step sample, Tens sample, Radar sample, 1D samples
 @subsection Step sample
 
-Function @ref{step} plot data as stairs. It have the same options as @code{Plot}. The sample code is:
+Command @ref{step} plot data as stairs. It have the same options as @code{Plot}. The sample code is:
 @verbatim
 call 'prepare1d'
 origin 0 0 0:subplot 2 2 0 '':title 'Step plot (default)':box
@@ -839,7 +857,7 @@ step y 's!rgb'
 @node Tens sample, Area sample, Step sample, 1D samples
 @subsection Tens sample
 
-Function @ref{tens} is variant of @ref{plot} with smooth coloring along the curves. At this, color is determined as for surfaces (see @ref{Color scheme}). The sample code is:
+Command @ref{tens} is variant of @ref{plot} with smooth coloring along the curves. At this, color is determined as for surfaces (see @ref{Color scheme}). The sample code is:
 @verbatim
 call 'prepare1d'
 subplot 2 2 0 '':title 'Tens plot (default)':box
@@ -860,7 +878,7 @@ tens xc yc z z 's'
 @node Area sample, Region sample, Tens sample, 1D samples
 @subsection Area sample
 
-Function @ref{area} fill the area between curve and axis plane. It support gradient filling if 2 colors per curve is specified. The sample code is:
+Command @ref{area} fill the area between curve and axis plane. It support gradient filling if 2 colors per curve is specified. The sample code is:
 @verbatim
 call 'prepare1d'
 origin 0 0 0
@@ -885,7 +903,7 @@ area xc yc z 'r'
 @node Region sample, Stem sample, Area sample, 1D samples
 @subsection Region sample
 
-Function @ref{region} fill the area between 2 curves. It support gradient filling if 2 colors per curve is specified. Also it can fill only the region y1<y<y2 if style @samp{i} is used. The sample code is:
+Command @ref{region} fill the area between 2 curves. It support gradient filling if 2 colors per curve is specified. Also it can fill only the region y1<y<y2 if style @samp{i} is used. The sample code is:
 @verbatim
 call 'prepare1d'
 copy y1 y(:,1):copy y2 y(:,2)
@@ -909,7 +927,7 @@ region y1 y2 'ir':plot y1 'k2':plot y2 'k2'
 @node Stem sample, Bars sample, Region sample, 1D samples
 @subsection Stem sample
 
-Function @ref{stem} draw vertical bars. It is most attractive if markers are drawn too. The sample code is:
+Command @ref{stem} draw vertical bars. It is most attractive if markers are drawn too. The sample code is:
 @verbatim
 call 'prepare1d'
 origin 0 0 0:subplot 2 2 0 '':title 'Stem plot (default)':box
@@ -930,7 +948,7 @@ stem y 'o!rgb'
 @node Bars sample, Barh sample, Stem sample, 1D samples
 @subsection Bars sample
 
-Function @ref{bars} draw vertical bars. It have a lot of options: bar-above-bar (@samp{a} style), fall like (@samp{f} style), 2 colors for positive and negative values, wired bars (@samp{#} style), 3D variant. The sample code is:
+Command @ref{bars} draw vertical bars. It have a lot of options: bar-above-bar (@samp{a} style), fall like (@samp{f} style), 2 colors for positive and negative values, wired bars (@samp{#} style), 3D variant. The sample code is:
 @verbatim
 new ys 10 3 '0.8*sin(pi*(x+y/4+1.25))+0.2*rnd':origin 0 0 0
 subplot 3 2 0 '':title 'Bars plot (default)':box
@@ -960,7 +978,7 @@ bars ys 'f'
 @node Barh sample, Cones sample, Bars sample, 1D samples
 @subsection Barh sample
 
-Function @ref{barh} is the similar to @code{Bars} but draw horizontal bars. The sample code is:
+Command @ref{barh} is the similar to @code{Bars} but draw horizontal bars. The sample code is:
 @verbatim
 new ys 10 3 '0.8*sin(pi*(x+y/4+1.25))+0.2*rnd':origin 0 0 0
 subplot 2 2 0 '':title 'Barh plot (default)':box
@@ -981,7 +999,7 @@ barh ys 'f'
 @node Cones sample, Chart sample, Bars sample, 1D samples
 @subsection Cones sample
 
-Function @ref{cones} is similar to @code{Bars} but draw cones. The sample code is:
+Command @ref{cones} is similar to @code{Bars} but draw cones. The sample code is:
 @verbatim
 new ys 10 3 '0.8*sin(pi*(x+y/4+1.25))+0.2*rnd'
 origin 0 0 0:light on
@@ -1005,7 +1023,7 @@ cones ys 'a'
 @node Chart sample, BoxPlot sample, Cones sample, 1D samples
 @subsection Chart sample
 
-Function @ref{chart} draw colored boxes with width proportional to data values. Use @samp{ } for empty box. Plot looks most attractive in polar coordinates -- well known pie chart. The sample code is:
+Command @ref{chart} draw colored boxes with width proportional to data values. Use @samp{ } for empty box. Plot looks most attractive in polar coordinates -- well known pie chart. The sample code is:
 @verbatim
 new ch 7 2 'rnd+0.1':light on
 subplot 2 2 0:title 'Chart plot (default)':rotate 50 60:box
@@ -1030,7 +1048,7 @@ chart ch 'bgr cmy#'
 @node BoxPlot sample, Candle sample, Chart sample, 1D samples
 @subsection BoxPlot sample
 
-Function @ref{boxplot} draw box-and-whisker diagram. The sample code is:
+Command @ref{boxplot} draw box-and-whisker diagram. The sample code is:
 @verbatim
 new a 10 7 '(2*rnd-1)^3/2'
 subplot 1 1 0 '':title 'Boxplot plot':box
@@ -1044,7 +1062,7 @@ boxplot a
 @node Candle sample, Error sample, BoxPlot sample, 1D samples
 @subsection Candle sample
 
-Function @ref{candle} draw candlestick chart. This is a combination of a line-chart and a bar-chart, in that each bar represents the range of price movement over a given time interval. The sample code is:
+Command @ref{candle} draw candlestick chart. This is a combination of a line-chart and a bar-chart, in that each bar represents the range of price movement over a given time interval. The sample code is:
 @verbatim
 new y 30 'sin(pi*x/2)^2':copy y1 y/2:copy y2 (y+1)/2
 subplot 1 1 0 '':title 'Candle plot (default)':yrange 0 1:box
@@ -1058,7 +1076,7 @@ candle y y1 y2
 @node Error sample, Mark sample, Candle sample, 1D samples
 @subsection Error sample
 
-Function @ref{error} draw error boxes around the points. You can draw default boxes or semi-transparent symbol (like marker, see @ref{Line styles}). Also you can set individual color for each box. The sample code is:
+Command @ref{error} draw error boxes around the points. You can draw default boxes or semi-transparent symbol (like marker, see @ref{Line styles}). Also you can set individual color for each box. The sample code is:
 @verbatim
 call 'prepare1d'
 new y 50 '0.7*sin(pi*x-pi) + 0.5*cos(3*pi*(x+1)/2) + 0.2*sin(pi*(x+1)/2)'
@@ -1087,7 +1105,7 @@ next
 @node Mark sample, TextMark sample, Error sample, 1D samples
 @subsection Mark sample
 
-Function @ref{mark} draw markers at points. It is mostly the same as @code{Plot} but marker size can be variable. The sample code is:
+Command @ref{mark} draw markers at points. It is mostly the same as @code{Plot} but marker size can be variable. The sample code is:
 @verbatim
 call 'prepare1d'
 subplot 1 1 0 '':title 'Mark plot (default)':box
@@ -1101,7 +1119,7 @@ mark y y1 's'
 @node TextMark sample, Label sample, Mark sample, 1D samples
 @subsection TextMark sample
 
-Function @ref{textmark} like @code{Mark} but draw text instead of markers. The sample code is:
+Command @ref{textmark} like @code{Mark} but draw text instead of markers. The sample code is:
 @verbatim
 call 'prepare1d'
 subplot 1 1 0 '':title 'TextMark plot (default)':box
@@ -1112,10 +1130,10 @@ textmark y y1 '\gamma' 'r'
 
 @c ------------------------------------------------------------------
 @external
-@node Label sample, Tube sample, TextMark sample, 1D samples
+@node Label sample, Table sample, TextMark sample, 1D samples
 @subsection Label sample
 
-Function @ref{label} print text at data points. The string may contain @samp{%x}, @samp{%y}, @samp{%z} for x-, y-, z-coordinates of points, @samp{%n} for point index. The sample code is:
+Command @ref{label} print text at data points. The string may contain @samp{%x}, @samp{%y}, @samp{%z} for x-, y-, z-coordinates of points, @samp{%n} for point index. The sample code is:
 @verbatim
 new ys 10 '0.2*rnd-0.8*sin(pi*x)'
 subplot 1 1 0 '':title 'Label plot':box
@@ -1127,10 +1145,34 @@ plot ys ' *':label ys 'y=%y'
 
 @c ------------------------------------------------------------------
 @external
-@node Tube sample, Tape sample, Label sample, 1D samples
+@node Table sample, Tube sample, Label sample, 1D samples
+@subsection Table sample
+
+Command @ref{table} draw table with data values. The sample code is:
+@verbatim
+new ys 10 3 '0.8*sin(pi*(x+y/4+1.25))+0.2*rnd'
+subplot 2 2 0:title 'Table sample':box
+table ys 'y_1\n{}y_2\n{}y_3'
+
+subplot 2 2 1:title 'no borders, colored'
+table ys 'y_1\n{}y_2\n{}y_3' 'r|'
+
+subplot 2 2 2:title 'no font decrease'
+table ys 'y_1\n{}y_2\n{}y_3' '#'
+
+subplot 2 2 3:title 'manual width and position':box
+table 0.5 0.95 ys 'y_1\n{}y_2\n{}y_3' '#';value 0.7
+@end verbatim
+
+@pfig{table, Example of Table()}
+
+
+@c ------------------------------------------------------------------
+@external
+@node Tube sample, Tape sample, Table sample, 1D samples
 @subsection Tube sample
 
-Function @ref{tube} draw tube with variable radius. The sample code is:
+Command @ref{tube} draw tube with variable radius. The sample code is:
 @verbatim
 light on:call 'prepare1d'
 new yc 50 'sin(pi*x)':new xc 50 'cos(pi*x)':new z 50 'x':divto y1 20
@@ -1156,7 +1198,7 @@ tube xc yc z y2 'r'
 @node Tape sample, Torus sample, Tube sample, 1D samples
 @subsection Tape sample
 
-Function @ref{tape} draw tapes which rotate around the curve as normal and binormal. The sample code is:
+Command @ref{tape} draw tapes which rotate around the curve as normal and binormal. The sample code is:
 @verbatim
 call 'prepare1d'
 new yc 50 'sin(pi*x)':new xc 50 'cos(pi*x)':new z 50 'x'
@@ -1182,7 +1224,7 @@ plot xc yc z 'k':tape xc yc z 'zg':tape xc yc z 'zg#'
 @node Torus sample, , Tape sample, 1D samples
 @subsection Torus sample
 
-Function @ref{torus} draw surface of the curve rotation. The sample code is:
+Command @ref{torus} draw surface of the curve rotation. The sample code is:
 @verbatim
 call 'prepare1d'
 subplot 2 2 0:title 'Torus plot (default)':light on:rotate 50 60:box
@@ -1239,7 +1281,7 @@ Basically, you can put this text after the script. Note, that you need to termin
 @node Surf sample, SurfC sample, , 2D samples
 @subsection Surf sample
 
-Function @ref{surf} is most standard way to visualize 2D data array. @code{Surf} use color scheme for coloring (see @ref{Color scheme}). You can use @samp{#} style for drawing black meshes on the surface. The sample code is:
+Command @ref{surf} is most standard way to visualize 2D data array. @code{Surf} use color scheme for coloring (see @ref{Color scheme}). You can use @samp{#} style for drawing black meshes on the surface. The sample code is:
 @verbatim
 call 'prepare2d'
 subplot 2 2 0:title 'Surf plot (default)':rotate 50 60:light on:box:surf a
@@ -1264,7 +1306,7 @@ surf x y z 'BbwrR'
 @node SurfC sample, SurfA sample, Surf sample, 2D samples
 @subsection SurfC sample
 
-Function @ref{surfc} is similar to @ref{surf} but its coloring is determined by another data. The sample code is:
+Command @ref{surfc} is similar to @ref{surf} but its coloring is determined by another data. The sample code is:
 @verbatim
 call 'prepare2d'
 title 'SurfC plot':rotate 50 60:light on:box
@@ -1278,7 +1320,7 @@ surfc a b
 @node SurfA sample, Mesh sample, SurfC sample, 2D samples
 @subsection SurfA sample
 
-Function @ref{surfa} is similar to @ref{surf} but its transparency is determined by another data. The sample code is:
+Command @ref{surfa} is similar to @ref{surf} but its transparency is determined by another data. The sample code is:
 @verbatim
 call 'prepare2d'
 title 'SurfC plot':rotate 50 60:light on:alpha on:box
@@ -1293,7 +1335,7 @@ surfa a b
 @node Mesh sample, Fall sample, SurfA sample, 2D samples
 @subsection Mesh sample
 
-Function @ref{mesh} draw wired surface. You can use @ref{meshnum} for changing number of lines to be drawn. The sample code is:
+Command @ref{mesh} draw wired surface. You can use @ref{meshnum} for changing number of lines to be drawn. The sample code is:
 @verbatim
 call 'prepare2d'
 title 'Mesh plot':rotate 50 60:box
@@ -1307,7 +1349,7 @@ mesh a
 @node Fall sample, Belt sample, Mesh sample, 2D samples
 @subsection Fall sample
 
-Function @ref{fall} draw waterfall surface. You can use @ref{meshnum} for changing number of lines to be drawn. Also you can use @samp{x} style for drawing lines in other direction. The sample code is:
+Command @ref{fall} draw waterfall surface. You can use @ref{meshnum} for changing number of lines to be drawn. Also you can use @samp{x} style for drawing lines in other direction. The sample code is:
 @verbatim
 call 'prepare2d'
 title 'Fall plot':rotate 50 60:box
@@ -1321,7 +1363,7 @@ fall a
 @node Belt sample, Boxs sample, Fall sample, 2D samples
 @subsection Belt sample
 
-Function @ref{belt} draw surface by belts. You can use @samp{x} style for drawing lines in other direction. The sample code is:
+Command @ref{belt} draw surface by belts. You can use @samp{x} style for drawing lines in other direction. The sample code is:
 @verbatim
 call 'prepare2d'
 title 'Belt plot':rotate 50 60:box
@@ -1335,7 +1377,7 @@ belt a
 @node Boxs sample, Tile sample, Fall sample, 2D samples
 @subsection Boxs sample
 
-Function @ref{boxs} draw surface by boxes. You can use @samp{#} for drawing wire plot. The sample code is:
+Command @ref{boxs} draw surface by boxes. You can use @samp{#} for drawing wire plot. The sample code is:
 @verbatim
 call 'prepare2d'
 origin 0 0 0
@@ -1359,7 +1401,7 @@ tile a
 @node Tile sample, TileS sample, Boxs sample, 2D samples
 @subsection Tile sample
 
-Function @ref{tile} draw surface by tiles. The sample code is:
+Command @ref{tile} draw surface by tiles. The sample code is:
 @verbatim
 call 'prepare2d'
 subplot 1 1 0 '':title 'Tiles plot':box
@@ -1373,7 +1415,7 @@ tile a
 @node TileS sample, Dens sample, Tile sample, 2D samples
 @subsection TileS sample
 
-Function @ref{tiles} is similar to @ref{tile} but tile sizes is determined by another data. This allows one to simulate transparency of the plot. The sample code is:
+Command @ref{tiles} is similar to @ref{tile} but tile sizes is determined by another data. This allows one to simulate transparency of the plot. The sample code is:
 @verbatim
 call 'prepare2d'
 subplot 1 1 0 '':title 'Tiles plot':box
@@ -1388,7 +1430,7 @@ tiles a b
 @node Dens sample, Cont sample, TileS sample, 2D samples
 @subsection Dens sample
 
-Function @ref{dens} draw density plot for surface. The sample code is:
+Command @ref{dens} draw density plot for surface. The sample code is:
 @verbatim
 call 'prepare2d'
 subplot 2 2 0 '':title 'Dens plot (default)':box
@@ -1413,7 +1455,7 @@ dens a1
 @node Cont sample, ContF sample, Dens sample, 2D samples
 @subsection Cont sample
 
-Function @ref{cont} draw contour lines for surface. You can select automatic (default) or manual levels for contours, print contour labels, draw it on the surface (default) or at plane (as @code{Dens}). The sample code is:
+Command @ref{cont} draw contour lines for surface. You can select automatic (default) or manual levels for contours, print contour labels, draw it on the surface (default) or at plane (as @code{Dens}). The sample code is:
 @verbatim
 call 'prepare2d'
 list v -0.5 -0.15 0 0.15 0.5
@@ -1437,7 +1479,7 @@ cont a 't'
 @node ContF sample, ContD sample, Cont sample, 2D samples
 @subsection ContF sample
 
-Function @ref{contf} draw filled contours.  You can select automatic (default) or manual levels for contours. The sample code is:
+Command @ref{contf} draw filled contours.  You can select automatic (default) or manual levels for contours. The sample code is:
 @verbatim
 call 'prepare2d'
 list v -0.5 -0.15 0 0.15 0.5
@@ -1463,7 +1505,7 @@ contf a1
 @node ContD sample, ContV sample, ContF sample, 2D samples
 @subsection ContD sample
 
-Function @ref{contd} is similar to @code{ContF} but with manual contour colors. The sample code is:
+Command @ref{contd} is similar to @code{ContF} but with manual contour colors. The sample code is:
 @verbatim
 call 'prepare2d'
 list v -0.5 -0.15 0 0.15 0.5
@@ -1489,7 +1531,7 @@ contd a1
 @node ContV sample, Axial sample, ContD sample, 2D samples
 @subsection ContV sample
 
-Function @ref{contv} draw vertical cylinders (belts) at contour lines. The sample code is:
+Command @ref{contv} draw vertical cylinders (belts) at contour lines. The sample code is:
 @verbatim
 call 'prepare2d'
 list v -0.5 -0.15 0 0.15 0.5
@@ -1513,7 +1555,7 @@ contv a:contf a:cont a 'k'
 @node Axial sample, Grad sample, ContV sample, 2D samples
 @subsection Axial sample
 
-Function @ref{axial} draw surfaces of rotation for contour lines. You can draw wire surfaces (@samp{#} style) or ones rotated in other directions (@samp{x}, @samp{z} styles). The sample code is:
+Command @ref{axial} draw surfaces of rotation for contour lines. You can draw wire surfaces (@samp{#} style) or ones rotated in other directions (@samp{x}, @samp{z} styles). The sample code is:
 @verbatim
 light on:alpha on:call 'prepare2d'
 subplot 2 2 0:title 'Axial plot (default)':rotate 50 60:box
@@ -1536,7 +1578,7 @@ axial a '#'
 @node Grad sample, , Axial sample, 2D samples
 @subsection Grad sample
 
-Function @ref{grad} draw gradient lines for matrix. The sample code is:
+Command @ref{grad} draw gradient lines for matrix. The sample code is:
 @verbatim
 call 'prepare2d'
 subplot 1 1 0 '':title 'Grad plot':box
@@ -1580,7 +1622,7 @@ Basically, you can put this text after the script. Note, that you need to termin
 @node Surf3 sample, Surf3C sample, , 3D samples
 @subsection Surf3 sample
 
-Function @ref{surf3} is one of most suitable (for my opinion) functions to visualize 3D data. It draw the isosurface(s) -- surface(s) of constant amplitude (3D analogue of contour lines). You can draw wired isosurfaces if specify @samp{#} style. The sample code is:
+Command @ref{surf3} is one of most suitable (for my opinion) functions to visualize 3D data. It draw the isosurface(s) -- surface(s) of constant amplitude (3D analogue of contour lines). You can draw wired isosurfaces if specify @samp{#} style. The sample code is:
 @verbatim
 call 'prepare3d'
 title 'Surf3 plot':rotate 50 60:light on:alpha on:box
@@ -1594,7 +1636,7 @@ surf3 c
 @node Surf3C sample, Surf3A sample, Surf3 sample, 3D samples
 @subsection Surf3C sample
 
-Function @ref{surf3c} is similar to @ref{surf3} but its coloring is determined by another data. The sample code is:
+Command @ref{surf3c} is similar to @ref{surf3} but its coloring is determined by another data. The sample code is:
 @verbatim
 call 'prepare3d'
 title 'Surf3 plot':rotate 50 60:light on:alpha on:box
@@ -1608,7 +1650,7 @@ surf3c c d
 @node Surf3A sample, Cloud sample, Surf3C sample, 3D samples
 @subsection Surf3A sample
 
-Function @ref{surf3a} is similar to @ref{surf3} but its transparency is determined by another data. The sample code is:
+Command @ref{surf3a} is similar to @ref{surf3} but its transparency is determined by another data. The sample code is:
 @verbatim
 call 'prepare3d'
 title 'Surf3 plot':rotate 50 60:light on:alpha on:box
@@ -1622,7 +1664,7 @@ surf3a c d
 @node Cloud sample, Dens3 sample, Surf3A sample, 3D samples
 @subsection Cloud sample
 
-Function @ref{cloud} draw cloud-like object which is less transparent for higher data values. Similar plot can be created using many (about 10-20) @code{Surf3A(a,a)} isosurfaces. The sample code is:
+Command @ref{cloud} draw cloud-like object which is less transparent for higher data values. Similar plot can be created using many (about 10-20) @code{Surf3A(a,a)} isosurfaces. The sample code is:
 @verbatim
 call 'prepare3d'
 subplot 2 2 0:title 'Cloud plot':rotate 50 60:alpha on:box
@@ -1645,7 +1687,7 @@ cloud c 'wyrRk'; meshnum 10
 @node Dens3 sample, Cont3 sample, Cloud sample, 3D samples
 @subsection Dens3 sample
 
-Function @ref{dens3} draw just usual density plot but at slices of 3D data. The sample code is:
+Command @ref{dens3} draw just usual density plot but at slices of 3D data. The sample code is:
 @verbatim
 call 'prepare3d'
 title 'Dens3 sample':rotate 50 60:alpha on:alphadef 0.7
@@ -1660,7 +1702,7 @@ dens3 c 'x':dens3 c ':y':dens3 c 'z'
 @node Cont3 sample, ContF3 sample, Dens3 sample, 3D samples
 @subsection Cont3 sample
 
-Function @ref{cont3} draw just usual contour lines but at slices of 3D data. The sample code is:
+Command @ref{cont3} draw just usual contour lines but at slices of 3D data. The sample code is:
 @verbatim
 call 'prepare3d'
 title 'Cont3 sample':rotate 50 60:box
@@ -1674,7 +1716,7 @@ cont3 c 'x':cont3 c:cont3 c 'z'
 @node ContF3 sample, Dens projection sample, Cont3 sample, 3D samples
 @subsection ContF3 sample
 
-Function @ref{contf3} draw just usual filled contours but at slices of 3D data. The sample code is:
+Command @ref{contf3} draw just usual filled contours but at slices of 3D data. The sample code is:
 @verbatim
 call 'prepare3d'
 title 'Cont3 sample':rotate 50 60:box:light on
@@ -1737,7 +1779,7 @@ contfz {sum c 'z'} '' -1
 @node TriPlot and QuadPlot, Axial sample, ContF projection sample, 3D samples
 @subsection TriPlot and QuadPlot
 
-Function @ref{triplot} and @ref{quadplot} draw set of triangles (or quadrangles for @code{QuadPlot}) for irregular data arrays. Note, that you have to provide not only vertexes, but also the indexes of triangles or quadrangles. I.e. perform triangulation by some other library. The sample code is:
+Command @ref{triplot} and @ref{quadplot} draw set of triangles (or quadrangles for @code{QuadPlot}) for irregular data arrays. Note, that you have to provide not only vertexes, but also the indexes of triangles or quadrangles. I.e. perform triangulation by some other library. The sample code is:
 @verbatim
 list q 0 1 2 3 | 4 5 6 7 | 0 2 4 6 | 1 3 5 7 | 0 4 1 5 | 2 6 3 7
 list xq -1 1 -1 1 -1 1 -1 1
@@ -1764,7 +1806,7 @@ triplot t xt yt zt '#k'
 @node Dots sample, , TriPlot and QuadPlot, 3D samples
 @subsection Dots sample
 
-Function @ref{dots} is another way to draw irregular points. @code{Dots} use color scheme for coloring (see @ref{Color scheme}). The sample code is:
+Command @ref{dots} is another way to draw irregular points. @code{Dots} use color scheme for coloring (see @ref{Color scheme}). The sample code is:
 @verbatim
 new t 1000 'pi*(rnd-0.5)':new f 1000 '2*pi*rnd'
 copy x 0.9*cos(t)*cos(f)
@@ -1817,7 +1859,7 @@ Basically, you can put this text after the script. Note, that you need to termin
 @node Vect sample, Vect3 sample, , Vector field samples
 @subsection Vect sample
 
-Function @ref{vect} is most standard way to visualize vector fields -- it draw a lot of arrows or hachures for each data cell. It have a lot of options which can be seen on the figure (and in the sample code). @code{Vect} use color scheme for coloring (see @ref{Color scheme}). The sample code is:
+Command @ref{vect} is most standard way to visualize vector fields -- it draw a lot of arrows or hachures for each data cell. It have a lot of options which can be seen on the figure (and in the sample code). @code{Vect} use color scheme for coloring (see @ref{Color scheme}). The sample code is:
 @verbatim
 call 'prepare2v'
 subplot 3 2 0 '':title 'Vect plot (default)':box
@@ -1847,7 +1889,7 @@ vect ex ey ez
 @node Vect3 sample, Traj sample, Vect sample, Vector field samples
 @subsection Vect3 sample
 
-Function @ref{vect3} draw just usual vector field plot but at slices of 3D data. The sample code is:
+Command @ref{vect3} draw just usual vector field plot but at slices of 3D data. The sample code is:
 @verbatim
 origin 0 0 0:call 'prepare3v'
 subplot 2 1 0:title 'Vect3 sample':rotate 50 60
@@ -1867,7 +1909,7 @@ grid3 ex 'Wx':grid3 ex 'W':grid3 ex 'Wz'
 @node Traj sample, Flow sample, Vect3 sample, Vector field samples
 @subsection Traj sample
 
-Function @ref{traj} is 1D analogue of @code{Vect}. It draw vectors from specified points. The sample code is:
+Command @ref{traj} is 1D analogue of @code{Vect}. It draw vectors from specified points. The sample code is:
 @verbatim
 call 'prepare1d'
 subplot 1 1 0 '':title 'Traj plot':box
@@ -1882,7 +1924,7 @@ plot x1 y:traj x1 y y1 y2
 @node Flow sample, Pipe sample, Traj sample, Vector field samples
 @subsection Flow sample
 
-Function @ref{flow} is another standard way to visualize vector fields -- it draw lines (threads) which is tangent to local vector field direction. MathGL draw threads from edges of bounding box and from central slices. Sometimes it is not most appropriate variant -- you may want to use @code{FlowP} to specify manual position of threads. @code{Flow} use color scheme for coloring (see @ref{Color scheme}). At this warm color corresponds to normal flow (like attractor), cold one corresponds to inverse flow (like source). The sample code is:
+Command @ref{flow} is another standard way to visualize vector fields -- it draw lines (threads) which is tangent to local vector field direction. MathGL draw threads from edges of bounding box and from central slices. Sometimes it is not most appropriate variant -- you may want to use @code{FlowP} to specify manual position of threads. @code{Flow} use color scheme for coloring (see @ref{Color scheme}). At this warm color corresponds to normal flow (like attractor), cold one corresponds to inverse flow (like source). The sample code is:
 @verbatim
 call 'prepare2v'
 subplot 2 2 0 '':title 'Flow plot (default)':box
@@ -1906,7 +1948,7 @@ flow ex ey ez
 @node Pipe sample, Dew sample, Flow sample, Vector field samples
 @subsection Pipe sample
 
-Function @ref{pipe} is similar to @ref{flow} but draw pipes (tubes) which radius is proportional to the amplitude of vector field. @code{Pipe} use color scheme for coloring (see @ref{Color scheme}). At this warm color corresponds to normal flow (like attractor), cold one corresponds to inverse flow (like source). The sample code is:
+Command @ref{pipe} is similar to @ref{flow} but draw pipes (tubes) which radius is proportional to the amplitude of vector field. @code{Pipe} use color scheme for coloring (see @ref{Color scheme}). At this warm color corresponds to normal flow (like attractor), cold one corresponds to inverse flow (like source). The sample code is:
 @verbatim
 call 'prepare2v'
 subplot 2 2 0 '':title 'Pipe plot (default)':light on:box
@@ -1930,7 +1972,7 @@ pipe ex ey ez '' 0.1
 @node Dew sample, , Pipe sample, Vector field samples
 @subsection Dew sample
 
-Function @ref{dew} is similar to @code{Vect} but use drops instead of arrows. The sample code is:
+Command @ref{dew} is similar to @code{Vect} but use drops instead of arrows. The sample code is:
 @verbatim
 call 'prepare2v'
 subplot 1 1 0 '':title 'Dew plot':light on:box
@@ -1963,6 +2005,7 @@ In this section I've included some small hints and advices for the improving of 
 * Using options::
 * ``Templates''::
 * Stereo image::
+* Reduce memory usage::
 @end menu
 
 @c ------------------------------------------------------------------
@@ -2047,7 +2090,7 @@ light off:surf a
 @node Types of transparency, Adding fog, Transparency and lighting, Hints
 @subsection Types of transparency
 
-MathGL library has advanced features for setting and handling the surface transparency. The simplest way to add transparency is the using of function @ref{alpha}. As a result, all further surfaces (and isosurfaces, density plots and so on) become transparent. However, their  look can be additionally improved.
+MathGL library has advanced features for setting and handling the surface transparency. The simplest way to add transparency is the using of command @ref{alpha}. As a result, all further surfaces (and isosurfaces, density plots and so on) become transparent. However, their  look can be additionally improved.
 
 The value of transparency can be different from surface to surface. To do it just use @code{SetAlphaDef} before the drawing of the surface, or use option @code{alpha} (see @ref{Command options}). If its value is close to 0 then the surface becomes more and more transparent. Contrary, if its value is close to 1 then the surface becomes practically non-transparent.
 
@@ -2344,13 +2387,7 @@ text 0.7 -0.05 'central ray'
 @node MGL parser using, Using options, PDE solving hints, Hints
 @subsection MGL parser using
 
-Sometimes you may prefer to use MGL scripts in yours code. It is simpler (especially in comparison with C/Fortran interfaces) and provide faster way to plot the data with annotations, labels and so on. Class @code{mglParse} (@pxref{mglParse class} parse MGL scripts in C++. It have also the corresponding interface for C/Fortran.
-
-The key function here is @code{mglParse::Parse()} (or @code{mgl_parse()} for C/Fortran) which execute one command per string. At this the detailed information about the possible errors or warnings is passed as function value. Or you may execute the whole script as long string with lines separated by @samp{\n}. Functions @code{mglParse::Execute()} and @code{mgl_parse_text()} perform it. Also you may set the values of parameters @samp{$0}...@samp{$9} for the script by functions @code{mglParse::AddParam()} or @code{mgl_add_param()}, allow/disable picture resizing, check ``once'' status and so on. The usage is rather straight-forward.
-
-The only non-obvious thing is data transition between script and yours program. There are 2 stages: add or find variable; and set data to variable. In C++ you may use functions @code{mglParse::AddVar()} and @code{mglParse::FindVar()} which return pointer to @code{mglData}. In C/Fortran the corresponding functions are @code{mgl_add_var()}, @code{mgl_find_var()}. This data pointer is valid until next @code{Parse()} or @code{Execute()} call. Note, you @strong{must not delete or free} the data obtained from these functions!
-
-So, some simple example at the end. Here I define a data array, create variable, put data into it and plot it. The C++ code looks like this:
+MGL scripts can contain loops, conditions and user-defined functions. Below I show very simple example of its usage:
 @verbatim
 title 'MGL parser sample'
 call 'sample'
@@ -2361,7 +2398,11 @@ new dat 100 'sin(2*pi*(x+1))'
 plot dat; xrange 0 1
 box:axis:xlabel 'x':ylabel 'y'
 for $0 -1 1 0.1
+if $0<0
 line 0 0 -1 $0 'r'
+else
+line 0 0 -1 $0 'r'
+endif
 next
 @end verbatim
 
@@ -2430,7 +2471,7 @@ I understand that this is obvious thing for any professional programmer, but I s
 
 @c ------------------------------------------------------------------
 @external
-@node Stereo image, , ``Templates'', Hints
+@node Stereo image, Reduce memory usage, ``Templates'', Hints
 @subsection Stereo image
 
 One can easily create stereo image in MathGL. Stereo image can be produced by making two subplots with slightly different rotation angles. The corresponding code looks like this:
@@ -2443,65 +2484,54 @@ subplot 2 1 1:rotate 50 60-1:box:surf a
 
 @pfig{stereo, Example of stereo image.}
 
+@c ------------------------------------------------------------------
+@external
+@node Reduce memory usage, , Stereo image, Hints
+@subsection Reduce memory usage
+
+By default MathGL save all primitives in memory, rearrange it and only later draw them on bitmaps. Usually, this speed up drawing, but may require a lot of memory for plots which contain a lot of faces (like @ref{cloud}, @ref{dew}). You can use @ref{quality} function for setting to use direct drawing on bitmap and bypassing keeping any primitives in memory. This function also allow you to decrease the quality of the resulting image but increase the speed of the drawing.
+
+The code for lower memory usage looks like this:
+@verbatim
+quality 6  # firstly, set to draw directly on bitmap
+for $1 0 1000
+  sphere 2*rnd-1 2*rnd-1 0.05
+next
+@end verbatim
+
+@c ==================================================================
+
 @external
 @node FAQ, , Hints, Examples
 @section FAQ
 
 @table @strong
 @item The plot does not appear
-Check that points of the plot are located inside the bounding box and resize the bounding box using @code{SetRange()}/@code{SetRanges()} function. Check that the data have correct dimensions for selected type of plot. Be sure that  @code{Finish()} is called after the plotting functions (or be sure that the plot is saved to a file). Sometimes the light reflection from flat surfaces (like, @code{Dens()}) can look as if the plot were absent.
+Check that points of the plot are located inside the bounding box and resize the bounding box using @ref{ranges} function. Check that the data have correct dimensions for selected type of plot. Sometimes the light reflection from flat surfaces (like, @ref{dens}) can look as if the plot were absent.
 
 @item I can not find some special kind of plot.
-Most ``new'' types of plots can be created by using the existing drawing functions. For example, the surface of curve rotation can be created by a special function @code{Torus()}, or as a parametrically specified surface by @code{Surf()}. See also, @ref{Hints}. If you can not find a specific type of plot, please e-mail me and this plot will appear in the next version of MathGL library.
-
-@item Should I know some graphical libraries (like OpenGL) before using the MathGL library?
-No. The MathGL library is self-contained and does not require the knowledge of external libraries.
-
-@item In which language is the library written? For which languages does it have an interface?
-The core of the MathGL library is written in C++. But there are interfaces for: pure C, Fortran, Pascal, Forth, and its own command language MGL. Also there is a large set of interpreted languages, which are supported (Python, Java,  ALLEGROCL, CHICKEN, Lisp, CFFI, C#, Guile, Lua, Modula 3, Mzscheme, Ocaml, Octave, Perl, PHP, Pike, R, Ruby, Tcl). These interfaces are written using SWIG (both pure C functions and classes) but only the interface for Python and Octave is included in the build system. The reason is that I don't know any other interpreted languages :(. Note that most other languages can use (link to) the pure C functions.
-
-@item How can I use MathGL with Fortran?
-You can use MathGL as is with @code{gfortran} because it uses by default the AT&T notation for external functions. For other compilers (like Visual Fortran) you have to switch on the AT&T notation manually. The AT&T notation requires that the symbol @samp{_} is added at the end of each function name, function argument(s) is passed by pointers and the string length(s) is passed at the end of the argument list. For example:
-
-@emph{C function} -- @code{void mgl_fplot(HMGL graph, const char *fy, const char *stl, int n);}
-
-@emph{AT&T function} -- @code{void mgl_fplot_(uintptr_t *graph, const char *fy, const char *stl, int *n, int ly, int ls);}
+Most ``new'' types of plots can be created by using the existing drawing functions. For example, the surface of curve rotation can be created by a special function @ref{torus}, or as a parametrically specified surface by @ref{surf}. See also, @ref{Hints}. If you can not find a specific type of plot, please e-mail me and this plot will appear in the next version of MathGL library.
 
 @item How can I print in Russian/Spanish/Arabic/Japanese, and so on?
 The standard way is to use Unicode encoding for the text output. But the MathGL library also has interface for 8-bit (char *) strings with internal conversion to Unicode. This conversion depends on the current locale OS. You may change it by @code{setlocale()} function. For example, for Russian text in CP1251 encoding you may use @code{setlocale(LC_CTYPE, "ru_RU.cp1251");} (under MS Windows the name of locale may differ -- @code{setlocale(LC_CTYPE, "russian_russia.1251")}). I strongly recommend not to use the constant @code{LC_ALL} in the conversion. Since it also changes the number format, it may lead to mistakes in formula writing and reading of the text in data files. For example, the program will await a @samp{,} as a decimal point but the user will enter @samp{.}.
 
 @item How can I exclude a point or a region of plot from the drawing?
-There are 3 general ways. First, the point with @code{NAN} value as one of the coordinates (including color/alpha range) will never be plotted. Second, special functions @code{SetCutBox}() and @code{CutOff}() define the condition when the points should be omitted (see @ref{Cutting}). Last, you may change the transparency of a part of the plot by the help of functions @code{SurfA()}, @code{Surf3A()} (see @ref{Dual plotting}). In last case the transparency is switched on smoothly.
-
-@item I use VisualStudio, CBuilder or some other compiler (not MinGW/gcc). How can I link the MathGL library?
-In version 2.0, main classes (@code{mglGraph} and @code{mglData}) contains only @code{inline} functions and are acceptable for any compiler with the same binary files. However, if you plan to use widget classes (QMathGL, Fl_MathGL, ...) or to access low-level features (mglBase, mglCanvas, ...) then you have to recompile MathGL by yours compiler.
-
-@item How I can build MathGL under Windows?
-Generally, it is the same procedure as for Linux or MacOS -- see section @ref{Installation}. The simplest way is using the combination CMake+MinGW. Also you may need some extra libraries like GSL, PNG, JPEG and so on. All of them can be found at @url{http://gnuwin32.sourceforge.net/packages.html}. After installing all components, just run @uref{http://www.cmake.org/cmake/help/runningcmake.html, cmake-gui} configurator and build the MathGL itself.
+There are 3 general ways. First, the point with @code{nan} value as one of the coordinates (including color/alpha range) will never be plotted. Second, special functions define the condition when the points should be omitted (see @ref{Cutting}). Last, you may change the transparency of a part of the plot by the help of functions @ref{surfa}, @ref{surf3a} (see @ref{Dual plotting}). In last case the transparency is switched on smoothly.
 
 @item How many people write this library?
 Most of the library was written by one person. This is a result of nearly a year of work (mostly in the evening and on holidays): I spent half a year to write the kernel and half a year to a year on extending, improving the library and writing documentation. This process continues now :). The build system (cmake files) was written mostly by D.Kulagin, and the export to PRC/IDTF was written mostly by M.Vidassov.
 
 @item How can I display a bitmap on the figure?
-You can import data into a @code{mglData} instance and display it by @code{Dens()} function. For example, for black-and-white bitmap you can use the code: @code{mglData bmp; bmp.Import("fname.png","wk"); gr->Dens(bmp,"wk");}.
-
-@item How can I use MathGL in Qt, FLTK, wxWidgets etc.?
-There are special classes (widgets) for these libraries: QMathGL for Qt, Fl_MathGL for FLTK and so on. If you don't find the appropriate class then you can create your own widget that displays a bitmap using mglCanvas::GetRGB().
-
-@item How can I create U3D file (make 3D in PDF)?
-There are 2 steps: first you should create IDTF file, and later convert it to U3D. You can use @uref{http://sourceforge.net/project/showfiles.php?group_id=152187&package_id=300628, U3D tools} for converting IDTF file to U3D. It needs @uref{http://libharu.org, libharu} 2.1.0 or later. For installation use @code{./bootstrap, ./configure, make, sudo make install}. It provides  IDTFConverter program for converting text files *.idtf to binary files *.u3d. The latter can be included into PDF.
+You can import data by command @ref{import} and display it by @ref{dens} function. For example, for black-and-white bitmap you can use the code: @code{import bmp 'fname.png' 'wk':dens  bmp 'wk'}.
 
 @item How I can change the font family?
-First, you should download new font files from @uref{http://mathgl.sourceforge.net/download.html, here} or from @uref{http://sourceforge.net/project/showfiles.php?group_id=152187&package_id=267177, here}. Next, you should load the font files into mglGraph class instance @var{gr} by the following command: @code{gr->LoadFont(fontname,path);}. Here @var{fontname} is the base font name like @samp{STIX} and @var{path} sets the location of font files. Use @code{gr->RestoreFont();} to start using the default font.
+First, you should download new font files from @uref{http://mathgl.sourceforge.net/download.html, here} or from @uref{http://sourceforge.net/project/showfiles.php?group_id=152187&package_id=267177, here}. Next, you should load the font files into by the following command: @code{loadfont 'fontname'}. Here @var{fontname} is the base font name like @samp{STIX}. Use @code{loadfont ''} to start using the default font.
 
 @item How can I draw tick out of a bounding box?
-Just set a negative value in @var{SetTickLen}. For example, use @code{gr->SetTickLen(-0.1);}.
+Just set a negative value in @ref{ticklen}. For example, use @code{ticklen -0.1}.
 
 @item How can I prevent text rotation?
-Just use @code{SetRotatedText(false)}.
-
-@item What is @code{*.so}? What is @code{gcc}? How I can use @code{make}?
-They are standard GNU tools. There is special FAQ about its usage under Windows -- @uref{http://www.mingw.org/wiki/FAQ}.
+Just use @code{rotatetext off}.
 
 @end table
 

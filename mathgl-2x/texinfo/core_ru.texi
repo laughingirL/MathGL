@@ -330,6 +330,15 @@ MGL не требует создания данного типа объекто�
 Включает/выключает вращение меток и подписей осей координат вдоль оси.
 @end deftypefn
 
+@anchor{loadfont}
+@deftypefn {MGL command} {} loadfont ['name'='']
+@ifclear UDAV
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} LoadFont (@code{const char *}name, @code{const char *}path=@code{""})
+@deftypefnx {Функция С} @code{void} mgl_load_font (@code{HMGL} gr, @code{const char *}name, @code{const char *}path)
+@end ifclear
+Загружает начертание шрифта из файла @var{path}/@var{name}. Пустая строка загрузит шрифт по умолчанию.
+@end deftypefn
+
 @ifclear UDAV
 @deftypefn {Метод класса @code{mglGraph}} @code{void} SetFontDef (@code{const char *}fnt)
 @deftypefnx {Функция С} @code{void} mgl_set_font_def (@code{HMGL} gr, @code{const char *} val)
@@ -349,11 +358,6 @@ MGL не требует создания данного типа объекто�
 @end deftypefn
 @deftypefn {Метод класса @code{mglGraph}} @code{inline void} SetFontSizeIN (@code{mreal} cm, @code{int} dpi=@code{72})
 Задает размер шрифта в дюймах для заданного DPI (по умолчанию 0.22 in = 16 pt).
-@end deftypefn
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} LoadFont (@code{const char *}name, @code{const char *}path=@code{""})
-@deftypefnx {Функция С} @code{void} mgl_load_font (@code{HMGL} gr, @code{const char *}name, @code{const char *}path)
-Загружает начертание шрифта из файла @var{path}/@var{name}.
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph}} @code{void} CopyFont (@code{mglGraph *} from)
@@ -883,7 +887,7 @@ Setsize: размер(ы) равны нулю или отрицательны
 @end deftypefn
 
 @anchor{quality}
-@deftypefn {Команда MGL} {} quality @code{val}
+@deftypefn {Команда MGL} {} quality [@code{val}=2]
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} SetQuality (@code{int} val=@code{MGL_DRAW_NORM})
 @deftypefnx {Функция С} @code{void} mgl_set_quality (@code{HMGL} gr, @code{int} val)
@@ -1371,7 +1375,6 @@ gr.GetBGRN(bits, len(bits));
 @cindex Putsw
 @end ifclear
 @cindex Text
-@cindex Label
 @cindex fgets
 
 Функции для вывода текста позволяют вывести строку текста в произвольном месте рисунка, в произвольном направлении и вдоль произвольной кривой. MathGL позволяет использовать произвольное начертание шрифта и многие ТеХ-ие команды (детальнее см. @ref{Font styles}). Все функции вывода текста имеют варианты для 8-bit строк (@code{char *}) и для Unicode строк (@code{wchar_t *}). В первом случае используется конверсия из текущей локали, т.е. иногда вам требуется явно указать локаль с помощью функции @code{setlocale()}. Аргумент @var{size} определяет размер текста: размер шрифта если положителен или относительный размер (=-@var{size}*@code{SetFontSize()}) если отрицателен. Начертание шрифта (STIX, arial, courier, times и др.) можно изменить с помощью функции LoadFont(). @xref{Font settings}.
@@ -1880,7 +1883,21 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Функция С} @code{void} mgl_label_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}txt, @code{const char *}fnt, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_labelw_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const wchar_t *}txt, @code{const char *}fnt, @code{const char *}opt)
 @end ifclear
-Функции выводят текстовую строку @var{txt} в точках @{@var{x}[i], @var{y}[i], @var{z}[i]@}. Если строка @var{txt} содержит @samp{%x}, @samp{%y}, @samp{%z} или @samp{%n}, то они будут заменены на значения соответствующих координат или на номер точки. См. также @ref{plot}, @ref{mark}, @ref{textmark}. @sref{Label sample}
+Функции выводят текстовую строку @var{txt} в точках @{@var{x}[i], @var{y}[i], @var{z}[i]@}. Если строка @var{txt} содержит @samp{%x}, @samp{%y}, @samp{%z} или @samp{%n}, то они будут заменены на значения соответствующих координат или на номер точки. См. также @ref{plot}, @ref{mark}, @ref{textmark}, @ref{table}. @sref{Label sample}
+@end deftypefn
+
+@anchor{table}
+@deftypefn {MGL command} {} table vdat 'txt' ['stl'='#']
+@deftypefnx {MGL command} {} table x y vdat 'txt' ['stl'='#']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} Table (@code{const mglDataA &}val, @code{const char *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Table (@code{const mglDataA &}val, @code{const wchar_t *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Table (@code{mreal} x, @code{mreal} y, @code{const mglDataA &}val, @code{const char *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Table (@code{mreal} x, @code{mreal} y, @code{const mglDataA &}val, @code{const wchar_t *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_table (@code{HMGL} gr, @code{mreal} x, @code{mreal} y, @code{HCDT} val, @code{const char *}txt, @code{const char *}fnt, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_tablew (@code{HMGL} gr, @code{mreal} x, @code{mreal} y, @code{HCDT} val, @code{const wchar_t *}txt, @code{const char *}fnt, @code{const char *}opt)
+@end ifclear
+Рисует таблицу значений массива @var{val} с заголовками @var{txt} (разделенными символом новой строки @samp{\n}) в точке @{@var{x}, @var{y}@} (по умолчанию @{0,0@}) относительно текущего subplot. Если строка @var{fnt} содержит @samp{#}, то рисуются границы ячеек. Если строка @var{fnt} содержит @samp{=}, то ширина всех ячеек одинакова. Если строка @var{fnt} содержит @samp{|}, то ширина таблицы ограничена шириной subplot (эквивалентно опции @samp{value 1}). Опция @code{value} задает ширину таблицы (по умолчанию 1). См. также @ref{label}. @sref{Table sample}
 @end deftypefn
 
 @anchor{tube}

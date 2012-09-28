@@ -1486,12 +1486,12 @@ void mglc_meshnum(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 //-----------------------------------------------------------------------------
 int mgls_quality(mglGraph *gr, long , mglArg *a, int k[10], const char *)
 {
-	if(k[0]==3)	gr->SetQuality(a[0].v);		else	return 1;
+	gr->SetQuality(k[0]==3?iint(a[0].v):2);
 	return 0;
 }
 void mglc_quality(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 {
-	if(k[0]==3)	mglprintf(out,1024,L"gr->SetQuality(%d);", iint(a[0].v));
+	if(k[0]==3)	mglprintf(out,1024,L"gr->SetQuality(%d);", k[0]==3?iint(a[0].v):2);
 }
 //-----------------------------------------------------------------------------
 int mgls_marksize(mglGraph *gr, long , mglArg *a, int k[10], const char *)
@@ -2616,18 +2616,18 @@ void mglc_label(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 int mgls_table(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]==3 && k[1]==3 && k[2]==1)
-		gr->Table(a[0].v, a[1].v, *(a[2].d), k[3]==2?a[3].w.c_str():L"", k[4]==2?a[4].s.c_str():"#",opt);
+		gr->Table(a[0].v, a[1].v, *(a[2].d), k[3]==2?a[3].w.c_str():L"", k[4]==2?a[4].s.c_str():"#|",opt);
 	else if(k[0]==1)
-		gr->Table(*(a[0].d), k[1]==2?a[1].w.c_str():L"", k[2]==2?a[2].s.c_str():"#",opt);
+		gr->Table(*(a[0].d), k[1]==2?a[1].w.c_str():L"", k[2]==2?a[2].s.c_str():"#|",opt);
 	else	return 1;
 	return 0;
 }
 void mglc_table(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]==3 && k[1]==3 && k[2]==1)
-		mglprintf(out,1024,L"gr->Table(%g, %g, %s, L\"%ls\", \"%s\", \"%s\");", a[0].v, a[1].v, a[2].s.c_str(), k[3]==2?a[3].w.c_str():L"", k[4]==2?a[4].s.c_str():"#",opt);
+		mglprintf(out,1024,L"gr->Table(%g, %g, %s, L\"%ls\", \"%s\", \"%s\");", a[0].v, a[1].v, a[2].s.c_str(), k[3]==2?a[3].w.c_str():L"", k[4]==2?a[4].s.c_str():"|#",opt);
 	else if(k[0]==1)
-		mglprintf(out,1024,L"gr->Table(%s, L\"%ls\", \"%s\", \"%s\");", a[0].s.c_str(), k[1]==2?a[1].w.c_str():L"", k[2]==2?a[2].s.c_str():"#",opt);
+		mglprintf(out,1024,L"gr->Table(%s, L\"%ls\", \"%s\", \"%s\");", a[0].s.c_str(), k[1]==2?a[1].w.c_str():L"", k[2]==2?a[2].s.c_str():"|#",opt);
 }
 //-----------------------------------------------------------------------------
 int mgls_xrange(mglGraph *gr, long , mglArg *a, int k[10], const char *)
@@ -3789,7 +3789,7 @@ mglCommand mgls_base_cmd[] = {
 	{"legendmarks","Set number of marks in the legend","legendmarks val", mgls_legendmarks, mglc_legendmarks,15},
 	{"light","Setup light","light [val] | val num | num xpos ypos zpos ['fmt' br]", mgls_light, mglc_light,2},
 	{"line","Draw line","line x1 y1 x2 y2 ['fmt']|x1 y1 z1 x2 y2 z2 ['fmt']", mgls_line, mglc_line,13},
-	{"loadfont","Load fontfaces","loadfont ['fmt']", mgls_loadfont, mglc_loadfont,15},
+	{"loadfont","Load fontfaces","loadfont ['face']", mgls_loadfont, mglc_loadfont,15},
 	{"map","Draw mapping plot","map Udat Vdat ['fmt']|Xdat Ydat Udat Vdat ['fmt']", mgls_map, mglc_map,10},
 	{"mark","Draw mark plot for 1D data","mark Ydat Rdat ['fmt']|Xdat Ydat Rdat ['fmt']|Xdat Ydat Zdat Rdat ['fmt']", mgls_mark, mglc_mark,7},
 	{"marksize","Set size of markers","marksize val", mgls_marksize, mglc_marksize,2},
@@ -3817,7 +3817,7 @@ mglCommand mgls_base_cmd[] = {
 	{"putsfit","Print fitted formula","putsfit x y ['pre' 'font' size]|x y z ['pre' 'font' size]", mgls_putsfit, mglc_putsfit,15},
 	{"qo2d","Solve PDE in accompanied coordinates","qo2d Res 'ham' IniRe IniIm Ray [r k0 Xout Yout]", mgls_qo2d, mglc_qo2d,4},
 	{"quadplot","Draw surface of quadrangles","quadplot Idat Xdat Ydat ['fmt']|Idat Xdat Ydat Zdat ['fmt']|Idat Xdat Ydat Zdat Cdat ['fmt'] ", mgls_quadplot, mglc_quadplot,0},
-	{"quality","Set plot quality","quality val", mgls_quality, mglc_quality,2},
+	{"quality","Set plot quality","quality [val]", mgls_quality, mglc_quality,2},
 	{"radar","Draw radar chart","radar Rdat ['fmt']", mgls_radar, mglc_radar,7},
 	{"ranges","Set axis ranges","ranges x1 x2 y1 y2 [z1 z2]", mgls_ranges, mglc_ranges,14},
 	{"ray","Solve Hamiltonian ODE (find GO ray or trajectory)","ray Res 'ham' x0 y0 z0 px0 py0 pz0 [dz=0.1 tmax=10]", mgls_ray, mglc_ray,4},

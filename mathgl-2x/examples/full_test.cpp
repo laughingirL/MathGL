@@ -83,11 +83,16 @@ int verbose = 0;
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	gr->DefaultPlotParam();	gr->Clf();
-	mglParse p;
-	setlocale(LC_CTYPE, "");
-	p.Execute(gr,"box:axis:fplot 'sin(pi*x)'");
-	gr->WriteJSON("-");
+	mglData ys(10,3);	ys.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
+	if(!mini)	{	gr->SubPlot(2,2,0);	gr->Title("Table plot");	}
+	gr->Table(ys,"y_1\ny_2\ny_3");	gr->Box();
+	if(mini)	return;
+	gr->SubPlot(2,2,1);	gr->Title("no borders, colored");
+	gr->Table(ys,"y_1\ny_2\ny_3","r|");
+	gr->SubPlot(2,2,2);	gr->Title("no font decrease");
+	gr->Table(ys,"y_1\ny_2\ny_3","#=");
+	gr->SubPlot(2,2,3);	gr->Title("manual width, position");
+	gr->Table(1, 0.5, ys,"y_1\ny_2\ny_3","#", "value 0.7");
 	return;
 
 /*	mglData ys(10,5);	ys.Modify("0.8*sin(pi*2*x+pi*y)+0.2*rnd");
@@ -1237,7 +1242,8 @@ void smgl_surf(mglGraph *gr)
 //-----------------------------------------------------------------------------
 const char *mmgl_parser="title 'MGL parser sample'\ncall 'sample'\nstop\nfunc 'sample'\n"
 "new dat 100 'sin(2*pi*(x+1))'\nplot dat; xrange 0 1\nbox\naxis\n"
-"xlabel 'x'\nylabel 'y'\nbox\nfor $0 -1 1 0.1\nline 0 0 -1 $0 'r'\nnext";
+"xlabel 'x'\nylabel 'y'\nbox\nfor $0 -1 1 0.1\nif $0<0\n"
+"line 0 0 -1 $0 'r':else:line 0 0 -1 $0 'g'\nendif\nnext";
 void smgl_parser(mglGraph *gr)	// example of MGL parsing
 {
 	gr->Title("MGL parser sample");
@@ -1251,7 +1257,9 @@ void smgl_parser(mglGraph *gr)	// example of MGL parsing
 	// and continue after that
 	parser->Execute(gr, "xlabel 'x'\nylabel 'y'\nbox");
 	// also you may use cycles or conditions in script
-	parser->Execute(gr, "for $0 -1 1 0.1\nline 0 0 -1 $0 'r'\nnext");
+	parser->Execute(gr, "for $0 -1 1 0.1\nif $0<0\n"
+		"line 0 0 -1 $0 'r':else:line 0 0 -1 $0 'g'\n"
+		"endif\nnext");
 	delete parser;
 }
 //-----------------------------------------------------------------------------
@@ -1721,6 +1729,26 @@ void smgl_primitives(mglGraph *gr)	// flag #
 	gr->Ball(mglPoint(0.3,0,1),'k');
 	gr->Ball(mglPoint(0.9,0,1),'k');
 	gr->Line(mglPoint(-0.9,0,1),mglPoint(0.9,0,1),"b");
+}
+//-----------------------------------------------------------------------------
+const char *mmgl_table="new ys 10 3 '0.8*sin(pi*(x+y/4+1.25))+0.2*rnd'\n"
+"subplot 2 2 0:title 'Table sample':box\ntable ys 'y_1\\n{}y_2\\n{}y_3'\n\n"
+"subplot 2 2 1:title 'no borders, colored'\ntable ys 'y_1\\n{}y_2\\n{}y_3' 'r|'\n\n"
+"subplot 2 2 2:title 'no font decrease'\ntable ys 'y_1\\n{}y_2\\n{}y_3' '#'\n\n"
+"subplot 2 2 3:title 'manual width and position':box\n"
+"table 0.5 0.95 ys 'y_1\\n{}y_2\\n{}y_3' '#';value 0.7\n";
+void smgl_table(mglGraph *gr)
+{
+	mglData ys(10,3);	ys.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
+	if(!mini)	{	gr->SubPlot(2,2,0);	gr->Title("Table plot");	}
+	gr->Table(ys,"y_1\ny_2\ny_3");	gr->Box();
+	if(mini)	return;
+	gr->SubPlot(2,2,1);	gr->Title("no borders, colored");
+	gr->Table(ys,"y_1\ny_2\ny_3","r|");
+	gr->SubPlot(2,2,2);	gr->Title("no font decrease");
+	gr->Table(ys,"y_1\ny_2\ny_3","#");
+	gr->SubPlot(2,2,3);	gr->Title("manual width, position");
+	gr->Table(0.5, 0.95, ys,"y_1\ny_2\ny_3","#", "value 0.7");	gr->Box();
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_label="new ys 10 '0.2*rnd-0.8*sin(pi*x)'\n"
@@ -2268,6 +2296,7 @@ mglSample samp[] = {
 	{"surf3c", smgl_surf3c, mmgl_surf3c},
 	{"surfa", smgl_surfa, mmgl_surfa},
 	{"surfc", smgl_surfc, mmgl_surfc},
+	{"table", smgl_table, mmgl_table},
 	{"tape", smgl_tape, mmgl_tape},
 	{"tens", smgl_tens, mmgl_tens},
 	{"ternary", smgl_ternary, mmgl_ternary },

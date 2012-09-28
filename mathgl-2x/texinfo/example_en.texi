@@ -911,6 +911,28 @@ int sample(mglGraph *gr)
 
 @pfig{text, Example of text printing}
 
+You can change font faces by loading font files by function @ref{loadfont}. Note, that this is long-run procedure. Font faces can be downloaded from @uref{http://mathgl.sourceforge.net/download.html, MathGL website} or from @uref{http://sourceforge.net/project/showfiles.php?group_id=152187&package_id=267177, here}. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  double h=1.1, d=0.25;
+  gr->LoadFont("STIX");     gr->Puts(mglPoint(0,h), "default font (STIX)");
+  gr->LoadFont("adventor"); gr->Puts(mglPoint(0,h-d), "adventor font");
+  gr->LoadFont("bonum");    gr->Puts(mglPoint(0,h-2*d), "bonum font");
+  gr->LoadFont("chorus");   gr->Puts(mglPoint(0,h-3*d), "chorus font");
+  gr->LoadFont("cursor");   gr->Puts(mglPoint(0,h-4*d), "cursor font");
+  gr->LoadFont("heros");    gr->Puts(mglPoint(0,h-5*d), "heros font");
+  gr->LoadFont("heroscn");  gr->Puts(mglPoint(0,h-6*d), "heroscn font");
+  gr->LoadFont("pagella");  gr->Puts(mglPoint(0,h-7*d), "pagella font");
+  gr->LoadFont("schola");   gr->Puts(mglPoint(0,h-8*d), "schola font");
+  gr->LoadFont("termes");   gr->Puts(mglPoint(0,h-9*d), "termes font");
+  return 0;
+}
+@end verbatim
+
+@pfig{fonts, Example of font faces}
+
+
 @c ------------------------------------------------------------------
 @external
 @node Legend sample, Cutting sample, Text features, Advanced usage
@@ -1377,6 +1399,7 @@ void mgls_prepare1d(HMDT y, HMDT y1=0, HMDT y2=0, HMDT x1=0, HMDT x2=0)
 * Mark sample::
 * TextMark sample::
 * Label sample::
+* Table sample::
 * Tube sample::
 * Tape sample::
 * Torus sample::
@@ -1810,7 +1833,7 @@ int sample(mglGraph *gr)
 
 @c ------------------------------------------------------------------
 @external
-@node Label sample, Tube sample, TextMark sample, 1D samples
+@node Label sample, Table sample, TextMark sample, 1D samples
 @subsection Label sample
 
 Function @ref{label} print text at data points. The string may contain @samp{%x}, @samp{%y}, @samp{%z} for x-, y-, z-coordinates of points, @samp{%n} for point index. The sample code is:
@@ -1826,10 +1849,34 @@ int sample(mglGraph *gr)
 
 @pfig{label, Example of Label()}
 
+@c ------------------------------------------------------------------
+@external
+@node Table sample, Tube sample, Label sample, 1D samples
+@subsection Table sample
+
+Function @ref{table} draw table with data values. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData ys(10,3); ys.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
+  gr->SubPlot(2,2,0);  gr->Title("Table plot");
+  gr->Table(ys,"y_1\ny_2\ny_3");   gr->Box();
+  gr->SubPlot(2,2,1);  gr->Title("no borders, colored");
+  gr->Table(ys,"y_1\ny_2\ny_3","r|");
+  gr->SubPlot(2,2,2);  gr->Title("no font decrease");
+  gr->Table(ys,"y_1\ny_2\ny_3","#");
+  gr->SubPlot(2,2,3);  gr->Title("manual width, position");
+  gr->Table(0.5, 0.95, ys,"y_1\ny_2\ny_3","#", "value 0.7");  gr->Box();
+  return 0;
+}
+@end verbatim
+
+@pfig{table, Example of Table()}
+
 
 @c ------------------------------------------------------------------
 @external
-@node Tube sample, Tape sample, Label sample, 1D samples
+@node Tube sample, Tape sample, Table sample, 1D samples
 @subsection Tube sample
 
 Function @ref{tube} draw tube with variable radius. The sample code is:
@@ -2925,6 +2972,7 @@ In this section I've included some small hints and advices for the improving of 
 * Using options::
 * ``Templates''::
 * Stereo image::
+* Reduce memory usage::
 @end menu
 
 @c ------------------------------------------------------------------
@@ -3432,7 +3480,9 @@ int sample(mglGraph *gr)
   // and continue after that
   parser->Execute(gr, "xlabel 'x'\nylabel 'y'\nbox");
   // also you may use cycles or conditions in script
-  parser->Execute(gr, "for $0 -1 1 0.1\nline 0 0 -1 $0 'r'\nnext");
+  parser->Execute(gr, "for $0 -1 1 0.1\nif $0<0\n"
+    "line 0 0 -1 $0 'r':else:line 0 0 -1 $0 'g'\n"
+    "endif\nnext");
   delete parser;
   return 0;
 }
@@ -3453,7 +3503,9 @@ int sample(HMGL gr)
   // and continue after that
   mgl_parse_text(gr, parser, "xlabel 'x'\nylabel 'y'");
   // also you may use cycles or conditions in script
-  mgl_parse_text(gr, parser, "for $0 -1 1 0.1\nline 0 0 -1 $0 'r'\nnext");
+  mgl_parse_text(gr, parser, "for $0 -1 1 0.1\nif $0<0\n"
+    "line 0 0 -1 $0 'r':else:line 0 0 -1 $0 'g'\n"
+    "endif\nnext");
   mgl_write_png(gr, "test.png", "");  // don't forgot to save picture
   return 0;
 }
@@ -3526,7 +3578,7 @@ I understand that this is obvious thing for any professional programmer, but I s
 
 @c ------------------------------------------------------------------
 @external
-@node Stereo image, , ``Templates'', Hints
+@node Stereo image, Reduce memory usage, ``Templates'', Hints
 @subsection Stereo image
 
 One can easily create stereo image in MathGL. Stereo image can be produced by making two subplots with slightly different rotation angles. The corresponding code looks like this:
@@ -3547,16 +3599,35 @@ int sample(mglGraph *gr)
 
 @pfig{stereo, Example of stereo image.}
 
+@c ------------------------------------------------------------------
+@external
+@node Reduce memory usage, , Stereo image, Hints
+@subsection Reduce memory usage
+
+By default MathGL save all primitives in memory, rearrange it and only later draw them on bitmaps. Usually, this speed up drawing, but may require a lot of memory for plots which contain a lot of faces (like @ref{cloud}, @ref{dew}). You can use @ref{quality} function for setting to use direct drawing on bitmap and bypassing keeping any primitives in memory. This function also allow you to decrease the quality of the resulting image but increase the speed of the drawing.
+
+The code for lowest memory usage looks like this:
+@verbatim
+int sample(mglGraph *gr)
+{
+  gr->SetQuality(6);   // firstly, set to draw directly on bitmap
+  for(i=0;i<1000;i++)
+    gr->Sphere(mglPoint(mgl_rnd()*2-1,mgl_rnd()*2-1),0.05);
+  return 0;
+}
+@end verbatim
+
+@c ==================================================================
 @external
 @node FAQ, , Hints, Examples
 @section FAQ
 
 @table @strong
 @item The plot does not appear
-Check that points of the plot are located inside the bounding box and resize the bounding box using @code{SetRange()}/@code{SetRanges()} function. Check that the data have correct dimensions for selected type of plot. Be sure that  @code{Finish()} is called after the plotting functions (or be sure that the plot is saved to a file). Sometimes the light reflection from flat surfaces (like, @code{Dens()}) can look as if the plot were absent.
+Check that points of the plot are located inside the bounding box and resize the bounding box using @ref{ranges} function. Check that the data have correct dimensions for selected type of plot. Be sure that  @code{Finish()} is called after the plotting functions (or be sure that the plot is saved to a file). Sometimes the light reflection from flat surfaces (like, @ref{dens}) can look as if the plot were absent.
 
 @item I can not find some special kind of plot.
-Most ``new'' types of plots can be created by using the existing drawing functions. For example, the surface of curve rotation can be created by a special function @code{Torus()}, or as a parametrically specified surface by @code{Surf()}. See also, @ref{Hints}. If you can not find a specific type of plot, please e-mail me and this plot will appear in the next version of MathGL library.
+Most ``new'' types of plots can be created by using the existing drawing functions. For example, the surface of curve rotation can be created by a special function @ref{torus}, or as a parametrically specified surface by @ref{surf}. See also, @ref{Hints}. If you can not find a specific type of plot, please e-mail me and this plot will appear in the next version of MathGL library.
 
 @item Should I know some graphical libraries (like OpenGL) before using the MathGL library?
 No. The MathGL library is self-contained and does not require the knowledge of external libraries.
@@ -3575,7 +3646,7 @@ You can use MathGL as is with @code{gfortran} because it uses by default the AT&
 The standard way is to use Unicode encoding for the text output. But the MathGL library also has interface for 8-bit (char *) strings with internal conversion to Unicode. This conversion depends on the current locale OS. You may change it by @code{setlocale()} function. For example, for Russian text in CP1251 encoding you may use @code{setlocale(LC_CTYPE, "ru_RU.cp1251");} (under MS Windows the name of locale may differ -- @code{setlocale(LC_CTYPE, "russian_russia.1251")}). I strongly recommend not to use the constant @code{LC_ALL} in the conversion. Since it also changes the number format, it may lead to mistakes in formula writing and reading of the text in data files. For example, the program will await a @samp{,} as a decimal point but the user will enter @samp{.}.
 
 @item How can I exclude a point or a region of plot from the drawing?
-There are 3 general ways. First, the point with @code{NAN} value as one of the coordinates (including color/alpha range) will never be plotted. Second, special functions @code{SetCutBox}() and @code{CutOff}() define the condition when the points should be omitted (see @ref{Cutting}). Last, you may change the transparency of a part of the plot by the help of functions @code{SurfA()}, @code{Surf3A()} (see @ref{Dual plotting}). In last case the transparency is switched on smoothly.
+There are 3 general ways. First, the point with @code{NAN} value as one of the coordinates (including color/alpha range) will never be plotted. Second, special functions @code{SetCutBox}() and @code{CutOff}() define the condition when the points should be omitted (see @ref{Cutting}). Last, you may change the transparency of a part of the plot by the help of functions @ref{surfa}, @ref{surf3a} (see @ref{Dual plotting}). In last case the transparency is switched on smoothly.
 
 @item I use VisualStudio, CBuilder or some other compiler (not MinGW/gcc). How can I link the MathGL library?
 In version 2.0, main classes (@code{mglGraph} and @code{mglData}) contains only @code{inline} functions and are acceptable for any compiler with the same binary files. However, if you plan to use widget classes (QMathGL, Fl_MathGL, ...) or to access low-level features (mglBase, mglCanvas, ...) then you have to recompile MathGL by yours compiler.
@@ -3587,7 +3658,7 @@ Generally, it is the same procedure as for Linux or MacOS -- see section @ref{In
 Most of the library was written by one person. This is a result of nearly a year of work (mostly in the evening and on holidays): I spent half a year to write the kernel and half a year to a year on extending, improving the library and writing documentation. This process continues now :). The build system (cmake files) was written mostly by D.Kulagin, and the export to PRC/IDTF was written mostly by M.Vidassov.
 
 @item How can I display a bitmap on the figure?
-You can import data into a @code{mglData} instance and display it by @code{Dens()} function. For example, for black-and-white bitmap you can use the code: @code{mglData bmp; bmp.Import("fname.png","wk"); gr->Dens(bmp,"wk");}.
+You can import data into a @code{mglData} instance by function @ref{import} and display it by @ref{dens} function. For example, for black-and-white bitmap you can use the code: @code{mglData bmp; bmp.Import("fname.png","wk"); gr->Dens(bmp,"wk");}.
 
 @item How can I use MathGL in Qt, FLTK, wxWidgets etc.?
 There are special classes (widgets) for these libraries: QMathGL for Qt, Fl_MathGL for FLTK and so on. If you don't find the appropriate class then you can create your own widget that displays a bitmap using mglCanvas::GetRGB().
@@ -3599,7 +3670,7 @@ There are 2 steps: first you should create IDTF file, and later convert it to U3
 First, you should download new font files from @uref{http://mathgl.sourceforge.net/download.html, here} or from @uref{http://sourceforge.net/project/showfiles.php?group_id=152187&package_id=267177, here}. Next, you should load the font files into mglGraph class instance @var{gr} by the following command: @code{gr->LoadFont(fontname,path);}. Here @var{fontname} is the base font name like @samp{STIX} and @var{path} sets the location of font files. Use @code{gr->RestoreFont();} to start using the default font.
 
 @item How can I draw tick out of a bounding box?
-Just set a negative value in @var{SetTickLen}. For example, use @code{gr->SetTickLen(-0.1);}.
+Just set a negative value in @ref{ticklen}. For example, use @code{gr->SetTickLen(-0.1);}.
 
 @item How can I prevent text rotation?
 Just use @code{SetRotatedText(false)}.
