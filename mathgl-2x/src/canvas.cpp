@@ -646,14 +646,13 @@ void mglCanvas::arrow_plot_2d(long n1, long n2, char st)
 	case 'O':
 		{
 			float t,c,s;
-			for(int i=0;i<16;i++)
+			q.xx=q.x=p1.x+lx;	q.yy=q.y=p1.y+ly;	q.zz=q.z=p1.z+lz;
+			MGL_PUSH(Pnt,q,mutexPnt);	k3=Pnt.size()-1;
+			for(int i=0;i<12;i++)
 			{
-				t = M_PI*i/8.;		s=sin(t);	c=cos(t);
+				t = M_PI*(i+1)/6.;	s=sin(t);	c=cos(t);
 				q.xx=q.x=p1.x+kx*s+lx*c;	q.yy=q.y=p1.y+ky*s+ly*c;	q.zz=q.z=p1.z+c*lz;
-				MGL_PUSH(Pnt,q,mutexPnt);	k2=Pnt.size()-1;
-				t = M_PI*(i+1)/8.;	s=sin(t);	c=cos(t);
-				q.xx=q.x=p1.x+kx*s+lx*c;	q.yy=q.y=p1.y+ky*s+ly*c;	q.zz=q.z=p1.z+c*lz;
-				MGL_PUSH(Pnt,q,mutexPnt);	k3=Pnt.size()-1;
+				k2=k3;	MGL_PUSH(Pnt,q,mutexPnt);	k3=Pnt.size()-1;
 				trig_plot(n1,k2,k3);
 			}
 			break;
@@ -689,6 +688,8 @@ void mglCanvas::arrow_plot_3d(long n1, long n2, char st)
 		case 'I':
 			k1=setPp(q,p0+kt);	k2=setPp(q,p0+kz);
 			k3=setPp(q,p0-kt);	k4=setPp(q,p0-kz);
+			line_plot(k1,k2);	line_plot(k1,k4);
+			line_plot(k3,k2);	line_plot(k3,k4);
 			quad_plot(k1,k2,k3,k4);	break;
 		case 'D':
 			k1=setPp(q,p0+kl);	k2=setPp(q,p0-kl);	k5=k3=setPp(q,p0+kt);
@@ -709,6 +710,8 @@ void mglCanvas::arrow_plot_3d(long n1, long n2, char st)
 		case 'K':
 			k1=setPp(q,p0+kt);	k2=setPp(q,p0+kz);
 			k3=setPp(q,p0-kt);	k4=setPp(q,p0-kz);	quad_plot(k1,k2,k3,k4);
+			line_plot(k1,k2);	line_plot(k1,k4);
+			line_plot(k3,k2);	line_plot(k3,k4);
 		case 'A':
 			k1=setPp(q,p0-2.*kl+kt);	k2=setPp(q,p0-2.*kl+kz);	k3=setPp(q,p0-2.*kl-kt);
 			k4=setPp(q,p0-2.*kl-kz);	k5=setPp(q,p0-1.5*kl);
@@ -719,21 +722,26 @@ void mglCanvas::arrow_plot_3d(long n1, long n2, char st)
 			k4=setPp(q,p0+2.*kl-kz);	k5=setPp(q,p0+1.5*kl);
 			trig_plot(n1,k5,k1);	trig_plot(n1,k5,k2);
 			trig_plot(n1,k5,k3);	trig_plot(n1,k5,k4);	break;
-/*		case 'O':
+		case 'O':	// let draw icosahedron
 		{
-			float t,c,s;
-			for(int i=0;i<16;i++)
-			{
-				t = M_PI*i/8.;		s=sin(t);	c=cos(t);
-				q.xx=q.x=p1.x+kx*s+lx*c;	q.yy=q.y=p1.y+ky*s+ly*c;	q.zz=q.z=p1.z+c*lz;
-				MGL_PUSH(Pnt,q,mutexPnt);	k2=Pnt.size()-1;
-				t = M_PI*(i+1)/8.;	s=sin(t);	c=cos(t);
-				q.xx=q.x=p1.x+kx*s+lx*c;	q.yy=q.y=p1.y+ky*s+ly*c;	q.zz=q.z=p1.z+c*lz;
-				MGL_PUSH(Pnt,q,mutexPnt);	k3=Pnt.size()-1;
-				trig_plot(n1,k2,k3);
-			}
-			break;
-		}*/
+			long k0,k9,k10,k11;
+			double t = 0.5*(1+sqrt(5.));
+			k0 = setPp(q,p0+ll*mglPoint(-1, t, 0));	k1 = setPp(q,p0+ll*mglPoint( 1, t, 0));
+			k2 = setPp(q,p0+ll*mglPoint(-1,-t, 0));	k3 = setPp(q,p0+ll*mglPoint( 1,-t, 0));
+			k4 = setPp(q,p0+ll*mglPoint( 0,-1, t));	k5 = setPp(q,p0+ll*mglPoint( 0, 1, t));
+			k6 = setPp(q,p0+ll*mglPoint( 0,-1,-t));	k7 = setPp(q,p0+ll*mglPoint( 0, 1,-t));
+			k8 = setPp(q,p0+ll*mglPoint(-1, 0, t));	k9 = setPp(q,p0+ll*mglPoint( 1, 0, t));
+			k10= setPp(q,p0+ll*mglPoint(-1, 0,-t));	k11= setPp(q,p0+ll*mglPoint( 1, 0,-t));
+
+			trig_plot(k0,k11,k5);	trig_plot(k0,k1,k5);		trig_plot(k0,k1,k7);
+			trig_plot(k0,k10,k7);	trig_plot(k0,k11,k10);
+			trig_plot(k1,k5,k9);		trig_plot(k5,k11,k4);	trig_plot(k10,k11,k2);
+			trig_plot(k10,k6,k7);	trig_plot(k7,k1,k8);
+			trig_plot(k3,k9,k4);		trig_plot(k3,k4,k2);		trig_plot(k3,k2,k6);
+			trig_plot(k3,k6,k8);		trig_plot(k3,k8,k9);
+			trig_plot(k4,k9,k5);		trig_plot(k2,k4,k11);	trig_plot(k6,k2,k10);
+			trig_plot(k8,k6,k7);		trig_plot(k9,k8,k1);		break;
+		}
 	}
 }
 //-----------------------------------------------------------------------------
