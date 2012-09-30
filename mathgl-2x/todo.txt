@@ -3,7 +3,6 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 
 ============= NEW  =============
 
-1. Use Hershey as built-in font ?!!
 2. Export to X3D
 3. JavaScript (WebGL, canvas) based on JSON + function for rotate, zoom, CalcXYZ(ask server).
 
@@ -22,7 +21,7 @@ http_request.onreadystatechange = function () {
 	}
 };
 
-4. GTK and WX window/widgets
+4. GTK window/widgets
 5. Labels at TriCont()
 6. curved text (in new sample) look not so good
 7. Drawing of saddle quadrangles
@@ -33,6 +32,8 @@ http_request.onreadystatechange = function () {
 11. Add flag for drawing 3d arrows instead of 2d (S,D -- cube, T -- sq.pyramid, I -- square, O -- sphere???, A,K,V -- cone???)
 
 12. Check quality 6 colors and size!!!
+
++13. WX window/widgets
 
 +20. Test mglcgi
 
@@ -102,3 +103,4 @@ Save/load into script between blocks "#----- MathGL block -----" +  hide it in e
 8. Check RunThr() in python/octave
 9. Try libtcc (TinyCC) as alternative to MGL -- how to handle ^ operator???
 10. Auto axis range for formulas, like AutoRange("y(x)") or AutoRange('x',"x(t)").
+11. Use Hershey as built-in font ?!!

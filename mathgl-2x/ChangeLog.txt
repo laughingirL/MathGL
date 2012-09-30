@@ -1,4 +1,4 @@
-2.0.4 Released ?? October 2012
+2.1 Released ?? October 2012
 
 * Color can be specified as its RGB[A] values, i.e. like "{xFFFFFF}" or "{xFFFFFFFF}".
 * Color in color scheme  may have position in range [0,1]. Format is {CN,pos} or {xFFFFFF,pos}.
@@ -19,7 +19,7 @@
 * Add mglData::Clean() for removing rows with duplicate values for given column.
 * Functions mglData::Spline*, mglData::Linear* now can return gradient at the point.
 * Add class mglDataC for complex data arrays.
-* Now you can use different fontfaces in the plot.
+* Now you can use different font-faces in the plot simultaneously.
 * Frames now save 3D information if MGL_VECT_FRAME is set (by default).
 * Picture drawing now use multi-threading for each stage.
 * Add Table() function for drawing table with data values.
@@ -32,11 +32,11 @@
 * Mouse position at an object click now is displayed on the image itself.
 * Add zoom in/out by mouse wheel.
 * Add zoom in/out of axis range by mouse wheel, and shift of axis range by middle button.
-* Text editor in UDAV now show line number and highlight current one.
+* Text editor in UDAV now highlight current line.
 * Completer can be switched off correctly now.
 * Multi-line strings (i.e. separated by "\" symbol) are highlighted correctly now.
 
-* Add MGL command 'errbox'
+* Add MGL commands 'errbox', 'face'
 
 * Update samples
 * Update documentation

@@ -423,7 +423,9 @@ private:
 	/// Scale points \a p for projection to the face number \a nface in image
 	long ProjScale(int nface, long p);
 	inline void PostScale(mglPoint *p,long n) const	{	for(long i=0;i<n;i++)	PostScale(p[i]);	}
-
+	/// Set coordinate and add the point, return its id
+	long setPp(mglPnt &q, const mglPoint &p);
+	
 	// functions for glyph drawing
 	void glyph_fill(const mglPnt &p, mreal f, const mglGlyph &g, mglDrawReg *d);
 	void glyph_wire(const mglPnt &p, mreal f, const mglGlyph &g, mglDrawReg *d);
