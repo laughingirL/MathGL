@@ -83,16 +83,12 @@ int verbose = 0;
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	mglData ys(10,3);	ys.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
-	if(!mini)	{	gr->SubPlot(2,2,0);	gr->Title("Table plot");	}
-	gr->Table(ys,"y_1\ny_2\ny_3");	gr->Box();
-	if(mini)	return;
-	gr->SubPlot(2,2,1);	gr->Title("no borders, colored");
-	gr->Table(ys,"y_1\ny_2\ny_3","r|");
-	gr->SubPlot(2,2,2);	gr->Title("no font decrease");
-	gr->Table(ys,"y_1\ny_2\ny_3","#=");
-	gr->SubPlot(2,2,3);	gr->Title("manual width, position");
-	gr->Table(1, 0.5, ys,"y_1\ny_2\ny_3","#", "value 0.7");
+	gr->SetSize(640,480);
+	mglParse pr;
+	pr.AllowSetSize(true);	setlocale(LC_CTYPE, "");
+	pr.Execute(gr,"rotate 40 60:fsurf 'sin(2*pi*x*y)'");
+	pr.Execute(gr,"box:axis:fplot 'sin(2*pi*t)' 'cos(2*pi*t)' '2*t-1' 'm2:'");
+	gr->WriteJSON("/home/balakin/progr/mgl4js/MglForJsTestBench/test.json");
 	return;
 
 /*	mglData ys(10,5);	ys.Modify("0.8*sin(pi*2*x+pi*y)+0.2*rnd");
