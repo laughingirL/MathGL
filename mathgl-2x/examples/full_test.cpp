@@ -86,8 +86,8 @@ void test(mglGraph *gr)
 	gr->SetSize(640,480);
 	mglParse pr;
 	pr.AllowSetSize(true);	setlocale(LC_CTYPE, "");
-	pr.Execute(gr,"rotate 40 60:fsurf 'sin(2*pi*x*y)'");
-	pr.Execute(gr,"box:axis:fplot 'sin(2*pi*t)' 'cos(2*pi*t)' '2*t-1' 'm2:'");
+	pr.Execute(gr,"alpha on:rotate 40 60:fsurf 'sin(2*pi*x*y)'");
+	pr.Execute(gr,"box:axis:fplot 'sin(2*pi*t)' 'cos(2*pi*t)' '2*t-1' 'm2o'");
 	gr->WriteJSON("/home/balakin/progr/mgl4js/MglForJsTestBench/test.json");
 	return;
 

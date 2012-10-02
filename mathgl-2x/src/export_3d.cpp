@@ -462,35 +462,58 @@ bool mglCanvas::WriteJSON(const char *fname)
 	if (!fp)	return true;
 	// first save coordinates
 	size_t i,l=Pnt.size();
-	fprintf(fp,"{\n\"width\" : %d,\t\"height\" : %d,\t\"npnts\" : %lu,\t\"pnts\" : [\n",
-			Width, Height,(unsigned long)l);
+	fprintf(fp,"{\n\"width\":%d,\t\"height\":%d,\t\"depth\":%d,\t\"npnts\":%lu,\t\"pnts\":[\n",
+			Width, Height, Depth, (unsigned long)l);
 	for(i=0;i<l;i++)
 	{
 		const mglPnt &q=Pnt[i];
-		fprintf(fp,"[%.4g, %.4g, %.4g]%c\n", q.xx, Height-q.yy, q.zz, i+1<l?',':' ');
+		fprintf(fp,"[%.4g,%.4g,%.4g]%c\n", q.xx, Height-q.yy, q.zz, i+1<l?',':' ');
 	}
 	l = Prm.size();
-	fprintf(fp,"],\t\"nprim\" : %lu,\t\"prim\" : [\n",(unsigned long)l);
+	fprintf(fp,"],\t\"nprim\":%lu,\t\"prim\":[\n",(unsigned long)l);
+
+	std::vector<mglPoint> xy;	// vector for glyphs coordinates (to be separated from pnts)
 	for(i=0;i<l;i++)
 	{
 		const mglPrim &p=Prm[i];		mglColor c = GetColor(p);
+		long n2 = p.n2;
 		// manually exclude absent primitives (TODO be more accurate for quadrangles)
 		if(p.n1<0 || (p.type==1 && p.n2<0) || (p.type==2 && (p.n2<0 || p.n3<0)) || (p.type==3 && (p.n2<0 || p.n3<0 || p.n4<0)))
 			continue;
-		fprintf(fp,"[%d, %ld, %ld, %ld, %ld, %d, %.4g, %.4g, %.4g, %.4g, \"rgba(%d,%d,%d,%.2g)\"]%c\n",
-				p.type, p.n1, p.n2, p.n3, p.n4, p.id, p.s, p.w, p.p,	Pnt[p.n1].zz, int(255*c.r), int(255*c.g), int(255*c.b), c.a, i+1<l?',':' ');
+		if(p.type==4)
+		{
+			const mglPnt &q = Pnt[p.n1];
+			xy.push_back(mglPoint(q.u,q.v));
+			n2 = xy.size()-1;
+		}
+		if(c.a==1 || p.type==0 || p.type==1 || p.type==4 || p.type==6)
+			fprintf(fp,"[%d,%ld,%ld,%ld,%ld,%d,%.4g,%.4g,%.4g,%.4g,\"#%02x%02x%02x\"]%c\n",
+				p.type, p.n1, n2, p.n3, p.n4, p.id, p.s, p.w, p.p,	Pnt[p.n1].zz, int(255*c.r), int(255*c.g), int(255*c.b), i+1<l?',':' ');
+			//	0		1		2	3		4		5	6	7		8	10
+		else
+			fprintf(fp,"[%d,%ld,%ld,%ld,%ld,%d,%.4g,%.4g,%.4g,%.4g,\"rgba(%d,%d,%d,%.2g)\"]%c\n",
+				p.type, p.n1, n2, p.n3, p.n4, p.id, p.s, p.w, p.p,	Pnt[p.n1].zz, int(255*c.r), int(255*c.g), int(255*c.b), c.a, i+1<l?',':' ');
 			//	0		1		2	3		4		5	6	7		8	10
 	}
+	
+	l = xy.size();
+	fprintf(fp,"],\t\"ncoor\":%lu,\t\"coor\":[\n",(unsigned long)l);
+	for(i=0;i<l;i++)
+	{
+		const mglPoint &p=xy[i];
+		fprintf(fp,"[%.4g,%.4g]%c\n", p.x, p.y, i+1<l?',':' ');
+	}
+
 	l = Glf.size();
-	fprintf(fp,"],\t\"nglfs\" : %lu,\t\"glfs\" : [\n",(unsigned long)l);
+	fprintf(fp,"],\t\"nglfs\":%lu,\t\"glfs\":[\n",(unsigned long)l);
 	for(i=0;i<l;i++)
 	{
 		const mglGlyph &g=Glf[i];
-		fprintf(fp,"[%ld, %ld, \n\t[", g.nt, g.nl);
+		fprintf(fp,"[%ld,%ld,\n\t[", g.nt, g.nl);
 		register long j;
-		for(j=0;j<6*g.nt;j++)	fprintf(fp,"%d%c ", g.trig[j], j+1<6*g.nt?',':' ');
+		for(j=0;j<6*g.nt;j++)	fprintf(fp,"%d%c", g.trig[j], j+1<6*g.nt?',':' ');
 		fprintf(fp,"],\n\t[");
-		for(j=0;j<4*g.nl;j++)	fprintf(fp,"%d%c ", g.line[j], j+1<4*g.nl?',':' ');
+		for(j=0;j<4*g.nl;j++)	fprintf(fp,"%d%c", g.line[j], j+1<4*g.nl?',':' ');
 		fprintf(fp,"]\n]%c\n", i+1<l?',':' ');
 	}
 	fprintf(fp,"]\n}\n");

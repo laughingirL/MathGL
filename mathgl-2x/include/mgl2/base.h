@@ -116,9 +116,9 @@ struct mglText
 struct mglPnt	// NOTE: use float for reducing memory size
 {
 	float xx,yy,zz;	// original coordinates
-	float x,y,z;		// coordinates
+	float x,y,z;	// coordinates
 	float c,t,ta;	// index in color scheme
-	float u,v,w;		// normales
+	float u,v,w;	// normales
 	float r,g,b,a;	// RGBA color
 	mglPnt()	{	xx=yy=zz=x=y=z=c=t=ta=u=v=w=r=g=b=a=0;	}
 };

@@ -360,10 +360,10 @@ mreal mglCanvas::text_plot(long p,const wchar_t *text,const char *font,mreal siz
 void mglCanvas::Glyph(mreal x, mreal y, mreal f, int s, long j, mreal col)
 {
 	mglPrim a(4);	// NOTE: no projection since text_plot() did it
-	a.s = fscl/B.pf;	a.w = ftet;	a.p = B.pf;
+	a.s = fscl/B.pf;	a.w = ftet;	a.p = f/fnt->GetFact(s&3);
 	mreal cc = col<0 ? AddTexture(char(0.5-col)):col;
 	if(cc<0)	cc = CDef;
-	a.n1 = AddPnt(mglPoint(B.x,B.y,B.z), cc, mglPoint(x,y,f/fnt->GetFact(s&3)), -1, -1);
+	a.n1 = AddPnt(mglPoint(B.x,B.y,B.z), cc, mglPoint(x,y,NAN), -1, -1);
 	a.n3 = s;	a.n4 = AddGlyph(s,j);
 	if(a.n1<0)	return;
 	mglDrawReg d;	d.set(this,1,1,0);

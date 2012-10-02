@@ -295,7 +295,7 @@ void mglCanvas::pxl_transform(size_t id, size_t n, const void *)
 		p.z = Depth/2. + Bp.b[6]*x + Bp.b[7]*y + Bp.b[8]*z;
 		if(Bp.pf)
 		{
-			register float d = (1-Bp.pf*Depth/2)/(1-Bp.pf*p.z);
+			register float d = (1-Bp.pf)/(1-Bp.pf*p.z/Depth);
 			p.x = Width/2 + d*(p.x-Width/2);
 			p.y = Height/2 + d*(p.y-Height/2);
 		}
@@ -868,7 +868,7 @@ void mglCanvas::mark_draw(long k, char type, mreal size, mglDrawReg *d)
 	const mglPnt &q=Pnt[k];
 	unsigned char cs[4];	col2int(q,cs,d->ObjId);	cs[3] = size>0 ? 255 : 255*q.t;
 	mglPnt p=q;
-	mreal ss=fabs(size)*0.35*font_factor;
+	mreal ss=fabs(size)*0.35*font_factor;		// TODO remove plot_factor here!?!
 	register long i,j;
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_lock(&mutexPnt);
@@ -1016,13 +1016,13 @@ void mglCanvas::mark_draw(long k, char type, mreal size, mglDrawReg *d)
 void mglCanvas::glyph_draw(const mglPrim *P, mglDrawReg *d)
 {
 	mglPnt p=Pnt[P->n1];
-	mreal f = p.w;
+	mreal f = P->p;
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_lock(&mutexPnt);
 #endif
 	Push();		B.clear();
-	B.b[0] = B.b[4] = B.b[8] = P->s*P->p;
-	RotateN(P->w,0,0,1);	B.pf = P->p;
+	B.b[0] = B.b[4] = B.b[8] = P->s;
+	RotateN(P->w,0,0,1);	B.pf = 1;
 	B.x=p.x;	B.y=p.y;	B.z=p.z;
 
 	const mglGlyph &g = Glf[P->n4];
