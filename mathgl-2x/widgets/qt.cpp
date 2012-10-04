@@ -225,7 +225,7 @@ void QMathGL::refresh()
 		}
 		gr->clr(MGL_DISABLE_SCALE);	setlocale(LC_NUMERIC, "");
 	}
-	gr->Zoom(x1,y1,x2,y2);	gr->View(phi,tet);	gr->Perspective(per);
+	gr->Zoom(x1,y1,x2,y2);	gr->View(phi,0,tet);	gr->Perspective(per);
 	mglConvertFromGraph(pic, gr, &grBuf);
 	if(pic.size()!=size())	setSize(pic.width(), pic.height());
 	repaint();

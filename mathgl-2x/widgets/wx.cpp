@@ -187,7 +187,7 @@ void convertFromGraph(wxBitmap &pic, mglCanvas *gr, unsigned char **buf)
 //-----------------------------------------------------------------------------
 void wxMathGL::Repaint()
 {
-	gr->Zoom(x1,y1,x2,y2);	gr->View(phi,tet);	gr->Perspective(per);
+	gr->Zoom(x1,y1,x2,y2);	gr->View(phi,0,tet);	gr->Perspective(per);
 	convertFromGraph(pic, gr, &grBuf);
 	wxSize sz=GetSize();
 	if(pic.GetWidth()!=sz.GetWidth() || pic.GetHeight()!=sz.GetHeight())

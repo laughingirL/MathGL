@@ -197,7 +197,7 @@ enum{	// Codes for warnings/messages
 #define MGL_REDUCEACC		0x020000 	///< Reduce accuracy of points (to reduc size of output files)
 #define MGL_PREFERVC 		0x040000 	///< Prefer vertex color instead of texture if output format supports
 #define MGL_ONESIDED 		0x080000 	///< Render only front side of surfaces if output format supports (for debugging)
-#define MGL_3D_ARROW 		0x100000 	///< Use 3D arrows instead of 2d ones
+//#define MGL_3D_ARROW 		0x100000 	///< Use 3D arrows instead of 2d ones
 //-----------------------------------------------------------------------------
 #ifdef __cplusplus
 //-----------------------------------------------------------------------------

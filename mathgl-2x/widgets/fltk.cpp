@@ -132,7 +132,7 @@ void Fl_MathGL::update()
 		gr->Alpha(flag&1);	gr->Light(flag&2);
 		if(tet_val)	tet = tet_val->value();
 		if(phi_val)	phi = phi_val->value();
-		gr->Zoom(x1,y1,x2,y2);	gr->View(phi,tet);
+		gr->Zoom(x1,y1,x2,y2);	gr->View(phi,0,tet);
 		if(draw_func)	draw_func(gr, draw_par);	// drawing itself
 		else	if(draw_cl)	{	mglGraph g(gr);	draw_cl->Draw(&g);	}
 		const char *buf = gr->Mess.c_str();

@@ -585,7 +585,7 @@ void mglCanvas::AddLight(int n, mglPoint r, mglPoint d, char col, mreal br, mrea
 //-----------------------------------------------------------------------------
 void mglCanvas::arrow_plot(long n1, long n2, char st)
 {
-	if(get(MGL_3D_ARROW))
+	if(Quality&4==3)
 		arrow_plot_3d(n1, n2, st);
 	else
 		arrow_plot_2d(n1, n2, st);
