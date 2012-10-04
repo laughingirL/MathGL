@@ -3662,6 +3662,57 @@ void mglc_triangulate(wchar_t out[1024], long , mglArg *a, int k[10], const char
 		mglprintf(out,1024,L"%s = mglTriangulation(%s, %s);",a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str());
 }
 //-----------------------------------------------------------------------------
+int mgls_view(mglGraph *gr, long , mglArg *a, int k[10], const char *)
+{
+	if(k[0]==3 && k[1]==3)
+		gr->View(a[0].v, a[1].v, k[2]==3?a[2].v:0);
+	else	return 1;
+	return 0;
+}
+void mglc_view(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
+{
+	if(k[0]==3 && k[1]==3)
+		mglprintf(out,1024,L"gr->View(%g, %g, %g);", a[0].v, a[1].v, k[2]==3?a[2].v:0);
+}
+//-----------------------------------------------------------------------------
+int mgls_zoom(mglGraph *gr, long , mglArg *a, int k[10], const char *)
+{
+	if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==3)
+		gr->Zoom(a[0].v, a[1].v, a[2].v, a[3].v);
+	else	return 1;
+	return 0;
+}
+void mglc_zoom(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
+{
+	if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==3)
+		mglprintf(out,1024,L"gr->Zoom(%g, %g, %g, %g);", a[0].v, a[1].v, a[2].v, a[3].v);
+}
+//-----------------------------------------------------------------------------
+int mgls_zoomaxis(mglGraph *gr, long , mglArg *a, int k[10], const char *)
+{
+	int i;
+	for(i=0;i<8;i++)	if(k[i]!=3)	break;
+	if(i==8)		gr->ZoomAxis(mglPoint(a[0].v, a[1].v, a[2].v, a[3].v), mglPoint(a[4].v, a[5].v, a[6].v, a[7].v));
+	else if(i==6)	gr->ZoomAxis(mglPoint(a[0].v, a[1].v, a[2].v), mglPoint(a[3].v, a[4].v, a[5].v));
+	else if(i==4)	gr->ZoomAxis(mglPoint(a[0].v, a[1].v), mglPoint(a[2].v, a[3].v));
+	else if(i==2)	gr->ZoomAxis(mglPoint(a[0].v), mglPoint(a[1].v));
+	else	return 1;
+	return 0;
+}
+void mglc_zoomaxis(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
+{
+	int i;
+	for(i=0;i<8;i++)	if(k[i]!=3)	break;
+	if(i==8)
+		mglprintf(out,1024,L"gr->ZoomAxis(mglPoint(%g, %g, %g, %g),mglPoint(%g, %g, %g, %g));", a[0].v, a[1].v, a[2].v, a[3].v, a[4].v, a[5].v, a[6].v, a[7].v);
+	else if(i==6)
+		mglprintf(out,1024,L"gr->ZoomAxis(mglPoint(%g, %g, %g),mglPoint(%g, %g, %g));", a[0].v, a[1].v, a[2].v, a[3].v, a[4].v, a[5].v);
+	else if(i==4)
+		mglprintf(out,1024,L"gr->ZoomAxis(mglPoint(%g, %g),mglPoint(%g, %g));", a[0].v, a[1].v, a[2].v, a[3].v);
+	else if(i==2)
+		mglprintf(out,1024,L"gr->ZoomAxis(mglPoint(%g),mglPoint(%g));", a[0].v, a[1].v);
+}
+//-----------------------------------------------------------------------------
 mglCommand mgls_base_cmd[] = {
 	{"addlegend","Add legend entry","addlegend 'txt' 'fmt'", mgls_addlegend, mglc_addlegend,15},
 	{"addto","Add data or number","addto Var Dat|Var num", mgls_addto, mglc_addto,3},
@@ -3887,6 +3938,7 @@ mglCommand mgls_base_cmd[] = {
 	{"var","Create new 1D data and fill it in range","var Dat nx x1 [x2]", mgls_var, mglc_var,4},
 	{"vect","Draw vector field","vect Udat Vdat ['fmt']|Xdat Ydat Udat Vdat ['fmt']|Udat Vdat Wdat ['fmt']|Xdat Ydat Zdat Udat Vdat Wdat ['fmt']", mgls_vect, mglc_vect,11},
 	{"vect3","Draw vector field at slices of 3D data","vect Udat Vdat Wdat ['fmt' sval]|Xdat Ydat Zdat Udat Vdat Wdat ['fmt' sval]", mgls_vect3, mglc_vect3,11},
+	{"view","Change view angles - use 'rotate' for plot rotation","view tetz tetx [tety]", mgls_view, mglc_view,5},
 	{"write","Write current image to graphical file","write 'fname' [solid]", mgls_write, mglc_write,2},
 	{"xlabel","Draw label for x-axis","xlabel 'txt' [pos]", mgls_xlabel, mglc_xlabel,12},
 	{"xrange","Set range for x-axis","xrange Dat [add] | x1 x2", mgls_xrange, mglc_xrange,14},
@@ -3895,6 +3947,8 @@ mglCommand mgls_base_cmd[] = {
 	{"yrange","Set range for y-axis","yrange Dat [add] | y1 y2", mgls_yrange, mglc_yrange,14},
 	{"ytick","Set ticks for y-axis","ytick dy [sy ty] | 'tmpl' | Ydat 'lbl' [add] | v1 'lbl1' ...", mgls_ytick, mglc_ytick,14},
 	{"zlabel","Draw label for z-axis","zlabel 'txt' [pos]", mgls_zlabel, mglc_zlabel,12},
+	{"zoom","Zoom plot region","zoom x1 x2 y1 y2", mgls_zoom, mglc_zoom,5},
+	{"zoomaxis","Zoom axis range","zoomaxis x1 x2|x1 x2 y1 y2|x1 x2 y1 y2 z1 z2|x1 x2 y1 y2 z1 z2 c1 c2", mgls_zoomaxis, mglc_zoomaxis,14},
 	{"zrange","Set range for z-axis","yrange Dat [add] | z1 z2", mgls_zrange, mglc_zrange,14},
 	{"ztick","Set ticks for z-axis","ztick dz [sz tz] | 'tmpl' | Zdat 'lbl' [add] | v1 'lbl1' ...", mgls_ztick, mglc_ztick,14},
 {"","","",NULL,NULL,0}};

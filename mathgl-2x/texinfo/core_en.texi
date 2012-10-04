@@ -559,6 +559,15 @@ Sets the ranges of @samp{x}-,@samp{y}-,@samp{z}-coordinates and coloring as mini
 Sets center of axis cross section. If one of values is NAN then MathGL try to select optimal axis position.
 @end deftypefn
 
+@anchor{zoomaxis}
+@deftypefn {MGL command} {} zoomaxis @code{x1 x2 [y1=0 y2=1 [z1=0 z2=1 [c1=0 c2=1]]]}
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} ZoomAxis (@code{mglPoint} p1, @code{mglPoint} p2)
+@deftypefnx {C function} @code{void} mgl_zoom_axis (@code{HMGL} gr, @code{mreal} x1, @code{mreal} x2, @code{mreal} y1, @code{mreal} y2, @code{mreal} z1, @code{mreal} z2, @code{mreal} c1, @code{mreal} c2)
+@end ifclear
+Additionally extend axis range for any settings made by @code{SetRange} or @code{SetRanges} functions according the formula @math{min += (max-min)*p1} and @math{max += (max-min)*p1} (or @math{min *= (max/min)^p1} and @math{max *= (max/min)^p1} for log-axis range when @math{inf>max/min>100} or @math{0<max/min<0.01}). Initial ranges are [0, 1].
+@end deftypefn
+
 
 @c ------------------------------------------------------------------
 @external
@@ -898,19 +907,27 @@ Pop (restore last 'pushed') transformation matrix into stack.
 Sets the factor of plot size. It is not recommended to set it lower then 1.5. This is some analogue of function Zoom() but applied not to overall image but for each InPlot. Use negative value or zero to enable automatic selection.
 @end deftypefn
 
-There are 2 functions @code{View()} and @code{Zoom()} which transform whole image. I.e. they act as secondary transformation matrix. They were introduced for rotating/zooming the whole plot by mouse.
+@end ifclear
 
-@deftypefn {Method on @code{mglGraph}} @code{void} View (@code{mreal} TetX, @code{mreal} TetZ, @code{mreal} TetY=@code{0})
+There are 2 functions @code{View()} and @code{Zoom()} which transform whole image. I.e. they act as secondary transformation matrix. They were introduced for rotating/zooming the whole plot by mouse. It is not recommended to call them for picture drawning.
+
+@anchor{view}
+@deftypefn {MGL command} {} view @code{tetx tetz [tety=0]}
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} View (@code{mreal} TetX, @code{mreal} TetZ, @code{mreal} TetY=@code{0})
 @deftypefnx {C function} @code{void} mgl_view (@code{HMGL} gr, @code{mreal} TetX, @code{mreal} TetZ, @code{mreal} TetY)
+@end ifclear
 Rotates a further plotting relative to each axis @{x, z, y@} consecutively on angles @var{TetX}, @var{TetZ}, @var{TetY}. Rotation is done independently on @ref{rotate}. Use @code{Zoom(0,0,1,1)} to return default view.
 @end deftypefn
 
-@deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} Zoom (@code{mreal} x1, @code{mreal} y1, @code{mreal} x2, @code{mreal} y2)
+@anchor{zoom}
+@deftypefn {MGL command} {} zoom @code{x1 y1 x2 y2}
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph} (C++, Python)} @code{void} Zoom (@code{mreal} x1, @code{mreal} y1, @code{mreal} x2, @code{mreal} y2)
 @deftypefnx {C function} @code{void} mgl_set_zoom (@code{HMGL} gr, @code{mreal} x1, @code{mreal} y1, @code{mreal} x2, @code{mreal} y2)
+@end ifclear
 The function changes the scale of graphics that correspond to zoom in/out of the picture. After function call the current plot will be cleared and further the picture will contain plotting from its part [x1,x2]*[y1,y2]. Here picture coordinates @var{x1}, @var{x2}, @var{y1}, @var{y2} changes from 0 to 1. Attention! this settings can not be overwritten by any other functions. Use @code{Zoom(0,0,1,1)} to return default view.
 @end deftypefn
-
-@end ifclear
 
 @c ##################################################################
 @external

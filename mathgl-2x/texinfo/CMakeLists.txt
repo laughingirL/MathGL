@@ -65,7 +65,7 @@ if(MGL_HAVE_DOC)
 		WORKING_DIRECTORY ${MGL_OUT}
 	)
 	add_custom_command(OUTPUT ${MGL_OUT}/mgl_en.html
-		COMMAND ${findth} -I=${MGL_OUT}/png --split=no -o mgl_en.html ${MGL_TEX}/mgl_en.texi
+		COMMAND ${findth} -I=${MGL_OUT} --split=no -o mgl_en.html ${MGL_TEX}/mgl_en.texi
 		DEPENDS ${list_texi_files_en} mgl_en.texi ${MGL_PNG_N}
 		WORKING_DIRECTORY ${MGL_OUT}
 	)

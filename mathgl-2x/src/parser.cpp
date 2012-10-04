@@ -105,7 +105,7 @@ bool check_for_name(const wchar_t *s)
 //-----------------------------------------------------------------------------
 mglCommand *mglParser::FindCommand(const char *com)
 {
-	if(!AllowFileIO && (!strncmp(com,"read",4) || !strncmp(com,"save",4) || !strcmp(com,"fgets")))
+	if(!AllowFileIO && ( !strncmp(com,"read",4) || !strncmp(com,"save",4) || !strcmp(com,"fgets") || !strcmp(com,"import") || !strcmp(com,"export") ))
 		return 0;
 	mglCommand tst, *rts, *cmd = Cmd;
 	long i;
@@ -668,7 +668,7 @@ int mglParser::Parse(mglGraph *gr, const wchar_t *string, long pos)
 					for(int i=1;i<k-1;i++)	AddParam(i,arg[i+1]);
 					fn_stack.push_back(fn);	n--;
 				}
-				else
+				else if(AllowFileIO)	// disable external scripts if AllowFileIO=false
 				{
 					FILE *fp = fopen(a[0].s.c_str(),"rt");
 					if(fp)

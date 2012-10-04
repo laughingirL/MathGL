@@ -83,6 +83,7 @@ int verbose = 0;
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
+	printf("Pnt: %d, Prim: %d, Act: %d\n",sizeof(mglPnt),sizeof(mglPrim),sizeof(mglActivePos));
 	gr->SetSize(640,480);
 	mglParse pr;
 	pr.AllowSetSize(true);	setlocale(LC_CTYPE, "");
