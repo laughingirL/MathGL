@@ -26,6 +26,7 @@ int mgl_hex(char ch)
 	int res=-1;
 	if(ch>='0' && ch<='9')	res = ch-'0';
 	if(ch>='a' && ch<='f')	res = ch-'a'+10;
+	if(ch>='A' && ch<='F')	res = ch-'A'+10;
 	return res;
 }
 //-----------------------------------------------------------------------------
@@ -37,6 +38,7 @@ void mgl_get_value(const char *buf, const char *name, char *val)
 	memset(val,0,strlen(buf)+1);
 	if(pos && (pos==buf || pos[-1]=='&'))
 	{
+		pos+=4;	// shift for "mgl="
 		register size_t i,j,l=strlen(pos);
 		for(i=j=0;i<l;i++,j++)
 		{
@@ -61,7 +63,7 @@ int main(int argc, char *argv[])
 
 	char *str, *buf;
 	const char *method = getenv("REQUEST_METHOD");
-	if(strcmp(method,"GET"))
+	if(method && strcmp(method,"GET"))
 	{
 		long len=atol(getenv("CONTENT_LENGTH"));
 		buf = new char[len+1];
@@ -69,16 +71,25 @@ int main(int argc, char *argv[])
 		buf[len]=0;
 	}
 	else		buf = getenv("QUERY_STRING");
+	if(!buf)	buf="mgl=alpha+on%3Arotate+40+60%3Afsurf+%27sin%282*pi*x*y%29%27%0D%0Abox%3Aaxis%3Afplot+%27sin%282*pi*t%29%27+%27cos%282*pi*t%29%27+%272*t-1%27+%27m2o%27";
 	str = new char[strlen(buf)+1];
 	mgl_get_value(buf,"mgl",str);
 
 	p.Execute(&gr,str);
 
-	printf("Content-Type: multipart/alternative; boundary=\"myboundary\"\n\n");
-	printf("--myboundary\nContent-Type: image/png\n\n");
-	gr.WritePNG("-");
+	printf("Content-Type: text/html\n\n");
+
+	printf("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd\">\n");
+	printf("<html><head><meta content=\"text/html; charset=utf-8\" http-equiv=\"content-type\">\n");
+	printf("<title>MathGL - library for scientific graphics</title></head><body>\n<img>\n");
+	gr.WriteSVG("-");	fflush(stdout);
+	printf("</img></body></html>\n");
+
+/*	printf("Content-Type: multipart/alternative; boundary=\"myboundary\"\n\n");
 	printf("--myboundary\nContent-Type: image/svg\n\n");
 	gr.WriteSVG("-");
+	printf("--myboundary\nContent-Type: image/png\n\n");
+	gr.WritePNG("-");*/
 	return 0;
 }
 //-----------------------------------------------------------------------------

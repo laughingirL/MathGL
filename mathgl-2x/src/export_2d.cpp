@@ -197,6 +197,7 @@ mglColor mglCanvas::GetColor(const mglPrim &p)
 //-----------------------------------------------------------------------------
 void mgl_write_eps(HMGL gr, const char *fname,const char *descr)
 {
+	if(!fname || *fname==0)	return;
 	if(gr->GetPrmNum()<1)	return;
 	_Gr_->clr(MGL_FINISHED);	_Gr_->Finish(false);
 	time_t now;	time(&now);
@@ -379,6 +380,7 @@ void mgl_write_eps_(uintptr_t *gr, const char *fname,const char *descr,int l,int
 //-----------------------------------------------------------------------------
 void mgl_write_svg(HMGL gr, const char *fname,const char *descr)
 {
+	if(!fname || *fname==0)	return;
 	if(gr->GetPrmNum()<1)	return;
 	_Gr_->clr(MGL_FINISHED);	_Gr_->Finish(false);
 	time_t now;	time(&now);
