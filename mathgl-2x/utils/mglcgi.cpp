@@ -77,16 +77,17 @@ int main(int argc, char *argv[])
 
 	p.Execute(&gr,str);
 
-	printf("Content-Type: text/html\n\n");
-
+/*	printf("Content-Type: text/html\n\n");
 	printf("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd\">\n");
 	printf("<html><head><meta content=\"text/html; charset=utf-8\" http-equiv=\"content-type\">\n");
 	printf("<title>MathGL - library for scientific graphics</title></head><body>\n<img>\n");
 	gr.WriteSVG("-");	fflush(stdout);
-	printf("</img></body></html>\n");
+	printf("</img></body></html>\n");*/
+
+	printf("Content-Type: image/png\n\n");	gr.WritePNG("-");
 
 /*	printf("Content-Type: multipart/alternative; boundary=\"myboundary\"\n\n");
-	printf("--myboundary\nContent-Type: image/svg\n\n");
+	printf("--myboundary\nContent-Type: image/svg+xml\n\n");
 	gr.WriteSVG("-");
 	printf("--myboundary\nContent-Type: image/png\n\n");
 	gr.WritePNG("-");*/
