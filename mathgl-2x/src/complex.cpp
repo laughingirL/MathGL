@@ -26,8 +26,9 @@
 #include <gsl/gsl_sf.h>
 #endif
 //-----------------------------------------------------------------------------
-void mglStartThreadC(void *(*func)(void *), void (*post)(mglThreadC *,dual *), long n, dual *a,
-					const dual *b, const dual *c, const long *p, void *v, const dual *d, const dual *e, const char *s)
+void mglStartThreadC(void *(*func)(void *), void (*post)(mglThreadC *,dual *), long n,
+					dual *a, const dual *b, const dual *c, const long *p,
+					const void *v, const dual *d, const dual *e, const char *s)
 {
 	if(!func)	return;
 #if MGL_HAVE_PTHREAD
@@ -57,7 +58,8 @@ void mglStartThreadC(void *(*func)(void *), void (*post)(mglThreadC *,dual *), l
 	}
 }
 //-----------------------------------------------------------------------------
-void mglStartThreadV(void *(*func)(void *), long n, dual *a, const void *b, const void *c, const long *p, void *v, const mreal *d)
+void mglStartThreadV(void *(*func)(void *), long n, dual *a, const void *b,
+					const void *c, const long *p, const void *v, const mreal *d)
 {
 	if(!func)	return;
 #if MGL_HAVE_PTHREAD

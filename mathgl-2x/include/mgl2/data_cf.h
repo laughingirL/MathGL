@@ -144,7 +144,8 @@ mreal mgl_data_spline(HCDT dat, mreal x,mreal y,mreal z);
 mreal mgl_data_linear(HCDT dat, mreal x,mreal y,mreal z);
 mreal mgl_data_spline_ext(HCDT dat, mreal x,mreal y,mreal z, mreal *dx,mreal *dy,mreal *dz);
 mreal mgl_data_linear_ext(HCDT dat, mreal x,mreal y,mreal z, mreal *dx,mreal *dy,mreal *dz);
-mreal mgl_data_solve(HCDT dat, mreal val, int spl, long i0);
+mreal mgl_data_solve_1d(HCDT dat, mreal val, int spl, long i0);
+HMDT mgl_data_solve(HCDT dat, mreal val, char dir, HCDT i0, int norm);
 
 HMDT mgl_data_trace(HCDT d);
 HMDT mgl_data_resize(HCDT dat, long mx,long my,long mz);
@@ -268,7 +269,8 @@ mreal mgl_data_spline_(uintptr_t *dat, mreal *x,mreal *y,mreal *z);
 mreal mgl_data_linear_(uintptr_t *dat, mreal *x,mreal *y,mreal *z);
 mreal mgl_data_spline_ext_(uintptr_t *dat, mreal *x,mreal *y,mreal *z, mreal *dx,mreal *dy,mreal *dz);
 mreal mgl_data_linear_ext_(uintptr_t *dat, mreal *x,mreal *y,mreal *z, mreal *dx,mreal *dy,mreal *dz);
-mreal mgl_data_solve_(uintptr_t *dat, mreal *val, int *spl, int *i0);
+mreal mgl_data_solve_1d_(uintptr_t *dat, mreal *val, int *spl, int *i0);
+uintptr_t mgl_data_solve_(uintptr_t *dat, mreal *val, const char *dir, uintptr_t *i0, int *norm,int);
 
 uintptr_t mgl_data_trace_(uintptr_t *d);
 uintptr_t mgl_data_resize_(uintptr_t *dat, int *mx,int *my,int *mz);

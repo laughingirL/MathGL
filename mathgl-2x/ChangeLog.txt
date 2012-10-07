@@ -37,6 +37,7 @@
 * Multi-line strings (i.e. separated by "\" symbol) are highlighted correctly now.
 
 * Add MGL commands 'errbox', 'face'
+* Add mgl.cgi tool which return PNG image for CGI request in form of MGL script.
 
 * Update samples
 * Update documentation

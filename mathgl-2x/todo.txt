@@ -35,9 +35,16 @@ http_request.onreadystatechange = function () {
 
 13. Use libtcc for mglFormula only!
 
+14. Change mglData::Solve to be inverse to Evaluate() + add sample like
+new a 20 30 'x+y^2':solve y a 0.1:new x a.nx:modify x 'x'
+evaluate v a x y
+ranges 0 1 0 1:surf a:plot x y v:axis:box
+
 +13. WX window/widgets
 
 +20. Test mglcgi
+
+
 
 
 <img name="result" src="test.svg"></img>

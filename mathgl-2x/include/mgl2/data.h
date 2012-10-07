@@ -248,11 +248,11 @@ public:
 	inline mglData Resize(long mx,long my=1,long mz=1, mreal x1=0,mreal x2=1, mreal y1=0,mreal y2=1, mreal z1=0,mreal z2=1) const
 	{	return mglData(true,mgl_data_resize_box(this,mx,my,mz,x1,x2,y1,y2,z1,z2));	}
 	/// Get array which values is result of interpolation this for coordinates from other arrays
-	inline mglData Evaluate(const mglDataA &idat, bool norm=true) const
+	inline mglData Evaluate(const mglData &idat, bool norm=true) const
 	{	return mglData(true,mgl_data_evaluate(this,&idat,0,0,norm));	}
-	inline mglData Evaluate(const mglDataA &idat, const mglDataA &jdat, bool norm=true) const
+	inline mglData Evaluate(const mglData &idat, const mglData &jdat, bool norm=true) const
 	{	return mglData(true,mgl_data_evaluate(this,&idat,&jdat,0,norm));	}
-	inline mglData Evaluate(const mglDataA &idat, const mglDataA &jdat, const mglDataA &kdat, bool norm=true) const
+	inline mglData Evaluate(const mglData &idat, const mglData &jdat, const mglData &kdat, bool norm=true) const
 	{	return mglData(true,mgl_data_evaluate(this,&idat,&jdat,&kdat,norm));	}
 
 	/// Cumulative summation the data in given direction or directions
@@ -318,9 +318,14 @@ public:
 	inline mreal Linear1(mreal x,mreal y=0,mreal z=0) const
 	{	return mgl_data_linear(this,x*(nx-1),y*(ny-1),z*(nz-1));	}
 	/// Return an approximated x-value (root) when dat(x) = val
-	inline mreal Solve(mreal val, bool use_spline=true, long i0=0)
-	{	return mgl_data_solve(this, val, use_spline, i0);		}
-
+	inline mreal Solve(mreal val, bool use_spline=true, long i0=0) const
+	{	return mgl_data_solve_1d(this, val, use_spline, i0);		}
+	/// Return an approximated value (root) when dat(x) = val
+	inline mglData Solve(mreal val, char dir, bool norm=true) const
+	{	return mglData(true,mgl_data_solve(this, val, dir, 0, norm));	}
+	inline mglData Solve(mreal val, char dir, const mglData &i0, bool norm=true) const
+	{	return mglData(true,mgl_data_solve(this, val, dir, &i0, norm));	}
+	
 	/// Interpolate by qubic splain the data and return its derivatives at given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
 	inline mreal Spline(mglPoint &dif, mreal x,mreal y=0,mreal z=0) const
 	{	return mgl_data_spline_ext(this, x,y,z, &(dif.x),&(dif.y), &(dif.z));	}

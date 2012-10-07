@@ -3415,7 +3415,29 @@ int mgls_evaluate(mglGraph *, long , mglArg *a, int k[10], const char *)
 }
 void mglc_evaluate(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 {
-	if(k[0]==1)	mglprintf(out,1024,L"%s.Sew(\"%s\", %g);", a[0].s.c_str(), k[1]==2?a[1].s.c_str():"xyz", k[2]==3 ? a[2].v : 2*M_PI);
+	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1 && k[4]==1)
+		mglprintf(out,1024,L"%s=%s.Evaluate(%s, %s, %s, %d);", a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str(), a[3].s.c_str(), a[4].s.c_str(), k[5]!=3 || a[5].v!=0);
+	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1)
+		mglprintf(out,1024,L"%s=%s.Evaluate(%s, %s, %d);", a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str(), a[3].s.c_str(), k[4]!=3 || a[4].v!=0);
+	else if(k[0]==1 && k[1]==1 && k[2]==1)
+		mglprintf(out,1024,L"%s=%s.Evaluate(%s, %d);", a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str(), k[3]!=3 || a[3].v!=0);
+}
+//-----------------------------------------------------------------------------
+int mgls_solve(mglGraph *, long , mglArg *a, int k[10], const char *)
+{
+	if(k[0]==1 && k[1]==1 && k[2]==3 && k[3]==2 && k[4]==1)
+		*(a[0].d) = a[1].d->Solve(a[2].v, a[3].s[0], *(a[4].d), k[5]!=3 || a[5].v!=0);
+	else if(k[0]==1 && k[1]==1 && k[2]==3 && k[3]==2)
+		*(a[0].d) = a[1].d->Solve(a[2].v, a[3].s[0], k[4]!=3 || a[4].v!=0);
+	else	return 1;
+	return 0;
+}
+void mglc_solve(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
+{
+	if(k[0]==1 && k[1]==1 && k[2]==3 && k[3]==2 && k[4]==1)
+		mglprintf(out,1024,L"%s=%s.Solve(%g, '%c', %s, %d);", a[0].s.c_str(), a[1].s.c_str(), a[2].v, a[3].s[0], a[4].s.c_str(), k[5]!=3 || a[5].v!=0);
+	else if(k[0]==1 && k[1]==1 && k[2]==3 && k[3]==2)
+		mglprintf(out,1024,L"%s=%s.Solve(%g, '%c', %d);", a[0].s.c_str(), a[1].s.c_str(), a[2].v, a[3].s[0], k[4]!=3 || a[4].v!=0);
 }
 //-----------------------------------------------------------------------------
 int mgls_put(mglGraph *, long , mglArg *a, int k[10], const char *)
@@ -3891,6 +3913,7 @@ mglCommand mgls_base_cmd[] = {
 	{"sew","Remove jump into the data, like phase jumps","sew Dat ['dir' da]", mgls_sew, mglc_sew,16},
 	{"sinfft","Sin-Fourier transform at some direction","sinfft Dat 'dir'", mgls_sinfft, mglc_sinfft,16},
 	{"smooth","Smooth data","smooth Dat [kind 'dir']", mgls_smooth, mglc_smooth,16},
+	{"solve","Find root Dat_{i,j,k}=val (inverse evaluate)","solve Res Dat val 'dir' [Idat norm]", mgls_solve, mglc_solve,4},
 	{"sort","Sort data by values in column","sort Dat idx [idy]", mgls_sort, mglc_sort,3},
 	{"sphere","Draw sphere","sphere x0 y0 r ['fmt']|x0 y0 z0 r ['fmt']", mgls_sphere, mglc_sphere,13},
 	{"squeeze","Squeeze data","squeeze Dat kx [ky kz]", mgls_squeeze, mglc_squeeze,3},

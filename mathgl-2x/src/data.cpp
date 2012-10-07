@@ -54,8 +54,9 @@ void mgl_set_num_thr(int n)
 void mgl_set_num_thr(int)	{	mglNumThr = 1;	}
 #endif
 //-----------------------------------------------------------------------------
-void mglStartThread(void *(*func)(void *), void (*post)(mglThreadD *,mreal *), long n, mreal *a,
-	const mreal *b, const mreal *c, const long *p, void *v, const mreal *d, const mreal *e, const char *s)
+void mglStartThread(void *(*func)(void *), void (*post)(mglThreadD *,mreal *), long n,
+					mreal *a, const mreal *b, const mreal *c, const long *p,
+					const void *v, const mreal *d, const mreal *e, const char *s)
 {
 	if(!func)	return;
 #if MGL_HAVE_PTHREAD
@@ -85,7 +86,8 @@ void mglStartThread(void *(*func)(void *), void (*post)(mglThreadD *,mreal *), l
 	}
 }
 //-----------------------------------------------------------------------------
-void mglStartThreadV(void *(*func)(void *), long n, mreal *a, const void *b, const void *c, const long *p, void *v, const mreal *d)
+void mglStartThreadV(void *(*func)(void *), long n, mreal *a, const void *b,
+					 const void *c, const long *p, const void *v, const mreal *d)
 {
 	if(!func)	return;
 #if MGL_HAVE_PTHREAD
@@ -620,6 +622,175 @@ void mgl_data_clean(HMDT d, long id)
 }
 void mgl_data_clean_(uintptr_t *d, int *id)	{	mgl_data_clean(_DT_,*id);	}
 //-----------------------------------------------------------------------------
+void *mgl_solve_x(void *par)
+{
+	mglThreadD *t=(mglThreadD *)par;
+	register long l,i,i0,j,k, nx=t->p[0], ny=t->p[1], nz=t->p[2], nn=t->n;
+	const mreal *a=t->b, *ii=t->c;
+	mreal *b=t->a,x,val=t->d[0],y1,y2,v,v0,dx,dy,dz,da = 1e-5*(val?fabs(val):1);
+	for(l=t->id;l<nn;l+=mglNumThr)
+	{
+		j = l%ny;	k = l/ny;
+		b[l] = NAN;	i0 = ii?ii[l]:0;
+		if(i0>nx-2)	continue;
+		if(a)	for(i=i0+1;i<nx;i++)
+		{
+			y1=a[i-1+nx*l];	y2=a[i+nx*l];
+			if(val==y1)	{	b[l] = i-1;	break;	}
+			if(val==y2)	{	b[l] = i;	break;	}
+			if((y1-val)*(y2-val)<0)
+			{
+				x = i-1 + (val-y1)/(y2-y1);
+				v0 = v = mglSpline3(a,nx,ny,nz,x,j,k, &dx,&dy,&dz);
+				unsigned kk=0;
+				while(fabs(v-val)>da || dx==0)
+				{
+					x += (val-v)/dx;		kk++;
+					v = mglSpline3(a,nx,ny,nz,x,j,k, &dx,&dy,&dz);
+					if(kk>=10)
+					{
+						b[l] = x = fabs(v-val)<fabs(v0-val) ? x:i-1 + (val-y1)/(y2-y1);
+						break;
+					}
+				}
+				b[l] = x;	break;
+			}
+		}
+		else 	for(i=i0+1;i<nx;i++)
+		{
+			HCDT d=(HCDT)t->v;
+			y1=d->v(i-1,j,k);	y2=d->v(i,j,k);
+			if(val==y1)	{	b[l] = i-1;	break;	}
+			if(val==y2)	{	b[l] = i;	break;	}
+			if((y1-val)*(y2-val)<0)
+			{	b[l] = i-1 + (val-y1)/(y2-y1);	break;	}
+		}
+	}
+	return 0;
+}
+void *mgl_solve_y(void *par)
+{
+	mglThreadD *t=(mglThreadD *)par;
+	register long l,i,i0,j,k, nx=t->p[0], ny=t->p[1], nz=t->p[2], nn=t->n;
+	const mreal *a=t->b, *ii=t->c;
+	mreal *b=t->a,x,val=t->d[0],y1,y2,v,v0,dx,dy,dz,da = 1e-5*(val?fabs(val):1);
+	for(l=t->id;l<nn;l+=mglNumThr)
+	{
+		j = l%nx;	k = l/nx;
+		b[l] = NAN;	i0 = ii?ii[l]:0;
+		if(i0>ny-2)	continue;
+		if(a)	for(i=i0+1;i<ny;i++)
+		{
+			y1=a[j+nx*(i-1+ny*k)];	y2=a[j+nx*(i+ny*k)];
+			if(val==y1)	{	b[l] = i-1;	break;	}
+			if(val==y2)	{	b[l] = i;	break;	}
+			if((y1-val)*(y2-val)<0)
+			{
+				x = i-1 + (val-y1)/(y2-y1);
+				v0 = v = mglSpline3(a,nx,ny,nz,j,x,k, &dx,&dy,&dz);
+				unsigned kk=0;
+				while(fabs(v-val)>da || dy==0)
+				{
+					x += (val-v)/dy;		kk++;
+					v = mglSpline3(a,nx,ny,nz,j,x,k, &dx,&dy,&dz);
+					if(kk>=10)
+					{
+						b[l] = x = fabs(v-val)<fabs(v0-val) ? x:i-1 + (val-y1)/(y2-y1);
+						break;
+					}
+				}
+				b[l] = x;	break;
+			}
+		}
+		else 	for(i=i0+1;i<ny;i++)
+		{
+			HCDT d=(HCDT)t->v;
+			y1=d->v(j,i-1,k);	y2=d->v(j,i,k);
+			if(val==y1)	{	b[l] = i-1;	break;	}
+			if(val==y2)	{	b[l] = i;	break;	}
+			if((y1-val)*(y2-val)<0)
+			{	b[l] = i-1 + (val-y1)/(y2-y1);	break;	}
+		}
+	}
+	return 0;
+}
+void *mgl_solve_z(void *par)
+{
+	mglThreadD *t=(mglThreadD *)par;
+	register long l,i,i0,j,k, nx=t->p[0], ny=t->p[1], nz=t->p[2], nn=t->n;
+	const mreal *a=t->b, *ii=t->c;
+	mreal *b=t->a,x,val=t->d[0],y1,y2,v,v0,dx,dy,dz,da = 1e-5*(val?fabs(val):1);
+	for(l=t->id;l<nn;l+=mglNumThr)
+	{
+		j = l%nx;	k = l/nx;
+		b[l] = NAN;	i0 = ii?ii[l]:0;
+		if(i0>nz-2)	continue;
+		if(a)	for(i=i0+1;i<nz;i++)
+		{
+			y1=a[nn*i-nn+l];	y2=a[nn*i+l];
+			if(val==y1)	{	b[l] = i-1;	break;	}
+			if(val==y2)	{	b[l] = i;	break;	}
+			if((y1-val)*(y2-val)<0)
+			{
+				x = i-1 + (val-y1)/(y2-y1);
+				v0 = v = mglSpline3(a,nx,ny,nz,j,k,x, &dx,&dy,&dz);
+				unsigned kk=0;
+				while(fabs(v-val)>da || dz==0)
+				{
+					x += (val-v)/dz;		kk++;
+					v = mglSpline3(a,nx,ny,nz,j,k,x, &dx,&dy,&dz);
+					if(kk>=10)
+					{
+						b[l] = x = fabs(v-val)<fabs(v0-val) ? x:i-1 + (val-y1)/(y2-y1);
+						break;
+					}
+				}
+				b[l] = x;	break;
+			}
+		}
+		else 	for(i=i0+1;i<nz;i++)
+		{
+			HCDT d=(HCDT)t->v;
+			y1=d->v(j,k,i-1);	y2=d->v(j,k,i);
+			if(val==y1)	{	b[l] = i-1;	break;	}
+			if(val==y2)	{	b[l] = i;	break;	}
+			if((y1-val)*(y2-val)<0)
+			{	b[l] = i-1 + (val-y1)/(y2-y1);	break;	}
+		}
+	}
+	return 0;
+}
+HMDT mgl_data_solve(HCDT dat, mreal val, char dir, HCDT i0, int norm)
+{
+	const mglData *i = dynamic_cast<const mglData *>(i0);
+	const mglData *d = dynamic_cast<const mglData *>(dat);
+	long p[3]={dat->GetNx(), dat->GetNy(), dat->GetNz()};
+	const mreal *ii=0;
+	mglData *r=new mglData;
+	if(dir=='x')
+	{
+		r->Create(p[1],p[2]);
+		if(i && i->nx*i->ny==p[1]*p[2])	ii = i->a;
+		mglStartThread(mgl_solve_x,0,p[1]*p[2],r->a,d?d->a:0,ii,p,dat,&val);
+		if(norm) 	*r /= p[0];
+	}
+	if(dir=='y')
+	{
+		r->Create(p[0],p[2]);
+		if(i && i->nx*i->ny==p[0]*p[2])	ii = i->a;
+		mglStartThread(mgl_solve_y,0,p[0]*p[2],r->a,d?d->a:0,ii,p,dat,&val);
+		if(norm) 	*r /= p[1];
+	}
+	if(dir=='z')
+	{
+		r->Create(p[0],p[1]);
+		if(i && i->nx*i->ny==p[0]*p[1])	ii = i->a;
+		mglStartThread(mgl_solve_z,0,p[0]*p[1],r->a,d?d->a:0,ii,p,dat,&val);
+		if(norm) 	*r /= p[2];
+	}
+	return r;
+}
+//-----------------------------------------------------------------------------
 mreal mgl_data_solve(HCDT d, mreal val, int spl, long i0)
 {
 	mreal x=0, y1, y2, a, a0, dx,dy,dz, da = 1e-5*(val?fabs(val):1);
@@ -726,8 +897,10 @@ mreal mgl_data_spline_ext_(uintptr_t *d, mreal *x,mreal *y,mreal *z, mreal *dx,m
 {	return mgl_data_spline_ext(_DA_(d),*x,*y,*z,dx,dy,dz);	}
 mreal mgl_data_linear_ext_(uintptr_t *d, mreal *x,mreal *y,mreal *z, mreal *dx,mreal *dy,mreal *dz)
 {	return mgl_data_linear_ext(_DA_(d),*x,*y,*z,dx,dy,dz);	}
-mreal mgl_data_solve_(uintptr_t *d, mreal *val, int *spl, int *i0)
+mreal mgl_data_solve_1d_(uintptr_t *d, mreal *val, int *spl, int *i0)
 {	return mgl_data_solve(_DA_(d),*val, *spl, *i0);	}
+uintptr_t mgl_data_solve_(uintptr_t *d, mreal *val, const char *dir, uintptr_t *i0, int *norm,int)
+{	return uintptr_t(mgl_data_solve(_DA_(d),*val, *dir, _DA_(i0), *norm));	}
 //-----------------------------------------------------------------------------
 mreal mglSpline3(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z,mreal *dx, mreal *dy, mreal *dz)
 {
@@ -744,8 +917,8 @@ mreal mglSpline3(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mr
 	//	if(x<0 || y<0 || z<0 || x>nx-1 || y>ny-1 || z>nz-1)		return 0;
 	if(dd)	{	*dx=*dy=*dz=0;	}
 	if(nz>1 && z!=kz)		// 3d interpolation
-	{						// TODO: add dx,dy,dz evaluation
-		mreal b1[4]={0,0,0,0};
+	{
+		mreal b1[4]={0,0,0,0},  x1[4]={0,0,0,0},  y1[4]={0,0,0,0};
 		if(kx>nx-2)	kx = nx-2;
 		if(ky>ny-2)	ky = ny-2;
 		if(kz>nz-2)	kz = nz-2;
@@ -759,13 +932,29 @@ mreal mglSpline3(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mr
 			for(i=0,fx=1;i<4;i++)
 			{
 				for(j=0,fy=1;j<4;j++)
-				{	b1[k] += fy*fx*_p[i][j];	fy *= y-ky;	}
+				{
+					b1[k] += fy*fx*_p[i][j];
+					x1[k] += i*fy*fx*_p[i][j];
+					y1[k] += j*fy*fx*_p[i][j];
+					fy *= y-ky;
+				}
 				fx *= x-kx;
 			}
 		}
 		mglFillP(kk, b1, nz>3 ? 4:3, _p[0]);
+		mglFillP(kk, x1, nz>3 ? 4:3, _p[1]);
+		mglFillP(kk, y1, nz>3 ? 4:3, _p[2]);
 		for(i=0,fx=1,b=0;i<4;i++)
-		{	b += fx*_p[0][i];	fx *= z-kz;	}
+		{
+			b += fx*_p[0][i];
+			if(dd)
+			{
+				*dx += fx*_p[1][i];
+				*dy += fx*_p[2][i];
+				*dz += i*fx*_p[0][i];
+			}
+			fx *= z-kz;
+		}
 	}
 	else if(ny>1 && y!=ky)	// 2d interpolation
 	{

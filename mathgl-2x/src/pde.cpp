@@ -36,7 +36,7 @@ struct mgl_pde_ham
 void *mgl_pde_hprep(void *par)
 {
 	mglThreadD *t=(mglThreadD *)par;
-	mgl_pde_ham *f = (mgl_pde_ham *)t->v;
+	const mgl_pde_ham *f = (const mgl_pde_ham *)t->v;
 	mglFormula *eqs = f->eqs;
 	register long i,j,i0, nx=2*f->nx, ny=2*f->ny;
 	mreal var[MGL_VS];
@@ -275,7 +275,7 @@ struct mgl_qo2d_ham
 void *mgl_qo2d_hprep(void *par)
 {
 	mglThreadD *t=(mglThreadD *)par;
-	mgl_qo2d_ham *f = (mgl_qo2d_ham *)t->v;
+	const mgl_qo2d_ham *f = (const mgl_qo2d_ham *)t->v;
 	mgl_ap *ra = f->ra;
 	mglFormula *h = f->h;
 	const mreal *r = f->r;

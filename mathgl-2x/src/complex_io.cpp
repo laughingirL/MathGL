@@ -518,7 +518,7 @@ void mgl_datac_transpose_(uintptr_t *d, const char *dim,int l)
 void *mgl_cmodify(void *par)
 {
 	mglThreadC *t=(mglThreadC *)par;
-	mglFormulaC *f = (mglFormulaC *)(t->v);
+	const mglFormulaC *f = (const mglFormulaC *)(t->v);
 	register long i,j,k,i0, nx=t->p[0],ny=t->p[1],nz=t->p[2];
 	dual *b=t->a;
 	mreal dx,dy,dz;
@@ -554,7 +554,7 @@ void mgl_datac_modify_(uintptr_t *d, const char *eq,int *dim,int l)
 void *mgl_cmodify_gen(void *par)
 {
 	mglThreadC *t=(mglThreadC *)par;
-	mglFormulaC *f = (mglFormulaC *)(t->v);
+	const mglFormulaC *f = (const mglFormulaC *)(t->v);
 	register long i,j,k,i0, nx=t->p[0],ny=t->p[1],nz=t->p[2];
 	dual *b=t->a;
 	mreal dx,dy,dz;
@@ -588,7 +588,7 @@ void mgl_datac_modify_vw_(uintptr_t *d, const char *eq, uintptr_t *v, uintptr_t 
 void *mgl_cfill_f(void *par)
 {
 	mglThreadC *t=(mglThreadC *)par;
-	mglFormulaC *f = (mglFormulaC *)(t->v);
+	const mglFormulaC *f = (const mglFormulaC *)(t->v);
 	register long i,j,k,i0, nx=t->p[0],ny=t->p[1];
 	dual *b=t->a;
 	const dual *v=t->b, *w=t->c, *x=t->d;
@@ -603,7 +603,7 @@ void *mgl_cfill_f(void *par)
 void *mgl_cfill_fgen(void *par)
 {
 	mglThreadC *t=(mglThreadC *)par;
-	mglFormulaC *f = (mglFormulaC *)(t->v);
+	const mglFormulaC *f = (const mglFormulaC *)(t->v);
 	register long i,j,k,i0, nx=t->p[0],ny=t->p[1];
 	dual *b=t->a;
 	HCDT v=(HCDT)t->b, w=(HCDT)t->c;

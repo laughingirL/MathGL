@@ -193,7 +193,7 @@ uintptr_t mgl_data_subdata_ext_(uintptr_t *d, uintptr_t *xx, uintptr_t *yy, uint
 void *mgl_column(void *par)
 {
 	mglThreadD *t=(mglThreadD *)par;
-	mglFormula *f = (mglFormula *)t->v;
+	const mglFormula *f = (const mglFormula *)t->v;
 	register long i,j, nx=t->p[0];
 	mreal *b=t->a, var[MGL_VS];
 	const mreal *a=t->b;
@@ -509,7 +509,7 @@ void *mgl_mom_z(void *par)
 	long nx=t->p[0], ny=t->p[1], nz=t->p[2], nn=t->n;
 	mreal *b=t->a, i0,i1,x,y,z;
 	const mreal *a=t->b;
-	const mglFormula *eq = (mglFormula *)t->v;
+	const mglFormula *eq = (const mglFormula *)t->v;
 	for(i=t->id;i<nn;i+=mglNumThr)
 	{
 		i0 = i1 = 0;
@@ -531,7 +531,7 @@ void *mgl_mom_y(void *par)
 	long nx=t->p[0], ny=t->p[1], nz=t->p[2], nn=t->n;
 	mreal *b=t->a, i0,i1,x,y,z;
 	const mreal *a=t->b;
-	const mglFormula *eq = (mglFormula *)t->v;
+	const mglFormula *eq = (const mglFormula *)t->v;
 	for(i=t->id;i<nn;i+=mglNumThr)
 	{
 		i0 = i1 = 0;
@@ -553,7 +553,7 @@ void *mgl_mom_x(void *par)
 	long nx=t->p[0], ny=t->p[1], nz=t->p[2], nn=t->n;
 	mreal *b=t->a, i0,i1,x,y,z;
 	const mreal *a=t->b;
-	const mglFormula *eq = (mglFormula *)t->v;
+	const mglFormula *eq = (const mglFormula *)t->v;
 	for(i=t->id;i<nn;i+=mglNumThr)
 	{
 		i0 = i1 = 0;
@@ -603,6 +603,21 @@ void *mgl_eval(void *par)
 	}
 	return 0;
 }
+void *mgl_eval_s(void *par)
+{
+	mglThreadD *t=(mglThreadD *)par;
+	register long i, nx=t->p[0], ny=t->p[1], nz=t->p[2], n1=t->p[3], nn=t->n;
+	const mreal *ii=t->c, *jj=t->d, *kk=t->e;
+	HCDT a = (HCDT)t->v;
+	mreal *b=t->a,x,y,z;
+	for(i=t->id;i<nn;i+=mglNumThr)
+	{
+		x=ii?ii[i]:0;	y=jj?jj[i]:0;	z=kk?kk[i]:0;
+		if(n1)	{	x*=nx-1;	y*=ny-1;	z*=nz-1;	}
+		b[i] = mgl_data_linear(a, x,y,z);
+	}
+	return 0;
+}
 HMDT mgl_data_evaluate(HCDT dat, HCDT idat, HCDT jdat, HCDT kdat, int norm)
 {	// NOTE: only for mglData (for speeding up)
 	mglData *r=new mglData;
@@ -610,14 +625,15 @@ HMDT mgl_data_evaluate(HCDT dat, HCDT idat, HCDT jdat, HCDT kdat, int norm)
 	const mglData *i=dynamic_cast<const mglData *>(idat);
 	const mglData *j=dynamic_cast<const mglData *>(jdat);
 	const mglData *k=dynamic_cast<const mglData *>(kdat);
-	if(!d || !i)	return r;
+	if(!i)	return r;
 
-	long p[4]={d->nx,d->ny,d->nz,norm};
+	long p[4]={dat->GetNx(), dat->GetNy(), dat->GetNz(),norm};
 	register long n=i->nx*i->ny*i->nz;
 	if(j && j->nx*j->ny*j->nz!=n)	return r;
 	if(k && k->nx*k->ny*k->nz!=n)	return r;
 	r->Create(i->nx,i->ny,i->nz);
-	mglStartThread(mgl_eval,0,n,r->a,d->a,i->a,p,0,j?j->a:0,k?k->a:0);
+	if(d)	mglStartThread(mgl_eval,0,n,r->a,d->a,i->a,p,0,j?j->a:0,k?k->a:0);
+	else 	mglStartThread(mgl_eval_s,0,n,r->a,0,i->a,p,dat,j?j->a:0,k?k->a:0);
 	return r;
 }
 uintptr_t mgl_data_evaluate_(uintptr_t *d, uintptr_t *idat, uintptr_t *jdat, uintptr_t *kdat, int *norm)
@@ -1174,9 +1190,9 @@ void *mgl_hist_1(void *par)
 {
 	mglThreadD *t=(mglThreadD *)par;
 	register long i,k, nn=t->n, n = t->p[0];
-	mreal *b=new mreal[n], *v=(mreal *)t->v;
+	mreal *b=new mreal[n];
 	memset(b,0,n*sizeof(mreal));
-	const mreal *a=t->b, *c=t->c;
+	const mreal *a=t->b, *c=t->c, *v=(const mreal *)t->v;
 	for(i=t->id;i<nn;i+=mglNumThr)
 	{
 		k = long(n*(a[i]-v[0])/(v[1]-v[0]));
@@ -1189,9 +1205,9 @@ void *mgl_hist_2(void *par)
 	mglThreadD *t=(mglThreadD *)par;
 	register long i,k, nn=t->n, n = t->p[0];
 	long ns=t->p[1], nx=t->p[2], ny=t->p[3], nz=t->p[4];
-	mreal *b=new mreal[n], *v=(mreal *)t->v, f,w=1, x,y,z, d=1./ns;
+	mreal *b=new mreal[n], f,w=1, x,y,z, d=1./ns;
 	memset(b,0,n*sizeof(mreal));
-	const mreal *a=t->b, *c=t->c;
+	const mreal *a=t->b, *c=t->c, *v=(const mreal *)t->v;
 	bool sp = n>0;
 	for(i=t->id;i<nn;i+=mglNumThr)
 	{
