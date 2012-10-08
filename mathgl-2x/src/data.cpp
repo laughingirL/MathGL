@@ -846,8 +846,8 @@ mreal mgl_data_linear_ext(HCDT d, mreal x,mreal y,mreal z, mreal *dx,mreal *dy,m
 		z -= kz;	if(nz==1)	z=0;
 
 		const mreal *aa=dd->a+kx+nx*(ky+ny*kz), *bb = aa+(nz>1?nx*ny:0);
-		b0 = aa[0]*(1-x-y+x*y) + x*(1-y)*aa[1] + y*(1-x)*aa[dn] + x*y*aa[1+dn];
-		b1 = bb[0]*(1-x-y+x*y) + x*(1-y)*bb[1] + y*(1-x)*bb[dn] + x*y*bb[1+dn];
+		b0 = x&&y ? aa[0]*(1-x-y+x*y) + x*(1-y)*aa[1] + y*(1-x)*aa[dn] + x*y*aa[1+dn] : aa[0];
+		b1 = x&&y ? bb[0]*(1-x-y+x*y) + x*(1-y)*bb[1] + y*(1-x)*bb[dn] + x*y*bb[1+dn] : bb[0];
 		if(dif)
 		{	*dx = aa[1]-aa[0];	*dy = aa[dn]-aa[0];	*dz = bb[0]-aa[0];	}
 	}
@@ -861,13 +861,15 @@ mreal mgl_data_linear_ext(HCDT d, mreal x,mreal y,mreal z, mreal *dx,mreal *dy,m
 
 		mreal a0 = d->v(kx,ky,kz), a1 = d->v(kx+1,ky,kz), a2 = d->v(kx,ky+1,kz);
 		if(dif)	{	*dx = a1-a0;	*dy = a2-a0;	*dz = -a0;	}
-		b0 = a0*(1-x-y+x*y) + x*(1-y)*a1 +
+		if(x&&y)	b0 = a0*(1-x-y+x*y) + x*(1-y)*a1 +
 			y*(1-x)*a2 + x*y*d->v(kx+1,ky+1,kz);
+		else 	b0 = a0;
 		kz++;
 		a0 = d->v(kx,ky,kz);
 		if(dif)	*dz += a0;
-		b1 = a0*(1-x-y+x*y) + x*(1-y)*d->v(kx+1,ky,kz) +
+		if(x&&y)	b1 = a0*(1-x-y+x*y) + x*(1-y)*d->v(kx+1,ky,kz) +
 			y*(1-x)*d->v(kx,ky+1,kz) + x*y*d->v(kx+1,ky+1,kz);
+		else 	b1 = a0;
 	}
 	return b0 + z*(b1-b0);
 }

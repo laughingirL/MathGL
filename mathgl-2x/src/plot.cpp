@@ -318,6 +318,7 @@ void mgl_plot_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *
 				} while(fabs(i2-i1)>1e-3);
 				if(t2)	gr->line_plot(n1,n2);
 				else	gr->line_plot(n3,n1);
+				n1=n3;
 			}
 			if(sh)	gr->NextColor(pal);
 		}

@@ -4,22 +4,6 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 ============= NEW  =============
 
 2. Export to X3D
-3. JavaScript (WebGL, canvas) based on JSON + function for rotate, zoom, CalcXYZ(ask server).
-
-var the_object;
-var http_request = new XMLHttpRequest();
-http_request.open( "GET", url, true );
-http_request.send(null);
-http_request.onreadystatechange = function () {
-	if ( http_request.readyState == 4 ) {
-		if ( http_request.status == 200 ) {
-			the_object = JSON.parse(http_request.responseText);
-		} else {
-			alert( "There was a problem with the URL." );
-		}
-		http_request = null;
-	}
-};
 
 4. GTK window/widgets
 5. Labels at TriCont()
@@ -35,19 +19,8 @@ http_request.onreadystatechange = function () {
 
 13. Use libtcc for mglFormula only!
 
-14. Change mglData::Solve to be inverse to Evaluate() + add sample like
-new a 20 30 'x+y^2':solve y a 0.1:new x a.nx:modify x 'x'
-evaluate v a x y
-ranges 0 1 0 1:surf a:plot x y v:axis:box
 
 +13. WX window/widgets
-
-+20. Test mglcgi
-
-
-
-
-<img name="result" src="test.svg"></img>
 
 ============= DOCS =============
 
@@ -61,6 +34,10 @@ ranges 0 1 0 1:surf a:plot x y v:axis:box
 
 5. Docs about WriteJSON() + appendix for details
 6. Docs about MGLD format -- in appendix
+
+7. JSON samples in documentation ?!!
+
+8. Change mglData::Solve to be inverse to Evaluate() + add sample like
 
 13. QMathGL::mglUserPrim -- allow user primitives (mouse) in QMathGL but double memory usage
 

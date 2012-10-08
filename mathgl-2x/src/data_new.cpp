@@ -599,7 +599,7 @@ void *mgl_eval(void *par)
 	{
 		x=ii?ii[i]:0;	y=jj?jj[i]:0;	z=kk?kk[i]:0;
 		if(n1)	{	x*=nx-1;	y*=ny-1;	z*=nz-1;	}
-		b[i] = mglSpline3(a,nx,ny,nz, x,y,z);
+		b[i] = (x==x && y==y && z==z) ? mglSpline3(a,nx,ny,nz, x,y,z):NAN;
 	}
 	return 0;
 }
@@ -614,12 +614,12 @@ void *mgl_eval_s(void *par)
 	{
 		x=ii?ii[i]:0;	y=jj?jj[i]:0;	z=kk?kk[i]:0;
 		if(n1)	{	x*=nx-1;	y*=ny-1;	z*=nz-1;	}
-		b[i] = mgl_data_linear(a, x,y,z);
+		b[i] = (x==x && y==y && z==z) ? mgl_data_linear(a, x,y,z):NAN;
 	}
 	return 0;
 }
 HMDT mgl_data_evaluate(HCDT dat, HCDT idat, HCDT jdat, HCDT kdat, int norm)
-{	// NOTE: only for mglData (for speeding up)
+{
 	mglData *r=new mglData;
 	const mglData *d=dynamic_cast<const mglData *>(dat);
 	const mglData *i=dynamic_cast<const mglData *>(idat);

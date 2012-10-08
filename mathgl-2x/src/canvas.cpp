@@ -851,7 +851,7 @@ void mglCanvas::Table(mreal x, mreal y, HCDT val, const wchar_t *text, const cha
 	}
 	delete []buf;
 
-	mreal sp=2*TextWidth(" ",frm,-1), w=sp+TextWidth(text,frm,-1), w1=0, ww, h;
+	mreal sp=2*TextWidth(" ",frm,-1), w=*text ? sp+TextWidth(text,frm,-1):0, w1=0, ww, h;
 	for(i=0;i<n;i++)		// find width for given font size
 	{
 		ww = TextWidth(str[i].c_str(),frm,-1)+sp;
@@ -877,7 +877,7 @@ void mglCanvas::Table(mreal x, mreal y, HCDT val, const wchar_t *text, const cha
 		k1=AddPnt(mglPoint(x,y,Depth),-1,q,-1,0);
 		k2=AddPnt(mglPoint(x,y+m*h,Depth),-1,q,-1,0);
 		line_plot(k1,k2);
-		ww = TextWidth(text,frm,-1)+sp;
+		ww = *text ? TextWidth(text,frm,-1)+sp:0;
 		k1=AddPnt(mglPoint(x+ww,y,Depth),-1,q,-1,0);
 		k2=AddPnt(mglPoint(x+ww,y+m*h,Depth),-1,q,-1,0);
 		line_plot(k1,k2);
@@ -896,10 +896,14 @@ void mglCanvas::Table(mreal x, mreal y, HCDT val, const wchar_t *text, const cha
 		}
 	}
 	int align;	mglGetStyle(frm, 0, &align);
-	ww = TextWidth(text,frm,-1)+sp;
-	k1=AddPnt(mglPoint(x+ww*align/2.,y+h*(m-1),Depth),-1,q,-1,0);
-	text_plot(k1,text,frm);
-	for(i=0,xx=x+ww,yy=y+h*(m-1);i<n;i++)	// draw lines and legend
+	if(*text)
+	{
+		ww = TextWidth(text,frm,-1)+sp;
+		k1=AddPnt(mglPoint(x+ww*align/2.,y+h*(m-0.99),Depth),-1,q,-1,0);
+		text_plot(k1,text,frm);
+	}
+	else 	ww = 0;
+	for(i=0,xx=x+ww,yy=y+h*(m-0.99);i<n;i++)	// draw lines and legend
 	{
 		ww = eqd ? w1:(TextWidth(str[i].c_str(),frm,-1)+sp);
 		k1=AddPnt(mglPoint(xx+ww*align/2.,yy,Depth),-1,q,-1,0);
