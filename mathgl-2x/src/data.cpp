@@ -20,7 +20,7 @@
 #include "mgl2/data.h"
 #include "mgl2/eval.h"
 
-int mglNumThr=0;
+int mglNumThr=1;
 void mglFillP(long x,long y, const mreal *a,long nx,long ny,mreal _p[4][4]);
 void mglFillP(long x, const mreal *a,long nx,mreal _p[4]);
 void mglFillP5(long x,long y, const mreal *a,long nx,long ny,mreal _p[6][6]);
@@ -625,13 +625,14 @@ void mgl_data_clean_(uintptr_t *d, int *id)	{	mgl_data_clean(_DT_,*id);	}
 void *mgl_solve_x(void *par)
 {
 	mglThreadD *t=(mglThreadD *)par;
-	register long l,i,i0,j,k, nx=t->p[0], ny=t->p[1], nz=t->p[2], nn=t->n;
+	register long l,i,i0,j,k, nx=t->p[0], ny=t->p[1], nz=t->p[2], n1=t->p[3]?nx-1:1, nn=t->n;
 	const mreal *a=t->b, *ii=t->c;
 	mreal *b=t->a,x,val=t->d[0],y1,y2,v,v0,dx,dy,dz,da = 1e-5*(val?fabs(val):1);
 	for(l=t->id;l<nn;l+=mglNumThr)
 	{
-		j = l%ny;	k = l/ny;
-		b[l] = NAN;	i0 = ii?ii[l]:0;
+		j = l%ny;	k = l/ny;	b[l] = NAN;
+		if(ii && ii[l]!=ii[l])	continue;
+		i0 = ii?(ii[l]*n1+1):0;
 		if(i0>nx-2)	continue;
 		if(a)	for(i=i0+1;i<nx;i++)
 		{
@@ -665,19 +666,21 @@ void *mgl_solve_x(void *par)
 			if((y1-val)*(y2-val)<0)
 			{	b[l] = i-1 + (val-y1)/(y2-y1);	break;	}
 		}
+		b[l] /= n1;
 	}
 	return 0;
 }
 void *mgl_solve_y(void *par)
 {
 	mglThreadD *t=(mglThreadD *)par;
-	register long l,i,i0,j,k, nx=t->p[0], ny=t->p[1], nz=t->p[2], nn=t->n;
+	register long l,i,i0,j,k, nx=t->p[0], ny=t->p[1], nz=t->p[2], n1=t->p[3]?ny-1:1, nn=t->n;
 	const mreal *a=t->b, *ii=t->c;
 	mreal *b=t->a,x,val=t->d[0],y1,y2,v,v0,dx,dy,dz,da = 1e-5*(val?fabs(val):1);
 	for(l=t->id;l<nn;l+=mglNumThr)
 	{
-		j = l%nx;	k = l/nx;
-		b[l] = NAN;	i0 = ii?ii[l]:0;
+		j = l%nx;	k = l/nx;	b[l] = NAN;
+		if(ii && ii[l]!=ii[l])	continue;
+		i0 = ii?(ii[l]*n1+1):0;
 		if(i0>ny-2)	continue;
 		if(a)	for(i=i0+1;i<ny;i++)
 		{
@@ -711,19 +714,21 @@ void *mgl_solve_y(void *par)
 			if((y1-val)*(y2-val)<0)
 			{	b[l] = i-1 + (val-y1)/(y2-y1);	break;	}
 		}
+		b[l] /= n1;
 	}
 	return 0;
 }
 void *mgl_solve_z(void *par)
 {
 	mglThreadD *t=(mglThreadD *)par;
-	register long l,i,i0,j,k, nx=t->p[0], ny=t->p[1], nz=t->p[2], nn=t->n;
+	register long l,i,i0,j,k, nx=t->p[0], ny=t->p[1], nz=t->p[2], n1=t->p[3]?nz-1:1, nn=t->n;
 	const mreal *a=t->b, *ii=t->c;
 	mreal *b=t->a,x,val=t->d[0],y1,y2,v,v0,dx,dy,dz,da = 1e-5*(val?fabs(val):1);
 	for(l=t->id;l<nn;l+=mglNumThr)
 	{
-		j = l%nx;	k = l/nx;
-		b[l] = NAN;	i0 = ii?ii[l]:0;
+		j = l%nx;	k = l/nx;	b[l] = NAN;
+		if(ii && ii[l]!=ii[l])	continue;
+		i0 = ii?(ii[l]*n1+1):0;
 		if(i0>nz-2)	continue;
 		if(a)	for(i=i0+1;i<nz;i++)
 		{
@@ -757,6 +762,7 @@ void *mgl_solve_z(void *par)
 			if((y1-val)*(y2-val)<0)
 			{	b[l] = i-1 + (val-y1)/(y2-y1);	break;	}
 		}
+		b[l] /= n1;
 	}
 	return 0;
 }
@@ -764,29 +770,26 @@ HMDT mgl_data_solve(HCDT dat, mreal val, char dir, HCDT i0, int norm)
 {
 	const mglData *i = dynamic_cast<const mglData *>(i0);
 	const mglData *d = dynamic_cast<const mglData *>(dat);
-	long p[3]={dat->GetNx(), dat->GetNy(), dat->GetNz()};
+	long p[4]={dat->GetNx(), dat->GetNy(), dat->GetNz(), norm};
 	const mreal *ii=0;
 	mglData *r=new mglData;
-	if(dir=='x')
+	if(dir=='x' && p[0]>1)
 	{
 		r->Create(p[1],p[2]);
 		if(i && i->nx*i->ny==p[1]*p[2])	ii = i->a;
 		mglStartThread(mgl_solve_x,0,p[1]*p[2],r->a,d?d->a:0,ii,p,dat,&val);
-		if(norm) 	*r /= p[0];
 	}
-	if(dir=='y')
+	if(dir=='y' && p[1]>1)
 	{
 		r->Create(p[0],p[2]);
 		if(i && i->nx*i->ny==p[0]*p[2])	ii = i->a;
 		mglStartThread(mgl_solve_y,0,p[0]*p[2],r->a,d?d->a:0,ii,p,dat,&val);
-		if(norm) 	*r /= p[1];
 	}
-	if(dir=='z')
+	if(dir=='z' && p[2]>1)
 	{
 		r->Create(p[0],p[1]);
 		if(i && i->nx*i->ny==p[0]*p[1])	ii = i->a;
 		mglStartThread(mgl_solve_z,0,p[0]*p[1],r->a,d?d->a:0,ii,p,dat,&val);
-		if(norm) 	*r /= p[2];
 	}
 	return r;
 }

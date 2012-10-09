@@ -306,19 +306,19 @@ void mgl_plot_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *
 			if(i>0 && ((t1 && !t2) || (t2 && !t1)))	// do smoothing
 			{
 				mreal i1=0, i2=1, ii;
-				t3=t1;	n3=n1;	// copy current
+				mglPoint q(NAN),p;
 				do {
 					ii = (i1+i2)/2;
 					pt.x = p1.x*ii+p2.x*(1-ii);
 					pt.y = p1.y*ii+p2.y*(1-ii);
-					pt.z = p1.z*ii+p2.z*(1-ii);
-					n1 = gr->AddPnt(pt);	t1 = n1>=0;
-					if((t1 && t3) || (t2 && !t1))	i2 = ii;
+					pt.z = p1.z*ii+p2.z*(1-ii);	p=pt;
+					t3 = gr->ScalePoint(p,q,false);
+					if((t1 && t3) || (t2 && !t3))	i2 = ii;
 					else	i1 = ii;
 				} while(fabs(i2-i1)>1e-3);
-				if(t2)	gr->line_plot(n1,n2);
-				else	gr->line_plot(n3,n1);
-				n1=n3;
+				n3 = gr->AddPnt(pt,-1,q,-1,2);
+				if(t2)	gr->line_plot(n3,n2);
+				else 	gr->line_plot(n1,n3);
 			}
 			if(sh)	gr->NextColor(pal);
 		}
@@ -403,19 +403,20 @@ void mgl_tens_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char *pen, cons
 			if(i>0 && ((t1 && !t2) || (t2 && !t1)))	// do smoothing
 			{
 				mreal i1=0, i2=1, ii;
-				t3=t1;	n3=n1;	// copy current
+				mglPoint q(NAN),p;
 				do {
 					ii = (i1+i2)/2;
 					pt.x = p1.x*ii+p2.x*(1-ii);
 					pt.y = p1.y*ii+p2.y*(1-ii);
-					pt.z = p1.z*ii+p2.z*(1-ii);
+					pt.z = p1.z*ii+p2.z*(1-ii);	p=pt;
 					pt.c = p1.c*ii+p2.c*(1-ii);
-					n1 = gr->AddPnt(pt,gr->GetC(ss,pt.c));	t1 = n1>=0;
-					if((t1 && t3) || (t2 && !t1))	i2 = ii;
+					t3 = gr->ScalePoint(p,q,false);
+					if((t1 && t3) || (t2 && !t3))	i2 = ii;
 					else	i1 = ii;
 				} while(fabs(i2-i1)>1e-3);
-				if(t2)	gr->line_plot(n1,n2);
-				else	gr->line_plot(n3,n1);
+				n3 = gr->AddPnt(pt,gr->GetC(ss,pt.c),q,-1,2);
+				if(t2)	gr->line_plot(n3,n2);
+				else 	gr->line_plot(n1,n3);
 			}
 		}
 	}
