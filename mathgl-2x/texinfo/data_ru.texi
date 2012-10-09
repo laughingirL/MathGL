@@ -881,7 +881,7 @@ These functions change the data in some direction like differentiations, integra
 @ifclear UDAV
 @deftypefn {Метод класса @code{mglDataC}} @code{void} FFT (@code{const char *}dir)
 @deftypefnx {Функция С} @code{void} mgl_datac_fft (@code{HADT} dat, @code{const char *}dir)
-Выполняет фурье преобразование в выбранном направлении(ях). Фурье преобразование есть @math{\sum a_j \exp(i k j)}.
+Выполняет фурье преобразование в выбранном направлении(ях). Если строка @var{dir} содержит @samp{i}, то используется обратное преобразование фурье. Фурье преобразование есть @math{\sum a_j \exp(i k j)}.
 @end deftypefn
 @end ifclear
 

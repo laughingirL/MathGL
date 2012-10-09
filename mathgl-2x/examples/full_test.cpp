@@ -157,11 +157,66 @@ void fexport(mglGraph *gr)
 //-----------------------------------------------------------------------------
 //		Sample functions (v.2.*0)
 //-----------------------------------------------------------------------------
+const char *mmgl_solve="zrange 0 1\nnew x 20 30 '(x+2)/3*cos(pi*y)'\n"
+"new y 20 30 '(x+2)/3*sin(pi*y)'\nnew z 20 30 'exp(-6*x^2-2*sin(pi*y)^2)'\n\n"
+"subplot 2 1 0:title 'Cartesian space':rotate 30 -40\naxis 'xyzU':box\nxlabel 'x':ylabel 'y'"
+"origin 1 1:grid 'xy'\nmesh x y z\n\n"
+"# section along 'x' direction\nsolve u x 0.5 'x'\nvar v u.nx 0 1\n"
+"evaluate yy y u v\nevaluate xx x u v\nevaluate zz z u v\nplot xx yy zz 'k2o'\n\n"
+"# 1st section along 'y' direction\nsolve u1 x -0.5 'y'\nvar v1 u1.nx 0 1\n"
+"evaluate yy y v1 u1\nevaluate xx x v1 u1\nevaluate zz z v1 u1\nplot xx yy zz 'b2^'\n\n"
+"# 2nd section along 'y' direction\nsolve u2 x -0.5 'y' u1\n"
+"evaluate yy y v1 u2\nevaluate xx x v1 u2\nevaluate zz z v1 u2\nplot xx yy zz 'r2v'\n\n"
+"subplot 2 1 1:title 'Accompanied space'\nranges 0 1 0 1:origin 0 0\n"
+"axis:box:xlabel 'i':ylabel 'j':grid2 z 'h'\n\n"
+"plot u v 'k2o':line 0.4 0.5 0.8 0.5 'kA'\n"
+"plot v1 u1 'b2^':line 0.5 0.15 0.5 0.3 'bA'\n"
+"plot v1 u2 'r2v':line 0.5 0.7 0.5 0.85 'rA'\n";
+void smgl_solve(mglGraph *gr)	// solve and evaluate
+{
+	gr->SetRange('z',0,1);
+	mglData x(20,30), y(20,30), z(20,30), xx,yy,zz;
+	gr->Fill(x,"(x+2)/3*cos(pi*y)");
+	gr->Fill(y,"(x+2)/3*sin(pi*y)");
+	gr->Fill(z,"exp(-6*x^2-2*sin(pi*y)^2)");
+
+	gr->SubPlot(2,1,0);	gr->Title("Cartesian space");	gr->Rotate(30,-40);
+	gr->Axis("xyzU");	gr->Box();	gr->Label('x',"x");	gr->Label('y',"y");
+	gr->SetOrigin(1,1);	gr->Grid("xy");
+	gr->Mesh(x,y,z);
+
+	// section along 'x' direction
+	mglData u = x.Solve(0.5,'x');
+	mglData v(u.nx);	v.Fill(0,1);
+	xx = x.Evaluate(u,v);	yy = y.Evaluate(u,v);	zz = z.Evaluate(u,v);
+	gr->Plot(xx,yy,zz,"k2o");
+
+	// 1st section along 'y' direction
+	mglData u1 = x.Solve(-0.5,'y');
+	mglData v1(u1.nx);	v1.Fill(0,1);
+	xx = x.Evaluate(v1,u1);	yy = y.Evaluate(v1,u1);	zz = z.Evaluate(v1,u1);
+	gr->Plot(xx,yy,zz,"b2^");
+
+	// 2nd section along 'y' direction
+	mglData u2 = x.Solve(-0.5,'y',u1);
+	xx = x.Evaluate(v1,u2);	yy = y.Evaluate(v1,u2);	zz = z.Evaluate(v1,u2);
+	gr->Plot(xx,yy,zz,"r2v");
+
+	gr->SubPlot(2,1,1);	gr->Title("Accompanied space");
+	gr->SetRanges(0,1,0,1);	gr->SetOrigin(0,0);
+	gr->Axis();	gr->Box();	gr->Label('x',"i");	gr->Label('y',"j");
+	gr->Grid(z,"h");
+
+	gr->Plot(u,v,"k2o");	gr->Line(mglPoint(0.4,0.5),mglPoint(0.8,0.5),"kA");
+	gr->Plot(v1,u1,"b2^");	gr->Line(mglPoint(0.5,0.15),mglPoint(0.5,0.3),"bA");
+	gr->Plot(v1,u2,"r2v");	gr->Line(mglPoint(0.5,0.7),mglPoint(0.5,0.85),"rA");
+}
+//-----------------------------------------------------------------------------
 const char *mmgl_triangulation="new x 100 '2*rnd-1':new y 100 '2*rnd-1':copy z x^2-y^2\n"
 "new g 30 30:triangulate d x y\n"
 "title 'Triangulation'\nrotate 50 60:box:light on\n"
 "triplot d x y z:triplot d x y z '#k'\ndatagrid g x y z:mesh g 'm'\n";
-void smgl_triangulation(mglGraph *gr)	// alpha and lighting
+void smgl_triangulation(mglGraph *gr)	// surface triangulation
 {
 	mglData x(100), y(100), z(100);
 	gr->Fill(x,"2*rnd-1");	gr->Fill(y,"2*rnd-1");	gr->Fill(z,"v^2-w^2",x,y);
@@ -2283,6 +2338,7 @@ mglSample samp[] = {
 	{"region", smgl_region, mmgl_region},
 	{"schemes", smgl_schemes, mmgl_schemes },
 	{"several_light", smgl_several_light, mmgl_several_light },
+	{"solve", smgl_solve, mmgl_solve},
 	{"stem", smgl_stem, mmgl_stem},
 	{"step", smgl_step, mmgl_step},
 	{"stereo", smgl_stereo, mmgl_stereo},
@@ -2315,3 +2371,4 @@ mglSample samp[] = {
 	{"vecta", smgl_vecta, mmgl_vecta},
 	{"venn", smgl_venn, mmgl_venn},
 {"", NULL}};
+//-----------------------------------------------------------------------------

@@ -885,7 +885,7 @@ Do Cosine transform of the data in given direction or directions. The Cosine tra
 @ifclear UDAV
 @deftypefn {Method on @code{mglDataC}} @code{void} FFT (@code{const char *}dir)
 @deftypefnx {C function} @code{void} mgl_datac_fft (@code{HADT} dat, @code{const char *}dir)
-Do Fourier transform of the data in given direction or directions. The Fourier transform is @math{\sum a_j \exp(i k j)}.
+Do Fourier transform of the data in given direction or directions. If @var{dir} contain @samp{i} then inverse Fourier is used. The Fourier transform is @math{\sum a_j \exp(i k j)}.
 @end deftypefn
 @end ifclear
 

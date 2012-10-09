@@ -1016,14 +1016,17 @@ void mglCanvas::mark_draw(long k, char type, mreal size, mglDrawReg *d)
 void mglCanvas::glyph_draw(const mglPrim *P, mglDrawReg *d)
 {
 	mglPnt p=Pnt[P->n1];
-	mreal f = P->p;
+	mreal pf=sqrt((Bp.b[0]*Bp.b[0]+Bp.b[1]*Bp.b[1]+Bp.b[3]*Bp.b[3]+Bp.b[4]*Bp.b[4])/2), f = P->p*pf;
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_lock(&mutexPnt);
 #endif
 	Push();		B.clear();
 	B.b[0] = B.b[4] = B.b[8] = P->s;
-	RotateN(P->w,0,0,1);	B.pf = 1;
+	mreal cw=cos(P->w*M_PI/180), sw=-sin(P->w*M_PI/180);
+	mreal tet = 180/M_PI*atan2(-Bp.b[3]*cw-Bp.b[4]*sw, Bp.b[0]*cw+Bp.b[1]*sw);
+	RotateN(tet,0,0,1);	B.pf = 1;
 	B.x=p.x;	B.y=p.y;	B.z=p.z;
+	p.u *= pf;	p.v *= pf;
 
 	const mglGlyph &g = Glf[P->n4];
 	if(P->n3&8)

@@ -39,8 +39,10 @@ class QMathGL : public QWidget
 {
 	Q_OBJECT
 public:
-	QString appName;	///< Application name for message boxes
-	bool autoResize;	///< Allow auto resizing (default is false)
+	QString appName; 	///< Application name for message boxes
+	bool autoResize; 	///< Allow auto resizing (default is false)
+	bool enableMouse;	///< Enable mouse handlers
+	bool enableWheel;	///< Enable mouse wheel handlers
 
 	QMathGL(QWidget *parent = 0, Qt::WindowFlags f = 0);
 	~QMathGL();

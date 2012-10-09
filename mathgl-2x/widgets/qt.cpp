@@ -61,6 +61,7 @@ QMathGL::QMathGL(QWidget *parent, Qt::WindowFlags f) : QWidget(parent, f)
 	alpha = light = zoom = rotate = grid = false;
 	resize(600, 400);	gr->set(MGL_CLF_ON_UPD);
 	timer = new QTimer(this);
+	enableWheel = enableMouse = true;
 //	resize(graph->GetWidth(), graph->GetHeight());
 //	mglConvertFromGraph(pic, graph, &grBuf);
 	connect(timer, SIGNAL(timeout()), this, SLOT(nextSlide()));
@@ -253,7 +254,7 @@ void QMathGL::mousePressEvent(QMouseEvent *ev)
 //-----------------------------------------------------------------------------
 void QMathGL::mouseReleaseEvent(QMouseEvent *ev)
 {
-	if(ev->button()&Qt::LeftButton)
+	if(ev->button()&Qt::LeftButton && enableMouse)
 	{
 		if(zoom)
 		{
@@ -275,6 +276,7 @@ void QMathGL::mouseReleaseEvent(QMouseEvent *ev)
 //-----------------------------------------------------------------------------
 void QMathGL::mouseMoveEvent(QMouseEvent *ev)
 {
+	if(!enableMouse)	{	ev->ignore();	return;	}
 	xe=ev->x();	ye=ev->y();
 	if(rotate)
 	{
@@ -327,6 +329,7 @@ void QMathGL::mouseMoveEvent(QMouseEvent *ev)
 //-----------------------------------------------------------------------------
 void QMathGL::wheelEvent(QWheelEvent *ev)
 {
+	if(!enableWheel)	{	ev->ignore();	return;	}
 	if(rotate)	// zoom
 	{
 		mreal d,c,f=exp(0.001*ev->delta())/2;
