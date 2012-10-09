@@ -91,6 +91,7 @@ GifFileType *gif;*/
 	ObjId = -1;	HighId = INT_MIN;
 	SetFunc(0,0);	Stop=false;	CutOff(0);	Ternary(0);
 	SetRanges(mglPoint(-1,-1,-1,-1), mglPoint(1,1,1,1));
+	SetOrigin(NAN,NAN,NAN,NAN);
 	SetBarWidth(0.7);	SetMarkSize(1);	SetArrowSize(1);
 	SetAlphaDef(0.5);		FontDef[0]=0;
 	SetTranspType(0);		SetMeshNum(0);	// NOTE: default MeshNum=0

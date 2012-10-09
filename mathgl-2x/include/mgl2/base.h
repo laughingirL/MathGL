@@ -252,8 +252,7 @@ public:
 	/// Set ranges for automatic variables
 	void SetAutoRanges(mreal x1, mreal x2, mreal y1=0, mreal y2=0, mreal z1=0, mreal z2=0, mreal c1=0, mreal c2=0);
 	/// Set axis origin
-	inline void SetOrigin(mreal x0, mreal y0, mreal z0=NAN, mreal c0=NAN)
-	{	Org=mglPoint(x0,y0,z0,c0);	}
+	void SetOrigin(mreal x0, mreal y0, mreal z0=NAN, mreal c0=NAN);
 	/// Save ranges into internal variable and put parsed
 	mreal SaveState(const char *opt);
 	/// Load ranges from internal variable
@@ -424,6 +423,8 @@ public:
 	inline const char *last_line()	{	return last_style;	}
 
 protected:
+	mglPoint OMin;		///< Lower edge for original axis (before scaling)
+	mglPoint OMax;		///< Upper edge for original axis (before scaling)
 	mglPoint AMin;		///< Lower edge for axis scaling
 	mglPoint AMax;		///< Upper edge for axis scaling
 	mglPoint FMin;		///< Actual lower edge after transformation formulas.

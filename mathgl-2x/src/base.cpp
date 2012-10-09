@@ -374,14 +374,33 @@ bool mglBase::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan) const
 //-----------------------------------------------------------------------------
 //		Ranges
 //-----------------------------------------------------------------------------
-void mglScaleAxis(mreal &v1, mreal &v2, mreal x1, mreal x2)
+void mglScaleAxis(mreal &v1, mreal &v2, mreal &v0, mreal x1, mreal x2)
 {
 	if(x1==x2 || v1==v2)	return;
-	mreal dv;	x2-=1;
+	mreal dv,d0;	x2-=1;
 	if(v1*v2>0 && (v2/v1>=100 || v2/v1<=0.01))	// log scale
-	{	dv=log(v2/v1);	v1*=exp(dv*x1);	v2*=exp(dv*x2);	}
+	{
+		dv=log(v2/v1);	d0 = log(v0/v1)/log(v2/v1);
+		v1*=exp(dv*x1);	v2*=exp(dv*x2);	v0=v1*exp(d0*log(v2/v1));
+	}
 	else
-	{	dv=v2-v1;	v1+=dv*x1;	v2+=dv*x2;	}
+	{
+		dv=v2-v1;	d0=(v0-v1)/(v2-v1);
+		v1+=dv*x1;	v2+=dv*x2;	v0=v1+d0*(v2-v1);
+	}
+}
+//-----------------------------------------------------------------------------
+void mglBase::SetOrigin(mreal x0, mreal y0, mreal z0, mreal c0)
+{
+	Org=mglPoint(x0,y0,z0,c0);
+	if((TernAxis&3)==0)
+	{
+		Min = OMin;	Max = OMax;
+		mglScaleAxis(Min.x, Max.x, Org.x, AMin.x, AMax.x);
+		mglScaleAxis(Min.y, Max.y, Org.y, AMin.y, AMax.y);
+		mglScaleAxis(Min.z, Max.z, Org.z, AMin.z, AMax.z);
+		mglScaleAxis(Min.c, Max.c, Org.c, AMin.c, AMax.c);
+	}
 }
 //-----------------------------------------------------------------------------
 void mglBase::SetRanges(mglPoint m1, mglPoint m2)
@@ -391,19 +410,22 @@ void mglBase::SetRanges(mglPoint m1, mglPoint m2)
 	if(m1.z!=m2.z)	{	Min.z=m1.z;	Max.z=m2.z;	}
 	if(m1.c!=m2.c)	{	Min.c=m1.c;	Max.c=m2.c;	}
 	else			{	Min.c=Min.z;Max.c=Max.z;}
-	if(!TernAxis)
-	{
-		mglScaleAxis(Min.x, Max.x, AMin.x, AMax.x);
-		mglScaleAxis(Min.y, Max.y, AMin.y, AMax.y);
-		mglScaleAxis(Min.z, Max.z, AMin.z, AMax.z);
-		mglScaleAxis(Min.c, Max.c, AMin.c, AMax.c);
-	}	
+
 	if(Org.x<Min.x && !mgl_isnan(Org.x))	Org.x = Min.x;
 	if(Org.x>Max.x && !mgl_isnan(Org.x))	Org.x = Max.x;
 	if(Org.y<Min.y && !mgl_isnan(Org.y))	Org.y = Min.y;
 	if(Org.y>Max.y && !mgl_isnan(Org.y))	Org.y = Max.y;
 	if(Org.z<Min.z && !mgl_isnan(Org.z))	Org.z = Min.z;
 	if(Org.z>Max.z && !mgl_isnan(Org.z))	Org.z = Max.z;
+
+	if((TernAxis&3)==0)
+	{
+		OMax = Max;	OMin = Min;
+		mglScaleAxis(Min.x, Max.x, Org.x, AMin.x, AMax.x);
+		mglScaleAxis(Min.y, Max.y, Org.y, AMin.y, AMax.y);
+		mglScaleAxis(Min.z, Max.z, Org.z, AMin.z, AMax.z);
+		mglScaleAxis(Min.c, Max.c, Org.c, AMin.c, AMax.c);
+	}	
 
 	CutMin = mglPoint(0,0,0);	CutMax = mglPoint(0,0,0);
 	RecalcBorder();
@@ -426,9 +448,13 @@ void mglBase::CRange(HCDT a,bool add, mreal fact)
 		Min.c = v1<Max.c ? v1:Max.c;
 		Max.c = v2>dv ? v2:dv;
 	}
-	if(!TernAxis)	mglScaleAxis(Min.c, Max.c, AMin.c, AMax.c);
 	if(Org.c<Min.c && !mgl_isnan(Org.c))	Org.c = Min.c;
 	if(Org.c>Max.c && !mgl_isnan(Org.c))	Org.c = Max.c;
+	if((TernAxis&3)==0)
+	{
+		OMax.c = Max.c;	OMin.c = Min.c;
+		mglScaleAxis(Min.c, Max.c, Org.c, AMin.c, AMax.c);
+	}
 	RecalcCRange();
 }
 //-----------------------------------------------------------------------------
@@ -449,9 +475,13 @@ void mglBase::XRange(HCDT a,bool add,mreal fact)
 		Min.x = v1<Max.x ? v1:Max.x;
 		Max.x = v2>dv ? v2:dv;
 	}
-	if(!TernAxis)	mglScaleAxis(Min.x, Max.x, AMin.x, AMax.x);
 	if(Org.x<Min.x && !mgl_isnan(Org.x))	Org.x = Min.x;
 	if(Org.x>Max.x && !mgl_isnan(Org.x))	Org.x = Max.x;
+	if((TernAxis&3)==0)
+	{
+		OMax.x = Max.x;	OMin.x = Min.x;
+		mglScaleAxis(Min.x, Max.x, Org.x, AMin.x, AMax.x);
+	}
 	RecalcBorder();
 }
 //-----------------------------------------------------------------------------
@@ -472,9 +502,14 @@ void mglBase::YRange(HCDT a,bool add,mreal fact)
 		Min.y = v1<Max.y ? v1:Max.y;
 		Max.y = v2>dv ? v2:dv;
 	}
-	if(!TernAxis)	mglScaleAxis(Min.y, Max.y, AMin.y, AMax.y);
 	if(Org.y<Min.y && !mgl_isnan(Org.y))	Org.y = Min.y;
 	if(Org.y>Max.y && !mgl_isnan(Org.y))	Org.y = Max.y;
+	if((TernAxis&3)==0)
+	{
+		OMax.y = Max.y;	OMin.y = Min.y;
+		mglScaleAxis(Min.y, Max.y, Org.y, AMin.y, AMax.y);
+	
+	}
 	RecalcBorder();
 }
 //-----------------------------------------------------------------------------
@@ -495,9 +530,13 @@ void mglBase::ZRange(HCDT a,bool add,mreal fact)
 		Min.z = v1<Max.z ? v1:Max.z;
 		Max.z = v2>dv ? v2:dv;
 	}
-	if(!TernAxis)	mglScaleAxis(Min.z, Max.z, AMin.z, AMax.z);
 	if(Org.z<Min.z && !mgl_isnan(Org.z))	Org.z = Min.z;
 	if(Org.z>Max.z && !mgl_isnan(Org.z))	Org.z = Max.z;
+	if((TernAxis&3)==0)
+	{
+		OMax.z = Max.z;	OMin.z = Min.z;
+		mglScaleAxis(Min.z, Max.z, Org.z, AMin.z, AMax.z);
+	}
 	RecalcBorder();
 }
 //-----------------------------------------------------------------------------
