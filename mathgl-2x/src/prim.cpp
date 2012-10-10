@@ -498,7 +498,7 @@ void mgl_dew_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, cons
 		ym = sqrt(ax->v(i,j,k)*ax->v(i,j,k)+ay->v(i,j,k)*ay->v(i,j,k));
 		xm = xm>ym ? xm : ym;
 	}
-	xm = 1./MGL_EPSILON/(xm==0 ? 1:xm);
+	xm = 1./MGL_FEPSILON/(xm==0 ? 1:xm);
 	mglPoint q;
 
 	for(k=0;k<ax->GetNz();k++)

@@ -91,6 +91,7 @@ typedef double mreal;
 typedef float mreal;
 #define MGL_EPSILON	(1.+1e-5)
 #endif
+#define MGL_FEPSILON	(1.+1e-5)
 //-----------------------------------------------------------------------------
 #ifndef MGL_CMAP_COLOR
 #define MGL_CMAP_COLOR	32

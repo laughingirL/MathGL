@@ -176,7 +176,7 @@ struct mglTexture
 	void GetC(mreal u,mreal v,mglPnt &p) const;
 	inline bool IsSame(const mglTexture &t) const
 	{	return n==t.n && !memcmp(col,t.col,512*sizeof(mglColor));	}
-	void GetRGBA(unsigned char *f) const;	// Write as BGRA for fastest export to TGA
+	void GetRGBA(unsigned char *f) const;
 };
 //-----------------------------------------------------------------------------
 const mglColor NC(-1,-1,-1);
@@ -397,7 +397,7 @@ public:
 
 	/// Get color depending on single variable z, which should be scaled if scale=true
 	inline mreal GetC(long s,mreal z,bool scale = true) const
-	{	return s+(scale?GetA(z):(z>0?z/MGL_EPSILON:0));	}
+	{	return s+(scale?GetA(z):(z>0?z/MGL_FEPSILON:0));	}
 	/// Get alpha value depending on single variable \a a
 	mreal GetA(mreal a) const;
 	/// Set pen/palette
