@@ -282,6 +282,15 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 Сортирует строки (или срезы в 3D случае) по значениям в указанной колонке @var{idx} (или ячейках @{@var{idx},@var{idy}@} для 3D случая). Не используйте в многопоточных функциях!
 @end deftypefn
 
+@anchor{clean}
+@deftypefn {Команда MGL} {} clean dat @code{idx}
+@ifclear UDAV
+@deftypefnx {Метод класса @code{mglData}} @code{void} Clean (@code{lond} idx)
+@deftypefnx {Функция С} @code{void} mgl_data_clean (@code{HMDT} dat, @code{lond} idx)
+@end ifclear
+Удаляет строки в которых значения для заданной колонки @var{idx} совпадают со значениями в следующей строке.
+@end deftypefn
+
 
 @c ------------------------------------------------------------------
 @external
@@ -683,6 +692,17 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @deftypefnx {Функция С} @code{HMDT} mgl_data_evaluate (@code{HCDT} dat, @code{HCDT} idat, @code{HCDT} jdat, @code{HCDT} kdat, @code{int} norm)
 @end ifclear
 Возвращает массив данных, полученный в результате интерполяции исходного массива в точках других массивов (например, res[i,j]=dat[idat[i,j],jdat[i,j]]). Размеры массивов @var{idat}, @var{jdat}, @var{kdat} должны совпадать. Координаты в @var{idat}, @var{jdat}, @var{kdat} полагаются нормированными в диапазон [0,1] (при @var{norm}=@code{true}) или в диапазоны [0,nx], [0,ny], [0,nz] соответственно.
+@end deftypefn
+
+@anchor{solve}
+@deftypefn {Команда MGL} {} solve @sc{res} dat @code{val} 'dir' [@code{norm=on}]
+@deftypefnx {Команда MGL} {} solve @sc{res} dat @code{val} 'dir' idat [@code{norm=on}]
+@ifclear UDAV
+@deftypefnx {Метод класса @code{mglData}} @code{mglData} Solve (@code{mreal} val, @code{char} dir, @code{bool} norm=@code{true}) @code{const}
+@deftypefnx {Метод класса @code{mglData}} @code{mglData} Solve (@code{mreal} val, @code{char} dir, @code{const mglDataA &}idat, @code{bool} norm=@code{true}) @code{const}
+@deftypefnx {Функция С} @code{HMDT} mgl_data_solve (@code{HCDT} dat, @code{mreal} val, @code{char} dir, @code{HCDT} idat, @code{int} norm)
+@end ifclear
+Возвращает массив индексов (корней) вдоль выбранного направления @var{dir} в которых значения массива @var{dat} равны @var{val}. Выходной массив будет иметь размеры массива @var{dat} в направлениях поперечных @var{dir}. Если предоставлен массив @var{idat}, то его значения используются как стартовые при поиске. Это позволяет найти несколько веток с помощью последовательного вызова функции. Индексы полагаются нормированными в диапазон [0,1] (при @var{norm}=@code{true}) или в диапазоны [0,nx], [0,ny], [0,nz] соответственно. @sref{Solve sample}
 @end deftypefn
 
 @anchor{hist}

@@ -783,7 +783,9 @@ Puts further plotting in a @var{m}-th cell of @var{nx}*@var{ny} grid of the whol
 @item
 @samp{A} or @samp{^} -- at top side,
 @item
-@samp{U} or @samp{_} -- at bottom side.
+@samp{U} or @samp{_} -- at bottom side,
+@item
+@samp{#} -- reserve none space (use whole region for axis range).
 @end itemize
 From the aesthetical point of view it is not recommended to use this function with different matrices in the same frame. The position of the cell can be shifted from its default position by relative size @var{dx}, @var{dy}.
 @end deftypefn
@@ -1103,14 +1105,19 @@ Displays the current picture using external program @var{viewer} for viewing. Th
 @end deftypefn
 
 
+@deftypefn {Method on @code{mglGraph}} @code{void} WriteJSON (@code{const char *}fname, @code{const char *}descr=@code{""})
+@deftypefnx {C function} @code{void} mgl_write_json (@code{HMGL} gr, @code{const char *}fname, @code{const char *}descr)
+Exports current frame to textual file using @ref{JSON format}. Later this file can be used for faster loading and viewing by JavaScript script. Parameter @var{fname} specifies the file name, @var{descr} adds description to file.
+@end deftypefn
+
 @deftypefn {Method on @code{mglGraph}} @code{void} ExportMGLD (@code{const char *}fname, @code{const char *}descr=@code{""})
 @deftypefnx {C function} @code{void} mgl_export_mgld (@code{HMGL} gr, @code{const char *}fname, @code{const char *}descr)
-Exports points and primitives in file using MGLD format. Later this file can be used for faster loading and viewing by @code{mglview} utility. Parameter @var{fname} specifies the file name, @var{descr} adds description to file (default is file name).
+Exports points and primitives in file using @ref{MGLD format}. Later this file can be used for faster loading and viewing by @code{mglview} utility. Parameter @var{fname} specifies the file name, @var{descr} adds description to file (default is file name).
 @end deftypefn
 
 @deftypefn {Method on @code{mglGraph}} @code{void} ImportMGLD (@code{const char *}fname, @code{bool} add=@code{false})
 @deftypefnx {C function} @code{void} mgl_import_mgld (@code{HMGL} gr, @code{const char *}fname, @code{int} add)
-Imports points and primitives in file using MGLD format. Later this file can be used for faster loading and viewing by @code{mglview} utility. Parameter @var{fname} specifies the file name, @var{add} sets to append or replace primitives to existed ones.
+Imports points and primitives in file using @ref{MGLD format}. Later this file can be used for faster loading and viewing by @code{mglview} utility. Parameter @var{fname} specifies the file name, @var{add} sets to append or replace primitives to existed ones.
 @end deftypefn
 
 @end ifclear

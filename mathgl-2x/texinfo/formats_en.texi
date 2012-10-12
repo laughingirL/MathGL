@@ -2,11 +2,13 @@ This appendix contain description of file formats used by MathGL.
 
 @menu
 * Font files::
+* MGLD format::
+* JSON format::
 @end menu
 
 @c ------------------------------------------------------------------
 @external
-@node Font files, , , File formats
+@node Font files, MGLD format, , File formats
 @section Font files
 
 Starting from v.1.6 the MathGL library uses new font files. The font is defined in 4 files with suffixes @samp{*.vfm}, @samp{*_b.vfm}, @samp{*_i.vfm}, @samp{*_bi.vfm}. These files are text files containing the data for roman font, bold font, italic font and bold italic font. The files (or some symbols in the files) for bold, italic or bold italic fonts can be absent. In this case the roman glyph will be used for them. By analogy, if the bold italic font is absent but the bold font is present then bold glyph will be used for bold italic. You may create these font files by yourself from *.ttf, *.otf files with the help of program @code{font_tools}. This program can be found at MathGL home site.
@@ -26,6 +28,21 @@ The end of file contains the buffer with point coordinates at lines or triangles
 Each font file can be compressed by gzip.
 
 Note: the closing contour line  is done automatically (so the last segment may be absent). For starting new contour use a point with coordinates @code{@{0x3fff, 0x3fff@}}.
+
+
+@c ------------------------------------------------------------------
+@external
+@node MGLD format, JSON format, Font files, File formats
+@section MGLD format
+
+
+@c ------------------------------------------------------------------
+@external
+@node JSON format, , MGLD format, File formats
+@section JSON format
+
+MathGL can save points and primitives of 3D object  
+
 
 @external
 

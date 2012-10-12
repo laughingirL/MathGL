@@ -2,6 +2,8 @@ This appendix contain description of file formats used by MathGL.
 
 @menu
 * Font files::
+* MGLD format::
+* JSON format::
 @end menu
 
 @c ------------------------------------------------------------------
@@ -26,6 +28,19 @@ The end of file contains the buffer with point coordinates at lines or triangles
 Each font file can be compressed by gzip.
 
 Note: the closing contour line  is done automatically (so the last segment may be absent). For starting new contour use a point with coordinates @code{@{0x3fff, 0x3fff@}}.
+
+
+@c ------------------------------------------------------------------
+@external
+@node MGLD format, JSON format, Font files, File formats
+@section MGLD format
+
+
+@c ------------------------------------------------------------------
+@external
+@node JSON format, , MGLD format, File formats
+@section JSON format
+
 
 @external
 

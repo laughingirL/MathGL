@@ -32,15 +32,9 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 5. Docs about WriteJSON() + appendix for details
 6. Docs about MGLD format -- in appendix
 
-7. mglData::Clean() for removing rows with duplicate values for given column.
-
-8. Change mglData::Solve to be inverse to Evaluate() + add sample
-
 9. Add comment that Zoom, View, ZoomAxis are not restored by DefaultPlotParam()
 
 13. QMathGL::mglUserPrim -- allow user primitives (mouse) in QMathGL but double memory usage
-
-14. SubPlot/InPlot style '#' will remove any borders
 
 ============= UDAV =============
 
@@ -71,6 +65,8 @@ Use frames for quickly drawing of main plot
 Dbl.click on primitive --> dialog for styles
 Dbl.click on active point -->remove primitive
 Save/load into script between blocks "#----- MathGL block -----" +  hide it in editor
+
+12. Multi-threading for enabling "stop".
 
 13. Manual rotate (i.e. change rotate arguments) by spinboxes ???
 

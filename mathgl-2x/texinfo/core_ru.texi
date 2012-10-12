@@ -759,7 +759,7 @@ Setsize: размер(ы) равны нулю или отрицательны
 @deftypefnx {Функция С} @code{void} mgl_subplot (@code{HMGL} gr, @code{int} nx, @code{int} ny, @code{int} m, @code{const char *}stl)
 @deftypefnx {Функция С} @code{void} mgl_subplot_d (@code{HMGL} gr, @code{int} nx, @code{int} ny, @code{int} m, @code{const char *}stl, @code{mreal} dx, @code{mreal} dy)
 @end ifclear
-Помещает последующий вывод в @var{m}-ую ячейку сетки размером @var{nx}*@var{ny} от всего рисунка. Функция сбрасывает матрицу трансформации (повороты и сжатие графика) и должна вызываться первой для создания "подграфика". С эстетической точки зрения не рекомендуется вызывать эту функцию с различными (или не кратными) размерами сетки. Место для осей/colorbar резервируется только если строка @var{stl} содержит: @samp{L} или @samp{<} -- с левого края, @samp{R} или @samp{>} -- с правого края, @samp{A} или @samp{^} -- с верхнего края, @samp{U} или @samp{_} -- с нижнего края. Ячейка может быть дополнительно сдвинута относительно своего обычного положения на относительный размер @var{dx}, @var{dy}.
+Помещает последующий вывод в @var{m}-ую ячейку сетки размером @var{nx}*@var{ny} от всего рисунка. Функция сбрасывает матрицу трансформации (повороты и сжатие графика) и должна вызываться первой для создания "подграфика". С эстетической точки зрения не рекомендуется вызывать эту функцию с различными (или не кратными) размерами сетки. Место для осей/colorbar резервируется только если строка @var{stl} содержит: @samp{L} или @samp{<} -- с левого края, @samp{R} или @samp{>} -- с правого края, @samp{A} или @samp{^} -- с верхнего края, @samp{U} или @samp{_} -- с нижнего края. Если строка @var{stl} содержит @samp{#}, то оси координат будут занимать все доступное пространство (место резервироваться не будет). Ячейка может быть дополнительно сдвинута относительно своего обычного положения на относительный размер @var{dx}, @var{dy}.
 @end deftypefn
 
 @anchor{multiplot}
@@ -1060,14 +1060,19 @@ Setsize: размер(ы) равны нулю или отрицательны
 @end deftypefn
 
 
+@deftypefn {Метод класса @code{mglGraph}} @code{void} WriteJSON (@code{const char *}fname, @code{const char *}descr=@code{""})
+@deftypefnx {Функция С} @code{void} mgl_write_json (@code{HMGL} gr, @code{const char *}fname, @code{const char *}descr)
+Экспортирует точки и примитивы в текстовый файл используя @ref{JSON format}. В дальнейшем этот файл можно загрузить и просмотреть в JavaScript скрипте. Параметры функции следующие: @var{fname} -- имя файла, @var{descr} -- описание файла.
+@end deftypefn
+
 @deftypefn {Метод класса @code{mglGraph}} @code{void} ExportMGLD (@code{const char *}fname, @code{const char *}descr=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_export_mgld (@code{HMGL} gr, @code{const char *}fname, @code{const char *}descr)
-Экспортирует точки и примитивы в файл MGLD формата. В дальнейшем этот файл можно загрузить и просмотреть с помощью @code{mglview}. Параметры функции следующие: @var{fname} -- имя файла, @var{descr} -- описание файла.
+Экспортирует точки и примитивы в файл @ref{MGLD format}. В дальнейшем этот файл можно загрузить и просмотреть с помощью @code{mglview}. Параметры функции следующие: @var{fname} -- имя файла, @var{descr} -- описание файла.
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph}} @code{void} ImportMGLD (@code{const char *}fname, @code{bool} add=@code{false})
 @deftypefnx {Функция С} @code{void} mgl_import_mgld (@code{HMGL} gr, @code{const char *}fname, @code{int} add)
-Импортирует точки и примитивы из файла в формате MGLD. Параметры функции следующие: @var{fname} -- имя файла, @var{add} -- флаг добавления или замены существующих точек и примитивов.
+Импортирует точки и примитивы из файла в @ref{MGLD format}. Параметры функции следующие: @var{fname} -- имя файла, @var{add} -- флаг добавления или замены существующих точек и примитивов.
 @end deftypefn
 
 @end ifclear

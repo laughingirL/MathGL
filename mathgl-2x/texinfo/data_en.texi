@@ -285,6 +285,15 @@ Delete @var{num} slices along @var{dir}-direction at position @var{pos}.
 Sort data rows (or slices in 3D case) by values of specified column @var{idx} (or cell @{@var{idx},@var{idy}@} for 3D case). Note, this function is not thread safe!
 @end deftypefn
 
+@anchor{clean}
+@deftypefn {MGL command} {} clean dat @code{idx}
+@ifclear UDAV
+@deftypefnx {Method on @code{mglData}} @code{void} Clean (@code{lond} idx)
+@deftypefnx {C function} @code{void} mgl_data_clean (@code{HMDT} dat, @code{lond} idx)
+@end ifclear
+Delete rows which values are equal to next row for given column @var{idx}.
+@end deftypefn
+
 
 @c ------------------------------------------------------------------
 @external
@@ -687,6 +696,17 @@ Resizes the data to new size @var{mx}, @var{my}, @var{mz} from box (part) [@var{
 @deftypefnx {C function} @code{HMDT} mgl_data_evaluate (@code{HCDT} dat, @code{HCDT} idat, @code{HCDT} jdat, @code{HCDT} kdat, @code{int} norm)
 @end ifclear
 Gets array which values is result of interpolation of original array for coordinates from other arrays. All dimensions must be the same for data @var{idat}, @var{jdat}, @var{kdat}. Coordinates from @var{idat}, @var{jdat}, @var{kdat} are supposed to be normalized in range [0,1] (if @var{norm}=@code{true}) or in ranges [0,nx], [0,ny], [0,nz] correspondingly.
+@end deftypefn
+
+@anchor{solve}
+@deftypefn {MGL command} {} solve @sc{res} dat @code{val} 'dir' [@code{norm=on}]
+@deftypefnx {MGL command} {} solve @sc{res} dat @code{val} 'dir' idat [@code{norm=on}]
+@ifclear UDAV
+@deftypefnx {Method on @code{mglData}} @code{mglData} Solve (@code{mreal} val, @code{char} dir, @code{bool} norm=@code{true}) @code{const}
+@deftypefnx {Method on @code{mglData}} @code{mglData} Solve (@code{mreal} val, @code{char} dir, @code{const mglDataA &}idat, @code{bool} norm=@code{true}) @code{const}
+@deftypefnx {C function} @code{HMDT} mgl_data_solve (@code{HCDT} dat, @code{mreal} val, @code{char} dir, @code{HCDT} idat, @code{int} norm)
+@end ifclear
+Gets array which values is indexes (roots) along given direction @var{dir}, where interpolated values of data @var{dat} are equal to @var{val}. Output data will have the sizes of @var{dat} in directions transverse to @var{dir}. If data @var{idat} is provided then its values are used as starting points. This allows to find several branches by consequentive calls. Indexes are supposed to be normalized in range [0,1] (if @var{norm}=@code{true}) or in ranges [0,nx], [0,ny], [0,nz] correspondingly. @sref{Solve sample}
 @end deftypefn
 
 @anchor{hist}
