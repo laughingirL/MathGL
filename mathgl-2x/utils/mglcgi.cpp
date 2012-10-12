@@ -71,7 +71,6 @@ int main(int argc, char *argv[])
 		buf[len]=0;
 	}
 	else		buf = getenv("QUERY_STRING");
-	if(!buf)	buf="mgl=alpha+on%3Arotate+40+60%3Afsurf+%27sin%282*pi*x*y%29%27%0D%0Abox%3Aaxis%3Afplot+%27sin%282*pi*t%29%27+%27cos%282*pi*t%29%27+%272*t-1%27+%27m2o%27";
 	str = new char[strlen(buf)+1];
 	mgl_get_value(buf,"mgl",str);
 
@@ -85,12 +84,6 @@ int main(int argc, char *argv[])
 	printf("</img></body></html>\n");*/
 
 	printf("Content-Type: image/png\n\n");	gr.WritePNG("-");
-
-/*	printf("Content-Type: multipart/alternative; boundary=\"myboundary\"\n\n");
-	printf("--myboundary\nContent-Type: image/svg+xml\n\n");
-	gr.WriteSVG("-");
-	printf("--myboundary\nContent-Type: image/png\n\n");
-	gr.WritePNG("-");*/
 	return 0;
 }
 //-----------------------------------------------------------------------------

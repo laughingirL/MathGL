@@ -40,6 +40,7 @@ void mgl_set_palette(HMGL gr, const char *colors);
 void mgl_set_alpha_default(HMGL graph, mreal alpha);
 void mgl_set_bar_width(HMGL graph, mreal width);
 void mgl_set_meshnum(HMGL graph, int num);
+void mgl_set_facenum(HMGL graph, int num);
 void mgl_set_ambbr(HMGL gr, mreal i);
 void mgl_set_light_dif(HMGL gr, int enable);
 
@@ -88,6 +89,7 @@ void mgl_set_pal_num_(uintptr_t *graph, int *num);
 void mgl_set_alpha_default_(uintptr_t *graph, mreal *alpha);
 void mgl_set_bar_width_(uintptr_t *graph, mreal *width);
 void mgl_set_meshnum_(uintptr_t *graph, int *num);
+void mgl_set_facenum_(uintptr_t *graph, int *num);
 void mgl_set_ambbr_(uintptr_t *gr, mreal *i);
 void mgl_set_light_dif_(uintptr_t *graph, int *enable);
 

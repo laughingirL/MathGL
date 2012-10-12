@@ -47,6 +47,7 @@ void mgl_set_origin(HMGL gr, mreal x0, mreal y0, mreal z0)
 void mgl_set_palette(HMGL gr, const char *colors)
 {	gr->SetPalette(colors);	}
 void mgl_set_meshnum(HMGL gr, int num)	{	gr->SetMeshNum(num);	}
+void mgl_set_facenum(HMGL gr, int num)	{	gr->FaceNum=num;		}
 void mgl_set_alpha_default(HMGL gr, mreal alpha)	{	gr->SetAlphaDef(alpha);	}
 void mgl_set_light_dif(HMGL gr, int enable)		{	gr->SetDifLight(enable);	}
 //-----------------------------------------------------------------------------
@@ -95,6 +96,7 @@ void mgl_set_palette_(uintptr_t *gr, const char *colors, int l)
 {	char *s=new char[l+1];	memcpy(s,colors,l);	s[l]=0;
 	_GR_->SetPalette(s);	delete []s;	}
 void mgl_set_meshnum_(uintptr_t *gr, int *num)	{	_GR_->SetMeshNum(*num);	}
+void mgl_set_facenum_(uintptr_t *gr, int *num)	{	_GR_->FaceNum=*num;		}
 void mgl_set_alpha_default_(uintptr_t *gr, mreal *alpha)	{	_GR_->SetAlphaDef(*alpha);	}
 void mgl_set_light_dif_(uintptr_t *gr, int *enable)			{	_GR_->SetDifLight(*enable);	}
 //-----------------------------------------------------------------------------

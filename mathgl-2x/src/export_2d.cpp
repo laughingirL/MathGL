@@ -348,7 +348,7 @@ void mgl_write_eps(HMGL gr, const char *fname,const char *descr)
 		}
 		else if(q.type==4)	// glyph
 		{
-			mreal 	ss = q.s/2, xx = p1.u, yy = p1.v, zz = p1.w;
+			mreal 	ss = q.s/2, xx = p1.u, yy = p1.v, zz = q.p;
 			mgl_printf(fp, gz, "gsave\t%g %g translate %g %g scale %g rotate %s\n",
 					   p1.x, p1.y, ss, ss, -q.w, str);
 			if(q.n3&8)	// this is "line"
@@ -501,7 +501,7 @@ void mgl_write_svg(HMGL gr, const char *fname,const char *descr)
 		}
 		else if(q.type==4)
 		{
-			mreal ss = q.s/2, xx = p1.u, yy = p1.v, zz = p1.w;
+			mreal ss = q.s/2, xx = p1.u, yy = p1.v, zz = q.p;
 			if(q.n3&8)	// this is "line"
 			{
 				mgl_printf(fp, gz, "<g transform=\"translate(%g,%g) scale(%.3g,%.3g) rotate(%g)\"", p1.x, hh-p1.y, ss, -ss, -q.w);

@@ -80,13 +80,14 @@ void QMGLSyntax::highlightBlock(const QString &text)
 		else if(text[i]==':' && s==0)	{	nl=true;	continue;	}
 		else if(arg)			// option
 		{
-			const char *o[]={"xrange","yrange","zrange","crange","alpha",
-							"cut","ambient","meshnum","fontsize","alphadef",
-							"marksize","legend","light"};
-			int l[] = {6, 6, 6, 6, 5, 3, 7, 7, 8, 8, 8, 6, 5};
+			const char *o[13]={"xrange","yrange","zrange","cut","meshnum","alpha","light","ambient","diffuse","size","legend","number","value"};
+			unsigned l;
 			for(j=0;j<13;j++)
-				if(text.indexOf(o[j],i)==i && (i+l[j]==text.length() || text[i+l[j]].isSpace()))
-					setFormat(i,l[j],mglColorScheme[3]);
+			{
+				l = strlen(o[j]);
+				if(text.indexOf(o[j],i)==i && (i+l==text.length() || text[i+l].isSpace()))
+					setFormat(i,l,mglColorScheme[3]);
+			}
 		}
 		else if(text[i]=='.' && i+1<text.length() && text[i+1].isLetter())	// suffix
 		{

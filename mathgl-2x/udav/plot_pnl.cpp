@@ -82,6 +82,7 @@ void PlotPanel::execute()
 	raisePanel(this);
 	emit clearWarn();
 	QTime t;	t.start();
+	mgl->getGraph()->FaceNum=0;
 	draw->text=textMGL->toPlainText();
 	draw->line=curPos;	mgl->update();
 	setStatus(QString(tr("Drawing time %1 ms")).arg(t.elapsed()*1e-3));

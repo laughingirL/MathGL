@@ -68,7 +68,7 @@ mglBase::mglBase()
 	fnt=0;	*FontDef=0;	fx=fy=fz=fa=fc=0;
 	AMin = mglPoint(0,0,0,0);	AMax = mglPoint(1,1,1,1);
 
-	InUse = 1;	SetQuality();
+	InUse = 1;	SetQuality();	FaceNum = 0;
 	// Always create default palette txt[0] and default scheme txt[1]
 	Txt.reserve(3);
 	MGL_PUSH(Txt,mglTexture(MGL_DEF_PAL,-1),mutexTxt);

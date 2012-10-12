@@ -83,24 +83,10 @@ int verbose = 0;
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	printf("Pnt: %lu, Prim: %lu, Act: %lu\n",sizeof(mglPnt),sizeof(mglPrim),sizeof(mglActivePos));
-	gr->SetSize(640,480);
-	mglParse pr;
-	pr.AllowSetSize(true);	setlocale(LC_CTYPE, "");
-	pr.Execute(gr,"alpha on:rotate 40 60:fsurf 'sin(2*pi*x*y)'");
-	pr.Execute(gr,"box:axis:fplot 'sin(2*pi*t)' 'cos(2*pi*t)' '2*t-1' 'm2o'");
-//	gr->WriteJSON("/home/balakin/progr/mgl4js/MglForJsTestBench/test.json");
-	gr->WriteSVG("-");	fflush(stdout);
+	gr->Box();	gr->FSurf("x");	gr->Axis();
+	gr->Puts(mglPoint(0,0,1),"a");
+	gr->WriteSVG("1.svg");	gr->WriteEPS("1.eps");
 	return;
-
-/*	mglData ys(10,5);	ys.Modify("0.8*sin(pi*2*x+pi*y)+0.2*rnd");
-	gr->Box();
-	char id[16];
-	std::string str;
-	for(int i=0;i<5;i++)
-	{	sprintf(id,"y_%d\n",i);	str += id;	}
-	gr->Table(0.5,1,ys,str.c_str(),"#|:C","value 0.7");
-	return;*/
 
 /*	mglData c;	mgls_prepare3d(&c);	gr->Light(true);	gr->Alpha(true);
 	gr->SubPlot(2,1,0);	gr->Rotate(50,60);	gr->Box();	gr->Surf3(c);

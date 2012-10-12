@@ -85,9 +85,11 @@ public:
 	inline void SetMarkSize(mreal size)		{	mgl_set_mark_size(gr, size);	}
 	/// Set size of arrows
 	inline void SetArrowSize(mreal size)	{	mgl_set_arrow_size(gr, size);	}
-	/// Set number of mesh lines
+	/// Set number of mesh lines (use 0 to draw all of them)
 	inline void SetMeshNum(int num)			{	mgl_set_meshnum(gr, num);	}
-
+	/// Set number of visible faces (use 0 to draw all of them)
+	inline void SetFaceNum(int num)			{	mgl_set_facenum(gr, num);	}
+	
 	/// Set cutting for points outside of bounding box
 	inline void SetCut(bool cut)				{	mgl_set_cut(gr, cut);	}
 	/// Set additional cutting box

@@ -157,8 +157,9 @@ struct prctriangles {
 				return colour_index;
 			}
 		} else {
-			const float u = p.ta;
-			const float v = p.c/ntxt;
+			const mreal gap = 1./512;
+			const double u = p.ta*(1-2*gap)+gap;
+			const double v = ((p.c-floor(p.c))*(1-2*gap) + gap + floor(p.c))/ntxt;
 
 			const PRCVector2d point(u, v);
 			std::map<PRCVector2d,uint32_t>::iterator pPoint = texturecoords.find(point);
@@ -278,7 +279,7 @@ void mgl_write_prc(HMGL gr, const char *fname,const char* /*descr*/, int make_pd
 		for(size_t i=0;i<height;i++)
 			pbuf[i] = buf+4*width*i;
 		for(size_t i=0;i<ntxt;i++)
-			gr->GetTxt(i).GetRGBA(buf+(ntxt-1-i)*256*256*4);
+			gr->GetTxt(i).GetRGBA(buf+(ntxt-1-i)*256*width*4);
 
 		png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING,0,0,0);
 		png_infop info_ptr = png_create_info_struct(png_ptr);
@@ -301,10 +302,10 @@ void mgl_write_prc(HMGL gr, const char *fname,const char* /*descr*/, int make_pd
 		t->mapping = PRC_TEXTURE_MAPPING_DIFFUSE;
 		t->components = PRC_TEXTURE_MAPPING_COMPONENTS_RGBA;
 		// Modulate for OBJ compatibilty, Replace is a better setting
-		t->function = KEPRCTextureFunction_Modulate;
+		t->function = KEPRCTextureFunction_Replace;
 		// Repeat for OBJ compatibilty, ClampToEdge is a better setting
-		t->wrapping_mode_S = KEPRCTextureWrappingMode_Repeat; // KEPRCTextureWrappingMode_ClampToEdge
-		t->wrapping_mode_T = KEPRCTextureWrappingMode_Repeat; // KEPRCTextureWrappingMode_ClampToEdge
+		t->wrapping_mode_S = KEPRCTextureWrappingMode_ClampToEdge;
+		t->wrapping_mode_T = KEPRCTextureWrappingMode_ClampToEdge;
 		t->data = buffer.data;
 		t->size	= buffer.size;
 		t->format = KEPRCPicture_PNG;

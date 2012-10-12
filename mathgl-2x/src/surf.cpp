@@ -25,18 +25,39 @@
 void mgl_mesh_plot(mglBase *gr, long *pos, long n, long m, int how)
 {
 	int d = gr->MeshNum>0 ? gr->MeshNum+1 : n*m, dx = n>d?n/d:1, dy = m>d?m/d:1;
-	register long i,j;
-	if(how&1)	for(j=0;j<m;j+=dy)	for(i=0;i<n-1;i++)
-		gr->line_plot(pos[n*j+i],pos[n*j+i+1]);
-	if(how&2)	for(j=0;j<m-1;j++)	for(i=0;i<n;i+=dx)
-		gr->line_plot(pos[n*j+i],pos[n*j+i+n]);
+	register long i,j,s;
+	// NOTE: number of lines in each direction can be reduced too
+	if(how&1)	for(j=0;j<m;j+=dy)
+	{
+		for(s=i=0;i<n-1;i++)	if(pos[n*j+i]>=0 && pos[n*j+i+1]>=0)	s++;
+		d = gr->FaceNum>0 ? gr->FaceNum+1 : n;	s = s>d?s/d:1;
+		for(i=0;i<n-s;i+=s)
+			gr->line_plot(pos[n*j+i],pos[n*j+i+s]);
+
+	}
+	if(how&2)	for(i=0;i<n;i+=dx)
+	{
+		for(s=j=0;j<m-1;j++)	if(pos[n*j+i]>=0 && pos[n*j+i+n]>=0)	s++;
+		d = gr->FaceNum>0 ? gr->FaceNum+1 : n;	s = s>d?s/d:1;
+		for(j=0;j<m-s;j+=s)
+			gr->line_plot(pos[n*j+i],pos[n*j+i+s*n]);
+	}
 }
 //-----------------------------------------------------------------------------
 void mgl_surf_plot(mglBase *gr, long *pos, long n, long m)
 {
-	register long i,j;
+	register long i,j,s=0;
 	for(j=0;j<m-1;j++)	for(i=0;i<n-1;i++)
-		gr->quad_plot(pos[n*j+i],pos[n*j+i+1],pos[n*j+i+n],pos[n*j+i+n+1]);
+		if(pos[n*j+i]>=0 && pos[n*j+i+1]>=0 && pos[n*j+i+n]>=0 && pos[n*j+i+n+1]>=0)
+			s++;
+	long dx=1,dy=1;
+	if(gr->FaceNum && s>gr->FaceNum*gr->FaceNum)
+	{
+		int d = gr->FaceNum+1,ns=n*s/((n-1)*(m-1)),ms=m*s/((n-1)*(m-1));
+		dx = ns>d?ns/d:1;		dy = ms>d?ms/d:1;
+	}
+	for(j=0;j<m-dy;j+=dy)	for(i=0;i<n-dx;i+=dx)
+		gr->quad_plot(pos[n*j+i],pos[n*j+i+dx],pos[n*j+i+n*dy],pos[n*j+i+n*dy+dx]);
 }
 //-----------------------------------------------------------------------------
 //
@@ -44,7 +65,7 @@ void mgl_surf_plot(mglBase *gr, long *pos, long n, long m)
 //
 //-----------------------------------------------------------------------------
 void mgl_fsurf(HMGL gr, const char *eqZ, const char *sch, const char *opt)
-{	// TODO: Add strong function variation analisys ???
+{	// TODO: Add strong function variation analysis ???
 	if(eqZ==0 || eqZ[0]==0)	return;		// nothing to plot
 	mreal r = gr->SaveState(opt);
 	long n = (mgl_isnan(r) || r<=0) ? 100:long(r+0.5);

@@ -269,6 +269,16 @@ Sets size of arrows for @ref{1D plotting}, lines and curves (see @ref{Primitives
 Sets approximate number of lines in @ref{mesh}, @ref{fall}, @ref{grid} and also the number of hachures in @ref{vect}, @ref{dew} and the number of cells in @ref{cloud}. By default (=0) it draws all lines/hachures/cells.
 @end deftypefn
 
+@anchor{facenum}
+@deftypefn {MGL command} {} facenum @code{val}
+@ifclear UDAV
+@anchor{FaceNum}
+@deftypefn {Method on @code{mglGraph}} @code{void} SetFaceNum (@code{int} val)
+@deftypefnx {C function} @code{void} mgl_set_facenum (@code{HMGL} gr, @code{int} num)
+@end ifclear
+Sets approximate number of visible faces. Can be used for speeding up drawing by cost of lower quality. By default (=0) it draws all of them.
+@end deftypefn
+
 @c ==================================================================
 @external
 @node Cutting, Font settings, Default sizes, Graphics setup

@@ -30,12 +30,13 @@ void mgl_fplot(HMGL gr, const char *eqY, const char *pen, const char *opt)
 	if(eqY==0 || eqY[0]==0)	return;		// nothing to plot
 	mreal r = gr->SaveState(opt);
 	long n = (mgl_isnan(r) || r<=0) ? 100:long(r+0.5);
+	long nm = gr->FaceNum?gr->FaceNum*n:10000, nd = gr->FaceNum?gr->FaceNum*10:1000;
 
 	mreal *x = (mreal *)malloc(n*sizeof(mreal));
 	mreal *y = (mreal *)malloc(n*sizeof(mreal));
 	mglFormula *eq = new mglFormula(eqY);
 	register int i;
-	mreal d = (gr->Max.x - gr->Min.x)/(n-1.), xs, ys, yr, ym=fabs(gr->Max.y - gr->Min.y)/1000;
+	mreal d = (gr->Max.x - gr->Min.x)/(n-1.), xs, ys, yr, ym=fabs(gr->Max.y - gr->Min.y)/nd;
 #define islog(a, b) (((a)>0 && (b)>10*(a)) || ((b)<0 && (a)<10*(b)))
 	// initial data filling
 	if(gr->Min.x>0 && gr->Max.x>100*gr->Min.x)	for(i=0,d=log(2*gr->Max.x/gr->Min.x)/(n-1);i<n;i++)
@@ -45,7 +46,7 @@ void mgl_fplot(HMGL gr, const char *eqY, const char *pen, const char *opt)
 	else for(i=0;i<n;i++)
 	{	x[i]=gr->Min.x + i*d;	y[i]=eq->Calc(x[i]);	}
 
-	for(i=0;i<n-1 && n<10000;)
+	for(i=0;i<n-1 && n<nm;)
 	{
 		if(gr->Stop)	{	delete eq;	return;	}
 		xs=(x[i]+x[i+1])/2;

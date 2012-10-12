@@ -177,6 +177,7 @@ struct mglTexture
 	inline bool IsSame(const mglTexture &t) const
 	{	return n==t.n && !memcmp(col,t.col,512*sizeof(mglColor));	}
 	void GetRGBA(unsigned char *f) const;
+	void GetRGBAOBJ(unsigned char *f) const;	// Export repeating border colors, since OBJ by default wraps textures and we need an extra boundary to work around implementation quirks
 };
 //-----------------------------------------------------------------------------
 const mglColor NC(-1,-1,-1);
@@ -221,7 +222,8 @@ public:
 	mreal CDef;			///< Default (current) color in texture
 	mreal AlphaDef;		///< Default value of alpha channel (transparency)
 	mreal BarWidth;		///< Relative width of rectangles in Bars().
-	int MeshNum;		///< Set approximate number of lines in Mesh and Grid. By default (=0) it draw all lines.
+	int MeshNum;			///< Set approximate number of lines in Mesh and Grid. By default (=0) it draw all lines.
+	int FaceNum;			///< Set approximate number of visible faces and lines. By default (=0) it draw everything.
 	char Arrow1, Arrow2;///< Style of arrows at end and at start of curve
 	long InUse;			///< Smart pointer (number of users)
 	long Flag;			///< Flags for controlling drawing

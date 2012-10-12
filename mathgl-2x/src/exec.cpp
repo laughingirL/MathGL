@@ -1484,6 +1484,16 @@ void mglc_meshnum(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 	if(k[0]==3)	mglprintf(out,1024,L"gr->SetMeshNum(%d);", iint(a[0].v));
 }
 //-----------------------------------------------------------------------------
+int mgls_facenum(mglGraph *gr, long , mglArg *a, int k[10], const char *)
+{
+	if(k[0]==3)	gr->SetFaceNum(a[0].v);		else	return 1;
+	return 0;
+}
+void mglc_facenum(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
+{
+	if(k[0]==3)	mglprintf(out,1024,L"gr->SetFaceNum(%d);", iint(a[0].v));
+}
+//-----------------------------------------------------------------------------
 int mgls_quality(mglGraph *gr, long , mglArg *a, int k[10], const char *)
 {
 	gr->SetQuality(k[0]==3?iint(a[0].v):2);
@@ -3824,6 +3834,7 @@ mglCommand mgls_base_cmd[] = {
 	{"export","Export data to PNG picture","export Dat 'fname' 'sch' [v1 v2]", mgls_import, mglc_import,3},
 	{"extend","Extend data array","extend Dat dim1 [dim2]", mgls_extend, mglc_extend,3},
 	{"face","Draw face (quadrangle)","face x1 y1 x2 y2 x3 y3 x4 y4 ['fmt']|x1 y1 z1 x2 y2 z2 x3 y3 z3 x4 y4 z4 ['fmt']", mgls_face, mglc_face,13},
+	{"facenum","Set number of visible faces","facenum val", mgls_facenum, mglc_facenum,2},
 	{"facex","Draw face perpendicular to x-axis","facex x0 y0 z0 wy wz ['fmt' d1 d2]", mgls_facex, mglc_facex,13},
 	{"facey","Draw face perpendicular to y-axis","facex x0 y0 z0 wx wz ['fmt' d1 d2]", mgls_facey, mglc_facey,13},
 	{"facez","Draw face perpendicular to z-axis","facex x0 y0 z0 wy wz ['fmt' d1 d2]", mgls_facez, mglc_facez,13},

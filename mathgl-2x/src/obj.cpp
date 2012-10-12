@@ -51,6 +51,35 @@ void mgl_printf(void *fp, bool gz, const char *str, ...);
 #      define PRIdS "zd"  /* printf ptrdiff_t */
 #endif
 
+//-----------------------------------------------------------------------------
+void mglTexture::GetRGBAOBJ(unsigned char *f) const
+{
+	const size_t bw = 128; //border width
+	register size_t i,j,i0;
+	mglColor c1,c2,c;
+	for(i=0;i<256;i++)
+	{
+		c1 = col[2*i];  c2 = col[2*i+1];
+		for(j=0;j<512;j++)
+		{
+			i0 = 4*(j+512*(255-i));
+			if (j<bw)
+				c = c1;
+			else if (j>511-bw)
+				c = c2;
+			else
+				c = c1 + (c2-c1)*((j-bw)/(255.));
+			f[i0]   = int(255*c.r);
+			f[i0+1] = int(255*c.g);
+			f[i0+2] = int(255*c.b);
+			f[i0+3] = int(255*c.a);
+		}
+  }
+	
+}
+
+//-----------------------------------------------------------------------------
+
 struct ObjUV
 {
   ObjUV() :
@@ -89,8 +118,12 @@ struct ObjUVs {
   FILE* const fp;
   ObjUVs(FILE *f) : fp(f) {}
 
-  size_t addTextureCoords(mreal u, mreal v)
+  size_t addTextureCoords(mreal ta, mreal c, size_t ntxt)
 	{    
+    const mreal gap = 1./512;
+    const mreal u = 0.25+0.5*(ta*(1-2*gap)+gap);
+    const mreal v = ((c-floor(c))*(1-2*gap) + gap + floor(c))/ntxt;
+		
     const ObjUV point(u, v);
     std::map<ObjUV,size_t>::iterator pPoint = texturecoords.find(point);
     if(pPoint!=texturecoords.end())
@@ -416,9 +449,7 @@ void mgl_write_obj(HMGL gr, const char *fname,const char *descr, int use_png)
 	{
 		const mglPnt &pp = gr->GetPnt(i);
     vcs[i] = vertexcoords.addVertexCoords(pp.x-p0.x, pp.y-p0.y, pp.z-p0.z);
-//  tcs[i] = texturecoords.addTextureCoords(1-pp.ta, pp.c/ntxt);
-    tcs[i] = texturecoords.addTextureCoords(pp.ta, pp.c/Ntxt);
-// OpenGL style u = p.ta, 1 - p.c/ntxt or Direct3D syle 1-pp.ta, pp.c/ntxt
+    tcs[i] = texturecoords.addTextureCoords(pp.ta, pp.c, Ntxt);
 	}
   
   // prepare MTL file
@@ -439,17 +470,18 @@ void mgl_write_obj(HMGL gr, const char *fname,const char *descr, int use_png)
 	else
 		strcat(tname,"_txt.tga");
 	// prepare texture file (TGA or PNG)
-	unsigned char *buf = new unsigned char[4*256*256*Ntxt];
+	const size_t txtwidth = 512;
+	unsigned char *buf = new unsigned char[4*256*txtwidth*Ntxt];
 	unsigned char **pbuf= (unsigned char **)malloc(256*Ntxt*sizeof(unsigned char *));
-	for(i=0;i<256*Ntxt;i++)	pbuf[i] = buf+4*256*i;
-	for(i=0;i<ntxt;i++)	gr->GetTxt(i).GetRGBA(buf+(Ntxt-1-i)*256*256*4);
+	for(i=0;i<256*Ntxt;i++)	pbuf[i] = buf+4*txtwidth*i;
+	for(i=0;i<ntxt;i++)	gr->GetTxt(i).GetRGBAOBJ(buf+(Ntxt-1-i)*256*txtwidth*4);
 	for(i=ntxt;i<Ntxt;i++)
   {
-    unsigned char *f=buf+(Ntxt-1-i)*256*256*4;
-    const mglColor c=BC;
+    unsigned char *f=buf+(Ntxt-1-i)*256*txtwidth*4;
+    const mglColor& c=BC;
     for(size_t k=0;k<256;k++)
     {
-      for(size_t l=0;l<256;l++)
+      for(size_t l=0;l<txtwidth;l++)
       {
         *f++ = int(255*c.r);
         *f++ = int(255*c.g);
@@ -459,9 +491,9 @@ void mgl_write_obj(HMGL gr, const char *fname,const char *descr, int use_png)
     }
   }
 	if(use_png)
-    mgl_pnga_save(tname,256,256*Ntxt,pbuf);
+    mgl_pnga_save(tname,txtwidth,256*Ntxt,pbuf);
 	else
-		mgl_tga_save(tname,256,256*Ntxt,pbuf);
+		mgl_tga_save(tname,txtwidth,256*Ntxt,pbuf);
 	free(pbuf);
 	delete []buf;
   
