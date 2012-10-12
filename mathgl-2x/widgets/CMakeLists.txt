@@ -27,7 +27,7 @@ if(MGL_HAVE_GLUT)
 	set_target_properties(mgl-glut-static PROPERTIES OUTPUT_NAME "mgl-glut")
 	set_target_properties(mgl-glut PROPERTIES CLEAN_DIRECT_OUTPUT 1)
 	set_target_properties(mgl-glut-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
-	set_target_properties(mgl-glut PROPERTIES SOVERSION 6.1.0)
+	set_target_properties(mgl-glut PROPERTIES SOVERSION 7.0.0)
 	target_link_libraries(mgl-glut mgl)
 	target_link_libraries(mgl-glut ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES})
 
@@ -62,7 +62,7 @@ add_library(mgl-wnd-static STATIC ${mgl_wnd_src} ${mgl_wnd_hdr})
 set_target_properties(mgl-wnd-static PROPERTIES OUTPUT_NAME "mgl-wnd")
 set_target_properties(mgl-wnd PROPERTIES CLEAN_DIRECT_OUTPUT 1)
 set_target_properties(mgl-wnd-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
-set_target_properties(mgl-wnd PROPERTIES SOVERSION 6.1.0)
+set_target_properties(mgl-wnd PROPERTIES SOVERSION 7.0.0)
 target_link_libraries(mgl-wnd mgl)
 
 

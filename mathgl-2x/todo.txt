@@ -36,6 +36,8 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 
 8. Change mglData::Solve to be inverse to Evaluate() + add sample
 
+9. Add comment that Zoom, View, ZoomAxis are not restored by DefaultPlotParam()
+
 13. QMathGL::mglUserPrim -- allow user primitives (mouse) in QMathGL but double memory usage
 
 14. SubPlot/InPlot style '#' will remove any borders
