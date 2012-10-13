@@ -83,9 +83,9 @@ int verbose = 0;
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	gr->Box();	gr->FSurf("x");	gr->Axis();
-	gr->Puts(mglPoint(0,0,1),"a");
-	gr->WriteSVG("1.svg");	gr->WriteEPS("1.eps");
+	gr->SetFaceNum(10);
+	gr->Box();	gr->Axis();	gr->FSurf("x*y");
+	gr->WriteJSON("1.json");
 	return;
 
 /*	mglData c;	mgls_prepare3d(&c);	gr->Light(true);	gr->Alpha(true);

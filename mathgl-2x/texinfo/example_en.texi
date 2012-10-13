@@ -1197,10 +1197,11 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@pfig{dat_extra, Example of data smoothing}
+@pfig{dat_extra, Example of data manipulation}
 
 Finally one can create new data arrays on base of the existing one: extract slice, row or column of data (@ref{subdata}), summarize along a direction(s) (@ref{sum}), find distribution of data elements (@ref{hist}) and so on.
 
+@anchor{Solve sample}
 
 @c ------------------------------------------------------------------
 @external
