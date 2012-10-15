@@ -50,6 +50,7 @@ void mgl_set_meshnum(HMGL gr, int num)	{	gr->SetMeshNum(num);	}
 void mgl_set_facenum(HMGL gr, int num)	{	gr->FaceNum=num;		}
 void mgl_set_alpha_default(HMGL gr, mreal alpha)	{	gr->SetAlphaDef(alpha);	}
 void mgl_set_light_dif(HMGL gr, int enable)		{	gr->SetDifLight(enable);	}
+void mgl_clear_unused(HMGL gr)	{	gr->ClearUnused();	}
 //-----------------------------------------------------------------------------
 void mgl_set_rdc_acc(HMGL gr, int reduce)	{	gr->SetReduceAcc(reduce);	}
 void mgl_highlight(HMGL gr, int id)			{	gr->Highlight(id);	}
@@ -99,6 +100,7 @@ void mgl_set_meshnum_(uintptr_t *gr, int *num)	{	_GR_->SetMeshNum(*num);	}
 void mgl_set_facenum_(uintptr_t *gr, int *num)	{	_GR_->FaceNum=*num;		}
 void mgl_set_alpha_default_(uintptr_t *gr, mreal *alpha)	{	_GR_->SetAlphaDef(*alpha);	}
 void mgl_set_light_dif_(uintptr_t *gr, int *enable)			{	_GR_->SetDifLight(*enable);	}
+void mgl_clear_unused_(uintptr_t *gr)	{	_GR_->ClearUnused();	}
 //-----------------------------------------------------------------------------
 void mgl_set_cut_box_(uintptr_t *gr, mreal *x1,mreal *y1,mreal *z1,mreal *x2,mreal *y2,mreal *z2)
 {	_GR_->SetCutBox(*x1,*y1,*z1,*x2,*y2,*z2);	}

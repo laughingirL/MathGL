@@ -448,32 +448,14 @@ bool mglCanvas::WriteJSON(const char *fname)
 	bool fl = strcmp(fname,"-");
 	FILE *fp = fl ? fopen(fname, "wb") : stdout;
 	if (!fp)	return true;
-	// first save coordinates
-	size_t i,l=Prm.size(),s;
-	long *used = new long[Pnt.size()];	memset(used,0,Pnt.size()*sizeof(long));
-	for(i=0;i<l;i++)		// find points which are actually used
-	{
-		const mglPrim &p=Prm[i];
-		if(p.n1<0)	continue;
-		used[p.n1] = 1;
-		switch(p.type)
-		{
-		case 1:	if(p.n2>=0)	used[p.n2] = 1;	break;
-		case 2:	if(p.n2>=0 && p.n3>=0)
-			used[p.n2] = used[p.n3] = 1;	break;
-		case 3:	if(p.n2>=0 && p.n3>=0 && p.n4>=0)
-			used[p.n2] = used[p.n3] = used[p.n4] = 1;	break;
-		}
-	}
-	// now add proper indexes
-	l=Pnt.size();
-	for(s=i=0;i<l;i++)	if(used[i])	{	s++; 	used[i]=s;	}
+	ClearUnused();	// clear unused points
+	size_t i,l=Pnt.size();
 	fprintf(fp,"{\n\"width\":%d,\t\"height\":%d,\t\"depth\":%d,\t\"npnts\":%lu,\t\"pnts\":[\n",
-			Width, Height, Depth, (unsigned long)s);
+			Width, Height, Depth, (unsigned long)l);
 	for(i=0;i<l;i++)
 	{
 		const mglPnt &q=Pnt[i];
-		if(used[i])	fprintf(fp,"[%.4g,%.4g,%.4g]%c\n", q.xx, Height-q.yy, q.zz, i+1<l?',':' ');
+		fprintf(fp,"[%.4g,%.4g,%.4g]%c\n", q.xx, Height-q.yy, q.zz, i+1<l?',':' ');
 	}
 	l = Prm.size();
 	fprintf(fp,"],\t\"nprim\":%lu,\t\"prim\":[\n",(unsigned long)l);
@@ -482,11 +464,10 @@ bool mglCanvas::WriteJSON(const char *fname)
 	for(i=0;i<l;i++)
 	{
 		const mglPrim &p=Prm[i];		mglColor c = GetColor(p);
-		// manually exclude absent primitives (TODO be more accurate for quadrangles)
 		if(p.n1<0 || (p.type==1 && p.n2<0) || (p.type==2 && (p.n2<0 || p.n3<0)) || (p.type==3 && (p.n2<0 || p.n3<0 || p.n4<0)))
 			continue;
-		long n1=used[p.n1]-1, n2=used[p.n2]-1, n3=0, n4=p.type==3?used[p.n4]-1:0;
-		if(p.type==2 || p.type==3)	n3 = used[p.n3]-1;
+		long n1=p.n1, n2=p.n2, n3=0, n4=p.type==3?p.n4:0;
+		if(p.type==2 || p.type==3)	n3 = p.n3;
 		if(p.type==4)
 		{
 			const mglPnt &q = Pnt[p.n1];
@@ -525,7 +506,7 @@ bool mglCanvas::WriteJSON(const char *fname)
 		fprintf(fp,"]\n]%c\n", i+1<l?',':' ');
 	}
 	fprintf(fp,"]\n}\n");
-	delete []used;	if(fl)	fclose(fp);
+	if(fl)	fclose(fp);
 	return false;
 }
 //-----------------------------------------------------------------------------

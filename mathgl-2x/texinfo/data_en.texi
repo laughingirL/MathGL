@@ -390,10 +390,10 @@ Allocates memory and scanf the data from the string.
 
 @deftypefn {Method on @code{mglData}} @code{void} Link (@code{mglData &}from)
 @deftypefnx {Method on @code{mglData}} @code{void} Link (@code{mreal *}A, @code{int} NX, @code{int} NY=@code{1}, @code{int} NZ=@code{1})
-@deftypefnx {C function} @code{void} mgl_data_link (@code{HMDT} dat, @code{const mreal *}A, @code{int} NX, @code{int} NY, @code{int} NZ)
+@deftypefnx {C function} @code{void} mgl_data_link (@code{HMDT} dat, @code{mreal *}A, @code{int} NX, @code{int} NY, @code{int} NZ)
 @deftypefnx {Method on @code{mglDataC}} @code{void} Link (@code{mglDataC &}from)
 @deftypefnx {Method on @code{mglDataC}} @code{void} Link (@code{dual *}A, @code{int} NX, @code{int} NY=@code{1}, @code{int} NZ=@code{1})
-@deftypefnx {C function} @code{void} mgl_datac_link (@code{HADT} dat, @code{const mreal *}A, @code{int} NX, @code{int} NY, @code{int} NZ)
+@deftypefnx {C function} @code{void} mgl_datac_link (@code{HADT} dat, @code{dual *}A, @code{int} NX, @code{int} NY, @code{int} NZ)
 Links external data array, i.e. don't delete this array at exit.
 @end deftypefn
 @end ifclear

@@ -72,7 +72,9 @@ void mgl_restore_font(HMGL gr);
 void mgl_set_color(char id, mreal r, mreal g, mreal b);
 void mgl_set_def_sch(HMGL gr, const char *sch);
 void mgl_set_def_schv(HMGL gr, HCDT val, const char *sch);
+void mgl_clear_unused(HMGL gr);
 /******************************************************************************/
+void mgl_clear_unused_(uintptr_t *gr);
 void mgl_set_def_sch_(uintptr_t *gr, const char *sch,int);
 void mgl_set_def_schv_(uintptr_t *gr, uintptr_t *val, const char *sch,int);
 void mgl_set_color_(char *id, mreal *r, mreal *g, mreal *b, int);

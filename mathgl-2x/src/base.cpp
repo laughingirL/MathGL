@@ -1155,3 +1155,45 @@ bool mgl_check_vec3(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, 
 	return false;
 }
 //-----------------------------------------------------------------------------
+void mglBase::ClearUnused()
+{
+#if MGL_HAVE_PTHREAD
+	pthread_mutex_lock(&mutexPnt);	pthread_mutex_lock(&mutexPrm);
+#endif
+	register size_t i, l=Prm.size();
+	// find points which are actually used
+	long *used = new long[Pnt.size()];	memset(used,0,Pnt.size()*sizeof(long));
+	for(i=0;i<l;i++)
+	{
+		const mglPrim &p=Prm[i];
+		if(p.n1<0)	continue;
+		used[p.n1] = 1;
+		switch(p.type)
+		{
+		case 1:	if(p.n2>=0)	used[p.n2] = 1;	break;
+		case 2:	if(p.n2>=0 && p.n3>=0)
+			used[p.n2] = used[p.n3] = 1;	break;
+		case 3:	if(p.n2>=0 && p.n3>=0 && p.n4>=0)
+			used[p.n2] = used[p.n3] = used[p.n4] = 1;	break;
+		}
+	}
+	// now add proper indexes
+	l=Pnt.size();
+	std::vector<mglPnt> pnt;
+	for(i=0;i<l;i++)	if(used[i])
+	{	pnt.push_back(Pnt[i]);	used[i]=pnt.size();	}
+	Pnt = pnt;	pnt.clear();
+	// now replace point id
+	l=Prm.size();
+	for(i=0;i<l;i++)
+	{
+		mglPrim &p=Prm[i];	p.n1=used[p.n1]-1;
+		if(p.type==1)	p.n2=used[p.n2]-1;
+		if(p.type==2)	{	p.n2=used[p.n2]-1;	p.n3=used[p.n3]-1;	}
+		if(p.type==3)	{	p.n2=used[p.n2]-1;	p.n3=used[p.n3]-1;	p.n4=used[p.n4]-1;	}
+	}
+#if MGL_HAVE_PTHREAD
+	pthread_mutex_unlock(&mutexPnt);	pthread_mutex_unlock(&mutexPrm);
+#endif
+}
+//-----------------------------------------------------------------------------

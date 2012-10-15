@@ -376,6 +376,8 @@ public:
 	long AddGlyph(int s, long j);
 	/// Add active point as k-th element of Pnt
 	void AddActive(long k,int n=0);
+	/// Clear unused points and primitives
+	void ClearUnused();
 	
 	inline mglPoint GetPntP(long i) const
 	{	const mglPnt &p=Pnt[i];	return mglPoint(p.x,p.y,p.z);	}

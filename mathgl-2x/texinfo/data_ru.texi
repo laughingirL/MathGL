@@ -384,8 +384,8 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 Выделяет память и сканирует массив данных из строки.
 @end deftypefn
 
-@deftypefn {Метод класса @code{mglData}} @code{void} Link (@code{const mglData &}from)
-@deftypefnx {Метод класса @code{mglData}} @code{void} Link (@code{const mreal *}A, @code{int} NX, @code{int} NY=@code{1}, @code{int} NZ=@code{1})
+@deftypefn {Метод класса @code{mglData}} @code{void} Link (@code{mglData &}from)
+@deftypefnx {Метод класса @code{mglData}} @code{void} Link (@code{mreal *}A, @code{int} NX, @code{int} NY=@code{1}, @code{int} NZ=@code{1})
 @deftypefnx {Функция С} @code{void} mgl_data_link (@code{HMDT} dat, @code{const mreal *}A, @code{int} NX, @code{int} NY, @code{int} NZ)
 @deftypefnx {Метод класса @code{mglDataC}} @code{void} Link (@code{mglDataC &}from)
 @deftypefnx {Метод класса @code{mglDataC}} @code{void} Link (@code{dual *}A, @code{int} NX, @code{int} NY=@code{1}, @code{int} NZ=@code{1})

@@ -422,6 +422,8 @@ public:
 	/// Clear up the frame
 	inline void Clf(mreal r, mreal g, mreal b)	{	mgl_clf_rgb(gr, r, g, b);	}
 	inline void Clf()	{	mgl_clf(gr);	}
+	/// Clear unused points and primitives. Usefull only in combination with SetFaceNum().
+	inline void ClearUnused()	{	mgl_clear_unused(gr);	}
 	/// Draws the point (ball) at position {x,y,z} with color c
 	inline void Ball(mglPoint p, char c='r')
 	{	char s[3]={'.',c,0};	mgl_mark(gr, p.x, p.y, p.z, s);	}

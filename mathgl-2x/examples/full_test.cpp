@@ -83,9 +83,16 @@ int verbose = 0;
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	gr->SetFaceNum(10);
-	gr->Box();	gr->Axis();	gr->FSurf("x*y");
-	gr->WriteJSON("1.json");
+//	gr->SetFaceNum(10);
+	mglData a(100,100);	a.Modify("x*y^2");
+	gr->Rotate(40,60);
+	gr->Box();	gr->Axis();
+	gr->Mesh(a,"k","xrange -2 2");
+	gr->Surf(a,"","xrange -2 2");
+//	gr->Mesh(a,"","meshnum 10");
+	printf("Before: pnt = %lu, prm = %lu\n",gr->Self()->GetPntNum(),gr->Self()->GetPrmNum());
+	gr->ClearUnused();
+	printf("After: pnt = %lu, prm = %lu\n",gr->Self()->GetPntNum(),gr->Self()->GetPrmNum());
 	return;
 
 /*	mglData c;	mgls_prepare3d(&c);	gr->Light(true);	gr->Alpha(true);
