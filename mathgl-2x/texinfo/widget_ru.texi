@@ -374,8 +374,8 @@ public:
 @c Сохраняет текущий рисунок в векторный X3D файл.
 @c @end deftypefn
 
-@deftypefn {Slot on @code{QMathGL}} @code{void} exportIDTF (@code{QString} fname=@code{""})
-Сохраняет текущий рисунок в векторный IDTF файл.
+@deftypefn {Slot on @code{QMathGL}} @code{void}setUsePrimitives (@code{bool} use)
+Разрешает использовать список примитивов для кадров. Это позволяет вращать/масштабировать кадры, но требует значительно больше памяти. По умолчанию разрешено (=@code{true}).
 @end deftypefn
 @deftypefn {Slot on @code{QMathGL}} @code{void} setMGLFont (@code{QString} path)
 Восстанавливает (@var{path}=@code{""}) или загружает файлы шрифтов.

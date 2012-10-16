@@ -11,13 +11,16 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 6. 2D textures as one of standard way for coloring -- if '%' present in color scheme
 7. Graph(mreal x, mreal y, names, styles, font, size); -- names = "node1[node2,node3,node4[node5,node6]]", styles -- the same + apply for subnodes if absent. Styles are colors (fill,border,line), dash (to subnodes), marks "dos^v><", arrows.
 8. Use libtcc for mglFormula only! -- note that MGL formulas (i.e. for mglData) are fast enough. The only possible speeding up for Fill() and Modify() functions
+9. 3D text (with depth, for Quality=3)
+10. Text along 3D curve (for Quality=3)
 
 ============= NEW FOR v.2.1 =============
 
 1. Axis -- projection (ternary + quaternary) + sample
 +2. Add flag for drawing 3d arrows instead of 2d (S,D -- cube, T -- sq.pyramid, I -- square, O -- sphere???, A,K,V -- cone???)
-+3. Check quality=6 colors and size!!!
++3. Check quality=6 colors and size in UDAV!!!
 +4. WX window/widgets
+5. Test animation in UDAV
 
 ============= DOCS =============
 
@@ -26,15 +29,8 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 2. Text about UDAV (tabs,dialogs,hotkeys,hints,mouse)
 * known feature -- if you draw something in function then highlighted all similar objects
 
-3. Add FAQ about MPEG/GIF and PDF
-4. Examples of animation, prc, mpg, js and so on -- JSON samples in documentation ?!!
-
-5. Docs about WriteJSON() + appendix for details
-6. Docs about MGLD format -- in appendix
-
-9. Add comment that Zoom, View, ZoomAxis are not restored by DefaultPlotParam()
-
-13. QMathGL::mglUserPrim -- allow user primitives (mouse) in QMathGL but double memory usage
+3. Add FAQ about MPEG/GIF and PDF, JavaScript
+4. JSON samples in documentation ?!!
 
 ============= UDAV =============
 

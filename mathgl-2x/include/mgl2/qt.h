@@ -125,7 +125,7 @@ public slots:
 	void addEllipse();					///< add ellipse into primitives
 	void addText(QString txt="");		///< add text into primitives
 
-	void SetUsePrimitives(bool use)	{	mglUserPrim=use;	emit usePrimChanged(use);	}
+	void setUsePrimitives(bool use)	{	mglUserPrim=use;	emit usePrimChanged(use);	}
 
 	void adjust();		///< Adjust plot size to fill entire window
 	void nextSlide();	///< Show next slide

@@ -559,7 +559,7 @@ Setsize: размер(ы) равны нулю или отрицательны
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} ZoomAxis (@code{mglPoint} p1, @code{mglPoint} p2)
 @deftypefnx {Функция С} @code{void} mgl_zoom_axis (@code{HMGL} gr, @code{mreal} x1, @code{mreal} x2, @code{mreal} y1, @code{mreal} y2, @code{mreal} z1, @code{mreal} z2, @code{mreal} c1, @code{mreal} c2)
 @end ifclear
-Дополнительно расширяет диапазон осей координат, задаваемый функциями @code{SetRange} или @code{SetRanges}, в соответствии с формулами @math{min += (max-min)*p1} и @math{max += (max-min)*p1} (или @math{min *= (max/min)^p1} и @math{max *= (max/min)^p1} для "логарифмических" диапазонов, когда @math{inf>max/min>100} или @math{0<max/min<0.01}). Начальные значения [0, 1].
+Дополнительно расширяет диапазон осей координат, задаваемый функциями @code{SetRange} или @code{SetRanges}, в соответствии с формулами @math{min += (max-min)*p1} и @math{max += (max-min)*p1} (или @math{min *= (max/min)^p1} и @math{max *= (max/min)^p1} для "логарифмических" диапазонов, когда @math{inf>max/min>100} или @math{0<max/min<0.01}). Начальные значения [0, 1]. Внимание! эти настройки не могут быть переписаны никакими другими функциями, включая  @code{DefaultPlotParam()}.
 @end deftypefn
 
 
@@ -884,7 +884,7 @@ Setsize: размер(ы) равны нулю или отрицательны
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} View (@code{mreal} TetX, @code{mreal} TetZ, @code{mreal} TetY=@code{0})
 @deftypefnx {Функция С} @code{void} mgl_view (@code{HMGL} gr, @code{mreal} TetX, @code{mreal} TetZ, @code{mreal} TetY)
 @end ifclear
-Вращает систему координат относительно осей @{x, z, y@} последовательно на углы @var{TetX}, @var{TetZ}, @var{TetY}. Вращение происходит независимо от @ref{rotate}. Используйте @code{Zoom(0,0,1,1)} для возвращения к виду по умолчанию.
+Вращает систему координат относительно осей @{x, z, y@} последовательно на углы @var{TetX}, @var{TetZ}, @var{TetY}. Вращение происходит независимо от @ref{rotate}. Внимание! эти настройки не могут быть переписаны функцией  @code{DefaultPlotParam()}. Используйте @code{Zoom(0,0,1,1)} для возвращения к виду по умолчанию.
 @end deftypefn
 
 @anchor{zoom}
@@ -893,7 +893,7 @@ Setsize: размер(ы) равны нулю или отрицательны
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} Zoom (@code{mreal} x1, @code{mreal} y1, @code{mreal} x2, @code{mreal} y2)
 @deftypefnx {Функция С} @code{void} mgl_set_zoom (@code{HMGL} gr, @code{mreal} x1, @code{mreal} y1, @code{mreal} x2, @code{mreal} y2)
 @end ifclear
-Масштабирует весь рисунок. После вызова функции текущий график будет очищен и в дальнейшем рисунок будет содержать только область [x1,x2]*[y1,y2] от исходного рисунка. Координаты @var{x1}, @var{x2}, @var{y1}, @var{y2} меняются в диапазоне от 0 до 1. Внимание! эти настройки не могут быть переписаны никакими другими функциями. Используйте @code{Zoom(0,0,1,1)} для возвращения к виду по умолчанию.
+Масштабирует весь рисунок. После вызова функции текущий график будет очищен и в дальнейшем рисунок будет содержать только область [x1,x2]*[y1,y2] от исходного рисунка. Координаты @var{x1}, @var{x2}, @var{y1}, @var{y2} меняются в диапазоне от 0 до 1. Внимание! эти настройки не могут быть переписаны никакими другими функциями, включая  @code{DefaultPlotParam()}. Используйте @code{Zoom(0,0,1,1)} для возвращения к виду по умолчанию.
 @end deftypefn
 
 @c ##################################################################

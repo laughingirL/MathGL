@@ -574,7 +574,7 @@ Sets center of axis cross section. If one of values is NAN then MathGL try to se
 @deftypefnx {Method on @code{mglGraph}} @code{void} ZoomAxis (@code{mglPoint} p1, @code{mglPoint} p2)
 @deftypefnx {C function} @code{void} mgl_zoom_axis (@code{HMGL} gr, @code{mreal} x1, @code{mreal} x2, @code{mreal} y1, @code{mreal} y2, @code{mreal} z1, @code{mreal} z2, @code{mreal} c1, @code{mreal} c2)
 @end ifclear
-Additionally extend axis range for any settings made by @code{SetRange} or @code{SetRanges} functions according the formula @math{min += (max-min)*p1} and @math{max += (max-min)*p1} (or @math{min *= (max/min)^p1} and @math{max *= (max/min)^p1} for log-axis range when @math{inf>max/min>100} or @math{0<max/min<0.01}). Initial ranges are [0, 1].
+Additionally extend axis range for any settings made by @code{SetRange} or @code{SetRanges} functions according the formula @math{min += (max-min)*p1} and @math{max += (max-min)*p1} (or @math{min *= (max/min)^p1} and @math{max *= (max/min)^p1} for log-axis range when @math{inf>max/min>100} or @math{0<max/min<0.01}). Initial ranges are [0, 1]. Attention! this settings can not be overwritten by any other functions, including @code{DefaultPlotParam()}.
 @end deftypefn
 
 
@@ -928,7 +928,7 @@ There are 2 functions @code{View()} and @code{Zoom()} which transform whole imag
 @deftypefnx {Method on @code{mglGraph}} @code{void} View (@code{mreal} TetX, @code{mreal} TetZ, @code{mreal} TetY=@code{0})
 @deftypefnx {C function} @code{void} mgl_view (@code{HMGL} gr, @code{mreal} TetX, @code{mreal} TetZ, @code{mreal} TetY)
 @end ifclear
-Rotates a further plotting relative to each axis @{x, z, y@} consecutively on angles @var{TetX}, @var{TetZ}, @var{TetY}. Rotation is done independently on @ref{rotate}. Use @code{Zoom(0,0,1,1)} to return default view.
+Rotates a further plotting relative to each axis @{x, z, y@} consecutively on angles @var{TetX}, @var{TetZ}, @var{TetY}. Rotation is done independently on @ref{rotate}. Attention! this settings can not be overwritten by @code{DefaultPlotParam()}. Use @code{Zoom(0,0,1,1)} to return default view.
 @end deftypefn
 
 @anchor{zoom}
@@ -937,7 +937,7 @@ Rotates a further plotting relative to each axis @{x, z, y@} consecutively on an
 @deftypefnx {Method on @code{mglGraph} (C++, Python)} @code{void} Zoom (@code{mreal} x1, @code{mreal} y1, @code{mreal} x2, @code{mreal} y2)
 @deftypefnx {C function} @code{void} mgl_set_zoom (@code{HMGL} gr, @code{mreal} x1, @code{mreal} y1, @code{mreal} x2, @code{mreal} y2)
 @end ifclear
-The function changes the scale of graphics that correspond to zoom in/out of the picture. After function call the current plot will be cleared and further the picture will contain plotting from its part [x1,x2]*[y1,y2]. Here picture coordinates @var{x1}, @var{x2}, @var{y1}, @var{y2} changes from 0 to 1. Attention! this settings can not be overwritten by any other functions. Use @code{Zoom(0,0,1,1)} to return default view.
+The function changes the scale of graphics that correspond to zoom in/out of the picture. After function call the current plot will be cleared and further the picture will contain plotting from its part [x1,x2]*[y1,y2]. Here picture coordinates @var{x1}, @var{x2}, @var{y1}, @var{y2} changes from 0 to 1. Attention! this settings can not be overwritten by any other functions, including @code{DefaultPlotParam()}. Use @code{Zoom(0,0,1,1)} to return default view.
 @end deftypefn
 
 @c ##################################################################

@@ -376,8 +376,8 @@ Export current picture to OFF file.
 @c Export current picture to X3D file.
 @c @end deftypefn
 
-@deftypefn {Slot on @code{QMathGL}} @code{void} exportIDTF (@code{QString} fname=@code{""})
-Export current picture to IDTF file.
+@deftypefn {Slot on @code{QMathGL}} @code{void}setUsePrimitives (@code{bool} use)
+Enable using list of primitives for frames. This allows frames transformation/zoom but requires much more memory. Default value is @code{true}.
 @end deftypefn
 @deftypefn {Slot on @code{QMathGL}} @code{void} setMGLFont (@code{QString} path)
 Restore (@var{path}=@code{""}) or load font for graphics.
