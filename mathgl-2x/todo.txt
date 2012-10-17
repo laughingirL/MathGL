@@ -20,7 +20,8 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 +2. Add flag for drawing 3d arrows instead of 2d (S,D -- cube, T -- sq.pyramid, I -- square, O -- sphere???, A,K,V -- cone???)
 +3. Check quality=6 colors and size in UDAV!!!
 +4. WX window/widgets
-5. Test animation in UDAV
+5. Add 'XYZ' axis for inverse ticks positions + correctly parse "inverse" ranges
+6. Grid lines for NAN origin values are always located at far edges (like Box())
 
 ============= DOCS =============
 
