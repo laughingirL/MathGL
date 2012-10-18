@@ -36,6 +36,9 @@
 * Completer can be switched off correctly now.
 * Multi-line strings (i.e. separated by "\" symbol) are highlighted correctly now.
 
+* Grid lines for NAN origin values are always located at far-away edges.
+* Correctly place axis and tick labels for axis with inverse range (i.e. for v2<v1).
+
 * Add MGL commands 'errbox', 'face'
 * Add mgl.cgi tool which return PNG image for CGI request in form of MGL script.
 
@@ -44,7 +47,7 @@
 * Different bugfixes
 
 * INCOMPATIBLE CHANGES in the arguments of functions: mgl_axis, mgl_axis_grid, mgl_label, mgl_labelw, mgl_legend_pos, mgl_legend; and in functions for MGL parsing.
-
+* mglFourier now make true inverse transform
 
 2.0.3 Released 27 July 2012
 

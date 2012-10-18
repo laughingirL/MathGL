@@ -45,10 +45,10 @@ struct mglMatrix
 /// Structure for drawing axis and ticks
 struct mglAxis
 {
-	mglAxis()	{	dv=ds=d=v0=v1=v2=o=sh=0;	ns=f=ch=*t=0;	}
+	mglAxis()	{	dv=ds=d=v0=v1=v2=o=sh=0;	ns=f=ch=*t=0;	pos = 't';	}
 	mglAxis(const mglAxis &aa)
 	{	dv=aa.dv;	ds=aa.ds;	d=aa.d;		dir=aa.dir;	sh=aa.sh;
-		v0=aa.v0;	v1=aa.v1;	v2=aa.v2;	o=aa.o;
+		v0=aa.v0;	v1=aa.v1;	v2=aa.v2;	o=aa.o;		pos=aa.pos;
 		a = aa.a;	b = aa.b;	org=aa.org;	txt=aa.txt;
 		ns=aa.ns;	f=aa.f;		ch=aa.ch;	wcscpy(t,aa.t);	}
 	inline void AddLabel(const wchar_t *lbl, mreal v)
@@ -70,6 +70,7 @@ struct mglAxis
 	int f;			///< Flag 0x1 - time, 0x2 - manual, 0x4 - fixed dv
 	std::vector<mglText> txt;	///< Axis labels
 	char ch;			///< Character of axis (like 'x','y','z','c')
+	char pos;		///< Text position ('t' by default, or 'T' for opposite)
 	mreal sh;		///< Extra shift of ticks and axis labels
 };
 //-----------------------------------------------------------------------------

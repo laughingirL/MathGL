@@ -270,11 +270,11 @@ void mglCanvas::AdjustTicks(const char *dir, bool force)
 {
 	if(force)	SetTuneTicks(-1);
 	UpdateAxis();
-	if(strchr(dir,'x'))	// NOTE dir have to be non-NULL here !!!
+	if(strchr(dir,'x') || strchr(dir,'X'))	// NOTE dir have to be non-NULL here !!!
 	{	if(force)	ax.d=0;	AdjustTicks(ax,fx);	}
-	if(strchr(dir,'y'))
+	if(strchr(dir,'y') || strchr(dir,'Y'))
 	{	if(force)	ay.d=0;	AdjustTicks(ay,fy);	}
-	if(strchr(dir,'z'))
+	if(strchr(dir,'z') || strchr(dir,'Z'))
 	{	if(force)	az.d=0;	AdjustTicks(az,fz);	}
 	if(strchr(dir,'a') || strchr(dir,'c'))
 	{	if(force)	ac.d=0;	AdjustTicks(ac,fa);	}
@@ -446,18 +446,22 @@ void mglCanvas::Axis(const char *dir, const char *stl, const char *opt)
 	SaveState(opt);
 	AdjustTicks(dir,adjust);
 	LoadState();
-	// TODO: Ternary axis labeling ...
-	if(strchr(dir,'x'))	DrawAxis(ax, text, arr, stl, opt);
-	if(strchr(dir,'z'))	DrawAxis(az, text, arr, stl, opt);
+
+	ax.pos = ay.pos = az.pos = 't';
+	if(strchr(dir,'X'))	{	ax.pos='T';	DrawAxis(ax, text, arr, stl, opt);	}
+	else if(strchr(dir,'x')) 	DrawAxis(ax, text, arr, stl, opt);
+	if(strchr(dir,'Z'))	{	az.pos='T';	DrawAxis(az, text, arr, stl, opt);	}
+	else if(strchr(dir,'z')) 	DrawAxis(az, text, arr, stl, opt);
 	if((TernAxis&3))
 	{
-		mglAxis ty(ay);					ty.ch='T';
+		mglAxis ty(ay);		ty.ch='T';
 		ty.dir = mglPoint(-1,1);		ty.org = mglPoint(1,0,ay.org.z);
 		DrawAxis(ty, text, arr, stl, opt);	ty.ch='t';
 		ty.dir = mglPoint(0,-1);		ty.org = mglPoint(0,1,ay.org.z);
 		DrawAxis(ty, text, arr, stl, opt);
 	}
-	else if(strchr(dir,'y'))	DrawAxis(ay, text, arr, stl, opt);
+	else if(strchr(dir,'Y'))	{	ay.pos='T';	DrawAxis(ay, text, arr, stl, opt);}
+	else if(strchr(dir,'y')) 	DrawAxis(ay, text, arr, stl, opt);
 	set(ret, MGL_ENABLE_RTEXT);
 }
 //-----------------------------------------------------------------------------
@@ -473,8 +477,9 @@ void mglCanvas::DrawAxis(mglAxis &aa, bool text, char arr,const char *stl,const 
 	mglPoint d = aa.dir, o = aa.org, q(NAN);	// "transverse" org
 	if(strchr("xyz",aa.ch))	o -= d*(o*d);
 	mglPoint av=(Min+Max)/2, dv,da,db, p;
-	dv = mglPoint(sign(av.x-o.x), sign(av.y-o.y), sign(av.z-o.z));
+	dv = mglPoint(sign((av.x-o.x)*(Max.x-Min.x)), sign((av.y-o.y)*(Max.y-Min.y)), sign((av.z-o.z)*(Max.z-Min.z)));
 	da = aa.a*(dv*aa.a);	db = aa.b*(dv*aa.b);
+	if(aa.v2<aa.v1)	{	da *= -1;	db *= -1;	}
 
 	register long i,j,k1,k2;
 	SetPenPal(mgl_have_color(stl) ? stl:AxisStl);
@@ -499,17 +504,19 @@ void mglCanvas::DrawAxis(mglAxis &aa, bool text, char arr,const char *stl,const 
 	if(k2>0)	for(i=0;i<k2;i++)
 	{
 		v = aa.txt[i].val;	u = fabs(v);
-		if(v>=aa.v1 && v<=aa.v2)	tick_draw(o+d*v, da, db, 0, stl);
-//		else	tick_draw(o+d*v, da, db, 0, " ");
-		if(aa.dv==0 && fabs(u-exp(M_LN10*floor(0.1+log10(u))))<0.01*u)
+		if(v>=aa.v1 && v<=aa.v2 && aa.v2>aa.v1)	tick_draw(o+d*v, da, db, 0, stl);
+		if(v>=aa.v2 && v<=aa.v1 && aa.v2<aa.v1)	tick_draw(o+d*v, da, db, 0, stl);
+		if(aa.dv==0 && aa.v2>aa.v1 && fabs(u-exp(M_LN10*floor(0.1+log10(u))))<0.01*u)
 			for(j=2;j<10 && v*j<aa.v2;j++)	tick_draw(o+d*(v*j),da,db,1,stl);
+		if(aa.dv==0 && aa.v2<aa.v1 && fabs(u-exp(M_LN10*floor(0.1+log10(u))))<0.01*u)
+			for(j=2;j<10 && v*j<aa.v1;j++)	tick_draw(o+d*(v*j),da,db,1,stl);
 	}
 	if(aa.ds>0 && !get(MGL_NOSUBTICKS))
 	{
 		if(aa.v2>aa.v1)	v0 = v0 - aa.ds*floor((v0-aa.v1)/aa.ds+1e-3);
-		else			v0 = v0 - aa.ds*floor((v0-aa.v2)/aa.ds+1e-3);
+		else 			v0 = v0 - aa.ds*floor((v0-aa.v2)/aa.ds+1e-3);
 		if(v0+aa.ds!=v0 && aa.v2+aa.ds!=aa.v2)
-			for(v=v0;v<aa.v2;v+=aa.ds)	tick_draw(o+d*v,da,db,1,stl);
+			for(v=v0;(v-aa.v2)*(aa.v2-aa.v1)<0;v+=aa.ds)	tick_draw(o+d*v,da,db,1,stl);
 	}
 	if(text)	DrawLabels(aa);
 	EndGroup();
@@ -526,7 +533,6 @@ void mglCanvas::DrawLabels(mglAxis &aa)
 
 	register long i,n = aa.txt.size();
 	char pos[4]="t:C";
-//	if(get(MGL_DISABLE_SCALE) && ((aa.dir.x==0 && aa.org.x<0) || (aa.dir.y==0 && aa.org.y>0)))	pos[0]='T';
 	if(aa.ch=='c')	pos[0]=(aa.ns==0 || aa.ns==3)?'t':'T';
 	if(aa.ch=='T')	pos[0]='T';
 	mreal *w=new mreal[n], h = TextHeight(FontDef,-1), c=NAN, l=NAN, tet=0, v, vv;	// find sizes
@@ -557,7 +563,7 @@ void mglCanvas::DrawLabels(mglAxis &aa)
 		if(kk[i]<0)	continue;	// should be never here?!
 		c = aa.txt[i].val;
 		if(c>aa.v1 && c<aa.v2 && i%k!=0)	continue;
-		p = o+d*c;	nn = s-o;	ScalePoint(p,nn);
+		p = o+d*c;	nn = (s-o)/(Max-Min);	ScalePoint(p,nn);
 		mglPnt &qq = Pnt[kk[i]];
 		mreal ux=qq.u*cos(tet) + qq.v*sin(tet), uy=qq.v*cos(tet) - qq.u*sin(tet);
 		if(qq.u*nn.x+qq.v*nn.y < ux*nn.x+uy*nn.y)
@@ -566,9 +572,9 @@ void mglCanvas::DrawLabels(mglAxis &aa)
 
 		if(!get(MGL_ENABLE_RTEXT) && nn.x!=0)	pos[2] = nn.x<0 ? 'L':'R';
 		if(aa.ch=='c' && aa.txt[i].text[0]==' ')	qq.u = qq.v = NAN;
-		if(!get(MGL_DISABLE_SCALE))	pos[0]=(qq.u*nn.y-qq.v*nn.x>0) ? 'T':'t';
-		if(aa.ch=='T' && pos[0]=='T')	pos[0]='t';
-		if(aa.ch=='T' && pos[0]=='t')	pos[0]='T';
+		if(!get(MGL_DISABLE_SCALE))	pos[0]=(qq.u*nn.y-qq.v*nn.x>0)^(aa.v2<aa.v1) ? 'T':'t';
+		if(((aa.ch=='T')^(aa.pos=='T')) && pos[0]=='T')	pos[0]='t';
+		if(((aa.ch=='T')^(aa.pos=='T')) && pos[0]=='t')	pos[0]='T';
 		text_plot(kk[i], aa.txt[i].text.c_str(), pos, -1, aa.sh+0.07,CDef,tet?false:true);
 	}
 	delete []w;	delete []kk;
@@ -587,13 +593,13 @@ char mglCanvas::GetLabelPos(mreal c, long kk, mglAxis &aa)
 	if(aa.ch=='c')	pos=(aa.ns==0 || aa.ns==3)?'t':'T';
 	if(aa.ch=='T')	pos='T';
 	
-	p = o+d*c;	nn = s-o;	ScalePoint(p,nn);
+	p = o+d*c;	nn = (s-o)/(Max-Min);	ScalePoint(p,nn);
 	mglPnt &qq = Pnt[kk];
 	
 	if(aa.ch=='c')	qq.u = qq.v = NAN;
-	if(!get(MGL_DISABLE_SCALE))	pos=(qq.u*nn.y-qq.v*nn.x>0) ? 'T':'t';
-	if(aa.ch=='T' && pos=='T')	pos='t';
-	if(aa.ch=='T' && pos=='t')	pos='T';
+	if(!get(MGL_DISABLE_SCALE))	pos=(qq.u*nn.y-qq.v*nn.x>0)^(aa.v2<aa.v1) ? 'T':'t';
+	if(((aa.ch=='T')^(aa.pos=='T')) && pos=='T')	pos='t';
+	if(((aa.ch=='T')^(aa.pos=='T')) && pos=='t')	pos='T';
 	return pos;
 }
 //-----------------------------------------------------------------------------
@@ -634,24 +640,23 @@ void mglCanvas::Grid(const char *dir, const char *pen, const char *opt)
 //-----------------------------------------------------------------------------
 void mglCanvas::DrawGrid(mglAxis &aa)
 {
-/*	mglPoint p[8]={Min,Min,Min,Min,Max,Max,Max,Max},nan=mglPoint(NAN),oo[8];
-	p[1].x=Max.x;	p[2].y=Max.y;	p[3].z=Max.z;
-	p[4].x=Min.x;	p[5].y=Min.y;	p[6].z=Min.z;
-	mreal zm=1e5;	int im=0;
-	memcpy(oo,p,8*sizeof(mglPoint));
+	mglPoint pp[8]={Min,Min,Min,Min,Max,Max,Max,Max},nan=mglPoint(NAN), oo[8], org=Min;
+	pp[1].x=Max.x;	pp[2].y=Max.y;	pp[3].z=Max.z;
+	pp[4].x=Min.x;	pp[5].y=Min.y;	pp[6].z=Min.z;
+	mreal zm=1e5;
+	memcpy(oo,pp,8*sizeof(mglPoint));
 	for(int i=0;i<8;i++)	// find deepest point
 	{
-		ScalePoint(p[i],nan,false);
-		if(p[i].z<zm)	{	zm=p[i].z;	im=i;	}
-	}*/
-
-
-	
-	aa.org = mglPoint(GetOrgX(aa.ch), GetOrgY(aa.ch), GetOrgZ(aa.ch));
+		ScalePoint(pp[i],nan,false);
+		if(pp[i].z<zm)	{	zm=pp[i].z;	org=oo[i];	}
+	}
+	if(Org.x==Org.x) 	org.x = Org.x;
+	if(Org.y==Org.y) 	org.y = Org.y;
+	if(Org.z==Org.z) 	org.z = Org.z;
 	mglPoint d=aa.dir, da1,da2,db1,db2,oa,ob, p,q;
 	da1 = aa.a*(aa.a*Min);	da2 = aa.a*(aa.a*Max);
 	db1 = aa.b*(aa.b*Min);	db2 = aa.b*(aa.b*Max);
-	oa  = aa.b*(aa.b*aa.org);	ob  = aa.a*(aa.a*aa.org);
+	oa  = aa.b*(aa.b*org);	ob  = aa.a*(aa.a*org);
 
 	register long i,j,n=aa.txt.size(),k1,k2;
 	mreal v;
@@ -699,7 +704,7 @@ void mglCanvas::Labelw(char dir, const wchar_t *text, mreal pos, const char *opt
 
 	mglAxis ty(ay);
 
-	if(dir=='x')	//	TODO: Tern axis & colorbar labels!!!
+	if(dir=='x')
 	{
 		AdjustTicks(ax,fx);	aa = &ax;
 		if(ax.dv)	t = (Min.x+Max.x+pos*(Max.x-Min.x))/2;
