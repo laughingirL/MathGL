@@ -634,6 +634,19 @@ void mglCanvas::Grid(const char *dir, const char *pen, const char *opt)
 //-----------------------------------------------------------------------------
 void mglCanvas::DrawGrid(mglAxis &aa)
 {
+/*	mglPoint p[8]={Min,Min,Min,Min,Max,Max,Max,Max},nan=mglPoint(NAN),oo[8];
+	p[1].x=Max.x;	p[2].y=Max.y;	p[3].z=Max.z;
+	p[4].x=Min.x;	p[5].y=Min.y;	p[6].z=Min.z;
+	mreal zm=1e5;	int im=0;
+	memcpy(oo,p,8*sizeof(mglPoint));
+	for(int i=0;i<8;i++)	// find deepest point
+	{
+		ScalePoint(p[i],nan,false);
+		if(p[i].z<zm)	{	zm=p[i].z;	im=i;	}
+	}*/
+
+
+	
 	aa.org = mglPoint(GetOrgX(aa.ch), GetOrgY(aa.ch), GetOrgZ(aa.ch));
 	mglPoint d=aa.dir, da1,da2,db1,db2,oa,ob, p,q;
 	da1 = aa.a*(aa.a*Min);	da2 = aa.a*(aa.a*Max);

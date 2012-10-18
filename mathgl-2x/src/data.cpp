@@ -794,7 +794,7 @@ HMDT mgl_data_solve(HCDT dat, mreal val, char dir, HCDT i0, int norm)
 	return r;
 }
 //-----------------------------------------------------------------------------
-mreal mgl_data_solve(HCDT d, mreal val, int spl, long i0)
+mreal mgl_data_solve_1d(HCDT d, mreal val, int spl, long i0)
 {
 	mreal x=0, y1, y2, a, a0, dx,dy,dz, da = 1e-5*(val?fabs(val):1);
 	long nx = d->GetNx();
@@ -901,7 +901,7 @@ mreal mgl_data_spline_ext_(uintptr_t *d, mreal *x,mreal *y,mreal *z, mreal *dx,m
 mreal mgl_data_linear_ext_(uintptr_t *d, mreal *x,mreal *y,mreal *z, mreal *dx,mreal *dy,mreal *dz)
 {	return mgl_data_linear_ext(_DA_(d),*x,*y,*z,dx,dy,dz);	}
 mreal mgl_data_solve_1d_(uintptr_t *d, mreal *val, int *spl, int *i0)
-{	return mgl_data_solve(_DA_(d),*val, *spl, *i0);	}
+{	return mgl_data_solve_1d(_DA_(d),*val, *spl, *i0);	}
 uintptr_t mgl_data_solve_(uintptr_t *d, mreal *val, const char *dir, uintptr_t *i0, int *norm,int)
 {	return uintptr_t(mgl_data_solve(_DA_(d),*val, *dir, _DA_(i0), *norm));	}
 //-----------------------------------------------------------------------------
@@ -919,13 +919,12 @@ mreal mglSpline3(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mr
 	z = z>0 ?(z<nz-1 ? z:nz-1):0;
 	//	if(x<0 || y<0 || z<0 || x>nx-1 || y>ny-1 || z>nz-1)		return 0;
 	if(dd)	{	*dx=*dy=*dz=0;	}
+	if(kx>nx-2)	kx = nx-2;	if(kx<0) 	kx = 0;
+	if(ky>ny-2)	ky = ny-2;	if(ky<0) 	ky = 0;
+	if(kz>nz-2)	kz = nz-2;	if(kz<0) 	kz = 0;
 	if(nz>1 && z!=kz)		// 3d interpolation
 	{
 		mreal b1[4]={0,0,0,0},  x1[4]={0,0,0,0},  y1[4]={0,0,0,0};
-		if(kx>nx-2)	kx = nx-2;
-		if(ky>ny-2)	ky = ny-2;
-		if(kz>nz-2)	kz = nz-2;
-
 		long kk=1;
 		if(kz==0)	{	kk=0;	}
 		else if(nz>3 && kz==nz-2)	{	kk=2;	}
@@ -961,8 +960,6 @@ mreal mglSpline3(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mr
 	}
 	else if(ny>1 && y!=ky)	// 2d interpolation
 	{
-		if(kx>nx-2)	kx = nx-2;
-		if(ky>ny-2)	ky = ny-2;
 		mglFillP(kx, ky, a+kz*nx*ny, nx, ny, _p);
 		fx = 1;	b = 0;
 		for(i=0;i<4;i++)
@@ -984,7 +981,6 @@ mreal mglSpline3(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mr
 	}
 	else if(nx>1 && x!=kx)	// 1d interpolation
 	{
-		if(kx>nx-2)	kx = nx-2;
 		mglFillP(kx, a+(ky+ny*kz)*nx, nx, _p[0]);
 		for(i=0,fx=1,b=0;i<4;i++)
 		{

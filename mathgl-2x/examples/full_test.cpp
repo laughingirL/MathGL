@@ -83,6 +83,12 @@ int verbose = 0;
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
+	mglData xx("1.dat");
+	printf("%s\n",xx.PrintInfo());
+	mglData res = xx.Solve(0.006838,'z');
+	res.Save("2.dat");
+	return;
+	
 //	gr->SetFaceNum(10);
 	mglData a(100,100);	a.Modify("x*y^2");
 	gr->Rotate(40,60);

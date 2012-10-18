@@ -647,15 +647,16 @@ void mgl_data_fourier(HMDT re, HMDT im, const char *dir)
 	if(nx*ny*nz != im->nx*im->ny*im->nz || !dir || dir[0]==0)	return;
 	double *a = new double[2*nx*ny*nz];
 	register long i,j;
-	gsl_fft_direction how = strchr(dir,'i')?backward:forward;
 	for(i=0;i<nx*ny*nz;i++)
 	{	a[2*i] = re->a[i];	a[2*i+1] = im->a[i];	}
 	if(strchr(dir,'x') && nx>1)
 	{
 		gsl_fft_complex_wavetable *wt = gsl_fft_complex_wavetable_alloc(nx);
 		gsl_fft_complex_workspace *ws = gsl_fft_complex_workspace_alloc(nx);
-		for(i=0;i<ny*nz;i++)
-			gsl_fft_complex_transform(a+2*i*nx, 1, nx, wt, ws, how);
+		if(strchr(dir,'i'))
+			for(i=0;i<ny*nz;i++)	gsl_fft_complex_inverse(a+2*i*nx, 1, nx, wt, ws);
+		else
+			for(i=0;i<ny*nz;i++)	gsl_fft_complex_forward(a+2*i*nx, 1, nx, wt, ws);
 		gsl_fft_complex_workspace_free(ws);
 		gsl_fft_complex_wavetable_free(wt);
 	}
@@ -663,8 +664,13 @@ void mgl_data_fourier(HMDT re, HMDT im, const char *dir)
 	{
 		gsl_fft_complex_wavetable *wt = gsl_fft_complex_wavetable_alloc(ny);
 		gsl_fft_complex_workspace *ws = gsl_fft_complex_workspace_alloc(ny);
-		for(j=0;j<nz;j++)	for(i=0;i<nx;i++)
-			gsl_fft_complex_transform(a+2*i+2*j*nx*ny, nx, ny, wt, ws, how);
+		if(strchr(dir,'i'))
+			for(j=0;j<nz;j++)	for(i=0;i<nx;i++)
+				gsl_fft_complex_inverse(a+2*i+2*j*nx*ny, nx, ny, wt, ws);
+		else
+			for(j=0;j<nz;j++)	for(i=0;i<nx;i++)
+				gsl_fft_complex_forward(a+2*i+2*j*nx*ny, nx, ny, wt, ws);
+
 		gsl_fft_complex_workspace_free(ws);
 		gsl_fft_complex_wavetable_free(wt);
 	}
@@ -672,8 +678,10 @@ void mgl_data_fourier(HMDT re, HMDT im, const char *dir)
 	{
 		gsl_fft_complex_wavetable *wt = gsl_fft_complex_wavetable_alloc(nz);
 		gsl_fft_complex_workspace *ws = gsl_fft_complex_workspace_alloc(nz);
-		for(i=0;i<ny*nx;i++)
-			gsl_fft_complex_transform(a+2*i, nx*ny, nz, wt, ws, how);
+		if(strchr(dir,'i'))
+			for(i=0;i<ny*nx;i++)	gsl_fft_complex_inverse(a+2*i, nx*ny, nz, wt, ws);
+		else
+			for(i=0;i<ny*nx;i++)	gsl_fft_complex_forward(a+2*i, nx*ny, nz, wt, ws);
 		gsl_fft_complex_workspace_free(ws);
 		gsl_fft_complex_wavetable_free(wt);
 	}

@@ -32,6 +32,7 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 
 3. Add FAQ about MPEG/GIF and PDF, JavaScript
 4. JSON samples in documentation ?!!
+5. mglFourier now make true inverse transform -- INCOMPATIBLE !!!
 
 ============= UDAV =============
 

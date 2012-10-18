@@ -73,7 +73,10 @@ supports it in developing GNU and promoting software freedom.''
 * Widget classes::
 * Data processing::
 * MGL scripts::
+* UDAV ::
 * Other classes::
+* Symbols and hot-keys::
+* File formats::
 * TeX-like symbols::
 * Copying This Manual::
 * Index::
@@ -173,13 +176,24 @@ screen.colorDepth:screen.pixelDepth))+";u"+escape(document.URL)+
 @node Data processing, MGL scripts, Widget classes, Top
 @include data_ru.texi
 
-@node MGL scripts, Other classes, Data processing, Top
+@node MGL scripts, UDAV, Data processing, Top
 @include parse_ru.texi
 
-@node Other classes, TeX-like symbols, MGL scripts, Top
+@node UDAV, Other classes, MGL scripts, Top
+@include udav_ru.texi
+
+@node Other classes, Symbols and hot-keys, UDAV, Top
 @include other_ru.texi
 
-@node TeX-like symbols, Copying This Manual, Other classes, Top
+@node Symbols and hot-keys, File formats, Other classes, Top
+@appendix Symbols and hot-keys
+@include symbols_ru.texi
+
+@node File formats, TeX-like symbols, Symbols and hot-keys, Top
+@appendix File formats
+@include formats_ru.texi
+
+@node TeX-like symbols, Copying This Manual, File formats, Top
 @appendix TeX-like symbols
 @include appendix_ru.texi
 
