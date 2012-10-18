@@ -20,7 +20,6 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 +2. Add flag for drawing 3d arrows instead of 2d (S,D -- cube, T -- sq.pyramid, I -- square, O -- sphere???, A,K,V -- cone???)
 +3. Check quality=6 colors and size in UDAV!!!
 +4. WX window/widgets
-5. Add 'XYZ' axis for inverse ticks positions + correctly parse "inverse" ranges
 
 ============= DOCS =============
 
@@ -31,6 +30,8 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 
 3. Add FAQ about MPEG/GIF and PDF, JavaScript
 4. JSON samples in documentation ?!!
+5. Hint about inverse axis range
+6. Axis style 'XYZ' for opposite tick and axis labels
 
 ============= UDAV =============
 

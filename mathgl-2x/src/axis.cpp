@@ -447,21 +447,20 @@ void mglCanvas::Axis(const char *dir, const char *stl, const char *opt)
 	AdjustTicks(dir,adjust);
 	LoadState();
 
-	ax.pos = ay.pos = az.pos = 't';
-	if(strchr(dir,'X'))	{	ax.pos='T';	DrawAxis(ax, text, arr, stl, opt);	}
-	else if(strchr(dir,'x')) 	DrawAxis(ax, text, arr, stl, opt);
-	if(strchr(dir,'Z'))	{	az.pos='T';	DrawAxis(az, text, arr, stl, opt);	}
-	else if(strchr(dir,'z')) 	DrawAxis(az, text, arr, stl, opt);
+	ax.pos = strchr(dir,'X') ? 'T':'t';
+	ay.pos = strchr(dir,'Y') ? 'T':'t';
+	az.pos = strchr(dir,'Z') ? 'T':'t';
+	if(strchr(dir,'X') || strchr(dir,'x'))	DrawAxis(ax, text, arr, stl, opt);
+	if(strchr(dir,'Z') || strchr(dir,'z'))	DrawAxis(az, text, arr, stl, opt);
 	if((TernAxis&3))
 	{
-		mglAxis ty(ay);		ty.ch='T';
+		mglAxis ty(ay);		ty.pos='t';	ty.ch='T';
 		ty.dir = mglPoint(-1,1);		ty.org = mglPoint(1,0,ay.org.z);
 		DrawAxis(ty, text, arr, stl, opt);	ty.ch='t';
 		ty.dir = mglPoint(0,-1);		ty.org = mglPoint(0,1,ay.org.z);
 		DrawAxis(ty, text, arr, stl, opt);
 	}
-	else if(strchr(dir,'Y'))	{	ay.pos='T';	DrawAxis(ay, text, arr, stl, opt);}
-	else if(strchr(dir,'y')) 	DrawAxis(ay, text, arr, stl, opt);
+	else if(strchr(dir,'Y') || strchr(dir,'y')) 	DrawAxis(ay, text, arr, stl, opt);
 	set(ret, MGL_ENABLE_RTEXT);
 }
 //-----------------------------------------------------------------------------
@@ -504,8 +503,7 @@ void mglCanvas::DrawAxis(mglAxis &aa, bool text, char arr,const char *stl,const 
 	if(k2>0)	for(i=0;i<k2;i++)
 	{
 		v = aa.txt[i].val;	u = fabs(v);
-		if(v>=aa.v1 && v<=aa.v2 && aa.v2>aa.v1)	tick_draw(o+d*v, da, db, 0, stl);
-		if(v>=aa.v2 && v<=aa.v1 && aa.v2<aa.v1)	tick_draw(o+d*v, da, db, 0, stl);
+		if((v-aa.v2)*(v-aa.v1)<=0)	tick_draw(o+d*v, da, db, 0, stl);
 		if(aa.dv==0 && aa.v2>aa.v1 && fabs(u-exp(M_LN10*floor(0.1+log10(u))))<0.01*u)
 			for(j=2;j<10 && v*j<aa.v2;j++)	tick_draw(o+d*(v*j),da,db,1,stl);
 		if(aa.dv==0 && aa.v2<aa.v1 && fabs(u-exp(M_LN10*floor(0.1+log10(u))))<0.01*u)
@@ -514,9 +512,10 @@ void mglCanvas::DrawAxis(mglAxis &aa, bool text, char arr,const char *stl,const 
 	if(aa.ds>0 && !get(MGL_NOSUBTICKS))
 	{
 		if(aa.v2>aa.v1)	v0 = v0 - aa.ds*floor((v0-aa.v1)/aa.ds+1e-3);
-		else 			v0 = v0 - aa.ds*floor((v0-aa.v2)/aa.ds+1e-3);
+		else			v0 = v0 - aa.ds*floor((v0-aa.v2)/aa.ds+1e-3);
 		if(v0+aa.ds!=v0 && aa.v2+aa.ds!=aa.v2)
-			for(v=v0;(v-aa.v2)*(aa.v2-aa.v1)<0;v+=aa.ds)	tick_draw(o+d*v,da,db,1,stl);
+			for(v=v0;(v-aa.v2)*(v-aa.v1)<=0;v+=aa.ds)
+				tick_draw(o+d*v,da,db,1,stl);
 	}
 	if(text)	DrawLabels(aa);
 	EndGroup();
@@ -572,9 +571,11 @@ void mglCanvas::DrawLabels(mglAxis &aa)
 
 		if(!get(MGL_ENABLE_RTEXT) && nn.x!=0)	pos[2] = nn.x<0 ? 'L':'R';
 		if(aa.ch=='c' && aa.txt[i].text[0]==' ')	qq.u = qq.v = NAN;
-		if(!get(MGL_DISABLE_SCALE))	pos[0]=(qq.u*nn.y-qq.v*nn.x>0)^(aa.v2<aa.v1) ? 'T':'t';
-		if(((aa.ch=='T')^(aa.pos=='T')) && pos[0]=='T')	pos[0]='t';
-		if(((aa.ch=='T')^(aa.pos=='T')) && pos[0]=='t')	pos[0]='T';
+		int ts = 1;
+		if(!get(MGL_DISABLE_SCALE))	ts = sign(qq.v*nn.x-qq.u*nn.y)*sign(aa.v2-aa.v1);
+		if(aa.ch=='T')	ts *= -1;
+		if(aa.pos=='T')	ts *= -1;
+		pos[0] = ts>0 ? 't':'T';
 		text_plot(kk[i], aa.txt[i].text.c_str(), pos, -1, aa.sh+0.07,CDef,tet?false:true);
 	}
 	delete []w;	delete []kk;
@@ -589,18 +590,18 @@ char mglCanvas::GetLabelPos(mreal c, long kk, mglAxis &aa)
 	mglPoint p,q, s=(Min+Max)/2, nn;
 	s = s - d*(s*d);
 
-	char pos='t';
-	if(aa.ch=='c')	pos=(aa.ns==0 || aa.ns==3)?'t':'T';
-	if(aa.ch=='T')	pos='T';
+	int ts = 1;
+	if(aa.ch=='c' && aa.ns!=0 && aa.ns!=3)	ts = -1;
+	if(aa.ch=='T')	ts=-1;
 	
 	p = o+d*c;	nn = (s-o)/(Max-Min);	ScalePoint(p,nn);
 	mglPnt &qq = Pnt[kk];
 	
 	if(aa.ch=='c')	qq.u = qq.v = NAN;
-	if(!get(MGL_DISABLE_SCALE))	pos=(qq.u*nn.y-qq.v*nn.x>0)^(aa.v2<aa.v1) ? 'T':'t';
-	if(((aa.ch=='T')^(aa.pos=='T')) && pos=='T')	pos='t';
-	if(((aa.ch=='T')^(aa.pos=='T')) && pos=='t')	pos='T';
-	return pos;
+	if(!get(MGL_DISABLE_SCALE))	ts = sign(qq.v*nn.x-qq.u*nn.y)*sign(aa.v2-aa.v1);
+	if(aa.ch=='T')	ts *= -1;
+	if(aa.pos=='T')	ts *= -1;
+	return ts>0 ? 't':'T';
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::tick_draw(mglPoint o, mglPoint d1, mglPoint d2, int f, const char *stl)

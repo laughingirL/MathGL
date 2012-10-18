@@ -37,7 +37,9 @@
 * Multi-line strings (i.e. separated by "\" symbol) are highlighted correctly now.
 
 * Grid lines for NAN origin values are always located at far-away edges.
-* Correctly place axis and tick labels for axis with inverse range (i.e. for v2<v1).
+* Try correctly place axis and tick labels even for axis with inverse range (i.e. for v2<v1). 
+  Note, it work well for 2D axis. One should use Aspect() with negative values to do it correctly in general case.
+* Axis style 'XYZ' draw corresponding axis with ticks labels from other side of axis. This also influence on followng Label() calls.
 
 * Add MGL commands 'errbox', 'face'
 * Add mgl.cgi tool which return PNG image for CGI request in form of MGL script.
