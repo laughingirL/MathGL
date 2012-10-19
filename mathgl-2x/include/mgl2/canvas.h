@@ -349,7 +349,7 @@ protected:
 		ax.v2=Max.x;	ay.v2=Max.y;	az.v2=Max.z;	ac.v2=Max.c;	}
 
 	/// Clear ZBuffer only
-	void ClfZB();
+	void ClfZB(bool force=false);
 	/// Scale coordinates and cut off some points
 	bool ScalePoint(mglPoint &p, mglPoint &n, bool use_nan=true) const;
 	void LightScale();	///< Additionally scale positions of light sources

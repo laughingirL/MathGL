@@ -17,6 +17,7 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+#include "mgl2/font.h"
 #include "mgl2/base.h"
 #include "mgl2/define.h"
 //-----------------------------------------------------------------------------
@@ -25,6 +26,48 @@ char *mgl_strdup(const char *s)
 	char *r = (char *)malloc((strlen(s)+1)*sizeof(char));
 	memcpy(r,s,(strlen(s)+1)*sizeof(char));
 	return r;
+}
+//-----------------------------------------------------------------------------
+void mgl_create_cpp_font(HMGL gr, const wchar_t *how)
+{
+	unsigned long l=wcslen(how), i, n=0, m;
+	wchar_t ch=*how;
+	const mglFont *f = gr->GetFont();
+	std::vector<wchar_t> s;
+	for(i=1;i<l;i++)
+		if(how[i]==',')	continue;
+		else if(how[i]=='-' && i+1<l)
+			for(ch++;ch<how[i+1];ch++)	s.push_back(ch);
+		else	s.push_back(ch=how[i]);
+	for(i=l=n=0;i<s.size();i++)
+	{
+		ch = f->Internal(s[i]);
+		l += 4*f->GetNl(0,ch);
+		n += 6*f->GetNt(0,ch);
+	}
+	printf("unsigned mgl_numg=%lu, mgl_cur=%lu;\n",s.size(),l+n);
+	printf("float mgl_fact=%g;\n",f->GetFact(0)/mgl_fgen);
+	printf("long mgl_gen_fnt[%lu][6] = {\n", s.size());
+	for(i=m=0;i<s.size();i++)	// first write symbols descriptions
+	{
+		ch = f->Internal(s[i]);
+		int m1 = f->GetNl(0,ch), m2 = f->GetNt(0,ch);
+		printf("\t{0x%x,%d,%d,%lu,%d,%lu},\n",s[i],f->GetWidth(0,ch),m1,m,m2,m+4*m1);
+		m += 4*m1+6*m2;
+	}
+	if(m!=l+n)	printf("#error \"%lu !=%lu + %lu\"",m,l,n);
+	printf("};\nshort mgl_buf_fnt[%lu] = {\n",m);
+	for(i=0;i<s.size();i++)		// now write data itself
+	{
+		ch = f->Internal(s[i]);
+		unsigned m1 = f->GetNl(0,ch), m2 = f->GetNt(0,ch);
+		const short *ln = f->GetLn(0,ch), *tr = f->GetTr(0,ch);
+		for(l=0;l<4*m1;l++)	printf("%d,",ln[l]);
+		printf("\n");
+		for(l=0;l<6*m2;l++)	printf("%d,",tr[l]);
+		printf("\n");
+	}
+	printf("};\n");
 }
 //-----------------------------------------------------------------------------
 void mgl_strtrim(char *str)
@@ -78,6 +121,17 @@ mglBase::mglBase()
 }
 mglBase::~mglBase()	{	ClearEq();	}
 //-----------------------------------------------------------------------------
+void mglBase::RestoreFont()	{	fnt->Restore();	}
+void mglBase::LoadFont(const char *name, const char *path)
+{	if(name && *name)	fnt->Load(name,path);	else	fnt->Restore();	}
+void mglBase::CopyFont(mglBase *gr)	{	fnt->Copy(gr->GetFont());	}
+//-----------------------------------------------------------------------------
+mreal mglBase::TextWidth(const char *text, const char *font, mreal size) const
+{	return (size<0?-size*FontSize:size)*font_factor*fnt->Width(text,(font&&*font)?font:FontDef)/20.16;	}
+mreal mglBase::TextWidth(const wchar_t *text, const char *font, mreal size) const
+{	return (size<0?-size*FontSize:size)*font_factor*fnt->Width(text,(font&&*font)?font:FontDef)/20.16;	}
+mreal mglBase::TextHeight(const char *font, mreal size) const
+{	return (size<0?-size*FontSize:size)*font_factor*fnt->Height(font?font:FontDef)/20.16; }
 void mglBase::AddActive(long k,int n)
 {
 	if(k<0 || (size_t)k>=Pnt.size())	return;

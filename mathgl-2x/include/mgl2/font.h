@@ -44,6 +44,7 @@
 #endif
 //-----------------------------------------------------------------------------
 struct mglTeXsymb	{	unsigned kod;	const wchar_t *tex;	};
+const float mgl_fgen = 4*14;
 /// Get font color, style and align for internal parser
 char mglGetStyle(const char *how, int *font, int *align=0);
 class mglBase;
@@ -81,6 +82,8 @@ public:
 	/// Get width of text string for font specified by string
 	float Width(const wchar_t *str,const char *how) const;
 
+	/// Get internal code for symbol
+	long Internal(unsigned s) const;
 	/// Return number of glyphs
 	inline unsigned GetNumGlyph() const	{	return numg;	};
 	/// Return some of pointers
@@ -88,6 +91,7 @@ public:
 	inline const short *GetLn(int s, long j) const	{	return Buf+ln[s][j];	}
 	inline int GetNt(int s, long j) const	{	return numt[s][j];	}
 	inline int GetNl(int s, long j) const	{	return numl[s][j];	}
+	inline short GetWidth(int s, long j) const	{	return width[s][j];	}
 	inline float GetFact(int s) const		{	return fact[s];	}
 protected:
 	wchar_t *id;		///< Unicode ID for glyph
@@ -113,9 +117,6 @@ protected:
 	float Puts(const unsigned *str, float x,float y,float f,int style,float col) const;
 	/// Parse LaTeX command
 	unsigned Parse(const wchar_t *s) const;
-	/// Get internal code for symbol
-	long Internal(unsigned s) const;
-
 	/// Get symbol for character \a ch with given \a font style
 	unsigned Symbol(char ch) const;
 private:

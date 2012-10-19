@@ -44,6 +44,7 @@
 * Add MGL commands 'errbox', 'face'
 * Add mgl.cgi tool which return PNG image for CGI request in form of MGL script.
 
+* Update list of built-in glyphs
 * Update samples
 * Update documentation
 * Different bugfixes

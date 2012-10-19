@@ -90,13 +90,14 @@ void QMathGL::paintEvent(QPaintEvent *)
 		}
 		paint.setPen(QColor(0,0,0));
 		d = (h>w?w:h)/100;
-		if(mglUserPrim)	for(i=0;i<(long)gr->Act.size();i++)
-		{
-			const mglActivePos &p=gr->Act[i];
-			QRect rf(p.x-d/2,h-p.y-d/2-1,d,d);
-			paint.drawRect(rf);
-			paint.fillRect(rf,QBrush(QColor(127,255,63)));
-		}
+		if(mglUserPrim && !(gr->GetQuality()&4))
+			for(i=0;i<(long)gr->Act.size();i++)
+			{
+				const mglActivePos &p=gr->Act[i];
+				QRect rf(p.x-d/2,h-p.y-d/2-1,d,d);
+				paint.drawRect(rf);
+				paint.fillRect(rf,QBrush(QColor(127,255,63)));
+			}
 	}
 	paint.end();
 }
@@ -197,10 +198,11 @@ void QMathGL::update()
 		gr->Alpha(alpha);	gr->Light(light);
 		if(!isHidden())	QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 		setlocale(LC_NUMERIC, "C");
-		if(mglUserPrim)	gr->NewFrame();	// use frames for quickly redrawing while adding/change primitives
+		// use frames for quickly redrawing while adding/changing primitives
+		if(mglUserPrim && !(gr->GetQuality()&4))	gr->NewFrame();
 		if(draw_func)	draw_func(gr, draw_par);
 		else if(draw)	{	mglGraph g(gr);	draw->Draw(&g);	}
-		if(mglUserPrim)	gr->EndFrame();
+		if(mglUserPrim && !(gr->GetQuality()&4))	gr->EndFrame();
 		setlocale(LC_NUMERIC, "");
 		if(!isHidden())	QApplication::restoreOverrideCursor();
 		emit refreshData();
@@ -212,7 +214,7 @@ void QMathGL::update()
 //-----------------------------------------------------------------------------
 void QMathGL::refresh()
 {
-	if(mglUserPrim)
+	if(mglUserPrim && !(gr->GetQuality()&4))
 	{
 		gr->Clf();	gr->GetFrame(0);
 		mglParse pr;
@@ -542,8 +544,8 @@ void QMathGL::copyClickCoor()
 {	QApplication::clipboard()->setText(mousePos);	}
 //-----------------------------------------------------------------------------
 void QMathGL::setMGLFont(QString path)
-{	if(path.isEmpty())	gr->GetFont()->Restore();
-	else	gr->GetFont()->Load(path.toAscii());	}
+{	if(path.isEmpty())	gr->RestoreFont();
+	else	gr->LoadFont(path.toAscii());	}
 //-----------------------------------------------------------------------------
 void QMathGL::setSize(int w, int h)
 {

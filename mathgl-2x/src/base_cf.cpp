@@ -139,9 +139,9 @@ void mgl_set_arrow_size(HMGL gr, mreal size)	{	gr->SetArrowSize(size);	}
 void mgl_set_font_size(HMGL gr, mreal size)		{	gr->SetFontSize(size);	}
 void mgl_set_font_def(HMGL gr, const char *fnt)	{	gr->SetFontDef(fnt);	}
 void mgl_load_font(HMGL gr, const char *name, const char *path)
-{	if(name && *name)	gr->GetFont()->Load(name,path);	else	gr->GetFont()->Restore();	}
-void mgl_copy_font(HMGL gr, HMGL gr_from)		{	gr->GetFont()->Copy(gr_from->GetFont());	}
-void mgl_restore_font(HMGL gr)	{	gr->GetFont()->Restore();	}
+{	gr->LoadFont(name,path);	}
+void mgl_copy_font(HMGL gr, HMGL gr_from)	{	gr->CopyFont(gr_from);	}
+void mgl_restore_font(HMGL gr)	{	gr->RestoreFont();	}
 //-----------------------------------------------------------------------------
 void mgl_set_bar_width_(uintptr_t *gr, mreal *width)	{	_GR_->SetBarWidth(*width);	}
 void mgl_set_rotated_text_(uintptr_t *gr, int *rotated)	{	_GR_->SetRotatedText(*rotated);	}
@@ -154,10 +154,10 @@ void mgl_set_font_def_(uintptr_t *gr, char *name, int l)
 void mgl_load_font_(uintptr_t *gr, char *name, char *path, int l,int n)
 {	char *s=new char[l+1];		memcpy(s,name,l);	s[l]=0;
 	char *d=new char[n+1];		memcpy(d,path,n);	d[n]=0;
-	_GR_->GetFont()->Load(s,d);	delete []s;		delete []d;	}
+	_GR_->LoadFont(s,d);	delete []s;		delete []d;	}
 void mgl_copy_font_(uintptr_t *gr, uintptr_t *gr_from)
-{	_GR_->GetFont()->Copy(((mglBase *)(*gr_from))->GetFont());	}
-void mgl_restore_font_(uintptr_t *gr)	{	_GR_->GetFont()->Restore();	}
+{	_GR_->CopyFont((mglBase *)(*gr_from));	}
+void mgl_restore_font_(uintptr_t *gr)	{	_GR_->RestoreFont();	}
 //-----------------------------------------------------------------------------
 void mgl_start_group(HMGL gr, const char *s)	{	gr->StartAutoGroup(s);	}
 void mgl_end_group(HMGL gr)	{	gr->EndGroup();	}

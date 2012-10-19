@@ -18,6 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include <limits.h>
+#include "mgl2/font.h"
 #include "mgl2/canvas.h"
 //-----------------------------------------------------------------------------
 std::string mglGlobalMess;	///< Buffer for receiving global messages
@@ -239,10 +240,14 @@ void mglCanvas::line_plot(long p1, long p2)
 {
 	if(PDef==0)	return;
 	if(p1<0 || p2<0 || mgl_isnan(Pnt[p1].x) || mgl_isnan(Pnt[p2].x))	return;
-	mglDrawReg dd;	dd.set(this,1,1,0);
 	long pp1=p1,pp2=p2;
 	mreal pw = fabs(PenWidth),d;
 	d = hypot(Pnt[p1].x-Pnt[p2].x, Pnt[p1].y-Pnt[p2].y);
+
+	mglDrawReg dd;		dd.set(this,1,1,0);
+	dd.PDef = PDef;		dd.pPos = pPos;
+	dd.ObjId = ObjId;	dd.PenWidth=pw;
+
 	if(TernAxis&4) for(int i=0;i<4;i++)
 	{	p1 = ProjScale(i, pp1);	p2 = ProjScale(i, pp2);
 		MGL_LINE_PLOT	}
@@ -367,7 +372,11 @@ void mglCanvas::Glyph(mreal x, mreal y, mreal f, int s, long j, mreal col)
 	a.n1 = AddPnt(mglPoint(B.x,B.y,B.z), cc, mglPoint(x,y,NAN), -1, -1);
 	a.n3 = s;	a.n4 = AddGlyph(s,j);
 	if(a.n1<0)	return;
+
 	mglDrawReg d;	d.set(this,1,1,0);
+	d.PDef = s;		d.pPos = a.s;
+	d.ObjId=ObjId;	d.PenWidth=a.w;
+	
 	if(Quality&4)	glyph_draw(&a,&d);
 	else	add_prim(a);
 }
@@ -586,7 +595,7 @@ void mglCanvas::AddLight(int n, mglPoint r, mglPoint d, char col, mreal br, mrea
 //-----------------------------------------------------------------------------
 void mglCanvas::arrow_plot(long n1, long n2, char st)
 {
-	if((Quality&4)==3)
+	if((Quality&3)==3)
 		arrow_plot_3d(n1, n2, st);
 	else
 		arrow_plot_2d(n1, n2, st);

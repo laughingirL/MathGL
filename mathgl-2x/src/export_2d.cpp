@@ -19,6 +19,7 @@
  ***************************************************************************/
 #include "mgl2/canvas.h"
 #include "mgl2/canvas_cf.h"
+#include "mgl2/font.h"
 #include <time.h>
 #include <algorithm>
 #include <vector>

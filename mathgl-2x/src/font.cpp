@@ -34,7 +34,6 @@ extern unsigned mgl_numg, mgl_cur;
 extern float mgl_fact;
 extern long mgl_gen_fnt[516][6];
 extern short mgl_buf_fnt[246080];
-const float mgl_fgen = 4*14;
 extern mglTeXsymb mgl_tex_symb[];
 mglFont mglDefFont;
 //-----------------------------------------------------------------------------

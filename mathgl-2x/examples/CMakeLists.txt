@@ -2,7 +2,7 @@ if(MGL_HAVE_GSL)
 	include_directories(${GSL_INCLUDE_DIR})
 endif(MGL_HAVE_GSL)
 
-add_executable(mgl_example wnd_samples.cpp full_test.cpp)
+add_executable(mgl_example wnd_samples.cpp full_test.cpp samples.cpp)
 target_link_libraries(mgl_example mgl)
 # install(
 # 	TARGETS mgl_example

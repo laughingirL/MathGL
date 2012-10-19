@@ -16,9 +16,10 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 
 ============= NEW FOR v.2.1 =============
 
+0. check for possible memory leaks before release
+
 1. Axis -- projection (ternary + quaternary) + sample
 +2. Add flag for drawing 3d arrows instead of 2d (S,D -- cube, T -- sq.pyramid, I -- square, O -- sphere???, A,K,V -- cone???)
-+3. Check quality=6 colors and size in UDAV!!!
 +4. WX window/widgets
 
 ============= DOCS =============
@@ -76,9 +77,9 @@ Save/load into script between blocks "#----- MathGL block -----" +  hide it in e
 3. \dfrac for normal size and centering  (sample \big\big{\frac{1}{2}}) ???
 4. "Cut off" curves if text is printed inside it (for contour labels) ?!?
 5. String variables in MGL + readstr command.
-6. Pool of threads for speeding up ???
+6. Pool of threads for speeding up ??? or openmp ???
 7. Read DICOM files
 8. Check RunThr() in python/octave
 9. Try libtcc (TinyCC) as alternative to MGL -- how to handle ^ operator???
 10. Auto axis range for formulas, like AutoRange("y(x)") or AutoRange('x',"x(t)").
-11. Use Hershey as built-in font ?!!
+11. Use Hershey as built-in font ??? -- for smaller size only

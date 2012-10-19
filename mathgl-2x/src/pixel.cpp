@@ -360,6 +360,7 @@ void mglCanvas::pxl_primdr(size_t id, size_t , const void *)
 void mglCanvas::Finish(bool fast)
 {
 	static mglMatrix bp;
+	if(Quality&4)	clr(MGL_FINISHED);
 	if(memcmp(&Bp,&bp,sizeof(mglMatrix)) && !(Quality&4) && Prm.size()>0)
 		clr(MGL_FINISHED);
 	if(get(MGL_FINISHED))	return;	// nothing to do
@@ -378,9 +379,9 @@ void mglCanvas::Finish(bool fast)
 	set(MGL_FINISHED);
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::ClfZB()
+void mglCanvas::ClfZB(bool force)
 {
-	if(Quality&4)	return;
+	if(!force && (Quality&4))	return;
 	register long i,n=Width*Height;
 	memset(C,0,12*n);	memset(OI,0,n*sizeof(int));
 	for(i=0;i<3*n;i++)	Z[i] = -1e20f;
@@ -400,7 +401,7 @@ void mglCanvas::Clf(mglColor Back)
 	if(Back==0)			Back = 'w';
 	if((Flag&3)==2)	Back = 'k';
 	BDef[0]=Back.r*255;	BDef[1]=Back.g*255;BDef[2]=Back.b*255;	BDef[3]=0;
-	ClfZB();
+	ClfZB(true);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::pxl_other(size_t id, size_t n, const void *p)

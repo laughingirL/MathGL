@@ -29,12 +29,12 @@
 #include <string>
 #include "mgl2/type.h"
 #include "mgl2/eval.h"
-#include "mgl2/font.h"
 //-----------------------------------------------------------------------------
 class mglBase;
 class mglData;
 class mglParser;
 class mglFormula;
+class mglFont;
 typedef mglBase*  HMGL;
 typedef mglData* HMDT;
 typedef mglParser* HMPR;
@@ -328,21 +328,17 @@ public:
 	/// Get current typeface. Note that this variable can be deleted at next SetFont() call!
 	inline mglFont *GetFont()	{	return fnt;	}
 	/// Restore font
-	inline void RestoreFont()	{	fnt->Restore();	}
+	void RestoreFont();
 	/// Load font from file
-	inline void LoadFont (const char *name, const char *path=NULL)
-	{	if(name && *name)	fnt->Load(name,path);	else	fnt->Restore();	}
+	void LoadFont (const char *name, const char *path=NULL);
 	/// Copy font from another mglGraph instance
-	inline void CopyFont(mglBase *gr)	{	fnt->Copy(gr->GetFont());	}
+	void CopyFont(mglBase *gr);
 	/// Set default font size
 	inline void SetFontSize(mreal val)	{	FontSize=val>0 ? val:-FontSize*val;	}
 	inline mreal GetFontSize() const	{	return FontSize;	}
-	inline mreal TextWidth(const char *text, const char *font, mreal size) const
-	{	return (size<0?-size*FontSize:size)*font_factor*fnt->Width(text,(font&&*font)?font:FontDef)/20.16;	}
-	inline mreal TextWidth(const wchar_t *text, const char *font, mreal size) const
-	{	return (size<0?-size*FontSize:size)*font_factor*fnt->Width(text,(font&&*font)?font:FontDef)/20.16;	}
-	inline mreal TextHeight(const char *font, mreal size) const
-	{	return (size<0?-size*FontSize:size)*font_factor*fnt->Height(font?font:FontDef)/20.16; }
+	mreal TextWidth(const char *text, const char *font, mreal size) const;
+	mreal TextWidth(const wchar_t *text, const char *font, mreal size) const;
+	mreal TextHeight(const char *font, mreal size) const;
 	inline mreal FontFactor() const		{	return font_factor;	}
 	virtual mreal GetRatio() const;
 	/// Set to use or not text rotation
