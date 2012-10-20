@@ -57,12 +57,9 @@ int verbose = 0;
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	gr->SetQuality(6);
-	gr->Box();
-	gr->Finish();
-	gr->Line(mglPoint(0),mglPoint(0,1));
-	gr->Axis();
-	gr->Finish();
+	gr->FPlot("0.1","|");
+//	gr->Line(mglPoint(-1,-1),mglPoint(1,1),"s|",7);
+	gr->WriteSVG("test.svg");
 	return;
 	
 //	gr->SetFaceNum(10);

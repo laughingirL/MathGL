@@ -475,6 +475,7 @@ bool mglCanvas::WriteJSON(const char *fname)
 			n2 = xy.size()-1;
 			n3 = p.n3;	n4 = p.n4;
 		}
+		if(p.type==1 && n1>n2)	{	n1=p.n2;	n2=p.n1;	}
 		if(c.a==1 || p.type==0 || p.type==1 || p.type==4 || p.type==6)
 			fprintf(fp,"[%d,%ld,%ld,%ld,%ld,%d,%.4g,%.4g,%.4g,%.4g,\"#%02x%02x%02x\"]%c\n",
 				p.type, n1, n2, n3, n4, p.id, p.s, p.w, p.p,

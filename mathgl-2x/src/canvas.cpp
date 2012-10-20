@@ -241,7 +241,7 @@ void mglCanvas::line_plot(long p1, long p2)
 	if(PDef==0)	return;
 	if(p1<0 || p2<0 || mgl_isnan(Pnt[p1].x) || mgl_isnan(Pnt[p2].x))	return;
 	long pp1=p1,pp2=p2;
-	mreal pw = fabs(PenWidth),d;
+	mreal pw = fabs(PenWidth)*sqrt(font_factor/400), d;
 	d = hypot(Pnt[p1].x-Pnt[p2].x, Pnt[p1].y-Pnt[p2].y);
 
 	mglDrawReg dd;		dd.set(this,1,1,0);
@@ -681,7 +681,7 @@ void mglCanvas::arrow_plot_3d(long n1, long n2, char st)
 {
 	if(n1<0 || n2<0 || !strchr("AVKSDTIO",st))	return;
 	const mglPnt &p1=Pnt[n1], &p2=Pnt[n2];
-	mglPnt q=p1; 	//q.u=q.v=NAN;
+	mglPnt q=p1; 	//q.u=q.v=q.w=0;
 
 	mglPoint kl=mglPoint(p1.x-p2.x,p1.y-p2.y,p1.z-p2.z), kt, kz, p0=mglPoint(p1.x,p1.y,p1.z), p;
 	if(kl.norm()==0)	return;
@@ -698,9 +698,9 @@ void mglCanvas::arrow_plot_3d(long n1, long n2, char st)
 		case 'I':
 			k1=setPp(q,p0+kt);	k2=setPp(q,p0+kz);
 			k3=setPp(q,p0-kt);	k4=setPp(q,p0-kz);
-			line_plot(k1,k2);	line_plot(k1,k4);
-			line_plot(k3,k2);	line_plot(k3,k4);
-			quad_plot(k1,k2,k3,k4);	break;
+//			line_plot(k1,k2);	line_plot(k1,k4);
+//			line_plot(k3,k2);	line_plot(k3,k4);
+			quad_plot(k1,k2,k4,k3);	break;
 		case 'D':
 			k1=setPp(q,p0+kl);	k2=setPp(q,p0-kl);	k5=k3=setPp(q,p0+kt);
 			k4=setPp(q,p0+kz);	trig_plot(k1,k3,k4);	trig_plot(k2,k3,k4);	k3=k4;
@@ -710,8 +710,8 @@ void mglCanvas::arrow_plot_3d(long n1, long n2, char st)
 		case 'S':
 			k1=setPp(q,p0+kl+kt);	k2=setPp(q,p0+kl+kz);	k3=setPp(q,p0+kl-kt);	k4=setPp(q,p0+kl-kz);
 			k5=setPp(q,p0-kl+kt);	k6=setPp(q,p0-kl+kz);	k7=setPp(q,p0-kl-kt);	k8=setPp(q,p0-kl-kz);
-			quad_plot(k1,k2,k3,k4);	quad_plot(k1,k2,k5,k6);	quad_plot(k3,k2,k6,k7);
-			quad_plot(k1,k4,k5,k8);	quad_plot(k3,k4,k7,k8);	quad_plot(k5,k6,k7,k8);	break;
+			quad_plot(k1,k2,k4,k3);	quad_plot(k1,k2,k5,k6);	quad_plot(k3,k2,k7,k6);
+			quad_plot(k1,k4,k5,k8);	quad_plot(k3,k4,k7,k8);	quad_plot(k5,k6,k8,k7);	break;
 		case 'T':
 			k1=setPp(q,p0-kl+kt);	k2=setPp(q,p0-kl+kz);	k3=setPp(q,p0-kl-kt);
 			k4=setPp(q,p0-kl-kz);	k5=setPp(q,p0+kl);
@@ -719,9 +719,9 @@ void mglCanvas::arrow_plot_3d(long n1, long n2, char st)
 			trig_plot(k3,k4,k5);	trig_plot(k1,k4,k5);	break;
 		case 'K':
 			k1=setPp(q,p0+kt);	k2=setPp(q,p0+kz);
-			k3=setPp(q,p0-kt);	k4=setPp(q,p0-kz);	quad_plot(k1,k2,k3,k4);
-			line_plot(k1,k2);	line_plot(k1,k4);
-			line_plot(k3,k2);	line_plot(k3,k4);
+			k3=setPp(q,p0-kt);	k4=setPp(q,p0-kz);	quad_plot(k1,k2,k4,k3);
+//			line_plot(k1,k2);	line_plot(k1,k4);
+//			line_plot(k3,k2);	line_plot(k3,k4);
 		case 'A':
 			k1=setPp(q,p0-2.*kl+kt);	k2=setPp(q,p0-2.*kl+kz);	k3=setPp(q,p0-2.*kl-kt);
 			k4=setPp(q,p0-2.*kl-kz);	k5=setPp(q,p0-1.5*kl);
@@ -743,14 +743,17 @@ void mglCanvas::arrow_plot_3d(long n1, long n2, char st)
 			k8 = setPp(q,p0+ll*mglPoint(-1, 0, t));	k9 = setPp(q,p0+ll*mglPoint( 1, 0, t));
 			k10= setPp(q,p0+ll*mglPoint(-1, 0,-t));	k11= setPp(q,p0+ll*mglPoint( 1, 0,-t));
 
-			trig_plot(k0,k11,k5);	trig_plot(k0,k1,k5);		trig_plot(k0,k1,k7);
+//			line_plot(k0,k11);	line_plot(k0,k1);	line_plot(k0,k5);	line_plot(k0,k7);line_plot(k0,k10);
+//			line_plot(k3,k9);	line_plot(k3,k4);	line_plot(k3,k2);	line_plot(k3,k6);line_plot(k3,k8);
+			trig_plot(k0,k11,k5);	trig_plot(k0,k1,k5);	trig_plot(k0,k1,k7);
 			trig_plot(k0,k10,k7);	trig_plot(k0,k11,k10);
-			trig_plot(k1,k5,k9);		trig_plot(k5,k11,k4);	trig_plot(k10,k11,k2);
+			trig_plot(k1,k5,k9);	trig_plot(k5,k11,k4);	trig_plot(k10,k11,k2);
 			trig_plot(k10,k6,k7);	trig_plot(k7,k1,k8);
-			trig_plot(k3,k9,k4);		trig_plot(k3,k4,k2);		trig_plot(k3,k2,k6);
-			trig_plot(k3,k6,k8);		trig_plot(k3,k8,k9);
-			trig_plot(k4,k9,k5);		trig_plot(k2,k4,k11);	trig_plot(k6,k2,k10);
-			trig_plot(k8,k6,k7);		trig_plot(k9,k8,k1);		break;
+			trig_plot(k3,k9,k4);	trig_plot(k3,k4,k2);	trig_plot(k3,k2,k6);
+			trig_plot(k3,k6,k8);	trig_plot(k3,k8,k9);
+			trig_plot(k4,k9,k5);	trig_plot(k2,k4,k11);	trig_plot(k6,k2,k10);
+			trig_plot(k8,k6,k7);	trig_plot(k9,k8,k1);
+			break;
 		}
 	}
 }

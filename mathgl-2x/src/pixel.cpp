@@ -745,11 +745,12 @@ void mglCanvas::trig_draw(long k1, long k2, long k3, bool anorm, mglDrawReg *d)
 //-----------------------------------------------------------------------------
 void mglCanvas::line_draw(long k1, long k2, mglDrawReg *dr)
 {
+	if(k1>k2)	{	long kk=k1;	k1=k2;	k2=kk;	}	// rearrange start/end for proper dashing
 	if(!(Quality&3))	{	fast_draw(k1,k2,dr);	return;	}
 	unsigned char r[4];
 	long y1,x1,y2,x2;
 
-	float pw=dr->PenWidth*sqrt(font_factor/400), dxu,dxv,dyu,dyv,dd,dpw=3;
+	float pw=dr->PenWidth, dxu,dxv,dyu,dyv,dd,dpw=3;
 	if(dr->ObjId==HighId)	{	pw *= 2;	dpw=2;	}
 	const mglPnt &p1=Pnt[k1], &p2=Pnt[k2];
 	mglPnt d=p2-p1, p;
@@ -759,7 +760,7 @@ void mglCanvas::line_draw(long k1, long k2, mglDrawReg *dr)
 	x2 = long(fmax(p1.x,p2.x));	y2 = long(fmax(p1.y,p2.y));
 	x1=x1>dr->x1?x1:dr->x1;	x2=x2<dr->x2?x2:dr->x2;
 	y1=y1>dr->y1?y1:dr->y1;	y2=y2<dr->y2?y2:dr->y2;
-	dd = sqrt(d.x*d.x + d.y*d.y);
+	dd = hypot(d.x, d.y);
 	if(x1>x2 || y1>y2 || dd<1e-5)	return;
 
 	dxv = d.y/dd;	dyv =-d.x/dd;
