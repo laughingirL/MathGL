@@ -1671,10 +1671,14 @@ const char *mmgl_primitives="subplot 2 2 0 '':title 'Line, Curve, Rhomb, Ellipse
 "cone 0 -0.3 0 0 0.7 0.5 0.2 0.1 'g@':text 0 -0.7 'with edges\\n('\\@' style)'\n"
 "cone 0.7 -0.3 0 0.7 0.7 0.5 0.2 0.1 'ry':text 0.7 -0.7 '\"arrow\" with\\n{}gradient'\n\n"
 "subplot 2 2 2 '':title 'Sphere and Drop'\nline -0.9 0 1 0.9 0 1\n"
-"text -0.9 -0.7 'sh=0':drop -0.9 0 0 1 0.5 'r' 0:ball -0.9 0 1 'k'\n"
-"text -0.3 -0.7 'sh=0.33':drop -0.3 0 0 1 0.5 'r' 0.33:ball -0.3 0 1 'k'\n"
-"text 0.3 -0.7 'sh=0.67':drop 0.3 0 0 1 0.5 'r' 0.67:ball 0.3 0 1 'k'\n"
-"text 0.9 -0.7 'sh=1':drop 0.9 0 0 1 0.5 'r' 1:ball 0.9 0 1 'k'\n";
+"text -0.9 0.4 'sh=0':drop -0.9 0 0 1 0.5 'r' 0:ball -0.9 0 1 'k'n"
+"text -0.3 0.6 'sh=0.33':drop -0.3 0 0 1 0.5 'r' 0.33:ball -0.3 0 1 'k'n"
+"text 0.3 0.8 'sh=0.67':drop 0.3 0 0 1 0.5 'r' 0.67:ball 0.3 0 1 'k'n"
+"text 0.9 1. 'sh=1':drop 0.9 0 0 1 0.5 'r' 1:ball 0.9 0 1 'k'\n\n"
+"text -0.9 -1.1 'asp=0.33':drop -0.9 -0.7 0 1 0.5 'b' 0 0.33\n"
+"text -0.3 -1.1 'asp=0.67':drop -0.3 -0.7 0 1 0.5 'b' 0 0.67\n"
+"text 0.3 -1.1 'asp=1':drop 0.3 -0.7 0 1 0.5 'b' 0 1\n"
+"text 0.9 -1.1 'asp=1.5':drop 0.9 -0.7 0 1 0.5 'b' 0 1.5\n";
 void smgl_primitives(mglGraph *gr)	// flag #
 {
 	gr->SubPlot(2,2,0,"");	gr->Title("Line, Curve, Rhomb, Ellipse","",-1.5);
@@ -1701,21 +1705,25 @@ void smgl_primitives(mglGraph *gr)	// flag #
 	gr->Cone(mglPoint(0.7,-0.3),mglPoint(0.7,0.7,0.5),0.2,0,"ry");
 	gr->Puts(mglPoint(0.7,-0.7),"'arrow' with\ngradient");
 
-	gr->SubPlot(2,2,2,"");	gr->Title("Sphere and Drop");
-	gr->Alpha(false);
-	gr->Puts(mglPoint(-0.9,-0.7),"sh=0");
+	gr->SubPlot(2,2,2,"");	gr->Title("Sphere and Drop");	gr->Alpha(false);
+	gr->Puts(mglPoint(-0.9,0.4),"sh=0");		gr->Ball(mglPoint(-0.9,0,1),'k');
 	gr->Drop(mglPoint(-0.9,0),mglPoint(0,1),0.5,"r",0);
-	gr->Puts(mglPoint(-0.3,-0.7),"sh=0.33");
+	gr->Puts(mglPoint(-0.3,0.6),"sh=0.33");	gr->Ball(mglPoint(-0.3,0,1),'k');
 	gr->Drop(mglPoint(-0.3,0),mglPoint(0,1),0.5,"r",0.33);
-	gr->Puts(mglPoint(0.3,-0.7),"sh=0.67");
+	gr->Puts(mglPoint(0.3,0.8),"sh=0.67");		gr->Ball(mglPoint(0.3,0,1),'k');
 	gr->Drop(mglPoint(0.3,0),mglPoint(0,1),0.5,"r",0.67);
-	gr->Puts(mglPoint(0.9,-0.7),"sh=1");
+	gr->Puts(mglPoint(0.9,1),"sh=1");			gr->Ball(mglPoint(0.9,0,1),'k');
 	gr->Drop(mglPoint(0.9,0),mglPoint(0,1),0.5,"r",1);
-	gr->Ball(mglPoint(-0.9,0,1),'k');
-	gr->Ball(mglPoint(-0.3,0,1),'k');
-	gr->Ball(mglPoint(0.3,0,1),'k');
-	gr->Ball(mglPoint(0.9,0,1),'k');
 	gr->Line(mglPoint(-0.9,0,1),mglPoint(0.9,0,1),"b");
+	
+	gr->Puts(mglPoint(-0.9,-1.1),"asp=0.33");
+	gr->Drop(mglPoint(-0.9,-0.7),mglPoint(0,1),0.5,"b",0,0.33);
+	gr->Puts(mglPoint(-0.3,-1.1),"asp=0.67");
+	gr->Drop(mglPoint(-0.3,-0.7),mglPoint(0,1),0.5,"b",0,0.67);
+	gr->Puts(mglPoint(0.3,-1.1),"asp=1");
+	gr->Drop(mglPoint(0.3,-0.7),mglPoint(0,1),0.5,"b",0,1);
+	gr->Puts(mglPoint(0.9,-1.1),"asp=1.5");
+	gr->Drop(mglPoint(0.9,-0.7),mglPoint(0,1),0.5,"b",0,1.5);
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_table="new ys 10 3 '0.8*sin(pi*(x+y/4+1.25))+0.2*rnd'\n"

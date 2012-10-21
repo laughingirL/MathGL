@@ -18,10 +18,8 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 0. check for possible memory leaks before release
 
 1. Axis -- projection (ternary + quaternary) + sample
-2. Improve 3D arrow 'O'
 3. curved text (in new sample) look not so good
 +4. WX window/widgets
-5. Check arrow rotation for View()
 
 ============= DOCS =============
 
@@ -35,6 +33,7 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 5. Hint about inverse axis range
 6. Axis style 'XYZ' for opposite tick and axis labels
 7. Quality=3 will draw 3D arrows instead of default 2D 
+8. Update text about drop sample
 
 ============= UDAV =============
 

@@ -601,80 +601,64 @@ void mglCanvas::arrow_plot(long n1, long n2, char st)
 		arrow_plot_2d(n1, n2, st);
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::arrow_plot_2d(long n1, long n2, char st)
-{
-	if(n1<0 || n2<0 || !strchr("AVKSDTIO",st))	return;
-	const mglPnt &p1=Pnt[n1], &p2=Pnt[n2];
-	mglPnt q=p1; 	q.u=q.v=NAN;
-
-	mreal lx=p1.x-p2.x, ly=p1.y-p2.y, ll, kx,ky;
-	ll = hypot(lx,ly)/(PenWidth*ArrowSize*0.35*font_factor);
-	if(ll==0)	return;
-	lx /= ll;	ly /= ll;	kx = ly;	ky = -lx;
-	mreal lz = (p2.z-p1.z)/ll;
-
-	Reserve(6);
-	long k1,k2,k3,k4;
-
-	switch(st)
-	{
-	case 'I':
-		q.xx=q.x=p1.x+kx;		q.yy=q.y=p1.y+ky;	MGL_PUSH(Pnt,q,mutexPnt);	k1=Pnt.size()-1;
-		q.xx=q.x=p1.x-kx;		q.yy=q.y=p1.y-ky;	MGL_PUSH(Pnt,q,mutexPnt);	k2=Pnt.size()-1;
-		line_plot(k1,k2);	break;
-	case 'D':
-		q.xx=q.x=p1.x+kx;		q.yy=q.y=p1.y+ky;						MGL_PUSH(Pnt,q,mutexPnt);	k1=Pnt.size()-1;
-		q.xx=q.x=p1.x+lx;		q.yy=q.y=p1.y+ly;	q.zz=q.z=p1.z+lz;	MGL_PUSH(Pnt,q,mutexPnt);	k2=Pnt.size()-1;
-		q.xx=q.x=p1.x-kx;		q.yy=q.y=p1.y-ky;						MGL_PUSH(Pnt,q,mutexPnt);	k3=Pnt.size()-1;
-		q.xx=q.x=p1.x-lx;		q.yy=q.y=p1.y-ly;	q.zz=q.z=p1.z-lz;	MGL_PUSH(Pnt,q,mutexPnt);	k4=Pnt.size()-1;
-		quad_plot(k1,k2,k4,k3);	break;
-	case 'S':
-		q.xx=q.x=p1.x+kx-lx;	q.yy=q.y=p1.y+ky-ly;	q.zz=q.z=p1.z-lz;	MGL_PUSH(Pnt,q,mutexPnt);	k1=Pnt.size()-1;
-		q.xx=q.x=p1.x-kx-lx;	q.yy=q.y=p1.y-ky-ly;	q.zz=q.z=p1.z-lz;	MGL_PUSH(Pnt,q,mutexPnt);	k2=Pnt.size()-1;
-		q.xx=q.x=p1.x-kx+lx;	q.yy=q.y=p1.y-ky+ly;	q.zz=q.z=p1.z+lz;	MGL_PUSH(Pnt,q,mutexPnt);	k3=Pnt.size()-1;
-		q.xx=q.x=p1.x+kx+lx;	q.yy=q.y=p1.y+ky+ly;	q.zz=q.z=p1.z+lz;	MGL_PUSH(Pnt,q,mutexPnt);	k4=Pnt.size()-1;
-		quad_plot(k1,k2,k4,k3);	break;
-	case 'T':
-		q.xx=q.x=p1.x+kx-lx;	q.yy=q.y=p1.y+ky-ly;	q.zz=q.z=p1.z-lz;	MGL_PUSH(Pnt,q,mutexPnt);	k1=Pnt.size()-1;
-		q.xx=q.x=p1.x-kx-lx;	q.yy=q.y=p1.y-ky-ly;	q.zz=q.z=p1.z-lz;	MGL_PUSH(Pnt,q,mutexPnt);	k2=Pnt.size()-1;
-		q.xx=q.x=p1.x+lx;	q.yy=q.y=p1.y+ly;	q.zz=q.z=p1.z+lz;	MGL_PUSH(Pnt,q,mutexPnt);	k3=Pnt.size()-1;
-		trig_plot(k1,k2,k3);	break;
-	case 'K':
-		q.xx=q.x=p1.x+kx;	q.yy=q.y=p1.y+ky;	MGL_PUSH(Pnt,q,mutexPnt);	k1=Pnt.size()-1;
-		q.xx=q.x=p1.x-kx;	q.yy=q.y=p1.y-ky;	MGL_PUSH(Pnt,q,mutexPnt);	k2=Pnt.size()-1;
-		line_plot(k1,k2);
-	case 'A':
-		q.xx=q.x=p1.x-kx-2*lx;	q.yy=q.y=p1.y-ky-2*ly;	q.zz=q.z=p1.z-2*lz;	MGL_PUSH(Pnt,q,mutexPnt);	k2=Pnt.size()-1;
-		q.xx=q.x=p1.x-1.5*lx;	q.yy=q.y=p1.y-1.5*ly;	q.zz=q.z=p1.z-1.5*lz;MGL_PUSH(Pnt,q,mutexPnt);	k3=Pnt.size()-1;
-		q.xx=q.x=p1.x+kx-2*lx;	q.yy=q.y=p1.y+ky-2*ly;	q.zz=q.z=p1.z-2*lz;	MGL_PUSH(Pnt,q,mutexPnt);	k4=Pnt.size()-1;
-		trig_plot(n1,k2,k3);		trig_plot(n1,k3,k4);	break;
-	case 'V':
-		q.xx=q.x=p1.x-kx+2*lx;	q.yy=q.y=p1.y-ky+2*ly;	q.zz=q.z=p1.z-2*lz;	MGL_PUSH(Pnt,q,mutexPnt);	k2=Pnt.size()-1;
-		q.xx=q.x=p1.x+1.5*lx;	q.yy=q.y=p1.y+1.5*ly;	q.zz=q.z=p1.z-1.5*lz;MGL_PUSH(Pnt,q,mutexPnt);	k3=Pnt.size()-1;
-		q.xx=q.x=p1.x+kx+2*lx;	q.yy=q.y=p1.y+ky+2*ly;	q.zz=q.z=p1.z-2*lz;	MGL_PUSH(Pnt,q,mutexPnt);	k4=Pnt.size()-1;
-		trig_plot(n1,k2,k3);		trig_plot(n1,k3,k4);	break;
-	case 'O':
-		{
-			float t,c,s;
-			q.xx=q.x=p1.x+lx;	q.yy=q.y=p1.y+ly;	q.zz=q.z=p1.z+lz;
-			MGL_PUSH(Pnt,q,mutexPnt);	k3=Pnt.size()-1;
-			for(int i=0;i<12;i++)
-			{
-				t = M_PI*(i+1)/6.;	s=sin(t);	c=cos(t);
-				q.xx=q.x=p1.x+kx*s+lx*c;	q.yy=q.y=p1.y+ky*s+ly*c;	q.zz=q.z=p1.z+c*lz;
-				k2=k3;	MGL_PUSH(Pnt,q,mutexPnt);	k3=Pnt.size()-1;
-				trig_plot(n1,k2,k3);
-			}
-			break;
-		}
-	}
-}
-//-----------------------------------------------------------------------------
 long mglCanvas::setPp(mglPnt &q, const mglPoint &p)
 {
 	q.xx=q.x=p.x;	q.yy=q.y=p.y;	q.zz=q.z=p.z;
 	MGL_PUSH(Pnt,q,mutexPnt);
 	return Pnt.size()-1;
+}
+//-----------------------------------------------------------------------------
+void mglCanvas::arrow_plot_2d(long n1, long n2, char st)
+{
+	if(n1<0 || n2<0 || !strchr("AVKSDTIO",st))	return;
+	const mglPnt &p1=Pnt[n1], &p2=Pnt[n2];
+	mglPnt q=p1; 	//q.u=q.v=q.w=0;
+	
+	mglPoint kl=mglPoint(p1.x-p2.x,p1.y-p2.y,p1.z-p2.z), kt, p0=mglPoint(p1.x,p1.y,p1.z), p;
+	mreal d = hypot(kl.x,kl.y);
+	if(d==0)	return;
+	kl /= d;	kt = !kl;
+	
+	mreal ll = PenWidth*ArrowSize*0.35*font_factor;
+	kl *= ll;	kt *= ll;
+	
+	Reserve(8);
+	long k1,k2,k3,k4;
+	
+	switch(st)	// S,D -- cube, T -- sq.pyramid, I -- square, O -- sphere???, A,K,V -- cone???
+	{
+		case 'I':
+			k1=setPp(q,p0+kt);	k2=setPp(q,p0-kt);	line_plot(k1,k2);	break;
+		case 'D':
+			k1=setPp(q,p0+kl);	k2=setPp(q,p0-kl);	k3=setPp(q,p0+kt);	k4=setPp(q,p0-kt);
+			trig_plot(k1,k2,k3);	trig_plot(k1,k2,k4);	break;
+		case 'S':
+			k1=setPp(q,p0+kl+kt);	k2=setPp(q,p0+kl-kt);
+			k3=setPp(q,p0-kl-kt);	k4=setPp(q,p0-kl+kt);
+			quad_plot(k1,k2,k4,k3);	break;
+		case 'T':
+			k1=setPp(q,p0-kl+kt);	k2=setPp(q,p0-kl-kt);	k3=setPp(q,p0+kl);
+			trig_plot(k1,k2,k3);	break;
+		case 'K':
+			k1=setPp(q,p0+kt);	k2=setPp(q,p0-kt);	line_plot(k1,k2);
+		case 'A':
+			k1=setPp(q,p0-2.*kl+kt);	k2=setPp(q,p0-2.*kl-kt);	k3=setPp(q,p0-1.5*kl);
+			trig_plot(n1,k3,k1);	trig_plot(n1,k3,k2);	break;
+		case 'V':
+			k1=setPp(q,p0+2.*kl+kt);	k2=setPp(q,p0+2.*kl-kt);	k3=setPp(q,p0+1.5*kl);
+			trig_plot(n1,k3,k1);	trig_plot(n1,k3,k2);	break;
+		case 'O':	// let draw icosahedron
+		{
+			const int n = 12;	k1=setPp(q,p0+kl);
+			for(int i=1;i<=n;i++)
+			{
+				mreal u = 2*i*M_PI/n;
+				k2 = k1;	k1 = setPp(q,p0+kl*cos(u)+kt*sin(u));
+				trig_plot(n1,k1,k2);
+			}
+			break;
+		}
+	}
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::arrow_plot_3d(long n1, long n2, char st)
@@ -698,8 +682,6 @@ void mglCanvas::arrow_plot_3d(long n1, long n2, char st)
 		case 'I':
 			k1=setPp(q,p0+kt);	k2=setPp(q,p0+kz);
 			k3=setPp(q,p0-kt);	k4=setPp(q,p0-kz);
-//			line_plot(k1,k2);	line_plot(k1,k4);
-//			line_plot(k3,k2);	line_plot(k3,k4);
 			quad_plot(k1,k2,k4,k3);	break;
 		case 'D':
 			k1=setPp(q,p0+kl);	k2=setPp(q,p0-kl);	k5=k3=setPp(q,p0+kt);
@@ -720,8 +702,6 @@ void mglCanvas::arrow_plot_3d(long n1, long n2, char st)
 		case 'K':
 			k1=setPp(q,p0+kt);	k2=setPp(q,p0+kz);
 			k3=setPp(q,p0-kt);	k4=setPp(q,p0-kz);	quad_plot(k1,k2,k4,k3);
-//			line_plot(k1,k2);	line_plot(k1,k4);
-//			line_plot(k3,k2);	line_plot(k3,k4);
 		case 'A':
 			k1=setPp(q,p0-2.*kl+kt);	k2=setPp(q,p0-2.*kl+kz);	k3=setPp(q,p0-2.*kl-kt);
 			k4=setPp(q,p0-2.*kl-kz);	k5=setPp(q,p0-1.5*kl);
@@ -734,26 +714,22 @@ void mglCanvas::arrow_plot_3d(long n1, long n2, char st)
 			trig_plot(n1,k5,k3);	trig_plot(n1,k5,k4);	break;
 		case 'O':	// let draw icosahedron
 		{
-			long k0,k9,k10,k11;
-			double t = 0.5*(1+sqrt(5.));
-			k0 = setPp(q,p0+ll*mglPoint(-1, t, 0));	k1 = setPp(q,p0+ll*mglPoint( 1, t, 0));
-			k2 = setPp(q,p0+ll*mglPoint(-1,-t, 0));	k3 = setPp(q,p0+ll*mglPoint( 1,-t, 0));
-			k4 = setPp(q,p0+ll*mglPoint( 0,-1, t));	k5 = setPp(q,p0+ll*mglPoint( 0, 1, t));
-			k6 = setPp(q,p0+ll*mglPoint( 0,-1,-t));	k7 = setPp(q,p0+ll*mglPoint( 0, 1,-t));
-			k8 = setPp(q,p0+ll*mglPoint(-1, 0, t));	k9 = setPp(q,p0+ll*mglPoint( 1, 0, t));
-			k10= setPp(q,p0+ll*mglPoint(-1, 0,-t));	k11= setPp(q,p0+ll*mglPoint( 1, 0,-t));
-
-//			line_plot(k0,k11);	line_plot(k0,k1);	line_plot(k0,k5);	line_plot(k0,k7);line_plot(k0,k10);
-//			line_plot(k3,k9);	line_plot(k3,k4);	line_plot(k3,k2);	line_plot(k3,k6);line_plot(k3,k8);
-			trig_plot(k0,k11,k5);	trig_plot(k0,k1,k5);	trig_plot(k0,k1,k7);
-			trig_plot(k0,k10,k7);	trig_plot(k0,k11,k10);
-			trig_plot(k1,k5,k9);	trig_plot(k5,k11,k4);	trig_plot(k10,k11,k2);
-			trig_plot(k10,k6,k7);	trig_plot(k7,k1,k8);
-			trig_plot(k3,k9,k4);	trig_plot(k3,k4,k2);	trig_plot(k3,k2,k6);
-			trig_plot(k3,k6,k8);	trig_plot(k3,k8,k9);
-			trig_plot(k4,k9,k5);	trig_plot(k2,k4,k11);	trig_plot(k6,k2,k10);
-			trig_plot(k8,k6,k7);	trig_plot(k9,k8,k1);
-			break;
+			const int n = 12, m = n/2;	Reserve(n*m);
+			register long i,j;
+			long *nn=new long[2*n], n1=setPp(q,p0+kl), n2=setPp(q,p0-kl);
+			mreal u,v,rr;
+			for(i=0;i<m;i++)	for(j=0;j<n;j++)
+			{
+				if(i>0 && i<m-1)
+				{
+					u = i*M_PI/(m-1.);	v = 2*M_PI*j/(n-1.)-1;	rr = sin(u);
+					nn[j+n]=nn[j];	nn[j]=setPp(q,p0+kl*cos(u)+kt*rr*cos(v)+kz*rr*sin(v));
+				}
+				else if(i==0)	nn[j] = n1;
+				else if(i==m-1)	{	nn[j+n]=nn[j];	nn[j]=n2;	}
+				if(i*j>0)	quad_plot(nn[j-1], nn[j], nn[j+n-1], nn[j+n]);
+			}
+			delete []nn;	break;
 		}
 	}
 }

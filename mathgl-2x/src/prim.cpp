@@ -440,24 +440,32 @@ void mgl_drop(HMGL gr, mglPoint p, mglPoint q, mreal r, mreal c, mreal sh, mreal
 	q.Normalize();	p1 = !q;	p2 = q^p1;	r /= 2;
 
 	static int cgid=1;	gr->StartGroup("Drop",cgid++);
-	const int n = 41;
+	const int n = 24, m = n/2;
 	register long i,j;
-	gr->Reserve(n*n);
-	long *nn=new long[2*n];
-
+	gr->Reserve(n*m);
+	long *nn=new long[2*n],n1,n2;
 	mreal u,v,x,y,z,rr,dr, co,si;
-	for(i=0;i<n;i++)	for(j=0;j<n;j++)
+
+	z = r*(1+sh)*(1+sh);	n1 = gr->AddPnt(p + q*z,c,q,-1,3);
+	z = r*(1+sh)*(sh-1);	n2 = gr->AddPnt(p + q*z,c,q,-1,3);
+
+	for(i=0;i<m;i++)	for(j=0;j<n;j++)
 	{
 		if(gr->Stop)	{	delete []nn;	return;	}
-		u = i*M_PI/(n-1.);	v = 2*M_PI*j/(n-1.)-1;
-		si = sin(u);	co = cos(u);
-		rr = r*a*si*(1.+sh*co)/(1+sh);
-		dr = r*a/(1+sh)*(co*(1.+sh*co) - sh*si*si);
-		x = rr*cos(v);	y = rr*sin(v);
-		z = r*(1+sh)*(co+sh);
-		pp = p + p1*x + p2*y + q*z;
-		qq = (p1*sin(v)-p2*cos(v))^(p1*(dr*cos(v)) + p2*(dr*sin(v)) - q*(r*(1+sh)*si));
-		nn[j+n]=nn[j];	nn[j]=gr->AddPnt(pp,c,qq,-1,3);
+		if(i>0 && i<m-1)
+		{
+			u = i*M_PI/(m-1.);	v = 2*M_PI*j/(n-1.)-1;
+			si = sin(u);	co = cos(u);
+			rr = r*a*si*(1.+sh*co)/(1+sh);
+			dr = r*a/(1+sh)*(co*(1.+sh*co) - sh*si*si);
+			x = rr*cos(v);	y = rr*sin(v);
+			z = r*(1+sh)*(co+sh);
+			pp = p + p1*x + p2*y + q*z;
+			qq = (p1*sin(v)-p2*cos(v))^(p1*(dr*cos(v)) + p2*(dr*sin(v)) - q*(r*(1+sh)*si));
+			nn[j+n]=nn[j];	nn[j]=gr->AddPnt(pp,c,qq,-1,3);
+		}
+		else if(i==0)	nn[j] = n1;
+		else if(i==m-1)	{	nn[j+n]=nn[j];	nn[j]=n2;	}
 		if(i*j>0)	gr->quad_plot(nn[j-1], nn[j], nn[j+n-1], nn[j+n]);
 	}
 	delete []nn;	gr->EndGroup();

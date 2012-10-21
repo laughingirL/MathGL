@@ -57,9 +57,26 @@ int verbose = 0;
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	gr->FPlot("0.1","|");
-//	gr->Line(mglPoint(-1,-1),mglPoint(1,1),"s|",7);
-	gr->WriteSVG("test.svg");
+//	gr->SubPlot(2,2,2,"");	
+	gr->Light(true);	gr->Title("Sphere and Drop");	gr->Alpha(false);
+	gr->Puts(mglPoint(-0.9,0.4),"sh=0");		gr->Ball(mglPoint(-0.9,0,1),'k');
+	gr->Drop(mglPoint(-0.9,0),mglPoint(0,1),0.5,"r",0);
+	gr->Puts(mglPoint(-0.3,0.6),"sh=0.33");	gr->Ball(mglPoint(-0.3,0,1),'k');
+	gr->Drop(mglPoint(-0.3,0),mglPoint(0,1),0.5,"r",0.33);
+	gr->Puts(mglPoint(0.3,0.8),"sh=0.67");		gr->Ball(mglPoint(0.3,0,1),'k');
+	gr->Drop(mglPoint(0.3,0),mglPoint(0,1),0.5,"r",0.67);
+	gr->Puts(mglPoint(0.9,1),"sh=1");			gr->Ball(mglPoint(0.9,0,1),'k');
+	gr->Drop(mglPoint(0.9,0),mglPoint(0,1),0.5,"r",1);
+	gr->Line(mglPoint(-0.9,0,1),mglPoint(0.9,0,1),"b");
+	
+	gr->Puts(mglPoint(-0.9,-1.1),"asp=0.33");
+	gr->Drop(mglPoint(-0.9,-0.7),mglPoint(0,1),0.5,"b",0,0.33);
+	gr->Puts(mglPoint(-0.3,-1.1),"asp=0.67");
+	gr->Drop(mglPoint(-0.3,-0.7),mglPoint(0,1),0.5,"b",0,0.67);
+	gr->Puts(mglPoint(0.3,-1.1),"asp=1");
+	gr->Drop(mglPoint(0.3,-0.7),mglPoint(0,1),0.5,"b",0,1);
+	gr->Puts(mglPoint(0.9,-1.1),"asp=1.5");
+	gr->Drop(mglPoint(0.9,-0.7),mglPoint(0,1),0.5,"b",0,1.5);
 	return;
 	
 //	gr->SetFaceNum(10);
