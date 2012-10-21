@@ -45,9 +45,9 @@ void mgl_create_cpp_font(HMGL gr, const wchar_t *how)
 		l += 4*f->GetNl(0,ch);
 		n += 6*f->GetNt(0,ch);
 	}
-	printf("unsigned mgl_numg=%lu, mgl_cur=%lu;\n",s.size(),l+n);
+	printf("unsigned mgl_numg=%lu, mgl_cur=%lu;\n",(unsigned long)s.size(),l+n);
 	printf("float mgl_fact=%g;\n",f->GetFact(0)/mgl_fgen);
-	printf("long mgl_gen_fnt[%lu][6] = {\n", s.size());
+	printf("long mgl_gen_fnt[%lu][6] = {\n", (unsigned long)s.size());
 	for(i=m=0;i<s.size();i++)	// first write symbols descriptions
 	{
 		ch = f->Internal(s[i]);
@@ -1143,6 +1143,25 @@ bool mgl_check_dim2(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *name, b
 		{	gr->SetWarn(mglWarnDim,name);	return true;	}
 		if(y->GetNx()!=m && (x->GetNy()!=m || y->GetNx()!=n || y->GetNy()!=m))
 		{	gr->SetWarn(mglWarnDim,name);	return true;	}
+	}
+	return false;
+}
+//-----------------------------------------------------------------------------
+bool mgl_check_dim0(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const char *name, bool less)
+{
+//	if(!gr || !x || !y)	return true;		// if data is absent then should be segfault!!!
+	register long n=y->GetNx();
+	if(less)
+	{
+		if(x->GetNx()<n)		{	gr->SetWarn(mglWarnDim,name);	return true;	}
+		if(z && z->GetNx()<n)	{	gr->SetWarn(mglWarnDim,name);	return true;	}
+		if(r && r->GetNx()<n)	{	gr->SetWarn(mglWarnDim,name);	return true;	}
+	}
+	else
+	{
+		if(x->GetNx()!=n)		{	gr->SetWarn(mglWarnDim,name);	return true;	}
+		if(z && z->GetNx()!=n)	{	gr->SetWarn(mglWarnDim,name);	return true;	}
+		if(r && r->GetNx()!=n)	{	gr->SetWarn(mglWarnDim,name);	return true;	}
 	}
 	return false;
 }

@@ -75,9 +75,6 @@ endif(MGL_HAVE_GIF)
 
 if(MGL_HAVE_HDF5)
 	target_link_libraries(mgl ${HDF5_LIBRARIES})
-#	if(NOT use_hdf5_18)
-#		add_definitions(-DH5_USE_16_API)
-#	endif(NOT use_hdf5_18)
 	include_directories(${HDF5_INCLUDE_DIR})
 endif(MGL_HAVE_HDF5)
 

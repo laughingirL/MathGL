@@ -608,7 +608,7 @@ void mgl_puts_dir_(uintptr_t *gr, mreal *x, mreal *y, mreal *z, mreal *dx, mreal
 void mgl_textmarkw_xyzr(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const wchar_t *text, const char *fnt, const char *opt)
 {
 	long j,m,mx,my,mz,mr,n=y->GetNx();
-	if(mgl_check_dim1(gr,x,y,z,r,"TextMark"))	return;
+	if(mgl_check_dim0(gr,x,y,z,r,"TextMark"))	return;
 
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("TextMark",cgid++);
@@ -645,7 +645,6 @@ void mgl_textmarkw_xyr(HMGL gr, HCDT x, HCDT y, HCDT r, const wchar_t *text, con
 void mgl_textmarkw_yr(HMGL gr, HCDT y, HCDT r, const wchar_t *text, const char *fnt, const char *opt)
 {
 	register long n=y->GetNx();
-	if(n<2)	{	gr->SetWarn(mglWarnLow,"TextMark");	return;	}
 	gr->SaveState(opt);
 	mglData x(n);	x.Fill(gr->Min.x,gr->Max.x);
 	mglData z(n);	z.Fill(gr->Min.z,gr->Min.z);
@@ -656,7 +655,6 @@ void mgl_textmarkw_yr(HMGL gr, HCDT y, HCDT r, const wchar_t *text, const char *
 void mgl_textmarkw(HMGL gr, HCDT y, const wchar_t *text, const char *fnt, const char *opt)
 {
 	register long n=y->GetNx();
-	if(n<2)	{	gr->SetWarn(mglWarnLow,"TextMark");	return;	}
 	gr->SaveState(opt);
 	mglData r(n);	r.Fill(1,1);
 	mglData x(n);	x.Fill(gr->Min.x,gr->Max.x);

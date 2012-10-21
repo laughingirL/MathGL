@@ -796,7 +796,7 @@ HMDT mgl_data_solve(HCDT dat, mreal val, char dir, HCDT i0, int norm)
 //-----------------------------------------------------------------------------
 mreal mgl_data_solve_1d(HCDT d, mreal val, int spl, long i0)
 {
-	mreal x=0, y1, y2, a, a0, dx,dy,dz, da = 1e-5*(val?fabs(val):1);
+	mreal x=0, y1, y2, a, a0, dx=0,dy,dz, da = 1e-5*(val?fabs(val):1);
 	long nx = d->GetNx();
 	if(i0<0 || i0>=nx)	i0=0;
 	const mglData *dd=dynamic_cast<const mglData *>(d);

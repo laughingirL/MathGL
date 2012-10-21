@@ -1443,7 +1443,7 @@ void mgl_chart_(uintptr_t *gr, uintptr_t *a, const char *col, const char *opt,in
 void mgl_mark_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const char *pen, const char *opt)
 {
 	long j,m,mx,my,mz,mr,n=y->GetNx(),pal;
-	if(mgl_check_dim1(gr,x,y,z,r,"Mark"))	return;
+	if(mgl_check_dim0(gr,x,y,z,r,"Mark"))	return;
 
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Mark",cgid++);
