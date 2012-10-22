@@ -901,11 +901,7 @@ void mgl_data_save_hdf(HCDT dat,const char *fname,const char *data,int rewrite)
 	hid_t hf,hd,hs;
 	hsize_t dims[3];
 	long rank = 3, res;
-#ifndef H5_USE_16_API
-	H5Eset_auto(H5E_DEFAULT,0,0);
-#else
 	H5Eset_auto(0,0);
-#endif
 	res=H5Fis_hdf5(fname);
 	if(res>0 && !rewrite)	hf = H5Fopen(fname, H5F_ACC_RDWR, H5P_DEFAULT);
 	else	hf = H5Fcreate(fname, H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
@@ -919,11 +915,7 @@ void mgl_data_save_hdf(HCDT dat,const char *fname,const char *data,int rewrite)
 #else
 	hid_t mem_type_id = H5T_NATIVE_FLOAT;
 #endif
-#ifndef H5_USE_16_API
-	hd = H5Dcreate(hf, data, mem_type_id, hs, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
-#else
 	hd = H5Dcreate(hf, data, mem_type_id, hs, H5P_DEFAULT);
-#endif
 	H5Dwrite(hd, mem_type_id, hs, hs, H5P_DEFAULT, d->a);
 	H5Dclose(hd);	H5Sclose(hs);	H5Fclose(hf);
 }
@@ -936,11 +928,7 @@ int mgl_data_read_hdf(HMDT d,const char *fname,const char *data)
 	if(res<=0)	return mgl_data_read_hdf4(d,fname,data);
 	hf = H5Fopen(fname, H5F_ACC_RDONLY, H5P_DEFAULT);
 	if(hf<0)	return false;
-#ifndef H5_USE_16_API
-	hd = H5Dopen(hf,data,H5P_DEFAULT);
-#else
 	hd = H5Dopen(hf,data);
-#endif
 	if(hd<0)	return false;
 	hs = H5Dget_space(hd);
 	rank = H5Sget_simple_extent_ndims(hs);
@@ -967,11 +955,7 @@ int mgl_datas_hdf(const char *fname, char *buf, long size)
 	buf[0]=0;
 	hf = H5Fopen(fname, H5F_ACC_RDONLY, H5P_DEFAULT);
 	if(!hf)	return 0;
-#ifndef H5_USE_16_API
-	hg = H5Gopen(hf,"/",H5P_DEFAULT);
-#else
 	hg = H5Gopen(hf,"/");
-#endif
 	hsize_t num, i;
 	char name[256];
 	long pos=0,len;
@@ -980,11 +964,7 @@ int mgl_datas_hdf(const char *fname, char *buf, long size)
 	{
 		if(H5Gget_objtype_by_idx(hg, i)!=H5G_DATASET)	continue;
 		H5Gget_objname_by_idx(hg, i, name, 256);	// replace by H5Lget_name_by_idx(hg,".",i,0,0,name,256,0) ?!
-#ifndef H5_USE_16_API
-		hd = H5Dopen(hf,name,H5P_DEFAULT);
-#else
 		hd = H5Dopen(hf,name);
-#endif
 		ht = H5Dget_type(hd);
 		len = strlen(name);		if(pos+len+2>size)	break;
 		if(H5Tget_class(ht)==H5T_FLOAT || H5Tget_class(ht)==H5T_INTEGER)

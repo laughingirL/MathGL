@@ -1480,7 +1480,6 @@ void mgl_mark_xy(HMGL gr, HCDT x, HCDT y, HCDT r, const char *pen, const char *o
 void mgl_mark_y(HMGL gr, HCDT y, HCDT r, const char *pen, const char *opt)
 {
 	register long n=y->GetNx();
-	if(n<2)	{	gr->SetWarn(mglWarnLow,"Mark");	return;	}
 	gr->SaveState(opt);
 	mglData x(n), z(n);
 	x.Fill(gr->Min.x,gr->Max.x);

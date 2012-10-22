@@ -27,7 +27,7 @@
 #include "mgl2/evalc.h"
 
 #if MGL_HAVE_HDF5
-#define H5_NO_DEPRECATED_SYMBOLS
+#define H5_USE_16_API
 #include <hdf5.h>
 #endif
 
@@ -835,7 +835,7 @@ void mgl_datac_save_hdf(HCDT dat,const char *fname,const char *data,int rewrite)
 	hid_t hf,hd,hs;
 	hsize_t dims[4];
 	long rank = 3, res;
-	H5Eset_auto(H5E_DEFAULT,0,0);
+	H5Eset_auto(0,0);
 	res=H5Fis_hdf5(fname);
 	if(res>0 && !rewrite)	hf = H5Fopen(fname, H5F_ACC_RDWR, H5P_DEFAULT);
 	else	hf = H5Fcreate(fname, H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
@@ -849,7 +849,7 @@ void mgl_datac_save_hdf(HCDT dat,const char *fname,const char *data,int rewrite)
 #else
 	hid_t mem_type_id = H5T_NATIVE_FLOAT;
 #endif
-	hd = H5Dcreate(hf, data, mem_type_id, hs, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+	hd = H5Dcreate(hf, data, mem_type_id, hs, H5P_DEFAULT);
 	H5Dwrite(hd, mem_type_id, hs, hs, H5P_DEFAULT, d->a);
 	H5Dclose(hd);	H5Sclose(hs);	H5Fclose(hf);
 }
@@ -862,7 +862,7 @@ int mgl_datac_read_hdf(HADT d,const char *fname,const char *data)
 	if(res<=0)	{	return false;	}
 	hf = H5Fopen(fname, H5F_ACC_RDONLY, H5P_DEFAULT);
 	if(hf<0)	return false;
-	hd = H5Dopen(hf,data,H5P_DEFAULT);
+	hd = H5Dopen(hf,data);
 	if(hd<0)	return false;
 	hs = H5Dget_space(hd);
 	rank = H5Sget_simple_extent_ndims(hs);
