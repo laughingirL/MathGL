@@ -33,7 +33,7 @@ void mgl_create_cpp_font(HMGL gr, const wchar_t *how)
 	unsigned long l=wcslen(how), i, n=0, m;
 	wchar_t ch=*how;
 	const mglFont *f = gr->GetFont();
-	std::vector<wchar_t> s;
+	std::vector<wchar_t> s;	s.push_back(ch);
 	for(i=1;i<l;i++)
 		if(how[i]==',')	continue;
 		else if(how[i]=='-' && i+1<l)

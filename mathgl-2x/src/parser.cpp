@@ -263,11 +263,8 @@ mglNum *mglParser::FindNum(const char *str)
 //-----------------------------------------------------------------------------
 void mglParser::AddParam(int n, const wchar_t *str)
 {
-	if(str)
-	{
-		if(n<0 || n>39 || wcschr(str,'$'))	return;
-		par[n] = str;
-	}
+//	if(str && n>=0 && n<40 && !wcschr(str,'$'))	par[n] = str;
+	if(str && n>=0 && n<40)	par[n] = str;
 }
 //-----------------------------------------------------------------------------
 mglVar *mglParser::FindVar(const wchar_t *name)
@@ -379,7 +376,6 @@ void mglParser::FillArg(mglGraph *gr, int k, wchar_t **arg, mglArg *a)
 		else if(arg[n][0]=='\'')
 		{	// this is string (simplest case)
 			a[n-1].type = 1;		arg[n][wcslen(arg[n])-1] = 0;
-//			if(wcslen(arg[n]+1)>=2048)	arg[n][2048]=0;
 			a[n-1].w = arg[n]+1;	arg[n][wcslen(arg[n])] = '\'';
 		}
 		else if(arg[n][0]=='{')

@@ -217,7 +217,6 @@ int main(int argc,char **argv)
 #endif
 
 	gr = new mglGraph;	//gr->SetQuality(0);
-
 	if(mini)		{	gr->SetSize(190,145);	suf = "-sm";	}
 	else if(big)
 	{	gr->SetSize(1920,1440);	suf = "-lg";	}

@@ -36,8 +36,10 @@
 #include <QPrintDialog>
 #include <QFileDialog>
 #include <QInputDialog>
+#include <limits.h>
 #include "mgl2/qt.h"
 //-----------------------------------------------------------------------------
+#define MGL_MAX_LINES	(INT_MAX-1000)
 #if !defined(WIN32) && !defined(__APPLE__)
 #include <X11/Xlib.h>
 #endif
@@ -220,13 +222,16 @@ void QMathGL::refresh()
 		mglParse pr;
 		size_t i, n=primitives.count('\n');
 		mglGraph gg(gr);
-		gr->set(MGL_DISABLE_SCALE);	setlocale(LC_NUMERIC, "C");
+		setlocale(LC_NUMERIC, "C");
+		gg.SubPlot(1,1,0,"#");
+printf("Refresh:\n%s\n",primitives.toAscii().constData());
 		for(i=0;i<n;i++)
 		{
+			gr->SetObjId(i+MGL_MAX_LINES);
 			QString tst = primitives.section('\n',i,i);
-			pr.Parse(&gg,primitives.section('\n',i,i).toAscii().constData(),-int(i)-10);
+			pr.Parse(&gg,primitives.section('\n',i,i).toAscii().constData(),long(i)+MGL_MAX_LINES);
 		}
-		gr->clr(MGL_DISABLE_SCALE);	setlocale(LC_NUMERIC, "");
+		setlocale(LC_NUMERIC, "");
 	}
 	gr->Zoom(x1,y1,x2,y2);	gr->View(phi,0,tet);	gr->Perspective(per);
 	mglConvertFromGraph(pic, gr, &grBuf);
@@ -243,11 +248,12 @@ void QMathGL::mousePressEvent(QMouseEvent *ev)
 		if(g)	g->LastMousePos = p;
 		if(g && g->ClickFunc)	g->ClickFunc(draw_par);
 		emit mouseClick(p.x,p.y,p.z);
-		emit objChanged(gr->GetObjId(ev->x(),ev->y())-1);
+		int id = gr->GetObjId(ev->x(),ev->y());
+		if(id<MGL_MAX_LINES)	emit objChanged(id-1);
 		
 		p = gr->CalcXYZ(ev->x(), ev->y(), true);
 		if(mgl_isnan(p.x))	mousePos = "";
-		else		mousePos.sprintf("x=%g, y=%g, z=%g",p.x,p.y,p.z);
+		else	mousePos.sprintf("x=%g, y=%g, z=%g",p.x,p.y,p.z);
 		emit posChanged(mousePos);
 		repaint();
 	}
@@ -324,25 +330,59 @@ void QMathGL::mouseMoveEvent(QMouseEvent *ev)
 	else if(ev->buttons()&Qt::LeftButton)	// move primitives
 	{
 		long h=pic.height(), w=pic.width(), d=(h>w?w:h)/100;
-		long pos = mgl_is_active(gr,x0,y0,d), id = gr->GetObjId(x0,y0);
+		long pos = mgl_is_active(gr,x0,y0,d);
+		long id = long(gr->GetObjId(x0,y0))-MGL_MAX_LINES;
+printf("pos = %ld, id = %ld\n",pos,id);	fflush(stdout);
 		if(pos>=0)	// this active point
 		{
-			const mglActivePos &p = gr->Act[pos];	id = p.id-1;
-			if(id<-10)	// this is our primitive
+			const mglActivePos &p = gr->Act[pos];
+			id = long(p.id)-MGL_MAX_LINES;
+printf("id = %ld\n",id);	fflush(stdout);
+			if(id>=0)	// this is our primitive
 			{
 				QString tst = primitives.section('\n',id,id),res;
-				float x = xe/float(w), y = ye/float(h);
-				res = tst.section(' ',0,p.n*2+1,QString::SectionSkipEmpty) +
-					' '+QString::number(x)+' '+QString::number(x)+' ' +
+printf("tst = '%s'\n",tst.toAscii().constData());	fflush(stdout);
+				float x = 2*xe/float(w)-1, y = 2*(h-ye)/float(h)-1;
+printf("x = %g, y = %g, n = %d\n",x,y,p.n);	fflush(stdout);
+				res = tst.section(' ',0,p.n*2,QString::SectionSkipEmpty) +
+					' '+QString::number(x)+' '+QString::number(y)+' ' +
 					tst.section(' ',p.n*2+3,-1,QString::SectionSkipEmpty);
-				if(id>0) 	res = primitives.section('\n',0,id-1) + res;
-				primitives = res + primitives.section('\n',id+1);
+printf("res = '%s'\n",res.toAscii().constData());	fflush(stdout);
+				if(id>0) 	res = primitives.section('\n',0,id-1) + "\n" + res;
+				primitives = res + "\n" + primitives.section('\n',id+1);
+printf("prim = '%s'\n",primitives.toAscii().constData());	fflush(stdout);
 				refresh();	x0 = xe;	y0 = ye;
+printf("finish\n");	fflush(stdout);
+/*{	primitives += "mark 0 0 '*'\n";	refresh();	}
+{	primitives += "line -0.2 0 0.2 0 'r2'\n";	refresh();	}
+{	primitives += "rect -0.2 -0.2 0.2 0.2 'r'\n";	refresh();	}
+{	primitives += "curve -0.2 0 0 0.5 0.2 0 0 0.5 'r2'\n";	refresh();	}
+{	primitives += "rhomb -0.2 0 0.2 0 0.1 'r'\n";	refresh();	}
+{	primitives += "ellipse -0.2 0 0.2 0 0.1 'r'\n";	refresh();	}*/
 			}
 		}
-		else if(id<-10)		// this is primitive
+		else if(id>=0)	// this is primitive
 		{
-			
+			QString tst = primitives.section('\n',id,id), cmd=tst.section(' ',0,0), res;
+			float dx = 2*(xe-x0)/float(w), dy = 2*(y0-ye)/float(h);
+			float x1=tst.section(' ',1,1).toFloat(), y1=tst.section(' ',2,2).toFloat(),x2,y2;
+			if(cmd=="mark" || cmd=="text")
+				res = cmd+" "+QString::number(x1+dx)+" "+QString::number(y1+dy)+" "+tst.section(' ',3);
+			else if(cmd=="curve")
+			{
+				x2=tst.section(' ',5,5).toFloat();	y2=tst.section(' ',6,6).toFloat();
+				res = cmd+" "+QString::number(x1+dx)+" "+QString::number(y1+dy)+" "+tst.section(' ',3,4)+
+						" "+QString::number(x2+dx)+" "+QString::number(y2+dy)+" "+tst.section(' ',7);
+			}
+			else
+			{
+				x2=tst.section(' ',3,3).toFloat();	y2=tst.section(' ',4,4).toFloat();
+				res = cmd+" "+QString::number(x1+dx)+" "+QString::number(y1+dy)+" "+
+						QString::number(x2+dx)+" "+QString::number(y2+dy)+" "+tst.section(' ',5);
+			}
+			if(id>0) 	res = primitives.section('\n',0,id-1) + "\n" + res;
+			primitives = res + "\n" + primitives.section('\n',id+1);
+			refresh();	x0 = xe;	y0 = ye;
 		}
 	}
 	ev->accept();

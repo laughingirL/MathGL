@@ -38,9 +38,8 @@ int mgl_get_spl_id(HMGL gr, long x, long y)	{	return _Gr_->GetSplId(x,y);	}
 //-----------------------------------------------------------------------------
 long mgl_is_active(HMGL gr, int xs, int ys, int d)
 {
-	register size_t i,w=_Gr_->GetWidth(), h=_Gr_->GetHeight();
 	if(d<=0) 	d=1;
-	for(i=0;i<gr->Act.size();i++)
+	for(size_t i=0;i<gr->Act.size();i++)
 	{
 		const mglActivePos &p = gr->Act[i];
 		if(abs(xs-p.x)<d && abs(ys-p.y)<d)	return i;

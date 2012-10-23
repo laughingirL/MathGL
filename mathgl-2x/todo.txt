@@ -18,7 +18,8 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 0. check for possible memory leaks before release
 
 1. Axis -- projection (ternary + quaternary) + sample
-3. curved text (in new sample) look not so good
+2. curved text (in new sample) look not so good
+3. space symbol in built-in font
 +4. WX window/widgets
 
 ============= DOCS =============
@@ -59,9 +60,9 @@ Buttons: new,load,save // newcmd,hide,annotation,collapse on/off,setup // calc. 
 09. Create default plot dependently of selected row/column/range in data table
 10. Data change via menu/toolbar -- save to internal script => enable undo + save initial array(?)
 
-+11. Add primitives by mouse at beginning of script + change its size/position by mouse + "attraction" points
-The primitives are: ball, line, ellipse/circle, rect, rhomb, text, curve.
-Use frames for quickly drawing of main plot
++11. Add primitives by mouse at beginning of script
+Move by "attraction" points don't work correctly.
+Primitives 'mark' and 'text' are nor drawn!!!
 Dbl.click on primitive --> dialog for styles
 Dbl.click on active point -->remove primitive
 Save/load into script between blocks "#----- MathGL block -----" +  hide it in editor
