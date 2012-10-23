@@ -46,174 +46,242 @@ void mglTexture::GetRGBA(unsigned char *f) const
 	}
 }
 //-----------------------------------------------------------------------------
-/* M.Vidassov take/move it into src/obj.cpp
-void mgl_obj_prim(const mglPrim &q, const mglPnt &p, FILE *fp, mreal size)
+void mgl_obj_glyph_old(HMGL gr, const mglPrim &q, const mglPnt &p, FILE *fp)
+{
+	mreal f = q.p, dx=p.u, dy=p.v, x,y;
+	mreal c=q.s*cos(q.w*M_PI/180), s=-q.s*sin(q.w*M_PI/180);
+	double b[4] = {c,-s, s,c};
+	long i=q.n1+1, ik,il=0;
+
+	const mglGlyph &g = gr->GetGlf(q.n4);
+	const mreal dd = 0.004;
+	if(q.n3&8)
+	{
+		fprintf(fp,"v %g %g %g\n",p.x+b[0]*dx+b[1]*(dy-dd),p.y+b[2]*dx+b[3]*(dy-dd),p.z);
+		fprintf(fp,"v %g %g %g\n",p.x+b[0]*dx+b[1]*(dy+dd),p.y+b[2]*dx+b[3]*(dy-dd),p.z);
+		fprintf(fp,"v %g %g %g\n",p.x+b[0]*(dx+f)+b[1]*(dy-dd),p.y+b[2]*dx+b[3]*(dy-dd),p.z);
+		fprintf(fp,"v %g %g %g\n",p.x+b[0]*(dx+f)+b[1]*(dy+dd),p.y+b[2]*dx+b[3]*(dy-dd),p.z);
+		if(!(q.n3&4))	// glyph_line(p,f,true, d);
+		{
+			fprintf(fp,"f -1/%ld -2/%ld -3/%ld\n",i,i,i);
+			fprintf(fp,"f -4/%ld -2/%ld -3/%ld\n",i,i,i);
+		}
+		else	// glyph_line(p,f,false, d);
+		{
+			fprintf(fp,"l -1/%ld -2/%ld\n",i,i);
+			fprintf(fp,"l -3/%ld -4/%ld\n",i,i);
+			fprintf(fp,"l -1/%ld -3/%ld\n",i,i);
+			fprintf(fp,"l -2/%ld -4/%ld\n",i,i);
+		}
+	}
+	else
+	{
+		if(!(q.n3&4))	// glyph_fill(p,f,g, d);
+		{
+			for(ik=0;ik<g.nt;ik++)
+			{
+				x = dx+f*g.trig[6*ik];		y = dy+f*g.trig[6*ik+1];
+				fprintf(fp,"v %g %g %g\n",p.x+b[0]*x+b[1]*y,p.y+b[2]*x+b[3]*y,p.z);
+				x = dx+f*g.trig[6*ik+2];	y = dy+f*g.trig[6*ik+3];
+				fprintf(fp,"v %g %g %g\n",p.x+b[0]*x+b[1]*y,p.y+b[2]*x+b[3]*y,p.z);
+				x = dx+f*g.trig[6*ik+4];	y = dy+f*g.trig[6*ik+5];
+				fprintf(fp,"v %g %g %g\n",p.x+b[0]*x+b[1]*y,p.y+b[2]*x+b[3]*y,p.z);
+				fprintf(fp,"f -1/%ld -2/%ld -3/%ld\n",i,i,i);
+			}
+		}
+		else	// glyph_wire(p,f,g, d);
+		{
+			for(ik=0;ik<g.nl;ik++)
+			{
+				x = g.line[2*ik];	y = g.line[2*ik+1];
+				if(x==0x3fff && y==0x3fff)	// line breakthrough
+				{	il = ik+1;	continue;	}
+				else if(ik==g.nl-1 || (g.line[2*ik+2]==0x3fff && g.line[2*ik+3]==0x3fff))
+				{	// enclose the circle. May be in future this block should be commented
+					x = dx+f*g.line[2*ik];		y = dy+f*g.line[2*ik+1];
+					fprintf(fp,"v %g %g %g\n",p.x+b[0]*x+b[1]*y,p.y+b[2]*x+b[3]*y,p.z);
+					x = dx+f*g.line[2*il];		y = dy+f*g.line[2*il+1];
+					fprintf(fp,"v %g %g %g\n",p.x+b[0]*x+b[1]*y,p.y+b[2]*x+b[3]*y,p.z);
+				}
+				else
+				{	// normal line
+					x = dx+f*g.line[2*ik];		y = dy+f*g.line[2*ik+1];
+					fprintf(fp,"v %g %g %g\n",p.x+b[0]*x+b[1]*y,p.y+b[2]*x+b[3]*y,p.z);
+					x = dx+f*g.line[2*ik+2];	y = dy+f*g.line[2*il+3];
+					fprintf(fp,"v %g %g %g\n",p.x+b[0]*x+b[1]*y,p.y+b[2]*x+b[3]*y,p.z);
+				}
+				fprintf(fp,"l -1/%ld -2/%ld\n",i,i);
+			}
+		}
+	}
+}
+//-----------------------------------------------------------------------------
+/* M.Vidassov take/move it into src/obj.cpp */
+void mgl_obj_prim_old(HMGL gr, const mglPrim &q, const mglPnt &p, FILE *fp, mreal size)
 {
 	char type = q.n4;	mreal ss=size*0.35;
 	register long i=q.n1+1,j;
 	register long n1=q.n1+1,n2=q.n2+1,n3=q.n3+1,n4=q.n4+1;
 	switch(q.type)
 	{
-		case 0:
-			if(!strchr("xsSoO",type))	ss *= 1.1;
-			if(type=='.' || ss==0)	fprintf(fp,"p %ld\n", i);
-			else	switch(type)
-			{
-			case 'P':
-				fprintf(fp,"v %g %g %g\n",p.x-ss,p.y-ss,p.z);
-				fprintf(fp,"v %g %g %g\n",p.x+ss,p.y-ss,p.z);
-				fprintf(fp,"v %g %g %g\n",p.x+ss,p.y+ss,p.z);
-				fprintf(fp,"v %g %g %g\n",p.x-ss,p.y+ss,p.z);
-				fprintf(fp,"l -4/%ld -3/%ld\n", i,i);
-				fprintf(fp,"l -3/%ld -2/%ld\n", i,i);
-				fprintf(fp,"l -2/%ld -1/%ld\n", i,i);
-				fprintf(fp,"l -1/%ld -4/%ld\n", i,i);
-			case '+':
-				fprintf(fp,"v %g %g %g\n",p.x-ss,p.y,p.z);
-				fprintf(fp,"v %g %g %g\n",p.x+ss,p.y,p.z);
-				fprintf(fp,"v %g %g %g\n",p.x,p.y-ss,p.z);
-				fprintf(fp,"v %g %g %g\n",p.x,p.y+ss,p.z);
-				fprintf(fp,"l -4/%ld -3/%ld\n", i,i);
-				fprintf(fp,"l -2/%ld -1/%ld\n", i,i);	break;
-			case 'X':
-				fprintf(fp,"v %g %g %g\n",p.x-ss,p.y-ss,p.z);
-				fprintf(fp,"v %g %g %g\n",p.x+ss,p.y-ss,p.z);
-				fprintf(fp,"v %g %g %g\n",p.x+ss,p.y+ss,p.z);
-				fprintf(fp,"v %g %g %g\n",p.x-ss,p.y+ss,p.z);
-				fprintf(fp,"l -4/%ld -3/%ld\n", i,i);
-				fprintf(fp,"l -3/%ld -2/%ld\n", i,i);
-				fprintf(fp,"l -2/%ld -1/%ld\n", i,i);
-				fprintf(fp,"l -1/%ld -4/%ld\n", i,i);
-				fprintf(fp,"l -1/%ld -3/%ld\n", i,i);
-				fprintf(fp,"l -2/%ld -4/%ld\n", i,i);	break;
-			case 'x':
-				fprintf(fp,"v %g %g %g\n",p.x-ss,p.y-ss,p.z);
-				fprintf(fp,"v %g %g %g\n",p.x+ss,p.y-ss,p.z);
-				fprintf(fp,"v %g %g %g\n",p.x+ss,p.y+ss,p.z);
-				fprintf(fp,"v %g %g %g\n",p.x-ss,p.y+ss,p.z);
-				fprintf(fp,"l -1/%ld -3/%ld\n", i,i);
-				fprintf(fp,"l -2/%ld -4/%ld\n", i,i);	break;
-			case 'S':
-				fprintf(fp,"v %g %g %g\n",p.x-ss,p.y-ss,p.z);
-				fprintf(fp,"v %g %g %g\n",p.x+ss,p.y-ss,p.z);
-				fprintf(fp,"v %g %g %g\n",p.x+ss,p.y+ss,p.z);
-				fprintf(fp,"v %g %g %g\n",p.x-ss,p.y+ss,p.z);
-				fprintf(fp,"f -4/%ld -3/%ld -2/%ld -1/%ld\n",i,i,i,i);	break;
-			case 's':
-				fprintf(fp,"v %g %g %g\n",p.x-ss,p.y-ss,p.z);
-				fprintf(fp,"v %g %g %g\n",p.x+ss,p.y-ss,p.z);
-				fprintf(fp,"v %g %g %g\n",p.x+ss,p.y+ss,p.z);
-				fprintf(fp,"v %g %g %g\n",p.x-ss,p.y+ss,p.z);
-				fprintf(fp,"l -4/%ld -3/%ld\n", i,i);
-				fprintf(fp,"l -3/%ld -2/%ld\n", i,i);
-				fprintf(fp,"l -2/%ld -1/%ld\n", i,i);
-				fprintf(fp,"l -1/%ld -4/%ld\n", i,i);	break;
-			case 'D':
-				fprintf(fp,"v %g %g %g\n",p.x,p.y-ss,p.z);
-				fprintf(fp,"v %g %g %g\n",p.x+ss,p.y,p.z);
-				fprintf(fp,"v %g %g %g\n",p.x,p.y+ss,p.z);
-				fprintf(fp,"v %g %g %g\n",p.x-ss,p.y,p.z);
-				fprintf(fp,"f -4/%ld -3/%ld -2/%ld -1/%ld\n",i,i,i,i);	break;
-			case 'd':
-				fprintf(fp,"v %g %g %g\n",p.x,p.y-ss,p.z);
-				fprintf(fp,"v %g %g %g\n",p.x+ss,p.y,p.z);
-				fprintf(fp,"v %g %g %g\n",p.x,p.y+ss,p.z);
-				fprintf(fp,"v %g %g %g\n",p.x-ss,p.y,p.z);
-				fprintf(fp,"l -4/%ld -3/%ld\n", i,i);
-				fprintf(fp,"l -3/%ld -2/%ld\n", i,i);
-				fprintf(fp,"l -2/%ld -1/%ld\n", i,i);
-				fprintf(fp,"l -1/%ld -4/%ld\n", i,i);	break;
-			case 'Y':
-				fprintf(fp,"v %g %g %g\n",p.x,p.y-ss,p.z);
-				fprintf(fp,"v %g %g %g\n",p.x+0.8*ss,p.y+0.6*ss,p.z);
-				fprintf(fp,"v %g %g %g\n",p.x-0.8*ss,p.y+0.6*ss,p.z);
-				fprintf(fp,"l -3/%ld %ld/%ld\n", i,i,i);
-				fprintf(fp,"l -2/%ld %ld/%ld\n", i,i,i);
-				fprintf(fp,"l -1/%ld %ld/%ld\n", i,i,i);	break;
-			case '*':
-				fprintf(fp,"v %g %g %g\n",p.x+ss,p.y,p.z);
-				fprintf(fp,"v %g %g %g\n",p.x-ss,p.y,p.z);
-				fprintf(fp,"l -2/%ld -1/%ld\n", i,i);
-				fprintf(fp,"v %g %g %g\n",p.x+0.6*ss,p.y+0.8*ss,p.z);
-				fprintf(fp,"v %g %g %g\n",p.x-0.6*ss,p.y-0.8*ss,p.z);
-				fprintf(fp,"l -2/%ld -1/%ld\n", i,i);
-				fprintf(fp,"v %g %g %g\n",p.x+0.6*ss,p.y-0.8*ss,p.z);
-				fprintf(fp,"v %g %g %g\n",p.x-0.6*ss,p.y+0.8*ss,p.z);
-				fprintf(fp,"l -2/%ld -1/%ld\n", i,i);		break;
-			case 'T':
-				fprintf(fp,"v %g %g %g\n",p.x-ss,p.y-ss/2,p.z);
-				fprintf(fp,"v %g %g %g\n",p.x+ss,p.y-ss/2,p.z);
-				fprintf(fp,"v %g %g %g\n",p.x,p.y+ss,p.z);
-				fprintf(fp,"f -3/%ld -2/%ld -1/%ld\n", i,i,i);	break;
-			case '^':
-				fprintf(fp,"v %g %g %g\n",p.x-ss,p.y-ss/2,p.z);
-				fprintf(fp,"v %g %g %g\n",p.x+ss,p.y-ss/2,p.z);
-				fprintf(fp,"v %g %g %g\n",p.x,p.y+ss,p.z);
-				fprintf(fp,"l -3/%ld -2/%ld\n", i,i);
-				fprintf(fp,"l -2/%ld -1/%ld\n", i,i);
-				fprintf(fp,"l -1/%ld -3/%ld\n", i,i);	break;
-			case 'V':
-				fprintf(fp,"v %g %g %g\n",p.x-ss,p.y+ss/2,p.z);
-				fprintf(fp,"v %g %g %g\n",p.x+ss,p.y+ss/2,p.z);
-				fprintf(fp,"v %g %g %g\n",p.x,p.y-ss,p.z);
-				fprintf(fp,"f -3/%ld -2/%ld -1/%ld\n", i,i,i);	break;
-			case 'v':
-				fprintf(fp,"v %g %g %g\n",p.x-ss,p.y+ss/2,p.z);
-				fprintf(fp,"v %g %g %g\n",p.x+ss,p.y+ss/2,p.z);
-				fprintf(fp,"v %g %g %g\n",p.x,p.y-ss,p.z);
-				fprintf(fp,"l -3/%ld -2/%ld\n", i,i);
-				fprintf(fp,"l -2/%ld -1/%ld\n", i,i);
-				fprintf(fp,"l -1/%ld -3/%ld\n", i,i);	break;
-			case 'L':
-				fprintf(fp,"v %g %g %g\n",p.x+ss/2,p.y+ss,p.z);
-				fprintf(fp,"v %g %g %g\n",p.x+ss/2,p.y-ss,p.z);
-				fprintf(fp,"v %g %g %g\n",p.x-ss,p.y,p.z);
-				fprintf(fp,"f -3/%ld -2/%ld -1/%ld\n", i,i,i);	break;
-			case '<':
-				fprintf(fp,"v %g %g %g\n",p.x+ss/2,p.y+ss,p.z);
-				fprintf(fp,"v %g %g %g\n",p.x+ss/2,p.y-ss,p.z);
-				fprintf(fp,"v %g %g %g\n",p.x-ss,p.y,p.z);
-				fprintf(fp,"l -3/%ld -2/%ld\n", i,i);
-				fprintf(fp,"l -2/%ld -1/%ld\n", i,i);
-				fprintf(fp,"l -1/%ld -3/%ld\n", i,i);	break;
-			case 'R':
-				fprintf(fp,"v %g %g %g\n",p.x-ss/2,p.y+ss,p.z);
-				fprintf(fp,"v %g %g %g\n",p.x-ss/2,p.y-ss,p.z);
-				fprintf(fp,"v %g %g %g\n",p.x+ss,p.y,p.z);
-				fprintf(fp,"f -3/%ld -2/%ld -1/%ld\n", i,i,i);	break;
-			case '>':
-				fprintf(fp,"v %g %g %g\n",p.x-ss/2,p.y+ss,p.z);
-				fprintf(fp,"v %g %g %g\n",p.x-ss/2,p.y-ss,p.z);
-				fprintf(fp,"v %g %g %g\n",p.x+ss,p.y,p.z);
-				fprintf(fp,"l -3/%ld -2/%ld\n", i,i);
-				fprintf(fp,"l -2/%ld -1/%ld\n", i,i);
-				fprintf(fp,"l -1/%ld -3/%ld\n", i,i);	break;
-			case 'O':
-				for(j=0;j<=20;j++)
-					fprintf(fp,"v %g %g %g\n",p.x+ss*cos(j*M_PI/10),p.y+ss*sin(j*M_PI/10),p.z);
-				for(j=0;j<20;j++)
-					fprintf(fp,"f %ld/%ld %ld/%ld %ld/%ld\n", j-21,i, j-20,i, i,i);
-				break;
-			case 'C':	fprintf(fp,"p %ld\n", i);
-			case 'o':
-				for(j=0;j<=20;j++)
-					fprintf(fp,"v %g %g %g\n",p.x+ss*cos(j*M_PI/10),p.y+ss*sin(j*M_PI/10),p.z);
-				for(j=0;j<20;j++)
-					fprintf(fp,"l %ld/%ld %ld/%ld\n", j-21,i, j-20,i);
-				break;
-			}
+	case 0:
+		if(!strchr("xsSoO",type))	ss *= 1.1;
+		if(type=='.' || ss==0)	fprintf(fp,"p %ld\n", i);
+		else	switch(type)
+		{
+		case 'P':
+			fprintf(fp,"v %g %g %g\n",p.x-ss,p.y-ss,p.z);
+			fprintf(fp,"v %g %g %g\n",p.x+ss,p.y-ss,p.z);
+			fprintf(fp,"v %g %g %g\n",p.x+ss,p.y+ss,p.z);
+			fprintf(fp,"v %g %g %g\n",p.x-ss,p.y+ss,p.z);
+			fprintf(fp,"l -4/%ld -3/%ld\n", i,i);
+			fprintf(fp,"l -3/%ld -2/%ld\n", i,i);
+			fprintf(fp,"l -2/%ld -1/%ld\n", i,i);
+			fprintf(fp,"l -1/%ld -4/%ld\n", i,i);
+		case '+':
+			fprintf(fp,"v %g %g %g\n",p.x-ss,p.y,p.z);
+			fprintf(fp,"v %g %g %g\n",p.x+ss,p.y,p.z);
+			fprintf(fp,"v %g %g %g\n",p.x,p.y-ss,p.z);
+			fprintf(fp,"v %g %g %g\n",p.x,p.y+ss,p.z);
+			fprintf(fp,"l -4/%ld -3/%ld\n", i,i);
+			fprintf(fp,"l -2/%ld -1/%ld\n", i,i);	break;
+		case 'X':
+			fprintf(fp,"v %g %g %g\n",p.x-ss,p.y-ss,p.z);
+			fprintf(fp,"v %g %g %g\n",p.x+ss,p.y-ss,p.z);
+			fprintf(fp,"v %g %g %g\n",p.x+ss,p.y+ss,p.z);
+			fprintf(fp,"v %g %g %g\n",p.x-ss,p.y+ss,p.z);
+			fprintf(fp,"l -4/%ld -3/%ld\n", i,i);
+			fprintf(fp,"l -3/%ld -2/%ld\n", i,i);
+			fprintf(fp,"l -2/%ld -1/%ld\n", i,i);
+			fprintf(fp,"l -1/%ld -4/%ld\n", i,i);
+			fprintf(fp,"l -1/%ld -3/%ld\n", i,i);
+			fprintf(fp,"l -2/%ld -4/%ld\n", i,i);	break;
+		case 'x':
+			fprintf(fp,"v %g %g %g\n",p.x-ss,p.y-ss,p.z);
+			fprintf(fp,"v %g %g %g\n",p.x+ss,p.y-ss,p.z);
+			fprintf(fp,"v %g %g %g\n",p.x+ss,p.y+ss,p.z);
+			fprintf(fp,"v %g %g %g\n",p.x-ss,p.y+ss,p.z);
+			fprintf(fp,"l -1/%ld -3/%ld\n", i,i);
+			fprintf(fp,"l -2/%ld -4/%ld\n", i,i);	break;
+		case 'S':
+			fprintf(fp,"v %g %g %g\n",p.x-ss,p.y-ss,p.z);
+			fprintf(fp,"v %g %g %g\n",p.x+ss,p.y-ss,p.z);
+			fprintf(fp,"v %g %g %g\n",p.x+ss,p.y+ss,p.z);
+			fprintf(fp,"v %g %g %g\n",p.x-ss,p.y+ss,p.z);
+			fprintf(fp,"f -4/%ld -3/%ld -2/%ld -1/%ld\n",i,i,i,i);	break;
+		case 's':
+			fprintf(fp,"v %g %g %g\n",p.x-ss,p.y-ss,p.z);
+			fprintf(fp,"v %g %g %g\n",p.x+ss,p.y-ss,p.z);
+			fprintf(fp,"v %g %g %g\n",p.x+ss,p.y+ss,p.z);
+			fprintf(fp,"v %g %g %g\n",p.x-ss,p.y+ss,p.z);
+			fprintf(fp,"l -4/%ld -3/%ld\n", i,i);
+			fprintf(fp,"l -3/%ld -2/%ld\n", i,i);
+			fprintf(fp,"l -2/%ld -1/%ld\n", i,i);
+			fprintf(fp,"l -1/%ld -4/%ld\n", i,i);	break;
+		case 'D':
+			fprintf(fp,"v %g %g %g\n",p.x,p.y-ss,p.z);
+			fprintf(fp,"v %g %g %g\n",p.x+ss,p.y,p.z);
+			fprintf(fp,"v %g %g %g\n",p.x,p.y+ss,p.z);
+			fprintf(fp,"v %g %g %g\n",p.x-ss,p.y,p.z);
+			fprintf(fp,"f -4/%ld -3/%ld -2/%ld -1/%ld\n",i,i,i,i);	break;
+		case 'd':
+			fprintf(fp,"v %g %g %g\n",p.x,p.y-ss,p.z);
+			fprintf(fp,"v %g %g %g\n",p.x+ss,p.y,p.z);
+			fprintf(fp,"v %g %g %g\n",p.x,p.y+ss,p.z);
+			fprintf(fp,"v %g %g %g\n",p.x-ss,p.y,p.z);
+			fprintf(fp,"l -4/%ld -3/%ld\n", i,i);
+			fprintf(fp,"l -3/%ld -2/%ld\n", i,i);
+			fprintf(fp,"l -2/%ld -1/%ld\n", i,i);
+			fprintf(fp,"l -1/%ld -4/%ld\n", i,i);	break;
+		case 'Y':
+			fprintf(fp,"v %g %g %g\n",p.x,p.y-ss,p.z);
+			fprintf(fp,"v %g %g %g\n",p.x+0.8*ss,p.y+0.6*ss,p.z);
+			fprintf(fp,"v %g %g %g\n",p.x-0.8*ss,p.y+0.6*ss,p.z);
+			fprintf(fp,"l -3/%ld %ld/%ld\n", i,i,i);
+			fprintf(fp,"l -2/%ld %ld/%ld\n", i,i,i);
+			fprintf(fp,"l -1/%ld %ld/%ld\n", i,i,i);	break;
+		case '*':
+			fprintf(fp,"v %g %g %g\n",p.x+ss,p.y,p.z);
+			fprintf(fp,"v %g %g %g\n",p.x-ss,p.y,p.z);
+			fprintf(fp,"l -2/%ld -1/%ld\n", i,i);
+			fprintf(fp,"v %g %g %g\n",p.x+0.6*ss,p.y+0.8*ss,p.z);
+			fprintf(fp,"v %g %g %g\n",p.x-0.6*ss,p.y-0.8*ss,p.z);
+			fprintf(fp,"l -2/%ld -1/%ld\n", i,i);
+			fprintf(fp,"v %g %g %g\n",p.x+0.6*ss,p.y-0.8*ss,p.z);
+			fprintf(fp,"v %g %g %g\n",p.x-0.6*ss,p.y+0.8*ss,p.z);
+			fprintf(fp,"l -2/%ld -1/%ld\n", i,i);		break;
+		case 'T':
+			fprintf(fp,"v %g %g %g\n",p.x-ss,p.y-ss/2,p.z);
+			fprintf(fp,"v %g %g %g\n",p.x+ss,p.y-ss/2,p.z);
+			fprintf(fp,"v %g %g %g\n",p.x,p.y+ss,p.z);
+			fprintf(fp,"f -3/%ld -2/%ld -1/%ld\n", i,i,i);	break;
+		case '^':
+			fprintf(fp,"v %g %g %g\n",p.x-ss,p.y-ss/2,p.z);
+			fprintf(fp,"v %g %g %g\n",p.x+ss,p.y-ss/2,p.z);
+			fprintf(fp,"v %g %g %g\n",p.x,p.y+ss,p.z);
+			fprintf(fp,"l -3/%ld -2/%ld\n", i,i);
+			fprintf(fp,"l -2/%ld -1/%ld\n", i,i);
+			fprintf(fp,"l -1/%ld -3/%ld\n", i,i);	break;
+		case 'V':
+			fprintf(fp,"v %g %g %g\n",p.x-ss,p.y+ss/2,p.z);
+			fprintf(fp,"v %g %g %g\n",p.x+ss,p.y+ss/2,p.z);
+			fprintf(fp,"v %g %g %g\n",p.x,p.y-ss,p.z);
+			fprintf(fp,"f -3/%ld -2/%ld -1/%ld\n", i,i,i);	break;
+		case 'v':
+			fprintf(fp,"v %g %g %g\n",p.x-ss,p.y+ss/2,p.z);
+			fprintf(fp,"v %g %g %g\n",p.x+ss,p.y+ss/2,p.z);
+			fprintf(fp,"v %g %g %g\n",p.x,p.y-ss,p.z);
+			fprintf(fp,"l -3/%ld -2/%ld\n", i,i);
+			fprintf(fp,"l -2/%ld -1/%ld\n", i,i);
+			fprintf(fp,"l -1/%ld -3/%ld\n", i,i);	break;
+		case 'L':
+			fprintf(fp,"v %g %g %g\n",p.x+ss/2,p.y+ss,p.z);
+			fprintf(fp,"v %g %g %g\n",p.x+ss/2,p.y-ss,p.z);
+			fprintf(fp,"v %g %g %g\n",p.x-ss,p.y,p.z);
+			fprintf(fp,"f -3/%ld -2/%ld -1/%ld\n", i,i,i);	break;
+		case '<':
+			fprintf(fp,"v %g %g %g\n",p.x+ss/2,p.y+ss,p.z);
+			fprintf(fp,"v %g %g %g\n",p.x+ss/2,p.y-ss,p.z);
+			fprintf(fp,"v %g %g %g\n",p.x-ss,p.y,p.z);
+			fprintf(fp,"l -3/%ld -2/%ld\n", i,i);
+			fprintf(fp,"l -2/%ld -1/%ld\n", i,i);
+			fprintf(fp,"l -1/%ld -3/%ld\n", i,i);	break;
+		case 'R':
+			fprintf(fp,"v %g %g %g\n",p.x-ss/2,p.y+ss,p.z);
+			fprintf(fp,"v %g %g %g\n",p.x-ss/2,p.y-ss,p.z);
+			fprintf(fp,"v %g %g %g\n",p.x+ss,p.y,p.z);
+			fprintf(fp,"f -3/%ld -2/%ld -1/%ld\n", i,i,i);	break;
+		case '>':
+			fprintf(fp,"v %g %g %g\n",p.x-ss/2,p.y+ss,p.z);
+			fprintf(fp,"v %g %g %g\n",p.x-ss/2,p.y-ss,p.z);
+			fprintf(fp,"v %g %g %g\n",p.x+ss,p.y,p.z);
+			fprintf(fp,"l -3/%ld -2/%ld\n", i,i);
+			fprintf(fp,"l -2/%ld -1/%ld\n", i,i);
+			fprintf(fp,"l -1/%ld -3/%ld\n", i,i);	break;
+		case 'O':
+			for(j=0;j<=20;j++)
+				fprintf(fp,"v %g %g %g\n",p.x+ss*cos(j*M_PI/10),p.y+ss*sin(j*M_PI/10),p.z);
+			for(j=0;j<20;j++)
+				fprintf(fp,"f %ld/%ld %ld/%ld %ld/%ld\n", j-21,i, j-20,i, i,i);
 			break;
-		case 1:	fprintf(fp,"l %ld/%ld %ld/%ld\n", n1,n1, n2,n2);	break;
-		case 2:
-			fprintf(fp,"f %ld/%ld %ld/%ld %ld/%ld\n", n1,n1, n2,n2, n3,n3);	break;
-		case 3:
-			fprintf(fp,"f %ld/%ld %ld/%ld %ld/%ld\n", n1,n1, n2,n2, n3,n3);
-			fprintf(fp,"f %ld/%ld %ld/%ld %ld/%ld\n", n2,n2, n4,n4, n3,n3);	break;
-		case 4:	break;	// TODO: add glyphs export later
+		case 'C':	fprintf(fp,"p %ld\n", i);
+		case 'o':
+			for(j=0;j<=20;j++)
+				fprintf(fp,"v %g %g %g\n",p.x+ss*cos(j*M_PI/10),p.y+ss*sin(j*M_PI/10),p.z);
+			for(j=0;j<20;j++)
+				fprintf(fp,"l %ld/%ld %ld/%ld\n", j-21,i, j-20,i);
+			break;
+		}
+		break;
+	case 1:	fprintf(fp,"l %ld/%ld %ld/%ld\n", n1,n1, n2,n2);	break;
+	case 2:	fprintf(fp,"f %ld/%ld %ld/%ld %ld/%ld\n", n1,n1, n2,n2, n3,n3);	break;
+	case 3:	fprintf(fp,"f %ld/%ld %ld/%ld %ld/%ld\n", n1,n1, n2,n2, n3,n3);
+		fprintf(fp,"f %ld/%ld %ld/%ld %ld/%ld\n", n2,n2, n4,n4, n3,n3);	break;
+	case 4:	mgl_obj_glyph_old(gr,q,p,fp);		break;
 	}
 }
 //-----------------------------------------------------------------------------
-void mgl_write_obj(HMGL gr, const char *fname,const char *descr, int use_png)
+void mgl_write_obj_old(HMGL gr, const char *fname,const char *descr, int use_png)
 {
 	if(gr->GetPrmNum()==0)	return;	// nothing to do
 	register size_t i,j;
@@ -252,7 +320,7 @@ void mgl_write_obj(HMGL gr, const char *fname,const char *descr, int use_png)
 		for(j=0;j<p.size();j++)
 		{
 			const mglPrim &q=gr->GetPrm(p[j]);
-			mgl_obj_prim(q, gr->GetPnt(q.n1), fp, q.s*gr->FontFactor());
+			mgl_obj_prim_old(gr, q, gr->GetPnt(q.n1), fp, q.s*gr->FontFactor());
 		}
 		gr->Grp[i].p.clear();	// we don't need indexes anymore
 	}
@@ -282,10 +350,10 @@ void mgl_write_obj(HMGL gr, const char *fname,const char *descr, int use_png)
 	else		mgl_tga_save(tname,256,256*j,pbuf);
 	free(pbuf);	delete []buf;	delete []tname;
 }
-void mgl_write_obj_(uintptr_t *gr, const char *fname,const char *descr, int *use_png,int l,int n)
+void mgl_write_obj_old_(uintptr_t *gr, const char *fname,const char *descr, int *use_png,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *d=new char[n+1];	memcpy(d,descr,n);	d[n]=0;
-	mgl_write_obj(_GR_,s,d,*use_png);	delete []s;		delete []d;	}*/
+	mgl_write_obj_old(_GR_,s,d,*use_png);	delete []s;		delete []d;	}
 //-----------------------------------------------------------------------------
 void mgl_write_stl(HMGL gr, const char *fname,const char *descr)
 {

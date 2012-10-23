@@ -54,55 +54,16 @@ int srnd = 0;
 int use_mgl = 0;
 int verbose = 0;
 //-----------------------------------------------------------------------------
+void mgl_write_obj_old(HMGL gr, const char *fname,const char *descr, int use_png);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-//	gr->SubPlot(2,2,2,"");	
-	gr->Light(true);	gr->Title("Sphere and Drop");	gr->Alpha(false);
-	gr->Puts(mglPoint(-0.9,0.4),"sh=0");		gr->Ball(mglPoint(-0.9,0,1),'k');
-	gr->Drop(mglPoint(-0.9,0),mglPoint(0,1),0.5,"r",0);
-	gr->Puts(mglPoint(-0.3,0.6),"sh=0.33");	gr->Ball(mglPoint(-0.3,0,1),'k');
-	gr->Drop(mglPoint(-0.3,0),mglPoint(0,1),0.5,"r",0.33);
-	gr->Puts(mglPoint(0.3,0.8),"sh=0.67");		gr->Ball(mglPoint(0.3,0,1),'k');
-	gr->Drop(mglPoint(0.3,0),mglPoint(0,1),0.5,"r",0.67);
-	gr->Puts(mglPoint(0.9,1),"sh=1");			gr->Ball(mglPoint(0.9,0,1),'k');
-	gr->Drop(mglPoint(0.9,0),mglPoint(0,1),0.5,"r",1);
-	gr->Line(mglPoint(-0.9,0,1),mglPoint(0.9,0,1),"b");
-	
-	gr->Puts(mglPoint(-0.9,-1.1),"asp=0.33");
-	gr->Drop(mglPoint(-0.9,-0.7),mglPoint(0,1),0.5,"b",0,0.33);
-	gr->Puts(mglPoint(-0.3,-1.1),"asp=0.67");
-	gr->Drop(mglPoint(-0.3,-0.7),mglPoint(0,1),0.5,"b",0,0.67);
-	gr->Puts(mglPoint(0.3,-1.1),"asp=1");
-	gr->Drop(mglPoint(0.3,-0.7),mglPoint(0,1),0.5,"b",0,1);
-	gr->Puts(mglPoint(0.9,-1.1),"asp=1.5");
-	gr->Drop(mglPoint(0.9,-0.7),mglPoint(0,1),0.5,"b",0,1.5);
+	gr->Axis();
+	gr->Box();
+	gr->Puts(mglPoint(0),"a");
+	mgl_write_obj_old(gr->Self(),"1.obj","",true);
 	return;
 	
-//	gr->SetFaceNum(10);
-	mglData a(100,100);	a.Modify("x*y^2");
-	gr->Rotate(40,60);
-	gr->Box();	gr->Axis();
-	gr->Mesh(a,"k","xrange -2 2");
-	gr->Surf(a,"","xrange -2 2");
-//	gr->Mesh(a,"","meshnum 10");
-	printf("Before: pnt = %lu, prm = %lu\n",gr->Self()->GetPntNum(),gr->Self()->GetPrmNum());
-	gr->ClearUnused();
-	printf("After: pnt = %lu, prm = %lu\n",gr->Self()->GetPntNum(),gr->Self()->GetPrmNum());
-	return;
-
-/*	mglData c;	mgls_prepare3d(&c);	gr->Light(true);	gr->Alpha(true);
-	gr->SubPlot(2,1,0);	gr->Rotate(50,60);	gr->Box();	gr->Surf3(c);
-	gr->SubPlot(2,1,1);	gr->Rotate(50,60);	gr->Box();	gr->Surf3(c,"","zrange 0 2");
-	return;
-
-	mglData a;	mgls_prepare2d(&a);	gr->Light(true);
-	gr->SubPlot(2,2,0);	gr->Rotate(50,60);	gr->Box();	gr->Surf(a);
-	gr->SubPlot(2,2,1);	gr->Rotate(50,60);	gr->Box();	gr->Surf(a,"%br");
-	gr->SubPlot(2,2,2);	gr->Rotate(50,60);	gr->Box();	gr->Surf(a,"%");
-	gr->SubPlot(2,2,3);	gr->Rotate(50,60);	gr->Box();	gr->Surf(a,"%!");
-	return;*/
-
 	mglParse par;
 	par.AllowSetSize(true);
 	setlocale(LC_CTYPE, "");
