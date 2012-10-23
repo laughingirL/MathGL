@@ -411,6 +411,8 @@ public:
 	inline int GetObjId(long x,long y)	{	return mgl_get_obj_id(gr,x,y);	}
 	/// Get subplot id
 	inline int GetSplId(long x,long y)	{	return mgl_get_spl_id(gr,x,y);	}
+	/// Check if {\a xs,\a ys} is close to active point with accuracy \a d, and return its position or -1
+	inline long IsActive(int xs, int ys, int d=1)	{	return mgl_is_active(gr,xs,ys,d);	}
 
 	/// Combine plots from 2 canvases. Result will be saved into this
 	inline void Combine(const mglGraph *g)	{	mgl_combine_gr(gr,g->gr);	}

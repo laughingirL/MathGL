@@ -431,8 +431,8 @@ void MainWindow::editPosChanged()
 	for(i=0;i<n;i++)	if(dlm.contains(text[i]))	break;
 	text.truncate(i);
 
-	const char *desc = parser.CmdDesc(text.toAscii());
-	const char *form = parser.CmdFormat(text.toAscii());
+	const char *desc = parser.CmdDesc(text.toAscii().constData());
+	const char *form = parser.CmdFormat(text.toAscii().constData());
 	if(form)	setStatus(QString::fromAscii(desc)+": "+QString::fromAscii(form));
 	else	setStatus(tr("Not recognized"));
 }
@@ -565,7 +565,7 @@ void MainWindow::setStatus(const QString &txt)
 void MainWindow::setCurrentFile(const QString &fileName)
 {
 	filename = fileName;
-	graph->mgl->getGraph()->PlotId = (const char *)fileName.toAscii();
+	graph->mgl->getGraph()->PlotId = fileName.toAscii().constData();
 	edit->setModified(false);
 	if(filename.isEmpty())
 		setWindowTitle(tr("untitled - UDAV"));

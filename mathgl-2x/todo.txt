@@ -34,6 +34,7 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 6. Axis style 'XYZ' for opposite tick and axis labels
 7. Quality=3 will draw 3D arrows instead of default 2D 
 8. Update text about drop sample
+9. Add mglGraph::IsActive()
 
 ============= UDAV =============
 

@@ -108,6 +108,7 @@ int mgl_get_width(HMGL graph);
 int mgl_get_height(HMGL graph);
 void mgl_calc_xyz(HMGL gr, int xs, int ys, mreal *x, mreal *y, mreal *z);
 void mgl_calc_scr(HMGL gr, mreal x, mreal y, mreal z, int *xs, int *ys);
+long mgl_is_active(HMGL gr, int xs, int ys, int d);
 
 int mgl_new_frame(HMGL graph);
 void mgl_end_frame(HMGL graph);
@@ -222,6 +223,7 @@ int mgl_get_width_(uintptr_t *graph);
 int mgl_get_height_(uintptr_t *graph);
 void mgl_calc_xyz_(uintptr_t *gr, int *xs, int *ys, mreal *x, mreal *y, mreal *z);
 void mgl_calc_scr_(uintptr_t *gr, mreal *x, mreal *y, mreal *z, int *xs, int *ys);
+long mgl_is_active_(uintptr_t *gr, int *xs, int *ys, int *d);
 
 int mgl_new_frame_(uintptr_t *graph);
 void mgl_end_frame_(uintptr_t *graph);

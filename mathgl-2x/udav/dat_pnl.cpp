@@ -174,7 +174,7 @@ void DatPanel::imprt()
 	{
 		bool ok;
 		QString s = QInputDialog::getText(this, tr("UDAV - Export to PNG"), tr("Enter color scheme for picture.\nNote that data will be normalized in range [0,1]."), QLineEdit::Normal, "BbcyrR", &ok);
-		if(ok)	var->Import(fn.toAscii(), s.toAscii());
+		if(ok)	var->Import(fn.toAscii().constData(), s.toAscii().constData());
 		refresh();
 	}
 }
@@ -186,20 +186,20 @@ void DatPanel::exprt()
 	{
 		bool ok;
 		QString s = QInputDialog::getText(this, tr("UDAV - Export to PNG"), tr("Enter color scheme for picture"), QLineEdit::Normal, "BbcyrR", &ok);
-		if(ok)	var->Export(fn.toAscii(), s.toAscii());
+		if(ok)	var->Export(fn.toAscii().constData(), s.toAscii().constData());
 	}
 }
 //-----------------------------------------------------------------------------
 void DatPanel::save()
 {
 	QString fn = QFileDialog::getSaveFileName(this, tr("UDAV - Save data"), "", tr("Data files (*.dat)\nAll files (*.*)"));
-	if(!fn.isEmpty())	var->Save(fn.toAscii());
+	if(!fn.isEmpty())	var->Save(fn.toAscii().constData());
 }
 //-----------------------------------------------------------------------------
 void DatPanel::load()
 {
 	QString fn = QFileDialog::getOpenFileName(this, tr("UDAV - Load data"), "", tr("Data files (*.dat)\nAll files (*.*)"));
-	if(!fn.isEmpty())	{	var->Read(fn.toAscii());	refresh();	}
+	if(!fn.isEmpty())	{	var->Read(fn.toAscii().constData());	refresh();	}
 }
 //-----------------------------------------------------------------------------
 void DatPanel::copy()
@@ -266,7 +266,7 @@ void DatPanel::byformula()
 {
 	bool ok;
 	QString s = QInputDialog::getText(this, tr("UDAV - Fill data"), tr("Enter formula for data filling.\nNote that variables x,y,z supposed to be in range [0,1]."), QLineEdit::Normal, "", &ok);
-	if(ok)	{	var->Modify(s.toAscii());	refresh();	}
+	if(ok)	{	var->Modify(s.toAscii().constData());	refresh();	}
 }
 //-----------------------------------------------------------------------------
 void DatPanel::inrange()
@@ -355,7 +355,7 @@ void DatPanel::transp()
 {
 	bool ok;
 	QString s = QInputDialog::getText(this, tr("UDAV - Transpose data"), tr("Enter new order of dimensions.\nFor example, 'yx' or 'yxz' for transpose x-y, 'zyx' for transposing x-z and so on."), QLineEdit::Normal, "yx", &ok);
-	if(ok)	{	var->Transpose(s.toAscii());	refresh();	updateDataItems();	}
+	if(ok)	{	var->Transpose(s.toAscii().constData());	refresh();	updateDataItems();	}
 }
 //-----------------------------------------------------------------------------
 void DatPanel::smooth()
@@ -369,42 +369,42 @@ void DatPanel::cumsum()
 {
 	bool ok;
 	QString s = QInputDialog::getText(this, tr("UDAV - Summarize data"), tr("Enter direction(s) for cumulative summation.\nFor example 'xy' - summate along x and y directions."), QLineEdit::Normal, "", &ok);
-	if(ok)	{	var->CumSum(s.toAscii());	refresh();	}
+	if(ok)	{	var->CumSum(s.toAscii().constData());	refresh();	}
 }
 //-----------------------------------------------------------------------------
 void DatPanel::integr()
 {
 	bool ok;
 	QString s = QInputDialog::getText(this, tr("UDAV - Integrate data"), tr("Enter direction(s) for integration.\nFor example 'xy' - integrate along x and y directions."), QLineEdit::Normal, "", &ok);
-	if(ok)	{	var->Integral(s.toAscii());	refresh();	}
+	if(ok)	{	var->Integral(s.toAscii().constData());	refresh();	}
 }
 //-----------------------------------------------------------------------------
 void DatPanel::diff()
 {
 	bool ok;
 	QString s = QInputDialog::getText(this, tr("UDAV - Differentiate data"), tr("Enter direction(s) for differentiation.\nFor example 'xy' - differentiate along x and y directions."), QLineEdit::Normal, "", &ok);
-	if(ok)	{	var->Diff(s.toAscii());		refresh();	}
+	if(ok)	{	var->Diff(s.toAscii().constData());		refresh();	}
 }
 //-----------------------------------------------------------------------------
 void DatPanel::diff2()
 {
 	bool ok;
 	QString s = QInputDialog::getText(this, tr("UDAV - Laplace transform"), tr("Enter direction(s) for laplace transform.\nFor example 'xy' - do transform along x and y directions."), QLineEdit::Normal, "", &ok);
-	if(ok)	{	var->Diff2(s.toAscii());	refresh();	}
+	if(ok)	{	var->Diff2(s.toAscii().constData());	refresh();	}
 }
 //-----------------------------------------------------------------------------
 void DatPanel::swap()
 {
 	bool ok;
 	QString s = QInputDialog::getText(this, tr("UDAV - Swap data"), tr("Enter direction(s) for swapping (exchange left and right parts).\nFor example 'xy' - swap along x and y directions. Useful for Fourier spectrum."), QLineEdit::Normal, "", &ok);
-	if(ok)	{	var->Swap(s.toAscii());		refresh();	}
+	if(ok)	{	var->Swap(s.toAscii().constData());		refresh();	}
 }
 //-----------------------------------------------------------------------------
 void DatPanel::mirror()
 {
 	bool ok;
 	QString s = QInputDialog::getText(this, tr("UDAV - Mirror data"), tr("Enter direction(s) for mirroring.\nFor example 'xy' - mirror along x and y directions."), QLineEdit::Normal, "", &ok);
-	if(ok)	{	var->Swap(s.toAscii());	refresh();	}
+	if(ok)	{	var->Swap(s.toAscii().constData());	refresh();	}
 }
 //-----------------------------------------------------------------------------
 void DatPanel::sumof()
@@ -412,8 +412,8 @@ void DatPanel::sumof()
 	QString name, val;
 	if(namesDialog(tr("UDAV - Sum along ..."), tr("Specify direction(s) of summation"), name, val))
 	{
-		mglVar *v = parser.AddVar(name.toAscii());
-		v->Set(var->Sum(val.toAscii()));
+		mglVar *v = parser.AddVar(name.toAscii().constData());
+		v->Set(var->Sum(val.toAscii().constData()));
 		updateDataItems();
 	}
 }
@@ -423,8 +423,8 @@ void DatPanel::maxof()
 	QString name, val;
 	if(namesDialog(tr("UDAV - Max along ..."), tr("Specify direction(s) of maximal values"), name, val))
 	{
-		mglVar *v = parser.AddVar(name.toAscii());
-		v->Set(var->Max(val.toAscii()));
+		mglVar *v = parser.AddVar(name.toAscii().constData());
+		v->Set(var->Max(val.toAscii().constData()));
 		updateDataItems();
 	}
 }
@@ -434,8 +434,8 @@ void DatPanel::minof()
 	QString name, val;
 	if(namesDialog(tr("UDAV - Min along ..."), tr("Specify direction(s) of minimal values"), name, val))
 	{
-		mglVar *v = parser.AddVar(name.toAscii());
-		v->Set(var->Min(val.toAscii()));
+		mglVar *v = parser.AddVar(name.toAscii().constData());
+		v->Set(var->Min(val.toAscii().constData()));
 		updateDataItems();
 	}
 }
@@ -446,8 +446,8 @@ void DatPanel::momentx()
 	if(namesDialog(tr("UDAV - Momentum along 'x'"),
 		tr("Specify which momentum evaluate.\nThe momentum is res_i = sum_jk how(x_i,y_j,z_k) a_jk/ sum_jk a_jk.\nCoordinates x, y, z are data indexes normalized in range [0,1]."), name, val))
 	{
-		mglVar *v = parser.AddVar(name.toAscii());
-		v->Set(var->Momentum('x', val.toAscii()));
+		mglVar *v = parser.AddVar(name.toAscii().constData());
+		v->Set(var->Momentum('x', val.toAscii().constData()));
 		updateDataItems();
 	}
 }
@@ -458,8 +458,8 @@ void DatPanel::momenty()
 	if(namesDialog(tr("UDAV - Momentum along 'y'"),
 		tr("Specify which momentum evaluate.\nThe momentum is res_j = sum_ik how(x_i,y_j,z_k) a_ik/ sum_ik a_ik.\nCoordinates x, y, z are data indexes normalized in range [0,1]."), name, val))
 	{
-		mglVar *v = parser.AddVar(name.toAscii());
-		v->Set(var->Momentum('y', val.toAscii()));
+		mglVar *v = parser.AddVar(name.toAscii().constData());
+		v->Set(var->Momentum('y', val.toAscii().constData()));
 		updateDataItems();
 	}
 }
@@ -470,8 +470,8 @@ void DatPanel::momentz()
 	if(namesDialog(tr("UDAV - Momentum along 'z'"),
 		tr("Specify which momentum evaluate.\nThe momentum is res_k = sum_ij how(x_i,y_j,z_k) a_ij/ sum_ij a_ij.\nCoordinates x, y, z are data indexes normalized in range [0,1]."), name, val))
 	{
-		mglVar *v = parser.AddVar(name.toAscii());
-		v->Set(var->Momentum('z', val.toAscii()));
+		mglVar *v = parser.AddVar(name.toAscii().constData());
+		v->Set(var->Momentum('z', val.toAscii().constData()));
 		updateDataItems();
 	}
 }
@@ -500,7 +500,7 @@ void DatPanel::hist()
 	bool res = d->exec();
 	if(res && !v1->text().isEmpty() && !v2->text().isEmpty() && !id->text().isEmpty())
 	{
-		mglVar *vv = parser.AddVar(id->text().toAscii());
+		mglVar *vv = parser.AddVar(id->text().toAscii().constData());
 		if(!vv)	return;
 		vv->Set(var->Hist(nm->value(), v1->text().toDouble(), v2->text().toDouble()));
 		updateDataItems();

@@ -36,6 +36,20 @@ void mgl_set_obj_id(HMGL gr, int id)	{	_Gr_->SetObjId(id);	}
 int mgl_get_obj_id(HMGL gr, long x, long y)	{	return _Gr_->GetObjId(x,y);	}
 int mgl_get_spl_id(HMGL gr, long x, long y)	{	return _Gr_->GetSplId(x,y);	}
 //-----------------------------------------------------------------------------
+long mgl_is_active(HMGL gr, int xs, int ys, int d)
+{
+	register size_t i,w=_Gr_->GetWidth(), h=_Gr_->GetHeight();
+	if(d<=0) 	d=1;
+	for(i=0;i<gr->Act.size();i++)
+	{
+		const mglActivePos &p = gr->Act[i];
+		if(abs(xs-p.x)<d && abs(ys-p.y)<d)	return i;
+	}
+	return -1;
+}
+long mgl_is_active_(uintptr_t *gr, int *xs, int *ys, int *d)
+{	return mgl_is_active(_GR_, *xs, *ys, *d);	}
+//-----------------------------------------------------------------------------
 int mgl_new_frame(HMGL gr)		{	return _Gr_->NewFrame();	}
 void mgl_end_frame(HMGL gr)		{	_Gr_->EndFrame();	}
 int mgl_get_num_frame(HMGL gr)	{	return _Gr_->GetNumFrame();	}

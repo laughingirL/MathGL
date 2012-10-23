@@ -30,7 +30,7 @@ mglCanvas::mglCanvas(int w, int h) : mglBase()
 	Z=0;	C=G=G4=0;	OI=0;	gif=0;
 	CurFrameId=0;	Delay=0.5;
 	Width=Height=Depth=0;	ObjId=-1;
-	fscl=ftet=0;
+	fscl=ftet=0;		PlotId = "frame";
 	dr_nx1=dr_nx2=dr_ny1=dr_ny2=0;	// Allowed drawing region
 
 	fnt = new mglFont;	fnt->gr = this;		ac.ch='c';
@@ -99,7 +99,7 @@ GifFileType *gif;*/
 	SetRotatedText(true);	CurrPal = 0;
 	SetLegendMarks();		SetFontSize(4);
 	SetTuneTicks(-1);		SetAmbient();
-	PlotId = "frame";		clr(MGL_DISABLE_SCALE);
+	clr(MGL_DISABLE_SCALE);
 	clr(MGL_USE_GMTIME);	clr(MGL_NOSUBTICKS);
 	SetDifLight(false);		SetReduceAcc(false);
 	SetDefScheme("BbcyrR");	SetPalette(MGL_DEF_PAL);

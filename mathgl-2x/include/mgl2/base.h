@@ -198,7 +198,9 @@ extern std::string mglGlobalMess;	///< Buffer for receiving global messages
 /// Structure active points
 struct mglActivePos
 {
-	int x,y,id,n;
+	int x,y;		///< coordinates of active point
+	int id;		///< object id for active point
+	int n;		///< position of active point in command (object id)
 };
 //-----------------------------------------------------------------------------
 /// Base class for canvas which handle all basic drawing

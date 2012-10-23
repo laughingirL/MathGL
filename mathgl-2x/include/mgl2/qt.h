@@ -67,10 +67,11 @@ public:
 	int getPer()	{return int(per);}	///< Get perspective value
 	int getPhi()	{return int(phi);}	///< Get Phi-angle value
 	int getTet()	{return int(tet);}	///< Get Theta-angle value
-	bool getAlpha()	{return alpha;}		///< Get transparency state
-	bool getLight()	{return light;}		///< Get lightning state
-	bool getZoom()	{return zoom;}		///< Get mouse zooming state
+	bool getAlpha()	{return alpha;}	///< Get transparency state
+	bool getLight()	{return light;}	///< Get lightning state
+	bool getZoom()	{return zoom;}	///< Get mouse zooming state
 	bool getRotate(){return rotate;}	///< Get mouse rotation state
+	bool isActive(int xs,int ys);	///< Check if active point is pressed
 
 public slots:
 	void refresh();
@@ -226,7 +227,7 @@ struct mglDrawScript : public mglDraw
 	mglDrawScript(HMPR p):mglDraw()	{	par=p;	line=-1;	}
 	virtual ~mglDrawScript() {}
 	int Draw(mglGraph *gr)
-	{	gr->Highlight(line+1);	mgl_parse_text(gr->Self(),par,text.toAscii());	return 0;	}
+	{	gr->Highlight(line+1);	mgl_parse_text(gr->Self(),par,text.toAscii().constData());	return 0;	}
 };
 //-----------------------------------------------------------------------------
 /// Convert bitmap from mglCanvasWnd to QPixmap
