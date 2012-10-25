@@ -37,6 +37,7 @@
 #include "mgl2/qt.h"
 #include "plot_pnl.h"
 #include "anim_dlg.h"
+#include "style_dlg.h"
 extern bool mglAutoSave;
 extern mglParse parser;
 int animDelay=500;
@@ -46,6 +47,7 @@ PlotPanel::PlotPanel(QWidget *parent) : QWidget(parent)
 {
 	gifOn = jpgOn = false;
 	animDialog = new AnimParam(this);	animPos = -1;
+	stlDialog = new StyleDialog(this);
 	printer = new QPrinter;		curPos = -1;
 	timer = new QTimer(this);
 	connect(timer, SIGNAL(timeout()), this, SLOT(next()));
@@ -56,6 +58,7 @@ PlotPanel::PlotPanel(QWidget *parent) : QWidget(parent)
 	mgl = new QMathGL(this);
 	draw = new mglDrawScript(parser.Self());
 	mgl->getGraph()->set(MGL_SHOW_POS);	mgl->setDraw(draw);
+	connect(mgl,SIGNAL(askStyle(int)),this,SLOT(setStyle(int)));
 
 	QBoxLayout *v,*h,*m;
 	v = new QVBoxLayout(this);
@@ -69,6 +72,9 @@ PlotPanel::PlotPanel(QWidget *parent) : QWidget(parent)
 }
 //-----------------------------------------------------------------------------
 PlotPanel::~PlotPanel()	{	delete printer;	}
+//-----------------------------------------------------------------------------
+void PlotPanel::setStyle(int id)
+{	if(stlDialog->exec())	mgl->setStyle(id, stlDialog->getStyle());	}
 //-----------------------------------------------------------------------------
 void PlotPanel::animText(const QString &txt)	{	animPutText(txt);	}
 //-----------------------------------------------------------------------------

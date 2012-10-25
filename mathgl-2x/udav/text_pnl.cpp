@@ -237,8 +237,10 @@ void TextPanel::setCursorPosition(int n)
 	edit->setFocus();
 }
 //-----------------------------------------------------------------------------
-void TextPanel::newCmd()
+void TextPanel::newCmd(int n)
 {
+	if(n>0)	setCursorPosition(n-1);
+	else if(n==0)	return;
 	newCmdDlg->parseCmd(edit->textCursor().block().text());
 	newCmdDlg->show();
 }

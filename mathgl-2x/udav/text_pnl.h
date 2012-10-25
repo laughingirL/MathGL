@@ -73,7 +73,7 @@ public slots:
 	void insFile();
 	void insPath();
 	void insFitF();
-	void newCmd();
+	void newCmd(int n=-1);
 	void addSetup();
 
 	void refreshData();

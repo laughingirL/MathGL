@@ -248,6 +248,7 @@ MainWindow::MainWindow(QWidget *wp) : QMainWindow(wp)
 //	connect(graph->mgl, SIGNAL(posChanged(QString)), statusBar(), SLOT(showMessage(QString)));
 	connect(graph->mgl, SIGNAL(refreshData()), this, SLOT(refresh()));
 	connect(graph->mgl, SIGNAL(refreshData()), edit, SLOT(refreshData()));
+	connect(graph->mgl,SIGNAL(doubleClick(int)),edit,SLOT(newCmd(int)));
 
 	connect(mess, SIGNAL(textChanged()), this, SLOT(warnChanged()));
 //	connect(mdi, SIGNAL(subWindowActivated(QMdiSubWindow *)), this, SLOT(subActivated(QMdiSubWindow *)));

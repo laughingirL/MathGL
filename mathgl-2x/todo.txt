@@ -28,6 +28,9 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 
 2. Text about UDAV (tabs,dialogs,hotkeys,hints,mouse)
 * known feature -- if you draw something in function then highlighted all similar objects
+* Dbl.click on figure --> newCmd dialog
+* Dbl.click on primitive --> dialog for styles
+* Dbl.click on active point --> remove primitive
 
 3. Add FAQ about MPEG/GIF and PDF, JavaScript
 4. JSON samples in documentation ?!!
@@ -60,12 +63,8 @@ Buttons: new,load,save // newcmd,hide,annotation,collapse on/off,setup // calc. 
 09. Create default plot dependently of selected row/column/range in data table
 10. Data change via menu/toolbar -- save to internal script => enable undo + save initial array(?)
 
-+11. Add primitives by mouse at beginning of script
-Move by "attraction" points don't work correctly.
-Primitives 'mark' and 'text' are nor drawn!!!
-Dbl.click on primitive --> dialog for styles
-Dbl.click on active point -->remove primitive
-Save/load into script between blocks "#----- MathGL block -----" +  hide it in editor
++11. Add primitives by mouse at beginning of script between blocks "#----- MathGL block -----" +  hide it in editor
+Move by "attraction" points don't work correctly + attract to grid/attr.pnts/bitmap.
 
 12. Multi-threading for enabling "stop".
 

@@ -29,6 +29,7 @@ void mgl_mark(HMGL gr, mreal x,mreal y,mreal z,const char *mark)
 {
 	char mk = gr->SetPenPal(mark);
 	if(!mk)	mk = '.';
+	if(mgl_isnan(z))	z=2*gr->Max.z-gr->Min.z;
 	static int cgid=1;	gr->StartGroup("MarkS",cgid++);
 	long k = gr->AddPnt(mglPoint(x,y,z),gr->CDef,mglPoint(NAN),-1,3);
 	gr->mark_plot(k,mk); 	gr->AddActive(k);
@@ -42,6 +43,7 @@ void mgl_mark_(uintptr_t *gr, mreal *x, mreal *y, mreal *z, const char *pen,int 
 void mgl_ball(HMGL gr, mreal x,mreal y,mreal z)
 {
 	static int cgid=1;	gr->StartGroup("Ball",cgid++);
+	if(mgl_isnan(z))	z=2*gr->Max.z-gr->Min.z;
 	long k = gr->AddPnt(mglPoint(x,y,z),gr->AddTexture('r'),mglPoint(NAN),-1,3);
 	gr->mark_plot(k,'.');	gr->AddActive(k);
 	gr->EndGroup();
@@ -53,7 +55,7 @@ void mgl_ball_(uintptr_t *gr, mreal *x,mreal *y,mreal *z)
 void mgl_line(HMGL gr, mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mreal z2, const char *pen,int n)
 {
 	static int cgid=1;	gr->StartGroup("Line",cgid++);
-	if(mgl_isnan(z1) || mgl_isnan(z2))	z1=z2=gr->Min.z;
+	if(mgl_isnan(z1) || mgl_isnan(z2))	z1=z2=2*gr->Max.z-gr->Min.z;
 	mglPoint p1(x1,y1,z1), p2(x2,y2,z2), p=p1,nn=mglPoint(NAN);
 	gr->SetPenPal(pen);
 	n = (n<2) ? 2 : n;
@@ -81,6 +83,7 @@ void mgl_line_(uintptr_t *gr, mreal *x1, mreal *y1, mreal *z1, mreal *x2, mreal 
 void mgl_curve(HMGL gr, mreal x1, mreal y1, mreal z1, mreal dx1, mreal dy1, mreal dz1, mreal x2, mreal y2, mreal z2, mreal dx2, mreal dy2, mreal dz2, const char *pen,int n)
 {
 	static int cgid=1;	gr->StartGroup("Curve",cgid++);
+	if(mgl_isnan(z1) || mgl_isnan(z2))	z1=z2=2*gr->Max.z-gr->Min.z;
 	mglPoint p1(x1,y1,z1), p2(x2,y2,z2), d1(dx1,dy1,dz1), d2(dx2,dy2,dz2), a,b,p=p1,nn=mglPoint(NAN);
 	a = 3*(p2-p1)-d2-2*d1;	b = d1+d2-2*(p2-p1);
 	n = (n<2) ? 2 : n;
@@ -143,7 +146,8 @@ void mgl_face(HMGL gr, mreal x0, mreal y0, mreal z0, mreal x1, mreal y1, mreal z
 	static int cgid=1;	gr->StartGroup("Face",cgid++);
 	long pal;
 	gr->SetPenPal(stl,&pal);
-	mreal c1,c2,c3,c4,zz=(gr->Min.z+gr->Max.z)/2;
+//	mreal c1,c2,c3,c4,zz=(gr->Min.z+gr->Max.z)/2;
+	mreal c1,c2,c3,c4,zz=2*gr->Max.z-gr->Min.z;
 	c1=c2=c3=c4=gr->CDef;
 	if(mgl_isnan(z0))	z0 = zz;	if(mgl_isnan(z1))	z1 = zz;
 	if(mgl_isnan(z2))	z2 = zz;	if(mgl_isnan(z3))	z3 = zz;
@@ -362,6 +366,7 @@ void mgl_ellipse(HMGL gr, mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mrea
 	if(!fill)	k=c;
 
 	gr->Reserve(2*n+1);
+	if(mgl_isnan(z1) || mgl_isnan(z2))	z1=z2=2*gr->Max.z-gr->Min.z;
 	mglPoint p1(x1,y1,z1), p2(x2,y2,z2), v=p2-p1;
 	d = v.norm();
 	if(d==0)	v = mglPoint(1);	else	v /= d;
@@ -376,7 +381,7 @@ void mgl_ellipse(HMGL gr, mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mrea
 		mreal t = i*2*M_PI/(n-1.);
 		p = s+v*cos(t)+u*sin(t);
 		n2 = n1;	n1 = gr->AddPnt(p,c,q,-1,11);
-		if(i==n/4)	gr->AddActive(n1,3);
+		if(i==n/4)	gr->AddActive(n1,2);
 		m2 = m1;	m1 = gr->CopyNtoC(n1,k);
 		if(i>0)
 		{
@@ -398,6 +403,7 @@ void mgl_rhomb(HMGL gr, mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mreal 
 	bool fill = !mglchr(stl,'#'), box = mglchr(stl,'@') || !fill;
 	if(!fill)	k=c;
 	gr->Reserve(8);
+	if(mgl_isnan(z1) || mgl_isnan(z2))	z1=z2=2*gr->Max.z-gr->Min.z;
 	mglPoint p1(x1,y1,z1), p2(x2,y2,z2), u=mglPoint(0,0,1)^(p1-p2), q=u^(p1-p2), p, s,qq;
 	u = (r/u.norm())*u;	s = (p1+p2)/2.;
 	p = p1;	q = qq;	n1 = gr->AddPnt(p,c,qq,-1,11);
@@ -580,6 +586,7 @@ void mgl_putsw_dir(HMGL gr, mreal x, mreal y, mreal z, mreal dx, mreal dy, mreal
 		x = (2*x-1)*s;	y = (2*y-1)*s;
 		dx= (2*dx-1)*s;	dy= (2*dy-1)*s;
 	}
+	if(mgl_isnan(z))	z=2*gr->Max.z-gr->Min.z;
 	mglPoint p(x,y,z), d(dx-x,dy-y,dz-z);
 	long k = gr->AddPnt(p,-1,d,-1,7);
 	gr->AddActive(k,0);

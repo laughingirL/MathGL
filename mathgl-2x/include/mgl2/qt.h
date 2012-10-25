@@ -121,10 +121,11 @@ public slots:
 	void addMark();						///< add marker into primitives
 	void addLine();						///< add line into primitives
 	void addRect();						///< add rectangle into primitives
-	void addCurve();						///< add curve into primitives
-	void addRhomb();						///< add rhombus into primitives
+	void addCurve();					///< add curve into primitives
+	void addRhomb();					///< add rhombus into primitives
 	void addEllipse();					///< add ellipse into primitives
 	void addText(QString txt="");		///< add text into primitives
+	void setStyle(int id, QString stl);///< set style for primitive with \a id
 
 	void setUsePrimitives(bool use)	{	mglUserPrim=use;	emit usePrimChanged(use);	}
 
@@ -134,22 +135,25 @@ public slots:
 	void animation(bool st=true);	///< Start animation
 	void about();		///< Show about information
 	void aboutQt();		///< Show information about Qt version
+
 signals:
 	void gridChanged(int);		///< Grid drawing changed (by mouse or by toolbar)
 	void phiChanged(int);		///< Phi angle changed (by mouse or by toolbar)
 	void tetChanged(int);		///< Tet angle changed (by mouse or by toolbar)
 	void perChanged(int);		///< Perspective changed (by mouse or by toolbar)
-	void alphaChanged(bool);		///< Transparency changed (by toolbar)
-	void lightChanged(bool);		///< Lighting changed (by toolbar)
+	void alphaChanged(bool);	///< Transparency changed (by toolbar)
+	void lightChanged(bool);	///< Lighting changed (by toolbar)
 	void zoomChanged(bool);		///< Zooming changed (by toolbar)
 	void rotateChanged(bool);	///< Rotation changed (by toolbar)
 	void mouseClick(mreal,mreal,mreal);	///< Position of mouse click
 	void frameChanged(int);		///< Need another frame to show
 	void showWarn(QString);		///< Show warnings
 	void posChanged(QString message);	///< user click to show mouse position
-	void objChanged(int objId);			///< User double-click to select object/line
+	void objChanged(int objId);	///< User double-click to select object/line
 	void usePrimChanged(bool);	///< Flag mglUserPrim is changed
 	void refreshData();
+	void doubleClick(int id);	///< Double mouse click by object with \a id
+	void askStyle(int id);	///< Update style
 
 protected:
 	void paintEvent(QPaintEvent *);
@@ -158,6 +162,7 @@ protected:
 	void mouseReleaseEvent(QMouseEvent *);
 	void mouseMoveEvent(QMouseEvent *);
 	void wheelEvent(QWheelEvent *);
+	void mouseDoubleClickEvent(QMouseEvent *);
 
 	static bool mglUserPrim;
 	QString primitives;	///< Manual primitives, defined by user

@@ -44,9 +44,9 @@ private slots:
 private:
 	QString result;
 	QComboBox *cc[8], *cline, *cfont;
-	QSlider *nn[8];
+	QSlider *nn[8], *nline;
 	QComboBox *axial, *ctext, *a1, *a2, *dash, *mark;
-	QCheckBox *swire, *coor, *upd;
+	QCheckBox *swire, *upd;
 	QCheckBox *ital, *bold, *wire, *uline, *oline;
 	QSpinBox *width;
 	QGroupBox *align;

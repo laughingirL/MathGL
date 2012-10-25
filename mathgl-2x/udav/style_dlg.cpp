@@ -101,6 +101,13 @@ StyleDialog::StyleDialog(QWidget *parent) : QDialog(parent)
 	a2 = new QComboBox(p);	g->addWidget(a2, 1, 2);	fillArrows(a2);
 	l = new QLabel(tr("Color"), p);	g->addWidget(l, 2, 0, Qt::AlignRight);
 	cline=new QComboBox(p);	g->addWidget(cline, 2, 1);	fillColors(cline);
+
+	nline = new QSlider(p);		g->addWidget(nline, 2, 2);
+	nline->setRange(1, 9);		nline->setValue(5);
+	nline->setTickPosition(QSlider::TicksAbove);
+	nline->setTickInterval(1);	nline->setPageStep(2);
+	nline->setOrientation(Qt::Horizontal);
+	
 	l = new QLabel(tr("Marks"), p);	g->addWidget(l, 3, 0, Qt::AlignRight);
 	mark = new QComboBox(p);	g->addWidget(mark, 3, 1);	fillMarkers(mark);
 	l = new QLabel(tr("Line width"), p);	g->addWidget(l, 4, 0, Qt::AlignRight);
@@ -111,6 +118,7 @@ StyleDialog::StyleDialog(QWidget *parent) : QDialog(parent)
 	connect(dash,SIGNAL(activated(int)), this, SLOT(updatePic()));
 	connect(mark,SIGNAL(activated(int)), this, SLOT(updatePic()));
 	connect(cline,SIGNAL(activated(int)), this, SLOT(updatePic()));
+	connect(nline,SIGNAL(valueChanged(int)), this, SLOT(updatePic()));
 	connect(width,SIGNAL(valueChanged(int)), this, SLOT(updatePic()));
 	tab->addTab(p, tr("Line style"));
 	// color scheme
@@ -132,7 +140,6 @@ StyleDialog::StyleDialog(QWidget *parent) : QDialog(parent)
 		connect(cc[i],SIGNAL(activated(int)), this, SLOT(updatePic()));
 		connect(nn[i],SIGNAL(valueChanged(int)), this, SLOT(updatePic()));
 	}
-	coor = new QCheckBox(tr("Colors along coordinates"),p);	v->addWidget(coor);
 	swire = new QCheckBox(tr("Wire or mesh plot"),p);	v->addWidget(swire);
 	g = new QGridLayout();	v->addLayout(g);
 	l = new QLabel(tr("Axial direction"), p);	g->addWidget(l, 0, 0, Qt::AlignRight);
@@ -142,7 +149,6 @@ StyleDialog::StyleDialog(QWidget *parent) : QDialog(parent)
 	axial->addItem("y");	axial->addItem("z");
 	ctext = new QComboBox(p);	g->addWidget(ctext, 1, 1);
 	ctext->addItem(tr("none"));	ctext->addItem(tr("under"));	ctext->addItem(tr("above"));
-	connect(coor,SIGNAL(toggled(bool)), this, SLOT(updatePic()));
 	connect(axial,SIGNAL(activated(int)), this, SLOT(updatePic()));
 	connect(ctext,SIGNAL(activated(int)), this, SLOT(updatePic()));
 	connect(swire,SIGNAL(toggled(bool)), this, SLOT(updatePic()));
@@ -318,7 +324,13 @@ void StyleDialog::updatePic()
 		i = dash->currentIndex();	if(i>0)	result += dsh[i-1];
 		i = mark->currentIndex();	if(i>0)	result += mrk[i-1];
 		if(i>11)	result += '#';
-		i = cline->currentIndex();	if(i>0)	result += col[i-1];
+		i = cline->currentIndex();
+		if(i>0)
+		{
+			j = nline->value();
+			if(j!=5)	result += "{"+col[i-1]+char('0'+i)+"}";
+			else		result += col[i-1];
+		}
 		i = width->value();		if(i>1)	result += char('0'+i);
 		gr.Plot(x,y,result.toAscii().constData());
 		break;
@@ -327,11 +339,11 @@ void StyleDialog::updatePic()
 		{
 			i = cc[j]->currentIndex();
 			if(i<1)	break;
-			result += col[i-1];
+			QCharRef c = col[i-1];
 			i = nn[j]->value();
-			if(i!=5)	result += char('0'+i);
+			if(i!=5)	result += "{"+c+char('0'+i)+"}";
+			else		result += c;
 		}
-		if(coor->isChecked())	result += 'd';
 		if(swire->isChecked())	result += '#';
 		i = ctext->currentIndex();
 		if(i==1)	result += 't';

@@ -285,7 +285,6 @@ void NewCmdDialog::insertData()
 		if(datDialog->exec())	args->item(row,1)->setText(datDialog->getData());
 	}
 	else		QMessageBox::warning(this,tr("New command"), tr("This argument is not data"));
-
 }
 //-----------------------------------------------------------------------------
 void NewCmdDialog::insertStl()

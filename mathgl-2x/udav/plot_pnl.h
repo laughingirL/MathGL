@@ -35,6 +35,7 @@ class InfoDialog;
 class AnimParam;
 class DatPanel;
 class mglVar;
+class StyleDialog;
 //-----------------------------------------------------------------------------
 class PlotPanel : public QWidget
 {
@@ -72,6 +73,7 @@ private slots:
 	void adjust();
 	void pressF9();
 	void stop();
+	void setStyle(int id);
 
 private:
 	bool gifOn, jpgOn;
@@ -85,7 +87,8 @@ private:
 	AnimParam *animDialog;
 	QMenu *popup;
 	QPrinter *printer;
-
+	StyleDialog *stlDialog;
+	
 	void toolTop(QBoxLayout *l);
 	void toolLeft(QBoxLayout *l);
 };

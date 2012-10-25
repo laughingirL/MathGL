@@ -208,8 +208,8 @@ void QMathGL::update()
 		setlocale(LC_NUMERIC, "");
 		if(!isHidden())	QApplication::restoreOverrideCursor();
 		emit refreshData();
-
-		emit showWarn(gr->Mess.c_str());		mousePos="";
+		emit showWarn(gr->Mess.c_str());
+		mousePos="";
 	}
 	refresh();
 }
@@ -223,15 +223,16 @@ void QMathGL::refresh()
 		size_t i, n=primitives.count('\n');
 		mglGraph gg(gr);
 		setlocale(LC_NUMERIC, "C");
-		gg.SubPlot(1,1,0,"#");
-printf("Refresh:\n%s\n",primitives.toAscii().constData());
+		gg.Push();	gg.SubPlot(1,1,0,"#");
+		mglPoint x1=gr->Min, x2=gr->Max;
+		gg.SetRanges(mglPoint(-1,-1,-1),mglPoint(1,1,1));
 		for(i=0;i<n;i++)
 		{
 			gr->SetObjId(i+MGL_MAX_LINES);
 			QString tst = primitives.section('\n',i,i);
 			pr.Parse(&gg,primitives.section('\n',i,i).toAscii().constData(),long(i)+MGL_MAX_LINES);
 		}
-		setlocale(LC_NUMERIC, "");
+		gg.SetRanges(x1,x2);	gg.Pop();	setlocale(LC_NUMERIC, "");
 	}
 	gr->Zoom(x1,y1,x2,y2);	gr->View(phi,0,tet);	gr->Perspective(per);
 	mglConvertFromGraph(pic, gr, &grBuf);
@@ -329,36 +330,72 @@ void QMathGL::mouseMoveEvent(QMouseEvent *ev)
 	}
 	else if(ev->buttons()&Qt::LeftButton)	// move primitives
 	{
-		long h=pic.height(), w=pic.width(), d=(h>w?w:h)/100;
+		long h=pic.height(), w=pic.width(), d=(h>w?w:h)/50;
 		long pos = mgl_is_active(gr,x0,y0,d);
 		long id = long(gr->GetObjId(x0,y0))-MGL_MAX_LINES;
-printf("pos = %ld, id = %ld\n",pos,id);	fflush(stdout);
-		if(pos>=0)	// this active point
+		if(grid && pos>=0)	// this active point
 		{
 			const mglActivePos &p = gr->Act[pos];
 			id = long(p.id)-MGL_MAX_LINES;
-printf("id = %ld\n",id);	fflush(stdout);
 			if(id>=0)	// this is our primitive
 			{
-				QString tst = primitives.section('\n',id,id),res;
-printf("tst = '%s'\n",tst.toAscii().constData());	fflush(stdout);
-				float x = 2*xe/float(w)-1, y = 2*(h-ye)/float(h)-1;
-printf("x = %g, y = %g, n = %d\n",x,y,p.n);	fflush(stdout);
-				res = tst.section(' ',0,p.n*2,QString::SectionSkipEmpty) +
-					' '+QString::number(x)+' '+QString::number(y)+' ' +
-					tst.section(' ',p.n*2+3,-1,QString::SectionSkipEmpty);
-printf("res = '%s'\n",res.toAscii().constData());	fflush(stdout);
+				// try "attract" mouse
+				register size_t i;
+				for(i=0;i<=10;i++)
+				{
+					if(abs(xe-i*(w/10))<d)	xe = i*(w/10);
+					if(abs(ye-i*(h/10))<d)	ye = i*(h/10);
+				}
+				for(i=0;i<gr->Act.size();i++)
+				{
+					const mglActivePos &q = gr->Act[i];
+					if(abs(xe-q.x)<d && abs(ye-q.y)<d)	{	xe=q.x;	ye=q.y;	}
+				}
+				// now move point
+				QString tst = primitives.section('\n',id,id), cmd=tst.section(' ',0,0), res;
+				float dx = 2*(xe-x0)/float(w), dy = 2*(y0-ye)/float(h);
+				float xx=tst.section(' ',1,1).toFloat(), yy=tst.section(' ',2,2).toFloat();
+				if(p.n==0)
+					res = cmd+" "+QString::number(xx+dx)+" "+QString::number(yy+dy)+" "+tst.section(' ',3);
+				else if(cmd=="rect")
+				{
+					float x_=tst.section(' ',3,3).toFloat(), y_=tst.section(' ',4,4).toFloat();
+					if(p.n==1)	{	xx+=dx;	y_+=dy;	}
+					if(p.n==2)	{	x_+=dx;	yy+=dy;	}
+					if(p.n==3)	{	x_+=dx;	y_+=dy;	}
+					res = "rect "+QString::number(xx)+" "+QString::number(yy)+" "+
+						QString::number(x_)+" "+QString::number(y_)+" "+tst.section(' ',5);
+				}
+				// TODO parse circle if I'll add it
+				else if(p.n==1)
+				{
+					xx=tst.section(' ',3,3).toFloat();	yy=tst.section(' ',4,4).toFloat();
+					res = tst.section(' ',0,2)+" "+QString::number(xx+dx)+" "+QString::number(yy+dy)+" "+tst.section(' ',5);
+				}
+				else if(cmd=="rhomb" || cmd=="ellipse")
+				{
+					float x_=tst.section(' ',3,3).toFloat()-xx, y_=tst.section(' ',4,4).toFloat()-yy, dr=0;
+					if(x_*x_+y_*y_>0)
+					{
+						dr = (dx*x_+dy*y_)/(x_*x_+y_*y_);
+						dr = hypot(dx-dr*x_,dy-dr*y_);
+					}
+					else	dr = hypot(dx,dy);
+					res = tst.section(' ',0,4)+" "+QString::number(tst.section(' ',5,5).toFloat()+dr)+" "+tst.section(' ',6);
+				}
+				else if(p.n==2)
+				{
+					xx=tst.section(' ',5,5).toFloat();	yy=tst.section(' ',6,6).toFloat();
+					res = tst.section(' ',0,4)+" "+QString::number(xx+dx)+" "+QString::number(yy+dy)+" "+tst.section(' ',7);
+				}
+				else if(p.n==3)
+				{
+					xx=tst.section(' ',7,7).toFloat();	yy=tst.section(' ',8,8).toFloat();
+					res = tst.section(' ',0,6)+" "+QString::number(xx+dx)+" "+QString::number(yy+dy)+" "+tst.section(' ',9);
+				}
 				if(id>0) 	res = primitives.section('\n',0,id-1) + "\n" + res;
 				primitives = res + "\n" + primitives.section('\n',id+1);
-printf("prim = '%s'\n",primitives.toAscii().constData());	fflush(stdout);
 				refresh();	x0 = xe;	y0 = ye;
-printf("finish\n");	fflush(stdout);
-/*{	primitives += "mark 0 0 '*'\n";	refresh();	}
-{	primitives += "line -0.2 0 0.2 0 'r2'\n";	refresh();	}
-{	primitives += "rect -0.2 -0.2 0.2 0.2 'r'\n";	refresh();	}
-{	primitives += "curve -0.2 0 0 0.5 0.2 0 0 0.5 'r2'\n";	refresh();	}
-{	primitives += "rhomb -0.2 0 0.2 0 0.1 'r'\n";	refresh();	}
-{	primitives += "ellipse -0.2 0 0.2 0 0.1 'r'\n";	refresh();	}*/
 			}
 		}
 		else if(id>=0)	// this is primitive
@@ -366,7 +403,7 @@ printf("finish\n");	fflush(stdout);
 			QString tst = primitives.section('\n',id,id), cmd=tst.section(' ',0,0), res;
 			float dx = 2*(xe-x0)/float(w), dy = 2*(y0-ye)/float(h);
 			float x1=tst.section(' ',1,1).toFloat(), y1=tst.section(' ',2,2).toFloat(),x2,y2;
-			if(cmd=="mark" || cmd=="text")
+			if(cmd=="ball" || cmd=="text")
 				res = cmd+" "+QString::number(x1+dx)+" "+QString::number(y1+dy)+" "+tst.section(' ',3);
 			else if(cmd=="curve")
 			{
@@ -386,6 +423,35 @@ printf("finish\n");	fflush(stdout);
 		}
 	}
 	ev->accept();
+}
+//-----------------------------------------------------------------------------
+void QMathGL::mouseDoubleClickEvent(QMouseEvent *ev)
+{
+	long h=pic.height(), w=pic.width(), d=(h>w?w:h)/100;
+	long pos = mgl_is_active(gr,x0,y0,d);
+	long id = long(gr->GetObjId(x0,y0));
+	if(grid && pos>=0)	// this active point -> delete primitive
+	{
+		const mglActivePos &p = gr->Act[pos];
+		id = long(p.id)-MGL_MAX_LINES;
+		QString res;
+		if(id>0) 	res = primitives.section('\n',0,id-1) + "\n";
+		if(id>=0)	primitives = res + primitives.section('\n',id+1);
+		refresh();	x0 = xe;	y0 = ye;
+	}
+	else if(id>=MGL_MAX_LINES)	// option for primitives
+		emit askStyle(id-MGL_MAX_LINES);
+	else	emit doubleClick(id);
+	ev->accept();
+}
+//-----------------------------------------------------------------------------
+void QMathGL::setStyle(int id, QString stl)
+{
+	QString tst = primitives.section('\n',id,id), res;
+	res = tst.section(' ',0,-2) + " " + stl;
+	if(id>0) 	res = primitives.section('\n',0,id-1) + "\n" + res;
+	primitives = res + "\n" + primitives.section('\n',id+1);
+	refresh();	x0 = xe;	y0 = ye;
 }
 //-----------------------------------------------------------------------------
 void QMathGL::wheelEvent(QWheelEvent *ev)
@@ -667,7 +733,7 @@ void QMathGL::adjust()
 }
 //-----------------------------------------------------------------------------
 void QMathGL::addMark()
-{	primitives += "mark 0 0 '*'\n";	refresh();	}
+{	primitives += "ball 0 0 'r*'\n";	refresh();	}
 //-----------------------------------------------------------------------------
 void QMathGL::addLine()
 {	primitives += "line -0.2 0 0.2 0 'r2'\n";	refresh();	}
@@ -688,7 +754,7 @@ void QMathGL::addText(QString txt)
 {
 	if(txt.isEmpty())
 		txt = QInputDialog::getText(QApplication::activeWindow(), "MathGL", tr("Enter text"));
-	if(txt.isEmpty())
+	if(!txt.isEmpty())
 	{	primitives += "text 0 0 '"+txt+"' ''\n";	refresh();	}
 }
 //-----------------------------------------------------------------------------
