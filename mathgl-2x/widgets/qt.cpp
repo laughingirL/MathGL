@@ -96,7 +96,7 @@ void QMathGL::paintEvent(QPaintEvent *)
 			for(i=0;i<(long)gr->Act.size();i++)
 			{
 				const mglActivePos &p=gr->Act[i];
-				QRect rf(p.x-d/2,h-p.y-d/2-1,d,d);
+				QRect rf(p.x-d/2,p.y-d/2-1,d,d);
 				paint.drawRect(rf);
 				paint.fillRect(rf,QBrush(QColor(127,255,63)));
 			}
@@ -220,7 +220,7 @@ void QMathGL::refresh()
 	{
 		gr->Clf();	gr->GetFrame(0);
 		mglParse pr;
-		size_t i, n=primitives.count('\n');
+		long i, n=primitives.count('\n');
 		mglGraph gg(gr);
 		setlocale(LC_NUMERIC, "C");
 		gg.Push();	gg.SubPlot(1,1,0,"#");
@@ -230,7 +230,7 @@ void QMathGL::refresh()
 		{
 			gr->SetObjId(i+MGL_MAX_LINES);
 			QString tst = primitives.section('\n',i,i);
-			pr.Parse(&gg,primitives.section('\n',i,i).toAscii().constData(),long(i)+MGL_MAX_LINES);
+			pr.Parse(&gg,primitives.section('\n',i,i).toAscii().constData(),i+MGL_MAX_LINES);
 		}
 		gg.SetRanges(x1,x2);	gg.Pop();	setlocale(LC_NUMERIC, "");
 	}
@@ -330,7 +330,7 @@ void QMathGL::mouseMoveEvent(QMouseEvent *ev)
 	}
 	else if(ev->buttons()&Qt::LeftButton)	// move primitives
 	{
-		long h=pic.height(), w=pic.width(), d=(h>w?w:h)/50;
+		long h=pic.height(), w=pic.width(), d=(h>w?w:h)/100;
 		long pos = mgl_is_active(gr,x0,y0,d);
 		long id = long(gr->GetObjId(x0,y0))-MGL_MAX_LINES;
 		if(grid && pos>=0)	// this active point
@@ -341,15 +341,16 @@ void QMathGL::mouseMoveEvent(QMouseEvent *ev)
 			{
 				// try "attract" mouse
 				register size_t i;
+				register int tt;
 				for(i=0;i<=10;i++)
 				{
-					if(abs(xe-i*(w/10))<d)	xe = i*(w/10);
-					if(abs(ye-i*(h/10))<d)	ye = i*(h/10);
+					tt = i*(w/10);	if(abs(xe-tt)<2*d)	xe = tt;
+					tt = i*(h/10);	if(abs(ye-tt)<2*d)	ye = tt;
 				}
 				for(i=0;i<gr->Act.size();i++)
 				{
 					const mglActivePos &q = gr->Act[i];
-					if(abs(xe-q.x)<d && abs(ye-q.y)<d)	{	xe=q.x;	ye=q.y;	}
+					if(abs(xe-q.x)<2*d && abs(ye-q.y)<2*d)	{	xe=q.x;	ye=q.y;	}
 				}
 				// now move point
 				QString tst = primitives.section('\n',id,id), cmd=tst.section(' ',0,0), res;
@@ -391,6 +392,7 @@ void QMathGL::mouseMoveEvent(QMouseEvent *ev)
 				else if(p.n==3)
 				{
 					xx=tst.section(' ',7,7).toFloat();	yy=tst.section(' ',8,8).toFloat();
+					if(cmd=="curve")	{	dx*=-1;	dy*=-1;	}
 					res = tst.section(' ',0,6)+" "+QString::number(xx+dx)+" "+QString::number(yy+dy)+" "+tst.section(' ',9);
 				}
 				if(id>0) 	res = primitives.section('\n',0,id-1) + "\n" + res;

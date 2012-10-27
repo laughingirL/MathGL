@@ -701,7 +701,7 @@ const char *mmgl_error="call 'prepare1d'\nnew y 50 '0.7*sin(pi*x-pi) + 0.5*cos(3
 "new y0 10 '0.7*sin(pi*x-pi) + 0.5*cos(3*pi*(x+1)/2) + 0.2*sin(pi*(x+1)/2) + 0.2*rnd-0.1'\n"
 "subplot 2 2 0 '':title 'Error plot (default)':box:plot y:error x0 y0 ex ey 'k'\n"
 "subplot 2 2 1 '':title '\"!\" style; no e_x':box:plot y:error x0 y0 ey 'o!rgb'\n"
-"subplot 2 2 2 '':title '\"\\@\" style':box:plot y:error x0 y0 ex ey '@'; alpha 0.5\n"
+"subplot 2 2 2 '':title '\"\\@\" style':alpha on:box:plot y:error x0 y0 ex ey '@'; alpha 0.5\n"
 "subplot 2 2 3:title '3d variant':rotate 50 60:axis\n"
 "for $1 0 9\n\terrbox 2*rnd-1 2*rnd-1 2*rnd-1 0.2 0.2 0.2 'bo'\nnext\n";
 void smgl_error(mglGraph *gr)
@@ -721,7 +721,7 @@ void smgl_error(mglGraph *gr)
 	if(mini)	return;
 	gr->SubPlot(2,2,1,"");	gr->Title("'!' style; no e_x");
 	gr->Box();	gr->Plot(y.SubData(-1,0));	gr->Error(x0,y0,ey0,"o!rgb");
-	gr->SubPlot(2,2,2,"");	gr->Title("'\\@' style");
+	gr->SubPlot(2,2,2,"");	gr->Title("'\\@' style");	gr->Alpha(true);
 	gr->Box();	gr->Plot(y.SubData(-1,0));	gr->Error(x0,y0,ex0,ey0,"@","alpha 0.5");
 	gr->SubPlot(2,2,3);	gr->Title("3d variant");	gr->Rotate(50,60);
 	for(int i=0;i<10;i++)
@@ -1877,7 +1877,7 @@ void smgl_dat_extra(mglGraph *gr)	// differentiate
 //-----------------------------------------------------------------------------
 const char *mmgl_ternary="ranges 0 1 0 1 0 1\nnew x 50 '0.25*(1+cos(2*pi*x))'\n"
 "new y 50 '0.25*(1+sin(2*pi*x))'\nnew z 50 'x'\nnew a 20 30 '30*x*y*(1-x-y)^2*(x+y<1)'\n"
-"new rx 10 'rnd':copy ry (1-rx)*rnd\nlight on\n\n"
+"new rx 10 'rnd':new ry 10:fill ry '(1-v)*rnd' rx\nlight on\n\n"
 "subplot 2 2 0:title 'Ordinary axis 3D':rotate 50 60\nbox:axis:grid\n"
 "plot x y z 'r2':surf a '#'\nxlabel 'B':ylabel 'C':zlabel 'Z'\n\n"
 "subplot 2 2 1:title 'Ternary axis (x+y+t=1)':ternary 1\nbox:axis:grid 'xyz' 'B;'\n"

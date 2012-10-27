@@ -137,11 +137,15 @@ void mglBase::AddActive(long k,int n)
 	if(k<0 || (size_t)k>=Pnt.size())	return;
 	mglActivePos p;
 	const mglPnt &q=Pnt[k];
-	p.x = int(q.x);	p.y = int(q.y);	p.id = ObjId;	p.n = n;
+	int h=GetHeight();
+	p.x = int(q.x);	p.y = h>1?h-1-int(q.y):int(q.y);
+	p.id = ObjId;	p.n = n;
 	MGL_PUSH(Act,p,mutexAct);
 }
 //-----------------------------------------------------------------------------
 mreal mglBase::GetRatio() const	{	return 1;	}
+int mglBase::GetWidth() const	{	return 1;	}
+int mglBase::GetHeight() const	{	return 1;	}
 //-----------------------------------------------------------------------------
 void mglBase::StartGroup(const char *name, int id)
 {
@@ -250,9 +254,9 @@ long mglBase::AddPnt(mglPoint p, mreal c, mglPoint n, mreal a, int scl)
 	q.t = q.t*(1-2*gap)+gap;
 	q.ta = q.t;
 	
+	if(scl&8 && scl>0)	q.a=a;	// bypass palette for enabling alpha in Error()
 	if(!get(MGL_ENABLE_ALPHA))	{	q.a=1;	if(txt.Smooth!=2)	q.ta=1-gap;	}
 //	if(q.ta<0.005)	q.ta = 0.005;	// bypass OpenGL/OBJ/PRC bug
-	if(scl&8 && scl>0)	q.a=a;	// bypass palette for enabling alpha in Error()
 	if(!get(MGL_ENABLE_LIGHT) && !(scl&4))	q.u=q.v=NAN;
 	MGL_PUSH(Pnt,q,mutexPnt);	return Pnt.size()-1;
 }

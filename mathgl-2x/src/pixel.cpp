@@ -65,7 +65,7 @@ void mglCanvas::PostScale(mglPoint &p) const
 bool mglCanvas::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan) const
 {
 	bool res = get(MGL_DISABLE_SCALE) || mglBase::ScalePoint(p,n,use_nan);
-	if(TernAxis&4)	return res;
+//	if(TernAxis&4)	return res;
 	PostScale(p);
 
 	mglPoint y=n;
@@ -81,6 +81,7 @@ long mglCanvas::ProjScale(int nf, long id)
 	const mglPnt &p0=Pnt[id];
 	mglPoint pp(p0.x,p0.y,p0.z), nn(p0.u,p0.v,p0.w);
 	if(mgl_isnan(pp.x))	return -1;
+	// TODO find q,n as inverse from pp,nn -- need for arrows, ticks and so on
 	mglPoint q=pp/(2*B.pf), p, n=nn;
 	mreal w=B1.b[0]/2, h=B1.b[4]/2, d=B1.b[8]/2, xx=B1.x-w/2, yy=B1.y-h/2;
 	if(TernAxis&1)	// usual ternary axis

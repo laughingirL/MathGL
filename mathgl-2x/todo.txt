@@ -19,7 +19,6 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 
 1. Axis -- projection (ternary + quaternary) + sample
 2. curved text (in new sample) look not so good
-3. space symbol in built-in font
 +4. WX window/widgets
 
 ============= DOCS =============

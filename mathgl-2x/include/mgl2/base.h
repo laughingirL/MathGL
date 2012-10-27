@@ -343,6 +343,9 @@ public:
 	mreal TextHeight(const char *font, mreal size) const;
 	inline mreal FontFactor() const		{	return font_factor;	}
 	virtual mreal GetRatio() const;
+	virtual int GetWidth() const;
+	virtual int GetHeight() const;
+	
 	/// Set to use or not text rotation
 	inline void SetRotatedText(bool val)	{	set(val,MGL_ENABLE_RTEXT);	}
 	/// Set default font style and color
