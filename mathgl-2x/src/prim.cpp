@@ -25,7 +25,7 @@
 //	Mark & Curve series
 //
 //-----------------------------------------------------------------------------
-void mgl_mark(HMGL gr, mreal x,mreal y,mreal z,const char *mark)
+void mgl_mark(HMGL gr, double x, double y, double z,const char *mark)
 {
 	char mk = gr->SetPenPal(mark);
 	if(!mk)	mk = '.';
@@ -36,11 +36,11 @@ void mgl_mark(HMGL gr, mreal x,mreal y,mreal z,const char *mark)
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mgl_mark_(uintptr_t *gr, mreal *x, mreal *y, mreal *z, const char *pen,int l)
+void mgl_mark_(uintptr_t *gr, double *x, double *y, double *z, const char *pen,int l)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	mgl_mark(_GR_, *x,*y,*z,s);	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_ball(HMGL gr, mreal x,mreal y,mreal z)
+void mgl_ball(HMGL gr, double x, double y, double z)
 {
 	static int cgid=1;	gr->StartGroup("Ball",cgid++);
 	if(mgl_isnan(z))	z=2*gr->Max.z-gr->Min.z;
@@ -49,10 +49,10 @@ void mgl_ball(HMGL gr, mreal x,mreal y,mreal z)
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mgl_ball_(uintptr_t *gr, mreal *x,mreal *y,mreal *z)
+void mgl_ball_(uintptr_t *gr, double *x, double *y, double *z)
 {	mgl_ball(_GR_, *x,*y,*z);	}
 //-----------------------------------------------------------------------------
-void mgl_line(HMGL gr, mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mreal z2, const char *pen,int n)
+void mgl_line(HMGL gr, double x1, double y1, double z1, double x2, double y2, double z2, const char *pen,int n)
 {
 	static int cgid=1;	gr->StartGroup("Line",cgid++);
 	if(mgl_isnan(z1) || mgl_isnan(z2))	z1=z2=2*gr->Max.z-gr->Min.z;
@@ -76,11 +76,11 @@ void mgl_line(HMGL gr, mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mreal z
 	gr->AddActive(k1,1);	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mgl_line_(uintptr_t *gr, mreal *x1, mreal *y1, mreal *z1, mreal *x2, mreal *y2, mreal *z2, const char *pen,int *n,int l)
+void mgl_line_(uintptr_t *gr, double *x1, double *y1, double *z1, double *x2, double *y2, double *z2, const char *pen,int *n,int l)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	mgl_line(_GR_, *x1,*y1,*z1, *x2,*y2,*z2,s,*n);	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_curve(HMGL gr, mreal x1, mreal y1, mreal z1, mreal dx1, mreal dy1, mreal dz1, mreal x2, mreal y2, mreal z2, mreal dx2, mreal dy2, mreal dz2, const char *pen,int n)
+void mgl_curve(HMGL gr, double x1, double y1, double z1, double dx1, double dy1, double dz1, double x2, double y2, double z2, double dx2, double dy2, double dz2, const char *pen,int n)
 {
 	static int cgid=1;	gr->StartGroup("Curve",cgid++);
 	if(mgl_isnan(z1) || mgl_isnan(z2))	z1=z2=2*gr->Max.z-gr->Min.z;
@@ -107,11 +107,11 @@ void mgl_curve(HMGL gr, mreal x1, mreal y1, mreal z1, mreal dx1, mreal dy1, mrea
 	gr->AddActive(k1,2);	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mgl_curve_(uintptr_t* gr, mreal *x1, mreal *y1, mreal *z1, mreal *dx1, mreal *dy1, mreal *dz1, mreal *x2, mreal *y2, mreal *z2, mreal *dx2, mreal *dy2, mreal *dz2, const char *pen,int *n, int l)
+void mgl_curve_(uintptr_t* gr, double *x1, double *y1, double *z1, double *dx1, double *dy1, double *dz1, double *x2, double *y2, double *z2, double *dx2, double *dy2, double *dz2, const char *pen,int *n, int l)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	mgl_curve(_GR_, *x1,*y1,*z1, *dx1,*dy1,*dz1, *x2,*y2,*z2, *dx2,*dy2,*dz2, s, *n);	delete []s;}
 //-----------------------------------------------------------------------------
-void mgl_error_box(HMGL gr, mreal x, mreal y, mreal z, mreal ex, mreal ey, mreal ez, const char *pen)
+void mgl_error_box(HMGL gr, double x, double y, double z, double ex, double ey, double ez, const char *pen)
 {
 	static int cgid=1;	gr->StartGroup("ErBox",cgid++);
 	char mk=gr->SetPenPal(pen);
@@ -133,7 +133,7 @@ void mgl_error_box(HMGL gr, mreal x, mreal y, mreal z, mreal ex, mreal ey, mreal
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mgl_error_box_(uintptr_t *gr, mreal *x1, mreal *y1, mreal *z1, mreal *x2, mreal *y2, mreal *z2, const char *pen,int l)
+void mgl_error_box_(uintptr_t *gr, double *x1, double *y1, double *z1, double *x2, double *y2, double *z2, const char *pen,int l)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	mgl_error_box(_GR_, *x1,*y1,*z1, *x2,*y2,*z2,s);	delete []s;	}
 //-----------------------------------------------------------------------------
@@ -141,7 +141,7 @@ void mgl_error_box_(uintptr_t *gr, mreal *x1, mreal *y1, mreal *z1, mreal *x2, m
 //	Face series
 //
 //-----------------------------------------------------------------------------
-void mgl_face(HMGL gr, mreal x0, mreal y0, mreal z0, mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mreal z2, mreal x3, mreal y3, mreal z3, const char *stl)
+void mgl_face(HMGL gr, double x0, double y0, double z0, double x1, double y1, double z1, double x2, double y2, double z2, double x3, double y3, double z3, const char *stl)
 {
 	static int cgid=1;	gr->StartGroup("Face",cgid++);
 	long pal;
@@ -177,29 +177,29 @@ void mgl_face(HMGL gr, mreal x0, mreal y0, mreal z0, mreal x1, mreal y1, mreal z
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mgl_facex(HMGL gr, mreal x0, mreal y0, mreal z0, mreal wy, mreal wz, const char *stl, mreal d1, mreal d2)
+void mgl_facex(HMGL gr, double x0, double y0, double z0, double wy, double wz, const char *stl, double d1, double d2)
 {	mgl_face(gr, x0,y0,z0, x0,y0+wy,z0, x0,y0,z0+wz, x0,y0+wy+d1,z0+wz+d2, stl);	}
 //-----------------------------------------------------------------------------
-void mgl_facey(HMGL gr, mreal x0, mreal y0, mreal z0, mreal wx, mreal wz, const char *stl, mreal d1, mreal d2)
+void mgl_facey(HMGL gr, double x0, double y0, double z0, double wx, double wz, const char *stl, double d1, double d2)
 {	mgl_face(gr, x0,y0,z0, x0+wx,y0,z0, x0,y0,z0+wz, x0+wx+d1,y0,z0+wz+d2, stl);	}
 //-----------------------------------------------------------------------------
-void mgl_facez(HMGL gr, mreal x0, mreal y0, mreal z0, mreal wx, mreal wy, const char *stl, mreal d1, mreal d2)
+void mgl_facez(HMGL gr, double x0, double y0, double z0, double wx, double wy, const char *stl, double d1, double d2)
 {	mgl_face(gr, x0,y0,z0, x0,y0+wy,z0, x0+wx,y0,z0, x0+wx+d1,y0+wy+d2,z0, stl);	}
 //-----------------------------------------------------------------------------
-void mgl_facex_(uintptr_t* gr, mreal *x0, mreal *y0, mreal *z0, mreal *wy, mreal *wz, const char *stl, mreal *dx, mreal *dy, int l)
+void mgl_facex_(uintptr_t* gr, double *x0, double *y0, double *z0, double *wy, double *wz, const char *stl, double *dx, double *dy, int l)
 {	char *s=new char[l+1];	memcpy(s,stl,l);	s[l]=0;
 	mgl_facex(_GR_, *x0,*y0,*z0,*wy,*wz,s,*dx,*dy);	delete []s;
 }
 //-----------------------------------------------------------------------------
-void mgl_facey_(uintptr_t* gr, mreal *x0, mreal *y0, mreal *z0, mreal *wx, mreal *wz, const char *stl, mreal *dx, mreal *dy, int l)
+void mgl_facey_(uintptr_t* gr, double *x0, double *y0, double *z0, double *wx, double *wz, const char *stl, double *dx, double *dy, int l)
 {	char *s=new char[l+1];	memcpy(s,stl,l);	s[l]=0;
 	mgl_facey(_GR_, *x0,*y0,*z0,*wx,*wz,s,*dx,*dy);	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_facez_(uintptr_t* gr, mreal *x0, mreal *y0, mreal *z0, mreal *wx, mreal *wy, const char *stl, mreal *dx, mreal *dy, int l)
+void mgl_facez_(uintptr_t* gr, double *x0, double *y0, double *z0, double *wx, double *wy, const char *stl, double *dx, double *dy, int l)
 {	char *s=new char[l+1];	memcpy(s,stl,l);	s[l]=0;
 	mgl_facez(_GR_, *x0,*y0,*z0,*wx,*wy,s,*dx,*dy);	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_face_(uintptr_t* gr, mreal *x0, mreal *y0, mreal *z0, mreal *x1, mreal *y1, mreal *z1, mreal *x2, mreal *y2, mreal *z2, mreal *x3, mreal *y3, mreal *z3, const char *stl, int l)
+void mgl_face_(uintptr_t* gr, double *x0, double *y0, double *z0, double *x1, double *y1, double *z1, double *x2, double *y2, double *z2, double *x3, double *y3, double *z3, const char *stl, int l)
 {	char *s=new char[l+1];	memcpy(s,stl,l);	s[l]=0;
 	mgl_face(_GR_, *x0,*y0,*z0, *x1,*y1,*z1, *x2,*y2,*z2, *x3,*y3,*z3, stl);	delete []s;	}
 //-----------------------------------------------------------------------------
@@ -207,7 +207,7 @@ void mgl_face_(uintptr_t* gr, mreal *x0, mreal *y0, mreal *z0, mreal *x1, mreal 
 //	Cone
 //
 //-----------------------------------------------------------------------------
-void mgl_cone(HMGL gr, mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mreal z2, mreal r1, mreal r2, const char *stl)
+void mgl_cone(HMGL gr, double x1, double y1, double z1, double x2, double y2, double z2, double r1, double r2, const char *stl)
 {
 	if(r2<0)	r2=r1;
 	if(r1==0 && r2==0)	return;
@@ -262,7 +262,7 @@ void mgl_cone(HMGL gr, mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mreal z
 	gr->EndGroup();	delete []kk;
 }
 //-----------------------------------------------------------------------------
-void mgl_cone_(uintptr_t* gr, mreal *x1, mreal *y1, mreal *z1, mreal *x2, mreal *y2, mreal *z2, mreal *r1, mreal *r2, const char *stl, int l)
+void mgl_cone_(uintptr_t* gr, double *x1, double *y1, double *z1, double *x2, double *y2, double *z2, double *r1, double *r2, const char *stl, int l)
 {	char *s=new char[l+1];	memcpy(s,stl,l);	s[l]=0;
 	mgl_cone(_GR_, *x1,*y1,*z1, *x2,*y2,*z2,*r1,*r2,s);	delete []s;	}
 //-----------------------------------------------------------------------------
@@ -354,7 +354,7 @@ void mgl_cones_(uintptr_t *gr, uintptr_t *y,	const char *pen, const char *opt,in
 //	Ellipse & Rhomb
 //
 //-----------------------------------------------------------------------------
-void mgl_ellipse(HMGL gr, mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mreal z2, mreal r, const char *stl)
+void mgl_ellipse(HMGL gr, double x1, double y1, double z1, double x2, double y2, double z2, double r, const char *stl)
 {
 	const int n = 41;
 	long pal=0,n0,n1=-1,n2,m1=-1,m2;
@@ -392,7 +392,7 @@ void mgl_ellipse(HMGL gr, mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mrea
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mgl_rhomb(HMGL gr, mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mreal z2, mreal r, const char *stl)
+void mgl_rhomb(HMGL gr, double x1, double y1, double z1, double x2, double y2, double z2, double r, const char *stl)
 {
 	long pal=0, n1,n2,n3,n4;
 	static int cgid=1;	gr->StartGroup("Rhomb",cgid++);
@@ -420,11 +420,11 @@ void mgl_rhomb(HMGL gr, mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mreal 
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mgl_ellipse_(uintptr_t* gr, mreal *x1, mreal *y1, mreal *z1, mreal *x2, mreal *y2, mreal *z2, mreal *r, const char *stl,int l)
+void mgl_ellipse_(uintptr_t* gr, double *x1, double *y1, double *z1, double *x2, double *y2, double *z2, double *r, const char *stl,int l)
 {	char *s=new char[l+1];	memcpy(s,stl,l);	s[l]=0;
 	mgl_ellipse(_GR_,*x1,*y1,*z1,*x2,*y2,*z2,*r,s);	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_rhomb_(uintptr_t* gr, mreal *x1, mreal *y1, mreal *z1, mreal *x2, mreal *y2, mreal *z2, mreal *r, const char *stl,int l)
+void mgl_rhomb_(uintptr_t* gr, double *x1, double *y1, double *z1, double *x2, double *y2, double *z2, double *r, const char *stl,int l)
 {	char *s=new char[l+1];	memcpy(s,stl,l);	s[l]=0;
 	mgl_rhomb(_GR_,*x1,*y1,*z1,*x2,*y2,*z2,*r,s);	delete []s;	}
 //-----------------------------------------------------------------------------
@@ -432,14 +432,14 @@ void mgl_rhomb_(uintptr_t* gr, mreal *x1, mreal *y1, mreal *z1, mreal *x2, mreal
 //	Sphere & Drop
 //
 //-----------------------------------------------------------------------------
-void mgl_sphere(HMGL gr, mreal x, mreal y, mreal z, mreal r, const char *stl)
+void mgl_sphere(HMGL gr, double x, double y, double z, double r, const char *stl)
 {	mgl_drop(gr,x,y,z,1,0,0,2*r,stl,0,1);	}
 //-----------------------------------------------------------------------------
-void mgl_sphere_(uintptr_t* gr, mreal *x, mreal *y, mreal *z, mreal *r, const char *stl,int l)
+void mgl_sphere_(uintptr_t* gr, double *x, double *y, double *z, double *r, const char *stl,int l)
 {	char *s=new char[l+1];	memcpy(s,stl,l);	s[l]=0;
 	mgl_sphere(_GR_, *x,*y,*z,*r,s);	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_drop(HMGL gr, mglPoint p, mglPoint q, mreal r, mreal c, mreal sh, mreal a)
+void mgl_drop(HMGL gr, mglPoint p, mglPoint q, double r, double c, double sh, double a)
 {
 	mglPoint p1,p2,pp,qq;
 	if(q.norm()==0)	{	q = mglPoint(1,0,0);	sh=0;	}
@@ -477,13 +477,13 @@ void mgl_drop(HMGL gr, mglPoint p, mglPoint q, mreal r, mreal c, mreal sh, mreal
 	delete []nn;	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mgl_drop(HMGL gr, mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mreal z2, mreal r, const char *stl, mreal sh, mreal a)
+void mgl_drop(HMGL gr, double x1, double y1, double z1, double x2, double y2, double z2, double r, const char *stl, double sh, double a)
 {
 	mreal c=gr->AddTexture((stl && stl[0]) ? stl[0]:'r');
 	mgl_drop(gr,mglPoint(x1,y1,z1), mglPoint(x2,y2,z2), r, c, sh, a);
 }
 //-----------------------------------------------------------------------------
-void mgl_drop_(uintptr_t* gr, mreal *x1, mreal *y1, mreal *z1, mreal *x2, mreal *y2, mreal *z2, mreal *r, const char *stl, mreal *shift, mreal *ap, int l)
+void mgl_drop_(uintptr_t* gr, double *x1, double *y1, double *z1, double *x2, double *y2, double *z2, double *r, const char *stl, double *shift, double *ap, int l)
 {	char *s=new char[l+1];	memcpy(s,stl,l);	s[l]=0;
 	mgl_drop(_GR_, *x1,*y1,*z1, *x2,*y2,*z2, *r,s,*shift,*ap);	delete []s;	}
 //-----------------------------------------------------------------------------
@@ -559,12 +559,12 @@ void mgl_dew_2d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, const char *sch, c
 //	Puts series
 //
 //-----------------------------------------------------------------------------
-void mgl_puts(HMGL gr, mreal x, mreal y, mreal z,const char *text, const char *font, mreal size)
+void mgl_puts(HMGL gr, double x, double y, double z,const char *text, const char *font, double size)
 {	mgl_puts_dir(gr, x, y, z, NAN, NAN, 0, text, font, size);	}
-void mgl_putsw(HMGL gr, mreal x, mreal y, mreal z,const wchar_t *text, const char *font, mreal size)
+void mgl_putsw(HMGL gr, double x, double y, double z,const wchar_t *text, const char *font, double size)
 {	mgl_putsw_dir(gr, x, y, z, NAN, NAN, 0, text, font, size);	}
 //-----------------------------------------------------------------------------
-void mgl_puts_dir(HMGL gr, mreal x, mreal y, mreal z, mreal dx, mreal dy, mreal dz, const char *text, const char *font, mreal size)
+void mgl_puts_dir(HMGL gr, double x, double y, double z, double dx, double dy, double dz, const char *text, const char *font, double size)
 {
 	long len = strlen(text);
 	wchar_t *buf = new wchar_t[len+1];
@@ -573,7 +573,7 @@ void mgl_puts_dir(HMGL gr, mreal x, mreal y, mreal z, mreal dx, mreal dy, mreal 
 	delete []buf;
 }
 //-----------------------------------------------------------------------------
-void mgl_putsw_dir(HMGL gr, mreal x, mreal y, mreal z, mreal dx, mreal dy, mreal dz, const wchar_t *text, const char *font, mreal size)
+void mgl_putsw_dir(HMGL gr, double x, double y, double z, double dx, double dy, double dz, const wchar_t *text, const char *font, double size)
 {
 	bool a=mglchr(font,'a'), A=mglchr(font,'A');
 	static int cgid=1;	gr->StartGroup("Puts",cgid++);
@@ -596,13 +596,13 @@ void mgl_putsw_dir(HMGL gr, mreal x, mreal y, mreal z, mreal dx, mreal dy, mreal
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mgl_puts_(uintptr_t *gr, mreal *x, mreal *y, mreal *z,const char *text, const char *font, mreal *size, int l, int n)
+void mgl_puts_(uintptr_t *gr, double *x, double *y, double *z,const char *text, const char *font, double *size, int l, int n)
 {	wchar_t *s=new wchar_t[l+1];	mbstowcs(s,text,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,font,n);	f[n]=0;
 	mgl_putsw_dir(_GR_, *x, *y, *z, NAN, NAN, 0, s, f, *size);
 	delete []s;	delete []f;	}
 //-----------------------------------------------------------------------------
-void mgl_puts_dir_(uintptr_t *gr, mreal *x, mreal *y, mreal *z, mreal *dx, mreal *dy, mreal *dz, const char *text, const char *font, mreal *size, int l, int n)
+void mgl_puts_dir_(uintptr_t *gr, double *x, double *y, double *z, double *dx, double *dy, double *dz, const char *text, const char *font, double *size, int l, int n)
 {	wchar_t *s=new wchar_t[l+1];	mbstowcs(s,text,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,font,n);	f[n]=0;
 	mgl_putsw_dir(_GR_, *x, *y, *z, *dx, *dy, *dz, s, f, *size);
@@ -812,12 +812,12 @@ void mgl_label_y_(uintptr_t *gr, uintptr_t *y, const char *text, const char *fnt
 //	Table series
 //
 //-----------------------------------------------------------------------------
-void mgl_tablew(HMGL gr, mreal x, mreal y, HCDT val, const wchar_t *text, const char *fnt, const char *opt)
+void mgl_tablew(HMGL gr, double x, double y, HCDT val, const wchar_t *text, const char *fnt, const char *opt)
 {
 	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);
 	if(g)	g->Table(x,y,val,text,fnt,opt);
 }
-void mgl_table(HMGL gr, mreal x, mreal y, HCDT val, const char *text, const char *fnt, const char *opt)
+void mgl_table(HMGL gr, double x, double y, HCDT val, const char *text, const char *fnt, const char *opt)
 {
 	if(!text)	mgl_tablew(gr,x,y,val,L"",fnt,opt);
 	else
@@ -825,7 +825,7 @@ void mgl_table(HMGL gr, mreal x, mreal y, HCDT val, const char *text, const char
 		mgl_tablew(gr, x, y, val, wcs, fnt, opt);	delete []wcs;	}
 }
 //-----------------------------------------------------------------------------
-void mgl_table_(uintptr_t *gr, mreal *x, mreal *y, uintptr_t *val, const char *text, const char *fnt, const char *opt,int l,int n,int lo)
+void mgl_table_(uintptr_t *gr, double *x, double *y, uintptr_t *val, const char *text, const char *fnt, const char *opt,int l,int n,int lo)
 {	wchar_t *s=new wchar_t[l+1];	mbstowcs(s,text,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,fnt,n);	f[n]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;

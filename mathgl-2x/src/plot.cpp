@@ -1577,7 +1577,7 @@ void mgl_tube_r(HMGL gr, HCDT y, HCDT r, const char *pen, const char *opt)
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_tube(HMGL gr, HCDT y, mreal rr, const char *pen, const char *opt)
+void mgl_tube(HMGL gr, HCDT y, double rr, const char *pen, const char *opt)
 {
 	register long n=y->GetNx();
 	if(n<2)	{	gr->SetWarn(mglWarnLow,"Tube");	return;	}
@@ -1590,7 +1590,7 @@ void mgl_tube(HMGL gr, HCDT y, mreal rr, const char *pen, const char *opt)
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_tube_xy(HMGL gr, HCDT x, HCDT y, mreal rr, const char *pen, const char *opt)
+void mgl_tube_xy(HMGL gr, HCDT x, HCDT y, double rr, const char *pen, const char *opt)
 {
 	register long n=y->GetNx();
 	if(n<2)	{	gr->SetWarn(mglWarnLow,"Tube");	return;	}
@@ -1602,7 +1602,7 @@ void mgl_tube_xy(HMGL gr, HCDT x, HCDT y, mreal rr, const char *pen, const char 
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_tube_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, mreal rr, const char *pen, const char *opt)
+void mgl_tube_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, double rr, const char *pen, const char *opt)
 {
 	gr->SaveState(opt);
 	mglData r(y->GetNx());
@@ -1627,17 +1627,17 @@ void mgl_tube_r_(uintptr_t *gr, uintptr_t *y, uintptr_t *r, const char *pen, con
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_tube_r(_GR_,_DA_(y),_DA_(r),s,o);	delete []s;	delete []o;	}
 //-----------------------------------------------------------------------------
-void mgl_tube_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, mreal *r, const char *pen, const char *opt,int l,int lo)
+void mgl_tube_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, double *r, const char *pen, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_tube_xyz(_GR_,_DA_(x),_DA_(y),_DA_(z),*r,s,o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_tube_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, mreal *r, const char *pen, const char *opt,int l,int lo)
+void mgl_tube_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, double *r, const char *pen, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_tube_xy(_GR_,_DA_(x),_DA_(y),*r,s,o);	delete []s;	delete []o;	}
 //-----------------------------------------------------------------------------
-void mgl_tube_(uintptr_t *gr, uintptr_t *y, mreal *r, const char *pen, const char *opt,int l,int lo)
+void mgl_tube_(uintptr_t *gr, uintptr_t *y, double *r, const char *pen, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_tube(_GR_,_DA_(y),*r,s,o);

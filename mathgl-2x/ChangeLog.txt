@@ -41,6 +41,8 @@
   Note, it work well for 2D axis. One should use Aspect() with negative values to do it correctly in general case.
 * Axis style 'XYZ' draw corresponding axis with ticks labels from other side of axis. This also influence on followng Label() calls.
 
+* MINOR INCOMPATIBLE: plotting functions now use double argument always.
+
 * Add MGL commands 'errbox', 'face'
 * Add mgl.cgi tool which return PNG image for CGI request in form of MGL script.
 

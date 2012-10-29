@@ -226,7 +226,7 @@ void mgl_surf3_plot(HMGL gr, long n,long m,long *kx1,long *kx2,long *ky1,long *k
 	}
 }
 //-----------------------------------------------------------------------------
-void mgl_surf3_xyz_val(HMGL gr, mreal val, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, const char *opt)
+void mgl_surf3_xyz_val(HMGL gr, double val, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, const char *opt)
 {
 	long i,j,k,i1,n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
 	long *kx1,*kx2,*ky1,*ky2,*kz;
@@ -317,7 +317,7 @@ void mgl_surf3_xyz_val(HMGL gr, mreal val, HCDT x, HCDT y, HCDT z, HCDT a, const
 	delete []ky2;	delete []kz;
 }
 //-----------------------------------------------------------------------------
-void mgl_surf3_val(HMGL gr, mreal val, HCDT a, const char *sch, const char *opt)
+void mgl_surf3_val(HMGL gr, double val, HCDT a, const char *sch, const char *opt)
 {
 	gr->SaveState(opt);
 	mglData x(a->GetNx()), y(a->GetNy()), z(a->GetNz());
@@ -351,12 +351,12 @@ void mgl_surf3(HMGL gr, HCDT a, const char *sch, const char *opt)
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_surf3_xyz_val_(uintptr_t *gr, mreal *Val, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
+void mgl_surf3_xyz_val_(uintptr_t *gr, double *Val, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_surf3_xyz_val(_GR_, *Val, _DA_(x), _DA_(y), _DA_(z), _DA_(a), s, o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_surf3_val_(uintptr_t *gr, mreal *Val, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
+void mgl_surf3_val_(uintptr_t *gr, double *Val, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_surf3_val(_GR_, *Val, _DA_(a), s, o);	delete []o;	delete []s;	}
@@ -375,7 +375,7 @@ void mgl_surf3_(uintptr_t *gr, uintptr_t *a, const char *sch, const char *opt,in
 //	Surf3A series
 //
 //-----------------------------------------------------------------------------
-void mgl_surf3a_xyz_val(HMGL gr, mreal val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT b, const char *sch, const char *opt)
+void mgl_surf3a_xyz_val(HMGL gr, double val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT b, const char *sch, const char *opt)
 {
 	long i,j,k,i1,n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
 	long *kx1,*kx2,*ky1,*ky2,*kz;
@@ -470,7 +470,7 @@ void mgl_surf3a_xyz_val(HMGL gr, mreal val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 	delete []ky2;	delete []kz;
 }
 //-----------------------------------------------------------------------------
-void mgl_surf3a_val(HMGL gr, mreal val, HCDT a, HCDT b, const char *sch, const char *opt)
+void mgl_surf3a_val(HMGL gr, double val, HCDT a, HCDT b, const char *sch, const char *opt)
 {
 	gr->SaveState(opt);
 	mglData x(a->GetNx()), y(a->GetNy()),z(a->GetNz());
@@ -515,13 +515,13 @@ void mgl_surf3a(HMGL gr, HCDT a, HCDT b, const char *sch, const char *opt)
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_surf3a_xyz_val_(uintptr_t *gr, mreal *Val, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, uintptr_t *b, const char *sch, const char *opt,int l,int lo)
+void mgl_surf3a_xyz_val_(uintptr_t *gr, double *Val, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, uintptr_t *b, const char *sch, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_surf3a_xyz_val(_GR_, *Val, _DA_(x), _DA_(y), _DA_(z), _DA_(a), _DA_(b), s, o);
 	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_surf3a_val_(uintptr_t *gr, mreal *Val, uintptr_t *a, uintptr_t *b, const char *sch, const char *opt,int l,int lo)
+void mgl_surf3a_val_(uintptr_t *gr, double *Val, uintptr_t *a, uintptr_t *b, const char *sch, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	 mgl_surf3a_val(_GR_, *Val, _DA_(a), _DA_(b), s, o);	delete []o;	delete []s;	}
@@ -541,7 +541,7 @@ void mgl_surf3a_(uintptr_t *gr, uintptr_t *a, uintptr_t *b, const char *sch, con
 //	Surf3C series
 //
 //-----------------------------------------------------------------------------
-void mgl_surf3c_xyz_val(HMGL gr, mreal val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT b, const char *sch, const char *opt)
+void mgl_surf3c_xyz_val(HMGL gr, double val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT b, const char *sch, const char *opt)
 {
 	long i,j,k,i1,n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
 	long *kx1,*kx2,*ky1,*ky2,*kz;
@@ -636,7 +636,7 @@ void mgl_surf3c_xyz_val(HMGL gr, mreal val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 	delete []ky2;	delete []kz;
 }
 //-----------------------------------------------------------------------------
-void mgl_surf3c_val(HMGL gr, mreal val, HCDT a, HCDT b, const char *sch, const char *opt)
+void mgl_surf3c_val(HMGL gr, double val, HCDT a, HCDT b, const char *sch, const char *opt)
 {
 	gr->SaveState(opt);
 	mglData x(a->GetNx()), y(a->GetNy()),z(a->GetNz());
@@ -670,13 +670,13 @@ void mgl_surf3c(HMGL gr, HCDT a, HCDT b, const char *sch, const char *opt)
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_surf3c_xyz_val_(uintptr_t *gr, mreal *Val, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, uintptr_t *b, const char *sch, const char *opt,int l,int lo)
+void mgl_surf3c_xyz_val_(uintptr_t *gr, double *Val, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, uintptr_t *b, const char *sch, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_surf3c_xyz_val(_GR_, *Val, _DA_(x), _DA_(y), _DA_(z), _DA_(a), _DA_(b), s, o);
 	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_surf3c_val_(uintptr_t *gr, mreal *Val, uintptr_t *a, uintptr_t *b, const char *sch, const char *opt,int l,int lo)
+void mgl_surf3c_val_(uintptr_t *gr, double *Val, uintptr_t *a, uintptr_t *b, const char *sch, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	 mgl_surf3c_val(_GR_, *Val, _DA_(a), _DA_(b), s, o);	delete []o;	delete []s;	}
@@ -699,7 +699,7 @@ void mgl_surf3c_(uintptr_t *gr, uintptr_t *a, uintptr_t *b, const char *sch, con
 // flag & 0x1	--	accompanied coordinates
 // flag & 0x2	--	project to r*z
 // flag & 0x4	--	normalize field
-void mgl_beam_md(HMGL gr, mreal val, const mglData *tr, const mglData *g1, const mglData *g2, const mglData *a, mreal r, const char *stl, int flag)
+void mgl_beam_md(HMGL gr, double val, const mglData *tr, const mglData *g1, const mglData *g2, const mglData *a, double r, const char *stl, int flag)
 {
 	long n = a->nz,m=a->nx,l=a->ny;
 	if(n<2 || m<2 || l<2)	{	gr->SetWarn(mglWarnLow,"Beam");	return;	}
@@ -748,7 +748,7 @@ void mgl_beam_md(HMGL gr, mreal val, const mglData *tr, const mglData *g1, const
 	mgl_surf3_xyz_val(gr,val,&x,&y,&z,&b,stl,0);
 }
 //-----------------------------------------------------------------------------
-void mgl_beam_val(HMGL gr, mreal val, HCDT tr, HCDT g1, HCDT g2, HCDT a, mreal r, const char *stl, int flag)
+void mgl_beam_val(HMGL gr, double val, HCDT tr, HCDT g1, HCDT g2, HCDT a, double r, const char *stl, int flag)
 {
 
 	const mglData *dtr=dynamic_cast<const mglData *>(tr);
@@ -805,7 +805,7 @@ void mgl_beam_val(HMGL gr, mreal val, HCDT tr, HCDT g1, HCDT g2, HCDT a, mreal r
 	mgl_surf3_xyz_val(gr,val,&x,&y,&z,&b,stl,0);
 }
 //-----------------------------------------------------------------------------
-void mgl_beam(HMGL gr, HCDT tr, HCDT g1, HCDT g2, HCDT a, mreal r, const char *stl, int flag, int num)
+void mgl_beam(HMGL gr, HCDT tr, HCDT g1, HCDT g2, HCDT a, double r, const char *stl, int flag, int num)
 {
 	num = num<=0 ? 1 : num;
 	for(long i=0;i<num;i++)
@@ -815,11 +815,11 @@ void mgl_beam(HMGL gr, HCDT tr, HCDT g1, HCDT g2, HCDT a, mreal r, const char *s
 	}
 }
 //-----------------------------------------------------------------------------
-void mgl_beam_val_(uintptr_t *gr, mreal *val, uintptr_t *tr, uintptr_t *g1, uintptr_t *g2, uintptr_t *a, mreal *r, const char *sch, int *norm,int l)
+void mgl_beam_val_(uintptr_t *gr, double *val, uintptr_t *tr, uintptr_t *g1, uintptr_t *g2, uintptr_t *a, double *r, const char *sch, int *norm,int l)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	mgl_beam_val(_GR_, *val,_DA_(tr),_DA_(g1),_DA_(g2),_DA_(a),*r,s,*norm);	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_beam_(uintptr_t *gr, uintptr_t *tr, uintptr_t *g1, uintptr_t *g2, uintptr_t *a, mreal *r, const char *sch, int *norm, int *num,int l)
+void mgl_beam_(uintptr_t *gr, uintptr_t *tr, uintptr_t *g1, uintptr_t *g2, uintptr_t *a, double *r, const char *sch, int *norm, int *num,int l)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	mgl_beam(_GR_, _DA_(tr), _DA_(g1), _DA_(g2), _DA_(a), *r,s,*norm,*num);	delete []s;	}
 //-----------------------------------------------------------------------------

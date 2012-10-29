@@ -44,7 +44,7 @@ HMDT mgl_hist_x(HMGL gr, HCDT x, HCDT a, const char *opt);
 HMDT mgl_hist_xy(HMGL gr, HCDT x, HCDT y, HCDT a, const char *opt);
 HMDT mgl_hist_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *opt);
 
-void mgl_puts_fit(HMGL gr, mreal x, mreal y, mreal z, const char *prefix, const char *font, mreal size);
+void mgl_puts_fit(HMGL gr, double x, double y, double z, const char *prefix, const char *font, double size);
 /******************************************************************************/
 uintptr_t mgl_fit_1_(uintptr_t* gr, uintptr_t* y, const char *eq, const char *var, uintptr_t *ini, const char *opt,int, int l, int n);
 uintptr_t mgl_fit_2_(uintptr_t* gr, uintptr_t* z, const char *eq, const char *var, uintptr_t *ini, const char *opt,int, int l, int n);
@@ -61,7 +61,7 @@ uintptr_t mgl_hist_x_(uintptr_t* gr, uintptr_t* x, uintptr_t* a, const char *opt
 uintptr_t mgl_hist_xy_(uintptr_t* gr, uintptr_t* x, uintptr_t* y, uintptr_t* a, const char *opt,int);
 uintptr_t mgl_hist_xyz_(uintptr_t* gr, uintptr_t* x, uintptr_t* y, uintptr_t* z, uintptr_t* a, const char *opt,int);
 
-void mgl_puts_fit_(uintptr_t* gr, mreal *x, mreal *y, mreal *z, const char *prefix, const char *font, mreal *size, int l, int n);
+void mgl_puts_fit_(uintptr_t* gr, double *x, double *y, double *z, const char *prefix, const char *font, double *size, int l, int n);
 /******************************************************************************/
 #ifdef __cplusplus
 }

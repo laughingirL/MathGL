@@ -31,7 +31,7 @@
 int mglFitPnts=100;		///< Number of output points in fitting
 char mglFitRes[1024];	///< Last fitted formula
 //-----------------------------------------------------------------------------
-void mgl_puts_fit(HMGL gr, mreal x, mreal y, mreal z, const char *pre, const char *font, mreal size)
+void mgl_puts_fit(HMGL gr, double x, double y, double z, const char *pre, const char *font, double size)
 {
 	long n = strlen(mglFitRes)+(pre?strlen(pre):0)+1;
 	char *buf = new char[n];
@@ -40,7 +40,7 @@ void mgl_puts_fit(HMGL gr, mreal x, mreal y, mreal z, const char *pre, const cha
 	mgl_puts(gr,x,y,z,buf,font,size);
 	delete []buf;
 }
-void mgl_puts_fit_(uintptr_t* gr, mreal *x, mreal *y, mreal *z, const char *prefix, const char *font, mreal *size, int l, int n)
+void mgl_puts_fit_(uintptr_t* gr, double *x, double *y, double *z, const char *prefix, const char *font, double *size, int l, int n)
 {
 	char *s=new char[l+1];	memcpy(s,prefix,l);	s[l]=0;
 	char *d=new char[n+1];	memcpy(d,font,n);	d[n]=0;

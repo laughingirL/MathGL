@@ -468,7 +468,7 @@ void mgl_get_slice_md(_mgl_vec_slice &s, const mglData *x, const mglData *y, con
 	}
 }
 //-----------------------------------------------------------------------------
-void mgl_vect3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, mreal sVal, const char *opt)
+void mgl_vect3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, double sVal, const char *opt)
 {
 	bool both = mgl_isboth(x,y,z,ax);
 	if(mgl_check_vec3(gr,x,y,z,ax,ay,az,"Vect3"))	return;
@@ -550,7 +550,7 @@ void mgl_vect3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, c
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mgl_vect3(HMGL gr, HCDT ax, HCDT ay, HCDT az, const char *sch, mreal sVal, const char *opt)
+void mgl_vect3(HMGL gr, HCDT ax, HCDT ay, HCDT az, const char *sch, double sVal, const char *opt)
 {
 	gr->SaveState(opt);
 	mglData x(ax->GetNx()), y(ax->GetNy()),z(ax->GetNz());
@@ -561,13 +561,13 @@ void mgl_vect3(HMGL gr, HCDT ax, HCDT ay, HCDT az, const char *sch, mreal sVal, 
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_vect3_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, mreal *sVal, const char *opt,int l,int lo)
+void mgl_vect3_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, double *sVal, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_vect3_xyz(_GR_, _DA_(x), _DA_(y), _DA_(z), _DA_(ax), _DA_(ay), _DA_(az), s, *sVal, o);
 	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_vect3_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, mreal *sVal, const char *opt,int l,int lo)
+void mgl_vect3_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, double *sVal, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_vect3(_GR_, _DA_(ax), _DA_(ay), _DA_(az), s, *sVal, o);	delete []o;	delete []s;	}
@@ -576,7 +576,7 @@ void mgl_vect3_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, cons
 //	Flow 2d series
 //
 //-----------------------------------------------------------------------------
-void flow(mglBase *gr, mreal zVal, mreal u, mreal v, const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, long ss, bool vv)
+void flow(mglBase *gr, double zVal, double u, double v, const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, long ss, bool vv)
 {
 	long n=10*(ax.nx+ax.ny);
 	bool both = x.nx==ax.nx && y.nx==ax.nx && x.ny==ax.ny && y.ny==ax.ny;
@@ -701,7 +701,7 @@ void mgl_flow_2d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, const char *sch, 
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_flow_2d(_GR_, _DA_(ax), _DA_(ay), s, o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_flowp_xy(HMGL gr, mreal x0, mreal y0, mreal z0, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, const char *opt)
+void mgl_flowp_xy(HMGL gr, double x0, double y0, double z0, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, const char *opt)
 {
 	mglPoint p(x0,y0,z0);
 	mreal u,v;
@@ -748,7 +748,7 @@ void mgl_flowp_xy(HMGL gr, mreal x0, mreal y0, mreal z0, HCDT x, HCDT y, HCDT ax
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mgl_flowp_2d(HMGL gr, mreal x0, mreal y0, mreal z0, HCDT ax, HCDT ay, const char *sch, const char *opt)
+void mgl_flowp_2d(HMGL gr, double x0, double y0, double z0, HCDT ax, HCDT ay, const char *sch, const char *opt)
 {
 	gr->SaveState(opt);
 	mglData x(ax->GetNx()), y(ax->GetNy());
@@ -758,12 +758,12 @@ void mgl_flowp_2d(HMGL gr, mreal x0, mreal y0, mreal z0, HCDT ax, HCDT ay, const
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_flowp_xy_(uintptr_t *gr, mreal *x0, mreal *y0, mreal *z0, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch, const char *opt, int l,int lo)
+void mgl_flowp_xy_(uintptr_t *gr, double *x0, double *y0, double *z0, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch, const char *opt, int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_flowp_xy(_GR_, *x0,*y0,*z0, _DA_(x), _DA_(y), _DA_(ax), _DA_(ay), s, o);	delete []o;	delete []s;
 }
-void mgl_flowp_2d_(uintptr_t *gr, mreal *x0, mreal *y0, mreal *z0, uintptr_t *ax, uintptr_t *ay, const char *sch, const char *opt, int l,int lo)
+void mgl_flowp_2d_(uintptr_t *gr, double *x0, double *y0, double *z0, uintptr_t *ax, uintptr_t *ay, const char *sch, const char *opt, int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_flowp_2d(_GR_, *x0,*y0,*z0, _DA_(ax), _DA_(ay), s, o);	delete []o;	delete []s;	}
@@ -772,7 +772,7 @@ void mgl_flowp_2d_(uintptr_t *gr, mreal *x0, mreal *y0, mreal *z0, uintptr_t *ax
 //	Flow 3d series
 //
 //-----------------------------------------------------------------------------
-void flow(mglBase *gr, mreal u, mreal v, mreal w, const mglData &x, const mglData &y, const mglData &z, const mglData &ax, const mglData &ay, const mglData &az,long ss,bool vv, bool xo, bool zo)
+void flow(mglBase *gr, double u, double v, double w, const mglData &x, const mglData &y, const mglData &z, const mglData &ax, const mglData &ay, const mglData &az,long ss,bool vv, bool xo, bool zo)
 {
 	static long n=10*(ax.nx+ax.ny);
 	long nn = ax.nx*ax.ny*ax.nz;
@@ -925,7 +925,7 @@ void mgl_flow_3d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, co
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_flow_3d(_GR_, _DA_(ax), _DA_(ay), _DA_(az), s, o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_flowp_xyz(HMGL gr, mreal x0, mreal y0, mreal z0, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, const char *opt)
+void mgl_flowp_xyz(HMGL gr, double x0, double y0, double z0, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, const char *opt)
 {
 	mglPoint p(x0,y0,z0);
 	mreal u,v,w;
@@ -980,7 +980,7 @@ void mgl_flowp_xyz(HMGL gr, mreal x0, mreal y0, mreal z0, HCDT x, HCDT y, HCDT z
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mgl_flowp_3d(HMGL gr, mreal x0, mreal y0, mreal z0, HCDT ax, HCDT ay, HCDT az, const char *sch, const char *opt)
+void mgl_flowp_3d(HMGL gr, double x0, double y0, double z0, HCDT ax, HCDT ay, HCDT az, const char *sch, const char *opt)
 {
 	gr->SaveState(opt);
 	mglData x(ax->GetNx()), y(ax->GetNy()), z(ax->GetNz());
@@ -991,12 +991,12 @@ void mgl_flowp_3d(HMGL gr, mreal x0, mreal y0, mreal z0, HCDT ax, HCDT ay, HCDT 
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_flowp_xyz_(uintptr_t *gr, mreal *x0, mreal *y0, mreal *z0, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, const char *opt, int l,int lo)
+void mgl_flowp_xyz_(uintptr_t *gr, double *x0, double *y0, double *z0, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, const char *opt, int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_flowp_xyz(_GR_, *x0,*y0,*z0, _DA_(x), _DA_(y), _DA_(z), _DA_(ax), _DA_(ay), _DA_(az), s, o);
 	delete []o;	delete []s;	}
-void mgl_flowp_3d_(uintptr_t *gr, mreal *x0, mreal *y0, mreal *z0, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, const char *opt, int l,int lo)
+void mgl_flowp_3d_(uintptr_t *gr, double *x0, double *y0, double *z0, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, const char *opt, int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_flowp_3d(_GR_, *x0,*y0,*z0, _DA_(ax), _DA_(ay), _DA_(az), s, o);	delete []o;	delete []s;	}
@@ -1070,7 +1070,7 @@ void mgl_grad_(uintptr_t *gr, uintptr_t *ph, const char *sch, const char *opt, i
 //	Pipe 2d series
 //
 //-----------------------------------------------------------------------------
-void flowr(mglBase *gr, mreal zVal, mreal u, mreal v, const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, mreal r0,long sc)
+void flowr(mglBase *gr, double zVal, double u, double v, const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, double r0,long sc)
 {
 	long n=10*(ax.nx+ax.ny);
 	bool both = x.nx==ax.nx && y.nx==ax.nx && x.ny==ax.ny && y.ny==ax.ny;
@@ -1149,7 +1149,7 @@ void flowr(mglBase *gr, mreal zVal, mreal u, mreal v, const mglData &x, const mg
 	delete []pp;	delete []cc;
 }
 //-----------------------------------------------------------------------------
-void mgl_pipe_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, mreal r0, const char *opt)
+void mgl_pipe_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, double r0, const char *opt)
 {
 	mreal u,v;
 	if(mgl_check_dim2(gr,x,y,ax,ay,"Pipe"))	return;
@@ -1197,7 +1197,7 @@ void mgl_pipe_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, mre
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mgl_pipe_2d(HMGL gr, HCDT ax, HCDT ay, const char *sch, mreal r0, const char *opt)
+void mgl_pipe_2d(HMGL gr, HCDT ax, HCDT ay, const char *sch, double r0, const char *opt)
 {
 	gr->SaveState(opt);
 	mglData x(ax->GetNx()), y(ax->GetNy());
@@ -1207,11 +1207,11 @@ void mgl_pipe_2d(HMGL gr, HCDT ax, HCDT ay, const char *sch, mreal r0, const cha
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_pipe_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch, mreal *r0, const char *opt,int l,int lo)
+void mgl_pipe_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch, double *r0, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_pipe_xy(_GR_, _DA_(x), _DA_(y), _DA_(ax), _DA_(ay), s, *r0, o);	delete []o;	delete []s;	}
-void mgl_pipe_2d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, const char *sch, mreal *r0, const char *opt,int l,int lo)
+void mgl_pipe_2d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, const char *sch, double *r0, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_pipe_2d(_GR_, _DA_(ax), _DA_(ay), s, *r0, o);	delete []o;	delete []s;	}
@@ -1220,7 +1220,7 @@ void mgl_pipe_2d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, const char *sch, 
 //	Pipe 3d series
 //
 //-----------------------------------------------------------------------------
-void flowr(mglBase *gr, mreal u, mreal v, mreal w, const mglData &x, const mglData &y, const mglData &z, const mglData &ax, const mglData &ay, const mglData &az, mreal r0,long sc)
+void flowr(mglBase *gr, double u, double v, double w, const mglData &x, const mglData &y, const mglData &z, const mglData &ax, const mglData &ay, const mglData &az, double r0,long sc)
 {
 	static long n=10*(ax.nx+ax.ny);
 	long nn = ax.nx*ax.ny*ax.nz;
@@ -1307,7 +1307,7 @@ void flowr(mglBase *gr, mreal u, mreal v, mreal w, const mglData &x, const mglDa
 	delete []pp;	delete []cc;
 }
 //-----------------------------------------------------------------------------
-void mgl_pipe_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, mreal r0, const char *opt)
+void mgl_pipe_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, double r0, const char *opt)
 {
 	mreal u,v,w;
 	long i,j;
@@ -1359,7 +1359,7 @@ void mgl_pipe_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mgl_pipe_3d(HMGL gr, HCDT ax, HCDT ay, HCDT az, const char *sch, mreal r0, const char *opt)
+void mgl_pipe_3d(HMGL gr, HCDT ax, HCDT ay, HCDT az, const char *sch, double r0, const char *opt)
 {
 	gr->SaveState(opt);
 	mglData x(ax->GetNx()), y(ax->GetNy()), z(ax->GetNz());
@@ -1370,12 +1370,12 @@ void mgl_pipe_3d(HMGL gr, HCDT ax, HCDT ay, HCDT az, const char *sch, mreal r0, 
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_pipe_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, mreal *r0, const char *opt,int l,int lo)
+void mgl_pipe_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, double *r0, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];		memcpy(o,opt,lo);	o[lo]=0;
 	mgl_pipe_xyz(_GR_, _DA_(x), _DA_(y), _DA_(z), _DA_(ax), _DA_(ay), _DA_(az), s, *r0, o);
 	delete []o;	delete []s;	}
-void mgl_pipe_3d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, mreal *r0, const char *opt,int l,int lo)
+void mgl_pipe_3d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, double *r0, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];		memcpy(o,opt,lo);	o[lo]=0;
 	mgl_pipe_3d(_GR_, _DA_(ax), _DA_(ay), _DA_(az), s, *r0, o);	delete []o;	delete []s;	}

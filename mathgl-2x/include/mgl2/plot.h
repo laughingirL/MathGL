@@ -92,9 +92,9 @@ void mgl_mark_y(HMGL graph, HCDT y, HCDT r, const char *pen, const char *opt);
 void mgl_tube_xyzr(HMGL graph, HCDT x, HCDT y, HCDT z, HCDT r, const char *pen, const char *opt);
 void mgl_tube_xyr(HMGL graph, HCDT x, HCDT y, HCDT r, const char *pen, const char *opt);
 void mgl_tube_r(HMGL graph, HCDT y, HCDT r, const char *pen, const char *opt);
-void mgl_tube_xyz(HMGL graph, HCDT x, HCDT y, HCDT z, mreal r, const char *pen, const char *opt);
-void mgl_tube_xy(HMGL graph, HCDT x, HCDT y, mreal r, const char *penl, const char *opt);
-void mgl_tube(HMGL graph, HCDT y, mreal r, const char *pen, const char *opt);
+void mgl_tube_xyz(HMGL graph, HCDT x, HCDT y, HCDT z, double r, const char *pen, const char *opt);
+void mgl_tube_xy(HMGL graph, HCDT x, HCDT y, double r, const char *penl, const char *opt);
+void mgl_tube(HMGL graph, HCDT y, double r, const char *pen, const char *opt);
 /******************************************************************************/
 void mgl_candle_xyv(HMGL gr, HCDT x, HCDT v1, HCDT v2, HCDT y1, HCDT y2, const char *pen, const char *opt);
 void mgl_candle_yv(HMGL gr, HCDT v1, HCDT v2, HCDT y1, HCDT y2, const char *pen, const char *opt);
@@ -129,9 +129,9 @@ void mgl_mark_y_(uintptr_t *graph, uintptr_t *y, uintptr_t *r, const char *pen, 
 void mgl_tube_xyzr_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *r, const char *pen, const char *opt,int,int);
 void mgl_tube_xyr_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *r, const char *pen, const char *opt,int,int);
 void mgl_tube_r_(uintptr_t *graph, uintptr_t *y, uintptr_t *r, const char *pen, const char *opt,int,int);
-void mgl_tube_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, mreal *r, const char *pen, const char *opt,int,int);
-void mgl_tube_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, mreal *r, const char *pen, const char *opt,int,int);
-void mgl_tube_(uintptr_t *graph, uintptr_t *y, mreal *r, const char *pen, const char *opt,int,int);
+void mgl_tube_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, double *r, const char *pen, const char *opt,int,int);
+void mgl_tube_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, double *r, const char *pen, const char *opt,int,int);
+void mgl_tube_(uintptr_t *graph, uintptr_t *y, double *r, const char *pen, const char *opt,int,int);
 void mgl_candle_xyv_(uintptr_t *gr, uintptr_t *x, uintptr_t *v1, uintptr_t *v2, uintptr_t *y1, uintptr_t *y2, const char *pen, const char *opt,int,int);
 void mgl_candle_yv_(uintptr_t *gr, uintptr_t *v1, uintptr_t *v2, uintptr_t *y1, uintptr_t *y2, const char *pen, const char *opt,int,int);
 void mgl_candle_(uintptr_t *gr, uintptr_t *y, uintptr_t *y1, uintptr_t *y2, const char *pen, const char *opt,int,int);
