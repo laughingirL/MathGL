@@ -78,65 +78,40 @@ bool mglCanvas::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan) const
 //-----------------------------------------------------------------------------
 long mglCanvas::ProjScale(int nf, long id)
 {
-	const mglPnt &p0=Pnt[id];
-	mglPoint pp(p0.x,p0.y,p0.z), nn(p0.u,p0.v,p0.w);
+	mglPoint pp = GetPntP(id), q, p;
 	if(mgl_isnan(pp.x))	return -1;
-	// TODO find q,n as inverse from pp,nn -- need for arrows, ticks and so on
-	mglPoint q=pp/(2*B.pf), p, n=nn;
+	q = RestorePnt(pp)/(2*B.pf);
 	mreal w=B1.b[0]/2, h=B1.b[4]/2, d=B1.b[8]/2, xx=B1.x-w/2, yy=B1.y-h/2;
 	if(TernAxis&1)	// usual ternary axis
 	{
 		if(nf==0)
-		{	p.x = xx+w/2 + (q.x+(q.y+1)/2)*w/2;
-			n.x = (nn.x+nn.y/2)*w/2;
-			p.y = yy+h + q.y*h/2;	n.y = nn.y*h/2;	}
+		{	p.x = xx+w/2 + (q.x+(q.y+1)/2)*w/2;	p.y = yy+h + q.y*h/2;	}
 	}
 	else if(TernAxis&2)	// quaternary axis
 	{
 		if(nf==0)
-		{	p.x = xx+w/2 + (q.x+(q.y+1)/2)*w/2;
-			n.x = (nn.x+nn.y/2)*w/2;
-			p.y = yy+h + q.y*h/2;
-			n.y = nn.y*h/2;	}
+		{	p.x = xx+w/2 + (q.x+(q.y+1)/2)*w/2;	p.y = yy+h + q.y*h/2;	}
 		else if(nf==1)
-		{	p.x = xx+w/2 + (q.x+(1-q.z)/2)*w/2;
-			n.x = (nn.x-nn.z/2)*w/2;
-			p.y = yy+h - q.z*h/2;
-			n.y = -nn.z*h/2;	}
+		{	p.x = xx+w/2 + (q.x+(1-q.z)/2)*w/2;	p.y = yy+h - q.z*h/2;	}
 		else if(nf==2)
-		{	p.x = xx+w/2 + (q.y-q.z)/2*w/2;
-			n.x = (nn.y-nn.z/2)*w/2;
-			p.y = yy+h + (q.y+q.z)*h/2;
-			n.y = (nn.y+nn.z)/2*h/2;	}
+		{	p.x = xx+w/2 + (q.y-q.z)/2*w/2;	p.y = yy+h + (q.y+q.z)*h/2;	}
 		else
-		{	p.x = xx+w/2 + (q.x+1+(q.y+q.z)/2)*w/2;
-			n.x = (nn.x+(nn.y+nn.z)/2)*w/2;
-			p.y = yy+h + (q.y+(q.z+1)/3)*h/2;
-			n.y = (nn.y+nn.z/3)*h/2;	}
+		{	p.x = xx+w/2 + (q.x+1+(q.y+q.z)/2)*w/2;	p.y = yy+h + (q.y+(q.z+1)/3)*h/2;	}
 	}
 	else
 	{
 		if(nf==0)
-		{	p.x = xx + q.x*w;		n.x = nn.x*w/2;
-			p.y = yy + q.y*h;		n.y = nn.y*h/2;
-			p.z = B1.z + q.z*d;	n.z = nn.z*d/2;	}
+		{	p.x = xx + q.x*w;	p.y = yy + q.y*h;	p.z = B1.z + q.z*d;	}
 		else if(nf==1)
-		{	p.x = xx + q.x*w;		n.x = nn.x*w/2;
-			p.y = yy+h + q.z*h;		n.y = nn.z*h/2;
-			p.z = B1.z + q.y*d;	n.z = nn.y*d/2;	}
+		{	p.x = xx + q.x*w;	p.y = yy+h + q.z*h;	p.z = B1.z + q.y*d;	}
 		else if(nf==2)
-		{	p.x = xx+w + q.z*w;		n.x = nn.z*w/2;
-			p.y = yy + q.y*h;		n.y = nn.y*h/2;
-			p.z = B1.z+ q.x*d;	n.z = nn.x*d/2;	}
+		{	p.x = xx+w + q.z*w;	p.y = yy + q.y*h;	p.z = B1.z+ q.x*d;	}
 		else
 		{	p.x = xx+w + q.x*B.b[0]/2 + q.y*B.b[1]/2 + q.z*B.b[2]/2;
 			p.y = yy+h + q.x*B.b[3]/2 + q.y*B.b[4]/2 + q.z*B.b[5]/2;
-			p.z = B.z + q.x*B.b[6]/2 + q.y*B.b[7]/2 + q.z*B.b[8]/2;
-			n.x = (nn.x*B.b[0] + nn.y*B.b[1] + nn.z*B.b[2])/2;
-			n.y = (nn.x*B.b[3] + nn.y*B.b[4] + nn.z*B.b[5])/2;
-			n.z = (nn.x*B.b[6] + nn.y*B.b[7] + nn.z*B.b[8])/2;	}
+			p.z = B.z + q.x*B.b[6]/2 + q.y*B.b[7]/2 + q.z*B.b[8]/2;	}
 	}
-	return CopyProj(id,p,n);
+	return CopyProj(id,p);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::LightScale()
@@ -152,10 +127,10 @@ void mglCanvas::LightScale()
 }
 //-----------------------------------------------------------------------------
 // NOTE: Perspective is not support just now !!! Also it use LAST InPlot parameters!!!
-mglPoint mglCanvas::CalcXYZ(int xs, int ys, bool real) const
+mglPoint mglCanvas::RestorePnt(mglPoint ps) const
 {
-	mreal s3 = 2*B.pf, x, y, z;
-	ys = Height - ys;
+	mreal s3 = 2*B.pf;
+	mglPoint p;
 
 	mreal W=Width/2, H=Height/2, D=Depth/2;
 	mreal cx = B.z*Bp.b[2]+B.y*Bp.b[1]+B.x*Bp.b[0]-Bp.x*W-Bp.b[0]*W+W-Bp.b[1]*H-Bp.b[2]*D;
@@ -170,42 +145,47 @@ mglPoint mglCanvas::CalcXYZ(int xs, int ys, bool real) const
 	mreal c6 = B.b[6]*Bp.b[8]+B.b[3]*Bp.b[7]+B.b[0]*Bp.b[6];
 	mreal c7 = B.b[7]*Bp.b[8]+B.b[4]*Bp.b[7]+B.b[1]*Bp.b[6];
 	mreal c8 = B.b[8]*Bp.b[8]+B.b[5]*Bp.b[7]+B.b[2]*Bp.b[6];
-	
-	mreal xx = xs-cx, yy = ys-cy, zz;
+
+	mreal xx = ps.x-cx, yy = ps.y-cy, zz = ps.z-cz;
 	mreal d1=c0*c4-c1*c3, d2=c1*c5-c2*c4, d3=c0*c5-c2*c3;
-	
-	// try to use z-values
-	zz = Z[3*(xs+Width*(Height-1-ys))]-cz;
-	if(zz>-1e20f)
+
+	if(zz==zz)	// try to use z-values
 	{
 		// put inverse matrix here: [x,y,z]=B^(-1)[xx,yy,zz]
-		mreal det = -c0*c4*c8+c1*c3*c8+c0*c5*c7-c2*c3*c7-c1*c5*c6+c2*c4*c6;
-		det /= 2*B.pf;
-		x = (c2*c4-c1*c5)*zz+(c1*c8-c2*c7)*yy+(c5*c7-c4*c8)*xx;	x /= det;
-		y = (c0*c5-c2*c3)*zz+(c2*c6-c0*c8)*yy+(c3*c8-c5*c6)*xx;	y /= det;
-		z = (c1*c3-c0*c4)*zz+(c0*c7-c1*c6)*yy+(c4*c6-c3*c7)*xx;	z /= det;
-		real = false;
+		mreal det = (-c0*c4*c8+c1*c3*c8+c0*c5*c7-c2*c3*c7-c1*c5*c6+c2*c4*c6)/s3;
+		p.x = (c2*c4-c1*c5)*zz+(c1*c8-c2*c7)*yy+(c5*c7-c4*c8)*xx;	p.x /= det;
+		p.y = (c0*c5-c2*c3)*zz+(c2*c6-c0*c8)*yy+(c3*c8-c5*c6)*xx;	p.y /= det;
+		p.z = (c1*c3-c0*c4)*zz+(c0*c7-c1*c6)*yy+(c4*c6-c3*c7)*xx;	p.z /= det;
 	}
 	else if(fabs(d1) > fabs(d2) && fabs(d1) > fabs(d3))	// x-y plane
 	{
-		z = 0;
-		x = s3*(c4*xx-c1*yy)/d1;
-		y = s3*(c0*yy-c3*xx)/d1;
+		p.z = 0;
+		p.x = s3*(c4*xx-c1*yy)/d1;
+		p.y = s3*(c0*yy-c3*xx)/d1;
 	}
 	else if(fabs(d2) > fabs(d3))	// y-z
 	{
-		x = 0;
-		y = s3*(c5*xx-c2*yy)/d2;
-		z = s3*(c1*yy-c4*xx)/d2;
+		p.x = 0;
+		p.y = s3*(c5*xx-c2*yy)/d2;
+		p.z = s3*(c1*yy-c4*xx)/d2;
 	}
 	else	// x-z
 	{
-		y = 0;
-		x = s3*(c5*xx-c2*yy)/d3;
-		z = s3*(c0*yy-c3*xx)/d3;
+		p.y = 0;
+		p.x = s3*(c5*xx-c2*yy)/d3;
+		p.z = s3*(c0*yy-c3*xx)/d3;
 	}
-	return real ? mglPoint(NAN,NAN,NAN) : mglPoint(Min.x + (Max.x-Min.x)*(x+1)/2,
-				Min.y + (Max.y-Min.y)*(y+1)/2, Min.z + (Max.z-Min.z)*(z+1)/2);
+	return p;
+}
+//-----------------------------------------------------------------------------
+mglPoint mglCanvas::CalcXYZ(int xs, int ys, bool real) const
+{
+	mglPoint p, ps(xs,Height-ys,NAN);
+	float zz = Z[3*(xs+Width*(Height-1-ys))];
+	if(zz>-1e20f)	{	ps.z = zz;	real=false;	}
+	p = RestorePnt(ps);
+	return real ? mglPoint(NAN,NAN,NAN) : mglPoint(Min.x + (Max.x-Min.x)*(p.x+1)/2,
+				Min.y + (Max.y-Min.y)*(p.y+1)/2, Min.z + (Max.z-Min.z)*(p.z+1)/2);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::CalcScr(mglPoint p, int *xs, int *ys) const

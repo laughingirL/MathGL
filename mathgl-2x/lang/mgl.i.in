@@ -41,7 +41,7 @@
 #include "mgl2/type.h"
 #include "mgl2/data.h"
 #include "mgl2/mgl.h"
-#include "mgl2/window.h"
+//#include "mgl2/window.h"
 %}
 
 #if MGL_USE_DOUBLE
@@ -90,7 +90,7 @@ import_array();
 %include "mgl2/type.h"
 %include "mgl2/data.h"
 %include "mgl2/mgl.h"
-%include "mgl2/window.h"
+//%include "mgl2/window.h"
 %extend mglData
 {
 	float __getitem__( int i)	{	return self->GetVal(i);	};

@@ -380,6 +380,9 @@ protected:
 	void glyph_draw(const mglPrim *P, mglDrawReg *d);
 	bool IsSame(const mglPrim &pr,mreal wp,mglColor cp,int st);
 
+	// restore normalized coordinates from screen ones
+	mglPoint RestorePnt(mglPoint ps) const;
+
 	// functions for multi-threading
 	void PreparePrim(bool fast);
 	void pxl_combine(size_t id, size_t n, const void *);

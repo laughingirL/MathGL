@@ -58,7 +58,8 @@ void mgl_write_obj_old(HMGL gr, const char *fname,const char *descr, int use_png
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-/*	gr->SetRanges(0,1,0,1,0,1);
+	gr->Title("Ordinary axis 3D");
+	gr->SetRanges(0,1,0,1,0,1);
 	mglData x(50),y(50),z(50),rx(10),ry(10), a(20,30);
 	a.Modify("30*x*y*(1-x-y)^2*(x+y<1)");
 	x.Modify("0.25*(1+cos(2*pi*x))");
@@ -66,16 +67,12 @@ void test(mglGraph *gr)
 	rx.Modify("rnd"); ry.Modify("(1-v)*rnd",rx);
 	z.Modify("x");
 
-	gr->Ternary(4);
-	gr->Title("Ordinary axis 3D");
+	gr->Ternary(6);
 	gr->Rotate(50,60);		gr->Light(true);
 	gr->Plot(x,y,z,"r2");	gr->Surf(a,"BbcyrR#");
 	gr->Axis(); gr->Grid();	gr->Box();
-	gr->Label('x',"B",1);	gr->Label('y',"C",1);	gr->Label('z',"Z",1);*/
-//	gr->Ternary(4);
-//	gr->Line(mglPoint(-1,-1,0),mglPoint(1,1,1),"r");
-//	gr->Axis();
-//	return;
+	gr->Label('x',"B",1);	gr->Label('y',"C",1);	gr->Label('z',"Z",1);
+	return;
 	
 	gr->Axis();
 	gr->Box();
