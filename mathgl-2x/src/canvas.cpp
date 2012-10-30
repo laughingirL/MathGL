@@ -298,7 +298,7 @@ mreal mglCanvas::text_plot(long p,const wchar_t *text,const char *font,mreal siz
 		mreal res;
 		TernAxis = TernAxis&(~4);
 		for(int i=0;i<4;i++)
-			res = text_plot(ProjScale(i,p),text,font,size/2,sh,col);
+			res = text_plot(ProjScale(i,p,true),text,font,size/2,sh,col);
 		TernAxis = TernAxis|4;
 		return res;
 	}
@@ -317,7 +317,7 @@ mreal mglCanvas::text_plot(long p,const wchar_t *text,const char *font,mreal siz
 		a.s = size;	a.w = sh;	a.p=col;
 		add_prim(a);
 	}
-	if(ll==0)	return 0;
+	if(ll<1e-10)	return 0;
 
 	mreal fsize=size/6.5*font_factor, h = fnt->Height(font)*fsize, w, shift = -(sh+0.02)*h;
 	// text drawing itself

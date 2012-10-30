@@ -381,7 +381,7 @@ protected:
 	bool IsSame(const mglPrim &pr,mreal wp,mglColor cp,int st);
 
 	// restore normalized coordinates from screen ones
-	mglPoint RestorePnt(mglPoint ps) const;
+	mglPoint RestorePnt(mglPoint ps, bool norm=false) const;
 
 	// functions for multi-threading
 	void PreparePrim(bool fast);
@@ -425,7 +425,7 @@ private:
 	/// Additionally scale points \a p for positioning in image
 	void PostScale(mglPoint &p) const;
 	/// Scale points \a p for projection to the face number \a nface in image
-	long ProjScale(int nface, long p);
+	long ProjScale(int nface, long p, bool text=false);
 	inline void PostScale(mglPoint *p,long n) const	{	for(long i=0;i<n;i++)	PostScale(p[i]);	}
 	/// Set coordinate and add the point, return its id
 	long setPp(mglPnt &q, const mglPoint &p);

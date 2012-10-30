@@ -369,7 +369,7 @@ public:
 	/// Add point to the Pnt and return its position
 	long AddPnt(mglPoint p, mreal c=-1, mglPoint n=mglPoint(NAN), mreal a=-1, int scl=1);
 	long CopyNtoC(long k, mreal c);
-	long CopyProj(long from, mglPoint p);
+	long CopyProj(long from, mglPoint p, mglPoint n);
 	virtual void Reserve(long n);		///< Allocate n-cells for Pnt and return current position
 	/// Set to reduce accuracy of points (to reduce size of output files)
 	inline void SetReduceAcc(bool val)	{	set(val, MGL_REDUCEACC);	}
@@ -382,8 +382,10 @@ public:
 	
 	inline mglPoint GetPntP(long i) const
 	{	const mglPnt &p=Pnt[i];	return mglPoint(p.x,p.y,p.z);	}
+	inline mglPoint GetPntN(long i) const
+	{	const mglPnt &p=Pnt[i];	return mglPoint(p.u,p.v,p.w);	}
 	inline float GetClrC(long i) const	{	return Pnt[i].c;	}
-	inline const mglGlyph &GetGlf(long i) const	{	return Glf[i];		}
+	inline const mglGlyph &GetGlf(long i) const	{	return Glf[i];	}
 	inline long GetGlfNum() const		{	return Glf.size();	}
 	inline const mglPnt &GetPnt(long i) const	{	return Pnt[i];		}
 	inline long GetPntNum() const		{	return Pnt.size();	}
@@ -391,7 +393,7 @@ public:
 	inline long GetPrmNum() const		{	return Prm.size();	}
 	inline const mglText &GetPtx(long i) const	{	return Ptx[i];		}
 	inline long GetPtxNum() const		{	return Ptx.size();	}
-	inline const mglTexture &GetTxt(long i) const	{	return Txt[i];		}
+	inline const mglTexture &GetTxt(long i) const	{	return Txt[i];	}
 	inline long GetTxtNum() const		{	return Txt.size();	}
 	/// Scale coordinates and cut off some points
 	virtual bool ScalePoint(mglPoint &p, mglPoint &n, bool use_nan=true) const;

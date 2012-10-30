@@ -48,7 +48,7 @@ void mglTexture::GetRGBA(unsigned char *f) const
 //-----------------------------------------------------------------------------
 void mgl_obj_glyph_old(HMGL gr, const mglPrim &q, const mglPnt &p, FILE *fp)
 {
-	mreal f = q.p/1.55, dx=p.u/1.55, dy=p.v/1.55, x,y;
+	mreal f = q.p/2, dx=p.u/2, dy=p.v/2, x,y;
 	mreal c=q.s*cos(q.w*M_PI/180), s=-q.s*sin(q.w*M_PI/180);
 	double b[4] = {c,-s, s,c};
 	long i=q.n1+1, ik,il=0;

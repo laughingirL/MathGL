@@ -76,11 +76,12 @@ bool mglCanvas::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan) const
 	return res;
 }
 //-----------------------------------------------------------------------------
-long mglCanvas::ProjScale(int nf, long id)
+long mglCanvas::ProjScale(int nf, long id, bool text)
 {
-	mglPoint pp = GetPntP(id), q, p;
+	mglPoint pp = GetPntP(id), nn = GetPntN(id), q, p, n, u;
 	if(mgl_isnan(pp.x))	return -1;
 	q = RestorePnt(pp)/(2*B.pf);
+	u = RestorePnt(nn,true);	u.Normalize();
 	mreal w=B1.b[0]/2, h=B1.b[4]/2, d=B1.b[8]/2, xx=B1.x-w/2, yy=B1.y-h/2;
 	if(TernAxis&1)	// usual ternary axis
 	{
@@ -101,17 +102,17 @@ long mglCanvas::ProjScale(int nf, long id)
 	else
 	{
 		if(nf==0)
-		{	p.x = xx + q.x*w;	p.y = yy + q.y*h;	p.z = B1.z + q.z*d;	}
+		{	p.x = xx + q.x*w;	p.y = yy + q.y*h;	p.z = B1.z + q.z*d;	n = u;	}
 		else if(nf==1)
-		{	p.x = xx + q.x*w;	p.y = yy+h + q.z*h;	p.z = B1.z + q.y*d;	}
+		{	p.x = xx + q.x*w;	p.y = yy+h + q.z*h;	p.z = B1.z + q.y*d;	n = mglPoint(u.x,u.z,u.y);	}
 		else if(nf==2)
-		{	p.x = xx+w + q.z*w;	p.y = yy + q.y*h;	p.z = B1.z+ q.x*d;	}
+		{	p.x = xx+w + q.z*w;	p.y = yy + q.y*h;	p.z = B1.z+ q.x*d;	n = mglPoint(u.z,u.y,u.x);	}
 		else
-		{	p.x = xx+w + q.x*B.b[0]/2 + q.y*B.b[1]/2 + q.z*B.b[2]/2;
+		{	p.x = xx+w + q.x*B.b[0]/2 + q.y*B.b[1]/2 + q.z*B.b[2]/2;	n = nn;
 			p.y = yy+h + q.x*B.b[3]/2 + q.y*B.b[4]/2 + q.z*B.b[5]/2;
 			p.z = B.z + q.x*B.b[6]/2 + q.y*B.b[7]/2 + q.z*B.b[8]/2;	}
 	}
-	return CopyProj(id,p);
+	return CopyProj(id,p,text?n:nn);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::LightScale()
@@ -127,7 +128,7 @@ void mglCanvas::LightScale()
 }
 //-----------------------------------------------------------------------------
 // NOTE: Perspective is not support just now !!! Also it use LAST InPlot parameters!!!
-mglPoint mglCanvas::RestorePnt(mglPoint ps) const
+mglPoint mglCanvas::RestorePnt(mglPoint ps, bool norm) const
 {
 	mreal s3 = 2*B.pf;
 	mglPoint p;
@@ -145,6 +146,7 @@ mglPoint mglCanvas::RestorePnt(mglPoint ps) const
 	mreal c6 = B.b[6]*Bp.b[8]+B.b[3]*Bp.b[7]+B.b[0]*Bp.b[6];
 	mreal c7 = B.b[7]*Bp.b[8]+B.b[4]*Bp.b[7]+B.b[1]*Bp.b[6];
 	mreal c8 = B.b[8]*Bp.b[8]+B.b[5]*Bp.b[7]+B.b[2]*Bp.b[6];
+	if(norm)	cx=cy=cz=0;
 
 	mreal xx = ps.x-cx, yy = ps.y-cy, zz = ps.z-cz;
 	mreal d1=c0*c4-c1*c3, d2=c1*c5-c2*c4, d3=c0*c5-c2*c3;

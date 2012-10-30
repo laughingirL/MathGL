@@ -67,18 +67,11 @@ void test(mglGraph *gr)
 	rx.Modify("rnd"); ry.Modify("(1-v)*rnd",rx);
 	z.Modify("x");
 
-	gr->Ternary(6);
+	gr->Ternary(4);
 	gr->Rotate(50,60);		gr->Light(true);
 	gr->Plot(x,y,z,"r2");	gr->Surf(a,"BbcyrR#");
 	gr->Axis(); gr->Grid();	gr->Box();
 	gr->Label('x',"B",1);	gr->Label('y',"C",1);	gr->Label('z',"Z",1);
-	return;
-	
-	gr->Axis();
-	gr->Box();
-	gr->Puts(mglPoint(0),"a");
-	gr->FSurf("-1");
-	mgl_write_obj_old(gr->Self(),"1.obj","",true);
 	return;
 	
 	mglParse par;
