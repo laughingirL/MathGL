@@ -362,8 +362,6 @@ protected:
 
 	void mark_plot(long p, char type, mreal size=1);
 	void arrow_plot(long p1, long p2, char st);
-	void arrow_plot_2d(long p1, long p2, char st);
-	void arrow_plot_3d(long p1, long p2, char st);
 	void line_plot(long p1, long p2);
 	void trig_plot(long p1, long p2, long p3);
 	void quad_plot(long p1, long p2, long p3, long p4);
@@ -377,6 +375,8 @@ protected:
 	virtual void trig_draw(long p1, long p2, long p3, bool anorm, mglDrawReg *d);
 	virtual void quad_draw(long p1, long p2, long p3, long p4, mglDrawReg *d);
 	virtual void pnt_draw(long p, mglDrawReg *d);
+	void arrow_draw(long n1, long n2, char st, float ll);
+	void arrow_plot_3d(long p1, long p2, char st, float ll);
 	void glyph_draw(const mglPrim *P, mglDrawReg *d);
 	bool IsSame(const mglPrim &pr,mreal wp,mglColor cp,int st);
 

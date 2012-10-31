@@ -271,6 +271,7 @@ void mgl_write_eps(HMGL gr, const char *fname,const char *descr)
 	put_desc(gr,fp,gz,"/%c%c_%04x { np\n", "\t%d %d mt ", "%d %d ll ", "cp\n", "} def\n");
 	// write primitives
 	mreal wp=-1;
+	float qs_old=gr->mark_size()/gr->FontFactor();
 	mglColor cp;
 	int st=0;
 	char str[256]="";
@@ -287,11 +288,12 @@ void mgl_write_eps(HMGL gr, const char *fname,const char *descr)
 			mreal x0 = p1.x,y0 = p1.y;
 			sprintf(str,"1 lw %.2g %.2g %.2g rgb ", cp.r,cp.g,cp.b);
 			wp=1;
-			if(q.s!=gr->mark_size()/gr->FontFactor())
+			if(q.s!=qs_old)
 			{
 				mgl_printf(fp, gz, "/ss {%g} def\n",q.s*0.4*gr->FontFactor());
 				mgl_printf(fp, gz, "/s2 {%g} def\n",q.s*0.8*gr->FontFactor());
 				mgl_printf(fp, gz, "/sm {-%g} def\n",q.s*0.4*gr->FontFactor());
+				qs_old = q.s;
 			}
 			switch(q.n4)
 			{
