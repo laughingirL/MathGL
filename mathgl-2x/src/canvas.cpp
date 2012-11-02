@@ -70,8 +70,11 @@ mreal mglCanvas::GetRatio() const	{	return inW/inH;	}
 void mglCanvas::add_prim(mglPrim &a)
 {
 	if(a.n1>=0)
-	{	a.z = Pnt[a.n1].z;	// this is a bit less accurate but simpler for transformation
-		a.id = ObjId;	MGL_PUSH(Prm,a,mutexPrm);	}
+	{
+		a.z = Pnt[a.n1].z;	// this is a bit less accurate but simpler for transformation
+		a.id = ObjId;	MGL_PUSH(Prm,a,mutexPrm);
+		clr(MGL_FINISHED);
+	}
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::DefaultPlotParam()

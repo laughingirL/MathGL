@@ -30,7 +30,7 @@ void mgl_printf(void *fp, bool gz, const char *str, ...);
 //-----------------------------------------------------------------------------
 char *mgl_get_dash(unsigned short d, mreal w)
 {
-	static char s[64],b[4];
+	static char s[64],b[32];
 	if(d==0xffff)	{	strcpy(s,"");	return s;	}
 	int f=0, p=d&1, n=p?0:1, i, j;
 	strcpy(s, p ? "" : "0");

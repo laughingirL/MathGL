@@ -58,6 +58,10 @@ void mgl_write_obj_old(HMGL gr, const char *fname,const char *descr, int use_png
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
+	gr->FPlot("x",";");
+	gr->WriteEPS("1.eps");
+	return;
+	
 	gr->Title("Ordinary axis 3D");
 	gr->SetRanges(0,1,0,1,0,1);
 	mglData x(50),y(50),z(50),rx(10),ry(10), a(20,30);
