@@ -58,8 +58,15 @@ void mgl_write_obj_old(HMGL gr, const char *fname,const char *descr, int use_png
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	gr->FPlot("x",";");
-	gr->WriteEPS("1.eps");
+	gr->Rotate(50,60);	// rotate axis
+	gr->Light(false);		// enable lighting
+	gr->SetRanges(0,20,0,30);
+	gr->Title("log-scale");
+	gr->SetRange('c',0.01,0.05);
+	gr->Box();
+	gr->SetFunc("","","","lg(c)");
+	gr->Colorbar("_");
+	gr->Puts(mglPoint(0.0,0.05),"Log scale");
 	return;
 	
 	gr->Title("Ordinary axis 3D");
@@ -230,6 +237,7 @@ int main(int argc,char **argv)
 		}
 #endif
 
+	if(dotest==1)	printf("Global (before):%s\n",mglGlobalMess.c_str());
 	gr = new mglGraph;	//gr->SetQuality(0);
 	if(mini)		{	gr->SetSize(190,145);	suf = "-sm";	}
 	else if(big)
@@ -238,10 +246,11 @@ int main(int argc,char **argv)
 
 	if(dotest==1)
 	{
-//		gr->SetSize(600,600);
 		mgl_set_test_mode(true);	test(gr);
 		gr->WritePNG("test.png","",false);
 		gr->WriteEPS("test.eps");
+		printf("Messages:%s\n",gr->Message());
+		printf("Global:%s\n",mglGlobalMess.c_str());
 		delete gr;	return 0;
 	}
 	if(dotest==2)

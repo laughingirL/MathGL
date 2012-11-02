@@ -34,6 +34,8 @@ struct gsl_matrix;
 class mglDataC;
 typedef mglDataC* HADT;
 extern "C" {
+#else
+typedef void *HADT;
 #endif
 /******************************************************************************/
 HADT mgl_create_datac();

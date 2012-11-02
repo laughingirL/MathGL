@@ -250,6 +250,9 @@ void mglStartThreadC(void *(*func)(void *), void (*post)(mglThreadC *,dual *), l
 extern int mglNumThr;		///< Number of thread for plotting and data handling
 //-----------------------------------------------------------------------------
 extern "C" {
+#else
+#include <complex.h>
+typedef double _Complex dual;
 #endif
 /** Find symbol in string excluding {} and return its position or NULL */
 const char *mglchr(const char *str, char ch);

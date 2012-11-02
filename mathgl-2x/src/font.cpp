@@ -35,6 +35,7 @@ extern float mgl_fact;
 extern long mgl_gen_fnt[516][6];
 extern short mgl_buf_fnt[246080];
 extern mglTeXsymb mgl_tex_symb[];
+//mglFont mglDefFont("nofont");
 mglFont mglDefFont;
 //-----------------------------------------------------------------------------
 char mglGetStyle(const char *how, int *font, int *align)
@@ -686,6 +687,7 @@ bool mglFont::read_main(const char *fname, unsigned &cur)
 	return true;
 }
 //-----------------------------------------------------------------------------
+extern std::string mglGlobalMess;	///< Buffer for receiving global messages
 bool mglFont::Load(const char *base, const char *path)
 {
 //	base = 0;
@@ -712,8 +714,11 @@ bool mglFont::Load(const char *base, const char *path)
 
 	sprintf(str,"%s%c%s.vfm",path,sep,base?base:"");
 	if(!(base && *base) || !read_main(str,cur))
-	{	read_def(cur);	setlocale(LC_NUMERIC,oldLocale);
-		if(buf)	delete []buf;	return true;	}
+	{
+		mglGlobalMess += "Load built-in font.\n";
+		read_def(cur);	setlocale(LC_NUMERIC,oldLocale);
+		if(buf)	delete []buf;	return true;
+	}
 
 	//================== bold ===========================================
 	sprintf(str,"%s%c%s_b.vfm",path,sep,base);	// this file may absent

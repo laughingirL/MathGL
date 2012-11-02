@@ -22,7 +22,6 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 3. WX window/widgets
 4. introduce new primitive type=5 -- arrow for Quality&3!=3. for better drawing in projections + json/view
 5. exclude mreal from base.h, canvas.h if possible?!
-6. accurate with dual for datac -- use "mreal _Complex" instead.
 
 ============= DOCS =============
 
