@@ -176,9 +176,14 @@ void QMathGL::zoomOut()
 void QMathGL::restore()
 {
 	setPhi(0);	setTet(0);	setPer(0);
-	ax1=ay1=x1=y1=0;	ax2=ay2=x2=y2=1;	zoom=rotate=false;
+	x1=y1=0; 	x2=y2=1;		zoom=rotate=false;
 	emit zoomChanged(false);	emit rotateChanged(false);
-	refresh();
+	if(ax1!=0 || ay1!=0 || ax2!=1 || ay2!=1)
+	{
+		ax1=ay1=0;		ax2=ay2=1;
+		gr->ZoomAxis();	update();
+	}
+	else refresh();
 }
 //-----------------------------------------------------------------------------
 void QMathGL::stop()	{	gr->Stop=true;	}	//{	thr->terminate();	}

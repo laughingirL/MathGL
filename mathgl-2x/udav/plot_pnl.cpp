@@ -39,6 +39,7 @@
 #include "anim_dlg.h"
 #include "style_dlg.h"
 extern bool mglAutoSave;
+extern bool mglHighlight;
 extern mglParse parser;
 int animDelay=500;
 void raisePanel(QWidget *w);
@@ -76,9 +77,13 @@ PlotPanel::~PlotPanel()	{	delete printer;	}
 void PlotPanel::setStyle(int id)
 {	if(stlDialog->exec())	mgl->setStyle(id, stlDialog->getStyle());	}
 //-----------------------------------------------------------------------------
-void PlotPanel::animText(const QString &txt)	{	animPutText(txt);	}
+void PlotPanel::animText(const QString &txt)		{	animPutText(txt);	}
 //-----------------------------------------------------------------------------
-void PlotPanel::setCurPos(int pos)	{	curPos = pos;	execute();	}
+void PlotPanel::setCurPos(int pos)
+{
+	if(!mglHighlight)	pos = -1;
+	if(curPos!=pos)	{	curPos = pos;	execute();	}
+}
 //-----------------------------------------------------------------------------
 void PlotPanel::stop()	{	parser.Stop();	mgl->stop();	}
 //-----------------------------------------------------------------------------
@@ -90,7 +95,8 @@ void PlotPanel::execute()
 	QTime t;	t.start();
 	mgl->getGraph()->FaceNum=0;
 	draw->text=textMGL->toPlainText();
-	draw->line=curPos;	mgl->update();
+	draw->line=curPos;
+	mgl->update();
 	setStatus(QString(tr("Drawing time %1 ms")).arg(t.elapsed()*1e-3));
 	emit giveFocus();
 }

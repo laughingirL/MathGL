@@ -43,6 +43,7 @@ public:
 	bool autoResize; 	///< Allow auto resizing (default is false)
 	bool enableMouse;	///< Enable mouse handlers
 	bool enableWheel;	///< Enable mouse wheel handlers
+	QString primitives;	///< Manual primitives, defined by user
 
 	QMathGL(QWidget *parent = 0, Qt::WindowFlags f = 0);
 	~QMathGL();
@@ -165,7 +166,6 @@ protected:
 	void mouseDoubleClickEvent(QMouseEvent *);
 
 	static bool mglUserPrim;
-	QString primitives;	///< Manual primitives, defined by user
 	mglCanvas *gr;		///< Built-in mglCanvasQT-er instance (used by default)
 	void *draw_par;		///< Parameters for drawing function mglCanvasWnd::DrawFunc.
 	/// Drawing function for window procedure. It should return the number of frames.

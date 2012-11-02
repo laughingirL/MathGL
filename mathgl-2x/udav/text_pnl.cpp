@@ -27,6 +27,7 @@
 #include <QPrinter>
 #include <QMenu>
 #include <mgl2/mgl.h>
+#include <mgl2/qt.h>
 //-----------------------------------------------------------------------------
 #include "udav_wnd.h"
 #include "qmglsyntax.h"
@@ -277,7 +278,13 @@ void TextPanel::loadHDF5(const QString &fileName)
 			char *buf = new char[dims[0]+1];
 			H5Dread(hd, H5T_C_S1, H5S_ALL, H5S_ALL, H5P_DEFAULT, buf);
 			buf[dims[0]]=0;		// to be sure :)
-			edit->setText(buf);
+			QString str = buf;
+			if(str.contains("#----- End of QMathGL block -----\n"))
+			{
+				graph->mgl->primitives = str.section("#----- End of QMathGL block -----\n",0,0);
+				str = str.section("#----- End of QMathGL block -----\n",1);
+			}
+			edit->setText(str);
 			graph->animParseText(edit->toPlainText());
 			setCurrentFile(fileName);
 			delete []buf;
@@ -325,7 +332,10 @@ void TextPanel::saveHDF5(const QString &fileName)
 		return;
 	}
 	{	// save script
-		QString txt = edit->toPlainText();
+		QString txt;
+		if(!graph->mgl->primitives.isEmpty())
+			txt += graph->mgl->primitives + "#----- End of QMathGL block -----";
+		txt += edit->toPlainText();
 		dims[0] = txt.length()+1;
 		char *buf = new char[dims[0]+1];
 		memcpy(buf, txt.toAscii().constData(), dims[0]);
@@ -406,7 +416,12 @@ void TextPanel::load(const QString &fileName)
 				str = files_dlg->putFiles(str);
 			}
 		}
-
+		if(str.contains("#----- End of QMathGL block -----\n"))
+		{
+			graph->mgl->primitives = str.section("#----- End of QMathGL block -----\n",0,0);
+			str = str.section("#----- End of QMathGL block -----\n",1);
+		}
+		
 		if(narg>0)	setCurrentFile(fileName.left(fileName.length()-3)+"mgl");
 		edit->setText(str);
 		graph->animParseText(edit->toPlainText());
@@ -420,7 +435,10 @@ void TextPanel::save(const QString &fileName)
 {
 	if(fileName.right(4)==".hdf" || fileName.right(3)==".h5")
 	{	saveHDF5(fileName);	return;	}
-	QString text = edit->toPlainText();
+	QString text;
+	if(!graph->mgl->primitives.isEmpty())
+		text += graph->mgl->primitives + "#----- End of QMathGL block -----\n";
+	text += edit->toPlainText();
 	QFile f(fileName);
 	if(!f.open(QIODevice::WriteOnly))
 	{

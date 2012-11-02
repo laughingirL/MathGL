@@ -58,6 +58,7 @@ QStringList recentFiles;
 int MaxRecentFiles=5;
 bool editPosBottom = false;
 bool mglAutoSave = false;
+bool mglHighlight = true;
 bool mglAutoPure = true;
 bool mglCompleter = true;
 bool loadInNewWnd = false;
@@ -506,6 +507,7 @@ void MainWindow::writeSettings()
 	settings.setValue("/colReserved", mglColorScheme[8].name());
 	settings.setValue("/autoExec",  mglAutoExecute);
 	settings.setValue("/autoSave",  mglAutoSave);
+	settings.setValue("/highlight",  mglHighlight);
 	settings.setValue("/autoPure",  mglAutoPure);
 	settings.setValue("/editAtTop", editPosBottom);
 	settings.setValue("/fontFamily", defFontFamily);
@@ -541,6 +543,7 @@ void MainWindow::readSettings()
 	mglColorScheme[7] = QColor(settings.value("/colFCKeyword","#007F7F").toString());
 	mglColorScheme[8] = QColor(settings.value("/colReserved", "#0000FF").toString());
 	mglAutoSave = settings.value("/autoSave",  false).toBool();
+	mglHighlight = settings.value("/highlight",  true).toBool();
 	mglAutoPure = settings.value("/autoPure",  true).toBool();
 	mglAutoExecute = settings.value("/autoExec",  true).toBool();
 	editPosBottom = settings.value("/editAtTop", false).toBool();

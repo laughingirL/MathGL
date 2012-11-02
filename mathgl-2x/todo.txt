@@ -19,11 +19,10 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 
 1. Axis -- projection (ternary + quaternary) + sample
 2. curved text (in new sample) look not so good
-4. WX window/widgets
-5. Add primitives by mouse at beginning of script between blocks "#----- MathGL block -----" +  hide it in editor
-6. introduce new primitive type=5 -- arrow for Quality&3!=3. for better drawing in projections + json/view
-7. exclude mreal from base.h, canvas.h if possible?!
-8. accurate with dual for datac -- use "mreal _Complex" instead.
+3. WX window/widgets
+4. introduce new primitive type=5 -- arrow for Quality&3!=3. for better drawing in projections + json/view
+5. exclude mreal from base.h, canvas.h if possible?!
+6. accurate with dual for datac -- use "mreal _Complex" instead.
 
 ============= DOCS =============
 

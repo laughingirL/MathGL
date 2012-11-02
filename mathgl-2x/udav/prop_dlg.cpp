@@ -47,6 +47,7 @@ extern bool mglAutoPure;
 extern bool mglCompleter;
 extern bool editPosBottom;
 extern bool loadInNewWnd;
+extern bool mglHighlight;
 int defWidth, defHeight;
 QString pathFont;
 QString lang[]={"","ru"};
@@ -157,10 +158,12 @@ PropDialog::PropDialog(QWidget *parent) : QDialog(parent)
 	save = new QCheckBox(tr("Automatically save before redrawing (F5)"), this);
 	save->setChecked(mglAutoSave);	v->addWidget(save);
 	pure = new QCheckBox(tr("Disable face drawing (faster) for mouse rotation/shift/zoom."), this);
-	pure->setChecked(mglAutoPure);	v->addWidget(pure);
+	pure->setChecked(mglAutoPure);	v->addWidget(pure);	pure->setEnabled(false);
 	cmpl = new QCheckBox(tr("Enable keywords completition"), this);
 	cmpl->setChecked(mglCompleter);	v->addWidget(cmpl);
-
+	high = new QCheckBox(tr("Highlight current object(s)"), this);
+	high->setChecked(mglHighlight);	v->addWidget(high);
+	
 	h = new QHBoxLayout();		v->addLayout(h);
 	h->addStretch(1);
 	b = new QPushButton(tr("Cancel"), this);	h->addWidget(b);
@@ -219,6 +222,7 @@ void PropDialog::applyChanges()
 	defFontSize = defFont.pointSize();
 	loadInNewWnd = load->isChecked();
 	mglAutoSave = save->isChecked();
+	mglHighlight = high->isChecked();
 	mglAutoPure = pure->isChecked();
 	mglCompleter = cmpl->isChecked();
 

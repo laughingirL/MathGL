@@ -35,6 +35,7 @@
 * Text editor in UDAV now highlight current line.
 * Completer can be switched off correctly now.
 * Multi-line strings (i.e. separated by "\" symbol) are highlighted correctly now.
+* Add option to enable/disable selected plot in UDAV.
 
 * Grid lines for NAN origin values are always located at far-away edges.
 * Try correctly place axis and tick labels even for axis with inverse range (i.e. for v2<v1). 

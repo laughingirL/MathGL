@@ -20,29 +20,26 @@
 #ifndef _MGL_CF_H_
 #define _MGL_CF_H_
 /******************************************************************************/
-#include "mgl2/base_cf.h"
-#include "mgl2/data_cf.h"
-#include "mgl2/datac_cf.h"
-#include "mgl2/cont.h"
-#include "mgl2/fit.h"
-#include "mgl2/plot.h"
-#include "mgl2/surf.h"
-#include "mgl2/volume.h"
-#include "mgl2/vect.h"
-#include "mgl2/prim.h"
-#include "mgl2/other.h"
-#include "mgl2/canvas_cf.h"
-#include "mgl2/addon.h"
+#ifdef __cplusplus
+#include <mgl2/data.h>
+#endif
+/******************************************************************************/
+#include <mgl2/base_cf.h>
+#include <mgl2/data_cf.h>
+#include <mgl2/datac_cf.h>
+#include <mgl2/cont.h>
+#include <mgl2/fit.h>
+#include <mgl2/plot.h>
+#include <mgl2/surf.h>
+#include <mgl2/volume.h>
+#include <mgl2/vect.h>
+#include <mgl2/prim.h>
+#include <mgl2/other.h>
+#include <mgl2/canvas_cf.h>
+#include <mgl2/addon.h>
 /******************************************************************************/
 #if MGL_HAVE_OPENGL
-#ifdef __cplusplus
-extern "C" {
-#endif
-HMGL mgl_create_graph_gl();
-uintptr_t mgl_create_graph_gl_();
-#ifdef __cplusplus
-}
-#endif
+#include <mgl2/opengl.h>
 #endif
 /******************************************************************************/
 #endif
