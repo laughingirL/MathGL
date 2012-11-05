@@ -682,7 +682,7 @@ void mglCanvasFL::Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p
 	SetDrawFunc(draw, par, reload);
 	if(Wnd)	{	Wnd->label(title);	Wnd->show();	return;	}
 
-	Wnd = new Fl_Double_Window(0,0,830,660,title);
+	Wnd = new Fl_Double_Window(830,660,title);
 
 	mgl = new Fl_MGLView(0,30,830,630);		mgl->par = this;
 

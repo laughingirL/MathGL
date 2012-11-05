@@ -252,7 +252,11 @@ extern int mglNumThr;		///< Number of thread for plotting and data handling
 extern "C" {
 #else
 #include <complex.h>
+#if MGL_USE_DOUBLE
 typedef double _Complex dual;
+#else
+typedef float _Complex dual;
+#endif
 #endif
 /** Find symbol in string excluding {} and return its position or NULL */
 const char *mglchr(const char *str, char ch);
