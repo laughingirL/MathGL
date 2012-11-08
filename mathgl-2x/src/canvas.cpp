@@ -60,17 +60,21 @@ void mglCanvas::GetFrame(long k)
 	if(k<0 || (size_t)k>=DrwDat.size())	return;
 	Clf();
 	const mglDrawDat &d=DrwDat[k];
+#if MGL_HAVE_PTHREAD
 	pthread_mutex_lock(&mutexPnt);
 	pthread_mutex_lock(&mutexPrm);
 	pthread_mutex_lock(&mutexGlf);
 	pthread_mutex_lock(&mutexPtx);
 	pthread_mutex_lock(&mutexTxt);
+#endif
 	Pnt=d.Pnt;	Prm=d.Prm;	Glf=d.Glf;	Ptx=d.Ptx;	Txt=d.Txt;
+#if MGL_HAVE_PTHREAD
 	pthread_mutex_unlock(&mutexPnt);
 	pthread_mutex_unlock(&mutexPrm);
 	pthread_mutex_unlock(&mutexGlf);
 	pthread_mutex_unlock(&mutexPtx);
 	pthread_mutex_unlock(&mutexTxt);
+#endif
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::AddFrame(long k)
@@ -78,13 +82,13 @@ void mglCanvas::AddFrame(long k)
 	if(k<0 || (size_t)k>=DrwDat.size())	return;
 	ClfZB();
 	size_t npnt=Pnt.size(), nglf=Glf.size(), nptx=Ptx.size(), ntxt=Txt.size();
-
+#if MGL_HAVE_PTHREAD
 	pthread_mutex_lock(&mutexPnt);
 	pthread_mutex_lock(&mutexPrm);
 	pthread_mutex_lock(&mutexGlf);
 	pthread_mutex_lock(&mutexPtx);
 	pthread_mutex_lock(&mutexTxt);
-
+#endif
 	const mglDrawDat &d=DrwDat[k];
 	register size_t i;
 	Glf.reserve(d.Glf.size());	for(i=0;i<d.Glf.size();i++)	Glf.push_back(d.Glf[i]);
@@ -113,12 +117,13 @@ void mglCanvas::AddFrame(long k)
 		}
 		Prm.push_back(p);
 	}
-
+#if MGL_HAVE_PTHREAD
 	pthread_mutex_unlock(&mutexPnt);
 	pthread_mutex_unlock(&mutexPrm);
 	pthread_mutex_unlock(&mutexGlf);
 	pthread_mutex_unlock(&mutexPtx);
 	pthread_mutex_unlock(&mutexTxt);
+#endif
 }
 //-----------------------------------------------------------------------------
 const unsigned char *mglCanvas::GetBits()	{	Finish();	return G;	}

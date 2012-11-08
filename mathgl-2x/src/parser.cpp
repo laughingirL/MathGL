@@ -1089,7 +1089,7 @@ const char *mgl_parser_cmd_frmt(HMPR pr, const char *name)
 const char *mgl_parser_cmd_name(HMPR pr, long id)
 {	return (id<mgl_parser_cmd_num(pr) && id>=0) ? pr->Cmd[id].name:"";	}
 long mgl_parser_cmd_num(HMPR pr)
-{	long i;	for(i=0;pr->Cmd[i].name[0];i++); 	return i;	}
+{	register long i=0;	while(pr->Cmd[i].name[0])	i++; 	return i;	}
 //---------------------------------------------------------------------------
 HMDT mgl_parser_calc(HMPR pr, const char *formula)
 {
