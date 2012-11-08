@@ -83,21 +83,16 @@ long mglCanvas::ProjScale(int nf, long id, bool text)
 	q = RestorePnt(pp)/(2*B.pf);
 	u = RestorePnt(nn,true);	u.Normalize();
 	mreal w=B1.b[0]/2, h=B1.b[4]/2, d=B1.b[8]/2, xx=B1.x-w/2, yy=B1.y-h/2;
-	if(TernAxis&3==1)	// usual ternary axis
+	if((TernAxis&3)==2)	// quaternary axis
 	{
 		if(nf==0)
-		{	p.x = xx+w/2 + (q.x+(q.y+1)/2)*w/2;	p.y = yy+h + q.y*h/2;	}
-	}
-	else if(TernAxis&3==2)	// quaternary axis
-	{
-		if(nf==0)
-		{	p.x = xx+w/2 + (q.x+(q.y+1)/2)*w/2;	p.y = yy+h + q.y*h/2;	}
+		{	p.x = xx+w/2 + q.x*w;	p.y = yy+h*3/4 + q.y*h;	}
 		else if(nf==1)
-		{	p.x = xx+w/2 + (q.x+(1-q.z)/2)*w/2;	p.y = yy+h - q.z*h/2;	}
+		{	p.x = xx+w + q.x*w;	p.y = yy+h*3/4 - q.z*h;	}
 		else if(nf==2)
-		{	p.x = xx+w/2 + (q.y-q.z)/2*w/2;	p.y = yy+h + (q.y+q.z)*h/2;	}
+		{	p.x = xx + q.y*w;	p.y = yy+h*3/4 - q.z*h;	}
 		else
-		{	p.x = xx+w/2 + (q.x+1+(q.y+q.z)/2)*w/2;	p.y = yy+h + (q.y+(q.z+1)/3)*h/2;	}
+		{	p.x = xx+w/2 + q.x*w;	p.y = yy - q.z*h;	}
 	}
 	else
 	{

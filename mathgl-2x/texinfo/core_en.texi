@@ -1157,6 +1157,16 @@ Finishes the frame drawing.
 Gets the number of created frames.
 @end deftypefn
 
+@deftypefn {Method on @code{mglGraph}} @code{int} GetFrame (@code{int} i)
+@deftypefnx {C function} @code{int} mgl_get_frame (@code{HMGL} gr, @code{int} i)
+Replaces drawing data by one from frame @var{i}. Function work if @code{MGL_VECT_FRAME} is set on (by default).
+@end deftypefn
+
+@deftypefn {Method on @code{mglGraph}} @code{int} AddFrame (@code{int} i)
+@deftypefnx {C function} @code{int} mgl_add_frame (@code{HMGL} gr, @code{int} i)
+Appends drawing data from frame @var{i} to current one. Function work if @code{MGL_VECT_FRAME} is set on (by default).
+@end deftypefn
+
 @deftypefn {Method on @code{mglGraph}} @code{void} ResetFrames ()
 @deftypefnx {C function} @code{int} mgl_reset_frames (@code{HMGL} gr)
 Reset frames counter (start it from zero).

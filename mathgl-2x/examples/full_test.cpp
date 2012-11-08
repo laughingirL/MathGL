@@ -58,17 +58,6 @@ void mgl_write_obj_old(HMGL gr, const char *fname,const char *descr, int use_png
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	gr->Rotate(50,60);	// rotate axis
-	gr->Light(false);		// enable lighting
-	gr->SetRanges(0,20,0,30);
-	gr->Title("log-scale");
-	gr->SetRange('c',0.01,0.05);
-	gr->Box();
-	gr->SetFunc("","","","lg(c)");
-	gr->Colorbar("_");
-	gr->Puts(mglPoint(0.0,0.05),"Log scale");
-	return;
-	
 	gr->Title("Ordinary axis 3D");
 	gr->SetRanges(0,1,0,1,0,1);
 	mglData x(50),y(50),z(50),rx(10),ry(10), a(20,30);
@@ -78,7 +67,7 @@ void test(mglGraph *gr)
 	rx.Modify("rnd"); ry.Modify("(1-v)*rnd",rx);
 	z.Modify("x");
 
-	gr->Ternary(4);
+	gr->Ternary(5);
 	gr->Rotate(50,60);		gr->Light(true);
 	gr->Plot(x,y,z,"r2");	gr->Surf(a,"BbcyrR#");
 	gr->Axis(); gr->Grid();	gr->Box();

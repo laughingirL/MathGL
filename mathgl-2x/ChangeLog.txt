@@ -42,6 +42,8 @@
   Note, it work well for 2D axis. One should use Aspect() with negative values to do it correctly in general case.
 * Axis style 'XYZ' draw corresponding axis with ticks labels from other side of axis. This also influence on followng Label() calls.
 
+* Add functions GetFrame(), AddFrame() for replacing or adding data from given frame. Work if MGL_VECT_FRAME is set on (by default is on).
+
 * MINOR INCOMPATIBLE: plotting functions now use double argument always.
 
 * Add MGL commands 'errbox', 'face'

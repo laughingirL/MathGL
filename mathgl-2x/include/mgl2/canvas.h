@@ -207,6 +207,8 @@ using mglBase::Light;
 	inline void ResetFrames()	{	CurFrameId=0;	DrwDat.clear();	}
 	/// Get drawing data for i-th frame.
 	void GetFrame(long i);
+	/// Add drawing data from i-th frame to the current drawing
+	void AddFrame(long i);
 	
 	/// Start write frames to cinema using GIF format
 	void StartGIF(const char *fname, int ms=100);

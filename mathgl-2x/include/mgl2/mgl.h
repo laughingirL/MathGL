@@ -346,7 +346,9 @@ public:
 	/// Reset frames counter (start it from zero)
 	inline void ResetFrames()	{	mgl_reset_frames(gr);	}
 	/// Get drawing data for i-th frame (work if MGL_VECT_FRAME is set on)
-	inline void GetFrame(long i)	{	mgl_get_frame(gr, i);	}
+	inline void GetFrame(int i)	{	mgl_get_frame(gr, i);	}
+	/// Append drawing data from i-th frame (work if MGL_VECT_FRAME is set on)
+	inline void AddFrame(int i)	{	mgl_add_frame(gr, i);	}
 	
 	/// Start write frames to cinema using GIF format
 	inline void StartGIF(const char *fname, int ms=100)

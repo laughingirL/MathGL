@@ -55,12 +55,70 @@ long mglCanvas::PushDrwDat()
 	return DrwDat.size();
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::GetFrame(long i)
+void mglCanvas::GetFrame(long k)
 {
-	if(i<0 || (size_t)i>=DrwDat.size())	return;
+	if(k<0 || (size_t)k>=DrwDat.size())	return;
 	Clf();
-	const mglDrawDat &d=DrwDat[i];
+	const mglDrawDat &d=DrwDat[k];
+	pthread_mutex_lock(&mutexPnt);
+	pthread_mutex_lock(&mutexPrm);
+	pthread_mutex_lock(&mutexGlf);
+	pthread_mutex_lock(&mutexPtx);
+	pthread_mutex_lock(&mutexTxt);
 	Pnt=d.Pnt;	Prm=d.Prm;	Glf=d.Glf;	Ptx=d.Ptx;	Txt=d.Txt;
+	pthread_mutex_unlock(&mutexPnt);
+	pthread_mutex_unlock(&mutexPrm);
+	pthread_mutex_unlock(&mutexGlf);
+	pthread_mutex_unlock(&mutexPtx);
+	pthread_mutex_unlock(&mutexTxt);
+}
+//-----------------------------------------------------------------------------
+void mglCanvas::AddFrame(long k)
+{
+	if(k<0 || (size_t)k>=DrwDat.size())	return;
+	ClfZB();
+	size_t npnt=Pnt.size(), nglf=Glf.size(), nptx=Ptx.size(), ntxt=Txt.size();
+
+	pthread_mutex_lock(&mutexPnt);
+	pthread_mutex_lock(&mutexPrm);
+	pthread_mutex_lock(&mutexGlf);
+	pthread_mutex_lock(&mutexPtx);
+	pthread_mutex_lock(&mutexTxt);
+
+	const mglDrawDat &d=DrwDat[k];
+	register size_t i;
+	Glf.reserve(d.Glf.size());	for(i=0;i<d.Glf.size();i++)	Glf.push_back(d.Glf[i]);
+	Ptx.reserve(d.Ptx.size());	for(i=0;i<d.Ptx.size();i++)	Ptx.push_back(d.Ptx[i]);
+	Txt.reserve(d.Pnt.size());	for(i=0;i<d.Txt.size();i++)	Txt.push_back(d.Txt[i]);
+	Pnt.reserve(d.Pnt.size());
+	for(i=0;i<d.Pnt.size();i++)
+	{
+		mglPnt p = d.Pnt[i]; 	p.c += ntxt;
+		Pnt.push_back(p);
+	}
+	Prm.reserve(d.Prm.size());
+	for(i=0;i<d.Prm.size();i++)
+	{
+		mglPrim p = d.Prm[i];
+		p.n1 += npnt;
+
+		switch(p.type)
+		{
+		case 1:	p.n2 += npnt;	break;
+		case 2:	p.n2 += npnt;	p.n3 += npnt;	break;
+		case 3:	p.n2 += npnt;	p.n3 += npnt;	p.n4 += npnt;	break;
+		case 4: p.n4 += nglf;	break;
+		case 5:	p.n2 += npnt;	break;
+		case 6: p.n3 += nptx;	break;
+		}
+		Prm.push_back(p);
+	}
+
+	pthread_mutex_unlock(&mutexPnt);
+	pthread_mutex_unlock(&mutexPrm);
+	pthread_mutex_unlock(&mutexGlf);
+	pthread_mutex_unlock(&mutexPtx);
+	pthread_mutex_unlock(&mutexTxt);
 }
 //-----------------------------------------------------------------------------
 const unsigned char *mglCanvas::GetBits()	{	Finish();	return G;	}
