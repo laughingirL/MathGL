@@ -1117,9 +1117,14 @@ Setsize: размер(ы) равны нулю или отрицательны
 Заменяет объекты рисования на объекты из кадра с номером @var{i}. Функция работает если установлен флаг @code{MGL_VECT_FRAME} (по умолчанию).
 @end deftypefn
 
-@deftypefn {Метод класса @code{mglGraph}} @code{int} AddFrame (@code{int} i)
-@deftypefnx {Функция С} @code{int} mgl_add_frame (@code{HMGL} gr, @code{int} i)
+@deftypefn {Метод класса @code{mglGraph}} @code{int} ShowFrame (@code{int} i)
+@deftypefnx {Функция С} @code{int} mgl_show_frame (@code{HMGL} gr, @code{int} i)
 Добавляет объекты рисования из кадра с номером @var{i} к уже существующим. Функция работает если установлен флаг @code{MGL_VECT_FRAME} (по умолчанию).
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglGraph}} @code{void} DelFrame (@code{int} i)
+@deftypefnx {Функция С} @code{int} mgl_del_frame (@code{HMGL} gr, @code{int} i)
+Удаляет объекты рисования для кадра с номером @var{i} и сдвигает нумерацию всех последующих кадров. Функция работает если установлен флаг @code{MGL_VECT_FRAME} (по умолчанию).
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph}} @code{void} ResetFrames ()

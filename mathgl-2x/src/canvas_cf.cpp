@@ -54,7 +54,8 @@ void mgl_end_frame(HMGL gr)		{	_Gr_->EndFrame();	}
 int mgl_get_num_frame(HMGL gr)	{	return _Gr_->GetNumFrame();	}
 void mgl_reset_frames(HMGL gr)	{	_Gr_->ResetFrames();	}
 void mgl_get_frame(HMGL gr, int i)	{	_Gr_->GetFrame(i);	}
-void mgl_add_frame(HMGL gr, int i)	{	_Gr_->AddFrame(i);	}
+void mgl_show_frame(HMGL gr, int i)	{	_Gr_->ShowFrame(i);	}
+void mgl_del_frame(HMGL gr, int i)	{	_Gr_->DelFrame(i);	}
 //-----------------------------------------------------------------------------
 void mgl_set_transp_type(HMGL gr, int type)			{	_Gr_->SetTranspType(type);	}
 void mgl_set_alpha(HMGL gr, int enable)				{	_Gr_->Alpha(enable);	}
@@ -141,7 +142,8 @@ void mgl_end_frame_(uintptr_t *gr)		{	_GR_->EndFrame();	}
 int mgl_get_num_frame_(uintptr_t *gr)	{	return _GR_->GetNumFrame();	}
 void mgl_reset_frames_(uintptr_t *gr)	{	_GR_->ResetFrames();	}
 void mgl_get_frame_(uintptr_t *gr, int *i)	{	_GR_->GetFrame(*i);	}
-void mgl_add_frame_(uintptr_t *gr, int *i)	{	_GR_->AddFrame(*i);	}
+void mgl_show_frame_(uintptr_t *gr, int *i)	{	_GR_->ShowFrame(*i);	}
+void mgl_del_frame_(uintptr_t *gr, int *i)	{	_GR_->DelFrame(*i);	}
 //-----------------------------------------------------------------------------
 void mgl_set_transp_type_(uintptr_t *gr, int *type)		{	_GR_->SetTranspType(*type);	}
 void mgl_set_alpha_(uintptr_t *gr, int *enable)			{	_GR_->Alpha(*enable);	}

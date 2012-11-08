@@ -36,7 +36,8 @@ public:
 	void Zoom(mreal x1, mreal y1, mreal x2, mreal y2);
 	int NewFrame();
 	void EndFrame();
-
+	void DelFrame(long ){}
+	
 	bool Alpha(bool enable);
 	void Fog(mreal d, mreal dz=0.25);
 	bool Light(bool enable);

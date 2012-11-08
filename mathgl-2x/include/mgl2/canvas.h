@@ -205,10 +205,12 @@ using mglBase::Light;
 	inline int GetNumFrame() const	{	return CurFrameId;	}
 	/// Reset frames counter (start it from zero)
 	inline void ResetFrames()	{	CurFrameId=0;	DrwDat.clear();	}
+	/// Delete primitives for i-th frame
+	virtual void DelFrame(long i);
 	/// Get drawing data for i-th frame.
 	void GetFrame(long i);
 	/// Add drawing data from i-th frame to the current drawing
-	void AddFrame(long i);
+	void ShowFrame(long i);
 	
 	/// Start write frames to cinema using GIF format
 	void StartGIF(const char *fname, int ms=100);

@@ -65,6 +65,15 @@ void mglCanvasWnd::EndFrame()
 	CurFig++;
 }
 //-----------------------------------------------------------------------------
+void mglCanvasWnd::DelFrame(long i)
+{
+	if(i<0 || i>=CurFrameId)	return;
+	if(CurFig>=i)	CurFig--;
+	long n = Width*Height*3;
+	if(CurFrameId-i>1)	memmove(GG+i*n, GG+i*n+n, n*(CurFrameId-i-1));
+	mglCanvas::DelFrame(i);
+}
+//-----------------------------------------------------------------------------
 void mglCanvasWnd::SetDrawFunc(int (*draw)(mglBase *gr, void *p), void *par, void (*reload)(void *p))
 {
 	ClearFrames();

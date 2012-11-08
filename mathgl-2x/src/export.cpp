@@ -353,6 +353,18 @@ void mglCanvas::EndFrame()
 #endif
 }
 //-----------------------------------------------------------------------------
+void mglCanvas::DelFrame(long i)
+{
+#if MGL_HAVE_PTHREAD
+	pthread_mutex_lock(&mutexDrw);
+	if(get(MGL_VECT_FRAME))	DrwDat.erase(DrwDat.begin()+i);
+	pthread_mutex_unlock(&mutexDrw);
+#else
+	if(get(MGL_VECT_FRAME))	DrwDat.erase(DrwDat.begin()+i);
+#endif
+	CurFrameId--;
+}
+//-----------------------------------------------------------------------------
 #undef _GR_
 #define _GR_	((mglCanvas *)(*gr))
 #define _Gr_	((mglCanvas *)(gr))

@@ -77,7 +77,7 @@ void mglCanvas::GetFrame(long k)
 #endif
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::AddFrame(long k)
+void mglCanvas::ShowFrame(long k)
 {
 	if(k<0 || (size_t)k>=DrwDat.size())	return;
 	ClfZB();

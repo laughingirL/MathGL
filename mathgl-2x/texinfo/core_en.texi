@@ -1162,9 +1162,14 @@ Gets the number of created frames.
 Replaces drawing data by one from frame @var{i}. Function work if @code{MGL_VECT_FRAME} is set on (by default).
 @end deftypefn
 
-@deftypefn {Method on @code{mglGraph}} @code{int} AddFrame (@code{int} i)
-@deftypefnx {C function} @code{int} mgl_add_frame (@code{HMGL} gr, @code{int} i)
+@deftypefn {Method on @code{mglGraph}} @code{int} ShowFrame (@code{int} i)
+@deftypefnx {C function} @code{int} mgl_show_frame (@code{HMGL} gr, @code{int} i)
 Appends drawing data from frame @var{i} to current one. Function work if @code{MGL_VECT_FRAME} is set on (by default).
+@end deftypefn
+
+@deftypefn {Method on @code{mglGraph}} @code{int} DelFrame (@code{int} i)
+@deftypefnx {C function} @code{int} mgl_del_frame (@code{HMGL} gr, @code{int} i)
+Deletes drawing data for frame @var{i} and shift all later frame indexes. Function work if @code{MGL_VECT_FRAME} is set on (by default). Do nothing in OpenGL mode.
 @end deftypefn
 
 @deftypefn {Method on @code{mglGraph}} @code{void} ResetFrames ()

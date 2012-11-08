@@ -192,8 +192,10 @@ void mgl_reset_frames(HMGL gr);
 void mgl_reset_frames_(uintptr_t *gr);
 void mgl_get_frame(HMGL gr, int i);
 void mgl_get_frame_(uintptr_t *gr, int *i);
-void mgl_add_frame(HMGL gr, int i);
-void mgl_add_frame_(uintptr_t *gr, int *i);
+void mgl_show_frame(HMGL gr, int i);
+void mgl_show_frame_(uintptr_t *gr, int *i);
+void mgl_del_frame(HMGL gr, int i);
+void mgl_del_frame_(uintptr_t *gr, int *i);
 
 void mgl_set_transp_type(HMGL gr, int type);
 void mgl_set_transp_type_(uintptr_t *gr, int *type);

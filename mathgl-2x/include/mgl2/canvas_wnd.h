@@ -36,6 +36,7 @@ public:
 
 	void SetSize(int w,int h);
 	void EndFrame();
+	void DelFrame(long i);
 	const unsigned char *GetBits();
 	inline int GetNumFig() const	{	return NumFig;	}
 	inline int GetCurFig() const	{	return CurFig;	}

@@ -345,10 +345,12 @@ public:
 	inline int GetNumFrame()	{	return mgl_get_num_frame(gr);	}
 	/// Reset frames counter (start it from zero)
 	inline void ResetFrames()	{	mgl_reset_frames(gr);	}
+	/// Delete primitives for i-th frame (work if MGL_VECT_FRAME is set on)
+	inline void DelFrame(int i)	{	mgl_del_frame(gr, i);	}
 	/// Get drawing data for i-th frame (work if MGL_VECT_FRAME is set on)
 	inline void GetFrame(int i)	{	mgl_get_frame(gr, i);	}
 	/// Append drawing data from i-th frame (work if MGL_VECT_FRAME is set on)
-	inline void AddFrame(int i)	{	mgl_add_frame(gr, i);	}
+	inline void ShowFrame(int i)	{	mgl_show_frame(gr, i);	}
 	
 	/// Start write frames to cinema using GIF format
 	inline void StartGIF(const char *fname, int ms=100)
