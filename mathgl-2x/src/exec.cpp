@@ -1506,12 +1506,12 @@ void mglc_quality(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 //-----------------------------------------------------------------------------
 int mgls_marksize(mglGraph *gr, long , mglArg *a, int k[10], const char *)
 {
-	if(k[0]==3)	gr->SetMarkSize(a[0].v/50);	else	return 1;
+	if(k[0]==3)	gr->SetMarkSize(a[0].v);	else	return 1;
 	return 0;
 }
 void mglc_marksize(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 {
-	if(k[0]==3)	mglprintf(out,1024,L"gr->SetMarkSize(%g);", a[0].v/50);
+	if(k[0]==3)	mglprintf(out,1024,L"gr->SetMarkSize(%g);", a[0].v);
 }
 //-----------------------------------------------------------------------------
 int mgls_mark(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
@@ -3241,13 +3241,13 @@ void mglc_putsfit(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 //-----------------------------------------------------------------------------
 int mgls_arrowsize(mglGraph *gr, long , mglArg *a, int k[10], const char *)
 {
-	if(k[0]==3)	gr->SetArrowSize(a[0].v/50);
+	if(k[0]==3)	gr->SetArrowSize(a[0].v);
 	else	return 1;
 	return 0;
 }
 void mglc_arrowsize(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 {
-	if(k[0]==3)	mglprintf(out,1024,L"gr->SetArrowSize(%g);", a[0].v/50);
+	if(k[0]==3)	mglprintf(out,1024,L"gr->SetArrowSize(%g);", a[0].v);
 }
 //-----------------------------------------------------------------------------
 int mgls_rearrange(mglGraph *, long , mglArg *a, int k[10], const char *)

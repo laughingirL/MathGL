@@ -618,7 +618,7 @@ void mglBase::Ternary(int t)
 		SetRanges(mglPoint(0,0),mglPoint(1,1,t==1?0:1));
 		Org=mglPoint(0,0,0);	c = false;
 	}
-	else	{	SetRanges(x1,x2);	Org=o;	c=true;	}
+	else if(!c)	{	SetRanges(x1,x2);	Org=o;	c=true;	}
 }
 //-----------------------------------------------------------------------------
 //		Transformation functions

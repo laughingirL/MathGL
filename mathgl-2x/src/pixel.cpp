@@ -83,30 +83,16 @@ long mglCanvas::ProjScale(int nf, long id, bool text)
 	q = RestorePnt(pp)/(2*B.pf);
 	u = RestorePnt(nn,true);	u.Normalize();
 	mreal w=B1.b[0]/2, h=B1.b[4]/2, d=B1.b[8]/2, xx=B1.x-w/2, yy=B1.y-h/2;
-	if((TernAxis&3)==2)	// quaternary axis
-	{
-		if(nf==0)
-		{	p.x = xx+w/2 + q.x*w;	p.y = yy+h*3/4 + q.y*h;	}
-		else if(nf==1)
-		{	p.x = xx+w + q.x*w;	p.y = yy+h*3/4 - q.z*h;	}
-		else if(nf==2)
-		{	p.x = xx + q.y*w;	p.y = yy+h*3/4 - q.z*h;	}
-		else
-		{	p.x = xx+w/2 + q.x*w;	p.y = yy - q.z*h;	}
-	}
+	if(nf==0)
+	{	p.x = xx + q.x*w;	p.y = yy + q.y*h;	p.z = B1.z + q.z*d;	n = u;	}
+	else if(nf==1)
+	{	p.x = xx + q.x*w;	p.y = yy+h + q.z*h;	p.z = B1.z + q.y*d;	n = mglPoint(u.x,u.z,u.y);	}
+	else if(nf==2)
+	{	p.x = xx+w + q.z*w;	p.y = yy + q.y*h;	p.z = B1.z+ q.x*d;	n = mglPoint(u.z,u.y,u.x);	}
 	else
-	{
-		if(nf==0)
-		{	p.x = xx + q.x*w;	p.y = yy + q.y*h;	p.z = B1.z + q.z*d;	n = u;	}
-		else if(nf==1)
-		{	p.x = xx + q.x*w;	p.y = yy+h + q.z*h;	p.z = B1.z + q.y*d;	n = mglPoint(u.x,u.z,u.y);	}
-		else if(nf==2)
-		{	p.x = xx+w + q.z*w;	p.y = yy + q.y*h;	p.z = B1.z+ q.x*d;	n = mglPoint(u.z,u.y,u.x);	}
-		else
-		{	p.x = xx+w + q.x*B.b[0]/2 + q.y*B.b[1]/2 + q.z*B.b[2]/2;	n = nn;
-			p.y = yy+h + q.x*B.b[3]/2 + q.y*B.b[4]/2 + q.z*B.b[5]/2;
-			p.z = B.z + q.x*B.b[6]/2 + q.y*B.b[7]/2 + q.z*B.b[8]/2;	}
-	}
+	{	p.x = xx+w + q.x*B.b[0]/2 + q.y*B.b[1]/2 + q.z*B.b[2]/2;	n = nn;
+		p.y = yy+h + q.x*B.b[3]/2 + q.y*B.b[4]/2 + q.z*B.b[5]/2;
+		p.z = B.z + q.x*B.b[6]/2 + q.y*B.b[7]/2 + q.z*B.b[8]/2;	}
 	return CopyProj(id,p,text?n:nn);
 }
 //-----------------------------------------------------------------------------

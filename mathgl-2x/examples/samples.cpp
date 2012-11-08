@@ -1885,7 +1885,7 @@ const char *mmgl_ternary="ranges 0 1 0 1 0 1\nnew x 50 '0.25*(1+cos(2*pi*x))'\n"
 "subplot 2 2 2:title 'Quaternary axis 3D':rotate 50 60:ternary 2\nbox:axis:grid 'xyz' 'B;'\n"
 "plot x y z 'r2':surf a '#'\nxlabel 'B':ylabel 'C':tlabel 'A':zlabel 'D'\n\n"
 "subplot 2 2 3:title 'Ternary axis 3D':rotate 50 60:ternary 1\nbox:axis:grid 'xyz' 'B;'\n"
-"plot x y z 'r2':surf a '#'\nxlabel 'B':ylabel 'C':tlabel 'A':zlabel 'Z'\n\n";
+"plot x y z 'r2':surf a '#'\nxlabel 'B':ylabel 'C':tlabel 'A':zlabel 'Z'\n";
 void smgl_ternary(mglGraph *gr)	// flag #
 {
 	gr->SetRanges(0,1,0,1,0,1);
@@ -1924,6 +1924,29 @@ void smgl_ternary(mglGraph *gr)	// flag #
 	gr->Axis(); gr->Grid();	gr->Box();
 	gr->Label('t',"A",1);	gr->Label('x',"B",1);
 	gr->Label('y',"C",1);	gr->Label('z',"Z",1);
+}
+//-----------------------------------------------------------------------------
+const char *mmgl_projection="ranges 0 1 0 1 0 1\nnew x 50 '0.25*(1+cos(2*pi*x))'\n"
+"new y 50 '0.25*(1+sin(2*pi*x))'\nnew z 50 'x'\nnew a 20 30 '30*x*y*(1-x-y)^2*(x+y<1)'\n"
+"new rx 10 'rnd':new ry 10:fill ry '(1-v)*rnd' rx\nlight on\n\n"
+"title 'Projection sample':ternary 4:rotate 50 60\nbox:axis:grid\n"
+"plot x y z 'r2':surf a '#'\nxlabel 'X':ylabel 'Y':zlabel 'Z'\n";
+void smgl_projection(mglGraph *gr)	// flag #
+{
+	gr->SetRanges(0,1,0,1,0,1);
+	mglData x(50),y(50),z(50),rx(10),ry(10), a(20,30);
+	a.Modify("30*x*y*(1-x-y)^2*(x+y<1)");
+	x.Modify("0.25*(1+cos(2*pi*x))");
+	y.Modify("0.25*(1+sin(2*pi*x))");
+	rx.Modify("rnd"); ry.Modify("(1-v)*rnd",rx);
+	z.Modify("x");
+	
+	if(!mini)	gr->Title("Projection sample");
+	gr->Ternary(4);
+	gr->Rotate(50,60);		gr->Light(true);
+	gr->Plot(x,y,z,"r2");	gr->Surf(a,"#");
+	gr->Axis(); gr->Grid();	gr->Box();
+	gr->Label('x',"X",1);	gr->Label('y',"Y",1);	gr->Label('z',"Z",1);
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_triplot="list q 0 1 2 3 | 4 5 6 7 | 0 2 4 6 | 1 3 5 7 | 0 4 1 5 | 2 6 3 7\n"
@@ -2066,6 +2089,7 @@ mglSample samp[] = {
 	{"pipe", smgl_pipe, mmgl_pipe},
 	{"plot", smgl_plot, mmgl_plot},
 	{"primitives", smgl_primitives, mmgl_primitives },
+	{"projection", smgl_projection, mmgl_projection },
 	{"qo2d", smgl_qo2d, mmgl_qo2d},
 	{"radar", smgl_radar, mmgl_radar},
 	{"region", smgl_region, mmgl_region},
