@@ -23,6 +23,7 @@
 #ifdef __cplusplus
 //-----------------------------------------------------------------------------
 #include "mgl2/canvas_wnd.h"
+#include <string>
 #if MGL_HAVE_QT
 #include <QtGui/QWidget>
 #include <QtGui/QPixmap>
@@ -201,7 +202,6 @@ using mglCanvasWnd::Window;
 
 	mglCanvasQT();
 
-	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Ñëóæåáíûå ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	/// Create a window for plotting. Now implemeted only for GLUT.
 	void Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p),const char *title,
 						void *par=NULL, void (*reload)(void *p)=NULL, bool maximize=false);
@@ -232,7 +232,7 @@ struct mglDrawScript : public mglDraw
 	mglDrawScript(HMPR p):mglDraw()	{	par=p;	line=-1;	}
 	virtual ~mglDrawScript() {}
 	int Draw(mglGraph *gr)
-	{	gr->Highlight(line+1);	mgl_parse_text(gr->Self(),par,text.toAscii().constData());	return 0;	}
+	{	gr->Highlight(line+1);	mgl_parse_textw(gr->Self(),par,text.toStdWString().c_str());	return 0;	}
 };
 //-----------------------------------------------------------------------------
 /// Convert bitmap from mglCanvasWnd to QPixmap
