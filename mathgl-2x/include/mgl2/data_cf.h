@@ -19,9 +19,9 @@
  ***************************************************************************/
 #ifndef _MGL_DATA_CF_H_
 #define _MGL_DATA_CF_H_
-/******************************************************************************/
+//-----------------------------------------------------------------------------
 #include "mgl2/base.h"
-/******************************************************************************/
+//-----------------------------------------------------------------------------
 #if MGL_HAVE_GSL
 #include <gsl/gsl_vector.h>
 #include <gsl/gsl_matrix.h>
@@ -29,28 +29,28 @@
 struct gsl_vector;
 struct gsl_matrix;
 #endif
-/******************************************************************************/
+//-----------------------------------------------------------------------------
 #ifdef __cplusplus
 extern "C" {
 #endif
-/******************************************************************************/
+//-----------------------------------------------------------------------------
 void mgl_srnd(long seed);
 double mgl_rnd();
 double mgl_ipow(double x,int n);
-/******************************************************************************/
+//-----------------------------------------------------------------------------
 HMDT mgl_create_data();
 HMDT mgl_create_data_size(long nx, long ny, long nz);
 HMDT mgl_create_data_file(const char *fname);
 void mgl_delete_data(HMDT dat);
 const char *mgl_data_info(HCDT dat);
-/******************************************************************************/
+//-----------------------------------------------------------------------------
 uintptr_t mgl_create_data_();
 uintptr_t mgl_create_data_size_(int *nx, int *ny, int *nz);
 uintptr_t mgl_create_data_file_(const char *fname, int len);
 void mgl_delete_data_(uintptr_t *dat);
-/******************************************************************************/
+//-----------------------------------------------------------------------------
 /*		Data creation functions												 */
-/******************************************************************************/
+//-----------------------------------------------------------------------------
 void mgl_data_rearrange(HMDT dat, long mx,long my,long mz);
 void mgl_data_link(HMDT dat, mreal *A,long mx,long my,long mz);
 void mgl_data_set_float(HMDT dat, const float *A,long mx,long my,long mz);
@@ -118,9 +118,9 @@ HMDT mgl_data_combine(HCDT dat1, HCDT dat2);
 void mgl_data_extend(HMDT dat, long n1, long n2);
 void mgl_data_insert(HMDT dat, char dir, long at, long num);
 void mgl_data_delete(HMDT dat, char dir, long at, long num);
-/******************************************************************************/
+//-----------------------------------------------------------------------------
 /*		Data manipulation functions											 */
-/******************************************************************************/
+//-----------------------------------------------------------------------------
 void mgl_data_smooth(HMDT d, const char *dirs, mreal delta);
 HMDT mgl_data_sum(HCDT dat, const char *dir);
 HMDT mgl_data_max_dir(HCDT dat, const char *dir);
@@ -158,9 +158,9 @@ void mgl_data_envelop(HMDT dat, char dir);
 void mgl_data_sew(HMDT dat, const char *dirs, mreal da);
 void mgl_data_crop(HMDT dat, long n1, long n2, char dir);
 void mgl_data_clean(HMDT dat, long id);
-/******************************************************************************/
+//-----------------------------------------------------------------------------
 /*		Data operations														 */
-/******************************************************************************/
+//-----------------------------------------------------------------------------
 void mgl_data_mul_dat(HMDT dat, HCDT d);
 void mgl_data_div_dat(HMDT dat, HCDT d);
 void mgl_data_add_dat(HMDT dat, HCDT d);
@@ -169,7 +169,7 @@ void mgl_data_mul_num(HMDT dat, mreal d);
 void mgl_data_div_num(HMDT dat, mreal d);
 void mgl_data_add_num(HMDT dat, mreal d);
 void mgl_data_sub_num(HMDT dat, mreal d);
-/******************************************************************************/
+//-----------------------------------------------------------------------------
 HMDT mgl_pde_solve(HMGL gr, const char *ham, HCDT ini_re, HCDT ini_im, mreal dz, mreal k0,const char *opt);
 HMDT mgl_qo2d_solve(const char *ham, HCDT ini_re, HCDT ini_im, HCDT ray, mreal r, mreal k0, HMDT xx, HMDT yy);
 HMDT mgl_ray_trace(const char *ham, mreal x0, mreal y0, mreal z0, mreal px, mreal py, mreal pz, mreal dt, mreal tmax);
@@ -182,9 +182,9 @@ HMDT mgl_data_stfa(HCDT re, HCDT im, long dn, char dir);
 
 HMDT mgl_triangulation_3d(HCDT x, HCDT y, HCDT z);
 HMDT mgl_triangulation_2d(HCDT x, HCDT y);
-/******************************************************************************/
+//-----------------------------------------------------------------------------
 /*		Data creation functions												 */
-/******************************************************************************/
+//-----------------------------------------------------------------------------
 void mgl_data_rearrange_(uintptr_t *dat, int *mx, int *my, int *mz);
 void mgl_data_set_float_(uintptr_t *dat, const float *A,int *NX,int *NY,int *NZ);
 void mgl_data_set_double_(uintptr_t *dat, const double *A,int *NX,int *NY,int *NZ);
@@ -243,9 +243,9 @@ uintptr_t mgl_data_combine_(uintptr_t *dat1, uintptr_t *dat2);
 void mgl_data_extend_(uintptr_t *dat, int *n1, int *n2);
 void mgl_data_insert_(uintptr_t *dat, const char *dir, int *at, int *num, int);
 void mgl_data_delete_(uintptr_t *dat, const char *dir, int *at, int *num, int);
-/******************************************************************************/
+//-----------------------------------------------------------------------------
 /*		Data manipulation functions											 */
-/******************************************************************************/
+//-----------------------------------------------------------------------------
 void mgl_data_smooth_(uintptr_t *dat, const char *dirs, mreal *delta,int);
 uintptr_t mgl_data_sum_(uintptr_t *dat, const char *dir,int);
 uintptr_t mgl_data_max_dir_(uintptr_t *dat, const char *dir,int);
@@ -282,9 +282,9 @@ uintptr_t mgl_data_evaluate_(uintptr_t *dat, uintptr_t *idat, uintptr_t *jdat, u
 void mgl_data_envelop_(uintptr_t *dat, const char *dir, int);
 void mgl_data_sew_(uintptr_t *dat, const char *dirs, mreal *da, int);
 void mgl_data_crop_(uintptr_t *dat, int *n1, int *n2, const char *dir,int);
-/******************************************************************************/
+//-----------------------------------------------------------------------------
 /*		Data operations														 */
-/******************************************************************************/
+//-----------------------------------------------------------------------------
 void mgl_data_mul_dat_(uintptr_t *dat, uintptr_t *d);
 void mgl_data_div_dat_(uintptr_t *dat, uintptr_t *d);
 void mgl_data_add_dat_(uintptr_t *dat, uintptr_t *d);
@@ -293,9 +293,9 @@ void mgl_data_mul_num_(uintptr_t *dat, mreal *d);
 void mgl_data_div_num_(uintptr_t *dat, mreal *d);
 void mgl_data_add_num_(uintptr_t *dat, mreal *d);
 void mgl_data_sub_num_(uintptr_t *dat, mreal *d);
-/******************************************************************************/
+//-----------------------------------------------------------------------------
 /*		Nonlinear fitting													 */
-/******************************************************************************/
+//-----------------------------------------------------------------------------
 uintptr_t mgl_pde_solve_(uintptr_t* gr, const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, mreal *dz, mreal *k0,const char *opt,int,int);
 uintptr_t mgl_qo2d_solve_(const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, uintptr_t* ray, mreal *r, mreal *k0, uintptr_t* xx, uintptr_t* yy, int);
 uintptr_t mgl_ray_trace_(const char *ham, mreal *x0, mreal *y0, mreal *z0, mreal *px, mreal *py, mreal *pz, mreal *dt, mreal *tmax,int);
@@ -309,13 +309,13 @@ uintptr_t mgl_data_stfa_(uintptr_t *re, uintptr_t *im, int *dn, char *dir, int);
 
 uintptr_t mgl_triangulation_3d_(uintptr_t *x, uintptr_t *y, uintptr_t *z);
 uintptr_t mgl_triangulation_2d_(uintptr_t *x, uintptr_t *y);
-/******************************************************************************/
+//-----------------------------------------------------------------------------
 int mgl_data_read_hdf_(uintptr_t *d, const char *fname, const char *data,int l,int n);
 void mgl_data_link_(uintptr_t *d, float *A, int *nx,int *ny,int *nz);
 void mgl_data_save_hdf_(uintptr_t *d, const char *fname, const char *data, int *rewrite,int l,int n);
-int mgl_data_read_range_(uintptr_t *d, const char *fname, double *from, double *to, double *step, int *as_slice,int l);
+int mgl_data_read_range_(uintptr_t *d, const char *fname, mreal *from, mreal *to, mreal *step, int *as_slice,int l);
 int mgl_data_read_all_(uintptr_t *d, const char *fname, int *as_slice,int l);
-/******************************************************************************/
+//-----------------------------------------------------------------------------
 #ifdef __cplusplus
 }
 #endif

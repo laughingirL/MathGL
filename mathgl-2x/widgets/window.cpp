@@ -130,7 +130,7 @@ void mgl_setup_window(HMGL gr, int clf_upd, int showpos)
 {	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>(gr);	if(g)	g->Setup(clf_upd, showpos);	}
 void mgl_set_click_func(HMGL gr, void (*func)(void *p))
 {	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>(gr);	if(g)	g->ClickFunc = func;	}
-void mgl_get_last_mouse_pos(HMGL gr, double *x, double *y, double *z)
+void mgl_get_last_mouse_pos(HMGL gr, mreal *x, mreal *y, mreal *z)
 {	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>(gr);
 	mglPoint p;	if(g)	p=g->GetMousePos();
 	*x=p.x;	*y=p.y;	*z=p.z;	}
@@ -171,7 +171,7 @@ void mgl_wnd_animation_(uintptr_t *gr)
 void mgl_setup_window_(uintptr_t *gr, int *clf_upd, int *showpos)
 {	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>((HMGL)(*gr));
 	if(g)	g->Setup(*clf_upd, *showpos);	}
-void mgl_get_last_mouse_pos_(uintptr_t *gr, double *x, double *y, double *z)
+void mgl_get_last_mouse_pos_(uintptr_t *gr, mreal *x, mreal *y, mreal *z)
 {	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>((HMGL)(*gr));
 	mglPoint p;	if(g)	p=g->GetMousePos();
 	*x=p.x;	*y=p.y;	*z=p.z;	}

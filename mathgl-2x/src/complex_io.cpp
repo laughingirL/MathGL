@@ -709,7 +709,7 @@ int mgl_datac_read_range(HADT dat, const char *templ, double from, double to, do
 	delete []fname;		free(b);
 	return true;
 }
-int mgl_datac_read_range_(uintptr_t *d, const char *fname, double *from, double *to, double *step, int *as_slice,int l)
+int mgl_datac_read_range_(uintptr_t *d, const char *fname, mreal *from, mreal *to, mreal *step, int *as_slice,int l)
 {	char *s=new char[l+1];		memcpy(s,fname,l);	s[l]=0;
 	int r = mgl_datac_read_range(_DC_,s,*from,*to,*step,*as_slice);	delete []s;	return r;	}
 //-----------------------------------------------------------------------------

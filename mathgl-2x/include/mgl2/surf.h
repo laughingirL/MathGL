@@ -20,11 +20,11 @@
 #ifndef _MGL_SURF_H_
 #define _MGL_SURF_H_
 #include "mgl2/base.h"
-/******************************************************************************/
+//-----------------------------------------------------------------------------
 #ifdef __cplusplus
 extern "C" {
 #endif
-/******************************************************************************/
+//-----------------------------------------------------------------------------
 void mgl_fsurf(HMGL graph, const char *fz, const char *stl, const char *opt);
 void mgl_fsurf_xyz(HMGL graph, const char *fx, const char *fy, const char *fz, const char *stl, const char *opt);
 void mgl_grid_xy(HMGL graph, HCDT x, HCDT y, HCDT z, const char *stl, const char *opt);
@@ -53,7 +53,7 @@ void mgl_stfa_xy(HMGL graph, HCDT x, HCDT y, HCDT re, HCDT im, int dn, const cha
 void mgl_stfa(HMGL graph, HCDT re, HCDT im, int dn, const char *sch, const char *opt);
 void mgl_map_xy(HMGL graph, HCDT x, HCDT y, HCDT a, HCDT b, const char *sch, const char *opt);
 void mgl_map(HMGL graph, HCDT a, HCDT b, const char *sch, const char *opt);
-/******************************************************************************/
+//-----------------------------------------------------------------------------
 void mgl_fsurf_(uintptr_t *graph, const char *fz, const char *stl, const char *opt,int,int,int);
 void mgl_fsurf_xyz_(uintptr_t *graph, const char *fx, const char *fy, const char *fz, const char *stl, const char *opt, int, int, int, int, int);
 void mgl_grid_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *stl, const char *opt,int,int);
@@ -82,9 +82,9 @@ void mgl_stfa_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *re, u
 void mgl_stfa_(uintptr_t *graph, uintptr_t *re, uintptr_t *im, int *dn, const char *sch, const char *opt,int, int);
 void mgl_map_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *a, uintptr_t *b, const char *sch, const char *opt,int,int);
 void mgl_map_(uintptr_t *graph, uintptr_t *a, uintptr_t *b, const char *sch, const char *opt,int,int);
-/******************************************************************************/
+//-----------------------------------------------------------------------------
 #ifdef __cplusplus
 }
 #endif
-/******************************************************************************/
+//-----------------------------------------------------------------------------
 #endif

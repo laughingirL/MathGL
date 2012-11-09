@@ -19,9 +19,9 @@
  ***************************************************************************/
 #ifndef _MGL_DATAC_CF_H_
 #define _MGL_DATAC_CF_H_
-/******************************************************************************/
+//-----------------------------------------------------------------------------
 #include "mgl2/base.h"
-/******************************************************************************/
+//-----------------------------------------------------------------------------
 #if MGL_HAVE_GSL
 #include <gsl/gsl_vector.h>
 #include <gsl/gsl_matrix.h>
@@ -29,7 +29,7 @@
 struct gsl_vector;
 struct gsl_matrix;
 #endif
-/******************************************************************************/
+//-----------------------------------------------------------------------------
 #ifdef __cplusplus
 class mglDataC;
 typedef mglDataC* HADT;
@@ -37,19 +37,19 @@ extern "C" {
 #else
 typedef void *HADT;
 #endif
-/******************************************************************************/
+//-----------------------------------------------------------------------------
 HADT mgl_create_datac();
 HADT mgl_create_datac_size(long nx, long ny, long nz);
 HADT mgl_create_datac_file(const char *fname);
 void mgl_delete_datac(HADT dat);
-/******************************************************************************/
+//-----------------------------------------------------------------------------
 uintptr_t mgl_create_datac_();
 uintptr_t mgl_create_datac_size_(int *nx, int *ny, int *nz);
 uintptr_t mgl_create_datac_file_(const char *fname, int len);
 void mgl_delete_datac_(uintptr_t *dat);
-/******************************************************************************/
+//-----------------------------------------------------------------------------
 /*		Data creation functions													*/
-/******************************************************************************/
+//-----------------------------------------------------------------------------
 void mgl_datac_rearrange(HADT dat, long mx,long my,long mz);
 void mgl_datac_link(HADT dat, dual *A,long mx,long my,long mz);
 void mgl_datac_set_float(HADT dat, const float *A,long mx,long my,long mz);
@@ -91,9 +91,9 @@ void mgl_datac_squeeze(HADT dat, long rx,long ry,long rz,long smooth);
 void mgl_datac_extend(HADT dat, long n1, long n2);
 void mgl_datac_insert(HADT dat, char dir, long at, long num);
 void mgl_datac_delete(HADT dat, char dir, long at, long num);
-/******************************************************************************/
+//-----------------------------------------------------------------------------
 /*		Data manipulation functions											*/
-/******************************************************************************/
+//-----------------------------------------------------------------------------
 void mgl_datac_smooth(HADT d, const char *dirs, mreal delta);
 void mgl_datac_cumsum(HADT dat, const char *dir);
 void mgl_datac_integral(HADT dat, const char *dir);
@@ -117,9 +117,9 @@ dual mgl_datac_linear(HCDT d, mreal x,mreal y,mreal z);
 dual mgl_datac_linear_ext_(uintptr_t *d, mreal *x,mreal *y,mreal *z, dual *dx,dual *dy,dual *dz);
 dual mgl_datac_linear_(uintptr_t *d, mreal *x,mreal *y,mreal *z);
 
-/******************************************************************************/
+//-----------------------------------------------------------------------------
 /*		Data creation functions												*/
-/******************************************************************************/
+//-----------------------------------------------------------------------------
 uintptr_t mgl_datac_real_(uintptr_t *dat);
 uintptr_t mgl_datac_imag_(uintptr_t *dat);
 uintptr_t mgl_datac_abs_(uintptr_t *dat);
@@ -140,7 +140,7 @@ int mgl_datac_read_mat_(uintptr_t *dat, const char *fname, int *dim, int);
 int mgl_datac_read_dim_(uintptr_t *dat, const char *fname,int *mx,int *my,int *mz,int);
 void mgl_datac_save_(uintptr_t *dat, const char *fname,int *ns,int);
 void mgl_data_link_(uintptr_t *d, float *A, int *nx,int *ny,int *nz);
-int mgl_data_read_range_(uintptr_t *d, const char *fname, double *from, double *to, double *step, int *as_slice,int l);
+int mgl_data_read_range_(uintptr_t *d, const char *fname, mreal *from, mreal *to, mreal *step, int *as_slice,int l);
 int mgl_data_read_all_(uintptr_t *d, const char *fname, int *as_slice,int l);
 
 void mgl_datac_create_(uintptr_t *dat, int *nx,int *ny,int *nz);
@@ -155,9 +155,9 @@ void mgl_datac_squeeze_(uintptr_t *dat, int *rx,int *ry,int *rz,int *smooth);
 void mgl_datac_extend_(uintptr_t *dat, int *n1, int *n2);
 void mgl_datac_insert_(uintptr_t *dat, const char *dir, int *at, int *num, int);
 void mgl_datac_delete_(uintptr_t *dat, const char *dir, int *at, int *num, int);
-/******************************************************************************/
+//-----------------------------------------------------------------------------
 /*		Data manipulation functions											 */
-/******************************************************************************/
+//-----------------------------------------------------------------------------
 void mgl_datac_smooth_(uintptr_t *dat, const char *dirs, mreal *delta,int);
 void mgl_datac_cumsum_(uintptr_t *dat, const char *dir,int);
 void mgl_datac_integral_(uintptr_t *dat, const char *dir,int);
@@ -175,7 +175,7 @@ void mgl_datac_cosfft_(uintptr_t *dat, const char *dir,int);
 
 int mgl_datac_read_hdf_(uintptr_t *d, const char *fname, const char *data,int l,int n);
 void mgl_datac_save_hdf_(uintptr_t *d, const char *fname, const char *data, int *rewrite,int l,int n);
-/******************************************************************************/
+//-----------------------------------------------------------------------------
 #ifdef __cplusplus
 }
 #endif

@@ -1140,24 +1140,24 @@ void mgl_cont3(HMGL gr, HCDT a, const char *sch, double sVal, const char *opt)
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_cont3_xyz_val_(uintptr_t *gr, uintptr_t *v, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, double *sVal, const char *opt,int l,int lo)
+void mgl_cont3_xyz_val_(uintptr_t *gr, uintptr_t *v, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, mreal *sVal, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_cont3_xyz_val(_GR_, _DA_(v), _DA_(x), _DA_(y), _DA_(z), _DA_(a), s, *sVal, o);
 	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_cont3_val_(uintptr_t *gr, uintptr_t *v, uintptr_t *a, const char *sch, double *sVal, const char *opt,int l,int lo)
+void mgl_cont3_val_(uintptr_t *gr, uintptr_t *v, uintptr_t *a, const char *sch, mreal *sVal, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_cont3_val(_GR_, _DA_(v), _DA_(a), s, *sVal, o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_cont3_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, double *sVal, const char *opt,int l,int lo)
+void mgl_cont3_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, mreal *sVal, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_cont3_xyz(_GR_, _DA_(x), _DA_(y), _DA_(z), _DA_(a), s, *sVal, o);
 	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_cont3_(uintptr_t *gr, uintptr_t *a, const char *sch, double *sVal, const char *opt,int l,int lo)
+void mgl_cont3_(uintptr_t *gr, uintptr_t *a, const char *sch, mreal *sVal, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_cont3(_GR_, _DA_(a), s, *sVal, o);	delete []o;	delete []s;	}
@@ -1199,13 +1199,13 @@ void mgl_dens3(HMGL gr, HCDT a, const char *sch, double sVal, const char *opt)
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_dens3_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, double *sVal, const char *opt,int l,int lo)
+void mgl_dens3_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, mreal *sVal, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 mgl_dens3_xyz(_GR_, _DA_(x), _DA_(y), _DA_(z), _DA_(a), s, *sVal, o);
 delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_dens3_(uintptr_t *gr, uintptr_t *a, const char *sch, double *sVal, const char *opt,int l,int lo)
+void mgl_dens3_(uintptr_t *gr, uintptr_t *a, const char *sch, mreal *sVal, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 mgl_dens3(_GR_, _DA_(a), s, *sVal, o);	delete []o;	delete []s;	}
@@ -1247,13 +1247,13 @@ void mgl_grid3(HMGL gr, HCDT a, const char *sch, double sVal, const char *opt)
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_grid3_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, double *sVal, const char *opt,int l,int lo)
+void mgl_grid3_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, mreal *sVal, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 mgl_grid3_xyz(_GR_, _DA_(x), _DA_(y), _DA_(z), _DA_(a), s, *sVal, o);
 delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_grid3_(uintptr_t *gr, uintptr_t *a, const char *sch, double *sVal, const char *opt,int l,int lo)
+void mgl_grid3_(uintptr_t *gr, uintptr_t *a, const char *sch, mreal *sVal, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 mgl_grid3(_GR_, _DA_(a), s, *sVal, o);	delete []o;	delete []s;	}
@@ -1320,25 +1320,25 @@ void mgl_contf3(HMGL gr, HCDT a, const char *sch, double sVal, const char *opt)
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_contf3_xyz_val_(uintptr_t *gr, uintptr_t *v, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, double *sVal, const char *opt,int l,int lo)
+void mgl_contf3_xyz_val_(uintptr_t *gr, uintptr_t *v, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, mreal *sVal, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 mgl_contf3_xyz_val(_GR_, _DA_(v), _DA_(x), _DA_(y), _DA_(z), _DA_(a), s, *sVal, o);
 delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_contf3_val_(uintptr_t *gr, uintptr_t *v, uintptr_t *a, const char *sch, double *sVal, const char *opt,int l,int lo)
+void mgl_contf3_val_(uintptr_t *gr, uintptr_t *v, uintptr_t *a, const char *sch, mreal *sVal, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 mgl_contf3_val(_GR_, _DA_(v), _DA_(a), s, *sVal, o);
 delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_contf3_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, double *sVal, const char *opt,int l,int lo)
+void mgl_contf3_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, mreal *sVal, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 mgl_contf3_xyz(_GR_, _DA_(x), _DA_(y), _DA_(z), _DA_(a), s, *sVal, o);
 delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_contf3_(uintptr_t *gr, uintptr_t *a, const char *sch, double *sVal, const char *opt,int l,int lo)
+void mgl_contf3_(uintptr_t *gr, uintptr_t *a, const char *sch, mreal *sVal, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 mgl_contf3(_GR_, _DA_(a), s, *sVal, o);

@@ -20,11 +20,11 @@
 #ifndef _MGL_CONT_H_
 #define _MGL_CONT_H_
 #include "mgl2/base.h"
-/******************************************************************************/
+//-----------------------------------------------------------------------------
 #ifdef __cplusplus
 extern "C" {
 #endif
-/******************************************************************************/
+//-----------------------------------------------------------------------------
 void mgl_textw_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const wchar_t *text, const char *font, const char *opt);
 void mgl_textw_xy(HMGL gr, HCDT x, HCDT y, const wchar_t *text, const char *font, const char *opt);
 void mgl_textw_y(HMGL gr, HCDT y, const wchar_t *text, const char *font, const char *opt);
@@ -87,36 +87,36 @@ void mgl_torus(HMGL gr, HCDT r, HCDT z, const char *col, const char *opt);
 void mgl_torus_(uintptr_t *gr, uintptr_t *r, uintptr_t *z, const char *pen, const char *opt,int,int);
 
 void mgl_grid3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *stl, double sVal, const char *opt);
-void mgl_grid3_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, double *sVal, const char *opt,int,int);
+void mgl_grid3_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, mreal *sVal, const char *opt,int,int);
 void mgl_grid3(HMGL gr, HCDT a, const char *stl, double sVal, const char *opt);
-void mgl_grid3_(uintptr_t *gr, uintptr_t *a, const char *sch, double *sVal, const char *opt,int,int);
+void mgl_grid3_(uintptr_t *gr, uintptr_t *a, const char *sch, mreal *sVal, const char *opt,int,int);
 
 void mgl_dens3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *stl, double sVal, const char *opt);
-void mgl_dens3_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, double *sVal, const char *opt,int,int);
+void mgl_dens3_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, mreal *sVal, const char *opt,int,int);
 void mgl_dens3(HMGL gr, HCDT a, const char *stl, double sVal, const char *opt);
-void mgl_dens3_(uintptr_t *gr, uintptr_t *a, const char *sch, double *sVal, const char *opt,int,int);
+void mgl_dens3_(uintptr_t *gr, uintptr_t *a, const char *sch, mreal *sVal, const char *opt,int,int);
 
 void mgl_cont3_xyz_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, double sVal, const char *opt);
-void mgl_cont3_xyz_val_(uintptr_t *gr, uintptr_t *v, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, double *sVal, const char *opt,int,int);
+void mgl_cont3_xyz_val_(uintptr_t *gr, uintptr_t *v, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, mreal *sVal, const char *opt,int,int);
 void mgl_cont3_val(HMGL gr, HCDT v, HCDT a, const char *sch, double sVal, const char *opt);
-void mgl_cont3_val_(uintptr_t *gr, uintptr_t *v, uintptr_t *a, const char *sch, double *sVal, const char *opt,int,int);
+void mgl_cont3_val_(uintptr_t *gr, uintptr_t *v, uintptr_t *a, const char *sch, mreal *sVal, const char *opt,int,int);
 void mgl_cont3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, double sVal, const char *opt);
-void mgl_cont3_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, double *sVal, const char *opt,int,int);
+void mgl_cont3_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, mreal *sVal, const char *opt,int,int);
 void mgl_cont3(HMGL gr, HCDT a, const char *sch, double sVal, const char *opt);
-void mgl_cont3_(uintptr_t *gr, uintptr_t *a, const char *sch, double *sVal, const char *opt,int,int);
+void mgl_cont3_(uintptr_t *gr, uintptr_t *a, const char *sch, mreal *sVal, const char *opt,int,int);
 
 void mgl_contf3_xyz_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, double sVal, const char *opt);
-void mgl_contf3_xyz_val_(uintptr_t *gr, uintptr_t *v, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, double *sVal, const char *opt,int,int);
+void mgl_contf3_xyz_val_(uintptr_t *gr, uintptr_t *v, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, mreal *sVal, const char *opt,int,int);
 void mgl_contf3_val(HMGL gr, HCDT v, HCDT a, const char *sch, double sVal, const char *opt);
-void mgl_contf3_val_(uintptr_t *gr, uintptr_t *v, uintptr_t *a, const char *sch, double *sVal, const char *opt,int,int);
+void mgl_contf3_val_(uintptr_t *gr, uintptr_t *v, uintptr_t *a, const char *sch, mreal *sVal, const char *opt,int,int);
 void mgl_contf3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, double sVal, const char *opt);
-void mgl_contf3_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, double *sVal, const char *opt,int,int);
+void mgl_contf3_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, mreal *sVal, const char *opt,int,int);
 void mgl_contf3(HMGL gr, HCDT a, const char *sch, double sVal, const char *opt);
-void mgl_contf3_(uintptr_t *gr, uintptr_t *a, const char *sch, double *sVal, const char *opt,int,int);
+void mgl_contf3_(uintptr_t *gr, uintptr_t *a, const char *sch, mreal *sVal, const char *opt,int,int);
 
-/******************************************************************************/
+//-----------------------------------------------------------------------------
 #ifdef __cplusplus
 }
 #endif
-/******************************************************************************/
+//-----------------------------------------------------------------------------
 #endif

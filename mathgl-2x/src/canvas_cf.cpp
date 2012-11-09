@@ -28,7 +28,7 @@ const unsigned char *mgl_get_rgb(HMGL gr)	{	return _Gr_->GetBits();	}
 const unsigned char *mgl_get_rgba(HMGL gr)	{	return _Gr_->GetRGBA();	}
 int mgl_get_width(HMGL gr)		{	return _Gr_->GetWidth();	}
 int mgl_get_height(HMGL gr)		{	return _Gr_->GetHeight();	}
-void mgl_calc_xyz(HMGL gr, int xs, int ys, double *x, double *y, double *z)
+void mgl_calc_xyz(HMGL gr, int xs, int ys, mreal *x, mreal *y, mreal *z)
 {	mglPoint p = _Gr_->CalcXYZ(xs,ys);	*x = p.x;	*y = p.y;	*z = p.z;	}
 void mgl_calc_scr(HMGL gr, double x, double y, double z, int *xs, int *ys)
 {	_Gr_->CalcScr(mglPoint(x,y,z),xs,ys);	}
@@ -147,25 +147,25 @@ void mgl_del_frame_(uintptr_t *gr, int *i)	{	_GR_->DelFrame(*i);	}
 //-----------------------------------------------------------------------------
 void mgl_set_transp_type_(uintptr_t *gr, int *type)		{	_GR_->SetTranspType(*type);	}
 void mgl_set_alpha_(uintptr_t *gr, int *enable)			{	_GR_->Alpha(*enable);	}
-void mgl_set_fog_(uintptr_t *gr, double *d, double *dz)	{	_GR_->Fog(*d, *dz);		}
+void mgl_set_fog_(uintptr_t *gr, mreal *d, mreal *dz)	{	_GR_->Fog(*d, *dz);		}
 void mgl_set_light_(uintptr_t *gr, int *enable)			{	_GR_->Light(*enable);	}
 void mgl_set_light_n_(uintptr_t *gr, int *n, int *enable)
 {	_GR_->Light(*n, *enable);	}
-void mgl_add_light_(uintptr_t *gr, int *n, double *x, double *y, double *z)
+void mgl_add_light_(uintptr_t *gr, int *n, mreal *x, mreal *y, mreal *z)
 {	_GR_->AddLight(*n,mglPoint(*x,*y,*z));	}
-void mgl_add_light_ext_(uintptr_t *gr, int *n, double *x, double *y, double *z, char *c, double *br, double *ap, int)
+void mgl_add_light_ext_(uintptr_t *gr, int *n, mreal *x, mreal *y, mreal *z, char *c, mreal *br, mreal *ap, int)
 {	_GR_->AddLight(*n,mglPoint(*x,*y,*z),*c,*br,*ap);	}
-void mgl_add_light_loc_(uintptr_t *gr, int *n, double *x, double *y, double *z, double *dx, double *dy, double *dz, char *c, double *br, double *ap, int)
+void mgl_add_light_loc_(uintptr_t *gr, int *n, mreal *x, mreal *y, mreal *z, mreal *dx, mreal *dy, mreal *dz, char *c, mreal *br, mreal *ap, int)
 {	_GR_->AddLight(*n,mglPoint(*x,*y,*z),mglPoint(*dx,*dy,*dz),*c,*br,*ap);	}
 //-----------------------------------------------------------------------------
 void mgl_mat_push_(uintptr_t *gr)	{	_GR_->Push();	}
 void mgl_mat_pop_(uintptr_t *gr)	{	_GR_->Pop();	}
 void mgl_clf_(uintptr_t *gr)
 {	_GR_->Clf();	}
-void mgl_clf_rgb_(uintptr_t *gr, double *r, double *g, double *b)
+void mgl_clf_rgb_(uintptr_t *gr, mreal *r, mreal *g, mreal *b)
 {	_GR_->Clf(mglColor(*r,*g,*b));	}
 //-----------------------------------------------------------------------------
-void mgl_subplot_d_(uintptr_t *gr, int *nx,int *ny,int *m,const char *st,double *dx,double *dy,int l)
+void mgl_subplot_d_(uintptr_t *gr, int *nx,int *ny,int *m,const char *st, mreal *dx, mreal *dy,int l)
 {	char *s=new char[l+1];	memcpy(s,st,l);	s[l]=0;
 	mgl_subplot_d(_GR_,*nx,*ny,*m,s,*dx,*dy);	delete []s;	}
 void mgl_subplot_(uintptr_t *gr, int *nx,int *ny,int *m,const char *st,int l)
@@ -174,30 +174,30 @@ void mgl_subplot_(uintptr_t *gr, int *nx,int *ny,int *m,const char *st,int l)
 void mgl_multiplot_(uintptr_t *gr, int *nx,int *ny,int *m,int *dx,int *dy,const char *st,int l)
 {	char *s=new char[l+1];	memcpy(s,st,l);	s[l]=0;
 	mgl_multiplot(_GR_,*nx,*ny,*m,*dx,*dy,s);	delete []s;	}
-void mgl_inplot_(uintptr_t *gr, double *x1,double *x2,double *y1,double *y2)
+void mgl_inplot_(uintptr_t *gr, mreal *x1, mreal *x2, mreal *y1, mreal *y2)
 {	_GR_->InPlot(*x1,*x2,*y1,*y2,false);	}
-void mgl_relplot_(uintptr_t *gr, double *x1,double *x2,double *y1,double *y2)
+void mgl_relplot_(uintptr_t *gr, mreal *x1, mreal *x2, mreal *y1, mreal *y2)
 {	_GR_->InPlot(*x1,*x2,*y1,*y2,true);	}
-void mgl_columnplot_(uintptr_t *gr, int *num, int *i, double *d)
+void mgl_columnplot_(uintptr_t *gr, int *num, int *i, mreal *d)
 {	mgl_columnplot(_GR_,*num,*i,*d);	}
-void mgl_columnplot_d_(uintptr_t *gr, int *nx, int *ny, int *i, double *d)
+void mgl_columnplot_d_(uintptr_t *gr, int *nx, int *ny, int *i, mreal *d)
 {	mgl_gridplot(_GR_,*nx,*ny,*i,*d);	}
-void mgl_stickplot_(uintptr_t *gr, int *num, int *i, double *tet, double *phi)
+void mgl_stickplot_(uintptr_t *gr, int *num, int *i, mreal *tet, mreal *phi)
 {	_GR_->StickPlot(*num, *i, *tet, *phi);	}
 
-void mgl_title_(uintptr_t *gr, const char *title, const char *stl, double *size, int l,int m)
+void mgl_title_(uintptr_t *gr, const char *title, const char *stl, mreal *size, int l,int m)
 {	char *t=new char[l+1];	memcpy(t,title,l);	t[l]=0;
 	char *s=new char[m+1];	memcpy(s,stl,m);	s[m]=0;
 	_GR_->Title(t,s,*size);	delete []s;	delete []t;	}
-void mgl_aspect_(uintptr_t *gr, double *Ax,double *Ay,double *Az)
+void mgl_aspect_(uintptr_t *gr, mreal *Ax, mreal *Ay, mreal *Az)
 {	_GR_->Aspect(*Ax,*Ay,*Az);	}
-void mgl_rotate_(uintptr_t *gr, double *TetX,double *TetZ,double *TetY)
+void mgl_rotate_(uintptr_t *gr, mreal *TetX, mreal *TetZ, mreal *TetY)
 {	_GR_->Rotate(*TetX,*TetZ,*TetY);	}
-void mgl_view_(uintptr_t *gr, double *TetX,double *TetZ,double *TetY)
+void mgl_view_(uintptr_t *gr, mreal *TetX, mreal *TetZ, mreal *TetY)
 {	_GR_->View(*TetX,*TetZ,*TetY);	}
-void mgl_zoom_(uintptr_t *gr, double *x1, double *y1, double *x2, double *y2)
+void mgl_zoom_(uintptr_t *gr, mreal *x1, mreal *y1, mreal *x2, mreal *y2)
 {	_GR_->Zoom(*x1,*y1,*x2,*y2);	}
-void mgl_rotate_vector_(uintptr_t *gr, double *Tet,double *x,double *y,double *z)
+void mgl_rotate_vector_(uintptr_t *gr, mreal *Tet, mreal *x, mreal *y, mreal *z)
 {	_GR_->RotateN(*Tet,*x,*y,*z);	}
 void mgl_perspective_(uintptr_t *gr, double val)
 {	_GR_->Perspective(val);	}
@@ -206,9 +206,9 @@ const unsigned char *mgl_get_rgb_(uintptr_t *gr)	{	return gr ? _GR_->GetBits():0
 const unsigned char *mgl_get_rgba_(uintptr_t *gr){	return gr ? _GR_->GetRGBA():0;	}
 int mgl_get_width_(uintptr_t *gr)	{	return gr ? _GR_->GetWidth():0;	}
 int mgl_get_height_(uintptr_t *gr)	{	return gr ? _GR_->GetHeight():0;}
-void mgl_calc_xyz_(uintptr_t *gr, int *xs, int *ys, double *x, double *y, double *z)
+void mgl_calc_xyz_(uintptr_t *gr, int *xs, int *ys, mreal *x, mreal *y, mreal *z)
 {	mglPoint p = _GR_->CalcXYZ(*xs,*ys);	*x = p.x;	*y = p.y;	*z = p.z;	}
-void mgl_calc_scr_(uintptr_t *gr, double *x, double *y, double *z, int *xs, int *ys)
+void mgl_calc_scr_(uintptr_t *gr, mreal *x, mreal *y, mreal *z, int *xs, int *ys)
 {	_GR_->CalcScr(mglPoint(*x,*y,*z),xs,ys);	}
 void mgl_set_obj_id_(uintptr_t *gr, int *id)		{	_GR_->SetObjId(*id);	}
 int mgl_get_obj_id_(uintptr_t *gr, int *x, int *y)	{	return _GR_->GetObjId(*x,*y);	}
@@ -292,7 +292,7 @@ void mgl_set_def_param_(uintptr_t *gr)	{	_GR_->DefaultPlotParam();	}
 void mgl_combine_gr_(uintptr_t *gr, uintptr_t *in)
 {	_GR_->Combine((mglCanvas *)in);	}
 //-----------------------------------------------------------------------------
-void mgl_set_tick_len_(uintptr_t *gr, double *len, double *stt)
+void mgl_set_tick_len_(uintptr_t *gr, mreal *len, mreal *stt)
 {	_GR_->SetTickLen(*len, *stt);	}
 void mgl_set_axis_stl_(uintptr_t *gr, const char *stl, const char *tck, const char *sub, int l,int m,int n)
 {	char *a=new char[l+1];	memcpy(a,stl,l);	a[l]=0;
@@ -302,7 +302,7 @@ void mgl_set_axis_stl_(uintptr_t *gr, const char *stl, const char *tck, const ch
 void mgl_adjust_ticks_(uintptr_t *gr, const char *dir, int l)
 {	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
 	_GR_->AdjustTicks(s);	delete []s;	}
-void mgl_set_ticks_(uintptr_t *gr, char *dir, double *d, int *ns, double *org, int)
+void mgl_set_ticks_(uintptr_t *gr, char *dir, mreal *d, int *ns, mreal *org, int)
 {	_GR_->SetTicks(*dir, *d, *ns, *org);	}
 void mgl_set_ticks_str_(uintptr_t *gr, const char *dir, const char *lbl, int *add,int,int l)
 {	char *s=new char[l+1];	memcpy(s,lbl,l);	s[l]=0;
@@ -310,12 +310,12 @@ void mgl_set_ticks_str_(uintptr_t *gr, const char *dir, const char *lbl, int *ad
 void mgl_set_ticks_val_(uintptr_t *gr, const char *dir, uintptr_t *val, const char *lbl, int *add,int,int l)
 {	char *s=new char[l+1];	memcpy(s,lbl,l);	s[l]=0;
 	_GR_->SetTicksVal(*dir,_DA_(val),s,*add);	delete []s;	}
-void mgl_tune_ticks_(uintptr_t *gr, int *tune, double *fact_pos)
+void mgl_tune_ticks_(uintptr_t *gr, int *tune, mreal *fact_pos)
 {	_GR_->SetTuneTicks(*tune, *fact_pos);	}
 void mgl_set_tick_templ_(uintptr_t *gr, const char *dir, const char *templ,int,int l)
 {	char *s=new char[l+1];	memcpy(s,templ,l);	s[l]=0;
 	_GR_->SetTickTempl(*dir,s);	delete []s;	}
-void mgl_set_ticks_time_(uintptr_t *gr, const char *dir, double *d, const char *t,int,int l)
+void mgl_set_ticks_time_(uintptr_t *gr, const char *dir, mreal *d, const char *t,int,int l)
 {	char *s=new char[l+1];	memcpy(s,t,l);	s[l]=0;
 	_GR_->SetTickTime(*dir,*d,s);	delete []s;	}
 //-----------------------------------------------------------------------------
@@ -333,7 +333,7 @@ void mgl_axis_grid_(uintptr_t *gr, const char *dir,const char *pen, const char *
 	char *p=new char[n+1];	memcpy(p,pen,n);	p[n]=0;
 	char *o=new char[m+1];	memcpy(o,opt,m);	o[m]=0;
 	_GR_->Grid(s,p,o);	delete []s;	delete []p;	delete []o;	}
-	void mgl_label_(uintptr_t *gr, const char *dir, const char *text, double *pos, const char *opt,int,int l,int m)
+	void mgl_label_(uintptr_t *gr, const char *dir, const char *text, mreal *pos, const char *opt,int,int l,int m)
 {	char *s=new char[l+1];	memcpy(s,text,l);	s[l]=0;
 	char *o=new char[m+1];	memcpy(o,opt,m);	o[m]=0;
 	_GR_->Label(*dir, s, *pos, o);	delete []s;	delete []o;	}
@@ -341,13 +341,13 @@ void mgl_axis_grid_(uintptr_t *gr, const char *dir,const char *pen, const char *
 void mgl_colorbar_(uintptr_t *gr, const char *sch,int l)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	_GR_->Colorbar(s);	delete []s;	}
-void mgl_colorbar_ext_(uintptr_t *gr, const char *sch, double *x, double *y, double *w, double *h, int l)
+void mgl_colorbar_ext_(uintptr_t *gr, const char *sch, mreal *x, mreal *y, mreal *w, mreal *h, int l)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	_GR_->Colorbar(s,*x,*y,*w,*h);	delete []s;	}
 void mgl_colorbar_val_(uintptr_t *gr, uintptr_t *dat, const char *sch,int l)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	_GR_->Colorbar(_DA_(dat), s);	delete []s;	}
-void mgl_colorbar_val_ext_(uintptr_t *gr, uintptr_t *dat, const char *sch, double *x, double *y, double *w, double *h, int l)
+void mgl_colorbar_val_ext_(uintptr_t *gr, uintptr_t *dat, const char *sch, mreal *x, mreal *y, mreal *w, mreal *h, int l)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	_GR_->Colorbar(_DA_(dat),s,*x,*y,*w,*h);	delete []s;	}
 //-----------------------------------------------------------------------------
@@ -356,7 +356,7 @@ void mgl_add_legend_(uintptr_t *gr, const char *text,const char *style,int l,int
 	char *f=new char[n+1];	memcpy(f,style,n);	f[n]=0;
 	_GR_->AddLegend(s,f);	delete []s;	delete []f;	}
 void mgl_clear_legend_(uintptr_t *gr)	{	if(gr)	_GR_->ClearLegend();	}
-void mgl_legend_pos_(uintptr_t *gr, double *x, double *y, const char *font, const char *opt,int l,int m)
+void mgl_legend_pos_(uintptr_t *gr, mreal *x, mreal *y, const char *font, const char *opt,int l,int m)
 {	char *s=new char[l+1];	memcpy(s,font,l);	s[l]=0;
 	char *o=new char[m+1];	memcpy(o,opt,m);	o[m]=0;
 	_GR_->Legend(*x, *y, s, o);	delete []s;	delete []o;	}
@@ -380,7 +380,7 @@ void mgl_mpi_recv(HMGL gr, int id)	{	_Gr_->MPI_Recv(id);	}
 void mgl_mpi_send_(uintptr_t *gr, int *id)	{	mgl_mpi_send(_GR_, *id);	}
 void mgl_mpi_recv_(uintptr_t *gr, int *id)	{	mgl_mpi_recv(_GR_, *id);	}
 //-----------------------------------------------------------------------------
-void mgl_wnd_set_delay_(uintptr_t *gr, double *dt)	{	_GR_->SetDelay(*dt);	}
+void mgl_wnd_set_delay_(uintptr_t *gr, mreal *dt)	{	_GR_->SetDelay(*dt);	}
 void mgl_wnd_set_delay(HMGL gr, double dt)	{	_Gr_->SetDelay(dt);	}
 //-----------------------------------------------------------------------------
 HMEX mgl_create_expr(const char *expr)	{	return new mglFormula(expr);	}
@@ -399,19 +399,19 @@ uintptr_t mgl_create_expr_(const char *expr, int l)
 	uintptr_t res = uintptr_t(mgl_create_expr(s));
 	delete []s;	return res;	}
 void mgl_delete_expr_(uintptr_t *ex)	{	mgl_delete_expr((HMEX)ex);	}
-double mgl_eval_expr_(uintptr_t *ex, double *x, double *y,double *z)
+double mgl_eval_expr_(uintptr_t *ex, mreal *x, mreal *y, mreal *z)
 {	return mgl_expr_eval((HMEX) ex, *x,*y,*z);		}
-double mgl_diff_expr_(uintptr_t *ex, const char *dir, double *x, double *y,double *z, int)
+double mgl_diff_expr_(uintptr_t *ex, const char *dir, mreal *x, mreal *y, mreal *z, int)
 {	return mgl_expr_diff((HMEX) ex, *dir,*x,*y,*z);	}
 //-----------------------------------------------------------------------------
 void mgl_set_plotfactor(HMGL gr, double val)
 {	_Gr_->SetPlotFactor(val);	}
-void mgl_set_plotfactor_(uintptr_t *gr, double *val)
+void mgl_set_plotfactor_(uintptr_t *gr, mreal *val)
 {	_GR_->SetPlotFactor(*val);	}
 //-----------------------------------------------------------------------------
 void mgl_set_tick_shift(HMGL gr, double sx, double sy, double sz, double sc)
 {	_Gr_->SetTickShift(mglPoint(sx,sy,sz,sc));	}
-void mgl_set_tick_shift_(uintptr_t *gr, double *sx, double *sy, double *sz, double *sc)
+void mgl_set_tick_shift_(uintptr_t *gr, mreal *sx, mreal *sy, mreal *sz, mreal *sc)
 {	_GR_->SetTickShift(mglPoint(*sx,*sy,*sz,*sc));	}
 //-----------------------------------------------------------------------------
 #if !MGL_HAVE_PNG

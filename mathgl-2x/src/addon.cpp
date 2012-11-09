@@ -27,7 +27,7 @@
 #include <string.h>
 #include "mgl2/addon.h"
 #include "mgl2/data.h"
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void mgl_strcls(char *str)
 {
 	size_t len = strlen(str),i,n;
@@ -43,7 +43,7 @@ void mgl_strcls(char *str)
 	tmp[i+1]=0;	strcpy(str,&(tmp[n]));
 	delete []tmp;
 }
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 int mgl_strpos(const char *str,char *fnd)
 {
 	const char *p=strstr(str,fnd);
@@ -52,7 +52,7 @@ int mgl_strpos(const char *str,char *fnd)
 	else	res = -1;
 	return res;
 }
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 int mgl_chrpos(const char *str,char ch)
 {
 	const char *p=str?strchr(str,ch):0;
@@ -61,7 +61,7 @@ int mgl_chrpos(const char *str,char ch)
 	else	res = -1;
 	return res;
 }
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 char *mgl_fgetstr(FILE *fp)
 {
 	static char s[256];
@@ -73,10 +73,10 @@ char *mgl_fgetstr(FILE *fp)
 	} while(!feof(fp) && (s[0]==0 || s[0]=='%' || s[0]=='#'));
 	return s;
 }
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 int mgl_istrue(char ch)
 {	return (ch=='1' || ch=='t' || ch=='+' || ch=='v');	}
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void mgl_test(const char *str, ...)
 {
 	char buf[256];
@@ -87,7 +87,7 @@ void mgl_test(const char *str, ...)
 	printf("TEST: %s\n",buf);
 	fflush(stdout);
 }
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void mgl_info(const char *str, ...)
 {
 	char buf[256];
@@ -100,7 +100,7 @@ void mgl_info(const char *str, ...)
 	fprintf(fp,"%s",buf);
 	fclose(fp);
 }
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 FILE *mgl_next_data(const char *fname,int p)
 {
 	char *s;
@@ -133,7 +133,7 @@ FILE *mgl_next_data(const char *fname,int p)
 	{	fclose(fp);	return NULL;	}
 	return fp;
 }
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 bool mgl_difr_grid(dual *a,int n,dual q,int Border,dual *b,dual *d,int kk)
 {
 	register int i,k;
@@ -173,7 +173,7 @@ bool mgl_difr_grid(dual *a,int n,dual q,int Border,dual *b,dual *d,int kk)
 	memcpy(a,b,n*sizeof(dual));
 	return true;
 }
-//----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 bool mgl_difr_axial(dual *a, int n, dual q, int Border,dual *b, dual *d, int kk, double di)
 {
 	register int i,k,ii = di<0 ? -int(floor(di)) : 0;
@@ -216,7 +216,7 @@ bool mgl_difr_axial(dual *a, int n, dual q, int Border,dual *b, dual *d, int kk,
 	memcpy(a,b,n*sizeof(dual));
 	return true;
 }
-//----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 double mgl_gauss_rnd()
 {
 	double v1,v2;
@@ -224,7 +224,7 @@ double mgl_gauss_rnd()
 	v2 = mgl_rnd();
 	return v1!=0 ? sqrt(-2.*log(v1))*cos(2*M_PI*v2) : 0;
 }
-//----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void mgl_fft_freq(double *freq, size_t nn)
 {
 	for(size_t i=0;i<=nn/2;i++)
@@ -233,4 +233,4 @@ void mgl_fft_freq(double *freq, size_t nn)
 		if(i>0) freq[nn-i] = -(double)(i);
 	}
 }
-//----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------

@@ -31,7 +31,7 @@ void mgl_set_color(char id, double r, double g, double b)
 	register size_t i;
 	for(i=0;mglColorIds[i].id;i++)	if(mglColorIds[i].id==id)	mglColorIds[i].col = mglColor(r,g,b);
 }
-void mgl_set_color_(char *id, double *r, double *g, double *b, int)	{	mgl_set_color(*id,*r,*g,*b);	}
+void mgl_set_color_(char *id, mreal *r, mreal *g, mreal *b, int)	{	mgl_set_color(*id,*r,*g,*b);	}
 //-----------------------------------------------------------------------------
 void mgl_set_def_sch(HMGL gr, const char *sch)	{	gr->SetDefScheme(sch);	}
 void mgl_set_def_sch_(uintptr_t *gr, const char *sch,int l)
@@ -87,7 +87,7 @@ void mgl_set_bar_width(HMGL gr, double width)	{	gr->SetBarWidth(width);	}
 void mgl_set_rdc_acc_(uintptr_t *gr, int *reduce)
 {	_GR_->SetReduceAcc(*reduce);	}
 void mgl_highlight_(uintptr_t *gr, int *id)	{	_GR_->Highlight(*id);	}
-void mgl_set_origin_(uintptr_t *gr, double *x0, double *y0, double *z0)
+void mgl_set_origin_(uintptr_t *gr, mreal *x0, mreal *y0, mreal *z0)
 {	_GR_->SetOrigin(*x0,*y0,*z0);	}
 int mgl_get_warn_(uintptr_t *gr)	{	return _GR_->GetWarn();	}
 void mgl_set_warn_(uintptr_t *gr, int *code, const char *txt, int l)
@@ -98,11 +98,11 @@ void mgl_set_palette_(uintptr_t *gr, const char *colors, int l)
 	_GR_->SetPalette(s);	delete []s;	}
 void mgl_set_meshnum_(uintptr_t *gr, int *num)	{	_GR_->SetMeshNum(*num);	}
 void mgl_set_facenum_(uintptr_t *gr, int *num)	{	_GR_->FaceNum=*num;		}
-void mgl_set_alpha_default_(uintptr_t *gr, double *alpha)	{	_GR_->SetAlphaDef(*alpha);	}
+void mgl_set_alpha_default_(uintptr_t *gr, mreal *alpha)	{	_GR_->SetAlphaDef(*alpha);	}
 void mgl_set_light_dif_(uintptr_t *gr, int *enable)			{	_GR_->SetDifLight(*enable);	}
 void mgl_clear_unused_(uintptr_t *gr)	{	_GR_->ClearUnused();	}
 //-----------------------------------------------------------------------------
-void mgl_set_cut_box_(uintptr_t *gr, double *x1,double *y1,double *z1,double *x2,double *y2,double *z2)
+void mgl_set_cut_box_(uintptr_t *gr, mreal *x1, mreal *y1, mreal *z1, mreal *x2, mreal *y2, mreal *z2)
 {	_GR_->SetCutBox(*x1,*y1,*z1,*x2,*y2,*z2);	}
 void mgl_set_cut_(uintptr_t *gr, int *cut)	{	_GR_->SetCut(*cut);	}
 void mgl_set_cutoff_(uintptr_t *gr, const char *EqC, int l)
@@ -110,11 +110,11 @@ void mgl_set_cutoff_(uintptr_t *gr, const char *EqC, int l)
 	_GR_->CutOff(s);	delete []s;	}
 //-----------------------------------------------------------------------------
 void mgl_set_ternary_(uintptr_t *gr, int *enable)	{	_GR_->Ternary(*enable);	}
-void mgl_set_range_val_(uintptr_t *gr, const char *dir, double *v1,double *v2,int)
+void mgl_set_range_val_(uintptr_t *gr, const char *dir, mreal *v1, mreal *v2,int)
 {	mgl_set_range_val(_GR_,*dir,*v1,*v2);	}
 void mgl_set_range_dat_(uintptr_t *gr, const char *dir, uintptr_t *a, int *add,int)
 {	mgl_set_range_dat(_GR_,*dir,_DA_(a),*add);	}
-void mgl_set_ranges_(uintptr_t *gr, double *x1, double *y1, double *z1, double *x2, double *y2, double *z2)
+void mgl_set_ranges_(uintptr_t *gr, mreal *x1, mreal *y1, mreal *z1, mreal *x2, mreal *y2, mreal *z2)
 {	_GR_->SetRanges(*x1,*y1,*z1,*x2,*y2,*z2);	}
 void mgl_set_func_(uintptr_t *gr, const char *EqX,const char *EqY,const char *EqZ,const char *EqA,int lx,int ly,int lz,int la)
 {
@@ -143,11 +143,11 @@ void mgl_load_font(HMGL gr, const char *name, const char *path)
 void mgl_copy_font(HMGL gr, HMGL gr_from)	{	gr->CopyFont(gr_from);	}
 void mgl_restore_font(HMGL gr)	{	gr->RestoreFont();	}
 //-----------------------------------------------------------------------------
-void mgl_set_bar_width_(uintptr_t *gr, double *width)	{	_GR_->SetBarWidth(*width);	}
+void mgl_set_bar_width_(uintptr_t *gr, mreal *width)	{	_GR_->SetBarWidth(*width);	}
 void mgl_set_rotated_text_(uintptr_t *gr, int *rotated)	{	_GR_->SetRotatedText(*rotated);	}
-void mgl_set_mark_size_(uintptr_t *gr, double *size)		{	_GR_->SetMarkSize(*size);	}
-void mgl_set_arrow_size_(uintptr_t *gr, double *size)	{	_GR_->SetArrowSize(*size);	}
-void mgl_set_font_size_(uintptr_t *gr, double *size)		{	_GR_->SetFontSize(*size);	}
+void mgl_set_mark_size_(uintptr_t *gr, mreal *size)		{	_GR_->SetMarkSize(*size);	}
+void mgl_set_arrow_size_(uintptr_t *gr, mreal *size)	{	_GR_->SetArrowSize(*size);	}
+void mgl_set_font_size_(uintptr_t *gr, mreal *size)		{	_GR_->SetFontSize(*size);	}
 void mgl_set_font_def_(uintptr_t *gr, char *name, int l)
 {	char *s=new char[l+1];		memcpy(s,name,l);	s[l]=0;
 	_GR_->SetFontDef(s);	delete []s;	}
@@ -189,10 +189,10 @@ long mgl_use_graph_(uintptr_t *gr, int *inc)
 {	return mgl_use_graph(_GR_,*inc);	}
 //---------------------------------------------------------------------------
 void mgl_set_ambbr(HMGL gr, double i)		{	gr->SetAmbient(i);	}
-void mgl_set_ambbr_(uintptr_t *gr, double *i){	_GR_->SetAmbient(*i);	}
+void mgl_set_ambbr_(uintptr_t *gr, mreal *i){	_GR_->SetAmbient(*i);	}
 //---------------------------------------------------------------------------
 void mgl_zoom_axis(HMGL gr, double x1,double y1,double z1,double c1,double x2,double y2,double z2,double c2)
 {	gr->ZoomAxis(mglPoint(x1,y1,z1,c1), mglPoint(x2,y2,z2,c2));	}
-void mgl_zoom_axis_(uintptr_t *gr, double *x1,double *y1,double *z1,double *c1,double *x2,double *y2,double *z2,double *c2)
+void mgl_zoom_axis_(uintptr_t *gr, mreal *x1, mreal *y1, mreal *z1, mreal *c1, mreal *x2, mreal *y2, mreal *z2, mreal *c2)
 {	_GR_->ZoomAxis(mglPoint(*x1,*y1,*z1,*c1), mglPoint(*x2,*y2,*z2,*c2));	}
 //---------------------------------------------------------------------------

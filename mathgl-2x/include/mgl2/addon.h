@@ -19,32 +19,32 @@
  ***************************************************************************/
 #ifndef _MGL_ADDON_H_
 #define _MGL_ADDON_H_
-/***************************************************************************/
+//-----------------------------------------------------------------------------
 #include "mgl2/define.h"
 #ifdef __cplusplus
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 dual mgl_ipowc(dual x,int n);
 dual expi(dual a);
 dual expi(double a);
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 /// Explicit scheme for 1 step of axial diffraction
 bool mgl_difr_axial(dual *a, int n, dual q, int Border,dual *b, dual *d, int kk, double di);
 /// Explicit scheme for 1 step of plane diffraction
 bool mgl_difr_grid(dual *a,int n,dual q,int Border,dual *b,dual *d,int kk);
-/***************************************************************************/
+//-----------------------------------------------------------------------------
 extern "C" {
 #endif
-/***************************************************************************/
+//-----------------------------------------------------------------------------
 double mgl_gauss_rnd();
 void mgl_fft_freq(double *freq,size_t nn);
-/***************************************************************************/
+//-----------------------------------------------------------------------------
 /** Remove double spaces from the string */
 void mgl_strcls(char *str);
 /** Get position of substring or return -1 if not found */
 int mgl_strpos(const char *str,char *fnd);
 /** Get position of symbol or return -1 if not found */
 int mgl_chrpos(const char *str,char fnd);
-/***************************************************************************/
+//-----------------------------------------------------------------------------
 /** Get uncommented string from file (NOTE: it is not thread safe!!!) */
 char *mgl_fgetstr(FILE *fp);
 /** Check if symbol denote true */
@@ -55,7 +55,7 @@ void mgl_test(const char *str, ...);
 void mgl_info(const char *str, ...);
 /** Locate next data block (block started by -----) */
 FILE *mgl_next_data(const char *fname,int p);
-/***************************************************************************/
+//-----------------------------------------------------------------------------
 #ifdef __cplusplus
 }
 #endif
