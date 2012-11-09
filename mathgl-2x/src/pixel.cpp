@@ -722,6 +722,8 @@ void mglCanvas::line_draw(long k1, long k2, mglDrawReg *dr)
 
 	x1 = long(fmin(p1.x,p2.x));	y1 = long(fmin(p1.y,p2.y));	// bounding box
 	x2 = long(fmax(p1.x,p2.x));	y2 = long(fmax(p1.y,p2.y));
+	x1 -= pw+3.5;	x2 += pw+3.5;
+	y1 -= pw+3.5;	y2 += pw+3.5;
 	x1=x1>dr->x1?x1:dr->x1;	x2=x2<dr->x2?x2:dr->x2;
 	y1=y1>dr->y1?y1:dr->y1;	y2=y2<dr->y2?y2:dr->y2;
 	dd = hypot(d.x, d.y);
@@ -729,8 +731,6 @@ void mglCanvas::line_draw(long k1, long k2, mglDrawReg *dr)
 
 	dxv = d.y/dd;	dyv =-d.x/dd;
 	dxu = d.x/dd;	dyu = d.y/dd;
-	x1 -= pw+3.5;	x2 += pw+3.5;
-	y1 -= pw+3.5;	y2 += pw+3.5;
 
 	bool aa=get(MGL_ENABLE_ALPHA);
 	register float u,v,xx,yy;
@@ -845,7 +845,7 @@ void mglCanvas::mark_draw(long k, char type, mreal size, mglDrawReg *d)
 	if(type=='.' || ss==0)	pnt_draw(k,d);
 	else
 	{
-		if(d)	{	d->PDef = 0xffff;	d->PenWidth=50*size;	}
+		if(d)	{	d->PDef = 0xffff;	d->PenWidth=50*size>1?50*size:1;	}
 		if(!strchr("xsSoO",type))	ss *= 1.1;
 		switch(type)
 		{
