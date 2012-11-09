@@ -118,8 +118,9 @@ mglBase::mglBase()
 	MGL_PUSH(Txt,mglTexture("BbcyrR",1),mutexTxt);
 	memcpy(last_style,"{k5}-1\0",8);
 	MinS=mglPoint(-1,-1,-1);	MaxS=mglPoint(1,1,1);
+	fnt = new mglFont;	fnt->gr = this;
 }
-mglBase::~mglBase()	{	ClearEq();	}
+mglBase::~mglBase()	{	ClearEq();	delete fnt;	}
 //-----------------------------------------------------------------------------
 void mglBase::RestoreFont()	{	fnt->Restore();	}
 void mglBase::LoadFont(const char *name, const char *path)

@@ -754,8 +754,8 @@ mglFont::mglFont(const char *name, const char *path)
 {
 	parse = true;	numg=0;	gr=0;
 //	if(this==&mglDefFont)	Load(name, path);	else	Copy(&mglDefFont);
-	if(this!=&mglDefFont)	Copy(&mglDefFont);
-	else if(name && *name)	Load(name, path);
+	if(name && *name)	Load(name, path);
+	else if(this!=&mglDefFont)	Copy(&mglDefFont);
 	else	Load(MGL_DEF_FONT_NAME,0);
 }
 mglFont::~mglFont()	{	Clear();	}

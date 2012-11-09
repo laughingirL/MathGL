@@ -17,6 +17,7 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+#include "mgl2/font.h"
 #include "mgl2/base_cf.h"
 //-----------------------------------------------------------------------------
 //
@@ -158,6 +159,14 @@ void mgl_load_font_(uintptr_t *gr, char *name, char *path, int l,int n)
 void mgl_copy_font_(uintptr_t *gr, uintptr_t *gr_from)
 {	_GR_->CopyFont((mglBase *)(*gr_from));	}
 void mgl_restore_font_(uintptr_t *gr)	{	_GR_->RestoreFont();	}
+//-----------------------------------------------------------------------------
+extern mglFont mglDefFont;
+void mgl_def_font(const char *name, const char *path)
+{	mglDefFont.Load(name,path);	}
+void mgl_def_font_(const char *name, const char *path,int l,int n)
+{	char *s=new char[l+1];		memcpy(s,name,l);	s[l]=0;
+	char *d=new char[n+1];		memcpy(d,path,n);	d[n]=0;
+	mglDefFont.Load(name,path);	delete []s;		delete []d;	}
 //-----------------------------------------------------------------------------
 void mgl_start_group(HMGL gr, const char *s)	{	gr->StartAutoGroup(s);	}
 void mgl_end_group(HMGL gr)	{	gr->EndGroup();	}

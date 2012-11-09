@@ -92,6 +92,8 @@ void mgl_set_tick_rotate_(uintptr_t *gr, int *enable);
 void mgl_set_tick_skip(HMGL gr, int enable);
 void mgl_set_tick_skip_(uintptr_t *gr, int *enable);
 
+void mgl_def_font(const char *name, const char *path);
+void mgl_def_font_(const char *name, const char *path,int,int);
 void mgl_set_mark_size(HMGL gr, double size);
 void mgl_set_mark_size_(uintptr_t *gr, mreal *size);
 void mgl_set_arrow_size(HMGL gr, double size);

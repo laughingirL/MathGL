@@ -286,7 +286,7 @@ void mgl_write_eps(HMGL gr, const char *fname,const char *descr)
 		if(q.type==0)	// mark
 		{
 			mreal x0 = p1.x,y0 = p1.y;
-			sprintf(str,"1 lw %.2g %.2g %.2g rgb ", cp.r,cp.g,cp.b);
+			sprintf(str,"%.2g lw %.2g %.2g %.2g rgb ", 50*q.s, cp.r,cp.g,cp.b);
 			wp=1;
 			if(q.s!=qs_old)
 			{
@@ -319,12 +319,6 @@ void mgl_write_eps(HMGL gr, const char *fname,const char *descr)
 				case 'X':	mgl_printf(fp, gz, "np %g %g mt m_X %sdr\n",x0,y0,str);	break;
 				case 'C':	mgl_printf(fp, gz, "%g %g m_o %g %g m_c %sdr\n",x0,y0,x0,y0,str);	break;
 				default:	mgl_printf(fp, gz, "%g %g m_c %sfill\n",x0,y0,str);
-			}
-			if(q.s!=gr->mark_size()/gr->FontFactor())
-			{
-				mgl_printf(fp, gz, "/ss {%g} def\n",0.4*gr->mark_size());
-				mgl_printf(fp, gz, "/s2 {%g} def\n",0.8*gr->mark_size());
-				mgl_printf(fp, gz, "/sm {-%g} def\n",0.4*gr->mark_size());
 			}
 		}
 		else if(q.type==3)	// quad
@@ -427,7 +421,7 @@ void mgl_write_svg(HMGL gr, const char *fname,const char *descr)
 			if(strchr("SDVTLR",q.n4))
 				mgl_printf(fp, gz, "<g fill=\"#%02x%02x%02x\">\n", int(255*cp.r),int(255*cp.g),int(255*cp.b));
 			else
-				mgl_printf(fp, gz, "<g stroke=\"#%02x%02x%02x\">\n", int(255*cp.r),int(255*cp.g),int(255*cp.b));
+				mgl_printf(fp, gz, "<g stroke=\"#%02x%02x%02x\"  stroke-width=\"%g\">\n", int(255*cp.r),int(255*cp.g),int(255*cp.b), 50*q.s);
 			switch(q.n4)
 			{
 			case 'P':
@@ -715,7 +709,7 @@ void mgl_write_tex(HMGL gr, const char *fname,const char *descr)
 		{
 			if(!strchr("xsSoO",q.n4))	s *= 1.1;
 			wp = 1;
-			switch(q.n4)
+			switch(q.n4)	// NOTE: no thickness for marks in TeX
 			{
 				case 'P':
 					fprintf(fp, "\\mglp{%g}{%g}{%s} \\mgls{%g}{%g}{%s}\n", x,y,cname,x,y,cname);	break;

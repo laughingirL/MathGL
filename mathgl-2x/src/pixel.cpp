@@ -729,6 +729,8 @@ void mglCanvas::line_draw(long k1, long k2, mglDrawReg *dr)
 
 	dxv = d.y/dd;	dyv =-d.x/dd;
 	dxu = d.x/dd;	dyu = d.y/dd;
+	x1 -= pw+3.5;	x2 += pw+3.5;
+	y1 -= pw+3.5;	y2 += pw+3.5;
 
 	bool aa=get(MGL_ENABLE_ALPHA);
 	register float u,v,xx,yy;
@@ -843,7 +845,7 @@ void mglCanvas::mark_draw(long k, char type, mreal size, mglDrawReg *d)
 	if(type=='.' || ss==0)	pnt_draw(k,d);
 	else
 	{
-		if(d)	{	d->PDef = 0xffff;	d->PenWidth=1;	}
+		if(d)	{	d->PDef = 0xffff;	d->PenWidth=50*size;	}
 		if(!strchr("xsSoO",type))	ss *= 1.1;
 		switch(type)
 		{

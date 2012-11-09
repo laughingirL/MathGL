@@ -47,6 +47,7 @@ A. libhpdf for win32
 12. FAQ about Fortran option -fdefault-real-8 for enable-double=ON
 13. Solve sample
 14. Thanks -- C.M., A.P.$
+15. void mgl_def_font(const char *name, const char *path)
 
 ============= UDAV =============
 

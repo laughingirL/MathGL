@@ -33,7 +33,7 @@ mglCanvas::mglCanvas(int w, int h) : mglBase()
 	fscl=ftet=0;		PlotId = "frame";
 	dr_nx1=dr_nx2=dr_ny1=dr_ny2=0;	// Allowed drawing region
 
-	fnt = new mglFont;	fnt->gr = this;		ac.ch='c';
+	ac.ch='c';
 	ax.dir = mglPoint(1,0,0);	ax.a = mglPoint(0,1,0);	ax.b = mglPoint(0,0,1);	ax.ch='x';
 	ay.dir = mglPoint(0,1,0);	ay.a = mglPoint(1,0,0);	ay.b = mglPoint(0,0,1);	ay.ch='y';
 	az.dir = mglPoint(0,0,1);	az.a = mglPoint(0,1,0);	az.b = mglPoint(1,0,0);	az.ch='z';
@@ -43,7 +43,6 @@ mglCanvas::mglCanvas(int w, int h) : mglBase()
 //-----------------------------------------------------------------------------
 mglCanvas::~mglCanvas()
 {
-	delete fnt;
 	if(G)	{	delete []G;	delete []C;	delete []Z;	delete []G4;delete []OI;	}
 }
 //-----------------------------------------------------------------------------
