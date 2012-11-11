@@ -30,11 +30,11 @@ public:
 	dual Calc(dual x,dual y=0,dual z=0,dual u=0) const;
 	/// Evaluates the formula for 'x, y, z, u, v, w'
 	dual Calc(dual x,dual y,dual z,dual u,dual v,dual w) const;
-	/// Evaluates the formula for variables \a var
+	/// Evaluates the formula for variables var
 	dual Calc(const dual var[MGL_VS]) const;
 	/// Return error code
 	int GetError() const;
-	/// Parse the formula \a str and create formula-tree
+	/// Parse the formula str and create formula-tree
 	mglFormulaC(const char *str);
 	/// Clean up formula-tree
 	virtual ~mglFormulaC();

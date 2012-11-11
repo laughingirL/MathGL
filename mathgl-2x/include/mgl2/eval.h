@@ -25,7 +25,7 @@
 #define MGL_ERR_LOG		1
 #define MGL_ERR_ARC		2
 #define MGL_ERR_SQRT	3
-/// size of \a var array
+/// size of var array
 const int MGL_VS = 'z'-'a'+1;
 //-----------------------------------------------------------------------------
 /// Class for evaluating formula specified by the string
@@ -36,17 +36,17 @@ public:
 	mreal Calc(mreal x,mreal y=0,mreal z=0,mreal u=0) const;
 	/// Evaluates the formula for 'x, y, z, u, v, w'
 	mreal Calc(mreal x,mreal y,mreal z,mreal u,mreal v,mreal w) const;
-	/// Evaluates the formula for variables \a var
+	/// Evaluates the formula for variables var
 	mreal Calc(const mreal var[MGL_VS]) const;
 	/// Evaluates the formula for 'x','r'=\a x, 'y','n'=\a y, 'z','t'=\a z, 'u'=\a u
 	mreal CalcD(char diff, mreal x,mreal y=0,mreal z=0,mreal u=0) const;
 	/// Evaluates the formula for 'x, y, z, u, v, w'
 	mreal CalcD(char diff, mreal x,mreal y,mreal z,mreal u,mreal v,mreal w) const;
-	/// Evaluates the derivates of the formula for variables \a var respect to variable \a diff
+	/// Evaluates the derivates of the formula for variables var respect to variable diff
 	mreal CalcD(const mreal var[MGL_VS], char diff) const;
 	/// Return error code
 	int GetError() const;
-	/// Parse the formula \a str and create formula-tree
+	/// Parse the formula str and create formula-tree
 	mglFormula(const char *str);
 	/// Clean up formula-tree
 	~mglFormula();

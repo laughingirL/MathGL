@@ -58,7 +58,7 @@ struct mglNum
 	mglNum *prev;	///< Pointer to prev instance in list
 	mglNum()	{	d=0;	next=prev=0;	}
 	~mglNum();
-	/// Move variable after \a var and copy \a func from \a var (if \a func is 0)
+	/// Move variable after var and copy func from var (if func is 0)
 	void MoveAfter(mglNum *var);
 };
 //-----------------------------------------------------------------------------
@@ -116,7 +116,7 @@ public:
 	inline 	int Export(wchar_t cpp_out[1024], HMGL gr, const wchar_t *str)
 	{	mglGraph GR(gr);	return Export(cpp_out,&GR,str);	}
 	int Export(wchar_t cpp_out[1024], mglGraph *gr, const wchar_t *str);
-	/// Execute MGL script file \a fname
+	/// Execute MGL script file fname
 	inline void Execute(HMGL gr, FILE *fp, bool print=false)
 	{	mglGraph GR(gr);	Execute(&GR,fp,print);	}
 	void Execute(mglGraph *gr, FILE *fp, bool print=false);
@@ -185,7 +185,7 @@ private:
 	size_t GetParLen(const wchar_t *str);
 	/// Parse command
 	int Exec(mglGraph *gr, const wchar_t *com, long n, mglArg *a, const wchar_t *var, const wchar_t *opt);
-	/// Fill arguments \a a from strings
+	/// Fill arguments a from strings
 	void FillArg(mglGraph *gr, int n, wchar_t **arg, mglArg *a);
 	/// PreExecute stage -- parse some commands and create variables
 	int PreExec(mglGraph *gr, long n, wchar_t **arg, mglArg *a);

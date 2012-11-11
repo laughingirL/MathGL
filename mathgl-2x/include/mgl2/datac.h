@@ -155,7 +155,7 @@ public:
 	{	mgl_datac_fill_eq(gr,this,eq,&vdat,0,opt);	}
 	inline void Fill(mglBase *gr, const char *eq, const mglDataA &vdat, const mglDataA &wdat,const char *opt="")
 	{	mgl_datac_fill_eq(gr,this,eq,&vdat,&wdat,opt);	}
-	/// Equidistantly fill the data to range [x1,x2] in direction \a dir
+	/// Equidistantly fill the data to range [x1,x2] in direction dir
 	inline void Fill(dual x1,dual x2=NaN,char dir='x')
 	{	return mgl_datac_fill(this,x1,x2,dir);	}
 
@@ -224,7 +224,7 @@ public:
 	/// Create n-th points distribution of this data values in range [v1, v2]
 	inline mglData Hist(long n,mreal v1=0,mreal v2=1, long nsub=0) const
 	{	return mglData(true,mgl_data_hist(this,n,v1,v2,nsub));	}
-	/// Create n-th points distribution of this data values in range [v1, v2] with weight \a w
+	/// Create n-th points distribution of this data values in range [v1, v2] with weight w
 	inline mglData Hist(const mglDataA &w, long n,mreal v1=0,mreal v2=1, long nsub=0) const
 	{	return mglData(true,mgl_data_hist_w(this,&w,n,v1,v2,nsub));	}
 	/// Get array which is result of summation in given direction or directions
@@ -261,7 +261,7 @@ public:
 
 	/// Swap left and right part of the data in given direction (useful for fourier spectrums)
 	inline void Swap(const char *dir)		{	mgl_datac_swap(this,dir);	}
-	/// Roll data along direction \a dir by \a num slices
+	/// Roll data along direction dir by num slices
 	inline void Roll(char dir, long num)	{	mgl_datac_roll(this,dir,num);	}
 	/// Mirror the data in given direction (useful for fourier spectrums)
 	inline void Mirror(const char *dir)		{	mgl_datac_mirror(this,dir);	}
@@ -277,7 +277,7 @@ public:
 	/// Interpolate by linear function the data to given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
 	inline dual Linear(mreal x,mreal y=0,mreal z=0)	const
 	{	return mgl_datac_linear(this,x,y,z);	}
-	/// Interpolate by line the data to given point \a x,\a y,\a z which normalized in range [0, 1]
+	/// Interpolate by line the data to given point x,\a y,\a z which normalized in range [0, 1]
 	inline dual Linear1(mreal x,mreal y=0,mreal z=0) const
 	{	return mgl_datac_linear(this,x*(nx-1),y*(ny-1),z*(nz-1));	}
 	/// Interpolate by linear function the data and return its derivatives at given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
@@ -287,7 +287,7 @@ public:
 		val = mgl_datac_linear_ext(this,x,y,z, &dx, &dy, &dz);
 		dif = mglPoint(dx.real(),dy.real(),dz.real());	return val;
 	}
-	/// Interpolate by line the data and return its derivatives at given point \a x,\a y,\a z which normalized in range [0, 1]
+	/// Interpolate by line the data and return its derivatives at given point x,\a y,\a z which normalized in range [0, 1]
 	inline dual Linear1(mglPoint &dif, mreal x,mreal y=0,mreal z=0) const
 	{
 		dual val,dx,dy,dz;

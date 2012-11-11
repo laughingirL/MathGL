@@ -30,8 +30,8 @@ int mgl_hex(char ch)
 	return res;
 }
 //-----------------------------------------------------------------------------
-/// Parse CGI string \a buf and return usual string as \a val for given \a name.
-/// The size of \a val should be the same as size of \a buf.
+/// Parse CGI string buf and return usual string as val for given name.
+/// The size of val should be the same as size of buf.
 void mgl_get_value(const char *buf, const char *name, char *val)
 {
 	const char *pos = strstr(buf,name);

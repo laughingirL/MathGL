@@ -134,13 +134,13 @@ public:
 	/// Crop the data
 	inline void Crop(long n1, long n2,char dir='x')
 	{	mgl_data_crop(this,n1,n2,dir);	}
-	/// Insert data
+	/// Insert data rows/columns/slices
 	inline void Insert(char dir, long at=0, long num=1)
 	{	mgl_data_insert(this,dir,at,num);	}
-	/// Delete data
+	/// Delete data rows/columns/slices
 	inline void Delete(char dir, long at=0, long num=1)
 	{	mgl_data_delete(this,dir,at,num);	}
-	/// Remove rows with duplicate values in column \a id
+	/// Remove rows with duplicate values in column id
 	inline void Clean(long id)
 	{	mgl_data_clean(this,id);	}
 	
@@ -160,7 +160,7 @@ public:
 	{	mgl_data_fill_eq(gr,this,eq,&vdat,0,opt);	}
 	inline void Fill(mglBase *gr, const char *eq, const mglDataA &vdat, const mglDataA &wdat,const char *opt="")
 	{	mgl_data_fill_eq(gr,this,eq,&vdat,&wdat,opt);	}
-	/// Eqidistantly fill the data to range [x1,x2] in direction \a dir
+	/// Equidistantly fill the data to range [x1,x2] in direction dir
 	inline void Fill(mreal x1,mreal x2=NaN,char dir='x')
 	{	return mgl_data_fill(this,x1,x2,dir);	}
 	/// Set the data by triangulated surface values assuming x,y,z in range [r1,r2]
@@ -229,7 +229,7 @@ public:
 	/// Create n-th points distribution of this data values in range [v1, v2]
 	inline mglData Hist(long n,mreal v1=0,mreal v2=1, long nsub=0) const
 	{	return mglData(true,mgl_data_hist(this,n,v1,v2,nsub));	}
-	/// Create n-th points distribution of this data values in range [v1, v2] with weight \a w
+	/// Create n-th points distribution of this data values in range [v1, v2] with weight w
 	inline mglData Hist(const mglDataA &w, long n,mreal v1=0,mreal v2=1, long nsub=0) const
 	{	return mglData(true,mgl_data_hist_w(this,&w,n,v1,v2,nsub));	}
 	/// Get array which is result of summation in given direction or directions
@@ -267,14 +267,14 @@ public:
 	/// Differentiate the parametrically specified data along direction v1 with v2,v3=const
 	inline void Diff(const mglDataA &v1, const mglDataA &v2, const mglDataA &v3)
 	{	mgl_data_diff_par(this,&v1,&v2,&v3);	}
-	/// Double-differentiate (like laplace operator) the data in given direction
+	/// Double-differentiate (like Laplace operator) the data in given direction
 	inline void Diff2(const char *dir)	{	mgl_data_diff2(this,dir);	}
 
-	/// Swap left and right part of the data in given direction (useful for fourier spectrums)
+	/// Swap left and right part of the data in given direction (useful for Fourier spectrum)
 	inline void Swap(const char *dir)		{	mgl_data_swap(this,dir);	}
-	/// Roll data along direction \a dir by \a num slices
+	/// Roll data along direction dir by num slices
 	inline void Roll(char dir, long num)	{	mgl_data_roll(this,dir,num);	}
-	/// Mirror the data in given direction (useful for fourier spectrums)
+	/// Mirror the data in given direction (useful for Fourier spectrum)
 	inline void Mirror(const char *dir)		{	mgl_data_mirror(this,dir);	}
 	/// Sort rows (or slices) by values of specified column
 	inline void Sort(long idx, long idy=-1)	{	mgl_data_sort(this,idx,idy);	}
@@ -295,26 +295,26 @@ public:
 	inline void NormSl(mreal v1=0,mreal v2=1,char dir='z',bool keep_en=true,bool sym=false)
 	{	mgl_data_norm_slice(this,v1,v2,dir,keep_en,sym);	}
 
-	/// Hankel transform
+	/// Apply Hankel transform
 	inline void Hankel(const char *dir)	{	mgl_data_hankel(this,dir);	}
-	/// Sin-Fourier transform
+	/// Apply Sin-Fourier transform
 	inline void SinFFT(const char *dir)	{	mgl_data_sinfft(this,dir);	}
-	/// Cos-Fourier transform
+	/// Apply Cos-Fourier transform
 	inline void CosFFT(const char *dir)	{	mgl_data_cosfft(this,dir);	}
 	/// Fill data by 'x'/'k' samples for Hankel ('h') or Fourier ('f') transform
 	inline void FillSample(const char *how)
 	{	mgl_data_fill_sample(this,how);	}
 
-	/// Interpolate by qubic splain the data to given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
+	/// Interpolate by cubic spline the data to given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
 	inline mreal Spline(mreal x,mreal y=0,mreal z=0) const
 	{	return mgl_data_spline(this, x,y,z);	}
-	/// Interpolate by qubic splain the data to given point \a x,\a y,\a z which normalized in range [0, 1]
+	/// Interpolate by cubic spline the data to given point x,\a y,\a z which normalized in range [0, 1]
 	inline mreal Spline1(mreal x,mreal y=0,mreal z=0) const
 	{	return mgl_data_spline(this, x*(nx-1),y*(ny-1),z*(nz-1));	}
 	/// Interpolate by linear function the data to given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
 	inline mreal Linear(mreal x,mreal y=0,mreal z=0)	const
 	{	return mgl_data_linear(this,x,y,z);	}
-	/// Interpolate by line the data to given point \a x,\a y,\a z which normalized in range [0, 1]
+	/// Interpolate by line the data to given point x,\a y,\a z which normalized in range [0, 1]
 	inline mreal Linear1(mreal x,mreal y=0,mreal z=0) const
 	{	return mgl_data_linear(this,x*(nx-1),y*(ny-1),z*(nz-1));	}
 	/// Return an approximated x-value (root) when dat(x) = val
@@ -326,22 +326,22 @@ public:
 	inline mglData Solve(mreal val, char dir, const mglData &i0, bool norm=true) const
 	{	return mglData(true,mgl_data_solve(this, val, dir, &i0, norm));	}
 	
-	/// Interpolate by qubic splain the data and return its derivatives at given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
+	/// Interpolate by cubic spline the data and return its derivatives at given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
 	inline mreal Spline(mglPoint &dif, mreal x,mreal y=0,mreal z=0) const
 	{	return mgl_data_spline_ext(this, x,y,z, &(dif.x),&(dif.y), &(dif.z));	}
-	/// Interpolate by qubic splain the data and return its derivatives at given point \a x,\a y,\a z which normalized in range [0, 1]
+	/// Interpolate by cubic spline the data and return its derivatives at given point x,\a y,\a z which normalized in range [0, 1]
 	inline mreal Spline1(mglPoint &dif, mreal x,mreal y=0,mreal z=0) const
 	{	mreal res=mgl_data_spline_ext(this, x*(nx-1),y*(ny-1),z*(nz-1), &(dif.x),&(dif.y), &(dif.z));
 		dif.x/=nx>1?nx-1:1;	dif.y/=ny>1?ny-1:1;	dif.z/=nz>1?nz-1:1;	return res;	}
 	/// Interpolate by linear function the data and return its derivatives at given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
 	inline mreal Linear(mglPoint &dif, mreal x,mreal y=0,mreal z=0)	const
 	{	return mgl_data_linear_ext(this,x,y,z, &(dif.x),&(dif.y), &(dif.z));	}
-	/// Interpolate by line the data and return its derivatives at given point \a x,\a y,\a z which normalized in range [0, 1]
+	/// Interpolate by line the data and return its derivatives at given point x,\a y,\a z which normalized in range [0, 1]
 	inline mreal Linear1(mglPoint &dif, mreal x,mreal y=0,mreal z=0) const
 	{	mreal res=mgl_data_linear_ext(this,x*(nx-1),y*(ny-1),z*(nz-1), &(dif.x),&(dif.y), &(dif.z));
 		dif.x/=nx>1?nx-1:1;	dif.y/=ny>1?ny-1:1;	dif.z/=nz>1?nz-1:1;	return res;	}
 	
-	/// Print information about the data (sizes and momentum) to string
+	/// Get information about the data (sizes and momentum) to string
 	inline const char *PrintInfo() const	{	return mgl_data_info(this);	}
 	/// Print information about the data (sizes and momentum) to FILE (for example, stdout)
 	inline void PrintInfo(FILE *fp) const
@@ -362,10 +362,10 @@ public:
 	/// Get minimal value of the data and its approximated position
 	inline mreal Minimal(mreal &x,mreal &y,mreal &z) const
 	{	return mgl_data_min_real(this,&x,&y,&z);	}
-	/// Get "energy" and find first (median) and second (width) momentums of data
+	/// Get "energy" and find first (median) and second (width) momenta of data
 	inline mreal Momentum(char dir,mreal &m,mreal &w) const
 	{	return mgl_data_momentum_val(this,dir,&m,&w,0,0);	}
-	/// Get "energy and find 4 momentums of data: median, width, skewness, kurtosis
+	/// Get "energy and find 4 momenta of data: median, width, skewness, kurtosis
 	inline mreal Momentum(char dir,mreal &m,mreal &w,mreal &s,mreal &k) const
 	{	return mgl_data_momentum_val(this,dir,&m,&w,&s,&k);	}
 	/// Find position (after specified in i,j,k) of first nonzero value of formula
@@ -386,21 +386,21 @@ public:
 	{	if(this!=&d)	Set(d.a,d.nx,d.ny,d.nz);	return *this;	}
 	inline mreal operator=(mreal val)
 	{	for(long i=0;i<nx*ny*nz;i++)	a[i]=val;	return val;	}
-	/// Multiplicate the data by other one for each element
+	/// Multiply the data by other one for each element
 	inline void operator*=(const mglDataA &d)	{	mgl_data_mul_dat(this,&d);	}
 	/// Divide the data by other one for each element
 	inline void operator/=(const mglDataA &d)	{	mgl_data_div_dat(this,&d);	}
 	/// Add the other data
 	inline void operator+=(const mglDataA &d)	{	mgl_data_add_dat(this,&d);	}
-	/// Substract the other data
+	/// Subtract the other data
 	inline void operator-=(const mglDataA &d)	{	mgl_data_sub_dat(this,&d);	}
-	/// Multiplicate each element by the number
+	/// Multiply each element by the number
 	inline void operator*=(mreal d)		{	mgl_data_mul_num(this,d);	}
 	/// Divide each element by the number
 	inline void operator/=(mreal d)		{	mgl_data_div_num(this,d);	}
 	/// Add the number
 	inline void operator+=(mreal d)		{	mgl_data_add_num(this,d);	}
-	/// Substract the number
+	/// Subtract the number
 	inline void operator-=(mreal d)		{	mgl_data_sub_num(this,d);	}
 #ifndef SWIG
 	/// Direct access to the data cell
@@ -483,15 +483,15 @@ inline void mglFourier(mglData &re, mglData &im, const char *dir)
 inline mglData mglSTFA(const mglDataA &re, const mglDataA &im, long dn, char dir='x')
 {	return mglData(true, mgl_data_stfa(&re,&im,dn,dir));	}
 //-----------------------------------------------------------------------------
-/// Saves result of PDE solving (|u|^2) for "Hamiltonian" \a ham with initial conditions \a ini
+/// Saves result of PDE solving (|u|^2) for "Hamiltonian" ham with initial conditions ini
 inline mglData mglPDE(mglBase *gr, const char *ham, const mglDataA &ini_re, const mglDataA &ini_im, mreal dz=0.1, mreal k0=100,const char *opt="")
 {	return mglData(true, mgl_pde_solve(gr,ham, &ini_re, &ini_im, dz, k0,opt));	}
-/// Saves result of PDE solving for "Hamiltonian" \a ham with initial conditions \a ini along a curve \a ray (must have nx>=7 - x,y,z,px,py,pz,tau or nx=5 - x,y,px,py,tau)
+/// Saves result of PDE solving for "Hamiltonian" ham with initial conditions ini along a curve ray (must have nx>=7 - x,y,z,px,py,pz,tau or nx=5 - x,y,px,py,tau)
 inline mglData mglQO2d(const char *ham, const mglDataA &ini_re, const mglDataA &ini_im, const mglDataA &ray, mreal r=1, mreal k0=100)
 {	return mglData(true, mgl_qo2d_solve(ham, &ini_re, &ini_im, &ray, r, k0, 0, 0));	}
 inline mglData mglQO2d(const char *ham, const mglDataA &ini_re, const mglDataA &ini_im, const mglDataA &ray, mglData &xx, mglData &yy, mreal r=1, mreal k0=100)
 {	return mglData(true, mgl_qo2d_solve(ham, &ini_re, &ini_im, &ray, r, k0, &xx, &yy));	}
-/// Prepares ray data for mglQO_PDE with starting point \a r0, \a p0
+/// Finds ray with starting point r0, p0 (and prepares ray data for mglQO2d)
 inline mglData mglRay(const char *ham, mglPoint r0, mglPoint p0, mreal dt=0.1, mreal tmax=10)
 {	return mglData(true, mgl_ray_trace(ham, r0.x, r0.y, r0.z, p0.x, p0.y, p0.z, dt, tmax));	}
 /// Calculate Jacobian determinant for D{x(u,v), y(u,v)} = dx/du*dy/dv-dx/dv*dy/du

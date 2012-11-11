@@ -130,7 +130,7 @@ public:
 	int Draw(mglGraph *);
 	/// Update (redraw) plot
 	void update();
-	/// Set main \a scr and optional \a pre scripts for execution
+	/// Set main scr and optional pre scripts for execution
 	void scripts(char *scr, char *pre);
 	/// Clear scripts internally saved
 	void clear_scripts();

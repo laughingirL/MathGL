@@ -127,7 +127,7 @@ public slots:
 	void addRhomb();					///< add rhombus into primitives
 	void addEllipse();					///< add ellipse into primitives
 	void addText(QString txt="");		///< add text into primitives
-	void setStyle(int id, QString stl);///< set style for primitive with \a id
+	void setStyle(int id, QString stl);///< set style for primitive with id
 
 	void setUsePrimitives(bool use)	{	mglUserPrim=use;	emit usePrimChanged(use);	}
 
@@ -154,7 +154,7 @@ signals:
 	void objChanged(int objId);	///< User double-click to select object/line
 	void usePrimChanged(bool);	///< Flag mglUserPrim is changed
 	void refreshData();
-	void doubleClick(int id);	///< Double mouse click by object with \a id
+	void doubleClick(int id);	///< Double mouse click by object with id
 	void askStyle(int id);	///< Update style
 
 protected:

@@ -122,7 +122,7 @@ public:
 	{	mgl_wnd_prev_frame(gr);	}
 	inline void Animation()		///< Run slideshow (animation) of frames
 	{	mgl_wnd_animation(gr);	}
-	void SetClickFunc(void (*func)(void *p))
+	void SetClickFunc(void (*func)(void *p))	///< Callback function for mouse click
 	{	if(!dr)	mgl_set_click_func(gr,func);	}
 
 	inline void SetDelay(double dt)	///< Delay for animation in seconds

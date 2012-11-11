@@ -117,7 +117,7 @@ protected:
 	float Puts(const unsigned *str, float x,float y,float f,int style,float col) const;
 	/// Parse LaTeX command
 	unsigned Parse(const wchar_t *s) const;
-	/// Get symbol for character \a ch with given \a font style
+	/// Get symbol for character ch with given font style
 	unsigned Symbol(char ch) const;
 private:
 	float get_ptr(long &i,unsigned *str, unsigned **b1, unsigned **b2,float &w1,float &w2, float f1, float f2, int st) const;

@@ -261,13 +261,13 @@ using mglBase::Light;
 	/// Set ticks length
 	void SetTickLen(mreal tlen, mreal stt=1.);
 
-	/// Draws bounding box outside the plotting volume with color \a c.
+	/// Draws bounding box outside the plotting volume with color c.
 	void Box(const char *col=0, bool ticks=true);
-	/// Draw axises with ticks in directions determined by string parameter \a dir.
+	/// Draw axises with ticks in directions determined by string parameter dir.
 	void Axis(const char *dir="xyzt", const char *stl="", const char *opt="");
-	/// Draw grid lines perpendicular to direction determined by string parameter \a dir.
+	/// Draw grid lines perpendicular to direction determined by string parameter dir.
 	void Grid(const char *dir="xyzt",const char *pen="B-", const char *opt="");
-	/// Print the label \a text for axis \a dir.
+	/// Print the label text for axis dir.
 	void Label(char dir, const char *text, mreal pos=0, const char *opt="");
 	void Labelw(char dir, const wchar_t *text, mreal pos=0, const char *opt="");
 
@@ -278,21 +278,21 @@ using mglBase::Light;
 	void Colorbar(HCDT v, const char *sch=0);
 	void Colorbar(HCDT v, const char *sch, mreal x, mreal y, mreal w, mreal h);
 
-	/// Draw legend of accumulated strings at position (x, y) by \a font with \a size
+	/// Draw legend of accumulated strings at position (x, y) by font with size
 	inline void Legend(mreal x, mreal y, const char *font="#", const char *opt="")
 	{	Legend(Leg,x,y,font,opt);	}
-	/// Draw legend of accumulated strings by \a font with \a size
+	/// Draw legend of accumulated strings by font with size
 	inline void Legend(int where=0x3, const char *font="#", const char *opt="")
 	{	Legend(Leg,(where&1)?1:0,(where&2)?1:0,font,opt);	}
-	/// Draw legend of accumulated strings by \a font with \a size
+	/// Draw legend of accumulated strings by font with size
 	inline void Legend(const std::vector<mglText> &leg, int where=3, const char *font="#", const char *opt="")
 	{	Legend(leg,(where&1)?1:0,(where&2)?1:0,font,opt);	}
-	/// Draw legend strings \a text at position (x, y) by \a font with \a size
+	/// Draw legend strings text at position (x, y) by font with size
 	void Legend(const std::vector<mglText> &leg, mreal x, mreal y, const char *font="#", const char *opt="");
 	/// Number of marks in legend sample
 	inline void SetLegendMarks(int num=1)	{	LegendMarks = num>0?num:1;	}
 
-	/// Draw table for values \a val along given direction with row labels \a text at given position
+	/// Draw table for values val along given direction with row labels text at given position
 	void Table(mreal x, mreal y, HCDT val, const wchar_t *text, const char *fnt, const char *opt);
 
 	void StartAutoGroup (const char *);
@@ -416,7 +416,7 @@ private:
 	char GetLabelPos(mreal c, long kk, mglAxis &aa);
 	/// Draw tick
 	void tick_draw(mglPoint o, mglPoint d1, mglPoint d2, int f, const char *stl);
-	/// Plot point \a p with color \a c
+	/// Plot point p with color c
 	void pnt_plot(long x,long y,mreal z,const unsigned char c[4], int obj_id);
 	mreal FindOptOrg(char dir, int ind) const;
 	/// Transform mreal color and alpha to bits format
@@ -426,9 +426,9 @@ private:
 	/// Fast drawing of line between 2 points
 	void fast_draw(long p1, long p2, mglDrawReg *d);
 
-	/// Additionally scale points \a p for positioning in image
+	/// Additionally scale points p for positioning in image
 	void PostScale(mglPoint &p) const;
-	/// Scale points \a p for projection to the face number \a nface in image
+	/// Scale points p for projection to the face number nface in image
 	long ProjScale(int nface, long p, bool text=false);
 	inline void PostScale(mglPoint *p,long n) const	{	for(long i=0;i<n;i++)	PostScale(p[i]);	}
 	/// Set coordinate and add the point, return its id
