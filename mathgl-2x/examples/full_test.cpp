@@ -54,20 +54,20 @@ int srnd = 0;
 int use_mgl = 0;
 int verbose = 0;
 //-----------------------------------------------------------------------------
+void mgls_prepare1d(mglData *y, mglData *y1=0, mglData *y2=0, mglData *x1=0, mglData *x2=0);
+void mgls_prepare2d(mglData *a, mglData *b=0, mglData *v=0);
+void mgls_prepare3d(mglData *a, mglData *b=0);
+void mgls_prepare2v(mglData *a, mglData *b);
+void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
+//-----------------------------------------------------------------------------
 void mgl_write_obj_old(HMGL gr, const char *fname,const char *descr, int use_png);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	mglData ys(10,3);	ys.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
-	if(!mini)	{	gr->SubPlot(2,2,0);	gr->Title("Table plot");	}
-	gr->Table(ys,"y_1\ny_2\ny_3");	gr->Box();
-	if(mini)	return;
-	gr->SubPlot(2,2,1);	gr->Title("no borders, colored");
-	gr->Table(ys,"y_1\ny_2\ny_3","r|");
-	gr->SubPlot(2,2,2);	gr->Title("no font decrease");
-	gr->Table(ys,"y_1\ny_2\ny_3","#");
-	gr->SubPlot(2,2,3);	gr->Title("manual width, position");
-	gr->Table(0.5, 0.95, ys,"y_1\ny_2\ny_3","#", "value 0.7");	gr->Box();
+	mglData y;	mgls_prepare1d(&y);
+	gr->Box();	gr->Plot(y.SubData(-1,0));
+	gr->Text(y,"This is very very very long string drawn along a curve","k");
+	gr->Text(y,"Another string drawn above a curve","Tr");
 	return;
 	
 	mglParse par;

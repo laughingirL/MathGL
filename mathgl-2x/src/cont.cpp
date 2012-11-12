@@ -28,28 +28,14 @@
 //	Text printing along a curve
 //
 //-----------------------------------------------------------------------------
-bool same_chain(long f,long i,long *nn)
-{
-	long j=f;
-	while(1)
-	{
-		j = nn[j];
-		if(j==f || j<0)	return false;
-		if(j==i)	return true;
-	}
-}
-//-----------------------------------------------------------------------------
 void mgl_string_curve(mglBase *gr,long f,long ,long *ff,long *nn,const wchar_t *text, const char *font, mreal size)
 {
-	if(nn[f]==-1)	return;	// do nothing since there is no curve
+	if(f<0 || nn[f]==-1)	return;	// do nothing since there is no curve
 	if(!font)	font="";
-	int pos = strchr(font,'t') ? 1:-1, align;
+	int pos = strchr(font,'T') ? 1:-1, align;
 	char cc=mglGetStyle(font,0,&align);		align = align&3;
 	mreal c=cc ? -cc : gr->GetClrC(ff[f]);
-	long len = wcslen(text);
-	char *fnt = new char[strlen(font)+3];	strcpy(fnt,font);
-	mreal *wdt=new mreal[len+1], h=gr->TextHeight(font,size), tet, tt;	// TODO optimaze ratio
-	mglPoint *pt=new mglPoint[len+1];
+	mreal h=gr->TextHeight(font,size)/2, tet, tt;
 	wchar_t L[2]=L"a";
 	register long i,j,k,m;
 
@@ -58,7 +44,7 @@ void mgl_string_curve(mglBase *gr,long f,long ,long *ff,long *nn,const wchar_t *
 	qa.push_back(q+l*h);	qb.push_back(q-l*h);
 	for(i=nn[f];i>=0 && i!=f;i=nn[i])	// construct curves
 	{
-		if(gr->Stop)	{	delete []wdt;	delete []pt;	delete []fnt;	return;	}
+		if(gr->Stop)	return;
 		p=q;	q=s;	l=t;
 		if(nn[i]>=0 && ff[nn[i]]>=0)	{	s=gr->GetPntP(ff[nn[i]]);	t=!(s-q);	}
 		tet = t.x*l.y-t.y*l.x;
@@ -70,9 +56,10 @@ void mgl_string_curve(mglBase *gr,long f,long ,long *ff,long *nn,const wchar_t *
 		else
 		{	qa.push_back(q+l*h);	qb.push_back(q-l*h);	}
 	}
-	if(pos<0)	qa=qb;
+	if(pos>0)	qa=qb;
 	// adjust text direction
 	bool rev = align==2;
+	char *fnt = new char[strlen(font)+3];	strcpy(fnt,font);
 	if(qa[0].x>qa[1].x)
 	{
 		if(align==0){	strcat(fnt,":R");	align=2;	}
@@ -80,11 +67,18 @@ void mgl_string_curve(mglBase *gr,long f,long ,long *ff,long *nn,const wchar_t *
 		else		{	strcat(fnt,":L");	align=0;	}
 	}
 	if(rev)	reverse(qa.begin(),qa.end());
-	for(j=0;j<len;j++)	{	L[0]=text[j];	wdt[j]=gr->TextWidth(L,font,size);	}
+	long len = wcslen(text);
+	mreal *wdt=new mreal[len+1];
+	for(j=0;j<len;j++)	{	L[0]=text[j];	wdt[j]=1.2*gr->TextWidth(L,font,size);	}
 	wdt[len]=0;
 
 	// place glyphs points
+	mglPoint *pt=new mglPoint[len+1];
 	pt[0] = qa[0];	m = qa.size();
+
+	// next string for testing curve position
+	//for(i=0;i<m;i++) gr->mark_plot(gr->AddPnt(qa[i],c,s,-1,-1),'.');
+	
 	mreal a,b,d,w,t1,t2;
 	for(i=j=0,tt=0;j<len;j++)
 	{
@@ -96,7 +90,7 @@ void mgl_string_curve(mglBase *gr,long f,long ,long *ff,long *nn,const wchar_t *
 		q = qa[i];	s = qa[i+1];	// points of line segment
 		a = (q-s)*(q-s);	b = (q-p)*(q-s);	d = (q-p)*(q-p)-w*w;
 		w = sqrt(b*b-a*d);		// NOTE: b*b>a*d should be here!
-		if(b*b>1e3*a*c)	{	t1 = d/(b+w);	t2 = d/(b-w);	}	// keep precision
+		if(b*b>1e3*a*d)	{	t1 = d/(b+w);	t2 = d/(b-w);	}	// keep precision
 		else			{	t1 = (b-w)/a;	t2 = (b+w)/a;	}
 		if(t1<0 || t1<tt)	t1=t2;	// t1<t2 should be here!
 		tt=t1;	pt[j+1] = q+(s-q)*tt;
@@ -104,7 +98,7 @@ void mgl_string_curve(mglBase *gr,long f,long ,long *ff,long *nn,const wchar_t *
 	if(rev)	pos=-pos;
 	for(j=0;j<len;j++)	// draw text
 	{	L[0] = text[align!=2?j:len-1-j];	s = pt[j+1]-pt[j];	l = !s;
-	gr->text_plot(gr->AddPnt(pt[j]-(pos*h)*l,c,s,-1,-1),L,font,size,0.05,c);	}
+	gr->text_plot(gr->AddPnt(pt[j]+(pos*h)*l,c,s,-1,-1),L,font,size,0.05,c);	}
 	delete []wdt;	delete []pt;	delete []fnt;
 }
 //-----------------------------------------------------------------------------

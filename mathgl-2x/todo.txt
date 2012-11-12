@@ -17,7 +17,6 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 
 0. check for possible memory leaks before release
 
-2. curved text (in new sample) look not so good
 3. WX window/widgets
 4. introduce new primitive type=5 -- arrow for Quality&3!=3. for better drawing in projections + json/view
 
