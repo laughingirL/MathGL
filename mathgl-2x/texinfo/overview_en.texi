@@ -81,7 +81,10 @@ Use a precompiled binary. There are binaries for MinGW (platform Win32). For a p
 Install precompiled versions from standard packages (RPM, deb, DevPak and so on).
 @end enumerate
 
-Note, you can download the latest sources (which can be not stable) from sourceforge.net SVN by command @code{svn co https://mathgl.svn.sourceforge.net/svnroot/mathgl mathgl} or just download MathGL 2.* sources by command @code{svn co https://mathgl.svn.sourceforge.net/svnroot/mathgl/mathgl-2x mathgl-2x} .
+Note, you can download the latest sources (which can be not stable) from sourceforge.net SVN by command 
+@verbatim
+svn checkout http://svn.code.sf.net/p/mathgl/code/mathgl-2x mathgl-code
+@end verbatim
 
 @c ------------------------------------------------------------------
 @external

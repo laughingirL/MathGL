@@ -12,19 +12,18 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 7. Use libtcc for mglFormula only! -- note that MGL formulas (i.e. for mglData) are fast enough. The only possible speeding up for Fill() and Modify() functions
 8. 3D text (with depth, for Quality=3)
 9. Text along 3D curve (for Quality=3)
+10. introduce new primitive type=5 -- arrow for Quality&3!=3. for better drawing in projections + json/view ?!?
 
 ============= NEW FOR v.2.1 =============
 
 0. check for possible memory leaks before release
 
+1. inverse axis sample
 3. WX window/widgets
-4. introduce new primitive type=5 -- arrow for Quality&3!=3. for better drawing in projections + json/view
 
 A. libhpdf for win32
 
 ============= DOCS =============
-
-1. Update web_*.texi -- links
 
 2. Text about UDAV (tabs,dialogs,hotkeys,hints,mouse)
 * known feature -- if you draw something in function then highlighted all similar objects
@@ -35,17 +34,14 @@ A. libhpdf for win32
 3. Add FAQ about MPEG/GIF and PDF, JavaScript
 4. JSON samples in documentation ?!!
 5. Hint about inverse axis range
-6. Axis style 'XYZ' for opposite tick and axis labels
-7. Quality=3 will draw 3D arrows instead of default 2D 
-8. Update text about drop sample
+6. Solve & evaluate sample
 9. Add mglGraph::IsActive()
 10. Check C/Fortran samples
-11. Axis -- projection in Ternary + sample
+11. Axis projections sample
 12. FAQ about Fortran option -fdefault-real-8 for enable-double=ON
 13. Solve sample
 14. Thanks -- C.M., A.P.$
-15. void mgl_def_font(const char *name, const char *path)
-16. update class diagram
+16. update class diagram (mglDataC) ?!
 
 ============= UDAV =============
 

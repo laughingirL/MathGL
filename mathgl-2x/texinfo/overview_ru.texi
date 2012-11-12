@@ -80,9 +80,12 @@ MathGL это ...
 Установить из стандартных пакетов (RPM, deb, DevPak и пр.).
 @end enumerate
 
-@c TODO Translate it!
+Последнюю версию (которая может быть не стабильна) можно загрузить с  sourceforge.net SVN с помощью команды
+@verbatim
+svn checkout http://svn.code.sf.net/p/mathgl/code/mathgl-2x mathgl-code
+@end verbatim
 
-Note, you can download the latest sources (which can be not stable) from sourceforge.net SVN by command @code{svn co https://mathgl.svn.sourceforge.net/svnroot/mathgl mathgl} or just download MathGL 2.* sources by command @code{svn co https://mathgl.svn.sourceforge.net/svnroot/mathgl/mathgl-2x mathgl-2x} .
+@c TODO Translate it!
 
 @c ------------------------------------------------------------------
 @external

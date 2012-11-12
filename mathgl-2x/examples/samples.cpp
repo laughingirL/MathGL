@@ -1362,6 +1362,7 @@ void smgl_vecta(mglGraph *gr)
 	if(!mini)	{	gr->SubPlot(2,1,0);	gr->Title("Vect3 sample");	}
 	gr->Rotate(50,60);	gr->SetOrigin(0,0,0);	gr->Axis("_xyz");	gr->Box();
 	gr->Vect3(ex,ey,ez,"x");	gr->Vect3(ex,ey,ez);	gr->Vect3(ex,ey,ez,"z");
+	if(mini)	return;
 	gr->SubPlot(2,1,1);	gr->Title("'f' style");
 	gr->Rotate(50,60);	gr->SetOrigin(0,0,0);	gr->Axis("_xyz");	gr->Box();
 	gr->Vect3(ex,ey,ez,"fx");	gr->Vect3(ex,ey,ez,"f");	gr->Vect3(ex,ey,ez,"fz");
