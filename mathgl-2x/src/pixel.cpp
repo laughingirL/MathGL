@@ -183,26 +183,23 @@ mglPoint mglCanvas::CalcScr(mglPoint p) const
 {	int x,y;	CalcScr(p,&x,&y);	return mglPoint(x,y);	}
 //-----------------------------------------------------------------------------
 //mglCanvas *mgl_tmp_gr;
+int mgl_type_prior[8]={0,2,4,5, 1,3,6, 7};
 bool operator<(const mglPrim &a, const mglPrim &b)
 {
-	if( a.z < b.z )	return true;
-	if( a.z > b.z )	return false;
-	if( a.w < b.w )		return true;
-	if( a.w > b.w )		return false;
-	if( a.n3 < b.n3 )	return true;
-	if( a.n3 > b.n3 )	return false;
-	return a.type < b.type;
+	register int t1 = mgl_type_prior[a.type], t2 = mgl_type_prior[b.type];
+	if(a.z!=b.z) 	return a.z < b.z;
+	if(t1!=t2)		return t1 < t2;
+	if(a.w!=b.w) 	return a.w < b.w;
+	return a.n3 < b.n3;
 }
 //-----------------------------------------------------------------------------
 bool operator>(const mglPrim &a, const mglPrim &b)
 {
-	if( a.z < b.z )	return false;
-	if( a.z > b.z )	return true;
-	if( a.w < b.w )		return false;
-	if( a.w > b.w )		return true;
-	if( a.n3 < b.n3 )	return false;
-	if( a.n3 > b.n3 )	return true;
-	return a.type > b.type;
+	register int t1 = mgl_type_prior[a.type], t2 = mgl_type_prior[b.type];
+	if(a.z!=b.z) 	return a.z > b.z;
+	if(t1!=t2)		return t1 > t2;
+	if(a.w!=b.w) 	return a.w > b.w;
+	return a.n3 > b.n3;
 }
 //-----------------------------------------------------------------------------
 void *mgl_canvas_thr(void *par)
@@ -715,6 +712,8 @@ void mglCanvas::line_draw(long k1, long k2, mglDrawReg *dr)
 	long y1,x1,y2,x2;
 
 	float pw=dr->PenWidth, dxu,dxv,dyu,dyv,dd,dpw=3;
+	float dz = Width>2 ? 1 : 1e-5*Width;		// provide additional height to be well visible on the surfaces
+
 	if(dr->ObjId==HighId)	{	pw *= 2;	dpw=2;	}
 	const mglPnt &p1=Pnt[k1], &p2=Pnt[k2];
 	mglPnt d=p2-p1, p;
@@ -746,13 +745,13 @@ void mglCanvas::line_draw(long k1, long k2, mglDrawReg *dr)
 		{
 			xx = (i-p1.x);	yy = (j-p1.y);
 			u = dxu*xx+dyu*yy;	v = dxv*xx+dyv*yy;	v = v*v;
-			if(u<0)			{	v += u*u;			u = 0;	}
-			else if(u>dd)	{	v += (u-dd)*(u-dd);	u = dd;	}
+			if(u<0)			v += u*u;
+			else if(u>dd)	v += (u-dd)*(u-dd);
 			if(v>pw*pw)		continue;
 			if(!(dr->PDef & ( 1<<long(fmod(dr->pPos+u/pw/1.5, 16)) ) ))	continue;
 			p = p1+d*(u/dd);	col2int(p,r,dr->ObjId);
 			r[3] = v<(pw-1)*(pw-1)/4 ? 255 : (unsigned char)(255/cosh(dpw*(sqrt(v)+(1-pw)/2)));
-			pnt_plot(i,j,p.z+pw,r,dr->ObjId);
+			pnt_plot(i,j,p.z+dz,r,dr->ObjId);
 		}
 	}
 	else	for(j=y1;j<=y2;j++)
@@ -766,13 +765,13 @@ void mglCanvas::line_draw(long k1, long k2, mglDrawReg *dr)
 		{
 			xx = (i-p1.x);	yy = (j-p1.y);
 			u = dxu*xx+dyu*yy;	v = dxv*xx+dyv*yy;	v = v*v;
-			if(u<0)			{	v += u*u;			u = 0;	}
-			else if(u>dd)	{	v += (u-dd)*(u-dd);	u = dd;	}
+			if(u<0)			v += u*u;
+			else if(u>dd)	v += (u-dd)*(u-dd);
 			if(v>pw*pw)		continue;
 			if(!(dr->PDef & (1<<long(fmod(dr->pPos+u/pw/1.5, 16)))))		continue;
 			p = p1+d*(u/dd);	col2int(p,r,dr->ObjId);
 			r[3] = v<(pw-1)*(pw-1)/4 ? 255 : (unsigned char)(255/cosh(dpw*(sqrt(v)+(1-pw)/2)));
-			pnt_plot(i,j,p.z+pw,r,dr->ObjId);
+			pnt_plot(i,j,p.z+dz,r,dr->ObjId);
 		}
 	}
 	set(aa,MGL_ENABLE_ALPHA);
@@ -785,7 +784,6 @@ void mglCanvas::fast_draw(long k1, long k2, mglDrawReg *dr)
 	unsigned char r[4];	col2int(p1,r,dr->ObjId);
 	long y1,x1,y2,x2;
 
-	float pw = dr->PenWidth*sqrt(font_factor/400);
 	bool hor = fabs(d.x)>fabs(d.y);
 
 	x1 = long(fmin(p1.x,p2.x));	y1 = long(fmin(p1.y,p2.y));	// bounding box
@@ -799,13 +797,13 @@ void mglCanvas::fast_draw(long k1, long k2, mglDrawReg *dr)
 	{
 		c = long(p1.y+d.y*(i-p1.x)/d.x);
 		if(c>=y1 && c<=y2)
-			pnt_plot(i, c, p1.z+d.z*(i-p1.x)/d.x+pw, r,dr->ObjId);
+			pnt_plot(i, c, p1.z+d.z*(i-p1.x)/d.x, r,dr->ObjId);
 	}
 	else if(d.y!=0)		for(i=y1;i<=y2;i++)
 	{
 		c = long(p1.x+d.x*(i-p1.y)/d.y);
 		if(c>=x1 && c<=x2)
-			pnt_plot(c, i, p1.z+d.z*(i-p1.y)/d.y+pw, r,dr->ObjId);
+			pnt_plot(c, i, p1.z+d.z*(i-p1.y)/d.y, r,dr->ObjId);
 	}
 }
 //-----------------------------------------------------------------------------
@@ -1018,16 +1016,15 @@ void mglCanvas::glyph_fill(const mglPnt &pp, mreal f, const mglGlyph &g, mglDraw
 	if(!g.trig || g.nt<=0)	return;
 	long ik,ii,pos=Pnt.size();
 	mglPnt p=pp;	p.u=p.v=NAN;
-	mreal pw = Width>2 && d ? fabs(d->PenWidth) : 1e-5*Width;
 	mglPoint p1,p2,p3;
 	for(ik=0;ik<g.nt;ik++)
 	{
 		ii = 6*ik;	p1 = mglPoint(f*g.trig[ii]+pp.u,f*g.trig[ii+1]+pp.v,0);	PostScale(p1);
 		ii+=2;		p2 = mglPoint(f*g.trig[ii]+pp.u,f*g.trig[ii+1]+pp.v,0);	PostScale(p2);
 		ii+=2;		p3 = mglPoint(f*g.trig[ii]+pp.u,f*g.trig[ii+1]+pp.v,0);	PostScale(p3);
-		p.x = p1.x;	p.y = p1.y;	p.z = p1.z+pw;	Pnt.push_back(p);
-		p.x = p2.x;	p.y = p2.y;	p.z = p2.z+pw;	Pnt.push_back(p);
-		p.x = p3.x;	p.y = p3.y;	p.z = p3.z+pw;	Pnt.push_back(p);
+		p.x = p1.x;	p.y = p1.y;	p.z = p1.z;	Pnt.push_back(p);
+		p.x = p2.x;	p.y = p2.y;	p.z = p2.z;	Pnt.push_back(p);
+		p.x = p3.x;	p.y = p3.y;	p.z = p3.z;	Pnt.push_back(p);
 		ii = Pnt.size()-3;	trig_draw(ii,ii+1,ii+2,false,d);
 	}
 	Pnt.erase(Pnt.begin()+pos,Pnt.end());
@@ -1066,7 +1063,6 @@ void mglCanvas::glyph_wire(const mglPnt &pp, mreal f, const mglGlyph &g, mglDraw
 void mglCanvas::glyph_line(const mglPnt &pp, mreal f, bool solid, mglDrawReg *d)
 {
 	mglPnt p=pp;	p.u=p.v=NAN;
-	mreal pw = Width>2 && d ? fabs(d->PenWidth) : 1e-5*Width;
 	if(d)	{	d->PDef = 0xffff;	d->PenWidth=1;	}
 	mglPoint p1,p2,p3,p4;
 	long pos=Pnt.size();
@@ -1077,10 +1073,10 @@ void mglCanvas::glyph_line(const mglPnt &pp, mreal f, bool solid, mglDrawReg *d)
 	p3 = mglPoint(fabs(f)+pp.u,pp.v+dy,0);	PostScale(p3);
 	p4 = mglPoint(fabs(f)+pp.u,pp.v-dy,0);	PostScale(p4);
 
-	p.x = p1.x;	p.y = p1.y;	p.z = p1.z+(solid?pw:0);	Pnt.push_back(p);
-	p.x = p2.x;	p.y = p2.y;	p.z = p2.z+(solid?pw:0);	Pnt.push_back(p);
-	p.x = p3.x;	p.y = p3.y;	p.z = p3.z+(solid?pw:0);	Pnt.push_back(p);
-	p.x = p4.x;	p.y = p4.y;	p.z = p4.z+(solid?pw:0);	Pnt.push_back(p);
+	p.x = p1.x;	p.y = p1.y;	p.z = p1.z;	Pnt.push_back(p);
+	p.x = p2.x;	p.y = p2.y;	p.z = p2.z;	Pnt.push_back(p);
+	p.x = p3.x;	p.y = p3.y;	p.z = p3.z;	Pnt.push_back(p);
+	p.x = p4.x;	p.y = p4.y;	p.z = p4.z;	Pnt.push_back(p);
 
 	if(solid)	quad_draw(pos,pos+1,pos+3,pos+2,d);
 	else

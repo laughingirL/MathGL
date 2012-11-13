@@ -262,7 +262,7 @@ public:
 	/// Load ranges from internal variable
 	void LoadState();
 	/// Increase ZMin
-	mreal AdjustZMin()	{	ZMin /= MGL_EPSILON;	return Max.z - ZMin*(Max.z-Min.z);	}
+	mreal AdjustZMin()	{	ZMin /= MGL_FEPSILON;	return Max.z - ZMin*(Max.z-Min.z);	}
 
 	/// Safetly set the transformation formulas for coordinate.
 	void SetFunc(const char *EqX, const char *EqY, const char *EqZ=0, const char *EqA=0);

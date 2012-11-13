@@ -64,10 +64,9 @@ void mgl_write_obj_old(HMGL gr, const char *fname,const char *descr, int use_png
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	mglData y;	mgls_prepare1d(&y);
-	gr->Box();	gr->Plot(y.SubData(-1,0));
-	gr->Text(y,"This is very very very long string drawn along a curve","k");
-	gr->Text(y,"Another string drawn above a curve","Tr");
+	mglData y(2);	y.Fill(-1,1);
+	gr->Plot(y,"r3");
+	gr->Plot(y,"b2");
 	return;
 	
 	mglParse par;
