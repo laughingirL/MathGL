@@ -67,37 +67,30 @@ protected:
 	int wnd;	///< Type of window
 public:
 	mglWindow(const char *title="MathGL") : mglGraph(-1)
-	{	wnd=0;	dr=0;	gr = mgl_create_graph_fltk(0,title,0,0);	mgl_use_graph(gr,1);	}
+	{	wnd=0;	dr=0;	gr = mgl_create_window(wnd, 0,title,0,0);	mgl_use_graph(gr,1);	}
 	inline int RunThr()		///< Run main loop for event handling in separate thread (for FLTK only)
 	{	return wnd==0 ? mgl_fltk_thr():0;	}
 #ifndef SWIG
 	mglWindow(int (*draw)(HMGL gr, void *p), const char *title="MathGL", void *par=NULL, int kind=MGL_WND_KIND, void (*load)(void *p)=0) : mglGraph(-1)
 	{
 		wnd=kind;	dr=0;
-		if(wnd==1)	gr = mgl_create_graph_qt(draw,title,par,load);
-		else if(wnd==2)	gr = mgl_create_graph_wx(draw,title,par,load);
-		else		gr = mgl_create_graph_fltk(draw,title,par,load);
+		gr = mgl_create_window(wnd, draw,title,par,load);
 		mgl_use_graph(gr,1);
 	}
 	mglWindow(int (*draw)(mglGraph *gr), const char *title="MathGL", int kind=MGL_WND_KIND) : mglGraph(-1)
 	{
 		wnd=kind;	dr=0;
-		if(wnd==1)	gr = mgl_create_graph_qt(mgl_draw_graph,title,(void*)draw,0);
-		else if(wnd==2)	gr = mgl_create_graph_wx(mgl_draw_graph,title,(void*)draw,0);
-		else		gr = mgl_create_graph_fltk(mgl_draw_graph,title,(void*)draw,0);
+		gr = mgl_create_window(wnd, mgl_draw_graph,title,(void*)draw,0);
 		mgl_use_graph(gr,1);
 	}
 	mglWindow(mglDraw *draw, const char *title="MathGL", int kind=MGL_WND_KIND) : mglGraph(-1)
 	{
 		wnd=kind;	dr=draw;
-		if(wnd==1)	gr = mgl_create_graph_qt(mgl_draw_class,title,this,mgl_reload_class);
-		else if(wnd==1)	gr = mgl_create_graph_wx(mgl_draw_class,title,this,mgl_reload_class);
-		else		gr = mgl_create_graph_fltk(mgl_draw_class,title,this,mgl_reload_class);
-		mgl_use_graph(gr,1);
-		mgl_set_click_func(gr, mgl_click_class);
+		gr = mgl_create_window(wnd, mgl_draw_class,title,this,mgl_reload_class);
+		mgl_use_graph(gr,1); 	mgl_set_click_func(gr, mgl_click_class);
 	}
 	inline int Run()			///< Run main loop for event handling
-	{	return (wnd==1)? mgl_qt_run() : mgl_fltk_run();	}
+	{	return mgl_wnd_run(wnd);	}
 #endif
 
 	inline void ToggleAlpha()	///< Switch on/off transparency (do not overwrite user settings)

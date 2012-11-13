@@ -176,60 +176,63 @@ void mgl_get_last_mouse_pos_(uintptr_t *gr, mreal *x, mreal *y, mreal *z)
 	mglPoint p;	if(g)	p=g->GetMousePos();
 	*x=p.x;	*y=p.y;	*z=p.z;	}
 //-----------------------------------------------------------------------------
-#if MGL_HAVE_FLTK==0
-HMGL mgl_create_graph_fltk(int (*)(HMGL gr, void *p), const char *, void *, void (*)(void *p))
-{	mglGlobalMess += "FLTK support was disabled. Please, enable it and rebuild MathGL.\n";	return NULL;	}
-int mgl_fltk_run(){return 0;}
-#endif
+//
+//		Dinamically linked widgets
+//
 //-----------------------------------------------------------------------------
-uintptr_t mgl_create_graph_fltk_(const char *title, int l)
+#include <ltdl.h>
+typedef HMGL (*wnd_func)(int (*)(HMGL gr, void *p), const char *, void *, void (*)(void *p));
+lt_dlhandle mgl_dl=0;
+HMGL mgl_create_window(int kind, int (*draw)(HMGL gr, void *p), const char *title, void *par, void (*load)(void *p))
 {
-	char *s = new char[l+1];	memcpy(s,title,l);	s[l]=0;
-	uintptr_t t = uintptr_t(mgl_create_graph_fltk(0,s,0,0));
-	delete []s;	return t;
-}
-int mgl_fltk_run_()	{	return mgl_fltk_run();	}
-//-----------------------------------------------------------------------------
-void *mgl_fltk_tmp(void *)
-{	mgl_fltk_run();	return 0;	}
-//-----------------------------------------------------------------------------
-int mgl_fltk_thr()		// NOTE: Qt couldn't be running in non-primary thread
-{
-#if MGL_HAVE_PTHREAD
-	static pthread_t thr;
-	pthread_create(&thr,0,mgl_fltk_tmp,0);
-	pthread_detach(thr);
+#if MGL_HAVE_LTDL
+	wnd_func f=0;
+	switch(kind)
+	{
+	case 0:	// FLTK
+		mgl_dl = lt_dlopen("libmgl-fltk");
+		if(mgl_dl)	f = (wnd_func)lt_dlsym(mgl_dl,"mgl_create_graph_fltk");
+		if(mgl_dl && f)	return f(draw,title,par,load);
+		else 	mglGlobalMess += "FLTK support was disabled. Please, enable it and rebuild MathGL.\n";
+		break;
+	case 1:	// Qt
+		mgl_dl = lt_dlopen("libmgl-qt");
+		if(mgl_dl)	f = (wnd_func)lt_dlsym(mgl_dl,"mgl_create_graph_qt");
+		if(mgl_dl && f)	return f(draw,title,par,load);
+		else 	mglGlobalMess += "Qt support was disabled. Please, enable it and rebuild MathGL.\n";
+		break;
+	case 2:	// WX
+		mgl_dl = lt_dlopen("libmgl-wx");
+		if(mgl_dl)	f = (wnd_func)lt_dlsym(mgl_dl,"mgl_create_graph_wx");
+		if(mgl_dl && f)	return f(draw,title,par,load);
+		else 	mglGlobalMess += "WX support was disabled. Please, enable it and rebuild MathGL.\n";
+		break;
+	}
 #endif
-	return 0;	// stupid, but I don't want keep result returned by Fl::Run()
+	return 0;
 }
-//-----------------------------------------------------------------------------
-#if MGL_HAVE_QT==0
-HMGL mgl_create_graph_qt(int (*)(HMGL gr, void *p), const char *, void *, void (*)(void *p))
-{	mglGlobalMess += "Qt support was disabled. Please, enable it and rebuild MathGL.\n";	return NULL;	}
-int mgl_qt_run(){return 0;}
-#endif
-//-----------------------------------------------------------------------------
-uintptr_t mgl_create_graph_qt_(const char *title, int l)
+typedef int (*run_func)();
+int mgl_wnd_run(int kind)
 {
-	char *s = new char[l+1];	memcpy(s,title,l);	s[l]=0;
-	uintptr_t t = uintptr_t(mgl_create_graph_qt(0,s,0,0));
-	delete []s;	return t;
-}
-int mgl_qt_run_()	{	return mgl_qt_run();	}
-//-----------------------------------------------------------------------------
-#if MGL_HAVE_WX==0
-HMGL mgl_create_graph_wx(int (*)(HMGL gr, void *p), const char *, void *, void (*)(void *p))
-{	mglGlobalMess += "Qt support was disabled. Please, enable it and rebuild MathGL.\n";	return NULL;	}
-int mgl_wx_run(){return 0;}
+	if(!mgl_dl)
+	{	mglGlobalMess += "No library was loaded.\n";	return 0;	}
+#if MGL_HAVE_LTDL
+	run_func f=0;
+	switch(kind)
+	{
+	case 0:	// FLTK
+		f = (run_func)lt_dlsym(mgl_dl,"mgl_fltk_run");
+		if(f)	return f();		break;
+	case 1:	// Qt
+		f = (run_func)lt_dlsym(mgl_dl,"mgl_qt_run");
+		if(f)	return f();		break;
+	case 2:	// WX
+		f = (run_func)lt_dlsym(mgl_dl,"mgl_wx_run");
+		if(f)	return f();		break;
+	}
 #endif
-//-----------------------------------------------------------------------------
-uintptr_t mgl_create_graph_wx_(const char *title, int l)
-{
-	char *s = new char[l+1];	memcpy(s,title,l);	s[l]=0;
-	uintptr_t t = uintptr_t(mgl_create_graph_wx(0,s,0,0));
-	delete []s;	return t;
+	return 0;
 }
-int mgl_wx_run_()	{	return mgl_wx_run();	}
 //-----------------------------------------------------------------------------
 //
 //	mglDraw class handling

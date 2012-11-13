@@ -26,7 +26,7 @@ qt4_add_resources(udav_rc_src ${udav_rc} )
 #qt_wrap_cpp(udav udav_moc_src ${udav_moc_hdr} )
 qt4_wrap_cpp(udav_moc_src ${udav_moc_hdr} )
 add_executable(udav ${udav_src} ${udav_moc_src} ${udav_rc_src})
-target_link_libraries(udav mgl-wnd ${QT_LIBRARIES})
+target_link_libraries(udav mgl-qt ${QT_LIBRARIES})
 
 if(MGL_HAVE_PTHREAD)
 	target_link_libraries(udav ${CMAKE_THREAD_LIBS_INIT})

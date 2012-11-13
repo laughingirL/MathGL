@@ -23,8 +23,44 @@
 #include <wx/clipbrd.h>
 #include <wx/dataobj.h>
 #include <wx/menu.h>
+#include <wx/scrolwin.h>
 
+#include "mgl2/canvas_wnd.h"
 #include "mgl2/wx.h"
+//-----------------------------------------------------------------------------
+class mglCanvasWX : public mglCanvasWnd
+{
+friend class wxMathGL;
+public:
+	int sshow;			///< Current state of animation switch (toggle button)
+	wxMathGL *WMGL;		///< Control which draw graphics
+	wxWindow *Wnd;		///< Pointer to window
+
+	mglCanvasWX();
+	virtual ~mglCanvasWX();
+
+	/// Create a window for plotting. Now implemeted only for GLUT.
+	void Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p), const char *title,
+				void *par=NULL, void (*reload)(void *p)=NULL, bool maximize=false);
+	/// Switch on/off transparency (do not overwrite switches in user drawing function)
+	void ToggleAlpha();
+	/// Switch on/off lighting (do not overwrite switches in user drawing function)
+	void ToggleLight();
+	void ToggleRotate();	///< Switch on/off rotation by mouse
+	void ToggleZoom();		///< Switch on/off zooming by mouse
+	void ToggleNo();		///< Switch off all zooming and rotation
+	void Update();			///< Update picture by calling user drawing function
+	void Adjust();			///< Adjust size of bitmap to window size
+	void GotoFrame(int d);	///< Show arbitrary frame (use relative step)
+	void Animation();	///< Run animation (I'm too lasy to change it)
+
+protected:
+	wxScrolledWindow *scroll;	///< Scrolling area
+	wxMenu *popup;			///< Popup menu
+//	wxSpinCtrl *tet, *phi;	///< Spin box for angles // TODO
+
+	void MakeMenu();		///< Create menu, toolbar and popup menu
+};
 //-----------------------------------------------------------------------------
 const wxString ScriptName(L"default");
 enum
@@ -656,4 +692,12 @@ HMGL mgl_create_graph_wx(int (*draw)(HMGL gr, void *p), const char *title, void 
 	return g;
 }
 int mgl_wx_run(){	return wxTheApp ? wxTheApp->MainLoop():0;	}
+//-----------------------------------------------------------------------------
+uintptr_t mgl_create_graph_wx_(const char *title, int l)
+{
+	char *s = new char[l+1];	memcpy(s,title,l);	s[l]=0;
+	uintptr_t t = uintptr_t(mgl_create_graph_wx(0,s,0,0));
+	delete []s;	return t;
+}
+int mgl_wx_run_()	{	return mgl_wx_run();	}
 //-----------------------------------------------------------------------------

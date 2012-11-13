@@ -5,7 +5,7 @@ set(mgl_src
 	export_2d.cpp export_3d.cpp eval.cpp evalp.cpp exec.cpp export.cpp
 	fit.cpp font.cpp obj.cpp other.cpp parser.cpp pde.cpp pixel.cpp
 	plot.cpp prim.cpp surf.cpp tex_table.cpp vect.cpp volume.cpp evalc.cpp
-	s_hull/s_hull_pro.cpp
+	s_hull/s_hull_pro.cpp window.cpp
 )
 
 set(mgl_hdr
@@ -17,7 +17,7 @@ set(mgl_hdr
 	../include/mgl2/data.h		../include/mgl2/volume.h	../include/mgl2/data_cf.h
 	../include/mgl2/define.h	../include/mgl2/other.h		../include/mgl2/eval.h
 	../include/mgl2/parser.h	../include/mgl2/addon.h		../include/mgl2/evalc.h
-	s_hull/s_hull_pro.h
+	s_hull/s_hull_pro.h		../include/mgl2/window.h		../include/mgl2/canvas_wnd.h
 )
 
 add_definitions(-DMGL_SRC)

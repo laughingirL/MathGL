@@ -21,8 +21,7 @@
 #ifndef _MGL_FLTK_H_
 #define _MGL_FLTK_H_
 
-#ifdef __cplusplus
-#include "mgl2/canvas_wnd.h"
+#include <mgl2/window.h>
 #if MGL_HAVE_FLTK
 //-----------------------------------------------------------------------------
 #ifdef __MWERKS__
@@ -138,39 +137,10 @@ protected:
 	void setoff(int &val, Fl_Button *b, const char *txt=NULL);
 };
 //-----------------------------------------------------------------------------
-/// Class allows the window creation for displaying plot bitmap with the help of FLTK library
-/** NOTE!!! All frames are saved in memory. So animation with many frames require a lot memory and CPU time (for example, for mouse rotation).*/
-class mglCanvasFL : public mglCanvasWnd
-{
-public:
-using mglCanvasWnd::Window;
-	Fl_Window *Wnd;		///< Pointer to window
-	Fl_MGLView *mgl;	///< Pointer to MGL widget with buttons
-
-	mglCanvasFL();
-	~mglCanvasFL();
-
-	/// Create a window for plotting. Now implemeted only for GLUT.
-	void Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p), const char *title,
-						void *par=NULL, void (*reload)(void *p)=NULL, bool maximize=false);
-	/// Switch on/off transparency (do not overwrite switches in user drawing function)
-	void ToggleAlpha();
-	/// Switch on/off lighting (do not overwrite switches in user drawing function)
-	void ToggleLight();
-	void ToggleRotate();	///< Switch on/off rotation by mouse
-	void ToggleZoom();		///< Switch on/off zooming by mouse
-	void ToggleNo();		///< Switch off all zooming and rotation
-	void Update();			///< Update picture by calling user drawing function
-	void Adjust();			///< Adjust size of bitmap to window size
-	void GotoFrame(int d);	///< Show arbitrary frame (use relative step)
-	void Animation();	///< Run animation (I'm too lasy to change it)
-};
-//-----------------------------------------------------------------------------
 void mgl_ask_fltk(const wchar_t *quest, wchar_t *res);
 void mgl_makemenu_fltk(Fl_Menu_ *m, Fl_MGLView *w);
 //-----------------------------------------------------------------------------
 #else
 #error "Please enable FLTK support"
-#endif
 #endif
 #endif

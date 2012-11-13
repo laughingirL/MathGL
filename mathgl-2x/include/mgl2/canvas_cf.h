@@ -360,6 +360,13 @@ void mgl_mpi_recv_(uintptr_t *gr, int *id);
 
 //-----------------------------------------------------------------------------
 void mgl_draw_thr(void *);
+
+/// Create window of specified kind
+HMGL mgl_create_window(int kind, int (*draw)(HMGL gr, void *p), const char *title, void *par, void (*load)(void *p));
+/// Run event handling for specified kind of widgets
+int mgl_wnd_run(int kind);
+
+
 /// Creates Qt window for plotting
 HMGL mgl_create_graph_qt(int (*draw)(HMGL gr, void *p), const char *title, void *par, void (*load)(void *p));
 uintptr_t mgl_create_graph_qt_(const char *title, int);

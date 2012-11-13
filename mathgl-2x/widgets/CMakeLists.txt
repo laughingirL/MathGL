@@ -1,5 +1,5 @@
-set(mgl_wnd_hdr ../include/mgl2/window.h ../include/mgl2/canvas_wnd.h)
-set(mgl_wnd_src window.cpp)
+set(mgl_wnd_hdr )
+set(mgl_wnd_src )
 #set(mgl_wnd_src )
 
 if(MGL_HAVE_GSL)
@@ -9,31 +9,33 @@ endif(MGL_HAVE_GSL)
 
 if(MGL_HAVE_FLTK)
 	include_directories(${FLTK_INCLUDE_DIR})
-	set(mgl_wnd_src ${mgl_wnd_src} fltk.cpp)
-	set(mgl_wnd_hdr ${mgl_wnd_hdr} ../include/mgl2/fltk.h)
-endif(MGL_HAVE_FLTK)
+	add_library(mgl-fltk SHARED fltk.cpp ../include/mgl2/fltk.h)
+	add_library(mgl-fltk-static STATIC fltk.cpp ../include/mgl2/fltk.h)
+	set_target_properties(mgl-fltk-static PROPERTIES OUTPUT_NAME "mgl-fltk")
+	set_target_properties(mgl-fltk PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+	set_target_properties(mgl-fltk-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+	set_target_properties(mgl-fltk PROPERTIES SOVERSION 7.0.0)
+	target_link_libraries(mgl-fltk mgl)
+	target_link_libraries(mgl-fltk ${FLTK_LIBRARIES})
 
-if(MGL_HAVE_ZLIB)
-	include_directories(${ZLIB_INCLUDE_DIR})
-endif(MGL_HAVE_ZLIB)
+	install(
+		TARGETS mgl-fltk mgl-fltk-static
+		RUNTIME DESTINATION bin
+		ARCHIVE DESTINATION lib
+		LIBRARY DESTINATION lib
+	)
+endif(MGL_HAVE_FLTK)
 
 if(MGL_HAVE_GLUT)
 	include_directories(${GLUT_INCLUDE_DIR})
-	set(mgl_glut_src glut.cpp window.cpp)
-	set(mgl_glut_hdr ../include/mgl2/glut.h ../include/mgl2/window.h)
-
-	add_library(mgl-glut SHARED ${mgl_glut_src} ${mgl_glut_hdr})
-	add_library(mgl-glut-static STATIC ${mgl_glut_src} ${mgl_glut_hdr})
+	add_library(mgl-glut SHARED glut.cpp ../include/mgl2/glut.h)
+	add_library(mgl-glut-static STATIC glut.cpp ../include/mgl2/glut.h)
 	set_target_properties(mgl-glut-static PROPERTIES OUTPUT_NAME "mgl-glut")
 	set_target_properties(mgl-glut PROPERTIES CLEAN_DIRECT_OUTPUT 1)
 	set_target_properties(mgl-glut-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
 	set_target_properties(mgl-glut PROPERTIES SOVERSION 7.0.0)
 	target_link_libraries(mgl-glut mgl)
 	target_link_libraries(mgl-glut ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES})
-
-	if(MGL_HAVE_PTHREAD)
-		target_link_libraries(mgl-glut ${CMAKE_THREAD_LIBS_INIT})
-	endif(MGL_HAVE_PTHREAD)
 
 	install(
 		TARGETS mgl-glut mgl-glut-static
@@ -45,50 +47,40 @@ endif(MGL_HAVE_GLUT)
 
 if(MGL_HAVE_WX)
 	include(${wxWidgets_USE_FILE})
-	set(mgl_wnd_src ${mgl_wnd_src} wx.cpp)
-	set(mgl_wnd_hdr ${mgl_wnd_hdr} ../include/mgl2/wx.h)
+	add_library(mgl-wx SHARED wx.cpp ../include/mgl2/wx.h)
+	add_library(mgl-wx-static STATIC wx.cpp ../include/mgl2/wx.h)
+	set_target_properties(mgl-wx-static PROPERTIES OUTPUT_NAME "mgl-wx")
+	set_target_properties(mgl-wx PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+	set_target_properties(mgl-wx-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+	set_target_properties(mgl-wx PROPERTIES SOVERSION 7.0.0)
+	target_link_libraries(mgl-wx mgl)
+	target_link_libraries(mgl-wx ${wxWidgets_LIBRARIES})
+
+	install(
+		TARGETS mgl-wx mgl-wx-static
+		RUNTIME DESTINATION bin
+		ARCHIVE DESTINATION lib
+		LIBRARY DESTINATION lib
+	)
 endif(MGL_HAVE_WX)
 
 if(MGL_HAVE_QT)
 	include(${QT_USE_FILE})
-#	qt_wrap_cpp(mgl-wnd MGL_MOC_FILES ../include/mgl2/qt.h)
 	qt4_wrap_cpp(MGL_MOC_FILES ../include/mgl2/qt.h)
-	set(mgl_wnd_src ${mgl_wnd_src} qt.cpp ${MGL_MOC_FILES})
-	set(mgl_wnd_hdr ${mgl_wnd_hdr} ../include/mgl2/qt.h)
+	add_library(mgl-qt SHARED qt.cpp ${MGL_MOC_FILES} ../include/mgl2/qt.h)
+	add_library(mgl-qt-static STATIC qt.cpp ${MGL_MOC_FILES} ../include/mgl2/qt.h)
+	set_target_properties(mgl-qt-static PROPERTIES OUTPUT_NAME "mgl-qt")
+	set_target_properties(mgl-qt PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+	set_target_properties(mgl-qt-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+	set_target_properties(mgl-qt PROPERTIES SOVERSION 7.0.0)
+	target_link_libraries(mgl-qt mgl)
+	target_link_libraries(mgl-qt ${QT_LIBRARIES})
+
+	install(
+		TARGETS mgl-qt mgl-qt-static
+		RUNTIME DESTINATION bin
+		ARCHIVE DESTINATION lib
+		LIBRARY DESTINATION lib
+	)
+
 endif(MGL_HAVE_QT)
-
-add_library(mgl-wnd SHARED ${mgl_wnd_src} ${mgl_wnd_hdr})
-add_library(mgl-wnd-static STATIC ${mgl_wnd_src} ${mgl_wnd_hdr})
-set_target_properties(mgl-wnd-static PROPERTIES OUTPUT_NAME "mgl-wnd")
-set_target_properties(mgl-wnd PROPERTIES CLEAN_DIRECT_OUTPUT 1)
-set_target_properties(mgl-wnd-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
-set_target_properties(mgl-wnd PROPERTIES SOVERSION 7.0.0)
-target_link_libraries(mgl-wnd mgl)
-
-
-if(MGL_HAVE_PTHREAD)
-	target_link_libraries(mgl-wnd ${CMAKE_THREAD_LIBS_INIT})
-endif(MGL_HAVE_PTHREAD)
-
-if(MGL_HAVE_FLTK)
-	target_link_libraries(mgl-wnd ${FLTK_LIBRARIES})
-endif(MGL_HAVE_FLTK)
-
-if(MGL_HAVE_WX)
-	target_link_libraries(mgl-wnd ${wxWidgets_LIBRARIES})
-endif(MGL_HAVE_WX)
-
-if(MGL_HAVE_QT)
-	target_link_libraries(mgl-wnd ${QT_LIBRARIES})
-endif(MGL_HAVE_QT)
-
-if(MGL_HAVE_ZLIB)
-	target_link_libraries(mgl-wnd ${ZLIB_LIBRARIES} )
-endif(MGL_HAVE_ZLIB)
-
-install(
-	TARGETS mgl-wnd mgl-wnd-static
-	RUNTIME DESTINATION bin
-	ARCHIVE DESTINATION lib
-	LIBRARY DESTINATION lib
-)

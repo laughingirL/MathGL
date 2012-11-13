@@ -20,11 +20,12 @@
 #ifndef MGL_WX_H
 #define MGL_WX_H
 //-----------------------------------------------------------------------------
+#if MGL_HAVE_WX
 #include <wx/window.h>
 #include <wx/image.h>
 #include <wx/timer.h>
 #include <wx/bitmap.h>
-#include <mgl2/canvas_wnd.h>
+#include <mgl2/window.h>
 //-----------------------------------------------------------------------------
 /// Class is Wx widget which display MathGL graphics
 class wxMathGL : public wxWindow
@@ -133,45 +134,5 @@ private:
 	unsigned char *grBuf;
 };
 //-----------------------------------------------------------------------------
-#include <wx/scrolwin.h>
-class wxSpinCtrl;
-class wxMenu;
-int mglWxRun();
-//-----------------------------------------------------------------------------
-class mglCanvasWX : public mglCanvasWnd
-{
-friend class wxMathGL;
-public:
-	int sshow;			///< Current state of animation switch (toggle button)
-	wxMathGL *WMGL;		///< Control which draw graphics
-	wxWindow *Wnd;		///< Pointer to window
-
-	mglCanvasWX();
-	virtual ~mglCanvasWX();
-
-	/// Create a window for plotting. Now implemeted only for GLUT.
-	void Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p), const char *title,
-				void *par=NULL, void (*reload)(void *p)=NULL, bool maximize=false);
-	/// Switch on/off transparency (do not overwrite switches in user drawing function)
-	void ToggleAlpha();
-	/// Switch on/off lighting (do not overwrite switches in user drawing function)
-	void ToggleLight();
-	void ToggleRotate();	///< Switch on/off rotation by mouse
-	void ToggleZoom();		///< Switch on/off zooming by mouse
-	void ToggleNo();		///< Switch off all zooming and rotation
-	void Update();			///< Update picture by calling user drawing function
-	void Adjust();			///< Adjust size of bitmap to window size
-	void GotoFrame(int d);	///< Show arbitrary frame (use relative step)
-	void Animation();	///< Run animation (I'm too lasy to change it)
-	
-protected:
-	wxScrolledWindow *scroll;	///< Scrolling area
-	wxMenu *popup;			///< Popup menu
-	wxSpinCtrl *tet, *phi;	///< Spin box for angles
-//	QAction *anim;
-
-	void MakeMenu();		///< Create menu, toolbar and popup menu
-};
-//-----------------------------------------------------------------------------
 #endif
-//-----------------------------------------------------------------------------
+#endif

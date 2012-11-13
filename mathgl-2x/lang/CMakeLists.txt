@@ -34,7 +34,7 @@ foreach(def_i ${DEF_LIST})
 		set(MGL_DEF -D${def_i})
 	endif(MGL_DEF)
 endforeach()
-SET(dep_libs mgl-wnd mgl)
+SET(dep_libs mgl)
 if(MGL_HAVE_PYTHON)
 	configure_file(${MathGL_SOURCE_DIR}/lang/setup.py.in ${MathGL_BINARY_DIR}/lang/setup.py)
  	add_custom_command(OUTPUT _mathgl.so mathgl.py
@@ -101,7 +101,7 @@ message(STATUS "${oct_prog} ${oct_host} ${oct_api}")
 		COMMAND ${oct_mk}
 		-L${MGL_LINK_DIR}
 		-L${MGL_WND_LINK_DIR}
-		-lmgl-wnd -lmgl
+		-lmgl
 		-o ${pkg_name}/inst/${oct_arch}/mathgl.oct mgl_octave.o
 		DEPENDS ${dep_libs} mgl_octave.o
 	)

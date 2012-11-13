@@ -19,10 +19,8 @@
  ***************************************************************************/
 #ifndef _MGL_QT_H_
 #define _MGL_QT_H_
-
-#ifdef __cplusplus
 //-----------------------------------------------------------------------------
-#include "mgl2/canvas_wnd.h"
+#include <mgl2/window.h>
 #include <string>
 #if MGL_HAVE_QT
 #include <QtGui/QWidget>
@@ -191,38 +189,6 @@ private:
 	uchar *grBuf;
 };
 //-----------------------------------------------------------------------------
-/// Base class for windows containing MathGL graphics
-class mglCanvasQT : public mglCanvasWnd
-{
-public:
-using mglCanvasWnd::Window;
-	int sshow;		///< Current state of animation switch (toggle button)
-	QMathGL *QMGL;	///< Control which draw graphics
-	QMainWindow *Wnd;	///< Pointer to window
-
-	mglCanvasQT();
-
-	/// Create a window for plotting. Now implemeted only for GLUT.
-	void Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p),const char *title,
-						void *par=NULL, void (*reload)(void *p)=NULL, bool maximize=false);
-	/// Switch on/off transparency (do not overwrite switches in user drawing function)
-	void ToggleAlpha();
-	/// Switch on/off lighting (do not overwrite switches in user drawing function)
-	void ToggleLight();
-	void ToggleRotate();///< Switch on/off rotation by mouse
-	void ToggleZoom();	///< Switch on/off zooming by mouse
-	void ToggleNo();	///< Switch off all zooming and rotation
-	void Update();		///< Update picture by calling user drawing function
-	void Adjust();		///< Adjust size of bitmap to window size
-	void GotoFrame(int d);	///< Show arbitrary frame (use relative step)
-	void Animation();		///< Run slideshow (animation) of frames
-
-protected:
-	QScrollArea *scroll;	///< Scrolling area
-	QMenu *popup;			///< Popup menu
-	QSpinBox *tet, *phi;	///< Spin box for angles
-};
-//-----------------------------------------------------------------------------
 /// Class for drawing the MGL script
 struct mglDrawScript : public mglDraw
 {
@@ -244,6 +210,5 @@ void mgl_ask_qt(const wchar_t *quest, wchar_t *res);
 //-----------------------------------------------------------------------------
 #else
 #error "Please enable Qt support"
-#endif
 #endif
 #endif

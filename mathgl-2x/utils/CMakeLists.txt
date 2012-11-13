@@ -35,7 +35,7 @@ install(
 
 if(MGL_HAVE_FLTK OR MGL_HAVE_QT)
 add_executable(mglview mglview.cpp)
-target_link_libraries(mglview mgl-wnd)
+target_link_libraries(mglview mgl-qt)	# TODO !!!
 install(
 	TARGETS mglview
 	RUNTIME DESTINATION bin

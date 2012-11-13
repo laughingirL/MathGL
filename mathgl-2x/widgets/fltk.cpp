@@ -33,6 +33,7 @@
 #endif
 #endif
 //-----------------------------------------------------------------------------
+#include "mgl2/canvas_wnd.h"
 #include "mgl2/fltk.h"
 //-----------------------------------------------------------------------------
 #include "xpm/alpha_on.xpm"
@@ -63,6 +64,34 @@ Fl_Pixmap xpm_z1(zoom_in_xpm), xpm_z2(zoom_on_xpm);
 Fl_Pixmap xpm_s1(show_sl_xpm), xpm_s2(show_on_xpm);
 Fl_Pixmap xpm_r1(rotate_xpm), xpm_r2(rotate_on_xpm);
 Fl_Pixmap xpm_wire(wire_xpm);
+//-----------------------------------------------------------------------------
+/// Class allows the window creation for displaying plot bitmap with the help of FLTK library
+/** NOTE!!! All frames are saved in memory. So animation with many frames require a lot memory and CPU time (for example, for mouse rotation).*/
+class mglCanvasFL : public mglCanvasWnd
+{
+public:
+using mglCanvasWnd::Window;
+	Fl_Window *Wnd;		///< Pointer to window
+	Fl_MGLView *mgl;	///< Pointer to MGL widget with buttons
+
+	mglCanvasFL();
+	~mglCanvasFL();
+
+	/// Create a window for plotting. Now implemeted only for GLUT.
+	void Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p), const char *title,
+						void *par=NULL, void (*reload)(void *p)=NULL, bool maximize=false);
+	/// Switch on/off transparency (do not overwrite switches in user drawing function)
+	void ToggleAlpha();
+	/// Switch on/off lighting (do not overwrite switches in user drawing function)
+	void ToggleLight();
+	void ToggleRotate();	///< Switch on/off rotation by mouse
+	void ToggleZoom();		///< Switch on/off zooming by mouse
+	void ToggleNo();		///< Switch off all zooming and rotation
+	void Update();			///< Update picture by calling user drawing function
+	void Adjust();			///< Adjust size of bitmap to window size
+	void GotoFrame(int d);	///< Show arbitrary frame (use relative step)
+	void Animation();	///< Run animation (I'm too lasy to change it)
+};
 //-----------------------------------------------------------------------------
 void mgl_ask_fltk(const wchar_t *quest, wchar_t *res)
 {
@@ -717,4 +746,25 @@ HMGL mgl_create_graph_fltk(int (*draw)(HMGL gr, void *p), const char *title, voi
 	return g;
 }
 int mgl_fltk_run()		{	return Fl::run();	}
+//-----------------------------------------------------------------------------
+uintptr_t mgl_create_graph_fltk_(const char *title, int l)
+{
+	char *s = new char[l+1];	memcpy(s,title,l);	s[l]=0;
+	uintptr_t t = uintptr_t(mgl_create_graph_fltk(0,s,0,0));
+	delete []s;	return t;
+}
+int mgl_fltk_run_()	{	return mgl_fltk_run();	}
+//-----------------------------------------------------------------------------
+void *mgl_fltk_tmp(void *)
+{	mgl_fltk_run();	return 0;	}
+//-----------------------------------------------------------------------------
+int mgl_fltk_thr()		// NOTE: Qt couldn't be running in non-primary thread
+{
+#if MGL_HAVE_PTHREAD
+	static pthread_t thr;
+	pthread_create(&thr,0,mgl_fltk_tmp,0);
+	pthread_detach(thr);
+#endif
+	return 0;	// stupid, but I don't want keep result returned by Fl::Run()
+}
 //-----------------------------------------------------------------------------
