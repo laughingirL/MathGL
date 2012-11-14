@@ -17,9 +17,9 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include "mgl2/window.h"
+#include "mgl2/fltk.h"
 #if defined(WIN32) || defined(_MSC_VER) || defined(__BORLANDC__)
-#include <windows.h>
+#include <window.h>
 #endif
 //-----------------------------------------------------------------------------
 int test_wnd(mglGraph *gr);
@@ -37,7 +37,7 @@ void *mgl_fltk_tmp(void *)	{	mgl_fltk_run();	return 0;	}
 int main(int argc,char **argv)
 {
 #ifdef PTHREAD_SAMPLE
-	mglWindow gr("test");
+	mglFLTK gr("test");
 	gr.RunThr();
 	for(int i=0;i<10;i++)	// do calculation
 	{
@@ -55,18 +55,18 @@ int main(int argc,char **argv)
 	}
 	return 0;	// finish calculations and close the window
 #else
-	mglWindow *gr;
+	mglFLTK *gr;
 	char key = 0;
 	if(argc>1)	key = argv[1][0]!='-' ? argv[1][0]:argv[1][1];
 	else	printf("You may specify argument '1', '2', '3' or 'd' for viewing examples of 1d, 2d, 3d or dual plotting\n");
 	switch(key)
 	{
-		case '1':	gr = new mglWindow(sample_1,"1D plots",0);	break;
-		case '2':	gr = new mglWindow(sample_2,"2D plots",0);	break;
-		case '3':	gr = new mglWindow(sample_3,"3D plots",0);	break;
-		case 'd':	gr = new mglWindow(sample_d,"Dual plots",0);	break;
-		case 't':	gr = new mglWindow(test_wnd,"Testing",0);	break;
-		default:	gr = new mglWindow(sample,"Drop and waves",0);	break;
+		case '1':	gr = new mglFLTK(sample_1,"1D plots");	break;
+		case '2':	gr = new mglFLTK(sample_2,"2D plots");	break;
+		case '3':	gr = new mglFLTK(sample_3,"3D plots");	break;
+		case 'd':	gr = new mglFLTK(sample_d,"Dual plots");	break;
+		case 't':	gr = new mglFLTK(test_wnd,"Testing");	break;
+		default:	gr = new mglFLTK(sample,"Drop and waves");	break;
 	}
 	gr->Run();	return 0;
 #endif

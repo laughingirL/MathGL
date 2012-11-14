@@ -21,8 +21,41 @@
 #ifndef _MGL_FLTK_H_
 #define _MGL_FLTK_H_
 
-#include <mgl2/window.h>
+#include <mgl2/base.h>
 #if MGL_HAVE_FLTK
+//-----------------------------------------------------------------------------
+#ifdef __cplusplus
+extern "C" {
+#endif
+/// Creates FLTK window for plotting
+HMGL mgl_create_graph_fltk(int (*draw)(HMGL gr, void *p), const char *title, void *par, void (*load)(void *p));
+uintptr_t mgl_create_graph_fltk_(const char *title, int);
+/// Run main FLTK loop for event handling.
+int mgl_fltk_run();
+int mgl_fltk_run_();
+/// Run main FLTK loop for event handling in separate thread.
+int mgl_fltk_thr();
+#ifdef __cplusplus
+}
+//-----------------------------------------------------------------------------
+#include <mgl2/window.h>
+//-----------------------------------------------------------------------------
+/// Wrapper class for windows displaying graphics
+class mglFLTK : public mglWindow
+{
+public:
+	mglFLTK(const char *title="MathGL") : mglWindow()
+	{	gr = mgl_create_graph_fltk(0,title,0,0);	}
+	mglFLTK(int (*draw)(HMGL gr, void *p), const char *title="MathGL", void *par=NULL, void (*load)(void *p)=0) : mglWindow()
+	{	gr = mgl_create_graph_fltk(draw,title,par,load);	}
+	mglFLTK(int (*draw)(mglGraph *gr), const char *title="MathGL") : mglWindow()
+	{	gr = mgl_create_graph_fltk(mgl_draw_graph,title,(void*)draw,0);	}
+	mglFLTK(mglDraw *draw, const char *title="MathGL") : mglWindow()
+	{	gr = mgl_create_graph_fltk(mgl_draw_class,title,draw,mgl_reload_class);
+		mgl_set_click_func(gr, mgl_click_class);	}
+	int Run()	{	return mgl_fltk_run();	}	///< Run main loop for event handling
+
+};
 //-----------------------------------------------------------------------------
 #ifdef __MWERKS__
 # define FL_DLL
@@ -140,6 +173,7 @@ protected:
 void mgl_ask_fltk(const wchar_t *quest, wchar_t *res);
 void mgl_makemenu_fltk(Fl_Menu_ *m, Fl_MGLView *w);
 //-----------------------------------------------------------------------------
+#endif
 #else
 #error "Please enable FLTK support"
 #endif

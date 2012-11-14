@@ -36,16 +36,52 @@
 
 #include "mgl2/glut.h"
 
-mglCanvasGLUT *_mgl_glwnd;
 void _mgl_key_up(unsigned char ch,int ,int );
 //-----------------------------------------------------------------------------
-int mgl_draw_glut(HMGL gr, void *p)	// so stupid way to save mglDraw class inheritance :(
+/// Class allows the window creation under OpenGL with the help of GLUT library
+class mglCanvasGLUT : public mglCanvasGL
 {
-	mglGraph g(gr);	mglGLUT *w = (mglGLUT *)p;
-	return (w && w->dr) ? w->dr->Draw(&g) : 0;
-}
-void mgl_reload_glut(void *p)	// so stupid way to save mglDraw class inheritance :(
-	{	mglGLUT *w = (mglGLUT *)p;	if(w && w->dr)	w->dr->Reload();}
+friend void _mgl_display();
+friend void _mgl_key_up(unsigned char ch,int ,int );
+friend void _mgl_timer(int);
+public:
+	mreal Delay;	///< Delay for animation in seconds
+	bool AutoClf;		///< Clear canvas between drawing
+
+	mglCanvasGLUT();
+	mglCanvasGLUT(int (*draw)(mglGraph *gr, void *p), const char *title, void *par=NULL,
+				void (*reload)(int next, void *p)=NULL, bool maximize=false);
+	virtual ~mglCanvasGLUT();
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ��������� ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	/// Create a window for plotting. Now implemeted only for GLUT.
+	void Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p),
+						const char *title,void *par=NULL,
+			   			void (*reload)(void *p)=NULL, bool maximize=false);
+	void Window(int argc, char **argv, int (*draw)(mglGraph *gr),
+				const char *title, bool maximize=false)
+	{	Window(argc,argv,mgl_draw_graph,title,(void*)draw,0,maximize);	}
+	/// Create a window for plotting based on class mglDraw.
+	void Window(int argc, char **argv, const char *title, mglDraw *draw, bool maximize=false)
+	{	Window(argc, argv, mgl_draw_class, title, draw, mgl_reload_class, maximize);	}
+	/// Switch on/off transparency (do not overwrite switches in user drawing function)
+	void ToggleAlpha()	{	_mgl_key_up('r',0,0);	}
+	/// Switch on/off lighting (do not overwrite switches in user drawing function)
+	void ToggleLight()	{	_mgl_key_up('f',0,0);	}
+	void ToggleNo()		{	_mgl_key_up('n',0,0);	}	///< Switch off all zooming and rotation
+	void Update()		{	_mgl_key_up(' ',0,0);	}	///< Update picture by calling user drawing function
+	void ReLoad(bool o)	{	_mgl_key_up(o?']':'[',0,0);	}	///< Reload user data and update picture
+	void NextFrame()	{	_mgl_key_up('.',0,0);	}	///< Show next frame (if one)
+	void PrevFrame()	{	_mgl_key_up(',',0,0);	}	///< Show previous frame (if one)
+	void Animation()	{	_mgl_key_up('m',0,0);	}	///< Run slideshow (animation) of frames
+private:
+	void (*LoadFunc)(void *par);
+	void *FuncPar;		///< Parameters for drawing function mglCanvas::DrawFunc.
+	/// Drawing function for window procedure. It should return the number of frames.
+	int (*DrawFunc)(mglBase *gr, void *par);
+	int NumFig;		///< Number of figures in the list. If 0 then no list and mglCanvas::DrawFunc will called for each drawing.
+	int curr_fig;	///< Current figure in the list.
+	int tt;			///< Temporal variable
+} *_mgl_glwnd;
 //-----------------------------------------------------------------------------
 void _mgl_timer(int)
 {
@@ -197,22 +233,4 @@ HMGL mgl_create_graph_glut(int (*draw)(HMGL gr, void *p), const char *title, voi
 }
 //-----------------------------------------------------------------------------
 mglCanvasGLUT::mglCanvasGLUT() : mglCanvasGL()	{}
-//-----------------------------------------------------------------------------
-#if MGL_HAVE_FLTK
-HMGL mgl_create_graph_fltk(int (*)(HMGL gr, void *p), const char *, void *, void (*)(void *p))
-{	return NULL;	}
-int mgl_fltk_run(){return 0;}
-#endif
-//-----------------------------------------------------------------------------
-#if MGL_HAVE_QT
-HMGL mgl_create_graph_qt(int (*)(HMGL gr, void *p), const char *, void *, void (*)(void *p))
-{	return NULL;	}
-int mgl_qt_run(){return 0;}
-#endif
-//-----------------------------------------------------------------------------
-#if MGL_HAVE_WX
-HMGL mgl_create_graph_wx(int (*)(HMGL gr, void *p), const char *, void *, void (*)(void *p))
-{	return NULL;	}
-int mgl_wx_run(){return 0;}
-#endif
 //-----------------------------------------------------------------------------

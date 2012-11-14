@@ -19,10 +19,41 @@
  ***************************************************************************/
 #ifndef _MGL_QT_H_
 #define _MGL_QT_H_
+#include <mgl2/base.h>
+#if MGL_HAVE_QT
+//-----------------------------------------------------------------------------
+#ifdef __cplusplus
+extern "C" {
+#endif
+/// Creates Qt window for plotting
+HMGL mgl_create_graph_qt(int (*draw)(HMGL gr, void *p), const char *title, void *par, void (*load)(void *p));
+uintptr_t mgl_create_graph_qt_(const char *title, int);
+/// Run main Qt loop for event handling.
+int mgl_qt_run();
+int mgl_qt_run_();
+#ifdef __cplusplus
+}
 //-----------------------------------------------------------------------------
 #include <mgl2/window.h>
+//-----------------------------------------------------------------------------
+/// Wrapper class for windows displaying graphics
+class mglQT : public mglWindow
+{
+public:
+	mglQT(const char *title="MathGL") : mglWindow()
+	{	gr = mgl_create_graph_qt(0,title,0,0);	}
+	mglQT(int (*draw)(HMGL gr, void *p), const char *title="MathGL", void *par=NULL, void (*load)(void *p)=0) : mglWindow()
+	{	gr = mgl_create_graph_qt(draw,title,par,load);	}
+	mglQT(int (*draw)(mglGraph *gr), const char *title="MathGL") : mglWindow()
+	{	gr = mgl_create_graph_qt(mgl_draw_graph,title,(void*)draw,0);	}
+	mglQT(mglDraw *draw, const char *title="MathGL") : mglWindow()
+	{	gr = mgl_create_graph_qt(mgl_draw_class,title,draw,mgl_reload_class);
+		mgl_set_click_func(gr, mgl_click_class);	}
+	int Run()	{	return mgl_qt_run();	}	///< Run main loop for event handling
+
+};
+//-----------------------------------------------------------------------------
 #include <string>
-#if MGL_HAVE_QT
 #include <QtGui/QWidget>
 #include <QtGui/QPixmap>
 //-----------------------------------------------------------------------------
@@ -208,6 +239,7 @@ QMenu *mglMakeMenu(QMainWindow* Wnd, QMathGL* QMGL, QSpinBox*& tet, QSpinBox*& p
 //-----------------------------------------------------------------------------
 void mgl_ask_qt(const wchar_t *quest, wchar_t *res);
 //-----------------------------------------------------------------------------
+#endif
 #else
 #error "Please enable Qt support"
 #endif

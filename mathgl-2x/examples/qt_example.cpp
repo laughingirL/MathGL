@@ -17,9 +17,9 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include "mgl2/window.h"
+#include "mgl2/qt.h"
 #if defined(WIN32) || defined(_MSC_VER) || defined(__BORLANDC__)
-#include <windows.h>
+#include <window.h>
 #endif
 //-----------------------------------------------------------------------------
 int test_wnd(mglGraph *gr);
@@ -69,22 +69,22 @@ int Foo::Draw(mglGraph *gr)
 int main(int argc,char **argv)
 {
 #ifdef PTHREAD_SAMPLE
-	mglWindow gr(&foo,"MathGL examples");
+	mglQT gr(&foo,"MathGL examples");
 	foo.Gr = &gr;   foo.Run();
 	return gr.Run();
 #else
-	mglWindow *gr;
+	mglQT *gr;
 	char key = 0;
 	if(argc>1)	key = argv[1][0]!='-' ? argv[1][0]:argv[1][1];
 	else	printf("You may specify argument '1', '2', '3' or 'd' for viewing examples of 1d, 2d, 3d or dual plotting\n");
 	switch(key)
 	{
-	case '1':	gr = new mglWindow(sample_1,"1D plots",1);	break;
-	case '2':	gr = new mglWindow(sample_2,"2D plots",1);	break;
-	case '3':	gr = new mglWindow(sample_3,"3D plots",1);	break;
-	case 'd':	gr = new mglWindow(sample_d,"Dual plots",1);	break;
-	case 't':	gr = new mglWindow(test_wnd,"Testing",1);	break;
-	default:	gr = new mglWindow(sample,"Drop and waves",1);	break;
+	case '1':	gr = new mglQT(sample_1,"1D plots");	break;
+	case '2':	gr = new mglQT(sample_2,"2D plots");	break;
+	case '3':	gr = new mglQT(sample_3,"3D plots");	break;
+	case 'd':	gr = new mglQT(sample_d,"Dual plots");	break;
+	case 't':	gr = new mglQT(test_wnd,"Testing");	break;
+	default: 	gr = new mglQT(sample,"Drop and waves");	break;
 	}
 	gr->Run();	return 0;
 #endif

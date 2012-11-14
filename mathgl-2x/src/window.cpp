@@ -177,68 +177,10 @@ void mgl_get_last_mouse_pos_(uintptr_t *gr, mreal *x, mreal *y, mreal *z)
 	*x=p.x;	*y=p.y;	*z=p.z;	}
 //-----------------------------------------------------------------------------
 //
-//		Dinamically linked widgets
-//
-//-----------------------------------------------------------------------------
-#include <ltdl.h>
-typedef HMGL (*wnd_func)(int (*)(HMGL gr, void *p), const char *, void *, void (*)(void *p));
-lt_dlhandle mgl_dl=0;
-HMGL mgl_create_window(int kind, int (*draw)(HMGL gr, void *p), const char *title, void *par, void (*load)(void *p))
-{
-#if MGL_HAVE_LTDL
-	wnd_func f=0;
-	switch(kind)
-	{
-	case 0:	// FLTK
-		mgl_dl = lt_dlopen("libmgl-fltk");
-		if(mgl_dl)	f = (wnd_func)lt_dlsym(mgl_dl,"mgl_create_graph_fltk");
-		if(mgl_dl && f)	return f(draw,title,par,load);
-		else 	mglGlobalMess += "FLTK support was disabled. Please, enable it and rebuild MathGL.\n";
-		break;
-	case 1:	// Qt
-		mgl_dl = lt_dlopen("libmgl-qt");
-		if(mgl_dl)	f = (wnd_func)lt_dlsym(mgl_dl,"mgl_create_graph_qt");
-		if(mgl_dl && f)	return f(draw,title,par,load);
-		else 	mglGlobalMess += "Qt support was disabled. Please, enable it and rebuild MathGL.\n";
-		break;
-	case 2:	// WX
-		mgl_dl = lt_dlopen("libmgl-wx");
-		if(mgl_dl)	f = (wnd_func)lt_dlsym(mgl_dl,"mgl_create_graph_wx");
-		if(mgl_dl && f)	return f(draw,title,par,load);
-		else 	mglGlobalMess += "WX support was disabled. Please, enable it and rebuild MathGL.\n";
-		break;
-	}
-#endif
-	return 0;
-}
-typedef int (*run_func)();
-int mgl_wnd_run(int kind)
-{
-	if(!mgl_dl)
-	{	mglGlobalMess += "No library was loaded.\n";	return 0;	}
-#if MGL_HAVE_LTDL
-	run_func f=0;
-	switch(kind)
-	{
-	case 0:	// FLTK
-		f = (run_func)lt_dlsym(mgl_dl,"mgl_fltk_run");
-		if(f)	return f();		break;
-	case 1:	// Qt
-		f = (run_func)lt_dlsym(mgl_dl,"mgl_qt_run");
-		if(f)	return f();		break;
-	case 2:	// WX
-		f = (run_func)lt_dlsym(mgl_dl,"mgl_wx_run");
-		if(f)	return f();		break;
-	}
-#endif
-	return 0;
-}
-//-----------------------------------------------------------------------------
-//
 //	mglDraw class handling
 //
 //-----------------------------------------------------------------------------
-int mgl_draw_class(HMGL gr, void *p)	// so stupid way to save mglDraw class inheritance :(
+/*int mgl_draw_class(HMGL gr, void *p)	// so stupid way to save mglDraw class inheritance :(
 {
 	mglGraph g(gr);	mglWindow *w = (mglWindow *)p;
 	return (w && w->dr) ? w->dr->Draw(&g) : 0;
@@ -246,7 +188,13 @@ int mgl_draw_class(HMGL gr, void *p)	// so stupid way to save mglDraw class inhe
 void mgl_reload_class(void *p)	// so stupid way to save mglDraw class inheritance :(
 {	mglWindow *w = (mglWindow *)p;	if(w && w->dr)	w->dr->Reload();}
 void mgl_click_class(void *p)	// so stupid way to save mglDraw class inheritance :(
-{	mglWindow *w = (mglWindow *)p;	if(w && w->dr)	w->dr->Click();	}
+{	mglWindow *w = (mglWindow *)p;	if(w && w->dr)	w->dr->Click();	}*/
+int mgl_draw_class(HMGL gr, void *p)
+{	mglGraph g(gr);	mglDraw *dr = (mglDraw *)p;	return dr->Draw(&g);	}
+void mgl_reload_class(void *p)
+{	mglDraw *dr = (mglDraw *)p;	dr->Reload();	}
+void mgl_click_class(void *p)
+{	mglDraw *dr = (mglDraw *)p;	dr->Click();		}
 //-----------------------------------------------------------------------------
 typedef int (*draw_func)(mglGraph *gr);
 int mgl_draw_graph(HMGL gr, void *p)

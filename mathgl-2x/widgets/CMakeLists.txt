@@ -1,11 +1,3 @@
-set(mgl_wnd_hdr )
-set(mgl_wnd_src )
-#set(mgl_wnd_src )
-
-if(MGL_HAVE_GSL)
-#	target_link_libraries(mgl ${GSL_LIB} ${GSL_CBLAS_LIB} )
-	include_directories(${GSL_INCLUDE_DIR})
-endif(MGL_HAVE_GSL)
 
 if(MGL_HAVE_FLTK)
 	include_directories(${FLTK_INCLUDE_DIR})
@@ -82,5 +74,4 @@ if(MGL_HAVE_QT)
 		ARCHIVE DESTINATION lib
 		LIBRARY DESTINATION lib
 	)
-
 endif(MGL_HAVE_QT)

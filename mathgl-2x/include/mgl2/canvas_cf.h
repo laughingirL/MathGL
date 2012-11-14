@@ -360,35 +360,8 @@ void mgl_mpi_recv_(uintptr_t *gr, int *id);
 
 //-----------------------------------------------------------------------------
 void mgl_draw_thr(void *);
-
-/// Create window of specified kind
-HMGL mgl_create_window(int kind, int (*draw)(HMGL gr, void *p), const char *title, void *par, void (*load)(void *p));
-/// Run event handling for specified kind of widgets
-int mgl_wnd_run(int kind);
-
-
-/// Creates Qt window for plotting
-HMGL mgl_create_graph_qt(int (*draw)(HMGL gr, void *p), const char *title, void *par, void (*load)(void *p));
-uintptr_t mgl_create_graph_qt_(const char *title, int);
-/// Creates FLTK window for plotting
-HMGL mgl_create_graph_fltk(int (*draw)(HMGL gr, void *p), const char *title, void *par, void (*load)(void *p));
-uintptr_t mgl_create_graph_fltk_(const char *title, int);
-/// Creates WX window for plotting
-HMGL mgl_create_graph_wx(int (*draw)(HMGL gr, void *p), const char *title, void *par, void (*load)(void *p));
-uintptr_t mgl_create_graph_wx_(const char *title, int);
 /// Callback function for mouse click
 void mgl_set_click_func(HMGL gr, void (*func)(void *p));
-/// Run main FLTK loop for event handling.
-int mgl_fltk_run();
-int mgl_fltk_run_();
-/// Run main FLTK loop for event handling in separate thread.
-int mgl_fltk_thr();
-/// Run main Qt loop for event handling.
-int mgl_qt_run();
-int mgl_qt_run_();
-/// Run main WX loop for event handling.
-int mgl_wx_run();
-int mgl_wx_run_();
 
 /// Delay for animation in seconds
 void mgl_wnd_set_delay(HMGL gr, double dt);
