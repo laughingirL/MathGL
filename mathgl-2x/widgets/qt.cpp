@@ -255,7 +255,7 @@ void QMathGL::update()
 //-----------------------------------------------------------------------------
 void QMathGL::refresh()
 {
-	if(mglUserPrim && !(gr->GetQuality()&4))
+	if(mglUserPrim && !(gr->GetQuality()&4) && gr->GetNumFrame()>0)
 	{
 		gr->Clf();	gr->GetFrame(0);
 		mglParse pr;

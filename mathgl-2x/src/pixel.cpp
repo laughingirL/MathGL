@@ -188,7 +188,7 @@ bool operator<(const mglPrim &a, const mglPrim &b)
 {
 	register int t1 = mgl_type_prior[a.type], t2 = mgl_type_prior[b.type];
 	if(a.z!=b.z) 	return a.z < b.z;
-	if(t1!=t2)		return t1 < t2;
+	if(t1!=t2)		return t1 > t2;
 	if(a.w!=b.w) 	return a.w < b.w;
 	return a.n3 < b.n3;
 }
@@ -197,7 +197,7 @@ bool operator>(const mglPrim &a, const mglPrim &b)
 {
 	register int t1 = mgl_type_prior[a.type], t2 = mgl_type_prior[b.type];
 	if(a.z!=b.z) 	return a.z > b.z;
-	if(t1!=t2)		return t1 > t2;
+	if(t1!=t2)		return t1 < t2;
 	if(a.w!=b.w) 	return a.w > b.w;
 	return a.n3 > b.n3;
 }

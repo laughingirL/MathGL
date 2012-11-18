@@ -142,8 +142,6 @@ void mglCanvas::add_prim(mglPrim &a)
 void mglCanvas::DefaultPlotParam()
 {
 /* NOTE: following variables and mutex will not be changed by DefaultPlotParam()
-std::vector<mglTexture> Txt;	///< Pointer to textures
-char *Message;		///< Buffer for receiving messages
 long InUse;			///< Smart pointer (number of users)
 mglFont *fnt;		///< Class for printing vector text
 int Quality;		///< Quality of plot (0x0-pure, 0x1-fast; 0x2-fine; 0x4 - low memory)

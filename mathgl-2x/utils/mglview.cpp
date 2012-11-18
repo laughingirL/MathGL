@@ -77,7 +77,9 @@ int main(int argc, char **argv)
 		FILE *fp = *iname?fopen(iname,"r"):stdin;
 		if(fp)
 		{
-			while(!feof(fp))	str.push_back(fgetwc(fp));
+			wchar_t ch;
+			while((ch=fgetwc(fp))!=WEOF)	str.push_back(ch);
+//			while(!feof(fp))	str.push_back(fgetwc(fp));
 			fclose(fp);
 		}
 	}

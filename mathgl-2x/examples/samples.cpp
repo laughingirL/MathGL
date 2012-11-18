@@ -33,39 +33,6 @@ struct mglSample	/// Structure for list of samples
 	const char *mgl;
 };
 //-----------------------------------------------------------------------------
-void fexport(mglGraph *gr)
-{
-	mglData a,b,d;	mgls_prepare2v(&a,&b);	d = a;
-	for(int i=0;i<a.nx*a.ny;i++)	d.a[i] = hypot(a.a[i],b.a[i]);
-	mglData c;	mgls_prepare3d(&c);
-	mglData v(10);	v.Fill(-0.5,1);
-	gr->SubPlot(2,2,1,"");	gr->Title("Flow + Dens");
-	gr->Flow(a,b,"br");	gr->Dens(d,"BbcyrR");	gr->Box();
-	gr->SubPlot(2,2,0);	gr->Title("Surf + Cont");	gr->Rotate(50,60);
-	gr->Light(true);	gr->Surf(a);	gr->Cont(a,"y");	gr->Box();
-	gr->SubPlot(2,2,2);	gr->Title("Mesh + Cont");	gr->Rotate(50,60);
-	gr->Box();	gr->Mesh(a);	gr->Cont(a,"_");
-	gr->SubPlot(2,2,3);	gr->Title("Surf3 + ContF_3");gr->Rotate(50,60);
-	gr->Box();	gr->ContF3(v,c,"z",0);	gr->ContF3(v,c,"x");	gr->ContF3(v,c);
-	gr->SetCutBox(mglPoint(0,-1,-1), mglPoint(1,0,1.1));
-	gr->ContF3(v,c,"z",c.nz-1);	gr->Surf3(-0.5,c);
-	
-	/*	gr->WriteJPEG("test.jpg");
-	 *	gr->WritePNG("test.png");
-	 *	gr->WriteBMP("test.bmp");
-	 *	gr->WriteTGA("test.tga");
-	 *	gr->WriteEPS("test.eps");
-	 *	gr->WriteSVG("test.svg");
-	 *	gr->WriteGIF("test.gif");*/
-	
-	gr->WriteXYZ("test.xyz");
-	gr->WriteSTL("test.stl");
-	gr->WriteOFF("test.off");
-	gr->WriteTEX("test.tex");
-	gr->WriteOBJ("test.obj","",true);
-	//	gr->WriteX3D("test.x3d");
-}
-//-----------------------------------------------------------------------------
 //		MGL functions for preparing data
 //-----------------------------------------------------------------------------
 const char *mmgl_dat_prepare = "\nstop\n\nfunc 'prepare1d'\n\

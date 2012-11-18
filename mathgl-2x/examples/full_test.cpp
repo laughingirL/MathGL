@@ -77,6 +77,39 @@ void test(mglGraph *gr)
 	fclose(fp);
 }
 //-----------------------------------------------------------------------------
+void fexport(mglGraph *gr)
+{
+	mglData a,b,d;	mgls_prepare2v(&a,&b);	d = a;
+	for(int i=0;i<a.nx*a.ny;i++)	d.a[i] = hypot(a.a[i],b.a[i]);
+	mglData c;	mgls_prepare3d(&c);
+	mglData v(10);	v.Fill(-0.5,1);
+	gr->SubPlot(2,2,1,"");	gr->Title("Flow + Dens");
+	gr->Flow(a,b,"br");	gr->Dens(d,"BbcyrR");	gr->Box();
+	gr->SubPlot(2,2,0);	gr->Title("Surf + Cont");	gr->Rotate(50,60);
+	gr->Light(true);	gr->Surf(a);	gr->Cont(a,"y");	gr->Box();
+	gr->SubPlot(2,2,2);	gr->Title("Mesh + Cont");	gr->Rotate(50,60);
+	gr->Box();	gr->Mesh(a);	gr->Cont(a,"_");
+	gr->SubPlot(2,2,3);	gr->Title("Surf3 + ContF_3");gr->Rotate(50,60);
+	gr->Box();	gr->ContF3(v,c,"z",0);	gr->ContF3(v,c,"x");	gr->ContF3(v,c);
+	gr->SetCutBox(mglPoint(0,-1,-1), mglPoint(1,0,1.1));
+	gr->ContF3(v,c,"z",c.nz-1);	gr->Surf3(-0.5,c);
+	
+	gr->WriteJPEG("test.jpg");
+	gr->WritePNG("test.png");
+	gr->WriteBMP("test.bmp");
+	gr->WriteTGA("test.tga");
+	gr->WriteEPS("test.eps");
+	gr->WriteSVG("test.svg");
+	gr->WriteGIF("test.gif");
+	
+	gr->WriteXYZ("test.xyz");
+	gr->WriteSTL("test.stl");
+	gr->WriteOFF("test.off");
+	gr->WriteTEX("test.tex");
+	gr->WriteOBJ("test.obj","",true);
+	//	gr->WriteX3D("test.x3d");
+}
+//-----------------------------------------------------------------------------
 #if !defined(_MSC_VER) && !defined(__BORLANDC__)
 static struct option longopts[] =
 {
@@ -101,8 +134,10 @@ static struct option longopts[] =
 	{ "srnd",			no_argument,	&srnd,		1 },
 	{ "svg",			no_argument,	&type,		2 },
 	{ "stl",			no_argument,	&type,		13 },
+	{ "tex",			no_argument,	&type,		14 },
 	{ "test",			no_argument,	&dotest,	1 },
 	{ "font",			no_argument,	&dotest,	2 },
+	{ "fmts",			no_argument,	&dotest,	3 },
 	{ "thread",		required_argument,	NULL,	't' },
 //	{ "u3d",			no_argument,	&type,		9 },
 	{ "verbose",		no_argument,	&verbose,	1 },
@@ -122,6 +157,7 @@ void usage()
 //		"--u3d		- output u3d\n"
 		"--pdf		- output pdf\n"
 		"--eps		- output EPS\n"
+		"--eps		- output LaTeX\n"
 		"--jpeg		- output JPEG\n"
 		"--solid		- output solid PNG\n"
 		"--svg		- output SVG\n"
@@ -136,6 +172,7 @@ void usage()
 		"--mgl		- use MGL scripts for samples\n"
 		"--test		- perform test\n"
 		"--font		- write current font as C++ file\n"
+		"--fmts		- write sample in all possible formats\n"
 	);
 }
 #endif
@@ -187,6 +224,9 @@ void save(mglGraph *gr,const char *name,const char *suf="")
 		case 13:	// STL
 			sprintf(buf,"%s%s.stl",name,suf);
 			gr->WriteSTL(buf);	break;
+		case 14:	// STL
+			sprintf(buf,"%s%s.tex",name,suf);
+			gr->WriteTEX(buf);	break;
 		default:// PNG (no alpha)
 			sprintf(buf,"%s%s.png",name,suf);
 			gr->WritePNG(buf,0,false);	break;
@@ -237,11 +277,11 @@ int main(int argc,char **argv)
 		printf("Global:%s\n",mglGlobalMess.c_str());
 		delete gr;	return 0;
 	}
-	if(dotest==2)
-	{
-		mgl_create_cpp_font(gr->Self(), L"!-~,¡-ÿ,̀-̏,Α-ω,ϑ,ϕ,ϖ,ϰ,ϱ,ϵ,А-я,ℏ,ℑ,ℓ,ℜ,←-↙,∀-∯,≠-≯,⟂");
-		delete gr;	return 0;
-	}
+	else if(dotest==2)
+	{	mgl_create_cpp_font(gr->Self(), L"!-~,¡-ÿ,̀-̏,Α-ω,ϑ,ϕ,ϖ,ϰ,ϱ,ϵ,А-я,ℏ,ℑ,ℓ,ℜ,←-↙,∀-∯,≠-≯,⟂");
+		delete gr;	return 0;	}
+	else if(dotest==3)
+	{	fexport(gr);	delete gr;	return 0;	}
 	
 	if(srnd)	mgl_srnd(1);
 	gr->VertexColor(false);	gr->TextureColor(true);	gr->Compression(false);

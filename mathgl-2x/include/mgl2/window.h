@@ -50,12 +50,6 @@ void mgl_click_class(void *p);
 void mgl_reload_class(void *p);
 }
 //-----------------------------------------------------------------------------
-#if MGL_HAVE_QT
-#define MGL_WND_KIND	1
-#else
-#define MGL_WND_KIND	0
-#endif
-//-----------------------------------------------------------------------------
 /// Wrapper class for windows displaying graphics
 class mglWindow : public mglGraph
 {

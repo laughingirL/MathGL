@@ -21,7 +21,6 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 1. inverse axis sample
 2. Check if mgl_draw_class, mgl_reload_class, mgl_click_class(void *p) are usable under Win32 non-native
 3. WX window/widgets
-4. test mglview with new libraries
 
 A. libhpdf for win32
 
