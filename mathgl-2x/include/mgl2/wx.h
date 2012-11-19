@@ -59,6 +59,7 @@ public:
 #include <wx/timer.h>
 #include <wx/bitmap.h>
 #include <mgl2/window.h>
+class mglCanvas;
 //-----------------------------------------------------------------------------
 /// Class is Wx widget which display MathGL graphics
 class wxMathGL : public wxWindow
@@ -69,13 +70,13 @@ public:
 
 	wxMathGL(wxWindow *parent, wxWindowID id=-1, const wxPoint& pos=wxDefaultPosition, const wxSize& size=wxDefaultSize, long style=0, const wxString& name=wxPanelNameStr);
 	virtual ~wxMathGL();
-	double GetRatio()	{	return double(gr->GetWidth())/gr->GetHeight();	};
+	double GetRatio();
 	void SetPopup(wxMenu *p)	{	popup = p;	};	///< Set popup menu pointer
 	void SetSize(int w, int h);		///< Set window/picture sizes
-	void SetGraph(mglCanvas *gr);	///< Set grapher object
+	void SetGraph(HMGL gr);	///< Set grapher object
 	inline void SetGraph(mglGraph *GR)
-	{	SetGraph(dynamic_cast<mglCanvas *>(GR->Self()));	}
-	inline HMGL GetGraph()	{	return gr;	}
+	{	SetGraph(GR->Self());	}
+	inline HMGL GetGraph()	{	return (HMGL)gr;	}
 
 	/// Set drawing functions and its parameter
 	inline void SetDraw(int (*func)(mglBase *gr, void *par), void *par=0)

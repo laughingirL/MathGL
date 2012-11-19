@@ -123,12 +123,14 @@ Fl_MathGL::Fl_MathGL(int xx, int yy, int ww, int hh, const char *lbl) : Fl_Widge
 	draw_par = 0;	draw_func = 0;	draw_cl = 0;
 }
 //-----------------------------------------------------------------------------
-Fl_MathGL::~Fl_MathGL()	{}
+Fl_MathGL::~Fl_MathGL()	{	if(mgl_use_graph(gr,-1)<1)	mgl_delete_graph(gr);	}
 //-----------------------------------------------------------------------------
-void Fl_MathGL::set_graph(mglCanvas *GR)
+void Fl_MathGL::set_graph(HMGL GR)
 {
-	if(!GR)	return;
-	delete gr;	gr=GR;
+	mglCanvas *gg = dynamic_cast<mglCanvas *>(GR);
+	if(!gg)	return;
+	if(mgl_use_graph(gr,-1)<1)	mgl_delete_graph(gr);
+	gr=gg;	mgl_use_graph(gg,1);
 }
 //-----------------------------------------------------------------------------
 void Fl_MathGL::draw()

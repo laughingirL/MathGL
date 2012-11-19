@@ -103,7 +103,21 @@ QMathGL::QMathGL(QWidget *parent, Qt::WindowFlags f) : QWidget(parent, f)
 	connect(timer, SIGNAL(timeout()), this, SLOT(nextSlide()));
 }
 //-----------------------------------------------------------------------------
-QMathGL::~QMathGL()	{	delete gr;	if(grBuf)	delete []grBuf;	}
+QMathGL::~QMathGL()
+{
+	if(mgl_use_graph(gr,-1)<1)	mgl_delete_graph(gr);
+	if(grBuf)	delete []grBuf;
+}
+//-----------------------------------------------------------------------------
+double QMathGL::getRatio()	{	return double(gr->GetWidth())/gr->GetHeight();	}
+//-----------------------------------------------------------------------------
+void QMathGL::setGraph(HMGL GR)	///< Set grapher object
+{
+	mglCanvas *gg = dynamic_cast<mglCanvas *>(GR);
+	if(!gg)	return;
+	if(mgl_use_graph(gr,-1)<1)	mgl_delete_graph(gr);
+	gr=gg;	mgl_use_graph(gg,1);
+}
 //-----------------------------------------------------------------------------
 void QMathGL::paintEvent(QPaintEvent *)
 {

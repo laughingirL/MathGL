@@ -118,7 +118,7 @@ mglBase::mglBase()
 	MGL_PUSH(Txt,mglTexture("BbcyrR",1),mutexTxt);
 	memcpy(last_style,"{k5}-1\0",8);
 	MinS=mglPoint(-1,-1,-1);	MaxS=mglPoint(1,1,1);
-	fnt = new mglFont;	fnt->gr = this;
+	fnt = new mglFont;	fnt->gr = this;	PrevState=NAN;
 }
 mglBase::~mglBase()	{	ClearEq();	delete fnt;	}
 //-----------------------------------------------------------------------------
@@ -1057,7 +1057,8 @@ void mglBase::SetAmbient(mreal bright)	{	AmbBr = bright;	}
 //-----------------------------------------------------------------------------
 mreal mglBase::SaveState(const char *opt)
 {
-	if(!opt || !opt[0] || saved)	return NAN;
+	if(saved)	return PrevState;
+	if(!opt || !opt[0])	return NAN;
 	MSS=MarkSize;	ASS=ArrowSize;
 	FSS=FontSize;	ADS=AlphaDef;
 	MNS=MeshNum;	CSS=Flag;	LSS=AmbBr;
@@ -1103,7 +1104,7 @@ mreal mglBase::SaveState(const char *opt)
 		else if(!strcmp(a,"legend"))
 		{	if(*b=='\'')	{	b++;	b[strlen(b)-1]=0;	}	leg_str = b;	}
 	}
-	free(qi);	return res;
+	free(qi);	PrevState=res;	return res;
 }
 //-----------------------------------------------------------------------------
 void mglBase::LoadState()

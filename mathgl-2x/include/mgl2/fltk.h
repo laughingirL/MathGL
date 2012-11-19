@@ -67,6 +67,7 @@ public:
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Counter.H>
 #include <FL/Fl_Menu_Bar.H>
+class mglCanvas;
 //-----------------------------------------------------------------------------
 /// Class is FLTK widget which display MathGL graphics
 class Fl_MathGL : public Fl_Widget
@@ -85,11 +86,11 @@ public:
 	/// Set bitwise flags for general state (1-Alpha, 2-Light)
 	inline void set_flag(int f)	{	flag = f;	}
 	/// Set flags for handling mouse
-	void set_graph(mglCanvas *gr);	///< Set grapher object
+	void set_graph(HMGL gr);	///< Set grapher object
 	inline void set_graph(mglGraph *Gr)
-	{	set_graph(dynamic_cast<mglCanvas *>(Gr->Self()));	}
+	{	set_graph(Gr->Self());	}
 	/// Get pointer to grapher
-	inline HMGL get_graph()	{	return gr;	}
+	inline HMGL get_graph()	{	return (HMGL)gr;	}
 	/// Set drawing functions and its parameter
 	inline void set_draw(int (*func)(mglBase *gr, void *par), void *par=0)
 	{	draw_func = func;	draw_par = par;	}

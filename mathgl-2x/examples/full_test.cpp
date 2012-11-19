@@ -64,15 +64,15 @@ void mgl_write_obj_old(HMGL gr, const char *fname,const char *descr, int use_png
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	mglData y(2);	y.Fill(-1,1);
+/*	mglData y(2);	y.Fill(-1,1);
 	gr->Plot(y,"r3");
 	gr->Plot(y,"b2");
-	return;
+	return;*/
 	
 	mglParse par;
 	par.AllowSetSize(true);
 	setlocale(LC_CTYPE, "");
-	FILE *fp=fopen("test.mgl","r");
+	FILE *fp=fopen("/home/balakin/progr/mathgl-code/mathgl-2x/build/test.mgl","r");
 	par.Execute(gr,fp,true);
 	fclose(fp);
 }

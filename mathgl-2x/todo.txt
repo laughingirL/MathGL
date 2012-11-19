@@ -26,6 +26,7 @@ A. libhpdf for win32
 
 ============= DOCS =============
 
+1. FAQ about import library and *.a; 32bit and 64bit incompatibility (+ into Install section)
 2. Text about UDAV (tabs,dialogs,hotkeys,hints,mouse)
 * known feature -- if you draw something in function then highlighted all similar objects
 * Dbl.click on figure --> newCmd dialog

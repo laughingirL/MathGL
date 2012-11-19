@@ -480,6 +480,7 @@ private:
 	mglPoint MinS;		///< Saved lower edge of bounding box for graphics.
 	mglPoint MaxS;		///< Saved upper edge of bounding box for graphics.
 	mreal MSS, ASS, FSS, ADS, MNS, LSS;	///< Saved state
+	mreal PrevState;		///< Previous value of SaveState()
 	long CSS;			///< Saved flags
 	bool saved;			///< State is saved
 	std::string leg_str;///< text to be save in legend

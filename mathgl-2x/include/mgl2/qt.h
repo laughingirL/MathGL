@@ -63,6 +63,7 @@ class QMainWindow;
 class QScrollArea;
 class QSpinBox;
 class QTimer;
+class mglCanvas;
 //-----------------------------------------------------------------------------
 /// Class is Qt widget which display MathGL graphics
 class QMathGL : public QWidget
@@ -77,14 +78,13 @@ public:
 
 	QMathGL(QWidget *parent = 0, Qt::WindowFlags f = 0);
 	~QMathGL();
-	double getRatio()	{	return double(gr->GetWidth())/gr->GetHeight();	}
+	double getRatio();
 	void setPopup(QMenu *p)	{	popup = p;	}	///< Set popup menu pointer
 	void setSize(int w, int h);		///< Set window/picture sizes
-	void setGraph(mglCanvas *GR)	///< Set grapher object
-	{	if(gr)	{	delete gr;	gr=GR;	}	}
+	void setGraph(HMGL GR);	///< Set grapher object
 	inline void setGraph(mglGraph *GR)
-	{	setGraph(dynamic_cast<mglCanvas *>(GR->Self()));	}
-	inline HMGL getGraph()	{	return gr;	}
+	{	setGraph(GR->Self());	}
+	inline HMGL getGraph()	{	return (HMGL)gr;	}
 	/// Set drawing functions and its parameter
 	inline void setDraw(int (*func)(mglBase *gr, void *par), void *par=0)
 	{	draw_func = func;	draw_par = par;	}

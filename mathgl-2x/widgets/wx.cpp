@@ -96,12 +96,16 @@ wxMathGL::wxMathGL(wxWindow *parent, wxWindowID id, const wxPoint& pos, const wx
 	timer = new wxTimer(this,TIMER_ID);
 }
 //-----------------------------------------------------------------------------
-wxMathGL::~wxMathGL()	{	delete gr;	}//!if(grBuf)	delete []grBuf;	}
+wxMathGL::~wxMathGL()	{	if(mgl_use_graph(gr,-1)<1)	mgl_delete_graph(gr);	}
 //-----------------------------------------------------------------------------
-void wxMathGL::SetGraph(mglCanvas *GR)
+double wxMathGL::GetRatio()	{	return double(gr->GetWidth())/gr->GetHeight();	};
+//-----------------------------------------------------------------------------
+void wxMathGL::SetGraph(HMGL GR)
 {
-	if(!GR)	return;
-	delete gr;	gr=GR;
+	mglCanvas *gg = dynamic_cast<mglCanvas *>(GR);
+	if(!gg)	return;
+	if(mgl_use_graph(gr,-1)<1)	mgl_delete_graph(gr);
+	gr=gg;	mgl_use_graph(gg,1);
 }
 //-----------------------------------------------------------------------------
 void wxMathGL::OnPaint(wxPaintEvent& event)
