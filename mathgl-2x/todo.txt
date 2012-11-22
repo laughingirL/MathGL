@@ -21,6 +21,7 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 1. inverse axis sample
 2. Check if mgl_draw_class, mgl_reload_class, mgl_click_class(void *p) are usable under Win32 non-native
 3. WX window/widgets
+4. Increase line width for arrows?!
 
 A. libhpdf for win32
 
@@ -43,7 +44,7 @@ A. libhpdf for win32
 12. FAQ about Fortran option -fdefault-real-8 for enable-double=ON
 13. Solve sample
 14. Thanks -- C.M., A.P.$
-16. update class diagram (mglDataC) ?!
+16. update class diagram (mglDataC, mglQT, mglFLTK, mglGLUT, mglWX)
 
 ============= UDAV =============
 

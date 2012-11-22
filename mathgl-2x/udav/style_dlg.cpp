@@ -297,7 +297,7 @@ void fillMarkers(QComboBox *cb)
 //-----------------------------------------------------------------------------
 void StyleDialog::updatePic()
 {
-		static mglGraph gr(0,128,30);
+	static mglGraph gr(0,128,30);
 	static bool f = true;
 	mglData x(3), y(3), a(32,2);
 	x.Fill(-1,1);	a.Fill(-1,1);
@@ -353,6 +353,9 @@ void StyleDialog::updatePic()
 		gr.Surf(a,result.toAscii().constData());
 		break;
 	case 2: // text style
+		i = cfont->currentIndex();
+		if(i>1)	result += col[i-1];
+		result += ':';
 		if(bold->isChecked())	result += 'b';
 		if(ital->isChecked())	result += 'i';
 		if(wire->isChecked())	result += 'w';
@@ -361,8 +364,6 @@ void StyleDialog::updatePic()
 		if(rbL->isChecked())	result += 'L';
 		if(rbC->isChecked())	result += 'C';
 		if(rbR->isChecked())	result += 'R';
-		i = cfont->currentIndex();
-		if(i>0)	result = result + ':' + col[i-1];
 		gr.Puts(mglPoint(0,-0.5),"Font test",result.toAscii().constData(),-10);
 		break;
 	}

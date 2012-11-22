@@ -39,13 +39,13 @@ public:
 	DatPanel(InfoDialog *inf, QWidget *parent = 0);
 	~DatPanel();
 
-	void refresh();	///< Refresh table with new data values
 	void setVar(mglVar *v);
 	inline long GetNz()	{	return nz;	}	///< Get number of slices
 	QString dataName();
 
 public slots:
 	QString dataOper()	{	return opers;	}
+	void refresh();		///< Refresh table with new data values
 
 signals:
 	void sliceChanged(int);

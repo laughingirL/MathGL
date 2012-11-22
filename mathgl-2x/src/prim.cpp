@@ -93,7 +93,7 @@ void mgl_curve(HMGL gr, double x1, double y1, double z1, double dx1, double dy1,
 	register mreal s;
 	gr->Reserve(n);
 	k1=gr->AddPnt(p,gr->CDef,nn,-1,3);	gr->AddActive(k1);
-	for(i=0;i<n;i++)
+	for(i=1;i<n;i++)
 	{
 		if(gr->Stop)	return;
 		s = i/(n-1.);	p = p1+s*(d1+s*(a+s*b));	k2 = k1;

@@ -300,7 +300,7 @@ void mgl_plot_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *
 			if(t1 && t2)
 			{
 				gr->line_plot(n1,n2);
-				if(i==0)	gr->arrow_plot(n1,n2,gr->Arrow1);
+				if(i==1)	gr->arrow_plot(n2,n1,gr->Arrow1);
 				if(i==n-1)	gr->arrow_plot(n1,n2,gr->Arrow2);
 			}
 
@@ -397,7 +397,7 @@ void mgl_tens_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char *pen, cons
 			if(t1 && t2)
 			{
 				gr->line_plot(n1,n2);
-				if(i==0)	gr->arrow_plot(n1,n2,gr->Arrow1);
+				if(i==1)	gr->arrow_plot(n2,n1,gr->Arrow1);
 				if(i==n-1)	gr->arrow_plot(n1,n2,gr->Arrow2);
 			}
 
@@ -671,7 +671,7 @@ void mgl_step_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *
 			n2 = n1;	// horizontal
 			p = mglPoint(x->v(i,mx), y->v(i,my), z->v(i-1,mz));
 			n1 = gr->AddPnt(p);	gr->line_plot(n1,n2);
-			if(i==1)	gr->arrow_plot(n1,n2,gr->Arrow1);
+			if(i==1)	gr->arrow_plot(n2,n1,gr->Arrow1);
 
 			n2 = n1;	// vertical
 			p.z = z->v(i,mz);	n1 = gr->AddPnt(p);
@@ -710,7 +710,7 @@ void mgl_step_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
 			n2 = n1;	// horizontal
 			p = mglPoint(x->v(i,mx), y->v(i-1,my), zVal);
 			n1 = gr->AddPnt(p);		gr->line_plot(n1,n2);
-			if(i==1)	gr->arrow_plot(n1,n2,gr->Arrow1);
+			if(i==1)	gr->arrow_plot(n2,n1,gr->Arrow1);
 
 			n2 = n1;	// vertical
 			p.y = y->v(i,my);		n1 = gr->AddPnt(p);

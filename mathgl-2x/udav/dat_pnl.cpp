@@ -725,7 +725,13 @@ void DatPanel::toolLeft(QBoxLayout *l)
 	a->setToolTip(tr("Find histogram of data."));
 	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
-
+	
+	a = new QAction(QPixmap(":/xpm/view-refresh.png"), tr("&Refresh"), this);
+	connect(a, SIGNAL(triggered()), this, SLOT(refresh()));
+	a->setToolTip(tr("Refresh data values."));
+	o->addAction(a);
+	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
+	
 	a = new QAction(tr("Re&arrange"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(rearrange()));
 	a->setToolTip(tr("Rearrange data sizes without changing data values."));
@@ -743,11 +749,6 @@ void DatPanel::toolLeft(QBoxLayout *l)
 	connect(a, SIGNAL(triggered()), this, SLOT(normsl()));
 	a->setToolTip(tr("Normalize each data slice perpendicular to some direction\nso that its minimal and maximal values be in specified range."));
 	o->addAction(a);
-	a = new QAction(QPixmap(smth_xpm), tr("&Smooth data"), this);
-	connect(a, SIGNAL(triggered()), this, SLOT(smooth()));
-	a->setToolTip(tr("Smooth data by one of 4 methods along specified direction(s)."));
-	o->addAction(a);
-	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
 	l->addStretch(1);
 }

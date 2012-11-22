@@ -843,7 +843,11 @@ void mglCanvas::mark_draw(long k, char type, mreal size, mglDrawReg *d)
 	if(type=='.' || ss==0)	pnt_draw(k,d);
 	else
 	{
-		if(d)	{	d->PDef = 0xffff;	d->PenWidth=50*size>1?50*size:1;	}
+		if(d)
+		{
+			d->PDef = 0xffff;	d->PenWidth=sqrt(ss)/2;
+			if(d->PenWidth<1)	d->PenWidth=1;
+		}
 		if(!strchr("xsSoO",type))	ss *= 1.1;
 		switch(type)
 		{

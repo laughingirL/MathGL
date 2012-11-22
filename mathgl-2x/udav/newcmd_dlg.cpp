@@ -240,6 +240,7 @@ void NewCmdDialog::nameChanged(int s)
 		kinds<<n+" "+a;
 		parse(argn[k],a);
 	}
+	name->setCurrentIndex(s);
 	kind->addItems(kinds);	kind->setCurrentIndex(0);
 }
 //-----------------------------------------------------------------------------
