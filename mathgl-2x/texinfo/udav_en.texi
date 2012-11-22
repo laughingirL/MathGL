@@ -1,2 +1,34 @@
 @chapter UDAV
 
+UDAV (Universal Data Array Visualizator) is cross-platform program for data arrays visualization based on MathGL library. It support wide spectrum of graphics, simple script language and visual data handling and editing. It has window interface for data viewing, changing and plotting. Also it can execute MGL scripts, setup and rotate graphics and so on.
+
+@menu
+* UDAV overview::
+* UDAV dialogs::
+* UDAV hotkeys::
+* UDAV hints::
+@end menu
+
+@c ------------------------------------------------------------------
+@external
+@node UDAV overview, UDAV dialogs, , UDAV
+@section UDAV overview
+
+
+@c ------------------------------------------------------------------
+@external
+@node UDAV dialogs, UDAV hotkeys, UDAV overview, UDAV
+@section UDAV dialogs
+
+
+@c ------------------------------------------------------------------
+@external
+@node UDAV hotkeys, UDAV hints, UDAV dialogs, UDAV
+@section UDAV hotkeys
+
+
+@c ------------------------------------------------------------------
+@external
+@node UDAV hints, , UDAV hotkeys, UDAV
+@section UDAV hints
+

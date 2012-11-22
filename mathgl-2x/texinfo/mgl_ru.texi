@@ -10,21 +10,7 @@
 @copying
 Это документация для MathGL (версии @value{VERSION}) -- библиотеки классов и функций для построения научной графики. Пожалуйста сообщайте о любых ошибках в этом руководстве на @email{mathgl.abalakin@@gmail.org}.
 
-Copyright @copyright{} 2009 Алексей Балакин.
-
-@quotation
-Permission is granted to copy, distribute and/or modify this document
-under the terms of the GNU Free Documentation License, Version 1.2 or
-any later version published by the Free Software Foundation; with no
-Invariant Sections, with the Front-Cover Texts being ``A GNU Manual,''
-and with the Back-Cover Texts as in (a) below.  A copy of the
-license is included in the section entitled ``GNU Free Documentation
-License.''
-
-(a) The FSF's Back-Cover Text is: ``You have the freedom to
-copy and modify this GNU manual.  Buying copies from the FSF
-supports it in developing GNU and promoting software freedom.''
-@end quotation
+@include copyright.texi
 @end copying
 
 @dircategory MathGL documentation system
@@ -49,21 +35,7 @@ supports it in developing GNU and promoting software freedom.''
 
 Это документация для языка MGL (версии @value{VERSION}). Пожалуйста сообщайте о любых ошибках в этом руководстве на @email{mathgl.abalakin@@gmail.org}. Дополнительную информацию о MGL и MathGL можно найти на домашней странице проекта @uref{http://mathgl.sourceforge.net/}.
 
-Copyright @copyright{} 2010 Алексей Балакин.
-
-@quotation
-Permission is granted to copy, distribute and/or modify this document
-under the terms of the GNU Free Documentation License, Version 1.2 or
-any later version published by the Free Software Foundation; with no
-Invariant Sections, with the Front-Cover Texts being ``A GNU Manual,''
-and with the Back-Cover Texts as in (a) below.  A copy of the
-license is included in the section entitled ``GNU Free Documentation
-License.''
-
-(a) The FSF's Back-Cover Text is: ``You have the freedom to
-copy and modify this GNU manual.  Buying copies from the FSF
-supports it in developing GNU and promoting software freedom.''
-@end quotation
+@include copyright.texi
 
 @end ifnottex
 

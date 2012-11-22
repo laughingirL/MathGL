@@ -32,6 +32,9 @@
 #include <QInputDialog>
 #include <QToolButton>
 #include <QSpinBox>
+#include <QComboBox>
+#include <QCheckBox>
+#include <QMessageBox>
 #include <mgl2/mgl.h>
 //-----------------------------------------------------------------------------
 #include "dat_pnl.h"
@@ -167,39 +170,47 @@ void DatPanel::putValue(int r, int c)
 	infoDlg->refresh();
 }
 //-----------------------------------------------------------------------------
-void DatPanel::imprt()
+void DatPanel::save()
 {
-	QString fn = QFileDialog::getOpenFileName(this, tr("UDAV - Import PNG"), "", tr("Data files (*.dat)\nAll files (*.*)"));
-	if(!fn.isEmpty())
-	{
-		bool ok;
-		QString s = QInputDialog::getText(this, tr("UDAV - Export to PNG"), tr("Enter color scheme for picture.\nNote that data will be normalized in range [0,1]."), QLineEdit::Normal, "BbcyrR", &ok);
-		if(ok)	var->Import(fn.toAscii().constData(), s.toAscii().constData());
-		refresh();
-	}
-}
-//-----------------------------------------------------------------------------
-void DatPanel::exprt()
-{
-	QString fn = QFileDialog::getOpenFileName(this, tr("UDAV - Import PNG"), "", tr("PNG files (*.png)\nAll files (*.*)"));
-	if(!fn.isEmpty())
+	QString fn = QFileDialog::getSaveFileName(this, tr("UDAV - Save/export data"), "",
+				tr("Data files (*.dat)\nHDF5 files (*.h5 *.hdf)\nPNG files (*.png)\nAll files (*.*)"));
+	if(fn.isEmpty())	return;
+	QString ext = fn.section(".",-1);
+	if(ext=="png")
 	{
 		bool ok;
 		QString s = QInputDialog::getText(this, tr("UDAV - Export to PNG"), tr("Enter color scheme for picture"), QLineEdit::Normal, "BbcyrR", &ok);
 		if(ok)	var->Export(fn.toAscii().constData(), s.toAscii().constData());
 	}
-}
-//-----------------------------------------------------------------------------
-void DatPanel::save()
-{
-	QString fn = QFileDialog::getSaveFileName(this, tr("UDAV - Save data"), "", tr("Data files (*.dat)\nAll files (*.*)"));
-	if(!fn.isEmpty())	var->Save(fn.toAscii().constData());
+	else if(ext=="h5" || ext=="hdf")
+	{
+		bool ok;
+		QString s = QInputDialog::getText(this, tr("UDAV - Save to HDF"), tr("Enter data name"), QLineEdit::Normal, QString::fromStdWString(var->s), &ok);
+		if(ok)	var->SaveHDF(fn.toAscii().constData(), s.toAscii().constData());
+	}
+	else 	var->Save(fn.toAscii().constData());
 }
 //-----------------------------------------------------------------------------
 void DatPanel::load()
 {
-	QString fn = QFileDialog::getOpenFileName(this, tr("UDAV - Load data"), "", tr("Data files (*.dat)\nAll files (*.*)"));
-	if(!fn.isEmpty())	{	var->Read(fn.toAscii().constData());	refresh();	}
+	QString fn = QFileDialog::getOpenFileName(this, tr("UDAV - Load data"), "",
+				tr("Data files (*.dat)\nHDF5 files (*.h5 *.hdf)\nPNG files (*.png)\nAll files (*.*)"));
+	if(fn.isEmpty())	return;
+	QString ext = fn.section(".",-1);
+	if(ext=="png")
+	{
+		bool ok;
+		QString s = QInputDialog::getText(this, tr("UDAV - Import PNG"), tr("Enter color scheme for picture"), QLineEdit::Normal, "BbcyrR", &ok);
+		if(ok)	var->Import(fn.toAscii().constData(), s.toAscii().constData());
+	}
+	else if(ext=="h5" || ext=="hdf")
+	{
+		bool ok;
+		QString s = QInputDialog::getText(this, tr("UDAV - Read from HDF"), tr("Enter data name"), QLineEdit::Normal, QString::fromStdWString(var->s), &ok);
+		if(ok)	var->ReadHDF(fn.toAscii().constData(), s.toAscii().constData());
+	}
+	else 	var->Read(fn.toAscii().constData());
+	refresh();
 }
 //-----------------------------------------------------------------------------
 void DatPanel::copy()
@@ -260,13 +271,6 @@ void DatPanel::list()	// TODO: in which script insert ???
 		}
 		if(j<ny-1)	res = res + "|\t";
 	}*/
-}
-//-----------------------------------------------------------------------------
-void DatPanel::byformula()
-{
-	bool ok;
-	QString s = QInputDialog::getText(this, tr("UDAV - Fill data"), tr("Enter formula for data filling.\nNote that variables x,y,z supposed to be in range [0,1]."), QLineEdit::Normal, "", &ok);
-	if(ok)	{	var->Modify(s.toAscii().constData());	refresh();	}
 }
 //-----------------------------------------------------------------------------
 void DatPanel::inrange()
@@ -351,131 +355,6 @@ void DatPanel::rearrange()
 	}
 }
 //-----------------------------------------------------------------------------
-void DatPanel::transp()
-{
-	bool ok;
-	QString s = QInputDialog::getText(this, tr("UDAV - Transpose data"), tr("Enter new order of dimensions.\nFor example, 'yx' or 'yxz' for transpose x-y, 'zyx' for transposing x-z and so on."), QLineEdit::Normal, "yx", &ok);
-	if(ok)	{	var->Transpose(s.toAscii().constData());	refresh();	updateDataItems();	}
-}
-//-----------------------------------------------------------------------------
-void DatPanel::smooth()
-{
-	bool ok;
-	QString s = QInputDialog::getText(this, tr("UDAV - Smooth data"), tr("Enter direction(s) for smoothing.\nOptionally you may enter the kind of smoothing by 3 or by 5 points. For example 'xy3' - smooth only in x and y directions and use 3-points scheme."), QLineEdit::Normal, "xyz", &ok);
-	if(ok)	{	var->Smooth(s.toAscii().constData());	refresh();	}
-}
-//-----------------------------------------------------------------------------
-void DatPanel::cumsum()
-{
-	bool ok;
-	QString s = QInputDialog::getText(this, tr("UDAV - Summarize data"), tr("Enter direction(s) for cumulative summation.\nFor example 'xy' - summate along x and y directions."), QLineEdit::Normal, "", &ok);
-	if(ok)	{	var->CumSum(s.toAscii().constData());	refresh();	}
-}
-//-----------------------------------------------------------------------------
-void DatPanel::integr()
-{
-	bool ok;
-	QString s = QInputDialog::getText(this, tr("UDAV - Integrate data"), tr("Enter direction(s) for integration.\nFor example 'xy' - integrate along x and y directions."), QLineEdit::Normal, "", &ok);
-	if(ok)	{	var->Integral(s.toAscii().constData());	refresh();	}
-}
-//-----------------------------------------------------------------------------
-void DatPanel::diff()
-{
-	bool ok;
-	QString s = QInputDialog::getText(this, tr("UDAV - Differentiate data"), tr("Enter direction(s) for differentiation.\nFor example 'xy' - differentiate along x and y directions."), QLineEdit::Normal, "", &ok);
-	if(ok)	{	var->Diff(s.toAscii().constData());		refresh();	}
-}
-//-----------------------------------------------------------------------------
-void DatPanel::diff2()
-{
-	bool ok;
-	QString s = QInputDialog::getText(this, tr("UDAV - Laplace transform"), tr("Enter direction(s) for laplace transform.\nFor example 'xy' - do transform along x and y directions."), QLineEdit::Normal, "", &ok);
-	if(ok)	{	var->Diff2(s.toAscii().constData());	refresh();	}
-}
-//-----------------------------------------------------------------------------
-void DatPanel::swap()
-{
-	bool ok;
-	QString s = QInputDialog::getText(this, tr("UDAV - Swap data"), tr("Enter direction(s) for swapping (exchange left and right parts).\nFor example 'xy' - swap along x and y directions. Useful for Fourier spectrum."), QLineEdit::Normal, "", &ok);
-	if(ok)	{	var->Swap(s.toAscii().constData());		refresh();	}
-}
-//-----------------------------------------------------------------------------
-void DatPanel::mirror()
-{
-	bool ok;
-	QString s = QInputDialog::getText(this, tr("UDAV - Mirror data"), tr("Enter direction(s) for mirroring.\nFor example 'xy' - mirror along x and y directions."), QLineEdit::Normal, "", &ok);
-	if(ok)	{	var->Swap(s.toAscii().constData());	refresh();	}
-}
-//-----------------------------------------------------------------------------
-void DatPanel::sumof()
-{
-	QString name, val;
-	if(namesDialog(tr("UDAV - Sum along ..."), tr("Specify direction(s) of summation"), name, val))
-	{
-		mglVar *v = parser.AddVar(name.toAscii().constData());
-		v->Set(var->Sum(val.toAscii().constData()));
-		updateDataItems();
-	}
-}
-//-----------------------------------------------------------------------------
-void DatPanel::maxof()
-{
-	QString name, val;
-	if(namesDialog(tr("UDAV - Max along ..."), tr("Specify direction(s) of maximal values"), name, val))
-	{
-		mglVar *v = parser.AddVar(name.toAscii().constData());
-		v->Set(var->Max(val.toAscii().constData()));
-		updateDataItems();
-	}
-}
-//-----------------------------------------------------------------------------
-void DatPanel::minof()
-{
-	QString name, val;
-	if(namesDialog(tr("UDAV - Min along ..."), tr("Specify direction(s) of minimal values"), name, val))
-	{
-		mglVar *v = parser.AddVar(name.toAscii().constData());
-		v->Set(var->Min(val.toAscii().constData()));
-		updateDataItems();
-	}
-}
-//-----------------------------------------------------------------------------
-void DatPanel::momentx()
-{
-	QString name, val;
-	if(namesDialog(tr("UDAV - Momentum along 'x'"),
-		tr("Specify which momentum evaluate.\nThe momentum is res_i = sum_jk how(x_i,y_j,z_k) a_jk/ sum_jk a_jk.\nCoordinates x, y, z are data indexes normalized in range [0,1]."), name, val))
-	{
-		mglVar *v = parser.AddVar(name.toAscii().constData());
-		v->Set(var->Momentum('x', val.toAscii().constData()));
-		updateDataItems();
-	}
-}
-//-----------------------------------------------------------------------------
-void DatPanel::momenty()
-{
-	QString name, val;
-	if(namesDialog(tr("UDAV - Momentum along 'y'"),
-		tr("Specify which momentum evaluate.\nThe momentum is res_j = sum_ik how(x_i,y_j,z_k) a_ik/ sum_ik a_ik.\nCoordinates x, y, z are data indexes normalized in range [0,1]."), name, val))
-	{
-		mglVar *v = parser.AddVar(name.toAscii().constData());
-		v->Set(var->Momentum('y', val.toAscii().constData()));
-		updateDataItems();
-	}
-}
-//-----------------------------------------------------------------------------
-void DatPanel::momentz()
-{
-	QString name, val;
-	if(namesDialog(tr("UDAV - Momentum along 'z'"),
-		tr("Specify which momentum evaluate.\nThe momentum is res_k = sum_ij how(x_i,y_j,z_k) a_ij/ sum_ij a_ij.\nCoordinates x, y, z are data indexes normalized in range [0,1]."), name, val))
-	{
-		mglVar *v = parser.AddVar(name.toAscii().constData());
-		v->Set(var->Momentum('z', val.toAscii().constData()));
-		updateDataItems();
-	}
-}
-//-----------------------------------------------------------------------------
 void DatPanel::hist()
 {
 	QLabel *l;
@@ -505,34 +384,6 @@ void DatPanel::hist()
 		vv->Set(var->Hist(nm->value(), v1->text().toDouble(), v2->text().toDouble()));
 		updateDataItems();
 	}
-}
-//-----------------------------------------------------------------------------
-void DatPanel::addto()
-{
-	bool ok;
-	QString s = QInputDialog::getText(this, tr("UDAV - Change data"), tr("Enter number for adding to data elements:"), QLineEdit::Normal, "", &ok);
-	if(ok)	{	*var += s.toDouble();		refresh();	}
-}
-//-----------------------------------------------------------------------------
-void DatPanel::subto()
-{
-	bool ok;
-	QString s = QInputDialog::getText(this, tr("UDAV - Change data"), tr("Enter number for subtraction from data elements:"), QLineEdit::Normal, "", &ok);
-	if(ok)	{	*var -= s.toDouble();		refresh();	}
-}
-//-----------------------------------------------------------------------------
-void DatPanel::divto()
-{
-	bool ok;
-	QString s = QInputDialog::getText(this, tr("UDAV - Change data"), tr("Enter number for division of data elements:"), QLineEdit::Normal, "", &ok);
-	if(ok)	{	*var /= s.toDouble();		refresh();	}
-}
-//-----------------------------------------------------------------------------
-void DatPanel::multo()
-{
-	bool ok;
-	QString s = QInputDialog::getText(this, tr("UDAV - Change data"), tr("Enter number for multiplication of data elements:"), QLineEdit::Normal, "", &ok);
-	if(ok)	{	*var *= s.toDouble();		refresh();	}
 }
 //-----------------------------------------------------------------------------
 void DatPanel::first()	{	setSlice(0);	}
@@ -584,18 +435,38 @@ bool DatPanel::sizesDialog(const QString &cap, const QString &lab, const QString
 	return res;
 }
 //-----------------------------------------------------------------------------
-bool DatPanel::namesDialog(const QString &cap, const QString &lab, QString &name, QString &val)
+#include "xpm/plot.xpm"
+#include "xpm/size.xpm"
+#include "xpm/smth.xpm"
+#include "xpm/crop.xpm"
+#include "xpm/squize.xpm"
+#include "xpm/sum.xpm"
+#include "xpm/func.xpm"
+#include "xpm/swap.xpm"
+#include "xpm/hist.xpm"
+#include "xpm/oper_dir.xpm"
+#include "xpm/oper_of.xpm"
+//-----------------------------------------------------------------------------
+void DatPanel::newdat()
 {
 	QLabel *l;
 	QLineEdit *f1, *f2;
 	QPushButton *b;
 	QDialog *d = new QDialog(this);
-	d->setWindowTitle(cap);
+	d->setWindowTitle(tr("UDAV - make new data"));
 	QVBoxLayout *v = new QVBoxLayout(d);
-	l = new QLabel(lab, d);		v->addWidget(l);
-	l = new QLabel(tr("NOTE: All fields must be filled!"), d);	v->addWidget(l);
-	f1 = new QLineEdit(val, d);	v->addWidget(f1);
-	l = new QLabel(tr("Enter the name for new variable"), d);	v->addWidget(l);
+	QComboBox *c = new QComboBox(d);	v->addWidget(c);
+	c->addItem(tr("Sum along direction(s)"));
+	c->addItem(tr("Min along direction(s)"));
+	c->addItem(tr("Max along direction(s)"));
+	c->addItem(tr("Momentum along 'x' for function"));
+	c->addItem(tr("Momentum along 'y' for function"));
+	c->addItem(tr("Momentum along 'z' for function"));
+	c->setCurrentIndex(0);
+
+	f1 = new QLineEdit("z",d);	v->addWidget(f1);
+	QCheckBox *cb = new QCheckBox(tr("Put into this data array"), d);	v->addWidget(cb);
+	l = new QLabel(tr("or enter name for new variable"), d);	v->addWidget(l);
 	f2 = new QLineEdit(d);		v->addWidget(f2);
 	QHBoxLayout *h = new QHBoxLayout();	v->addLayout(h);	h->addStretch(1);
 	b = new QPushButton(tr("Cancel"), d);	h->addWidget(b);
@@ -605,28 +476,121 @@ bool DatPanel::namesDialog(const QString &cap, const QString &lab, QString &name
 	b->setDefault(true);
 	// now execute dialog and get values
 	bool res = d->exec();
-	val = f1->text();	name = f2->text();
-	if(val.isEmpty() || name.isEmpty())	res = false;
-	delete d;
-	return res;
+	QString 	val = f1->text(), mgl;
+	int k = c->currentIndex();
+	QString self = QString::fromStdWString(var->s);
+	if(res)
+	{
+		if(k<0)
+		{
+			QMessageBox::warning(d, tr("UDAV - make new data"),
+				tr("No action is selected. Do nothing."));
+			return;
+		}
+		if(val.isEmpty())
+		{
+			QMessageBox::warning(d, tr("UDAV - make new data"),
+				tr("No direction/formula is entered. Do nothing."));
+			return;
+		}
+		if(cb->isChecked())	k += 6;
+		QString name = f2->text();
+		switch(k)
+		{
+		case 0:	mgl = "sum "+name+" "+self+" '"+val+"'";	break;
+		case 1:	mgl = "min "+name+" "+self+" '"+val+"'";	break;
+		case 2:	mgl = "max "+name+" "+self+" '"+val+"'";	break;
+		case 3:	mgl = "momentum "+name+" "+self+" 'x' '"+val+"'";	break;
+		case 4:	mgl = "momentum "+name+" "+self+" 'y' '"+val+"'";	break;
+		case 5:	mgl = "momentum "+name+" "+self+" 'z' '"+val+"'";	break;
+		case 6:	mgl = "copy "+self+" {sum "+self+" '"+val+"'}";	break;
+		case 7:	mgl = "copy "+self+" {min "+self+" '"+val+"'}";	break;
+		case 8:	mgl = "copy "+self+" {max "+self+" '"+val+"'}";	break;
+		case 9:	mgl = "copy "+self+" {momentum "+self+" 'x' '"+val+"'}";	break;
+		case 10:	mgl = "copy "+self+" {momentum "+self+" 'y' '"+val+"'}";	break;
+		case 11:	mgl = "copy "+self+" {momentum "+self+" 'z' '"+val+"'}";	break;
+		}
+	}
+	if(!mgl.isEmpty())
+	{
+		mglGraph gr;
+		parser.Execute(&gr,mgl.toAscii().constData());
+		opers += mgl+"\n";
+		updateDataItems();
+	}
 }
 //-----------------------------------------------------------------------------
-#include "xpm/plot.xpm"
-#include "xpm/size.xpm"
-#include "xpm/smth.xpm"
-#include "xpm/oper_d.xpm"
-#include "xpm/oper_s.xpm"
-#include "xpm/oper_a.xpm"
-#include "xpm/oper_m.xpm"
-#include "xpm/crop.xpm"
-#include "xpm/tran.xpm"
-#include "xpm/integr.xpm"
-#include "xpm/diff.xpm"
-#include "xpm/diff2.xpm"
-#include "xpm/squize.xpm"
-#include "xpm/sum.xpm"
-#include "xpm/func.xpm"
-#include "xpm/swap.xpm"
+void DatPanel::oper()
+{
+	QLabel *l;
+	QLineEdit *f1;
+	QPushButton *b;
+	QDialog *d = new QDialog(this);
+	d->setWindowTitle(tr("UDAV - change data"));
+	QVBoxLayout *v = new QVBoxLayout(d);
+	QComboBox *c = new QComboBox(d);	v->addWidget(c);
+	c->addItem(tr("Fill data by formula"));
+	c->addItem(tr("Transpose data with new dimensions"));
+	c->addItem(tr("Smooth data along direction(s)"));
+	c->addItem(tr("Summarize data along direction(s)"));
+	c->addItem(tr("Integrate data along direction(s)"));
+	c->addItem(tr("Differentiate data along direction(s)"));
+	c->addItem(tr("Laplace transform along direction(s)"));
+	c->addItem(tr("Swap data along direction(s)"));
+	c->addItem(tr("Mirror data along direction(s)"));
+	c->addItem(tr("Sin-Fourier transform along direction(s)"));
+	c->addItem(tr("Cos-Fourier transform along direction(s)"));
+	c->addItem(tr("Hankel transform along direction(s)"));
+	c->addItem(tr("Sew data along direction(s)"));
+	c->addItem(tr("Find envelope along direction(s)"));
+	c->setCurrentIndex(0);
+
+	f1 = new QLineEdit("z",d);	v->addWidget(f1);
+	QHBoxLayout *h = new QHBoxLayout();	v->addLayout(h);	h->addStretch(1);
+	b = new QPushButton(tr("Cancel"), d);	h->addWidget(b);
+	connect(b, SIGNAL(clicked()), d, SLOT(reject()));
+	b = new QPushButton(tr("OK"), d);		h->addWidget(b);
+	connect(b, SIGNAL(clicked()), d, SLOT(accept()));
+	b->setDefault(true);
+	// now execute dialog and get values
+	bool res = d->exec();
+	QString 	val = f1->text(), mgl;
+	int k = c->currentIndex();
+	QString self = QString::fromStdWString(var->s);
+	if(res)
+	{
+		if(k<0)
+		{
+			QMessageBox::warning(d, tr("UDAV - make new data"),
+				tr("No action is selected. Do nothing."));
+			return;
+		}
+		switch(k)
+		{
+		case 0:	mgl = "modify "+self+" '"+val+"'";	break;
+		case 1:	mgl = "transpose "+self+" '"+val+"'";	break;
+		case 2:	mgl = "smooth "+self+" '"+val+"'";	break;
+		case 3:	mgl = "cumsum "+self+" '"+val+"'";	break;
+		case 4:	mgl = "integrate "+self+" '"+val+"'";	break;
+		case 5:	mgl = "diff "+self+" '"+val+"'";	break;
+		case 6:	mgl = "diff2 "+self+" '"+val+"'";	break;
+		case 7:	mgl = "swap "+self+" '"+val+"'";	break;
+		case 8:	mgl = "mirror "+self+" '"+val+"'";	break;
+		case 9:	mgl = "sinfft "+self+" '"+val+"'";	break;
+		case 10:	mgl = "cosfft "+self+" '"+val+"'";	break;
+		case 11:	mgl = "hankel "+self+" '"+val+"'";	break;
+		case 12:	mgl = "sew "+self+" '"+val+"'";	break;
+		case 13:	mgl = "envelop "+self+" '"+val+"'";	break;
+		}
+	}
+	if(!mgl.isEmpty())
+	{
+		mglGraph gr;
+		parser.Execute(&gr,mgl.toAscii().constData());
+		opers += mgl+"\n";
+		updateDataItems();
+	}
+}
 //-----------------------------------------------------------------------------
 void DatPanel::toolTop(QBoxLayout *l)
 {
@@ -642,22 +606,10 @@ void DatPanel::toolTop(QBoxLayout *l)
 	a->setShortcut(Qt::CTRL+Qt::SHIFT+Qt::Key_O);	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
-	a = new QAction(QPixmap(":/xpm/document-import.png"), tr("&Import PNG"), this);
-	connect(a, SIGNAL(triggered()), this, SLOT(imprt()));
-	a->setToolTip(tr("Import data from PNG picture with specified color scheme.\nData will be deleted only at exit but UDAV will not ask it saving."));
-	o->addAction(a);
-	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
-
 	a = new QAction(QPixmap(":/xpm/document-save.png"), tr("&Save data"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(save()));
 	a->setToolTip(tr("Save data to tab-separeted file."));
 	a->setShortcut(Qt::CTRL+Qt::SHIFT+Qt::Key_S);	o->addAction(a);
-	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
-
-	a = new QAction(QPixmap(":/xpm/document-export.png"), tr("&Export PNG"), this);
-	connect(a, SIGNAL(triggered()), this, SLOT(exprt()));
-	a->setToolTip(tr("Export data to PNG picture. The colors defined by \nspecified color scheme. The same as in 'dens' command."));
-	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
 //	o->addSeparator();	bb->addSeparator();
@@ -756,9 +708,21 @@ void DatPanel::toolLeft(QBoxLayout *l)
 	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
-	a = new QAction(QPixmap(tran_xpm), tr("&Transpose"), this);
-	connect(a, SIGNAL(triggered()), this, SLOT(transp()));
-	a->setToolTip(tr("Transpose data dimensions, like x<->y or x<->z and so on."));
+	a = new QAction(QPixmap(oper_of_xpm), tr("&Transform"), this);
+	connect(a, SIGNAL(triggered()), this, SLOT(newdat()));
+	a->setToolTip(tr("Transform data along dimension(s)."));
+	o->addAction(a);
+	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
+
+	a = new QAction(QPixmap(oper_dir_xpm), tr("&Make new"), this);
+	connect(a, SIGNAL(triggered()), this, SLOT(oper()));
+	a->setToolTip(tr("Make another data."));
+	o->addAction(a);
+	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
+
+	a = new QAction(QPixmap(hist_xpm), tr("&Histogram"), this);
+	connect(a, SIGNAL(triggered()), this, SLOT(hist()));
+	a->setToolTip(tr("Find histogram of data."));
 	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
@@ -766,14 +730,6 @@ void DatPanel::toolLeft(QBoxLayout *l)
 	connect(a, SIGNAL(triggered()), this, SLOT(rearrange()));
 	a->setToolTip(tr("Rearrange data sizes without changing data values."));
 	o->addAction(a);
-
-	// modify menu
-	o = menu->addMenu(tr("&Modify"));
-	a = new QAction(QPixmap(func_xpm), tr("By &formula"), this);
-	connect(a, SIGNAL(triggered()), this, SLOT(byformula()));
-	a->setToolTip(tr("Change data values according to formula depended on 'x', 'y' and 'z'\nvariables. A set of special function is availible also."));
-	a->setShortcut(Qt::CTRL+Qt::Key_M);	o->addAction(a);
-	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
 	a = new QAction(tr("Fill in &range"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(inrange()));
@@ -792,76 +748,6 @@ void DatPanel::toolLeft(QBoxLayout *l)
 	a->setToolTip(tr("Smooth data by one of 4 methods along specified direction(s)."));
 	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
-
-	oo = menu->addMenu(tr("&Operators"));
-	a = new QAction(QPixmap(sum_xpm), tr("&Cum. sum"), this);
-	connect(a, SIGNAL(triggered()), this, SLOT(cumsum()));
-	a->setToolTip(tr("Summate data values along specified direction(s)."));
-	oo->addAction(a);
-	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
-
-	a = new QAction(QPixmap(integr_xpm), tr("&Integrate"), this);
-	connect(a, SIGNAL(triggered()), this, SLOT(integr()));
-	a->setToolTip(tr("Integrate data values along specified direction(s)."));
-	oo->addAction(a);
-	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
-
-	a = new QAction(QPixmap(diff_xpm), tr("&Differentiate"), this);
-	connect(a, SIGNAL(triggered()), this, SLOT(diff()));
-	a->setToolTip(tr("Differentiate data values along specified direction(s)."));
-	oo->addAction(a);
-	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
-
-	a = new QAction(QPixmap(diff2_xpm), tr("&Laplace"), this);
-	connect(a, SIGNAL(triggered()), this, SLOT(diff2()));
-	a->setToolTip(tr("Double differentiate data values along specified direction(s)."));
-	oo->addAction(a);
-	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
-
-	a = new QAction(QPixmap(swap_xpm), tr("&Swap"), this);
-	connect(a, SIGNAL(triggered()), this, SLOT(swap()));
-	a->setToolTip(tr("Swap left and right data part along specified direction(s).\nThis operation is useful for data after Fourier transform."));
-	oo->addAction(a);
-	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
-
-	a = new QAction(tr("&Mirror"), this);
-	connect(a, SIGNAL(triggered()), this, SLOT(mirror()));
-	a->setToolTip(tr("Mirror left and right data part along specified direction(s).\nThis operation do like index change from 'i' to 'n-i'."));
-	oo->addAction(a);
-
-	oo = menu->addMenu(tr("&Algebraic"));
-	a = new QAction(QPixmap(oper_a_xpm), tr("&Add"), this);
-	connect(a, SIGNAL(triggered()), this, SLOT(addto()));
-	a->setToolTip(tr("Add a number to all data values."));
-	oo->addAction(a);
-	a = new QAction(QPixmap(oper_s_xpm), tr("&Subtract"), this);
-	connect(a, SIGNAL(triggered()), this, SLOT(subto()));
-	a->setToolTip(tr("Subtract a number to all data values."));
-	oo->addAction(a);
-	a = new QAction(QPixmap(oper_m_xpm), tr("&Multiply"), this);
-	connect(a, SIGNAL(triggered()), this, SLOT(multo()));
-	a->setToolTip(tr("Multiply all data values by a number."));
-	oo->addAction(a);
-	a = new QAction(QPixmap(oper_d_xpm), tr("&Divide"), this);
-	connect(a, SIGNAL(triggered()), this, SLOT(divto()));
-	a->setToolTip(tr("Divide all data values by a number."));
-	oo->addAction(a);
-
-	oo = menu->addMenu(tr("A&nother data"));
-	a = new QAction(tr("&Sum of"), this);	oo->addAction(a);
-	connect(a, SIGNAL(triggered()), this, SLOT(sumof()));
-	a = new QAction(tr("M&in of"), this);	oo->addAction(a);
-	connect(a, SIGNAL(triggered()), this, SLOT(minof()));
-	a = new QAction(tr("M&ax of"), this);	oo->addAction(a);
-	connect(a, SIGNAL(triggered()), this, SLOT(maxof()));
-	a = new QAction(tr("Momentum along &x"), this);	oo->addAction(a);
-	connect(a, SIGNAL(triggered()), this, SLOT(momentx()));
-	a = new QAction(tr("Momentum along &y"), this);	oo->addAction(a);
-	connect(a, SIGNAL(triggered()), this, SLOT(momenty()));
-	a = new QAction(tr("Momentum along &z"), this);	oo->addAction(a);
-	connect(a, SIGNAL(triggered()), this, SLOT(momentz()));
-	a = new QAction(tr("&Histogram"), this);	oo->addAction(a);
-	connect(a, SIGNAL(triggered()), this, SLOT(hist()));
 
 	l->addStretch(1);
 }

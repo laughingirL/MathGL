@@ -438,7 +438,7 @@ void *mgl_min_z(void *par)
 	mreal *b=t->a;
 	const mreal *a=t->b;
 	for(i=t->id;i<nn;i+=mglNumThr)
-		for(j=1,b[i]=a[i];j<nz;j++)	if(b[i]<a[i+nn*j]) b[i] = a[i+nn*j];
+		for(j=1,b[i]=a[i];j<nz;j++)	if(b[i]>a[i+nn*j]) b[i] = a[i+nn*j];
 	return 0;
 }
 void *mgl_min_y(void *par)
@@ -450,7 +450,7 @@ void *mgl_min_y(void *par)
 	for(i=t->id;i<nn;i+=mglNumThr)
 	{
 		k = (i%nx)+nx*ny*(i/nx);
-		for(j=1,b[i]=a[k];j<ny;j++)	if(b[i]<a[k+nx*j])	b[i]=a[k+nx*j];
+		for(j=1,b[i]=a[k];j<ny;j++)	if(b[i]>a[k+nx*j])	b[i]=a[k+nx*j];
 	}
 	return 0;
 }
@@ -463,7 +463,7 @@ void *mgl_min_x(void *par)
 	for(i=t->id;i<nn;i+=mglNumThr)
 	{
 		k = i*nx;
-		for(j=1,b[i]=a[k];j<nx;j++)	if(b[i]<a[j+k])	b[i]=a[j+k];
+		for(j=1,b[i]=a[k];j<nx;j++)	if(b[i]>a[j+k])	b[i]=a[j+k];
 	}
 	return 0;
 }

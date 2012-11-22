@@ -44,6 +44,9 @@ public:
 	inline long GetNz()	{	return nz;	}	///< Get number of slices
 	QString dataName();
 
+public slots:
+	QString dataOper()	{	return opers;	}
+
 signals:
 	void sliceChanged(int);
 	void nzChanged(int);
@@ -54,14 +57,11 @@ private slots:
 	// menu genereal
 	void load();
 	void save();
-	void imprt();
-	void exprt();
 	void copy();
 	void paste();
 	void plot();
 	void list();
 	// menu fill
-	void byformula();
 	void inrange();
 	void norm();
 	void normsl();
@@ -70,29 +70,12 @@ private slots:
 	void reSize();
 	void squize();
 	void crop();
-	void transp();
 	void rearrange();
 	// menu change
-	void smooth();
-	void cumsum();
-	void integr();
-	void diff();
-	void diff2();
-	void swap();
-	void mirror();
-	// menu another ???
-	void sumof();
-	void maxof();
-	void minof();
-	void momentx();
-	void momenty();
-	void momentz();
+	void oper();
+	// menu another
+	void newdat();
 	void hist();
-	// menu operations
-	void addto();
-	void subto();
-	void divto();
-	void multo();
 	// menu navigation
 	void first();
 	void last();
@@ -104,6 +87,7 @@ private slots:
 private:
 	int nx,ny,nz;	///< Data sizes
 	QString id;
+	QString opers;
 	QTableWidget *tab;	///< Table itself
 	int kz;			///< Current z-slice
 	mglVar *var;	///< Variable with data
@@ -112,7 +96,6 @@ private:
 	QSpinBox *sb;
 
 	bool sizesDialog(const QString &cap, const QString &lab, const QString &desc1, const QString &desc2, const QString &desc3, QString &val1, QString &val2, QString &val3);
-	bool namesDialog(const QString &cap, const QString &lab, QString &name, QString &val);
 	void toolTop(QBoxLayout *l);
 	void toolLeft(QBoxLayout *l);
 };

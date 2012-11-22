@@ -63,8 +63,8 @@ void mgl_obj_glyph_old(HMGL gr, const mglPrim &q, const mglPnt &p, FILE *fp)
 		fprintf(fp,"v %g %g %g\n",p.x+b[0]*(dx+f)+b[1]*(dy+dd),p.y+b[2]*dx+b[3]*(dy+dd),p.z);
 		if(!(q.n3&4))	// glyph_line(p,f,true, d);
 		{
-			fprintf(fp,"f -1/%ld -2/%ld -3/%ld\n",i,i,i);
-			fprintf(fp,"f -4/%ld -3/%ld -2/%ld\n",i,i,i);
+			fprintf(fp,"f -1/%ld -3/%ld -2/%ld\n",i,i,i);
+			fprintf(fp,"f -4/%ld -2/%ld -3/%ld\n",i,i,i);
 		}
 		else	// glyph_line(p,f,false, d);
 		{
@@ -86,7 +86,7 @@ void mgl_obj_glyph_old(HMGL gr, const mglPrim &q, const mglPnt &p, FILE *fp)
 				fprintf(fp,"v %g %g %g\n",p.x+b[0]*x+b[1]*y,p.y+b[2]*x+b[3]*y,p.z);
 				x = dx+f*g.trig[6*ik+4];	y = dy+f*g.trig[6*ik+5];
 				fprintf(fp,"v %g %g %g\n",p.x+b[0]*x+b[1]*y,p.y+b[2]*x+b[3]*y,p.z);
-				fprintf(fp,"f -1/%ld -2/%ld -3/%ld\n",i,i,i);
+				fprintf(fp,"f -1/%ld -3/%ld -2/%ld\n",i,i,i);
 			}
 		}
 		else	// glyph_wire(p,f,g, d);
