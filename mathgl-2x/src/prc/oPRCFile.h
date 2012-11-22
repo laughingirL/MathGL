@@ -747,6 +747,8 @@ class oPRCFile
 //  void addTriangle(const double P[][3], const double T[][2], uint32_t style_index);
   
     void addLine(uint32_t n, const double P[][3], const RGBAColour &c, double w=1.0);
+    void addSegment(const double P1[3], const double P2[3], const RGBAColour &c, double w=1.0);
+
     void addBezierCurve(uint32_t n, const double cP[][3], const RGBAColour &c);
     void addCurve(uint32_t d, uint32_t n, const double cP[][3], const double *k, const RGBAColour &c, const double w[]);
     void addQuad(const double P[][3], const RGBAColour C[]);

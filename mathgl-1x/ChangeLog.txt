@@ -1,3 +1,14 @@
+1.11.3 Released 23 November 2012
+	- Changes in documentation license
+	- Make DefColor() to be public function
+	- Bugfix for using ids in mglData
+	- More accurate ticks and grid-lines drawing
+	- Bugfix for QuadPlot() memory access
+	- Changes for novel zlib
+	- Improve text drawing in OpenGL mode
+	- Allow inverse (negative) ticks
+	- Corrections in documentation
+
 1.11.2 Released 30 May 2011
 	- Add Quaternary coordinates
 	- Bugfixes

@@ -268,7 +268,7 @@ struct ObjGroup {
   
 //  ObjGroup(const HMGL g) : samecolor(true),	gr(g) {}
   
-  void addLine(size_t m, size_t p1, size_t p2)
+  void addSegment(size_t m, size_t p1, size_t p2)
   {
     lines[m].push_back(ObjLine(p1,p2));
   }
@@ -298,6 +298,10 @@ struct ObjGroup {
   void addTriangle(size_t p1, size_t t1, size_t p2, size_t t2, size_t p3, size_t t3)
   {
     triangles.push_back(ObjTriangle(p1,t1,p2,t2,p3,t3));
+  }
+  void addMonoTriangle(size_t t1, size_t p1, size_t p2, size_t p3)
+  {
+    triangles.push_back(ObjTriangle(p1,t1,p2,t1,p3,t1));
   }
   void addColourInfo(const mglPnt& p)
 	{
@@ -834,7 +838,7 @@ void mgl_write_obj(HMGL gr, const char *fname,const char *descr, int use_png)
           const mglPnt& p1 = gr->GetPnt(q.n1);
           const mglPnt& p2 = gr->GetPnt(q.n2);
           const size_t m = materials.addColor((p1.r+p2.r)/2, (p1.g+p2.g)/2, (p1.b+p2.b)/2, (p1.a+p2.a)/2);
-          grp.addLine(m, vcs[n1], vcs[n2]);          
+          grp.addSegment(m, vcs[n1], vcs[n2]);
         }
           break;
         case 2:
@@ -855,7 +859,89 @@ void mgl_write_obj(HMGL gr, const char *fname,const char *descr, int use_png)
           grp.addColourInfo(gr->GetPnt(n4));
         }
           break;
-        case 4:	break;	// TODO: add glyphs export later
+        case 4:
+        {
+          const mglPnt p = gr->GetPnt(q.n1) - p0;
+
+          const mreal f = q.p/2, dx=p.u/2, dy=p.v/2;
+          const mreal c=q.s*cos(q.w*M_PI/180), s=-q.s*sin(q.w*M_PI/180);
+          const double b[4] = {c,-s, s,c};
+          long ik,il=0;
+          
+          const mglGlyph &g = gr->GetGlf(q.n4);
+          const mreal dd = 0.004;
+          if(q.n3&8)
+          {
+            const size_t p_4 = vertexcoords.addVertexCoords(p.x+b[0]*dx+b[1]*(dy-dd),p.y+b[2]*dx+b[3]*(dy-dd),p.z);
+            const size_t p_3 = vertexcoords.addVertexCoords(p.x+b[0]*dx+b[1]*(dy+dd),p.y+b[2]*dx+b[3]*(dy+dd),p.z);
+            const size_t p_2 = vertexcoords.addVertexCoords(p.x+b[0]*(dx+f)+b[1]*(dy-dd),p.y+b[2]*dx+b[3]*(dy-dd),p.z);
+            const size_t p_1 = vertexcoords.addVertexCoords(p.x+b[0]*(dx+f)+b[1]*(dy+dd),p.y+b[2]*dx+b[3]*(dy+dd),p.z);
+            
+            if(!(q.n3&4))	// glyph_line(p,f,true, d);
+            {
+              const size_t ti = tcs[n1]; grp.addColourInfo(p);
+              grp.addMonoTriangle(ti, p_1, p_3, p_2);
+              grp.addMonoTriangle(ti, p_4, p_2, p_3);
+            }
+            else	// glyph_line(p,f,false, d);
+            {
+              const size_t m = materials.addColor(p.r, p.g, p.b, p.a);
+              grp.addSegment(m, p_1, p_2);
+              grp.addSegment(m, p_3, p_4);
+              grp.addSegment(m, p_1, p_3);
+              grp.addSegment(m, p_2, p_4);
+            }
+          }
+          else
+          {
+            if(!(q.n3&4))	// glyph_fill(p,f,g, d);
+            {
+              for(ik=0;ik<g.nt;ik++)
+              {
+                mreal x,y;
+                x = dx+f*g.trig[6*ik];		y = dy+f*g.trig[6*ik+1];
+                const size_t p_3 = vertexcoords.addVertexCoords(p.x+b[0]*x+b[1]*y,p.y+b[2]*x+b[3]*y,p.z);
+                x = dx+f*g.trig[6*ik+2];	y = dy+f*g.trig[6*ik+3];
+                const size_t p_2 = vertexcoords.addVertexCoords(p.x+b[0]*x+b[1]*y,p.y+b[2]*x+b[3]*y,p.z);
+                x = dx+f*g.trig[6*ik+4];	y = dy+f*g.trig[6*ik+5];
+                const size_t p_1 = vertexcoords.addVertexCoords(p.x+b[0]*x+b[1]*y,p.y+b[2]*x+b[3]*y,p.z);
+
+                const size_t ti = tcs[n1]; grp.addColourInfo(p);
+                grp.addMonoTriangle(ti, p_1, p_3, p_2);
+              }
+            }
+            else	// glyph_wire(p,f,g, d);
+            {
+              const size_t m = materials.addColor(p.r, p.g, p.b, p.a);
+              for(ik=0;ik<g.nl;ik++)
+              {
+                mreal x,y;
+                x = g.line[2*ik];	y = g.line[2*ik+1];
+                if(x==0x3fff && y==0x3fff)	// line breakthrough
+                {	il = ik+1;	continue;	}
+                else if(ik==g.nl-1 || (g.line[2*ik+2]==0x3fff && g.line[2*ik+3]==0x3fff))
+                {	// enclose the circle. May be in future this block should be commented
+                  x = dx+f*g.line[2*ik];		y = dy+f*g.line[2*ik+1];
+                  const size_t p_2 = vertexcoords.addVertexCoords(p.x+b[0]*x+b[1]*y,p.y+b[2]*x+b[3]*y,p.z);
+                  x = dx+f*g.line[2*il];		y = dy+f*g.line[2*il+1];
+                  const size_t p_1 = vertexcoords.addVertexCoords(p.x+b[0]*x+b[1]*y,p.y+b[2]*x+b[3]*y,p.z);
+                  grp.addSegment(m, p_1, p_2);
+                }
+                else
+                {	// normal line
+                  x = dx+f*g.line[2*ik];		y = dy+f*g.line[2*ik+1];
+                  const size_t p_2 = vertexcoords.addVertexCoords(p.x+b[0]*x+b[1]*y,p.y+b[2]*x+b[3]*y,p.z);
+                  x = dx+f*g.line[2*ik+2];	y = dy+f*g.line[2*ik+3];
+                  const size_t p_1 = vertexcoords.addVertexCoords(p.x+b[0]*x+b[1]*y,p.y+b[2]*x+b[3]*y,p.z);
+                  grp.addSegment(m, p_1, p_2);
+                }
+
+              }
+            }
+          }
+
+        }
+          break;
       }
 		}
     if (!grp.triangles.empty() || !grp.lines.empty() || !grp.points.empty())

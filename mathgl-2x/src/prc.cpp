@@ -716,7 +716,95 @@ void mgl_write_prc(HMGL gr, const char *fname,const char* /*descr*/, int make_pd
 						group.triangles.push_back(triangle2);
 					}
 					break;
-					case 4:	break;	// TODO: add glyphs export later
+					case 4:
+					if (gr->GetPnt(q.n1).a > mgl_min_a) {
+						const mglPnt p = gr->GetPnt(q.n1) - p0;
+						
+						const mreal f = q.p/2, dx=p.u/2, dy=p.v/2;
+						const mreal c=q.s*cos(q.w*M_PI/180), s=-q.s*sin(q.w*M_PI/180);
+						const double b[4] = {c,-s, s,c};
+						long ik,il=0;
+						
+						const mglGlyph &g = gr->GetGlf(q.n4);
+						const mreal dd = 0.004;
+						if(q.n3&8)
+						{
+							if(!(q.n3&4))	// glyph_line(p,f,true, d);
+							{
+								const uint32_t ti = group.addColourInfo(p);
+								const uint32_t p_4 = group.addPoint(p.x+b[0]*dx+b[1]*(dy-dd),p.y+b[2]*dx+b[3]*(dy-dd),p.z);
+								const uint32_t p_3 = group.addPoint(p.x+b[0]*dx+b[1]*(dy+dd),p.y+b[2]*dx+b[3]*(dy+dd),p.z);
+								const uint32_t p_2 = group.addPoint(p.x+b[0]*(dx+f)+b[1]*(dy-dd),p.y+b[2]*dx+b[3]*(dy-dd),p.z);
+								const uint32_t p_1 = group.addPoint(p.x+b[0]*(dx+f)+b[1]*(dy+dd),p.y+b[2]*dx+b[3]*(dy+dd),p.z);
+								
+								group.addTriangle(ti, p_1, p_3, p_2);
+								group.addTriangle(ti, p_4, p_2, p_3);
+							}
+							else	// glyph_line(p,f,false, d);
+							{
+								const RGBAColour c(p.r, p.g, p.b, p.a);
+								const double p_4[3] = {p.x+b[0]*dx+b[1]*(dy-dd),p.y+b[2]*dx+b[3]*(dy-dd),p.z};
+								const double p_3[3] = {p.x+b[0]*dx+b[1]*(dy+dd),p.y+b[2]*dx+b[3]*(dy+dd),p.z};
+								const double p_2[3] = {p.x+b[0]*(dx+f)+b[1]*(dy-dd),p.y+b[2]*dx+b[3]*(dy-dd),p.z};
+								const double p_1[3] = {p.x+b[0]*(dx+f)+b[1]*(dy+dd),p.y+b[2]*dx+b[3]*(dy+dd),p.z};
+								
+								file.addSegment(p_1, p_2, c, w);
+								file.addSegment(p_3, p_4, c, w);
+								file.addSegment(p_1, p_3, c, w);
+								file.addSegment(p_2, p_4, c, w);
+							}
+						}
+						else
+						{
+							if(!(q.n3&4))	// glyph_fill(p,f,g, d);
+							{
+								for(ik=0;ik<g.nt;ik++)
+								{
+									const uint32_t ti = group.addColourInfo(p);
+									mreal x,y;
+									x = dx+f*g.trig[6*ik];		y = dy+f*g.trig[6*ik+1];
+									const uint32_t p_3 = group.addPoint(p.x+b[0]*x+b[1]*y,p.y+b[2]*x+b[3]*y,p.z);
+									x = dx+f*g.trig[6*ik+2];	y = dy+f*g.trig[6*ik+3];
+									const uint32_t p_2 = group.addPoint(p.x+b[0]*x+b[1]*y,p.y+b[2]*x+b[3]*y,p.z);
+									x = dx+f*g.trig[6*ik+4];	y = dy+f*g.trig[6*ik+5];
+									const uint32_t p_1 = group.addPoint(p.x+b[0]*x+b[1]*y,p.y+b[2]*x+b[3]*y,p.z);
+									
+									group.addTriangle(ti, p_1, p_3, p_2);
+								}
+							}
+							else	// glyph_wire(p,f,g, d);
+							{
+								const RGBAColour c(p.r, p.g, p.b, p.a);
+								for(ik=0;ik<g.nl;ik++)
+								{
+									mreal x,y;
+									x = g.line[2*ik];	y = g.line[2*ik+1];
+									if(x==0x3fff && y==0x3fff)	// line breakthrough
+									{	il = ik+1;	continue;	}
+									else if(ik==g.nl-1 || (g.line[2*ik+2]==0x3fff && g.line[2*ik+3]==0x3fff))
+									{	// enclose the circle. May be in future this block should be commented
+										x = dx+f*g.line[2*ik];		y = dy+f*g.line[2*ik+1];
+										const double p_2[3] = {p.x+b[0]*x+b[1]*y,p.y+b[2]*x+b[3]*y,p.z};
+										x = dx+f*g.line[2*il];		y = dy+f*g.line[2*il+1];
+										const double p_1[3] = {p.x+b[0]*x+b[1]*y,p.y+b[2]*x+b[3]*y,p.z};
+										file.addSegment(p_1, p_2, c, w);
+									}
+									else
+									{	// normal line
+										x = dx+f*g.line[2*ik];		y = dy+f*g.line[2*ik+1];
+										const double p_2[3] = {p.x+b[0]*x+b[1]*y,p.y+b[2]*x+b[3]*y,p.z};
+										x = dx+f*g.line[2*ik+2];	y = dy+f*g.line[2*ik+3];
+										const double p_1[3] = {p.x+b[0]*x+b[1]*y,p.y+b[2]*x+b[3]*y,p.z};
+										file.addSegment(p_1, p_2, c, w);
+									}
+									
+								}
+							}
+						}
+						
+					}
+						break;
+
 				}
 			}
 		}

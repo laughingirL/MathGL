@@ -1981,6 +1981,30 @@ void oPRCFile::addLine(uint32_t n, const double P[][3], const RGBAColour &c, dou
   }
 }
 
+void oPRCFile::addSegment(const double P1[3], const double P2[3], const RGBAColour &c, double w)
+{
+  PRCgroup &group = findGroup();
+  if(group.options.tess)
+  {
+    group.lines[w].push_back(PRCtessline());
+    PRCtessline& line = group.lines[w].back();
+    line.color.red   = c.R;
+    line.color.green = c.G;
+    line.color.blue  = c.B;
+    line.point.push_back(PRCVector3d(P1[0],P1[1],P1[2]));
+    line.point.push_back(PRCVector3d(P2[0],P2[1],P2[2]));
+  }
+  else
+  {
+    ADDWIRE(PRCPolyLine)
+    curve->point.resize(2);
+    curve->point[0].Set(P1[0],P1[1],P1[2]);
+    curve->point[1].Set(P2[0],P2[1],P2[2]);
+    curve->interval.min = 0;
+    curve->interval.max = curve->point.size()-1;
+  }
+}
+
 void oPRCFile::addBezierCurve(uint32_t n, const double cP[][3],
                               const RGBAColour &c)
 {
