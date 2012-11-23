@@ -20,7 +20,6 @@
 #ifndef _MGL_QT_H_
 #define _MGL_QT_H_
 #include <mgl2/base.h>
-#if MGL_HAVE_QT
 //-----------------------------------------------------------------------------
 #ifdef __cplusplus
 extern "C" {
@@ -239,8 +238,5 @@ QMenu *mglMakeMenu(QMainWindow* Wnd, QMathGL* QMGL, QSpinBox*& tet, QSpinBox*& p
 //-----------------------------------------------------------------------------
 void mgl_ask_qt(const wchar_t *quest, wchar_t *res);
 //-----------------------------------------------------------------------------
-#endif
-#else
-#error "Please enable Qt support"
 #endif
 #endif

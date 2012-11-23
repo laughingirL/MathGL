@@ -28,6 +28,7 @@
 #define	_USE_MATH_DEFINES
 #endif
 
+#ifdef MGL_SRC
 #if MGL_HAVE_ZLIB
 #include <zlib.h>
 #ifndef Z_BEST_COMPRESSION
@@ -41,6 +42,7 @@
 #define gzprintf	fprintf
 #define gzgets(fp,str,size)	fgets(str,size,fp)
 #define gzgetc	fgetc
+#endif
 #endif
 
 #include <math.h>

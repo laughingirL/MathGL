@@ -13,6 +13,7 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 8. 3D text (with depth, for Quality=3)
 9. Text along 3D curve (for Quality=3)
 10. introduce new primitive type=5 -- arrow for Quality&3!=3. for better drawing in projections + json/view ?!?
+11. Increase line width for arrows?!?
 
 ============= NEW FOR v.2.1 =============
 
@@ -21,7 +22,7 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 1. inverse axis sample
 2. Check if mgl_draw_class, mgl_reload_class, mgl_click_class(void *p) are usable under Win32 non-native
 3. WX window/widgets
-4. Increase line width for arrows?!
+4. switch off MGL_HAVE_ZLIB in define.h
 
 A. libhpdf for win32
 

@@ -22,7 +22,6 @@
 #define _MGL_FLTK_H_
 
 #include <mgl2/base.h>
-#if MGL_HAVE_FLTK
 //-----------------------------------------------------------------------------
 #ifdef __cplusplus
 extern "C" {
@@ -174,8 +173,5 @@ protected:
 void mgl_ask_fltk(const wchar_t *quest, wchar_t *res);
 void mgl_makemenu_fltk(Fl_Menu_ *m, Fl_MGLView *w);
 //-----------------------------------------------------------------------------
-#endif
-#else
-#error "Please enable FLTK support"
 #endif
 #endif

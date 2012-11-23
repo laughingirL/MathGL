@@ -1234,6 +1234,8 @@ bool mgl_check_vec3(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, 
 	return false;
 }
 //-----------------------------------------------------------------------------
+void mglBase::SetFontDef(const char *font) {	strncpy(FontDef, font, 31);	}
+//-----------------------------------------------------------------------------
 void mglBase::ClearUnused()
 {
 #if MGL_HAVE_PTHREAD

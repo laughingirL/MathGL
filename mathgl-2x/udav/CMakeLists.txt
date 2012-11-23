@@ -38,6 +38,6 @@ install(
 )
 install(FILES udav.desktop DESTINATION ${CMAKE_INSTALL_PREFIX}/share/applications/)
 install(FILES udav.png DESTINATION ${CMAKE_INSTALL_PREFIX}/share/pixmaps/)
-#install(FILES udav_ru.qm DESTINATION ${CMAKE_INSTALL_PREFIX}/share/udav/)
+install(FILES udav_ru.qm DESTINATION ${CMAKE_INSTALL_PREFIX}/share/udav/)
 
 endif(MGL_HAVE_QT)
