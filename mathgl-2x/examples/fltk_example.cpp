@@ -20,6 +20,8 @@
 #include "mgl2/fltk.h"
 #if defined(WIN32) || defined(_MSC_VER) || defined(__BORLANDC__)
 #include <window.h>
+#else
+#include <unistd.h>
 #endif
 //-----------------------------------------------------------------------------
 int test_wnd(mglGraph *gr);

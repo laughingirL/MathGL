@@ -1251,19 +1251,24 @@ Calculate screen point @{xs,ys@} for 3D coordinate @{x,y,z@}. The calculation ar
 Set the numeric id for object or subplot/inplot.
 @end deftypefn
 
-@deftypefn {Method on @code{mglGraph}} @code{int} GetObjId (@code{long} xs, @code{long} ys)
-@deftypefnx {C function} @code{int} mgl_get_obj_id (@code{HMGL} gr, @code{long} xs, @code{long} ys)
+@deftypefn {Method on @code{mglGraph}} @code{int} GetObjId (@code{int} xs, @code{int} ys)
+@deftypefnx {C function} @code{int} mgl_get_obj_id (@code{HMGL} gr, @code{int} xs, @code{int} ys)
 Get the numeric id for most upper object at pixel @{xs, ys@} of the picture.
 @end deftypefn
 
-@deftypefn {Method on @code{mglGraph}} @code{int} GetSplId (@code{long} xs, @code{long} ys)
-@deftypefnx {C function} @code{int} mgl_get_spl_id (@code{HMGL} gr, @code{long} xs, @code{long} ys)
+@deftypefn {Method on @code{mglGraph}} @code{int} GetSplId (@code{int} xs, @code{int} ys)
+@deftypefnx {C function} @code{int} mgl_get_spl_id (@code{HMGL} gr, @code{int} xs, @code{int} ys)
 Get the numeric id for most subplot/inplot at pixel @{xs, ys@} of the picture.
 @end deftypefn
 
 @deftypefn {Method on @code{mglGraph}} @code{void} Highlight (@code{int} id)
 @deftypefnx {C function} @code{void} mgl_highlight (@code{HMGL} gr, @code{int} id)
 Highlight the object with given @var{id}.
+@end deftypefn
+
+@deftypefn {Method on @code{mglGraph}} @code{long} IsActive (@code{int} xs, @code{int} ys, @code{int} d=@code{1})
+@deftypefnx {C function} @code{long} mgl_is_active (@code{HMGL} gr, @code{int} xs, @code{int} ys, @code{int} d)
+Checks if point @{@var{xs}, @var{ys}@} is close to one of active point (i.e. mglBase::Act) with accuracy @var{d} and return its index or @code{-1} if not found. Active points are special points which characterize primitives (like edges and so on). This function for advanced users only.
 @end deftypefn
 
 @end ifclear

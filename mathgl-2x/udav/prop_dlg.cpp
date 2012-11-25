@@ -37,7 +37,7 @@
 #include "plot_pnl.h"
 #include "text_pnl.h"
 //-----------------------------------------------------------------------------
-extern QColor mglColorScheme[9];
+extern QColor mglColorScheme[10];
 extern QString defFontFamily;
 extern int defFontSize;
 extern QString pathHelp;
@@ -72,7 +72,7 @@ PropDialog::PropDialog(QWidget *parent) : QDialog(parent)
 	cc[2]=mglColorScheme[2];	cc[3]=mglColorScheme[3];
 	cc[4]=mglColorScheme[4];	cc[5]=mglColorScheme[5];
 	cc[6]=mglColorScheme[6];	cc[7]=mglColorScheme[7];
-	cc[8]=mglColorScheme[8];//	cc[5]=mglColorScheme[5];
+	cc[8]=mglColorScheme[8];	cc[9]=mglColorScheme[9];
 	QPixmap pic(16,16);
 	l = new QLabel(tr("Setup colors for:"), this);	v->addWidget(l, Qt::AlignHCenter);
 	QGridLayout *g = new QGridLayout();		v->addLayout(g);
@@ -100,7 +100,10 @@ PropDialog::PropDialog(QWidget *parent) : QDialog(parent)
 	pic.fill(cc[7]);	cb[7] = new QPushButton(pic, tr("FlowKey"), this);
 	connect(cb[7], SIGNAL(clicked()),this, SLOT(setC7()));
 	g->addWidget(cb[7], 2, 1);
-
+	pic.fill(cc[9]);	cb[9] = new QPushButton(pic, tr("CurrLine"), this);
+	connect(cb[9], SIGNAL(clicked()),this, SLOT(setC9()));
+	g->addWidget(cb[9], 2, 2);
+	
 	l = new QLabel(tr("Path for help files"), this);	v->addWidget(l);
 	h = new QHBoxLayout();		v->addLayout(h);
 	hlp = new QLineEdit(pathHelp, this);	h->addWidget(hlp,1);
@@ -192,7 +195,7 @@ void PropDialog::getPathF()
 //-----------------------------------------------------------------------------
 void PropDialog::setC(int k)
 {
-	if(k<0 || k>8)	return;
+	if(k<0 || k>9)	return;
 	QColor c = QColorDialog::getColor(cc[k], this);
 	if(c.isValid())
 	{
@@ -214,6 +217,8 @@ void PropDialog::applyChanges()
 	mglColorScheme[0]=cc[0];	mglColorScheme[1]=cc[1];
 	mglColorScheme[2]=cc[2];	mglColorScheme[3]=cc[3];
 	mglColorScheme[4]=cc[4];	mglColorScheme[5]=cc[5];
+	mglColorScheme[6]=cc[6];	mglColorScheme[7]=cc[7];
+	mglColorScheme[8]=cc[8];	mglColorScheme[9]=cc[9];
 	mglAutoExecute = run->isChecked();
 	editPosBottom = edt->isChecked();
 	pathHelp = hlp->text();	pathFont = fnt->lineEdit()->text();
@@ -267,6 +272,6 @@ void PropDialog::applyChanges()
 	settings.setValue("/defHeight", defHeight);
 	settings.endGroup();
 
-	accept();
+	accept();	emit propUpdated();
 }
 //-----------------------------------------------------------------------------

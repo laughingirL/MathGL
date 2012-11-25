@@ -22,30 +22,25 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 1. inverse axis sample
 2. Check if mgl_draw_class, mgl_reload_class, mgl_click_class(void *p) are usable under Win32 non-native
 3. WX window/widgets
-4. switch off MGL_HAVE_ZLIB in define.h
+4. test TeX output + sample in docs
+5. Command options dialog -- add "value"
 
 A. libhpdf for win32
 
 ============= DOCS =============
 
 1. FAQ about import library and *.a; 32bit and 64bit incompatibility (+ into Install section)
-2. Text about UDAV (tabs,dialogs,hotkeys,hints,mouse)
-* known feature -- if you draw something in function then highlighted all similar objects
-* Dbl.click on figure --> newCmd dialog
-* Dbl.click on primitive --> dialog for styles
-* Dbl.click on active point --> remove primitive
+2. UDAV hotkeys
 
 3. Add FAQ about MPEG/GIF and PDF, JavaScript
-4. JSON samples in documentation ?!!
+4. JSON samples in web-page ?!!
 5. Hint about inverse axis range
 6. Solve & evaluate sample
-9. Add mglGraph::IsActive()
-10. Check C/Fortran samples
-11. Axis projections sample
-12. FAQ about Fortran option -fdefault-real-8 for enable-double=ON
-13. Solve sample
+7. Axis projections sample
+8. Check C/Fortran samples
+9. update class diagram (mglDataC, mglQT, mglFLTK, mglGLUT, mglWX)
+
 14. Thanks -- C.M., A.P.$
-16. update class diagram (mglDataC, mglQT, mglFLTK, mglGLUT, mglWX)
 
 ============= UDAV =============
 

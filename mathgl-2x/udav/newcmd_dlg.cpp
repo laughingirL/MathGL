@@ -101,6 +101,7 @@ NewCmdDialog::NewCmdDialog(QWidget *p) : QDialog(p,Qt::WindowStaysOnTopHint)
 	connect(name, SIGNAL(currentIndexChanged(int)),this,SLOT(nameChanged(int)));
 	connect(kind, SIGNAL(currentIndexChanged(int)),this,SLOT(kindChanged(int)));
 	type->setCurrentIndex(0);	typeChanged(0);
+	setWindowTitle(tr("New command"));
 }
 //-----------------------------------------------------------------------------
 void NewCmdDialog::zoomIn()
@@ -280,6 +281,11 @@ void NewCmdDialog::insertOpt()
 void NewCmdDialog::insertData()
 {
 	int row = args->currentRow();
+	if(row<0)
+	{
+		QMessageBox::warning(this,tr("New command"), tr("No argument is selected"));
+		return;
+	}
 	QString a = args->item(row,0)->text();
 	if(a[0].isUpper())
 	{

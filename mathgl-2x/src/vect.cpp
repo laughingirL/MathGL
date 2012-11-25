@@ -1114,7 +1114,7 @@ void flowr(mglBase *gr, double zVal, double u, double v, const mglData &x, const
 	} while(!end);
 	if(k>1)
 	{
-		const int num=41;
+		const int num=24;
 		long i,j,*id=new long[2*num];
 		mglPoint p,l=pp[1]-pp[0],t,q,d;
 		t = !l;	t.Normalize();	q = t^l;	q.Normalize();
@@ -1272,7 +1272,7 @@ void flowr(mglBase *gr, double u, double v, double w, const mglData &x, const mg
 	} while(!end);
 	if(k>1)
 	{
-		const int num=41;
+		const int num=24;
 		long i,j,*id=new long[2*num];
 		mglPoint p,l=pp[1]-pp[0],t,q,d;
 		t = !l;	t.Normalize();	q = t^l;	q.Normalize();

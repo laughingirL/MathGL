@@ -217,10 +217,10 @@ const unsigned char *mgl_get_rgba_(uintptr_t *gr);
 void mgl_set_obj_id(HMGL gr, int id);
 void mgl_set_obj_id_(uintptr_t *gr, int *id);
 /// Get object id
-int mgl_get_obj_id(HMGL gr, long x, long y);
+int mgl_get_obj_id(HMGL gr, int x, int y);
 int mgl_get_obj_id_(uintptr_t *gr, int *x, int *y);
 /// Get subplot id
-int mgl_get_spl_id(HMGL gr, long x, long y);
+int mgl_get_spl_id(HMGL gr, int x, int y);
 int mgl_get_spl_id_(uintptr_t *gr, int *x, int *y);
 /// Get width of the image
 int mgl_get_width(HMGL gr);

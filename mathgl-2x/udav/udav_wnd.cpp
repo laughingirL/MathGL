@@ -254,6 +254,7 @@ MainWindow::MainWindow(QWidget *wp) : QMainWindow(wp)
 	connect(mess, SIGNAL(textChanged()), this, SLOT(warnChanged()));
 //	connect(mdi, SIGNAL(subWindowActivated(QMdiSubWindow *)), this, SLOT(subActivated(QMdiSubWindow *)));
 	connect(propDlg, SIGNAL(sizeChanged(int,int)), graph->mgl, SLOT(imgSize(int,int)));
+//	connect(propDlg, SIGNAL(propUpdated()), edit->edit, SLOT(update()));	// TODO: update qmglsyntax
 	connect(edit->edit,SIGNAL(textChanged()), this, SLOT(setAsterix()));
 	connect(edit->edit, SIGNAL(cursorPositionChanged()), this, SLOT(editPosChanged()));
 	connect(edit,SIGNAL(setCurrentFile(QString)),this,SLOT(setCurrentFile(QString)));
@@ -505,6 +506,7 @@ void MainWindow::writeSettings()
 	settings.setValue("/colACKeyword", mglColorScheme[6].name());
 	settings.setValue("/colFCKeyword", mglColorScheme[7].name());
 	settings.setValue("/colReserved", mglColorScheme[8].name());
+	settings.setValue("/colCurrLine", mglColorScheme[9].name());
 	settings.setValue("/autoExec",  mglAutoExecute);
 	settings.setValue("/autoSave",  mglAutoSave);
 	settings.setValue("/highlight",  mglHighlight);
@@ -542,6 +544,7 @@ void MainWindow::readSettings()
 	mglColorScheme[6] = QColor(settings.value("/colACKeyword","#7F007F").toString());
 	mglColorScheme[7] = QColor(settings.value("/colFCKeyword","#007F7F").toString());
 	mglColorScheme[8] = QColor(settings.value("/colReserved", "#0000FF").toString());
+	mglColorScheme[9] = QColor(settings.value("/colCurrLine", "#FFFFCC").toString());
 	mglAutoSave = settings.value("/autoSave",  false).toBool();
 	mglHighlight = settings.value("/highlight",  true).toBool();
 	mglAutoPure = settings.value("/autoPure",  true).toBool();

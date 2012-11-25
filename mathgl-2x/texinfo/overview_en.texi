@@ -131,7 +131,9 @@ Now picture is ready and we can save it in a file.
 
 To compile your program, you need to specify the linker option @code{-lmgl}.
 
-This is enough for a compilation of console program or with external (non-MathGL) window library. If you want to use FLTK or Qt windows provided by MathGL then you need to add the option @code{-lmgl-wnd}. Fortran users also should add C++ library by the option @code{-lstdc++}.
+This is enough for a compilation of console program or with external (non-MathGL) window library. If you want to use FLTK or Qt windows provided by MathGL then you need to add the option @code{-lmgl-wnd}.
+
+Fortran users also should add C++ library by the option @code{-lstdc++}. If library was built with @code{enable-double=ON} (this default for v.2.1 and later) then all real numbers must be real*8. You can make it automatic if use option @code{-fdefault-real-8}.
 
 @c ------------------------------------------------------------------
 @external

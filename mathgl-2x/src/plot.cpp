@@ -1521,7 +1521,7 @@ void mgl_tube_xyzr(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const char *pen, con
 	bool sh = mglchr(pen,'!');
 	bool wire = mglchr(pen,'#');
 
-	const int num=41;
+	const int num=24;
 	gr->SetPenPal(pen,&pal);
 	gr->Reserve(n*m*num);
 	mglPoint p,l,t,u,q,d;

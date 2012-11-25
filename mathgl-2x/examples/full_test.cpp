@@ -106,43 +106,42 @@ void fexport(mglGraph *gr)
 	gr->WriteSTL("test.stl");
 	gr->WriteOFF("test.off");
 	gr->WriteTEX("test.tex");
-	gr->WriteOBJ("test.obj","",true);
-	//	gr->WriteX3D("test.x3d");
+	gr->WriteOBJ("test.obj");
+	gr->WritePRC("test.prc");
 }
 //-----------------------------------------------------------------------------
 #if !defined(_MSC_VER) && !defined(__BORLANDC__)
 static struct option longopts[] =
 {
-	{ "big",			no_argument,	&big,		1 },
-	{ "bps",			no_argument,	&type,		8 },
-	{ "help",			no_argument,	NULL,		'?' },
-	{ "height",		required_argument,	NULL,	'h' },
-	{ "png",			no_argument,	&type,		0 },
-	{ "eps",			no_argument,	&type,		1 },
-	{ "gif",			no_argument,	&type,		6 },
-	{ "jpeg",			no_argument,	&type,		4 },
-	{ "kind",			required_argument,	NULL,	'k' },
-	{ "list",			no_argument,	NULL,		'l' },
-	{ "mgl",			no_argument,	&use_mgl,	1 },
-	{ "mini",			no_argument,	&mini,		1 },
-	{ "none",		no_argument,	&type,		7 },
-	{ "obj",			no_argument,	&type,		11 },
-	{ "off",			no_argument,	&type,		12 },
-	{ "pdf",			no_argument,	&type,		10 },
-	{ "prc",			no_argument,	&type,		5 },
-	{ "solid",		no_argument,	&type,		3 },
-	{ "srnd",			no_argument,	&srnd,		1 },
-	{ "svg",			no_argument,	&type,		2 },
-	{ "stl",			no_argument,	&type,		13 },
-	{ "tex",			no_argument,	&type,		14 },
-	{ "test",			no_argument,	&dotest,	1 },
-	{ "font",			no_argument,	&dotest,	2 },
-	{ "fmts",			no_argument,	&dotest,	3 },
-	{ "thread",		required_argument,	NULL,	't' },
-//	{ "u3d",			no_argument,	&type,		9 },
-	{ "verbose",		no_argument,	&verbose,	1 },
-	{ "width",		required_argument,	NULL,	'w' },
-	{ NULL,				0,				NULL,		0 }
+	{ "big",	no_argument,	&big,		1 },
+	{ "bps",	no_argument,	&type,		8 },
+	{ "help",	no_argument,	NULL,		'?' },
+	{ "height",	required_argument,	NULL,	'h' },
+	{ "png",	no_argument,	&type,		0 },
+	{ "eps",	no_argument,	&type,		1 },
+	{ "gif",	no_argument,	&type,		6 },
+	{ "jpeg",	no_argument,	&type,		4 },
+	{ "kind",	required_argument,	NULL,	'k' },
+	{ "list",	no_argument,	NULL,		'l' },
+	{ "mgl",	no_argument,	&use_mgl,	1 },
+	{ "mini",	no_argument,	&mini,		1 },
+	{ "none",	no_argument,	&type,		7 },
+	{ "obj",	no_argument,	&type,		11 },
+	{ "off",	no_argument,	&type,		12 },
+	{ "prc",	no_argument,	&type,		5 },
+	{ "solid",	no_argument,	&type,		3 },
+	{ "srnd",	no_argument,	&srnd,		1 },
+	{ "svg",	no_argument,	&type,		2 },
+	{ "stl",	no_argument,	&type,		13 },
+	{ "tex",	no_argument,	&type,		14 },
+	{ "json",	no_argument,	&type,		15 },
+	{ "test",	no_argument,	&dotest,	1 },
+	{ "font",	no_argument,	&dotest,	2 },
+	{ "fmts",	no_argument,	&dotest,	3 },
+	{ "thread",	required_argument,	NULL,	't' },
+	{ "verbose",no_argument,	&verbose,	1 },
+	{ "width",	required_argument,	NULL,	'w' },
+	{ NULL,		0,				NULL,		0 }
 };
 //-----------------------------------------------------------------------------
 void usage()
@@ -154,11 +153,11 @@ void usage()
 		"--mini		- png picture is 200x150\n"
 		"--big		- png picture is 1920x1440\n"
 		"--idtf		- output idtf\n"
-//		"--u3d		- output u3d\n"
-		"--pdf		- output pdf\n"
+		"--prc		- output prc\n"
 		"--eps		- output EPS\n"
 		"--eps		- output LaTeX\n"
 		"--jpeg		- output JPEG\n"
+		"--json		- output JSON\n"
 		"--solid		- output solid PNG\n"
 		"--svg		- output SVG\n"
 		"--obj		- output obj/mtl\n"
@@ -209,12 +208,6 @@ void save(mglGraph *gr,const char *name,const char *suf="")
 			sprintf(buf,"%s%s.png",name,suf);
 			gr->WritePNG(buf,0,false);
 			break;
-		case 9:	// U3D
-			sprintf(buf,"%s%s.u3d",name,suf);
-			//gr->WriteU3D(buf);	break;	// TODO: Add IDTF support
-		case 10:	// PDF
-			sprintf(buf,"%s%s.pdf",name,suf);
-			//gr->WritePDF(buf);	break;	// TODO: Add IDTF support
 		case 11:	// OBJ
 			sprintf(buf,"%s%s.obj",name,suf);
 			gr->WriteOBJ(buf);	break;
@@ -224,9 +217,12 @@ void save(mglGraph *gr,const char *name,const char *suf="")
 		case 13:	// STL
 			sprintf(buf,"%s%s.stl",name,suf);
 			gr->WriteSTL(buf);	break;
-		case 14:	// STL
+		case 14:	// TeX
 			sprintf(buf,"%s%s.tex",name,suf);
 			gr->WriteTEX(buf);	break;
+		case 15:	// JSON
+			sprintf(buf,"%s%s.json",name,suf);
+			gr->WriteJSON(buf);	break;
 		default:// PNG (no alpha)
 			sprintf(buf,"%s%s.png",name,suf);
 			gr->WritePNG(buf,0,false);	break;

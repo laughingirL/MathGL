@@ -92,7 +92,19 @@ line dashing style (see @ref{Line styles});
 
 end of an option in @ref{MGL scripts} or in @ref{Command options}.
 
-@item <,>
+@item <
+one of marks (see @ref{Line styles});
+
+style of @ref{subplot} and @ref{inplot};
+
+set position of @ref{colorbar};
+
+style of @ref{vect}, @ref{vect3};
+
+operation in @ref{Textual formulas}.
+
+
+@item >
 one of marks (see @ref{Line styles});
 
 style of @ref{subplot} and @ref{inplot};

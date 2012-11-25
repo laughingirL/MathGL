@@ -1206,19 +1206,24 @@ gr.GetBGRN(bits, len(bits));
 Задает числовой идентификатор для объектов или subplot/inplot.
 @end deftypefn
 
-@deftypefn {Метод класса @code{mglGraph}} @code{int} GetObjId (@code{long} xs, @code{long} ys)
-@deftypefnx {Функция С} @code{int} mgl_get_obj_id (@code{HMGL} gr, @code{long} xs, @code{long} ys)
+@deftypefn {Метод класса @code{mglGraph}} @code{int} GetObjId (@code{int} xs, @code{int} ys)
+@deftypefnx {Функция С} @code{int} mgl_get_obj_id (@code{HMGL} gr, @code{int} xs, @code{int} ys)
 Возвращает числовой идентификатор верхнего объекта в точке @{xs, ys@} рисунка.
 @end deftypefn
 
-@deftypefn {Метод класса @code{mglGraph}} @code{int} GetSplId (@code{long} xs, @code{long} ys)
-@deftypefnx {Функция С} @code{int} mgl_get_spl_id (@code{HMGL} gr, @code{long} xs, @code{long} ys)
+@deftypefn {Метод класса @code{mglGraph}} @code{int} GetSplId (@code{int} xs, @code{int} ys)
+@deftypefnx {Функция С} @code{int} mgl_get_spl_id (@code{HMGL} gr, @code{int} xs, @code{int} ys)
 Возвращает числовой идентификатор верхнего "подграфика" в точке @{xs, ys@} рисунка.
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph}} @code{void} Highlight (@code{int} id)
 @deftypefnx {Функция С} @code{void} mgl_highlight (@code{HMGL} gr, @code{int} id)
 Выделяет объект с заданным @var{id}.
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglGraph}} @code{long} IsActive (@code{int} xs, @code{int} ys, @code{int} d=@code{1})
+@deftypefnx {Функция С} @code{long} mgl_is_active (@code{HMGL} gr, @code{int} xs, @code{int} ys, @code{int} d)
+Проверяет близка ли точка @{@var{xs}, @var{ys}@} к активной точке (т.е. mglBase::Act) с точностью @var{d} и возвращает индекс активной точки или @code{-1} если не найдено. Активные точки -- специальные точки, которые характеризуют примитивы (например, вершины). Это функция только для опытных пользователей.
 @end deftypefn
 
 @end ifclear

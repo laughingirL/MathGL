@@ -49,6 +49,7 @@
 #include <QScrollBar>
 #include <QPainter>
 #include <QTextBlock>
+extern QColor mglColorScheme[10];
 //-----------------------------------------------------------------------------
 TextEdit::TextEdit(QWidget *parent) : QTextEdit(parent)
 {
@@ -62,10 +63,7 @@ void TextEdit::highlight()
 	if (!isReadOnly())
 	{
 		QTextEdit::ExtraSelection selection;
-		
-		QColor lineColor = QColor(Qt::yellow).lighter(180);
-		
-		selection.format.setBackground(lineColor);
+		selection.format.setBackground(mglColorScheme[9]);
 		selection.format.setProperty(QTextFormat::FullWidthSelection, true);
 		selection.cursor = textCursor();
 		selection.cursor.clearSelection();

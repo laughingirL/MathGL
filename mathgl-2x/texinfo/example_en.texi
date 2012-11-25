@@ -3643,6 +3643,8 @@ You can use MathGL as is with @code{gfortran} because it uses by default the AT&
 
 @emph{AT&T function} -- @code{void mgl_fplot_(uintptr_t *graph, const char *fy, const char *stl, int *n, int ly, int ls);}
 
+Fortran users also should add C++ library by the option @code{-lstdc++}. If library was built with @code{enable-double=ON} (this default for v.2.1 and later) then all real numbers must be real*8. You can make it automatic if use option @code{-fdefault-real-8}.
+
 @item How can I print in Russian/Spanish/Arabic/Japanese, and so on?
 The standard way is to use Unicode encoding for the text output. But the MathGL library also has interface for 8-bit (char *) strings with internal conversion to Unicode. This conversion depends on the current locale OS. You may change it by @code{setlocale()} function. For example, for Russian text in CP1251 encoding you may use @code{setlocale(LC_CTYPE, "ru_RU.cp1251");} (under MS Windows the name of locale may differ -- @code{setlocale(LC_CTYPE, "russian_russia.1251")}). I strongly recommend not to use the constant @code{LC_ALL} in the conversion. Since it also changes the number format, it may lead to mistakes in formula writing and reading of the text in data files. For example, the program will await a @samp{,} as a decimal point but the user will enter @samp{.}.
 

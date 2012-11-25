@@ -36,6 +36,7 @@ public:
 	~PropDialog();
 signals:
 	void sizeChanged(int w, int h);
+	void propUpdated();
 private slots:
 	void applyChanges();
 	void setC0()	{	setC(0);	}
@@ -47,17 +48,18 @@ private slots:
 	void setC6()	{	setC(6);	}
 	void setC7()	{	setC(7);	}
 	void setC8()	{	setC(8);	}
+	void setC9()	{	setC(9);	}
 	void setF();
 	void getPathH();
 	void getPathF();
 private:
 	void setC(int k);
 	QLabel *lbl;
-	QPushButton *cb[9];
+	QPushButton *cb[10];
 	QCheckBox *run, *edt, *load, *save, *pure, *cmpl, *high;
 	QLineEdit *hlp, *defW, *defH;
 	QFont defFont;
-	QColor cc[9];
+	QColor cc[10];
 	QComboBox *lng, *fnt;
 };
 //-----------------------------------------------------------------------------

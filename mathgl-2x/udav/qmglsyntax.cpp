@@ -25,7 +25,7 @@
 mglParse parser;
 int mgl_cmd_cmp(const void *a, const void *b);
 // comment string keyword option suffix number
-QColor mglColorScheme[9] = {QColor(0,127,0), QColor(255,0,0), QColor(0,0,127), QColor(127,0,0), QColor(127,0,0), QColor(0,0,255), QColor(127,0,127), QColor(0,127,127), QColor(0,0,127)};
+QColor mglColorScheme[10] = {QColor(0,127,0), QColor(255,0,0), QColor(0,0,127), QColor(127,0,0), QColor(127,0,0), QColor(0,0,255), QColor(127,0,127), QColor(0,127,127), QColor(0,0,127), QColor(255,255,204)};
 //-----------------------------------------------------------------------------
 QMGLSyntax::QMGLSyntax(QTextEdit *textEdit) : QSyntaxHighlighter(textEdit)	{}
 //-----------------------------------------------------------------------------

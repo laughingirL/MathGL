@@ -10,13 +10,23 @@ if(MGL_HAVE_DOC)
 		torus traj triangulation triplot tube type0 type1 type2 vect vecta venn )
 	set(MGL_PNG_N )
 	set(MGL_PNG_S )
+	set(MGL_PNG_J )
 
 	set(MGL_OUT ${CMAKE_BINARY_DIR}/texinfo)
 	set(MGL_TEX ${CMAKE_SOURCE_DIR}/texinfo)
+	file(MAKE_DIRECTORY ${MGL_OUT}/udav)
 	file(MAKE_DIRECTORY ${MGL_OUT}/png)
 	file(MAKE_DIRECTORY ${MGL_OUT}/small)
+	file(MAKE_DIRECTORY ${MGL_OUT}/json)
 	file(COPY ${MGL_TEX}/qt.png ${MGL_TEX}/fltk.png ${MGL_TEX}/classes.png ${MGL_TEX}/emblem_sm.png DESTINATION ${MGL_OUT})
 	file(COPY ${MGL_TEX}/toc_ru.html ${MGL_TEX}/toc_fr.html ${MGL_TEX}/toc_en.html ${MGL_TEX}/title.html ${MGL_TEX}/index.html DESTINATION ${MGL_OUT})
+
+	set(UDAV_IMG udav_arg.png udav_calc.png udav_cmd.png udav_data.png 
+		udav_gen_set.png udav_help.png udav_light.png udav_main.png udav_opt.png
+		udav_pen.png udav_prop.png udav_sch.png udav_txt.png udav_var.png)
+	foreach(SAMPLE ${UDAV_IMG})
+		file(COPY ${MGL_TEX}/udav/${SAMPLE} DESTINATION ${MGL_OUT}/udav/)
+	endforeach(SAMPLE)
 
 	foreach(SAMPLE ${MGL_PNG})
 		set(MGL_PNG_N ${MGL_PNG_N} ${MGL_OUT}/png/${SAMPLE}.png)
@@ -29,6 +39,11 @@ if(MGL_HAVE_DOC)
 			COMMAND ${CMAKE_BINARY_DIR}/examples/mgl_example -kind=${SAMPLE} -mini
 			DEPENDS mgl_example
 			WORKING_DIRECTORY ${MGL_OUT}/small )
+		set(MGL_PNG_J ${MGL_PNG_J} ${MGL_OUT}/json/${SAMPLE}.json)
+		add_custom_command(OUTPUT ${MGL_OUT}/json/${SAMPLE}.json
+			COMMAND ${CMAKE_BINARY_DIR}/examples/mgl_example -json -kind=${SAMPLE}
+			DEPENDS mgl_example
+			WORKING_DIRECTORY ${MGL_OUT}/json )
 	endforeach(SAMPLE)
 
 	set(list_texi_files_en overview_en.texi example_en.texi ex_mgl_en.texi parse_en.texi formats_en.texi udav_en.texi symbols_en.texi
@@ -45,7 +60,7 @@ if(MGL_HAVE_DOC)
 	)
 	add_custom_command(OUTPUT ${MGL_OUT}/web_en/web_en.html
 		COMMAND ${findth} -I=${MGL_OUT}/png --split=section -o web_en ${MGL_TEX}/web_en.texi
-		DEPENDS web_en.texi ${MGL_PNG_S}
+		DEPENDS web_en.texi ${MGL_PNG_S} ${MGL_PNG_J}
 		WORKING_DIRECTORY ${MGL_OUT}
 	)
 
@@ -87,7 +102,7 @@ if(MGL_HAVE_DOC)
 	)
 	add_custom_command(OUTPUT ${MGL_OUT}/web_ru/web_ru.html
 		COMMAND ${findth} -I=${MGL_OUT}/png --split=section -o web_ru ${MGL_TEX}/web_ru.texi
-		DEPENDS web_ru.texi ${MGL_PNG_S}
+		DEPENDS web_ru.texi ${MGL_PNG_S} ${MGL_PNG_J}
 		WORKING_DIRECTORY ${MGL_OUT}
 	)
 
@@ -141,11 +156,12 @@ if(MGL_HAVE_DOC)
 # 		COMMAND rm -f * */*
 # 		WORKING_DIRECTORY ${MGL_OUT}
 # 	)
-	set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "doc_en;mathgl_en;web_en;./mathgl*.*;small/*.*;png/*.*")
+	set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "doc_en;mathgl_en;web_en;./mathgl*.*;small/*.*;png/*.*;json/*.*")
 	install(FILES ${MGL_TEX}/qt.png ${MGL_TEX}/fltk.png ${MGL_TEX}/classes.png DESTINATION ${MGL_DOC_PATH})
 	install(FILES ${MGL_OUT}/mathgl_en.pdf ${MGL_OUT}/mgl_en.html DESTINATION ${MGL_DOC_PATH})
 	install(DIRECTORY ${MGL_OUT}/mathgl_en DESTINATION ${MGL_DOC_PATH})
 	install(DIRECTORY ${MGL_OUT}/png DESTINATION ${MGL_DOC_PATH})
+	install(DIRECTORY ${MGL_OUT}/udav DESTINATION ${MGL_DOC_PATH})
 	install(FILES ${MGL_TEX}/mglconv.1 ${MGL_TEX}/mglview.1 DESTINATION ${MGL_MAN_PATH}/man1)
 	install(FILES ${MGL_TEX}/mgl.5 DESTINATION ${MGL_MAN_PATH}/man5)
 # TODO: try to install all mathgl*.info* in future!!!
