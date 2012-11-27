@@ -17,7 +17,7 @@ set(mgl_hdr
 	../include/mgl2/data.h		../include/mgl2/volume.h	../include/mgl2/data_cf.h
 	../include/mgl2/define.h	../include/mgl2/other.h		../include/mgl2/eval.h
 	../include/mgl2/parser.h	../include/mgl2/addon.h		../include/mgl2/evalc.h
-	s_hull/s_hull_pro.h		../include/mgl2/window.h		../include/mgl2/canvas_wnd.h
+	s_hull/s_hull_pro.h		../include/mgl2/wnd.h		../include/mgl2/canvas_wnd.h
 )
 
 add_definitions(-DMGL_SRC)

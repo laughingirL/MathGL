@@ -34,19 +34,19 @@ int mgl_wx_run_();
 #ifdef __cplusplus
 }
 //-----------------------------------------------------------------------------
-#include <mgl2/window.h>
+#include <mgl2/wnd.h>
 //-----------------------------------------------------------------------------
 /// Wrapper class for windows displaying graphics
-class mglWX : public mglWindow
+class mglWX : public mglWnd
 {
 public:
-	mglWX(const char *title="MathGL") : mglWindow()
+	mglWX(const char *title="MathGL") : mglWnd()
 	{	gr = mgl_create_graph_wx(0,title,0,0);	}
-	mglWX(int (*draw)(HMGL gr, void *p), const char *title="MathGL", void *par=NULL, void (*load)(void *p)=0) : mglWindow()
+	mglWX(int (*draw)(HMGL gr, void *p), const char *title="MathGL", void *par=NULL, void (*load)(void *p)=0) : mglWnd()
 	{	gr = mgl_create_graph_wx(draw,title,par,load);	}
-	mglWX(int (*draw)(mglGraph *gr), const char *title="MathGL") : mglWindow()
+	mglWX(int (*draw)(mglGraph *gr), const char *title="MathGL") : mglWnd()
 	{	gr = mgl_create_graph_wx(mgl_draw_graph,title,(void*)draw,0);	}
-	mglWX(mglDraw *draw, const char *title="MathGL") : mglWindow()
+	mglWX(mglDraw *draw, const char *title="MathGL") : mglWnd()
 	{	gr = mgl_create_graph_wx(mgl_draw_class,title,draw,mgl_reload_class);
 		mgl_set_click_func(gr, mgl_click_class);	}
 	int Run()	{	return mgl_wx_run();	}	///< Run main loop for event handling
@@ -57,7 +57,6 @@ public:
 #include <wx/image.h>
 #include <wx/timer.h>
 #include <wx/bitmap.h>
-#include <mgl2/window.h>
 class mglCanvas;
 //-----------------------------------------------------------------------------
 /// Class is Wx widget which display MathGL graphics

@@ -36,7 +36,7 @@ public:
 @cindex window
 @c @cindex mglDraw
 
-Этот класс производный от класса mglGraph (см. @ref{MathGL core}). Он определен в @code{#include <mgl2/window.h>}. Класс содержит методы для создания и управления окном, содержащим графику MathGL.
+Этот класс производный от класса mglGraph (см. @ref{MathGL core}). Он определен в @code{#include <mgl2/window.h>}. Класс содержит методы для создания и управления окном, содержащим графику MathGL. Похожий набор классов существует отдельно для каждой библиотеки виджетов: @code{mglQT} в @code{#include <mgl2/qt.h>}, @code{mglFLTK} в @code{#include <mgl2/fltk.h>}, @code{mglWX} в @code{#include <mgl2/wx.h>}.
 
 @deftypefn {Конструктор класса @code{mglWindow}} {} mglWindow (@code{const char *}title=@code{"MathGL"})
 @deftypefnx {Конструктор класса @code{mglWindow}} {} mglWindow (@code{int} (*draw)(@code{HMGL} gr, @code{void *}p), @code{const char *}title=@code{"MathGL"}, @code{void *}par=@code{NULL}, @code{int} kind=@code{0}, @code{void} (*reload)(@code{HMGL} gr, @code{void *}p)=0)

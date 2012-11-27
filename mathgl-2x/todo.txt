@@ -17,10 +17,10 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 
 ============= NEW FOR v.2.1 =============
 
+00. Check if mgl_draw_class, mgl_reload_class, mgl_click_class(void *p) are usable under Win32 non-native
 0. check for possible memory leaks before release
 
 1. inverse axis sample
-2. Check if mgl_draw_class, mgl_reload_class, mgl_click_class(void *p) are usable under Win32 non-native
 3. WX window/widgets
 4. test TeX output + sample in docs
 5. Command options dialog -- add "value"
@@ -38,7 +38,6 @@ A. libhpdf for win32
 6. Solve & evaluate sample
 7. Axis projections sample
 8. Check C/Fortran samples
-9. update class diagram (mglDataC, mglQT, mglFLTK, mglGLUT, mglWX)
 
 14. Thanks -- C.M., A.P.$
 

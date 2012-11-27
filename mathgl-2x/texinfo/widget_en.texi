@@ -36,7 +36,7 @@ You should inherit yours class from @code{mglDraw} and re-implement one or both 
 @cindex window
 @c @cindex mglDraw
 
-This class is derived from mglGraph class (see @ref{MathGL core}). It is defined in @code{#include <mgl2/window.h>}. It provide methods for handling window with MathGL graphics.
+This class is derived from mglGraph class (see @ref{MathGL core}). It is defined in @code{#include <mgl2/window.h>}. It provide methods for handling window with MathGL graphics. Similar classes are exist for each widget library: @code{mglQT} in @code{#include <mgl2/qt.h>}, @code{mglFLTK} in @code{#include <mgl2/fltk.h>}, @code{mglWX} in @code{#include <mgl2/wx.h>}.
 
 @deftypefn {Constructor on @code{mglWindow}} {} mglWindow (@code{const char *}title=@code{"MathGL"})
 @deftypefnx {Constructor on @code{mglWindow}} {} mglWindow (@code{int} (*draw)(@code{HMGL} gr, @code{void *}p), @code{const char *}title=@code{"MathGL"}, @code{void *}par=@code{NULL}, @code{int} kind=@code{0}, @code{void} (*reload)(@code{HMGL} gr, @code{void *}p)=0)

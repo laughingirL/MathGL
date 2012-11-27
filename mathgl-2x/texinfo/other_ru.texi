@@ -2,13 +2,13 @@
 @c ------------------------------------------------------------------
 @chapter Other classes
 
-There are only 5 end-user classes: @code{mglGraph} (see @ref{MathGL core}), @code{mglWindow} and @code{mglGLUT} (see @ref{Widget classes}), @code{mglData} (see @ref{Data processing}), @code{mglParse} (see @ref{MGL scripts}). Exactly these classes I recommend to use in most of user programs. All methods in all of these classes are inline and have exact C/Fortran analogue functions. This give compiler independent binary libraries for MathGL.
+There are few end-user classes: @code{mglGraph} (see @ref{MathGL core}), @code{mglWindow} and @code{mglGLUT} (see @ref{Widget classes}), @code{mglData} (see @ref{Data processing}), @code{mglParse} (see @ref{MGL scripts}). Exactly these classes I recommend to use in most of user programs. All methods in all of these classes are inline and have exact C/Fortran analogue functions. This give compiler independent binary libraries for MathGL.
 
 However, sometimes you may need to extend MathGL by writing yours own plotting functions or handling yours own data structures. In these cases you may need to use low-level API. This chapter describes it.
 
 @fig{classes, Class diagram for MathGL}
 
-The internal structure of MathGL is rather complicated. There are C++ classes @code{mglBase}, @code{mglCanvas}, ... for drawing primitives and positioning the plot (blue ones in the figure). There is a layer of C functions, which include interface for most important methods of these classes. Also most of plotting functions are implemented as C functions. After it, there are ``inline'' front-end classes which are created for user convenience (yellow ones in the figure). Also there are 2 classes which are widgets for FLTK and Qt libraries (green ones in the figure).
+The internal structure of MathGL is rather complicated. There are C++ classes @code{mglBase}, @code{mglCanvas}, ... for drawing primitives and positioning the plot (blue ones in the figure). There is a layer of C functions, which include interface for most important methods of these classes. Also most of plotting functions are implemented as C functions. After it, there are ``inline'' front-end classes which are created for user convenience (yellow ones in the figure). Also there are widgets for FLTK, Qt and other libraries (green ones in the figure).
 
 Below I show how this internal classes can be used.
 

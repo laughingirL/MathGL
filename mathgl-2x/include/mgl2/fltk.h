@@ -37,23 +37,22 @@ int mgl_fltk_thr();
 #ifdef __cplusplus
 }
 //-----------------------------------------------------------------------------
-#include <mgl2/window.h>
+#include <mgl2/wnd.h>
 //-----------------------------------------------------------------------------
 /// Wrapper class for windows displaying graphics
-class mglFLTK : public mglWindow
+class mglFLTK : public mglWnd
 {
 public:
-	mglFLTK(const char *title="MathGL") : mglWindow()
+	mglFLTK(const char *title="MathGL") : mglWnd()
 	{	gr = mgl_create_graph_fltk(0,title,0,0);	}
-	mglFLTK(int (*draw)(HMGL gr, void *p), const char *title="MathGL", void *par=NULL, void (*load)(void *p)=0) : mglWindow()
+	mglFLTK(int (*draw)(HMGL gr, void *p), const char *title="MathGL", void *par=NULL, void (*load)(void *p)=0) : mglWnd()
 	{	gr = mgl_create_graph_fltk(draw,title,par,load);	}
-	mglFLTK(int (*draw)(mglGraph *gr), const char *title="MathGL") : mglWindow()
+	mglFLTK(int (*draw)(mglGraph *gr), const char *title="MathGL") : mglWnd()
 	{	gr = mgl_create_graph_fltk(mgl_draw_graph,title,(void*)draw,0);	}
-	mglFLTK(mglDraw *draw, const char *title="MathGL") : mglWindow()
+	mglFLTK(mglDraw *draw, const char *title="MathGL") : mglWnd()
 	{	gr = mgl_create_graph_fltk(mgl_draw_class,title,draw,mgl_reload_class);
 		mgl_set_click_func(gr, mgl_click_class);	}
 	int Run()	{	return mgl_fltk_run();	}	///< Run main loop for event handling
-
 };
 //-----------------------------------------------------------------------------
 #ifdef __MWERKS__

@@ -21,7 +21,7 @@
 #ifndef _MGL_GLUT_H_
 #define _MGL_GLUT_H_
 #ifdef __cplusplus
-#include <mgl2/window.h>
+#include <mgl2/wnd.h>
 //-----------------------------------------------------------------------------
 extern "C" {
 #endif

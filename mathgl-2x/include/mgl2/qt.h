@@ -33,23 +33,22 @@ int mgl_qt_run_();
 #ifdef __cplusplus
 }
 //-----------------------------------------------------------------------------
-#include <mgl2/window.h>
+#include <mgl2/wnd.h>
 //-----------------------------------------------------------------------------
 /// Wrapper class for windows displaying graphics
-class mglQT : public mglWindow
+class mglQT : public mglWnd
 {
 public:
-	mglQT(const char *title="MathGL") : mglWindow()
+	mglQT(const char *title="MathGL") : mglWnd()
 	{	gr = mgl_create_graph_qt(0,title,0,0);	}
-	mglQT(int (*draw)(HMGL gr, void *p), const char *title="MathGL", void *par=NULL, void (*load)(void *p)=0) : mglWindow()
+	mglQT(int (*draw)(HMGL gr, void *p), const char *title="MathGL", void *par=NULL, void (*load)(void *p)=0) : mglWnd()
 	{	gr = mgl_create_graph_qt(draw,title,par,load);	}
-	mglQT(int (*draw)(mglGraph *gr), const char *title="MathGL") : mglWindow()
+	mglQT(int (*draw)(mglGraph *gr), const char *title="MathGL") : mglWnd()
 	{	gr = mgl_create_graph_qt(mgl_draw_graph,title,(void*)draw,0);	}
-	mglQT(mglDraw *draw, const char *title="MathGL") : mglWindow()
+	mglQT(mglDraw *draw, const char *title="MathGL") : mglWnd()
 	{	gr = mgl_create_graph_qt(mgl_draw_class,title,draw,mgl_reload_class);
 		mgl_set_click_func(gr, mgl_click_class);	}
 	int Run()	{	return mgl_qt_run();	}	///< Run main loop for event handling
-
 };
 //-----------------------------------------------------------------------------
 #include <string>

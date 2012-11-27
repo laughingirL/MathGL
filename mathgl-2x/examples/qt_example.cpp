@@ -42,7 +42,7 @@ class Foo : public mglDraw
 {
 	mglPoint pnt;  // some result of calculation
 public:
-	mglWindow *Gr;  // graphics to be updated
+	mglWnd *Gr;  // graphics to be updated
 	int Draw(mglGraph *gr);
 	void Calc();
 } foo;

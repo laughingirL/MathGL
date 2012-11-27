@@ -20,74 +20,43 @@
 #ifndef _MGL_WINDOW_H_
 #define _MGL_WINDOW_H_
 
-#include "mgl2/mgl.h"
+#include "mgl2/qt.h"
+#include "mgl2/fltk.h"
+#include "mgl2/wx.h"
 //-----------------------------------------------------------------------------
-/// Class for drawing in windows (like, mglCanvasFL, mglCanvasQT and so on)
-/// Make inherited class and redefine Draw() function if you don't want to use function pointers.
-struct mglDraw
+/// Wrapper class for all windows displaying graphics
+class mglWindow : public mglWnd
 {
-	virtual int Draw(mglGraph *)=0;	///< Function for drawing
-	virtual void Reload()	{}		///< Function for reloading data
-	virtual void Click()	{}		///< Callback function on mouse click
-	virtual ~mglDraw()	{}
-#if MGL_HAVE_PTHREAD
-	pthread_t thr;
-	bool running;
-	mglDraw()	{	running=false;	}
-	virtual void Calc()	{}			///< Function for calculations
-	inline void Run()				///< Run calculations in other thread
-	{	mgl_draw_thr(this);	}
-#else
-	mglDraw(){}
-#endif
-};
-//-----------------------------------------------------------------------------
-extern "C" {
-int mgl_draw_graph(HMGL gr, void *p);
-// NOTE: mgl_draw_class() and mgl_draw_load() use mglWindow* only. Don't use it with inherited classes
-int mgl_draw_class(HMGL gr, void *p);
-void mgl_click_class(void *p);
-void mgl_reload_class(void *p);
-}
-//-----------------------------------------------------------------------------
-/// Wrapper class for windows displaying graphics
-class mglWindow : public mglGraph
-{
+	int wnd;	///< Type of window
 public:
-	mglWindow() : mglGraph(-1)	{}
-	virtual int Run()=0;			///< Run main loop for event handling
-
-	inline void ToggleAlpha()	///< Switch on/off transparency (do not overwrite user settings)
-	{	mgl_wnd_toggle_alpha(gr);	}
-	inline void ToggleLight()	///< Switch on/off lighting (do not overwrite user settings)
-	{	mgl_wnd_toggle_light(gr);	}
-	inline void ToggleZoom()	///< Switch on/off zooming by mouse
-	{	mgl_wnd_toggle_zoom(gr);	}
-	inline void ToggleRotate()	///< Switch on/off rotation by mouse
-	{	mgl_wnd_toggle_rotate(gr);	}
-	inline void ToggleNo()		///< Switch off all zooming and rotation
-	{	mgl_wnd_toggle_no(gr);	}
-	inline void Update()		///< Update picture by calling user drawing function
-	{	mgl_wnd_update(gr);	}
-	inline void ReLoad()		///< Reload user data and update picture
-	{	mgl_wnd_reload(gr);	}
-	inline void Adjust()		///< Adjust size of bitmap to window size
-	{	mgl_wnd_adjust(gr);	}
-	inline void NextFrame()		///< Show next frame (if one)
-	{	mgl_wnd_next_frame(gr);	}
-	inline void PrevFrame()		///< Show previous frame (if one)
-	{	mgl_wnd_prev_frame(gr);	}
-	inline void Animation()		///< Run slideshow (animation) of frames
-	{	mgl_wnd_animation(gr);	}
-	void SetClickFunc(void (*func)(void *p))	///< Callback function for mouse click
-	{	mgl_set_click_func(gr,func);	}
-
-	inline void SetDelay(double dt)	///< Delay for animation in seconds
-	{	mgl_wnd_set_delay(gr, dt);	}
-	inline void Setup(bool clf_upd=true, bool showpos=false)
-	{	mgl_setup_window(gr, clf_upd, showpos);	}
-	inline mglPoint LastMousePos()		///< Last mouse position
-	{	double x,y,z;	mgl_get_last_mouse_pos(gr,&x,&y,&z);	return mglPoint(x,y,z);	}
+	mglWindow(const char *title="MathGL") : mglWnd()
+	{	wnd=1;	gr = mgl_create_graph_fltk(0,title,0,0);	}
+	mglWindow(int (*draw)(HMGL gr, void *p), const char *title="MathGL", void *par=NULL, int kind=0, void (*load)(void *p)=0) : mglWnd()
+	{
+		wnd=kind;
+		if(wnd==1)	gr = mgl_create_graph_qt(draw,title,par,load);
+		else if(wnd==2)	gr = mgl_create_graph_wx(draw,title,par,load);
+		else		gr = mgl_create_graph_fltk(draw,title,par,load);
+	}
+	mglWindow(int (*draw)(mglGraph *gr), const char *title="MathGL", int kind=0) : mglWnd()
+	{
+		wnd=kind;
+		if(wnd==1)	gr = mgl_create_graph_qt(mgl_draw_graph,title,(void*)draw,0);
+		else if(wnd==2)	gr = mgl_create_graph_wx(mgl_draw_graph,title,(void*)draw,0);
+		else		gr = mgl_create_graph_fltk(mgl_draw_graph,title,(void*)draw,0);
+	}
+	mglWindow(mglDraw *draw, const char *title="MathGL", int kind=0) : mglWnd()
+	{
+		wnd=kind;
+		if(wnd==1)	gr = mgl_create_graph_qt(mgl_draw_class,title,draw,mgl_reload_class);
+		else if(wnd==2)	gr = mgl_create_graph_wx(mgl_draw_class,title,draw,mgl_reload_class);
+		else		gr = mgl_create_graph_fltk(mgl_draw_class,title,draw,mgl_reload_class);
+		mgl_set_click_func(gr, mgl_click_class);
+	}
+	/// Run main loop for event handling
+	int Run()	{	return wnd==0? mgl_fltk_run():(wnd==1?mgl_qt_run():mgl_wx_run());	}
+	/// Run main loop for event handling in separate thread (for FLTK only)
+	inline int RunThr()	{	return wnd==0 ? mgl_fltk_thr():0;	}
 };
 //-----------------------------------------------------------------------------
 #endif

@@ -1,0 +1,426 @@
+This appendix contain the full list of symbols (characters) used by MathGL for setting up plot. Also it contain sections for full list of hot-keys supported by mglview tool and by UDAV program.
+
+@menu
+* Symbols for styles::
+* Hot-keys for mglview::
+* Hot-keys for UDAV::
+@end menu
+
+@c ------------------------------------------------------------------
+@external
+@node Symbols for styles, Hot-keys for mglview, , Symbols and hot-keys
+@section Symbols for styles
+
+Below is full list of all characters (symbols) which MathGL use for setting up the plot.
+
+@table @samp
+@item space ' '
+empty line style (see @ref{Line styles});
+
+empty color in @ref{chart}.
+
+@item !
+set to use new color from palette for each point (not for each curve, as default) in @ref{1D plotting}.
+
+@item #
+set to use solid marks (see @ref{Line styles}) or solid @ref{error} boxes;
+
+set to draw wired plot for @ref{axial}, @ref{surf3}, @ref{surf3a}, @ref{surf3c}, @ref{triplot}, @ref{tricont}, @ref{area}, @ref{bars}, @ref{barh}, @ref{tube}, @ref{tape}, @ref{cone}, @ref{boxs} and draw boundary only for @ref{circle}, @ref{ellipse}, @ref{rhomb};
+
+set to draw also mesh lines for @ref{surf}, @ref{surfc}, @ref{surfa}, @ref{dens}, @ref{densx}, @ref{densy}, @ref{densz}, @ref{dens3}, or boundary for @ref{chart}, @ref{facex}, @ref{facey}, @ref{facez}, @ref{rect};
+
+set to draw boundary and box for @ref{legend}, @ref{title}, or grid lines for @ref{table};
+
+set to draw grid for @ref{radar};
+
+set to start flow threads and pipes from edges only for @ref{flow}, @ref{pipe};
+
+set to use whole are for axis range in @ref{subplot}, @ref{inplot};
+
+change text color inside a string (see @ref{Font styles});
+
+start comment in @ref{MGL scripts} or in @ref{Command options}.
+
+@item $
+denote parameter of @ref{MGL scripts}.
+
+@item &
+operation in @ref{Textual formulas}.
+
+@item @quoteright{}
+denote string in @ref{MGL scripts} or in @ref{Command options}.
+
+@item *
+one of marks (see @ref{Line styles});
+
+operation in @ref{Textual formulas}.
+
+@item +
+one of marks (see @ref{Line styles}) or kind of @ref{error} boxes;
+
+operation in @ref{Textual formulas}.
+
+@item ,
+separator for color positions (see @ref{Color styles}) or items in a list.
+
+@item -
+solid line style (see @ref{Line styles});
+
+operation in @ref{Textual formulas}.
+
+@item .
+one of marks (see @ref{Line styles});
+
+set to draw hachures instead of arrows for @ref{vect}, @ref{vect3};
+
+set to use dots instead of faces for @ref{cloud};
+
+delimiter of fractional parts for numbers.
+
+@item /
+operation in @ref{Textual formulas}.
+
+@item :
+line dashing style (see @ref{Line styles});
+
+stop color scheme parsing (see @ref{Color scheme});
+
+range operation in @ref{MGL scripts}.
+
+@item ;
+line dashing style (see @ref{Line styles});
+
+end of an option in @ref{MGL scripts} or in @ref{Command options}.
+
+@item <
+one of marks (see @ref{Line styles});
+
+style of @ref{subplot} and @ref{inplot};
+
+set position of @ref{colorbar};
+
+style of @ref{vect}, @ref{vect3};
+
+operation in @ref{Textual formulas}.
+
+
+@item >
+one of marks (see @ref{Line styles});
+
+style of @ref{subplot} and @ref{inplot};
+
+set position of @ref{colorbar};
+
+style of @ref{vect}, @ref{vect3};
+
+operation in @ref{Textual formulas}.
+
+@item =
+line dashing style (see @ref{Line styles});
+
+set to use equidistant columns for @ref{table};
+
+set to use color gradient for @ref{vect}, @ref{vect3};
+
+operation in @ref{Textual formulas}.
+
+@item @@
+set to draw box around text for @ref{text} and similar functions;
+
+set to draw boundary and fill it for @ref{circle}, @ref{ellipse}, @ref{rhomb};
+
+set to fill faces for @ref{box};
+
+set to draw large semitransparent mark instead of error box for @ref{error};
+
+set to draw edges for @ref{cone};
+
+set to draw filled boxes for @ref{boxs};
+
+reduce text size inside a string (see @ref{Font styles}).
+
+@item ^
+one of marks (see @ref{Line styles});
+
+style of @ref{subplot} and @ref{inplot};
+
+set position of @ref{colorbar};
+
+switch to lower index inside a string (see @ref{Font styles});
+
+operation in @ref{Textual formulas}.
+
+@item _
+empty arrow style (see @ref{Line styles});
+
+disable drawing of tick labels for @ref{axis};
+
+style of @ref{subplot} and @ref{inplot};
+
+set position of @ref{colorbar};
+
+set to draw contours at bottom for @ref{cont}, @ref{contf}, @ref{contd}, @ref{contv}, @ref{tricont};
+
+switch to upper index inside a string (see @ref{Font styles}).
+
+@item []
+contain symbols excluded from color scheme parsing (see @ref{Color scheme}).
+
+@item @{@}
+contain extended color specification (see @ref{Color styles});
+
+denote special operation in @ref{MGL scripts};
+
+denote 'meta-symbol' for LaTeX like string parsing (see @ref{Font styles}).
+
+@item |
+line dashing style (see @ref{Line styles});
+
+set to use sharp color scheme (see @ref{Color scheme});
+
+set to limit width by subplot width for @ref{table};
+
+delimiter in @ref{list} command;
+
+operation in @ref{Textual formulas}.
+
+@item \
+string continuation symbol on next line for @ref{MGL scripts}.
+
+@item 0,1,2,3,4,5,6,7,8,9
+line width (see @ref{Line styles});
+
+brightness of a color (see @ref{Color styles});
+
+kind of smoothing (for digits 1,3,5) in @ref{smooth};
+
+digits for a value.
+
+@item A,B,C,D,E,F,a,b,c,d,e,f
+can be hex-digit for color specification if placed inside @{@} (see @ref{Color styles}).
+
+@item A
+arrow style (see @ref{Line styles});
+
+set to use absolute position in whole picture for @ref{text}, @ref{colorbar}, @ref{legend}.
+
+@item a
+set to use absolute position in subplot for @ref{text};
+
+style of @ref{bars}, @ref{barh}.
+
+@item B
+dark blue color (see @ref{Color styles}).
+
+@item b
+blue color (see @ref{Color styles});
+
+bold font face if placed after @samp{:} (see @ref{Font styles}).
+
+@item C
+dark cyan color (see @ref{Color styles});
+
+align text to center if placed after @samp{:} (see @ref{Font styles}).
+
+@item c
+cyan color (see @ref{Color styles});
+
+name of color axis;
+
+cosine transform for @ref{transform}.
+
+@item D
+arrow style (see @ref{Line styles}).
+
+@item d
+one of marks (see @ref{Line styles}) or kind of @ref{error} boxes.
+
+@item E
+dark green-yellow color (see @ref{Color styles}).
+
+@item e
+green-yellow color (see @ref{Color styles}).
+
+@item f
+style of @ref{bars}, @ref{barh};
+
+style of @ref{vect}, @ref{vect3};
+
+Fourier transform for @ref{transform}.
+
+@item G
+dark green color (see @ref{Color styles}).
+
+@item g
+green color (see @ref{Color styles}).
+
+@item H
+dark gray color (see @ref{Color styles}).
+
+@item h
+gray color (see @ref{Color styles});
+
+Hankel transform for @ref{transform}.
+
+@item I
+arrow style (see @ref{Line styles});
+
+set @ref{colorbar} position near boundary.
+
+@item i
+line dashing style (see @ref{Line styles});
+
+italic font face if placed after @samp{:} (see @ref{Font styles}).
+
+set to use inverse values for @ref{cloud}, @ref{pipe}, @ref{dew};
+
+set to fill only area with y1<y<y2 for @ref{region};
+
+inverse Fourier transform for @ref{transform}.
+
+@item j
+line dashing style (see @ref{Line styles});
+
+@item K
+arrow style (see @ref{Line styles}).
+
+@item k
+black color (see @ref{Color styles}).
+
+@item L
+dark green-blue color (see @ref{Color styles});
+
+align text to left if placed after @samp{:} (see @ref{Font styles}).
+
+@item l
+green-blue color (see @ref{Color styles}).
+
+@item M
+dark magenta color (see @ref{Color styles}).
+
+@item m
+magenta color (see @ref{Color styles}).
+
+@item N
+dark sky-blue color (see @ref{Color styles}).
+
+@item n
+sky-blue color (see @ref{Color styles}).
+
+@item O
+arrow style (see @ref{Line styles}).
+
+@item o
+one of marks (see @ref{Line styles}) or kind of @ref{error} boxes;
+
+over-line text if placed after @samp{:} (see @ref{Font styles}).
+
+@item P
+dark purple color (see @ref{Color styles}).
+
+@item p
+purple color (see @ref{Color styles}).
+
+@item Q
+dark orange or brown color (see @ref{Color styles}).
+
+@item q
+orange color (see @ref{Color styles}).
+
+@item R
+dark red color (see @ref{Color styles});
+
+align text to right if placed after @samp{:} (see @ref{Font styles}).
+
+@item r
+red color (see @ref{Color styles}).
+
+@item S
+arrow style (see @ref{Line styles});
+
+@item s
+one of marks (see @ref{Line styles}) or kind of @ref{error} boxes;
+
+sine transform for @ref{transform}.
+
+@item T
+arrow style (see @ref{Line styles});
+
+place text under the curve for @ref{text}, @ref{cont}, @ref{cont3}.
+
+@item t
+set to draw text labels for @ref{cont}, @ref{cont3};
+
+name of t-axis (one of ternary axis);
+
+variable in @ref{Textual formulas}, which usually is varied in range [0,1].
+
+@item U
+dark blue-violet color (see @ref{Color styles});
+
+disable rotation of tick labels for @ref{axis}.
+
+@item u
+blue-violet color (see @ref{Color styles});
+
+under-line text if placed after @samp{:} (see @ref{Font styles});
+
+name of u-axis (one of ternary axis);
+
+variable in @ref{Textual formulas}, which usually denote array itself.
+
+@item V
+arrow style (see @ref{Line styles}).
+
+@item v
+one of marks (see @ref{Line styles});
+
+set to draw vectors on flow threads for @ref{flow}.
+
+@item W
+bright gray color (see @ref{Color styles}).
+
+@item w
+white color (see @ref{Color styles});
+
+wired text if placed after @samp{:} (see @ref{Font styles});
+
+name of w-axis (one of ternary axis);
+
+@item x
+one of marks (see @ref{Line styles}) or kind of @ref{error} boxes;
+
+name of x-axis or x-direction or 1st dimension of a data array;
+
+start hex-color described if placed inside @{@} (see @ref{Color styles});
+
+style of @ref{tape}.
+
+@item Y
+dark yellow or gold color (see @ref{Color styles}).
+
+@item y
+yellow color (see @ref{Color styles});
+
+name of y-axis or y-direction or 2nd dimension of a data array.
+
+@item z
+
+name of z-axis or z-direction or 3d dimension of a data array;
+
+style of @ref{tape}.
+
+@end table
+
+
+@c ------------------------------------------------------------------
+@external
+@node Hot-keys for mglview, Hot-keys for UDAV, Symbols for styles, Symbols and hot-keys
+@section Hot-keys for mglview
+
+
+@c ------------------------------------------------------------------
+@external
+@node Hot-keys for UDAV, , Hot-keys for mglview, Symbols and hot-keys
+@section Hot-keys for UDAV
+
