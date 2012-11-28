@@ -1032,7 +1032,7 @@ Class @code{mglData} contains all functions for the data handling in MathGL (@px
 
 @c ------------------------------------------------------------------
 @external
-@node Array creation, Change data, , Data handling
+@node Array creation, Linking array, , Data handling
 @subsection Array creation
 
 There are many ways in MathGL how data arrays can be created and filled.
@@ -1199,9 +1199,56 @@ int sample(mglGraph *gr)
 
 @pfig{dat_extra, Example of data manipulation}
 
-Finally one can create new data arrays on base of the existing one: extract slice, row or column of data (@ref{subdata}), summarize along a direction(s) (@ref{sum}), find distribution of data elements (@ref{hist}) and so on.
+Also one can create new data arrays on base of the existing one: extract slice, row or column of data (@ref{subdata}), summarize along a direction(s) (@ref{sum}), find distribution of data elements (@ref{hist}) and so on.
 
 @anchor{Solve sample}
+Another interesting feature of MathGL is interpolation and root-finding. There are several functions for linear and cubic spline interpolation (see @ref{Interpolation}). Also there is a function @ref{evaluate} which do interpolation of data array for values of each data element of index data. It look as indirect access to the data elements.
+
+This function have inverse function @ref{solve} which find array of indexes at which data array is equal to given value (i.e. work as root finding). But @ref{solve} function have the issue -- usually multidimensional data (2d and 3d ones) have an infinite number of indexes which give some value. This is contour lines for 2d data, or isosurface(s) for 3d data. So, @ref{solve} function will return index only in given direction, assuming that other index(es) are the same as equidistant index(es) of original data. If data have multiple roots then second (and later) branches can be found by consecutive call(s) of @ref{solve} function.  Let me demonstrate this on the following sample.
+
+@verbatim
+int sample(mglGraph *gr)
+{
+  gr->SetRange('z',0,1);
+  mglData x(20,30), y(20,30), z(20,30), xx,yy,zz;
+  gr->Fill(x,"(x+2)/3*cos(pi*y)");
+  gr->Fill(y,"(x+2)/3*sin(pi*y)");
+  gr->Fill(z,"exp(-6*x^2-2*sin(pi*y)^2)");
+
+  gr->SubPlot(2,1,0); gr->Title("Cartesian space");   gr->Rotate(30,-40);
+  gr->Axis("xyzU");   gr->Box();  gr->Label('x',"x"); gr->Label('y',"y");
+  gr->SetOrigin(1,1); gr->Grid("xy");
+  gr->Mesh(x,y,z);
+
+  // section along 'x' direction
+  mglData u = x.Solve(0.5,'x');
+  mglData v(u.nx);  v.Fill(0,1);
+  xx = x.Evaluate(u,v);   yy = y.Evaluate(u,v);   zz = z.Evaluate(u,v);
+  gr->Plot(xx,yy,zz,"k2o");
+
+  // 1st section along 'y' direction
+  mglData u1 = x.Solve(-0.5,'y');
+  mglData v1(u1.nx);  v1.Fill(0,1);
+  xx = x.Evaluate(v1,u1); yy = y.Evaluate(v1,u1); zz = z.Evaluate(v1,u1);
+  gr->Plot(xx,yy,zz,"b2^");
+
+  // 2nd section along 'y' direction
+  mglData u2 = x.Solve(-0.5,'y',u1);
+  xx = x.Evaluate(v1,u2); yy = y.Evaluate(v1,u2); zz = z.Evaluate(v1,u2);
+  gr->Plot(xx,yy,zz,"r2v");
+
+  gr->SubPlot(2,1,1); gr->Title("Accompanied space");
+  gr->SetRanges(0,1,0,1); gr->SetOrigin(0,0);
+  gr->Axis(); gr->Box();  gr->Label('x',"i"); gr->Label('y',"j");
+  gr->Grid(z,"h");
+
+  gr->Plot(u,v,"k2o");    gr->Line(mglPoint(0.4,0.5),mglPoint(0.8,0.5),"kA");
+  gr->Plot(v1,u1,"b2^");  gr->Line(mglPoint(0.5,0.15),mglPoint(0.5,0.3),"bA");
+  gr->Plot(v1,u2,"r2v");  gr->Line(mglPoint(0.5,0.7),mglPoint(0.5,0.85),"rA");
+}
+@end verbatim
+
+@pfig{solve, Example of data interpolation and root finding}
 
 @c ------------------------------------------------------------------
 @external
@@ -2961,6 +3008,7 @@ In this section I've included some small hints and advices for the improving of 
 * ``Compound'' graphics::
 * Transparency and lighting::
 * Types of transparency::
+* Axis projection::
 * Adding fog::
 * Several light sources::
 * Using primitives::
@@ -3065,7 +3113,7 @@ int sample(mglGraph *gr)
 
 @c ------------------------------------------------------------------
 @external
-@node Types of transparency, Adding fog, Transparency and lighting, Hints
+@node Types of transparency, Axis projection, Transparency and lighting, Hints
 @subsection Types of transparency
 
 MathGL library has advanced features for setting and handling the surface transparency. The simplest way to add transparency is the using of function @ref{alpha}. As a result, all further surfaces (and isosurfaces, density plots and so on) become transparent. However, their  look can be additionally improved.
@@ -3098,7 +3146,37 @@ int sample(mglGraph *gr)
 
 @c ------------------------------------------------------------------
 @external
-@node Adding fog, Several light sources, Types of transparency, Hints
+@node Axis projection, Adding fog, Ternary axis, Hints
+@subsection Axis projection
+
+You can easily make 3D plot and draw its x-,y-,z-projections (like in CAD) by using @ref{ternary} function with arguments: 4 for Cartesian, 5 for Ternary and 6 for Quaternary coordinates. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  gr->SetRanges(0,1,0,1,0,1);
+  mglData x(50),y(50),z(50),rx(10),ry(10), a(20,30);
+  a.Modify("30*x*y*(1-x-y)^2*(x+y<1)");
+  x.Modify("0.25*(1+cos(2*pi*x))");
+  y.Modify("0.25*(1+sin(2*pi*x))");
+  rx.Modify("rnd"); ry.Modify("(1-v)*rnd",rx);
+  z.Modify("x");
+
+  gr->Title("Projection sample");
+  gr->Ternary(4);
+  gr->Rotate(50,60);      gr->Light(true);
+  gr->Plot(x,y,z,"r2");   gr->Surf(a,"#");
+  gr->Axis(); gr->Grid(); gr->Box();
+  gr->Label('x',"X",1);   gr->Label('y',"Y",1);   gr->Label('z',"Z",1);
+}
+@end verbatim
+
+@pfig{projection, Example of axis projections}
+@pfig{projection5, Example of ternary axis projections}
+@c @pfig{projection6, Example of quaternary axis projections}
+
+@c ------------------------------------------------------------------
+@external
+@node Adding fog, Several light sources, Axis projection, Hints
 @subsection Adding fog
 
 MathGL can add a fog to the image. Its switching on is rather simple -- just use @ref{fog} function. There is the only feature -- fog is applied for whole image. Not to particular subplot. The sample code is:
@@ -3526,7 +3604,7 @@ void template(mglGraph *gr)
   mglData a(31,41);
   gr->Fill(a,"-pi*x*exp(-(y+1)^2-4*x^2)");
 
-  if(!mini)	{	gr->SubPlot(2,2,0);	gr->Title("Options for coordinates");	}
+  gr->SubPlot(2,2,0);	gr->Title("Options for coordinates");
   gr->Alpha(true);	gr->Light(true);
   gr->Rotate(40,60);    gr->Box();
   gr->Surf(a,"r","yrange 0 1"); gr->Surf(a,"b","yrange 0 -1");
@@ -3536,9 +3614,11 @@ void template(mglGraph *gr)
   gr->Mesh(a,"r","yrange 0 1"); gr->Mesh(a,"b","yrange 0 -1; meshnum 5");
   gr->SubPlot(2,2,2);   gr->Title("Option 'alpha'");
   gr->Rotate(40,60);    gr->Box();
-  gr->Surf(a,"r","yrange 0 1; alpha 0.7"); gr->Surf(a,"b","yrange 0 -1; alpha 0.3");
+  gr->Surf(a,"r","yrange 0 1; alpha 0.7");
+  gr->Surf(a,"b","yrange 0 -1; alpha 0.3");
   gr->SubPlot(2,2,3,"<_");  gr->Title("Option 'legend'");
-  gr->FPlot("x^3","r","legend 'y = x^3'"); gr->FPlot("cos(pi*x)","b","legend 'y = cos \\pi x'");
+  gr->FPlot("x^3","r","legend 'y = x^3'");
+  gr->FPlot("cos(pi*x)","b","legend 'y = cos \\pi x'");
   gr->Box();    gr->Axis(); gr->Legend(2,"");
 }
 @end verbatim
@@ -3643,7 +3723,7 @@ You can use MathGL as is with @code{gfortran} because it uses by default the AT&
 
 @emph{AT&T function} -- @code{void mgl_fplot_(uintptr_t *graph, const char *fy, const char *stl, int *n, int ly, int ls);}
 
-Fortran users also should add C++ library by the option @code{-lstdc++}. If library was built with @code{enable-double=ON} (this default for v.2.1 and later) then all real numbers must be real*8. You can make it automatic if use option @code{-fdefault-real-8}.
+Fortran users also should add C++ library by the option @code{-lstdc++}. If library was built with @code{enable-double=ON} (this default for v.2.1 and later) then all real numbers must be @code{real*8}. You can make it automatic if use option @code{-fdefault-real-8}.
 
 @item How can I print in Russian/Spanish/Arabic/Japanese, and so on?
 The standard way is to use Unicode encoding for the text output. But the MathGL library also has interface for 8-bit (char *) strings with internal conversion to Unicode. This conversion depends on the current locale OS. You may change it by @code{setlocale()} function. For example, for Russian text in CP1251 encoding you may use @code{setlocale(LC_CTYPE, "ru_RU.cp1251");} (under MS Windows the name of locale may differ -- @code{setlocale(LC_CTYPE, "russian_russia.1251")}). I strongly recommend not to use the constant @code{LC_ALL} in the conversion. Since it also changes the number format, it may lead to mistakes in formula writing and reading of the text in data files. For example, the program will await a @samp{,} as a decimal point but the user will enter @samp{.}.
@@ -3653,6 +3733,8 @@ There are 3 general ways. First, the point with @code{NAN} value as one of the c
 
 @item I use VisualStudio, CBuilder or some other compiler (not MinGW/gcc). How can I link the MathGL library?
 In version 2.0, main classes (@code{mglGraph} and @code{mglData}) contains only @code{inline} functions and are acceptable for any compiler with the same binary files. However, if you plan to use widget classes (QMathGL, Fl_MathGL, ...) or to access low-level features (mglBase, mglCanvas, ...) then you have to recompile MathGL by yours compiler.
+
+Note, that you have to make import library(-ies) *.lib for provided binary *.dll. This procedure depend on used compiler -- please read documentation for yours compiler. For VisualStudio, it can be done by command @code{lib.exe /DEF:libmgl.def /OUT:libmgl.lib}.
 
 @item How I can build MathGL under Windows?
 Generally, it is the same procedure as for Linux or MacOS -- see section @ref{Installation}. The simplest way is using the combination CMake+MinGW. Also you may need some extra libraries like GSL, PNG, JPEG and so on. All of them can be found at @url{http://gnuwin32.sourceforge.net/packages.html}. After installing all components, just run @uref{http://www.cmake.org/cmake/help/runningcmake.html, cmake-gui} configurator and build the MathGL itself.

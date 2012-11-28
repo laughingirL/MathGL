@@ -1031,7 +1031,7 @@ Class @code{mglData} contains all functions for the data handling in MathGL (@px
 
 @c ------------------------------------------------------------------
 @external
-@node Array creation, Change data, , Data handling
+@node Array creation, Linking array, , Data handling
 @subsection Array creation
 
 There are many ways in MathGL how data arrays can be created and filled.
@@ -1198,8 +1198,56 @@ int sample(mglGraph *gr)
 
 @pfig{dat_extra, Example of data smoothing}
 
-Finally one can create new data arrays on base of the existing one: extract slice, row or column of data (@ref{subdata}), summarize along a direction(s) (@ref{sum}), find distribution of data elements (@ref{hist}) and so on.
+Also one can create new data arrays on base of the existing one: extract slice, row or column of data (@ref{subdata}), summarize along a direction(s) (@ref{sum}), find distribution of data elements (@ref{hist}) and so on.
 
+@anchor{Solve sample}
+Another interesting feature of MathGL is interpolation and root-finding. There are several functions for linear and cubic spline interpolation (see @ref{Interpolation}). Also there is a function @ref{evaluate} which do interpolation of data array for values of each data element of index data. It look as indirect access to the data elements.
+
+This function have inverse function @ref{solve} which find array of indexes at which data array is equal to given value (i.e. work as root finding). But @ref{solve} function have the issue -- usually multidimensional data (2d and 3d ones) have an infinite number of indexes which give some value. This is contour lines for 2d data, or isosurface(s) for 3d data. So, @ref{solve} function will return index only in given direction, assuming that other index(es) are the same as equidistant index(es) of original data. If data have multiple roots then second (and later) branches can be found by consecutive call(s) of @ref{solve} function. Let me demonstrate this on the following sample.
+
+@verbatim
+int sample(mglGraph *gr)
+{
+  gr->SetRange('z',0,1);
+  mglData x(20,30), y(20,30), z(20,30), xx,yy,zz;
+  gr->Fill(x,"(x+2)/3*cos(pi*y)");
+  gr->Fill(y,"(x+2)/3*sin(pi*y)");
+  gr->Fill(z,"exp(-6*x^2-2*sin(pi*y)^2)");
+
+  gr->SubPlot(2,1,0); gr->Title("Cartesian space");   gr->Rotate(30,-40);
+  gr->Axis("xyzU");   gr->Box();  gr->Label('x',"x"); gr->Label('y',"y");
+  gr->SetOrigin(1,1); gr->Grid("xy");
+  gr->Mesh(x,y,z);
+
+  // section along 'x' direction
+  mglData u = x.Solve(0.5,'x');
+  mglData v(u.nx);  v.Fill(0,1);
+  xx = x.Evaluate(u,v);   yy = y.Evaluate(u,v);   zz = z.Evaluate(u,v);
+  gr->Plot(xx,yy,zz,"k2o");
+
+  // 1st section along 'y' direction
+  mglData u1 = x.Solve(-0.5,'y');
+  mglData v1(u1.nx);  v1.Fill(0,1);
+  xx = x.Evaluate(v1,u1); yy = y.Evaluate(v1,u1); zz = z.Evaluate(v1,u1);
+  gr->Plot(xx,yy,zz,"b2^");
+
+  // 2nd section along 'y' direction
+  mglData u2 = x.Solve(-0.5,'y',u1);
+  xx = x.Evaluate(v1,u2); yy = y.Evaluate(v1,u2); zz = z.Evaluate(v1,u2);
+  gr->Plot(xx,yy,zz,"r2v");
+
+  gr->SubPlot(2,1,1); gr->Title("Accompanied space");
+  gr->SetRanges(0,1,0,1); gr->SetOrigin(0,0);
+  gr->Axis(); gr->Box();  gr->Label('x',"i"); gr->Label('y',"j");
+  gr->Grid(z,"h");
+
+  gr->Plot(u,v,"k2o");    gr->Line(mglPoint(0.4,0.5),mglPoint(0.8,0.5),"kA");
+  gr->Plot(v1,u1,"b2^");  gr->Line(mglPoint(0.5,0.15),mglPoint(0.5,0.3),"bA");
+  gr->Plot(v1,u2,"r2v");  gr->Line(mglPoint(0.5,0.7),mglPoint(0.5,0.85),"rA");
+}
+@end verbatim
+
+@pfig{solve, Example of data interpolation and root finding}
 
 @c ------------------------------------------------------------------
 @external
@@ -2959,6 +3007,7 @@ In this section I've included some small hints and advices for the improving of 
 * ``Compound'' graphics::
 * Transparency and lighting::
 * Types of transparency::
+* Axis projection::
 * Adding fog::
 * Several light sources::
 * Using primitives::
@@ -3063,7 +3112,7 @@ int sample(mglGraph *gr)
 
 @c ------------------------------------------------------------------
 @external
-@node Types of transparency, Adding fog, Transparency and lighting, Hints
+@node Types of transparency, Axis projection, Transparency and lighting, Hints
 @subsection Types of transparency
 
 MathGL library has advanced features for setting and handling the surface transparency. The simplest way to add transparency is the using of function @ref{alpha}. As a result, all further surfaces (and isosurfaces, density plots and so on) become transparent. However, their  look can be additionally improved.
@@ -3096,7 +3145,37 @@ int sample(mglGraph *gr)
 
 @c ------------------------------------------------------------------
 @external
-@node Adding fog, Several light sources, Types of transparency, Hints
+@node Axis projection, Adding fog, Ternary axis, Hints
+@subsection Axis projection
+
+You can easily make 3D plot and draw its x-,y-,z-projections (like in CAD) by using @ref{ternary} function with arguments: 4 for Cartesian, 5 for Ternary and 6 for Quaternary coordinates. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  gr->SetRanges(0,1,0,1,0,1);
+  mglData x(50),y(50),z(50),rx(10),ry(10), a(20,30);
+  a.Modify("30*x*y*(1-x-y)^2*(x+y<1)");
+  x.Modify("0.25*(1+cos(2*pi*x))");
+  y.Modify("0.25*(1+sin(2*pi*x))");
+  rx.Modify("rnd"); ry.Modify("(1-v)*rnd",rx);
+  z.Modify("x");
+
+  gr->Title("Projection sample");
+  gr->Ternary(4);
+  gr->Rotate(50,60);      gr->Light(true);
+  gr->Plot(x,y,z,"r2");   gr->Surf(a,"#");
+  gr->Axis(); gr->Grid(); gr->Box();
+  gr->Label('x',"X",1);   gr->Label('y',"Y",1);   gr->Label('z',"Z",1);
+}
+@end verbatim
+
+@pfig{projection, Example of axis projections}
+@pfig{projection5, Example of ternary axis projections}
+@c @pfig{projection6, Example of quaternary axis projections}
+
+@c ------------------------------------------------------------------
+@external
+@node Adding fog, Several light sources, Axis projection, Hints
 @subsection Adding fog
 
 MathGL can add a fog to the image. Its switching on is rather simple -- just use @ref{fog} function. There is the only feature -- fog is applied for whole image. Not to particular subplot. The sample code is:
@@ -3520,7 +3599,7 @@ void template(mglGraph *gr)
   mglData a(31,41);
   gr->Fill(a,"-pi*x*exp(-(y+1)^2-4*x^2)");
 
-  if(!mini)	{	gr->SubPlot(2,2,0);	gr->Title("Options for coordinates");	}
+  gr->SubPlot(2,2,0);	gr->Title("Options for coordinates");
   gr->Alpha(true);	gr->Light(true);
   gr->Rotate(40,60);    gr->Box();
   gr->Surf(a,"r","yrange 0 1"); gr->Surf(a,"b","yrange 0 -1");
@@ -3530,9 +3609,11 @@ void template(mglGraph *gr)
   gr->Mesh(a,"r","yrange 0 1"); gr->Mesh(a,"b","yrange 0 -1; meshnum 5");
   gr->SubPlot(2,2,2);   gr->Title("Option 'alpha'");
   gr->Rotate(40,60);    gr->Box();
-  gr->Surf(a,"r","yrange 0 1; alpha 0.7"); gr->Surf(a,"b","yrange 0 -1; alpha 0.3");
+  gr->Surf(a,"r","yrange 0 1; alpha 0.7");
+  gr->Surf(a,"b","yrange 0 -1; alpha 0.3");
   gr->SubPlot(2,2,3,"<_");  gr->Title("Option 'legend'");
-  gr->FPlot("x^3","r","legend 'y = x^3'"); gr->FPlot("cos(pi*x)","b","legend 'y = cos \\pi x'");
+  gr->FPlot("x^3","r","legend 'y = x^3'");
+  gr->FPlot("cos(pi*x)","b","legend 'y = cos \\pi x'");
   gr->Box();    gr->Axis(); gr->Legend(2,"");
 }
 @end verbatim
@@ -3638,7 +3719,7 @@ int sample(mglGraph *gr)
 
 @emph{AT&T функция} -- @code{void mgl_fplot_(uintptr_t *graph, const char *fy, const char *stl, int *n, int ly, int ls);}
 
-При использовании фортрана необходимо также включить библиотеку @code{-lstdc++}. Кроме того, если библиотека была собрана с опцией @code{enable-double=ON} (по умолчанию в версии 2.1 и более поздних), то все вещественные числа должны быть типа real*8. Это можно включить по умолчанию опцией @code{-fdefault-real-8}.
+При использовании фортрана необходимо также включить библиотеку @code{-lstdc++}. Кроме того, если библиотека была собрана с опцией @code{enable-double=ON} (по умолчанию в версии 2.1 и более поздних), то все вещественные числа должны быть типа @code{real*8}. Это можно включить по умолчанию опцией @code{-fdefault-real-8}.
 
 @item У меня есть класс Foo и в нем метод рисования Foo::draw(mglGraph *gr). Как мне нарисовать что-то в окне FLTK, GLUT или Qt?
 Функции-члены класса в С++ имеют ``скрытый'' параметр -- указатель на экземпляр класса и их прямое использование невозможно. Решением будет определение интерфейсной функции:
@@ -3661,6 +3742,8 @@ gr->Window(argc,argv,foo_draw,"Title",this);
 
 @item Я использую VisualStudio, CBuilder или другой компилятор (не MinGW/gcc). Как мне подключить библиотеку MathGL?
 Начиная с версии 2.0, рекомендуемый к использованию класс mglGraph (заголовочный файл @code{#include <mgl2/mgl.h>}) содержbn только с @code{inline} функции и может использоваться с любым компилятором без перекомпиляции бинарной версии библиотеки. Однако, если Вы планируете использовать низкоуровневые возможности (т.е. классы mglBase, mglCanvas и т.д.), то Вам следует перекомпилировать библиотеку MathGL с использованием Вашего компилятора.
+
+Отмечу, что использование предоставляемых динамических библиотек *.dll требует создания библиотек импорта (import library *.lib). Эта процедура зависит от используемого компилятора -- обратитесь к документации по Вашему компилятору. Например для VisualStudio это можно сделать командой @code{lib.exe /DEF:libmgl.def /OUT:libmgl.lib}.
 
 @item Как мне собрать MathGL под Windows?
 Простейший путь -- использование комбинации CMake и MinGW. Также Вам может потребоваться дополнительные библиотеки, такие как GSL, PNG, JPEG и пр. Все они могут быть найдены на @url{http://gnuwin32.sourceforge.net/packages.html}. После установки всех компонент, просто запустите конфигуратор CMake и соберите MathGL командой make.

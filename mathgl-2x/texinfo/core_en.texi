@@ -623,7 +623,7 @@ Correspondingly, Quaternary plot is plot for 4 dependent coordinates @var{a}, @v
 
 Projections can be obtained by adding value @code{4} to @var{tern} argument. So, that @var{tern}=@code{4} will draw projections in Cartesian coordinates, @var{tern}=@code{5} will draw projections in Ternary coordinates, @var{tern}=@code{6} will draw projections in Quaternary coordinates.
 
-Use @code{Ternary(0)} for returning to usual axis. @sref{Ternary axis} @sref{Projections}
+Use @code{Ternary(0)} for returning to usual axis. @sref{Ternary axis} @sref{Axis projection}
 @end deftypefn
 
 @c ------------------------------------------------------------------

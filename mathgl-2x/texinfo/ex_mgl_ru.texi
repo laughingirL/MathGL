@@ -380,7 +380,7 @@ plot x y z 'r2':surf a '#'
 xlabel 'B':ylabel 'C':tlabel 'A':zlabel 'Z'
 @end verbatim
 
-@pfig{ternary, Example of colorbars}
+@pfig{ternary, Ternary and Quaternary axis}
 
 @c ------------------------------------------------------------------
 @external
@@ -655,6 +655,55 @@ plot x0 v0 'b+ ':plot x1 v1 'r-':label x0 v0 '%n'
 
 Finally one can create new data arrays on base of the existing one: extract slice, row or column of data (@ref{subdata}), summarize along a direction(s) (@ref{sum}), find distribution of data elements (@ref{hist}) and so on.
 
+@anchor{Solve sample}
+Another interesting feature of MathGL is interpolation and root-finding. There are several functions for linear and cubic spline interpolation (see @ref{Interpolation}). Also there is a function @ref{evaluate} which do interpolation of data array for values of each data element of index data. It look as indirect access to the data elements.
+
+This function have inverse function @ref{solve} which find array of indexes at which data array is equal to given value (i.e. work as root finding). But @ref{solve} function have the issue -- usually multidimensional data (2d and 3d ones) have an infinite number of indexes which give some value. This is contour lines for 2d data, or isosurface(s) for 3d data. So, @ref{solve} function will return index only in given direction, assuming that other index(es) are the same as equidistant index(es) of original data. Let me demonstrate this on the following sample.
+
+@verbatim
+zrange 0 1
+new x 20 30 '(x+2)/3*cos(pi*y)'
+new y 20 30 '(x+2)/3*sin(pi*y)'
+new z 20 30 'exp(-6*x^2-2*sin(pi*y)^2)'
+
+subplot 2 1 0:title 'Cartesian space':rotate 30 -40
+axis 'xyzU':box
+xlabel 'x':ylabel 'y'origin 1 1:grid 'xy'
+mesh x y z
+
+# section along 'x' direction
+solve u x 0.5 'x'
+var v u.nx 0 1
+evaluate yy y u v
+evaluate xx x u v
+evaluate zz z u v
+plot xx yy zz 'k2o'
+
+# 1st section along 'y' direction
+solve u1 x -0.5 'y'
+var v1 u1.nx 0 1
+evaluate yy y v1 u1
+evaluate xx x v1 u1
+evaluate zz z v1 u1
+plot xx yy zz 'b2^'
+
+# 2nd section along 'y' direction
+solve u2 x -0.5 'y' u1
+evaluate yy y v1 u2
+evaluate xx x v1 u2
+evaluate zz z v1 u2
+plot xx yy zz 'r2v'
+
+subplot 2 1 1:title 'Accompanied space'
+ranges 0 1 0 1:origin 0 0
+axis:box:xlabel 'i':ylabel 'j':grid2 z 'h'
+
+plot u v 'k2o':line 0.4 0.5 0.8 0.5 'kA'
+plot v1 u1 'b2^':line 0.5 0.15 0.5 0.3 'bA'
+plot v1 u2 'r2v':line 0.5 0.7 0.5 0.85 'rA'
+@end verbatim
+
+@pfig{solve, Example of data interpolation and root finding}
 
 @c ------------------------------------------------------------------
 @external
@@ -1993,6 +2042,7 @@ In this section I've included some small hints and advices for the improving of 
 * ``Compound'' graphics::
 * Transparency and lighting::
 * Types of transparency::
+* Axis projection::
 * Adding fog::
 * Several light sources::
 * Using primitives::
@@ -2087,7 +2137,7 @@ light off:surf a
 
 @c ------------------------------------------------------------------
 @external
-@node Types of transparency, Adding fog, Transparency and lighting, Hints
+@node Types of transparency, Axis projection, Transparency and lighting, Hints
 @subsection Types of transparency
 
 MathGL library has advanced features for setting and handling the surface transparency. The simplest way to add transparency is the using of command @ref{alpha}. As a result, all further surfaces (and isosurfaces, density plots and so on) become transparent. However, their  look can be additionally improved.
@@ -2116,7 +2166,30 @@ subplot 2 2 3:rotate 50 60:axial a:box
 
 @c ------------------------------------------------------------------
 @external
-@node Adding fog, Several light sources, Types of transparency, Hints
+@node Axis projection, Adding fog, Ternary axis, Hints
+@subsection Axis projection
+
+You can easily make 3D plot and draw its x-,y-,z-projections (like in CAD) by using @ref{ternary} function with arguments: 4 for Cartesian, 5 for Ternary and 6 for Quaternary coordinates. The sample code is:
+@verbatim
+ranges 0 1 0 1 0 1
+new x 50 '0.25*(1+cos(2*pi*x))'
+new y 50 '0.25*(1+sin(2*pi*x))'
+new z 50 'x'
+new a 20 30 '30*x*y*(1-x-y)^2*(x+y<1)'
+new rx 10 'rnd':new ry 10:fill ry '(1-v)*rnd' rx
+light on
+
+title 'Projection sample':ternary 4:rotate 50 60
+box:axis:grid
+plot x y z 'r2':surf a '#'
+xlabel 'X':ylabel 'Y':zlabel 'Z'
+@end verbatim
+
+@pfig{projection, Example of axis projections}
+
+@c ------------------------------------------------------------------
+@external
+@node Adding fog, Several light sources, Axis projection, Hints
 @subsection Adding fog
 
 MathGL can add a fog to the image. Its switching on is rather simple -- just use @ref{fog} function. There is the only feature -- fog is applied for whole image. Not to particular subplot. The sample code is:
