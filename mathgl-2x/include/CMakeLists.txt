@@ -7,6 +7,7 @@ install(DIRECTORY mgl2/ DESTINATION ${MGL_INCLUDE_PATH}
                         PATTERN "glut.h" EXCLUDE
                         PATTERN "wx.h" EXCLUDE
                         PATTERN "qt.h" EXCLUDE
+                        PATTERN "qmathgl.h" EXCLUDE
                         PATTERN "window.h" EXCLUDE
                         PATTERN "*~" EXCLUDE
                         PATTERN "*.fs"
@@ -24,7 +25,7 @@ if(MGL_HAVE_WX)
 	install(FILES mgl2/wx.h DESTINATION ${MGL_INCLUDE_PATH})
 endif(MGL_HAVE_WX)
 if(MGL_HAVE_QT)
-	install(FILES mgl2/qt.h DESTINATION ${MGL_INCLUDE_PATH})
+	install(FILES mgl2/qt.h mgl2/qmathgl.h DESTINATION ${MGL_INCLUDE_PATH})
 endif(MGL_HAVE_QT)
 
 if(MGL_HAVE_FLTK AND MGL_HAVE_WX AND MGL_HAVE_QT)

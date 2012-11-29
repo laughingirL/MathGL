@@ -43,8 +43,7 @@
 #include <X11/Xlib.h>
 #endif
 //-----------------------------------------------------------------------------
-#include <mgl2/mgl.h>
-#include <mgl2/qt.h>
+#include <mgl2/qmathgl.h>
 #include "udav_wnd.h"
 #include "text_pnl.h"
 #include "plot_pnl.h"

@@ -22,8 +22,7 @@
 #include <QComboBox>
 #include <QTextEdit>
 #include <QTabWidget>
-#include <mgl2/mgl.h>
-#include <mgl2/qt.h>
+#include "mgl2/qmathgl.h"
 #include "info_dlg.h"
 extern mglParse parser;
 //-----------------------------------------------------------------------------

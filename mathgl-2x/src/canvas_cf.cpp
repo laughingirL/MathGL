@@ -54,6 +54,7 @@ void mgl_end_frame(HMGL gr)		{	_Gr_->EndFrame();	}
 int mgl_get_num_frame(HMGL gr)	{	return _Gr_->GetNumFrame();	}
 void mgl_reset_frames(HMGL gr)	{	_Gr_->ResetFrames();	}
 void mgl_get_frame(HMGL gr, int i)	{	_Gr_->GetFrame(i);	}
+void mgl_set_frame(HMGL gr, int i)	{	_Gr_->SetFrame(i);	}
 void mgl_show_frame(HMGL gr, int i)	{	_Gr_->ShowFrame(i);	}
 void mgl_del_frame(HMGL gr, int i)	{	_Gr_->DelFrame(i);	}
 //-----------------------------------------------------------------------------
@@ -142,6 +143,7 @@ void mgl_end_frame_(uintptr_t *gr)		{	_GR_->EndFrame();	}
 int mgl_get_num_frame_(uintptr_t *gr)	{	return _GR_->GetNumFrame();	}
 void mgl_reset_frames_(uintptr_t *gr)	{	_GR_->ResetFrames();	}
 void mgl_get_frame_(uintptr_t *gr, int *i)	{	_GR_->GetFrame(*i);	}
+void mgl_set_frame_(uintptr_t *gr, int *i)	{	_GR_->SetFrame(*i);	}
 void mgl_show_frame_(uintptr_t *gr, int *i)	{	_GR_->ShowFrame(*i);	}
 void mgl_del_frame_(uintptr_t *gr, int *i)	{	_GR_->DelFrame(*i);	}
 //-----------------------------------------------------------------------------

@@ -44,6 +44,8 @@
 
 * Add functions GetFrame(), AddFrame() for replacing or adding data from given frame. Work if MGL_VECT_FRAME is set on (by default is on).
 
+* Pen width for marks now is proportional to pen width of line multiplied by size of marks.
+
 * MINOR INCOMPATIBLE: plotting functions now use double argument always.
 
 * Add MGL commands 'errbox', 'face'

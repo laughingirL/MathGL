@@ -26,48 +26,51 @@ var main = function()
 	ctx = document.getElementById("canvas").getContext("2d");
 	ctx.lineCap="round";	// global setting
 
-	init("test.json");
-	draw_good(obj, ctx);
+	mgl_init("test.json");
+	mgl_draw_good(obj, ctx);
 };
 
 // mouse handling functions
-var mouseUp = function()	{	obj.button = 0;	obj.good = 0;	draw_good(obj, ctx);	}
-var mouseDown = function()
+var mglMouseUp = function()
+{	obj.button = 0;	obj.good = 0;	mgl_draw_good(obj, ctx);	}
+var mglMouseDown = function()
 {
 	obj.good = 1;
 	obj.mouseX = window.event.clientX;
 	obj.mouseY = window.event.clientY;
 	obj.button = window.event.button+1;
 }
-var mouseMove = function()
+var mglMouseMove = function()
 {
 	var x = window.event.clientX-obj.mouseX;
 	var y = window.event.clientY-obj.mouseY;
 	switch(obj.button)
 	{
 	case 1: // rotate
-		rotateDown(y*90/obj.height);	rotateLeft(x*90/obj.width);	 break;
+		mgl_rotate_down(obj, y*90/obj.height);
+		mgl_rotate_left(obj, x*90/obj.width);	break;
 	case 2: // shift
-		shiftDown(y/obj.height);	shiftRight(x/obj.width);	break;
+		mgl_shift_down(obj, y/obj.height);
+		mgl_shift_right(obj, x/obj.width);		break;
 	case 3: // zoom
-		zoomIn(Math.pow(1.003,x));	break;
+		mgl_zoom_in(obj, Math.pow(1.003,x));	break;
 	 }
 	if(obj.button)
 	{
 		obj.mouseX += x;	obj.mouseY += y;
-		draw(obj, ctx);
+		mgl_draw(obj, ctx);
 	}
 }
-var mouseWheel = function()
+var mglMouseWheel = function()
 {
 	var e = window.event;
 	var d = e.wheelDelta? e.wheelDelta:e.detail*(-120);
-	zoomIn(Math.pow(1.002,d));
-	draw(obj, ctx);
+	mgl_zoom_in(obj, Math.pow(1.002,d));
+	mgl_draw(obj, ctx);
 }
 
 // The function load data and set up rotation/zoom state
-var init = function(name)
+var mgl_init = function(name)
 {
 	// now obtain JSON data
 	var req = new XMLHttpRequest();
@@ -85,7 +88,7 @@ var init = function(name)
 	obj.tet= 0;		// current tet-angle for rotation
 	obj.phi= 0;		// current phi-angle for rotation
 	obj.bet= 0;		// current beta-angle for rotation
-	obj.button = 0; // pressed mouse buttons (0-none, 1-left, 2-right)
+	obj.button = 0;	// pressed mouse buttons (0-none, 1-left, 2-right)
 	obj.mouseX=0;
 	obj.mouseY=0;
 	obj.fast = 0;
@@ -94,20 +97,20 @@ var init = function(name)
 
 // Functions for rotation, shifting and zooming of the picture as whole
 // Basically it redefine obj properties by user-friendly manner
-var rotateLeft = function(val)	{	obj.tet += val; }	// rotate left, def.value=10
-var rotateRight = function(val)	{	obj.tet -= val; }	// rotate right, def.value=10
-var rotateUp = function(val)	{	obj.bet += val; }	// rotate up, def.value=10
-var rotateDown = function(val)	{	obj.bet -= val; }	// rotate down, def.value=10
-var restore = function()		// restore transformation state
+var mgl_rotate_left = function(obj,val)	{	obj.tet += val; }
+var mgl_rotate_right = function(obj,val)	{	obj.tet -= val; }
+var mgl_rotate_up = function(obj,val)		{	obj.bet += val; }
+var mgl_rotate_down = function(obj,val)	{	obj.bet -= val; }
+var mgl_restore = function(obj)		// restore transformation state
 {	obj.tet=obj.phi=obj.bet=0;	obj.z=[0,1,0,1];	obj.pf=0;	}
-var perspective = function(val) // add perspective, def.value=0.1
+var mgl_perspective = function(obj,val) // add perspective, def.value=0.1
 {
 	var x = obj.pf/(1-obj.pf) + val;
 	obj.pf = x/(1+x);	// let use this formula for "smooth" changing
 }
-var zoomIn = function(factor)	// zoom in picture, def.value=1.1
-{	if(factor)  zoomOut(1/factor);  }
-var zoomOut = function(factor)	// zoom out picture, def.value=1.1
+var mgl_zoom_in = function(obj,factor)		// zoom in picture
+{	if(factor)  mgl_zoom_out(obj,1/factor);  }
+var mgl_zoom_out = function(obj,factor)	// zoom out picture
 {
 	var d, c;
 	d=(obj.z[3]-obj.z[2])*factor/2; c=(obj.z[3]+obj.z[2])/2;
@@ -115,39 +118,39 @@ var zoomOut = function(factor)	// zoom out picture, def.value=1.1
 	d=(obj.z[1]-obj.z[0])*factor/2; c=(obj.z[1]+obj.z[0])/2;
 	obj.z[0] = c-d; obj.z[1] = c+d;
 }
-var shiftUp = function(val)	 // shift up, def.value=0.1
+var mgl_shift_up = function(obj,val)		// shift up
 {
 	var d=(obj.z[3]-obj.z[2])*val;
 	obj.z[2] += d; obj.z[3] += d;
 }
-var shiftDown = function(val)	// shift down, def.value=0.1
+var mgl_shift_down = function(obj,val)		// shift down
 {
 	var d=(obj.z[3]-obj.z[2])*val;
 	obj.z[2] -= d; obj.z[3] -= d;
 }
-var shiftLeft = function(val)	// shift left, def.value=0.1
+var mgl_shift_left = function(obj,val)		// shift left
 {
 	var d=(obj.z[1]-obj.z[0])*val;
 	obj.z[0] += d; obj.z[1] += d;
 }
-var shiftRight = function(val)  // shift right, def.value=0.1
+var mgl_shift_right = function(obj,val)	// shift right
 {
 	var d=(obj.z[1]-obj.z[0])*val;
 	obj.z[0] -= d; obj.z[1] -= d;
 }
 
 // This function make drawing itself
-var draw = function(obj, ctx)
+var mgl_draw = function(obj, ctx)
 {
 	if(obj.good==0)
 	{
 		obj.good = 1;
-		setTimeout(function(){draw_good(obj, ctx);},300);
+		setTimeout(function(){mgl_draw_good(obj, ctx);},300);
 	}
 	else if(obj.fast==0)
 	{
 		obj.fast = 1;
-		setTimeout(function(){draw_fast(obj, ctx);},0);
+		setTimeout(function(){mgl_draw_fast(obj, ctx);},0);
 	}
 /*	var t1 = new Date();
 	draw_good(obj, ctx);
@@ -158,10 +161,10 @@ var draw = function(obj, ctx)
 
 
 // This function make fast drawing
-var draw_fast = function(obj, ctx)
+var mgl_draw_fast = function(obj, ctx)
 {
 	if(obj.fast==0)	return;
-	prepare(obj);	// update coordinates
+	mgl_prepare(obj);	// update coordinates
 	ctx.clearRect(0,0,obj.width,obj.height);
 	var i,n1;
 	for(var i=0;i<obj.nprim;i++)	// for each primitive
@@ -174,9 +177,9 @@ var draw_fast = function(obj, ctx)
 }
 
 // This function make high-quality drawing
-var draw_good = function(obj, ctx)
+var mgl_draw_good = function(obj, ctx)
 {
-	prepare(obj);	// update coordinates
+	mgl_prepare(obj);	// update coordinates
 	ctx.clearRect(0,0,obj.width,obj.height);
 	var d = 0.35*(obj.width>obj.height?obj.height:obj.width);
 	for(var i=0;i<obj.nprim;i++)	// for each primitive
@@ -189,7 +192,7 @@ var draw_good = function(obj, ctx)
 		switch(obj.prim[i][0])	  // draw it depending on its type
 		{
 		case 0: // marks
-			drawMark(ctx, obj.pp[n1][0], obj.pp[n1][1], n4, obj.prim[i][6], d);
+			mgl_draw_mark(ctx, obj.pp[n1][0], obj.pp[n1][1], n4, obj.prim[i][6], d);
 			break;
 		case 1: // lines
 			ctx.beginPath();
@@ -223,13 +226,13 @@ var draw_good = function(obj, ctx)
 			var x=obj.coor[n2][0], y=obj.coor[n2][1], f=obj.prim[i][8];
 			if(n3&8)
 			{
-				if(!(n3&4))  lineGlyph(ctx, x,y, f,1,b);
-				lineGlyph(ctx, x,y, f,0,b);
+				if(!(n3&4))  mgl_line_glyph(ctx, x,y, f,1,b);
+				mgl_line_glyph(ctx, x,y, f,0,b);
 			}
 			else
 			{
-				if(!(n3&4)) fillGlyph(ctx, x,y, f,obj.glfs[n4],b);
-				wireGlyph(ctx, x,y, f,obj.glfs[n4],b);
+				if(!(n3&4)) mgl_fill_glyph(ctx, x,y, f,obj.glfs[n4],b);
+				mgl_wire_glyph(ctx, x,y, f,obj.glfs[n4],b);
 			}
 			break;
 		}
@@ -239,7 +242,7 @@ var draw_good = function(obj, ctx)
 
 // This function change coordinates according current transformations
 // Usually this Function is called internally by draw()
-var prepare = function(obj)
+var mgl_prepare = function(obj)
 {
 	// QUESTION: should I stretch the picture to the whole canvas???
 	// fill transformation matrix
@@ -297,7 +300,7 @@ var prepare = function(obj)
 
 // Function for drawing markers of type st with given size at position {x,y}
 // Usually this function is called internally, but it can be called by user as well
-var drawMark = function(ctx,x,y,st,size,d)
+var mgl_draw_mark = function(ctx,x,y,st,size,d)
 {
 	if(size<=0) {	st = 46;	size=1; }
 	var s = size*d;
@@ -396,7 +399,7 @@ var drawMark = function(ctx,x,y,st,size,d)
 }
 
 // This function for internal use only!!!
-var fillGlyph = function(ctx, x,y, f,g,b)
+var mgl_fill_glyph = function(ctx, x,y, f,g,b)
 {
 	var xx,yy,j,xs,ys;
 	for(j=0;j<g[0];j++)
@@ -411,7 +414,7 @@ var fillGlyph = function(ctx, x,y, f,g,b)
 	}
 }
 // This function for internal use only!!!
-var wireGlyph = function(ctx, x,y, f,g,b)
+var mgl_wire_glyph = function(ctx, x,y, f,g,b)
 {
 	var xx,yy,j,xs,ys;
 	var np=1;
@@ -437,7 +440,7 @@ var wireGlyph = function(ctx, x,y, f,g,b)
 	}
 }
 // This function for internal use only!!!
-var lineGlyph = function(ctx, x,y, f,solid,b)
+var mgl_line_glyph = function(ctx, x,y, f,solid,b)
 {
 	var xx,yy,j,xs,ys;
 	var dy = 0.004;

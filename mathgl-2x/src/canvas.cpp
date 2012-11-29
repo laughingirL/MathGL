@@ -54,6 +54,23 @@ long mglCanvas::PushDrwDat()
 	return DrwDat.size();
 }
 //-----------------------------------------------------------------------------
+void mglCanvas::SetFrame(long i)
+{
+	if(get(MGL_VECT_FRAME) && i>=0 && i<DrwDat.size())
+	{
+		Finish();	CurFrameId--;
+		mglDrawDat d;
+		d.Pnt=Pnt;	d.Prm=Prm;	d.Glf=Glf;	d.Ptx=Ptx;	d.Txt=Txt;
+#if MGL_HAVE_PTHREAD
+		pthread_mutex_lock(&mutexDrw);
+		DrwDat[i] = d;
+		pthread_mutex_unlock(&mutexDrw);
+#else
+		DrwDat[i] = d;
+#endif
+	}
+}
+//-----------------------------------------------------------------------------
 void mglCanvas::GetFrame(long k)
 {
 	if(k<0 || (size_t)k>=DrwDat.size())	return;
@@ -68,11 +85,11 @@ void mglCanvas::GetFrame(long k)
 #endif
 	Pnt=d.Pnt;	Prm=d.Prm;	Glf=d.Glf;	Ptx=d.Ptx;	Txt=d.Txt;
 #if MGL_HAVE_PTHREAD
-	pthread_mutex_unlock(&mutexPnt);
-	pthread_mutex_unlock(&mutexPrm);
-	pthread_mutex_unlock(&mutexGlf);
-	pthread_mutex_unlock(&mutexPtx);
 	pthread_mutex_unlock(&mutexTxt);
+	pthread_mutex_unlock(&mutexPtx);
+	pthread_mutex_unlock(&mutexGlf);
+	pthread_mutex_unlock(&mutexPrm);
+	pthread_mutex_unlock(&mutexPnt);
 #endif
 }
 //-----------------------------------------------------------------------------
@@ -283,13 +300,14 @@ mreal mglCanvas::GetOrgZ(char dir) const
 //	Put primitives
 //-----------------------------------------------------------------------------
 #define MGL_MARK_PLOT	if(Quality&4)	mark_draw(p,type,size?size:MarkSize,&d);else	\
-						{	mglPrim a;	a.w = fabs(PenWidth);	a.s = size?size:MarkSize;	\
+						{	mglPrim a;	a.w = pw;	a.s = size?size:MarkSize;	\
 							a.n1 = p;	a.n4 = type;	add_prim(a);	}
 void mglCanvas::mark_plot(long p, char type, mreal size)
 {
 	if(p<0 || mgl_isnan(Pnt[p].x))	return;
 	long pp=p;
-	mglDrawReg d;	d.set(this,1,1,0);
+	mreal pw = fabs(PenWidth)*sqrt(font_factor/400);
+	mglDrawReg d;	d.set(this,1,1,0);	d.PenWidth = pw;
 	if(size>=0)	size *= MarkSize;
 	if(TernAxis&4) for(int i=0;i<4;i++)
 	{	p = ProjScale(i, pp);	MGL_MARK_PLOT	}

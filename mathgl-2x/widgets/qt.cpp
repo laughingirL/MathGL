@@ -39,6 +39,7 @@
 #include <limits.h>
 
 #include "mgl2/canvas_wnd.h"
+#include "mgl2/qmathgl.h"
 #include "mgl2/qt.h"
 //-----------------------------------------------------------------------------
 #define MGL_MAX_LINES	(INT_MAX-1000)

@@ -349,6 +349,8 @@ public:
 	inline void DelFrame(int i)	{	mgl_del_frame(gr, i);	}
 	/// Get drawing data for i-th frame (work if MGL_VECT_FRAME is set on)
 	inline void GetFrame(int i)	{	mgl_get_frame(gr, i);	}
+	/// Set drawing data for i-th frame (work if MGL_VECT_FRAME is set on). Work as EndFrame() but don't add frame to GIF image.
+	inline void SetFrame(int i)	{	mgl_set_frame(gr, i);	}
 	/// Append drawing data from i-th frame (work if MGL_VECT_FRAME is set on)
 	inline void ShowFrame(int i)	{	mgl_show_frame(gr, i);	}
 	

@@ -253,6 +253,9 @@ void mgl_reset_frames_(uintptr_t *gr);
 /// Get drawing data for i-th frame (work if MGL_VECT_FRAME is set on)
 void mgl_get_frame(HMGL gr, int i);
 void mgl_get_frame_(uintptr_t *gr, int *i);
+/// Set drawing data for i-th frame (work if MGL_VECT_FRAME is set on)
+void mgl_set_frame(HMGL gr, int i);
+void mgl_set_frame_(uintptr_t *gr, int *i);
 /// Append drawing data from i-th frame (work if MGL_VECT_FRAME is set on)
 void mgl_show_frame(HMGL gr, int i);
 void mgl_show_frame_(uintptr_t *gr, int *i);

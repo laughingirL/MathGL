@@ -58,9 +58,9 @@ endif(MGL_HAVE_WX)
 
 if(MGL_HAVE_QT)
 	include(${QT_USE_FILE})
-	qt4_wrap_cpp(MGL_MOC_FILES ../include/mgl2/qt.h)
-	add_library(mgl-qt SHARED qt.cpp ${MGL_MOC_FILES} ../include/mgl2/qt.h)
-	add_library(mgl-qt-static STATIC qt.cpp ${MGL_MOC_FILES} ../include/mgl2/qt.h)
+	qt4_wrap_cpp(MGL_MOC_FILES ../include/mgl2/qmathgl.h)
+	add_library(mgl-qt SHARED qt.cpp ${MGL_MOC_FILES} ../include/mgl2/qt.h ../include/mgl2/qmathgl.h)
+	add_library(mgl-qt-static STATIC qt.cpp ${MGL_MOC_FILES} ../include/mgl2/qt.h ../include/mgl2/qmathgl.h)
 	set_target_properties(mgl-qt-static PROPERTIES OUTPUT_NAME "mgl-qt")
 	set_target_properties(mgl-qt PROPERTIES CLEAN_DIRECT_OUTPUT 1)
 	set_target_properties(mgl-qt-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
@@ -75,3 +75,33 @@ if(MGL_HAVE_QT)
 		LIBRARY DESTINATION lib
 	)
 endif(MGL_HAVE_QT)
+
+
+if(MGL_HAVE_QT AND MGL_HAVE_WX AND MGL_HAVE_FLTK)
+	include_directories(${FLTK_INCLUDE_DIR})
+	include(${wxWidgets_USE_FILE})
+	include(${QT_USE_FILE})
+#	qt4_wrap_cpp(MGL_MOC_FILES ../include/mgl2/qmathgl.h)
+
+	set(MGL_WND_SRC wx.cpp ../include/mgl2/wx.h qt.cpp ../include/mgl2/qt.h ../include/mgl2/qmathgl.h fltk.cpp ../include/mgl2/fltk.h)
+
+	add_library(mgl-wnd SHARED ${MGL_WND_SRC} ${MGL_MOC_FILES})
+	add_library(mgl-wnd-static STATIC ${MGL_WND_SRC} ${MGL_MOC_FILES})
+
+	set_target_properties(mgl-wnd-static PROPERTIES OUTPUT_NAME "mgl-wnd")
+	set_target_properties(mgl-wnd PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+	set_target_properties(mgl-wnd-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+	set_target_properties(mgl-wnd PROPERTIES SOVERSION 7.0.0)
+
+	target_link_libraries(mgl-wnd mgl)
+	target_link_libraries(mgl-wnd ${QT_LIBRARIES})
+	target_link_libraries(mgl-wnd ${wxWidgets_LIBRARIES})
+	target_link_libraries(mgl-wnd ${FLTK_LIBRARIES})
+
+	install(
+		TARGETS mgl-wnd mgl-wnd-static
+		RUNTIME DESTINATION bin
+		ARCHIVE DESTINATION lib
+		LIBRARY DESTINATION lib
+	)
+endif(MGL_HAVE_QT AND MGL_HAVE_WX AND MGL_HAVE_FLTK)

@@ -20,7 +20,7 @@ if(MGL_HAVE_DOC)
 	file(MAKE_DIRECTORY ${MGL_OUT}/small)
 	file(MAKE_DIRECTORY ${MGL_OUT}/json)
 	file(COPY ${MGL_TEX}/qt.png ${MGL_TEX}/fltk.png ${MGL_TEX}/classes.png ${MGL_TEX}/emblem_sm.png DESTINATION ${MGL_OUT})
-	file(COPY ${MGL_TEX}/toc_ru.html ${MGL_TEX}/toc_fr.html ${MGL_TEX}/toc_en.html ${MGL_TEX}/title.html ${MGL_TEX}/index.html DESTINATION ${MGL_OUT})
+	file(COPY ${MGL_TEX}/toc_ru.html ${MGL_TEX}/toc_fr.html ${MGL_TEX}/toc_en.html ${MGL_TEX}/title.html ${MGL_TEX}/index.html ${MGL_TEX}/json.html ${MGL_TEX}/mathgl.js DESTINATION ${MGL_OUT})
 
 	set(UDAV_IMG udav_arg.png udav_calc.png udav_cmd.png udav_data.png 
 		udav_gen_set.png udav_help.png udav_light.png udav_main.png udav_opt.png

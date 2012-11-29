@@ -33,8 +33,7 @@
 #include <QTextEdit>
 
 #include <QMdiArea>
-#include <mgl2/mgl.h>
-#include "mgl2/qt.h"
+#include "mgl2/qmathgl.h"
 #include "plot_pnl.h"
 #include "anim_dlg.h"
 #include "style_dlg.h"
