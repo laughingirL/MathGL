@@ -160,6 +160,7 @@ var draw = function(obj, ctx)
 // This function make fast drawing
 var draw_fast = function(obj, ctx)
 {
+	if(obj.fast==0)	return;
 	prepare(obj);	// update coordinates
 	ctx.clearRect(0,0,obj.width,obj.height);
 	var i,n1;
@@ -215,6 +216,9 @@ var draw_good = function(obj, ctx)
 			ctx.fill();	break;
 		case 4: // glyphs
 			var t=obj.prim[i][7]*deg, c=Math.cos(t), s=Math.sin(t), d=obj.prim[i][6]/2;
+			t = -Math.atan2(-obj.b[3]*c-obj.b[4]*s, obj.b[0]*c+obj.b[1]*s);
+			c=Math.cos(t);	s=Math.sin(t);
+
 			var b=[d*c, d*s, d*s, -d*c, obj.pp[n1][0],obj.pp[n1][1]];
 			var x=obj.coor[n2][0], y=obj.coor[n2][1], f=obj.prim[i][8];
 			if(n3&8)
@@ -227,11 +231,68 @@ var draw_good = function(obj, ctx)
 				if(!(n3&4)) fillGlyph(ctx, x,y, f,obj.glfs[n4],b);
 				wireGlyph(ctx, x,y, f,obj.glfs[n4],b);
 			}
-
 			break;
 		}
 	}
 	obj.good = 0;
+}
+
+// This function change coordinates according current transformations
+// Usually this Function is called internally by draw()
+var prepare = function(obj)
+{
+	// QUESTION: should I stretch the picture to the whole canvas???
+	// fill transformation matrix
+	var dx = 1/Math.abs(obj.z[1]-obj.z[0]);
+	var dy = 1/Math.abs(obj.z[3]-obj.z[2]);
+	var cx=Math.cos(obj.tet*deg), sx=Math.sin(obj.tet*deg);	// tetx
+	var cy=Math.cos(obj.phi*deg), sy=Math.sin(obj.phi*deg);	// tety
+	var cz=Math.cos(obj.bet*deg), sz=Math.sin(obj.bet*deg);	// tetz
+	var b  = [dx*cx*cy, -dx*cy*sx, dx*sy,
+				dy*(cx*sy*sz+cz*sx), dy*(cx*cz-sx*sy*sz), -dy*cy*sz,
+				sx*sz-cx*cz*sy, cx*sz+cz*sx*sy, cy*cz,
+				obj.width/2*(1+dx-obj.z[1]-obj.z[0])/dx,
+				obj.height/2*(1+dy-obj.z[3]-obj.z[2])/dy, obj.depth/2];
+	obj.b = b;
+	// now transform points for found transformation matrix
+	var i;
+	for(i=0;i<obj.npnts;i++)
+	{
+		var x = obj.pnts[i][0]-obj.width/2;
+		var y = obj.pnts[i][1]-obj.height/2;
+		var z = obj.pnts[i][2]-obj.depth/2;
+		obj.pp[i][0] = b[9]  + b[0]*x + b[1]*y + b[2]*z;
+		obj.pp[i][1] = b[10] + b[3]*x + b[4]*y + b[5]*z;
+		obj.pp[i][2] = b[11] + b[6]*x + b[7]*y + b[8]*z;
+	}
+	if(obj.pf)  for(var i=0;i<obj.npnts;i++)	// perspective
+	{	// NOTE: it is not supported for coordinate determining now
+		var d = (1-obj.pf)/(1-obj.pf*obj.pp[i][2]/obj.depth);
+		obj.pp[i][0] = d*obj.pp[i][0] + (1-d)/2*obj.width;
+		obj.pp[i][1] = d*obj.pp[i][1] + (1-d)/2*obj.height;
+	}
+	// fill z-coordinates for primitives
+	for(i=0;i<obj.nprim;i++)	obj.prim[i][9] = obj.pp[obj.prim[i][1]][2];
+/*	{
+		var n1 = obj.prim[i][1];
+		var n2 = obj.prim[i][2];
+		var n3 = obj.prim[i][3];
+		var n4 = obj.prim[i][4];
+		switch(obj.prim[i][0])
+		{
+		case 1: // lines
+			obj.prim[i][9] = (obj.pp[n1][2]+obj.pp[n2][2])/2;	break;
+		case 2: // triangles
+			obj.prim[i][9] = (obj.pp[n1][2]+obj.pp[n2][2]+obj.pp[n3][2])/3;	break;
+		case 3: // quadrangles
+			obj.prim[i][9] = (obj.pp[n1][2]+obj.pp[n2][2]+obj.pp[n3][2]+obj.pp[n4][2])/4;	break;
+		default:
+			obj.prim[i][9] = obj.pp[n1][2];	break;
+		}
+	}*/
+	// sort primitives according its z-coordinate
+	// TODO: more accurate comparison ??? for placing text/lines before faces -- need tests
+	obj.prim.sort(function(a,b){return a[9] - b[9]});
 }
 
 // Function for drawing markers of type st with given size at position {x,y}
@@ -332,63 +393,6 @@ var drawMark = function(ctx,x,y,st,size,d)
 	default:
 		ctx.arc(x,y,0.1*s,0,Math.PI*2); ctx.fill();	 break;
 	}
-}
-
-// This function change coordinates according current transformations
-// Usually this Function is called internally by draw()
-var prepare = function(obj)
-{
-	// QUESTION: should I stretch the picture to the whole canvas???
-	// fill transformation matrix
-	var dx = 1/Math.abs(obj.z[1]-obj.z[0]);
-	var dy = 1/Math.abs(obj.z[3]-obj.z[2]);
-	var cx=Math.cos(obj.tet*deg), sx=Math.sin(obj.tet*deg);
-	var cy=Math.cos(obj.phi*deg), sy=Math.sin(obj.phi*deg);
-	var cz=Math.cos(obj.bet*deg), sz=Math.sin(obj.bet*deg);
-	var b  = [dx*cx*cy, -dx*cy*sx, dx*sy,
-				dy*(cx*sy*sz+cz*sx), dy*(cx*cz-sx*sy*sz), -dy*cy*sz,
-				sx*sz-cx*cz*sy, cx*sz+cz*sx*sy, cy*cz,
-				obj.width/2*(1+dx-obj.z[1]-obj.z[0])/dx,
-				obj.height/2*(1+dy-obj.z[3]-obj.z[2])/dy, obj.depth/2];
-	// now transform points for found transformation matrix
-	var i;
-	for(i=0;i<obj.npnts;i++)
-	{
-		var x = obj.pnts[i][0]-obj.width/2;
-		var y = obj.pnts[i][1]-obj.height/2;
-		var z = obj.pnts[i][2]-obj.depth/2;
-		obj.pp[i][0] = b[9]  + b[0]*x + b[1]*y + b[2]*z;
-		obj.pp[i][1] = b[10] + b[3]*x + b[4]*y + b[5]*z;
-		obj.pp[i][2] = b[11] + b[6]*x + b[7]*y + b[8]*z;
-	}
-	if(obj.pf)  for(var i=0;i<obj.npnts;i++)	// perspective
-	{	// NOTE: it is not supported for coordinate determining now
-		var d = (1-obj.pf)/(1-obj.pf*obj.pp[i][2]/obj.depth);
-		obj.pp[i][0] = d*obj.pp[i][0] + (1-d)/2*obj.width;
-		obj.pp[i][1] = d*obj.pp[i][1] + (1-d)/2*obj.height;
-	}
-	// fill z-coordinates for primitives
-	for(i=0;i<obj.nprim;i++)	obj.prim[i][9] = obj.pp[obj.prim[i][1]][2];
-/*	{
-		var n1 = obj.prim[i][1];
-		var n2 = obj.prim[i][2];
-		var n3 = obj.prim[i][3];
-		var n4 = obj.prim[i][4];
-		switch(obj.prim[i][0])
-		{
-		case 1: // lines
-			obj.prim[i][9] = (obj.pp[n1][2]+obj.pp[n2][2])/2;	break;
-		case 2: // triangles
-			obj.prim[i][9] = (obj.pp[n1][2]+obj.pp[n2][2]+obj.pp[n3][2])/3;	break;
-		case 3: // quadrangles
-			obj.prim[i][9] = (obj.pp[n1][2]+obj.pp[n2][2]+obj.pp[n3][2]+obj.pp[n4][2])/4;	break;
-		default:
-			obj.prim[i][9] = obj.pp[n1][2];	break;
-		}
-	}*/
-	// sort primitives according its z-coordinate
-	// TODO: more accurate comparison ??? for placing text/lines before faces -- need tests
-	obj.prim.sort(function(a,b){return a[9] - b[9]});
 }
 
 // This function for internal use only!!!
