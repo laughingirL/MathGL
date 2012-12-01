@@ -286,7 +286,7 @@ void mgl_write_eps(HMGL gr, const char *fname,const char *descr)
 		if(q.type==0)	// mark
 		{
 			mreal x0 = p1.x,y0 = p1.y;
-			sprintf(str,"%.2g lw %.2g %.2g %.2g rgb ", 50*q.s>1?50*q.s:1, cp.r,cp.g,cp.b);
+			sprintf(str,"%.2g lw %.2g %.2g %.2g rgb ", 50*q.s*q.w>1?50*q.s*q.w:1, cp.r,cp.g,cp.b);
 			wp=1;
 			if(q.s!=qs_old)
 			{
@@ -421,7 +421,7 @@ void mgl_write_svg(HMGL gr, const char *fname,const char *descr)
 			if(strchr("SDVTLR",q.n4))
 				mgl_printf(fp, gz, "<g fill=\"#%02x%02x%02x\">\n", int(255*cp.r),int(255*cp.g),int(255*cp.b));
 			else
-				mgl_printf(fp, gz, "<g stroke=\"#%02x%02x%02x\"  stroke-width=\"%g\">\n", int(255*cp.r),int(255*cp.g),int(255*cp.b), 50*q.s>1?50*q.s:1);
+				mgl_printf(fp, gz, "<g stroke=\"#%02x%02x%02x\"  stroke-width=\"%g\">\n", int(255*cp.r),int(255*cp.g),int(255*cp.b), 50*q.s*q.w>1?50*q.s*q.w:1);
 			switch(q.n4)
 			{
 			case 'P':

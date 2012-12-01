@@ -2126,10 +2126,10 @@ surf a
 subplot 2 2 1:title 'light on':rotate 50 60:box
 light on:surf a
 
-subplot 2 2 2:title 'light on; alpha on':rotate 50 60:box
+subplot 2 2 3:title 'light on; alpha on':rotate 50 60:box
 alpha on:surf a
 
-subplot 2 2 3:title 'alpha on':rotate 50 60:box
+subplot 2 2 2:title 'alpha on':rotate 50 60:box
 light off:surf a
 @end verbatim
 

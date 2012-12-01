@@ -1154,8 +1154,8 @@ There are no commands for making animation in MGL. However you can use features 
 
 These functions provide ability to create several pictures simultaneously. For most of cases it is useless but for widget classes (see @ref{Widget classes}) they can provide a way to show animation. Also you can write several frames into animated GIF file.
 
-@deftypefn {Method on @code{mglGraph}} @code{int} NewFrame ()
-@deftypefnx {C function} @code{int} mgl_new_frame (@code{HMGL} gr)
+@deftypefn {Method on @code{mglGraph}} @code{void} NewFrame ()
+@deftypefnx {C function} @code{void} mgl_new_frame (@code{HMGL} gr)
 Creates new frame. Function returns current frame id. This is not thread safe function in OpenGL mode! Use direct list creation in multi-threading drawing. The function @code{EndFrame()} @strong{must} be call after the finishing of the frame drawing for each call of this function.
 @end deftypefn
 
@@ -1169,23 +1169,28 @@ Finishes the frame drawing.
 Gets the number of created frames.
 @end deftypefn
 
-@deftypefn {Method on @code{mglGraph}} @code{int} GetFrame (@code{int} i)
-@deftypefnx {C function} @code{int} mgl_get_frame (@code{HMGL} gr, @code{int} i)
+@deftypefn {Method on @code{mglGraph}} @code{void} SetFrame (@code{int} i)
+@deftypefnx {C function} @code{void} mgl_set_frame (@code{HMGL} gr, @code{int} i)
+Finishes the frame drawing and sets drawing data to frame @var{i}, which should be in range [0, @code{GetNumFrame()}-1]. This function is similar to @code{EndFrame()} but don't add frame to the GIF image.
+@end deftypefn
+
+@deftypefn {Method on @code{mglGraph}} @code{void} GetFrame (@code{int} i)
+@deftypefnx {C function} @code{void} mgl_get_frame (@code{HMGL} gr, @code{int} i)
 Replaces drawing data by one from frame @var{i}. Function work if @code{MGL_VECT_FRAME} is set on (by default).
 @end deftypefn
 
-@deftypefn {Method on @code{mglGraph}} @code{int} ShowFrame (@code{int} i)
-@deftypefnx {C function} @code{int} mgl_show_frame (@code{HMGL} gr, @code{int} i)
+@deftypefn {Method on @code{mglGraph}} @code{void} ShowFrame (@code{int} i)
+@deftypefnx {C function} @code{void} mgl_show_frame (@code{HMGL} gr, @code{int} i)
 Appends drawing data from frame @var{i} to current one. Function work if @code{MGL_VECT_FRAME} is set on (by default).
 @end deftypefn
 
-@deftypefn {Method on @code{mglGraph}} @code{int} DelFrame (@code{int} i)
-@deftypefnx {C function} @code{int} mgl_del_frame (@code{HMGL} gr, @code{int} i)
+@deftypefn {Method on @code{mglGraph}} @code{void} DelFrame (@code{int} i)
+@deftypefnx {C function} @code{void} mgl_del_frame (@code{HMGL} gr, @code{int} i)
 Deletes drawing data for frame @var{i} and shift all later frame indexes. Function work if @code{MGL_VECT_FRAME} is set on (by default). Do nothing in OpenGL mode.
 @end deftypefn
 
 @deftypefn {Method on @code{mglGraph}} @code{void} ResetFrames ()
-@deftypefnx {C function} @code{int} mgl_reset_frames (@code{HMGL} gr)
+@deftypefnx {C function} @code{void} mgl_reset_frames (@code{HMGL} gr)
 Reset frames counter (start it from zero).
 @end deftypefn
 
@@ -1194,7 +1199,7 @@ Reset frames counter (start it from zero).
 Start writing frames into animated GIF file @var{fname}. Parameter @var{ms} set the delay between frames in milliseconds. You @strong{should not} change the picture size during writing the cinema. Use @code{CloseGIF()} to finalize writing. Note, that this function is disabled in OpenGL mode.
 @end deftypefn
 
-@deftypefn {Method on @code{mglGraph}} @code{int} CloseGIF ()
+@deftypefn {Method on @code{mglGraph}} @code{void} CloseGIF ()
 @deftypefnx {C function} @code{void} mgl_close_gif (@code{HMGL} gr)
 Finish writing animated GIF and close connected pointers.
 @end deftypefn

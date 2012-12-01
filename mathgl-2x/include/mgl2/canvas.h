@@ -210,7 +210,7 @@ using mglBase::Light;
 	/// Get drawing data for i-th frame.
 	void GetFrame(long i);
 	/// Set drawing data for i-th frame. This work as EndFrame() but don't add frame to GIF image.
-	void SetFrame(long i);
+	virtual void SetFrame(long i);
 	/// Add drawing data from i-th frame to the current drawing
 	void ShowFrame(long i);
 	

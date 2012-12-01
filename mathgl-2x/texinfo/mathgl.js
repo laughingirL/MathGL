@@ -26,9 +26,25 @@ var main = function()
 	ctx = document.getElementById("canvas").getContext("2d");
 	ctx.lineCap="round";	// global setting
 
-	mgl_init("test.json");
+//	mgl_init("json/style.json");
+	mgl_init("json/alpha.json");
+	var t1 = new Date();
 	mgl_draw_good(obj, ctx);
+//	draw_fast(obj, ctx);
+	var t2 = new Date();
+	document.getElementById("time").innerHTML = "Drawing time is "+(t2.getTime()-t1.getTime())+" ms. Number of primitives is "+obj.nprim+". Canvas size is "+obj.width+"*"+obj.height+" points.";
 };
+
+var mglChange = function()
+{
+	var name = document.getElementById("select").value;
+	mgl_init("json/"+name+".json");
+	var t1 = new Date();
+	mgl_draw_good(obj, ctx);
+//	draw_fast(obj, ctx);
+	var t2 = new Date();
+	document.getElementById("time").innerHTML = "Drawing time is "+(t2.getTime()-t1.getTime())+" ms. Number of primitives is "+obj.nprim;
+}
 
 // mouse handling functions
 var mglMouseUp = function()
@@ -65,8 +81,19 @@ var mglMouseWheel = function()
 {
 	var e = window.event;
 	var d = e.wheelDelta? e.wheelDelta:e.detail*(-120);
+
+/*	var x = window.event.clientX;
+	var y = obj.height-window.event.clientY;
+	mgl_shift_down(obj, -y/obj.height);
+	mgl_shift_right(obj, x/obj.width);*/
+
 	mgl_zoom_in(obj, Math.pow(1.002,d));
 	mgl_draw(obj, ctx);
+}
+var mglRestore = function()
+{
+	mgl_restore(obj);
+	mgl_draw_good(obj,ctx);
 }
 
 // The function load data and set up rotation/zoom state
@@ -98,8 +125,8 @@ var mgl_init = function(name)
 // Functions for rotation, shifting and zooming of the picture as whole
 // Basically it redefine obj properties by user-friendly manner
 var mgl_rotate_left = function(obj,val)	{	obj.tet += val; }
-var mgl_rotate_right = function(obj,val)	{	obj.tet -= val; }
-var mgl_rotate_up = function(obj,val)		{	obj.bet += val; }
+var mgl_rotate_right = function(obj,val){	obj.tet -= val; }
+var mgl_rotate_up = function(obj,val)	{	obj.bet += val; }
 var mgl_rotate_down = function(obj,val)	{	obj.bet -= val; }
 var mgl_restore = function(obj)		// restore transformation state
 {	obj.tet=obj.phi=obj.bet=0;	obj.z=[0,1,0,1];	obj.pf=0;	}
@@ -109,7 +136,7 @@ var mgl_perspective = function(obj,val) // add perspective, def.value=0.1
 	obj.pf = x/(1+x);	// let use this formula for "smooth" changing
 }
 var mgl_zoom_in = function(obj,factor)		// zoom in picture
-{	if(factor)  mgl_zoom_out(obj,1/factor);  }
+{	if(factor)	mgl_zoom_out(obj,1/factor);	}
 var mgl_zoom_out = function(obj,factor)	// zoom out picture
 {
 	var d, c;
@@ -118,24 +145,18 @@ var mgl_zoom_out = function(obj,factor)	// zoom out picture
 	d=(obj.z[1]-obj.z[0])*factor/2; c=(obj.z[1]+obj.z[0])/2;
 	obj.z[0] = c-d; obj.z[1] = c+d;
 }
-var mgl_shift_up = function(obj,val)		// shift up
+var mgl_shift_up = function(obj,val)	// shift up
+{	mgl_shift_down(obj,-val);	}
+var mgl_shift_down = function(obj,val)	// shift down
 {
-	var d=(obj.z[3]-obj.z[2])*val;
-	obj.z[2] += d; obj.z[3] += d;
-}
-var mgl_shift_down = function(obj,val)		// shift down
-{
-	var d=(obj.z[3]-obj.z[2])*val;
+	var d=val/(obj.z[3]-obj.z[2]);
 	obj.z[2] -= d; obj.z[3] -= d;
 }
-var mgl_shift_left = function(obj,val)		// shift left
-{
-	var d=(obj.z[1]-obj.z[0])*val;
-	obj.z[0] += d; obj.z[1] += d;
-}
+var mgl_shift_left = function(obj,val)	// shift left
+{	mgl_shift_right(obj,-val);	}
 var mgl_shift_right = function(obj,val)	// shift right
 {
-	var d=(obj.z[1]-obj.z[0])*val;
+	var d=val/(obj.z[1]-obj.z[0]);
 	obj.z[0] -= d; obj.z[1] -= d;
 }
 
@@ -181,7 +202,9 @@ var mgl_draw_good = function(obj, ctx)
 {
 	mgl_prepare(obj);	// update coordinates
 	ctx.clearRect(0,0,obj.width,obj.height);
-	var d = 0.35*(obj.width>obj.height?obj.height:obj.width);
+//	var scl = 1/Math.abs(obj.z[1]-obj.z[0]);
+	// NOTE: this valid only for current zoom/view. In general case it should be more complicated
+	var scl = Math.sqrt(obj.b[0]*obj.b[0]+obj.b[1]*obj.b[1]+obj.b[2]*obj.b[2]);
 	for(var i=0;i<obj.nprim;i++)	// for each primitive
 	{
 		var n1 = obj.prim[i][1], n2 = obj.prim[i][2];
@@ -189,9 +212,11 @@ var mgl_draw_good = function(obj, ctx)
 		ctx.strokeStyle = obj.prim[i][10];
 		ctx.fillStyle = obj.prim[i][10];
 		ctx.lineWidth = 1;
-		switch(obj.prim[i][0])	  // draw it depending on its type
+		switch(obj.prim[i][0])		// draw it depending on its type
 		{
 		case 0: // marks
+			var d = 0.35*(obj.width>obj.height?obj.height:obj.width)*scl;
+			ctx.lineWidth = obj.prim[i][7]*obj.prim[i][6]*50;
 			mgl_draw_mark(ctx, obj.pp[n1][0], obj.pp[n1][1], n4, obj.prim[i][6], d);
 			break;
 		case 1: // lines
@@ -215,7 +240,7 @@ var mgl_draw_good = function(obj, ctx)
 			ctx.closePath();
 			// NOTE: look as alpha is disabled for lines
 			// So, next code should be only for the case alpha=false
-			if(obj.prim[i][10].charAt(0)=='#')  ctx.stroke();
+			if(obj.prim[i][10].charAt(0)=='#')	ctx.stroke();
 			ctx.fill();	break;
 		case 4: // glyphs
 			var t=obj.prim[i][7]*deg, c=Math.cos(t), s=Math.sin(t), d=obj.prim[i][6]/2;
@@ -223,10 +248,10 @@ var mgl_draw_good = function(obj, ctx)
 			c=Math.cos(t);	s=Math.sin(t);
 
 			var b=[d*c, d*s, d*s, -d*c, obj.pp[n1][0],obj.pp[n1][1]];
-			var x=obj.coor[n2][0], y=obj.coor[n2][1], f=obj.prim[i][8];
+			var x=obj.coor[n2][0]*scl, y=obj.coor[n2][1]*scl, f=obj.prim[i][8]*scl;
 			if(n3&8)
 			{
-				if(!(n3&4))  mgl_line_glyph(ctx, x,y, f,1,b);
+				if(!(n3&4))	mgl_line_glyph(ctx, x,y, f,1,b);
 				mgl_line_glyph(ctx, x,y, f,0,b);
 			}
 			else
@@ -251,7 +276,7 @@ var mgl_prepare = function(obj)
 	var cx=Math.cos(obj.tet*deg), sx=Math.sin(obj.tet*deg);	// tetx
 	var cy=Math.cos(obj.phi*deg), sy=Math.sin(obj.phi*deg);	// tety
 	var cz=Math.cos(obj.bet*deg), sz=Math.sin(obj.bet*deg);	// tetz
-	var b  = [dx*cx*cy, -dx*cy*sx, dx*sy,
+	var b = [dx*cx*cy, -dx*cy*sx, dx*sy,
 				dy*(cx*sy*sz+cz*sx), dy*(cx*cz-sx*sy*sz), -dy*cy*sz,
 				sx*sz-cx*cz*sy, cx*sz+cz*sx*sy, cy*cz,
 				obj.width/2*(1+dx-obj.z[1]-obj.z[0])/dx,
@@ -268,19 +293,17 @@ var mgl_prepare = function(obj)
 		obj.pp[i][1] = b[10] + b[3]*x + b[4]*y + b[5]*z;
 		obj.pp[i][2] = b[11] + b[6]*x + b[7]*y + b[8]*z;
 	}
-	if(obj.pf)  for(var i=0;i<obj.npnts;i++)	// perspective
+	if(obj.pf)	for(var i=0;i<obj.npnts;i++)	// perspective
 	{	// NOTE: it is not supported for coordinate determining now
 		var d = (1-obj.pf)/(1-obj.pf*obj.pp[i][2]/obj.depth);
 		obj.pp[i][0] = d*obj.pp[i][0] + (1-d)/2*obj.width;
 		obj.pp[i][1] = d*obj.pp[i][1] + (1-d)/2*obj.height;
 	}
 	// fill z-coordinates for primitives
-	for(i=0;i<obj.nprim;i++)	obj.prim[i][9] = obj.pp[obj.prim[i][1]][2];
-/*	{
-		var n1 = obj.prim[i][1];
-		var n2 = obj.prim[i][2];
-		var n3 = obj.prim[i][3];
-		var n4 = obj.prim[i][4];
+	if(obj.fast)	for(i=0;i<obj.nprim;i++)	obj.prim[i][9] = obj.pp[obj.prim[i][1]][2];
+	else	for(i=0;i<obj.nprim;i++)
+	{
+		var n1 = obj.prim[i][1], n2 = obj.prim[i][2], n3 = obj.prim[i][3], n4 = obj.prim[i][4];
 		switch(obj.prim[i][0])
 		{
 		case 1: // lines
@@ -292,10 +315,19 @@ var mgl_prepare = function(obj)
 		default:
 			obj.prim[i][9] = obj.pp[n1][2];	break;
 		}
-	}*/
-	// sort primitives according its z-coordinate
-	// TODO: more accurate comparison ??? for placing text/lines before faces -- need tests
-	obj.prim.sort(function(a,b){return a[9] - b[9]});
+	}
+	if(obj.fast)	// sort primitives according its z-coordinate
+		obj.prim.sort(function(a,b){return a[9] - b[9]});
+	else	obj.prim.sort(mgl_cmp);	// more accurate sorting
+}
+
+var mgl_cmp = function(a,b)
+{
+	var tt = [0,2,4,5, 1,3,6, 7];
+	if(a[9]!=b[9])	return a[9] - b[9];
+	if(a[0]!=b[0])	return tt[b[0]]-tt[a[0]];
+	if(a[8]!=b[8])	return a[8] - b[8];
+	return a[3]-b[3];
 }
 
 // Function for drawing markers of type st with given size at position {x,y}
@@ -317,12 +349,12 @@ var mgl_draw_mark = function(ctx,x,y,st,size,d)
 	case 80:	// 'P'
 		ctx.moveTo(x-s,y-s);	ctx.lineTo(x+s,y-s);
 		ctx.lineTo(x+s,y+s);	ctx.lineTo(x-s,y+s);	ctx.lineTo(x-s,y-s);
-		ctx.moveTo(x-s,y);	  ctx.lineTo(x+s,y);
-		ctx.moveTo(x,y-s);	  ctx.lineTo(x,y+s);
+		ctx.moveTo(x-s,y);		ctx.lineTo(x+s,y);
+		ctx.moveTo(x,y-s);		ctx.lineTo(x,y+s);
 		ctx.stroke();	break;
 	case 43:	// '+'
-		ctx.moveTo(x-s,y);	  ctx.lineTo(x+s,y);
-		ctx.moveTo(x,y-s);	  ctx.lineTo(x,y+s);
+		ctx.moveTo(x-s,y);		ctx.lineTo(x+s,y);
+		ctx.moveTo(x,y-s);		ctx.lineTo(x,y+s);
 		ctx.stroke();	break;
 	case 88:	// 'X'
 		ctx.moveTo(x-s,y-s);	ctx.lineTo(x+s,y-s);
@@ -343,58 +375,58 @@ var mgl_draw_mark = function(ctx,x,y,st,size,d)
 		ctx.lineTo(x+s,y+s);	ctx.lineTo(x-s,y+s);
 		ctx.closePath();		ctx.fill();	 break;
 	case 100:	// 'd'
-		ctx.moveTo(x-s,y);	  ctx.lineTo(x,y-s);
-		ctx.lineTo(x+s,y);	  ctx.lineTo(x,y+s);
+		ctx.moveTo(x-s,y);		ctx.lineTo(x,y-s);
+		ctx.lineTo(x+s,y);		ctx.lineTo(x,y+s);
 		ctx.closePath();		ctx.stroke();	break;
 	case 68:	// 'D'
-		ctx.moveTo(x-s,y);	  ctx.lineTo(x,y-s);
-		ctx.lineTo(x+s,y);	  ctx.lineTo(x,y+s);
+		ctx.moveTo(x-s,y);		ctx.lineTo(x,y-s);
+		ctx.lineTo(x+s,y);		ctx.lineTo(x,y+s);
 		ctx.closePath();		ctx.fill();	 break;
 	case 42:	// '*'
-		ctx.moveTo(x-s,y);	  ctx.lineTo(x+s,y);
+		ctx.moveTo(x-s,y);		ctx.lineTo(x+s,y);
 		ctx.moveTo(x-0.6*s,y-0.8*s);	ctx.lineTo(x+0.6*s,y+0.8*s);
 		ctx.moveTo(x+0.6*s,y-0.8*s);	ctx.lineTo(x-0.6*s,y+0.8*s);
 		ctx.stroke();	break;
 	case 89:	// 'Y'
-		ctx.moveTo(x,y-s);	  ctx.lineTo(x,y);
+		ctx.moveTo(x,y-s);		ctx.lineTo(x,y);
 		ctx.moveTo(x-0.8*s,y+0.6*s);	ctx.lineTo(x,y);
 		ctx.moveTo(x+0.8*s,y+0.6*s);	ctx.lineTo(x,y);
 		ctx.stroke();	break;
-	case 84:	// 'T'
-		ctx.moveTo(x-s,y-s/2);  ctx.lineTo(x+s,y-s/2);
-		ctx.lineTo(x,y+s);	  ctx.closePath();
+	case 86:	// 'T'
+		ctx.moveTo(x-s,y-s/2);	ctx.lineTo(x+s,y-s/2);
+		ctx.lineTo(x,y+s);		ctx.closePath();
 		ctx.fill();	 break;
-	case 94:	// '^'
-		ctx.moveTo(x-s,y-s/2);  ctx.lineTo(x+s,y-s/2);
-		ctx.lineTo(x,y+s);	  ctx.closePath();
+	case 118:	// '^'
+		ctx.moveTo(x-s,y-s/2);	ctx.lineTo(x+s,y-s/2);
+		ctx.lineTo(x,y+s);		ctx.closePath();
 		ctx.stroke();	break;
-	case 86:	// 'V'
-		ctx.moveTo(x-s,y+s/2);  ctx.lineTo(x+s,y+s/2);
-		ctx.lineTo(x,y-s);	  ctx.closePath();
+	case 84:	// 'V'
+		ctx.moveTo(x-s,y+s/2);	ctx.lineTo(x+s,y+s/2);
+		ctx.lineTo(x,y-s);		ctx.closePath();
 		ctx.fill();	 break;
-	case 118:	// 'v'
-		ctx.moveTo(x-s,y+s/2);  ctx.lineTo(x+s,y+s/2);
-		ctx.lineTo(x,y-s);	  ctx.closePath();
+	case 94:	// 'v'
+		ctx.moveTo(x-s,y+s/2);	ctx.lineTo(x+s,y+s/2);
+		ctx.lineTo(x,y-s);		ctx.closePath();
 		ctx.stroke();	break;
 	case 76:	// 'L'
-		ctx.moveTo(x+s/2,y-s);  ctx.lineTo(x+s/2,y+s);
-		ctx.lineTo(x-s,y);	  ctx.closePath();
+		ctx.moveTo(x+s/2,y-s);	ctx.lineTo(x+s/2,y+s);
+		ctx.lineTo(x-s,y);		ctx.closePath();
 		ctx.fill();	 break;
 	case 60:	// '<'
-		ctx.moveTo(x+s/2,y-s);  ctx.lineTo(x+s/2,y+s);
-		ctx.lineTo(x-s,y);	  ctx.closePath();
+		ctx.moveTo(x+s/2,y-s);	ctx.lineTo(x+s/2,y+s);
+		ctx.lineTo(x-s,y);		ctx.closePath();
 		ctx.stroke();	break;
 	case 82:	// 'R'
-		ctx.moveTo(x-s/2,y-s);  ctx.lineTo(x-s/2,y+s);
-		ctx.lineTo(x+s,y);	  ctx.closePath();
+		ctx.moveTo(x-s/2,y-s);	ctx.lineTo(x-s/2,y+s);
+		ctx.lineTo(x+s,y);		ctx.closePath();
 		ctx.fill();	 break;
 	case 62:	// '>'
-		ctx.moveTo(x-s/2,y-s);  ctx.lineTo(x-s/2,y+s);
-		ctx.lineTo(x+s,y);	  ctx.closePath();
+		ctx.moveTo(x-s/2,y-s);	ctx.lineTo(x-s/2,y+s);
+		ctx.lineTo(x+s,y);		ctx.closePath();
 		ctx.stroke();	break;
 //	case 46:	// '.'
 	default:
-		ctx.arc(x,y,0.1*s,0,Math.PI*2); ctx.fill();	 break;
+		ctx.rect(x,y,1,1); ctx.fill();	 break;
 	}
 }
 

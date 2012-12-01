@@ -65,6 +65,12 @@ void mglCanvasWnd::EndFrame()
 	CurFig++;
 }
 //-----------------------------------------------------------------------------
+void mglCanvasWnd::SetFrame(long i)
+{
+	mglCanvas::SetFrame(i);
+	if(i>=0 && i<NumFig)	memcpy(GG + i*Width*Height*3,G,3*Width*Height);
+}
+//-----------------------------------------------------------------------------
 void mglCanvasWnd::DelFrame(long i)
 {
 	if(i<0 || i>=CurFrameId)	return;

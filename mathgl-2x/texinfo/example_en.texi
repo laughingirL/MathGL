@@ -3100,10 +3100,10 @@ int sample(mglGraph *gr)
   gr->SubPlot(2,2,1); gr->Title("light on");  gr->Rotate(50,60);
   gr->Box();  gr->Light(true);  gr->Surf(a);
 
-  gr->SubPlot(2,2,2); gr->Title("alpha on; light on");  gr->Rotate(50,60);
+  gr->SubPlot(2,2,3); gr->Title("alpha on; light on");  gr->Rotate(50,60);
   gr->Box();  gr->Alpha(true);  gr->Surf(a);
 
-  gr->SubPlot(2,2,3); gr->Title("alpha on");  gr->Rotate(50,60);
+  gr->SubPlot(2,2,2); gr->Title("alpha on");  gr->Rotate(50,60);
   gr->Box();  gr->Light(false); gr->Surf(a);
   return 0;
 }

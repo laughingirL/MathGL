@@ -534,7 +534,7 @@ bool mglCanvas::WriteJSON(const char *fname)
 		const mglPrim &p=Prm[i];		mglColor c = GetColor(p);
 		if(p.n1<0 || (p.type==1 && p.n2<0) || (p.type==2 && (p.n2<0 || p.n3<0)) || (p.type==3 && (p.n2<0 || p.n3<0 || p.n4<0)))
 			continue;
-		long n1=p.n1, n2=p.n2, n3=0, n4=p.type==3?p.n4:0;
+		long n1=p.n1, n2=p.n2, n3=0, n4=(p.type==3||p.type==0)?p.n4:0;
 		if(p.type==2 || p.type==3)	n3 = p.n3;
 		if(p.type==4)
 		{

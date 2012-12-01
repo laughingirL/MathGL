@@ -17,7 +17,6 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 
 ============= NEW FOR v.2.1 =============
 
-00. Check if mgl_draw_class, mgl_reload_class, mgl_click_class(void *p) are usable under Win32 non-native
 0. check for possible memory leaks before release
 
 1. inverse axis sample
@@ -27,19 +26,13 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 
 A. libhpdf for win32
 
-
-new a 2 'x':plot a '2o'
-
-
 ============= DOCS =============
 
 1. Check C/Fortran samples
 2. UDAV hotkeys
 
-3. Add FAQ about MPEG/GIF and PDF, JavaScript
-4. JSON samples in web-page ?!!
+3. Add FAQ about MPEG/GIF, TeX, PDF, JavaScript
 5. Hint about inverse axis range
-6. Docs about SetFrame()
 
 14. Thanks -- C.M., A.P.$
 

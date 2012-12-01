@@ -132,8 +132,8 @@ void smgl_triangulation(mglGraph *gr)	// surface triangulation
 //-----------------------------------------------------------------------------
 const char *mmgl_alpha="call 'prepare2d'\nsubplot 2 2 0:title 'default':rotate 50 60:box\nsurf a\n"
 "subplot 2 2 1:title 'light on':rotate 50 60:box\nlight on:surf a\n"
-"subplot 2 2 2:title 'light on; alpha on':rotate 50 60:box\nalpha on:surf a\n"
-"subplot 2 2 3:title 'alpha on':rotate 50 60:box\nlight off:surf a\n";
+"subplot 2 2 3:title 'light on; alpha on':rotate 50 60:box\nalpha on:surf a\n"
+"subplot 2 2 2:title 'alpha on':rotate 50 60:box\nlight off:surf a\n";
 void smgl_alpha(mglGraph *gr)	// alpha and lighting
 {
 	mglData a;	mgls_prepare2d(&a);
@@ -141,9 +141,9 @@ void smgl_alpha(mglGraph *gr)	// alpha and lighting
 	gr->Box();	gr->Surf(a);
 	gr->SubPlot(2,2,1);	gr->Title("light on");	gr->Rotate(50,60);
 	gr->Box();	gr->Light(true);	gr->Surf(a);
-	gr->SubPlot(2,2,2);	gr->Title("alpha on; light on");	gr->Rotate(50,60);
+	gr->SubPlot(2,2,3);	gr->Title("alpha on; light on");	gr->Rotate(50,60);
 	gr->Box();	gr->Alpha(true);	gr->Surf(a);
-	gr->SubPlot(2,2,3);	gr->Title("alpha on");	gr->Rotate(50,60);
+	gr->SubPlot(2,2,2);	gr->Title("alpha on");	gr->Rotate(50,60);
 	gr->Box();	gr->Light(false);	gr->Surf(a);
 }
 //-----------------------------------------------------------------------------

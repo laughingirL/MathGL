@@ -158,7 +158,7 @@ void usage()
 		"--eps		- output LaTeX\n"
 		"--jpeg		- output JPEG\n"
 		"--json		- output JSON\n"
-		"--solid		- output solid PNG\n"
+		"--solid	- output solid PNG\n"
 		"--svg		- output SVG\n"
 		"--obj		- output obj/mtl\n"
 		"--off		- output off\n"
@@ -278,6 +278,8 @@ int main(int argc,char **argv)
 		delete gr;	return 0;	}
 	else if(dotest==3)
 	{	fexport(gr);	delete gr;	return 0;	}
+
+	if(type==15)	mini=1;	// save mini version for json
 	
 	if(srnd)	mgl_srnd(1);
 	gr->VertexColor(false);	gr->TextureColor(true);	gr->Compression(false);
