@@ -77,9 +77,11 @@ void test(mglGraph *gr)
 	fclose(fp);
 }
 //-----------------------------------------------------------------------------
+void smgl_style(mglGraph *gr);
 void fexport(mglGraph *gr)
 {
-	mglData a,b,d;	mgls_prepare2v(&a,&b);	d = a;
+	smgl_style(gr);
+/*	mglData a,b,d;	mgls_prepare2v(&a,&b);	d = a;
 	for(int i=0;i<a.nx*a.ny;i++)	d.a[i] = hypot(a.a[i],b.a[i]);
 	mglData c;	mgls_prepare3d(&c);
 	mglData v(10);	v.Fill(-0.5,1);
@@ -92,7 +94,10 @@ void fexport(mglGraph *gr)
 	gr->SubPlot(2,2,3);	gr->Title("Surf3 + ContF_3");gr->Rotate(50,60);
 	gr->Box();	gr->ContF3(v,c,"z",0);	gr->ContF3(v,c,"x");	gr->ContF3(v,c);
 	gr->SetCutBox(mglPoint(0,-1,-1), mglPoint(1,0,1.1));
-	gr->ContF3(v,c,"z",c.nz-1);	gr->Surf3(-0.5,c);
+	gr->ContF3(v,c,"z",c.nz-1);	gr->Surf3(-0.5,c);*/
+
+/*	gr->SetSize(800,800);
+	gr->Axis();	gr->FPlot("sin(4*pi*x^2)");*/
 	
 	gr->WriteJPEG("test.jpg");
 	gr->WritePNG("test.png");

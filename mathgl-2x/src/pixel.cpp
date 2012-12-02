@@ -834,7 +834,7 @@ void mglCanvas::mark_draw(long k, char type, mreal size, mglDrawReg *d)
 	const mglPnt &q=Pnt[k];
 	unsigned char cs[4];	col2int(q,cs,d->ObjId);	cs[3] = size>0 ? 255 : 255*q.t;
 	mglPnt p=q;
-	mreal ss=fabs(size)*0.35*font_factor;
+	mreal ss=fabs(size);
 	register long i,j;
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_lock(&mutexPnt);

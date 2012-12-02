@@ -21,7 +21,8 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 
 1. inverse axis sample
 3. WX window/widgets
-4. test TeX output + sample in docs
+
+4. bug for shift of rotated text in TeX + text size in subplots + text align
 5. Command options dialog -- add "value"
 
 A. libhpdf for win32
@@ -31,7 +32,7 @@ A. libhpdf for win32
 1. Check C/Fortran samples
 2. UDAV hotkeys
 
-3. Add FAQ about MPEG/GIF, TeX, PDF, JavaScript
+3. Add FAQ about MPEG/GIF, TeX (just use mglmain.tex), PDF, JavaScript
 5. Hint about inverse axis range
 
 14. Thanks -- C.M., A.P.$

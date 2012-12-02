@@ -215,9 +215,9 @@ var mgl_draw_good = function(obj, ctx)
 		switch(obj.prim[i][0])		// draw it depending on its type
 		{
 		case 0: // marks
-			var d = 0.35*(obj.width>obj.height?obj.height:obj.width)*scl;
+//			var d = 0.35*(obj.width>obj.height?obj.height:obj.width)*scl;
 			ctx.lineWidth = obj.prim[i][7]*obj.prim[i][6]*50;
-			mgl_draw_mark(ctx, obj.pp[n1][0], obj.pp[n1][1], n4, obj.prim[i][6], d);
+			mgl_draw_mark(ctx, obj.pp[n1][0], obj.pp[n1][1], n4, obj.prim[i][6], scl);
 			break;
 		case 1: // lines
 			ctx.beginPath();

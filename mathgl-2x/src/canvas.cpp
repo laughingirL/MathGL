@@ -299,16 +299,18 @@ mreal mglCanvas::GetOrgZ(char dir) const
 //-----------------------------------------------------------------------------
 //	Put primitives
 //-----------------------------------------------------------------------------
-#define MGL_MARK_PLOT	if(Quality&4)	mark_draw(p,type,size?size:MarkSize,&d);else	\
-						{	mglPrim a;	a.w = pw;	a.s = size?size:MarkSize;	\
+#define MGL_MARK_PLOT	if(Quality&4)	mark_draw(p,type,size,&d);else	\
+						{	mglPrim a;	a.w = pw;	a.s = size;	\
 							a.n1 = p;	a.n4 = type;	add_prim(a);	}
 void mglCanvas::mark_plot(long p, char type, mreal size)
 {
 	if(p<0 || mgl_isnan(Pnt[p].x))	return;
 	long pp=p;
-	mreal pw = fabs(PenWidth)*sqrt(font_factor/400);
+	mreal pw = fabs(PenWidth)*0.15/sqrt(font_factor);
 	mglDrawReg d;	d.set(this,1,1,0);	d.PenWidth = pw;
 	if(size>=0)	size *= MarkSize;
+	if(size==0)	size = MarkSize;
+	size *= 0.35*font_factor;
 	if(TernAxis&4) for(int i=0;i<4;i++)
 	{	p = ProjScale(i, pp);	MGL_MARK_PLOT	}
 	else	{	MGL_MARK_PLOT	}
@@ -389,16 +391,6 @@ mreal mglCanvas::text_plot(long p,const wchar_t *text,const char *font,mreal siz
 	bool inv=false;
 	if(rot && (q.u<0 || (q.u==0 && q.v<0)))
 	{	q.u=-q.u;	q.v=-q.v;	q.w=-q.w;	inv=true;	}
-	if(!(Quality&4))	// add text itself
-	{
-		mglPrim a(6);	a.n1 = p;
-		mglText txt(text,font);
-		MGL_PUSH(Ptx,txt,mutexPtx);
-		a.n3 = Ptx.size()-1;
-		a.s = size;	a.w = sh;	a.p=col;
-		add_prim(a);
-	}
-	if(ll<1e-10)	return 0;
 
 	mreal fsize=size/6.5*font_factor, h = fnt->Height(font)*fsize, w, shift = -(sh+0.02)*h;
 	// text drawing itself
@@ -420,6 +412,17 @@ mreal mglCanvas::text_plot(long p,const wchar_t *text,const char *font,mreal siz
 	if(mgl_isnan(ll) || !get(MGL_ENABLE_RTEXT))	ftet = 0;
 	else	ftet = -180*atan2(q.v,q.u)/M_PI;
 
+	if(!(Quality&4))	// add text itself
+	{
+		mglPrim a(6);	a.n1 = p;
+		mglText txt(text,font);
+		MGL_PUSH(Ptx,txt,mutexPtx);
+		a.n3 = Ptx.size()-1;
+		a.s = size;	a.w = shift;	a.p=ftet;
+		add_prim(a);
+	}
+	if(ll<1e-10)	{	Pop();	return 0;	}
+	
 	memset(B.b,0,9*sizeof(mreal));
 	B.b[0] = B.b[4] = B.b[8] = fscl;
 	register mreal opf = B.pf;
