@@ -2586,7 +2586,7 @@ Check that points of the plot are located inside the bounding box and resize the
 Most ``new'' types of plots can be created by using the existing drawing functions. For example, the surface of curve rotation can be created by a special function @ref{torus}, or as a parametrically specified surface by @ref{surf}. See also, @ref{Hints}. If you can not find a specific type of plot, please e-mail me and this plot will appear in the next version of MathGL library.
 
 @item How can I print in Russian/Spanish/Arabic/Japanese, and so on?
-The standard way is to use Unicode encoding for the text output. But the MathGL library also has interface for 8-bit (char *) strings with internal conversion to Unicode. This conversion depends on the current locale OS. You may change it by @code{setlocale()} function. For example, for Russian text in CP1251 encoding you may use @code{setlocale(LC_CTYPE, "ru_RU.cp1251");} (under MS Windows the name of locale may differ -- @code{setlocale(LC_CTYPE, "russian_russia.1251")}). I strongly recommend not to use the constant @code{LC_ALL} in the conversion. Since it also changes the number format, it may lead to mistakes in formula writing and reading of the text in data files. For example, the program will await a @samp{,} as a decimal point but the user will enter @samp{.}.
+The standard way is to use Unicode encoding for the text output. But the MathGL library also has interface for 8-bit (char *) strings with internal conversion to Unicode. This conversion depends on the current locale OS.
 
 @item How can I exclude a point or a region of plot from the drawing?
 There are 3 general ways. First, the point with @code{nan} value as one of the coordinates (including color/alpha range) will never be plotted. Second, special functions define the condition when the points should be omitted (see @ref{Cutting}). Last, you may change the transparency of a part of the plot by the help of functions @ref{surfa}, @ref{surf3a} (see @ref{Dual plotting}). In last case the transparency is switched on smoothly.
@@ -2597,6 +2597,14 @@ Most of the library was written by one person. This is a result of nearly a year
 @item How can I display a bitmap on the figure?
 You can import data by command @ref{import} and display it by @ref{dens} function. For example, for black-and-white bitmap you can use the code: @code{import bmp 'fname.png' 'wk':dens  bmp 'wk'}.
 
+
+@item How can I create 3D in PDF?
+Just use command @code{write fname.pdf}, which create PDF file if enable-pdf=ON at MathGL configure.
+
+@item How can I create TeX figure?
+Just use command @code{write fname.tex}, which create LaTeX files with figure itself @samp{@var{fname}.tex}, with MathGL colors @samp{mglcolors.tex} and main file @samp{mglmain.tex}. Last one can be used for viewing image by command like @code{pdflatex mglmain.tex}.
+
+
 @item How I can change the font family?
 First, you should download new font files from @uref{http://mathgl.sourceforge.net/download.html, here} or from @uref{http://sourceforge.net/project/showfiles.php?group_id=152187&package_id=267177, here}. Next, you should load the font files into by the following command: @code{loadfont 'fontname'}. Here @var{fontname} is the base font name like @samp{STIX}. Use @code{loadfont ''} to start using the default font.
 
@@ -2604,7 +2612,7 @@ First, you should download new font files from @uref{http://mathgl.sourceforge.n
 Just set a negative value in @ref{ticklen}. For example, use @code{ticklen -0.1}.
 
 @item How can I prevent text rotation?
-Just use @code{rotatetext off}.
+Just use @code{rotatetext off}. Also you can use axis style @samp{U} for disable only tick labels rotation.
 
 @end table
 

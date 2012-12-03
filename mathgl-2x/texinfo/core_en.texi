@@ -1014,6 +1014,7 @@ Ends group definition.
 @cindex WriteBPS
 @cindex WriteTGA
 @cindex WriteTEX
+@cindex WritePRC
 @cindex WriteOBJ
 @cindex WriteWGL
 @cindex WriteJPEG
@@ -1079,6 +1080,10 @@ Exports current frame to SVG (Scalable Vector Graphics) file using vector repres
 Exports current frame to LaTeX (package Tikz/PGF) file using vector representation. Note, the output file may be too large for graphic of large data array (especially for surfaces). It is better to use bitmap format (for example PNG or JPEG). However, program has no internal limitations for size of output file. Parameter @var{fname} specifies the file name, @var{descr} adds description to file (default is file name).
 @end deftypefn
 
+@deftypefn {Method on @code{mglGraph}} @code{void} WritePRC (@code{const char *}fname, @code{const char *}descr=@code{""}, @code{bool} make_pdf=@code{true})
+@deftypefnx {C function} @code{void} mgl_write_prc (@code{HMGL} gr, @code{const char *}fname, @code{const char *}descr, @code{int} make_pdf)
+Exports current frame to PRC file using vector representation (see @url{http://en.wikipedia.org/wiki/PRC_%28file_format%29}). Note, the output file may be too large for graphic of large data array (especially for surfaces). It is better to use bitmap format (for example PNG or JPEG). However, program has no internal limitations for size of output file. Parameter @var{fname} specifies the file name, @var{descr} adds description to file (default is file name). If parameter @var{make_pdf}=@code{true} and PDF was enabled at MathGL configure then corresponding PDF file with 3D image will be created.
+@end deftypefn
 
 @deftypefn {Method on @code{mglGraph}} @code{void} WriteOBJ (@code{const char *}fname, @code{const char *}descr=@code{""})
 @deftypefnx {C function} @code{void} mgl_write_obj (@code{HMGL} gr, @code{const char *}fname, @code{const char *}descr)

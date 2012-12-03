@@ -183,12 +183,12 @@ mglPoint mglCanvas::CalcScr(mglPoint p) const
 {	int x,y;	CalcScr(p,&x,&y);	return mglPoint(x,y);	}
 //-----------------------------------------------------------------------------
 //mglCanvas *mgl_tmp_gr;
-int mgl_type_prior[8]={0,2,4,5, 1,3,6, 7};
+int mgl_type_prior[8]={1,2,4,5, 0,3,6, 7};
 bool operator<(const mglPrim &a, const mglPrim &b)
 {
 	register int t1 = mgl_type_prior[a.type], t2 = mgl_type_prior[b.type];
 	if(a.z!=b.z) 	return a.z < b.z;
-	if(t1!=t2)		return t1 > t2;
+	if(t1!=t2)		return t1 < t2;
 	if(a.w!=b.w) 	return a.w < b.w;
 	return a.n3 < b.n3;
 }
@@ -197,7 +197,7 @@ bool operator>(const mglPrim &a, const mglPrim &b)
 {
 	register int t1 = mgl_type_prior[a.type], t2 = mgl_type_prior[b.type];
 	if(a.z!=b.z) 	return a.z > b.z;
-	if(t1!=t2)		return t1 < t2;
+	if(t1!=t2)		return t1 > t2;
 	if(a.w!=b.w) 	return a.w > b.w;
 	return a.n3 > b.n3;
 }

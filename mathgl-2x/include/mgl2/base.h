@@ -154,7 +154,7 @@ struct mglGlyph
 	bool operator==(const mglGlyph &g);
 	inline mglGlyph &operator=(const mglGlyph &a)
 	{	Create(a.nt, a.nl);	memcpy(trig, a.trig, 6*nt*sizeof(short));
-		memcpy(line, a.line, 4*nl*sizeof(short));	return *this;	}
+		memcpy(line, a.line, 2*nl*sizeof(short));	return *this;	}
 };
 //-----------------------------------------------------------------------------
 /// Structure for texture (color scheme + palette) representation

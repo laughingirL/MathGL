@@ -3816,8 +3816,16 @@ int main (int argc, char ** argv)
 @item Как использовать MathGL в Qt, FLTK, wxWidgets ...?
 Есть специальные классы (виджеты) для этих библиотек: QMathGL для Qt, Fl_MathGL для FLTK и т.д. Если Вы не нашли подходящий класс, то можете создать свой собственный виджет, рисующий растровое изображение из mglCanvas::GetBits().
 
-@item Как мне создать U3D файл (3D in PDF)?
-Процедура состоит из двух шагов: создания файла IDTF и его конвертация в U3D. Можно использовать @uref{http://sourceforge.net/project/showfiles.php?group_id=152187&package_id=300628, U3D tools} для конвертации IDTF в U3D. Ему требуется библиотека @uref{http://libharu.org, libharu} 2.1.0 или более поздняя. Для установки используйте обычную процедуру @code{./bootstrap, ./configure, make, sudo make install}. В результате появится программа IDTFConverter для конвертации файлов *.idtf в бинарные файлы *.u3d. Последние можно включить в PDF.
+@item Как мне создать 3D в PDF?
+Используйте функцию @code{WritePRC}(), которая создаст PDF файл если MathGL был собран с enable-pdf=ON.
+
+@item Как мне создать TeX рисунок?
+Используйте функцию @code{WriteTEX}(), которая создаст LaTeX файлы с собственно рисунком @samp{@var{fname}.tex}, с цветами MathGL @samp{mglcolors.tex} и основной файл @samp{mglmain.tex}, который может использоваться для просмотра изображения и/или генерации PDF с помощью команды типа @code{pdflatex mglmain.tex}.
+
+@item Можно ли использовать MathGL в JavaScript?
+Да, пример JavaScript файла находится в папке texinfo/ исходных текстов. Для его работы необходимо предоставить JSON данные с 3d изображением (можно создать с помощью @code{WriteJSON}() функции). Скрипт позволяет выполнять базовые операции: приближение/удаление, вращение и сдвиг. Примеры использования JavaScript можно найти в @url{http://mathgl.sf.net/json.html}.
+
+
 
 @item Как сменить шрифт (семейство шрифтов)?
 Во-первых, надо загрузить файлы @uref{http://mathgl.sourceforge.net/download.html, отсюда} или @uref{http://sourceforge.net/project/showfiles.php?group_id=152187&package_id=267177, отсюда}. Далее, в экземпляре mglGraph загружаем шрифты: @code{gr->LoadFont(fontname,path);}. Здесь @var{fontname} -- базовое имя шрифта, например @samp{STIX}, и @var{path} -- путь к папке с файлами шрифтов. Вызовите @code{gr->RestoreFont();} для использования шрифта по умолчанию.

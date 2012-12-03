@@ -32,7 +32,6 @@ A. libhpdf for win32
 1. Check C/Fortran samples
 2. UDAV hotkeys
 
-3. Add FAQ about MPEG/GIF, TeX (just use mglmain.tex), PDF, JavaScript
 5. Hint about inverse axis range
 
 14. Thanks -- C.M., A.P.$

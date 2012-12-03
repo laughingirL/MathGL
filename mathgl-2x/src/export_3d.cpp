@@ -571,7 +571,7 @@ bool mglCanvas::WriteJSON(const char *fname)
 		register long j;
 		for(j=0;j<6*g.nt;j++)	fprintf(fp,"%d%c", g.trig[j], j+1<6*g.nt?',':' ');
 		fprintf(fp,"],\n\t[");
-		for(j=0;j<4*g.nl;j++)	fprintf(fp,"%d%c", g.line[j], j+1<4*g.nl?',':' ');
+		for(j=0;j<2*g.nl;j++)	fprintf(fp,"%d%c", g.line[j], j+1<2*g.nl?',':' ');
 		fprintf(fp,"]\n]%c\n", i+1<l?',':' ');
 	}
 	fprintf(fp,"]\n}\n");

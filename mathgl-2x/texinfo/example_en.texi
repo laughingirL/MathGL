@@ -3748,8 +3748,17 @@ You can import data into a @code{mglData} instance by function @ref{import} and 
 @item How can I use MathGL in Qt, FLTK, wxWidgets etc.?
 There are special classes (widgets) for these libraries: QMathGL for Qt, Fl_MathGL for FLTK and so on. If you don't find the appropriate class then you can create your own widget that displays a bitmap using mglCanvas::GetRGB().
 
-@item How can I create U3D file (make 3D in PDF)?
-There are 2 steps: first you should create IDTF file, and later convert it to U3D. You can use @uref{http://sourceforge.net/project/showfiles.php?group_id=152187&package_id=300628, U3D tools} for converting IDTF file to U3D. It needs @uref{http://libharu.org, libharu} 2.1.0 or later. For installation use @code{./bootstrap, ./configure, make, sudo make install}. It provides  IDTFConverter program for converting text files *.idtf to binary files *.u3d. The latter can be included into PDF.
+@item How can I create 3D in PDF?
+Just use @code{WritePRC}() method which create PDF file if enable-pdf=ON at MathGL configure.
+
+@item How can I create TeX figure?
+Just use @code{WriteTEX}() method which create LaTeX files with figure itself @samp{@var{fname}.tex}, with MathGL colors @samp{mglcolors.tex} and main file @samp{mglmain.tex}. Last one can be used for viewing image by command like @code{pdflatex mglmain.tex}.
+
+@item Can I use MathGL in JavaScript?
+Yes, sample JavaScript file is located in texinfo/ folder of sources. You should provide JSON data with 3d image for it (can be created by @code{WriteJSON}() method). Script allows basic manipulation with plot: zoom, rotation, shift. Sample of JavaScript pictures can be found in @url{http://mathgl.sf.net/json.html}.
+
+
+
 
 @item How I can change the font family?
 First, you should download new font files from @uref{http://mathgl.sourceforge.net/download.html, here} or from @uref{http://sourceforge.net/project/showfiles.php?group_id=152187&package_id=267177, here}. Next, you should load the font files into mglGraph class instance @var{gr} by the following command: @code{gr->LoadFont(fontname,path);}. Here @var{fontname} is the base font name like @samp{STIX} and @var{path} sets the location of font files. Use @code{gr->RestoreFont();} to start using the default font.
@@ -3758,7 +3767,7 @@ First, you should download new font files from @uref{http://mathgl.sourceforge.n
 Just set a negative value in @ref{ticklen}. For example, use @code{gr->SetTickLen(-0.1);}.
 
 @item How can I prevent text rotation?
-Just use @code{SetRotatedText(false)}.
+Just use @code{SetRotatedText(false)}. Also you can use axis style @samp{U} for disable only tick labels rotation.
 
 @item What is @code{*.so}? What is @code{gcc}? How I can use @code{make}?
 They are standard GNU tools. There is special FAQ about its usage under Windows -- @uref{http://www.mingw.org/wiki/FAQ}.

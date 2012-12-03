@@ -42,7 +42,7 @@ void mgl_create_cpp_font(HMGL gr, const wchar_t *how)
 	for(i=l=n=0;i<s.size();i++)
 	{
 		ch = f->Internal(s[i]);
-		l += 4*f->GetNl(0,ch);
+		l += 2*f->GetNl(0,ch);
 		n += 6*f->GetNt(0,ch);
 	}
 	printf("unsigned mgl_numg=%lu, mgl_cur=%lu;\n",(unsigned long)s.size(),l+n);
@@ -52,8 +52,8 @@ void mgl_create_cpp_font(HMGL gr, const wchar_t *how)
 	{
 		ch = f->Internal(s[i]);
 		int m1 = f->GetNl(0,ch), m2 = f->GetNt(0,ch);
-		printf("\t{0x%x,%d,%d,%lu,%d,%lu},\n",s[i],f->GetWidth(0,ch),m1,m,m2,m+4*m1);
-		m += 4*m1+6*m2;
+		printf("\t{0x%x,%d,%d,%lu,%d,%lu},\n",s[i],f->GetWidth(0,ch),m1,m,m2,m+2*m1);
+		m += 2*m1+6*m2;
 	}
 	if(m!=l+n)	printf("#error \"%lu !=%lu + %lu\"",m,l,n);
 	printf("};\nshort mgl_buf_fnt[%lu] = {\n",m);
@@ -62,7 +62,7 @@ void mgl_create_cpp_font(HMGL gr, const wchar_t *how)
 		ch = f->Internal(s[i]);
 		unsigned m1 = f->GetNl(0,ch), m2 = f->GetNt(0,ch);
 		const short *ln = f->GetLn(0,ch), *tr = f->GetTr(0,ch);
-		for(l=0;l<4*m1;l++)	printf("%d,",ln[l]);
+		for(l=0;l<2*m1;l++)	printf("%d,",ln[l]);
 		printf("\n");
 		for(l=0;l<6*m2;l++)	printf("%d,",tr[l]);
 		printf("\n");
@@ -197,14 +197,14 @@ void mglGlyph::Create(long Nt, long Nl)
 	if(trig)	delete []trig;
 	trig = nt>0?new short[6*nt]:0;
 	if(line)	delete []line;
-	line = nl>0?new short[4*nl]:0;
+	line = nl>0?new short[2*nl]:0;
 }
 //-----------------------------------------------------------------------------
 bool mglGlyph::operator==(const mglGlyph &g)
 {
 	if(nl!=g.nl || nt!=g.nt)	return false;
 	if(trig && memcmp(trig,g.trig,6*nt*sizeof(short)))	return false;
-	if(line && memcmp(line,g.line,4*nl*sizeof(short)))	return false;
+	if(line && memcmp(line,g.line,2*nl*sizeof(short)))	return false;
 	return true;
 }
 //-----------------------------------------------------------------------------
@@ -214,7 +214,7 @@ long mglBase::AddGlyph(int s, long j)
 	s = s&3;
 	mglGlyph g(fnt->GetNt(s,j), fnt->GetNl(s,j));	
 	memcpy(g.trig, fnt->GetTr(s,j), 6*g.nt*sizeof(short));
-	memcpy(g.line, fnt->GetLn(s,j), 4*g.nl*sizeof(short));
+	memcpy(g.line, fnt->GetLn(s,j), 2*g.nl*sizeof(short));
 	// now let find the similar glyph
 	register size_t i;
 	for(i=0;i<Glf.size();i++)	if(g==Glf[i])	return i;
