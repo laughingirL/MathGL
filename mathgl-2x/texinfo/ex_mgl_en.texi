@@ -463,7 +463,8 @@ subplot 2 2 2 '':title 'coloring':box
 legend 0 'r#':legend 1 'Wb#':legend 2 'ygr#'
 
 subplot 2 2 3 '':title 'manual position':box
-legend 0.5 0.5
+legend 0.5 1:text 0.5 0.55 'at x=0.5, y=1' 'a'
+legend 1 '#-':text 0.75 0.25 'Horizontal legend' 'a'
 @end verbatim
 
 @pfig{legend, Example of legend}

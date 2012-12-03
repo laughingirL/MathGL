@@ -23,30 +23,33 @@
 #include <time.h>
 #include <algorithm>
 #include <vector>
+#include <string>
+#include <sys/stat.h>
 #undef _GR_
 #define _GR_	((mglCanvas *)(*gr))
 #define _Gr_	((mglCanvas *)(gr))
 void mgl_printf(void *fp, bool gz, const char *str, ...);
 //-----------------------------------------------------------------------------
-char *mgl_get_dash(unsigned short d, mreal w)
+const char *mgl_get_dash(unsigned short d, mreal w)
 {
-	static char s[64],b[32];
-	if(d==0xffff)	{	strcpy(s,"");	return s;	}
+	static char b[32];
+	static std::string s;
+	if(d==0xffff)	return "";
 	int f=0, p=d&1, n=p?0:1, i, j;
-	strcpy(s, p ? "" : "0");
+	s = p ? "" : "0";
 	for(i=0;i<16;i++)
 	{
 		j = i;//15-i;
 		if(((d>>j)&1) == p)	f++;
 		else
 		{
-			sprintf(b," %g",f*w);	strcat(s,b);
+			sprintf(b," %g",f*w);	s += b;
 			p = (d>>j)&1;	f = 1;	n++;
 		}
 	}
-	sprintf(b," %g",f*w);	strcat(s,b);
-	strcat(s,n%2 ? "" : " 0");
-	return s;
+	sprintf(b," %g",f*w);	s += b;
+	s += n%2 ? "" : " 0";
+	return s.c_str();
 }
 //-----------------------------------------------------------------------------
 bool mgl_is_same(HMGL gr, const mglPrim &pr,mreal wp,mglColor cp,int st)
@@ -471,6 +474,19 @@ void mgl_write_svg(HMGL gr, const char *fname,const char *descr)
 			}
 			mgl_printf(fp, gz, "</g>\n");
 		}
+		else if(q.type==1)
+		{
+			mgl_printf(fp,gz,"<g stroke=\"#%02x%02x%02x\"",int(255*cp.r),int(255*cp.g),int(255*cp.b));
+			if(q.n3)
+			{
+				mgl_printf(fp, gz, " stroke-dasharray=\"%s\"", mgl_get_dash(q.n3,q.w));
+				mgl_printf(fp, gz, " stroke-dashoffset=\"%g\"", q.s*q.w);
+			}
+			if(q.w>1)	mgl_printf(fp, gz, " stroke-width=\"%g\"", q.w);
+			wp = q.w>1  ? q.w:1;	st = q.n3;
+			put_line(gr,fp,gz,i,wp,cp,st, "><path d=\" M %g %g", " L %g %g", true, 1);
+			mgl_printf(fp, gz, "\"/> </g>\n");
+		}
 		else if(q.type==2 && cp.a>mgl_min_a)
 		{
 			const mglPnt &p2=gr->GetPnt(q.n2), &p3=gr->GetPnt(q.n3);
@@ -482,20 +498,6 @@ void mgl_write_svg(HMGL gr, const char *fname,const char *descr)
 			const mglPnt &p2=gr->GetPnt(q.n2), &p3=gr->GetPnt(q.n3), &p4=gr->GetPnt(q.n4);
 			mgl_printf(fp, gz, "<g fill=\"#%02x%02x%02x\" opacity=\"%g\">\n", int(255*cp.r),int(255*cp.g),int(255*cp.b),cp.a);
 			mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g L %g %g L %g %g Z\"/> </g>\n", p1.x, hh-p1.y, p2.x, hh-p2.y, p4.x, hh-p4.y, p3.x, hh-p3.y);
-		}
-		else if(q.type==1)
-		{
-			//			const char *dash[]={"", "8 8","4 4","1 3","7 4 1 4","3 2 1 2"};
-			mgl_printf(fp,gz,"<g stroke=\"#%02x%02x%02x\"",int(255*cp.r),int(255*cp.g),int(255*cp.b));
-			if(q.n3)
-			{
-				mgl_printf(fp, gz, " stroke-dasharray=\"%s\"", mgl_get_dash(q.n3,q.w));
-				mgl_printf(fp, gz, " stroke-dashoffset=\"%g\"", q.s*q.w);
-			}
-			if(q.w>1)	mgl_printf(fp, gz, " stroke-width=\"%g\"", q.w);
-			wp = q.w>1  ? q.w:1;	st = q.n3;
-			put_line(gr,fp,gz,i,wp,cp,st, "><path d=\" M %g %g", " L %g %g", true, 1);
-			mgl_printf(fp, gz, "\"/> </g>\n");
 		}
 		else if(q.type==4)
 		{

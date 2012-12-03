@@ -46,6 +46,8 @@
 
 * Pen width for marks now is proportional to pen width of line multiplied by size of marks.
 
+* Option '-' in legend for drawing horizontally
+
 * MINOR INCOMPATIBLE: plotting functions now use double argument always.
 
 * Add MGL commands 'errbox', 'face'

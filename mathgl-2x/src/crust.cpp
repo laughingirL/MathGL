@@ -31,7 +31,7 @@ void mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const 
 	if(mgl_check_trig(gr,nums,x,y,z,a,"TriPlot"))	return;
 
 	long ss=gr->AddTexture(sch);
-	gr->SaveState(opt);
+	gr->SaveState(opt);	gr->SetPenPal("-");
 	static int cgid=1;	gr->StartGroup("TriPlot",cgid++);
 	mglPoint p1,p2,p3,q=mglPoint(NAN,NAN);
 
@@ -141,7 +141,7 @@ void mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const
 	if(mgl_check_trig(gr,nums,x,y,z,a,"QuadPlot",4))	return;
 
 	long ss=gr->AddTexture(sch);
-	gr->SaveState(opt);
+	gr->SaveState(opt);	gr->SetPenPal("-");
 	static int cgid=1;	gr->StartGroup("QuadPlot",cgid++);
 	mglPoint p1,p2,p3,p4,q=mglPoint(NAN,NAN);
 

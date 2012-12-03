@@ -66,6 +66,8 @@ separator for color positions (see @ref{Color styles}) or items in a list.
 @item -
 solid line style (see @ref{Line styles});
 
+place entries horizontally in @ref{legend};
+
 operation in @ref{Textual formulas}.
 
 @item .
@@ -146,7 +148,7 @@ style of @ref{subplot} and @ref{inplot};
 
 set position of @ref{colorbar};
 
-switch to lower index inside a string (see @ref{Font styles});
+switch to upper index inside a string (see @ref{Font styles});
 
 operation in @ref{Textual formulas}.
 
@@ -161,7 +163,7 @@ set position of @ref{colorbar};
 
 set to draw contours at bottom for @ref{cont}, @ref{contf}, @ref{contd}, @ref{contv}, @ref{tricont};
 
-switch to upper index inside a string (see @ref{Font styles}).
+switch to lower index inside a string (see @ref{Font styles}).
 
 @item []
 contain symbols excluded from color scheme parsing (see @ref{Color scheme}).

@@ -1761,7 +1761,9 @@ const char *mmgl_legend="addlegend 'sin(\\pi {x^2})' 'b':addlegend 'sin(\\pi x)'
 "subplot 2 2 0 '':title 'Legend (default)':box:legend\n"
 "legend 3 'A#':text 0.75 0.65 'Absolute position' 'A'\n"
 "subplot 2 2 2 '':title 'coloring':box:legend 0 'r#':legend 1 'Wb#':legend 2 'ygr#'\n"
-"subplot 2 2 3 '':title 'manual position':box:legend 0.5 0.5\n";
+"subplot 2 2 3 '':title 'manual position':box\n"
+"legend 0.5 1:text 0.5 0.55 'at x=0.5, y=1' 'a'\n"
+"legend 1 '#-':text 0.75 0.25 'Horizontal legend' 'a'\n";
 void smgl_legend(mglGraph *gr)
 {
 	gr->AddLegend("sin(\\pi {x^2})","b");
@@ -1776,7 +1778,11 @@ void smgl_legend(mglGraph *gr)
 	gr->Puts(mglPoint(0.75,0.65),"Absolute position","A");
 	gr->SubPlot(2,2,2,"");	gr->Title("coloring");	gr->Box();
 	gr->Legend(0,"r#");	gr->Legend(1,"Wb#");	gr->Legend(2,"ygr#");
-	gr->SubPlot(2,2,3,"");	gr->Title("manual position");	gr->Box();	gr->Legend(0.5,0.5);
+	gr->SubPlot(2,2,3,"");	gr->Title("manual position");	gr->Box();
+	gr->Legend(0.5,1);
+	gr->Puts(mglPoint(0.5,0.55),"at x=0.5, y=1","a");
+	gr->Legend(1,"#-");
+	gr->Puts(mglPoint(0.75,0.25),"Horizontal legend","a");
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_dat_diff="ranges 0 1 0 1 0 1:new a 30 40 'x*y'\n"

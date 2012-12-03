@@ -20,9 +20,11 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 0. check for possible memory leaks before release
 
 1. inverse axis sample
+2. enable line width for mesh and fall???
+
 3. WX window/widgets
 
-4. bug for shift of rotated text in TeX + text size in subplots + text align
+4. bug for shift of rotated text in TeX + text color + text size in subplots + text align
 5. Command options dialog -- add "value"
 
 A. libhpdf for win32

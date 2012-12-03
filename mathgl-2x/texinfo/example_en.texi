@@ -961,8 +961,9 @@ int sample(mglGraph *gr)
   gr->SubPlot(2,2,2,"");  gr->Title("coloring");  gr->Box();
   gr->Legend(0,"r#"); gr->Legend(1,"Wb#");  gr->Legend(2,"ygr#");
 
-  gr->SubPlot(2,2,3,"");  gr->Title("manual position");
-  gr->Box();  gr->Legend(0.5,0.5);
+  gr->SubPlot(2,2,3,"");  gr->Title("manual position"); gr->Box();
+  gr->Legend(0.5,1);  gr->Puts(mglPoint(0.5,0.55),"at x=0.5, y=1","a");
+  gr->Legend(1,"#-"); gr->Puts(mglPoint(0.75,0.25),"Horizontal legend","a");
   return 0;
 }
 @end verbatim

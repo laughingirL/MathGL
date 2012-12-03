@@ -183,23 +183,23 @@ mglPoint mglCanvas::CalcScr(mglPoint p) const
 {	int x,y;	CalcScr(p,&x,&y);	return mglPoint(x,y);	}
 //-----------------------------------------------------------------------------
 //mglCanvas *mgl_tmp_gr;
-int mgl_type_prior[8]={1,2,4,5, 0,3,6, 7};
+int mgl_type_prior[8]={1,2,4,5, 0,3,0, 7};
 bool operator<(const mglPrim &a, const mglPrim &b)
 {
 	register int t1 = mgl_type_prior[a.type], t2 = mgl_type_prior[b.type];
 	if(a.z!=b.z) 	return a.z < b.z;
-	if(t1!=t2)		return t1 < t2;
-	if(a.w!=b.w) 	return a.w < b.w;
-	return a.n3 < b.n3;
+	if(t1!=t2)		return t1 > t2;
+	if(a.w!=b.w) 	return a.w > b.w;
+	return a.n3 > b.n3;
 }
 //-----------------------------------------------------------------------------
 bool operator>(const mglPrim &a, const mglPrim &b)
 {
 	register int t1 = mgl_type_prior[a.type], t2 = mgl_type_prior[b.type];
 	if(a.z!=b.z) 	return a.z > b.z;
-	if(t1!=t2)		return t1 > t2;
-	if(a.w!=b.w) 	return a.w > b.w;
-	return a.n3 > b.n3;
+	if(t1!=t2)		return t1 < t2;
+	if(a.w!=b.w) 	return a.w < b.w;
+	return a.n3 < b.n3;
 }
 //-----------------------------------------------------------------------------
 void *mgl_canvas_thr(void *par)
@@ -442,17 +442,17 @@ void mglCanvas::pnt_plot(long x,long y,mreal z,const unsigned char ci[4], int ob
 	}
 	if(Quality&2)
 	{
-		if(z>zz[1])	// shift point on slice down and paste new point
+		if(z>=zz[1])	// shift point on slice down and paste new point
 		{
 			zz[2] = zz[1];	combine(cc+8,cc+4);
-			if(z>zz[0])
+			if(z>=zz[0])
 			{	zz[1] = zz[0];	zz[0] = z;	OI[i0]=obj_id;
 				memcpy(cc+4,cc,4);	memcpy(cc,c,4);		}
 			else	{	zz[1] = z;	memcpy(cc+4,c,4);	}
 		}
 		else
 		{
-			if(z>zz[2])	// shift point on slice down and paste new point
+			if(z>=zz[2])	// shift point on slice down and paste new point
 			{	zz[2] = z;	combine(cc+8,c);	}
 			else		// point below the background
 			{	combine(c,cc+8);	memcpy(cc+8,c,4);	}
@@ -460,7 +460,7 @@ void mglCanvas::pnt_plot(long x,long y,mreal z,const unsigned char ci[4], int ob
 	}
 	else
 	{
-		if(z>zz[0])	// point upper the background
+		if(z>=zz[0])	// point upper the background
 		{	zz[0]=z;	memcpy(cc,c,4);		OI[i0]=obj_id;	}
 	}
 }
