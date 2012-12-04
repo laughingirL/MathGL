@@ -2418,8 +2418,8 @@ int sample(mglGraph *gr)
   gr->Light(true);  gr->Alpha(true);  gr->Rotate(50,60);
   gr->Box();  gr->Axial(a);
 
-  gr->SubPlot(2,2,1); gr->Title("'x' style"); gr->Rotate(50,60);
-  gr->Box();  gr->Axial(a,"x");
+  gr->SubPlot(2,2,1); gr->Title("'x' style;'.' style"); gr->Rotate(50,60);
+  gr->Box();  gr->Axial(a,"x.");
 
   gr->SubPlot(2,2,2); gr->Title("'z' style"); gr->Rotate(50,60);
   gr->Box();  gr->Axial(a,"z");

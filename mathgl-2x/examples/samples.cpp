@@ -1075,7 +1075,7 @@ void smgl_torus(mglGraph *gr)
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_axial="call 'prepare2d'\nsubplot 2 2 0:title 'Axial plot (default)':light on:alpha on:rotate 50 60:box:axial a\n"
-"subplot 2 2 1:title '\"x\" style':light on:rotate 50 60:box:axial a 'x'\n"
+"subplot 2 2 1:title '\"x\" style;\".\" style':light on:rotate 50 60:box:axial a 'x.'\n"
 "subplot 2 2 2:title '\"z\" style':light on:rotate 50 60:box:axial a 'z'\n"
 "subplot 2 2 3:title '\"\\#\" style':light on:rotate 50 60:box:axial a '#'\n";
 void smgl_axial(mglGraph *gr)
@@ -1084,7 +1084,7 @@ void smgl_axial(mglGraph *gr)
 	if(!mini)	{	gr->SubPlot(2,2,0);	gr->Title("Axial plot (default)");	}
 	gr->Light(true);	gr->Alpha(true);	gr->Rotate(50,60);	gr->Box();	gr->Axial(a);
 	if(mini)	return;
-	gr->SubPlot(2,2,1);	gr->Title("'x' style");	gr->Rotate(50,60);	gr->Box();	gr->Axial(a,"x");
+	gr->SubPlot(2,2,1);	gr->Title("'x' style; '.'style");	gr->Rotate(50,60);	gr->Box();	gr->Axial(a,"x.");
 	gr->SubPlot(2,2,2);	gr->Title("'z' style");	gr->Rotate(50,60);	gr->Box();	gr->Axial(a,"z");
 	gr->SubPlot(2,2,3);	gr->Title("'\\#' style");	gr->Rotate(50,60);	gr->Box();	gr->Axial(a,"#");
 }

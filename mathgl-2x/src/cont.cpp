@@ -1347,7 +1347,7 @@ long mgl_find_prev(long i, long pc, long *nn)
 	for(long k=0;k<pc;k++)	if(nn[k]==i)	return k;
 	return -1;
 }
-void mgl_axial_plot(mglBase *gr,long pc, mglPoint *ff, long *nn,char dir,mreal cc,bool wire)
+void mgl_axial_plot(mglBase *gr,long pc, mglPoint *ff, long *nn,char dir,mreal cc,int wire)
 {
 	mglPoint a(0,0,1),b,c,p,q1,q2;
 	if(dir=='x')	a = mglPoint(1,0,0);
@@ -1357,7 +1357,7 @@ void mgl_axial_plot(mglBase *gr,long pc, mglPoint *ff, long *nn,char dir,mreal c
 	register long i,j,k;
 	mreal fi,si,co;
 	long p1,p2,p3,p4;
-	if(wire)	gr->Reserve(pc*82);	else	gr->Reserve(pc*82);
+	gr->Reserve(pc*82);
 	for(i=0;i<pc;i++)
 	{
 		if(gr->Stop)	return;
@@ -1370,8 +1370,9 @@ void mgl_axial_plot(mglBase *gr,long pc, mglPoint *ff, long *nn,char dir,mreal c
 		p1 = wire ? gr->AddPnt(p,cc) : gr->AddPnt(p,cc,(a*q1.y + c*q1.x)^b);
 		p = a*ff[nn[i]].y + c*ff[nn[i]].x;
 		p2 = wire ? gr->AddPnt(p,cc) : gr->AddPnt(p,cc,(a*q2.y + c*q2.x)^b);
-		if(wire)	gr->line_plot(p1,p2);
-
+		if(wire==1)	gr->line_plot(p1,p2);
+		else if(wire)	{	gr->mark_plot(p1,'.');	gr->mark_plot(p2,'.');	}
+		
 		for(j=1;j<41;j++)
 		{
 			p3 = p1;	p4 = p2;
@@ -1380,16 +1381,17 @@ void mgl_axial_plot(mglBase *gr,long pc, mglPoint *ff, long *nn,char dir,mreal c
 			p1 = wire ?	gr->AddPnt(p,cc) : gr->AddPnt(p,cc,(a*q1.y + b*(si*q1.x) +  c*(co*q1.x))^(b*co-c*si));
 			p = a*ff[nn[i]].y + b*(si*ff[nn[i]].x) +  c*(co*ff[nn[i]].x);
 			p2 = wire ?	gr->AddPnt(p,cc) : gr->AddPnt(p,cc,(a*q2.y + b*(si*q2.x) +  c*(co*q2.x))^(b*co-c*si));
-			if(wire)
+			if(wire==1)
 			{	gr->line_plot(p1,p2);	gr->line_plot(p1,p3);
 			gr->line_plot(p4,p2);	gr->line_plot(p4,p3);	}
+			else if(wire)	{	gr->mark_plot(p1,'.');	gr->mark_plot(p2,'.');	}
 			else	gr->quad_plot(p3,p4,p1,p2);
 		}
 	}
 }
 //-----------------------------------------------------------------------------
 // NOTE! All data MUST have the same size! Only first slice is used!
-void mgl_axial_gen(HMGL gr, mreal val, HCDT a, HCDT x, HCDT y, mreal c, char dir,long ak,bool wire)
+void mgl_axial_gen(HMGL gr, mreal val, HCDT a, HCDT x, HCDT y, mreal c, char dir,long ak,int wire)
 {
 	long n=a->GetNx(), m=a->GetNy();
 	if(n<2 || m<2 || x->GetNx()*x->GetNy()!=n*m || y->GetNx()*y->GetNy()!=n*m)
@@ -1510,7 +1512,8 @@ void mgl_axial_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, 
 	}
 	// x, y -- have the same size z
 	mreal v0;
-	bool wire = mglchr(sch,'#');
+	int wire = mglchr(sch,'#')?1:0;
+	if(mglchr(sch,'.'))	wire = 2;
 	for(j=0;j<z->GetNz();j++)	for(i=0;i<v->GetNx();i++)
 	{
 		if(gr->Stop)	return;
@@ -1598,6 +1601,8 @@ void mgl_torus(HMGL gr, HCDT r, HCDT z, const char *sch, const char *opt)
 	mreal c = gr->GetC(ss,gr->Min.c);
 	const mglData *mr = dynamic_cast<const mglData *>(r);
 	const mglData *mz = dynamic_cast<const mglData *>(z);
+	int wire = mglchr(sch,'#')?1:0;
+	if(mglchr(sch,'.'))	wire = 2;
 	for(j=0;j<r->GetNy();j++)
 	{
 		if(mr&&mz)	for(i=0;i<n;i++)
@@ -1610,7 +1615,7 @@ void mgl_torus(HMGL gr, HCDT r, HCDT z, const char *sch, const char *opt)
 			nn[i] = i<n-1 ? i+1 : -1;
 			pp[i] = mglPoint(r->v(i,j), z->v(i,j));
 		}
-		mgl_axial_plot(gr,n,pp,nn,dir,c,mglchr(sch,'#'));
+		mgl_axial_plot(gr,n,pp,nn,dir,c,wire);
 	}
 	gr->EndGroup();
 	delete []nn;	delete []pp;

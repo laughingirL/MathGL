@@ -2010,7 +2010,7 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} Torus (@code{const mglDataA &}r, @code{const mglDataA &}z, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_torus (@code{HMGL} gr, @code{HCDT} r, @code{HCDT} z, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-Функции рисуют поверхность вращения кривой @{@var{r}, @var{z}@} относительно оси. Если строка @var{pen} содержит @samp{x} или @samp{z}, то ось вращения будет выбрана в указанном направлении (по умолчанию вдоль оси y). См. также @ref{plot}, @ref{axial}. @sref{Torus sample}
+Функции рисуют поверхность вращения кривой @{@var{r}, @var{z}@} относительно оси. Если строка @var{pen} содержит @samp{x} или @samp{z}, то ось вращения будет выбрана в указанном направлении (по умолчанию вдоль оси y). Если @var{sch} содержит @samp{#}, то рисуется сетчатая поверхность. Если @var{sch} содержит @samp{.}, то рисуется поверхность из точек. См. также @ref{plot}, @ref{axial}. @sref{Torus sample}
 @end deftypefn
 
 
@@ -2045,7 +2045,7 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Функция С} @code{void} mgl_surf (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_surf_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-Рисует параметрически заданную поверхность @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. Если @var{sch} содержит @samp{#}, то рисуется сетка на поверхности. См. также @ref{mesh}, @ref{dens}, @ref{belt}, @ref{tile}, @ref{boxs}, @ref{surfc}, @ref{surfa}. @sref{Surf sample}
+Рисует параметрически заданную поверхность @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. Если @var{sch} содержит @samp{#}, то рисуется сетка на поверхности. Если @var{sch} содержит @samp{.}, то рисуется поверхность из точек. См. также @ref{mesh}, @ref{dens}, @ref{belt}, @ref{tile}, @ref{boxs}, @ref{surfc}, @ref{surfa}. @sref{Surf sample}
 @end deftypefn
 
 @anchor{mesh}
@@ -2117,7 +2117,7 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Функция С} @code{void} mgl_dens (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_dens_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-Рисует график плотности для параметрически заданной поверхности @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} при @var{z} = @var{Min}.z. Если @var{sch} содержит @samp{#}, то рисуется сетка. См. также @ref{surf}, @ref{cont}, @ref{contf}, @ref{boxs}, @ref{tile}, @code{dens[xyz]}. @sref{Dens sample}
+Рисует график плотности для параметрически заданной поверхности @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} при @var{z} = @var{Min}.z. Если @var{sch} содержит @samp{#}, то рисуется сетка. Если @var{sch} содержит @samp{.}, то рисуется поверхность из точек. См. также @ref{surf}, @ref{cont}, @ref{contf}, @ref{boxs}, @ref{tile}, @code{dens[xyz]}. @sref{Dens sample}
 @end deftypefn
 
 @anchor{cont}
@@ -2221,7 +2221,7 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Функция С} @code{void} mgl_axial_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_axial_xy_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-Рисует поверхность вращения линии уровня для параметрически заданной поверхности @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. Линии уровня рисуются для @var{z}[i,j]=@var{v}[k]. Если @var{sch} содержит @samp{#}, то рисуется сетчатая поверхность. Если строка содержит символы @samp{x} или @samp{z}, то ось вращения устанавливается в указанное направление (по умолчанию вдоль @samp{y}). См. также @ref{cont}, @ref{contf}, @ref{torus}, @ref{surf3}. @sref{Axial sample}
+Рисует поверхность вращения линии уровня для параметрически заданной поверхности @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. Линии уровня рисуются для @var{z}[i,j]=@var{v}[k]. Если @var{sch} содержит @samp{#}, то рисуется сетчатая поверхность. Если @var{sch} содержит @samp{.}, то рисуется поверхность из точек. Если строка содержит символы @samp{x} или @samp{z}, то ось вращения устанавливается в указанное направление (по умолчанию вдоль @samp{y}). См. также @ref{cont}, @ref{contf}, @ref{torus}, @ref{surf3}. @sref{Axial sample}
 @end deftypefn
 
 @deftypefn {Команда MGL} {} axial zdat ['sch'='']
@@ -2272,7 +2272,7 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Функция С} @code{void} mgl_surf3_val (@code{HMGL} gr, @code{mreal} val, @code{HCDT} a, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_surf3_xyz_val (@code{HMGL} gr, @code{mreal} val, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-Рисует поверхность уровня для 3d массива, заданного параметрически @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]) при @var{a}(x,y,z)=@var{val}. Если @var{sch} содержит @samp{#}, то рисуется сетчатая поверхность. Замечу, что возможно некорректная отрисовка граней вследствие неопределённости построения сечения если поверхность пересекает ячейку данных 2 и более раз. См. также @ref{cloud}, @ref{dens3}, @ref{surf3c}, @ref{surf3a}, @ref{axial}. @sref{Surf3 sample}
+Рисует поверхность уровня для 3d массива, заданного параметрически @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]) при @var{a}(x,y,z)=@var{val}. Если @var{sch} содержит @samp{#}, то рисуется сетчатая поверхность. Если @var{sch} содержит @samp{.}, то рисуется поверхность из точек. Замечу, что возможно некорректная отрисовка граней вследствие неопределённости построения сечения если поверхность пересекает ячейку данных 2 и более раз. См. также @ref{cloud}, @ref{dens3}, @ref{surf3c}, @ref{surf3a}, @ref{axial}. @sref{Surf3 sample}
 @end deftypefn
 
 @deftypefn {Команда MGL} {} surf3 adat ['sch'='']
@@ -2404,7 +2404,7 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Функция С} @code{void} mgl_surfc (@code{HMGL} gr, @code{HCDT} z, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_surfc_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-Рисует параметрически заданную поверхность @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} с цветом, заданным массивом @var{c}[i,j]. Если @var{sch} содержит @samp{#}, то на поверхности рисуется сетка. Размерность массивов @var{z} и @var{c} должна быть одинакова. График строится для каждого z среза данных. См. также @ref{surf}, @ref{surfa}, @ref{surf3c}. @sref{SurfC sample}
+Рисует параметрически заданную поверхность @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} с цветом, заданным массивом @var{c}[i,j]. Если @var{sch} содержит @samp{#}, то на поверхности рисуется сетка. Если @var{sch} содержит @samp{.}, то рисуется поверхность из точек. Размерность массивов @var{z} и @var{c} должна быть одинакова. График строится для каждого z среза данных. См. также @ref{surf}, @ref{surfa}, @ref{surf3c}. @sref{SurfC sample}
 @end deftypefn
 
 @anchor{surf3c}
@@ -2416,7 +2416,7 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Функция С} @code{void} mgl_surf3c_val (@code{HMGL} gr, @code{mreal} val, @code{HCDT} a, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_surf3c_xyz_val (@code{HMGL} gr, @code{mreal} val, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-Рисует поверхность уровня для 3d массива, заданного параметрически @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]) при @var{a}(x,y,z)=@var{val}. Аналогично @ref{surf3}, но цвет задается массивом @var{c}. Если @var{sch} содержит @samp{#}, то рисуется сетчатая поверхность. См. также @ref{surf3}, @ref{surfc}, @ref{surf3a}. @sref{Surf3C sample}
+Рисует поверхность уровня для 3d массива, заданного параметрически @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]) при @var{a}(x,y,z)=@var{val}. Аналогично @ref{surf3}, но цвет задается массивом @var{c}. Если @var{sch} содержит @samp{#}, то рисуется сетчатая поверхность. Если @var{sch} содержит @samp{.}, то рисуется поверхность из точек. См. также @ref{surf3}, @ref{surfc}, @ref{surf3a}. @sref{Surf3C sample}
 @end deftypefn
 
 @deftypefn {Команда MGL} {} surf3c adat cdat ['sch'='']
@@ -2440,7 +2440,7 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Функция С} @code{void} mgl_surfa (@code{HMGL} gr, @code{HCDT} z, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_surfa_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-Рисует параметрически заданную поверхность @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} с прозрачностью, заданной массивом @var{c}[i,j]. Если @var{sch} содержит @samp{#}, то на поверхности рисуется сетка. Размерность массивов @var{z} и @var{c} должна быть одинакова. График строится для каждого z среза данных. См. также @ref{surf}, @ref{surfc}, @ref{surf3a}. @sref{SurfA sample}
+Рисует параметрически заданную поверхность @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} с прозрачностью, заданной массивом @var{c}[i,j]. Если @var{sch} содержит @samp{#}, то на поверхности рисуется сетка. Если @var{sch} содержит @samp{.}, то рисуется поверхность из точек. Размерность массивов @var{z} и @var{c} должна быть одинакова. График строится для каждого z среза данных. См. также @ref{surf}, @ref{surfc}, @ref{surf3a}. @sref{SurfA sample}
 @end deftypefn
 
 @anchor{surf3a}
@@ -2452,7 +2452,7 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Функция С} @code{void} mgl_surf3a_val (@code{HMGL} gr, @code{mreal} val, @code{HCDT} a, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_surf3a_xyz_val (@code{HMGL} gr, @code{mreal} val, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-Рисует поверхность уровня для 3d массива, заданного параметрически @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]) при @var{a}(x,y,z)=@var{val}. Аналогично @ref{surf3}, но прозрачность задается массивом @var{c}. Если @var{sch} содержит @samp{#}, то рисуется сетчатая поверхность. См. также @ref{surf3}, @ref{surfc}, @ref{surf3a}. @sref{Surf3A sample}
+Рисует поверхность уровня для 3d массива, заданного параметрически @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]) при @var{a}(x,y,z)=@var{val}. Аналогично @ref{surf3}, но прозрачность задается массивом @var{c}. Если @var{sch} содержит @samp{#}, то рисуется сетчатая поверхность. Если @var{sch} содержит @samp{.}, то рисуется поверхность из точек. См. также @ref{surf3}, @ref{surfc}, @ref{surf3a}. @sref{Surf3A sample}
 @end deftypefn
 
 @deftypefn {Команда MGL} {} surf3a adat cdat ['sch'='']

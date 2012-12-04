@@ -25,7 +25,7 @@ set to use new color from palette for each point (not for each curve, as default
 @item #
 set to use solid marks (see @ref{Line styles}) or solid @ref{error} boxes;
 
-set to draw wired plot for @ref{axial}, @ref{surf3}, @ref{surf3a}, @ref{surf3c}, @ref{triplot}, @ref{tricont}, @ref{area}, @ref{bars}, @ref{barh}, @ref{tube}, @ref{tape}, @ref{cone}, @ref{boxs} and draw boundary only for @ref{circle}, @ref{ellipse}, @ref{rhomb};
+set to draw wired plot for @ref{axial}, @ref{surf3}, @ref{surf3a}, @ref{surf3c}, @ref{triplot}, @ref{quadplot}, @ref{area}, @ref{bars}, @ref{barh}, @ref{tube}, @ref{tape}, @ref{cone}, @ref{boxs} and draw boundary only for @ref{circle}, @ref{ellipse}, @ref{rhomb};
 
 set to draw also mesh lines for @ref{surf}, @ref{surfc}, @ref{surfa}, @ref{dens}, @ref{densx}, @ref{densy}, @ref{densz}, @ref{dens3}, or boundary for @ref{chart}, @ref{facex}, @ref{facey}, @ref{facez}, @ref{rect};
 
@@ -75,7 +75,7 @@ one of marks (see @ref{Line styles});
 
 set to draw hachures instead of arrows for @ref{vect}, @ref{vect3};
 
-set to use dots instead of faces for @ref{cloud};
+set to use dots instead of faces for @ref{cloud}, @ref{torus}, @ref{axial}, @ref{surf3}, @ref{surf3a}, @ref{surf3c}, @ref{surf}, @ref{surfa}, @ref{surfc}, @ref{dens}, @ref{map};
 
 delimiter of fractional parts for numbers.
 

@@ -64,23 +64,9 @@ void mgl_write_obj_old(HMGL gr, const char *fname,const char *descr, int use_png
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	gr->AddLegend("sin(\\pi {x^2})","b");
-	gr->AddLegend("sin(\\pi x)","g*");
-	gr->AddLegend("sin(\\pi \\sqrt{x})","rd");
-	gr->AddLegend("just text"," ");
-	gr->AddLegend("no indent for this","");
-	if(!mini)	{gr->SubPlot(2,2,0,"");	gr->Title("Legend (default)");}
-	gr->Box();	gr->Legend();
-	if(mini)	return;
-	gr->Legend(3,"A#");
-	gr->Puts(mglPoint(0.75,0.7),"Absolute position","A");
-	gr->SubPlot(2,2,2,"");	gr->Title("coloring");	gr->Box();
-	gr->Legend(0,"r#");	gr->Legend(1,"Wb#");	gr->Legend(2,"ygr#");
-	gr->SubPlot(2,2,3,"");	gr->Title("manual position");	gr->Box();
-	gr->Legend(0.5,1);
-	gr->Puts(mglPoint(0.5,0.55),"at x=0.5, y=1","a");
-	gr->Legend(1,"#-");
-	gr->Puts(mglPoint(0.75,0.25),"Horizontal legend","a");
+	mglData a,b;	mgls_prepare2d(&a,&b);
+	if(!mini)	gr->Title("SurfA plot");	gr->Rotate(50,60);
+	gr->Light(true);	gr->Box();	gr->Dens(a,".");
 	return;
 	
 	mglParse par;

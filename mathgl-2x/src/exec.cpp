@@ -2701,14 +2701,14 @@ int mgls_xtick(mglGraph *gr, long n, mglArg *a, int k[10], const char *)
 	if(k[0]==1 && k[1]==2)	gr->SetTicksVal('x', *(a[0].d), a[1].w.c_str(), k[2]==3 && a[2].v);
 	else if(k[0]==3 && k[1]==2)
 	{
-		mreal v[50];	wchar_t *s=new wchar_t[50*256];	int i;
+		mreal v[50];	std::wstring s;	int i;
 		for(i=0;i<50 && i<n/2;i++)
 		{
 			if(a[2*i].type==2 && a[2*i+1].type==1)
-			{	v[i] = a[2*i].v;	wcscat(s, a[2*i+1].w.c_str());	wcscat(s, L"\n");	}
+			{	v[i] = a[2*i].v;	s += a[2*i+1].w+L"\n";	}
 			else	break;
 		}
-		gr->SetTicksVal('x',mglData(i,v),s);	delete []s;
+		gr->SetTicksVal('x',mglData(i,v),s.c_str());
 	}
 	else if(k[0]==3)
 		gr->SetTicks('x', a[0].v, k[1]==3?iint(a[1].v):0, k[2]==3?a[2].v:NAN);
@@ -2734,14 +2734,14 @@ int mgls_ytick(mglGraph *gr, long n, mglArg *a, int k[10], const char *)
 	if(k[0]==1 && k[1]==2)	gr->SetTicksVal('x', *(a[0].d), a[1].w.c_str(), k[2]==3 && a[2].v);
 	else if(k[0]==3 && k[1]==2)
 	{
-		mreal v[50];	wchar_t *s=new wchar_t[50*256];	int i;
+		mreal v[50];	std::wstring s;	int i;
 		for(i=0;i<50 && i<n/2;i++)
 		{
 			if(a[2*i].type==2 && a[2*i+1].type==1)
-			{	v[i] = a[2*i].v;	wcscat(s, a[2*i+1].w.c_str());	wcscat(s, L"\n");	}
+			{	v[i] = a[2*i].v;	s += a[2*i+1].w+L"\n";	}
 			else	break;
 		}
-		gr->SetTicksVal('y',mglData(i,v),s);	delete []s;
+		gr->SetTicksVal('y',mglData(i,v),s.c_str());
 	}
 	else if(k[0]==3)
 		gr->SetTicks('y', a[0].v, k[1]==3?iint(a[1].v):0, k[2]==3?a[2].v:NAN);
@@ -2766,14 +2766,14 @@ int mgls_ztick(mglGraph *gr, long n, mglArg *a, int k[10], const char *)
 	if(k[0]==1 && k[1]==2)	gr->SetTicksVal('x', *(a[0].d), a[1].w.c_str(), k[2]==3 && a[2].v);
 	else if(k[0]==3 && k[1]==2)
 	{
-		mreal v[50];	wchar_t *s=new wchar_t[50*256];	int i;
+		mreal v[50];	std::wstring s;	int i;
 		for(i=0;i<50 && i<n/2;i++)
 		{
 			if(a[2*i].type==2 && a[2*i+1].type==1)
-			{	v[i] = a[2*i].v;	wcscat(s, a[2*i+1].w.c_str());	wcscat(s, L"\n");	}
+			{	v[i] = a[2*i].v;	s += a[2*i+1].w+L"\n";	}
 			else	break;
 		}
-		gr->SetTicksVal('z',mglData(i,v),s);	delete []s;
+		gr->SetTicksVal('z',mglData(i,v),s.c_str());
 	}
 	else if(k[0]==3)
 		gr->SetTicks('z', a[0].v, k[1]==3?iint(a[1].v):0, k[2]==3?a[2].v:NAN);

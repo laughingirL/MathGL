@@ -14,13 +14,14 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 9. Text along 3D curve (for Quality=3)
 10. introduce new primitive type=5 -- arrow for Quality&3!=3. for better drawing in projections + json/view ?!?
 11. Increase line width for arrows?!?
+12. enable line width for mesh and fall???
 
 ============= NEW FOR v.2.1 =============
 
 0. check for possible memory leaks before release
 
 1. inverse axis sample
-2. enable line width for mesh and fall???
+2. surf, surfa, surfc, surf3, surf3a, surf3c samples -- add '#', '.' styles ?!?
 
 3. WX window/widgets
 

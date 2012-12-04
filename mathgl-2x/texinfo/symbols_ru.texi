@@ -75,7 +75,7 @@ one of marks (see @ref{Line styles});
 
 set to draw hachures instead of arrows for @ref{vect}, @ref{vect3};
 
-set to use dots instead of faces for @ref{cloud};
+set to use dots instead of faces for @ref{cloud}, @ref{torus}, @ref{axial}, @ref{surf3}, @ref{surf3a}, @ref{surf3c}, @ref{surf}, @ref{surfa}, @ref{surfc}, @ref{dens}, @ref{map};
 
 delimiter of fractional parts for numbers.
 

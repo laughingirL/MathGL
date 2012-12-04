@@ -307,7 +307,8 @@ void mgl_surf_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 			c = gr->GetC(ss,p.z);
 			pos[i+n*j] = gr->AddPnt(p,c,q^s);
 		}
-		mgl_surf_plot(gr,pos,n,m);
+		if(sch && mglchr(sch,'.'))	for(i=0;i<n*m;i++)	gr->mark_plot(pos[i],'.');
+		else	mgl_surf_plot(gr,pos,n,m);
 		if(wire)
 		{
 			gr->SetPenPal("k-");
@@ -445,7 +446,8 @@ void mgl_dens_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 			if(mgl_isnan(zz))	p.x = NAN;
 			pos[i+n*j] = gr->AddPnt(p,c,s);
 		}
-		mgl_surf_plot(gr,pos,n,m);
+		if(sch && mglchr(sch,'.'))	for(i=0;i<n*m;i++)	gr->mark_plot(pos[i],'.');
+		else	mgl_surf_plot(gr,pos,n,m);
 		if(mglchr(sch,'#'))
 		{
 			gr->Reserve(n*m);	gr->SetPenPal("k-");
@@ -526,7 +528,8 @@ void mgl_surfc_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char *sch, cons
 			col = gr->GetC(ss,c->v(i,j,k));
 			pos[i+n*j] = gr->AddPnt(p,col,q^s);
 		}
-		mgl_surf_plot(gr,pos,n,m);
+		if(sch && mglchr(sch,'.'))	for(i=0;i<n*m;i++)	gr->mark_plot(pos[i],'.');
+		else	mgl_surf_plot(gr,pos,n,m);
 		if(mglchr(sch,'#'))
 		{
 			gr->Reserve(n*m);	gr->SetPenPal("k-");
@@ -585,7 +588,8 @@ void mgl_surfa_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char *sch, cons
 			s = mglPoint(xx.z, yy.z, z->dvy(i,j,k));
 			pos[i+n*j] = gr->AddPnt(p,gr->GetC(ss,vv),q^s,gr->GetA(c->v(i,j,k)));
 		}
-		mgl_surf_plot(gr,pos,n,m);
+		if(sch && mglchr(sch,'.'))	for(i=0;i<n*m;i++)	gr->mark_plot(pos[i],'.');
+		else	mgl_surf_plot(gr,pos,n,m);
 		if(mglchr(sch,'#'))
 		{
 			gr->Reserve(n*m);	gr->SetPenPal("k-");
@@ -896,7 +900,7 @@ void mgl_map_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, cons
 		if(yy<0)	yy=0;	if(yy>=1)	yy=1/MGL_FEPSILON;
 		pos[i+n*j] = gr->AddPnt(p,gr->GetC(ss,xx,false),t,yy);
 	}
-	if(sch && mglchr(sch,'.'))	for(i=0;i<n*m;i++)	gr->mark_plot(pos[i],'.',-1);
+	if(sch && mglchr(sch,'.'))	for(i=0;i<n*m;i++)	gr->mark_plot(pos[i],'.');
 	else	mgl_surf_plot(gr,pos,n,m);
 	delete []pos;	gr->EndGroup();
 }

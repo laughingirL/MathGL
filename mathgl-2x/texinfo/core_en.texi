@@ -2115,7 +2115,7 @@ These functions draw the tube with variable radius @var{r}[i] along the curve be
 @deftypefnx {Method on @code{mglGraph}} @code{void} Torus (@code{const mglDataA &}r, @code{const mglDataA &}z, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {C function} @code{void} mgl_torus (@code{HMGL} gr, @code{HCDT} r, @code{HCDT} z, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-These functions draw surface which is result of curve @{@var{r}, @var{z}@} rotation around axis. If string @var{pen} contain symbols @samp{x} or @samp{z} then rotation axis will be set to specified direction (default is @samp{y}). See also @ref{plot}, @ref{axial}. @sref{Torus sample}
+These functions draw surface which is result of curve @{@var{r}, @var{z}@} rotation around axis. If string @var{pen} contain symbols @samp{x} or @samp{z} then rotation axis will be set to specified direction (default is @samp{y}). If string @var{pen} have symbol @samp{#} then wire plot is produced. If string @var{pen} have symbol @samp{.} then plot by dots is produced. See also @ref{plot}, @ref{axial}. @sref{Torus sample}
 @end deftypefn
 
 @c ##################################################################
@@ -2147,7 +2147,7 @@ These functions perform plotting of 2D data. 2D means that data depend from 2 in
 @deftypefnx {C function} @code{void} mgl_surf (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_surf_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-The function draws surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. If string @var{sch} have symbol @samp{#} then grid lines are drawn. See also @ref{mesh}, @ref{dens}, @ref{belt}, @ref{tile}, @ref{boxs}, @ref{surfc}, @ref{surfa}. @sref{Surf sample}
+The function draws surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. If string @var{sch} have symbol @samp{#} then grid lines are drawn. If string @var{sch} have symbol @samp{.} then plot by dots is produced. See also @ref{mesh}, @ref{dens}, @ref{belt}, @ref{tile}, @ref{boxs}, @ref{surfc}, @ref{surfa}. @sref{Surf sample}
 @end deftypefn
 
 @anchor{mesh}
@@ -2219,7 +2219,7 @@ The function draws horizontal tiles for surface specified parametrically @{@var{
 @deftypefnx {C function} @code{void} mgl_dens (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_dens_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-The function draws density plot for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} at @var{z} = @var{Min}.z. If string @var{sch} have symbol @samp{#} then grid lines are drawn. See also @ref{surf}, @ref{cont}, @ref{contf}, @ref{boxs}, @ref{tile}, @code{dens[xyz]}. @sref{Dens sample}
+The function draws density plot for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} at @var{z} = @var{Min}.z. If string @var{sch} have symbol @samp{#} then grid lines are drawn. If string @var{sch} have symbol @samp{.} then plot by dots is produced. See also @ref{surf}, @ref{cont}, @ref{contf}, @ref{boxs}, @ref{tile}, @code{dens[xyz]}. @sref{Dens sample}
 @end deftypefn
 
 @anchor{cont}
@@ -2323,7 +2323,7 @@ The same as previous with vector @var{v} of @var{num}-th elements equidistantly 
 @deftypefnx {C function} @code{void} mgl_axial_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_axial_xy_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-The function draws surface which is result of contour plot rotation for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. Contours are plotted for @var{z}[i,j]=@var{v}[k] where @var{v}[k] are values of data array @var{v}. If string @var{sch} have symbol @samp{#} then wire plot is produced. If string contain symbols @samp{x} or @samp{z} then rotation axis will be set to specified direction (default is @samp{y}). See also @ref{cont}, @ref{contf}, @ref{torus}, @ref{surf3}. @sref{Axial sample}
+The function draws surface which is result of contour plot rotation for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. Contours are plotted for @var{z}[i,j]=@var{v}[k] where @var{v}[k] are values of data array @var{v}. If string @var{sch} have symbol @samp{#} then wire plot is produced. If string @var{sch} have symbol @samp{.} then plot by dots is produced. If string contain symbols @samp{x} or @samp{z} then rotation axis will be set to specified direction (default is @samp{y}). See also @ref{cont}, @ref{contf}, @ref{torus}, @ref{surf3}. @sref{Axial sample}
 @end deftypefn
 
 @deftypefn {MGL command} {} axial zdat ['sch'='']
@@ -2373,7 +2373,7 @@ These functions perform plotting of 3D data. 3D means that data depend from 3 in
 @deftypefnx {C function} @code{void} mgl_surf3_val (@code{HMGL} gr, @code{mreal} val, @code{HCDT} a, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_surf3_xyz_val (@code{HMGL} gr, @code{mreal} val, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-The function draws isosurface plot for 3d array specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]) at @var{a}(x,y,z)=@var{val}. If string contain @samp{#} then wire plot is produced. Note, that there is possibility of incorrect plotting due to uncertainty of cross-section defining if there are two or more isosurface intersections inside one cell. See also @ref{cloud}, @ref{dens3}, @ref{surf3c}, @ref{surf3a}, @ref{axial}. @sref{Surf3 sample}
+The function draws isosurface plot for 3d array specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]) at @var{a}(x,y,z)=@var{val}. If string contain @samp{#} then wire plot is produced. If string @var{sch} have symbol @samp{.} then plot by dots is produced. Note, that there is possibility of incorrect plotting due to uncertainty of cross-section defining if there are two or more isosurface intersections inside one cell. See also @ref{cloud}, @ref{dens3}, @ref{surf3c}, @ref{surf3a}, @ref{axial}. @sref{Surf3 sample}
 @end deftypefn
 
 @deftypefn {MGL command} {} surf3 adat ['sch'='']
@@ -2504,7 +2504,7 @@ These plotting functions draw @emph{two matrix} simultaneously. There are 5 gene
 @deftypefnx {C function} @code{void} mgl_surfc (@code{HMGL} gr, @code{HCDT} z, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_surfc_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-The function draws surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} and color it by matrix @var{c}[i,j]. If string @var{sch} have symbol @samp{#} then grid lines are drawn. All dimensions of arrays @var{z} and @var{c} must be equal. Surface is plotted for each z slice of the data. See also @ref{surf}, @ref{surfa}, @ref{surf3c}. @sref{SurfC sample}
+The function draws surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} and color it by matrix @var{c}[i,j]. If string @var{sch} have symbol @samp{#} then grid lines are drawn. If string @var{sch} have symbol @samp{.} then plot by dots is produced. All dimensions of arrays @var{z} and @var{c} must be equal. Surface is plotted for each z slice of the data. See also @ref{surf}, @ref{surfa}, @ref{surf3c}. @sref{SurfC sample}
 @end deftypefn
 
 @anchor{surf3c}
@@ -2516,7 +2516,7 @@ The function draws surface specified parametrically @{@var{x}[i,j], @var{y}[i,j]
 @deftypefnx {C function} @code{void} mgl_surf3c_val (@code{HMGL} gr, @code{mreal} val, @code{HCDT} a, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_surf3c_xyz_val (@code{HMGL} gr, @code{mreal} val, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-The function draws isosurface plot for 3d array specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]) at @var{a}(x,y,z)=@var{val}. It is mostly the same as @ref{surf3} function but the color of isosurface depends on values of array @var{c}. If string @var{sch} contain @samp{#} then wire plot is produced. See also @ref{surf3}, @ref{surfc}, @ref{surf3a}. @sref{Surf3C sample}
+The function draws isosurface plot for 3d array specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]) at @var{a}(x,y,z)=@var{val}. It is mostly the same as @ref{surf3} function but the color of isosurface depends on values of array @var{c}. If string @var{sch} contain @samp{#} then wire plot is produced. If string @var{sch} have symbol @samp{.} then plot by dots is produced. See also @ref{surf3}, @ref{surfc}, @ref{surf3a}. @sref{Surf3C sample}
 @end deftypefn
 
 @deftypefn {MGL command} {} surf3c adat cdat ['sch'='']
@@ -2540,7 +2540,7 @@ Draws @var{num}-th uniformly distributed in color range isosurfaces for 3d data.
 @deftypefnx {C function} @code{void} mgl_surfa (@code{HMGL} gr, @code{HCDT} z, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_surfa_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-The function draws surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} and transparent it by matrix @var{c}[i,j]. If string @var{sch} have symbol @samp{#} then grid lines are drawn. All dimensions of arrays @var{z} and @var{c} must be equal. Surface is plotted for each z slice of the data. See also @ref{surf}, @ref{surfc}, @ref{surf3a}. @sref{SurfA sample}
+The function draws surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} and transparent it by matrix @var{c}[i,j]. If string @var{sch} have symbol @samp{#} then grid lines are drawn. If string @var{sch} have symbol @samp{.} then plot by dots is produced. All dimensions of arrays @var{z} and @var{c} must be equal. Surface is plotted for each z slice of the data. See also @ref{surf}, @ref{surfc}, @ref{surf3a}. @sref{SurfA sample}
 @end deftypefn
 
 @anchor{surf3a}
@@ -2552,7 +2552,7 @@ The function draws surface specified parametrically @{@var{x}[i,j], @var{y}[i,j]
 @deftypefnx {C function} @code{void} mgl_surf3a_val (@code{HMGL} gr, @code{mreal} val, @code{HCDT} a, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_surf3a_xyz_val (@code{HMGL} gr, @code{mreal} val, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-The function draws isosurface plot for 3d array specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]) at @var{a}(x,y,z)=@var{val}. It is mostly the same as @ref{surf3} function but the color of isosurface depends on values of array @var{c}. If string @var{sch} contain @samp{#} then wire plot is produced. See also @ref{surf3}, @ref{surfc}, @ref{surf3a}. @sref{Surf3A sample}
+The function draws isosurface plot for 3d array specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]) at @var{a}(x,y,z)=@var{val}. It is mostly the same as @ref{surf3} function but the color of isosurface depends on values of array @var{c}. If string @var{sch} contain @samp{#} then wire plot is produced. If string @var{sch} have symbol @samp{.} then plot by dots is produced. See also @ref{surf3}, @ref{surfc}, @ref{surf3a}. @sref{Surf3A sample}
 @end deftypefn
 
 @deftypefn {MGL command} {} surf3a adat cdat ['sch'='']

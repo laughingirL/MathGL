@@ -152,7 +152,7 @@ inline mreal mgl_cos_pp(const mglPoint *kk,long i0,long i1,long i2)
 	return p1*p2>1e-10 ? pc/sqrt(p1*p2) : NAN;
 }
 //-----------------------------------------------------------------------------
-void mgl_surf3_plot(HMGL gr, long n,long m,long *kx1,long *kx2,long *ky1,long *ky2, long *kz, std::vector<mglPoint> kk, bool wire)
+void mgl_surf3_plot(HMGL gr, long n,long m,long *kx1,long *kx2,long *ky1,long *ky2, long *kz, std::vector<mglPoint> kk, int wire)
 {
 	register long i,j,k,i0,ii,jj;
 	long id[12],us[12],pd[12],ni;
@@ -214,11 +214,17 @@ void mgl_surf3_plot(HMGL gr, long n,long m,long *kx1,long *kx2,long *ky1,long *k
 			}
 			if(i0<0)	break;	// no more triangles. NOTE: should be never here
 			jj = i0;	us[jj]=1;	p3 = pd[jj];
-			if(wire)
+			if(wire==1)
 			{
 				gr->line_plot(p1, p2);
 				gr->line_plot(p1, p3);
 				gr->line_plot(p2, p3);
+			}
+			else if(wire==2)
+			{
+				gr->mark_plot(p1, '.');
+				gr->mark_plot(p2, '.');
+				gr->mark_plot(p3, '.');
 			}
 			else	gr->trig_plot(p1, p2, p3);
 			p2 = p3;
@@ -230,7 +236,9 @@ void mgl_surf3_xyz_val(HMGL gr, double val, HCDT x, HCDT y, HCDT z, HCDT a, cons
 {
 	long i,j,k,i1,n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
 	long *kx1,*kx2,*ky1,*ky2,*kz;
-	bool both = mgl_isboth(x,y,z,a), wire = mglchr(sch,'#');
+	bool both = mgl_isboth(x,y,z,a);
+	int wire = mglchr(sch,'#')?1:0;
+	if(mglchr(sch,'.'))	wire = 2;
 	mreal d;
 	if(mgl_check_dim3(gr,both,x,y,z,a,0,"Surf3"))	return;
 
@@ -379,7 +387,9 @@ void mgl_surf3a_xyz_val(HMGL gr, double val, HCDT x, HCDT y, HCDT z, HCDT a, HCD
 {
 	long i,j,k,i1,n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
 	long *kx1,*kx2,*ky1,*ky2,*kz;
-	bool both = mgl_isboth(x,y,z,a), wire = mglchr(sch,'#');
+	bool both = mgl_isboth(x,y,z,a);
+	int wire = mglchr(sch,'#')?1:0;
+	if(mglchr(sch,'.'))	wire = 2;
 	mreal d;
 	if(mgl_check_dim3(gr,both,x,y,z,a,b,"Surf3A"))	return;
 
@@ -545,7 +555,9 @@ void mgl_surf3c_xyz_val(HMGL gr, double val, HCDT x, HCDT y, HCDT z, HCDT a, HCD
 {
 	long i,j,k,i1,n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
 	long *kx1,*kx2,*ky1,*ky2,*kz;
-	bool both = mgl_isboth(x,y,z,a), wire = mglchr(sch,'#');
+	bool both = mgl_isboth(x,y,z,a);
+	int wire = mglchr(sch,'#')?1:0;
+	if(mglchr(sch,'.'))	wire = 2;
 	mreal d;
 	if(mgl_check_dim3(gr,both,x,y,z,a,b,"Surf3C"))	return;
 

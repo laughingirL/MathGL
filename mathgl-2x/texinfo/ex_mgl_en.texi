@@ -1611,8 +1611,8 @@ light on:alpha on:call 'prepare2d'
 subplot 2 2 0:title 'Axial plot (default)':rotate 50 60:box
 axial a
 
-subplot 2 2 1:title '"x" style':light on:rotate 50 60:box
-axial a 'x'
+subplot 2 2 1:title '"x" style;\".\" style':light on:rotate 50 60:box
+axial a 'x.'
 
 subplot 2 2 2:title '"z" style':light on:rotate 50 60:box
 axial a 'z'

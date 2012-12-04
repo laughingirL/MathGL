@@ -182,10 +182,10 @@ var mgl_draw = function(obj, ctx)
 
 
 // This function make fast drawing
-var mgl_draw_fast = function(obj, ctx)
+var mgl_draw_fast = function(obj, ctx, skip)
 {
 	if(obj.fast==0)	return;
-	mgl_prepare(obj);	// update coordinates
+	mgl_prepare(obj,skip);	// update coordinates
 	ctx.clearRect(0,0,obj.width,obj.height);
 	var i,n1;
 	for(var i=0;i<obj.nprim;i++)	// for each primitive
@@ -198,9 +198,9 @@ var mgl_draw_fast = function(obj, ctx)
 }
 
 // This function make high-quality drawing
-var mgl_draw_good = function(obj, ctx)
+var mgl_draw_good = function(obj, ctx, skip)
 {
-	mgl_prepare(obj);	// update coordinates
+	mgl_prepare(obj,skip);	// update coordinates
 	ctx.clearRect(0,0,obj.width,obj.height);
 //	var scl = 1/Math.abs(obj.z[1]-obj.z[0]);
 	// NOTE: this valid only for current zoom/view. In general case it should be more complicated
@@ -267,23 +267,24 @@ var mgl_draw_good = function(obj, ctx)
 
 // This function change coordinates according current transformations
 // Usually this Function is called internally by draw()
-var mgl_prepare = function(obj)
+var mgl_prepare = function(obj, skip)
 {
-	// QUESTION: should I stretch the picture to the whole canvas???
 	// fill transformation matrix
-	var dx = 1/Math.abs(obj.z[1]-obj.z[0]);
-	var dy = 1/Math.abs(obj.z[3]-obj.z[2]);
-	var cx=Math.cos(obj.tet*deg), sx=Math.sin(obj.tet*deg);	// tetx
-	var cy=Math.cos(obj.phi*deg), sy=Math.sin(obj.phi*deg);	// tety
-	var cz=Math.cos(obj.bet*deg), sz=Math.sin(obj.bet*deg);	// tetz
-	var b = [dx*cx*cy, -dx*cy*sx, dx*sy,
-				dy*(cx*sy*sz+cz*sx), dy*(cx*cz-sx*sy*sz), -dy*cy*sz,
-				sx*sz-cx*cz*sy, cx*sz+cz*sx*sy, cy*cz,
-				obj.width/2*(1+dx-obj.z[1]-obj.z[0])/dx,
-				obj.height/2*(1+dy-obj.z[3]-obj.z[2])/dy, obj.depth/2];
-	obj.b = b;
+	if(!skip)
+	{
+		var dx = 1/Math.abs(obj.z[1]-obj.z[0]);
+		var dy = 1/Math.abs(obj.z[3]-obj.z[2]);
+		var cx=Math.cos(obj.tet*deg), sx=Math.sin(obj.tet*deg);	// tetx
+		var cy=Math.cos(obj.phi*deg), sy=Math.sin(obj.phi*deg);	// tety
+		var cz=Math.cos(obj.bet*deg), sz=Math.sin(obj.bet*deg);	// tetz
+		obj.b = [dx*cx*cy, -dx*cy*sx, dx*sy,
+					dy*(cx*sy*sz+cz*sx), dy*(cx*cz-sx*sy*sz), -dy*cy*sz,
+					sx*sz-cx*cz*sy, cx*sz+cz*sx*sy, cy*cz,
+					obj.width/2*(1+dx-obj.z[1]-obj.z[0])/dx,
+					obj.height/2*(1+dy-obj.z[3]-obj.z[2])/dy, obj.depth/2];
+	}
 	// now transform points for found transformation matrix
-	var i;
+	var b = obj.b, i;
 	for(i=0;i<obj.npnts;i++)
 	{
 		var x = obj.pnts[i][0]-obj.width/2;
