@@ -72,11 +72,6 @@ Functions and variables in this group influences on overall graphics appearance.
 @deftypefnx {C function} @code{void} mgl_set_def_param (@code{HMGL} gr)
 Restore initial values for all of parameters.
 @end deftypefn
-
-@deftypefn {Method on @code{mglGraph}} @code{void} SetPlotId (@code{const char *}id)
-@deftypefnx {C function} @code{void} mgl_set_plotid (@code{HMGL} gr, @code{const char *}id)
-Sets name of plot for saving filename (in FLTK window for example).
-@end deftypefn
 @end ifclear
 
 @menu
@@ -276,6 +271,15 @@ Sets approximate number of lines in @ref{mesh}, @ref{fall}, @ref{grid} and also 
 @deftypefnx {C function} @code{void} mgl_set_facenum (@code{HMGL} gr, @code{int} num)
 @end ifclear
 Sets approximate number of visible faces. Can be used for speeding up drawing by cost of lower quality. By default (=0) it draws all of them.
+@end deftypefn
+
+@anchor{plotid}
+@deftypefn {MGL command} {} plotid 'id'
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} SetPlotId (@code{const char *}id)
+@deftypefnx {C function} @code{void} mgl_set_plotid (@code{HMGL} gr, @code{const char *}id)
+@end ifclear
+Sets default name @var{id} as filename for saving (in FLTK window for example).
 @end deftypefn
 
 @c ==================================================================
@@ -1029,7 +1033,7 @@ These functions export current view to a graphic file. The filename @var{fname} 
 @deftypefnx {Method on @code{mglGraph}} @code{void} WriteFrame (@code{const char *}fname=@code{""}, @code{const char *}descr=@code{""})
 @deftypefnx {C function} @code{void} mgl_write_frame (@code{HMGL} gr, @code{const char *}fname, @code{const char *}descr)
 @end ifclear
-Exports current frame to a file @var{fname} which type is determined by the extension. Parameter @var{descr} adds description to file (can be @code{""}). If @var{fname}=@code{""} then the file @samp{frame####.jpg} is used, where @samp{####} is current frame id and name @samp{frame} is defined by @var{PlotId} class property.
+Exports current frame to a file @var{fname} which type is determined by the extension. Parameter @var{descr} adds description to file (can be @code{""}). If @var{fname}=@code{""} then the file @samp{frame####.jpg} is used, where @samp{####} is current frame id and name @samp{frame} is defined by @ref{plotid} class property.
 @end deftypefn
 
 @ifclear UDAV

@@ -518,8 +518,8 @@ bool mglCanvas::WriteJSON(const char *fname)
 	if (!fp)	return true;
 	ClearUnused();	// clear unused points
 	size_t i,l=Pnt.size();
-	fprintf(fp,"{\n\"width\":%d,\t\"height\":%d,\t\"depth\":%d,\t\"npnts\":%lu,\t\"pnts\":[\n",
-			Width, Height, Depth, (unsigned long)l);
+	fprintf(fp,"{\n\"width\":%d,\t\"height\":%d,\t\"depth\":%d,\t\"depth\":\"%s\",\t\"npnts\":%lu,\t\"pnts\":[\n",
+			Width, Height, Depth, PlotId.c_str(), (unsigned long)l);
 	for(i=0;i<l;i++)
 	{
 		const mglPnt &q=Pnt[i];

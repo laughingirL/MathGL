@@ -70,6 +70,17 @@ void mglc_alpha(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 	mglprintf(out,1024,L"gr->Alpha(%s);",(k[0]==3&&a[0].v!=0)?"true":"false");
 }
 //-----------------------------------------------------------------------------
+int mgls_plotid(mglGraph *gr, long , mglArg *a, int k[10], const char *)
+{
+	if(k[0]==2)	gr->SetPlotId(a[1].s.c_str());
+	else 	return 1;
+	return 0;
+}
+void mglc_plotid(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
+{
+	if(k[0]==2)	mglprintf(out,1024,L"gr->SetPlotId(\"%s\");",a[0].s.c_str());
+}
+//-----------------------------------------------------------------------------
 int mgls_alphadef(mglGraph *gr, long , mglArg *a, int k[10], const char *)
 {
 	if(k[0]==3)	gr->SetAlphaDef(a[0].v);	else	return 1;
@@ -3899,6 +3910,7 @@ mglCommand mgls_base_cmd[] = {
 	{"perspective","Set perspective","perspective val", mgls_perspective, mglc_perspective,2},
 	{"pipe","Draw flow pipes for vector field","pipe Udat Vdat ['fmt' rad num]|Xdat Ydat Udat Vdat ['fmt' rad num]|Udat Vdat Wdat ['fmt' rad num]|Xdat Ydat Zdat Udat Vdat Wdat ['fmt' rad num]", mgls_pipe, mglc_pipe,11},
 	{"plot","Draw usual plot for 1D data","plot Ydat ['fmt']|Xdat Ydat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_plot, mglc_plot,7},
+	{"plotid","Set default filename","plotid 'name'", mgls_plotid, mglc_plotid,2},
 	{"put","Put value (numeric or array) to given data element","put Dat val [i j k] | Dat Val [i j k]", mgls_put, mglc_put,3},
 	{"putsfit","Print fitted formula","putsfit x y ['pre' 'font' size]|x y z ['pre' 'font' size]", mgls_putsfit, mglc_putsfit,15},
 	{"qo2d","Solve PDE in accompanied coordinates","qo2d Res 'ham' IniRe IniIm Ray [r k0 Xout Yout]", mgls_qo2d, mglc_qo2d,4},

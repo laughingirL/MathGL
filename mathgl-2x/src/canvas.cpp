@@ -307,7 +307,9 @@ void mglCanvas::mark_plot(long p, char type, mreal size)
 	if(p<0 || mgl_isnan(Pnt[p].x))	return;
 	long pp=p;
 	mreal pw = fabs(PenWidth)*0.15/sqrt(font_factor);
-	mglDrawReg d;	d.set(this,1,1,0);	d.PenWidth = pw;
+	mglDrawReg d;	d.set(this,1,1,0);
+	d.PDef = PDef;	d.pPos = pPos;
+	d.ObjId = ObjId;	d.PenWidth=pw;
 	if(size>=0)	size *= MarkSize;
 	if(size==0)	size = MarkSize;
 	size *= 0.35*font_factor;
@@ -345,7 +347,7 @@ void mglCanvas::trig_plot(long p1, long p2, long p3)
 {
 	if(p1<0 || p2<0 || p3<0 || mgl_isnan(Pnt[p1].x) || mgl_isnan(Pnt[p2].x) || mgl_isnan(Pnt[p3].x))	return;
 	long pp1=p1,pp2=p2,pp3=p3;
-	mglDrawReg d;	d.set(this,1,1,0);
+	mglDrawReg d;	d.set(this,1,1,0);	d.ObjId = ObjId;
 	if(TernAxis&4) for(int i=0;i<4;i++)
 	{	p1 = ProjScale(i, pp1);	p2 = ProjScale(i, pp2);
 		p3 = ProjScale(i, pp3);	MGL_TRIG_PLOT	}
@@ -362,7 +364,7 @@ void mglCanvas::quad_plot(long p1, long p2, long p3, long p4)
 	if(p3<0 || mgl_isnan(Pnt[p3].x))	{	trig_plot(p1,p2,p4);	return;	}
 	if(p4<0 || mgl_isnan(Pnt[p4].x))	{	trig_plot(p1,p2,p3);	return;	}
 	long pp1=p1,pp2=p2,pp3=p3,pp4=p4;
-	mglDrawReg d;	d.set(this,1,1,0);
+	mglDrawReg d;	d.set(this,1,1,0);	d.ObjId = ObjId;
 	if(TernAxis&4) for(int i=0;i<4;i++)
 	{	p1 = ProjScale(i, pp1);	p2 = ProjScale(i, pp2);
 		p3 = ProjScale(i, pp3);	p4 = ProjScale(i, pp4);
