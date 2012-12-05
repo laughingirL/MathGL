@@ -40,6 +40,7 @@ var mglChange = function()
 	var name = document.getElementById("select").value;
 	mgl_init("json/"+name+".json");
 	var t1 = new Date();
+	ctx.clearRect(0,0,obj.width,obj.height);
 	mgl_draw_good(obj, ctx);
 //	draw_fast(obj, ctx);
 	var t2 = new Date();
@@ -48,7 +49,9 @@ var mglChange = function()
 
 // mouse handling functions
 var mglMouseUp = function()
-{	obj.button = 0;	obj.good = 0;	mgl_draw_good(obj, ctx);	}
+{	obj.button = 0;	obj.good = 0;
+	ctx.clearRect(0,0,obj.width,obj.height);
+	mgl_draw_good(obj, ctx);	}
 var mglMouseDown = function()
 {
 	obj.good = 1;
@@ -93,6 +96,7 @@ var mglMouseWheel = function()
 var mglRestore = function()
 {
 	mgl_restore(obj);
+	ctx.clearRect(0,0,obj.width,obj.height);
 	mgl_draw_good(obj,ctx);
 }
 
@@ -163,6 +167,7 @@ var mgl_shift_right = function(obj,val)	// shift right
 // This function make drawing itself
 var mgl_draw = function(obj, ctx)
 {
+	ctx.clearRect(0,0,obj.width,obj.height);
 	if(obj.good==0)
 	{
 		obj.good = 1;
@@ -186,7 +191,6 @@ var mgl_draw_fast = function(obj, ctx, skip)
 {
 	if(obj.fast==0)	return;
 	mgl_prepare(obj,skip);	// update coordinates
-	ctx.clearRect(0,0,obj.width,obj.height);
 	var i,n1;
 	for(var i=0;i<obj.nprim;i++)	// for each primitive
 	{
@@ -201,8 +205,6 @@ var mgl_draw_fast = function(obj, ctx, skip)
 var mgl_draw_good = function(obj, ctx, skip)
 {
 	mgl_prepare(obj,skip);	// update coordinates
-	ctx.clearRect(0,0,obj.width,obj.height);
-//	var scl = 1/Math.abs(obj.z[1]-obj.z[0]);
 	// NOTE: this valid only for current zoom/view. In general case it should be more complicated
 	var scl = Math.sqrt(obj.b[0]*obj.b[0]+obj.b[1]*obj.b[1]+obj.b[2]*obj.b[2]);
 	for(var i=0;i<obj.nprim;i++)	// for each primitive
@@ -290,9 +292,9 @@ var mgl_prepare = function(obj, skip)
 		var x = obj.pnts[i][0]-obj.width/2;
 		var y = obj.pnts[i][1]-obj.height/2;
 		var z = obj.pnts[i][2]-obj.depth/2;
-		obj.pp[i][0] = b[9]  + b[0]*x + b[1]*y + b[2]*z;
-		obj.pp[i][1] = b[10] + b[3]*x + b[4]*y + b[5]*z;
-		obj.pp[i][2] = b[11] + b[6]*x + b[7]*y + b[8]*z;
+		obj.pp[i] = [b[9]  + b[0]*x + b[1]*y + b[2]*z,
+					 b[10] + b[3]*x + b[4]*y + b[5]*z,
+					 b[11] + b[6]*x + b[7]*y + b[8]*z];
 	}
 	if(obj.pf)	for(var i=0;i<obj.npnts;i++)	// perspective
 	{	// NOTE: it is not supported for coordinate determining now
