@@ -416,7 +416,12 @@ mreal mglCanvas::text_plot(long p,const wchar_t *text,const char *font,mreal siz
 
 	if(!(Quality&4))	// add text itself
 	{
+		char ch = mglGetStyle(font,0,0);
+		mglColor mc(ch);
+		if(!ch)	mc = col<0 ? mglColor(char(0.5-col)):Txt[long(col)].GetC(col);
+
 		mglPrim a(6);	a.n1 = p;
+		a.n2 = int(255*mc.r) + 256*(int(255*mc.g) + 256*int(255*mc.b));
 		mglText txt(text,font);
 		MGL_PUSH(Ptx,txt,mutexPtx);
 		a.n3 = Ptx.size()-1;

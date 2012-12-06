@@ -39,8 +39,8 @@ private slots:
 private:
 	QString result;
 	QLineEdit *x1, *x2, *y1, *y2, *z1, *z2, *c1, *c2;
-	QLineEdit *alpha, *amb, *mn, *fs, *leg;
-	QComboBox *cut;
+	QLineEdit *alpha, *amb, *dif, *val, *mn, *fs, *leg;
+	QComboBox *cut, *lig;
 };
 //-----------------------------------------------------------------------------
 #endif

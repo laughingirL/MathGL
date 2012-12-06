@@ -46,18 +46,29 @@ OptionDialog::OptionDialog(QWidget *parent) : QDialog(parent)
 	lbl = new QLabel(tr("C-range"),this);	g->addWidget(lbl,1,3);
 	c1 = new QLineEdit(this);	g->addWidget(c1,1,4);
 	c2 = new QLineEdit(this);	g->addWidget(c2,1,5);
-	g = new QGridLayout();		o->addLayout(g);
-	lbl = new QLabel(tr("Alpha"),this);		g->addWidget(lbl,0,0);
-	alpha = new QLineEdit(this);	g->addWidget(alpha,1,0);
-	lbl = new QLabel(tr("Ambient"),this);	g->addWidget(lbl,0,1);
-	amb = new QLineEdit(this);		g->addWidget(amb,1,1);
-	lbl = new QLabel(tr("Mesh num"),this);	g->addWidget(lbl,0,2);
-	mn = new QLineEdit(this);		g->addWidget(mn,1,2);
-	lbl = new QLabel(tr("Font size"),this);	g->addWidget(lbl,0,3);
-	fs = new QLineEdit(this);		g->addWidget(fs,1,3);
-	lbl = new QLabel(tr("Cutting"),this);	g->addWidget(lbl,0,4);
-	cut = new QComboBox(this);		g->addWidget(cut,1,4);
-	cut->insertItem(0,tr("on"));	cut->insertItem(1,tr("off"));
+
+	lbl = new QLabel(tr("Alpha"),this);		g->addWidget(lbl,2,0);
+	alpha = new QLineEdit(this);	g->addWidget(alpha,2,1);
+	lbl = new QLabel(tr("Mesh num"),this);	g->addWidget(lbl,2,3);
+	mn = new QLineEdit(this);		g->addWidget(mn,2,4);
+
+	lbl = new QLabel(tr("Ambient"),this);	g->addWidget(lbl,3,0);
+	amb = new QLineEdit(this);		g->addWidget(amb,3,1);
+	lbl = new QLabel(tr("Diffuse"),this);	g->addWidget(lbl,3,3);
+	dif = new QLineEdit(this);		g->addWidget(dif,3,4);
+
+	lbl = new QLabel(tr("Cutting"),this);	g->addWidget(lbl,4,0);
+	cut = new QComboBox(this);		g->addWidget(cut,4,1);
+	cut->insertItem(0,tr("default"));	cut->insertItem(1,tr("on"));	cut->insertItem(2,tr("off"));
+	lbl = new QLabel(tr("Light"),this);	g->addWidget(lbl,4,3);
+	lig = new QComboBox(this);		g->addWidget(lig,4,4);
+	lig->insertItem(0,tr("default"));	lig->insertItem(1,tr("on"));	lig->insertItem(2,tr("off"));
+	
+	lbl = new QLabel(tr("Value"),this);	g->addWidget(lbl,5,0);
+	val = new QLineEdit(this);		g->addWidget(val,5,1);
+	lbl = new QLabel(tr("Size"),this);	g->addWidget(lbl,5,3);
+	fs = new QLineEdit(this);		g->addWidget(fs,5,4);
+	
 	a = new QHBoxLayout();	o->addLayout(a);
 	lbl = new QLabel(tr("Legend"),this);	a->addWidget(lbl);
 	leg = new QLineEdit(this);	a->addWidget(leg);
@@ -103,12 +114,16 @@ void OptionDialog::prepareResult()
 		QMessageBox::warning(this,tr("UDAV - command options"), tr("Both fields in crange must be filled"));
 		return;
 	}
-	if(!alpha->text().isEmpty())	result = result+"; alpha "+alpha->text();
+	if(!val->text().isEmpty())	result = result+"; value "+val->text();
+	if(!alpha->text().isEmpty())result = result+"; alpha "+alpha->text();
 	if(!amb->text().isEmpty())	result = result+"; ambient "+amb->text();
+	if(!dif->text().isEmpty())	result = result+"; diffuse "+dif->text();
 	if(!mn->text().isEmpty())	result = result+"; meshnum "+mn->text();
-	if(!fs->text().isEmpty())	result = result+"; fontsize "+fs->text();
-	if(cut->currentIndex()==0)	result = result+"; cut on";
-	if(cut->currentIndex()==1)	result = result+"; cut off";
+	if(!fs->text().isEmpty())	result = result+"; size "+fs->text();
+	if(cut->currentIndex()==1)	result = result+"; cut on";
+	if(cut->currentIndex()==2)	result = result+"; cut off";
+	if(lig->currentIndex()==1)	result = result+"; light on";
+	if(lig->currentIndex()==2)	result = result+"; light off";
 	if(!leg->text().isEmpty())	result = result+"; legend '"+leg->text()+"'";
 	accept();
 }

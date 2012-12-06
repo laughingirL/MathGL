@@ -202,6 +202,15 @@ inplot 0 0.5 0 0.5 on:ranges 1 0 4 0:fplot '4*x^2'
 
 Note, that MathGL can draw not only single axis (which is default). But also several axis on the plot (see right plots). The idea is that the change of settings does not influence on the already drawn graphics. So, for 2-axes I setup the first axis and draw everything concerning it. Then I setup the second axis and draw things for the second axis. Generally, the similar idea allows one to draw rather complicated plot of 4 axis with different ranges (see bottom left plot).
 
+At this inverted axis can be created by 2 methods. First one is used in this sample -- just specify minimal axis value to be large than maximal one. This method work well for 2D axis, but can wrongly place labels in 3D case. Second method is more general and work in 3D case too -- just use @ref{aspect} function with negative arguments. For example, following code will produce exactly the same result for 2D case, but 2nd variant will look better in 3D.
+@verbatim
+# variant 1
+ranges 0 10 4 0:axis
+
+# variant 2
+ranges 0 10 0 4:aspect 1 -1:axis
+@end verbatim
+
 @pfig{axis, Example of axis.}
 
 Another MathGL feature is fine ticks tunning. By default (if it is not changed by @code{SetTicks} function), MathGL try to adjust ticks positioning, so that they looks most human readable. At this, MathGL try to extract common factor for too large or too small axis ranges, as well as for too narrow ranges. Last one is non-common notation and can be disabled by @code{SetTuneTicks} function.
@@ -1339,8 +1348,8 @@ subplot 2 2 0:title 'Surf plot (default)':rotate 50 60:light on:box:surf a
 subplot 2 2 1:title '"\#" style; meshnum 10':rotate 50 60:box
 surf a '#'; meshnum 10
 
-subplot 2 2 2:title '"|" style':rotate 50 60:box
-surf a '|'
+subplot 2 2 2:title '"." style':rotate 50 60:box
+surf a '.'
 
 new x 50 40 '0.8*sin(pi*x)*sin(pi*(y+1)/2)'
 new y 50 40 '0.8*cos(pi*x)*sin(pi*(y+1)/2)'
@@ -1675,8 +1684,15 @@ Basically, you can put this text after the script. Note, that you need to termin
 Command @ref{surf3} is one of most suitable (for my opinion) functions to visualize 3D data. It draw the isosurface(s) -- surface(s) of constant amplitude (3D analogue of contour lines). You can draw wired isosurfaces if specify @samp{#} style. The sample code is:
 @verbatim
 call 'prepare3d'
-title 'Surf3 plot':rotate 50 60:light on:alpha on:box
+light on:alpha on
+subplot 2 2 1:title 'Surf3 plot':rotate 50 60:box
 surf3 c
+
+subplot 2 2 1:title '"\#" style':rotate 50 60:box
+surf3 c '#'
+
+subplot 2 2 2:title '"." style':rotate 50 60:box
+surf3 c '.'
 @end verbatim
 
 @pfig{surf3, Example of Surf3()}

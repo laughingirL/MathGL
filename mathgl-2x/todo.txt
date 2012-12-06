@@ -18,15 +18,7 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 
 ============= NEW FOR v.2.1 =============
 
-0. check for possible memory leaks before release
-
-1. inverse axis sample
-2. surf, surfa, surfc, surf3, surf3a, surf3c samples -- add '#', '.' styles ?!?
-
 3. WX window/widgets
-
-4. bug for shift of rotated text in TeX + text color + text size in subplots + text align
-5. Command options dialog -- add "value"
 
 A. libhpdf for win32
 
@@ -34,8 +26,6 @@ A. libhpdf for win32
 
 1. Check C/Fortran samples
 2. UDAV hotkeys
-
-5. Hint about inverse axis range
 
 14. Thanks -- C.M., A.P.$
 

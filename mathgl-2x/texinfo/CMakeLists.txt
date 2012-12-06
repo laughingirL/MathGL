@@ -94,6 +94,14 @@ if(MGL_HAVE_DOC)
 		WORKING_DIRECTORY ${MGL_OUT}
 	)
 
+	add_custom_command(OUTPUT ${MGL_OUT}/mgl_en.pdf
+		COMMAND ${findtp} -I ${MGL_OUT}/png ${MGL_TEX}/mgl_en.texi
+		COMMAND ${findtp} -I ${MGL_OUT}/png ${MGL_TEX}/mgl_en.texi
+		COMMAND ${findtp} -I ${MGL_OUT}/png ${MGL_TEX}/mgl_en.texi
+		DEPENDS ${list_texi_files_en} mgl_en.texi ${MGL_PNG_N}
+		WORKING_DIRECTORY ${MGL_OUT}
+	)
+
 	add_custom_command(OUTPUT ${MGL_OUT}/web_ru.pdf
 		COMMAND ${findtp} -I ${MGL_OUT}/png ${MGL_TEX}/web_ru.texi
 		COMMAND ${findtp} -I ${MGL_OUT}/png ${MGL_TEX}/web_ru.texi
@@ -138,6 +146,7 @@ if(MGL_HAVE_DOC)
 
 	add_custom_target(documentation ALL
 		DEPENDS ${MGL_OUT}/mathgl_en.info
+		DEPENDS ${MGL_OUT}/mgl_en.pdf
 		DEPENDS ${MGL_OUT}/mathgl_en.pdf
 		DEPENDS ${MGL_OUT}/mgl_en.html
 		DEPENDS ${MGL_OUT}/mathgl_en/mathgl_en.html

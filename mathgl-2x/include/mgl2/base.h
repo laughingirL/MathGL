@@ -174,6 +174,7 @@ struct mglTexture
 	void Set(const char *cols, int smooth=0,mreal alpha=1);
 	void Set(HCDT val, const char *cols);
 	void GetC(mreal u,mreal v,mglPnt &p) const;
+	mglColor GetC(mreal u,mreal v=0) const;
 	inline bool IsSame(const mglTexture &t) const
 	{	return n==t.n && !memcmp(col,t.col,512*sizeof(mglColor));	}
 	void GetRGBA(unsigned char *f) const;

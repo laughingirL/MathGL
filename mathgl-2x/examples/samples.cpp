@@ -1100,13 +1100,21 @@ void smgl_several_light(mglGraph *gr)	// several light sources
 	gr->Box();	gr->Surf(a,"h");
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_surf3="call 'prepare3d'\ntitle 'Surf3 plot':rotate 50 60:light on:alpha on:box:surf3 c";
+const char *mmgl_surf3="call 'prepare3d'\nlight on:alpha on\n"
+"subplot 2 2 0:title 'Surf3 plot (default)'\nrotate 50 60:box:surf3 c"
+"subplot 2 2 1:title '\"\\#\" style'\nrotate 50 60:box:surf3 c '#'\n"
+"subplot 2 2 2:title '\".\" style'\nrotate 50 60:box:surf3 c '.'\n";
 void smgl_surf3(mglGraph *gr)
 {
 	mglData c;	mgls_prepare3d(&c);
-	if(!mini)	gr->Title("Surf3 plot");
+	if(!mini)	{	gr->SubPlot(2,2,0);	gr->Title("Surf3 plot (default)");	}
 	gr->Rotate(50,60);	gr->Light(true);	gr->Alpha(true);
 	gr->Box();	gr->Surf3(c);
+	if(mini)	return;
+	gr->SubPlot(2,2,1);	gr->Title("'\\#' style");
+	gr->Rotate(50,60);	gr->Box();	gr->Surf3(c,"#");
+	gr->SubPlot(2,2,2);	gr->Title("'.' style");
+	gr->Rotate(50,60);	gr->Box();	gr->Surf3(c,".");
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_surf3a="call 'prepare3d'\ntitle 'Surf3 plot':rotate 50 60:light on:alpha on:box:surf3a c d";
@@ -1173,7 +1181,7 @@ void smgl_fall(mglGraph *gr)
 //-----------------------------------------------------------------------------
 const char *mmgl_surf="call 'prepare2d'\nsubplot 2 2 0:title 'Surf plot (default)':rotate 50 60:light on:box:surf a\n"
 "subplot 2 2 1:title '\"\\#\" style; meshnum 10':rotate 50 60:box:surf a '#'; meshnum 10\n"
-"subplot 2 2 2:title '\"|\" style':rotate 50 60:box:surf a '|'\n"
+"subplot 2 2 2:title '\".\" style':rotate 50 60:box:surf a '.'\n"
 "new x 50 40 '0.8*sin(pi*x)*sin(pi*(y+1)/2)'\nnew y 50 40 '0.8*cos(pi*x)*sin(pi*(y+1)/2)'\nnew z 50 40 '0.8*cos(pi*(y+1)/2)'\n"
 "subplot 2 2 3:title 'parametric form':rotate 50 60:box:surf x y z 'BbwrR'\n";
 void smgl_surf(mglGraph *gr)
@@ -1184,8 +1192,8 @@ void smgl_surf(mglGraph *gr)
 	if(mini)	return;
 	gr->SubPlot(2,2,1);	gr->Title("'\\#' style; meshnum 10");
 	gr->Rotate(50,60);	gr->Box();	gr->Surf(a,"#","meshnum 10");
-	gr->SubPlot(2,2,2);	gr->Title("'|' style");
-	gr->Rotate(50,60);	gr->Box();	gr->Surf(a,"|");
+	gr->SubPlot(2,2,2);	gr->Title("'.' style");
+	gr->Rotate(50,60);	gr->Box();	gr->Surf(a,".");
 	gr->SubPlot(2,2,3);	gr->Title("parametric form");
 	mglData x(50,40),y(50,40),z(50,40);
 	gr->Fill(x,"0.8*sin(pi*x)*sin(pi*(y+1)/2)");

@@ -646,6 +646,15 @@ int sample(mglGraph *gr)
 
 Note, that MathGL can draw not only single axis (which is default). But also several axis on the plot (see right plots). The idea is that the change of settings does not influence on the already drawn graphics. So, for 2-axes I setup the first axis and draw everything concerning it. Then I setup the second axis and draw things for the second axis. Generally, the similar idea allows one to draw rather complicated plot of 4 axis with different ranges (see bottom left plot).
 
+At this inverted axis can be created by 2 methods. First one is used in this sample -- just specify minimal axis value to be large than maximal one. This method work well for 2D axis, but can wrongly place labels in 3D case. Second method is more general and work in 3D case too -- just use @ref{aspect} function with negative arguments. For example, following code will produce exactly the same result for 2D case, but 2nd variant will look better in 3D.
+@verbatim
+// variant 1
+gr->SetRanges(0,10,4,0);  gr->Axis();
+
+// variant 2
+gr->SetRanges(0,10,0,4);  gr->Aspect(1,-1);   gr->Axis();
+@end verbatim
+
 @pfig{axis, Example of axis.}
 
 Another MathGL feature is fine ticks tunning. By default (if it is not changed by @code{SetTicks} function), MathGL try to adjust ticks positioning, so that they looks most human readable. At this, MathGL try to extract common factor for too large or too small axis ranges, as well as for too narrow ranges. Last one is non-common notation and can be disabled by @code{SetTuneTicks} function.
@@ -2089,8 +2098,8 @@ int sample(mglGraph *gr)
   gr->SubPlot(2,2,1); gr->Title("'\\#' style; meshnum 10");
   gr->Rotate(50,60);  gr->Box();  gr->Surf(a,"#","meshnum 10");
 
-  gr->SubPlot(2,2,2); gr->Title("'|' style");
-  gr->Rotate(50,60);  gr->Box();  gr->Surf(a,"|");
+  gr->SubPlot(2,2,2); gr->Title("'.' style");
+  gr->Rotate(50,60);  gr->Box();  gr->Surf(a,".");
 
   gr->SubPlot(2,2,3); gr->Title("parametric form");
   mglData x(50,40),y(50,40),z(50,40);
@@ -2512,9 +2521,15 @@ Function @ref{surf3} is one of most suitable (for my opinion) functions to visua
 int sample(mglGraph *gr)
 {
   mglData c;  mgls_prepare3d(&c);
-  gr->Title("Surf3 plot");  gr->Rotate(50,60);
-  gr->Light(true);  gr->Alpha(true);
-  gr->Box();  gr->Surf3(c);
+  gr->Light(true);    gr->Alpha(true);
+  gr->SubPlot(2,2,0); gr->Title("Surf3 plot (default)");
+  gr->Rotate(50,60);  gr->Box();  gr->Surf3(c);
+
+  gr->SubPlot(2,2,1); gr->Title("'\\#' style");
+  gr->Rotate(50,60);  gr->Box();  gr->Surf3(c,"#");
+
+  gr->SubPlot(2,2,2); gr->Title("'.' style");
+  gr->Rotate(50,60);  gr->Box();  gr->Surf3(c,".");
   return 0;
 }
 @end verbatim

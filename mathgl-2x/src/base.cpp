@@ -840,6 +840,19 @@ void mglTexture::Set(const char *s, int smooth, mreal alpha)
 	delete []c;	delete []val;
 }
 //-----------------------------------------------------------------------------
+mglColor mglTexture::GetC(mreal u,mreal v) const
+{
+	u -= long(u);
+	register long i=long(255*u);	u = u*255-i;
+	const mglColor *s=col+2*i;	mglColor p;
+	p.r = (s[0].r*(1-u)+s[2].r*u)*(1-v) + (s[1].r*(1-u)+s[3].r*u)*v;
+	p.g = (s[0].g*(1-u)+s[2].g*u)*(1-v) + (s[1].g*(1-u)+s[3].g*u)*v;
+	p.b = (s[0].b*(1-u)+s[2].b*u)*(1-v) + (s[1].b*(1-u)+s[3].b*u)*v;
+	p.a = (s[0].a*(1-u)+s[2].a*u)*(1-v) + (s[1].a*(1-u)+s[3].a*u)*v;
+	//	p.a = (s[0].a*(1-u)+s[2].a*u)*v + (s[1].a*(1-u)+s[3].a*u)*(1-v);	// for alpha use inverted
+	return p;
+}
+//-----------------------------------------------------------------------------
 void mglTexture::GetC(mreal u,mreal v,mglPnt &p) const
 {
 	u -= long(u);

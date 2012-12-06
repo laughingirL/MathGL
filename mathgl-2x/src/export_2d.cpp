@@ -187,7 +187,9 @@ mglColor mglCanvas::GetColor(const mglPrim &p)
 		col2int(Pnt[p.n4],buf,p.id);	res[0]=(3L*res[0]+buf[0])/4;
 		res[1]=(3L*res[1]+buf[1])/4;	res[2]=(3L*res[2]+buf[2])/4;
 	}
-
+	if(p.type==6)
+	{	res[0]=p.n2&0xff;	res[1]=(p.n2/256)&0xff;	res[2]=(p.n2/65536)&0xff;	}
+	
 	// add fog into resulting color
 	float zf = FogDist*(p.z/Depth-0.5-FogDz);
 	if(zf<0)	// add fog
@@ -721,13 +723,15 @@ void mgl_write_tex(HMGL gr, const char *fname,const char *descr)
 			mreal dy = q.w*cos(q.p*M_PI/180)/100, dx = q.w*sin(q.p*M_PI/180)/100;
 			int f,a;	mglGetStyle(t.stl.c_str(), &f, &a);
 			std::string ss=cname;
-			if((a&3)==2)	ss.append(",anchor=west");	if((a&3)==0)	ss.append(",anchor=east");
+			if((a&3)==0)	ss.append(",anchor=base west");
+			if((a&3)==1)	ss.append(",anchor=base");
+			if((a&3)==2)	ss.append(",anchor=base east");
 			if(f&MGL_FONT_ITAL)	ss.append(",font=\\itshape");
 			if(f&MGL_FONT_BOLD)	ss.append(",font=\\bfshape");
 			if(t.text.find('\\')!=std::string::npos || t.text.find('{')!=std::string::npos || t.text.find('_')!=std::string::npos || t.text.find('^')!=std::string::npos)
-				fprintf(fp,"\\draw[%s] (%g,%g) node[rotate=%.2g]{$%ls$};\n", ss.c_str(),x-dx,y-dy, q.p, t.text.c_str());
+				fprintf(fp,"\\draw[%s] (%g,%g) node[rotate=%.2g]{$%ls$};\n", ss.c_str(),x-dx,y-dy, -q.p, t.text.c_str());
 			else
-				fprintf(fp,"\\draw[%s] (%g,%g) node[rotate=%.2g]{%ls};\n", ss.c_str(),x-dx,y-dy, q.p, t.text.c_str());
+				fprintf(fp,"\\draw[%s] (%g,%g) node[rotate=%.2g]{%ls};\n", ss.c_str(),x-dx,y-dy, -q.p, t.text.c_str());
 		}
 	}
 	fprintf(fp, "\\end{tikzpicture}\n");

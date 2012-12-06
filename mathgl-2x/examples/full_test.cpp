@@ -64,11 +64,6 @@ void mgl_write_obj_old(HMGL gr, const char *fname,const char *descr, int use_png
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	mglData a,b;	mgls_prepare2d(&a,&b);
-	if(!mini)	gr->Title("SurfA plot");	gr->Rotate(50,60);
-	gr->Light(true);	gr->Box();	gr->Dens(a,".");
-	return;
-	
 	mglParse par;
 	par.AllowSetSize(true);
 	setlocale(LC_CTYPE, "");

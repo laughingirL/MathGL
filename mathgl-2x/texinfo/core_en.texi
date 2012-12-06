@@ -1081,7 +1081,7 @@ Exports current frame to SVG (Scalable Vector Graphics) file using vector repres
 
 @deftypefn {Method on @code{mglGraph}} @code{void} WriteTEX (@code{const char *}fname, @code{const char *}descr=@code{""})
 @deftypefnx {C function} @code{void} mgl_write_tex (@code{HMGL} gr, @code{const char *}fname, @code{const char *}descr)
-Exports current frame to LaTeX (package Tikz/PGF) file using vector representation. Note, the output file may be too large for graphic of large data array (especially for surfaces). It is better to use bitmap format (for example PNG or JPEG). However, program has no internal limitations for size of output file. Parameter @var{fname} specifies the file name, @var{descr} adds description to file (default is file name).
+Exports current frame to LaTeX (package Tikz/PGF) file using vector representation. Note, the output file may be too large for graphic of large data array (especially for surfaces). It is better to use bitmap format (for example PNG or JPEG). However, program has no internal limitations for size of output file. Parameter @var{fname} specifies the file name, @var{descr} adds description to file (default is file name). Note, there is no text scaling now (for example, in subplots), what may produce miss-aligned labels.
 @end deftypefn
 
 @deftypefn {Method on @code{mglGraph}} @code{void} WritePRC (@code{const char *}fname, @code{const char *}descr=@code{""}, @code{bool} make_pdf=@code{true})
