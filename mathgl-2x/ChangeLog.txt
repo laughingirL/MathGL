@@ -1,4 +1,4 @@
-2.1 Released 7 December 2012
+2.1 Released 12 December 2012
 
 * Color can be specified as its RGB[A] values, i.e. like "{xFFFFFF}" or "{xFFFFFFFF}".
 * Color in color scheme  may have position in range [0,1]. Format is {CN,pos} or {xFFFFFF,pos}.
@@ -44,6 +44,7 @@
 
 * Add functions GetFrame(), AddFrame() for replacing or adding data from given frame. Work if MGL_VECT_FRAME is set on (by default is on).
 
+* Text is drawn for initially invisible axis (like z-axis) too.
 * Pen width for marks now is proportional to pen width of line multiplied by size of marks.
 
 * Option '-' in legend for drawing horizontally

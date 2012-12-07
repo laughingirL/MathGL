@@ -397,6 +397,9 @@ mreal mglCanvas::text_plot(long p,const wchar_t *text,const char *font,mreal siz
 	mreal fsize=size/6.5*font_factor, h = fnt->Height(font)*fsize, w, shift = -(sh+0.02)*h;
 	// text drawing itself
 	Push();
+#if MGL_HAVE_PTHREAD
+pthread_mutex_lock(&mutexPtx);
+#endif
 	inv = inv ^ (strchr(font,'T')!=0);
 	if(inv)	shift = 0.2*h-shift;
 	shift += 0.015*h;	// Correction for glyph rotation around proper point
@@ -409,7 +412,7 @@ mreal mglCanvas::text_plot(long p,const wchar_t *text,const char *font,mreal siz
 		B.x += shift*q.v/sqrt(ll);	B.y += shift*(1-q.u/sqrt(ll));
 		if(q.u==0 && !get(MGL_ENABLE_RTEXT))	B.y -= 0.1*h;
 	}
-	fscl = fsize;
+	fscl = fsize;	forg = p;
 
 	if(mgl_isnan(ll) || !get(MGL_ENABLE_RTEXT))	ftet = 0;
 	else	ftet = -180*atan2(q.v,q.u)/M_PI;
@@ -423,13 +426,11 @@ mreal mglCanvas::text_plot(long p,const wchar_t *text,const char *font,mreal siz
 		mglPrim a(6);	a.n1 = p;
 		a.n2 = int(255*mc.r) + 256*(int(255*mc.g) + 256*int(255*mc.b));
 		mglText txt(text,font);
-		MGL_PUSH(Ptx,txt,mutexPtx);
-		a.n3 = Ptx.size()-1;
+		Ptx.push_back(txt);	a.n3 = Ptx.size()-1;
 		a.s = size;	a.w = shift;	a.p=ftet;
 		add_prim(a);
 	}
-	if(ll<1e-10)	{	Pop();	return 0;	}
-	
+
 	memset(B.b,0,9*sizeof(mreal));
 	B.b[0] = B.b[4] = B.b[8] = fscl;
 	register mreal opf = B.pf;
@@ -451,6 +452,9 @@ mreal mglCanvas::text_plot(long p,const wchar_t *text,const char *font,mreal siz
 		line_plot(k1,k2);	line_plot(k1,k3);	line_plot(k4,k2);	line_plot(k4,k3);
 	}
 	fsize *= fnt->Puts(text,font,col)/2;
+#if MGL_HAVE_PTHREAD
+pthread_mutex_unlock(&mutexPtx);
+#endif
 	Pop();	return fsize;
 }
 //-----------------------------------------------------------------------------
@@ -461,7 +465,7 @@ void mglCanvas::Glyph(mreal x, mreal y, mreal f, int s, long j, mreal col)
 	mreal cc = col<0 ? AddTexture(char(0.5-col)):col;
 	if(cc<0)	cc = CDef;
 	a.n1 = AddPnt(mglPoint(B.x,B.y,B.z), cc, mglPoint(x,y,NAN), -1, -1);
-	a.n3 = s;	a.n4 = AddGlyph(s,j);
+	a.n2 = forg; 	a.n3 = s;	a.n4 = AddGlyph(s,j);
 	if(a.n1<0)	return;
 
 	mglDrawReg d;	d.set(this,1,1,0);

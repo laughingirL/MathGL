@@ -539,7 +539,7 @@ bool mglCanvas::WriteJSON(const char *fname)
 		if(p.type==4)
 		{
 			const mglPnt &q = Pnt[p.n1];
-			xy.push_back(mglPoint(q.u,q.v));
+			xy.push_back(mglPoint(q.u,q.v,p.n2));
 			n2 = xy.size()-1;
 			n3 = p.n3;	n4 = p.n4;
 		}
@@ -559,7 +559,11 @@ bool mglCanvas::WriteJSON(const char *fname)
 	for(i=0;i<l;i++)
 	{
 		const mglPoint &p=xy[i];
-		fprintf(fp,"[%.4g,%.4g]%c\n", p.x, p.y, i+1<l?',':' ');
+		const mglPnt &q=Pnt[int(0.5+p.z)];
+		if(q.u==q.u)
+			fprintf(fp,"[%.4g,%.4g,%.4g,%.4g,%.4g]%c\n", p.x, p.y, q.u, q.v, q.w, i+1<l?',':' ');
+		else
+			fprintf(fp,"[%.4g,%.4g,\"nan\",\"nan\",\"nan\"]%c\n", p.x, p.y, i+1<l?',':' ');
 	}
 
 	l = Glf.size();

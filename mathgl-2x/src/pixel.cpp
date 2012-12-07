@@ -251,15 +251,11 @@ void mglCanvas::pxl_transform(size_t id, size_t n, const void *)
 	{
 		mglPnt &p=Pnt[i];
 		x = p.xx-Width/2.;	y = p.yy-Height/2.;	z = p.zz-Depth/2.;
-		p.x = Width/2 - Bp.x*Width/2 + Bp.b[0]*x + Bp.b[1]*y + Bp.b[2]*z;
-		p.y = Height/2- Bp.y*Height/2+ Bp.b[3]*x + Bp.b[4]*y + Bp.b[5]*z;
-		p.z = Depth/2. + Bp.b[6]*x + Bp.b[7]*y + Bp.b[8]*z;
-		if(Bp.pf)
-		{
-			register float d = (1-Bp.pf)/(1-Bp.pf*p.z/Depth);
-			p.x = Width/2 + d*(p.x-Width/2);
-			p.y = Height/2 + d*(p.y-Height/2);
-		}
+		p.x = Bp.b[0]*x + Bp.b[1]*y + Bp.b[2]*z - Bp.x*Width/2;
+		p.y = Bp.b[3]*x + Bp.b[4]*y + Bp.b[5]*z - Bp.y*Height/2;
+		p.z = Bp.b[6]*x + Bp.b[7]*y + Bp.b[8]*z + Depth/2.;
+		register float d = (1-Bp.pf)/(1-Bp.pf*p.z/Depth);
+		p.x = Width/2 + d*p.x;	p.y = Height/2 + d*p.y;
 	}
 }
 //-----------------------------------------------------------------------------
@@ -985,17 +981,29 @@ void mglCanvas::mark_draw(long k, char type, mreal size, mglDrawReg *d)
 //-----------------------------------------------------------------------------
 void mglCanvas::glyph_draw(const mglPrim *P, mglDrawReg *d)
 {
-	mglPnt p=Pnt[P->n1];
+	mglPnt p=Pnt[P->n1], q=Pnt[P->n2];
+	// scale direction for new view/zoom
+	float dv = (1-Bp.pf)/(1-Bp.pf*q.z/Depth);
+	float x,y,z,c=Bp.pf/(1-Bp.pf),ll,phi=P->w;
+	x = Bp.b[0]*q.u + Bp.b[1]*q.v + Bp.b[2]*q.w;
+	y = Bp.b[3]*q.u + Bp.b[4]*q.v + Bp.b[5]*q.w;
+	z = Bp.b[6]*q.u + Bp.b[7]*q.v + Bp.b[8]*q.w;
+	x += (q.x-Width/2)*z*c;
+	y += (q.y-Height/2)*z*c;
+	ll = x*x+y*y;
+	if(ll < 1e-10)	return;
+	if(ll==ll)	phi = -atan2(y,x)*180/M_PI;
+
 	mreal pf=sqrt((Bp.b[0]*Bp.b[0]+Bp.b[1]*Bp.b[1]+Bp.b[3]*Bp.b[3]+Bp.b[4]*Bp.b[4])/2), f = P->p*pf;
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_lock(&mutexPnt);
 #endif
 	Push();		B.clear();
 	B.b[0] = B.b[4] = B.b[8] = P->s;
-	mreal cw=cos(P->w*M_PI/180), sw=-sin(P->w*M_PI/180);
-	mreal tet = 180/M_PI*atan2(-Bp.b[3]*cw-Bp.b[4]*sw, Bp.b[0]*cw+Bp.b[1]*sw);
-	RotateN(tet,0,0,1);	B.pf = 1;
-	B.x=p.x;	B.y=p.y;	B.z=p.z;
+//	mreal cw=cos(phi), sw=-sin(phi);
+//	mreal tet = 180/M_PI*atan2(-Bp.b[3]*cw-Bp.b[4]*sw, Bp.b[0]*cw+Bp.b[1]*sw);
+	RotateN(phi,0,0,1);
+	B.x=p.x;	B.y=p.y;	B.z=p.z;	B.pf = 1;
 	p.u *= pf;	p.v *= pf;
 
 	const mglGlyph &g = Glf[P->n4];

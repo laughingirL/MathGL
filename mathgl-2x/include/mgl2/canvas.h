@@ -408,6 +408,7 @@ private:
 	int dr_nx1, dr_nx2, dr_ny1, dr_ny2;	// Allowed drawing region
 	GifFileType *gif;
 	mreal fscl,ftet;	///< last scale and rotation for glyphs
+	long forg;		///< original point (for directions)
 	size_t grp_counter;	///< Counter for StartGroup(); EndGroup();
 
 	/// Draw generic colorbar

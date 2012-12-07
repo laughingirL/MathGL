@@ -26,8 +26,8 @@ var main = function()
 	ctx = document.getElementById("canvas").getContext("2d");
 	ctx.lineCap="round";	// global setting
 
-//	mgl_init("json/style.json");
-	mgl_init("json/alpha.json");
+	mgl_init("json/test.json");
+//	mgl_init("json/alpha.json");
 	var t1 = new Date();
 	mgl_draw_good(obj, ctx);
 //	draw_fast(obj, ctx);
@@ -245,6 +245,16 @@ var mgl_draw_good = function(obj, ctx, skip)
 			if(obj.prim[i][10].charAt(0)=='#')	ctx.stroke();
 			ctx.fill();	break;
 		case 4: // glyphs
+/*			var t=obj.prim[i][7]*deg;
+			var xx=obj.coor[n2][2],yy=obj.coor[n2][3],zz=obj.coor[n2][4];
+			var x = obj.b[0]*xx + obj.b[1]*yy + obj.b[2]*zz;
+			var y = obj.b[3]*xx + obj.b[4]*yy + obj.b[5]*zz;
+			var z = obj.b[6]*xx + obj.b[7]*yy + obj.b[8]*zz;
+			var ll = x*x+y*y;
+			if(ll < 1e-10)	return;
+			if(ll<1e10)	t = -Math.atan2(y,x);
+			var c=Math.cos(t), s=Math.sin(t), d=obj.prim[i][6]/2;
+*/
 			var t=obj.prim[i][7]*deg, c=Math.cos(t), s=Math.sin(t), d=obj.prim[i][6]/2;
 			t = -Math.atan2(-obj.b[3]*c-obj.b[4]*s, obj.b[0]*c+obj.b[1]*s);
 			c=Math.cos(t);	s=Math.sin(t);
