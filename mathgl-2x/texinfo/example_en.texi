@@ -3765,7 +3765,7 @@ You can import data into a @code{mglData} instance by function @ref{import} and 
 There are special classes (widgets) for these libraries: QMathGL for Qt, Fl_MathGL for FLTK and so on. If you don't find the appropriate class then you can create your own widget that displays a bitmap using mglCanvas::GetRGB().
 
 @item How can I create 3D in PDF?
-Just use @code{WritePRC}() method which create PDF file if enable-pdf=ON at MathGL configure.
+Just use @code{WritePRC}() method which also create PDF file if enable-pdf=ON at MathGL configure.
 
 @item How can I create TeX figure?
 Just use @code{WriteTEX}() method which create LaTeX files with figure itself @samp{@var{fname}.tex}, with MathGL colors @samp{mglcolors.tex} and main file @samp{mglmain.tex}. Last one can be used for viewing image by command like @code{pdflatex mglmain.tex}.

@@ -204,6 +204,7 @@ var mgl_draw_fast = function(obj, ctx, skip)
 // This function make high-quality drawing
 var mgl_draw_good = function(obj, ctx, skip)
 {
+	obj.fast = 0;
 	mgl_prepare(obj,skip);	// update coordinates
 	// NOTE: this valid only for current zoom/view. In general case it should be more complicated
 	var scl = Math.sqrt(obj.b[0]*obj.b[0]+obj.b[1]*obj.b[1]+obj.b[2]*obj.b[2]);
@@ -245,19 +246,15 @@ var mgl_draw_good = function(obj, ctx, skip)
 			if(obj.prim[i][10].charAt(0)=='#')	ctx.stroke();
 			ctx.fill();	break;
 		case 4: // glyphs
-/*			var t=obj.prim[i][7]*deg;
-			var xx=obj.coor[n2][2],yy=obj.coor[n2][3],zz=obj.coor[n2][4];
-			var x = obj.b[0]*xx + obj.b[1]*yy + obj.b[2]*zz;
-			var y = obj.b[3]*xx + obj.b[4]*yy + obj.b[5]*zz;
-			var z = obj.b[6]*xx + obj.b[7]*yy + obj.b[8]*zz;
-			var ll = x*x+y*y;
-			if(ll < 1e-10)	return;
-			if(ll<1e10)	t = -Math.atan2(y,x);
+			var t=obj.prim[i][7]*deg;
+			var xx=obj.coor[n2][2],yy=-obj.coor[n2][3],zz=obj.coor[n2][4];
+			var xc = obj.b[0]*xx + obj.b[1]*yy + obj.b[2]*zz;
+			var yc = obj.b[3]*xx + obj.b[4]*yy + obj.b[5]*zz;
+			var zc = obj.b[6]*xx + obj.b[7]*yy + obj.b[8]*zz;
+			var ll = xc*xc+yc*yc;
+			if(ll < 1e-10)	break;
+			if(ll<1e10)	t = Math.atan2(yc,xc);
 			var c=Math.cos(t), s=Math.sin(t), d=obj.prim[i][6]/2;
-*/
-			var t=obj.prim[i][7]*deg, c=Math.cos(t), s=Math.sin(t), d=obj.prim[i][6]/2;
-			t = -Math.atan2(-obj.b[3]*c-obj.b[4]*s, obj.b[0]*c+obj.b[1]*s);
-			c=Math.cos(t);	s=Math.sin(t);
 
 			var b=[d*c, d*s, d*s, -d*c, obj.pp[n1][0],obj.pp[n1][1]];
 			var x=obj.coor[n2][0]*scl, y=obj.coor[n2][1]*scl, f=obj.prim[i][8]*scl;
@@ -313,25 +310,25 @@ var mgl_prepare = function(obj, skip)
 		obj.pp[i][1] = d*obj.pp[i][1] + (1-d)/2*obj.height;
 	}
 	// fill z-coordinates for primitives
-	if(obj.fast)	for(i=0;i<obj.nprim;i++)	obj.prim[i][9] = obj.pp[obj.prim[i][1]][2];
-	else	for(i=0;i<obj.nprim;i++)
+	if(!obj.fast)
 	{
-		var n1 = obj.prim[i][1], n2 = obj.prim[i][2], n3 = obj.prim[i][3], n4 = obj.prim[i][4];
-		switch(obj.prim[i][0])
+		for(i=0;i<obj.nprim;i++)
 		{
-		case 1: // lines
-			obj.prim[i][9] = (obj.pp[n1][2]+obj.pp[n2][2])/2;	break;
-		case 2: // triangles
-			obj.prim[i][9] = (obj.pp[n1][2]+obj.pp[n2][2]+obj.pp[n3][2])/3;	break;
-		case 3: // quadrangles
-			obj.prim[i][9] = (obj.pp[n1][2]+obj.pp[n2][2]+obj.pp[n3][2]+obj.pp[n4][2])/4;	break;
-		default:
-			obj.prim[i][9] = obj.pp[n1][2];	break;
+			var n1 = obj.prim[i][1], n2 = obj.prim[i][2], n3 = obj.prim[i][3], n4 = obj.prim[i][4];
+			switch(obj.prim[i][0])
+			{
+			case 1: // lines
+				obj.prim[i][9] = (obj.pp[n1][2]+obj.pp[n2][2])/2;	break;
+			case 2: // triangles
+				obj.prim[i][9] = (obj.pp[n1][2]+obj.pp[n2][2]+obj.pp[n3][2])/3;	break;
+			case 3: // quadrangles
+				obj.prim[i][9] = (obj.pp[n1][2]+obj.pp[n2][2]+obj.pp[n3][2]+obj.pp[n4][2])/4;	break;
+			default:
+				obj.prim[i][9] = obj.pp[n1][2];	break;
+			}
 		}
+		obj.prim.sort(mgl_cmp);	// more accurate sorting
 	}
-	if(obj.fast)	// sort primitives according its z-coordinate
-		obj.prim.sort(function(a,b){return a[9] - b[9]});
-	else	obj.prim.sort(mgl_cmp);	// more accurate sorting
 }
 
 var mgl_cmp = function(a,b)

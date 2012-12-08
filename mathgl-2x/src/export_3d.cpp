@@ -563,7 +563,7 @@ bool mglCanvas::WriteJSON(const char *fname)
 		if(q.u==q.u)
 			fprintf(fp,"[%.4g,%.4g,%.4g,%.4g,%.4g]%c\n", p.x, p.y, q.u, q.v, q.w, i+1<l?',':' ');
 		else
-			fprintf(fp,"[%.4g,%.4g,\"nan\",\"nan\",\"nan\"]%c\n", p.x, p.y, i+1<l?',':' ');
+			fprintf(fp,"[%.4g,%.4g,1e11,1e11,1e11]%c\n", p.x, p.y, i+1<l?',':' ');
 	}
 
 	l = Glf.size();
