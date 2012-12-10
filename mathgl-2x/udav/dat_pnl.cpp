@@ -602,13 +602,13 @@ void DatPanel::toolTop(QBoxLayout *l)
 	o = menu->addMenu(tr("&File"));
 	a = new QAction(QPixmap(":/xpm/document-open.png"), tr("&Load data"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(load()));
-	a->setToolTip(tr("Load data from file. Data will be deleted only\nat exit but UDAV will not ask to save it."));
+	a->setToolTip(tr("Load data from file. Data will be deleted only\nat exit but UDAV will not ask to save it. (Ctrl+Shift+O)"));
 	a->setShortcut(Qt::CTRL+Qt::SHIFT+Qt::Key_O);	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
 	a = new QAction(QPixmap(":/xpm/document-save.png"), tr("&Save data"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(save()));
-	a->setToolTip(tr("Save data to tab-separeted file."));
+	a->setToolTip(tr("Save data to a file. (Ctrl+Shift+S)"));
 	a->setShortcut(Qt::CTRL+Qt::SHIFT+Qt::Key_S);	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
@@ -627,14 +627,14 @@ void DatPanel::toolTop(QBoxLayout *l)
 
 	a = new QAction(QPixmap(":/xpm/edit-copy.png"), tr("Copy &data"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(copy()));
-	a->setToolTip(tr("Copy range of numbers to clipboard."));
-	o->addAction(a);
+	a->setToolTip(tr("Copy range of numbers to clipboard. (Ctrl+Shift+C)"));
+	a->setShortcut(Qt::CTRL+Qt::SHIFT+Qt::Key_C);	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
 	a = new QAction(QPixmap(":/xpm/edit-paste.png"), tr("Paste &data"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(copy()));
-	a->setToolTip(tr("Paste range of numbers from clipboard."));
-	o->addAction(a);
+	a->setToolTip(tr("Paste range of numbers from clipboard. (Ctrl+Shift+P)"));
+	a->setShortcut(Qt::CTRL+Qt::SHIFT+Qt::Key_P);	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
 	// navigation menu
@@ -692,8 +692,8 @@ void DatPanel::toolLeft(QBoxLayout *l)
 
 	a = new QAction(QPixmap(size_xpm), tr("&Resize"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(reSize()));
-	a->setToolTip(tr("Resize (interpolate) the data to specified sizes (Ctrl+R)."));
-	a->setShortcut(Qt::CTRL+Qt::Key_R);	o->addAction(a);
+	a->setToolTip(tr("Resize (interpolate) the data to specified sizes (Ctrl+Shift+R)."));
+	a->setShortcut(Qt::CTRL+Qt::SHIFT+Qt::Key_R);	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
 	a = new QAction(QPixmap(squize_xpm), tr("&Squeeze"), this);
@@ -710,33 +710,32 @@ void DatPanel::toolLeft(QBoxLayout *l)
 
 	a = new QAction(QPixmap(oper_of_xpm), tr("&Transform"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(newdat()));
-	a->setToolTip(tr("Transform data along dimension(s)."));
-	o->addAction(a);
+	a->setToolTip(tr("Transform data along dimension(s) (Ctrl+Shift+T)."));
+	a->setShortcut(Qt::CTRL+Qt::SHIFT+Qt::Key_T);	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
-	a = new QAction(QPixmap(oper_dir_xpm), tr("&Make new"), this);
+	a = new QAction(QPixmap(oper_dir_xpm), tr("&Make new (Ctrl+Shift+M)"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(oper()));
 	a->setToolTip(tr("Make another data."));
-	o->addAction(a);
+	a->setShortcut(Qt::CTRL+Qt::SHIFT+Qt::Key_M);	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
-	a = new QAction(QPixmap(hist_xpm), tr("&Histogram"), this);
+	a = new QAction(QPixmap(hist_xpm), tr("&Histogram (Ctrl+Shift+H)"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(hist()));
 	a->setToolTip(tr("Find histogram of data."));
-	o->addAction(a);
+	a->setShortcut(Qt::CTRL+Qt::SHIFT+Qt::Key_H);	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 	
-	a = new QAction(QPixmap(":/xpm/view-refresh.png"), tr("&Refresh"), this);
+/*	a = new QAction(QPixmap(":/xpm/view-refresh.png"), tr("&Refresh"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(refresh()));
 	a->setToolTip(tr("Refresh data values."));
 	o->addAction(a);
-	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
+	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);*/
 	
-	a = new QAction(tr("Re&arrange"), this);
+/*	a = new QAction(tr("Re&arrange"), this);	// TODO: move in generalized dialog
 	connect(a, SIGNAL(triggered()), this, SLOT(rearrange()));
 	a->setToolTip(tr("Rearrange data sizes without changing data values."));
 	o->addAction(a);
-
 	a = new QAction(tr("Fill in &range"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(inrange()));
 	a->setToolTip(tr("Fill data equidistantly from one value to another."));
@@ -748,7 +747,7 @@ void DatPanel::toolLeft(QBoxLayout *l)
 	a = new QAction(tr("Norm. s&lices"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(normsl()));
 	a->setToolTip(tr("Normalize each data slice perpendicular to some direction\nso that its minimal and maximal values be in specified range."));
-	o->addAction(a);
+	o->addAction(a);*/
 
 	l->addStretch(1);
 }

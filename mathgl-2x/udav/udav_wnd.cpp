@@ -294,7 +294,7 @@ void MainWindow::makeMenu()
 	o->addSeparator();
 	fileMenu = o->addMenu(tr("Recent files"));
 	o->addSeparator();
-	o->addAction(tr("&Quit"), qApp, SLOT(closeAllWindows()), Qt::CTRL+Qt::Key_Q);
+	o->addAction(tr("&Quit"), qApp, SLOT(closeAllWindows()));
 	}
 
 	menuBar()->addMenu(edit->menu);
@@ -318,10 +318,6 @@ void MainWindow::makeMenu()
 	connect(a, SIGNAL(triggered()), this, SLOT(showHelp()));
 	a->setToolTip(tr("Show help on MGL commands (F1)."));
 	a->setShortcut(Qt::Key_F1);	o->addAction(a);
-//	a = new QAction(QPixmap(":/xpm/help-faq.png"), tr("&Examples"), this);
-//	connect(a, SIGNAL(triggered()), this, SLOT(showExamples()));
-//	a->setToolTip(tr("Show examples of MGL usage (Shift+F1)."));
-//	a->setShortcut(Qt::SHIFT+Qt::Key_F1);	o->addAction(a);
 	a = new QAction(QPixmap(":/xpm/help-faq.png"), tr("H&ints"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(showHint()));
 	a->setToolTip(tr("Show hints of MGL usage."));	o->addAction(a);
@@ -473,8 +469,8 @@ void MainWindow::warnChanged()
 //-----------------------------------------------------------------------------
 void MainWindow::about()
 {
-	QString s = tr("UDAV v. 0.")+QString::number(UDAV_VERSION)+
-				tr("\n(c) Alexey Balakin, 2008\nhttp://udav.sf.net/");
+	QString s = tr("UDAV v. 2.")+QString::number(MGL_VER2)+
+				tr("\n(c) Alexey Balakin, 2008-2012\nhttp://mathgl.sf.net/");
 	QMessageBox::about(this, tr("UDAV - about"), s);
 }
 //-----------------------------------------------------------------------------

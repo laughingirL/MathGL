@@ -342,8 +342,8 @@ void PlotPanel::toolTop(QBoxLayout *l)
 
 	a = new QAction(QPixmap(":/xpm/edit-copy.png"), tr("&Copy plot"), this);
 	connect(a, SIGNAL(triggered()), mgl, SLOT(copy()));
-	a->setToolTip(tr("Copy graphics to clipboard (Ctrl+Shift+C)."));
-	a->setShortcut(Qt::CTRL+Qt::SHIFT+Qt::Key_C);
+	a->setToolTip(tr("Copy graphics to clipboard (Ctrl+Insert)."));
+	a->setShortcut(Qt::CTRL+Qt::Key_Insert);
 	o->addAction(a);	popup->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 

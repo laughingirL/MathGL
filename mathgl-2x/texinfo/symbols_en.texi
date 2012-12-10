@@ -426,3 +426,54 @@ style of @ref{tape}.
 @node Hot-keys for UDAV, , Hot-keys for mglview, Symbols and hot-keys
 @section Hot-keys for UDAV
 
+@multitable @columnfractions .15 .25 .6
+@headitem Key @tab Menu @tab Description
+@item @key{Ctrl-N}
+@tab @code{File|New script}
+@tab Create new window with empty script. Note, all scripts share variables. So, second window can be used to see some additional information of existed variables.
+
+@item @key{Ctrl-O}
+@tab @code{File|Open file}
+@tab Open and show script or data from the file. You can disable automatic script execution in UDAV properties.
+
+@item @key{Ctrl-S}
+@tab @code{File|Save script}
+@tab Save script to a file.
+
+@item @key{Ctrl-P}
+@tab @code{File|Print graphics}
+@tab Print graphics currently shown in "Canvas" panel.
+
+@item @key{Ctrl-Z}
+@tab @code{Edit|Undo}
+@tab Undo changes in script editor.
+
+@item @key{Ctrl-Shift-Z}
+@tab @code{Edit|Redo}
+@tab Redo changes in script editor.
+
+@item @key{Ctrl-X}
+@tab @code{Edit|Cut text}
+@tab Cut selected text into clipboard.
+
+@item @key{Ctrl-C}
+@tab @code{Edit|Copy text}
+@tab Copy selected text into clipboard.
+
+@item @key{Ctrl-V}
+@tab @code{Edit|Paste text}
+@tab Paste selected text from clipboard.
+
+@item @key{Ctrl-A}
+@tab @code{Edit|Select all}
+@tab Select all text in editor.
+
+@item @key{Ctrl-F}
+@tab @code{Edit|Find/Replace}
+@tab Show dialog for text finding.
+
+@item @key{F3}
+@tab @code{Edit|Find next}
+@tab Find next occurrence of the text.
+
+@end multitable
