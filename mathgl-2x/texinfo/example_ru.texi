@@ -167,7 +167,7 @@ int sample(HMGL gr, void *)
 int main(int argc,char **argv)
 {
   HMGL gr;
-  gr = mgl_create_graph_qt(sample,"MathGL examples",0);
+  gr = mgl_create_graph_qt(sample,"MathGL examples",0,0);
   return mgl_qt_run();
 /* generally I should call mgl_delete_graph() here,
  * but I omit it in main() function. */
@@ -2817,7 +2817,7 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez)
 @end verbatim
 or using C functions
 @verbatim
-void mgls_prepare2v(mglData *a, mglData *b)
+void mgls_prepare2v(HMDT a, HMDT b)
 {
   register long i,j,n=20,m=30,i0;
   if(a) mgl_data_create(a,n,m,1);
@@ -2830,7 +2830,7 @@ void mgls_prepare2v(mglData *a, mglData *b)
     if(b) mgl_data_set_value(b, 0.6*cos(2*M_PI*x)*cos(3*M_PI*y)+0.4*cos(3*M_PI*x*y), i,j,0);
   }
 }
-void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez)
+void mgls_prepare3v(HMDT ex, HMDT ey, HMDT ez)
 {
   register long i,j,k,n=10,i0;
   if(!ex || !ey || !ez) return;
@@ -3583,19 +3583,21 @@ The code in C/Fortran looks practically the same:
 @verbatim
 int sample(HMGL gr)
 {
-  mgl_title(gr, "MGL parser sample")
-  mreal a[100];   // let a_i = sin(4*pi*x), x=0...1
+  mgl_title(gr, "MGL parser sample", "", -2);
+  double a[100];   // let a_i = sin(4*pi*x), x=0...1
   int i;
   for(i=0;i<100;i++)  a[i]=sin(4*M_PI*i/99);
   HMPR parser = mgl_create_parser();
-  HMDT d = mgl_add_var(parser, "dat");
-  mgl_data_set_mreal(d,a,100,1,1);    // set data to variable
+  HMDT d = mgl_parser_add_var(parser, "dat");
+  mgl_data_set_double(d,a,100,1,1);    // set data to variable
   mgl_parse_text(gr, parser, "plot dat; xrange 0 1\nbox\naxis");
   // you may break script at any line do something
   // and continue after that
   mgl_parse_text(gr, parser, "xlabel 'x'\nylabel 'y'");
   // also you may use cycles or conditions in script
-  mgl_parse_text(gr, parser, "for $0 -1 1 0.1\nline 0 0 -1 $0 'r'\nnext");
+  mgl_parse_text(gr, parser, "for $0 -1 1 0.1\nif $0<0\n"
+    "line 0 0 -1 $0 'r':else:line 0 0 -1 $0 'g'\n"
+    "endif\nnext");
   mgl_write_png(gr, "test.png", "");  // don't forgot to save picture
   return 0;
 }

@@ -26,8 +26,8 @@ var main = function()
 	ctx = document.getElementById("canvas").getContext("2d");
 	ctx.lineCap="round";	// global setting
 
-	mgl_init("json/test.json");
-//	mgl_init("json/alpha.json");
+//	mgl_init("json/test.json");
+	mgl_init("json/alpha.json");
 	var t1 = new Date();
 	mgl_draw_good(obj, ctx);
 //	draw_fast(obj, ctx);
@@ -459,10 +459,10 @@ var mgl_fill_glyph = function(ctx, x,y, f,g,b)
 var mgl_wire_glyph = function(ctx, x,y, f,g,b)
 {
 	var xx,yy,j,xs,ys;
-	var np=1;
+	var np=1;	ctx.beginPath();
 	for(j=0;j<g[1];j++)
 	{
-		xx = g[3][2*j]; yy = g[3][2*j+1];	ctx.beginPath();
+		xx = g[3][2*j]; yy = g[3][2*j+1];
 		if(xx==16383 && yy==16383)
 		{
 			ctx.closePath();	ctx.stroke();
@@ -478,8 +478,8 @@ var mgl_wire_glyph = function(ctx, x,y, f,g,b)
 			xx = x+f*xx;	yy = y+f*yy;
 			ctx.lineTo(b[4]+b[0]*xx+b[1]*yy, b[5]+b[2]*xx+b[3]*yy);
 		}
-		ctx.closePath();	ctx.stroke();
 	}
+	ctx.closePath();	ctx.stroke();
 }
 // This function for internal use only!!!
 var mgl_line_glyph = function(ctx, x,y, f,solid,b)

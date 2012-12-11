@@ -52,7 +52,7 @@ HelpPanel::HelpPanel(QWidget *parent) : QWidget(parent)
 	connect(entry, SIGNAL(returnPressed()), this, SLOT(showHelp()));
 	b = new QPushButton(QPixmap(":/xpm/go-next.png"), tr("Forward"));
 	connect(b, SIGNAL(clicked()), help, SLOT(forward()));	a->addWidget(b);
-//	b = new QPushButton(QPixmap(":/xpm/help-faq.png"), tr("&Examples"));
+//	b = new QPushButton(QPixmap(":/xpm/help-faq.png"), tr("Examples"));
 //	connect(b, SIGNAL(clicked()), this, SLOT(showExamples()));	a->addWidget(b);
 	t = new QToolButton(this);	t->setIcon(QPixmap(":/xpm/zoom-in.png"));
 	connect(t, SIGNAL(clicked()), this, SLOT(zoomIn()));	a->addWidget(t);

@@ -21,13 +21,7 @@
 #include <unistd.h>
 
 #include "mgl2/mgl.h"
-//#if MGL_HAVE_QT
 #include "mgl2/qt.h"
-/*#elif MGL_HAVE_FLTK
-#include "mgl2/fltk.h"
-#elif MGL_HAVE_WX
-#include "mgl2/wx.h"
-#endif*/
 //-----------------------------------------------------------------------------
 std::wstring str;
 mglParse p(true);
@@ -85,18 +79,8 @@ int main(int argc, char **argv)
 	}
 
 	mgl_ask_func = mgl_ask_gets;
-//#if MGL_HAVE_QT
 	mgl_ask_func = mgl_ask_qt;
 	mglQT gr(mgld?NULL:show, *iname?iname:"mglview");
-/*#elif MGL_HAVE_FLTK
-	mgl_ask_func = mgl_ask_fltk;
-	mglFLTK gr(mgld?NULL:show, *iname?iname:"mglview");
-#elif MGL_HAVE_WX
-	mgl_ask_func = mgl_ask_wx;
-	mglWX gr(mgld?NULL:show, *iname?iname:"mglview");
-#else
-#error "There is no widget support enabled"
-#endif*/
 	if(mgld)
 	{
 		gr.Setup(false);

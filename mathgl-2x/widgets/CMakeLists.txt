@@ -77,13 +77,14 @@ if(MGL_HAVE_QT)
 endif(MGL_HAVE_QT)
 
 
-if(MGL_HAVE_QT AND MGL_HAVE_WX AND MGL_HAVE_FLTK)
+#if(MGL_HAVE_QT AND MGL_HAVE_WX AND MGL_HAVE_FLTK)
+if(MGL_HAVE_QT AND MGL_HAVE_FLTK)
 	include_directories(${FLTK_INCLUDE_DIR})
-	include(${wxWidgets_USE_FILE})
+#	include(${wxWidgets_USE_FILE})
 	include(${QT_USE_FILE})
-#	qt4_wrap_cpp(MGL_MOC_FILES ../include/mgl2/qmathgl.h)
 
-	set(MGL_WND_SRC wx.cpp ../include/mgl2/wx.h qt.cpp ../include/mgl2/qt.h ../include/mgl2/qmathgl.h fltk.cpp ../include/mgl2/fltk.h)
+#	set(MGL_WND_SRC wx.cpp ../include/mgl2/wx.h qt.cpp ../include/mgl2/qt.h ../include/mgl2/qmathgl.h fltk.cpp ../include/mgl2/fltk.h)
+	set(MGL_WND_SRC qt.cpp ../include/mgl2/qt.h ../include/mgl2/qmathgl.h fltk.cpp ../include/mgl2/fltk.h)
 
 	add_library(mgl-wnd SHARED ${MGL_WND_SRC} ${MGL_MOC_FILES})
 	add_library(mgl-wnd-static STATIC ${MGL_WND_SRC} ${MGL_MOC_FILES})
@@ -95,7 +96,7 @@ if(MGL_HAVE_QT AND MGL_HAVE_WX AND MGL_HAVE_FLTK)
 
 	target_link_libraries(mgl-wnd mgl)
 	target_link_libraries(mgl-wnd ${QT_LIBRARIES})
-	target_link_libraries(mgl-wnd ${wxWidgets_LIBRARIES})
+#	target_link_libraries(mgl-wnd ${wxWidgets_LIBRARIES})
 	target_link_libraries(mgl-wnd ${FLTK_LIBRARIES})
 
 	install(
@@ -104,4 +105,5 @@ if(MGL_HAVE_QT AND MGL_HAVE_WX AND MGL_HAVE_FLTK)
 		ARCHIVE DESTINATION lib
 		LIBRARY DESTINATION lib
 	)
-endif(MGL_HAVE_QT AND MGL_HAVE_WX AND MGL_HAVE_FLTK)
+#endif(MGL_HAVE_QT AND MGL_HAVE_WX AND MGL_HAVE_FLTK)
+endif(MGL_HAVE_QT AND MGL_HAVE_FLTK)

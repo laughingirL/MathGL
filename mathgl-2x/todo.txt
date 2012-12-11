@@ -15,17 +15,16 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 10. introduce new primitive type=5 -- arrow for Quality&3!=3. for better drawing in projections + json/view ?!?
 11. Increase line width for arrows?!?
 12. enable line width for mesh and fall???
+13. WX window/widgets
 
 ============= NEW FOR v.2.1 =============
 
-3. WX window/widgets
+2. Check SetFrame
+3. Check MGLD
 
 A. libhpdf for win32
 
 ============= DOCS =============
-
-1. Check C/Fortran samples
-2. UDAV hotkeys
 
 14. Thanks -- C.M., A.P.$
 

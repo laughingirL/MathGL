@@ -63,15 +63,15 @@ HintDialog::HintDialog(QWidget *parent) : QDialog(parent)
 	text = new QTextEdit(this);	o->addWidget(text);
 	text->setReadOnly(true);	text->setText(hints[cur]);
 
-	start = new QCheckBox(tr("&Show at startup"), this);	o->addWidget(start);
+	start = new QCheckBox(tr("Show at startup"), this);	o->addWidget(start);
 	start->setChecked(true);
 
 	a = new QHBoxLayout;	o->addLayout(a);
-	b = new QPushButton(tr("&Prev"), this);		a->addWidget(b);
+	b = new QPushButton(tr("Prev"), this);		a->addWidget(b);
 	connect(b, SIGNAL(clicked()), this, SLOT(prevClicked()));
-	b = new QPushButton(tr("&Next"), this);		a->addWidget(b);
+	b = new QPushButton(tr("Next"), this);		a->addWidget(b);
 	connect(b, SIGNAL(clicked()), this, SLOT(nextClicked()));
-	b = new QPushButton(tr("&Close"), this);	a->addWidget(b);
+	b = new QPushButton(tr("Close"), this);	a->addWidget(b);
 	connect(b, SIGNAL(clicked()),this, SLOT(close()));
 }
 //-----------------------------------------------------------------------------

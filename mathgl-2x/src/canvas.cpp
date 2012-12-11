@@ -415,7 +415,8 @@ pthread_mutex_lock(&mutexPtx);
 	fscl = fsize;	forg = p;
 
 	if(mgl_isnan(ll) || !get(MGL_ENABLE_RTEXT))	ftet = 0;
-	else	ftet = -180*atan2(q.v,q.u)/M_PI;
+	else if(ll)	ftet = -180*atan2(q.v,q.u)/M_PI;
+	else 	ftet = NAN;
 
 	if(!(Quality&4))	// add text itself
 	{

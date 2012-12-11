@@ -1,30 +1,34 @@
 2.1 Released 12 December 2012
 
-* Color can be specified as its RGB[A] values, i.e. like "{xFFFFFF}" or "{xFFFFFFFF}".
-* Color in color scheme  may have position in range [0,1]. Format is {CN,pos} or {xFFFFFF,pos}.
-* Vectors is drawn now even if only starting or ending points are placed in bounding box.
-* Strongly rewrite the algorithm of vector field plotting.
-* Add Vect3() plot for drawing vectors on slice of 3d vector field.
-* CalcXYZ() function now use data from z-buffer for better determining {x,y,z} coordinates.
-* Make code compilable by Borland compiler too.
-* Improve output in OpenGL mode.
-* Add fog at export in EPS/SVG formats.
-
-* Add ZoomAxis() for zooming/shifting axis range as whole.
-* Export functions now can write in stdout if file name is "-".
-
-* Add WriteJSON() function for exporting in JSON format suitable for later drawing by JavaScript
-* Add mglcgi for parsing MGL script as CGI request which return PNG or SVG image.
+* Add class mglDataC for complex data arrays.
 * Add mglData::Solve() for finding x-value where dat(x)=val.
 * Add mglData::Clean() for removing rows with duplicate values for given column.
-* Functions mglData::Spline*, mglData::Linear* now can return gradient at the point.
-* Add class mglDataC for complex data arrays.
-* Now you can use different font-faces in the plot simultaneously.
-* Frames now save 3D information if MGL_VECT_FRAME is set (by default).
-* Picture drawing now use multi-threading for each stage.
+* Add Vect3() plot for drawing vectors on slice of 3d vector field.
 * Add Table() function for drawing table with data values.
+* Add ZoomAxis() for zooming/shifting axis range as whole.
+* Add WriteJSON() function for exporting in JSON format suitable for later drawing by JavaScript
+* Add JavaScript code for visualizing JSON data.
+* Add mgl.cgi tool which return PNG image for CGI request in form of MGL script.
+* Add MGL commands 'errbox', 'face'
+
+* Color can be specified as its RGB[A] values, i.e. like "{xFFFFFF}" or "{xFFFFFFFF}".
+* Color in color scheme  may have position in range [0,1]. Format is {CN,pos} or {xFFFFFF,pos}.
+* Now pen width for marks is proportional to pen width of line multiplied by size of marks.
+* Now you can use different font-faces in the plot simultaneously.
 * Now Legend() automatically use several columns if it contain too many legend entries.
-* Add mglParse::AllowFileIO() for enable/disable I/O commands in MGL scripts.
+* Add style '-' for legend for drawing them horizontally.
+* Vectors is drawn now even if only starting or ending points are placed in bounding box.
+* Strongly rewrite the algorithm of vector field plotting.
+
+* Grid lines for NAN origin values are always located at far-away edges.
+* Try correctly place axis and tick labels even for axis with inverse range (i.e. for v2<v1).
+  Note, it work well for 2D axis. One should use Aspect() with negative values to do it correctly in general case.
+* Axis style 'XYZ' draw corresponding axis with ticks labels from other side of axis. This also influence on followng Label() calls.
+* Text is drawn for initially invisible axis (like z-axis) too.
+
+* Add functions GetFrame(), AddFrame() for replacing or adding data from given frame. Work if MGL_VECT_FRAME is set on (by default is on).
+* Frames now save 3D information if MGL_VECT_FRAME is set (by default).
+* CalcXYZ() function now use data from z-buffer for better determining {x,y,z} coordinates.
 
 * Add dialog for data arguments in "New command" dialog of UDAV.
 * Value of arguments are saved while the kind of command is changed in "New command" dialog of UDAV.
@@ -36,33 +40,27 @@
 * Completer can be switched off correctly now.
 * Multi-line strings (i.e. separated by "\" symbol) are highlighted correctly now.
 * Add option to enable/disable selected plot in UDAV.
+* Rearrange hot-keys in UDAV and in QMathGL.
 
-* Grid lines for NAN origin values are always located at far-away edges.
-* Try correctly place axis and tick labels even for axis with inverse range (i.e. for v2<v1). 
-  Note, it work well for 2D axis. One should use Aspect() with negative values to do it correctly in general case.
-* Axis style 'XYZ' draw corresponding axis with ticks labels from other side of axis. This also influence on followng Label() calls.
+* Make code compilable by Borland compiler too.
+* Improve output in OpenGL mode.
+* Add fog at export in EPS/SVG formats.
+* Add mglParse::AllowFileIO() for enable/disable I/O commands in MGL scripts.
 
-* Add functions GetFrame(), AddFrame() for replacing or adding data from given frame. Work if MGL_VECT_FRAME is set on (by default is on).
+* Export functions now can write in stdout if file name is "-".
+* Picture drawing now use multi-threading for each stage.
 
-* Text is drawn for initially invisible axis (like z-axis) too.
-* Pen width for marks now is proportional to pen width of line multiplied by size of marks.
-
-* Option '-' in legend for drawing horizontally
-
-* MINOR INCOMPATIBLE: plotting functions now use double argument always.
-
-* Add MGL commands 'errbox', 'face'
-* Add mgl.cgi tool which return PNG image for CGI request in form of MGL script.
+* Functions mglData::Spline*, mglData::Linear* now can return gradient at the point.
+* mglFourier now make true inverse transform
 
 * Add annotation for all pure C functions.
-
 * Update list of built-in glyphs
 * Update samples
 * Update documentation
 * Different bugfixes
 
 * INCOMPATIBLE CHANGES in the arguments of functions: mgl_axis, mgl_axis_grid, mgl_label, mgl_labelw, mgl_legend_pos, mgl_legend; and in functions for MGL parsing.
-* mglFourier now make true inverse transform
+* MINOR INCOMPATIBLE: plotting functions now use double argument always.
 
 2.0.3 Released 27 July 2012
 

@@ -546,11 +546,11 @@ bool mglCanvas::WriteJSON(const char *fname)
 		if(p.type==1 && n1>n2)	{	n1=p.n2;	n2=p.n1;	}
 		if(c.a==1 || p.type==0 || p.type==1 || p.type==4 || p.type==6)
 			fprintf(fp,"[%d,%ld,%ld,%ld,%ld,%d,%.4g,%.4g,%.4g,%.4g,\"#%02x%02x%02x\"]%c\n",
-				p.type, n1, n2, n3, n4, p.id, p.s, p.w, p.p,
+				p.type, n1, n2, n3, n4, p.id, p.s, p.w==p.w?p.w:0, p.p==p.p?p.p:0,
 				0., int(255*c.r), int(255*c.g), int(255*c.b), i+1<l?',':' ');
 		else
 			fprintf(fp,"[%d,%ld,%ld,%ld,%ld,%d,%.4g,%.4g,%.4g,%.4g,\"rgba(%d,%d,%d,%.2g)\"]%c\n",
-				p.type, n1, n2, n3, n4, p.id, p.s, p.w, p.p,
+				p.type, n1, n2, n3, n4, p.id, p.s, p.w==p.w?p.w:0, p.p==p.p?p.p:0,
 				0., int(255*c.r), int(255*c.g), int(255*c.b), c.a, i+1<l?',':' ');
 	}
 	

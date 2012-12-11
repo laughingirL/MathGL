@@ -32,21 +32,21 @@ FindDialog::FindDialog(QWidget *parent) : QDialog(parent)
 	setWindowTitle(tr("UDAV - Find"));
 	QVBoxLayout *o = new QVBoxLayout;
 	a = new QHBoxLayout;	o->addLayout(a);
-	lbl = new QLabel(tr("Find &what:"), this);			a->addWidget(lbl);
+	lbl = new QLabel(tr("Find what:"), this);			a->addWidget(lbl);
 	line = new QLineEdit(this);	lbl->setBuddy(line);	a->addWidget(line);
 	a = new QHBoxLayout;	o->addLayout(a);
-	lbl = new QLabel(tr("Replace &by:"), this);			a->addWidget(lbl);
+	lbl = new QLabel(tr("Replace by:"), this);			a->addWidget(lbl);
 	text = new QLineEdit(this);	lbl->setBuddy(text);	a->addWidget(text);
 
-	caseUse = new QCheckBox(tr("Match &case"), this);	o->addWidget(caseUse);
-	backward = new QCheckBox(tr("Search &backward"), this);	o->addWidget(backward);
+	caseUse = new QCheckBox(tr("Match case"), this);	o->addWidget(caseUse);
+	backward = new QCheckBox(tr("Search backward"), this);	o->addWidget(backward);
 
 	a = new QHBoxLayout(this);	a->setMargin(11);
 	a->setSpacing(6);			a->addLayout(o);
 	o = new QVBoxLayout;		a->addLayout(o);
-	find = new QPushButton(tr("&Find"), this);		o->addWidget(find);
+	find = new QPushButton(tr("Find"), this);		o->addWidget(find);
 	find->setDefault(true);	find->setEnabled(false);
-	repl= new QPushButton(tr("&Replace"), this);	o->addWidget(repl);
+	repl= new QPushButton(tr("Replace"), this);	o->addWidget(repl);
 	repl->setEnabled(false);
 	cancel = new QPushButton(tr("Close"), this);	o->addWidget(cancel);
 	o->addStretch(1);

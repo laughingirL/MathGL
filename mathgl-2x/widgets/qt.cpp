@@ -647,7 +647,7 @@ void QMathGL::exportOBJ(QString fname)
 	else
 	{
 		setlocale(LC_NUMERIC, "C");
-		mgl_write_obj(gr,setExtension(fname,"obj").toAscii().constData(), appName.toAscii().constData(),0);
+		mgl_write_obj(gr,setExtension(fname,"obj").toAscii().constData(), appName.toAscii().constData(),1);
 		setlocale(LC_NUMERIC, "");
 	}
 }
@@ -936,14 +936,14 @@ QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *&tet, QSpinBox *&p
 		oo->addAction(TR("bitmap EPS"), QMGL, SLOT(exportBPS()));
 		oo->addAction(TR("vector EPS"), QMGL, SLOT(exportEPS()),Qt::ALT+Qt::Key_E);
 		oo->addAction(TR("SVG"), QMGL, SLOT(exportSVG()),Qt::ALT+Qt::Key_S);
-		oo->addAction(TR("LaTeX"), QMGL, SLOT(exportTEX()));
+		oo->addAction(TR("LaTeX"), QMGL, SLOT(exportTEX()),Qt::ALT+Qt::Key_L);
 		o->addMenu(oo);		popup->addMenu(oo);
 		oo = new QMenu(TR("&Export as 3D ..."),Wnd);
-//		oo->addAction(TR("X3D"), QMGL, SLOT(exportX3D()));
-		oo->addAction(TR("XYZ"), QMGL, SLOT(exportXYZ()));
-		oo->addAction(TR("OBJ"), QMGL, SLOT(exportOBJ()));
+		oo->addAction(TR("PRC"), QMGL, SLOT(exportPRC()),Qt::ALT+Qt::Key_D);
+		oo->addAction(TR("OBJ"), QMGL, SLOT(exportOBJ()),Qt::ALT+Qt::Key_O);
 		oo->addAction(TR("STL"), QMGL, SLOT(exportSTL()));
-//		oo->addAction(TR("IDTF"), QMGL, SLOT(exportIDTF()));
+		oo->addAction(TR("XYZ"), QMGL, SLOT(exportXYZ()));
+//		oo->addAction(TR("X3D"), QMGL, SLOT(exportX3D()),Qt::ALT+Qt::Key_X);
 		o->addMenu(oo);		popup->addMenu(oo);
 
 		o->addSeparator();
@@ -1001,8 +1001,8 @@ QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *&tet, QSpinBox *&p
 		a->setShortcut(Qt::Key_F6);		o->addAction(a);
 		a = new QAction(QPixmap(copy_xpm), TR("&Copy plot"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(copy()));
-		a->setToolTip(TR("Copy graphics to clipboard (CTRl+C)."));
-		a->setShortcut(Qt::CTRL+Qt::Key_C);
+		a->setToolTip(TR("Copy graphics to clipboard (CTRl+Shift+G)."));
+		a->setShortcut(Qt::CTRL+Qt::SHIFT+Qt::Key_G);
 		o->addAction(a);		bb->addAction(a);	popup->addAction(a);
 
 		bb->addSeparator();

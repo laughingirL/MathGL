@@ -62,7 +62,7 @@ DatPanel::DatPanel(InfoDialog *inf, QWidget *parent) : QWidget(parent)
 	ready = false;	infoDlg = inf;
 	QBoxLayout *v,*h,*m;
 
-	menu = new QMenu(tr("&Data"),this);
+	menu = new QMenu(tr("Data"),this);
 	v = new QVBoxLayout(this);
 	h = new QHBoxLayout();	v->addLayout(h);	toolTop(h);
 	h = new QHBoxLayout();	v->addLayout(h);
@@ -599,53 +599,53 @@ void DatPanel::toolTop(QBoxLayout *l)
 	QToolButton *bb;
 
 	// file menu
-	o = menu->addMenu(tr("&File"));
-	a = new QAction(QPixmap(":/xpm/document-open.png"), tr("&Load data"), this);
+	o = menu->addMenu(tr("File"));
+	a = new QAction(QPixmap(":/xpm/document-open.png"), tr("Load data"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(load()));
-	a->setToolTip(tr("Load data from file. Data will be deleted only\nat exit but UDAV will not ask to save it. (Ctrl+Shift+O)"));
+	a->setToolTip(tr("Load data from file. Data will be deleted only\nat exit but UDAV will not ask to save it (Ctrl+Shift+O)."));
 	a->setShortcut(Qt::CTRL+Qt::SHIFT+Qt::Key_O);	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
-	a = new QAction(QPixmap(":/xpm/document-save.png"), tr("&Save data"), this);
+	a = new QAction(QPixmap(":/xpm/document-save.png"), tr("Save data"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(save()));
-	a->setToolTip(tr("Save data to a file. (Ctrl+Shift+S)"));
+	a->setToolTip(tr("Save data to a file (Ctrl+Shift+S)."));
 	a->setShortcut(Qt::CTRL+Qt::SHIFT+Qt::Key_S);	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
 //	o->addSeparator();	bb->addSeparator();
-//	a = new QAction(QPixmap(insert_xpm), tr("Insert as &list"), this);
+//	a = new QAction(QPixmap(insert_xpm), tr("Insert as list"), this);
 //	connect(a, SIGNAL(triggered()), this, SLOT(list()));
 //	o->addAction(a);
 //	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
 
-	a = new QAction(QPixmap(plot_xpm), tr("Plot &data"), this);
+	a = new QAction(QPixmap(plot_xpm), tr("Plot data"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(plot()));
 	a->setToolTip(tr("Plot data in new script window. You may select the kind\nof plot, its style and so on."));
 	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
-	a = new QAction(QPixmap(":/xpm/edit-copy.png"), tr("Copy &data"), this);
+	a = new QAction(QPixmap(":/xpm/edit-copy.png"), tr("Copy data"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(copy()));
-	a->setToolTip(tr("Copy range of numbers to clipboard. (Ctrl+Shift+C)"));
+	a->setToolTip(tr("Copy range of numbers to clipboard (Ctrl+Shift+C)."));
 	a->setShortcut(Qt::CTRL+Qt::SHIFT+Qt::Key_C);	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
-	a = new QAction(QPixmap(":/xpm/edit-paste.png"), tr("Paste &data"), this);
+	a = new QAction(QPixmap(":/xpm/edit-paste.png"), tr("Paste data"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(copy()));
-	a->setToolTip(tr("Paste range of numbers from clipboard. (Ctrl+Shift+P)"));
-	a->setShortcut(Qt::CTRL+Qt::SHIFT+Qt::Key_P);	o->addAction(a);
+	a->setToolTip(tr("Paste range of numbers from clipboard (Ctrl+Shift+P)."));
+	a->setShortcut(Qt::CTRL+Qt::SHIFT+Qt::Key_V);	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
 	// navigation menu
-	o = menu->addMenu(tr("&Navigate"));
-	a = new QAction(QPixmap(":/xpm/go-first.png"), tr("&First slice"), this);
+	o = menu->addMenu(tr("Navigate"));
+	a = new QAction(QPixmap(":/xpm/go-first.png"), tr("First slice"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(first()));
 	a->setToolTip(tr("Go to the first data slice for 3D data."));
 	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
-	a = new QAction(QPixmap(":/xpm/go-previous.png"), tr("&Prev. slice"), this);
+	a = new QAction(QPixmap(":/xpm/go-previous.png"), tr("Prev. slice"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(prev()));
 	a->setToolTip(tr("Go to the previous data slice for 3D data."));
 	o->addAction(a);
@@ -683,20 +683,20 @@ void DatPanel::toolLeft(QBoxLayout *l)
 	QToolButton *bb;
 
 	// size menu
-	o = menu->addMenu(tr("&Sizes"));
-	a = new QAction(QPixmap(":/xpm/document-new.png"), tr("&Create new"), this);
+	o = menu->addMenu(tr("Sizes"));
+	a = new QAction(QPixmap(":/xpm/document-new.png"), tr("Create new"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(create()));
-	a->setToolTip(tr("Recreate the data with new sizes and fill it by zeros (Ctrl+N)."));
-	a->setShortcut(Qt::CTRL+Qt::Key_N);	o->addAction(a);
+	a->setToolTip(tr("Recreate the data with new sizes and fill it by zeros (Ctrl+Shift+N)."));
+	a->setShortcut(Qt::CTRL+Qt::SHIFT+Qt::Key_N);	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
-	a = new QAction(QPixmap(size_xpm), tr("&Resize"), this);
+	a = new QAction(QPixmap(size_xpm), tr("Resize"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(reSize()));
 	a->setToolTip(tr("Resize (interpolate) the data to specified sizes (Ctrl+Shift+R)."));
 	a->setShortcut(Qt::CTRL+Qt::SHIFT+Qt::Key_R);	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
-	a = new QAction(QPixmap(squize_xpm), tr("&Squeeze"), this);
+	a = new QAction(QPixmap(squize_xpm), tr("Squeeze"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(squize()));
 	a->setToolTip(tr("Keep only each n-th element of the data array."));
 	o->addAction(a);
@@ -708,43 +708,43 @@ void DatPanel::toolLeft(QBoxLayout *l)
 	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
-	a = new QAction(QPixmap(oper_of_xpm), tr("&Transform"), this);
+	a = new QAction(QPixmap(oper_of_xpm), tr("Transform"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(newdat()));
 	a->setToolTip(tr("Transform data along dimension(s) (Ctrl+Shift+T)."));
 	a->setShortcut(Qt::CTRL+Qt::SHIFT+Qt::Key_T);	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
-	a = new QAction(QPixmap(oper_dir_xpm), tr("&Make new (Ctrl+Shift+M)"), this);
+	a = new QAction(QPixmap(oper_dir_xpm), tr("Make new (Ctrl+Shift+M)"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(oper()));
 	a->setToolTip(tr("Make another data."));
 	a->setShortcut(Qt::CTRL+Qt::SHIFT+Qt::Key_M);	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
-	a = new QAction(QPixmap(hist_xpm), tr("&Histogram (Ctrl+Shift+H)"), this);
+	a = new QAction(QPixmap(hist_xpm), tr("Histogram (Ctrl+Shift+H)"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(hist()));
 	a->setToolTip(tr("Find histogram of data."));
 	a->setShortcut(Qt::CTRL+Qt::SHIFT+Qt::Key_H);	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 	
-/*	a = new QAction(QPixmap(":/xpm/view-refresh.png"), tr("&Refresh"), this);
+/*	a = new QAction(QPixmap(":/xpm/view-refresh.png"), tr("Refresh"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(refresh()));
 	a->setToolTip(tr("Refresh data values."));
 	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);*/
 	
-/*	a = new QAction(tr("Re&arrange"), this);	// TODO: move in generalized dialog
+/*	a = new QAction(tr("Rearrange"), this);	// TODO: move in generalized dialog
 	connect(a, SIGNAL(triggered()), this, SLOT(rearrange()));
 	a->setToolTip(tr("Rearrange data sizes without changing data values."));
 	o->addAction(a);
-	a = new QAction(tr("Fill in &range"), this);
+	a = new QAction(tr("Fill in range"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(inrange()));
 	a->setToolTip(tr("Fill data equidistantly from one value to another."));
 	o->addAction(a);
-	a = new QAction(tr("&Normalize"), this);
+	a = new QAction(tr("Normalize"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(norm()));
 	a->setToolTip(tr("Normalize data so that its minimal\nand maximal values be in specified range."));
 	o->addAction(a);
-	a = new QAction(tr("Norm. s&lices"), this);
+	a = new QAction(tr("Norm. slices"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(normsl()));
 	a->setToolTip(tr("Normalize each data slice perpendicular to some direction\nso that its minimal and maximal values be in specified range."));
 	o->addAction(a);*/

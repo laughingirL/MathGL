@@ -349,7 +349,7 @@ void mgl_write_eps(HMGL gr, const char *fname,const char *descr)
 			if(sd && sd[0])	mgl_printf(fp, gz, "%s [%s] %g sd dr\n",str,sd,q.w*q.s);
 			else			mgl_printf(fp, gz, "%s d0 dr\n",str);
 		}
-		else if(q.type==4)	// glyph
+		else if(q.type==4 && !mgl_isnan(q.w))	// glyph
 		{
 			mreal 	ss = q.s/2, xx = p1.u, yy = p1.v, zz = q.p;
 			mgl_printf(fp, gz, "gsave\t%g %g translate %g %g scale %g rotate %s\n",
@@ -501,7 +501,7 @@ void mgl_write_svg(HMGL gr, const char *fname,const char *descr)
 			mgl_printf(fp, gz, "<g fill=\"#%02x%02x%02x\" opacity=\"%g\">\n", int(255*cp.r),int(255*cp.g),int(255*cp.b),cp.a);
 			mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g L %g %g L %g %g Z\"/> </g>\n", p1.x, hh-p1.y, p2.x, hh-p2.y, p4.x, hh-p4.y, p3.x, hh-p3.y);
 		}
-		else if(q.type==4)
+		else if(q.type==4 && !mgl_isnan(q.w))
 		{
 			mreal ss = q.s/2, xx = p1.u, yy = p1.v, zz = q.p;
 			if(q.n3&8)	// this is "line"
@@ -717,7 +717,7 @@ void mgl_write_tex(HMGL gr, const char *fname,const char *descr)
 			put_line(gr,fp,false,i,wp,cp,st, "(%g,%g)", " -- (%g,%g)", false, 0.01);
 			fprintf(fp, ";\n");
 		}
-		else if(q.type==6)	// text
+		else if(q.type==6 && !mgl_isnan(q.p))	// text
 		{
 			const mglText &t = gr->GetPtx(q.n3);
 			mreal dy = q.w*cos(q.p*M_PI/180)/100, dx = q.w*sin(q.p*M_PI/180)/100;
@@ -774,3 +774,4 @@ void mgl_write_tex(HMGL gr, const char *fname,const char *descr)
 	fprintf(fp, "\\begin{document}\n%% start figure itself\n\\input{%s}\\end{document}\n",fname);
 	fclose(fp);
 }
+//-----------------------------------------------------------------------------
