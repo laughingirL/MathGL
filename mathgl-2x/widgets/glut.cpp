@@ -59,10 +59,10 @@ public:
 			   			void (*reload)(void *p)=NULL, bool maximize=false);
 	void Window(int argc, char **argv, int (*draw)(mglGraph *gr),
 				const char *title, bool maximize=false)
-	{	Window(argc,argv,mgl_draw_graph,title,(void*)draw,0,maximize);	}
+	{	Window(argc,argv,draw?mgl_draw_graph:0,title,(void*)draw,0,maximize);	}
 	/// Create a window for plotting based on class mglDraw.
 	void Window(int argc, char **argv, const char *title, mglDraw *draw, bool maximize=false)
-	{	Window(argc, argv, mgl_draw_class, title, draw, mgl_reload_class, maximize);	}
+	{	Window(argc, argv, draw?mgl_draw_class:0, title, draw, mgl_reload_class, maximize);	}
 	/// Switch on/off transparency (do not overwrite switches in user drawing function)
 	void ToggleAlpha()	{	_mgl_key_up('r',0,0);	}
 	/// Switch on/off lighting (do not overwrite switches in user drawing function)

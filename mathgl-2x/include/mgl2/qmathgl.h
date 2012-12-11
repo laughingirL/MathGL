@@ -59,7 +59,7 @@ public:
 	inline void setDraw(mglDraw *dr)
 	{	draw = dr;	}
 	inline void setDraw(int (*draw)(mglGraph *gr))
-	{	setDraw(mgl_draw_graph,(void*)draw);	}
+	{	setDraw(draw?mgl_draw_graph:0,(void*)draw);	}
 	inline void zoomRegion(mreal xx1,mreal xx2,mreal yy1, mreal yy2)
 	{	x1=xx1;	y1=yy1;	x2=xx2;	y2=yy2;	}
 
@@ -115,6 +115,7 @@ public slots:
 	void exportOFF(QString fname="");	///< export to OFF file
 //	void exportX3D(QString fname="");	///< export to XYZ file
 	void exportPRC(QString fname="");	///< export to PRC file
+	void exportMGLD(QString fname="");	///< export to MGLD file
 	void setMGLFont(QString path);		///< restore/load font for graphics
 
 	void addMark();						///< add marker into primitives

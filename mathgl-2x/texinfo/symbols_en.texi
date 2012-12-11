@@ -591,6 +591,9 @@ style of @ref{tape}.
 @item @key{Alt-L}
 @tab Export as LaTeX/Tikz image.
 
+@item @key{Alt-M}
+@tab Export as MGLD.
+
 @item @key{Alt-D}
 @tab Export as PRC/PDF.
 

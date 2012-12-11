@@ -41,16 +41,16 @@ public:
 	mglWindow(int (*draw)(mglGraph *gr), const char *title="MathGL", int kind=0) : mglWnd()
 	{
 		wnd=kind;
-		if(wnd==1)	gr = mgl_create_graph_qt(mgl_draw_graph,title,(void*)draw,0);
-		else if(wnd==2)	gr = mgl_create_graph_wx(mgl_draw_graph,title,(void*)draw,0);
-		else		gr = mgl_create_graph_fltk(mgl_draw_graph,title,(void*)draw,0);
+		if(wnd==1)	gr = mgl_create_graph_qt(draw?mgl_draw_graph:0,title,(void*)draw,0);
+		else if(wnd==2)	gr = mgl_create_graph_wx(draw?mgl_draw_graph:0,title,(void*)draw,0);
+		else		gr = mgl_create_graph_fltk(draw?mgl_draw_graph:0,title,(void*)draw,0);
 	}
 	mglWindow(mglDraw *draw, const char *title="MathGL", int kind=0) : mglWnd()
 	{
 		wnd=kind;
-		if(wnd==1)	gr = mgl_create_graph_qt(mgl_draw_class,title,draw,mgl_reload_class);
-		else if(wnd==2)	gr = mgl_create_graph_wx(mgl_draw_class,title,draw,mgl_reload_class);
-		else		gr = mgl_create_graph_fltk(mgl_draw_class,title,draw,mgl_reload_class);
+		if(wnd==1)	gr = mgl_create_graph_qt(draw?mgl_draw_class:0,title,draw,mgl_reload_class);
+		else if(wnd==2)	gr = mgl_create_graph_wx(draw?mgl_draw_class:0,title,draw,mgl_reload_class);
+		else		gr = mgl_create_graph_fltk(draw?mgl_draw_class:0,title,draw,mgl_reload_class);
 		mgl_set_click_func(gr, mgl_click_class);
 	}
 	/// Run main loop for event handling

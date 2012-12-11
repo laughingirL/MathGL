@@ -45,9 +45,9 @@ public:
 	mglWX(int (*draw)(HMGL gr, void *p), const char *title="MathGL", void *par=NULL, void (*load)(void *p)=0) : mglWnd()
 	{	gr = mgl_create_graph_wx(draw,title,par,load);	}
 	mglWX(int (*draw)(mglGraph *gr), const char *title="MathGL") : mglWnd()
-	{	gr = mgl_create_graph_wx(mgl_draw_graph,title,(void*)draw,0);	}
+	{	gr = mgl_create_graph_wx(draw?mgl_draw_graph:0,title,(void*)draw,0);	}
 	mglWX(mglDraw *draw, const char *title="MathGL") : mglWnd()
-	{	gr = mgl_create_graph_wx(mgl_draw_class,title,draw,mgl_reload_class);
+	{	gr = mgl_create_graph_wx(draw?mgl_draw_class:0,title,draw,mgl_reload_class);
 		mgl_set_click_func(gr, mgl_click_class);	}
 	int Run()	{	return mgl_wx_run();	}	///< Run main loop for event handling
 
@@ -82,7 +82,7 @@ public:
 	inline void SetDraw(mglDraw *dr)
 	{	draw_cl = dr;	}
 	inline void SetDraw(int (*draw)(mglGraph *gr))
-	{	SetDraw(mgl_draw_graph,(void*)draw);	}
+	{	SetDraw(draw?mgl_draw_graph:0,(void*)draw);	}
 	inline void ZoomRegion(mreal xx1,mreal xx2,mreal yy1, mreal yy2)
 	{	x1=xx1;	y1=yy1;	x2=xx2;	y2=yy2;	}
 

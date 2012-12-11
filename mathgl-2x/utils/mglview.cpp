@@ -85,7 +85,9 @@ int main(int argc, char **argv)
 	{
 		gr.Setup(false);
 		setlocale(LC_NUMERIC, "C");
+		gr.NewFrame();
 		gr.ImportMGLD(iname);
+		gr.EndFrame();
 		setlocale(LC_NUMERIC, "");
 		gr.Update();
 	}

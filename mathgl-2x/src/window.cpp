@@ -42,7 +42,7 @@ void mglCanvasWnd::ResetFrames()
 //-----------------------------------------------------------------------------
 void mglCanvasWnd::SetSize(int w,int h)
 {
-	ResetFrames();
+	if(DrawFunc)	ResetFrames();
 	mglCanvas::SetSize(w,h);
 //	if(Wnd)	Wnd->size(w,h);
 }
@@ -112,8 +112,15 @@ void mglCanvasWnd::ReLoad()
 		LoadFunc(FuncPar);
 		// update number of slides
 		ResetFrames();
+		setlocale(LC_NUMERIC, "C");
+		// use frames for quickly redrawing while adding/changing primitives
+		if(get(MGL_VECT_FRAME) && !(GetQuality()&4))	NewFrame();
+		
 		int n = DrawFunc ? DrawFunc(this,FuncPar) : 0;
 		if(n<NumFig && n>=0)	NumFig = n;
+		
+		if(get(MGL_VECT_FRAME) && !(GetQuality()&4))	EndFrame();
+		setlocale(LC_NUMERIC, "");
 		Update();
 	}
 }

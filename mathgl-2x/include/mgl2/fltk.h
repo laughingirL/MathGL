@@ -48,9 +48,9 @@ public:
 	mglFLTK(int (*draw)(HMGL gr, void *p), const char *title="MathGL", void *par=NULL, void (*load)(void *p)=0) : mglWnd()
 	{	gr = mgl_create_graph_fltk(draw,title,par,load);	}
 	mglFLTK(int (*draw)(mglGraph *gr), const char *title="MathGL") : mglWnd()
-	{	gr = mgl_create_graph_fltk(mgl_draw_graph,title,(void*)draw,0);	}
+	{	gr = mgl_create_graph_fltk(draw?mgl_draw_graph:0,title,(void*)draw,0);	}
 	mglFLTK(mglDraw *draw, const char *title="MathGL") : mglWnd()
-	{	gr = mgl_create_graph_fltk(mgl_draw_class,title,draw,mgl_reload_class);
+	{	gr = mgl_create_graph_fltk(draw?mgl_draw_class:0,title,draw,mgl_reload_class);
 		mgl_set_click_func(gr, mgl_click_class);	}
 	int Run()	{	return mgl_fltk_run();	}	///< Run main loop for event handling
 };
@@ -94,7 +94,7 @@ public:
 	{	draw_func = func;	draw_par = par;	}
 	inline void set_draw(mglDraw *dr)	{	draw_cl = dr;	}
 	inline void set_draw(int (*dr)(mglGraph *gr))
-	{	set_draw(mgl_draw_graph,(void*)dr);	}
+	{	set_draw(dr?mgl_draw_graph:0,(void*)dr);	}
 	void set_state(bool z, bool r)	{	zoom = z;	rotate = r;	}
 	/// Set zoom in/out region
 	inline void set_zoom(mreal X1, mreal Y1, mreal X2, mreal Y2)

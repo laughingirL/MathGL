@@ -36,9 +36,9 @@ public:
 	mglGLUT(int (*draw)(HMGL gr, void *p), const char *title="MathGL", void *par=0, void (*load)(void *p)=0) : mglGraph(-1)
 	{	gr = mgl_create_graph_glut(draw,title,par,load);	}
 	mglGLUT(int (*draw)(mglGraph *gr), const char *title="MathGL") : mglGraph(-1)
-	{	gr = mgl_create_graph_glut(mgl_draw_graph,title,(void*)draw,0);	}
+	{	gr = mgl_create_graph_glut(draw?mgl_draw_graph:0,title,(void*)draw,0);	}
 	mglGLUT(mglDraw *draw=0, const char *title="MathGL") : mglGraph(-1)
-	{	gr = mgl_create_graph_glut(mgl_draw_class,title,draw,mgl_reload_class);	}
+	{	gr = mgl_create_graph_glut(draw?mgl_draw_class:0,title,draw,mgl_reload_class);	}
 };
 //-----------------------------------------------------------------------------
 #endif

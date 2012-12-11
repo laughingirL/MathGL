@@ -19,9 +19,6 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 
 ============= NEW FOR v.2.1 =============
 
-2. Check SetFrame
-3. Check MGLD
-
 A. libhpdf for win32
 
 ============= DOCS =============

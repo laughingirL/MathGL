@@ -596,7 +596,7 @@ bool mglCanvas::ExportMGLD(const char *fname, const char *descr)
 	FILE *fp=fopen(fname,"wt");
 	if(!fp)	return true;
 	// NOTE: I'll save Ptx. So prim type=6 is useless,and no LaTeX
-	fprintf(fp,"MGLD %lu %lu %lu %lu\n# %s\n", (unsigned long)Pnt.size(), (unsigned long)Prm.size(), (unsigned long)Txt.size(), (unsigned long)Glf.size(), (descr && *descr) ? descr : fname);
+	fprintf(fp,"MGLD %lu %lu %lu %lu %d %d\n# %s\n", (unsigned long)Pnt.size(), (unsigned long)Prm.size(), (unsigned long)Txt.size(), (unsigned long)Glf.size(), Width, Height, (descr && *descr) ? descr : fname);
 	register size_t i;
 	fprintf(fp,"# Vertexes: x y z c t ta u v w r g b a\n");
 	for(i=0;i<Pnt.size();i++)
@@ -628,7 +628,7 @@ bool mglCanvas::ExportMGLD(const char *fname, const char *descr)
 		}
 		if(g.line)
 		{
-			for(long j=0;j<4*g.nl;j++)	fprintf(fp,"%d\t",g.line[j]);
+			for(long j=0;j<2*g.nl;j++)	fprintf(fp,"%d\t",g.line[j]);
 			fprintf(fp,"\n");
 		}
 	}
@@ -652,7 +652,10 @@ bool mglCanvas::ImportMGLD(const char *fname, bool add)
 	if(strncmp(buf,"MGLD",4))	{	delete []buf;	fclose(fp);	return true;	}
 	register size_t i;
 	unsigned long n=0,m=0,l=0,k=0, npnt=0, nglf=0;
-	sscanf(buf+5,"%lu%lu%lu%lu",&n,&m,&l,&k);
+	int w=0,h=0,d;
+	sscanf(buf+5,"%lu%lu%lu%lu%d%d",&n,&m,&l,&k,&w,&h);
+	if(w<=0 || h<=0)	{	w=Width;	h=Height;	}
+	d = long(sqrt(double(w*h)));
 	if(n<=0 || m<=0 || l<=0)	{	delete []buf;	fclose(fp);	return true;	}
 	if(!add)	{	Clf();	Txt.clear();	}
 	else	{	ClfZB();	npnt=Pnt.size();	nglf=Glf.size();	}
@@ -668,6 +671,8 @@ bool mglCanvas::ImportMGLD(const char *fname, bool add)
 	{
 		do {	if(!fgets(buf,512,fp))	*buf=0;	mgl_strtrim(buf);	} while(*buf=='#');
 		sscanf(buf,"%g%g%g%g%g%g%g%g%g%g%g%g%g", &p.xx, &p.yy, &p.zz, &p.c, &p.t, &p.ta, &p.u, &p.v, &p.w, &p.r, &p.g, &p.b, &p.a);
+		// rescale to current image size
+		p.xx *= Width/double(w);	p.yy *= Height/double(h);	p.zz *= Depth/double(d);
 		Pnt.push_back(p);
 	}
 	mglPrim q;
@@ -678,9 +683,10 @@ bool mglCanvas::ImportMGLD(const char *fname, bool add)
 		q.n1 = q.n1>=0?q.n1+npnt:-1;
 		q.n2 = q.n2>=0?q.n2+npnt:-1;
 		if(q.type==2 || q.type==3)
-		{	q.n3 = q.n3>=0?q.n3+npnt:-1;		q.n4 = q.n4>=0?q.n4+npnt:-1;	}
-		if(q.type==4)	q.n4 = q.n4>=0?q.n4+nglf:-1;
-		if(q.type<5)		Prm.push_back(q);
+		{	q.n3 = q.n3>=0?q.n3+npnt:-1;	q.n4 = q.n4>=0?q.n4+npnt:-1;	}
+		if(q.type==4)
+		{	q.n4 = q.n4>=0?q.n4+nglf:-1;	q.s *= font_factor/(w<h?w:h);	}
+		if(q.type<5)	Prm.push_back(q);
 	}
 	mglTexture t;
 	for(i=0;i<l;i++)
@@ -706,7 +712,7 @@ bool mglCanvas::ImportMGLD(const char *fname, bool add)
 		sscanf(buf,"%ld%ld", &nt, &nl);	g.Create(nt,nl);
 		register long j;
 		for(j=0;j<6*nt;j++)	fscanf(fp,"%hd",g.trig+j);
-		for(j=0;j<4*nl;j++)	fscanf(fp,"%hd",g.line+j);
+		for(j=0;j<2*nl;j++)	fscanf(fp,"%hd",g.line+j);
 		Glf.push_back(g);
 	}
 #if MGL_HAVE_PTHREAD

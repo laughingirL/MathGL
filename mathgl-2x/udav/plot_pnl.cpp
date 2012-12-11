@@ -356,43 +356,36 @@ void PlotPanel::toolTop(QBoxLayout *l)
 	oo = new QMenu(tr("Primitives ..."),this);
 	a = new QAction(QPixmap(line_xpm), tr("Add line"), this);
 	connect(a, SIGNAL(triggered()), mgl, SLOT(addLine()));
-	connect(mgl, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
 	a->setToolTip(tr("Add line which properties can be changed later by mouse."));
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);	oo->addAction(a);
 
 	a = new QAction(QPixmap(curve_xpm), tr("Add curve"), this);
 	connect(a, SIGNAL(triggered()), mgl, SLOT(addCurve()));
-	connect(mgl, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
 	a->setToolTip(tr("Add curve which properties can be changed later by mouse."));
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);	oo->addAction(a);
 	
 	a = new QAction(QPixmap(mark_s_xpm), tr("Add rect"), this);
 	connect(a, SIGNAL(triggered()), mgl, SLOT(addRect()));
-	connect(mgl, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
 	a->setToolTip(tr("Add rectangle which properties can be changed later by mouse."));
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);	oo->addAction(a);
 	
 	a = new QAction(QPixmap(mark_d_xpm), tr("Add rhombus"), this);
 	connect(a, SIGNAL(triggered()), mgl, SLOT(addRhomb()));
-	connect(mgl, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
 	a->setToolTip(tr("Add rhombus which properties can be changed later by mouse."));
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);	oo->addAction(a);
 	
 	a = new QAction(QPixmap(mark_o_xpm), tr("Add ellipse"), this);
 	connect(a, SIGNAL(triggered()), mgl, SLOT(addEllipse()));
-	connect(mgl, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
 	a->setToolTip(tr("Add ellipse which properties can be changed later by mouse."));
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);	oo->addAction(a);
 	
 	a = new QAction(QPixmap(mark_a_xpm), tr("Add mark"), this);
 	connect(a, SIGNAL(triggered()), mgl, SLOT(addMark()));
-	connect(mgl, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
 	a->setToolTip(tr("Add marker which properties can be changed later by mouse."));
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);	oo->addAction(a);
 	
 	a = new QAction(QPixmap(text_xpm), tr("Add text"), this);
 	connect(a, SIGNAL(triggered()), mgl, SLOT(addText()));
-	connect(mgl, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
 	a->setToolTip(tr("Add text which properties can be changed later by mouse."));
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);	oo->addAction(a);
 	
@@ -421,6 +414,7 @@ void PlotPanel::toolTop(QBoxLayout *l)
 //	oo->addAction(tr("C++"), mgl, SLOT(exportCPP()));	// TODO: Add later
 	o->addMenu(oo);		popup->addMenu(oo);
 	oo = new QMenu(tr("Export as 3D ..."),this);
+	oo->addAction(tr("MGLD"), mgl, SLOT(exportMGLD()),Qt::ALT+Qt::Key_M);
 	oo->addAction(tr("PRC"), mgl, SLOT(exportPRC()),Qt::ALT+Qt::Key_D);
 	oo->addAction(tr("OBJ"), mgl, SLOT(exportOBJ()),Qt::ALT+Qt::Key_O);
 	oo->addAction(tr("STL"), mgl, SLOT(exportSTL()));
