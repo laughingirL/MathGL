@@ -79,7 +79,6 @@ protected:
 	QSpinBox *tet, *phi;	///< Spin box for angles
 };
 //-----------------------------------------------------------------------------
-bool QMathGL::mglUserPrim = false;
 void mgl_ask_qt(const wchar_t *quest, wchar_t *res)
 {	QInputDialog::getText(QApplication::activeWindow(), "MathGL",
 						QString::fromWCharArray(quest)).toWCharArray(res);	}
@@ -92,7 +91,7 @@ QMathGL::QMathGL(QWidget *parent, Qt::WindowFlags f) : QWidget(parent, f)
 {
 	autoResize = false;	draw_par = 0;	draw_func = 0;
 	gr = new mglCanvas;		appName = "MathGL";
-	popup = 0;	grBuf = 0;	draw = 0;	mglUserPrim = true;	
+	popup = 0;	grBuf = 0;	draw = 0;
 	phi = tet = per = 0;
 	x1 = y1 = ax1 = ay1 = 0;	x2 = y2 = ax2 = ay2 = 1;
 	alpha = light = zoom = rotate = grid = false;
@@ -141,7 +140,7 @@ void QMathGL::paintEvent(QPaintEvent *)
 		}
 		paint.setPen(QColor(0,0,0));
 		d = (h>w?w:h)/100;
-		if(mglUserPrim && !(gr->GetQuality()&4))
+		if(gr->get(MGL_VECT_FRAME) && !(gr->GetQuality()&4))
 			for(i=0;i<(long)gr->Act.size();i++)
 			{
 				const mglActivePos &p=gr->Act[i];
@@ -255,10 +254,10 @@ void QMathGL::update()
 		if(!isHidden())	QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 		setlocale(LC_NUMERIC, "C");
 		// use frames for quickly redrawing while adding/changing primitives
-		if(mglUserPrim && !(gr->GetQuality()&4))	gr->NewFrame();
+		if(gr->get(MGL_VECT_FRAME) && !(gr->GetQuality()&4))	gr->NewFrame();
 		if(draw_func)	draw_func(gr, draw_par);
 		else if(draw)	{	mglGraph g(gr);	draw->Draw(&g);	}
-		if(mglUserPrim && !(gr->GetQuality()&4))	gr->EndFrame();
+		if(gr->get(MGL_VECT_FRAME) && !(gr->GetQuality()&4))	gr->EndFrame();
 		setlocale(LC_NUMERIC, "");
 		if(!isHidden())	QApplication::restoreOverrideCursor();
 		emit refreshData();
@@ -270,9 +269,9 @@ void QMathGL::update()
 //-----------------------------------------------------------------------------
 void QMathGL::refresh()
 {
-	if(mglUserPrim && !(gr->GetQuality()&4) && gr->GetNumFrame()>0)
+	if(gr->get(MGL_VECT_FRAME) && !(gr->GetQuality()&4) && gr->GetNumFrame()>0)
 	{
-		gr->Clf();	gr->GetFrame(0);
+		gr->Clf();	gr->GetFrame(gr->GetNumFrame()-1);
 		mglParse pr;
 		long i, n=primitives.count('\n');
 		mglGraph gg(gr);

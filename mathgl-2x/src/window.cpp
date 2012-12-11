@@ -33,16 +33,16 @@ void mglCanvasWnd::SetCurFig(int c)
 	if(get(MGL_VECT_FRAME) && c>=0 && c<(long)DrwDat.size())	GetFrame(c);
 }
 //-----------------------------------------------------------------------------
-void mglCanvasWnd::ClearFrames()
+void mglCanvasWnd::ResetFrames()
 {
 	if(GG)	free(GG);	GG = 0;
-	CurFrameId = NumFig = CurFig = 0;
-	DrwDat.clear();
+	NumFig = CurFig = 0;
+	mglCanvas::ResetFrames();
 }
 //-----------------------------------------------------------------------------
 void mglCanvasWnd::SetSize(int w,int h)
 {
-	ClearFrames();
+	ResetFrames();
 	mglCanvas::SetSize(w,h);
 //	if(Wnd)	Wnd->size(w,h);
 }
@@ -57,8 +57,8 @@ void mglCanvasWnd::EndFrame()
 	}
 	else if(CurFig>NumFig-1)
 	{
-		GG = (unsigned char *)realloc(GG,3*(NumFig+1)*Width*Height);
-		NumFig++;
+		GG = (unsigned char *)realloc(GG,3*(CurFig+1)*Width*Height);
+		NumFig = CurFig+1;
 	}
 	mglCanvas::EndFrame();
 	memcpy(GG + CurFig*Width*Height*3,G,3*Width*Height);
@@ -82,11 +82,19 @@ void mglCanvasWnd::DelFrame(long i)
 //-----------------------------------------------------------------------------
 void mglCanvasWnd::SetDrawFunc(int (*draw)(mglBase *gr, void *p), void *par, void (*reload)(void *p))
 {
-	ClearFrames();
+	ResetFrames();
+	if(get(MGL_CLF_ON_UPD))	DefaultPlotParam();
+	setlocale(LC_NUMERIC, "C");
+	// use frames for quickly redrawing while adding/changing primitives
+	if(get(MGL_VECT_FRAME) && !(GetQuality()&4))	NewFrame();
+
 	int n = draw ? draw(this,par) : 0;
 	if(n<NumFig && n>=0)	NumFig = n;
 	DrawFunc = draw;		FuncPar = par;
 	LoadFunc = reload;
+
+	if(get(MGL_VECT_FRAME) && !(GetQuality()&4))	EndFrame();
+	setlocale(LC_NUMERIC, "");
 }
 //-----------------------------------------------------------------------------
 const unsigned char *mglCanvasWnd::GetBits()
@@ -103,7 +111,7 @@ void mglCanvasWnd::ReLoad()
 	{
 		LoadFunc(FuncPar);
 		// update number of slides
-		ClearFrames();
+		ResetFrames();
 		int n = DrawFunc ? DrawFunc(this,FuncPar) : 0;
 		if(n<NumFig && n>=0)	NumFig = n;
 		Update();

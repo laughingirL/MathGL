@@ -20,7 +20,7 @@
 #include "mgl2/data.h"
 #include "mgl2/eval.h"
 
-int mglNumThr=1;
+int mglNumThr=0;
 void mglFillP(long x,long y, const mreal *a,long nx,long ny,mreal _p[4][4]);
 void mglFillP(long x, const mreal *a,long nx,mreal _p[4]);
 void mglFillP5(long x,long y, const mreal *a,long nx,long ny,mreal _p[6][6]);

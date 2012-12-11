@@ -30,12 +30,27 @@ int test_wnd(mglGraph *gr)
 {
 mgl_set_test_mode(true);
 //	gr->SetQuality(6);
+	gr->NewFrame();	// 0
 	gr->Box();
+	gr->EndFrame();
+	gr->NewFrame();	// 1
 	gr->Axis();
+	gr->EndFrame();
+	gr->NewFrame();	// 2
 	gr->Label('x',"XXXX",0);
 	gr->Label('y',"YYYY",0);
+	gr->EndFrame();
+	gr->NewFrame();	// 3
 	gr->Puts(mglPoint(0,0),"0");
-//	gr->Puts(mglPoint(0,1),"1");
+	gr->EndFrame();
+
+	gr->Clf();
+	gr->ShowFrame(0);
+	gr->ShowFrame(1);
+	gr->ShowFrame(2);
+	gr->ShowFrame(3);
+	//	gr->Puts(mglPoint(0,1),"1");
+	gr->Finish();
 	return 0;
 }
 //-----------------------------------------------------------------------------

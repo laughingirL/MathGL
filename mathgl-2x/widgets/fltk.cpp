@@ -164,8 +164,13 @@ void Fl_MathGL::update()
 		if(tet_val)	tet = tet_val->value();
 		if(phi_val)	phi = phi_val->value();
 		gr->Zoom(x1,y1,x2,y2);	gr->View(phi,0,tet);
+		setlocale(LC_NUMERIC, "C");
+		// use frames for quickly redrawing while adding/changing primitives
+		if(gr->get(MGL_VECT_FRAME) && !(gr->GetQuality()&4))	gr->NewFrame();
 		if(draw_func)	draw_func(gr, draw_par);	// drawing itself
 		else	if(draw_cl)	{	mglGraph g(gr);	draw_cl->Draw(&g);	}
+		if(gr->get(MGL_VECT_FRAME) && !(gr->GetQuality()&4))	gr->EndFrame();
+		setlocale(LC_NUMERIC, "");
 		const char *buf = gr->Mess.c_str();
 		if(*buf)	fl_message("%s",buf);
 	}

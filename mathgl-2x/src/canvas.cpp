@@ -54,6 +54,8 @@ long mglCanvas::PushDrwDat()
 	return DrwDat.size();
 }
 //-----------------------------------------------------------------------------
+void mglCanvas::ResetFrames()	{	CurFrameId=0;	DrwDat.clear();	}
+//-----------------------------------------------------------------------------
 void mglCanvas::SetFrame(long i)
 {
 	if(get(MGL_VECT_FRAME) && i>=0 && i<DrwDat.size())

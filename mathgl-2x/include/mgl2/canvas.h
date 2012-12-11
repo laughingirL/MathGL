@@ -204,7 +204,7 @@ using mglBase::Light;
 	/// Get the number of created frames
 	inline int GetNumFrame() const	{	return CurFrameId;	}
 	/// Reset frames counter (start it from zero)
-	inline void ResetFrames()	{	CurFrameId=0;	DrwDat.clear();	}
+	virtual void ResetFrames();
 	/// Delete primitives for i-th frame
 	virtual void DelFrame(long i);
 	/// Get drawing data for i-th frame.

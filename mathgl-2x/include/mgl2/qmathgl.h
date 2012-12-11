@@ -126,8 +126,6 @@ public slots:
 	void addText(QString txt="");		///< add text into primitives
 	void setStyle(int id, QString stl);///< set style for primitive with id
 
-	void setUsePrimitives(bool use)	{	mglUserPrim=use;	emit usePrimChanged(use);	}
-
 	void adjust();		///< Adjust plot size to fill entire window
 	void nextSlide();	///< Show next slide
 	void prevSlide();	///< Show previous slide
@@ -149,7 +147,6 @@ signals:
 	void showWarn(QString);		///< Show warnings
 	void posChanged(QString message);	///< user click to show mouse position
 	void objChanged(int objId);	///< User double-click to select object/line
-	void usePrimChanged(bool);	///< Flag mglUserPrim is changed
 	void refreshData();
 	void doubleClick(int id);	///< Double mouse click by object with id
 	void askStyle(int id);	///< Update style
@@ -163,7 +160,6 @@ protected:
 	void wheelEvent(QWheelEvent *);
 	void mouseDoubleClickEvent(QMouseEvent *);
 
-	static bool mglUserPrim;
 	mglCanvas *gr;		///< Built-in mglCanvasQT-er instance (used by default)
 	void *draw_par;		///< Parameters for drawing function mglCanvasWnd::DrawFunc.
 	/// Drawing function for window procedure. It should return the number of frames.

@@ -41,7 +41,7 @@ public:
 	inline int GetNumFig() const	{	return NumFig;	}
 	inline int GetCurFig() const	{	return CurFig;	}
 	void SetCurFig(int c);
-	void ClearFrames();
+	void ResetFrames();
 	inline mglPoint GetMousePos() const	{	return LastMousePos;}
 	inline void SetMousePos(mglPoint p)	{	LastMousePos=p;	}
 	inline void Setup(bool clf_upd=true, bool showpos=false)
