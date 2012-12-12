@@ -13,17 +13,12 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 8. 3D text (with depth, for Quality=3)
 9. Text along 3D curve (for Quality=3)
 10. introduce new primitive type=5 -- arrow for Quality&3!=3. for better drawing in projections + json/view ?!?
-11. Increase line width for arrows?!?
-12. enable line width for mesh and fall???
-13. WX window/widgets
+11. enable line width for mesh and fall???
+12. WX window/widgets
 
 ============= NEW FOR v.2.1 =============
 
 A. libhpdf for win32
-
-============= DOCS =============
-
-14. Thanks -- C.M., A.P.$
 
 ============= UDAV =============
 

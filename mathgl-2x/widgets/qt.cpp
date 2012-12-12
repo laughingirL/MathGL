@@ -1113,7 +1113,7 @@ QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *&tet, QSpinBox *&p
 		a = new QAction(QPixmap(next_sl_xpm), TR("&Next slide"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(nextSlide()));
 		a->setToolTip(TR("Show next slide (Alt+Right)."));
-		a->setShortcut(Qt::ALT+Qt::Key_Right);	o->addAction(a);		bb->addAction(a);
+		a->setShortcut(Qt::CTRL+Qt::Key_Period);	o->addAction(a);		bb->addAction(a);
 		a = new QAction(QPixmap(show_sl_xpm), TR("&Slideshow"), Wnd);
 		a->setCheckable(true);
 		Wnd->connect(a, SIGNAL(toggled(bool)), QMGL, SLOT(animation(bool)));
@@ -1122,7 +1122,7 @@ QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *&tet, QSpinBox *&p
 		a = new QAction(QPixmap(prev_sl_xpm), TR("&Prev slide"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(prevSlide()));
 		a->setToolTip(TR("Show previous slide (Alt+Left)."));
-		a->setShortcut(Qt::ALT+Qt::Key_Left);	o->addAction(a);		bb->addAction(a);
+		a->setShortcut(Qt::CTRL+Qt::Key_Comma);	o->addAction(a);		bb->addAction(a);
 	}
 
 	Wnd->menuBar()->addSeparator();

@@ -984,12 +984,18 @@ void mglCanvas::glyph_draw(const mglPrim *P, mglDrawReg *d)
 	mglPnt p=Pnt[P->n1], q=Pnt[P->n2];
 	// scale direction for new view/zoom
 	float dv = (1-Bp.pf)/(1-Bp.pf*q.z/Depth);
-	float x,y,z,c=Bp.pf/(1-Bp.pf),ll,phi=P->w;
+	float x,y,z,c=Bp.pf/(1-Bp.pf)/Depth,ll,phi=P->w;
 	x = Bp.b[0]*q.u + Bp.b[1]*q.v + Bp.b[2]*q.w;
 	y = Bp.b[3]*q.u + Bp.b[4]*q.v + Bp.b[5]*q.w;
 	z = Bp.b[6]*q.u + Bp.b[7]*q.v + Bp.b[8]*q.w;
-	x += (q.x-Width/2)*z*c;
-	y += (q.y-Height/2)*z*c;
+
+//	register float d = (1-Bp.pf)/(1-Bp.pf*p.z/Depth);
+//	p.x = Width/2 + d*p.x;	p.y = Height/2 + d*p.y;
+
+	// po = (pn-w/2)/dv, dr = dv*dx+po*((1-pf)*pf/depth/(1-...)^2)*dz
+	
+	x += (q.x-Width/2)*z*c*dv;
+	y += (q.y-Height/2)*z*c*dv;
 	ll = x*x+y*y;
 	if(ll < 1e-10)	return;
 	if(ll==ll)	phi = -atan2(y,x)*180/M_PI;

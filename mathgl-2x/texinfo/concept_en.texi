@@ -297,7 +297,7 @@ Finally, a special command language MGL (see @ref{MGL scripts}) was written for 
 * C++ interface::
 @end menu
 
-@external
+@comment  @external
 @node C interface, C++ interface, , Interfaces
 @subsection C/Fortran interface
 
@@ -316,7 +316,7 @@ These variables contain identifiers for graphics drawing objects and for the dat
 
 Fortran functions/subroutines have the same names as C functions. However, there is a difference. Variable of type @code{HMGL, HMDT} must be an integer with sufficient size (@code{integer*4} in the 32-bit operating system or @code{integer*8} in the 64-bit operating system). All C functions are subroutines in Fortran, which are called by operator @code{call}. The exceptions are functions, which return variables of types @code{HMGL} or @code{HMDT}. These functions should be declared as integer in Fortran code. Also, one should keep in mind that strings in Fortran are denoted by @code{'} symbol, not the @code{"} symbol.
 
-@external
+@comment  @external
 @node C++ interface, , C interface, Interfaces
 @subsection C++/Python interface
 

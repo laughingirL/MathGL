@@ -19,7 +19,7 @@ if(MGL_HAVE_DOC)
 	file(MAKE_DIRECTORY ${MGL_OUT}/png)
 	file(MAKE_DIRECTORY ${MGL_OUT}/small)
 	file(MAKE_DIRECTORY ${MGL_OUT}/json)
-	file(COPY ${MGL_TEX}/qt.png ${MGL_TEX}/fltk.png ${MGL_TEX}/classes.png ${MGL_TEX}/emblem_sm.png DESTINATION ${MGL_OUT})
+	file(COPY ${MGL_TEX}/qt.png ${MGL_TEX}/fltk.png ${MGL_TEX}/classes.png ${MGL_TEX}/emblem_sm.png ${MGL_TEX}/datadvance.png DESTINATION ${MGL_OUT})
 	file(COPY ${MGL_TEX}/toc_ru.html ${MGL_TEX}/toc_fr.html ${MGL_TEX}/toc_en.html ${MGL_TEX}/title.html ${MGL_TEX}/index.html ${MGL_TEX}/json.html ${MGL_TEX}/mathgl.js DESTINATION ${MGL_OUT})
 
 	set(UDAV_IMG udav_arg.png udav_calc.png udav_cmd.png udav_data.png 
@@ -76,7 +76,7 @@ if(MGL_HAVE_DOC)
 		WORKING_DIRECTORY ${MGL_OUT}
 	)
 	add_custom_command(OUTPUT ${MGL_OUT}/doc_en/doc_en.html
-		COMMAND ${findth} -I=${MGL_OUT}/png --split=node --frames -o doc_en ${MGL_TEX}/doc_en.texi
+		COMMAND ${findth} -I=${MGL_OUT}/png --split=section --frames -o doc_en ${MGL_TEX}/doc_en.texi
 		DEPENDS ${list_texi_files_en} doc_en.texi ${MGL_PNG_N}
 		WORKING_DIRECTORY ${MGL_OUT}
 	)
@@ -126,7 +126,7 @@ if(MGL_HAVE_DOC)
 		WORKING_DIRECTORY ${MGL_OUT}
 	)
 	add_custom_command(OUTPUT ${MGL_OUT}/doc_ru/doc_ru.html
-		COMMAND ${findth} -I=${MGL_OUT}/png --split=node --frames -o doc_ru ${MGL_TEX}/doc_ru.texi
+		COMMAND ${findth} -I=${MGL_OUT}/png --split=section --frames -o doc_ru ${MGL_TEX}/doc_ru.texi
 		DEPENDS ${list_texi_files_ru} doc_ru.texi ${MGL_PNG_N}
 		WORKING_DIRECTORY ${MGL_OUT}
 	)
@@ -167,7 +167,7 @@ if(MGL_HAVE_DOC)
 # 		WORKING_DIRECTORY ${MGL_OUT}
 # 	)
 	set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "doc_en;mathgl_en;web_en;./mathgl*.*;small/*.*;png/*.*;json/*.*")
-	install(FILES ${MGL_TEX}/qt.png ${MGL_TEX}/fltk.png ${MGL_TEX}/classes.png DESTINATION ${MGL_DOC_PATH})
+	install(FILES ${MGL_TEX}/qt.png ${MGL_TEX}/fltk.png ${MGL_TEX}/classes.png ${MGL_TEX}/datadvance.png DESTINATION ${MGL_DOC_PATH})
 	install(FILES ${MGL_OUT}/mathgl_en.pdf ${MGL_OUT}/mgl_en.html DESTINATION ${MGL_DOC_PATH})
 	install(DIRECTORY ${MGL_OUT}/mathgl_en DESTINATION ${MGL_DOC_PATH})
 	install(DIRECTORY ${MGL_OUT}/png DESTINATION ${MGL_DOC_PATH})

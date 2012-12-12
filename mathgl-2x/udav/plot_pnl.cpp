@@ -342,7 +342,7 @@ void PlotPanel::toolTop(QBoxLayout *l)
 
 	a = new QAction(QPixmap(":/xpm/edit-copy.png"), tr("Copy plot"), this);
 	connect(a, SIGNAL(triggered()), mgl, SLOT(copy()));
-	a->setToolTip(tr("Copy graphics to clipboard (Ctrl+Insert)."));
+	a->setToolTip(tr("Copy graphics to clipboard (Ctrl+Shift+G)."));
 	a->setShortcut(Qt::CTRL+Qt::SHIFT+Qt::Key_G);
 	o->addAction(a);	popup->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
@@ -504,13 +504,13 @@ void PlotPanel::toolLeft(QBoxLayout *l)
 	a = new QAction(QPixmap(":/xpm/media-seek-forward.png"), tr("Next slide"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(nextSlide()));
 	a->setShortcut(Qt::CTRL+Qt::Key_Period);
-	a->setToolTip(tr("Show next slide (Alt+.)."));	oo->addAction(a);
+	a->setToolTip(tr("Show next slide (Ctrl+.)."));	oo->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
 	a = new QAction(QPixmap(":/xpm/media-seek-backward.png"), tr("Prev slide"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(prevSlide()));
 	a->setShortcut(Qt::CTRL+Qt::Key_Comma);
-	a->setToolTip(tr("Show previous slide (Alt+,)."));	oo->addAction(a);
+	a->setToolTip(tr("Show previous slide (Ctrl+,)."));	oo->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
 	a = new QAction(QPixmap(":/xpm/film-b.png"), tr("Slideshow"), this);

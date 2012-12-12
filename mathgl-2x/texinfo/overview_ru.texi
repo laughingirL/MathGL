@@ -21,6 +21,7 @@ MathGL это ...
 * Quick guide::
 * Changes from v.1::
 * Utilities::
+* Thanks::
 @end menu
 
 @external
@@ -169,7 +170,7 @@ Add pipes support in utilities (@code{mglconv, mglview}).
 
 @c ------------------------------------------------------------------
 @external
-@node  Utilities, , Changes from v.1, Overview
+@node  Utilities, Thanks, Changes from v.1, Overview
 @section Utilities for parsing MGL
 
 MathGL library provides several tools for parsing MGL scripts. There is tools saving it to bitmap or vectorial images (@code{mglconv}). Tool @code{mglview} show MGL script and allow to rotate and setup the image. Another feature of @code{mglview} is loading *.mgld files (see @code{ExportMGLD()}) for quick viewing 3d pictures.
@@ -195,5 +196,28 @@ print help message.
 @end itemize
 
 Additionally you can create animated GIF file or a set of JPEG files with names @samp{frameNNNN.jpg} (here @samp{NNNN} is frame index). Values of the parameter @code{$0} for making animation can be specified inside the script by comment @code{##a val} for each value @code{val} (one comment for one value) or by option(s) @samp{-A val}. Also you can specify a cycle for animation by comment @code{##c v1 v2 dv} or by option @code{-C v1:v2:dv}. In the case of found/specified animation parameters, tool will execute script several times -- once for each value of @code{$0}.
+
+
+@c ------------------------------------------------------------------
+@external
+@node Thanks, , Utilities, Overview
+@section Благодарности
+
+
+@itemize @bullet
+@item
+Моя специальная благодарность моей жене за терпение во время написания библиотеки.
+@item
+Я благодарен моим соавторам Д. Кулагину и М. Видассову за помощь в разработке MathGL.
+@item
+Я благодарен D. Eftaxiopoulos, В. Липатову и С. Плису за создание бинарных пакетов для Linux.
+@item
+Я благодарен С. Скобелеву, К. Михайленко, М. Вейсману, W. Kaufman, A. Прохорову, A. Короткевичу, В. Онучину, С. Плису, Р. Киселеву, A. Иванову, Н. Троицкому and В. Липатову за продуктивные предложения и обсуждения.
+@item
+Я благодарен спонсорам М. Вейсману (ОИВТ РАН), W. Kaufman и A. Прохорову ($DATADVANCE).
+@end itemize
+
+Javascript интерфейс был разработан при поддержке компании @url{www.datadvance.net, $DATADVANCE}.
+
 
 @external

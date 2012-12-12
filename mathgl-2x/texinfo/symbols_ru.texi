@@ -420,6 +420,71 @@ style of @ref{tape}.
 @node Hot-keys for mglview, Hot-keys for UDAV, Symbols for styles, Symbols and hot-keys
 @section Hot-keys for mglview
 
+@multitable @columnfractions .15 .25 .6
+@headitem Key @tab Description
+@item @key{Ctrl-P}
+@tab Open printer dialog and print graphics.
+
+@item @key{Ctrl-W}
+@tab Close window.
+
+@item @key{Ctrl-T}
+@tab Switch on/off transparency for the graphics.
+
+@item @key{Ctrl-L}
+@tab Switch on/off additional lightning for the graphics.
+
+@item @key{Ctrl-Space}
+@tab Restore default graphics rotation, zoom and perspective.
+
+@item @key{F5}
+@tab Execute script and redraw graphics.
+
+@item @key{F6}
+@tab Change canvas size to fill whole region.
+
+@item @key{Ctrl-F5}
+@tab Run slideshow. If no parameter specified then the dialog with slideshow options will appear.
+
+@item @key{Ctrl-Comma}, @key{Ctrl-Period}
+@tab Show next/previous slide. If no parameter specified then the dialog with slideshow options will appear.
+
+
+@item @key{Ctrl-Shift-G}
+@tab Copy graphics to clipboard.
+
+
+
+@item @key{Alt-P}
+@tab Export as semitransparent PNG.
+
+@item @key{Alt-F}
+@tab Export as solid PNG.
+
+@item @key{Alt-J}
+@tab Export as JPEG.
+
+@item @key{Alt-E}
+@tab Export as vector EPS.
+
+@item @key{Alt-S}
+@tab Export as vector SVG.
+
+@item @key{Alt-L}
+@tab Export as LaTeX/Tikz image.
+
+@item @key{Alt-M}
+@tab Export as MGLD.
+
+@item @key{Alt-D}
+@tab Export as PRC/PDF.
+
+@item @key{Alt-O}
+@tab Export as OBJ.
+
+@c @item @key{Alt-X}
+@c @tab Export as X3D.
+@end multitable
 
 @c ------------------------------------------------------------------
 @external
@@ -550,6 +615,9 @@ style of @ref{tape}.
 @item @key{Ctrl-W}
 @tab Open dialog with slideshow options.
 
+@item @key{Ctrl-Shift-G}
+@tab Copy graphics to clipboard.
+
 
 @item @key{F1}
 @tab Show help on MGL commands
@@ -604,3 +672,5 @@ style of @ref{tape}.
 @c @tab Export as X3D.
 
 @end multitable
+
+@external

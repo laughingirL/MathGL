@@ -1469,8 +1469,6 @@ Evaluates the formula derivation respect to @var{dir} for variables in array @va
 
 @end ifclear
 
-@external
-
 @c ------------------------------------------------------------------
 @external
 @node MGL variables, , Evaluate expression, Data processing

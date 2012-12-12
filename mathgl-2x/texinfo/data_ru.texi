@@ -1466,9 +1466,6 @@ These functions change the data in some direction like differentiations, integra
 
 @end ifclear
 
-@external
-
-
 @c ------------------------------------------------------------------
 @external
 @node MGL variables, , Evaluate expression, Data processing

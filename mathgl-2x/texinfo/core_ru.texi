@@ -86,7 +86,7 @@ MGL не требует создания данного типа объекто�
 @end menu
 
 @c ==================================================================
-@external
+@comment  @external
 @node Transparency, Lighting, , Graphics setup
 @subsection Прозрачность
 @cindex Alpha
@@ -127,7 +127,7 @@ MGL не требует создания данного типа объекто�
 @end deftypefn
 
 @c ==================================================================
-@external
+@comment  @external
 @node Lighting, Fog, Transparency, Graphics setup
 @subsection Освещение
 @ifclear UDAV
@@ -186,7 +186,7 @@ MGL не требует создания данного типа объекто�
 @end deftypefn
 
 @c ==================================================================
-@external
+@comment  @external
 @node Fog, Default sizes, Lighting, Graphics setup
 @subsection Туман
 @cindex Fog
@@ -201,7 +201,7 @@ MGL не требует создания данного типа объекто�
 @end deftypefn
 
 @c ==================================================================
-@external
+@comment  @external
 @node Default sizes, Cutting, Fog, Graphics setup
 @subsection Базовые размеры
 @ifclear UDAV
@@ -274,7 +274,7 @@ MGL не требует создания данного типа объекто�
 @end deftypefn
 
 @c ==================================================================
-@external
+@comment  @external
 @node Cutting, Font settings, Default sizes, Graphics setup
 @subsection Обрезание
 @ifclear UDAV
@@ -312,7 +312,7 @@ MGL не требует создания данного типа объекто�
 @end deftypefn
 
 @c ==================================================================
-@external
+@comment  @external
 @node Font settings, Palette and colors, Cutting, Graphics setup
 @subsection Шрифты
 @ifclear UDAV
@@ -390,7 +390,7 @@ MGL не требует создания данного типа объекто�
 @end ifclear
 
 @c ==================================================================
-@external
+@comment  @external
 @node Palette and colors, Error handling, Font settings, Graphics setup
 @subsection Палитра и цвета
 @ifclear UDAV
@@ -419,7 +419,7 @@ MGL не требует создания данного типа объекто�
 @end ifclear
 
 @c ==================================================================
-@external
+@comment  @external
 @node Error handling, , Palette and colors, Graphics setup
 @subsection Обработка ошибок
 @ifclear UDAV
@@ -492,7 +492,7 @@ Setsize: размер(ы) равны нулю или отрицательны
 @end menu
 
 @c ------------------------------------------------------------------
-@external
+@comment  @external
 @node Ranges (bounding box), Curved coordinates, , Axis settings
 @subsection Масштаб осей координат
 @cindex CRange
@@ -572,7 +572,7 @@ Setsize: размер(ы) равны нулю или отрицательны
 
 
 @c ------------------------------------------------------------------
-@external
+@comment  @external
 @node Curved coordinates, Ticks, Ranges (bounding box), Axis settings
 @subsection Криволинейные координаты
 @cindex Axis
@@ -616,7 +616,7 @@ Ternary -- специальный тип графика для 3 зависим�
 @end deftypefn
 
 @c ------------------------------------------------------------------
-@external
+@comment  @external
 @node Ticks, , Curved coordinates, Axis settings
 @subsection Метки осей
 @cindex AxisStl
@@ -958,7 +958,7 @@ Ternary -- специальный тип графика для 3 зависим�
 @end menu
 
 @c ==================================================================
-@external
+@comment  @external
 @node Export to file, Frames/Animation, , Export picture
 @subsection Экспорт в файл
 @cindex Write
@@ -1102,7 +1102,7 @@ Ternary -- специальный тип графика для 3 зависим�
 
 
 @c ##################################################################
-@external
+@comment  @external
 @node Frames/Animation, Bitmap in memory, Export to file, Export picture
 @subsection Кадры/Анимация
 
@@ -1172,7 +1172,7 @@ Ternary -- специальный тип графика для 3 зависим�
 @end ifclear
 
 @c ------------------------------------------------------------------
-@external
+@comment  @external
 @node Bitmap in memory, Parallelization, Frames/Animation, Export picture
 @subsection Рисование в памяти
 
@@ -1245,7 +1245,7 @@ gr.GetBGRN(bits, len(bits));
 @end ifclear
 
 @c ------------------------------------------------------------------
-@external
+@comment  @external
 @node Parallelization, , Bitmap in memory, Export picture
 @subsection Распараллеливание
 

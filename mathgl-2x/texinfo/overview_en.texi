@@ -21,6 +21,7 @@ a library with large and growing set of graphics.
 * Quick guide::
 * Changes from v.1::
 * Utilities::
+* Thanks::
 @end menu
 
 @external
@@ -168,7 +169,7 @@ Add pipes support in utilities (@code{mglconv, mglview}).
 
 @c ------------------------------------------------------------------
 @external
-@node  Utilities, , Changes from v.1, Overview
+@node  Utilities, Thanks, Changes from v.1, Overview
 @section Utilities for parsing MGL
 
 MathGL library provides several tools for parsing MGL scripts. There is tools saving it to bitmap or vectorial images (@code{mglconv}). Tool @code{mglview} show MGL script and allow to rotate and setup the image. Another feature of @code{mglview} is loading *.mgld files (see @code{ExportMGLD()}) for quick viewing 3d pictures.
@@ -194,5 +195,26 @@ print help message.
 @end itemize
 
 Additionally you can create animated GIF file or a set of JPEG files with names @samp{frameNNNN.jpg} (here @samp{NNNN} is frame index). Values of the parameter @code{$0} for making animation can be specified inside the script by comment @code{##a val} for each value @code{val} (one comment for one value) or by option(s) @samp{-A val}. Also you can specify a cycle for animation by comment @code{##c v1 v2 dv} or by option @code{-C v1:v2:dv}. In the case of found/specified animation parameters, tool will execute script several times -- once for each value of @code{$0}.
+
+
+@c ------------------------------------------------------------------
+@external
+@node Thanks, , Utilities, Overview
+@section Thanks
+
+@itemize @bullet
+@item
+My special thanks to my wife for the patience during the writing of this library and for the help in documentation writing and spelling.
+@item
+I'm thankful to my coauthors D. Kulagin and M. Vidassov for help in developing MathGL.
+@item
+I'm thankful to D. Eftaxiopoulos, V. Lipatov and S.M. Plis for making binary packages for Linux.
+@item
+I'm thankful to S. Skobelev, C. Mikhailenko, M. Veysman, W. Kaufman, A. Prokhorov, A. Korotkevich, V. Onuchin, S.M. Plis, R. Kiselev, A. Ivanov, N. Troickiy and V. Lipatov for fruitful comments.
+@item
+I'm thankful to sponsors M. Veysman (IHED RAS), W. Kaufman and A. Prokhorov ($DATADVANCE).
+@end itemize
+
+Javascript interface was developed with support of @url{www.datadvance.net, $DATADVANCE} company.
 
 @external

@@ -86,7 +86,7 @@ Restore initial values for all of parameters.
 @end menu
 
 @c ==================================================================
-@external
+@comment  @external
 @node Transparency, Lighting, , Graphics setup
 @subsection Transparency
 @cindex Alpha
@@ -136,7 +136,7 @@ Lamp-like transparency (@samp{2}) -- below and upper things are commutable and a
 @end deftypefn
 
 @c ==================================================================
-@external
+@comment  @external
 @node Lighting, Fog, Transparency, Graphics setup
 @subsection Lighting
 @ifclear UDAV
@@ -195,7 +195,7 @@ Sets the brightness of ambient light. The value should be in range [0,1].
 @end deftypefn
 
 @c ==================================================================
-@external
+@comment  @external
 @node Fog, Default sizes, Lighting, Graphics setup
 @subsection Fog
 @cindex Fog
@@ -210,7 +210,7 @@ Function imitate a fog in the plot. Fog start from relative distance @var{dz} fr
 @end deftypefn
 
 @c ==================================================================
-@external
+@comment  @external
 @node Default sizes, Cutting, Fog, Graphics setup
 @subsection Default sizes
 @ifclear UDAV
@@ -283,7 +283,7 @@ Sets default name @var{id} as filename for saving (in FLTK window for example).
 @end deftypefn
 
 @c ==================================================================
-@external
+@comment  @external
 @node Cutting, Font settings, Default sizes, Graphics setup
 @subsection Cutting
 @ifclear UDAV
@@ -321,7 +321,7 @@ Sets the cutting off condition by formula @var{cond}. This condition determine w
 @end deftypefn
 
 @c ==================================================================
-@external
+@comment  @external
 @node Font settings, Palette and colors, Cutting, Graphics setup
 @subsection Font settings
 @ifclear UDAV
@@ -404,7 +404,7 @@ Load default font typeface (for all newly created HMGL/mglGraph objects) from @v
 @end ifclear
 
 @c ==================================================================
-@external
+@comment  @external
 @node Palette and colors, Error handling, Font settings, Graphics setup
 @subsection Palette and colors
 @ifclear UDAV
@@ -433,7 +433,7 @@ Sets RGB values for color with given @var{id}.
 @end ifclear
 
 @c ==================================================================
-@external
+@comment  @external
 @node Error handling, , Palette and colors, Graphics setup
 @subsection Error handling
 @ifclear UDAV
@@ -506,7 +506,7 @@ These large set of variables and functions control how the axis and ticks will b
 @end menu
 
 @c ------------------------------------------------------------------
-@external
+@comment  @external
 @node Ranges (bounding box), Curved coordinates, , Axis settings
 @subsection Ranges (bounding box)
 @cindex CRange
@@ -587,7 +587,7 @@ Additionally extend axis range for any settings made by @code{SetRange} or @code
 
 
 @c ------------------------------------------------------------------
-@external
+@comment  @external
 @node Curved coordinates, Ticks, Ranges (bounding box), Axis settings
 @subsection Curved coordinates
 @cindex Axis
@@ -631,7 +631,7 @@ Use @code{Ternary(0)} for returning to usual axis. @sref{Ternary axis} @sref{Axi
 @end deftypefn
 
 @c ------------------------------------------------------------------
-@external
+@comment  @external
 @node Ticks, , Curved coordinates, Axis settings
 @subsection Ticks
 @cindex AxisStl
@@ -1003,7 +1003,7 @@ Ends group definition.
 @end menu
 
 @c ==================================================================
-@external
+@comment  @external
 @node Export to file, Frames/Animation, , Export picture
 @subsection Export to file
 @cindex Write
@@ -1145,7 +1145,7 @@ Imports points and primitives in file using @ref{MGLD format}. Later this file c
 
 
 @c ##################################################################
-@external
+@comment  @external
 @node Frames/Animation, Bitmap in memory, Export to file, Export picture
 @subsection Frames/Animation
 
@@ -1215,7 +1215,7 @@ Finish writing animated GIF and close connected pointers.
 @end ifclear
 
 @c ------------------------------------------------------------------
-@external
+@comment  @external
 @node Bitmap in memory, Parallelization, Frames/Animation, Export picture
 @subsection Bitmap in memory
 
@@ -1288,7 +1288,7 @@ Checks if point @{@var{xs}, @var{ys}@} is close to one of active point (i.e. mgl
 @end ifclear
 
 @c ------------------------------------------------------------------
-@external
+@comment  @external
 @node Parallelization, , Bitmap in memory, Export picture
 @subsection Parallelization
 

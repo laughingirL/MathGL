@@ -1,4 +1,4 @@
-2.1 Released 12 December 2012
+2.1 Released 13 December 2012
 
 * Add class mglDataC for complex data arrays.
 * Add mglData::Solve() for finding x-value where dat(x)=val.
