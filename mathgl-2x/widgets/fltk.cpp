@@ -135,6 +135,7 @@ void Fl_MathGL::set_graph(HMGL GR)
 //-----------------------------------------------------------------------------
 void Fl_MathGL::draw()
 {
+	// TODO: add active points drawing here (from Qt)
 	const unsigned char *g = gr ? gr->GetBits() : 0;
 	int i, hh=gr->GetHeight(), ww=gr->GetWidth();
 	if(g)	fl_draw_image(g, x(), y(), ww, hh, 3);
@@ -150,7 +151,6 @@ void Fl_MathGL::draw()
 			fl_line(30+i*ww/10,30,30+i*ww/10,30+hh);
 		}
 //		if(*MouseBuf)	fl_draw(MouseBuf,30,50);
-// TODO: add active points drawing here (from Qt)
 	}
 }
 //-----------------------------------------------------------------------------

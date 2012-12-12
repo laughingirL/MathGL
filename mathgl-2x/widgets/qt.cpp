@@ -269,25 +269,30 @@ void QMathGL::update()
 //-----------------------------------------------------------------------------
 void QMathGL::refresh()
 {
+//	printf("%ld,%d\n",gr->GetPrmNum(),gr->GetNumFrame());	fflush(stdout);
 	if(gr->get(MGL_VECT_FRAME) && !(gr->GetQuality()&4) && gr->GetNumFrame()>0)
 	{
-		gr->Clf();	gr->GetFrame(gr->GetNumFrame()-1);
-		mglParse pr;
-		long i, n=primitives.count('\n');
-		mglGraph gg(gr);
-		setlocale(LC_NUMERIC, "C");
-		gg.Push();	gg.SubPlot(1,1,0,"#");
-		mglPoint x1=gr->Min, x2=gr->Max;
-		gg.SetRanges(mglPoint(-1,-1,-1),mglPoint(1,1,1));
-		for(i=0;i<n;i++)
+		if(draw_func || draw)
 		{
-			gr->SetObjId(i+MGL_MAX_LINES);
-			QString tst = primitives.section('\n',i,i);
-			pr.Parse(&gg,primitives.section('\n',i,i).toAscii().constData(),i+MGL_MAX_LINES);
+			gr->Clf();	gr->GetFrame(gr->GetNumFrame()-1);
+			mglParse pr;
+			long i, n=primitives.count('\n');
+			mglGraph gg(gr);
+			setlocale(LC_NUMERIC, "C");
+			gg.Push();	gg.SubPlot(1,1,0,"#");
+			mglPoint x1=gr->Min, x2=gr->Max;
+			gg.SetRanges(mglPoint(-1,-1,-1),mglPoint(1,1,1));
+			for(i=0;i<n;i++)
+			{
+				gr->SetObjId(i+MGL_MAX_LINES);
+				QString tst = primitives.section('\n',i,i);
+				pr.Parse(&gg,primitives.section('\n',i,i).toAscii().constData(),i+MGL_MAX_LINES);
+			}
+			gg.SetRanges(x1,x2);	gg.Pop();	setlocale(LC_NUMERIC, "");
+			
 		}
-		gg.SetRanges(x1,x2);	gg.Pop();	setlocale(LC_NUMERIC, "");
+		gr->Zoom(x1,y1,x2,y2);	gr->View(phi,0,tet);	gr->Perspective(per);
 	}
-	gr->Zoom(x1,y1,x2,y2);	gr->View(phi,0,tet);	gr->Perspective(per);
 	mglConvertFromGraph(pic, gr, &grBuf);
 	if(pic.size()!=size())	setSize(pic.width(), pic.height());
 	repaint();
@@ -1021,30 +1026,37 @@ QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *&tet, QSpinBox *&p
 		oo = new QMenu(TR("Primitives ..."),Wnd);
 		a = new QAction(QPixmap(line_xpm), TR("Add line"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(addLine()));
+		Wnd->connect(QMGL, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
 		a->setToolTip(TR("Add line which properties can be changed later by mouse."));
 		bb->addAction(a);	oo->addAction(a);
 		a = new QAction(QPixmap(curve_xpm), TR("Add curve"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(addCurve()));
+		Wnd->connect(QMGL, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
 		a->setToolTip(TR("Add curve which properties can be changed later by mouse."));
 		bb->addAction(a);	oo->addAction(a);
 		a = new QAction(QPixmap(mark_s_xpm), TR("Add rect"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(addRect()));
+		Wnd->connect(QMGL, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
 		a->setToolTip(TR("Add rectangle which properties can be changed later by mouse."));
 		bb->addAction(a);	oo->addAction(a);
 		a = new QAction(QPixmap(mark_d_xpm), TR("Add rhombus"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(addRhomb()));
+		Wnd->connect(QMGL, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
 		a->setToolTip(TR("Add rhombus which properties can be changed later by mouse."));
 		bb->addAction(a);	oo->addAction(a);
 		a = new QAction(QPixmap(mark_o_xpm), TR("Add ellipse"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(addEllipse()));
+		Wnd->connect(QMGL, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
 		a->setToolTip(TR("Add ellipse which properties can be changed later by mouse."));
 		bb->addAction(a);	oo->addAction(a);
 		a = new QAction(QPixmap(mark_a_xpm), TR("Add mark"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(addMark()));
+		Wnd->connect(QMGL, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
 		a->setToolTip(TR("Add marker which properties can be changed later by mouse."));
 		bb->addAction(a);	oo->addAction(a);
 		a = new QAction(QPixmap(text_xpm), TR("Add text"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(addText()));
+		Wnd->connect(QMGL, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
 		a->setToolTip(TR("Add text which properties can be changed later by mouse."));
 		bb->addAction(a);	oo->addAction(a);
 		o->addMenu(oo);

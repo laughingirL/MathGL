@@ -55,9 +55,9 @@ public:
 	inline HMGL getGraph()	{	return (HMGL)gr;	}
 	/// Set drawing functions and its parameter
 	inline void setDraw(int (*func)(mglBase *gr, void *par), void *par=0)
-	{	draw_func = func;	draw_par = par;	}
+	{	draw_func = func;	draw_par = par;	emit usePrimChanged(draw_func || draw);	}
 	inline void setDraw(mglDraw *dr)
-	{	draw = dr;	}
+	{	draw = dr;	emit usePrimChanged(draw_func || draw);	}
 	inline void setDraw(int (*draw)(mglGraph *gr))
 	{	setDraw(draw?mgl_draw_graph:0,(void*)draw);	}
 	inline void zoomRegion(mreal xx1,mreal xx2,mreal yy1, mreal yy2)
@@ -143,6 +143,7 @@ signals:
 	void lightChanged(bool);	///< Lighting changed (by toolbar)
 	void zoomChanged(bool);		///< Zooming changed (by toolbar)
 	void rotateChanged(bool);	///< Rotation changed (by toolbar)
+	void usePrimChanged(bool);	///< Use primitive changed (i.e. have or not drawing function)
 	void mouseClick(mreal,mreal,mreal);	///< Position of mouse click
 	void frameChanged(int);		///< Need another frame to show
 	void showWarn(QString);		///< Show warnings

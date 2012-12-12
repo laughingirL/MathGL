@@ -73,7 +73,6 @@ int main(int argc, char **argv)
 		{
 			wchar_t ch;
 			while((ch=fgetwc(fp))!=WEOF)	str.push_back(ch);
-//			while(!feof(fp))	str.push_back(fgetwc(fp));
 			fclose(fp);
 		}
 	}
@@ -85,9 +84,7 @@ int main(int argc, char **argv)
 	{
 		gr.Setup(false);
 		setlocale(LC_NUMERIC, "C");
-		gr.NewFrame();
 		gr.ImportMGLD(iname);
-		gr.EndFrame();
 		setlocale(LC_NUMERIC, "");
 		gr.Update();
 	}

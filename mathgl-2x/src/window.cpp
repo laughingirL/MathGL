@@ -30,7 +30,8 @@ mglCanvasWnd::~mglCanvasWnd()	{	if(GG) free(GG);	}
 void mglCanvasWnd::SetCurFig(int c)
 {
 	CurFig=c;
-	if(get(MGL_VECT_FRAME) && c>=0 && c<(long)DrwDat.size())	GetFrame(c);
+	if(get(MGL_VECT_FRAME) && c>=0 && c<(long)DrwDat.size() && DrawFunc)
+		GetFrame(c);
 }
 //-----------------------------------------------------------------------------
 void mglCanvasWnd::ResetFrames()
