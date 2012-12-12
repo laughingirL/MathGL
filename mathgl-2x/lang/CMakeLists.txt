@@ -2,7 +2,6 @@ set(src_imp_dep
 ${CMAKE_SOURCE_DIR}/include/mgl2/type.h
 ${CMAKE_SOURCE_DIR}/include/mgl2/data.h
 ${CMAKE_SOURCE_DIR}/include/mgl2/mgl.h
-${CMAKE_SOURCE_DIR}/include/mgl2/window.h
 )
 
 SET_SOURCE_FILES_PROPERTIES(mgl.i numpy.i PROPERTIES CPLUSPLUS ON)
@@ -16,11 +15,14 @@ if(MGL_HAVE_PYTHON)
 	SWIG_ADD_MODULE(mathgl python mgl.i)
 	SWIG_LINK_LIBRARIES(mathgl mgl ${PYTHON_LIBRARIES})
 	SET(SWIG_MODULE_mathgl_EXTRA_DEPS numpy.i ${src_imp_dep})
-	set_target_properties(${SWIG_MODULE_${mathgl}_REAL_NAME} PROPERTIES BUILD_WITH_INSTALL_RPATH TRUE)
-	add_custom_target(mgl_python_module ALL DEPENDS ${SWIG_MODULE_${mathgl}_REAL_NAME})
+	add_custom_target(mgl_python_module ALL DEPENDS _mathgl)
 
+	install(CODE "
+		execute_process(
+			COMMAND ${pycompile_prog} -f mathgl.py
+			WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/lang)")
 	install(FILES ${MathGL_BINARY_DIR}/lang/mathgl.py ${MathGL_BINARY_DIR}/lang/mathgl.pyc DESTINATION ${MGL_PYTHON_SITE_PACKAGES})
-	install (TARGETS ${SWIG_MODULE_${mathgl}_REAL_NAME} LIBRARY DESTINATION ${MGL_PYTHON_SITE_PACKAGES})
+	install (TARGETS _mathgl LIBRARY DESTINATION ${MGL_PYTHON_SITE_PACKAGES})
 	set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "mathgl.py mathgl.pyc")
 endif(MGL_HAVE_PYTHON)
 
