@@ -4,6 +4,8 @@ ${CMAKE_SOURCE_DIR}/include/mgl2/data.h
 ${CMAKE_SOURCE_DIR}/include/mgl2/mgl.h
 )
 
+set(mgl_clean_files "")
+
 SET_SOURCE_FILES_PROPERTIES(mgl.i numpy.i PROPERTIES CPLUSPLUS ON)
 
 if(MGL_HAVE_PYTHON)
@@ -23,7 +25,7 @@ if(MGL_HAVE_PYTHON)
 			WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/lang)")
 	install(FILES ${MathGL_BINARY_DIR}/lang/mathgl.py ${MathGL_BINARY_DIR}/lang/mathgl.pyc DESTINATION ${MGL_PYTHON_SITE_PACKAGES})
 	install (TARGETS _mathgl LIBRARY DESTINATION ${MGL_PYTHON_SITE_PACKAGES})
-	set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "mathgl.py mathgl.pyc")
+	set(mgl_clean_files ${mgl_clean_files} mathgl.py mathgl.pyc)
 endif(MGL_HAVE_PYTHON)
 
 if(MGL_HAVE_OCTAVE)
@@ -61,5 +63,6 @@ message(STATUS "${oct_prog} ${oct_host} ${oct_api}")
 			COMMAND ${oct_exec} -q --eval \"pkg install mathgl.tar.gz\"
 			WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/lang )")
 	endif(enable-octave-install)
-	set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "mathgl mathgl.tar.gz")
+	set(mgl_clean_files ${mgl_clean_files} mathgl mathgl.tar.gz)
 endif(MGL_HAVE_OCTAVE)
+set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "${mgl_clean_files}")
