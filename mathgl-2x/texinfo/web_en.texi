@@ -128,7 +128,8 @@ Generally MathGL is GPL library. However, you can use LGPL license for MathGL co
 @strong{Latest news}
 @itemize
 @item @emph{13 December 2012.}
-New version (v.@value{VERSION}) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are new plots, advanced color schemes, JavaScript drawing, and many other improvements in both MathGL core and UDAV, which partially denoted @ref{News, here}. Note, there are @strong{incompatible with v.2.0.* changes} in the arguments of some functions.
+New version (v.@value{VERSION}) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are new plots, advanced color schemes, @uref{../json.html, JavaScript drawing}, and many other improvements in both MathGL core and UDAV, which partially denoted @ref{News, here}. Note, there are @strong{incompatible with v.2.0.* changes} in the arguments of some functions.
+@item @emph{I'm sorry for making incompatible changes in v.2.1. It was done for introducing unified interface for all functions. I promise that I will not break API for v.2.* later, i.e. I'll only add new features or bug fixes.}
 @end itemize
 
 There is detailed @ref{News, news list}. Sourceforge project page @uref{http://sourceforge.net/projects/mathgl/, here}.
@@ -154,36 +155,36 @@ New version (v.2.1) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is 
 @item
 Add class mglDataC for complex data arrays.
 @item
-Add mglData::Solve() for finding x-value where dat(x)=val.
+Add Vect3() plot for drawing vectors on slice of 3d vector field. See @url{../doc_en/doc_en_17.html#Vect3-sample, sample}.
 @item
-Add mglData::Clean() for removing rows with duplicate values for given column.
-@item
-Add Vect3() plot for drawing vectors on slice of 3d vector field.
-@item
-Add Table() function for drawing table with data values.
+Add Table() function for drawing table with data values. See @url{../doc_en/doc_en_14.html#Table-sample, sample}.
 @item
 Add ZoomAxis() for zooming/shifting axis range as whole.
 @item
 Add WriteJSON() function for exporting in JSON format suitable for later drawing by JavaScript
 @item
-Add JavaScript code for visualizing JSON data.
+Add JavaScript code for visualizing JSON data. See @uref{../json.html, samples}.
 @item
 Add mgl.cgi tool which return PNG image for CGI request in form of MGL script.
+@item
+Add mglData::Solve() for finding x-value where dat(x)=val. See @url{../doc_en/doc_en_12.html#Solve-sample, sample}.
+@item
+Add mglData::Clean() for removing rows with duplicate values for given column.
 @item
 Add MGL commands 'errbox', 'face'
 
 @item
-Color can be specified as its RGB[A] values, i.e. like @samp{@{xFFFFFF@}} or @samp{@{xFFFFFFFF@}}.
+Color can be specified as its RGB[A] values, i.e. like @samp{@{xFFFFFF@}} or @samp{@{xFFFFFFFF@}}. See @url{../doc_en/doc_en_23.html#Line-styles, sample}.
 @item
-Color in color scheme  may have position in range [0,1]. Format is @samp{@{CN,pos@}} or @samp{@{xFFFFFF,pos@}}.
+Color in color scheme  may have position in range [0,1]. Format is @samp{@{CN,pos@}} or @samp{@{xFFFFFF,pos@}}. See @url{../doc_en/doc_en_24.html#Color-scheme, sample}.
 @item
 Now pen width for marks is proportional to pen width of line multiplied by size of marks.
 @item
-Now you can use different font-faces in the plot simultaneously.
+Now you can use different font-faces in the plot simultaneously. See @url{../doc_en/doc_en_11.html#Text-features, sample}.
 @item
 Now Legend() automatically use several columns if it contain too many legend entries.
 @item
-Add style '-' for legend for drawing them horizontally.
+Add style '-' for legend for drawing them horizontally. See @url{../doc_en/doc_en_11.html#Legend-sample, sample}.
 @item
 Vectors is drawn now even if only starting or ending points are placed in bounding box.
 @item
@@ -192,22 +193,21 @@ Strongly rewrite the algorithm of vector field plotting.
 @item
 Grid lines for NAN origin values are always located at far-away edges.
 @item
-Try correctly place axis and tick labels even for axis with inverse range (i.e. for v2<v1).
-  Note, it work well for 2D axis. One should use Aspect() with negative values to do it correctly in general case.
+Try correctly place axis and tick labels even for axis with inverse range (i.e. for v2<v1). Note, it work well for 2D axis. One should use Aspect() with negative values to do it correctly in general case.
 @item
-Axis style 'XYZ' draw corresponding axis with ticks labels from other side of axis. This also influence on followng Label() calls.
+Axis style 'XYZ' draw corresponding axis with ticks labels on opposite side. This also influence on following Label() calls.
 @item
 Text is drawn for initially invisible axis (like z-axis) too.
 
 @item
-Add functions GetFrame(), AddFrame() for replacing or adding data from given frame. Work if MGL_VECT_FRAME is set on (by default is on).
-@item
 Frames now save 3D information if MGL_VECT_FRAME is set (by default).
+@item
+Add functions GetFrame(), DelFrame(), SetFrame(), ShowFrame() for replacing or showing data from given frame. It can be use to hide/show a set of plot(s) quickly. Work if MGL_VECT_FRAME is set on (by default is on).
 @item
 CalcXYZ() function now use data from z-buffer for better determining @{x,y,z@} coordinates.
 
 @item
-Add dialog for data arguments in "New command" dialog of UDAV.
+Add dialog for data arguments in "New command" dialog of UDAV. See @url{../doc_en/doc_en_71.html#UDAV-dialogs, UDAV dialogs}.
 @item
 Value of arguments are saved while the kind of command is changed in "New command" dialog of UDAV.
 @item
@@ -244,26 +244,25 @@ Export functions now can write in stdout if file name is "-".
 Picture drawing now use multi-threading for each stage.
 
 @item
-Functions mglData::Spline*, mglData::Linear@item
-now can return gradient at the point.
+Functions mglData::Spline*, mglData::Linear* now can return gradient at the point.
 @item
-mglFourier now make true inverse transform
+mglFourier now make true inverse transform.
 
 @item
 Add annotation for all pure C functions.
 @item
-Update list of built-in glyphs
+Update list of built-in glyphs.
 @item
-Update samples
+Update samples.
 @item
-Update documentation
+Update documentation.
 @item
-Different bugfixes
+Different bugfixes.
 
 @item
-INCOMPATIBLE CHANGES in the arguments of functions: mgl_axis, mgl_axis_grid, mgl_label, mgl_labelw, mgl_legend_pos, mgl_legend; and in functions for MGL parsing.
+@strong{INCOMPATIBLE CHANGES:} in the arguments of functions: mgl_axis, mgl_axis_grid, mgl_label, mgl_labelw, mgl_legend_pos, mgl_legend; and in functions for MGL parsing.
 @item
-MINOR INCOMPATIBLE: plotting functions now use double argument always.
+@strong{MINOR INCOMPATIBLE:} plotting functions now use double argument always.
 @end itemize
 
 @item 
