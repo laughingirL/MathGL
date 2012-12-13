@@ -49,14 +49,15 @@ message(STATUS "${oct_prog} ${oct_host} ${oct_api}")
 	SWIG_ADD_MODULE(mgl-oct octave mathgl.i)
 	SWIG_LINK_LIBRARIES(mgl-oct mgl)
 	set_target_properties(mgl-oct PROPERTIES OUTPUT_NAME mathgl PREFIX "" SUFFIX ".oct")
+	get_target_property(mgl-oct_filename mgl-oct LOCATION)
 	add_custom_command(OUTPUT mathgl.tar.gz
 		COMMAND ${CMAKE_COMMAND} -E make_directory ${mgl_pkg_dir}
 		COMMAND ${CMAKE_COMMAND} -E copy ${MathGL_SOURCE_DIR}/COPYING ${MathGL_BINARY_DIR}/lang/${pkg_name}
 		COMMAND ${CMAKE_COMMAND} -E copy ${MathGL_SOURCE_DIR}/lang/DESCRIPTION ${MathGL_BINARY_DIR}/lang/${pkg_name}
 		COMMAND ${CMAKE_COMMAND} -E copy ${MathGL_SOURCE_DIR}/lang/INDEX ${MathGL_BINARY_DIR}/lang/${pkg_name}
 		COMMAND ${CMAKE_COMMAND} -E copy ${MathGL_SOURCE_DIR}/lang/PKG_ADD_template ${MathGL_BINARY_DIR}/lang/${pkg_name}
-		COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:mgl-oct> ${mgl_pkg_dir}
-		COMMAND ${oct_tar} cpzvf mathgl.tar.gz ${pkg_name}
+		COMMAND ${CMAKE_COMMAND} -E copy ${mgl-oct_filename} ${mgl_pkg_dir}
+		COMMAND ${oct_tar} cpzf mathgl.tar.gz ${pkg_name}
 		WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/lang
 		DEPENDS mgl-oct
 	)
