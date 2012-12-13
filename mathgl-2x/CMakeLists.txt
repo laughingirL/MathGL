@@ -10,7 +10,6 @@ endif(NOT CMAKE_BUILD_TYPE)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 set(MathGL_VERSION_MAJOR 2)
 set(MathGL_VERSION_MINOR 1)
-SET(CMAKE_SKIP_INSTALL_ALL_DEPENDENCY TRUE)
 
 include(CMakeDependentOption)
 
@@ -277,10 +276,6 @@ endif((enable-all-widgets OR enable-qt) AND (NOT enable-lgpl) )
 
 if((enable-all-swig OR enable-python) AND (NOT enable-lgpl) )
 	set(MGL_HAVE_PYTHON 1)
-	find_program(pycompile_prog pycompile)
-	if(NOT pycompile_prog)
-		message(SEND_ERROR "Couldn't find pycompile needed for python interfaces compiling.")
-	endif(NOT pycompile_prog)
 	FIND_PACKAGE(PythonInterp)
 	if(NOT PYTHONINTERP_FOUND)
 		message(SEND_ERROR "Couldn't find python interpreter.")
