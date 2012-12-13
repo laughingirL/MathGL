@@ -1007,9 +1007,9 @@ HMDT mgl_transform(HCDT re, HCDT im, const char *tr)
 	else if(strchr(tr,'i'))	// do Fourier only once for speeding up
 	{
 		char str[5] = "   i";
-		if(tr[0]=='f')	str[0]='x';
-		if(tr[1]=='f')	str[1]='y';
-		if(tr[2]=='f')	str[2]='z';
+		if(tr[0]=='i')	str[0]='x';
+		if(tr[1]=='i')	str[1]='y';
+		if(tr[2]=='i')	str[2]='z';
 		mgl_data_fourier(&rr,&ii,str);
 	}
 	else if(strchr(tr,'s'))	// do Fourier only once for speeding up
