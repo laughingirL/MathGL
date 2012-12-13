@@ -64,6 +64,13 @@ void mgl_write_obj_old(HMGL gr, const char *fname,const char *descr, int use_png
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
+	mglData xx("/home/balakin/tmp/xx.dat");
+	printf("{%ld,%ld,%ld}\t",xx.nx,xx.ny,xx.nz);
+	mglData res = xx.Solve(0.058775233,'z');
+	printf("{%ld,%ld,%ld}\n",res.nx,res.ny,res.nz);
+	res.Save("/home/balakin/tmp/res.dat");
+	return;
+	
 	mglParse par;
 	par.AllowSetSize(true);
 	setlocale(LC_CTYPE, "");

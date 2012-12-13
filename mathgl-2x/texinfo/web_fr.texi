@@ -341,120 +341,120 @@ There are samples for @ref{1D plotting, 1D arrays}, @ref{2D plotting, 2D arrays}
 @anchor{1D plotting}
 @subsection Examples of graphics for 1d arrays
 
-@fig{plot, doc_en/doc_en_13.html#Plot-sample}
-@fig{radar,doc_en/doc_en_13.html#Radar-sample}
-@fig{step, doc_en/doc_en_13.html#Step-sample}
-@fig{tens, doc_en/doc_en_13.html#Tens-sample}
+@fig{plot, doc_en/doc_en_14.html#Plot-sample}
+@fig{radar,doc_en/doc_en_14.html#Radar-sample}
+@fig{step, doc_en/doc_en_14.html#Step-sample}
+@fig{tens, doc_en/doc_en_14.html#Tens-sample}
 
-@fig{area, doc_en/doc_en_13.html#Area-sample}
-@fig{region,doc_en/doc_en_13.html#Region-sample}
-@fig{stem, doc_en/doc_en_13.html#Stem-sample}
-@fig{torus,doc_en/doc_en_13.html#Torus-sample}
+@fig{area, doc_en/doc_en_14.html#Area-sample}
+@fig{region,doc_en/doc_en_14.html#Region-sample}
+@fig{stem, doc_en/doc_en_14.html#Stem-sample}
+@fig{torus,doc_en/doc_en_14.html#Torus-sample}
 
-@fig{bars, doc_en/doc_en_13.html#Bars-sample}
-@fig{barh, doc_en/doc_en_13.html#Barh-sample}
-@fig{cones,doc_en/doc_en_13.html#Cones-sample}
-@fig{chart,doc_en/doc_en_13.html#Chart-sample}
+@fig{bars, doc_en/doc_en_14.html#Bars-sample}
+@fig{barh, doc_en/doc_en_14.html#Barh-sample}
+@fig{cones,doc_en/doc_en_14.html#Cones-sample}
+@fig{chart,doc_en/doc_en_14.html#Chart-sample}
 
-@fig{boxplot,doc_en/doc_en_13.html#BoxPlot-sample}
-@fig{candle, doc_en/doc_en_13.html#Candle-sample}
-@fig{tube, doc_en/doc_en_13.html#Tube-sample}
-@fig{tape, doc_en/doc_en_13.html#Tape-sample}
+@fig{boxplot,doc_en/doc_en_14.html#BoxPlot-sample}
+@fig{candle, doc_en/doc_en_14.html#Candle-sample}
+@fig{tube, doc_en/doc_en_14.html#Tube-sample}
+@fig{tape, doc_en/doc_en_14.html#Tape-sample}
 
-@fig{error,doc_en/doc_en_13.html#Error-sample}
-@fig{mark, doc_en/doc_en_13.html#Mark-sample}
-@fig{textmark, doc_en/doc_en_13.html#TextMark-sample}
-@fig{label,doc_en/doc_en_13.html#Label-sample}
+@fig{error,doc_en/doc_en_14.html#Error-sample}
+@fig{mark, doc_en/doc_en_14.html#Mark-sample}
+@fig{textmark, doc_en/doc_en_14.html#TextMark-sample}
+@fig{label,doc_en/doc_en_14.html#Label-sample}
 
 @anchor{2D plotting}
 @subsection Examples of graphics for 2d arrays
 
-@fig{surf, doc_en/doc_en_14.html#Surf-sample}
-@fig{surfc,doc_en/doc_en_14.html#SurfC-sample}
-@fig{surfa,doc_en/doc_en_14.html#SurfA-sample}
-@fig{mesh, doc_en/doc_en_14.html#Mesh-sample}
+@fig{surf, doc_en/doc_en_15.html#Surf-sample}
+@fig{surfc,doc_en/doc_en_15.html#SurfC-sample}
+@fig{surfa,doc_en/doc_en_15.html#SurfA-sample}
+@fig{mesh, doc_en/doc_en_15.html#Mesh-sample}
 
-@fig{fall, doc_en/doc_en_14.html#Fall-sample}
-@fig{belt, doc_en/doc_en_14.html#Belt-sample}
-@fig{boxs, doc_en/doc_en_14.html#Boxs-sample}
-@fig{axial,doc_en/doc_en_14.html#Axial-sample}
+@fig{fall, doc_en/doc_en_15.html#Fall-sample}
+@fig{belt, doc_en/doc_en_15.html#Belt-sample}
+@fig{boxs, doc_en/doc_en_15.html#Boxs-sample}
+@fig{axial,doc_en/doc_en_15.html#Axial-sample}
 
-@fig{dens, doc_en/doc_en_14.html#Dens-sample}
-@fig{tile, doc_en/doc_en_14.html#Tile-sample}
-@fig{tiles,doc_en/doc_en_14.html#TileS-sample}
-@fig{grad, doc_en/doc_en_14.html#Grad-sample}
+@fig{dens, doc_en/doc_en_15.html#Dens-sample}
+@fig{tile, doc_en/doc_en_15.html#Tile-sample}
+@fig{tiles,doc_en/doc_en_15.html#TileS-sample}
+@fig{grad, doc_en/doc_en_15.html#Grad-sample}
 
-@fig{cont, doc_en/doc_en_14.html#Cont-sample}
-@fig{contf,doc_en/doc_en_14.html#ContF-sample}
-@fig{contd,doc_en/doc_en_14.html#ContD-sample}
-@fig{contv,doc_en/doc_en_14.html#ContV-sample}
+@fig{cont, doc_en/doc_en_15.html#Cont-sample}
+@fig{contf,doc_en/doc_en_15.html#ContF-sample}
+@fig{contd,doc_en/doc_en_15.html#ContD-sample}
+@fig{contv,doc_en/doc_en_15.html#ContV-sample}
 
 @anchor{3D plotting}
 @subsection Examples of graphics for 3d arrays
 
-@fig{surf3, doc_en/doc_en_15.html#Surf3-sample}
-@fig{surf3c,doc_en/doc_en_15.html#Surf3C-sample}
-@fig{surf3a,doc_en/doc_en_15.html#Surf3A-sample}
-@fig{cloud, doc_en/doc_en_15.html#Cloud-sample}
+@fig{surf3, doc_en/doc_en_16.html#Surf3-sample}
+@fig{surf3c,doc_en/doc_en_16.html#Surf3C-sample}
+@fig{surf3a,doc_en/doc_en_16.html#Surf3A-sample}
+@fig{cloud, doc_en/doc_en_16.html#Cloud-sample}
 
-@fig{densa, doc_en/doc_en_15.html#Dens3-sample}
-@fig{conta, doc_en/doc_en_15.html#Cont3-sample}
-@fig{contfa,doc_en/doc_en_15.html#ContF3-sample}
-@fig{dots,  doc_en/doc_en_15.html#Dots-sample}
+@fig{densa, doc_en/doc_en_16.html#Dens3-sample}
+@fig{conta, doc_en/doc_en_16.html#Cont3-sample}
+@fig{contfa,doc_en/doc_en_16.html#ContF3-sample}
+@fig{dots,  doc_en/doc_en_16.html#Dots-sample}
 
-@fig{dens_xyz, doc_en/doc_en_15.html#Dens-projection-sample}
-@fig{cont_xyz, doc_en/doc_en_15.html#Cont-projection-sample}
-@fig{contf_xyz,doc_en/doc_en_15.html#ContF-projection-sample}
-@fig{triplot,  doc_en/doc_en_15.html#TriPlot-and-QuadPlot}
+@fig{dens_xyz, doc_en/doc_en_16.html#Dens-projection-sample}
+@fig{cont_xyz, doc_en/doc_en_16.html#Cont-projection-sample}
+@fig{contf_xyz,doc_en/doc_en_16.html#ContF-projection-sample}
+@fig{triplot,  doc_en/doc_en_16.html#TriPlot-and-QuadPlot}
 
 @anchor{Vector fields}
 @subsection Examples of graphics for vector fields
 
-@fig{vect, doc_en/doc_en_16.html#Vect-sample}
-@fig{vecta,doc_en/doc_en_16.html#Vect3-sample}
-@fig{flow, doc_en/doc_en_16.html#Flow-sample}
-@fig{pipe, doc_en/doc_en_16.html#Pipe-sample}
+@fig{vect, doc_en/doc_en_17.html#Vect-sample}
+@fig{vecta,doc_en/doc_en_17.html#Vect3-sample}
+@fig{flow, doc_en/doc_en_17.html#Flow-sample}
+@fig{pipe, doc_en/doc_en_17.html#Pipe-sample}
 
-@fig{traj, doc_en/doc_en_16.html#Traj-sample}
-@fig{dew, doc_en/doc_en_16.html#Dew-sample}
+@fig{traj, doc_en/doc_en_17.html#Traj-sample}
+@fig{dew, doc_en/doc_en_17.html#Dew-sample}
 
 @anchor{Extra samples}
 @subsection Examples of additional features
 
-@fig{inplot, doc_en/doc_en_10.html#Subplots}
-@fig{axis, doc_en/doc_en_10.html#Axis-and-ticks}
-@fig{ticks, doc_en/doc_en_10.html#Axis-and-ticks}
-@fig{loglog, doc_en/doc_en_10.html#Axis-and-ticks}
+@fig{inplot, doc_en/doc_en_11.html#Subplots}
+@fig{axis, doc_en/doc_en_11.html#Axis-and-ticks}
+@fig{ticks, doc_en/doc_en_11.html#Axis-and-ticks}
+@fig{loglog, doc_en/doc_en_11.html#Axis-and-ticks}
 
-@fig{curvcoor, doc_en/doc_en_10.html#Curvilinear-coordinates}
-@fig{colorbar, doc_en/doc_en_10.html#Colorbars}
-@fig{box, doc_en/doc_en_10.html#Bounding-box}
-@fig{ternary, doc_en/doc_en_10.html#Ternary-axis}
+@fig{curvcoor, doc_en/doc_en_11.html#Curvilinear-coordinates}
+@fig{colorbar, doc_en/doc_en_11.html#Colorbars}
+@fig{box, doc_en/doc_en_11.html#Bounding-box}
+@fig{ternary, doc_en/doc_en_11.html#Ternary-axis}
 
-@fig{text, doc_en/doc_en_10.html#Text-features}
-@fig{legend, doc_en/doc_en_10.html#Legend-sample}
-@fig{cut, doc_en/doc_en_10.html#Cutting-sample}
-@fig{alpha, doc_en/doc_en_17.html#Transparency-and-lighting}
+@fig{text, doc_en/doc_en_11.html#Text-features}
+@fig{legend, doc_en/doc_en_11.html#Legend-sample}
+@fig{cut, doc_en/doc_en_11.html#Cutting-sample}
+@fig{alpha, doc_en/doc_en_18.html#Transparency-and-lighting}
 
-@fig{type0, doc_en/doc_en_17.html#Types-of-transparency}
-@fig{type1, doc_en/doc_en_17.html#Types-of-transparency}
-@fig{type2, doc_en/doc_en_17.html#Types-of-transparency}
-@fig{fog, doc_en/doc_en_17.html#Adding-fog}
+@fig{type0, doc_en/doc_en_18.html#Types-of-transparency}
+@fig{type1, doc_en/doc_en_18.html#Types-of-transparency}
+@fig{type2, doc_en/doc_en_18.html#Types-of-transparency}
+@fig{fog, doc_en/doc_en_18.html#Adding-fog}
 
-@fig{combined, doc_en/doc_en_17.html#g_t_0060_0060Compound_0027_0027-graphics}
-@fig{several_light, doc_en/doc_en_17.html#Several-light-sources}
-@fig{stereo, doc_en/doc_en_17.html#Stereo-image}
-@fig{primitives, doc_en/doc_en_17.html#Using-primitives}
+@fig{combined, doc_en/doc_en_18.html#g_t_0060_0060Compound_0027_0027-graphics}
+@fig{several_light, doc_en/doc_en_18.html#Several-light-sources}
+@fig{stereo, doc_en/doc_en_18.html#Stereo-image}
+@fig{primitives, doc_en/doc_en_18.html#Using-primitives}
 
-@fig{stfa, doc_en/doc_en_17.html#STFA-sample}
-@fig{dat_diff, doc_en/doc_en_11.html#Change-data}
-@fig{dat_extra, doc_en/doc_en_11.html#Change-data}
-@fig{map, doc_en/doc_en_17.html#Mapping-visualization}
+@fig{stfa, doc_en/doc_en_18.html#STFA-sample}
+@fig{dat_diff, doc_en/doc_en_12.html#Change-data}
+@fig{dat_extra, doc_en/doc_en_12.html#Change-data}
+@fig{map, doc_en/doc_en_18.html#Mapping-visualization}
 
-@fig{hist, doc_en/doc_en_17.html#Making-histogram}
-@fig{fit, doc_en/doc_en_17.html#Nonlinear-fitting-sample}
-@fig{pde, doc_en/doc_en_17.html#PDE-solving-hints}
-@fig{parser, doc_en/doc_en_17.html#MGL-parser-using}
+@fig{hist, doc_en/doc_en_18.html#Making-histogram}
+@fig{fit, doc_en/doc_en_18.html#Nonlinear-fitting-sample}
+@fig{pde, doc_en/doc_en_18.html#PDE-solving-hints}
+@fig{parser, doc_en/doc_en_18.html#MGL-parser-using}
 
 @external
 

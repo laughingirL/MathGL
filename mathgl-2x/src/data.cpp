@@ -930,7 +930,7 @@ mreal mglSpline3(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mr
 		else if(nz>3 && kz==nz-2)	{	kk=2;	}
 		for(long k=0;k<4;k++)
 		{
-			mglFillP(kx, ky, a+(kz+k-kk)*nx*ny, nx, ny, _p);
+			if(kz+k-kk<nz)	mglFillP(kx, ky, a+(kz+k-kk)*nx*ny, nx, ny, _p);
 			for(i=0,fx=1;i<4;i++)
 			{
 				for(j=0,fy=1;j<4;j++)

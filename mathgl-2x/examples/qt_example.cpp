@@ -19,7 +19,7 @@
  ***************************************************************************/
 #include "mgl2/qt.h"
 #if defined(WIN32) || defined(_MSC_VER) || defined(__BORLANDC__)
-#include <window.h>
+#include <windows.h>
 #else
 #include <unistd.h>
 #endif

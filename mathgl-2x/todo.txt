@@ -3,6 +3,8 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 
 ============= NEW FOR LATER =============
 
+0. Check how Spline/mglSpline3 work for n[xyz]<4 !!!
+
 1. Export to X3D
 2. GTK window/widgets
 3. Labels at TriCont()
@@ -15,10 +17,6 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 10. introduce new primitive type=5 -- arrow for Quality&3!=3. for better drawing in projections + json/view ?!?
 11. enable line width for mesh and fall???
 12. WX window/widgets
-
-============= NEW FOR v.2.1 =============
-
-A. libhpdf for win32
 
 ============= UDAV =============
 
