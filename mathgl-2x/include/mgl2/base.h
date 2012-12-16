@@ -244,16 +244,16 @@ public:
 	void SetRanges(mglPoint v1, mglPoint v2);
 	/// Set values of mglGraph::Cmin and mglGraph::Cmax as minimal and maximal values of data a
 	void CRange(HCDT a, bool add = false, mreal fact=0);
-	inline void CRange(mreal v1,mreal v2)	{	if(v1!=v2)	{Min.c=v1;	Max.c=v2;	RecalcCRange();}	}
+	inline void CRange(mreal v1,mreal v2)	{	if(v1!=v2)	{OMin.c=Min.c=v1;	OMax.c=Max.c=v2;	RecalcCRange();}	}
 	/// Set values of mglGraph::Min.x and mglGraph::Max.x as minimal and maximal values of data a
 	void XRange(HCDT a, bool add = false, mreal fact=0);
-	inline void XRange(mreal v1,mreal v2)	{	if(v1!=v2)	{Min.x=v1;	Max.x=v2;	RecalcBorder();}	}
+	inline void XRange(mreal v1,mreal v2)	{	if(v1!=v2)	{OMin.x=Min.x=v1;	OMax.x=Max.x=v2;	RecalcBorder();}	}
 	/// Set values of mglGraph::Min.x and mglGraph::Max.x as minimal and maximal values of data a
 	void YRange(HCDT a, bool add = false, mreal fact=0);
-	inline void YRange(mreal v1,mreal v2)	{	if(v1!=v2)	{Min.y=v1;	Max.y=v2;	RecalcBorder();}	}
+	inline void YRange(mreal v1,mreal v2)	{	if(v1!=v2)	{OMin.y=Min.y=v1;	OMax.y=Max.y=v2;	RecalcBorder();}	}
 	/// Set values of mglGraph::Min.x and mglGraph::Max.x as minimal and maximal values of data a
 	void ZRange(HCDT a, bool add = false, mreal fact=0);
-	inline void ZRange(mreal v1,mreal v2)	{	if(v1!=v2)	{Min.z=v1;	Max.z=v2;	RecalcBorder();}	}
+	inline void ZRange(mreal v1,mreal v2)	{	if(v1!=v2)	{OMin.z=Min.z=v1;	OMax.z=Max.z=v2;	RecalcBorder();}	}
 	/// Set ranges for automatic variables
 	void SetAutoRanges(mreal x1, mreal x2, mreal y1=0, mreal y2=0, mreal z1=0, mreal z2=0, mreal c1=0, mreal c2=0);
 	/// Set axis origin

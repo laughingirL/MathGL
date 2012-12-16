@@ -432,7 +432,7 @@ First of all you have to define the drawing function or inherit a class from @co
 #include <QApplication>
 #include <QMainWindow>
 #include <QScrollArea>
-#include <mgl2/qt.h>
+#include <mgl2/qmathgl.h>
 int main(int argc,char **argv)
 {
   QApplication a(argc,argv);

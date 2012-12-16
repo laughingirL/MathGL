@@ -125,9 +125,14 @@ mglCommand *mglParser::FindCommand(const wchar_t *com)
 // return values : 0 -- OK, 1 -- wrong arguments, 2 -- wrong command, 3 -- unclosed string
 int mglParser::Exec(mglGraph *gr, const wchar_t *com, long n, mglArg *a, const wchar_t *var, const wchar_t *opt)
 {
-	int k[10], i;
-	for(i=0;i<10;i++)	k[i] = i<n ? a[i].type + 1 : 0;
-	for(i=0;i<n;i++)	a[i].s.assign(a[i].w.begin(),a[i].w.end());
+	int i;
+	const char *id="dsn";
+	std::string k;
+	for(i=0;i<n;i++)
+	{
+		k += id[a[i].type];
+		a[i].s.assign(a[i].w.begin(),a[i].w.end());
+	}
 	mglCommand *rts=FindCommand(com);
 	if(!rts || rts->type==6)	return 2;
 	if(rts->type == 4)
@@ -136,7 +141,7 @@ int mglParser::Exec(mglGraph *gr, const wchar_t *com, long n, mglArg *a, const w
 		mglVar *v = AddVar(var);
 		v->Create(1,1,1);
 		a[0].type = 0;	a[0].d = v;
-		a[0].w = var;	k[0] = 1;
+		a[0].w = var;	k[0] = 'd';
 	}
 	char *o=0;
 	if(opt && *opt)	// TODO: parse arguments of options
@@ -145,8 +150,7 @@ int mglParser::Exec(mglGraph *gr, const wchar_t *com, long n, mglArg *a, const w
 		o = new char[len+1];
 		for(i=0;i<len+1;i++)	o[i]=opt[i];
 	}
-	if(out)	rts->save(out, n, a, k, o);
-	int res=rts->exec(gr, n, a, k, o);
+	int res=rts->exec(gr, n, a, k.c_str(), o);
 	if(o)	delete []o;
 	return res;
 }
@@ -171,7 +175,7 @@ mglParser::mglParser(bool setsize)
 {
 	DataList=0;	NumList=0;
 //	wchar_t *par[40];	///< Parameter for substituting instead of $1, ..., $9
-	out=0;	InUse = 1;
+	InUse = 1;
 	Skip=Stop=for_br=false;
 	memset(for_stack,0,40*sizeof(int));
 	memset(if_stack,0,40*sizeof(int));
@@ -759,12 +763,17 @@ int mglParser::ParseDat(mglGraph *gr, const wchar_t *string, mglData &res)
 		mglArg *a = new mglArg[k+1];
 		FillArg(gr, k, arg, a+1);	a[0].type=0;	a[0].d=&res;
 		// alocate new arrays and execute the command itself
-		int kk[10], i;
-		for(i=0;i<10;i++)	kk[i] = i<=k ? a[i].type + 1 : 0;
-		for(i=0;i<=k;i++)	a[i].s.assign(a[i].w.begin(),a[i].w.end());
+		int i;
+		std::string kk;
+		const char *id="dsn";
+		for(i=0;i<k;i++)
+		{
+			kk += id[a[i].type];
+			a[i].s.assign(a[i].w.begin(),a[i].w.end());
+		}
 		mglCommand *rts=FindCommand(arg[0]);
 		if(!rts || rts->type!=4)	return 2;
-		n = rts->exec(gr, k, a, kk, 0);
+		n = rts->exec(gr, k, a, kk.c_str(), 0);
 		delete []a;
 	}
 	delete []s;	return n;
@@ -778,10 +787,8 @@ int mglParser::FlowExec(mglGraph *, const wchar_t *com, long m, mglArg *a)
 		if(a[0].type==2)
 		{
 			n = 0;
-			if(a[0].v)
-			{	Skip = !Once;	if(out)	mglprintf(out,1024,L"if(!once)\t{\tonce = true;");	}
-			else
-			{	Skip = Once = false;	if(out)	mglprintf(out,1024,L"}");	}
+			if(a[0].v)	Skip = !Once;
+			else	Skip = Once = false;
 		}
 		else n = 1;
 	}
@@ -789,33 +796,22 @@ int mglParser::FlowExec(mglGraph *, const wchar_t *com, long m, mglArg *a)
 	{
 		int cond;
 		if(a[0].type==2)
-		{
-			n = 0;	cond = (a[0].v!=0)?3:0;
-			if(out)	mglprintf(out,1024,L"if(%g!=0)\t{", a[0].v);
-		}
+		{	n = 0;	cond = (a[0].v!=0)?3:0;	}
 		else if(a[0].type==0)
 		{
 			n = 0;	a[1].s.assign(a[1].w.begin(),a[1].w.end());
 			cond = a[0].d->FindAny((m>1 && a[1].type==1) ? a[1].s.c_str():"u")?3:0;
-			if(out)	mglprintf(out,1024,L"if(%ls.FindAny(\"%s\"))\t{",
-						a[0].w.c_str(), (m>1 && a[1].type==1) ? a[1].s.c_str():"u");
 		}
 		else n = 1;
 		if(n==0)
 		{	if_stack[if_pos] = cond;	if_pos = if_pos<39 ? if_pos+1 : 39;	}
 	}
 	else if(!Skip && !wcscmp(com,L"endif"))
-	{
-		if_pos = if_pos>0 ? if_pos-1 : 0;
-		n = 0;	if(out)	mglprintf(out,1024,L"}");
-	}
+	{	if_pos = if_pos>0 ? if_pos-1 : 0;	n = 0;	}
 	else if(!Skip && !wcscmp(com,L"else"))
 	{
 		if(if_pos>0)
-		{
-			n=0; if_stack[if_pos-1] = (if_stack[if_pos-1]&2)?2:3;
-			if(out)	mglprintf(out,1024,L"}\telse\t{");
-		}
+		{	n=0; if_stack[if_pos-1] = (if_stack[if_pos-1]&2)?2:3;	}
 		else n = 1;
 	}
 	else if(!Skip && !wcscmp(com,L"elseif"))
@@ -824,16 +820,11 @@ int mglParser::FlowExec(mglGraph *, const wchar_t *com, long m, mglArg *a)
 		if(if_pos<1 || m<1)	n = 1;
 		else if(if_stack[if_pos-1]&2)	{	n = 0;	cond = 2;	}
 		else if(a[0].type==2)
-		{
-			n = 0;	cond = (a[0].v!=0)?3:0;
-			if(out)	mglprintf(out,1024,L"else if(%g!=0)\t{", a[0].v);
-		}
+		{	n = 0;	cond = (a[0].v!=0)?3:0;	}
 		else if(a[0].type==0)
 		{
 			n = 0;	a[1].s.assign(a[1].w.begin(),a[1].w.end());
 			cond = a[0].d->FindAny((m>1 && a[1].type==1) ? a[1].s.c_str():"u")?3:0;
-			if(out)	mglprintf(out,1024,L"else if(%ls.FindAny(\"%s\"))\t{",
-						a[0].w.c_str(), (m>1 && a[1].type==1) ? a[1].s.c_str():"u");
 		}
 		else n = 1;
 		if(n==0)	if_stack[if_pos-1] = cond;
@@ -841,7 +832,6 @@ int mglParser::FlowExec(mglGraph *, const wchar_t *com, long m, mglArg *a)
 	else if(!ifskip() && !Skip && !wcscmp(com,L"break"))
 	{
 		if(if_pos==if_for[0])	if_pos = if_pos>0 ? if_pos-1 : 0;
-		if(out)	mglprintf(out,1024,L"break;");	for_br = true;
 	}
 	else if(!skip() && !wcscmp(com, L"return"))	// parse command "delete"
 	{
@@ -870,7 +860,6 @@ int mglParser::FlowExec(mglGraph *, const wchar_t *com, long m, mglArg *a)
 				for_stack[39] = 0;	for_br=false;
 			}
 		}
-		if(out)	mglprintf(out,1024,L"}");
 	}
 	else if(!ifskip() && !Skip && !wcscmp(com,L"continue"))
 	{
@@ -887,7 +876,6 @@ int mglParser::FlowExec(mglGraph *, const wchar_t *com, long m, mglArg *a)
 			}
 			else	for_br = true;
 		}
-		if(out)	mglprintf(out,1024,L"continue;");
 	}
 	return n+1;
 }
@@ -965,15 +953,6 @@ void mglParser::Execute(mglGraph *gr, const char *text)
 	mbstowcs(wcs,text,s);
 	Execute(gr, wcs);
 	delete []wcs;
-}
-//-----------------------------------------------------------------------------
-int mglParser::Export(wchar_t cpp_out[1024], mglGraph *gr, const wchar_t *str)
-{
-	*op1 = *op2 = 0;
-	out = cpp_out;
-	int res = Parse(gr, str);
-	out = 0;
-	return res;
 }
 //-----------------------------------------------------------------------------
 void mglParser::DeleteVar(mglVar *v)

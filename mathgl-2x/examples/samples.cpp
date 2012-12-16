@@ -60,7 +60,7 @@ new ez 10 10 10 '0.2*(z-0.3)/$1-0.2*(z+0.3)/$2'\nreturn\n";
 //-----------------------------------------------------------------------------
 const char *mmgl_solve="zrange 0 1\nnew x 20 30 '(x+2)/3*cos(pi*y)'\n"
 "new y 20 30 '(x+2)/3*sin(pi*y)'\nnew z 20 30 'exp(-6*x^2-2*sin(pi*y)^2)'\n\n"
-"subplot 2 1 0:title 'Cartesian space':rotate 30 -40\naxis 'xyzU':box\nxlabel 'x':ylabel 'y'"
+"subplot 2 1 0:title 'Cartesian space':rotate 30 -40\naxis 'xyzU':box\nxlabel 'x':ylabel 'y'\n"
 "origin 1 1:grid 'xy'\nmesh x y z\n\n"
 "# section along 'x' direction\nsolve u x 0.5 'x'\nvar v u.nx 0 1\n"
 "evaluate yy y u v\nevaluate xx x u v\nevaluate zz z u v\nplot xx yy zz 'k2o'\n\n"
@@ -809,9 +809,9 @@ void smgl_fog(mglGraph *gr)
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_map="new a 50 40 'x':new b 50 40 'y':zrange -2 2:text 0 0 '\\to'\n"
-"subplot 2 1 0:text 0 1.1 '\\{x, y\\}' '' -2:box:map a b 'brgk' 0 0\n"
+"subplot 2 1 0:text 0 1.1 '\\{x, y\\}' '' -2:box:map a b 'brgk'\n"
 "subplot 2 1 1:text 0 1.1 '\\{\\frac{x^3+y^3}{2}, \\frac{x-y}{2}\\}' '' -2\n"
-"box:fill a '(x^3+y^3)/2':fill b '(x-y)/2':map a b 'brgk' 0 0\n";
+"box:fill a '(x^3+y^3)/2':fill b '(x-y)/2':map a b 'brgk'\n";
 void smgl_map(mglGraph *gr)	// example of mapping
 {
 	mglData a(50, 40), b(50, 40);
@@ -1101,7 +1101,7 @@ void smgl_several_light(mglGraph *gr)	// several light sources
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_surf3="call 'prepare3d'\nlight on:alpha on\n"
-"subplot 2 2 0:title 'Surf3 plot (default)'\nrotate 50 60:box:surf3 c"
+"subplot 2 2 0:title 'Surf3 plot (default)'\nrotate 50 60:box:surf3 c\n"
 "subplot 2 2 1:title '\"\\#\" style'\nrotate 50 60:box:surf3 c '#'\n"
 "subplot 2 2 2:title '\".\" style'\nrotate 50 60:box:surf3 c '.'\n";
 void smgl_surf3(mglGraph *gr)
@@ -1117,7 +1117,7 @@ void smgl_surf3(mglGraph *gr)
 	gr->Rotate(50,60);	gr->Box();	gr->Surf3(c,".");
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_surf3a="call 'prepare3d'\ntitle 'Surf3 plot':rotate 50 60:light on:alpha on:box:surf3a c d";
+const char *mmgl_surf3a="call 'prepare3d'\ntitle 'Surf3A plot':rotate 50 60:light on:alpha on:box:surf3a c d";
 void smgl_surf3a(mglGraph *gr)
 {
 	mglData c,d;	mgls_prepare3d(&c,&d);
@@ -1126,7 +1126,7 @@ void smgl_surf3a(mglGraph *gr)
 	gr->Box();	gr->Surf3A(c,d);
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_surf3c="call 'prepare3d'\ntitle 'Surf3 plot':rotate 50 60:light on:alpha on:box:surf3c c d";
+const char *mmgl_surf3c="call 'prepare3d'\ntitle 'Surf3C plot':rotate 50 60:light on:alpha on:box:surf3c c d";
 void smgl_surf3c(mglGraph *gr)
 {
 	mglData c,d;	mgls_prepare3d(&c,&d);
@@ -1436,7 +1436,7 @@ void smgl_cones(mglGraph *gr)
 	gr->Rotate(50,60);	gr->Box();	gr->Cones(ys,"a");
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_aspect="subplot 2 2 0:box:text -1 1.1 'Just box' ':L'\ninplot 0.2 0.5 0.7 1:box:text 0 1.2 'InPlot example'\n"
+const char *mmgl_aspect="subplot 2 2 0:box:text -1 1.1 'Just box' ':L'\ninplot 0.2 0.5 0.7 1 off:box:text 0 1.2 'InPlot example'\n"
 "subplot 2 2 1:title 'Rotate only':rotate 50 60:box\nsubplot 2 2 2:title 'Rotate and Aspect':rotate 50 60:aspect 1 1 2:box\n"
 "subplot 2 2 3:title 'Aspect in other direction':rotate 50 60:aspect 1 2 2:box\n";
 void smgl_aspect(mglGraph *gr)	// transformation
@@ -1647,9 +1647,9 @@ const char *mmgl_primitives="subplot 2 2 0 '':title 'Line, Curve, Rhomb, Ellipse
 "cone 0 -0.3 0 0 0.7 0.5 0.2 0.1 'g@':text 0 -0.7 'with edges\\n('\\@' style)'\n"
 "cone 0.7 -0.3 0 0.7 0.7 0.5 0.2 0.1 'ry':text 0.7 -0.7 '\"arrow\" with\\n{}gradient'\n\n"
 "subplot 2 2 2 '':title 'Sphere and Drop'\nline -0.9 0 1 0.9 0 1\n"
-"text -0.9 0.4 'sh=0':drop -0.9 0 0 1 0.5 'r' 0:ball -0.9 0 1 'k'n"
-"text -0.3 0.6 'sh=0.33':drop -0.3 0 0 1 0.5 'r' 0.33:ball -0.3 0 1 'k'n"
-"text 0.3 0.8 'sh=0.67':drop 0.3 0 0 1 0.5 'r' 0.67:ball 0.3 0 1 'k'n"
+"text -0.9 0.4 'sh=0':drop -0.9 0 0 1 0.5 'r' 0:ball -0.9 0 1 'k'\n"
+"text -0.3 0.6 'sh=0.33':drop -0.3 0 0 1 0.5 'r' 0.33:ball -0.3 0 1 'k'\n"
+"text 0.3 0.8 'sh=0.67':drop 0.3 0 0 1 0.5 'r' 0.67:ball 0.3 0 1 'k'\n"
 "text 0.9 1. 'sh=1':drop 0.9 0 0 1 0.5 'r' 1:ball 0.9 0 1 'k'\n\n"
 "text -0.9 -1.1 'asp=0.33':drop -0.9 -0.7 0 1 0.5 'b' 0 0.33\n"
 "text -0.3 -1.1 'asp=0.67':drop -0.3 -0.7 0 1 0.5 'b' 0 0.67\n"

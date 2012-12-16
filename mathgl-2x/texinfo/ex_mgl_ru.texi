@@ -122,7 +122,7 @@ Let me demonstrate possibilities of plot positioning and rotation. MathGL has a 
 @verbatim
 subplot 2 2 0
 box:text -1 1.1 'Just box' ':L'
-inplot 0.2 0.5 0.7 1
+inplot 0.2 0.5 0.7 off
 box:text 0 1.2 'InPlot example'
 
 subplot 2 2 1:title 'Rotate only'
@@ -2348,11 +2348,11 @@ The sample code for mapping visualization is:
 @verbatim
 new a 50 40 'x':new b 50 40 'y':zrange -2 2:text 0 0 '\to'
 subplot 2 1 0:text 0 1.1 '\{x, y\}' '' -2:box
-map a b 'brgk' 0 0
+map a b 'brgk'
 
 subplot 2 1 1:box
 text 0 1.1 '\{\frac{x^3+y^3}{2}, \frac{x-y}{2}\}' '' -2
-fill a '(x^3+y^3)/2':fill b '(x-y)/2':map a b 'brgk' 0 0
+fill a '(x^3+y^3)/2':fill b '(x-y)/2':map a b 'brgk'
 @end verbatim
 
 @pfig{map, Example of Map().}

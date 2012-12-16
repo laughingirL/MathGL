@@ -1,3 +1,11 @@
+2.1.0.1 Released 18 December 2012
+
+* Bugfix for SetRange(val,val) function
+* Exclude export MGL to CPP
+* MGL parsing now produce errors for any wrong list of arguments
+* Add message to mgl.cgi
+* Update docs and MGL samples
+
 2.1 Released 13 December 2012
 
 * Add class mglDataC for complex data arrays.

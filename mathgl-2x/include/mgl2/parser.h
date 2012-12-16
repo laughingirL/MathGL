@@ -42,10 +42,12 @@ struct mglCommand
 	const char *desc;	///< Short command description (can be NULL)
 	const char *form;	///< Format of command arguments (can be NULL)
 	/// Function for executing (plotting)
-	int (*exec)(mglGraph *gr, long n, mglArg *a, int k[10], const char *opt);
-	/// Function for exporting in C++ (can be NULL)
-	void (*save)(wchar_t out[1024], long n, mglArg *a, int k[10], const char *opt);
-	int type;	///< Type of command: 0 - data plot, 1 - other plot, 2 - setup, 3 - data handle, 4 - data create, 5 - subplot, 6 - program
+	int (*exec)(mglGraph *gr, long n, mglArg *a, const char *k, const char *opt);
+	/// Type of command: 0 - data plot, 1 - other plot,
+	///	2 - setup, 3 - data handle, 4 - data create, 5 - subplot, 6 - program
+	///	7 - 1d plot, 8 - 2d plot, 9 - 3d plot, 10 - dd plot, 11 - vector plot
+	///	12 - axis, 13 - primitives, 14 - axis setup, 15 - text/legend, 16 - data transform
+	int type;
 };
 extern mglCommand mgls_base_cmd[];
 //-----------------------------------------------------------------------------
@@ -112,10 +114,6 @@ public:
 	inline int Parse(HMGL gr, const wchar_t *str, long pos=0)
 	{	mglGraph GR(gr);	return Parse(&GR,str,pos);	}
 	int Parse(mglGraph *gr, const wchar_t *str, long pos=0);
-	/// Parse, execute and export it in C++ code the string of MGL script
-	inline 	int Export(wchar_t cpp_out[1024], HMGL gr, const wchar_t *str)
-	{	mglGraph GR(gr);	return Export(cpp_out,&GR,str);	}
-	int Export(wchar_t cpp_out[1024], mglGraph *gr, const wchar_t *str);
 	/// Execute MGL script file fname
 	inline void Execute(HMGL gr, FILE *fp, bool print=false)
 	{	mglGraph GR(gr);	Execute(&GR,fp,print);	}
@@ -165,8 +163,6 @@ public:
 private:
 //	long parlen;		///< Length of parameter strings
 	std::wstring par[40];	///< Parameter for substituting instead of $1, ..., $9
-	wchar_t *out;		///< Buffer for writing C++ code (if not NULL)
-//	wchar_t leg[128];	///< Buffer for legend
 	bool Once;			///< Flag for command which should be executed only once
 	bool Skip;			///< Flag that commands should be skiped (inside 'once' block)
 	int if_stack[40];	///< Stack for if-else-endif commands
