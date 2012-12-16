@@ -202,7 +202,12 @@ void mglParser::DeleteAll()
 	if(DataList)
 	{
 		while(DataList->next)	delete DataList->next;
-		delete DataList;
+		delete DataList;	DataList = 0;
+	}
+	if(NumList)
+	{
+		while(NumList->next)	delete NumList->next;
+		delete NumList;		NumList = 0;
 	}
 }
 //-----------------------------------------------------------------------------
