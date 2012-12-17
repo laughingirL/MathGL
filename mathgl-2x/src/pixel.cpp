@@ -393,6 +393,7 @@ void mglCanvas::MPI_Send(int id)
 {
 	::MPI_Send(Z,3*Width*Height,MPI_FLOAT,id,TAG_DATA_Z,MCW);
 	::MPI_Send(C,12*Width*Height,MPI_CHAR,id,TAG_DATA_C,MCW);
+	::MPI_Send(OI,Width*Height,MPI_INT,id,TAG_DATA_C,MCW);
 }
 void mglCanvas::MPI_Recv(int id)
 {
@@ -400,9 +401,11 @@ void mglCanvas::MPI_Recv(int id)
 	MPI_Status status;
 	long n = Width*Height;
 	float *zz = new float[3*n];
+	int *oi = new int[n];
 	unsigned char *cc = new unsigned char[12*n];
-	::MPI_Recv(Z,3*n,MPI_FLOAT,id,TAG_DATA_Z,MCW,&status);
-	::MPI_Recv(C,12*n,MPI_CHAR,id,TAG_DATA_C,MCW,&status);
+	::MPI_Recv(zz,3*n,MPI_FLOAT,id,TAG_DATA_Z,MCW,&status);
+	::MPI_Recv(cc,12*n,MPI_CHAR,id,TAG_DATA_C,MCW,&status);
+	::MPI_Recv(oi,n,MPI_INT,id,TAG_DATA_C,MCW,&status);
 	// TODO check status for errors
 	register long i,j,k;
 	for(k=0;k<n;k++)
@@ -410,12 +413,13 @@ void mglCanvas::MPI_Recv(int id)
 		i = k%Width;	j = Height-1-(k/Width);
 		if(Quality&2)
 		{
-			pnt_plot(i,j,zz[3*k+2],cc+12*k+8);
-			pnt_plot(i,j,zz[3*k+1],cc+12*k+4);
+			pnt_plot(i,j,zz[3*k+2],cc+12*k+8,oi[k]);
+			pnt_plot(i,j,zz[3*k+1],cc+12*k+4,oi[k]);
 		}
-		pnt_plot(i,j,zz[3*k],cc+12*k);
+		pnt_plot(i,j,zz[3*k],cc+12*k,oi[k]);
 	}
 	set(MGL_FINISHED);
+	delete []oi; 	delete []zz; 	delete []cc;
 }
 #else
 void mglCanvas::MPI_Send(int /*id*/)	{	mglGlobalMess += "MPI support was disabled. Please, enable it and rebuild MathGL.\n";	}

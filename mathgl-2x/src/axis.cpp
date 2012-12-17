@@ -632,7 +632,7 @@ void mglCanvas::Grid(const char *dir, const char *pen, const char *opt)
 	if(!dir || !dir[0])	dir="xyz";
 	AdjustTicks(dir,false);
 	SetPenPal(pen);
-	// TODO: Ternary axis labeling ...
+
 	static int cgid=1;	StartGroup("AxisGrid",cgid++);
 	if(strchr(dir,'x'))	DrawGrid(ax);
 	if(strchr(dir,'y'))	DrawGrid(ay);

@@ -735,7 +735,7 @@ void mglCanvas::Legend(const std::vector<mglText> &leg, mreal x, mreal y, const 
 		nrow = 1+(n-1)/j;
 		ncol = (n+nrow-1)/nrow;
 	}
-	x = x*(iw-w*ncol-2*dx)+B.x-iw/2+dx;	// TODO bypass very long legends
+	x = x*(iw-w*ncol-2*dx)+B.x-iw/2+dx;
 	y = y*(ih-h*nrow-2*dy)+B.y-ih/2+dy;
 	// draw it
 	long k1=0,k2=0,k3=0,k4=0;

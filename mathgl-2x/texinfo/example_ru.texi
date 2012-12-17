@@ -3714,7 +3714,7 @@ int sample(mglGraph *gr)
 @c ==================================================================
 @external
 @node FAQ, , Hints, Examples
-@section FAQ -- TODO: UPDATE!!!
+@section FAQ
 
 @table @strong
 @item График не рисуется?!

@@ -715,7 +715,7 @@ bool mglFont::Load(const char *base, const char *path)
 	sprintf(str,"%s%c%s.vfm",path,sep,base?base:"");
 	if(!(base && *base) || !read_main(str,cur))
 	{
-		mglGlobalMess += "Load built-in font.\n";
+		mglGlobalMess = "Load built-in font.\n";
 		read_def(cur);	setlocale(LC_NUMERIC,oldLocale);
 		if(buf)	delete []buf;	return true;
 	}

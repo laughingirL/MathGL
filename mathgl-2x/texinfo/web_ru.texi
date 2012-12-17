@@ -1,96 +1,17 @@
-\input texinfo
-@setfilename mgl_web_en.info
-@set VERSION 2.1
-@settitle MathGL @value{VERSION}
-@syncodeindex pg cp
-@comment %**end of header
-
-@copying
-This website demonstrates the Mathematical Graphic Library (MathGL) version @value{VERSION}, a collection of classes and routines for scientific plotting. Please report any errors in this manual to @email{mathgl.abalakin@@gmail.org}.
-
-@include copyright.texi
-@end copying
-
-@titlepage
-@title MathGL website
-@subtitle for version @value{VERSION}
-@author A.A. Balakin (@uref{http://mathgl.sourceforge.net/})
-@page
-@vskip 0pt plus 1filll
-@insertcopying
-@end titlepage
-
-@contents
-
-@ifnottex
-@node Top
-@top MathGL
-
-This website demonstrates the Mathematical Graphic Library (MathGL), a collection of classes and routines for scientific plotting. It corresponds to release @value{VERSION} of the library. Please report any errors in this manual to @email{mathgl.abalakin@@gmail.org}. More information about MathGL can be found at the project homepage, @uref{http://mathgl.sourceforge.net/}.
-
-@include copyright.texi
-
-@end ifnottex
+@c ------------------------------------------------------------------
+@chapter Website
 
 @menu
 * Main::
 * News::
 * Features::
 * Pictures::
-* MGL scripts::
+@c * MGL scripts::
 * Download::
 * Other projects::
 @end menu
 
-@ifhtml
-@macro external {}
-@comment  @html
-@comment  <script type="text/javascript"><!--
-@comment  google_ad_client = "ca-pub-1128070552722622";
-@comment  /* 728x90, создано 23.12.09 */
-@comment  google_ad_slot = "9958083480";
-@comment  google_ad_width = 728;
-@comment  google_ad_height = 90;
-@comment  //-->
-@comment  </script>
-@comment  <script type="text/javascript"
-@comment  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-@comment  </script>
-@comment  <br/>
-@html
-<!--LiveInternet counter--><script type="text/javascript"><!--
-document.write("<a href='http://www.liveinternet.ru/click' "+
-"target=_blank><img src='http://counter.yadro.ru/hit?t12.2;r"+
-escape(document.referrer)+((typeof(screen)=="undefined")?"":
-";s"+screen.width+"*"+screen.height+"*"+(screen.colorDepth?
-screen.colorDepth:screen.pixelDepth))+";u"+escape(document.URL)+
-";"+Math.random()+
-"' alt='' title='LiveInternet: number of views during 24"+
-" hours, number of visitors during 24 hours and during today' "+
-"border=0 width=88 height=31><\/a>")//--></script><!--/LiveInternet-->
-
-<a target=_blank href="http://sourceforge.net"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=152187&amp;type=2" alt="SourceForge.net Logo" border="0" height="37" width="125"></a>
-
-<a target=_blank href="http://www.thefreecountry.com/"> <img src="http://www.thefreecountry.com/images/tfc88x31green.gif" alt="thefreecountry.com: Free Programmers' Resources, Free Webmasters' Resources, Free Security Resources, Free Software" border="0" height="31" width="88"></a>
-
-<a target=_blank href="http://sourceforge.net/donate/index.php?group_id=152187"><img src="http://images.sourceforge.net/images/project-support.jpg" width="88" height="32" border="0" alt="Support This Project" /> </a>
-@end html
-@end macro
-
-@macro fig {plot,text}
-@uref{../\text\, @image{../small/\plot\-sm,3cm, , , .png}}
-@end macro
-@end ifhtml
-
-@ifnothtml
-@macro external {}
-@end macro
-@macro fig {plot,text}
-@uref{http://mathgl.sourceforge.net/\text\, @image{small/\plot\-sm,3cm, , , .png}}
-@end macro
-@end ifnothtml
-
-@node Main, News, , Top
+@node Main, News, , Website
 @section MathGL is ...
 
 @ifhtml
@@ -143,7 +64,7 @@ Javascript interface was developed with support of @url{www.datadvance.net, $DAT
 
 @external
 
-@node News, Features, Main, Top
+@node News, Features, Main, Website
 @section News
 
 @itemize
@@ -155,9 +76,9 @@ New version (v.2.1) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is 
 @item
 Add class mglDataC for complex data arrays.
 @item
-Add Vect3() plot for drawing vectors on slice of 3d vector field. See @url{../doc_en/doc_en_17.html#Vect3-sample, sample}.
+Add Vect3() plot for drawing vectors on slice of 3d vector field. See @ref{Vect3 sample}.
 @item
-Add Table() function for drawing table with data values. See @url{../doc_en/doc_en_14.html#Table-sample, sample}.
+Add Table() function for drawing table with data values. See @ref{Table sample}.
 @item
 Add ZoomAxis() for zooming/shifting axis range as whole.
 @item
@@ -167,24 +88,24 @@ Add JavaScript code for visualizing JSON data. See @uref{../json.html, samples}.
 @item
 Add mgl.cgi tool which return PNG image for CGI request in form of MGL script.
 @item
-Add mglData::Solve() for finding x-value where dat(x)=val. See @url{../doc_en/doc_en_12.html#Solve-sample, sample}.
+Add mglData::Solve() for finding x-value where dat(x)=val. See @ref{Solve sample}.
 @item
 Add mglData::Clean() for removing rows with duplicate values for given column.
 @item
 Add MGL commands 'errbox', 'face'
 
 @item
-Color can be specified as its RGB[A] values, i.e. like @samp{@{xFFFFFF@}} or @samp{@{xFFFFFFFF@}}. See @url{../doc_en/doc_en_23.html#Line-styles, sample}.
+Color can be specified as its RGB[A] values, i.e. like @samp{@{xFFFFFF@}} or @samp{@{xFFFFFFFF@}}. See @ref{Line styles}.
 @item
-Color in color scheme  may have position in range [0,1]. Format is @samp{@{CN,pos@}} or @samp{@{xFFFFFF,pos@}}. See @url{../doc_en/doc_en_24.html#Color-scheme, sample}.
+Color in color scheme  may have position in range [0,1]. Format is @samp{@{CN,pos@}} or @samp{@{xFFFFFF,pos@}}. See @ref{Color scheme}.
 @item
 Now pen width for marks is proportional to pen width of line multiplied by size of marks.
 @item
-Now you can use different font-faces in the plot simultaneously. See @url{../doc_en/doc_en_11.html#Text-features, sample}.
+Now you can use different font-faces in the plot simultaneously. See @ref{Text features}.
 @item
 Now Legend() automatically use several columns if it contain too many legend entries.
 @item
-Add style '-' for legend for drawing them horizontally. See @url{../doc_en/doc_en_11.html#Legend-sample, sample}.
+Add style '-' for legend for drawing them horizontally. See @ref{Legend sample}.
 @item
 Vectors is drawn now even if only starting or ending points are placed in bounding box.
 @item
@@ -207,7 +128,7 @@ Add functions GetFrame(), DelFrame(), SetFrame(), ShowFrame() for replacing or s
 CalcXYZ() function now use data from z-buffer for better determining @{x,y,z@} coordinates.
 
 @item
-Add dialog for data arguments in "New command" dialog of UDAV. See @url{../doc_en/doc_en_71.html#UDAV-dialogs, UDAV dialogs}.
+Add dialog for data arguments in "New command" dialog of UDAV. See @ref{UDAV dialogs}.
 @item
 Value of arguments are saved while the kind of command is changed in "New command" dialog of UDAV.
 @item
@@ -300,7 +221,7 @@ Different bugfixes.
 @external
 
 
-@node Features, Pictures, News, Top
+@node Features, Pictures, News, Website
 @section Features
 
 MathGL can plot a wide range of graphics. It includes:
@@ -333,175 +254,132 @@ There is fast evaluation of a textual mathematical expression. It is based on st
 
 @external
 
-@node Pictures, MGL scripts, Features, Top
+@node Pictures, Download, Features, Website
 @section Pictures
 
-There are samples for @ref{1D plotting, 1D arrays}, @ref{2D plotting, 2D arrays}, @ref{3D plotting, 3D arrays}, @ref{Vector fields} and some @ref{Extra samples}.
+There are samples for @ref{1D data plotting, 1D arrays}, @ref{2D data plotting, 2D arrays}, @ref{3D data plotting, 3D arrays}, @ref{Vector fields plotting} and some @ref{Extra samples}.
 
-@anchor{1D plotting}
+@anchor{1D data plotting}
 @subsection Examples of graphics for 1d arrays
 
-@fig{plot, doc_en/doc_en_14.html#Plot-sample}
-@fig{radar,doc_en/doc_en_14.html#Radar-sample}
-@fig{step, doc_en/doc_en_14.html#Step-sample}
-@fig{tens, doc_en/doc_en_14.html#Tens-sample}
+@sfig{plot, Plot sample}
+@sfig{radar, Radar sample}
+@sfig{step, Step sample}
+@sfig{tens, Tens sample}
 
-@fig{area, doc_en/doc_en_14.html#Area-sample}
-@fig{region,doc_en/doc_en_14.html#Region-sample}
-@fig{stem, doc_en/doc_en_14.html#Stem-sample}
-@fig{torus,doc_en/doc_en_14.html#Torus-sample}
+@sfig{area, Area sample}
+@sfig{region,Region sample}
+@sfig{stem, Stem sample}
+@sfig{torus,Torus sample}
 
-@fig{bars, doc_en/doc_en_14.html#Bars-sample}
-@fig{barh, doc_en/doc_en_14.html#Barh-sample}
-@fig{cones,doc_en/doc_en_14.html#Cones-sample}
-@fig{chart,doc_en/doc_en_14.html#Chart-sample}
+@sfig{bars, Bars sample}
+@sfig{barh, Barh sample}
+@sfig{cones,Cones sample}
+@sfig{chart,Chart sample}
 
-@fig{boxplot,doc_en/doc_en_14.html#BoxPlot-sample}
-@fig{candle, doc_en/doc_en_14.html#Candle-sample}
-@fig{tube, doc_en/doc_en_14.html#Tube-sample}
-@fig{tape, doc_en/doc_en_14.html#Tape-sample}
+@sfig{boxplot,BoxPlot sample}
+@sfig{candle, Candle sample}
+@sfig{tube, Tube sample}
+@sfig{tape, Tape sample}
 
-@fig{error,doc_en/doc_en_14.html#Error-sample}
-@fig{mark, doc_en/doc_en_14.html#Mark-sample}
-@fig{textmark, doc_en/doc_en_14.html#TextMark-sample}
-@fig{label,doc_en/doc_en_14.html#Label-sample}
+@sfig{error,Error sample}
+@sfig{mark, Mark sample}
+@sfig{textmark, TextMark sample}
+@sfig{label,Label sample}
 
-@anchor{2D plotting}
+@anchor{2D data plotting}
 @subsection Examples of graphics for 2d arrays
 
-@fig{surf, doc_en/doc_en_15.html#Surf-sample}
-@fig{surfc,doc_en/doc_en_15.html#SurfC-sample}
-@fig{surfa,doc_en/doc_en_15.html#SurfA-sample}
-@fig{mesh, doc_en/doc_en_15.html#Mesh-sample}
+@sfig{surf, Surf sample}
+@sfig{surfc,SurfC sample}
+@sfig{surfa,SurfA sample}
+@sfig{mesh, Mesh sample}
 
-@fig{fall, doc_en/doc_en_15.html#Fall-sample}
-@fig{belt, doc_en/doc_en_15.html#Belt-sample}
-@fig{boxs, doc_en/doc_en_15.html#Boxs-sample}
-@fig{axial,doc_en/doc_en_15.html#Axial-sample}
+@sfig{fall, Fall sample}
+@sfig{belt, Belt sample}
+@sfig{boxs, Boxs sample}
+@sfig{axial,Axial sample}
 
-@fig{dens, doc_en/doc_en_15.html#Dens-sample}
-@fig{tile, doc_en/doc_en_15.html#Tile-sample}
-@fig{tiles,doc_en/doc_en_15.html#TileS-sample}
-@fig{grad, doc_en/doc_en_15.html#Grad-sample}
+@sfig{dens, Dens sample}
+@sfig{tile, Tile sample}
+@sfig{tiles,TileS sample}
+@sfig{grad, Grad sample}
 
-@fig{cont, doc_en/doc_en_15.html#Cont-sample}
-@fig{contf,doc_en/doc_en_15.html#ContF-sample}
-@fig{contd,doc_en/doc_en_15.html#ContD-sample}
-@fig{contv,doc_en/doc_en_15.html#ContV-sample}
+@sfig{cont, Cont sample}
+@sfig{contf,ContF sample}
+@sfig{contd,ContD sample}
+@sfig{contv,ContV sample}
 
-@anchor{3D plotting}
+@anchor{3D data plotting}
 @subsection Examples of graphics for 3d arrays
 
-@fig{surf3, doc_en/doc_en_16.html#Surf3-sample}
-@fig{surf3c,doc_en/doc_en_16.html#Surf3C-sample}
-@fig{surf3a,doc_en/doc_en_16.html#Surf3A-sample}
-@fig{cloud, doc_en/doc_en_16.html#Cloud-sample}
+@sfig{surf3, Surf3 sample}
+@sfig{surf3c,Surf3C sample}
+@sfig{surf3a,Surf3A sample}
+@sfig{cloud, Cloud sample}
 
-@fig{densa, doc_en/doc_en_16.html#Dens3-sample}
-@fig{conta, doc_en/doc_en_16.html#Cont3-sample}
-@fig{contfa,doc_en/doc_en_16.html#ContF3-sample}
-@fig{dots,  doc_en/doc_en_16.html#Dots-sample}
+@sfig{densa, Dens3 sample}
+@sfig{conta, Cont3 sample}
+@sfig{contfa,ContF3 sample}
+@sfig{dots,  Dots sample}
 
-@fig{dens_xyz, doc_en/doc_en_16.html#Dens-projection-sample}
-@fig{cont_xyz, doc_en/doc_en_16.html#Cont-projection-sample}
-@fig{contf_xyz,doc_en/doc_en_16.html#ContF-projection-sample}
-@fig{triplot,  doc_en/doc_en_16.html#TriPlot-and-QuadPlot}
+@sfig{dens_xyz, Dens projection sample}
+@sfig{cont_xyz, Cont projection sample}
+@sfig{contf_xyz,ContF projection sample}
+@sfig{triplot, TriPlot and QuadPlot}
 
-@anchor{Vector fields}
+@anchor{Vector fields plotting}
 @subsection Examples of graphics for vector fields
 
-@fig{vect, doc_en/doc_en_17.html#Vect-sample}
-@fig{vecta,doc_en/doc_en_17.html#Vect3-sample}
-@fig{flow, doc_en/doc_en_17.html#Flow-sample}
-@fig{pipe, doc_en/doc_en_17.html#Pipe-sample}
+@sfig{vect, Vect sample}
+@sfig{vecta,Vect3 sample}
+@sfig{flow, Flow sample}
+@sfig{pipe, Pipe sample}
 
-@fig{traj, doc_en/doc_en_17.html#Traj-sample}
-@fig{dew, doc_en/doc_en_17.html#Dew-sample}
+@sfig{traj, Traj sample}
+@sfig{dew, Dew sample}
 
 @anchor{Extra samples}
 @subsection Examples of additional features
 
-@fig{inplot, doc_en/doc_en_11.html#Subplots}
-@fig{axis, doc_en/doc_en_11.html#Axis-and-ticks}
-@fig{ticks, doc_en/doc_en_11.html#Axis-and-ticks}
-@fig{loglog, doc_en/doc_en_11.html#Axis-and-ticks}
+@sfig{inplot, Subplots}
+@sfig{axis, Axis and ticks}
+@sfig{ticks, Axis and ticks}
+@sfig{loglog, Axis and ticks}
 
-@fig{curvcoor, doc_en/doc_en_11.html#Curvilinear-coordinates}
-@fig{colorbar, doc_en/doc_en_11.html#Colorbars}
-@fig{box, doc_en/doc_en_11.html#Bounding-box}
-@fig{ternary, doc_en/doc_en_11.html#Ternary-axis}
+@sfig{curvcoor, Curvilinear coordinates}
+@sfig{colorbar, Colorbars}
+@sfig{box, Bounding box}
+@sfig{ternary, Ternary axis}
 
-@fig{text, doc_en/doc_en_11.html#Text-features}
-@fig{legend, doc_en/doc_en_11.html#Legend-sample}
-@fig{cut, doc_en/doc_en_11.html#Cutting-sample}
-@fig{alpha, doc_en/doc_en_18.html#Transparency-and-lighting}
+@sfig{text, Text features}
+@sfig{legend, Legend sample}
+@sfig{cut, Cutting sample}
+@sfig{alpha, Transparency and lighting}
 
-@fig{type0, doc_en/doc_en_18.html#Types-of-transparency}
-@fig{type1, doc_en/doc_en_18.html#Types-of-transparency}
-@fig{type2, doc_en/doc_en_18.html#Types-of-transparency}
-@fig{fog, doc_en/doc_en_18.html#Adding-fog}
+@sfig{type0, Types of transparency}
+@sfig{type1, Types of transparency}
+@sfig{type2, Types of transparency}
+@sfig{fog, Adding fog}
 
-@fig{combined, doc_en/doc_en_18.html#g_t_0060_0060Compound_0027_0027-graphics}
-@fig{several_light, doc_en/doc_en_18.html#Several-light-sources}
-@fig{stereo, doc_en/doc_en_18.html#Stereo-image}
-@fig{primitives, doc_en/doc_en_18.html#Using-primitives}
+@sfig{combined, ``Compound'' graphics}
+@sfig{several_light, Several light sources}
+@sfig{stereo, Stereo image}
+@sfig{primitives, Using primitives}
 
-@fig{stfa, doc_en/doc_en_18.html#STFA-sample}
-@fig{dat_diff, doc_en/doc_en_12.html#Change-data}
-@fig{dat_extra, doc_en/doc_en_12.html#Change-data}
-@fig{map, doc_en/doc_en_18.html#Mapping-visualization}
+@sfig{stfa, STFA sample}
+@sfig{dat_diff, Change data}
+@sfig{dat_extra, Change data}
+@sfig{map, Mapping visualization}
 
-@fig{hist, doc_en/doc_en_18.html#Making-histogram}
-@fig{fit, doc_en/doc_en_18.html#Nonlinear-fitting-sample}
-@fig{pde, doc_en/doc_en_18.html#PDE-solving-hints}
-@fig{parser, doc_en/doc_en_18.html#MGL-parser-using}
-
-@external
-
-@node MGL scripts, Download, Pictures, Top
-@section MGL scripts
-
-MGL script language is rather simple. Each string is a command. First word of string is the name of command. Other words are command arguments. Command may have up to 1000 arguments (at least for now). Words are separated from each other by space or tabulation symbol. The upper or lower case of words is important, i.e. variables @var{a} and @var{A} are different variables. Symbol @samp{#} starts the comment (all characters after # will be ignored). The exception is situation when @samp{#} is a part of some string. Also options can be specified after symbol @samp{;}. Symbol @samp{:} starts new command (like new line character) if it is not placed inside a string or inside brackets.
-
-If string contain references to external parameters (substrings @samp{$0}, @samp{$1} ... @samp{$9}) or definitions (substrings @samp{$a}, @samp{$b} ... @samp{$z}) then before execution the values of parameter/definition will be substituted instead of reference. It allows to use the same MGL script for different parameters (file names, paths, condition and so on).
-
-Argument can be a string, a variable (data arrays) or a number (scalars).
-@itemize @bullet
-@item
-The string is any symbols between ordinary marks @samp{'}. Long strings can be concatenated from several lines by @samp{\} symbol. I.e. the string @samp{'a +'\<br>' b'} will give string @samp{'a + b'} (here @samp{<br>} is newline).
-
-@item
-Usually variable have a name which is arbitrary combination of symbols (except spaces and @samp{'}) started from a letter and with length less than 64. A temporary array can be used as variable:
-@itemize @bullet
-@item
-sub-arrays (like in @code{subdata} command) as command argument. For example, @code{a(1)} or @code{a(1,:)} or @code{a(1,:,:)} is second row, @code{a(:,2)} or @code{a(:,2,:)} is third column, @code{a(:,:,0)} is first slice and so on. Also you can extract a part of array from m-th to n-th element by code @code{a(m:n,:,:)} or just @code{a(m:n)}.
-
-@item
-any column combinations defined by formulas, like @code{a('n*w^2/exp(t)')} if names for data columns was specified (by @code{idset} command or in the file at string started with @code{##}).
-
-@item
-any expression (without spaces) of existed variables produce temporary variable. For example, @samp{sqrt(dat(:,5)+1)} will produce temporary variable with data values equal to @code{tmp[i,j] = sqrt(dat[i,5,j]+1)}.
-
-@item
-temporary variable of higher dimensions by help of []. For example, @samp{[1,2,3]} will produce a temporary vector of 3 elements @{1, 2, 3@}; @samp{[[11,12],[21,22]]} will produce matrix 2*2 and so on. Here you can join even an arrays of the same dimensions by construction like @samp{[v1,v2,...,vn]}.
-
-@item
-result of code for making new data inside @{@}. For example, @samp{@{sum dat 'x'@}} produce temporary variable which contain result of summation of @var{dat} along direction 'x'. This is the same array @var{tmp} as produced by command @samp{sum tmp dat 'x'}. You can use nested constructions, like @samp{@{sum @{max dat 'z'@} 'x'@}}.
-@end itemize
-Temporary variables can not be used as 1st argument for commands which create (return) the data (like @samp{new}, @samp{read}, @samp{hist} and so on).
-
-@item
-Special names @code{nan=#QNAN, pi=3.1415926..., on=1, off=0, :=-1} are treated as number if they were not redefined by user. Variables with suffixes are treated as numbers. Names defined by @code{define} command are treated as number. Also results of formulas with sizes 1x1x1 are treated as number (for example, @samp{pi/dat.nx}).
-@end itemize
-Before the first using all variables must be defined with the help of commands, like, @code{new}, @code{var}, @code{list}, @code{copy}, @code{read}, @code{hist}, @code{sum} and so on.
-
-Command may have several set of possible arguments (for example, @code{plot ydat} and @code{plot xdat ydat}). All command arguments for a selected set must be specified. However, some arguments can have default values. These argument are printed in [], like @code{text ydat ['stl'='']} or @code{text x y 'txt' ['fnt'='' size=-1]}. At this, the record @code{[arg1 arg2 arg3 ...]} means @code{[arg1 [arg2 [arg3 ...]]]}, i.e. you can omit only tailing arguments if you agree with its default values. For example, @code{text x y 'txt' '' 1} or @code{text x y 'txt' ''} is correct, but @code{text x y 'txt' 1} is incorrect (argument @code{'fnt'} is missed).
-
-For more details see @uref{../doc_en/doc_en_64.html#MGL-scripts, MathGL documentation}
+@sfig{hist, Making histogram}
+@sfig{fit, Nonlinear fitting sample}
+@sfig{pde, PDE solving hints}
+@sfig{parser, MGL parser using}
 
 @external
 
-@node Download, Other projects, MGL scripts, Top
+@node Download, Other projects, Pictures, Website
 @section Download
 
 @strong{Stable version (v.@value{VERSION})}
@@ -517,35 +395,13 @@ You may download current version of MathGL for following configurations:
 @item
 @uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}.LGPL-win64.7z,Win64 LGPL} binaries for MSVS 2010 (no GSL and HDF5 support)
 @item
-@uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}-1.DevPack,DevPak} package for Dev-C++ or Code::Blocks (GPL version)
-@item
 @uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}.eng.pdf,PDF} documentation in English
 @item
-@uref{http://downloads.sourceforge.net/mathgl/mgl_scripts-@value{VERSION}.7z,utilities} with all required DLL files (build for i686)
+@uref{http://downloads.sourceforge.net/mathgl/mgl_scripts-@value{VERSION}.7z, UDAV and utilities} with all required DLL files (build for i686)
 @c HTML documentation in English
 @c HTML documentation in Russian
 @c @item
 @c @uref{http://downloads.sourceforge.net/mathgl/mathgl_slides-1.9.pdf,PDF} slideshow of main features
-@end itemize
-
-@strong{Previous version (v.1.11.2)}
-
-You may download current version of MathGL for following configurations:
-@itemize @bullet
-@item
-@uref{http://downloads.sourceforge.net/mathgl/mathgl-1.11.2.tar.gz,source} file with autoconf/automake script.
-@item
-@uref{http://downloads.sourceforge.net/mathgl/mathgl-1.11.2-mingw.i686.zip,Win32 GPL} binaries for MinGW (build for i686)
-@item
-@uref{http://downloads.sourceforge.net/mathgl/mathgl-1.11.1.1.LGPL-mingw.i686.zip,Win32 LGPL} binaries for MinGW (build for i686, no GSL and HDF5 support)
-@item
-@uref{http://downloads.sourceforge.net/mathgl/mathgl-1.11.2-1.DevPack,DevPak} package for Dev-C++ or Code::Blocks (GPL version)
-@item
-@uref{http://downloads.sourceforge.net/mathgl/mathgl-1.11.2.eng.pdf,PDF} documentation in English
-@c HTML documentation in English
-@c HTML documentation in Russian
-@item
-@uref{http://downloads.sourceforge.net/mathgl/mathgl_slides-1.9.pdf,PDF} slideshow of main features
 @end itemize
 
 @strong{Font files}
@@ -576,7 +432,7 @@ There are a set of @uref{http://sourceforge.net/project/showfiles.php?group_id=1
 
 @external
 
-@node Other projects, , Download, Top
+@node Other projects, , Download, Website
 @section Other projects
 
 Except scientific (non public) projects I also have some general interest projects:
@@ -610,5 +466,3 @@ Finally, few links to free software and libraries:
 @end itemize
 
 @external
-
-@bye
