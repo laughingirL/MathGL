@@ -70,6 +70,7 @@ public:
 	bool getLight()	{return light;}	///< Get lightning state
 	bool getZoom()	{return zoom;}	///< Get mouse zooming state
 	bool getRotate(){return rotate;}	///< Get mouse rotation state
+	bool getViewYZ(){return viewYZ;}	///< Get mouse rotation axis
 	bool isActive(int xs,int ys);	///< Check if active point is pressed
 
 public slots:
@@ -86,6 +87,7 @@ public slots:
 	void setLight(bool l);	///< Switch on/off lightning
 	void setGrid(bool r);	///< Switch on/off grid drawing
 	void imgSize(int w, int h);	///< Set image size
+	void setViewYZ(bool v);	///< Switch on/off rotation around Y and Z axis
 
 	void setZoom(bool z);	///< Switch on/off mouse zooming
 	void setRotate(bool r);	///< Switch on/off mouse rotation
@@ -144,6 +146,7 @@ signals:
 	void zoomChanged(bool);		///< Zooming changed (by toolbar)
 	void rotateChanged(bool);	///< Rotation changed (by toolbar)
 	void usePrimChanged(bool);	///< Use primitive changed (i.e. have or not drawing function)
+	void viewYZChanged(bool);	///< Rotation axis changed (by toolbar)
 	void mouseClick(mreal,mreal,mreal);	///< Position of mouse click
 	void frameChanged(int);		///< Need another frame to show
 	void showWarn(QString);		///< Show warnings
@@ -176,6 +179,7 @@ protected:
 	bool zoom;			///< Mouse zoom state
 	bool grid;			///< Grid drawing state
 	bool rotate;			///< Mouse rotation state
+	bool viewYZ;			///< Set mouse rotation around Y and Z axis (instead of X and Z)
 	mreal x1,x2,y1,y2;	///< Zoom in region
 	mreal ax1,ax2,ay1,ay2;	///< Axis range zoom
 	bool showMessage;	///< Flag for showing messages (enabled by each execute())

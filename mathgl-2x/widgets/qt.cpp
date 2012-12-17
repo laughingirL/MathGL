@@ -94,7 +94,7 @@ QMathGL::QMathGL(QWidget *parent, Qt::WindowFlags f) : QWidget(parent, f)
 	popup = 0;	grBuf = 0;	draw = 0;
 	phi = tet = per = 0;
 	x1 = y1 = ax1 = ay1 = 0;	x2 = y2 = ax2 = ay2 = 1;
-	alpha = light = zoom = rotate = grid = false;
+	alpha = light = zoom = rotate = grid = viewYZ = false;
 	resize(600, 400);	gr->set(MGL_CLF_ON_UPD);
 	timer = new QTimer(this);
 	enableWheel = enableMouse = true;
@@ -179,6 +179,9 @@ void QMathGL::setLight(bool l)
 //-----------------------------------------------------------------------------
 void QMathGL::setGrid(bool g)
 {	if(grid!=g)	{	grid = g;	emit gridChanged(g); 	refresh();	}	}
+//-----------------------------------------------------------------------------
+void QMathGL::setViewYZ(bool a)
+{	if(viewYZ!=a)	{	viewYZ = a;	emit viewYZChanged(a);	refresh();	}	}
 //-----------------------------------------------------------------------------
 void QMathGL::setRotate(bool r)
 {
@@ -291,7 +294,9 @@ void QMathGL::refresh()
 			gg.SetRanges(x1,x2);	gg.Pop();	setlocale(LC_NUMERIC, "");
 			
 		}
-		gr->Zoom(x1,y1,x2,y2);	gr->View(phi,0,tet);	gr->Perspective(per);
+		gr->Zoom(x1,y1,x2,y2);	gr->Perspective(per);
+		if(viewYZ)	gr->View(0,phi,tet);
+		else 		gr->View(phi,0,tet);
 	}
 	mglConvertFromGraph(pic, gr, &grBuf);
 	if(pic.size()!=size())	setSize(pic.width(), pic.height());
