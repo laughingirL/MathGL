@@ -13,6 +13,8 @@ set(MathGL_VERSION_MINOR 1)
 
 include(CMakeDependentOption)
 
+set(MGL_LIB_INSTALL_DIR "lib" CACHE STRING "Set library install directory")
+
 option(enable-double "Enable double precision in MathGL library" ON)
 option(enable-simple "Slightly increase drawing speed but disable mglDataA class")
 option(enable-mpi "Enable mpi")

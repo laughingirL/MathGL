@@ -17,6 +17,7 @@ if(MGL_HAVE_PYTHON)
 	set(SWIG_MODULE_mathgl_EXTRA_DEPS numpy.i ${src_imp_dep})
 	SWIG_ADD_MODULE(mathgl python mathgl.i)
 	SWIG_LINK_LIBRARIES(mathgl mgl ${PYTHON_LIBRARIES})
+	set_target_properties(_mathgl PROPERTIES BUILD_WITH_INSTALL_RPATH ON)
 	add_custom_command(OUTPUT mathgl.pyc
 		COMMAND ${PYTHON_EXECUTABLE} -c \"from py_compile import compile\; compile('mathgl.py')\"
 		WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/lang
@@ -48,7 +49,7 @@ message(STATUS "${oct_prog} ${oct_host} ${oct_api}")
 	SET(SWIG_MODULE_mgl-oct_EXTRA_DEPS numpy.i ${src_imp_dep})
 	SWIG_ADD_MODULE(mgl-oct octave mathgl.i)
 	SWIG_LINK_LIBRARIES(mgl-oct mgl)
-	set_target_properties(mgl-oct PROPERTIES OUTPUT_NAME mathgl PREFIX "" SUFFIX ".oct")
+	set_target_properties(mgl-oct PROPERTIES OUTPUT_NAME mathgl PREFIX "" SUFFIX ".oct" BUILD_WITH_INSTALL_RPATH ON)
 	get_target_property(mgl-oct_filename mgl-oct LOCATION)
 	add_custom_command(OUTPUT mathgl.tar.gz
 		COMMAND ${CMAKE_COMMAND} -E make_directory ${mgl_pkg_dir}
