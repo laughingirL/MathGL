@@ -26,7 +26,7 @@ This chapter describe classes @code{mglData} and @code{mglDataC} for working wit
 @end menu
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node Public variables, Data constructor, , Data processing
 @section Public variables
 
@@ -94,7 +94,7 @@ Returns pointer to internal data array.
 @end ifclear
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node Data constructor, Data resizing, Public variables, Data processing
 @section Data constructor
 @cindex mglData
@@ -164,7 +164,7 @@ Deletes the instance of class mglData.
 
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node Data resizing, Data filling, Data constructor, Data processing
 @section Data resizing
 @cindex Create
@@ -296,7 +296,7 @@ Delete rows which values are equal to next row for given column @var{idx}.
 
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node Data filling, File I/O, Data resizing, Data processing
 @section Data filling
 @cindex Fill
@@ -499,7 +499,7 @@ Sets the symbol @var{ids} for data columns. The string should contain one symbol
 
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node File I/O, Make another data, Data filling, Data processing
 @section File I/O
 @cindex Read
@@ -627,7 +627,7 @@ Saves data matrix (or @code{ns}-th slice for 3d data) to bitmap file (now suppor
 @end deftypefn
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node Make another data, Data changing, File I/O, Data processing
 @section Make another data
 @cindex SubData
@@ -810,7 +810,7 @@ Gets array of arguments of the data.
 @end ifclear
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node Data changing, Interpolation, Make another data, Data processing
 @section Data changing
 @cindex CumSum
@@ -1006,7 +1006,7 @@ Normalizes data slice-by-slice along direction @var{dir} the data in slices to r
 @end deftypefn
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node Interpolation, Data information, Data changing, Data processing
 @section Interpolation
 
@@ -1063,7 +1063,7 @@ Interpolates data by linear function to the given point @var{x}, @var{y}, @var{z
 @end ifclear
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node Data information, Operators, Interpolation, Data processing
 @section Data information
 
@@ -1236,7 +1236,7 @@ Give first (for @code{.a}, i.e. @code{dat->a[0]}).
 
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node Operators, Global functions, Data information, Data processing
 @section Operators
 
@@ -1328,7 +1328,7 @@ Divides by the other data or the number.
 @end ifclear
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node Global functions, Evaluate expression, Operators, Data processing
 @section Global functions
 
@@ -1425,7 +1425,7 @@ Computes triangulation for arbitrary placed points with coordinates @{@var{x},@v
 
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node Evaluate expression, MGL variables, Global functions, Data processing
 @section Evaluate expression
 
@@ -1470,7 +1470,7 @@ Evaluates the formula derivation respect to @var{dir} for variables in array @va
 @end ifclear
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node MGL variables, , Evaluate expression, Data processing
 @section MGL variables
 
@@ -1495,7 +1495,7 @@ Next and previous variable in the list.
 Flag of the temporary variable. If @code{true} the this variable will be removed after script execution.
 @end deftypecv
 
-@deftypecv {Variable} mglVar @code{void} (*func)(void *)
+@deftypecv {Variable} mglVar @code{void} @code{void (*}func@code{)(void *)}
 Callback function, which will be called at variable destroying.
 @end deftypecv
 
@@ -1517,5 +1517,5 @@ Evaluates the formula for @code{'x','r'}=@var{x}, @code{'y','n'}=@var{y}, @code{
 
 @end ifclear
 
-@external
+@external{}
 

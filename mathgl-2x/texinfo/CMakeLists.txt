@@ -32,17 +32,18 @@ if(MGL_HAVE_DOC)
 	foreach(SAMPLE ${MGL_PNG})
 		set(MGL_PNG_N ${MGL_PNG_N} ${MGL_OUT}/png/${SAMPLE}.png)
 		add_custom_command(OUTPUT ${MGL_OUT}/png/${SAMPLE}.png
-			COMMAND ${CMAKE_BINARY_DIR}/examples/mgl_example -kind=${SAMPLE}
+			COMMAND mgl_example -kind=${SAMPLE}
 			DEPENDS mgl_example
 			WORKING_DIRECTORY ${MGL_OUT}/png )
 		set(MGL_PNG_S ${MGL_PNG_S} ${MGL_OUT}/small/${SAMPLE}-sm.png)
 		add_custom_command(OUTPUT ${MGL_OUT}/small/${SAMPLE}-sm.png
-			COMMAND ${CMAKE_BINARY_DIR}/examples/mgl_example -kind=${SAMPLE} -mini
+			COMMAND mgl_example -kind=${SAMPLE} -mini
 			DEPENDS mgl_example
 			WORKING_DIRECTORY ${MGL_OUT}/small )
 		set(MGL_PNG_J ${MGL_PNG_J} ${MGL_OUT}/json/${SAMPLE}.json)
 		add_custom_command(OUTPUT ${MGL_OUT}/json/${SAMPLE}.json
-			COMMAND ${CMAKE_BINARY_DIR}/examples/mgl_example -json -kind=${SAMPLE}
+			COMMAND mgl_example -json -kind=${SAMPLE}
+#			COMMAND ${CMAKE_BINARY_DIR}/examples/mgl_example -json -kind=${SAMPLE}
 			DEPENDS mgl_example
 			WORKING_DIRECTORY ${MGL_OUT}/json )
 	endforeach(SAMPLE)

@@ -29,7 +29,7 @@ public:
 
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node mglWindow class, Fl_MathGL class, , Widget classes
 @section Класс mglWindow
 @cindex mglWindow
@@ -134,7 +134,7 @@ public:
 @end deftypefn
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node Fl_MathGL class, QMathGL class, , Widget classes
 @section Класс Fl_MathGL
 @cindex Fl_MathGL
@@ -189,7 +189,7 @@ public:
 @end deftypecv
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node QMathGL class, , Fl_MathGL class, Widget classes
 @section Класс QMathGL
 @cindex QMathGL
@@ -202,8 +202,8 @@ public:
 @deftypemethod QMathGL @code{void} setDraw (@code{mglDraw *}dr)
 Задает функцию рисования из класса производного от @code{mglDraw}.
 @end deftypemethod
-@deftypemethod QMathGL @code{void} setDraw (@code{int (*}draw)(@code{mglBase *}gr, @code{void *}p), @code{void *}par=@code{NULL})
-@deftypemethodx QMathGL @code{void} setDraw (@code{int (*}draw)(@code{mglGraph *}gr))
+@deftypemethod QMathGL @code{void} setDraw (@code{int (*}draw@code{)(mglBase *}gr, @code{void *}p@code{)}, @code{void *}par=@code{NULL})
+@deftypemethodx QMathGL @code{void} setDraw (@code{int (*}draw@code{)(mglGraph *}gr@code{)})
 Задает функцию рисования @var{draw}. Поддерживается список графиков (кадров), так что можно вначале их нарисовать (требует довольно много памяти), а потом достаточно быстро отображать. Функция должна возвращать положительное число создаваемых кадров или ноль для непосредственного рисования. Параметр @var{par} содержит указатель на данные пользователя, передаваемый функции рисования @var{draw}.
 @end deftypemethod
 
@@ -440,5 +440,5 @@ public:
 Разрешить изменять размер рисунка (по умолчанию false).
 @end deftypecv
 
-@external
+@external{}
 

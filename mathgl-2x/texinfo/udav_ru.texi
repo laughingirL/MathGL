@@ -9,7 +9,7 @@ UDAV (Universal Data Array Visualizator) is cross-platform program for data arra
 @end menu
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node UDAV overview, UDAV dialogs, , UDAV
 @section UDAV overview
 
@@ -46,7 +46,7 @@ Also you can look the current list of variables, its dimensions and its size in 
 Finally, pressing @key{F2} or @key{F4} you can show/hide windows with messages/warnings and with calculator. Double click on a warning in message window will jump to corresponding line in editor. Calculator allow you type expression by keyboard as well as by toolbuttons. It know about all current variables, so you can use them in formulas.
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node UDAV dialogs, UDAV hints, UDAV overview, UDAV
 @section UDAV dialogs
 
@@ -86,7 +86,7 @@ Finally, there is dialog for UDAV settings. It allow to change most of things in
 There are also a set of dialogs for data handling, but they are too simple and clear. So, I will not put them here.
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node UDAV hints, , UDAV dialogs, UDAV
 @section UDAV hints
 

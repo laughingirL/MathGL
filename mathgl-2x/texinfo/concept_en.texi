@@ -34,7 +34,7 @@ In addition to the general concepts I want to comment on some non-trivial or les
 @end menu
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node Coordinate axes, Color styles, , General concepts
 @section Coordinate axes
 
@@ -47,7 +47,7 @@ There is 4-th axis @emph{c} (color axis or colorbar) in addition to the usual ax
 The form (appearence) of tick labels is controlled by @code{SetTicks()} function (@pxref{Ticks}). Function @var{SetTuneTicks} switches on/off tick enhancing by factoring out acommon multiplier (for small coordinate values, like 0.001 to 0.002, or large, like from 1000 to 2000) or common component (for narrow range, like from 0.999 to 1.000). Finally, you may use functions @code{SetTickTempl()} for setting templates for tick labels (it supports TeX symbols). Also, there is a possibility to print arbitrary text as tick labels the by help of @code{SetTicksVal()} function.
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node Color styles, Line styles, Coordinate axes, General concepts
 @section Color styles
 
@@ -74,7 +74,7 @@ melone color.
 @end ifnothtml
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node Line styles, Color scheme, Color styles, General concepts
 @section Line styles
 
@@ -103,7 +103,7 @@ One may specify to draw a special symbol (an arrow) at the beginning and at the 
 @pfig{style, Color and line styles.}
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node Color scheme, Font styles, Line styles, General concepts
 @section Color scheme
 
@@ -123,7 +123,7 @@ When coloring by @emph{coordinate} (used in @ref{map}), the final color is deter
 @c This type of coloring is useful for isosurface plot where color may show the exact position of a piece of surface.
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node Font styles, Textual formulas, Color scheme, General concepts
 @section Font styles
 
@@ -163,7 +163,7 @@ The small part of most common special TeX symbols are: @math{\angle} -- \angle, 
 The font size can be defined explicitly (if @var{size}>0) or relatively to a base font size as |@var{size}|*@var{FontSize} (if @var{size}<0). The value @var{size}=0 specifies that the string will not be printed. The base font size is measured in internal ``MathGL'' units. Special functions @code{SetFontSizePT(), SetFontSizeCM(), SetFontSizeIN()} (see @ref{Font settings}) allow one to set it in more ``common'' variables for a given dpi value of the picture.
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node Textual formulas, Command options, Font styles, General concepts
 @section Textual formulas
 
@@ -215,7 +215,7 @@ Note, some of these functions are unavailable if MathGL was compiled without GSL
 There is no difference between lower or upper case in formulas. If argument value lie outside the range of function definition then function returns NaN.
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node  Command options, Interfaces, Textual formulas, General concepts
 @section Command options
 
@@ -276,7 +276,7 @@ Set the value to be used as additional numeric parameter in plotting command.
 
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node Interfaces, , Command options, General concepts
 @section Interfaces
 
@@ -297,7 +297,7 @@ Finally, a special command language MGL (see @ref{MGL scripts}) was written for 
 * C++ interface::
 @end menu
 
-@comment  @external
+@comment  @external{}
 @node C interface, C++ interface, , Interfaces
 @subsection C/Fortran interface
 
@@ -316,7 +316,7 @@ These variables contain identifiers for graphics drawing objects and for the dat
 
 Fortran functions/subroutines have the same names as C functions. However, there is a difference. Variable of type @code{HMGL, HMDT} must be an integer with sufficient size (@code{integer*4} in the 32-bit operating system or @code{integer*8} in the 64-bit operating system). All C functions are subroutines in Fortran, which are called by operator @code{call}. The exceptions are functions, which return variables of types @code{HMGL} or @code{HMDT}. These functions should be declared as integer in Fortran code. Also, one should keep in mind that strings in Fortran are denoted by @code{'} symbol, not the @code{"} symbol.
 
-@comment  @external
+@comment  @external{}
 @node C++ interface, , C interface, Interfaces
 @subsection C++/Python interface
 
@@ -351,5 +351,5 @@ This becomes useful if you create many @code{mglData} objects, for example.
 
 @end ifclear
 
-@external
+@external{}
 

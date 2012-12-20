@@ -21,7 +21,7 @@ Below I show how this internal classes can be used.
 
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node mglBase class, mglDataA class, , Other classes
 @section Define new kind of plot (mglBase class)
 
@@ -325,7 +325,7 @@ int main()
 
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node mglDataA class, mglColor class, mglBase class, Other classes
 @section User defined types (mglDataA class)
 
@@ -413,7 +413,7 @@ int main()
 
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node mglColor class, mglPoint class, mglDataA class, Other classes
 @section mglColor class
 @cindex mglColor
@@ -483,7 +483,7 @@ Return inverted color.
 @end deftypefn
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node mglPoint class, , mglColor class, Other classes
 @section mglPoint class
 @cindex mglPoint
@@ -557,5 +557,5 @@ Return true if points are the same.
 Return true if points are different.
 @end deftypefn
 
-@external
+@external{}
 

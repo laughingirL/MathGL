@@ -29,7 +29,7 @@ You should inherit yours class from @code{mglDraw} and re-implement one or both 
 
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node mglWindow class, Fl_MathGL class, , Widget classes
 @section mglWindow class
 @cindex mglWindow
@@ -134,7 +134,7 @@ Gets last position of mouse click.
 @end deftypefn
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node Fl_MathGL class, QMathGL class, mglWindow class, Widget classes
 @section Fl_MathGL class
 @cindex Fl_MathGL
@@ -191,7 +191,7 @@ Pointer to external phi-angle validator.
 @end deftypecv
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node QMathGL class, , Fl_MathGL class, Widget classes
 @section QMathGL class
 @cindex QMathGL
@@ -204,8 +204,8 @@ Class is Qt widget which display MathGL graphics. It is defined in @code{#includ
 @deftypemethod QMathGL @code{void} setDraw (@code{mglDraw *}dr)
 Sets drawing functions from a class inherited from @code{mglDraw}.
 @end deftypemethod
-@deftypemethod QMathGL @code{void} setDraw (@code{int (*}draw)(@code{mglBase *}gr, @code{void *}p), @code{void *}par=@code{NULL})
-@deftypemethodx QMathGL @code{void} setDraw (@code{int (*}draw)(@code{mglGraph *}gr))
+@deftypemethod QMathGL @code{void} setDraw (@code{int (*}draw@code{)(mglBase *}gr, @code{void *}p@code{)}, @code{void *}par=@code{NULL})
+@deftypemethodx QMathGL @code{void} setDraw (@code{int (*}draw@code{)(mglGraph *}gr@code{)})
 Sets the drawing function @var{draw}. There is support of a list of plots (frames). So as one can prepare a set of frames at first and redraw it fast later (but it requires more memory). Function should return positive number of frames for the list or zero if it will plot directly. Parameter @var{par} contains pointer to data for the plotting function @var{draw}.
 @end deftypemethod
 
@@ -442,5 +442,5 @@ Application name for message boxes.
 Allow auto resizing (default is false).
 @end deftypecv
 
-@external
+@external{}
 

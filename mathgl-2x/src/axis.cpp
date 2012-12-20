@@ -24,7 +24,8 @@
 #include "mgl2/prim.h"
 //-----------------------------------------------------------------------------
 #define islog(a, b) (((a)>0 && (b)>10*(a)) || ((b)<0 && (a)<10*(b)))
-#define sign(a)	((a)<0 ? -1:1)
+// NOTE: I use <=0 for proper tick labels rotation. But this mirror labels for central origin!
+#define sign(a)	((a)<=0 ? -1:1)
 //-----------------------------------------------------------------------------
 inline struct tm* mgl_localtime (const time_t *clock, struct tm *result, bool use_utc)
 {	if (!clock || !result) return NULL;
@@ -565,11 +566,10 @@ void mglCanvas::DrawLabels(mglAxis &aa)
 		p = o+d*c;	nn = (s-o)/(Max-Min);	ScalePoint(p,nn);
 		mglPnt &qq = Pnt[kk[i]];
 		mreal ux=qq.u*cos(tet) + qq.v*sin(tet), uy=qq.v*cos(tet) - qq.u*sin(tet);
-		if(qq.u*nn.x+qq.v*nn.y < ux*nn.x+uy*nn.y)
-		{	ux=qq.u*cos(tet) - qq.v*sin(tet);	uy=qq.v*cos(tet) + qq.u*sin(tet);	}
 		qq.u = ux;	qq.v = uy;
 
-		if(!get(MGL_ENABLE_RTEXT) && nn.x!=0)	pos[2] = nn.x<0 ? 'L':'R';
+		if((!get(MGL_ENABLE_RTEXT) || tet) && nn.x!=0)	pos[2] = nn.x<0 ? 'L':'R';
+//		if(tet && nn.x==0)	pos[2] = 'R';
 		if(aa.ch=='c' && aa.txt[i].text[0]==' ')	qq.u = qq.v = NAN;
 		int ts = 1;
 		if(!get(MGL_DISABLE_SCALE))	ts = sign(qq.v*nn.x-qq.u*nn.y)*sign(aa.v2-aa.v1);

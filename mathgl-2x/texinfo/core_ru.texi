@@ -32,7 +32,7 @@
 @end menu
 
 @c ##################################################################
-@external
+@external{}
 @node Constructor, Graphics setup, , MathGL core
 @section Создание и удаление графического объекта
 
@@ -60,7 +60,7 @@ MGL не требует создания данного типа объекто�
 @end ifset
 
 @c ##################################################################
-@external
+@external{}
 @node Graphics setup, Axis settings, Constructor, MathGL core
 @section Настройка графика
 @cindex Настройка MathGL
@@ -86,7 +86,7 @@ MGL не требует создания данного типа объекто�
 @end menu
 
 @c ==================================================================
-@comment  @external
+@comment  @external{}
 @node Transparency, Lighting, , Graphics setup
 @subsection Прозрачность
 @cindex Alpha
@@ -127,7 +127,7 @@ MGL не требует создания данного типа объекто�
 @end deftypefn
 
 @c ==================================================================
-@comment  @external
+@comment  @external{}
 @node Lighting, Fog, Transparency, Graphics setup
 @subsection Освещение
 @ifclear UDAV
@@ -186,7 +186,7 @@ MGL не требует создания данного типа объекто�
 @end deftypefn
 
 @c ==================================================================
-@comment  @external
+@comment  @external{}
 @node Fog, Default sizes, Lighting, Graphics setup
 @subsection Туман
 @cindex Fog
@@ -201,7 +201,7 @@ MGL не требует создания данного типа объекто�
 @end deftypefn
 
 @c ==================================================================
-@comment  @external
+@comment  @external{}
 @node Default sizes, Cutting, Fog, Graphics setup
 @subsection Базовые размеры
 @ifclear UDAV
@@ -274,7 +274,7 @@ MGL не требует создания данного типа объекто�
 @end deftypefn
 
 @c ==================================================================
-@comment  @external
+@comment  @external{}
 @node Cutting, Font settings, Default sizes, Graphics setup
 @subsection Обрезание
 @ifclear UDAV
@@ -312,7 +312,7 @@ MGL не требует создания данного типа объекто�
 @end deftypefn
 
 @c ==================================================================
-@comment  @external
+@comment  @external{}
 @node Font settings, Palette and colors, Cutting, Graphics setup
 @subsection Шрифты
 @ifclear UDAV
@@ -390,7 +390,7 @@ MGL не требует создания данного типа объекто�
 @end ifclear
 
 @c ==================================================================
-@comment  @external
+@comment  @external{}
 @node Palette and colors, Error handling, Font settings, Graphics setup
 @subsection Палитра и цвета
 @ifclear UDAV
@@ -419,7 +419,7 @@ MGL не требует создания данного типа объекто�
 @end ifclear
 
 @c ==================================================================
-@comment  @external
+@comment  @external{}
 @node Error handling, , Palette and colors, Graphics setup
 @subsection Обработка ошибок
 @ifclear UDAV
@@ -479,7 +479,7 @@ Setsize: размер(ы) равны нулю или отрицательны
 
 
 @c ==================================================================
-@external
+@external{}
 @node Axis settings, Subplots and rotation, Graphics setup, MathGL core
 @section Настройки осей координат
 
@@ -492,7 +492,7 @@ Setsize: размер(ы) равны нулю или отрицательны
 @end menu
 
 @c ------------------------------------------------------------------
-@comment  @external
+@comment  @external{}
 @node Ranges (bounding box), Curved coordinates, , Axis settings
 @subsection Масштаб осей координат
 @cindex CRange
@@ -572,7 +572,7 @@ Setsize: размер(ы) равны нулю или отрицательны
 
 
 @c ------------------------------------------------------------------
-@comment  @external
+@comment  @external{}
 @node Curved coordinates, Ticks, Ranges (bounding box), Axis settings
 @subsection Криволинейные координаты
 @cindex Axis
@@ -616,7 +616,7 @@ Ternary -- специальный тип графика для 3 зависим�
 @end deftypefn
 
 @c ------------------------------------------------------------------
-@comment  @external
+@comment  @external{}
 @node Ticks, , Curved coordinates, Axis settings
 @subsection Метки осей
 @cindex AxisStl
@@ -749,7 +749,7 @@ Ternary -- специальный тип графика для 3 зависим�
 @end deftypefn
 
 @c ##################################################################
-@external
+@external{}
 @node Subplots and rotation, Export picture, Axis settings, MathGL core
 @section Матрица преобразования
 @cindex Aspect
@@ -913,7 +913,7 @@ Ternary -- специальный тип графика для 3 зависим�
 @end deftypefn
 
 @c ##################################################################
-@external
+@external{}
 @node Export picture, Primitives, Subplots and rotation, MathGL core
 @section Экспорт рисунка
 @cindex SetSize
@@ -958,7 +958,7 @@ Ternary -- специальный тип графика для 3 зависим�
 @end menu
 
 @c ==================================================================
-@comment  @external
+@comment  @external{}
 @node Export to file, Frames/Animation, , Export picture
 @subsection Экспорт в файл
 @cindex Write
@@ -1102,7 +1102,7 @@ Ternary -- специальный тип графика для 3 зависим�
 
 
 @c ##################################################################
-@comment  @external
+@comment  @external{}
 @node Frames/Animation, Bitmap in memory, Export to file, Export picture
 @subsection Кадры/Анимация
 
@@ -1172,7 +1172,7 @@ Ternary -- специальный тип графика для 3 зависим�
 @end ifclear
 
 @c ------------------------------------------------------------------
-@comment  @external
+@comment  @external{}
 @node Bitmap in memory, Parallelization, Frames/Animation, Export picture
 @subsection Рисование в памяти
 
@@ -1245,7 +1245,7 @@ gr.GetBGRN(bits, len(bits));
 @end ifclear
 
 @c ------------------------------------------------------------------
-@comment  @external
+@comment  @external{}
 @node Parallelization, , Bitmap in memory, Export picture
 @subsection Распараллеливание
 
@@ -1280,7 +1280,7 @@ gr.GetBGRN(bits, len(bits));
 
 
 @c ##################################################################
-@external
+@external{}
 @node Primitives, Text printing, Export picture, MathGL core
 @section Рисование примитивов
 @cindex Ball
@@ -1447,7 +1447,7 @@ gr.GetBGRN(bits, len(bits));
 @end deftypefn
 
 @c ##################################################################
-@external
+@external{}
 @node Text printing, Axis and Colorbar, Primitives, MathGL core
 @section Вывод текста
 @ifclear UDAV
@@ -1517,7 +1517,7 @@ gr.GetBGRN(bits, len(bits));
 @end deftypefn
 
 @c ##################################################################
-@external
+@external{}
 @node Axis and Colorbar, Legend, Text printing, MathGL core
 @section Оси и Colorbar
 @cindex Axis
@@ -1607,7 +1607,7 @@ gr.GetBGRN(bits, len(bits));
 @end deftypefn
 
 @c ##################################################################
-@external
+@external{}
 @node Legend, 1D plotting, Axis and Colorbar, MathGL core
 @section Легенда
 @cindex Legend
@@ -1665,7 +1665,7 @@ gr.GetBGRN(bits, len(bits));
 @end deftypefn
 
 @c ##################################################################
-@external
+@external{}
 @node 1D plotting, 2D plotting, Legend, MathGL core
 @section 1D графики
 @cindex Plot
@@ -2017,7 +2017,7 @@ gr.GetBGRN(bits, len(bits));
 
 
 @c ##################################################################
-@external
+@external{}
 @node 2D plotting, 3D plotting, 1D plotting, MathGL core
 @section 2D графики
 @cindex Mesh
@@ -2249,7 +2249,7 @@ gr.GetBGRN(bits, len(bits));
 
 
 @c ##################################################################
-@external
+@external{}
 @node 3D plotting, Dual plotting, 2D plotting, MathGL core
 @section 3D графики
 @cindex Surf3
@@ -2381,7 +2381,7 @@ gr.GetBGRN(bits, len(bits));
 
 
 @c ##################################################################
-@external
+@external{}
 @node Dual plotting, Vector fields, 3D plotting, MathGL core
 @section Парные графики
 @cindex SurfC
@@ -2504,7 +2504,7 @@ gr.GetBGRN(bits, len(bits));
 
 
 @c ##################################################################
-@external
+@external{}
 @node Vector fields, Other plotting, Dual plotting, MathGL core
 @section Векторные поля
 @cindex Traj
@@ -2693,7 +2693,7 @@ gr.GetBGRN(bits, len(bits));
 
 
 @c ##################################################################
-@external
+@external{}
 @node Other plotting, Nonlinear fitting, Vector fields, MathGL core
 @section Прочие графики
 @cindex DensXYZ
@@ -2879,7 +2879,7 @@ gr.GetBGRN(bits, len(bits));
 @end deftypefn
 
 @c ##################################################################
-@external
+@external{}
 @node Nonlinear fitting, Data manipulation, Other plotting, MathGL core
 @section Nonlinear fitting
 @cindex Fit
@@ -2967,7 +2967,7 @@ gr.GetBGRN(bits, len(bits));
 
 
 @c ##################################################################
-@external
+@external{}
 @node Data manipulation, , Nonlinear fitting, MathGL core
 @section Распределение данных
 @cindex Hist
@@ -3020,7 +3020,7 @@ gr.GetBGRN(bits, len(bits));
 @end deftypefn
 
 @c ##################################################################
-@c @external
+@c @external{}
 @c @node IDTF functions, , Data distributions, MathGL core
 @c @section IDTF функции
 
@@ -3039,5 +3039,5 @@ gr.GetBGRN(bits, len(bits));
 
 @c @end ifclear
 
-@external
+@external{}
 

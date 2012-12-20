@@ -26,7 +26,7 @@
 @end menu
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node Public variables, Data constructor, , Data processing
 @section Переменные
 
@@ -93,7 +93,7 @@ MGL не поддерживает прямой доступ к элемента�
 @end ifclear
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node Data constructor, Data resizing, Public variables, Data processing
 @section Создание и удаление данных
 @cindex mglData
@@ -161,7 +161,7 @@ There are many functions, which can create data for output (see @ref{Data fillin
 
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node Data resizing, Data filling, Data constructor, Data processing
 @section Изменение размеров данных
 @cindex Create
@@ -293,7 +293,7 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node Data filling, File I/O, Data resizing, Data processing
 @section Заполнение данных
 @cindex Fill
@@ -495,7 +495,7 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node File I/O, Make another data, Data filling, Data processing
 @section Чтение/сохранение данных
 @cindex Read
@@ -623,7 +623,7 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @end deftypefn
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node Make another data, Data changing, File I/O, Data processing
 @section Make another data
 @cindex SubData
@@ -806,7 +806,7 @@ res_k = \sum_ij how(x_i,y_j,z_k) a_ij/ \sum_ij a_ij
 @end ifclear
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node Data changing, Interpolation, Make another data, Data processing
 @section Изменение данных
 @cindex CumSum
@@ -1002,7 +1002,7 @@ These functions change the data in some direction like differentiations, integra
 @end deftypefn
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node Interpolation, Data information, Data changing, Data processing
 @section Интерполяция
 
@@ -1060,7 +1060,7 @@ These functions change the data in some direction like differentiations, integra
 @end ifclear
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node Data information, Operators, Interpolation, Data processing
 @section Информационные функции
 
@@ -1233,7 +1233,7 @@ These functions change the data in some direction like differentiations, integra
 
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node Operators, Global functions, Data information, Data processing
 @section Операторы
 
@@ -1325,7 +1325,7 @@ These functions change the data in some direction like differentiations, integra
 @end ifclear
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node Global functions, Evaluate expression, Operators, Data processing
 @section Глобальные функции
 
@@ -1422,7 +1422,7 @@ These functions change the data in some direction like differentiations, integra
 
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node Evaluate expression, MGL variables, Global functions, Data processing
 @section Вычисление выражений
 
@@ -1467,7 +1467,7 @@ These functions change the data in some direction like differentiations, integra
 @end ifclear
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node MGL variables, , Evaluate expression, Data processing
 @section MGL variables
 
@@ -1514,5 +1514,5 @@ Evaluates the formula for @code{'x','r'}=@var{x}, @code{'y','n'}=@var{y}, @code{
 
 @end ifclear
 
-@external
+@external{}
 

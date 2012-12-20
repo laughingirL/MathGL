@@ -54,11 +54,10 @@ This file documents the MGL script language. It corresponds to release @value{VE
 
 @ifhtml
 @macro fig {fname,text}
-@center @image{\fname\, 11cm, , \text\, png}
+@center @image{\fname\, 11cm, , \text\, .png}
 @end macro
 @macro pfig {fname,text}
-@center @image{png/\fname\, 11cm, , \text\, png}
-@c @center @image{../png/\fname\, 11cm, , \text\. See also @uref{../pdf/\fname\.pdf, U3D PDF} sample, .png}
+@center @image{png/\fname\, 11cm, , \text\, .png}
 @end macro
 @end ifhtml
 
@@ -74,10 +73,8 @@ This file documents the MGL script language. It corresponds to release @value{VE
 
 @ifnottex
 @macro fig {fname,text}
-@c @center @image{\fname\, 11cm, , \text\, .png}
 @end macro
 @macro pfig {fname,text}
-@c @center @image{png/\fname\, 11cm, , \text\, .png}
 @end macro
 @end ifnottex
 @end ifnothtml

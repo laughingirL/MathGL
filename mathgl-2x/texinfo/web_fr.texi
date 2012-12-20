@@ -141,7 +141,7 @@ There is detailed @ref{News, news list}. Sourceforge project page @uref{http://s
 @end ifhtml
 Javascript interface was developed with support of @url{www.datadvance.net, $DATADVANCE} company.
 
-@external
+@external{}
 
 @node News, Features, Main, Top
 @section News
@@ -297,7 +297,7 @@ Different bugfixes.
 @strong{24 January 2007.} First public release (v.0.8).
 @end itemize
 
-@external
+@external{}
 
 
 @node Features, Pictures, News, Top
@@ -331,7 +331,7 @@ Special class mglData is used for data encapsulation. In addition to a safe crea
 
 There is fast evaluation of a textual mathematical expression. It is based on string precompilation to tree-like code at the creation of class instance. At evaluation stage code performs only fast tree-walk and returns the value of the expression. In addition to changing data values, textual formulas are also used for drawing in @emph{arbitrary} curvilinear coordinates. A set of such curvilinear coordinates is limited only by user's imagination rather than a fixed list like: polar, parabolic, spherical, and so on.
 
-@external
+@external{}
 
 @node Pictures, MGL scripts, Features, Top
 @section Pictures
@@ -456,7 +456,7 @@ There are samples for @ref{1D plotting, 1D arrays}, @ref{2D plotting, 2D arrays}
 @fig{pde, doc_en/doc_en_18.html#PDE-solving-hints}
 @fig{parser, doc_en/doc_en_18.html#MGL-parser-using}
 
-@external
+@external{}
 
 @node MGL scripts, Download, Pictures, Top
 @section MGL scripts
@@ -499,7 +499,7 @@ Command may have several set of possible arguments (for example, @code{plot ydat
 
 For more details see @uref{../doc_en/doc_en_64.html#MGL-scripts, MathGL documentation}
 
-@external
+@external{}
 
 @node Download, Other projects, MGL scripts, Top
 @section Download
@@ -574,7 +574,7 @@ There are a set of @uref{http://sourceforge.net/project/showfiles.php?group_id=1
 @uref{http://downloads.sourceforge.net/mathgl/termes_font.tgz,Termes font} -- the @uref{http://www.gust.org.pl/projects/e-foundry/tex-gyre/index_html,TeX Gyre} serif fonts is based on the Nimbus Roman No9 L (like Times).
 @end itemize
 
-@external
+@external{}
 
 @node Other projects, , Download, Top
 @section Other projects
@@ -609,6 +609,6 @@ Finally, few links to free software and libraries:
 @uref{http://loll.sourceforge.net/,LLoL} is project collecting, organising, classifying, and maintaining important URLs about Linux and the Open Source movement for all levels of Linux users. The LoLL project now has 4000+ links which are updated usually on a daily basis.
 @end itemize
 
-@external
+@external{}
 
 @bye

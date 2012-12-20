@@ -24,7 +24,7 @@ a library with large and growing set of graphics.
 * Thanks::
 @end menu
 
-@external
+@external{}
 @node What is MathGL?, MathGL features, , Overview
 @section What is MathGL?
 
@@ -32,7 +32,7 @@ A code for making high-quality scientific graphics under Linux and Windows. A  c
 
 At this version (@value{VERSION}) MathGL has more than 50 general types of graphics for 1d, 2d and 3d data arrays. It can export graphics to bitmap and vector (EPS or SVG) files. It has OpenGL interface and can be used from console programs. It has functions for data handling and script MGL language for simplification of data plotting. It also has several types of transparency and smoothed lighting, vector fonts and TeX-like symbol parsing, arbitrary curvilinear coordinate system and many other useful things (see pictures section at @uref{http://mathgl.sf.net/, homepage}). Finally it is platform-independent and free (under GPL v.2.0 or later license).
 
-@external
+@external{}
 @node MathGL features, Installation, What is MathGL?, Overview
 @section MathGL features
 
@@ -64,7 +64,7 @@ Special class mglData is used for data encapsulation (@pxref{Data processing}). 
 
 There is fast evaluation of a textual mathematical expression (@pxref{Textual formulas}). It is based on string precompilation to tree-like code at the creation of class instance. At evaluation stage code performs only fast tree-walk and returns the value of the expression. In addition to changing data values, textual formulas are also used for drawing in @emph{arbitrary} curvilinear coordinates. A set of such curvilinear coordinates is limited only by user's imagination rather than a fixed list like: polar, parabolic, spherical, and so on.
 
-@external
+@external{}
 @node Installation, Quick guide, MathGL features, Overview
 @section Installation
 
@@ -88,7 +88,7 @@ svn checkout http://svn.code.sf.net/p/mathgl/code/mathgl-2x mathgl-code
 @end verbatim
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node  Quick guide, Changes from v.1, Installation, Overview
 @section Quick guide
 
@@ -137,7 +137,7 @@ This is enough for a compilation of console program or with external (non-MathGL
 Fortran users also should add C++ library by the option @code{-lstdc++}. If library was built with @code{enable-double=ON} (this default for v.2.1 and later) then all real numbers must be real*8. You can make it automatic if use option @code{-fdefault-real-8}.
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node  Changes from v.1, Utilities, Quick guide, Overview
 @section Changes from v.1.*
 
@@ -168,7 +168,7 @@ Add pipes support in utilities (@code{mglconv, mglview}).
 @end itemize
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node  Utilities, Thanks, Changes from v.1, Overview
 @section Utilities for parsing MGL
 
@@ -198,7 +198,7 @@ Additionally you can create animated GIF file or a set of JPEG files with names 
 
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node Thanks, , Utilities, Overview
 @section Thanks
 
@@ -217,4 +217,4 @@ I'm thankful to sponsors M. Veysman (@uref{http://jiht.ru/en/about/structure.php
 
 Javascript interface was developed with support of @url{www.datadvance.net, $DATADVANCE} company.
 
-@external
+@external{}

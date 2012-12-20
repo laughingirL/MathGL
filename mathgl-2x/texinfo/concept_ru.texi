@@ -32,7 +32,7 @@
 @end menu
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node Coordinate axes, Color styles, , General concepts
 @section Оси координат
 
@@ -45,7 +45,7 @@
 Вид меток по осям определяется функцией @code{SetTicks()} (@pxref{Ticks}). Функция @var{SetTuneTicks} включает/выключает выделение общего множителя (большого или малого факторов в диапазоне) для меток осей координат. Наконец, если стандартный вид меток не устраивает пользователя, то их шаблон можно задать явно (можно использовать и ТеХ символы), воспользовавшись функцией  @code{SetTickTempl()}. Кроме того, в качестве меток можно вывести произвольный текст использовав функцию @code{SetTicksVal()}.
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node Color styles, Line styles, Coordinate axes, General concepts
 @section Цвета
 
@@ -59,7 +59,7 @@ Base colors are defined by one of symbol @samp{wkrgbcymhRGBCYMHWlenupqLENUPQ}.
 Символы цвета: @samp{k} -- черный, @samp{r} -- красный, @samp{R} -- темно красный, @samp{g} -- зеленый, @samp{G} -- темно зеленый, @samp{b} -- синий, @samp{B} -- темно синий, @samp{c} -- голубой, @samp{C} -- темно голубой, @samp{m} -- пурпурный, @samp{M} -- темно пурпурный, @samp{y} -- желтый, @samp{Y} -- темно желтый (золотой), @samp{h} -- серый, @samp{H} -- темно серый, @samp{w} -- белый, @samp{W} -- светло серый, @samp{l} -- сине-зеленый, @samp{L} -- темно сине-зеленый, @samp{e} -- желто-зеленый, @samp{E} -- темно желто-зеленый, @samp{n} -- небесно-синий, @samp{N} -- темно небесно-синий, @samp{u} -- сине-фиолетовый, @samp{U} -- темно сине-фиолетовый, @samp{p} -- фиолетовый, @samp{P} -- темно фиолетовый, @samp{q} -- оранжевый, @samp{Q} -- темно оранжевый (коричневый).
 @end ifnothtml
 
-В цветовой схеме можно использовать тональные (``подсвеченные'') цвета. Тональный цвет задается двумя символами в фигурных скобках @samp{@{cN@}: первый -- обычный цвет, второй -- его яркость цифрой. Цифра может быть в диапазоне @samp{1}...@samp{9}. При этом @samp{5} соответствует нормальному цвету, @samp{1} -- очень темная версия цвета (почти черный), @samp{9} -- очень светлая версия цвета (почти белый). Например, цвета могут быть @samp{@{b2@}} @samp{@{b7@}} @samp{@{r7@}} и т.д.
+В цветовой схеме можно использовать тональные (``подсвеченные'') цвета. Тональный цвет задается двумя символами в фигурных скобках @samp{@{cN@}}: первый -- обычный цвет, второй -- его яркость цифрой. Цифра может быть в диапазоне @samp{1}...@samp{9}. При этом @samp{5} соответствует нормальному цвету, @samp{1} -- очень темная версия цвета (почти черный), @samp{9} -- очень светлая версия цвета (почти белый). Например, цвета могут быть @samp{@{b2@}} @samp{@{b7@}} @samp{@{r7@}} и т.д.
 
 Наконец, можно указать явно RGB или RGBA значения цвета, используя формат @samp{@{xRRGGBB@}} или @samp{@{xRRGGBBAA@}} соответственно. Например, @samp{@{xFF9966@}} даст цвет
 @ifhtml
@@ -72,7 +72,7 @@ Base colors are defined by one of symbol @samp{wkrgbcymhRGBCYMHWlenupqLENUPQ}.
 @end ifnothtml
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node Line styles, Color scheme, Color styles, General concepts
 @section Стиль линий
 
@@ -101,7 +101,7 @@ Base colors are defined by one of symbol @samp{wkrgbcymhRGBCYMHWlenupqLENUPQ}.
 @pfig{style, Color and line styles.}
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node Color scheme, Font styles, Line styles, General concepts
 @section Цветовая схема
 
@@ -121,7 +121,7 @@ Base colors are defined by one of symbol @samp{wkrgbcymhRGBCYMHWlenupqLENUPQ}.
 @c Такой тип определения цвета полезен, например, при построении поверхностей уровня, когда цвет дает представление о положении точки в пространстве.
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node Font styles, Textual formulas, Color scheme, General concepts
 @section Стиль текста
 
@@ -161,7 +161,7 @@ Base colors are defined by one of symbol @samp{wkrgbcymhRGBCYMHWlenupqLENUPQ}.
 Размер текста может быть задан явно (если @var{size}>0) или относительно базового размера шрифта для рисунка |@var{size}|*@var{FontSize} при @var{size}<0. Значение @var{size}=0 указывает, что соответствующая строка выводиться не будет. Базовый размер шрифта измеряется во внутренних единицах. Специальные функции @code{SetFontSizePT(), SetFontSizeCM(), SetFontSizeIN()} позволяют задавать его в более ``привычных'' единицах.
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node Textual formulas, Command options, Font styles, General concepts
 @section Текстовые формулы
 
@@ -213,7 +213,7 @@ MathGL имеет быстрый парсер текстовых формул
 При разборе формул нет различия между верхним и нижним регистром. Если аргумент лежит вне области определения функции, то возвращается NaN.
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node  Command options, Interfaces, Textual formulas, General concepts
 @section Опции команд
 
@@ -274,7 +274,7 @@ MathGL имеет быстрый парсер текстовых формул
 
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node Interfaces, , Command options, General concepts
 @section Интерфейсы
 
@@ -297,7 +297,7 @@ Finally, a special command language MGL (see @ref{MGL scripts}) was written for 
 * C++ interface::
 @end menu
 
-@comment  @external
+@comment  @external{}
 @node C interface, C++ interface, , Interfaces
 @subsection C/Fortran interface
 
@@ -316,7 +316,7 @@ These variables contain identifiers for graphics drawing objects and for the dat
 
 Fortran functions/subroutines have the same names as C functions. However, there is a difference. Variable of type @code{HMGL, HMDT} must be an integer with sufficient size (@code{integer*4} in the 32-bit operating system or @code{integer*8} in the 64-bit operating system). All C functions are subroutines in Fortran, which are called by operator @code{call}. The exceptions are functions, which return variables of types @code{HMGL} or @code{HMDT}. These functions should be declared as integer in Fortran code. Also, one should keep in mind that strings in Fortran are denoted by @code{'} symbol, not the @code{"} symbol.
 
-@comment  @external
+@comment  @external{}
 @node C++ interface, , C interface, Interfaces
 @subsection C++/Python interface
 
@@ -351,5 +351,5 @@ This becomes useful if you create many @code{mglData} objects, for example.
 
 @end ifclear
 
-@external
+@external{}
 

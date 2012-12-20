@@ -7,7 +7,7 @@ This appendix contain description of file formats used by MathGL.
 @end menu
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node Font files, MGLD format, , File formats
 @section Font files
 
@@ -31,7 +31,7 @@ Note: the closing contour line  is done automatically (so the last segment may b
 
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node MGLD format, JSON format, Font files, File formats
 @section MGLD format
 
@@ -70,7 +70,7 @@ xP yP ...
 Here nT is the number of triangles; nL is the number of line vertexes; xA, yA, xB, yB, xC, yC are coordinates of triangles; and xP, yP, xQ, yQ are coordinates of lines. Line coordinate xP=0x3fff, yP=0x3fff denote line breaking.
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node JSON format, , MGLD format, File formats
 @section JSON format
 
@@ -107,4 +107,4 @@ number of glyph descriptions
 array of glyph descriptions, each element is array in form [nT, nL, [xA0, yA0, xB0, yB0, xC0, yC0, xA1, yA1, xB1, yB1, xC1, yC1 ...], [xP0, yP0, xP1, yP1 ...]]. Here nT is the number of triangles; nL is the number of line vertexes; xA, yA, xB, yB, xC, yC are coordinates of triangles; and xP, yP, xQ, yQ are coordinates of lines. Line coordinate xP=0x3fff, yP=0x3fff denote line breaking.
 
 @end table
-@external
+@external{}

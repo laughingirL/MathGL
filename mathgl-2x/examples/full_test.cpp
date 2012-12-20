@@ -64,10 +64,11 @@ void mgl_write_obj_old(HMGL gr, const char *fname,const char *descr, int use_png
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	gr->SubPlot(3,2,0);	gr->SetRanges(100,100.1,10,10.01);	gr->Axis();
-	gr->SubPlot(3,2,1);	gr->SetTuneTicks(0);	gr->Axis();
-	gr->SubPlot(3,2,2);	gr->SetOrigin(100.1,NAN);	gr->Axis();
-	gr->SubPlot(3,2,3);	gr->SetOrigin(100.05,NAN);	gr->Axis();
+	gr->SetSize(800,300);
+	gr->SetTuneTicks(0);	gr->SetRanges(1000,1000.1,10,10.001);
+	gr->SubPlot(3,1,0);	gr->Axis();
+	gr->SubPlot(3,1,1);	gr->SetOrigin(1000.1,NAN);	gr->Axis();
+	gr->SubPlot(3,1,2);	gr->SetOrigin(1000.05,NAN);	gr->Axis();
 	return;
 	
 	mglParse par;

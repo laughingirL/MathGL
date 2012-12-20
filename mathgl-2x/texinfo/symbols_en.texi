@@ -7,7 +7,7 @@ This appendix contain the full list of symbols (characters) used by MathGL for s
 @end menu
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node Symbols for styles, Hot-keys for mglview, , Symbols and hot-keys
 @section Symbols for styles
 
@@ -416,7 +416,7 @@ style of @ref{tape}.
 
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node Hot-keys for mglview, Hot-keys for UDAV, Symbols for styles, Symbols and hot-keys
 @section Hot-keys for mglview
 
@@ -487,7 +487,7 @@ style of @ref{tape}.
 @end multitable
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node Hot-keys for UDAV, , Hot-keys for mglview, Symbols and hot-keys
 @section Hot-keys for UDAV
 
@@ -673,4 +673,4 @@ style of @ref{tape}.
 
 @end multitable
 
-@external
+@external{}

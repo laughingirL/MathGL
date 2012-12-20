@@ -24,7 +24,7 @@ MathGL это ...
 * Thanks::
 @end menu
 
-@external
+@external{}
 @node What is MathGL?, MathGL features, , Overview
 @section Что такое MathGL?
 
@@ -32,7 +32,7 @@ MathGL это ...
 
 На данный момент (версия @value{VERSION}) MathGL это более 50 основных типов графиков для одно-, двух- и трехмерных массивов, возможность экспорта в растровые и векторные (EPS или SVG) файлы, интерфейс для OpenGL и возможность запуска в консольном режиме, функции для обработки данных и даже простейший командный (интерпретируемый) язык MGL для упрощения построения графиков. Кроме того, есть несколько типов прозрачности, гладкое освещение, векторные шрифты, TeX-ие команды в надписях, произвольные криволинейные системы координат и прочие полезные мелочи (см. раздел pictures на @uref{http://mathgl.sf.net/, домашней странице}). Ну, и, естественно, полная переносимость библиотеки и ее свободное распространение под лицензией GPL v.2.0 или более поздней.
 
-@external
+@external{}
 @node MathGL features, Installation, What is MathGL?, Overview
 @section Возможности MathGL
 
@@ -64,7 +64,7 @@ MathGL это ...
 
 Для @emph{быстрого} вычисления значения выражения, заданного текстовой строкой (@pxref{Textual formulas}). Он основан на компиляции строки в древоподобную структуру при создании экземпляра класса. На этапе вычисления происходит быстрый обход дерева с выдачей результата для конкретных значений переменных. Помимо изменения значений массива данных, текстовые формулы используются для рисования в @emph{произвольной} криволинейной системе координат. Набор таких координат ограничивается только фантазией пользователя, а не фиксированным числом (типа полярной, параболической, цилиндрической и т.д.).
 
-@external
+@external{}
 @node Installation, Quick guide, MathGL features, Overview
 @section Установка MathGL
 
@@ -89,7 +89,7 @@ svn checkout http://svn.code.sf.net/p/mathgl/code/mathgl-2x mathgl-code
 @c TODO Translate it!
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node  Quick guide, Changes from v.1, Installation, Overview
 @section Quick guide
 
@@ -138,7 +138,7 @@ This is enough for a compilation of console program or with external (non-MathGL
 При использовании фортрана необходимо также включить библиотеку @code{-lstdc++}. Кроме того, если библиотека была собрана с опцией @code{enable-double=ON} (по умолчанию в версии 2.1 и более поздних), то все вещественные числа должны быть типа real*8. Это можно включить по умолчанию опцией @code{-fdefault-real-8}.
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node  Changes from v.1, Utilities, Quick guide, Overview
 @section Changes from v.1.*
 
@@ -169,7 +169,7 @@ Add pipes support in utilities (@code{mglconv, mglview}).
 @end itemize
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node  Utilities, Thanks, Changes from v.1, Overview
 @section Utilities for parsing MGL
 
@@ -199,7 +199,7 @@ Additionally you can create animated GIF file or a set of JPEG files with names 
 
 
 @c ------------------------------------------------------------------
-@external
+@external{}
 @node Thanks, , Utilities, Overview
 @section Благодарности
 
@@ -220,4 +220,4 @@ Additionally you can create animated GIF file or a set of JPEG files with names 
 Javascript интерфейс был разработан при поддержке компании @url{www.datadvance.net, $DATADVANCE}.
 
 
-@external
+@external{}
