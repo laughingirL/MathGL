@@ -148,7 +148,7 @@ void mgl_textw_y(HMGL gr, HCDT y, const wchar_t *text, const char *font, const c
 //-----------------------------------------------------------------------------
 void mgl_text_xyz(HMGL gr, HCDT x, HCDT y, HCDT z,const char *text, const char *font, const char *opt)
 {
-	size_t s = strlen(text)+1;
+	size_t s = mbstowcs(0,text,0)+1;
 	wchar_t *wcs = new wchar_t[s];
 	mbstowcs(wcs,text,s);
 	mgl_textw_xyz(gr,x,y,z, wcs, font, opt);

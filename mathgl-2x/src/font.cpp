@@ -70,7 +70,7 @@ float mglFont::Puts(const char *str,const char *how,float col) const
 {
 	int font=0, align=1;
 	char cc=mglGetStyle(how,&font,&align);
-	size_t size = strlen(str)+1;
+	size_t size = mbstowcs(0,str,0)+1;
 	wchar_t *wcs = new wchar_t[size];
 	mbstowcs(wcs,str,size);
 	float w = Puts(wcs,font,align,cc?-cc:col);
@@ -82,7 +82,7 @@ float mglFont::Width(const char *str,const char *how) const
 {
 	int font=0;
 	mglGetStyle(how,&font);
-	size_t size = strlen(str)+1;
+	size_t size = mbstowcs(0,str,0)+1;
 	wchar_t *wcs = new wchar_t[size];
 	mbstowcs(wcs,str,size);
 	float w = Width(wcs,font);

@@ -566,9 +566,9 @@ void mgl_putsw(HMGL gr, double x, double y, double z,const wchar_t *text, const 
 //-----------------------------------------------------------------------------
 void mgl_puts_dir(HMGL gr, double x, double y, double z, double dx, double dy, double dz, const char *text, const char *font, double size)
 {
-	long len = strlen(text);
+	long len = mbstowcs(0,text,0)+1;
 	wchar_t *buf = new wchar_t[len+1];
-	mbstowcs(buf,text,len);	buf[len]=0;
+	mbstowcs(buf,text,len);
 	mgl_putsw_dir(gr, x, y, z, dx, dy, dz, buf, font, size);
 	delete []buf;
 }
@@ -671,19 +671,19 @@ void mgl_textmarkw(HMGL gr, HCDT y, const wchar_t *text, const char *fnt, const 
 }
 //-----------------------------------------------------------------------------
 void mgl_textmark_xyzr(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const char *str, const char *fnt, const char *opt)
-{	long s = strlen(str)+1;	wchar_t *wcs = new wchar_t[s];	mbstowcs(wcs,str,s);
+{	long s = mbstowcs(0,str,0)+1;	wchar_t *wcs = new wchar_t[s];	mbstowcs(wcs,str,s);
 	mgl_textmarkw_xyzr(gr, x, y, z, r, wcs, fnt, opt);	delete []wcs;	}
 //-----------------------------------------------------------------------------
 void mgl_textmark_xyr(HMGL gr, HCDT x, HCDT y, HCDT r, const char *str, const char *fnt, const char *opt)
-{	long s = strlen(str)+1;	wchar_t *wcs = new wchar_t[s];	mbstowcs(wcs,str,s);
+{	long s = mbstowcs(0,str,0)+1;	wchar_t *wcs = new wchar_t[s];	mbstowcs(wcs,str,s);
 	mgl_textmarkw_xyr(gr, x, y, r, wcs, fnt, opt);	delete []wcs;	}
 //-----------------------------------------------------------------------------
 void mgl_textmark_yr(HMGL gr, HCDT y, HCDT r, const char *str, const char *fnt, const char *opt)
-{	long s = strlen(str)+1;	wchar_t *wcs = new wchar_t[s];	mbstowcs(wcs,str,s);
+{	long s = mbstowcs(0,str,0)+1;	wchar_t *wcs = new wchar_t[s];	mbstowcs(wcs,str,s);
 	mgl_textmarkw_yr(gr, y, r, wcs, fnt, opt);	delete []wcs;	}
 //-----------------------------------------------------------------------------
 void mgl_textmark(HMGL gr, HCDT y, const char *str, const char *fnt, const char *opt)
-{	long s = strlen(str)+1;	wchar_t *wcs = new wchar_t[s];	mbstowcs(wcs,str,s);
+{	long s = mbstowcs(0,str,0)+1;	wchar_t *wcs = new wchar_t[s];	mbstowcs(wcs,str,s);
 	mgl_textmarkw(gr, y, wcs, fnt, opt);	delete []wcs;	}
 //-----------------------------------------------------------------------------
 void mgl_textmark_xyzr_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *r, const char *text, const char *fnt, const char *opt, int l,int n,int lo)
@@ -777,15 +777,15 @@ void mgl_labelw_y(HMGL gr, HCDT y, const wchar_t *text, const char *fnt, const c
 }
 //-----------------------------------------------------------------------------
 void mgl_label_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *str, const char *fnt, const char *opt)
-{	long s = strlen(str)+1;	wchar_t *wcs = new wchar_t[s];	mbstowcs(wcs,str,s);
+{	long s = mbstowcs(0,str,0)+1;	wchar_t *wcs = new wchar_t[s];	mbstowcs(wcs,str,s);
 	mgl_labelw_xyz(gr, x, y, z, wcs, fnt, opt);	delete []wcs;	}
 //-----------------------------------------------------------------------------
 void mgl_label_xy(HMGL gr, HCDT x, HCDT y, const char *str, const char *fnt, const char *opt)
-{	long s = strlen(str)+1;	wchar_t *wcs = new wchar_t[s];	mbstowcs(wcs,str,s);
+{	long s = mbstowcs(0,str,0)+1;	wchar_t *wcs = new wchar_t[s];	mbstowcs(wcs,str,s);
 	mgl_labelw_xy(gr, x, y, wcs, fnt, opt);	delete []wcs;	}
 //-----------------------------------------------------------------------------
 void mgl_label_y(HMGL gr, HCDT y, const char *str, const char *fnt, const char *opt)
-{	long s = strlen(str)+1;	wchar_t *wcs = new wchar_t[s];	mbstowcs(wcs,str,s);
+{	long s = mbstowcs(0,str,0)+1;	wchar_t *wcs = new wchar_t[s];	mbstowcs(wcs,str,s);
 	mgl_labelw_y(gr, y, wcs, fnt, opt);	delete []wcs;	}
 //-----------------------------------------------------------------------------
 void mgl_label_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *text, const char *fnt, const char *opt, int l,int n,int lo)
@@ -821,7 +821,7 @@ void mgl_table(HMGL gr, double x, double y, HCDT val, const char *text, const ch
 {
 	if(!text)	mgl_tablew(gr,x,y,val,L"",fnt,opt);
 	else
-	{	long s = strlen(text)+1;	wchar_t *wcs = new wchar_t[s];	mbstowcs(wcs,text,s);
+	{	long s = mbstowcs(0,text,0)+1;	wchar_t *wcs = new wchar_t[s];	mbstowcs(wcs,text,s);
 		mgl_tablew(gr, x, y, val, wcs, fnt, opt);	delete []wcs;	}
 }
 //-----------------------------------------------------------------------------

@@ -213,7 +213,7 @@ void mglParser::DeleteAll()
 //-----------------------------------------------------------------------------
 void mglParser::AddParam(int n, const char *str)
 {
-	unsigned s = strlen(str)+1;
+	unsigned s = mbstowcs(0,str,0)+1;
 	wchar_t *wcs = new wchar_t[s];
 	mbstowcs(wcs,str,s);
 	AddParam(n,wcs);
@@ -222,7 +222,7 @@ void mglParser::AddParam(int n, const char *str)
 //-----------------------------------------------------------------------------
 int mglParser::Parse(mglGraph *gr, const char *str, long pos)
 {
-	size_t s = strlen(str)+1;
+	size_t s = mbstowcs(0,str,0)+1;
 	wchar_t *wcs = new wchar_t[s];
 	mbstowcs(wcs,str,s);
 	int r = Parse(gr,wcs,pos);
@@ -231,7 +231,7 @@ int mglParser::Parse(mglGraph *gr, const char *str, long pos)
 //-----------------------------------------------------------------------------
 mglVar *mglParser::AddVar(const char *str)
 {
-	size_t s = strlen(str)+1;
+	size_t s = mbstowcs(0,str,0)+1;
 	wchar_t *wcs = new wchar_t[s];
 	mbstowcs(wcs,str,s);
 	mglVar *v = AddVar(wcs);
@@ -242,7 +242,7 @@ mglVar *mglParser::AddVar(const char *str)
 mglVar *mglParser::FindVar(const char *str)
 {
 	if(!str || *str==0) 	return DataList;
-	size_t s = strlen(str)+1;
+	size_t s = mbstowcs(0,str,0)+1;
 	wchar_t *wcs = new wchar_t[s];
 	mbstowcs(wcs,str,s);
 	mglVar *v = FindVar(wcs);
@@ -252,7 +252,7 @@ mglVar *mglParser::FindVar(const char *str)
 //-----------------------------------------------------------------------------
 mglNum *mglParser::AddNum(const char *str)
 {
-	size_t s = strlen(str)+1;
+	size_t s = mbstowcs(0,str,0)+1;
 	wchar_t *wcs = new wchar_t[s];
 	mbstowcs(wcs,str,s);
 	mglNum *v = AddNum(wcs);
@@ -262,7 +262,7 @@ mglNum *mglParser::AddNum(const char *str)
 //-----------------------------------------------------------------------------
 mglNum *mglParser::FindNum(const char *str)
 {
-	size_t s = strlen(str)+1;
+	size_t s = mbstowcs(0,str,0)+1;
 	wchar_t *wcs = new wchar_t[s];
 	mbstowcs(wcs,str,s);
 	mglNum *v = FindNum(wcs);
@@ -521,6 +521,7 @@ int mglParser::Parse(mglGraph *gr, const wchar_t *string, long pos)
 	size_t lstr = wcslen(string)+2+GetParLen(string);
 	wchar_t *str, *arg[1024],*t;
 	wchar_t *s = new wchar_t[lstr];
+	memset(s,0,lstr*sizeof(wchar_t));
 	wcscpy(s,string);	mgl_wcstrim(s);	str = s;
 	long n,k=0,m=0,mm=0;
 	// try parse ':' -- several commands in line
@@ -953,8 +954,9 @@ void mglParser::Execute(mglGraph *gr, const wchar_t *text)
 //-----------------------------------------------------------------------------
 void mglParser::Execute(mglGraph *gr, const char *text)
 {
-	size_t s = strlen(text)+1;
+	size_t s = mbstowcs(0,text,0)+1;
 	wchar_t *wcs = new wchar_t[s];
+	memset(wcs,0,s*sizeof(wchar_t));
 	mbstowcs(wcs,text,s);
 	Execute(gr, wcs);
 	delete []wcs;
@@ -1079,7 +1081,7 @@ long mgl_parser_cmd_num(HMPR pr)
 //---------------------------------------------------------------------------
 HMDT mgl_parser_calc(HMPR pr, const char *formula)
 {
-	size_t s = strlen(formula)+1;
+	size_t s = mbstowcs(0,formula,0)+1;
 	wchar_t *wcs = new wchar_t[s];
 	mbstowcs(wcs,formula,s);
 	HMDT d = mgl_parser_calcw(pr,wcs);

@@ -4,6 +4,7 @@
 * Exclude export MGL to CPP
 * MGL parsing now produce errors for any wrong list of arguments
 * Add message to mgl.cgi
+* Improve text rotation at View()
 * Update docs and MGL samples
 
 2.1 Released 13 December 2012

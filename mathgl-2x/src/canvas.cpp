@@ -426,6 +426,7 @@ pthread_mutex_lock(&mutexPtx);
 		mglColor mc(ch);
 		if(!ch)	mc = col<0 ? mglColor(char(0.5-col)):Txt[long(col)].GetC(col);
 
+//		if(!get(MGL_ENABLE_RTEXT))
 		mglPrim a(6);	a.n1 = p;
 		a.n2 = int(255*mc.r) + 256*(int(255*mc.g) + 256*int(255*mc.b));
 		mglText txt(text,font);
@@ -464,7 +465,9 @@ pthread_mutex_unlock(&mutexPtx);
 void mglCanvas::Glyph(mreal x, mreal y, mreal f, int s, long j, mreal col)
 {
 	mglPrim a(4);	// NOTE: no projection since text_plot() did it
-	a.s = fscl/B.pf;	a.w = ftet;	a.p = f/fnt->GetFact(s&3);
+	a.s = fscl/B.pf;
+	a.w = get(MGL_ENABLE_RTEXT)?ftet:1e5;
+	a.p = f/fnt->GetFact(s&3);
 	mreal cc = col<0 ? AddTexture(char(0.5-col)):col;
 	if(cc<0)	cc = CDef;
 	a.n1 = AddPnt(mglPoint(B.x,B.y,B.z), cc, mglPoint(x,y,NAN), -1, -1);
@@ -876,7 +879,7 @@ void mglCanvas::Table(mreal x, mreal y, HCDT val, const wchar_t *text, const cha
 void mglCanvas::Title(const char *title,const char *stl,mreal size)
 {
 	if(!title)	title="";
-	size_t s = strlen(title)+1;
+	size_t s = mbstowcs(0,title,0)+1;
 	wchar_t *wcs = new wchar_t[s];
 	mbstowcs(wcs,title,s);
 	Title(wcs, stl,size);

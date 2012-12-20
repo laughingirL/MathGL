@@ -101,9 +101,9 @@ void mglCanvas::SetTicksVal(char dir, HCDT v, const wchar_t *lbl, bool add)
 //-----------------------------------------------------------------------------
 void mglCanvas::SetTicksVal(char dir, HCDT v, const char *lbl, bool add)
 {
-	long ll=strlen(lbl);
-	wchar_t *wcs = new wchar_t[ll+1];
-	mbstowcs(wcs,lbl,ll);	wcs[ll]=0;
+	long ll=mbstowcs(0,lbl,0)+1;
+	wchar_t *wcs = new wchar_t[ll];
+	mbstowcs(wcs,lbl,ll);
 	SetTicksVal(dir,v,wcs,add);
 	delete []wcs;
 }
@@ -153,7 +153,7 @@ void mglCanvas::SetTicksVal(char dir, HCDT v, const char **lbl, bool add)
 	if(!v || !lbl)	{	aa.f = 0;	return;	}
 	aa.f = 2;	aa.ns=0;	aa.ds=0;
 	register size_t i,n=v->GetNx(),l=0;
-	for(i=0;i<n;i++)	if(strlen(lbl[i])>l)	l=strlen(lbl[i]);
+	for(i=0;i<n;i++)	if(strlen(lbl[i])>l)	l=mbstowcs(0,lbl[i],0)+1;
 	wchar_t *str=new wchar_t[l+1];
 	for(i=0;i<n;i++)
 	{
@@ -180,7 +180,7 @@ void mglCanvas::SetTickTempl(char dir, const char *t)
 
 	if(aa.f==1)	aa.f = 0;	// remove time ticks
 	if(!t || !t[0])	aa.t[0]=0;
-	else if(strlen(t)<255) mbstowcs(aa.t,t,strlen(t)+1);
+	else if(mbstowcs(0,t,0)<256) mbstowcs(aa.t,t,256);
 }
 //-----------------------------------------------------------------------------
 double mgl_adj_val(double v,mreal *ds=0)
@@ -245,7 +245,7 @@ void mglCanvas::SetTickTime(char dir, mreal d, const char *t)
 	}
 
 	aa.dv = d;	aa.f = 1;	aa.txt.clear();
-	if(strlen(t)<255) mbstowcs(aa.t,t,strlen(t)+1);
+	if(mbstowcs(0,t,0)<256) mbstowcs(aa.t,t,256);
 
 	if(strchr("xyztuvw",aa.ch))
 		aa.org = mglPoint(GetOrgX(aa.ch), GetOrgY(aa.ch), GetOrgZ(aa.ch));
@@ -689,7 +689,7 @@ void mglCanvas::DrawGrid(mglAxis &aa)
 //-----------------------------------------------------------------------------
 void mglCanvas::Label(char dir, const char *str, mreal pos, const char *opt)
 {
-	size_t s = strlen(str)+1;
+	size_t s = mbstowcs(0,str,0)+1;
 	wchar_t *wcs = new wchar_t[s];
 	mbstowcs(wcs,str,s);
 	Labelw(dir, wcs, pos, opt);

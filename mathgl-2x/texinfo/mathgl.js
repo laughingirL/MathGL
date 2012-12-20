@@ -253,7 +253,12 @@ var mgl_draw_good = function(obj, ctx, skip)
 			var zc = obj.b[6]*xx + obj.b[7]*yy + obj.b[8]*zz;
 			var ll = xc*xc+yc*yc;
 			if(ll < 1e-10)	break;
-			if(ll<1e10)	t = Math.atan2(yc,xc);
+			if(ll<1e10 && t<1e4)
+			{
+				t = Math.atan2(yc,xc);
+				if(Math.abs(t)>Math.PI/2)	t += Math.PI;
+			}
+			else t=0;
 			var c=Math.cos(t), s=Math.sin(t), d=obj.prim[i][6]/2;
 
 			var b=[d*c, d*s, d*s, -d*c, obj.pp[n1][0],obj.pp[n1][1]];

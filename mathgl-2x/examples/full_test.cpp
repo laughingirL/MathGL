@@ -64,11 +64,10 @@ void mgl_write_obj_old(HMGL gr, const char *fname,const char *descr, int use_png
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	mglData xx("/home/balakin/tmp/xx.dat");
-	printf("{%ld,%ld,%ld}\t",xx.nx,xx.ny,xx.nz);
-	mglData res = xx.Solve(0.058775233,'z');
-	printf("{%ld,%ld,%ld}\n",res.nx,res.ny,res.nz);
-	res.Save("/home/balakin/tmp/res.dat");
+	gr->SubPlot(3,2,0);	gr->SetRanges(100,100.1,10,10.01);	gr->Axis();
+	gr->SubPlot(3,2,1);	gr->SetTuneTicks(0);	gr->Axis();
+	gr->SubPlot(3,2,2);	gr->SetOrigin(100.1,NAN);	gr->Axis();
+	gr->SubPlot(3,2,3);	gr->SetOrigin(100.05,NAN);	gr->Axis();
 	return;
 	
 	mglParse par;

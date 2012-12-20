@@ -1134,8 +1134,8 @@ void mglBase::AddLegend(const wchar_t *text,const char *style)
 //-----------------------------------------------------------------------------
 void mglBase::AddLegend(const char *str,const char *style)
 {
-	if(!str)	return;
-	size_t s = strlen(str)+1;
+	if(!str || *str==0)	return;
+	size_t s = mbstowcs(0,str,0)+1;
 	wchar_t *wcs = new wchar_t[s];
 	mbstowcs(wcs,str,s);
 	AddLegend(wcs, style);
