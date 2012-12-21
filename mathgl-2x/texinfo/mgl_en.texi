@@ -79,9 +79,9 @@ This file documents the MGL script language. It corresponds to release @value{VE
 @end ifnottex
 @end ifnothtml
 
-@rmacro sref {arg}
+@macro sref {arg}
 @xref{\arg\}, for sample code and picture.
-@end rmacro
+@end macro
 @macro tdref {nam}
 @end macro
 @set UDAV

@@ -81,9 +81,9 @@
 @end ifnottex
 @end ifnothtml
 
-@rmacro sref {arg}
+@macro sref {arg}
 См. @ref{\arg\}, для примеров кода и графика.
-@end rmacro
+@end macro
 @macro tdref {nam}
 @end macro
 @set UDAV

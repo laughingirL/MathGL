@@ -138,9 +138,9 @@ screen.colorDepth:screen.pixelDepth))+";u"+escape(document.URL)+
 @end ifnothtml
 
 
-@rmacro sref {arg}
+@macro sref {arg}
 См. раздел @ref{\arg\}, для примеров кода и графика.
-@end rmacro
+@end macro
 @macro tdref {nam}
 @uref{http://mathgl.sourceforge.net/pdf_u3d/\nam\.pdf, 3D pdf}
 @end macro

@@ -138,9 +138,9 @@ screen.colorDepth:screen.pixelDepth))+";u"+escape(document.URL)+
 @end ifnothtml
 
 
-@rmacro sref {arg}
+@macro sref {arg}
 @xref{\arg\}, for sample code and picture.
-@end rmacro
+@end macro
 @macro tdref {nam}
 @uref{http://mathgl.sourceforge.net/pdf_u3d/\nam\.pdf, 3D pdf}
 @end macro

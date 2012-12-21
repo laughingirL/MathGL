@@ -577,6 +577,7 @@ void mglCanvas::DrawLabels(mglAxis &aa)
 		if(aa.ch=='T')	ts *= -1;
 		if(aa.pos=='T')	ts *= -1;
 		pos[0] = ts>0 ? 't':'T';
+		if(ts>0 && tet && nn.x==0)	pos[2]='R';
 		text_plot(kk[i], aa.txt[i].text.c_str(), pos, -1, aa.sh+0.07,CDef,tet?false:true);
 	}
 	delete []w;	delete []kk;
