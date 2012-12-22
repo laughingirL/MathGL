@@ -226,7 +226,11 @@ int mgl_bps_save(const char *fname, int w, int h, unsigned char **p)
 int mgl_gif_save(const char *fname, int w, int h, unsigned char **l)
 {
 #if MGL_HAVE_GIF
+#if GIFLIB_MAJOR>=5
+	GifFileType *fg = EGifOpenFileName(fname, 0, 0);
+#else
 	GifFileType *fg = EGifOpenFileName(fname, 0);
+#endif
 	// define colormap
 	GifColorType col[256];
 	memset(col,0,256*sizeof(GifColorType));
@@ -240,9 +244,15 @@ int mgl_gif_save(const char *fname, int w, int h, unsigned char **l)
 		col[m].Blue =51*k;
 	}
 	// write header
+#if GIFLIB_MAJOR>=5
+	ColorMapObject *gmap = GifMakeMapObject(256, col);
+	EGifPutScreenDesc(fg, w, h, 256,0,gmap);
+	GifFreeMapObject(gmap);
+#else
 	ColorMapObject *gmap = MakeMapObject(256, col);
 	EGifPutScreenDesc(fg, w, h, 256,0,gmap);
 	FreeMapObject(gmap);
+#endif
 	// write frame
 	EGifPutImageDesc(fg, 0, 0, w, h, 0, 0);
 	GifPixelType *line = new GifPixelType[w*h];
@@ -271,10 +281,15 @@ void mglCanvas::StartGIF(const char *fname, int ms)
 {
 #if MGL_HAVE_GIF
 	if(gif)	EGifCloseFile(gif);
-	EGifSetGifVersion("89a");
 	std::string fn=fname;
 	if(fn.empty())	{	fn=PlotId+".gif";	fname = fn.c_str();	}
+#if GIFLIB_MAJOR>=5
+	gif = EGifOpenFileName(fname, 0, 0);
+	EGifSetGifVersion(gif,true);
+#else
+	EGifSetGifVersion("89a");
 	gif = EGifOpenFileName(fname, 0);
+#endif
 	// get picture sizes
 	// NOTE: you shouldn't call SetSize() after StartGIF() !!!
 	long width, height;
@@ -293,15 +308,29 @@ void mglCanvas::StartGIF(const char *fname, int ms)
 		col[m].Blue =51*k;
 	}
 	// write header
+#if GIFLIB_MAJOR>=5
+	ColorMapObject *gmap = GifMakeMapObject(256, col);
+	EGifPutScreenDesc(gif, width, height, 256,0,gmap);
+	GifFreeMapObject(gmap);
+#else
 	ColorMapObject *gmap = MakeMapObject(256, col);
 	EGifPutScreenDesc(gif, width, height, 256,0,gmap);
 	FreeMapObject(gmap);
+#endif
 	// put animation parameters
 	ms /= 10;
 	unsigned char ext1[11] = {0x4E, 0x45, 0x54, 0x53, 0x43, 0x41, 0x50, 0x45, 0x32, 0x2E, 0x30}, ext3[3] = {0x01, 0xff, 0xff}, ext2[9] = {0x08, ms%256, ms/256, 0xff};
+#if GIFLIB_MAJOR>=5
+	EGifPutExtensionLeader(gif,0xff);
+	EGifPutExtensionBlock(gif,11,ext1);
+	EGifPutExtensionBlock(gif,3,ext3);
+	EGifPutExtensionTrailer(gif);
+	EGifPutExtension(gif,0xf9,4,ext2);
+#else
 	EGifPutExtensionFirst(gif,0xff,11,ext1);
 	EGifPutExtensionLast(gif,0xff,3,ext3);
 	EGifPutExtension(gif,0xf9,4,ext2);
+#endif
 #else
 	mglGlobalMess += "GIF support was disabled. Please, enable it and rebuild MathGL.\n";
 #endif

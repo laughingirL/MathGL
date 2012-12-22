@@ -198,6 +198,8 @@ print help message.
 Additionally you can create animated GIF file or a set of JPEG files with names @samp{frameNNNN.jpg} (here @samp{NNNN} is frame index). Values of the parameter @code{$0} for making animation can be specified inside the script by comment @code{##a val} for each value @code{val} (one comment for one value) or by option(s) @samp{-A val}. Also you can specify a cycle for animation by comment @code{##c v1 v2 dv} or by option @code{-C v1:v2:dv}. In the case of found/specified animation parameters, tool will execute script several times -- once for each value of @code{$0}.
 
 
+MathGL also provide another simple tool @code{mgl.cgi} which parse MGL script from CGI request and send back produced PNG file. Usually this program should be placed in @code{/usr/lib/cgi-bin/}. But you need to put this program by yourself due to possible security issues and difference of Apache server settings.
+
 @c ------------------------------------------------------------------
 @external{}
 @node Thanks, , Utilities, Overview

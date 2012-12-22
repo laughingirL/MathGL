@@ -253,6 +253,7 @@ static struct option longopts[] =
 	{ "obj",	no_argument,	&type,		11 },
 	{ "off",	no_argument,	&type,		12 },
 	{ "prc",	no_argument,	&type,		5 },
+	{ "pdf",	no_argument,	&type,		9 },
 	{ "solid",	no_argument,	&type,		3 },
 	{ "srnd",	no_argument,	&srnd,		1 },
 	{ "svg",	no_argument,	&type,		2 },
@@ -276,8 +277,8 @@ void usage()
 		"--height=num	- png picture height\n"
 		"--mini		- png picture is 200x150\n"
 		"--big		- png picture is 1920x1440\n"
-		"--idtf		- output idtf\n"
 		"--prc		- output prc\n"
+		"--pdf		- output pdf\n"
 		"--eps		- output EPS\n"
 		"--eps		- output LaTeX\n"
 		"--jpeg		- output JPEG\n"
@@ -322,7 +323,7 @@ void save(mglGraph *gr,const char *name,const char *suf="")
 			gr->WriteJPEG(buf);	break;
 		case 5:	// PRC
 			sprintf(buf,"%s%s.prc",name,suf);
-			gr->WritePRC(buf);	break;
+			gr->WritePRC(buf,"",false);	break;
 		case 6:	// GIF
 			sprintf(buf,"%s%s.gif",name,suf);
 			gr->WriteGIF(buf);	break;
@@ -332,6 +333,9 @@ void save(mglGraph *gr,const char *name,const char *suf="")
 			sprintf(buf,"%s%s.png",name,suf);
 			gr->WritePNG(buf,0,false);
 			break;
+ 		case 9:	// PDF
+			sprintf(buf,"%s%s.prc",name,suf);
+			gr->WritePRC(buf);	remove(buf);	break;
 		case 11:	// OBJ
 			sprintf(buf,"%s%s.obj",name,suf);
 			gr->WriteOBJ(buf);	break;
@@ -358,7 +362,6 @@ int main(int argc,char **argv)
 	const char *suf = "";
 	char name[256]="", *tmp;
 	int ch;
-//	mglGraphIDTF u3d;
 	mglGraph *gr = NULL;
 	mglSample *s=samp;
 #if !defined(_MSC_VER) && !defined(__BORLANDC__)
