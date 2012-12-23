@@ -3,8 +3,11 @@
 * Bugfix for SetRange(val,val) function
 * Exclude export MGL to CPP
 * MGL parsing now produce errors for any wrong list of arguments
-* Add message to mgl.cgi
+* Add help message to mgl.cgi
 * Improve text rotation at View()
+* Make compatible with GIF library v.5.0.
+* Bugfix for making MPI interface.
+* Bugfix for running in Win32 mode.
 * Update docs and MGL samples
 
 2.1 Released 13 December 2012
