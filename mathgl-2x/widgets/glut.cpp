@@ -34,6 +34,7 @@
 	#endif
 #endif
 
+#include "mgl2/opengl.h"
 #include "mgl2/glut.h"
 
 void _mgl_key_up(unsigned char ch,int ,int );

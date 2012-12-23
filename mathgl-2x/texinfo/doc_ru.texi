@@ -94,7 +94,7 @@ screen.colorDepth:screen.pixelDepth))+";u"+escape(document.URL)+
 @center @image{../\fname\, 11cm, , \text\, .png}
 @end macro
 @macro pfig {fname,text}
-@center @image{../png/\fname\, 11cm, , \text\, .png}
+@center @image{../png/\fname\, 11cm, , \text\ См. также пример @uref{../pdf/\fname\.pdf, 3D PDF}, .png}
 @c @center @image{../png/\fname\, 11cm, , \text\. See also @uref{../pdf/\fname\.pdf, U3D PDF} sample, .png}
 @end macro
 @macro ufig {fname,width,text}

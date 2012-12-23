@@ -12,6 +12,7 @@ if(MGL_HAVE_DOC)
 	set(MGL_PNG_N )
 	set(MGL_PNG_S )
 	set(MGL_PNG_J )
+	set(MGL_PNG_D )
 
 	set(MGL_OUT ${CMAKE_BINARY_DIR}/texinfo)
 	set(MGL_TEX ${CMAKE_SOURCE_DIR}/texinfo)
@@ -19,6 +20,7 @@ if(MGL_HAVE_DOC)
 	file(MAKE_DIRECTORY ${MGL_OUT}/png)
 	file(MAKE_DIRECTORY ${MGL_OUT}/small)
 	file(MAKE_DIRECTORY ${MGL_OUT}/json)
+	file(MAKE_DIRECTORY ${MGL_OUT}/pdf)
 	file(COPY ${MGL_TEX}/qt.png ${MGL_TEX}/fltk.png ${MGL_TEX}/classes.png ${MGL_TEX}/emblem_sm.png ${MGL_TEX}/datadvance.png DESTINATION ${MGL_OUT})
 	file(COPY ${MGL_TEX}/toc_ru.html ${MGL_TEX}/toc_fr.html ${MGL_TEX}/toc_en.html ${MGL_TEX}/title.html ${MGL_TEX}/index.html ${MGL_TEX}/json.html ${MGL_TEX}/mathgl.js DESTINATION ${MGL_OUT})
 
@@ -46,6 +48,13 @@ if(MGL_HAVE_DOC)
 #			COMMAND ${CMAKE_BINARY_DIR}/examples/mgl_example -json -kind=${SAMPLE}
 			DEPENDS mgl_example
 			WORKING_DIRECTORY ${MGL_OUT}/json )
+if(MGL_HAVE_PDF)
+		set(MGL_PNG_D ${MGL_PNG_D} ${MGL_OUT}/pdf/${SAMPLE}.pdf)
+		add_custom_command(OUTPUT ${MGL_OUT}/pdf/${SAMPLE}.pdf
+			COMMAND mgl_example -pdf -kind=${SAMPLE}
+			DEPENDS mgl_example
+			WORKING_DIRECTORY ${MGL_OUT}/pdf )
+endif(MGL_HAVE_PDF)
 	endforeach(SAMPLE)
 
 	set(list_texi_files_en overview_en.texi example_en.texi ex_mgl_en.texi parse_en.texi formats_en.texi udav_en.texi symbols_en.texi
@@ -71,7 +80,7 @@ if(MGL_HAVE_DOC)
 	)
 	add_custom_command(OUTPUT ${MGL_OUT}/doc_en/doc_en.html
 		COMMAND ${findth} -I=${MGL_OUT}/png --split=section --frames -o doc_en ${MGL_TEX}/doc_en.texi
-		DEPENDS ${list_texi_files_en} doc_en.texi ${MGL_PNG_N} web_en.texi ${MGL_PNG_S}
+		DEPENDS ${list_texi_files_en} doc_en.texi ${MGL_PNG_N} web_en.texi ${MGL_PNG_S} ${MGL_PNG_J} ${MGL_PNG_D}
 		WORKING_DIRECTORY ${MGL_OUT}
 	)
 	add_custom_command(OUTPUT ${MGL_OUT}/mgl_en.html
@@ -114,7 +123,7 @@ if(MGL_HAVE_DOC)
 	)
 	add_custom_command(OUTPUT ${MGL_OUT}/doc_ru/doc_ru.html
 		COMMAND ${findth} -I=${MGL_OUT}/png --split=section --frames -o doc_ru ${MGL_TEX}/doc_ru.texi
-		DEPENDS ${list_texi_files_ru} doc_ru.texi ${MGL_PNG_N} web_ru.texi ${MGL_PNG_S}
+		DEPENDS ${list_texi_files_ru} doc_ru.texi ${MGL_PNG_N} web_ru.texi ${MGL_PNG_S} ${MGL_PNG_J} ${MGL_PNG_D}
 		WORKING_DIRECTORY ${MGL_OUT}
 	)
 	add_custom_command(OUTPUT ${MGL_OUT}/mgl_ru.html

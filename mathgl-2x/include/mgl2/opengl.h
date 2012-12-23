@@ -20,9 +20,8 @@
 #ifndef MGL_CANVAS_GL_H
 #define MGL_CANVAS_GL_H
 //-----------------------------------------------------------------------------
-#ifdef __cplusplus
 #include "mgl2/canvas.h"
-
+//-----------------------------------------------------------------------------
 class mglCanvasGL : public mglCanvas
 {
 public:
@@ -55,15 +54,6 @@ protected:
 	void LightScale();
 	void set_pen(unsigned style,mreal width);
 };
-extern "C" {
-#endif
-//-----------------------------------------------------------------------------
-HMGL mgl_create_graph_gl();
-uintptr_t mgl_create_graph_gl_();
-//-----------------------------------------------------------------------------
-#ifdef __cplusplus
-}
-#endif
 //-----------------------------------------------------------------------------
 #endif
 

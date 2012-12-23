@@ -7,6 +7,7 @@
 #include <GL/gl.h>
 #endif
 #include "mgl2/opengl.h"
+#include "mgl2/mgl_cf.h"
 #include <algorithm>
 //-----------------------------------------------------------------------------
 /// Create mglGraph object in OpenGL mode.
