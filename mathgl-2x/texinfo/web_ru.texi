@@ -70,8 +70,6 @@ Javascript interface was developed with support of @url{www.datadvance.net, $DAT
 @section News
 
 @itemize
-
-@itemize
 @item
 @strong{24 December 2012.}
 New version (v.2.1.1) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are minor bugfixes and improvements:
