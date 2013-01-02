@@ -165,6 +165,9 @@ void mgl_write_tex_(uintptr_t *gr, const char *fname,const char *descr,int,int);
 /// Write the frame in file using OBJ format
 void mgl_write_obj(HMGL gr, const char *fname,const char *descr, int use_png);
 void mgl_write_obj_(uintptr_t *gr, const char *fname,const char *descr, int *use_png,int,int);
+/// Write the frame in file using OBJ format (old version)
+void mgl_write_obj_old(HMGL gr, const char *fname,const char *descr, int use_png);
+void mgl_write_obj_old_(uintptr_t *gr, const char *fname,const char *descr, int *use_png,int,int);
 /// Write the frame in file using STL format (faces only)
 void mgl_write_stl(HMGL gr, const char *fname,const char *descr);
 void mgl_write_stl_(uintptr_t *gr, const char *fname,const char *descr,int,int);

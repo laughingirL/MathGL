@@ -1,5 +1,5 @@
 http://ubuntuforums.org/showthread.php?t=1862084
-Device 0 (VID=0502 and PID=337d) is UNKNOWN.
+Device 0 (VID=0502 and PID=337d) is UNKNOWN. (VID=18d1 and PID=4e41)
 
 ============= NEW FOR LATER =============
 

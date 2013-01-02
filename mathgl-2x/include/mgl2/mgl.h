@@ -316,6 +316,9 @@ public:
 	/// Write the frame in file using OBJ format
 	inline void WriteOBJ(const char *fname,const char *descr="",bool use_png=true)
 	{	mgl_write_obj(gr, fname, descr, use_png);	}
+	/// Write the frame in file using OBJ format - Balakin way
+	inline void WriteOBJold(const char *fname,const char *descr="",bool use_png=true)
+	{	mgl_write_obj_old(gr, fname, descr, use_png);	}
 	/// Write the frame in file using XYZ format
 	inline void WriteXYZ(const char *fname,const char *descr="")
 	{	mgl_write_xyz(gr, fname, descr);	}

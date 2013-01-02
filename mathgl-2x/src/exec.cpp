@@ -1053,7 +1053,6 @@ int mgls_savehdf(mglGraph *, long , mglArg *a, const char *k, const char *)
 int mgls_rect(mglGraph *gr, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
-	long i;
 	if(!strcmp(k,"nnnn"))
 		gr->Face(mglPoint(a[0].v,a[1].v,NAN), mglPoint(a[0].v,a[3].v,NAN),
 				 mglPoint(a[2].v,a[1].v,NAN), mglPoint(a[2].v,a[3].v,NAN));

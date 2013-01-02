@@ -42,6 +42,27 @@
 #undef _GR_
 #define _GR_	((mglCanvas *)(*gr))
 #define _Gr_	((mglCanvas *)(gr))
+
+//-----------------------------------------------------------------------------
+void mglTexture::GetRGBAPRC(unsigned char *f) const
+{
+	register size_t i,j,i0;
+	mglColor c1,c2,c;
+	for(i=0;i<255;i++)
+	{
+		c1 = col[2*i];	c2 = col[2*i+1];
+		for(j=0;j<256;j++)
+		{
+			i0 = 4*(j+256*(255-i));
+			c = c1 + (c2-c1)*(j/255.);
+			f[i0]   = int(255*c.r);
+			f[i0+1] = int(255*c.g);
+			f[i0+2] = int(255*c.b);
+			f[i0+3] = int(255*c.a);
+		}
+	}
+}
+//-----------------------------------------------------------------------------
 int mgl_tga_save(const char *fname, int w, int h, unsigned char **p);
 int mgl_pnga_save(const char *fname, int w, int h, unsigned char **p);
 void mgl_printf(void *fp, bool gz, const char *str, ...);
@@ -279,7 +300,7 @@ void mgl_write_prc(HMGL gr, const char *fname,const char* /*descr*/, int make_pd
 		for(size_t i=0;i<height;i++)
 			pbuf[i] = buf+4*width*i;
 		for(size_t i=0;i<ntxt;i++)
-			gr->GetTxt(i).GetRGBA(buf+(ntxt-1-i)*256*width*4);
+			gr->GetTxt(i).GetRGBAPRC(buf+(ntxt-1-i)*256*width*4);
 
 		png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING,0,0,0);
 		png_infop info_ptr = png_create_info_struct(png_ptr);
@@ -318,6 +339,15 @@ void mgl_write_prc(HMGL gr, const char *fname,const char* /*descr*/, int make_pd
 									1.0,0.1); // alpha, shininess
 
 		materialMathGLid = file.addTexturedMaterial(m,1,&t);
+
+		// char * const pngname = new char[len+100];
+		// strcpy(pngname, "test_texture_");
+		// strcat(pngname,tname);
+		// const size_t tlen=strlen(pngname)-4;
+		// pngname[tlen+1]='p';	pngname[tlen+2]='n';	pngname[tlen+3]='g';
+		// FILE *fp = fopen(pngname, "wb");
+		// fwrite(buffer.data, 1, buffer.size, fp);
+		// fclose(fp);
 
 		free(buffer.data); buffer.data = NULL;
 	}

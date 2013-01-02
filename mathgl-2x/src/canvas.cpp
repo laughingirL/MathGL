@@ -890,6 +890,7 @@ void mglCanvas::Title(const wchar_t *title,const char *stl,mreal size)
 {
 	mreal s = size>0 ? size/FontSize:-size, h=TextHeight(stl,size)*s/2;
 	if(h>=inH)	{	SetWarn(mglWarnSpc,"Title");	return;	}
+	static int cgid=1;	StartGroup("Title",cgid++);
 	bool box=mglchr(stl,'#');
 	int align;	mglGetStyle(stl,0,&align);	align = align&3;
 	mreal y=inY+inH-h;
@@ -912,6 +913,7 @@ void mglCanvas::Title(const wchar_t *title,const char *stl,mreal size)
 	}
 	B1.y -= h/2;	B1.b[4] -= h;	B=B1;
 	inH-=h;	font_factor = B.b[0] < B.b[4] ? B.b[0] : B.b[4];
+	EndGroup();
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::StartAutoGroup (const char *lbl)

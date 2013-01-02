@@ -178,6 +178,7 @@ struct mglTexture
 	inline bool IsSame(const mglTexture &t) const
 	{	return n==t.n && !memcmp(col,t.col,512*sizeof(mglColor));	}
 	void GetRGBA(unsigned char *f) const;
+	void GetRGBAPRC(unsigned char *f) const;
 	void GetRGBAOBJ(unsigned char *f) const;	// Export repeating border colors, since OBJ by default wraps textures and we need an extra boundary to work around implementation quirks
 };
 //-----------------------------------------------------------------------------

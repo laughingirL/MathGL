@@ -64,14 +64,10 @@ void mgl_write_obj_old(HMGL gr, const char *fname,const char *descr, int use_png
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	gr->SetSize(800,600);
-	gr->SetTuneTicks(0);	gr->SetRanges(1000,1000.1,10,10.001);
-	gr->SubPlot(3,2,0);	gr->SetOrigin(1000,10);	gr->Axis();
-	gr->SubPlot(3,2,1);	gr->SetOrigin(1000.1,10);	gr->Axis();
-	gr->SubPlot(3,2,2);	gr->SetOrigin(1000.05,10);	gr->Axis();
-	gr->SubPlot(3,2,3);	gr->SetOrigin(1000,10.001);	gr->Axis();
-	gr->SubPlot(3,2,4);	gr->SetOrigin(1000.1,10.001);	gr->Axis();
-	gr->SubPlot(3,2,5);	gr->SetOrigin(1000.05,10.001);	gr->Axis();
+	mglData x(100), y(100);	x.Modify("100*rnd-50");	y.Modify("100*rnd-50");
+	gr->SetRanges(x,y);
+	gr->Axis();
+	gr->Plot(x,y,"B. ");
 	return;
 	
 	mglParse par;
@@ -251,6 +247,7 @@ static struct option longopts[] =
 	{ "mini",	no_argument,	&mini,		1 },
 	{ "none",	no_argument,	&type,		7 },
 	{ "obj",	no_argument,	&type,		11 },
+	{ "obj_old",no_argument,	&type,		10 },
 	{ "off",	no_argument,	&type,		12 },
 	{ "prc",	no_argument,	&type,		5 },
 	{ "pdf",	no_argument,	&type,		9 },
@@ -286,6 +283,7 @@ void usage()
 		"--solid	- output solid PNG\n"
 		"--svg		- output SVG\n"
 		"--obj		- output obj/mtl\n"
+		"--obj_old	- output obj/mtl in old way\n"
 		"--off		- output off\n"
 		"--stl		- output stl\n"
 		"--none		- none output\n"
@@ -336,6 +334,9 @@ void save(mglGraph *gr,const char *name,const char *suf="")
  		case 9:	// PDF
 			sprintf(buf,"%s%s.prc",name,suf);
 			gr->WritePRC(buf);	remove(buf);	break;
+		case 10:	// old OBJ
+			sprintf(buf,"%s%s.obj",name,suf);
+			gr->WriteOBJold(buf);	break;
 		case 11:	// OBJ
 			sprintf(buf,"%s%s.obj",name,suf);
 			gr->WriteOBJ(buf);	break;
@@ -386,6 +387,7 @@ int main(int argc,char **argv)
 
 	if(dotest==1)	printf("Global (before):%s\n",mglGlobalMess.c_str());
 	gr = new mglGraph;	//gr->SetQuality(0);
+	if(	type==11|| type==12|| type==5 || type==9)	width=height;
 	if(mini)		{	gr->SetSize(190,145);	suf = "-sm";	}
 	else if(big)
 	{	gr->SetSize(1920,1440);	suf = "-lg";	}
