@@ -809,7 +809,7 @@ void mglCanvas::fast_draw(long k1, long k2, mglDrawReg *dr)
 void mglCanvas::pnt_draw(long k, mglDrawReg *dr)
 {
 	register long i,j,s,x,y;
-	register float v,pw=2*dr->PenWidth*sqrt(font_factor/400),dpw=3;
+	register float v,pw=3*dr->PenWidth,dpw=3;
 	if(dr->ObjId==HighId)	{	pw *= 2;	dpw=2;	}
 	const mglPnt &p=Pnt[k];
 	unsigned char cs[4], cc;
@@ -839,7 +839,11 @@ void mglCanvas::mark_draw(long k, char type, mreal size, mglDrawReg *d)
 	pthread_mutex_lock(&mutexPnt);
 #endif
 	size_t pos = Pnt.size(), qos=pos;
-	if(type=='.' || ss==0)	pnt_draw(k,d);
+	if(type=='.' || ss==0)
+	{
+		if(d)	d->PenWidth = ss?ss:sqrt(font_factor/400);
+		pnt_draw(k,d);
+	}
 	else
 	{
 		if(d)

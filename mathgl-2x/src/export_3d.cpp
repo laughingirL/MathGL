@@ -119,7 +119,7 @@ void mgl_obj_glyph_old(HMGL gr, const mglPrim &q, const mglPnt &p, FILE *fp)
 /* M.Vidassov take/move it into src/obj.cpp */
 void mgl_obj_prim_old(HMGL gr, const mglPrim &q, const mglPnt &p, FILE *fp, mreal size)
 {
-	char type = q.n4;	mreal ss=size*0.35;
+	char type = q.n4;	mreal ss=size;
 	register long i=q.n1+1,j;
 	register long n1=q.n1+1,n2=q.n2+1,n3=q.n3+1,n4=q.n4+1;
 	switch(q.type)
@@ -320,7 +320,7 @@ void mgl_write_obj_old(HMGL gr, const char *fname,const char *descr, int use_png
 		for(j=0;j<p.size();j++)
 		{
 			const mglPrim &q=gr->GetPrm(p[j]);
-			mgl_obj_prim_old(gr, q, gr->GetPnt(q.n1), fp, q.s*gr->FontFactor());
+			mgl_obj_prim_old(gr, q, gr->GetPnt(q.n1), fp, q.s);
 		}
 		gr->Grp[i].p.clear();	// we don't need indexes anymore
 	}

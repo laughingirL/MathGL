@@ -1,3 +1,8 @@
+2.1.2 Released ?? 2013
+
+* Adjust marks drawing (line width and dots)
+* Minor improvements
+
 2.1.1 Released 24 December 2012
 
 * Bugfix for SetRange(val,val) function

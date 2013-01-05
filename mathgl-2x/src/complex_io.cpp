@@ -703,10 +703,10 @@ int mgl_datac_read_range(HADT dat, const char *templ, double from, double to, do
 		sprintf(fname,templ,t);
 		if(mgl_datac_read(&d,fname))
 			if(!mgl_add_file(kx,ky,kz,b,&d,as_slice))
-				return false;
+			{	delete []fname;	free(b);	return false;	}
 	}
 	dat->Set(b,kx,ky,kz);
-	delete []fname;		free(b);
+	delete []fname;	free(b);
 	return true;
 }
 int mgl_datac_read_range_(uintptr_t *d, const char *fname, mreal *from, mreal *to, mreal *step, int *as_slice,int l)

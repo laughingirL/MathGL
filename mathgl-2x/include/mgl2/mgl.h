@@ -20,7 +20,6 @@
 #ifndef _MGL_H_
 #define _MGL_H_
 
-#include "mgl2/define.h"
 #include "mgl2/mgl_cf.h"
 #include "mgl2/data.h"
 #include "mgl2/datac.h"

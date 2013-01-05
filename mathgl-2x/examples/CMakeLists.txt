@@ -6,6 +6,7 @@ add_executable(mgl_example wnd_samples.cpp full_test.cpp samples.cpp)
 target_link_libraries(mgl_example mgl)
 
 if(MGL_HAVE_FLTK)
+	include_directories(${FLTK_INCLUDE_DIR})
 	add_executable(mgl_fltk_example wnd_samples.cpp fltk_example.cpp)
 	target_link_libraries(mgl_fltk_example mgl-fltk)
 endif(MGL_HAVE_FLTK)

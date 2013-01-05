@@ -27,9 +27,9 @@
 // NOTE: I use <=0 for proper tick labels rotation. But this mirror labels for central origin!
 #define sign(a)	((a)<=0 ? -1:1)
 //-----------------------------------------------------------------------------
-inline struct tm* mgl_localtime (const time_t *clock, struct tm *result, bool use_utc)
+inline struct tm* mgl_localtime (const time_t *clock, tm *result, bool use_utc)
 {	if (!clock || !result) return NULL;
-memcpy(result,use_utc?gmtime(clock):localtime(clock),sizeof(*result));
+	memcpy(result,use_utc?gmtime(clock):localtime(clock),sizeof(tm));
 	return result;	}
 //-----------------------------------------------------------------------------
 long mgl_have_color(const char *stl)

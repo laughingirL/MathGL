@@ -48,7 +48,7 @@ void mglTexture::GetRGBAPRC(unsigned char *f) const
 {
 	register size_t i,j,i0;
 	mglColor c1,c2,c;
-	for(i=0;i<255;i++)
+	for(i=0;i<256;i++)
 	{
 		c1 = col[2*i];	c2 = col[2*i+1];
 		for(j=0;j<256;j++)

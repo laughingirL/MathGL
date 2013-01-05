@@ -19,6 +19,7 @@
  ***************************************************************************/
 #include <ctype.h>
 #include "mgl2/data.h"
+#include "mgl2/eval.h"
 
 #if MGL_HAVE_GSL
 #include <gsl/gsl_fft_complex.h>

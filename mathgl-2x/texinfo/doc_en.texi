@@ -141,10 +141,6 @@ screen.colorDepth:screen.pixelDepth))+";u"+escape(document.URL)+
 @macro sref {arg}
 @xref{\arg\}, for sample code and picture.
 @end macro
-@macro tdref {nam}
-@uref{http://mathgl.sourceforge.net/pdf_u3d/\nam\.pdf, 3D pdf}
-@end macro
-
 
 @node Website, Overview, , Top
 @include web_en.texi

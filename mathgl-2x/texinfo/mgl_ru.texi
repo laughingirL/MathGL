@@ -84,8 +84,6 @@
 @macro sref {arg}
 См. @ref{\arg\}, для примеров кода и графика.
 @end macro
-@macro tdref {nam}
-@end macro
 @set UDAV
 
 @c @node Overview, Examples, , Top

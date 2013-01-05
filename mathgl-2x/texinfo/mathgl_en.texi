@@ -100,10 +100,6 @@ This file documents the Mathematical Graphic Library (MathGL), a collection of c
 @macro sref {arg}
 @xref{\arg\}, for sample code and picture.
 @end macro
-@macro tdref {nam}
-@uref{http://mathgl.sourceforge.net/pdf_u3d/\nam\.pdf, 3D pdf}
-@end macro
-
 
 @node Overview, Examples, , Top
 @include overview_en.texi

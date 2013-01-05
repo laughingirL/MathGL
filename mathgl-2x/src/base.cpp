@@ -19,7 +19,7 @@
  ***************************************************************************/
 #include "mgl2/font.h"
 #include "mgl2/base.h"
-#include "mgl2/define.h"
+#include "mgl2/eval.h"
 //-----------------------------------------------------------------------------
 char *mgl_strdup(const char *s)
 {
@@ -73,27 +73,23 @@ void mgl_create_cpp_font(HMGL gr, const wchar_t *how)
 void mgl_strtrim(char *str)
 {
 	char *c = mgl_strdup(str);
-	size_t n=strlen(str);
-	long k;
-	for(k=0;k<long(strlen(str));k++)	// óäàëÿåì íà÷àëüíûå ïðîáåëû
-		if(str[k]>' ')	break;
+	long k,n=strlen(str);
+	for(k=0;k<n;k++)	if(str[k]>' ')	break;
 	strcpy(c,&(str[k]));
 	n = strlen(c);
-	for(k=n-1;k>=0;k--)	// óäàëÿåì íà÷àëüíûå ïðîáåëû
-		if(c[k]>' ')		break;
+	for(k=n-1;k>=0;k--)	if(c[k]>' ')	break;
 	c[k+1] = 0;
 	strcpy(str,c);	free(c);
 }
 //-----------------------------------------------------------------------------
 void mgl_strlwr(char *str)
 {
-	for(long k=0;k<(long)strlen(str);k++)	// óäàëÿåì íà÷àëüíûå ïðîáåëû
+	for(long k=0;k<(long)strlen(str);k++)
 		str[k] = (str[k]>='A' && str[k]<='Z') ? str[k]+'a'-'A' : str[k];
 }
 //-----------------------------------------------------------------------------
 mglBase::mglBase()
 {
-//	memset(this,0,sizeof(mglBase));	// since mglBase is abstract then I can do it?!!
 	Flag=0;	saved=false;
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_init(&mutexPnt,0);
@@ -821,7 +817,7 @@ void mglTexture::Set(const char *s, int smooth, mreal alpha)
 	register mreal u,v=sm?(n-1)/255.:n/256.;
 	for(i=0,i1=0;i<256;i++)
 	{
-		u = v*i;	j = long(u);	u-=j;
+		u = v*i;	j = long(u);	//u-=j;
 		if(!sm || j==n-1)
 		{	col[2*i] = c[2*j];	col[2*i+1] = c[2*j+1];	}
 		else if(j>n-1)	// NOTE: never should be here!

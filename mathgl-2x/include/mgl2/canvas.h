@@ -25,11 +25,7 @@
 #define MGL_STACK_ENTRY	10
 #endif
 //-----------------------------------------------------------------------------
-#if MGL_HAVE_GIF
-#include <gif_lib.h>
-#else
 struct GifFileType;
-#endif
 //-----------------------------------------------------------------------------
 /// Structure for transformation matrix
 struct mglMatrix

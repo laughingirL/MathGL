@@ -32,6 +32,10 @@ extern "C" {
 #include <jpeglib.h>
 }
 #endif
+
+#if MGL_HAVE_GIF
+#include <gif_lib.h>
+#endif
 //-----------------------------------------------------------------------------
 int mgl_pnga_save(const char *fname, int w, int h, unsigned char **p)
 {

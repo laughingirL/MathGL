@@ -308,13 +308,15 @@ void mglCanvas::mark_plot(long p, char type, mreal size)
 {
 	if(p<0 || mgl_isnan(Pnt[p].x))	return;
 	long pp=p;
-	mreal pw = fabs(PenWidth)*0.15/sqrt(font_factor);
+//	mreal pw = fabs(PenWidth)*0.15/sqrt(font_factor);
+	mreal pw = 0.15/sqrt(font_factor);
 	mglDrawReg d;	d.set(this,1,1,0);
 	d.PDef = PDef;	d.pPos = pPos;
 	d.ObjId = ObjId;	d.PenWidth=pw;
 	if(size>=0)	size *= MarkSize;
 	if(size==0)	size = MarkSize;
 	size *= 0.35*font_factor;
+	if(type=='.')	size = fabs(PenWidth)*sqrt(font_factor/400);
 	if(TernAxis&4) for(int i=0;i<4;i++)
 	{	p = ProjScale(i, pp);	MGL_MARK_PLOT	}
 	else	{	MGL_MARK_PLOT	}
@@ -747,7 +749,7 @@ void mglCanvas::Legend(const std::vector<mglText> &leg, mreal x, mreal y, const 
 	for(i=0;ff[i] && ff[i]!=':';i++)	if(strchr(MGL_COLORS,ff[i]))
 	{
 
-		if(k1 && k2)	{	k3=ff[i];	k4++;	}
+		if(k1 && k2)	{	k3=ff[i];	k4++;	}	// NOTE: keep k3 for future usage
 		if(k1 && !k2)	{	k2=ff[i];	k4++;	}
 		if(!k1)	{	k1=ff[i];	k4++;	}
 	}

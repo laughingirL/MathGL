@@ -18,6 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include "mgl2/data.h"
+#include "mgl2/eval.h"
 #include <complex>
 #define dual	std::complex<double>
 #define GAMMA	0.1

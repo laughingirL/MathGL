@@ -60,14 +60,11 @@ void mgls_prepare3d(mglData *a, mglData *b=0);
 void mgls_prepare2v(mglData *a, mglData *b);
 void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 //-----------------------------------------------------------------------------
-void mgl_write_obj_old(HMGL gr, const char *fname,const char *descr, int use_png);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	mglData x(100), y(100);	x.Modify("100*rnd-50");	y.Modify("100*rnd-50");
-	gr->SetRanges(x,y);
+	gr->SetTicksTime('x');
 	gr->Axis();
-	gr->Plot(x,y,"B. ");
 	return;
 	
 	mglParse par;

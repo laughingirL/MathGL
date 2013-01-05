@@ -18,6 +18,9 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN. (VID=18d1 and PID=4e41)
 11. enable line width for mesh and fall???
 12. WX window/widgets
 
+
+13. Bug?! option for legend should change only font size + way to pass mark size!!!
+
 ============= UDAV =============
 
 01. Show plot at creation stage (if option is enabled -- can be long process!!!) + auto axis range or [-1,1] by default

@@ -28,7 +28,6 @@
 #include <vector>
 #include <string>
 #include "mgl2/type.h"
-#include "mgl2/eval.h"
 //-----------------------------------------------------------------------------
 class mglBase;
 class mglData;
@@ -386,6 +385,8 @@ public:
 	{	const mglPnt &p=Pnt[i];	return mglPoint(p.x,p.y,p.z);	}
 	inline mglPoint GetPntN(long i) const
 	{	const mglPnt &p=Pnt[i];	return mglPoint(p.u,p.v,p.w);	}
+	inline mglColor GetPntC(long i) const
+	{	const mglPnt &p=Pnt[i];	return mglColor(p.r,p.g,p.b,p.a);	}
 	inline float GetClrC(long i) const	{	return Pnt[i].c;	}
 	inline const mglGlyph &GetGlf(long i) const	{	return Glf[i];	}
 	inline long GetGlfNum() const		{	return Glf.size();	}

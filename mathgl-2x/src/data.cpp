@@ -930,7 +930,15 @@ mreal mglSpline3(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mr
 		else if(nz>3 && kz==nz-2)	{	kk=2;	}
 		for(long k=0;k<4;k++)
 		{
-			if(kz+k-kk<nz)	mglFillP(kx, ky, a+(kz+k-kk)*nx*ny, nx, ny, _p);
+			if(kz+k-kk<nz && kz+k-kk>=0)
+				mglFillP(kx, ky, a+(kz+k-kk)*nx*ny, nx, ny, _p);
+			else
+			{
+				memset(_p[0],0,4*sizeof(mreal));
+				memset(_p[1],0,4*sizeof(mreal));
+				memset(_p[2],0,4*sizeof(mreal));
+				memset(_p[3],0,4*sizeof(mreal));
+			}
 			for(i=0,fx=1;i<4;i++)
 			{
 				for(j=0,fy=1;j<4;j++)
@@ -1195,7 +1203,7 @@ mreal mgl_data_last(HCDT d, const char *cond, long *i, long *j, long *k)
 	return i0>=0 ? d->vthr(i0) : NAN;	// NOTE: Return NAN if false
 }
 mreal mgl_data_last_(uintptr_t *d, const char *cond, int *i, int *j, int *k, int l)
-{	long ii,jj,kk;	char *s=new char[l+1];	memcpy(s,cond,l);	s[l]=0;
+{	long ii=*i,jj=*j,kk=*k;	char *s=new char[l+1];	memcpy(s,cond,l);	s[l]=0;
 	mreal res = mgl_data_last(_DT_,s,&ii,&jj,&kk);	*i=ii;	*j=jj;	*k=kk;
 	delete []s;		return res;	}
 //-----------------------------------------------------------------------------
