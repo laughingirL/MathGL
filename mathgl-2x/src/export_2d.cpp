@@ -292,7 +292,7 @@ void mgl_write_eps(HMGL gr, const char *fname,const char *descr)
 		{
 			mreal x0 = p1.x,y0 = p1.y;
 			sprintf(str,"%.2g lw %.2g %.2g %.2g rgb ", 50*q.s*q.w>1?50*q.s*q.w:1, cp.r,cp.g,cp.b);
-			wp=1;
+			wp=1;	// NOTE: this may renew line style if a mark inside!
 			if(q.s!=qs_old)
 			{
 				mgl_printf(fp, gz, "/ss {%g} def\n",q.s);

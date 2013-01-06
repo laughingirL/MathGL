@@ -756,7 +756,7 @@ void mglCanvas::Legend(const std::vector<mglText> &leg, mreal x, mreal y, const 
 	if(k4==2)	k2=0;
 	if(k4==1)	k1=k2=0;
 	mreal c1=AddTexture(char(k1?k1:'w')), c2=AddTexture(char(k2?k2:'k'));
-	if((Flag&3)==2)	{	mreal cc=c1;	c2=c1;	c2=cc;	}
+	if((Flag&3)==2)	{	mreal cc=c1;	c2=c1;	c1=cc;	}
 
 	if(strchr(ff,'#'))	// draw bounding box
 	{

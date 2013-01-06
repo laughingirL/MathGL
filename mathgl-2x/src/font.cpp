@@ -636,7 +636,7 @@ bool mglFont::read_data(const char *fname, float *ff, short *wdt, short *lnum,
 		lnum[j] = tmpnl;	posl[j] = tmppl+cur;
 		tnum[j] = tmpnt;	post[j] = tmppt+cur;
 	}
-	for(j=i=0;i<int(s);i++)
+	for(i=0;i<int(s);i++)
 	{
 		for(j=0;j<256;j++)
 		{	str[j] = ch = gzgetc(fp);	if(ch<=' ')	break;	}
@@ -675,7 +675,7 @@ bool mglFont::read_main(const char *fname, unsigned &cur)
 		numl[0][i] = tmpnl; ln[0][i] = tmppl;
 		numt[0][i] = tmpnt;	tr[0][i] = tmppt;
 	}
-	for(j=i=0;i<int(s);i++)
+	for(i=0;i<int(s);i++)
 	{
 		for(j=0;j<256;j++)
 		{	str[j] = ch = gzgetc(fp);	if(ch<=' ')	break;	}

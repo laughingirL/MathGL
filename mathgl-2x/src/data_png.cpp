@@ -152,7 +152,7 @@ void mgl_data_export(HCDT dd, const char *fname, const char *scheme,mreal v1,mre
 	delete []c;
 
 	FILE *fp = fopen(fname, "wb");
-	if (!fp)	return;
+	if (!fp)	{	free(p);	free(d);	return;	}
 	png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, 0, 0, 0);
 	if (!png_ptr)	{	fclose(fp);	return;	}
 	png_infop info_ptr = png_create_info_struct(png_ptr);

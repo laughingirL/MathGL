@@ -113,12 +113,9 @@ mglPoint mgl_normal_3d(HCDT a, mglPoint p, bool inv, long n,long m,long l)
 	i = i<n-1 ? i:n-2;	j = j<m-1 ? j:m-2;	k = k<l-1 ? k:l-2;
 	x-=i;	y-=j;	z-=k;
 
-	if(i<n-1)	nx = a->dvx(i,j,k)*(1-x) + a->dvx(i+1,j,k)*x;
-	else		nx = a->dvx(i,j,k);
-	if(j<m-1)	ny = a->dvy(i,j,k)*(1-y) + a->dvy(i,j+1,k)*y;
-	else		ny = a->dvy(i,j,k);
-	if(k<l-1)	nz = a->dvz(i,j,k)*(1-z) + a->dvz(i,j,k+1)*z;
-	else		nz = a->dvz(i,j,k);
+	nx = a->dvx(i,j,k)*(1-x) + a->dvx(i+1,j,k)*x;
+	ny = a->dvy(i,j,k)*(1-y) + a->dvy(i,j+1,k)*y;
+	nz = a->dvz(i,j,k)*(1-z) + a->dvz(i,j,k+1)*z;
 	return inv ? mglPoint(nx,ny,nz) : mglPoint(-nx,-ny,-nz);
 }
 //-----------------------------------------------------------------------------

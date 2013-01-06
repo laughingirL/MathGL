@@ -339,6 +339,7 @@ void mgl_write_prc(HMGL gr, const char *fname,const char* /*descr*/, int make_pd
 									1.0,0.1); // alpha, shininess
 
 		materialMathGLid = file.addTexturedMaterial(m,1,&t);
+		delete t;
 
 		// char * const pngname = new char[len+100];
 		// strcpy(pngname, "test_texture_");
@@ -348,6 +349,7 @@ void mgl_write_prc(HMGL gr, const char *fname,const char* /*descr*/, int make_pd
 		// FILE *fp = fopen(pngname, "wb");
 		// fwrite(buffer.data, 1, buffer.size, fp);
 		// fclose(fp);
+		// delete[] pngname;
 
 		free(buffer.data); buffer.data = NULL;
 	}
@@ -375,14 +377,14 @@ void mgl_write_prc(HMGL gr, const char *fname,const char* /*descr*/, int make_pd
 			const double w = (q.w>1)?(q.w*sqrt(gr->FontFactor()/400.)):1;
 
 			const mglPnt p = gr->GetPnt(q.n1) - p0;
-			const mreal size = q.s*gr->FontFactor();
+			const mreal size = q.s;
 			{
 				switch(q.type)
 				{
 					case 0:
 					if (gr->GetPnt(q.n1).a > mgl_min_a) {
 						const char type = q.n4;
-						float ss=size*0.35;
+						float ss=size;
 						const RGBAColour c(p.r, p.g, p.b, p.a);
 
 						if(!strchr("xsSoO",type))	ss *= 1.1;

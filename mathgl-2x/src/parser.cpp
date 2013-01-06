@@ -449,7 +449,7 @@ int mglParser::PreExec(mglGraph *, long k, wchar_t **arg, mglArg *a)
 			}
 			if(ch=='|' && t==1)		{	nx = j>nx ? j:nx;	j=0;	ny++;	}
 		}
-		v = AddVar(arg[1]);		n=1;
+		v = AddVar(arg[1]);
 		if(t==1)	nx = j>nx ? j:nx;
 		if(t==1)	// list of numeric values
 		{

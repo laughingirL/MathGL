@@ -541,7 +541,7 @@ long mgl_insert_trig(long i1,long i2,long i3,long **n)
 		*n = (long *)realloc(*n,Max*3*sizeof(long));
 		memset(*n+3*(Max-1024),0,3*1024*sizeof(long));
 	}
-	long *nn = *n;
+	long *nn;
 	register long i,k1;
 	if(i1>i3)	{	k1=i1;	i1=i3;	i3=k1;	}	// simple sorting
 	if(i1>i2)	{	k1=i1;	i1=i2;	i2=k1;	}
@@ -607,7 +607,7 @@ long mgl_crust(long n,mglPoint *pp,long **nn,mreal ff)
 		while((k2=mgl_get_next(k1,ii,ind,set,qq))>0)
 		{
 			set[k1]=1;
-			m = mgl_insert_trig(i,ind[k1],ind[k2],nn);
+			mgl_insert_trig(i,ind[k1],ind[k2],nn);
 			k1 = k2;
 		}
 		m = mgl_insert_trig(i,ind[k1],ind[0],nn);

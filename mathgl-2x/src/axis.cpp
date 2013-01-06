@@ -29,8 +29,8 @@
 //-----------------------------------------------------------------------------
 inline struct tm* mgl_localtime (const time_t *clock, tm *result, bool use_utc)
 {	if (!clock || !result) return NULL;
-	memcpy(result,use_utc?gmtime(clock):localtime(clock),sizeof(tm));
-	return result;	}
+	const tm *res = use_utc?gmtime(clock):localtime(clock);
+	memcpy(result,res,sizeof(tm));	return result;	}
 //-----------------------------------------------------------------------------
 long mgl_have_color(const char *stl)
 {
@@ -374,7 +374,7 @@ void mglCanvas::LabelTicks(mglAxis &aa)
 	if(aa.ch=='z')	aa.v0 = aa.org.z;
 
 	wchar_t buf[64]=L"";
-	mreal v,v0,v1,w;
+	mreal v,v0,v1,w=0;
 	int d,ds;
 	if(aa.f)	return;
 	aa.txt.clear();

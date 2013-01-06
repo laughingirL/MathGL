@@ -48,7 +48,7 @@ void mgl_fplot(HMGL gr, const char *eqY, const char *pen, const char *opt)
 
 	for(i=0;i<n-1 && n<nm;)
 	{
-		if(gr->Stop)	{	delete eq;	return;	}
+		if(gr->Stop)	{	free(x);	free(y);	delete eq;	return;	}
 		xs=(x[i]+x[i+1])/2;
 		ys=(y[i]+y[i+1])/2;	yr=eq->Calc(xs);
 		if(fabs(yr-ys)>ym)	// bad approximation here
@@ -86,7 +86,11 @@ void mgl_fplot_xyz(HMGL gr, const char *eqX, const char *eqY, const char *eqZ, c
 	mreal ts, xs, ys, zs, xr, yr, zr, xm=fabs(gr->Max.x - gr->Min.x)/1000, ym=fabs(gr->Max.y - gr->Min.y)/1000, zm=fabs(gr->Max.z - gr->Min.z)/1000;
 	for(i=0;i<n;i++)	// initial data filling
 	{
-		if(gr->Stop)	{	delete ex;	delete ey;	delete ez;	return;	}
+		if(gr->Stop)
+		{
+			free(x);	free(y);	free(z);	free(t);
+			delete ex;	delete ey;	delete ez;	return;
+		}
 		t[i] = i/(n-1.);
 		x[i] = ex->Calc(0,0,t[i]);
 		y[i] = ey->Calc(0,0,t[i]);
@@ -1281,7 +1285,7 @@ void mgl_error_exy(HMGL gr, HCDT x, HCDT y, HCDT ex, HCDT ey, const char *pen, c
 			}	break;
 			case 'C':	for(i=0;i<n;i++)
 			{
-				vx=x->v(i,mx);	ve=ex->v(i,m1);	vy=y->v(i,my);	vf=ey->v(i,m2);
+				vx=x->v(i,mx);	vy=y->v(i,my);
 				gr->mark_plot(gr->AddPnt(mglPoint(vx,vy,zVal),-1,q,-1,3), '.');
 				if(sh)	gr->NextColor(pal);
 			}
@@ -1400,7 +1404,8 @@ void mgl_chart(HMGL gr, HCDT a, const char *cols, const char *opt)
 	for(i=0;i<long(strlen(cols));i++)
 		if(strchr(MGL_COLORS,cols[i]) || cols[i]==' ')
 		{	c[nc]=gr->AddTexture(cols[i]);	nc++;	}
-
+	// NOTE: nc>0 since j>0 or MGL_DEF_PAL is not empty
+	
 	mreal dy = (gr->Max.y-gr->Min.y)/a->GetNy(), dx, ss, cs, x1, y1, dz=gr->Max.z-gr->Min.z, vv;
 	mglPoint d1,d2,o;
 

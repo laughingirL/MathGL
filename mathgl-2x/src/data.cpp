@@ -1226,7 +1226,7 @@ mreal mgl_data_first(HCDT d, const char *cond, long *i, long *j, long *k)
 	return i0<nx*ny*nz ? d->vthr(i0) : NAN;	// NOTE: Return NAN if false
 }
 mreal mgl_data_first_(uintptr_t *d, const char *cond, int *i, int *j, int *k, int l)
-{	long ii,jj,kk;	char *s=new char[l+1];	memcpy(s,cond,l);	s[l]=0;
+{	long ii=*i,jj=*j,kk=*k;	char *s=new char[l+1];	memcpy(s,cond,l);	s[l]=0;
 	mreal res = mgl_data_first(_DT_,s,&ii,&jj,&kk);	*i=ii;	*j=jj;	*k=kk;
 	delete []s;		return res;	}
 //-----------------------------------------------------------------------------

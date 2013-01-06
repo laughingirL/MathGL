@@ -510,7 +510,7 @@ unsigned char* mglCanvas::col2int(const mglPnt &p,unsigned char *r, int obj_id)
 				d2 = light[i].q.z-p.z;
 				nn = d0*d0 + d1*d1 + d2*d2 + 1e-6;
 				float bb = 2*(d0*light[i].p.x+d1*light[i].p.y+d2*light[i].p.z)/nn;
-				bb = exp(-light[i].a*nn)*light[i].b*2;
+//				bb = exp(-light[i].a*nn)*light[i].b*2;
 				// now difference for angles between normale and direction to light
 				nn = 2*(p.u*d0+p.v*d1+p.w*d2)/(p.u*p.u+p.v*p.v+p.w*p.w+1e-6)/nn;
 				d0 -= p.u*nn;	d1 -= p.v*nn;	d2 -= p.w*nn;

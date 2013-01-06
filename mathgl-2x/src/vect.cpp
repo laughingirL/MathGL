@@ -40,15 +40,15 @@ void mgl_traj_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 	m = x->GetNy()>y->GetNy() ? x->GetNy():y->GetNy();		if(i>m)	m=i;	if(j>m)	m=j;
 	gr->SetPenPal(sch,&pal);	gr->Reserve(4*n*m);
 
-	mreal dx,dy,dz,dd,da,xm=0;
+	mreal dx,dy,dz,dd,da;
 	mglPoint p1,p2;
-	for(j=0;j<m;j++)	for(i=0;i<n;i++)	// find maximal amplitude of vector field
+/*	for(j=0;j<m;j++)	for(i=0;i<n;i++)	// find maximal amplitude of vector field
 	{
 		mx = j<ax->GetNy() ? j:0;	my = j<ay->GetNy() ? j:0;	mz = j<az->GetNy() ? j:0;
 		da = sqrt(ax->v(i,mx)*ax->v(i,mx)+ay->v(i,my)*ay->v(i,my)+az->v(i,mz)*az->v(i,mz));
 		xm = xm>da ? xm : da;
 	}
-	xm = 1./(xm ? sqrt(xm):1);
+	xm = 1./(xm ? sqrt(xm):1);*/
 	for(j=0;j<m;j++) // start prepare arrows
 	{
 		gr->NextColor(pal);
@@ -139,7 +139,7 @@ void mgl_vect_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, con
 		c1 = c1<c2 ? c2:c1;	ca+=c1;	cm = cm<c1 ? c1:cm;
 	}
 	ca /= (n*m*l)/(tx*ty);
-	//	if(cm>2*ca)	cm = 2*ca;	// disable too narrow grid steps
+//	if(cm>2*ca)	cm = 2*ca;	// disable too narrow grid steps TODO: decide later
 	xm = xm?1./xm:0;	cm = cm?1./cm:0;
 
 
@@ -236,7 +236,7 @@ void mgl_vect_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 		ca+=c1;	cm = cm<c1 ? c1:cm;
 	}
 	ca /= (n*m*l)/(tx*ty*tz);
-	//	if(cm>2*ca)	cm = 2*ca;	// disable too narrow grid steps
+//	if(cm>2*ca)	cm = 2*ca;	// disable too narrow grid steps. TODO: decide later
 	xm = xm?1./xm:0;	cm = cm?1./cm:0;
 
 	long n1,n2;
@@ -523,7 +523,7 @@ void mgl_vect3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, c
 		ca+=c1;	cm = cm<c1 ? c1:cm;
 	}
 	ca /= (n*m)/(tx*ty);
-//	if(cm>2*ca)	cm = 2*ca;	// disable too narrow grid steps
+//	if(cm>2*ca)	cm = 2*ca;	// disable too narrow grid steps TODO: decide later
 	xm = xm?1./xm:0;	cm = cm?1./cm:0;
 
 	long n1,n2;

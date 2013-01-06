@@ -521,9 +521,9 @@ void mgl_write_obj(HMGL gr, const char *fname,const char *descr, int use_png)
         case 0:
         if (gr->GetPnt(q.n1).a > mgl_min_a) {
           const mglPnt p = gr->GetPnt(q.n1) - p0;
-          const mreal size = q.s*gr->FontFactor();
+          const mreal size = q.s;
           const char type = q.n4;
-          mreal ss=size*0.35;
+          mreal ss=size;
           const mglColor c(p.r, p.g, p.b, p.a);
           
           if(!strchr("xsSoO",type))	ss *= 1.1;
