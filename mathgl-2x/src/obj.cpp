@@ -808,7 +808,7 @@ void mgl_write_obj(HMGL gr, const char *fname,const char *descr, int use_png)
                 size_t pnti[21];
                 for(size_t k=0;k<=20;k++)
                   pnti[k]=vertexcoords.addVertexCoords(p.x+ss*cos(k*M_PI/10),p.y+ss*sin(k*M_PI/10),p.z);
-                for(size_t k=0;k<=20;k++) {
+                for(size_t k=0;k<20;k++) {
                   grp.addTriangle(pnti[k], ti, pnti[k+1], ti, cpi, ti);
                 }
               }

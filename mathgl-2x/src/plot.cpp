@@ -99,7 +99,11 @@ void mgl_fplot_xyz(HMGL gr, const char *eqX, const char *eqY, const char *eqZ, c
 
 	for(i=0;i<n-1 && n<10000;)
 	{
-		if(gr->Stop)	{	delete ex;	delete ey;	delete ez;	return;	}
+		if(gr->Stop)
+		{
+			free(x);	free(y);	free(z);	free(t);
+			delete ex;	delete ey;	delete ez;	return;
+		}
 		ts=(t[i]+t[i+1])/2;
 		xs=(x[i]+x[i+1])/2;	xr=ex->Calc(0,0,ts);
 		ys=(y[i]+y[i+1])/2;	yr=ey->Calc(0,0,ts);
@@ -197,11 +201,12 @@ void mgl_radar_(uintptr_t *gr, uintptr_t *a, const char *pen, const char *opt, i
 void mgl_candle_xyv(HMGL gr, HCDT x, HCDT v1, HCDT v2, HCDT y1, HCDT y2, const char *pen, const char *opt)
 {
 	long i,n=v1->GetNx(),pal,nx=x->GetNx();
+	if(n<2)	{	gr->SetWarn(mglWarnLow,"Candle");	return;	}
+	if(nx<n || v2->GetNx()!=n)	{	gr->SetWarn(mglWarnDim,"Candle");	return;	}
 	bool d1=false,d2=false;
 	if(!y1)	{	y1 = new mglData(n);	d1=true;	((mglData *)y1)->Fill(NAN,NAN);	}
 	if(!y2)	{	y2 = new mglData(n);	d2=true;	((mglData *)y2)->Fill(NAN,NAN);	}
-	if(n<2)	{	gr->SetWarn(mglWarnLow,"Candle");	return;	}
-	if(nx<n || v2->GetNx()!=n || y1->GetNx()!=n || y2->GetNx()!=n)
+	if(y1->GetNx()!=n || y2->GetNx()!=n)
 	{	gr->SetWarn(mglWarnDim,"Candle");	return;	}
 	static int cgid=1;	gr->StartGroup("Candle",cgid++);
 	gr->SaveState(opt);	gr->SetPenPal(pen,&pal);
@@ -851,7 +856,8 @@ void mgl_bars_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *
 
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Bars3",cgid++);
-	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();	m = z->GetNy() > m ? z->GetNy() : m;
+	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();
+	m = z->GetNy() > m ? z->GetNy() : m;
 	bool sh = mglchr(pen,'!');
 
 	bool wire = mglchr(pen,'#');
@@ -1094,7 +1100,7 @@ void mgl_boxplot_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
 	register long i,j;
 	for(i=0;i<n;i++)	// find quartiles by itself
 	{
-		if(gr->Stop)	{	delete []d;	return;	}
+		if(gr->Stop)	{	delete []d;	delete []b;	return;	}
 		register long mm,k;
 		for(mm=j=0;j<m;j++)
 		{

@@ -154,10 +154,10 @@ void mgl_data_export(HCDT dd, const char *fname, const char *scheme,mreal v1,mre
 	FILE *fp = fopen(fname, "wb");
 	if (!fp)	{	free(p);	free(d);	return;	}
 	png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, 0, 0, 0);
-	if (!png_ptr)	{	fclose(fp);	return;	}
+	if (!png_ptr)	{	free(p);	free(d);	fclose(fp);	return;	}
 	png_infop info_ptr = png_create_info_struct(png_ptr);
 	if (!info_ptr)
-	{	png_destroy_write_struct(&png_ptr,0);	fclose(fp);	return;	}
+	{	png_destroy_write_struct(&png_ptr,0);	free(p);	free(d);	fclose(fp);	return;	}
 	png_init_io(png_ptr, fp);
 	png_set_filter(png_ptr, 0, PNG_ALL_FILTERS);
 	png_set_compression_level(png_ptr, Z_BEST_COMPRESSION);

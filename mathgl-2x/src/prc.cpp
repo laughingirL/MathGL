@@ -657,7 +657,7 @@ void mgl_write_prc(HMGL gr, const char *fname,const char* /*descr*/, int make_pd
 									uint32_t pnti[21];
 									for(size_t k=0;k<=20;k++)
 										pnti[k]=group.addPoint(p.x+ss*cos(k*M_PI/10),p.y+ss*sin(k*M_PI/10),p.z);
-									for(size_t k=0;k<=20;k++) {
+									for(size_t k=0;k<20;k++) {
 										group.addTriangle(ti, pnti[k], pnti[k+1], cpi);
 									}
 								}

@@ -901,7 +901,7 @@ void mglCanvas::Title(const wchar_t *title,const char *stl,mreal size)
 	if(box)	//	draw boungind box
 	{
 		mreal c1=AddTexture('w'), c2=AddTexture('k');
-		if((Flag&3)==2)	{	mreal cc=c1;	c2=c1;	c2=cc;	}
+		if((Flag&3)==2)	{	mreal cc=c1;	c2=c1;	c1=cc;	}
 		long k1,k2,k3,k4;
 		k1=AddPnt(mglPoint(inX,y,Depth),c1,q,-1,0);
 		k2=AddPnt(mglPoint(inX+inW,y,Depth),c1,q,-1,0);

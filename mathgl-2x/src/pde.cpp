@@ -132,9 +132,13 @@ HMDT mgl_pde_solve(HMGL gr, const char *ham, HCDT ini_re, HCDT ini_im, mreal dz,
 	for(k=1;k<nz;k++)
 	{
 		if(gr->Stop)
-		{	delete []a;		delete []dmp;	delete []hxy;	delete []hxv;
+		{
+			gsl_fft_complex_workspace_free(wsx);	gsl_fft_complex_wavetable_free(wtx);
+			gsl_fft_complex_workspace_free(wsy);	gsl_fft_complex_wavetable_free(wty);
+			delete []a;		delete []dmp;	delete []hxy;	delete []hxv;
 			delete []huy;	delete []huv;	delete []hx;	delete []hy;
-			delete []hu;	delete []hv;	delete res;		return 0;	}
+			delete []hu;	delete []hv;	return 0;
+		}
 		tmp.zz = Min.z+dz*k;
 		memset(hxy,0,4*nx*ny*sizeof(dual));	memset(hxv,0,4*nx*ny*sizeof(dual));
 		memset(huv,0,4*nx*ny*sizeof(dual));	memset(huy,0,4*nx*ny*sizeof(dual));
