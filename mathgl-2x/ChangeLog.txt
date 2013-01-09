@@ -1,7 +1,9 @@
 2.1.2 Released ?? 2013
 
+* Bugfix for colors in 3D PDF
+* If Aspect() function have NAN argument(s) then it try to select optimal aspect ratio.
 * Adjust marks drawing (line width and dots)
-* Minor improvements
+* Minor improvements and bugfixes
 
 2.1.1 Released 24 December 2012
 

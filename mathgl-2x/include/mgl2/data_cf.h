@@ -34,9 +34,18 @@ struct gsl_matrix;
 extern "C" {
 #endif
 
+/// Set seed for random numbers
 void mgl_srnd(long seed);
+void mgl_srnd_(int *seed);
+/// Get random number
 double mgl_rnd();
+double mgl_rnd_();
+/// Get integer power of x
 double mgl_ipow(double x,int n);
+double mgl_ipow_(double *x,int *n);
+/// Get number of seconds since 1970 for given string
+double mgl_get_time(const char *time, const char *fmt);
+double mgl_get_time_(const char *time, const char *fmt,int,int);
 
 /// Create HMDT object
 HMDT mgl_create_data();

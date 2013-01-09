@@ -149,6 +149,8 @@ void mgl_srnd(long seed)
 	srand(seed);
 #endif
 }
+void mgl_srnd_(int *seed)	{	mgl_srnd(*seed);	}
+//-----------------------------------------------------------------------------
 double mgl_rnd()
 {
 #if MGL_HAVE_GSL
@@ -164,6 +166,7 @@ double mgl_rnd()
 	return rand()/(RAND_MAX-1.);
 #endif
 }
+double mgl_rnd_()	{	return mgl_rnd();	}
 //-----------------------------------------------------------------------------
 mglFormula::~mglFormula()
 {

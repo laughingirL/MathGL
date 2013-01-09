@@ -667,8 +667,18 @@ int mglCanvas::GetSplId(long x,long y) const
 	return id;
 }
 //-----------------------------------------------------------------------------
+#define islog(a, b) (((a)>0 && (b)>10*(a)) || ((b)<0 && (a)<10*(b)))
 void mglCanvas::Aspect(mreal Ax,mreal Ay,mreal Az)
 {
+	if(mgl_isnan(Ax))
+	{
+		mreal dy = (Max.y-Min.y), dx = (Max.x-Min.x);
+		if(islog(Min.x,Max.x) && fx)	dx = log10(Max.x/Min.x);
+		if(islog(Min.y,Max.y) && fy)	dy = log10(Max.y/Min.y);
+		mreal f=pow10(floor(0.5+log10(fabs(dy/dx))));
+		if(!mgl_isnan(Ay))	f=Ay;
+		Ax = Height*dx*f;	Ay = Width*dy;	Az = Depth;
+	}
 	mreal a = fabs(Ax) > fabs(Ay) ? fabs(Ax) : fabs(Ay);
 	a = a > fabs(Az) ? a : fabs(Az);
 	if(a==0)	{	SetWarn(mglWarnZero,"Aspect");	return;	}

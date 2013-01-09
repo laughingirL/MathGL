@@ -17,6 +17,7 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+#include <time.h>
 #include "mgl2/data.h"
 #include "mgl2/eval.h"
 
@@ -126,6 +127,18 @@ double mgl_ipow(double x,int n)
 	if(n%2==1)	t *= x;
 	return t;
 }
+double mgl_ipow_(double *x,int *n)	{	return mgl_ipow(*x,*n);	}
+//-----------------------------------------------------------------------------
+double mgl_get_time(const char *time, const char *fmt)
+{
+	tm t;
+	strptime(time,fmt,&t);
+	return timegm(&t);
+}
+double mgl_get_time_(const char *time, const char *fmt,int l,int m)
+{	char *s=new char[l+1];	memcpy(s,time,l);	s[l]=0;
+	char *f=new char[m+1];	memcpy(f,fmt,m); 	f[m]=0;
+	double t=mgl_get_time(s,f);	delete []s;	delete []f;	return t;	}
 //-----------------------------------------------------------------------------
 void *mgl_smth_x(void *par)
 {

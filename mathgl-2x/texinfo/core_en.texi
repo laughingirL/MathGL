@@ -711,8 +711,14 @@ Set template @var{templ} for x-,y-,z-axis ticks or colorbar ticks. It may contai
 @deftypefnx {Method on @code{mglGraph}} @code{void} SetTicksTime (@code{char} dir, @code{mreal} val, @code{const char *}templ)
 @deftypefnx {C function} @code{void} mgl_set_ticks_time (@code{HMGL} gr, @code{mreal} val, @code{const char *}templ)
 @end ifclear
-Set time labels with step @var{val} and template @var{templ} for x-,y-,z-axis ticks or colorbar ticks. It may contain TeX symbols also. The format of template @var{templ} is the same as described in @url{http://www.manpagez.com/man/3/strftime/}. Most common variants are @samp{%X} for national representation of time, @samp{%x} for national representation of date, @samp{%Y} for year with century. If @var{val}=0 and/or @var{templ}="" then automatic tick step and/or template will be selected.
+Sets time labels with step @var{val} and template @var{templ} for x-,y-,z-axis ticks or colorbar ticks. It may contain TeX symbols also. The format of template @var{templ} is the same as described in @url{http://www.manpagez.com/man/3/strftime/}. Most common variants are @samp{%X} for national representation of time, @samp{%x} for national representation of date, @samp{%Y} for year with century. If @var{val}=0 and/or @var{templ}="" then automatic tick step and/or template will be selected. You can use @code{mgl_get_time}() function for obtaining number of second for given date/time string. Note, that MS Visual Studio couldn't handle date before 1970.
 @end deftypefn
+
+@ifclear UDAV
+@deftypefn {C function} @code{double} mgl_get_time (@code{const char*}str, @code{const char *}templ)
+Gets number of seconds from 1970 year to specified date/time @var{str}. The format of string is specified by @var{templ}, which is the same as described in @url{http://www.manpagez.com/man/3/strftime/}. Most common variants are @samp{%X} for national representation of time, @samp{%x} for national representation of date, @samp{%Y} for year with century. Note, that MS Visual Studio couldn't handle date before 1970.
+@end deftypefn
+@end ifclear
 
 @deftypefn {MGL command} {} tuneticks @code{val} [@code{pos=1.15}]
 @ifclear UDAV
@@ -905,7 +911,7 @@ Rotates a further plotting around vector @{@var{x}, @var{y}, @var{z}@} on angle 
 @deftypefnx {Method on @code{mglGraph}} @code{void} Aspect (@code{mreal} Ax, @code{mreal} Ay, @code{mreal} Az=@code{1})
 @deftypefnx {C function} @code{void} mgl_aspect (@code{HMGL} gr, @code{mreal} Ax, @code{mreal} Ay, @code{mreal} Az)
 @end ifclear
-Defines aspect ratio for the plot. The viewable axes will be related one to another as the ratio @var{Ax:Ay:Az}. For the best effect it should be used after @ref{rotate} function.
+Defines aspect ratio for the plot. The viewable axes will be related one to another as the ratio @var{Ax:Ay:Az}. For the best effect it should be used after @ref{rotate} function. If @var{Ax} is @code{NAN} then function try to select optimal aspect ratio to keep equal ranges for x-y axis. At this, @var{Ay} will specify proportionality factor, or set to use automatic one if @var{Ay}=@code{NAN}.
 @end deftypefn
 
 @anchor{perspective}

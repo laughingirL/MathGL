@@ -45,6 +45,9 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN. (VID=18d1 and PID=4e41)
 	u. Test FlowP + 3d
 	v. Test GIF animationm OBJold, MGLD(+new png) in fexport()
 	w. Test diffuse, specular local sources
+	x. Test about equal axis range
+
+15. Hint about equal axis range.
 
 ============= UDAV =============
 
