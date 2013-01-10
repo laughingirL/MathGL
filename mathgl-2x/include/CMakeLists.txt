@@ -1,6 +1,5 @@
 configure_file(${MathGL_SOURCE_DIR}/include/config.h.in ${MathGL_BINARY_DIR}/include/mgl2/config.h)
 
-set(MGL_INCLUDE_PATH "${CMAKE_INSTALL_PREFIX}/include/mgl2")
 install(DIRECTORY mgl2/ DESTINATION ${MGL_INCLUDE_PATH}
                         PATTERN ".svn" EXCLUDE
                         PATTERN "fltk.h" EXCLUDE

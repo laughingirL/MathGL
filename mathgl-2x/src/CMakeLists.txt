@@ -36,11 +36,15 @@ if(MGL_HAVE_OPENGL)
 	set(mgl_hdr ${mgl_hdr} ../include/mgl2/opengl.h )
 endif(MGL_HAVE_OPENGL)
 
+include(GenerateExportHeader)
+add_compiler_export_flags()
 add_library(mgl SHARED ${mgl_src} ${mgl_hdr})
 add_library(mgl-static STATIC ${mgl_src} ${mgl_hdr})
-set_target_properties(mgl-static PROPERTIES OUTPUT_NAME "mgl")
 set_target_properties(mgl PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+set_target_properties(mgl-static PROPERTIES OUTPUT_NAME "mgl")
 set_target_properties(mgl-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+set_target_properties(mgl-static PROPERTIES COMPILE_FLAGS -DMGL_STATIC_DEFINE)
+generate_export_header(mgl EXPORT_FILE_NAME ${MathGL_BINARY_DIR}/include/mgl2/dllexport.h)
 
 if(MGL_HAVE_LTDL)
 	target_link_libraries(mgl ${LTDL_LIB})
@@ -109,7 +113,9 @@ if(MGL_HAVE_MPI)
 	include_directories(${MPI_CXX_INCLUDE_PATH})
 endif(MGL_HAVE_MPI)
 
-target_link_libraries(mgl ${M_LIB})
+if(M_LIB)
+	target_link_libraries(mgl ${M_LIB})
+endif(M_LIB)
 
 set_target_properties(mgl PROPERTIES SOVERSION 7.0.0)
 install(
@@ -118,3 +124,4 @@ install(
 	ARCHIVE DESTINATION ${MGL_LIB_INSTALL_DIR}
 	LIBRARY DESTINATION ${MGL_LIB_INSTALL_DIR}
 )
+install(FILES ${MathGL_BINARY_DIR}/include/mgl2/dllexport.h DESTINATION ${MGL_INCLUDE_PATH})
