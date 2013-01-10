@@ -44,7 +44,7 @@ set_target_properties(mgl PROPERTIES CLEAN_DIRECT_OUTPUT 1)
 set_target_properties(mgl-static PROPERTIES OUTPUT_NAME "mgl")
 set_target_properties(mgl-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
 set_target_properties(mgl-static PROPERTIES COMPILE_FLAGS -DMGL_STATIC_DEFINE)
-generate_export_header(mgl EXPORT_FILE_NAME ${MathGL_BINARY_DIR}/include/mgl2/dllexport.h)
+generate_export_header(mgl EXPORT_FILE_NAME ../include/mgl2/dllexport.h)
 
 if(MGL_HAVE_LTDL)
 	target_link_libraries(mgl ${LTDL_LIB})

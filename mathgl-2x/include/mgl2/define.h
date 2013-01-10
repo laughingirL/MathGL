@@ -23,7 +23,7 @@
 #include "mgl2/config.h"
 #include "mgl2/dllexport.h"
 
-#define MGL_VER2 	1.1
+#define MGL_VER2 	1.2
 //-----------------------------------------------------------------------------
 #ifdef WIN32 //_MSC_VER needs this before math.h
 #define	_USE_MATH_DEFINES
@@ -242,7 +242,7 @@ void mglStartThreadV(void *(*func)(void *), long n, dual *a, const void *b=0,
 void mglStartThreadC(void *(*func)(void *), void (*post)(mglThreadC *,dual *), long n,
 					dual *a=0, const dual *b=0, const dual *c=0, const long *p=0,
 					const void *v=0, const dual *d=0, const dual *e=0, const char *s=0);
-extern int mglNumThr;		///< Number of thread for plotting and data handling
+MGL_EXPORT extern int mglNumThr;		///< Number of thread for plotting and data handling
 //-----------------------------------------------------------------------------
 extern "C" {
 #else
@@ -256,14 +256,14 @@ typedef float _Complex dual;
 /** Find symbol in string excluding {} and return its position or NULL */
 const char *mglchr(const char *str, char ch);
 /** Set number of thread for plotting and data handling*/
-void mgl_set_num_thr(int n);
-void mgl_test_txt(const char *str, ...);
-void mgl_set_test_mode(int enable);
+void MGL_EXPORT mgl_set_num_thr(int n);
+void MGL_EXPORT mgl_test_txt(const char *str, ...);
+void MGL_EXPORT mgl_set_test_mode(int enable);
 /** Remove spaces at begining and at the end of the string */
-void mgl_strtrim(char *str);
-void mgl_wcstrim(wchar_t *str);
+void MGL_EXPORT mgl_strtrim(char *str);
+void MGL_EXPORT mgl_wcstrim(wchar_t *str);
 /** Change register to lowercase (only for ANSI symbols) */
-void mgl_strlwr(char *str);
+void MGL_EXPORT mgl_strlwr(char *str);
 #ifdef __cplusplus
 }
 #endif

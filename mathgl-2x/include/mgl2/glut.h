@@ -1,5 +1,5 @@
 /***************************************************************************
- * mgl_glut.h is part of Math Graphic Library
+ * glut.h is part of Math Graphic Library
  * Copyright (C) 2007-2012 Alexey Balakin <mathgl.abalakin@gmail.ru>       *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -26,7 +26,7 @@
 extern "C" {
 #endif
 void _mgl_key_up(unsigned char ch,int ,int );
-HMGL mgl_create_graph_glut(int (*draw)(HMGL gr, void *p), const char *title, void *par, void (*load)(void *p));
+HMGL MGL_EXPORT mgl_create_graph_glut(int (*draw)(HMGL gr, void *p), const char *title, void *par, void (*load)(void *p));
 #ifdef __cplusplus
 }
 //-----------------------------------------------------------------------------

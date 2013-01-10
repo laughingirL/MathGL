@@ -22,7 +22,7 @@
 //-----------------------------------------------------------------------------
 #include "mgl2/canvas.h"
 //-----------------------------------------------------------------------------
-class mglCanvasGL : public mglCanvas
+class MGL_EXPORT mglCanvasGL : public mglCanvas
 {
 public:
 	mglCanvasGL();

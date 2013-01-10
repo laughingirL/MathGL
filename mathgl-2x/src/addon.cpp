@@ -28,7 +28,7 @@
 #include "mgl2/addon.h"
 #include "mgl2/data.h"
 //-----------------------------------------------------------------------------
-void mgl_strcls(char *str)
+void MGL_EXPORT mgl_strcls(char *str)
 {
 	size_t len = strlen(str),i,n;
 	char *tmp = new char[len];
@@ -44,7 +44,7 @@ void mgl_strcls(char *str)
 	delete []tmp;
 }
 //-----------------------------------------------------------------------------
-int mgl_strpos(const char *str,char *fnd)
+int MGL_EXPORT mgl_strpos(const char *str,char *fnd)
 {
 	const char *p=strstr(str,fnd);
 	int res;
@@ -53,7 +53,7 @@ int mgl_strpos(const char *str,char *fnd)
 	return res;
 }
 //-----------------------------------------------------------------------------
-int mgl_chrpos(const char *str,char ch)
+int MGL_EXPORT mgl_chrpos(const char *str,char ch)
 {
 	const char *p=str?strchr(str,ch):0;
 	int res;
@@ -62,7 +62,7 @@ int mgl_chrpos(const char *str,char ch)
 	return res;
 }
 //-----------------------------------------------------------------------------
-char *mgl_fgetstr(FILE *fp)
+MGL_EXPORT char *mgl_fgetstr(FILE *fp)
 {
 	static char s[256];
 	do
@@ -74,10 +74,10 @@ char *mgl_fgetstr(FILE *fp)
 	return s;
 }
 //-----------------------------------------------------------------------------
-int mgl_istrue(char ch)
+int MGL_EXPORT mgl_istrue(char ch)
 {	return (ch=='1' || ch=='t' || ch=='+' || ch=='v');	}
 //-----------------------------------------------------------------------------
-void mgl_test(const char *str, ...)
+void MGL_EXPORT mgl_test(const char *str, ...)
 {
 	char buf[256];
 	va_list lst;
@@ -88,7 +88,7 @@ void mgl_test(const char *str, ...)
 	fflush(stdout);
 }
 //-----------------------------------------------------------------------------
-void mgl_info(const char *str, ...)
+void MGL_EXPORT mgl_info(const char *str, ...)
 {
 	char buf[256];
 	va_list lst;
@@ -101,7 +101,7 @@ void mgl_info(const char *str, ...)
 	fclose(fp);
 }
 //-----------------------------------------------------------------------------
-FILE *mgl_next_data(const char *fname,int p)
+MGL_EXPORT FILE *mgl_next_data(const char *fname,int p)
 {
 	char *s;
 	int len;
@@ -134,7 +134,7 @@ FILE *mgl_next_data(const char *fname,int p)
 	return fp;
 }
 //-----------------------------------------------------------------------------
-bool mgl_difr_grid(dual *a,int n,dual q,int Border,dual *b,dual *d,int kk)
+bool MGL_EXPORT mgl_difr_grid(dual *a,int n,dual q,int Border,dual *b,dual *d,int kk)
 {
 	register int i,k;
 	//	if(n<=0 || q>=0.5)	return false;
@@ -174,7 +174,7 @@ bool mgl_difr_grid(dual *a,int n,dual q,int Border,dual *b,dual *d,int kk)
 	return true;
 }
 //-----------------------------------------------------------------------------
-bool mgl_difr_axial(dual *a, int n, dual q, int Border,dual *b, dual *d, int kk, double di)
+bool MGL_EXPORT mgl_difr_axial(dual *a, int n, dual q, int Border,dual *b, dual *d, int kk, double di)
 {
 	register int i,k,ii = di<0 ? -int(floor(di)) : 0;
 	dual adt = dual(0.,1.)*q;
@@ -217,7 +217,7 @@ bool mgl_difr_axial(dual *a, int n, dual q, int Border,dual *b, dual *d, int kk,
 	return true;
 }
 //-----------------------------------------------------------------------------
-double mgl_gauss_rnd()
+double MGL_EXPORT mgl_gauss_rnd()
 {
 	double v1,v2;
 	v1 = mgl_rnd();
@@ -225,7 +225,7 @@ double mgl_gauss_rnd()
 	return v1!=0 ? sqrt(-2.*log(v1))*cos(2*M_PI*v2) : 0;
 }
 //-----------------------------------------------------------------------------
-void mgl_fft_freq(double *freq, size_t nn)
+void MGL_EXPORT mgl_fft_freq(double *freq, size_t nn)
 {
 	for(size_t i=0;i<=nn/2;i++)
 	{

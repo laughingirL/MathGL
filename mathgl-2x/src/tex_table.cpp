@@ -1,5 +1,5 @@
 /***************************************************************************
- * mgl_tex_table.cpp is part of Math Graphic Library
+ * tex_table.cpp is part of Math Graphic Library
  * Copyright (C) 2007-2012 Alexey Balakin <mathgl.abalakin@gmail.ru>       *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -20,7 +20,7 @@
 #include "mgl2/font.h"
 
 /// Table of LaTeX symbols and its UTF8 codes. This array MUST BE sorted!!!
-mglTeXsymb mgl_tex_symb[] = {
+MGL_EXPORT mglTeXsymb mgl_tex_symb[] = {
 	{0x23, L"#"},
 	{0x25, L"%"},
 	{0x26, L"&"},

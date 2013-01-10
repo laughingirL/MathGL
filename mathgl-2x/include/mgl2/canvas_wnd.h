@@ -24,7 +24,7 @@
 #include "mgl2/wnd.h"
 //-----------------------------------------------------------------------------
 /// Base class for windows containing MathGL graphics
-class mglCanvasWnd : public mglCanvas
+class MGL_EXPORT mglCanvasWnd : public mglCanvas
 {
 public:
 	mglPoint LastMousePos;			///< Last mouse position

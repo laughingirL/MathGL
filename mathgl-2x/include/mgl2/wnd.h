@@ -43,11 +43,11 @@ struct mglDraw
 };
 //-----------------------------------------------------------------------------
 extern "C" {
-int mgl_draw_graph(HMGL gr, void *p);
-// NOTE: mgl_draw_class() and mgl_draw_load() use mglWindow* only. Don't use it with inherited classes
-int mgl_draw_class(HMGL gr, void *p);
-void mgl_click_class(void *p);
-void mgl_reload_class(void *p);
+int MGL_EXPORT mgl_draw_graph(HMGL gr, void *p);
+// NOTE: MGL_EXPORT mgl_draw_class() and MGL_EXPORT mgl_draw_load() use mglWindow* only. Don't use it with inherited classes
+int MGL_EXPORT mgl_draw_class(HMGL gr, void *p);
+void MGL_EXPORT mgl_click_class(void *p);
+void MGL_EXPORT mgl_reload_class(void *p);
 }
 //-----------------------------------------------------------------------------
 /// Abstract class for windows displaying graphics

@@ -34,7 +34,7 @@ class QTimer;
 class mglCanvas;
 //-----------------------------------------------------------------------------
 /// Class is Qt widget which display MathGL graphics
-class QMathGL : public QWidget
+class MGL_EXPORT QMathGL : public QWidget
 {
 	Q_OBJECT
 public:

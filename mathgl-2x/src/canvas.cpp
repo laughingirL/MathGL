@@ -21,7 +21,7 @@
 #include "mgl2/font.h"
 #include "mgl2/canvas.h"
 //-----------------------------------------------------------------------------
-std::string mglGlobalMess;	///< Buffer for receiving global messages
+MGL_EXPORT std::string mglGlobalMess;	///< Buffer for receiving global messages
 //-----------------------------------------------------------------------------
 mglCanvas::mglCanvas(int w, int h) : mglBase()
 {

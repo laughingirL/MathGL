@@ -25,11 +25,11 @@
 extern "C" {
 #endif
 /// Creates Qt window for plotting
-HMGL mgl_create_graph_qt(int (*draw)(HMGL gr, void *p), const char *title, void *par, void (*load)(void *p));
-uintptr_t mgl_create_graph_qt_(const char *title, int);
+HMGL MGL_EXPORT mgl_create_graph_qt(int (*draw)(HMGL gr, void *p), const char *title, void *par, void (*load)(void *p));
+uintptr_t MGL_EXPORT mgl_create_graph_qt_(const char *title, int);
 /// Run main Qt loop for event handling.
-int mgl_qt_run();
-int mgl_qt_run_();
+int MGL_EXPORT mgl_qt_run();
+int MGL_EXPORT mgl_qt_run_();
 #ifdef __cplusplus
 }
 //-----------------------------------------------------------------------------

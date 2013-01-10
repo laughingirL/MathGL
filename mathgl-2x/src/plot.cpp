@@ -25,7 +25,7 @@
 //	Plot by formulas series
 //
 //-----------------------------------------------------------------------------
-void mgl_fplot(HMGL gr, const char *eqY, const char *pen, const char *opt)
+void MGL_EXPORT mgl_fplot(HMGL gr, const char *eqY, const char *pen, const char *opt)
 {
 	if(eqY==0 || eqY[0]==0)	return;		// nothing to plot
 	mreal r = gr->SaveState(opt);
@@ -69,7 +69,7 @@ void mgl_fplot(HMGL gr, const char *eqY, const char *pen, const char *opt)
 	mgl_plot_xy(gr,&xx,&yy,pen,0);
 }
 //-----------------------------------------------------------------------------
-void mgl_fplot_xyz(HMGL gr, const char *eqX, const char *eqY, const char *eqZ, const char *pen, const char *opt)
+void MGL_EXPORT mgl_fplot_xyz(HMGL gr, const char *eqX, const char *eqY, const char *eqZ, const char *pen, const char *opt)
 {
 	mreal r = gr->SaveState(opt);
 	long n = (mgl_isnan(r) || r<=0) ? 100:long(r+0.5);
@@ -130,14 +130,14 @@ void mgl_fplot_xyz(HMGL gr, const char *eqX, const char *eqY, const char *eqZ, c
 	mgl_plot_xyz(gr,&xx,&yy,&zz,pen,0);
 }
 //-----------------------------------------------------------------------------
-void mgl_fplot_(uintptr_t *gr, const char *fy, const char *stl, const char *opt, int ly, int ls, int lo)
+void MGL_EXPORT mgl_fplot_(uintptr_t *gr, const char *fy, const char *stl, const char *opt, int ly, int ls, int lo)
 {	char *s=new char[ly+1];	memcpy(s,fy,ly);	s[ly]=0;
 	char *p=new char[ls+1];	memcpy(p,stl,ls);	p[ls]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_fplot(_GR_, s, p, o);
 	delete []s;		delete []p;	delete []o;	}
 //-----------------------------------------------------------------------------
-void mgl_fplot_xyz_(uintptr_t *gr, const char *fx, const char *fy, const char *fz, const char *stl, const char *opt, int lx, int ly, int lz, int ls, int lo)
+void MGL_EXPORT mgl_fplot_xyz_(uintptr_t *gr, const char *fx, const char *fy, const char *fz, const char *stl, const char *opt, int lx, int ly, int lz, int ls, int lo)
 {	char *sx=new char[lx+1];	memcpy(sx,fx,lx);	sx[lx]=0;
 	char *sy=new char[ly+1];	memcpy(sy,fy,ly);	sy[ly]=0;
 	char *sz=new char[lz+1];	memcpy(sz,fz,lz);	sz[lz]=0;
@@ -150,7 +150,7 @@ void mgl_fplot_xyz_(uintptr_t *gr, const char *fx, const char *fy, const char *f
 //	Radar series
 //
 //-----------------------------------------------------------------------------
-void mgl_radar(HMGL gr, HCDT a, const char *pen, const char *opt)
+void MGL_EXPORT mgl_radar(HMGL gr, HCDT a, const char *pen, const char *opt)
 {
 	long n = a->GetNx(), ny=a->GetNy();
 	if(n<2)	{	gr->SetWarn(mglWarnLow,"Radar");	return;	}
@@ -189,7 +189,7 @@ void mgl_radar(HMGL gr, HCDT a, const char *pen, const char *opt)
 	}
 }
 //-----------------------------------------------------------------------------
-void mgl_radar_(uintptr_t *gr, uintptr_t *a, const char *pen, const char *opt, int l,int lo)
+void MGL_EXPORT mgl_radar_(uintptr_t *gr, uintptr_t *a, const char *pen, const char *opt, int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	char *o=new char[lo+1];		memcpy(o,opt,lo);	o[lo]=0;
 	mgl_radar(_GR_, _DA_(a),s,o);	delete []s;	delete []o;	}
@@ -198,7 +198,7 @@ void mgl_radar_(uintptr_t *gr, uintptr_t *a, const char *pen, const char *opt, i
 //	Candle series
 //
 //-----------------------------------------------------------------------------
-void mgl_candle_xyv(HMGL gr, HCDT x, HCDT v1, HCDT v2, HCDT y1, HCDT y2, const char *pen, const char *opt)
+void MGL_EXPORT mgl_candle_xyv(HMGL gr, HCDT x, HCDT v1, HCDT v2, HCDT y1, HCDT y2, const char *pen, const char *opt)
 {
 	long i,n=v1->GetNx(),pal,nx=x->GetNx();
 	if(n<2)	{	gr->SetWarn(mglWarnLow,"Candle");	return;	}
@@ -243,7 +243,7 @@ void mgl_candle_xyv(HMGL gr, HCDT x, HCDT v1, HCDT v2, HCDT y1, HCDT y2, const c
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mgl_candle_yv(HMGL gr, HCDT v1, HCDT v2, HCDT y1, HCDT y2, const char *pen, const char *opt)
+void MGL_EXPORT mgl_candle_yv(HMGL gr, HCDT v1, HCDT v2, HCDT y1, HCDT y2, const char *pen, const char *opt)
 {
 	gr->SaveState(opt);
 	mglData x(v1->GetNx()+1);
@@ -252,24 +252,24 @@ void mgl_candle_yv(HMGL gr, HCDT v1, HCDT v2, HCDT y1, HCDT y2, const char *pen,
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_candle(HMGL gr, HCDT v1, HCDT y1, HCDT y2, const char *pen, const char *opt)
+void MGL_EXPORT mgl_candle(HMGL gr, HCDT v1, HCDT y1, HCDT y2, const char *pen, const char *opt)
 {
 	mglData v2(v1);
 	v2.Roll('x',1);	v2.a[0]=NAN;
 	mgl_candle_yv(gr,v1,&v2,y1,y2,pen,opt);
 }
 //-----------------------------------------------------------------------------
-void mgl_candle_xyv_(uintptr_t *gr, uintptr_t *x, uintptr_t *v1, uintptr_t *v2, uintptr_t *y1, uintptr_t *y2, const char *pen, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_candle_xyv_(uintptr_t *gr, uintptr_t *x, uintptr_t *v1, uintptr_t *v2, uintptr_t *y1, uintptr_t *y2, const char *pen, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_candle_xyv(_GR_,_DA_(x),_DA_(v1),_DA_(v2),_DA_(y1),_DA_(y2),s,o);	delete []s;	delete []o;	}
 //-----------------------------------------------------------------------------
-void mgl_candle_yv_(uintptr_t *gr, uintptr_t *v1, uintptr_t *v2, uintptr_t *y1, uintptr_t *y2, const char *pen, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_candle_yv_(uintptr_t *gr, uintptr_t *v1, uintptr_t *v2, uintptr_t *y1, uintptr_t *y2, const char *pen, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_candle_yv(_GR_,_DA_(v1),_DA_(v2),_DA_(y1),_DA_(y2),s,o);	delete []s;	delete []o;	}
 //-----------------------------------------------------------------------------
-void mgl_candle_(uintptr_t *gr, uintptr_t *y, uintptr_t *y1, uintptr_t *y2, const char *pen, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_candle_(uintptr_t *gr, uintptr_t *y, uintptr_t *y1, uintptr_t *y2, const char *pen, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_candle(_GR_,_DA_(y),_DA_(y1),_DA_(y2),s,o);
@@ -279,7 +279,7 @@ void mgl_candle_(uintptr_t *gr, uintptr_t *y, uintptr_t *y1, uintptr_t *y2, cons
 //	Plot series
 //
 //-----------------------------------------------------------------------------
-void mgl_plot_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *opt)
+void MGL_EXPORT mgl_plot_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *opt)
 {
 	long j,m,mx,my,mz,n=y->GetNx(),pal;
 	if(mgl_check_dim1(gr,x,y,z,0,"Plot"))	return;
@@ -336,7 +336,7 @@ void mgl_plot_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mgl_plot_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
+void MGL_EXPORT mgl_plot_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
 {
 	gr->SaveState(opt);
 	mglData z(y->GetNx());
@@ -345,7 +345,7 @@ void mgl_plot_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_plot(HMGL gr, HCDT y, const char *pen, const char *opt)
+void MGL_EXPORT mgl_plot(HMGL gr, HCDT y, const char *pen, const char *opt)
 {
 	register long n=y->GetNx();
 	if(n<2)	{	gr->SetWarn(mglWarnLow,"Plot");	return;	}
@@ -357,17 +357,17 @@ void mgl_plot(HMGL gr, HCDT y, const char *pen, const char *opt)
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_plot_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *pen, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_plot_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *pen, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	char *o=new char[lo+1];		memcpy(o,opt,lo);	o[lo]=0;
 	mgl_plot_xyz(_GR_, _DA_(x),_DA_(y),_DA_(z),s,o);	delete []s;	delete []o;	}
 //-----------------------------------------------------------------------------
-void mgl_plot_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, const char *pen, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_plot_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, const char *pen, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	char *o=new char[lo+1];		memcpy(o,opt,lo);	o[lo]=0;
 	mgl_plot_xy(_GR_, _DA_(x),_DA_(y),s,o);	delete []s;	delete []o;	}
 //-----------------------------------------------------------------------------
-void mgl_plot_(uintptr_t *gr, uintptr_t *y,	const char *pen, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_plot_(uintptr_t *gr, uintptr_t *y,	const char *pen, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	char *o=new char[lo+1];		memcpy(o,opt,lo);	o[lo]=0;
 	mgl_plot(_GR_, _DA_(y),s,o);	delete []s;	delete []o;	}
@@ -376,7 +376,7 @@ void mgl_plot_(uintptr_t *gr, uintptr_t *y,	const char *pen, const char *opt,int
 //	Tens series
 //
 //-----------------------------------------------------------------------------
-void mgl_tens_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char *pen, const char *opt)
+void MGL_EXPORT mgl_tens_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char *pen, const char *opt)
 {
 	long j,m,mx,my,mz,mc,n=y->GetNx(), pal;
 	if(mgl_check_dim1(gr,x,y,z,0,"Tens"))	return;
@@ -433,7 +433,7 @@ void mgl_tens_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char *pen, cons
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mgl_tens_xy(HMGL gr, HCDT x, HCDT y, HCDT c, const char *pen, const char *opt)
+void MGL_EXPORT mgl_tens_xy(HMGL gr, HCDT x, HCDT y, HCDT c, const char *pen, const char *opt)
 {
 	gr->SaveState(opt);
 	mglData z(y->GetNx());
@@ -442,7 +442,7 @@ void mgl_tens_xy(HMGL gr, HCDT x, HCDT y, HCDT c, const char *pen, const char *o
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_tens(HMGL gr, HCDT y, HCDT c, const char *pen, const char *opt)
+void MGL_EXPORT mgl_tens(HMGL gr, HCDT y, HCDT c, const char *pen, const char *opt)
 {
 	register long n=y->GetNx();
 	if(n<2)	{	gr->SetWarn(mglWarnLow,"Tens");	return;	}
@@ -454,17 +454,17 @@ void mgl_tens(HMGL gr, HCDT y, HCDT c, const char *pen, const char *opt)
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_tens_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *c, const char *pen, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_tens_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *c, const char *pen, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_tens_xyz(_GR_, _DA_(x),_DA_(y),_DA_(z),_DA_(c),s,o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_tens_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *c, const char *pen, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_tens_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *c, const char *pen, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_tens_xy(_GR_, _DA_(x),_DA_(y),_DA_(c),s,o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_tens_(uintptr_t *gr, uintptr_t *y, uintptr_t *c, const char *pen, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_tens_(uintptr_t *gr, uintptr_t *y, uintptr_t *c, const char *pen, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_tens(_GR_, _DA_(y),_DA_(c),s,o);	delete []o;	delete []s;	}
@@ -473,7 +473,7 @@ void mgl_tens_(uintptr_t *gr, uintptr_t *y, uintptr_t *c, const char *pen, const
 //	Area series
 //
 //-----------------------------------------------------------------------------
-void mgl_area_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *opt)
+void MGL_EXPORT mgl_area_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *opt)
 {
 	long i,j,n=y->GetNx(),m,mx,my,mz,pal;
 	if(mgl_check_dim1(gr,x,y,z,0,"Area"))	return;
@@ -518,7 +518,7 @@ void mgl_area_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mgl_area_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
+void MGL_EXPORT mgl_area_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
 {
 	long i,j,n=y->GetNx(),m=y->GetNy(),mx,my,pal;
 	if(mgl_check_dim1(gr,x,y,0,0,"Area"))	return;
@@ -562,7 +562,7 @@ void mgl_area_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mgl_area(HMGL gr, HCDT y, const char *pen, const char *opt)
+void MGL_EXPORT mgl_area(HMGL gr, HCDT y, const char *pen, const char *opt)
 {
 	gr->SaveState(opt);
 	mglData x(y->GetNx());
@@ -571,17 +571,17 @@ void mgl_area(HMGL gr, HCDT y, const char *pen, const char *opt)
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_area_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *pen, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_area_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *pen, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_area_xyz(_GR_, _DA_(x),_DA_(y),_DA_(z),s,o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_area_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, const char *pen, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_area_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, const char *pen, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_area_xy(_GR_, _DA_(x),_DA_(y),s,o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_area_(uintptr_t *gr, uintptr_t *y, const char *pen, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_area_(uintptr_t *gr, uintptr_t *y, const char *pen, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_area(_GR_, _DA_(y),s,o);	delete []o;	delete []s;	}
@@ -590,7 +590,7 @@ void mgl_area_(uintptr_t *gr, uintptr_t *y, const char *pen, const char *opt,int
 //	Region series
 //
 //-----------------------------------------------------------------------------
-void mgl_region_xy(HMGL gr, HCDT x, HCDT y1, HCDT y2, const char *pen, const char *opt)
+void MGL_EXPORT mgl_region_xy(HMGL gr, HCDT x, HCDT y1, HCDT y2, const char *pen, const char *opt)
 {
 	long i,j, n=y1->GetNx(), m=y1->GetNy(), mx, pal;
 	if(mgl_check_dim1(gr,x,y1,y2,0,"Region"))	return;
@@ -632,7 +632,7 @@ void mgl_region_xy(HMGL gr, HCDT x, HCDT y1, HCDT y2, const char *pen, const cha
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mgl_region(HMGL gr, HCDT y1, HCDT y2, const char *pen, const char *opt)
+void MGL_EXPORT mgl_region(HMGL gr, HCDT y1, HCDT y2, const char *pen, const char *opt)
 {
 	gr->SaveState(opt);
 	mglData x(y1->GetNx());
@@ -641,12 +641,12 @@ void mgl_region(HMGL gr, HCDT y1, HCDT y2, const char *pen, const char *opt)
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_region_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y1, uintptr_t *y2, const char *pen, const char *opt, int l, int lo)
+void MGL_EXPORT mgl_region_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y1, uintptr_t *y2, const char *pen, const char *opt, int l, int lo)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_region_xy(_GR_, _DA_(x),_DA_(y1),_DA_(y2),s,o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_region_(uintptr_t *gr, uintptr_t *y1, uintptr_t *y2, const char *pen, const char *opt, int l, int lo)
+void MGL_EXPORT mgl_region_(uintptr_t *gr, uintptr_t *y1, uintptr_t *y2, const char *pen, const char *opt, int l, int lo)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_region(_GR_, _DA_(y1),_DA_(y2),s,o);	delete []o;	delete []s;	}
@@ -655,7 +655,7 @@ void mgl_region_(uintptr_t *gr, uintptr_t *y1, uintptr_t *y2, const char *pen, c
 //	Step series
 //
 //-----------------------------------------------------------------------------
-void mgl_step_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *opt)
+void MGL_EXPORT mgl_step_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *opt)
 {
 	long i,j,m,mx,my,mz,n=y->GetNx(), pal;
 	if(mgl_check_dim1(gr,x,y,z,0,"Step"))	return;
@@ -693,7 +693,7 @@ void mgl_step_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mgl_step_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
+void MGL_EXPORT mgl_step_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
 {
 	long i,j,m,mx,my,n=y->GetNx(), pal;
 	if(mgl_check_dim1(gr,x,y,0,0,"Step"))	return;
@@ -732,7 +732,7 @@ void mgl_step_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mgl_step(HMGL gr, HCDT y,	const char *pen, const char *opt)
+void MGL_EXPORT mgl_step(HMGL gr, HCDT y,	const char *pen, const char *opt)
 {
 	gr->SaveState(opt);
 	mglData x(y->GetNx());
@@ -741,17 +741,17 @@ void mgl_step(HMGL gr, HCDT y,	const char *pen, const char *opt)
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_step_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *pen, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_step_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *pen, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_step_xyz(_GR_, _DA_(x),_DA_(y),_DA_(z),s,o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_step_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, const char *pen, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_step_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, const char *pen, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_step_xy(_GR_, _DA_(x),_DA_(y),s,o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_step_(uintptr_t *gr, uintptr_t *y,	const char *pen, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_step_(uintptr_t *gr, uintptr_t *y,	const char *pen, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_step(_GR_, _DA_(y),s,o);	delete []o;	delete []s;	}
@@ -760,7 +760,7 @@ void mgl_step_(uintptr_t *gr, uintptr_t *y,	const char *pen, const char *opt,int
 //	Stem series
 //
 //-----------------------------------------------------------------------------
-void mgl_stem_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *opt)
+void MGL_EXPORT mgl_stem_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *opt)
 {
 	long i,j,m,mx,my,mz,n=y->GetNx(), pal;
 	if(mgl_check_dim1(gr,x,y,z,0,"Stem"))	return;
@@ -790,7 +790,7 @@ void mgl_stem_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mgl_stem_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
+void MGL_EXPORT mgl_stem_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
 {
 	long i,j,m,mx,my,n=y->GetNx(), pal;
 	if(mgl_check_dim1(gr,x,y,0,0,"Stem"))	return;
@@ -821,7 +821,7 @@ void mgl_stem_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mgl_stem(HMGL gr, HCDT y,	const char *pen, const char *opt)
+void MGL_EXPORT mgl_stem(HMGL gr, HCDT y,	const char *pen, const char *opt)
 {
 	gr->SaveState(opt);
 	mglData x(y->GetNx());
@@ -830,17 +830,17 @@ void mgl_stem(HMGL gr, HCDT y,	const char *pen, const char *opt)
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_stem_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *pen, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_stem_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *pen, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_stem_xyz(_GR_,_DA_(x),_DA_(y),_DA_(z),s,o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_stem_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, const char *pen, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_stem_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, const char *pen, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_stem_xy(_GR_,_DA_(x),_DA_(y),s,o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_stem_(uintptr_t *gr, uintptr_t *y,	const char *pen, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_stem_(uintptr_t *gr, uintptr_t *y,	const char *pen, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_stem(_GR_,_DA_(y),s,o);	delete []o;	delete []s;	}
@@ -849,7 +849,7 @@ void mgl_stem_(uintptr_t *gr, uintptr_t *y,	const char *pen, const char *opt,int
 //	Bars series
 //
 //-----------------------------------------------------------------------------
-void mgl_bars_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *opt)
+void MGL_EXPORT mgl_bars_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *opt)
 {
 	long i,j,m,mx,my,mz,n=z->GetNx(), pal,nx=x->GetNx(),ny=y->GetNx();
 	if(mgl_check_dim1(gr,x,z,y,0,"Bars",true))	return;
@@ -917,7 +917,7 @@ void mgl_bars_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *
 	gr->EndGroup();	delete []dd;
 }
 //-----------------------------------------------------------------------------
-void mgl_bars_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
+void MGL_EXPORT mgl_bars_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
 {
 	long i,j,m,mx,my,n=y->GetNx(),pal;
 	if(mgl_check_dim1(gr,x,y,0,0,"Bars",true))	return;
@@ -973,7 +973,7 @@ void mgl_bars_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
 	gr->EndGroup();	delete []dd;
 }
 //-----------------------------------------------------------------------------
-void mgl_bars(HMGL gr, HCDT y, const char *pen, const char *opt)
+void MGL_EXPORT mgl_bars(HMGL gr, HCDT y, const char *pen, const char *opt)
 {
 	gr->SaveState(opt);
 	mglData x(y->GetNx()+1);
@@ -982,17 +982,17 @@ void mgl_bars(HMGL gr, HCDT y, const char *pen, const char *opt)
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_bars_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *pen, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_bars_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *pen, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_bars_xyz(_GR_,_DA_(x),_DA_(y),_DA_(z),s,o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_bars_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, const char *pen, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_bars_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, const char *pen, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_bars_xy(_GR_,_DA_(x),_DA_(y),s,o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_bars_(uintptr_t *gr, uintptr_t *y,	const char *pen, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_bars_(uintptr_t *gr, uintptr_t *y,	const char *pen, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_bars(_GR_,_DA_(y),s,o);	delete []o;	delete []s;	}
@@ -1001,7 +1001,7 @@ void mgl_bars_(uintptr_t *gr, uintptr_t *y,	const char *pen, const char *opt,int
 //		Barh series
 //
 //-----------------------------------------------------------------------------
-void mgl_barh_yx(HMGL gr, HCDT y, HCDT v, const char *pen, const char *opt)
+void MGL_EXPORT mgl_barh_yx(HMGL gr, HCDT y, HCDT v, const char *pen, const char *opt)
 {
 	long i,j,m,mx,my,n=v->GetNx(),pal;
 	if(mgl_check_dim1(gr,y,v,0,0,"Barh",true))	return;
@@ -1057,7 +1057,7 @@ void mgl_barh_yx(HMGL gr, HCDT y, HCDT v, const char *pen, const char *opt)
 	gr->EndGroup();	delete []dd;
 }
 //-----------------------------------------------------------------------------
-void mgl_barh(HMGL gr, HCDT v,	const char *pen, const char *opt)
+void MGL_EXPORT mgl_barh(HMGL gr, HCDT v,	const char *pen, const char *opt)
 {
 	gr->SaveState(opt);
 	mglData y(v->GetNx()+1);
@@ -1066,12 +1066,12 @@ void mgl_barh(HMGL gr, HCDT v,	const char *pen, const char *opt)
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_barh_yx_(uintptr_t *gr, uintptr_t *y, uintptr_t *v, const char *pen, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_barh_yx_(uintptr_t *gr, uintptr_t *y, uintptr_t *v, const char *pen, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_barh_yx(_GR_,_DA_(y),_DA_(v),s,o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_barh_(uintptr_t *gr, uintptr_t *v,	const char *pen, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_barh_(uintptr_t *gr, uintptr_t *v,	const char *pen, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_barh(_GR_,_DA_(v),s,o);	delete []o;	delete []s;	}
@@ -1081,14 +1081,14 @@ void mgl_barh_(uintptr_t *gr, uintptr_t *v,	const char *pen, const char *opt,int
 //
 //-----------------------------------------------------------------------------
 double sgn(double a);
-int mgl_cmp_flt(const void *a, const void *b)
+int MGL_NO_EXPORT mgl_cmp_flt(const void *a, const void *b)
 {
 	const mreal *aa = (const mreal *)a;
 	const mreal *bb = (const mreal *)b;
 	return int(sgn(*aa-*bb));
 }
 //-----------------------------------------------------------------------------
-void mgl_boxplot_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
+void MGL_EXPORT mgl_boxplot_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
 {
 	long n=y->GetNx(), m=y->GetNy(), nx=x->GetNx();
 	if(nx<n || nx<2)	{	gr->SetWarn(mglWarnDim,"BoxPlot");	return;	}
@@ -1150,7 +1150,7 @@ void mgl_boxplot_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
 	delete []b;	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mgl_boxplot(HMGL gr, HCDT y, const char *pen, const char *opt)
+void MGL_EXPORT mgl_boxplot(HMGL gr, HCDT y, const char *pen, const char *opt)
 {
 	gr->SaveState(opt);
 	mglData x(y->GetNx()+1);
@@ -1159,12 +1159,12 @@ void mgl_boxplot(HMGL gr, HCDT y, const char *pen, const char *opt)
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_boxplot_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, const char *pen, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_boxplot_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, const char *pen, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_boxplot_xy(_GR_,_DA_(x),_DA_(y),s,o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_boxplot_(uintptr_t *gr, uintptr_t *y,	const char *pen, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_boxplot_(uintptr_t *gr, uintptr_t *y,	const char *pen, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_boxplot(_GR_,_DA_(y),s,o);	delete []o;	delete []s;	}
@@ -1173,7 +1173,7 @@ void mgl_boxplot_(uintptr_t *gr, uintptr_t *y,	const char *pen, const char *opt,
 //		Error series
 //
 //-----------------------------------------------------------------------------
-void mgl_error_exy(HMGL gr, HCDT x, HCDT y, HCDT ex, HCDT ey, const char *pen, const char *opt)
+void MGL_EXPORT mgl_error_exy(HMGL gr, HCDT x, HCDT y, HCDT ex, HCDT ey, const char *pen, const char *opt)
 {
 	long i,j,k,m,mx,my,m1,m2,n=ey->GetNx(),pal;
 	if(mgl_check_dim1(gr,x,y,ey,ex,"Error"))	return;
@@ -1315,7 +1315,7 @@ void mgl_error_exy(HMGL gr, HCDT x, HCDT y, HCDT ex, HCDT ey, const char *pen, c
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mgl_error_xy(HMGL gr, HCDT x, HCDT y, HCDT ey, const char *pen, const char *opt)
+void MGL_EXPORT mgl_error_xy(HMGL gr, HCDT x, HCDT y, HCDT ey, const char *pen, const char *opt)
 {
 	gr->SaveState(opt);
 	mglData ex(y->GetNx());
@@ -1324,7 +1324,7 @@ void mgl_error_xy(HMGL gr, HCDT x, HCDT y, HCDT ey, const char *pen, const char 
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_error(HMGL gr, HCDT y, HCDT ey, const char *pen, const char *opt)
+void MGL_EXPORT mgl_error(HMGL gr, HCDT y, HCDT ey, const char *pen, const char *opt)
 {
 	gr->SaveState(opt);
 	mglData x(y->GetNx());
@@ -1333,17 +1333,17 @@ void mgl_error(HMGL gr, HCDT y, HCDT ey, const char *pen, const char *opt)
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_error_(uintptr_t *gr, uintptr_t *y, uintptr_t *ey, const char *pen, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_error_(uintptr_t *gr, uintptr_t *y, uintptr_t *ey, const char *pen, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_error(_GR_,_DA_(y),_DA_(ey),s,o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_error_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *ey, const char *pen, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_error_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *ey, const char *pen, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_error_xy(_GR_,_DA_(x),_DA_(y),_DA_(ey),s,o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_error_exy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *ex, uintptr_t *ey, const char *pen, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_error_exy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *ex, uintptr_t *ey, const char *pen, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_error_exy(_GR_,_DA_(x),_DA_(y),_DA_(ex),_DA_(ey),s,o);
@@ -1395,7 +1395,7 @@ void face_plot(mglBase *gr, mglPoint o, mglPoint d1, mglPoint d2, mreal c, bool 
 	delete []id;
 }
 //-----------------------------------------------------------------------------
-void mgl_chart(HMGL gr, HCDT a, const char *cols, const char *opt)
+void MGL_EXPORT mgl_chart(HMGL gr, HCDT a, const char *cols, const char *opt)
 {
 	if(a->Minimal()<0)	{	gr->SetWarn(mglWarnNeg,"Chart");	return;	}
 	gr->SaveState(opt);
@@ -1442,7 +1442,7 @@ void mgl_chart(HMGL gr, HCDT a, const char *cols, const char *opt)
 	gr->EndGroup();	delete []c;
 }
 //-----------------------------------------------------------------------------
-void mgl_chart_(uintptr_t *gr, uintptr_t *a, const char *col, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_chart_(uintptr_t *gr, uintptr_t *a, const char *col, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,col,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_chart(_GR_, _DA_(a), s,o);	delete []o;	delete []s;	}
@@ -1451,7 +1451,7 @@ void mgl_chart_(uintptr_t *gr, uintptr_t *a, const char *col, const char *opt,in
 //	Mark series
 //
 //-----------------------------------------------------------------------------
-void mgl_mark_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const char *pen, const char *opt)
+void MGL_EXPORT mgl_mark_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const char *pen, const char *opt)
 {
 	long j,m,mx,my,mz,mr,n=y->GetNx(),pal;
 	if(mgl_check_dim0(gr,x,y,z,r,"Mark"))	return;
@@ -1479,7 +1479,7 @@ void mgl_mark_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const char *pen, cons
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mgl_mark_xy(HMGL gr, HCDT x, HCDT y, HCDT r, const char *pen, const char *opt)
+void MGL_EXPORT mgl_mark_xy(HMGL gr, HCDT x, HCDT y, HCDT r, const char *pen, const char *opt)
 {
 	gr->SaveState(opt);
 	mglData z(y->GetNx());
@@ -1488,7 +1488,7 @@ void mgl_mark_xy(HMGL gr, HCDT x, HCDT y, HCDT r, const char *pen, const char *o
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_mark_y(HMGL gr, HCDT y, HCDT r, const char *pen, const char *opt)
+void MGL_EXPORT mgl_mark_y(HMGL gr, HCDT y, HCDT r, const char *pen, const char *opt)
 {
 	register long n=y->GetNx();
 	gr->SaveState(opt);
@@ -1499,18 +1499,18 @@ void mgl_mark_y(HMGL gr, HCDT y, HCDT r, const char *pen, const char *opt)
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_mark_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *r, const char *pen, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_mark_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *r, const char *pen, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_mark_xyz(_GR_, _DA_(x), _DA_(y), _DA_(z), _DA_(r),s,o);
 	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_mark_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *r, const char *pen, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_mark_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *r, const char *pen, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_mark_xy(_GR_, _DA_(x), _DA_(y), _DA_(r),s,o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_mark_y_(uintptr_t *gr, uintptr_t *y, uintptr_t *r, const char *pen, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_mark_y_(uintptr_t *gr, uintptr_t *y, uintptr_t *r, const char *pen, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_mark_y(_GR_,_DA_(y),_DA_(r),s,o);	delete []o;	delete []s;	}
@@ -1519,7 +1519,7 @@ void mgl_mark_y_(uintptr_t *gr, uintptr_t *y, uintptr_t *r, const char *pen, con
 //	Tube series
 //
 //-----------------------------------------------------------------------------
-void mgl_tube_xyzr(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const char *pen, const char *opt)
+void MGL_EXPORT mgl_tube_xyzr(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const char *pen, const char *opt)
 {
 	long j,m,mx,my,mz,mr,n=y->GetNx(),pal;
 	if(mgl_check_dim1(gr,x,y,z,r,"Tube"))	return;
@@ -1567,7 +1567,7 @@ void mgl_tube_xyzr(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const char *pen, con
 	delete []nn;	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mgl_tube_xyr(HMGL gr, HCDT x, HCDT y, HCDT r, const char *pen, const char *opt)
+void MGL_EXPORT mgl_tube_xyr(HMGL gr, HCDT x, HCDT y, HCDT r, const char *pen, const char *opt)
 {
 	gr->SaveState(opt);
 	mglData z(y->GetNx());
@@ -1576,7 +1576,7 @@ void mgl_tube_xyr(HMGL gr, HCDT x, HCDT y, HCDT r, const char *pen, const char *
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_tube_r(HMGL gr, HCDT y, HCDT r, const char *pen, const char *opt)
+void MGL_EXPORT mgl_tube_r(HMGL gr, HCDT y, HCDT r, const char *pen, const char *opt)
 {
 	register long n=y->GetNx();
 	if(n<2)	{	gr->SetWarn(mglWarnLow,"Tube");	return;	}
@@ -1588,7 +1588,7 @@ void mgl_tube_r(HMGL gr, HCDT y, HCDT r, const char *pen, const char *opt)
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_tube(HMGL gr, HCDT y, double rr, const char *pen, const char *opt)
+void MGL_EXPORT mgl_tube(HMGL gr, HCDT y, double rr, const char *pen, const char *opt)
 {
 	register long n=y->GetNx();
 	if(n<2)	{	gr->SetWarn(mglWarnLow,"Tube");	return;	}
@@ -1601,7 +1601,7 @@ void mgl_tube(HMGL gr, HCDT y, double rr, const char *pen, const char *opt)
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_tube_xy(HMGL gr, HCDT x, HCDT y, double rr, const char *pen, const char *opt)
+void MGL_EXPORT mgl_tube_xy(HMGL gr, HCDT x, HCDT y, double rr, const char *pen, const char *opt)
 {
 	register long n=y->GetNx();
 	if(n<2)	{	gr->SetWarn(mglWarnLow,"Tube");	return;	}
@@ -1613,7 +1613,7 @@ void mgl_tube_xy(HMGL gr, HCDT x, HCDT y, double rr, const char *pen, const char
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_tube_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, double rr, const char *pen, const char *opt)
+void MGL_EXPORT mgl_tube_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, double rr, const char *pen, const char *opt)
 {
 	gr->SaveState(opt);
 	mglData r(y->GetNx());
@@ -1622,33 +1622,33 @@ void mgl_tube_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, double rr, const char *pen, c
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_tube_xyzr_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *r, const char *pen, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_tube_xyzr_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *r, const char *pen, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_tube_xyzr(_GR_,_DA_(x),_DA_(y),_DA_(z), _DA_(r),s,o);
 	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_tube_xyr_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *r, const char *pen, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_tube_xyr_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *r, const char *pen, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_tube_xyr(_GR_,_DA_(x),_DA_(y),_DA_(r),s,o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_tube_r_(uintptr_t *gr, uintptr_t *y, uintptr_t *r, const char *pen, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_tube_r_(uintptr_t *gr, uintptr_t *y, uintptr_t *r, const char *pen, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_tube_r(_GR_,_DA_(y),_DA_(r),s,o);	delete []s;	delete []o;	}
 //-----------------------------------------------------------------------------
-void mgl_tube_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, mreal *r, const char *pen, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_tube_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, mreal *r, const char *pen, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_tube_xyz(_GR_,_DA_(x),_DA_(y),_DA_(z),*r,s,o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_tube_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, mreal *r, const char *pen, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_tube_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, mreal *r, const char *pen, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_tube_xy(_GR_,_DA_(x),_DA_(y),*r,s,o);	delete []s;	delete []o;	}
 //-----------------------------------------------------------------------------
-void mgl_tube_(uintptr_t *gr, uintptr_t *y, mreal *r, const char *pen, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_tube_(uintptr_t *gr, uintptr_t *y, mreal *r, const char *pen, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_tube(_GR_,_DA_(y),*r,s,o);
@@ -1658,7 +1658,7 @@ void mgl_tube_(uintptr_t *gr, uintptr_t *y, mreal *r, const char *pen, const cha
 //	Tape series
 //
 //-----------------------------------------------------------------------------
-void mgl_tape_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *opt)
+void MGL_EXPORT mgl_tape_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *opt)
 {
 	long j,m,mx,my,mz,n=y->GetNx(),pal;
 	if(mgl_check_dim1(gr,x,y,z,0,"Tape"))	return;
@@ -1722,7 +1722,7 @@ void mgl_tape_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mgl_tape_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
+void MGL_EXPORT mgl_tape_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
 {
 	gr->SaveState(opt);
 	mglData z(y->GetNx());
@@ -1731,7 +1731,7 @@ void mgl_tape_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_tape(HMGL gr, HCDT y, const char *pen, const char *opt)
+void MGL_EXPORT mgl_tape(HMGL gr, HCDT y, const char *pen, const char *opt)
 {
 	register long n=y->GetNx();
 	if(n<2)	{	gr->SetWarn(mglWarnLow,"Plot");	return;	}
@@ -1743,17 +1743,17 @@ void mgl_tape(HMGL gr, HCDT y, const char *pen, const char *opt)
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_tape_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *pen, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_tape_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *pen, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	char *o=new char[lo+1];		memcpy(o,opt,lo);	o[lo]=0;
 	mgl_tape_xyz(_GR_, _DA_(x),_DA_(y),_DA_(z),s,o);	delete []s;	delete []o;	}
 //-----------------------------------------------------------------------------
-void mgl_tape_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, const char *pen, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_tape_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, const char *pen, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	char *o=new char[lo+1];		memcpy(o,opt,lo);	o[lo]=0;
 	mgl_tape_xy(_GR_, _DA_(x),_DA_(y),s,o);	delete []s;	delete []o;	}
 //-----------------------------------------------------------------------------
-void mgl_tape_(uintptr_t *gr, uintptr_t *y,	const char *pen, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_tape_(uintptr_t *gr, uintptr_t *y,	const char *pen, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	char *o=new char[lo+1];		memcpy(o,opt,lo);	o[lo]=0;
 	mgl_tape(_GR_, _DA_(y),s,o);	delete []s;	delete []o;	}

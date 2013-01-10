@@ -25,7 +25,7 @@
 //	Traj series
 //
 //-----------------------------------------------------------------------------
-void mgl_traj_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, const char *opt)
+void MGL_EXPORT mgl_traj_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, const char *opt)
 {
 	long m,mx,my,mz,nx,ny,nz,n=ax->GetNx(),pal;
 	if(mgl_check_dim1(gr,x,z,y,ax,"Traj"))	return;
@@ -77,7 +77,7 @@ void mgl_traj_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mgl_traj_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, const char *opt)
+void MGL_EXPORT mgl_traj_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, const char *opt)
 {
 	gr->SaveState(opt);
 	mglData z(x->GetNx()), az(x->GetNx());	z.Fill(gr->Min.z,gr->Min.z);
@@ -85,12 +85,12 @@ void mgl_traj_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, con
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_traj_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_traj_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_traj_xy(_GR_, _DA_(x), _DA_(y), _DA_(ax), _DA_(ay), s, o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_traj_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_traj_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_traj_xyz(_GR_, _DA_(x), _DA_(y), _DA_(z), _DA_(ax), _DA_(ay), _DA_(az), s, o);
@@ -100,7 +100,7 @@ void mgl_traj_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uint
 //	Vect series
 //
 //-----------------------------------------------------------------------------
-void mgl_vect_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, const char *opt)
+void MGL_EXPORT mgl_vect_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, const char *opt)
 {
 	long i,j,n=ax->GetNx(),m=ax->GetNy(),l=ax->GetNz(),k;
 	if(mgl_check_dim2(gr,x,y,ax,ay,"Vect"))	return;
@@ -170,7 +170,7 @@ void mgl_vect_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, con
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mgl_vect_2d(HMGL gr, HCDT ax, HCDT ay, const char *sch, const char *opt)
+void MGL_EXPORT mgl_vect_2d(HMGL gr, HCDT ax, HCDT ay, const char *sch, const char *opt)
 {
 	gr->SaveState(opt);
 	mglData x(ax->GetNx()), y(ax->GetNy());
@@ -180,13 +180,13 @@ void mgl_vect_2d(HMGL gr, HCDT ax, HCDT ay, const char *sch, const char *opt)
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_vect_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_vect_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_vect_xy(_GR_, _DA_(x), _DA_(y), _DA_(ax), _DA_(ay), s, o);
 	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_vect_2d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, const char *sch, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_vect_2d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, const char *sch, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_vect_2d(_GR_, _DA_(ax), _DA_(ay), s, o);	delete []o;	delete []s;	}
@@ -195,7 +195,7 @@ void mgl_vect_2d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, const char *sch, 
 //	Vect3 series
 //
 //-----------------------------------------------------------------------------
-void mgl_vect_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, const char *opt)
+void MGL_EXPORT mgl_vect_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, const char *opt)
 {
 	register long i,j,n=ax->GetNx(),m=ax->GetNy(),l=ax->GetNz(),k;
 	if(mgl_check_vec3(gr,x,y,z,ax,ay,az,"Vect_3d"))	return;
@@ -262,7 +262,7 @@ void mgl_vect_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mgl_vect_3d(HMGL gr, HCDT ax, HCDT ay, HCDT az, const char *sch, const char *opt)
+void MGL_EXPORT mgl_vect_3d(HMGL gr, HCDT ax, HCDT ay, HCDT az, const char *sch, const char *opt)
 {
 	gr->SaveState(opt);
 	mglData x(ax->GetNx()), y(ax->GetNy()), z(ax->GetNz());
@@ -273,13 +273,13 @@ void mgl_vect_3d(HMGL gr, HCDT ax, HCDT ay, HCDT az, const char *sch, const char
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_vect_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_vect_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_vect_xyz(_GR_, _DA_(x), _DA_(y), _DA_(z), _DA_(ax), _DA_(ay), _DA_(az), s, o);
 	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_vect_3d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, const char *opt, int l,int lo)
+void MGL_EXPORT mgl_vect_3d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, const char *opt, int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_vect_3d(_GR_, _DA_(ax), _DA_(ay), _DA_(az), s, o);	delete []o;	delete []s;	}
@@ -290,7 +290,7 @@ void mgl_vect_3d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, co
 //-----------------------------------------------------------------------------
 struct _mgl_vec_slice	{	mglData x,y,z,ax,ay,az;	};
 //-----------------------------------------------------------------------------
-void mgl_get_slice(_mgl_vec_slice &s, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, char dir, mreal d, bool both)
+void MGL_NO_EXPORT mgl_get_slice(_mgl_vec_slice &s, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, char dir, mreal d, bool both)
 {
 	register long i,j,i0,n=ax->GetNx(),m=ax->GetNy(),l=ax->GetNz(), nx=1,ny=1,p;
 
@@ -379,7 +379,7 @@ void mgl_get_slice(_mgl_vec_slice &s, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, 
 	}
 }
 //-----------------------------------------------------------------------------
-void mgl_get_slice_md(_mgl_vec_slice &s, const mglData *x, const mglData *y, const mglData *z, const mglData *ax, const mglData *ay, const mglData *az, char dir, mreal d, bool both)
+void MGL_NO_EXPORT mgl_get_slice_md(_mgl_vec_slice &s, const mglData *x, const mglData *y, const mglData *z, const mglData *ax, const mglData *ay, const mglData *az, char dir, mreal d, bool both)
 {
 	register long i,j,i0,i1,n=ax->nx,m=ax->ny,l=ax->nz, nx=1,ny=1,p;
 
@@ -468,7 +468,7 @@ void mgl_get_slice_md(_mgl_vec_slice &s, const mglData *x, const mglData *y, con
 	}
 }
 //-----------------------------------------------------------------------------
-void mgl_vect3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, double sVal, const char *opt)
+void MGL_EXPORT mgl_vect3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, double sVal, const char *opt)
 {
 	bool both = mgl_isboth(x,y,z,ax);
 	if(mgl_check_vec3(gr,x,y,z,ax,ay,az,"Vect3"))	return;
@@ -550,7 +550,7 @@ void mgl_vect3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, c
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mgl_vect3(HMGL gr, HCDT ax, HCDT ay, HCDT az, const char *sch, double sVal, const char *opt)
+void MGL_EXPORT mgl_vect3(HMGL gr, HCDT ax, HCDT ay, HCDT az, const char *sch, double sVal, const char *opt)
 {
 	gr->SaveState(opt);
 	mglData x(ax->GetNx()), y(ax->GetNy()),z(ax->GetNz());
@@ -561,13 +561,13 @@ void mgl_vect3(HMGL gr, HCDT ax, HCDT ay, HCDT az, const char *sch, double sVal,
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_vect3_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, mreal *sVal, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_vect3_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, mreal *sVal, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_vect3_xyz(_GR_, _DA_(x), _DA_(y), _DA_(z), _DA_(ax), _DA_(ay), _DA_(az), s, *sVal, o);
 	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_vect3_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, mreal *sVal, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_vect3_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, mreal *sVal, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_vect3(_GR_, _DA_(ax), _DA_(ay), _DA_(az), s, *sVal, o);	delete []o;	delete []s;	}
@@ -576,7 +576,7 @@ void mgl_vect3_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, cons
 //	Flow 2d series
 //
 //-----------------------------------------------------------------------------
-void flow(mglBase *gr, double zVal, double u, double v, const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, long ss, bool vv)
+void MGL_NO_EXPORT flow(mglBase *gr, double zVal, double u, double v, const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, long ss, bool vv)
 {
 	long n=10*(ax.nx+ax.ny);
 	bool both = x.nx==ax.nx && y.nx==ax.nx && x.ny==ax.ny && y.ny==ax.ny;
@@ -634,7 +634,7 @@ void flow(mglBase *gr, double zVal, double u, double v, const mglData &x, const 
 	delete []pp;	delete []cc;
 }
 //-----------------------------------------------------------------------------
-void mgl_flow_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, const char *opt)
+void MGL_EXPORT mgl_flow_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, const char *opt)
 {
 	mreal u,v;
 	if(mgl_check_dim2(gr,x,y,ax,ay,"Flow"))	return;
@@ -682,7 +682,7 @@ void mgl_flow_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, con
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mgl_flow_2d(HMGL gr, HCDT ax, HCDT ay, const char *sch, const char *opt)
+void MGL_EXPORT mgl_flow_2d(HMGL gr, HCDT ax, HCDT ay, const char *sch, const char *opt)
 {
 	gr->SaveState(opt);
 	mglData x(ax->GetNx()), y(ax->GetNy());
@@ -692,16 +692,16 @@ void mgl_flow_2d(HMGL gr, HCDT ax, HCDT ay, const char *sch, const char *opt)
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_flow_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_flow_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_flow_xy(_GR_, _DA_(x), _DA_(y), _DA_(ax), _DA_(ay), s, o);	delete []o;	delete []s;	}
-void mgl_flow_2d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, const char *sch, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_flow_2d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, const char *sch, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_flow_2d(_GR_, _DA_(ax), _DA_(ay), s, o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_flowp_xy(HMGL gr, double x0, double y0, double z0, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, const char *opt)
+void MGL_EXPORT mgl_flowp_xy(HMGL gr, double x0, double y0, double z0, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, const char *opt)
 {
 	mglPoint p(x0,y0,z0);
 	mreal u,v;
@@ -748,7 +748,7 @@ void mgl_flowp_xy(HMGL gr, double x0, double y0, double z0, HCDT x, HCDT y, HCDT
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mgl_flowp_2d(HMGL gr, double x0, double y0, double z0, HCDT ax, HCDT ay, const char *sch, const char *opt)
+void MGL_EXPORT mgl_flowp_2d(HMGL gr, double x0, double y0, double z0, HCDT ax, HCDT ay, const char *sch, const char *opt)
 {
 	gr->SaveState(opt);
 	mglData x(ax->GetNx()), y(ax->GetNy());
@@ -758,12 +758,12 @@ void mgl_flowp_2d(HMGL gr, double x0, double y0, double z0, HCDT ax, HCDT ay, co
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_flowp_xy_(uintptr_t *gr, mreal *x0, mreal *y0, mreal *z0, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch, const char *opt, int l,int lo)
+void MGL_EXPORT mgl_flowp_xy_(uintptr_t *gr, mreal *x0, mreal *y0, mreal *z0, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch, const char *opt, int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_flowp_xy(_GR_, *x0,*y0,*z0, _DA_(x), _DA_(y), _DA_(ax), _DA_(ay), s, o);	delete []o;	delete []s;
 }
-void mgl_flowp_2d_(uintptr_t *gr, mreal *x0, mreal *y0, mreal *z0, uintptr_t *ax, uintptr_t *ay, const char *sch, const char *opt, int l,int lo)
+void MGL_EXPORT mgl_flowp_2d_(uintptr_t *gr, mreal *x0, mreal *y0, mreal *z0, uintptr_t *ax, uintptr_t *ay, const char *sch, const char *opt, int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_flowp_2d(_GR_, *x0,*y0,*z0, _DA_(ax), _DA_(ay), s, o);	delete []o;	delete []s;	}
@@ -854,7 +854,7 @@ void flow(mglBase *gr, double u, double v, double w, const mglData &x, const mgl
 	delete []pp;	delete []cc;
 }
 //-----------------------------------------------------------------------------
-void mgl_flow_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, const char *opt)
+void MGL_EXPORT mgl_flow_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, const char *opt)
 {
 	mreal u,v,w;
 	long i,j;
@@ -905,7 +905,7 @@ void mgl_flow_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mgl_flow_3d(HMGL gr, HCDT ax, HCDT ay, HCDT az, const char *sch, const char *opt)
+void MGL_EXPORT mgl_flow_3d(HMGL gr, HCDT ax, HCDT ay, HCDT az, const char *sch, const char *opt)
 {
 	gr->SaveState(opt);
 	mglData x(ax->GetNx()), y(ax->GetNy()), z(ax->GetNz());
@@ -916,16 +916,16 @@ void mgl_flow_3d(HMGL gr, HCDT ax, HCDT ay, HCDT az, const char *sch, const char
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_flow_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_flow_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_flow_xyz(_GR_, _DA_(x), _DA_(y), _DA_(z), _DA_(ax), _DA_(ay), _DA_(az), s, o);	delete []o;	delete []s;	}
-void mgl_flow_3d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_flow_3d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_flow_3d(_GR_, _DA_(ax), _DA_(ay), _DA_(az), s, o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_flowp_xyz(HMGL gr, double x0, double y0, double z0, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, const char *opt)
+void MGL_EXPORT mgl_flowp_xyz(HMGL gr, double x0, double y0, double z0, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, const char *opt)
 {
 	mglPoint p(x0,y0,z0);
 	mreal u,v,w;
@@ -980,7 +980,7 @@ void mgl_flowp_xyz(HMGL gr, double x0, double y0, double z0, HCDT x, HCDT y, HCD
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mgl_flowp_3d(HMGL gr, double x0, double y0, double z0, HCDT ax, HCDT ay, HCDT az, const char *sch, const char *opt)
+void MGL_EXPORT mgl_flowp_3d(HMGL gr, double x0, double y0, double z0, HCDT ax, HCDT ay, HCDT az, const char *sch, const char *opt)
 {
 	gr->SaveState(opt);
 	mglData x(ax->GetNx()), y(ax->GetNy()), z(ax->GetNz());
@@ -991,12 +991,12 @@ void mgl_flowp_3d(HMGL gr, double x0, double y0, double z0, HCDT ax, HCDT ay, HC
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_flowp_xyz_(uintptr_t *gr, mreal *x0, mreal *y0, mreal *z0, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, const char *opt, int l,int lo)
+void MGL_EXPORT mgl_flowp_xyz_(uintptr_t *gr, mreal *x0, mreal *y0, mreal *z0, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, const char *opt, int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_flowp_xyz(_GR_, *x0,*y0,*z0, _DA_(x), _DA_(y), _DA_(z), _DA_(ax), _DA_(ay), _DA_(az), s, o);
 	delete []o;	delete []s;	}
-void mgl_flowp_3d_(uintptr_t *gr, mreal *x0, mreal *y0, mreal *z0, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, const char *opt, int l,int lo)
+void MGL_EXPORT mgl_flowp_3d_(uintptr_t *gr, mreal *x0, mreal *y0, mreal *z0, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, const char *opt, int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_flowp_3d(_GR_, *x0,*y0,*z0, _DA_(ax), _DA_(ay), _DA_(az), s, o);	delete []o;	delete []s;	}
@@ -1005,7 +1005,7 @@ void mgl_flowp_3d_(uintptr_t *gr, mreal *x0, mreal *y0, mreal *z0, uintptr_t *ax
 //	Grad series
 //
 //-----------------------------------------------------------------------------
-void mgl_grad_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT phi, const char *sch, const char *opt)
+void MGL_EXPORT mgl_grad_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT phi, const char *sch, const char *opt)
 {
 	mglData ax(phi), ay,az,xx,yy,zz;
 	ay.Set(ax);	az.Set(ax);	xx.Set(ax);	yy.Set(ax);	zz.Set(ax);
@@ -1024,7 +1024,7 @@ void mgl_grad_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT phi, const char *sch, co
 	mgl_flow_xyz(gr,&xx,&yy,&zz,&ax,&ay,&az,sch,opt);
 }
 //-----------------------------------------------------------------------------
-void mgl_grad_xy(HMGL gr, HCDT x, HCDT y, HCDT phi, const char *sch, const char *opt)
+void MGL_EXPORT mgl_grad_xy(HMGL gr, HCDT x, HCDT y, HCDT phi, const char *sch, const char *opt)
 {
 	mglData ax(phi), ay,xx,yy;
 	ay.Set(ax);	xx.Set(ax);	yy.Set(ax);
@@ -1041,7 +1041,7 @@ void mgl_grad_xy(HMGL gr, HCDT x, HCDT y, HCDT phi, const char *sch, const char 
 	mgl_flow_xy(gr,&xx,&yy,&ax,&ay,sch,opt);
 }
 //-----------------------------------------------------------------------------
-void mgl_grad(HMGL gr, HCDT phi, const char *sch, const char *opt)
+void MGL_EXPORT mgl_grad(HMGL gr, HCDT phi, const char *sch, const char *opt)
 {
 	mglData x(phi->GetNx()), y(phi->GetNy()), z(phi->GetNz());
 	gr->SaveState(opt);
@@ -1051,17 +1051,17 @@ void mgl_grad(HMGL gr, HCDT phi, const char *sch, const char *opt)
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_grad_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ph, const char *sch, const char *opt, int l,int lo)
+void MGL_EXPORT mgl_grad_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ph, const char *sch, const char *opt, int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_grad_xyz(_GR_, _DA_(x), _DA_(y), _DA_(z), _DA_(ph), s, o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_grad_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *ph, const char *sch, const char *opt, int l,int lo)
+void MGL_EXPORT mgl_grad_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *ph, const char *sch, const char *opt, int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_grad_xy(_GR_, _DA_(x), _DA_(y), _DA_(ph), s, o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_grad_(uintptr_t *gr, uintptr_t *ph, const char *sch, const char *opt, int l,int lo)
+void MGL_EXPORT mgl_grad_(uintptr_t *gr, uintptr_t *ph, const char *sch, const char *opt, int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_grad(_GR_, _DA_(ph), s, o);	delete []o;	delete []s;	}
@@ -1070,7 +1070,7 @@ void mgl_grad_(uintptr_t *gr, uintptr_t *ph, const char *sch, const char *opt, i
 //	Pipe 2d series
 //
 //-----------------------------------------------------------------------------
-void flowr(mglBase *gr, double zVal, double u, double v, const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, double r0,long sc)
+void MGL_NO_EXPORT flowr(mglBase *gr, double zVal, double u, double v, const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, double r0,long sc)
 {
 	long n=10*(ax.nx+ax.ny);
 	bool both = x.nx==ax.nx && y.nx==ax.nx && x.ny==ax.ny && y.ny==ax.ny;
@@ -1149,7 +1149,7 @@ void flowr(mglBase *gr, double zVal, double u, double v, const mglData &x, const
 	delete []pp;	delete []cc;
 }
 //-----------------------------------------------------------------------------
-void mgl_pipe_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, double r0, const char *opt)
+void MGL_EXPORT mgl_pipe_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, double r0, const char *opt)
 {
 	mreal u,v;
 	if(mgl_check_dim2(gr,x,y,ax,ay,"Pipe"))	return;
@@ -1197,7 +1197,7 @@ void mgl_pipe_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, dou
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mgl_pipe_2d(HMGL gr, HCDT ax, HCDT ay, const char *sch, double r0, const char *opt)
+void MGL_EXPORT mgl_pipe_2d(HMGL gr, HCDT ax, HCDT ay, const char *sch, double r0, const char *opt)
 {
 	gr->SaveState(opt);
 	mglData x(ax->GetNx()), y(ax->GetNy());
@@ -1207,11 +1207,11 @@ void mgl_pipe_2d(HMGL gr, HCDT ax, HCDT ay, const char *sch, double r0, const ch
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_pipe_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch, mreal *r0, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_pipe_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch, mreal *r0, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_pipe_xy(_GR_, _DA_(x), _DA_(y), _DA_(ax), _DA_(ay), s, *r0, o);	delete []o;	delete []s;	}
-void mgl_pipe_2d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, const char *sch, mreal *r0, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_pipe_2d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, const char *sch, mreal *r0, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_pipe_2d(_GR_, _DA_(ax), _DA_(ay), s, *r0, o);	delete []o;	delete []s;	}
@@ -1307,7 +1307,7 @@ void flowr(mglBase *gr, double u, double v, double w, const mglData &x, const mg
 	delete []pp;	delete []cc;
 }
 //-----------------------------------------------------------------------------
-void mgl_pipe_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, double r0, const char *opt)
+void MGL_EXPORT mgl_pipe_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, double r0, const char *opt)
 {
 	mreal u,v,w;
 	long i,j;
@@ -1359,7 +1359,7 @@ void mgl_pipe_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mgl_pipe_3d(HMGL gr, HCDT ax, HCDT ay, HCDT az, const char *sch, double r0, const char *opt)
+void MGL_EXPORT mgl_pipe_3d(HMGL gr, HCDT ax, HCDT ay, HCDT az, const char *sch, double r0, const char *opt)
 {
 	gr->SaveState(opt);
 	mglData x(ax->GetNx()), y(ax->GetNy()), z(ax->GetNz());
@@ -1370,12 +1370,12 @@ void mgl_pipe_3d(HMGL gr, HCDT ax, HCDT ay, HCDT az, const char *sch, double r0,
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_pipe_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, mreal *r0, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_pipe_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, mreal *r0, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];		memcpy(o,opt,lo);	o[lo]=0;
 	mgl_pipe_xyz(_GR_, _DA_(x), _DA_(y), _DA_(z), _DA_(ax), _DA_(ay), _DA_(az), s, *r0, o);
 	delete []o;	delete []s;	}
-void mgl_pipe_3d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, mreal *r0, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_pipe_3d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, mreal *r0, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];		memcpy(o,opt,lo);	o[lo]=0;
 	mgl_pipe_3d(_GR_, _DA_(ax), _DA_(ay), _DA_(az), s, *r0, o);	delete []o;	delete []s;	}

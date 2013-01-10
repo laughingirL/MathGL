@@ -37,7 +37,7 @@ extern "C" {
 #include <gif_lib.h>
 #endif
 //-----------------------------------------------------------------------------
-int mgl_pnga_save(const char *fname, int w, int h, unsigned char **p)
+int MGL_NO_EXPORT mgl_pnga_save(const char *fname, int w, int h, unsigned char **p)
 {
 #if MGL_HAVE_PNG
 	bool fl = strcmp(fname,"-");
@@ -71,7 +71,7 @@ int mgl_pnga_save(const char *fname, int w, int h, unsigned char **p)
 #endif
 }
 //-----------------------------------------------------------------------------
-int mgl_png_save(const char *fname, int w, int h, unsigned char **p)
+int MGL_NO_EXPORT mgl_png_save(const char *fname, int w, int h, unsigned char **p)
 {
 #if MGL_HAVE_PNG
 	bool fl = strcmp(fname,"-");
@@ -105,7 +105,7 @@ int mgl_png_save(const char *fname, int w, int h, unsigned char **p)
 #endif
 }
 //-----------------------------------------------------------------------------
-int mgl_bmp_save(const char *fname, int w, int h, unsigned char **p)
+int MGL_NO_EXPORT mgl_bmp_save(const char *fname, int w, int h, unsigned char **p)
 {
 	bool fl = strcmp(fname,"-");
 	FILE *fp = fl ? fopen(fname, "wb") : stdout;
@@ -137,7 +137,7 @@ int mgl_bmp_save(const char *fname, int w, int h, unsigned char **p)
 	return 0;
 }
 //-----------------------------------------------------------------------------
-int mgl_tga_save(const char *fname, int w, int h, unsigned char **p)
+int MGL_NO_EXPORT mgl_tga_save(const char *fname, int w, int h, unsigned char **p)
 {
 	bool fl = strcmp(fname,"-");
 	FILE *fp = fl ? fopen(fname, "wb") : stdout;
@@ -162,7 +162,7 @@ int mgl_tga_save(const char *fname, int w, int h, unsigned char **p)
 	return 0;
 }
 //-----------------------------------------------------------------------------
-int mgl_jpeg_save(const char *fname, int w, int h, unsigned char **p)
+int MGL_NO_EXPORT mgl_jpeg_save(const char *fname, int w, int h, unsigned char **p)
 {
 #if MGL_HAVE_JPEG
 	struct jpeg_compress_struct cinfo;
@@ -192,7 +192,7 @@ int mgl_jpeg_save(const char *fname, int w, int h, unsigned char **p)
 #endif
 }
 //-----------------------------------------------------------------------------
-void mgl_printf(void *fp, bool gz, const char *str, ...)
+void MGL_NO_EXPORT mgl_printf(void *fp, bool gz, const char *str, ...)
 {
 	char buf[512];
 	va_list lst;
@@ -203,7 +203,7 @@ void mgl_printf(void *fp, bool gz, const char *str, ...)
 	else	fprintf((FILE *)fp, "%s", buf);
 }
 //---------------------------------------------------------------------------
-int mgl_bps_save(const char *fname, int w, int h, unsigned char **p)
+int MGL_NO_EXPORT mgl_bps_save(const char *fname, int w, int h, unsigned char **p)
 {
 	time_t now;	time(&now);
 	register long i,j;
@@ -227,7 +227,7 @@ int mgl_bps_save(const char *fname, int w, int h, unsigned char **p)
 	return 0;
 }
 //-----------------------------------------------------------------------------
-int mgl_gif_save(const char *fname, int w, int h, unsigned char **l)
+int MGL_NO_EXPORT mgl_gif_save(const char *fname, int w, int h, unsigned char **l)
 {
 #if MGL_HAVE_GIF
 #if GIFLIB_MAJOR>=5
@@ -402,7 +402,7 @@ void mglCanvas::DelFrame(long i)
 #define _GR_	((mglCanvas *)(*gr))
 #define _Gr_	((mglCanvas *)(gr))
 //-----------------------------------------------------------------------------
-void mgl_write_png(HMGL gr, const char *fname,const char *)
+void MGL_EXPORT mgl_write_png(HMGL gr, const char *fname,const char *)
 {
 	long w,h;	unsigned char *f=0, **p=0;
 	p =_Gr_->GetRGBLines(w,h,f,true);
@@ -414,12 +414,12 @@ void mgl_write_png(HMGL gr, const char *fname,const char *)
 		free(p);	if(f)	free(f);
 	}
 }
-void mgl_write_png_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
+void MGL_EXPORT mgl_write_png_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
 	mgl_write_png(_GR_,s,f);	delete []s;		delete []f;	}
 //-----------------------------------------------------------------------------
-void mgl_write_png_solid(HMGL gr, const char *fname,const char *)
+void MGL_EXPORT mgl_write_png_solid(HMGL gr, const char *fname,const char *)
 {
 	long w,h;	unsigned char *f=0, **p=0;
 	p =_Gr_->GetRGBLines(w,h,f);
@@ -431,12 +431,12 @@ void mgl_write_png_solid(HMGL gr, const char *fname,const char *)
 		free(p);	if(f)	free(f);
 	}
 }
-void mgl_write_png_solid_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
+void MGL_EXPORT mgl_write_png_solid_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
 	mgl_write_png_solid(_GR_,s,f);	delete []s;		delete []f;	}
 //-----------------------------------------------------------------------------
-void mgl_write_jpg(HMGL gr, const char *fname,const char *)
+void MGL_EXPORT mgl_write_jpg(HMGL gr, const char *fname,const char *)
 {
 	long w,h;	unsigned char *f=0, **p=0;
 	p =_Gr_->GetRGBLines(w,h,f);
@@ -448,12 +448,12 @@ void mgl_write_jpg(HMGL gr, const char *fname,const char *)
 		free(p);	if(f)	free(f);
 	}
 }
-void mgl_write_jpg_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
+void MGL_EXPORT mgl_write_jpg_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
 	mgl_write_jpg(_GR_,s,f);	delete []s;		delete []f;	}
 //-----------------------------------------------------------------------------
-void mgl_write_tga(HMGL gr, const char *fname,const char *)
+void MGL_EXPORT mgl_write_tga(HMGL gr, const char *fname,const char *)
 {
 	long w,h;	unsigned char *f=0, **p=0;
 	p =_Gr_->GetRGBLines(w,h,f,true);
@@ -465,12 +465,12 @@ void mgl_write_tga(HMGL gr, const char *fname,const char *)
 		free(p);	if(f)	free(f);
 	}
 }
-void mgl_write_tga_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
+void MGL_EXPORT mgl_write_tga_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
 	mgl_write_tga(_GR_,s,f);	delete []s;		delete []f;	}
 //-----------------------------------------------------------------------------
-void mgl_write_bmp(HMGL gr, const char *fname,const char *)
+void MGL_EXPORT mgl_write_bmp(HMGL gr, const char *fname,const char *)
 {
 	long w,h;	unsigned char *f=0, **p=0;
 	p =_Gr_->GetRGBLines(w,h,f);
@@ -482,12 +482,12 @@ void mgl_write_bmp(HMGL gr, const char *fname,const char *)
 		free(p);	if(f)	free(f);
 	}
 }
-void mgl_write_bmp_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
+void MGL_EXPORT mgl_write_bmp_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
 	mgl_write_bmp(_GR_,s,f);	delete []s;		delete []f;	}
 //-----------------------------------------------------------------------------
-void mgl_write_bps(HMGL gr, const char *fname,const char *)
+void MGL_EXPORT mgl_write_bps(HMGL gr, const char *fname,const char *)
 {
 	long w,h;	unsigned char *f=0, **p=0;
 	p =_Gr_->GetRGBLines(w,h,f);
@@ -499,12 +499,12 @@ void mgl_write_bps(HMGL gr, const char *fname,const char *)
 		free(p);	if(f)	free(f);
 	}
 }
-void mgl_write_bps_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
+void MGL_EXPORT mgl_write_bps_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
 	mgl_write_bps(_GR_,s,f);	delete []s;		delete []f;	}
 //-----------------------------------------------------------------------------
-void mgl_write_gif(HMGL gr, const char *fname,const char *)
+void MGL_EXPORT mgl_write_gif(HMGL gr, const char *fname,const char *)
 {
 	long w,h;	unsigned char *f=0, **p=0;
 	p =_Gr_->GetRGBLines(w,h,f);
@@ -516,21 +516,21 @@ void mgl_write_gif(HMGL gr, const char *fname,const char *)
 		free(p);	if(f)	free(f);
 	}
 }
-void mgl_write_gif_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
+void MGL_EXPORT mgl_write_gif_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
 	mgl_write_gif(_GR_,s,f);	delete []s;		delete []f;	}
 //-----------------------------------------------------------------------------
-void mgl_start_gif(HMGL gr, const char *fname,int ms)
+void MGL_EXPORT mgl_start_gif(HMGL gr, const char *fname,int ms)
 {	_Gr_->StartGIF(fname,ms);	}
-void mgl_start_gif_(uintptr_t *gr, const char *fname,int *ms,int l)
+void MGL_EXPORT mgl_start_gif_(uintptr_t *gr, const char *fname,int *ms,int l)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	mgl_start_gif(_GR_,s,*ms);	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_close_gif(HMGL gr)			{	_Gr_->CloseGIF();	}
-void mgl_close_gif_(uintptr_t *gr)	{	mgl_close_gif(_GR_);	}
+void MGL_EXPORT mgl_close_gif(HMGL gr)			{	_Gr_->CloseGIF();	}
+void MGL_EXPORT mgl_close_gif_(uintptr_t *gr)	{	mgl_close_gif(_GR_);	}
 //-----------------------------------------------------------------------------
-void mgl_write_frame(HMGL gr, const char *fname,const char *descr)
+void MGL_EXPORT mgl_write_frame(HMGL gr, const char *fname,const char *descr)
 {
 	char buf[64];
 	if(!fname || !fname[0])
@@ -555,7 +555,7 @@ void mgl_write_frame(HMGL gr, const char *fname,const char *descr)
 	if(!strcmp(fname+len-4,".off")) mgl_write_off(gr,fname,descr,0);
 //	if(!strcmp(fname+len-4,".x3d")) mgl_write_x3d(gr,fname,descr,1);
 }
-void mgl_write_frame_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
+void MGL_EXPORT mgl_write_frame_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
 	mgl_write_frame(_GR_,s,f);	delete []s;		delete []f;}
@@ -564,7 +564,7 @@ void mgl_write_frame_(uintptr_t *gr, const char *fname,const char *descr,int l,i
 #include <io.h>
 #include <direct.h>
 #endif
-void mgl_show_image(HMGL gr, const char *viewer, int keep)
+void MGL_EXPORT mgl_show_image(HMGL gr, const char *viewer, int keep)
 {
 	char fname[128], *cmd = new char [128];
 	sprintf(fname,"%s.png", tmpnam(NULL));
@@ -593,7 +593,7 @@ void mgl_show_image(HMGL gr, const char *viewer, int keep)
 		if(system(cmd)==-1)	printf("Error to call external viewer\n");
 		delete []cmd;
 }
-void mgl_show_image_(uintptr_t *gr, const char *viewer, int *keep, int l)
+void MGL_EXPORT mgl_show_image_(uintptr_t *gr, const char *viewer, int *keep, int l)
 {	char *s=new char[l+1];	memcpy(s,viewer,l);	s[l]=0;
 	mgl_show_image(_GR_,s,*keep);	delete []s;	}
 //-----------------------------------------------------------------------------

@@ -1,5 +1,5 @@
 /***************************************************************************
- * mgl_evalc.cpp is part of Math Graphic Library
+ * evalc.cpp is part of Math Graphic Library
  * Copyright (C) 2007-2012 Alexey Balakin <mathgl.abalakin@gmail.ru>       *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,17 +18,12 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include <time.h>
+#include "mgl2/data_cf.h"
 #include "mgl2/evalc.h"
 #include "mgl2/addon.h"
 #if MGL_HAVE_GSL
 #include <gsl/gsl_sf.h>
 #endif
-//-----------------------------------------------------------------------------
-extern "C"{
-void mgl_srnd(long seed);
-double mgl_rnd();
-double mgl_ipow(double x,int n);
-}
 //-----------------------------------------------------------------------------
 //	constants for expression parsing
 enum{
@@ -219,34 +214,34 @@ dual mglFormulaC::Calc(const dual var[MGL_VS]) const
 	return CalcIn(var);
 }
 //-----------------------------------------------------------------------------
-dual addc(dual a,dual b)	{return a+b;}
-dual subc(dual a,dual b)	{return a-b;}
-dual mulc(dual a,dual b)	{return a*b;}
-dual divc(dual a,dual b)	{return a/b;}
-dual ipwc(dual a,dual b)	{return mgl_ipowc(a,int(b.real()));}
-dual powc(dual a,dual b)	{return exp(b*log(a));	}
-dual llgc(dual a,dual b)	{return log(a)/log(b);	}
-dual expi(dual a)	{	return exp(dual(0,1)*a);	}
-dual expi(double a)	{	return dual(cos(a),sin(a));	}
+dual MGL_NO_EXPORT addc(dual a,dual b)	{return a+b;}
+dual MGL_NO_EXPORT subc(dual a,dual b)	{return a-b;}
+dual MGL_NO_EXPORT mulc(dual a,dual b)	{return a*b;}
+dual MGL_NO_EXPORT divc(dual a,dual b)	{return a/b;}
+dual MGL_NO_EXPORT ipwc(dual a,dual b)	{return mgl_ipowc(a,int(b.real()));}
+dual MGL_NO_EXPORT powc(dual a,dual b)	{return exp(b*log(a));	}
+dual MGL_NO_EXPORT llgc(dual a,dual b)	{return log(a)/log(b);	}
+dual MGL_NO_EXPORT expi(dual a)	{	return exp(dual(0,1)*a);	}
+dual MGL_NO_EXPORT expi(double a)	{	return dual(cos(a),sin(a));	}
 //-----------------------------------------------------------------------------
-dual ic = dual(0,1);
-dual asinhc(dual x)	{	return log(x+sqrt(x*x+mreal(1)));	}
-dual acoshc(dual x)	{	return log(x+sqrt(x*x-mreal(1)));	}
-dual atanhc(dual x)	{	return log((mreal(1)+x)/(mreal(1)-x))/mreal(2);	}
-dual sinc(dual x)	{	return sin(x);	}
-dual cosc(dual x)	{	return cos(x);	}
-dual tanc(dual x)	{	return tan(x);	}
-dual sinhc(dual x)	{	return sinh(x);	}
-dual coshc(dual x)	{	return cosh(x);	}
-dual tanhc(dual x)	{	return tanh(x);	}
-dual asinc(dual x)	{	return log(ic*x+sqrt(mreal(1)-x*x))/ic;	}
-dual acosc(dual x)	{	return log(x+sqrt(x*x-mreal(1)))/ic;	}
-dual atanc(dual x)	{	return log((ic-x)/(ic+x))/(mreal(2)*ic);	}
-dual expc(dual x)	{	return exp(x);	}
-dual sqrtc(dual x)	{	return sqrt(x);	}
-dual logc(dual x)	{	return log(x);	}
-dual absc(dual x)	{	return abs(x);	}
-dual lgc(dual x)	{	return log10(x);}
+dual MGL_NO_EXPORT ic = dual(0,1);
+dual MGL_NO_EXPORT asinhc(dual x)	{	return log(x+sqrt(x*x+mreal(1)));	}
+dual MGL_NO_EXPORT acoshc(dual x)	{	return log(x+sqrt(x*x-mreal(1)));	}
+dual MGL_NO_EXPORT atanhc(dual x)	{	return log((mreal(1)+x)/(mreal(1)-x))/mreal(2);	}
+dual MGL_NO_EXPORT sinc(dual x)	{	return sin(x);	}
+dual MGL_NO_EXPORT cosc(dual x)	{	return cos(x);	}
+dual MGL_NO_EXPORT tanc(dual x)	{	return tan(x);	}
+dual MGL_NO_EXPORT sinhc(dual x)	{	return sinh(x);	}
+dual MGL_NO_EXPORT coshc(dual x)	{	return cosh(x);	}
+dual MGL_NO_EXPORT tanhc(dual x)	{	return tanh(x);	}
+dual MGL_NO_EXPORT asinc(dual x)	{	return log(ic*x+sqrt(mreal(1)-x*x))/ic;	}
+dual MGL_NO_EXPORT acosc(dual x)	{	return log(x+sqrt(x*x-mreal(1)))/ic;	}
+dual MGL_NO_EXPORT atanc(dual x)	{	return log((ic-x)/(ic+x))/(mreal(2)*ic);	}
+dual MGL_NO_EXPORT expc(dual x)	{	return exp(x);	}
+dual MGL_NO_EXPORT sqrtc(dual x)	{	return sqrt(x);	}
+dual MGL_NO_EXPORT logc(dual x)	{	return log(x);	}
+dual MGL_NO_EXPORT absc(dual x)	{	return abs(x);	}
+dual MGL_NO_EXPORT lgc(dual x)	{	return log10(x);}
 //-----------------------------------------------------------------------------
 typedef dual (*func_1)(dual);
 typedef dual (*func_2)(dual, dual);
@@ -274,7 +269,7 @@ dual mglFormulaC::CalcIn(const dual *a1) const
 	return Res;
 }
 //-----------------------------------------------------------------------------
-dual mgl_ipowc(dual x,int n)
+dual MGL_EXPORT mgl_ipowc(dual x,int n)
 {
 	dual t;
 	if(n==2)	return x*x;

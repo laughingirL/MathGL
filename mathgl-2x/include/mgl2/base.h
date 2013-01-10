@@ -68,7 +68,7 @@ public:
 #endif
 typedef const mglDataA* HCDT;
 //-----------------------------------------------------------------------------
-inline mreal mgl_d(mreal v,mreal v1,mreal v2) { return v2!=v1?(v-v1)/(v2-v1):NAN; }
+inline mreal MGL_EXPORT mgl_d(mreal v,mreal v1,mreal v2) { return v2!=v1?(v-v1)/(v2-v1):NAN; }
 //-----------------------------------------------------------------------------
 mglPoint GetX(HCDT x, int i, int j, int k=0);
 mglPoint GetY(HCDT y, int i, int j, int k=0);
@@ -185,7 +185,7 @@ const mglColor NC(-1,-1,-1);
 const mglColor BC( 0, 0, 0);
 const mglColor WC( 1, 1, 1);
 const mglColor RC( 1, 0, 0);
-long mgl_have_color(const char *stl);
+long MGL_EXPORT mgl_have_color(const char *stl);
 //-----------------------------------------------------------------------------
 /// Structure for color ID
 struct mglColorID
@@ -193,8 +193,8 @@ struct mglColorID
 	char id;
 	mglColor col;
 };
-extern mglColorID mglColorIds[31];
-extern std::string mglGlobalMess;	///< Buffer for receiving global messages
+MGL_EXPORT extern mglColorID mglColorIds[31];
+MGL_EXPORT extern std::string mglGlobalMess;	///< Buffer for receiving global messages
 //-----------------------------------------------------------------------------
 /// Structure active points
 struct mglActivePos
@@ -205,7 +205,7 @@ struct mglActivePos
 };
 //-----------------------------------------------------------------------------
 /// Base class for canvas which handle all basic drawing
-class mglBase
+class MGL_EXPORT mglBase
 {
 public:
 	mglBase();
@@ -426,6 +426,7 @@ public:
 	virtual void trig_plot(long p1, long p2, long p3)=0;
 	virtual void quad_plot(long p1, long p2, long p3, long p4)=0;
 	virtual void Glyph(mreal x, mreal y, mreal f, int style, long icode, mreal col)=0;
+	virtual float GetGlyphPhi(const mglPnt &q, float phi)=0;
 	virtual mreal text_plot(long p,const wchar_t *text,const char *fnt,mreal size=-1,mreal sh=0,mreal  col=-('k'),bool rot=true)=0;
 	void vect_plot(long p1, long p2, mreal s=1);
 	inline mreal mark_size()	{	return MarkSize*font_factor;	}
@@ -497,13 +498,13 @@ private:
 	void ClearEq();			///< Clear the used variables for axis transformation
 };
 //-----------------------------------------------------------------------------
-bool mgl_check_dim0(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const char *name, bool less=false);
-bool mgl_check_dim1(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const char *name, bool less=false);
-bool mgl_check_dim2(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *name, bool less=false);
-bool mgl_check_dim3(HMGL gr, bool both, HCDT x, HCDT y, HCDT z, HCDT a, HCDT b, const char *name);
-bool mgl_check_vec3(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *name);
-bool mgl_check_trig(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const char *name, int d=3);
-bool mgl_isboth(HCDT x, HCDT y, HCDT z, HCDT a);
+bool MGL_EXPORT mgl_check_dim0(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const char *name, bool less=false);
+bool MGL_EXPORT mgl_check_dim1(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const char *name, bool less=false);
+bool MGL_EXPORT mgl_check_dim2(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *name, bool less=false);
+bool MGL_EXPORT mgl_check_dim3(HMGL gr, bool both, HCDT x, HCDT y, HCDT z, HCDT a, HCDT b, const char *name);
+bool MGL_EXPORT mgl_check_vec3(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *name);
+bool MGL_EXPORT mgl_check_trig(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const char *name, int d=3);
+bool MGL_EXPORT mgl_isboth(HCDT x, HCDT y, HCDT z, HCDT a);
 //-----------------------------------------------------------------------------
 #define _Da_(d)	(*((const mglDataA *)(d)))
 #define _DA_(a)	((const mglDataA *)*(a))

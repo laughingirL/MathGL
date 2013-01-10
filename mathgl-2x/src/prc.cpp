@@ -63,9 +63,9 @@ void mglTexture::GetRGBAPRC(unsigned char *f) const
 	}
 }
 //-----------------------------------------------------------------------------
-int mgl_tga_save(const char *fname, int w, int h, unsigned char **p);
-int mgl_pnga_save(const char *fname, int w, int h, unsigned char **p);
-void mgl_printf(void *fp, bool gz, const char *str, ...);
+int MGL_NO_EXPORT mgl_tga_save(const char *fname, int w, int h, unsigned char **p);
+int MGL_NO_EXPORT mgl_pnga_save(const char *fname, int w, int h, unsigned char **p);
+void MGL_NO_EXPORT mgl_printf(void *fp, bool gz, const char *str, ...);
 //-----------------------------------------------------------------------------
 struct prctriangle {
 	uint32_t pi[3];
@@ -244,7 +244,7 @@ void my_png_flush(png_structp /*png_ptr*/)
 {
 }
 //-----------------------------------------------------------------------------
-void mgl_write_prc(HMGL gr, const char *fname,const char* /*descr*/, int make_pdf)
+void MGL_EXPORT mgl_write_prc(HMGL gr, const char *fname,const char* /*descr*/, int make_pdf)
 {
 	if(gr->GetPrmNum()==0)	return;	// nothing to do
 	{
@@ -986,7 +986,7 @@ void mgl_write_prc(HMGL gr, const char *fname,const char* /*descr*/, int make_pd
 	delete []tname;
 }
 //-----------------------------------------------------------------------------
-void mgl_write_prc_(uintptr_t *gr, const char *fname,const char *descr, int *make_pdf,int l,int n)
+void MGL_EXPORT mgl_write_prc_(uintptr_t *gr, const char *fname,const char *descr, int *make_pdf,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
 	mgl_write_prc(_GR_,s,f,*make_pdf);	delete []s;		delete []f;	}

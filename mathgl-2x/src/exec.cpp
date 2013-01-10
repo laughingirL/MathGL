@@ -1,5 +1,5 @@
 /***************************************************************************
- * mgl_exec.cpp is part of Math Graphic Library
+ * exec.cpp is part of Math Graphic Library
  * Copyright (C) 2007-2012 Alexey Balakin <mathgl.abalakin@gmail.ru>       *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -26,7 +26,7 @@
 
 #include "mgl2/parser.h"
 #define iint(x)	floor((x)+0.5)
-wchar_t *mgl_str_copy(const char *s);
+MGL_NO_EXPORT wchar_t *mgl_str_copy(const char *s);
 //-----------------------------------------------------------------------------
 int mgls_addlegend(mglGraph *gr, long , mglArg *a, const char *k, const char *)
 {

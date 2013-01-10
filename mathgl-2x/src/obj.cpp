@@ -23,9 +23,9 @@
 #undef _GR_
 #define _GR_	((mglCanvas *)(*gr))
 #define _Gr_	((mglCanvas *)(gr))
-int mgl_tga_save(const char *fname, int w, int h, unsigned char **p);
-int mgl_pnga_save(const char *fname, int w, int h, unsigned char **p);
-void mgl_printf(void *fp, bool gz, const char *str, ...);
+int MGL_NO_EXPORT mgl_tga_save(const char *fname, int w, int h, unsigned char **p);
+int MGL_NO_EXPORT mgl_pnga_save(const char *fname, int w, int h, unsigned char **p);
+void MGL_NO_EXPORT mgl_printf(void *fp, bool gz, const char *str, ...);
 //-----------------------------------------------------------------------------
 #include <climits>
 #include <cassert>
@@ -406,7 +406,7 @@ static size_t power_of_two(size_t input)
 }
 
 
-void mgl_write_obj(HMGL gr, const char *fname,const char *descr, int use_png)
+void MGL_EXPORT mgl_write_obj(HMGL gr, const char *fname,const char *descr, int use_png)
 {
 	if(gr->GetPrmNum()==0)	return;	// nothing to do
   
@@ -966,7 +966,7 @@ void mgl_write_obj(HMGL gr, const char *fname,const char *descr, int use_png)
   delete []tname;
 }
 
-void mgl_write_obj_(uintptr_t *gr, const char *fname,const char *descr, int *use_png,int l,int n)
+void MGL_EXPORT mgl_write_obj_(uintptr_t *gr, const char *fname,const char *descr, int *use_png,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]='\0';
 	char *d=new char[n+1];	memcpy(d,descr,n);	d[n]='\0';
 	mgl_write_obj(_GR_,s,d,*use_png);	delete []s;		delete []d;	}

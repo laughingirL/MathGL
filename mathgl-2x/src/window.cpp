@@ -126,74 +126,74 @@ void mglCanvasWnd::ReLoad()
 	}
 }
 //-----------------------------------------------------------------------------
-void mgl_wnd_toggle_alpha(HMGL gr)
+void MGL_EXPORT mgl_wnd_toggle_alpha(HMGL gr)
 {	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>(gr);	if(g)	g->ToggleAlpha();	}
-void mgl_wnd_toggle_light(HMGL gr)
+void MGL_EXPORT mgl_wnd_toggle_light(HMGL gr)
 {	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>(gr);	if(g)	g->ToggleLight();	}
-void mgl_wnd_toggle_zoom(HMGL gr)
+void MGL_EXPORT mgl_wnd_toggle_zoom(HMGL gr)
 {	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>(gr);	if(g)	g->ToggleZoom();	}
-void mgl_wnd_toggle_rotate(HMGL gr)
+void MGL_EXPORT mgl_wnd_toggle_rotate(HMGL gr)
 {	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>(gr);	if(g)	g->ToggleRotate();	}
-void mgl_wnd_toggle_no(HMGL gr)
+void MGL_EXPORT mgl_wnd_toggle_no(HMGL gr)
 {	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>(gr);	if(g)	g->ToggleNo();	}
-void mgl_wnd_update(HMGL gr)
+void MGL_EXPORT mgl_wnd_update(HMGL gr)
 {	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>(gr);	if(g)	g->Update();	}
-void mgl_wnd_reload(HMGL gr)
+void MGL_EXPORT mgl_wnd_reload(HMGL gr)
 {	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>(gr);	if(g)	g->ReLoad();	}
-void mgl_wnd_adjust(HMGL gr)
+void MGL_EXPORT mgl_wnd_adjust(HMGL gr)
 {	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>(gr);	if(g)	g->Adjust();	}
-void mgl_wnd_next_frame(HMGL gr)
+void MGL_EXPORT mgl_wnd_next_frame(HMGL gr)
 {	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>(gr);	if(g)	g->NextFrame();	}
-void mgl_wnd_prev_frame(HMGL gr)
+void MGL_EXPORT mgl_wnd_prev_frame(HMGL gr)
 {	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>(gr);	if(g)	g->PrevFrame();	}
-void mgl_wnd_animation(HMGL gr)
+void MGL_EXPORT mgl_wnd_animation(HMGL gr)
 {	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>(gr);	if(g)	g->Animation();	}
-void mgl_setup_window(HMGL gr, int clf_upd, int showpos)
+void MGL_EXPORT mgl_setup_window(HMGL gr, int clf_upd, int showpos)
 {	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>(gr);	if(g)	g->Setup(clf_upd, showpos);	}
-void mgl_set_click_func(HMGL gr, void (*func)(void *p))
+void MGL_EXPORT mgl_set_click_func(HMGL gr, void (*func)(void *p))
 {	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>(gr);	if(g)	g->ClickFunc = func;	}
-void mgl_get_last_mouse_pos(HMGL gr, mreal *x, mreal *y, mreal *z)
+void MGL_EXPORT mgl_get_last_mouse_pos(HMGL gr, mreal *x, mreal *y, mreal *z)
 {	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>(gr);
 	mglPoint p;	if(g)	p=g->GetMousePos();
 	*x=p.x;	*y=p.y;	*z=p.z;	}
 //-----------------------------------------------------------------------------
-void mgl_wnd_toggle_alpha_(uintptr_t *gr)
+void MGL_EXPORT mgl_wnd_toggle_alpha_(uintptr_t *gr)
 {	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>((HMGL)(*gr));
 	if(g)	g->ToggleAlpha();	}
-void mgl_wnd_toggle_light_(uintptr_t *gr)
+void MGL_EXPORT mgl_wnd_toggle_light_(uintptr_t *gr)
 {	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>((HMGL)(*gr));
 	if(g)	g->ToggleLight();	}
-void mgl_wnd_toggle_zoom_(uintptr_t *gr)
+void MGL_EXPORT mgl_wnd_toggle_zoom_(uintptr_t *gr)
 {	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>((HMGL)(*gr));
 	if(g)	g->ToggleZoom();	}
-void mgl_wnd_toggle_rotate_(uintptr_t *gr)
+void MGL_EXPORT mgl_wnd_toggle_rotate_(uintptr_t *gr)
 {	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>((HMGL)(*gr));
 	if(g)	g->ToggleRotate();	}
-void mgl_wnd_toggle_no_(uintptr_t *gr)
+void MGL_EXPORT mgl_wnd_toggle_no_(uintptr_t *gr)
 {	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>((HMGL)(*gr));
 	if(g)	g->ToggleNo();	}
-void mgl_wnd_update_(uintptr_t *gr)
+void MGL_EXPORT mgl_wnd_update_(uintptr_t *gr)
 {	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>((HMGL)(*gr));
 	if(g)	g->Update();	}
-void mgl_wnd_reload_(uintptr_t *gr)
+void MGL_EXPORT mgl_wnd_reload_(uintptr_t *gr)
 {	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>((HMGL)(*gr));
 	if(g)	g->ReLoad();	}
-void mgl_wnd_adjust_(uintptr_t *gr)
+void MGL_EXPORT mgl_wnd_adjust_(uintptr_t *gr)
 {	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>((HMGL)(*gr));
 	if(g)	g->Adjust();	}
-void mgl_wnd_next_frame_(uintptr_t *gr)
+void MGL_EXPORT mgl_wnd_next_frame_(uintptr_t *gr)
 {	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>((HMGL)(*gr));
 	if(g)	g->NextFrame();	}
-void mgl_wnd_prev_frame_(uintptr_t *gr)
+void MGL_EXPORT mgl_wnd_prev_frame_(uintptr_t *gr)
 {	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>((HMGL)(*gr));
 	if(g)	g->PrevFrame();	}
-void mgl_wnd_animation_(uintptr_t *gr)
+void MGL_EXPORT mgl_wnd_animation_(uintptr_t *gr)
 {	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>((HMGL)(*gr));
 	if(g)	g->Animation();	}
-void mgl_setup_window_(uintptr_t *gr, int *clf_upd, int *showpos)
+void MGL_EXPORT mgl_setup_window_(uintptr_t *gr, int *clf_upd, int *showpos)
 {	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>((HMGL)(*gr));
 	if(g)	g->Setup(*clf_upd, *showpos);	}
-void mgl_get_last_mouse_pos_(uintptr_t *gr, mreal *x, mreal *y, mreal *z)
+void MGL_EXPORT mgl_get_last_mouse_pos_(uintptr_t *gr, mreal *x, mreal *y, mreal *z)
 {	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>((HMGL)(*gr));
 	mglPoint p;	if(g)	p=g->GetMousePos();
 	*x=p.x;	*y=p.y;	*z=p.z;	}
@@ -207,26 +207,26 @@ void mgl_get_last_mouse_pos_(uintptr_t *gr, mreal *x, mreal *y, mreal *z)
 	mglGraph g(gr);	mglWindow *w = (mglWindow *)p;
 	return (w && w->dr) ? w->dr->Draw(&g) : 0;
 }
-void mgl_reload_class(void *p)	// so stupid way to save mglDraw class inheritance :(
+void MGL_EXPORT mgl_reload_class(void *p)	// so stupid way to save mglDraw class inheritance :(
 {	mglWindow *w = (mglWindow *)p;	if(w && w->dr)	w->dr->Reload();}
-void mgl_click_class(void *p)	// so stupid way to save mglDraw class inheritance :(
+void MGL_EXPORT mgl_click_class(void *p)	// so stupid way to save mglDraw class inheritance :(
 {	mglWindow *w = (mglWindow *)p;	if(w && w->dr)	w->dr->Click();	}*/
-int mgl_draw_class(HMGL gr, void *p)
+int MGL_EXPORT mgl_draw_class(HMGL gr, void *p)
 {	mglGraph g(gr);	mglDraw *dr = (mglDraw *)p;	return dr->Draw(&g);	}
-void mgl_reload_class(void *p)
+void MGL_EXPORT mgl_reload_class(void *p)
 {	mglDraw *dr = (mglDraw *)p;	dr->Reload();	}
-void mgl_click_class(void *p)
+void MGL_EXPORT mgl_click_class(void *p)
 {	mglDraw *dr = (mglDraw *)p;	dr->Click();		}
 //-----------------------------------------------------------------------------
 typedef int (*draw_func)(mglGraph *gr);
-int mgl_draw_graph(HMGL gr, void *p)
+int MGL_EXPORT mgl_draw_graph(HMGL gr, void *p)
 {
 	mglGraph g(gr);
 	draw_func func = (draw_func)(p);
 	return func ? func(&g) : 0;
 }
 //-----------------------------------------------------------------------------
-void *mgl_draw_calc(void *p)
+MGL_NO_EXPORT void *mgl_draw_calc(void *p)
 {
 #if MGL_HAVE_PTHREAD
 	((mglDraw *)p)->Calc();
@@ -234,7 +234,7 @@ void *mgl_draw_calc(void *p)
 	return 0;
 }
 //-----------------------------------------------------------------------------
-void mgl_draw_thr(void *p)
+void MGL_EXPORT mgl_draw_thr(void *p)
 {
 #if MGL_HAVE_PTHREAD
 	mglDraw *d = (mglDraw *)p;

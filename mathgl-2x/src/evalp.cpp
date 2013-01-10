@@ -1,5 +1,5 @@
 /***************************************************************************
- * mgl_evalp.cpp is part of Math Graphic Library
+ * evalp.cpp is part of Math Graphic Library
  * Copyright (C) 2007-2012 Alexey Balakin <mathgl.abalakin@gmail.ru>       *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -80,26 +80,26 @@ int mglFindInText(wchar_t *str,const char *lst)
 	return -1;
 }
 //-----------------------------------------------------------------------------
-double cand(double a,double b);//	{return a&&b?1:0;}
-double cor(double a,double b);//	{return a||b?1:0;}
-double ceq(double a,double b);//	{return a==b?1:0;}
-double clt(double a,double b);//	{return a<b?1:0;}
-double cgt(double a,double b);//	{return a>b?1:0;}
-double add(double a,double b);//	{return a+b;}
-double sub(double a,double b);//	{return a-b;}
-double mul(double a,double b);//	{return a&&b?a*b:0;}
-double div(double a,double b);//	{return b?a/b:NAN;}
-double ipw(double a,double b);//	{return mgl_ipow(a,int(b));}
-double llg(double a,double b);//	{return log(a)/log(b);}
-//double asinh(double x);//	{	return log(x+sqrt(x*x+1));	}
-//double acosh(double x);//	{	return x>1 ? log(x+sqrt(x*x-1)) : NAN;	}
-//double atanh(double x);//	{	return fabs(x)<1 ? log((1+x)/(1-x))/2 : NAN;	}
-double gslEllE(double a,double b);//	{return gsl_sf_ellint_E(a,b,GSL_PREC_SINGLE);}
-double gslEllF(double a,double b);//	{return gsl_sf_ellint_F(a,b,GSL_PREC_SINGLE);}
-double gslLegP(double a,double b);//	{return gsl_sf_legendre_Pl(int(a),b);}
+double MGL_NO_EXPORT cand(double a,double b);//	{return a&&b?1:0;}
+double MGL_NO_EXPORT cor(double a,double b);//	{return a||b?1:0;}
+double MGL_NO_EXPORT ceq(double a,double b);//	{return a==b?1:0;}
+double MGL_NO_EXPORT clt(double a,double b);//	{return a<b?1:0;}
+double MGL_NO_EXPORT cgt(double a,double b);//	{return a>b?1:0;}
+double MGL_NO_EXPORT add(double a,double b);//	{return a+b;}
+double MGL_NO_EXPORT sub(double a,double b);//	{return a-b;}
+double MGL_NO_EXPORT mul(double a,double b);//	{return a&&b?a*b:0;}
+double MGL_NO_EXPORT div(double a,double b);//	{return b?a/b:NAN;}
+double MGL_NO_EXPORT ipw(double a,double b);//	{return mgl_ipow(a,int(b));}
+double MGL_NO_EXPORT llg(double a,double b);//	{return log(a)/log(b);}
+//double MGL_NO_EXPORT asinh(double x);//	{	return log(x+sqrt(x*x+1));	}
+//double MGL_NO_EXPORT acosh(double x);//	{	return x>1 ? log(x+sqrt(x*x-1)) : NAN;	}
+//double MGL_NO_EXPORT atanh(double x);//	{	return fabs(x)<1 ? log((1+x)/(1-x))/2 : NAN;	}
+double MGL_NO_EXPORT gslEllE(double a,double b);//	{return gsl_sf_ellint_E(a,b,GSL_PREC_SINGLE);}
+double MGL_NO_EXPORT gslEllF(double a,double b);//	{return gsl_sf_ellint_F(a,b,GSL_PREC_SINGLE);}
+double MGL_NO_EXPORT gslLegP(double a,double b);//	{return gsl_sf_legendre_Pl(int(a),b);}
 //-----------------------------------------------------------------------------
 // It seems that standard wcstombs() have a bug. So, I replace by my own.
-void mgl_wcstombs(char *dst, const wchar_t *src, int size)
+void MGL_EXPORT mgl_wcstombs(char *dst, const wchar_t *src, int size)
 {
 	register int j;
 	for(j=0;j<size-1 && src[j]!=0;j++)
@@ -112,7 +112,7 @@ void mgl_wcstombs(char *dst, const wchar_t *src, int size)
 // NOTE: In any case where number is required the mglData::a[0] is used.
 // String flag is binary 0x1 -> 'x', 0x2 -> 'y', 0x4 -> 'z'
 // NOTE: the speed is not a goal (mglFormula is faster). It is true interpreter!
-mglData mglFormulaCalc(const wchar_t *string, mglParser *arg)
+mglData MGL_EXPORT mglFormulaCalc(const wchar_t *string, mglParser *arg)
 {
 #if MGL_HAVE_GSL
 	gsl_set_error_handler_off();
@@ -637,7 +637,7 @@ mglData mglFormulaCalc(const wchar_t *string, mglParser *arg)
 	delete []str;	return res;
 }
 //-----------------------------------------------------------------------------
-void mgl_wcslwr(wchar_t *str)
+void MGL_EXPORT mgl_wcslwr(wchar_t *str)
 {
 	for(size_t k=0;k<wcslen(str);k++)	// ������� ��������� �������
 		str[k] = (str[k]>='A' && str[k]<='Z') ? str[k]+'a'-'A' : str[k];

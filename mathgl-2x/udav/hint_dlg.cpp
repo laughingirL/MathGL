@@ -22,6 +22,7 @@
 #include <QLayout>
 #include <QPushButton>
 #include "hint_dlg.h"
+#include "mgl2/data_cf.h"
 //-----------------------------------------------------------------------------
 #define qtr	HintDialog::tr
 QString hints[] = {
@@ -51,7 +52,6 @@ QString hints[] = {
 //	Hint dialog
 //
 //-----------------------------------------------------------------------------
-extern "C"{double mgl_rnd();}
 HintDialog::HintDialog(QWidget *parent) : QDialog(parent)
 {
 	for(numHints=0;!hints[numHints].isEmpty();numHints++);

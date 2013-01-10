@@ -11,10 +11,10 @@
 #include <algorithm>
 //-----------------------------------------------------------------------------
 /// Create mglGraph object in OpenGL mode.
-HMGL mgl_create_graph_gl()
+HMGL MGL_EXPORT mgl_create_graph_gl()
 {	return new mglCanvasGL;	}
 /// Create mglGraph object in OpenGL mode.
-uintptr_t mgl_create_graph_gl_()
+uintptr_t MGL_EXPORT mgl_create_graph_gl_()
 {	return uintptr_t(new mglCanvasGL);	}
 //-----------------------------------------------------------------------------
 mglCanvasGL::mglCanvasGL() : mglCanvas(1,1)	{}

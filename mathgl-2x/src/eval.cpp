@@ -20,6 +20,7 @@
 #include <time.h>
 #include <ctype.h>
 
+#include "mgl2/data_cf.h"
 #include "mgl2/eval.h"
 
 #if MGL_HAVE_GSL
@@ -124,19 +125,14 @@ EQ_CL,		// Clausen function
 #define M_PI       3.14159265358979323846
 #endif
 //-----------------------------------------------------------------------------
-extern "C"{
-void mgl_srnd(long seed);
-double mgl_rnd();
-double mgl_ipow(double x,int n);
-}
 int mglFormula::Error=0;
 bool mglCheck(char *str,int n);
 int mglFindInText(char *str,const char *lst);
 //-----------------------------------------------------------------------------
 #if MGL_HAVE_GSL
-gsl_rng *mgl_rng=0;	// NOTE: should be deleted by gsl_rng_free() but I don't know where :(
+MGL_NO_EXPORT gsl_rng *mgl_rng=0;	// NOTE: should be deleted by gsl_rng_free() but I don't know where :(
 #endif
-void mgl_srnd(long seed)
+void MGL_EXPORT mgl_srnd(long seed)
 {
 #if MGL_HAVE_GSL
 	if(mgl_rng==0)
@@ -149,9 +145,9 @@ void mgl_srnd(long seed)
 	srand(seed);
 #endif
 }
-void mgl_srnd_(int *seed)	{	mgl_srnd(*seed);	}
+void MGL_EXPORT mgl_srnd_(int *seed)	{	mgl_srnd(*seed);	}
 //-----------------------------------------------------------------------------
-double mgl_rnd()
+double MGL_EXPORT mgl_rnd()
 {
 #if MGL_HAVE_GSL
 	if(mgl_rng==0)
@@ -166,7 +162,7 @@ double mgl_rnd()
 	return rand()/(RAND_MAX-1.);
 #endif
 }
-double mgl_rnd_()	{	return mgl_rnd();	}
+double MGL_EXPORT mgl_rnd_()	{	return mgl_rnd();	}
 //-----------------------------------------------------------------------------
 mglFormula::~mglFormula()
 {
@@ -461,37 +457,37 @@ mreal mglFormula::CalcD(const mreal var[MGL_VS], char diff) const
 	return CalcDIn(diff-'a', var);
 }
 //-----------------------------------------------------------------------------
-double cand(double a,double b)	{return a&&b?1:0;}
-double cor(double a,double b)	{return a||b?1:0;}
-double ceq(double a,double b)	{return a==b?1:0;}
-double clt(double a,double b)	{return a<b?1:0;}
-double cgt(double a,double b)	{return a>b?1:0;}
-double add(double a,double b)	{return a+b;}
-double sub(double a,double b)	{return a-b;}
-double mul(double a,double b)	{return a&&b?a*b:0;}
-double div(double a,double b)	{return b?a/b:NAN;}
-double ipw(double a,double b)	{return fabs(b-int(b))<1e-5 ? mgl_ipow(a,int(b)) : pow(a,b);}
-double llg(double a,double b)	{return log(a)/log(b);}
+double MGL_NO_EXPORT cand(double a,double b)	{return a&&b?1:0;}
+double MGL_NO_EXPORT cor(double a,double b)	{return a||b?1:0;}
+double MGL_NO_EXPORT ceq(double a,double b)	{return a==b?1:0;}
+double MGL_NO_EXPORT clt(double a,double b)	{return a<b?1:0;}
+double MGL_NO_EXPORT cgt(double a,double b)	{return a>b?1:0;}
+double MGL_NO_EXPORT add(double a,double b)	{return a+b;}
+double MGL_NO_EXPORT sub(double a,double b)	{return a-b;}
+double MGL_NO_EXPORT mul(double a,double b)	{return a&&b?a*b:0;}
+double MGL_NO_EXPORT div(double a,double b)	{return b?a/b:NAN;}
+double MGL_NO_EXPORT ipw(double a,double b)	{return fabs(b-int(b))<1e-5 ? mgl_ipow(a,int(b)) : pow(a,b);}
+double MGL_NO_EXPORT llg(double a,double b)	{return log(a)/log(b);}
 #if MGL_HAVE_GSL
-double gslEllE(double a,double b)	{return gsl_sf_ellint_E(a,b,GSL_PREC_SINGLE);}
-double gslEllF(double a,double b)	{return gsl_sf_ellint_F(a,b,GSL_PREC_SINGLE);}
-double gslLegP(double a,double b)	{return gsl_sf_legendre_Pl(int(a),b);}
-double gslEllEc(double a)	{return gsl_sf_ellint_Ecomp(a,GSL_PREC_SINGLE);}
-double gslEllFc(double a)	{return gsl_sf_ellint_Kcomp(a,GSL_PREC_SINGLE);}
-double gslAi(double a)	{return gsl_sf_airy_Ai(a,GSL_PREC_SINGLE);}
-double gslBi(double a)	{return gsl_sf_airy_Bi(a,GSL_PREC_SINGLE);}
-double gslAi_d(double a)	{return gsl_sf_airy_Ai_deriv(a,GSL_PREC_SINGLE);}
-double gslBi_d(double a)	{return gsl_sf_airy_Bi_deriv(a,GSL_PREC_SINGLE);}
+double MGL_NO_EXPORT gslEllE(double a,double b)	{return gsl_sf_ellint_E(a,b,GSL_PREC_SINGLE);}
+double MGL_NO_EXPORT gslEllF(double a,double b)	{return gsl_sf_ellint_F(a,b,GSL_PREC_SINGLE);}
+double MGL_NO_EXPORT gslLegP(double a,double b)	{return gsl_sf_legendre_Pl(int(a),b);}
+double MGL_NO_EXPORT gslEllEc(double a)	{return gsl_sf_ellint_Ecomp(a,GSL_PREC_SINGLE);}
+double MGL_NO_EXPORT gslEllFc(double a)	{return gsl_sf_ellint_Kcomp(a,GSL_PREC_SINGLE);}
+double MGL_NO_EXPORT gslAi(double a)	{return gsl_sf_airy_Ai(a,GSL_PREC_SINGLE);}
+double MGL_NO_EXPORT gslBi(double a)	{return gsl_sf_airy_Bi(a,GSL_PREC_SINGLE);}
+double MGL_NO_EXPORT gslAi_d(double a)	{return gsl_sf_airy_Ai_deriv(a,GSL_PREC_SINGLE);}
+double MGL_NO_EXPORT gslBi_d(double a)	{return gsl_sf_airy_Bi_deriv(a,GSL_PREC_SINGLE);}
 #endif
-double sgn(double a)	{return a<0 ? -1:(a>0?1:0);}
-double stp(double a)	{return a>0 ? 1:0;}
-double arg(double a,double b)	{	return atan2(b,a);	}
-double mgz1(double)	{return 0;}
-double mgz2(double,double)	{return 0;}
+double MGL_NO_EXPORT sgn(double a)	{return a<0 ? -1:(a>0?1:0);}
+double MGL_NO_EXPORT stp(double a)	{return a>0 ? 1:0;}
+double MGL_NO_EXPORT arg(double a,double b)	{	return atan2(b,a);	}
+double MGL_NO_EXPORT mgz1(double)	{return 0;}
+double MGL_NO_EXPORT mgz2(double,double)	{return 0;}
 #ifdef WIN32
-double asinh(double x)	{	return log(x+sqrt(x*x+1.));	}
-double acosh(double x)	{	return x>1 ? log(x+sqrt(x*x-1.)) : NAN;	}
-double atanh(double x)	{	return fabs(x)<1 ? log((1.+x)/(1.-x))/2 : NAN;	}
+double MGL_NO_EXPORT asinh(double x)	{	return log(x+sqrt(x*x+1.));	}
+double MGL_NO_EXPORT acosh(double x)	{	return x>1 ? log(x+sqrt(x*x-1.)) : NAN;	}
+double MGL_NO_EXPORT atanh(double x)	{	return fabs(x)<1 ? log((1.+x)/(1.-x))/2 : NAN;	}
 #endif
 //-----------------------------------------------------------------------------
 typedef double (*func_1)(double);
@@ -572,50 +568,50 @@ mreal mglFormula::CalcIn(const mreal *a1) const
 	return NAN;
 }
 //-----------------------------------------------------------------------------
-double mgp(double ,double )	{return 1;}
-double mgm(double ,double )	{return -1;}
-double mul1(double ,double b)	{return b;}
-double mul2(double a,double )	{return a;}
-double div1(double ,double b)	{return b?1/b:NAN;}
-double div2(double a,double b)	{return b?-a/(b*b):NAN;}
-double ipw1(double a,double b)	{return b*(fabs(b-int(b))<1e-5 ? mgl_ipow(a,int(b-1)) : pow(a,b-1));}
-double pow1(double a,double b)	{return b*pow(a,b-1);}
-double pow2(double a,double b)	{return log(a)*pow(a,b);}
-double llg1(double a,double b)	{return 1/(a*log(b));}
-double llg2(double a,double b)	{return -log(a)/(b*log(b)*log(b));}
-double cos_d(double a)	{return -sin(a);}
-double tan_d(double a)	{return 1./(cos(a)*cos(a));}
-double asin_d(double a)	{return 1./sqrt(1.-a*a);}
-double acos_d(double a)	{return -1./sqrt(1.-a*a);}
-double atan_d(double a)	{return 1./(1.+a*a);}
-double tanh_d(double a)	{return 1./(cosh(a)*cosh(a));}
-double atanh_d(double a){return 1./(1.-a*a);}
-double asinh_d(double a){return 1./sqrt(1.+a*a);}
-double acosh_d(double a){return 1./sqrt(a*a-1.);}
-double sqrt_d(double a)	{return 0.5/sqrt(a);}
-double log10_d(double a){return M_LN10/a;}
-double log_d(double a)	{return 1./a;}
-double erf_d(double a)	{return 2*exp(-a*a)/sqrt(M_PI);}
-double dilog_d(double a){return log(a)/(1.-a);}
-double ei_d(double a)	{return exp(a)/a;}
-double si_d(double a)	{return a?sin(a)/a:1;}
-double ci_d(double a)	{return cos(a)/a;}
-double exp3_d(double a)	{return exp(-a*a*a);}
-double e1_d(double a)	{return exp(-a)/a;}
-double sinc_d(double a)	{return a ? (cos(M_PI*a)/a-sin(M_PI*a)/(M_PI*a*a)) : 0;}
+double MGL_NO_EXPORT mgp(double ,double )	{return 1;}
+double MGL_NO_EXPORT mgm(double ,double )	{return -1;}
+double MGL_NO_EXPORT mul1(double ,double b)	{return b;}
+double MGL_NO_EXPORT mul2(double a,double )	{return a;}
+double MGL_NO_EXPORT div1(double ,double b)	{return b?1/b:NAN;}
+double MGL_NO_EXPORT div2(double a,double b)	{return b?-a/(b*b):NAN;}
+double MGL_NO_EXPORT ipw1(double a,double b)	{return b*(fabs(b-int(b))<1e-5 ? mgl_ipow(a,int(b-1)) : pow(a,b-1));}
+double MGL_NO_EXPORT pow1(double a,double b)	{return b*pow(a,b-1);}
+double MGL_NO_EXPORT pow2(double a,double b)	{return log(a)*pow(a,b);}
+double MGL_NO_EXPORT llg1(double a,double b)	{return 1/(a*log(b));}
+double MGL_NO_EXPORT llg2(double a,double b)	{return -log(a)/(b*log(b)*log(b));}
+double MGL_NO_EXPORT cos_d(double a)	{return -sin(a);}
+double MGL_NO_EXPORT tan_d(double a)	{return 1./(cos(a)*cos(a));}
+double MGL_NO_EXPORT asin_d(double a)	{return 1./sqrt(1.-a*a);}
+double MGL_NO_EXPORT acos_d(double a)	{return -1./sqrt(1.-a*a);}
+double MGL_NO_EXPORT atan_d(double a)	{return 1./(1.+a*a);}
+double MGL_NO_EXPORT tanh_d(double a)	{return 1./(cosh(a)*cosh(a));}
+double MGL_NO_EXPORT atanh_d(double a){return 1./(1.-a*a);}
+double MGL_NO_EXPORT asinh_d(double a){return 1./sqrt(1.+a*a);}
+double MGL_NO_EXPORT acosh_d(double a){return 1./sqrt(a*a-1.);}
+double MGL_NO_EXPORT sqrt_d(double a)	{return 0.5/sqrt(a);}
+double MGL_NO_EXPORT log10_d(double a){return M_LN10/a;}
+double MGL_NO_EXPORT log_d(double a)	{return 1./a;}
+double MGL_NO_EXPORT erf_d(double a)	{return 2*exp(-a*a)/sqrt(M_PI);}
+double MGL_NO_EXPORT dilog_d(double a){return log(a)/(1.-a);}
+double MGL_NO_EXPORT ei_d(double a)	{return exp(a)/a;}
+double MGL_NO_EXPORT si_d(double a)	{return a?sin(a)/a:1;}
+double MGL_NO_EXPORT ci_d(double a)	{return cos(a)/a;}
+double MGL_NO_EXPORT exp3_d(double a)	{return exp(-a*a*a);}
+double MGL_NO_EXPORT e1_d(double a)	{return exp(-a)/a;}
+double MGL_NO_EXPORT sinc_d(double a)	{return a ? (cos(M_PI*a)/a-sin(M_PI*a)/(M_PI*a*a)) : 0;}
 #if MGL_HAVE_GSL
-double e2_d(double a)	{return -gsl_sf_expint_E1(a);}
-double gslJnuD(double a,double b)	{return 0.5*(gsl_sf_bessel_Jnu(a-1,b)-gsl_sf_bessel_Jnu(a+1,b));}
-double gslYnuD(double a,double b)	{return 0.5*(gsl_sf_bessel_Ynu(a-1,b)-gsl_sf_bessel_Ynu(a+1,b));}
-double gslKnuD(double a,double b)	{return -(a*gsl_sf_bessel_Knu(a,b)/b +gsl_sf_bessel_Knu(a-1,b));}
-double gslInuD(double a,double b)	{return -(a*gsl_sf_bessel_Inu(a,b)/b -gsl_sf_bessel_Inu(a-1,b));}
-double gslEllE1(double a,double b)	{return sqrt(1.-sin(a)*sin(a)*b);}
-double gslEllE2(double a,double b)	{return (gsl_sf_ellint_E(a,b,GSL_PREC_SINGLE) - gsl_sf_ellint_F(a,b,GSL_PREC_SINGLE))/(2.*b);}
-double gslEllF1(double a,double b)	{return 1./sqrt(1.-sin(a)*sin(a)*b);}
-double gslEllF2(double a,double b)	{return (gsl_sf_ellint_E(a,b,GSL_PREC_SINGLE) - gsl_sf_ellint_F(a,b,GSL_PREC_SINGLE)*(1.-b))/(2*b*(1.-b)) - sin(2.*a)/(sqrt(1.-sin(a)*sin(a)*b)*2.*(1.-b));}
-double gslE_d(double a)	{return (gsl_sf_ellint_Ecomp(a,GSL_PREC_SINGLE) - gsl_sf_ellint_Kcomp(a,GSL_PREC_SINGLE))/(2.*a);}
-double gslK_d(double a)	{return (gsl_sf_ellint_Ecomp(a,GSL_PREC_SINGLE) - (1.-a)*gsl_sf_ellint_Kcomp(a,GSL_PREC_SINGLE))/(2.*a*(1.-a));}
-double gamma_d(double a)	{return gsl_sf_psi(a)*gsl_sf_gamma(a);}
+double MGL_NO_EXPORT e2_d(double a)	{return -gsl_sf_expint_E1(a);}
+double MGL_NO_EXPORT gslJnuD(double a,double b)	{return 0.5*(gsl_sf_bessel_Jnu(a-1,b)-gsl_sf_bessel_Jnu(a+1,b));}
+double MGL_NO_EXPORT gslYnuD(double a,double b)	{return 0.5*(gsl_sf_bessel_Ynu(a-1,b)-gsl_sf_bessel_Ynu(a+1,b));}
+double MGL_NO_EXPORT gslKnuD(double a,double b)	{return -(a*gsl_sf_bessel_Knu(a,b)/b +gsl_sf_bessel_Knu(a-1,b));}
+double MGL_NO_EXPORT gslInuD(double a,double b)	{return -(a*gsl_sf_bessel_Inu(a,b)/b -gsl_sf_bessel_Inu(a-1,b));}
+double MGL_NO_EXPORT gslEllE1(double a,double b)	{return sqrt(1.-sin(a)*sin(a)*b);}
+double MGL_NO_EXPORT gslEllE2(double a,double b)	{return (gsl_sf_ellint_E(a,b,GSL_PREC_SINGLE) - gsl_sf_ellint_F(a,b,GSL_PREC_SINGLE))/(2.*b);}
+double MGL_NO_EXPORT gslEllF1(double a,double b)	{return 1./sqrt(1.-sin(a)*sin(a)*b);}
+double MGL_NO_EXPORT gslEllF2(double a,double b)	{return (gsl_sf_ellint_E(a,b,GSL_PREC_SINGLE) - gsl_sf_ellint_F(a,b,GSL_PREC_SINGLE)*(1.-b))/(2*b*(1.-b)) - sin(2.*a)/(sqrt(1.-sin(a)*sin(a)*b)*2.*(1.-b));}
+double MGL_NO_EXPORT gslE_d(double a)	{return (gsl_sf_ellint_Ecomp(a,GSL_PREC_SINGLE) - gsl_sf_ellint_Kcomp(a,GSL_PREC_SINGLE))/(2.*a);}
+double MGL_NO_EXPORT gslK_d(double a)	{return (gsl_sf_ellint_Ecomp(a,GSL_PREC_SINGLE) - (1.-a)*gsl_sf_ellint_Kcomp(a,GSL_PREC_SINGLE))/(2.*a*(1.-a));}
+double MGL_NO_EXPORT gamma_d(double a)	{return gsl_sf_psi(a)*gsl_sf_gamma(a);}
 #endif
 //-----------------------------------------------------------------------------
 // evaluation of derivative of embedded (included) expressions
@@ -684,7 +680,7 @@ mreal mglFormula::CalcDIn(int id, const mreal *a1) const
 }
 //-----------------------------------------------------------------------------
 // Check braces correctness
-bool mglCheck(char *str,int n)
+bool MGL_NO_EXPORT mglCheck(char *str,int n)
 {
 	register long s = 0,i;
 	for(i=0;i<n;i++)
@@ -697,7 +693,7 @@ bool mglCheck(char *str,int n)
 }
 //-----------------------------------------------------------------------------
 // Try to find one of symbols lst in the string str
-int mglFindInText(char *str,const char *lst)
+int MGL_NO_EXPORT mglFindInText(char *str,const char *lst)
 {
 	register long l=0,r=0,i;//,j,len=strlen(lst);
 	for(i=strlen(str)-1;i>=0;i--)

@@ -1,5 +1,5 @@
 /***************************************************************************
- * mgl_glut.cpp is part of Math Graphic Library
+ * glut.cpp is part of Math Graphic Library
  * Copyright (C) 2007-2012 Alexey Balakin <mathgl.abalakin@gmail.ru>       *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -226,7 +226,7 @@ void mglCanvasGLUT::Window(int argc, char **argv,int (*draw)(mglBase *gr, void *
 	glDeleteLists(1,NumFig);
 }
 //-----------------------------------------------------------------------------
-HMGL mgl_create_graph_glut(int (*draw)(HMGL gr, void *p), const char *title, void *par, void (*load)(void *p))
+HMGL MGL_EXPORT mgl_create_graph_glut(int (*draw)(HMGL gr, void *p), const char *title, void *par, void (*load)(void *p))
 {
 	mglCanvasGLUT *g = new mglCanvasGLUT;
 	g->Window(0,0,draw,title,par, load);

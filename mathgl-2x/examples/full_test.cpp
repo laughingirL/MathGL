@@ -63,7 +63,9 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	gr->SetTicksTime('x');
+	gr->SetRotatedText(false);
+	gr->SetRanges(-1.0, 1.0, -1.0, 1.0);
+	gr->Box();
 	gr->Axis();
 	return;
 	

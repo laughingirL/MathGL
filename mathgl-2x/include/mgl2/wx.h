@@ -26,11 +26,11 @@
 extern "C" {
 #endif
 /// Creates WX window for plotting
-HMGL mgl_create_graph_wx(int (*draw)(HMGL gr, void *p), const char *title, void *par, void (*load)(void *p));
-uintptr_t mgl_create_graph_wx_(const char *title, int);
+HMGL MGL_EXPORT mgl_create_graph_wx(int (*draw)(HMGL gr, void *p), const char *title, void *par, void (*load)(void *p));
+uintptr_t MGL_EXPORT mgl_create_graph_wx_(const char *title, int);
 /// Run main WX loop for event handling.
-int mgl_wx_run();
-int mgl_wx_run_();
+int MGL_EXPORT mgl_wx_run();
+int MGL_EXPORT mgl_wx_run_();
 #ifdef __cplusplus
 }
 //-----------------------------------------------------------------------------

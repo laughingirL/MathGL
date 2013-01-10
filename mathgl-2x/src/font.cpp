@@ -1,5 +1,5 @@
 /***************************************************************************
- * mgl_font.cpp is part of Math Graphic Library
+ * font.cpp is part of Math Graphic Library
  * Copyright (C) 2007-2012 Alexey Balakin <mathgl.abalakin@gmail.ru>       *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -230,11 +230,11 @@ long mglFont::Internal(unsigned s) const
 }
 //-----------------------------------------------------------------------------
 /// Table of acents and its UTF8 codes
-mglTeXsymb mgl_act_symb[] = {
+MGL_NO_EXPORT mglTeXsymb mgl_act_symb[] = {
 	{0x02c6, L"hat"}, {0x02dc, L"tilde"}, {0x02d9, L"dot"}, {0x00a8, L"ddot"}, {0x20db, L"dddot"}, {0x20dc, L"ddddot"}, {0x02ca, L"acute"}, {0x02c7, L"check"}, {0x02cb, L"grave"}, {0x20d7, L"vec"}, {0x02c9, L"bar"}, {0x02d8, L"breve"},
 	/*end*/{0, L"\0"}};
 //-----------------------------------------------------------------------------
-int mgl_tex_symb_cmp(const void *a, const void *b)
+int MGL_NO_EXPORT mgl_tex_symb_cmp(const void *a, const void *b)
 {
 	const mglTeXsymb *aa = (const mglTeXsymb *)a;
 	const mglTeXsymb *bb = (const mglTeXsymb *)b;

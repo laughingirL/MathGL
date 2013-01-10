@@ -25,7 +25,7 @@
 //	TriPlot series
 //
 //-----------------------------------------------------------------------------
-void mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, const char *opt)
+void MGL_EXPORT mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, const char *opt)
 {
 	long n = x->GetNx(), m = nums->GetNy();
 	if(mgl_check_trig(gr,nums,x,y,z,a,"TriPlot"))	return;
@@ -102,10 +102,10 @@ void mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const 
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mgl_triplot_xyz(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt)
+void MGL_EXPORT mgl_triplot_xyz(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt)
 {	mgl_triplot_xyzc(gr,nums,x,y,z,z,sch,opt);	}
 //-----------------------------------------------------------------------------
-void mgl_triplot_xy(HMGL gr, HCDT nums, HCDT x, HCDT y, const char *sch, const char *opt)
+void MGL_EXPORT mgl_triplot_xy(HMGL gr, HCDT nums, HCDT x, HCDT y, const char *sch, const char *opt)
 {
 	gr->SaveState(opt);
 	mglData z(x->GetNx());
@@ -114,19 +114,19 @@ void mgl_triplot_xy(HMGL gr, HCDT nums, HCDT x, HCDT y, const char *sch, const c
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_triplot_xyzc_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *c, const char *sch, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_triplot_xyzc_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *c, const char *sch, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_triplot_xyzc(_GR_, _DA_(nums), _DA_(x), _DA_(y), _DA_(z), _DA_(c), s, o);
 	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_triplot_xyz_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *sch, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_triplot_xyz_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *sch, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_triplot_xyz(_GR_, _DA_(nums), _DA_(x), _DA_(y), _DA_(z), s, o);
 	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_triplot_xy_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y, const char *sch, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_triplot_xy_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y, const char *sch, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_triplot_xy(_GR_, _DA_(nums), _DA_(x), _DA_(y), s, o);	delete []o;	delete []s;	}
@@ -135,7 +135,7 @@ void mgl_triplot_xy_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y,
 //	QuadPlot series
 //
 //-----------------------------------------------------------------------------
-void mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, const char *opt)
+void MGL_EXPORT mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, const char *opt)
 {
 	long n = x->GetNx(), m = nums->GetNy();
 	if(mgl_check_trig(gr,nums,x,y,z,a,"QuadPlot",4))	return;
@@ -220,10 +220,10 @@ void mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mgl_quadplot_xyz(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt)
+void MGL_EXPORT mgl_quadplot_xyz(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt)
 {	mgl_quadplot_xyzc(gr,nums,x,y,z,z,sch,opt);	}
 //-----------------------------------------------------------------------------
-void mgl_quadplot_xy(HMGL gr, HCDT nums, HCDT x, HCDT y, const char *sch, const char *opt)
+void MGL_EXPORT mgl_quadplot_xy(HMGL gr, HCDT nums, HCDT x, HCDT y, const char *sch, const char *opt)
 {
 	gr->SaveState(opt);
 	mglData z(x->GetNx());	z.Fill(gr->Min.z,gr->Min.z);
@@ -231,19 +231,19 @@ void mgl_quadplot_xy(HMGL gr, HCDT nums, HCDT x, HCDT y, const char *sch, const 
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_quadplot_xyzc_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *c, const char *sch, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_quadplot_xyzc_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *c, const char *sch, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_quadplot_xyzc(_GR_, _DA_(nums), _DA_(x), _DA_(y), _DA_(z), _DA_(c), s, o);
 	delete []o;	delete []s;}
 //-----------------------------------------------------------------------------
-void mgl_quadplot_xyz_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *sch, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_quadplot_xyz_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *sch, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_quadplot_xyzc(_GR_, _DA_(nums), _DA_(x), _DA_(y), _DA_(z), _DA_(z), s, o);
 	delete []o;	delete []s;}
 //-----------------------------------------------------------------------------
-void mgl_quadplot_xy_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y, const char *sch, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_quadplot_xy_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y, const char *sch, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_quadplot_xy(_GR_, _DA_(nums), _DA_(x), _DA_(y), s, o);	delete []o;	delete []s;	}
@@ -252,7 +252,7 @@ void mgl_quadplot_xy_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y
 //	TriCont series
 //
 //-----------------------------------------------------------------------------
-void mgl_tricont_line(HMGL gr, mreal val, long k1, long k2, long k3, HCDT x, HCDT y, HCDT z, HCDT a, bool zVal,mreal c)
+void MGL_EXPORT mgl_tricont_line(HMGL gr, mreal val, long k1, long k2, long k3, HCDT x, HCDT y, HCDT z, HCDT a, bool zVal,mreal c)
 {
 	mreal d1,d2;
 	mglPoint p1,p2,n;
@@ -270,7 +270,7 @@ void mgl_tricont_line(HMGL gr, mreal val, long k1, long k2, long k3, HCDT x, HCD
 	gr->line_plot(k1,k2);
 }
 //-----------------------------------------------------------------------------
-void mgl_tricont_xyzcv(HMGL gr, HCDT v, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, const char *opt)
+void MGL_EXPORT mgl_tricont_xyzcv(HMGL gr, HCDT v, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, const char *opt)
 {
 	long n = x->GetNx(), m = nums->GetNy();
 	if(mgl_check_trig(gr,nums,x,y,z,a,"TriCont"))	return;
@@ -296,7 +296,7 @@ void mgl_tricont_xyzcv(HMGL gr, HCDT v, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT 
 	}
 }
 //-----------------------------------------------------------------------------
-void mgl_tricont_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, const char *opt)
+void MGL_EXPORT mgl_tricont_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, const char *opt)
 {
 	mreal r = gr->SaveState(opt);
 	long n = (mgl_isnan(r) || r<=0) ? 7:long(r+0.5);
@@ -306,31 +306,31 @@ void mgl_tricont_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const 
 	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
-void mgl_tricont_xyc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt)
+void MGL_EXPORT mgl_tricont_xyc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt)
 {	mgl_tricont_xyzc(gr,nums,x,y,z,z,sch,opt);	}
 //-----------------------------------------------------------------------------
-void mgl_tricont_xycv(HMGL gr, HCDT v, HCDT nums, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt)
+void MGL_EXPORT mgl_tricont_xycv(HMGL gr, HCDT v, HCDT nums, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt)
 {	mgl_tricont_xyzcv(gr,v,nums,x,y,z,z,sch,opt);	}
 //-----------------------------------------------------------------------------
-void mgl_tricont_xyzcv_(uintptr_t *gr, uintptr_t *v, uintptr_t *nums, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *c, const char *sch, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_tricont_xyzcv_(uintptr_t *gr, uintptr_t *v, uintptr_t *nums, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *c, const char *sch, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_tricont_xyzcv(_GR_, _DA_(v), _DA_(nums), _DA_(x), _DA_(y), _DA_(z), _DA_(c), s, o);
 	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_tricont_xycv_(uintptr_t *gr, uintptr_t *v, uintptr_t *nums, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *sch, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_tricont_xycv_(uintptr_t *gr, uintptr_t *v, uintptr_t *nums, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *sch, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_tricont_xycv(_GR_, _DA_(v), _DA_(nums), _DA_(x), _DA_(y), _DA_(z), s, o);
 	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_tricont_xyzc_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *c, const char *sch, const char *opt, int l,int lo)
+void MGL_EXPORT mgl_tricont_xyzc_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *c, const char *sch, const char *opt, int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_tricont_xyzc(_GR_, _DA_(nums), _DA_(x), _DA_(y), _DA_(z), _DA_(c), s, o);
 	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_tricont_xyc_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *sch, const char *opt, int l,int lo)
+void MGL_EXPORT mgl_tricont_xyc_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *sch, const char *opt, int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_tricont_xyc(_GR_, _DA_(nums), _DA_(x), _DA_(y), _DA_(z), s, o);
@@ -340,7 +340,7 @@ void mgl_tricont_xyc_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y
 //	Dots series
 //
 //-----------------------------------------------------------------------------
-void mgl_dots_a(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, const char *opt)
+void MGL_EXPORT mgl_dots_a(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, const char *opt)
 {
 	long n = x->GetNx();
 	if(y->GetNx()!=n || z->GetNx()!=n || a->GetNx()!=n)	{	gr->SetWarn(mglWarnDim,"Dots");	return;	}
@@ -362,15 +362,15 @@ void mgl_dots_a(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, const 
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mgl_dots(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt)
+void MGL_EXPORT mgl_dots(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt)
 {	mgl_dots_a(gr, x, y, z, z, sch, opt);	}
 //-----------------------------------------------------------------------------
-void mgl_dots_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *sch, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_dots_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *sch, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_dots(_GR_, _DA_(x),_DA_(y),_DA_(z),s, o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_dots_a_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_dots_a_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_dots_a(_GR_, _DA_(x),_DA_(y),_DA_(z),_DA_(a),s, o);	delete []o;	delete []s;	}
@@ -379,8 +379,8 @@ void mgl_dots_a_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintpt
 //	mglTriangulation
 //
 //-----------------------------------------------------------------------------
-long mgl_crust(long n,mglPoint *pp,long **nn,mreal ff);
-HMDT mgl_triangulation_3d(HCDT x, HCDT y, HCDT z)
+long MGL_NO_EXPORT mgl_crust(long n,mglPoint *pp,long **nn,mreal ff);
+HMDT MGL_EXPORT mgl_triangulation_3d(HCDT x, HCDT y, HCDT z)
 {	// TODO: should be used s-hull or q-hull
 	mglData *nums=new mglData;
 	long n = x->GetNx(), m;
@@ -400,7 +400,7 @@ HMDT mgl_triangulation_3d(HCDT x, HCDT y, HCDT z)
 }
 //-----------------------------------------------------------------------------
 #include "s_hull/s_hull_pro.h"
-HMDT mgl_triangulation_2d(HCDT x, HCDT y)
+HMDT MGL_EXPORT mgl_triangulation_2d(HCDT x, HCDT y)
 {
 	mglData *nums=new mglData;
 	register long n = x->GetNx(), m,i;
@@ -430,16 +430,16 @@ HMDT mgl_triangulation_2d(HCDT x, HCDT y)
 	return nums;
 }
 //-----------------------------------------------------------------------------
-uintptr_t mgl_triangulation_3d_(uintptr_t *x, uintptr_t *y, uintptr_t *z)
+uintptr_t MGL_EXPORT mgl_triangulation_3d_(uintptr_t *x, uintptr_t *y, uintptr_t *z)
 {	return uintptr_t(mgl_triangulation_3d(_DA_(x),_DA_(y),_DA_(z)));	}
-uintptr_t mgl_triangulation_2d_(uintptr_t *x, uintptr_t *y)
+uintptr_t MGL_EXPORT mgl_triangulation_2d_(uintptr_t *x, uintptr_t *y)
 {	return uintptr_t(mgl_triangulation_2d(_DA_(x),_DA_(y)));	}
 //-----------------------------------------------------------------------------
 //
 //	DataGrid
 //
 //-----------------------------------------------------------------------------
-void *mgl_grid_t(void *par)
+MGL_NO_EXPORT void *mgl_grid_t(void *par)
 {
 	mglThreadD *t=(mglThreadD *)par;
 	long nx=t->p[0],ny=t->p[1];
@@ -478,7 +478,7 @@ void *mgl_grid_t(void *par)
 	}
 	return 0;
 }
-void mgl_data_grid(HMGL gr, HMDT d, HCDT xdat, HCDT ydat, HCDT zdat, const char *opt)
+void MGL_EXPORT mgl_data_grid(HMGL gr, HMDT d, HCDT xdat, HCDT ydat, HCDT zdat, const char *opt)
 { // NOTE: only for mglData
 	const mglData *x = dynamic_cast<const mglData *>(xdat);
 	const mglData *y = dynamic_cast<const mglData *>(ydat);
@@ -503,7 +503,7 @@ void mgl_data_grid(HMGL gr, HMDT d, HCDT xdat, HCDT ydat, HCDT zdat, const char 
 	mglStartThread(mgl_grid_t,0,nn,d->a,xc,yc,par,0,nums->a,z->a);
 	gr->LoadState();	delete nums;	delete []xc;	delete []yc;
 }
-void mgl_data_grid_(uintptr_t *gr, uintptr_t *d, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *opt,int lo)
+void MGL_EXPORT mgl_data_grid_(uintptr_t *gr, uintptr_t *d, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *opt,int lo)
 {	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_data_grid(_GR_,_DT_,_DA_(x),_DA_(y),_DA_(z),o);	delete []o;	}
 //-----------------------------------------------------------------------------
@@ -511,7 +511,7 @@ void mgl_data_grid_(uintptr_t *gr, uintptr_t *d, uintptr_t *x, uintptr_t *y, uin
 //	Crust series
 //
 //-----------------------------------------------------------------------------
-void mgl_crust(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt)
+void MGL_EXPORT mgl_crust(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt)
 {
 	if(y->GetNx()!=x->GetNx() || z->GetNx()!=x->GetNx())
 	{	gr->SetWarn(mglWarnDim,"Crust");	return;	}
@@ -520,12 +520,12 @@ void mgl_crust(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt
 	mgl_delete_data(nums);
 }
 //-----------------------------------------------------------------------------
-void mgl_crust_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *sch, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_crust_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *sch, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_crust(_GR_, _DA_(x),_DA_(y),_DA_(z),s, o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-long mgl_insert_trig(long i1,long i2,long i3,long **n)
+long MGL_NO_EXPORT mgl_insert_trig(long i1,long i2,long i3,long **n)
 {
 	static long Cur=0,Max=0;
 	if(i1<0 || i2<0 || i3<0)	return Cur;
@@ -556,7 +556,7 @@ long mgl_insert_trig(long i1,long i2,long i3,long **n)
 	Cur++;	return Cur;
 }
 //-----------------------------------------------------------------------------
-long mgl_get_next(long k1,long n,long *,long *set,mglPoint *qq)
+long MGL_NO_EXPORT mgl_get_next(long k1,long n,long *,long *set,mglPoint *qq)
 {
 	long i,j=-1;
 	mreal r,rm=FLT_MAX;
@@ -569,7 +569,7 @@ long mgl_get_next(long k1,long n,long *,long *set,mglPoint *qq)
 	return j;
 }
 //-----------------------------------------------------------------------------
-long mgl_crust(long n,mglPoint *pp,long **nn,mreal ff)
+long MGL_NO_EXPORT mgl_crust(long n,mglPoint *pp,long **nn,mreal ff)
 {	// TODO: update to normal algorithm
 	register long i,j;
 	register mreal r,rm,rs;

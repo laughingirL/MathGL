@@ -28,7 +28,7 @@ char *mgl_strdup(const char *s)
 	return r;
 }
 //-----------------------------------------------------------------------------
-void mgl_create_cpp_font(HMGL gr, const wchar_t *how)
+void MGL_EXPORT mgl_create_cpp_font(HMGL gr, const wchar_t *how)
 {
 	unsigned long l=wcslen(how), i, n=0, m;
 	wchar_t ch=*how;
@@ -70,7 +70,7 @@ void mgl_create_cpp_font(HMGL gr, const wchar_t *how)
 	printf("};\n");
 }
 //-----------------------------------------------------------------------------
-void mgl_strtrim(char *str)
+void MGL_EXPORT mgl_strtrim(char *str)
 {
 	char *c = mgl_strdup(str);
 	long k,n=strlen(str);
@@ -82,7 +82,7 @@ void mgl_strtrim(char *str)
 	strcpy(str,c);	free(c);
 }
 //-----------------------------------------------------------------------------
-void mgl_strlwr(char *str)
+void MGL_EXPORT mgl_strlwr(char *str)
 {
 	for(long k=0;k<(long)strlen(str);k++)
 		str[k] = (str[k]>='A' && str[k]<='Z') ? str[k]+'a'-'A' : str[k];
@@ -690,7 +690,7 @@ void mglBase::ClearEq()
 //-----------------------------------------------------------------------------
 //		Colors ids
 //-----------------------------------------------------------------------------
-mglColorID mglColorIds[31] = {{'k', mglColor(0,0,0)},
+MGL_EXPORT mglColorID mglColorIds[31] = {{'k', mglColor(0,0,0)},
 	{'r', mglColor(1,0,0)},		{'R', mglColor(0.5,0,0)},
 	{'g', mglColor(0,1,0)},		{'G', mglColor(0,0.5,0)},
 	{'b', mglColor(0,0,1)},		{'B', mglColor(0,0,0.5)},
@@ -1138,7 +1138,7 @@ void mglBase::AddLegend(const char *str,const char *style)
 	delete []wcs;
 }
 //-----------------------------------------------------------------------------
-bool mgl_check_dim2(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *name, bool less)
+bool MGL_EXPORT mgl_check_dim2(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *name, bool less)
 {
 //	if(!gr || !x || !y || !z)	return true;		// if data is absent then should be segfault!!!
 	register long n=z->GetNx(),m=z->GetNy();
@@ -1162,7 +1162,7 @@ bool mgl_check_dim2(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *name, b
 	return false;
 }
 //-----------------------------------------------------------------------------
-bool mgl_check_dim0(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const char *name, bool less)
+bool MGL_EXPORT mgl_check_dim0(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const char *name, bool less)
 {
 //	if(!gr || !x || !y)	return true;		// if data is absent then should be segfault!!!
 	register long n=y->GetNx();
@@ -1181,7 +1181,7 @@ bool mgl_check_dim0(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const char *name, b
 	return false;
 }
 //-----------------------------------------------------------------------------
-bool mgl_check_dim1(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const char *name, bool less)
+bool MGL_EXPORT mgl_check_dim1(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const char *name, bool less)
 {
 //	if(!gr || !x || !y)	return true;		// if data is absent then should be segfault!!!
 	register long n=y->GetNx();
@@ -1201,7 +1201,7 @@ bool mgl_check_dim1(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const char *name, b
 	return false;
 }
 //-----------------------------------------------------------------------------
-bool mgl_check_dim3(HMGL gr, bool both, HCDT x, HCDT y, HCDT z, HCDT a, HCDT b, const char *name)
+bool MGL_EXPORT mgl_check_dim3(HMGL gr, bool both, HCDT x, HCDT y, HCDT z, HCDT a, HCDT b, const char *name)
 {
 // 	if(!gr || !x || !y || !z || !a)	return true;		// if data is absent then should be segfault!!!
 	register long n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
@@ -1214,7 +1214,7 @@ bool mgl_check_dim3(HMGL gr, bool both, HCDT x, HCDT y, HCDT z, HCDT a, HCDT b, 
 	return false;
 }
 //-----------------------------------------------------------------------------
-bool mgl_check_trig(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const char *name, int d)
+bool MGL_EXPORT mgl_check_trig(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const char *name, int d)
 {
 // 	if(!gr || !x || !y || !z || !a || !nums)	return true;		// if data is absent then should be segfault!!!
 	long n = x->GetNx(), m = nums->GetNy();
@@ -1224,13 +1224,13 @@ bool mgl_check_trig(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const ch
 	return false;
 }
 //-----------------------------------------------------------------------------
-bool mgl_isboth(HCDT x, HCDT y, HCDT z, HCDT a)
+bool MGL_EXPORT mgl_isboth(HCDT x, HCDT y, HCDT z, HCDT a)
 {
 	register long n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
 	return x->GetNx()*x->GetNy()*x->GetNz()==n*m*l && y->GetNx()*y->GetNy()*y->GetNz()==n*m*l && z->GetNx()*z->GetNy()*z->GetNz()==n*m*l;
 }
 //-----------------------------------------------------------------------------
-bool mgl_check_vec3(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *name)
+bool MGL_EXPORT mgl_check_vec3(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *name)
 {
 // 	if(!gr || !x || !y || !z || !ax || !ay || !az)	return true;		// if data is absent then should be segfault!!!
 	register long n=ax->GetNx(),m=ax->GetNy(),l=ax->GetNz();

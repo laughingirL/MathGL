@@ -27,19 +27,19 @@
 // NOTE: I use <=0 for proper tick labels rotation. But this mirror labels for central origin!
 #define sign(a)	((a)<=0 ? -1:1)
 //-----------------------------------------------------------------------------
-inline struct tm* mgl_localtime (const time_t *clock, tm *result, bool use_utc)
+MGL_NO_EXPORT inline struct tm *mgl_localtime (const time_t *clock, tm *result, bool use_utc)
 {	if (!clock || !result) return NULL;
 	const tm *res = use_utc?gmtime(clock):localtime(clock);
 	memcpy(result,res,sizeof(tm));	return result;	}
 //-----------------------------------------------------------------------------
-long mgl_have_color(const char *stl)
+long MGL_EXPORT mgl_have_color(const char *stl)
 {
 	register long i,j=0;
 	if(stl)	for(i=0;stl[i];i++)	if(strchr(MGL_COLORS,stl[i]))	j++;
 	return j;
 }
 //-----------------------------------------------------------------------------
-void mgl_wcstrim(wchar_t *str)
+void MGL_EXPORT mgl_wcstrim(wchar_t *str)
 {
 	size_t n=wcslen(str), k, i;
 	for(k=0;k<n;k++)	if(str[k]>' ')	break;
@@ -184,7 +184,7 @@ void mglCanvas::SetTickTempl(char dir, const char *t)
 	else if(mbstowcs(0,t,0)<256) mbstowcs(aa.t,t,256);
 }
 //-----------------------------------------------------------------------------
-double mgl_adj_val(double v,mreal *ds=0)
+MGL_NO_EXPORT double mgl_adj_val(double v,mreal *ds=0)
 {
 	double n = floor(log10(v)), s;
 	v = floor(v*pow(10.,-n));	n = pow(10.,n);
@@ -301,7 +301,7 @@ void mglCanvas::AdjustTicks(mglAxis &aa, bool ff)
 	LabelTicks(aa);
 }
 //-----------------------------------------------------------------------------
-int mgl_tick_ext(mreal a, mreal b, wchar_t s[32], mreal &v)
+int MGL_NO_EXPORT mgl_tick_ext(mreal a, mreal b, wchar_t s[32], mreal &v)
 {
 	int kind = 0;
 	if(fabs(a-b)<=0.001*fabs(a))
@@ -342,7 +342,7 @@ int mgl_tick_ext(mreal a, mreal b, wchar_t s[32], mreal &v)
 	return kind;
 }
 //-----------------------------------------------------------------------------
-void mgl_tick_text(mreal z, mreal z0, mreal d, mreal v, int kind, wchar_t str[64], bool tune)
+void MGL_NO_EXPORT mgl_tick_text(mreal z, mreal z0, mreal d, mreal v, int kind, wchar_t str[64], bool tune)
 {
 	mreal u = fabs(z)<d ? 0:z;
 	if((kind&1) && z>z0)	u = fabs(z-z0)<d ? 0:(z-z0);

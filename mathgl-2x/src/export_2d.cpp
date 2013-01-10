@@ -30,7 +30,7 @@
 #define _Gr_	((mglCanvas *)(gr))
 void mgl_printf(void *fp, bool gz, const char *str, ...);
 //-----------------------------------------------------------------------------
-const char *mgl_get_dash(unsigned short d, mreal w)
+MGL_NO_EXPORT const char *mgl_get_dash(unsigned short d, mreal w)
 {
 	static char b[32];
 	static std::string s;
@@ -52,7 +52,7 @@ const char *mgl_get_dash(unsigned short d, mreal w)
 	return s.c_str();
 }
 //-----------------------------------------------------------------------------
-bool mgl_is_same(HMGL gr, const mglPrim &pr,mreal wp,mglColor cp,int st)
+bool MGL_NO_EXPORT mgl_is_same(HMGL gr, const mglPrim &pr,mreal wp,mglColor cp,int st)
 {
 	if(abs(pr.type)!=1)	return false;
 	if(pr.w>=1 && wp!=pr.w)	return false;
@@ -62,7 +62,7 @@ bool mgl_is_same(HMGL gr, const mglPrim &pr,mreal wp,mglColor cp,int st)
 	return (cp==c);
 }
 //-----------------------------------------------------------------------------
-void put_line(HMGL gr, void *fp, bool gz, long i, mreal wp, mglColor cp,int st, const char *ifmt, const char *nfmt, bool neg, mreal fc)
+void MGL_NO_EXPORT put_line(HMGL gr, void *fp, bool gz, long i, mreal wp, mglColor cp,int st, const char *ifmt, const char *nfmt, bool neg, mreal fc)
 {
 	long n1=gr->GetPrm(i).n1, n2=gr->GetPrm(i).n2;
 	if(n1>n2)	{	n1=gr->GetPrm(i).n2;	n2=gr->GetPrm(i).n1;	}
@@ -131,7 +131,7 @@ void put_line(HMGL gr, void *fp, bool gz, long i, mreal wp, mglColor cp,int st, 
 //-----------------------------------------------------------------------------
 //put_desc(fp,"%c%c%c_%04x {", "np %d %d mt %d %d ll %d %d ll cp fill\n",
 //"np %d %d mt ", "%d %d ll ", "cp dr\n", "} def")
-void put_desc(HMGL gr, void *fp, bool gz, const char *pre, const char *ln1, const char *ln2, const char *ln3, const char *suf)
+void MGL_NO_EXPORT put_desc(HMGL gr, void *fp, bool gz, const char *pre, const char *ln1, const char *ln2, const char *ln3, const char *suf)
 {
 	register long i,j,n;
 	wchar_t *g;
@@ -202,7 +202,7 @@ mglColor mglCanvas::GetColor(const mglPrim &p)
 	return mglColor(res[0]/255.,res[1]/255.,res[2]/255.,res[3]/255.);
 }
 //-----------------------------------------------------------------------------
-void mgl_write_eps(HMGL gr, const char *fname,const char *descr)
+void MGL_EXPORT mgl_write_eps(HMGL gr, const char *fname,const char *descr)
 {
 	if(!fname || *fname==0)	return;
 	if(gr->GetPrmNum()<1)	return;
@@ -349,11 +349,13 @@ void mgl_write_eps(HMGL gr, const char *fname,const char *descr)
 			if(sd && sd[0])	mgl_printf(fp, gz, "%s [%s] %g sd dr\n",str,sd,q.w*q.s);
 			else			mgl_printf(fp, gz, "%s d0 dr\n",str);
 		}
-		else if(q.type==4 && !mgl_isnan(q.w))	// glyph
+		else if(q.type==4)	// glyph
 		{
+			float phi = gr->GetGlyphPhi(gr->GetPnt(q.n2),q.w);
+			if(mgl_isnan(phi))	continue;
 			mreal 	ss = q.s/2, xx = p1.u, yy = p1.v, zz = q.p;
 			mgl_printf(fp, gz, "gsave\t%g %g translate %g %g scale %g rotate %s\n",
-					   p1.x, p1.y, ss, ss, -q.w, str);
+					   p1.x, p1.y, ss, ss, -phi, str);
 			if(q.n3&8)	// this is "line"
 			{
 				mreal dy = 0.004,f=fabs(zz);
@@ -376,12 +378,12 @@ void mgl_write_eps(HMGL gr, const char *fname,const char *descr)
 	mgl_printf(fp, gz, "\nshowpage\n%%%%EOF\n");
 	if(strcmp(fname,"-"))	{	if(gz)	gzclose((gzFile)fp);	else	fclose((FILE *)fp);	}
 }
-void mgl_write_eps_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
+void MGL_EXPORT mgl_write_eps_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *d=new char[n+1];	memcpy(d,descr,n);	d[n]=0;
 	mgl_write_eps(_GR_,s,d);	delete []s;		delete []d;	}
 //-----------------------------------------------------------------------------
-void mgl_write_svg(HMGL gr, const char *fname,const char *descr)
+void MGL_EXPORT mgl_write_svg(HMGL gr, const char *fname,const char *descr)
 {
 	if(!fname || *fname==0)	return;
 	if(gr->GetPrmNum()<1)	return;
@@ -501,12 +503,14 @@ void mgl_write_svg(HMGL gr, const char *fname,const char *descr)
 			mgl_printf(fp, gz, "<g fill=\"#%02x%02x%02x\" opacity=\"%g\">\n", int(255*cp.r),int(255*cp.g),int(255*cp.b),cp.a);
 			mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g L %g %g L %g %g Z\"/> </g>\n", p1.x, hh-p1.y, p2.x, hh-p2.y, p4.x, hh-p4.y, p3.x, hh-p3.y);
 		}
-		else if(q.type==4 && !mgl_isnan(q.w))
+		else if(q.type==4)
 		{
+			float phi = gr->GetGlyphPhi(gr->GetPnt(q.n2),q.w);
+			if(mgl_isnan(phi))	continue;
 			mreal ss = q.s/2, xx = p1.u, yy = p1.v, zz = q.p;
 			if(q.n3&8)	// this is "line"
 			{
-				mgl_printf(fp, gz, "<g transform=\"translate(%g,%g) scale(%.3g,%.3g) rotate(%g)\"", p1.x, hh-p1.y, ss, -ss, -q.w);
+				mgl_printf(fp, gz, "<g transform=\"translate(%g,%g) scale(%.3g,%.3g) rotate(%g)\"", p1.x, hh-p1.y, ss, -ss, -phi);
 				if(q.n3&4)
 					mgl_printf(fp, gz, " stroke=\"#%02x%02x%02x\">", int(255*cp.r),int(255*cp.g),int(255*cp.b));
 				else
@@ -532,14 +536,14 @@ void mgl_write_svg(HMGL gr, const char *fname,const char *descr)
 	mgl_printf(fp, gz, "</g></svg>");
 	if(strcmp(fname,"-"))	{	if(gz)	gzclose((gzFile)fp);	else	fclose((FILE *)fp);	}
 }
-void mgl_write_svg_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
+void MGL_EXPORT mgl_write_svg_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *d=new char[n+1];	memcpy(d,descr,n);	d[n]=0;
 	mgl_write_svg(_GR_,s,d);	delete []s;		delete []d;	}
 //-----------------------------------------------------------------------------
 /// Color names easely parsed by LaTeX
 struct mglSVGName	{	const char *name;	mreal r,g,b;	};
-mglSVGName mgl_names[]={{"AliceBlue",.94,.972,1},
+MGL_NO_EXPORT mglSVGName mgl_names[]={{"AliceBlue",.94,.972,1},
 {"Apricot", 0.984, 0.725, 0.51},
 {"Aquamarine", 0, 0.71, 0.745},
 {"Bittersweet", 0.753, 0.31, 0.0902},
@@ -618,7 +622,7 @@ mglSVGName mgl_names[]={{"AliceBlue",.94,.972,1},
 {"yellow", 1,1,0},
 {"",-1,-1,-1}};
 //-----------------------------------------------------------------------------
-const char *mglColorName(mglColor c)	// return closest SVG color
+MGL_NO_EXPORT const char *mglColorName(mglColor c)	// return closest SVG color
 {
 	register long i;
 	register mreal d, dm=10;
@@ -631,7 +635,7 @@ const char *mglColorName(mglColor c)	// return closest SVG color
 	return name;
 }
 //-----------------------------------------------------------------------------
-void mgl_write_tex(HMGL gr, const char *fname,const char *descr)
+void MGL_EXPORT mgl_write_tex(HMGL gr, const char *fname,const char *descr)
 {
 	if(gr->GetPrmNum()<1)	return;
 	_Gr_->clr(MGL_FINISHED);	_Gr_->Finish(false);

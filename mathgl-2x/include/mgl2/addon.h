@@ -23,38 +23,38 @@
 #include "mgl2/define.h"
 #ifdef __cplusplus
 //-----------------------------------------------------------------------------
-dual mgl_ipowc(dual x,int n);
+dual MGL_EXPORT mgl_ipowc(dual x,int n);
 dual expi(dual a);
 dual expi(double a);
 
 /// Explicit scheme for 1 step of axial diffraction
-bool mgl_difr_axial(dual *a, int n, dual q, int Border,dual *b, dual *d, int kk, double di);
+bool MGL_EXPORT mgl_difr_axial(dual *a, int n, dual q, int Border,dual *b, dual *d, int kk, double di);
 /// Explicit scheme for 1 step of plane diffraction
-bool mgl_difr_grid(dual *a,int n,dual q,int Border,dual *b,dual *d,int kk);
+bool MGL_EXPORT mgl_difr_grid(dual *a,int n,dual q,int Border,dual *b,dual *d,int kk);
 //-----------------------------------------------------------------------------
 extern "C" {
 #endif
 
-double mgl_gauss_rnd();
-void mgl_fft_freq(double *freq,size_t nn);
+double MGL_EXPORT mgl_gauss_rnd();
+void MGL_EXPORT mgl_fft_freq(double *freq,size_t nn);
 
 /// Remove double spaces from the string
-void mgl_strcls(char *str);
+void MGL_EXPORT mgl_strcls(char *str);
 /// Get position of substring or return -1 if not found
-int mgl_strpos(const char *str,char *fnd);
+int MGL_EXPORT mgl_strpos(const char *str,char *fnd);
 /// Get position of symbol or return -1 if not found
-int mgl_chrpos(const char *str,char fnd);
+int MGL_EXPORT mgl_chrpos(const char *str,char fnd);
 
 /// Get uncommented string from file (NOTE: it is not thread safe!!!)
-char *mgl_fgetstr(FILE *fp);
+MGL_EXPORT char *mgl_fgetstr(FILE *fp);
 /// Check if symbol denote true
-int mgl_istrue(char ch);
+int MGL_EXPORT mgl_istrue(char ch);
 /// Print test message
-void mgl_test(const char *str, ...);
+void MGL_EXPORT mgl_test(const char *str, ...);
 /// Print info message
-void mgl_info(const char *str, ...);
+void MGL_EXPORT mgl_info(const char *str, ...);
 /// Locate next data block (block started by -----)
-FILE *mgl_next_data(const char *fname,int p);
+MGL_EXPORT FILE *mgl_next_data(const char *fname,int p);
 
 #ifdef __cplusplus
 }

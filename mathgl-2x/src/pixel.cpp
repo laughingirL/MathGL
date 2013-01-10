@@ -182,8 +182,7 @@ void mglCanvas::CalcScr(mglPoint p, int *xs, int *ys) const
 mglPoint mglCanvas::CalcScr(mglPoint p) const
 {	int x,y;	CalcScr(p,&x,&y);	return mglPoint(x,y);	}
 //-----------------------------------------------------------------------------
-//mglCanvas *mgl_tmp_gr;
-int mgl_type_prior[8]={1,2,4,5, 0,3,0, 7};
+MGL_NO_EXPORT int mgl_type_prior[8]={1,2,4,5, 0,3,0, 7};
 bool operator<(const mglPrim &a, const mglPrim &b)
 {
 	register int t1 = mgl_type_prior[a.type], t2 = mgl_type_prior[b.type];
@@ -202,7 +201,7 @@ bool operator>(const mglPrim &a, const mglPrim &b)
 	return a.n3 < b.n3;
 }
 //-----------------------------------------------------------------------------
-void *mgl_canvas_thr(void *par)
+MGL_NO_EXPORT void *mgl_canvas_thr(void *par)
 {	mglThreadG *t=(mglThreadG *)par;	(t->gr->*(t->f))(t->id, t->n, t->p);	return NULL;	}
 void mglStartThread(void (mglCanvas::*func)(size_t i, size_t n, const void *p), mglCanvas *gr, size_t n, const void *p=NULL)
 {
@@ -986,27 +985,34 @@ void mglCanvas::mark_draw(long k, char type, mreal size, mglDrawReg *d)
 #endif
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::glyph_draw(const mglPrim *P, mglDrawReg *d)
+// scale direction for new view/zoom
+float mglCanvas::GetGlyphPhi(const mglPnt &q, float phi)
 {
-	mglPnt p=Pnt[P->n1], q=Pnt[P->n2];
-	// scale direction for new view/zoom
 	float dv = (1-Bp.pf)/(1-Bp.pf*q.z/Depth);
-	float x,y,z,c=Bp.pf/(1-Bp.pf)/Depth,ll,phi=P->w;
+	float x,y,z,c=Bp.pf/(1-Bp.pf)/Depth,ll;
 	x = Bp.b[0]*q.u + Bp.b[1]*q.v + Bp.b[2]*q.w;
 	y = Bp.b[3]*q.u + Bp.b[4]*q.v + Bp.b[5]*q.w;
 	z = Bp.b[6]*q.u + Bp.b[7]*q.v + Bp.b[8]*q.w;
-	
+
 	x += (q.x-Width/2)*z*c*dv;
 	y += (q.y-Height/2)*z*c*dv;
 	ll = x*x+y*y;
-	if(ll < 1e-10)	return;
+	if(ll < 1e-10)	return NAN;
 	if(ll==ll && phi<1e4)
 	{
 		phi = -atan2(y,x)*180/M_PI;
 		if(fabs(phi)>90) 	phi+=180;
 	}
 	else phi=0;
+	return phi;
+}
+//-----------------------------------------------------------------------------
+void mglCanvas::glyph_draw(const mglPrim *P, mglDrawReg *d)
+{
+	float phi = GetGlyphPhi(Pnt[P->n2],P->w);
+	if(mgl_isnan(phi))	return;
 
+	mglPnt p=Pnt[P->n1];
 	mreal pf=sqrt((Bp.b[0]*Bp.b[0]+Bp.b[1]*Bp.b[1]+Bp.b[3]*Bp.b[3]+Bp.b[4]*Bp.b[4])/2), f = P->p*pf;
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_lock(&mutexPnt);

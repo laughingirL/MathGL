@@ -1,5 +1,5 @@
 /***************************************************************************
- * mgl_qt.cpp is part of Math Graphic Library                              *
+ * qt.cpp is part of Math Graphic Library                              *
  * Copyright (C) 2007-2012 Alexey Balakin <mathgl.abalakin@gmail.ru>       *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -79,7 +79,7 @@ protected:
 	QSpinBox *tet, *phi;	///< Spin box for angles
 };
 //-----------------------------------------------------------------------------
-void mgl_ask_qt(const wchar_t *quest, wchar_t *res)
+void MGL_EXPORT mgl_ask_qt(const wchar_t *quest, wchar_t *res)
 {	QInputDialog::getText(QApplication::activeWindow(), "MathGL",
 						QString::fromWCharArray(quest)).toWCharArray(res);	}
 //-----------------------------------------------------------------------------
@@ -1137,19 +1137,19 @@ QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *&tet, QSpinBox *&p
 	return popup;
 }
 //-----------------------------------------------------------------------------
-HMGL mgl_create_graph_qt(int (*draw)(HMGL gr, void *p), const char *title, void *par, void (*load)(void *p))
+HMGL MGL_EXPORT mgl_create_graph_qt(int (*draw)(HMGL gr, void *p), const char *title, void *par, void (*load)(void *p))
 {
 	mglCanvasQT *g = new mglCanvasQT;
 	g->Window(0,0,draw,title,par,load);
 	return g;
 }
-int mgl_qt_run()	{	return (qApp)?qApp->exec():-1;	}
+int MGL_EXPORT mgl_qt_run()	{	return (qApp)?qApp->exec():-1;	}
 //-----------------------------------------------------------------------------
-uintptr_t mgl_create_graph_qt_(const char *title, int l)
+uintptr_t MGL_EXPORT mgl_create_graph_qt_(const char *title, int l)
 {
 	char *s = new char[l+1];	memcpy(s,title,l);	s[l]=0;
 	uintptr_t t = uintptr_t(mgl_create_graph_qt(0,s,0,0));
 	delete []s;	return t;
 }
-int mgl_qt_run_()	{	return mgl_qt_run();	}
+int MGL_EXPORT mgl_qt_run_()	{	return mgl_qt_run();	}
 //-----------------------------------------------------------------------------

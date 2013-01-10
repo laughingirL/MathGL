@@ -32,21 +32,21 @@
 #endif
 
 #define isn(ch)		((ch)=='\n')
-char *mgl_read_gz(gzFile fp);
+MGL_NO_EXPORT char *mgl_read_gz(gzFile fp);
 //-----------------------------------------------------------------------------
-HADT mgl_create_datac()	{	return new mglDataC;	}
-HADT mgl_create_datac_size(long nx, long ny, long nz){	return new mglDataC(nx,ny,nz);	}
-HADT mgl_create_datac_file(const char *fname)		{	return new mglDataC(fname);	}
-void mgl_delete_datac(HADT d)	{	if(d)	delete d;	}
+HADT MGL_EXPORT mgl_create_datac()	{	return new mglDataC;	}
+HADT MGL_EXPORT mgl_create_datac_size(long nx, long ny, long nz){	return new mglDataC(nx,ny,nz);	}
+HADT MGL_EXPORT mgl_create_datac_file(const char *fname)		{	return new mglDataC(fname);	}
+void MGL_EXPORT mgl_delete_datac(HADT d)	{	if(d)	delete d;	}
 //-----------------------------------------------------------------------------
-uintptr_t mgl_create_datac_()
+uintptr_t MGL_EXPORT mgl_create_datac_()
 {	return uintptr_t(new mglDataC());	}
-uintptr_t mgl_create_datac_size_(int *nx, int *ny, int *nz)
+uintptr_t MGL_EXPORT mgl_create_datac_size_(int *nx, int *ny, int *nz)
 {	return uintptr_t(new mglDataC(*nx,*ny,*nz));	}
-uintptr_t mgl_create_datac_file_(const char *fname,int l)
+uintptr_t MGL_EXPORT mgl_create_datac_file_(const char *fname,int l)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	uintptr_t r = uintptr_t(new mglDataC(s));	delete []s;	return r;	}
-void mgl_delete_datac_(uintptr_t *d)
+void MGL_EXPORT mgl_delete_datac_(uintptr_t *d)
 {	if(_DC_)	delete _DC_;	}
 //-----------------------------------------------------------------------------
 void mglFromStr(HADT d,char *buf,long NX,long NY,long NZ)	// TODO: add multithreading read
@@ -87,7 +87,7 @@ void mglFromStr(HADT d,char *buf,long NX,long NY,long NZ)	// TODO: add multithre
 	}
 }
 //-----------------------------------------------------------------------------
-void mgl_datac_set(HADT d, HCDT a)
+void MGL_EXPORT mgl_datac_set(HADT d, HCDT a)
 {
 	if(!a)	return;
 	const mglDataC *dd = dynamic_cast<const mglDataC *>(a);	// faster for mglData
@@ -101,9 +101,9 @@ void mgl_datac_set(HADT d, HCDT a)
 			d->a[i+d->nx*(j+d->ny*k)] = a->v(i,j,k);
 	}
 }
-void mgl_datac_set_(uintptr_t *d, uintptr_t *a)	{	mgl_datac_set(_DC_,_DA_(a));	}
+void MGL_EXPORT mgl_datac_set_(uintptr_t *d, uintptr_t *a)	{	mgl_datac_set(_DC_,_DA_(a));	}
 //-----------------------------------------------------------------------------
-void mgl_datac_set_values(HADT d, const char *v,long NX,long NY,long NZ)
+void MGL_EXPORT mgl_datac_set_values(HADT d, const char *v,long NX,long NY,long NZ)
 {
 	if(NX<1 || NY <1 || NZ<1)	return;
 	register long n=strlen(v)+1;
@@ -112,11 +112,11 @@ void mgl_datac_set_values(HADT d, const char *v,long NX,long NY,long NZ)
 	mglFromStr(d,buf,NX,NY,NZ);
 	delete []buf;
 }
-void mgl_datac_set_values_(uintptr_t *d, const char *val, int *nx, int *ny, int *nz, int l)
+void MGL_EXPORT mgl_datac_set_values_(uintptr_t *d, const char *val, int *nx, int *ny, int *nz, int l)
 {	char *s=new char[l+1];	memcpy(s,val,l);	s[l]=0;
 	mgl_datac_set_values(_DC_,s,*nx,*ny,*nz);	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_datac_set_vector(HADT d, gsl_vector *v)
+void MGL_EXPORT mgl_datac_set_vector(HADT d, gsl_vector *v)
 {
 #if MGL_HAVE_GSL
 	if(!v || v->size<1)	return;
@@ -125,7 +125,7 @@ void mgl_datac_set_vector(HADT d, gsl_vector *v)
 #endif
 }
 //-----------------------------------------------------------------------------
-void mgl_datac_set_matrix(HADT d, gsl_matrix *m)
+void MGL_EXPORT mgl_datac_set_matrix(HADT d, gsl_matrix *m)
 {
 #if MGL_HAVE_GSL
 	if(!m || m->size1<1 || m->size2<1)	return;
@@ -136,7 +136,7 @@ void mgl_datac_set_matrix(HADT d, gsl_matrix *m)
 #endif
 }
 //-----------------------------------------------------------------------------
-void mgl_datac_set_float(HADT d, const float *A,long NX,long NY,long NZ)
+void MGL_EXPORT mgl_datac_set_float(HADT d, const float *A,long NX,long NY,long NZ)
 {
 	if(NX<=0 || NY<=0 || NZ<=0)	return;
 	mgl_datac_create(d, NX,NY,NZ);	if(!A)	return;
@@ -147,7 +147,7 @@ void mgl_datac_set_float(HADT d, const float *A,long NX,long NY,long NZ)
 #endif
 }
 //-----------------------------------------------------------------------------
-void mgl_datac_set_double(HADT d, const double *A,long NX,long NY,long NZ)
+void MGL_EXPORT mgl_datac_set_double(HADT d, const double *A,long NX,long NY,long NZ)
 {
 	if(NX<=0 || NY<=0 || NZ<=0)	return;
 	mgl_datac_create(d, NX,NY,NZ);	if(!A)	return;
@@ -158,7 +158,7 @@ void mgl_datac_set_double(HADT d, const double *A,long NX,long NY,long NZ)
 #endif
 }
 //-----------------------------------------------------------------------------
-void mgl_datac_set_complex(HADT d, const dual *A,long NX,long NY,long NZ)
+void MGL_EXPORT mgl_datac_set_complex(HADT d, const dual *A,long NX,long NY,long NZ)
 {
 	if(NX<=0 || NY<=0 || NZ<=0)	return;
 	mgl_datac_create(d, NX,NY,NZ);	if(!A)	return;
@@ -169,14 +169,14 @@ void mgl_datac_set_complex(HADT d, const dual *A,long NX,long NY,long NZ)
 	#endif
 }
 //-----------------------------------------------------------------------------
-void mgl_datac_set_float_(uintptr_t *d, const float *A,int *NX,int *NY,int *NZ)
+void MGL_EXPORT mgl_datac_set_float_(uintptr_t *d, const float *A,int *NX,int *NY,int *NZ)
 {	mgl_datac_set_float(_DC_,A,*NX,*NY,*NZ);	}
-void mgl_datac_set_double_(uintptr_t *d, const double *A,int *NX,int *NY,int *NZ)
+void MGL_EXPORT mgl_datac_set_double_(uintptr_t *d, const double *A,int *NX,int *NY,int *NZ)
 {	mgl_datac_set_double(_DC_,A,*NX,*NY,*NZ);	}
-void mgl_datac_set_complex_(uintptr_t *d, const dual *A,int *NX,int *NY,int *NZ)
+void MGL_EXPORT mgl_datac_set_complex_(uintptr_t *d, const dual *A,int *NX,int *NY,int *NZ)
 {	mgl_datac_set_complex(_DC_,A,*NX,*NY,*NZ);	}
 //-----------------------------------------------------------------------------
-void mgl_datac_rearrange(HADT d, long mx,long my,long mz)
+void MGL_EXPORT mgl_datac_rearrange(HADT d, long mx,long my,long mz)
 {
 	if(mx<1)	return;	// wrong mx
 	if(my<1)	{	my = d->nx*d->ny*d->nz/mx;	mz = 1;	}
@@ -185,15 +185,15 @@ void mgl_datac_rearrange(HADT d, long mx,long my,long mz)
 	if(m==0 || m>d->nx*d->ny*d->nz)	return;	// too high desired dimensions
 	d->nx = mx;	d->ny = my;	d->nz = mz;	d->NewId();
 }
-void mgl_datac_rearrange_(uintptr_t *d, int *mx, int *my, int *mz)
+void MGL_EXPORT mgl_datac_rearrange_(uintptr_t *d, int *mx, int *my, int *mz)
 {	mgl_datac_rearrange(_DC_,*mx,*my,*mz);	}
 //-----------------------------------------------------------------------------
-void mgl_datac_set_id(HADT d, const char *ids)	{	d->id = ids;	}
-void mgl_datac_set_id_(uintptr_t *d, const char *eq,int l)
+void MGL_EXPORT mgl_datac_set_id(HADT d, const char *ids)	{	d->id = ids;	}
+void MGL_EXPORT mgl_datac_set_id_(uintptr_t *d, const char *eq,int l)
 {	char *s=new char[l+1];	memcpy(s,eq,l);	s[l]=0;
 	mgl_datac_set_id(_DC_, s);	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_datac_save(HCDT d, const char *fname,long ns)
+void MGL_EXPORT mgl_datac_save(HCDT d, const char *fname,long ns)
 {
 	const mglDataC *dd = dynamic_cast<const mglDataC*>(d);
 	if(!dd)	{	mgl_data_save(d,fname,ns);	return;	}
@@ -222,11 +222,11 @@ void mgl_datac_save(HCDT d, const char *fname,long ns)
 	}
 	fclose(fp);
 }
-void mgl_datac_save_(uintptr_t *d, const char *fname,int *ns,int l)
+void MGL_EXPORT mgl_datac_save_(uintptr_t *d, const char *fname,int *ns,int l)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	mgl_datac_save(_DC_,s,*ns);		delete []s;	}
 //-----------------------------------------------------------------------------
-int mgl_datac_read(HADT d, const char *fname)
+int MGL_EXPORT mgl_datac_read(HADT d, const char *fname)
 {
 	long l=1,m=1,k=1;
 	long nb,i;
@@ -279,11 +279,11 @@ int mgl_datac_read(HADT d, const char *fname)
 	mglFromStr(d,buf,k,m,l);
 	free(buf);	return true;
 }
-int mgl_datac_read_(uintptr_t *d, const char *fname,int l)
+int MGL_EXPORT mgl_datac_read_(uintptr_t *d, const char *fname,int l)
 {	char *s=new char[l+1];		memcpy(s,fname,l);	s[l]=0;
 	int r = mgl_datac_read(_DC_, s);	delete []s;		return r;	}
 //-----------------------------------------------------------------------------
-void mgl_datac_create(HADT d,long mx,long my,long mz)
+void MGL_EXPORT mgl_datac_create(HADT d,long mx,long my,long mz)
 {
 	d->nx = mx>0 ? mx:1;	d->ny = my>0 ? my:1;	d->nz = mz>0 ? mz:1;
 	if(d->a && !d->link)	delete [](d->a);
@@ -291,20 +291,20 @@ void mgl_datac_create(HADT d,long mx,long my,long mz)
 	d->id.clear();	d->link=false;
 	memset(d->a,0,d->nx*d->ny*d->nz*sizeof(dual));
 }
-void mgl_datac_create_(uintptr_t *d, int *nx,int *ny,int *nz)
+void MGL_EXPORT mgl_datac_create_(uintptr_t *d, int *nx,int *ny,int *nz)
 {	mgl_datac_create(_DC_,*nx,*ny,*nz);	}
 //-----------------------------------------------------------------------------
-void mgl_datac_link(HADT d, dual *A, long mx,long my,long mz)
+void MGL_EXPORT mgl_datac_link(HADT d, dual *A, long mx,long my,long mz)
 {
 	if(!A)	return;
 	if(!d->link && d->a)	delete [](d->a);
 	d->nx = mx>0 ? mx:1;	d->ny = my>0 ? my:1;	d->nz = mz>0 ? mz:1;
 	d->link=true;	d->a=A;	d->NewId();
 }
-void mgl_datac_link_(uintptr_t *d, dual *A, int *nx,int *ny,int *nz)
+void MGL_EXPORT mgl_datac_link_(uintptr_t *d, dual *A, int *nx,int *ny,int *nz)
 {	mgl_datac_link(_DC_,A,*nx,*ny,*nz);	}
 //-----------------------------------------------------------------------------
-int mgl_datac_read_dim(HADT d, const char *fname,long mx,long my,long mz)
+int MGL_EXPORT mgl_datac_read_dim(HADT d, const char *fname,long mx,long my,long mz)
 {
 	if(mx<=0 || my<=0 || mz<=0)	return false;
 	gzFile fp = gzopen(fname,"r");
@@ -314,11 +314,11 @@ int mgl_datac_read_dim(HADT d, const char *fname,long mx,long my,long mz)
 	mglFromStr(d,buf,mx,my,mz);
 	free(buf);	return true;
 }
-int mgl_datac_read_dim_(uintptr_t *d, const char *fname,int *mx,int *my,int *mz,int l)
+int MGL_EXPORT mgl_datac_read_dim_(uintptr_t *d, const char *fname,int *mx,int *my,int *mz,int l)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	int r = mgl_datac_read_dim(_DC_,s,*mx,*my,*mz);	delete []s;	return r;	}
 //-----------------------------------------------------------------------------
-int mgl_datac_read_mat(HADT d, const char *fname, long dim)
+int MGL_EXPORT mgl_datac_read_mat(HADT d, const char *fname, long dim)
 {
 	if(dim<=0 || dim>3)	return false;
 	gzFile fp = gzopen(fname,"r");
@@ -371,11 +371,11 @@ int mgl_datac_read_mat(HADT d, const char *fname, long dim)
 	mglFromStr(d,buf+j,nx,ny,nz);
 	free(buf);	return true;
 }
-int mgl_datac_read_mat_(uintptr_t *d, const char *fname,int *dim,int l)
+int MGL_EXPORT mgl_datac_read_mat_(uintptr_t *d, const char *fname,int *dim,int l)
 {	char *s=new char[l+1];		memcpy(s,fname,l);	s[l]=0;
 	int r = mgl_datac_read_mat(_DC_,s,*dim);	delete []s;	return r;	}
 //-----------------------------------------------------------------------------
-void *mgl_cfill_x(void *par)
+MGL_NO_EXPORT void *mgl_cfill_x(void *par)
 {
 	mglThreadC *t=(mglThreadC *)par;
 	register long i0, nx=t->p[0],ny=t->p[1];
@@ -389,7 +389,7 @@ void *mgl_cfill_x(void *par)
 	}
 	return 0;
 }
-void mgl_datac_fill(HADT d, dual x1,dual x2,char dir)
+void MGL_EXPORT mgl_datac_fill(HADT d, dual x1,dual x2,char dir)
 {
 	if(mgl_isnan(x2))	x2=x1;
 	if(dir<'x' || dir>'z')	dir='x';
@@ -400,10 +400,10 @@ void mgl_datac_fill(HADT d, dual x1,dual x2,char dir)
 	if(dir=='z')	b[1] *= d->nz>1 ? 1./(d->nz-1):0;
 	mglStartThreadC(mgl_cfill_x,0,d->nx*d->ny*d->nz,d->a,b,0,par,0,0,0,&dir);
 }
-void mgl_datac_fill_(uintptr_t *d, dual *x1,dual *x2,const char *dir,int)
+void MGL_EXPORT mgl_datac_fill_(uintptr_t *d, dual *x1,dual *x2,const char *dir,int)
 {	mgl_datac_fill(_DC_,*x1,*x2,*dir);	}
 //-----------------------------------------------------------------------------
-void mgl_datac_squeeze(HADT d, long rx,long ry,long rz,long smooth)
+void MGL_EXPORT mgl_datac_squeeze(HADT d, long rx,long ry,long rz,long smooth)
 {
 	long kx,ky,kz,i,j,k;
 	long nx=d->nx, ny=d->ny, nz=d->nz;
@@ -432,10 +432,10 @@ void mgl_datac_squeeze(HADT d, long rx,long ry,long rz,long smooth)
 	if(!d->link)	delete [](d->a);
 	d->a=b;	d->nx = kx;  d->ny = ky;  d->nz = kz;	d->NewId();	d->link=false;
 }
-void mgl_datac_squeeze_(uintptr_t *d, int *rx,int *ry,int *rz,int *smooth)
+void MGL_EXPORT mgl_datac_squeeze_(uintptr_t *d, int *rx,int *ry,int *rz,int *smooth)
 {	mgl_datac_squeeze(_DC_,*rx,*ry,*rz,*smooth);	}
 //-----------------------------------------------------------------------------
-void mgl_datac_extend(HADT d, long n1, long n2)
+void MGL_EXPORT mgl_datac_extend(HADT d, long n1, long n2)
 {
 	long nx=d->nx, ny=d->ny, nz=d->nz;
 	if(nz>2 || n1==0)	return;
@@ -469,10 +469,10 @@ void mgl_datac_extend(HADT d, long n1, long n2)
 	d->a=b;	d->nx=mx;	d->ny=my;	d->nz=mz;
 	d->NewId();		d->link=false;
 }
-void mgl_datac_extend_(uintptr_t *d, int *n1, int *n2)
+void MGL_EXPORT mgl_datac_extend_(uintptr_t *d, int *n1, int *n2)
 {	mgl_datac_extend(_DC_,*n1,*n2);	}
 //-----------------------------------------------------------------------------
-void mgl_datac_transpose(HADT d, const char *dim)
+void MGL_EXPORT mgl_datac_transpose(HADT d, const char *dim)
 {
 	long nx=d->nx, ny=d->ny, nz=d->nz;
 	dual *b=new dual[nx*ny*nz], *a=d->a;
@@ -512,11 +512,11 @@ void mgl_datac_transpose(HADT d, const char *dim)
 	n=d->nx;	d->nx=nx;	d->ny=ny;	d->nz=nz;
 	if(nx!=n)	d->NewId();
 }
-void mgl_datac_transpose_(uintptr_t *d, const char *dim,int l)
+void MGL_EXPORT mgl_datac_transpose_(uintptr_t *d, const char *dim,int l)
 {	char *s=new char[l+1];	memcpy(s,dim,l);	s[l]=0;
 	mgl_datac_transpose(_DC_,s);	delete []s;	}
 //-----------------------------------------------------------------------------
-void *mgl_cmodify(void *par)
+MGL_NO_EXPORT void *mgl_cmodify(void *par)
 {
 	mglThreadC *t=(mglThreadC *)par;
 	const mglFormulaC *f = (const mglFormulaC *)(t->v);
@@ -532,7 +532,7 @@ void *mgl_cmodify(void *par)
 	}
 	return 0;
 }
-void mgl_datac_modify(HADT d, const char *eq,long dim)
+void MGL_EXPORT mgl_datac_modify(HADT d, const char *eq,long dim)
 {
 	long nx=d->nx, ny=d->ny, nz=d->nz, par[3]={nx,ny,nz};
 	mglFormulaC f(eq);
@@ -548,11 +548,11 @@ void mgl_datac_modify(HADT d, const char *eq,long dim)
 		mglStartThreadC(mgl_cmodify,0,nx*par[1],d->a+nx*dim,0,0,par,&f);
 	}
 }
-void mgl_datac_modify_(uintptr_t *d, const char *eq,int *dim,int l)
+void MGL_EXPORT mgl_datac_modify_(uintptr_t *d, const char *eq,int *dim,int l)
 {	char *s=new char[l+1];	memcpy(s,eq,l);	s[l]=0;
 	mgl_datac_modify(_DC_,s,*dim);	delete []s;	}
 //-----------------------------------------------------------------------------
-void *mgl_cmodify_gen(void *par)
+MGL_NO_EXPORT void *mgl_cmodify_gen(void *par)
 {
 	mglThreadC *t=(mglThreadC *)par;
 	const mglFormulaC *f = (const mglFormulaC *)(t->v);
@@ -568,7 +568,7 @@ void *mgl_cmodify_gen(void *par)
 	}
 	return 0;
 }
-void mgl_datac_modify_vw(HADT d, const char *eq,HCDT vdat,HCDT wdat)
+void MGL_EXPORT mgl_datac_modify_vw(HADT d, const char *eq,HCDT vdat,HCDT wdat)
 {
 	const mglDataC *v = dynamic_cast<const mglDataC *>(vdat);
 	const mglDataC *w = dynamic_cast<const mglDataC *>(wdat);
@@ -582,11 +582,11 @@ void mgl_datac_modify_vw(HADT d, const char *eq,HCDT vdat,HCDT wdat)
 	else if(vdat)	mglStartThreadV(mgl_cmodify_gen,nn,d->a,vdat,0,par,&f);
 	else	mglStartThreadC(mgl_cmodify,0,nn,d->a,0,0,par,&f);
 }
-void mgl_datac_modify_vw_(uintptr_t *d, const char *eq, uintptr_t *v, uintptr_t *w,int l)
+void MGL_EXPORT mgl_datac_modify_vw_(uintptr_t *d, const char *eq, uintptr_t *v, uintptr_t *w,int l)
 {	char *s=new char[l+1];	memcpy(s,eq,l);	s[l]=0;
 	mgl_datac_modify_vw(_DC_,s,_DA_(v),_DA_(w));	delete []s;	}
 //-----------------------------------------------------------------------------
-void *mgl_cfill_f(void *par)
+MGL_NO_EXPORT void *mgl_cfill_f(void *par)
 {
 	mglThreadC *t=(mglThreadC *)par;
 	const mglFormulaC *f = (const mglFormulaC *)(t->v);
@@ -601,7 +601,7 @@ void *mgl_cfill_f(void *par)
 	}
 	return 0;
 }
-void *mgl_cfill_fgen(void *par)
+MGL_NO_EXPORT void *mgl_cfill_fgen(void *par)
 {
 	mglThreadC *t=(mglThreadC *)par;
 	const mglFormulaC *f = (const mglFormulaC *)(t->v);
@@ -617,7 +617,7 @@ void *mgl_cfill_fgen(void *par)
 	}
 	return 0;
 }
-void mgl_datac_fill_eq(HMGL gr, HADT d, const char *eq, HCDT vdat, HCDT wdat, const char *opt)
+void MGL_EXPORT mgl_datac_fill_eq(HMGL gr, HADT d, const char *eq, HCDT vdat, HCDT wdat, const char *opt)
 {
 	const mglDataC *v = dynamic_cast<const mglDataC *>(vdat);
 	const mglDataC *w = dynamic_cast<const mglDataC *>(wdat);
@@ -638,12 +638,12 @@ void mgl_datac_fill_eq(HMGL gr, HADT d, const char *eq, HCDT vdat, HCDT wdat, co
 	else	mglStartThreadC(mgl_cfill_f,0,nn,d->a,0,0,par,&f,cc);
 	gr->LoadState();
 }
-void mgl_datac_fill_eq_(uintptr_t *gr, uintptr_t *d, const char *eq, uintptr_t *v, uintptr_t *w, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_datac_fill_eq_(uintptr_t *gr, uintptr_t *d, const char *eq, uintptr_t *v, uintptr_t *w, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,eq,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_datac_fill_eq(_GR_,_DC_,s,_DA_(v),_DA_(w),o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-bool mgl_add_file(long &kx,long &ky, long &kz, dual *&b, mglDataC *d,bool as_slice)
+bool MGL_NO_EXPORT mgl_add_file(long &kx,long &ky, long &kz, dual *&b, mglDataC *d,bool as_slice)
 {
 	if(as_slice && d->nz==1)
 	{
@@ -681,7 +681,7 @@ bool mgl_add_file(long &kx,long &ky, long &kz, dual *&b, mglDataC *d,bool as_sli
 	return true;
 }
 //-----------------------------------------------------------------------------
-int mgl_datac_read_range(HADT dat, const char *templ, double from, double to, double step, int as_slice)
+int MGL_EXPORT mgl_datac_read_range(HADT dat, const char *templ, double from, double to, double step, int as_slice)
 {
 	mglDataC d;
 	double t = from;
@@ -709,11 +709,11 @@ int mgl_datac_read_range(HADT dat, const char *templ, double from, double to, do
 	delete []fname;	free(b);
 	return true;
 }
-int mgl_datac_read_range_(uintptr_t *d, const char *fname, mreal *from, mreal *to, mreal *step, int *as_slice,int l)
+int MGL_EXPORT mgl_datac_read_range_(uintptr_t *d, const char *fname, mreal *from, mreal *to, mreal *step, int *as_slice,int l)
 {	char *s=new char[l+1];		memcpy(s,fname,l);	s[l]=0;
 	int r = mgl_datac_read_range(_DC_,s,*from,*to,*step,*as_slice);	delete []s;	return r;	}
 //-----------------------------------------------------------------------------
-int mgl_datac_read_all(HADT dat, const char *templ, int as_slice)
+int MGL_EXPORT mgl_datac_read_all(HADT dat, const char *templ, int as_slice)
 {
 #ifndef WIN32
 	mglDataC d;
@@ -748,11 +748,11 @@ int mgl_datac_read_all(HADT dat, const char *templ, int as_slice)
 	return false;
 #endif
 }
-int mgl_datac_read_all_(uintptr_t *d, const char *fname, int *as_slice,int l)
+int MGL_EXPORT mgl_datac_read_all_(uintptr_t *d, const char *fname, int *as_slice,int l)
 {	char *s=new char[l+1];		memcpy(s,fname,l);	s[l]=0;
 	int r = mgl_datac_read_all(_DC_,s,*as_slice);	delete []s;	return r;	}
 //-----------------------------------------------------------------------------
-HMDT mgl_datac_real(HCDT d)
+HMDT MGL_EXPORT mgl_datac_real(HCDT d)
 {
 	long nx=d->GetNx(),ny=d->GetNy(),nz=d->GetNz();
 	mglData *r=new mglData(nx,ny,nz);
@@ -762,10 +762,10 @@ HMDT mgl_datac_real(HCDT d)
 	else		r->Set(d);
 	return r;
 }
-uintptr_t mgl_datac_real_(uintptr_t *d)
+uintptr_t MGL_EXPORT mgl_datac_real_(uintptr_t *d)
 {	return uintptr_t(mgl_datac_real(_DC_));	}
 //-----------------------------------------------------------------------------
-HMDT mgl_datac_imag(HCDT d)
+HMDT MGL_EXPORT mgl_datac_imag(HCDT d)
 {
 	long nx=d->GetNx(),ny=d->GetNy(),nz=d->GetNz();
 	mglData *r=new mglData(nx,ny,nz);
@@ -774,10 +774,10 @@ HMDT mgl_datac_imag(HCDT d)
 	if(dd)	for(i=0;i<nx*ny*nz;i++)	r->a[i] = imag(dd->a[i]);
 	return r;
 }
-uintptr_t mgl_datac_imag_(uintptr_t *d)
+uintptr_t MGL_EXPORT mgl_datac_imag_(uintptr_t *d)
 {	return uintptr_t(mgl_datac_imag(_DC_));	}
 //-----------------------------------------------------------------------------
-HMDT mgl_datac_abs(HCDT d)
+HMDT MGL_EXPORT mgl_datac_abs(HCDT d)
 {
 	long nx=d->GetNx(),ny=d->GetNy(),nz=d->GetNz();
 	mglData *r=new mglData(nx,ny,nz);
@@ -787,10 +787,10 @@ HMDT mgl_datac_abs(HCDT d)
 	else	for(i=0;i<nx*ny*nz;i++)	r->a[i] = fabs(d->vthr(i));
 	return r;
 }
-uintptr_t mgl_datac_abs_(uintptr_t *d)
+uintptr_t MGL_EXPORT mgl_datac_abs_(uintptr_t *d)
 {	return uintptr_t(mgl_datac_abs(_DC_));	}
 //-----------------------------------------------------------------------------
-HMDT mgl_datac_arg(HCDT d)
+HMDT MGL_EXPORT mgl_datac_arg(HCDT d)
 {
 	long nx=d->GetNx(),ny=d->GetNy(),nz=d->GetNz();
 	mglData *r=new mglData(nx,ny,nz);
@@ -799,20 +799,20 @@ HMDT mgl_datac_arg(HCDT d)
 	if(dd)	for(i=0;i<nx*ny*nz;i++)	r->a[i] = arg(dd->a[i]);
 	return r;
 }
-uintptr_t mgl_datac_arg_(uintptr_t *d)
+uintptr_t MGL_EXPORT mgl_datac_arg_(uintptr_t *d)
 {	return uintptr_t(mgl_datac_arg(_DC_));	}
 //-----------------------------------------------------------------------------
-void mgl_datac_set_ri(HADT d, HCDT re, HCDT im)
+void MGL_EXPORT mgl_datac_set_ri(HADT d, HCDT re, HCDT im)
 {
 	long nx=d->GetNx(),ny=d->GetNy(),nz=d->GetNz();
 	d->Create(nx,ny,nz);
 	register long i;
 	for(i=0;i<nx*ny*nz;i++)	d->a[i] = dual(re->vthr(i),im->vthr(i));
 }
-void mgl_datac_set_ri_(uintptr_t *d, uintptr_t *re, uintptr_t *im)
+void MGL_EXPORT mgl_datac_set_ri_(uintptr_t *d, uintptr_t *re, uintptr_t *im)
 {	mgl_datac_set_ri(_DC_,_DA_(re),_DA_(im));	}
 //-----------------------------------------------------------------------------
-void mgl_datac_set_ap(HADT d, HCDT a, HCDT p)
+void MGL_EXPORT mgl_datac_set_ap(HADT d, HCDT a, HCDT p)
 {
 	long nx=d->GetNx(),ny=d->GetNy(),nz=d->GetNz();
 	d->Create(nx,ny,nz);
@@ -824,11 +824,11 @@ void mgl_datac_set_ap(HADT d, HCDT a, HCDT p)
 		d->a[i] = dual(aa*cos(pp), aa*sin(pp));
 	}
 }
-void mgl_datac_set_ap_(uintptr_t *d, uintptr_t *a, uintptr_t *p)
+void MGL_EXPORT mgl_datac_set_ap_(uintptr_t *d, uintptr_t *a, uintptr_t *p)
 {	mgl_datac_set_ap(_DC_,_DA_(a),_DA_(p));	}
 //-----------------------------------------------------------------------------
 #if MGL_HAVE_HDF5
-void mgl_datac_save_hdf(HCDT dat,const char *fname,const char *data,int rewrite)
+void MGL_EXPORT mgl_datac_save_hdf(HCDT dat,const char *fname,const char *data,int rewrite)
 {
 	const mglDataC *d = dynamic_cast<const mglDataC *>(dat);	// NOTE: only for mglDataC
 	if(!d)	{	mgl_data_save_hdf(dat,fname,data,rewrite);	return;	}
@@ -854,7 +854,7 @@ void mgl_datac_save_hdf(HCDT dat,const char *fname,const char *data,int rewrite)
 	H5Dclose(hd);	H5Sclose(hs);	H5Fclose(hf);
 }
 //-----------------------------------------------------------------------------
-int mgl_datac_read_hdf(HADT d,const char *fname,const char *data)
+int MGL_EXPORT mgl_datac_read_hdf(HADT d,const char *fname,const char *data)
 {
 	hid_t hf,hd,hs;
 	hsize_t dims[4];
@@ -883,17 +883,17 @@ int mgl_datac_read_hdf(HADT d,const char *fname,const char *data)
 }
 //-----------------------------------------------------------------------------
 #else
-void mgl_datac_save_hdf(HCDT ,const char *,const char *,int )
+void MGL_EXPORT mgl_datac_save_hdf(HCDT ,const char *,const char *,int )
 {	mglGlobalMess += "HDF5 support was disabled. Please, enable it and rebuild MathGL.\n";	}
-int mgl_datac_read_hdf(HADT ,const char *,const char *)
+int MGL_EXPORT mgl_datac_read_hdf(HADT ,const char *,const char *)
 {	mglGlobalMess += "HDF5 support was disabled. Please, enable it and rebuild MathGL.\n";	return false;}
 #endif
 //-----------------------------------------------------------------------------
-int mgl_datac_read_hdf_(uintptr_t *d, const char *fname, const char *data,int l,int n)
+int MGL_EXPORT mgl_datac_read_hdf_(uintptr_t *d, const char *fname, const char *data,int l,int n)
 {	char *s=new char[l+1];		memcpy(s,fname,l);	s[l]=0;
 	char *t=new char[n+1];		memcpy(t,data,n);	t[n]=0;
 	int r = mgl_datac_read_hdf(_DC_,s,t);	delete []s;	delete []t;	return r;	}
-void mgl_datac_save_hdf_(uintptr_t *d, const char *fname, const char *data, int *rewrite,int l,int n)
+void MGL_EXPORT mgl_datac_save_hdf_(uintptr_t *d, const char *fname, const char *data, int *rewrite,int l,int n)
 {	char *s=new char[l+1];		memcpy(s,fname,l);	s[l]=0;
 	char *t=new char[n+1];		memcpy(t,data,n);	t[n]=0;
 	mgl_datac_save_hdf(_DC_,s,t,*rewrite);	delete []s;	delete []t;	}

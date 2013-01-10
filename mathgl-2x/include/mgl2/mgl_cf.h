@@ -1,5 +1,5 @@
 /***************************************************************************
- * mgl_cf.cpp is part of Math Graphic Library
+ * MGL_EXPORT mgl_cf.cpp is part of Math Graphic Library
  * Copyright (C) 2007-2012 Alexey Balakin <mathgl.abalakin@gmail.ru>       *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -44,8 +44,8 @@
 extern "C" {
 #endif
 //-----------------------------------------------------------------------------
-HMGL mgl_create_graph_gl();
-uintptr_t mgl_create_graph_gl_();
+HMGL MGL_EXPORT mgl_create_graph_gl();
+uintptr_t MGL_EXPORT mgl_create_graph_gl_();
 //-----------------------------------------------------------------------------
 #ifdef __cplusplus
 }

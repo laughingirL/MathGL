@@ -106,7 +106,7 @@ struct mglDrawDat
 };
 //-----------------------------------------------------------------------------
 /// Class contains all functionality for creating different mathematical plots
-class mglCanvas : public mglBase
+class MGL_EXPORT mglCanvas : public mglBase
 {
 friend struct mglPrim;
 public:
@@ -300,6 +300,8 @@ using mglBase::Light;
 	/// Set extra shift for tick and axis labels
 	inline void SetTickShift(mglPoint p)
 	{	ax.sh = p.x;	ay.sh = p.y;	az.sh = p.z;	ac.sh = p.c;	}
+	/// Get rotation angle for glyph
+	float GetGlyphPhi(const mglPnt &q, float phi);
 
 protected:
 	mreal Delay;		///< Delay for animation in seconds

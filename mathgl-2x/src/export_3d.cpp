@@ -23,9 +23,9 @@
 #undef _GR_
 #define _GR_	((mglCanvas *)(*gr))
 #define _Gr_	((mglCanvas *)(gr))
-int mgl_tga_save(const char *fname, int w, int h, unsigned char **p);
-int mgl_pnga_save(const char *fname, int w, int h, unsigned char **p);
-void mgl_printf(void *fp, bool gz, const char *str, ...);
+int MGL_NO_EXPORT mgl_tga_save(const char *fname, int w, int h, unsigned char **p);
+int MGL_NO_EXPORT mgl_pnga_save(const char *fname, int w, int h, unsigned char **p);
+void MGL_NO_EXPORT mgl_printf(void *fp, bool gz, const char *str, ...);
 //-----------------------------------------------------------------------------
 void mglTexture::GetRGBA(unsigned char *f) const
 {
@@ -46,7 +46,7 @@ void mglTexture::GetRGBA(unsigned char *f) const
 	}
 }
 //-----------------------------------------------------------------------------
-void mgl_obj_glyph_old(HMGL gr, const mglPrim &q, const mglPnt &p, FILE *fp)
+void MGL_EXPORT mgl_obj_glyph_old(HMGL gr, const mglPrim &q, const mglPnt &p, FILE *fp)
 {
 	mreal f = q.p/2, dx=p.u/2, dy=p.v/2, x,y;
 	mreal c=q.s*cos(q.w*M_PI/180), s=-q.s*sin(q.w*M_PI/180);
@@ -117,7 +117,7 @@ void mgl_obj_glyph_old(HMGL gr, const mglPrim &q, const mglPnt &p, FILE *fp)
 }
 //-----------------------------------------------------------------------------
 /* M.Vidassov take/move it into src/obj.cpp */
-void mgl_obj_prim_old(HMGL gr, const mglPrim &q, const mglPnt &p, FILE *fp, mreal size)
+void MGL_EXPORT mgl_obj_prim_old(HMGL gr, const mglPrim &q, const mglPnt &p, FILE *fp, mreal size)
 {
 	char type = q.n4;	mreal ss=size;
 	register long i=q.n1+1,j;
@@ -281,7 +281,7 @@ void mgl_obj_prim_old(HMGL gr, const mglPrim &q, const mglPnt &p, FILE *fp, mrea
 	}
 }
 //-----------------------------------------------------------------------------
-void mgl_write_obj_old(HMGL gr, const char *fname,const char *descr, int use_png)
+void MGL_EXPORT mgl_write_obj_old(HMGL gr, const char *fname,const char *descr, int use_png)
 {
 	if(gr->GetPrmNum()==0)	return;	// nothing to do
 	register size_t i,j;
@@ -350,12 +350,12 @@ void mgl_write_obj_old(HMGL gr, const char *fname,const char *descr, int use_png
 	else		mgl_tga_save(tname,256,256*j,pbuf);
 	free(pbuf);	delete []buf;	delete []tname;
 }
-void mgl_write_obj_old_(uintptr_t *gr, const char *fname,const char *descr, int *use_png,int l,int n)
+void MGL_EXPORT mgl_write_obj_old_(uintptr_t *gr, const char *fname,const char *descr, int *use_png,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *d=new char[n+1];	memcpy(d,descr,n);	d[n]=0;
 	mgl_write_obj_old(_GR_,s,d,*use_png);	delete []s;		delete []d;	}
 //-----------------------------------------------------------------------------
-void mgl_write_stl(HMGL gr, const char *fname,const char *descr)
+void MGL_EXPORT mgl_write_stl(HMGL gr, const char *fname,const char *descr)
 {
 	if(gr->GetPrmNum()==0)	return;	// nothing to do
 	FILE *fp = fopen(fname,"wt");
@@ -400,12 +400,12 @@ void mgl_write_stl(HMGL gr, const char *fname,const char *descr)
 	fprintf(fp,"endsolid %s",(descr && *descr)?descr:"mathgl");
 	fclose(fp);
 }
-void mgl_write_stl_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
+void MGL_EXPORT mgl_write_stl_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *d=new char[n+1];	memcpy(d,descr,n);	d[n]=0;
 	mgl_write_stl(_GR_,s,d);	delete []s;		delete []d;	}
 //-----------------------------------------------------------------------------
-void mgl_write_xyz(HMGL gr, const char *fname,const char *descr)
+void MGL_EXPORT mgl_write_xyz(HMGL gr, const char *fname,const char *descr)
 {
 	if(gr->GetPrmNum()==0)	return;	// nothing to do
 
@@ -438,12 +438,12 @@ void mgl_write_xyz(HMGL gr, const char *fname,const char *descr)
 	}
 	fclose(fp);	fclose(ff);	delete []tname;
 }
-void mgl_write_xyz_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
+void MGL_EXPORT mgl_write_xyz_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *d=new char[n+1];	memcpy(d,descr,n);	d[n]=0;
 	mgl_write_xyz(_GR_,s,d);	delete []s;		delete []d;	}
 //-----------------------------------------------------------------------------
-void mgl_write_off(HMGL gr, const char *fname,const char *descr, int colored)
+void MGL_EXPORT mgl_write_off(HMGL gr, const char *fname,const char *descr, int colored)
 {
 	register long i,nf=0;
 	for(i=0;i<gr->GetPrmNum();i++)	// find number of faces
@@ -499,14 +499,14 @@ void mgl_write_off(HMGL gr, const char *fname,const char *descr, int colored)
 	}
 	fclose(fp);
 }
-void mgl_write_off_(uintptr_t *gr, const char *fname,const char *descr,int *colored,int l,int n)
+void MGL_EXPORT mgl_write_off_(uintptr_t *gr, const char *fname,const char *descr,int *colored,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *d=new char[n+1];	memcpy(d,descr,n);	d[n]=0;
 	mgl_write_off(_GR_,s,d,*colored);	delete []s;		delete []d;	}
 //-----------------------------------------------------------------------------
-void mgl_write_idtf(HMGL /*gr*/, const char */*fname*/,const char */*descr*/)
+void MGL_EXPORT mgl_write_idtf(HMGL /*gr*/, const char */*fname*/,const char */*descr*/)
 {	/*_Gr_->WriteIDTF(fname,descr);*/	}	// TODO: Add idtf support later
-void mgl_write_idtf_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
+void MGL_EXPORT mgl_write_idtf_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
 	mgl_write_idtf(_GR_,s,f);	delete []s;		delete []f;	}
@@ -583,9 +583,9 @@ bool mglCanvas::WriteJSON(const char *fname)
 	return false;
 }
 //-----------------------------------------------------------------------------
-void mgl_write_json(HMGL gr, const char *fname,const char *)
+void MGL_EXPORT mgl_write_json(HMGL gr, const char *fname,const char *)
 {	_Gr_->WriteJSON(fname);	}
-void mgl_write_json_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
+void MGL_EXPORT mgl_write_json_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
 	mgl_write_json(_GR_,s,f);	delete []s;		delete []f;	}
@@ -636,9 +636,9 @@ bool mglCanvas::ExportMGLD(const char *fname, const char *descr)
 	return false;
 }
 //-----------------------------------------------------------------------------
-void mgl_export_mgld(HMGL gr, const char *fname,const char *descr)
+void MGL_EXPORT mgl_export_mgld(HMGL gr, const char *fname,const char *descr)
 {	_Gr_->ExportMGLD(fname, descr);	}
-void mgl_export_mgld_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
+void MGL_EXPORT mgl_export_mgld_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
 	mgl_export_mgld(_GR_,s,f);	delete []s;		delete []f;	}
@@ -724,13 +724,13 @@ bool mglCanvas::ImportMGLD(const char *fname, bool add)
 	delete []buf;	fclose(fp);	return false;
 }
 //-----------------------------------------------------------------------------
-void mgl_import_mgld(HMGL gr, const char *fname, int add)
+void MGL_EXPORT mgl_import_mgld(HMGL gr, const char *fname, int add)
 {	_Gr_->ImportMGLD(fname, add);	}
-void mgl_import_mgld_(uintptr_t *gr, const char *fname, int *add, int l)
+void MGL_EXPORT mgl_import_mgld_(uintptr_t *gr, const char *fname, int *add, int l)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	mgl_import_mgld(_GR_,s,*add);	delete []s;	}
 //-----------------------------------------------------------------------------
-/*void mgl_xgl_prim(const mglPrim &q, const mglPnt &p, FILE *fp, mreal size)
+/*void MGL_EXPORT mgl_xgl_prim(const mglPrim &q, const mglPnt &p, FILE *fp, mreal size)
 {
 	char type = q.n4;	mreal ss=size*0.35;
 	register long i=q.n1,j;
@@ -960,14 +960,14 @@ void mglCanvas::WriteXGL(const char *fname,const char *descr)
 	fprintf(fp,"</WORLD>");	fclose(fp);	delete []pg;
 }
 //-----------------------------------------------------------------------------
-void mgl_write_xgl(HMGL gr, const char *fname,const char *descr)
+void MGL_EXPORT mgl_write_xgl(HMGL gr, const char *fname,const char *descr)
 {	_Gr_->WriteXGL(fname,descr);	}
-void mgl_write_xgl_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
+void MGL_EXPORT mgl_write_xgl_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *d=new char[n+1];	memcpy(d,descr,n);	d[n]=0;
 	mgl_write_xgl(_GR_,s,d);	delete []s;		delete []d;	}*/
 //-----------------------------------------------------------------------------
-void mgl_x3d_mdef(HMGL gr, void *fp, bool gz)
+void MGL_EXPORT mgl_x3d_mdef(HMGL gr, void *fp, bool gz)
 {
 	bool m_p=false,m_x=false,m_d=false,m_v=false,m_t=false,
 	m_s=false,m_a=false,m_o=false,m_T=false,
@@ -1015,7 +1015,7 @@ void mgl_x3d_mdef(HMGL gr, void *fp, bool gz)
 	mgl_printf(fp, gz, "\n");
 }
 //-----------------------------------------------------------------------------
-void mgl_x3d_prim(const mglPrim &q, const mglPnt &p, const long *pnt, void *fp,bool gz, mreal size)
+void MGL_EXPORT mgl_x3d_prim(const mglPrim &q, const mglPnt &p, const long *pnt, void *fp,bool gz, mreal size)
 {
 	// <ProtoInstance name='EmissiveMaterial'/>
 /*		if(q.type==0)	// mark
@@ -1102,7 +1102,7 @@ void mgl_x3d_prim(const mglPrim &q, const mglPnt &p, const long *pnt, void *fp,b
 		}*/	
 }
 //-----------------------------------------------------------------------------
-void mgl_write_x3d(HMGL gr, const char *fname,const char *descr)
+void MGL_EXPORT mgl_write_x3d(HMGL gr, const char *fname,const char *descr)
 {
 	if(gr->GetPrmNum()<1)	return;
 	time_t now;	time(&now);
@@ -1179,7 +1179,7 @@ void mgl_write_x3d(HMGL gr, const char *fname,const char *descr)
 	mgl_printf(fp, gz, "</Scene>\n");
 	if(gz)	gzclose((gzFile)fp);	else	fclose((FILE *)fp);
 }
-void mgl_write_x3d_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
+void MGL_EXPORT mgl_write_x3d_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 char *d=new char[n+1];	memcpy(d,descr,n);	d[n]=0;
 mgl_write_x3d(_GR_,s,d);	delete []s;		delete []d;	}

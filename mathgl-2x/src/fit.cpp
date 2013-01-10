@@ -31,7 +31,7 @@
 int mglFitPnts=100;		///< Number of output points in fitting
 char mglFitRes[1024];	///< Last fitted formula
 //-----------------------------------------------------------------------------
-void mgl_puts_fit(HMGL gr, double x, double y, double z, const char *pre, const char *font, double size)
+void MGL_EXPORT mgl_puts_fit(HMGL gr, double x, double y, double z, const char *pre, const char *font, double size)
 {
 	long n = strlen(mglFitRes)+(pre?strlen(pre):0)+1;
 	char *buf = new char[n];
@@ -40,7 +40,7 @@ void mgl_puts_fit(HMGL gr, double x, double y, double z, const char *pre, const 
 	mgl_puts(gr,x,y,z,buf,font,size);
 	delete []buf;
 }
-void mgl_puts_fit_(uintptr_t* gr, mreal *x, mreal *y, mreal *z, const char *prefix, const char *font, mreal *size, int l, int n)
+void MGL_EXPORT mgl_puts_fit_(uintptr_t* gr, mreal *x, mreal *y, mreal *z, const char *prefix, const char *font, mreal *size, int l, int n)
 {
 	char *s=new char[l+1];	memcpy(s,prefix,l);	s[l]=0;
 	char *d=new char[n+1];	memcpy(d,font,n);	d[n]=0;
@@ -79,7 +79,7 @@ int	mgl_fit__f (const gsl_vector *x, void *data, gsl_vector *f)
 	return GSL_SUCCESS;
 }
 //-----------------------------------------------------------------------------
-int mgl_fit__df (const gsl_vector * x, void *data, gsl_matrix * J)
+int MGL_NO_EXPORT mgl_fit__df (const gsl_vector * x, void *data, gsl_matrix * J)
 {
 	mglFitData *fd = (mglFitData *)data;
 	register long i,j;
@@ -96,7 +96,7 @@ int mgl_fit__df (const gsl_vector * x, void *data, gsl_matrix * J)
 	return GSL_SUCCESS;
 }
 //-----------------------------------------------------------------------------
-int mgl_fit__fdf (const gsl_vector * x, void *data, gsl_vector * f, gsl_matrix * J)
+int MGL_NO_EXPORT mgl_fit__fdf (const gsl_vector * x, void *data, gsl_vector * f, gsl_matrix * J)
 {
 	mgl_fit__f(x, data, f);
 	mgl_fit__df(x, data, J);
@@ -105,7 +105,7 @@ int mgl_fit__fdf (const gsl_vector * x, void *data, gsl_vector * f, gsl_matrix *
 #endif
 //-----------------------------------------------------------------------------
 /// GSL based fitting procedure for formula/arguments specified by string
-mreal mgl_fit_base(mglFitData *fd, mreal *ini)
+mreal MGL_NO_EXPORT mgl_fit_base(mglFitData *fd, mreal *ini)
 {
 #if MGL_HAVE_GSL
 	register long i,m=fd->m,n=fd->n,iter=0;
@@ -171,7 +171,7 @@ void mglPrepareFitEq(mglBase *gr,mreal chi, const char *eq, const char *var, mre
 	mglFitRes[k]=0;
 }
 //-----------------------------------------------------------------------------
-HMDT mgl_fit_1(HMGL gr, HCDT y, const char *eq, const char *var, HMDT ini, const char *opt)
+HMDT MGL_EXPORT mgl_fit_1(HMGL gr, HCDT y, const char *eq, const char *var, HMDT ini, const char *opt)
 {
 	gr->SaveState(opt);
 	mglData x(y->GetNx());	x.Fill(gr->Min.x, gr->Max.x);
@@ -179,7 +179,7 @@ HMDT mgl_fit_1(HMGL gr, HCDT y, const char *eq, const char *var, HMDT ini, const
 	return mgl_fit_xys(gr,&x,y,&s,eq,var,ini,0);
 }
 //-----------------------------------------------------------------------------
-HMDT mgl_fit_2(HMGL gr, HCDT z, const char *eq, const char *var, HMDT ini, const char *opt)
+HMDT MGL_EXPORT mgl_fit_2(HMGL gr, HCDT z, const char *eq, const char *var, HMDT ini, const char *opt)
 {
 	gr->SaveState(opt);
 	mglData x(z->GetNx());	x.Fill(gr->Min.x, gr->Max.x);
@@ -188,7 +188,7 @@ HMDT mgl_fit_2(HMGL gr, HCDT z, const char *eq, const char *var, HMDT ini, const
 	return mgl_fit_xyzs(gr,&x,&y,z,&s,eq,var,ini,0);
 }
 //-----------------------------------------------------------------------------
-HMDT mgl_fit_3(HMGL gr, HCDT a, const char *eq, const char *var, HMDT ini, const char *opt)
+HMDT MGL_EXPORT mgl_fit_3(HMGL gr, HCDT a, const char *eq, const char *var, HMDT ini, const char *opt)
 {
 	gr->SaveState(opt);
 	mglData x(a->GetNx());	x.Fill(gr->Min.x, gr->Max.x);
@@ -198,32 +198,32 @@ HMDT mgl_fit_3(HMGL gr, HCDT a, const char *eq, const char *var, HMDT ini, const
 	return mgl_fit_xyzas(gr,&x,&y,&z,a,&s,eq,var,ini,0);
 }
 //-----------------------------------------------------------------------------
-HMDT mgl_fit_xy(HMGL gr, HCDT x, HCDT y, const char *eq, const char *var, HMDT ini, const char *opt)
+HMDT MGL_EXPORT mgl_fit_xy(HMGL gr, HCDT x, HCDT y, const char *eq, const char *var, HMDT ini, const char *opt)
 {
 	mglData s(y);	s.Fill(1,1);
 	return mgl_fit_xys(gr,x,y,&s,eq,var,ini,opt);
 }
 //-----------------------------------------------------------------------------
-HMDT mgl_fit_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *eq, const char *var, HMDT ini, const char *opt)
+HMDT MGL_EXPORT mgl_fit_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *eq, const char *var, HMDT ini, const char *opt)
 {
 	mglData s(z);	s.Fill(1,1);
 	return mgl_fit_xyzs(gr,x,y,z,&s,eq,var,ini,opt);
 }
 //-----------------------------------------------------------------------------
-HMDT mgl_fit_xyza(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *eq, const char *var, HMDT ini, const char *opt)
+HMDT MGL_EXPORT mgl_fit_xyza(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *eq, const char *var, HMDT ini, const char *opt)
 {
 	mglData s(a);	s.Fill(1,1);
 	return mgl_fit_xyzas(gr,x,y,z,a,&s,eq,var,ini,opt);
 }
 //-----------------------------------------------------------------------------
-HMDT mgl_fit_ys(HMGL gr, HCDT y, HCDT s, const char *eq, const char *var, HMDT ini, const char *opt)
+HMDT MGL_EXPORT mgl_fit_ys(HMGL gr, HCDT y, HCDT s, const char *eq, const char *var, HMDT ini, const char *opt)
 {
 	gr->SaveState(opt);
 	mglData x(y->GetNx());	x.Fill(gr->Min.x, gr->Max.x);
 	return mgl_fit_xys(gr,&x,y,s,eq,var,ini,0);
 }
 //-----------------------------------------------------------------------------
-HMDT mgl_fit_xys(HMGL gr, HCDT xx, HCDT yy, HCDT ss, const char *eq, const char *var, HMDT ini, const char *opt)
+HMDT MGL_EXPORT mgl_fit_xys(HMGL gr, HCDT xx, HCDT yy, HCDT ss, const char *eq, const char *var, HMDT ini, const char *opt)
 {
 	mglData *fit=new mglData;
 	long m = yy->GetNx();
@@ -267,7 +267,7 @@ HMDT mgl_fit_xys(HMGL gr, HCDT xx, HCDT yy, HCDT ss, const char *eq, const char 
 	delete fd.eq;	gr->LoadState();	return fit;
 }
 //-----------------------------------------------------------------------------
-HMDT mgl_fit_xyzs(HMGL gr, HCDT xx, HCDT yy, HCDT zz, HCDT ss, const char *eq, const char *var, HMDT ini, const char *opt)
+HMDT MGL_EXPORT mgl_fit_xyzs(HMGL gr, HCDT xx, HCDT yy, HCDT zz, HCDT ss, const char *eq, const char *var, HMDT ini, const char *opt)
 {
 	mglData *fit=new mglData;
 	long m=zz->GetNx(),n=zz->GetNy();
@@ -318,7 +318,7 @@ HMDT mgl_fit_xyzs(HMGL gr, HCDT xx, HCDT yy, HCDT zz, HCDT ss, const char *eq, c
 	delete fd.eq;	gr->LoadState();	return fit;
 }
 //-----------------------------------------------------------------------------
-HMDT mgl_fit_xyzas(HMGL gr, HCDT xx, HCDT yy, HCDT zz, HCDT aa, HCDT ss, const char *eq, const char *var, HMDT ini, const char *opt)
+HMDT MGL_EXPORT mgl_fit_xyzas(HMGL gr, HCDT xx, HCDT yy, HCDT zz, HCDT aa, HCDT ss, const char *eq, const char *var, HMDT ini, const char *opt)
 {
 	mglData *fit=new mglData;
 	register long i,j,k,i0;
@@ -370,7 +370,7 @@ HMDT mgl_fit_xyzas(HMGL gr, HCDT xx, HCDT yy, HCDT zz, HCDT aa, HCDT ss, const c
 	delete fd.eq;	gr->LoadState();	return fit;
 }
 //-----------------------------------------------------------------------------
-HMDT mgl_hist_x(HMGL gr, HCDT x, HCDT a, const char *opt)
+HMDT MGL_EXPORT mgl_hist_x(HMGL gr, HCDT x, HCDT a, const char *opt)
 {
 	long nn=a->GetNx()*a->GetNy()*a->GetNz();
 	if(nn!=x->GetNx()*x->GetNy()*x->GetNz())
@@ -396,7 +396,7 @@ HMDT mgl_hist_x(HMGL gr, HCDT x, HCDT a, const char *opt)
 	gr->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
-HMDT mgl_hist_xy(HMGL gr, HCDT x, HCDT y, HCDT a, const char *opt)
+HMDT MGL_EXPORT mgl_hist_xy(HMGL gr, HCDT x, HCDT y, HCDT a, const char *opt)
 {
 	long nn=a->GetNx()*a->GetNy()*a->GetNz();
 	if(nn!=x->GetNx()*x->GetNy()*x->GetNz() || nn!=y->GetNx()*y->GetNy()*y->GetNz())
@@ -425,7 +425,7 @@ HMDT mgl_hist_xy(HMGL gr, HCDT x, HCDT y, HCDT a, const char *opt)
 	gr->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
-HMDT mgl_hist_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *opt)
+HMDT MGL_EXPORT mgl_hist_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *opt)
 {
 	long nn=a->GetNx()*a->GetNy()*a->GetNz();
 	if(nn!=x->GetNx()*x->GetNy()*x->GetNz() || nn!=y->GetNx()*y->GetNy()*y->GetNz() || nn!=z->GetNx()*z->GetNy()*z->GetNz())
@@ -459,22 +459,22 @@ HMDT mgl_hist_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *opt)
 	gr->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
-uintptr_t mgl_hist_x_(uintptr_t* gr, uintptr_t* x, uintptr_t* a, const char *opt, int lo)
+uintptr_t MGL_EXPORT mgl_hist_x_(uintptr_t* gr, uintptr_t* x, uintptr_t* a, const char *opt, int lo)
 {	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	uintptr_t r = (uintptr_t)mgl_hist_x(_GR_, _DA_(x), _DA_(a), o);
 	delete []o;	return r;	}
-uintptr_t mgl_hist_xy_(uintptr_t* gr, uintptr_t* x, uintptr_t* y, uintptr_t* a, const char *opt, int lo)
+uintptr_t MGL_EXPORT mgl_hist_xy_(uintptr_t* gr, uintptr_t* x, uintptr_t* y, uintptr_t* a, const char *opt, int lo)
 {	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	uintptr_t r = (uintptr_t)mgl_hist_xy(_GR_, _DA_(x), _DA_(y), _DA_(a), o);
 	delete []o;	return r;	}
-uintptr_t mgl_hist_xyz_(uintptr_t* gr, uintptr_t* x, uintptr_t* y, uintptr_t* z, uintptr_t* a, const char *opt, int lo)
+uintptr_t MGL_EXPORT mgl_hist_xyz_(uintptr_t* gr, uintptr_t* x, uintptr_t* y, uintptr_t* z, uintptr_t* a, const char *opt, int lo)
 {	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	uintptr_t r = (uintptr_t)mgl_hist_xyz(_GR_, _DA_(x), _DA_(y), _DA_(z), _DA_(a), o);
 	delete []o;	return r;	}
 //-----------------------------------------------------------------------------
-const char *mgl_get_fit(HMGL )	{	return mglFitRes;	}
+MGL_EXPORT const char *mgl_get_fit(HMGL )	{	return mglFitRes;	}
 //-----------------------------------------------------------------------------
-uintptr_t mgl_fit_1_(uintptr_t* gr, uintptr_t* y, const char *eq, const char *var, uintptr_t *ini, const char *opt, int l, int n, int lo)
+uintptr_t MGL_EXPORT mgl_fit_1_(uintptr_t* gr, uintptr_t* y, const char *eq, const char *var, uintptr_t *ini, const char *opt, int l, int n, int lo)
 {
 	char *s=new char[l+1];	memcpy(s,eq,l);		s[l]=0;
 	char *d=new char[n+1];	memcpy(d,var,n);	d[n]=0;
@@ -482,7 +482,7 @@ uintptr_t mgl_fit_1_(uintptr_t* gr, uintptr_t* y, const char *eq, const char *va
 	uintptr_t r = (uintptr_t)mgl_fit_1(_GR_, _DA_(y), s, d, _DM_(ini), o);
 	delete []o;	delete []s;	delete []d;	return r;
 }
-uintptr_t mgl_fit_2_(uintptr_t* gr, uintptr_t* z, const char *eq, const char *var, uintptr_t *ini, const char *opt, int l, int n, int lo)
+uintptr_t MGL_EXPORT mgl_fit_2_(uintptr_t* gr, uintptr_t* z, const char *eq, const char *var, uintptr_t *ini, const char *opt, int l, int n, int lo)
 {
 	char *s=new char[l+1];	memcpy(s,eq,l);		s[l]=0;
 	char *d=new char[n+1];	memcpy(d,var,n);	d[n]=0;
@@ -490,7 +490,7 @@ uintptr_t mgl_fit_2_(uintptr_t* gr, uintptr_t* z, const char *eq, const char *va
 	uintptr_t r = (uintptr_t)mgl_fit_2(_GR_, _DA_(z), s, d, _DM_(ini), o);
 	delete []o;	delete []s;	delete []d;	return r;
 }
-uintptr_t mgl_fit_3_(uintptr_t* gr, uintptr_t* a, const char *eq, const char *var, uintptr_t *ini, const char *opt, int l, int n, int lo)
+uintptr_t MGL_EXPORT mgl_fit_3_(uintptr_t* gr, uintptr_t* a, const char *eq, const char *var, uintptr_t *ini, const char *opt, int l, int n, int lo)
 {
 	char *s=new char[l+1];	memcpy(s,eq,l);		s[l]=0;
 	char *d=new char[n+1];	memcpy(d,var,n);	d[n]=0;
@@ -498,7 +498,7 @@ uintptr_t mgl_fit_3_(uintptr_t* gr, uintptr_t* a, const char *eq, const char *va
 	uintptr_t r = (uintptr_t)mgl_fit_3(_GR_, _DA_(a), s, d, _DM_(ini), o);
 	delete []o;	delete []s;	delete []d;	return r;
 }
-uintptr_t mgl_fit_xy_(uintptr_t* gr, uintptr_t* x, uintptr_t* y, const char *eq, const char *var, uintptr_t *ini, const char *opt, int l, int n, int lo)
+uintptr_t MGL_EXPORT mgl_fit_xy_(uintptr_t* gr, uintptr_t* x, uintptr_t* y, const char *eq, const char *var, uintptr_t *ini, const char *opt, int l, int n, int lo)
 {
 	char *s=new char[l+1];	memcpy(s,eq,l);		s[l]=0;
 	char *d=new char[n+1];	memcpy(d,var,n);	d[n]=0;
@@ -506,7 +506,7 @@ uintptr_t mgl_fit_xy_(uintptr_t* gr, uintptr_t* x, uintptr_t* y, const char *eq,
 	uintptr_t r = (uintptr_t)mgl_fit_xy(_GR_, _DA_(x), _DA_(y), s, d, _DM_(ini), o);
 	delete []o;	delete []s;	delete []d;	return r;
 }
-uintptr_t mgl_fit_xyz_(uintptr_t* gr, uintptr_t* x, uintptr_t* y, uintptr_t* z, const char *eq, const char *var, uintptr_t *ini, const char *opt, int l, int n, int lo)
+uintptr_t MGL_EXPORT mgl_fit_xyz_(uintptr_t* gr, uintptr_t* x, uintptr_t* y, uintptr_t* z, const char *eq, const char *var, uintptr_t *ini, const char *opt, int l, int n, int lo)
 {
 	char *s=new char[l+1];	memcpy(s,eq,l);		s[l]=0;
 	char *d=new char[n+1];	memcpy(d,var,n);	d[n]=0;
@@ -514,7 +514,7 @@ uintptr_t mgl_fit_xyz_(uintptr_t* gr, uintptr_t* x, uintptr_t* y, uintptr_t* z, 
 	uintptr_t r = (uintptr_t)mgl_fit_xyz(_GR_, _DA_(x), _DA_(y), _DA_(z), s, d, _DM_(ini), o);
 	delete []o;	delete []s;	delete []d;	return r;
 }
-uintptr_t mgl_fit_xyza_(uintptr_t* gr, uintptr_t* x, uintptr_t* y, uintptr_t* z, uintptr_t* a, const char *eq, const char *var, uintptr_t *ini, const char *opt, int l, int n, int lo)
+uintptr_t MGL_EXPORT mgl_fit_xyza_(uintptr_t* gr, uintptr_t* x, uintptr_t* y, uintptr_t* z, uintptr_t* a, const char *eq, const char *var, uintptr_t *ini, const char *opt, int l, int n, int lo)
 {
 	char *s=new char[l+1];	memcpy(s,eq,l);		s[l]=0;
 	char *d=new char[n+1];	memcpy(d,var,n);	d[n]=0;
@@ -522,7 +522,7 @@ uintptr_t mgl_fit_xyza_(uintptr_t* gr, uintptr_t* x, uintptr_t* y, uintptr_t* z,
 	uintptr_t r = (uintptr_t)mgl_fit_xyza(_GR_, _DA_(x), _DA_(y), _DA_(z), _DA_(a), s, d, _DM_(ini), o);
 	delete []o;	delete []s;	delete []d;	return r;
 }
-uintptr_t mgl_fit_ys_(uintptr_t* gr, uintptr_t* y, uintptr_t* ss, const char *eq, const char *var, uintptr_t *ini, const char *opt, int l, int n, int lo)
+uintptr_t MGL_EXPORT mgl_fit_ys_(uintptr_t* gr, uintptr_t* y, uintptr_t* ss, const char *eq, const char *var, uintptr_t *ini, const char *opt, int l, int n, int lo)
 {
 	char *s=new char[l+1];	memcpy(s,eq,l);		s[l]=0;
 	char *d=new char[n+1];	memcpy(d,var,n);	d[n]=0;
@@ -530,7 +530,7 @@ uintptr_t mgl_fit_ys_(uintptr_t* gr, uintptr_t* y, uintptr_t* ss, const char *eq
 	uintptr_t r = (uintptr_t)mgl_fit_ys(_GR_, _DA_(y), _DA_(ss), s, d, _DM_(ini), o);
 	delete []o;	delete []s;	delete []d;	return r;
 }
-uintptr_t mgl_fit_xys_(uintptr_t* gr, uintptr_t* x, uintptr_t* y, uintptr_t* ss, const char *eq, const char *var, uintptr_t *ini, const char *opt, int l, int n, int lo)
+uintptr_t MGL_EXPORT mgl_fit_xys_(uintptr_t* gr, uintptr_t* x, uintptr_t* y, uintptr_t* ss, const char *eq, const char *var, uintptr_t *ini, const char *opt, int l, int n, int lo)
 {
 	char *s=new char[l+1];	memcpy(s,eq,l);		s[l]=0;
 	char *d=new char[n+1];	memcpy(d,var,n);	d[n]=0;
@@ -538,7 +538,7 @@ uintptr_t mgl_fit_xys_(uintptr_t* gr, uintptr_t* x, uintptr_t* y, uintptr_t* ss,
 	uintptr_t r = (uintptr_t)mgl_fit_xys(_GR_, _DA_(x), _DA_(y), _DA_(ss), s, d, _DM_(ini), o);
 	delete []o;	delete []s;	delete []d;	return r;
 }
-uintptr_t mgl_fit_xyzs_(uintptr_t* gr, uintptr_t* x, uintptr_t* y, uintptr_t* z, uintptr_t* ss, const char *eq, const char *var, uintptr_t *ini, const char *opt, int l, int n, int lo)
+uintptr_t MGL_EXPORT mgl_fit_xyzs_(uintptr_t* gr, uintptr_t* x, uintptr_t* y, uintptr_t* z, uintptr_t* ss, const char *eq, const char *var, uintptr_t *ini, const char *opt, int l, int n, int lo)
 {
 	char *s=new char[l+1];	memcpy(s,eq,l);		s[l]=0;
 	char *d=new char[n+1];	memcpy(d,var,n);	d[n]=0;
@@ -546,7 +546,7 @@ uintptr_t mgl_fit_xyzs_(uintptr_t* gr, uintptr_t* x, uintptr_t* y, uintptr_t* z,
 	uintptr_t r = (uintptr_t)mgl_fit_xyzs(_GR_, _DA_(x), _DA_(y), _DA_(z), _DA_(ss), s, d, _DM_(ini), o);
 	delete []o;	delete []s;	delete []d;	return r;
 }
-uintptr_t mgl_fit_xyzas_(uintptr_t* gr, uintptr_t* x, uintptr_t* y, uintptr_t* z, uintptr_t* a, uintptr_t* ss, const char *eq, const char *var, uintptr_t *ini, const char *opt, int l, int n, int lo)
+uintptr_t MGL_EXPORT mgl_fit_xyzas_(uintptr_t* gr, uintptr_t* x, uintptr_t* y, uintptr_t* z, uintptr_t* a, uintptr_t* ss, const char *eq, const char *var, uintptr_t *ini, const char *opt, int l, int n, int lo)
 {
 	char *s=new char[l+1];	memcpy(s,eq,l);		s[l]=0;
 	char *d=new char[n+1];	memcpy(d,var,n);	d[n]=0;

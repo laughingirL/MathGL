@@ -689,19 +689,19 @@ void mglCanvasWX::MakeMenu()
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-HMGL mgl_create_graph_wx(int (*draw)(HMGL gr, void *p), const char *title, void *par, void (*load)(void *p))
+HMGL MGL_EXPORT mgl_create_graph_wx(int (*draw)(HMGL gr, void *p), const char *title, void *par, void (*load)(void *p))
 {
 	mglCanvasWX *g = new mglCanvasWX;
 	g->Window(0,0,draw,title,par,load);
 	return g;
 }
-int mgl_wx_run(){	return wxTheApp ? wxTheApp->MainLoop():0;	}
+int MGL_EXPORT mgl_wx_run(){	return wxTheApp ? wxTheApp->MainLoop():0;	}
 //-----------------------------------------------------------------------------
-uintptr_t mgl_create_graph_wx_(const char *title, int l)
+uintptr_t MGL_EXPORT mgl_create_graph_wx_(const char *title, int l)
 {
 	char *s = new char[l+1];	memcpy(s,title,l);	s[l]=0;
 	uintptr_t t = uintptr_t(mgl_create_graph_wx(0,s,0,0));
 	delete []s;	return t;
 }
-int mgl_wx_run_()	{	return mgl_wx_run();	}
+int MGL_EXPORT mgl_wx_run_()	{	return mgl_wx_run();	}
 //-----------------------------------------------------------------------------
