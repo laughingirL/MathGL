@@ -745,7 +745,7 @@ dual MGL_EXPORT mgl_datac_get_value(HCDT dat, long i, long j, long k)
 	if(i<0 || i>=dat->GetNx() || j<0 || j>=dat->GetNy() || k<0 || k>=dat->GetNz())
 		return NAN;
 	const mglDataC *d = dynamic_cast<const mglDataC*>(dat);
-	return d ? d->a[i+d->nx*(j+d->nz*k)] : dat->v(i,j,k);	
+	return d ? d->a[i+d->nx*(j+d->nz*k)] : dual(dat->v(i,j,k),0);	
 }
 dual MGL_EXPORT mgl_datac_get_value_(uintptr_t *d, int *i, int *j, int *k)
 {	return mgl_datac_get_value(_DA_(d),*i,*j,*k);	}

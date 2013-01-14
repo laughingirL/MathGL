@@ -528,7 +528,7 @@ MGL_NO_EXPORT void *mgl_cmodify(void *par)
 	for(i0=t->id;i0<t->n;i0+=mglNumThr)
 	{
 		i=i0%nx;	j=((i0/nx)%ny);	k=i0/(nx*ny);
-		b[i0] = f->Calc(i*dx, j*dy, k*dz, b[i0], v?v[i0]:0, w?w[i0]:0);
+		b[i0] = f->Calc(i*dx, j*dy, k*dz, b[i0], v?v[i0]:dual(0,0), w?w[i0]:dual(0,0));
 	}
 	return 0;
 }
@@ -597,7 +597,7 @@ MGL_NO_EXPORT void *mgl_cfill_f(void *par)
 	{
 		i=i0%nx;	j=((i0/nx)%ny);	k=i0/(nx*ny);
 		b[i0] = f->Calc(x[0]+mreal(i)*x[1], x[2]+mreal(j)*x[3], x[4]+mreal(k)*x[5],
-						b[i0], v?v[i0]:0, w?w[i0]:0);
+						b[i0], v?v[i0]:dual(0,0), w?w[i0]:dual(0,0));
 	}
 	return 0;
 }

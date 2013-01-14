@@ -233,40 +233,53 @@ HMDT MGL_EXPORT mgl_ray_trace(const char *ham, mreal x0, mreal y0, mreal z0, mre
 //-----------------------------------------------------------------------------
 struct mgl_ap
 {
-	double x0,y0,x1,y1;	// vectors {l, g1, g2}
-	double t1,ch,q1,pt,dt,d1;	// theta_{1,2}, chi, q_{1,2}, p_t, dtau, dq_{1,2}
+	double x0,y0,z0,x1,y1,z1,x2,y2,z2;	// vectors {l, g1, g2}
+	double t1,ch,q1,q2,pt,dt,d1,d2;	// theta_{1,2}, chi, q_{1,2}, p_t, dtau, dq_{1,2}
 	mgl_ap()	{	memset(this,0,sizeof(mgl_ap));	}
 };
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_init_ra(int n, const mreal *r, mgl_ap *ra)	// prepare some intermediate data for mglPDE2d
+void MGL_NO_EXPORT mgl_init_ra(int n, const mreal *r, mgl_ap *ra)	// prepare some intermediate data for QO (3d case)
 {
 	register double tt;
 	tt = hypot(r[7]-r[0], r[8]-r[1]);
-	ra[0].x1 = (r[8]-r[1])/tt;
-	ra[0].y1 = (r[0]-r[7])/tt;
+	if(tt)
+	{
+		ra[0].x1 = (r[8]-r[1])/tt;
+		ra[0].y1 = (r[0]-r[7])/tt;
+		ra[0].z1 = 0;
+	}
+	else	{	ra[0].x1 = ra[0].y1 = 0;	ra[0].z1 = 1;	}
 	register long i;
 	for(i=1;i<n;i++)	// NOTE: no parallel due to dependence on prev point!
 	{
 		ra[i].dt = r[6+7*i] - r[7*i-1];
 		ra[i].x0 = r[7*i] - r[7*i-7];	// NOTE: very rough formulas
 		ra[i].y0 = r[7*i+1] - r[7*i-6];	// for corresponding with dt one
-		tt = sqrt(ra[i].x0*ra[i].x0 + ra[i].y0*ra[i].y0);
-		ra[i].x0 /= tt;	ra[i].y0 /= tt;
+		ra[i].z0 = r[7*i+2] - r[7*i-5];	// for corresponding with dt one
+		tt = sqrt(ra[i].x0*ra[i].x0 + ra[i].y0*ra[i].y0 + ra[i].z0*ra[i].z0);
+		ra[i].x0 /= tt;	ra[i].y0 /= tt;	ra[i].z0 /= tt;
 		ra[i].ch = tt/ra[i].dt;
-		tt = ra[i].x0*ra[i-1].x1 + ra[i].y0*ra[i-1].y1;
+		tt = ra[i].x0*ra[i-1].x1 + ra[i].y0*ra[i-1].y1 + ra[i].z0*ra[i-1].z1;
 		ra[i].x1 = ra[i-1].x1 - tt*ra[i].x0;	// vector g_1
 		ra[i].y1 = ra[i-1].y1 - tt*ra[i].y0;
+		ra[i].z1 = ra[i-1].z1 - tt*ra[i].z0;
 		ra[i].t1 = tt/(ra[i].dt*ra[i].ch);
-		tt = sqrt(ra[i].x1*ra[i].x1 + ra[i].y1*ra[i].y1);
-		ra[i].x1 /= tt;	ra[i].y1 /= tt;
+		tt = sqrt(ra[i].x1*ra[i].x1 + ra[i].y1*ra[i].y1 + ra[i].z1*ra[i].z1);
+		ra[i].x1 /= tt;	ra[i].y1 /= tt;	ra[i].z1 /= tt;	// norm for reducing numeric error
+		ra[i].x2 = ra[i].y1*ra[i].z0 - ra[i].y0*ra[i].z1;	// vector g_2
+		ra[i].y2 = ra[i].z1*ra[i].x0 - ra[i].z0*ra[i].x1;
+		ra[i].z2 = ra[i].x1*ra[i].y0 - ra[i].x0*ra[i].y1;
 		// other parameters
-		ra[i].pt = r[7*i+3]*ra[i].x0 + r[7*i+4]*ra[i].y0;
-		ra[i].q1 = r[7*i+3]*ra[i].x1 + r[7*i+4]*ra[i].y1;
+		ra[i].pt = r[7*i+3]*ra[i].x0 + r[7*i+4]*ra[i].y0 + r[7*i+5]*ra[i].z0;
+		ra[i].q1 = r[7*i+3]*ra[i].x1 + r[7*i+4]*ra[i].y1 + r[7*i+5]*ra[i].z1;
+		ra[i].q2 = r[7*i+3]*ra[i].x2 + r[7*i+4]*ra[i].y2 + r[7*i+5]*ra[i].z2;
 		ra[i].d1 = (ra[i].q1-ra[i-1].q1)/(ra[i].dt*ra[i].ch);
+		ra[i].d2 = (ra[i].q2-ra[i-1].q2)/(ra[i].dt*ra[i].ch);
 	}
 	memcpy(ra,ra+1,sizeof(mgl_ap));	// setup zero point
-	ra[0].pt = r[3]*ra[0].x0 + r[4]*ra[0].y0;
-	ra[0].q1 = r[3]*ra[0].x1 + r[4]*ra[0].y1;
+	ra[0].pt = r[3]*ra[0].x0 + r[4]*ra[0].y0 + r[5]*ra[0].z0;
+	ra[0].q1 = r[3]*ra[0].x1 + r[4]*ra[0].y1 + r[5]*ra[0].z1;
+	ra[0].q2 = r[3]*ra[0].x2 + r[4]*ra[0].y2 + r[5]*ra[0].z2;
 }
 //-----------------------------------------------------------------------------
 struct mgl_qo2d_ham
@@ -526,6 +539,10 @@ uintptr_t MGL_EXPORT mgl_ray_trace_(const char *ham, mreal *x0, mreal *y0, mreal
 uintptr_t MGL_EXPORT mgl_qo2d_solve_(const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, uintptr_t* ray, mreal *r, mreal *k0, uintptr_t* xx, uintptr_t* yy, int l)
 {	char *s=new char[l+1];	memcpy(s,ham,l);	s[l]=0;
 	uintptr_t res = uintptr_t(mgl_qo2d_solve(s, _DA_(ini_re), _DA_(ini_im), _DA_(ray), *r, *k0, _DM_(xx), _DM_(yy)));
+	delete []s;	return res;	}
+uintptr_t MGL_EXPORT mgl_qo3d_solve_(const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, uintptr_t* ray, mreal *r, mreal *k0, uintptr_t* xx, uintptr_t* yy, uintptr_t* zz, int l)
+{	char *s=new char[l+1];	memcpy(s,ham,l);	s[l]=0;
+	uintptr_t res = uintptr_t(mgl_qo3d_solve(s, _DA_(ini_re), _DA_(ini_im), _DA_(ray), *r, *k0, _DM_(xx), _DM_(yy), _DM_(zz)));
 	delete []s;	return res;	}
 uintptr_t MGL_EXPORT mgl_jacobian_2d_(uintptr_t* x, uintptr_t* y)
 {	return uintptr_t(mgl_jacobian_2d(_DA_(x), _DA_(y)));	}

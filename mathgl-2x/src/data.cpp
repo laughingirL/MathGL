@@ -131,9 +131,13 @@ double mgl_ipow_(double *x,int *n)	{	return mgl_ipow(*x,*n);	}
 //-----------------------------------------------------------------------------
 double mgl_get_time(const char *time, const char *fmt)
 {
+#if !defined(_MSC_VER) && !defined(__BORLANDC__)
 	tm t;
 	strptime(time,fmt,&t);
 	return timegm(&t);
+#else
+	return -1;
+#endif
 }
 double mgl_get_time_(const char *time, const char *fmt,int l,int m)
 {	char *s=new char[l+1];	memcpy(s,time,l);	s[l]=0;

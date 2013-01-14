@@ -19,8 +19,11 @@
  ***************************************************************************/
 #ifndef _MGL_BASE_H_
 #define _MGL_BASE_H_
-#if !defined(_MSC_VER)
+#if !defined(_MSC_VER) && !defined(__BORLANDC__)
 #include <stdint.h>
+#endif
+#if defined(__BORLANDC__)
+typedef unsigned uintptr_t;
 #endif
 #include "mgl2/define.h"
 

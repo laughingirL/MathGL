@@ -272,13 +272,13 @@ void mglCanvas::AdjustTicks(const char *dir, bool force)
 	if(force)	SetTuneTicks(-1);
 	UpdateAxis();
 	if(strchr(dir,'x') || strchr(dir,'X'))	// NOTE dir have to be non-NULL here !!!
-	{	if(force)	ax.d=0;	AdjustTicks(ax,fx);	}
+	{	if(force)	ax.d=0;	AdjustTicks(ax,fx!=0);	}
 	if(strchr(dir,'y') || strchr(dir,'Y'))
-	{	if(force)	ay.d=0;	AdjustTicks(ay,fy);	}
+	{	if(force)	ay.d=0;	AdjustTicks(ay,fy!=0);	}
 	if(strchr(dir,'z') || strchr(dir,'Z'))
-	{	if(force)	az.d=0;	AdjustTicks(az,fz);	}
+	{	if(force)	az.d=0;	AdjustTicks(az,fz!=0);	}
 	if(strchr(dir,'a') || strchr(dir,'c'))
-	{	if(force)	ac.d=0;	AdjustTicks(ac,fa);	}
+	{	if(force)	ac.d=0;	AdjustTicks(ac,fa!=0);	}
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::AdjustTicks(mglAxis &aa, bool ff)
@@ -709,14 +709,14 @@ void mglCanvas::Labelw(char dir, const wchar_t *text, mreal pos, const char *opt
 
 	if(dir=='x')
 	{
-		AdjustTicks(ax,fx);	aa = &ax;
+		AdjustTicks(ax,fx!=0);	aa = &ax;
 		if(ax.dv)	t = (Min.x+Max.x+pos*(Max.x-Min.x))/2;
 		else	t = Min.x*pow(Max.x/Min.x, (pos+1)/2);
 		p = mglPoint(t,y0,z0);	q = mglPoint(1,0,0);	shift += ax.sh;
 	}
 	if(dir=='y' && !(TernAxis&3))
 	{
-		AdjustTicks(ay,fy);	aa = &ay;
+		AdjustTicks(ay,fy!=0);	aa = &ay;
 		if(ay.dv)	t = (Min.y+Max.y+pos*(Max.y-Min.y))/2;
 		else	t = Min.y*pow(Max.y/Min.y, (pos+1)/2);
 		p = mglPoint(x0,t,z0);	q = mglPoint(0,1,0);	shift += ay.sh;
@@ -728,7 +728,7 @@ void mglCanvas::Labelw(char dir, const wchar_t *text, mreal pos, const char *opt
 	if(dir=='y' && (TernAxis&3))
 	{
 		ty.ch='T';	ty.dir = mglPoint(-1,1);	ty.org = mglPoint(1,0,ay.org.z);
-		AdjustTicks(ty,fy);	aa = &ty;
+		AdjustTicks(ty,fy!=0);	aa = &ty;
 		if(ty.dv)	t = (Min.y+Max.y+pos*(Max.y-Min.y))/2;
 		else	t = Min.y*pow(Max.y/Min.y, (pos+1)/2);
 		p = mglPoint(x0,t,z0);	q = mglPoint(0,1,0);	shift += ty.sh;
@@ -740,14 +740,14 @@ void mglCanvas::Labelw(char dir, const wchar_t *text, mreal pos, const char *opt
 	if(dir=='t' && (TernAxis&3))
 	{
 		ty.ch='t';	ty.dir = mglPoint(0,-1);	ty.org = mglPoint(0,1,ay.org.z);
-		AdjustTicks(ty,fy);	pos = -pos;	aa = &ty;
+		AdjustTicks(ty,fy!=0);	pos = -pos;	aa = &ty;
 		if(ty.dv)	t = (Min.y+Max.y+pos*(Max.y-Min.y))/2;
 		else	t = Min.y*pow(Max.y/Min.y, (pos+1)/2);
 		p = mglPoint(x0,t,z0);	q = mglPoint(0,1,0);	shift += ty.sh;
 	}
 	if(dir=='z')
 	{
-		AdjustTicks(az,fz);	aa = &az;
+		AdjustTicks(az,fz!=0);	aa = &az;
 		if(az.dv)	t = (Min.z+Max.z+pos*(Max.z-Min.z))/2;
 		else	t = Min.z*pow(Max.z/Min.z, (pos+1)/2);
 		p = mglPoint(x0,y0,t);	q = mglPoint(0,0,1);	shift += az.sh;
@@ -938,7 +938,7 @@ void mglCanvas::colorbar(HCDT vv, const mreal *c, int where, mreal x, mreal y, m
 			ac.AddLabel(buf,d);
 		}
 	}
-	else	{	UpdateAxis();	AdjustTicks(ac,fa);	}
+	else	{	UpdateAxis();	AdjustTicks(ac,fa!=0);	}
 	// hint for using standard label drawing function
 	SetPenPal(*TickStl ? TickStl:"k-1");
 	for(i=0;i<ac.txt.size();i++)

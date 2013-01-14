@@ -17,7 +17,12 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+#ifdef __BORLANDC__
+#include <algorithm.h>
+#else
 #include <algorithm>
+#endif
+
 #include "mgl2/surf.h"
 #include "mgl2/cont.h"
 #include "mgl2/data.h"
