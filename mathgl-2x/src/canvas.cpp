@@ -675,7 +675,7 @@ void mglCanvas::Aspect(mreal Ax,mreal Ay,mreal Az)
 		mreal dy = (Max.y-Min.y), dx = (Max.x-Min.x);
 		if(islog(Min.x,Max.x) && fx)	dx = log10(Max.x/Min.x);
 		if(islog(Min.y,Max.y) && fy)	dy = log10(Max.y/Min.y);
-		mreal f=pow10(floor(0.5+log10(fabs(dy/dx))));
+		mreal f=exp(M_LN10*floor(0.5+log10(fabs(dy/dx))));
 		if(!mgl_isnan(Ay))	f=Ay;
 		Ax = Height*dx*f;	Ay = Width*dy;	Az = Depth;
 	}

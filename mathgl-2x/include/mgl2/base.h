@@ -48,6 +48,9 @@ typedef const mglData* HCDT;
 #include "mgl2/data.h"
 #else
 //-----------------------------------------------------------------------------
+/// Callback function for asking user a question. Result shouldn't exceed 1024.
+extern MGL_EXPORT void (*mgl_ask_func)(const wchar_t *quest, wchar_t *res);
+//-----------------------------------------------------------------------------
 /// Abstract class for data array
 class mglDataA
 {

@@ -25,11 +25,8 @@
 #include <gsl/gsl_errno.h>
 #endif
 //-----------------------------------------------------------------------------
-void mgl_wcstrim(wchar_t *str);
-void mgl_wcslwr(wchar_t *str);
-void mgl_wcstombs(char *dst, const wchar_t *src, int size);
 int mglFormulaError;
-mglData mglFormulaCalc(const wchar_t *string, mglParser *arg);
+mglData MGL_NO_EXPORT mglFormulaCalc(const wchar_t *string, mglParser *arg);
 //-----------------------------------------------------------------------------
 mglData mglApplyOper(const wchar_t *a1, const wchar_t *a2, mglParser *arg, double (*func)(double,double))
 {
@@ -112,7 +109,7 @@ void MGL_EXPORT mgl_wcstombs(char *dst, const wchar_t *src, int size)
 // NOTE: In any case where number is required the mglData::a[0] is used.
 // String flag is binary 0x1 -> 'x', 0x2 -> 'y', 0x4 -> 'z'
 // NOTE: the speed is not a goal (mglFormula is faster). It is true interpreter!
-mglData MGL_EXPORT mglFormulaCalc(const wchar_t *string, mglParser *arg)
+mglData MGL_NO_EXPORT mglFormulaCalc(const wchar_t *string, mglParser *arg)
 {
 #if MGL_HAVE_GSL
 	gsl_set_error_handler_off();

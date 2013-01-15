@@ -1017,7 +1017,7 @@ Ends group definition.
 @cindex WriteFrame
 @cindex WritePNG
 @cindex WriteGIF
-@cindex WriteIDTF
+@c @cindex WriteIDTF
 @cindex WriteSVG
 @cindex WriteBMP
 @cindex WriteEPS
@@ -1031,7 +1031,7 @@ Ends group definition.
 @cindex ShowImage
 @end ifclear
 
-These functions export current view to a graphic file. The filename @var{fname} should have appropriate extension. Parameter @var{descr} gives the short description of the picture. Just now the transparency is supported in PNG, SVG, OBJ and IDTF files.
+These functions export current view to a graphic file. The filename @var{fname} should have appropriate extension. Parameter @var{descr} gives the short description of the picture. Just now the transparency is supported in PNG, SVG, OBJ and PRC files.
 
 @anchor{write}
 @deftypefn {MGL command} {} write ['fname'='']

@@ -27,7 +27,6 @@
 #include <mgl2/mgl.h>
 #include "calc_dlg.h"
 extern mglParse parser;
-mglData mglFormulaCalc(const wchar_t *string, mglParser *arg);
 //-----------------------------------------------------------------------------
 //
 //	Calc dialog

@@ -1152,9 +1152,6 @@ public:
 	inline void TextureColor(bool){}	// NOTE: Add later -- IDTF
 };
 //-----------------------------------------------------------------------------
-/// Callback function for asking user a question. Result shouldn't exceed 1024.
-extern void (*mgl_ask_func)(const wchar_t *quest, wchar_t *res);
-//-----------------------------------------------------------------------------
 /// Structure for handling named mglData (used by mglParse class).
 class mglVar : public mglData
 {

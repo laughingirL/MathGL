@@ -25,7 +25,6 @@
 #include <QLineEdit>
 //-----------------------------------------------------------------------------
 #include <mgl2/mgl.h>
-mglData mglFormulaCalc(const wchar_t *string, mglParser *arg);
 extern mglParse parser;
 #include "data_dlg.h"
 //-----------------------------------------------------------------------------

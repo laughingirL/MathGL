@@ -2609,7 +2609,7 @@ The standard way is to use Unicode encoding for the text output. But the MathGL 
 There are 3 general ways. First, the point with @code{nan} value as one of the coordinates (including color/alpha range) will never be plotted. Second, special functions define the condition when the points should be omitted (see @ref{Cutting}). Last, you may change the transparency of a part of the plot by the help of functions @ref{surfa}, @ref{surf3a} (see @ref{Dual plotting}). In last case the transparency is switched on smoothly.
 
 @item How many people write this library?
-Most of the library was written by one person. This is a result of nearly a year of work (mostly in the evening and on holidays): I spent half a year to write the kernel and half a year to a year on extending, improving the library and writing documentation. This process continues now :). The build system (cmake files) was written mostly by D.Kulagin, and the export to PRC/IDTF was written mostly by M.Vidassov.
+Most of the library was written by one person. This is a result of nearly a year of work (mostly in the evening and on holidays): I spent half a year to write the kernel and half a year to a year on extending, improving the library and writing documentation. This process continues now :). The build system (cmake files) was written mostly by D.Kulagin, and the export to PRC/PDF was written mostly by M.Vidassov.
 
 @item How can I display a bitmap on the figure?
 You can import data by command @ref{import} and display it by @ref{dens} function. For example, for black-and-white bitmap you can use the code: @code{import bmp 'fname.png' 'wk':dens  bmp 'wk'}.

@@ -491,6 +491,11 @@ inline mglData mglQO2d(const char *ham, const mglDataA &ini_re, const mglDataA &
 {	return mglData(true, mgl_qo2d_solve(ham, &ini_re, &ini_im, &ray, r, k0, 0, 0));	}
 inline mglData mglQO2d(const char *ham, const mglDataA &ini_re, const mglDataA &ini_im, const mglDataA &ray, mglData &xx, mglData &yy, mreal r=1, mreal k0=100)
 {	return mglData(true, mgl_qo2d_solve(ham, &ini_re, &ini_im, &ray, r, k0, &xx, &yy));	}
+/// Saves result of PDE solving for "Hamiltonian" ham with initial conditions ini along a curve ray (must have nx>=7 - x,y,z,px,py,pz,tau or nx=5 - x,y,px,py,tau)
+inline mglData mglQO3d(const char *ham, const mglDataA &ini_re, const mglDataA &ini_im, const mglDataA &ray, mreal r=1, mreal k0=100)
+{	return mglData(true, mgl_qo3d_solve(ham, &ini_re, &ini_im, &ray, r, k0, 0, 0, 0));	}
+inline mglData mglQO3d(const char *ham, const mglDataA &ini_re, const mglDataA &ini_im, const mglDataA &ray, mglData &xx, mglData &yy, mglData &zz, mreal r=1, mreal k0=100)
+{	return mglData(true, mgl_qo3d_solve(ham, &ini_re, &ini_im, &ray, r, k0, &xx, &yy, &zz));	}
 /// Finds ray with starting point r0, p0 (and prepares ray data for mglQO2d)
 inline mglData mglRay(const char *ham, mglPoint r0, mglPoint p0, mreal dt=0.1, mreal tmax=10)
 {	return mglData(true, mgl_ray_trace(ham, r0.x, r0.y, r0.z, p0.x, p0.y, p0.z, dt, tmax));	}

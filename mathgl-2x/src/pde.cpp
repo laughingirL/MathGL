@@ -234,7 +234,7 @@ HMDT MGL_EXPORT mgl_ray_trace(const char *ham, mreal x0, mreal y0, mreal z0, mre
 struct mgl_ap
 {
 	double x0,y0,z0,x1,y1,z1,x2,y2,z2;	// vectors {l, g1, g2}
-	double t1,ch,q1,q2,pt,dt,d1,d2;	// theta_{1,2}, chi, q_{1,2}, p_t, dtau, dq_{1,2}
+	double t1,t2,ch,q1,q2,pt,dt,d1,d2;	// theta_{1,2}, chi, q_{1,2}, p_t, dtau, dq_{1,2}
 	mgl_ap()	{	memset(this,0,sizeof(mgl_ap));	}
 };
 //-----------------------------------------------------------------------------
@@ -249,6 +249,12 @@ void MGL_NO_EXPORT mgl_init_ra(int n, const mreal *r, mgl_ap *ra)	// prepare som
 		ra[0].z1 = 0;
 	}
 	else	{	ra[0].x1 = ra[0].y1 = 0;	ra[0].z1 = 1;	}
+	ra[0].x0 = r[7] - r[0];	ra[0].y0 = r[8] - r[1];	ra[0].z0 = r[9] - r[2];
+	tt = sqrt(ra[0].x0*ra[0].x0 + ra[0].y0*ra[0].y0 + ra[0].z0*ra[0].z0);
+	ra[0].x0 /= tt;	ra[0].y0 /= tt;	ra[0].z0 /= tt;
+	ra[0].x2 = ra[0].y1*ra[0].z0 - ra[0].y0*ra[0].z1;	// vector g_2
+	ra[0].y2 = ra[0].z1*ra[0].x0 - ra[0].z0*ra[0].x1;
+	ra[0].z2 = ra[0].x1*ra[0].y0 - ra[0].x0*ra[0].y1;
 	register long i;
 	for(i=1;i<n;i++)	// NOTE: no parallel due to dependence on prev point!
 	{
@@ -269,6 +275,8 @@ void MGL_NO_EXPORT mgl_init_ra(int n, const mreal *r, mgl_ap *ra)	// prepare som
 		ra[i].x2 = ra[i].y1*ra[i].z0 - ra[i].y0*ra[i].z1;	// vector g_2
 		ra[i].y2 = ra[i].z1*ra[i].x0 - ra[i].z0*ra[i].x1;
 		ra[i].z2 = ra[i].x1*ra[i].y0 - ra[i].x0*ra[i].y1;
+		tt = ra[i].x0*ra[i-1].x2 + ra[i].y0*ra[i-1].y2 + ra[i].z0*ra[i-1].z2;
+		ra[i].t2 = tt/(ra[i].dt*ra[i].ch);
 		// other parameters
 		ra[i].pt = r[7*i+3]*ra[i].x0 + r[7*i+4]*ra[i].y0 + r[7*i+5]*ra[i].z0;
 		ra[i].q1 = r[7*i+3]*ra[i].x1 + r[7*i+4]*ra[i].y1 + r[7*i+5]*ra[i].z1;
@@ -282,56 +290,49 @@ void MGL_NO_EXPORT mgl_init_ra(int n, const mreal *r, mgl_ap *ra)	// prepare som
 	ra[0].q2 = r[3]*ra[0].x2 + r[4]*ra[0].y2 + r[5]*ra[0].z2;
 }
 //-----------------------------------------------------------------------------
+//
+//		QO2d series
+//
+//-----------------------------------------------------------------------------
 struct mgl_qo2d_ham
 {
 	dual *hx, *hu, *a, h0;
-	double *ru, *rx, *dmp;
-	mreal *r, dr, dk, pt0;
+	double *dmp;
+	mreal *r, dr, dk;
 	mgl_ap *ra;
-	mglFormula *h;
+	dual (*ham)(mreal u, mreal x, mreal y, mreal px, mreal py, void *par);
+	void *par;
 };
+//-----------------------------------------------------------------------------
 MGL_NO_EXPORT void *mgl_qo2d_hprep(void *par)
 {
 	mglThreadD *t=(mglThreadD *)par;
-	const mgl_qo2d_ham *f = (const mgl_qo2d_ham *)t->v;
+	mgl_qo2d_ham *f = (mgl_qo2d_ham *)t->v;
 	mgl_ap *ra = f->ra;
-	mglFormula *h = f->h;
+	
 	const mreal *r = f->r;
-	mreal var[MGL_VS], pt0=f->pt0, tt, x1, hh;
-	memset(var,0,MGL_VS*sizeof(mreal));
+	mreal tt, x1, hh;
 	register long i, nx=t->n;
 	for(i=t->id;i<nx;i+=mglNumThr)
 	{
 		// x terms
-		x1 = (2*i-nx+1)*f->dr;
-		var['x'-'a'] = r[0] + ra->x1*x1;	// new coordiantes
-		var['y'-'a'] = r[1] + ra->y1*x1;
-		hh = 1 - ra->t1*x1;	hh = sqrt(sqrt(0.041+hh*hh*hh*hh));
+		x1 = (2*i-nx+1)*f->dr;	hh = 1 - ra->t1*x1;
+		hh = sqrt(sqrt(0.041+hh*hh*hh*hh));
 		tt = (ra->pt + ra->d1*x1)/hh - ra->pt;
-		var['p'-'a'] = r[3] + ra->x0*tt;	// new momentums
-		var['q'-'a'] = r[4] + ra->y0*tt;	var['u'-'a'] = abs(f->a[i]);
-		f->rx[i] = (h->CalcD(var,'p')*ra->x0 + h->CalcD(var,'q')*ra->y0)/ra->ch;
-		f->hx[i] = dual(h->Calc(var), -h->CalcD(var,'i'));
+		f->hx[i] = f->ham(abs(f->a[i]), r[0]+ra->x1*x1, r[1]+ra->y1*x1, r[3]+ra->x0*tt, r[4]+ra->y0*tt, f->par) - f->h0/2.;
 		// u-y terms
 		x1 = f->dk/2*(i<nx/2 ? i:i-nx);
-		var['x'-'a'] = r[0];	var['y'-'a'] = r[1];
-		var['p'-'a'] = r[3] + ra->x1*x1;	// new momentums
-		var['q'-'a'] = r[4] + ra->y1*x1;	var['u'-'a'] = 0;
-		f->ru[i] = (h->CalcD(var,'p')*ra->x0 + h->CalcD(var,'q')*ra->y0)/ra->ch;
-		f->hu[i] = dual(h->Calc(var), -h->CalcD(var,'i'));
+		f->hu[i] = f->ham(0, r[0], r[1], r[3]+ra->x1*x1, r[4]+ra->y1*x1, f->par) - f->h0/2.;
 
-		f->rx[i] = f->rx[i]>0.3*pt0 ? f->rx[i] : 0.3*pt0;
-		f->hx[i] = (f->hx[i]-f->h0/2.)/f->rx[i];
 		if(imag(f->hx[i])>0)	f->hx[i] = f->hx[i].real();
-		f->ru[i] = f->ru[i]>0.3*pt0 ? f->ru[i] : 0.3*pt0;
-		f->hu[i] = (f->hu[i]-f->h0/2.)/f->ru[i];
 		if(imag(f->hu[i])>0)	f->hu[i] = f->hu[i].real();
 		// add boundary conditions for x-direction
 		f->hx[i] -= dual(0,f->dmp[i]);
 	}
 	return 0;
 }
-HMDT MGL_EXPORT mgl_qo2d_solve(const char *ham, HCDT ini_re, HCDT ini_im, HCDT ray_dat, mreal r, mreal k0, HMDT xx, HMDT yy)
+//-----------------------------------------------------------------------------
+HMDT MGL_EXPORT mgl_qo2d_func(dual (*ham)(mreal u, mreal x, mreal y, mreal px, mreal py, void *par), void *par, HCDT ini_re, HCDT ini_im, HCDT ray_dat, mreal r, mreal k0, HMDT xx, HMDT yy)
 {
 	mglData *res=new mglData;
 	const mglData *ray=dynamic_cast<const mglData *>(ray_dat);	// NOTE: Ray must be mglData!
@@ -340,14 +341,12 @@ HMDT MGL_EXPORT mgl_qo2d_solve(const char *ham, HCDT ini_re, HCDT ini_im, HCDT r
 	if(nx<2 || ini_im->GetNx()!=nx || nt<2)	return res;
 	mgl_data_create(res,nx,nt,1);
 #if MGL_HAVE_GSL
-	dual *a=new dual[2*nx], *hu=new dual[2*nx],  *hx=new dual[2*nx], h0;
-	double *ru=new double[2*nx],	*rx=new double[2*nx],	*dmp=new double[2*nx],
-			*pu=new double[2*nx],	*px=new double[2*nx];
+	dual *a=new dual[2*nx], *hu=new dual[2*nx],  *hx=new dual[2*nx];
+	double *dmp=new double[2*nx];
 	mgl_ap *ra = new mgl_ap[nt];	mgl_init_ra(ray->ny, ray->a, ra);	// ray
 	register int i;
-	mglFormula h(ham);
-	mreal var[MGL_VS], dr = r/(nx-1), dk = M_PI*(nx-1)/(k0*r*nx), tt, x1, hh, B1, pt0;
-	memset(var,0,MGL_VS*sizeof(mreal));
+
+	mreal dr = r/(nx-1), dk = M_PI*(nx-1)/(k0*r*nx), tt, x1, hh, B1, pt0;
 
 	memset(dmp,0,2*nx*sizeof(double));
 	for(i=0;i<nx/2;i++)	// prepare damping
@@ -355,15 +354,14 @@ HMDT MGL_EXPORT mgl_qo2d_solve(const char *ham, HCDT ini_re, HCDT ini_im, HCDT r
 		x1 = (nx/2-i)/(nx/2.);
 		dmp[2*nx-1-i] = dmp[i] = 30*GAMMA*x1*x1/k0;
 	}
-	for(i=0;i<nx;i++)	a[i+nx/2] = dual(ini_re->v(i),ini_im->v(i));	// ini
-	for(i=0;i<2*nx;i++)	{	rx[i] = ru[i] = 1;	}
+	for(i=0;i<nx;i++)	a[i+nx/2] = dual(ini_re->v(i),ini_im->v(i));	// init
 	gsl_fft_complex_wavetable *wtx = gsl_fft_complex_wavetable_alloc(2*nx);
 	gsl_fft_complex_workspace *wsx = gsl_fft_complex_workspace_alloc(2*nx);
 	if(xx && yy)	{	xx->Create(nx,nt);	yy->Create(nx,nt);	}
 
-	mgl_qo2d_ham tmp;
-	tmp.hx=hx;	tmp.rx=rx;	tmp.hu=hu;	tmp.ru=ru;	tmp.dmp=dmp;
-	tmp.dr=dr;	tmp.dk=dk;	tmp.h=&h;	tmp.a=a;
+	mgl_qo2d_ham tmp;	// parameters for Hamiltonian calculation
+	tmp.hx=hx;	tmp.hu=hu;	tmp.dmp=dmp;	tmp.par=par;
+	tmp.dr=dr;	tmp.dk=dk;	tmp.ham=ham;	tmp.a=a;
 	// start calculation
 	for(int k=0;k<nt;k++)
 	{
@@ -372,22 +370,21 @@ HMDT MGL_EXPORT mgl_qo2d_solve(const char *ham, HCDT ini_re, HCDT ini_im, HCDT r
 		if(xx && yy)	for(i=0;i<nx;i++)	// prepare xx, yy
 		{
 			x1 = (2*i-nx+1)*dr;
-			xx->a[i+k*nx] = ray->a[7*k] + ra[k].x1*x1;	// new coordiantes
+			xx->a[i+k*nx] = ray->a[7*k] + ra[k].x1*x1;	// new coordinates
 			yy->a[i+k*nx] = ray->a[7*k+1] + ra[k].y1*x1;
 		}
-		memcpy(px,rx,2*nx*sizeof(double));
-		memcpy(pu,ru,2*nx*sizeof(double));
+		tmp.r=ray->a+7*k;	tmp.ra=ra+k;
 		hh = ra[k].pt*(1/sqrt(sqrt(1.041))-1);	// 0.041=0.45^4 -- minimal value of h
-		var['x'-'a'] = ray->a[7*k];	var['y'-'a'] = ray->a[7*k+1];
-		var['p'-'a'] = ray->a[7*k+3] + ra[k].x0*hh;
-		var['q'-'a'] = ray->a[7*k+4] + ra[k].y0*hh;	var['u'-'a'] = 0;
-		h0 = dual(h.Calc(var), -h.CalcD(var,'i'));
-		pt0 = (h.CalcD(var,'p')*ra[k].x0 + h.CalcD(var,'q')*ra[k].y0)/ra[k].ch;
-
-		tmp.h0=h0;	tmp.pt0=pt0;	tmp.r=ray->a+7*k;	tmp.ra=ra+k;
+		tmp.h0 = ham(0, tmp.r[0], tmp.r[1], tmp.r[3]+ra[k].x0*hh, tmp.r[4]+ra[k].x0*hh, par);
 		mglStartThread(mgl_qo2d_hprep,0,2*nx,0,0,0,0,&tmp);
+		// Step for field
+		dual dt = dual(0, -ra[k].dt*k0);
+		for(i=0;i<2*nx;i++)		a[i] *= exp(hx[i]*dt);
+		gsl_fft_complex_transform((double *)a, 1, 2*nx, wtx, wsx, forward);
+		for(i=0;i<2*nx;i++)		a[i] *= exp(hu[i]*dt)/(2.*nx);
+		gsl_fft_complex_transform((double *)a, 1, 2*nx, wtx, wsx, backward);
 
-		// Calculate B1
+/*		// Calculate B1			// TODO make more general scheme later!!!
 		hh = ra[k].pt*(1/sqrt(sqrt(1.041))-1);
 		var['x'-'a'] = ray->a[7*k];	// new coordiantes
 		var['y'-'a'] = ray->a[7*k+1];
@@ -402,26 +399,224 @@ HMDT MGL_EXPORT mgl_qo2d_solve(const char *ham, HCDT ini_re, HCDT ini_im, HCDT r
 		var['q'-'a'] = ray->a[7*k+4] + ra[k].y0*hh;
 		B1 = h.CalcD(var,'p')*ra[k].x1 + h.CalcD(var,'q')*ra[k].y1;
 		B1 = (B1-tt)/dr;
-		// Step for field
-		dual dt = dual(0, -ra[k].dt*k0);
-		for(i=0;i<2*nx;i++)		a[i] *= exp(hx[i]*dt);
-		gsl_fft_complex_transform((double *)a, 1, 2*nx, wtx, wsx, forward);
-		for(i=0;i<2*nx;i++)		a[i] *= exp(hu[i]*dt)/(2.*nx);
-		gsl_fft_complex_transform((double *)a, 1, 2*nx, wtx, wsx, backward);
 		double a1=0, a2=0;
 		for(i=0;i<2*nx;i++)	a1 += norm(a[i]);
 		hx[0] = hx[2*nx-1] = 0.;
 		for(i=1;i<2*nx-1;i++)	hx[i] = (B1*ra[k].dt*(i-nx))*(a[i+1]-a[i-1]);
 		for(i=0;i<2*nx;i++)	{	a[i] += hx[i];	a2 += norm(a[i]);	}
 		a1 = sqrt(a1/a2);
-		for(i=0;i<2*nx;i++)	a[i] *= a1;
+		for(i=0;i<2*nx;i++)	a[i] *= a1;*/
 	}
 	gsl_fft_complex_workspace_free(wsx);
 	gsl_fft_complex_wavetable_free(wtx);
 	delete []a;		delete []hu;	delete []hx;	delete []ra;	delete []dmp;
-	delete []rx;	delete []ru;	delete []px;	delete []pu;
 #endif
 	return res;
+}
+//-----------------------------------------------------------------------------
+dual MGL_NO_EXPORT mgl_ham2d(mreal u, mreal x, mreal y, mreal px, mreal py, void *par)
+{
+	mglFormula *h = (mglFormula *)par;
+	mreal var[MGL_VS];	memset(var,0,MGL_VS*sizeof(mreal));
+	var['x'-'a'] = x;	var['y'-'a'] = y;	var['u'-'a'] = u;
+	var['p'-'a'] = px;	var['q'-'a'] = py;
+	return dual(h->Calc(var), -h->CalcD(var,'i'));
+}
+//-----------------------------------------------------------------------------
+HMDT MGL_EXPORT mgl_qo2d_solve(const char *ham, HCDT ini_re, HCDT ini_im, HCDT ray_dat, mreal r, mreal k0, HMDT xx, HMDT yy)
+{
+	mglFormula h(ham);
+	return mgl_qo2d_func(mgl_ham2d, &h, ini_re, ini_im, ray_dat, r, k0, xx, yy);
+}
+//-----------------------------------------------------------------------------
+//
+//		QO2d series
+//
+//-----------------------------------------------------------------------------
+struct mgl_qo3d_ham
+{
+	dual *hxy, *huv, *hxv, *huy, *a;
+	dual *hx, *hy, *hu, *hv, h0;
+	double *dmp;
+	mreal *r, dr, dk;
+	mgl_ap *ra;
+	dual (*ham)(mreal u, mreal x, mreal y, mreal z, mreal px, mreal py, mreal pz, void *par);
+	void *par;
+};
+//-----------------------------------------------------------------------------
+MGL_NO_EXPORT void *mgl_qo3d_hprep(void *par)
+{
+	mglThreadD *t=(mglThreadD *)par;
+	mgl_qo3d_ham *f = (mgl_qo3d_ham *)t->v;
+	mgl_ap *ra = f->ra;
+
+	const mreal *r = f->r;
+	mreal tt, x1, x2, hh;
+	register long ii,i,j, nx=t->n;
+	for(ii=t->id;ii<nx*nx;ii+=mglNumThr)
+	{
+		i = ii%nx;	j = ii/nx;
+		// x-y terms
+		x1 = (2*i-nx+1)*f->dr;	x2 = (2*j-nx+1)*f->dr;	hh = 1-ra->t1*x1-ra->t2*x2;
+		hh = sqrt(sqrt(0.041+hh*hh*hh*hh));
+		tt = (ra->pt + ra->d1*x1 + ra->d2*x2)/hh - ra->pt;
+		f->hxy[ii] = f->ham(abs(f->a[i]), r[0]+ra->x1*x1+ra->x2*x2, r[1]+ra->y1*x1+ra->y2*x2, r[2]+ra->z1*x1+ra->z2*x2, r[3]+ra->x0*tt, r[4]+ra->y0*tt, r[5]+ra->z0*tt, f->par);
+		// x-v terms
+		x1 = (2*i-nx+1)*f->dr;	x2 = f->dk/2*(j<nx/2 ? j:j-nx);	hh = 1-ra->t1*x1;
+		hh = sqrt(sqrt(0.041+hh*hh*hh*hh));
+		tt = (ra->pt + ra->d1*x1)/hh - ra->pt;
+		f->hxv[ii] = f->ham(0, r[0]+ra->x1*x1, r[1]+ra->y1*x1, r[2]+ra->z1*x1, r[3]+ra->x0*tt+ra->x2*x2, r[4]+ra->y0*tt+ra->y2*x2, r[5]+ra->z0*tt+ra->z2*x2, f->par);
+		// u-y terms
+		x1 = f->dk/2*(i<nx/2 ? i:i-nx);	x2 = (2*j-nx+1)*f->dr;	hh = 1-ra->t2*x2;
+		hh = sqrt(sqrt(0.041+hh*hh*hh*hh));
+		tt = (ra->pt + ra->d2*x2)/hh - ra->pt;
+		f->huy[ii] = f->ham(0, r[0]+ra->x2*x2, r[1]+ra->y2*x2, r[2]+ra->z2*x2, r[3]+ra->x1*x1+ra->x0*tt, r[4]+ra->y1*x1+ra->y0*tt, r[5]+ra->z1*x1+ra->z0*tt, f->par);
+		// u-y terms
+		x1 = f->dk/2*(i<nx/2 ? i:i-nx);	x2 = f->dk/2*(j<nx/2 ? j:j-nx);
+		f->huv[ii] = f->ham(0, r[0], r[1], r[2], r[3]+ra->x1*x1+ra->x2*x2, r[4]+ra->y1*x1+ra->y2*x2, r[5]+ra->z1*x1+ra->z2*x2, f->par);
+	}
+	return 0;
+}
+//-----------------------------------------------------------------------------
+MGL_NO_EXPORT void *mgl_qo3d_post(void *par)
+{
+	mglThreadD *t=(mglThreadD *)par;
+	mgl_qo3d_ham *f = (mgl_qo3d_ham *)t->v;
+	
+	register long ii,i,j, nx=t->n;
+	for(ii=t->id;ii<nx*nx;ii+=mglNumThr)
+	{
+		i = ii%nx;	j = ii/nx;
+		f->hxy[ii] -= (f->hx[i]+f->hy[j]-f->h0/2.)/2.;
+		if(imag(f->hxy[ii])>0)	f->hxy[ii] = f->hxy[ii].real();
+		f->hxv[ii] -= (f->hx[i]+f->hv[j]-f->h0/2.)/2.;
+		if(imag(f->hxv[ii])>0)	f->hxv[ii] = f->hxv[ii].real();
+		f->huy[ii] -= (f->hu[i]+f->hy[j]-f->h0/2.)/2.;
+		if(imag(f->huy[ii])>0)	f->huy[ii] = f->huy[ii].real();
+		f->huv[ii] -= (f->hu[i]+f->hv[j]-f->h0/2.)/2.;
+		if(imag(f->huv[ii])>0)	f->huv[ii] = f->huv[ii].real();
+		// add boundary conditions for x-direction
+		f->hxy[ii] -= dual(0,f->dmp[ii]);
+	}
+	return 0;
+}
+//-----------------------------------------------------------------------------
+HMDT MGL_EXPORT mgl_qo3d_func(dual (*ham)(mreal u, mreal x, mreal y, mreal z, mreal px, mreal py, mreal pz, void *par), void *par, HCDT ini_re, HCDT ini_im, HCDT ray_dat, mreal r, mreal k0, HMDT xx, HMDT yy, HMDT zz)
+{
+	mglData *res=new mglData;
+	const mglData *ray=dynamic_cast<const mglData *>(ray_dat);	// NOTE: Ray must be mglData!
+	if(!ray)	return res;
+	int nx=ini_re->GetNx(), nt=ray->ny;	// NOTE: only square grids are supported now (for simplicity)
+	if(nx<2 || ini_re->GetNx()!=nx || ini_im->GetNx()*ini_im->GetNy()!=nx*nx || nt<2)	return res;
+	mgl_data_create(res,nx,nx,nt);
+#if MGL_HAVE_GSL
+	dual *a=new dual[4*nx*nx], *huv=new dual[4*nx*nx],  *hxy=new dual[4*nx*nx], *huy=new dual[4*nx*nx],  *hxv=new dual[4*nx*nx];
+	dual *hu=new dual[2*nx],  *hx=new dual[2*nx], *hy=new dual[2*nx],  *hv=new dual[2*nx];
+	double *dmp=new double[2*nx*nx];
+	mgl_ap *ra = new mgl_ap[nt];	mgl_init_ra(ray->ny, ray->a, ra);	// ray
+	register int i,j,ii;
+
+	mreal dr = r/(nx-1), dk = M_PI*(nx-1)/(k0*r*nx), tt, x1, x2, hh, B1, pt0;
+
+	memset(dmp,0,2*nx*sizeof(double));
+	for(i=0;i<nx/2;i++)	for(j=0;j<nx/2;j++)	// prepare damping
+	{
+		x1 = (nx/2-i)/(nx/2.);	x2 = (nx/2-j)/(nx/2.);
+		dmp[2*nx-1-i] = dmp[i] = 30*GAMMA*x1*x1/k0;
+		dmp[(2*nx-1-j)*2*nx] += 30*GAMMA*x2*x2/k0;
+		dmp[j*2*nx] += 30*GAMMA*x2*x2/k0;
+	}
+	for(i=0;i<nx;i++)	for(j=0;j<nx;j++)	// init
+		a[i+nx/2+2*nx*(j+nx/2)] = dual(ini_re->v(i,j),ini_im->v(i,j));
+	gsl_fft_complex_wavetable *wtx = gsl_fft_complex_wavetable_alloc(2*nx);
+	gsl_fft_complex_workspace *wsx = gsl_fft_complex_workspace_alloc(2*nx);
+	if(xx && yy && zz)	{	xx->Create(nx,nx,nt);	yy->Create(nx,nx,nt);	zz->Create(nx,nx,nt);	}
+
+	mgl_qo3d_ham tmp;	// parameters for Hamiltonian calculation
+	tmp.hxy=hxy;	tmp.hx=hx;	tmp.huv=huv;	tmp.hu=hu;
+	tmp.huy=huy;	tmp.hy=hy;	tmp.hxv=hxv;	tmp.hv=hv;
+	tmp.dmp=dmp;	tmp.par=par;
+	tmp.dr=dr;	tmp.dk=dk;	tmp.ham=ham;	tmp.a=a;
+	// start calculation
+	for(int k=0;k<nt;k++)
+	{
+		for(i=0;i<nx;i++)	for(j=0;j<nx;j++)	// "save"
+			res->a[i+nx*(j+k*nx)]=abs(a[i+nx/2+2*nx*(j+nx/2)])*sqrt(ra[0].ch/ra[k].ch);
+		if(xx && yy && zz)	for(i=0;i<nx;i++)	for(j=0;j<nx;j++)	// prepare xx, yy, zz
+		{
+			x1 = (2*i-nx+1)*dr;	x2 = (2*j-nx+1)*dr;
+			xx->a[i+nx*(j+k*nx)] = ray->a[7*k] + ra[k].x1*x1 + ra[k].x2*x2;	// new coordinates
+			yy->a[i+nx*(j+k*nx)] = ray->a[7*k+1] + ra[k].y1*x1 + ra[k].y2*x2;
+			zz->a[i+nx*(j+k*nx)] = ray->a[7*k+2] + ra[k].z1*x1 + ra[k].z2*x2;
+		}
+		tmp.r=ray->a+7*k;	tmp.ra=ra+k;
+		mglStartThread(mgl_qo3d_hprep,0,2*nx,0,0,0,0,&tmp);	tmp.h0 = huv[0];
+		for(i=0;i<2*nx;i++)	// fill intermediate arrays
+		{
+			tmp.hx[i] = hxv[i];	tmp.hy[i] = huy[i*2*nx];
+			tmp.hv[i] = huv[i];	tmp.hu[i] = huv[i*2*nx];
+		}
+		mglStartThread(mgl_qo3d_post,0,2*nx,0,0,0,0,&tmp);
+		// Step for field
+		dual dt = dual(0, -ra[k].dt*k0);	// TODO: this part can be paralleled
+		for(i=0;i<4*nx*nx;i++)	a[i] *= exp(hxy[i]*dt);		// x-y
+		for(i=0;i<2*nx;i++)	// x->u
+			gsl_fft_complex_transform((double *)(a+i), 1, 2*nx, wtx, wsx, forward);
+		for(i=0;i<4*nx*nx;i++)	a[i] *= exp(huy[i]*dt);		// u-y
+		for(i=0;i<2*nx;i++)	// y->v
+			gsl_fft_complex_transform((double *)(a+i*2*nx), 2*nx, 2*nx, wtx, wsx, forward);
+		for(i=0;i<4*nx*nx;i++)	a[i] *= exp(huv[i]*dt)/(4.*nx*nx);	// u-v
+		for(i=0;i<2*nx;i++)	// u->x
+			gsl_fft_complex_transform((double *)(a+i), 1, 2*nx, wtx, wsx, backward);
+		for(i=0;i<4*nx*nx;i++)	a[i] *= exp(hxv[i]*dt);		// x-v
+		for(i=0;i<2*nx;i++)	// v->y
+			gsl_fft_complex_transform((double *)(a+i*2*nx), 2*nx, 2*nx, wtx, wsx, backward);
+		
+/*		// Calculate B1			// TODO make more general scheme later!!!
+		hh = ra[k].pt*(1/sqrt(sqrt(1.041))-1);
+		var['x'-'a'] = ray->a[7*k];	// new coordiantes
+		var['y'-'a'] = ray->a[7*k+1];
+		var['p'-'a'] = ray->a[7*k+3] + ra[k].x0*hh;	// new momentums
+		var['q'-'a'] = ray->a[7*k+4] + ra[k].y0*hh;
+		tt = h.CalcD(var,'p')*ra[k].x1 + h.CalcD(var,'q')*ra[k].y1;
+		var['x'-'a'] = ray->a[7*k] + ra[k].x1*dr;	// new coordiantes
+		var['y'-'a'] = ray->a[7*k+1] + ra[k].y1*dr;
+		hh = 1 - ra[k].t1*dr;	hh = sqrt(sqrt(0.041+hh*hh*hh*hh));
+		hh = (ra[k].ch*ra[k].pt + ra[k].d1*dr)/(hh*ra[k].ch) - ra[k].pt;
+		var['p'-'a'] = ray->a[7*k+3] + ra[k].x0*hh;	// new momentums
+		var['q'-'a'] = ray->a[7*k+4] + ra[k].y0*hh;
+		B1 = h.CalcD(var,'p')*ra[k].x1 + h.CalcD(var,'q')*ra[k].y1;
+		B1 = (B1-tt)/dr;
+		double a1=0, a2=0;
+		for(i=0;i<2*nx;i++)	a1 += norm(a[i]);
+		hx[0] = hx[2*nx-1] = 0.;
+		for(i=1;i<2*nx-1;i++)	hx[i] = (B1*ra[k].dt*(i-nx))*(a[i+1]-a[i-1]);
+		for(i=0;i<2*nx;i++)	{	a[i] += hx[i];	a2 += norm(a[i]);	}
+		a1 = sqrt(a1/a2);
+		for(i=0;i<2*nx;i++)	a[i] *= a1;*/
+	}
+	gsl_fft_complex_workspace_free(wsx);
+	gsl_fft_complex_wavetable_free(wtx);
+	delete []a;		delete []ra;	delete []dmp;
+	delete []huv;	delete []hxy;	delete []hxv;	delete []huy;
+	delete []hu;	delete []hx;	delete []hv;	delete []hy;
+#endif
+	return res;
+}
+//-----------------------------------------------------------------------------
+dual MGL_NO_EXPORT mgl_ham3d(mreal u, mreal x, mreal y, mreal z, mreal px, mreal py, mreal pz, void *par)
+{
+	mglFormula *h = (mglFormula *)par;
+	mreal var[MGL_VS];	memset(var,0,MGL_VS*sizeof(mreal));
+	var['x'-'a'] = x;	var['y'-'a'] = y;	var['z'-'a'] = z;	var['u'-'a'] = u;
+	var['p'-'a'] = px;	var['q'-'a'] = py;	var['v'-'a'] = pz;
+	return dual(h->Calc(var), -h->CalcD(var,'i'));
+}
+//-----------------------------------------------------------------------------
+HMDT MGL_EXPORT mgl_qo3d_solve(const char *ham, HCDT ini_re, HCDT ini_im, HCDT ray_dat, mreal r, mreal k0, HMDT xx, HMDT yy, HMDT zz)
+{
+	mglFormula h(ham);
+	return mgl_qo3d_func(mgl_ham3d, &h, ini_re, ini_im, ray_dat, r, k0, xx, yy, zz);
 }
 //-----------------------------------------------------------------------------
 MGL_NO_EXPORT void *mgl_jacob2(void *par)

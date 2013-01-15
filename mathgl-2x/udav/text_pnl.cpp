@@ -104,7 +104,7 @@ void TextPanel::insNVal()
 	}
 	wchar_t *txt=new wchar_t[sel.length()+1];
 	sel.toWCharArray(txt);	txt[sel.length()]=0;
-	mglData res=mglFormulaCalc(txt, parser.Self());
+	mglData res=parser.Calc(txt);
 	delete []txt;
 	edit->textCursor().insertText(QString::number(res.GetVal(0)));
 }
