@@ -75,7 +75,7 @@ void TextEdit::highlight()
 void TextEdit::setCompleter(QCompleter *completer)
 {
 	if(c && c!=completer)
-	{	QObject::disconnect(c);	c->setWidget(0);	c=0;	}
+	{	QObject::disconnect(c);	c->setWidget(0);	delete c;	c=0;	}
 	if(!completer)	return;
 	c = completer;
 	c->setWidget(this);

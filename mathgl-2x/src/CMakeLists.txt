@@ -52,13 +52,6 @@ if(MGL_HAVE_LTDL)
 	include_directories(${LTDL_INCLUDE_DIR})
 endif(MGL_HAVE_LTDL)
 
-if(MGL_HAVE_U3D)
-#	include_directories( IDTFGen ${U3D_INCLUDE_DIR} )
-	target_link_libraries(mgl ${U3D_LIB})
-	target_link_libraries(mgl-static ${U3D_LIB})
-	include_directories(${U3D_INCLUDE_DIR})
-endif(MGL_HAVE_U3D)
-
 if(MGL_HAVE_PDF)
 	include_directories(${HPDF_INCLUDE_DIR})
 	target_link_libraries(mgl ${HPDF_LIB})

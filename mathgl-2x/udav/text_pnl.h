@@ -26,7 +26,6 @@
 //-----------------------------------------------------------------------------
 class QMenu;
 class QPrinter;
-class QCompleter;
 class QBoxLayout;
 class FindDialog;
 class OptionDialog;
@@ -84,8 +83,7 @@ public slots:
 
 private:
 
-	QCompleter *completer;
-	QStringList words;
+	QStringList words, vars;
 	QPrinter *printer;
 
 	FindDialog *findDialog;

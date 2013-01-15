@@ -3,6 +3,8 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN. (VID=18d1 and PID=4e41)
 
 ============= NEW FOR LATER =============
 
+A. Paper about MathGL!!!
+
 0. Check how Spline/mglSpline3 work for n[xyz]<4 !!!
 
 1. Export to X3D

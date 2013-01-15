@@ -63,16 +63,10 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	gr->SetRotatedText(false);
-	gr->SetRanges(-1.0, 1.0, -1.0, 1.0);
-	gr->Box();
-	gr->Axis();
-	return;
-	
 	mglParse par;
 	par.AllowSetSize(true);
 	setlocale(LC_CTYPE, "");
-	FILE *fp=fopen("/home/balakin/mathgl-code/mathgl-2x/build/test.mgl","r");
+	FILE *fp=fopen("/home/balakin/mathgl-code/mathgl-2x/build/qo.mgl","r");
 	par.Execute(gr,fp,true);
 	fclose(fp);
 }
@@ -410,7 +404,7 @@ int main(int argc,char **argv)
 	if(type==15)	mini=1;	// save mini version for json
 	
 	if(srnd)	mgl_srnd(1);
-	gr->VertexColor(false);	gr->TextureColor(true);	gr->Compression(false);
+	gr->VertexColor(false);	gr->Compression(false);
 	if(name[0]==0)	while(s->name[0])	// all samples
 	{
 		gr->DefaultPlotParam();	gr->Clf();

@@ -504,13 +504,6 @@ void MGL_EXPORT mgl_write_off_(uintptr_t *gr, const char *fname,const char *desc
 	char *d=new char[n+1];	memcpy(d,descr,n);	d[n]=0;
 	mgl_write_off(_GR_,s,d,*colored);	delete []s;		delete []d;	}
 //-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_write_idtf(HMGL /*gr*/, const char */*fname*/,const char */*descr*/)
-{	/*_Gr_->WriteIDTF(fname,descr);*/	}	// TODO: Add idtf support later
-void MGL_EXPORT mgl_write_idtf_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
-{	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
-	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
-	mgl_write_idtf(_GR_,s,f);	delete []s;		delete []f;	}
-//-----------------------------------------------------------------------------
 bool mglCanvas::WriteJSON(const char *fname)
 {
 	bool fl = strcmp(fname,"-");

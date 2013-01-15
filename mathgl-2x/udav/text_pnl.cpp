@@ -61,8 +61,7 @@ TextPanel::TextPanel(QWidget *parent) : QWidget(parent)
 
 	register int i,n=parser.GetCmdNum();
 	for(i=0;i<n;i++) 	words<<QString::fromAscii(parser.GetCmdName(i));
-	completer = new QCompleter(words, this);
-	completer->setCaseSensitivity(Qt::CaseInsensitive);
+	vars = words;
 
 	connect(setupDlg, SIGNAL(putText(const QString &)), this, SLOT(animPutText(const QString &)));
 	connect(newCmdDlg, SIGNAL(result(const QString&)), this, SLOT(putLine(const QString&)));
@@ -73,8 +72,6 @@ TextPanel::TextPanel(QWidget *parent) : QWidget(parent)
 	new QMGLSyntax(edit);
 	defFontFamily = edit->fontFamily();
 	defFontSize = int(edit->fontPointSize());
-	completer->setCompletionMode(QCompleter::PopupCompletion);
-//	edit->setCompleter(completer);
 	edit->setLineWrapMode(QTextEdit::NoWrap);
 	setCompleter(mglCompleter);
 
@@ -89,7 +86,14 @@ TextPanel::~TextPanel()	{	delete printer;	}
 //-----------------------------------------------------------------------------
 void TextPanel::setCompleter(bool en)
 {
-	edit->setCompleter(en?completer:0);
+	if(en)
+	{
+		QCompleter *completer = new QCompleter(vars, this);
+		completer->setCaseSensitivity(Qt::CaseInsensitive);
+		completer->setCompletionMode(QCompleter::PopupCompletion);
+		edit->setCompleter(completer);
+	}
+	else	edit->setCompleter(0);
 //	completer->setCompletionMode(en ? QCompleter::PopupCompletion : QCompleter::InlineCompletion);
 }
 //-----------------------------------------------------------------------------
@@ -136,17 +140,13 @@ void TextPanel::insPath()
 //-----------------------------------------------------------------------------
 void TextPanel::refreshData()
 {
-	QStringList vars=words;
+	vars=words;
 	mglVar *v = parser.FindVar("");
 	while(v)
 	{
 		if(v->s.length()>2)	vars<<QString::fromStdWString(v->s);
 		v = v->next;
 	}
-	if(completer)	delete completer;
-	completer = new QCompleter(vars, this);
-	completer->setCaseSensitivity(Qt::CaseInsensitive);
-	completer->setCompletionMode(QCompleter::PopupCompletion);
 	setCompleter(mglCompleter);
 }
 //-----------------------------------------------------------------------------

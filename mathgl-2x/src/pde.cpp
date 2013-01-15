@@ -512,13 +512,14 @@ HMDT MGL_EXPORT mgl_qo3d_func(dual (*ham)(mreal u, mreal x, mreal y, mreal z, mr
 #if MGL_HAVE_GSL
 	dual *a=new dual[4*nx*nx], *huv=new dual[4*nx*nx],  *hxy=new dual[4*nx*nx], *huy=new dual[4*nx*nx],  *hxv=new dual[4*nx*nx];
 	dual *hu=new dual[2*nx],  *hx=new dual[2*nx], *hy=new dual[2*nx],  *hv=new dual[2*nx];
-	double *dmp=new double[2*nx*nx];
-	mgl_ap *ra = new mgl_ap[nt];	mgl_init_ra(ray->ny, ray->a, ra);	// ray
+	mreal *dmp=new mreal[4*nx*nx];
+	mgl_ap *ra = new mgl_ap[nt];
+	mgl_init_ra(ray->ny, ray->a, ra);	// prepare ray
 	register int i,j,ii;
 
 	mreal dr = r/(nx-1), dk = M_PI*(nx-1)/(k0*r*nx), tt, x1, x2, hh, B1, pt0;
 
-	memset(dmp,0,2*nx*sizeof(double));
+	memset(dmp,0,4*nx*nx*sizeof(mreal));
 	for(i=0;i<nx/2;i++)	for(j=0;j<nx/2;j++)	// prepare damping
 	{
 		x1 = (nx/2-i)/(nx/2.);	x2 = (nx/2-j)/(nx/2.);
@@ -561,16 +562,16 @@ HMDT MGL_EXPORT mgl_qo3d_func(dual (*ham)(mreal u, mreal x, mreal y, mreal z, mr
 		dual dt = dual(0, -ra[k].dt*k0);	// TODO: this part can be paralleled
 		for(i=0;i<4*nx*nx;i++)	a[i] *= exp(hxy[i]*dt);		// x-y
 		for(i=0;i<2*nx;i++)	// x->u
-			gsl_fft_complex_transform((double *)(a+i), 1, 2*nx, wtx, wsx, forward);
+			gsl_fft_complex_transform((double *)(a+i*2*nx), 1, 2*nx, wtx, wsx, forward);
 		for(i=0;i<4*nx*nx;i++)	a[i] *= exp(huy[i]*dt);		// u-y
 		for(i=0;i<2*nx;i++)	// y->v
-			gsl_fft_complex_transform((double *)(a+i*2*nx), 2*nx, 2*nx, wtx, wsx, forward);
+			gsl_fft_complex_transform((double *)(a+i), 2*nx, 2*nx, wtx, wsx, forward);
 		for(i=0;i<4*nx*nx;i++)	a[i] *= exp(huv[i]*dt)/(4.*nx*nx);	// u-v
 		for(i=0;i<2*nx;i++)	// u->x
-			gsl_fft_complex_transform((double *)(a+i), 1, 2*nx, wtx, wsx, backward);
+			gsl_fft_complex_transform((double *)(a+i*2*nx), 1, 2*nx, wtx, wsx, backward);
 		for(i=0;i<4*nx*nx;i++)	a[i] *= exp(hxv[i]*dt);		// x-v
 		for(i=0;i<2*nx;i++)	// v->y
-			gsl_fft_complex_transform((double *)(a+i*2*nx), 2*nx, 2*nx, wtx, wsx, backward);
+			gsl_fft_complex_transform((double *)(a+i), 2*nx, 2*nx, wtx, wsx, backward);
 		
 /*		// Calculate B1			// TODO make more general scheme later!!!
 		hh = ra[k].pt*(1/sqrt(sqrt(1.041))-1);
@@ -597,7 +598,9 @@ HMDT MGL_EXPORT mgl_qo3d_func(dual (*ham)(mreal u, mreal x, mreal y, mreal z, mr
 	}
 	gsl_fft_complex_workspace_free(wsx);
 	gsl_fft_complex_wavetable_free(wtx);
-	delete []a;		delete []ra;	delete []dmp;
+	delete []a;
+	delete []ra;
+	delete []dmp;
 	delete []huv;	delete []hxy;	delete []hxv;	delete []huy;
 	delete []hu;	delete []hx;	delete []hv;	delete []hy;
 #endif

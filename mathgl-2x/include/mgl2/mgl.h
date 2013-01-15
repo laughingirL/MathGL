@@ -354,7 +354,7 @@ public:
 	/// Set drawing data for i-th frame (work if MGL_VECT_FRAME is set on). Work as EndFrame() but don't add frame to GIF image.
 	inline void SetFrame(int i)	{	mgl_set_frame(gr, i);	}
 	/// Append drawing data from i-th frame (work if MGL_VECT_FRAME is set on)
-	inline void ShowFrame(int i)	{	mgl_show_frame(gr, i);	}
+	inline void ShowFrame(int i){	mgl_show_frame(gr, i);	}
 	
 	/// Start write frames to cinema using GIF format
 	inline void StartGIF(const char *fname, int ms=100)
@@ -1149,7 +1149,7 @@ public:
 	inline void VertexColor(bool enable)	{	mgl_set_flag(gr,enable, MGL_PREFERVC);	}
 	/// Render only front side of surfaces for dubugging purposes (for formats that support it, now only PRC does).
 	inline void DoubleSided(bool enable)	{	mgl_set_flag(gr,!enable, MGL_ONESIDED);	}
-	inline void TextureColor(bool){}	// NOTE: Add later -- IDTF
+//	inline void TextureColor(bool){}	// NOTE: Add later -- IDTF
 };
 //-----------------------------------------------------------------------------
 /// Structure for handling named mglData (used by mglParse class).
