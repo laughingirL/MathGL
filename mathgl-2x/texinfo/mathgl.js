@@ -194,9 +194,17 @@ var mgl_draw_fast = function(obj, ctx, skip)
 	var i,n1;
 	for(var i=0;i<obj.nprim;i++)	// for each primitive
 	{
-		var n1 = obj.prim[i][1];
+		var n1 = obj.prim[i][1], n2 = obj.prim[i][2];
 		ctx.fillStyle = obj.prim[i][10];
-		ctx.fillRect(obj.pp[n1][0], obj.pp[n1][1], 1, 1);
+		ctx.fillRect(obj.pp[n1][0], obj.pp[n1][1], 2, 2);
+		if(obj.prim[i][0]==1)
+		{
+			ctx.beginPath();
+			ctx.moveTo(obj.pp[n1][0],obj.pp[n1][1]);
+			ctx.lineTo(obj.pp[n2][0],obj.pp[n2][1]);
+			ctx.lineWidth = obj.prim[i][7];
+			ctx.stroke();
+		}
 	}
 	obj.fast = 0;
 }

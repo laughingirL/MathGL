@@ -17,10 +17,13 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifdef __BORLANDC__
-#include <algorithm.h>
-#else
+// NOTE: Borland before 2007 (i.e. < 0x0600) use <algorithm.h>, fter 0x0630 it use <algorithm>.
+// I don't find information about 2009, 2010 versions (i.e. 0x0610 and 0x0620).
+// May be condition below can be rewritten as (__CODEGEARC__ >=  0x0600)
+#if !defined(__BORLANDC__) || (__CODEGEARC__ >=  0x0630)
 #include <algorithm>
+#else
+#include <algorithm.h>
 #endif
 
 #include "mgl2/surf.h"

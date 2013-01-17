@@ -325,7 +325,8 @@ void mglFont::Convert(const wchar_t *str, unsigned *res) const
 		else if(ch=='@')	res[j++] = MGL_FONT_UPPER|MGL_FONT_LOWER;
 		else if(ch=='{')	res[j++] = unsigned(-3);
 		else if(ch=='}')	res[j++] = unsigned(-4);
-		else if(ch=='#')	res[j++] = MGL_COLOR_MASK + (0xff & str[++i]);
+		else if(ch=='#' && str[i+1]>' ')
+			res[j++] = MGL_COLOR_MASK + (0xff & str[++i]);
 		else	res[j++] = ch;				// It is just symbol
 	}
 	res[j] = 0;
