@@ -160,7 +160,7 @@ void mglCanvasGL::View(mreal TetX,mreal TetY,mreal TetZ)
 //-----------------------------------------------------------------------------
 void mglCanvasGL::Fog(mreal d, mreal)
 {
-	if(d>0)		// TODO: Check fog to OpenGL mode
+	if(d>0)
 	{
 		float back[4]={BDef[0]/255.f,BDef[1]/255.f,BDef[2]/255.f,BDef[3]/255.f};
 		glFogf(GL_FOG_MODE,GL_EXP);

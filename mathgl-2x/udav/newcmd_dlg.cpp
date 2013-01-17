@@ -150,7 +150,7 @@ void NewCmdDialog::parseCmd(const QString &txt)
 	}
 }
 //-----------------------------------------------------------------------------
-void NewCmdDialog::fillList()	// TODO update list !!!
+void NewCmdDialog::fillList()
 {
 	types<<tr("1D plots")<<tr("2D plots")<<tr("3D plots")<<tr("Dual plots")
 			<<tr("Vector plots")<<tr("Other plots")<<tr("Text and legend")

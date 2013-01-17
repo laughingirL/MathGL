@@ -486,7 +486,7 @@ protected:
 
 	virtual void LightScale()=0;			///< Scale positions of light sources
 
-private:
+	// block for SaveState()
 	mglPoint MinS;		///< Saved lower edge of bounding box for graphics.
 	mglPoint MaxS;		///< Saved upper edge of bounding box for graphics.
 	mreal MSS, ASS, FSS, ADS, MNS, LSS;	///< Saved state
@@ -494,6 +494,8 @@ private:
 	long CSS;			///< Saved flags
 	bool saved;			///< State is saved
 	std::string leg_str;///< text to be save in legend
+
+private:
 
 	mglPoint CutMin;	///< Lower edge of bounding box for cut off.
 	mglPoint CutMax;	///< Upper edge of bounding box for cut off.

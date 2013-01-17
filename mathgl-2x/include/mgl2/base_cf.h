@@ -34,6 +34,20 @@ void MGL_EXPORT mgl_set_warn_(uintptr_t *gr, int *code, const char *text,int);
 /// Set buffer for warning messages
 MGL_EXPORT const char *mgl_get_mess(HMGL gr);
 
+/// Set name of plot for saving filename
+void MGL_EXPORT mgl_set_plotid(HMGL gr, const char *id);
+void MGL_EXPORT mgl_set_plotid_(uintptr_t *gr, const char *id,int);
+/// Get name of plot for saving filename
+MGL_EXPORT const char *mgl_get_plotid(HMGL gr);
+
+/// Get plot quality
+int MGL_EXPORT mgl_get_quality(HMGL gr);
+int MGL_EXPORT mgl_get_quality_(uintptr_t *gr);
+/// Set plot quality
+void MGL_EXPORT mgl_set_quality(HMGL gr, int qual);
+void MGL_EXPORT mgl_set_quality_(uintptr_t *gr, int *qual);
+/// Is frames
+int MGL_EXPORT mgl_is_frames(HMGL gr);
 /// Get bit-value flag of HMGL state (for advanced users only)
 int MGL_EXPORT mgl_get_flag(HMGL gr, long flag);
 /// Set bit-value flag of HMGL state (for advanced users only)

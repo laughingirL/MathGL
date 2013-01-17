@@ -136,8 +136,8 @@ void Fl_MathGL::set_graph(HMGL GR)
 void Fl_MathGL::draw()
 {
 	// TODO: add active points drawing here (from Qt)
-	const unsigned char *g = gr ? gr->GetBits() : 0;
-	int i, hh=gr->GetHeight(), ww=gr->GetWidth();
+	const unsigned char *g = mgl_get_rgb(gr);
+	int i, ww=mgl_get_width(gr), hh=mgl_get_height(gr);
 	if(g)	fl_draw_image(g, x(), y(), ww, hh, 3);
 	if(flag&4)
 	{
@@ -158,24 +158,24 @@ void Fl_MathGL::update()
 {
 	if(draw_func || draw_cl)
 	{
-		if(gr->get(MGL_CLF_ON_UPD))	gr->DefaultPlotParam();
-		gr->ResetFrames();
-		gr->Alpha(flag&1);	gr->Light(flag&2);
+		mgl_reset_frames(gr);
+		if(mgl_get_flag(gr,MGL_CLF_ON_UPD))	mgl_set_def_param(gr);
+		mgl_set_alpha(gr,flag&1);	mgl_set_light(gr,flag&2);
 		if(tet_val)	tet = tet_val->value();
 		if(phi_val)	phi = phi_val->value();
-		gr->Zoom(x1,y1,x2,y2);	gr->View(phi,0,tet);
+		mgl_zoom(gr,x1,y1,x2,y2);	mgl_view(gr,phi,0,tet);
 		setlocale(LC_NUMERIC, "C");
 		// use frames for quickly redrawing while adding/changing primitives
-		if(gr->get(MGL_VECT_FRAME) && !(gr->GetQuality()&4))	gr->NewFrame();
+		if(mgl_is_frames(gr))	mgl_new_frame(gr);
 		if(draw_func)	draw_func(gr, draw_par);	// drawing itself
 		else	if(draw_cl)	{	mglGraph g(gr);	draw_cl->Draw(&g);	}
-		if(gr->get(MGL_VECT_FRAME) && !(gr->GetQuality()&4))	gr->EndFrame();
+		if(mgl_is_frames(gr))	mgl_end_frame(gr);
 		setlocale(LC_NUMERIC, "");
-		const char *buf = gr->Mess.c_str();
+		const char *buf = mgl_get_mess(gr);
 		if(*buf)	fl_message("%s",buf);
 	}
-	if(gr->GetWidth()!=w() || gr->GetHeight()!=h())
-		size(gr->GetWidth(), gr->GetHeight());
+	if(mgl_get_width(gr)!=w() || mgl_get_height(gr)!=h())
+		size(mgl_get_width(gr), mgl_get_height(gr));
 	redraw();	Fl::flush();
 }
 //-----------------------------------------------------------------------------
@@ -193,7 +193,7 @@ int Fl_MathGL::handle(int code)
 	{
 		mglCanvasWnd *g=dynamic_cast<mglCanvasWnd *>(gr);
 		if(g && g->ClickFunc)	g->ClickFunc(draw_par);
-		if(gr->get(MGL_SHOW_POS))
+		if(mgl_get_flag(gr,MGL_SHOW_POS))
 		{
 			mglPoint p = gr->CalcXYZ(Fl::event_x()-x(), Fl::event_y()-y());
 			if(g)	g->LastMousePos = p;
@@ -313,8 +313,6 @@ int Fl_MathGL::handle(int code)
 void Fl_MGLView::toggle(int &val, Fl_Button *b, const char *txt)
 {
 	val = 1-val;	b->value(val);
-	// TODO: add pixmap (Fl_Pixmap *pix) change?!
-	// if(pix) {b->image(*pix);	b->redraw();}
 	if(menu && txt && *txt)
 	{
 		Fl_Menu_Item *m = (Fl_Menu_Item *)menu->find_item(gettext(txt));
@@ -327,8 +325,6 @@ void Fl_MGLView::toggle(int &val, Fl_Button *b, const char *txt)
 void Fl_MGLView::setoff(int &val, Fl_Button *b, const char *txt)
 {
 	val = 0;	b->value(val);
-	// TODO: add pixmap (Fl_Pixmap *pix) change?!
-	// if(pix) {b->image(*pix);	b->redraw();}
 	if(menu && txt && *txt)
 	{
 		Fl_Menu_Item *m = (Fl_Menu_Item *)menu->find_item(gettext(txt));

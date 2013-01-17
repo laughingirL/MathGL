@@ -243,7 +243,6 @@ void PropDialog::applyChanges()
 			MainWindow *s = (MainWindow *)w;
 			if(ok)	{	s->writeSettings();	ok = false;	}
 			s->edit->setEditorFont();
-//			if(s->hlp->isActiveWindow())	s->hlp->showHelp();	// TODO: may be should enabled later
 			s->graph->setMGLFont(pathFont);
 			s->setEditPos(editPosBottom);
 			s->edit->setCompleter(mglCompleter);

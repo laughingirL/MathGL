@@ -23,19 +23,27 @@
 //-----------------------------------------------------------------------------
 #undef _GR_
 #define _GR_	((mglCanvas *)(*gr))
-#define _Gr_	((mglCanvas *)(gr))
 //-----------------------------------------------------------------------------
-MGL_EXPORT const unsigned char *mgl_get_rgb(HMGL gr)	{	return _Gr_->GetBits();	}
-MGL_EXPORT const unsigned char *mgl_get_rgba(HMGL gr)	{	return _Gr_->GetRGBA();	}
-int MGL_EXPORT mgl_get_width(HMGL gr)		{	return _Gr_->GetWidth();	}
-int MGL_EXPORT mgl_get_height(HMGL gr)		{	return _Gr_->GetHeight();	}
+MGL_EXPORT const unsigned char *mgl_get_rgb(HMGL gr)
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	return g?g->GetBits():0;	}
+MGL_EXPORT const unsigned char *mgl_get_rgba(HMGL gr)
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	return g?g->GetRGBA():0;	}
+int MGL_EXPORT mgl_get_width(HMGL gr)
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	return g?g->GetWidth():0;	}
+int MGL_EXPORT mgl_get_height(HMGL gr)
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	return g?g->GetHeight():0;	}
 void MGL_EXPORT mgl_calc_xyz(HMGL gr, int xs, int ys, mreal *x, mreal *y, mreal *z)
-{	mglPoint p = _Gr_->CalcXYZ(xs,ys);	*x = p.x;	*y = p.y;	*z = p.z;	}
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);
+	mglPoint p = g?g->CalcXYZ(xs,ys):mglPoint(NAN,NAN,NAN);
+	*x = p.x;	*y = p.y;	*z = p.z;	}
 void MGL_EXPORT mgl_calc_scr(HMGL gr, double x, double y, double z, int *xs, int *ys)
-{	_Gr_->CalcScr(mglPoint(x,y,z),xs,ys);	}
-void MGL_EXPORT mgl_set_obj_id(HMGL gr, int id)	{	_Gr_->SetObjId(id);	}
-int MGL_EXPORT mgl_get_obj_id(HMGL gr, int x, int y)	{	return _Gr_->GetObjId(x,y);	}
-int MGL_EXPORT mgl_get_spl_id(HMGL gr, int x, int y)	{	return _Gr_->GetSplId(x,y);	}
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->CalcScr(mglPoint(x,y,z),xs,ys);	}
+void MGL_EXPORT mgl_set_obj_id(HMGL gr, int id)
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->SetObjId(id);	}
+int MGL_EXPORT mgl_get_obj_id(HMGL gr, int x, int y)
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	return g?g->GetObjId(x,y):-1;	}
+int MGL_EXPORT mgl_get_spl_id(HMGL gr, int x, int y)
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	return g?g->GetSplId(x,y):-1;	}
 //-----------------------------------------------------------------------------
 long MGL_EXPORT mgl_is_active(HMGL gr, int xs, int ys, int d)
 {
@@ -50,41 +58,59 @@ long MGL_EXPORT mgl_is_active(HMGL gr, int xs, int ys, int d)
 long MGL_EXPORT mgl_is_active_(uintptr_t *gr, int *xs, int *ys, int *d)
 {	return mgl_is_active(_GR_, *xs, *ys, *d);	}
 //-----------------------------------------------------------------------------
-int MGL_EXPORT mgl_new_frame(HMGL gr)		{	return _Gr_->NewFrame();	}
-void MGL_EXPORT mgl_end_frame(HMGL gr)		{	_Gr_->EndFrame();	}
-int MGL_EXPORT mgl_get_num_frame(HMGL gr)	{	return _Gr_->GetNumFrame();	}
-void MGL_EXPORT mgl_reset_frames(HMGL gr)	{	_Gr_->ResetFrames();	}
-void MGL_EXPORT mgl_get_frame(HMGL gr, int i)	{	_Gr_->GetFrame(i);	}
-void MGL_EXPORT mgl_set_frame(HMGL gr, int i)	{	_Gr_->SetFrame(i);	}
-void MGL_EXPORT mgl_show_frame(HMGL gr, int i)	{	_Gr_->ShowFrame(i);	}
-void MGL_EXPORT mgl_del_frame(HMGL gr, int i)	{	_Gr_->DelFrame(i);	}
+int MGL_EXPORT mgl_new_frame(HMGL gr)
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	return g?g->NewFrame():-1;	}
+void MGL_EXPORT mgl_end_frame(HMGL gr)
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->EndFrame();	}
+int MGL_EXPORT mgl_get_num_frame(HMGL gr)
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	return g?g->GetNumFrame():0;	}
+void MGL_EXPORT mgl_reset_frames(HMGL gr)
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->ResetFrames();	}
+void MGL_EXPORT mgl_get_frame(HMGL gr, int i)
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->GetFrame(i);	}
+void MGL_EXPORT mgl_set_frame(HMGL gr, int i)
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->SetFrame(i);	}
+void MGL_EXPORT mgl_show_frame(HMGL gr, int i)
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->ShowFrame(i);	}
+void MGL_EXPORT mgl_del_frame(HMGL gr, int i)
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->DelFrame(i);	}
 //-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_set_transp_type(HMGL gr, int type)			{	_Gr_->SetTranspType(type);	}
-void MGL_EXPORT mgl_set_alpha(HMGL gr, int enable)				{	_Gr_->Alpha(enable);	}
-void MGL_EXPORT mgl_set_fog(HMGL gr, double d, double dz)		{	_Gr_->Fog(d,dz);		}
-void MGL_EXPORT mgl_set_light(HMGL gr, int enable)				{	_Gr_->Light(enable);	}
-void MGL_EXPORT mgl_set_light_n(HMGL gr, int n, int enable)	{	_Gr_->Light(n, enable);	}
+void MGL_EXPORT mgl_set_transp_type(HMGL gr, int type)
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->SetTranspType(type);	}
+void MGL_EXPORT mgl_set_alpha(HMGL gr, int enable)
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->Alpha(enable);	}
+void MGL_EXPORT mgl_set_fog(HMGL gr, double d, double dz)
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->Fog(d,dz);		}
+void MGL_EXPORT mgl_set_light(HMGL gr, int enable)
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->Light(enable);	}
+void MGL_EXPORT mgl_set_light_n(HMGL gr, int n, int enable)
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->Light(n, enable);	}
 void MGL_EXPORT mgl_add_light_ext(HMGL gr, int n, double x, double y, double z, char c, double br, double ap)
-{	_Gr_->AddLight(n,mglPoint(x,y,z),c,br,ap);	}
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->AddLight(n,mglPoint(x,y,z),c,br,ap);	}
 void MGL_EXPORT mgl_add_light_loc(HMGL gr, int n, double x, double y, double z, double dx, double dy, double dz, char c, double br, double ap)
-{	_Gr_->AddLight(n,mglPoint(x,y,z),mglPoint(dx,dy,dz),c,br,ap);	}
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->AddLight(n,mglPoint(x,y,z),mglPoint(dx,dy,dz),c,br,ap);	}
 void MGL_EXPORT mgl_add_light(HMGL gr, int n, double x, double y, double z)
-{	_Gr_->AddLight(n,mglPoint(x,y,z));	}
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->AddLight(n,mglPoint(x,y,z));	}
 //-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_mat_push(HMGL gr)	{	_Gr_->Push();	}
-void MGL_EXPORT mgl_mat_pop(HMGL gr)	{	_Gr_->Pop();	}
-void MGL_EXPORT mgl_clf(HMGL gr)	{	_Gr_->Clf();	}
-void MGL_EXPORT mgl_clf_rgb(HMGL gr, double r, double g, double b){	_Gr_->Clf(mglColor(r,g,b));	}
+void MGL_EXPORT mgl_mat_push(HMGL gr)
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->Push();	}
+void MGL_EXPORT mgl_mat_pop(HMGL gr)
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->Pop();	}
+void MGL_EXPORT mgl_clf(HMGL gr)
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->Clf();	}
+void MGL_EXPORT mgl_clf_rgb(HMGL gr, double r, double g, double b)
+{	mglCanvas *gg = dynamic_cast<mglCanvas *>(gr);	if(gg)	gg->Clf(mglColor(r,g,b));	}
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_subplot_d(HMGL gr, int nx,int ny,int m,const char *style,double dx,double dy)
 {
 	double x1,x2,y1,y2;
 	int mx = m%nx, my = m/nx;
-	if(_Gr_->get(MGL_AUTO_FACTOR))	{	dx /= 1.55;	dy /= 1.55;	}
+	if(gr->get(MGL_AUTO_FACTOR))	{	dx /= 1.55;	dy /= 1.55;	}
 	else	{	dx /= 2;	dy /= 2;	}
 	x1 = (mx+dx)/nx;		x2 = (mx+1+dx)/nx;
 	y2 = 1.f-(my+dy)/ny;	y1 = 1.f-(my+1+dy)/ny;
-	_Gr_->InPlot(x1,x2,y1,y2,style);
+	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);
+	if(g)	g->InPlot(x1,x2,y1,y2,style);
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_subplot(HMGL gr, int nx,int ny,int m,const char *style)
@@ -98,46 +124,48 @@ void MGL_EXPORT mgl_multiplot(HMGL gr, int nx,int ny,int m,int dx,int dy,const c
 	dy = (dy<1 || dy+my>ny) ? 1 : dy;
 	x1 = double(mx)/nx;		x2 = double(mx+dx)/nx;
 	y2 = 1-double(my)/ny;	y1 = 1-double(my+dy)/ny;
-	_Gr_->InPlot(x1,x2,y1,y2,style);
+	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->InPlot(x1,x2,y1,y2,style);
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_inplot(HMGL gr, double x1,double x2,double y1,double y2)
-{	_Gr_->InPlot(x1,x2,y1,y2,false);	}
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->InPlot(x1,x2,y1,y2,false);	}
 void MGL_EXPORT mgl_relplot(HMGL gr, double x1,double x2,double y1,double y2)
-{	_Gr_->InPlot(x1,x2,y1,y2,true);	}
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->InPlot(x1,x2,y1,y2,true);	}
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_columnplot(HMGL gr, int num, int i, double dd)
 {
 	register double w = 1./num;
-	_Gr_->InPlot(0,1,1-w*(i+1-dd),1-i*w,true);
+	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);
+	if(g)	g->InPlot(0,1,1-w*(i+1-dd),1-i*w,true);
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_gridplot(HMGL gr, int nx, int ny, int i, double dd)
 {
 	register int ix=i%nx, iy=i/nx;
 	register double wx = 1./nx, wy = 1./ny;
-	_Gr_->InPlot(ix*wx,wx*(ix+1-dd),1-wy*(iy+1-dd),1-iy*wy,true);
+	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);
+	if(g)	g->InPlot(ix*wx,wx*(ix+1-dd),1-wy*(iy+1-dd),1-iy*wy,true);
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_stickplot(HMGL gr, int num, int i, double tet, double phi)
-{	_Gr_->StickPlot(num, i, tet, phi);	}
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->StickPlot(num, i, tet, phi);	}
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_aspect(HMGL gr, double Ax,double Ay,double Az)
-{	_Gr_->Aspect(Ax,Ay,Az);	}
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->Aspect(Ax,Ay,Az);	}
 void MGL_EXPORT mgl_rotate(HMGL gr, double TetX,double TetZ,double TetY)
-{	_Gr_->Rotate(TetX,TetZ,TetY);	}
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->Rotate(TetX,TetZ,TetY);	}
 void MGL_EXPORT mgl_view(HMGL gr, double TetX,double TetZ,double TetY)
-{	_Gr_->View(TetX,TetZ,TetY);	}
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->View(TetX,TetZ,TetY);	}
 void MGL_EXPORT mgl_zoom(HMGL gr, double x1, double y1, double x2, double y2)
-{	_Gr_->Zoom(x1,y1,x2,y2);	}
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->Zoom(x1,y1,x2,y2);	}
 void MGL_EXPORT mgl_rotate_vector(HMGL gr, double Tet,double x,double y,double z)
-{	_Gr_->RotateN(Tet,x,y,z);	}
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->RotateN(Tet,x,y,z);	}
 void MGL_EXPORT mgl_perspective(HMGL gr, double val)
-{	_Gr_->Perspective(val);	}
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->Perspective(val);	}
 void MGL_EXPORT mgl_title(HMGL gr, const char *title, const char *stl, double size)
-{	_Gr_->Title(title,stl,size);	}
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->Title(title,stl,size);	}
 void MGL_EXPORT mgl_titlew(HMGL gr, const wchar_t *title, const char *stl, double size)
-{	_Gr_->Title(title,stl,size);	}
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->Title(title,stl,size);	}
 //-----------------------------------------------------------------------------
 int MGL_EXPORT mgl_new_frame_(uintptr_t *gr)		{	return _GR_->NewFrame();	}
 void MGL_EXPORT mgl_end_frame_(uintptr_t *gr)		{	_GR_->EndFrame();	}
@@ -221,70 +249,72 @@ HMGL MGL_EXPORT mgl_create_graph(int width, int height)
 {	return new mglCanvas(width,height);	}
 void MGL_EXPORT mgl_delete_graph(HMGL gr)	{	if(gr)	delete gr;	}
 void MGL_EXPORT mgl_set_size(HMGL gr, int width, int height)
-{	_Gr_->SetSize(width, height);	}
-void MGL_EXPORT mgl_set_def_param(HMGL gr)	{	_Gr_->DefaultPlotParam();	}
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->SetSize(width, height);	}
+void MGL_EXPORT mgl_set_def_param(HMGL gr)
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->DefaultPlotParam();	}
 void MGL_EXPORT mgl_combine_gr(HMGL gr, HMGL in)
 {	const mglCanvas *gg = dynamic_cast<const mglCanvas *>(in);
-	if(gg)	_Gr_->Combine(gg);	}
+	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g && gg)	g->Combine(gg);	}
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_set_tick_len(HMGL gr, double len, double stt)
-{	_Gr_->SetTickLen(len,stt);	}
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->SetTickLen(len,stt);	}
 void MGL_EXPORT mgl_set_axis_stl(HMGL gr, const char *stl, const char *tck, const char *sub)
-{	_Gr_->SetAxisStl(stl,tck,sub);	}
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->SetAxisStl(stl,tck,sub);	}
 void MGL_EXPORT mgl_tune_ticks(HMGL gr, int tune, double pos)
-{	_Gr_->SetTuneTicks(tune,pos);	}
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->SetTuneTicks(tune,pos);	}
 void MGL_EXPORT mgl_adjust_ticks(HMGL gr, const char *dir)
-{	_Gr_->AdjustTicks(dir,true);	}
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->AdjustTicks(dir,true);	}
 void MGL_EXPORT mgl_set_ticks(HMGL gr, char dir, double d, int ns, double org)
-{	_Gr_->SetTicks(dir,d,ns,org);	}
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->SetTicks(dir,d,ns,org);	}
 void MGL_EXPORT mgl_set_ticks_str(HMGL gr, char dir, const char *lbl, int add)
-{	_Gr_->SetTicksVal(dir,lbl,add);	}
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->SetTicksVal(dir,lbl,add);	}
 void MGL_EXPORT mgl_set_ticks_wcs(HMGL gr, char dir, const wchar_t *lbl, int add)
-{	_Gr_->SetTicksVal(dir,lbl,add);	}
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->SetTicksVal(dir,lbl,add);	}
 void MGL_EXPORT mgl_set_ticks_val(HMGL gr, char dir, HCDT val, const char *lbl, int add)
-{	_Gr_->SetTicksVal(dir,val,lbl,add);	}
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->SetTicksVal(dir,val,lbl,add);	}
 void MGL_EXPORT mgl_set_ticks_valw(HMGL gr, char dir, HCDT val, const wchar_t *lbl, int add)
-{	_Gr_->SetTicksVal(dir,val,lbl,add);	}
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->SetTicksVal(dir,val,lbl,add);	}
 void MGL_EXPORT mgl_set_tick_templ(HMGL gr, char dir, const char *templ)
-{	_Gr_->SetTickTempl(dir,templ);	}
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->SetTickTempl(dir,templ);	}
 void MGL_EXPORT mgl_set_tick_templw(HMGL gr, char dir, const wchar_t *templ)
-{	_Gr_->SetTickTempl(dir,templ);	}
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->SetTickTempl(dir,templ);	}
 void MGL_EXPORT mgl_set_ticks_time(HMGL gr, char dir, double d, const char *t)
-{	_Gr_->SetTickTime(dir,d,t);	}
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->SetTickTime(dir,d,t);	}
 //-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_box(HMGL gr)	{	_Gr_->Box();	}
+void MGL_EXPORT mgl_box(HMGL gr)
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->Box();	}
 void MGL_EXPORT mgl_box_str(HMGL gr, const char *col, int ticks)
-{	_Gr_->Box(col,ticks);	}
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->Box(col,ticks);	}
 void MGL_EXPORT mgl_axis(HMGL gr, const char *dir, const char *stl, const char *opt)
-{	_Gr_->Axis(dir,stl,opt);	}
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->Axis(dir,stl,opt);	}
 void MGL_EXPORT mgl_axis_grid(HMGL gr, const char *dir,const char *pen, const char *opt)
-{	_Gr_->Grid(dir,pen,opt);	}
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->Grid(dir,pen,opt);	}
 void MGL_EXPORT mgl_label(HMGL gr, char dir, const char *text, double pos, const char *opt)
-{	_Gr_->Label(dir,text,pos,opt);	}
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->Label(dir,text,pos,opt);	}
 void MGL_EXPORT mgl_labelw(HMGL gr, char dir, const wchar_t *text, double pos, const char *opt)
-{	_Gr_->Labelw(dir,text,pos,opt);	}
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->Labelw(dir,text,pos,opt);	}
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_colorbar(HMGL gr, const char *sch)
-{	_Gr_->Colorbar(sch);	}
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->Colorbar(sch);	}
 void MGL_EXPORT mgl_colorbar_ext(HMGL gr, const char *sch, double x, double y, double w, double h)
-{	_Gr_->Colorbar(sch,x,y,w,h);	}
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->Colorbar(sch,x,y,w,h);	}
 void MGL_EXPORT mgl_colorbar_val(HMGL gr, HCDT dat, const char *sch)
-{	_Gr_->Colorbar(dat,sch);	}
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->Colorbar(dat,sch);	}
 void MGL_EXPORT mgl_colorbar_val_ext(HMGL gr, HCDT dat, const char *sch,double x, double y, double w, double h)
-{	_Gr_->Colorbar(dat,sch,x,y,w,h);	}
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->Colorbar(dat,sch,x,y,w,h);	}
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_add_legend(HMGL gr, const char *text,const char *style)
-{	_Gr_->AddLegend(text,style);	}
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->AddLegend(text,style);	}
 void MGL_EXPORT mgl_add_legendw(HMGL gr, const wchar_t *text,const char *style)
-{	_Gr_->AddLegend(text,style);	}
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->AddLegend(text,style);	}
 void MGL_EXPORT mgl_clear_legend(HMGL gr)
-{	_Gr_->ClearLegend();	}
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->ClearLegend();	}
 void MGL_EXPORT mgl_legend_pos(HMGL gr, double x, double y, const char *font, const char *opt)
-{	_Gr_->Legend(x,y,font,opt);	}
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->Legend(x,y,font,opt);	}
 void MGL_EXPORT mgl_legend(HMGL gr, int where, const char *font, const char *opt)
-{	_Gr_->Legend(where,font,opt);	}
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->Legend(where,font,opt);	}
 void MGL_EXPORT mgl_set_legend_marks(HMGL gr, int num)
-{	_Gr_->SetLegendMarks(num);	}
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->SetLegendMarks(num);	}
 //-----------------------------------------------------------------------------
 uintptr_t MGL_EXPORT mgl_create_graph_(int *width, int *height)
 {	return uintptr_t(new mglCanvas(*width,*height));	}
@@ -370,21 +400,19 @@ void MGL_EXPORT mgl_legend_(uintptr_t *gr, int *where, const char *font, const c
 void MGL_EXPORT mgl_set_legend_marks_(uintptr_t *gr, int *num)
 {	_GR_->SetLegendMarks(*num);	}
 //-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_set_quality(HMGL gr, int qual)			{	_Gr_->SetQuality(qual);	}
-void MGL_EXPORT mgl_set_quality_(uintptr_t *gr, int *qual)	{	_GR_->SetQuality(*qual);	}
-//-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_set_plotid(HMGL gr, const char *id)	{	_Gr_->PlotId = id;	}
-void MGL_EXPORT mgl_set_plotid_(uintptr_t *gr, const char *id,int l)
-{	char *s=new char[l+1];	memcpy(s,id,l);	s[l]=0;
-	_GR_->PlotId = s;	delete []s;	}
-//-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_mpi_send(HMGL gr, int id)	{	_Gr_->MPI_Send(id);	}
-void MGL_EXPORT mgl_mpi_recv(HMGL gr, int id)	{	_Gr_->MPI_Recv(id);	}
+void MGL_EXPORT mgl_mpi_send(HMGL gr, int id)
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->MPI_Send(id);	}
+void MGL_EXPORT mgl_mpi_recv(HMGL gr, int id)
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->MPI_Recv(id);	}
 void MGL_EXPORT mgl_mpi_send_(uintptr_t *gr, int *id)	{	mgl_mpi_send(_GR_, *id);	}
 void MGL_EXPORT mgl_mpi_recv_(uintptr_t *gr, int *id)	{	mgl_mpi_recv(_GR_, *id);	}
 //-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_wnd_set_delay(HMGL gr, double dt)
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->SetDelay(dt);	}
+double MGL_EXPORT mgl_wnd_get_delay(HMGL gr)
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	return g?g->GetDelay():0;	}
 void MGL_EXPORT mgl_wnd_set_delay_(uintptr_t *gr, mreal *dt)	{	_GR_->SetDelay(*dt);	}
-void MGL_EXPORT mgl_wnd_set_delay(HMGL gr, double dt)	{	_Gr_->SetDelay(dt);	}
+double MGL_EXPORT mgl_wnd_get_delay_(uintptr_t *gr)	{	return _GR_->GetDelay();	}
 //-----------------------------------------------------------------------------
 HMEX MGL_EXPORT mgl_create_expr(const char *expr)	{	return new mglFormula(expr);	}
 void MGL_EXPORT mgl_delete_expr(HMEX ex)	{	delete ex;	}
@@ -408,12 +436,12 @@ double MGL_EXPORT mgl_diff_expr_(uintptr_t *ex, const char *dir, mreal *x, mreal
 {	return mgl_expr_diff((HMEX) ex, *dir,*x,*y,*z);	}
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_set_plotfactor(HMGL gr, double val)
-{	_Gr_->SetPlotFactor(val);	}
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->SetPlotFactor(val);	}
 void MGL_EXPORT mgl_set_plotfactor_(uintptr_t *gr, mreal *val)
 {	_GR_->SetPlotFactor(*val);	}
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_set_tick_shift(HMGL gr, double sx, double sy, double sz, double sc)
-{	_Gr_->SetTickShift(mglPoint(sx,sy,sz,sc));	}
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->SetTickShift(mglPoint(sx,sy,sz,sc));	}
 void MGL_EXPORT mgl_set_tick_shift_(uintptr_t *gr, mreal *sx, mreal *sy, mreal *sz, mreal *sc)
 {	_GR_->SetTickShift(mglPoint(*sx,*sy,*sz,*sc));	}
 //-----------------------------------------------------------------------------
@@ -424,6 +452,7 @@ void MGL_EXPORT mgl_write_prc_(uintptr_t *graph, const char *fname,const char *d
 {	mglGlobalMess += "PNG support was disabled. Please, enable it and rebuild MathGL.\n";	}
 #endif
 //-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_finish(HMGL gr)	{	_Gr_->Finish();	}
+void MGL_EXPORT mgl_finish(HMGL gr)
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->Finish();	}
 void MGL_EXPORT mgl_finish_(uintptr_t *gr)	{	_GR_->Finish();	}
 //-----------------------------------------------------------------------------

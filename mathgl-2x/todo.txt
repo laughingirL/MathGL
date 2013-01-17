@@ -20,9 +20,6 @@ A. Paper about MathGL!!!
 11. enable line width for mesh and fall???
 12. WX window/widgets
 
-
-13. Bug?! option for legend should change only font size + way to pass mark size!!!
-
 14. New tests:
 	a. Add test for parametric plots ?!
 	b. Add test for curved text align "L","C","R"
@@ -50,6 +47,8 @@ A. Paper about MathGL!!!
 	x. Test about equal axis range
 
 15. Hint about equal axis range.
+
+16. Add docs mgl_wnd_get_delay(), mgl_get_plotid(), mgl_get_quality()
 
 ============= UDAV =============
 

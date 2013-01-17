@@ -98,7 +98,7 @@ wxMathGL::wxMathGL(wxWindow *parent, wxWindowID id, const wxPoint& pos, const wx
 //-----------------------------------------------------------------------------
 wxMathGL::~wxMathGL()	{	if(mgl_use_graph(gr,-1)<1)	mgl_delete_graph(gr);	}
 //-----------------------------------------------------------------------------
-double wxMathGL::GetRatio()	{	return double(gr->GetWidth())/gr->GetHeight();	};
+double wxMathGL::GetRatio()	{	return double(mgl_get_width(gr))/mgl_get_height(gr);	};
 //-----------------------------------------------------------------------------
 void wxMathGL::SetGraph(HMGL GR)
 {
@@ -113,7 +113,7 @@ void wxMathGL::OnPaint(wxPaintEvent& event)
 	wxPaintDC dc(this);
 	dc.DrawBitmap(pic,0,0);
 //	if(zoom)	dc.DrawRectangle(x0,y0,xe-x0,ye-y0);
-	if(gr->get(MGL_SHOW_POS) && !MousePos.IsEmpty())
+	if(mgl_get_flag(gr,MGL_SHOW_POS) && !MousePos.IsEmpty())
 		dc.DrawText(MousePos,0,12);
 	// TODO: add grid drawing here (from Qt)
 	// TODO: add active points drawing here (from Qt)
@@ -122,11 +122,11 @@ void wxMathGL::OnPaint(wxPaintEvent& event)
 void wxMathGL::OnSize(wxSizeEvent& event)
 {
 	wxSize ev = event.GetSize();
-	if(gr->GetWidth()==ev.GetWidth() && gr->GetHeight()==ev.GetHeight())
+	if(mgl_get_width(gr)==ev.GetWidth() && mgl_get_height(gr)==ev.GetHeight())
 		return;
 	if(AutoResize && ev.GetWidth()>0 && ev.GetHeight()>0)
-	{	gr->SetSize(ev.GetWidth(), ev.GetHeight());	Update();	}
-	else 	SetSize(gr->GetWidth(), gr->GetHeight());
+	{	mgl_set_size(gr, ev.GetWidth(), ev.GetHeight());	Update();	}
+	else 	SetSize(mgl_get_width(gr), mgl_get_height(gr));
 }
 //-----------------------------------------------------------------------------
 void wxMathGL::OnNextSlide(wxTimerEvent& evt)	{	NextSlide();	}
@@ -191,27 +191,25 @@ void wxMathGL::Update()
 {
 	if(draw_func || draw_cl)
 	{
-		if(gr->get(MGL_CLF_ON_UPD))	gr->DefaultPlotParam();
-		gr->ResetFrames();
-		gr->Alpha(alpha);	gr->Light(light);
+		if(mgl_get_flag(gr,MGL_CLF_ON_UPD))	mgl_set_def_param(gr);
+		mgl_reset_frames(gr);
+		mgl_set_alpha(gr,alpha);	mgl_set_light(gr,light);
 		if(draw_func)	draw_func(gr, draw_par);	// drawing itself
 		else 	if(draw_cl)	{	mglGraph g(gr);	draw_cl->Draw(&g);	}
-		const char *buf = gr->Mess.c_str();
+		const char *buf = mgl_get_mess(gr);
 		if(*buf)
 		{
 			wxMessageDialog dlg(this, wxString(buf,wxConvLocal), appName, wxOK);
 			dlg.ShowModal();
 		}
 	}
-//	if(gr->GetWidth()!=w() || gr->GetHeight()!=h())
-//		size(gr->GetWidth(), gr->GetHeight());
 	MousePos.Empty();	Repaint();
 }
 //-----------------------------------------------------------------------------
 void convertFromGraph(wxBitmap &pic, mglCanvas *gr, unsigned char **buf)
 {
-	const unsigned char *bb = gr->GetBits();
-	register long i,w=gr->GetWidth(), h=gr->GetHeight();
+	const unsigned char *bb = mgl_get_rgb(gr);
+	register long i,w=mgl_get_width(gr), h=mgl_get_height(gr);
 	if(*buf) 	delete [](*buf);
 	*buf = new unsigned char[4*w*h];
 	for(i=0;i<w*h;i++)
@@ -227,7 +225,7 @@ void convertFromGraph(wxBitmap &pic, mglCanvas *gr, unsigned char **buf)
 //-----------------------------------------------------------------------------
 void wxMathGL::Repaint()
 {
-	gr->Zoom(x1,y1,x2,y2);	gr->View(phi,0,tet);	gr->Perspective(per);
+	mgl_zoom(gr,x1,y1,x2,y2);	mgl_view(gr,phi,0,tet);	mgl_perspective(gr, per);
 	convertFromGraph(pic, gr, &grBuf);
 	wxSize sz=GetSize();
 	if(pic.GetWidth()!=sz.GetWidth() || pic.GetHeight()!=sz.GetHeight())
@@ -396,12 +394,12 @@ void wxMathGL::Copy()
 }
 //-----------------------------------------------------------------------------
 void wxMathGL::SetSize(int w, int h)
-{	gr->SetSize(w,h);	wxWindow::SetSize(w, h);	Update();	};
+{	mgl_set_size(gr,w,h);	wxWindow::SetSize(w, h);	Update();	};
 //-----------------------------------------------------------------------------
 void wxMathGL::Adjust()
 {
 	wxSize sz=GetSize();
-	gr->SetSize(sz.GetWidth(),sz.GetHeight());
+	mgl_set_size(gr,sz.GetWidth(),sz.GetHeight());
 	Repaint();
 }
 //-----------------------------------------------------------------------------
@@ -419,7 +417,7 @@ void wxMathGL::PrevSlide()
 //-----------------------------------------------------------------------------
 void wxMathGL::Animation(bool st)
 {
-	if(st)	timer->Start(int(gr->GetDelay()*1000));
+	if(st)	timer->Start(int(mgl_wnd_get_delay(gr)*1000));
 	else	timer->Stop();
 }
 //-----------------------------------------------------------------------------

@@ -1,9 +1,11 @@
-2.1.2 Released ?? 2013
+2.1.2 Released ?? January 2013
 
-* Bugfix for colors in 3D PDF
+* Exclude "local" functions from resulting library.
+* Bugfix for colors in 3D PDF.
 * If Aspect() function have NAN argument(s) then it try to select optimal aspect ratio.
-* Adjust marks drawing (line width and dots)
-* Minor improvements and bugfixes
+* Option 'size' in Legend() now change only text size (not mark size).
+* Adjust marks drawing (line width and dots).
+* Minor improvements and bugfixes.
 
 2.1.1 Released 24 December 2012
 

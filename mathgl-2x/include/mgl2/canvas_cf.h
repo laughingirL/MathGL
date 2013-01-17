@@ -37,9 +37,6 @@ void MGL_EXPORT mgl_set_size_(uintptr_t *gr, int *width, int *height);
 /// Set default parameters for plotting
 void MGL_EXPORT mgl_set_def_param(HMGL gr);
 void MGL_EXPORT mgl_set_def_param_(uintptr_t *gr);
-/// Set plot quality
-void MGL_EXPORT mgl_set_quality(HMGL gr, int qual);
-void MGL_EXPORT mgl_set_quality_(uintptr_t *gr, int *qual);
 /// Combine plots from 2 canvases. Result will be saved into gr
 void MGL_EXPORT mgl_combine_gr(HMGL gr, HMGL in);
 void MGL_EXPORT mgl_combine_gr_(uintptr_t *gr, uintptr_t *in);
@@ -196,9 +193,6 @@ void MGL_EXPORT mgl_start_gif_(uintptr_t *gr, const char *fname,int *ms,int);
 /// Stop writing cinema using GIF format
 void MGL_EXPORT mgl_close_gif(HMGL gr);
 void MGL_EXPORT mgl_close_gif_(uintptr_t *gr);
-/// Set name of plot for saving filename
-void MGL_EXPORT mgl_set_plotid(HMGL gr, const char *id);
-void MGL_EXPORT mgl_set_plotid_(uintptr_t *gr, const char *id,int);
 
 /// Export points and primitives in file using MGLD format
 void MGL_EXPORT mgl_export_mgld(HMGL gr, const char *fname,const char *descr);
@@ -369,9 +363,12 @@ void MGL_EXPORT mgl_draw_thr(void *);
 /// Callback function for mouse click
 void MGL_EXPORT mgl_set_click_func(HMGL gr, void (*func)(void *p));
 
-/// Delay for animation in seconds
+/// Set delay for animation in seconds
 void MGL_EXPORT mgl_wnd_set_delay(HMGL gr, double dt);
 void MGL_EXPORT mgl_wnd_set_delay_(uintptr_t *gr, mreal *dt);
+/// Get delay for animation in seconds
+double MGL_EXPORT mgl_wnd_get_delay(HMGL gr);
+double MGL_EXPORT mgl_wnd_get_delay_(uintptr_t *gr);
 /// Set window properties
 void MGL_EXPORT mgl_setup_window(HMGL gr, int clf_upd, int showpos);
 void MGL_EXPORT mgl_setup_window_(uintptr_t *gr, int *clf_upd, int *showpos);

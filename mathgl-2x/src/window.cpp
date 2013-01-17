@@ -87,14 +87,14 @@ void mglCanvasWnd::SetDrawFunc(int (*draw)(mglBase *gr, void *p), void *par, voi
 	if(get(MGL_CLF_ON_UPD))	DefaultPlotParam();
 	setlocale(LC_NUMERIC, "C");
 	// use frames for quickly redrawing while adding/changing primitives
-	if(get(MGL_VECT_FRAME) && !(GetQuality()&4))	NewFrame();
+	if(mgl_is_frames(this))	NewFrame();
 
 	int n = draw ? draw(this,par) : 0;
 	if(n<NumFig && n>=0)	NumFig = n;
 	DrawFunc = draw;		FuncPar = par;
 	LoadFunc = reload;
 
-	if(get(MGL_VECT_FRAME) && !(GetQuality()&4))	EndFrame();
+	if(mgl_is_frames(this))	EndFrame();
 	setlocale(LC_NUMERIC, "");
 }
 //-----------------------------------------------------------------------------
@@ -115,12 +115,12 @@ void mglCanvasWnd::ReLoad()
 		ResetFrames();
 		setlocale(LC_NUMERIC, "C");
 		// use frames for quickly redrawing while adding/changing primitives
-		if(get(MGL_VECT_FRAME) && !(GetQuality()&4))	NewFrame();
+		if(mgl_is_frames(this))	NewFrame();
 		
 		int n = DrawFunc ? DrawFunc(this,FuncPar) : 0;
 		if(n<NumFig && n>=0)	NumFig = n;
 		
-		if(get(MGL_VECT_FRAME) && !(GetQuality()&4))	EndFrame();
+		if(mgl_is_frames(this))	EndFrame();
 		setlocale(LC_NUMERIC, "");
 		Update();
 	}

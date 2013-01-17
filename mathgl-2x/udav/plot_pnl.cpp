@@ -418,7 +418,7 @@ void PlotPanel::toolTop(QBoxLayout *l)
 	oo->addAction(tr("vector EPS"), mgl, SLOT(exportEPS()),Qt::ALT+Qt::Key_E);
 	oo->addAction(tr("SVG"), mgl, SLOT(exportSVG()),Qt::ALT+Qt::Key_S);
 	oo->addAction(tr("LaTeX"), mgl, SLOT(exportTEX()),Qt::ALT+Qt::Key_L);
-//	oo->addAction(tr("C++"), mgl, SLOT(exportCPP()));	// TODO: Add later
+
 	o->addMenu(oo);		popup->addMenu(oo);
 	oo = new QMenu(tr("Export as 3D ..."),this);
 	oo->addAction(tr("MGLD"), mgl, SLOT(exportMGLD()),Qt::ALT+Qt::Key_M);

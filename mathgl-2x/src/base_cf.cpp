@@ -24,6 +24,13 @@
 //		C interfaces
 //
 //-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_set_quality(HMGL gr, int qual)	{	gr->SetQuality(qual);	}
+void MGL_EXPORT mgl_set_quality_(uintptr_t *gr, int *qual)	{	_GR_->SetQuality(*qual);	}
+int MGL_EXPORT mgl_get_quality(HMGL gr, int qual)	{	return gr->GetQuality();	}
+int MGL_EXPORT mgl_get_quality_(uintptr_t *gr, int *qual)	{	return _GR_->GetQuality();	}
+int MGL_EXPORT mgl_is_frames(HMGL gr)
+{	return gr->get(MGL_VECT_FRAME) && !(gr->GetQuality()&4);	}
+//-----------------------------------------------------------------------------
 int MGL_EXPORT mgl_get_flag(HMGL gr, long flag)			{	return gr->get(flag);	}
 void MGL_EXPORT mgl_set_flag(HMGL gr, int val, long flag)	{	gr->set(val,flag);	}
 //-----------------------------------------------------------------------------
@@ -38,6 +45,12 @@ void MGL_EXPORT mgl_set_def_sch(HMGL gr, const char *sch)	{	gr->SetDefScheme(sch
 void MGL_EXPORT mgl_set_def_sch_(uintptr_t *gr, const char *sch,int l)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	mgl_set_def_sch(_GR_, s);	delete []s;	}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_set_plotid(HMGL gr, const char *id)	{	gr->PlotId = id;	}
+void MGL_EXPORT mgl_set_plotid_(uintptr_t *gr, const char *id,int l)
+{	char *s=new char[l+1];	memcpy(s,id,l);	s[l]=0;
+	_GR_->PlotId = s;	delete []s;	}
+MGL_EXPORT const char *mgl_get_plotid(HMGL gr)	{	return gr->PlotId.c_str();	}
 //-----------------------------------------------------------------------------
 MGL_EXPORT const char *mgl_get_mess(HMGL gr)	{	return gr->Mess.c_str();	}
 int MGL_EXPORT mgl_get_warn(HMGL gr)	{	return gr->GetWarn();	}

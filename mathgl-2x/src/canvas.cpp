@@ -720,6 +720,7 @@ void mglCanvas::Legend(const std::vector<mglText> &leg, mreal x, mreal y, const 
 	long n=leg.size(), iw, ih;
 	if(n<1)	{	SetWarn(mglWarnLeg,"Legend");	return;	}
 	mreal ll = SaveState(opt);	if(mgl_isnan(ll))	ll=0.1;
+	if(saved)	MarkSize=MSS;	// restore back size of marks
 	static int cgid=1;	StartGroup("Legend",cgid++);
 	if(ll<=0 || mgl_isnan(ll))	ll=0.1;
 	ll *=font_factor;
