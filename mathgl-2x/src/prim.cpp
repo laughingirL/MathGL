@@ -726,35 +726,34 @@ void MGL_EXPORT mgl_labelw_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const wchar_t *t
 	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();	m = z->GetNy() > m ? z->GetNy() : m;
 
 	register long i,k,kk,l,nn;
-	for(i=k=0;text[i];i++)	if(text[i]=='%')
-	{if(text[i+1]=='%')	k--;	else	k++;	}
-	nn = wcslen(text)+10*k+1;
-	wchar_t *buf = new wchar_t[nn];
 	mglPoint p,q(NAN);
+	wchar_t tmp[32];
 	for(j=0;j<m;j++)
 	{
 		mx = j<x->GetNy() ? j:0;	my = j<y->GetNy() ? j:0;	mz = j<z->GetNy() ? j:0;
 		for(i=0;i<n;i++)
 		{
-			if(gr->Stop)	{	delete []buf;	return;	}
+			if(gr->Stop)	return;
 			mreal xx=x->v(i,mx), yy=y->v(i,my), zz=z->v(i,mz);
 			p = mglPoint(xx,yy,zz);
 			kk = gr->AddPnt(p,-1,q);
-			memset(buf,0,nn*sizeof(wchar_t));
+			std::wstring buf;
 			for(k=l=0;text[k];k++)
 			{
-				if(text[k]!='%')	{	buf[l]=text[k];	l++;	continue;	}
-				else if(text[k+1]=='%')	{	buf[l]='%';	l++;	continue;	}
-				else if(text[k+1]=='n')	mglprintf(buf+l,nn-l,L"%ld",i);
-				else if(text[k+1]=='x')	mglprintf(buf+l,nn-l,L"%.2g",xx);
-				else if(text[k+1]=='y')	mglprintf(buf+l,nn-l,L"%.2g",yy);
-				else if(text[k+1]=='z')	mglprintf(buf+l,nn-l,L"%.2g",zz);
-				l=wcslen(buf);	k++;
+				if(text[k]!='%' || (k>0 && text[k-1]=='\\'))
+				{	buf += text[k];	continue;	}
+				else if(text[k+1]=='%')	{	buf+='%';	k++;	continue;	}
+				else if(text[k+1]=='n')	mglprintf(tmp,32,L"%ld",i);
+				else if(text[k+1]=='x')	mglprintf(tmp,32,L"%.2g",xx);
+				else if(text[k+1]=='y')	mglprintf(tmp,32,L"%.2g",yy);
+				else if(text[k+1]=='z')	mglprintf(tmp,32,L"%.2g",zz);
+				else {	buf+='%';	continue;	}
+				buf += tmp;	k++;
 			}
-			gr->text_plot(kk, buf, fnt, -0.7, 0.05);
+			gr->text_plot(kk, buf.c_str(), fnt, -0.7, 0.05);
 		}
 	}
-	delete []buf;	gr->EndGroup();
+	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_labelw_xy(HMGL gr, HCDT x, HCDT y, const wchar_t *text, const char *fnt, const char *opt)
