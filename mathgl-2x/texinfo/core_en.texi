@@ -577,10 +577,13 @@ Sets center of axis cross section. If one of values is NAN then MathGL try to se
 @end deftypefn
 
 @anchor{zoomaxis}
-@deftypefn {MGL command} {} zoomaxis @code{x1 x2 [y1=0 y2=1 [z1=0 z2=1 [c1=0 c2=1]]]}
+@deftypefn {MGL command} {} zoomaxis @code{x1 x2}
+@deftypefnx {MGL command} {} zoomaxis @code{x1 y1 x2 y2}
+@deftypefnx {MGL command} {} zoomaxis @code{x1 y1 z1 x2 y2 z2}
+@deftypefnx {MGL command} {} zoomaxis @code{x1 y1 z1 c1 x2 y2 z2 c2}
 @ifclear UDAV
 @deftypefnx {Method on @code{mglGraph}} @code{void} ZoomAxis (@code{mglPoint} p1, @code{mglPoint} p2)
-@deftypefnx {C function} @code{void} mgl_zoom_axis (@code{HMGL} gr, @code{mreal} x1, @code{mreal} x2, @code{mreal} y1, @code{mreal} y2, @code{mreal} z1, @code{mreal} z2, @code{mreal} c1, @code{mreal} c2)
+@deftypefnx {C function} @code{void} mgl_zoom_axis (@code{HMGL} gr, @code{mreal} x1, @code{mreal} y1, @code{mreal} z1, @code{mreal} c1, @code{mreal} x2, @code{mreal} y2, @code{mreal} z2, @code{mreal} c2)
 @end ifclear
 Additionally extend axis range for any settings made by @code{SetRange} or @code{SetRanges} functions according the formula @math{min += (max-min)*p1} and @math{max += (max-min)*p1} (or @math{min *= (max/min)^p1} and @math{max *= (max/min)^p1} for log-axis range when @math{inf>max/min>100} or @math{0<max/min<0.01}). Initial ranges are [0, 1]. Attention! this settings can not be overwritten by any other functions, including @code{DefaultPlotParam()}.
 @end deftypefn

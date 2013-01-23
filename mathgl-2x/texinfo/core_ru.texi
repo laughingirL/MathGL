@@ -562,10 +562,13 @@ Setsize: размер(ы) равны нулю или отрицательны
 @end deftypefn
 
 @anchor{zoomaxis}
-@deftypefn {Команда MGL} {} zoomaxis @code{x1 x2 [y1=0 y2=1 [z1=0 z2=1 [c1=0 c2=1]]]}
+@deftypefn {Команда MGL} {} zoomaxis @code{x1 x2}
+@deftypefnx {Команда MGL} {} zoomaxis @code{x1 y1 x2 y2}
+@deftypefnx {Команда MGL} {} zoomaxis @code{x1 y1 z1 x2 y2 z2}
+@deftypefnx {Команда MGL} {} zoomaxis @code{x1 y1 z1 c1 x2 y2 z2 c2}
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} ZoomAxis (@code{mglPoint} p1, @code{mglPoint} p2)
-@deftypefnx {Функция С} @code{void} mgl_zoom_axis (@code{HMGL} gr, @code{mreal} x1, @code{mreal} x2, @code{mreal} y1, @code{mreal} y2, @code{mreal} z1, @code{mreal} z2, @code{mreal} c1, @code{mreal} c2)
+@deftypefnx {Функция С} @code{void} mgl_zoom_axis (@code{HMGL} gr, @code{mreal} x1, @code{mreal} y1, @code{mreal} z1, @code{mreal} c1, @code{mreal} x2, @code{mreal} y2, @code{mreal} z2, @code{mreal} c2)
 @end ifclear
 Дополнительно расширяет диапазон осей координат, задаваемый функциями @code{SetRange} или @code{SetRanges}, в соответствии с формулами @math{min += (max-min)*p1} и @math{max += (max-min)*p1} (или @math{min *= (max/min)^p1} и @math{max *= (max/min)^p1} для "логарифмических" диапазонов, когда @math{inf>max/min>100} или @math{0<max/min<0.01}). Начальные значения [0, 1]. Внимание! эти настройки не могут быть переписаны никакими другими функциями, включая  @code{DefaultPlotParam()}.
 @end deftypefn

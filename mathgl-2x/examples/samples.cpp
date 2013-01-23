@@ -435,7 +435,8 @@ void smgl_barh(mglGraph *gr)
 //-----------------------------------------------------------------------------
 const char *mmgl_area="call 'prepare1d'\norigin 0 0 0\nsubplot 2 2 0 '':title 'Area plot (default)':box:area y\n"
 "subplot 2 2 1 '':title '2 colors':box:area y 'cbgGyr'\nsubplot 2 2 2 '':title '\"!\" style':box:area y '!'\n"
-"new yc 30 'sin(pi*x)':new xc 30 'cos(pi*x)':new z 30 'x'\nsubplot 2 2 3:title '3d variant':rotate 50 60:box:area xc yc z 'r'\n";
+"new yc 30 'sin(pi*x)':new xc 30 'cos(pi*x)':new z 30 'x'\nsubplot 2 2 3:title '3d variant':rotate 50 60:box\n"
+"area xc yc z 'r'\narea xc -yc z 'b#'\n";
 void smgl_area(mglGraph *gr)
 {
 	mglData y;	mgls_prepare1d(&y);	gr->SetOrigin(0,0,0);
@@ -448,6 +449,7 @@ void smgl_area(mglGraph *gr)
 	mglData yc(30), xc(30), z(30);	z.Modify("2*x-1");
 	yc.Modify("sin(pi*(2*x-1))");	xc.Modify("cos(pi*2*x-pi)");
 	gr->Area(xc,yc,z,"r");
+	yc.Modify("-sin(pi*(2*x-1))");	gr->Area(xc,yc,z,"b#");
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_plot="call 'prepare1d'\nsubplot 2 2 0 '':title 'Plot plot (default)':box:plot y\n"
@@ -1641,7 +1643,7 @@ const char *mmgl_primitives="subplot 2 2 0 '':title 'Line, Curve, Rhomb, Ellipse
 "ellipse 0 -0.5 1 -0.1 0.2 'u#'\nellipse 0 -1 1 -0.6 0.2 'm@'\n\n"
 "light on\nsubplot 2 2 1:title 'Face[xyz]':rotate 50 60:box\n"
 "facex 1 0 -1 1 1 'r':facey -1 -1 -1 1 1 'g':facez 1 -1 -1 -1 1 'b'\n"
-"face -1 -1 1 -1 1 1 1 -1 0 1 1 1 'm'\n\n"
+"face -1 -1 1 -1 1 1 1 -1 0 1 1 1 'bmgr'\n\n"
 "subplot 2 2 3 '':title 'Cone'\n"
 "cone -0.7 -0.3 0 -0.7 0.7 0.5 0.2 0.1 'b':text -0.7 -0.7 'no edges\\n(default)'\n"
 "cone 0 -0.3 0 0 0.7 0.5 0.2 0.1 'g@':text 0 -0.7 'with edges\\n('\\@' style)'\n"
@@ -1671,7 +1673,7 @@ void smgl_primitives(mglGraph *gr)	// flag #
 	gr->FaceX(mglPoint(1,0,-1),1,1,"r");
 	gr->FaceY(mglPoint(-1,-1,-1),1,1,"g");
 	gr->FaceZ(mglPoint(1,-1,-1),-1,1,"b");
-	gr->Face(mglPoint(-1,-1,1),mglPoint(-1,1,1),mglPoint(1,-1,0),mglPoint(1,1,1),"m");
+	gr->Face(mglPoint(-1,-1,1),mglPoint(-1,1,1),mglPoint(1,-1,0),mglPoint(1,1,1),"bmgr");
 
 	gr->SubPlot(2,2,3,"");	gr->Title("Cone");
 	gr->Cone(mglPoint(-0.7,-0.3),mglPoint(-0.7,0.7,0.5),0.2,0.1,"b");

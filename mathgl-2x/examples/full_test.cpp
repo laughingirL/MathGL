@@ -63,12 +63,18 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
+/*	gr->ZoomAxis(mglPoint(0.5,0.5),mglPoint(1,1));
+	gr->SetRanges(mglPoint(-1,-1,-1),mglPoint(1,1,1));
+	gr->Axis();
+	return;*/
+	
 	mglParse par;
 	par.AllowSetSize(true);
 	setlocale(LC_CTYPE, "");
-	FILE *fp=fopen("/home/balakin/mathgl-code/mathgl-2x/build/qo.mgl","r");
-	par.Execute(gr,fp,true);
-	fclose(fp);
+	par.Execute(gr,"zoomaxis 0.5 0.5 1 1:ranges -1 -1 1 1:axis");
+//	FILE *fp=fopen("/home/balakin/progr/mathgl-code/mathgl-2x/build/test.mgl","r");
+//	par.Execute(gr,fp,true);
+//	fclose(fp);
 }
 //-----------------------------------------------------------------------------
 void fexport(mglGraph *gr)

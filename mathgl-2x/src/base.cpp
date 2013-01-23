@@ -366,9 +366,9 @@ bool mglBase::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan) const
 	mreal &x=p.x, &y=p.y, &z=p.z;
 	if(mgl_isnan(x) || mgl_isnan(y) || mgl_isnan(z))	{	x=NAN;	return false;	}
 	mreal x1,y1,z1,x2,y2,z2;
-	x1 = x>0?x*MGL_FEPSILON:x/MGL_FEPSILON;	x2 = x<0?x*MGL_FEPSILON:x/MGL_FEPSILON;
-	y1 = y>0?y*MGL_FEPSILON:y/MGL_FEPSILON;	y2 = y<0?y*MGL_FEPSILON:y/MGL_FEPSILON;
-	z1 = z>0?z*MGL_FEPSILON:z/MGL_FEPSILON;	z2 = z<0?z*MGL_FEPSILON:z/MGL_FEPSILON;
+	x1 = x>0?x*MGL_EPSILON:x/MGL_EPSILON;	x2 = x<0?x*MGL_EPSILON:x/MGL_EPSILON;
+	y1 = y>0?y*MGL_EPSILON:y/MGL_EPSILON;	y2 = y<0?y*MGL_EPSILON:y/MGL_EPSILON;
+	z1 = z>0?z*MGL_EPSILON:z/MGL_EPSILON;	z2 = z<0?z*MGL_EPSILON:z/MGL_EPSILON;
 	bool res = true;
 	if(x2>CutMin.x && x1<CutMax.x && y2>CutMin.y && y1<CutMax.y &&
 		z2>CutMin.z && z1<CutMax.z)	res = false;

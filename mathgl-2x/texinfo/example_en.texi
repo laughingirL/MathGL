@@ -1590,6 +1590,7 @@ int sample(mglGraph *gr)
   mglData yc(30), xc(30), z(30);  z.Modify("2*x-1");
   yc.Modify("sin(pi*(2*x-1))"); xc.Modify("cos(pi*2*x-pi)");
   gr->Area(xc,yc,z,"r");
+  yc.Modify("-sin(pi*(2*x-1))");  gr->Area(xc,yc,z,"b#");
   return 0;
 }
 @end verbatim

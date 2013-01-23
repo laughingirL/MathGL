@@ -952,7 +952,7 @@ area y '!'
 
 new yc 30 'sin(pi*x)':new xc 30 'cos(pi*x)':new z 30 'x'
 subplot 2 2 3:title '3d variant':rotate 50 60:box
-area xc yc z 'r'
+area xc yc z 'r':area xc -yc z 'b#'
 @end verbatim
 
 @pfig{area, Example of Area()}
@@ -2253,7 +2253,7 @@ ellipse 0 -1 1 -0.6 0.2 'm@'
 light on
 subplot 2 2 1:title 'Face[xyz]':rotate 50 60:box
 facex 1 0 -1 1 1 'r':facey -1 -1 -1 1 1 'g':facez 1 -1 -1 -1 1 'b'
-face -1 -1 1 -1 1 1 1 -1 0 1 1 1 'm'
+face -1 -1 1 -1 1 1 1 -1 0 1 1 1 'bmgr'
 
 subplot 2 2 3 '':title 'Cone'
 cone -0.7 -0.3 0 -0.7 0.7 0.5 0.2 0.1 'b':text -0.7 -0.7 'no edges\n(default)'

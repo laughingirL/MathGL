@@ -30,11 +30,8 @@ A. Paper about MathGL!!!
 	g. DensXYZ, ContXYZ, ContFXYZ -- test for 3d data
 	h. Test for CalcXYZ -- in data samples
 	i. Tests for Quality!=2
-	j. Test Area, Bars, Barh wire
 	k. Test Tens "breaking"
 	l. Test Error for all marks
-	m. Test Ball
-	n. Test Face for color per vertex
 	o. Add Fortran tests?
 	p. Test FaceNum for Surf
 	q. Test FSurf
