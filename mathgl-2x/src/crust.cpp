@@ -342,9 +342,15 @@ void MGL_EXPORT mgl_tricont_xyc_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, u
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_dots_a(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, const char *opt)
 {
-	long n = x->GetNx();
-	if(y->GetNx()!=n || z->GetNx()!=n || a->GetNx()!=n)	{	gr->SetWarn(mglWarnDim,"Dots");	return;	}
+	long n = x->GetNN(), d, k=1;
+	if(x->GetNz()>1) 	k=3;		else if(x->GetNy()>1)	k=2;
+
+	if(y->GetNN()!=n || z->GetNN()!=n || a->GetNN()!=n)	{	gr->SetWarn(mglWarnDim,"Dots");	return;	}
 	gr->SaveState(opt);
+
+	d = gr->MeshNum>0 ? mgl_ipow(gr->MeshNum+1,k) : n;
+	d = n>d ? n/d:1;
+	
 	static int cgid=1;	gr->StartGroup("Dots",cgid++);
 	char mk=gr->SetPenPal(sch);
 	long ss=gr->AddTexture(sch), pp;
@@ -352,11 +358,11 @@ void MGL_EXPORT mgl_dots_a(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *
 	gr->Reserve(n);
 	mglPoint p;
 
-	for(long i=0;i<n;i++)
+	for(long i=0;i<n;i+=d)
 	{
 		if(gr->Stop)	return;
-		p = mglPoint(x->v(i),y->v(i),z->v(i));
-		pp = gr->AddPnt(p,gr->GetC(ss,a->v(i)));
+		p = mglPoint(x->vthr(i),y->vthr(i),z->vthr(i));
+		pp = gr->AddPnt(p,gr->GetC(ss,a->vthr(i)));
 		gr->mark_plot(pp, mk);
 	}
 	gr->EndGroup();

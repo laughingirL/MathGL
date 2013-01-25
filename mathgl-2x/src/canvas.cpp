@@ -184,7 +184,7 @@ GifFileType *gif;*/
 	clr(MGL_DISABLE_SCALE);
 	clr(MGL_USE_GMTIME);	clr(MGL_NOSUBTICKS);
 	SetDifLight(false);		SetReduceAcc(false);
-	SetDefScheme("BbcyrR");	SetPalette(MGL_DEF_PAL);
+	SetDefScheme(MGL_DEF_SCH);	SetPalette(MGL_DEF_PAL);
 	SetPenPal("k-1");		Alpha(false);
 	SetTicks('x');	SetTicks('y');	SetTicks('z');	SetTicks('c');
 	stack.clear();	Restore();	DefColor('k');
@@ -306,7 +306,7 @@ mreal mglCanvas::GetOrgZ(char dir) const
 							a.n1 = p;	a.n4 = type;	add_prim(a);	}
 void mglCanvas::mark_plot(long p, char type, mreal size)
 {
-	if(p<0 || mgl_isnan(Pnt[p].x))	return;
+	if(p<0 || mgl_isnan(Pnt[p].x) || mgl_isnan(size))	return;
 	long pp=p;
 //	mreal pw = fabs(PenWidth)*0.15/sqrt(font_factor);
 	mreal pw = 0.15/sqrt(font_factor);

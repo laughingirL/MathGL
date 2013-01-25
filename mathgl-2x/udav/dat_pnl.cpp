@@ -179,7 +179,7 @@ void DatPanel::save()
 	if(ext=="png")
 	{
 		bool ok;
-		QString s = QInputDialog::getText(this, tr("UDAV - Export to PNG"), tr("Enter color scheme for picture"), QLineEdit::Normal, "BbcyrR", &ok);
+		QString s = QInputDialog::getText(this, tr("UDAV - Export to PNG"), tr("Enter color scheme for picture"), QLineEdit::Normal, MGL_DEF_SCH, &ok);
 		if(ok)	var->Export(fn.toAscii().constData(), s.toAscii().constData());
 	}
 	else if(ext=="h5" || ext=="hdf")
@@ -200,7 +200,7 @@ void DatPanel::load()
 	if(ext=="png")
 	{
 		bool ok;
-		QString s = QInputDialog::getText(this, tr("UDAV - Import PNG"), tr("Enter color scheme for picture"), QLineEdit::Normal, "BbcyrR", &ok);
+		QString s = QInputDialog::getText(this, tr("UDAV - Import PNG"), tr("Enter color scheme for picture"), QLineEdit::Normal, MGL_DEF_SCH, &ok);
 		if(ok)	var->Import(fn.toAscii().constData(), s.toAscii().constData());
 	}
 	else if(ext=="h5" || ext=="hdf")

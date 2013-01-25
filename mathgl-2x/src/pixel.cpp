@@ -351,7 +351,7 @@ void mglCanvas::Clf(mglColor Back)
 
 	Txt.clear();	Txt.reserve(3);
 	MGL_PUSH(Txt,mglTexture(MGL_DEF_PAL,-1),mutexTxt);
-	MGL_PUSH(Txt,mglTexture("BbcyrR",1),mutexTxt);
+	MGL_PUSH(Txt,mglTexture(MGL_DEF_SCH,1),mutexTxt);
 	
 	if(Back==0)		Back = 'w';
 	if((Flag&3)==2)	Back = 'k';

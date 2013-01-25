@@ -1472,7 +1472,7 @@ void MGL_EXPORT mgl_mark_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const char
 		for(int i=0;i<n;i++)
 		{
 			if(gr->Stop)	return;
-			gr->mark_plot(gr->AddPnt(mglPoint(x->v(i,mx),y->v(i,my),z->v(i,mz))), mk, r->v(i,mr));
+			gr->mark_plot(gr->AddPnt(mglPoint(x->v(i,mx),y->v(i,my),z->v(i,mz))), mk, fabs(r->v(i,mr)));
 			if(sh)	gr->NextColor(pal);
 		}
 	}

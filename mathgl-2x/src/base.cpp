@@ -111,7 +111,7 @@ mglBase::mglBase()
 	// Always create default palette txt[0] and default scheme txt[1]
 	Txt.reserve(3);
 	MGL_PUSH(Txt,mglTexture(MGL_DEF_PAL,-1),mutexTxt);
-	MGL_PUSH(Txt,mglTexture("BbcyrR",1),mutexTxt);
+	MGL_PUSH(Txt,mglTexture(MGL_DEF_SCH,1),mutexTxt);
 	memcpy(last_style,"{k5}-1\0",8);
 	MinS=mglPoint(-1,-1,-1);	MaxS=mglPoint(1,1,1);
 	fnt = new mglFont;	fnt->gr = this;	PrevState=NAN;
@@ -745,9 +745,9 @@ void mglTexture::Set(const char *s, int smooth, mreal alpha)
 	if(!n)
 	{
 		if((strchr(s,'|') || strchr(s,'!')) && !smooth)	// sharp colors
-		{	n=l=6;	s="BbcyrR";	sm = false;	}
+		{	n=l=6;	s=MGL_DEF_SCH;	sm = false;	}
 		else if(smooth==0)		// none colors but color scheme
-		{	n=l=6;	s="BbcyrR";	}
+		{	n=l=6;	s=MGL_DEF_SCH;	}
 		else	return;
 	}
 	bool man=sm;

@@ -56,7 +56,7 @@ void mglCanvas::SetAxisStl(const char *stl, const char *tck, const char *sub)
 	else if(strlen(stl)<32)	strcpy(AxisStl,stl);
 	if(!tck || !(*tck))		strcpy(TickStl,AxisStl);
 	else if(strlen(tck)<32)	strcpy(TickStl,tck);
-	if(!sub || !(*sub))		strcpy(SubTStl,AxisStl);
+	if(!sub || !(*sub))		strcpy(SubTStl,TickStl);
 	else if(strlen(sub)<32)	strcpy(SubTStl,sub);
 }
 //-----------------------------------------------------------------------------
@@ -518,6 +518,7 @@ void mglCanvas::DrawAxis(mglAxis &aa, bool text, char arr,const char *stl,const 
 			for(v=v0;(v-aa.v2)*(v-aa.v1)<=0;v+=aa.ds)
 				tick_draw(o+d*v,da,db,1,stl);
 	}
+	SetPenPal(mgl_have_color(stl) ? stl:AxisStl);
 	if(text)	DrawLabels(aa);
 	EndGroup();
 }
@@ -940,7 +941,7 @@ void mglCanvas::colorbar(HCDT vv, const mreal *c, int where, mreal x, mreal y, m
 	}
 	else	{	UpdateAxis();	AdjustTicks(ac,fa!=0);	}
 	// hint for using standard label drawing function
-	SetPenPal(*TickStl ? TickStl:"k-1");
+	SetPenPal(TickStl);
 	for(i=0;i<ac.txt.size();i++)
 	{
 		d = ac.txt[i].val = GetA(ac.txt[i].val)*2-1;
@@ -964,6 +965,7 @@ void mglCanvas::colorbar(HCDT vv, const mreal *c, int where, mreal x, mreal y, m
 		case 3:	ac.dir.y = 0;	ac.org.y = y+0.1*h;	break;
 		default:ac.dir.x = 0;	ac.org.x = x-0.1*w;	break;
 	}
+	SetPenPal(AxisStl);
 	ac.ns = where;	DrawLabels(ac);	// NOTE ns isn't used for colorbar
 	Pop();	clr(MGL_DISABLE_SCALE);	EndGroup();
 }

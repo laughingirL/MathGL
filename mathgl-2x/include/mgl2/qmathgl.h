@@ -45,7 +45,7 @@ public:
 	QString primitives;	///< Manual primitives, defined by user
 
 	QMathGL(QWidget *parent = 0, Qt::WindowFlags f = 0);
-	~QMathGL();
+	virtual ~QMathGL();
 	double getRatio();
 	void setPopup(QMenu *p)	{	popup = p;	}	///< Set popup menu pointer
 	void setSize(int w, int h);		///< Set window/picture sizes

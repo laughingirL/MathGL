@@ -167,6 +167,7 @@ enum{	// Codes for warnings/messages
 };
 //-----------------------------------------------------------------------------
 #define MGL_DEF_PAL	"bgrcmyhlnqeupH"	// default palette
+#define MGL_DEF_SCH	"BbcyrR"	// default palette
 #define MGL_COLORS	"kwrgbcymhWRGBCYMHlenpquLENPQU"
 //-----------------------------------------------------------------------------
 #define MGL_TRANSP_NORM		0x000000

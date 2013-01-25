@@ -1496,7 +1496,7 @@ void smgl_combined(mglGraph *gr)	// flow threads and density plot
 	mglData c;	mgls_prepare3d(&c);
 	mglData v(10);	v.Fill(-0.5,1);
 	gr->SubPlot(2,2,1,"");	gr->Title("Flow + Dens");
-	gr->Flow(a,b,"br");	gr->Dens(d,"BbcyrR");	gr->Box();
+	gr->Flow(a,b,"br");	gr->Dens(d);	gr->Box();
 	gr->SubPlot(2,2,0);	gr->Title("Surf + Cont");	gr->Rotate(50,60);
 	gr->Light(true);	gr->Surf(a);	gr->Cont(a,"y");	gr->Box();
 	gr->SubPlot(2,2,2);	gr->Title("Mesh + Cont");	gr->Rotate(50,60);
@@ -1888,7 +1888,7 @@ void smgl_ternary(mglGraph *gr)	// flag #
 
 	gr->SubPlot(2,2,1);	gr->Title("Ternary axis (x+y+t=1)");
 	gr->Ternary(1);
-	gr->Plot(x,y,"r2");	gr->Plot(rx,ry,"q^ ");	gr->Cont(a,"BbcyrR");
+	gr->Plot(x,y,"r2");	gr->Plot(rx,ry,"q^ ");	gr->Cont(a);
 	gr->Line(mglPoint(0.5,0), mglPoint(0,0.75), "g2");
 	gr->Axis(); gr->Grid("xyz","B;");
 	gr->Label('x',"B");	gr->Label('y',"C");	gr->Label('t',"A");

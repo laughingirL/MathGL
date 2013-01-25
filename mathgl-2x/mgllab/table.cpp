@@ -388,7 +388,7 @@ void exp_dat_cb(Fl_Widget*, void*v)
 		gettext("PNG Files (*.png)\tAll Files (*)"), 0);
 	if(newfile != NULL)
 	{
-		scheme = fl_input(gettext("Enter color scheme"),"BbcyrR");
+		scheme = fl_input(gettext("Enter color scheme"),MGL_DEF_SCH);
 		if(scheme)	e->var->Export(newfile,scheme);
 	}
 }
@@ -400,7 +400,7 @@ void imp_dat_cb(Fl_Widget*, void*v)
 		gettext("PNG Files (*.png)\tAll Files (*)"), 0);
 	if (newfile != NULL)
 	{
-		scheme = fl_input(gettext("Enter color scheme"),"BbcyrR");
+		scheme = fl_input(gettext("Enter color scheme"),MGL_DEF_SCH);
 		if(scheme)
 		{	e->var->Import(newfile,scheme);	e->refresh();	}
 	}

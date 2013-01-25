@@ -218,7 +218,7 @@ int sample_2(mglGraph *gr)
 	gr->Puts(mglPoint(0,1.2,1),"Simple surface");
 	gr->Rotate(40,60);
 	gr->Box();	gr->Axis();
-	gr->Surf(a,"BbcyrR");
+	gr->Surf(a);
 //	gr->Colorbar();
 	gr->EndFrame();
 
@@ -248,7 +248,7 @@ int sample_2(mglGraph *gr)
 	gr->NewFrame();
 	gr->Box();	gr->Axis();
 	gr->Puts(mglPoint(0,1.2,1),"Density plot");
-	gr->Dens(a,"BbcyrR");
+	gr->Dens(a);
 	gr->InPlot(0.6,1,0.6,1,false);	// new axis in upper right corner
 	gr->Box();	gr->Axis();
 	gr->Puts(mglPoint(0,1.2,1),"... with bicolor");
@@ -266,7 +266,7 @@ int sample_2(mglGraph *gr)
 	gr->Puts(mglPoint(0,1.2,1),"Surface of boxes");
 	gr->Rotate(40,60);
 	gr->Box();	gr->Axis();
-	gr->Boxs(a,"BbcyrR");
+	gr->Boxs(a);
 	gr->EndFrame();
 
 	gr->NewFrame();
@@ -359,7 +359,7 @@ int sample_3(mglGraph *gr)
 	gr->Puts(mglPoint(0,1.2,1),"Cloud plot (switch alpha !!!)");
 	gr->Rotate(40,60);
 	gr->Box();	gr->Axis();
-	gr->Cloud(a,"BbcyrR");
+	gr->Cloud(a);
 	gr->EndFrame();
 
 	gr->NewFrame();
