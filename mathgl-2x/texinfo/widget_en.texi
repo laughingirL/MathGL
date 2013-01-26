@@ -68,57 +68,62 @@ Set callback function @code{func} which will be called on mouse click.
 @end deftypefn
 
 @deftypefn {Method on @code{mglWindow}} @code{void} ToggleAlpha ()
-@deftypefnx {C function} @code{int} mgl_wnd_toggle_alpha (@code{HMGL} gr)
+@deftypefnx {C function} @code{void} mgl_wnd_toggle_alpha (@code{HMGL} gr)
 Switch on/off transparency but do not overwrite switches in user drawing function.
 @end deftypefn
 @deftypefn {Method on @code{mglWindow}} @code{void} ToggleLight ()
-@deftypefnx {C function} @code{int} mgl_wnd_toggle_light (@code{HMGL} gr)
+@deftypefnx {C function} @code{void} mgl_wnd_toggle_light (@code{HMGL} gr)
 Switch on/off lighting but do not overwrite switches in user drawing function.
 @end deftypefn
 @deftypefn {Method on @code{mglWindow}} @code{void} ToggleRotate ()
-@deftypefnx {C function} @code{int} mgl_wnd_toggle_rotate (@code{HMGL} gr)
+@deftypefnx {C function} @code{void} mgl_wnd_toggle_rotate (@code{HMGL} gr)
 Switch on/off rotation by mouse. Usually, left button is used for rotation, middle button for shift, right button for zoom/perspective.
 @end deftypefn
 @deftypefn {Method on @code{mglWindow}} @code{void} ToggleZoom ()
-@deftypefnx {C function} @code{int} mgl_wnd_toggle_zoom (@code{HMGL} gr)
+@deftypefnx {C function} @code{void} mgl_wnd_toggle_zoom (@code{HMGL} gr)
 Switch on/off zooming by mouse. Just select rectangular region by mouse and it will be zoomed in.
 @end deftypefn
 @deftypefn {Method on @code{mglWindow}} @code{void} ToggleNo ()
-@deftypefnx {C function} @code{int} mgl_wnd_toggle_no (@code{HMGL} gr)
+@deftypefnx {C function} @code{void} mgl_wnd_toggle_no (@code{HMGL} gr)
 Switch off all zooming and rotation and restore initial state.
 @end deftypefn
 @deftypefn {Method on @code{mglWindow}} @code{void} Update ()
-@deftypefnx {C function} @code{int} mgl_wnd_update (@code{HMGL} gr)
+@deftypefnx {C function} @code{void} mgl_wnd_update (@code{HMGL} gr)
 Update window contents. This is very useful function for manual updating the plot while long calculation was running in parallel thread.
 @end deftypefn
 @deftypefn {Method on @code{mglWindow}} @code{void} ReLoad ()
-@deftypefnx {C function} @code{int} mgl_wnd_reload (@code{HMGL} gr)
+@deftypefnx {C function} @code{void} mgl_wnd_reload (@code{HMGL} gr)
 Reload user data and update picture. This function also update number of frames which drawing function can create.
 @end deftypefn
 @deftypefn {Method on @code{mglWindow}} @code{void} Adjust ()
-@deftypefnx {C function} @code{int} mgl_wnd_adjust (@code{HMGL} gr)
+@deftypefnx {C function} @code{void} mgl_wnd_adjust (@code{HMGL} gr)
 Adjust size of bitmap to window size.
 @end deftypefn
 @deftypefn {Method on @code{mglWindow}} @code{void} NextFrame ()
-@deftypefnx {C function} @code{int} mgl_wnd_next_frame (@code{HMGL} gr)
+@deftypefnx {C function} @code{void} mgl_wnd_next_frame (@code{HMGL} gr)
 Show next frame if one.
 @end deftypefn
 @deftypefn {Method on @code{mglWindow}} @code{void} PrevFrame ()
-@deftypefnx {C function} @code{int} mgl_wnd_prev_frame (@code{HMGL} gr)
+@deftypefnx {C function} @code{void} mgl_wnd_prev_frame (@code{HMGL} gr)
 Show previous frame if one.
 @end deftypefn
 @deftypefn {Method on @code{mglWindow}} @code{void} Animation ()
-@deftypefnx {C function} @code{int} mgl_wnd_animation (@code{HMGL} gr)
+@deftypefnx {C function} @code{void} mgl_wnd_animation (@code{HMGL} gr)
 Run/stop slideshow (animation) of frames.
 @end deftypefn
 
-@deftypefn {Method on @code{mglWindow}} @code{void} SetDelay (@code{mreal} dt)
-@deftypefnx {C function} @code{int} mgl_wnd_set_delay (@code{HMGL} gr, @code{int} dt)
+@deftypefn {Method on @code{mglWindow}} @code{void} SetDelay (@code{double} dt)
+@deftypefnx {C function} @code{void} mgl_wnd_set_delay (@code{HMGL} gr, @code{double} dt)
 Sets delay for animation in seconds. Default value is 1 sec.
 @end deftypefn
 
+@deftypefn {Method on @code{mglWindow}} @code{double} GetDelay ()
+@deftypefnx {C function} @code{double} mgl_wnd_get_delay (@code{HMGL} gr)
+Gets delay for animation in seconds.
+@end deftypefn
+
 @deftypefn {Method on @code{mglWindow}} @code{void} Setup (@code{bool} clfupd=@code{true}, @code{bool} showpos=@code{false})
-@deftypefnx {C function} @code{int} mgl_setup_window (@code{HMGL} gr, @code{bool} clfupd, @code{bool} showpos)
+@deftypefnx {C function} @code{void} mgl_setup_window (@code{HMGL} gr, @code{bool} clfupd, @code{bool} showpos)
 Enable/disable flags for:
 @itemize @bullet
 @item
@@ -129,7 +134,7 @@ showing the last mouse click position in the widget.
 @end deftypefn
 
 @deftypefn {Method on @code{mglWindow}} @code{mglPoint} LastMousePos ()
-@deftypefnx {C function} @code{int} mgl_get_last_mouse_pos (@code{HMGL} gr, @code{mreal *}x, @code{mreal *}y, @code{mreal *}z)
+@deftypefnx {C function} @code{void} mgl_get_last_mouse_pos (@code{HMGL} gr, @code{mreal *}x, @code{mreal *}y, @code{mreal *}z)
 Gets last position of mouse click.
 @end deftypefn
 

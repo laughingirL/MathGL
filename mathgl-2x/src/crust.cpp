@@ -252,24 +252,6 @@ void MGL_EXPORT mgl_quadplot_xy_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, u
 //	TriCont series
 //
 //-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_tricont_line(HMGL gr, mreal val, long k1, long k2, long k3, HCDT x, HCDT y, HCDT z, HCDT a, bool zVal,mreal c)
-{
-	mreal d1,d2;
-	mglPoint p1,p2,n;
-	d1 = mgl_d(val,a->v(k1),a->v(k2));
-	d2 = mgl_d(val,a->v(k1),a->v(k3));
-	if(d1<0 || d1>1 || d2<0 || d2>1)	return;
-	p1 = mglPoint(x->v(k1)*(1-d1)+x->v(k2)*d1, y->v(k1)*(1-d1)+y->v(k2)*d1,
-				zVal?z->v(k1)*(1-d1)+z->v(k2)*d1:gr->Min.z);
-	if(!gr->ScalePoint(p1,n))	return;
-	p2 = mglPoint(x->v(k1)*(1-d2)+x->v(k3)*d2, y->v(k1)*(1-d2)+y->v(k3)*d2,
-				zVal?z->v(k1)*(1-d2)+z->v(k3)*d2:gr->Min.z);
-	if(!gr->ScalePoint(p2,n))	return;
-
-	k1 = gr->AddPnt(p1,c);	k2 = gr->AddPnt(p2,c);
-	gr->line_plot(k1,k2);
-}
-//-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_tricont_xyzcv(HMGL gr, HCDT v, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, const char *opt)
 {
 	long n = x->GetNx(), m = nums->GetNy();
@@ -278,10 +260,12 @@ void MGL_EXPORT mgl_tricont_xyzcv(HMGL gr, HCDT v, HCDT nums, HCDT x, HCDT y, HC
 	long ss=gr->AddTexture(sch);
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("TriCont",cgid++);
-	mreal val;
+	mreal val, c;
 	register long i,k;
 	long k1,k2,k3;
-	bool zVal = (mglchr(sch,'_'));
+	bool zVal = !(mglchr(sch,'_'));
+	mreal d1,d2,d3;
+	mglPoint p1,p2,p3;
 	for(k=0;k<v->GetNx();k++)	for(i=0;i<m;i++)
 	{
 		if(gr->Stop)	return;
@@ -289,10 +273,32 @@ void MGL_EXPORT mgl_tricont_xyzcv(HMGL gr, HCDT v, HCDT nums, HCDT x, HCDT y, HC
 		k2 = long(nums->v(1,i)+0.1);	if(k2<0 || k2>=n)	continue;
 		k3 = long(nums->v(2,i)+0.1);	if(k3<0 || k3>=n)	continue;
 		val = v->v(k);
-		mreal c = gr->GetC(ss,val);
-		mgl_tricont_line(gr,val, k1,k2,k3,x,y,z,a,zVal,c);
-		mgl_tricont_line(gr,val, k2,k1,k3,x,y,z,a,zVal,c);
-		mgl_tricont_line(gr,val, k3,k2,k1,x,y,z,a,zVal,c);
+		c = gr->GetC(ss,val);
+		
+		d1 = mgl_d(val,a->v(k1),a->v(k2));
+		p1 = mglPoint(x->v(k1)*(1-d1)+x->v(k2)*d1, y->v(k1)*(1-d1)+y->v(k2)*d1,
+					  zVal?z->v(k1)*(1-d1)+z->v(k2)*d1:gr->Min.z);
+		d2 = mgl_d(val,a->v(k1),a->v(k3));
+		p2 = mglPoint(x->v(k1)*(1-d2)+x->v(k3)*d2, y->v(k1)*(1-d2)+y->v(k3)*d2,
+					  zVal?z->v(k1)*(1-d2)+z->v(k3)*d2:gr->Min.z);
+		d3 = mgl_d(val,a->v(k2),a->v(k3));
+		p3 = mglPoint(x->v(k2)*(1-d3)+x->v(k3)*d3, y->v(k2)*(1-d3)+y->v(k3)*d3,
+					  zVal?z->v(k2)*(1-d3)+z->v(k3)*d3:gr->Min.z);
+		if(d1>=0 && d1<=1 && d2>=0 && d2<=1)
+		{
+			k1 = gr->AddPnt(p1,c);	k2 = gr->AddPnt(p2,c);
+			gr->line_plot(k1,k2);
+		}
+		else if(d1>=0 && d1<=1 && d3>=0 && d3<=1)
+		{
+			k1 = gr->AddPnt(p1,c);	k2 = gr->AddPnt(p3,c);
+			gr->line_plot(k1,k2);
+		}
+		else if(d3>=0 && d3<=1 && d2>=0 && d2<=1)
+		{
+			k1 = gr->AddPnt(p3,c);	k2 = gr->AddPnt(p2,c);
+			gr->line_plot(k1,k2);
+		}
 	}
 }
 //-----------------------------------------------------------------------------

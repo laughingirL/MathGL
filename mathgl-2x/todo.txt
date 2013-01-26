@@ -21,31 +21,22 @@ A. Paper about MathGL!!!
 12. WX window/widgets
 
 14. New tests:
-	a. Add test for parametric plots ?!
 	b. Add test for curved text align "L","C","R"
 	c. Tests for mglDataC arrays (as separate flag)
-	d. Test color per face in TriPlot, QuadPlot; + test TriCont
 	e. Test for Smooth, CumSum, Diff, Diff2, Integrate, Roll, Mirror, Crop, Momentum, NormSl, Sew, DiffParam, Envelope, FFT, STFA, Hankel, CosFFT, SinFFT, Transform for all directions "xyz"; Clean, Last, First, Find, Spline3, FindAny, Insert, Delete, Put, Read/Save+HDF, SetId/Column, PrintInfo, Squeeze, Extend, Trace, Combine, new Max/Min/Momentum, FillSample, Hist, operators, Sort, Export/Import, Jacobian
-	f. Save should save Id too.
-	g. DensXYZ, ContXYZ, ContFXYZ -- test for 3d data
 	h. Test for CalcXYZ -- in data samples
 	i. Tests for Quality!=2
-	k. Test Tens "breaking"
 	l. Test Error for all marks
 	o. Add Fortran tests?
 	p. Test FaceNum for Surf
 	q. Test FSurf
-	r. Test Belt in opposite dir
-	s. All styles for SurfC, SurfA, ...
-	t. Test wire Boxs
 	u. Test FlowP + 3d
 	v. Test GIF animationm OBJold, MGLD(+new png) in fexport()
 	w. Test diffuse, specular local sources
-	x. Test about equal axis range
 
 15. Hint about equal axis range.
-
-16. Add docs mgl_wnd_get_delay(), mgl_get_plotid(), mgl_get_quality()
+16. Save should save Id too.
+17. Drawing in parallel in QMathGL
 
 ============= UDAV =============
 

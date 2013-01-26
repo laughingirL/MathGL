@@ -82,8 +82,10 @@ public:
 	void SetClickFunc(void (*func)(void *p))	///< Callback function for mouse click
 	{	mgl_set_click_func(gr,func);	}
 
-	inline void SetDelay(double dt)	///< Delay for animation in seconds
+	inline void SetDelay(double dt)	///< Set delay for animation in seconds
 	{	mgl_wnd_set_delay(gr, dt);	}
+	inline double GetDelay()		///< Get delay for animation in seconds
+	{	return mgl_wnd_get_delay(gr);	}
 	inline void Setup(bool clf_upd=true, bool showpos=false)
 	{	mgl_setup_window(gr, clf_upd, showpos);	}
 	inline mglPoint LastMousePos()		///< Last mouse position

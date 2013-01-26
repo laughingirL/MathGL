@@ -282,6 +282,13 @@ Sets approximate number of visible faces. Can be used for speeding up drawing by
 Sets default name @var{id} as filename for saving (in FLTK window for example).
 @end deftypefn
 
+@ifclear UDAV
+@deftypefn {Method on @code{mglGraph}} @code{const char *} GetPlotId ()
+@deftypefnx {C function} @code{const char *} mgl_get_plotid (@code{HMGL} gr)
+Gets default name @var{id} as filename for saving (in FLTK window for example).
+@end deftypefn
+@end ifclear
+
 @c ==================================================================
 @comment  @external{}
 @node Cutting, Font settings, Default sizes, Graphics setup
@@ -988,10 +995,14 @@ Sets size of picture in pixels. This function @strong{must be} called before any
 @deftypefnx {Method on @code{mglGraph}} @code{void} SetQuality (@code{int} val=@code{MGL_DRAW_NORM})
 @deftypefnx {C function} @code{void} mgl_set_quality (@code{HMGL} gr, @code{int} val)
 @end ifclear
-Sets quality of the plot depending on value @var{val}: @code{MGL_DRAW_WIRE=0} --	no face drawing (fastest), @code{MGL_DRAW_FAST=1} -- no color interpolation (fast), @code{MGL_DRAW_NORM=2} -- high quality (normal), @code{MGL_DRAW_NORM=3} -- high quality with 3d primitives (arrows and marks). If @code{MGL_DRAW_LMEM=0x4} is set then direct bitmap drawing is used (low memory usage).
+Sets quality of the plot depending on value @var{val}: @code{MGL_DRAW_WIRE=0} -- no face drawing (fastest), @code{MGL_DRAW_FAST=1} -- no color interpolation (fast), @code{MGL_DRAW_NORM=2} -- high quality (normal), @code{MGL_DRAW_HIGH=3} -- high quality with 3d primitives (arrows and marks). If @code{MGL_DRAW_LMEM=0x4} is set then direct bitmap drawing is used (low memory usage).
 @end deftypefn
 
 @ifclear UDAV
+@deftypefn {Method on @code{mglGraph}} @code{int} GetQuality ()
+@deftypefnx {C function} @code{int} mgl_get_quality (@code{HMGL} gr)
+Gets quality of the plot: @code{MGL_DRAW_WIRE=0} -- no face drawing (fastest), @code{MGL_DRAW_FAST=1} -- no color interpolation (fast), @code{MGL_DRAW_NORM=2} -- high quality (normal), @code{MGL_DRAW_HIGH=3} -- high quality with 3d primitives (arrows and marks). If @code{MGL_DRAW_LMEM=0x4} is set then direct bitmap drawing is used (low memory usage).
+@end deftypefn
 
 @deftypefn {Method on @code{mglGraph}} @code{void} StartGroup (const char *name)
 @deftypefnx {C function} @code{void} mgl_start_group (@code{HMGL} gr, @code{const char *}name)

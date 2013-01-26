@@ -1852,17 +1852,26 @@ list xq -1 1 -1 1 -1 1 -1 1
 list yq -1 -1 1 1 -1 -1 1 1
 list zq -1 -1 -1 -1 1 1 1 1
 light on
-subplot 2 1 0:title 'QuadPlot sample':rotate 50 60
+subplot 2 2 0:title 'QuadPlot sample':rotate 50 60
 quadplot q xq yq zq 'yr'
+quadplot q xq yq zq '#k'
+
+subplot 2 2 2:title 'QuadPlot coloring':rotate 50 60
+quadplot q xq yq zq yq 'yr'
 quadplot q xq yq zq '#k'
 
 list t 0 1 2 | 0 1 3 | 0 2 3 | 1 2 3
 list xt -1 1 0 0
 list yt -1 -1 1 0
 list zt -1 -1 -1 1
-subplot 2 1 1:title 'TriPlot sample':rotate 50 60
+subplot 2 2 1:title 'TriPlot sample':rotate 50 60
 triplot t xt yt zt 'b'
 triplot t xt yt zt '#k'
+
+subplot 2 2 3:title 'TriPlot coloring':rotate 50 60
+triplot t xt yt zt yt 'cb'
+triplot t xt yt zt '#k'
+tricont t xt yt zt 'B'
 @end verbatim
 
 @pfig{triplot, Example of TriPlot() and QuadPlot()}

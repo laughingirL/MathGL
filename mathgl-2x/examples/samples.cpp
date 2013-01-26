@@ -58,6 +58,158 @@ new ez 10 10 10 '0.2*(z-0.3)/$1-0.2*(z+0.3)/$2'\nreturn\n";
 //-----------------------------------------------------------------------------
 //		Sample functions (v.2.*0)
 //-----------------------------------------------------------------------------
+const char *mmgl_param1="new x 100 'sin(pi*x)'\nnew y 100 'cos(pi*x)'\n"
+"new z 100 'sin(2*pi*x)'\nnew c 100 'cos(2*pi*x)'\n\n"
+"subplot 4 3 0:rotate 40 60:box:plot x y z\n"
+"subplot 4 3 1:rotate 40 60:box:area x y z\n"
+"subplot 4 3 2:rotate 40 60:box:tens x y z c\n"
+"subplot 4 3 3:rotate 40 60:box:bars x y z\n"
+"subplot 4 3 4:rotate 40 60:box:stem x y z\n"
+"subplot 4 3 5:rotate 40 60:box:textmark x y z c*2 '\\alpha'\n"
+"subplot 4 3 6:rotate 40 60:box:tube x y z c/10\n"
+"subplot 4 3 7:rotate 40 60:box:mark x y z c 's'\n"
+"subplot 4 3 8:box:error x y z/10 c/10\n"
+"subplot 4 3 9:rotate 40 60:box:step x y z\n"
+"subplot 4 3 10:rotate 40 60:box:torus x z 'z';light on\n"
+"subplot 4 3 11:rotate 40 60:box:label x y z '%z'\n";
+void smgl_param1(mglGraph *gr)	// surface triangulation
+{
+	mglData x(100), y(100), z(100), c(100);
+	gr->Fill(x,"sin(pi*x)");	gr->Fill(y,"cos(pi*x)");
+	gr->Fill(z,"sin(2*pi*x)");	gr->Fill(c,"cos(2*pi*x)");
+
+	gr->SubPlot(4,3,0);	gr->Rotate(40,60);	gr->Box();	gr->Plot(x,y,z);
+	gr->SubPlot(4,3,1);	gr->Rotate(40,60);	gr->Box();	gr->Area(x,y,z);
+	gr->SubPlot(4,3,2);	gr->Rotate(40,60);	gr->Box();	gr->Tens(x,y,z,c);
+	gr->SubPlot(4,3,3);	gr->Rotate(40,60);	gr->Box();	gr->Bars(x,y,z);
+	gr->SubPlot(4,3,4);	gr->Rotate(40,60);	gr->Box();	gr->Stem(x,y,z);
+	gr->SubPlot(4,3,5);	gr->Rotate(40,60);	gr->Box();	gr->TextMark(x,y,z,"\\alpha");
+	gr->SubPlot(4,3,6);	gr->Rotate(40,60);	gr->Box();	gr->Tube(x,y,z,c/10,"","light on");
+	gr->SubPlot(4,3,7);	gr->Rotate(40,60);	gr->Box();	gr->Mark(x,y,z,c,"s");
+	gr->SubPlot(4,3,8);	gr->Rotate(40,60);	gr->Box();	gr->Error(x,y,z/10,c/10);
+	gr->SubPlot(4,3,9);	gr->Rotate(40,60);	gr->Box();	gr->Step(x,y,z);
+	gr->SubPlot(4,3,10);gr->Rotate(40,60);	gr->Box();	gr->Torus(x,z,"z","light on");
+	gr->SubPlot(4,3,11);gr->Rotate(40,60);	gr->Box();	gr->Label(x,y,z,"%z");
+}
+//-----------------------------------------------------------------------------
+const char *mmgl_param2="new x 100 100 'sin(pi*(x+y)/2)*cos(pi*y/2)'\n"
+"new y 100 100 'cos(pi*(x+y)/2)*cos(pi*y/2)'\n"
+"new z 100 100 'sin(pi*y/2)'\nnew c 100 100 'cos(pi*x)'\n\n"
+"subplot 4 4 0:rotate 40 60:box:surf x y z\n"
+"subplot 4 4 1:rotate 40 60:box:surfc x y z c\n"
+"subplot 4 4 2:rotate 40 60:box:surfa x y z c;alpha 1\n"
+"subplot 4 4 3:rotate 40 60:box:mesh x y z;meshnum 10\n"
+"subplot 4 4 4:rotate 40 60:box:tile x y z;meshnum 10\n"
+"subplot 4 4 5:rotate 40 60:box:tiles x y z c;meshnum 10\n"
+"subplot 4 4 6:rotate 40 60:box:axial x y z;alpha 0.5;light on\n"
+"subplot 4 4 7:rotate 40 60:box:cont x y z\n"
+"subplot 4 4 8:rotate 40 60:box:contf x y z;light on:contv x y z;light on\n"
+"subplot 4 4 9:rotate 40 60:box:belt x y z 'x';meshnum 10;light on\n"
+"subplot 4 4 10:rotate 40 60:box:dens x y z;alpha 0.5\n"
+"subplot 4 4 11:rotate 40 60:box\n"
+"fall x y z 'g';meshnum 10:fall x y z 'rx';meshnum 10\n"
+"subplot 4 4 12:rotate 40 60:box:belt x y z '';meshnum 10;light on\n"
+"subplot 4 4 13:rotate 40 60:box:boxs x y z '';meshnum 10;light on\n"
+"subplot 4 4 14:rotate 40 60:box:boxs x y z '#';meshnum 10;light on\n"
+"subplot 4 4 15:rotate 40 60:box:boxs x y z '@';meshnum 10;light on\n";
+void smgl_param2(mglGraph *gr)	// surface triangulation
+{
+	mglData x(100,100), y(100,100), z(100,100), c(100,100);
+	gr->Fill(x,"sin(pi*(x+y)/2)*cos(pi*y/2)");	gr->Fill(y,"cos(pi*(x+y)/2)*cos(pi*y/2)");
+	gr->Fill(z,"sin(pi*y/2)");	gr->Fill(c,"cos(pi*x)");
+	
+	gr->SubPlot(4,4,0);	gr->Rotate(40,60);	gr->Box();	gr->Surf(x,y,z);
+	gr->SubPlot(4,4,1);	gr->Rotate(40,60);	gr->Box();	gr->SurfC(x,y,z,c);
+	gr->SubPlot(4,4,2);	gr->Rotate(40,60);	gr->Box();	gr->SurfA(x,y,z,c,"","alpha 1");
+	gr->SubPlot(4,4,3);	gr->Rotate(40,60);	gr->Box();	gr->Mesh(x,y,z,"","meshnum 10");
+	gr->SubPlot(4,4,4);	gr->Rotate(40,60);	gr->Box();	gr->Tile(x,y,z,"","meshnum 10");
+	gr->SubPlot(4,4,5);	gr->Rotate(40,60);	gr->Box();	gr->TileS(x,y,z,c,"","meshnum 10");
+	gr->SubPlot(4,4,6);	gr->Rotate(40,60);	gr->Box();	gr->Axial(x,y,z,"","alpha 0.5;light on");
+	gr->SubPlot(4,4,7);	gr->Rotate(40,60);	gr->Box();	gr->Cont(x,y,z);
+	gr->SubPlot(4,4,8);	gr->Rotate(40,60);	gr->Box();	gr->ContF(x,y,z,"","light on");	gr->ContV(x,y,z,"","light on");
+	gr->SubPlot(4,4,9);	gr->Rotate(40,60);	gr->Box();	gr->Belt(x,y,z,"x","meshnum 10;light on");
+	gr->SubPlot(4,4,10);gr->Rotate(40,60);	gr->Box();	gr->Dens(x,y,z,"","alpha 0.5");
+	gr->SubPlot(4,4,11);gr->Rotate(40,60);	gr->Box();
+	gr->Fall(x,y,z,"g","meshnum 10");	gr->Fall(x,y,z,"rx","meshnum 10");
+	gr->SubPlot(4,4,12);	gr->Rotate(40,60);	gr->Box();	gr->Belt(x,y,z,"","meshnum 10;light on");
+	gr->SubPlot(4,4,13);	gr->Rotate(40,60);	gr->Box();	gr->Boxs(x,y,z,"","meshnum 10;light on");
+	gr->SubPlot(4,4,14);	gr->Rotate(40,60);	gr->Box();	gr->Boxs(x,y,z,"#","meshnum 10");
+	gr->SubPlot(4,4,15);	gr->Rotate(40,60);	gr->Box();	gr->Boxs(x,y,z,"@","meshnum 10;light on");
+}
+//-----------------------------------------------------------------------------
+const char *mmgl_param3="new x 50 50 50 '(x+2)/3*sin(pi*y/2)'\n"
+"new y 50 50 50 '(x+2)/3*cos(pi*y/2)'\nnew z 50 50 50 'z'\n"
+"new c 50 50 50 '-2*(x^2+y^2+z^4-z^2)+0.2'\n"
+"new d 50 50 50 '1-2*tanh(2*(x+y)^2)'\n\n"
+"alpha on:light on\n"
+"subplot 4 3 0:rotate 40 60:box:surf3 x y z c\n"
+"subplot 4 3 1:rotate 40 60:box:surf3c x y z c d\n"
+"subplot 4 3 2:rotate 40 60:box:surf3a x y z c d\n"
+"subplot 4 3 3:rotate 40 60:box:cloud x y z c\n"
+"subplot 4 3 4:rotate 40 60:box:cont3 x y z c:cont3 x y z c 'x':cont3 x y z c 'z'\n"
+"subplot 4 3 5:rotate 40 60:box:contf3 x y z c:contf3 x y z c 'x':contf3 x y z c 'z'\n"
+"subplot 4 3 6:rotate 40 60:box:dens3 x y z c:dens3 x y z c 'x':dens3 x y z c 'z'\n"
+"subplot 4 3 7:rotate 40 60:box:dots x y z c;meshnum 15\n"
+"subplot 4 3 8:rotate 40 60:box:densx c '' 0:densy c '' 0:densz c '' 0\n"
+"subplot 4 3 9:rotate 40 60:box:contx c '' 0:conty c '' 0:contz c '' 0\n"
+"subplot 4 3 10:rotate 40 60:box:contfx c '' 0:contfy c '' 0:contfz c '' 0\n";
+void smgl_param3(mglGraph *gr)	// surface triangulation
+{
+	mglData x(50,50,50), y(50,50,50), z(50,50,50), c(50,50,50), d(50,50,50);
+	gr->Fill(x,"(x+2)/3*sin(pi*y/2)");	gr->Fill(y,"(x+2)/3*cos(pi*y/2)");	gr->Fill(z,"z");
+	gr->Fill(c,"-2*(x^2+y^2+z^4-z^2)+0.2");	gr->Fill(d,"1-2*tanh(2*(x+y)^2)");
+
+	gr->Light(true);	gr->Alpha(true);
+	gr->SubPlot(4,3,0);	gr->Rotate(40,60);	gr->Box();	gr->Surf3(x,y,z,c);
+	gr->SubPlot(4,3,1);	gr->Rotate(40,60);	gr->Box();	gr->Surf3C(x,y,z,c,d);
+	gr->SubPlot(4,3,2);	gr->Rotate(40,60);	gr->Box();	gr->Surf3A(x,y,z,c,d);
+	gr->SubPlot(4,3,3);	gr->Rotate(40,60);	gr->Box();	gr->Cloud(x,y,z,c);
+	gr->SubPlot(4,3,4);	gr->Rotate(40,60);	gr->Box();	gr->Cont3(x,y,z,c);	gr->Cont3(x,y,z,c,"x");	gr->Cont3(x,y,z,c,"z");
+	gr->SubPlot(4,3,5);	gr->Rotate(40,60);	gr->Box();	gr->ContF3(x,y,z,c);gr->ContF3(x,y,z,c,"x");gr->ContF3(x,y,z,c,"z");
+	gr->SubPlot(4,3,6);	gr->Rotate(40,60);	gr->Box();	gr->Dens3(x,y,z,c);	gr->Dens3(x,y,z,c,"x");	gr->Dens3(x,y,z,c,"z");
+	gr->SubPlot(4,3,7);	gr->Rotate(40,60);	gr->Box();	gr->Dots(x,y,z,c,"","meshnum 15");
+	gr->SubPlot(4,3,8);	gr->Rotate(40,60);	gr->Box();	gr->DensX(c,"",0);	gr->DensY(c,"",0);	gr->DensZ(c,"",0);
+	gr->SubPlot(4,3,9);	gr->Rotate(40,60);	gr->Box();	gr->ContX(c,"",0);	gr->ContY(c,"",0);	gr->ContZ(c,"",0);
+	gr->SubPlot(4,3,10);gr->Rotate(40,60);	gr->Box();	gr->ContFX(c,"",0);	gr->ContFY(c,"",0);	gr->ContFZ(c,"",0);
+}
+//-----------------------------------------------------------------------------
+const char *mmgl_paramv="new x 20 20 20 '(x+2)/3*sin(pi*y/2)'\n"
+"new y 20 20 20 '(x+2)/3*cos(pi*y/2)'\nnew z 20 20 20 'z+x'\n"
+"new ex 20 20 20 'x'\nnew ey 20 20 20 'x^2+y'\nnew ez 20 20 20 'y^2+z'\n\n"
+"new x1 50 50 '(x+2)/3*sin(pi*y/2)'\n"
+"new y1 50 50 '(x+2)/3*cos(pi*y/2)'\n"
+"new e1 50 50 'x'\nnew e2 50 50 'x^2+y'\n\n"
+"subplot 3 3 0:rotate 40 60:box:vect x1 y1 e1 e2\n"
+"subplot 3 3 1:rotate 40 60:box:flow x1 y1 e1 e2\n"
+"subplot 3 3 2:rotate 40 60:box:pipe x1 y1 e1 e2\n"
+"subplot 3 3 3:rotate 40 60:box:dew x1 y1 e1 e2\n"
+"subplot 3 3 4:rotate 40 60:box:vect x y z ex ey ez\n"
+"subplot 3 3 5:rotate 40 60:box\n"
+"vect3 x y z ex ey ez:vect3 x y z ex ey ez 'x':vect3 x y z ex ey ez 'z'\n"
+"grid3 x y z z '{r9}':grid3 x y z z '{g9}x':grid3 x y z z '{b9}z'\n"
+"subplot 3 3 6:rotate 40 60:box:flow x y z ex ey ez\n"
+"subplot 3 3 7:rotate 40 60:box:pipe x y z ex ey ez\n";
+void smgl_paramv(mglGraph *gr)	// surface triangulation
+{
+	mglData x(20,20,20), y(20,20,20), z(20,20,20), ex(20,20,20), ey(20,20,20), ez(20,20,20);
+	gr->Fill(x,"(x+2)/3*sin(pi*y/2)");	gr->Fill(y,"(x+2)/3*cos(pi*y/2)");	gr->Fill(z,"x+z");
+	gr->Fill(ex,"x");	gr->Fill(ey,"x^2+y");	gr->Fill(ez,"y^2+z");
+	mglData x1(20,20), y1(20,20), e1(20,20), e2(20,20);
+	gr->Fill(x1,"(x+2)/3*sin(pi*y/2)");	gr->Fill(y1,"(x+2)/3*cos(pi*y/2)");
+	gr->Fill(e1,"x");	gr->Fill(e2,"x^2+y");
+
+	gr->SubPlot(3,3,0);	gr->Rotate(40,60);	gr->Box();	gr->Vect(x1,y1,e1,e2);
+	gr->SubPlot(3,3,1);	gr->Rotate(40,60);	gr->Box();	gr->Flow(x1,y1,e1,e2);
+	gr->SubPlot(3,3,2);	gr->Rotate(40,60);	gr->Box();	gr->Pipe(x1,y1,e1,e2);
+	gr->SubPlot(3,3,3);	gr->Rotate(40,60);	gr->Box();	gr->Dew(x1,y1,e1,e2);
+	gr->SubPlot(3,3,4);	gr->Rotate(40,60);	gr->Box();	gr->Vect(x,y,z,ex,ey,ez);
+	gr->SubPlot(3,3,5);	gr->Rotate(40,60);	gr->Box();
+	gr->Vect3(x,y,z,ex,ey,ez);	gr->Vect3(x,y,z,ex,ey,ez,"x");	gr->Vect3(x,y,z,ex,ey,ez,"z");
+	gr->Grid3(x,y,z,z,"{r9}");	gr->Grid3(x,y,z,z,"{r9}x");		gr->Grid3(x,y,z,z,"{r9}z");
+	gr->SubPlot(3,3,6);	gr->Rotate(40,60);	gr->Box();	gr->Flow(x,y,z,ex,ey,ez);
+	gr->SubPlot(3,3,7);	gr->Rotate(40,60);	gr->Box();	gr->Pipe(x,y,z,ex,ey,ez);
+}
+//-----------------------------------------------------------------------------
 const char *mmgl_solve="zrange 0 1\nnew x 20 30 '(x+2)/3*cos(pi*y)'\n"
 "new y 20 30 '(x+2)/3*sin(pi*y)'\nnew z 20 30 'exp(-6*x^2-2*sin(pi*y)^2)'\n\n"
 "subplot 2 1 0:title 'Cartesian space':rotate 30 -40\naxis 'xyzU':box\nxlabel 'x':ylabel 'y'\n"
@@ -1958,28 +2110,39 @@ void smgl_projection5(mglGraph *gr)	// flag #
 //-----------------------------------------------------------------------------
 const char *mmgl_triplot="list q 0 1 2 3 | 4 5 6 7 | 0 2 4 6 | 1 3 5 7 | 0 4 1 5 | 2 6 3 7\n"
 "list xq -1 1 -1 1 -1 1 -1 1\nlist yq -1 -1 1 1 -1 -1 1 1\nlist zq -1 -1 -1 -1 1 1 1 1\nlight on\n"
-"subplot 2 1 0:title 'QuadPlot sample':rotate 50 60\n"
+"subplot 2 2 0:title 'QuadPlot sample':rotate 50 60\n"
 "quadplot q xq yq zq 'yr'\nquadplot q xq yq zq '#k'\n"
+"subplot 2 2 2:title 'QuadPlot coloring':rotate 50 60\n"
+"quadplot q xq yq zq yq 'yr'\nquadplot q xq yq zq '#k'\n"
 "list t 0 1 2 | 0 1 3 | 0 2 3 | 1 2 3\n"
 "list xt -1 1 0 0\nlist yt -1 -1 1 0\nlist zt -1 -1 -1 1\n"
-"subplot 2 1 1:title 'TriPlot sample':rotate 50 60\n"
-"triplot t xt yt zt 'b'\ntriplot t xt yt zt '#k'\n";
+"subplot 2 2 1:title 'TriPlot sample':rotate 50 60\n"
+"triplot t xt yt zt 'b'\ntriplot t xt yt zt '#k'\n"
+"subplot 2 2 3:title 'TriPlot coloring':rotate 50 60\n"
+"triplot t xt yt zt yt 'cb'\ntriplot t xt yt zt '#k'\ntricont t xt yt zt 'B'\n";
 void smgl_triplot(mglGraph *gr)
 {
 	double q[] = {0,1,2,3, 4,5,6,7, 0,2,4,6, 1,3,5,7, 0,4,1,5, 2,6,3,7};
 	double xc[] = {-1,1,-1,1,-1,1,-1,1}, yc[] = {-1,-1,1,1,-1,-1,1,1}, zc[] = {-1,-1,-1,-1,1,1,1,1};
 	mglData qq(6,4,q), xx(8,xc), yy(8,yc), zz(8,zc);
 	gr->Light(true);	//gr->Alpha(true);
-	gr->SubPlot(2,1,0);	gr->Title("QuadPlot sample");	gr->Rotate(50,60);
+	gr->SubPlot(2,2,0);	gr->Title("QuadPlot sample");	gr->Rotate(50,60);
 	gr->QuadPlot(qq,xx,yy,zz,"yr");
 	gr->QuadPlot(qq,xx,yy,zz,"k#");
-
+	gr->SubPlot(2,2,2);	gr->Title("QuadPlot coloring");	gr->Rotate(50,60);
+	gr->QuadPlot(qq,xx,yy,zz,yy,"yr");
+	gr->QuadPlot(qq,xx,yy,zz,"k#");
+	
 	double t[] = {0,1,2, 0,1,3, 0,2,3, 1,2,3};
 	double xt[] = {-1,1,0,0}, yt[] = {-1,-1,1,0}, zt[] = {-1,-1,-1,1};
 	mglData tt(4,3,t), uu(4,xt), vv(4,yt), ww(4,zt);
-	gr->SubPlot(2,1,1);	gr->Title("TriPlot sample");	gr->Rotate(50,60);
+	gr->SubPlot(2,2,1);	gr->Title("TriPlot sample");	gr->Rotate(50,60);
 	gr->TriPlot(tt,uu,vv,ww,"b");
 	gr->TriPlot(tt,uu,vv,ww,"k#");
+	gr->SubPlot(2,2,3);	gr->Title("TriPlot coloring");	gr->Rotate(50,60);
+	gr->TriPlot(tt,uu,vv,ww,vv,"cb");
+	gr->TriPlot(tt,uu,vv,ww,"k#");
+	gr->TriCont(tt,uu,vv,ww,"B");
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_dots="new t 1000 'pi*(rnd-0.5)':new f 1000 '2*pi*rnd'\n"
@@ -2091,6 +2254,10 @@ mglSample samp[] = {
 	{"mesh", smgl_mesh, mmgl_mesh},
 	{"mirror", smgl_mirror, mmgl_mirror },
 	{"molecule", smgl_molecule, mmgl_molecule },
+	{"param1", smgl_param1, mmgl_param1},
+	{"param2", smgl_param2, mmgl_param2},
+	{"param3", smgl_param3, mmgl_param3},
+	{"paramv", smgl_paramv, mmgl_paramv},
 	{"parser", smgl_parser, mmgl_parser},
 	{"pde", smgl_pde, mmgl_pde},
 	{"pipe", smgl_pipe, mmgl_pipe},

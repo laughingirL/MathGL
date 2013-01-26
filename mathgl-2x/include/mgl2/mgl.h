@@ -54,7 +54,9 @@ public:
 	inline void DefaultPlotParam()			{	mgl_set_def_param(gr);	}
 	/// Set name of plot for saving filename
 	inline void SetPlotId(const char *id)	{	mgl_set_plotid(gr,id);	}
-
+	/// Get name of plot for saving filename
+	inline const char *GetPlotId()	{	return mgl_get_plotid(gr);	}
+	
 	/// Set the transparency on/off.
 	inline void Alpha(bool enable)			{	mgl_set_alpha(gr, enable);	}
 	/// Set default value of alpha-channel
@@ -270,6 +272,8 @@ public:
 	inline void SetSize(int width, int height)	{	mgl_set_size(gr, width, height);	}
 	/// Set plot quality
 	inline void SetQuality(int qual=MGL_DRAW_NORM)	{	mgl_set_quality(gr, qual);	}
+	/// Get plot quality
+	inline int GetQuality()	{	return mgl_get_quality(gr);	}
 	/// Start group of objects
 	inline void StartGroup(const char *name)		{	mgl_start_group(gr, name);	}
 	/// End group of objects

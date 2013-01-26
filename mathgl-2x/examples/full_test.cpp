@@ -63,10 +63,6 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-/*	gr->ZoomAxis(mglPoint(0.5,0.5),mglPoint(1,1));
-	gr->SetRanges(mglPoint(-1,-1,-1),mglPoint(1,1,1));
-	gr->Axis();
-	return;*/
 	
 	mglParse par;
 	par.AllowSetSize(true);

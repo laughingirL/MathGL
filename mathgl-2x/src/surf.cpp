@@ -350,6 +350,7 @@ void MGL_EXPORT mgl_belt_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, co
 
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Belt",cgid++);
+	int d = gr->MeshNum>0 ? gr->MeshNum+1 : n*m, dx = n>d?n/d:1, dy = m>d?m/d:1;
 	long ss = gr->AddTexture(sch);
 	long *pos = new long[2*(n>m?n:m)];
 	gr->Reserve(2*n*m*z->GetNz());
@@ -359,7 +360,7 @@ void MGL_EXPORT mgl_belt_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, co
 	mreal c;
 	for(k=0;k<z->GetNz();k++)
 	{
-		if(how)	for(i=0;i<n-1;i++)
+		if(how)	for(i=0;i<n-dx;i+=dx)
 		{
 			for(j=0;j<m;j++)
 			{
@@ -369,13 +370,13 @@ void MGL_EXPORT mgl_belt_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, co
 				s = mglPoint(xx.z, yy.z, z->dvy(i,j,k));
 				q = mglPoint(xx.y, yy.y, 0);	s = q^s;
 				c = gr->GetC(ss,p1.z);
-				p2 = mglPoint(GetX(x,i+1,j,k).x,GetY(y,i+1,j,k).x,p1.z);
+				p2 = mglPoint(GetX(x,i+dx,j,k).x,GetY(y,i+dx,j,k).x,p1.z);
 				pos[2*j] = gr->AddPnt(p1,c,s);
 				pos[2*j+1]=gr->AddPnt(p2,c,s);
 			}
 			mgl_surf_plot(gr,pos,2,m);
 		}
-		else	for(j=0;j<m-1;j++)
+		else	for(j=0;j<m-dy;j+=dy)
 		{
 			for(i=0;i<n;i++)	// ñîçäàåì ìàññèâ òî÷åê
 			{
@@ -385,7 +386,7 @@ void MGL_EXPORT mgl_belt_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, co
 				q = mglPoint(xx.y, yy.y, z->dvx(i,j,k));
 				s = mglPoint(xx.z, yy.z, 0);	s = q^s;
 				c = gr->GetC(ss,p1.z);
-				p2 = mglPoint(GetX(x,i,j+1,k).x,GetY(y,i,j+1,k).x,p1.z);
+				p2 = mglPoint(GetX(x,i,j+dy,k).x,GetY(y,i,j+dy,k).x,p1.z);
 				pos[2*i] = gr->AddPnt(p1,c,s);
 				pos[2*i+1]=gr->AddPnt(p2,c,s);
 			}
@@ -629,9 +630,10 @@ void MGL_EXPORT mgl_boxs_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, co
 	register long i,j,k,n=z->GetNx(),m=z->GetNy();
 	if(mgl_check_dim2(gr,x,y,z,0,"Boxs",true))	return;
 
-	long ly = x->GetNy()>=m ? y->GetNy() : y->GetNx(), lx = x->GetNx();
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Boxs",cgid++);
+	long ly = y->GetNy()>=m ? y->GetNy() : y->GetNx(), lx = x->GetNx();
+	int d = gr->MeshNum>0 ? gr->MeshNum+1 : n*m, dx = n>d?n/d:1, dy = m>d?m/d:1;
 
 	long ss = gr->AddTexture(sch);
 	bool wire = mglchr(sch,'#');
@@ -639,25 +641,29 @@ void MGL_EXPORT mgl_boxs_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, co
 	gr->Reserve(8*n*m*z->GetNz());
 
 	mglPoint p1,p2,p3,p4,q,s,t(wire||full?NAN:0,0,1),xx,yy;
-	mreal zz,z1,z2,x1,y1,c,z0=gr->GetOrgZ('x');
+	mreal zz,z1,z2,x1,y1,x2,y2,x3,y3,c,z0=gr->GetOrgZ('x');
 	long k1,k2,k3,k4,k5,k6,k7,k8;
 	for(k=0;k<z->GetNz();k++)
 	{
-		for(i=0;i<n;i++)	for(j=0;j<m;j++)
+		for(i=0;i<n;i+=dx)	for(j=0;j<m;j+=dy)
 		{
 			if(gr->Stop)	return;
 			zz = z->v(i,j,k);		c  = gr->GetC(ss,zz);
 			xx = GetX(x,i,j,k);		yy = GetY(y,i,j,k);
-			x1 = i<lx-1 ? GetX(x,i+1,j,k).x:NAN;
-			y1 = j<ly-1 ? GetY(y,i,j+1,k).x:NAN;
-			z1 = i<n-1?z->v(i+1,j,k):NAN;
-			z2 = j<m-1?z->v(i,j+1,k):NAN;
+			x1 = i<lx-dx ? GetX(x,i+dx,j,k).x:NAN;
+			y1 = i<lx-dx ? GetY(y,i+dx,j,k).x:NAN;
+			x2 = j<ly-dy ? GetX(x,i,j+dy,k).x:NAN;
+			y2 = j<ly-dy ? GetY(y,i,j+dy,k).x:NAN;
+			x3 = i<lx-dx && j<ly-dy ? GetX(x,i+dx,j+dy,k).x:NAN;
+			y3 = i<lx-dx && j<ly-dy ? GetY(y,i+dx,j+dy,k).x:NAN;
+			z1 = i<n-dx?z->v(i+dx,j,k):NAN;
+			z2 = j<m-dy?z->v(i,j+dy,k):NAN;
 			q = mglPoint(xx.y,yy.y,0);
 			s = mglPoint(xx.z,yy.z,0);
 			p1 = mglPoint(xx.x,yy.x,zz);	k1 = gr->AddPnt(p1,c,t);
-			p2 = mglPoint(x1,yy.x,zz);		k2 = gr->AddPnt(p2,c,t);
-			p3 = mglPoint(xx.x,y1,zz);		k3 = gr->AddPnt(p3,c,t);
-			p4 = mglPoint(x1,y1,zz);		k4 = gr->AddPnt(p4,c,t);
+			p2 = mglPoint(x1,y1,zz);		k2 = gr->AddPnt(p2,c,t);
+			p3 = mglPoint(x2,y2,zz);		k3 = gr->AddPnt(p3,c,t);
+			p4 = mglPoint(x3,y3,zz);		k4 = gr->AddPnt(p4,c,t);
 			if(wire)
 			{
 				gr->line_plot(k1,k2);	gr->line_plot(k1,k3);
@@ -668,9 +674,9 @@ void MGL_EXPORT mgl_boxs_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, co
 			if(full)
 			{
 				p1 = mglPoint(xx.x,yy.x,z0);	k5 = gr->AddPnt(p1,c,t);
-				p2 = mglPoint(x1,yy.x,z0);		k6 = gr->AddPnt(p2,c,t);
-				p3 = mglPoint(xx.x,y1,z0);		k7 = gr->AddPnt(p3,c,t);
-				p4 = mglPoint(x1,y1,z0);		k8 = gr->AddPnt(p4,c,t);
+				p2 = mglPoint(x1,y1,z0);		k6 = gr->AddPnt(p2,c,t);
+				p3 = mglPoint(x2,y2,z0);		k7 = gr->AddPnt(p3,c,t);
+				p4 = mglPoint(x3,y3,z0);		k8 = gr->AddPnt(p4,c,t);
 				if(wire)
 				{
 					gr->line_plot(k5,k6);	gr->line_plot(k5,k7);
@@ -687,13 +693,13 @@ void MGL_EXPORT mgl_boxs_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, co
 			}
 			else
 			{
-				p3 = mglPoint(x1,yy.x,z1);		k5 = gr->AddPnt(p3,c,wire?t:q);
-				p4 = mglPoint(x1,y1,z1);		k6 = gr->AddPnt(p4,c,wire?t:q);
+				p3 = mglPoint(x1,y1,z1);		k5 = gr->AddPnt(p3,c,wire?t:q);
+				p4 = mglPoint(x3,y3,z1);		k6 = gr->AddPnt(p4,c,wire?t:q);
 				if(wire)
 				{	gr->line_plot(k2,k5);	gr->line_plot(k6,k5);	gr->line_plot(k6,k4);	}
 				else	gr->quad_plot(k2,k4,k5,k6);
-				p3 = mglPoint(xx.x,y1,z2);		k7 = gr->AddPnt(p3,c,wire?t:s);
-				p4 = mglPoint(x1,y1,z2);		k8 = gr->AddPnt(p4,c,wire?t:s);
+				p3 = mglPoint(x2,y2,z2);		k7 = gr->AddPnt(p3,c,wire?t:s);
+				p4 = mglPoint(x3,y3,z2);		k8 = gr->AddPnt(p4,c,wire?t:s);
 				if(wire)
 				{	gr->line_plot(k3,k7);	gr->line_plot(k4,k8);	gr->line_plot(k7,k8);	}
 				else	gr->quad_plot(k3,k4,k7,k8);
@@ -732,30 +738,34 @@ void MGL_EXPORT mgl_tile_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, co
 	register long i,j,k,n=z->GetNx(),m=z->GetNy();
 	if(mgl_check_dim2(gr,x,y,z,0,"Tile",true))	return;
 
-	long ly = x->GetNy()>=z->GetNy() ? y->GetNy() : y->GetNx(), lx = x->GetNx();
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Tile",cgid++);
+	long ly = x->GetNy()>=z->GetNy() ? y->GetNy() : y->GetNx(), lx = x->GetNx();
+	int d = gr->MeshNum>0 ? gr->MeshNum+1 : n*m, dx = n>d?n/d:1, dy = m>d?m/d:1;
 
 	long ss = gr->AddTexture(sch);
 	gr->Reserve(4*n*m*z->GetNz());
 
 	mglPoint p1,p2,p3,p4,s=mglPoint(0,0,1);
-	mreal zz,x1,x2,y1,y2,c;
+	mreal zz,x0,y0,x1,y1,x2,y2,x3,y3,c;
 	long k1,k2,k3,k4;
 	for(k=0;k<z->GetNz();k++)
 	{
-		for(j=0;j<m;j++)	for(i=0;i<n;i++)
+		for(j=0;j<m;j+=dx)	for(i=0;i<n;i+=dy)
 		{
 			if(gr->Stop)	return;
 			zz = z->v(i,j,k);		c = gr->GetC(ss,zz);
-			x1 = GetX(x,i,j,k).x;	y1 = GetY(y,i,j,k).x;
-			x2 = i<lx-1 ? GetX(x,i+1,j,k).x:NAN;
-			y2 = j<ly-1 ? GetY(y,i,j+1,k).x:NAN;
-//			x2 = GetX(x,i+1,j,k).x;	y2 = GetY(y,i,j+1,k).x;
-			p1 = mglPoint(x1,y1,zz);	k1 = gr->AddPnt(p1,c,s);
-			p2 = mglPoint(x2,y1,zz);	k2 = gr->AddPnt(p2,c,s);
-			p3 = mglPoint(x1,y2,zz);	k3 = gr->AddPnt(p3,c,s);
-			p4 = mglPoint(x2,y2,zz);	k4 = gr->AddPnt(p4,c,s);
+			x0 = GetX(x,i,j,k).x;	y0 = GetY(y,i,j,k).x;
+			x1 = i<lx-dx ? GetX(x,i+dx,j,k).x:NAN;
+			y1 = i<lx-dx ? GetY(y,i+dx,j,k).x:NAN;
+			x2 = j<ly-dy ? GetX(x,i,j+dy,k).x:NAN;
+			y2 = j<ly-dy ? GetY(y,i,j+dy,k).x:NAN;
+			x3 = i<lx-dx && j<ly-dy ? GetX(x,i+dx,j+dy,k).x:NAN;
+			y3 = i<lx-dx && j<ly-dy ? GetY(y,i+dx,j+dy,k).x:NAN;
+			p1 = mglPoint(x0,y0,zz);	k1 = gr->AddPnt(p1,c,s);
+			p2 = mglPoint(x1,y1,zz);	k2 = gr->AddPnt(p2,c,s);
+			p3 = mglPoint(x2,y2,zz);	k3 = gr->AddPnt(p3,c,s);
+			p4 = mglPoint(x3,y3,zz);	k4 = gr->AddPnt(p4,c,s);
 			gr->quad_plot(k1,k2,k3,k4);
 		}
 	}
@@ -791,9 +801,10 @@ void MGL_EXPORT mgl_tiles_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT s, const char
 	register long i,j,k,n=z->GetNx(),m=z->GetNy();
 	if(mgl_check_dim2(gr,x,y,z,s,"TileS",true))	return;
 
-	long ly = x->GetNy()>=z->GetNy() ? y->GetNy() : y->GetNx(), lx = x->GetNx();
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("TileS",cgid++);
+	long ly = x->GetNy()>=z->GetNy() ? y->GetNy() : y->GetNx(), lx = x->GetNx();
+	int d = gr->MeshNum>0 ? gr->MeshNum+1 : n*m, dx = n>d?n/d:1, dy = m>d?m/d:1;
 
 	long cc = gr->AddTexture(sch);
 	gr->Reserve(4*n*m*z->GetNz());
@@ -803,7 +814,7 @@ void MGL_EXPORT mgl_tiles_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT s, const char
 	long k1,k2,k3,k4;
 	for(k=0;k<z->GetNz();k++)
 	{
-		for(j=0;j<m;j++)	for(i=0;i<n;i++)
+		for(j=0;j<m;j+=dx)	for(i=0;i<n;i+=dy)
 		{
 			if(gr->Stop)	return;
 			zz = z->v(i,j,k);	c = gr->GetC(cc,zz);
@@ -811,13 +822,13 @@ void MGL_EXPORT mgl_tiles_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT s, const char
 
 			x1 = GetX(x,i,j,k).x;	y1 = GetY(y,i,j,k).x;
 			x2 = x3 = x4 = y2 = y3 = y4 = NAN;
-			if(i<lx-1)
-			{	x2 = GetX(x,i+1,j,k).x-x1;	y2 = GetY(y,i+1,j,k).x-y1;	}
-			if(j<ly-1)
-			{	x4 = GetX(x,i,j+1,k).x-x1;	y4 = GetY(y,i,j+1,k).x-y1;	}
-			if(i<lx-1 && j<ly-1)
-			{	x3 = GetX(x,i+1,j+1,k).x-x2-x4-x1;
-				y3 = GetY(y,i+1,j+1,k).x-y2-y4-y1;	}
+			if(i<lx-dx)
+			{	x2 = GetX(x,i+dx,j,k).x-x1;	y2 = GetY(y,i+dx,j,k).x-y1;	}
+			if(j<ly-dy)
+			{	x4 = GetX(x,i,j+dy,k).x-x1;	y4 = GetY(y,i,j+dy,k).x-y1;	}
+			if(i<lx-dx && j<ly-dy)
+			{	x3 = GetX(x,i+dx,j+dy,k).x-x2-x4-x1;
+				y3 = GetY(y,i+dx,j+dy,k).x-y2-y4-y1;	}
 
 			p1 = mglPoint(x1+x2*ss+x4*ss+x3*ss*ss, y1+y2*ss+y4*ss+y3*ss*ss, zz);
 			k1 = gr->AddPnt(p1,c,t);

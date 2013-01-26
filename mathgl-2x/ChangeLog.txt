@@ -1,5 +1,6 @@
 2.1.2 Released ?? January 2013
 
+* Option 'meshnum' now influence on Boxs() and Belt() functions
 * Exclude "local" functions from resulting library.
 * Bugfix for colors in 3D PDF.
 * If Aspect() function have NAN argument(s) then it try to select optimal aspect ratio.
