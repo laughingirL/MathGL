@@ -1,10 +1,11 @@
-2.1.2 Released ?? January 2013
+2.1.2 Released 28 January 2013
 
-* Option 'meshnum' now influence on Boxs() and Belt() functions
 * Exclude "local" functions from resulting library.
+* String in MGL script now can be concatenated with another string or data/numbers (like 'str1',val,'str2',...). First value is used for data arrays.
 * Bugfix for colors in 3D PDF.
 * If Aspect() function have NAN argument(s) then it try to select optimal aspect ratio.
 * Option 'size' in Legend() now change only text size (not mark size).
+* Option 'meshnum' now influence on Boxs() and Belt() functions
 * Adjust marks drawing (line width and dots).
 * Minor improvements and bugfixes.
 

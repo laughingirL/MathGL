@@ -271,30 +271,40 @@ void QMathGL::update()
 	refresh();
 }
 //-----------------------------------------------------------------------------
+void QMathGL::draw_thr()
+{
+	mgl_clf(gr);
+	mgl_get_frame(gr, mgl_get_num_frame(gr)-1);
+	mglParse pr;
+	long i, n=primitives.count('\n');
+	mglGraph gg(gr);
+	setlocale(LC_NUMERIC, "C");
+	gg.Push();	gg.SubPlot(1,1,0,"#");
+	mglPoint ox1=gr->Min, ox2=gr->Max;
+	gg.SetRanges(mglPoint(-1,-1,-1),mglPoint(1,1,1));
+	for(i=0;i<n;i++)
+	{
+		mgl_set_obj_id(gr,i+MGL_MAX_LINES);
+		QString tst = primitives.section('\n',i,i);
+		pr.Parse(&gg,primitives.section('\n',i,i).toAscii().constData(),i+MGL_MAX_LINES);
+	}
+	gg.SetRanges(ox1,ox2);	gg.Pop();	setlocale(LC_NUMERIC, "");
+}
+//-----------------------------------------------------------------------------
+void *mgl_qt_thr(void *p)	{	QMathGL *q = (QMathGL *)p;	q->draw_thr();	return 0;	}
 void QMathGL::refresh()
 {
-//	printf("%ld,%d\n",gr->GetPrmNum(),gr->GetNumFrame());	fflush(stdout);
 	if(mgl_is_frames(gr) && mgl_get_num_frame(gr)>0)
 	{
 		if(draw_func || draw)
 		{
-			mgl_clf(gr);
-			mgl_get_frame(gr, mgl_get_num_frame(gr)-1);
-			mglParse pr;
-			long i, n=primitives.count('\n');
-			mglGraph gg(gr);
-			setlocale(LC_NUMERIC, "C");
-			gg.Push();	gg.SubPlot(1,1,0,"#");
-			mglPoint ox1=gr->Min, ox2=gr->Max;
-			gg.SetRanges(mglPoint(-1,-1,-1),mglPoint(1,1,1));
-			for(i=0;i<n;i++)
-			{
-				mgl_set_obj_id(gr,i+MGL_MAX_LINES);
-				QString tst = primitives.section('\n',i,i);
-				pr.Parse(&gg,primitives.section('\n',i,i).toAscii().constData(),i+MGL_MAX_LINES);
-			}
-			gg.SetRanges(ox1,ox2);	gg.Pop();	setlocale(LC_NUMERIC, "");
-			
+#if MGL_HAVE_PTHREAD
+			pthread_t tmp;
+			pthread_create(&tmp, 0, mgl_qt_thr, this);
+			pthread_join(tmp, 0);
+#else
+			draw_thr();
+#endif
 		}
 		mgl_zoom(gr,x1,y1,x2,y2);	mgl_perspective(gr,per);
 		if(viewYZ)	mgl_view(gr,0,phi,tet);

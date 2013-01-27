@@ -298,6 +298,7 @@ void mglCanvas::pxl_primdr(size_t id, size_t , const void *)
 
 	for(i=0;i<Prm.size();i++)
 	{
+		if(Stop)	return;
 		const mglPrim &p=Prm[i];
 		d.PDef = p.n3;	d.pPos = p.s;
 		d.ObjId = p.id;	d.PenWidth=p.w;

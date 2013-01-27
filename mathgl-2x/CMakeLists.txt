@@ -9,7 +9,7 @@ endif(NOT CMAKE_BUILD_TYPE)
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
 set(MathGL_VERSION_MAJOR 2)
-set(MathGL_VERSION_MINOR 1.1)
+set(MathGL_VERSION_MINOR 1.2)
 
 include(CMakeDependentOption)
 

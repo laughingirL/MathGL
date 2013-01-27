@@ -23,7 +23,7 @@ A. Paper about MathGL!!!
 14. New tests:
 	b. Add test for curved text align "L","C","R"
 	c. Tests for mglDataC arrays (as separate flag)
-	e. Test for Smooth, CumSum, Diff, Diff2, Integrate, Roll, Mirror, Crop, Momentum, NormSl, Sew, DiffParam, Envelope, FFT, STFA, Hankel, CosFFT, SinFFT, Transform for all directions "xyz"; Clean, Last, First, Find, Spline3, FindAny, Insert, Delete, Put, Read/Save+HDF, SetId/Column, PrintInfo, Squeeze, Extend, Trace, Combine, new Max/Min/Momentum, FillSample, Hist, operators, Sort, Export/Import, Jacobian
+	e. Test for Crop, Momentum, NormSl, Sew, DiffParam, Envelope, FFT, STFA, Transform for all directions "xyz"; Clean, Last, First, Find, Spline3, FindAny, Insert, Delete, Put, Read/Save+HDF, SetId/Column, PrintInfo, Squeeze, Extend, Trace, Combine, new Max/Min/Momentum, FillSample, Hist, operators, Sort, Export/Import, Jacobian
 	h. Test for CalcXYZ -- in data samples
 	i. Tests for Quality!=2
 	l. Test Error for all marks
@@ -36,7 +36,7 @@ A. Paper about MathGL!!!
 
 15. Hint about equal axis range.
 16. Save should save Id too.
-17. Drawing in parallel in QMathGL
+18. Text about string concatenation with string and numbers (like 'str1',val,'str2' or 'str1'val'str2')
 
 ============= UDAV =============
 

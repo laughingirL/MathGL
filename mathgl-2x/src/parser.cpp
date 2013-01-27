@@ -384,8 +384,24 @@ void mglParser::FillArg(mglGraph *gr, int k, wchar_t **arg, mglArg *a)
 		if(arg[n][0]=='|')	a[n-1].type = -1;
 		else if(arg[n][0]=='\'')
 		{	// this is string (simplest case)
-			a[n-1].type = 1;		arg[n][wcslen(arg[n])-1] = 0;
-			a[n-1].w = arg[n]+1;	arg[n][wcslen(arg[n])] = '\'';
+			a[n-1].type = 1;
+			wchar_t *w=arg[n],ch,*f,buf[32];
+			long i,l,ll=wcslen(w);
+			for(l=i=1;i<ll;i++)
+			{
+				if(w[i]=='\'')
+				{
+					if(i==ll-1)	continue;
+					i++;	f = w+i;
+					for(;i<ll && w[i]!='\'';i++);
+					ch=w[i];	w[i]=0;
+					if(*f==',')	f++;
+					if(*f==0)	continue;
+					mglData d = mglFormulaCalc(f, this);	w[i]=ch;
+					mglprintf(buf,32,L"%g",d.a[0]);	a[n-1].w += buf;
+				}
+				else	a[n-1].w += w[i];
+			}
 		}
 		else if(arg[n][0]=='{')
 		{	// this is temp data

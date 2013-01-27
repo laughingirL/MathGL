@@ -38,6 +38,7 @@ class MGL_EXPORT QMathGL : public QWidget
 {
 	Q_OBJECT
 public:
+	friend void *mgl_qt_thr(void *);
 	QString appName; 	///< Application name for message boxes
 	bool autoResize; 	///< Allow auto resizing (default is false)
 	bool enableMouse;	///< Enable mouse handlers
@@ -188,6 +189,7 @@ protected:
 private:
 	int x0, y0, xe, ye;		///< Temporary variables for mouse
 	uchar *grBuf;
+	void draw_thr();
 };
 //-----------------------------------------------------------------------------
 /// Class for drawing the MGL script

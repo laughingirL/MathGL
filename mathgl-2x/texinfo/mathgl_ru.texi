@@ -2,7 +2,7 @@
 @setfilename mathgl_ru.info
 @c @documentlanguage ru
 @documentencoding UTF-8
-@set VERSION 2.1.1
+@set VERSION 2.1.2
 @settitle MathGL @value{VERSION}
 @syncodeindex pg cp
 @comment %**end of header
