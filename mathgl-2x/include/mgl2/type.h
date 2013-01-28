@@ -88,7 +88,11 @@ inline mreal mgl_norm(const mglPoint &p)
 #endif
 //-----------------------------------------------------------------------------
 /// Class for incapsulating color
+#ifndef SWIG
+struct MGL_EXPORT mglColor
+#else
 struct mglColor
+#endif
 {
 	float r;	///< Red component of color
 	float g;	///< Green component of color

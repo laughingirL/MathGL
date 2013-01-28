@@ -252,13 +252,15 @@ typedef double _Complex dual;
 typedef float _Complex dual;
 #endif
 #endif
-/** Find symbol in string excluding {} and return its position or NULL */
+/// Check if string contain color id and return its number
+long MGL_EXPORT mgl_have_color(const char *stl);
+/// Find symbol in string excluding {} and return its position or NULL
 const char *mglchr(const char *str, char ch);
-/** Set number of thread for plotting and data handling*/
+/// Set number of thread for plotting and data handling
 void MGL_EXPORT mgl_set_num_thr(int n);
 void MGL_EXPORT mgl_test_txt(const char *str, ...);
 void MGL_EXPORT mgl_set_test_mode(int enable);
-/** Remove spaces at begining and at the end of the string */
+/// Remove spaces at begining and at the end of the string
 void MGL_EXPORT mgl_strtrim(char *str);
 void MGL_EXPORT mgl_wcstrim(wchar_t *str);
 /** Change register to lowercase (only for ANSI symbols) */

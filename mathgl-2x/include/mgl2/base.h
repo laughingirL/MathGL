@@ -163,7 +163,7 @@ struct mglGlyph
 };
 //-----------------------------------------------------------------------------
 /// Structure for texture (color scheme + palette) representation
-struct mglTexture
+struct MGL_EXPORT mglTexture
 {
 	mglColor col[512];	///< Colors itself
 	long n;				///< Number of initial colors along u
@@ -191,7 +191,6 @@ const mglColor NC(-1,-1,-1);
 const mglColor BC( 0, 0, 0);
 const mglColor WC( 1, 1, 1);
 const mglColor RC( 1, 0, 0);
-long MGL_EXPORT mgl_have_color(const char *stl);
 //-----------------------------------------------------------------------------
 /// Structure for color ID
 struct mglColorID
