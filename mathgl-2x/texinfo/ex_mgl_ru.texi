@@ -2632,6 +2632,9 @@ Just set a negative value in @ref{ticklen}. For example, use @code{ticklen -0.1}
 @item How can I prevent text rotation?
 Just use @code{rotatetext off}.
 
+@item Как нарисовать одинаковые оси координат для прямоугольного (не квадратного) рисунка?
+Просто используйте @code{aspect nan nan} для каждого подграфика, или в начале рисования.
+
 @end table
 
 @external{}

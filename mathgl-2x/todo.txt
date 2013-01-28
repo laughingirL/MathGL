@@ -31,10 +31,8 @@ A. Paper about MathGL!!!
 	p. Test FaceNum for Surf
 	q. Test FSurf
 	u. Test FlowP + 3d
-	v. Test GIF animationm OBJold, MGLD(+new png) in fexport()
 	w. Test diffuse, specular local sources
 
-15. Hint about equal axis range.
 16. Save should save Id too.
 18. Text about string concatenation with string and numbers (like 'str1',val,'str2' or 'str1'val'str2')
 

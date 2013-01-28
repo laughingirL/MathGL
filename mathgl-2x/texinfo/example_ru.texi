@@ -102,6 +102,7 @@ Let me consider the aforesaid in more detail.
 * Drawing in memory::
 * Using QMathGL::
 * MathGL and PyQt::
+* MathGL and MPI::
 @end menu
 
 
@@ -460,7 +461,7 @@ int main(int argc,char **argv)
 
 @c ------------------------------------------------------------------
 @c @external{}
-@node MathGL and PyQt, , Using QMathGL, Basic usage
+@node MathGL and PyQt, MathGL and MPI, Using QMathGL, Basic usage
 @subsection MathGL and PyQt
 
 Generally SWIG based classes (including the Python one) are the same as C++ classes. However, there are few tips for using MathGL with PyQt. Below I place a very simple python code which demonstrate how MathGL can be used with PyQt. This code is mostly written by Prof. Dr. Heino Falcke. You can just copy it to a file @code{mgl-pyqt-test.py} and execute it from python shell by command @code{execfile("mgl-pyqt-test.py")}
@@ -530,6 +531,84 @@ qw.setgraph(gr)
 qw.raise_()
 @end verbatim
 
+
+
+@c ------------------------------------------------------------------
+@c @external{}
+@node MathGL and MPI, , MathGL and PyQt, , Basic usage
+@subsection MathGL and MPI
+
+For using MathGL in MPI program you just need to: (1) plot its own part of data for each running node; (2) collect resulting graphical information in a single program (for example, at node with rank=0); (3) save it. The sample code below demonstrate this for very simple sample of surface drawing.
+
+First you need to initialize MPI
+@verbatim
+#include <stdio.h>
+#include <mgl2/mgl.h>
+#include <mpi.h>
+
+int main(int argc, char *argv[])
+{
+  // initialize MPI
+  int rank=0, numproc=1;
+  MPI_Init(&argc, &argv);
+  MPI_Comm_size(MPI_COMM_WORLD,&numproc);
+  MPI_Comm_rank(MPI_COMM_WORLD,&rank);
+  if(rank==0) printf("Use %d processes.\n", numproc);
+@end verbatim
+
+Next step is data creation. For simplicity, I create data arrays with the same sizes for all nodes. At this, you have to create @code{mglGraph} object too.
+
+@verbatim
+  // initialize data similarly for all nodes
+  mglData a(128,256);
+  mglGraph gr;
+@end verbatim
+
+Now, data should be filled by numbers. In real case, it should be some kind of calculations. But I just fill it by formula.
+
+@verbatim
+  // do the same plot for its own range
+  char buf[64];
+  sprintf(buf,"xrange %g %g",2.*rank/numproc-1,2.*(rank+1)/numproc-1);
+  gr.Fill(a,"sin(2*pi*x)",buf);
+@end verbatim
+
+It is time to plot the data. Don't forget to set proper axis range(s) by using parametric form or by using options (as in the sample).
+
+@verbatim
+  // plot data in each node
+  gr.Clf();   // clear image before making the image
+  gr.Rotate(40,60);
+  gr.Surf(a,"",buf);
+@end verbatim
+
+Finally, let send graphical information to node with rank=0.
+
+@verbatim
+  // collect information
+  if(rank!=0) gr.MPI_Send(0);
+  else for(int i=1;i<numproc;i++)  gr.MPI_Recv(i);
+@end verbatim
+
+Now, node with rank=0 have whole image. It is time to save the image to a file. Also, you can add a kind of annotations here -- I draw axis and bounding box in the sample.
+
+@verbatim
+  if(rank==0)
+  {
+    gr.Box();   gr.Axis();   // some post processing
+    gr.WritePNG("test.png"); // save result
+  }
+@end verbatim
+
+In my case the program is done, and I finalize MPI. In real program, you can repeat the loop of data calculation and data plotting as many times as you need.
+
+@verbatim
+  MPI_Finalize();
+  return 0;
+}
+@end verbatim
+
+You can type @samp{mpic++ test.cpp -lmgl && mpirun -np 8 ./a.out} for compilation and running the sample program on 8 nodes. Note, that you have to set enable-mpi=ON at MathGL configure to use this feature.
 
 @c ------------------------------------------------------------------
 @external{}
@@ -3857,6 +3936,9 @@ int main (int argc, char ** argv)
 
 @item Как нарисовать метки оси снаружи от графика?
 Просто используйте отрицательные значения длины меток, например @code{gr->SetTickLen(-0.1);}.
+
+@item Как нарисовать одинаковые оси координат для прямоугольного (не квадратного) рисунка?
+Просто используйте @code{Aspect(NAN,NAN)} для каждого подграфика, или в начале рисования.
 
 @end table
 

@@ -63,7 +63,6 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	
 	mglParse par;
 	par.AllowSetSize(true);
 	setlocale(LC_CTYPE, "");

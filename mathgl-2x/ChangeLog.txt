@@ -1,8 +1,9 @@
 2.1.2 Released 28 January 2013
 
 * Exclude "local" functions from resulting library.
-* String in MGL script now can be concatenated with another string or data/numbers (like 'str1',val,'str2',...). First value is used for data arrays.
+* String in MGL script now can be concatenated with another string or data/numbers (like 'max(u)=',u.max,' a.u.').
 * Bugfix for colors in 3D PDF.
+* Bugfix for drawing in MPI mode.
 * If Aspect() function have NAN argument(s) then it try to select optimal aspect ratio.
 * Option 'size' in Legend() now change only text size (not mark size).
 * Option 'meshnum' now influence on Boxs() and Belt() functions

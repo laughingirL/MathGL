@@ -390,6 +390,7 @@ void mglCanvas::Combine(const mglCanvas *gr)
 #define TAG_DATA_C	1
 void mglCanvas::MPI_Send(int id)
 {
+	Finish();
 	::MPI_Send(Z,3*Width*Height,MPI_FLOAT,id,TAG_DATA_Z,MCW);
 	::MPI_Send(C,12*Width*Height,MPI_CHAR,id,TAG_DATA_C,MCW);
 	::MPI_Send(OI,Width*Height,MPI_INT,id,TAG_DATA_C,MCW);
@@ -408,7 +409,7 @@ void mglCanvas::MPI_Recv(int id)
 	// TODO check status for errors
 	register long i,j,k;
 	for(k=0;k<n;k++)
-	{
+	{	// i0=x+Width*(Height-1-y)
 		i = k%Width;	j = Height-1-(k/Width);
 		if(Quality&2)
 		{

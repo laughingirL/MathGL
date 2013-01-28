@@ -75,8 +75,9 @@ Javascript interface was developed with support of @url{www.datadvance.net, $DAT
 New version (v.2.1.2) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are minor bugfixes and improvements:
 @itemize @bullet
 @item Exclude "local" functions from resulting library.
-@item String in MGL script now can be concatenated with another string or data/numbers (like 'str1',val,'str2',...). First value is used for data arrays.
+@item String in MGL script now can be concatenated with another string or data/numbers (like @samp{'max(u)=',u.max,' a.u.'}).
 @item Bugfix for colors in 3D PDF.
+@item Bugfix for drawing in MPI mode.
 @item If Aspect() function have NAN argument(s) then it try to select optimal aspect ratio.
 @item Option 'size' in Legend() now change only text size (not mark size).
 @item Option 'meshnum' now influence on Boxs() and Belt() functions

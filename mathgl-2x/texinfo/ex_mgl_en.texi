@@ -2640,6 +2640,9 @@ Just set a negative value in @ref{ticklen}. For example, use @code{ticklen -0.1}
 @item How can I prevent text rotation?
 Just use @code{rotatetext off}. Also you can use axis style @samp{U} for disable only tick labels rotation.
 
+@item How can I draw equal axis range even for rectangular image?
+Just use @code{aspect nan nan} for each subplot, or at the beginning of the drawing.
+
 @end table
 
 @external{}
