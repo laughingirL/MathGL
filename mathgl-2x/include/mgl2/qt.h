@@ -51,7 +51,7 @@ public:
 	int Run()	{	return mgl_qt_run();	}	///< Run main loop for event handling
 };
 //-----------------------------------------------------------------------------
-void mgl_ask_qt(const wchar_t *quest, wchar_t *res);
+void MGL_EXPORT mgl_ask_qt(const wchar_t *quest, wchar_t *res);
 //-----------------------------------------------------------------------------
 #endif
 #endif

@@ -49,7 +49,7 @@ const float mgl_fgen = 4*14;
 char mglGetStyle(const char *how, int *font, int *align=0);
 class mglBase;
 //-----------------------------------------------------------------------------
-/// Class for incapsulating font plotting procedures
+/// Class for font typeface and text plotting procedures
 class mglFont
 {
 public:

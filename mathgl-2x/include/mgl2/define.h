@@ -252,6 +252,8 @@ typedef double _Complex dual;
 typedef float _Complex dual;
 #endif
 #endif
+/// Get RGB values for given color id or fill by -1 if no one found
+void MGL_EXPORT mgl_chrrgb(char id, float rgb[3]);
 /// Check if string contain color id and return its number
 long MGL_EXPORT mgl_have_color(const char *stl);
 /// Find symbol in string excluding {} and return its position or NULL

@@ -33,7 +33,7 @@ const mreal mgl_min_a = 1./256;
 #define MGL_SET_RGBA(p,rr,gg,bb,aa)	{p.r=(rr);p.g=(gg);p.b=(bb);p.a=(aa);}
 #define MGL_SET_RGB(p,rr,gg,bb)		{p.r=(rr);p.g=(gg);p.b=(bb);}
 //-----------------------------------------------------------------------------
-/// Class for incapsulating point in space
+/// Class for point in 3D space
 struct mglPoint
 {
 	mreal x,y,z,c;
@@ -87,12 +87,8 @@ inline mreal mgl_norm(const mglPoint &p)
 {	return sqrt(p.x*p.x+p.y*p.y+p.z*p.z);	}
 #endif
 //-----------------------------------------------------------------------------
-/// Class for incapsulating color
-#ifndef SWIG
-struct MGL_EXPORT mglColor
-#else
+/// Class for RGBA color
 struct mglColor
-#endif
 {
 	float r;	///< Red component of color
 	float g;	///< Green component of color
@@ -106,7 +102,13 @@ struct mglColor
 	/// Set color as Red, Green, Blue values
 	void Set(float R,float G,float B,float A=1)	{	r=R;	g=G;	b=B;	a=A;	}
 	/// Set color as Red, Green, Blue values
-	void Set(mglColor c, float bright=1);
+	void Set(mglColor c, float bright=1)
+	{
+		if(bright<0)	bright=0;	if(bright>2.f)	bright=2.f;
+		r = bright<=1 ? c.r*bright : 1 - (1-c.r)*(2-bright);
+		g = bright<=1 ? c.g*bright : 1 - (1-c.g)*(2-bright);
+		b = bright<=1 ? c.b*bright : 1 - (1-c.b)*(2-bright);	a = 1;
+	}
 	/// Check if color is valid
 	inline bool Valid()
 	{	return (r>=0 && r<=1 && g>=0 && g<=1 && b>=0 && b<=1 && a>=0 && a<=1);	}
@@ -116,7 +118,11 @@ struct mglColor
 	inline float NormS()
 	{	return r*r+g*g+b*b;	}
 	/// Set color from symbolic id
-	void Set(char p, float bright=1);
+	void Set(char p, float bright=1)
+	{
+		float rgb[3];	mgl_chrrgb(p,rgb);
+		Set(mglColor(rgb[0],rgb[1],rgb[2]),bright);
+	}
 	/// Copy color from other one
 	inline bool operator==(const mglColor &c) const
 	{	return !memcmp(this, &c, sizeof(mglColor));	}

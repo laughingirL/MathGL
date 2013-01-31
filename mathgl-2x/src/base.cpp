@@ -708,21 +708,17 @@ MGL_EXPORT mglColorID mglColorIds[31] = {{'k', mglColor(0,0,0)},
 	{' ', mglColor(-1,-1,-1)},	{0, mglColor(-1,-1,-1)}	// the last one MUST have id=0
 };
 //-----------------------------------------------------------------------------
-void mglColor::Set(mglColor c, float br)
+void MGL_EXPORT mgl_chrrgb(char p, float c[3])
 {
-	if(br<0)	br=0;	if(br>2.f)	br=2.f;
-	r = br<=1.f ? c.r*br : 1 - (1-c.r)*(2-br);
-	g = br<=1.f ? c.g*br : 1 - (1-c.g)*(2-br);
-	b = br<=1.f ? c.b*br : 1 - (1-c.b)*(2-br);
-	a = 1;
-}
-//-----------------------------------------------------------------------------
-void mglColor::Set(char p, float bright)
-{
-	Set(-1,-1,-1);
+	c[0]=c[1]=c[3]=-1;
 	for(long i=0; mglColorIds[i].id; i++)
 		if(mglColorIds[i].id==p)
-		{	Set(mglColorIds[i].col, bright);	break;	}
+		{
+			c[0]=mglColorIds[i].col.r;
+			c[1]=mglColorIds[i].col.g;
+			c[2]=mglColorIds[i].col.b;
+			break;
+		}
 }
 //-----------------------------------------------------------------------------
 void mglTexture::Set(const char *s, int smooth, mreal alpha)
