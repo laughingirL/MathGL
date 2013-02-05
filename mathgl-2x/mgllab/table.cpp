@@ -421,7 +421,7 @@ void list_dat_cb(Fl_Widget*, void*v)
 	{
 		for(i=0;i<d->nx;i++)
 		{
-			sprintf(s,"%g\t",d->a[i+d->nx*(j+e->get_slice()*d->ny)]);
+			snprintf(s,32,"%g\t",d->a[i+d->nx*(j+e->get_slice()*d->ny)]);
 			strcat(list,s);
 		}
 		if(j<d->ny-1)	strcat(list,"|\t");

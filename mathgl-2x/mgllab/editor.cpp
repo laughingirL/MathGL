@@ -275,15 +275,15 @@ void load_file(char *newfile, int ipos)
 	if(ipos==-1 && (!strcmp(newfile+len-4,".dat") || !strcmp(newfile+len-4,".csv")))
 	{
 		data_file(newfile);
-		strcpy(newfile+len-4,".mgl");
-		strcpy(filename, newfile);
+		strncpy(newfile+len-4,".mgl",4);
+		strncpy(filename, newfile,256);
 	}
 	else
 	{
 		loading = 1;
 		int insert = (ipos != -1);
 		changed = insert;
-		if(!insert) strcpy(filename, "");
+		if(!insert) *filename=0;
 		long r;
 		if(!insert)	r = textbuf->loadfile(newfile);
 		else r = textbuf->insertfile(newfile, ipos);
@@ -297,7 +297,7 @@ void load_file(char *newfile, int ipos)
 
 		if (r)
 			fl_alert(gettext("Error reading from file \'%s\':\n%s."), newfile, strerror(errno));
-		else	if(!insert)	strcpy(filename, newfile);
+		else	if(!insert)	strncpy(filename, newfile,256);
 		loading = 0;
 		textbuf->call_modify_callbacks();
 	}
@@ -309,7 +309,7 @@ void save_file(char *newfile)
 	if (textbuf->savefile(newfile))
 		fl_alert(gettext("Error writing to file \'%s\':\n%s."), newfile, strerror(errno));
 	else
-		strcpy(filename, newfile);
+		strncpy(filename, newfile,256);
 	changed = 0;
 	textbuf->call_modify_callbacks();
 }
@@ -333,7 +333,7 @@ void find_cb(Fl_Widget* w, void* v)
 	ScriptWindow* e = (ScriptWindow*)v;
 	const char *val;
 	val = fl_input(gettext("Search String:"), e->search);
-	if (val != NULL) {	strcpy(e->search, val);	find2_cb(w, v);	}
+	if (val != NULL) {	strncpy(e->search, val,256);	find2_cb(w, v);	}
 }
 //-----------------------------------------------------------------------------
 void find2_cb(Fl_Widget* w, void* v)

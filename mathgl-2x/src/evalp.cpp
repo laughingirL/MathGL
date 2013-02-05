@@ -104,6 +104,7 @@ void MGL_EXPORT mgl_wcstombs(char *dst, const wchar_t *src, int size)
 	dst[j] = 0;
 }
 //-----------------------------------------------------------------------------
+#define LBUF 	2048
 /// Parse string and substitute the script argument
 // All numbers are presented as mglData(1). Do boundary checking.
 // NOTE: In any case where number is required the mglData::a[0] is used.
@@ -124,8 +125,8 @@ mglData MGL_NO_EXPORT mglFormulaCalc(const wchar_t *string, mglParser *arg)
 	len=wcslen(str);
 	if(str[0]=='(' && mglCheck(&(str[1]),len-2))	// remove braces
 	{
-		wcscpy(Buf,str+1);
-		len-=2;	Buf[len]=0;
+		wcsncpy(Buf,str+1,LBUF);
+		len-=2;	Buf[len]=Buf[LBUF-1]=0;
 		wcscpy(str,Buf);
 	}
 	len=wcslen(str);
@@ -140,7 +141,7 @@ mglData MGL_NO_EXPORT mglFormulaCalc(const wchar_t *string, mglParser *arg)
 			if(str[i]==']' && br>0)	br--;
 			if(str[i]==',' && !br)
 			{
-				wcscpy(Buf,str+j);	Buf[i-j]=0;
+				wcsncpy(Buf,str+j,LBUF);	Buf[i-j]=Buf[LBUF-1]=0;
 				a1=mglFormulaCalc(Buf, arg);
 				if(j==1)
 				{	res = a1;	ar = (a1.nx==1);	mt = (a1.nx>1 && a1.ny==1);	}
@@ -156,7 +157,7 @@ mglData MGL_NO_EXPORT mglFormulaCalc(const wchar_t *string, mglParser *arg)
 				j=i+1;
 			}
 		}
-		wcscpy(Buf,str+j);	Buf[i-j]=0;
+		wcsncpy(Buf,str+j,LBUF);	Buf[i-j]=Buf[LBUF-1]=0;
 		a1=mglFormulaCalc(Buf, arg);
 		if(j==1)
 		{	res = a1;	ar = (a1.nx==1);	mt = (a1.nx>1 && a1.ny==1);	}
@@ -175,14 +176,14 @@ mglData MGL_NO_EXPORT mglFormulaCalc(const wchar_t *string, mglParser *arg)
 	n=mglFindInText(str,"&|");				// lowest priority -- logical
 	if(n>=0)
 	{
-		wcscpy(Buf,str);	Buf[n]=0;
+		wcsncpy(Buf,str,LBUF);	Buf[n]=Buf[LBUF-1]=0;
 		res = mglApplyOper(Buf,Buf+n+1,arg, str[n]=='|'?cor:cand);
 		delete []str;		return res;
 	}
 	n=mglFindInText(str,"<>=");				// low priority -- conditions
 	if(n>=0)
 	{
-		wcscpy(Buf,str);	Buf[n]=0;
+		wcsncpy(Buf,str,LBUF);	Buf[n]=Buf[LBUF-1]=0;
 		if(str[n]=='<')			res = mglApplyOper(Buf,Buf+n+1,arg, clt);
 		else if(str[n]=='>')	res = mglApplyOper(Buf,Buf+n+1,arg, cgt);
 		else	res = mglApplyOper(Buf,Buf+n+1,arg, ceq);
@@ -191,14 +192,14 @@ mglData MGL_NO_EXPORT mglFormulaCalc(const wchar_t *string, mglParser *arg)
 	n=mglFindInText(str,"+-");				// normal priority -- additions
 	if(n>=0 && (n<2 || str[n-1]!='e' || (str[n-2]!='.' && !isdigit(str[n-2]))))
 	{
-		wcscpy(Buf,str);	Buf[n]=0;
+		wcsncpy(Buf,str,LBUF);	Buf[n]=Buf[LBUF-1]=0;
 		res = mglApplyOper(Buf,Buf+n+1,arg, str[n]=='+'?add:sub);
 		delete []str;		return res;
 	}
 	n=mglFindInText(str,"*/");				// high priority -- multiplications
 	if(n>=0)
 	{
-		wcscpy(Buf,str);	Buf[n]=0;
+		wcsncpy(Buf,str,LBUF);	Buf[n]=Buf[LBUF-1]=0;
 		if(str[n]=='*')	res = mglApplyOper(Buf,Buf+n+1,arg, mul);
 		else			res = mglApplyOper(Buf,Buf+n+1,arg, div);
 		delete []str;		return res;
@@ -206,21 +207,21 @@ mglData MGL_NO_EXPORT mglFormulaCalc(const wchar_t *string, mglParser *arg)
 	n=mglFindInText(str,"@");				// high priority -- combine
 	if(n>=0)
 	{
-		wcscpy(Buf,str);	Buf[n]=0;
+		wcsncpy(Buf,str,LBUF);	Buf[n]=Buf[LBUF-1]=0;
 		const mglData &a = mglFormulaCalc(Buf,arg), &b = mglFormulaCalc(Buf+n+1,arg);
 		delete []str;		return a.Combine(b);
 	}
 	n=mglFindInText(str,"^");				// highest priority -- power
 	if(n>=0)
 	{
-		wcscpy(Buf,str);	Buf[n]=0;
+		wcsncpy(Buf,str,LBUF);	Buf[n]=Buf[LBUF-1]=0;
 		res = mglApplyOper(Buf,Buf+n+1,arg, ipw);
 		delete []str;		return res;
 	}
 	n=mglFindInText(str,":");				// highest priority -- array
 	if(n>=0 && wcscmp(str,L":"))
 	{
-		wcscpy(Buf,str);	Buf[n]=0;
+		wcsncpy(Buf,str,LBUF);	Buf[n]=Buf[LBUF-1]=0;
 		mglData a1=mglFormulaCalc(Buf, arg);
 		mglData a2=mglFormulaCalc(Buf+n+1, arg);
 		res.Create(abs(int(a2.a[0]+0.5)-int(a1.a[0]+0.5))+1);
@@ -230,7 +231,7 @@ mglData MGL_NO_EXPORT mglFormulaCalc(const wchar_t *string, mglParser *arg)
 	n=mglFindInText(str,".");				// highest priority -- suffixes
 	if(n>=0)
 	{
-		wcscpy(Buf,str);	Buf[n]=0;
+		wcsncpy(Buf,str,LBUF);	Buf[n]=Buf[LBUF-1]=0;
 		mreal x,y,z,k,v=NAN;
 		mglData d = mglFormulaCalc(Buf, arg);
 		const wchar_t *p=Buf+n+1;
@@ -285,7 +286,7 @@ mglData MGL_NO_EXPORT mglFormulaCalc(const wchar_t *string, mglParser *arg)
 	{
 		register long i;
 		wchar_t name[128];
-		wcscpy(name,str);	name[n]=0;
+		wcsncpy(name,str,128);	name[127]=name[n]=0;
 		wcscpy(Buf,str+n+1);
 		len=wcslen(Buf);	Buf[--len]=0;
 		mglVar *v = arg->FindVar(name);

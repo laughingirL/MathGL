@@ -108,7 +108,7 @@ void animate_dlg_cb(Fl_Widget *, void *v)
 		{
 			if(fl_ask(gettext("Order of first and last value is wrong. Swap it?")))
 			{
-				char s[32];	sprintf(s,"%g",t0);
+				char s[32];	snprintf(s,32,"%g",t0);
 				animate_dlg.x0->value(animate_dlg.x1->value());
 				animate_dlg.x1->value(s);
 			}
@@ -150,7 +150,7 @@ void animate_put_cb(Fl_Widget *, void *)
 	else if(animate_dlg.rv->value())
 	{
 		char *s = new char[128];
-		sprintf(s,"\n##c %s %s %s",animate_dlg.x0->value(),animate_dlg.x1->value(),animate_dlg.dx->value());
+		snprintf(s,128,"\n##c %s %s %s",animate_dlg.x0->value(),animate_dlg.x1->value(),animate_dlg.dx->value());
 		textbuf->append(s);
 		delete []s;
 	}
@@ -194,7 +194,7 @@ void AnimateDlg::FillResult(Fl_MGL* e)
 	{
 		char *s;
 		e->ArgBuf = new char[1+strlen(txt->value())];
-		strcpy(e->ArgBuf, txt->value());
+		strncpy(e->ArgBuf, txt->value(),32);
 		s = e->Args[0] = e->ArgBuf;	e->NArgs = 1;
 		for(int i=0;s[i]!=0;i++)
 			if(s[i]=='\n')
@@ -208,7 +208,7 @@ void AnimateDlg::FillResult(Fl_MGL* e)
 		double t0=atof(x0->value()), t1=atof(x1->value()), dt=atof(dx->value()), t;
 		if((t1-t0)/dt<1)
 		{
-			e->ArgBuf = new char[32];	sprintf(e->ArgBuf,"%g",t0);
+			e->ArgBuf = new char[32];	snprintf(e->ArgBuf,32,"%g",t0);
 			e->NArgs = 1;	e->Args[0] = e->ArgBuf;	return;
 		}
 		if((t1-t0)/dt>999)
@@ -219,7 +219,7 @@ void AnimateDlg::FillResult(Fl_MGL* e)
 		e->ArgBuf = new char[32*int(1+(t1-t0)/dt)];
 		for(t=t0;(dt>0&&t<=t1)||(dt<0&&t>=t1);t+=dt)
 		{
-			sprintf(e->ArgBuf + 32*e->NArgs,"%g\0",t);
+			snprintf(e->ArgBuf + 32*e->NArgs,32,"%g\0",t);
 			e->Args[e->NArgs] = e->ArgBuf + 32*e->NArgs;
 			e->NArgs += 1;
 		}

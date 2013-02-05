@@ -149,19 +149,19 @@ void _mgl_key_up(unsigned char ch,int ,int )
 	if(ch=='P')
 	{
 		char str[128];
-		sprintf(str,"%s_%d.png",_mgl_glwnd->PlotId.c_str(),_mgl_glwnd->curr_fig);
+		snprintf(str,128,"%s_%d.png",_mgl_glwnd->PlotId.c_str(),_mgl_glwnd->curr_fig);
 		mgl_write_png(_mgl_glwnd, str, "Math GL");
 	}
 	if(ch=='J')
 	{
 		char str[128];
-		sprintf(str,"%s_%d.jpg",_mgl_glwnd->PlotId.c_str(),_mgl_glwnd->curr_fig);
+		snprintf(str,128,"%s_%d.jpg",_mgl_glwnd->PlotId.c_str(),_mgl_glwnd->curr_fig);
 		mgl_write_jpg(_mgl_glwnd, str, "Math GL");
 	}
 	if(ch=='E')
 	{
 		char str[128];
-		sprintf(str,"%s_%d.eps",_mgl_glwnd->PlotId.c_str(),_mgl_glwnd->curr_fig);
+		snprintf(str,128,"%s_%d.eps",_mgl_glwnd->PlotId.c_str(),_mgl_glwnd->curr_fig);
 		mgl_write_eps(_mgl_glwnd, str, "Math GL");
 	}
 	if(ch==' ')	_mgl_glwnd->Clf();

@@ -147,53 +147,53 @@ void save(mglGraph *gr,const char *name,const char *suf="")
 	switch(type)
 	{
 		case 1:	// EPS
-			sprintf(buf,"%s%s.eps",name,suf);
+			snprintf(buf,128,"%s%s.eps",name,suf);
 			gr->WriteEPS(buf);
 			break;
 		case 2:	// SVG
-			sprintf(buf,"%s%s.svg",name,suf);
+			snprintf(buf,128,"%s%s.svg",name,suf);
 			gr->WriteSVG(buf);	break;
 		case 3:	// PNG
-			sprintf(buf,"%s%s.png",name,suf);
+			snprintf(buf,128,"%s%s.png",name,suf);
 			gr->WritePNG(buf,0,true);	break;
 		case 4:	// JPEG
-			sprintf(buf,"%s%s.jpg",name,suf);
+			snprintf(buf,128,"%s%s.jpg",name,suf);
 			gr->WriteJPEG(buf);	break;
 		case 5:	// PRC
-			sprintf(buf,"%s%s.prc",name,suf);
+			snprintf(buf,128,"%s%s.prc",name,suf);
 			gr->WritePRC(buf,"",false);	break;
 		case 6:	// GIF
-			sprintf(buf,"%s%s.gif",name,suf);
+			snprintf(buf,128,"%s%s.gif",name,suf);
 			gr->WriteGIF(buf);	break;
 		case 7:	// none
 			break;
 		case 8:	// EPS to PNG
-			sprintf(buf,"%s%s.png",name,suf);
+			snprintf(buf,128,"%s%s.png",name,suf);
 			gr->WritePNG(buf,0,false);
 			break;
  		case 9:	// PDF
-			sprintf(buf,"%s%s.prc",name,suf);
+			snprintf(buf,128,"%s%s.prc",name,suf);
 			gr->WritePRC(buf);	remove(buf);	break;
 		case 10:	// old OBJ
-			sprintf(buf,"%s%s.obj",name,suf);
+			snprintf(buf,128,"%s%s.obj",name,suf);
 			gr->WriteOBJold(buf);	break;
 		case 11:	// OBJ
-			sprintf(buf,"%s%s.obj",name,suf);
+			snprintf(buf,128,"%s%s.obj",name,suf);
 			gr->WriteOBJ(buf);	break;
 		case 12:	// OFF
-			sprintf(buf,"%s%s.off",name,suf);
+			snprintf(buf,128,"%s%s.off",name,suf);
 			gr->WriteOFF(buf);	break;
 		case 13:	// STL
-			sprintf(buf,"%s%s.stl",name,suf);
+			snprintf(buf,128,"%s%s.stl",name,suf);
 			gr->WriteSTL(buf);	break;
 		case 14:	// TeX
-			sprintf(buf,"%s%s.tex",name,suf);
+			snprintf(buf,128,"%s%s.tex",name,suf);
 			gr->WriteTEX(buf);	break;
 		case 15:	// JSON
-			sprintf(buf,"%s%s.json",name,suf);
+			snprintf(buf,128,"%s%s.json",name,suf);
 			gr->WriteJSON(buf);	break;
 		default:// PNG (no alpha)
-			sprintf(buf,"%s%s.png",name,suf);
+			snprintf(buf,128,"%s%s.png",name,suf);
 			gr->WritePNG(buf,0,false);	break;
 	}
 }
@@ -212,7 +212,7 @@ int main(int argc,char **argv)
 			case 0:		break;
 			case 'w':	width =atoi(optarg);	break;
 			case 'h':	height=atoi(optarg);	break;
-			case 'k':	strcpy(name, optarg);
+			case 'k':	strncpy(name, optarg,256);
 						tmp=strchr(name,'.');	if(tmp)	*tmp=0;
 						tmp=strchr(name,'-');	if(tmp)	*tmp=0;
 						break;

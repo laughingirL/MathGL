@@ -43,11 +43,11 @@ MGL_NO_EXPORT const char *mgl_get_dash(unsigned short d, mreal w)
 		if(((d>>j)&1) == p)	f++;
 		else
 		{
-			sprintf(b," %g",f*w);	s += b;
+			snprintf(b,32," %g",f*w);	s += b;
 			p = (d>>j)&1;	f = 1;	n++;
 		}
 	}
-	sprintf(b," %g",f*w);	s += b;
+	snprintf(b,32," %g",f*w);	s += b;
 	s += n%2 ? "" : " 0";
 	return s.c_str();
 }
@@ -286,12 +286,12 @@ void MGL_EXPORT mgl_write_eps(HMGL gr, const char *fname,const char *descr)
 		if(q.type<0)	continue;	// q.n1>=0 always
 		cp = _Gr_->GetColor(q);
 		const mglPnt p1 = gr->GetPnt(q.n1);
-		if(q.type>1)	sprintf(str,"%.2g %.2g %.2g rgb ", cp.r,cp.g,cp.b);
+		if(q.type>1)	snprintf(str,256,"%.2g %.2g %.2g rgb ", cp.r,cp.g,cp.b);
 
 		if(q.type==0)	// mark
 		{
 			mreal x0 = p1.x,y0 = p1.y;
-			sprintf(str,"%.2g lw %.2g %.2g %.2g rgb ", 50*q.s*q.w>1?50*q.s*q.w:1, cp.r,cp.g,cp.b);
+			snprintf(str,256,"%.2g lw %.2g %.2g %.2g rgb ", 50*q.s*q.w>1?50*q.s*q.w:1, cp.r,cp.g,cp.b);
 			wp=1;	// NOTE: this may renew line style if a mark inside!
 			if(q.s!=qs_old)
 			{
@@ -342,7 +342,7 @@ void MGL_EXPORT mgl_write_eps(HMGL gr, const char *fname,const char *descr)
 		}
 		else if(q.type==1)	// line
 		{
-			sprintf(str,"%.2g lw %.2g %.2g %.2g rgb ", q.w>1 ? q.w:1., cp.r,cp.g,cp.b);
+			snprintf(str,256,"%.2g lw %.2g %.2g %.2g rgb ", q.w>1 ? q.w:1., cp.r,cp.g,cp.b);
 			wp = q.w>1  ? q.w:1;	st = q.n3;
 			put_line(gr,fp,gz,i,wp,cp,st, "np %g %g mt ", "%g %g ll ", false, 1);
 			const char *sd = mgl_get_dash(q.n3,q.w);
@@ -662,7 +662,7 @@ void MGL_EXPORT mgl_write_tex(HMGL gr, const char *fname,const char *descr)
 		ii = (cp.r*255+25)/51;
 		jj = (cp.g*255+25)/51;
 		kk = (cp.b*255+25)/51;
-		sprintf(cname,"mgl_%d",ii+6*(jj+6*kk));
+		snprintf(cname,16,"mgl_%d",ii+6*(jj+6*kk));
 //		cname = mglColorName(cp);
 		const mglPnt p1=gr->GetPnt(q.n1);
 		mreal x=p1.x/100,y=p1.y/100,s=q.s/100;

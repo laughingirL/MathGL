@@ -30,9 +30,9 @@ void help_cb(Fl_Widget*, void*v)
 		s[j-j0] = buf[j];
 	free(buf);
 #ifdef WIN32
-	sprintf(str,"%s\\mgl_en.html#%s",docdir,s);
+	snprintf(str,300,"%s\\mgl_en.html#%s",docdir,s);
 #else
-	sprintf(str,"%s/mgl_en.html#%s",docdir,s);
+	snprintf(str,300,"%s/mgl_en.html#%s",docdir,s);
 #endif
 	e->hd->load(str);
 	if(e->rtab)	e->rtab->value(e->ghelp);
@@ -43,9 +43,9 @@ void link_cb(Fl_Widget*, void*v)
 	ScriptWindow* e = (ScriptWindow*)v;
 	static char str[300];
 #ifdef WIN32
-	sprintf(str,"%s\\mgl_en.html#%s",docdir,e->link_cmd->value());
+	snprintf(str,300,"%s\\mgl_en.html#%s",docdir,e->link_cmd->value());
 #else
-	sprintf(str,"%s/mgl_en.html#%s",docdir,e->link_cmd->value());
+	snprintf(str,300,"%s/mgl_en.html#%s",docdir,e->link_cmd->value());
 #endif
 	e->hd->load(str);
 	if(e->rtab)	e->rtab->value(e->ghelp);
@@ -56,9 +56,9 @@ void example_cb(Fl_Widget*, void*v)
 	static char str[300];
 	ScriptWindow* e = (ScriptWindow*)v;
 #ifdef WIN32
-	sprintf(str,"%s\\mgl_en.html\\mgl_en_2.html",docdir);
+	snprintf(str,300,"%s\\mgl_en.html\\mgl_en_2.html",docdir);
 #else
-	sprintf(str,"%s/mgl_en.html/mgl_en_2.html",docdir);
+	snprintf(str,300,"%s/mgl_en.html/mgl_en_2.html",docdir);
 #endif
 	e->hd->load(str);	e->rtab->value(e->ghelp);
 	if(e->rtab)	e->rtab->value(e->ghelp);
@@ -80,7 +80,7 @@ void help_out_cb(Fl_Widget*, void*v)
 void about_cb(Fl_Widget*, void*)
 {
 	static char s[128];
-	sprintf(s,gettext("UDAV v. 2.%g\n(c) Alexey Balakin, 2007\nhttp://udav.sf.net/"), MGL_VER2);
+	snprintf(s,128,gettext("UDAV v. 2.%g\n(c) Alexey Balakin, 2007\nhttp://udav.sf.net/"), MGL_VER2);
 	Fl_Double_Window* w = new Fl_Double_Window(355, 130, "About UDAV");
 	Fl_Box* o = new Fl_Box(10, 15, 65, 65);
 	o->box(FL_UP_BOX);	o->color(55);	o->image(new Fl_Pixmap(udav_xpm));
@@ -182,7 +182,7 @@ void ScriptWindow::mem_init()
 	mglVar *v=Parse->FindVar("");
 	while(v)
 	{
-		sprintf(str,"%ls\t%ld*%ld*%ld\t%ld\t", v->s.c_str(), v->nx, v->ny, v->nz, sizeof(mreal)*v->nx*v->ny*v->nz);
+		snprintf(str,128,"%ls\t%ld*%ld*%ld\t%ld\t", v->s.c_str(), v->nx, v->ny, v->nz, sizeof(mreal)*v->nx*v->ny*v->nz);
 		var->add(str,v);
 		v = v->next;
 	}
@@ -211,9 +211,9 @@ void ScriptWindow::mem_pressed(int kind)
 	}
 	else if(kind==1)
 	{
-		if(v->nz>1)		sprintf(res,"box\nsurf3 %ls\n",v->s.c_str());
-		else if(v->ny>1)	sprintf(res,"box\nsurf %ls\n",v->s.c_str());
-		else				sprintf(res,"box\nplot %ls\n",v->s.c_str());
+		if(v->nz>1)		snprintf(res,128,"box\nsurf3 %ls\n",v->s.c_str());
+		else if(v->ny>1)	snprintf(res,128,"box\nsurf %ls\n",v->s.c_str());
+		else				snprintf(res,128,"box\nplot %ls\n",v->s.c_str());
 		textbuf->text(res);
 	}
 	else if(kind==2)

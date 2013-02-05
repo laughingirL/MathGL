@@ -52,12 +52,12 @@ void MGL_EXPORT mgl_wcstrim(wchar_t *str)
 //-----------------------------------------------------------------------------
 void mglCanvas::SetAxisStl(const char *stl, const char *tck, const char *sub)
 {
-	if(!stl || !(*stl))		strcpy(AxisStl,"k");
-	else if(strlen(stl)<32)	strcpy(AxisStl,stl);
-	if(!tck || !(*tck))		strcpy(TickStl,AxisStl);
-	else if(strlen(tck)<32)	strcpy(TickStl,tck);
-	if(!sub || !(*sub))		strcpy(SubTStl,TickStl);
-	else if(strlen(sub)<32)	strcpy(SubTStl,sub);
+	if(!stl || !(*stl))	strncpy(AxisStl,"k",32);
+	else 				strncpy(AxisStl,stl,32);
+	if(!tck || !(*tck))	strncpy(TickStl,AxisStl,32);
+	else 				strncpy(TickStl,tck,32);
+	if(!sub || !(*sub))	strncpy(SubTStl,TickStl,32);
+	else 				strncpy(SubTStl,sub,32);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::SetTickLen(mreal tlen, mreal stt)
@@ -755,7 +755,7 @@ void mglCanvas::Labelw(char dir, const wchar_t *text, mreal pos, const char *opt
 	}
 	char font[64],ff[3]=":C";
 	if(pos<-0.2)	ff[1]='L';	if(pos>0.2)	ff[1]='R';
-	strcpy(font,FontDef);	strcat(font,ff);
+	strncpy(font,FontDef,64);	strcat(font,ff);
 	long kk = AddPnt(p,-1,q,0,7);	ff[1]=0;
 	ff[0] = GetLabelPos(t, kk, *aa);	strcat(font,ff);
 	text_plot(kk,text,font,-1.4,0.35+shift);

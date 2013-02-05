@@ -60,23 +60,23 @@ char *VarDlg::get_result()
 	{
 		if(dim3->value()>=0)
 		{
-			if(dim1->value()>=0)	sprintf(a1,"%g",dim1->value());
-			if(dim2->value()>=0)	sprintf(a2,"%g",dim2->value());
-			sprintf(a3,"%g",dim3->value());
-			sprintf(res,"%s(%s,%s,%s)",m.text,a1,a2,a3);
+			if(dim1->value()>=0)	snprintf(a1,16,"%g",dim1->value());
+			if(dim2->value()>=0)	snprintf(a2,16,"%g",dim2->value());
+			snprintf(a3,16,"%g",dim3->value());
+			snprintf(res,64,"%s(%s,%s,%s)",m.text,a1,a2,a3);
 		}
 		else if(dim2->value()>=0)
 		{
-			if(dim1->value()>=0)	sprintf(a1,"%g",dim1->value());
-			sprintf(a2,"%g",dim2->value());
-			sprintf(res,"%s(%s,%s)",m.text,a1,a2);
+			if(dim1->value()>=0)	snprintf(a1,16,"%g",dim1->value());
+			snprintf(a2,16,"%g",dim2->value());
+			snprintf(res,64,"%s(%s,%s)",m.text,a1,a2);
 		}
 		else if(dim1->value()>=0)
 		{
-			sprintf(a1,"%g",dim1->value());
-			sprintf(res,"%s(%s)",m.text,a1);
+			snprintf(a1,16,"%g",dim1->value());
+			snprintf(res,64,"%s(%s)",m.text,a1);
 		}
-		else	strcpy(res,m.text);
+		else	strncpy(res,m.text,64);
 	}
 	return res;
 }
@@ -153,15 +153,15 @@ void data_file(char *fn)
 {
 	static int num=0;
 	static char name[32], res[256];
-	sprintf(name,"mgl_%d",num);	num++;
+	snprintf(name,32,"mgl_%d",num);	num++;
 	mglData *v = Parse->AddVar(name);
 	v->Read(fn);
 	if(v->nz>1)
-		sprintf(res,"#read %s '%s'\nrotate 40 60\ncrange %s\nbox\nsurf3 %s\n", name, fn, name, name);
+		snprintf(res,256,"#read %s '%s'\nrotate 40 60\ncrange %s\nbox\nsurf3 %s\n", name, fn, name, name);
 	else if(v->ny>1)
-		sprintf(res,"#read %s '%s'\nrotate 40 60\ncrange %s\nzrange %s\nbox\nsurf %s\n", name, fn, name, name, name);
+		snprintf(res,256,"#read %s '%s'\nrotate 40 60\ncrange %s\nzrange %s\nbox\nsurf %s\n", name, fn, name, name, name);
 	else
-		sprintf(res,"#read %s '%s'\nyrange %s\nbox\nplot %s\n", name, fn, name, name);
+		snprintf(res,256,"#read %s '%s'\nyrange %s\nbox\nplot %s\n", name, fn, name, name);
 	textbuf->text(res);
 }
 //-----------------------------------------------------------------------------
@@ -200,9 +200,9 @@ void type_cmd_cb(Fl_Widget *, void *)
 
 		static char str[300];	// load help for command
 #ifdef WIN32
-		sprintf(str,"%s\\mgl_en.html#%s",docdir,first[val]);
+		snprintf(str,300,"%s\\mgl_en.html#%s",docdir,first[val]);
 #else
-		sprintf(str,"%s/mgl_en.html#%s",docdir,first[val]);
+		snprintf(str,300,"%s/mgl_en.html#%s",docdir,first[val]);
 #endif
 		cmd_dlg.help->load(str);
 	}
@@ -217,9 +217,9 @@ void desc_cmd_cb(Fl_Widget *, void *)
 
 	static char str[300];	// load help for command
 #ifdef WIN32
-	sprintf(str,"%s\\mgl_en.html#%s",docdir,name);
+	snprintf(str,300,"%s\\mgl_en.html#%s",docdir,name);
 #else
-	sprintf(str,"%s/mgl_en.html#%s",docdir,name);
+	snprintf(str,300,"%s/mgl_en.html#%s",docdir,name);
 #endif
 	cmd_dlg.help->load(str);
 }
@@ -290,8 +290,8 @@ char *CmdDlg::get_result()
 	const char *cn = cmd->mvalue()->text;
 
 	bool sl3 = !strcmp(cn,"cont3") || !strcmp(cn,"contf3") || !strcmp(cn,"dens3");
-	strcpy(res,"\n");	strcat(res,cn);
-	sprintf(buf,"%s%s%s%s%s%s%s%s%s%s%s%s", var_x->value()[0]?" ":"", var_x->value(),
+	strcpy(res,"\n");	strncat(res,cn,1022);
+	snprintf(buf,128,"%s%s%s%s%s%s%s%s%s%s%s%s", var_x->value()[0]?" ":"", var_x->value(),
 		var_y->value()[0]?" ":"", var_y->value(), var_z->value()[0]?" ":"", var_z->value(),
 		var_u->value()[0]?" ":"", var_u->value(), var_v->value()[0]?" ":"", var_v->value(),
 		var_w->value()[0]?" ":"", var_w->value());
@@ -304,20 +304,20 @@ char *CmdDlg::get_result()
 		strcat(res," 'x'");
 		fl_message(gettext("You should specify direction.\nDirection 'x' is selected by default"));
 		if(zval->value()[0])
-		{	sprintf(buf," %d",atoi(zval->value()));	strcat(res,buf);	}
+		{	snprintf(buf,128," %d",atoi(zval->value()));	strcat(res,buf);	}
 	}
 	if(sl3 && par1->value()[0])
 	{
 		strcat(res," '");	strcat(res,par1->value());	strcat(res,"'");
 		if(zval->value()[0])
-		{	sprintf(buf," %d",atoi(zval->value()));	strcat(res,buf);	}
+		{	snprintf(buf,128," %d",atoi(zval->value()));	strcat(res,buf);	}
 	}
 	if(stl->value()[0])
 	{	strcat(res," '");	strcat(res,stl->value());	strcat(res,"'");	}
 	if(!sl3 && zval->value()[0])
-	{	sprintf(buf," %d",atoi(zval->value()));	strcat(res,buf);	}
+	{	snprintf(buf,128," %d",atoi(zval->value()));	strcat(res,buf);	}
 	if(!sl3 && par2->value()[0])
-	{	sprintf(buf," %d",atoi(par2->value()));	strcat(res,buf);	}
+	{	snprintf(buf,128," %d",atoi(par2->value()));	strcat(res,buf);	}
 	if(opt->value()[0])	strcat(res,opt->value());
 //	strcat(res,"\n");
 	return res;

@@ -82,7 +82,7 @@ void MGL_EXPORT mgl_test(const char *str, ...)
 	char buf[256];
 	va_list lst;
 	va_start(lst,str);
-	vsprintf(buf,str,lst);
+	vsnprintf(buf,256,str,lst);
 	va_end(lst);
 	printf("TEST: %s\n",buf);
 	fflush(stdout);
@@ -93,7 +93,7 @@ void MGL_EXPORT mgl_info(const char *str, ...)
 	char buf[256];
 	va_list lst;
 	va_start(lst,str);
-	vsprintf(buf,str,lst);
+	vsnprintf(buf,256,str,lst);
 	va_end(lst);
 	printf("%s",buf);
 	FILE *fp = fopen("info.txt","at");

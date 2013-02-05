@@ -140,24 +140,24 @@ void OptionDlg::FillResult()
 	v2 = ymin->value()[0];	if(v2)	y2 = atof(ymax->value());
 	w1 = zmin->value()[0];	if(w1)	z1 = atof(zmin->value());
 	w2 = zmin->value()[0];	if(w2)	z2 = atof(zmax->value());
-	if(u1 && u2)	{sprintf(str,"; xrange %g %g",x1,x2);	strcat(result,str);}
-	if(v1 && v2)	{sprintf(str,"; yrange %g %g",y1,y2);	strcat(result,str);}
-	if(w1 && w2)	{sprintf(str,"; zrange %g %g",z1,z2);	strcat(result,str);}
+	if(u1 && u2)	{snprintf(str,64,"; xrange %g %g",x1,x2);	strcat(result,str);}
+	if(v1 && v2)	{snprintf(str,64,"; yrange %g %g",y1,y2);	strcat(result,str);}
+	if(w1 && w2)	{snprintf(str,64,"; zrange %g %g",z1,z2);	strcat(result,str);}
 
 	u1 = cmin->value()[0];	if(u1)	x1 = atof(cmin->value());
 	u2 = cmax->value()[0];	if(u2)	x2 = atof(cmax->value());
-	if(u1&&u2)	{sprintf(str,"; crange %g %g",x1,x2);	strcat(result,str);}
+	if(u1&&u2)	{snprintf(str,64,"; crange %g %g",x1,x2);	strcat(result,str);}
 
 	if(alpha->value()[0])
-	{	sprintf(str,"; alpha %g",atof(alpha->value()));	strcat(result,str);}
+	{	snprintf(str,64,"; alpha %g",atof(alpha->value()));	strcat(result,str);}
 	if(amb->value()[0])
-	{	sprintf(str,"; ambient %g",atof(amb->value()));	strcat(result,str);}
+	{	snprintf(str,64,"; ambient %g",atof(amb->value()));	strcat(result,str);}
 	if(mesh->value()[0])
-	{	sprintf(str,"; meshnum %g",atof(mesh->value()));strcat(result,str);}
+	{	snprintf(str,64,"; meshnum %g",atof(mesh->value()));strcat(result,str);}
 	if(font->value()[0])
-	{	sprintf(str,"; fontsize '%g'",atof(font->value()));	strcat(result,str);}
+	{	snprintf(str,64,"; fontsize '%g'",atof(font->value()));	strcat(result,str);}
 	if(cut->value()>=0)
-	{sprintf(str,"; cut %s",cut->value()==0?"on":"off");	strcat(result,str);}
+	{snprintf(str,64,"; cut %s",cut->value()==0?"on":"off");	strcat(result,str);}
 }
 //-----------------------------------------------------------------------------
 void option_cb(Fl_Widget *, void *v)
@@ -368,7 +368,7 @@ void style_cb(Fl_Widget *, void *v)
 	{
 		int p,q;
 		char str[20];
-		sprintf(str,"'%s'",s->result);
+		snprintf(str,20,"'%s'",s->result);
 		textbuf->selection_position(&p, &q);
 		if(p==q)	e->editor->insert(str);
 		else		textbuf->replace_selection(str);

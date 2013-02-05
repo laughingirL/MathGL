@@ -42,8 +42,8 @@ void set_title(Fl_Window* w)
 #ifdef WIN32
 		if (slash == NULL) slash = strrchr(filename, '\\');
 #endif
-		if (slash != NULL) strcpy(title, slash + 1);
-		else strcpy(title, filename);
+		if (slash != NULL) strncpy(title, slash + 1,256);
+		else strncpy(title, filename,256);
 	}
 	if (changed) strcat(title, gettext(" (modified)"));
 	w->label(title);
@@ -56,7 +56,7 @@ void fname_cb(Fl_Widget*, void *v)
 	if(file)
 	{
 		char *str = new char[strlen(file)+4];
-		sprintf(str," '%s'",file);
+		snprintf(str,strlen(file)+4," '%s'",file);
 		e->editor->insert(str);
 		delete []str;
 	}
@@ -76,7 +76,7 @@ void open_cb(Fl_Widget*, void *v)
 {
 	if (!check_save()) return;
 	char *lastname=0;
-	if(*filename==0)	{	pref.get("last_file",lastname,"");	strcpy(filename, lastname);	}
+	if(*filename==0)	{	pref.get("last_file",lastname,"");	strncpy(filename, lastname,256);	}
 	char *newfile = fl_file_chooser(gettext("Open File?"),
 		gettext("MGL Files (*.mgl)\tDAT Files (*.{dat,csv})\tAll Files (*)"), filename);
 	if(lastname)	free(lastname);

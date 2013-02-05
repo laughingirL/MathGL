@@ -198,7 +198,7 @@ int Fl_MathGL::handle(int code)
 			mglPoint p = gr->CalcXYZ(Fl::event_x()-x(), Fl::event_y()-y());
 			if(g)	g->LastMousePos = p;
 			char s[128];
-			sprintf(s,"x=%g, y=%g, z=%g",p.x,p.y,p.z);
+			snprintf(s,128,"x=%g, y=%g, z=%g",p.x,p.y,p.z);
 			draw();	fl_color(FL_BLACK);		fl_draw(s,40,70);
 		}
 	}

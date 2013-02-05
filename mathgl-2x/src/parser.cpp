@@ -583,7 +583,7 @@ int mglParser::Parse(mglGraph *gr, const wchar_t *string, long pos)
 				res = 0;	str +=2;	mgl_wcstrim(str);
 				mreal d = mglFormulaCalc(str, this).a[0];
 				char *buf=new char[128];
-				sprintf(buf,"%g",d);
+				snprintf(buf,128,"%g",d);
 				AddParam(nn, buf);	delete []buf;
 			}
 			delete []s;	return res;
@@ -679,7 +679,7 @@ int mglParser::Parse(mglGraph *gr, const wchar_t *string, long pos)
 				if(n && k!=na+2)
 				{
 					char buf[64];
-					sprintf(buf,"Bad arguments for %ls: %ld instead of %d\n",
+					snprintf(buf,64,"Bad arguments for %ls: %ld instead of %d\n",
 							a[0].w.c_str(),k-2,na);
 					gr->SetWarn(-1,buf);	n = 1;
 				}
@@ -927,11 +927,11 @@ void mglParser::Execute(mglGraph *gr, int n, const wchar_t **text)
 		gr->SetObjId(i+1);
 		r = Parse(gr,text[i],i+1);
 		if(r<0)	{	i = -r-2;	continue;	}
-		if(r==1)		sprintf(buf,"\nWrong argument(s) in line %ld\n", i+1);
-		else if(r==2)	sprintf(buf,"\nWrong command in line %ld\n", i+1);
-		else if(r==3)	sprintf(buf,"\nString too long in line %ld\n", i+1);
-		else if(r==4)	sprintf(buf,"\nUnbalanced ' in line %ld\n", i+1);
-		else if(gr->GetWarn()>0)	sprintf(buf," in line %ld\n", i+1);
+		if(r==1)		snprintf(buf,64,"\nWrong argument(s) in line %ld\n", i+1);
+		else if(r==2)	snprintf(buf,64,"\nWrong command in line %ld\n", i+1);
+		else if(r==3)	snprintf(buf,64,"\nString too long in line %ld\n", i+1);
+		else if(r==4)	snprintf(buf,64,"\nUnbalanced ' in line %ld\n", i+1);
+		else if(gr->GetWarn()>0)	snprintf(buf,64," in line %ld\n", i+1);
 		else *buf=0;
 		if(*buf)	gr->SetWarn(-2,buf);
 	}

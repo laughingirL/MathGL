@@ -69,6 +69,7 @@ mglFormulaC::~mglFormulaC()
 	if(Right) delete Right;
 }
 //-----------------------------------------------------------------------------
+#define LBUF 	2048
 // Formula constructor (automatically parse and "compile" formula)
 mglFormulaC::mglFormulaC(const char *string)
 {
@@ -79,7 +80,7 @@ mglFormulaC::mglFormulaC(const char *string)
 //printf("%s\n",string);	fflush(stdout);
 	char *str = new char[strlen(string)+1];
 	strcpy(str,string);
-	static char Buf[2048];
+	static char Buf[LBUF];
 	long n,len;
 	mgl_strtrim(str);
 	mgl_strlwr(str);
@@ -87,15 +88,15 @@ mglFormulaC::mglFormulaC(const char *string)
 	if(str[0]==0) {	delete []str;	return;	}
 	if(str[0]=='(' && mglCheck(&(str[1]),len-2))	// remove braces
 	{
-		strcpy(Buf,str+1);
-		len-=2;	Buf[len]=0;
+		strncpy(Buf,str+1,LBUF);
+		len-=2;	Buf[len]=Buf[LBUF-1]=0;
 		strcpy(str,Buf);
 	}
 	len=strlen(str);
 	n=mglFindInText(str,"+-");				// normal priority -- additions
 	if(n>=0)
 	{
-		if(str[n]=='+') Kod=EQ_ADD; else Kod=EQ_SUB;
+		strncpy(Buf,str,LBUF); Buf[n]=Buf[LBUF-1]=0;
 		strcpy(Buf,str); Buf[n]=0;
 		Left=new mglFormulaC(Buf);
 		Right=new mglFormulaC(Buf+n+1);
@@ -105,7 +106,7 @@ mglFormulaC::mglFormulaC(const char *string)
 	n=mglFindInText(str,"*/");				// high priority -- multiplications
 	if(n>=0)
 	{
-		if(str[n]=='*') Kod=EQ_MUL; else Kod=EQ_DIV;
+		strncpy(Buf,str,LBUF); Buf[n]=Buf[LBUF-1]=0;
 		strcpy(Buf,str); Buf[n]=0;
 		Left=new mglFormulaC(Buf);
 		Right=new mglFormulaC(Buf+n+1);
@@ -115,7 +116,7 @@ mglFormulaC::mglFormulaC(const char *string)
 	n=mglFindInText(str,"^");				// highest priority -- power
 	if(n>=0)
 	{
-		Kod=EQ_IPOW;
+		strncpy(Buf,str,LBUF); Buf[n]=Buf[LBUF-1]=0;
 		strcpy(Buf,str); Buf[n]=0;
 		Left=new mglFormulaC(Buf);
 		Right=new mglFormulaC(Buf+n+1);
@@ -138,10 +139,7 @@ mglFormulaC::mglFormulaC(const char *string)
 	else
 	{
 		char name[128];
-		strcpy(name,str);
-//		strcpy(Buf,str);
-		name[n]=0;
-//		len-=n;
+		strncpy(name,str,128);	name[127]=name[n]=0;
 		memcpy(Buf,&(str[n+1]),len-n);
 		len=strlen(Buf);
 		Buf[--len]=0;

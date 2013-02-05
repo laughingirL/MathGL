@@ -170,6 +170,7 @@ mglFormula::~mglFormula()
 	if(Right) delete Right;
 }
 //-----------------------------------------------------------------------------
+#define LBUF 	2048
 // Formula constructor (automatically parse and "compile" formula)
 mglFormula::mglFormula(const char *string)
 {
@@ -182,7 +183,7 @@ mglFormula::mglFormula(const char *string)
 	if(!string)	{	Kod = EQ_NUM;	Res = 0;	return;	}
 	char *str = new char[strlen(string)+1];
 	strcpy(str,string);
-	static char Buf[2048];
+	static char Buf[LBUF];
 	long n,len;
 	mgl_strtrim(str);
 	mgl_strlwr(str);
@@ -190,8 +191,8 @@ mglFormula::mglFormula(const char *string)
 	if(str[0]==0) {	delete []str;	return;	}
 	if(str[0]=='(' && mglCheck(&(str[1]),len-2))	// remove braces
 	{
-		strcpy(Buf,str+1);
-		len-=2;	Buf[len]=0;
+		strncpy(Buf,str+1,LBUF);
+		len-=2;	Buf[len]=Buf[LBUF-1]=0;
 		strcpy(str,Buf);
 	}
 	len=strlen(str);
@@ -199,7 +200,7 @@ mglFormula::mglFormula(const char *string)
 	if(n>=0)
 	{
 		if(str[n]=='|') Kod=EQ_OR;	else Kod=EQ_AND;
-		strcpy(Buf,str); Buf[n]=0;
+		strncpy(Buf,str,LBUF); Buf[n]=Buf[LBUF-1]=0;
 		Left=new mglFormula(Buf);
 		Right=new mglFormula(Buf+n+1);
 		delete []str;
@@ -211,7 +212,7 @@ mglFormula::mglFormula(const char *string)
 		if(str[n]=='<') Kod=EQ_LT;
 		else if(str[n]=='>') Kod=EQ_GT;
 		else Kod=EQ_EQ;
-		strcpy(Buf,str); Buf[n]=0;
+		strncpy(Buf,str,LBUF); Buf[n]=Buf[LBUF-1]=0;
 		Left=new mglFormula(Buf);
 		Right=new mglFormula(Buf+n+1);
 		delete []str;
@@ -221,7 +222,7 @@ mglFormula::mglFormula(const char *string)
 	if(n>=0 && (n<2 || str[n-1]!='e' || (str[n-2]!='.' && !isdigit(str[n-2]))))
 	{
 		if(str[n]=='+') Kod=EQ_ADD; else Kod=EQ_SUB;
-		strcpy(Buf,str); Buf[n]=0;
+		strncpy(Buf,str,LBUF); Buf[n]=Buf[LBUF-1]=0;
 		Left=new mglFormula(Buf);
 		Right=new mglFormula(Buf+n+1);
 		delete []str;
@@ -231,7 +232,7 @@ mglFormula::mglFormula(const char *string)
 	if(n>=0)
 	{
 		if(str[n]=='*') Kod=EQ_MUL; else Kod=EQ_DIV;
-		strcpy(Buf,str); Buf[n]=0;
+		strncpy(Buf,str,LBUF); Buf[n]=Buf[LBUF-1]=0;
 		Left=new mglFormula(Buf);
 		Right=new mglFormula(Buf+n+1);
 		delete []str;
@@ -241,7 +242,7 @@ mglFormula::mglFormula(const char *string)
 	if(n>=0)
 	{
 		Kod=EQ_IPOW;
-		strcpy(Buf,str); Buf[n]=0;
+		strncpy(Buf,str,LBUF); Buf[n]=Buf[LBUF-1]=0;
 		Left=new mglFormula(Buf);
 		Right=new mglFormula(Buf+n+1);
 		delete []str;
@@ -262,10 +263,7 @@ mglFormula::mglFormula(const char *string)
 	else
 	{
 		char name[128];
-		strcpy(name,str);
-//		strcpy(Buf,str);
-		name[n]=0;
-//		len-=n;
+		strncpy(name,str,128);	name[127]=name[n]=0;
 		memcpy(Buf,&(str[n+1]),len-n);
 		len=strlen(Buf);
 		Buf[--len]=0;

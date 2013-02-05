@@ -54,7 +54,7 @@ DataOpenDialog::DataOpenDialog(QWidget *parent) : QDialog(parent)
 
 	a = new QHBoxLayout;	o->addLayout(a);
 	l = new QLabel(tr("Data name"));	a->addWidget(l);
-	char buf[32];	sprintf(buf,"mgl_%d",numDataOpened);
+	char buf[32];	snprintf(buf,32,"mgl_%d",numDataOpened);
 	name = new QLineEdit(buf,this);		a->addWidget(name);
 
 	rA = new QRadioButton(tr("Auto detect data sizes"), this);
@@ -114,7 +114,7 @@ void DataOpenDialog::prepareResult()
 {
 	code = "";	numDataOpened++;	data = name->text();
 	// prepare unique value of name for next time
-	char buf[32];	sprintf(buf,"mgl_%d",numDataOpened);	name->setText(buf);
+	char buf[32];	snprintf(buf,32,"mgl_%d",numDataOpened);	name->setText(buf);
 	mglVar *v = parser.AddVar(data.toAscii().constData());
 	bool dd=0;
 	if(rA->isChecked())	//	auto sizes

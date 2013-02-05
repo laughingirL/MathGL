@@ -148,7 +148,7 @@ void mglBase::StartGroup(const char *name, int id)
 {
 	LightScale();
 	char buf[128];
-	sprintf(buf,"%s_%d",name,id);
+	snprintf(buf,128,"%s_%d",name,id);
 	StartAutoGroup(buf);
 }
 //-----------------------------------------------------------------------------

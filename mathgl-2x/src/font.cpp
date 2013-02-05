@@ -713,7 +713,7 @@ bool mglFont::Load(const char *base, const char *path)
 	}
 	Clear();							// first clear old
 
-	sprintf(str,"%s%c%s.vfm",path,sep,base?base:"");
+	snprintf(str,256,"%s%c%s.vfm",path,sep,base?base:"");
 	if(!(base && *base) || !read_main(str,cur))
 	{
 //		mglGlobalMess += "Load built-in font.\n";
@@ -722,7 +722,7 @@ bool mglFont::Load(const char *base, const char *path)
 	}
 
 	//================== bold ===========================================
-	sprintf(str,"%s%c%s_b.vfm",path,sep,base);	// this file may absent
+	snprintf(str,256,"%s%c%s_b.vfm",path,sep,base);	// this file may absent
 	if(read_data(str, fact+1, width[1], numl[1], ln[1], numt[1], tr[1], cur))
 	{
 		fact[3] = fact[1];		// copy default factor for bold-italic;
@@ -735,11 +735,11 @@ bool mglFont::Load(const char *base, const char *path)
 	}
 
 	//================== italic =========================================
-	sprintf(str,"%s%c%s_i.vfm",path,sep,base);
+	snprintf(str,256,"%s%c%s_i.vfm",path,sep,base);
 	read_data(str, fact+2, width[2], numl[2], ln[2], numt[2], tr[2], cur);
 
 	//================== bold-italic ====================================
-	sprintf(str,"%s%c%s_bi.vfm",path,sep,base);
+	snprintf(str,256,"%s%c%s_bi.vfm",path,sep,base);
 	read_data(str, fact+3, width[3], numl[3], ln[3], numt[3], tr[3], cur);
 	numb = cur;
 

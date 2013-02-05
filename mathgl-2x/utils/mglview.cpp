@@ -60,7 +60,7 @@ int main(int argc, char **argv)
 			ch = 'h';	break;
 		}
 		else if(ch==-1 && optind<argc)
-		{	strcpy(iname, argv[optind][0]=='-'?"":argv[optind]);	break;	}
+		{	strncpy(iname, argv[optind][0]=='-'?"":argv[optind],256);	break;	}
 	}
 	if(ch=='h')	return 0;
 

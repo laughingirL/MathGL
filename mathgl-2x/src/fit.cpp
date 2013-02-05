@@ -35,7 +35,7 @@ void MGL_EXPORT mgl_puts_fit(HMGL gr, double x, double y, double z, const char *
 {
 	long n = strlen(mglFitRes)+(pre?strlen(pre):0)+1;
 	char *buf = new char[n];
-	if(pre)	sprintf(buf,"%s%s",pre,mglFitRes);
+	if(pre)	snprintf(buf,n,"%s%s",pre,mglFitRes);
 	else	strcpy(buf,mglFitRes);
 	mgl_puts(gr,x,y,z,buf,font,size);
 	delete []buf;
@@ -148,10 +148,10 @@ mreal MGL_NO_EXPORT mgl_fit_base(mglFitData *fd, mreal *ini)
 void mglPrepareFitEq(mglBase *gr,mreal chi, const char *eq, const char *var, mreal *par)
 {
 	char buf[32]="";
-	sprintf(mglFitRes,"chi=%g",chi);
+	snprintf(mglFitRes,1024,"chi=%g",chi);
 	for(int i=0;i<int(strlen(var));i++)
 	{
-		sprintf(buf,", %c=%g",var[i],par[i]);
+		snprintf(buf,32,", %c=%g",var[i],par[i]);
 		strcat(mglFitRes,buf);
 	}
 	gr->SetWarn(-1,mglFitRes);
@@ -163,7 +163,7 @@ void mglPrepareFitEq(mglBase *gr,mreal chi, const char *eq, const char *var, mre
 		const char *c = strchr(var,eq[i]);
 		if(c && (i==0 || !isalnum(eq[i-1])) && (i==len-1 || !isalnum(eq[i+1])))
 		{
-			sprintf(buf,"%g",par[c-var]);
+			snprintf(buf,32,"%g",par[c-var]);
 			strcat(mglFitRes+k, buf);	k+=strlen(buf);
 		}
 		else	{	mglFitRes[k] = eq[i];	k++;	}

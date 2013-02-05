@@ -178,10 +178,10 @@ char *SetupDlg::ToScript()
 		if(!xid[i]->value()[0] || !yid[i]->value()[0] || !zid[i]->value()[0])	continue;
 		x1=atof(xid[i]->value());	y1=atof(yid[i]->value());	z1=atof(zid[i]->value());
 		if(!bid[i]->value()[0])
-			cur += sprintf(str,"light %ld %g %g %g '%c'\n",i,x1,y1,z1,
+			cur += snprintf(str,128,"light %ld %g %g %g '%c'\n",i,x1,y1,z1,
 						cols[cid[i]->value()]);
 		else
-			cur += sprintf(str,"light %ld %g %g %g '%c' %g\n",i,x1,y1,z1,
+			cur += snprintf(str,128,"light %ld %g %g %g '%c' %g\n",i,x1,y1,z1,
 						cols[cid[i]->value()],atof(bid[i]->value()));
 		strcat(buf,str);
 	}
@@ -193,24 +193,24 @@ char *SetupDlg::ToScript()
 	w2 = zmin->value()[0];	if(w2)	z2 = atof(zmax->value());
 	if(u1&&v1&&w1&&u2&&v2&&w2)
 	{
-		cur+=sprintf(str,"axis %g %g %g %g %g %g\n",x1,y1,z1,x2,y2,z2);
+		cur+=snprintf(str,128,"axis %g %g %g %g %g %g\n",x1,y1,z1,x2,y2,z2);
 		strcat(buf,str);
 	}
 	else
 	{
-		if(u1 && u2)	{cur+=sprintf(str,"xrange %g %g\n",x1,x2);	strcat(buf,str);}
-		if(v1 && v2)	{cur+=sprintf(str,"yrange %g %g\n",y1,y2);	strcat(buf,str);}
-		if(w1 && w2)	{cur+=sprintf(str,"zrange %g %g\n",z1,z2);	strcat(buf,str);}
+		if(u1 && u2)	{cur+=snprintf(str,128,"xrange %g %g\n",x1,x2);	strcat(buf,str);}
+		if(v1 && v2)	{cur+=snprintf(str,128,"yrange %g %g\n",y1,y2);	strcat(buf,str);}
+		if(w1 && w2)	{cur+=snprintf(str,128,"zrange %g %g\n",z1,z2);	strcat(buf,str);}
 	}
 	u1 = cmin->value()[0];	if(u1)	x1 = atof(cmin->value());
 	u2 = cmax->value()[0];	if(u2)	x2 = atof(cmax->value());
-	if(u1&&u2)	{cur+=sprintf(str,"crange %g %g\n",x1,x2);	strcat(buf,str);}
+	if(u1&&u2)	{cur+=snprintf(str,128,"crange %g %g\n",x1,x2);	strcat(buf,str);}
 	if(cur>num-256)	{	num+=512;	buf = (char *)realloc(buf,num*sizeof(char));	}
 
 	u1 = xorg->value()[0];	if(u1)	x1 = atof(xorg->value());
 	v1 = yorg->value()[0];	if(v1)	y1 = atof(yorg->value());
 	w1 = zorg->value()[0];	if(w1)	z1 = atof(zorg->value());
-	if(u1&&v1&&w1)	{sprintf(str,"origin %g %g %g\n",x1,y1,z1);	strcat(buf,str);}
+	if(u1&&v1&&w1)	{snprintf(str,128,"origin %g %g %g\n",x1,y1,z1);	strcat(buf,str);}
 
 	u1 = xtik->value()[0];	if(u1)	x1 = atof(xtik->value());
 	u2 = xsub->value()[0];	if(u2)	x2 = atoi(xsub->value());
@@ -218,67 +218,67 @@ char *SetupDlg::ToScript()
 	v2 = ysub->value()[0];	if(v2)	y2 = atoi(ysub->value());
 	w1 = ztik->value()[0];	if(w1)	z1 = atof(ztik->value());
 	w2 = zsub->value()[0];	if(w2)	z2 = atoi(zsub->value());
-	if(u1 && u2)	{cur+=sprintf(str,"xtick %g %g\n",x1,x2);	strcat(buf,str);}
-	if(v1 && v2)	{cur+=sprintf(str,"ytick %g %g\n",y1,y2);	strcat(buf,str);}
-	if(w1 && w2)	{cur+=sprintf(str,"ztick %g %g\n",z1,z2);	strcat(buf,str);}
-	if(u1 && !u2)	{cur+=sprintf(str,"xtick %g\n",x1);	strcat(buf,str);}
-	if(v1 && !v2)	{cur+=sprintf(str,"ytick %g\n",y1);	strcat(buf,str);}
-	if(w1 && !w2)	{cur+=sprintf(str,"ztick %g\n",z1);	strcat(buf,str);}
+	if(u1 && u2)	{cur+=snprintf(str,128,"xtick %g %g\n",x1,x2);	strcat(buf,str);}
+	if(v1 && v2)	{cur+=snprintf(str,128,"ytick %g %g\n",y1,y2);	strcat(buf,str);}
+	if(w1 && w2)	{cur+=snprintf(str,128,"ztick %g %g\n",z1,z2);	strcat(buf,str);}
+	if(u1 && !u2)	{cur+=snprintf(str,128,"xtick %g\n",x1);	strcat(buf,str);}
+	if(v1 && !v2)	{cur+=snprintf(str,128,"ytick %g\n",y1);	strcat(buf,str);}
+	if(w1 && !w2)	{cur+=snprintf(str,128,"ztick %g\n",z1);	strcat(buf,str);}
 
 	if(xlab->value()[0])
 	{
-		cur+=sprintf(str,"xlabel '%s' %d\n",xlab->value(), xpos->value()-1);
+		cur+=snprintf(str,128,"xlabel '%s' %d\n",xlab->value(), xpos->value()-1);
 		strcat(buf,str);
 	}
 	if(ylab->value()[0])
 	{
-		cur+=sprintf(str,"ylabel '%s' %d\n",ylab->value(), ypos->value()-1);
+		cur+=snprintf(str,128,"ylabel '%s' %d\n",ylab->value(), ypos->value()-1);
 		strcat(buf,str);
 	}
 	if(zlab->value()[0])
 	{
-		cur+=sprintf(str,"zlabel '%s' %d\n",zlab->value(), zpos->value()-1);
+		cur+=snprintf(str,128,"zlabel '%s' %d\n",zlab->value(), zpos->value()-1);
 		strcat(buf,str);
 	}
 	if(alphad->value()[0])
 	{
-		cur+=sprintf(str,"alphadef %g\n",atof(alphad->value()));
+		cur+=snprintf(str,128,"alphadef %g\n",atof(alphad->value()));
 		strcat(buf,str);
 	}
 	if(ambient->value()[0])
 	{
-		cur+=sprintf(str,"ambient %g\n",atof(ambient->value()));
+		cur+=snprintf(str,128,"ambient %g\n",atof(ambient->value()));
 		strcat(buf,str);
 	}
 
 	if(basew->value()[0])
 	{
-		cur+=sprintf(str,"baselinewidth %g\n",atof(basew->value()));
+		cur+=snprintf(str,128,"baselinewidth %g\n",atof(basew->value()));
 		strcat(buf,str);
 	}
 	if(mesh->value()[0])
 	{
-		cur+=sprintf(str,"meshnum %g\n",atof(mesh->value()));
+		cur+=snprintf(str,128,"meshnum %g\n",atof(mesh->value()));
 		strcat(buf,str);
 	}
 	if(axial->value()>=0)
 	{
-		cur+=sprintf(str,"axialdir '%c'\n",'x'+axial->value());
+		cur+=snprintf(str,128,"axialdir '%c'\n",'x'+axial->value());
 		strcat(buf,str);
 	}
 
 	if(font->value()[0])
 	{
-		cur+=sprintf(str,"font '%s'",font->value());
+		cur+=snprintf(str,128,"font '%s'",font->value());
 		strcat(buf,str);
-		if(size->value())	cur+=sprintf(str," %g\n",atof(size->value()));
-		else	cur+=sprintf(str,"\n");
+		if(size->value())	cur+=snprintf(str,128," %g\n",atof(size->value()));
+		else	cur+=snprintf(str,128,"\n");
 		strcat(buf,str);
 	}
-	if(rotate->value())	{cur+=sprintf(str,"rotatetext on\n");	strcat(buf,str);}
+	if(rotate->value())	{cur+=snprintf(str,128,"rotatetext on\n");	strcat(buf,str);}
 
-	if(alpha->value())	{cur+=sprintf(str,"alpha on\n");	strcat(buf,str);}
-	if(light->value())	{cur+=sprintf(str,"light on\n");	strcat(buf,str);}
+	if(alpha->value())	{cur+=snprintf(str,128,"alpha on\n");	strcat(buf,str);}
+	if(light->value())	{cur+=snprintf(str,128,"light on\n");	strcat(buf,str);}
 
 	code->value(buf);
 	return buf;

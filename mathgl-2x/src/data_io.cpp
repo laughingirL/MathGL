@@ -1034,11 +1034,11 @@ int MGL_EXPORT mgl_data_read_range(HMDT dat, const char *templ, double from, dou
 {
 	mglData d;
 	mreal t = from, *b;
-	long kx,ky,kz;
-	char *fname = new char[strlen(templ)+20];
+	long kx,ky,kz,n=strlen(templ)+20;
+	char *fname = new char[n];
 
 	//read first file
-	do{	sprintf(fname,templ,t);	t+= step;	} while(!mgl_data_read(&d,fname) && t<=to);
+	do{	snprintf(fname,n,templ,t);	t+= step;	} while(!mgl_data_read(&d,fname) && t<=to);
 
 	if(t>to)	return false;
 	kx = d.nx;	ky = d.ny;	kz = d.nz;
@@ -1048,7 +1048,7 @@ int MGL_EXPORT mgl_data_read_range(HMDT dat, const char *templ, double from, dou
 	// read other files
 	for(;t<=to;t+=step)
 	{
-		sprintf(fname,templ,t);
+		snprintf(fname,n,templ,t);
 		if(mgl_data_read(&d,fname))
 			if(!mgl_add_file(kx,ky,kz,b,&d,as_slice))
 			{	delete []fname;	free(b);	return false;	}

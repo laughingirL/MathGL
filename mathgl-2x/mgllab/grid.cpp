@@ -47,13 +47,13 @@ void Fl_Data_Table::draw_cell(TableContext context, int R, int C, int X, int Y, 
 	case CONTEXT_COL_HEADER:
 		fl_draw_box(FL_THIN_UP_BOX, X, Y, W, H, col_header_color());
 		fl_font(FL_HELVETICA | FL_BOLD, 14);
-		fl_color(FL_BLACK);		sprintf(s,"%d",C);
+		fl_color(FL_BLACK);		snprintf(s,32,"%d",C);
 		fl_draw(s, X, Y, W, H, FL_ALIGN_CENTER);
 		break;
 	case CONTEXT_ROW_HEADER:
 		fl_draw_box(FL_THIN_UP_BOX, X, Y, W, H, col_header_color());
 		fl_font(FL_HELVETICA | FL_BOLD, 14);
-		fl_color(FL_BLACK);		sprintf(s,"%d",R);
+		fl_color(FL_BLACK);		snprintf(s,32,"%d",R);
 		fl_draw(s, X, Y, W, H, FL_ALIGN_CENTER);
 		break;
 	case CONTEXT_CELL:
@@ -64,7 +64,7 @@ void Fl_Data_Table::draw_cell(TableContext context, int R, int C, int X, int Y, 
 		fl_font(FL_HELVETICA, 14);
 		fl_color(FL_BLACK);
 		if(mgl_isnan(data[C+nx*R]))	strcpy(s,"nan");
-		else	sprintf(s,"%g",data[C+nx*R]);
+		else	snprintf(s,32,"%g",data[C+nx*R]);
 		fl_draw(s, X+3, Y+3, W-6, H-6, FL_ALIGN_RIGHT);
 		break;
 	case CONTEXT_RC_RESIZE:
@@ -96,7 +96,7 @@ void Fl_Data_Table::cell_click()
 		input->resize(XX,YY,WW,HH);
 		char s[32];
 		if(mgl_isnan(data[C+nx*R]))	strcpy(s,"nan");
-		else	sprintf(s,"%g",data[C+nx*R]);
+		else	snprintf(s,32,"%g",data[C+nx*R]);
 		input->value(s);	input->show();
 		input->take_focus();
 	}

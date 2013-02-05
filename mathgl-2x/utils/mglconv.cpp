@@ -72,12 +72,12 @@ int main(int argc, char *argv[])
 				"\t-h           print this message\n" );
 			ch = 'h';	break;
 		}
-		else if(ch=='o')	strcpy(oname, optarg);
+		else if(ch=='o')	strncpy(oname, optarg,256);
 		else if(ch==-1 && optind<argc)
-		{	strcpy(iname, argv[optind][0]=='-'?"":argv[optind]);	break;	}
+		{	strncpy(iname, argv[optind][0]=='-'?"":argv[optind],256);	break;	}
 	}
 	if(ch=='h')	return 0;
-	if(*oname==0)	{	strcpy(oname,*iname?iname:"out");	strcat(oname,".png");	}
+	if(*oname==0)	{	strncpy(oname,*iname?iname:"out",250);	strcat(oname,".png");	}
 	
 	mgl_ask_func = mgl_ask_gets;
 	// prepare for animation
@@ -116,7 +116,7 @@ int main(int argc, char *argv[])
 			p.Execute(&gr,str.c_str());
 			if(gr.Message()[0])	printf("%s\n",gr.Message());
 			gr.EndFrame();
-			sprintf(buf,"%s-%ld",oname,i);
+			snprintf(buf,2048,"%s-%ld",oname,i);
 			if(!gif)	gr.WriteFrame(buf);
 		}
 		if(gif)	gr.CloseGIF();
