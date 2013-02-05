@@ -127,7 +127,7 @@ double mgl_ipow(double x,int n)
 	if(n%2==1)	t *= x;
 	return t;
 }
-double mgl_ipow_(double *x,int *n)	{	return mgl_ipow(*x,*n);	}
+double mgl_ipow_(mreal *x,int *n)	{	return mgl_ipow(*x,*n);	}
 //-----------------------------------------------------------------------------
 double mgl_get_time(const char *time, const char *fmt)
 {

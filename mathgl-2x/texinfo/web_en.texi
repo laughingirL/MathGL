@@ -423,8 +423,8 @@ You may download current version of MathGL for following configurations:
 @uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}-mingw.i686.7z,Win32 GPL} binaries for MinGW (build for i686)
 @item
 @uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}.LGPL-mingw.i686.7z,Win32 LGPL} binaries for MinGW (build for i686, no GSL and HDF5 support)
-@item
-@uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}.LGPL-win64.7z,Win64 LGPL} binaries for MSVS 2010 (no GSL and HDF5 support)
+@c @item
+@c @uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}.LGPL-win64.7z,Win64 LGPL} binaries for MSVS 2010 (no GSL and HDF5 support)
 @item
 @uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}.eng.pdf,PDF} documentation in English
 @item

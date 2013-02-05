@@ -37,7 +37,7 @@ class mglData;
 class mglParser;
 class mglFormula;
 class mglFont;
-typedef mglBase*  HMGL;
+typedef mglBase* HMGL;
 typedef mglData* HMDT;
 typedef mglParser* HMPR;
 typedef mglFormula* HMEX;
@@ -145,7 +145,7 @@ inline mglPnt operator*(float b, const mglPnt &a)
 	c.r*=b;	c.g*=b;	c.b*=b;	c.a*=b;	return c;	}
 //-----------------------------------------------------------------------------
 /// Structure for glyph representation
-struct mglGlyph
+struct MGL_EXPORT mglGlyph
 {
 	long nt, nl;			///< number of triangles and lines
 	short *trig, *line;	///< vertexes of triangles and lines

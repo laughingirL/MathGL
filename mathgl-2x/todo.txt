@@ -34,7 +34,6 @@ A. Paper about MathGL!!!
 	w. Test diffuse, specular local sources
 
 16. Save should save Id too.
-18. Text about string concatenation with string and numbers (like 'str1',val,'str2' or 'str1'val'str2')
 
 ============= UDAV =============
 

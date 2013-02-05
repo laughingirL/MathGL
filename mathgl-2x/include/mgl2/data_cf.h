@@ -42,7 +42,7 @@ double MGL_EXPORT mgl_rnd();
 double MGL_EXPORT mgl_rnd_();
 /// Get integer power of x
 double MGL_EXPORT mgl_ipow(double x,int n);
-double MGL_EXPORT mgl_ipow_(double *x,int *n);
+double MGL_EXPORT mgl_ipow_(mreal *x,int *n);
 /// Get number of seconds since 1970 for given string
 double MGL_EXPORT mgl_get_time(const char *time, const char *fmt);
 double MGL_EXPORT mgl_get_time_(const char *time, const char *fmt,int,int);
@@ -67,7 +67,7 @@ void MGL_EXPORT mgl_data_rearrange(HMDT dat, long mx,long my,long mz);
 void MGL_EXPORT mgl_data_rearrange_(uintptr_t *dat, int *mx, int *my, int *mz);
 /// Link external data array (don't delete it at exit)
 void MGL_EXPORT mgl_data_link(HMDT dat, mreal *A,long mx,long my,long mz);
-void MGL_EXPORT mgl_data_link_(uintptr_t *d, float *A, int *nx,int *ny,int *nz);
+void MGL_EXPORT mgl_data_link_(uintptr_t *d, mreal *A, int *nx,int *ny,int *nz);
 /// Allocate memory and copy the data from the (float *) array
 void MGL_EXPORT mgl_data_set_float(HMDT dat, const float *A,long mx,long my,long mz);
 void MGL_EXPORT mgl_data_set_float_(uintptr_t *dat, const float *A,int *NX,int *NY,int *NZ);
