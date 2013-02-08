@@ -69,7 +69,6 @@ mglFormulaC::~mglFormulaC()
 	if(Right) delete Right;
 }
 //-----------------------------------------------------------------------------
-#define LBUF 	2048
 // Formula constructor (automatically parse and "compile" formula)
 mglFormulaC::mglFormulaC(const char *string)
 {
@@ -80,7 +79,6 @@ mglFormulaC::mglFormulaC(const char *string)
 //printf("%s\n",string);	fflush(stdout);
 	char *str = new char[strlen(string)+1];
 	strcpy(str,string);
-	static char Buf[LBUF];
 	long n,len;
 	mgl_strtrim(str);
 	mgl_strlwr(str);
@@ -88,40 +86,35 @@ mglFormulaC::mglFormulaC(const char *string)
 	if(str[0]==0) {	delete []str;	return;	}
 	if(str[0]=='(' && mglCheck(&(str[1]),len-2))	// remove braces
 	{
-		strncpy(Buf,str+1,LBUF);
-		len-=2;	Buf[len]=Buf[LBUF-1]=0;
-		strcpy(str,Buf);
+		memmove(str,str+1,len);
+		len-=2;	str[len]=0;
 	}
 	len=strlen(str);
 	n=mglFindInText(str,"+-");				// normal priority -- additions
-	if(n>=0)
+	if(n>=0 && (n<2 || str[n-1]!='e' || (str[n-2]!='.' && !isdigit(str[n-2]))))
 	{
-		strncpy(Buf,str,LBUF); Buf[n]=Buf[LBUF-1]=0;
-		strcpy(Buf,str); Buf[n]=0;
-		Left=new mglFormulaC(Buf);
-		Right=new mglFormulaC(Buf+n+1);
-		delete []str;
-		return;
+		if(str[n]=='+') Kod=EQ_ADD; else Kod=EQ_SUB;
+		str[n]=0;
+		Left=new mglFormulaC(str);
+		Right=new mglFormulaC(str+n+1);
+		delete []str;	return;
 	}
 	n=mglFindInText(str,"*/");				// high priority -- multiplications
 	if(n>=0)
 	{
-		strncpy(Buf,str,LBUF); Buf[n]=Buf[LBUF-1]=0;
-		strcpy(Buf,str); Buf[n]=0;
-		Left=new mglFormulaC(Buf);
-		Right=new mglFormulaC(Buf+n+1);
-		delete []str;
-		return;
+		if(str[n]=='*') Kod=EQ_MUL; else Kod=EQ_DIV;
+		str[n]=0;
+		Left=new mglFormulaC(str);
+		Right=new mglFormulaC(str+n+1);
+		delete []str;	return;
 	}
 	n=mglFindInText(str,"^");				// highest priority -- power
 	if(n>=0)
 	{
-		strncpy(Buf,str,LBUF); Buf[n]=Buf[LBUF-1]=0;
-		strcpy(Buf,str); Buf[n]=0;
-		Left=new mglFormulaC(Buf);
-		Right=new mglFormulaC(Buf+n+1);
-		delete []str;
-		return;
+		Kod=EQ_IPOW;		str[n]=0;
+		Left=new mglFormulaC(str);
+		Right=new mglFormulaC(str+n+1);
+		delete []str;	return;
 	}
 
 	for(n=0;n<len;n++)	if(str[n]=='(')	break;
@@ -140,9 +133,8 @@ mglFormulaC::mglFormulaC(const char *string)
 	{
 		char name[128];
 		strncpy(name,str,128);	name[127]=name[n]=0;
-		memcpy(Buf,&(str[n+1]),len-n);
-		len=strlen(Buf);
-		Buf[--len]=0;
+		memmove(str,str+n+1,len-n);
+		len=strlen(str);		str[--len]=0;
 		if(!strcmp(name,"sin")) Kod=EQ_SIN;
 		else if(!strcmp(name,"cos")) Kod=EQ_COS;
 		else if(!strcmp(name,"tg")) Kod=EQ_TAN;
@@ -164,15 +156,15 @@ mglFormulaC::mglFormulaC(const char *string)
 		else if(!strcmp(name,"ln")) Kod=EQ_LN;
 		else if(!strcmp(name,"abs")) Kod=EQ_ABS;
 		else {	delete []str;	return;	}	// unknown function
-		n=mglFindInText(Buf,",");
+		n=mglFindInText(str,",");
 		if(n>=0)
 		{
-			Buf[n]=0;
-			Left=new mglFormulaC(Buf);
-			Right=new mglFormulaC(&(Buf[n+1]));
+			str[n]=0;
+			Left=new mglFormulaC(str);
+			Right=new mglFormulaC(str+n+1);
 		}
 		else
-			Left=new mglFormulaC(Buf);
+			Left=new mglFormulaC(str);
 	}
 	delete []str;
 }

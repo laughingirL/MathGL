@@ -170,7 +170,6 @@ mglFormula::~mglFormula()
 	if(Right) delete Right;
 }
 //-----------------------------------------------------------------------------
-#define LBUF 	2048
 // Formula constructor (automatically parse and "compile" formula)
 mglFormula::mglFormula(const char *string)
 {
@@ -183,28 +182,25 @@ mglFormula::mglFormula(const char *string)
 	if(!string)	{	Kod = EQ_NUM;	Res = 0;	return;	}
 	char *str = new char[strlen(string)+1];
 	strcpy(str,string);
-	static char Buf[LBUF];
 	long n,len;
 	mgl_strtrim(str);
 	mgl_strlwr(str);
 	len=strlen(str);
 	if(str[0]==0) {	delete []str;	return;	}
-	if(str[0]=='(' && mglCheck(&(str[1]),len-2))	// remove braces
+	if(str[0]=='(' && mglCheck(str+1,len-2))	// remove braces
 	{
-		strncpy(Buf,str+1,LBUF);
-		len-=2;	Buf[len]=Buf[LBUF-1]=0;
-		strcpy(str,Buf);
+		memmove(str,str+1,len);
+		len-=2;	str[len]=0;
 	}
 	len=strlen(str);
 	n=mglFindInText(str,"&|");				// lowest priority -- logical
 	if(n>=0)
 	{
 		if(str[n]=='|') Kod=EQ_OR;	else Kod=EQ_AND;
-		strncpy(Buf,str,LBUF); Buf[n]=Buf[LBUF-1]=0;
-		Left=new mglFormula(Buf);
-		Right=new mglFormula(Buf+n+1);
-		delete []str;
-		return;
+		str[n]=0;
+		Left=new mglFormula(str);
+		Right=new mglFormula(str+n+1);
+		delete []str;	return;
 	}
 	n=mglFindInText(str,"<>=");				// low priority -- conditions
 	if(n>=0)
@@ -212,41 +208,36 @@ mglFormula::mglFormula(const char *string)
 		if(str[n]=='<') Kod=EQ_LT;
 		else if(str[n]=='>') Kod=EQ_GT;
 		else Kod=EQ_EQ;
-		strncpy(Buf,str,LBUF); Buf[n]=Buf[LBUF-1]=0;
-		Left=new mglFormula(Buf);
-		Right=new mglFormula(Buf+n+1);
-		delete []str;
-		return;
+		str[n]=0;
+		Left=new mglFormula(str);
+		Right=new mglFormula(str+n+1);
+		delete []str;	return;
 	}
 	n=mglFindInText(str,"+-");				// normal priority -- additions
 	if(n>=0 && (n<2 || str[n-1]!='e' || (str[n-2]!='.' && !isdigit(str[n-2]))))
 	{
 		if(str[n]=='+') Kod=EQ_ADD; else Kod=EQ_SUB;
-		strncpy(Buf,str,LBUF); Buf[n]=Buf[LBUF-1]=0;
-		Left=new mglFormula(Buf);
-		Right=new mglFormula(Buf+n+1);
-		delete []str;
-		return;
+		str[n]=0;
+		Left=new mglFormula(str);
+		Right=new mglFormula(str+n+1);
+		delete []str;	return;
 	}
 	n=mglFindInText(str,"*/");				// high priority -- multiplications
 	if(n>=0)
 	{
 		if(str[n]=='*') Kod=EQ_MUL; else Kod=EQ_DIV;
-		strncpy(Buf,str,LBUF); Buf[n]=Buf[LBUF-1]=0;
-		Left=new mglFormula(Buf);
-		Right=new mglFormula(Buf+n+1);
-		delete []str;
-		return;
+		str[n]=0;
+		Left=new mglFormula(str);
+		Right=new mglFormula(str+n+1);
+		delete []str;	return;
 	}
 	n=mglFindInText(str,"^");				// highest priority -- power
 	if(n>=0)
 	{
-		Kod=EQ_IPOW;
-		strncpy(Buf,str,LBUF); Buf[n]=Buf[LBUF-1]=0;
-		Left=new mglFormula(Buf);
-		Right=new mglFormula(Buf+n+1);
-		delete []str;
-		return;
+		Kod=EQ_IPOW;		str[n]=0;
+		Left=new mglFormula(str);
+		Right=new mglFormula(str+n+1);
+		delete []str;	return;
 	}
 
 	for(n=0;n<len;n++)	if(str[n]=='(')	break;
@@ -264,9 +255,8 @@ mglFormula::mglFormula(const char *string)
 	{
 		char name[128];
 		strncpy(name,str,128);	name[127]=name[n]=0;
-		memcpy(Buf,&(str[n+1]),len-n);
-		len=strlen(Buf);
-		Buf[--len]=0;
+		memmove(str,str+n+1,len-n);
+		len=strlen(str);		str[--len]=0;
 		if(!strncmp(name,"jacobi_",7))
 			memmove(name,name+7,(strlen(name+7)+1)*sizeof(char));
 		if(name[0]=='a')
@@ -377,14 +367,14 @@ mglFormula::mglFormula(const char *string)
 		else if(!strcmp(name,"zeta"))	Kod=EQ_ZETA;
 		else if(!strcmp(name,"z"))		Kod=EQ_Z;
 		else {	delete []str;	return;	}	// unknown function
-		n=mglFindInText(Buf,",");
+		n=mglFindInText(str,",");
 		if(n>=0)
 		{
-			Buf[n]=0;
-			Left=new mglFormula(Buf);
-			Right=new mglFormula(&(Buf[n+1]));
+			str[n]=0;
+			Left=new mglFormula(str);
+			Right=new mglFormula(str+n+1);
 		}
-		else	Left=new mglFormula(Buf);
+		else	Left=new mglFormula(str);
 	}
 	delete []str;
 }
@@ -463,7 +453,7 @@ double MGL_NO_EXPORT cgt(double a,double b)	{return a>b?1:0;}
 double MGL_NO_EXPORT add(double a,double b)	{return a+b;}
 double MGL_NO_EXPORT sub(double a,double b)	{return a-b;}
 double MGL_NO_EXPORT mul(double a,double b)	{return a&&b?a*b:0;}
-double MGL_NO_EXPORT div(double a,double b)	{return b?a/b:NAN;}
+double MGL_NO_EXPORT del(double a,double b)	{return b?a/b:NAN;}
 double MGL_NO_EXPORT ipw(double a,double b)	{return fabs(b-int(b))<1e-5 ? mgl_ipow(a,int(b)) : pow(a,b);}
 double MGL_NO_EXPORT llg(double a,double b)	{return log(a)/log(b);}
 #if MGL_HAVE_GSL
@@ -500,7 +490,7 @@ mreal mglFormula::CalcIn(const mreal *a1) const
 			,0,0,0,0,0,0,0,0
 #endif
 		};
-	func_2 f2[22] = {clt,cgt,ceq,cor,cand,add,sub,mul,div,ipw,pow,fmod,llg,arg
+	func_2 f2[22] = {clt,cgt,ceq,cor,cand,add,sub,mul,del,ipw,pow,fmod,llg,arg
 #if MGL_HAVE_GSL
 			,gsl_sf_bessel_Jnu,gsl_sf_bessel_Ynu,
 			gsl_sf_bessel_Inu,gsl_sf_bessel_Knu,
