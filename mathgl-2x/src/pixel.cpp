@@ -183,8 +183,10 @@ mglPoint mglCanvas::CalcScr(mglPoint p) const
 {	int x,y;	CalcScr(p,&x,&y);	return mglPoint(x,y);	}
 //-----------------------------------------------------------------------------
 MGL_NO_EXPORT int mgl_type_prior[8]={1,2,4,5, 0,3,0, 7};
+bool mglCreationOrder=false;
 bool operator<(const mglPrim &a, const mglPrim &b)
 {
+	if(mglCreationOrder)	return a.n1<b.n1;
 	register int t1 = mgl_type_prior[a.type], t2 = mgl_type_prior[b.type];
 	if(a.z!=b.z) 	return a.z < b.z;
 	if(t1!=t2)		return t1 > t2;
@@ -194,6 +196,7 @@ bool operator<(const mglPrim &a, const mglPrim &b)
 //-----------------------------------------------------------------------------
 bool operator>(const mglPrim &a, const mglPrim &b)
 {
+	if(mglCreationOrder)	return a.n1>b.n1;
 	register int t1 = mgl_type_prior[a.type], t2 = mgl_type_prior[b.type];
 	if(a.z!=b.z) 	return a.z > b.z;
 	if(t1!=t2)		return t1 < t2;
@@ -280,7 +283,16 @@ void mglCanvas::PreparePrim(bool fast)
 	mglStartThread(&mglCanvas::pxl_transform,this,Pnt.size());
 	if(fast)	mglStartThread(&mglCanvas::pxl_setz,this,Prm.size());
 	else	mglStartThread(&mglCanvas::pxl_setz_adv,this,Prm.size());
+	mglCreationOrder = false;
 	std::sort(Prm.begin(), Prm.end());
+}
+//-----------------------------------------------------------------------------
+void mglBase::resort()
+{
+	mglCreationOrder = true;
+	std::sort(Prm.begin(), Prm.end());
+	mglCreationOrder = false;
+	clr(MGL_FINISHED);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::pxl_primdr(size_t id, size_t , const void *)

@@ -52,7 +52,8 @@ void VarDlg::init()
 //-----------------------------------------------------------------------------
 char *VarDlg::get_result()
 {
-	static char res[64],a1[16]=":",a2[16]=":",a3[16]=":";
+	static char res[64];
+	char a1[16]=":",a2[16]=":",a3[16]=":";
 	res[0]=0;
 	if(var->value()<0)	return res;
 	const Fl_Menu_Item m=var->menu()[var->value()];

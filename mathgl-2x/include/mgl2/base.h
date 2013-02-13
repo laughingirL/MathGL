@@ -437,6 +437,7 @@ public:
 	inline mreal mark_size()	{	return MarkSize*font_factor;	}
 //	inline char last_color()	{	return last_style[1];	}
 	inline const char *last_line()	{	return last_style;	}
+	void resort();	///< Resort primitives in creation order (need for export in 3D formats)
 
 protected:
 	mglPoint OMin;		///< Lower edge for original axis (before scaling)

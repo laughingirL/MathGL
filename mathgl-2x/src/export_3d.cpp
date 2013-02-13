@@ -1131,6 +1131,9 @@ void MGL_EXPORT mgl_write_x3d(HMGL gr, const char *fname,const char *descr)
 	}
 	delete []ng;
 
+	// resort in creation order for proper drawing of lines and faces
+	gr->resort();
+	
 	// primitive definition in groups
 	long npnt = gr->GetPntNum(), k;
 	long *pnt=new long[npnt];
@@ -1141,24 +1144,107 @@ void MGL_EXPORT mgl_write_x3d(HMGL gr, const char *fname,const char *descr)
 		std::vector<long> &p = gr->Grp[i].p;
 
 		// define coordinates, colors and so on
-		memset(pnt,-1,npnt*sizeof(long));
+		long line=-1, face=-1, other=-1;
 		for(j=0,k=0;j<p.size();j++)	// find points for this group
 		{
 			const mglPrim &q=gr->GetPrm(p[j]);
-			if(q.n1>=0 && pnt[q.n1]<0)	{	pnt[q.n1]=k;	k++;	}
-			if(q.type>0 && q.type<4 && q.n2>=0 && pnt[q.n2]<0)	{	pnt[q.n2]=k;	k++;	}
-			if(q.type>1 && q.type<4 && q.n3>=0 && pnt[q.n3]<0)	{	pnt[q.n3]=k;	k++;	}
-			if(q.type==3 && q.n4>=0 && pnt[q.n4]<0)	{	pnt[q.n4]=k;	k++;	}
+			if(q.type==1)	line=q.n1;	// find kind of primitives in the group
+			if(q.type==2 || q.type==3)	face =q.n1;
+			if(q.type>3 || q.type==0)	other=q.n1;
 		}
-		
-		mgl_printf(fp, gz, "<Coordinate DEF='mypnts_%ld' point='",i);
-		for(i=0;i<gr->GetPntNum();i++)	if(pnt[i]>=0)
-		{	const mglPnt &p=gr->GetPnt(i);	mgl_printf(fp, gz, "%g %g %g, ", p.x,p.y,p.z);	}
-		mgl_printf(fp, gz, "0.0 0.0 0.0'/>");
-		mgl_printf(fp, gz, "<Color DEF='myclrs' color='");
-		for(i=0;i<gr->GetPntNum();i++)	if(pnt[i]>=0)
-		{	const mglPnt &p=gr->GetPnt(i);	mgl_printf(fp, gz, "%g %g %g, ", p.r,p.g,p.b);	}
-		mgl_printf(fp, gz, "0.0 0.0 0.0'/>");
+
+		// now save lines
+		if(line>=0)
+		{
+			mglColor c=gr->GetPntC(line);
+			bool same=true;	// check if there are the same colors for all line segments
+			for(j=0;j<p.size();j++)
+			{
+				const mglPrim &q=gr->GetPrm(p[j]);
+				if(q.type==1 && c!=gr->GetPntC(q.n1))	same=false;
+			}
+			memset(pnt,-1,npnt*sizeof(long));
+			for(j=0,k=0;j<p.size();j++)	// rearrange points for this group
+			{
+				const mglPrim &q=gr->GetPrm(p[j]);
+				if(q.type!=1)	continue;
+				if(q.n1>=0 && pnt[q.n1]<0)	{	pnt[q.n1]=k;	k++;	}
+				if(q.n2>=0 && pnt[q.n2]<0)	{	pnt[q.n2]=k;	k++;	}
+			}
+			mgl_printf(fp, gz, "<Shape><Coordinate DEF='Lpnts_%ld' point='",i);
+			for(j=0;j<gr->GetPntNum();j++)	if(pnt[j]>=0)
+			{	const mglPnt &p=gr->GetPnt(j);	mgl_printf(fp, gz, "%g %g %g, ", p.x,p.y,p.z);	}
+			mgl_printf(fp, gz, "0.0 0.0 0.0'/>");
+			mgl_printf(fp, gz, "<Color DEF='Lclrs_%ld' color='",i);
+			for(j=0;j<gr->GetPntNum();j++)	if(pnt[j]>=0)
+			{	const mglPnt &p=gr->GetPnt(j);	mgl_printf(fp, gz, "%g %g %g, ", p.r,p.g,p.b);	}
+			mgl_printf(fp, gz, "0.0 0.0 0.0'/>");
+
+			// TODO save IndexedLineSet here + manual color is same==true
+			
+			mgl_printf(fp, gz, "</Shape>");
+		}
+
+		// now save faces
+		if(face>=0)
+		{
+			mglColor c=gr->GetPntC(face);
+			bool same=true;	// check if there are the same colors for all line segments
+			for(j=0;j<p.size();j++)
+			{
+				const mglPrim &q=gr->GetPrm(p[j]);
+				if((q.type==2 || q.type==3) && c!=gr->GetPntC(q.n1))	same=false;
+			}
+			memset(pnt,-1,npnt*sizeof(long));
+			for(j=0,k=0;j<p.size();j++)	// rearrange points for this group
+			{
+				const mglPrim &q=gr->GetPrm(p[j]);
+				if(q.type!=2 && q.type!=3)	continue;
+				if(q.n1>=0 && pnt[q.n1]<0)	{	pnt[q.n1]=k;	k++;	}
+				if(q.n2>=0 && pnt[q.n2]<0)	{	pnt[q.n2]=k;	k++;	}
+				if(q.n3>=0 && pnt[q.n3]<0)	{	pnt[q.n3]=k;	k++;	}
+				if(q.type==3 && q.n4>=0 && pnt[q.n4]<0)	{	pnt[q.n4]=k;	k++;	}
+			}
+			mgl_printf(fp, gz, "<Shape><Coordinate DEF='Fpnts_%ld' point='",i);
+			for(j=0;j<gr->GetPntNum();j++)	if(pnt[j]>=0)
+			{	const mglPnt &p=gr->GetPnt(j);	mgl_printf(fp, gz, "%g %g %g, ", p.x,p.y,p.z);	}
+			mgl_printf(fp, gz, "0.0 0.0 0.0'/>");
+			mgl_printf(fp, gz, "<Color DEF='Fclrs_%ld' color='",i);
+			for(j=0;j<gr->GetPntNum();j++)	if(pnt[j]>=0)
+			{	const mglPnt &p=gr->GetPnt(j);	mgl_printf(fp, gz, "%g %g %g, ", p.r,p.g,p.b);	}
+			mgl_printf(fp, gz, "0.0 0.0 0.0'/>");
+
+			// TODO save IndexedLineSet here + manual color is same==true
+
+			mgl_printf(fp, gz, "</Shape>");
+		}
+
+		// now save other primitives
+		if(other>=0)
+		{
+/*			memset(pnt,-1,npnt*sizeof(long));
+			for(j=0,k=0;j<p.size();j++)	// rearrange points for this group
+			{
+				const mglPrim &q=gr->GetPrm(p[j]);
+				if(q.type!=2 && q.type!=3)	continue;
+				if(q.n1>=0 && pnt[q.n1]<0)	{	pnt[q.n1]=k;	k++;	}
+				if(q.n2>=0 && pnt[q.n2]<0)	{	pnt[q.n2]=k;	k++;	}
+				if(q.n3>=0 && pnt[q.n3]<0)	{	pnt[q.n3]=k;	k++;	}
+				if(q.type==3 && q.n4>=0 && pnt[q.n4]<0)	{	pnt[q.n4]=k;	k++;	}
+			}
+			mgl_printf(fp, gz, "<Shape><Coordinate DEF='Fpnts_%ld' point='",i);
+			for(j=0;j<gr->GetPntNum();j++)	if(pnt[j]>=0)
+			{	const mglPnt &p=gr->GetPnt(j);	mgl_printf(fp, gz, "%g %g %g, ", p.x,p.y,p.z);	}
+			mgl_printf(fp, gz, "0.0 0.0 0.0'/>");
+			mgl_printf(fp, gz, "<Color DEF='Fclrs_%ld' color='",i);
+			for(j=0;j<gr->GetPntNum();j++)	if(pnt[j]>=0)
+			{	const mglPnt &p=gr->GetPnt(j);	mgl_printf(fp, gz, "%g %g %g, ", p.r,p.g,p.b);	}
+			mgl_printf(fp, gz, "0.0 0.0 0.0'/>");
+
+			// TODO save IndexedLineSet here + manual color is same==true
+
+			mgl_printf(fp, gz, "</Shape>");*/
+		}
 		// no normals since mathgl ones are "signless" -- x3d should calculate it by itself
 
 		for(j=0;j<p.size();j++)

@@ -5,8 +5,6 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN. (VID=18d1 and PID=4e41)
 
 A. Paper about MathGL!!!
 
-0. Check how Spline/mglSpline3 work for n[xyz]<4 !!!
-
 1. Export to X3D
 2. GTK window/widgets
 3. Labels at TriCont()
@@ -19,6 +17,7 @@ A. Paper about MathGL!!!
 10. introduce new primitive type=5 -- arrow for Quality&3!=3. for better drawing in projections + json/view ?!?
 11. enable line width for mesh and fall???
 12. WX window/widgets
+13. Textured brushes for drawing: (a) as 8*8 array, i.e. long (save only index in mglPrim::type); (b) BrushWidth; (c) BrushAngle; (d) some pixels become transparent; (e) count from edge of image; (f) symbols {+-;=\*<>^osdiODSI}. Question: how this can be exported???
 
 14. New tests:
 	b. Add test for curved text align "L","C","R"

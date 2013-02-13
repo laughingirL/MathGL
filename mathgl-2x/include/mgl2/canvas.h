@@ -88,7 +88,7 @@ class mglCanvas;
 /// Structure for light source
 struct mglDrawReg
 {
-	unsigned PDef;
+	unsigned long PDef;
 	int ObjId;
 	mreal PenWidth, pPos;
 	int x1,x2,y1,y2;
