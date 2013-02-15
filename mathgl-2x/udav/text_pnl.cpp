@@ -253,11 +253,7 @@ void TextPanel::newCmd(int n)
 	newCmdDlg->show();
 }
 //-----------------------------------------------------------------------------
-#if MGL_HAVE_HDF5==0
-void TextPanel::saveHDF5(const QString &fileName){}
-void TextPanel::loadHDF5(const QString &fileName){}
-//-----------------------------------------------------------------------------
-#else
+#if MGL_HAVE_HDF5
 #define H5_USE_16_API
 #include <hdf5.h>
 void TextPanel::loadHDF5(const QString &fileName)
@@ -376,6 +372,9 @@ void TextPanel::saveHDF5(const QString &fileName)
 	setStatus(tr("File %1 saved").arg(fileName));
 	return;
 }
+#else
+void TextPanel::saveHDF5(const QString &fileName){}
+void TextPanel::loadHDF5(const QString &fileName){}
 #endif
 //-----------------------------------------------------------------------------
 void TextPanel::load(const QString &fileName)

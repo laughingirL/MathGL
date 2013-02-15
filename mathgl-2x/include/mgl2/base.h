@@ -74,7 +74,7 @@ public:
 #endif
 typedef const mglDataA* HCDT;
 //-----------------------------------------------------------------------------
-inline mreal MGL_EXPORT mgl_d(mreal v,mreal v1,mreal v2) { return v2!=v1?(v-v1)/(v2-v1):NAN; }
+inline mreal mgl_d(mreal v,mreal v1,mreal v2) { return v2!=v1?(v-v1)/(v2-v1):NAN; }
 //-----------------------------------------------------------------------------
 mglPoint GetX(HCDT x, int i, int j, int k=0);
 mglPoint GetY(HCDT y, int i, int j, int k=0);

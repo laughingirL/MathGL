@@ -710,7 +710,7 @@ MGL_EXPORT mglColorID mglColorIds[31] = {{'k', mglColor(0,0,0)},
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_chrrgb(char p, float c[3])
 {
-	c[0]=c[1]=c[3]=-1;
+	c[0]=c[1]=c[2]=-1;
 	for(long i=0; mglColorIds[i].id; i++)
 		if(mglColorIds[i].id==p)
 		{

@@ -26,8 +26,8 @@
 #include <gsl/gsl_vector.h>
 #include <gsl/gsl_matrix.h>
 #else
-struct gsl_vector;
-struct gsl_matrix;
+typedef void gsl_vector;
+typedef void gsl_matrix;
 #endif
 //-----------------------------------------------------------------------------
 #ifdef __cplusplus

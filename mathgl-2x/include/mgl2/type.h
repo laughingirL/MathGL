@@ -118,7 +118,7 @@ struct mglColor
 	inline float NormS()
 	{	return r*r+g*g+b*b;	}
 	/// Set color from symbolic id
-	void Set(char p, float bright=1)
+	inline void Set(char p, float bright=1)
 	{
 		float rgb[3];	mgl_chrrgb(p,rgb);
 		Set(mglColor(rgb[0],rgb[1],rgb[2]),bright);

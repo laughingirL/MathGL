@@ -179,7 +179,7 @@ else(enable-hdf4)
 endif(enable-hdf4)
 
 if(enable-hdf5)
-	message(STATUS "enable hdf5")
+#	message(STATUS "enable hdf5")
 	set(MGL_HAVE_HDF5 1)
 	include(FindHDF5)
 	if(NOT HDF5_FOUND)
