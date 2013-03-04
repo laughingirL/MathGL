@@ -554,10 +554,10 @@ void MGL_EXPORT mgl_datac_modify_(uintptr_t *d, const char *eq,int *dim,int l)
 //-----------------------------------------------------------------------------
 MGL_NO_EXPORT void *mgl_cmodify_gen(void *par)
 {
-	mglThreadC *t=(mglThreadC *)par;
+	mglThreadV *t=(mglThreadV *)par;
 	const mglFormulaC *f = (const mglFormulaC *)(t->v);
 	register long i,j,k,i0, nx=t->p[0],ny=t->p[1],nz=t->p[2];
-	dual *b=t->a;
+	dual *b=t->aa;
 	mreal dx,dy,dz;
 	HCDT v=(HCDT)t->b, w=(HCDT)t->c;
 	dx=nx>1?1/(nx-1.):0;	dy=ny>1?1/(ny-1.):0;	dz=nz>1?1/(nz-1.):0;
@@ -577,7 +577,7 @@ void MGL_EXPORT mgl_datac_modify_vw(HADT d, const char *eq,HCDT vdat,HCDT wdat)
 	if(wdat && wdat->GetNN()!=nn)	return;
 	mglFormulaC f(eq);
 	if(v && w)	mglStartThreadC(mgl_cmodify,0,nn,d->a,v->a,w->a,par,&f);
-	else if(vdat && wdat)	mglStartThreadV(mgl_cmodify_gen,nn,d->a,vdat,wdat,par,&f);
+	else if(vdat && wdat)	(mgl_cmodify_gen,nn,d->a,vdat,wdat,par,&f);
 	else if(v)	mglStartThreadC(mgl_cmodify,0,nn,d->a,v->a,0,par,&f);
 	else if(vdat)	mglStartThreadV(mgl_cmodify_gen,nn,d->a,vdat,0,par,&f);
 	else	mglStartThreadC(mgl_cmodify,0,nn,d->a,0,0,par,&f);
@@ -603,16 +603,16 @@ MGL_NO_EXPORT void *mgl_cfill_f(void *par)
 }
 MGL_NO_EXPORT void *mgl_cfill_fgen(void *par)
 {
-	mglThreadC *t=(mglThreadC *)par;
+	mglThreadV *t=(mglThreadV *)par;
 	const mglFormulaC *f = (const mglFormulaC *)(t->v);
 	register long i,j,k,i0, nx=t->p[0],ny=t->p[1];
-	dual *b=t->a;
+	dual *b=t->aa;
 	HCDT v=(HCDT)t->b, w=(HCDT)t->c;
-	const dual *x=t->d;
+	const mreal *x=t->d;
 	for(i0=t->id;i0<t->n;i0+=mglNumThr)
 	{
 		i=i0%nx;	j=((i0/nx)%ny);	k=i0/(nx*ny);
-		b[i0] = f->Calc(x[0]+mreal(i)*x[1], x[2]+mreal(j)*x[3], x[4]+mreal(k)*x[5],
+		b[i0] = f->Calc(x[0]+i*x[1], x[2]+j*x[3], x[4]+k*x[5],
 						b[i0], v?v->vthr(i0):0, w?w->vthr(i0):0);
 	}
 	return 0;

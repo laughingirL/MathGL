@@ -812,7 +812,7 @@ MGL_NO_EXPORT void *mgl_fill_f(void *par)
 }
 MGL_NO_EXPORT void *mgl_fill_fgen(void *par)
 {
-	mglThreadD *t=(mglThreadD *)par;
+	mglThreadV *t=(mglThreadV *)par;
 	const mglFormula *f = (const mglFormula *)(t->v);
 	register long i,j,k,i0, nx=t->p[0],ny=t->p[1];
 	mreal *b=t->a;
