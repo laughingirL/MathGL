@@ -86,8 +86,10 @@ void MGL_EXPORT mgl_set_range_dat(HMGL gr, char dir, HCDT a, int add)
 	else if(dir=='x')	gr->XRange(a,add);
 	else if(dir=='y')	gr->YRange(a,add);
 	else if(dir=='z')	gr->ZRange(a,add);	}
-void MGL_EXPORT mgl_set_ranges(HMGL gr, double x1, double y1, double z1, double x2, double y2, double z2)
-{	gr->SetRanges(x1,y1,z1,x2,y2,z2);	}
+void MGL_EXPORT mgl_set_ranges(HMGL gr, double x1, double x2, double y1, double y2, double z1, double z2)
+{	gr->SetRanges(x1,x2,y1,y2,z1,z2);	}
+void MGL_EXPORT mgl_set_auto_ranges(HMGL gr, double x1, double x2, double y1, double y2, double z1, double z2, double c1, double c2)
+{	gr->SetAutoRanges(x1,x2,y1,y2,z1,z2,c1,c2);	}
 void MGL_EXPORT mgl_set_func(HMGL gr, const char *EqX,const char *EqY,const char *EqZ,const char *EqA)
 {	gr->SetFunc(EqX,EqY,EqZ,EqA);	}
 void MGL_EXPORT mgl_set_coor(HMGL gr, int how)	{	gr->SetCoor(how);	}
@@ -128,8 +130,10 @@ void MGL_EXPORT mgl_set_range_val_(uintptr_t *gr, const char *dir, mreal *v1, mr
 {	mgl_set_range_val(_GR_,*dir,*v1,*v2);	}
 void MGL_EXPORT mgl_set_range_dat_(uintptr_t *gr, const char *dir, uintptr_t *a, int *add,int)
 {	mgl_set_range_dat(_GR_,*dir,_DA_(a),*add);	}
-void MGL_EXPORT mgl_set_ranges_(uintptr_t *gr, mreal *x1, mreal *y1, mreal *z1, mreal *x2, mreal *y2, mreal *z2)
-{	_GR_->SetRanges(*x1,*y1,*z1,*x2,*y2,*z2);	}
+void MGL_EXPORT mgl_set_ranges_(uintptr_t *gr, mreal *x1, mreal *x2, mreal *y1, mreal *y2, mreal *z1, mreal *z2)
+{	_GR_->SetRanges(*x1,*x2,*y1,*y2,*z1,*z2);	}
+void MGL_EXPORT mgl_set_auto_ranges_(uintptr_t *gr, mreal *x1, mreal *x2, mreal *y1, mreal *y2, mreal *z1, mreal *z2, mreal *c1, mreal *c2)
+{	_GR_->SetAutoRanges(*x1,*x2,*y1,*y2,*z1,*z2,*c1,*c2);	}
 void MGL_EXPORT mgl_set_func_(uintptr_t *gr, const char *EqX,const char *EqY,const char *EqZ,const char *EqA,int lx,int ly,int lz,int la)
 {
 	char *sx=new char[lx+1];	memcpy(sx,EqX,lx);	sx[lx]=0;

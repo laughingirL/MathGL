@@ -122,6 +122,9 @@ void MGL_EXPORT mgl_set_range_val_(uintptr_t *gr, const char *dir, mreal *v1, mr
 /// Set range in direction dir as minimal and maximal values of data a
 void MGL_EXPORT mgl_set_range_dat(HMGL gr, char dir, HCDT a, int add);
 void MGL_EXPORT mgl_set_range_dat_(uintptr_t *gr, const char *dir, uintptr_t *a, int *add,int);
+/// Set ranges for automatic variables
+void MGL_EXPORT mgl_set_auto_ranges(HMGL gr, double x1, double x2, double y1, double y2, double z1, double z2, double c1, double c2);
+void MGL_EXPORT mgl_set_auto_ranges_(uintptr_t *gr, mreal *x1, mreal *x2, mreal *y1, mreal *y2, mreal *z1, mreal *z2, mreal *c1, mreal *c2);
 /// Set axis range scaling -- simplified way to shift/zoom axis range -- need to redraw whole image!
 void MGL_EXPORT mgl_zoom_axis(HMGL gr, double x1,double y1,double z1,double c1,double x2,double y2,double z2,double c2);
 void MGL_EXPORT mgl_zoom_axis_(uintptr_t *gr, mreal *x1, mreal *y1, mreal *z1, mreal *c1, mreal *x2, mreal *y2, mreal *z2, mreal *c2);

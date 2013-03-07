@@ -32,6 +32,8 @@ A. Paper about MathGL!!!
 	u. Test FlowP + 3d
 	w. Test diffuse, specular local sources
 
+15. Doc about SetAutoRanges()
+
 16. Save should save Id too.
 
 ============= UDAV =============

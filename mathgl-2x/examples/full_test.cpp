@@ -66,7 +66,7 @@ void test(mglGraph *gr)
 	mglParse par;
 	par.AllowSetSize(true);
 	setlocale(LC_CTYPE, "");
-	par.Execute(gr,"text 0 0 'test':text 0 1 'test='1+1:text 0 -1 'test='[1,3]");
+	par.Execute(gr,"xrange 1362565462 1365935062:ticktime 'x' 7*86400 '%d/%m/%y':axis");
 //	FILE *fp=fopen("/home/balakin/progr/mathgl-code/mathgl-2x/build/test.mgl","r");
 //	par.Execute(gr,fp,true);
 //	fclose(fp);

@@ -227,7 +227,7 @@ void mglCanvas::SetTickTime(char dir, mreal d, const char *t)
 	}
 	if(d==0)	// try to select opimal step
 	{
-
+		// TODO add subticks for drawing
 		if(abs(t1.tm_year-t2.tm_year)>1)
 			d = 365.25*24*3600*mgl_adj_val(abs(t1.tm_year-t2.tm_year));	// number of second in year NOTE: improve it
 		// NOTE here should be months ... but it is too unregular ... so omit it now
@@ -242,10 +242,9 @@ void mglCanvas::SetTickTime(char dir, mreal d, const char *t)
 		{	d = mgl_adj_val(abs(t1.tm_sec-t2.tm_sec));	d = d>1?d:1;	}
 		else	// adjust msec. NOTE: this is not supported by localtime() !!!
 			d = mgl_adj_val(fabs(aa.v2-aa.v1));
-		aa.ds = 0;
 	}
 
-	aa.dv = d;	aa.f = 1;	aa.txt.clear();
+	aa.ds = 0;	aa.dv = d;	aa.f = 1;	aa.txt.clear();
 	if(mbstowcs(0,t,0)<256) mbstowcs(aa.t,t,256);
 
 	if(strchr("xyztuvw",aa.ch))

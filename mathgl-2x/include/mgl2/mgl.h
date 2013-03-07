@@ -151,12 +151,18 @@ public:
 	/// Set values of axis range as minimal and maximal values of datas
 	inline void SetRanges(const mglDataA &xx, const mglDataA &yy)
 	{	mgl_set_range_dat(gr,'x',&xx,0);	mgl_set_range_dat(gr,'y',&yy,0);	}
-	/// Set values of axis range
+	/// Set values of axis ranges
 	inline void SetRanges(double x1, double x2, double y1, double y2, double z1=0, double z2=0)
 	{	mgl_set_ranges(gr, x1, x2, y1, y2, z1, z2);	}
-	/// Set values of axis range
+	/// Set values of axis ranges
 	inline void SetRanges(mglPoint p1, mglPoint p2)
 	{	mgl_set_ranges(gr, p1.x, p2.x, p1.y, p2.y, p1.z, p2.z);	}
+	/// Set ranges for automatic variables
+	inline void SetAutoRanges(double x1, double x2, double y1=0, double y2=0, double z1=0, double z2=0, double c1=0, double c2=0)
+	{	mgl_set_auto_ranges(gr, x1, x2, y1, y2, z1, z2, c1, c2);	}
+	/// Set ranges for automatic variables
+	inline void SetAutoRanges(mglPoint p1, mglPoint p2)
+	{	mgl_set_auto_ranges(gr, p1.x, p2.x, p1.y, p2.y, p1.z, p2.z, p1.c, p2.c);	}
 	/// Set axis origin
 	inline void SetOrigin(mglPoint p)
 	{	mgl_set_origin(gr, p.x, p.y, p.z);	}
