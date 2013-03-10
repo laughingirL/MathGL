@@ -28,6 +28,9 @@
 #include "mgl2/addon.h"
 #include "mgl2/data.h"
 //-----------------------------------------------------------------------------
+dual MGL_EXPORT mgl_expi(dual a)	{	return exp(dual(0,1)*a);	}
+dual MGL_EXPORT mgl_expi(double a)	{	return dual(cos(a),sin(a));	}
+//-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_strcls(char *str)
 {
 	size_t len = strlen(str),i,n;

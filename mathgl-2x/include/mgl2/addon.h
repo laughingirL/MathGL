@@ -23,9 +23,12 @@
 #include "mgl2/define.h"
 #ifdef __cplusplus
 //-----------------------------------------------------------------------------
+/// Get integer power of x
 dual MGL_EXPORT mgl_ipowc(dual x,int n);
-dual expi(dual a);
-dual expi(double a);
+/// Get exp(i*a)
+dual MGL_EXPORT mgl_expi(dual a);
+/// Get exp(i*a)
+dual MGL_EXPORT mgl_expi(double a);
 
 /// Explicit scheme for 1 step of axial diffraction
 bool MGL_EXPORT mgl_difr_axial(dual *a, int n, dual q, int Border,dual *b, dual *d, int kk, double di);
@@ -34,8 +37,16 @@ bool MGL_EXPORT mgl_difr_grid(dual *a,int n,dual q,int Border,dual *b,dual *d,in
 //-----------------------------------------------------------------------------
 extern "C" {
 #endif
+/// Set seed for random numbers
+void MGL_EXPORT mgl_srnd(long seed);
+/// Get random number
+double MGL_EXPORT mgl_rnd();
+/// Get integer power of x
+double MGL_EXPORT mgl_ipow(double x,int n);
 
+/// Get random number with Gaussian distribution
 double MGL_EXPORT mgl_gauss_rnd();
+/// Fill frequencies for FFT
 void MGL_EXPORT mgl_fft_freq(double *freq,size_t nn);
 
 /// Remove double spaces from the string
