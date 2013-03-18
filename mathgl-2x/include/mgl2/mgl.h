@@ -1303,4 +1303,28 @@ public:
 #endif
 };
 //-----------------------------------------------------------------------------
+/// Wrapper class expression evaluating
+class mglExprC
+{
+	HAEX ex;
+public:
+	mglExprC(const char *expr)		{	ex = mgl_create_cexpr(expr);	}
+	~mglExprC()	{	mgl_delete_cexpr(ex);	}
+	/// Return value of expression for given x,y,z variables
+	inline dual Eval(dual x, dual y=0, dual z=0)
+	{	return mgl_cexpr_eval(ex,x,y,z);	}
+	/// Return value of expression for given x,y,z,u,v,w variables
+	inline dual Eval(dual x, dual y, dual z, dual u, dual v, dual w)
+	{
+		dual var[26];
+		var['x'-'a']=x;	var['y'-'a']=y;	var['z'-'a']=z;
+		var['u'-'a']=u;	var['v'-'a']=v;	var['w'-'a']=w;
+		return mgl_cexpr_eval_v(ex,var);	}
+#ifndef SWIG
+	/// Return value of expression for given variables
+	inline dual Eval(dual var[26])
+	{	return mgl_cexpr_eval_v(ex,var);	}
+#endif
+};
+//-----------------------------------------------------------------------------
 #endif

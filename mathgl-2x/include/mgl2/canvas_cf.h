@@ -490,14 +490,18 @@ HMDT MGL_EXPORT mgl_parser_calcw(HMPR pr, const wchar_t *formula);
 /// Create HMEX object for expression evaluating
 HMEX MGL_EXPORT mgl_create_expr(const char *expr);
 uintptr_t MGL_EXPORT mgl_create_expr_(const char *expr, int);
+HAEX MGL_EXPORT mgl_create_cexpr(const char *expr);
 /// Delete HMEX object
 void MGL_EXPORT mgl_delete_expr(HMEX ex);
 void MGL_EXPORT mgl_delete_expr_(uintptr_t *ex);
+void MGL_EXPORT mgl_delete_cexpr(HAEX ex);
 /// Return value of expression for given x,y,z variables
 double MGL_EXPORT mgl_expr_eval(HMEX ex, double x, double y,double z);
 double MGL_EXPORT mgl_eval_expr_(uintptr_t *ex, mreal *x, mreal *y, mreal *z);
+dual MGL_EXPORT mgl_cexpr_eval(HAEX ex, dual x, dual y,dual z);
 /// Return value of expression for given variables
 double MGL_EXPORT mgl_expr_eval_v(HMEX ex, mreal *var);
+dual MGL_EXPORT mgl_cexpr_eval_v(HAEX ex, dual *var);
 /// Return value of expression differentiation over variable dir for given x,y,z variables
 double MGL_EXPORT mgl_expr_diff(HMEX ex, char dir, double x, double y,double z);
 double MGL_EXPORT mgl_diff_expr_(uintptr_t *ex, const char *dir, mreal *x, mreal *y, mreal *z, int);

@@ -20,6 +20,7 @@
 #include "mgl2/canvas.h"
 #include "mgl2/canvas_cf.h"
 #include "mgl2/eval.h"
+#include "mgl2/evalc.h"
 //-----------------------------------------------------------------------------
 #undef _GR_
 #define _GR_	((mglCanvas *)(*gr))
@@ -434,6 +435,13 @@ double MGL_EXPORT mgl_eval_expr_(uintptr_t *ex, mreal *x, mreal *y, mreal *z)
 {	return mgl_expr_eval((HMEX) ex, *x,*y,*z);		}
 double MGL_EXPORT mgl_diff_expr_(uintptr_t *ex, const char *dir, mreal *x, mreal *y, mreal *z, int)
 {	return mgl_expr_diff((HMEX) ex, *dir,*x,*y,*z);	}
+//-----------------------------------------------------------------------------
+HAEX MGL_EXPORT mgl_create_cexpr(const char *expr)	{	return new mglFormulaC(expr);	}
+void MGL_EXPORT mgl_delete_cexpr(HAEX ex)	{	delete ex;	}
+dual MGL_EXPORT mgl_cexpr_eval(HAEX ex, dual x, dual y,dual z)
+{	return ex->Calc(x,y,z);	}
+dual MGL_EXPORT mgl_cexpr_eval_v(HAEX ex, dual *var)
+{	return ex->Calc(var);	}
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_set_plotfactor(HMGL gr, double val)
 {	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->SetPlotFactor(val);	}

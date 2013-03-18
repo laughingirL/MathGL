@@ -36,11 +36,13 @@ class mglBase;
 class mglData;
 class mglParser;
 class mglFormula;
+class mglFormulaC;
 class mglFont;
 typedef mglBase* HMGL;
 typedef mglData* HMDT;
 typedef mglParser* HMPR;
 typedef mglFormula* HMEX;
+typedef mglFormulaC* HAEX;
 //-----------------------------------------------------------------------------
 #if MGL_NO_DATA_A
 #define mglDataA mglData
@@ -526,6 +528,7 @@ bool MGL_EXPORT mgl_isboth(HCDT x, HCDT y, HCDT z, HCDT a);
 typedef void *HMGL;
 typedef void *HMDT;
 typedef void *HMEX;
+typedef void *HAEX;
 typedef void *HMPR;
 typedef const void *HCDT;
 #endif
