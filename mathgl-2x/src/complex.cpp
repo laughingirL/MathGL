@@ -1,5 +1,5 @@
 /***************************************************************************
- * data.cpp is part of Math Graphic Library
+ * complex.cpp is part of Math Graphic Library
  * Copyright (C) 2007-2012 Alexey Balakin <mathgl.abalakin@gmail.ru>       *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -19,14 +19,8 @@
  ***************************************************************************/
 #include "mgl2/datac.h"
 #include "mgl2/evalc.h"
-
-#if MGL_HAVE_GSL
-#include <gsl/gsl_fft_complex.h>
-#include <gsl/gsl_dht.h>
-#include <gsl/gsl_sf.h>
-#endif
 //-----------------------------------------------------------------------------
-void mglStartThreadC(void *(*func)(void *), void (*post)(mglThreadC *,dual *), long n,
+void MGL_EXPORT mglStartThreadC(void *(*func)(void *), void (*post)(mglThreadC *,dual *), long n,
 					dual *a, const dual *b, const dual *c, const long *p,
 					const void *v, const dual *d, const dual *e, const char *s)
 {
@@ -58,7 +52,7 @@ void mglStartThreadC(void *(*func)(void *), void (*post)(mglThreadC *,dual *), l
 	}
 }
 //-----------------------------------------------------------------------------
-void mglStartThreadV(void *(*func)(void *), long n, dual *a, const void *b,
+void MGL_EXPORT mglStartThreadV(void *(*func)(void *), long n, dual *a, const void *b,
 					const void *c, const long *p, const void *v, const mreal *d)
 {
 	if(!func)	return;
@@ -755,108 +749,4 @@ MGL_EXPORT dual *mgl_datac_data(HADT dat)	{	return dat->a;	}
 MGL_EXPORT dual *mgl_datac_value(HADT dat, long i,long j,long k)
 {	register long ii=i*dat->nx*(j+dat->ny*k);
 	return	ii>=0 && ii<dat->GetNN() ? dat->a+ii : 0;	}
-//-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_datac_fft(HADT d, const char *dir)
-{
-#if MGL_HAVE_GSL
-	if(!dir || *dir==0)	return;
-	long nx = d->nx, ny = d->ny, nz = d->nz;
-	double *a = new double[2*nx*ny*nz];
-	register long i,j;
-	gsl_fft_direction how = strchr(dir,'i')?backward:forward;
-	for(i=0;i<nx*ny*nz;i++)
-	{	a[2*i] = real(d->a[i]);	a[2*i+1] = imag(d->a[i]);	}
-	if(strchr(dir,'x') && nx>1)
-	{
-		gsl_fft_complex_wavetable *wt = gsl_fft_complex_wavetable_alloc(nx);
-		gsl_fft_complex_workspace *ws = gsl_fft_complex_workspace_alloc(nx);
-		for(i=0;i<ny*nz;i++)
-			gsl_fft_complex_transform(a+2*i*nx, 1, nx, wt, ws, how);
-		gsl_fft_complex_workspace_free(ws);
-		gsl_fft_complex_wavetable_free(wt);
-	}
-	if(strchr(dir,'y') && ny>1)
-	{
-		gsl_fft_complex_wavetable *wt = gsl_fft_complex_wavetable_alloc(ny);
-		gsl_fft_complex_workspace *ws = gsl_fft_complex_workspace_alloc(ny);
-		for(j=0;j<nz;j++)	for(i=0;i<nx;i++)
-			gsl_fft_complex_transform(a+2*i+2*j*nx*ny, nx, ny, wt, ws, how);
-		gsl_fft_complex_workspace_free(ws);
-		gsl_fft_complex_wavetable_free(wt);
-	}
-	if(strchr(dir,'z') && nz>1)
-	{
-		gsl_fft_complex_wavetable *wt = gsl_fft_complex_wavetable_alloc(nz);
-		gsl_fft_complex_workspace *ws = gsl_fft_complex_workspace_alloc(nz);
-		for(i=0;i<ny*nx;i++)
-			gsl_fft_complex_transform(a+2*i, nx*ny, nz, wt, ws, how);
-		gsl_fft_complex_workspace_free(ws);
-		gsl_fft_complex_wavetable_free(wt);
-	}
-	for(i=0;i<nx*ny*nz;i++)	d->a[i] = dual(a[2*i], a[2*i+1]);
-	delete []a;
-#endif
-}
-void MGL_EXPORT mgl_datac_fft_(uintptr_t *d, const char *dir, int l)
-{	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
-	mgl_datac_fft(_DC_,s);	delete []s;	}
-//-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_datac_hankel(HADT d, const char *dir)
-{
-	#if MGL_HAVE_GSL
-	if(!dir || *dir==0)	return;
-	double *ai=0, *af=0, *ag=0;
-	mreal mm;
-	gsl_dht *dht=0;
-	register long i,j,k;
-	long nx=d->nx, ny=d->ny, nz=d->nz;
-	dual *a=d->a;
-	if(strchr(dir,'x') && nx>1)
-	{
-		ai = new double[nx];	af = new double[nx];	ag = new double[nx];
-		dht = gsl_dht_new(nx,0,1);
-		mm = gsl_sf_bessel_zero_J0(nx+1);
-		for(i=0;i<ny*nz;i++)
-		{
-			for(j=0;j<nx;j++)	ai[j] = real(a[j+nx*i]);
-			gsl_dht_apply(dht,ai,af);
-			for(j=0;j<nx;j++)	ai[j] = imag(a[j+nx*i]);
-			gsl_dht_apply(dht,ai,ag);
-			for(j=0;j<nx;j++)	a[j+nx*i] = dual(af[j],ag[j])*mm;
-		}
-	}
-	if(strchr(dir,'y') && ny>1)
-	{
-		ai = new double[ny];	af = new double[ny];	ag = new double[ny];
-		dht = gsl_dht_new(ny,0,1);
-		mm = gsl_sf_bessel_zero_J0(ny+1);
-		for(i=0;i<nx;i++)	for(k=0;k<nz;k++)
-		{
-			for(j=0;j<nx;j++)	ai[j] = real(a[i+nx*(j+ny*k)]);
-			gsl_dht_apply(dht,ai,af);
-			for(j=0;j<nx;j++)	ai[j] = imag(a[i+nx*(j+ny*k)]);
-			gsl_dht_apply(dht,ai,ag);
-			for(j=0;j<nx;j++)	a[i+nx*(j+ny*k)] = dual(af[j],ag[j])*mm;
-		}
-	}
-	if(strchr(dir,'z') && nz>1)
-	{
-		ai = new double[nz];	af = new double[nz];	ag = new double[nz];
-		dht = gsl_dht_new(nz,0,1);
-		mm = gsl_sf_bessel_zero_J0(nz+1);
-		k = nx*ny;	for(i=0;i<k;i++)
-		{
-			for(j=0;j<nz;j++)	ai[j] = real(a[i+j*k]);
-			gsl_dht_apply(dht,ai,af);
-			for(j=0;j<nz;j++)	ai[j] = imag(a[i+j*k]);
-			gsl_dht_apply(dht,ai,ag);
-			for(j=0;j<nz;j++)	a[i+j*k] = dual(af[j],ag[j])*mm;
-		}
-	}
-	if(ai)	{	delete []ai;	delete []af;	gsl_dht_free(dht);	}
-	#endif
-}
-void MGL_EXPORT mgl_datac_hankel_(uintptr_t *d, const char *dir,int l)
-{	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
-	mgl_datac_hankel(_DC_,s);	delete []s;	}
 //-----------------------------------------------------------------------------

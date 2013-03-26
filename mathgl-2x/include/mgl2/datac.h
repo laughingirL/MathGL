@@ -183,6 +183,9 @@ public:
 	/// Read data from text file with size specified at beginning of the file
 	inline bool ReadMat(const char *fname, long dim=2)
 	{	return mgl_datac_read_mat(this,fname,dim);	}
+	/// Export data array (for ns=-1) or only ns-th slice to PNG file according color scheme
+	inline void Export(const char *fname,const char *scheme,mreal v1=0,mreal v2=0,long ns=-1) const
+	{	mgl_data_export(this,fname,scheme,v1,v2,ns);	}
 
 		/// Read data array from HDF file (parse HDF4 and HDF5 files)
 	inline int ReadHDF(const char *fname,const char *data)

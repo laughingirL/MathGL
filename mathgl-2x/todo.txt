@@ -36,6 +36,10 @@ A. Paper about MathGL!!!
 
 16. Save should save Id too.
 
+17. Check FFT, Envelope, SinFFT, CosFFT, Hankel (+complex)
+
+18. Check if Read() correctly handle 1.#QNAN values in file
+
 ============= UDAV =============
 
 01. Show plot at creation stage (if option is enabled -- can be long process!!!) + auto axis range or [-1,1] by default
@@ -58,6 +62,8 @@ Buttons: new,load,save // newcmd,hide,annotation,collapse on/off,setup // calc. 
 
 09. Create default plot dependently of selected row/column/range in data table
 10. Data change via menu/toolbar -- save to internal script => enable undo + save initial array(?)
+
+11. Speed up rotation like as done in JavaScript
 
 12. Multi-threading for enabling "stop".
 
