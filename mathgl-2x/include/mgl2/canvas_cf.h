@@ -351,13 +351,6 @@ void MGL_EXPORT mgl_view_(uintptr_t *gr, mreal *TetX, mreal *TetZ, mreal *TetY);
 void MGL_EXPORT mgl_zoom(HMGL gr, double x1, double y1, double x2, double y2);
 void MGL_EXPORT mgl_zoom_(uintptr_t *gr, mreal *x1, mreal *y1, mreal *x2, mreal *y2);
 
-/// Send graphical information to node id using MPI
-void MGL_EXPORT mgl_mpi_send(HMGL gr, int id);
-void MGL_EXPORT mgl_mpi_send_(uintptr_t *gr, int *id);
-/// Receive graphical information from node id using MPI
-void MGL_EXPORT mgl_mpi_recv(HMGL gr, int id);
-void MGL_EXPORT mgl_mpi_recv_(uintptr_t *gr, int *id);
-
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_draw_thr(void *);
 /// Callback function for mouse click

@@ -434,10 +434,6 @@ public:
 
 	/// Combine plots from 2 canvases. Result will be saved into this
 	inline void Combine(const mglGraph *g)	{	mgl_combine_gr(gr,g->gr);	}
-	/// Send graphical information to node id using MPI
-	inline void MPI_Send(int id)	{	mgl_mpi_send(gr,id);	}
-	/// Receive graphical information from node id using MPI
-	inline void MPI_Recv(int id)	{	mgl_mpi_recv(gr,id);	}
 
 	/// Clear up the frame
 	inline void Clf(double r, double g, double b)	{	mgl_clf_rgb(gr, r, g, b);	}

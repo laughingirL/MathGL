@@ -172,10 +172,7 @@ using mglBase::Light;
 	int GetHeight() const	{	return Height;	}
 	/// Combine plots from 2 canvases. Result will be saved into this.
 	void Combine(const mglCanvas *gr);
-	/// Send graphical information to node id using MPI
-	void MPI_Send(int id);
-	/// Receive graphical information from node id using MPI
-	void MPI_Recv(int id);
+
 	inline mreal GetDelay() const	{	return Delay;	}
 	inline void SetDelay(mreal d)	{	Delay=d;	}
 
@@ -303,12 +300,16 @@ using mglBase::Light;
 	/// Get rotation angle for glyph
 	float GetGlyphPhi(const mglPnt &q, float phi);
 
+	// Following arrays are open for advanced users only. It is not recommended to change them directly
+	float *Z;			///< Height for given level in Z-direction (size 3*width*height)
+	unsigned char *C;	///< Picture for given level in Z-direction (size 3*4*width*height)
+	int *OI;			///< ObjId arrays (size width*height)
+	/// Plot point p with color c
+	void pnt_plot(long x,long y,mreal z,const unsigned char c[4], int obj_id);
+	
 protected:
 	mreal Delay;		///< Delay for animation in seconds
 	// NOTE: Z should be float for reducing space and for compatibility reasons
-	float *Z;			///< Height for given level in Z-direction
-	unsigned char *C;	///< Picture for given level in Z-direction
-	int *OI;			///< ObjId arrays
 	unsigned char *G4;	///< Final picture in RGBA format. Prepared in Finish().
 	unsigned char *G;	///< Final picture in RGB format. Prepared in Finish().
 	std::vector<mglDrawDat> DrwDat;	///< Set of ALL drawing data for each frames
@@ -417,8 +418,6 @@ private:
 	char GetLabelPos(mreal c, long kk, mglAxis &aa);
 	/// Draw tick
 	void tick_draw(mglPoint o, mglPoint d1, mglPoint d2, int f, const char *stl);
-	/// Plot point p with color c
-	void pnt_plot(long x,long y,mreal z,const unsigned char c[4], int obj_id);
 	mreal FindOptOrg(char dir, int ind) const;
 	/// Transform mreal color and alpha to bits format
 	unsigned char* col2int(const mglPnt &p, unsigned char *r, int obj_id);

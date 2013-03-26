@@ -102,9 +102,25 @@ if(MGL_HAVE_ZLIB)
 endif(MGL_HAVE_ZLIB)
 
 if(MGL_HAVE_MPI)
-	target_link_libraries(mgl ${MPI_LIBRARIES} )
+	add_library(mgl-mpi SHARED mpi.cpp ../include/mgl2/mpi.h)
+	add_library(mgl-mpi-static STATIC mpi.cpp ../include/mgl2/mpi.h)
+	set_target_properties(mgl-mpi PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+	set_target_properties(mgl-mpi PROPERTIES DEFINE_SYMBOL "mgl_EXPORTS")
+	set_target_properties(mgl-mpi-static PROPERTIES OUTPUT_NAME "mgl-mpi")
+	set_target_properties(mgl-mpi-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+	set_target_properties(mgl-mpi-static PROPERTIES COMPILE_FLAGS -DMGL_STATIC_DEFINE)
+
+	target_link_libraries(mgl-mpi ${MPI_LIBRARIES} )
 #	include_directories(${MPI_C_INCLUDE_PATH})
 	include_directories(${MPI_CXX_INCLUDE_PATH})
+
+	set_target_properties(mgl-mpi PROPERTIES SOVERSION 7.0.0)
+	install(
+		TARGETS mgl-mpi mgl-mpi-static
+		RUNTIME DESTINATION bin
+		ARCHIVE DESTINATION ${MGL_LIB_INSTALL_DIR}
+		LIBRARY DESTINATION ${MGL_LIB_INSTALL_DIR}
+	)
 endif(MGL_HAVE_MPI)
 
 if(M_LIB)
