@@ -323,7 +323,7 @@ MGL_NO_EXPORT void* mgl_cosx(void *par)
 	for(i=t->id;i<t->n;i+=mglNumThr)
 	{
 		k = i*nx;	memset(b,0,4*nx*sizeof(double));	b[0] = b[2*nx] = a[k];
-		for(j=1;j<nx;j++)	{	b[2*j] = a[k+j];	b[4*nx-2*j] = a[k+j];	}
+		for(j=1;j<nx;j++)	{	b[2*j] = b[4*nx-2*j] = a[k+j];	}
 		gsl_fft_complex_transform(b, 1, 2*nx, wt, ws[t->id], forward);
 		for(j=0;j<nx;j++)	a[k+j] = b[2*j]/sqrt(2.*nx);
 	}
@@ -339,7 +339,7 @@ MGL_NO_EXPORT void* mgl_cosy(void *par)
 	gsl_fft_complex_workspace **ws = (gsl_fft_complex_workspace **)t->w;
 	for(ii=t->id;ii<t->n;ii+=mglNumThr)
 	{
-		i = ii%nx;	j = ii/nx;
+		i = ii%nx;	k = ii/nx;
 		memset(b,0,4*ny*sizeof(double));	b[0] = b[2*ny] = a[i+nx*ny*k];
 		for(j=1;j<ny;j++)	{	b[2*j] = a[i+nx*(ny*k+j)];	b[4*ny-2*j] = a[i+nx*(ny*k+j)];	}
 		gsl_fft_complex_transform(b, 1, 2*ny, wt, ws[t->id], forward);
@@ -357,8 +357,8 @@ MGL_NO_EXPORT void* mgl_cosz(void *par)
 	gsl_fft_complex_workspace **ws = (gsl_fft_complex_workspace **)t->w;
 	for(i=t->id;i<t->n;i+=mglNumThr)
 	{
-		memset(b,0,4*nz*sizeof(double));	b[0] = b[2*nx] = a[i];
-		for(j=1;j<nx;j++)	{	b[2*j] = a[i+k*j];	b[4*nx-2*j] = a[i+k*j];	}
+		memset(b,0,4*nz*sizeof(double));	b[0] = b[2*nz] = a[i];
+		for(j=1;j<nz;j++)	{	b[2*j] = a[i+k*j];	b[4*nz-2*j] = a[i+k*j];	}
 		gsl_fft_complex_transform(b, 1, 2*nz, wt, ws[t->id], forward);
 		for(j=0;j<nz;j++)	a[i+k*j] = b[2*j]/sqrt(2.*nz);
 	}
@@ -414,8 +414,8 @@ MGL_NO_EXPORT void* mgl_sinx(void *par)
 	gsl_fft_complex_workspace **ws = (gsl_fft_complex_workspace **)t->w;
 	for(i=t->id;i<t->n;i+=mglNumThr)
 	{
-		k = i*nx;	memset(b,0,4*nx*sizeof(double));	b[0] = b[2*nx] = a[k];
-		for(j=1;j<nx;j++)	{	b[2*j] = a[k+j];	b[4*nx-2*j] = a[k+j];	}
+		k = i*nx;	memset(b,0,4*nx*sizeof(double));	//b[0] = b[2*nx] = 0;
+		for(j=1;j<nx;j++)	{	b[2*j] = a[k+j];	b[4*nx-2*j] = -a[k+j];	}
 		gsl_fft_complex_transform(b, 1, 2*nx, wt, ws[t->id], forward);
 		for(j=0;j<nx;j++)	a[k+j] = -b[2*j+1]/sqrt(2.*nx);
 	}
@@ -431,9 +431,8 @@ MGL_NO_EXPORT void* mgl_siny(void *par)
 	gsl_fft_complex_workspace **ws = (gsl_fft_complex_workspace **)t->w;
 	for(ii=t->id;ii<t->n;ii+=mglNumThr)
 	{
-		i = ii%nx;	j = ii/nx;
-		memset(b,0,4*ny*sizeof(double));	b[0] = b[2*ny] = a[i+nx*ny*k];
-		for(j=1;j<ny;j++)	{	b[2*j] = a[i+nx*(ny*k+j)];	b[4*ny-2*j] = a[i+nx*(ny*k+j)];	}
+		i = ii%nx;	k = ii/nx;	memset(b,0,4*ny*sizeof(double));	//b[0] = b[2*ny] = 0;
+		for(j=1;j<ny;j++)	{	b[2*j] = a[i+nx*(ny*k+j)];	b[4*ny-2*j] = -a[i+nx*(ny*k+j)];	}
 		gsl_fft_complex_transform(b, 1, 2*ny, wt, ws[t->id], forward);
 		for(j=0;j<ny;j++)	a[i+nx*(ny*k+j)] = -b[2*j+1]/sqrt(2.*ny);
 	}
@@ -449,8 +448,8 @@ MGL_NO_EXPORT void* mgl_sinz(void *par)
 	gsl_fft_complex_workspace **ws = (gsl_fft_complex_workspace **)t->w;
 	for(i=t->id;i<t->n;i+=mglNumThr)
 	{
-		memset(b,0,4*nz*sizeof(double));	b[0] = b[2*nx] = a[i];
-		for(j=1;j<nx;j++)	{	b[2*j] = a[i+k*j];	b[4*nx-2*j] = a[i+k*j];	}
+		memset(b,0,4*nz*sizeof(double));	//b[0] = b[2*nx] = 0;
+		for(j=1;j<nz;j++)	{	b[2*j] = a[i+k*j];	b[4*nz-2*j] = -a[i+k*j];	}
 		gsl_fft_complex_transform(b, 1, 2*nz, wt, ws[t->id], forward);
 		for(j=0;j<nz;j++)	a[i+k*j] = -b[2*j+1]/sqrt(2.*nz);
 	}

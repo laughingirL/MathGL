@@ -90,7 +90,7 @@ void MGL_EXPORT mgl_ask_qt(const wchar_t *quest, wchar_t *res)
 QMathGL::QMathGL(QWidget *parent, Qt::WindowFlags f) : QWidget(parent, f)
 {
 	autoResize = false;	draw_par = 0;	draw_func = 0;
-	gr = new mglCanvas;		appName = "MathGL";
+	gr = new mglCanvas;	appName = "MathGL";
 	popup = 0;	grBuf = 0;	draw = 0;
 	phi = tet = per = 0;
 	x1 = y1 = ax1 = ay1 = 0;	x2 = y2 = ax2 = ay2 = 1;
@@ -298,13 +298,13 @@ void QMathGL::refresh()
 	{
 		if(draw_func || draw)
 		{
-#if MGL_HAVE_PTHREAD
+/*#if MGL_HAVE_PTHREAD	// TODO add qthread here later
 			pthread_t tmp;
 			pthread_create(&tmp, 0, mgl_qt_thr, this);
 			pthread_join(tmp, 0);
-#else
+#else*/
 			draw_thr();
-#endif
+/*#endif*/
 		}
 		mgl_zoom(gr,x1,y1,x2,y2);	mgl_perspective(gr,per);
 		if(viewYZ)	mgl_view(gr,0,phi,tet);

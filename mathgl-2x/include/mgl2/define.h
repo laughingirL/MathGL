@@ -101,10 +101,6 @@ typedef float mreal;
 #define MGL_CMAP_COLOR	32
 #endif
 //-----------------------------------------------------------------------------
-#ifndef MGL_STACK_ENTRY
-#define MGL_STACK_ENTRY	10
-#endif
-//-----------------------------------------------------------------------------
 #ifndef MGL_DEF_VIEWER
 #define MGL_DEF_VIEWER "evince"
 #endif

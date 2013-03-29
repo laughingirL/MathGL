@@ -752,9 +752,9 @@ void mglCanvas::Labelw(char dir, const wchar_t *text, mreal pos, const char *opt
 		else	t = Min.z*pow(Max.z/Min.z, (pos+1)/2);
 		p = mglPoint(x0,y0,t);	q = mglPoint(0,0,1);	shift += az.sh;
 	}
-	char font[64],ff[3]=":C";
+	char font[64],ff[3]=":C";	memset(font,0,64);
 	if(pos<-0.2)	ff[1]='L';	if(pos>0.2)	ff[1]='R';
-	strncpy(font,FontDef,64);	strcat(font,ff);
+	strncpy(font,FontDef,63);	strcat(font,ff);
 	long kk = AddPnt(p,-1,q,0,7);	ff[1]=0;
 	ff[0] = GetLabelPos(t, kk, *aa);	strcat(font,ff);
 	text_plot(kk,text,font,-1.4,0.35+shift);

@@ -97,8 +97,10 @@ struct mglColor
 
 	/// Constructor for RGB components manualy
 	mglColor(float R,float G,float B, float A=1){	r=R;	g=G;	b=B;	a=A;	}
+	/// Constructor set default color
+	mglColor()		{	r=g=b=0;	a=1;	}
 	/// Constructor set color from character id
-	mglColor(char c='k', float bright=1)		{	Set(c,bright);	}
+	mglColor(char c, float bright=1)		{	Set(c,bright);	}
 	/// Set color as Red, Green, Blue values
 	void Set(float R,float G,float B,float A=1)	{	r=R;	g=G;	b=B;	a=A;	}
 	/// Set color as Red, Green, Blue values

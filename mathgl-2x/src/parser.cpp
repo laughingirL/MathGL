@@ -794,8 +794,8 @@ int mglParser::ParseDat(mglGraph *gr, const wchar_t *string, mglData &res)
 			a[i].s.assign(a[i].w.begin(),a[i].w.end());
 		}
 		mglCommand *rts=FindCommand(arg[0]);
-		if(!rts || rts->type!=4)	return 2;
-		n = rts->exec(gr, k, a, kk.c_str(), 0);
+		if(!rts || rts->type!=4)	n = 2;
+		else n = rts->exec(gr, k, a, kk.c_str(), 0);
 		delete []a;
 	}
 	delete []s;	return n;

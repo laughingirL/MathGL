@@ -5,7 +5,7 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN. (VID=18d1 and PID=4e41)
 
 A. Paper about MathGL!!!
 
-1. Export to X3D
+1. Export to X3D, COLLADA !!!
 2. GTK window/widgets
 3. Labels at TriCont()
 4. Drawing of saddle quadrangles

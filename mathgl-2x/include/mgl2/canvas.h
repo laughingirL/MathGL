@@ -21,10 +21,6 @@
 #define MGL_CANVAS_H
 #include "mgl2/base.h"
 //-----------------------------------------------------------------------------
-#ifndef MGL_STACK_ENTRY
-#define MGL_STACK_ENTRY	10
-#endif
-//-----------------------------------------------------------------------------
 struct GifFileType;
 //-----------------------------------------------------------------------------
 /// Structure for transformation matrix
@@ -403,7 +399,7 @@ protected:
 	
 private:
 //	mreal _tetx,_tety,_tetz;		// extra angles
-	std::vector<mglMatrix> stack;	///< stack for transformation matrixes
+	std::vector<mglMatrix> stack;	///< stack for transformation matrices
 	int dr_nx1, dr_nx2, dr_ny1, dr_ny2;	// Allowed drawing region
 	GifFileType *gif;
 	mreal fscl,ftet;	///< last scale and rotation for glyphs

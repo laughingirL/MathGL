@@ -1278,6 +1278,7 @@ void mglBase::ClearUnused()
 		if(p.type==2)	{	p.n2=used[p.n2]-1;	p.n3=used[p.n3]-1;	}
 		if(p.type==3)	{	p.n2=used[p.n2]-1;	p.n3=used[p.n3]-1;	p.n4=used[p.n4]-1;	}
 	}
+	delete []used;
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_unlock(&mutexPnt);	pthread_mutex_unlock(&mutexPrm);
 #endif
