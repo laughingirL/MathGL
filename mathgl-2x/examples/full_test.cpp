@@ -19,6 +19,7 @@
  ***************************************************************************/
 #include <time.h>
 #include <locale.h>
+#include <time.h>
 #if !defined(_MSC_VER) && !defined(__BORLANDC__)
 #include <getopt.h>
 #endif
@@ -61,8 +62,18 @@ void mgls_prepare2v(mglData *a, mglData *b);
 void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 //-----------------------------------------------------------------------------
 void save(mglGraph *gr,const char *name,const char *suf);
+void smgl_stfa(mglGraph *gr);	// STFA sample
 void test(mglGraph *gr)
 {
+	mgl_set_num_thr(	1);
+	smgl_stfa(gr);	return;
+	
+	long n=200000;
+	mglData x(n),y(n),z(n);	x.Modify("rnd");	y.Modify("rnd");	z.Modify("rnd");
+	gr->SetRanges(0,1,0,1,0,1);
+	gr->Rotate(40,60);	gr->Box();
+	gr->Dots(x,y,z);
+	
 	mglParse par;
 	par.AllowSetSize(true);
 	setlocale(LC_CTYPE, "");
@@ -99,6 +110,7 @@ static struct option longopts[] =
 	{ "stl",	no_argument,	&type,		13 },
 	{ "tex",	no_argument,	&type,		14 },
 	{ "json",	no_argument,	&type,		15 },
+	{ "jsonz",	no_argument,	&type,		16 },
 	{ "test",	no_argument,	&dotest,	1 },
 	{ "font",	no_argument,	&dotest,	2 },
 	{ "thread",	required_argument,	NULL,	't' },
@@ -121,6 +133,7 @@ void usage()
 		"--eps		- output LaTeX\n"
 		"--jpeg		- output JPEG\n"
 		"--json		- output JSON\n"
+		"--jsonz		- output JSONz\n"
 		"--solid	- output solid PNG\n"
 		"--svg		- output SVG\n"
 		"--obj		- output obj/mtl\n"
@@ -192,6 +205,9 @@ void save(mglGraph *gr,const char *name,const char *suf="")
 		case 15:	// JSON
 			snprintf(buf,128,"%s%s.json",name,suf);
 			gr->WriteJSON(buf);	break;
+		case 16:	// JSON
+			snprintf(buf,128,"%s%s.jsonz",name,suf);
+			gr->WriteJSON(buf);	break;
 		default:// PNG (no alpha)
 			snprintf(buf,128,"%s%s.png",name,suf);
 			gr->WritePNG(buf,0,false);	break;
@@ -203,6 +219,7 @@ int main(int argc,char **argv)
 	const char *suf = "";
 	char name[256]="", *tmp;
 	int ch;
+	time_t st,en;	time(&st);
 	mglGraph *gr = NULL;
 	mglSample *s=samp;
 #if !defined(_MSC_VER) && !defined(__BORLANDC__)
@@ -236,6 +253,7 @@ int main(int argc,char **argv)
 	if(dotest==1)
 	{
 		mgl_set_test_mode(true);	test(gr);
+		time(&en);	printf("time is %g sec\n",difftime(en,st));
 		gr->WritePNG("test.png","",false);
 		gr->WriteEPS("test.eps");
 		printf("Messages:%s\n",gr->Message());
@@ -246,7 +264,7 @@ int main(int argc,char **argv)
 	{	mgl_create_cpp_font(gr->Self(), L"!-~,¡-ÿ,̀-̏,Α-ω,ϑ,ϕ,ϖ,ϰ,ϱ,ϵ,А-я,ℏ,ℑ,ℓ,ℜ,←-↙,∀-∯,≠-≯,⟂");
 		delete gr;	return 0;	}
 
-	if(type==15)	mini=1;	// save mini version for json
+	if(type==15 || type==16)	mini=1;	// save mini version for json
 	
 	if(srnd)	mgl_srnd(1);
 	gr->VertexColor(false);	gr->Compression(false);

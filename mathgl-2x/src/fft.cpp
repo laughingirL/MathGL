@@ -19,12 +19,6 @@
  ***************************************************************************/
 #include "mgl2/datac.h"
 #include "mgl2/data.h"
-
-#if MGL_HAVE_GSL
-#include <gsl/gsl_fft_complex.h>
-#include <gsl/gsl_dht.h>
-#include <gsl/gsl_sf.h>
-#endif
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mglStartThreadT(void *(*func)(void *), long n, void *a, double *b, const void *v, void *w, const long *p, const void *re, const void *im)
 {
@@ -54,6 +48,11 @@ void MGL_EXPORT mglStartThreadT(void *(*func)(void *), long n, void *a, double *
 	}
 }
 //-----------------------------------------------------------------------------
+#if MGL_HAVE_GSL
+#include <gsl/gsl_fft_complex.h>
+#include <gsl/gsl_dht.h>
+#include <gsl/gsl_sf.h>
+
 MGL_NO_EXPORT void* mgl_fftx(void *par)
 {
 	mglThreadT *t=(mglThreadT *)par;
@@ -92,7 +91,6 @@ MGL_NO_EXPORT void* mgl_fftz(void *par)
 }
 void MGL_EXPORT mgl_datac_fft(HADT d, const char *dir)
 {
-#if MGL_HAVE_GSL
 	if(!dir || *dir==0)	return;
 	long nx = d->nx, ny = d->ny, nz = d->nz;
 	if(mglNumThr<1)	mgl_set_num_thr(0);	// manually set number of threads
@@ -133,15 +131,10 @@ void MGL_EXPORT mgl_datac_fft(HADT d, const char *dir)
 	for(i=0;i<nx*ny*nz;i++)	d->a[i] = dual(a[2*i], a[2*i+1]);
 	delete []a;
 #endif
-#endif
 }
-void MGL_EXPORT mgl_datac_fft_(uintptr_t *d, const char *dir, int l)
-{	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
-	mgl_datac_fft(_DC_,s);	delete []s;	}
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_data_fourier(HMDT re, HMDT im, const char *dir)
 {
-#if MGL_HAVE_GSL
 	if(!dir || *dir==0)	return;
 	long nx = re->nx, ny = re->ny, nz = re->nz;
 	if(nx*ny*nz != im->nx*im->ny*im->nz || !dir || dir[0]==0)	return;
@@ -178,18 +171,14 @@ void MGL_EXPORT mgl_data_fourier(HMDT re, HMDT im, const char *dir)
 	for(i=0;i<nx*ny*nz;i++)
 	{	re->a[i] = a[2*i];	im->a[i] = a[2*i+1];	}
 	delete []a;
-#endif
 }
-void MGL_EXPORT mgl_data_fourier_(uintptr_t *re, uintptr_t *im, const char *dir, int l)
-{	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
-	mgl_data_fourier(_DM_(re),_DM_(im),s);	delete []s;	}
 //-----------------------------------------------------------------------------
 MGL_NO_EXPORT void* mgl_stfa1(void *par)
 {
 	mglThreadT *t=(mglThreadT *)par;
 	register long i,j,k,ii,i0,mx=t->p[0],my=t->p[1],mz=t->p[2],dn=t->p[3],dd=dn/2,ny=t->p[4];
 	double *a = t->b+4*dn*t->id,ff;
-	dual *d = (dual*)t->a;
+	mreal *d = (mreal*)t->a;
 	HCDT re = (HCDT)t->re, im = (HCDT)t->im;
 	const gsl_fft_complex_wavetable *wt = (const gsl_fft_complex_wavetable *)t->v;
 	gsl_fft_complex_workspace **ws = (gsl_fft_complex_workspace **)t->w;
@@ -221,7 +210,7 @@ MGL_NO_EXPORT void* mgl_stfa2(void *par)
 	mglThreadT *t=(mglThreadT *)par;
 	register long i,j,k,ii,i0,mx=t->p[0],my=t->p[1],mz=t->p[2],dn=t->p[3],dd=dn/2,nx=t->p[4];
 	double *a = t->b+4*dn*t->id,ff;
-	dual *d = (dual*)t->a;
+	mreal *d = (mreal*)t->a;
 	HCDT re = (HCDT)t->re, im = (HCDT)t->im;
 	const gsl_fft_complex_wavetable *wt = (const gsl_fft_complex_wavetable *)t->v;
 	gsl_fft_complex_workspace **ws = (gsl_fft_complex_workspace **)t->w;
@@ -251,7 +240,6 @@ MGL_NO_EXPORT void* mgl_stfa2(void *par)
 HMDT MGL_EXPORT mgl_data_stfa(HCDT re, HCDT im, long dn, char dir)
 {
 	mglData *d=new mglData;
-#if MGL_HAVE_GSL
 	if(dn<2)	return d;
 	dn = 2*(dn/2);
 	long nx = re->GetNx(), ny = re->GetNy();
@@ -280,37 +268,8 @@ HMDT MGL_EXPORT mgl_data_stfa(HCDT re, HCDT im, long dn, char dir)
 	delete []a;
 	for(i=0;i<mglNumThr;i++)	gsl_fft_complex_workspace_free(ws[i]);
 	gsl_fft_complex_wavetable_free(wt);
-#endif
 	return d;
 }
-uintptr_t MGL_EXPORT mgl_data_stfa_(uintptr_t *re, uintptr_t *im, int *dn, char *dir, int)
-{	return uintptr_t(mgl_data_stfa(_DA_(re),_DA_(im),*dn,*dir));	}
-//-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_data_fill_sample(HMDT d, const char *how)
-{
-	if(!how || *how==0)	return;
-	bool xx = strchr(how,'x');
-	register long i,n=d->nx;
-	mreal *aa=d->a;
-	if(strchr(how,'h'))	// Hankel
-	{
-#if MGL_HAVE_GSL
-		gsl_dht *dht = gsl_dht_new(n,0,1);
-		for(i=0;i<n;i++)
-			aa[i] = xx ? gsl_dht_x_sample(dht, i) : gsl_dht_k_sample(dht, i);
-		gsl_dht_free(dht);
-#endif
-	}
-	else	// Fourier
-	{
-		if(xx)	for(i=0;i<n;i++)	aa[i] = mreal(2*i-n)/n;
-		else	for(i=0;i<n;i++)	aa[i] = M_PI*(i<n/2 ? i:i-n);
-	}
-	for(i=1;i<d->ny*d->nz;i++)	memcpy(aa+i*n,aa,n*sizeof(mreal));
-}
-void MGL_EXPORT mgl_data_fill_sample_(uintptr_t *d, const char *how,int l)
-{	char *s=new char[l+1];	memcpy(s,how,l);	s[l]=0;
-	mgl_data_fill_sample(_DT_,s);	delete []s;	}
 //-----------------------------------------------------------------------------
 MGL_NO_EXPORT void* mgl_cosx(void *par)
 {
@@ -366,7 +325,6 @@ MGL_NO_EXPORT void* mgl_cosz(void *par)
 }
 void MGL_EXPORT mgl_data_cosfft(HMDT d, const char *dir)
 {
-#if MGL_HAVE_GSL
 	if(!dir || *dir==0)	return;
 	double *b = 0;
 	if(mglNumThr<1)	mgl_set_num_thr(0);	// manually set number of threads
@@ -398,11 +356,7 @@ void MGL_EXPORT mgl_data_cosfft(HMDT d, const char *dir)
 	if(b)
 	{	for(i=0;i<mglNumThr;i++)	gsl_fft_complex_workspace_free(ws[i]);
 		delete []b;	gsl_fft_complex_wavetable_free(wt);	}
-#endif
 }
-void MGL_EXPORT mgl_data_cosfft_(uintptr_t *d, const char *dir,int l)
-{	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
-	mgl_data_cosfft(_DT_,s);	delete []s;	}
 //-----------------------------------------------------------------------------
 MGL_NO_EXPORT void* mgl_sinx(void *par)
 {
@@ -457,7 +411,6 @@ MGL_NO_EXPORT void* mgl_sinz(void *par)
 }
 void MGL_EXPORT mgl_data_sinfft(HMDT d, const char *dir)
 {
-#if MGL_HAVE_GSL
 	if(!dir || *dir==0)	return;
 	double *b = 0;
 	if(mglNumThr<1)	mgl_set_num_thr(0);	// manually set number of threads
@@ -489,11 +442,107 @@ void MGL_EXPORT mgl_data_sinfft(HMDT d, const char *dir)
 	if(b)
 	{	for(i=0;i<mglNumThr;i++)	gsl_fft_complex_workspace_free(ws[i]);
 		delete []b;	gsl_fft_complex_wavetable_free(wt);	}
-#endif
 }
-void MGL_EXPORT mgl_data_sinfft_(uintptr_t *d, const char *dir,int l)
-{	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
-	mgl_data_sinfft(_DT_,s);	delete []s;	}
+//-----------------------------------------------------------------------------
+MGL_NO_EXPORT void* mgl_envx(void *par)
+{
+	mglThreadT *t=(mglThreadT *)par;
+	register long i,j,nx=t->p[0],ny=t->p[1],nz=t->p[2];
+	double *b = t->b+2*nx*t->id;
+	mreal *a = (mreal*)t->a;
+	const gsl_fft_complex_wavetable *wt = (const gsl_fft_complex_wavetable *)t->v;
+	gsl_fft_complex_workspace **ws = (gsl_fft_complex_workspace **)t->w;
+	for(i=t->id;i<t->n;i+=mglNumThr)
+	{
+		for(j=0;j<nx;j++)	{	b[2*j] = a[j+i*nx];	b[2*j+1] = 0;	}
+		gsl_fft_complex_transform(b, 1, nx, wt, ws[t->id], forward);
+		for(j=0;j<nx;j++)
+		{	b[j] /= nx/2.;	b[j+nx] = 0;	}
+		gsl_fft_complex_transform(b, 1, nx, wt, ws[t->id], backward);
+		for(j=0;j<nx;j++)	a[j+i*nx] = hypot(b[2*j], b[2*j+1]);
+	}
+	return 0;
+}
+MGL_NO_EXPORT void* mgl_envy(void *par)
+{
+	mglThreadT *t=(mglThreadT *)par;
+	register long i,j,nx=t->p[0],ny=t->p[1],nz=t->p[2];
+	double *b = t->b+2*ny*t->id;
+	mreal *a = (mreal*)t->a;
+	const gsl_fft_complex_wavetable *wt = (const gsl_fft_complex_wavetable *)t->v;
+	gsl_fft_complex_workspace **ws = (gsl_fft_complex_workspace **)t->w;
+	for(i=t->id;i<t->n;i+=mglNumThr)
+	{
+		for(j=0;j<ny;j++)	{	b[2*j] = a[(i%nx)+nx*(j+ny*(i/nx))];	b[2*j+1] = 0;	}
+		gsl_fft_complex_transform(b, 1, ny, wt, ws[t->id], forward);
+		for(j=0;j<ny;j++)
+		{	b[j] /= ny/2.;	b[j+ny] = 0;	}
+		gsl_fft_complex_transform(b, 1, ny, wt, ws[t->id], backward);
+		for(j=0;j<ny;j++)	a[(i%nx)+nx*(j+ny*(i/nx))] = hypot(b[2*j], b[2*j+1]);
+	}
+	return 0;
+}
+MGL_NO_EXPORT void* mgl_envz(void *par)
+{
+	mglThreadT *t=(mglThreadT *)par;
+	register long i,j,nx=t->p[0],ny=t->p[1],nz=t->p[2],k=nx*ny;
+	double *b = t->b+2*nz*t->id;
+	mreal *a = (mreal*)t->a;
+	const gsl_fft_complex_wavetable *wt = (const gsl_fft_complex_wavetable *)t->v;
+	gsl_fft_complex_workspace **ws = (gsl_fft_complex_workspace **)t->w;
+	for(i=t->id;i<t->n;i+=mglNumThr)
+	{
+		for(j=0;j<nz;j++)	{	b[2*j] = a[j*k+i];	b[2*j+1] = 0;	}
+		gsl_fft_complex_transform(b, 1, nz, wt, ws[t->id], forward);
+		for(j=0;j<nz;j++)
+		{	b[j] /= nz/2.;	b[j+nz] = 0;	}
+		gsl_fft_complex_transform(b, 1, nz, wt, ws[t->id], backward);
+		for(j=0;j<nz;j++)	a[j*k+i] = hypot(b[2*j], b[2*j+1]);
+	}
+	return 0;
+}
+void MGL_EXPORT mgl_data_envelop(HMDT d, char dir)
+{
+	register long i;
+	long nx=d->nx,ny=d->ny,nz=d->nz,par[3]={nx,ny,nz};
+	if(mglNumThr<1)	mgl_set_num_thr(0);	// manually set number of threads
+	gsl_fft_complex_wavetable *wt=0;
+	gsl_fft_complex_workspace *ws[mglNumThr];
+	double *b = 0;
+	if(dir=='x' && nx>1)
+	{
+		wt = gsl_fft_complex_wavetable_alloc(nx);
+		for(i=0;i<mglNumThr;i++)	ws[i] = gsl_fft_complex_workspace_alloc(nx);
+		b = new double[2*nx*mglNumThr];
+		mglStartThreadT(mgl_envx,ny*nz,d->a,b,wt,ws,par);
+	}
+	if(dir=='y' && ny>1)
+	{
+		wt = gsl_fft_complex_wavetable_alloc(ny);
+		for(i=0;i<mglNumThr;i++)	ws[i] = gsl_fft_complex_workspace_alloc(ny);
+		b = new double[2*ny*mglNumThr];
+		mglStartThreadT(mgl_envy,nx*nz,d->a,b,wt,ws,par);
+	}
+	if(dir=='z' && nz>1)
+	{
+		wt = gsl_fft_complex_wavetable_alloc(nz);
+		for(i=0;i<mglNumThr;i++)	ws[i] = gsl_fft_complex_workspace_alloc(nz);
+		b = new double[2*nz*mglNumThr];
+		mglStartThreadT(mgl_envz,nx*ny,d->a,b,wt,ws,par);
+	}
+	for(i=0;i<nx*ny*nz;i++)	d->a[i] = hypot(b[2*i], b[2*i+1]);
+	if(b)
+	{	for(i=0;i<mglNumThr;i++)	gsl_fft_complex_workspace_free(ws[i]);
+		delete []b;	gsl_fft_complex_wavetable_free(wt);	}
+}
+#else
+void MGL_EXPORT mgl_datac_fft(HADT d, const char *dir){}
+void MGL_EXPORT mgl_data_fourier(HMDT re, HMDT im, const char *dir){}
+HMDT MGL_EXPORT mgl_data_stfa(HCDT re, HCDT im, long dn, char dir){}
+void MGL_EXPORT mgl_data_cosfft(HMDT d, const char *dir){}
+void MGL_EXPORT mgl_data_sinfft(HMDT d, const char *dir){}
+void MGL_EXPORT mgl_data_envelop(HMDT d, char dir){}
+#endif
 //-----------------------------------------------------------------------------
 HMDT MGL_EXPORT mgl_transform_a(HCDT am, HCDT ph, const char *tr)
 {
@@ -577,99 +626,6 @@ uintptr_t MGL_EXPORT mgl_transform_(uintptr_t *re, uintptr_t *im, const char *tr
 	uintptr_t res = uintptr_t(mgl_transform(_DA_(re),_DA_(im),s));
 	delete []s;		return res;	}
 //-----------------------------------------------------------------------------
-MGL_NO_EXPORT void* mgl_envx(void *par)
-{
-	mglThreadT *t=(mglThreadT *)par;
-	register long i,j,nx=t->p[0],ny=t->p[1],nz=t->p[2];
-	double *b = t->b+2*nx*t->id;
-	mreal *a = (mreal*)t->a;
-	const gsl_fft_complex_wavetable *wt = (const gsl_fft_complex_wavetable *)t->v;
-	gsl_fft_complex_workspace **ws = (gsl_fft_complex_workspace **)t->w;
-	for(i=t->id;i<t->n;i+=mglNumThr)
-	{
-		for(j=0;j<nx;j++)	{	b[2*j] = a[j+i*nx];	b[2*j+1] = 0;	}
-		gsl_fft_complex_transform(b, 1, nx, wt, ws[t->id], forward);
-		for(j=0;j<nx;j++)
-		{	b[j] /= nx/2.;	b[j+nx] = 0;	}
-		gsl_fft_complex_transform(b, 1, nx, wt, ws[t->id], backward);
-		for(j=0;j<nx;j++)	a[j+i*nx] = hypot(b[2*j], b[2*j+1]);
-	}
-	return 0;
-}
-MGL_NO_EXPORT void* mgl_envy(void *par)
-{
-	mglThreadT *t=(mglThreadT *)par;
-	register long i,j,nx=t->p[0],ny=t->p[1],nz=t->p[2];
-	double *b = t->b+2*ny*t->id;
-	mreal *a = (mreal*)t->a;
-	const gsl_fft_complex_wavetable *wt = (const gsl_fft_complex_wavetable *)t->v;
-	gsl_fft_complex_workspace **ws = (gsl_fft_complex_workspace **)t->w;
-	for(i=t->id;i<t->n;i+=mglNumThr)
-	{
-		for(j=0;j<ny;j++)	{	b[2*j] = a[(i%nx)+nx*(j+ny*(i/nx))];	b[2*j+1] = 0;	}
-		gsl_fft_complex_transform(b, 1, ny, wt, ws[t->id], forward);
-		for(j=0;j<ny;j++)
-		{	b[j] /= ny/2.;	b[j+ny] = 0;	}
-		gsl_fft_complex_transform(b, 1, ny, wt, ws[t->id], backward);
-		for(j=0;j<ny;j++)	a[(i%nx)+nx*(j+ny*(i/nx))] = hypot(b[2*j], b[2*j+1]);
-	}
-	return 0;
-}
-MGL_NO_EXPORT void* mgl_envz(void *par)
-{
-	mglThreadT *t=(mglThreadT *)par;
-	register long i,j,nx=t->p[0],ny=t->p[1],nz=t->p[2],k=nx*ny;
-	double *b = t->b+2*nz*t->id;
-	mreal *a = (mreal*)t->a;
-	const gsl_fft_complex_wavetable *wt = (const gsl_fft_complex_wavetable *)t->v;
-	gsl_fft_complex_workspace **ws = (gsl_fft_complex_workspace **)t->w;
-	for(i=t->id;i<t->n;i+=mglNumThr)
-	{
-		for(j=0;j<nz;j++)	{	b[2*j] = a[j*k+i];	b[2*j+1] = 0;	}
-		gsl_fft_complex_transform(b, 1, nz, wt, ws[t->id], forward);
-		for(j=0;j<nz;j++)
-		{	b[j] /= nz/2.;	b[j+nz] = 0;	}
-		gsl_fft_complex_transform(b, 1, nz, wt, ws[t->id], backward);
-		for(j=0;j<nz;j++)	a[j*k+i] = hypot(b[2*j], b[2*j+1]);
-	}
-	return 0;
-}
-void MGL_EXPORT mgl_data_envelop(HMDT d, char dir)
-{
-#if MGL_HAVE_GSL
-	register long i;
-	long nx=d->nx,ny=d->ny,nz=d->nz,par[3]={nx,ny,nz};
-	if(mglNumThr<1)	mgl_set_num_thr(0);	// manually set number of threads
-	gsl_fft_complex_wavetable *wt=0;
-	gsl_fft_complex_workspace *ws[mglNumThr];
-	double *b = 0;
-	if(dir=='x' && nx>1)
-	{
-		wt = gsl_fft_complex_wavetable_alloc(nx);
-		for(i=0;i<mglNumThr;i++)	ws[i] = gsl_fft_complex_workspace_alloc(nx);
-		b = new double[2*nx*mglNumThr];
-		mglStartThreadT(mgl_envx,ny*nz,d->a,b,wt,ws,par);
-	}
-	if(dir=='y' && ny>1)
-	{
-		wt = gsl_fft_complex_wavetable_alloc(ny);
-		for(i=0;i<mglNumThr;i++)	ws[i] = gsl_fft_complex_workspace_alloc(ny);
-		b = new double[2*ny*mglNumThr];
-		mglStartThreadT(mgl_envy,nx*nz,d->a,b,wt,ws,par);
-	}
-	if(dir=='z' && nz>1)
-	{
-		wt = gsl_fft_complex_wavetable_alloc(nz);
-		for(i=0;i<mglNumThr;i++)	ws[i] = gsl_fft_complex_workspace_alloc(nz);
-		b = new double[2*nz*mglNumThr];
-		mglStartThreadT(mgl_envz,nx*ny,d->a,b,wt,ws,par);
-	}
-	for(i=0;i<nx*ny*nz;i++)	d->a[i] = hypot(b[2*i], b[2*i+1]);
-	if(b)
-	{	for(i=0;i<mglNumThr;i++)	gsl_fft_complex_workspace_free(ws[i]);
-		delete []b;	gsl_fft_complex_wavetable_free(wt);	}
-#endif
-}
 void MGL_EXPORT mgl_data_envelop_(uintptr_t *d, const char *dir, int)
 {	mgl_data_envelop(_DT_,*dir);	}
 //-----------------------------------------------------------------------------
@@ -783,4 +739,45 @@ void MGL_EXPORT mgl_data_hankel(HMDT d, const char *dir)
 void MGL_EXPORT mgl_data_hankel_(uintptr_t *d, const char *dir,int l)
 {	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
 	mgl_data_hankel(_DT_,s);	delete []s;	}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_data_fill_sample(HMDT d, const char *how)
+{
+	if(!how || *how==0)	return;
+	bool xx = strchr(how,'x');
+	register long i,n=d->nx;
+	mreal *aa=d->a;
+	if(strchr(how,'h'))	// Hankel
+	{
+#if MGL_HAVE_GSL
+		gsl_dht *dht = gsl_dht_new(n,0,1);
+		for(i=0;i<n;i++)
+			aa[i] = xx ? gsl_dht_x_sample(dht, i) : gsl_dht_k_sample(dht, i);
+		gsl_dht_free(dht);
+#endif
+	}
+	else	// Fourier
+	{
+		if(xx)	for(i=0;i<n;i++)	aa[i] = mreal(2*i-n)/n;
+		else	for(i=0;i<n;i++)	aa[i] = M_PI*(i<n/2 ? i:i-n);
+	}
+	for(i=1;i<d->ny*d->nz;i++)	memcpy(aa+i*n,aa,n*sizeof(mreal));
+}
+void MGL_EXPORT mgl_data_fill_sample_(uintptr_t *d, const char *how,int l)
+{	char *s=new char[l+1];	memcpy(s,how,l);	s[l]=0;
+	mgl_data_fill_sample(_DT_,s);	delete []s;	}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_datac_fft_(uintptr_t *d, const char *dir, int l)
+{	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
+	mgl_datac_fft(_DC_,s);	delete []s;	}
+void MGL_EXPORT mgl_data_fourier_(uintptr_t *re, uintptr_t *im, const char *dir, int l)
+{	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
+	mgl_data_fourier(_DM_(re),_DM_(im),s);	delete []s;	}
+uintptr_t MGL_EXPORT mgl_data_stfa_(uintptr_t *re, uintptr_t *im, int *dn, char *dir, int)
+{	return uintptr_t(mgl_data_stfa(_DA_(re),_DA_(im),*dn,*dir));	}
+void MGL_EXPORT mgl_data_cosfft_(uintptr_t *d, const char *dir,int l)
+{	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
+	mgl_data_cosfft(_DT_,s);	delete []s;	}
+void MGL_EXPORT mgl_data_sinfft_(uintptr_t *d, const char *dir,int l)
+{	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
+	mgl_data_sinfft(_DT_,s);	delete []s;	}
 //-----------------------------------------------------------------------------
