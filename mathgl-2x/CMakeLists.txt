@@ -301,7 +301,7 @@ endif(enable-wx)
 
 if(enable-qt)
 	set(MGL_HAVE_QT 1)
-	FIND_PACKAGE(Qt4)
+	FIND_PACKAGE(Qt4 4.8 REQUIRED QtCore QtGui QtNetwork QtWebKit)
 	if(NOT QT4_FOUND)
 		message(SEND_ERROR "Couldn't find Qt4 library.")
 	endif(NOT QT4_FOUND)
