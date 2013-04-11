@@ -1,6 +1,6 @@
 if(MGL_HAVE_QT)
 
-set(json_src Backend.cpp main.cpp MainWindow.cpp)
+set(json_src Backend.cpp MainWindow.cpp)
 set(json_moc_hdr Backend.hpp MainWindow.hpp)
 
 include(${QT_USE_FILE})

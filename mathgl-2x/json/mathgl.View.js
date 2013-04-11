@@ -130,7 +130,7 @@ mathgl.View.prototype.viewMatrix = function() {
   return viewMatrix;
 }
 
-/** TODO: add function returning current view area in world (model) coodrinates */
+/** TODO: add function returning current view area in world (model) coordinates */
 mathgl.View.prototype.viewArea = function() {
   throw new Error("not implemented");
 }

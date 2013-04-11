@@ -81,7 +81,6 @@ mathgl.Graph.prototype.backgroundFillStyle = function() {
 
 /** called when user picks the point on the graph, point shall be somehow displayed/highlighted */
 mathgl.Graph.prototype.__pickPointHandler = function(x, y) {
-    // TODO, implement me please
     console.log("Point picked: ", x, y);
     var obj = this.__geometry;
     var xy = x*obj.width/this.__canvas.width + " " + y*obj.height/this.__canvas.height;
@@ -240,8 +239,6 @@ mathgl.Graph.prototype.__mgl_draw_fast = function(obj, ctx, skip) {
     for(var i=0;i<obj.nprim;i += 1 + Math.round(obj.nprim / this.__maxDraftPoints))
     {
         n1 = obj.prim[i][1];    n2 = obj.prim[i][2];
-        ctx.fillStyle = obj.prim[i][10];
-        ctx.fillRect(obj.pp[n1][0], obj.pp[n1][1], 2, 2);
         if(obj.prim[i][0]==1)
         {
             ctx.strokeStyle = obj.prim[i][10];
@@ -251,6 +248,11 @@ mathgl.Graph.prototype.__mgl_draw_fast = function(obj, ctx, skip) {
             ctx.lineWidth = obj.prim[i][7];
             ctx.stroke();
         }
+        else
+		{
+			ctx.fillStyle = obj.prim[i][10];
+			ctx.fillRect(obj.pp[n1][0], obj.pp[n1][1], 2, 2);
+		}
     }
 }
 
