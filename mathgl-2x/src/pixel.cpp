@@ -377,14 +377,16 @@ void mglCanvas::pxl_other(size_t id, size_t n, const void *p)
 	size_t i,j,k;
 	const mglCanvas *gr = (const mglCanvas *)p;
 	if(!gr)	return;
-	for(k=id;k<n;k+=mglNumThr)
+	if(Quality&2)	for(k=id;k<n;k+=mglNumThr)
 	{
 		i = k%Width;	j = Height-1-(k/Width);
-		if(Quality&2)
-		{
-			pnt_plot(i,j,gr->Z[3*k+2],gr->C+12*k+8,gr->OI[k]);
-			pnt_plot(i,j,gr->Z[3*k+1],gr->C+12*k+4,gr->OI[k]);
-		}
+		pnt_plot(i,j,gr->Z[3*k+2],gr->C+12*k+8,gr->OI[k]);
+		pnt_plot(i,j,gr->Z[3*k+1],gr->C+12*k+4,gr->OI[k]);
+		pnt_plot(i,j,gr->Z[3*k],gr->C+12*k,gr->OI[k]);
+	}
+	else	for(k=id;k<n;k+=mglNumThr)
+	{
+		i = k%Width;	j = Height-1-(k/Width);
 		pnt_plot(i,j,gr->Z[3*k],gr->C+12*k,gr->OI[k]);
 	}
 }
@@ -628,7 +630,7 @@ void mglCanvas::quad_draw(long k1, long k2, long k3, long k4, mglDrawReg *d)
 	Point plotted is u>0 and v>0 and u+v<1.*/
 void mglCanvas::trig_draw(long k1, long k2, long k3, bool anorm, mglDrawReg *d)
 {
-	if(!(Quality&3))
+	if(!(Quality&3) && anorm)
 	{
 		fast_draw(k1,k2,d);	fast_draw(k1,k3,d);
 		fast_draw(k2,k3,d);	return;
@@ -657,19 +659,22 @@ void mglCanvas::trig_draw(long k1, long k2, long k3, bool anorm, mglDrawReg *d)
 	register float u,v,xx,yy;
 	register long i,j;
 	float x0 = p1.x, y0 = p1.y;
-	for(i=x1;i<=x2;i++)	for(j=y1;j<=y2;j++)
+	if(Quality&2)	for(i=x1;i<=x2;i++)	for(j=y1;j<=y2;j++)
 	{
 		xx = (i-x0);	yy = (j-y0);
 		u = dxu*xx+dyu*yy;	v = dxv*xx+dyv*yy;
 		if(u<0 || v<0 || u+v>1)	continue;
-		if(Quality&2)	// slow but accurate
-		{
-			p = p1+d1*u+d2*v;
-			if(mgl_isnan(p.u) && !mgl_isnan(p.v) && anorm)
-			{	p.u = nr.x;	p.v = nr.y;	p.w = nr.z;	}
-			pnt_plot(i,j,p.z,col2int(p,r,d->ObjId),d->ObjId);
-		}
-		else 	pnt_plot(i,j,p1.z,col2int(p1,r,d->ObjId),d->ObjId);
+		p = p1+d1*u+d2*v;
+		if(mgl_isnan(p.u) && !mgl_isnan(p.v) && anorm)
+		{	p.u = nr.x;	p.v = nr.y;	p.w = nr.z;	}
+		pnt_plot(i,j,p.z,col2int(p,r,d->ObjId),d->ObjId);
+	}
+	else	for(i=x1;i<=x2;i++)	for(j=y1;j<=y2;j++)
+	{
+		xx = (i-x0);	yy = (j-y0);
+		u = dxu*xx+dyu*yy;	v = dxv*xx+dyv*yy;
+		if(u<0 || v<0 || u+v>1)	continue;
+		pnt_plot(i,j,p1.z,col2int(p1,r,d->ObjId),d->ObjId);
 	}
 }
 //-----------------------------------------------------------------------------
@@ -778,23 +783,27 @@ void mglCanvas::fast_draw(long k1, long k2, mglDrawReg *dr)
 //-----------------------------------------------------------------------------
 void mglCanvas::pnt_draw(long k, mglDrawReg *dr)
 {
-	register long i,j,s,x,y;
+	register long i,j;
 	register float v,pw=3*dr->PenWidth,dpw=3;
 	if(dr->ObjId==HighId)	{	pw *= 2;	dpw=2;	}
 	const mglPnt &p=Pnt[k];
 	unsigned char cs[4], cc;
 	col2int(p,cs,dr->ObjId);	cc = cs[3];
 	if(cc==0)	return;
-	s = long(5.5+fabs(pw));
-	for(j=-s;j<=s;j++)	for(i=-s;i<=s;i++)
+	long s = long(5.5+fabs(pw));
+	long i1=fmax(-s,dr->x1-p.x),i2=fmin(s,dr->x2-p.x), j1=fmax(-s,dr->y1-p.y),j2=fmin(s,dr->y2-p.y);
+	if(!(Quality&3))	for(j=j1;j<=j2;j++)	for(i=i1;i<=i2;i++)	// fast draw
+	{
+		v = i*i+j*j;
+		if(v>1+(pw-1)*(pw-1)/4)	continue;
+		pnt_plot(p.x+i,p.y+j,p.z,cs,dr->ObjId);
+	}
+	else	for(j=j1;j<=j2;j++)	for(i=i1;i<=i2;i++)
 	{
 		v = i*i+j*j;
 		cs[3] = v<(pw-1)*(pw-1)/4 ? cc : (unsigned char)(cc/cosh(dpw*(sqrt(v)+(1-pw)/2)));
 //		cs[3] = (unsigned char)(cc*exp(-6*v));
-		if(cs[3]==0)	continue;
-		x=p.x+i;	y=p.y+j;
-		if(x>=dr->x1 && x<=dr->x2 && y>=dr->y1 && y<=dr->y2)
-			pnt_plot(p.x+i,p.y+j,p.z,cs,dr->ObjId);
+		pnt_plot(p.x+i,p.y+j,p.z,cs,dr->ObjId);
 	}
 }
 //-----------------------------------------------------------------------------

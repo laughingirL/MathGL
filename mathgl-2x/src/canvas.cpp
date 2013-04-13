@@ -428,7 +428,19 @@ pthread_mutex_lock(&mutexPtx);
 		mglColor mc(ch);
 		if(!ch)	mc = col<0 ? mglColor(char(0.5-col)):Txt[long(col)].GetC(col);
 
-//		if(!get(MGL_ENABLE_RTEXT))
+/*		for(long i=0;i<Prm.size();i++)	// try don't draw text if one present at this point
+		{
+			const mglPnt &t=Pnt[Prm[i].n1];
+			if(Prm[i].type==6 && t.x==q.x && t.y==q.y)
+			{
+#if MGL_HAVE_PTHREAD
+				pthread_mutex_unlock(&mutexPtx);
+#endif
+				Pop();
+				return 0;
+			}
+		}*/
+
 		mglPrim a(6);	a.n1 = p;
 		a.n2 = int(255*mc.r) + 256*(int(255*mc.g) + 256*int(255*mc.b));
 		mglText txt(text,font);
@@ -459,7 +471,7 @@ pthread_mutex_lock(&mutexPtx);
 	}
 	fsize *= fnt->Puts(text,font,col)/2;
 #if MGL_HAVE_PTHREAD
-pthread_mutex_unlock(&mutexPtx);
+	pthread_mutex_unlock(&mutexPtx);
 #endif
 	Pop();	return fsize;
 }
