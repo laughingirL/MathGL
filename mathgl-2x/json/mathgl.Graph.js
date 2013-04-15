@@ -131,19 +131,6 @@ mathgl.Graph.prototype.zoomAxis = function(factor) {
 }
 
 
-/*
-// get coordinate
-var getCoor = function()
-{
-    // TODO need canvas coordinates!!!
-    var xy = window.event.clientX + " " + (obj.height-window.event.clientY);
-    var zoom = "\nzoom "+obj.z[0]+" "+obj.z[2]+" "+obj.z[1]+" "+obj.z[3];
-    var view = "\nview "+obj.tet+" "+obj.phi+" "+obj.bet;
-    var res = backend.coor(xy, zoom+view+txt);
-    console.debug("coordinates are ", res);
-}
-*/
-
 /** initiate the chains of rendering the geometry to the canvas */
 mathgl.Graph.prototype.__renderStart = function() {
   // do nothing if processing is already started
@@ -565,21 +552,32 @@ mathgl.Graph.prototype.__mgl_line_glyph = function(ctx, x,y, f,solid,b) {
 }
 
 
-
 mathgl.Graph.prototype.moveLeft = function() { 
-  this.shiftAxis(-0.1,0);  
+	var b = this.__geometry.b;
+	var f = 0.1/Math.sqrt(b[0]*b[0]+b[1]*b[1]+b[2]*b[2]);
+	this.shiftAxis(f*b[0],f*b[1]);
+	//this.shiftAxis(-0.1,0);
 }
 
 mathgl.Graph.prototype.moveRight = function() { 
-  this.shiftAxis(0.1,0);
+	var b = this.__geometry.b;
+	var f = -0.1/Math.sqrt(b[0]*b[0]+b[1]*b[1]+b[2]*b[2]);
+	this.shiftAxis(f*b[0],f*b[1]);
+	//this.shiftAxis(0.1,0);
 }
 
 mathgl.Graph.prototype.moveUp = function() { 
-  this.shiftAxis(0,-0.1);
+	var b = this.__geometry.b;
+	var f = -0.1/Math.sqrt(b[3]*b[3]+b[4]*b[4]+b[5]*b[5]);
+	this.shiftAxis(f*b[3],f*b[4]);
+	//this.shiftAxis(0,-0.1);
 }
 
 mathgl.Graph.prototype.moveDown = function() { 
-  this.shiftAxis(0,0.1);
+	var b = this.__geometry.b;
+	var f = 0.1/Math.sqrt(b[3]*b[3]+b[4]*b[4]+b[5]*b[5]);
+	this.shiftAxis(f*b[3],f*b[4]);
+	//this.shiftAxis(0,0.1);
 }
 
 mathgl.Graph.prototype.zoomIn = function() { 

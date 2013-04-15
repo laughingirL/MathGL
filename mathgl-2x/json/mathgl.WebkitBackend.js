@@ -13,6 +13,16 @@ mathgl.WebkitBackend.prototype = new mathgl.Backend();
 mathgl.WebkitBackend.prototype.geometry = function(mgl) {
     var geometryData = globalBackend.geometry(mgl);
     console.log("geometryData size:",geometryData.length);
+
+	/*
+	var zlib = require('zlib');
+	zlib.unzip(geometryData, function(err, buffer) {
+		if (!err)
+		{	geometryData = buffer;
+			console.log("geometryData size:",geometryData.length);	}
+	 });
+	 */
+	
     var obj = JSON.parse(geometryData);
     obj.pp = new Array();
     for(var i=0;i<obj.npnts;i++)	// copy original data for transformation
