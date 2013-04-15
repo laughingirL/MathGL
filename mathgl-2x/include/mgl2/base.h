@@ -164,10 +164,11 @@ struct MGL_EXPORT mglGlyph
 		memcpy(line, a.line, 2*nl*sizeof(short));	return *this;	}
 };
 //-----------------------------------------------------------------------------
+#define MGL_TEXTURE_COLOURS 512
 /// Structure for texture (color scheme + palette) representation
 struct MGL_EXPORT mglTexture
 {
-	mglColor col[512];	///< Colors itself
+	mglColor col[MGL_TEXTURE_COLOURS];	///< Colors itself
 	long n;				///< Number of initial colors along u
 
 	char Sch[260];		///< Color scheme used
@@ -183,7 +184,7 @@ struct MGL_EXPORT mglTexture
 	void GetC(mreal u,mreal v,mglPnt &p) const;
 	mglColor GetC(mreal u,mreal v=0) const;
 	inline bool IsSame(const mglTexture &t) const
-	{	return n==t.n && !memcmp(col,t.col,512*sizeof(mglColor));	}
+	{	return n==t.n && !memcmp(col,t.col,MGL_TEXTURE_COLOURS*sizeof(mglColor));	}
 	void GetRGBA(unsigned char *f) const;
 	void GetRGBAPRC(unsigned char *f) const;
 	void GetRGBAOBJ(unsigned char *f) const;	// Export repeating border colors, since OBJ by default wraps textures and we need an extra boundary to work around implementation quirks

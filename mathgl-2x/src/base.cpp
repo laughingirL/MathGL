@@ -246,7 +246,7 @@ long mglBase::AddPnt(mglPoint p, mreal c, mglPoint n, mreal a, int scl)
 	txt.GetC(c,a,q);	// RGBA color
 
 	// add gap for texture coordinates for compatibility with OpenGL
-	const mreal gap = 0./512;
+	const mreal gap = 0./MGL_TEXTURE_COLOURS;
 	q.c = ci+(q.c-ci)*(1-2*gap)+gap;
 	q.t = q.t*(1-2*gap)+gap;
 	q.ta = q.t;
@@ -878,7 +878,7 @@ mreal mglBase::AddTexture(mglColor c)
 			return i+j/255.;
 	// add new texture
 	mglTexture t;
-	for(i=0;i<514;i++)	t.col[i]=c;
+	for(i=0;i<MGL_TEXTURE_COLOURS;i++)	t.col[i]=c;
 	MGL_PUSH(Txt,t,mutexTxt);	return Txt.size()-1;
 }
 //-----------------------------------------------------------------------------
@@ -888,7 +888,7 @@ mreal mglBase::NextColor(long &id)
 {
 	long i=abs(id)/256, n=Txt[i].n, p=abs(id)&0xff;
 	if(id>=0)	{	p=(p+1)%n;	id = 256*i+p;	}
-	mglColor c = Txt[i].col[int(512*(p+0.5)/n)];
+	mglColor c = Txt[i].col[int(MGL_TEXTURE_COLOURS*(p+0.5)/n)];
 	mreal dif, dmin=1;
 	// try to find closest color
 	for(long j=0;mglColorIds[j].id;j++)	for(long k=1;k<10;k++)
