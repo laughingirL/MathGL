@@ -221,6 +221,9 @@ public:
 	/// Set to use UTC time instead of local time
 	inline void SetTimeUTC(bool enable)
 	{	mgl_set_flag(gr,enable, MGL_USE_GMTIME);	}
+	/// Set to draw tick labels at axis origin
+	inline void SetOriginTick(bool enable=true)
+	{	mgl_set_flag(gr,!enable, MGL_NO_ORIGIN);	}
 	
 	/// Put further plotting in some region of whole frame.
 	inline void SubPlot(int nx,int ny,int m,const char *style="<>_^", double dx=0, double dy=0)

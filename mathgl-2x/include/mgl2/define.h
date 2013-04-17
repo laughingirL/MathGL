@@ -181,7 +181,7 @@ enum{	// Codes for warnings/messages
 #define MGL_DISABLE_SCALE	0x000200 	///< Temporary flag for disable scaling (used for axis)
 #define MGL_FINISHED 		0x000400 	///< Flag that final picture (i.e. mglCanvas::G) is ready
 #define MGL_USE_GMTIME		0x000800 	///< Use gmtime instead of localtime
-#define MGL_SHOW_POS			0x001000 	///< Switch to show or not mouse click position
+#define MGL_SHOW_POS		0x001000 	///< Switch to show or not mouse click position
 #define MGL_CLF_ON_UPD		0x002000 	///< Clear plot before Update()
 #define MGL_NOSUBTICKS		0x004000 	///< Disable subticks drawing (for bounding box)
 #define MGL_DIFFUSIVE		0x008000 	///< Use diffusive light instead of specular
@@ -189,7 +189,7 @@ enum{	// Codes for warnings/messages
 #define MGL_REDUCEACC		0x020000 	///< Reduce accuracy of points (to reduc size of output files)
 #define MGL_PREFERVC 		0x040000 	///< Prefer vertex color instead of texture if output format supports
 #define MGL_ONESIDED 		0x080000 	///< Render only front side of surfaces if output format supports (for debugging)
-//#define MGL_3D_ARROW 		0x100000 	///< Use 3D arrows instead of 2d ones
+#define MGL_NO_ORIGIN 		0x100000 	///< Don't draw tick labels at axis origin
 //-----------------------------------------------------------------------------
 #ifdef __cplusplus
 //-----------------------------------------------------------------------------
@@ -233,7 +233,7 @@ struct mglThreadT
 	double *b; 		// dual* array with input or results
 	const long *p;	// long* array with parameters
 	const void *v;	// pointer to table/parameter
-	void *w; 		// pointer to workspace
+	void **w; 		// pointer to workspace
 	int id;			// thread id
 	long n;			// total number of iteration
 	const void *re,*im;
@@ -250,7 +250,7 @@ void MGL_EXPORT mglStartThreadC(void *(*func)(void *), void (*post)(mglThreadC *
 					dual *a=0, const dual *b=0, const dual *c=0, const long *p=0,
 					const void *v=0, const dual *d=0, const dual *e=0, const char *s=0);
 void MGL_EXPORT mglStartThreadT(void *(*func)(void *), long n, void *a, double *b, const void *v=0,
-					void *w=0, const long *p=0, const void *re=0, const void *im=0);
+					void **w=0, const long *p=0, const void *re=0, const void *im=0);
 MGL_EXPORT extern int mglNumThr;		///< Number of thread for plotting and data handling
 //-----------------------------------------------------------------------------
 extern "C" {

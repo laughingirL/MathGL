@@ -74,7 +74,7 @@ MGL_NO_EXPORT void *mgl_pde_hprep(void *par)
 	}
 	return 0;
 }
-// Solve equation du/dz = ham(p,q,x,y,z,|u|)[u] where p=d/dx, q=d/dy. At this moment simplified form of ham is supported: ham = f(p,q,z) + g(x,y,z,'u'), where variable 'u'=|u| (for allowing solve nonlinear problems). You may specify imaginary part like ham = p^2 + i*x*(x>0) but only if dependence on variable 'i' is linear (i.e. ham = hre+i*him).
+// Solve equation dx/dz = func(p,q,x,y,z,|u|)[u] where p=d/dx, q=d/dy. At this moment simplified form of ham is supported: ham = f(p,q,z) + g(x,y,z,'u'), where variable 'u'=|u| (for allowing solve nonlinear problems). You may specify imaginary part like ham = p^2 + i*x*(x>0) but only if dependence on variable 'i' is linear (i.e. ham = hre+i*him).
 HMDT MGL_EXPORT mgl_pde_solve(HMGL gr, const char *ham, HCDT ini_re, HCDT ini_im, mreal dz, mreal k0, const char *opt)
 {
 	gr->SaveState(opt);
@@ -180,54 +180,49 @@ HMDT MGL_EXPORT mgl_pde_solve(HMGL gr, const char *ham, HCDT ini_re, HCDT ini_im
 	return res;
 }
 //-----------------------------------------------------------------------------
-// Solve GO ray equation like dr/dt = d ham/dp, dp/dt = -d ham/dr where ham = ham(x,y,z,p,q,v,t) and px=p, py=q, pz=v. The starting point (at t=0) is r0, p0. Result is array of {x,y,z,p,q,v,t}
-HMDT MGL_EXPORT mgl_ray_trace(const char *ham, mreal x0, mreal y0, mreal z0, mreal px, mreal py, mreal pz, mreal dt, mreal tmax)
+HMDT MGL_EXPORT mgl_ode_solve(void (*func)(const mreal *x, mreal *dx, void *par), int n, mreal *x0, mreal dt, mreal tmax, void *par)
 {
 	mglData *res=new mglData;
 	if(tmax<dt)	return res;	// nothing to do
 	int nt = int(tmax/dt)+1;
-	mgl_data_create(res,7,nt,1);
-	mgl_data_set_id(res,"xyzpqvt");
-#if MGL_HAVE_GSL
-	mreal x[6], k1[6], k2[6], k3[6], hh=dt/2;
-	mglFormula eqs(ham);
+	mgl_data_create(res,n,nt,1);
+	mreal x[n], k1[n], k2[n], k3[n], v[n], hh=dt/2;
+	register long i,k;
 	// initial conditions
-	x[0] = res->a[0] = x0;	x[1] = res->a[1] = y0;	x[2] = res->a[2] = z0;
-	x[3] = res->a[3] = px;	x[4] = res->a[4] = py;	x[5] = res->a[5] = pz;
-	res->a[6] = 0;
+	for(i=0;i<n;i++)	x[i] = res->a[i] = x0[i];
 	// Runge Kutta scheme of 4th order
-	char v[7]="xyzpqv";
-	mreal var[MGL_VS];	memset(var,0,MGL_VS*sizeof(mreal));
-	register int i,k;
 	for(k=1;k<nt;k++)
 	{
-		// 		md->H(cy,k1);
-		var['t'-'a']=k*dt;		for(i=0;i<6;i++)	var[v[i]-'a'] = x[i];
-		k1[0] = eqs.CalcD(var,'p');	k1[3] = -eqs.CalcD(var,'x');
-		k1[1] = eqs.CalcD(var,'q');	k1[4] = -eqs.CalcD(var,'y');
-		k1[2] = eqs.CalcD(var,'v');	k1[5] = -eqs.CalcD(var,'z');
-		// 		ty = cy/(k1*hh);	md->H(ty,k2);
-		var['t'-'a']=k*dt+hh;	for(i=0;i<6;i++)	var[v[i]-'a'] = x[i]+k1[i]*hh;
-		k2[0] = eqs.CalcD(var,'p');	k2[3] = -eqs.CalcD(var,'x');
-		k2[1] = eqs.CalcD(var,'q');	k2[4] = -eqs.CalcD(var,'y');
-		k2[2] = eqs.CalcD(var,'v');	k2[5] = -eqs.CalcD(var,'z');
-		//		ty = cy/(k2*hh);	md->H(ty,k3);
-		var['t'-'a']=k*dt+hh;	for(i=0;i<6;i++)	var[v[i]-'a'] = x[i]+k2[i]*hh;
-		k3[0] = eqs.CalcD(var,'p');	k3[3] = -eqs.CalcD(var,'x');
-		k3[1] = eqs.CalcD(var,'q');	k3[4] = -eqs.CalcD(var,'y');
-		k3[2] = eqs.CalcD(var,'v');	k3[5] = -eqs.CalcD(var,'z');
-		//		ty = cy/(k2*h);	k3+=k2;	md->H(ty,k2);
-		var['t'-'a']=k*dt+dt;	for(i=0;i<6;i++)
-		{	var[v[i]-'a'] = x[i]+k3[i]*dt;	k3[i] += k2[i];	}
-		k2[0] = eqs.CalcD(var,'p');	k2[3] = -eqs.CalcD(var,'x');
-		k2[1] = eqs.CalcD(var,'q');	k2[4] = -eqs.CalcD(var,'y');
-		k2[2] = eqs.CalcD(var,'v');	k2[5] = -eqs.CalcD(var,'z');
-		//		cy /= (k1+k2+k3*2.)*(h/6);
-		for(i=0;i<6;i++)
-			res->a[i+7*k] = x[i] += (k1[i]+k2[i]+2*k3[i])*dt/6;
-		res->a[6+7*k] = dt*k;
+		func(x,k1,par);
+		for(i=0;i<n;i++)	v[i] = x[i]+k1[i]*hh;
+		func(v,k2,par);
+		for(i=0;i<n;i++)	v[i] = x[i]+k2[i]*hh;
+		func(v,k3,par);
+		for(i=0;i<n;i++)	{	v[i] = x[i]+k3[i]*dt;	k3[i] += k2[i];	}
+		func(v,k2,par);
+		for(i=0;i<n;i++)	res->a[i+n*k] = x[i] += (k1[i]+k2[i]+2*k3[i])*dt/6;
 	}
-#endif
+	return res;
+}
+//-----------------------------------------------------------------------------
+void MGL_NO_EXPORT mgl_ray3d(const mreal *in, mreal *out, void *par)
+{
+	mglFormula *eqs = (mglFormula *)par;
+	const char *v="xyzpqvt";
+	mreal var[MGL_VS];	memset(var,0,MGL_VS*sizeof(mreal));
+	for(int i=0;i<7;i++)	var[v[i]-'a'] = in[i];
+	out[0] = eqs->CalcD(var,'p');	out[3] = -eqs->CalcD(var,'x');
+	out[1] = eqs->CalcD(var,'q');	out[4] = -eqs->CalcD(var,'y');
+	out[2] = eqs->CalcD(var,'v');	out[5] = -eqs->CalcD(var,'z');
+	out[7] = eqs->CalcD(var,'i');	out[6] = 1;
+}
+// Solve GO ray equation like dr/dt = d ham/dp, dp/dt = -d ham/dr where ham = ham(x,y,z,p,q,v,t) and px=p, py=q, pz=v. The starting point (at t=0) is r0, p0. Result is array of {x,y,z,p,q,v,t}
+HMDT MGL_EXPORT mgl_ray_trace(const char *ham, mreal x0, mreal y0, mreal z0, mreal px, mreal py, mreal pz, mreal dt, mreal tmax)
+{
+	mglFormula eqs(ham);
+	mreal in[8]={x0,y0,z0,px,py,pz,0,0};
+	HMDT res = mgl_ode_solve(mgl_ray3d,8,in,dt,tmax,&eqs);
+	mgl_data_set_id(res,"xyzpqvti");
 	return res;
 }
 //-----------------------------------------------------------------------------

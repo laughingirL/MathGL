@@ -206,6 +206,13 @@ dual MGL_EXPORT mgl_datac_linear_(uintptr_t *d, mreal *x,mreal *y,mreal *z);
 dual MGL_EXPORT mgl_datac_linear_ext(HCDT d, mreal x,mreal y,mreal z, dual *dx,dual *dy,dual *dz);
 dual MGL_EXPORT mgl_datac_linear_ext_(uintptr_t *d, mreal *x,mreal *y,mreal *z, dual *dx,dual *dy,dual *dz);
 
+/// Allocate and prepare data for Fourier transform by nthr threads
+MGL_EXPORT void *mgl_fft_alloc(long n, void **space, long nthr);
+/// Free data for Fourier transform
+void MGL_EXPORT mgl_fft_free(void *wt, void **ws, long nthr);
+/// Make Fourier transform of data x of size n and step s between points
+void MGL_EXPORT mgl_fft(double *x, long s, long n, const void *wt, void *ws);
+
 #ifdef __cplusplus
 }
 #endif

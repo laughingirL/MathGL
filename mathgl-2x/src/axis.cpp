@@ -25,7 +25,7 @@
 //-----------------------------------------------------------------------------
 #define islog(a, b) (((a)>0 && (b)>10*(a)) || ((b)<0 && (a)<10*(b)))
 // NOTE: I use <=0 for proper tick labels rotation. But this mirror labels for central origin!
-#define sign(a)	((a)<=0 ? -1:1)
+#define sign(a)	((a)<0 ? -1:1)
 //-----------------------------------------------------------------------------
 MGL_NO_EXPORT inline struct tm *mgl_localtime (const time_t *clock, tm *result, bool use_utc)
 {	if (!clock || !result) return NULL;
@@ -562,6 +562,7 @@ void mglCanvas::DrawLabels(mglAxis &aa)
 	{
 		if(kk[i]<0)	continue;	// should be never here?!
 		c = aa.txt[i].val;
+		if(get(MGL_NO_ORIGIN) && c==aa.v0)	continue;
 		if(c>aa.v1 && c<aa.v2 && i%k!=0)	continue;
 		p = o+d*c;	nn = (s-o)/(Max-Min);	ScalePoint(p,nn);
 		mglPnt &qq = Pnt[kk[i]];
