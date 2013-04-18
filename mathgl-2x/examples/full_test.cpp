@@ -65,6 +65,17 @@ void save(mglGraph *gr,const char *name,const char *suf);
 void smgl_stfa(mglGraph *gr);	// STFA sample
 void test(mglGraph *gr)
 {
+	mglData c;
+	mgls_prepare3d( &c) ;
+	gr->Title( "Cont3 sample") ;
+	gr->Alpha( true) ;  gr->SetAlphaDef( 0.7) ;
+	gr->SetOrigin( 0, 0, 0) ;
+	gr->Axis( 0, 0, 0);
+	gr->Cont3( c,"x") ; gr->Cont3( c) ; gr->Cont3( c,"z") ;
+
+	gr->Zoom(0.3,0.3,0.7,0.7);
+	gr->View(40,60);	return;
+	
 	mgl_set_num_thr(	1);
 	smgl_stfa(gr);	return;
 	

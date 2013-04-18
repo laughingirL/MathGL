@@ -385,6 +385,7 @@ MGL_NO_EXPORT void* mgl_sinx(void *par)
 			a[k+2*j] = -b[2*j+1]*f;
 			a[k+2*j+1] = a[k+2*j-1]+b[2*j]*f;
 		}
+		if(nx%2)	a[nx-1] = -b[nx]*f;
 	}
 	return 0;
 }
@@ -405,6 +406,7 @@ MGL_NO_EXPORT void* mgl_siny(void *par)
 			a[i+nx*(ny*k+2*j)] = -b[2*j+1]*f;
 			a[i+nx*(ny*k+2*j+1)] = a[i+nx*(ny*k+2*j-1)]+b[2*j]*f;
 		}
+		if(ny%2)	a[i+nx*(ny*k+ny-1)] = -b[ny]*f;
 	}
 	return 0;
 }
@@ -425,6 +427,7 @@ MGL_NO_EXPORT void* mgl_sinz(void *par)
 			a[i+k*2*j] = -b[2*j+1]*f;
 			a[i+k*(2*j+1)] = a[i+k*(2*j-1)]+b[2*j]*f;
 		}
+		if(nz%2)	a[i+k*nz-k] = -b[nz]*f;
 	}
 	return 0;
 }
@@ -457,65 +460,91 @@ void MGL_EXPORT mgl_data_sinfft(HMDT d, const char *dir)	// use DST-1
 	if(b)	{	mgl_fft_free(wt,ws,mglNumThr);	delete []b;	}
 }
 //-----------------------------------------------------------------------------
-
-
-
-
-
-/*
 MGL_NO_EXPORT void* mgl_cosx(void *par)
 {
 	mglThreadT *t=(mglThreadT *)par;
-	register long i,j,k,nx=t->p[0],ny=t->p[1],nz=t->p[2];
-	double *b = t->b+4*nx*t->id;
+	register long i,j,k,nx=t->p[0],nn=nx-1;
+	double *b = t->b+2*nx*t->id, f=sqrt(2./nx);
 	mreal *a = (mreal*)t->a;
-	const gsl_fft_complex_wavetable *wt = (const gsl_fft_complex_wavetable *)t->v;
-	gsl_fft_complex_workspace **ws = (gsl_fft_complex_workspace **)t->w;
 	for(i=t->id;i<t->n;i+=mglNumThr)
 	{
-		k = i*nx;	memset(b,0,4*nx*sizeof(double));
-		for(j=0;j<nx;j++)	b[2*j] = a[k+j];
-		for(j=nx-1;j>0;j--)	b[4*nx-2-2*j] = a[k+j];
-		gsl_fft_complex_transform(b, 1, 2*nx-2, wt, ws[t->id], forward);
-		for(j=0;j<nx;j++)	a[k+j] = b[2*j]/sqrt(2.*(nx-1));
+		k = i*nx;	memset(b,0,2*nx*sizeof(double));
+		for(j=0;j<nn;j++)	b[2*j]=(a[j]+a[nn-j])*0.5-sin(M_PI*j/nn)*(a[j]-a[nn-j]);
+		mgl_fft(b,1,nn,t->v,t->w[t->id],false);
+		double f1=0.5*(a[0]-a[nn]), s=-1;
+		a[nn]=0.5*(a[0]+a[nn]*(nn%2?-1:1));
+		for(j=1;j<nn;j++)
+		{
+			f1 += a[j]*cos(M_PI*j/nn);
+			a[nn] += a[j]*s;	s = -s;
+		}
+		a[0]=b[0]*f;	a[1]=f1*f;	a[nn]*=f;	// fill cosfft
+		for(j=1;j<nn/2;j++)
+		{
+			a[2*j] = b[2*j]*f;
+			a[2*j+1] = a[2*j-1]-b[2*j+1]*f;
+		}
+		if(nn%2)	a[nn-1] = b[nn-1]*f;
 	}
 	return 0;
 }
 MGL_NO_EXPORT void* mgl_cosy(void *par)
 {
 	mglThreadT *t=(mglThreadT *)par;
-	register long ii,i,j,k,nx=t->p[0],ny=t->p[1],nz=t->p[2];
-	double *b = t->b+4*ny*t->id;
+	register long ii,i,j,k,nx=t->p[0],ny=t->p[1],nz=t->p[2],nn=ny-1;
+	double *b = t->b+2*ny*t->id, f=sqrt(2./ny);
 	mreal *a = (mreal*)t->a;
-	const gsl_fft_complex_wavetable *wt = (const gsl_fft_complex_wavetable *)t->v;
-	gsl_fft_complex_workspace **ws = (gsl_fft_complex_workspace **)t->w;
 	for(ii=t->id;ii<t->n;ii+=mglNumThr)
 	{
-		i = ii%nx;	k = ii/nx;
-		memset(b,0,4*ny*sizeof(double));	b[0] = a[i+nx*ny*k];	b[2*ny-2] = a[i+nx*(ny-1+ny*k)];
-		for(j=1;j<ny-1;j++)	{	b[2*j] = b[4*ny-2-2*j] = a[i+nx*(ny*k+j)];	}
-		gsl_fft_complex_transform(b, 1, 2*ny-2, wt, ws[t->id], forward);
-		for(j=0;j<ny;j++)	a[i+nx*(ny*k+j)] = b[2*j]/sqrt(2.*(ny-1));
+		i = ii%nx;	k = ii/nx;	memset(b,0,2*ny*sizeof(double));
+		for(j=0;j<nn;j++)	b[2*j]=(a[i+nx*(ny*k+j)]+a[i+nx*(ny*k+nn-j)])*0.5-sin(M_PI*j/nn)*(a[i+nx*(ny*k+j)]-a[i+nx*(ny*k+nn-j)]);
+		mgl_fft(b,1,nn,t->v,t->w[t->id],false);
+		double f1=0.5*(a[i+nx*ny*k]-a[i+nx*(ny*k+nn)]), s=-1;
+		a[i+nx*(ny*k+nn)]=0.5*(a[i+nx*ny*k]+a[i+nx*(ny*k+nn)]*(nn%2?-1:1));
+		for(j=1;j<nn;j++)
+		{
+			f1 += a[i+nx*(ny*k+j)]*cos(M_PI*j/nn);
+			a[i+nx*(ny*k+nn)] += a[i+nx*(ny*k+j)]*s;	s = -s;
+		}
+		a[i+nx*ny*k]=b[0]*f;	a[i+nx*(ny*k+1)]=f1*f;	a[i+nx*(ny*k+nn)]*=f;	// fill cosfft
+		for(j=1;j<nn/2;j++)
+		{
+			a[i+nx*(ny*k+2*j)] = b[2*j]*f;
+			a[i+nx*(ny*k+2*j+1)] = a[i+nx*(ny*k+2*j-1)]-b[2*j+1]*f;
+		}
+		if(nn%2)	a[i+nx*(ny*k+nn-1)] = b[nn-1]*f;
 	}
 	return 0;
 }
 MGL_NO_EXPORT void* mgl_cosz(void *par)
 {
 	mglThreadT *t=(mglThreadT *)par;
-	register long i,j,nx=t->p[0],ny=t->p[1],nz=t->p[2],k=nx*ny;
-	double *b = t->b+4*nz*t->id;
+	register long i,j,nx=t->p[0],ny=t->p[1],nz=t->p[2],k=nx*ny,nn=nz-1;
+	double *b = t->b+2*nz*t->id, f=sqrt(2./nz);
 	mreal *a = (mreal*)t->a;
-	const gsl_fft_complex_wavetable *wt = (const gsl_fft_complex_wavetable *)t->v;
-	gsl_fft_complex_workspace **ws = (gsl_fft_complex_workspace **)t->w;
 	for(i=t->id;i<t->n;i+=mglNumThr)
 	{
-		memset(b,0,4*nz*sizeof(double));	b[0] = a[i];	b[2*nz-2] = a[i+k*(nz-1)];
-		for(j=1;j<nz-1;j++)	{	b[2*j] = b[4*nz-2-2*j] = a[i+k*j];	}
-		gsl_fft_complex_transform(b, 1, 2*nz-2, wt, ws[t->id], forward);
-		for(j=0;j<nz;j++)	a[i+k*j] = b[2*j]/sqrt(2.*(nz-1));
+		memset(b,0,2*nz*sizeof(double));
+
+		for(j=0;j<nn;j++)	b[2*j]=(a[i+k*j]+a[i+k*(nn-j)])*0.5-sin(M_PI*j/nn)*(a[i+k*j]-a[i+k*(nn-j)]);
+		mgl_fft(b,1,nn,t->v,t->w[t->id],false);
+		double f1=0.5*(a[i]-a[i+k*nn]), s=-1;
+		a[i+k*nn]=0.5*(a[i]+a[i+k*nn]*(nn%2?-1:1));
+		for(j=1;j<nn;j++)
+		{
+			f1 += a[i+k*j]*cos(M_PI*j/nn);
+			a[i+k*nn] += a[i+k*j]*s;	s = -s;
+		}
+		a[i]=b[0]*f;	a[i+k]=f1*f;	a[i+k*nn]*=f;	// fill cosfft
+		for(j=1;j<nn/2;j++)
+		{
+			a[i+k*2*j] = b[2*j]*f;
+			a[i+k*2*j+k] = a[i+k*2*j-k]-b[2*j+1]*f;
+		}
+		if(nn%2)	a[i+k*nn-k] = b[nn-1]*f;
 	}
 	return 0;
-	}*/
+}
 void MGL_EXPORT mgl_data_cosfft(HMDT d, const char *dir)
 {
 	if(!dir || *dir==0)	return;
@@ -528,19 +557,19 @@ void MGL_EXPORT mgl_data_cosfft(HMDT d, const char *dir)
 	{
 		wt = mgl_fft_alloc(nx-1,ws,mglNumThr);
 		b = new double[2*nx*mglNumThr];
-//		mglStartThreadT(mgl_cosx,ny*nz,d->a,b,wt,ws,par);
+		mglStartThreadT(mgl_cosx,ny*nz,d->a,b,wt,ws,par);
 	}
 	if(strchr(dir,'y') && ny>1)
 	{
 		wt = mgl_fft_alloc(ny-1,ws,mglNumThr);
 		b = new double[2*ny*mglNumThr];
-//		mglStartThreadT(mgl_cosy,nx*nz,d->a,b,wt,ws,par);
+		mglStartThreadT(mgl_cosy,nx*nz,d->a,b,wt,ws,par);
 	}
 	if(strchr(dir,'z') && nz>1)
 	{
 		wt = mgl_fft_alloc(nz-1,ws,mglNumThr);
 		b = new double[2*nz*mglNumThr];
-//		mglStartThreadT(mgl_cosz,nx*ny,d->a,b,wt,ws,par);
+		mglStartThreadT(mgl_cosz,nx*ny,d->a,b,wt,ws,par);
 	}
 	if(b)	{	mgl_fft_free(wt,ws,mglNumThr);	delete []b;	}
 }
