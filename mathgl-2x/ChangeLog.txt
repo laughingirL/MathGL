@@ -1,6 +1,8 @@
 2.1.3 Released ?? April 2013
 
-*
+* Improve SinFFT, CosFFT. Use DFT if GSL support is disabled (much slow!).
+* Correctly read #QNAN values in data files
+* Bugfixes
 
 2.1.2 Released 28 January 2013
 

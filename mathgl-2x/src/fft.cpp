@@ -419,7 +419,7 @@ MGL_NO_EXPORT void* mgl_sinz(void *par)
 	for(i=t->id;i<t->n;i+=mglNumThr)
 	{
 		memset(b,0,2*nz*sizeof(double));
-		for(j=1;j<nz;j++)	b[2*j]=sin(M_PI*j/nz)*(a[i+k*j]+a[i+k*(ny-j)])+(a[i+k*j]-a[i+k*(ny-j)])*0.5;
+		for(j=1;j<nz;j++)	b[2*j]=sin(M_PI*j/nz)*(a[i+k*j]+a[i+k*(nz-j)])+(a[i+k*j]-a[i+k*(nz-j)])*0.5;
 		mgl_fft(b,1,nz,t->v,t->w[t->id],false);
 		a[i]=0;	a[i+k]=b[0]*f/2;	// fill sinfft
 		for(j=1;j<nz/2;j++)
@@ -469,22 +469,22 @@ MGL_NO_EXPORT void* mgl_cosx(void *par)
 	for(i=t->id;i<t->n;i+=mglNumThr)
 	{
 		k = i*nx;	memset(b,0,2*nx*sizeof(double));
-		for(j=0;j<nn;j++)	b[2*j]=(a[j]+a[nn-j])*0.5-sin(M_PI*j/nn)*(a[j]-a[nn-j]);
+		for(j=0;j<nn;j++)	b[2*j]=(a[j+k]+a[nn-j+k])*0.5-sin(M_PI*j/nn)*(a[j+k]-a[nn-j+k]);
 		mgl_fft(b,1,nn,t->v,t->w[t->id],false);
-		double f1=0.5*(a[0]-a[nn]), s=-1;
-		a[nn]=0.5*(a[0]+a[nn]*(nn%2?-1:1));
+		double f1=0.5*(a[k]-a[nn+k]), s=-1;
+		a[nn+k]=0.5*(a[k]+a[nn+k]*(nn%2?-1:1));
 		for(j=1;j<nn;j++)
 		{
-			f1 += a[j]*cos(M_PI*j/nn);
-			a[nn] += a[j]*s;	s = -s;
+			f1 += a[j+k]*cos(M_PI*j/nn);
+			a[nn+k] += a[j+k]*s;	s = -s;
 		}
-		a[0]=b[0]*f;	a[1]=f1*f;	a[nn]*=f;	// fill cosfft
+		a[k]=b[0]*f;	a[1+k]=f1*f;	a[nn+k]*=f;	// fill cosfft
 		for(j=1;j<nn/2;j++)
 		{
-			a[2*j] = b[2*j]*f;
-			a[2*j+1] = a[2*j-1]-b[2*j+1]*f;
+			a[2*j+k] = b[2*j]*f;
+			a[2*j+1+k] = a[2*j-1+k]-b[2*j+1]*f;
 		}
-		if(nn%2)	a[nn-1] = b[nn-1]*f;
+		if(nn%2)	a[nn-1+k] = b[nn-1]*f;
 	}
 	return 0;
 }
@@ -574,11 +574,6 @@ void MGL_EXPORT mgl_data_cosfft(HMDT d, const char *dir)
 	if(b)	{	mgl_fft_free(wt,ws,mglNumThr);	delete []b;	}
 }
 //-----------------------------------------------------------------------------
-
-
-
-
-
 HMDT MGL_EXPORT mgl_transform_a(HCDT am, HCDT ph, const char *tr)
 {
 	long nx = am->GetNx(), ny = am->GetNy(), nz = am->GetNz();
@@ -695,11 +690,11 @@ void MGL_EXPORT mgl_datac_hankel(HADT d, const char *dir)
 		mm = gsl_sf_bessel_zero_J0(ny+1);
 		for(i=0;i<nx;i++)	for(k=0;k<nz;k++)
 		{
-			for(j=0;j<nx;j++)	ai[j] = real(a[i+nx*(j+ny*k)]);
+			for(j=0;j<ny;j++)	ai[j] = real(a[i+nx*(j+ny*k)]);
 			gsl_dht_apply(dht,ai,af);
-			for(j=0;j<nx;j++)	ai[j] = imag(a[i+nx*(j+ny*k)]);
+			for(j=0;j<ny;j++)	ai[j] = imag(a[i+nx*(j+ny*k)]);
 			gsl_dht_apply(dht,ai,ag);
-			for(j=0;j<nx;j++)	a[i+nx*(j+ny*k)] = dual(af[j],ag[j])*mm;
+			for(j=0;j<ny;j++)	a[i+nx*(j+ny*k)] = dual(af[j],ag[j])*mm;
 		}
 	}
 	if(strchr(dir,'z') && nz>1)
@@ -751,9 +746,9 @@ void MGL_EXPORT mgl_data_hankel(HMDT d, const char *dir)
 		mm = gsl_sf_bessel_zero_J0(ny+1);
 		for(i=0;i<nx;i++)	for(k=0;k<nz;k++)
 		{
-			for(j=0;j<nx;j++)	ai[j] = a[i+nx*(j+ny*k)];
+			for(j=0;j<ny;j++)	ai[j] = a[i+nx*(j+ny*k)];
 			gsl_dht_apply(dht,ai,af);
-			for(j=0;j<nx;j++)	a[i+nx*(j+ny*k)] = af[j]*mm;
+			for(j=0;j<ny;j++)	a[i+nx*(j+ny*k)] = af[j]*mm;
 		}
 	}
 	if(strchr(dir,'z') && nz>1)

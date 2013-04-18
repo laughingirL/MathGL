@@ -24,6 +24,7 @@
 #endif
 
 #include "mgl2/data.h"
+#include "mgl2/datac.h"
 #include "mgl2/eval.h"
 
 #if MGL_HAVE_HDF5
@@ -82,7 +83,7 @@ void mglFromStr(HMDT d,char *buf,long NX,long NY,long NZ)	// TODO: add multithre
 		char *s=buf+j;
 		while(buf[j]>' ' && buf[j]!=',' && buf[j]!=';' && j<nb)	j++;
 		buf[j]=0;
-		d->a[i] = atof(s);
+		d->a[i] = strstr(s,"NAN")?NAN:atof(s);
 		i++;	if(i>=NX*NY*NZ)	break;
 	}
 }
@@ -248,6 +249,10 @@ void MGL_EXPORT mgl_data_save(HCDT d, const char *fname,long ns)
 	long nx=d->GetNx(), ny=d->GetNy(), nz=d->GetNz();
 	if(ns<0 || (ns>=nz && nz>1))	for(k=0;k<nz;k++)
 	{	// save whole data
+		const mglData *dr = dynamic_cast<const mglData *>(d);
+		if(dr)	fprintf(fp,"## %s\n",dr->id.c_str());
+		const mglDataC *dc = dynamic_cast<const mglDataC *>(d);
+		if(dc)	fprintf(fp,"## %s\n",dc->id.c_str());
 		for(i=0;i<ny;i++)
 		{
 			for(j=0;j<nx-1;j++)	fprintf(fp,"%g\t",d->v(j,i,k));
