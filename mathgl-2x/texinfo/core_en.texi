@@ -559,8 +559,8 @@ Sets the range for @samp{x}-,@samp{y}-,@samp{z}- coordinate or coloring (@samp{c
 @deftypefn {MGL command} {} ranges @code{x1 x2 y1 y2 [z1=0 z2=0]}
 @ifclear UDAV
 @deftypefnx {Method on @code{mglGraph}} @code{void} SetRanges (@code{mglPoint} p1, @code{mglPoint} p2)
-@deftypefnx {Method on @code{mglGraph}} @code{void} SetRanges (@code{mreal} x1, @code{mreal} x2, @code{mreal} y1, @code{mreal} y2, @code{mreal} z1=@code{0}, @code{mreal} z2=@code{0})
-@deftypefnx {C function} @code{void} mgl_set_ranges (@code{HMGL} gr, @code{mreal} x1, @code{mreal} x2, @code{mreal} y1, @code{mreal} y2, @code{mreal} z1, @code{mreal} z2)
+@deftypefnx {Method on @code{mglGraph}} @code{void} SetRanges (@code{double} x1, @code{double} x2, @code{double} y1, @code{double} y2, @code{double} z1=@code{0}, @code{double} z2=@code{0})
+@deftypefnx {C function} @code{void} mgl_set_ranges (@code{HMGL} gr, @code{double} x1, @code{double} x2, @code{double} y1, @code{double} y2, @code{double} z1, @code{double} z2)
 @end ifclear
 Sets the ranges of coordinates. If minimal and maximal values of the coordinate are the same then they are ignored. Also it sets the range for coloring (analogous to @code{crange z1 z2}). This is default color range for 2d plots. Initial ranges are [-1, 1].
 @end deftypefn
@@ -571,6 +571,13 @@ Sets the ranges of coordinates. If minimal and maximal values of the coordinate 
 @deftypefnx {Method on @code{mglGraph}} @code{void} SetRanges (@code{const mglDataA &}xx, @code{const mglDataA &}yy, @code{const mglDataA &}zz, @code{const mglDataA &}cc)
 Sets the ranges of @samp{x}-,@samp{y}-,@samp{z}-coordinates and coloring as minimal and maximal values of data @var{xx}, @var{yy}, @var{zz}, @var{cc} correspondingly.
 @end deftypefn
+
+@deftypefn {Method on @code{mglGraph}} @code{void} SetAutoRanges (@code{mglPoint} p1, @code{mglPoint} p2)
+@deftypefnx {Method on @code{mglGraph}} @code{void} SetAutoRanges (@code{double} x1, @code{double} x2, @code{double} y1, @code{double} y2, @code{double} z1=@code{0}, @code{double} z2=@code{0}, @code{double} c1=@code{0}, @code{double} c2=@code{0})
+@deftypefnx {C function} @code{void} mgl_set_auto_ranges (@code{HMGL} gr, @code{double} x1, @code{double} x2, @code{double} y1, @code{double} y2, @code{double} z1, @code{double} z2, @code{double} z1, @code{double} z2)
+Sets the ranges for automatic coordinates. If minimal and maximal values of the coordinate are the same then they are ignored.
+@end deftypefn
+
 @end ifclear
 
 @anchor{origin}
@@ -661,6 +668,7 @@ Use @code{Ternary(0)} for returning to usual axis. @sref{Ternary axis} @sref{Axi
 @cindex SetTickTempl
 @cindex SetTickRotate
 @cindex SetTickSkip
+@cindex SetOriginTick
 @end ifclear
 
 @anchor{adjust}
@@ -716,6 +724,7 @@ Set the manual positions @var{val} and its labels @var{lbl} for ticks along axis
 Set template @var{templ} for x-,y-,z-axis ticks or colorbar ticks. It may contain TeX symbols also. If @var{templ}=@code{""} then default template is used (in simplest case it is @samp{%.2g}). Setting on template switch off automatic ticks tuning.
 @end deftypefn
 
+@anchor{ticktime}
 @deftypefn {MGL command} {} ticktime 'dir' [@code{dv} 'tmpl']
 @ifclear UDAV
 @deftypefnx {Method on @code{mglGraph}} @code{void} SetTicksTime (@code{char} dir, @code{mreal} val, @code{const char *}templ)
@@ -730,6 +739,7 @@ Gets number of seconds from 1970 year to specified date/time @var{str}. The form
 @end deftypefn
 @end ifclear
 
+@anchor{tuneticks}
 @deftypefn {MGL command} {} tuneticks @code{val} [@code{pos=1.15}]
 @ifclear UDAV
 @deftypefnx {Method on @code{mglGraph}} @code{void} SetTuneTicks (@code{int} tune, @code{mreal} pos=@code{1.15})
@@ -738,12 +748,16 @@ Gets number of seconds from 1970 year to specified date/time @var{str}. The form
 Switch on/off ticks enhancing by factoring common multiplier (for small, like from 0.001 to 0.002, or large, like from 1000 to 2000, coordinate values -- enabled if @var{tune}&1 is nonzero) or common component (for narrow range, like from 0.999 to 1.000 -- enabled if @var{tune}&2 is nonzero). Also set the position @var{pos} of common multiplier/component on the axis: =0 at minimal axis value, =1 at maximal axis value. Default value is 1.15.
 @end deftypefn
 
+@anchor{tickshift}
+@deftypefn {MGL command} {} tickshift @code{dx [dy=0 dz=0 dc=0]}
 @ifclear UDAV
-
-@deftypefn {Method on @code{mglGraph}} @code{void} SetTickShift (@code{mglPoint} d)
+@deftypefnx {Method on @code{mglGraph}} @code{void} SetTickShift (@code{mglPoint} d)
 @deftypefnx {C function} @code{void} mgl_set_tick_shift (@code{HMGL} gr, @code{mreal} dx, @code{mreal} dy, @code{mreal} dz, @code{mreal} dc)
+@end ifclear
 Set value of additional shift for ticks labels.
 @end deftypefn
+
+@ifclear UDAV
 
 @deftypefn {Method on @code{mglGraph}} @code{void} SetTickRotate (@code{bool} val)
 @deftypefnx {C function} @code{void} mgl_set_tick_rotate (@code{HMGL} gr, @code{bool} val)
@@ -761,6 +775,14 @@ Enable/disable using UTC time for ticks labels. In C/Fortran you can use @code{m
 @end deftypefn
 
 @end ifclear
+
+@anchor{origintick}
+@deftypefn {MGL command} {} origintick @code{val}
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} SetOriginTick (@code{bool} val=@code{true})
+@end ifclear
+Enable/disable drawing of ticks labels at axis origin. In C/Fortran you can use @code{mgl_set_flag(gr,val, MGL_NO_ORIGIN);}.
+@end deftypefn
 
 @anchor{ticklen}
 @deftypefn {MGL command} {} ticklen @code{val} [@code{stt=1}]

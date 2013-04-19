@@ -32,13 +32,7 @@ A. Paper about MathGL!!!
 	u. Test FlowP + 3d
 	w. Test diffuse, specular local sources
 
-15. Docs about SetAutoRanges()
-
 20. JS rotation in Firefox
-
-21. Docs about SetOriginTick()
-
-22. Add new options in MGL
 23. check if all "value" options are described
 
 ============= UDAV =============

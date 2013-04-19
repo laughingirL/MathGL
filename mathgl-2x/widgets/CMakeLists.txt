@@ -8,11 +8,17 @@ if(MGL_HAVE_FLTK)
 	set_target_properties(mgl-fltk PROPERTIES SOVERSION 7.0.0)
 	set_target_properties(mgl-fltk PROPERTIES CLEAN_DIRECT_OUTPUT 1)
 	set_target_properties(mgl-fltk PROPERTIES DEFINE_SYMBOL "mgl_EXPORTS")
-	set_target_properties(mgl-fltk-static PROPERTIES OUTPUT_NAME "mgl-fltk")
 	set_target_properties(mgl-fltk-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
 	set_target_properties(mgl-fltk-static PROPERTIES COMPILE_FLAGS -DMGL_STATIC_DEFINE)
 	target_link_libraries(mgl-fltk mgl)
 	target_link_libraries(mgl-fltk ${FLTK_LIBRARIES})
+
+	if(enable-mgl2)
+		set_target_properties(mgl-fltk PROPERTIES OUTPUT_NAME "mgl2-fltk")
+		set_target_properties(mgl-fltk-static PROPERTIES OUTPUT_NAME "mgl2-fltk")
+	else(enable-mgl2)
+		set_target_properties(mgl-fltk-static PROPERTIES OUTPUT_NAME "mgl-fltk")
+	endif(enable-mgl2)
 
 	install(
 		TARGETS mgl-fltk mgl-fltk-static
@@ -29,11 +35,17 @@ if(MGL_HAVE_GLUT)
 	set_target_properties(mgl-glut PROPERTIES SOVERSION 7.0.0)
 	set_target_properties(mgl-glut PROPERTIES CLEAN_DIRECT_OUTPUT 1)
 	set_target_properties(mgl-glut PROPERTIES DEFINE_SYMBOL "mgl_EXPORTS")
-	set_target_properties(mgl-glut-static PROPERTIES OUTPUT_NAME "mgl-glut")
 	set_target_properties(mgl-glut-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
 	set_target_properties(mgl-glut-static PROPERTIES COMPILE_FLAGS -DMGL_STATIC_DEFINE)
 	target_link_libraries(mgl-glut mgl)
 	target_link_libraries(mgl-glut ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES})
+
+	if(enable-mgl2)
+		set_target_properties(mgl-glut PROPERTIES OUTPUT_NAME "mgl2-glut")
+		set_target_properties(mgl-glut-static PROPERTIES OUTPUT_NAME "mgl2-glut")
+	else(enable-mgl2)
+		set_target_properties(mgl-glut-static PROPERTIES OUTPUT_NAME "mgl-glut")
+	endif(enable-mgl2)
 
 	install(
 		TARGETS mgl-glut mgl-glut-static
@@ -50,11 +62,17 @@ if(MGL_HAVE_WX)
 	set_target_properties(mgl-wx PROPERTIES SOVERSION 7.0.0)
 	set_target_properties(mgl-wx PROPERTIES CLEAN_DIRECT_OUTPUT 1)
 	set_target_properties(mgl-wx PROPERTIES DEFINE_SYMBOL "mgl_EXPORTS")
-	set_target_properties(mgl-wx-static PROPERTIES OUTPUT_NAME "mgl-wx")
 	set_target_properties(mgl-wx-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
 	set_target_properties(mgl-wx-static PROPERTIES COMPILE_FLAGS -DMGL_STATIC_DEFINE)
 	target_link_libraries(mgl-wx mgl)
 	target_link_libraries(mgl-wx ${wxWidgets_LIBRARIES})
+
+	if(enable-mgl2)
+		set_target_properties(mgl-wx PROPERTIES OUTPUT_NAME "mgl2-wx")
+		set_target_properties(mgl-wx-static PROPERTIES OUTPUT_NAME "mgl2-wx")
+	else(enable-mgl2)
+		set_target_properties(mgl-wx-static PROPERTIES OUTPUT_NAME "mgl-wx")
+	endif(enable-mgl2)
 
 	install(
 		TARGETS mgl-wx mgl-wx-static
@@ -72,11 +90,17 @@ if(MGL_HAVE_QT)
 	set_target_properties(mgl-qt PROPERTIES SOVERSION 7.0.0)
 	set_target_properties(mgl-qt PROPERTIES CLEAN_DIRECT_OUTPUT 1)
 	set_target_properties(mgl-qt PROPERTIES DEFINE_SYMBOL "mgl_EXPORTS")
-	set_target_properties(mgl-qt-static PROPERTIES OUTPUT_NAME "mgl-qt")
 	set_target_properties(mgl-qt-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
 	set_target_properties(mgl-qt-static PROPERTIES COMPILE_FLAGS -DMGL_STATIC_DEFINE)
 	target_link_libraries(mgl-qt mgl)
 	target_link_libraries(mgl-qt ${QT_LIBRARIES})
+
+	if(enable-mgl2)
+		set_target_properties(mgl-qt PROPERTIES OUTPUT_NAME "mgl2-qt")
+		set_target_properties(mgl-qt-static PROPERTIES OUTPUT_NAME "mgl2-qt")
+	else(enable-mgl2)
+		set_target_properties(mgl-qt-static PROPERTIES OUTPUT_NAME "mgl-qt")
+	endif(enable-mgl2)
 
 	install(
 		TARGETS mgl-qt mgl-qt-static
@@ -102,9 +126,15 @@ if(MGL_HAVE_QT AND MGL_HAVE_FLTK)
 	set_target_properties(mgl-wnd PROPERTIES SOVERSION 7.0.0)
 	set_target_properties(mgl-wnd PROPERTIES CLEAN_DIRECT_OUTPUT 1)
 	set_target_properties(mgl-wnd PROPERTIES DEFINE_SYMBOL "mgl_EXPORTS")
-	set_target_properties(mgl-wnd-static PROPERTIES OUTPUT_NAME "mgl-wnd")
 	set_target_properties(mgl-wnd-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
 	set_target_properties(mgl-wnd-static PROPERTIES COMPILE_FLAGS -DMGL_STATIC_DEFINE)
+
+	if(enable-mgl2)
+		set_target_properties(mgl-wnd PROPERTIES OUTPUT_NAME "mgl2-wnd")
+		set_target_properties(mgl-wnd-static PROPERTIES OUTPUT_NAME "mgl2-wnd")
+	else(enable-mgl2)
+		set_target_properties(mgl-wnd-static PROPERTIES OUTPUT_NAME "mgl-wnd")
+	endif(enable-mgl2)
 
 	target_link_libraries(mgl-wnd mgl)
 	target_link_libraries(mgl-wnd ${QT_LIBRARIES})

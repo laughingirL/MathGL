@@ -2367,6 +2367,23 @@ int MGL_NO_EXPORT mgls_ticklen(mglGraph *gr, long , mglArg *a, const char *k, co
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_tickshift(mglGraph *gr, long , mglArg *a, const char *k, const char *)
+{
+	int res=0;
+	if(!strcmp(k,"n"))	gr->SetTickShift(mglPoint(a[0].v));
+	else if(!strcmp(k,"nn"))	gr->SetTickShift(mglPoint(a[0].v, a[1].v));
+	else if(!strcmp(k,"nnn"))	gr->SetTickShift(mglPoint(a[0].v, a[1].v, a[2].v));
+	else if(!strcmp(k,"nnnn"))	gr->SetTickShift(mglPoint(a[0].v, a[1].v, a[2].v, a[3].v));
+	else res = 1;	return res;
+}
+//-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_origintick(mglGraph *gr, long , mglArg *a, const char *k, const char *)
+{
+	int res=0;
+	if(!strcmp(k,"n"))	gr->SetOriginTick(a[0].v);
+	else res = 1;	return res;
+}
+//-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_axisstl(mglGraph *gr, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
@@ -2612,6 +2629,7 @@ mglCommand mgls_base_cmd[] = {
 	{"normsl","Normalize data slice by slice","normsl Dat v1 v2 ['dir' keep sym] ", mgls_normsl ,16},
 	{"once","Start/close commands which should executed only once","once val", 0, 6},
 	{"origin","Set axis origin","origin x0 y0 [z0]", mgls_origin ,14},
+	{"origintick","Set tick labels drawing at origin","origintick val", mgls_origintick ,14},
 	{"palette","Set palette for 1D plots","palette 'colors'", mgls_palette ,2},
 	{"pde","Solve PDE","pde Res 'ham' IniRe IniIm [dz k0]", mgls_pde ,4},
 	{"perspective","Set perspective","perspective val", mgls_perspective ,2},
@@ -2674,6 +2692,7 @@ mglCommand mgls_base_cmd[] = {
 	{"text","Draw text at some position or along curve","text x y 'txt' ['fmt' size]|x y z 'txt' ['fmt' size]|x y dx dy 'txt' ['fmt' size]|x y z dx dy dz 'txt' ['fmt' size]|Ydat 'txt' ['font' sise]|Xdat Ydat 'txt' ['font' sise]", mgls_text ,15},
 	{"textmark","Draw TeX mark at point position","textmark Ydat Rdat 'text' ['fmt']|Xdat Ydat Rdat 'text' ['fmt']|Xdat Ydat Zdat Rdat 'text' ['fmt']", mgls_textmark ,7},
 	{"ticklen","Set tick length","ticklen val [stt]", mgls_ticklen ,14},
+	{"tickshift","Set additional tick and axis labels shift","tickshift dx [dy dz dc]", mgls_tickshift ,14},
 	{"ticktime","Set ticks in time format","ticktime 'dir' [dv 'tmpl']", mgls_ticktime ,14},
 	{"tile","Draw horizontal tiles","tile Zdat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_tile ,8},
 	{"tiles","Draw horizontal tiles with variable size","tiles Zdat Rdat ['fmt']|Xdat Ydat Zdat Rdat ['fmt']", mgls_tiles ,10},

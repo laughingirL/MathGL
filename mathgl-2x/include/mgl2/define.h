@@ -23,7 +23,7 @@
 #include "mgl2/config.h"
 #include "mgl2/dllexport.h"
 
-#define MGL_VER2 	1.2
+#define MGL_VER2 	1.3
 //-----------------------------------------------------------------------------
 #ifdef WIN32 //_MSC_VER needs this before math.h
 #define	_USE_MATH_DEFINES

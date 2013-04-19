@@ -556,6 +556,12 @@ Setsize: размер(ы) равны нулю или отрицательны
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} SetRanges (@code{const mglDataA &}xx, @code{const mglDataA &}yy, @code{const mglDataA &}zz, @code{const mglDataA &}cc)
 Задает диапазон изменения @samp{x}-,@samp{y}-,@samp{z}-,@samp{c}-координат как минимальное и максимальное значение массивов @var{xx}, @var{yy}, @var{zz}, @var{cc} соответственно.
 @end deftypefn
+
+@deftypefn {Метод класса @code{mglGraph}} @code{void} SetAutoRanges (@code{mglPoint} p1, @code{mglPoint} p2)
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} SetAutoRanges (@code{double} x1, @code{double} x2, @code{double} y1, @code{double} y2, @code{double} z1=@code{0}, @code{double} z2=@code{0}, @code{double} c1=@code{0}, @code{double} c2=@code{0})
+@deftypefnx {Функция С} @code{void} mgl_set_auto_ranges (@code{HMGL} gr, @code{double} x1, @code{double} x2, @code{double} y1, @code{double} y2, @code{double} z1, @code{double} z2, @code{double} z1, @code{double} z2)
+Задает диапазон изменения координат для автоматических переменных. Если минимальное и максимальное значение координаты равны, то они игнорируются по данному направлению.
+@end deftypefn
 @end ifclear
 
 @anchor{origin}
@@ -646,6 +652,7 @@ Ternary -- специальный тип графика для 3 зависим�
 @cindex SetTickTempl
 @cindex SetTickRotate
 @cindex SetTickSkip
+@cindex SetOriginTick
 @end ifclear
 
 @anchor{adjust}
@@ -701,6 +708,7 @@ Ternary -- специальный тип графика для 3 зависим�
 Задает шаблон @var{templ} для меток вдоль x-,y-,z-оси или colorbar. Шаблон может содержать и символы TeX. Если @var{templ}=@code{""}, то используется шаблон по умолчанию (в простейшем случае @samp{%.2g}). Установка шаблона выключает автоматическое улучшение вида меток.
 @end deftypefn
 
+@anchor{ticktime}
 @deftypefn {Команда MGL} {} ticktime 'dir' [@code{dv} 'tmpl']
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} SetTicksTime (@code{char} dir, @code{mreal} val, @code{const char *}templ)
@@ -715,6 +723,7 @@ Ternary -- специальный тип графика для 3 зависим�
 @end deftypefn
 @end ifclear
 
+@anchor{tuneticks}
 @deftypefn {Команда MGL} {} tuneticks @code{val} [@code{pos=1.15}]
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} SetTuneTicks (@code{int} tune, @code{mreal} pos=@code{1.15})
@@ -723,12 +732,16 @@ Ternary -- специальный тип графика для 3 зависим�
 Включает/выключает улучшение вида меток осей путем вынесения общего множителя (для маленьких, типа 0.001...0.002, или больших, типа 1000...2000, значений координат) или общей компоненты (для узкого диапазона, типа 0.999...1.000). Также задает положение @var{pos} общего множителя на оси: =0 около минимального значения, =1 около максимального значения.
 @end deftypefn
 
+@anchor{tickshift}
+@deftypefn {Команда MGL} {} tickshift @code{dx [dy=0 dz=0 dc=0]}
 @ifclear UDAV
-
-@deftypefn {Метод класса @code{mglGraph}} @code{void} SetTickShift (@code{mglPoint} d)
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} SetTickShift (@code{mglPoint} d)
 @deftypefnx {Функция С} @code{void} mgl_set_tick_shift (@code{HMGL} gr, @code{mreal} dx, @code{mreal} dy, @code{mreal} dz, @code{mreal} dc)
+@end ifclear
 Задает значение дополнительного сдвига меток осей координат.
 @end deftypefn
+
+@ifclear UDAV
 
 @deftypefn {Метод класса @code{mglGraph}} @code{void} SetTickRotate (@code{bool} val)
 @deftypefnx {Функция С} @code{void} mgl_set_tick_rotate (@code{HMGL} gr, @code{bool} val)
@@ -741,11 +754,18 @@ Ternary -- специальный тип графика для 3 зависим�
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph}} @code{void} SetTimeUTC (@code{bool} val)
-@c @deftypefnx {Функция С} @code{void} mgl_set_tick_skip (@code{HMGL} gr, @code{bool} val)
 Разрешает/запрещает использование UTC времени в метках осей координат. В C/Fortran следует использовать @code{mgl_set_flag(gr,val, MGL_USE_GMTIME);}.
 @end deftypefn
 
 @end ifclear
+
+@anchor{origintick}
+@deftypefn {Команда MGL} {} origintick @code{val}
+@ifclear UDAV
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} SetOriginTick (@code{bool} val=@code{true})
+@end ifclear
+Разрешает/запрещает рисование меток в точке пересечения осей координат. В C/Fortran следует использовать @code{mgl_set_flag(gr,val, MGL_NO_ORIGIN);}.
+@end deftypefn
 
 @anchor{ticklen}
 @deftypefn {Команда MGL} {} ticklen @code{val} [@code{stt=1}]
