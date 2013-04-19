@@ -559,6 +559,7 @@ unsigned char **mglCanvas::GetRGBLines(long &w, long &h, unsigned char *&f, bool
 	for each point (x,y) and selected one pair which 0<u<1 and 0<v<1.*/
 void mglCanvas::quad_draw(long k1, long k2, long k3, long k4, mglDrawReg *d)
 {
+	if(k1<0 || k2<0 || k3<0 || k4<0 || !d)	return;
 	if(!(Quality&3))
 	{
 		fast_draw(k1,k2,d);	fast_draw(k1,k3,d);
@@ -630,6 +631,7 @@ void mglCanvas::quad_draw(long k1, long k2, long k3, long k4, mglDrawReg *d)
 	Point plotted is u>0 and v>0 and u+v<1.*/
 void mglCanvas::trig_draw(long k1, long k2, long k3, bool anorm, mglDrawReg *d)
 {
+	if(k1<0 || k2<0 || k3<0 || !d)	return;
 	if(!(Quality&3) && anorm)
 	{
 		fast_draw(k1,k2,d);	fast_draw(k1,k3,d);
@@ -680,6 +682,7 @@ void mglCanvas::trig_draw(long k1, long k2, long k3, bool anorm, mglDrawReg *d)
 //-----------------------------------------------------------------------------
 void mglCanvas::line_draw(long k1, long k2, mglDrawReg *dr)
 {
+	if(k1<0 || k2<0 || !dr)	return;
 	if(k1>k2)	{	long kk=k1;	k1=k2;	k2=kk;	}	// rearrange start/end for proper dashing
 	if(!(Quality&3))	{	fast_draw(k1,k2,dr);	return;	}
 	unsigned char r[4];
@@ -753,6 +756,7 @@ void mglCanvas::line_draw(long k1, long k2, mglDrawReg *dr)
 //-----------------------------------------------------------------------------
 void mglCanvas::fast_draw(long k1, long k2, mglDrawReg *dr)
 {
+	if(k1<0 || k2<0 || !dr)	return;
 	const mglPnt &p1=Pnt[k1], &p2=Pnt[k2];
 	mglPnt d=p2-p1;
 	unsigned char r[4];	col2int(p1,r,dr->ObjId);
@@ -783,6 +787,7 @@ void mglCanvas::fast_draw(long k1, long k2, mglDrawReg *dr)
 //-----------------------------------------------------------------------------
 void mglCanvas::pnt_draw(long k, mglDrawReg *dr)
 {
+	if(k<0 || !dr)	return;
 	register long i,j;
 	register float v,pw=3*dr->PenWidth,dpw=3;
 	if(dr->ObjId==HighId)	{	pw *= 2;	dpw=2;	}
@@ -809,6 +814,7 @@ void mglCanvas::pnt_draw(long k, mglDrawReg *dr)
 //-----------------------------------------------------------------------------
 void mglCanvas::mark_draw(long k, char type, mreal size, mglDrawReg *d)
 {
+	if(k<0 || !d)	return;
 	const mglPnt &q=Pnt[k];
 	unsigned char cs[4];	col2int(q,cs,d->ObjId);	cs[3] = size>0 ? 255 : 255*q.t;
 	mglPnt p=q;
