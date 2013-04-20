@@ -559,7 +559,7 @@ unsigned char **mglCanvas::GetRGBLines(long &w, long &h, unsigned char *&f, bool
 	for each point (x,y) and selected one pair which 0<u<1 and 0<v<1.*/
 void mglCanvas::quad_draw(long k1, long k2, long k3, long k4, mglDrawReg *d)
 {
-	if(k1<0 || k2<0 || k3<0 || k4<0 || !d)	return;
+//	if(k1<0 || k2<0 || k3<0 || k4<0 || !d)	return;
 	if(!(Quality&3))
 	{
 		fast_draw(k1,k2,d);	fast_draw(k1,k3,d);
@@ -631,7 +631,7 @@ void mglCanvas::quad_draw(long k1, long k2, long k3, long k4, mglDrawReg *d)
 	Point plotted is u>0 and v>0 and u+v<1.*/
 void mglCanvas::trig_draw(long k1, long k2, long k3, bool anorm, mglDrawReg *d)
 {
-	if(k1<0 || k2<0 || k3<0 || !d)	return;
+//	if(k1<0 || k2<0 || k3<0 || !d)	return;
 	if(!(Quality&3) && anorm)
 	{
 		fast_draw(k1,k2,d);	fast_draw(k1,k3,d);
@@ -682,7 +682,7 @@ void mglCanvas::trig_draw(long k1, long k2, long k3, bool anorm, mglDrawReg *d)
 //-----------------------------------------------------------------------------
 void mglCanvas::line_draw(long k1, long k2, mglDrawReg *dr)
 {
-	if(k1<0 || k2<0 || !dr)	return;
+//	if(k1<0 || k2<0 || !dr)	return;
 	if(k1>k2)	{	long kk=k1;	k1=k2;	k2=kk;	}	// rearrange start/end for proper dashing
 	if(!(Quality&3))	{	fast_draw(k1,k2,dr);	return;	}
 	unsigned char r[4];
@@ -756,7 +756,7 @@ void mglCanvas::line_draw(long k1, long k2, mglDrawReg *dr)
 //-----------------------------------------------------------------------------
 void mglCanvas::fast_draw(long k1, long k2, mglDrawReg *dr)
 {
-	if(k1<0 || k2<0 || !dr)	return;
+//	if(k1<0 || k2<0 || !dr)	return;
 	const mglPnt &p1=Pnt[k1], &p2=Pnt[k2];
 	mglPnt d=p2-p1;
 	unsigned char r[4];	col2int(p1,r,dr->ObjId);
@@ -787,7 +787,7 @@ void mglCanvas::fast_draw(long k1, long k2, mglDrawReg *dr)
 //-----------------------------------------------------------------------------
 void mglCanvas::pnt_draw(long k, mglDrawReg *dr)
 {
-	if(k<0 || !dr)	return;
+//	if(k<0 || !dr)	return;
 	register long i,j;
 	register float v,pw=3*dr->PenWidth,dpw=3;
 	if(dr->ObjId==HighId)	{	pw *= 2;	dpw=2;	}
@@ -814,7 +814,7 @@ void mglCanvas::pnt_draw(long k, mglDrawReg *dr)
 //-----------------------------------------------------------------------------
 void mglCanvas::mark_draw(long k, char type, mreal size, mglDrawReg *d)
 {
-	if(k<0 || !d)	return;
+//	if(k<0 || !d)	return;
 	const mglPnt &q=Pnt[k];
 	unsigned char cs[4];	col2int(q,cs,d->ObjId);	cs[3] = size>0 ? 255 : 255*q.t;
 	mglPnt p=q;
@@ -823,7 +823,6 @@ void mglCanvas::mark_draw(long k, char type, mreal size, mglDrawReg *d)
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_lock(&mutexPnt);
 #endif
-	size_t pos = Pnt.size(), qos=pos;
 	if(type=='.' || ss==0)
 	{
 		if(d)	d->PenWidth = ss?ss:sqrt(font_factor/400);
@@ -831,6 +830,9 @@ void mglCanvas::mark_draw(long k, char type, mreal size, mglDrawReg *d)
 	}
 	else
 	{
+		if(type=='C')	pnt_draw(k,d);
+		std::vector<mglPnt> pnt = Pnt;	Pnt.clear();
+		long qos = 0;
 		if(d)
 		{
 			d->PDef = 0xffff;	d->PenWidth*=fabs(50*size);
@@ -841,10 +843,10 @@ void mglCanvas::mark_draw(long k, char type, mreal size, mglDrawReg *d)
 		{
 		case 'P':
 			p.x = q.x-ss;	p.y = q.y-ss;	Pnt.push_back(p);
-			p.x = q.x+ss;	p.y = q.y-ss;	Pnt.push_back(p);	line_draw(pos,pos+1,d);
-			p.x = q.x+ss;	p.y = q.y+ss;	Pnt.push_back(p);	line_draw(pos+1,pos+2,d);
-			p.x = q.x-ss;	p.y = q.y+ss;	Pnt.push_back(p);	line_draw(pos+2,pos+3,d);
-			line_draw(pos+3,pos,d);	qos+=4;
+			p.x = q.x+ss;	p.y = q.y-ss;	Pnt.push_back(p);	line_draw(0,1,d);
+			p.x = q.x+ss;	p.y = q.y+ss;	Pnt.push_back(p);	line_draw(1,2,d);
+			p.x = q.x-ss;	p.y = q.y+ss;	Pnt.push_back(p);	line_draw(2,3,d);
+			line_draw(3,0,d);	qos+=4;
 		case '+':
 			p.x = q.x-ss;	p.y = q.y;		Pnt.push_back(p);
 			p.x = q.x+ss;	p.y = q.y;		Pnt.push_back(p);	line_draw(qos,qos+1,d);
@@ -853,10 +855,10 @@ void mglCanvas::mark_draw(long k, char type, mreal size, mglDrawReg *d)
 			break;
 		case 'X':
 			p.x = q.x-ss;	p.y = q.y-ss;	Pnt.push_back(p);
-			p.x = q.x+ss;	p.y = q.y-ss;	Pnt.push_back(p);	line_draw(pos,pos+1,d);
-			p.x = q.x+ss;	p.y = q.y+ss;	Pnt.push_back(p);	line_draw(pos+1,pos+2,d);
-			p.x = q.x-ss;	p.y = q.y+ss;	Pnt.push_back(p);	line_draw(pos+2,pos+3,d);
-			line_draw(pos+3,pos,d);	qos+=4;
+			p.x = q.x+ss;	p.y = q.y-ss;	Pnt.push_back(p);	line_draw(0,1,d);
+			p.x = q.x+ss;	p.y = q.y+ss;	Pnt.push_back(p);	line_draw(1,2,d);
+			p.x = q.x-ss;	p.y = q.y+ss;	Pnt.push_back(p);	line_draw(2,3,d);
+			line_draw(3,0,d);	qos+=4;
 		case 'x':
 			p.x = q.x-ss;	p.y = q.y-ss;	Pnt.push_back(p);
 			p.x = q.x+ss;	p.y = q.y+ss;	Pnt.push_back(p);	line_draw(qos,qos+1,d);
@@ -868,7 +870,7 @@ void mglCanvas::mark_draw(long k, char type, mreal size, mglDrawReg *d)
 			p.x = q.x-ss;	p.y = q.y+ss;	Pnt.push_back(p);
 			p.x= q.x+ss;	p.y= q.y+ss;	Pnt.push_back(p);
 			p.x = q.x+ss;	p.y = q.y-ss;	Pnt.push_back(p);
-			quad_draw(pos,pos+1,pos+3,pos+2,d);	qos+=4;
+			quad_draw(0,1,3,2,d);	qos+=4;
 		case 's':
 			p.x = q.x-ss;	p.y = q.y-ss;	Pnt.push_back(p);
 			p.x = q.x+ss;	p.y = q.y-ss;	Pnt.push_back(p);	line_draw(qos,qos+1,d);
@@ -880,7 +882,7 @@ void mglCanvas::mark_draw(long k, char type, mreal size, mglDrawReg *d)
 			p.x = q.x+ss;	p.y = q.y;		Pnt.push_back(p);
 			p.x= q.x;	p.y= q.y+ss;		Pnt.push_back(p);
 			p.x = q.x-ss;	p.y = q.y;		Pnt.push_back(p);
-			quad_draw(pos,pos+1,pos+3,pos+2,d);	qos+=4;
+			quad_draw(0,1,3,2,d);	qos+=4;
 		case 'd':
 			p.x = q.x;	p.y = q.y-ss;		Pnt.push_back(p);
 			p.x = q.x+ss;	p.y = q.y;		Pnt.push_back(p);	line_draw(qos,qos+1,d);
@@ -889,23 +891,23 @@ void mglCanvas::mark_draw(long k, char type, mreal size, mglDrawReg *d)
 			line_draw(qos+3,qos,d);	break;
 		case 'Y':
 			p.x = q.x;	p.y = q.y;			Pnt.push_back(p);
-			p.x = q.x;	p.y = q.y-ss;		Pnt.push_back(p);	line_draw(pos,pos+1,d);
-			p.x = q.x-0.8*ss;	p.y = q.y+0.6*ss;	Pnt.push_back(p);	line_draw(pos,pos+2,d);
-			p.x = q.x+0.8*ss;	p.y = q.y+0.6*ss;	Pnt.push_back(p);	line_draw(pos,pos+3,d);
+			p.x = q.x;	p.y = q.y-ss;		Pnt.push_back(p);	line_draw(0,1,d);
+			p.x = q.x-0.8*ss;	p.y = q.y+0.6*ss;	Pnt.push_back(p);	line_draw(0,2,d);
+			p.x = q.x+0.8*ss;	p.y = q.y+0.6*ss;	Pnt.push_back(p);	line_draw(0,3,d);
 			break;
 		case '*':
 			p.x = q.x-ss;		p.y = q.y;	Pnt.push_back(p);
-			p.x = q.x+ss;		p.y = q.y;	Pnt.push_back(p);	line_draw(pos,pos+1,d);
+			p.x = q.x+ss;		p.y = q.y;	Pnt.push_back(p);	line_draw(0,1,d);
 			p.x = q.x-0.6*ss;	p.y = q.y-0.8*ss;	Pnt.push_back(p);
-			p.x = q.x+0.6*ss;	p.y = q.y+0.8*ss;	Pnt.push_back(p);	line_draw(pos+2,pos+3,d);
+			p.x = q.x+0.6*ss;	p.y = q.y+0.8*ss;	Pnt.push_back(p);	line_draw(2,3,d);
 			p.x = q.x-0.6*ss;	p.y = q.y+0.8*ss;	Pnt.push_back(p);
-			p.x = q.x+0.6*ss;	p.y = q.y-0.8*ss;	Pnt.push_back(p);	line_draw(pos+4,pos+5,d);
+			p.x = q.x+0.6*ss;	p.y = q.y-0.8*ss;	Pnt.push_back(p);	line_draw(4,5,d);
 			break;
 		case 'T':
 			p.x = q.x-ss;	p.y = q.y-ss/2;	Pnt.push_back(p);
 			p.x = q.x+ss;	p.y = q.y-ss/2;	Pnt.push_back(p);
 			p.x= q.x;		p.y= q.y+ss;	Pnt.push_back(p);
-			trig_draw(pos,pos+1,pos+2,false,d);	qos+=3;
+			trig_draw(0,1,2,false,d);	qos+=3;
 		case '^':
 			p.x = q.x-ss;	p.y = q.y-ss/2;	Pnt.push_back(p);
 			p.x = q.x+ss;	p.y = q.y-ss/2;	Pnt.push_back(p);	line_draw(qos,qos+1,d);
@@ -915,7 +917,7 @@ void mglCanvas::mark_draw(long k, char type, mreal size, mglDrawReg *d)
 			p.x = q.x-ss;	p.y = q.y+ss/2;	Pnt.push_back(p);
 			p.x = q.x+ss;	p.y = q.y+ss/2;	Pnt.push_back(p);
 			p.x= q.x;		p.y= q.y-ss;	Pnt.push_back(p);
-			trig_draw(pos,pos+1,pos+2,false,d);	qos+=3;
+			trig_draw(0,1,2,false,d);	qos+=3;
 		case 'v':
 			p.x = q.x-ss;	p.y = q.y+ss/2;	Pnt.push_back(p);
 			p.x = q.x+ss;	p.y = q.y+ss/2;	Pnt.push_back(p);	line_draw(qos,qos+1,d);
@@ -925,7 +927,7 @@ void mglCanvas::mark_draw(long k, char type, mreal size, mglDrawReg *d)
 			p.x = q.x+ss/2;	p.y = q.y+ss;	Pnt.push_back(p);
 			p.x = q.x+ss/2;	p.y = q.y-ss;	Pnt.push_back(p);
 			p.x= q.x-ss;	p.y= q.y;		Pnt.push_back(p);
-			trig_draw(pos,pos+1,pos+2,false,d);	qos+=3;
+			trig_draw(0,1,2,false,d);	qos+=3;
 		case '<':
 			p.x = q.x+ss/2;	p.y = q.y+ss;	Pnt.push_back(p);
 			p.x = q.x+ss/2;	p.y = q.y-ss;	Pnt.push_back(p);	line_draw(qos,qos+1,d);
@@ -935,7 +937,7 @@ void mglCanvas::mark_draw(long k, char type, mreal size, mglDrawReg *d)
 			p.x = q.x-ss/2;	p.y = q.y+ss;	Pnt.push_back(p);
 			p.x = q.x-ss/2;	p.y = q.y-ss;	Pnt.push_back(p);
 			p.x= q.x+ss;	p.y= q.y;		Pnt.push_back(p);
-			trig_draw(pos,pos+1,pos+2,false,d);	qos+=3;
+			trig_draw(0,1,2,false,d);	qos+=3;
 		case '>':
 			p.x = q.x-ss/2;	p.y = q.y+ss;	Pnt.push_back(p);
 			p.x = q.x-ss/2;	p.y = q.y-ss;	Pnt.push_back(p);	line_draw(qos,qos+1,d);
@@ -952,19 +954,18 @@ void mglCanvas::mark_draw(long k, char type, mreal size, mglDrawReg *d)
 			for(i=0;i<=20;i++)
 			{
 				p.x = q.x+ss*cos(i*M_PI/10);	p.y = q.y+ss*sin(i*M_PI/10);	Pnt.push_back(p);
-				if(i>0)	line_draw(pos+i-1,pos+i,d);
+				if(i>0)	line_draw(i-1,i,d);
 			}
 			break;
 		case 'C':
-			pnt_draw(k,d);
 			for(i=0;i<=20;i++)
 			{
 				p.x = q.x+ss*cos(i*M_PI/10);	p.y = q.y+ss*sin(i*M_PI/10);	Pnt.push_back(p);
-				if(i>0)	line_draw(pos+i-1,pos+i,d);
+				if(i>0)	line_draw(i-1,i,d);
 			}
 			break;
 		}
-		Pnt.erase(Pnt.begin()+pos,Pnt.end());
+		Pnt = pnt;
 	}
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_unlock(&mutexPnt);
@@ -1029,7 +1030,8 @@ void mglCanvas::glyph_draw(const mglPrim *P, mglDrawReg *d)
 void mglCanvas::glyph_fill(const mglPnt &pp, mreal f, const mglGlyph &g, mglDrawReg *d)
 {
 	if(!g.trig || g.nt<=0)	return;
-	long ik,ii,pos=Pnt.size();
+	std::vector<mglPnt> pnt = Pnt;	Pnt.clear();
+	long ik,ii,jj=0;
 	mglPnt p=pp;	p.u=p.v=NAN;
 	mglPoint p1,p2,p3;
 	for(ik=0;ik<g.nt;ik++)
@@ -1040,15 +1042,16 @@ void mglCanvas::glyph_fill(const mglPnt &pp, mreal f, const mglGlyph &g, mglDraw
 		p.x = p1.x;	p.y = p1.y;	p.z = p1.z;	Pnt.push_back(p);
 		p.x = p2.x;	p.y = p2.y;	p.z = p2.z;	Pnt.push_back(p);
 		p.x = p3.x;	p.y = p3.y;	p.z = p3.z;	Pnt.push_back(p);
-		ii = Pnt.size()-3;	trig_draw(ii,ii+1,ii+2,false,d);
+		trig_draw(jj,jj+1,jj+2,false,d);	jj+=3;
 	}
-	Pnt.erase(Pnt.begin()+pos,Pnt.end());
+	Pnt = pnt;
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::glyph_wire(const mglPnt &pp, mreal f, const mglGlyph &g, mglDrawReg *d)
 {
 	if(!g.line || g.nl<=0)	return;
-	long ik,ii,il=0,pos=Pnt.size();
+	long ik,ii,il=0,jj=0;
+	std::vector<mglPnt> pnt = Pnt;	Pnt.clear();
 	mglPnt p=pp;	p.u=p.v=NAN;
 	if(d)	{	d->PDef = 0xffff;	d->PenWidth=0.75;	}
 	mglPoint p1,p2;
@@ -1070,9 +1073,9 @@ void mglCanvas::glyph_wire(const mglPnt &pp, mreal f, const mglGlyph &g, mglDraw
 		PostScale(p1);	PostScale(p2);
 		p.x = p1.x;	p.y = p1.y;	p.z = p1.z;	Pnt.push_back(p);
 		p.x = p2.x;	p.y = p2.y;	p.z = p2.z;	Pnt.push_back(p);
-		ii = Pnt.size()-2;	line_draw(ii,ii+1,d);
+		line_draw(jj,jj+1,d);	jj+=2;
 	}
-	Pnt.erase(Pnt.begin()+pos,Pnt.end());
+	Pnt = pnt;
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::glyph_line(const mglPnt &pp, mreal f, bool solid, mglDrawReg *d)
@@ -1080,7 +1083,7 @@ void mglCanvas::glyph_line(const mglPnt &pp, mreal f, bool solid, mglDrawReg *d)
 	mglPnt p=pp;	p.u=p.v=NAN;
 	if(d)	{	d->PDef = 0xffff;	d->PenWidth=1;	}
 	mglPoint p1,p2,p3,p4;
-	long pos=Pnt.size();
+	std::vector<mglPnt> pnt = Pnt;	Pnt.clear();
 
 	mreal dy = 0.004;
 	p1 = mglPoint(pp.u,pp.v-dy,0);	PostScale(p1);
@@ -1093,13 +1096,13 @@ void mglCanvas::glyph_line(const mglPnt &pp, mreal f, bool solid, mglDrawReg *d)
 	p.x = p3.x;	p.y = p3.y;	p.z = p3.z;	Pnt.push_back(p);
 	p.x = p4.x;	p.y = p4.y;	p.z = p4.z;	Pnt.push_back(p);
 
-	if(solid)	quad_draw(pos,pos+1,pos+3,pos+2,d);
+	if(solid)	quad_draw(0,1,3,2,d);
 	else
 	{
-		line_draw(pos,pos+1,d);	line_draw(pos+2,pos+1,d);
-		line_draw(pos,pos+3,d);	line_draw(pos+2,pos+3,d);
+		line_draw(0,1,d);	line_draw(2,1,d);
+		line_draw(0,3,d);	line_draw(2,3,d);
 	}
-	Pnt.erase(Pnt.begin()+pos,Pnt.end());
+	Pnt=pnt;
 }
 //-----------------------------------------------------------------------------
 long mglCanvas::setPp(mglPnt &q, const mglPoint &p)
