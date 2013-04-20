@@ -301,7 +301,7 @@ mreal mglCanvas::GetOrgZ(char dir) const
 //-----------------------------------------------------------------------------
 //	Put primitives
 //-----------------------------------------------------------------------------
-#define MGL_MARK_PLOT	if(Quality&4)	mark_draw(p,type,size,&d);else	\
+#define MGL_MARK_PLOT	if(Quality&4)	mark_draw(Pnt[p],type,size,&d);else	\
 						{	mglPrim a;	a.w = pw;	a.s = size;	\
 							a.n1 = p;	a.n4 = type;	add_prim(a);	}
 void mglCanvas::mark_plot(long p, char type, mreal size)
@@ -322,13 +322,14 @@ void mglCanvas::mark_plot(long p, char type, mreal size)
 	else	{	MGL_MARK_PLOT	}
 }
 //-----------------------------------------------------------------------------
-#define MGL_LINE_PLOT	if(Quality&4)	line_draw(p1,p2,&dd);else	\
+#define MGL_LINE_PLOT	if(Quality&4)	line_draw(Pnt[p1],Pnt[p2],&dd);else	\
 						{	mglPrim a(1);	a.n3=PDef;	a.s = pPos;	\
 							a.n1 = p1;	a.n2 = p2;	a.w = pw;	add_prim(a);	}
 void mglCanvas::line_plot(long p1, long p2)
 {
 	if(PDef==0)	return;
 	if(p1<0 || p2<0 || mgl_isnan(Pnt[p1].x) || mgl_isnan(Pnt[p2].x))	return;
+	if(p1>p2)	{	long kk=p1;	p1=p2;	p2=kk;	}	// rearrange start/end for proper dashing
 	long pp1=p1,pp2=p2;
 	mreal pw = fabs(PenWidth)*sqrt(font_factor/400), d;
 	d = hypot(Pnt[p1].x-Pnt[p2].x, Pnt[p1].y-Pnt[p2].y);
@@ -344,7 +345,7 @@ void mglCanvas::line_plot(long p1, long p2)
 	pPos = fmod(pPos+d/pw/1.5, 16);
 }
 //-----------------------------------------------------------------------------
-#define MGL_TRIG_PLOT	if(Quality&4)	trig_draw(p1,p2,p3,true,&d);else	\
+#define MGL_TRIG_PLOT	if(Quality&4)	trig_draw(Pnt[p1],Pnt[p2],Pnt[p3],true,&d);else	\
 						{	mglPrim a(2);	a.n1 = p1;	a.n2 = p2;	\
 							a.n3 = p3;	add_prim(a);}
 void mglCanvas::trig_plot(long p1, long p2, long p3)
@@ -358,7 +359,7 @@ void mglCanvas::trig_plot(long p1, long p2, long p3)
 	else	{	MGL_TRIG_PLOT	}
 }
 //-----------------------------------------------------------------------------
-#define MGL_QUAD_PLOT	if(Quality&4)	quad_draw(p1,p2,p3,p4,&d);else	\
+#define MGL_QUAD_PLOT	if(Quality&4)	quad_draw(Pnt[p1],Pnt[p2],Pnt[p3],Pnt[p4],&d);else	\
 						{	mglPrim a(3);	a.n1 = p1;	a.n2 = p2;	\
 							a.n3 = p3;	a.n4 = p4;	add_prim(a);	}
 void mglCanvas::quad_plot(long p1, long p2, long p3, long p4)
@@ -492,7 +493,7 @@ void mglCanvas::Glyph(mreal x, mreal y, mreal f, int s, long j, mreal col)
 	d.PDef = s;		d.pPos = a.s;
 	d.ObjId=ObjId;	d.PenWidth=a.w;
 	
-	if(Quality&4)	glyph_draw(&a,&d);
+	if(Quality&4)	glyph_draw(a,&d);
 	else	add_prim(a);
 }
 //-----------------------------------------------------------------------------
@@ -720,6 +721,7 @@ void mglCanvas::AddLight(int n, mglPoint r, mglPoint d, char col, mreal br, mrea
 //-----------------------------------------------------------------------------
 void mglCanvas::arrow_plot(long n1, long n2, char st)
 {
+	if(n1<0 || n2<0 || !strchr("AVKSDTIO",st))	return;
 	float ll = PenWidth*ArrowSize*0.35*font_factor;
 	if((Quality&3)==3)
 		arrow_plot_3d(n1, n2, st, ll);

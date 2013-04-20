@@ -45,10 +45,15 @@ public:
 	void Clf(mglColor Back=WC);
 
 protected:
-	void line_draw(long p1, long p2, mglDrawReg *d);
-	void trig_draw(long p1, long p2, long p3, bool anorm, mglDrawReg *d);
-	void quad_draw(long p1, long p2, long p3, long p4, mglDrawReg *d);
-	void pnt_draw(long p, mglDrawReg *d);
+	// provide fastest variant for usual points (not glyphs or marks)
+	void line_draw(long n1, long n2);
+	void trig_draw(long n1, long n2, long n3);
+	void quad_draw(long n1, long n2, long n3, long n4);
+	// variant for glyphs or marks
+	void line_draw(const mglPnt &p1, const mglPnt &p2, mglDrawReg *d);
+	void trig_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, bool anorm, mglDrawReg *d);
+	void quad_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, const mglPnt &p4, mglDrawReg *d);
+	void pnt_draw(const mglPnt &p, mglDrawReg *d);
 
 	unsigned char **GetRGBLines(long &w, long &h, unsigned char *&f, bool solid=true);
 	void LightScale();

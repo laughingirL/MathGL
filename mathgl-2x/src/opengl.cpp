@@ -41,11 +41,11 @@ void mglCanvasGL::Finish(bool fast)
 			p=Prm[i];	PDef=p.n3;	pPos=p.s;	PenWidth=p.w;
 			switch(p.type)
 			{
-			case 0:	mark_draw(p.n1,p.n4,p.s,0);	break;
-			case 1:	line_draw(p.n1,p.n2,0);		break;
-			case 2:	trig_draw(p.n1,p.n2,p.n3,true,0);	break;
-			case 3:	quad_draw(p.n1,p.n2,p.n3,p.n4,0);	break;
-			case 4:	glyph_draw(&p,0);	break;
+			case 0:	mark_draw(Pnt[p.n1],p.n4,p.s,0);	break;
+			case 1:	line_draw(p.n1,p.n2);	break;
+			case 2:	trig_draw(p.n1,p.n2,p.n3);	break;
+			case 3:	quad_draw(p.n1,p.n2,p.n3,p.n4);	break;
+			case 4:	glyph_draw(p,0);	break;
 			}
 		}
 		PDef=pdef;	pPos=ss;	PenWidth=ww;
@@ -231,26 +231,24 @@ unsigned char **mglCanvasGL::GetRGBLines(long &width, long &height, unsigned cha
 	return p;
 }
 //-----------------------------------------------------------------------------
-void mglCanvasGL::trig_draw(long k1, long k2, long k3, bool, mglDrawReg *)
+void mglCanvasGL::quad_draw(long k1, long k2, long k3, long k4)
 {
-	if(k1<0 || k2<0 || k3<0)	return;
-	glBegin(GL_TRIANGLES);
-	glArrayElement(k1);	glArrayElement(k2);	glArrayElement(k3);
-	glEnd();
-}
-//-----------------------------------------------------------------------------
-void mglCanvasGL::quad_draw(long k1, long k2, long k3, long k4, mglDrawReg *)
-{
-	if(k1<0 || k2<0 || k3<0 || k4<0)	return;
 	glBegin(GL_QUADS);
 	glArrayElement(k1);	glArrayElement(k2);
 	glArrayElement(k4);	glArrayElement(k3);
 	glEnd();
 }
 //-----------------------------------------------------------------------------
-void mglCanvasGL::line_draw(long k1, long k2, mglDrawReg *)
+void mglCanvasGL::trig_draw(long k1, long k2, long k3)
 {
-	if(k1<0 || k2<0 || PDef==0)	return;
+	glBegin(GL_TRIANGLES);
+	glArrayElement(k1);	glArrayElement(k2);	glArrayElement(k3);
+	glEnd();
+}
+//-----------------------------------------------------------------------------
+void mglCanvasGL::line_draw(long k1, long k2)
+{
+	if(PDef==0)	return;
 /*	unsigned pdef = PDef*0x10001;
 	pdef = pdef << (int(100*pPos+0.5)%16);
 	set_pen(pdef&0xffff,PenWidth);*/
@@ -260,11 +258,39 @@ void mglCanvasGL::line_draw(long k1, long k2, mglDrawReg *)
 	glEnd();
 }
 //-----------------------------------------------------------------------------
-void mglCanvasGL::pnt_draw(long k1, mglDrawReg *)
+void mglCanvasGL::quad_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, const mglPnt &p4, mglDrawReg *)
 {
-	if(k1<0)	return;
+	glBegin(GL_QUADS);
+	glNormal3f(p1.u,p1.v,p1.w);	glColor4f(p1.r,p1.g,p1.b,p1.a);	glVertex3f(p1.x,p1.y,p1.z);
+	glNormal3f(p2.u,p2.v,p2.w);	glColor4f(p2.r,p2.g,p2.b,p2.a);	glVertex3f(p2.x,p2.y,p2.z);
+	glNormal3f(p3.u,p3.v,p3.w);	glColor4f(p3.r,p3.g,p3.b,p3.a);	glVertex3f(p3.x,p3.y,p3.z);
+	glNormal3f(p4.u,p4.v,p4.w);	glColor4f(p4.r,p4.g,p4.b,p4.a);	glVertex3f(p4.x,p4.y,p4.z);
+	glEnd();
+}
+//-----------------------------------------------------------------------------
+void mglCanvasGL::trig_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, bool, mglDrawReg *)
+{
+	glBegin(GL_TRIANGLES);
+	glNormal3f(p1.u,p1.v,p1.w);	glColor4f(p1.r,p1.g,p1.b,p1.a);	glVertex3f(p1.x,p1.y,p1.z);
+	glNormal3f(p2.u,p2.v,p2.w);	glColor4f(p2.r,p2.g,p2.b,p2.a);	glVertex3f(p2.x,p2.y,p2.z);
+	glNormal3f(p3.u,p3.v,p3.w);	glColor4f(p3.r,p3.g,p3.b,p3.a);	glVertex3f(p3.x,p3.y,p3.z);
+	glEnd();
+}
+//-----------------------------------------------------------------------------
+void mglCanvasGL::line_draw(const mglPnt &p1, const mglPnt &p2, mglDrawReg *)
+{
+	if(PDef==0)	return;
+	set_pen(PDef,PenWidth);
+	glBegin(GL_LINES);
+	glColor4f(p1.r,p1.g,p1.b,p1.a);	glVertex3f(p1.x,p1.y,p1.z);
+	glColor4f(p2.r,p2.g,p2.b,p2.a);	glVertex3f(p2.x,p2.y,p2.z);
+	glEnd();
+}
+//-----------------------------------------------------------------------------
+void mglCanvasGL::pnt_draw(const mglPnt &p1, mglDrawReg *)
+{
 	glBegin(GL_POINTS);
-	glArrayElement(k1);
+	glColor4f(p1.r,p1.g,p1.b,p1.a);	glVertex3f(p1.x,p1.y,p1.z);
 	glEnd();
 }
 //-----------------------------------------------------------------------------

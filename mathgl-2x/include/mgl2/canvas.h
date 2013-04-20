@@ -370,15 +370,15 @@ protected:
 	mreal text_plot(long p,const wchar_t *text,const char *fnt,mreal size=-1,mreal sh=0,mreal  col=-('k'), bool rot=true);
 
 	void add_prim(mglPrim &a);	///< add primitive to list
-	void mark_draw(long p, char type, mreal size, mglDrawReg *d);
-	void arrow_draw(long p1, long p2, char st, mreal size, mglDrawReg *d);
-	virtual void line_draw(long p1, long p2, mglDrawReg *d);
-	virtual void trig_draw(long p1, long p2, long p3, bool anorm, mglDrawReg *d);
-	virtual void quad_draw(long p1, long p2, long p3, long p4, mglDrawReg *d);
-	virtual void pnt_draw(long p, mglDrawReg *d);
+	void mark_draw(const mglPnt &p, char type, mreal size, mglDrawReg *d);
+	void arrow_draw(const mglPnt &p1, const mglPnt &p2, char st, mreal size, mglDrawReg *d);
+	virtual void line_draw(const mglPnt &p1, const mglPnt &p2, mglDrawReg *d);
+	virtual void trig_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, bool anorm, mglDrawReg *d);
+	virtual void quad_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, const mglPnt &p4, mglDrawReg *d);
+	virtual void pnt_draw(const mglPnt &p, mglDrawReg *d);
 	void arrow_draw(long n1, long n2, char st, float ll);
-	void arrow_plot_3d(long p1, long p2, char st, float ll);
-	void glyph_draw(const mglPrim *P, mglDrawReg *d);
+	void arrow_plot_3d(long n1, long n2, char st, float ll);
+	void glyph_draw(const mglPrim &P, mglDrawReg *d);
 	bool IsSame(const mglPrim &pr,mreal wp,mglColor cp,int st);
 
 	// restore normalized coordinates from screen ones
@@ -420,7 +420,7 @@ private:
 	/// Combine colors in 2 plane.
 	void combine(unsigned char *c1, const unsigned char *c2);
 	/// Fast drawing of line between 2 points
-	void fast_draw(long p1, long p2, mglDrawReg *d);
+	void fast_draw(const mglPnt &p1, const mglPnt &p2, mglDrawReg *d);
 
 	/// Additionally scale points p for positioning in image
 	void PostScale(mglPoint &p) const;

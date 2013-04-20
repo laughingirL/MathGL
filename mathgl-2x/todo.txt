@@ -32,6 +32,9 @@ A. Paper about MathGL!!!
 	u. Test FlowP + 3d
 	w. Test diffuse, specular local sources
 
+15. Check samples: colorbar
+16. Add samples about data handling (data1, data2, data2)
+
 20. JS rotation in Firefox
 23. check if all "value" options are described
 

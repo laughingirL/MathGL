@@ -224,7 +224,7 @@ int main(int argc,char **argv)
 						tmp=strchr(name,'.');	if(tmp)	*tmp=0;
 						tmp=strchr(name,'-');	if(tmp)	*tmp=0;
 						break;
-			case 't':	mglNumThr=atoi(optarg);	break;
+			case 't':	mgl_set_num_thr(atoi(optarg));	break;
 			case 'l':
 				while(s->name[0])	{	printf("%s ",s->name);	s++;	}
 				printf("\n");	return 0;
