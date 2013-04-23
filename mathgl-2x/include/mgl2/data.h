@@ -143,6 +143,9 @@ public:
 	/// Remove rows with duplicate values in column id
 	inline void Clean(long id)
 	{	mgl_data_clean(this,id);	}
+	/// Join with another data array
+	inline void Join(const mglDataA &d)
+	{	mgl_data_join(this,&d);	}
 	
 	/// Modify the data by specified formula
 	inline void Modify(const char *eq,long dim=0)

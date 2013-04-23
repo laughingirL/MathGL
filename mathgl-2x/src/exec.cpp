@@ -1799,6 +1799,13 @@ int MGL_NO_EXPORT mgls_extend(mglGraph *, long , mglArg *a, const char *k, const
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_join(mglGraph *, long , mglArg *a, const char *k, const char *)
+{
+	int res=0;
+	if(!strcmp(k,"dd"))	a[0].d->Join(*(a[1].d));
+	else res = 1;	return res;
+}
+//-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_datas(mglGraph *gr, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
@@ -2604,6 +2611,7 @@ mglCommand mgls_base_cmd[] = {
 	{"insert","Insert slice of data","insert Dat 'dir' [pos=0 num=1]", mgls_insert ,3},
 	{"integrate","Integrate data","integrate Dat 'dir'", mgls_integrate ,16},
 	{"jacobian","Get Jacobian","jacobian Res Xdat Ydat [Zdat]", mgls_jacobian ,4},
+	{"join","Join data arrays","join Dat Add", mgls_join ,3},
 	{"label","Draw label at arbitrary position","label Ydat 'txt' ['fmt'='']|Xdat Ydat 'txt' ['fmt'='']|Xdat Ydat Zdat 'txt' ['fmt'='']", mgls_label ,7},
 	{"legend","Draw legend","legend [pos 'fmt']|x y ['fmt']", mgls_legend ,15},
 	{"legendmarks","Set number of marks in the legend","legendmarks val", mgls_legendmarks ,15},

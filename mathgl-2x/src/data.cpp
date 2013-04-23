@@ -1960,3 +1960,46 @@ long MGL_EXPORT mgl_data_get_nx_(uintptr_t *d)	{	return _DA_(d)->GetNx();	}
 long MGL_EXPORT mgl_data_get_ny_(uintptr_t *d)	{	return _DA_(d)->GetNy();	}
 long MGL_EXPORT mgl_data_get_nz_(uintptr_t *d)	{	return _DA_(d)->GetNz();	}
 //-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_data_join(HMDT d, HCDT v)
+{
+	register long nx=d->nx, ny=d->ny, nz=d->nz;
+	const mglData *mv = dynamic_cast<const mglData *>(v);
+	long vx=v->GetNx(), vy=v->GetNy(), vz=v->GetNz();
+	register long i,k=nx*ny*nz;
+
+	if(nx==vx && ny==vy)
+	{
+		mreal *b = new mreal[nx*ny*(nz+vz)];
+		memcpy(b,d->a,nx*ny*nz*sizeof(mreal));
+		if(mv)	memcpy(b+nx*ny*nz,d->a,nx*ny*vz*sizeof(mreal));
+		else 	for(i=0;i<nx*ny*vz;i++)	b[k+i] = v->vthr(i);
+		if(!d->link)	delete []d->a;	d->nz += vz;
+		d->a = b;	d->link=false;	d->NewId();
+	}
+	else if(nx==vx)
+	{
+		ny *= nz;	vy *= vz;
+		mreal *b = new mreal[nx*(ny+vy)];
+		memcpy(b,d->a,nx*ny*sizeof(mreal));
+		if(mv)	memcpy(b+nx*ny,d->a,nx*vy*sizeof(mreal));
+		else 	for(i=0;i<nx*vy;i++)	b[k+i] = v->vthr(i);
+		if(!d->link)	delete []d->a;
+		d->nz = 1;	d->ny = ny+vy;
+		d->a = b;	d->link=false;	d->NewId();
+	}
+	else
+	{
+		nx *= ny*nz;	vx *= vy*vz;
+		mreal *b = new mreal[nx+vx];
+		memcpy(b,d->a,nx*sizeof(mreal));
+		if(mv)	memcpy(b+nx,d->a,vx*sizeof(mreal));
+		else 	for(i=0;i<vx;i++)	b[k+i] = v->vthr(i);
+		if(!d->link)	delete []d->a;
+		d->nz = d->ny = 1;	d->nx = nx+vx;
+		d->a = b;	d->link=false;	d->NewId();
+	}
+}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_data_join_(uintptr_t *d, uintptr_t *val)
+{	mgl_data_join(_DT_,_DA_(val));	}
+//-----------------------------------------------------------------------------

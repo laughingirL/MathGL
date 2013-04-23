@@ -11,6 +11,7 @@
 * Add SetAutoRanges()
 * Add flag to disable tick labels at axis origin (see SetOriginTick())
 * Add JSON sample usage via QtWebKit
+* Add Join() function for mglData and mglDataC
 * Bugfixes and memory leaks
 
 2.1.2 Released 28 January 2013

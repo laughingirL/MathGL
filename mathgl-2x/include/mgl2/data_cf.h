@@ -253,6 +253,9 @@ void MGL_EXPORT mgl_data_insert_(uintptr_t *dat, const char *dir, int *at, int *
 /// Delete data rows/columns/slices
 void MGL_EXPORT mgl_data_delete(HMDT dat, char dir, long at, long num);
 void MGL_EXPORT mgl_data_delete_(uintptr_t *dat, const char *dir, int *at, int *num, int);
+/// Joind another data array
+void MGL_EXPORT mgl_data_join(HMDT dat, HCDT d);
+void MGL_EXPORT mgl_data_join_(uintptr_t *dat, uintptr_t *d);
 
 /// Smooth the data on specified direction or directions
 void MGL_EXPORT mgl_data_smooth(HMDT d, const char *dirs, mreal delta);

@@ -26,8 +26,8 @@
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_set_quality(HMGL gr, int qual)	{	gr->SetQuality(qual);	}
 void MGL_EXPORT mgl_set_quality_(uintptr_t *gr, int *qual)	{	_GR_->SetQuality(*qual);	}
-int MGL_EXPORT mgl_get_quality(HMGL gr, int qual)	{	return gr->GetQuality();	}
-int MGL_EXPORT mgl_get_quality_(uintptr_t *gr, int *qual)	{	return _GR_->GetQuality();	}
+int MGL_EXPORT mgl_get_quality(HMGL gr)	{	return gr->GetQuality();	}
+int MGL_EXPORT mgl_get_quality_(uintptr_t *gr)	{	return _GR_->GetQuality();	}
 int MGL_EXPORT mgl_is_frames(HMGL gr)
 {	return gr->get(MGL_VECT_FRAME) && !(gr->GetQuality()&4);	}
 //-----------------------------------------------------------------------------

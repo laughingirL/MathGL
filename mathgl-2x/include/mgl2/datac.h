@@ -138,6 +138,9 @@ public:
 	/// Delete data
 	inline void Delete(char dir, long at=0, long num=1)
 	{	mgl_datac_delete(this,dir,at,num);	}
+	/// Join with another data array
+	inline void Join(const mglDataA &d)
+	{	mgl_datac_join(this,&d);	}
 
 	/// Modify the data by specified formula
 	inline void Modify(const char *eq,long dim=0)

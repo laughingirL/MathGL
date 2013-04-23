@@ -750,3 +750,46 @@ MGL_EXPORT dual *mgl_datac_value(HADT dat, long i,long j,long k)
 {	register long ii=i*dat->nx*(j+dat->ny*k);
 	return	ii>=0 && ii<dat->GetNN() ? dat->a+ii : 0;	}
 //-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_datac_join(HADT d, HCDT v)
+{
+	register long nx=d->nx, ny=d->ny, nz=d->nz;
+	const mglDataC *mv = dynamic_cast<const mglDataC *>(v);
+	long vx=v->GetNx(), vy=v->GetNy(), vz=v->GetNz();
+	register long i,k=nx*ny*nz;
+
+	if(nx==vx && ny==vy)
+	{
+		dual *b = new dual[nx*ny*(nz+vz)];
+		memcpy(b,d->a,nx*ny*nz*sizeof(dual));
+		if(mv)	memcpy(b+nx*ny*nz,d->a,nx*ny*vz*sizeof(dual));
+		else 	for(i=0;i<nx*ny*vz;i++)	b[k+i] = v->vthr(i);
+		if(!d->link)	delete []d->a;	d->nz += vz;
+		d->a = b;	d->link=false;	d->NewId();
+	}
+	else if(nx==vx)
+	{
+		ny *= nz;	vy *= vz;
+		dual *b = new dual[nx*(ny+vy)];
+		memcpy(b,d->a,nx*ny*sizeof(dual));
+		if(mv)	memcpy(b+nx*ny,d->a,nx*vy*sizeof(dual));
+		else 	for(i=0;i<nx*vy;i++)	b[k+i] = v->vthr(i);
+		if(!d->link)	delete []d->a;
+		d->nz = 1;	d->ny = ny+vy;
+		d->a = b;	d->link=false;	d->NewId();
+	}
+	else
+	{
+		nx *= ny*nz;	vx *= vy*vz;
+		dual *b = new dual[nx+vx];
+		memcpy(b,d->a,nx*sizeof(dual));
+		if(mv)	memcpy(b+nx,d->a,vx*sizeof(dual));
+		else 	for(i=0;i<vx;i++)	b[k+i] = v->vthr(i);
+		if(!d->link)	delete []d->a;
+		d->nz = d->ny = 1;	d->nx = nx+vx;
+		d->a = b;	d->link=false;	d->NewId();
+	}
+}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_datac_join_(uintptr_t *d, uintptr_t *val)
+{	mgl_datac_join(_DC_,_DA_(val));	}
+//-----------------------------------------------------------------------------
