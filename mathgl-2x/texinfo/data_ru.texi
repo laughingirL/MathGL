@@ -172,6 +172,9 @@ There are many functions, which can create data for output (see @ref{Data fillin
 @cindex Crop
 @cindex Insert
 @cindex Delete
+@cindex Sort
+@cindex Clean
+@cindex Join
 
 
 @deftypefn {Команда MGL} {} new @sc{dat} [@code{nx=1 ny=1 nz=1}]
@@ -291,6 +294,17 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 Удаляет строки в которых значения для заданной колонки @var{idx} совпадают со значениями в следующей строке.
 @end deftypefn
 
+
+@anchor{join}
+@deftypefn {Команда MGL} {} join dat vdat
+@ifclear UDAV
+@deftypefnx {Метод класса @code{mglData}} @code{void} Join (@code{const mglDataA &}vdat)
+@deftypefnx {Метод класса @code{mglDataC}} @code{void} Join (@code{const mglDataA &}vdat)
+@deftypefnx {Функция С} @code{void} mgl_data_join (@code{HMDT} dat, @code{HCDT} vdat)
+@deftypefnx {Функция С} @code{void} mgl_datac_join (@code{HADT} dat, @code{HCDT} vdat)
+@end ifclear
+Объединяет данные из массива @var{vdat} с данными массива @var{dat}. При этом, функция увеличивает размер массива @var{dat}: в z-направлении для 3D массивов с одинаковыми размерами по x и y; в y-направлении для 2D массивов с одинаковыми размерами по x; в x-направлении в остальных случаях.
+@end deftypefn
 
 @c ------------------------------------------------------------------
 @external{}

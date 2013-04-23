@@ -1967,7 +1967,7 @@ void MGL_EXPORT mgl_data_join(HMDT d, HCDT v)
 	long vx=v->GetNx(), vy=v->GetNy(), vz=v->GetNz();
 	register long i,k=nx*ny*nz;
 
-	if(nx==vx && ny==vy)
+	if(nx==vx && ny==vy && (nz>1 || vz>1))
 	{
 		mreal *b = new mreal[nx*ny*(nz+vz)];
 		memcpy(b,d->a,nx*ny*nz*sizeof(mreal));
@@ -1976,7 +1976,7 @@ void MGL_EXPORT mgl_data_join(HMDT d, HCDT v)
 		if(!d->link)	delete []d->a;	d->nz += vz;
 		d->a = b;	d->link=false;	d->NewId();
 	}
-	else if(nx==vx)
+	else if(nx==vx && (ny>1 || vy>1))
 	{
 		ny *= nz;	vy *= vz;
 		mreal *b = new mreal[nx*(ny+vy)];

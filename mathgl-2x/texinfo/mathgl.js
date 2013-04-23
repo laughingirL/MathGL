@@ -26,8 +26,8 @@ var main = function()
 	ctx = document.getElementById("canvas").getContext("2d");
 	ctx.lineCap="round";	// global setting
 
-//	mgl_init("json/test.json");
 	mgl_init("json/alpha.json");
+//	mgl_init("json/alpha.jsonz");
 	var t1 = new Date();
 	mgl_draw_good(obj, ctx);
 //	draw_fast(obj, ctx);
@@ -104,10 +104,32 @@ var mglRestore = function()
 var mgl_init = function(name)
 {
 	// now obtain JSON data
-	var req = new XMLHttpRequest();
+	var req = new XMLHttpRequest(), txt;
 	req.open( "GET", name, false );
+	req.overrideMimeType('text\/plain; charset=x-user-defined');
+/*	req.responseType = "arraybuffer";
+	req.onload = function (oEvent) {
+		var arrayBuffer = req.response; // Note: not oReq.responseText
+		console.debug("arrayBuffer=",arrayBuffer);
+		if (arrayBuffer) {
+			var compressed = new Uint8Array(arrayBuffer);
+			console.debug("compressed=",compressed);
+//			var gunzip = new Zlib.Gunzip(compressed);
+//			txt = gunzip.decompress();
+			var inflate = new Zlib.Inflate(arrayBuffer);
+			txt = inflate.decompress();
+		}
+	};*/
 	req.send(null);
-	obj = JSON.parse(req.responseText);
+	if(name[name.length-1]!='z')
+		txt = req.responseText;
+	else
+	{
+console.debug("compressed=",req.responseText);
+		var inflate = new Zlib.Inflate(req.responseText);
+		txt = inflate.decompress();
+	}
+	obj = JSON.parse(txt);
 
 	// copy original data for transformation
 	obj.pp = new Array();

@@ -175,7 +175,9 @@ Deletes the instance of class mglData.
 @cindex Crop
 @cindex Insert
 @cindex Delete
-
+@cindex Sort
+@cindex Clean
+@cindex Join
 
 @deftypefn {MGL command} {} new @sc{dat} [@code{nx=1 ny=1 nz=1}]
 @ifclear UDAV
@@ -292,6 +294,17 @@ Sort data rows (or slices in 3D case) by values of specified column @var{idx} (o
 @deftypefnx {C function} @code{void} mgl_data_clean (@code{HMDT} dat, @code{lond} idx)
 @end ifclear
 Delete rows which values are equal to next row for given column @var{idx}.
+@end deftypefn
+
+@anchor{join}
+@deftypefn {MGL command} {} join dat vdat
+@ifclear UDAV
+@deftypefnx {Method on @code{mglData}} @code{void} Join (@code{const mglDataA &}vdat)
+@deftypefnx {Method on @code{mglDataC}} @code{void} Join (@code{const mglDataA &}vdat)
+@deftypefnx {C function} @code{void} mgl_data_join (@code{HMDT} dat, @code{HCDT} vdat)
+@deftypefnx {C function} @code{void} mgl_datac_join (@code{HADT} dat, @code{HCDT} vdat)
+@end ifclear
+Join data cells from @var{vdat} to @var{dat}. At this, function increase @var{dat} sizes according following: z-size for 3D data arrays arrays with equal x-,y-sizes; or y-size for 2D data arrays with equal x-sizes; or x-size otherwise.
 @end deftypefn
 
 
