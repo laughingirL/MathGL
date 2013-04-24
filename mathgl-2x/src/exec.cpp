@@ -2292,6 +2292,16 @@ int MGL_NO_EXPORT mgls_combine(mglGraph *, long , mglArg *a, const char *k, cons
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_roots(mglGraph *, long , mglArg *a, const char *k, const char *)
+{
+	int res=0;
+	if(!strcmp(k,"dsds"))	*(a[0].d) = a[2].d->Roots(a[1].s.c_str(), a[3].s[0]);
+	else if(!strcmp(k,"dsns"))	a[0].d->a[0] = mgl_find_root_txt(a[1].s.c_str(), a[2].v, a[3].s[0]);
+	else if(!strcmp(k,"dsd"))	*(a[0].d) = a[2].d->Roots(a[1].s.c_str(), 'x');
+	else if(!strcmp(k,"dsn"))	a[0].d->a[0] = mgl_find_root_txt(a[1].s.c_str(), a[2].v, 'x');
+	else res = 1;	return res;
+}
+//-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_pde(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;
@@ -2664,6 +2674,7 @@ mglCommand mgls_base_cmd[] = {
 	{"return","Return from function","return", 0, 6},
 	{"rhomb","Draw rhombus","rhomb x1 y1 x2 y2 r ['fmt']|x1 y1 z1 x2 y2 z2 r ['fmt']", mgls_rhomb ,13},
 	{"roll","Roll data along direction","roll Dat 'dir' num", mgls_roll ,16},
+	{"roots", "Find roots using data as initial values", "roots Res 'func' Ini ['var']|Res 'func' ini ['var']", mgls_roots ,4},
 	{"rotate","Rotate plot","rotate tetz tetx [tety] | tet x y z", mgls_rotate ,5},
 	{"rotatetext","Set to auto rotate text or not","rotatetext val", mgls_rotatetext ,15},
 	{"save","Save data to file","save Dat 'file'", mgls_save ,3},

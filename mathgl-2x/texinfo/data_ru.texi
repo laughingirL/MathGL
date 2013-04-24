@@ -651,6 +651,7 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @cindex Sum
 @cindex Min
 @cindex Max
+@cindex Roots
 
 @anchor{subdata}
 @deftypefn {Команда MGL} {} subdata @sc{res} dat @code{xx [yy=: zz=:]}
@@ -818,6 +819,17 @@ res_k = \sum_ij how(x_i,y_j,z_k) a_ij/ \sum_ij a_ij
 Возвращает массив аргументов массива данных.
 @end deftypefn
 @end ifclear
+
+@anchor{roots}
+@deftypefn {Команда MGL} {} roots @sc{res} 'func' ini ['var'='x']
+@deftypefnx {Команда MGL} {} roots @sc{res} 'func' @code{ini} ['var'='x']
+@ifclear UDAV
+@deftypefnx {Метод класса @code{mglData}} @code{mglData} Roots (@code{const char *}func, @code{char} var) @code{const}
+@deftypefnx {Функция С} @code{HMDT} mgl_data_roots (@code{const char *}func, @code{HCDT} ini, @code{char} var)
+@deftypefnx {Функция С} @code{mreal} mgl_find_root_txt (@code{const char *}func, @code{mreal} ini, @code{char} var)
+@end ifclear
+Возвращает массив корней уравнения 'func'=0 для переменной @var{var} с начальными положениями @var{ini}.
+@end deftypefn
 
 @c ------------------------------------------------------------------
 @external{}

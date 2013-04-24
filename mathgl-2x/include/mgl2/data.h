@@ -257,7 +257,10 @@ public:
 	{	return mglData(true,mgl_data_evaluate(this,&idat,&jdat,0,norm));	}
 	inline mglData Evaluate(const mglData &idat, const mglData &jdat, const mglData &kdat, bool norm=true) const
 	{	return mglData(true,mgl_data_evaluate(this,&idat,&jdat,&kdat,norm));	}
-
+	/// Find roots for set of nonlinear equations defined by textual formula
+	inline mglData Roots(const char *func, char var='x') const
+	{	return mglData(true,mgl_data_roots(func, this, var));	}
+	
 	/// Cumulative summation the data in given direction or directions
 	inline void CumSum(const char *dir)	{	mgl_data_cumsum(this,dir);	}
 	/// Integrate (cumulative summation) the data in given direction or directions

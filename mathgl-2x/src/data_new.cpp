@@ -854,44 +854,60 @@ void MGL_EXPORT mgl_data_sort(HMDT dat, long idx, long idy)
 void MGL_EXPORT mgl_data_sort_(uintptr_t *d, int *idx, int *idy)
 {	mgl_data_sort(_DT_,*idx,*idy);	}
 //-----------------------------------------------------------------------------
-HMDT MGL_EXPORT mgl_data_roots_gen(mreal (*func)(HCDT val, void *par), HCDT ini, void *par)
+mreal MGL_EXPORT mgl_find_root(mreal (*func)(mreal x, void *par), mreal x0, void *par)
 {
-	mglData *res = new mglData(ini);
-	register long i,j;
-
-
-
-
-	
-	return res;
+	mreal x1=x0+1e-2*(x0?x0:1), f0=func(x0,par), f1=func(x1,par), x, f;
+	if(fabs(f0)<1e-7)	return x0;
+	if(fabs(f1)<1e-7)	return x1;
+	if(f0==f1)	return NAN;
+	while(fabs(x0-x1)>1e-5)
+	{
+		x = x1-f1*(x1-x0)/(f1-f0);	f = func(x,par);
+		if(fabs(f)<1e-7)	return x;
+/*		if(fabs(f-f1)>0.5*fmin(fabs(f),fabs(f1)))	// TODO switch to bisection if slow
+		{
+			x = (x1+x0)/2;	f = func(x,par);
+			if(fabs(f)<1e-7)	return x;
+		}*/
+		x0=x1;	f0=f1;	x1=x;	f1=f;	// new points
+	}
+	return (x0+x1)/2;
 }
 //-----------------------------------------------------------------------------
-struct MGL_NO_EXPORT mglFuncV	{	mglFormula *eq;	const char *vars;	};
-mreal MGL_NO_EXPORT mgl_funcv(HCDT v, void *par)
+struct MGL_NO_EXPORT mglFuncV	{	mglFormula *eq;	char var;	};
+mreal MGL_NO_EXPORT mgl_funcv(double v, void *par)
 {
 	mglFuncV *f = (mglFuncV *)par;
 	mreal var[MGL_VS];	memset(var,0,('z'-'a')*sizeof(mreal));
-	long j,nx=v->GetNx();
-	for(j=0;j<nx;j++)	if(f->vars[j]>='a' && f->vars[j]<='z')
-		var[f->vars[j]-'a'] = v->v(j);
+	var[f->var-'a'] = v;
 	return f->eq->Calc(var);
 }
-HMDT MGL_EXPORT mgl_data_roots(const char *func, HCDT ini, const char *vars)
+HMDT MGL_EXPORT mgl_data_roots(const char *func, HCDT ini, char var)
 {
-	long nx=ini->GetNx();
-	if(nx>strlen(vars))	return (new mglData);	// no roots found
+	if(!ini)	return (new mglData);
+	mglData *res = new mglData(ini);
 
 	mglFormula eq(func);
-	mglFuncV f;	f.eq = &eq;
-	mglData inp(ini);
-	if(nx>1 && strlen(vars)==1)
-	{	inp.nz *= inp.ny;	inp.ny = inp.nx;	inp.nx = 1;	}
-	return mgl_data_roots_gen(mgl_funcv,&inp,&f);
+	mglFuncV f;	f.eq = &eq;	f.var = var;
+	register long i, n = res->nx*res->ny*res->nz;
+	for(i=0;i<n;i++)
+		res->a[i] = mgl_find_root(mgl_funcv,res->a[i],&f);
+	return res;
 }
 //-----------------------------------------------------------------------------
-uintptr_t MGL_EXPORT mgl_data_roots_(const char *func, uintptr_t *ini, const char *vars,int l,int m)
+mreal MGL_EXPORT mgl_find_root_txt(const char *func, mreal ini, char var)
+{
+	mglFormula eq(func);
+	mglFuncV f;	f.eq = &eq;	f.var = var;
+	return mgl_find_root(mgl_funcv,ini,&f);
+}
+//-----------------------------------------------------------------------------
+uintptr_t MGL_EXPORT mgl_data_roots_(const char *func, uintptr_t *ini, const char *var,int l,int)
 {	char *s=new char[l+1];	memcpy(s,func,l);	s[l]=0;
-	char *v=new char[m+1];	memcpy(s,vars,m);	s[m]=0;
-	uintptr_t r = uintptr_t(mgl_data_roots(s,_DA_(ini),v));
-	delete []s;	delete []v;	return r;	}
+	uintptr_t r = uintptr_t(mgl_data_roots(s,_DA_(ini),*var));
+	delete []s;	return r;	}
+mreal MGL_EXPORT mgl_find_root_txt_(const char *func, mreal *ini, const char *var,int l,int)
+{	char *s=new char[l+1];	memcpy(s,func,l);	s[l]=0;
+	mreal r = mgl_find_root_txt(s,*ini,*var);
+	delete []s;	return r;	}
 //-----------------------------------------------------------------------------

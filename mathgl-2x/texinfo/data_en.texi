@@ -654,6 +654,7 @@ Saves data matrix (or @code{ns}-th slice for 3d data) to bitmap file (now suppor
 @cindex Sum
 @cindex Min
 @cindex Max
+@cindex Roots
 
 @anchor{subdata}
 @deftypefn {MGL command} {} subdata @sc{res} dat @code{xx [yy=: zz=:]}
@@ -821,6 +822,17 @@ Gets array of absolute values of the data.
 Gets array of arguments of the data.
 @end deftypefn
 @end ifclear
+
+@anchor{roots}
+@deftypefn {MGL command} {} roots @sc{res} 'func' ini ['var'='x']
+@deftypefnx {MGL command} {} roots @sc{res} 'func' @code{ini} ['var'='x']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglData}} @code{mglData} Roots (@code{const char *}func, @code{char} var) @code{const}
+@deftypefnx {C function} @code{HMDT} mgl_data_roots (@code{const char *}func, @code{HCDT} ini, @code{char} var)
+@deftypefnx {C function} @code{mreal} mgl_find_root_txt (@code{const char *}func, @code{mreal} ini, @code{char} var)
+@end ifclear
+Find roots of equation 'func'=0 for variable @var{var} with initial guess @var{ini}. Secant method is used for root finding.
+@end deftypefn
 
 @c ------------------------------------------------------------------
 @external{}
