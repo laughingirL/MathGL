@@ -437,6 +437,12 @@ uintptr_t MGL_EXPORT mgl_triangulation_3d_(uintptr_t *x, uintptr_t *y, uintptr_t
 HMDT MGL_EXPORT mgl_triangulation_2d(HCDT x, HCDT y);
 uintptr_t MGL_EXPORT mgl_triangulation_2d_(uintptr_t *x, uintptr_t *y);
 
+/// Find roots for general set of nonlinear equations
+HMDT MGL_EXPORT mgl_data_roots_gen(mreal (*func)(HCDT val, void *par), HCDT ini, void *par);
+/// Find roots for general set of nonlinear equations defined by textual formula
+HMDT MGL_EXPORT mgl_data_roots(const char *func, HCDT ini, const char *vars);
+uintptr_t MGL_EXPORT mgl_data_roots_(const char *func, uintptr_t *ini, const char *vars,int,int);
+
 #ifdef __cplusplus
 }
 #endif

@@ -854,3 +854,44 @@ void MGL_EXPORT mgl_data_sort(HMDT dat, long idx, long idy)
 void MGL_EXPORT mgl_data_sort_(uintptr_t *d, int *idx, int *idy)
 {	mgl_data_sort(_DT_,*idx,*idy);	}
 //-----------------------------------------------------------------------------
+HMDT MGL_EXPORT mgl_data_roots_gen(mreal (*func)(HCDT val, void *par), HCDT ini, void *par)
+{
+	mglData *res = new mglData(ini);
+	register long i,j;
+
+
+
+
+	
+	return res;
+}
+//-----------------------------------------------------------------------------
+struct MGL_NO_EXPORT mglFuncV	{	mglFormula *eq;	const char *vars;	};
+mreal MGL_NO_EXPORT mgl_funcv(HCDT v, void *par)
+{
+	mglFuncV *f = (mglFuncV *)par;
+	mreal var[MGL_VS];	memset(var,0,('z'-'a')*sizeof(mreal));
+	long j,nx=v->GetNx();
+	for(j=0;j<nx;j++)	if(f->vars[j]>='a' && f->vars[j]<='z')
+		var[f->vars[j]-'a'] = v->v(j);
+	return f->eq->Calc(var);
+}
+HMDT MGL_EXPORT mgl_data_roots(const char *func, HCDT ini, const char *vars)
+{
+	long nx=ini->GetNx();
+	if(nx>strlen(vars))	return (new mglData);	// no roots found
+
+	mglFormula eq(func);
+	mglFuncV f;	f.eq = &eq;
+	mglData inp(ini);
+	if(nx>1 && strlen(vars)==1)
+	{	inp.nz *= inp.ny;	inp.ny = inp.nx;	inp.nx = 1;	}
+	return mgl_data_roots_gen(mgl_funcv,&inp,&f);
+}
+//-----------------------------------------------------------------------------
+uintptr_t MGL_EXPORT mgl_data_roots_(const char *func, uintptr_t *ini, const char *vars,int l,int m)
+{	char *s=new char[l+1];	memcpy(s,func,l);	s[l]=0;
+	char *v=new char[m+1];	memcpy(s,vars,m);	s[m]=0;
+	uintptr_t r = uintptr_t(mgl_data_roots(s,_DA_(ini),v));
+	delete []s;	delete []v;	return r;	}
+//-----------------------------------------------------------------------------
