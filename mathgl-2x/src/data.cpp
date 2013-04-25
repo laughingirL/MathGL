@@ -1971,7 +1971,7 @@ void MGL_EXPORT mgl_data_join(HMDT d, HCDT v)
 	{
 		mreal *b = new mreal[nx*ny*(nz+vz)];
 		memcpy(b,d->a,nx*ny*nz*sizeof(mreal));
-		if(mv)	memcpy(b+nx*ny*nz,d->a,nx*ny*vz*sizeof(mreal));
+		if(mv)	memcpy(b+nx*ny*nz,mv->a,nx*ny*vz*sizeof(mreal));
 		else 	for(i=0;i<nx*ny*vz;i++)	b[k+i] = v->vthr(i);
 		if(!d->link)	delete []d->a;	d->nz += vz;
 		d->a = b;	d->link=false;	d->NewId();
@@ -1981,7 +1981,7 @@ void MGL_EXPORT mgl_data_join(HMDT d, HCDT v)
 		ny *= nz;	vy *= vz;
 		mreal *b = new mreal[nx*(ny+vy)];
 		memcpy(b,d->a,nx*ny*sizeof(mreal));
-		if(mv)	memcpy(b+nx*ny,d->a,nx*vy*sizeof(mreal));
+		if(mv)	memcpy(b+nx*ny,mv->a,nx*vy*sizeof(mreal));
 		else 	for(i=0;i<nx*vy;i++)	b[k+i] = v->vthr(i);
 		if(!d->link)	delete []d->a;
 		d->nz = 1;	d->ny = ny+vy;
@@ -1992,7 +1992,7 @@ void MGL_EXPORT mgl_data_join(HMDT d, HCDT v)
 		nx *= ny*nz;	vx *= vy*vz;
 		mreal *b = new mreal[nx+vx];
 		memcpy(b,d->a,nx*sizeof(mreal));
-		if(mv)	memcpy(b+nx,d->a,vx*sizeof(mreal));
+		if(mv)	memcpy(b+nx,mv->a,vx*sizeof(mreal));
 		else 	for(i=0;i<vx;i++)	b[k+i] = v->vthr(i);
 		if(!d->link)	delete []d->a;
 		d->nz = d->ny = 1;	d->nx = nx+vx;

@@ -11,8 +11,8 @@
 * Add SetAutoRanges()
 * Add flag to disable tick labels at axis origin (see SetOriginTick())
 * Add JSON sample usage via QtWebKit
-* Add Join() function for mglData and mglDataC
-* Add Roots() function for mglData
+* Add Join() function for joining mglData arrays
+* Add Roots() function for root finding of nonlinear equation using provided guess(es)
 * Bugfixes and memory leaks
 
 2.1.2 Released 28 January 2013
