@@ -168,7 +168,7 @@ endif(MGL_HAVE_PDF)
 	install(DIRECTORY ${MGL_OUT}/mathgl_en DESTINATION ${MGL_DOC_PATH})
 	install(DIRECTORY ${MGL_OUT}/png DESTINATION ${MGL_DOC_PATH})
 	install(DIRECTORY ${MGL_OUT}/udav DESTINATION ${MGL_DOC_PATH})
-	install(FILES ${MGL_TEX}/mglconv.1 ${MGL_TEX}/mglview.1 ${MGL_TEX}/udav.1 DESTINATION ${MGL_MAN_PATH}/man1)
+	install(FILES ${MGL_TEX}/mglconv.1 ${MGL_TEX}/mglview.1 ${MGL_TEX}/udav.1 ${MGL_TEX}/mgl.cgi.1 DESTINATION ${MGL_MAN_PATH}/man1)
 	install(FILES ${MGL_TEX}/mgl.5 DESTINATION ${MGL_MAN_PATH}/man5)
 # TODO: try to install all mathgl*.info* in future!!!
 	install(FILES ${MGL_OUT}/mathgl_en.info ${MGL_OUT}/mathgl_en.info-1 ${MGL_OUT}/mathgl_en.info-2 DESTINATION ${MGL_INFO_PATH})

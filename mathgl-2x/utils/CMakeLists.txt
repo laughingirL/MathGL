@@ -10,7 +10,8 @@ add_executable(mgl.cgi mglcgi.cpp)
 target_link_libraries(mgl.cgi mgl)
 install(
 	TARGETS mgl.cgi
-	RUNTIME DESTINATION bin
+# should be /usr/lib/cgi-bin/
+	RUNTIME DESTINATION ${MGL_CGI_PATH}
 )
 
 if(MGL_HAVE_QT)

@@ -860,7 +860,7 @@ mreal MGL_EXPORT mgl_find_root(mreal (*func)(mreal x, void *par), mreal x0, void
 	if(fabs(f0)<1e-7)	return x0;
 	if(fabs(f1)<1e-7)	return x1;
 	if(f0==f1)	return NAN;
-	while(fabs(x0-x1)>1e-5)
+	for(long i=0;i<20;i++)
 	{
 		x = x1-f1*(x1-x0)/(f1-f0);	f = func(x,par);
 		if(fabs(f)<1e-7)	return x;
@@ -871,7 +871,7 @@ mreal MGL_EXPORT mgl_find_root(mreal (*func)(mreal x, void *par), mreal x0, void
 		}*/
 		x0=x1;	f0=f1;	x1=x;	f1=f;	// new points
 	}
-	return (x0+x1)/2;
+	return NAN;	// no roots found
 }
 //-----------------------------------------------------------------------------
 struct MGL_NO_EXPORT mglFuncV	{	mglFormula *eq;	char var;	};

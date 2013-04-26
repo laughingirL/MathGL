@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
 		buf[len]=0;
 	}
 	else		buf = getenv("QUERY_STRING");
-	if(buf==0)	{	printf("There is no query. Exit.");	return 0;	}
+	if(buf==0)	{	printf("There is no query. Exit.\n");	return 0;	}
 	str = new char[strlen(buf)+1];
 	mgl_get_value(buf,"mgl",str);
 

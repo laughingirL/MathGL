@@ -88,6 +88,18 @@ MGL_DEPENDENT_OPTION(enable-octave-install "Octave interface will install for al
 include_directories( ${MathGL_SOURCE_DIR}/include ${MathGL_BINARY_DIR}/include)
 set(MGL_INCLUDE_PATH "${CMAKE_INSTALL_PREFIX}/include/mgl2")
 
+if(NOT WIN32)
+	set(MGL_CGI_PATH "${CMAKE_INSTALL_PREFIX}/share/mathgl")
+	set(MGL_DATA_PATH "${CMAKE_INSTALL_PREFIX}/share/mathgl")
+	set(MGL_DOC_PATH "${CMAKE_INSTALL_PREFIX}/share/doc/mathgl")
+	set(MGL_MAN_PATH "${CMAKE_INSTALL_PREFIX}/share/man")
+	set(MGL_INFO_PATH "${CMAKE_INSTALL_PREFIX}/share/info")
+	set(MGL_FONT_PATH "${MGL_DATA_PATH}/fonts")
+	install(DIRECTORY fonts/ DESTINATION ${MGL_FONT_PATH}
+			PATTERN ".svn" EXCLUDE
+			PATTERN "*.vfm")
+endif(NOT WIN32)
+
 include(CheckFunctionExists)
 include(CMakePushCheckState)
 CHECK_FUNCTION_EXISTS(sin MGL_SIN)
@@ -394,17 +406,6 @@ endif(UNIX)
 if(WIN32)
 	add_definitions(-DWIN32)
 endif(WIN32)
-
-if(NOT WIN32)
-set(MGL_DATA_PATH "${CMAKE_INSTALL_PREFIX}/share/mathgl")
-set(MGL_DOC_PATH "${CMAKE_INSTALL_PREFIX}/share/doc/mathgl")
-set(MGL_MAN_PATH "${CMAKE_INSTALL_PREFIX}/share/man")
-set(MGL_INFO_PATH "${CMAKE_INSTALL_PREFIX}/share/info")
-set(MGL_FONT_PATH "${MGL_DATA_PATH}/fonts")
-install(DIRECTORY fonts/ DESTINATION ${MGL_FONT_PATH}
-		PATTERN ".svn" EXCLUDE
-		PATTERN "*.vfm")
-endif(NOT WIN32)
 
 add_subdirectory( src )
 add_subdirectory( widgets )
