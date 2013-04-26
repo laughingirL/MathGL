@@ -87,9 +87,10 @@ MGL_DEPENDENT_OPTION(enable-octave-install "Octave interface will install for al
 
 include_directories( ${MathGL_SOURCE_DIR}/include ${MathGL_BINARY_DIR}/include)
 set(MGL_INCLUDE_PATH "${CMAKE_INSTALL_PREFIX}/include/mgl2")
+set(MGL_CGI_PATH "${CMAKE_INSTALL_PREFIX}/share/mathgl" CACHE STRING "Set CGI install directory")
 
 if(NOT WIN32)
-	set(MGL_CGI_PATH "${CMAKE_INSTALL_PREFIX}/share/mathgl")
+#	set(MGL_CGI_PATH "${CMAKE_INSTALL_PREFIX}/share/mathgl")
 	set(MGL_DATA_PATH "${CMAKE_INSTALL_PREFIX}/share/mathgl")
 	set(MGL_DOC_PATH "${CMAKE_INSTALL_PREFIX}/share/doc/mathgl")
 	set(MGL_MAN_PATH "${CMAKE_INSTALL_PREFIX}/share/man")
