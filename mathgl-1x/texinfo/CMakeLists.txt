@@ -26,9 +26,6 @@ if(use_doc)
 		COMMAND ${findtp} mathgl_en.texi
 		COMMAND ${findtp} mathgl_en.texi
 		COMMAND ${findtp} mathgl_en.texi
-#		COMMAND ${findtp} mathgl_ru.texi
-#		COMMAND ${findtp} mathgl_ru.texi
-#		COMMAND ${findtp} mathgl_ru.texi
 		DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/png/all.png
 		DEPENDS ${list_texi_files_en}
 		DEPENDS ${list_texi_files_ru}
@@ -43,7 +40,7 @@ if(use_doc)
 		WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/texinfo
 	)
 	add_custom_target(documentation ALL
-		DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/mathgl_en.pdf
+#		DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/mathgl_en.pdf
 		DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/mathgl_en.info
 		DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/mathgl_en
 #		DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/mathgl_ru.pdf
