@@ -1,18 +1,18 @@
-2.1.3 Released ?? April 2013
+2.1.3 Released ?? May 2013
 
-* Improve SinFFT, CosFFT and so on, to be multi-threaded
+* Improve SinFFT, CosFFT, Hankel and so on, to be multi-threaded
 * Use DFT instead of FFT if GSL support is disabled (much slow!).
+* Add Join() function for joining mglData arrays
+* Add Roots() function for root finding of nonlinear equation using provided guess(es)
+* Add mglExprC for parsing formula with complex numbers
 * Correctly read #QNAN values in data files
 * Speed up Dots() drawing
+* Add flag to disable tick labels at axis origin (see SetOriginTick())
 * Add MGL commands 'origintick', 'tickshift'
 * JSON now use zlib if filename end at 'z' (like "test.jsonz")
 * Make separate libmgl-mpi
-* Add mglExprC for parsing formula with complex numbers
-* Add SetAutoRanges()
-* Add flag to disable tick labels at axis origin (see SetOriginTick())
-* Add JSON sample usage via QtWebKit
-* Add Join() function for joining mglData arrays
-* Add Roots() function for root finding of nonlinear equation using provided guess(es)
+* Add SetAutoRanges() function (duplicate corresponding options)
+* Add JSON sample usage via QtWebKit (thanks to DATADVANCE)
 * Bugfixes and memory leaks
 
 2.1.2 Released 28 January 2013

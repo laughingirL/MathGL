@@ -824,9 +824,9 @@ Ternary -- специальный тип графика для 3 зависим�
 @end deftypefn
 
 @anchor{inplot}
-@deftypefn {Команда MGL} {} inplot @code{x1 x2 y1 y2 [rel=off]}
+@deftypefn {Команда MGL} {} inplot @code{x1 x2 y1 y2 [rel=on]}
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} InPlot (@code{mreal} x1, @code{mreal} x2, @code{mreal} y1, @code{mreal} y2, @code{bool} rel=@code{false})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} InPlot (@code{mreal} x1, @code{mreal} x2, @code{mreal} y1, @code{mreal} y2, @code{bool} rel=@code{true})
 @deftypefnx {Функция С} @code{void} mgl_inplot (@code{HMGL} gr, @code{mreal} x1, @code{mreal} x2, @code{mreal} y1, @code{mreal} y2)
 @deftypefnx {Функция С} @code{void} mgl_relplot (@code{HMGL} gr, @code{mreal} x1, @code{mreal} x2, @code{mreal} y1, @code{mreal} y2)
 @end ifclear
