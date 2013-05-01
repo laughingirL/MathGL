@@ -577,7 +577,7 @@ void MGL_EXPORT mgl_datac_modify_vw(HADT d, const char *eq,HCDT vdat,HCDT wdat)
 	if(wdat && wdat->GetNN()!=nn)	return;
 	mglFormulaC f(eq);
 	if(v && w)	mglStartThreadC(mgl_cmodify,0,nn,d->a,v->a,w->a,par,&f);
-	else if(vdat && wdat)	(mgl_cmodify_gen,nn,d->a,vdat,wdat,par,&f);
+	else if(vdat && wdat)	mglStartThreadV(mgl_cmodify_gen,nn,d->a,vdat,wdat,par,&f);
 	else if(v)	mglStartThreadC(mgl_cmodify,0,nn,d->a,v->a,0,par,&f);
 	else if(vdat)	mglStartThreadV(mgl_cmodify_gen,nn,d->a,vdat,0,par,&f);
 	else	mglStartThreadC(mgl_cmodify,0,nn,d->a,0,0,par,&f);

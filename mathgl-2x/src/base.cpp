@@ -52,7 +52,7 @@ void MGL_EXPORT mgl_create_cpp_font(HMGL gr, const wchar_t *how)
 	{
 		ch = f->Internal(s[i]);
 		int m1 = f->GetNl(0,ch), m2 = f->GetNt(0,ch);
-		printf("\t{0x%x,%d,%d,%lu,%d,%lu},\n",s[i],f->GetWidth(0,ch),m1,m,m2,m+2*m1);
+		printf("\t{0x%x,%d,%d,%lu,%d,%lu},\n",unsigned(s[i]),f->GetWidth(0,ch),m1,m,m2,m+2*m1);
 		m += 2*m1+6*m2;
 	}
 	if(m!=l+n)	printf("#error \"%lu !=%lu + %lu\"",m,l,n);
