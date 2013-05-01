@@ -6,7 +6,7 @@ set(udav_src anim_dlg.cpp find_dlg.cpp mem_pnl.cpp prop_dlg.cpp textedit.cpp arg
 	open_dlg.cpp qmglsyntax.cpp udav_wnd.cpp dat_pnl.cpp info_dlg.cpp opt_dlg.cpp setup_dlg.cpp
 	files_dlg.cpp plot_pnl.cpp style_dlg.cpp data_dlg.cpp tree_pnl.cpp)
 
-set(udav_moc_hdr anim_dlg.h files_dlg.h info_dlg.h opt_dlg.h qmglsyntax.h text_pnl.h args_dlg.h
+set(udav_moc_hdr anim_dlg.h files_dlg.h info_dlg.h opt_dlg.h text_pnl.h args_dlg.h
 	find_dlg.h mem_pnl.h plot_pnl.h setup_dlg.h udav_wnd.h calc_dlg.h help_pnl.h newcmd_dlg.h
 	prop_dlg.h style_dlg.h dat_pnl.h open_dlg.h textedit.h hint_dlg.h data_dlg.h)
 

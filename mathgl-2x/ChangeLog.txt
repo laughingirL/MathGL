@@ -1,6 +1,6 @@
-2.1.3 Released ?? May 2013
+2.1.3 Released 2 May 2013
 
-* Improve SinFFT, CosFFT, Hankel and so on, to be multi-threaded
+* Functions SinFFT, CosFFT, Hankel and so on, become multi-threaded
 * Use DFT instead of FFT if GSL support is disabled (much slow!).
 * Add Join() function for joining mglData arrays
 * Add Roots() function for root finding of nonlinear equation using provided guess(es)
@@ -9,7 +9,7 @@
 * Speed up Dots() drawing
 * Add flag to disable tick labels at axis origin (see SetOriginTick())
 * Add MGL commands 'origintick', 'tickshift'
-* JSON now use zlib if filename end at 'z' (like "test.jsonz")
+* WriteJSON now use zlib if filename end at 'z' (like "test.jsonz")
 * Make separate libmgl-mpi
 * Add SetAutoRanges() function (duplicate corresponding options)
 * Add JSON sample usage via QtWebKit (thanks to DATADVANCE)

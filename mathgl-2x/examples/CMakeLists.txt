@@ -24,7 +24,7 @@ endif(MGL_HAVE_WX)
 
 if(MGL_HAVE_QT)
 	include(${QT_USE_FILE})
-	qt_wrap_cpp(mgl_qt_example MGL_MOC_EX_FILES ../include/mgl2/qt.h)
+#	qt_wrap_cpp(mgl_qt_example MGL_MOC_EX_FILES ../include/mgl2/qt.h)
 	add_executable(mgl_qt_example wnd_samples.cpp qt_example.cpp ${MGL_MOC_EX_FILES})
 	target_link_libraries(mgl_qt_example mgl-qt)
 endif(MGL_HAVE_QT)

@@ -851,7 +851,7 @@ res_k = \sum_ij how(x_i,y_j,z_k) a_ij/ \sum_ij a_ij
 @cindex Norm
 @cindex NormSl
 
-These functions change the data in some direction like differentiations, integrations and so on. The direction in which the change will applied is specified by the string parameter, which may contain @samp{x}, @samp{y} or @samp{z} characters for 1-st, 2-nd and 3-d dimension correspondengly.
+These functions change the data in some direction like differentiations, integrations and so on. The direction in which the change will applied is specified by the string parameter, which may contain @samp{x}, @samp{y} or @samp{z} characters for 1-st, 2-nd and 3-d dimension correspondingly.
 
 @anchor{cumsum}
 @deftypefn {Команда MGL} {} cumsum dat 'dir'
@@ -912,7 +912,7 @@ These functions change the data in some direction like differentiations, integra
 @deftypefnx {Метод класса @code{mglData}} @code{void} SinFFT (@code{const char *}dir)
 @deftypefnx {Функция С} @code{void} mgl_data_sinfft (@code{HMDT} dat, @code{const char *}dir)
 @end ifclear
-Выполняет синус преобразование в выбранном направлении(ях). Синус преобразование есть @math{\sum a_j \sin(k j)}.
+Выполняет синус преобразование в выбранном направлении(ях). Синус преобразование есть @math{\sum a_j \sin(k j)} (см. @uref{http://en.wikipedia.org/wiki/Discrete_sine_transform#DST-I}).
 @end deftypefn
 
 @anchor{cosfft}
@@ -921,13 +921,13 @@ These functions change the data in some direction like differentiations, integra
 @deftypefnx {Метод класса @code{mglData}} @code{void} CosFFT (@code{const char *}dir)
 @deftypefnx {Функция С} @code{void} mgl_data_cosfft (@code{HMDT} dat, @code{const char *}dir)
 @end ifclear
-Выполняет косинус преобразование в выбранном направлении(ях). Синус преобразование есть @math{\sum a_j \cos(k j)}.
+Выполняет косинус преобразование в выбранном направлении(ях). Синус преобразование есть @math{\sum a_j \cos(k j)} (см. @uref{http://en.wikipedia.org/wiki/Discrete_cosine_transform#DCT-I}).
 @end deftypefn
 
 @ifclear UDAV
 @deftypefn {Метод класса @code{mglDataC}} @code{void} FFT (@code{const char *}dir)
 @deftypefnx {Функция С} @code{void} mgl_datac_fft (@code{HADT} dat, @code{const char *}dir)
-Выполняет фурье преобразование в выбранном направлении(ях). Если строка @var{dir} содержит @samp{i}, то используется обратное преобразование фурье. Фурье преобразование есть @math{\sum a_j \exp(i k j)}.
+Выполняет фурье преобразование в выбранном направлении(ях). Если строка @var{dir} содержит @samp{i}, то используется обратное преобразование фурье. Фурье преобразование есть @math{\sum a_j \exp(i k j)} (см. @uref{http://en.wikipedia.org/wiki/Discrete_Fourier_transform}).
 @end deftypefn
 @end ifclear
 
@@ -939,7 +939,7 @@ These functions change the data in some direction like differentiations, integra
 @deftypefnx {Функция С} @code{void} mgl_data_hankel (@code{HMDT} dat, @code{const char *}dir)
 @deftypefnx {Функция С} @code{void} mgl_datac_hankel (@code{HADT} dat, @code{const char *}dir)
 @end ifclear
-Выполняет преобразование Ханкеля в выбранном направлении(ях). Преобразование Ханкеля есть @math{\sum a_j J_0(k j)}.
+Выполняет преобразование Ханкеля в выбранном направлении(ях). Преобразование Ханкеля есть @math{\sum a_j J_0(k j)} (см. @uref{http://en.wikipedia.org/wiki/Hankel_transform}).
 @end deftypefn
 
 @anchor{swap}
@@ -1457,25 +1457,33 @@ These functions change the data in some direction like differentiations, integra
 @end ifset
 
 @ifclear UDAV
-В MathGL есть специальный класс @code{mglExpr} для вычисления формул заданных строкой. Класс определён в @code{#include <mgl2/mgl.h>}. При создании класса происходит разбор формулы в древовидную структуру. А при вычислении только выполняется достаточно быстрый обход по дереву. В данный момент нет различия между верхним и нижним регистром. Если аргумент какой-либо функции лежит вне её области определения, то возвращается NaN. @xref{Textual formulas}.
+В MathGL есть специальные классы @code{mglExpr} и @code{mglExprC} для вычисления формул заданных строкой для действительных и комплексных чисел соответственно. Классы определены в @code{#include <mgl2/mgl.h>}. При создании класса происходит разбор формулы в древовидную структуру. А при вычислении только выполняется достаточно быстрый обход по дереву. В данный момент нет различия между верхним и нижним регистром. Если аргумент какой-либо функции лежит вне её области определения, то возвращается NaN. @xref{Textual formulas}.
 
 @deftypefn {Конструктор класса @code{mglExpr}} @code{} mglExpr (@code{const char *}expr)
+@deftypefnx {Конструктор класса @code{mglExprC}} @code{} mglExprC (@code{const char *}expr)
 @deftypefnx {Функция С} @code{HMEX} mgl_create_expr (@code{const char *}expr)
+@deftypefnx {Функция С} @code{HAEX} mgl_create_cexpr (@code{const char *}expr)
 Разбирает формулу @var{expr} и создает древовидную структуру, содержащую последовательность вызова функций и операторов для последующего быстрого вычисления формулы с помощью функций @code{Calc()} и/или @code{CalcD()}.
 @end deftypefn
 
 @deftypefn {Destructor on @code{mglExpr}} @code{} ~mglExpr ()
-@deftypefnx {Функция С} @code{HMEX} mgl_delete_expr (@code{HMEX} ex)
+@deftypefnx {Destructor on @code{mglExprC}} @code{} ~mglExprC ()
+@deftypefnx {Функция С} @code{void} mgl_delete_expr (@code{HMEX} ex)
+@deftypefnx {Функция С} @code{void} mgl_delete_cexpr (@code{HAEX} ex)
 Удаляет объект типа @code{mglExpr}.
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglExpr}} @code{mreal} Eval (@code{mreal} x, @code{mreal} y, @code{mreal} z)
+@deftypefnx {Метод класса @code{mglExprC}} @code{dual} Eval (@code{dual} x, @code{dual} y, @code{dual} z)
 @deftypefnx {Функция С} @code{mreal} mgl_expr_eval (@code{HMEX} ex, @code{mreal} x, @code{mreal} y, @code{mreal} z)
+@deftypefnx {Функция С} @code{dual} mgl_cexpr_eval (@code{HAEX} ex, @code{dual} x, @code{dual} y, @code{dual} z)
 Вычисляет значение формулы для @code{'x','r'}=@var{x}, @code{'y','n'}=@var{y}, @code{'z','t'}=@var{z}, @code{'a','u'}=@var{u}.
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglExpr}} @code{mreal} Eval (@code{mreal} var[26])
+@deftypefnx {Метод класса @code{mglExprC}} @code{dual} Eval (@code{dual} var[26])
 @deftypefnx {Функция С} @code{mreal} mgl_expr_eval_v (@code{HMEX} ex, @code{mreal *}var)
+@deftypefnx {Функция С} @code{dual} mgl_cexpr_eval_v (@code{HMEX} ex, @code{dual *}var)
 Вычисляет значение формулы для переменных в массиве @var{var}[0,...,'z'-'a'].
 @end deftypefn
 
