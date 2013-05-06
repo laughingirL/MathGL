@@ -63,8 +63,11 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 //-----------------------------------------------------------------------------
 void save(mglGraph *gr,const char *name,const char *suf);
 void smgl_stfa(mglGraph *gr);	// STFA sample
+void smgl_text(mglGraph *gr);	// text drawing
 void test(mglGraph *gr)
 {
+	smgl_text(gr);	return;
+	
 	mglParse par;
 	par.AllowSetSize(true);
 	setlocale(LC_CTYPE, "");
@@ -200,8 +203,13 @@ void save(mglGraph *gr,const char *name,const char *suf="")
 			snprintf(buf,128,"%s%s.jsonz",name,suf);
 			gr->WriteJSON(buf);	break;
 		default:// PNG (no alpha)
+#if MGL_HAVE_PNG
 			snprintf(buf,128,"%s%s.png",name,suf);
 			gr->WritePNG(buf,0,false);	break;
+#else
+			snprintf(buf,128,"%s%s.bmp",name,suf);
+			gr->WriteBMP(buf);	break;
+#endif
 	}
 }
 //-----------------------------------------------------------------------------

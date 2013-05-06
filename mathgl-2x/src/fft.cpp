@@ -134,7 +134,7 @@ void MGL_EXPORT mgl_datac_fft(HADT d, const char *dir)
 	if(!dir || *dir==0)	return;
 	long nx = d->nx, ny = d->ny, nz = d->nz;
 	if(mglNumThr<1)	mgl_set_num_thr(0);	// manually set number of threads
-	void *wt=0, *ws[mglNumThr];
+	void *wt=0, **ws=new void*[mglNumThr];
 	long par[4]={nx,ny,nz,strchr(dir,'i')!=0}, i;
 #if MGL_USE_DOUBLE
 	double *a = (double *)(d->a);
@@ -159,6 +159,7 @@ void MGL_EXPORT mgl_datac_fft(HADT d, const char *dir)
 		mglStartThreadT(mgl_fftz,nx*ny,0,a,wt,ws,par);
 	}
 	if(wt)	mgl_fft_free(wt,ws,mglNumThr);
+	delete []ws;
 #if !MGL_USE_DOUBLE
 	for(i=0;i<nx*ny*nz;i++)	d->a[i] = dual(a[2*i], a[2*i+1]);
 	delete []a;
@@ -171,7 +172,7 @@ void MGL_EXPORT mgl_data_fourier(HMDT re, HMDT im, const char *dir)
 	long nx = re->nx, ny = re->ny, nz = re->nz;
 	if(nx*ny*nz != im->nx*im->ny*im->nz || !dir || dir[0]==0)	return;
 	if(mglNumThr<1)	mgl_set_num_thr(0);	// manually set number of threads
-	void *wt=0, *ws[mglNumThr];
+	void *wt=0, **ws=new void*[mglNumThr];
 	long par[4]={nx,ny,nz,strchr(dir,'i')!=0}, i;
 	double *a = new double[2*nx*ny*nz];
 	for(i=0;i<nx*ny*nz;i++)
@@ -194,7 +195,7 @@ void MGL_EXPORT mgl_data_fourier(HMDT re, HMDT im, const char *dir)
 	if(wt)	mgl_fft_free(wt,ws,mglNumThr);
 	for(i=0;i<nx*ny*nz;i++)
 	{	re->a[i] = a[2*i];	im->a[i] = a[2*i+1];	}
-	delete []a;
+	delete []ws;	delete []a;
 }
 //-----------------------------------------------------------------------------
 MGL_NO_EXPORT void* mgl_envx(void *par)
@@ -253,7 +254,7 @@ void MGL_EXPORT mgl_data_envelop(HMDT d, char dir)
 	register long i;
 	long nx=d->nx,ny=d->ny,nz=d->nz,par[3]={nx,ny,nz};
 	if(mglNumThr<1)	mgl_set_num_thr(0);	// manually set number of threads
-	void *wt=0, *ws[mglNumThr];
+	void *wt=0, **ws=new void*[mglNumThr];
 	double *b = 0;
 	if(dir=='x' && nx>1)
 	{
@@ -275,6 +276,7 @@ void MGL_EXPORT mgl_data_envelop(HMDT d, char dir)
 	}
 	for(i=0;i<nx*ny*nz;i++)	d->a[i] = hypot(b[2*i], b[2*i+1]);
 	if(b)	{	mgl_fft_free(wt,ws,mglNumThr);	delete []b;	}
+	delete []ws;
 }
 //-----------------------------------------------------------------------------
 MGL_NO_EXPORT void* mgl_stfa1(void *par)
@@ -347,7 +349,7 @@ HMDT MGL_EXPORT mgl_data_stfa(HCDT re, HCDT im, long dn, char dir)
 	register long i,j,k,i0,dd=dn/2;
 	if(mglNumThr<1)	mgl_set_num_thr(0);	// manually set number of threads
 	double *a = new double[4*dn*mglNumThr],ff;
-	void *ws[mglNumThr], *wt = mgl_fft_alloc(2*dn,ws,mglNumThr);
+	void **ws=new void*[mglNumThr], *wt = mgl_fft_alloc(2*dn,ws,mglNumThr);
 	long mx,my,mz;
 	if(dir=='y')
 	{
@@ -363,8 +365,8 @@ HMDT MGL_EXPORT mgl_data_stfa(HCDT re, HCDT im, long dn, char dir)
 		long par[5]={mx,my,mz,dn,nx};
 		mglStartThreadT(mgl_stfa2,my*mz,d->a,a,wt,ws,par,re,im);
 	}
-	delete []a;
 	mgl_fft_free(wt,ws,mglNumThr);
+	delete []ws;	delete []a;
 	return d;
 }
 //-----------------------------------------------------------------------------
@@ -436,7 +438,7 @@ void MGL_EXPORT mgl_data_sinfft(HMDT d, const char *dir)	// use DST-1
 	if(!dir || *dir==0)	return;
 	double *b = 0;
 	if(mglNumThr<1)	mgl_set_num_thr(0);	// manually set number of threads
-	void *wt=0, *ws[mglNumThr];
+	void *wt=0, **ws=new void*[mglNumThr];
 	long nx=d->nx, ny=d->ny, nz=d->nz;
 	long par[3]={nx,ny,nz}, i;
 	if(strchr(dir,'x') && nx>1)
@@ -458,6 +460,7 @@ void MGL_EXPORT mgl_data_sinfft(HMDT d, const char *dir)	// use DST-1
 		mglStartThreadT(mgl_sinz,nx*ny,d->a,b,wt,ws,par);
 	}
 	if(b)	{	mgl_fft_free(wt,ws,mglNumThr);	delete []b;	}
+	delete []ws;
 }
 //-----------------------------------------------------------------------------
 MGL_NO_EXPORT void* mgl_cosx(void *par)
@@ -550,7 +553,7 @@ void MGL_EXPORT mgl_data_cosfft(HMDT d, const char *dir)
 	if(!dir || *dir==0)	return;
 	double *b = 0;
 	if(mglNumThr<1)	mgl_set_num_thr(0);	// manually set number of threads
-	void *wt=0, *ws[mglNumThr];
+	void *wt=0, **ws=new void*[mglNumThr];
 	long nx=d->nx, ny=d->ny, nz=d->nz;
 	long par[3]={nx,ny,nz}, i;
 	if(strchr(dir,'x') && nx>1)
@@ -572,6 +575,7 @@ void MGL_EXPORT mgl_data_cosfft(HMDT d, const char *dir)
 		mglStartThreadT(mgl_cosz,nx*ny,d->a,b,wt,ws,par);
 	}
 	if(b)	{	mgl_fft_free(wt,ws,mglNumThr);	delete []b;	}
+	delete []ws;
 }
 //-----------------------------------------------------------------------------
 HMDT MGL_EXPORT mgl_transform_a(HCDT am, HCDT ph, const char *tr)
@@ -675,7 +679,7 @@ MGL_NO_EXPORT void* mgl_chnkx(void *par)
 		gsl_dht_apply(dht,b,b+nx);
 		for(j=0;j<nx;j++)	b[j] = imag(a[j+nx*i]);
 		gsl_dht_apply(dht,b,b+2*nx);
-		for(j=0;j<nx;j++)	a[j+nx*i] = dual(b[j+nx],b[j+2*nx])*mm;
+		for(j=0;j<nx;j++)	a[j+nx*i] = dual(b[j+nx],b[j+2*nx])*mreal(mm);
 	}
 	return 0;
 }
@@ -695,7 +699,7 @@ MGL_NO_EXPORT void* mgl_chnky(void *par)
 		gsl_dht_apply(dht,b,b+ny);
 		for(j=0;j<ny;j++)	b[j] = imag(a[i+nx*(j+ny*k)]);
 		gsl_dht_apply(dht,b,b+2*ny);
-		for(j=0;j<ny;j++)	a[i+nx*(j+ny*k)] = dual(b[j+ny],b[j+2*ny])*mm;
+		for(j=0;j<ny;j++)	a[i+nx*(j+ny*k)] = dual(b[j+ny],b[j+2*ny])*mreal(mm);
 	}
 	return 0;
 }
@@ -714,7 +718,7 @@ MGL_NO_EXPORT void* mgl_chnkz(void *par)
 		gsl_dht_apply(dht,b,b+nz);
 		for(j=0;j<nz;j++)	b[j] = imag(a[i+j*k]);
 		gsl_dht_apply(dht,b,b+2*nz);
-		for(j=0;j<nz;j++)	a[i+j*k] = dual(b[j+nz],b[j+2*nz])*mm;
+		for(j=0;j<nz;j++)	a[i+j*k] = dual(b[j+nz],b[j+2*nz])*mreal(mm);
 	}
 	return 0;
 }
@@ -767,7 +771,7 @@ MGL_NO_EXPORT void* mgl_hnkx(void *par)
 	{
 		for(j=0;j<nx;j++)	b[j] = a[j+nx*i];
 		gsl_dht_apply(dht,b,b+nx);
-		for(j=0;j<nx;j++)	a[j+nx*i] = b[j+nx]*mm;
+		for(j=0;j<nx;j++)	a[j+nx*i] = b[j+nx]*mreal(mm);
 	}
 	return 0;
 }
@@ -785,7 +789,7 @@ MGL_NO_EXPORT void* mgl_hnky(void *par)
 		i = ii%nx;	k = ii/nx;
 		for(j=0;j<ny;j++)	b[j] = a[i+nx*(j+ny*k)];
 		gsl_dht_apply(dht,b,b+ny);
-		for(j=0;j<ny;j++)a[i+nx*(j+ny*k)] = b[j+ny]*mm;
+		for(j=0;j<ny;j++)a[i+nx*(j+ny*k)] = b[j+ny]*mreal(mm);
 	}
 	return 0;
 }
@@ -802,7 +806,7 @@ MGL_NO_EXPORT void* mgl_hnkz(void *par)
 	{
 		for(j=0;j<nz;j++)	b[j] = a[i+j*k];
 		gsl_dht_apply(dht,b,b+nz);
-		for(j=0;j<nz;j++)	a[i+j*k] = b[j+nz]*mm;
+		for(j=0;j<nz;j++)	a[i+j*k] = b[j+nz]*mreal(mm);
 	}
 	return 0;
 }

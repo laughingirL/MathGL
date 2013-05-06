@@ -20,6 +20,12 @@
 #include <time.h>
 #include <stdarg.h>
 
+#if defined(WIN32) || defined(_MSC_VER) || defined(__BORLANDC__)
+#include <windows.h>
+#else
+#include <unistd.h>
+#endif
+
 #include "mgl2/canvas.h"
 #include "mgl2/canvas_cf.h"
 
@@ -576,7 +582,7 @@ void MGL_EXPORT mgl_show_image(HMGL gr, const char *viewer, int keep)
 		{
 			snprintf(cmd,128,"%s %s &", viewer,fname);
 			if(system(cmd)==-1)	printf("Error to call external viewer\n");
-			//		sleep(2);
+			Sleep(2000);
 			snprintf(cmd,128,"del %s", fname);
 		}
 		else	snprintf(cmd,128,"%s %s; del %s", viewer,fname,fname);

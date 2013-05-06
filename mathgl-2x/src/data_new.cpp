@@ -875,7 +875,7 @@ mreal MGL_EXPORT mgl_find_root(mreal (*func)(mreal x, void *par), mreal x0, void
 }
 //-----------------------------------------------------------------------------
 struct MGL_NO_EXPORT mglFuncV	{	mglFormula *eq;	char var;	};
-mreal MGL_NO_EXPORT mgl_funcv(double v, void *par)
+mreal MGL_NO_EXPORT mgl_funcv(mreal v, void *par)
 {
 	mglFuncV *f = (mglFuncV *)par;
 	mreal var[MGL_VS];	memset(var,0,('z'-'a')*sizeof(mreal));

@@ -34,6 +34,7 @@ A. Paper about MathGL!!!
 
 15. Check samples: colorbar
 16. Add samples about data handling (data1, data2, data2)
+17. Add "Triangulation sample"
 
 20. JS rotation in Firefox
 23. check if all "value" options are described

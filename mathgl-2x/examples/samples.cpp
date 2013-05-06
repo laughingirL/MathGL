@@ -60,7 +60,7 @@ new ez 10 10 10 '0.2*(z-0.3)/$1-0.2*(z+0.3)/$2'\nreturn\n";
 //-----------------------------------------------------------------------------
 const char *mmgl_fexport="";
 #define splot1(b) {(b).Norm(-1,1,true);gr->Rotate(70,60);gr->Box();gr->Surf3(b);}
-void smgl_fexport(mglGraph *gr)	// surface triangulation
+void smgl_fexport(mglGraph *gr)	// test file export
 {
 	gr->SubPlot(3,2,0);
 	double d,x1,x2,x0,y=0.95;
@@ -233,7 +233,7 @@ const char *mmgl_data1="new a 40 50 60 'exp(-x^2-4*y^2-16*z^2)'\n"
 "title 'max=',b.max:norm b -1 1 on:rotate 70 60:box:surf3 b\n"
 "return\n";
 #define splot1(b) {(b).Norm(-1,1,true);gr->Rotate(70,60);gr->Box();gr->Surf3(b);}
-void smgl_data1(mglGraph *gr)	// surface triangulation
+void smgl_data1(mglGraph *gr)	// basic data operations
 {
 	mglData a(40,50,60),b;	gr->Fill(a,"exp(-x^2-4*y^2-16*z^2)");
 	gr->Light(true);		gr->Alpha(true);
@@ -275,7 +275,7 @@ const char *mmgl_data2="new a 40 50 60 'exp(-x^2-4*y^2-16*z^2)'\n"
 "title 'max=',b.max:norm b -1 1 on:rotate 70 60:box\n"
 "surf3 b 0.5:surf3 b -0.5\nreturn\n";
 #define splot2(b) {(b).Norm(-1,1,true);gr->Rotate(70,60);gr->Box();gr->Surf3(0.5,b);gr->Surf3(-0.5,b);}
-void smgl_data2(mglGraph *gr)	// surface triangulation
+void smgl_data2(mglGraph *gr)	// data transforms
 {
 	mglData a(40,50,60),b;	gr->Fill(a,"exp(-x^2-4*y^2-16*z^2)");
 	gr->Light(true);		gr->Alpha(true);
@@ -310,7 +310,7 @@ const char *mmgl_param1="new x 100 'sin(pi*x)'\nnew y 100 'cos(pi*x)'\n"
 "subplot 4 3 9:rotate 40 60:box:step x y z\n"
 "subplot 4 3 10:rotate 40 60:box:torus x z 'z';light on\n"
 "subplot 4 3 11:rotate 40 60:box:label x y z '%z'\n";
-void smgl_param1(mglGraph *gr)	// surface triangulation
+void smgl_param1(mglGraph *gr)	// 1d parametric plots
 {
 	mglData x(100), y(100), z(100), c(100);
 	gr->Fill(x,"sin(pi*x)");	gr->Fill(y,"cos(pi*x)");
@@ -350,7 +350,7 @@ const char *mmgl_param2="new x 100 100 'sin(pi*(x+y)/2)*cos(pi*y/2)'\n"
 "subplot 4 4 13:rotate 40 60:box:boxs x y z '';meshnum 10;light on\n"
 "subplot 4 4 14:rotate 40 60:box:boxs x y z '#';meshnum 10;light on\n"
 "subplot 4 4 15:rotate 40 60:box:boxs x y z '@';meshnum 10;light on\n";
-void smgl_param2(mglGraph *gr)	// surface triangulation
+void smgl_param2(mglGraph *gr)	// 2d parametric plots
 {
 	mglData x(100,100), y(100,100), z(100,100), c(100,100);
 	gr->Fill(x,"sin(pi*(x+y)/2)*cos(pi*y/2)");	gr->Fill(y,"cos(pi*(x+y)/2)*cos(pi*y/2)");
@@ -391,7 +391,7 @@ const char *mmgl_param3="new x 50 50 50 '(x+2)/3*sin(pi*y/2)'\n"
 "subplot 4 3 8:rotate 40 60:box:densx c '' 0:densy c '' 0:densz c '' 0\n"
 "subplot 4 3 9:rotate 40 60:box:contx c '' 0:conty c '' 0:contz c '' 0\n"
 "subplot 4 3 10:rotate 40 60:box:contfx c '' 0:contfy c '' 0:contfz c '' 0\n";
-void smgl_param3(mglGraph *gr)	// surface triangulation
+void smgl_param3(mglGraph *gr)	// 3d parametric plots
 {
 	mglData x(50,50,50), y(50,50,50), z(50,50,50), c(50,50,50), d(50,50,50);
 	gr->Fill(x,"(x+2)/3*sin(pi*y/2)");	gr->Fill(y,"(x+2)/3*cos(pi*y/2)");	gr->Fill(z,"z");
@@ -427,7 +427,7 @@ const char *mmgl_paramv="new x 20 20 20 '(x+2)/3*sin(pi*y/2)'\n"
 "grid3 x y z z '{r9}':grid3 x y z z '{g9}x':grid3 x y z z '{b9}z'\n"
 "subplot 3 3 6:rotate 40 60:box:flow x y z ex ey ez\n"
 "subplot 3 3 7:rotate 40 60:box:pipe x y z ex ey ez\n";
-void smgl_paramv(mglGraph *gr)	// surface triangulation
+void smgl_paramv(mglGraph *gr)	// parametric plots for vector field
 {
 	mglData x(20,20,20), y(20,20,20), z(20,20,20), ex(20,20,20), ey(20,20,20), ez(20,20,20);
 	gr->Fill(x,"(x+2)/3*sin(pi*y/2)");	gr->Fill(y,"(x+2)/3*cos(pi*y/2)");	gr->Fill(z,"x+z");

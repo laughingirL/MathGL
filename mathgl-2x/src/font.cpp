@@ -619,7 +619,7 @@ bool mglFont::read_data(const char *fname, float *ff, short *wdt, short *lnum,
 	register long i,j,ch,retVal;
 	fp = gzopen(fname,"r");	if(!fp)	return false;	// false if no file
 	// first string is comment (not used), second string have information
-	if(!gzgets(fp,str,256) || !gzgets(fp,str,256))
+	if(!gzgets(fp,str,256) || strncmp(str,"# font",6) || !gzgets(fp,str,256))
 	{	gzclose(fp);	return false;	}
 	retVal = sscanf(str, "%d%f%d", &n, ff, &s);
 	//Check sscanf read all data  (3 items)
@@ -657,11 +657,11 @@ bool mglFont::read_main(const char *fname, unsigned &cur)
 
 	fp = gzopen(fname,"r");	if(!fp)	return false;	// this font must be in any case
 	// first string is comment (not used), second string have information
-	if(!gzgets(fp,str,256) || !gzgets(fp,str,256))
+	if(!gzgets(fp,str,256) || strncmp(str,"# font",6) || !gzgets(fp,str,256))
 	{	gzclose(fp);	return false;	}
 	sscanf(str, "%u%f%u", &numg, fact, &s);
 	fact[1] = fact[2] = fact[3] = fact[0];	// copy default factor for other font styles;
-	Buf = (short *)malloc(s*sizeof(short));	// prealocate buffer
+	Buf = (short *)malloc(s*sizeof(short));	// preallocate buffer
 	memset(Buf,0,s*sizeof(short));
 	if(!Buf)	{	gzclose(fp);	numg=0;	return false;	}
 	// now allocate memory for all fonts

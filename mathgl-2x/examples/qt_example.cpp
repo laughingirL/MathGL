@@ -35,7 +35,7 @@ int sample_d(mglGraph *gr);
 #ifdef PTHREAD_SAMPLE
 #include <pthread.h>
 #endif
-mglPoint pnt;  // some global variable for changable data
+mglPoint pnt;  // some global variable for changeable data
 void *mgl_qt_tmp(void *);
 //-----------------------------------------------------------------------------
 class Foo : public mglDraw

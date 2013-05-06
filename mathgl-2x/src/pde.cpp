@@ -419,7 +419,7 @@ struct mgl_qo3d_ham
 {
 	dual *hxy, *huv, *hxv, *huy, *a;
 	dual *hx, *hy, *hu, *hv, h0;
-	double *dmp;
+	mreal *dmp;
 	mreal *r, dr, dk;
 	mgl_ap *ra;
 	dual (*ham)(mreal u, mreal x, mreal y, mreal z, mreal px, mreal py, mreal pz, void *par);

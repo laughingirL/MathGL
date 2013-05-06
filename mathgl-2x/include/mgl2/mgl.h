@@ -415,7 +415,7 @@ public:
 	/// Calculate 3D coordinate {x,y,z} for screen point {xs,ys}
 	inline mglPoint CalcXYZ(int xs, int ys)
 	{
-		double x,y,z;
+		mreal x,y,z;
 		mgl_calc_xyz(gr,xs,ys,&x,&y,&z);
 		return mglPoint(x,y,z);
 	}
