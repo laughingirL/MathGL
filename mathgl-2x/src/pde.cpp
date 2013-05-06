@@ -176,7 +176,7 @@ HMDT MGL_EXPORT mgl_ode_solve(void (*func)(const mreal *x, mreal *dx, void *par)
 	if(tmax<dt)	return res;	// nothing to do
 	int nt = int(tmax/dt)+1;
 	mgl_data_create(res,n,nt,1);
-	mreal x[n], k1[n], k2[n], k3[n], v[n], hh=dt/2;
+	mreal *x=new mreal[n], *k1=new mreal[n], *k2=new mreal[n], *k3=new mreal[n], *v=new mreal[n], hh=dt/2;
 	register long i,k;
 	// initial conditions
 	for(i=0;i<n;i++)	x[i] = res->a[i] = x0[i];
@@ -192,6 +192,7 @@ HMDT MGL_EXPORT mgl_ode_solve(void (*func)(const mreal *x, mreal *dx, void *par)
 		func(v,k2,par);
 		for(i=0;i<n;i++)	res->a[i+n*k] = x[i] += (k1[i]+k2[i]+2*k3[i])*dt/6;
 	}
+	delete []x;	delete []k1;	delete []k2;	delete []k3;	delete []v;
 	return res;
 }
 //-----------------------------------------------------------------------------
