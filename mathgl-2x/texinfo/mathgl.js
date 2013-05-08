@@ -52,17 +52,17 @@ var mglMouseUp = function()
 {	obj.button = 0;	obj.good = 0;
 	ctx.clearRect(0,0,obj.width,obj.height);
 	mgl_draw_good(obj, ctx);	}
-var mglMouseDown = function()
+var mglMouseDown = function(event)
 {
 	obj.good = 1;
-	obj.mouseX = window.event.clientX;
-	obj.mouseY = window.event.clientY;
-	obj.button = window.event.button+1;
+	obj.mouseX = event.clientX;
+	obj.mouseY = event.clientY;
+	obj.button = event.button+1;
 }
-var mglMouseMove = function()
+var mglMouseMove = function(event)
 {
-	var x = window.event.clientX-obj.mouseX;
-	var y = window.event.clientY-obj.mouseY;
+	var x = event.clientX-obj.mouseX;
+	var y = event.clientY-obj.mouseY;
 	switch(obj.button)
 	{
 	case 1: // rotate
@@ -80,16 +80,10 @@ var mglMouseMove = function()
 		mgl_draw(obj, ctx);
 	}
 }
-var mglMouseWheel = function()
+var mglMouseWheel = function(event)
 {
-	var e = window.event;
-	var d = e.wheelDelta? e.wheelDelta:e.detail*(-120);
-
-/*	var x = window.event.clientX;
-	var y = obj.height-window.event.clientY;
-	mgl_shift_down(obj, -y/obj.height);
-	mgl_shift_right(obj, x/obj.width);*/
-
+//	var e = window.event;
+	var d = event.wheelDelta? event.wheelDelta:event.detail*(-120);
 	mgl_zoom_in(obj, Math.pow(1.002,d));
 	mgl_draw(obj, ctx);
 }

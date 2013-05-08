@@ -109,10 +109,10 @@ Select sample
 <p>You can use mouse with pressed left button for rotation; with pressed middle button for shift; mouse wheel for zoom in/out. Double click will restore original view.</p>
 <center>
 <canvas id="canvas" width="800" height="600"
-	style="border:1px solid #d3d3d3;" onmousemove="mglMouseMove()"
-	onmousedown="mglMouseDown()" onmouseup="mglMouseUp()"
-	onmouseout="mglMouseUp()" onmousewheel="mglMouseWheel()"
-	ondblclick="mglRestore()"></canvas>
+	style="border:1px solid #d3d3d3;" onmousemove="mglMouseMove(event)"
+	onmousedown="mglMouseDown(event)" onmouseup="mglMouseUp(event)"
+	onmouseout="mglMouseUp(event)" onmousewheel="mglMouseWheel(event)"
+	ondblclick="mglRestore(event)"></canvas>
 </center>
 
 <p id="time"></p>
