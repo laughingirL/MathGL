@@ -308,13 +308,21 @@ All C functions are described in the header file @code{#include <mgl2/mgl_cf.h>}
 @item
 @code{HMGL} --- Pointer to class @code{mglGraph} (@pxref{MathGL core}).
 @item
-@code{HMDT} --- Pointer to class @code{mglData} (@pxref{Data processing}).
+@code{HCDT} --- Pointer to class @code{const mglDataA} (@pxref{Data processing}) --- constant data array.
 @item
-@code{HMPR} --- Pointer to class @code{mglParse} (@pxref{mglParse class}).
+@code{HMDT} --- Pointer to class @code{mglData} (@pxref{Data processing}) --- data array of real numbers.
+@item
+@code{HADT} --- Pointer to class @code{mglDataC} (@pxref{Data processing}) --- data array of complex numbers.
+@item
+@code{HMPR} --- Pointer to class @code{mglParse} (@pxref{mglParse class}) --- MGL script parsing.
+@item
+@code{HMEX} --- Pointer to class @code{mglExpr} (@pxref{Evaluate expression}) --- textual formulas for real numbers.
+@item
+@code{HMAX} --- Pointer to class @code{mglExprC} (@pxref{Evaluate expression}) --- textual formulas for complex numbers.
 @end itemize
 These variables contain identifiers for graphics drawing objects and for the data objects.
 
-Fortran functions/subroutines have the same names as C functions. However, there is a difference. Variable of type @code{HMGL, HMDT} must be an integer with sufficient size (@code{integer*4} in the 32-bit operating system or @code{integer*8} in the 64-bit operating system). All C functions are subroutines in Fortran, which are called by operator @code{call}. The exceptions are functions, which return variables of types @code{HMGL} or @code{HMDT}. These functions should be declared as integer in Fortran code. Also, one should keep in mind that strings in Fortran are denoted by @code{'} symbol, not the @code{"} symbol.
+Fortran functions/subroutines have the same names as C functions. However, there is a difference. Variable of type @code{HMGL, HMDT} must be an integer with sufficient size (@code{integer*4} in the 32-bit operating system or @code{integer*8} in the 64-bit operating system). All C functions of type @code{void} are subroutines in Fortran, which are called by operator @code{call}. The exceptions are functions, which return variables of types @code{HMGL} or @code{HMDT}. These functions should be declared as integer in Fortran code. Also, one should keep in mind that strings in Fortran are denoted by @code{'} symbol, not the @code{"} symbol.
 
 @comment  @external{}
 @node C++ interface, , C interface, Interfaces
@@ -322,7 +330,7 @@ Fortran functions/subroutines have the same names as C functions. However, there
 
 MathGL provides the interface to a set of languages via SWIG library. Some of these languages support classes. The typical example is Python -- which is named in this chapter's title. Exactly the same classes are used for high-level C++ API. Its feature is using only inline member-functions what make high-level API to be independent on compiler even for binary build.
 
-There are 3 classes in:
+There are 3 main classes in:
 @itemize
 @item @code{mglGraph}
 -- provide most plotting functions (see @ref{MathGL core}).
@@ -352,4 +360,3 @@ This becomes useful if you create many @code{mglData} objects, for example.
 @end ifclear
 
 @external{}
-

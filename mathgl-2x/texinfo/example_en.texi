@@ -534,7 +534,7 @@ qw.raise_()
 
 @c ------------------------------------------------------------------
 @c @external{}
-@node MathGL and MPI, , MathGL and PyQt, , Basic usage
+@node MathGL and MPI, , MathGL and PyQt, Basic usage
 @subsection MathGL and MPI
 
 For using MathGL in MPI program you just need to: (1) plot its own part of data for each running node; (2) collect resulting graphical information in a single program (for example, at node with rank=0); (3) save it. The sample code below demonstrate this for very simple sample of surface drawing.

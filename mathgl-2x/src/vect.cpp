@@ -139,7 +139,6 @@ void MGL_EXPORT mgl_vect_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const cha
 		c1 = c1<c2 ? c2:c1;	ca+=c1;	cm = cm<c1 ? c1:cm;
 	}
 	ca /= (n*m*l)/(tx*ty);
-//	if(cm>2*ca)	cm = 2*ca;	// disable too narrow grid steps TODO: decide later
 	xm = xm?1./xm:0;	cm = cm?1./cm:0;
 
 
@@ -236,7 +235,6 @@ void MGL_EXPORT mgl_vect_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, 
 		ca+=c1;	cm = cm<c1 ? c1:cm;
 	}
 	ca /= (n*m*l)/(tx*ty*tz);
-//	if(cm>2*ca)	cm = 2*ca;	// disable too narrow grid steps. TODO: decide later
 	xm = xm?1./xm:0;	cm = cm?1./cm:0;
 
 	long n1,n2;
@@ -523,7 +521,6 @@ void MGL_EXPORT mgl_vect3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay,
 		ca+=c1;	cm = cm<c1 ? c1:cm;
 	}
 	ca /= (n*m)/(tx*ty);
-//	if(cm>2*ca)	cm = 2*ca;	// disable too narrow grid steps TODO: decide later
 	xm = xm?1./xm:0;	cm = cm?1./cm:0;
 
 	long n1,n2;

@@ -278,19 +278,17 @@ MathGL имеет быстрый парсер текстовых формул
 @node Interfaces, , Command options, General concepts
 @section Интерфейсы
 
-@c TODO Translate it!!!
-
 @ifset UDAV
-You can use @code{mglParse} class for executing MGL scripts from different languages.
+Вы можете использовать класс @code{mglParse} для выполнения MGL скриптов из других языков программирования.
 @end ifset
 
 @ifclear UDAV
 
-The MathGL library has interfaces for a set of languages. Most of them are based on the C interface via SWIG tool. There are Python, Java, Octave, Lisp, C#, Guile, Lua, Modula 3, Ocaml, Perl, PHP, Pike, R, Ruby, and Tcl interfaces. Also there is a Fortran interface which has a similar set of functions, but slightly different types of arguments (integers instead of pointers). These functions are marked as [C function].
+Библиотека MathGL имеет интерфейсы к ряду языков программирования. Большинство из них основано на С интерфейсе с использованием SWIG. Это Python, Java, Octave, Lisp, C#, Guile, Lua, Modula 3, Ocaml, Perl, PHP, Pike, R, Ruby, и Tcl интерфейсы. Также есть Fortran интерфейс, который имеет схожий набор функций, но слегка различающиеся типы аргументов (целые вместо указателей). Эти функции отмечены как [C function].
 
-Some of the languages listed above support classes (like C++ or Python). The name of functions for them is the same as in C++ (see @ref{MathGL core} and @ref{Data processing}) and marked like [Method on mglGraph].
+Некоторые языки поддерживают классы (подобно C++ или Python). Имена функций для них такие же как в С++ (см. @ref{MathGL core} и @ref{Data processing}) и отмечены, например, так [Method on mglGraph].
 
-Finally, a special command language MGL (see @ref{MGL scripts}) was written for a faster access to plotting functions. Corresponding scripts can be executed separately (by UDAV, mglconv, mglview and so on) or from the C/C++/Python/... code (@pxref{mglParse class}).
+Наконец, специальный командный язык MGL (см. @ref{MGL scripts}) был создан для быстрого доступа к функциям рисования. Соответствующие скрипты могут быть выполнены самостоятельно (с помощью UDAV, mglconv, mglview и т.д.) или из программы на языке C/C++/Python/... (см. @ref{mglParse class}).
 
 @menu
 * C interface::
@@ -299,57 +297,63 @@ Finally, a special command language MGL (see @ref{MGL scripts}) was written for 
 
 @comment  @external{}
 @node C interface, C++ interface, , Interfaces
-@subsection C/Fortran interface
+@subsection C/Fortran интерфейс
 
-The C interface is a base for many other interfaces. It contains the pure C functions for most of the methods of MathGL classes. In distinction to C++ classes, C functions must have an argument HMGL (for graphics) and/or HMDT (for data arrays), which specifies the object for drawing or manipulating (changing). So, firstly, the user has to create this object by the function @code{mgl_create_*()} and has to delete it after the use by function @code{mgl_delete_*()}.
+C интерфейс -- основа для многих других интерфейсов. Он содержит функции С для всех методов MathGL. В отличие от C++ классов, C функции содержат обязательный(ые) аргумент(ы) типа HMGL (для графики) и/или HCDT/HMDT/HADT (для массивов данных), который указывают на объект для рисования или изменения. Поэтому перед использованием их необходимо создать с помощью функции @code{mgl_create_*()}, и удалить после использования (или в конце программы) с помощью функции @code{mgl_delete_*()}.
 
-All C functions are described in the header file @code{#include <mgl2/mgl_cf.h>} and use variables of the following types:
+Все C функции описаны в заголовочном файле @code{#include <mgl2/mgl_cf.h>} и используют переменные следующих типов:
 @itemize
 @item
-@code{HMGL} --- Pointer to class @code{mglGraph} (@pxref{MathGL core}).
+@code{HMGL} --- Указатель на класс @code{mglGraph} (см. @ref{MathGL core}).
 @item
-@code{HMDT} --- Pointer to class @code{mglData} (@pxref{Data processing}).
+@code{HCDT} --- Указатель на класс @code{const mglDataA} (см. @ref{Data processing}) --- неизменяемые массивы данных.
 @item
-@code{HMPR} --- Pointer to class @code{mglParse} (@pxref{mglParse class}).
+@code{HMDT} --- Указатель на класс @code{mglData} (см. @ref{Data processing}) --- массивы данных с действительными числами.
+@item
+@code{HADT} --- Указатель на класс @code{mglDataC} (см. @ref{Data processing}) --- массивы данных с комплексными числами.
+@item
+@code{HMPR} --- Указатель на класс @code{mglParse} (см. @ref{mglParse class}) --- выполнение MGL скриптов.
+@item
+@code{HMEX} --- Указатель на класс @code{mglExpr} (см. @ref{Evaluate expression}) --- текстовые формулы для действительных чисел.
+@item
+@code{HMAX} --- Указатель на класс @code{mglExprC} (см. @ref{Evaluate expression}) --- текстовые формулы для комплексных чисел.
 @end itemize
-These variables contain identifiers for graphics drawing objects and for the data objects.
 
-Fortran functions/subroutines have the same names as C functions. However, there is a difference. Variable of type @code{HMGL, HMDT} must be an integer with sufficient size (@code{integer*4} in the 32-bit operating system or @code{integer*8} in the 64-bit operating system). All C functions are subroutines in Fortran, which are called by operator @code{call}. The exceptions are functions, which return variables of types @code{HMGL} or @code{HMDT}. These functions should be declared as integer in Fortran code. Also, one should keep in mind that strings in Fortran are denoted by @code{'} symbol, not the @code{"} symbol.
+Фортрановские функции и подпрограммы имеют такие же имена как функции С. Однако есть отличие. Переменные типов @code{HMGL, HCDT, HMDT, ...} должны быть целыми с достаточной разрядностью (@code{integer*4} для 32-битной операционной системы или @code{integer*8} для 64-битной). Все C функции типа @code{void} --- подпрограммы на Фортране и должны вызываться оператором @code{call}. Прочие функции, возвращающие тип @code{HMGL} или @code{HMDT} и т.п. должны быть объявлены в Фортране как возвращающие целое нужной разрядности. Также необходимо иметь в виду, что строки в Фортране отделяются символом @code{'}, а не @code{"}.
 
 @comment  @external{}
 @node C++ interface, , C interface, Interfaces
-@subsection C++/Python interface
+@subsection C++/Python интерфейс
 
-MathGL provides the interface to a set of languages via SWIG library. Some of these languages support classes. The typical example is Python -- which is named in this chapter's title. Exactly the same classes are used for high-level C++ API. Its feature is using only inline member-functions what make high-level API to be independent on compiler even for binary build.
+MathGL имеет интерфейс на основе классов (объектов с членами-функциями) с использованием библиотеки SWIG. Типичный пример -- Python, имя которого использовано в заголовке раздела. В точности те же классы используются и в C++ API. Отмечу, что С++ классы содержат только inline члены-функции, что делает С++ API независимым от компилятора даже для бинарной версии.
 
-There are 3 classes in:
+Есть 3 основных класса:
 @itemize
 @item @code{mglGraph}
--- provide most plotting functions (see @ref{MathGL core}).
+-- обеспечивает вывод графики (см. @ref{MathGL core}).
 @item @code{mglData}
--- provide base data processing (see @ref{Data processing}). It have an additional feature to access data values. You can use a construct like this: @code{dat[i]=sth;} or @code{sth=dat[i]} where flat representation of data is used (i.e., @var{i} can be in range 0...nx*nx*nz-1). You can also import NumPy arrays as input arguments in Python: @code{mgl_dat = mglData(numpy_dat);}.
+-- обеспечивает обработку данных (см. @ref{Data processing}). Класс имеет возможность прямого доступа к данным с помощью конструкции вида: @code{dat[i]=sth;} или @code{sth=dat[i]}, где используется "плоское" представление данных (т.е., @var{i} может быть в диапазоне 0...nx*nx*nz-1). Также можно импортировать массивы NumPy в Python: @code{mgl_dat = mglData(numpy_dat);}.
 @item @code{mglParse}
--- provide functions for parsing MGL scripts (see @ref{MGL scripts}).
+-- обеспечивает выполнение скриптов MGL (см. @ref{MGL scripts}).
 @end itemize
 
 
-To use Python classes just execute @samp{import mathgl}. The simplest example will be:
+Для использования в Python достаточно выполнить @samp{import mathgl}. Простейший пример имеет вид:
 @verbatim
 import mathgl
 a=mathgl.mglGraph()
 a.Box()
 a.WritePNG("test.png")
 @end verbatim
-Alternatively you can import all classes from @code{mathgl} module and easily access MathGL classes like this:
+Также можно импортировать все классы из модуля @code{mathgl} и обеспечить более легкий доступ к MathGL:
 @verbatim
 from mathgl import *
 a=mglGraph()
 a.Box()
 a.WritePNG("test.png")
 @end verbatim
-This becomes useful if you create many @code{mglData} objects, for example.
+Это становится более полезным если, например, вы создаете много объектов данных @code{mglData}.
 
 @end ifclear
 
 @external{}
-

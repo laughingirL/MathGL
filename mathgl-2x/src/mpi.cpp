@@ -27,7 +27,9 @@ void MGL_EXPORT mgl_mpi_recv(HMGL gr, int id)
 	MPI_Recv(zz,3*n,MPI_FLOAT,id,TAG_DATA_Z,MCW,&status);
 	MPI_Recv(cc,12*n,MPI_CHAR,id,TAG_DATA_C,MCW,&status);
 	MPI_Recv(oi,n,MPI_INT,id,TAG_DATA_C,MCW,&status);
-	// TODO check status for errors
+	// NOTE: No need for check errors. The matter is MPI docs:
+	// "All MPI routines return an error value. Before the value is returned,
+	// the current MPI error handler is called. By default, this error handler aborts the MPI job."
 	register long i,j,k;
 	for(k=0;k<n;k++)
 	{	// i0=x+Width*(Height-1-y)

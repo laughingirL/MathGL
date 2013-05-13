@@ -90,7 +90,7 @@ Sets @var{N}-th script argument to answer which give the user on the @var{questi
 Sets @var{N}-th script argument to @var{smth}. Note, that @var{smth} is used as is (with @samp{'} symbols if present). Here @var{N} is digit (0...9) or alpha (a...z).
 @end deftypefn
 @deftypefn {MGL command} {} define name smth
-Create scalar variable @code{name} which have the numeric value of @code{smth}. Later you can use this variable as usual number. Here @var{N} is digit (0...9) or alpha (a...z).
+Create scalar variable @code{name} which have the numeric value of @code{smth}. Later you can use this variable as usual number.
 @end deftypefn
 @cindex defchr
 @anchor{defchr}
@@ -181,12 +181,12 @@ Terminate execution.
 @c ------------------------------------------------------------------
 @external{}
 @node mglParse class, , Program flow commands, MGL scripts
-@section mglParse class
+@section Класс mglParse
 @cindex mglParse
 
 Class for parsing and executing MGL script. This class is defined in @code{#include <mgl2/mgl.h>}.
 
-Class mglParse is the interpreter for MGL scripts. The main function of mglParse class is @code{Execute()}. Exactly this function parses and executes the script string-by-string. Also there are subservient functions for the finding and creation of a variable. These functions can be useful for displaying values of variables (arrays) in some external program (in window, for example). Function @code{AllowSetSize()} allows one to prevent changing the size of the  picture inside the script (forbids the MGL command @code{setsize}).
+The main function of mglParse class is @code{Execute()}. Exactly this function parses and executes the script string-by-string. Also there are subservient functions for the finding and creation of a variable (object derived from @code{mglData} class, see @ref{MGL variables}). These functions can be useful for displaying values of variables (arrays) in some external object (like, window) or for providing access to internal data. Function @code{AllowSetSize()} allows one to prevent changing the size of the  picture inside the script (forbids the MGL command @code{setsize}).
 
 @c Note an important feature -- if user defines function @var{func} in variable then it will be called before the destroying of this variable (@pxref{mglVar class}).
 
@@ -257,7 +257,7 @@ Function returns the pointer to variable with name @var{name}. If variable is ab
 @deftypefnx{Method on @code{mglParse} (C++)} @code{void} DeleteVar (@code{const wchar_t *}name)
 @deftypefnx {C function} @code{void} mgl_parser_del_var (@code{HMPR} p, @code{const char *}name)
 @deftypefnx {C function} @code{void} mgl_parser_del_varw (@code{HMPR} p, @code{const wchar_t *}name)
-Function delete the variable specified by its name or by its pointer.
+Function delete the variable with given @var{name}.
 @end deftypefn
 
 @deftypefn{Method on @code{mglParse} (C++)} @code{void} DeleteAll ()

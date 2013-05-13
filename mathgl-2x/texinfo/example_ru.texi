@@ -1,9 +1,9 @@
 @c ------------------------------------------------------------------
-@chapter MathGL examples
+@chapter Примеры MathGL
 
-This chapter contain information about basic and advanced MathGL, hints and samples for all types of graphics. I recommend you read first 2 sections one after another and at least look on @ref{Hints} section. Also I recommend you to look at @ref{General concepts} and @ref{FAQ}.
+В данной главе рассмотрены базовые и продвинутые возможности MathGL, даны советы по использованию и примеры для всех типов графиков. Я рекомендую прочитать вначале первые 2 раздела и посмотреть на раздел @ref{Hints}. Также рекомендую прочитать @ref{General concepts} и @ref{FAQ}.
 
-Note, that MathGL v.2.* have only 2 end-user interfaces: one for C/Fortran and similar languages which don't support classes, another one for C++/Python/Octave and similar languages which support classes. So, most of samples placed in this chapter can be run as is (after minor changes due to different syntaxes for different languages). For example, the C++ code
+Отмечу, что MathGL v.2.* имеет только пользовательских 2 интерфейса: один для языков подобных C или Fortran (не поддерживающих классы), другой для языков подобных C++/Python/Octave, которые поддерживают классы. При этом все классы являются "оберткой" С-ого интерфейсы, а функции-члены классов -- inline вызовами функций С. Поэтому, в большинстве примеров в этой главе я буду приводить только один вариант кода, который после минимальных изменений синтаксиса может быть применен для других языков. Например, код на языке C++
 @verbatim
 #include <mgl2/mgl.h>
 int main()
@@ -13,20 +13,20 @@ int main()
   gr.WriteFrame("test.png");
 }
 @end verbatim
-in Python will be as
+на Python будет выглядеть как
 @verbatim
 from mathgl import *
 gr = mglGraph();
 gr.FPlot("sin(pi*x)");
 gr.WriteFrame("test.png");
 @end verbatim
-in Octave will be as (you need first install MathGL package by command @code{octave:1> pkg install /usr/share/mathgl/octave/mathgl.tar.gz} from @code{sudo octave})
+в Octave он будет почти тем же
 @verbatim
 gr = mglGraph();
 gr.FPlot("sin(pi*x)");
 gr.WriteFrame("test.png");
 @end verbatim
-in C will be as
+в C необходимо будет найти С-ые аналоги функций (из документации) и указать все их аргументы явно
 @verbatim
 #include <mgl2/mgl_cf.h>
 int main()
@@ -37,7 +37,7 @@ int main()
   mgl_delete_graph(gr);
 }
 @end verbatim
-in Fortran will be as
+в Fortran помимо этого придется определить функции возвращающие указатели на объекты как функции возвращающие целое
 @verbatim
 integer gr, mgl_create_graph
 gr = mgl_create_graph(600,400);
@@ -45,7 +45,7 @@ call mgl_fplot(gr,'sin(pi*x)','','');
 call mgl_write_frame(gr,'test.png','');
 call mgl_delete_graph(gr);
 @end verbatim
-and so on.
+и т.д.
 
 
 
@@ -65,35 +65,34 @@ and so on.
 @c ------------------------------------------------------------------
 @external{}
 @node Basic usage, Advanced usage, , Examples
-@section Basic usage
+@section Основы использования
 
-MathGL library can be used by several manners. Each has positive and negative sides:
+Библиотеку MathGL можно использовать несколькими способами, каждый из которых имеет свои достоинства и недостатки:
 @itemize @bullet
 @item
-@emph{Using of MathGL library features for creating graphical window (requires FLTK, Qt or GLUT libraries).}
+@emph{Использовать возможности MathGL для создания графического окна (требуется FLTK, Qt или GLUT библиотеки).}
 
-Positive side is the possibility to view the plot at once and to modify it (rotate, zoom or switch on transparency or lighting) by hand or by mouse. Negative sides are: the need  of X-terminal and limitation consisting in working with the only one set of data at a time.
-
-@item
-@emph{Direct writing to file in bitmap or vector format without creation of graphical window.}
-
-Positive aspects are: batch processing of similar data set (for example, a set of resulting data files for different calculation parameters), running from the console program (including the cluster calculation), fast and automated drawing, saving pictures for further analysis (or demonstration). Negative sides are: the usage of the external program for picture viewing. Also, the data plotting is non-visual. So, you have to imagine the picture (view angles, lighting and so on) before the plotting. I recommend to use graphical window for determining the optimal parameters of plotting on the base of some typical data set. And later use these parameters for batch processing in console program.
+Положительная сторона состоит в возможности сразу увидеть график и быстро его мышкой поправить (повернуть, приблизить, выключить прозрачность или освещение и т.д.). Однако, в этом случае требуется наличие графической системы (нельзя запускать на удаленной машине), и работать можно только с одним набором данных одновременно.
 
 @item
-@emph{Drawing in memory with the following displaying by other graphical program.}
+@emph{Прямой вывод в файл в растровом или векторном формате, без создания графического окна.}
 
-In this case the programmer has more freedom in selecting the window libraries (not only FLTK, Qt or GLUT), in positioning and surroundings control and so on. I recommend to use such way for ``stand alone'' programs.
+Достоинства такого подхода: пакетная обработка похожих данных (например, набора расчетных файлов при различных условиях), возможность запуска из консольной программы (включая запуск на удаленном компьютере/сервере/кластере), более быстрая и автоматизированная отрисовка, сохранение графиков для последующего анализа непосредственно во время расчета. К недостаткам подхода можно отнести: использование внешней программы просмотра для построенных графиков, необходимость заранее представить картинку (углы просмотра, освещение и пр.). Я рекомендую вначале использовать графическое окно для выбора оптимальных параметров графика, а потом использовать их для пакетной обработки.
 
 @item
-@emph{Using FLTK or Qt widgets provided by MathGL}
+@emph{Рисовать график в памяти с последующим выводом на экран другой графической программой.}
 
-Here one can use a set of standard widgets which support export to many file formats, copying to clipboard, handle mouse and so on. 
+В этом случае программист имеет максимум свободы в выборе графической библиотеки (не только FLTK, Qt или GLUT), в расположении и выборе элементов управления графиком и т.д. Я рекомендую этот вариант для "самодостаточного" приложения.
+
+@item
+@emph{Использовать FLTK или Qt виджеты, предоставляемые MathGL}
+
+Вы также можете использовать ряд элементов управления (виджетов), которые позволяют отобразить график, сохранить его в файл в различных форматах или скопировать в буфер обмена, обработать движение/клики мышкой и пр.
 @end itemize
 
-MathGL drawing can be created not only by object oriented languages (like, C++ or Python), but also by pure C or Fortran-like languages. The usage of last one is mostly identical to usage of classes (except the different function names). But there are some differences. C functions must have argument HMGL (for graphics) and/or HMDT (for data arrays) which specifies the object for drawing or manipulating (changing). Fortran users may regard these variables as integer. So, firstly the user has to create this object by function mgl_create_*() and has to delete it after the using by function mgl_delete_*().
-@c Also, all arguments of C function have to be defined. So there are several functions with practically identical names doing practically the same. But some of them have simplified interface for the quick plotting and some of them have access to all plotting parameters for manual tunning.
+Графики MathGL могут быть созданы не только с помощью объектно-ориентированных языков (например, C++ или Python), но и на C или Fortran подобных языках. Использование последних в основном идентичны использованию классов (за исключением различных имен функций). Различие состоит в обязательном предварительном создании (и удалении после использования) объектов типа HMGL (для графики) и/или HMDT (для данных). Пользователи Fortran могут считать эти переменные целочисленными с достаточной разрядностью для используемой операционной системы.
 
-Let me consider the aforesaid in more detail.
+Рассмотрим вышесказанное подробно.
 
 @menu
 * Using MathGL window::
@@ -109,7 +108,7 @@ Let me consider the aforesaid in more detail.
 @c ------------------------------------------------------------------
 @c @external{}
 @node Using MathGL window, Drawing to file, , Basic usage
-@subsection Using MathGL window
+@subsection Использование окон MathGL
 @cindex window
 @cindex widgets
 

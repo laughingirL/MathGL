@@ -2,11 +2,9 @@
 @c ------------------------------------------------------------------
 @chapter Скрипты MGL
 
-@c TODO Translate it!
-
-MathGL library supports the simplest scripts for data handling and plotting. These scripts can be used independently (with the help of UDAV, mglconv, mglview programs and others
+MathGL имеет встроенный скриптовый язык MGL для обработки и отображения данных. Скрипты MGL могут быть выполнены независимо (с помощью программ UDAV, mglconv, mglview и др.
 @ifclear UDAV
-, @pxref{Utilities}) or in the frame of the library using.
+, см. @ref{Utilities}) или с использованием вызовов библиотеки.
 @end ifclear
 
 @ifclear UDAV
@@ -73,113 +71,114 @@ MathGL library supports the simplest scripts for data handling and plotting. The
 @c ------------------------------------------------------------------
 @external{}
 @node Program flow commands, MGL definition, MGL scripts
-@section Program flow commands
+@section Управление ходом выполнения
 
-Below I show commands to control program flow, like, conditions, loops, define script arguments and so on. Other commands can be found in chapters @ref{MathGL core} and @ref{Data processing}. Note, that some of program flow commands (like @ref{define}, @ref{ask}, @ref{call}, @ref{for}, @ref{func}) should be placed alone in the string.
+Ниже собраны команды, управляющие порядком выполнения других команд (условия, циклы, подпрограммы), (пере-)определяют аргументы скрипта и пр. Прочие команды могут быть найдены в главах @ref{MathGL core} и @ref{Data processing}. Отмечу, что некоторые из команд (например, @ref{define}, @ref{ask}, @ref{call}, @ref{for}, @ref{func}) должны быть расположены на отдельной строке.
 
 @cindex chdir
 @anchor{chdir}
 @deftypefn {MGL command} {} chdir 'path'
-Changes the current directory to @var{path}.
+Переходит в папку @var{path}.
 @end deftypefn
 
 @cindex ask
 @anchor{ask}
 @deftypefn {MGL command} {} ask $N 'question'
-Sets @var{N}-th script argument to answer which give the user on the @var{question}. Usually this show dialog with question where user can enter some text as answer. Here @var{N} is digit (0...9) or alpha (a...z).
+Задает @var{N}-ый аргумент скрипта равным ответу пользователя на вопрос @var{question}. Обычно команда показывает диалог с вопросом и полем ввода текста ответа. Здесь @var{N} это цифра (0...9) или буква (a...z).
 @end deftypefn
 
 @cindex define
 @anchor{define}
 @deftypefn {MGL command} {} define $N smth
-Sets @var{N}-th script argument to @var{smth}. Note, that @var{smth} is used as is (with @samp{'} symbols if present). Here @var{N} is digit (0...9) or alpha (a...z).
+Задает @var{N}-ый аргумент скрипта равным @var{smth}. Отмечу, что @var{smth} используется как есть (с символами @samp{'} если присутствуют). Выполняется только подстановка других макроопределений $0...$9, $a...$z. Здесь @var{N} это цифра (0...9) или буква (a...z).
 @end deftypefn
 @deftypefn {MGL command} {} define name smth
-Create scalar variable @code{name} which have the numeric value of @code{smth}. Later you can use this variable as usual number. Here @var{N} is digit (0...9) or alpha (a...z).
+Определяет константу (скаляр) с именем @code{name} и числовым значением @code{smth}. Позднее она может быть использована как обычное число.
 @end deftypefn
 @cindex defchr
 @anchor{defchr}
 @deftypefn {MGL command} {} defchr $N smth
-Sets @var{N}-th script argument to character with value evaluated from @var{smth}. Here @var{N} is digit (0...9) or alpha (a...z).
+Задает @var{N}-ый аргумент скрипта равным символу с UTF кодом @var{smth}. Здесь @var{N} это цифра (0...9) или буква (a...z).
 @end deftypefn
 @cindex defnum
 @anchor{defnum}
 @deftypefn {MGL command} {} defnum $N smth
-Sets @var{N}-th script argument to number with value evaluated from @var{smth}. Here @var{N} is digit (0...9) or alpha (a...z).
+Задает @var{N}-ый аргумент скрипта равным числовому значению @var{smth}. Здесь @var{N} это цифра (0...9) или буква (a...z).
 @end deftypefn
 @cindex defpal
 @anchor{defpal}
 @deftypefn {MGL command} {} defpal $N smth
-Sets @var{N}-th script argument to palette character at position evaluated from @var{smth}. Here @var{N} is digit (0...9) or alpha (a...z).
+Задает @var{N}-ый аргумент скрипта равным символу палитры с индексом, найденным из @var{smth}. Здесь @var{N} это цифра (0...9) или буква (a...z).
 @end deftypefn
 
 @cindex call
 @anchor{call}
 @deftypefn {MGL command} {} call 'fname' [ARG1 ARG2 ... ARG9]
-Executes function @var{fname} (or script if function is not found). Optional arguments will be passed to functions. See also @ref{func}.
+Переходит к выполнению (вызывает) подпрограммы @var{fname} (или внешнего скрипта, если функция не была найдена). Опциональные аргументы передаются в подпрограмму. См. также @ref{func}.
 @end deftypefn
 @cindex func
 @anchor{func}
 @deftypefn {MGL command} {} func 'fname' [narg=0]
-Define the function @var{fname} and number of required arguments. The arguments will be placed in script parameters $1, $2, ... $9. Note, you should stop script execution before function definition(s) by command @ref{stop}. See also @ref{return}.
+Определяет подпрограмму с именем @var{fname} и задает число требуемых аргументов. Аргументы будут помещены в параметры скрипта $1, $2, ... $9. Отмечу, что выполнение основной программы должно быть остановлено до начала определений подпрограмм. См. также @ref{stop},  @ref{return}.
+
 @end deftypefn
 @cindex return
 @anchor{return}
 @deftypefn {MGL command} {} return
-Return from the function. See also @ref{func}.
+Возвращается из подпрограммы. См. также @ref{func}.
 @end deftypefn
 
 
 @cindex if
 @anchor{if}
 @deftypefn {MGL command} {} if dat 'cond'
-Starts block which will be executed if @var{dat} satisfy to @var{cond}.
+Начинает блок команд, выполняемый если каждый элемент @var{dat} удовлетворяет условию @var{cond}.
 @end deftypefn
 @deftypefn {MGL command} {} if @code{val}
-Starts block which will be executed if @code{val} is nonzero.
+Начинает блок команд, выполняемый если @code{val} не ноль.
 @end deftypefn
 @cindex elseif
 @anchor{elseif}
 @deftypefn {MGL command} {} elseif dat 'cond'
-Starts block which will be executed if previous @code{if} or @code{elseif} is false and @var{dat} satisfy to @var{cond}.
+Начинает блок команд, выполняемый если предыдущий @code{if} или @code{elseif} не был выполнен и каждый элемент @var{dat} удовлетворяет условию @var{cond}.
 @end deftypefn
 @deftypefn {MGL command} {} elseif @code{val}
-Starts block which will be executed if previous @code{if} or @code{elseif} is false and @code{val} is nonzero.
+Начинает блок команд, выполняемый если предыдущий @code{if} или @code{elseif} не был выполнен и @code{val} не ноль.
 @end deftypefn
 @cindex else
 @anchor{else}
-@deftypefn {MGL command} {} else
-Starts block which will be executed if previous @code{if} or @code{elseif} is false.
+@deftypefn {Команда MGL} {} else
+Начинает блок команд, выполняемый если предыдущий @code{if} или @code{elseif} не был выполнен.
 @end deftypefn
 @cindex endif
 @anchor{endif}
-@deftypefn {MGL command} {} endif
-Finishes @code{if/elseif/else} block.
+@deftypefn {Команда MGL} {} endif
+Заканчивает определение блока @code{if/elseif/else}.
 @end deftypefn
 
 @cindex for
 @anchor{for}
 @deftypefn {MGL command} {} for $N @code{v1 v2 [dv=1]}
-Starts cycle with $@var{N}-th argument changing from @var{v1} to @var{v2} with the step @var{dv}. Here @var{N} is digit (0...9) or alpha (a...z).
+Начинает блок команд, выполняемый в цикле с $@var{N}-ым аргументом изменяющимся от @var{v1} до @var{v2} с шагом @var{dv}. Здесь @var{N} это цифра (0...9) или буква (a...z).
 @end deftypefn
-@deftypefn {MGL command} {} for $N dat
-Starts cycle with $@var{N}-th argument changing for @var{dat} values. Here @var{N} is digit (0...9) or alpha (a...z).
+@deftypefn {Команда MGL} {} for $N dat
+Начинает блок команд, выполняемый в цикле с $@var{N}-ым аргументом пробегающим значения массива @var{dat}. Здесь @var{N} это цифра (0...9) или буква (a...z).
 @end deftypefn
 @cindex next
 @anchor{next}
-@deftypefn {MGL command} {} next
-Finishes @code{for} cycle.
+@deftypefn {Команда MGL} {} next
+Заканчивает блок цикла @code{for}.
 @end deftypefn
 
 @cindex once
 @anchor{once}
 @deftypefn {MGL command} {} once @code{val}
-The code between @code{once on} and @code{once off} will be executed only once. Useful for large data manipulation in programs like UDAV.
+Определяет код (между @code{once on} и @code{once off}) который будет выполнен только один раз. Полезно для работы с большими данными в программах типа UDAV.
 @end deftypefn
 @cindex stop
 @anchor{stop}
 @deftypefn {MGL command} {} stop
-Terminate execution.
+Останавливает выполнение скрипта.
 @end deftypefn
 
 @ifclear UDAV
@@ -189,134 +188,133 @@ Terminate execution.
 @section mglParse class
 @cindex mglParse
 
-Class for parsing and executing MGL script. This class is defined in @code{#include <mgl2/mgl.h>}.
+Класс разбирает и выполняет скрипты MGL. Он определен в @code{#include <mgl2/mgl.h>}.
 
-Class mglParse is the interpreter for MGL scripts. The main function of mglParse class is @code{Execute()}. Exactly this function parses and executes the script string-by-string. Also there are subservient functions for the finding and creation of a variable. These functions can be useful for displaying values of variables (arrays) in some external program (in window, for example). Function @code{AllowSetSize()} allows one to prevent changing the size of the  picture inside the script (forbids the MGL command @code{setsize}).
+Основная функция класса mglParse -- @code{Execute()}, выполняющая построчный разбор скрипта. Также есть вспомогательные функции для поиска и создания переменных MGL (объектов, производных от @code{mglData}, см. @ref{MGL variables}). Эти функции полезны для отображения значений массивов во внешних объектах (например, в отдельном окне) или для предоставления доступа к внутренним массивам. Функция @code{AllowSetSize()} позволяет запретить изменение размера картинки (запрещает команду @code{setsize}). Функция @code{AllowFileIO()} позволяет запретить доступ к файлам на диске.
 
 @c Note an important feature -- if user defines function @var{func} in variable then it will be called before the destroying of this variable (@pxref{mglVar class}).
 
-@deftypefn {Constructor on @code{mglParse}} @code{} mglParse (@code{bool} setsize=@code{false})
-@deftypefnx {Constructor on @code{mglParse}} @code{} mglParse (@code{HMPR} pr)
-@deftypefnx {Constructor on @code{mglParse}} @code{} mglParse (@code{mglParse &}pr)
-@deftypefnx {C function} @code{HMPR} mgl_create_parser ()
-Constructor initializes all values with zero and set @var{AllowSetSize} value.
+@deftypefn {Конструктор класса @code{mglParse}} @code{} mglParse (@code{bool} setsize=@code{false})
+@deftypefnx {Конструктор класса @code{mglParse}} @code{} mglParse (@code{HMPR} pr)
+@deftypefnx {Конструктор класса @code{mglParse}} @code{} mglParse (@code{mglParse &}pr)
+@deftypefnx {Функция С} @code{HMPR} mgl_create_parser ()
+Создает экземпляр класса @code{mglParse} и устанавливает значение @var{AllowSetSize}.
 @end deftypefn
 
-@deftypefn {Destructor on @code{mglParse}} @code{} ~mglParse ()
-@deftypefnx {C function} @code{void} mgl_delete_parser (@code{HMPR} p)
-Destructor delete parser
+@deftypefn {Деструктор класса @code{mglParse}} @code{} ~mglParse ()
+@deftypefnx {Функция С} @code{void} mgl_delete_parser (@code{HMPR} p)
+Удаляет экземпляр класса.
 @end deftypefn
 
-@deftypefn {Method on @code{mglParse}} @code{HMPR} Self ()
-Returns the pointer to internal object of type @code{HMPR}.
+@deftypefn {Метод класса @code{mglParse}} @code{HMPR} Self ()
+Возвращает указатель на используемый объект типа @code{HMPR}.
 @end deftypefn
 
-@deftypefn {Method on @code{mglParse}} @code{void} Execute (@code{mglGraph *}gr, @code{const char *}text)
-@deftypefnx{Method on @code{mglParse}} @code{void} Execute (@code{mglGraph *}gr, @code{const wchar_t *}text)
-@deftypefnx {C function} @code{void} mgl_parse_text (@code{HMGL} gr, @code{HMPR} p, @code{const char *}text)
-@deftypefnx {C function} @code{void} mgl_parse_textw (@code{HMGL} gr, @code{HMPR} p, @code{const wchar_t *}text)
-Main function in the class. Function parse and execute line-by-line MGL script in array @var{text}. Lines are separated by newline symbol @samp{\n} as usual.
+@deftypefn {Метод класса @code{mglParse}} @code{void} Execute (@code{mglGraph *}gr, @code{const char *}text)
+@deftypefnx{Метод класса @code{mglParse}} @code{void} Execute (@code{mglGraph *}gr, @code{const wchar_t *}text)
+@deftypefnx {Функция С} @code{void} mgl_parse_text (@code{HMGL} gr, @code{HMPR} p, @code{const char *}text)
+@deftypefnx {Функция С} @code{void} mgl_parse_textw (@code{HMGL} gr, @code{HMPR} p, @code{const wchar_t *}text)
+Выполняет построчно скрипт MGL, содержащийся в @var{text}. Строки считаются разделенными символом @samp{\n}. Это основная функция класса.
 @end deftypefn
 
-@deftypefn {Method on @code{mglParse}} @code{void} Execute (@code{mglGraph *}gr, @code{FILE *}fp, @code{bool} print=@code{false})
-@deftypefnx {C function} @code{void} mgl_parse_file (@code{HMGL} gr, @code{HMPR} p, @code{FILE *}fp, @code{int} print)
-The same as previous but read script from the file @var{fp}. If @var{print}=@code{true} then all warnings and information will be printed in stdout.
+@deftypefn {Метод класса @code{mglParse}} @code{void} Execute (@code{mglGraph *}gr, @code{FILE *}fp, @code{bool} print=@code{false})
+@deftypefnx {Функция С} @code{void} mgl_parse_file (@code{HMGL} gr, @code{HMPR} p, @code{FILE *}fp, @code{int} print)
+Аналогично предыдущему, но скрипт читается из файла @var{fp}. Если @var{print}=@code{true}, то предупреждения и информационные сообщения печатаются в stdout.
 @end deftypefn
 
-@deftypefn {Method on @code{mglParse}} @code{int} Parse (@code{mglGraph *}gr, @code{const char *}str, @code{long} pos=@code{0})
-@deftypefnx {Method on @code{mglParse}} @code{int} Parse (@code{mglGraph *}gr, @code{const wchar_t *}str, @code{long} pos=@code{0})
-@deftypefnx {C function} @code{int} mgl_parse_line (@code{HMGL} gr, @code{HMPR} p, @code{const char *}str, @code{int} pos)
-@deftypefnx {C function} @code{int} mgl_parse_linew (@code{HMGL} gr, @code{HMPR} p, @code{const wchar_t *}str, @code{int} pos)
-Function parses the string @var{str} and executes it by  using @var{gr} as a graphics plotter. Returns the value depending on an error presence in the string @var{str}: 0 -- no error, 1 -- wrong command argument(s), 2 -- unknown command, 3 -- string is too long. Optional argument @var{pos} allows to save the string position in the document (or file) for using @code{for|next} command.
+@deftypefn {Метод класса @code{mglParse}} @code{int} Parse (@code{mglGraph *}gr, @code{const char *}str, @code{long} pos=@code{0})
+@deftypefnx {Метод класса @code{mglParse}} @code{int} Parse (@code{mglGraph *}gr, @code{const wchar_t *}str, @code{long} pos=@code{0})
+@deftypefnx {Функция С} @code{int} mgl_parse_line (@code{HMGL} gr, @code{HMPR} p, @code{const char *}str, @code{int} pos)
+@deftypefnx {Функция С} @code{int} mgl_parse_linew (@code{HMGL} gr, @code{HMPR} p, @code{const wchar_t *}str, @code{int} pos)
+Выполняет строку @var{str} с выводом графики на @var{gr}. Возвращает код ошибки: 0 -- нет ошибок, 1 -- неправильные аргументы, 2 -- неизвестная команда, 3 -- строка слишком длинная. Аргумент @var{pos} задает позицию строки в документе/файле для использования в команде @ref{for}.
 @end deftypefn
 
-@deftypefn {Method on @code{mglParse}} @code{mglData} Calc (@code{const char *}formula)
-@deftypefnx {Method on @code{mglParse}} @code{mglData} Calc (@code{const wchar_t *}formula)
-@deftypefnx {C function} @code{HMDT} mgl_parser_calc (@code{HMPR} p, @code{const char *}formula)
-@deftypefnx {C function} @code{HMDT} mgl_parser_calcw (@code{HMPR} p, @code{const wchar_t *}formula)
-Function parses the string @var{formula} and return resulting data array. In difference to @code{AddVar()} or @code{FindVar()}, it is usual data array which should be deleted after usage.
-@end deftypefn
-
-
-@deftypefn {Method on @code{mglParse}} @code{void} AddParam (@code{int} n, @code{const char *}str)
-@deftypefnx {Method on @code{mglParse}} @code{void} AddParam (@code{int} n, @code{const wchar_t *}str)
-@deftypefnx {C function} @code{void} mgl_parser_add_param (@code{HMPR} p, @code{int} id, @code{const char *}val)
-@deftypefnx {C function} @code{void} mgl_parser_add_paramw (@code{HMPR} p, @code{int} id, @code{const wchar_t *}val)
-Function set the value of @var{n}-th parameter as string @var{str} (@var{n}=0, 1 ... 'z'-'a'+10). String @var{str} shouldn't contain @samp{$} symbol.
-@end deftypefn
-
-@deftypefn {Method on @code{mglParse}} @code{mglVar *} FindVar (@code{const char *}name)
-@deftypefnx {Method on @code{mglParse}} @code{mglVar *} FindVar (@code{const wchar_t *}name)
-@deftypefnx {C function} @code{HMDT} mgl_parser_find_var  (@code{HMPR} p, @code{const char *}name)
-@deftypefnx {C function} @code{HMDT} mgl_parser_find_varw  (@code{HMPR} p, @code{const wchar_t *}name)
-Function returns the pointer to variable with name @var{name} or zero if variable is absent. Use this function to put external data array to the script or get the data from the script. You must @strong{not delete} obtained data arrays!
-@end deftypefn
-@deftypefn {Method on @code{mglParse}} @code{mglVar *} AddVar (@code{const char *}name)
-@deftypefnx {Method on @code{mglParse}} @code{mglVar *} AddVar (@code{const wchar_t *}name)
-@deftypefnx {C function} @code{HMDT} mgl_parser_add_var (@code{HMPR} p, @code{const char *}name)
-@deftypefnx {C function} @code{HMDT} mgl_parser_add_varw (@code{HMPR} p, @code{const wchar_t *}name)
-Function returns the pointer to variable with name @var{name}. If variable is absent then new variable is created with name @var{name}. Use this function to put external data array to the script or get the data from the script. You must @strong{not delete} obtained data arrays!
-@end deftypefn
-
-@deftypefn{Method on @code{mglParse} (C++)} @code{void} DeleteVar (@code{const char *}name)
-@deftypefnx{Method on @code{mglParse} (C++)} @code{void} DeleteVar (@code{const wchar_t *}name)
-@deftypefnx {C function} @code{void} mgl_parser_del_var (@code{HMPR} p, @code{const char *}name)
-@deftypefnx {C function} @code{void} mgl_parser_del_varw (@code{HMPR} p, @code{const wchar_t *}name)
-Function delete the variable specified by its name or by its pointer.
-@end deftypefn
-
-@deftypefn{Method on @code{mglParse} (C++)} @code{void} DeleteAll ()
-@deftypefnx {C function} @code{void} mgl_parser_del_all (@code{HMPR} p)
-Function delete all variables in this parser.
-@end deftypefn
-
-@deftypefn {Method on @code{mglParse}} @code{void} RestoreOnce ()
-@deftypefnx {C function} @code{void} mgl_parser_restore_once (@code{HMPR} p)
-Restore Once flag.
-@end deftypefn
-
-@deftypefn {Method on @code{mglParse}} @code{void} AllowSetSize (@code{bool} a)
-@deftypefnx {C function} @code{void} mgl_parser_allow_setsize (@code{HMPR} p, @code{int} a)
-Allow to parse 'setsize' command or not.
-@end deftypefn
-
-@deftypefn {Method on @code{mglParse}} @code{void} AllowFileIO (@code{bool} a)
-@deftypefnx {C function} @code{void} mgl_parser_allow_file_io (@code{HMPR} p, @code{int} a)
-Allow reading/saving files or not.
-@end deftypefn
-
-@deftypefn {Method on @code{mglParse}} @code{void} Stop ()
-@deftypefnx {C function} @code{void} mgl_parser_stop (@code{HMPR} p)
-Sends stop signal which terminate execution at next command.
+@deftypefn {Метод класса @code{mglParse}} @code{mglData} Calc (@code{const char *}formula)
+@deftypefnx {Метод класса @code{mglParse}} @code{mglData} Calc (@code{const wchar_t *}formula)
+@deftypefnx {Функция С} @code{HMDT} mgl_parser_calc (@code{HMPR} p, @code{const char *}formula)
+@deftypefnx {Функция С} @code{HMDT} mgl_parser_calcw (@code{HMPR} p, @code{const wchar_t *}formula)
+Разбирает строку @var{formula} и возвращает полученный массив. В отличие от @code{AddVar()} или @code{FindVar()}, это обычный массив данных, который следует удалить после использования.
 @end deftypefn
 
 
-@deftypefn {Method on @code{mglParse}} @code{long} GetCmdNum ()
-@deftypefnx {C function} @code{long} mgl_parser_cmd_num (@code{HMPR} p)
-Return the number of registered MGL commands.
+@deftypefn {Метод класса @code{mglParse}} @code{void} AddParam (@code{int} n, @code{const char *}str)
+@deftypefnx {Метод класса @code{mglParse}} @code{void} AddParam (@code{int} n, @code{const wchar_t *}str)
+@deftypefnx {Функция С} @code{void} mgl_parser_add_param (@code{HMPR} p, @code{int} id, @code{const char *}val)
+@deftypefnx {Функция С} @code{void} mgl_parser_add_paramw (@code{HMPR} p, @code{int} id, @code{const wchar_t *}val)
+Устанавливает значение @var{n}-го параметра строкой @var{str} (@var{n}=0, 1 ... 'z'-'a'+10). Строка @var{str} не должна содержать символ @samp{$}.
 @end deftypefn
 
-@deftypefn {Method on @code{mglParse}} @code{const char *} GetCmdName (@code{long} id)
-@deftypefnx {C function} @code{const char *} mgl_parser_cmd_name (@code{HMPR} p, @code{long} id)
-Return the name of command with given @var{id}.
+@deftypefn {Метод класса @code{mglParse}} @code{mglVar *} FindVar (@code{const char *}name)
+@deftypefnx {Метод класса @code{mglParse}} @code{mglVar *} FindVar (@code{const wchar_t *}name)
+@deftypefnx {Функция С} @code{HMDT} mgl_parser_find_var  (@code{HMPR} p, @code{const char *}name)
+@deftypefnx {Функция С} @code{HMDT} mgl_parser_find_varw  (@code{HMPR} p, @code{const wchar_t *}name)
+Возвращает указатель на переменную с именем @var{name} или @code{NULL} если переменная отсутствует. Используйте эту функцию для добавления внешних массивов в скрипт. @strong{Не удаляйте} полученный массив!
+@end deftypefn
+@deftypefn {Метод класса @code{mglParse}} @code{mglVar *} AddVar (@code{const char *}name)
+@deftypefnx {Метод класса @code{mglParse}} @code{mglVar *} AddVar (@code{const wchar_t *}name)
+@deftypefnx {Функция С} @code{HMDT} mgl_parser_add_var (@code{HMPR} p, @code{const char *}name)
+@deftypefnx {Функция С} @code{HMDT} mgl_parser_add_varw (@code{HMPR} p, @code{const wchar_t *}name)
+Возвращает указатель на переменную с именем @var{name}. Если переменная отсутствует, то она будет создана. Используйте эту функцию для добавления внешних массивов в скрипт. @strong{Не удаляйте} полученный массив!
 @end deftypefn
 
-@deftypefn {Method on @code{mglParse}} @code{int} CmdType (@code{const char *}name)
-@deftypefnx {C function} @code{int} mgl_parser_cmd_type (@code{HMPR} p, @code{const char *}name)
-Return the type of MGL command @var{name}. Type of commands are: 0 -- not the command, 1 - data plot, 2 - other plot, 3 - setup, 4 - data handle, 5 - data create, 6 - subplot, 7 - program, 8 - 1d plot, 9 - 2d plot, 10 - 3d plot, 11 - dd plot, 12 - vector plot, 13 - axis, 14 - primitives, 15 - axis setup, 16 - text/legend, 17 - data transform.
+@deftypefn{Метод класса @code{mglParse} (C++)} @code{void} DeleteVar (@code{const char *}name)
+@deftypefnx{Метод класса @code{mglParse} (C++)} @code{void} DeleteVar (@code{const wchar_t *}name)
+@deftypefnx {Функция С} @code{void} mgl_parser_del_var (@code{HMPR} p, @code{const char *}name)
+@deftypefnx {Функция С} @code{void} mgl_parser_del_varw (@code{HMPR} p, @code{const wchar_t *}name)
+Удаляет переменную по имени @var{name}.
 @end deftypefn
 
-@deftypefn {Method on @code{mglParse}} @code{const char *} CmdFormat (@code{const char *}name)
-@deftypefnx {C function} @code{const char *} mgl_parser_cmd_frmt (@code{HMPR} p, @code{const char *}name)
-Return the format of arguments for MGL command @var{name}.
+@deftypefn{Метод класса @code{mglParse} (C++)} @code{void} DeleteAll ()
+@deftypefnx {Функция С} @code{void} mgl_parser_del_all (@code{HMPR} p)
+Удаляет все переменные в данном классе.
 @end deftypefn
 
-@deftypefn {Method on @code{mglParse}} @code{const char *} CmdDesc (@code{const char *}name)
-@deftypefnx {C function} @code{const char *} mgl_parser_cmd_desc (@code{HMPR} p, @code{const char *}name)
-Return the description of MGL command @var{name}.
+@deftypefn {Метод класса @code{mglParse}} @code{void} RestoreOnce ()
+@deftypefnx {Функция С} @code{void} mgl_parser_restore_once (@code{HMPR} p)
+Восстанавливает состояние флага Once.
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglParse}} @code{void} AllowSetSize (@code{bool} a)
+@deftypefnx {Функция С} @code{void} mgl_parser_allow_setsize (@code{HMPR} p, @code{int} a)
+Разрешает/запрещает команду 'setsize'.
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglParse}} @code{void} AllowFileIO (@code{bool} a)
+@deftypefnx {Функция С} @code{void} mgl_parser_allow_file_io (@code{HMPR} p, @code{int} a)
+Разрешает/запрещает команды чтения файлов.
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglParse}} @code{void} Stop ()
+@deftypefnx {Функция С} @code{void} mgl_parser_stop (@code{HMPR} p)
+Посылает сигнал завершения выполнения для следующей команды.
+@end deftypefn
+
+
+@deftypefn {Метод класса @code{mglParse}} @code{long} GetCmdNum ()
+@deftypefnx {Функция С} @code{long} mgl_parser_cmd_num (@code{HMPR} p)
+Возвращает число зарегистрированных команд MGL.
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglParse}} @code{const char *} GetCmdName (@code{long} id)
+@deftypefnx {Функция С} @code{const char *} mgl_parser_cmd_name (@code{HMPR} p, @code{long} id)
+Возвращает имя команды MGL с заданным номером @var{id}.
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglParse}} @code{int} CmdType (@code{const char *}name)
+@deftypefnx {Функция С} @code{int} mgl_parser_cmd_type (@code{HMPR} p, @code{const char *}name)
+Возвращает тип команды MGL с именем @var{name}. Типы команд: 0 -- не команда, 1 - графики по данным, 2 - прочие графики, 3 - настройка, 4 - обработка данных, 5 - создание данных, 6 - трансформация, 7 - ход выполнения, 8 - 1d графики, 9 - 2d графики, 10 - 3d графики, 11 - двойные графики, 12 - векторные поля, 13 - оси координат, 14 - примитивы, 15 - настройка осей, 16 - текст/легенда, 17 - изменение данных.
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglParse}} @code{const char *} CmdFormat (@code{const char *}name)
+@deftypefnx {Функция С} @code{const char *} mgl_parser_cmd_frmt (@code{HMPR} p, @code{const char *}name)
+Возвращает формат аргументов команды MGL с именем @var{name}.
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglParse}} @code{const char *} CmdDesc (@code{const char *}name)
+@deftypefnx {Функция С} @code{const char *} mgl_parser_cmd_desc (@code{HMPR} p, @code{const char *}name)
+Возвращает описание команды MGL с именем @var{name}.
 @end deftypefn
 
 @end ifclear
 
 @external{}
-

@@ -498,14 +498,14 @@ void MGL_EXPORT mgl_area_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, c
 
 		nn = mglPoint(-y->dvx(0,my),x->dvx(0,mx));
 		mglPoint p = mglPoint(x->v(0,mx),y->v(0,my),z->v(0,mz));
-		n1 = gr->AddPnt(p,c1,nn);	p.z = z0;	n2 = gr->AddPnt(p,c2,nn);
+		n1 = gr->AddPnt(p,c1,nn,-1,11);	p.z = z0;	n2 = gr->AddPnt(p,c2,nn,-1,11);
 		for(i=1;i<n;i++)
 		{
 			if(gr->Stop)	return;
 			n3=n1;	n4=n2;
 			nn = mglPoint(-y->dvx(i,my),x->dvx(i,mx));
 			p = mglPoint(x->v(i,mx),y->v(i,my),z->v(i,mz));
-			n1 = gr->AddPnt(p,c1,nn);	p.z = z0;	n2 = gr->AddPnt(p,c2,nn);
+			n1 = gr->AddPnt(p,c1,nn,-1,11);	p.z = z0;	n2 = gr->AddPnt(p,c2,nn,-1,11);
 			if(wire)
 			{
 				gr->line_plot(n1,n2);	gr->line_plot(n3,n4);
@@ -543,13 +543,13 @@ void MGL_EXPORT mgl_area_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char
 		z0 = zm + (m-1-j)*(gr->Max.z-zm)/m;
 
 		mglPoint p = mglPoint(x->v(0,mx),y->v(0,my),z0);
-		n1 = gr->AddPnt(p,c1,nn);	p.y = y0;	n2 = gr->AddPnt(p,c2,nn);
+		n1 = gr->AddPnt(p,c1,nn,-1,11);	p.y = y0;	n2 = gr->AddPnt(p,c2,nn,-1,11);
 		for(i=1;i<n;i++)
 		{
 			if(gr->Stop)	return;
 			n3=n1;	n4=n2;
 			p = mglPoint(x->v(i,mx),y->v(i,my),z0);
-			n1 = gr->AddPnt(p,c1,nn);	p.y = y0;	n2 = gr->AddPnt(p,c2,nn);
+			n1 = gr->AddPnt(p,c1,nn,-1,11);	p.y = y0;	n2 = gr->AddPnt(p,c2,nn,-1,11);
 			if(wire)
 			{
 				gr->line_plot(n1,n2);	gr->line_plot(n3,n4);
@@ -616,15 +616,15 @@ void MGL_EXPORT mgl_region_xy(HMGL gr, HCDT x, HCDT y1, HCDT y2, const char *pen
 		mreal z0 = zm + (m-1-j)*(gr->Max.z-zm)/m;
 
 		f1 = y1->v(0,j);	f2 = y2->v(0,j);	xx = x->v(0,mx);
-		n1 = gr->AddPnt(mglPoint(xx,f1,z0),c1,nn);
-		n2 = gr->AddPnt(mglPoint(xx,f2,z0),c2,nn);
+		n1 = gr->AddPnt(mglPoint(xx,f1,z0),c1,nn,-1,11);
+		n2 = gr->AddPnt(mglPoint(xx,f2,z0),c2,nn,-1,11);
 		for(i=1;i<n;i++)
 		{
 			if(gr->Stop)	return;
 			n3=n1;	n4=n2;	f3=f1;	f4=f2;
 			f1 = y1->v(i,j);	f2 = y2->v(i,j);	xx = x->v(i,mx);
-			n1 = gr->AddPnt(mglPoint(xx,f1,z0),c1,nn);
-			n2 = gr->AddPnt(mglPoint(xx,f2,z0),c2,nn);
+			n1 = gr->AddPnt(mglPoint(xx,f1,z0),c1,nn,-1,11);
+			n2 = gr->AddPnt(mglPoint(xx,f2,z0),c2,nn,-1,11);
 			if(!inside || (f2>f1 && f4>f3))	gr->quad_plot(n1,n2,n3,n4);
 			if(sh)	c2=c1=gr->NextColor(pal);
 		}

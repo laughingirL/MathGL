@@ -598,7 +598,7 @@ Setsize: размер(ы) равны нулю или отрицательны
 @cindex Ternary
 @end ifclear
 
-@deftypefn {Команда MGL} {} axis 'fx' 'fy' ['fz'='' 'fa'='']
+@deftypefn {Команда MGL} {} axis 'fx' 'fy' 'fz'='' ['fa'='']
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} SetFunc (@code{const char *}EqX, @code{const char *}EqY, @code{const char *}EqZ=@code{""}, @code{const char *}EqA=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_set_func (@code{HMGL} gr, @code{const char *}EqX, @code{const char *}EqY, @code{const char *}EqZ, @code{const char *}EqA)
@@ -3081,4 +3081,3 @@ gr.GetBGRN(bits, len(bits));
 @c @end ifclear
 
 @external{}
-

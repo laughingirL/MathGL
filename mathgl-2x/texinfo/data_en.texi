@@ -1548,10 +1548,9 @@ Deletes the instance of class mglVar.
 @end deftypefn
 
 @deftypefn {Method on @code{mglVar}} @code{void} MoveAfter (@code{mglVar *}var)
-Evaluates the formula for @code{'x','r'}=@var{x}, @code{'y','n'}=@var{y}, @code{'z','t'}=@var{z}, @code{'a','u'}=@var{u}.
+Move variable after @var{var} in the list.
 @end deftypefn
 
 @end ifclear
 
 @external{}
-

@@ -139,7 +139,7 @@
 @include formats_ru.texi
 
 @node TeX-like symbols, Copying This Manual, File formats, Top
-@appendix TeX-like symbols
+@appendix Символы TeX
 @include appendix_ru.texi
 
 @node Copying This Manual, Index, TeX-like symbols, Top
