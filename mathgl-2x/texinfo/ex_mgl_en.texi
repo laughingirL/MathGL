@@ -1062,17 +1062,23 @@ Command @ref{cones} is similar to @code{Bars} but draw cones. The sample code is
 @verbatim
 new ys 10 3 '0.8*sin(pi*(x+y/4+1.25))+0.2*rnd'
 origin 0 0 0:light on
-subplot 2 2 0:title 'Cones plot':rotate 50 60:box
+subplot 3 2 0:title 'Cones plot':rotate 50 60:box
 cones ys
 
-subplot 2 2 1:title '2 colors':rotate 50 60:box
+subplot 3 2 1:title '2 colors':rotate 50 60:box
 cones ys 'cbgGyr'
 
-subplot 2 2 2:title '"\#" style':rotate 50 60:box
+subplot 3 2 2:title '"\#" style':rotate 50 60:box
 cones ys '#'
 
-subplot 2 2 3:title '"a" style':rotate 50 60:zrange -2 2:box
+subplot 3 2 3:title '"a" style':rotate 50 60:zrange -2 2:box
 cones ys 'a'
+
+subplot 3 2 4:title '"t" style':rotate 50 60:box
+cones ys 't'
+
+subplot 3 2 5:title '"4" style':rotate 50 60:box
+cones ys '4'
 @end verbatim
 
 @pfig{cones, Example of Cones()}
@@ -2646,4 +2652,3 @@ Just use @code{aspect nan nan} for each subplot, or at the beginning of the draw
 @end table
 
 @external{}
-

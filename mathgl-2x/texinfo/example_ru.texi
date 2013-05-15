@@ -112,9 +112,9 @@ call mgl_delete_graph(gr);
 @cindex window
 @cindex widgets
 
-The ``interactive'' way of drawing in MathGL consists in window creation  with help of class @code{mglWindow} or @code{mglGLUT} (see @ref{Widget classes}) and the following drawing in this window. There is a corresponding code:
+``Интерактивный'' способ использования MathGL состоит в создании окна с помощью классов @code{mglQT}, @code{mglFLTK} или @code{mglGLUT} (см. @ref{Widget classes}) и последующем рисовании в этом окне. Соответствующий код выглядит так:
 @verbatim
-#include <mgl2/window.h>
+#include <mgl2/qt.h>
 int sample(mglGraph *gr)
 {
   gr->Rotate(60,40);
@@ -124,18 +124,18 @@ int sample(mglGraph *gr)
 //-----------------------------------------------------
 int main(int argc,char **argv)
 {
-  mglWindow gr(sample,"MathGL examples");
+  mglQT gr(sample,"MathGL examples");
   return gr.Run();
 }
 @end verbatim
-Here callback function @code{sample} is defined. This function does all drawing. Other function @code{main} is entry point function for console program. For compilation, just execute the command
+Здесь используется callback функция @code{sample}, выполняющая собственно рисование. Функция @code{main} -- точка входа в программу -- создает окно (объект @var{gr} типа @code{mglQT}) и запускает цикл обработки сообщений (вызов @code{gr.Run()}). Для компиляции достаточно выполнить команду
 @verbatim
-gcc test.cpp -lmgl-wnd -lmgl
+gcc test.cpp -lmgl-qt -lmgl
 @end verbatim
 
-Alternatively you can create yours own class inherited from class @code{mglDraw} and re-implement the function @code{Draw()} in it:
+Альтернативный способ состоит в использовании класса, производного от @code{mglDraw} с переопределенной функцией @code{Draw()}:
 @verbatim
-#include <mgl2/window.h>
+#include <mgl2/qt.h>
 class Foo : public mglDraw
 {
 public:
@@ -152,11 +152,11 @@ int Foo::Draw(mglGraph *gr)
 int main(int argc,char **argv)
 {
   Foo foo;
-  mglWindow gr(&foo,"MathGL examples");
+  mglQT gr(&foo,"MathGL examples");
   return gr.Run();
 }
 @end verbatim
-Or use pure C-functions:
+Или в использовании функций С:
 @verbatim
 #include <mgl2/mgl_cf.h>
 int sample(HMGL gr, void *)
@@ -174,7 +174,7 @@ int main(int argc,char **argv)
 }
 @end verbatim
 
-The similar code can be written for @code{mglGLUT} window (function @code{sample()} is the same):
+Похожий код получается и при использовании окон @code{mglFLTK}, @code{mglGLUT} (функция @code{sample()} та же):
 @verbatim
 #include <mgl2/glut.h>
 int main(int argc,char **argv)
@@ -1806,18 +1806,24 @@ int sample(mglGraph *gr)
 {
   mglData ys(10,3);   ys.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
   gr->Light(true);    gr->SetOrigin(0,0,0);
-  gr->SubPlot(2,2,0); gr->Title("Cones plot");
+  gr->SubPlot(3,2,0); gr->Title("Cones plot");
   gr->Rotate(50,60);  gr->Box();  gr->Cones(ys);
 
-  gr->SubPlot(2,2,1); gr->Title("2 colors");
+  gr->SubPlot(3,2,1); gr->Title("2 colors");
   gr->Rotate(50,60);  gr->Box();  gr->Cones(ys,"cbgGyr");
 
-  gr->SubPlot(2,2,2); gr->Title("'#' style");
+  gr->SubPlot(3,2,2); gr->Title("'#' style");
   gr->Rotate(50,60);  gr->Box();  gr->Cones(ys,"#");
 
-  gr->SubPlot(2,2,3); gr->Title("'a' style");
+  gr->SubPlot(3,2,3); gr->Title("'a' style");
   gr->SetRange('z',-2,2); // increase range since summation can exceed [-1,1]
   gr->Rotate(50,60);  gr->Box();  gr->Cones(ys,"a");
+
+  gr->SubPlot(3,2,4); gr->Title("'t' style");
+  gr->Rotate(50,60);  gr->Box();  gr->Cones(ys,"t");
+
+  gr->SubPlot(3,2,5); gr->Title("'4' style");
+  gr->Rotate(50,60);  gr->Box();  gr->Cones(ys,"4");
   return 0;
 }
 @end verbatim
@@ -3942,4 +3948,3 @@ int main (int argc, char ** argv)
 @end table
 
 @external{}
-

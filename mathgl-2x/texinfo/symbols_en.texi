@@ -209,7 +209,7 @@ set to use absolute position in whole picture for @ref{text}, @ref{colorbar}, @r
 @item a
 set to use absolute position in subplot for @ref{text};
 
-style of @ref{bars}, @ref{barh}.
+style of @ref{bars}, @ref{barh}, @ref{cones}.
 
 @item B
 dark blue color (see @ref{Color styles}).

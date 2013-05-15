@@ -1807,25 +1807,31 @@ void smgl_grad(mglGraph *gr)
 	gr->Box();	gr->Grad(a);	gr->Dens(a,"{u8}w{q8}");
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_cones="new ys 10 3 '0.8*sin(pi*(x+y/4+1.25))+0.2*rnd'\n"
-"subplot 2 2 0:title 'Cones plot':rotate 50 60:light on:origin 0 0 0:box:cones ys\n"
-"subplot 2 2 1:title '2 colors':rotate 50 60:light on:origin 0 0 0:box:cones ys 'cbgGyr'\n"
-"subplot 2 2 2:title '\"\\#\" style':rotate 50 60:light on:origin 0 0 0:box:cones ys '#'\n"
-"subplot 2 2 3:title '\"a\" style':rotate 50 60:zrange -2 2:light on:origin 0 0 0:box:cones ys 'a'\n";
+const char *mmgl_cones="new ys 10 3 '0.8*sin(pi*(x+y/4+1.25))+0.2*rnd'\nlight on:origin 0 0 0\n"
+"subplot 3 2 0:title 'Cones plot':rotate 50 60:box:cones ys\n"
+"subplot 3 2 1:title '2 colors':rotate 50 60:box:cones ys 'cbgGyr'\n"
+"subplot 3 2 2:title '\"\\#\" style':rotate 50 60:box:cones ys '#'\n"
+"subplot 3 2 3:title '\"a\" style':rotate 50 60:zrange -2 2:box:cones ys 'a'\n"
+"subplot 3 2 4:title '\"t\" style':rotate 50 60:box:cones ys 't'\n"
+"subplot 3 2 5:title '\"4\" style':rotate 50 60:box:cones ys '4'\n";
 void smgl_cones(mglGraph *gr)
 {
 	mglData ys(10,3);	ys.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
 	gr->Light(true);	gr->SetOrigin(0,0,0);
-	if(!mini)	{	gr->SubPlot(2,2,0);	gr->Title("Cones plot");	}
+	if(!mini)	{	gr->SubPlot(3,2,0);	gr->Title("Cones plot");	}
 	gr->Rotate(50,60);	gr->Box();	gr->Cones(ys);
 	if(mini)	return;
-	gr->SubPlot(2,2,1);	gr->Title("2 colors");
+	gr->SubPlot(3,2,1);	gr->Title("2 colors");
 	gr->Rotate(50,60);	gr->Box();	gr->Cones(ys,"cbgGyr");
-	gr->SubPlot(2,2,2);	gr->Title("'\\#' style");
+	gr->SubPlot(3,2,2);	gr->Title("'\\#' style");
 	gr->Rotate(50,60);	gr->Box();	gr->Cones(ys,"#");
-	gr->SubPlot(2,2,3);	gr->Title("'a' style");
+	gr->SubPlot(3,2,3);	gr->Title("'a' style");
 	gr->SetRange('z',-2,2);	// increase range since summation can exceed [-1,1]
 	gr->Rotate(50,60);	gr->Box();	gr->Cones(ys,"a");
+	gr->SubPlot(3,2,4);	gr->Title("'t' style");
+	gr->Rotate(50,60);	gr->Box();	gr->Cones(ys,"t");
+	gr->SubPlot(3,2,5);	gr->Title("'4' style");
+	gr->Rotate(50,60);	gr->Box();	gr->Cones(ys,"4");
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_aspect="subplot 2 2 0:box:text -1 1.1 'Just box' ':L'\ninplot 0.2 0.5 0.7 1 off:box:text 0 1.2 'InPlot example'\n"

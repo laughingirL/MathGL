@@ -227,32 +227,38 @@ void MGL_EXPORT mgl_cone(HMGL gr, double x1, double y1, double z1, double x2, do
 		k2=gr->AddPnt(p2,c2,d,-1,3);
 	}
 	mreal f,si,co, dr=r2-r1;
-	register long i;
-	for(i=0;i<(wire?13:41);i++)
+	register long i,n=wire?6:20;
+	if(mglchr(stl,'4'))	n=2;
+	else if(mglchr(stl,'6'))	n=3;
+	else if(mglchr(stl,'8'))	n=4;
+	for(i=0;i<2*n+1;i++)
 	{
 		if(gr->Stop)	{	delete []kk;	return;	}
-		f = i*M_PI/(wire?6:20);	co = cos(f);	si = sin(f);
+		f = (i+0.5)*M_PI/n;	co = cos(f);	si = sin(f);
 		p = p1+(r1*co)*a+(r1*si)*b;
 		q = (si*a-co*b)^(d + (dr*co)*a + (dr*si)*b);
 		if(wire)	q.x=q.y=NAN;
+//		if(n<10)	q.x=NAN;
 		kk[i] = gr->AddPnt(p,c1,q,-1,3);
 		if(edge && !wire)	kk[i+82] = gr->AddPnt(p,c1,d,-1,3);
 		p = p2+(r2*co)*a+(r2*si)*b;
-		kk[i+(wire?13:41)] = gr->AddPnt(p,c2,q,-1,3);
+		kk[i+2*n+1] = gr->AddPnt(p,c2,q,-1,3);
 		if(edge && !wire)	kk[i+123] = gr->AddPnt(p,c2,d,-1,3);
 	}
-	if(wire)	for(i=0;i<12;i++)
+	if(wire)	for(i=0;i<2*n;i++)
 	{
 		if(gr->Stop)	{	delete []kk;	return;	}
 		gr->line_plot(kk[i],kk[i+1]);
-		gr->line_plot(kk[i],kk[i+13]);
-		gr->line_plot(kk[i+14],kk[i+1]);
-		gr->line_plot(kk[i+14],kk[i+13]);
+		gr->line_plot(kk[i],kk[i+2*n+1]);
+		gr->line_plot(kk[i+2*n+2],kk[i+1]);
+		gr->line_plot(kk[i+2*n+2],kk[i+2*n+1]);
 	}
-	else	for(i=0;i<40;i++)
+	else	for(i=0;i<2*n;i++)
 	{
 		if(gr->Stop)	{	delete []kk;	return;	}
-		gr->quad_plot(kk[i],kk[i+1],kk[i+41],kk[i+42]);
+//		gr->quad_plot(kk[i],kk[i+1],kk[i+2*n+1],kk[i+2*n+2]);
+		gr->trig_plot(kk[i],kk[i+1],kk[i+2*n+1]);
+		gr->trig_plot(kk[i+1],kk[i+2*n+1],kk[i+2*n+2]);
 		if(edge)
 		{
 			gr->trig_plot(k1,kk[i+82],kk[i+83]);
@@ -272,7 +278,7 @@ void MGL_EXPORT mgl_cone_(uintptr_t* gr, mreal *x1, mreal *y1, mreal *z1, mreal 
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_cones_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *opt)
 {
-	long i,j,m,mx,my,mz,n=z->GetNx(),nx=x->GetNx(), nz=z->GetNy(), pal;
+	long i=5,j,m,mx,my,mz,n=z->GetNx(),nx=x->GetNx(), nz=z->GetNy(), pal;
 	if(mgl_check_dim1(gr,x,z,y,0,"Cones",true))	return;
 
 	gr->SaveState(opt);
@@ -281,12 +287,17 @@ void MGL_EXPORT mgl_cones_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, 
 
 	bool above= mglchr(pen,'a');
 	bool wire = mglchr(pen,'#');
+	bool tube = mglchr(pen,'t');
 	mreal *dd=new mreal[2*n], x1,z0,zz,d, vx,vy,vz,v0,v1;
 
 	gr->SetPenPal(pen,&pal);
-	char c1[7];	memset(c1,0,7);	c1[0] ='@';
-	char c2[7];	memset(c2,0,7);	c2[0] ='@';
-	if(wire)	c1[5]=c2[5]='#';
+	char c1[8];	memset(c1,0,8);	c1[0] ='@';
+	char c2[8];	memset(c2,0,8);	c2[0] ='@';
+	if(wire)	{	c1[5]=c2[5]='#';	i++;	}
+	if(mglchr(pen,'&'))	c1[i]=c2[i]='4';
+	else if(mglchr(pen,'4'))	c1[i]=c2[i]='4';
+	else if(mglchr(pen,'6'))	c1[i]=c2[i]='6';
+	else if(mglchr(pen,'8'))	c1[i]=c2[i]='8';
 	memset(dd,0,2*n*sizeof(mreal));
 	z0 = gr->GetOrgZ('x');
 	for(i=0;i<n;i++)	for(j=0;j<m;j++)	dd[i] += z->v(i, j<nz ? j:0);
@@ -295,7 +306,7 @@ void MGL_EXPORT mgl_cones_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, 
 		gr->NextColor(pal);		memcpy(c1+1,gr->last_line(),4);
 		if(gr->GetNumPal(pal)==2*m)
 		{	gr->NextColor(pal);	memcpy(c2+1,gr->last_line(),4);	}
-		else	memcpy(c2,c1,7);
+		else	memcpy(c2,c1,8);
 		mx = j<x->GetNy() ? j:0;	my = j<y->GetNy() ? j:0;	mz = j<nz ? j:0;
 		for(i=0;i<n;i++)
 		{
@@ -304,14 +315,15 @@ void MGL_EXPORT mgl_cones_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, 
 			v0=y->v(i,0);	v1=i<nx-1 ? x->v(i+1,mx):x->v(i-1,mx);
 			d = i<nx-1 ? v1-vx : vx-v1;
 			x1 = (n<nx ? (vx+v1)/2 : vx) + d/2*(1-0.7*gr->BarWidth);
+			d *= 0.7*gr->BarWidth;
 			if(above)
 			{
 				zz = j>0?dd[i+n]:z0;	dd[i+n] += vz;
 				mgl_cone(gr, x1,v0,zz, x1,v0,dd[i+n],
-						 0.7*gr->BarWidth*d*(dd[i]-zz)/(dd[i]-z0),
-						 0.7*gr->BarWidth*d*(dd[i]-dd[i+n])/(dd[i]-z0), c1);
+						 tube?d:d*(dd[i]-zz)/(dd[i]-z0),
+						 tube?d:d*(dd[i]-dd[i+n])/(dd[i]-z0), c1);
 			}
-			else	mgl_cone(gr, x1,vy,z0, x1,vy,vz, 0.7*gr->BarWidth*d,0, vz<0?c1:c2);
+			else	mgl_cone(gr, x1,vy,z0, x1,vy,vz, d,tube?d:0, vz<0?c1:c2);
 		}
 	}
 	gr->EndGroup();	delete []dd;
