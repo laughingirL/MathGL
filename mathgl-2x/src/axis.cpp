@@ -41,9 +41,10 @@ long MGL_EXPORT mgl_have_color(const char *stl)
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_wcstrim(wchar_t *str)
 {
+	if(!str || *str==0)	return;
 	size_t n=wcslen(str), k, i;
 	for(k=0;k<n;k++)	if(str[k]>' ')	break;
-	for(i=n;i>0;i--)	if(str[i-1]>' ')	break;
+	for(i=n;i>k;i--)	if(str[i-1]>' ')	break;
 	memmove(str, str+k, (i-k)*sizeof(wchar_t));
 	str[i-k]=0;
 }

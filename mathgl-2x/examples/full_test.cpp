@@ -66,12 +66,13 @@ void smgl_stfa(mglGraph *gr);	// STFA sample
 void smgl_text(mglGraph *gr);	// text drawing
 void test(mglGraph *gr)
 {
-	smgl_text(gr);	return;
+//	gr->SetOrigin(0,0,0);	gr->SetOriginTick(false);	gr->Axis("y");	return;
 	
 	mglParse par;
 	par.AllowSetSize(true);
 	setlocale(LC_CTYPE, "");
-	par.Execute(gr,"xrange 1362565462 1365935062:ticktime 'x' 7*86400 '%d/%m/%y':axis");
+	par.Execute(gr,"origintick off:origin 0 0 0:axis 'y'\nwrite 'test.json'");
+
 //	FILE *fp=fopen("/home/balakin/progr/mathgl-code/mathgl-2x/build/test.mgl","r");
 //	par.Execute(gr,fp,true);
 //	fclose(fp);

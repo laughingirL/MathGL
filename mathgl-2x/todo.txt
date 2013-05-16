@@ -32,13 +32,15 @@ A. Paper about MathGL!!!
 	u. Test FlowP + 3d
 	w. Test diffuse, specular local sources
 
-15. Check samples: colorbar
+15. Check samples: colorbar + axis after rotate -100 45
 16. Add samples about data handling (data1, data2, data2)
 17. Add "Triangulation sample"
 18. Update docs about Cones (styles 't', '4', '6', '8')
 19. Update docs about Cone (style '4', '6', '8')
 
-20. JS rotation in Firefox
+20. Move to wstring in mglParse
+
+
 23. check if all "value" options are described
 
 ============= UDAV =============

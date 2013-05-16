@@ -504,10 +504,10 @@ void MGL_EXPORT mgl_write_off_(uintptr_t *gr, const char *fname,const char *desc
 	char *d=new char[n+1];	memcpy(d,descr,n);	d[n]=0;
 	mgl_write_off(_GR_,s,d,*colored);	delete []s;		delete []d;	}
 //-----------------------------------------------------------------------------
-bool mglCanvas::WriteJSON(const char *fname)
+bool mglCanvas::WriteJSON(const char *fname, bool force_zlib)
 {
 	bool fl = strcmp(fname,"-");
-	bool gz = fname[strlen(fname)-1]=='z';
+	bool gz = force_zlib || fname[strlen(fname)-1]=='z';
 	void *fp = fl ? (gz ? (void*)gzopen(fname,"wt") : (void*)fopen(fname,"wt")) : stdout;
 	if (!fp)	return true;
 	ClearUnused();	// clear unused points
@@ -557,7 +557,7 @@ bool mglCanvas::WriteJSON(const char *fname)
 	{
 		const mglPoint &p=xy[i];
 		const mglPnt &q=Pnt[int(0.5+p.z)];
-		if(q.u==q.u)
+		if(q.u==q.u && q.v==q.v && q.w==q.w)
 			mgl_printf(fp, gz,"[%.3g,%.3g,%.3g,%.3g,%.3g]%c\n", p.x, p.y, q.u, q.v, q.w, i+1<l?',':' ');
 //			fprintf(fp,"[%.4g,%.4g,%.4g,%.4g,%.4g]%c\n", p.x, p.y, q.u, q.v, q.w, i+1<l?',':' ');
 		else
@@ -588,6 +588,13 @@ void MGL_EXPORT mgl_write_json_(uintptr_t *gr, const char *fname,const char *des
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
 	mgl_write_json(_GR_,s,f);	delete []s;		delete []f;	}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_write_json_z(HMGL gr, const char *fname,const char *)
+{	_Gr_->WriteJSON(fname,true);	}
+void MGL_EXPORT mgl_write_json_z_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
+{	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
+	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
+	mgl_write_json_z(_GR_,s,f);	delete []s;		delete []f;	}
 //-----------------------------------------------------------------------------
 bool mglCanvas::ExportMGLD(const char *fname, const char *descr)
 {

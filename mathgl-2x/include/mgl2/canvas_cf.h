@@ -203,6 +203,8 @@ void MGL_EXPORT mgl_import_mgld_(uintptr_t *gr, const char *fname, int *add, int
 /// Export in JSON format suitable for later drawing by JavaScript
 void MGL_EXPORT mgl_write_json(HMGL gr, const char *fname,const char *descr);
 void MGL_EXPORT mgl_write_json_(uintptr_t *gr, const char *fname,const char *descr,int,int);
+void MGL_EXPORT mgl_write_json_z(HMGL gr, const char *fname,const char *descr);
+void MGL_EXPORT mgl_write_json_z_(uintptr_t *gr, const char *fname,const char *descr,int,int);
 
 /// Get RGB values of current bitmap
 MGL_EXPORT const unsigned char *mgl_get_rgb(HMGL gr);
@@ -506,4 +508,3 @@ double MGL_EXPORT mgl_expr_diff_v(HMEX ex, char dir, mreal *var);
 #endif
 //-----------------------------------------------------------------------------
 #endif
-

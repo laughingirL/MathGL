@@ -548,12 +548,15 @@ void MGL_EXPORT mgl_write_frame(HMGL gr, const char *fname,const char *descr)
 	if(!strcmp(fname+len-4,".pdf")) mgl_write_prc(gr,fname,descr,1);
 	if(!strcmp(fname+len-4,".png"))	mgl_write_png(gr,fname,descr);
 	if(!strcmp(fname+len-4,".eps"))	mgl_write_eps(gr,fname,descr);
+	if(!strcmp(fname+len-5,".epsz"))	mgl_write_eps(gr,fname,descr);
 	if(!strcmp(fname+len-4,".svg"))	mgl_write_svg(gr,fname,descr);
+	if(!strcmp(fname+len-5,".svgz"))	mgl_write_svg(gr,fname,descr);
 	if(!strcmp(fname+len-4,".gif"))	mgl_write_gif(gr,fname,descr);
 	if(!strcmp(fname+len-4,".bmp"))	mgl_write_bmp(gr,fname,descr);
 	if(!strcmp(fname+len-4,".tga"))	mgl_write_tga(gr,fname,descr);
 	if(!strcmp(fname+len-5,".mgld"))mgl_export_mgld(gr,fname,descr);
-	if(!strcmp(fname+len-4,".json")) mgl_write_json(gr,fname,descr);
+	if(!strcmp(fname+len-5,".json")) mgl_write_json(gr,fname,descr);
+	if(!strcmp(fname+len-6,".jsonz")) mgl_write_json(gr,fname,descr);
 	if(!strcmp(fname+len-4,".obj")) mgl_write_obj(gr,fname,descr,1);
 	if(!strcmp(fname+len-4,".tex")) mgl_write_tex(gr,fname,descr);
 	if(!strcmp(fname+len-4,".xyz")) mgl_write_xyz(gr,fname,descr);

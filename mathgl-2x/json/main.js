@@ -24,7 +24,7 @@ var main = function() {
 //var script = "rotate 10 20: box:axis:fsurf 'sin(pi*x*y)'";
 
 var makeSampleScript = function() {
-  var mgl = "";
+  var mgl = "origintick off\n";
   mgl += "ranges -2 2 -2 2 -2 2:"   // NOTE: Ranges MUST BE specified for correctly work of zoomaxis feature
   mgl += "facenum 50:";
 //  mgl += "rotate 1 0:";

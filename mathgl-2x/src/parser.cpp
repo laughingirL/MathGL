@@ -538,7 +538,8 @@ int mglParser::Parse(mglGraph *gr, const wchar_t *string, long pos)
 	wchar_t *str, *arg[1024],*t;
 	wchar_t *s = new wchar_t[lstr];
 	memset(s,0,lstr*sizeof(wchar_t));
-	wcscpy(s,string);	mgl_wcstrim(s);	str = s;
+	wcsncpy(s,string,lstr-1);
+	mgl_wcstrim(s);	str = s;
 	long n,k=0,m=0,mm=0;
 	// try parse ':' -- several commands in line
 	for(n=0;n<long(wcslen(str));n++)
