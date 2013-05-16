@@ -48,6 +48,13 @@ Generally MathGL is GPL library. However, you can use LGPL license for MathGL co
 
 @strong{Latest news}
 @itemize
+@item @emph{16 May 2013.}
+Update documentation and add Russian @uref{../doc_ru/doc_ru_toc.html, translation} for chapters 4-8.
+@item @emph{16 May 2013.}
+New version (v.1.4.4) of @uref{http://sourceforge.net/projects/mathgl/files/u3d-1.4.4.tar.gz, U3D} is released. Main changes are: disable use of assembler, fix warnings, update cmake,
+update jpeg, png and zlib libraries.
+@item @emph{8 May 2013.}
+New version (v.@value{VERSION}@value{MINVER}) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are minor bugfixes for cmake options enable-double=OFF, enable-zlib=OFF and enable mouse actions in @uref{../json.html, JS sample} for Firefox.
 @item @emph{2 May 2013.}
 New version (v.@value{VERSION}) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are minor bugfixes and improvements, which denoted @ref{News, here}.
 @item @emph{13 December 2012.}
@@ -70,6 +77,15 @@ Javascript interface was developed with support of @url{http://www.datadvance.ne
 @section News
 
 @itemize
+@item
+@strong{8 May 2013.}
+New version (v.2.1.3.1) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are minor bugfixes and improvements:
+@itemize @bullet
+@item Compatibility changes for MS VS.
+@item Bugfixes for cmake options @code{enable-double=OFF, enable-zlib=OFF}.
+@item Enable mouse actions for Firefox in JS sample.
+@end itemize
+
 @item
 @strong{2 May 2013.}
 New version (v.2.1.3) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are minor bugfixes and improvements:
@@ -438,7 +454,7 @@ There are samples for @ref{1D data plotting, 1D arrays}, @ref{2D data plotting, 
 You may download current version of MathGL for following configurations:
 @itemize @bullet
 @item
-@uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}.tar.gz,source} file with cmake build system.
+@uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}@value{MINVER}.tar.gz,source} file with cmake build system.
 @item
 @uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}-mingw.i686.7z,Win32 GPL} binaries for MinGW (build for i686)
 @item

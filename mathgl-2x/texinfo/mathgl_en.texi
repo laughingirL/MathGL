@@ -1,6 +1,6 @@
 \input texinfo
 @setfilename mathgl_en.info
-@set VERSION 2.1.2
+@include version.texi
 @settitle MathGL @value{VERSION}
 @syncodeindex pg cp
 @comment %**end of header

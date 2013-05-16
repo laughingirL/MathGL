@@ -128,13 +128,14 @@ int main(int argc, char **argv)
 	}
 
 	udavLoadDefCommands();
+	parser.AllowSetSize(true);
 	MainWindow *mw = new MainWindow();
 	if(argc>1)
 	{
 		QTextCodec *codec = QTextCodec::codecForLocale();
 		mw->load(codec->toUnicode(argv[1]), true);
 	}
-	mw->show();	parser.AllowSetSize(true);
+	mw->show();
 	a.connect(&a, SIGNAL(lastWindowClosed()), &a, SLOT(quit()));
 	if(showHint)	udavShowHint(mw);
 	return a.exec();
