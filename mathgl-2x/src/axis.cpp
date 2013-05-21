@@ -26,6 +26,7 @@
 #define islog(a, b) (((a)>0 && (b)>10*(a)) || ((b)<0 && (a)<10*(b)))
 // NOTE: I use <=0 for proper tick labels rotation. But this mirror labels for central origin!
 #define sign(a)	((a)<0 ? -1:1)
+//#define sign(a)	((a)<0 ? -1:((a)>0 ? 1:0))
 //-----------------------------------------------------------------------------
 MGL_NO_EXPORT inline struct tm *mgl_localtime (const time_t *clock, tm *result, bool use_utc)
 {	if (!clock || !result) return NULL;

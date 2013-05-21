@@ -40,8 +40,8 @@ A. Paper about MathGL!!!
 
 20. Move to wstring in mglParse
 
-
-23. check if all "value" options are described
+22. Command 'resize' should take 0 (i.e. initial one) for default sizes
+23. check if all "value" options are described (see hist, )
 
 ============= UDAV =============
 

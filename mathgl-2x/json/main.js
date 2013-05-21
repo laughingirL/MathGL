@@ -30,7 +30,7 @@ var makeSampleScript = function() {
 //  mgl += "rotate 1 0:";
 
   //mgl += "origin 0 0 0:axis 'Uxyz':xlabel 'x':ylabel 'y':zlabel 'z':"
-  mgl += "origin 0 0 0:axis 'x':xlabel 'x':ylabel 'y':zlabel 'z':"
+  mgl += "origin 0 0 0:axis :xlabel 'x':ylabel 'y':zlabel 'z':"
 
   mgl += "box:"
 
@@ -41,7 +41,7 @@ var makeSampleScript = function() {
 //  mgl += "fplot 'sin(2*pi*t)' '2*t-1' '2*cos(2*pi*t)' 'm2o':";
 
   //mgl += "axis:fsurf 'sin(2*pi*x*y)':";
-mgl += "axis:fsurf 'cos(2*pi*x*y)':";
+//mgl += "axis:fsurf 'cos(2*pi*x*y)':";
 
   //mgl += "zoomaxis";
 ///////  mgl += "box:axis:fplot 'sin(2*pi*t)' 'cos(2*pi*t)' '2*t-1' 'm2o'\n";

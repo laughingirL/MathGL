@@ -21,8 +21,8 @@ mathgl.Graph = function(canvas, backend) {
   this.__preciseRenderingDelay = 700;
   // TODO add setters/getters
   this.__maxDraftPoints = 9000;
-  this.__x1 = 0;    this.__y1 = 0;
-  this.__x2 = 1;    this.__y2 = 1;
+  this.__x1 = 0;	this.__y1 = 0;	this.__z1 = 0;
+  this.__x2 = 1;	this.__y2 = 1;	this.__z2 = 1;
 }
 
 
@@ -88,7 +88,6 @@ mathgl.Graph.prototype.__pickPointHandler = function(x, y) {
     var zoom = "zoom "+(0.5-obj.pf/2)+" "+(0.5-obj.pf/2)+" "+(0.5+obj.pf/2)+" "+(0.5+obj.pf/2)+"\n";
     var view1 = "view 0 "+this.__view.__pitch*180/Math.PI+" 0"+"\n";
     var view2 = "view 0 0 "+(-this.__view.__yaw)*180/Math.PI+"\n";
-    console.debug(xy,"pf=",obj.pf,zoom+view1+view2)
     // now ask server side for proper coordinates
     var res = globalBackend.coor(xy, zoom+view1+view2+obj.mgl);
     console.debug("coordinates are ", res);
@@ -96,12 +95,13 @@ mathgl.Graph.prototype.__pickPointHandler = function(x, y) {
 
 
 /** called when user shift axis range */
-mathgl.Graph.prototype.shiftAxis = function(x, y) {
-    var dx = x*(this.__x2-this.__x1), dy = y*(this.__y2-this.__y1)
+mathgl.Graph.prototype.shiftAxis = function(x, y, z) {
+    var dx = x*(this.__x2-this.__x1), dy = y*(this.__y2-this.__y1), dz = z*(this.__z2-this.__z1)
     this.__x1 += dx; this.__x2 += dx;
     this.__y1 += dy; this.__y2 += dy;
+    this.__z1 += dz; this.__z2 += dz;
     // introduce zoomaxis coomand for server side
-    var zoom = "zoomaxis "+this.__x1+" "+this.__y1+" "+this.__x2+" "+this.__y2+"\n";
+    var zoom = "zoomaxis "+this.__x1+" "+this.__y1+" "+this.__z1+" "+this.__x2+" "+this.__y2+" "+this.__z2+"\n";
     var mgl = this.__geometry.mgl;
             console.log(zoom, "Old: ", this.__geometry);
     // now ask server side for proper coordinates
@@ -119,8 +119,10 @@ mathgl.Graph.prototype.zoomAxis = function(factor) {
     this.__x1 = c-d; this.__x2 = c+d;
     d=(this.__y2-this.__y1)*factor/2; c=(this.__y2+this.__y1)/2;
     this.__y1 = c-d; this.__y2 = c+d;
+    d=(this.__z2-this.__z1)*factor/2; c=(this.__z2+this.__z1)/2;
+    this.__z1 = c-d; this.__z2 = c+d;
     // introduce zoomaxis coomand for server side
-    var zoom = "zoomaxis "+this.__x1+" "+this.__y1+" "+this.__x2+" "+this.__y2+"\n";
+    var zoom = "zoomaxis "+this.__x1+" "+this.__y1+" "+this.__z1+" "+this.__x2+" "+this.__y2+" "+this.__z2+"\n";
     var mgl = this.__geometry.mgl;
             console.log(zoom, "Old: ", this.__geometry);
     // now ask server side for proper coordinates
@@ -297,7 +299,6 @@ mathgl.Graph.prototype.__mgl_draw_good = function(obj, ctx, skip) {
             var zc = obj.b[6]*xx + obj.b[7]*yy + obj.b[8]*zz;
             var ll = xc*xc+yc*yc;
             if(ll < 1e-10)	break;
-            console.debug("t=",t);
             if(ll<1e10 && t/deg<1e4)
             {
                 t = Math.atan2(yc,xc);
@@ -555,29 +556,25 @@ mathgl.Graph.prototype.__mgl_line_glyph = function(ctx, x,y, f,solid,b) {
 mathgl.Graph.prototype.moveLeft = function() { 
 	var b = this.__geometry.b;
 	var f = 0.1/Math.sqrt(b[0]*b[0]+b[1]*b[1]+b[2]*b[2]);
-	this.shiftAxis(f*b[0],f*b[1]);
-	//this.shiftAxis(-0.1,0);
+	this.shiftAxis(f*b[0],f*b[1],f*b[2]);
 }
 
 mathgl.Graph.prototype.moveRight = function() { 
 	var b = this.__geometry.b;
 	var f = -0.1/Math.sqrt(b[0]*b[0]+b[1]*b[1]+b[2]*b[2]);
-	this.shiftAxis(f*b[0],f*b[1]);
-	//this.shiftAxis(0.1,0);
+	this.shiftAxis(f*b[0],f*b[1],f*b[2]);
 }
 
 mathgl.Graph.prototype.moveUp = function() { 
 	var b = this.__geometry.b;
 	var f = -0.1/Math.sqrt(b[3]*b[3]+b[4]*b[4]+b[5]*b[5]);
-	this.shiftAxis(f*b[3],f*b[4]);
-	//this.shiftAxis(0,-0.1);
+	this.shiftAxis(f*b[3],f*b[4],f*b[5]);
 }
 
 mathgl.Graph.prototype.moveDown = function() { 
 	var b = this.__geometry.b;
 	var f = 0.1/Math.sqrt(b[3]*b[3]+b[4]*b[4]+b[5]*b[5]);
-	this.shiftAxis(f*b[3],f*b[4]);
-	//this.shiftAxis(0,0.1);
+	this.shiftAxis(f*b[3],f*b[4],f*b[5]);
 }
 
 mathgl.Graph.prototype.zoomIn = function() { 
@@ -587,4 +584,3 @@ mathgl.Graph.prototype.zoomIn = function() {
 mathgl.Graph.prototype.zoomOut = function() { 
   this.zoomAxis(1./1.1);
 }
-
