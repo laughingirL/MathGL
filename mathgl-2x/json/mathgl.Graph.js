@@ -568,13 +568,13 @@ mathgl.Graph.prototype.moveRight = function() {
 mathgl.Graph.prototype.moveUp = function() { 
 	var b = this.__geometry.b;
 	var f = -0.1/Math.sqrt(b[3]*b[3]+b[4]*b[4]+b[5]*b[5]);
-	this.shiftAxis(f*b[3],f*b[4],f*b[5]);
+	this.shiftAxis(-f*b[3],f*b[4],-f*b[5]);
 }
 
 mathgl.Graph.prototype.moveDown = function() { 
 	var b = this.__geometry.b;
 	var f = 0.1/Math.sqrt(b[3]*b[3]+b[4]*b[4]+b[5]*b[5]);
-	this.shiftAxis(f*b[3],f*b[4],f*b[5]);
+	this.shiftAxis(-f*b[3],f*b[4],-f*b[5]);
 }
 
 mathgl.Graph.prototype.zoomIn = function() { 

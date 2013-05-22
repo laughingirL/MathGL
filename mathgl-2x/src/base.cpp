@@ -1256,7 +1256,7 @@ void mglBase::ClearUnused()
 		used[p.n1] = 1;
 		switch(p.type)
 		{
-		case 1:	if(p.n2>=0)	used[p.n2] = 1;	break;
+		case 1:	case 4:	if(p.n2>=0)	used[p.n2] = 1;	break;
 		case 2:	if(p.n2>=0 && p.n3>=0)
 			used[p.n2] = used[p.n3] = 1;	break;
 		case 3:	if(p.n2>=0 && p.n3>=0 && p.n4>=0)
@@ -1274,7 +1274,7 @@ void mglBase::ClearUnused()
 	for(i=0;i<l;i++)
 	{
 		mglPrim &p=Prm[i];	p.n1=used[p.n1]-1;
-		if(p.type==1)	p.n2=used[p.n2]-1;
+		if(p.type==1 || p.type==4)	p.n2=used[p.n2]-1;
 		if(p.type==2)	{	p.n2=used[p.n2]-1;	p.n3=used[p.n3]-1;	}
 		if(p.type==3)	{	p.n2=used[p.n2]-1;	p.n3=used[p.n3]-1;	p.n4=used[p.n4]-1;	}
 	}
