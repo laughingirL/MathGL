@@ -69,11 +69,11 @@ struct mglFunc
 {
 	long pos;
 	int narg;
-	std::wstring func;
-//	wchar_t func[64];
+//	std::wstring func;
+	wchar_t func[64];
 	mglFunc(long p, const wchar_t *f);
 	mglFunc(const mglFunc &f);
-	mglFunc()	{	pos=narg=-1;	}
+	mglFunc()	{	pos=narg=-1;	*func=0;	}
 };
 //-----------------------------------------------------------------------------
 /// Structure for stack of functions and its arguments.
@@ -98,6 +98,7 @@ public:
 	bool AllowFileIO;	///< Allow reading/saving files
 	bool Stop;			///< Stop command was. Flag prevent further execution
 	mglCommand *Cmd;	///< Table of MGL commands (can be changed by user). It MUST be sorted by 'name'!!!
+	wchar_t *op1, *op2;	///< Buffer for options (are used if out!=NULL)
 	long InUse;			///< Smart pointer (number of users)
 
 	mglParser(bool setsize=false);
@@ -112,7 +113,7 @@ public:
 	/// Parse and execute the unicode string of MGL script
 	inline int Parse(HMGL gr, const wchar_t *str, long pos=0)
 	{	mglGraph GR(gr);	return Parse(&GR,str,pos);	}
-	int Parse(mglGraph *gr, std::wstring str, long pos=0);
+	int Parse(mglGraph *gr, const wchar_t *str, long pos=0);
 	/// Execute MGL script file fname
 	inline void Execute(HMGL gr, FILE *fp, bool print=false)
 	{	mglGraph GR(gr);	Execute(&GR,fp,print);	}
@@ -132,7 +133,7 @@ public:
 	/// Scan for functions (use NULL for reset)
 	void ScanFunc(const wchar_t *line);
 	/// Check if name is function and return its address (or 0 if no)
-	long IsFunc(const std::wstring &name, int *narg=0);
+	long IsFunc(const wchar_t *name, int *narg=0);
 	/// Find variable or return 0 if absent
 	mglVar *FindVar(const char *name);
 	mglVar *FindVar(const wchar_t *name);
@@ -175,20 +176,21 @@ private:
 	int for_addr;		///< Flag for saving address in variable (for_addr-1)
 	bool for_br;		///< Break is switched on (skip all comands until 'next')
 
+	/// Length of parameter strings
+	size_t GetParLen();
+	size_t GetParLen(const wchar_t *str);
 	/// Parse command
-	int Exec(mglGraph *gr, const wchar_t *com, long n, mglArg *a, const std::wstring &var, const wchar_t *opt);
+	int Exec(mglGraph *gr, const wchar_t *com, long n, mglArg *a, const wchar_t *var, const wchar_t *opt);
 	/// Fill arguments a from strings
-	void FillArg(mglGraph *gr, int n, std::wstring *arg, mglArg *a);
+	void FillArg(mglGraph *gr, int n, wchar_t **arg, mglArg *a);
 	/// PreExecute stage -- parse some commands and create variables
-	int PreExec(mglGraph *gr, long n, std::wstring *arg, mglArg *a);
+	int PreExec(mglGraph *gr, long n, wchar_t **arg, mglArg *a);
 	/// Execute program-flow control commands
-	int FlowExec(mglGraph *gr, const std::wstring &com, long n, mglArg *a);
+	int FlowExec(mglGraph *gr, const wchar_t *com, long n, mglArg *a);
 	/// Parse and execute the unicode string of MGL script
-	int ParseDat(mglGraph *gr, std::wstring str, mglData &res);
-	/// Define '$' parameters or start for loop
-	int ParseDef(std::wstring &str);
+	int ParseDat(mglGraph *gr, const wchar_t *str, mglData &res);
 	/// Parse $N arguments
-	void PutArg(std::wstring &str, bool def);
+	void PutArg(const wchar_t *string, wchar_t *str, bool def);
 	/// In skip mode
 	bool inline ifskip()	{	return (if_pos>0 && !(if_stack[if_pos-1]&1));	}
 	bool inline skip()		{	return (Skip || ifskip() || for_br);	}

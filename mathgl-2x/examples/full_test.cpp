@@ -71,7 +71,7 @@ void test(mglGraph *gr)
 	mglParse par;
 	par.AllowSetSize(true);
 	setlocale(LC_CTYPE, "");
-	par.Execute(gr,"origintick off:origin 0 0 0:axis 'y'\nwrite 'test.json'");
+	par.Execute(gr,"call 'test' 1\nstop\nfunc 'test' 1\ntext 0 0 '$1'\nreturn");
 
 //	FILE *fp=fopen("/home/balakin/progr/mathgl-code/mathgl-2x/build/test.mgl","r");
 //	par.Execute(gr,fp,true);

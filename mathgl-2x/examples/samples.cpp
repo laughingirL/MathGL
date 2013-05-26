@@ -542,8 +542,8 @@ const char *mmgl_schemes="call 'sch' 0 'kw'\ncall 'sch' 1 'wk'\ncall 'sch' 2 'kH
 "call 'sch' 8 'GgwmM'\ncall 'sch' 9 'UuwqR'\ncall 'sch' 10 'QqwcC'\ncall 'sch' 11 'CcwyY'\n"
 "call 'sch' 12 'bcwyr'\ncall 'sch' 13 'bwr'\ncall 'sch' 14 'BbcyrR'\ncall 'sch' 15 'UbcyqR'\n"
 "call 'sch' 16 'BbcwyrR'\ncall 'sch' 17 'bgr'\ncall 'sch' 18 'BbcyrR|'\ncall 'sch' 19 'b\\{g,0.3\\}r'\n"
-"stop\nfunc 'sch' 2\nsubplot 2 10 $1 '<>_^' 0.2 0:fsurf 'x' '$2'\n"
-"text 0.07+0.5*mod($1,2) 0.92-0.1*int($1/2) '$2' 'A'\nreturn\n";
+"stop\nfunc 'sch' 2\nsubplot 2 10 $1 '<>_^' 0.2 0:fsurf 'x' $2\n"
+"text 0.07+0.5*mod($1,2) 0.92-0.1*int($1/2) $2 'A'\nreturn\n";
 void smgl_schemes(mglGraph *gr)	// Color table
 {
 	mglData a(256,2);	a.Fill(-1,1);
@@ -860,7 +860,7 @@ void smgl_plot(mglGraph *gr)
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_tens="call 'prepare1d'\nsubplot 2 2 0 '':title 'Tens plot (default)':box:tens y(:,0) y(:,1)\n"
-"subplot 2 2 2 '':title '" " style':box:tens y(:,0) y(:,1) 'o '\n"
+"subplot 2 2 2 '':title '\" \" style':box:tens y(:,0) y(:,1) 'o '\n"
 "new yc 30 'sin(pi*x)':new xc 30 'cos(pi*x)':new z 30 'x'\n"
 "subplot 2 2 1:title '3d variant':rotate 50 60:box:tens xc yc z z 's'\n";
 void smgl_tens(mglGraph *gr)
