@@ -500,12 +500,12 @@ int mglParser::PreExec(mglGraph *, long k, std::wstring *arg, mglArg *a)
 //-----------------------------------------------------------------------------
 void mglParser::PutArg(std::wstring &str, bool def)
 {
-	size_t pos = str.find('$',def?10:0), n;
+	size_t pos = str.find('$',def?10:0);
 	while(pos<str.length())
 	{
 		wchar_t ch = str[pos+1];
-		n = ch-'0';	if(n>=0 && n<=9)	str.replace(pos,2,par[n]);
-		n = ch-'a';	if(n>=0 && n<='z'-'a')	str.replace(pos,2,par[n+10]);
+		if(ch>='0' && ch<='9')	str.replace(pos,2,par[ch-'0']);
+		if(ch>='a' && ch<='z')	str.replace(pos,2,par[ch-'a'+10]);
 		if(ch=='$')	str.replace(pos,2,L"\xffff");
 		pos = str.find('$',def?10:0);
 	}

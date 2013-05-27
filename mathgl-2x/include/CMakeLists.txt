@@ -8,6 +8,7 @@ install(DIRECTORY mgl2/ DESTINATION ${MGL_INCLUDE_PATH}
                         PATTERN "qt.h" EXCLUDE
                         PATTERN "qmathgl.h" EXCLUDE
                         PATTERN "window.h" EXCLUDE
+                        PATTERN "*old.h" EXCLUDE
                         PATTERN "*~" EXCLUDE
                         PATTERN "*.fs"
                         PATTERN "*.pas"

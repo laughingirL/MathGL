@@ -347,8 +347,9 @@ public:
 	inline void WritePRC(const char *fname,const char *descr="",bool make_pdf=true)
 	{	mgl_write_prc(gr, fname, descr, make_pdf);	}
 	/// Export in JSON format suitable for later drawing by JavaScript
-	inline void WriteJSON(const char *fname,const char *descr="")
-	{	mgl_write_json(gr, fname, descr);	}
+	inline void WriteJSON(const char *fname,const char *descr="",bool force_z=false)
+	{	if(force_z)	mgl_write_json_z(gr, fname, descr);
+		else 	mgl_write_json(gr, fname, descr);	}
 
 	/// Force preparing the image. It can be useful for OpenGL mode mostly.
 	inline void Finish()			{	mgl_finish(gr);	}
