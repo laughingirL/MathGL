@@ -46,12 +46,7 @@ friend void _mgl_display();
 friend void _mgl_key_up(unsigned char ch,int ,int );
 friend void _mgl_timer(int);
 public:
-	mreal Delay;	///< Delay for animation in seconds
-	bool AutoClf;		///< Clear canvas between drawing
-
 	mglCanvasGLUT();
-	mglCanvasGLUT(int (*draw)(mglGraph *gr, void *p), const char *title, void *par=NULL,
-				void (*reload)(int next, void *p)=NULL, bool maximize=false);
 	virtual ~mglCanvasGLUT();
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ��������� ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	/// Create a window for plotting. Now implemeted only for GLUT.
@@ -183,7 +178,7 @@ void _mgl_display()
 	if(!_mgl_glwnd)	return;
 //	glEnable(GL_LINE_SMOOTH);
 	_mgl_glwnd->CurFrameId = 1;
-	if(_mgl_glwnd->AutoClf)	_mgl_glwnd->Clf();
+	if(_mgl_glwnd->get(MGL_CLF_ON_UPD))	_mgl_glwnd->Clf();
 	_mgl_glwnd->InPlot(0,1,0,1,false);
 	if(_mgl_glwnd->NumFig>0)	glCallList(_mgl_glwnd->curr_fig);
 	else
@@ -191,8 +186,8 @@ void _mgl_display()
 		(_mgl_glwnd->DrawFunc)(_mgl_glwnd,_mgl_glwnd->FuncPar);
 		_mgl_glwnd->Finish();
 	}
-	if(_mgl_glwnd->AutoClf)	glFinish();
-	if(_mgl_glwnd->AutoClf)	glutSwapBuffers();
+	if(_mgl_glwnd->get(MGL_CLF_ON_UPD))
+	{	glFinish();	glutSwapBuffers();	}
 }
 //-----------------------------------------------------------------------------
 mglCanvasGLUT::~mglCanvasGLUT()	{	_mgl_glwnd = 0;	}
