@@ -72,14 +72,12 @@ void MGL_EXPORT mgl_create_cpp_font(HMGL gr, const wchar_t *how)
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_strtrim(char *str)
 {
-	char *c = mgl_strdup(str);
-	long k,n=strlen(str);
+	if(!str || *str==0)	return;
+	size_t n=strlen(str), k, i;
 	for(k=0;k<n;k++)	if(str[k]>' ')	break;
-	strcpy(c,&(str[k]));
-	n = strlen(c);
-	for(k=n-1;k>=0;k--)	if(c[k]>' ')	break;
-	c[k+1] = 0;
-	strcpy(str,c);	free(c);
+	for(i=n;i>k;i--)	if(str[i-1]>' ')	break;
+	memmove(str, str+k, (i-k));
+	str[i-k]=0;
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_strlwr(char *str)

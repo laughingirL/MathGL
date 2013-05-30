@@ -79,7 +79,7 @@ void MGL_EXPORT mgl_fft_free(void *wt, void **ws, long nthr)
 #endif
 }
 //-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_fft(double *x, long s, long n, const void *wt, void *ws, bool inv)
+void MGL_EXPORT mgl_fft(double *x, long s, long n, const void *wt, void *ws, int inv)
 {
 #if MGL_HAVE_GSL
 gsl_fft_complex_transform(x, s, n, (const gsl_fft_complex_wavetable*)wt, (gsl_fft_complex_workspace*)ws, inv?backward:forward);
