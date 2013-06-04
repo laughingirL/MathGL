@@ -34,7 +34,7 @@ void MGL_EXPORT mgl_mpi_recv(HMGL gr, int id)
 	for(k=0;k<n;k++)
 	{	// i0=x+Width*(Height-1-y)
 		i = k%w;	j = h-1-(k/w);
-		if(g->GetQuality()&2)
+		if(g->GetQuality()&MGL_DRAW_NORM)
 		{
 			g->pnt_plot(i,j,zz[3*k+2],cc+12*k+8,oi[k]);
 			g->pnt_plot(i,j,zz[3*k+1],cc+12*k+4,oi[k]);

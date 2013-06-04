@@ -325,22 +325,39 @@ void mglCanvas::pxl_primdr(size_t id, size_t , const void *)
 	}
 }
 //-----------------------------------------------------------------------------
+void mglCanvas::pxl_dotsdr(size_t id, size_t , const void *)
+{
+	unsigned char r[4];
+	for(size_t i=id;i<Prm.size();i+=mglNumThr)
+	{
+		if(Stop)	return;
+		const mglPnt &q=Pnt[Prm[i].n1];
+		int id = Prm[i].id;
+		col2int(q,r,id);
+		pnt_plot(q.x,q.y,q.z,r, id);
+	}
+}
+//-----------------------------------------------------------------------------
 void mglCanvas::Finish(bool fast)
 {
 	static mglMatrix bp;
-	if(Quality&4)	clr(MGL_FINISHED);
-	if(memcmp(&Bp,&bp,sizeof(mglMatrix)) && !(Quality&4) && Prm.size()>0)
+	if(Quality==MGL_DRAW_NONE)	return;
+	if(Quality&MGL_DRAW_LMEM)	clr(MGL_FINISHED);
+	if(memcmp(&Bp,&bp,sizeof(mglMatrix)) && !(Quality&MGL_DRAW_LMEM) && Prm.size()>0)
 		clr(MGL_FINISHED);
 	if(get(MGL_FINISHED))	return;	// nothing to do
-	if(!(Quality&4) && Prm.size()>0)
+	if(!(Quality&MGL_DRAW_LMEM) && Prm.size()>0)
 	{
 		PreparePrim(fast);	bp=Bp;
 		clr(MGL_FINISHED);
-		mglStartThread(&mglCanvas::pxl_primdr,this,Prm.size());
+		if(Quality==MGL_DRAW_DOTS)
+			mglStartThread(&mglCanvas::pxl_dotsdr,this,Prm.size());
+		else
+			mglStartThread(&mglCanvas::pxl_primdr,this,Prm.size());
 	}
 	size_t n=Width*Height;
 	BDef[3] = (Flag&3)!=2 ? 0:255;
-	if(Quality&2)	mglStartThread(&mglCanvas::pxl_combine,this,n);
+	if(Quality&MGL_DRAW_NORM)	mglStartThread(&mglCanvas::pxl_combine,this,n);
 	else 			mglStartThread(&mglCanvas::pxl_memcpy,this,n);
 	BDef[3] = 255;
 	mglStartThread(&mglCanvas::pxl_backgr,this,n);
@@ -349,7 +366,7 @@ void mglCanvas::Finish(bool fast)
 //-----------------------------------------------------------------------------
 void mglCanvas::ClfZB(bool force)
 {
-	if(!force && (Quality&4))	return;
+	if(!force && (Quality&MGL_DRAW_LMEM))	return;
 	register long i,n=Width*Height;
 	memset(C,0,12*n);	memset(OI,0,n*sizeof(int));
 	for(i=0;i<3*n;i++)	Z[i] = -1e20f;
@@ -377,7 +394,7 @@ void mglCanvas::pxl_other(size_t id, size_t n, const void *p)
 	size_t i,j,k;
 	const mglCanvas *gr = (const mglCanvas *)p;
 	if(!gr)	return;
-	if(Quality&2)	for(k=id;k<n;k+=mglNumThr)
+	if(Quality&MGL_DRAW_NORM)	for(k=id;k<n;k+=mglNumThr)
 	{
 		i = k%Width;	j = Height-1-(k/Width);
 		pnt_plot(i,j,gr->Z[3*k+2],gr->C+12*k+8,gr->OI[k]);
@@ -411,7 +428,7 @@ void mglCanvas::pnt_plot(long x,long y,mreal z,const unsigned char ci[4], int ob
 		if(d==255)	return;
 		combine(c,cb);
 	}
-	if(Quality&2)
+	if(Quality&MGL_DRAW_NORM)
 	{
 		if(z>=zz[1])	// shift point on slice down and paste new point
 		{
@@ -581,7 +598,7 @@ void mglCanvas::quad_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 	dsx =-4*(d2.y*d3.x - d2.x*d3.y)*d1.y;
 	dsy = 4*(d2.y*d3.x - d2.x*d3.y)*d1.x;
 
-	if((d1.x==0 && d1.y==0) || (d2.x==0 && d2.y==0) || !(Quality&2))
+	if((d1.x==0 && d1.y==0) || (d2.x==0 && d2.y==0) || !(Quality&MGL_DRAW_NORM))
 	{	trig_draw(p1,p2,p4,true,d);	trig_draw(p1,p3,p4,true,d);	return;	}
 
 	mglPoint n1 = mglPoint(p2.x-p1.x,p2.y-p1.y,p2.z-p1.z)^mglPoint(p3.x-p1.x,p3.y-p1.y,p3.z-p1.z);
@@ -657,7 +674,7 @@ void mglCanvas::trig_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 	register float u,v,xx,yy;
 	register long i,j;
 	float x0 = p1.x, y0 = p1.y;
-	if(Quality&2)	for(i=x1;i<=x2;i++)	for(j=y1;j<=y2;j++)
+	if(Quality&MGL_DRAW_NORM)	for(i=x1;i<=x2;i++)	for(j=y1;j<=y2;j++)
 	{
 		xx = (i-x0);	yy = (j-y0);
 		u = dxu*xx+dyu*yy;	v = dxv*xx+dyv*yy;

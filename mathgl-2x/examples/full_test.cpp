@@ -54,6 +54,7 @@ int big  = 0;
 int srnd = 0;
 int use_mgl = 0;
 int verbose = 0;
+int quality  = MGL_DRAW_NORM;
 //-----------------------------------------------------------------------------
 void mgls_prepare1d(mglData *y, mglData *y1=0, mglData *y2=0, mglData *x1=0, mglData *x2=0);
 void mgls_prepare2d(mglData *a, mglData *b=0, mglData *v=0);
@@ -66,7 +67,7 @@ void smgl_stfa(mglGraph *gr);	// STFA sample
 void smgl_text(mglGraph *gr);	// text drawing
 void test(mglGraph *gr)
 {
-//	gr->SetOrigin(0,0,0);	gr->SetOriginTick(false);	gr->Axis("y");	return;
+	gr->SetOrigin(0,0,0);	gr->SetOriginTick(false);	gr->Axis("y");	return;
 	
 	mglParse par;
 	par.AllowSetSize(true);
@@ -111,6 +112,7 @@ static struct option longopts[] =
 	{ "thread",	required_argument,	NULL,	't' },
 	{ "verbose",no_argument,	&verbose,	1 },
 	{ "width",	required_argument,	NULL,	'w' },
+	{ "quality",required_argument,	NULL,	'q' },
 	{ NULL,		0,				NULL,		0 }
 };
 //-----------------------------------------------------------------------------
@@ -143,6 +145,7 @@ void usage()
 		"--mgl		- use MGL scripts for samples\n"
 		"--test		- perform test\n"
 		"--font		- write current font as C++ file\n"
+		"--quality=val	- use specified quality for plot(s)\n"
 	);
 }
 #endif
@@ -229,6 +232,7 @@ int main(int argc,char **argv)
 			case 0:		break;
 			case 'w':	width =atoi(optarg);	break;
 			case 'h':	height=atoi(optarg);	break;
+			case 'q':	quality =atoi(optarg);	break;
 			case 'k':	strncpy(name, optarg,256);
 						tmp=strchr(name,'.');	if(tmp)	*tmp=0;
 						tmp=strchr(name,'-');	if(tmp)	*tmp=0;
@@ -243,12 +247,13 @@ int main(int argc,char **argv)
 #endif
 
 	if(dotest==1)	printf("Global (before):%s\n",mglGlobalMess.c_str());
-	gr = new mglGraph;	//gr->SetQuality(0);
+	gr = new mglGraph;
 	if(	type==11|| type==12|| type==5 || type==9)	width=height;
 	if(mini)		{	gr->SetSize(190,145);	suf = "-sm";	}
 	else if(big)
 	{	gr->SetSize(1920,1440);	suf = "-lg";	}
 	else	gr->SetSize(width,height);
+	gr->SetQuality(quality);
 
 	if(dotest==1)
 	{

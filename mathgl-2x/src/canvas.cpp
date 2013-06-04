@@ -301,7 +301,7 @@ mreal mglCanvas::GetOrgZ(char dir) const
 //-----------------------------------------------------------------------------
 //	Put primitives
 //-----------------------------------------------------------------------------
-#define MGL_MARK_PLOT	if(Quality&4)	mark_draw(Pnt[p],type,size,&d);else	\
+#define MGL_MARK_PLOT	if(Quality&MGL_DRAW_LMEM)	mark_draw(Pnt[p],type,size,&d);else	\
 						{	mglPrim a;	a.w = pw;	a.s = size;	\
 							a.n1 = p;	a.n4 = type;	add_prim(a);	}
 void mglCanvas::mark_plot(long p, char type, mreal size)
@@ -322,7 +322,7 @@ void mglCanvas::mark_plot(long p, char type, mreal size)
 	else	{	MGL_MARK_PLOT	}
 }
 //-----------------------------------------------------------------------------
-#define MGL_LINE_PLOT	if(Quality&4)	line_draw(Pnt[p1],Pnt[p2],&dd);else	\
+#define MGL_LINE_PLOT	if(Quality&MGL_DRAW_LMEM)	line_draw(Pnt[p1],Pnt[p2],&dd);else	\
 						{	mglPrim a(1);	a.n3=PDef;	a.s = pPos;	\
 							a.n1 = p1;	a.n2 = p2;	a.w = pw;	add_prim(a);	}
 void mglCanvas::line_plot(long p1, long p2)
@@ -345,7 +345,7 @@ void mglCanvas::line_plot(long p1, long p2)
 	pPos = fmod(pPos+d/pw/1.5, 16);
 }
 //-----------------------------------------------------------------------------
-#define MGL_TRIG_PLOT	if(Quality&4)	trig_draw(Pnt[p1],Pnt[p2],Pnt[p3],true,&d);else	\
+#define MGL_TRIG_PLOT	if(Quality&MGL_DRAW_LMEM)	trig_draw(Pnt[p1],Pnt[p2],Pnt[p3],true,&d);else	\
 						{	mglPrim a(2);	a.n1 = p1;	a.n2 = p2;	\
 							a.n3 = p3;	add_prim(a);}
 void mglCanvas::trig_plot(long p1, long p2, long p3)
@@ -359,7 +359,7 @@ void mglCanvas::trig_plot(long p1, long p2, long p3)
 	else	{	MGL_TRIG_PLOT	}
 }
 //-----------------------------------------------------------------------------
-#define MGL_QUAD_PLOT	if(Quality&4)	quad_draw(Pnt[p1],Pnt[p2],Pnt[p3],Pnt[p4],&d);else	\
+#define MGL_QUAD_PLOT	if(Quality&MGL_DRAW_LMEM)	quad_draw(Pnt[p1],Pnt[p2],Pnt[p3],Pnt[p4],&d);else	\
 						{	mglPrim a(3);	a.n1 = p1;	a.n2 = p2;	\
 							a.n3 = p3;	a.n4 = p4;	add_prim(a);	}
 void mglCanvas::quad_plot(long p1, long p2, long p3, long p4)
@@ -423,7 +423,7 @@ pthread_mutex_lock(&mutexPtx);
 	else if(ll)	ftet = -180*atan2(q.v,q.u)/M_PI;
 	else 	ftet = NAN;
 
-	if(!(Quality&4))	// add text itself
+	if(!(Quality&MGL_DRAW_LMEM))	// add text itself
 	{
 		char ch = mglGetStyle(font,0,0);
 		mglColor mc(ch);
@@ -493,7 +493,7 @@ void mglCanvas::Glyph(mreal x, mreal y, mreal f, int s, long j, mreal col)
 	d.PDef = s;		d.pPos = a.s;
 	d.ObjId=ObjId;	d.PenWidth=a.w;
 	
-	if(Quality&4)	glyph_draw(a,&d);
+	if(Quality&MGL_DRAW_LMEM)	glyph_draw(a,&d);
 	else	add_prim(a);
 }
 //-----------------------------------------------------------------------------
@@ -960,7 +960,7 @@ void mglCanvas::StartAutoGroup (const char *lbl)
 void mglCanvas::EndGroup()
 {
 	LoadState();
-	if(Quality&4)
+	if(Quality&MGL_DRAW_LMEM)
 	{
 		Pnt.clear();		Prm.clear();		Ptx.clear();
 		Glf.clear();		Act.clear(); 	Grp.clear();

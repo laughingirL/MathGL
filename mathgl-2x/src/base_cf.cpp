@@ -29,7 +29,7 @@ void MGL_EXPORT mgl_set_quality_(uintptr_t *gr, int *qual)	{	_GR_->SetQuality(*q
 int MGL_EXPORT mgl_get_quality(HMGL gr)	{	return gr->GetQuality();	}
 int MGL_EXPORT mgl_get_quality_(uintptr_t *gr)	{	return _GR_->GetQuality();	}
 int MGL_EXPORT mgl_is_frames(HMGL gr)
-{	return gr->get(MGL_VECT_FRAME) && !(gr->GetQuality()&4);	}
+{	return gr->get(MGL_VECT_FRAME) && !(gr->GetQuality()&MGL_DRAW_LMEM);	}
 //-----------------------------------------------------------------------------
 int MGL_EXPORT mgl_get_flag(HMGL gr, long flag)			{	return gr->get(flag);	}
 void MGL_EXPORT mgl_set_flag(HMGL gr, int val, long flag)	{	gr->set(val,flag);	}

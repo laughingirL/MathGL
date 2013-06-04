@@ -141,6 +141,8 @@ enum{	// types of predefined curvelinear coordinate systems
 #define MGL_DRAW_FAST	1	// fast, no color interpolation
 #define MGL_DRAW_NORM	2	// high quality, slower
 #define MGL_DRAW_LMEM	4	// low memory usage (direct to pixel)
+#define MGL_DRAW_DOTS	8	// draw dots instead of primitives
+#define MGL_DRAW_NONE	9	// no ouput (for testing only)
 //-----------------------------------------------------------------------------
 enum{	// Codes for warnings/messages
 	mglWarnNone = 0,// Everything OK

@@ -390,6 +390,7 @@ protected:
 	void pxl_memcpy(size_t id, size_t n, const void *);
 	void pxl_backgr(size_t id, size_t n, const void *);
 	void pxl_primdr(size_t id, size_t n, const void *);
+	void pxl_dotsdr(size_t id, size_t n, const void *);
 	void pxl_transform(size_t id, size_t n, const void *);
 	void pxl_setz(size_t id, size_t n, const void *);
 	void pxl_setz_adv(size_t id, size_t n, const void *);
