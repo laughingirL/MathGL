@@ -55,23 +55,23 @@ void MGL_EXPORT mglStartThreadT(void *(*func)(void *), long n, void *a, double *
 //-----------------------------------------------------------------------------
 struct mglFFTdata
 {
-	int nthr;
+	int thx,thy,thz;
 	long wnx,wny,wnz;		// sizes for FFT
 	long hnx,hny,hnz;		// sizes for Hankel
-	void *wtx,*wty,*wtz;		// tables for FFT
+	void *wtx,*wty,*wtz;	// tables for FFT
 	void **wsx,**wsy,**wsz;	// spaces for FFT
-	void *htx,*hty,*htz;		// tables for Hankel
+	void *htx,*hty,*htz;	// tables for Hankel
 	mglFFTdata()	{	memset(this,0,sizeof(mglFFTdata));	}
-	~mglFFTdata()	{	mgl_clear_fft();	}
+	~mglFFTdata()	{	Clear();	}
 	void Clear()
 	{
-		if(wnx)	{	mgl_fft_free(wtx,wsx,nthr);	delete []wsx;	}
-		if(wny)	{	mgl_fft_free(wty,wsy,nthr);	delete []wsy;	}
-		if(wnz)	{	mgl_fft_free(wtz,wsz,nthr);	delete []wsz;	}
+		if(wnx)	{	wnx=0;	mgl_fft_free(wtx,wsx,thx);	delete []wsx;	}
+		if(wny)	{	wny=0;	mgl_fft_free(wty,wsy,thy);	delete []wsy;	}
+		if(wnz)	{	wnz=0;	mgl_fft_free(wtz,wsz,thz);	delete []wsz;	}
 #if MGL_HAVE_GSL
-		if(hnx)	gsl_dht_free((gsl_dht*)htx);
-		if(hny)	gsl_dht_free((gsl_dht*)hty);
-		if(hnz)	gsl_dht_free((gsl_dht*)htz);
+		if(hnx)	{	hnx=0;	gsl_dht_free((gsl_dht*)htx);	}
+		if(hny)	{	hny=0;	gsl_dht_free((gsl_dht*)hty);	}
+		if(hnz)	{	hnz=0;	gsl_dht_free((gsl_dht*)htz);	}
 #endif
 	}
 } mgl_fft_data;
@@ -158,7 +158,8 @@ void MGL_EXPORT mgl_datac_fft(HADT d, const char *dir)
 	if(!dir || *dir==0)	return;
 	long nx = d->nx, ny = d->ny, nz = d->nz;
 	if(mglNumThr<1)	mgl_set_num_thr(0);	// manually set number of threads
-	void *wt=0, **ws=new void*[mglNumThr];
+	void *wt=0, **ws=0;
+	bool clear=false;
 	long par[4]={nx,ny,nz,strchr(dir,'i')!=0}, i;
 #if MGL_USE_DOUBLE
 	double *a = (double *)(d->a);
@@ -169,21 +170,41 @@ void MGL_EXPORT mgl_datac_fft(HADT d, const char *dir)
 #endif
 	if(strchr(dir,'x') && nx>1)
 	{
-		wt = mgl_fft_alloc(nx,ws,mglNumThr);
+		if(mgl_fft_data.thx==mglNumThr && mgl_fft_data.wnx==nx)
+		{	ws = mgl_fft_data.wsx;	wt = mgl_fft_data.wtx;	}
+		else
+		{	ws = new void*[mglNumThr];	clear = true;
+			wt = mgl_fft_alloc(nx,ws,mglNumThr);	}
 		mglStartThreadT(mgl_fftx,ny*nz,0,a,wt,ws,par);
+		if(mgl_fft_data.wnx==0)
+		{	mgl_fft_data.wsx = ws;	mgl_fft_data.wtx = wt;	clear = false;
+			mgl_fft_data.thx=mglNumThr;	mgl_fft_data.wnx=nx;	}
 	}
 	if(strchr(dir,'y') && ny>1)
 	{
-		wt = mgl_fft_alloc(ny,ws,mglNumThr);
+		if(mgl_fft_data.thy==mglNumThr && mgl_fft_data.wny==ny)
+		{	ws = mgl_fft_data.wsy;	wt = mgl_fft_data.wty;	}
+		else
+		{	ws = new void*[mglNumThr];	clear = true;
+			wt = mgl_fft_alloc(ny,ws,mglNumThr);	}
 		mglStartThreadT(mgl_ffty,nx*nz,0,a,wt,ws,par);
+		if(mgl_fft_data.wny==0)
+		{	mgl_fft_data.wsy = ws;	mgl_fft_data.wty = wt;	clear = false;
+			mgl_fft_data.thy=mglNumThr;	mgl_fft_data.wny=ny;	}
 	}
 	if(strchr(dir,'z') && nz>1)
 	{
-		wt = mgl_fft_alloc(nz,ws,mglNumThr);
+		if(mgl_fft_data.thz==mglNumThr && mgl_fft_data.wnz==nz)
+		{	ws = mgl_fft_data.wsz;	wt = mgl_fft_data.wtz;	}
+		else
+		{	ws = new void*[mglNumThr];	clear = true;
+			wt = mgl_fft_alloc(nz,ws,mglNumThr);	}
 		mglStartThreadT(mgl_fftz,nx*ny,0,a,wt,ws,par);
+		if(mgl_fft_data.wnz==0)
+		{	mgl_fft_data.wsz = ws;	mgl_fft_data.wtz = wt;	clear = false;
+			mgl_fft_data.thz=mglNumThr;	mgl_fft_data.wnz=nz;	}
 	}
-	if(wt)	mgl_fft_free(wt,ws,mglNumThr);
-	delete []ws;
+	if(clear)	{	mgl_fft_free(wt,ws,mglNumThr);	delete []ws;	}
 #if !MGL_USE_DOUBLE
 	for(i=0;i<nx*ny*nz;i++)	d->a[i] = dual(a[2*i], a[2*i+1]);
 	delete []a;
@@ -196,30 +217,52 @@ void MGL_EXPORT mgl_data_fourier(HMDT re, HMDT im, const char *dir)
 	long nx = re->nx, ny = re->ny, nz = re->nz;
 	if(nx*ny*nz != im->nx*im->ny*im->nz || !dir || dir[0]==0)	return;
 	if(mglNumThr<1)	mgl_set_num_thr(0);	// manually set number of threads
-	void *wt=0, **ws=new void*[mglNumThr];
+	bool clear=false;
+	void *wt=0, **ws=0;
 	long par[4]={nx,ny,nz,strchr(dir,'i')!=0}, i;
 	double *a = new double[2*nx*ny*nz];
 	for(i=0;i<nx*ny*nz;i++)
 	{	a[2*i] = re->a[i];	a[2*i+1] = im->a[i];	}
 	if(strchr(dir,'x') && nx>1)
 	{
-		wt = mgl_fft_alloc(nx,ws,mglNumThr);
+		if(mgl_fft_data.thx==mglNumThr && mgl_fft_data.wnx==nx)
+		{	ws = mgl_fft_data.wsx;	wt = mgl_fft_data.wtx;	}
+		else
+		{	ws = new void*[mglNumThr];	clear = true;
+			wt = mgl_fft_alloc(nx,ws,mglNumThr);	}
 		mglStartThreadT(mgl_fftx,ny*nz,0,a,wt,ws,par);
+		if(mgl_fft_data.wnx==0)
+		{	mgl_fft_data.wsx = ws;	mgl_fft_data.wtx = wt;	clear = false;
+			mgl_fft_data.thx=mglNumThr;	mgl_fft_data.wnx=nx;	}
 	}
 	if(strchr(dir,'y') && ny>1)
 	{
-		wt = mgl_fft_alloc(ny,ws,mglNumThr);
+		if(mgl_fft_data.thy==mglNumThr && mgl_fft_data.wny==ny)
+		{	ws = mgl_fft_data.wsy;	wt = mgl_fft_data.wty;	}
+		else
+		{	ws = new void*[mglNumThr];	clear = true;
+			wt = mgl_fft_alloc(ny,ws,mglNumThr);	}
 		mglStartThreadT(mgl_ffty,nx*nz,0,a,wt,ws,par);
+		if(mgl_fft_data.wny==0)
+		{	mgl_fft_data.wsy = ws;	mgl_fft_data.wty = wt;	clear = false;
+			mgl_fft_data.thy=mglNumThr;	mgl_fft_data.wny=ny;	}
 	}
 	if(strchr(dir,'z') && nz>1)
 	{
-		wt = mgl_fft_alloc(nz,ws,mglNumThr);
+		if(mgl_fft_data.thz==mglNumThr && mgl_fft_data.wnz==nz)
+		{	ws = mgl_fft_data.wsz;	wt = mgl_fft_data.wtz;	}
+		else
+		{	ws = new void*[mglNumThr];	clear = true;
+			wt = mgl_fft_alloc(nz,ws,mglNumThr);	}
 		mglStartThreadT(mgl_fftz,nx*ny,0,a,wt,ws,par);
+		if(mgl_fft_data.wnz==0)
+		{	mgl_fft_data.wsz = ws;	mgl_fft_data.wtz = wt;	clear = false;
+			mgl_fft_data.thz=mglNumThr;	mgl_fft_data.wnz=nz;	}
 	}
-	if(wt)	mgl_fft_free(wt,ws,mglNumThr);
+	if(clear)	{	mgl_fft_free(wt,ws,mglNumThr);	delete []ws;	}
 	for(i=0;i<nx*ny*nz;i++)
 	{	re->a[i] = a[2*i];	im->a[i] = a[2*i+1];	}
-	delete []ws;	delete []a;
+	delete []a;
 }
 //-----------------------------------------------------------------------------
 MGL_NO_EXPORT void* mgl_envx(void *par)
@@ -278,29 +321,51 @@ void MGL_EXPORT mgl_data_envelop(HMDT d, char dir)
 	register long i;
 	long nx=d->nx,ny=d->ny,nz=d->nz,par[3]={nx,ny,nz};
 	if(mglNumThr<1)	mgl_set_num_thr(0);	// manually set number of threads
-	void *wt=0, **ws=new void*[mglNumThr];
+	bool clear=false;
+	void *wt=0, **ws=0;
 	double *b = 0;
 	if(dir=='x' && nx>1)
 	{
-		wt = mgl_fft_alloc(nx,ws,mglNumThr);
+		if(mgl_fft_data.thx==mglNumThr && mgl_fft_data.wnx==nx)
+		{	ws = mgl_fft_data.wsx;	wt = mgl_fft_data.wtx;	}
+		else
+		{	ws = new void*[mglNumThr];	clear = true;
+			wt = mgl_fft_alloc(nx,ws,mglNumThr);	}
 		b = new double[2*nx*mglNumThr];
 		mglStartThreadT(mgl_envx,ny*nz,d->a,b,wt,ws,par);
+		if(mgl_fft_data.wnx==0)
+		{	mgl_fft_data.wsx = ws;	mgl_fft_data.wtx = wt;	clear = false;
+			mgl_fft_data.thx=mglNumThr;	mgl_fft_data.wnx=nx;	}
 	}
 	if(dir=='y' && ny>1)
 	{
-		wt = mgl_fft_alloc(ny,ws,mglNumThr);
+		if(mgl_fft_data.thy==mglNumThr && mgl_fft_data.wny==ny)
+		{	ws = mgl_fft_data.wsy;	wt = mgl_fft_data.wty;	}
+		else
+		{	ws = new void*[mglNumThr];	clear = true;
+			wt = mgl_fft_alloc(ny,ws,mglNumThr);	}
 		b = new double[2*ny*mglNumThr];
 		mglStartThreadT(mgl_envy,nx*nz,d->a,b,wt,ws,par);
+		if(mgl_fft_data.wny==0)
+		{	mgl_fft_data.wsy = ws;	mgl_fft_data.wty = wt;	clear = false;
+			mgl_fft_data.thy=mglNumThr;	mgl_fft_data.wny=ny;	}
 	}
 	if(dir=='z' && nz>1)
 	{
-		wt = mgl_fft_alloc(nz,ws,mglNumThr);
+		if(mgl_fft_data.thz==mglNumThr && mgl_fft_data.wnz==nz)
+		{	ws = mgl_fft_data.wsz;	wt = mgl_fft_data.wtz;	}
+		else
+		{	ws = new void*[mglNumThr];	clear = true;
+			wt = mgl_fft_alloc(nz,ws,mglNumThr);	}
 		b = new double[2*nz*mglNumThr];
 		mglStartThreadT(mgl_envz,nx*ny,d->a,b,wt,ws,par);
+		if(mgl_fft_data.wnz==0)
+		{	mgl_fft_data.wsz = ws;	mgl_fft_data.wtz = wt;	clear = false;
+			mgl_fft_data.thz=mglNumThr;	mgl_fft_data.wnz=nz;	}
 	}
 	for(i=0;i<nx*ny*nz;i++)	d->a[i] = hypot(b[2*i], b[2*i+1]);
-	if(b)	{	mgl_fft_free(wt,ws,mglNumThr);	delete []b;	}
-	delete []ws;
+	if(clear)	{	mgl_fft_free(wt,ws,mglNumThr);	delete []ws;	}
+	if(b)	delete []b;
 }
 //-----------------------------------------------------------------------------
 MGL_NO_EXPORT void* mgl_stfa1(void *par)
@@ -462,29 +527,51 @@ void MGL_EXPORT mgl_data_sinfft(HMDT d, const char *dir)	// use DST-1
 	if(!dir || *dir==0)	return;
 	double *b = 0;
 	if(mglNumThr<1)	mgl_set_num_thr(0);	// manually set number of threads
-	void *wt=0, **ws=new void*[mglNumThr];
+	bool clear=false;
+	void *wt=0, **ws=0;
 	long nx=d->nx, ny=d->ny, nz=d->nz;
 	long par[3]={nx,ny,nz}, i;
 	if(strchr(dir,'x') && nx>1)
 	{
-		wt = mgl_fft_alloc(nx,ws,mglNumThr);
+		if(mgl_fft_data.thx==mglNumThr && mgl_fft_data.wnx==nx)
+		{	ws = mgl_fft_data.wsx;	wt = mgl_fft_data.wtx;	}
+		else
+		{	ws = new void*[mglNumThr];	clear = true;
+			wt = mgl_fft_alloc(nx,ws,mglNumThr);	}
 		b = new double[2*nx*mglNumThr];
 		mglStartThreadT(mgl_sinx,ny*nz,d->a,b,wt,ws,par);
+		if(mgl_fft_data.wnx==0)
+		{	mgl_fft_data.wsx = ws;	mgl_fft_data.wtx = wt;	clear = false;
+			mgl_fft_data.thx=mglNumThr;	mgl_fft_data.wnx=nx;	}
 	}
 	if(strchr(dir,'y') && ny>1)
 	{
-		wt = mgl_fft_alloc(ny,ws,mglNumThr);
+		if(mgl_fft_data.thy==mglNumThr && mgl_fft_data.wny==ny)
+		{	ws = mgl_fft_data.wsy;	wt = mgl_fft_data.wty;	}
+		else
+		{	ws = new void*[mglNumThr];	clear = true;
+			wt = mgl_fft_alloc(ny,ws,mglNumThr);	}
 		b = new double[2*ny*mglNumThr];
 		mglStartThreadT(mgl_siny,nx*nz,d->a,b,wt,ws,par);
+		if(mgl_fft_data.wny==0)
+		{	mgl_fft_data.wsy = ws;	mgl_fft_data.wty = wt;	clear = false;
+			mgl_fft_data.thy=mglNumThr;	mgl_fft_data.wny=ny;	}
 	}
 	if(strchr(dir,'z') && nz>1)
 	{
-		wt = mgl_fft_alloc(nz,ws,mglNumThr);
+		if(mgl_fft_data.thz==mglNumThr && mgl_fft_data.wnz==nz)
+		{	ws = mgl_fft_data.wsz;	wt = mgl_fft_data.wtz;	}
+		else
+		{	ws = new void*[mglNumThr];	clear = true;
+			wt = mgl_fft_alloc(nz,ws,mglNumThr);	}
 		b = new double[2*nz*mglNumThr];
 		mglStartThreadT(mgl_sinz,nx*ny,d->a,b,wt,ws,par);
+		if(mgl_fft_data.wnz==0)
+		{	mgl_fft_data.wsz = ws;	mgl_fft_data.wtz = wt;	clear = false;
+			mgl_fft_data.thz=mglNumThr;	mgl_fft_data.wnz=nz;	}
 	}
-	if(b)	{	mgl_fft_free(wt,ws,mglNumThr);	delete []b;	}
-	delete []ws;
+	if(clear)	{	mgl_fft_free(wt,ws,mglNumThr);	delete []ws;	}
+	if(b)	delete []b;
 }
 //-----------------------------------------------------------------------------
 MGL_NO_EXPORT void* mgl_cosx(void *par)
@@ -577,29 +664,51 @@ void MGL_EXPORT mgl_data_cosfft(HMDT d, const char *dir)
 	if(!dir || *dir==0)	return;
 	double *b = 0;
 	if(mglNumThr<1)	mgl_set_num_thr(0);	// manually set number of threads
-	void *wt=0, **ws=new void*[mglNumThr];
+	bool clear=false;
+	void *wt=0, **ws=0;
 	long nx=d->nx, ny=d->ny, nz=d->nz;
 	long par[3]={nx,ny,nz}, i;
 	if(strchr(dir,'x') && nx>1)
 	{
-		wt = mgl_fft_alloc(nx-1,ws,mglNumThr);
+		if(mgl_fft_data.thx==mglNumThr && mgl_fft_data.wnx==nx-1)
+		{	ws = mgl_fft_data.wsx;	wt = mgl_fft_data.wtx;	}
+		else
+		{	ws = new void*[mglNumThr];	clear = true;
+			wt = mgl_fft_alloc(nx-1,ws,mglNumThr);	}
 		b = new double[2*nx*mglNumThr];
 		mglStartThreadT(mgl_cosx,ny*nz,d->a,b,wt,ws,par);
+		if(mgl_fft_data.wnx==0)
+		{	mgl_fft_data.wsx = ws;	mgl_fft_data.wtx = wt;	clear = false;
+			mgl_fft_data.thx=mglNumThr;	mgl_fft_data.wnx=nx-1;	}
 	}
 	if(strchr(dir,'y') && ny>1)
 	{
-		wt = mgl_fft_alloc(ny-1,ws,mglNumThr);
+		if(mgl_fft_data.thy==mglNumThr && mgl_fft_data.wny==ny-1)
+		{	ws = mgl_fft_data.wsy;	wt = mgl_fft_data.wty;	}
+		else
+		{	ws = new void*[mglNumThr];	clear = true;
+			wt = mgl_fft_alloc(ny-1,ws,mglNumThr);	}
 		b = new double[2*ny*mglNumThr];
 		mglStartThreadT(mgl_cosy,nx*nz,d->a,b,wt,ws,par);
+		if(mgl_fft_data.wny==0)
+		{	mgl_fft_data.wsy = ws;	mgl_fft_data.wty = wt;	clear = false;
+			mgl_fft_data.thy=mglNumThr;	mgl_fft_data.wny=ny-1;	}
 	}
 	if(strchr(dir,'z') && nz>1)
 	{
-		wt = mgl_fft_alloc(nz-1,ws,mglNumThr);
+		if(mgl_fft_data.thz==mglNumThr && mgl_fft_data.wnz==nz-1)
+		{	ws = mgl_fft_data.wsz;	wt = mgl_fft_data.wtz;	}
+		else
+		{	ws = new void*[mglNumThr];	clear = true;
+			wt = mgl_fft_alloc(nz-1,ws,mglNumThr);	}
 		b = new double[2*nz*mglNumThr];
 		mglStartThreadT(mgl_cosz,nx*ny,d->a,b,wt,ws,par);
+		if(mgl_fft_data.wnz==0)
+		{	mgl_fft_data.wsz = ws;	mgl_fft_data.wtz = wt;	clear = false;
+			mgl_fft_data.thz=mglNumThr;	mgl_fft_data.wnz=nz-1;	}
 	}
-	if(b)	{	mgl_fft_free(wt,ws,mglNumThr);	delete []b;	}
-	delete []ws;
+	if(clear)	{	mgl_fft_free(wt,ws,mglNumThr);	delete []ws;	}
+	if(b)	delete []b;
 }
 //-----------------------------------------------------------------------------
 HMDT MGL_EXPORT mgl_transform_a(HCDT am, HCDT ph, const char *tr)
@@ -751,28 +860,48 @@ void MGL_EXPORT mgl_datac_hankel(HADT d, const char *dir)
 	if(!dir || *dir==0)	return;
 	if(mglNumThr<1)	mgl_set_num_thr(0);	// manually set number of threads
 	gsl_dht *dht=0;
+	bool clear = false;
 	double *b=0;
 	long nx=d->nx, ny=d->ny, nz=d->nz;
 	long par[3]={nx,ny,nz};
 	if(strchr(dir,'x') && nx>1)
 	{
-		dht = gsl_dht_new(nx,0,1);
+		if(mgl_fft_data.thx==mglNumThr && mgl_fft_data.hnx==nx)
+		{	dht = (gsl_dht *)mgl_fft_data.htx;	}
+		else
+		{	dht = gsl_dht_new(nx,0,1);	clear = true;	}
 		b = new double[3*nx*mglNumThr];
 		mglStartThreadT(mgl_chnkx,ny*nz,d->a,b,dht,0,par);
+		if(mgl_fft_data.hnx==0)	// TODO: make different th[xyz] for hankel ???
+		{	mgl_fft_data.htx = dht;	clear = false;
+			mgl_fft_data.thx=mglNumThr;	mgl_fft_data.hnx=nx;	}
 	}
 	if(strchr(dir,'y') && ny>1)
 	{
-		dht = gsl_dht_new(ny,0,1);
+		if(mgl_fft_data.thy==mglNumThr && mgl_fft_data.hny==ny)
+		{	dht = (gsl_dht *)mgl_fft_data.hty;	}
+		else
+		{	dht = gsl_dht_new(ny,0,1);	clear = true;	}
 		b = new double[3*ny*mglNumThr];
 		mglStartThreadT(mgl_chnky,nx*nz,d->a,b,dht,0,par);
+		if(mgl_fft_data.hny==0)	// TODO: make different th[xyz] for hankel ???
+		{	mgl_fft_data.hty = dht;	clear = false;
+			mgl_fft_data.thy=mglNumThr;	mgl_fft_data.hny=ny;	}
 	}
 	if(strchr(dir,'z') && nz>1)
 	{
-		dht = gsl_dht_new(nz,0,1);
+		if(mgl_fft_data.thz==mglNumThr && mgl_fft_data.hnz==nz)
+		{	dht = (gsl_dht *)mgl_fft_data.htz;	}
+		else
+		{	dht = gsl_dht_new(nz,0,1);	clear = true;	}
 		b = new double[3*nz*mglNumThr];
 		mglStartThreadT(mgl_chnkz,nx*ny,d->a,b,dht,0,par);
+		if(mgl_fft_data.hnz==0)	// TODO: make different th[xyz] for hankel ???
+		{	mgl_fft_data.htz = dht;	clear = false;
+			mgl_fft_data.thz=mglNumThr;	mgl_fft_data.hnz=nz;	}
 	}
-	if(b)	{	delete []b;	gsl_dht_free(dht);	}
+	if(clear)	gsl_dht_free(dht);
+	if(b)	delete []b;
 }
 #else
 void MGL_EXPORT mgl_datac_hankel(HADT , const char *){}
@@ -838,29 +967,49 @@ void MGL_EXPORT mgl_data_hankel(HMDT d, const char *dir)
 {
 	if(!dir || *dir==0)	return;
 	if(mglNumThr<1)	mgl_set_num_thr(0);	// manually set number of threads
+	bool clear = false;
 	gsl_dht *dht=0;
 	double *b=0;
 	long nx=d->nx, ny=d->ny, nz=d->nz;
 	long par[3]={nx,ny,nz};
 	if(strchr(dir,'x') && nx>1)
 	{
-		dht = gsl_dht_new(nx,0,1);
+		if(mgl_fft_data.thx==mglNumThr && mgl_fft_data.hnx==nx)
+		{	dht = (gsl_dht *)mgl_fft_data.htx;	}
+		else
+		{	dht = gsl_dht_new(nx,0,1);	clear = true;	}
 		b = new double[2*nx*mglNumThr];
 		mglStartThreadT(mgl_hnkx,ny*nz,d->a,b,dht,0,par);
+		if(mgl_fft_data.hnx==0)	// TODO: make different th[xyz] for hankel ???
+		{	mgl_fft_data.htx = dht;	clear = false;
+			mgl_fft_data.thx=mglNumThr;	mgl_fft_data.hnx=nx;	}
 	}
 	if(strchr(dir,'y') && ny>1)
 	{
-		dht = gsl_dht_new(ny,0,1);
+		if(mgl_fft_data.thy==mglNumThr && mgl_fft_data.hny==ny)
+		{	dht = (gsl_dht *)mgl_fft_data.hty;	}
+		else
+		{	dht = gsl_dht_new(ny,0,1);	clear = true;	}
 		b = new double[2*ny*mglNumThr];
 		mglStartThreadT(mgl_hnky,nx*nz,d->a,b,dht,0,par);
+		if(mgl_fft_data.hny==0)	// TODO: make different th[xyz] for hankel ???
+		{	mgl_fft_data.hty = dht;	clear = false;
+			mgl_fft_data.thy=mglNumThr;	mgl_fft_data.hny=ny;	}
 	}
 	if(strchr(dir,'z') && nz>1)
 	{
-		dht = gsl_dht_new(nz,0,1);
+		if(mgl_fft_data.thz==mglNumThr && mgl_fft_data.hnz==nz)
+		{	dht = (gsl_dht *)mgl_fft_data.htz;	}
+		else
+		{	dht = gsl_dht_new(nz,0,1);	clear = true;	}
 		b = new double[2*nz*mglNumThr];
 		mglStartThreadT(mgl_hnkz,nx*ny,d->a,b,dht,0,par);
+		if(mgl_fft_data.hnz==0)	// TODO: make different th[xyz] for hankel ???
+		{	mgl_fft_data.htz = dht;	clear = false;
+			mgl_fft_data.thz=mglNumThr;	mgl_fft_data.hnz=nz;	}
 	}
-	if(b)	{	delete []b;	gsl_dht_free(dht);	}
+	if(clear)	gsl_dht_free(dht);
+	if(b)	delete []b;
 }
 #else
 void MGL_EXPORT mgl_data_hankel(HMDT , const char *){}

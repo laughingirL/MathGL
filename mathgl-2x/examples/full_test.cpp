@@ -75,7 +75,7 @@ void test(mglGraph *gr)
 	for(mreal t=0;t<1;t+=dt)
 	{
 		a.Hankel("x");
-		for(long i=0;i<128;i++)	a.a[i] *= mgl_expi(k.a[i]*k.a[i]*0.01*dt);
+		for(long i=0;i<128;i++)	a.a[i] *= mgl_expi(k.a[i]*k.a[i]*0.02*dt);
 //		for(long i=0;i<128;i++)	a.a[i] *= 1./128.;
 		a.Hankel("ix");
 	}
@@ -221,7 +221,7 @@ void save(mglGraph *gr,const char *name,const char *suf="")
 			gr->WriteJSON(buf);	break;
 		case 16:	// JSON
 			snprintf(buf,128,"%s%s.jsonz",name,suf);
-			gr->WriteJSON(buf);	break;
+			gr->WriteJSON(buf,"",true);	break;
 		default:// PNG (no alpha)
 #if MGL_HAVE_PNG
 			snprintf(buf,128,"%s%s.png",name,suf);
