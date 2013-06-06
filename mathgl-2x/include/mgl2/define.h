@@ -282,6 +282,8 @@ void MGL_EXPORT mgl_strlwr(char *str);
 void MGL_EXPORT mgl_wcslwr(wchar_t *str);
 /// Convert wchar_t* string into char* one
 void MGL_EXPORT mgl_wcstombs(char *dst, const wchar_t *src, int size);
+/// Clear internal data for speeding up FFT and Hankel transforms
+void MGL_EXPORT mgl_clear_fft();
 #ifdef __cplusplus
 }
 #endif

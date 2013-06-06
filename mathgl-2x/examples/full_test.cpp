@@ -67,8 +67,24 @@ void smgl_stfa(mglGraph *gr);	// STFA sample
 void smgl_text(mglGraph *gr);	// text drawing
 void test(mglGraph *gr)
 {
+//	mgl_set_num_thr(1);
+	mglDataC a(128); gr->Fill(a,"exp(-24*x^2)");
+	mglData x(128), k(128);	x.FillSample("xh");	k.FillSample("kh");
+	for(long i=0;i<128;i++)	a.a[i] = exp(-24*x.a[i]*x.a[i]);
+	mreal dt = 0.01;
+	for(mreal t=0;t<1;t+=dt)
+	{
+		a.Hankel("x");
+		for(long i=0;i<128;i++)	a.a[i] *= mgl_expi(k.a[i]*k.a[i]*0.01*dt);
+//		for(long i=0;i<128;i++)	a.a[i] *= 1./128.;
+		a.Hankel("ix");
+	}
+	gr->SetRange('y',a);
+	gr->Plot(a); 	gr->Axis();
+	return;
+
 	gr->SetOrigin(0,0,0);	gr->SetOriginTick(false);	gr->Axis("y");	return;
-	
+
 	mglParse par;
 	par.AllowSetSize(true);
 	setlocale(LC_CTYPE, "");
@@ -270,7 +286,7 @@ int main(int argc,char **argv)
 		delete gr;	return 0;	}
 
 	if(type==15 || type==16)	mini=1;	// save mini version for json
-	
+
 	if(srnd)	mgl_srnd(1);
 	gr->VertexColor(false);	gr->Compression(false);
 	if(name[0]==0)	while(s->name[0])	// all samples

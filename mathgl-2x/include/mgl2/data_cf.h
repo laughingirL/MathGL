@@ -316,6 +316,8 @@ MGL_EXPORT void *mgl_fft_alloc(long n, void **space, long nthr);
 void MGL_EXPORT mgl_fft_free(void *wt, void **ws, long nthr);
 /// Make Fourier transform of data x of size n and step s between points
 void MGL_EXPORT mgl_fft(double *x, long s, long n, const void *wt, void *ws, int inv);
+/// Clear internal data for speeding up FFT and Hankel transforms
+void MGL_EXPORT mgl_clear_fft();
 
 /// Interpolate by cubic spline the data to given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
 mreal MGL_EXPORT mgl_data_spline(HCDT dat, mreal x,mreal y,mreal z);

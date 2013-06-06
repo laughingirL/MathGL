@@ -169,6 +169,7 @@ int Height;			///< Height of the image
 int Depth;			///< Depth of the image
 int CurFrameId;		///< Number of automaticle created frames
 GifFileType *gif;*/
+	mgl_clear_fft();
 	SetTickRotate(true);	SetTickSkip(true);
 	SetWarn(mglWarnNone,"");	mglGlobalMess = "";
 	ObjId = -1;	HighId = INT_MIN;

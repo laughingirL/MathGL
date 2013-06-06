@@ -53,6 +53,30 @@ void MGL_EXPORT mglStartThreadT(void *(*func)(void *), long n, void *a, double *
 	}
 }
 //-----------------------------------------------------------------------------
+struct mglFFTdata
+{
+	int nthr;
+	long wnx,wny,wnz;		// sizes for FFT
+	long hnx,hny,hnz;		// sizes for Hankel
+	void *wtx,*wty,*wtz;		// tables for FFT
+	void **wsx,**wsy,**wsz;	// spaces for FFT
+	void *htx,*hty,*htz;		// tables for Hankel
+	mglFFTdata()	{	memset(this,0,sizeof(mglFFTdata));	}
+	~mglFFTdata()	{	mgl_clear_fft();	}
+	void Clear()
+	{
+		if(wnx)	{	mgl_fft_free(wtx,wsx,nthr);	delete []wsx;	}
+		if(wny)	{	mgl_fft_free(wty,wsy,nthr);	delete []wsy;	}
+		if(wnz)	{	mgl_fft_free(wtz,wsz,nthr);	delete []wsz;	}
+#if MGL_HAVE_GSL
+		if(hnx)	gsl_dht_free((gsl_dht*)htx);
+		if(hny)	gsl_dht_free((gsl_dht*)hty);
+		if(hnz)	gsl_dht_free((gsl_dht*)htz);
+#endif
+	}
+} mgl_fft_data;
+void MGL_EXPORT mgl_clear_fft()	{	mgl_fft_data.Clear();	}
+//-----------------------------------------------------------------------------
 MGL_EXPORT void *mgl_fft_alloc(long n, void **space, long nthr)
 {
 #if MGL_HAVE_GSL
