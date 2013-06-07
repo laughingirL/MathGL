@@ -68,19 +68,13 @@ void smgl_text(mglGraph *gr);	// text drawing
 void test(mglGraph *gr)
 {
 //	mgl_set_num_thr(1);
-	mglDataC a(128); gr->Fill(a,"exp(-24*x^2)");
-	mglData x(128), k(128);	x.FillSample("xh");	k.FillSample("kh");
-	for(long i=0;i<128;i++)	a.a[i] = exp(-24*x.a[i]*x.a[i]);
-	mreal dt = 0.01;
-	for(mreal t=0;t<1;t+=dt)
-	{
-		a.Hankel("x");
-		for(long i=0;i<128;i++)	a.a[i] *= mgl_expi(k.a[i]*k.a[i]*0.02*dt);
-//		for(long i=0;i<128;i++)	a.a[i] *= 1./128.;
-		a.Hankel("ix");
-	}
-	gr->SetRange('y',a);
-	gr->Plot(a); 	gr->Axis();
+	gr->SetQuality(6);
+	mglData a(128,128); gr->Fill(a,"x^3*y");
+	gr->SubPlot(2,2,0);	gr->Dens(a);
+	a.Export("test_data.png","BbcyrR",-1,1);
+	mglData b;	b.Import("test_data.png","BbcyrR",-1,1);
+	gr->SubPlot(2,2,1);	gr->Dens(b);	gr->Colorbar();
+	gr->SubPlot(2,2,2);	gr->Plot(a);	gr->Plot(b);
 	return;
 
 	gr->SetOrigin(0,0,0);	gr->SetOriginTick(false);	gr->Axis("y");	return;

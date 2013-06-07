@@ -33,7 +33,7 @@ long MGL_NO_EXPORT mgl_col_dif(unsigned char *c1,unsigned char *c2,bool sum)
 //-----------------------------------------------------------------------------
 MGL_NO_EXPORT unsigned char *mgl_create_scheme(const char *scheme,long &num)
 {
-	unsigned char *c=0,*cc=new unsigned char[3*strlen(scheme)+3];
+	unsigned char *c=0,*cc=new unsigned char[3*strlen(scheme)+3],*c1,*c2;
 	long nc=1,np=0;
 	register long i,j;
 	mglColor col;
@@ -41,7 +41,7 @@ MGL_NO_EXPORT unsigned char *mgl_create_scheme(const char *scheme,long &num)
 	{
 		col = mglColor(scheme[i]);
 		if(col.Valid())
-		{	cc[3*np]=col.r;	cc[3*np+1]=col.g;	cc[3*np+2]=col.b;	np++;	}
+		{	cc[3*np]=255*col.r;	cc[3*np+1]=255*col.g;	cc[3*np+2]=255*col.b;	np++;	}
 	}
 	if(np<2)	{	delete []cc;	return 0;	}
 	for(i=0;i<np-1;i++)	nc+=mgl_col_dif(cc+3*i,cc+3*i+3,false);
@@ -52,13 +52,14 @@ MGL_NO_EXPORT unsigned char *mgl_create_scheme(const char *scheme,long &num)
 		dd=mgl_col_dif(cc+3*i,cc+3*i+3,false);
 		for(j=0;j<dd;j++)
 		{
-			c[3*(pos+j)] = cc[3*i]+(cc[3*i+3]-cc[3*i])*j/dd;
-			c[3*(pos+j)+1] = cc[3*i+1]+(cc[3*i+4]-cc[3*i+1])*j/dd;
-			c[3*(pos+j)+2] = cc[3*i+2]+(cc[3*i+5]-cc[3*i+2])*j/dd;
+			c1 = c+3*(pos+j);	c2 = cc+3*i;
+			c1[0] = c2[0]+(c2[3]-c2[0])*j/dd;
+			c1[1] = c2[1]+(c2[4]-c2[1])*j/dd;
+			c1[2] = c2[2]+(c2[5]-c2[2])*j/dd;
 		}
 		pos += dd;
 	}
-	memcpy(c+3*nc-3,cc+3*np-3,3*sizeof(unsigned char));
+	memcpy(c+3*nc-3,cc+3*np-3,3);
 	delete []cc;
 	num=nc;
 	return c;
@@ -104,9 +105,8 @@ void MGL_EXPORT mgl_data_import(HMDT d, const char *fname, const char *scheme,mr
 			d->a[j+d->nx*i] = v1 + pos*(v2-v1)/num;
 		}
 	}
-	delete []c;
 	png_destroy_read_struct(&png_ptr, &info_ptr,&end_info);
-	fclose(fp);
+	fclose(fp);	delete []c;
 #else
 	mglGlobalMess += "PNG support was disabled. Please, enable it and rebuild MathGL.\n";
 #endif
@@ -134,20 +134,21 @@ void MGL_EXPORT mgl_data_export(HCDT dd, const char *fname, const char *scheme,m
 	unsigned char *c = mgl_create_scheme(scheme,num);
 	if(num<2)	{	delete []c;		return;		}
 
-	unsigned char **p = (unsigned char **)malloc(ny*sizeof(unsigned char *));
-	unsigned char *d = (unsigned char *)malloc(3*nx*ny*sizeof(unsigned char));
+	unsigned char **p = new unsigned char*[ny];
+	unsigned char *d = new unsigned char[3*nx*ny];
 	for(i=0;i<ny;i++)	p[i] = d+3*nx*(ny-1-i);
 	if(md)	for(i=0;i<ny;i++)	for(j=0;j<nx;j++)
 	{
-		k = long(num*(md->a[j+nx*(i+ny*nz)]-v1)/(v2-v1));
+		vv = md->a[j+nx*(i+ny*ns)];
+		k = long(num*(vv-v1)/(v2-v1));
 		if(k<0)	k=0;	if(k>=num) k=num-1;
-		memcpy(d+3*(j+i*nx),c+3*k,3*sizeof(unsigned char));
+		memcpy(d+3*(j+i*nx),c+3*k,3);
 	}
 	else	for(i=0;i<ny;i++)	for(j=0;j<nx;j++)
 	{
 		k = long(num*(dd->v(j,i,ns)-v1)/(v2-v1));
 		if(k<0)	k=0;	if(k>=num) k=num-1;
-		memcpy(d+3*(j+i*nx),c+3*k,3*sizeof(unsigned char));
+		memcpy(d+3*(j+i*nx),c+3*k,3);
 	}
 	delete []c;
 
@@ -167,7 +168,7 @@ void MGL_EXPORT mgl_data_export(HCDT dd, const char *fname, const char *scheme,m
 	png_write_png(png_ptr, info_ptr,  PNG_TRANSFORM_IDENTITY, 0);
 	png_write_end(png_ptr, info_ptr);
 	png_destroy_write_struct(&png_ptr, &info_ptr);
-	fclose(fp);	free(p);	free(d);
+	fclose(fp);	delete []p;	delete []d;
 #else
 	mglGlobalMess += "PNG support was disabled. Please, enable it and rebuild MathGL.\n";
 #endif

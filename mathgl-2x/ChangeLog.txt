@@ -1,6 +1,6 @@
 2.2 Release ??? 2013
 
-* Speed up consequent FFT and Hankel transforms (about 20-30 times). Add mgl_clear_fft() function. 
+* Greatly speed up consequent FFT and Hankel transforms. Add mgl_clear_fft() function for manual clearing of saved FFT/Hankel data. 
 * Add Quality=8 for dots drawing (extremely fast), Quality=9 for none drawing (for testing speed)
 * Add styles '4','6','8' for Cone() and Cones() to produce square, hex, octo-prism
 * Add style 't' for Cones() to produce tubes (cylinders)

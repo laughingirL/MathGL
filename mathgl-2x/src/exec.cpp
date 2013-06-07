@@ -2584,7 +2584,7 @@ mglCommand mgls_base_cmd[] = {
 	{"errbox","Draw error box","errbox x y ex ey ['fmt']|x y z ex ey ez ['fmt']", mgls_errbox ,13},
 	{"error","Draw error boxes","error Ydat Yerr ['fmt']|Xdat Ydat Yerr ['fmt']|Xdat Ydat Xerr Yerr ['fmt']", mgls_error ,7},
 	{"evaluate","Evaluate (interpolate) values of array Dat at points i=idat,j=jdat,k=kdat","evaluate Res Dat Idat [norm]|Res Dat Idat Jdat [norm]|Res Dat Idat Jdat Kdat [norm]", mgls_evaluate ,4},
-	{"export","Export data to PNG picture","export Dat 'fname' 'sch' [v1 v2]", mgls_import ,3},
+	{"export","Export data to PNG picture","export Dat 'fname' 'sch' [v1 v2]", mgls_export ,3},
 	{"extend","Extend data array","extend Dat dim1 [dim2]", mgls_extend ,3},
 	{"face","Draw face (quadrangle)","face x1 y1 x2 y2 x3 y3 x4 y4 ['fmt']|x1 y1 z1 x2 y2 z2 x3 y3 z3 x4 y4 z4 ['fmt']", mgls_face ,13},
 	{"facenum","Set number of visible faces","facenum val", mgls_facenum ,2},

@@ -212,6 +212,20 @@ void smgl_fexport(mglGraph *gr)	// test file export
 	gr->WritePRC("fexport.prc");
 }
 //-----------------------------------------------------------------------------
+const char *mmgl_export="new a 100 100 'x^2*y':new b 100 100\n"
+"export a 'test_data.png' 'BbcyrR' -1 1\n"
+"import b 'test_data.png' 'BbcyrR' -1 1\n"
+"subplot 2 1 0 '':title 'initial':box:dens a\n"
+"subplot 2 1 1 '':title 'imported':box:dens b";
+void smgl_export(mglGraph *gr)	// basic data operations
+{
+	mglData a(100,100), b; gr->Fill(a,"x^2*y");
+	a.Export("test_data.png","BbcyrR");
+	b.Import("test_data.png","BbcyrR",-1,1);
+	gr->SubPlot(2,1,0,"");	gr->Title("initial");	gr->Box();	gr->Dens(a);
+	gr->SubPlot(2,1,1,"");	gr->Title("imported");	gr->Box();	gr->Dens(b);
+}
+//-----------------------------------------------------------------------------
 const char *mmgl_data1="new a 40 50 60 'exp(-x^2-4*y^2-16*z^2)'\n"
 "light on:alpha on\n"
 "copy b a:diff b 'x':subplot 5 3 0:call 'splot'\n"
@@ -2483,7 +2497,8 @@ mglSample samp[] = {
 	{"densa", smgl_densa, mmgl_densa},
 	{"dew", smgl_dew, mmgl_dew},
 	{"dots", smgl_dots, mmgl_dots},
-	{"error", smgl_error, mmgl_error },
+	{"error", smgl_error, mmgl_error},
+	{"export", smgl_export, mmgl_export},
 	{"fall", smgl_fall, mmgl_fall},
 	{"fexport", smgl_fexport, mmgl_fexport},
 	{"fit", smgl_fit, mmgl_fit},
