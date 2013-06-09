@@ -55,10 +55,8 @@ public:
 	{	setGraph(GR->Self());	}
 	inline HMGL getGraph()	{	return (HMGL)gr;	}
 	/// Set drawing functions and its parameter
-	inline void setDraw(int (*func)(mglBase *gr, void *par), void *par=0)
-	{	draw_func = func;	draw_par = par;	emit usePrimChanged(draw_func || draw);	}
-	inline void setDraw(mglDraw *dr)
-	{	draw = dr;	emit usePrimChanged(draw_func || draw);	}
+	void setDraw(int (*func)(mglBase *gr, void *par), void *par);
+	void setDraw(mglDraw *dr);
 	inline void setDraw(int (*draw)(mglGraph *gr))
 	{	setDraw(draw?mgl_draw_graph:0,(void*)draw);	}
 	inline void zoomRegion(mreal xx1,mreal xx2,mreal yy1, mreal yy2)

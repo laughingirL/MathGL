@@ -778,6 +778,30 @@ void smgl_text(mglGraph *gr)	// text drawing
 	gr->Line(mglPoint(-1,-1),mglPoint(-1,1),"rA");	gr->Puts(mglPoint(-1,0),mglPoint(-1,1),"Vertical");
 }
 //-----------------------------------------------------------------------------
+const char *mmgl_text2="call 'prepare1d'\n"
+"subplot 1 3 0 '':box:plot y(:,0)\ntext y 'This is very very long string drawn along a curve' 'k'\ntext y 'Another string drawn above a curve' 'Tr'\n"
+"subplot 1 3 1 '':box:plot y(:,0)\ntext y 'This is very very long string drawn along a curve' 'k:C'\ntext y 'Another string drawn above a curve' 'Tr:C'\n"
+"subplot 1 3 2 '':box:plot y(:,0)\ntext y 'This is very very long string drawn along a curve' 'k:R'\ntext y 'Another string drawn above a curve' 'Tr:R'\n";
+void smgl_text2(mglGraph *gr)	// text drawing
+{
+	mglData y;	mgls_prepare1d(&y);
+	if(!mini)	gr->SubPlot(1,3,0,"");
+	gr->Box();	gr->Plot(y.SubData(-1,0));
+	gr->Text(y,"This is very very long string drawn along a curve","k");
+	gr->Text(y,"Another string drawn above a curve","Tr");
+	if(mini)	return;
+
+	gr->SubPlot(1,3,1,"");
+	gr->Box();	gr->Plot(y.SubData(-1,0));
+	gr->Text(y,"This is very very long string drawn along a curve","k:C");
+	gr->Text(y,"Another string drawn above a curve","Tr:C");
+
+	gr->SubPlot(1,3,2,"");
+	gr->Box();	gr->Plot(y.SubData(-1,0));
+	gr->Text(y,"This is very very long string drawn along a curve","k:R");
+	gr->Text(y,"Another string drawn above a curve","Tr:R");
+}
+//-----------------------------------------------------------------------------
 const char *mmgl_fonts="define d 0.25\nloadfont 'STIX':text 0 1.1 'default font (STIX)'\nloadfont 'adventor':text 0 1.1-d 'adventor font'\n"
 "loadfont 'bonum':text 0 1.1-2*d 'bonum font'\nloadfont 'chorus':text 0 1.1-3*d 'chorus font'\nloadfont 'cursor':text 0 1.1-4*d 'cursor font'\n"
 "loadfont 'heros':text 0 1.1-5*d 'heros font'\nloadfont 'heroscn':text 0 1.1-6*d 'heroscn font'\nloadfont 'pagella':text 0 1.1-7*d 'pagella font'\n"
@@ -2549,6 +2573,7 @@ mglSample samp[] = {
 	{"tens", smgl_tens, mmgl_tens},
 	{"ternary", smgl_ternary, mmgl_ternary },
 	{"text", smgl_text, mmgl_text},
+	{"text2", smgl_text2, mmgl_text2},
 	{"textmark", smgl_textmark, mmgl_textmark},
 	{"ticks", smgl_ticks, mmgl_ticks},
 	{"tile", smgl_tile, mmgl_tile},

@@ -250,9 +250,9 @@ void MGL_EXPORT mgl_data_save(HCDT d, const char *fname,long ns)
 	if(ns<0 || (ns>=nz && nz>1))	for(k=0;k<nz;k++)
 	{	// save whole data
 		const mglData *dr = dynamic_cast<const mglData *>(d);
-		if(dr)	fprintf(fp,"## %s\n",dr->id.c_str());
+		if(dr && !dr->id.empty())	fprintf(fp,"## %s\n",dr->id.c_str());
 		const mglDataC *dc = dynamic_cast<const mglDataC *>(d);
-		if(dc)	fprintf(fp,"## %s\n",dc->id.c_str());
+		if(dc && !dc->id.empty())	fprintf(fp,"## %s\n",dc->id.c_str());
 		for(i=0;i<ny;i++)
 		{
 			for(j=0;j<nx-1;j++)	fprintf(fp,"%g\t",d->v(j,i,k));

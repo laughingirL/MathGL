@@ -107,6 +107,21 @@ QMathGL::~QMathGL()
 {
 	if(mgl_use_graph(gr,-1)<1)	mgl_delete_graph(gr);
 	if(grBuf)	delete []grBuf;
+	if(draw)	delete draw;
+}
+//-----------------------------------------------------------------------------
+void QMathGL::setDraw(int (*func)(mglBase *gr, void *par), void *par)
+{
+	if(draw)	delete draw;	draw = 0;
+	draw_func = func;	draw_par = par;
+	emit usePrimChanged(draw_func || draw);
+}
+//-----------------------------------------------------------------------------
+void QMathGL::setDraw(mglDraw *dr)
+{
+	if(draw)	delete draw;
+	draw = dr;	draw_func = 0;
+	emit usePrimChanged(draw_func || draw);
 }
 //-----------------------------------------------------------------------------
 double QMathGL::getRatio()	{	return double(mgl_get_width(gr))/mgl_get_height(gr);	}
