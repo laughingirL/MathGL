@@ -1253,7 +1253,7 @@ void MGL_EXPORT mgl_error_exy(HMGL gr, HCDT x, HCDT y, HCDT ex, HCDT ey, const c
 				n2 = gr->AddPnt(mglPoint(vx-ve, vy-vf, zVal),-1,q,-1,11);
 				n3 = gr->AddPnt(mglPoint(vx+ve, vy+vf, zVal),-1,q,-1,11);
 				n4 = gr->AddPnt(mglPoint(vx+ve, vy-vf, zVal),-1,q,-1,11);
-				gr->line_plot(n1,n3);	gr->line_plot(n2,n4);
+				gr->line_plot(n1,n4);	gr->line_plot(n2,n3);
 				if(sh)	gr->NextColor(pal);
 			}	break;
 			case 'S':	for(i=0;i<n;i++)
@@ -1273,7 +1273,7 @@ void MGL_EXPORT mgl_error_exy(HMGL gr, HCDT x, HCDT y, HCDT ex, HCDT ey, const c
 				n2 = gr->AddPnt(mglPoint(vx-ve, vy, zVal),-1,q,-1,11);
 				n3 = gr->AddPnt(mglPoint(vx, vy-vf, zVal),-1,q,-1,11);
 				n4 = gr->AddPnt(mglPoint(vx+ve, vy, zVal),-1,q,-1,11);
-				gr->quad_plot(n1,n2,n3,n4);
+				gr->quad_plot(n1,n4,n2,n3);
 				if(sh)	gr->NextColor(pal);
 			}	break;
 			case 'O':	for(i=0;i<n;i++)

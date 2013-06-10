@@ -57,8 +57,8 @@ public:
 	/// Set drawing functions and its parameter
 	void setDraw(int (*func)(mglBase *gr, void *par), void *par);
 	void setDraw(mglDraw *dr);
-	inline void setDraw(int (*draw)(mglGraph *gr))
-	{	setDraw(draw?mgl_draw_graph:0,(void*)draw);	}
+	inline void setDraw(int (*func)(mglGraph *gr))
+	{	setDraw(func?mgl_draw_graph:0,(void*)func);	}
 	inline void zoomRegion(mreal xx1,mreal xx2,mreal yy1, mreal yy2)
 	{	x1=xx1;	y1=yy1;	x2=xx2;	y2=yy2;	}
 

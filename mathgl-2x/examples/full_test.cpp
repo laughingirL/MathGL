@@ -67,14 +67,13 @@ void smgl_stfa(mglGraph *gr);	// STFA sample
 void smgl_text(mglGraph *gr);	// text drawing
 void test(mglGraph *gr)
 {
-//	mgl_set_num_thr(1);
-	gr->SetQuality(6);
-	mglData a(128,128); gr->Fill(a,"x^3*y");
-	gr->SubPlot(2,2,0);	gr->Dens(a);
-	a.Export("test_data.png","BbcyrR",-1,1);
-	mglData b;	b.Import("test_data.png","BbcyrR",-1,1);
-	gr->SubPlot(2,2,1);	gr->Dens(b);	gr->Colorbar();
-	gr->SubPlot(2,2,2);	gr->Plot(a);	gr->Plot(b);
+	gr->Light(true);	gr->SetQuality(6);
+	mglData a;	mgls_prepare2d(&a);
+	gr->SubPlot(2,2,0);	gr->Title("Default");	gr->Rotate(50,60);	gr->Box();	gr->Surf(a);
+	gr->AddLight(0,mglPoint(0,0,1),mglPoint(0,0,-1));
+	gr->SubPlot(2,2,1);	gr->Title("Diffuse");	gr->Rotate(50,60);	gr->Box();	gr->Surf(a);
+	gr->SetDifLight(false);
+	gr->SubPlot(2,2,2);	gr->Title("Specular");	gr->Rotate(50,60);	gr->Box();	gr->Surf(a);
 	return;
 
 	gr->SetOrigin(0,0,0);	gr->SetOriginTick(false);	gr->Axis("y");	return;

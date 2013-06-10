@@ -1093,6 +1093,40 @@ void smgl_molecule(mglGraph *gr)	// example of moleculas
 	gr->DoubleSided( true ); // put back
 }
 //-----------------------------------------------------------------------------
+const char *mmgl_error2="new x0 10 'rnd':new ex 10 '0.1'\nnew y0 10 'rnd':new ey 10 '0.1'\nranges 0 1 0 1\n"
+"subplot 4 3 0 '':box:error x0 y0 ex ey '#+@'; alpha 0.5\n"
+"subplot 4 3 1 '':box:error x0 y0 ex ey '#x@'; alpha 0.5\n"
+"subplot 4 3 2 '':box:error x0 y0 ex ey '#s@'; alpha 0.5\n"
+"subplot 4 3 3 '':box:error x0 y0 ex ey 's@'; alpha 0.5\n"
+"subplot 4 3 4 '':box:error x0 y0 ex ey 'd@'; alpha 0.5\n"
+"subplot 4 3 5 '':box:error x0 y0 ex ey '#d@'; alpha 0.5\n"
+"subplot 4 3 6 '':box:error x0 y0 ex ey '+@'; alpha 0.5\n"
+"subplot 4 3 7 '':box:error x0 y0 ex ey 'x@'; alpha 0.5\n"
+"subplot 4 3 8 '':box:error x0 y0 ex ey 'o@'; alpha 0.5\n"
+"subplot 4 3 9 '':box:error x0 y0 ex ey '#o@'; alpha 0.5\n"
+"subplot 4 3 10 '':box:error x0 y0 ex ey '#.@'; alpha 0.5\n";
+void smgl_error2(mglGraph *gr)
+{
+	mglData x0(10), y0(10), ex(10), ey(10);
+	for(int i=0;i<10;i++)
+	{
+		x0.a[i] = mgl_rnd();	y0.a[i] = mgl_rnd();
+		ey.a[i] = ex.a[i] = 0.1;
+	}
+	gr->SetRanges(0,1,0,1);	gr->Alpha(true);
+	gr->SubPlot(4,3,0,"");	gr->Box();	gr->Error(x0,y0,ex,ey,"#+@","alpha 0.5");
+	gr->SubPlot(4,3,1,"");	gr->Box();	gr->Error(x0,y0,ex,ey,"#x@","alpha 0.5");
+	gr->SubPlot(4,3,2,"");	gr->Box();	gr->Error(x0,y0,ex,ey,"#s@","alpha 0.5");
+	gr->SubPlot(4,3,3,"");	gr->Box();	gr->Error(x0,y0,ex,ey,"s@","alpha 0.5");
+	gr->SubPlot(4,3,4,"");	gr->Box();	gr->Error(x0,y0,ex,ey,"d@","alpha 0.5");
+	gr->SubPlot(4,3,5,"");	gr->Box();	gr->Error(x0,y0,ex,ey,"#d@","alpha 0.5");
+	gr->SubPlot(4,3,6,"");	gr->Box();	gr->Error(x0,y0,ex,ey,"+@","alpha 0.5");
+	gr->SubPlot(4,3,7,"");	gr->Box();	gr->Error(x0,y0,ex,ey,"x@","alpha 0.5");
+	gr->SubPlot(4,3,8,"");	gr->Box();	gr->Error(x0,y0,ex,ey,"o@","alpha 0.5");
+	gr->SubPlot(4,3,9,"");	gr->Box();	gr->Error(x0,y0,ex,ey,"#o@","alpha 0.5");
+	gr->SubPlot(4,3,10,"");	gr->Box();	gr->Error(x0,y0,ex,ey,"#c@","alpha 0.5");
+}
+//-----------------------------------------------------------------------------
 const char *mmgl_error="call 'prepare1d'\nnew y 50 '0.7*sin(pi*x-pi) + 0.5*cos(3*pi*(x+1)/2) + 0.2*sin(pi*(x+1)/2)'\n"
 "new x0 10 'x + 0.1*rnd-0.05':new ex 10 '0.1':new ey 10 '0.2'\n"
 "new y0 10 '0.7*sin(pi*x-pi) + 0.5*cos(3*pi*(x+1)/2) + 0.2*sin(pi*(x+1)/2) + 0.2*rnd-0.1'\n"
@@ -2522,6 +2556,7 @@ mglSample samp[] = {
 	{"dew", smgl_dew, mmgl_dew},
 	{"dots", smgl_dots, mmgl_dots},
 	{"error", smgl_error, mmgl_error},
+	{"error2", smgl_error2, mmgl_error2},
 	{"export", smgl_export, mmgl_export},
 	{"fall", smgl_fall, mmgl_fall},
 	{"fexport", smgl_fexport, mmgl_fexport},
