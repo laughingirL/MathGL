@@ -303,9 +303,9 @@ void mglCanvas::StartGIF(const char *fname, int ms)
 	// get picture sizes
 	// NOTE: you shouldn't call SetSize() after StartGIF() !!!
 	long width, height;
-	unsigned char *f=0;
-	GetRGBLines(width, height, f);
+	unsigned char *f=0, **l=GetRGBLines(width, height, f);
 	if(f)	free(f);
+	if(l)	free(l);
 	// define colormap
 	GifColorType col[256];
 	memset(col,0,256*sizeof(GifColorType));
@@ -367,11 +367,11 @@ void mglCanvas::EndFrame()
 	Finish();
 	if(get(MGL_VECT_FRAME))	PushDrwDat();
 #if MGL_HAVE_GIF
+	if(!gif)	return;
 	long width, height, n;
-	unsigned char *f=0, **l=0;
-	l = GetRGBLines(width, height, f);
+	unsigned char *f=0, **l=GetRGBLines(width, height, f);
 	n = width*height;
-	if(!l || !gif)	return;
+	if(!l)	return;
 	EGifPutImageDesc(gif, 0, 0, width, height, 0, 0);
 	GifPixelType *line = new GifPixelType[n];
 	register long m;
