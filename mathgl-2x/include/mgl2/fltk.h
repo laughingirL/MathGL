@@ -91,9 +91,9 @@ public:
 	/// Get pointer to grapher
 	inline HMGL get_graph()	{	return (HMGL)gr;	}
 	/// Set drawing functions and its parameter
-	inline void set_draw(int (*func)(mglBase *gr, void *par), void *par=0)
-	{	draw_func = func;	draw_par = par;	}
-	inline void set_draw(mglDraw *dr)	{	draw_cl = dr;	}
+	inline void set_draw(int (*func)(mglBase *gr, void *par), void *par)
+	{	if(draw_cl)	delete draw_cl;	draw_cl=0;	draw_func=func;	draw_par=par;	}
+	inline void set_draw(mglDraw *dr)	{	if(draw_cl)	delete draw_cl;	draw_cl=dr;	draw_func=0;	}
 	inline void set_draw(int (*dr)(mglGraph *gr))
 	{	set_draw(dr?mgl_draw_graph:0,(void*)dr);	}
 	void set_state(bool z, bool r)	{	zoom = z;	rotate = r;	}

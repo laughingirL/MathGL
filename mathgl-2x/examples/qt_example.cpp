@@ -31,10 +31,7 @@ int sample_2(mglGraph *gr);
 int sample_3(mglGraph *gr);
 int sample_d(mglGraph *gr);
 //-----------------------------------------------------------------------------
-//#define PTHREAD_SAMPLE
-#ifdef PTHREAD_SAMPLE
-#include <pthread.h>
-#endif
+#define PTHREAD_SAMPLE
 mglPoint pnt;  // some global variable for changeable data
 void *mgl_qt_tmp(void *);
 //-----------------------------------------------------------------------------
@@ -45,7 +42,7 @@ public:
 	mglWnd *Gr;  // graphics to be updated
 	int Draw(mglGraph *gr);
 	void Calc();
-} foo;
+};
 //-----------------------------------------------------
 void Foo::Calc()
 {
@@ -71,8 +68,9 @@ int Foo::Draw(mglGraph *gr)
 int main(int argc,char **argv)
 {
 #ifdef PTHREAD_SAMPLE
-	mglQT gr(&foo,"MathGL examples");
-	foo.Gr = &gr;   foo.Run();
+	Foo *foo = new Foo;
+	mglQT gr(foo,"MathGL examples");
+	foo->Gr = &gr;   foo->Run();
 	return gr.Run();
 #else
 	mglQT *gr;
