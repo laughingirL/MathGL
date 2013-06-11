@@ -83,7 +83,7 @@ int MGL_NO_EXPORT mgls_ambient(mglGraph *gr, long , mglArg *a, const char *k, co
 int MGL_NO_EXPORT mgls_diffuse(mglGraph *gr, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
-	if(!strcmp(k,"n"))	gr->SetDifLight(a[0].v);
+	if(!strcmp(k,"n"))	gr->SetDiffuse(a[0].v);
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -1103,8 +1103,8 @@ int MGL_NO_EXPORT mgls_face(mglGraph *gr, long , mglArg *a, const char *k, const
 int MGL_NO_EXPORT mgls_resize(mglGraph *, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
-	if(!strcmp(k,"ddn"))	*(a[0].d) = a[1].d->Resize(iint(a[2].v), 1, 1);
-	else if(!strcmp(k,"ddnn"))	*(a[0].d) = a[1].d->Resize(iint(a[2].v), iint(a[3].v), 1);
+	if(!strcmp(k,"ddn"))	*(a[0].d) = a[1].d->Resize(iint(a[2].v));
+	else if(!strcmp(k,"ddnn"))	*(a[0].d) = a[1].d->Resize(iint(a[2].v), iint(a[3].v));
 	else if(!strcmp(k,"ddnnn"))	*(a[0].d) = a[1].d->Resize(iint(a[2].v), iint(a[3].v), iint(a[4].v));
 	else res = 1;	return res;
 }
@@ -2580,7 +2580,7 @@ mglCommand mgls_base_cmd[] = {
 	{"dew","Draw dew plot","dew Udat Vdat ['fmt']|Xdat Ydat Udat Vdat ['fmt']", mgls_dew ,11},
 	{"diff","Numerically differentiate data","diff Var 'dir'", mgls_diff ,16},
 	{"diff2","Numerically double differentiate data","diff2 Var 'dir'", mgls_diff2 ,16},
-	{"diffuse","Set to use diffuse/specular light","diffuse val", mgls_diffuse ,2},
+	{"diffuse","Set diffusive light brightness","diffuse val", mgls_diffuse ,2},
 	{"divto","Divide by data or number","divto Var Dat|Var num", mgls_divto ,3},
 	{"dots","Draw dots for arbitrary data points","dots Xdat Ydat Zdat ['fmt']", mgls_dots ,9},
 	{"drop","Draw drop","drop x0 y0 dx dy r ['col' sh asp]|x0 y0 z0 dx dy dz r ['col' sh asp]", mgls_drop ,13},

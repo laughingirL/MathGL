@@ -217,6 +217,9 @@ long MGL_EXPORT mgl_use_graph_(uintptr_t *gr, int *inc)
 void MGL_EXPORT mgl_set_ambbr(HMGL gr, double i)		{	gr->SetAmbient(i);	}
 void MGL_EXPORT mgl_set_ambbr_(uintptr_t *gr, mreal *i){	_GR_->SetAmbient(*i);	}
 //---------------------------------------------------------------------------
+void MGL_EXPORT mgl_set_difbr(HMGL gr, double i)		{	gr->SetDiffuse(i);	}
+void MGL_EXPORT mgl_set_difbr_(uintptr_t *gr, mreal *i){	_GR_->SetDiffuse(*i);	}
+//---------------------------------------------------------------------------
 void MGL_EXPORT mgl_zoom_axis(HMGL gr, double x1,double y1,double z1,double c1,double x2,double y2,double z2,double c2)
 {	gr->ZoomAxis(mglPoint(x1,y1,z1,c1), mglPoint(x2,y2,z2,c2));	}
 void MGL_EXPORT mgl_zoom_axis_(uintptr_t *gr, mreal *x1, mreal *y1, mreal *z1, mreal *c1, mreal *x2, mreal *y2, mreal *z2, mreal *c2)

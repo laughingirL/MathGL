@@ -394,7 +394,7 @@ void MGL_EXPORT mgl_dots_a_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t
 long MGL_NO_EXPORT mgl_crust(long n,mglPoint *pp,long **nn,mreal ff);
 HMDT MGL_EXPORT mgl_triangulation_3d(HCDT x, HCDT y, HCDT z)
 {	// TODO: should be used s-hull or q-hull
-	mglData *nums=new mglData;
+	mglData *nums=0;
 	long n = x->GetNx(), m;
 	if(y->GetNx()!=n || z->GetNx()!=n)	return nums;
 	register long i;
@@ -405,7 +405,7 @@ HMDT MGL_EXPORT mgl_triangulation_3d(HCDT x, HCDT y, HCDT z)
 
 	if(m>0)
 	{
-		nums->Create(3,m);
+		nums=new mglData(3,m);
 		for(i=0;i<3*m;i++)	nums->a[i]=nn[i];
 	}
 	delete []pp;	free(nn);	return nums;
@@ -414,7 +414,7 @@ HMDT MGL_EXPORT mgl_triangulation_3d(HCDT x, HCDT y, HCDT z)
 #include "s_hull/s_hull_pro.h"
 HMDT MGL_EXPORT mgl_triangulation_2d(HCDT x, HCDT y)
 {
-	mglData *nums=new mglData;
+	mglData *nums=0;
 	register long n = x->GetNx(), m,i;
 	if(y->GetNx()!=n)	return nums;
 	// use s-hull here
@@ -432,7 +432,7 @@ HMDT MGL_EXPORT mgl_triangulation_2d(HCDT x, HCDT y)
 		mglGlobalMess += "There are duplicated points for triangulation.\n";
 	s_hull_pro(pts, triads);
 	m = triads.size();
-	nums->Create(3,m);
+	nums=new mglData(3,m);
 	for(i=0;i<m;i++)
 	{
 		nums->a[3*i]   = triads[i].a;

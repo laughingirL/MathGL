@@ -430,16 +430,16 @@ MGL_NO_EXPORT void* mgl_stfa2(void *par)
 }
 HMDT MGL_EXPORT mgl_data_stfa(HCDT re, HCDT im, long dn, char dir)
 {
-	mglData *d=new mglData;
-	if(dn<2)	return d;
+	if(dn<2)	return 0;
 	dn = 2*(dn/2);
 	long nx = re->GetNx(), ny = re->GetNy();
-	if(nx*ny!=im->GetNx()*im->GetNy())	return d;
+	if(nx*ny!=im->GetNx()*im->GetNy())	return 0;
 	register long i,j,k,i0,dd=dn/2;
 	if(mglNumThr<1)	mgl_set_num_thr(0);	// manually set number of threads
 	double *a = new double[4*dn*mglNumThr],ff;
 	void **ws=new void*[mglNumThr], *wt = mgl_fft_alloc(2*dn,ws,mglNumThr);
 	long mx,my,mz;
+	mglData *d=new mglData;
 	if(dir=='y')
 	{
 		mx = nx;	my = dn;	mz = ny/dn;
@@ -715,7 +715,7 @@ HMDT MGL_EXPORT mgl_transform_a(HCDT am, HCDT ph, const char *tr)
 {
 	long nx = am->GetNx(), ny = am->GetNy(), nz = am->GetNz();
 	if(nx*ny*nz != ph->GetNx()*ph->GetNy()*ph->GetNz() || !tr || tr[0]==0)
-		return (new mglData);
+		return 0;
 	mglData re(nx,ny,nz), im(nx,ny,nz);
 	const mglData *da=dynamic_cast<const mglData *>(am);
 	const mglData *dp=dynamic_cast<const mglData *>(ph);
@@ -733,7 +733,7 @@ HMDT MGL_EXPORT mgl_transform(HCDT re, HCDT im, const char *tr)
 	if(!tr || *tr==0)	return 0;
 	long nx = re->GetNx(), ny = re->GetNy(), nz = re->GetNz();
 	if(nx*ny*nz != im->GetNx()*im->GetNy()*im->GetNz() || !tr || tr[0]==0)
-		return (new mglData);
+		return 0;
 	mglData rr(re),ii(im);
 	if(strchr(tr,'i') && strchr(tr,'f'))	// general case
 	{

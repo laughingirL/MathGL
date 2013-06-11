@@ -181,7 +181,7 @@ GifFileType *gif;*/
 	SetTranspType(0);		SetMeshNum(0);	// NOTE: default MeshNum=0
 	SetRotatedText(true);	CurrPal = 0;
 	SetLegendMarks();		SetFontSize(4);
-	SetTuneTicks(-1);		SetAmbient();
+	SetTuneTicks(-1);		SetAmbient();	SetDiffuse();
 	clr(MGL_DISABLE_SCALE);
 	clr(MGL_USE_GMTIME);	clr(MGL_NOSUBTICKS);
 	SetDifLight(false);		SetReduceAcc(false);

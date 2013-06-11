@@ -3,7 +3,7 @@ if(MGL_HAVE_DOC)
 		box boxs candle chart cloud colorbar combined cones conta contd
 		contfa contf contf_xyz cont contv cont_xyz curvcoor cut dat_diff
 		dat_extra densa dens dens_xyz dew dots error fall fit flow fonts
-		fog grad hist inplot label legend loglog map mark mesh mirror
+		fog grad hist inplot label legend light loglog map mark mesh mirror
 		molecule parser pde pipe plot primitives projection qo2d radar region schemes
 		several_light solve stem step stereo stfa style surf3a surf3c surf3
 		surfa surfc surf table tape tens ternary textmark text ticks tile tiles

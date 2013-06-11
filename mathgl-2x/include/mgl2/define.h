@@ -186,7 +186,7 @@ enum{	// Codes for warnings/messages
 #define MGL_SHOW_POS		0x001000 	///< Switch to show or not mouse click position
 #define MGL_CLF_ON_UPD		0x002000 	///< Clear plot before Update()
 #define MGL_NOSUBTICKS		0x004000 	///< Disable subticks drawing (for bounding box)
-#define MGL_DIFFUSIVE		0x008000 	///< Use diffusive light instead of specular
+//#define MGL_DIFFUSIVE		0x008000 	///< Use diffusive light instead of specular
 #define MGL_VECT_FRAME		0x010000 	///< Use DrwDat to remember all data of frames
 #define MGL_REDUCEACC		0x020000 	///< Reduce accuracy of points (to reduc size of output files)
 #define MGL_PREFERVC 		0x040000 	///< Prefer vertex color instead of texture if output format supports

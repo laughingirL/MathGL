@@ -1057,6 +1057,7 @@ int mglFindArg(const char *str)
 }
 //-----------------------------------------------------------------------------
 void mglBase::SetAmbient(mreal bright)	{	AmbBr = bright;	}
+void mglBase::SetDiffuse(mreal bright)	{	DifBr = bright;	}
 //-----------------------------------------------------------------------------
 mreal mglBase::SaveState(const char *opt)
 {

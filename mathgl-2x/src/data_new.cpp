@@ -38,52 +38,52 @@ HMDT MGL_EXPORT mgl_data_subdata_ext(HCDT d, HCDT xx, HCDT yy, HCDT zz)
 {
 	long n=0,m=0,l=0,i,j,k,i0;
 	mreal x,y,z;
-	mglData *r=new mglData;
 	bool ix=false, iy=false, iz=false;
 	if(xx->GetNz()>1)	// 3d data
 	{
 		n = xx->GetNx();	m = xx->GetNy();	l = xx->GetNz();
-		j = yy->GetNx()*yy->GetNy()*yy->GetNz();	if(j>1 && j!=n*m*l)	return r;	// wrong sizes
-		k = zz->GetNx()*zz->GetNy()*zz->GetNz();	if(k>1 && k!=n*m*l)	return r;	// wrong sizes
+		j = yy->GetNx()*yy->GetNy()*yy->GetNz();	if(j>1 && j!=n*m*l)	return 0;	// wrong sizes
+		k = zz->GetNx()*zz->GetNy()*zz->GetNz();	if(k>1 && k!=n*m*l)	return 0;	// wrong sizes
 		ix = true;	iy = j>1;	iz = k>1;
 	}
 	else if(yy->GetNz()>1)
 	{
 		n = yy->GetNx();	m = yy->GetNy();	l = yy->GetNz();
-		j = xx->GetNx()*xx->GetNy()*xx->GetNz();	if(j>1 && j!=n*m*l)	return r;	// wrong sizes
-		k = zz->GetNx()*zz->GetNy()*zz->GetNz();	if(k>1 && k!=n*m*l)	return r;	// wrong sizes
+		j = xx->GetNx()*xx->GetNy()*xx->GetNz();	if(j>1 && j!=n*m*l)	return 0;	// wrong sizes
+		k = zz->GetNx()*zz->GetNy()*zz->GetNz();	if(k>1 && k!=n*m*l)	return 0;	// wrong sizes
 		iy = true;	ix = j>1;	iz = k>1;
 	}
 	else if(zz->GetNz()>1)
 	{
 		n = zz->GetNx();	m = zz->GetNy();	l = zz->GetNz();
-		j = yy->GetNx()*yy->GetNy()*yy->GetNz();	if(j>1 && j!=n*m*l)	return r;	// wrong sizes
-		k = xx->GetNx()*xx->GetNy()*xx->GetNz();	if(k>1 && k!=n*m*l)	return r;	// wrong sizes
+		j = yy->GetNx()*yy->GetNy()*yy->GetNz();	if(j>1 && j!=n*m*l)	return 0;	// wrong sizes
+		k = xx->GetNx()*xx->GetNy()*xx->GetNz();	if(k>1 && k!=n*m*l)	return 0;	// wrong sizes
 		iz = true;	iy = j>1;	ix = k>1;
 	}
 	else if(xx->GetNy()>1)	// 2d data
 	{
 		n = xx->GetNx();	m = xx->GetNy();	l = 1;
-		j = yy->GetNx()*yy->GetNy();	if(j>1 && j!=n*m)	return r;	// wrong sizes
-		k = zz->GetNx()*zz->GetNy();	if(k>1 && k!=n*m)	return r;	// wrong sizes
+		j = yy->GetNx()*yy->GetNy();	if(j>1 && j!=n*m)	return 0;	// wrong sizes
+		k = zz->GetNx()*zz->GetNy();	if(k>1 && k!=n*m)	return 0;	// wrong sizes
 		ix = true;	iy = j>1;	iz = k>1;
 	}
 	else if(yy->GetNy()>1)
 	{
 		n = yy->GetNx();	m = yy->GetNy();	l = 1;
-		j = xx->GetNx()*xx->GetNy();	if(j>1 && j!=n*m)	return r;	// wrong sizes
-		k = zz->GetNx()*zz->GetNy();	if(k>1 && k!=n*m)	return r;	// wrong sizes
+		j = xx->GetNx()*xx->GetNy();	if(j>1 && j!=n*m)	return 0;	// wrong sizes
+		k = zz->GetNx()*zz->GetNy();	if(k>1 && k!=n*m)	return 0;	// wrong sizes
 		iy = true;	ix = j>1;	iz = k>1;
 	}
 	else if(zz->GetNy()>1)
 	{
 		n = zz->GetNx();	m = zz->GetNy();	l = 1;
-		j = yy->GetNx()*yy->GetNy();	if(j>1 && j!=n*m)	return r;	// wrong sizes
-		k = xx->GetNx()*xx->GetNy();	if(k>1 && k!=n*m)	return r;	// wrong sizes
+		j = yy->GetNx()*yy->GetNy();	if(j>1 && j!=n*m)	return 0;	// wrong sizes
+		k = xx->GetNx()*xx->GetNy();	if(k>1 && k!=n*m)	return 0;	// wrong sizes
 		iz = true;	iy = j>1;	ix = k>1;
 	}
 	long nx=d->GetNx(),ny=d->GetNy(),nz=d->GetNz();
 	mreal vx=xx->v(0), vy=yy->v(0), vz=zz->v(0);
+	mglData *r=new mglData;
 	if(n*m*l>1)	// this is 2d or 3d data
 	{
 		r->Create(n,m,l);
@@ -173,11 +173,12 @@ MGL_NO_EXPORT void *mgl_resize(void *par)
 }
 HMDT MGL_EXPORT mgl_data_resize_box(HCDT dat, long mx,long my,long mz, mreal x1,mreal x2, mreal y1,mreal y2, mreal z1,mreal z2)
 {	// NOTE: only for mglData (for speeding up)
-	mx = mx<1 ? 1:mx;	my = my<1 ? 1:my;	mz = mz<1 ? 1:mz;
-	mglData *r=new mglData(mx,my,mz);
 	const mglData *d=dynamic_cast<const mglData *>(dat);
-	if(!d)	return r;
+	if(!d)	return 0;
 	register long nx = d->nx-1, ny = d->ny-1, nz = d->nz-1;
+	mx = mx<1 ? nx:mx;	my = my<1 ? ny:my;	mz = mz<1 ? nz:mz;
+	mglData *r=new mglData(mx,my,mz);
+
 	mreal par[6]={nx*x1,0,ny*y1,0,nz*z1,0};
 	long nn[6]={mx,my,mz,nx+1,ny+1,nz+1};
 	if(mx>1)	par[1] = nx*(x2-x1)/(mx-1);
@@ -207,8 +208,8 @@ HMDT MGL_EXPORT mgl_data_combine(HCDT d1, HCDT d2)
 	const mglData *a=dynamic_cast<const mglData *>(d1);
 	const mglData *b=dynamic_cast<const mglData *>(d2);
 
+	if(!a || !b || a->nz>1 || (a->ny>1 && b->ny>1) || b->nz>1)	return 0;
 	mglData *r=new mglData;
-	if(a->nz>1 || (a->ny>1 && b->ny>1) || b->nz>1)	return r;
 	long n1=a->ny,n2=b->nx;
 	bool dim2=true;
 	if(a->ny==1)	{	n1=b->nx;	n2=b->ny;	dim2 = false;	}
@@ -508,16 +509,16 @@ HMDT MGL_EXPORT mgl_data_momentum(HCDT dat, char dir, const char *how)
 {	// NOTE: only for mglData (for speeding up)
 	long nx=dat->GetNx(),ny=dat->GetNy(),nz=dat->GetNz();
 	const mglData *d=dynamic_cast<const mglData *>(dat);
-	mglData *b=new mglData;
-	if(!d)	return b;
+	if(!d)	return 0;
 	mglFormula eq(how);
 	long p[3]={nx,ny,nz};
+	mglData *b=0;
 	if(dir=='x')
-	{	b->Create(nx);	mglStartThread(mgl_mom_x,0,nx,b->a,d->a,0,p,&eq);	}
+	{	b=new mglData(nx);	mglStartThread(mgl_mom_x,0,nx,b->a,d->a,0,p,&eq);	}
 	if(dir=='y')
-	{	b->Create(ny);	mglStartThread(mgl_mom_y,0,ny,b->a,d->a,0,p,&eq);	}
+	{	b=new mglData(ny);	mglStartThread(mgl_mom_y,0,ny,b->a,d->a,0,p,&eq);	}
 	if(dir=='z')
-	{	b->Create(nz);	mglStartThread(mgl_mom_z,0,nz,b->a,d->a,0,p,&eq);	}
+	{	b=new mglData(nz);	mglStartThread(mgl_mom_z,0,nz,b->a,d->a,0,p,&eq);	}
 	return b;
 }
 uintptr_t MGL_EXPORT mgl_data_momentum_(uintptr_t *d, char *dir, const char *how, int,int l)
@@ -556,18 +557,17 @@ MGL_NO_EXPORT void *mgl_eval_s(void *par)
 }
 HMDT MGL_EXPORT mgl_data_evaluate(HCDT dat, HCDT idat, HCDT jdat, HCDT kdat, int norm)
 {
-	mglData *r=new mglData;
 	const mglData *d=dynamic_cast<const mglData *>(dat);
 	const mglData *i=dynamic_cast<const mglData *>(idat);
 	const mglData *j=dynamic_cast<const mglData *>(jdat);
 	const mglData *k=dynamic_cast<const mglData *>(kdat);
-	if(!i)	return r;
+	if(!i)	return 0;
 
 	long p[4]={dat->GetNx(), dat->GetNy(), dat->GetNz(),norm};
 	register long n=i->nx*i->ny*i->nz;
-	if(j && j->nx*j->ny*j->nz!=n)	return r;
-	if(k && k->nx*k->ny*k->nz!=n)	return r;
-	r->Create(i->nx,i->ny,i->nz);
+	if(j && j->nx*j->ny*j->nz!=n)	return 0;
+	if(k && k->nx*k->ny*k->nz!=n)	return 0;
+	mglData *r=new mglData(i->nx,i->ny,i->nz);
 	if(d)	mglStartThread(mgl_eval,0,n,r->a,d->a,i->a,p,0,j?j->a:0,k?k->a:0);
 	else 	mglStartThread(mgl_eval_s,0,n,r->a,0,i->a,p,dat,j?j->a:0,k?k->a:0);
 	return r;
@@ -762,10 +762,9 @@ MGL_NO_EXPORT void *mgl_hist_2(void *par)
 }
 HMDT MGL_EXPORT mgl_data_hist(HCDT dat, long n, mreal v1, mreal v2, long nsub)
 {
-	mglData *b=new mglData;		// NOTE: For mglData only!
 	const mglData *d = dynamic_cast<const mglData *>(dat);
-	if(n<2 || v1==v2 || !d)	return b;
-	mgl_data_create(b,n,1,1);
+	if(n<2 || v1==v2 || !d)	return 0;	// NOTE: For mglData only!
+	mglData *b=new mglData(n);
 	mreal v[2]={v1,v2};
 	long nx=d->nx, ny=d->ny, nz=d->nz;
 	long ns=abs(nsub)+1, p[5]={n,ns,nx,ny,nz};
@@ -776,11 +775,10 @@ HMDT MGL_EXPORT mgl_data_hist(HCDT dat, long n, mreal v1, mreal v2, long nsub)
 //-----------------------------------------------------------------------------
 HMDT MGL_EXPORT mgl_data_hist_w(HCDT dat, HCDT weight, long n, mreal v1, mreal v2, long nsub)
 {
-	mglData *b=new mglData;		// NOTE: For mglData only!
 	const mglData *d = dynamic_cast<const mglData *>(dat);
 	const mglData *w = dynamic_cast<const mglData *>(weight);
-	if(n<2 || v1==v2 || !d || !w)	return b;
-	mgl_data_create(b,n,1,1);
+	if(n<2 || v1==v2 || !d || !w)	return 0;	// NOTE: For mglData only!
+	mglData *b=new mglData(n);
 	mreal v[2]={v1,v2};
 
 	long nx=d->nx, ny=d->ny, nz=d->nz;
@@ -884,7 +882,7 @@ mreal MGL_NO_EXPORT mgl_funcv(mreal v, void *par)
 }
 HMDT MGL_EXPORT mgl_data_roots(const char *func, HCDT ini, char var)
 {
-	if(!ini)	return (new mglData);
+	if(!ini)	return 0;
 	mglData *res = new mglData(ini);
 
 	mglFormula eq(func);

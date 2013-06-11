@@ -23,20 +23,19 @@ A. Paper about MathGL!!!
 	c. Tests for mglDataC arrays (as separate flag)
 	e. Test for Crop, Momentum, NormSl, Sew, DiffParam, Envelope, STFA for all directions "xyz"; Clean, Last, First, Find, Spline3, FindAny, Insert, Delete, Put, SetId/Column, PrintInfo, Squeeze, Extend, Trace, Combine, new Max/Min/Momentum, FillSample, Hist, operators, Sort, Jacobian
 	h. Test for CalcXYZ -- in data samples
-	p. Test FaceNum for Surf
 	q. Test FSurf
 	u. Test FlowP + 3d
-	w. Test diffuse, specular local sources
 
 15. Check samples: colorbar + axis after rotate -100 45
 16. Add extra samples (data1, data2, text2, error2) ???
-17. Add "Triangulation sample"
+17. Add "Triangulation sample", "Local light sample"
 18. Update docs about Cones (styles 't', '4', '6', '8')
 19. Update docs about Cone (style '4', '6', '8')
 
 20. http://en.wikipedia.org/wiki/Autocorrelation#Efficient_computation
 
-22. Command 'resize' should take 0 (i.e. initial one) for default sizes
+21. Update docs HMDT return NULL if data cannot be created
+22. Update docs: command 'resize' should take 0 (i.e. initial one) for default sizes
 23. check if all "value" options are described (see hist, )
 24. Check centered curved text (see text2)
 

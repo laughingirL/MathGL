@@ -76,14 +76,13 @@ HMDT MGL_EXPORT mgl_pde_solve(HMGL gr, const char *ham, HCDT ini_re, HCDT ini_im
 {
 	gr->SaveState(opt);
 	mglPoint Min=gr->Min, Max=gr->Max;
-	mglData *res=new mglData;
 	int nx=ini_re->GetNx(), ny=ini_re->GetNy();
 	int nz = int((Max.z-Min.z)/dz)+1;
 	if(nx<2 || nz<2 || Max.x==Min.x)			// Too small data
-	{	gr->SetWarn(mglWarnLow,"PDE");	return res;	}
+	{	gr->SetWarn(mglWarnLow,"PDE");	return 0;	}
 	if(ini_im->GetNx()*ini_im->GetNy() != nx*ny)// Wrong dimensions
-	{	gr->SetWarn(mglWarnDim,"PDE");	return res;	}
-	mgl_data_create(res, nz, nx, ny);
+	{	gr->SetWarn(mglWarnDim,"PDE");	return 0;	}
+	mglData *res=new mglData(nz, nx, ny);
 
 	mglFormula eqs(ham);
 	dual *a = new dual[4*nx*ny], hh0;	// Add "damping" area
@@ -172,10 +171,9 @@ HMDT MGL_EXPORT mgl_pde_solve(HMGL gr, const char *ham, HCDT ini_re, HCDT ini_im
 //-----------------------------------------------------------------------------
 HMDT MGL_EXPORT mgl_ode_solve(void (*func)(const mreal *x, mreal *dx, void *par), int n, mreal *x0, mreal dt, mreal tmax, void *par)
 {
-	mglData *res=new mglData;
-	if(tmax<dt)	return res;	// nothing to do
+	if(tmax<dt)	return 0;	// nothing to do
 	int nt = int(tmax/dt)+1;
-	mgl_data_create(res,n,nt,1);
+	mglData *res=new mglData(n,nt);
 	mreal *x=new mreal[n], *k1=new mreal[n], *k2=new mreal[n], *k3=new mreal[n], *v=new mreal[n], hh=dt/2;
 	register long i,k;
 	// initial conditions
@@ -320,12 +318,11 @@ MGL_NO_EXPORT void *mgl_qo2d_hprep(void *par)
 //-----------------------------------------------------------------------------
 HMDT MGL_EXPORT mgl_qo2d_func(dual (*ham)(mreal u, mreal x, mreal y, mreal px, mreal py, void *par), void *par, HCDT ini_re, HCDT ini_im, HCDT ray_dat, mreal r, mreal k0, HMDT xx, HMDT yy)
 {
-	mglData *res=new mglData;
 	const mglData *ray=dynamic_cast<const mglData *>(ray_dat);	// NOTE: Ray must be mglData!
-	if(!ray)	return res;
+	if(!ray)	return 0;
 	int nx=ini_re->GetNx(), nt=ray->ny, n7=ray->nx;
-	if(nx<2 || ini_im->GetNx()!=nx || nt<2)	return res;
-	mgl_data_create(res,nx,nt,1);
+	if(nx<2 || ini_im->GetNx()!=nx || nt<2)	return 0;
+	mglData *res=new mglData(nx,nt,1);
 
 	dual *a=new dual[2*nx], *hu=new dual[2*nx],  *hx=new dual[2*nx];
 	double *dmp=new double[2*nx];
@@ -486,12 +483,11 @@ MGL_NO_EXPORT void *mgl_qo3d_post(void *par)
 //-----------------------------------------------------------------------------
 HMDT MGL_EXPORT mgl_qo3d_func(dual (*ham)(mreal u, mreal x, mreal y, mreal z, mreal px, mreal py, mreal pz, void *par), void *par, HCDT ini_re, HCDT ini_im, HCDT ray_dat, mreal r, mreal k0, HMDT xx, HMDT yy, HMDT zz)
 {
-	mglData *res=new mglData;
 	const mglData *ray=dynamic_cast<const mglData *>(ray_dat);	// NOTE: Ray must be mglData!
-	if(!ray)	return res;
+	if(!ray)	return 0;
 	int nx=ini_re->GetNx(), nt=ray->ny, n7=ray->nx;	// NOTE: only square grids are supported now (for simplicity)
-	if(nx<2 || ini_re->GetNx()!=nx || ini_im->GetNx()*ini_im->GetNy()!=nx*nx || nt<2)	return res;
-	mgl_data_create(res,nx,nx,nt);
+	if(nx<2 || ini_re->GetNx()!=nx || ini_im->GetNx()*ini_im->GetNy()!=nx*nx || nt<2)	return 0;
+	mglData *res=new mglData(nx,nx,nt);
 
 	dual *a=new dual[4*nx*nx], *huv=new dual[4*nx*nx],  *hxy=new dual[4*nx*nx], *huy=new dual[4*nx*nx],  *hxv=new dual[4*nx*nx];
 	dual *hu=new dual[2*nx],  *hx=new dual[2*nx], *hy=new dual[2*nx],  *hv=new dual[2*nx];
@@ -620,9 +616,8 @@ MGL_NO_EXPORT void *mgl_jacob2(void *par)
 HMDT MGL_EXPORT mgl_jacobian_2d(HCDT x, HCDT y)
 {
 	int nx = x->GetNx(), ny=x->GetNy();
-	mglData *r=new mglData;
-	if(nx!=y->GetNx() || ny!=y->GetNy() || nx<2 || ny<2)	return	r;
-	mgl_data_create(r,nx,ny,1);
+	if(nx!=y->GetNx() || ny!=y->GetNy() || nx<2 || ny<2)	return	0;
+	mglData *r=new mglData(nx,ny,1);
 	const mglData *xx=dynamic_cast<const mglData *>(x);
 	const mglData *yy=dynamic_cast<const mglData *>(y);
 	if(xx && yy)
@@ -669,10 +664,9 @@ MGL_NO_EXPORT void *mgl_jacob3(void *par)
 HMDT MGL_EXPORT mgl_jacobian_3d(HCDT x, HCDT y, HCDT z)
 {
 	int nx = x->GetNx(), ny=x->GetNy(), nz=x->GetNz(), nn = nx*ny*nz;
-	mglData *r=new mglData;
-	if(nx<2 || ny<2 || nz<2)	return	r;
-	if(nn!=y->GetNx()*y->GetNy()*y->GetNz() || nn!=z->GetNx()*z->GetNy()*z->GetNz())	return r;
-	mgl_data_create(r,nx,ny,nz);
+	if(nx<2 || ny<2 || nz<2)	return 0;
+	if(nn!=y->GetNx()*y->GetNy()*y->GetNz() || nn!=z->GetNx()*z->GetNy()*z->GetNz())	return 0;
+	mglData *r=new mglData(nx,ny,nz);
 	const mglData *xx=dynamic_cast<const mglData *>(x);
 	const mglData *yy=dynamic_cast<const mglData *>(y);
 	const mglData *zz=dynamic_cast<const mglData *>(z);

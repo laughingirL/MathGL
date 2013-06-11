@@ -248,7 +248,7 @@ public:
 	inline mglData Combine(const mglDataA &dat) const
 	{	return mglData(true,mgl_data_combine(this,&dat));	}
 	/// Resize the data to new size of box [x1,x2]*[y1,y2]*[z1,z2]
-	inline mglData Resize(long mx,long my=1,long mz=1, mreal x1=0,mreal x2=1, mreal y1=0,mreal y2=1, mreal z1=0,mreal z2=1) const
+	inline mglData Resize(long mx,long my=0,long mz=0, mreal x1=0,mreal x2=1, mreal y1=0,mreal y2=1, mreal z1=0,mreal z2=1) const
 	{	return mglData(true,mgl_data_resize_box(this,mx,my,mz,x1,x2,y1,y2,z1,z2));	}
 	/// Get array which values is result of interpolation this for coordinates from other arrays
 	inline mglData Evaluate(const mglData &idat, bool norm=true) const

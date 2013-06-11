@@ -294,8 +294,10 @@ public:
 	{	bool t=get(MGL_ENABLE_LIGHT);	set(enable,MGL_ENABLE_LIGHT);	return t;	}
 	/// Set ambient light brightness
 	virtual void SetAmbient(mreal bright=0.5);
+	/// Set diffusive light brightness
+	virtual void SetDiffuse(mreal bright=0.5);
 	/// Use diffusive light (only for local light sources)
-	inline void SetDifLight(bool dif)	{	set(dif,MGL_DIFFUSIVE);	}
+	inline void SetDifLight(bool dif)	{	SetDiffuse(dif?0.5:0);	}
 	/// Set the transparency on/off.
 	virtual bool Alpha(bool enable)
 	{	bool t=get(MGL_ENABLE_ALPHA);	set(enable,MGL_ENABLE_ALPHA);	return t;	}
@@ -469,6 +471,7 @@ protected:
 	mreal PenWidth;		///< Pen width for further line plotting (must be >0 !!!)
 //	long numT;			///< Number of textures
 	mreal AmbBr;		///< Default ambient light brightness
+	mreal DifBr;		///< Default diffusive light brightness
 
 	mglFont *fnt;		///< Class for printing vector text
 	mreal FontSize;		///< The size of font for tick and axis labels

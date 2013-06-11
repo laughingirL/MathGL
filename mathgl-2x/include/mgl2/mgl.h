@@ -77,6 +77,8 @@ public:
 	{	mgl_add_light_loc(gr, n, r.x, r.y, r.z, p.x, p.y, p.z, col, bright, ap);	}
 	/// Set ambient light brightness
 	inline void SetAmbient(double i)			{	mgl_set_ambbr(gr, i);	}
+	/// Set diffusive light brightness
+	inline void SetDiffuse(double i)			{	mgl_set_difbr(gr, i);	}
 	/// Set the fog distance or switch it off (if d=0).
 	inline void Fog(double d, double dz=0.25)	{	mgl_set_fog(gr, d, dz);		}
 

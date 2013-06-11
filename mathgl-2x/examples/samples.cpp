@@ -1564,6 +1564,33 @@ void smgl_several_light(mglGraph *gr)	// several light sources
 	gr->Box();	gr->Surf(a,"h");
 }
 //-----------------------------------------------------------------------------
+const char *mmgl_light="light on:quality 6\ncall 'prepare2d'\n"
+"subplot 2 2 0:title 'Default':rotate 50 60:box:surf a\nline -1 -0.7 1.7 -1 -0.7 0.7 'BA'\n\n"
+"light 0 1 0 1 -2 -1 -1\nsubplot 2 2 1:title 'Local':rotate 50 60:box:surf a\n"
+"line 1 0 1 -1 -1 0 'BAO'\n\n"
+"diffuse 0\nsubplot 2 2 2:title 'no diffuse':rotate 50 60:box:surf a\n"
+"line 1 0 1 -1 -1 0 'BAO'\n\n"
+"diffuse 0.5:light 0 1 0 1 -2 -1 -1 'w' 0\n"
+"subplot 2 2 3:title 'diffusive only':rotate 50 60:box:surf a\n"
+"line 1 0 1 -1 -1 0 'BAO'\n";
+void smgl_light(mglGraph *gr)	// local light sources
+{
+	gr->Light(true);	gr->SetQuality(6);
+	mglData a;	mgls_prepare2d(&a);
+	gr->SubPlot(2,2,0);	gr->Title("Default");	gr->Rotate(50,60);	gr->Box();	gr->Surf(a);
+	gr->Line(mglPoint(-1,-0.7,1.7),mglPoint(-1,-0.7,0.7),"BA");
+	gr->AddLight(0,mglPoint(1,0,1),mglPoint(-2,-1,-1));
+	gr->SubPlot(2,2,1);	gr->Title("Local");	gr->Rotate(50,60);	gr->Box();	gr->Surf(a);
+	gr->Line(mglPoint(1,0,1),mglPoint(-1,-1,0),"BAO");
+	gr->SetDiffuse(0);
+	gr->SubPlot(2,2,2);	gr->Title("no diffuse");	gr->Rotate(50,60);	gr->Box();	gr->Surf(a);
+	gr->Line(mglPoint(1,0,1),mglPoint(-1,-1,0),"BAO");
+	gr->SetDiffuse(0.5);
+	gr->AddLight(0,mglPoint(1,0,1),mglPoint(-2,-1,-1),'w',0);
+	gr->SubPlot(2,2,3);	gr->Title("diffusive only");	gr->Rotate(50,60);	gr->Box();	gr->Surf(a);
+	gr->Line(mglPoint(1,0,1),mglPoint(-1,-1,0),"BAO");
+}
+//-----------------------------------------------------------------------------
 const char *mmgl_surf3="call 'prepare3d'\nlight on:alpha on\n"
 "subplot 2 2 0:title 'Surf3 plot (default)'\nrotate 50 60:box:surf3 c\n"
 "subplot 2 2 1:title '\"\\#\" style'\nrotate 50 60:box:surf3 c '#'\n"
@@ -2569,6 +2596,7 @@ mglSample samp[] = {
 	{"inplot", smgl_inplot, mmgl_inplot},
 	{"label", smgl_label, mmgl_label},
 	{"legend", smgl_legend, mmgl_legend },
+	{"light", smgl_light, mmgl_light},
 	{"loglog", smgl_loglog, mmgl_loglog},
 	{"map", smgl_map, mmgl_map},
 	{"mark", smgl_mark, mmgl_mark},
