@@ -102,7 +102,7 @@ void MGL_EXPORT mgl_set_ambbr_(uintptr_t *gr, mreal *i);
 /// Set diffusive light brightness
 void MGL_EXPORT mgl_set_difbr(HMGL gr, double i);
 void MGL_EXPORT mgl_set_difbr_(uintptr_t *gr, mreal *i);
-/// Use diffusive light (only for local light sources)
+/// Use diffusive light (only for local light sources) -- OBSOLETE
 void MGL_EXPORT mgl_set_light_dif(HMGL gr, int enable);
 void MGL_EXPORT mgl_set_light_dif_(uintptr_t *gr, int *enable);
 

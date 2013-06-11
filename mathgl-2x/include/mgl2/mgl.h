@@ -68,7 +68,7 @@ public:
 	inline void Light(bool enable)			{	mgl_set_light(gr, enable);	}
 	/// Switch on/off the specified light source.
 	inline void Light(int n,bool enable)	{	mgl_set_light_n(gr, n, enable);	}
-	/// Use diffusive light (only for local light sources)
+	/// Use diffusive light (only for local light sources) -- OBSOLETE
 	inline void SetDifLight(bool dif)		{	mgl_set_light_dif(gr, dif);	}
 	/// Add a light source.
 	inline void AddLight(int n, mglPoint p, char col='w', double bright=0.5, double ap=0)

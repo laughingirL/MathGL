@@ -1,9 +1,10 @@
 if(MGL_HAVE_DOC)
+	set(MGL_EXTA light)
 	set(MGL_PNG alpha area aspect axial axis barh bars belt boxplot
 		box boxs candle chart cloud colorbar combined cones conta contd
 		contfa contf contf_xyz cont contv cont_xyz curvcoor cut dat_diff
 		dat_extra densa dens dens_xyz dew dots error fall fit flow fonts
-		fog grad hist inplot label legend light loglog map mark mesh mirror
+		fog grad hist inplot label legend loglog map mark mesh mirror
 		molecule parser pde pipe plot primitives projection qo2d radar region schemes
 		several_light solve stem step stereo stfa style surf3a surf3c surf3
 		surfa surfc surf table tape tens ternary textmark text ticks tile tiles
@@ -55,6 +56,19 @@ if(MGL_HAVE_PDF)
 			DEPENDS mgl_example
 			WORKING_DIRECTORY ${MGL_OUT}/pdf )
 endif(MGL_HAVE_PDF)
+	endforeach(SAMPLE)
+
+	foreach(SAMPLE ${MGL_EXTRA})
+		set(MGL_PNG_N ${MGL_PNG_N} ${MGL_OUT}/png/${SAMPLE}.png)
+		add_custom_command(OUTPUT ${MGL_OUT}/png/${SAMPLE}.png
+			COMMAND mgl_example -kind=${SAMPLE}
+			DEPENDS mgl_example
+			WORKING_DIRECTORY ${MGL_OUT}/png )
+		set(MGL_PNG_S ${MGL_PNG_S} ${MGL_OUT}/small/${SAMPLE}-sm.png)
+		add_custom_command(OUTPUT ${MGL_OUT}/small/${SAMPLE}-sm.png
+			COMMAND mgl_example -kind=${SAMPLE} -mini
+			DEPENDS mgl_example
+			WORKING_DIRECTORY ${MGL_OUT}/small )
 	endforeach(SAMPLE)
 
 	set(list_texi_files_en overview_en.texi example_en.texi ex_mgl_en.texi parse_en.texi formats_en.texi udav_en.texi symbols_en.texi

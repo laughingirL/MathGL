@@ -5,6 +5,7 @@
 * Add styles '4','6','8' for Cone() and Cones() to produce square, hex, octo-prism
 * Add style 't' for Cones() to produce tubes (cylinders)
 * Add transparency for Area() and Region() plots
+* Improve/change lighting from local sources. Add SetDiffuse() function
 * Add manual compression of JSON
 * Define WORDS_BIGENDIAN and HAVE_MEMRCHR (thanks to Dinar Valeev)
 * Bugfix for cleaning unused points

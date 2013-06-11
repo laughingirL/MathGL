@@ -424,9 +424,8 @@ int mglParser::PreExec(mglGraph *, long k, std::wstring *arg, mglArg *a)
 {
 	long n=0;
 	mglVar *v;
-	if(!arg[0].compare(L"delete"))	// parse command "delete"
+	if(!arg[0].compare(L"delete") && k==2)	// parse command "delete"
 	{
-		if(k<2)	return 2;
 		DeleteVar(arg[1].c_str());	n=1;
 	}
 	else if(!arg[0].compare(L"list"))	// parse command "list"
