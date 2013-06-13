@@ -107,7 +107,7 @@ gr.ShowImage();
 @subsection Plot sample
 @cindex Plot
 @float
-@image{../png/plot, 7cm}
+@image{png/plot, 7cm}
 @c @caption{Example of Plot. @tdref{plot}}
 @end float
 @ifclear UDAV
@@ -167,7 +167,7 @@ gr.Plot(y);
 @subsection Radar sample
 @cindex Radar
 @float
-@image{../png/radar, 7cm}
+@image{png/radar, 7cm}
 @c @caption{Example of Plot. @tdref{radar}}
 @end float
 @ifclear UDAV
@@ -212,7 +212,7 @@ gr.Radar(y,"#");
 @subsection Tens sample
 @cindex Tens
 @float
-@image{../png/tens, 7cm}
+@image{png/tens, 7cm}
 @c @caption{Example of Tens. @tdref{tens}}
 @end float
 @ifclear UDAV
@@ -273,7 +273,7 @@ gr.Tens(y,c);
 @subsection Area sample
 @cindex Area
 @float
-@image{../png/area, 7cm}
+@image{png/area, 7cm}
 @c @caption{Example of Area. @tdref{area}}
 @end float
 @ifclear UDAV
@@ -338,7 +338,7 @@ gr.Area(y);
 @subsection Area with gradient filling sample
 @cindex Area
 @float
-@image{../png/area_2, 7cm}
+@image{png/area_2, 7cm}
 @c @caption{Example of Area. @tdref{area}}
 @end float
 @ifclear UDAV
@@ -403,7 +403,7 @@ gr.Area(y,"cbgGyr");
 @subsection Bars sample
 @cindex Bars
 @float
-@image{../png/bars, 7cm}
+@image{png/bars, 7cm}
 @c @caption{Example of Bars. @tdref{bars}}
 @end float
 @ifclear UDAV
@@ -458,7 +458,7 @@ gr.Bars(y);
 @subsection Bars 2 colors sample
 @cindex Bars
 @float
-@image{../png/bars_2, 7cm}
+@image{png/bars_2, 7cm}
 @c @caption{Example of Bars. @tdref{bars}}
 @end float
 @ifclear UDAV
@@ -513,7 +513,7 @@ gr.Bars(y,"cbgGyr");
 @subsection Bars above sample
 @cindex Bars
 @float
-@image{../png/bars_a, 7cm}
+@image{png/bars_a, 7cm}
 @c @caption{Example of Bars. @tdref{bars}}
 @end float
 @ifclear UDAV
@@ -568,7 +568,7 @@ gr.Bars(y,"a");
 @subsection Bars fall sample
 @cindex Bars
 @float
-@image{../png/bars_f, 7cm}
+@image{png/bars_f, 7cm}
 @c @caption{Example of Bars. @tdref{bars}}
 @end float
 @ifclear UDAV
@@ -623,7 +623,7 @@ gr.Bars(y,"f");
 @subsection Barh sample
 @cindex Barh
 @float
-@image{../png/barh, 7cm}
+@image{png/barh, 7cm}
 @c @caption{Example of Barh. @tdref{barh}}
 @end float
 @ifclear UDAV
@@ -678,7 +678,7 @@ gr.Barh(y);
 @subsection Step sample
 @cindex Step
 @float
-@image{../png/step, 7cm}
+@image{png/step, 7cm}
 @c @caption{Example of Step. @tdref{step}}
 @end float
 @ifclear UDAV
@@ -738,7 +738,7 @@ gr.Step(y);
 @subsection Stem sample
 @cindex Stem
 @float
-@image{../png/stem, 7cm}
+@image{png/stem, 7cm}
 @c @caption{Example of Stem. @tdref{stem}}
 @end float
 @ifclear UDAV
@@ -803,7 +803,7 @@ gr.Stem(y,"o");
 @subsection Region sample
 @cindex Region
 @float
-@image{../png/region, 7cm}
+@image{png/region, 7cm}
 @c @caption{Example of Region. @tdref{region}}
 @end float
 @ifclear UDAV
@@ -873,7 +873,7 @@ gr.Plot(y2,"k2");
 @subsection Region gradient sample
 @cindex Region
 @float
-@image{../png/region_2, 7cm}
+@image{png/region_2, 7cm}
 @c @caption{Example of Region. @tdref{region}}
 @end float
 @ifclear UDAV
@@ -943,7 +943,7 @@ gr.Plot(y2,"k2");
 @subsection Error sample
 @cindex Error
 @float
-@image{../png/error, 7cm}
+@image{png/error, 7cm}
 @c @caption{Example of Error. @tdref{error}}
 @end float
 @ifclear UDAV
@@ -1033,7 +1033,7 @@ gr.Error(x0,y0,ex,ey,"ko");
 @subsection BoxPlot sample
 @cindex BoxPlot
 @float
-@image{../png/boxplot, 7cm}
+@image{png/boxplot, 7cm}
 @c @caption{Example of BoxPlot. @tdref{boxplot}}
 @end float
 @ifclear UDAV
@@ -1087,7 +1087,7 @@ gr.BoxPlot(a);
 @subsection Mark sample
 @cindex Mark
 @float
-@image{../png/mark, 7cm}
+@image{png/mark, 7cm}
 @c @caption{Example of Mark. @tdref{mark}}
 @end float
 @ifclear UDAV
@@ -1156,7 +1156,7 @@ gr.Mark(y,y1,"bs");
 @subsection TextMark sample
 @cindex TextMark
 @float
-@image{../png/textmark, 7cm}
+@image{png/textmark, 7cm}
 @c @caption{Example of TextMark. @tdref{textmark}}
 @end float
 @ifclear UDAV
@@ -1226,7 +1226,7 @@ gr.TextMark(y,y1,"\\gamma");
 @subsection Tube sample
 @cindex Tube
 @float
-@image{../png/tube, 7cm}
+@image{png/tube, 7cm}
 @c @caption{Example of Tube. @tdref{tube}}
 @end float
 @ifclear UDAV
@@ -1293,7 +1293,7 @@ gr.Tube(y,0.05);
 @subsection Text sample
 @cindex Text
 @float
-@image{../png/text, 7cm}
+@image{png/text, 7cm}
 @c @caption{Example of Text. @tdref{text}}
 @end float
 @ifclear UDAV
@@ -1358,7 +1358,7 @@ gr.Text(y,"Another string drawn above a curve","T:r");
 @subsection Torus sample
 @cindex Torus
 @float
-@image{../png/torus, 7cm}
+@image{png/torus, 7cm}
 @c @caption{Example of Torus. @tdref{torus}}
 @end float
 @ifclear UDAV
@@ -1427,7 +1427,7 @@ gr.Torus(y1,y2,"pz");
 @subsection Chart sample
 @cindex Chart
 @float
-@image{../png/chart, 7cm}
+@image{png/chart, 7cm}
 @c @caption{Example of Chart. @tdref{chart}}
 @end float
 @ifclear UDAV
@@ -1486,7 +1486,7 @@ gr.Chart(ch,"#");
 @cindex Chart
 @cindex Axis
 @float
-@image{../png/pie_chart, 7cm}
+@image{png/pie_chart, 7cm}
 @c @caption{Example of Chart in cylindrical coordinates. @tdref{pie_chart}}
 @end float
 @ifclear UDAV
@@ -1550,7 +1550,7 @@ gr.Chart(ch,"bgr cmy#");
 @cindex Chart
 @cindex Axis
 @float
-@image{../png/ring_chart, 7cm}
+@image{png/ring_chart, 7cm}
 @c @caption{Example of Chart in cylindrical coordinates. @tdref{pie_chart}}
 @end float
 @ifclear UDAV
@@ -1633,7 +1633,7 @@ gr.Chart(ch,"bgr cmy#");
 @subsection Surf sample
 @cindex Surf
 @float
-@image{../png/surf, 7cm}
+@image{png/surf, 7cm}
 @c @caption{Example of Surf. @tdref{surf}}
 @end float
 @ifclear UDAV
@@ -1692,7 +1692,7 @@ gr.Surf(a);
 @cindex Surf
 @cindex Alpha
 @float
-@image{../png/surf_alpha, 7cm}
+@image{png/surf_alpha, 7cm}
 @c @caption{Example of Surf & Alpha. @tdref{surf_alpha}}
 @end float
 @ifclear UDAV
@@ -1756,7 +1756,7 @@ gr.Surf(a);
 @cindex Surf
 @cindex Fog
 @float
-@image{../png/surf_fog, 7cm}
+@image{png/surf_fog, 7cm}
 @c @caption{Example of Surf & Fog. @tdref{surf_fog}}
 @end float
 @ifclear UDAV
@@ -1819,7 +1819,7 @@ gr.Surf(a);
 @subsection Sharp colors sample
 @cindex Surf
 @float
-@image{../png/surf_sl, 7cm}
+@image{png/surf_sl, 7cm}
 @c @caption{Example of sharp color scheme. @tdref{surf_sl}}
 @end float
 @ifclear UDAV
@@ -1877,7 +1877,7 @@ gr.Surf(a,"BbcyrR|");
 @subsection Mesh sample
 @cindex Mesh
 @float
-@image{../png/mesh, 7cm}
+@image{png/mesh, 7cm}
 @c @caption{Example of Mesh. @tdref{mesh}}
 @end float
 @ifclear UDAV
@@ -1931,7 +1931,7 @@ gr.Mesh(a);
 @subsection Fall sample
 @cindex Fall
 @float
-@image{../png/fall, 7cm}
+@image{png/fall, 7cm}
 @c @caption{Example of Fall. @tdref{fall}}
 @end float
 @ifclear UDAV
@@ -1985,7 +1985,7 @@ gr.Fall(a);
 @subsection Belt sample
 @cindex Belt
 @float
-@image{../png/belt, 7cm}
+@image{png/belt, 7cm}
 @c @caption{Example of Belt. @tdref{belt}}
 @end float
 @ifclear UDAV
@@ -2043,7 +2043,7 @@ gr.Belt(a);
 @subsection Tile sample
 @cindex Tile
 @float
-@image{../png/tile, 7cm}
+@image{png/tile, 7cm}
 @c @caption{Example of Tile. @tdref{tile}}
 @end float
 @ifclear UDAV
@@ -2101,7 +2101,7 @@ gr.Tile(a);
 @subsection Boxs sample
 @cindex Boxs
 @float
-@image{../png/boxs, 7cm}
+@image{png/boxs, 7cm}
 @c @caption{Example of Boxs. @tdref{boxs}}
 @end float
 @ifclear UDAV
@@ -2164,7 +2164,7 @@ gr.Boxs(a);
 @cindex Dens
 @cindex Colorbar
 @float
-@image{../png/dens, 7cm}
+@image{png/dens, 7cm}
 @c @caption{Example of Dens & Colorbar. @tdref{dens}}
 @end float
 @ifclear UDAV
@@ -2219,7 +2219,7 @@ gr.Colorbar();
 @subsection Cont sample
 @cindex Cont
 @float
-@image{../png/cont, 7cm}
+@image{png/cont, 7cm}
 @c @caption{Example of Cont. @tdref{cont}}
 @end float
 @ifclear UDAV
@@ -2277,7 +2277,7 @@ gr.Cont(a);
 @subsection ContF sample
 @cindex ContF
 @float
-@image{../png/contf, 7cm}
+@image{png/contf, 7cm}
 @c @caption{Example of ContF. @tdref{contf}}
 @end float
 @ifclear UDAV
@@ -2338,7 +2338,7 @@ gr.ContF(a);
 @subsection ContD sample
 @cindex ContD
 @float
-@image{../png/contd, 7cm}
+@image{png/contd, 7cm}
 @c @caption{Example of ContD. @tdref{contd}}
 @end float
 @ifclear UDAV
@@ -2402,7 +2402,7 @@ gr.Colorbar(v);
 @subsection Axial sample
 @cindex Axial
 @float
-@image{../png/axial, 7cm}
+@image{png/axial, 7cm}
 @c @caption{Example of Axial. @tdref{axial}}
 @end float
 @ifclear UDAV
@@ -2465,7 +2465,7 @@ gr.Axial(a);
 @subsection Grad sample
 @cindex Grad
 @float
-@image{../png/grad, 7cm}
+@image{png/grad, 7cm}
 @c @caption{Example of Grad. @tdref{grad}}
 @end float
 @ifclear UDAV
@@ -2535,7 +2535,7 @@ gr.Colorbar();
 @subsection Surf3 sample
 @cindex Surf3
 @float
-@image{../png/surf3, 7cm}
+@image{png/surf3, 7cm}
 @c @caption{Example of Surf3. @tdref{surf3}}
 @end float
 @ifclear UDAV
@@ -2598,7 +2598,7 @@ gr.Surf3(a);
 @subsection Cloud sample
 @cindex Cloud
 @float
-@image{../png/cloud, 7cm}
+@image{png/cloud, 7cm}
 @c @caption{Example of Cloud. @tdref{cloud}}
 @end float
 @ifclear UDAV
@@ -2657,7 +2657,7 @@ gr.Cloud(a,"wyrRk");
 @subsection CloudP sample
 @cindex CloudP
 @float
-@image{../png/cloudp, 7cm}
+@image{png/cloudp, 7cm}
 @c @caption{Example of CloudP. @tdref{cloudp}}
 @end float
 @ifclear UDAV
@@ -2704,7 +2704,7 @@ Not available.
 @cindex Dens3
 @cindex Axis
 @float
-@image{../png/densa, 7cm}
+@image{png/densa, 7cm}
 @c @caption{Example of Dens3. @tdref{densa}}
 @end float
 @ifclear UDAV
@@ -2770,7 +2770,7 @@ gr.DensA(a);
 @subsection Cont3 sample
 @cindex Cont3
 @float
-@image{../png/conta, 7cm}
+@image{png/conta, 7cm}
 @c @caption{Example of Cont3. @tdref{conta}}
 @end float
 @ifclear UDAV
@@ -2825,7 +2825,7 @@ gr.ContA(a);
 @subsection ContF3 sample
 @cindex ContF3
 @float
-@image{../png/contfa, 7cm}
+@image{png/contfa, 7cm}
 @c @caption{Example of ContF3. @tdref{contfa}}
 @end float
 @ifclear UDAV
@@ -2885,7 +2885,7 @@ gr.ContFA(a);
 @cindex ContY
 @cindex ContZ
 @float
-@image{../png/cont_xyz, 7cm}
+@image{png/cont_xyz, 7cm}
 @c @caption{Example of projection by Cont[XYZ]. @tdref{cont_xyz}}
 @end float
 @ifclear UDAV
@@ -2960,7 +2960,7 @@ gr.ContZ(a.Sum("z"),"",-1);
 @cindex DensY
 @cindex DensZ
 @float
-@image{../png/dens_xyz, 7cm}
+@image{png/dens_xyz, 7cm}
 @c @caption{Example of projection by Dens[XYZ]. @tdref{dens_xyz}}
 @end float
 @ifclear UDAV
@@ -3035,7 +3035,7 @@ gr.DensZ(a.Sum("z"),"",-1);
 @cindex CutMin
 @cindex CutMax
 @float
-@image{../png/cutminmax, 7cm}
+@image{png/cutminmax, 7cm}
 @c @caption{Example of Surf3 & CutMin, CutMax. @tdref{cutminmax}}
 @end float
 @ifclear UDAV
@@ -3105,7 +3105,7 @@ gr.Surf3(a);
 @cindex CutMin
 @cindex CutMax
 @float
-@image{../png/cutminmax2, 7cm}
+@image{png/cutminmax2, 7cm}
 @c @caption{Example of ``Isocaps''. @tdref{cutminmax2}}
 @end float
 @ifclear UDAV
@@ -3184,7 +3184,7 @@ gr.ContF3(a,"z",0);     gr.ContF3(a,"z",39);
 @cindex Surf3
 @cindex CutOff
 @float
-@image{../png/surf3_cutoff, 7cm}
+@image{png/surf3_cutoff, 7cm}
 @c @caption{Example of Surf3 & CutOff. @tdref{surf3_cutoff}}
 @end float
 @ifclear UDAV
@@ -3277,7 +3277,7 @@ gr.Surf3(a);
 @subsection SurfC sample
 @cindex SurfC
 @float
-@image{../png/surfc, 7cm}
+@image{png/surfc, 7cm}
 @c @caption{Example of SurfC. @tdref{surfc}}
 @end float
 @ifclear UDAV
@@ -3345,7 +3345,7 @@ gr.SurfC(a,b);
 @subsection SurfA sample
 @cindex SurfA
 @float
-@image{../png/surfa, 7cm}
+@image{png/surfa, 7cm}
 @c @caption{Example of SurfA. @tdref{surfa}}
 @end float
 @ifclear UDAV
@@ -3418,7 +3418,7 @@ gr.SurfC(a,b);
 @subsection TileS sample
 @cindex TileS
 @float
-@image{../png/tiles, 7cm}
+@image{png/tiles, 7cm}
 @c @caption{Example of TileS. @tdref{tiles}}
 @end float
 @ifclear UDAV
@@ -3478,7 +3478,7 @@ gr.TileS(a,b);
 @subsection Map sample
 @cindex Map
 @float
-@image{../png/map, 7cm}
+@image{png/map, 7cm}
 @c @caption{Example of Map. @tdref{map}}
 @end float
 @ifclear UDAV
@@ -3587,7 +3587,7 @@ gr.Map(a, b, "brgk", 0, 0);
 @subsection Traj sample
 @cindex Traj
 @float
-@image{../png/traj, 7cm}
+@image{png/traj, 7cm}
 @c @caption{Example of Plot. @tdref{traj}}
 @end float
 @ifclear UDAV
@@ -3680,7 +3680,7 @@ gr.Traj(x,y,y1,y2);
 @subsection Vect sample
 @cindex Vect
 @float
-@image{../png/vect, 7cm}
+@image{png/vect, 7cm}
 @c @caption{Example of Vect. @tdref{vect}}
 @end float
 @ifclear UDAV
@@ -3739,7 +3739,7 @@ gr.Vect(a,b);
 @subsection VectL sample
 @cindex VectL
 @float
-@image{../png/vectl, 7cm}
+@image{png/vectl, 7cm}
 @c @caption{Example of VectL. @tdref{vectl}}
 @end float
 @ifclear UDAV
@@ -3799,7 +3799,7 @@ gr.VectL(a,b);
 @subsection VectC sample
 @cindex VectC
 @float
-@image{../png/vectc, 7cm}
+@image{png/vectc, 7cm}
 @c @caption{Example of VectC. @tdref{vectc}}
 @end float
 @ifclear UDAV
@@ -3859,7 +3859,7 @@ gr.VectC(a,b);
 @subsection Flow sample
 @cindex Flow
 @float
-@image{../png/flow, 7cm}
+@image{png/flow, 7cm}
 @c @caption{Example of Flow. @tdref{flow}}
 @end float
 @ifclear UDAV
@@ -3918,7 +3918,7 @@ gr.Flow(a,b);
 @subsection Pipe sample
 @cindex Pipe
 @float
-@image{../png/pipe, 7cm}
+@image{png/pipe, 7cm}
 @c @caption{Example of Pipe. @tdref{pipe}}
 @end float
 @ifclear UDAV
@@ -3981,7 +3981,7 @@ gr.Pipe(a,b);
 @subsection Dew sample
 @cindex Dew
 @float
-@image{../png/dew, 7cm}
+@image{png/dew, 7cm}
 @c @caption{Example of Dew. @tdref{dew}}
 @end float
 @ifclear UDAV
@@ -4044,7 +4044,7 @@ gr.Dew(a,b);
 @subsection Surf3C sample
 @cindex Surf3C
 @float
-@image{../png/surf3c, 7cm}
+@image{png/surf3c, 7cm}
 @c @caption{Example of Surf3C. @tdref{surf3c}}
 @end float
 @ifclear UDAV
@@ -4116,7 +4116,7 @@ gr.Surf3C(a,b);
 @subsection Surf3A sample
 @cindex Surf3A
 @float
-@image{../png/surf3a, 7cm}
+@image{png/surf3a, 7cm}
 @c @caption{Example of Surf3A. @tdref{surf3a}}
 @end float
 @ifclear UDAV
@@ -4188,7 +4188,7 @@ gr.Surf3A(a,b);
 @subsection Vect 3D sample
 @cindex Vect
 @float
-@image{../png/vect3, 7cm}
+@image{png/vect3, 7cm}
 @c @caption{Example of Vect in 3D. @tdref{vect3}}
 @end float
 @ifclear UDAV
@@ -4273,7 +4273,7 @@ gr.Vect(ex,ey,ez,"bwr");
 @subsection VectL 3D sample
 @cindex VectL
 @float
-@image{../png/vectl3, 7cm}
+@image{png/vectl3, 7cm}
 @c @caption{Example of VectL in 3D. @tdref{vectl3}}
 @end float
 @ifclear UDAV
@@ -4358,7 +4358,7 @@ gr.VectL(ex,ey,ez,"bwr");
 @subsection VectC 3D sample
 @cindex VectC
 @float
-@image{../png/vectc3, 7cm}
+@image{png/vectc3, 7cm}
 @c @caption{Example of VectC in 3D. @tdref{vectc3}}
 @end float
 @ifclear UDAV
@@ -4443,7 +4443,7 @@ gr.VectC(ex,ey,ez,"bwr");
 @subsection Flow 3D sample
 @cindex Flow
 @float
-@image{../png/flow3, 7cm}
+@image{png/flow3, 7cm}
 @c @caption{Example of Flow in 3D. @tdref{flow3}}
 @end float
 @ifclear UDAV
@@ -4528,7 +4528,7 @@ gr.Flow(ex,ey,ez,"bwr");
 @subsection Pipe 3D sample
 @cindex Pipe
 @float
-@image{../png/pipe3, 7cm}
+@image{png/pipe3, 7cm}
 @c @caption{Example of Pipe in 3D. @tdref{pipe3}}
 @end float
 @ifclear UDAV
@@ -4617,7 +4617,7 @@ gr.Pipe(ex,ey,ez,"bwr");
 @subsection Crust sample
 @cindex Crust
 @float
-@image{../png/crust, 7cm}
+@image{png/crust, 7cm}
 @c @caption{Example of Crust. @tdref{crust}}
 @end float
 @ifclear UDAV
@@ -4676,7 +4676,7 @@ gr.Crust(a);
 @subsection Dots sample
 @cindex Dots
 @float
-@image{../png/dots, 7cm}
+@image{png/dots, 7cm}
 @c @caption{Example of Dots. @tdref{dots}}
 @end float
 @ifclear UDAV
@@ -4753,7 +4753,7 @@ gr.Dots(a);
 @cindex Bars
 @cindex SubPlot
 @float
-@image{../png/sample8, 7cm}
+@image{png/sample8, 7cm}
 @c @caption{Example of Legend usage. @tdref{legend}}
 @end float
 @ifclear UDAV
@@ -4819,7 +4819,7 @@ bars x y0 z 'r':box
 @cindex Dens
 @cindex Alpha
 @float
-@image{../png/sample9, 7cm}
+@image{png/sample9, 7cm}
 @c @caption{Example of Legend usage. @tdref{legend}}
 @end float
 @ifclear UDAV
@@ -4884,7 +4884,7 @@ dens a1: box
 @cindex Dens
 @cindex Alpha
 @float
-@image{../png/sampleb, 7cm}
+@image{png/sampleb, 7cm}
 @c @caption{Example of Legend usage. @tdref{legend}}
 @end float
 @ifclear UDAV
@@ -4930,7 +4930,7 @@ surf3a b a 'q': box
 @cindex Mark
 @cindex Line
 @float
-@image{../png/sample5, 7cm}
+@image{png/sample5, 7cm}
 @c @caption{Example of Legend usage. @tdref{legend}}
 @end float
 @ifclear UDAV
@@ -4983,7 +4983,7 @@ NOT AVAILABLE
 @subsection Arrow styles sample
 @cindex Line
 @float
-@image{../png/sampled, 7cm}
+@image{png/sampled, 7cm}
 @c @caption{Example of Legend usage. @tdref{legend}}
 @end float
 @ifclear UDAV
@@ -5025,7 +5025,7 @@ NOT AVAILABLE
 @subsection Text styles sample
 @cindex Puts
 @float
-@image{../png/sample4, 7cm}
+@image{png/sample4, 7cm}
 @c @caption{Example of Legend usage. @tdref{legend}}
 @end float
 @ifclear UDAV
@@ -5056,7 +5056,7 @@ text 0 -1 'It parse TeX: \int \alpha \cdot \sqrt3{sin(\pi x)^2 + \gamma_{i_k}} d
 @subsection TeX parsing sample
 @cindex Puts
 @float
-@image{../png/samplee, 7cm}
+@image{png/samplee, 7cm}
 @c @caption{Example of Legend usage. @tdref{legend}}
 @end float
 @ifclear UDAV
@@ -5075,7 +5075,7 @@ text 0 0 '\sqrt{\frac{\alpha^{\gamma^2}+\overset 1{\big\infty}}{\sqrt3{2+b}}}' '
 @subsection Font faces sample
 @cindex Puts
 @float
-@image{../png/fonts, 7cm}
+@image{png/fonts, 7cm}
 @c @caption{Example of Legend usage. @tdref{legend}}
 @end float
 @ifclear UDAV
@@ -5102,7 +5102,7 @@ NOT AVAILABLE
 @node Colors sample, Color schemes sample, Font faces sample, Basic features
 @subsection Colors sample
 @float
-@image{../png/colors, 7cm}
+@image{png/colors, 7cm}
 @c @caption{Example of Legend usage. @tdref{legend}}
 @end float
 @ifclear UDAV
@@ -5202,7 +5202,7 @@ facez  0.6 0.8 0 0.4 0.3 'r9#': text  0.8 0.9 'r9' 'C:k'
 @subsection Color schemes sample
 @cindex Colorbar
 @float
-@image{../png/color_schemes, 7cm}
+@image{png/color_schemes, 7cm}
 @c @caption{Example of Legend usage. @tdref{legend}}
 @end float
 @ifclear UDAV
@@ -5300,7 +5300,7 @@ text -1.4 -0.3 'bgr' '' -8
 @subsection Normal transparency
 @cindex TranspType
 @float
-@image{../png/type0, 7cm}
+@image{png/type0, 7cm}
 @c @caption{Example of Legend usage. @tdref{legend}}
 @end float
 @ifclear UDAV
@@ -5334,7 +5334,7 @@ subplot 2 2 3: rotate 40 60: axial a: box
 @subsection Glass-like transparency
 @cindex TranspType
 @float
-@image{../png/type1, 7cm}
+@image{png/type1, 7cm}
 @c @caption{Example of Legend usage. @tdref{legend}}
 @end float
 @ifclear UDAV
@@ -5368,7 +5368,7 @@ subplot 2 2 3: rotate 40 60: axial a: box
 @subsection Lamp-like transparency
 @cindex TranspType
 @float
-@image{../png/type2, 7cm}
+@image{png/type2, 7cm}
 @c @caption{Example of Legend usage. @tdref{legend}}
 @end float
 @ifclear UDAV
@@ -5435,7 +5435,7 @@ subplot 2 2 3: rotate 40 60: axial a: box
 @cindex Legend
 @cindex AddLegend
 @float
-@image{../png/legend, 7cm}
+@image{png/legend, 7cm}
 @c @caption{Example of Legend usage. @tdref{legend}}
 @end float
 @ifclear UDAV
@@ -5522,7 +5522,7 @@ gr.Legend();
 @cindex Cont
 @cindex Axial
 @float
-@image{../png/samplea, 7cm}
+@image{png/samplea, 7cm}
 @c @caption{Example of adding mesh. @tdref{samplea}}
 @end float
 @ifclear UDAV
@@ -5630,7 +5630,7 @@ gr.Rotate(40,60);   gr.Axial(a,"BbcyrR#");  gr.Box();
 @cindex Surf
 @cindex Cont
 @float
-@image{../png/surf_cont_y, 7cm}
+@image{png/surf_cont_y, 7cm}
 @c @caption{Example of Surf & Cont. @tdref{surf_cont_y}}
 @end float
 @ifclear UDAV
@@ -5696,7 +5696,7 @@ gr.Surf(a);         gr.Cont(a,"y");
 @cindex Flow
 @cindex Dens
 @float
-@image{../png/flow_dens, 7cm}
+@image{png/flow_dens, 7cm}
 @c @caption{Example of Flow & Dens. @tdref{flow_dens}}
 @end float
 @ifclear UDAV
@@ -5769,7 +5769,7 @@ gr.Flow(a,b,"br");      gr.Dens(d,"BbcyrR");
 @cindex Surf
 @cindex Light
 @float
-@image{../png/several_light, 7cm}
+@image{png/several_light, 7cm}
 @c @caption{Example of Surf with several light. @tdref{several_light}}
 @end float
 @ifclear UDAV
@@ -5843,7 +5843,7 @@ gr.Surf(a,"h")
 @subsection Mirrored surface sample
 @cindex Surf
 @float
-@image{../png/mirror, 7cm}
+@image{png/mirror, 7cm}
 @c @caption{Example of mirrored surface. @tdref{mirror}}
 @end float
 @ifclear UDAV
@@ -5935,7 +5935,7 @@ gr.Surf(x,y1,a,"r");    gr.Surf(x,y2,a,"b");
 @subsection Cont with labels sample
 @cindex Cont
 @float
-@image{../png/contt, 7cm}
+@image{png/contt, 7cm}
 @c @caption{Example of Cont with labels. @tdref{contt}}
 @end float
 @ifclear UDAV
@@ -5985,7 +5985,7 @@ gr.Cont(a,"BbcyrRt");
 @subsection Ternary plot sample
 @cindex Ternary
 @float
-@image{../png/ternary, 7cm}
+@image{png/ternary, 7cm}
 @c @caption{Example of Ternary plot. @tdref{ternary}}
 @end float
 @ifclear UDAV
@@ -6114,7 +6114,7 @@ gr.Label("t","t comp.");
 @subsection Quaternary plot sample
 @cindex Ternary
 @float
-@image{../png/quaternary, 7cm}
+@image{png/quaternary, 7cm}
 @c @caption{Example of Ternary plot. @tdref{ternary}}
 @end float
 @ifclear UDAV
@@ -6186,7 +6186,7 @@ gr.Label('y',"C",1);    gr.Label('z',"D",1);
 @subsection Coloring by coordinates sample
 @cindex Surf3
 @float
-@image{../png/surf3_rgbd, 7cm}
+@image{png/surf3_rgbd, 7cm}
 @c @caption{Example of Surf3 colored by coordinates. @tdref{surf3_rgbd}}
 @end float
 @ifclear UDAV
@@ -6240,7 +6240,7 @@ gr.Surf3(a,"bgrd");
 @subsection Drops sample
 @cindex Drop
 @float
-@image{../png/drops, 7cm}
+@image{png/drops, 7cm}
 @c @caption{Example of Drop(s). @tdref{drops}}
 @end float
 @ifclear UDAV
@@ -6340,7 +6340,7 @@ gr.Line(-1,0,1,1,0,1,"b");
 @cindex Drop
 @cindex Sphere
 @float
-@image{../png/molecule, 7cm}
+@image{png/molecule, 7cm}
 @c @caption{Example of molecules drawing. @tdref{molecule}}
 @end float
 @ifclear UDAV
@@ -6449,7 +6449,7 @@ sphere -0.65 0 0 0.25 'g'
 @subsection Curvelinear coorinates sample
 @cindex Axis
 @float
-@image{../png/sample3, 7cm}
+@image{png/sample3, 7cm}
 @c @caption{Example of curvelinear coorinates usage. @tdref{sample3}}
 @end float
 @ifclear UDAV
@@ -6597,7 +6597,7 @@ gr.SetFunc("","");   # set to default Gartesian
 @subsection 2-axes sample
 @cindex Axis
 @float
-@image{../png/2_axis, 7cm}
+@image{png/2_axis, 7cm}
 @c @caption{Example of 2 axes on the plot. @tdref{2_axis}}
 @end float
 @ifclear UDAV
@@ -6685,7 +6685,7 @@ gr.Stem(y2,"r");
 @cindex SetTicks
 @cindex Plot
 @float
-@image{../png/semilog, 7cm}
+@image{png/semilog, 7cm}
 @c @caption{Example of semi-log plot. @tdref{semilog}}
 @end float
 @ifclear UDAV
@@ -6766,7 +6766,7 @@ TO BE DONE
 @cindex SetTicks
 @cindex Plot
 @float
-@image{../png/loglog, 7cm}
+@image{png/loglog, 7cm}
 @c @caption{Example of log-log plot. @tdref{loglog}}
 @end float
 @ifclear UDAV
@@ -6854,7 +6854,7 @@ gr.Label("x","x",0);    gr.Label("y","y=\\sqrt{1+x^2}",0);
 @cindex Fit
 @cindex PutsFit
 @float
-@image{../png/fit, 7cm}
+@image{png/fit, 7cm}
 @c @caption{Example of nonlinear fitting. @tdref{fit}}
 @end float
 @ifclear UDAV
@@ -6952,7 +6952,7 @@ gr.Puts(0,2.2,0,"initial: y = 0.3+sin(2\\pi x)","C:b",-1);
 @subsection Envelop sample
 @cindex Envelop
 @float
-@image{../png/envelop, 7cm}
+@image{png/envelop, 7cm}
 @c @caption{Example of envelop reconstruction.}@c @tdref{envelop}}
 @end float
 @ifclear UDAV
@@ -7010,7 +7010,7 @@ gr.Axis();
 @subsection Sew sample
 @cindex Sew
 @float
-@image{../png/sew, 7cm}
+@image{png/sew, 7cm}
 @c @caption{Example of phase ``sewing''.}@c @tdref{sew}}
 @end float
 @ifclear UDAV
@@ -7081,7 +7081,7 @@ gr.Box();
 @subsection STFA sample
 @cindex STFA
 @float
-@image{../png/stfa, 7cm}
+@image{png/stfa, 7cm}
 @c @caption{Example of Short Time Fourier Analysis.}@c @tdref{stfa}}
 @end float
 @ifclear UDAV
@@ -7174,7 +7174,7 @@ gr.Label('y', "\\omega", 0);
 @cindex mglPDE
 @cindex mglRay
 @float
-@image{../png/pde, 7cm}
+@image{png/pde, 7cm}
 @c @caption{Example of Partial Differential Eduation solving.}@c @tdref{pde}}
 @end float
 @ifclear UDAV
@@ -7280,7 +7280,7 @@ i \\frac{x+z}{2}\\cdot u = 0", "iC", -1.5);
 @cindex mglQO2d
 @cindex mglRay
 @float
-@image{../png/qo2d, 7cm}
+@image{png/qo2d, 7cm}
 @c @caption{Example of ray and beam tracing. Compare with @ref{PDE sample}.}@c @tdref{qo2d}}
 @end float
 @ifclear UDAV
@@ -7403,7 +7403,7 @@ gr.Title("Beam and ray tracing", "C", -1.5);
 @cindex mglParse
 @ifclear UDAV
 @float
-@image{../png/parser, 7cm}
+@image{png/parser, 7cm}
 @c @caption{Example of MGL parsing.}@c @tdref{parser}}
 @end float
 @strong{C++ code}
@@ -7485,7 +7485,7 @@ parser.Execute(gr, "for $0 -1 1 0.1\nline 0 0 -1 $0 'r'\nnext");
 @subsection Tick values sample
 @cindex SetTicksVal
 @float
-@image{../png/tval, 7cm}
+@image{png/tval, 7cm}
 @c @caption{Example of manual tick values.}@c @tdref{tval}}
 @end float
 @ifclear UDAV
@@ -7536,7 +7536,7 @@ gr.Plot("2*cos(x^2)^2", "r2", 300);
 @subsection ColumnPlot sample
 @cindex ColumnPlot
 @float
-@image{../png/column, 7cm}
+@image{png/column, 7cm}
 @c @caption{Example of ColumnPlot.}@c @tdref{column}}
 @end float
 @ifclear UDAV
@@ -7592,7 +7592,7 @@ NOT AVAILABLE
 @subsection StickPlot sample
 @cindex StickPlot
 @float
-@image{../png/stick, 7cm}
+@image{png/stick, 7cm}
 @c @caption{Example of StickPlot.}@c @tdref{stick}}
 @end float
 @ifclear UDAV
@@ -7668,7 +7668,7 @@ gr->Label('x',"\\tau", 0);  gr->Label('y', "\\rho");
 @node Stereo image sample, , StickPlot sample, Advanced features
 @subsection Stereo image sample
 @float
-@image{../png/stereo, 7cm}
+@image{png/stereo, 7cm}
 @c @caption{Example of stereo image.}@c @tdref{stereo}}
 @end float
 @ifclear UDAV

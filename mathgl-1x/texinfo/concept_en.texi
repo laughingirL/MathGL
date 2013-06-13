@@ -40,14 +40,14 @@ Dashing style has the following meaning: space -- no line (usable for plotting o
 Marker types are: @samp{o} -- circle, @samp{+} -- cross, @samp{x} -- skew cross, @samp{s} - square, @samp{d} - rhomb (or diamond), @samp{.} -- dot (point), @samp{^} -- triangle up, @samp{v} -- triangle down, @samp{<} -- triangle left, @samp{>} -- triangle right, @samp{#*} -- Y sign, @samp{#+} -- squared cross, @samp{#x} -- squared skew cross, @samp{#.} -- circled dot. If string contain symbol @samp{#} then the solid versions of markers are used.
 
 @float
-@image{../png/sample5, 7cm}
+@image{png/sample5, 7cm}
 @caption{Styles of lines and marks.}
 @end float
 
 One may specify to draw a special symbol (an arrow) at the beginning and at the end of line. This is done if the specification string contains one of the following symbols: @samp{A} -- outer arrow, @samp{V} -- inner arrow, @samp{I} -- transverse hatches, @samp{K} -- arrow with hatches, @samp{T} -- triangle, @samp{S} -- square, @samp{D} -- rhombus, @samp{O} -- circle, @samp{_} -- nothing (the default). The following rule applies: the first symbol specifies the arrow at the end of line, the second specifies the arrow at the beginning of the line. For example, @samp{r-A} defines a red solid line with usual arrow at the end, @samp{b|AI} defines a blue dash line with an arrow at the end and with hatches at the beginning, @samp{_O} defines a line with the current style and with a circle at the beginning. These styles are applicable during the graphics plotting as well (for example, @ref{1D plotting}).
 
 @float
-@image{../png/sampled, 7cm}
+@image{png/sampled, 7cm}
 @caption{Arrow styles.}
 @end float
 
@@ -62,7 +62,7 @@ You may also use ``lighted'' colors in the color scheme specification (@emph{not
 Number @samp{5} corresponds to a normal color, @samp{1} is a very dark version of the color (practically black), and @samp{9} is a very bright version of the color (practically white). For example, the color scheme can be @samp{b2b7wr7r2}.
 
 @float
-@image{../png/colors, 7cm}
+@image{png/colors, 7cm}
 @caption{Colors and its ids.}
 @end float
 
@@ -71,7 +71,7 @@ For coloring by @emph{amplitude} (most common) the final color is a linear inter
 There are several useful combinations. String @samp{kw} corresponds to the simplest gray color scheme where higher values are brighter. String @samp{wk} presents the inverse gray color scheme where higher value is darker. Strings @samp{kRryw}, @samp{kGgw}, @samp{kBbcw} present the well-known @emph{hot}, @emph{summer} and @emph{winter} color schemes. Strings @samp{BbwrR} and @samp{bBkRr} allow to view bi-color figure on white or black background, where negative values are blue and positive values are red. String @samp{BbcyrR} gives a color scheme similar to the well-known @emph{jet} color scheme.
 
 @float
-@image{../png/color_schemes, 7cm}
+@image{png/color_schemes, 7cm}
 @caption{Most popular color schemes.}
 @end float
 
