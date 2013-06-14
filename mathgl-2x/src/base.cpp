@@ -921,7 +921,7 @@ const char *mglchr(const char *str, char ch)
 	return NULL;
 }
 //-----------------------------------------------------------------------------
-char mglBase::SetPenPal(const char *p, long *Id)
+char mglBase::SetPenPal(const char *p, long *Id, bool pal)
 {
 	char mk=0;
 	PDef = 0xffff;	// reset to solid line
@@ -980,11 +980,14 @@ char mglBase::SetPenPal(const char *p, long *Id)
 			if(mk=='*')	mk = 'Y';
 		}
 	}
-	last_style[6]=mk;
-	long tt, n;
-	tt = AddTexture(p,-1);	n=Txt[tt].n;
-	CDef = tt+((n+CurrPal-1)%n+0.5)/n;
-	if(Id)	*Id=long(tt)*256+(n+CurrPal-1)%n;
+	if(pal)
+	{
+		last_style[6]=mk;
+		long tt, n;
+		tt = AddTexture(p,-1);	n=Txt[tt].n;
+		CDef = tt+((n+CurrPal-1)%n+0.5)/n;
+		if(Id)	*Id=long(tt)*256+(n+CurrPal-1)%n;
+	}
 	return mk;
 }
 //-----------------------------------------------------------------------------

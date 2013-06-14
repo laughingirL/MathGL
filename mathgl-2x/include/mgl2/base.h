@@ -421,7 +421,7 @@ public:
 	/// Get alpha value depending on single variable a
 	mreal GetA(mreal a) const;
 	/// Set pen/palette
-	char SetPenPal(const char *stl, long *id=0);
+	char SetPenPal(const char *stl, long *id=0, bool pal=true);
 	/// Add texture (like color scheme) and return the position of first color
 	long AddTexture(const char *cols, int smooth=0);
 //	inline mreal AddTexture(char col)	{	return AddTexture(mglColor(col));	}

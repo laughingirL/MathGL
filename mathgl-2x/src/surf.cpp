@@ -135,7 +135,7 @@ void MGL_EXPORT mgl_mesh_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, co
 
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Mesh",cgid++);
-	gr->SetPenPal("-");
+	gr->SetPenPal(sch,0,false);
 	long ss = gr->AddTexture(sch);
 	long *pos = new long[n*m];
 	gr->Reserve(n*m*z->GetNz());
@@ -186,7 +186,7 @@ void MGL_EXPORT mgl_fall_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, co
 
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Fall",cgid++);
-	gr->SetPenPal("-");
+	gr->SetPenPal(sch,0,false);
 	long ss = gr->AddTexture(sch);
 	long *pos = new long[n*m];
 	gr->Reserve(n*m*z->GetNz());
