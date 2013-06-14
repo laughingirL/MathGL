@@ -214,7 +214,8 @@ void MGL_EXPORT mgl_candle_xyv(HMGL gr, HCDT x, HCDT v1, HCDT v2, HCDT y1, HCDT 
 	bool sh = mglchr(pen,'!');
 
 	long n1,n2,n3,n4;
-	mreal m1,m2,xx,x1,x2,d,dv=1;
+	mreal m1,m2,xx,x1,x2,d,dv=nx>n?1:0;
+	if(mglchr(pen,'<'))	dv = 1;
 	if(mglchr(pen,'^'))	dv = 0;
 	if(mglchr(pen,'>'))	dv = -1;
 	mreal zm = gr->AdjustZMin();
@@ -868,7 +869,8 @@ void MGL_EXPORT mgl_bars_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, c
 	mreal c1,c2,c;
 	mglPoint p1,p2,p3,p4,nn;
 	long n1,n2,n3,n4;
-	mreal *dd=new mreal[n], x1,x2,y1,y2,z0,zz,zp,d,vv,dv=1;
+	mreal *dd=new mreal[n], x1,x2,y1,y2,z0,zz,zp,d,vv,dv=nx>n?1:0;
+	if(mglchr(pen,'<'))	dv = 1;
 	if(mglchr(pen,'^'))	dv = 0;
 	if(mglchr(pen,'>'))	dv = -1;
 	memset(dd,0,n*sizeof(mreal));
@@ -923,7 +925,7 @@ void MGL_EXPORT mgl_bars_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, c
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_bars_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
 {
-	long i,j,m,mx,my,n=y->GetNx(),pal;
+	long i,j,m,mx,my,n=y->GetNx(),nx=x->GetNx(),pal;
 	if(mgl_check_dim1(gr,x,y,0,0,"Bars",true))	return;
 
 	gr->SaveState(opt);
@@ -936,7 +938,8 @@ void MGL_EXPORT mgl_bars_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char
 	if(above)	fall = false;
 	mreal c1,c2,c;
 	long n1,n2,n3,n4;
-	mreal *dd=new mreal[n], x1,x2,yy,y0,yp,d,vv,dv=1;
+	mreal *dd=new mreal[n], x1,x2,yy,y0,yp,d,vv,dv=nx>n?1:0;
+	if(mglchr(pen,'<'))	dv = 1;
 	if(mglchr(pen,'^'))	dv = 0;
 	if(mglchr(pen,'>'))	dv = -1;
 	mreal zm = gr->AdjustZMin();
@@ -953,7 +956,7 @@ void MGL_EXPORT mgl_bars_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char
 		for(i=0;i<n;i++)
 		{
 			if(gr->Stop)	{	delete []dd;	return;	}
-			vv = x->v(i,mx);	d = i<n-1 ? x->v(i+1,mx)-vv : vv-x->v(i-1,mx);
+			vv = x->v(i,mx);	d = i<nx-1 ? x->v(i+1,mx)-vv : vv-x->v(i-1,mx);
 			x1 = vv + d/2*(dv-gr->BarWidth);	x2 = x1 + gr->BarWidth*d;
 			vv = yy = y->v(i,my);
 			if(!above)
@@ -1009,7 +1012,7 @@ void MGL_EXPORT mgl_bars_(uintptr_t *gr, uintptr_t *y,	const char *pen, const ch
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_barh_yx(HMGL gr, HCDT y, HCDT v, const char *pen, const char *opt)
 {
-	long i,j,m,mx,my,n=v->GetNx(),pal;
+	long i,j,m,mx,my,n=v->GetNx(),ny=y->GetNx(),pal;
 	if(mgl_check_dim1(gr,y,v,0,0,"Barh",true))	return;
 
 	gr->SaveState(opt);
@@ -1022,7 +1025,8 @@ void MGL_EXPORT mgl_barh_yx(HMGL gr, HCDT y, HCDT v, const char *pen, const char
 	if(above)	fall = false;
 	mreal c1,c2,c;
 	long n1,n2,n3,n4;
-	mreal *dd=new mreal[n], y1,y2,xx,x0,xp,d,vv,dv=1;
+	mreal *dd=new mreal[n], y1,y2,xx,x0,xp,d,vv,dv=ny>n?1:0;
+	if(mglchr(pen,'<'))	dv = 1;
 	if(mglchr(pen,'^'))	dv = 0;
 	if(mglchr(pen,'>'))	dv = -1;
 	mreal zm = gr->AdjustZMin();
@@ -1039,7 +1043,7 @@ void MGL_EXPORT mgl_barh_yx(HMGL gr, HCDT y, HCDT v, const char *pen, const char
 		for(i=0;i<n;i++)
 		{
 			if(gr->Stop)	{	delete []dd;	return;	}
-			vv = y->v(i,my);	d = i<n-1 ? y->v(i+1,my)-vv : vv-y->v(i-1,my);
+			vv = y->v(i,my);	d = i<ny-1 ? y->v(i+1,my)-vv : vv-y->v(i-1,my);
 			y1 = vv + d/2*(dv-gr->BarWidth);	y2 = y1 + gr->BarWidth*d;
 			vv = xx = v->v(i,mx);
 			if(!above)
@@ -1102,7 +1106,8 @@ void MGL_EXPORT mgl_boxplot_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const c
 	if(nx<n || nx<2)	{	gr->SetWarn(mglWarnDim,"BoxPlot");	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("BoxPlot",cgid++);
-	mreal *b = new mreal[5*n], *d = new mreal[m], x1, x2, dd, dv=1;
+	mreal *b = new mreal[5*n], *d = new mreal[m], x1, x2, dd, dv=nx>n?1:0;
+	if(mglchr(pen,'<'))	dv = 1;
 	if(mglchr(pen,'^'))	dv = 0;
 	if(mglchr(pen,'>'))	dv = -1;
 	mreal zVal = gr->AdjustZMin(), vv;

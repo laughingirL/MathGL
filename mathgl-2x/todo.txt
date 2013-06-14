@@ -37,8 +37,6 @@ A. Paper about MathGL!!!
 23. check if all "value" options are described (see hist, )
 24. Check centered curved text (see text2)
 
-25. Check '<', '^', '>' for centring in Cones
-
 ============= UDAV =============
 
 01. Show plot at creation stage (if option is enabled -- can be long process!!!) + auto axis range or [-1,1] by default

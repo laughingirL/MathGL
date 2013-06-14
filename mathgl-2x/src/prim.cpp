@@ -288,7 +288,8 @@ void MGL_EXPORT mgl_cones_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, 
 	bool above= mglchr(pen,'a');
 	bool wire = mglchr(pen,'#');
 	bool tube = mglchr(pen,'t');
-	mreal *dd=new mreal[2*n], x1,z0,zz,d, vx,vy,vz,v0,v1,dv=1;
+	mreal *dd=new mreal[2*n], x1,z0,zz,d, vx,vy,vz,v0,v1,dv=nx>n?1:0;
+	if(mglchr(pen,'<'))	dv = 1;
 	if(mglchr(pen,'^'))	dv = 0;
 	if(mglchr(pen,'>'))	dv = -1;
 
@@ -316,7 +317,7 @@ void MGL_EXPORT mgl_cones_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, 
 			vx=x->v(i,mx);	vy=y->v(i,my);	vz=z->v(i,mz);
 			v0=y->v(i,0);	v1=i<nx-1 ? x->v(i+1,mx):x->v(i-1,mx);
 			d = i<nx-1 ? v1-vx : vx-v1;
-			x1 = (n<nx ? (vx+v1)/2 : vx) + d/2*(dv-0.7*gr->BarWidth);	// TODO
+			x1 = vx + d/2*(dv-0.*gr->BarWidth);	// TODO
 			d *= 0.7*gr->BarWidth;
 			if(above)
 			{
