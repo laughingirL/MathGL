@@ -4,6 +4,7 @@
 * Add Quality=8 for dots drawing (extremely fast), Quality=9 for none drawing (for testing speed)
 * Add styles '4','6','8' for Cone() and Cones() to produce square, hex, octo-prism
 * Add style 't' for Cones() to produce tubes (cylinders)
+* Add style '<', '^', '>' for centring boxes in Bars(), Barh(), BoxPlot(), Cones()
 * Add transparency for Area() and Region() plots
 * Improve/change lighting from local sources. Add SetDiffuse() function
 * Enable line width for Mesh() and Fall() plots

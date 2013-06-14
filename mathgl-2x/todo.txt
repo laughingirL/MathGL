@@ -37,7 +37,7 @@ A. Paper about MathGL!!!
 23. check if all "value" options are described (see hist, )
 24. Check centered curved text (see text2)
 
-25. Symbols '<', '^', '>' for centring in BoxPlot, Bars, Barh, Boxs, ...
+25. Check '<', '^', '>' for centring in Cones
 
 ============= UDAV =============
 

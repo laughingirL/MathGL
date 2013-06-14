@@ -214,14 +214,16 @@ void MGL_EXPORT mgl_candle_xyv(HMGL gr, HCDT x, HCDT v1, HCDT v2, HCDT y1, HCDT 
 	bool sh = mglchr(pen,'!');
 
 	long n1,n2,n3,n4;
-	mreal m1,m2,xx,x1,x2,d;
+	mreal m1,m2,xx,x1,x2,d,dv=1;
+	if(mglchr(pen,'^'))	dv = 0;
+	if(mglchr(pen,'>'))	dv = -1;
 	mreal zm = gr->AdjustZMin();
 	for(i=0;i<n;i++)
 	{
 		if(gr->Stop)	{	if(d1)	delete y1;	if(d2)	delete y2;	return;	}
 		m1=v1->v(i);	m2 = v2->v(i);	xx = x->v(i);
 		d = i<nx-1 ? x->v(i+1)-xx : xx-x->v(i-1);
-		x1 = xx + d/2*(1-gr->BarWidth);
+		x1 = xx + d/2*(dv-gr->BarWidth);
 		x2 = x1 + gr->BarWidth*d;	xx = (x1+x2)/2;
 		n1 = gr->AddPnt(mglPoint(xx,y1->v(i),zm));
 		n2 = gr->AddPnt(mglPoint(xx,m1,zm));
@@ -866,7 +868,9 @@ void MGL_EXPORT mgl_bars_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, c
 	mreal c1,c2,c;
 	mglPoint p1,p2,p3,p4,nn;
 	long n1,n2,n3,n4;
-	mreal *dd=new mreal[n], x1,x2,y1,y2,z0,zz,zp,d,vv;
+	mreal *dd=new mreal[n], x1,x2,y1,y2,z0,zz,zp,d,vv,dv=1;
+	if(mglchr(pen,'^'))	dv = 0;
+	if(mglchr(pen,'>'))	dv = -1;
 	memset(dd,0,n*sizeof(mreal));
 
 	gr->SetPenPal(pen,&pal);
@@ -881,9 +885,9 @@ void MGL_EXPORT mgl_bars_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, c
 		{
 			if(gr->Stop)	{	delete []dd;	return;	}
 			vv = x->v(i,mx);	d = i<nx-1 ? x->v(i+1,mx)-vv : vv-x->v(i-1,mx);
-			x1 = vv + d/2*(1-gr->BarWidth);	x2 = x1 + gr->BarWidth*d;
+			x1 = vv + d/2*(dv-gr->BarWidth);	x2 = x1 + gr->BarWidth*d;
 			vv = y->v(i,my);	d = i<ny-1 ? y->v(i+1,my)-vv : vv-y->v(i-1,my);
-			y1 = vv + d/2*(1-gr->BarWidth);	y2 = y1 + gr->BarWidth*d;
+			y1 = vv + d/2*(dv-gr->BarWidth);	y2 = y1 + gr->BarWidth*d;
 			vv = zz = z->v(i,mz);
 			if(!above)
 			{
@@ -932,7 +936,9 @@ void MGL_EXPORT mgl_bars_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char
 	if(above)	fall = false;
 	mreal c1,c2,c;
 	long n1,n2,n3,n4;
-	mreal *dd=new mreal[n], x1,x2,yy,y0,yp,d,vv;
+	mreal *dd=new mreal[n], x1,x2,yy,y0,yp,d,vv,dv=1;
+	if(mglchr(pen,'^'))	dv = 0;
+	if(mglchr(pen,'>'))	dv = -1;
 	mreal zm = gr->AdjustZMin();
 	memset(dd,0,n*sizeof(mreal));
 
@@ -948,7 +954,7 @@ void MGL_EXPORT mgl_bars_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char
 		{
 			if(gr->Stop)	{	delete []dd;	return;	}
 			vv = x->v(i,mx);	d = i<n-1 ? x->v(i+1,mx)-vv : vv-x->v(i-1,mx);
-			x1 = vv + d/2*(1-gr->BarWidth);	x2 = x1 + gr->BarWidth*d;
+			x1 = vv + d/2*(dv-gr->BarWidth);	x2 = x1 + gr->BarWidth*d;
 			vv = yy = y->v(i,my);
 			if(!above)
 			{	x2 = (x2-x1)/m;		x1 += j*x2;		x2 += x1;	}
@@ -1016,7 +1022,9 @@ void MGL_EXPORT mgl_barh_yx(HMGL gr, HCDT y, HCDT v, const char *pen, const char
 	if(above)	fall = false;
 	mreal c1,c2,c;
 	long n1,n2,n3,n4;
-	mreal *dd=new mreal[n], y1,y2,xx,x0,xp,d,vv;
+	mreal *dd=new mreal[n], y1,y2,xx,x0,xp,d,vv,dv=1;
+	if(mglchr(pen,'^'))	dv = 0;
+	if(mglchr(pen,'>'))	dv = -1;
 	mreal zm = gr->AdjustZMin();
 	memset(dd,0,n*sizeof(mreal));
 
@@ -1032,7 +1040,7 @@ void MGL_EXPORT mgl_barh_yx(HMGL gr, HCDT y, HCDT v, const char *pen, const char
 		{
 			if(gr->Stop)	{	delete []dd;	return;	}
 			vv = y->v(i,my);	d = i<n-1 ? y->v(i+1,my)-vv : vv-y->v(i-1,my);
-			y1 = vv + d/2*(1-gr->BarWidth);	y2 = y1 + gr->BarWidth*d;
+			y1 = vv + d/2*(dv-gr->BarWidth);	y2 = y1 + gr->BarWidth*d;
 			vv = xx = v->v(i,mx);
 			if(!above)
 			{	y2 = (y2-y1)/m;		y1 += j*y2;		y2 += y1;	}
@@ -1094,7 +1102,9 @@ void MGL_EXPORT mgl_boxplot_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const c
 	if(nx<n || nx<2)	{	gr->SetWarn(mglWarnDim,"BoxPlot");	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("BoxPlot",cgid++);
-	mreal *b = new mreal[5*n], *d = new mreal[m], x1, x2, dd;
+	mreal *b = new mreal[5*n], *d = new mreal[m], x1, x2, dd, dv=1;
+	if(mglchr(pen,'^'))	dv = 0;
+	if(mglchr(pen,'>'))	dv = -1;
 	mreal zVal = gr->AdjustZMin(), vv;
 	bool sh = mglchr(pen,'!');
 	register long i,j;
@@ -1124,7 +1134,7 @@ void MGL_EXPORT mgl_boxplot_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const c
 		if(gr->Stop)	{	delete []b;	return;	}
 		vv = x->v(i);
 		dd = i<nx-1 ? x->v(i+1)-vv : vv-x->v(i-1);
-		x1 = vv + dd/2*(1-gr->BarWidth);
+		x1 = vv + dd/2*(dv-gr->BarWidth);
 		x2 = x1 + gr->BarWidth*dd;
 		for(j=0;j<5;j++)	// horizontal lines
 		{
