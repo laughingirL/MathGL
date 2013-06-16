@@ -22,9 +22,9 @@
 #include <png.h>
 #endif
 //-----------------------------------------------------------------------------
-long MGL_NO_EXPORT mgl_col_dif(unsigned char *c1,unsigned char *c2,bool sum)
+size_t MGL_NO_EXPORT mgl_col_dif(unsigned char *c1,unsigned char *c2,bool sum)
 {
-	long res,d1=abs(long(c1[0])-long(c2[0])),
+	size_t res,d1=abs(long(c1[0])-long(c2[0])),
 		d2=abs(long(c1[1])-long(c2[1])),d3=abs(long(c1[2])-long(c2[2]));
 	if(sum)	res = d1+d2+d3;
 	else	res = mgl_max(d1,mgl_max(d2,d3));
@@ -34,10 +34,10 @@ long MGL_NO_EXPORT mgl_col_dif(unsigned char *c1,unsigned char *c2,bool sum)
 MGL_NO_EXPORT unsigned char *mgl_create_scheme(const char *scheme,long &num)
 {
 	unsigned char *c=0,*cc=new unsigned char[3*strlen(scheme)+3],*c1,*c2;
-	long nc=1,np=0;
-	register long i,j;
+	size_t nc=1,np=0;
+	register size_t i,j,l=strlen(scheme);
 	mglColor col;
-	for(i=0;i<long(strlen(scheme));i++)
+	for(i=0;i<l;i++)
 	{
 		col = mglColor(scheme[i]);
 		if(col.Valid())
@@ -46,7 +46,7 @@ MGL_NO_EXPORT unsigned char *mgl_create_scheme(const char *scheme,long &num)
 	if(np<2)	{	delete []cc;	return 0;	}
 	for(i=0;i<np-1;i++)	nc+=mgl_col_dif(cc+3*i,cc+3*i+3,false);
 	c = new unsigned char[3*nc+3];
-	long dd,pos=0;
+	size_t dd,pos=0;
 	for(i=0;i<np-1;i++)
 	{
 		dd=mgl_col_dif(cc+3*i,cc+3*i+3,false);
@@ -93,7 +93,7 @@ void MGL_EXPORT mgl_data_import(HMDT d, const char *fname, const char *scheme,mr
 		long h=png_get_image_height(png_ptr, info_ptr);
 		d->Create(w,h,1);
 		register long i,j,k;
-		long pos=0,val,mval=256;
+		size_t pos=0,val,mval=256;
 		for(i=0;i<d->ny;i++)	for(j=0;j<d->nx;j++)
 		{
 			for(mval=256,k=0;k<num;k++)

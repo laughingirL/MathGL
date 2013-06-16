@@ -82,7 +82,8 @@ void MGL_EXPORT mgl_strtrim(char *str)
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_strlwr(char *str)
 {
-	for(long k=0;k<(long)strlen(str);k++)
+	register size_t k,l=strlen(str);
+	for(k=0;k<l;k++)
 		str[k] = (str[k]>='A' && str[k]<='Z') ? str[k]+'a'-'A' : str[k];
 }
 //-----------------------------------------------------------------------------
@@ -936,7 +937,8 @@ char mglBase::SetPenPal(const char *p, long *Id, bool pal)
 		const char *wdh = "123456789";
 		const char *arr = "AKDTVISO_";
 		long m=0;
-		for(size_t i=0;i<strlen(p);i++)
+		register size_t i,l=strlen(p);
+		for(i=0;i<l;i++)
 		{
 			if(p[i]=='{')	m++;	if(p[i]=='}')	m--;
 			if(m>0)	continue;
@@ -1044,8 +1046,9 @@ void mglBase::vect_plot(long p1, long p2, mreal s)
 //-----------------------------------------------------------------------------
 int mglFindArg(const char *str)
 {
-	register long l=0,k=0,i;//,j,len=strlen(lst);
-	for(i=0;i<long(strlen(str));i++)
+	register long l=0,k=0;
+	register size_t i,len=strlen(str);
+	for(i=0;i<len;i++)
 	{
 		if(str[i]=='\'') l++;
 		if(str[i]=='{') k++;

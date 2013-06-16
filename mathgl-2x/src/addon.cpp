@@ -34,15 +34,16 @@ dual MGL_EXPORT mgl_expi(double a)	{	return dual(cos(a),sin(a));	}
 void MGL_EXPORT mgl_strcls(char *str)
 {
 	size_t len = strlen(str),i,n;
-	char *tmp = new char[len];
+	char *tmp = new char[len+1];	memset(tmp,0,len);
 	for(i=0;i<len;i++)
 	{
 		if(i<len-1 && str[i]==' ' && str[i+1]==' ')
 			continue;
 		tmp[i] = str[i];
 	}
-	for(n=0;n<strlen(tmp);n++)		if(tmp[n]!=' ')	break;
-	for(i=strlen(tmp)-1;i>0;i--)	if(tmp[i]!=' ')	break;
+	len = strlen(tmp);
+	for(n=0;n<len;n++)		if(tmp[n]!=' ')	break;
+	for(i=len-1;i>0;i--)	if(tmp[i]!=' ')	break;
 	tmp[i+1]=0;	strcpy(str,&(tmp[n]));
 	delete []tmp;
 }

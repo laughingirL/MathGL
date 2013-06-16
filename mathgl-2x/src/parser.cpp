@@ -69,11 +69,10 @@ void mglParser::ScanFunc(const wchar_t *line)
 //-----------------------------------------------------------------------------
 MGL_NO_EXPORT wchar_t *mgl_str_copy(const char *s)
 {
-	wchar_t *str = new wchar_t[strlen(s)+1];
-	register long i;
-	for(i=0;i<int(strlen(s));i++)	str[i] = s[i];
-	str[i] = 0;
-	return str;
+	register size_t i,l=strlen(s);
+	wchar_t *str = new wchar_t[l+1];
+	for(i=0;i<l;i++)	str[i] = s[i];
+	str[i] = 0;	return str;
 }
 //-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgl_cmd_cmp(const void *a, const void *b)

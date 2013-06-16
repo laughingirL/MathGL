@@ -1413,13 +1413,13 @@ void MGL_EXPORT mgl_chart(HMGL gr, HCDT a, const char *cols, const char *opt)
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Chart",cgid++);
 	bool wire = mglchr(cols,'#');	// draw edges
-	register long n=a->GetNx(),i,j=0;
-	if(cols)	for(i=0;i<long(strlen(cols));i++)
+	register long n=a->GetNx(),i,j=0,len=cols?long(strlen(cols)):0;
+	if(cols)	for(i=0;i<len;i++)
 		if(strchr(MGL_COLORS,cols[i]) || cols[i]==' ')	j++;
-	if(j==0)	cols = MGL_DEF_PAL;
-	mreal *c = new mreal[strlen(cols)+1],cc;
+	if(j==0)	{	cols = MGL_DEF_PAL;	len=long(strlen(cols));	}
+	mreal *c = new mreal[len+1],cc;
 	long nc=0;			// number of colors
-	for(i=0;i<long(strlen(cols));i++)
+	for(i=0;i<len;i++)
 		if(strchr(MGL_COLORS,cols[i]) || cols[i]==' ')
 		{	c[nc]=gr->AddTexture(cols[i]);	nc++;	}
 	// NOTE: nc>0 since j>0 or MGL_DEF_PAL is not empty

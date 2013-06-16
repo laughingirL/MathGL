@@ -149,7 +149,8 @@ void mglPrepareFitEq(mglBase *gr,mreal chi, const char *eq, const char *var, mre
 {
 	char buf[32]="";
 	snprintf(mglFitRes,1024,"chi=%g",chi);
-	for(int i=0;i<int(strlen(var));i++)
+	register size_t i,k,len=strlen(var);
+	for(i=0;i<len;i++)
 	{
 		snprintf(buf,32,", %c=%g",var[i],par[i]);
 		strcat(mglFitRes,buf);
@@ -157,7 +158,7 @@ void mglPrepareFitEq(mglBase *gr,mreal chi, const char *eq, const char *var, mre
 	gr->SetWarn(-1,mglFitRes);
 
 	memset(mglFitRes, 0, 1024);	//mglFitRes[0] = 0;
-	register long i,k,len=strlen(eq);
+	len=strlen(eq);
 	for(i=k=0;i<len;i++)
 	{
 		const char *c = strchr(var,eq[i]);
