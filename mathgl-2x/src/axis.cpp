@@ -519,7 +519,7 @@ void mglCanvas::DrawAxis(mglAxis &aa, bool text, char arr,const char *stl,const 
 	EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::DrawLabels(mglAxis &aa)
+void mglCanvas::DrawLabels(mglAxis &aa, bool inv)
 {
 	if(strchr("xyz",aa.ch))
 		aa.org = mglPoint(GetOrgX(aa.ch), GetOrgY(aa.ch), GetOrgZ(aa.ch));
@@ -551,7 +551,7 @@ void mglCanvas::DrawLabels(mglAxis &aa)
 		if(c>v)	c = v;
 	}
 	if(get(MGL_ENABLE_RTEXT) && get(MGL_TICKS_ROTATE) && l>1 && c>0)	// try rotate first
-	{	tet = c>1.1*h ? asin(1.1*h/c) : M_PI/2;	pos[2]=aa.ch=='c'?'R':'L';
+	{	tet = c>1.1*h ? asin(1.1*h/c) : M_PI/2;	pos[2]=(aa.ch=='c' && !inv)?'R':'L';
 		l=0.99*h/sin(tet)/c;	for(i=0;i<n;i++)	w[i]=l*c;	}
 	// TODO: do clever points exclusion (i.e. longest and so on)
 	long k = get(MGL_TICKS_SKIP) ? 1+l : 1;
@@ -566,12 +566,12 @@ void mglCanvas::DrawLabels(mglAxis &aa)
 		mreal ux=qq.u*cos(tet) + qq.v*sin(tet), uy=qq.v*cos(tet) - qq.u*sin(tet);
 		qq.u = ux;	qq.v = uy;
 
-		if((!get(MGL_ENABLE_RTEXT) || tet) && nn.x!=0)	pos[2] = nn.x<0 ? 'L':'R';
+		if((!get(MGL_ENABLE_RTEXT) || tet) && nn.x!=0 && aa.ch!='c')	pos[2] = nn.x<0 ? 'L':'R';
 //		if(tet && nn.x==0)	pos[2] = 'R';
 		if(aa.ch=='c' && aa.txt[i].text[0]==' ')	qq.u = qq.v = NAN;
 		int ts = 1;
 		if(!get(MGL_DISABLE_SCALE))	ts = sign(qq.v*nn.x-qq.u*nn.y)*sign(aa.v2-aa.v1);
-		if(aa.ch=='c')	ts=(aa.ns==0 || aa.ns==3)?1:-1;
+		if(aa.ch=='c')	ts=inv?-1:1;	// use manual settings by inv argument
 		if(aa.ch=='T')	ts *= -1;
 		if(aa.pos=='T')	ts *= -1;
 		pos[0] = ts>0 ? 't':'T';
@@ -924,7 +924,7 @@ void mglCanvas::colorbar(HCDT vv, const mreal *c, int where, mreal x, mreal y, m
 	}
 	if(n<64)
 	{
-		wchar_t buf[64];
+		wchar_t buf[64];	ac.txt.clear();
 		for(i=0;i<n;i++)
 		{
 			d = vv->v(i);
@@ -959,7 +959,8 @@ void mglCanvas::colorbar(HCDT vv, const mreal *c, int where, mreal x, mreal y, m
 		default:ac.dir.x = 0;	ac.org.x = x-0.1*w;	break;
 	}
 	SetPenPal(AxisStl);
-	ac.ns = where;	DrawLabels(ac);	// NOTE ns isn't used for colorbar
+	bool out = fabs(x)>1 && fabs(y)>1, inv = where!=3 && where!=0;
+	ac.ns = where;	DrawLabels(ac,inv);	// NOTE ns isn't used for colorbar
 	Pop();	clr(MGL_DISABLE_SCALE);	EndGroup();
 }
 //-----------------------------------------------------------------------------

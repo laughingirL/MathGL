@@ -67,12 +67,7 @@ void smgl_stfa(mglGraph *gr);	// STFA sample
 void smgl_text(mglGraph *gr);	// text drawing
 void test(mglGraph *gr)
 {
-	mglData a,v;	mgls_prepare2d(&a,0,&v);
-	gr->SetTickTempl('c',L"%.3f");
-	gr->SubPlot(2,2,0);	gr->Box();
-	gr->Colorbar(v,"<");		gr->Colorbar(v,">");		gr->Colorbar(v,"_");		gr->Colorbar(v,"^");
-	gr->SubPlot(2,2,2);	gr->Box();
-	gr->Colorbar(v,"I<");	gr->Colorbar(v,"I>");	gr->Colorbar(v,"I_");	gr->Colorbar(v,"I^");
+	gr->Rotate(-100,45);	gr->Axis();
 	return;
 	
 	mglParse par;

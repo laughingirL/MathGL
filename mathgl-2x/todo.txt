@@ -24,7 +24,7 @@ A. Paper about MathGL!!!
 	q. Test FSurf
 	u. Test FlowP + 3d
 
-15. Check samples: colorbar + axis after rotate -100 45
+15. Check axis after rotate -100 45
 16. Add extra samples (data1, data2, data3, data4, text2, error2) ???
 17. Add "Triangulation sample", "Local light sample"
 18. Update docs about Cones (styles 't', '4', '6', '8')

@@ -410,7 +410,7 @@ private:
 	/// Draw generic colorbar
 	void colorbar(HCDT v, const mreal *s, int where, mreal x, mreal y, mreal w, mreal h);
 	/// Draw labels for ticks
-	void DrawLabels(mglAxis &aa);
+	void DrawLabels(mglAxis &aa, bool inv=false);
 	/// Get label style
 	char GetLabelPos(mreal c, long kk, mglAxis &aa);
 	/// Draw tick
