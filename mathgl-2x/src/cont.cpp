@@ -75,7 +75,7 @@ void MGL_NO_EXPORT mgl_string_curve(mglBase *gr,long f,long ,long *ff,long *nn,c
 		else		{	strcat(fnt,":L");	align=0;	}
 	}
 	if(rev)	reverse(qa.begin(),qa.end());
-	long len = wcslen(text);
+	long len = mgl_wcslen(text);
 	mreal *wdt=new mreal[len+1];
 	for(j=0;j<len;j++)	{	L[0]=text[j];	wdt[j]=1.2*gr->TextWidth(L,font,size);	}
 	wdt[len]=0;
@@ -156,11 +156,7 @@ void MGL_EXPORT mgl_textw_y(HMGL gr, HCDT y, const wchar_t *text, const char *fo
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_text_xyz(HMGL gr, HCDT x, HCDT y, HCDT z,const char *text, const char *font, const char *opt)
 {
-	size_t s = mbstowcs(0,text,0)+1;
-	wchar_t *wcs = new wchar_t[s];
-	mbstowcs(wcs,text,s);
-	mgl_textw_xyz(gr,x,y,z, wcs, font, opt);
-	delete []wcs;
+	MGL_TO_WCS(text,mgl_textw_xyz(gr,x,y,z, wcs, font, opt));
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_text_xy(HMGL gr, HCDT x, HCDT y, const char *text, const char *font, const char *opt)

@@ -95,17 +95,15 @@ using mglCanvasWnd::Window;
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_ask_fltk(const wchar_t *quest, wchar_t *res)
 {
-	static char buf[1024];
+	static char buf[1024];	*res=0;
 #if FL_MINOR_VERSION>=3
-	fl_utf8fromwc(buf, 1024, quest, wcslen(quest)+1);
+	fl_utf8fromwc(buf, 1024, quest, mgl_wcslen(quest)+1);
 	const char *str = fl_input("%s",buf,"");
 	if(str)	fl_utf8towc(str, strlen(str)+1, res, 1024);
-	else		*res=0;
 #else
-	wcstombs(buf,quest,wcslen(quest)+1);
+	wcstombs(buf,quest,mgl_wcslen(quest)+1);
 	const char *str = fl_input("%s",buf,"");
-	if(str)	mbstowcs(res,str, strlen(str)+1);
-	else		*res=0;
+	MGL_TO_WCS(str,wcscpy(res,str));
 #endif
 }
 //-----------------------------------------------------------------------------

@@ -176,7 +176,7 @@ HMDT MGL_EXPORT mgl_data_resize_box(HCDT dat, long mx,long my,long mz, mreal x1,
 	const mglData *d=dynamic_cast<const mglData *>(dat);
 	if(!d)	return 0;
 	register long nx = d->nx-1, ny = d->ny-1, nz = d->nz-1;
-	mx = mx<1 ? nx:mx;	my = my<1 ? ny:my;	mz = mz<1 ? nz:mz;
+	mx = mx<1 ? nx+1:mx;	my = my<1 ? ny+1:my;	mz = mz<1 ? nz+1:mz;
 	mglData *r=new mglData(mx,my,mz);
 
 	mreal par[6]={nx*x1,0,ny*y1,0,nz*z1,0};

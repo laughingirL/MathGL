@@ -117,7 +117,7 @@ MGL_EXPORT FILE *mgl_next_data(const char *fname,int p)
 	if(pos==0)	{	if(!getcwd(path,256))	return 0;	}	// remember ini dyrectory
 	else		{	if(chdir(path)==-1)		return 0;	}
 
-	// read the initial (common) date from "mbrs.ini"
+	// read the initial (common) data
 	FILE *fp=fopen(fname,"rt");
 	if(fp==NULL)	return NULL;
 	fseek(fp,0,SEEK_END);

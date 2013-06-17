@@ -30,7 +30,7 @@ char *mgl_strdup(const char *s)
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_create_cpp_font(HMGL gr, const wchar_t *how)
 {
-	unsigned long l=wcslen(how), i, n=0, m;
+	unsigned long l=mgl_wcslen(how), i, n=0, m;
 	wchar_t ch=*how;
 	const mglFont *f = gr->GetFont();
 	std::vector<wchar_t> s;	s.push_back(ch);
@@ -1131,12 +1131,7 @@ void mglBase::AddLegend(const wchar_t *text,const char *style)
 //-----------------------------------------------------------------------------
 void mglBase::AddLegend(const char *str,const char *style)
 {
-	if(!str || *str==0)	return;
-	size_t s = mbstowcs(0,str,0)+1;
-	wchar_t *wcs = new wchar_t[s];
-	mbstowcs(wcs,str,s);
-	AddLegend(wcs, style);
-	delete []wcs;
+	MGL_TO_WCS(str,AddLegend(wcs, style));
 }
 //-----------------------------------------------------------------------------
 bool MGL_EXPORT mgl_check_dim2(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *name, bool less)

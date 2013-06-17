@@ -264,6 +264,8 @@ typedef double _Complex dual;
 typedef float _Complex dual;
 #endif
 #endif
+/// Find length of wchar_t string (bypass standard wcslen bug)
+size_t MGL_EXPORT mgl_wcslen(const wchar_t *str);
 /// Get RGB values for given color id or fill by -1 if no one found
 void MGL_EXPORT mgl_chrrgb(char id, float rgb[3]);
 /// Check if string contain color id and return its number
@@ -294,6 +296,7 @@ void MGL_EXPORT mgl_clear_fft();
 #else
 #define MGL_PUSH(a,v,m)		a.push_back(v);
 #endif
+#define MGL_TO_WCS(str,code)	if(str){size_t s=mbstowcs(0,str,0); wchar_t *wcs=new wchar_t[s+1]; mbstowcs(wcs,str,s); wcs[s]=0; code; delete []wcs;}
 //-----------------------------------------------------------------------------
 #endif
 //-----------------------------------------------------------------------------

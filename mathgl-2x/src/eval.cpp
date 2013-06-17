@@ -147,8 +147,14 @@ void MGL_EXPORT mgl_srnd(long seed)
 }
 void MGL_EXPORT mgl_srnd_(int *seed)	{	mgl_srnd(*seed);	}
 //-----------------------------------------------------------------------------
+#if MGL_HAVE_PTHREAD
+pthread_mutex_t mutexRnd;
+#endif
 double MGL_EXPORT mgl_rnd()
 {
+#if MGL_HAVE_PTHREAD
+	pthread_mutex_lock(&mutexRnd);
+#endif
 #if MGL_HAVE_GSL
 	if(mgl_rng==0)
 	{
@@ -156,11 +162,15 @@ double MGL_EXPORT mgl_rnd()
 		mgl_rng = gsl_rng_alloc(gsl_rng_default);
 		gsl_rng_set(mgl_rng, time(0));
 	}
-	return gsl_rng_uniform(mgl_rng);
+	double res = gsl_rng_uniform(mgl_rng);
 //	gsl_rng_free(r);
 #else
-	return rand()/(RAND_MAX-1.);
+	double res = rand()/(RAND_MAX-1.);
 #endif
+#if MGL_HAVE_PTHREAD
+	pthread_mutex_unlock(&mutexRnd);
+#endif
+	return res;
 }
 double MGL_EXPORT mgl_rnd_()	{	return mgl_rnd();	}
 //-----------------------------------------------------------------------------

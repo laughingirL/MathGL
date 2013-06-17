@@ -68,25 +68,17 @@ char mglGetStyle(const char *how, int *font, int *align)
 //-----------------------------------------------------------------------------
 float mglFont::Puts(const char *str,const char *how,float col) const
 {
-	int font=0, align=1;
+	int font=0, align=1;	float w=0;
 	char cc=mglGetStyle(how,&font,&align);
-	size_t size = mbstowcs(0,str,0)+1;
-	wchar_t *wcs = new wchar_t[size];
-	mbstowcs(wcs,str,size);
-	float w = Puts(wcs,font,align,cc?-cc:col);
-	delete []wcs;
+	MGL_TO_WCS(str,w = Puts(wcs,font,align,cc?-cc:col));
 	return w;
 }
 //-----------------------------------------------------------------------------
 float mglFont::Width(const char *str,const char *how) const
 {
-	int font=0;
+	int font=0;	float w=0;
 	mglGetStyle(how,&font);
-	size_t size = mbstowcs(0,str,0)+1;
-	wchar_t *wcs = new wchar_t[size];
-	mbstowcs(wcs,str,size);
-	float w = Width(wcs,font);
-	delete []wcs;
+	MGL_TO_WCS(str,w = Width(wcs,font));
 	return w;
 }
 //-----------------------------------------------------------------------------
@@ -108,7 +100,7 @@ float mglFont::Puts(const wchar_t *str,int font,int align, float col) const
 {
 	if(numg==0 || !str || *str==0)	return 0;
 	float ww=0,w=0,h = (align&4) ? 500./fact[0] : 0;
-	size_t size = wcslen(str)+1,i,num=0;
+	size_t size = mgl_wcslen(str)+1,i,num=0;
 	if(parse)
 	{
 		unsigned *wcs = new unsigned[size], *buf=wcs;
@@ -166,7 +158,7 @@ float mglFont::Width(const wchar_t *str,int font) const
 {
 	if(numg==0 || !str || *str==0)	return 0;
 	float ww=0,w=0;
-	size_t size = wcslen(str)+1,i;
+	size_t size = mgl_wcslen(str)+1,i;
 	if(parse)
 	{
 		unsigned *wcs = new unsigned[size], *buf=wcs;
@@ -751,13 +743,22 @@ bool mglFont::Load(const char *base, const char *path)
 	return true;
 }
 //-----------------------------------------------------------------------------
+#if MGL_HAVE_PTHREAD
+extern pthread_mutex_t mutexRnd;
+#endif
 mglFont::mglFont(const char *name, const char *path)
 {
 	parse = true;	numg=0;	gr=0;
 //	if(this==&mglDefFont)	Load(name, path);	else	Copy(&mglDefFont);
 	if(name && *name)	Load(name, path);
 	else if(this!=&mglDefFont)	Copy(&mglDefFont);
-	else	Load(MGL_DEF_FONT_NAME,0);
+	else
+	{
+#if MGL_HAVE_PTHREAD
+		pthread_mutex_init(&mutexRnd,0);	// NOTE: this like init function for the library.
+#endif
+		Load(MGL_DEF_FONT_NAME,0);
+	}
 }
 mglFont::~mglFont()	{	Clear();	}
 void mglFont::Restore()	{	Copy(&mglDefFont);	}

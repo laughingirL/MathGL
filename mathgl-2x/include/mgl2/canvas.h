@@ -37,12 +37,12 @@ struct mglMatrix
 /// Structure for drawing axis and ticks
 struct mglAxis
 {
-	mglAxis()	{	dv=ds=d=v0=v1=v2=o=sh=0;	ns=f=ch=*t=0;	pos = 't';	}
+	mglAxis()	{	dv=ds=d=v0=v1=v2=o=sh=0;	ns=f=ch=0;	pos = 't';	}
 	mglAxis(const mglAxis &aa)
 	{	dv=aa.dv;	ds=aa.ds;	d=aa.d;		dir=aa.dir;	sh=aa.sh;
 		v0=aa.v0;	v1=aa.v1;	v2=aa.v2;	o=aa.o;		pos=aa.pos;
 		a = aa.a;	b = aa.b;	org=aa.org;	txt=aa.txt;
-		ns=aa.ns;	f=aa.f;		ch=aa.ch;	wcscpy(t,aa.t);	}
+		ns=aa.ns;	f=aa.f;		ch=aa.ch;	t=aa.t;	}
 	inline void AddLabel(const wchar_t *lbl, mreal v)
 	{	txt.push_back(mglText(lbl,"",v));	}
 	inline void AddLabel(const std::wstring &lbl, mreal v)
@@ -51,7 +51,7 @@ struct mglAxis
 	mreal dv,ds;		///< Actual step for ticks and subticks.
 	mreal d;			///< Step for axis ticks (if positive) or its number (if negative).
 	int ns;			///< Number of axis subticks.
-	wchar_t t[256];	///< Tick template (set "" to use default one ("%.2g" in simplest case))
+	std::wstring t;	///< Tick template (set "" to use default one ("%.2g" in simplest case))
 	mglPoint dir;	///< Axis direction
 	mglPoint a,b;	///< Directions of over axis
 	mglPoint org;

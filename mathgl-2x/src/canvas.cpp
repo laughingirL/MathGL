@@ -907,11 +907,7 @@ void mglCanvas::Table(mreal x, mreal y, HCDT val, const wchar_t *text, const cha
 void mglCanvas::Title(const char *title,const char *stl,mreal size)
 {
 	if(!title)	title="";
-	size_t s = mbstowcs(0,title,0)+1;
-	wchar_t *wcs = new wchar_t[s];
-	mbstowcs(wcs,title,s);
-	Title(wcs, stl,size);
-	delete []wcs;
+	MGL_TO_WCS(title,Title(wcs, stl,size));
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::Title(const wchar_t *title,const char *stl,mreal size)

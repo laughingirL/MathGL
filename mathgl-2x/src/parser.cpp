@@ -101,7 +101,7 @@ mglCommand *mglParser::FindCommand(const char *com)
 //-----------------------------------------------------------------------------
 mglCommand *mglParser::FindCommand(const wchar_t *com)
 {
-	size_t s = 15<wcslen(com)?15:wcslen(com);
+	size_t s = 15<mgl_wcslen(com)?15:mgl_wcslen(com);
 	char cmd[16];	wcstombs(cmd,com,s+1);	cmd[s]=0;
 	return FindCommand(cmd);
 }
@@ -130,7 +130,7 @@ int mglParser::Exec(mglGraph *gr, const wchar_t *com, long n, mglArg *a, const s
 	char *o=0;
 	if(opt && *opt)	// TODO: parse arguments of options
 	{
-		long len = wcslen(opt);
+		long len = mgl_wcslen(opt);
 		o = new char[len+1];
 		for(i=0;i<len+1;i++)	o[i]=opt[i];
 	}
@@ -195,60 +195,42 @@ void mglParser::DeleteAll()
 //-----------------------------------------------------------------------------
 void mglParser::AddParam(int n, const char *str)
 {
-	unsigned s = mbstowcs(0,str,0)+1;
-	wchar_t *wcs = new wchar_t[s];
-	mbstowcs(wcs,str,s);
-	AddParam(n,wcs);
-	delete []wcs;
+	MGL_TO_WCS(str,AddParam(n,wcs));
 }
 //-----------------------------------------------------------------------------
 int mglParser::Parse(mglGraph *gr, const char *str, long pos)
 {
-	size_t s = mbstowcs(0,str,0)+1;
-	wchar_t *wcs = new wchar_t[s];
-	mbstowcs(wcs,str,s);
-	int r = Parse(gr,wcs,pos);
-	delete []wcs;	return r;
+	int r=0;
+	MGL_TO_WCS(str,r = Parse(gr,wcs,pos));
+	return r;
 }
 //-----------------------------------------------------------------------------
 mglVar *mglParser::AddVar(const char *str)
 {
-	size_t s = mbstowcs(0,str,0)+1;
-	wchar_t *wcs = new wchar_t[s];
-	mbstowcs(wcs,str,s);
-	mglVar *v = AddVar(wcs);
-	delete []wcs;
+	mglVar *v=0;
+	MGL_TO_WCS(str,v = AddVar(wcs));
 	return v;
 }
 //-----------------------------------------------------------------------------
 mglVar *mglParser::FindVar(const char *str)
 {
 	if(!str || *str==0) 	return DataList;
-	size_t s = mbstowcs(0,str,0)+1;
-	wchar_t *wcs = new wchar_t[s];
-	mbstowcs(wcs,str,s);
-	mglVar *v = FindVar(wcs);
-	delete []wcs;
+	mglVar *v=DataList;
+	MGL_TO_WCS(str,v = FindVar(wcs));
 	return v;
 }
 //-----------------------------------------------------------------------------
 mglNum *mglParser::AddNum(const char *str)
 {
-	size_t s = mbstowcs(0,str,0)+1;
-	wchar_t *wcs = new wchar_t[s];
-	mbstowcs(wcs,str,s);
-	mglNum *v = AddNum(wcs);
-	delete []wcs;
+	mglNum *v=0;
+	MGL_TO_WCS(str,v = AddNum(wcs));
 	return v;
 }
 //-----------------------------------------------------------------------------
 mglNum *mglParser::FindNum(const char *str)
 {
-	size_t s = mbstowcs(0,str,0)+1;
-	wchar_t *wcs = new wchar_t[s];
-	mbstowcs(wcs,str,s);
-	mglNum *v = FindNum(wcs);
-	delete []wcs;
+	mglNum *v=0;
+	MGL_TO_WCS(str,v = FindNum(wcs));
 	return v;
 }
 //-----------------------------------------------------------------------------
@@ -919,7 +901,7 @@ void mglParser::Execute(mglGraph *gr, int n, const wchar_t **text)
 //-----------------------------------------------------------------------------
 void mglParser::Execute(mglGraph *gr, const wchar_t *text)
 {
-	size_t s = wcslen(text)+1;
+	size_t s = mgl_wcslen(text)+1;
 	wchar_t *wcs = new wchar_t[s];
 	const wchar_t **str;
 	register size_t i, n=1;
@@ -950,12 +932,7 @@ void mglParser::Execute(mglGraph *gr, const wchar_t *text)
 //-----------------------------------------------------------------------------
 void mglParser::Execute(mglGraph *gr, const char *text)
 {
-	size_t s = mbstowcs(0,text,0)+1;
-	wchar_t *wcs = new wchar_t[s];
-	memset(wcs,0,s*sizeof(wchar_t));
-	mbstowcs(wcs,text,s);
-	Execute(gr, wcs);
-	delete []wcs;
+	MGL_TO_WCS(text,	Execute(gr, wcs));
 }
 //-----------------------------------------------------------------------------
 void mglParser::DeleteVar(mglVar *v)
@@ -1077,11 +1054,9 @@ long MGL_EXPORT mgl_parser_cmd_num(HMPR pr)
 //---------------------------------------------------------------------------
 HMDT MGL_EXPORT mgl_parser_calc(HMPR pr, const char *formula)
 {
-	size_t s = mbstowcs(0,formula,0)+1;
-	wchar_t *wcs = new wchar_t[s];
-	mbstowcs(wcs,formula,s);
-	HMDT d = mgl_parser_calcw(pr,wcs);
-	delete []wcs;	return d;
+	HMDT d=0;
+	MGL_TO_WCS(formula,d = mgl_parser_calcw(pr,wcs));
+	return d;
 }
 HMDT MGL_EXPORT mgl_parser_calcw(HMPR pr, const wchar_t *formula)
 {	mglData *d = new mglData(mglFormulaCalc(formula,pr)); 	return d;	}
