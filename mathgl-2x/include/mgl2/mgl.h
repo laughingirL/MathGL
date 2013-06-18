@@ -443,6 +443,7 @@ public:
 
 	/// Clear up the frame
 	inline void Clf(double r, double g, double b)	{	mgl_clf_rgb(gr, r, g, b);	}
+	inline void Clf(char col)	{	mgl_clf_chr(gr, col);	}
 	inline void Clf()	{	mgl_clf(gr);	}
 	/// Clear unused points and primitives. Useful only in combination with SetFaceNum().
 	inline void ClearUnused()	{	mgl_clear_unused(gr);	}

@@ -301,6 +301,9 @@ void MGL_EXPORT mgl_clf_(uintptr_t *gr);
 /// Clear up the frame and fill background by specified color
 void MGL_EXPORT mgl_clf_rgb(HMGL gr, double r, double g, double b);
 void MGL_EXPORT mgl_clf_rgb_(uintptr_t *gr, mreal *r, mreal *g, mreal *b);
+/// Clear up the frame and fill background by specified color
+void MGL_EXPORT mgl_clf_chr(HMGL gr, char col);
+void MGL_EXPORT mgl_clf_chr_(uintptr_t *gr, const char *col, int);
 
 /// Put further plotting in some region of whole frame.
 void MGL_EXPORT mgl_subplot(HMGL gr, int nx,int ny,int m,const char *style);

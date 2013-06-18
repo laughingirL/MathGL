@@ -191,7 +191,7 @@ GifFileType *gif;*/
 	stack.clear();	Restore();	DefColor('k');
 	SetPlotFactor(0);	InPlot(0,1,0,1,false);
 	SetTickLen(0);	SetCut(true);
-	AdjustTicks("xyzc",true);	Clf();
+	AdjustTicks("xyzc",true);	Clf('w');
 
 	for(int i=0;i<10;i++)	{	AddLight(i, mglPoint(0,0,1));	Light(i,false);	}
 	Light(0,true);	Light(false);	SetDifLight(true);

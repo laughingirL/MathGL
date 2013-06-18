@@ -564,6 +564,7 @@ void mglCanvas::DrawLabels(mglAxis &aa, bool inv)
 		p = o+d*c;	nn = (s-o)/(Max-Min);	ScalePoint(p,nn);
 		mglPnt &qq = Pnt[kk[i]];
 		mreal ux=qq.u*cos(tet) + qq.v*sin(tet), uy=qq.v*cos(tet) - qq.u*sin(tet);
+		if(ux==0)	uy = fabs(uy);
 		qq.u = ux;	qq.v = uy;
 
 		if((!get(MGL_ENABLE_RTEXT) || tet) && nn.x!=0 && aa.ch!='c')	pos[2] = nn.x<0 ? 'L':'R';
@@ -572,6 +573,7 @@ void mglCanvas::DrawLabels(mglAxis &aa, bool inv)
 		int ts = 1;
 		if(!get(MGL_DISABLE_SCALE))	ts = sign(qq.v*nn.x-qq.u*nn.y)*sign(aa.v2-aa.v1);
 		if(aa.ch=='c')	ts=inv?-1:1;	// use manual settings by inv argument
+//		else if(ux==0 && uy<0)	ts *= -1;
 		if(aa.ch=='T')	ts *= -1;
 		if(aa.pos=='T')	ts *= -1;
 		pos[0] = ts>0 ? 't':'T';

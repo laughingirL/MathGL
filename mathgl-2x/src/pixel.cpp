@@ -382,10 +382,11 @@ void mglCanvas::Clf(mglColor Back)
 	Txt.clear();	Txt.reserve(3);
 	MGL_PUSH(Txt,mglTexture(MGL_DEF_PAL,-1),mutexTxt);
 	MGL_PUSH(Txt,mglTexture(MGL_DEF_SCH,1),mutexTxt);
-	
-	if(Back==0)		Back = 'w';
-	if((Flag&3)==2)	Back = 'k';
-	BDef[0]=Back.r*255;	BDef[1]=Back.g*255;BDef[2]=Back.b*255;	BDef[3]=0;
+
+//	if(Back==NC)		Back = mglColor(1,1,1);
+	if((Flag&3)==2)	Back = mglColor(0,0,0);
+	if(Back!=NC)
+	{	BDef[0]=Back.r*255;	BDef[1]=Back.g*255;BDef[2]=Back.b*255;	BDef[3]=0;	}
 	ClfZB(true);
 }
 //-----------------------------------------------------------------------------

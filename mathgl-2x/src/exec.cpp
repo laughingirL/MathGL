@@ -229,10 +229,12 @@ int MGL_NO_EXPORT mgls_clearlegend(mglGraph *gr, long , mglArg *, const char *k,
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_clf(mglGraph *gr, long , mglArg *, const char *k, const char *)
+int MGL_NO_EXPORT mgls_clf(mglGraph *gr, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
 	if(!strcmp(k,""))	gr->Clf();
+	else if(!strcmp(k,"s"))	gr->Clf(a[0].s[0]);
+	else if(!strcmp(k,"nnn"))	gr->Clf(a[0].v,a[1].v,a[2].v);
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -2535,7 +2537,7 @@ mglCommand mgls_base_cmd[] = {
 	{"circle","Draw circle","circle x y r ['fmt']|x y z r ['fmt']", mgls_circle ,13},
 	{"clean","Remove duplicate rows","clean Dat id", mgls_clean ,3},
 	{"clearlegend","Clear legend antries","clearlegend", mgls_clearlegend ,15},
-	{"clf","Clear picture","clf", mgls_clf ,12},
+	{"clf","Clear picture","clf|'col'|r g b", mgls_clf ,12},
 	{"cloud","Draw cloud","cloud Adat ['fmt']|Xdat Ydat Zdat Adat ['fmt']", mgls_cloud ,9},
 	{"colorbar","Draw colorbar","colorbar ['fmt' pos]|Vdat ['fmt' pos]|'sch' pos x y [w h]|Vdat 'sch' pos x y [w h]", mgls_colorbar ,12},
 	{"column","Get data column filled by formula on column ids","column Res Dat 'eq'", mgls_column ,4},

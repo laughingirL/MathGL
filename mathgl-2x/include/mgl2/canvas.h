@@ -133,7 +133,7 @@ using mglBase::Light;
 	/// Pop transformation matrix from stack
 	inline void Pop()	{	B = stack.back(); stack.pop_back();	}
 	/// Clear up the frame
-	virtual void Clf(mglColor back=WC);
+	virtual void Clf(mglColor back=NC);
 
 	/// Put further plotting in cell of stick rotated on angles tet, phi
 	void StickPlot(int num, int i, mreal tet, mreal phi);

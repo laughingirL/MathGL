@@ -99,6 +99,8 @@ void MGL_EXPORT mgl_mat_pop(HMGL gr)
 {	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->Pop();	}
 void MGL_EXPORT mgl_clf(HMGL gr)
 {	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->Clf();	}
+void MGL_EXPORT mgl_clf_chr(HMGL gr, char ch)
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->Clf(mglColor(ch));	}
 void MGL_EXPORT mgl_clf_rgb(HMGL gr, double r, double g, double b)
 {	mglCanvas *gg = dynamic_cast<mglCanvas *>(gr);	if(gg)	gg->Clf(mglColor(r,g,b));	}
 //-----------------------------------------------------------------------------
@@ -194,6 +196,8 @@ void MGL_EXPORT mgl_mat_push_(uintptr_t *gr)	{	_GR_->Push();	}
 void MGL_EXPORT mgl_mat_pop_(uintptr_t *gr)	{	_GR_->Pop();	}
 void MGL_EXPORT mgl_clf_(uintptr_t *gr)
 {	_GR_->Clf();	}
+void MGL_EXPORT mgl_clf_chr_(uintptr_t *gr, const char *ch, int)
+{	_GR_->Clf(mglColor(*ch));	}
 void MGL_EXPORT mgl_clf_rgb_(uintptr_t *gr, mreal *r, mreal *g, mreal *b)
 {	_GR_->Clf(mglColor(*r,*g,*b));	}
 //-----------------------------------------------------------------------------
