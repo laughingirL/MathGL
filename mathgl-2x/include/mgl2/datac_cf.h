@@ -192,6 +192,9 @@ void MGL_EXPORT mgl_datac_hankel_(uintptr_t *dat, const char *dir,int);
 /// Apply Fourier transform
 void MGL_EXPORT mgl_datac_fft(HADT dat, const char *dir);
 void MGL_EXPORT mgl_datac_fft_(uintptr_t *dat, const char *dir,int);
+/// Find correlation between 2 data arrays
+HADT MGL_EXPORT mgl_datac_correl(HCDT dat1, HCDT dat2, const char *dir);
+uintptr_t MGL_EXPORT mgl_datac_correl_(uintptr_t dat1, uintptr_t dat2, const char *dir,int);
 
 HMDT MGL_EXPORT mgl_datac_real(HCDT dat);
 uintptr_t MGL_EXPORT mgl_datac_real_(uintptr_t *dat);

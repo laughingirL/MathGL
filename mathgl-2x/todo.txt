@@ -6,15 +6,15 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN. (VID=18d1 and PID=4e41)
 A. Paper about MathGL!!!
 
 1. Export to X3D, COLLADA !!!
-2. GTK window/widgets
+2. GTK and WX window/widgets ???
 3. Labels at TriCont()
+4. Use libtcc for Fill() and Modify() functions only ???
+
 5. 2D textures as one of standard way for coloring -- if '%' present in color scheme
 6. Graph(mreal x, mreal y, names, styles, font, size); -- names = "node1[node2,node3,node4[node5,node6]]", styles -- the same + apply for subnodes if absent. Styles are colors (fill,border,line), dash (to subnodes), marks "dos^v><", arrows.
-7. Use libtcc for mglFormula only! -- note that MGL formulas (i.e. for mglData) are fast enough. The only possible speeding up for Fill() and Modify() functions
 8. 3D text (with depth, for Quality=3)
 9. Text along 3D curve (for Quality=3)
 10. introduce new primitive type=5 -- arrow for Quality&3!=3. for better drawing in projections + json/view ?!?
-12. WX window/widgets
 13. Textured brushes for drawing: (a) as 8*8 array, i.e. long (save only index in mglPrim::type); (b) BrushWidth; (c) BrushAngle; (d) some pixels become transparent; (e) count from edge of image; (f) symbols {+-;=\*<>^osdiODSI}. Question: how this can be exported???
 
 14. New tests:
@@ -24,18 +24,23 @@ A. Paper about MathGL!!!
 	q. Test FSurf
 	u. Test FlowP + 3d
 
-15. Check axis after rotate -100 45
-16. Add extra samples (data1, data2, data3, data4, text2, error2) ???
-17. Add "Triangulation sample", "Local light sample"
-18. Update docs about Cones (styles 't', '4', '6', '8')
-19. Update docs about Cone (style '4', '6', '8')
+15. Check centered curved text (see text2)
+16. http://en.wikipedia.org/wiki/Autocorrelation#Efficient_computation
 
-20. http://en.wikipedia.org/wiki/Autocorrelation#Efficient_computation
+============= DOCUMENTATION =============
 
-21. Update docs: HMDT return NULL if data cannot be created
-22. Update docs: command 'resize' take 0 for default sizes
-23. check if all "value" options are described (see hist, )
-24. Check centered curved text (see text2)
+1. Add extra samples (data1, data2, data3, data4, text2, error2) ???
+2. Add "Triangulation sample"
+3. Add "Local light sample"
+4. Update docs about Cones (styles 't', '4', '6', '8')
+5. Update docs about Cone (style '4', '6', '8')
+
+6. http://en.wikipedia.org/wiki/Autocorrelation#Efficient_computation
+
+7. Update docs: HMDT return NULL if data cannot be created
+8. Update docs: command 'resize' take 0 for default sizes
+9. check if all "value" options are described (see hist, )
+
 
 ============= UDAV =============
 

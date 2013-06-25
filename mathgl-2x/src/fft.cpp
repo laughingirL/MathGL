@@ -106,7 +106,8 @@ void MGL_EXPORT mgl_fft_free(void *wt, void **ws, long nthr)
 void MGL_EXPORT mgl_fft(double *x, long s, long n, const void *wt, void *ws, int inv)
 {
 #if MGL_HAVE_GSL
-gsl_fft_complex_transform(x, s, n, (const gsl_fft_complex_wavetable*)wt, (gsl_fft_complex_workspace*)ws, inv?backward:forward);
+	if(inv)	gsl_fft_complex_inverse(x, s, n, (const gsl_fft_complex_wavetable*)wt, (gsl_fft_complex_workspace*)ws);
+	else	gsl_fft_complex_forward(x, s, n, (const gsl_fft_complex_wavetable*)wt, (gsl_fft_complex_workspace*)ws);
 #else	// NOTE this is VERY slow!
 	const double *c = (const double *)wt;
 	double *d = (double *)ws, f = inv?1./n:1;
@@ -276,7 +277,7 @@ MGL_NO_EXPORT void* mgl_envx(void *par)
 		for(j=0;j<nx;j++)	{	b[2*j] = a[j+i*nx];	b[2*j+1] = 0;	}
 		mgl_fft(b, 1, nx, t->v, t->w[t->id], false);
 		for(j=0;j<nx;j++)
-		{	b[j] /= nx/2.;	b[j+nx] = 0;	}
+		{	b[j] *= 2.;	b[j+nx] = 0;	}
 		mgl_fft(b, 1, nx, t->v, t->w[t->id], true);
 		for(j=0;j<nx;j++)	a[j+i*nx] = hypot(b[2*j], b[2*j+1]);
 	}
@@ -293,7 +294,7 @@ MGL_NO_EXPORT void* mgl_envy(void *par)
 		for(j=0;j<ny;j++)	{	b[2*j] = a[(i%nx)+nx*(j+ny*(i/nx))];	b[2*j+1] = 0;	}
 		mgl_fft(b, 1, ny, t->v, t->w[t->id], false);
 		for(j=0;j<ny;j++)
-		{	b[j] /= ny/2.;	b[j+ny] = 0;	}
+		{	b[j] *= 2.;	b[j+ny] = 0;	}
 		mgl_fft(b, 1, ny, t->v, t->w[t->id], true);
 		for(j=0;j<ny;j++)	a[(i%nx)+nx*(j+ny*(i/nx))] = hypot(b[2*j], b[2*j+1]);
 	}
@@ -310,7 +311,7 @@ MGL_NO_EXPORT void* mgl_envz(void *par)
 		for(j=0;j<nz;j++)	{	b[2*j] = a[j*k+i];	b[2*j+1] = 0;	}
 		mgl_fft(b, 1, nz, t->v, t->w[t->id], false);
 		for(j=0;j<nz;j++)
-		{	b[j] /= nz/2.;	b[j+nz] = 0;	}
+		{	b[j] *= 2.;	b[j+nz] = 0;	}
 		mgl_fft(b, 1, nz, t->v, t->w[t->id], true);
 		for(j=0;j<nz;j++)	a[j*k+i] = hypot(b[2*j], b[2*j+1]);
 	}
@@ -1058,4 +1059,127 @@ void MGL_EXPORT mgl_data_cosfft_(uintptr_t *d, const char *dir,int l)
 void MGL_EXPORT mgl_data_sinfft_(uintptr_t *d, const char *dir,int l)
 {	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
 	mgl_data_sinfft(_DT_,s);	delete []s;	}
+//-----------------------------------------------------------------------------
+MGL_NO_EXPORT void* mgl_corx(void *par)
+{
+	mglThreadT *t=(mglThreadT *)par;
+	register long i,j,ii,nx=t->p[0];
+	double *a = (double *)t->a, re, im;
+	for(i=t->id;i<t->n;i+=mglNumThr)
+	{
+		mgl_fft(t->b+2*nx*i, 1, nx, t->v, t->w[t->id], false);
+		mgl_fft(a+2*nx*i, 1, nx, t->v, t->w[t->id], false);
+		for(j=0;j<nx;j++)
+		{
+			ii = 2*j+2*nx*i;	re = t->b[ii];	im = t->b[ii+1];
+			t->b[ii]   = re*a[ii] - im*a[ii+1];
+			t->b[ii+1] = re*a[ii+1] + im*a[ii];
+		}
+		mgl_fft(t->b+2*nx*i, 1, nx, t->v, t->w[t->id], true);
+	}
+	return 0;
+}
+MGL_NO_EXPORT void* mgl_cory(void *par)
+{
+	mglThreadT *t=(mglThreadT *)par;
+	register long i,j,ii,k,nx=t->p[0],ny=t->p[1];
+	double *a = (double *)t->a, re, im;
+	for(i=t->id;i<t->n;i+=mglNumThr)
+	{
+		k = 2*(i%nx)+2*nx*ny*(i/nx);
+		mgl_fft(t->b+k, nx, ny, t->v, t->w[t->id], false);
+		mgl_fft(a+k, nx, ny, t->v, t->w[t->id], false);
+		for(j=0;j<ny;j++)
+		{
+			ii = 2*nx*j+k;	re = t->b[ii];	im = t->b[ii+1];
+			t->b[ii]   = re*a[ii] - im*a[ii+1];
+			t->b[ii+1] = re*a[ii+1] + im*a[ii];
+		}
+		mgl_fft(t->b+k, nx, ny, t->v, t->w[t->id], true);
+	}
+	return 0;
+}
+MGL_NO_EXPORT void* mgl_corz(void *par)
+{
+	mglThreadT *t=(mglThreadT *)par;
+	register long i,j,ii,nx=t->p[0],ny=t->p[1],nz=t->p[2];
+	double *a = (double *)t->a, re, im;
+	for(i=t->id;i<t->n;i+=mglNumThr)
+	{
+		mgl_fft(t->b+2*i, nx*ny, nz, t->v, t->w[t->id], false);
+		mgl_fft(a+2*i, nx*ny, nz, t->v, t->w[t->id], false);
+		for(j=0;j<nz;j++)
+		{
+			ii = 2*nx*ny*j+2*i;	re = t->b[ii];	im = t->b[ii+1];
+			t->b[ii]   = re*a[ii] - im*a[ii+1];
+			t->b[ii+1] = re*a[ii+1] + im*a[ii];
+		}
+		mgl_fft(t->b+2*i, nx*ny, nz, t->v, t->w[t->id], true);
+	}
+	return 0;
+}
+HADT MGL_EXPORT mgl_datac_correl(HCDT d1, HCDT d2, const char *dir)
+{
+	if(!dir || *dir==0)	return 0;
+	long nx = d1->GetNx(), ny = d1->GetNy(), nz = d1->GetNz();
+	if(nx*ny*nz!=d2->GetNN())	return 0;
+	if(mglNumThr<1)	mgl_set_num_thr(0);	// manually set number of threads
+	void *wt=0, **ws=0;
+	bool clear=false;
+	long par[3]={nx,ny,nz}, i;
+
+	double *a = new double[2*nx*ny*nz];	// manually convert to double
+	double *b = new double[2*nx*ny*nz];	// manually convert to double
+	const mglDataC *dd1 = dynamic_cast<const mglDataC *>(d1);
+	const mglDataC *dd2 = dynamic_cast<const mglDataC *>(d2);
+	if(dd1)	for(i=0;i<nx*ny*nz;i++)
+	{	a[2*i] = real(dd1->a[i]);	a[2*i+1] = imag(dd1->a[i]);	}
+	else	for(i=0;i<nx*ny*nz;i++)
+	{	a[2*i] = d1->vthr(i);	a[2*i+1] = 0;	}
+	if(dd2)	for(i=0;i<nx*ny*nz;i++)
+	{	b[2*i] = real(dd2->a[i]);	b[2*i+1] = imag(dd2->a[i]);	}
+	else	for(i=0;i<nx*ny*nz;i++)
+	{	b[2*i] = d2->vthr(i);	b[2*i+1] = 0;	}
+
+	if(strchr(dir,'x') && nx>1)
+	{
+		if(mgl_fft_data.thx==mglNumThr && mgl_fft_data.wnx==nx)
+		{	ws = mgl_fft_data.wsx;	wt = mgl_fft_data.wtx;	}
+		else
+		{	ws = new void*[mglNumThr];	clear = true;
+			wt = mgl_fft_alloc(nx,ws,mglNumThr);	}
+		mglStartThreadT(mgl_corx,ny*nz,b,a,wt,ws,par);
+		if(mgl_fft_data.wnx==0)
+		{	mgl_fft_data.wsx = ws;	mgl_fft_data.wtx = wt;	clear = false;
+			mgl_fft_data.thx=mglNumThr;	mgl_fft_data.wnx=nx;	}
+	}
+	if(strchr(dir,'y') && ny>1)
+	{
+		if(mgl_fft_data.thy==mglNumThr && mgl_fft_data.wny==ny)
+		{	ws = mgl_fft_data.wsy;	wt = mgl_fft_data.wty;	}
+		else
+		{	ws = new void*[mglNumThr];	clear = true;
+			wt = mgl_fft_alloc(ny,ws,mglNumThr);	}
+		mglStartThreadT(mgl_cory,nx*nz,b,a,wt,ws,par);
+		if(mgl_fft_data.wny==0)
+		{	mgl_fft_data.wsy = ws;	mgl_fft_data.wty = wt;	clear = false;
+			mgl_fft_data.thy=mglNumThr;	mgl_fft_data.wny=ny;	}
+	}
+	if(strchr(dir,'z') && nz>1)
+	{
+		if(mgl_fft_data.thz==mglNumThr && mgl_fft_data.wnz==nz)
+		{	ws = mgl_fft_data.wsz;	wt = mgl_fft_data.wtz;	}
+		else
+		{	ws = new void*[mglNumThr];	clear = true;
+			wt = mgl_fft_alloc(nz,ws,mglNumThr);	}
+		mglStartThreadT(mgl_corz,nx*ny,b,a,wt,ws,par);
+		if(mgl_fft_data.wnz==0)
+		{	mgl_fft_data.wsz = ws;	mgl_fft_data.wtz = wt;	clear = false;
+			mgl_fft_data.thz=mglNumThr;	mgl_fft_data.wnz=nz;	}
+	}
+	if(clear)	{	mgl_fft_free(wt,ws,mglNumThr);	delete []ws;	}
+	mglDataC *res = new mglDataC(nx,ny,nz);
+	for(i=0;i<nx*ny*nz;i++)	res->a[i] = dual(a[2*i], a[2*i+1]);
+	delete []a;	delete []b;	return res;
+}
 //-----------------------------------------------------------------------------

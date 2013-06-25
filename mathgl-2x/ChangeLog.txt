@@ -7,6 +7,7 @@
 * Add style '<', '^', '>' for aligning/centering boxes in Bars(), Barh(), BoxPlot(), Cones(). Also this plots become centered by default if nx sizes are the same for all data.
 * Add transparency for Area() and Region() plots.
 * Add mgl_clf_chr() function and extend 'clf' command
+* Fourier now perform true inverse Fourier transform (instead of backward one).
 * Improve/change lighting from local sources. Add SetDiffuse() function.
 * C functions now return NULL if HMDT data cannot be created for given input argument(s).
 * Enable line width for Mesh() and Fall() plots.

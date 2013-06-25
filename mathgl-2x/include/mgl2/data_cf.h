@@ -309,6 +309,9 @@ void MGL_EXPORT mgl_data_cosfft_(uintptr_t *dat, const char *dir,int);
 /// Fill data by 'x'/'k' samples for Hankel ('h') or Fourier ('f') transform
 void MGL_EXPORT mgl_data_fill_sample(HMDT dat, const char *how);
 void MGL_EXPORT mgl_data_fill_sample_(uintptr_t *dat, const char *how,int);
+/// Find correlation between 2 data arrays
+HMDT MGL_EXPORT mgl_data_correl(HCDT dat1, HCDT dat2, const char *dir);
+uintptr_t MGL_EXPORT mgl_data_correl_(uintptr_t dat1, uintptr_t dat2, const char *dir,int);
 
 /// Allocate and prepare data for Fourier transform by nthr threads
 MGL_EXPORT void *mgl_fft_alloc(long n, void **space, long nthr);
