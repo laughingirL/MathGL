@@ -2301,6 +2301,13 @@ int MGL_NO_EXPORT mgls_combine(mglGraph *, long , mglArg *a, const char *k, cons
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_correl(mglGraph *, long , mglArg *a, const char *k, const char *)
+{
+	int res=0;
+	if(!strcmp(k,"ddds"))	*(a[0].d) = a[1].d->Correl(*(a[2].d), a[3].s.c_str());
+	else res = 1;	return res;
+}
+//-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_roots(mglGraph *, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
@@ -2559,6 +2566,7 @@ mglCommand mgls_base_cmd[] = {
 	{"conty","Draw contour lines at y-slice (or y-plane)","conty Dat ['fmt' pos num]", mgls_conty ,0},
 	{"contz","Draw contour lines at z-slice (or z-plane)","contz Dat ['fmt' pos num]", mgls_contz ,0},
 	{"copy","Copy data from another variable","copy Dat1 Dat2 ['eq' onaxis]", mgls_copy ,4},
+	{"correl", "Find correlation between data arrays", "correl Res Adat Bdat 'dir'", mgls_correl ,4},
 	{"cosfft","Cos-Fourier transform at some direction","cosfft Dat 'dir'", mgls_cosfft ,16},
 	{"crange","Set color range","crange Dat [sym] | c1 c2", mgls_crange ,14},
 	{"crop","Crop edge of data","crop Dat n1 n2 'dir'", mgls_crop ,16},

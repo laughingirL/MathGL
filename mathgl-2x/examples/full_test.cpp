@@ -67,13 +67,10 @@ void smgl_stfa(mglGraph *gr);	// STFA sample
 void smgl_text(mglGraph *gr);	// text drawing
 void test(mglGraph *gr)
 {
-	gr->Rotate(-100,45);	gr->Axis();
-	return;
-	
 	mglParse par;
 	par.AllowSetSize(true);
 	setlocale(LC_CTYPE, "");
-	par.Execute(gr,"call 'test' 1\nstop\nfunc 'test' 1\ntext 0 0 '$1'\nreturn");
+	par.Execute(gr,"list x 0 0 2 3 1 0 0 0:correl res x x 'x'\nyrange 0 20:plot res 'o':axis");
 
 //	FILE *fp=fopen("/home/balakin/progr/mathgl-code/mathgl-2x/build/test.mgl","r");
 //	par.Execute(gr,fp,true);

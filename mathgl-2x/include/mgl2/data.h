@@ -260,6 +260,12 @@ public:
 	/// Find roots for set of nonlinear equations defined by textual formula
 	inline mglData Roots(const char *func, char var='x') const
 	{	return mglData(true,mgl_data_roots(func, this, var));	}
+	/// Find correlation with another data arrays
+	inline mglData Correl(const mglData &dat, const char *dir) const
+	{	return mglData(true,mgl_data_correl(this,&dat,dir));	}
+	/// Find auto correlation function
+	inline mglData AutoCorrel(const char *dir) const
+	{	return mglData(true,mgl_data_correl(this,this,dir));	}
 	
 	/// Cumulative summation the data in given direction or directions
 	inline void CumSum(const char *dir)	{	mgl_data_cumsum(this,dir);	}

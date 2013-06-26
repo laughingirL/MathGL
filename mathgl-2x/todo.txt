@@ -25,7 +25,6 @@ A. Paper about MathGL!!!
 	u. Test FlowP + 3d
 
 15. Check centered curved text (see text2)
-16. http://en.wikipedia.org/wiki/Autocorrelation#Efficient_computation
 
 ============= DOCUMENTATION =============
 
@@ -34,12 +33,11 @@ A. Paper about MathGL!!!
 3. Add "Local light sample"
 4. Update docs about Cones (styles 't', '4', '6', '8')
 5. Update docs about Cone (style '4', '6', '8')
-
-6. http://en.wikipedia.org/wiki/Autocorrelation#Efficient_computation
-
+6. Docs about mglData[C]::Correl() & AutoCorrel() + hint about Swap()
 7. Update docs: HMDT return NULL if data cannot be created
 8. Update docs: command 'resize' take 0 for default sizes
 9. check if all "value" options are described (see hist, )
+10. Add "Data correlation sample"
 
 
 ============= UDAV =============

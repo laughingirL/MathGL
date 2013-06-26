@@ -1072,8 +1072,8 @@ MGL_NO_EXPORT void* mgl_corx(void *par)
 		for(j=0;j<nx;j++)
 		{
 			ii = 2*j+2*nx*i;	re = t->b[ii];	im = t->b[ii+1];
-			t->b[ii]   = re*a[ii] - im*a[ii+1];
-			t->b[ii+1] = re*a[ii+1] + im*a[ii];
+			t->b[ii]   = re*a[ii] + im*a[ii+1];
+			t->b[ii+1] = im*a[ii] - re*a[ii+1];
 		}
 		mgl_fft(t->b+2*nx*i, 1, nx, t->v, t->w[t->id], true);
 	}
@@ -1092,8 +1092,8 @@ MGL_NO_EXPORT void* mgl_cory(void *par)
 		for(j=0;j<ny;j++)
 		{
 			ii = 2*nx*j+k;	re = t->b[ii];	im = t->b[ii+1];
-			t->b[ii]   = re*a[ii] - im*a[ii+1];
-			t->b[ii+1] = re*a[ii+1] + im*a[ii];
+			t->b[ii]   = re*a[ii] + im*a[ii+1];
+			t->b[ii+1] = im*a[ii] - re*a[ii+1];
 		}
 		mgl_fft(t->b+k, nx, ny, t->v, t->w[t->id], true);
 	}
@@ -1111,35 +1111,37 @@ MGL_NO_EXPORT void* mgl_corz(void *par)
 		for(j=0;j<nz;j++)
 		{
 			ii = 2*nx*ny*j+2*i;	re = t->b[ii];	im = t->b[ii+1];
-			t->b[ii]   = re*a[ii] - im*a[ii+1];
-			t->b[ii+1] = re*a[ii+1] + im*a[ii];
+			t->b[ii]   = re*a[ii] + im*a[ii+1];
+			t->b[ii+1] = im*a[ii] - re*a[ii+1];
 		}
 		mgl_fft(t->b+2*i, nx*ny, nz, t->v, t->w[t->id], true);
 	}
 	return 0;
 }
-HADT MGL_EXPORT mgl_datac_correl(HCDT d1, HCDT d2, const char *dir)
+MGL_NO_EXPORT double *mgl_d_correl(HCDT d1, HCDT d2, const char *dir)
 {
 	if(!dir || *dir==0)	return 0;
-	long nx = d1->GetNx(), ny = d1->GetNy(), nz = d1->GetNz();
+	long nx = d1->GetNx(), ny = d1->GetNy(), nz = d1->GetNz(), nn=nx*ny*nz;
 	if(nx*ny*nz!=d2->GetNN())	return 0;
 	if(mglNumThr<1)	mgl_set_num_thr(0);	// manually set number of threads
 	void *wt=0, **ws=0;
 	bool clear=false;
 	long par[3]={nx,ny,nz}, i;
 
-	double *a = new double[2*nx*ny*nz];	// manually convert to double
-	double *b = new double[2*nx*ny*nz];	// manually convert to double
+	double *a = new double[2*nn];	memset(a,0,2*nn*sizeof(double));
+	double *b = new double[2*nn];	memset(b,0,2*nn*sizeof(double));
 	const mglDataC *dd1 = dynamic_cast<const mglDataC *>(d1);
 	const mglDataC *dd2 = dynamic_cast<const mglDataC *>(d2);
-	if(dd1)	for(i=0;i<nx*ny*nz;i++)
+	const mglData *rd1 = dynamic_cast<const mglData *>(d1);
+	const mglData *rd2 = dynamic_cast<const mglData *>(d2);
+	if(dd1)	for(i=0;i<nn;i++)
 	{	a[2*i] = real(dd1->a[i]);	a[2*i+1] = imag(dd1->a[i]);	}
-	else	for(i=0;i<nx*ny*nz;i++)
-	{	a[2*i] = d1->vthr(i);	a[2*i+1] = 0;	}
-	if(dd2)	for(i=0;i<nx*ny*nz;i++)
+	else if(rd1)	for(i=0;i<nn;i++)	a[2*i] = rd1->a[i];
+	else	for(i=0;i<nn;i++)	a[2*i] = d1->vthr(i);
+	if(dd2)	for(i=0;i<nn;i++)
 	{	b[2*i] = real(dd2->a[i]);	b[2*i+1] = imag(dd2->a[i]);	}
-	else	for(i=0;i<nx*ny*nz;i++)
-	{	b[2*i] = d2->vthr(i);	b[2*i+1] = 0;	}
+	else if(rd2)	for(i=0;i<nn;i++)	b[2*i] = rd2->a[i];
+	else	for(i=0;i<nn;i++)	b[2*i] = d2->vthr(i);
 
 	if(strchr(dir,'x') && nx>1)
 	{
@@ -1178,8 +1180,36 @@ HADT MGL_EXPORT mgl_datac_correl(HCDT d1, HCDT d2, const char *dir)
 			mgl_fft_data.thz=mglNumThr;	mgl_fft_data.wnz=nz;	}
 	}
 	if(clear)	{	mgl_fft_free(wt,ws,mglNumThr);	delete []ws;	}
-	mglDataC *res = new mglDataC(nx,ny,nz);
-	for(i=0;i<nx*ny*nz;i++)	res->a[i] = dual(a[2*i], a[2*i+1]);
-	delete []a;	delete []b;	return res;
+	delete []b;	return a;
 }
+//-----------------------------------------------------------------------------
+HADT MGL_EXPORT mgl_datac_correl(HCDT d1, HCDT d2, const char *dir)
+{
+	double *a = mgl_d_correl(d1,d2,dir);
+	if(!a)	return 0;
+	const long nx = d1->GetNx(), ny = d1->GetNy(), nz = d1->GetNz();
+	mglDataC *res = new mglDataC(nx,ny,nz);
+	for(long i=0;i<nx*ny*nz;i++)	res->a[i] = dual(a[2*i], a[2*i+1]);
+	delete []a;	return res;
+}
+uintptr_t MGL_EXPORT mgl_datac_correl_(uintptr_t *d1, uintptr_t *d2, const char *dir,int l)
+{	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
+	uintptr_t res = uintptr_t(mgl_datac_correl(_DA_(d1),_DA_(d2),s));
+	delete []s;		return res;	}
+//-----------------------------------------------------------------------------
+HMDT MGL_EXPORT mgl_data_correl(HCDT d1, HCDT d2, const char *dir)
+{
+	double *a = mgl_d_correl(d1,d2,dir);	// NOTE: this is not so effective but straightforward way
+	if(!a)	return 0;
+	const long nx = d1->GetNx(), ny = d1->GetNy(), nz = d1->GetNz();
+	mglData *res = new mglData(nx,ny,nz);
+	for(long i=0;i<nx*ny*nz;i++)	res->a[i] = a[2*i];
+	delete []a;	return res;
+}
+uintptr_t MGL_EXPORT mgl_data_correl_(uintptr_t *d1, uintptr_t *d2, const char *dir,int l)
+{	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
+	uintptr_t res = uintptr_t(mgl_datac_correl(_DA_(d1),_DA_(d2),s));
+	delete []s;		return res;	}
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------

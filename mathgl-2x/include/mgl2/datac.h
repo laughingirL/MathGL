@@ -256,6 +256,13 @@ public:
 	inline mglData Evaluate(const mglData &idat, const mglData &jdat, const mglData &kdat, bool norm=true) const
 	{	return mglData(true,mgl_data_evaluate(this,&idat,&jdat,&kdat,norm));	}
 
+	/// Find correlation with another data arrays
+	inline mglDataC Correl(const mglData &dat, const char *dir) const
+	{	return mglDataC(true,mgl_datac_correl(this,&dat,dir));	}
+	/// Find auto correlation function
+	inline mglDataC AutoCorrel(const char *dir) const
+	{	return mglDataC(true,mgl_datac_correl(this,this,dir));	}
+
 	/// Cumulative summation the data in given direction or directions
 	inline void CumSum(const char *dir)	{	mgl_datac_cumsum(this,dir);	}
 	/// Integrate (cumulative summation) the data in given direction or directions
