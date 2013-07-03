@@ -159,7 +159,7 @@ void MGL_EXPORT mgl_data_set_double(HMDT d, const double *A,long NX,long NY,long
 #endif
 }
 //-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_data_set_float2(HMDT d, const float **A,long N1,long N2)
+void MGL_EXPORT mgl_data_set_float2(HMDT d, float const * const *A,long N1,long N2)
 {
 	if(N1<=0 || N2<=0)	return;
 	mgl_data_create(d, N2,N1,1);	if(!A)	return;
@@ -170,7 +170,7 @@ void MGL_EXPORT mgl_data_set_float2(HMDT d, const float **A,long N1,long N2)
 #endif
 }
 //-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_data_set_double2(HMDT d, const double **A,long N1,long N2)
+void MGL_EXPORT mgl_data_set_double2(HMDT d, double const *const *A,long N1,long N2)
 {
 	if(N1<=0 || N2<=0)	return;
 	mgl_data_create(d, N2,N1,1);	if(!A)	return;
@@ -181,7 +181,7 @@ void MGL_EXPORT mgl_data_set_double2(HMDT d, const double **A,long N1,long N2)
 #endif
 }
 //-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_data_set_float3(HMDT d, const float ***A,long N1,long N2,long N3)
+void MGL_EXPORT mgl_data_set_float3(HMDT d, float const * const * const *A,long N1,long N2,long N3)
 {
 	if(N1<=0 || N2<=0 || N3<=0)	return;
 	mgl_data_create(d, N3,N2,N1);	if(!A)	return;
@@ -194,7 +194,7 @@ void MGL_EXPORT mgl_data_set_float3(HMDT d, const float ***A,long N1,long N2,lon
 #endif
 }
 //-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_data_set_double3(HMDT d, const double ***A,long N1,long N2,long N3)
+void MGL_EXPORT mgl_data_set_double3(HMDT d, double const * const * const *A,long N1,long N2,long N3)
 {
 	if(N1<=0 || N2<=0 || N3<=0)	return;
 	mgl_data_create(d, N3,N2,N1);	if(!A)	return;

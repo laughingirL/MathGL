@@ -88,16 +88,16 @@ public:
 	inline void Set(const double *A,long NX,long NY=1,long NZ=1)
 	{	mgl_data_set_double(this,A,NX,NY,NZ);	}
 	/// Allocate memory and copy the data from the (float **) array
-	inline void Set(const float **A,long N1,long N2)
+	inline void Set(float const * const *A,long N1,long N2)
 	{	mgl_data_set_float2(this,A,N1,N2);	}
 	/// Allocate memory and copy the data from the (double **) array
-	inline void Set(const double **A,long N1,long N2)
+	inline void Set(double const * const *A,long N1,long N2)
 	{	mgl_data_set_double2(this,A,N1,N2);	}
 	/// Allocate memory and copy the data from the (float ***) array
-	inline void Set(const float ***A,long N1,long N2,long N3)
+	inline void Set(float const * const * const *A,long N1,long N2,long N3)
 	{	mgl_data_set_float3(this,A,N1,N2,N3);	}
 	/// Allocate memory and copy the data from the (double ***) array
-	inline void Set(const double ***A,long N1,long N2,long N3)
+	inline void Set(double const * const * const *A,long N1,long N2,long N3)
 	{	mgl_data_set_double3(this,A,N1,N2,N3);	}
 	/// Allocate memory and scanf the data from the string
 	inline void Set(const char *str,long NX,long NY=1,long NZ=1)

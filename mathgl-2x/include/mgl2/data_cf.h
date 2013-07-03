@@ -82,16 +82,16 @@ void MGL_EXPORT mgl_data_set_double(HMDT dat, const double *A,long mx,long my,lo
 void MGL_EXPORT mgl_data_set_double_(uintptr_t *dat, const double *A,int *NX,int *NY,int *NZ);
 void MGL_EXPORT mgl_data_set_double1_(uintptr_t *d, const double *A,int *N1);
 /// Allocate memory and copy the data from the (float **) array
-void MGL_EXPORT mgl_data_set_float2(HMDT d, const float **A,long N1,long N2);
+void MGL_EXPORT mgl_data_set_float2(HMDT d, float const * const *A,long N1,long N2);
 void MGL_EXPORT mgl_data_set_float2_(uintptr_t *d, const float *A,int *N1,int *N2);
 /// Allocate memory and copy the data from the (double **) array
-void MGL_EXPORT mgl_data_set_double2(HMDT d, const double **A,long N1,long N2);
+void MGL_EXPORT mgl_data_set_double2(HMDT d, double const * const *A,long N1,long N2);
 void MGL_EXPORT mgl_data_set_double2_(uintptr_t *d, const double *A,int *N1,int *N2);
 /// Allocate memory and copy the data from the (float ***) array
-void MGL_EXPORT mgl_data_set_float3(HMDT d, const float ***A,long N1,long N2,long N3);
+void MGL_EXPORT mgl_data_set_float3(HMDT d, float const * const * const *A,long N1,long N2,long N3);
 void MGL_EXPORT mgl_data_set_float3_(uintptr_t *d, const float *A,int *N1,int *N2,int *N3);
 /// Allocate memory and copy the data from the (double ***) array
-void MGL_EXPORT mgl_data_set_double3(HMDT d, const double ***A,long N1,long N2,long N3);
+void MGL_EXPORT mgl_data_set_double3(HMDT d, double const * const * const *A,long N1,long N2,long N3);
 void MGL_EXPORT mgl_data_set_double3_(uintptr_t *d, const double *A,int *N1,int *N2,int *N3);
 /// Import data from abstract type
 void MGL_EXPORT mgl_data_set(HMDT dat, HCDT a);
