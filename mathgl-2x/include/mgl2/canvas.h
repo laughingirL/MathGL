@@ -84,7 +84,12 @@ class mglCanvas;
 /// Structure for light source
 struct mglDrawReg
 {
-	unsigned long PDef;
+	union
+	{
+		unsigned long PDef;
+		unsigned char m[8];
+	};
+	int angle;	///< mask rotation values in degrees
 	int ObjId;
 	mreal PenWidth, pPos;
 	int x1,x2,y1,y2;

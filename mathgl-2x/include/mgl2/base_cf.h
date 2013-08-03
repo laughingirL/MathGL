@@ -79,6 +79,12 @@ void MGL_EXPORT mgl_set_color_(char *id, mreal *r, mreal *g, mreal *b, int);
 /// Set default color scheme
 void MGL_EXPORT mgl_set_def_sch(HMGL gr, const char *sch);
 void MGL_EXPORT mgl_set_def_sch_(uintptr_t *gr, const char *sch,int);
+/// Set mask for face coloring as array of type 'unsigned char[8]'
+void MGL_EXPORT mgl_set_mask(char id, const char *mask);
+void MGL_EXPORT mgl_set_mask_(const char *id, const char *mask,int,int);
+/// Set mask for face coloring as unsigned long number
+void MGL_EXPORT mgl_set_mask_val(char id, unsigned long mask);
+void MGL_EXPORT mgl_set_mask_val_(const char *id, unsigned long *mask,int);
 
 /// Set default value of alpha-channel
 void MGL_EXPORT mgl_set_alpha_default(HMGL gr, double alpha);

@@ -24,8 +24,9 @@
 //-----------------------------------------------------------------------------
 /// Class for drawing in windows (like, mglCanvasFL, mglCanvasQT and so on)
 /// Make inherited class and redefine Draw() function if you don't want to use function pointers.
-struct mglDraw
+class mglDraw
 {
+public:
 	virtual int Draw(mglGraph *)=0;	///< Function for drawing
 	virtual void Reload()	{}		///< Function for reloading data
 	virtual void Click()	{}		///< Callback function on mouse click

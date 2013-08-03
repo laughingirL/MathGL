@@ -660,7 +660,7 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @deftypefnx {Метод класса @code{mglDataC}} @code{mglData} SubData (@code{mreal} xx, @code{mreal} yy=@code{-1}, @code{mreal} zz=@code{-1}) @code{const}
 @deftypefnx {Функция С} @code{HMDT} mgl_data_subdata (@code{HCDT} dat, @code{mreal} xx, @code{mreal} yy, @code{mreal} zz)
 @end ifclear
-Возвращает в @var{res} подмассив массива данных @var{dat} с фиксированными значениями индексов с положительными значениями. Например, @code{SubData(-1,2)} выделяет третью строку (индексы начинаются с нуля), @code{SubData(4,-1)} выделяет 5-ую колонку, @code{SubData(-1,-1,3)} выделяет 4-ый срез и т.д. В MGL скриптах обычно используется упрощенная версия @code{dat(xx,yy,zz)}.
+Возвращает в @var{res} подмассив массива данных @var{dat} с фиксированными значениями индексов с положительными значениями. Например, @code{SubData(-1,2)} выделяет третью строку (индексы начинаются с нуля), @code{SubData(4,-1)} выделяет 5-ую колонку, @code{SubData(-1,-1,3)} выделяет 4-ый срез и т.д. В MGL скриптах обычно используется упрощенная версия @code{dat(xx,yy,zz)}. Функция возвращает NULL или пустой массив если данные не могут быть созданы при данных значениях аргументов.
 @end deftypefn
 
 @deftypefn {Команда MGL} {} subdata @sc{res} dat xdat [ydat=: zdat=:]
@@ -669,7 +669,7 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @deftypefnx {Метод класса @code{mglDataC}} @code{mglData} SubData (@code{const mglDataA &}xx, @code{const mglDataA &}yy, @code{const mglDataA &}zz) @code{const}
 @deftypefnx {Функция С} @code{HMDT} mgl_data_subdata_ext (@code{HCDT} dat, @code{HCDT} xx, @code{HCDT} yy, @code{HCDT} zz)
 @end ifclear
-Возвращает в @var{res} подмассив массива данных @var{dat} с индексами, заданными в массивах @var{xx}, @var{yy}, @var{zz} (косвенная адресация). Результат будет иметь размерность массивов с индексами. Размеры массивов @var{xx}, @var{yy}, @var{zz} с индексами должна быть одинакова, либо должны быть "скаляром" (т.е. 1*1*1). В MGL скриптах обычно используется упрощенная версия @code{dat(xx,yy,zz)}.
+Возвращает в @var{res} подмассив массива данных @var{dat} с индексами, заданными в массивах @var{xx}, @var{yy}, @var{zz} (косвенная адресация). Результат будет иметь размерность массивов с индексами. Размеры массивов @var{xx}, @var{yy}, @var{zz} с индексами должна быть одинакова, либо должны быть "скаляром" (т.е. 1*1*1). В MGL скриптах обычно используется упрощенная версия @code{dat(xx,yy,zz)}. Функция возвращает NULL или пустой массив если данные не могут быть созданы при данных значениях аргументов.
 @end deftypefn
 
 @anchor{column}
@@ -679,18 +679,18 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @deftypefnx {Метод класса @code{mglDataC}} @code{mglData} Column (@code{const char *}eq) @code{const}
 @deftypefnx {Функция С} @code{HMDT} mgl_data_column (@code{HCDT} dat, @code{const char *}eq)
 @end ifclear
-Возвращает массив данных заполненный по формуле @var{eq}, вычисленной для именованных колонок (или срезов). Например, @code{Column("n*w^2/exp(t)");}. Имена колонок должны быть предварительно заданы функцией @ref{idset} или при чтении файлов данных. В MGL скриптах обычно используется упрощенная версия @code{dat('eq')}.
+Возвращает массив данных заполненный по формуле @var{eq}, вычисленной для именованных колонок (или срезов). Например, @code{Column("n*w^2/exp(t)");}. Имена колонок должны быть предварительно заданы функцией @ref{idset} или при чтении файлов данных. В MGL скриптах обычно используется упрощенная версия @code{dat('eq')}. Функция возвращает NULL или пустой массив если данные не могут быть созданы при данных значениях аргументов.
 @end deftypefn
 
 @anchor{resize}
 @deftypefn {Команда MGL} {} resize @sc{res} dat @code{mx [my=1 mz=1]}
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglData}} @code{mglData} Resize (@code{int} mx, @code{int} my=@code{1}, @code{int} mz=@code{1}, @code{mreal} x1=@code{0}, @code{mreal} x2=@code{1}, @code{mreal} y1=@code{0}, @code{mreal} y2=@code{1}, @code{mreal} z1=@code{0}, @code{mreal} z2=@code{1}) @code{const}
-@deftypefnx {Метод класса @code{mglDataC}} @code{mglData} Resize (@code{int} mx, @code{int} my=@code{1}, @code{int} mz=@code{1}, @code{mreal} x1=@code{0}, @code{mreal} x2=@code{1}, @code{mreal} y1=@code{0}, @code{mreal} y2=@code{1}, @code{mreal} z1=@code{0}, @code{mreal} z2=@code{1}) @code{const}
+@deftypefnx {Метод класса @code{mglData}} @code{mglData} Resize (@code{int} mx, @code{int} my=@code{0}, @code{int} mz=@code{0}, @code{mreal} x1=@code{0}, @code{mreal} x2=@code{1}, @code{mreal} y1=@code{0}, @code{mreal} y2=@code{1}, @code{mreal} z1=@code{0}, @code{mreal} z2=@code{1}) @code{const}
+@deftypefnx {Метод класса @code{mglDataC}} @code{mglData} Resize (@code{int} mx, @code{int} my=@code{0}, @code{int} mz=@code{0}, @code{mreal} x1=@code{0}, @code{mreal} x2=@code{1}, @code{mreal} y1=@code{0}, @code{mreal} y2=@code{1}, @code{mreal} z1=@code{0}, @code{mreal} z2=@code{1}) @code{const}
 @deftypefnx {Функция С} @code{HMDT} mgl_data_resize (@code{HCDT} dat, @code{int} mx, @code{int} my, @code{int} mz)
 @deftypefnx {Функция С} @code{HMDT} mgl_data_resize_box (@code{HCDT} dat, @code{int} mx, @code{int} my, @code{int} mz, @code{mreal} x1, @code{mreal} x2, @code{mreal} y1, @code{mreal} y2, @code{mreal} z1, @code{mreal} z2)
 @end ifclear
-Возвращает массив данных размером @var{mx}, @var{my}, @var{mz} со значениями полученными интерполяцией значений из части [@var{x1},@var{x2}] x [@var{y1},@var{y2}] x [@var{z1},@var{z2}] исходного массива. Величины x,y,z полагаются нормированными в диапазоне [0,1].
+Возвращает массив данных размером @var{mx}, @var{my}, @var{mz} со значениями полученными интерполяцией значений из части [@var{x1},@var{x2}] x [@var{y1},@var{y2}] x [@var{z1},@var{z2}] исходного массива. Величины x,y,z полагаются нормированными в диапазоне [0,1]. Если значение @var{mx}, @var{my} или @var{mz} равно 0, то исходный размер используется.  Функция возвращает NULL или пустой массив если данные не могут быть созданы при данных значениях аргументов.
 @end deftypefn
 
 @anchor{evaluate}
@@ -706,7 +706,7 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @deftypefnx {Метод класса @code{mglDataC}} @code{mglData} Evaluate (@code{const mglDataA &}idat, @code{const mglDataA &}jdat, @code{const mglDataA &}kdat, @code{bool} norm=@code{true}) @code{const}
 @deftypefnx {Функция С} @code{HMDT} mgl_data_evaluate (@code{HCDT} dat, @code{HCDT} idat, @code{HCDT} jdat, @code{HCDT} kdat, @code{int} norm)
 @end ifclear
-Возвращает массив данных, полученный в результате интерполяции исходного массива в точках других массивов (например, res[i,j]=dat[idat[i,j],jdat[i,j]]). Размеры массивов @var{idat}, @var{jdat}, @var{kdat} должны совпадать. Координаты в @var{idat}, @var{jdat}, @var{kdat} полагаются нормированными в диапазон [0,1] (при @var{norm}=@code{true}) или в диапазоны [0,nx], [0,ny], [0,nz] соответственно.
+Возвращает массив данных, полученный в результате интерполяции исходного массива в точках других массивов (например, res[i,j]=dat[idat[i,j],jdat[i,j]]). Размеры массивов @var{idat}, @var{jdat}, @var{kdat} должны совпадать. Координаты в @var{idat}, @var{jdat}, @var{kdat} полагаются нормированными в диапазон [0,1] (при @var{norm}=@code{true}) или в диапазоны [0,nx], [0,ny], [0,nz] соответственно. Функция возвращает NULL или пустой массив если данные не могут быть созданы при данных значениях аргументов.
 @end deftypefn
 
 @anchor{solve}
@@ -717,7 +717,7 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @deftypefnx {Метод класса @code{mglData}} @code{mglData} Solve (@code{mreal} val, @code{char} dir, @code{const mglDataA &}idat, @code{bool} norm=@code{true}) @code{const}
 @deftypefnx {Функция С} @code{HMDT} mgl_data_solve (@code{HCDT} dat, @code{mreal} val, @code{char} dir, @code{HCDT} idat, @code{int} norm)
 @end ifclear
-Возвращает массив индексов (корней) вдоль выбранного направления @var{dir} в которых значения массива @var{dat} равны @var{val}. Выходной массив будет иметь размеры массива @var{dat} в направлениях поперечных @var{dir}. Если предоставлен массив @var{idat}, то его значения используются как стартовые при поиске. Это позволяет найти несколько веток с помощью последовательного вызова функции. Индексы полагаются нормированными в диапазон [0,1] (при @var{norm}=@code{true}) или в диапазоны [0,nx], [0,ny], [0,nz] соответственно. @sref{Solve sample}
+Возвращает массив индексов (корней) вдоль выбранного направления @var{dir} в которых значения массива @var{dat} равны @var{val}. Выходной массив будет иметь размеры массива @var{dat} в направлениях поперечных @var{dir}. Если предоставлен массив @var{idat}, то его значения используются как стартовые при поиске. Это позволяет найти несколько веток с помощью последовательного вызова функции. Индексы полагаются нормированными в диапазон [0,1] (при @var{norm}=@code{true}) или в диапазоны [0,nx], [0,ny], [0,nz] соответственно. Функция возвращает NULL или пустой массив если данные не могут быть созданы при данных значениях аргументов. @sref{Solve sample}
 @end deftypefn
 
 @anchor{hist}
@@ -731,7 +731,7 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @deftypefnx {Функция С} @code{HMDT} mgl_data_hist (@code{HCDT} dat, @code{int} n, @code{mreal} v1, @code{mreal} v2, @code{int} nsub)
 @deftypefnx {Функция С} @code{HMDT} mgl_data_hist_w (@code{HCDT} dat, @code{HCDT} w, @code{int} n, @code{mreal} v1, @code{mreal} v2, @code{int} nsub)
 @end ifclear
-Возвращает распределение (гистограмму) из @var{n} точек от значений массива в диапазоне [@var{v1}, @var{v2}]. Массив @var{w} задает веса элементов (по умолчанию все веса равны 1). Параметр @var{nsub} задает число дополнительных точек интерполяции (для сглаживания получившейся гистограммы). См. также @ref{Data manipulation}
+Возвращает распределение (гистограмму) из @var{n} точек от значений массива в диапазоне [@var{v1}, @var{v2}]. Массив @var{w} задает веса элементов (по умолчанию все веса равны 1). Параметр @var{nsub} задает число дополнительных точек интерполяции (для сглаживания получившейся гистограммы). Функция возвращает NULL или пустой массив если данные не могут быть созданы при данных значениях аргументов. См. также @ref{Data manipulation}
 @end deftypefn
 
 @anchor{momentum}
@@ -748,7 +748,7 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @ifnottex
 res_k = \sum_ij how(x_i,y_j,z_k) a_ij/ \sum_ij a_ij
 @end ifnottex
-если @var{dir}=@samp{z} и т.д. Координаты @samp{x}, @samp{y}, @samp{z} -- индексы массива в диапазоне [0,1].
+если @var{dir}=@samp{z} и т.д. Координаты @samp{x}, @samp{y}, @samp{z} -- индексы массива в диапазоне [0,1]. Функция возвращает NULL или пустой массив если данные не могут быть созданы при данных значениях аргументов.
 @end deftypefn
 
 @anchor{sum}
@@ -758,7 +758,7 @@ res_k = \sum_ij how(x_i,y_j,z_k) a_ij/ \sum_ij a_ij
 @deftypefnx {Метод класса @code{mglDataC}} @code{mglData} Sum (@code{const char *}dir) @code{const}
 @deftypefnx {Функция С} @code{HMDT} mgl_data_sum (@code{HCDT} dat, @code{const char *}dir)
 @end ifclear
-Возвращает результат суммирования данных вдоль направления(ий) @var{dir}.
+Возвращает результат суммирования данных вдоль направления(ий) @var{dir}. Функция возвращает NULL или пустой массив если данные не могут быть созданы при данных значениях аргументов.
 @end deftypefn
 
 @anchor{max}
@@ -768,7 +768,7 @@ res_k = \sum_ij how(x_i,y_j,z_k) a_ij/ \sum_ij a_ij
 @deftypefnx {Метод класса @code{mglDataC}} @code{mglData} Max (@code{const char *}dir) @code{const}
 @deftypefnx {Функция С} @code{HMDT} mgl_data_max_dir (@code{HCDT} dat, @code{const char *}dir)
 @end ifclear
-Возвращает максимальное значение данных вдоль направления(ий) @var{dir}.
+Возвращает максимальное значение данных вдоль направления(ий) @var{dir}. Функция возвращает NULL или пустой массив если данные не могут быть созданы при данных значениях аргументов.
 @end deftypefn
 
 @anchor{min}
@@ -778,7 +778,7 @@ res_k = \sum_ij how(x_i,y_j,z_k) a_ij/ \sum_ij a_ij
 @deftypefnx {Метод класса @code{mglDataC}} @code{mglData} Min (@code{const char *}dir) @code{const}
 @deftypefnx {Функция С} @code{HMDT} mgl_data_min_dir (@code{HCDT} dat, @code{const char *}dir)
 @end ifclear
-Возвращает минимальное значение данных вдоль направления(ий) @var{dir}.
+Возвращает минимальное значение данных вдоль направления(ий) @var{dir}. Функция возвращает NULL или пустой массив если данные не могут быть созданы при данных значениях аргументов.
 @end deftypefn
 
 @anchor{combine}
@@ -788,7 +788,7 @@ res_k = \sum_ij how(x_i,y_j,z_k) a_ij/ \sum_ij a_ij
 @deftypefnx {Метод класса @code{mglDataC}} @code{mglData} Combine (@code{const mglDataA &}a) @code{const}
 @deftypefnx {Функция С} @code{HMDT} mgl_data_combine (@code{HCDT} dat, @code{HCDT} a)
 @end ifclear
-Возвращает прямое произведение массивов (наподобие, res[i,j] = adat[i]*bdat[j] и т.д.).
+Возвращает прямое произведение массивов (наподобие, res[i,j] = adat[i]*bdat[j] и т.д.). Функция возвращает NULL или пустой массив если данные не могут быть созданы при данных значениях аргументов.
 @end deftypefn
 
 @anchor{trace}
@@ -798,7 +798,7 @@ res_k = \sum_ij how(x_i,y_j,z_k) a_ij/ \sum_ij a_ij
 @deftypefnx {Метод класса @code{mglDataC}} @code{mglData} Trace () @code{const}
 @deftypefnx {Функция С} @code{HMDT} mgl_data_trace (@code{HCDT} dat)
 @end ifclear
-Возвращает массив диагональных элементов a[i,i] (для 2D данных) или a[i,i,i] (для 3D данных) где i=0...nx-1. В 1D случае возвращается сам массив данных. Размеры массива данных должен быть ny,nz >= nx или ny,nz = 1.
+Возвращает массив диагональных элементов a[i,i] (для 2D данных) или a[i,i,i] (для 3D данных) где i=0...nx-1. В 1D случае возвращается сам массив данных. Размеры массива данных должен быть ny,nz >= nx или ny,nz = 1. Функция возвращает NULL или пустой массив если данные не могут быть созданы при данных значениях аргументов.
 @end deftypefn
 
 @ifclear UDAV
@@ -828,7 +828,7 @@ res_k = \sum_ij how(x_i,y_j,z_k) a_ij/ \sum_ij a_ij
 @deftypefnx {Функция С} @code{HMDT} mgl_data_roots (@code{const char *}func, @code{HCDT} ini, @code{char} var)
 @deftypefnx {Функция С} @code{mreal} mgl_find_root_txt (@code{const char *}func, @code{mreal} ini, @code{char} var)
 @end ifclear
-Возвращает массив корней уравнения 'func'=0 для переменной @var{var} с начальными положениями @var{ini}.
+Возвращает массив корней уравнения 'func'=0 для переменной @var{var} с начальными положениями @var{ini}. Функция возвращает NULL или пустой массив если данные не могут быть созданы при данных значениях аргументов.
 @end deftypefn
 
 @c ------------------------------------------------------------------

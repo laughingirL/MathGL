@@ -35,7 +35,8 @@ void mglCanvas::SetSize(int w,int h)
 //-----------------------------------------------------------------------------
 void mglDrawReg::set(mglCanvas *gr, int nx, int ny, int m)
 {
-	int mx = m%nx, my = m/nx;
+	int mx = m%nx, my = m/nx;	ObjId = gr->ObjId;
+	PDef = gr->mask;	angle = gr->mask_an;
 	x1 = gr->GetWidth()*mx/nx;		y1 = gr->GetHeight()-gr->GetHeight()*(my+1)/ny;
 	x2 = gr->GetWidth()*(mx+1)/nx-1;	y2 = gr->GetHeight()-gr->GetHeight()*my/ny-1;
 }
@@ -314,6 +315,8 @@ void mglCanvas::pxl_primdr(size_t id, size_t , const void *)
 		const mglPrim &p=Prm[i];
 		d.PDef = p.n3;	d.pPos = p.s;
 		d.ObjId = p.id;	d.PenWidth=p.w;
+		d.angle = p.angl;
+		if(p.type==2 || p.type==3) d.PDef = p.m;
 		switch(p.type)
 		{
 		case 0:	mark_draw(Pnt[p.n1],p.n4,p.s,&d);	break;
@@ -563,6 +566,14 @@ unsigned char **mglCanvas::GetRGBLines(long &w, long &h, unsigned char *&f, bool
 	return p;
 }
 //-----------------------------------------------------------------------------
+bool visible(long i, long j, unsigned char m[8], mreal pw, int a)	// Check if pixel visible
+{
+	register float c = cos(a*M_PI/180), s = sin(a*M_PI/180);
+	register int ii = long(0.5+(i*c+j*s)/pw)%8, jj = long(0.5+(j*c-i*s)/pw)%8;
+	if(ii<0)	ii+=8;	if(jj<0)	jj+=8;
+	return m[jj] & (1<<ii);
+}
+//-----------------------------------------------------------------------------
 /* Bilinear interpolation r(u,v) = r0 + (r1-r0)*u + (r2-r0)*v + (r3+r0-r1-r2)*u*v
 	is used (where r is one of {x,y,z,R,G,B,A}. Variables u,v are determined
 	for each point (x,y) and selected one pair which 0<u<1 and 0<v<1.*/
@@ -602,6 +613,7 @@ void mglCanvas::quad_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 	float x0 = p1.x, y0 = p1.y;
 	for(i=x1;i<=x2;i++)	for(j=y1;j<=y2;j++)
 	{
+		if(!visible(i,j,d->m, d->PenWidth,d->angle))	continue;
 		xx = (i-x0);	yy = (j-y0);
 		s = dsx*xx + dsy*yy + (dd+d3.y*xx-d3.x*yy)*(dd+d3.y*xx-d3.x*yy);
 		if(s<0)	continue;	// no solution
@@ -668,6 +680,7 @@ void mglCanvas::trig_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 	float x0 = p1.x, y0 = p1.y;
 	if(Quality&MGL_DRAW_NORM)	for(i=x1;i<=x2;i++)	for(j=y1;j<=y2;j++)
 	{
+		if(!visible(i,j,d->m, d->PenWidth,d->angle))	continue;
 		xx = (i-x0);	yy = (j-y0);
 		u = dxu*xx+dyu*yy;	v = dxv*xx+dyv*yy;
 		if(u<0 || v<0 || u+v>1)	continue;
@@ -678,6 +691,7 @@ void mglCanvas::trig_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 	}
 	else	for(i=x1;i<=x2;i++)	for(j=y1;j<=y2;j++)
 	{
+		if(!visible(i,j,d->m, d->PenWidth,d->angle))	continue;
 		xx = (i-x0);	yy = (j-y0);
 		u = dxu*xx+dyu*yy;	v = dxv*xx+dyv*yy;
 		if(u<0 || v<0 || u+v>1)	continue;
@@ -981,6 +995,7 @@ void mglCanvas::glyph_draw(const mglPrim &P, mglDrawReg *d)
 	float phi = GetGlyphPhi(Pnt[P.n2],P.w);
 	if(mgl_isnan(phi))	return;
 
+	d->PDef = MGL_SOLID_MASK;
 	mglPnt p=Pnt[P.n1];
 	mreal pf=sqrt((Bp.b[0]*Bp.b[0]+Bp.b[1]*Bp.b[1]+Bp.b[3]*Bp.b[3]+Bp.b[4]*Bp.b[4])/2), f = P.p*pf;
 #if MGL_HAVE_PTHREAD

@@ -56,7 +56,7 @@ InfoDialog::InfoDialog(QWidget *parent) : QDialog(parent)
 	connect(mgl,SIGNAL(showWarn(QString)),info,SLOT(setText(QString)));
 }
 //-----------------------------------------------------------------------------
-InfoDialog::~InfoDialog()	{	delete draw;	}
+InfoDialog::~InfoDialog()	{}
 //-----------------------------------------------------------------------------
 #include <QMessageBox>
 void InfoDialog::refresh(bool force)

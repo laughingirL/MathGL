@@ -88,12 +88,20 @@ struct mglPrim	// NOTE: use float for reducing memory size
 	// NOTE: n4 is used as mark; n3 -- as pen style for type=0,1,4
 	// NOTE: n3 is used as position of txt,font in Ptxt for type=6
 	long n1,n2,n3,n4;	///< coordinates of corners
-	int type;	///< primitive type (0-point, 1-line, 2-trig, 3-quad, 4-glyph, 6-text)
+	short type;	///< primitive type (0-point, 1-line, 2-trig, 3-quad, 4-glyph, 6-text)
+	short angl;	///< rotation angle for mask
 	int id;		///< object id
-	float z;		///< z-position
-	float s;		///< size (if applicable) or fscl
-	float w;		///< width (if applicable) or ftet
-	float p;
+	float z;	///< z-position
+	float w;	///< width (if applicable) or ftet
+	union
+	{
+		struct
+		{
+			float s;		///< size (if applicable) or fscl
+			float p;
+		};
+		unsigned long m;	// NOTE: I suppose that sizeof(long)>=8 !
+	};
 
 	mglPrim(int t=0)	{	n1=n2=n3=n4=id=0;	z=s=w=p=0;	type = t;	}
 };
@@ -212,6 +220,11 @@ struct mglActivePos
 	int n;		///< position of active point in command (object id)
 };
 //-----------------------------------------------------------------------------
+/// Brushes for mask with symbol "-+=;oOsS~<>jdD*^" correspondingly
+extern unsigned long mgl_mask_val[16];
+#define MGL_MASK_ID		"-+=;oOsS~<>jdD*^"
+#define MGL_SOLID_MASK	0xffffffffffffffff
+//-----------------------------------------------------------------------------
 /// Base class for canvas which handle all basic drawing
 class MGL_EXPORT mglBase
 {
@@ -233,11 +246,17 @@ public:
 	mreal CDef;			///< Default (current) color in texture
 	mreal AlphaDef;		///< Default value of alpha channel (transparency)
 	mreal BarWidth;		///< Relative width of rectangles in Bars().
-	int MeshNum;			///< Set approximate number of lines in Mesh and Grid. By default (=0) it draw all lines.
-	int FaceNum;			///< Set approximate number of visible faces and lines. By default (=0) it draw everything.
+	int MeshNum;		///< Set approximate number of lines in Mesh and Grid. By default (=0) it draw all lines.
+	int FaceNum;		///< Set approximate number of visible faces and lines. By default (=0) it draw everything.
 	char Arrow1, Arrow2;///< Style of arrows at end and at start of curve
 	long InUse;			///< Smart pointer (number of users)
 	long Flag;			///< Flags for controlling drawing
+	union
+	{
+		unsigned long mask;	///< Mask to be used for coloring
+		unsigned char mask_ch[8];
+	};
+	int mask_an;		///< Mask rotation values in degrees
 
 	inline bool get(long fl) const	{	return Flag&fl;	}
 	inline void set(long fl)	{	Flag |= fl;	}
@@ -427,6 +446,8 @@ public:
 //	inline mreal AddTexture(char col)	{	return AddTexture(mglColor(col));	}
 	mreal AddTexture(mglColor col);
 	inline void DefColor(mglColor col)	{	CDef = AddTexture(col);	}
+	/// Set mask for face coloring
+	void SetMask(const char *mask);
 	/// Set next color from palette
 	mreal NextColor(long &id);
 

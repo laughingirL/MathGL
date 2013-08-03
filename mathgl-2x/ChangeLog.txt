@@ -1,6 +1,7 @@
 2.2 Release ??? 2013
 
-* Greatly speed up consequent FFT and Hankel transforms. Add mgl_clear_fft() function for manual clearing of saved FFT/Hankel data. 
+* Greatly speed up consequent FFT and Hankel transforms. Add mgl_clear_fft() function for manual clearing of saved FFT/Hankel data.
+* Add mask for face drawing. This work only for export in bitmap images.
 * Add Quality=8 for dots drawing (extremely fast), Quality=9 for none drawing (for speed testing).
 * Add styles '4','6','8' for Cone() and Cones() to produce square, hex, octo-prism.
 * Add style 't' for Cones() to produce tubes (cylinders).

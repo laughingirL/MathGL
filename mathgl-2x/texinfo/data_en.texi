@@ -663,7 +663,7 @@ Saves data matrix (or @code{ns}-th slice for 3d data) to bitmap file (now suppor
 @deftypefnx {Method on @code{mglDataC}} @code{mglData} SubData (@code{mreal} xx, @code{mreal} yy=@code{-1}, @code{mreal} zz=@code{-1}) @code{const}
 @deftypefnx {C function} @code{HMDT} mgl_data_subdata (@code{HCDT} dat, @code{mreal} xx, @code{mreal} yy, @code{mreal} zz)
 @end ifclear
-Extracts sub-array data from the original data array keeping fixed positive index. For example @code{SubData(-1,2)} extracts 3d row (indexes are zero based), @code{SubData(4,-1)} extracts 5th column, @code{SubData(-1,-1,3)} extracts 4th slice and so on. If argument(s) are non-integer then linear interpolation between slices is used. In MGL version this command usually is used as inline one @code{dat(xx,yy,zz)}.
+Extracts sub-array data from the original data array keeping fixed positive index. For example @code{SubData(-1,2)} extracts 3d row (indexes are zero based), @code{SubData(4,-1)} extracts 5th column, @code{SubData(-1,-1,3)} extracts 4th slice and so on. If argument(s) are non-integer then linear interpolation between slices is used. In MGL version this command usually is used as inline one @code{dat(xx,yy,zz)}. Function return NULL or create empty data if data cannot be created for given arguments.
 @end deftypefn
 
 @deftypefn {MGL command} {} subdata @sc{res} dat xdat [ydat=: zdat=:]
@@ -672,7 +672,7 @@ Extracts sub-array data from the original data array keeping fixed positive inde
 @deftypefnx {Method on @code{mglDataC}} @code{mglData} SubData (@code{const mglDataA &}xx, @code{const mglDataA &}yy, @code{const mglDataA &}zz) @code{const}
 @deftypefnx {C function} @code{HMDT} mgl_data_subdata_ext (@code{HCDT} dat, @code{HCDT} xx, @code{HCDT} yy, @code{HCDT} zz)
 @end ifclear
-Extracts sub-array data from the original data array for indexes specified by arrays @var{xx}, @var{yy}, @var{zz} (indirect access). This function work like previous one for 1D arguments or numbers, and resulting array dimensions are equal dimensions of 1D arrays for corresponding direction. For 2D and 3D arrays in arguments, the resulting array have the same dimensions as input arrays. The dimensions of all argument must be the same (or to be scalar 1*1*1) if they are 2D or 3D arrays. In MGL version this command usually is used as inline one @code{dat(xx,yy,zz)}.
+Extracts sub-array data from the original data array for indexes specified by arrays @var{xx}, @var{yy}, @var{zz} (indirect access). This function work like previous one for 1D arguments or numbers, and resulting array dimensions are equal dimensions of 1D arrays for corresponding direction. For 2D and 3D arrays in arguments, the resulting array have the same dimensions as input arrays. The dimensions of all argument must be the same (or to be scalar 1*1*1) if they are 2D or 3D arrays. In MGL version this command usually is used as inline one @code{dat(xx,yy,zz)}. Function return NULL or create empty data if data cannot be created for given arguments.
 @end deftypefn
 
 @anchor{column}
@@ -682,18 +682,18 @@ Extracts sub-array data from the original data array for indexes specified by ar
 @deftypefnx {Method on @code{mglDataC}} @code{mglData} Column (@code{const char *}eq) @code{const}
 @deftypefnx {C function} @code{HMDT} mgl_data_column (@code{HCDT} dat, @code{const char *}eq)
 @end ifclear
-Get column (or slice) of the data filled by formula @var{eq} on column ids. For example, @code{Column("n*w^2/exp(t)");}. The column ids must be defined first by @ref{idset} function or read from files. In MGL version this command usually is used as inline one @code{dat('eq')}.
+Get column (or slice) of the data filled by formula @var{eq} on column ids. For example, @code{Column("n*w^2/exp(t)");}. The column ids must be defined first by @ref{idset} function or read from files. In MGL version this command usually is used as inline one @code{dat('eq')}. Function return NULL or create empty data if data cannot be created for given arguments.
 @end deftypefn
 
 @anchor{resize}
 @deftypefn {MGL command} {} resize @sc{res} dat @code{mx [my=1 mz=1]}
 @ifclear UDAV
-@deftypefnx {Method on @code{mglData}} @code{mglData} Resize (@code{int} mx, @code{int} my=@code{1}, @code{int} mz=@code{1}, @code{mreal} x1=@code{0}, @code{mreal} x2=@code{1}, @code{mreal} y1=@code{0}, @code{mreal} y2=@code{1}, @code{mreal} z1=@code{0}, @code{mreal} z2=@code{1}) @code{const}
-@deftypefnx {Method on @code{mglDataC}} @code{mglData} Resize (@code{int} mx, @code{int} my=@code{1}, @code{int} mz=@code{1}, @code{mreal} x1=@code{0}, @code{mreal} x2=@code{1}, @code{mreal} y1=@code{0}, @code{mreal} y2=@code{1}, @code{mreal} z1=@code{0}, @code{mreal} z2=@code{1}) @code{const}
+@deftypefnx {Method on @code{mglData}} @code{mglData} Resize (@code{int} mx, @code{int} my=@code{0}, @code{int} mz=@code{0}, @code{mreal} x1=@code{0}, @code{mreal} x2=@code{1}, @code{mreal} y1=@code{0}, @code{mreal} y2=@code{1}, @code{mreal} z1=@code{0}, @code{mreal} z2=@code{1}) @code{const}
+@deftypefnx {Method on @code{mglDataC}} @code{mglData} Resize (@code{int} mx, @code{int} my=@code{0}, @code{int} mz=@code{0}, @code{mreal} x1=@code{0}, @code{mreal} x2=@code{1}, @code{mreal} y1=@code{0}, @code{mreal} y2=@code{1}, @code{mreal} z1=@code{0}, @code{mreal} z2=@code{1}) @code{const}
 @deftypefnx {C function} @code{HMDT} mgl_data_resize (@code{HCDT} dat, @code{int} mx, @code{int} my, @code{int} mz)
 @deftypefnx {C function} @code{HMDT} mgl_data_resize_box (@code{HCDT} dat, @code{int} mx, @code{int} my, @code{int} mz, @code{mreal} x1, @code{mreal} x2, @code{mreal} y1, @code{mreal} y2, @code{mreal} z1, @code{mreal} z2)
 @end ifclear
-Resizes the data to new size @var{mx}, @var{my}, @var{mz} from box (part) [@var{x1},@var{x2}] x [@var{y1},@var{y2}] x [@var{z1},@var{z2}] of original array. Initially x,y,z coordinates are supposed to be in [0,1].
+Resizes the data to new size @var{mx}, @var{my}, @var{mz} from box (part) [@var{x1},@var{x2}] x [@var{y1},@var{y2}] x [@var{z1},@var{z2}] of original array. Initially x,y,z coordinates are supposed to be in [0,1]. If one of sizes @var{mx}, @var{my} or @var{mz} is 0 then initial size is used. Function return NULL or create empty data if data cannot be created for given arguments.
 @end deftypefn
 
 @anchor{evaluate}
@@ -709,7 +709,7 @@ Resizes the data to new size @var{mx}, @var{my}, @var{mz} from box (part) [@var{
 @deftypefnx {Method on @code{mglDataC}} @code{mglData} Evaluate (@code{const mglDataA &}idat, @code{const mglDataA &}jdat, @code{const mglDataA &}kdat, @code{bool} norm=@code{true}) @code{const}
 @deftypefnx {C function} @code{HMDT} mgl_data_evaluate (@code{HCDT} dat, @code{HCDT} idat, @code{HCDT} jdat, @code{HCDT} kdat, @code{int} norm)
 @end ifclear
-Gets array which values is result of interpolation of original array for coordinates from other arrays. All dimensions must be the same for data @var{idat}, @var{jdat}, @var{kdat}. Coordinates from @var{idat}, @var{jdat}, @var{kdat} are supposed to be normalized in range [0,1] (if @var{norm}=@code{true}) or in ranges [0,nx], [0,ny], [0,nz] correspondingly.
+Gets array which values is result of interpolation of original array for coordinates from other arrays. All dimensions must be the same for data @var{idat}, @var{jdat}, @var{kdat}. Coordinates from @var{idat}, @var{jdat}, @var{kdat} are supposed to be normalized in range [0,1] (if @var{norm}=@code{true}) or in ranges [0,nx], [0,ny], [0,nz] correspondingly. Function return NULL or create empty data if data cannot be created for given arguments.
 @end deftypefn
 
 @anchor{solve}
@@ -720,7 +720,7 @@ Gets array which values is result of interpolation of original array for coordin
 @deftypefnx {Method on @code{mglData}} @code{mglData} Solve (@code{mreal} val, @code{char} dir, @code{const mglDataA &}idat, @code{bool} norm=@code{true}) @code{const}
 @deftypefnx {C function} @code{HMDT} mgl_data_solve (@code{HCDT} dat, @code{mreal} val, @code{char} dir, @code{HCDT} idat, @code{int} norm)
 @end ifclear
-Gets array which values is indexes (roots) along given direction @var{dir}, where interpolated values of data @var{dat} are equal to @var{val}. Output data will have the sizes of @var{dat} in directions transverse to @var{dir}. If data @var{idat} is provided then its values are used as starting points. This allows to find several branches by consequentive calls. Indexes are supposed to be normalized in range [0,1] (if @var{norm}=@code{true}) or in ranges [0,nx], [0,ny], [0,nz] correspondingly. @sref{Solve sample}
+Gets array which values is indexes (roots) along given direction @var{dir}, where interpolated values of data @var{dat} are equal to @var{val}. Output data will have the sizes of @var{dat} in directions transverse to @var{dir}. If data @var{idat} is provided then its values are used as starting points. This allows to find several branches by consequentive calls. Indexes are supposed to be normalized in range [0,1] (if @var{norm}=@code{true}) or in ranges [0,nx], [0,ny], [0,nz] correspondingly. Function return NULL or create empty data if data cannot be created for given arguments. @sref{Solve sample}
 @end deftypefn
 
 @anchor{hist}
@@ -734,7 +734,7 @@ Gets array which values is indexes (roots) along given direction @var{dir}, wher
 @deftypefnx {C function} @code{HMDT} mgl_data_hist (@code{HCDT} dat, @code{int} n, @code{mreal} v1, @code{mreal} v2, @code{int} nsub)
 @deftypefnx {C function} @code{HMDT} mgl_data_hist_w (@code{HCDT} dat, @code{HCDT} w, @code{int} n, @code{mreal} v1, @code{mreal} v2, @code{int} nsub)
 @end ifclear
-Creates @var{n}-th points distribution of the data values in range [@var{v1}, @var{v2}]. Array @var{w} specifies weights of the data elements (by default is 1). Parameter @var{nsub} define the number of additional interpolated points (for smoothness of histogram). See also @ref{Data manipulation}
+Creates @var{n}-th points distribution of the data values in range [@var{v1}, @var{v2}]. Array @var{w} specifies weights of the data elements (by default is 1). Parameter @var{nsub} define the number of additional interpolated points (for smoothness of histogram). Function return NULL or create empty data if data cannot be created for given arguments. See also @ref{Data manipulation}
 @end deftypefn
 
 @anchor{momentum}
@@ -751,7 +751,7 @@ Gets momentum (1d-array) of the data along direction @var{dir}. String @var{how}
 @ifnottex
 res_k = \sum_ij how(x_i,y_j,z_k) a_ij/ \sum_ij a_ij
 @end ifnottex
-if @var{dir}=@samp{z} and so on. Coordinates @samp{x}, @samp{y}, @samp{z} are data indexes normalized in range [0,1].
+if @var{dir}=@samp{z} and so on. Coordinates @samp{x}, @samp{y}, @samp{z} are data indexes normalized in range [0,1]. Function return NULL or create empty data if data cannot be created for given arguments.
 @end deftypefn
 
 @anchor{sum}
@@ -761,7 +761,7 @@ if @var{dir}=@samp{z} and so on. Coordinates @samp{x}, @samp{y}, @samp{z} are da
 @deftypefnx {Method on @code{mglDataC}} @code{mglData} Sum (@code{const char *}dir) @code{const}
 @deftypefnx {C function} @code{HMDT} mgl_data_sum (@code{HCDT} dat, @code{const char *}dir)
 @end ifclear
-Gets array which is the result of summation in given direction or direction(s).
+Gets array which is the result of summation in given direction or direction(s). Function return NULL or create empty data if data cannot be created for given arguments.
 @end deftypefn
 
 @anchor{max}
@@ -771,7 +771,7 @@ Gets array which is the result of summation in given direction or direction(s).
 @deftypefnx {Method on @code{mglDataC}} @code{mglData} Max (@code{const char *}dir) @code{const}
 @deftypefnx {C function} @code{HMDT} mgl_data_max_dir (@code{HCDT} dat, @code{const char *}dir)
 @end ifclear
-Gets array which is the maximal data values in given direction or direction(s).
+Gets array which is the maximal data values in given direction or direction(s). Function return NULL or create empty data if data cannot be created for given arguments.
 @end deftypefn
 
 @anchor{min}
@@ -781,7 +781,7 @@ Gets array which is the maximal data values in given direction or direction(s).
 @deftypefnx {Method on @code{mglDataC}} @code{mglData} Min (@code{const char *}dir) @code{const}
 @deftypefnx {C function} @code{HMDT} mgl_data_min_dir (@code{HCDT} dat, @code{const char *}dir)
 @end ifclear
-Gets array which is the maximal data values in given direction or direction(s).
+Gets array which is the maximal data values in given direction or direction(s). Function return NULL or create empty data if data cannot be created for given arguments.
 @end deftypefn
 
 @anchor{combine}
@@ -791,7 +791,7 @@ Gets array which is the maximal data values in given direction or direction(s).
 @deftypefnx {Method on @code{mglDataC}} @code{mglData} Combine (@code{const mglDataA &}a) @code{const}
 @deftypefnx {C function} @code{HMDT} mgl_data_combine (@code{HCDT} dat, @code{HCDT} a)
 @end ifclear
-Returns direct multiplication of arrays (like, res[i,j] = this[i]*a[j] and so on).
+Returns direct multiplication of arrays (like, res[i,j] = this[i]*a[j] and so on). Function return NULL or create empty data if data cannot be created for given arguments.
 @end deftypefn
 
 @anchor{trace}
@@ -801,7 +801,7 @@ Returns direct multiplication of arrays (like, res[i,j] = this[i]*a[j] and so on
 @deftypefnx {Method on @code{mglDataC}} @code{mglData} Trace () @code{const}
 @deftypefnx {C function} @code{HMDT} mgl_data_trace (@code{HCDT} dat)
 @end ifclear
-Gets array of diagonal elements a[i,i] (for 2D case) or a[i,i,i] (for 3D case) where i=0...nx-1. Function return copy of itself for 1D case. Data array must have dimensions ny,nz >= nx or ny,nz = 1.
+Gets array of diagonal elements a[i,i] (for 2D case) or a[i,i,i] (for 3D case) where i=0...nx-1. Function return copy of itself for 1D case. Data array must have dimensions ny,nz >= nx or ny,nz = 1. Function return NULL or create empty data if data cannot be created for given arguments.
 @end deftypefn
 
 @ifclear UDAV
@@ -831,7 +831,7 @@ Gets array of arguments of the data.
 @deftypefnx {C function} @code{HMDT} mgl_data_roots (@code{const char *}func, @code{HCDT} ini, @code{char} var)
 @deftypefnx {C function} @code{mreal} mgl_find_root_txt (@code{const char *}func, @code{mreal} ini, @code{char} var)
 @end ifclear
-Find roots of equation 'func'=0 for variable @var{var} with initial guess @var{ini}. Secant method is used for root finding.
+Find roots of equation 'func'=0 for variable @var{var} with initial guess @var{ini}. Secant method is used for root finding. Function return NULL or create empty data if data cannot be created for given arguments.
 @end deftypefn
 
 @c ------------------------------------------------------------------

@@ -858,6 +858,7 @@ void mglTexture::GetC(mreal u,mreal v,mglPnt &p) const
 //-----------------------------------------------------------------------------
 long mglBase::AddTexture(const char *cols, int smooth)
 {
+	SetMask(cols);
 	mglTexture t(cols,smooth,smooth==2?AlphaDef:1);
 	if(t.n==0)	return smooth<0 ? 0:1;
 	if(smooth<0)	CurrPal=0;
@@ -932,8 +933,10 @@ char mglBase::SetPenPal(const char *p, long *Id, bool pal)
 	if(p && *p)
 	{
 //		const char *col = "wkrgbcymhRGBCYMHWlenuqpLENUQP";
-		const char *stl = " -|;:ji=";
+		unsigned val[8] = {0x0000, 0xffff, 0x00ff, 0x0f0f, 0x1111, 0x087f, 0x2727, 0x3333};
+		const char *stl = " -|;:ji=", *s;
 		const char *mrk = "*o+xsd.^v<>";
+		const char *MRK = "YOPXSDCTVLR";
 		const char *wdh = "123456789";
 		const char *arr = "AKDTVISO_";
 		long m=0;
@@ -942,21 +945,8 @@ char mglBase::SetPenPal(const char *p, long *Id, bool pal)
 		{
 			if(p[i]=='{')	m++;	if(p[i]=='}')	m--;
 			if(m>0)	continue;
-			if(mglchr(stl,p[i]))
-			{
-				switch(p[i])
-				{
-				case '|': PDef = 0x00ff;	break;
-				case ';': PDef = 0x0f0f;	break;
-				case '=': PDef = 0x3333;	break;
-				case ':': PDef = 0x1111;	break;
-				case 'j': PDef = 0x087f;	break;
-				case 'i': PDef = 0x2727;	break;
-				case ' ': PDef = 0x0000;	break;
-				default:  PDef = 0xffff;	break;	// '-'
-				}
-				last_style[4]=p[i];
-			}
+			s = mglchr(stl,p[i]);
+			if(s)	{	PDef = val[s-stl];	last_style[4]=p[i];	}
 			else if(mglchr(mrk,p[i]))	mk = p[i];
 			else if(mglchr(wdh,p[i]))
 			{	last_style[5] = p[i];	PenWidth = p[i]-'0';	}
@@ -969,17 +959,8 @@ char mglBase::SetPenPal(const char *p, long *Id, bool pal)
 		if(Arrow1=='_')	Arrow1=0;	if(Arrow2=='_')	Arrow2=0;
 		if(mglchr(p,'#'))
 		{
-			if(mk=='.')	mk = 'C';
-			if(mk=='+')	mk = 'P';
-			if(mk=='x')	mk = 'X';
-			if(mk=='o')	mk = 'O';
-			if(mk=='d')	mk = 'D';
-			if(mk=='s')	mk = 'S';
-			if(mk=='^')	mk = 'T';
-			if(mk=='v')	mk = 'V';
-			if(mk=='<')	mk = 'L';
-			if(mk=='>')	mk = 'R';
-			if(mk=='*')	mk = 'Y';
+			s = mglchr(mrk,mk);
+			if(s)	mk = MRK[s-mrk];
 		}
 	}
 	if(pal)
@@ -991,6 +972,41 @@ char mglBase::SetPenPal(const char *p, long *Id, bool pal)
 		if(Id)	*Id=long(tt)*256+(n+CurrPal-1)%n;
 	}
 	return mk;
+}
+//-----------------------------------------------------------------------------
+// keep this for restore default mask
+unsigned long mgl_mask_def[16]={0x000000FF00000000,	0x080808FF08080808,	0x0000FF00FF000000,	0x0000007700000000,
+								0x0000182424180000,	0x0000183C3C180000,	0x00003C24243C0000,	0x00003C3C3C3C0000,
+								0x0000060990600000,	0x0060584658600000,	0x00061A621A060000,	0x0000005F00000000,
+								0x0008142214080000,	0x00081C3E1C080000,	0x8142241818244281,	0x0000001824420000};
+unsigned long mgl_mask_val[16]={0x000000FF00000000,	0x080808FF08080808,	0x0000FF00FF000000,	0x0000007700000000,
+								0x0000182424180000,	0x0000183C3C180000,	0x00003C24243C0000,	0x00003C3C3C3C0000,
+								0x0000060990600000,	0x0060584658600000,	0x00061A621A060000,	0x0000005F00000000,
+								0x0008142214080000,	0x00081C3E1C080000,	0x8142241818244281,	0x0000001824420000};
+void mglBase::SetMask(const char *p)
+{
+	mask = MGL_SOLID_MASK;	// reset to solid face
+	PenWidth = 1;	mask_an=0;
+	if(p && *p)
+	{
+		const char *msk = MGL_MASK_ID, *s;
+		const char *wdh = "123456789";
+		register size_t i,l=strlen(p);
+		long m=0;
+		for(i=0;i<l;i++)
+		{
+			if(p[i]=='{')	m++;	if(p[i]=='}')	m--;
+			if(m>0)	continue;
+			s = mglchr(msk, p[i]);
+			if(s)	mask = mgl_mask_val[s-msk];
+			else if(mglchr(wdh,p[i]))	PenWidth = p[i]-'0';
+			else if(p[i]=='I')	mask_an=90;
+			else if(p[i]=='\\')	mask_an=315;	// =360-45
+			else if(p[i]=='/')	mask_an=45;
+		}
+		// use line if rotation only specified
+		if(mask==MGL_SOLID_MASK && mask_an!=0)	mask = mgl_mask_val[0];
+	}
 }
 //-----------------------------------------------------------------------------
 mreal mglBase::GetA(mreal a) const

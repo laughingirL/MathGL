@@ -12,19 +12,18 @@ A. Paper about MathGL!!!
 
 5. 2D textures as one of standard way for coloring -- if '%' present in color scheme
 6. Graph(mreal x, mreal y, names, styles, font, size); -- names = "node1[node2,node3,node4[node5,node6]]", styles -- the same + apply for subnodes if absent. Styles are colors (fill,border,line), dash (to subnodes), marks "dos^v><", arrows.
-8. 3D text (with depth, for Quality=3)
-9. Text along 3D curve (for Quality=3)
-10. introduce new primitive type=5 -- arrow for Quality&3!=3. for better drawing in projections + json/view ?!?
-13. Textured brushes for drawing: (a) as 8*8 array, i.e. long (save only index in mglPrim::type); (b) BrushWidth; (c) BrushAngle; (d) some pixels become transparent; (e) count from edge of image; (f) symbols {+-;=\*<>^osdiODSI}. Question: how this can be exported???
+7. 3D text (with depth, for Quality=3)
+8. Text along 3D curve (for Quality=3)
+9. introduce new primitive type=5 -- arrow for Quality&3!=3. for better drawing in projections + json/view ?!?
 
-14. New tests:
+10. New tests:
 	c. Tests for mglDataC arrays (as separate flag)
 	e. Test for Crop, Momentum, NormSl, Sew, DiffParam, Envelope, STFA for all directions "xyz"; Clean, Last, First, Find, Spline3, FindAny, Insert, Delete, Put, SetId/Column, PrintInfo, Squeeze, Extend, Trace, Combine, new Max/Min/Momentum, FillSample, Hist, operators, Sort, Jacobian
 	h. Test for CalcXYZ -- in data samples
-	q. Test FSurf
 	u. Test FlowP + 3d
 
-15. Check centered curved text (see text2)
+11. Check centered curved text (see text2)
+12. Axis labels are not optimal -- "Rotate(30,-26), everything is fine. For Rotate(30,-27) the axis labels get rotated too"
 
 ============= DOCUMENTATION =============
 
@@ -34,11 +33,11 @@ A. Paper about MathGL!!!
 4. Update docs about Cones (styles 't', '4', '6', '8')
 5. Update docs about Cone (style '4', '6', '8')
 6. Docs about mglData[C]::Correl() & AutoCorrel() + hint about Swap()
-7. Update docs: HMDT return NULL if data cannot be created
-8. Update docs: command 'resize' take 0 for default sizes
-9. check if all "value" options are described (see hist, )
 10. Add "Data correlation sample"
-
+11. mgl_set_mask(char id, const char *mask); && mgl_set_mask_val(char id, unsigned long mask);
+12. Add 'Mask sample'
+13. Update docs about mask symbols "-+=;oOsS~<>jdD*^" + in color scheme
+14. Add chapter with real samples
 
 ============= UDAV =============
 
@@ -49,8 +48,8 @@ A. Paper about MathGL!!!
 03. Dialog for InPlot(s):
 {SubPlot,MultiPlot}	-- enable rotate,aspect,title
 {ColumnPlot}		-- enable rotate,several
-{StickPlot}		-- enable several
-{InPlot}		-- enable rotate,aspect,title
+{StickPlot}			-- enable several
+{InPlot}			-- enable rotate,aspect,title
 Image with gray alternatives and black choice
 
 04. QTreeWidgetItem -- ICON (func/call,if,for,once,subplot,...); annotation/name; (keep LINE - POS in script). After editing/changing --> put text to editor.
@@ -70,6 +69,8 @@ Buttons: new,load,save // newcmd,hide,annotation,collapse on/off,setup // calc. 
 13. Manual rotate (i.e. change rotate arguments) by spinboxes ???
 
 14. Close button on data tabs ?!?
+
+15. Add dialog for mask creation.
 
 ============= UNSURE ===========
 

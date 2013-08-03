@@ -227,7 +227,8 @@ HMDT MGL_EXPORT mgl_fit_ys(HMGL gr, HCDT y, HCDT s, const char *eq, const char *
 HMDT MGL_EXPORT mgl_fit_xys(HMGL gr, HCDT xx, HCDT yy, HCDT ss, const char *eq, const char *var, HMDT ini, const char *opt)
 {
 	long m = yy->GetNx();
-	long nn = long(0.5+gr->SaveState(opt));
+	mreal rr = gr->SaveState(opt);
+	long nn = (mgl_isnan(rr) || rr<=0) ? mglFitPnts:long(rr+0.5);
 	if(xx->GetNx()!=m)
 	{	gr->SetWarn(mglWarnDim,"Fit[S]");	return 0;	}
 	if(m<2)
@@ -237,7 +238,6 @@ HMDT MGL_EXPORT mgl_fit_xys(HMGL gr, HCDT xx, HCDT yy, HCDT ss, const char *eq, 
 	if(!var || *var==0)
 	{	gr->SetWarn(mglWarnNull,"Fit[S]");	return 0;	}
 
-	if(nn<mglFitPnts)	nn = mglFitPnts;
 	mglData x(xx), y(yy), s(ss);
 	mglFitData fd;
 	fd.n = m;	fd.x = x.a;		fd.y = 0;
@@ -269,7 +269,8 @@ HMDT MGL_EXPORT mgl_fit_xys(HMGL gr, HCDT xx, HCDT yy, HCDT ss, const char *eq, 
 HMDT MGL_EXPORT mgl_fit_xyzs(HMGL gr, HCDT xx, HCDT yy, HCDT zz, HCDT ss, const char *eq, const char *var, HMDT ini, const char *opt)
 {
 	long m=zz->GetNx(),n=zz->GetNy();
-	long nn = long(0.5+gr->SaveState(opt));
+	mreal rr = gr->SaveState(opt);
+	long nn = (mgl_isnan(rr) || rr<=0) ? mglFitPnts:long(rr+0.5);
 	if(xx->GetNx()!=m)
 	{	gr->SetWarn(mglWarnDim,"Fit[S]");	return 0;	}
 	if(ss->GetNx()*ss->GetNy()*ss->GetNz() != m*n*zz->GetNz())
@@ -280,8 +281,7 @@ HMDT MGL_EXPORT mgl_fit_xyzs(HMGL gr, HCDT xx, HCDT yy, HCDT zz, HCDT ss, const 
 	{	gr->SetWarn(mglWarnLow,"Fit[S]");	return 0;	}
 	if(!var || *var==0)
 	{	gr->SetWarn(mglWarnNull,"Fit[S]");	return 0;	}
-	
-	if(nn<mglFitPnts)	nn = mglFitPnts;
+
 	mglData x(m, n), y(m, n), z(zz), s(ss);
 	register long i,j;
 	for(i=0;i<m;i++)	for(j=0;j<n;j++)	// ñîçäàåì ìàññèâ òî÷åê
@@ -320,7 +320,8 @@ HMDT MGL_EXPORT mgl_fit_xyzas(HMGL gr, HCDT xx, HCDT yy, HCDT zz, HCDT aa, HCDT 
 	register long i,j,k,i0;
 	long m=aa->GetNx(), n=aa->GetNy(), l=aa->GetNz();
 	i = n*m*l;
-	long nn = long(0.5+gr->SaveState(opt));
+	mreal rr = gr->SaveState(opt);
+	long nn = (mgl_isnan(rr) || rr<=0) ? mglFitPnts:long(rr+0.5);
 	if(m<2 || n<2 || l<2)
 	{	gr->SetWarn(mglWarnLow,"Fit[S]");	return 0;	}
 	if(ss->GetNx()*ss->GetNy()*ss->GetNz() != i)
@@ -331,7 +332,6 @@ HMDT MGL_EXPORT mgl_fit_xyzas(HMGL gr, HCDT xx, HCDT yy, HCDT zz, HCDT aa, HCDT 
 	if(!var || *var==0)
 	{	gr->SetWarn(mglWarnNull,"Fit[S]");	return 0;	}
 	
-	if(nn<mglFitPnts)	nn = mglFitPnts;
 	mglData x(aa), y(aa), z(aa), a(aa), s(ss);
 	for(i=0;i<m;i++)	for(j=0;j<n;j++)	for(k=0;k<l;k++)	// ñîçäàåì ìàññèâ òî÷åê
 	{
@@ -370,8 +370,8 @@ HMDT MGL_EXPORT mgl_hist_x(HMGL gr, HCDT x, HCDT a, const char *opt)
 	long nn=a->GetNx()*a->GetNy()*a->GetNz();
 	if(nn!=x->GetNx()*x->GetNy()*x->GetNz())
 	{	gr->SetWarn(mglWarnDim,"Hist");	return 0;	}
-	long n = long(0.5+gr->SaveState(opt));
-	if(n<mglFitPnts)	n = mglFitPnts;
+	mreal rr = gr->SaveState(opt);
+	long n = (mgl_isnan(rr) || rr<=0) ? mglFitPnts:long(rr+0.5);
 	mglData *res = new mglData(n);
 	register long i,j1;
 
@@ -396,8 +396,8 @@ HMDT MGL_EXPORT mgl_hist_xy(HMGL gr, HCDT x, HCDT y, HCDT a, const char *opt)
 	long nn=a->GetNx()*a->GetNy()*a->GetNz();
 	if(nn!=x->GetNx()*x->GetNy()*x->GetNz() || nn!=y->GetNx()*y->GetNy()*y->GetNz())
 	{	gr->SetWarn(mglWarnDim,"Hist");	return 0;	}
-	long n = long(0.5+gr->SaveState(opt));
-	if(n<mglFitPnts)	n = mglFitPnts;
+	mreal rr = gr->SaveState(opt);
+	long n = (mgl_isnan(rr) || rr<=0) ? mglFitPnts:long(rr+0.5);
 	mglData *res = new mglData(n, n);
 	register long i,j1,j2;
 	const mglData *dx = dynamic_cast<const mglData *>(x);
@@ -425,8 +425,8 @@ HMDT MGL_EXPORT mgl_hist_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char
 	long nn=a->GetNx()*a->GetNy()*a->GetNz();
 	if(nn!=x->GetNx()*x->GetNy()*x->GetNz() || nn!=y->GetNx()*y->GetNy()*y->GetNz() || nn!=z->GetNx()*z->GetNy()*z->GetNz())
 	{	gr->SetWarn(mglWarnDim,"Hist");	return 0;	}
-	long n = long(0.5+gr->SaveState(opt));
-	if(n<mglFitPnts)	n = mglFitPnts;
+	mreal rr = gr->SaveState(opt);
+	long n = (mgl_isnan(rr) || rr<=0) ? mglFitPnts:long(rr+0.5);
 	mglData *res = new mglData(n, n, n);
 	register long i,j1,j2,j3;
 	const mglData *dx = dynamic_cast<const mglData *>(x);

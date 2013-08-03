@@ -1739,7 +1739,7 @@ Draws bounding box outside the plotting volume with color @var{col}. If @var{col
 @deftypefnx {C function} @code{void} mgl_label (@code{HMGL} gr, @code{char} dir, @code{const char *}text, @code{mreal} pos, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_labelw (@code{HMGL} gr, @code{char} dir, @code{const wchar_t *}text, @code{mreal} pos, @code{const char *}opt)
 @end ifclear
-Prints the label @var{text} for axis @var{dir}=@samp{x},@samp{y},@samp{z},@samp{t} (here @samp{t} is ``ternary'' axis @math{t=1-x-y}). The position of label is determined by @var{pos} parameter. If @var{pos}=0 then label is printed at the center of axis. If @var{pos}>0 then label is printed at the maximum of axis. If @var{pos}<0 then label is printed at the minimum of axis. Value option set additional shifting of the label. @xref{Text printing}.
+Prints the label @var{text} for axis @var{dir}=@samp{x},@samp{y},@samp{z},@samp{t} (here @samp{t} is ``ternary'' axis @math{t=1-x-y}). The position of label is determined by @var{pos} parameter. If @var{pos}=0 then label is printed at the center of axis. If @var{pos}>0 then label is printed at the maximum of axis. If @var{pos}<0 then label is printed at the minimum of axis. Option @code{value} set additional shifting of the label. @xref{Text printing}.
 @end deftypefn
 
 @c ##################################################################
@@ -1771,7 +1771,7 @@ colors for background (first one) and border (second one) of legend. Note, that 
 @deftypefnx {Method on @code{mglGraph}} @code{void} Legend (@code{int} pos=@code{0x3}, @code{const char *}fnt=@code{"#"}, @code{const char *}opt=@code{""})
 @deftypefnx {C function} @code{void} mgl_legend (@code{HMGL} gr, @code{int} pos, @code{const char *}fnt, @code{const char *}opt)
 @end ifclear
-Draws legend of accumulated legend entries by font @var{fnt} with @var{size}. Parameter @var{pos} sets the position of the legend: @samp{0} is bottom left corner, @samp{1} is bottom right corner, @samp{2} is top left corner, @samp{3} is top right corner (is default). Parameter @var{fnt} can contain colors for face (1st one), for border (2nd one) and for text (last one). If less than 3 colors are specified then the color for border is black (for 2 and less colors), and the color for face is white (for 1 or none colors). If string @var{fnt} contain @samp{#} then border around the legend is drawn. If string @var{fnt} contain @samp{-} then legend entries will arranged horizontally.
+Draws legend of accumulated legend entries by font @var{fnt} with @var{size}. Parameter @var{pos} sets the position of the legend: @samp{0} is bottom left corner, @samp{1} is bottom right corner, @samp{2} is top left corner, @samp{3} is top right corner (is default). Parameter @var{fnt} can contain colors for face (1st one), for border (2nd one) and for text (last one). If less than 3 colors are specified then the color for border is black (for 2 and less colors), and the color for face is white (for 1 or none colors). If string @var{fnt} contain @samp{#} then border around the legend is drawn. If string @var{fnt} contain @samp{-} then legend entries will arranged horizontally. Option @code{value} set the space between line samples and text (default is 0.1).
 @end deftypefn
 
 @deftypefn {MGL command} {} legend @code{x y} ['fnt'='#']
@@ -1779,7 +1779,7 @@ Draws legend of accumulated legend entries by font @var{fnt} with @var{size}. Pa
 @deftypefnx {Method on @code{mglGraph}} @code{void} Legend (@code{mreal} x, @code{mreal} y, @code{const char *}fnt=@code{"#"}, @code{const char *}opt=@code{""})
 @deftypefnx {C function} @code{void} mgl_legend_pos (@code{HMGL} gr, @code{mreal} x, @code{mreal} y, @code{const char *}fnt, @code{const char *}opt)
 @end ifclear
-Draws legend of accumulated legend entries by font @var{fnt} with @var{size}. Position of legend is determined by parameter @var{x}, @var{y} which supposed to be normalized to interval [0,1].
+Draws legend of accumulated legend entries by font @var{fnt} with @var{size}. Position of legend is determined by parameter @var{x}, @var{y} which supposed to be normalized to interval [0,1]. Option @code{value} set the space between line samples and text (default is 0.1).
 @end deftypefn
 
 @anchor{addlegend}
@@ -1861,7 +1861,7 @@ These functions draw continuous lines between points @{@var{x}[i], @var{y}[i], @
 @deftypefnx {Method on @code{mglGraph}} @code{void} Radar (@code{const mglDataA &}a, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {C function} @code{void} mgl_radar (@code{HMGL} gr, @code{HCDT} a, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-This functions draws radar chart which is continuous lines between points located on an radial lines (like plot in Polar coordinates). Parameter @var{value} in options @var{opt} set the additional shift of data (i.e. the data @var{a}+@var{value} is used instead of @var{a}). If @code{value<0} then @code{r=max(0, -min(value)}. If @var{pen} containt @samp{#} symbol then "grid" (radial lines and circle for @var{r}) is drawn. See also @ref{plot}. @sref{Radar sample}
+This functions draws radar chart which is continuous lines between points located on an radial lines (like plot in Polar coordinates). Option @code{value} set the additional shift of data (i.e. the data @var{a}+@code{value} is used instead of @var{a}). If @code{value<0} then @code{r=max(0, -min(value)}. If @var{pen} containt @samp{#} symbol then "grid" (radial lines and circle for @var{r}) is drawn. See also @ref{plot}. @sref{Radar sample}
 @end deftypefn
 
 @anchor{step}
@@ -1906,7 +1906,7 @@ These functions draw continuous lines between points @{@var{x}[i], @var{y}[i], @
 @deftypefnx {C function} @code{void} mgl_tape_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_tape_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-These functions draw tapes of normals for curve between points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. Initial tape(s) was selected in x-y plane (for @samp{x} in @var{pen}) and/or y-z plane (for @samp{x} in @var{pen}). The width of tape is proportional to @ref{barwidth}. See also @ref{plot}, @ref{flow}, @ref{barwidth}. @sref{Tape sample}
+These functions draw tapes of normals for curve between points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. Initial tape(s) was selected in x-y plane (for @samp{x} in @var{pen}) and/or y-z plane (for @samp{x} in @var{pen}). The width of tape is proportional to @ref{barwidth} and can be changed by option @code{value}. See also @ref{plot}, @ref{flow}, @ref{barwidth}. @sref{Tape sample}
 @end deftypefn
 
 @anchor{area}
@@ -2284,7 +2284,7 @@ The function draws contour lines for surface specified parametrically @{@var{x}[
 @deftypefnx {C function} @code{void} mgl_cont (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_cont_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-The same as previous with vector @var{v} of @var{num}-th elements equidistantly distributed in color range. Here @var{num} is equal to parameter @var{value} in options @var{opt} (default is 7).
+The same as previous with vector @var{v} of @var{num}-th elements equidistantly distributed in color range. Here @var{num} is equal to parameter @code{value} in options @var{opt} (default is 7).
 @end deftypefn
 
 @anchor{contf}
@@ -2307,7 +2307,7 @@ The function draws solid (or filled) contour lines for surface specified paramet
 @deftypefnx {C function} @code{void} mgl_contf (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_contf_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-The same as previous with vector @var{v} of @var{num}-th elements equidistantly distributed in color range. Here @var{num} is equal to parameter @var{value} in options @var{opt} (default is 7).
+The same as previous with vector @var{v} of @var{num}-th elements equidistantly distributed in color range. Here @var{num} is equal to parameter @code{value} in options @var{opt} (default is 7).
 @end deftypefn
 
 @anchor{contd}
@@ -2330,7 +2330,7 @@ The function draws solid (or filled) contour lines for surface specified paramet
 @deftypefnx {C function} @code{void} mgl_contd (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_contd_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-The same as previous with vector @var{v} of @var{num}-th elements equidistantly distributed in color range. Here @var{num} is equal to parameter @var{value} in options @var{opt} (default is 7).
+The same as previous with vector @var{v} of @var{num}-th elements equidistantly distributed in color range. Here @var{num} is equal to parameter @code{value} in options @var{opt} (default is 7).
 @end deftypefn
 
 @anchor{contv}
@@ -2353,7 +2353,7 @@ The function draws vertical cylinder (tube) at contour lines for surface specifi
 @deftypefnx {C function} @code{void} mgl_contv (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_contv_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-The same as previous with vector @var{v} of @var{num}-th elements equidistantly distributed in color range. Here @var{num} is equal to parameter @var{value} in options @var{opt} (default is 7).
+The same as previous with vector @var{v} of @var{num}-th elements equidistantly distributed in color range. Here @var{num} is equal to parameter @code{value} in options @var{opt} (default is 7).
 @end deftypefn
 
 @anchor{axial}
@@ -2376,7 +2376,7 @@ The function draws surface which is result of contour plot rotation for surface 
 @deftypefnx {C function} @code{void} mgl_axial (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_axial_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-The same as previous with vector @var{v} of @var{num}-th elements equidistantly distributed in color range. Here @var{num} is equal to parameter @var{value} in options @var{opt} (default is 3).
+The same as previous with vector @var{v} of @var{num}-th elements equidistantly distributed in color range. Here @var{num} is equal to parameter @code{value} in options @var{opt} (default is 3).
 @end deftypefn
 
 @anchor{grid2}
@@ -2426,7 +2426,7 @@ The function draws isosurface plot for 3d array specified parametrically @var{a}
 @deftypefnx {C function} @code{void} mgl_surf3 (@code{HMGL} gr, @code{HCDT} a, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_surf3_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-Draws @var{num}-th uniformly distributed in color range isosurfaces for 3d data. Here @var{num} is equal to parameter @var{value} in options @var{opt} (default is 3).
+Draws @var{num}-th uniformly distributed in color range isosurfaces for 3d data. Here @var{num} is equal to parameter @code{value} in options @var{opt} (default is 3).
 @end deftypefn
 
 @anchor{cloud}
@@ -2473,7 +2473,7 @@ The function draws contour plot for 3d data specified parametrically @var{a}[i,j
 @deftypefnx {C function} @code{void} mgl_cont3 (@code{HMGL} gr, @code{HCDT} a, @code{const char *}sch, @code{mreal} sVal, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_cont3_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{const char *}sch, @code{mreal} sVal, @code{const char *}opt)
 @end ifclear
-The same as previous with vector @var{v} of @var{num}-th elements equidistantly distributed in color range. Here @var{num} is equal to parameter @var{value} in options @var{opt} (default is 7).
+The same as previous with vector @var{v} of @var{num}-th elements equidistantly distributed in color range. Here @var{num} is equal to parameter @code{value} in options @var{opt} (default is 7).
 @end deftypefn
 
 @anchor{contf3}
@@ -2496,7 +2496,7 @@ The function draws solid (or filled) contour plot for 3d data specified parametr
 @deftypefnx {C function} @code{void} mgl_contf3 (@code{HMGL} gr, @code{HCDT} a, @code{const char *}sch, @code{mreal} sVal, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_contf3_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{const char *}sch, @code{mreal} sVal, @code{const char *}opt)
 @end ifclear
-The same as previous with vector @var{v} of @var{num}-th elements equidistantly distributed in color range. Here @var{num} is equal to parameter @var{value} in options @var{opt} (default is 7).
+The same as previous with vector @var{v} of @var{num}-th elements equidistantly distributed in color range. Here @var{num} is equal to parameter @code{value} in options @var{opt} (default is 7).
 @end deftypefn
 
 @anchor{grid3}
@@ -2569,7 +2569,7 @@ The function draws isosurface plot for 3d array specified parametrically @var{a}
 @deftypefnx {C function} @code{void} mgl_surf3c (@code{HMGL} gr, @code{HCDT} a, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_surf3c_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-Draws @var{num}-th uniformly distributed in color range isosurfaces for 3d data. Here @var{num} is equal to parameter @var{value} in options @var{opt} (default is 3).
+Draws @var{num}-th uniformly distributed in color range isosurfaces for 3d data. Here @var{num} is equal to parameter @code{value} in options @var{opt} (default is 3).
 @end deftypefn
 
 
@@ -2605,7 +2605,7 @@ The function draws isosurface plot for 3d array specified parametrically @var{a}
 @deftypefnx {C function} @code{void} mgl_surf3a (@code{HMGL} gr, @code{HCDT} a, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_surf3a_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-Draws @var{num}-th uniformly distributed in color range isosurfaces for 3d data. At this array @var{c} can be vector with values of transparency and @var{num}=@var{c}.nx. In opposite case @var{num} is equal to parameter @var{value} in options @var{opt} (default is 3).
+Draws @var{num}-th uniformly distributed in color range isosurfaces for 3d data. At this array @var{c} can be vector with values of transparency and @var{num}=@var{c}.nx. In opposite case @var{num} is equal to parameter @code{value} in options @var{opt} (default is 3).
 @end deftypefn
 
 @anchor{tiles}
@@ -2667,7 +2667,7 @@ These functions perform plotting of 2D and 3D vector fields. There are 5 general
 @deftypefnx {C function} @code{void} mgl_traj_xyz (@code{HMGL} gr, @code{HCDT}x, @code{HCDT}y, @code{HCDT}z, @code{HCDT}ax, @code{HCDT}ay, @code{HCDT}az, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_traj_xy (@code{HMGL} gr, @code{HCDT}x, @code{HCDT}y, @code{HCDT}ax, @code{HCDT}ay, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-The function draws vectors @{@var{ax}, @var{ay}, @var{az}@} along a curve @{@var{x}, @var{y}, @var{z}@}. The length of arrows are proportional to @math{\sqrt@{ax^2+ay^2+az^2@}}. String @var{pen} specifies the color (see @ref{Line styles}). By default (@code{pen=""}) color from palette is used (see @ref{Palette and colors}). Option @var{value} set the vector length factor (if non-zero) or vector length to be proportional the distance between curve points (if @var{value}=0). The minor sizes of all arrays must be equal and large 2. The plots are drawn for each row if one of the data is the matrix. See also @ref{vect}. @sref{Traj sample}
+The function draws vectors @{@var{ax}, @var{ay}, @var{az}@} along a curve @{@var{x}, @var{y}, @var{z}@}. The length of arrows are proportional to @math{\sqrt@{ax^2+ay^2+az^2@}}. String @var{pen} specifies the color (see @ref{Line styles}). By default (@code{pen=""}) color from palette is used (see @ref{Palette and colors}). Option @code{value} set the vector length factor (if non-zero) or vector length to be proportional the distance between curve points (if @code{value=0}). The minor sizes of all arrays must be equal and large 2. The plots are drawn for each row if one of the data is the matrix. See also @ref{vect}. @sref{Traj sample}
 @end deftypefn
 
 @anchor{vect}
@@ -2748,7 +2748,7 @@ The function draws dew-drops for plane vector field @{@var{ax}, @var{ay}@} depen
 @deftypefnx {C function} @code{void} mgl_flow_2d (@code{HMGL} gr, @code{HCDT} ax, @code{HCDT} ay, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_flow_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} ax, @code{HCDT} ay, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-The function draws flow threads for the plane vector field @{@var{ax}, @var{ay}@} parametrically depending on coordinates @var{x}, @var{y} at level @var{z} = @var{Min}.z. Number of threads is proportional to @var{value} option (default is 5). String @var{sch} may contain:
+The function draws flow threads for the plane vector field @{@var{ax}, @var{ay}@} parametrically depending on coordinates @var{x}, @var{y} at level @var{z} = @var{Min}.z. Number of threads is proportional to @code{value} option (default is 5). String @var{sch} may contain:
 @itemize @bullet
 @item
 color scheme -- up-half (warm) corresponds to normal flow (like attractor), bottom-half (cold) corresponds to inverse flow (like source);
@@ -2807,7 +2807,7 @@ This is 3D version of the previous functions.
 @deftypefnx {C function} @code{void} mgl_grad_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} phi, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_grad_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} phi, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-The function draws gradient lines for scalar field @var{phi}[i,j] (or @var{phi}[i,j,k] in 3d case) specified parametrically @{@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]@}. Number of lines is proportional to @var{value} option (default is 5). See also @ref{dens}, @ref{cont}, @ref{flow}.
+The function draws gradient lines for scalar field @var{phi}[i,j] (or @var{phi}[i,j,k] in 3d case) specified parametrically @{@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]@}. Number of lines is proportional to @code{value} option (default is 5). See also @ref{dens}, @ref{cont}, @ref{flow}.
 @end deftypefn
 
 @anchor{pipe}
@@ -2819,7 +2819,7 @@ The function draws gradient lines for scalar field @var{phi}[i,j] (or @var{phi}[
 @deftypefnx {C function} @code{void} mgl_pipe_2d (@code{HMGL} gr, @code{HCDT} ax, @code{HCDT} ay, @code{const char *}sch, @code{mreal} r0, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_pipe_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} ax, @code{HCDT} ay, @code{const char *}sch, @code{mreal} r0, @code{const char *}opt)
 @end ifclear
-The function draws flow pipes for the plane vector field @{@var{ax}, @var{ay}@} parametrically depending on coordinates @var{x}, @var{y} at level @var{z} = @var{Min}.z. Number of pipes is proportional to @var{value} option (default is 5). If @samp{#} symbol is specified then pipes start only from edges of axis range. The color of lines is proportional to @math{\sqrt@{ax^2+ay^2@}}. Warm color corresponds to normal flow (like attractor). Cold one corresponds to inverse flow (like source). Parameter @var{r0} set the base pipe radius. If @var{r0}<0 or symbol @samp{i} is specified then pipe radius is inverse proportional to amplitude. The vector field is plotted for each z slice of @var{ax}, @var{ay}. See also @ref{flow}, @ref{vect}. @sref{Pipe sample}
+The function draws flow pipes for the plane vector field @{@var{ax}, @var{ay}@} parametrically depending on coordinates @var{x}, @var{y} at level @var{z} = @var{Min}.z. Number of pipes is proportional to @code{value} option (default is 5). If @samp{#} symbol is specified then pipes start only from edges of axis range. The color of lines is proportional to @math{\sqrt@{ax^2+ay^2@}}. Warm color corresponds to normal flow (like attractor). Cold one corresponds to inverse flow (like source). Parameter @var{r0} set the base pipe radius. If @var{r0}<0 or symbol @samp{i} is specified then pipe radius is inverse proportional to amplitude. The vector field is plotted for each z slice of @var{ax}, @var{ay}. See also @ref{flow}, @ref{vect}. @sref{Pipe sample}
 @end deftypefn
 
 @deftypefn {MGL command} {} pipe udat vdat wdat ['sch'='' @code{r0=0.05}]
@@ -2878,7 +2878,7 @@ These plotting functions draw density plot in x, y, or z plain. If @var{a} is a 
 @deftypefnx {C function} @code{void} mgl_cont_y (@code{HMGL} gr, @code{HCDT} a, @code{const char *}stl, @code{mreal} sVal, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_cont_z (@code{HMGL} gr, @code{HCDT} a, @code{const char *}stl, @code{mreal} sVal, @code{const char *}opt)
 @end ifclear
-These plotting functions draw contour lines in x, y, or z plain. If @var{a} is a tensor (3-dimensional data) then interpolation to a given @var{sVal} is performed. These functions are useful for creating projections of the 3D data array to the bounding box. See also @ref{ContFXYZ}, @ref{DensXYZ}, @ref{cont}, @ref{Data manipulation}. @sref{Cont projection sample}
+These plotting functions draw contour lines in x, y, or z plain. If @var{a} is a tensor (3-dimensional data) then interpolation to a given @var{sVal} is performed. These functions are useful for creating projections of the 3D data array to the bounding box. Option @code{value} set the number of contours. See also @ref{ContFXYZ}, @ref{DensXYZ}, @ref{cont}, @ref{Data manipulation}. @sref{Cont projection sample}
 @end deftypefn
 
 @ifclear UDAV
@@ -2904,7 +2904,7 @@ The same as previous with manual contour levels.
 @deftypefnx {C function} @code{void} mgl_contf_y (@code{HMGL} gr, @code{HCDT} a, @code{const char *}stl, @code{mreal} sVal, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_contf_z (@code{HMGL} gr, @code{HCDT} a, @code{const char *}stl, @code{mreal} sVal, @code{const char *}opt)
 @end ifclear
-These plotting functions draw solid contours in x, y, or z plain. If @var{a} is a tensor (3-dimensional data) then interpolation to a given @var{sVal} is performed. These functions are useful for creating projections of the 3D data array to the bounding box. See also @ref{ContFXYZ}, @ref{DensXYZ}, @ref{cont}, @ref{Data manipulation}. @sref{ContF projection sample}
+These plotting functions draw solid contours in x, y, or z plain. If @var{a} is a tensor (3-dimensional data) then interpolation to a given @var{sVal} is performed. These functions are useful for creating projections of the 3D data array to the bounding box. Option @code{value} set the number of contours. See also @ref{ContFXYZ}, @ref{DensXYZ}, @ref{cont}, @ref{Data manipulation}. @sref{ContF projection sample}
 @end deftypefn
 
 @ifclear UDAV
@@ -2924,7 +2924,7 @@ The same as previous with manual contour levels.
 @deftypefnx {Method on @code{mglGraph}} @code{void} FPlot (@code{const char *}eqY, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {C function} @code{void} mgl_fplot (@code{HMGL} gr, @code{const char *}eqY, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-Draws command function @samp{y(x)} at plane @var{z}=@var{Min}.z where @samp{x} variable is changed in @code{xrange}. You do not need to create the data arrays to plot it.  See also @ref{plot}.
+Draws command function @samp{y(x)} at plane @var{z}=@var{Min}.z where @samp{x} variable is changed in @code{xrange}. You do not need to create the data arrays to plot it. Option @code{value} set initial number of points.  See also @ref{plot}.
 @end deftypefn
 
 @deftypefn {MGL command} {} fplot 'x(t)' 'y(t)' 'z(t)' ['pen'='']
@@ -2932,7 +2932,7 @@ Draws command function @samp{y(x)} at plane @var{z}=@var{Min}.z where @samp{x} v
 @deftypefnx {Method on @code{mglGraph}} @code{void} FPlot (@code{const char *}eqX, @code{const char *}eqY, @code{const char *}eqZ, @code{const char *}pen, @code{const char *}opt=@code{""})
 @deftypefnx {C function} @code{void} mgl_fplot_xyz (@code{HMGL} gr, @code{const char *}eqX, @code{const char *}eqY, @code{const char *}eqZ, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-Draws command parametrical curve @{@samp{x(t)}, @samp{y(t)}, @samp{z(t)}@} where @samp{t} variable is changed in range [0, 1]. You do not need to create the data arrays to plot it. See also @ref{plot}.
+Draws command parametrical curve @{@samp{x(t)}, @samp{y(t)}, @samp{z(t)}@} where @samp{t} variable is changed in range [0, 1]. You do not need to create the data arrays to plot it. Option @code{value} set number of points. See also @ref{plot}.
 @end deftypefn
 
 @anchor{fsurf}
@@ -2941,7 +2941,7 @@ Draws command parametrical curve @{@samp{x(t)}, @samp{y(t)}, @samp{z(t)}@} where
 @deftypefnx {Method on @code{mglGraph}} @code{void} FSurf (@code{const char *}eqZ, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""});
 @deftypefnx {C function} @code{void} mgl_fsurf (@code{HMGL} gr, @code{const char *}eqZ, @code{const char *}sch, @code{const char *}opt);
 @end ifclear
-Draws command surface for function @samp{z(x,y)} where @samp{x}, @samp{y} variable are changed in @code{xrange, yrange}. You do not need to create the data arrays to plot it. See also @ref{surf}.
+Draws command surface for function @samp{z(x,y)} where @samp{x}, @samp{y} variable are changed in @code{xrange, yrange}. You do not need to create the data arrays to plot it. Option @code{value} set number of points. See also @ref{surf}.
 @end deftypefn
 
 @deftypefn {MGL command} {} fsurf 'x(u,v)' 'y(u,v)' 'z(u,v)' ['sch'='']
@@ -2949,7 +2949,7 @@ Draws command surface for function @samp{z(x,y)} where @samp{x}, @samp{y} variab
 @deftypefnx {Method on @code{mglGraph}} @code{void} FSurf (@code{const char *}eqX, @code{const char *}eqY, @code{const char *}eqZ, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {C function} @code{void} mgl_fsurf_xyz (@code{HMGL} gr, @code{const char *}eqX, @code{const char *}eqY, @code{const char *}eqZ, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-Draws command parametrical surface @{@samp{x(u,v)}, @samp{y(u,v)}, @samp{z(u,v)}@} where @samp{u}, @samp{v} variable are changed in range [0, 1]. You do not need to create the data arrays to plot it. See also @ref{surf}.
+Draws command parametrical surface @{@samp{x(u,v)}, @samp{y(u,v)}, @samp{z(u,v)}@} where @samp{u}, @samp{v} variable are changed in range [0, 1]. You do not need to create the data arrays to plot it. Option @code{value} set number of points. See also @ref{surf}.
 @end deftypefn
 
 @anchor{triplot}
@@ -2981,7 +2981,7 @@ The function draws the surface of triangles. Triangle vertexes are set by indexe
 @deftypefnx {C function} @code{void} mgl_tricont_xyzcv (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} id, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_tricont_xyzv (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} id, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-The function draws contour lines for surface of triangles at @var{z}=@var{v}[k] (or at  @var{z} = @var{Min}.z if @var{sch} contain symbol @samp{_}). Triangle vertexes are set by indexes @var{id} of data points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. Contours are plotted for @var{z}[i,j]=@var{v}[k] where @var{v}[k] are values of data array @var{v}. String @var{sch} sets the color scheme. Array @var{c} (if specified) is used for contour coloring. First dimensions of @var{id} must be 3 or greater. Arrays @var{x}, @var{y}, @var{z} must have equal sizes. Parameter @var{c} set the colors of triangles (if @var{id}.ny=@var{c}.nx) or colors of vertexes (if @var{x}.nx=@var{c}.nx). See also @ref{triplot}, @ref{cont}, @ref{triangulation}.
+The function draws contour lines for surface of triangles at @var{z}=@var{v}[k] (or at  @var{z} = @var{Min}.z if @var{sch} contain symbol @samp{_}). Triangle vertexes are set by indexes @var{id} of data points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. Contours are plotted for @var{z}[i,j]=@var{v}[k] where @var{v}[k] are values of data array @var{v}. If @var{v} is absent then arrays of option @code{value} elements  equidistantly distributed in color range is used. String @var{sch} sets the color scheme. Array @var{c} (if specified) is used for contour coloring. First dimensions of @var{id} must be 3 or greater. Arrays @var{x}, @var{y}, @var{z} must have equal sizes. Parameter @var{c} set the colors of triangles (if @var{id}.ny=@var{c}.nx) or colors of vertexes (if @var{x}.nx=@var{c}.nx). See also @ref{triplot}, @ref{cont}, @ref{triangulation}.
 @end deftypefn
 
 @anchor{quadplot}
@@ -3033,7 +3033,7 @@ The function reconstruct and draws the surface for arbitrary placed points @{@va
 
 These functions fit data to formula. Fitting goal is to find formula parameters for the best fit the data points, i.e. to minimize the sum @math{\sum_i (f(x_i, y_i, z_i) - a_i)^2/s_i^2}. At this, approximation function @samp{f} can depend only on one argument @samp{x} (1D case), on two arguments @samp{x,y} (2D case) and on three arguments @samp{x,y,z} (3D case). The function @samp{f} also may depend on parameters. Normally the list of fitted parameters is specified by @var{var} string (like, @samp{abcd}). Usually user should supply initial values for fitted parameters by @var{ini} variable. But if he/she don't supply it then the zeros are used. Parameter @var{print}=@code{true} switch on printing the found coefficients to @var{Message} (see @ref{Error handling}).
 
-Functions Fit() and FitS() do not draw the obtained data themselves. They fill the data @var{fit} by formula @samp{f} with found coefficients and return it. At this, the @samp{x,y,z} coordinates are equidistantly distributed in the axis range. Number of points in @var{fit} is selected as maximal value of @var{fit} size and the value of @var{mglFitPnts}. Note, that this functions use GSL library and do something only if MathGL was compiled with GSL support. @sref{Nonlinear fitting sample}
+Functions Fit() and FitS() do not draw the obtained data themselves. They fill the data @var{fit} by formula @samp{f} with found coefficients and return it. At this, the @samp{x,y,z} coordinates are equidistantly distributed in the axis range. Number of points in @var{fit} is defined by option @code{value} (default is @var{mglFitPnts}=100). Note, that this functions use GSL library and do something only if MathGL was compiled with GSL support. @sref{Nonlinear fitting sample}
 
 @anchor{fits}
 @deftypefn {MGL command} {} fits res adat sdat 'func' 'var' [ini=0]
@@ -3127,7 +3127,7 @@ Get last fitted formula with found coefficients (as numbers).
 @deftypefnx {C function} @code{HMDT} mgl_hist_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} a, @code{const char *}opt)
 @deftypefnx {C function} @code{HMDT} mgl_hist_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{const char *}opt)
 @end ifclear
-These functions make distribution (histogram) of data. They do not draw the obtained data themselves. These functions can be useful if user have data defined for random points (for example, after PIC simulation) and he want to produce a plot which require regular data (defined on grid(s)). The range for grids is always selected as axis range. Arrays @var{x}, @var{y}, @var{z} define the positions (coordinates) of random points. Array @var{a} define the data value. Number of points in output array @var{res} is selected as maximal value of @var{res} size and the value of @var{mglFitPnts}.
+These functions make distribution (histogram) of data. They do not draw the obtained data themselves. These functions can be useful if user have data defined for random points (for example, after PIC simulation) and he want to produce a plot which require regular data (defined on grid(s)). The range for grids is always selected as axis range. Arrays @var{x}, @var{y}, @var{z} define the positions (coordinates) of random points. Array @var{a} define the data value. Number of points in output array @var{res}  is defined by option @code{value} (default is @var{mglFitPnts}=100).
 @end deftypefn
 
 

@@ -826,11 +826,12 @@ void mglCanvas::Box(const char *col, bool ticks)
 void mglCanvas::Colorbar(const char *sch)
 {
 	bool in = mglchr(sch,'I');
-	mreal s=1/B.pf, x=1, y=0;
-	if(mglchr(sch,'>'))	{	x=in?(1+s)/2:1;	y=0;	}
-	if(mglchr(sch,'<'))	{	x=in?(1-s)/2:0;	y=0;	}
-	if(mglchr(sch,'^'))	{	x=0;	y=in?(1+s)/2:1;	}
-	if(mglchr(sch,'_'))	{	x=0;	y=in?(1-s)/2:0;	}
+	mreal sx = (fabs(B.b[0])+fabs(B.b[1])+fabs(B.b[2]))/B.pf/Width, x=1;
+	mreal sy = (fabs(B.b[3])+fabs(B.b[4])+fabs(B.b[5]))/B.pf/Height, y=0;
+	if(mglchr(sch,'>'))	{	x=in?(1+sx)/2:1;	y=0;	}
+	if(mglchr(sch,'<'))	{	x=in?(1-sx)/2:0;	y=0;	}
+	if(mglchr(sch,'^'))	{	x=0;	y=in?(1+sy)/2:1;	}
+	if(mglchr(sch,'_'))	{	x=0;	y=in?(1-sy)/2:0;	}
 	Colorbar(sch, x, y, 1, 1);
 }
 //-----------------------------------------------------------------------------
@@ -861,11 +862,12 @@ void mglCanvas::Colorbar(const char *sch, mreal x, mreal y, mreal w, mreal h)
 void mglCanvas::Colorbar(HCDT v, const char *sch)
 {
 	bool in = mglchr(sch,'I');
-	mreal s=1/B.pf, x=1, y=0;
-	if(mglchr(sch,'>'))	{	x=in?(1+s)/2:1;	y=0;	}
-	if(mglchr(sch,'<'))	{	x=in?(1-s)/2:0;	y=0;	}
-	if(mglchr(sch,'^'))	{	x=0;	y=in?(1+s)/2:1;	}
-	if(mglchr(sch,'_'))	{	x=0;	y=in?(1-s)/2:0;	}
+	mreal sx = (fabs(B.b[0])+fabs(B.b[1])+fabs(B.b[2]))/B.pf/Width, x=1;
+	mreal sy = (fabs(B.b[3])+fabs(B.b[4])+fabs(B.b[5]))/B.pf/Height, y=0;
+	if(mglchr(sch,'>'))	{	x=in?(1+sx)/2:1;	y=0;	}
+	if(mglchr(sch,'<'))	{	x=in?(1-sx)/2:0;	y=0;	}
+	if(mglchr(sch,'^'))	{	x=0;	y=in?(1+sy)/2:1;	}
+	if(mglchr(sch,'_'))	{	x=0;	y=in?(1-sy)/2:0;	}
 	Colorbar(v, sch, x, y, 1, 1);
 }
 //-----------------------------------------------------------------------------

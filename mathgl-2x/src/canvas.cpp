@@ -158,6 +158,7 @@ void mglCanvas::add_prim(mglPrim &a)
 	}
 }
 //-----------------------------------------------------------------------------
+extern unsigned long mgl_mask_def[16];
 void mglCanvas::DefaultPlotParam()
 {
 /* NOTE: following variables and mutex will not be changed by DefaultPlotParam()
@@ -169,7 +170,8 @@ int Height;			///< Height of the image
 int Depth;			///< Depth of the image
 int CurFrameId;		///< Number of automaticle created frames
 GifFileType *gif;*/
-	mgl_clear_fft();
+	memcpy(mgl_mask_val, mgl_mask_def, 16*sizeof(unsigned long));	// should be > 16*8
+	mgl_clear_fft();		mask = 0xffffffffffffffff;
 	SetTickRotate(true);	SetTickSkip(true);
 	SetWarn(mglWarnNone,"");	mglGlobalMess = "";
 	ObjId = -1;	HighId = INT_MIN;
@@ -304,7 +306,7 @@ mreal mglCanvas::GetOrgZ(char dir) const
 //-----------------------------------------------------------------------------
 #define MGL_MARK_PLOT	if(Quality&MGL_DRAW_LMEM)	mark_draw(Pnt[p],type,size,&d);else	\
 						{	mglPrim a;	a.w = pw;	a.s = size;	\
-							a.n1 = p;	a.n4 = type;	add_prim(a);	}
+							a.n1 = p;	a.n4 = type;	a.angl=0;	add_prim(a);	}
 void mglCanvas::mark_plot(long p, char type, mreal size)
 {
 	if(p<0 || mgl_isnan(Pnt[p].x) || mgl_isnan(size))	return;
@@ -312,8 +314,7 @@ void mglCanvas::mark_plot(long p, char type, mreal size)
 //	mreal pw = fabs(PenWidth)*0.15/sqrt(font_factor);
 	mreal pw = 0.15/sqrt(font_factor);
 	mglDrawReg d;	d.set(this,1,1,0);
-	d.PDef = PDef;	d.pPos = pPos;
-	d.ObjId = ObjId;	d.PenWidth=pw;
+	d.PDef = PDef;	d.pPos = pPos;	d.PenWidth=pw;
 	if(size>=0)	size *= MarkSize;
 	if(size==0)	size = MarkSize;
 	size *= 0.35*font_factor;
@@ -325,7 +326,7 @@ void mglCanvas::mark_plot(long p, char type, mreal size)
 //-----------------------------------------------------------------------------
 #define MGL_LINE_PLOT	if(Quality&MGL_DRAW_LMEM)	line_draw(Pnt[p1],Pnt[p2],&dd);else	\
 						{	mglPrim a(1);	a.n3=PDef;	a.s = pPos;	\
-							a.n1 = p1;	a.n2 = p2;	a.w = pw;	add_prim(a);	}
+							a.n1 = p1;	a.n2 = p2;	a.w = pw;	a.angl=0;	add_prim(a);	}
 void mglCanvas::line_plot(long p1, long p2)
 {
 	if(PDef==0)	return;
@@ -335,9 +336,8 @@ void mglCanvas::line_plot(long p1, long p2)
 	mreal pw = fabs(PenWidth)*sqrt(font_factor/400), d;
 	d = hypot(Pnt[p1].x-Pnt[p2].x, Pnt[p1].y-Pnt[p2].y);
 
-	mglDrawReg dd;		dd.set(this,1,1,0);
-	dd.PDef = PDef;		dd.pPos = pPos;
-	dd.ObjId = ObjId;	dd.PenWidth=pw;
+	mglDrawReg dd;	dd.set(this,1,1,0);
+	dd.PDef = PDef;	dd.pPos = pPos;	dd.PenWidth=pw;
 
 	if(TernAxis&4) for(int i=0;i<4;i++)
 	{	p1 = ProjScale(i, pp1);	p2 = ProjScale(i, pp2);
@@ -347,13 +347,14 @@ void mglCanvas::line_plot(long p1, long p2)
 }
 //-----------------------------------------------------------------------------
 #define MGL_TRIG_PLOT	if(Quality&MGL_DRAW_LMEM)	trig_draw(Pnt[p1],Pnt[p2],Pnt[p3],true,&d);else	\
-						{	mglPrim a(2);	a.n1 = p1;	a.n2 = p2;	\
-							a.n3 = p3;	add_prim(a);}
+						{	mglPrim a(2);	a.n1 = p1;	a.n2 = p2;	a.n3 = p3;	\
+							a.m=mask;	a.angl=mask_an;	a.w = pw;	add_prim(a);}
 void mglCanvas::trig_plot(long p1, long p2, long p3)
 {
 	if(p1<0 || p2<0 || p3<0 || mgl_isnan(Pnt[p1].x) || mgl_isnan(Pnt[p2].x) || mgl_isnan(Pnt[p3].x))	return;
 	long pp1=p1,pp2=p2,pp3=p3;
-	mglDrawReg d;	d.set(this,1,1,0);	d.ObjId = ObjId;
+	mreal pw = fabs(PenWidth)*sqrt(font_factor/400);
+	mglDrawReg d;	d.set(this,1,1,0);	d.PenWidth=pw;
 	if(TernAxis&4) for(int i=0;i<4;i++)
 	{	p1 = ProjScale(i, pp1);	p2 = ProjScale(i, pp2);
 		p3 = ProjScale(i, pp3);	MGL_TRIG_PLOT	}
@@ -361,8 +362,8 @@ void mglCanvas::trig_plot(long p1, long p2, long p3)
 }
 //-----------------------------------------------------------------------------
 #define MGL_QUAD_PLOT	if(Quality&MGL_DRAW_LMEM)	quad_draw(Pnt[p1],Pnt[p2],Pnt[p3],Pnt[p4],&d);else	\
-						{	mglPrim a(3);	a.n1 = p1;	a.n2 = p2;	\
-							a.n3 = p3;	a.n4 = p4;	add_prim(a);	}
+						{	mglPrim a(3);	a.n1 = p1;	a.n2 = p2;	a.n3 = p3;	a.n4 = p4;	\
+							a.m=mask;	a.angl=mask_an;	a.w = pw;	add_prim(a);	}
 void mglCanvas::quad_plot(long p1, long p2, long p3, long p4)
 {
 	if(p1<0 || mgl_isnan(Pnt[p1].x))	{	trig_plot(p4,p2,p3);	return;	}
@@ -370,7 +371,8 @@ void mglCanvas::quad_plot(long p1, long p2, long p3, long p4)
 	if(p3<0 || mgl_isnan(Pnt[p3].x))	{	trig_plot(p1,p2,p4);	return;	}
 	if(p4<0 || mgl_isnan(Pnt[p4].x))	{	trig_plot(p1,p2,p3);	return;	}
 	long pp1=p1,pp2=p2,pp3=p3,pp4=p4;
-	mglDrawReg d;	d.set(this,1,1,0);	d.ObjId = ObjId;
+	mreal pw = fabs(PenWidth)*sqrt(font_factor/400);
+	mglDrawReg d;	d.set(this,1,1,0);	d.PenWidth=pw;
 	if(TernAxis&4) for(int i=0;i<4;i++)
 	{	p1 = ProjScale(i, pp1);	p2 = ProjScale(i, pp2);
 		p3 = ProjScale(i, pp3);	p4 = ProjScale(i, pp4);
@@ -491,9 +493,8 @@ void mglCanvas::Glyph(mreal x, mreal y, mreal f, int s, long j, mreal col)
 	if(a.n1<0)	return;
 
 	mglDrawReg d;	d.set(this,1,1,0);
-	d.PDef = s;		d.pPos = a.s;
-	d.ObjId=ObjId;	d.PenWidth=a.w;
-	
+	d.PDef = s;		d.pPos = a.s;	d.PenWidth=a.w;
+
 	if(Quality&MGL_DRAW_LMEM)	glyph_draw(a,&d);
 	else	add_prim(a);
 }

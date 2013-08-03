@@ -1665,7 +1665,7 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} Legend (@code{int} pos=@code{0x3}, @code{const char *}fnt=@code{"#"}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_legend (@code{HMGL} gr, @code{int} pos, @code{const char *}fnt, @code{const char *}opt)
 @end ifclear
-Рисует легенду из накопленных записей шрифтом @var{fnt} размером @var{size}. Параметр @var{pos} задает положение легенды: @samp{0} -- в нижнем левом углу, @samp{1} -- нижнем правом углу, @samp{2} -- верхнем левом углу, @samp{3} -- верхнем правом углу (по умолчанию). Строка @var{fnt} может содержать вет для прямоугольника (1-ый цвет), для его границы (2-ой цвет) и для текста (последний). Если указано менее 3 цветов, то цвет рёбер будет чёрным (2 и менее цвета), а цвет прямоугольника белым (1 и менее цвета). Прямоугольник рисуется если строка @var{fnt} содержит @samp{#}. Если строка @var{fnt} содержит @samp{-}, то записи располагаются горизонтально.
+Рисует легенду из накопленных записей шрифтом @var{fnt} размером @var{size}. Параметр @var{pos} задает положение легенды: @samp{0} -- в нижнем левом углу, @samp{1} -- нижнем правом углу, @samp{2} -- верхнем левом углу, @samp{3} -- верхнем правом углу (по умолчанию). Строка @var{fnt} может содержать вет для прямоугольника (1-ый цвет), для его границы (2-ой цвет) и для текста (последний). Если указано менее 3 цветов, то цвет рёбер будет чёрным (2 и менее цвета), а цвет прямоугольника белым (1 и менее цвета). Прямоугольник рисуется если строка @var{fnt} содержит @samp{#}. Если строка @var{fnt} содержит @samp{-}, то записи располагаются горизонтально. Опция @code{value} задает зазор между примером линии и текстом (по умолчанию 0.1).
 @end deftypefn
 
 @deftypefn {Команда MGL} {} legend @code{x y} ['fnt'='#']
@@ -1673,7 +1673,7 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} Legend (@code{mreal} x, @code{mreal} y, @code{const char *}fnt=@code{"#"}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_legend_pos (@code{HMGL} gr, @code{mreal} x, @code{mreal} y, @code{const char *}fnt, @code{const char *}opt)
 @end ifclear
-Рисует легенду из накопленных записей шрифтом @var{fnt} размером @var{size}. Положение легенды задается параметрами @var{x}, @var{y}, которые полагаются нормированными в диапазоне [0,1].
+Рисует легенду из накопленных записей шрифтом @var{fnt} размером @var{size}. Положение легенды задается параметрами @var{x}, @var{y}, которые полагаются нормированными в диапазоне [0,1]. Опция @code{value} задает зазор между примером линии и текстом (по умолчанию 0.1).
 @end deftypefn
 
 @anchor{addlegend}
@@ -1755,7 +1755,7 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} Radar (@code{const mglDataA &}a, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_radar (@code{HMGL} gr, @code{HCDT} a, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-Функции рисуют radar chart, представляющий собой ломанную с вершинами на радиальных линиях (типа ломанной в полярных координатах). Параметр @var{value} в опциях @var{opt} задает дополнительный сдвиг данных (т.е. использование @var{a}+@var{value} вместо @var{a}). Если @var{pen} содержит @samp{#}, то рисуется "сетка" (радиальные линии). См. также @ref{plot}. @sref{Radar sample}
+Функции рисуют radar chart, представляющий собой ломанную с вершинами на радиальных линиях (типа ломанной в полярных координатах). Параметр @code{value} в опциях @var{opt} задает дополнительный сдвиг данных (т.е. использование @var{a}+@code{value} вместо @var{a}). Если @var{pen} содержит @samp{#}, то рисуется "сетка" (радиальные линии). См. также @ref{plot}. @sref{Radar sample}
 @end deftypefn
 
 @anchor{step}
@@ -1800,7 +1800,7 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Функция С} @code{void} mgl_tape_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_tape_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-Функции рисуют ленты, которые вращаются вокруг кривой @{@var{x}[i], @var{y}[i], @var{z}[i]@} как её нормали. Начальная лента(ы) выбираются в плоскости x-y (для @samp{x} в @var{pen}) и/или y-z (для @samp{x} в @var{pen}). Ширина лент пропорциональна @ref{barwidth}. См. также @ref{plot}, @ref{flow}, @ref{barwidth}. @sref{Tape sample}
+Функции рисуют ленты, которые вращаются вокруг кривой @{@var{x}[i], @var{y}[i], @var{z}[i]@} как её нормали. Начальная лента(ы) выбираются в плоскости x-y (для @samp{x} в @var{pen}) и/или y-z (для @samp{x} в @var{pen}). Ширина лент пропорциональна @ref{barwidth}, а также может быть изменена опцией @code{value}. См. также @ref{plot}, @ref{flow}, @ref{barwidth}. @sref{Tape sample}
 @end deftypefn
 
 @anchor{area}
@@ -2181,7 +2181,7 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Функция С} @code{void} mgl_cont (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_cont_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-Как предыдущий с вектором @var{v} из @var{num} элементов равно распределенных в диапазоне изменения цвета. Здесь @var{num} равен значению параметра @var{value} в опциях @var{opt} (по умолчанию 7).
+Как предыдущий с вектором @var{v} из @var{num} элементов равно распределенных в диапазоне изменения цвета. Здесь @var{num} равен значению параметра @code{value} в опциях @var{opt} (по умолчанию 7).
 @end deftypefn
 
 @anchor{contf}
@@ -2204,7 +2204,7 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Функция С} @code{void} mgl_contf (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_contf_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-Как предыдущий с вектором @var{v} из @var{num} элементов равно распределенных в диапазоне изменения цвета. Здесь @var{num} равен значению параметра @var{value} в опциях @var{opt} (по умолчанию 7).
+Как предыдущий с вектором @var{v} из @var{num} элементов равно распределенных в диапазоне изменения цвета. Здесь @var{num} равен значению параметра @code{value} в опциях @var{opt} (по умолчанию 7).
 @end deftypefn
 
 @anchor{contd}
@@ -2227,7 +2227,7 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Функция С} @code{void} mgl_contd (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_contd_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-Как предыдущий с вектором @var{v} из @var{num} элементов равно распределенных в диапазоне изменения цвета. Здесь @var{num} равен значению параметра @var{value} в опциях @var{opt} (по умолчанию 7).
+Как предыдущий с вектором @var{v} из @var{num} элементов равно распределенных в диапазоне изменения цвета. Здесь @var{num} равен значению параметра @code{value} в опциях @var{opt} (по умолчанию 7).
 @end deftypefn
 
 @anchor{contv}
@@ -2250,7 +2250,7 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Функция С} @code{void} mgl_contv (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_contv_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-Как предыдущий с вектором @var{v} из @var{num} элементов равно распределенных в диапазоне изменения цвета. Здесь @var{num} равен значению параметра @var{value} в опциях @var{opt} (по умолчанию 7).
+Как предыдущий с вектором @var{v} из @var{num} элементов равно распределенных в диапазоне изменения цвета. Здесь @var{num} равен значению параметра @code{value} в опциях @var{opt} (по умолчанию 7).
 @end deftypefn
 
 @anchor{axial}
@@ -2273,7 +2273,7 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Функция С} @code{void} mgl_axial (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_axial_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-Как предыдущий с вектором @var{v} из @var{num} элементов равно распределенных в диапазоне изменения цвета. Здесь @var{num} равен значению параметра @var{value} в опциях @var{opt} (по умолчанию 3).
+Как предыдущий с вектором @var{v} из @var{num} элементов равно распределенных в диапазоне изменения цвета. Здесь @var{num} равен значению параметра @code{value} в опциях @var{opt} (по умолчанию 3).
 @end deftypefn
 
 @anchor{grid2}
@@ -2324,7 +2324,7 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Функция С} @code{void} mgl_surf3 (@code{HMGL} gr, @code{HCDT} a, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_surf3_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-Аналогично предыдущему для @var{num} поверхностей уровня равномерно распределённых в диапазоне изменения цвета. Величина @var{num} равна значению параметра @var{value} в опциях @var{opt} (по умолчанию 3).
+Аналогично предыдущему для @var{num} поверхностей уровня равномерно распределённых в диапазоне изменения цвета. Величина @var{num} равна значению параметра @code{value} в опциях @var{opt} (по умолчанию 3).
 @end deftypefn
 
 @anchor{cloud}
@@ -2371,7 +2371,7 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Функция С} @code{void} mgl_cont3 (@code{HMGL} gr, @code{HCDT} a, @code{const char *}sch, @code{mreal} sVal, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_cont3_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{const char *}sch, @code{mreal} sVal, @code{const char *}opt)
 @end ifclear
-Аналогично предыдущему для @var{num} линий уровня равномерно распределённых в диапазоне изменения цвета. Величина @var{num} равна значению параметра @var{value} в опциях @var{opt} (по умолчанию 7).
+Аналогично предыдущему для @var{num} линий уровня равномерно распределённых в диапазоне изменения цвета. Величина @var{num} равна значению параметра @code{value} в опциях @var{opt} (по умолчанию 7).
 @end deftypefn
 
 @anchor{contf3}
@@ -2394,7 +2394,7 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Функция С} @code{void} mgl_contf3 (@code{HMGL} gr, @code{HCDT} a, @code{const char *}sch, @code{mreal} sVal, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_contf3_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{const char *}sch, @code{mreal} sVal, @code{const char *}opt)
 @end ifclear
-Аналогично предыдущему для @var{num} закрашенных линий (контуров) уровня равномерно распределённых в диапазоне изменения цвета. Величина @var{num} равна значению параметра @var{value} в опциях @var{opt} (по умолчанию 7).
+Аналогично предыдущему для @var{num} закрашенных линий (контуров) уровня равномерно распределённых в диапазоне изменения цвета. Величина @var{num} равна значению параметра @code{value} в опциях @var{opt} (по умолчанию 7).
 @end deftypefn
 
 @anchor{grid3}
@@ -2468,7 +2468,7 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Функция С} @code{void} mgl_surf3c (@code{HMGL} gr, @code{HCDT} a, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_surf3c_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-Аналогично предыдущему для @var{num} поверхностей уровня равномерно распределённых в диапазоне изменения цвета. Величина @var{num} равна значению параметра @var{value} в опциях @var{opt} (по умолчанию 3).
+Аналогично предыдущему для @var{num} поверхностей уровня равномерно распределённых в диапазоне изменения цвета. Величина @var{num} равна значению параметра @code{value} в опциях @var{opt} (по умолчанию 3).
 @end deftypefn
 
 
@@ -2504,7 +2504,7 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Функция С} @code{void} mgl_surf3a (@code{HMGL} gr, @code{HCDT} a, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_surf3a_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-Аналогично предыдущему для @var{num} поверхностей уровня равномерно распределённых в диапазоне изменения цвета. При этом массив @var{c} может быть вектором со значениями прозрачности и @var{num}=@var{c}.nx. В противном случае величина @var{num} равна значению параметра @var{value} в опциях @var{opt} (по умолчанию 3).
+Аналогично предыдущему для @var{num} поверхностей уровня равномерно распределённых в диапазоне изменения цвета. При этом массив @var{c} может быть вектором со значениями прозрачности и @var{num}=@var{c}.nx. В противном случае величина @var{num} равна значению параметра @code{value} в опциях @var{opt} (по умолчанию 3).
 @end deftypefn
 
 @anchor{tiles}
@@ -2566,7 +2566,7 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Функция С} @code{void} mgl_traj_xyz (@code{HMGL} gr, @code{HCDT}x, @code{HCDT}y, @code{HCDT}z, @code{HCDT}ax, @code{HCDT}ay, @code{HCDT}az, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_traj_xy (@code{HMGL} gr, @code{HCDT}x, @code{HCDT}y, @code{HCDT}ax, @code{HCDT}ay, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-Рисует вектора @{@var{ax}, @var{ay}, @var{az}@} вдоль кривой @{@var{x}, @var{y}, @var{z}@}. Длина векторов пропорциональна @math{\sqrt@{ax^2+ay^2+az^2@}}. Строка @var{pen} задает цвет (см. @ref{Line styles}). По умолчанию (@code{pen=""}) используется текущий цвет из палитры (см. @ref{Palette and colors}). Опция @var{value} задает фактор длины векторов (если не нуль) или выбирать длину пропорционально расстоянию между точками кривой (если @var{value}=0). Размер по 1-му индексу должен быть 2 или больше. График рисуется для каждой строки если один из массивов матрица. См. также @ref{vect}. @sref{Traj sample}
+Рисует вектора @{@var{ax}, @var{ay}, @var{az}@} вдоль кривой @{@var{x}, @var{y}, @var{z}@}. Длина векторов пропорциональна @math{\sqrt@{ax^2+ay^2+az^2@}}. Строка @var{pen} задает цвет (см. @ref{Line styles}). По умолчанию (@code{pen=""}) используется текущий цвет из палитры (см. @ref{Palette and colors}). Опция @code{value} задает фактор длины векторов (если не нуль) или выбирать длину пропорционально расстоянию между точками кривой (если @code{value=0}). Размер по 1-му индексу должен быть 2 или больше. График рисуется для каждой строки если один из массивов матрица. См. также @ref{vect}. @sref{Traj sample}
 @end deftypefn
 
 @anchor{vect}
@@ -2647,7 +2647,7 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Функция С} @code{void} mgl_flow_2d (@code{HMGL} gr, @code{HCDT} ax, @code{HCDT} ay, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_flow_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} ax, @code{HCDT} ay, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-Рисует нити тока для векторного поля @{@var{ax}, @var{ay}@}, параметрически зависящего от координат @var{x}, @var{y} на плоскости при @var{z} = @var{Min}.z. Число нитей пропорционально значению опции @var{value} (по умолчанию 5). Цвет нитей пропорционален @math{\sqrt@{ax^2+ay^2@}}. Строка @var{sch} может содержать
+Рисует нити тока для векторного поля @{@var{ax}, @var{ay}@}, параметрически зависящего от координат @var{x}, @var{y} на плоскости при @var{z} = @var{Min}.z. Число нитей пропорционально значению опции @code{value} (по умолчанию 5). Цвет нитей пропорционален @math{\sqrt@{ax^2+ay^2@}}. Строка @var{sch} может содержать
 @itemize @bullet
 @item
 цветовую схему -- тёплые цвета соответствуют нормальному току (типа стока), холодные цвета соответствуют обратному току (типа источника);
@@ -2706,7 +2706,7 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Функция С} @code{void} mgl_grad_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} phi, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_grad_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} phi, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-Рисует линии градиента скалярного поля @var{phi}[i,j] (или @var{phi}[i,j,k] в 3d случае) заданного параметрически @{@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]@}. Число линий пропорционально значению опции @var{value} (по умолчанию 5). См. также @ref{dens}, @ref{cont}, @ref{flow}.
+Рисует линии градиента скалярного поля @var{phi}[i,j] (или @var{phi}[i,j,k] в 3d случае) заданного параметрически @{@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]@}. Число линий пропорционально значению опции @code{value} (по умолчанию 5). См. также @ref{dens}, @ref{cont}, @ref{flow}.
 @end deftypefn
 
 @anchor{pipe}
@@ -2718,7 +2718,7 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Функция С} @code{void} mgl_pipe_2d (@code{HMGL} gr, @code{HCDT} ax, @code{HCDT} ay, @code{const char *}sch, @code{mreal} r0, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_pipe_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} ax, @code{HCDT} ay, @code{const char *}sch, @code{mreal} r0, @code{const char *}opt)
 @end ifclear
-Рисует трубки тока для векторного поля @{@var{ax}, @var{ay}@}, параметрически зависящего от координат @var{x}, @var{y} на плоскости при @var{z} = @var{Min}.z. Число трубок пропорционально значению опции @var{value}. Цвет и радиус трубок пропорционален @math{\sqrt@{ax^2+ay^2@}}. Тёплые цвета соответствуют нормальному току (типа стока). Холодные цвета соответствуют обратному току (типа источника). Параметр @var{r0} задает радиус трубок. При @var{r0}<0 радиус трубок обратно пропорционален их амплитуде. См. также @ref{flow}, @ref{vect}. @sref{Pipe sample}
+Рисует трубки тока для векторного поля @{@var{ax}, @var{ay}@}, параметрически зависящего от координат @var{x}, @var{y} на плоскости при @var{z} = @var{Min}.z. Число трубок пропорционально значению опции @code{value}. Цвет и радиус трубок пропорционален @math{\sqrt@{ax^2+ay^2@}}. Тёплые цвета соответствуют нормальному току (типа стока). Холодные цвета соответствуют обратному току (типа источника). Параметр @var{r0} задает радиус трубок. При @var{r0}<0 радиус трубок обратно пропорционален их амплитуде. См. также @ref{flow}, @ref{vect}. @sref{Pipe sample}
 @end deftypefn
 
 @deftypefn {Команда MGL} {} pipe udat vdat wdat ['sch'='' @code{r0=0.05}]
@@ -2777,7 +2777,7 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Функция С} @code{void} mgl_cont_y (@code{HMGL} gr, @code{HCDT} a, @code{const char *}stl, @code{mreal} sVal, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_cont_z (@code{HMGL} gr, @code{HCDT} a, @code{const char *}stl, @code{mreal} sVal, @code{const char *}opt)
 @end ifclear
-Эти функции рисуют линии уровня на x, y или z плоскостях. Если @var{a} -- 3d массив, то выполняется интерполяция к заданному срезу @var{sVal}. Функции полезны для создания проекций 3D массивов на оси координат. См. также @ref{ContFXYZ}, @ref{DensXYZ}, @ref{cont}, @ref{Data manipulation}. @sref{Cont projection sample}
+Эти функции рисуют линии уровня на x, y или z плоскостях. Если @var{a} -- 3d массив, то выполняется интерполяция к заданному срезу @var{sVal}. Опция @code{value} задает число контуров. Функции полезны для создания проекций 3D массивов на оси координат. См. также @ref{ContFXYZ}, @ref{DensXYZ}, @ref{cont}, @ref{Data manipulation}. @sref{Cont projection sample}
 @end deftypefn
 
 @ifclear UDAV
@@ -2803,7 +2803,7 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Функция С} @code{void} mgl_contf_y (@code{HMGL} gr, @code{HCDT} a, @code{const char *}stl, @code{mreal} sVal, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_contf_z (@code{HMGL} gr, @code{HCDT} a, @code{const char *}stl, @code{mreal} sVal, @code{const char *}opt)
 @end ifclear
-Эти функции рисуют закрашенные контуры уровня на x, y или z плоскостях. Если @var{a} -- 3d массив, то выполняется интерполяция к заданному срезу @var{sVal}. Функции полезны для создания проекций 3D массивов на оси координат. См. также @ref{ContFXYZ}, @ref{DensXYZ}, @ref{cont}, @ref{Data manipulation}. @sref{ContF projection sample}
+Эти функции рисуют закрашенные контуры уровня на x, y или z плоскостях. Если @var{a} -- 3d массив, то выполняется интерполяция к заданному срезу @var{sVal}. Опция @code{value} задает число контуров. Функции полезны для создания проекций 3D массивов на оси координат. См. также @ref{ContFXYZ}, @ref{DensXYZ}, @ref{cont}, @ref{Data manipulation}. @sref{ContF projection sample}
 @end deftypefn
 
 @ifclear UDAV
@@ -2823,7 +2823,7 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} FPlot (@code{const char *}eqY, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_fplot (@code{HMGL} gr, @code{const char *}eqY, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-Рисует функцию @samp{eqY(x)} в плоскости @var{z}=@var{Min}.z с координатой @samp{x} в диапазоне [@var{Min}.x, @var{Max}.x]. См. также @ref{plot}.
+Рисует функцию @samp{eqY(x)} в плоскости @var{z}=@var{Min}.z с координатой @samp{x} в диапазоне [@var{Min}.x, @var{Max}.x]. Опция @code{value} задает начальное число точек. См. также @ref{plot}.
 @end deftypefn
 
 @deftypefn {Команда MGL} {} fplot 'x(t)' 'y(t)' 'z(t)' ['pen'='']
@@ -2831,7 +2831,7 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} FPlot (@code{const char *}eqX, @code{const char *}eqY, @code{const char *}eqZ, @code{const char *}pen, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_fplot_xyz (@code{HMGL} gr, @code{const char *}eqX, @code{const char *}eqY, @code{const char *}eqZ, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-Рисует параметрическую кривую @{@samp{eqX(t)}, @samp{eqY(t)}, @samp{eqZ(t)}@}, где координата @samp{t} меняется в диапазоне [0, 1]. См. также @ref{plot}.
+Рисует параметрическую кривую @{@samp{eqX(t)}, @samp{eqY(t)}, @samp{eqZ(t)}@}, где координата @samp{t} меняется в диапазоне [0, 1]. Опция @code{value} задает начальное число точек. См. также @ref{plot}.
 @end deftypefn
 
 @anchor{fsurf}
@@ -2840,7 +2840,7 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} FSurf (@code{const char *}eqZ, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""});
 @deftypefnx {Функция С} @code{void} mgl_fsurf (@code{HMGL} gr, @code{const char *}eqZ, @code{const char *}sch, @code{const char *}opt);
 @end ifclear
-Рисует поверхность @samp{eqY(x,y)} с координатами @samp{x}, @samp{y} в диапазоне @code{xrange, yrange}. См. также @ref{surf}.
+Рисует поверхность @samp{eqY(x,y)} с координатами @samp{x}, @samp{y} в диапазоне @code{xrange, yrange}. Опция @code{value} задает число точек. См. также @ref{surf}.
 @end deftypefn
 
 @deftypefn {Команда MGL} {} fsurf 'x(u,v)' 'y(u,v)' 'z(u,v)' ['sch'='']
@@ -2848,7 +2848,7 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} FSurf (@code{const char *}eqX, @code{const char *}eqY, @code{const char *}eqZ, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_fsurf_xyz (@code{HMGL} gr, @code{const char *}eqX, @code{const char *}eqY, @code{const char *}eqZ, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-Рисует параметрическую поверхность @{@samp{eqX(u,v)}, @samp{eqY(u,v)}, @samp{eqZ(u,v)}@}, где координаты @samp{u}, @samp{v} меняются в диапазоне [0, 1]. См. также @ref{surf}.
+Рисует параметрическую поверхность @{@samp{eqX(u,v)}, @samp{eqY(u,v)}, @samp{eqZ(u,v)}@}, где координаты @samp{u}, @samp{v} меняются в диапазоне [0, 1]. Опция @code{value} задает число точек. См. также @ref{surf}.
 @end deftypefn
 
 @anchor{triplot}
@@ -2880,7 +2880,7 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Функция С} @code{void} mgl_tricont_xyzcv (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} id, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_tricont_xyzv (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} id, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-Рисует линии уровня поверхности из треугольников при @var{z}=@var{v}[k] (или при @var{z} = @var{Min}.z если @var{sch} содержит @samp{_}). Вершины треугольников задаются индексами @var{id} в массиве точек @{@var{x}[i], @var{y}[i], @var{z}[i]@}. Строка @var{sch} задает цветовую схему. Размер по 1-му индексу массива @var{id} должен быть 3 или больше. Массивы @var{x}, @var{y}, @var{z} должны иметь одинаковые размеры. Массив @var{c} задает цвет треугольников (если @var{id}.ny=@var{c}.nx) или цвет вершин (если @var{x}.nx=@var{c}.nx). См. также @ref{triplot}, @ref{cont}, @ref{triangulation}.
+Рисует линии уровня поверхности из треугольников при @var{z}=@var{v}[k] (или при @var{z} = @var{Min}.z если @var{sch} содержит @samp{_}). Вершины треугольников задаются индексами @var{id} в массиве точек @{@var{x}[i], @var{y}[i], @var{z}[i]@}. Если аргуент @var{v} не задан, то используется массив из @var{num} элементов равно распределенных в диапазоне изменения цвета. Здесь @var{num} равен значению параметра @code{value} в опциях @var{opt} (по умолчанию 7). Строка @var{sch} задает цветовую схему. Размер по 1-му индексу массива @var{id} должен быть 3 или больше. Массивы @var{x}, @var{y}, @var{z} должны иметь одинаковые размеры. Массив @var{c} задает цвет треугольников (если @var{id}.ny=@var{c}.nx) или цвет вершин (если @var{x}.nx=@var{c}.nx). См. также @ref{triplot}, @ref{cont}, @ref{triangulation}.
 @end deftypefn
 
 @anchor{quadplot}
@@ -2932,7 +2932,7 @@ gr.GetBGRN(bits, len(bits));
 
 Эти функции подбирают параметры функции для наилучшей аппроксимации данных, т.е. минимизируют сумму @math{\sum_i (f(x_i, y_i, z_i) - a_i)^2/s_i^2}. При этом аппроксимирующая функция @samp{f} может зависеть от одного аргумента @samp{x} (1D случай), от двух аргументов @samp{x,y} (2D случай) или от трех аргументов @samp{x,y,z} (3D случай). Функция @samp{f} также может зависеть от параметров. Список параметров задается строкой @var{var} (например, @samp{abcd}). Обычно пользователь должен предоставить начальные значения параметров в переменной @var{ini}. Однако, при его отсутствии используются нулевые значения. Параметр @var{print}=@code{true} включает вывод найденной формулы в @var{Message} (см. @ref{Error handling}).
 
-Функции Fit() и FitS() не рисуют полученные массивы. Они заполняют массив @var{fit} по формуле @samp{f} с найденными коэффициентами и возвращают @math{\chi^2} ошибку аппроксимации. При этом, координаты @samp{x,y,z} равно распределены в интервале @var{Min}--@var{Max}. Число точек в @var{fit} выбирается максимальным из размера массива @var{fit} и значения переменной @var{mglFitPnts}. Функции используют библиотеку GSL. @sref{Nonlinear fitting sample}
+Функции Fit() и FitS() не рисуют полученные массивы. Они заполняют массив @var{fit} по формуле @samp{f} с найденными коэффициентами и возвращают @math{\chi^2} ошибку аппроксимации. При этом, координаты @samp{x,y,z} равно распределены в интервале @var{Min}--@var{Max}. Число точек в @var{fit} определяется опцией @code{value} (по умолчанию @var{mglFitPnts}=100). Функции используют библиотеку GSL. @sref{Nonlinear fitting sample}
 
 @anchor{fits}
 @deftypefn {Команда MGL} {} fits res adat sdat 'func' 'var' [ini=0]
@@ -3026,7 +3026,7 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Функция С} @code{HMDT} mgl_hist_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} a, @code{const char *}opt)
 @deftypefnx {Функция С} @code{HMDT} mgl_hist_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{const char *}opt)
 @end ifclear
-Создают распределения данных. Они не рисуют данные. Функции могут быть полезны в случае когда данные пользователя определены на случайно расположенных точка (например, после PIC расчетов) и он хочет построить график, требующий регулярных данных (данных на сетках). Диапазон сеток равен диапазону осей координат. Массивы @var{x}, @var{y}, @var{z} определяют положение (координаты) точек. Массив @var{a} задает значения данных. Число точек в результате @var{res} -- максимум из размера @var{res} и значения @var{mglFitPnts}.
+Создают распределения данных. Они не рисуют данные. Функции могут быть полезны в случае когда данные пользователя определены на случайно расположенных точка (например, после PIC расчетов) и он хочет построить график, требующий регулярных данных (данных на сетках). Диапазон сеток равен диапазону осей координат. Массивы @var{x}, @var{y}, @var{z} определяют положение (координаты) точек. Массив @var{a} задает значения данных. Число точек в результате @var{res} определяется опцией @code{value} (по умолчанию @var{mglFitPnts}=100).
 @end deftypefn
 
 

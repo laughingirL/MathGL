@@ -191,8 +191,9 @@ private:
 };
 //-----------------------------------------------------------------------------
 /// Class for drawing the MGL script
-struct mglDrawScript : public mglDraw
+class mglDrawScript : public mglDraw
 {
+public:
 	HMPR par;		///< Parser to be used
 	QString text;	///< Script to be drawn
 	long line;		///< Line which will be highlited

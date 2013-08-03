@@ -31,7 +31,7 @@ int sample_2(mglGraph *gr);
 int sample_3(mglGraph *gr);
 int sample_d(mglGraph *gr);
 //-----------------------------------------------------------------------------
-#define PTHREAD_SAMPLE
+//#define PTHREAD_SAMPLE
 mglPoint pnt;  // some global variable for changeable data
 void *mgl_qt_tmp(void *);
 //-----------------------------------------------------------------------------
