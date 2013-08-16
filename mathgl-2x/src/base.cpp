@@ -151,23 +151,23 @@ void mglBase::StartGroup(const char *name, int id)
 	StartAutoGroup(buf);
 }
 //-----------------------------------------------------------------------------
-const char *mglWarn[mglWarnEnd] = {"data dimension(s) is incompatible",
-								"data dimension(s) is too small",
-								"minimal data value is negative",
-								"no file or wrong data dimensions",
-								"not enough memory",
-								"data values are zero",
-								"too many legend entries",
-								"no legend entries",
-								"slice value is out of range",
-								"number of contours is zero or negative",
-								"couldn't open file",
-								"light: ID is out of range",
-								"size(s) is zero or negative",
-								"format is not supported for that build",
-								"axis ranges are incompatible",
-								"pointer is NULL",
-								"not enough space for plot"};
+const char *mglWarn[mglWarnEnd] = {"data dimension(s) is incompatible",	//mglWarnDim
+								"data dimension(s) is too small",		//mglWarnLow
+								"minimal data value is negative",		//mglWarnNeg
+								"no file or wrong data dimensions",		//mglWarnFile
+								"not enough memory", 					//mglWarnMem
+								"data values are zero",					//mglWarnZero
+//								"too many legend entries",
+								"no legend entries",						//mglWarnLeg
+								"slice value is out of range",			//mglWarnSlc
+								"number of contours is zero or negative",//mglWarnCnt
+								"couldn't open file",					//mglWarnOpen
+								"light: ID is out of range",				//mglWarnLId
+								"size(s) is zero or negative",			//mglWarnSize
+								"format is not supported for that build",//mglWarnFmt
+								"axis ranges are incompatible",			//mglWarnTern
+								"pointer is NULL",						//mglWarnNull
+								"not enough space for plot"};			//mglWarnSpc
 //-----------------------------------------------------------------------------
 void mglBase::SetWarn(int code, const char *who)
 {

@@ -67,7 +67,6 @@ void smgl_stfa(mglGraph *gr);	// STFA sample
 void smgl_text(mglGraph *gr);	// text drawing
 void test(mglGraph *gr)
 {
-	printf("%d %d %d\n",(-1)%8,-1%8,-3%8);
 	gr->FSurf("x","s5"); gr->Box();
 	return;
 

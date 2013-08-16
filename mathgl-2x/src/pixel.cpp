@@ -349,6 +349,9 @@ void mglCanvas::Finish(bool fast)
 	if(memcmp(&Bp,&bp,sizeof(mglMatrix)) && !(Quality&MGL_DRAW_LMEM) && Prm.size()>0)
 		clr(MGL_FINISHED);
 	if(get(MGL_FINISHED))	return;	// nothing to do
+/*	static bool working=false;
+	if(working)	return;
+	working = true;*/
 	if(!(Quality&MGL_DRAW_LMEM) && Prm.size()>0)
 	{
 		PreparePrim(fast);	bp=Bp;
@@ -365,6 +368,7 @@ void mglCanvas::Finish(bool fast)
 	BDef[3] = 255;
 	mglStartThread(&mglCanvas::pxl_backgr,this,n);
 	set(MGL_FINISHED);
+//	working = false;
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::ClfZB(bool force)
