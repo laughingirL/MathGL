@@ -67,7 +67,7 @@ void smgl_stfa(mglGraph *gr);	// STFA sample
 void smgl_text(mglGraph *gr);	// text drawing
 void test(mglGraph *gr)
 {
-	gr->FSurf("x","s5"); gr->Box();
+	gr->Axis("xyz","","");
 	return;
 
 	mglParse par;

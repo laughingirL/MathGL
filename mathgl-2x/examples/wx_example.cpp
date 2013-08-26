@@ -19,20 +19,19 @@
  ***************************************************************************/
 #include "mgl2/wx.h"
 //-----------------------------------------------------------------------------
-#ifdef ENABLE_MGLGRAPHWX
-int test(mglGraph *gr, void *);
-int sample(mglGraph *gr, void *);
-int sample_1(mglGraph *gr, void *);
-int sample_2(mglGraph *gr, void *);
-int sample_3(mglGraph *gr, void *);
-int sample_d(mglGraph *gr, void *);
+int test_wnd(mglGraph *gr);
+int sample(mglGraph *gr);
+int sample_1(mglGraph *gr);
+int sample_2(mglGraph *gr);
+int sample_3(mglGraph *gr);
+int sample_d(mglGraph *gr);
 //-----------------------------------------------------------------------------
 //#define PTHREAD_SAMPLE
 #ifdef PTHREAD_SAMPLE
 #include <pthread.h>
 #endif
 mglPoint pnt;  // some global variable for changable data
-void *mgl_wx_tmp(void *)	{	mglWxRun();	return 0;	}
+void *mgl_wx_tmp(void *)	{	mgl_wx_run();	return 0;	}
 //-----------------------------------------------------------------------------
 int main(int argc,char **argv)
 {
@@ -55,23 +54,20 @@ int main(int argc,char **argv)
 	}
 	return 0;   // finish calculations and close the window
 #else
-	mglGraphWX gr;
+	mglWX *gr;
 	char key = 0;
 	if(argc>1 && argv[1][0]!='-')	key = argv[1][0];
 	else	printf("You may specify argument '1', '2', '3' or 'd' for viewing examples of 1d, 2d, 3d or dual plotting\n");
 	switch(key)
 	{
-	case '1':	gr.Window(argc,argv,sample_1,"1D plots");	break;
-	case '2':	gr.Window(argc,argv,sample_2,"2D plots");	break;
-	case '3':	gr.Window(argc,argv,sample_3,"3D plots");	break;
-	case 'd':	gr.Window(argc,argv,sample_d,"Dual plots");	break;
-	case 't':	gr.Window(argc,argv,test,"Testing");	break;
-	default:	gr.Window(argc,argv,sample,"Example of molecules");	break;
+	case '1':	gr = new mglWX(sample_1,"1D plots");	break;
+	case '2':	gr = new mglWX(sample_2,"2D plots");	break;
+	case '3':	gr = new mglWX(sample_3,"3D plots");	break;
+	case 'd':	gr = new mglWX(sample_d,"Dual plots");	break;
+	case 't':	gr = new mglWX(test_wnd,"Testing");	break;
+	default: 	gr = new mglWX(sample,"Drop and waves");	break;
 	}
-	return mglWxRun();
+	gr->Run();	return 0;
 #endif
 }
 //-----------------------------------------------------------------------------
-#else
-int main(int argc,char **argv)	{	return 0;	}
-#endif

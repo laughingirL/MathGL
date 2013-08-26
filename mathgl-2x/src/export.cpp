@@ -387,8 +387,8 @@ void mglCanvas::EndFrame()
 	EGifPutLine(gif, line, n);
 	delete []line;	free(l);
 	if(f)	free(f);
-#else
-	mglGlobalMess += "GIF support was disabled. Please, enable it and rebuild MathGL.\n";
+//#else
+//	mglGlobalMess += "GIF support was disabled. Please, enable it and rebuild MathGL.\n";
 #endif
 }
 //-----------------------------------------------------------------------------
