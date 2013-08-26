@@ -845,7 +845,9 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 	{
 		if(d)
 		{
-			d->PDef = 0xffff;	d->PenWidth*=fabs(50*size);
+			d->PDef = MGL_SOLID_MASK;	d->angle = 0;
+			//d->PDef = 0xffff;
+			d->PenWidth*=fabs(50*size);
 			if(d->PenWidth<1)	d->PenWidth=1;
 		}
 		if(!strchr("xsSoO",type))	ss *= 1.1;
