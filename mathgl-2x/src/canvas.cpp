@@ -733,7 +733,8 @@ void mglCanvas::arrow_plot(long n1, long n2, char st)
 //-----------------------------------------------------------------------------
 void mglCanvas::Legend(const std::vector<mglText> &leg, mreal x, mreal y, const char *font, const char *opt)
 {
-	long n=leg.size(), iw, ih;
+	long n=leg.size();
+	mreal iw, ih;
 	if(n<1)	{	SetWarn(mglWarnLeg,"Legend");	return;	}
 	mreal ll = SaveState(opt);	if(mgl_isnan(ll))	ll=0.1;
 	if(saved)	MarkSize=MSS;	// restore back size of marks
