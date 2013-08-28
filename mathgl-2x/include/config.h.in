@@ -20,6 +20,7 @@
 #define MGL_HAVE_GIF ${MGL_HAVE_GIF}
 #define MGL_HAVE_OPENGL ${MGL_HAVE_OPENGL}
 #define MGL_HAVE_MPI ${MGL_HAVE_MPI}
+#define MGL_HAVE_OMP ${MGL_HAVE_OMP}
 #define MGL_FONT_PATH "${MGL_FONT_PATH}"
 
 #endif

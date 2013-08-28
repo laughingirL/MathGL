@@ -58,6 +58,8 @@ int MGL_EXPORT mgl_chrpos(const char *str,char fnd);
 
 /// Get uncommented string from file (NOTE: it is not thread safe!!!)
 MGL_EXPORT char *mgl_fgetstr(FILE *fp);
+/// Get parameters from uncommented strings of file (NOTE: it is not thread safe!!!)
+void MGL_EXPORT mgl_fgetpar(FILE *fp, const char *str, ...);
 /// Check if symbol denote true
 int MGL_EXPORT mgl_istrue(char ch);
 /// Print test message

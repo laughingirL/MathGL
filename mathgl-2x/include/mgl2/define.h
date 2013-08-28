@@ -52,6 +52,10 @@
 #include <string.h>
 #include <wchar.h>
 
+#if MGL_HAVE_OMP
+#include <omp.h>
+#endif
+
 #if defined(_MSC_VER) || defined(__BORLANDC__)
 #define fmin(a,b)	((a)<(b))?(a):(b)
 #define fmax(a,b)	((a)>(b))?(a):(b)

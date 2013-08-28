@@ -542,27 +542,29 @@ void MGL_EXPORT mgl_write_frame(HMGL gr, const char *fname,const char *descr)
 	if(!fname || !fname[0])
 	{	snprintf(buf,64,"%s%04d.jpg",_Gr_->PlotId.c_str(),_Gr_->GetNumFrame());	fname = buf;	}
 	int len=strlen(fname);
-	if(!strcmp(fname+len-4,".jpg"))	mgl_write_jpg(gr,fname,descr);
-	if(!strcmp(fname+len-5,".jpeg"))mgl_write_jpg(gr,fname,descr);
-	if(!strcmp(fname+len-4,".prc")) mgl_write_prc(gr,fname,descr,1);
-	if(!strcmp(fname+len-4,".pdf")) mgl_write_prc(gr,fname,descr,1);
-	if(!strcmp(fname+len-4,".png"))	mgl_write_png(gr,fname,descr);
-	if(!strcmp(fname+len-4,".eps"))	mgl_write_eps(gr,fname,descr);
+	if(!strcmp(fname+len-4,".jpg")) 	mgl_write_jpg(gr,fname,descr);
+	if(!strcmp(fname+len-5,".jpeg"))	mgl_write_jpg(gr,fname,descr);
+	if(!strcmp(fname+len-4,".prc")) 	mgl_write_prc(gr,fname,descr,1);
+	if(!strcmp(fname+len-4,".pdf")) 	mgl_write_prc(gr,fname,descr,1);
+	if(!strcmp(fname+len-4,".png")) 	mgl_write_png(gr,fname,descr);
+	if(!strcmp(fname+len-4,".eps")) 	mgl_write_eps(gr,fname,descr);
 	if(!strcmp(fname+len-5,".epsz"))	mgl_write_eps(gr,fname,descr);
-	if(!strcmp(fname+len-4,".svg"))	mgl_write_svg(gr,fname,descr);
+	if(!strcmp(fname+len-4,".bps")) 	mgl_write_bps(gr,fname,descr);
+	if(!strcmp(fname+len-5,".bpsz"))	mgl_write_bps(gr,fname,descr);
+	if(!strcmp(fname+len-4,".svg")) 	mgl_write_svg(gr,fname,descr);
 	if(!strcmp(fname+len-5,".svgz"))	mgl_write_svg(gr,fname,descr);
-	if(!strcmp(fname+len-4,".gif"))	mgl_write_gif(gr,fname,descr);
-	if(!strcmp(fname+len-4,".bmp"))	mgl_write_bmp(gr,fname,descr);
-	if(!strcmp(fname+len-4,".tga"))	mgl_write_tga(gr,fname,descr);
-	if(!strcmp(fname+len-5,".mgld"))mgl_export_mgld(gr,fname,descr);
-	if(!strcmp(fname+len-5,".json")) mgl_write_json(gr,fname,descr);
-	if(!strcmp(fname+len-6,".jsonz")) mgl_write_json(gr,fname,descr);
-	if(!strcmp(fname+len-4,".obj")) mgl_write_obj(gr,fname,descr,1);
-	if(!strcmp(fname+len-4,".tex")) mgl_write_tex(gr,fname,descr);
-	if(!strcmp(fname+len-4,".xyz")) mgl_write_xyz(gr,fname,descr);
-	if(!strcmp(fname+len-4,".stl")) mgl_write_stl(gr,fname,descr);
-	if(!strcmp(fname+len-4,".off")) mgl_write_off(gr,fname,descr,0);
-//	if(!strcmp(fname+len-4,".x3d")) mgl_write_x3d(gr,fname,descr,1);
+	if(!strcmp(fname+len-4,".gif")) 	mgl_write_gif(gr,fname,descr);
+	if(!strcmp(fname+len-4,".bmp")) 	mgl_write_bmp(gr,fname,descr);
+	if(!strcmp(fname+len-4,".tga")) 	mgl_write_tga(gr,fname,descr);
+	if(!strcmp(fname+len-5,".mgld"))	mgl_export_mgld(gr,fname,descr);
+	if(!strcmp(fname+len-5,".json"))	mgl_write_json(gr,fname,descr);
+	if(!strcmp(fname+len-6,".jsonz"))	mgl_write_json(gr,fname,descr);
+	if(!strcmp(fname+len-4,".obj")) 	mgl_write_obj(gr,fname,descr,1);
+	if(!strcmp(fname+len-4,".tex")) 	mgl_write_tex(gr,fname,descr);
+	if(!strcmp(fname+len-4,".xyz")) 	mgl_write_xyz(gr,fname,descr);
+	if(!strcmp(fname+len-4,".stl")) 	mgl_write_stl(gr,fname,descr);
+	if(!strcmp(fname+len-4,".off")) 	mgl_write_off(gr,fname,descr,0);
+//	if(!strcmp(fname+len-4,".x3d")) 	mgl_write_x3d(gr,fname,descr,1);
 }
 void MGL_EXPORT mgl_write_frame_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;

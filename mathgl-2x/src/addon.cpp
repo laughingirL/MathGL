@@ -75,7 +75,36 @@ MGL_EXPORT char *mgl_fgetstr(FILE *fp)
 		mgl_strtrim(s);
 		//		strlwr(s);
 	} while(!feof(fp) && (s[0]==0 || s[0]=='%' || s[0]=='#'));
+	for(size_t i=0;s[i];i++)	if(s[i]=='#')	{	s[i]=0;	break;	}
 	return s;
+}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_fgetpar(FILE *fp, const char *str, ...)
+{
+	if(!str || !str[0])	return;
+	long len=strlen(str), *n;	double *v;
+	char *s, *t, *buf=new char[len+1];
+	memcpy(buf,str,len+1);
+	va_list lst;
+	va_start(lst,str);
+	t = mgl_fgetstr(fp);
+	for(size_t i=0;i<len;i++)
+	{
+		if(str[i]=='%')
+		{
+			if(str[i+1]=='s')	{	s = va_arg(lst, char*);	strcpy(s, t);	}
+			if(strchr("efg",str[i+1]))	{	v = va_arg(lst, double*);	*v = atof(t);	}
+			if(strchr("ld",str[i+1]))	{	n = va_arg(lst, long*); 	*n = atol(t);	}
+			i++;
+		}
+		if(str[i]==':')
+		{
+			for(;*t && *t!=':';t++);
+			if(*t==':')	t++;
+			printf("[found ':' -- '%s']",t);
+		}
+		if(str[i]<=' ')	t = mgl_fgetstr(fp);
+	}
 }
 //-----------------------------------------------------------------------------
 int MGL_EXPORT mgl_istrue(char ch)
