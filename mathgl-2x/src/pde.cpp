@@ -112,7 +112,7 @@ HMDT MGL_EXPORT mgl_pde_solve(HMGL gr, const char *ham, HCDT ini_re, HCDT ini_im
 	mreal dp = M_PI/(Max.x-Min.x)/k0, dq = M_PI/(Max.y-Min.y)/k0;
 	mreal xs=(Min.x+Max.x)/2, ys=(Min.y+Max.y)/2;
 //	double xx = Min.x - dx*nx/2, yy = Min.x - dy*ny/2;
-	double ff = ny>1?4*nx*ny:2*nx, dd = k0*dz;
+	double dd = k0*dz;
 
 	mgl_pde_ham tmp;tmp.eqs = &eqs;
 	tmp.nx = nx;	tmp.ny = ny;	tmp.a=a;		tmp.hxy=hxy;
@@ -147,7 +147,7 @@ HMDT MGL_EXPORT mgl_pde_solve(HMGL gr, const char *ham, HCDT ini_re, HCDT ini_im
 			hxy[i0] -= (hx[i]+hy[j]-hh0)/2.;	hxv[i0] -= (hx[i]+hv[j]-hh0)/2.;
 		}
 		// solve equation
-		for(i=0;i<4*nx*ny;i++)	a[i] *= exp(hxy[i])*exp(-double(dmp[i]*dz))/ff;
+		for(i=0;i<4*nx*ny;i++)	a[i] *= exp(hxy[i])*exp(-double(dmp[i]*dz));
 		for(i=0;i<2*ny;i++)		mgl_fft((double *)(a+i*2*nx), 1, 2*nx, wtx, wsx, false);
 		for(i=0;i<4*nx*ny;i++)	a[i] *= exp(huy[i]);
 		if(ny>1) for(i=0;i<2*nx;i++)	mgl_fft((double *)(a+i), 2*nx, 2*ny, wty, wsy, false);
@@ -363,7 +363,7 @@ HMDT MGL_EXPORT mgl_qo2d_func(dual (*ham)(mreal u, mreal x, mreal y, mreal px, m
 		dual dt = dual(0, -ra[k].dt*k0);
 		for(i=0;i<2*nx;i++)		a[i] *= exp(hx[i]*dt);
 		mgl_fft((double *)a, 1, 2*nx, wtx, wsx, false);
-		for(i=0;i<2*nx;i++)		a[i] *= exp(hu[i]*dt)/(2.*nx);
+		for(i=0;i<2*nx;i++)		a[i] *= exp(hu[i]*dt);
 		mgl_fft((double *)a, 1, 2*nx, wtx, wsx, true);
 
 /*		// Calculate B1			// TODO make more general scheme later!!!
@@ -544,7 +544,7 @@ HMDT MGL_EXPORT mgl_qo3d_func(dual (*ham)(mreal u, mreal x, mreal y, mreal z, mr
 		for(i=0;i<4*nx*nx;i++)	a[i] *= exp(huy[i]*dt);		// u-y
 		for(i=0;i<2*nx;i++)	// y->v
 			mgl_fft((double *)(a+i), 2*nx, 2*nx, wtx, wsx, false);
-		for(i=0;i<4*nx*nx;i++)	a[i] *= exp(huv[i]*dt)/(4.*nx*nx);	// u-v
+		for(i=0;i<4*nx*nx;i++)	a[i] *= exp(huv[i]*dt);		// u-v
 		for(i=0;i<2*nx;i++)	// u->x
 			mgl_fft((double *)(a+i*2*nx), 1, 2*nx, wtx, wsx, true);
 		for(i=0;i<4*nx*nx;i++)	a[i] *= exp(hxv[i]*dt);		// x-v

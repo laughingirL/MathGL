@@ -858,7 +858,7 @@ void mglTexture::GetC(mreal u,mreal v,mglPnt &p) const
 //-----------------------------------------------------------------------------
 long mglBase::AddTexture(const char *cols, int smooth)
 {
-	SetMask(cols);
+	if(smooth>=0)	SetMask(cols);
 	mglTexture t(cols,smooth,smooth==2?AlphaDef:1);
 	if(t.n==0)	return smooth<0 ? 0:1;
 	if(smooth<0)	CurrPal=0;
