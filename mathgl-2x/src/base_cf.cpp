@@ -246,3 +246,6 @@ void MGL_EXPORT mgl_set_mask_val(char id, unsigned long mask)
 void MGL_EXPORT mgl_set_mask_val_(const char *id, unsigned long *mask,int)
 {	mgl_set_mask_val(*id,*mask);	}
 //---------------------------------------------------------------------------
+void MGL_EXPORT mgl_reset_mask(HMGL gr)	{	gr->ResetMask();	}
+void MGL_EXPORT mgl_reset_mask_(uintptr_t *gr)	{	_GR_->ResetMask();	}
+//---------------------------------------------------------------------------

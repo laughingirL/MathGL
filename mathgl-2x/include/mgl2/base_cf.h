@@ -85,6 +85,9 @@ void MGL_EXPORT mgl_set_mask_(const char *id, const char *mask,int,int);
 /// Set mask for face coloring as unsigned long number
 void MGL_EXPORT mgl_set_mask_val(char id, unsigned long mask);
 void MGL_EXPORT mgl_set_mask_val_(const char *id, unsigned long *mask,int);
+/// Reset mask to solid state
+void MGL_EXPORT mgl_reset_mask(HMGL gr);
+void MGL_EXPORT mgl_reset_mask_(uintptr_t *gr);
 
 /// Set default value of alpha-channel
 void MGL_EXPORT mgl_set_alpha_default(HMGL gr, double alpha);

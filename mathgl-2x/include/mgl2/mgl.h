@@ -126,6 +126,15 @@ public:
 	/// Set default color scheme
 	inline void SetDefScheme(const char *sch)	{	mgl_set_def_sch(gr, sch);	}
 
+	/// Sets RGB values for color with given id
+	static inline void SetColor(char id, double r, double g, double b)	{	mgl_set_color(id, r, g, b);	}
+	/// Set mask for face coloring as array of type 'unsigned char[8]'
+	static inline void SetMask(char id, const char *mask)	{	mgl_set_mask(id, mask);	}
+	/// Set mask for face coloring as unsigned long number
+	static inline void SetMask(char id, unsigned long mask)	{	mgl_set_mask_val(id, mask);	}
+	/// Reset mask to solid state
+	inline void ResetMask()	{	mgl_reset_mask(gr);	}
+
 	/// Get last warning code
 	inline int  GetWarn()	{	return mgl_get_warn(gr);}
 	/// Set warning code ant fill message

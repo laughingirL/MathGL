@@ -1205,6 +1205,7 @@ void MGL_EXPORT mgl_error_exy(HMGL gr, HCDT x, HCDT y, HCDT ex, HCDT ey, const c
 	mreal zVal=gr->AdjustZMin(), vx, vy, ve, vf;
 	gr->Reserve(5*n*m);
 	if(ma && (mk==0 || !strchr("PXsSdD+xoOC",mk) ))	mk = 'S';
+	gr->ResetMask();
 	long n1,n2,n3,n4;
 	mglPoint q(NAN,NAN);
 	for(j=0;j<m;j++)
