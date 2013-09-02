@@ -1,141 +1,4 @@
 //-----------------------------------------------------------------------------
-template <class Treal> Treal mglLineart(const Treal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z)
-{
-	if(!a || nx<1 || ny<1 || nz<1)	return 0;
-	register long i0;
-	long kx,ky,kz;
-	Treal b=0,dx,dy,dz,b1,b0;
-	if(x<0 || y<0 || z<0 || x>nx-1 || y>ny-1 || z>nz-1)
-		return 0;
-	if(nz>1 && z!=floor(z))		// 3d interpolation
-	{
-		kx=long(x);	ky=long(y);	kz=long(z);
-		dx = x-mreal(kx);	dy = y-mreal(ky);	dz = z-mreal(kz);
-
-		i0 = kx+nx*(ky+ny*kz);
-		b0 = a[i0]*(mreal(1)-dx-dy+dx*dy) + dx*(mreal(1)-dy)*a[i0+1] +
-			dy*(mreal(1)-dx)*a[i0+nx] + dx*dy*a[i0+nx+1];
-		i0 = kx+nx*(ky+ny*(kz+1));
-		b1 = a[i0]*(mreal(1)-dx-dy+dx*dy) + dx*(mreal(1)-dy)*a[i0+1] +
-			dy*(mreal(1)-dx)*a[i0+nx] + dx*dy*a[i0+nx+1];
-		b = b0 + dz*(b1-b0);
-	}
-	else if(ny>1 && y!=floor(y))	// 2d interpolation
-	{
-		kx=long(x);	ky=long(y);
-		dx = x-kx;	dy=y-ky;
-		i0 = kx+nx*ky;
-		b = a[i0]*(mreal(1)-dx-dy+dx*dy) + dx*(mreal(1)-dy)*a[i0+1] +
-			dy*(mreal(1)-dx)*a[i0+nx] + dx*dy*a[i0+nx+1];
-	}
-	else if(nx>1 && x!=floor(x))	// 1d interpolation
-	{
-		kx = long(x);
-		b = a[kx] + (x-kx)*(a[kx+1]-a[kx]);
-	}
-	else						// no interpolation
-		b = a[long(x+nx*(y+ny*z))];
-	return b;
-}
-//-----------------------------------------------------------------------------
-template <class Treal> Treal mglSpline3t(const Treal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z, Treal *dx=0, Treal *dy=0, Treal *dz=0)
-{
-	if(!a || nx<1 || ny<1 || nz<1)	return 0;
-	Treal _p[4][4];
-	register long i,j;
-	register Treal fx=1, fy=1;
-	long kx=long(x),ky=long(y),kz=long(z);
-	bool dd = (dx && dy && dz);
-	Treal b=0;
-	x = x>0 ?(x<nx-1 ? x:nx-1):0;
-	y = y>0 ?(y<ny-1 ? y:ny-1):0;
-	z = z>0 ?(z<nz-1 ? z:nz-1):0;
-	//	if(x<0 || y<0 || z<0 || x>nx-1 || y>ny-1 || z>nz-1)		return 0;
-	if(dd)	{	*dx=*dy=*dz=0;	}
-	if(kx>nx-2)	kx = nx-2;	if(kx<0) 	kx = 0;
-	if(ky>ny-2)	ky = ny-2;	if(ky<0) 	ky = 0;
-	if(kz>nz-2)	kz = nz-2;	if(kz<0) 	kz = 0;
-	if(nz>1 && z!=kz)		// 3d interpolation
-	{
-		Treal b1[4]={0,0,0,0},  x1[4]={0,0,0,0},  y1[4]={0,0,0,0};
-		long kk=1;
-		if(kz==0)	{	kk=0;	}
-		else if(nz>3 && kz==nz-2)	{	kk=2;	}
-		for(long k=0;k<4;k++)
-		{
-			if(kz+k-kk<nz && kz+k-kk>=0)
-				mglFillP(kx, ky, a+(kz+k-kk)*nx*ny, nx, ny, _p);
-			else
-			{
-				memset(_p[0],0,4*sizeof(Treal));
-				memset(_p[1],0,4*sizeof(Treal));
-				memset(_p[2],0,4*sizeof(Treal));
-				memset(_p[3],0,4*sizeof(Treal));
-			}
-			for(i=0,fx=1;i<4;i++)
-			{
-				for(j=0,fy=1;j<4;j++)
-				{
-					b1[k] += fy*fx*_p[i][j];
-					x1[k] += mreal(i)*fy*fx*_p[i][j];
-					y1[k] += mreal(j)*fy*fx*_p[i][j];
-					fy *= y-ky;
-				}
-				fx *= x-kx;
-			}
-		}
-		mglFillP(kk, b1, nz>3 ? 4:3, _p[0]);
-		mglFillP(kk, x1, nz>3 ? 4:3, _p[1]);
-		mglFillP(kk, y1, nz>3 ? 4:3, _p[2]);
-		for(i=0,fx=1,b=0;i<4;i++)
-		{
-			b += fx*_p[0][i];
-			if(dd)
-			{
-				*dx += fx*_p[1][i];
-				*dy += fx*_p[2][i];
-				*dz += mreal(i)*fx*_p[0][i];
-			}
-			fx *= z-kz;
-		}
-	}
-	else if(ny>1 && y!=ky)	// 2d interpolation
-	{
-		mglFillP(kx, ky, a+kz*nx*ny, nx, ny, _p);
-		fx = 1;	b = 0;
-		for(i=0;i<4;i++)
-		{
-			fy = 1;
-			for(j=0;j<4;j++)
-			{
-				b += fy*fx*_p[i][j];
-				if(dd)
-				{
-					*dx+= mreal(i)*fy*fx*_p[i][j];
-					*dy+= mreal(j)*fy*fx*_p[i][j];
-				}
-				fy *= y-ky;
-			}
-			fx *= x-kx;
-		}
-		if(dd)	{	*dx /= x-kx;	*dy /= y-ky;	}
-	}
-	else if(nx>1 && x!=kx)	// 1d interpolation
-	{
-		mglFillP(kx, a+(ky+ny*kz)*nx, nx, _p[0]);
-		for(i=0,fx=1,b=0;i<4;i++)
-		{
-			b += fx*_p[0][i];
-			if(dd)	*dx+= mreal(i)*fx*_p[0][i];
-			fx *= x-kx;
-		}
-		if(dd)	*dx /= x-kx;
-	}
-	else					// no interpolation
-		b = a[kx+nx*(ky+ny*kz)];
-	return b;
-}
-//-----------------------------------------------------------------------------
 template <class Treal> void mglFillP(long x,long y, const Treal *a,long nx,long ny,Treal _p[4][4])
 {
 	Treal sx[4]={0,0,0,0},sy[4]={0,0,0,0},f[4]={0,0,0,0},d[4]={0,0,0,0};
@@ -276,5 +139,142 @@ template <class Treal> void mglFillP(long x, const Treal *a,long nx,Treal _p[4])
 	_p[0]=f[0];		_p[1]=s[0];
 	_p[2]=mreal(3)*(f[1]-f[0])-mreal(2)*s[0]-s[1];
 	_p[3]=s[0]+s[1]+mreal(2)*(f[0]-f[1]);
+}
+//-----------------------------------------------------------------------------
+template <class Treal> Treal mglLineart(const Treal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z)
+{
+	if(!a || nx<1 || ny<1 || nz<1)	return 0;
+	register long i0;
+	long kx,ky,kz;
+	Treal b=0,dx,dy,dz,b1,b0;
+	if(x<0 || y<0 || z<0 || x>nx-1 || y>ny-1 || z>nz-1)
+		return 0;
+	if(nz>1 && z!=floor(z))		// 3d interpolation
+	{
+		kx=long(x);	ky=long(y);	kz=long(z);
+		dx = x-mreal(kx);	dy = y-mreal(ky);	dz = z-mreal(kz);
+
+		i0 = kx+nx*(ky+ny*kz);
+		b0 = a[i0]*(mreal(1)-dx-dy+dx*dy) + dx*(mreal(1)-dy)*a[i0+1] +
+			dy*(mreal(1)-dx)*a[i0+nx] + dx*dy*a[i0+nx+1];
+		i0 = kx+nx*(ky+ny*(kz+1));
+		b1 = a[i0]*(mreal(1)-dx-dy+dx*dy) + dx*(mreal(1)-dy)*a[i0+1] +
+			dy*(mreal(1)-dx)*a[i0+nx] + dx*dy*a[i0+nx+1];
+		b = b0 + dz*(b1-b0);
+	}
+	else if(ny>1 && y!=floor(y))	// 2d interpolation
+	{
+		kx=long(x);	ky=long(y);
+		dx = x-kx;	dy=y-ky;
+		i0 = kx+nx*ky;
+		b = a[i0]*(mreal(1)-dx-dy+dx*dy) + dx*(mreal(1)-dy)*a[i0+1] +
+			dy*(mreal(1)-dx)*a[i0+nx] + dx*dy*a[i0+nx+1];
+	}
+	else if(nx>1 && x!=floor(x))	// 1d interpolation
+	{
+		kx = long(x);
+		b = a[kx] + (x-kx)*(a[kx+1]-a[kx]);
+	}
+	else						// no interpolation
+		b = a[long(x+nx*(y+ny*z))];
+	return b;
+}
+//-----------------------------------------------------------------------------
+template <class Treal> Treal mglSpline3t(const Treal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z, Treal *dx=0, Treal *dy=0, Treal *dz=0)
+{
+	if(!a || nx<1 || ny<1 || nz<1)	return 0;
+	Treal _p[4][4];
+	register long i,j;
+	register Treal fx=1, fy=1;
+	long kx=long(x),ky=long(y),kz=long(z);
+	bool dd = (dx && dy && dz);
+	Treal b=0;
+	x = x>0 ?(x<nx-1 ? x:nx-1):0;
+	y = y>0 ?(y<ny-1 ? y:ny-1):0;
+	z = z>0 ?(z<nz-1 ? z:nz-1):0;
+	//	if(x<0 || y<0 || z<0 || x>nx-1 || y>ny-1 || z>nz-1)		return 0;
+	if(dd)	{	*dx=*dy=*dz=0;	}
+	if(kx>nx-2)	kx = nx-2;	if(kx<0) 	kx = 0;
+	if(ky>ny-2)	ky = ny-2;	if(ky<0) 	ky = 0;
+	if(kz>nz-2)	kz = nz-2;	if(kz<0) 	kz = 0;
+	if(nz>1 && z!=kz)		// 3d interpolation
+	{
+		Treal b1[4]={0,0,0,0},  x1[4]={0,0,0,0},  y1[4]={0,0,0,0};
+		long kk=1;
+		if(kz==0)	{	kk=0;	}
+		else if(nz>3 && kz==nz-2)	{	kk=2;	}
+		for(long k=0;k<4;k++)
+		{
+			if(kz+k-kk<nz && kz+k-kk>=0)
+				mglFillP(kx, ky, a+(kz+k-kk)*nx*ny, nx, ny, _p);
+			else
+			{
+				memset(_p[0],0,4*sizeof(Treal));
+				memset(_p[1],0,4*sizeof(Treal));
+				memset(_p[2],0,4*sizeof(Treal));
+				memset(_p[3],0,4*sizeof(Treal));
+			}
+			for(i=0,fx=1;i<4;i++)
+			{
+				for(j=0,fy=1;j<4;j++)
+				{
+					b1[k] += fy*fx*_p[i][j];
+					x1[k] += mreal(i)*fy*fx*_p[i][j];
+					y1[k] += mreal(j)*fy*fx*_p[i][j];
+					fy *= y-ky;
+				}
+				fx *= x-kx;
+			}
+		}
+		mglFillP(kk, b1, nz>3 ? 4:3, _p[0]);
+		mglFillP(kk, x1, nz>3 ? 4:3, _p[1]);
+		mglFillP(kk, y1, nz>3 ? 4:3, _p[2]);
+		for(i=0,fx=1,b=0;i<4;i++)
+		{
+			b += fx*_p[0][i];
+			if(dd)
+			{
+				*dx += fx*_p[1][i];
+				*dy += fx*_p[2][i];
+				*dz += mreal(i)*fx*_p[0][i];
+			}
+			fx *= z-kz;
+		}
+	}
+	else if(ny>1 && y!=ky)	// 2d interpolation
+	{
+		mglFillP(kx, ky, a+kz*nx*ny, nx, ny, _p);
+		fx = 1;	b = 0;
+		for(i=0;i<4;i++)
+		{
+			fy = 1;
+			for(j=0;j<4;j++)
+			{
+				b += fy*fx*_p[i][j];
+				if(dd)
+				{
+					*dx+= mreal(i)*fy*fx*_p[i][j];
+					*dy+= mreal(j)*fy*fx*_p[i][j];
+				}
+				fy *= y-ky;
+			}
+			fx *= x-kx;
+		}
+		if(dd)	{	*dx /= x-kx;	*dy /= y-ky;	}
+	}
+	else if(nx>1 && x!=kx)	// 1d interpolation
+	{
+		mglFillP(kx, a+(ky+ny*kz)*nx, nx, _p[0]);
+		for(i=0,fx=1,b=0;i<4;i++)
+		{
+			b += fx*_p[0][i];
+			if(dd)	*dx+= mreal(i)*fx*_p[0][i];
+			fx *= x-kx;
+		}
+		if(dd)	*dx /= x-kx;
+	}
+	else					// no interpolation
+		b = a[kx+nx*(ky+ny*kz)];
+	return b;
 }
 //-----------------------------------------------------------------------------
