@@ -19,6 +19,9 @@
  ***************************************************************************/
 #include "mgl2/datac.h"
 #include "mgl2/evalc.h"
+
+#include "interp.hpp"
+
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mglStartThreadC(void *(*func)(void *), void (*post)(mglThreadC *,dual *), long n,
 					dual *a, const dual *b, const dual *c, const long *p,
@@ -552,46 +555,52 @@ void MGL_EXPORT mgl_datac_mirror_(uintptr_t *d, const char *dir,int l)
 {	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
 	mgl_datac_mirror(_DC_,s);	delete []s;	}
 //-----------------------------------------------------------------------------
+dual mglSpline3C(const dual *a, long nx, long ny, long nz, mreal x, mreal y, mreal z,dual *dx, dual *dy, dual *dz)
+{	return mglSpline3t<dual>(a,nx,ny,nz,x,y,z,dx,dy,dz);	}
+//-----------------------------------------------------------------------------
+dual mglLinearC(const dual *a, long nx, long ny, long nz, mreal x, mreal y, mreal z)
+{	return mglLineart<dual>(a,nx,ny,nz,x,y,z);	}
+//-----------------------------------------------------------------------------
+dual MGL_EXPORT mgl_datac_spline(HCDT d, mreal x,mreal y,mreal z)
+{
+	const mglDataC *dd=dynamic_cast<const mglDataC *>(d);
+	if(!dd)	return mgl_datac_spline(d,x,y,z);
+	return mglSpline3t<dual>(dd->a,dd->nx,dd->ny,dd->nz,x,y,z,0,0,0);
+}
+//-----------------------------------------------------------------------------
+dual MGL_EXPORT mgl_datac_spline_ext(HCDT d, mreal x,mreal y,mreal z, dual *dx,dual *dy,dual *dz)
+{
+	const mglDataC *dd=dynamic_cast<const mglDataC *>(d);
+	if(!dd)	return mgl_datac_spline_ext(d,x,y,z,dx,dy,dz);
+	return mglSpline3t<dual>(dd->a,dd->nx,dd->ny,dd->nz,x,y,z,dx,dy,dz);
+}
+//-----------------------------------------------------------------------------
+dual MGL_EXPORT mgl_datac_spline_(uintptr_t *d, mreal *x,mreal *y,mreal *z)
+{	return mgl_datac_spline(_DA_(d),*x,*y,*z);	}
+dual MGL_EXPORT mgl_datac_spline_ext_(uintptr_t *d, mreal *x,mreal *y,mreal *z, dual *dx,dual *dy,dual *dz)
+{	return mgl_datac_spline_ext(_DA_(d),*x,*y,*z,dx,dy,dz);	}
+//-----------------------------------------------------------------------------
 dual MGL_EXPORT mgl_datac_linear_ext(HCDT d, mreal x,mreal y,mreal z, dual *dx,dual *dy,dual *dz)
 {
 	long kx=long(x), ky=long(y), kz=long(z);
 	dual b0,b1;
 	bool dif = (dx && dy && dz);
 	const mglDataC *dd=dynamic_cast<const mglDataC *>(d);
-	if(dd)
-	{
-		long nx=dd->nx, ny=dd->ny, nz=dd->nz, dn=ny>1?nx:0;
-		kx = kx<nx-1 ? kx:nx-2;	kx = kx>=0 ? kx:0;
-		ky = ky<ny-1 ? ky:ny-2;	ky = ky>=0 ? ky:0;
-		kz = kz<nz-1 ? kz:nz-2;	kz = kz>=0 ? kz:0;
-		x -= kx;	if(nx==1)	x=0;
-		y -= ky;	if(ny==1)	y=0;
-		z -= kz;	if(nz==1)	z=0;
+	if(!dd)	return mgl_datac_linear_ext(d,x,y,z,dx,dy,dz);
 
-		const dual *aa=dd->a+kx+nx*(ky+ny*kz), *bb = aa+(nz>1?nx*ny:0);
-		b0 = aa[0]*(1-x-y+x*y) + x*(1-y)*aa[1] + y*(1-x)*aa[dn] + x*y*aa[1+dn];
-		b1 = bb[0]*(1-x-y+x*y) + x*(1-y)*bb[1] + y*(1-x)*bb[dn] + x*y*bb[1+dn];
-		if(dif)
-		{	*dx = aa[1]-aa[0];	*dy = aa[dn]-aa[0];	*dz = bb[0]-aa[0];	}
-	}
-	else
-	{
-		long n=d->GetNx(), ny=d->GetNy(), nz=d->GetNz();
-		kx = (kx>=0 ? (kx<n ? kx:n -1):0);
-		ky = (ky>=0 ? (ky<ny? ky:ny-1):0);
-		kz = (kz>=0 ? (kz<nz? kz:nz-1):0);
-		x -= kx;	y -= ky;	z -= kz;
+	long nx=dd->nx, ny=dd->ny, nz=dd->nz, dn=ny>1?nx:0;
+	kx = kx<nx-1 ? kx:nx-2;	kx = kx>=0 ? kx:0;
+	ky = ky<ny-1 ? ky:ny-2;	ky = ky>=0 ? ky:0;
+	kz = kz<nz-1 ? kz:nz-2;	kz = kz>=0 ? kz:0;
+	x -= kx;	if(nx==1)	x=0;
+	y -= ky;	if(ny==1)	y=0;
+	z -= kz;	if(nz==1)	z=0;
 
-		dual a0 = d->v(kx,ky,kz), a1 = d->v(kx+1,ky,kz), a2 = d->v(kx,ky+1,kz);
-		if(dif)	{	*dx = a1-a0;	*dy = a2-a0;	*dz = -a0;	}
-		b0 = a0*(1-x-y+x*y) + x*(1-y)*a1 +
-			y*(1-x)*a2 + x*y*d->v(kx+1,ky+1,kz);
-		kz++;
-		a0 = d->v(kx,ky,kz);
-		if(dif)	*dz += a0;
-		b1 = a0*(1-x-y+x*y) + x*(1-y)*d->v(kx+1,ky,kz) +
-			y*(1-x)*d->v(kx,ky+1,kz) + x*y*d->v(kx+1,ky+1,kz);
-	}
+	const dual *aa=dd->a+kx+nx*(ky+ny*kz), *bb = aa+(nz>1?nx*ny:0);
+	b0 = aa[0]*(1-x-y+x*y) + x*(1-y)*aa[1] + y*(1-x)*aa[dn] + x*y*aa[1+dn];
+	b1 = bb[0]*(1-x-y+x*y) + x*(1-y)*bb[1] + y*(1-x)*bb[dn] + x*y*bb[1+dn];
+	if(dif)
+	{	*dx = aa[1]-aa[0];	*dy = aa[dn]-aa[0];	*dz = bb[0]-aa[0];	}
 	return b0 + z*(b1-b0);
 }
 dual MGL_EXPORT mgl_datac_linear(HCDT d, mreal x,mreal y,mreal z)

@@ -287,6 +287,12 @@ public:
 	/// Fourier transform
 	inline void FFT(const char *dir)	{	mgl_datac_fft(this,dir);	}
 
+	/// Interpolate by cubic spline the data to given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
+	inline dual Spline(mreal x,mreal y=0,mreal z=0) const
+	{	return mgl_datac_spline(this, x,y,z);	}
+	/// Interpolate by cubic spline the data to given point x,\a y,\a z which normalized in range [0, 1]
+	inline dual Spline1(mreal x,mreal y=0,mreal z=0) const
+	{	return mgl_datac_spline(this, x*(nx-1),y*(ny-1),z*(nz-1));	}
 	/// Interpolate by linear function the data to given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
 	inline dual Linear(mreal x,mreal y=0,mreal z=0)	const
 	{	return mgl_datac_linear(this,x,y,z);	}
@@ -377,6 +383,11 @@ protected:
 	{   register long i0=i+nx*(j+ny*k), n=nx*ny;
 	return k>0? abs(k<nz-1? (a[i0+n]-a[i0-n])/mgl2:a[i0]-a[i0-n]) : abs(a[i0+n]-a[i0]);	}
 };
+//-----------------------------------------------------------------------------
+#ifndef SWIG
+dual mglLinearC(const dual *a, long nx, long ny, long nz, mreal x, mreal y, mreal z);
+dual mglSpline3C(const dual *a, long nx, long ny, long nz, mreal x, mreal y, mreal z,dual *dx=0, dual *dy=0, dual *dz=0);
+#endif
 //-----------------------------------------------------------------------------
 #define _DN_(a)	((mglDataC *)*(a))
 #define _DC_		((mglDataC *)*d)

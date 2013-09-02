@@ -685,7 +685,7 @@ bool mglCanvas::ImportMGLD(const char *fname, bool add)
 	for(i=0;i<m;i++)
 	{
 		do {	if(!fgets(buf,512,fp))	*buf=0;	mgl_strtrim(buf);	} while(*buf=='#');
-		sscanf(buf,"%d%ld%ld%ld%ld%d%g%g%g", &q.type, &q.n1, &q.n2, &q.n3, &q.n4, &q.id, &q.s, &q.w, &q.p);
+		sscanf(buf,"%hd%ld%ld%ld%ld%d%g%g%g", &q.type, &q.n1, &q.n2, &q.n3, &q.n4, &q.id, &q.s, &q.w, &q.p);
 		q.n1 = q.n1>=0?q.n1+npnt:-1;
 		q.n2 = q.n2>=0?q.n2+npnt:-1;
 		if(q.type==2 || q.type==3)

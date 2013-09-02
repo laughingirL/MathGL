@@ -21,11 +21,9 @@
 #include "mgl2/data.h"
 #include "mgl2/eval.h"
 
+#include "interp.hpp"
+
 MGL_EXPORT int mglNumThr=0;
-void mglFillP(long x,long y, const mreal *a,long nx,long ny,mreal _p[4][4]);
-void mglFillP(long x, const mreal *a,long nx,mreal _p[4]);
-void mglFillP5(long x,long y, const mreal *a,long nx,long ny,mreal _p[6][6]);
-void mglFillP5(long x, const mreal *a,long nx,mreal _p[6]);
 //-----------------------------------------------------------------------------
 #if MGL_HAVE_PTHREAD
 #ifdef WIN32
@@ -115,6 +113,12 @@ void MGL_EXPORT mglStartThreadV(void *(*func)(void *), long n, mreal *a, const v
 		func(&par);
 	}
 }
+//-----------------------------------------------------------------------------
+mreal mglSpline3(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z,mreal *dx, mreal *dy, mreal *dz)
+{	return mglSpline3t<mreal>(a,nx,ny,nz,x,y,z,dx,dy,dz);	}
+//-----------------------------------------------------------------------------
+mreal mglLinear(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z)
+{	return mglLineart<mreal>(a,nx,ny,nz,x,y,z);	}
 //-----------------------------------------------------------------------------
 double mgl_ipow(double x,int n)
 {
@@ -921,246 +925,6 @@ mreal MGL_EXPORT mgl_data_solve_1d_(uintptr_t *d, mreal *val, int *spl, int *i0)
 {	return mgl_data_solve_1d(_DA_(d),*val, *spl, *i0);	}
 uintptr_t MGL_EXPORT mgl_data_solve_(uintptr_t *d, mreal *val, const char *dir, uintptr_t *i0, int *norm,int)
 {	return uintptr_t(mgl_data_solve(_DA_(d),*val, *dir, _DA_(i0), *norm));	}
-//-----------------------------------------------------------------------------
-mreal mglSpline3(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z,mreal *dx, mreal *dy, mreal *dz)
-{
-	if(!a || nx<1 || ny<1 || nz<1)	return 0;
-	mreal _p[4][4];
-	register long i,j;
-	register mreal fx=1, fy=1;
-	long kx=long(x),ky=long(y),kz=long(z);
-	bool dd = (dx && dy && dz);
-	mreal b=0;
-	x = x>0 ?(x<nx-1 ? x:nx-1):0;
-	y = y>0 ?(y<ny-1 ? y:ny-1):0;
-	z = z>0 ?(z<nz-1 ? z:nz-1):0;
-	//	if(x<0 || y<0 || z<0 || x>nx-1 || y>ny-1 || z>nz-1)		return 0;
-	if(dd)	{	*dx=*dy=*dz=0;	}
-	if(kx>nx-2)	kx = nx-2;	if(kx<0) 	kx = 0;
-	if(ky>ny-2)	ky = ny-2;	if(ky<0) 	ky = 0;
-	if(kz>nz-2)	kz = nz-2;	if(kz<0) 	kz = 0;
-	if(nz>1 && z!=kz)		// 3d interpolation
-	{
-		mreal b1[4]={0,0,0,0},  x1[4]={0,0,0,0},  y1[4]={0,0,0,0};
-		long kk=1;
-		if(kz==0)	{	kk=0;	}
-		else if(nz>3 && kz==nz-2)	{	kk=2;	}
-		for(long k=0;k<4;k++)
-		{
-			if(kz+k-kk<nz && kz+k-kk>=0)
-				mglFillP(kx, ky, a+(kz+k-kk)*nx*ny, nx, ny, _p);
-			else
-			{
-				memset(_p[0],0,4*sizeof(mreal));
-				memset(_p[1],0,4*sizeof(mreal));
-				memset(_p[2],0,4*sizeof(mreal));
-				memset(_p[3],0,4*sizeof(mreal));
-			}
-			for(i=0,fx=1;i<4;i++)
-			{
-				for(j=0,fy=1;j<4;j++)
-				{
-					b1[k] += fy*fx*_p[i][j];
-					x1[k] += i*fy*fx*_p[i][j];
-					y1[k] += j*fy*fx*_p[i][j];
-					fy *= y-ky;
-				}
-				fx *= x-kx;
-			}
-		}
-		mglFillP(kk, b1, nz>3 ? 4:3, _p[0]);
-		mglFillP(kk, x1, nz>3 ? 4:3, _p[1]);
-		mglFillP(kk, y1, nz>3 ? 4:3, _p[2]);
-		for(i=0,fx=1,b=0;i<4;i++)
-		{
-			b += fx*_p[0][i];
-			if(dd)
-			{
-				*dx += fx*_p[1][i];
-				*dy += fx*_p[2][i];
-				*dz += i*fx*_p[0][i];
-			}
-			fx *= z-kz;
-		}
-	}
-	else if(ny>1 && y!=ky)	// 2d interpolation
-	{
-		mglFillP(kx, ky, a+kz*nx*ny, nx, ny, _p);
-		fx = 1;	b = 0;
-		for(i=0;i<4;i++)
-		{
-			fy = 1;
-			for(j=0;j<4;j++)
-			{
-				b += fy*fx*_p[i][j];
-				if(dd)
-				{
-					*dx+= i*fy*fx*_p[i][j];
-					*dy+= j*fy*fx*_p[i][j];
-				}
-				fy *= y-ky;
-			}
-			fx *= x-kx;
-		}
-		if(dd)	{	*dx /= x-kx;	*dy /= y-ky;	}
-	}
-	else if(nx>1 && x!=kx)	// 1d interpolation
-	{
-		mglFillP(kx, a+(ky+ny*kz)*nx, nx, _p[0]);
-		for(i=0,fx=1,b=0;i<4;i++)
-		{
-			b += fx*_p[0][i];
-			if(dd)	*dx+= i*fx*_p[0][i];
-			fx *= x-kx;
-		}
-		if(dd)	*dx /= x-kx;
-	}
-	else					// no interpolation
-		b = a[kx+nx*(ky+ny*kz)];
-	return b;
-}
-//-----------------------------------------------------------------------------
-void mglFillP(long x,long y, const mreal *a,long nx,long ny,mreal _p[4][4])
-{
-	mreal sx[4]={0,0,0,0},sy[4]={0,0,0,0},f[4]={0,0,0,0},d[4]={0,0,0,0};
-	if(x<0 || y<0 || x>nx-2 || y>ny-2)
-	{
-		memset(_p[0],0,4*sizeof(mreal));
-		memset(_p[1],0,4*sizeof(mreal));
-		memset(_p[2],0,4*sizeof(mreal));
-		memset(_p[3],0,4*sizeof(mreal));
-		return;
-	}
-	// �������� �������
-	f[0]=a[x+nx*y];		f[1]=a[x+nx*(y+1)];
-	if(nx>1)	{	f[2]=a[x+1+nx*y];	f[3]=a[x+1+nx*(y+1)];	}
-	else		{	f[2] = f[0];	f[3] = f[1];	}
-	// ����������� �� x
-	if(nx>1)
-	{
-		if(x==0)
-		{
-			sx[0]=a[x+1+y*nx]-a[x+nx*y];
-			sx[1]=a[x+1+nx*(y+1)]-a[x+nx*(y+1)];
-		}
-		else
-		{
-			sx[0]=(a[x+1+nx*y]-a[x-1+nx*y])/2;
-			sx[1]=(a[x+1+nx*(y+1)]-a[x-1+nx*(y+1)])/2;
-		}
-	}
-	if(x==nx-2)
-	{
-		sx[2]=a[x+1+nx*y]-a[x+nx*y];
-		sx[3]=a[x+1+nx*(y+1)]-a[x+nx*(y+1)];
-	}
-	else
-	{
-		sx[2]=(a[x+2+nx*y]-a[x+nx*y])/2;
-		sx[3]=(a[x+2+nx*(y+1)]-a[x+nx*(y+1)])/2;
-	}
-	// ����������� �� y
-	if(y==0)
-	{
-		sy[0]=a[x+nx*(y+1)]-a[x+nx*y];
-		sy[2]=a[x+1+nx*(y+1)]-a[x+1+nx*y];
-	}
-	else
-	{
-		sy[0]=(a[x+nx*(y+1)]-a[x+nx*(y-1)])/2;
-		sy[2]=(a[x+1+nx*(y+1)]-a[x+1+nx*(y-1)])/2;
-	}
-	if(y==ny-2)
-	{
-		sy[1]=a[x+nx*(y+1)]-a[x+nx*y];
-		sy[3]=a[x+1+nx*(y+1)]-a[x+1+nx*y];
-	}
-	else
-	{
-		sy[1]=(a[x+nx*(y+2)]-a[x+nx*y])/2;
-		sy[3]=(a[x+1+nx*(y+2)]-a[x+1+nx*y])/2;
-	}
-	// ������������ �����������
-	if(nx>1)
-	{
-		// ������ d[0]
-		if(y==0 && x==0)
-			d[0]=(a[x+1+nx*(y+1)]-a[x+nx*(y+1)]-a[x+1+nx*y]+a[x+nx*y]);
-		else if(y==0)
-			d[0]=(a[x+1+nx*(y+1)]-a[x-1+nx*(y+1)]-a[x+1+nx*y]+a[x-1+nx*y])/2;
-		else if(x==0)
-			d[0]=(a[x+1+nx*(y+1)]-a[x+nx*(y+1)]-a[x+1+nx*(y-1)]+a[x+nx*(y-1)])/2;
-		else
-			d[0]=(a[x+1+nx*(y+1)]-a[x-1+nx*(y+1)]-a[x+1+nx*(y-1)]+a[x-1+nx*(y-1)])/4;
-		// ������ d[1]
-		if(y==ny-2 && x==0)
-			d[1]=(a[x+1+nx*(y+1)]-a[x+nx*(y+1)]-a[x+1+nx*y]+a[x+nx*y]);
-		else if(y==ny-2)
-			d[1]=(a[x+1+nx*(y+1)]-a[x-1+nx*(y+1)]-a[x+1+nx*y]+a[x-1+nx*y])/2;
-		else if(x==0)
-			d[1]=(a[x+1+nx*(y+2)]-a[x+nx*(y+2)]-a[x+1+nx*y]+a[x+nx*y])/2;
-		else
-			d[1]=(a[x+1+nx*(y+2)]-a[x-1+nx*(y+2)]-a[x+1+nx*y]+a[x-1+nx*y])/4;
-		// ������ d[2]
-		if(y==0 && x==nx-2)
-			d[2]=(a[x+1+nx*(y+1)]-a[x+nx*(y+1)]-a[x+1+nx*y]+a[x+nx*y]);
-		else if(y==0)
-			d[2]=(a[x+2+nx*(y+1)]-a[x+nx*(y+1)]-a[x+2+nx*y]+a[x+nx*y])/2;
-		else if(x==nx-2)
-			d[2]=(a[x+1+nx*(y+1)]-a[x+nx*(y+1)]-a[x+1+nx*(y-1)]+a[x+nx*(y-1)])/2;
-		else
-			d[2]=(a[x+2+nx*(y+1)]-a[x+nx*(y+1)]-a[x+2+nx*(y-1)]+a[x+nx*(y-1)])/4;
-		// ������ d[3]
-		if(y==ny-2 && x==nx-2)
-			d[3]=(a[x+1+nx*(y+1)]-a[x+nx*(y+1)]-a[x+1+nx*y]+a[x+nx*y]);
-		else if(y==ny-2)
-			d[3]=(a[x+2+nx*(y+1)]-a[x+nx*(y+1)]-a[x+2+nx*y]+a[x+nx*y])/2;
-		else if(x==nx-2)
-			d[3]=(a[x+1+nx*(y+2)]-a[x+nx*(y+2)]-a[x+1+nx*y]+a[x+nx*y])/2;
-		else
-			d[3]=(a[x+2+nx*(y+2)]-a[x+nx*(y+2)]-a[x+2+nx*y]+a[x+nx*y])/4;
-	}
-	// ��������� ������������ ��������
-	_p[0][0]=f[0];		_p[1][0]=sx[0];
-	_p[2][0]=3*(f[2]-f[0])-2*sx[0]-sx[2];
-	_p[3][0]=sx[0]+sx[2]+2*(f[0]-f[2]);
-	_p[0][1]=sy[0];		_p[1][1]=d[0];
-	_p[2][1]=3*(sy[2]-sy[0])-2*d[0]-d[2];
-	_p[3][1]=d[0]+d[2]+2*(sy[0]-sy[2]);
-	_p[0][2]=3*(f[1]-f[0])-2*sy[0]-sy[1];
-	_p[1][2]=3*(sx[1]-sx[0])-2*d[0]-d[1];
-	_p[2][2]=9*(f[0]-f[1]-f[2]+f[3])+6*(sy[0]-sy[2]+sx[0]-sx[1])+
-		3*(sx[2]-sx[3]+sy[1]-sy[3])+2*(d[1]+d[2])+4*d[0]+d[3];
-	_p[3][2]=6*(f[1]+f[2]-f[0]-f[3])+3*(sx[1]-sx[0]+sx[3]-sx[2])+
-		4*(sy[2]-sy[0])+2*(sy[3]-sy[1]-d[0]-d[2])-d[1]-d[3];
-	_p[0][3]=2*(f[0]-f[1])+sy[0]+sy[1];
-	_p[1][3]=2*(sx[0]-sx[1])+d[0]+d[1];
-	_p[2][3]=6*(f[1]+f[2]-f[0]-f[3])+3*(sy[2]-sy[1]+sy[3]-sy[0])+
-		4*(sx[1]-sx[0])+2*(sx[3]-sx[2]-d[0]-d[1])-d[2]-d[3];
-	_p[3][3]=d[0]+d[1]+d[2]+d[3]+4*(f[0]-f[1]-f[2]+f[3])+
-		2*(sx[0]-sx[1]+sx[2]-sx[3]+sy[0]-sy[2]+sy[1]-sy[3]);
-}
-//-----------------------------------------------------------------------------
-void mglFillP(long x, const mreal *a,long nx,mreal _p[4])
-{
-	if(x<0 || x>nx-2)
-	{
-		memset(_p,0,4*sizeof(mreal));
-		return;
-	}
-	mreal s[2],f[2];
-	// �������� �������
-	f[0]=a[x];		f[1]=a[x+1];
-	// ����������� �� x
-	if(x==0)	s[0]=a[x+1]-a[x];
-	else		s[0]=(a[x+1]-a[x-1])/2;
-	if(x==nx-2)	s[1]=a[x+1]-a[x];
-	else		s[1]=(a[x+2]-a[x])/2;
-	// ��������� ������������ ��������
-	_p[0]=f[0];		_p[1]=s[0];
-	_p[2]=3*(f[1]-f[0])-2*s[0]-s[1];
-	_p[3]=s[0]+s[1]+2*(f[0]-f[1]);
-}
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_data_crop(HMDT d, long n1, long n2, char dir)
 {

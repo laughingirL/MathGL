@@ -793,45 +793,6 @@ uintptr_t MGL_EXPORT mgl_data_hist_(uintptr_t *d, int *n, mreal *v1, mreal *v2, 
 uintptr_t MGL_EXPORT mgl_data_hist_w_(uintptr_t *d, uintptr_t *w, int *n, mreal *v1, mreal *v2, int *nsub)
 {	return uintptr_t(mgl_data_hist_w(_DT_,_DA_(w),*n,*v1,*v2,*nsub));	}
 //-----------------------------------------------------------------------------
-mreal mglLinear(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z)
-{
-	if(!a || nx<1 || ny<1 || nz<1)	return 0;
-	register long i0;
-	long kx,ky,kz;
-	mreal b=0,dx,dy,dz,b1,b0;
-	if(x<0 || y<0 || z<0 || x>nx-1 || y>ny-1 || z>nz-1)
-		return 0;
-	if(nz>1 && z!=floor(z))		// 3d interpolation
-	{
-		kx=long(x);	ky=long(y);	kz=long(z);
-		dx = x-kx;	dy = y-ky;	dz = z-kz;
-
-		i0 = kx+nx*(ky+ny*kz);
-		b0 = a[i0]*(1-dx-dy+dx*dy) + dx*(1-dy)*a[i0+1] +
-			dy*(1-dx)*a[i0+nx] + dx*dy*a[i0+nx+1];
-		i0 = kx+nx*(ky+ny*(kz+1));
-		b1 = a[i0]*(1-dx-dy+dx*dy) + dx*(1-dy)*a[i0+1] +
-			dy*(1-dx)*a[i0+nx] + dx*dy*a[i0+nx+1];
-		b = b0 + dz*(b1-b0);
-	}
-	else if(ny>1 && y!=floor(y))	// 2d interpolation
-	{
-		kx=long(x);	ky=long(y);
-		dx = x-kx;	dy=y-ky;
-		i0 = kx+nx*ky;
-		b = a[i0]*(1-dx-dy+dx*dy) + dx*(1-dy)*a[i0+1] +
-			dy*(1-dx)*a[i0+nx] + dx*dy*a[i0+nx+1];
-	}
-	else if(nx>1 && x!=floor(x))	// 1d interpolation
-	{
-		kx = long(x);
-		b = a[kx] + (x-kx)*(a[kx+1]-a[kx]);
-	}
-	else						// no interpolation
-		b = a[long(x+nx*(y+ny*z))];
-	return b;
-}
-//-----------------------------------------------------------------------------
 long MGL_NO_EXPORT mgl_idx_var;
 int MGL_NO_EXPORT mgl_cmd_idx(const void *a, const void *b)
 {
