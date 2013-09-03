@@ -81,7 +81,6 @@ mathgl.Graph.prototype.backgroundFillStyle = function() {
 
 /** called when user picks the point on the graph, point shall be somehow displayed/highlighted */
 mathgl.Graph.prototype.__pickPointHandler = function(x, y) {
-    console.log("Point picked: ", x, y);
     var obj = this.__geometry;
     var xy = x*obj.width/this.__canvas.width + " " + y*obj.height/this.__canvas.height;
     // introduce zoom and view coomand for server side
@@ -90,7 +89,6 @@ mathgl.Graph.prototype.__pickPointHandler = function(x, y) {
     var view2 = "view 0 0 "+(-this.__view.__yaw)*180/Math.PI+"\n";
     // now ask server side for proper coordinates
     var res = globalBackend.coor(xy, zoom+view1+view2+obj.mgl);
-    console.debug("coordinates are ", res);
 }
 
 
@@ -103,11 +101,9 @@ mathgl.Graph.prototype.shiftAxis = function(x, y, z) {
     // introduce zoomaxis coomand for server side
     var zoom = "zoomaxis "+this.__x1+" "+this.__y1+" "+this.__z1+" "+this.__x2+" "+this.__y2+" "+this.__z2+"\n";
     var mgl = this.__geometry.mgl;
-            console.log(zoom, "Old: ", this.__geometry);
     // now ask server side for proper coordinates
     this.__geometry = this.__backend.geometry(zoom+mgl);
     this.__geometry.mgl = mgl;
-            console.log("New: ", this.__geometry);
     this.__renderStart();
 }
 
@@ -124,11 +120,9 @@ mathgl.Graph.prototype.zoomAxis = function(factor) {
     // introduce zoomaxis coomand for server side
     var zoom = "zoomaxis "+this.__x1+" "+this.__y1+" "+this.__z1+" "+this.__x2+" "+this.__y2+" "+this.__z2+"\n";
     var mgl = this.__geometry.mgl;
-            console.log(zoom, "Old: ", this.__geometry);
     // now ask server side for proper coordinates
     this.__geometry = this.__backend.geometry(zoom+this.__geometry.mgl);
     this.__geometry.mgl = mgl;
-            console.log("New: ", this.__geometry);
     this.__renderStart();
 }
 
@@ -193,7 +187,6 @@ mathgl.Graph.prototype.__drawMesh = function(isPrecise) {
   var c = this.__canvas.getContext("2d");
   var m = this.__view.viewMatrix().inverse();
 //  var vvv = $M([[1,0,0,1]]);
-//  console.log(vvv.x(m).elements);
   var obj = this.__geometry;
   var h = this.__canvas.height;
   var dy = h / obj.height;

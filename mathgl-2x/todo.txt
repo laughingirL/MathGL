@@ -39,6 +39,7 @@ A. Paper about MathGL!!!
 12. Add 'Mask sample'
 13. Update docs about mask symbols "-+=;oOsS~<>jdD*^" + in color scheme
 14. Add chapter with real samples
+15. Put & Spline in mglDataC
 
 ============= UDAV =============
 

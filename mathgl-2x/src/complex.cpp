@@ -802,3 +802,88 @@ void MGL_EXPORT mgl_datac_join(HADT d, HCDT v)
 void MGL_EXPORT mgl_datac_join_(uintptr_t *d, uintptr_t *val)
 {	mgl_datac_join(_DC_,_DA_(val));	}
 //-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_datac_put_val(HADT d, dual val, long xx, long yy, long zz)
+{
+	register long nx=d->nx, ny=d->ny, nz=d->nz;
+	if(xx>=nx || yy>=ny || zz>=nz)	return;
+	dual *a=d->a;
+	register long i,j;
+	if(xx<0 && yy<0 && zz<0)for(i=0;i<nx*ny*nz;i++)	a[i] = val;
+	else if(xx<0 && yy<0)	for(i=0;i<nx*ny;i++)	a[i+zz*nx*ny] = val;
+	else if(yy<0 && zz<0)	for(i=0;i<nz*ny;i++)	a[xx+i*nx] = val;
+	else if(xx<0 && zz<0)	for(i=0;i<nx;i++)	for(j=0;j<nz;j++)	a[i+nx*(yy+j*ny)] = val;
+	else if(xx<0)	for(i=0;i<nx;i++)	a[i+nx*(yy+zz*ny)] = val;
+	else if(yy<0)	for(i=0;i<ny;i++)	a[xx+nx*(i+zz*ny)] = val;
+	else if(zz<0)	for(i=0;i<nz;i++)	a[xx+nx*(yy+i*ny)] = val;
+	else	a[xx+nx*(yy+zz*ny)] = val;
+}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_datac_put_dat(HADT d, HCDT v, long xx, long yy, long zz)
+{
+	register long nx=d->nx, ny=d->ny, nz=d->nz;
+	if(xx>=nx || yy>=ny || zz>=nz)	return;
+	const mglDataC *mv = dynamic_cast<const mglDataC *>(v);
+	dual *a=d->a, vv=v->v(0);
+	const dual *b = mv?mv->a:0;
+	long vx=v->GetNx(), vy=v->GetNy(), vz=v->GetNz();
+	register long i,j,k;
+	if(xx<0 && yy<0 && zz<0)	// whole array
+	{
+		if(vx>=nx && vy>=ny && vz>=nz)
+			for(k=0;k<nz;k++)	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
+				a[i+nx*(j+k*ny)] = b?b[i+vx*(j+k*vy)]:v->v(i,j,k);
+		else if(vx>=nx && vy>=ny)
+			for(k=0;k<nz;k++)	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
+				a[i+nx*(j+k*ny)] = b?b[i+vx*j]:v->v(i,j);
+		else if(vx>=nx)	for(k=0;k<ny*nz;k++)	for(i=0;i<nx;i++)
+				a[i+nx*k] = b?b[i]:v->v(i);
+		else	for(i=0;i<nx*ny*nz;i++)	a[i] = vv;
+	}
+	else if(xx<0 && yy<0)	// 2d
+	{
+		if(vx>=nx && vy>=ny)	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
+				a[i+nx*(j+zz*ny)] = b?b[i+vx*j]:v->v(i,j);
+		else if(vx>=nx)	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
+				a[i+nx*(j+zz*ny)] = b?b[i]:v->v(i);
+		else	for(i=0;i<nx*ny;i++)	a[i+nx*ny*zz] = vv;
+	}
+	else if(yy<0 && zz<0)	// 2d
+	{
+		if(vx>=ny && vy>=nz)	for(j=0;j<nz;j++)	for(i=0;i<ny;i++)
+				a[xx+nx*(i+j*ny)] = b?b[i+vx*j]:v->v(i,j);
+		else if(vx>=ny)	for(j=0;j<nz;j++)	for(i=0;i<ny;i++)
+				a[xx+nx*(i+j*ny)] = b?b[i]:v->v(i);
+		else	for(i=0;i<ny*nz;i++)	a[xx+nx*i] = vv;
+	}
+	else if(xx<0 && zz<0)	// 2d
+	{
+		if(vx>=nx && vy>=nz)	for(j=0;j<nz;j++)	for(i=0;i<nx;i++)
+				a[i+nx*(yy+j*ny)] = b?b[i+vx*j]:v->v(i,j);
+		else if(vx>=nx)	for(j=0;j<nz;j++)	for(i=0;i<nx;i++)
+				a[i+nx*(yy+j*ny)] = b?b[i]:v->v(i);
+		else	for(j=0;j<nz;j++)	for(i=0;i<nx;i++)
+				a[i+nx*(yy+j*ny)] = vv;
+	}
+	else if(xx<0)
+	{
+		if(vx>=nx)	for(i=0;i<nx;i++)	a[i+nx*(yy+zz*ny)] = b?b[i]:v->v(i);
+		else for(i=0;i<nx;i++)	a[i+nx*(yy+zz*ny)] = vv;
+	}
+	else if(yy<0)
+	{
+		if(vx>=ny)	for(i=0;i<ny;i++)	a[xx+nx*(i+zz*ny)] = b?b[i]:v->v(i);
+		else for(i=0;i<ny;i++)	a[xx+nx*(i+zz*ny)] = vv;
+	}
+	else if(zz<0)
+	{
+		if(vx>=nz)	for(i=0;i<nz;i++)	a[xx+nx*(yy+i*ny)] = b?b[i]:v->v(i);
+		else for(i=0;i<nz;i++)	a[xx+nx*(yy+i*ny)] = vv;
+	}
+	else	a[xx+nx*(yy+ny*zz)] = vv;
+}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_datac_put_val_(uintptr_t *d, dual *val, int *i, int *j, int *k)
+{	mgl_datac_put_val(_DC_,*val, *i,*j,*k);	}
+void MGL_EXPORT mgl_datac_put_dat_(uintptr_t *d, uintptr_t *val, int *i, int *j, int *k)
+{	mgl_datac_put_dat(_DC_,_DA_(val), *i,*j,*k);	}
+//-----------------------------------------------------------------------------

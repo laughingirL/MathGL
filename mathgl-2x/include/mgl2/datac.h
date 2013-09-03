@@ -162,6 +162,13 @@ public:
 	inline void Fill(dual x1,dual x2=NaN,char dir='x')
 	{	return mgl_datac_fill(this,x1,x2,dir);	}
 
+		/// Put value to data element(s)
+	inline void Put(dual val, long i=-1, long j=-1, long k=-1)
+	{	mgl_datac_put_val(this,val,i,j,k);	}
+	/// Put array to data element(s)
+	inline void Put(const mglDataA &dat, long i=-1, long j=-1, long k=-1)
+	{	mgl_datac_put_dat(this,&dat,i,j,k);	}
+
 	/// Set names for columns (slices)
 	inline void SetColumnId(const char *ids)
 	{	mgl_datac_set_id(this,ids);	}

@@ -142,6 +142,13 @@ void MGL_EXPORT mgl_datac_modify_(uintptr_t *dat, const char *eq,int *dim,int);
 void MGL_EXPORT mgl_datac_modify_vw(HADT dat, const char *eq,HCDT vdat,HCDT wdat);
 void MGL_EXPORT mgl_datac_modify_vw_(uintptr_t *dat, const char *eq, uintptr_t *vdat, uintptr_t *wdat,int);
 
+/// Put value to data element(s)
+void MGL_EXPORT mgl_datac_put_val(HADT dat, dual val, long i, long j, long k);
+void MGL_EXPORT mgl_datac_put_val_(uintptr_t *dat, dual *val, int *i, int *j, int *k);
+/// Put array to data element(s)
+void MGL_EXPORT mgl_datac_put_dat(HADT dat, HCDT val, long i, long j, long k);
+void MGL_EXPORT mgl_datac_put_dat_(uintptr_t *dat, uintptr_t *val, int *i, int *j, int *k);
+
 /// Reduce size of the data
 void MGL_EXPORT mgl_datac_squeeze(HADT dat, long rx,long ry,long rz,long smooth);
 void MGL_EXPORT mgl_datac_squeeze_(uintptr_t *dat, int *rx,int *ry,int *rz,int *smooth);
