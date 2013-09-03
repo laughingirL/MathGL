@@ -35,7 +35,7 @@ A. Paper about MathGL!!!
 5. Update docs about Cone (style '4', '6', '8')
 6. Docs about mglData[C]::Correl() & AutoCorrel() + hint about Swap()
 10. Add "Data correlation sample"
-11. mgl_set_mask(char id, const char *mask); && mgl_set_mask_val(char id, unsigned long mask);
+11. mgl_set_mask(char id, const char *mask); && mgl_set_mask_val(char id, uint64_t mask);
 12. Add 'Mask sample'
 13. Update docs about mask symbols "-+=;oOsS~<>jdD*^" + in color scheme
 14. Add chapter with real samples

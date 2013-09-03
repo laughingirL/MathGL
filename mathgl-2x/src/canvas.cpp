@@ -158,7 +158,7 @@ void mglCanvas::add_prim(mglPrim &a)
 	}
 }
 //-----------------------------------------------------------------------------
-extern unsigned long mgl_mask_def[16];
+extern uint64_t mgl_mask_def[16];
 void mglCanvas::DefaultPlotParam()
 {
 /* NOTE: following variables and mutex will not be changed by DefaultPlotParam()
@@ -170,7 +170,7 @@ int Height;			///< Height of the image
 int Depth;			///< Depth of the image
 int CurFrameId;		///< Number of automaticle created frames
 GifFileType *gif;*/
-	memcpy(mgl_mask_val, mgl_mask_def, 16*sizeof(unsigned long));	// should be > 16*8
+	memcpy(mgl_mask_val, mgl_mask_def, 16*sizeof(uint64_t));	// should be > 16*8
 	mgl_clear_fft();		ResetMask();
 	SetTickRotate(true);	SetTickSkip(true);
 	SetWarn(mglWarnNone,"");	mglGlobalMess = "";
@@ -725,7 +725,7 @@ void mglCanvas::arrow_plot(long n1, long n2, char st)
 {
 	if(n1<0 || n2<0 || !strchr("AVKSDTIO",st))	return;
 	float ll = PenWidth*ArrowSize*0.35*font_factor;
-	unsigned long m=mask;	int ma=mask_an;
+	uint64_t m=mask;	int ma=mask_an;
 	ResetMask();
 	if((Quality&3)==3)
 		arrow_plot_3d(n1, n2, st, ll);

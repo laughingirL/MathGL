@@ -86,7 +86,7 @@ struct mglDrawReg
 {
 	union
 	{
-		unsigned long PDef;
+		uint64_t PDef;
 		unsigned char m[8];
 	};
 	int angle;	///< mask rotation values in degrees

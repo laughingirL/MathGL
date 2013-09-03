@@ -225,25 +225,25 @@ void MGL_EXPORT mgl_zoom_axis(HMGL gr, double x1,double y1,double z1,double c1,d
 void MGL_EXPORT mgl_zoom_axis_(uintptr_t *gr, mreal *x1, mreal *y1, mreal *z1, mreal *c1, mreal *x2, mreal *y2, mreal *z2, mreal *c2)
 {	_GR_->ZoomAxis(mglPoint(*x1,*y1,*z1,*c1), mglPoint(*x2,*y2,*z2,*c2));	}
 //---------------------------------------------------------------------------
-extern unsigned long mgl_mask_def[16];
+extern uint64_t mgl_mask_def[16];
 void MGL_EXPORT mgl_set_mask(char id, const char *mask)
 {
 	const char *msk = MGL_MASK_ID, *s = mglchr(msk, id);
 	if(s)
 	{
-		unsigned long val = (mask && *mask) ? strtoul(mask,NULL,16) : mgl_mask_def[s-msk];
+		uint64_t val = (mask && *mask) ? strtoull(mask,NULL,16) : mgl_mask_def[s-msk];
 		mgl_mask_val[s-msk] = val;
 	}
 }
 void MGL_EXPORT mgl_set_mask_(const char *id, const char *mask,int,int l)
 {	char *s=new char[l+1];	memcpy(s,mask,l);	s[l]=0;	mgl_set_mask(*id,s);	delete []s;	}
 //---------------------------------------------------------------------------
-void MGL_EXPORT mgl_set_mask_val(char id, unsigned long mask)
+void MGL_EXPORT mgl_set_mask_val(char id, uint64_t mask)
 {
 	const char *msk = MGL_MASK_ID, *s = mglchr(msk, id);
 	if(s)	mgl_mask_val[s-msk]=mask;
 }
-void MGL_EXPORT mgl_set_mask_val_(const char *id, unsigned long *mask,int)
+void MGL_EXPORT mgl_set_mask_val_(const char *id, uint64_t *mask,int)
 {	mgl_set_mask_val(*id,*mask);	}
 //---------------------------------------------------------------------------
 void MGL_EXPORT mgl_reset_mask(HMGL gr)	{	gr->ResetMask();	}

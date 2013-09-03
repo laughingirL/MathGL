@@ -101,7 +101,6 @@ void MGL_EXPORT mgl_fgetpar(FILE *fp, const char *str, ...)
 		{
 			for(;*t && *t!=':';t++);
 			if(*t==':')	t++;
-			printf("[found ':' -- '%s']",t);
 		}
 		if(str[i]<=' ')	t = mgl_fgetstr(fp);
 	}
