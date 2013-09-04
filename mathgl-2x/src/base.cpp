@@ -779,6 +779,7 @@ void mglTexture::Set(const char *s, int smooth, mreal alpha)
 		if(s[i]=='A' && j<1 && m>0 && s[i+1]>'0' && s[i+1]<='9')
 		{	man=false;	alpha = 0.1*(s[i+1]-'0');	i++;	}
 	}
+#pragma omp parallel for private(i)
 	for(i=0;i<n;i++)	// default texture
 	{	c[2*i+1]=c[2*i];	c[2*i].a=man?0:alpha;	c[2*i+1].a=alpha;	}
 	if(map && sm)		// map texture
@@ -810,7 +811,8 @@ void mglTexture::Set(const char *s, int smooth, mreal alpha)
 	}
 	// fill texture itself
 	register mreal u,v=sm?(n-1)/255.:n/256.;
-	for(i=0,i1=0;i<256;i++)
+#pragma omp parallel for private(i,i1,j,u)
+	for(i=i1=0;i<256;i++)
 	{
 		u = v*i;	j = long(u);	//u-=j;
 		if(!sm || j==n-1)
@@ -878,6 +880,7 @@ mreal mglBase::AddTexture(mglColor c)
 			return i+j/255.;
 	// add new texture
 	mglTexture t;
+#pragma omp parallel for private(i)
 	for(i=0;i<MGL_TEXTURE_COLOURS;i++)	t.col[i]=c;
 	MGL_PUSH(Txt,t,mutexTxt);	return Txt.size()-1;
 }

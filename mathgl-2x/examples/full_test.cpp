@@ -67,6 +67,12 @@ void smgl_stfa(mglGraph *gr);	// STFA sample
 void smgl_text(mglGraph *gr);	// text drawing
 void test(mglGraph *gr)
 {
+	mgl_set_num_thr(4);
+	mglData s(500,500,500);
+	s.Modify("x^2+y^2+z^2");
+	printf("NumThr = %d\n",mglNumThr);
+	return;
+	
 	gr->Axis("xyz","","");
 	return;
 

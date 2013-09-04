@@ -36,8 +36,8 @@ void MGL_EXPORT mgl_set_flag(HMGL gr, int val, long flag)	{	gr->set(val,flag);	}
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_set_color(char id, double r, double g, double b)
 {
-	register size_t i;
-	for(i=0;mglColorIds[i].id;i++)	if(mglColorIds[i].id==id)	mglColorIds[i].col = mglColor(r,g,b);
+	for(size_t i=0;mglColorIds[i].id;i++)
+		if(mglColorIds[i].id==id)	mglColorIds[i].col = mglColor(r,g,b);
 }
 void MGL_EXPORT mgl_set_color_(char *id, mreal *r, mreal *g, mreal *b, int)	{	mgl_set_color(*id,*r,*g,*b);	}
 //-----------------------------------------------------------------------------

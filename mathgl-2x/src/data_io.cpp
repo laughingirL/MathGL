@@ -741,6 +741,9 @@ MGL_NO_EXPORT void *mgl_modify(void *par)
 	mreal *b=t->a, dx,dy,dz;
 	const mreal *v=t->b, *w=t->c;
 	dx=nx>1?1/(nx-1.):0;	dy=ny>1?1/(ny-1.):0;	dz=nz>1?1/(nz-1.):0;
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel for private(i0,i,j,k)
+#endif
 	for(i0=t->id;i0<t->n;i0+=mglNumThr)
 	{
 		i=i0%nx;	j=((i0/nx)%ny);	k=i0/(nx*ny);

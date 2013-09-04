@@ -90,6 +90,9 @@ MGL_NO_EXPORT void *mgl_csmth_x(void *par)
 	register long i,j,d3,d5, nx=t->p[0];
 	dual *b=t->a, y5,y3,x2y;
 	const dual *a=t->b;
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel for private(i,j,d3,d5,y3,y5,x2y)
+#endif
 	for(i=t->id;i<t->n;i+=mglNumThr)
 	{
 		j = i%nx;
@@ -115,6 +118,9 @@ MGL_NO_EXPORT void *mgl_csmth_y(void *par)
 	register long i,j,d3,d5, nx=t->p[0],ny=t->p[1];
 	dual *b=t->a, y5,y3,x2y;
 	const dual *a=t->b;
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel for private(i,j,d3,d5,y3,y5,x2y)
+#endif
 	for(i=t->id;i<t->n;i+=mglNumThr)
 	{
 		j = (i/nx)%ny;
@@ -140,6 +146,9 @@ MGL_NO_EXPORT void *mgl_csmth_z(void *par)
 	register long i,j,d3,d5, nn=t->p[0]*t->p[1], nz=t->n/nn;
 	dual *b=t->a, y5,y3,x2y;
 	const dual *a=t->b;
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel for private(i,j,d3,d5,y3,y5,x2y)
+#endif
 	for(i=t->id;i<t->n;i+=mglNumThr)
 	{
 		j = i/nn;
@@ -201,6 +210,9 @@ MGL_NO_EXPORT void *mgl_ccsum_z(void *par)
 	register long i,j, nz=t->p[2], nn=t->n;
 	dual *b=t->a;
 	const dual *a=t->b;
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel for private(i,j)
+#endif
 	for(i=t->id;i<nn;i+=mglNumThr)
 	{
 		b[i] = a[i];
@@ -214,6 +226,9 @@ MGL_NO_EXPORT void *mgl_ccsum_y(void *par)
 	register long i,j,k, nx=t->p[0], ny=t->p[1], nn=t->n;
 	dual *b=t->a;
 	const dual *a=t->b;
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel for private(i,j,k)
+#endif
 	for(i=t->id;i<nn;i+=mglNumThr)
 	{
 		k = (i%nx)+nx*ny*(i/nx);		b[k] = a[k];
@@ -227,6 +242,9 @@ MGL_NO_EXPORT void *mgl_ccsum_x(void *par)
 	register long i,j,k, nx=t->p[0], nn=t->n;
 	dual *b=t->a;
 	const dual *a=t->b;
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel for private(i,j,k)
+#endif
 	for(i=t->id;i<nn;i+=mglNumThr)
 	{
 		k = i*nx;			b[k] = a[k];
@@ -268,6 +286,9 @@ MGL_NO_EXPORT void *mgl_cint_z(void *par)
 	register long i,j, nz=t->p[2], nn=t->n;
 	dual *b=t->a, dd=0.5/nz;
 	const dual *a=t->b;
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel for private(i,j)
+#endif
 	for(i=t->id;i<nn;i+=mglNumThr)
 	{
 		b[i] = 0;
@@ -281,6 +302,9 @@ MGL_NO_EXPORT void *mgl_cint_y(void *par)
 	register long i,j,k, nx=t->p[0], ny=t->p[1], nn=t->n;
 	dual *b=t->a, dd=0.5/ny;
 	const dual *a=t->b;
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel for private(i,j,k)
+#endif
 	for(i=t->id;i<nn;i+=mglNumThr)
 	{
 		k = (i%nx)+nx*ny*(i/nx);	b[k] = 0;
@@ -294,6 +318,9 @@ MGL_NO_EXPORT void *mgl_cint_x(void *par)
 	register long i,j,k, nx=t->p[0], nn=t->n;
 	dual *b=t->a, dd=0.5/nx;
 	const dual *a=t->b;
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel for private(i,j,k)
+#endif
 	for(i=t->id;i<nn;i+=mglNumThr)
 	{
 		k = i*nx;			b[k] = 0;
@@ -335,6 +362,9 @@ MGL_NO_EXPORT void *mgl_cdif_z(void *par)
 	register long i,j, nz=t->p[2], nn=t->n;
 	dual *b=t->a, dd=0.5*nz;
 	const dual *a=t->b;
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel for private(i,j)
+#endif
 	for(i=t->id;i<nn;i+=mglNumThr)
 	{
 		b[i] = -(mgl3*a[i]-mgl4*a[i+nn]+a[i+2*nn])*dd;
@@ -349,6 +379,9 @@ MGL_NO_EXPORT void *mgl_cdif_y(void *par)
 	register long i,j,k, nx=t->p[0], ny=t->p[1], nn=t->n;
 	dual *b=t->a, dd=0.5*ny;
 	const dual *a=t->b;
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel for private(i,j,k)
+#endif
 	for(i=t->id;i<nn;i+=mglNumThr)
 	{
 		k = (i%nx)+nx*ny*(i/nx);
@@ -364,6 +397,9 @@ MGL_NO_EXPORT void *mgl_cdif_x(void *par)
 	register long i,j,k, nx=t->p[0], nn=t->n;
 	dual *b=t->a, dd=0.5*nx;
 	const dual *a=t->b;
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel for private(i,j,k)
+#endif
 	for(i=t->id;i<nn;i+=mglNumThr)
 	{
 		k = i*nx;
@@ -406,6 +442,9 @@ MGL_NO_EXPORT void *mgl_cdif2_z(void *par)
 	register long i,j, nz=t->p[2], nn=t->n;
 	dual *b=t->a, dd=0.5*nz*nz;
 	const dual *a=t->b;
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel for private(i,j)
+#endif
 	for(i=t->id;i<nn;i+=mglNumThr)
 	{
 		b[i] = b[i+(nz-1)*nn] = 0;
@@ -419,6 +458,9 @@ MGL_NO_EXPORT void *mgl_cdif2_y(void *par)
 	register long i,j,k, nx=t->p[0], ny=t->p[1], nn=t->n;
 	dual *b=t->a, dd=0.5*ny*ny;
 	const dual *a=t->b;
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel for private(i,j,k)
+#endif
 	for(i=t->id;i<nn;i+=mglNumThr)
 	{
 		k = (i%nx)+nx*ny*(i/nx);	b[k] = b[k+(ny-1)*nx] = 0;
@@ -432,6 +474,9 @@ MGL_NO_EXPORT void *mgl_cdif2_x(void *par)
 	register long i,j,k, nx=t->p[0], nn=t->n;
 	dual *b=t->a, dd=0.5*nx*nx;
 	const dual *a=t->b;
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel for private(i,j,k)
+#endif
 	for(i=t->id;i<nn;i+=mglNumThr)
 	{
 		k = i*nx;			b[k] = b[k+nx-1] = 0;
@@ -497,6 +542,7 @@ void MGL_EXPORT mgl_datac_roll(HADT dd, char dir, long num)
 		if(d==0)	return;		// nothing to do
 		b = new dual[nx*ny*nz];
 		memcpy(b,a+nx*d,(nx*ny*nz-nx*d)*sizeof(dual));
+#pragma omp parallel for private(i)
 		for(i=0;i<nz;i++)
 			memcpy(b+nx*(ny-d)+nx*ny*i,a+nx*ny*i,nx*d*sizeof(dual));
 		memcpy(a,b,nx*ny*nz*sizeof(dual));	delete []b;
@@ -507,6 +553,7 @@ void MGL_EXPORT mgl_datac_roll(HADT dd, char dir, long num)
 		if(d==0)	return;		// nothing to do
 		b = new dual[nx*ny*nz];
 		memcpy(b,a+d,(nx*ny*nz-d)*sizeof(dual));
+#pragma omp parallel for private(i)
 		for(i=0;i<nz*ny;i++)
 			memcpy(b+nx-d+nx*i,a+nx*i,d*sizeof(dual));
 		memcpy(a,b,nx*ny*nz*sizeof(dual));	delete []b;
@@ -519,11 +566,12 @@ void MGL_EXPORT mgl_datac_mirror(HADT d, const char *dir)
 {
 	if(!dir || *dir==0)	return;
 	long nx=d->nx,ny=d->ny,nz=d->nz;
-	register long i,j,k,i0,j0;
+	register long i,j,i0,j0;
 	dual b, *a=d->a;
 	if(strchr(dir,'z') && nz>1)
 	{
-		for(j=0;j<nz/2;j++)	for(i=0;i<nx*ny;i++)
+#pragma omp parallel for private(i,j,i0,j0,b)
+		for(i=0;i<nx*ny;i++)	for(j=0;j<nz/2;j++)
 		{
 			i0 = i+j*nx*ny;	j0 = i+(nz-1-j)*nx*ny;
 			b = a[i0];	a[i0] = a[j0];	a[j0] = b;
@@ -531,9 +579,10 @@ void MGL_EXPORT mgl_datac_mirror(HADT d, const char *dir)
 	}
 	if(strchr(dir,'y') && ny>1)
 	{
-		for(k=0;k<nz;k++)	for(i=0;i<nx;i++)
+#pragma omp parallel for private(i,j,i0,j0,b)
+		for(i=0;i<nx*nz;i++)
 		{
-			j0 = i+nx*ny*k;
+			j0 = (i%nx)+nx*ny*(i/nx);
 			for(j=0;j<ny/2;j++)
 			{
 				i0 = j0+(ny-1-j)*nx;	b = a[j0+j*nx];
@@ -543,6 +592,7 @@ void MGL_EXPORT mgl_datac_mirror(HADT d, const char *dir)
 	}
 	if(strchr(dir,'x') && nx>1)
 	{
+#pragma omp parallel for private(i,j,i0,j0,b)
 		for(j=0;j<ny*nz;j++)
 		{
 			j0 = j*nx;
@@ -614,7 +664,7 @@ dual MGL_EXPORT mgl_datac_linear_ext_(uintptr_t *d, mreal *x,mreal *y,mreal *z, 
 void MGL_EXPORT mgl_datac_crop(HADT d, long n1, long n2, char dir)
 {
 	long nx=d->nx,ny=d->ny,nz=d->nz, nn;
-	register long i,k;
+	register long i;
 	dual *b;
 	if(n1<0)	n1=0;
 	switch(dir)
@@ -623,6 +673,7 @@ void MGL_EXPORT mgl_datac_crop(HADT d, long n1, long n2, char dir)
 		n2 = n2>0 ? n2 : nx+n2;
 		if(n2<0 || n2>=nx || n2<n1)	n2 = nx;
 		nn = n2-n1;	b = new dual[nn*ny*nz];
+#pragma omp parallel for private(i)
 		for(i=0;i<ny*nz;i++)
 			memcpy(b+nn*i,d->a+nx*i+n1,nn*sizeof(dual));
 		d->nx = nn;	if(!d->link)	delete []d->a;
@@ -632,8 +683,9 @@ void MGL_EXPORT mgl_datac_crop(HADT d, long n1, long n2, char dir)
 		n2 = n2>0 ? n2 : ny+n2;
 		if(n2<0 || n2>=ny || n2<n1)	n2 = ny;
 		nn = n2-n1;	b = new dual[nn*nx*nz];
-		for(long j=0;j<nz;j++)	for(k=0;k<nn;k++)
-			memcpy(b+nx*(k+nn*j),d->a+nx*(n1+k+ny*j),nx*sizeof(dual));
+#pragma omp parallel for private(i)
+		for(i=0;i<nn;i++)	for(long j=0;j<nz;j++)
+			memcpy(b+nx*(i+nn*j),d->a+nx*(n1+i+ny*j),nx*sizeof(dual));
 		d->ny = nn;	if(!d->link)	delete []d->a;
 		d->a = b;	d->link=false;
 		break;
@@ -661,6 +713,7 @@ void MGL_EXPORT mgl_datac_insert(HADT d, char dir, long at, long num)
 	{
 		if(at>nx)	at=nx;
 		nn=nx+num;	b.Create(nn,ny,nz);
+#pragma omp parallel for private(i,k)
 		for(k=0;k<ny*nz;k++)
 		{
 			if(at>0)	memcpy(b.a+nn*k, d->a+nx*k,at*sizeof(dual));
@@ -673,6 +726,7 @@ void MGL_EXPORT mgl_datac_insert(HADT d, char dir, long at, long num)
 	{
 		if(at>ny)	at=ny;
 		nn=num+ny;	b.Create(nx,nn,nz);
+#pragma omp parallel for private(i,k)
 		for(k=0;k<nz;k++)
 		{
 			if(at>0)	memcpy(b.a+nx*nn*k, d->a+nx*ny*k,at*nx*sizeof(dual));
@@ -702,6 +756,7 @@ void MGL_EXPORT mgl_datac_delete(HADT d, char dir, long at, long num)
 	{
 		if(at+num>=nx)	return;
 		nn=nx-num;	b.Create(nn,ny,nz);
+#pragma omp parallel for private(k)
 		for(k=0;k<ny*nz;k++)
 		{
 			if(at>0)	memcpy(b.a+nn*k, d->a+nx*k,at*sizeof(dual));
@@ -713,6 +768,7 @@ void MGL_EXPORT mgl_datac_delete(HADT d, char dir, long at, long num)
 	{
 		if(at+num>=ny)	return;
 		nn=ny-num;	b.Create(nx,nn,nz);
+#pragma omp parallel for private(k)
 		for(k=0;k<nz;k++)
 		{
 			if(at>0)	memcpy(b.a+nx*nn*k, d->a+nx*ny*k,at*nx*sizeof(dual));
@@ -771,7 +827,9 @@ void MGL_EXPORT mgl_datac_join(HADT d, HCDT v)
 		dual *b = new dual[nx*ny*(nz+vz)];
 		memcpy(b,d->a,nx*ny*nz*sizeof(dual));
 		if(mv)	memcpy(b+nx*ny*nz,mv->a,nx*ny*vz*sizeof(dual));
-		else 	for(i=0;i<nx*ny*vz;i++)	b[k+i] = v->vthr(i);
+		else
+#pragma omp parallel for private(i)
+			for(i=0;i<nx*ny*vz;i++)	b[k+i] = v->vthr(i);
 		if(!d->link)	delete []d->a;	d->nz += vz;
 		d->a = b;	d->link=false;	d->NewId();
 	}
@@ -781,7 +839,9 @@ void MGL_EXPORT mgl_datac_join(HADT d, HCDT v)
 		dual *b = new dual[nx*(ny+vy)];
 		memcpy(b,d->a,nx*ny*sizeof(dual));
 		if(mv)	memcpy(b+nx*ny,mv->a,nx*vy*sizeof(dual));
-		else 	for(i=0;i<nx*vy;i++)	b[k+i] = v->vthr(i);
+		else
+#pragma omp parallel for private(i)
+			for(i=0;i<nx*vy;i++)	b[k+i] = v->vthr(i);
 		if(!d->link)	delete []d->a;
 		d->nz = 1;	d->ny = ny+vy;
 		d->a = b;	d->link=false;	d->NewId();
@@ -792,7 +852,9 @@ void MGL_EXPORT mgl_datac_join(HADT d, HCDT v)
 		dual *b = new dual[nx+vx];
 		memcpy(b,d->a,nx*sizeof(dual));
 		if(mv)	memcpy(b+nx,mv->a,vx*sizeof(dual));
-		else 	for(i=0;i<vx;i++)	b[k+i] = v->vthr(i);
+		else
+#pragma omp parallel for private(i)
+			for(i=0;i<vx;i++)	b[k+i] = v->vthr(i);
 		if(!d->link)	delete []d->a;
 		d->nz = d->ny = 1;	d->nx = nx+vx;
 		d->a = b;	d->link=false;	d->NewId();
@@ -808,13 +870,27 @@ void MGL_EXPORT mgl_datac_put_val(HADT d, dual val, long xx, long yy, long zz)
 	if(xx>=nx || yy>=ny || zz>=nz)	return;
 	dual *a=d->a;
 	register long i,j;
-	if(xx<0 && yy<0 && zz<0)for(i=0;i<nx*ny*nz;i++)	a[i] = val;
-	else if(xx<0 && yy<0)	for(i=0;i<nx*ny;i++)	a[i+zz*nx*ny] = val;
-	else if(yy<0 && zz<0)	for(i=0;i<nz*ny;i++)	a[xx+i*nx] = val;
-	else if(xx<0 && zz<0)	for(i=0;i<nx;i++)	for(j=0;j<nz;j++)	a[i+nx*(yy+j*ny)] = val;
-	else if(xx<0)	for(i=0;i<nx;i++)	a[i+nx*(yy+zz*ny)] = val;
-	else if(yy<0)	for(i=0;i<ny;i++)	a[xx+nx*(i+zz*ny)] = val;
-	else if(zz<0)	for(i=0;i<nz;i++)	a[xx+nx*(yy+i*ny)] = val;
+	if(xx<0 && yy<0 && zz<0)
+#pragma omp parallel for private(i)
+		for(i=0;i<nx*ny*nz;i++)	a[i] = val;
+	else if(xx<0 && yy<0)
+#pragma omp parallel for private(i)
+		for(i=0;i<nx*ny;i++)	a[i+zz*nx*ny] = val;
+	else if(yy<0 && zz<0)
+#pragma omp parallel for private(i)
+		for(i=0;i<nz*ny;i++)	a[xx+i*nx] = val;
+	else if(xx<0 && zz<0)
+#pragma omp parallel for private(i,j)
+		for(i=0;i<nx;i++)	for(j=0;j<nz;j++)	a[i+nx*(yy+j*ny)] = val;
+	else if(xx<0)
+#pragma omp parallel for private(i)
+		for(i=0;i<nx;i++)	a[i+nx*(yy+zz*ny)] = val;
+	else if(yy<0)
+#pragma omp parallel for private(i)
+		for(i=0;i<ny;i++)	a[xx+nx*(i+zz*ny)] = val;
+	else if(zz<0)
+#pragma omp parallel for private(i)
+		for(i=0;i<nz;i++)	a[xx+nx*(yy+i*ny)] = val;
 	else	a[xx+nx*(yy+zz*ny)] = val;
 }
 //-----------------------------------------------------------------------------
@@ -826,58 +902,105 @@ void MGL_EXPORT mgl_datac_put_dat(HADT d, HCDT v, long xx, long yy, long zz)
 	dual *a=d->a, vv=v->v(0);
 	const dual *b = mv?mv->a:0;
 	long vx=v->GetNx(), vy=v->GetNy(), vz=v->GetNz();
-	register long i,j,k;
+	register long i,j,k,ii;
 	if(xx<0 && yy<0 && zz<0)	// whole array
 	{
 		if(vx>=nx && vy>=ny && vz>=nz)
-			for(k=0;k<nz;k++)	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
-				a[i+nx*(j+k*ny)] = b?b[i+vx*(j+k*vy)]:v->v(i,j,k);
+#pragma omp parallel for private(ii,i,j,k)
+			for(ii=0;ii<nx*ny*nz;ii++)
+			{	i=ii%nx;	j=(ii/nx)%ny;	k=ii/(nx*ny);
+				a[ii] = b?b[i+vx*(j+k*vy)]:v->v(i,j,k);	}
 		else if(vx>=nx && vy>=ny)
-			for(k=0;k<nz;k++)	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
-				a[i+nx*(j+k*ny)] = b?b[i+vx*j]:v->v(i,j);
-		else if(vx>=nx)	for(k=0;k<ny*nz;k++)	for(i=0;i<nx;i++)
-				a[i+nx*k] = b?b[i]:v->v(i);
-		else	for(i=0;i<nx*ny*nz;i++)	a[i] = vv;
+#pragma omp parallel for private(ii,i,j)
+			for(ii=0;ii<nx*ny*nz;ii++)
+			{	i=ii%nx;	j=(ii/nx)%ny;
+				a[ii] = b?b[i+vx*j]:v->v(i,j);	}
+		else if(vx>=nx)
+#pragma omp parallel for private(ii,i)
+			for(ii=0;ii<nx*ny*nz;ii++)
+			{	i=ii%nx;	a[ii] = b?b[i]:v->v(i);	}
+		else
+#pragma omp parallel for private(ii)
+			for(ii=0;ii<nx*ny*nz;ii++)	a[ii] = vv;
 	}
 	else if(xx<0 && yy<0)	// 2d
 	{
-		if(vx>=nx && vy>=ny)	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
-				a[i+nx*(j+zz*ny)] = b?b[i+vx*j]:v->v(i,j);
-		else if(vx>=nx)	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
-				a[i+nx*(j+zz*ny)] = b?b[i]:v->v(i);
-		else	for(i=0;i<nx*ny;i++)	a[i+nx*ny*zz] = vv;
+		zz*=nx*ny;
+		if(vx>=nx && vy>=ny)
+#pragma omp parallel for private(ii,i,j)
+			for(ii=0;ii<nx*ny;ii++)
+			{	i=ii%nx;	j=ii/nx;
+				a[ii+zz] = b?b[i+vx*j]:v->v(i,j);	}
+		else if(vx>=nx)
+#pragma omp parallel for private(ii,i)
+			for(ii=0;ii<nx*ny;ii++)
+			{	i=ii%nx;	a[ii+zz] = b?b[i]:v->v(i);	}
+		else
+#pragma omp parallel for private(ii)
+			for(ii=0;ii<nx*ny;ii++) 	a[ii+zz] = vv;
 	}
 	else if(yy<0 && zz<0)	// 2d
 	{
-		if(vx>=ny && vy>=nz)	for(j=0;j<nz;j++)	for(i=0;i<ny;i++)
-				a[xx+nx*(i+j*ny)] = b?b[i+vx*j]:v->v(i,j);
-		else if(vx>=ny)	for(j=0;j<nz;j++)	for(i=0;i<ny;i++)
-				a[xx+nx*(i+j*ny)] = b?b[i]:v->v(i);
-		else	for(i=0;i<ny*nz;i++)	a[xx+nx*i] = vv;
+		if(vx>=ny && vy>=nz)
+#pragma omp parallel for private(ii,i,j)
+			for(ii=0;ii<ny*nz;ii++)
+			{	i=ii%ny;	j=ii/ny;
+				a[ii*nx+xx] = b?b[i+vx*j]:v->v(i,j);	}
+		else if(vx>=ny)
+#pragma omp parallel for private(ii,i)
+			for(ii=0;ii<ny*nz;ii++)
+			{	i=ii%ny;	a[ii*nx+xx] = b?b[i]:v->v(i);	}
+		else
+#pragma omp parallel for private(ii)
+			for(ii=0;ii<ny*nz;ii++) 	a[ii*nx+xx] = vv;
 	}
 	else if(xx<0 && zz<0)	// 2d
 	{
-		if(vx>=nx && vy>=nz)	for(j=0;j<nz;j++)	for(i=0;i<nx;i++)
-				a[i+nx*(yy+j*ny)] = b?b[i+vx*j]:v->v(i,j);
-		else if(vx>=nx)	for(j=0;j<nz;j++)	for(i=0;i<nx;i++)
-				a[i+nx*(yy+j*ny)] = b?b[i]:v->v(i);
-		else	for(j=0;j<nz;j++)	for(i=0;i<nx;i++)
-				a[i+nx*(yy+j*ny)] = vv;
+		yy *= nx;	zz = nx*ny;
+		if(vx>=nx && vy>=nz)
+#pragma omp parallel for private(ii,i,j)
+			for(ii=0;ii<nx*nz;ii++)
+			{	i=ii%nx;	j=ii/nx;
+				a[i+yy+j*zz] = b?b[i+vx*j]:v->v(i,j);	}
+		else if(vx>=nx)
+#pragma omp parallel for private(ii,i,j)
+			for(ii=0;ii<nx*nz;ii++)
+			{	i=ii%nx;	j=ii/nx;
+				a[i+yy+j*zz] = b?b[i]:v->v(i);	}
+		else
+#pragma omp parallel for private(ii,i,j)
+			for(ii=0;ii<nx*nz;ii++)
+			{	i=ii%nx;	j=ii/nx;	a[i+yy+j*zz] = vv;	}
 	}
 	else if(xx<0)
 	{
-		if(vx>=nx)	for(i=0;i<nx;i++)	a[i+nx*(yy+zz*ny)] = b?b[i]:v->v(i);
-		else for(i=0;i<nx;i++)	a[i+nx*(yy+zz*ny)] = vv;
+		xx = nx*(yy+zz*ny);
+		if(vx>=nx)
+#pragma omp parallel for private(i)
+			for(i=0;i<nx;i++)	a[i+xx] = b?b[i]:v->v(i);
+		else
+#pragma omp parallel for private(i)
+			for(i=0;i<nx;i++)	a[i+xx] = vv;
 	}
 	else if(yy<0)
 	{
-		if(vx>=ny)	for(i=0;i<ny;i++)	a[xx+nx*(i+zz*ny)] = b?b[i]:v->v(i);
-		else for(i=0;i<ny;i++)	a[xx+nx*(i+zz*ny)] = vv;
+		xx += zz*nx*ny;
+		if(vx>=ny)
+#pragma omp parallel for private(i)
+			for(i=0;i<ny;i++)	a[xx+nx*i] = b?b[i]:v->v(i);
+		else
+#pragma omp parallel for private(i)
+			for(i=0;i<ny;i++)	a[xx+nx*i] = vv;
 	}
 	else if(zz<0)
 	{
-		if(vx>=nz)	for(i=0;i<nz;i++)	a[xx+nx*(yy+i*ny)] = b?b[i]:v->v(i);
-		else for(i=0;i<nz;i++)	a[xx+nx*(yy+i*ny)] = vv;
+		xx += nx*yy;	yy = nx*ny;
+		if(vx>=nz)
+#pragma omp parallel for private(i)
+			for(i=0;i<nz;i++)	a[xx+yy*i] = b?b[i]:v->v(i);
+		else
+#pragma omp parallel for private(i)
+			for(i=0;i<nz;i++)	a[xx+yy*i] = vv;
 	}
 	else	a[xx+nx*(yy+ny*zz)] = vv;
 }

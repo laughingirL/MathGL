@@ -175,6 +175,7 @@ bool MGL_EXPORT mgl_difr_grid(dual *a,int n,dual q,int Border,dual *b,dual *d,in
 	memcpy(b,a,n*sizeof(dual));
 	for(k=kk;k>0;k--)	// 3 iterations
 	{
+#pragma omp parallel for private(i)
 		for(i=1;i<n-1;i++)
 			d[i] = a[i] + adt*(b[i-1]+b[i+1]-mreal(2)*b[i])/mreal(k);
 		memcpy(b,d,n*sizeof(dual));
@@ -216,6 +217,7 @@ bool MGL_EXPORT mgl_difr_axial(dual *a, int n, dual q, int Border,dual *b, dual 
 	for(k=kk;k>0;k--)	// kk iterations
 	{
 		d[ii] = a[ii] + adt*(b[ii+1]-b[ii])*(ff/k);
+#pragma omp parallel for private(i,dd,gg)
 		for(i=ii+1;i<n-1;i++)
 		{
 			dd = i+di;
@@ -259,6 +261,7 @@ double MGL_EXPORT mgl_gauss_rnd()
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_fft_freq(double *freq, size_t nn)
 {
+#pragma omp parallel for
 	for(size_t i=0;i<=nn/2;i++)
 	{
 		freq[i] = i;
