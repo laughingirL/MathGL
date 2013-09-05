@@ -109,8 +109,11 @@ mglBase::mglBase()
 	InUse = 1;	SetQuality();	FaceNum = 0;
 	// Always create default palette txt[0] and default scheme txt[1]
 	Txt.reserve(3);
-	MGL_PUSH(Txt,mglTexture(MGL_DEF_PAL,-1),mutexTxt);
-	MGL_PUSH(Txt,mglTexture(MGL_DEF_SCH,1),mutexTxt);
+#pragma omp critical(txt)
+	{
+		MGL_PUSH(Txt,mglTexture(MGL_DEF_PAL,-1),mutexTxt);
+		MGL_PUSH(Txt,mglTexture(MGL_DEF_SCH,1),mutexTxt);
+	}
 	memcpy(last_style,"{k5}-1\0",8);
 	MinS=mglPoint(-1,-1,-1);	MaxS=mglPoint(1,1,1);
 	fnt = new mglFont;	fnt->gr = this;	PrevState=NAN;
@@ -136,6 +139,7 @@ void mglBase::AddActive(long k,int n)
 	int h=GetHeight();
 	p.x = int(q.x);	p.y = h>1?h-1-int(q.y):int(q.y);
 	p.id = ObjId;	p.n = n;
+#pragma omp critical(act)
 	MGL_PUSH(Act,p,mutexAct);
 }
 //-----------------------------------------------------------------------------
@@ -214,6 +218,7 @@ long mglBase::AddGlyph(int s, long j)
 	register size_t i;
 	for(i=0;i<Glf.size();i++)	if(g==Glf[i])	return i;
 	// if no one then let add it
+#pragma omp critical(glf)
 	MGL_PUSH(Glf,g,mutexGlf);	return Glf.size()-1;
 }
 //-----------------------------------------------------------------------------
@@ -254,6 +259,7 @@ long mglBase::AddPnt(mglPoint p, mreal c, mglPoint n, mreal a, int scl)
 	if(!get(MGL_ENABLE_ALPHA))	{	q.a=1;	if(txt.Smooth!=2)	q.ta=1-gap;	}
 //	if(q.ta<0.005)	q.ta = 0.005;	// bypass OpenGL/OBJ/PRC bug
 	if(!get(MGL_ENABLE_LIGHT) && !(scl&4))	q.u=q.v=NAN;
+#pragma omp critical(pnt)
 	MGL_PUSH(Pnt,q,mutexPnt);	return Pnt.size()-1;
 }
 //-----------------------------------------------------------------------------
@@ -262,6 +268,7 @@ long mglBase::CopyNtoC(long from, mreal c)
 	if(from<0)	return -1;
 	mglPnt p=Pnt[from];
 	if(!mgl_isnan(c))	{	p.c=c;	p.t=0;	Txt[long(c)].GetC(c,0,p);	}
+#pragma omp critical(pnt)
 	MGL_PUSH(Pnt,p,mutexPnt);	return Pnt.size()-1;
 }
 //-----------------------------------------------------------------------------
@@ -271,6 +278,7 @@ long mglBase::CopyProj(long from, mglPoint p, mglPoint n)
 	mglPnt q=Pnt[from];
 	q.x=q.xx=p.x;	q.y=q.yy=p.y;	q.z=q.zz=p.z;
 	q.u = n.x;		q.v = n.y;		q.w = n.z;
+#pragma omp critical(pnt)
 	MGL_PUSH(Pnt,q,mutexPnt);	return Pnt.size()-1;
 }
 //-----------------------------------------------------------------------------
@@ -867,6 +875,7 @@ long mglBase::AddTexture(const char *cols, int smooth)
 	// check if already exist
 	for(size_t i=0;i<Txt.size();i++)	if(t.IsSame(Txt[i]))	return i;
 	// create new one
+#pragma omp critical(txt)
 	MGL_PUSH(Txt,t,mutexTxt);	return Txt.size()-1;
 }
 //-----------------------------------------------------------------------------
@@ -882,6 +891,7 @@ mreal mglBase::AddTexture(mglColor c)
 	mglTexture t;
 #pragma omp parallel for private(i)
 	for(i=0;i<MGL_TEXTURE_COLOURS;i++)	t.col[i]=c;
+#pragma omp critical(txt)
 	MGL_PUSH(Txt,t,mutexTxt);	return Txt.size()-1;
 }
 //-----------------------------------------------------------------------------
@@ -1058,8 +1068,11 @@ void mglBase::vect_plot(long p1, long p2, mreal s)
 	s2.y=s2.yy = q2.y - 3*s*(q2.y-q1.y) + s*(q2.x-q1.x);
 	s1.z=s1.zz=s2.z=s2.zz = q2.z - 3*s*(q2.z-q1.z);
 	long n1,n2;
-	n1=Pnt.size();	MGL_PUSH(Pnt,s1,mutexPnt);
-	n2=Pnt.size();	MGL_PUSH(Pnt,s2,mutexPnt);
+#pragma omp critical(pnt)
+	{
+		n1=Pnt.size();	MGL_PUSH(Pnt,s1,mutexPnt);
+		n2=Pnt.size();	MGL_PUSH(Pnt,s2,mutexPnt);
+	}
 	line_plot(p1,p2);	line_plot(n1,p2);	line_plot(p2,n2);
 }
 //-----------------------------------------------------------------------------
@@ -1146,7 +1159,11 @@ void mglBase::LoadState()
 }
 //-----------------------------------------------------------------------------
 void mglBase::AddLegend(const wchar_t *text,const char *style)
-{	if(text)	MGL_PUSH(Leg,mglText(text,style),mutexLeg);	}
+{
+	if(text)
+#pragma omp critical(leg)
+		MGL_PUSH(Leg,mglText(text,style),mutexLeg);
+}
 //-----------------------------------------------------------------------------
 void mglBase::AddLegend(const char *str,const char *style)
 {
@@ -1265,39 +1282,42 @@ void mglBase::ClearUnused()
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_lock(&mutexPnt);	pthread_mutex_lock(&mutexPrm);
 #endif
-	register size_t i, l=Prm.size();
-	// find points which are actually used
-	long *used = new long[Pnt.size()];	memset(used,0,Pnt.size()*sizeof(long));
-	for(i=0;i<l;i++)
+#pragma omp critical
 	{
-		const mglPrim &p=Prm[i];
-		if(p.n1<0)	continue;
-		used[p.n1] = 1;
-		switch(p.type)
+		register size_t i, l=Prm.size();
+		// find points which are actually used
+		long *used = new long[Pnt.size()];	memset(used,0,Pnt.size()*sizeof(long));
+		for(i=0;i<l;i++)
 		{
-		case 1:	case 4:	if(p.n2>=0)	used[p.n2] = 1;	break;
-		case 2:	if(p.n2>=0 && p.n3>=0)
-			used[p.n2] = used[p.n3] = 1;	break;
-		case 3:	if(p.n2>=0 && p.n3>=0 && p.n4>=0)
-			used[p.n2] = used[p.n3] = used[p.n4] = 1;	break;
+			const mglPrim &p=Prm[i];
+			if(p.n1<0)	continue;
+			used[p.n1] = 1;
+			switch(p.type)
+			{
+			case 1:	case 4:	if(p.n2>=0)	used[p.n2] = 1;	break;
+			case 2:	if(p.n2>=0 && p.n3>=0)
+				used[p.n2] = used[p.n3] = 1;	break;
+			case 3:	if(p.n2>=0 && p.n3>=0 && p.n4>=0)
+				used[p.n2] = used[p.n3] = used[p.n4] = 1;	break;
+			}
 		}
+		// now add proper indexes
+		l=Pnt.size();
+		std::vector<mglPnt> pnt;
+		for(i=0;i<l;i++)	if(used[i])
+		{	pnt.push_back(Pnt[i]);	used[i]=pnt.size();	}
+		Pnt = pnt;	pnt.clear();
+		// now replace point id
+		l=Prm.size();
+		for(i=0;i<l;i++)
+		{
+			mglPrim &p=Prm[i];	p.n1=used[p.n1]-1;
+			if(p.type==1 || p.type==4)	p.n2=used[p.n2]-1;
+			if(p.type==2)	{	p.n2=used[p.n2]-1;	p.n3=used[p.n3]-1;	}
+			if(p.type==3)	{	p.n2=used[p.n2]-1;	p.n3=used[p.n3]-1;	p.n4=used[p.n4]-1;	}
+		}
+		delete []used;
 	}
-	// now add proper indexes
-	l=Pnt.size();
-	std::vector<mglPnt> pnt;
-	for(i=0;i<l;i++)	if(used[i])
-	{	pnt.push_back(Pnt[i]);	used[i]=pnt.size();	}
-	Pnt = pnt;	pnt.clear();
-	// now replace point id
-	l=Prm.size();
-	for(i=0;i<l;i++)
-	{
-		mglPrim &p=Prm[i];	p.n1=used[p.n1]-1;
-		if(p.type==1 || p.type==4)	p.n2=used[p.n2]-1;
-		if(p.type==2)	{	p.n2=used[p.n2]-1;	p.n3=used[p.n3]-1;	}
-		if(p.type==3)	{	p.n2=used[p.n2]-1;	p.n3=used[p.n3]-1;	p.n4=used[p.n4]-1;	}
-	}
-	delete []used;
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_unlock(&mutexPnt);	pthread_mutex_unlock(&mutexPrm);
 #endif

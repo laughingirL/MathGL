@@ -129,7 +129,7 @@ using mglBase::Light;
 	/// Clear transformation matrix.
 	inline void Identity(bool rel=false)	{	InPlot(0,1,0,1,rel);	}
 	/// Push transformation matrix into stack
-	inline void Push()	{	MGL_PUSH(stack,B,mutexStk);	}
+	void Push();
 	/// Set PlotFactor
 	inline void SetPlotFactor(mreal val)
 	{	if(val<=0)	{B.pf=1.55;	set(MGL_AUTO_FACTOR);}	else {B.pf=val;	clr(MGL_AUTO_FACTOR);}	}

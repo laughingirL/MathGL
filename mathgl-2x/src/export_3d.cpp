@@ -672,54 +672,57 @@ bool mglCanvas::ImportMGLD(const char *fname, bool add)
 	pthread_mutex_lock(&mutexPrm);
 	pthread_mutex_lock(&mutexTxt);
 #endif
-	mglPnt p;
-	for(i=0;i<n;i++)
+#pragma omp critical
 	{
-		do {	if(!fgets(buf,512,fp))	*buf=0;	mgl_strtrim(buf);	} while(*buf=='#');
-		sscanf(buf,"%g%g%g%g%g%g%g%g%g%g%g%g%g", &p.xx, &p.yy, &p.zz, &p.c, &p.t, &p.ta, &p.u, &p.v, &p.w, &p.r, &p.g, &p.b, &p.a);
-		// rescale to current image size
-		p.xx *= Width/double(w);	p.yy *= Height/double(h);	p.zz *= Depth/double(d);
-		Pnt.push_back(p);
-	}
-	mglPrim q;
-	for(i=0;i<m;i++)
-	{
-		do {	if(!fgets(buf,512,fp))	*buf=0;	mgl_strtrim(buf);	} while(*buf=='#');
-		sscanf(buf,"%hd%ld%ld%ld%ld%d%g%g%g", &q.type, &q.n1, &q.n2, &q.n3, &q.n4, &q.id, &q.s, &q.w, &q.p);
-		q.n1 = q.n1>=0?q.n1+npnt:-1;
-		q.n2 = q.n2>=0?q.n2+npnt:-1;
-		if(q.type==2 || q.type==3)
-		{	q.n3 = q.n3>=0?q.n3+npnt:-1;	q.n4 = q.n4>=0?q.n4+npnt:-1;	}
-		if(q.type==4)
-		{	q.n4 = q.n4>=0?q.n4+nglf:-1;	q.s *= font_factor/(w<h?w:h);	}
-		if(q.type<5)	Prm.push_back(q);
-	}
-	mglTexture t;
-	for(i=0;i<l;i++)
-	{
-		int sm=0;	float a;
-		do {	if(!fgets(buf,512,fp))	*buf=0;	mgl_strtrim(buf);	} while(*buf=='#');
-		register size_t j,k=0;
-		for(j=0;buf[j];j++)
+		mglPnt p;
+		for(i=0;i<n;i++)
 		{
-			if(buf[j]<=' ' && k)	{	sm++;	k=0;	}
-			if(buf[j]>' ')	k=1;
-			if(sm==2 && k)	break;
+			do {	if(!fgets(buf,512,fp))	*buf=0;	mgl_strtrim(buf);	} while(*buf=='#');
+			sscanf(buf,"%g%g%g%g%g%g%g%g%g%g%g%g%g", &p.xx, &p.yy, &p.zz, &p.c, &p.t, &p.ta, &p.u, &p.v, &p.w, &p.r, &p.g, &p.b, &p.a);
+			// rescale to current image size
+			p.xx *= Width/double(w);	p.yy *= Height/double(h);	p.zz *= Depth/double(d);
+			Pnt.push_back(p);
 		}
-		sscanf(buf,"%d%g", &sm, &a);
-		t.Set(buf+j, sm, a);
-		Txt.push_back(t);
-	}
-	mglGlyph g;
-	for(i=0;i<k;i++)
-	{
-		do {	if(!fgets(buf,512,fp))	*buf=0;	mgl_strtrim(buf);	} while(*buf=='#' || *buf==0);
-		long nt=0,nl=0;
-		sscanf(buf,"%ld%ld", &nt, &nl);	g.Create(nt,nl);
-		register long j;
-		for(j=0;j<6*nt;j++)	fscanf(fp,"%hd",g.trig+j);
-		for(j=0;j<2*nl;j++)	fscanf(fp,"%hd",g.line+j);
-		Glf.push_back(g);
+		mglPrim q;
+		for(i=0;i<m;i++)
+		{
+			do {	if(!fgets(buf,512,fp))	*buf=0;	mgl_strtrim(buf);	} while(*buf=='#');
+			sscanf(buf,"%hd%ld%ld%ld%ld%d%g%g%g", &q.type, &q.n1, &q.n2, &q.n3, &q.n4, &q.id, &q.s, &q.w, &q.p);
+			q.n1 = q.n1>=0?q.n1+npnt:-1;
+			q.n2 = q.n2>=0?q.n2+npnt:-1;
+			if(q.type==2 || q.type==3)
+			{	q.n3 = q.n3>=0?q.n3+npnt:-1;	q.n4 = q.n4>=0?q.n4+npnt:-1;	}
+			if(q.type==4)
+			{	q.n4 = q.n4>=0?q.n4+nglf:-1;	q.s *= font_factor/(w<h?w:h);	}
+			if(q.type<5)	Prm.push_back(q);
+		}
+		mglTexture t;
+		for(i=0;i<l;i++)
+		{
+			int sm=0;	float a;
+			do {	if(!fgets(buf,512,fp))	*buf=0;	mgl_strtrim(buf);	} while(*buf=='#');
+			register size_t j,k=0;
+			for(j=0;buf[j];j++)
+			{
+				if(buf[j]<=' ' && k)	{	sm++;	k=0;	}
+				if(buf[j]>' ')	k=1;
+				if(sm==2 && k)	break;
+			}
+			sscanf(buf,"%d%g", &sm, &a);
+			t.Set(buf+j, sm, a);
+			Txt.push_back(t);
+		}
+		mglGlyph g;
+		for(i=0;i<k;i++)
+		{
+			do {	if(!fgets(buf,512,fp))	*buf=0;	mgl_strtrim(buf);	} while(*buf=='#' || *buf==0);
+			long nt=0,nl=0;
+			sscanf(buf,"%ld%ld", &nt, &nl);	g.Create(nt,nl);
+			register long j;
+			for(j=0;j<6*nt;j++)	fscanf(fp,"%hd",g.trig+j);
+			for(j=0;j<2*nl;j++)	fscanf(fp,"%hd",g.line+j);
+			Glf.push_back(g);
+		}
 	}
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_unlock(&mutexGlf);

@@ -94,6 +94,7 @@ void MGL_EXPORT mgl_data_import(HMDT d, const char *fname, const char *scheme,mr
 		d->Create(w,h,1);
 		register long i,j,k;
 		size_t pos=0,val,mval=256;
+#pragma omp parallel for private(i,j,k,mval,val) collapse(2)
 		for(i=0;i<d->ny;i++)	for(j=0;j<d->nx;j++)
 		{
 			for(mval=256,k=0;k<num;k++)
@@ -124,10 +125,14 @@ void MGL_EXPORT mgl_data_export(HCDT dd, const char *fname, const char *scheme,m
 	if(v1==v2)
 	{
 		v1 = 1e20;	v2=-1e20;
-		if(md)	for(i=0;i<nx*ny*nz;i++)
-		{	vv = md->a[i];	if(vv<v1)	v1=vv;	if(vv>v2)	v2=vv;	}
-		else	for(i=0;i<nx*ny*nz;i++)
-		{	vv = dd->vthr(i);	if(vv<v1)	v1=vv;	if(vv>v2)	v2=vv;	}
+		if(md)
+#pragma omp parallel for private(i)
+			for(i=0;i<nx*ny*nz;i++)
+			{	vv = md->a[i];	if(vv<v1)	v1=vv;	if(vv>v2)	v2=vv;	}
+		else
+#pragma omp parallel for private(i)
+			for(i=0;i<nx*ny*nz;i++)
+			{	vv = dd->vthr(i);	if(vv<v1)	v1=vv;	if(vv>v2)	v2=vv;	}
 	}
 	if(v1==v2)	return;
 	long num=0;
@@ -136,20 +141,25 @@ void MGL_EXPORT mgl_data_export(HCDT dd, const char *fname, const char *scheme,m
 
 	unsigned char **p = new unsigned char*[ny];
 	unsigned char *d = new unsigned char[3*nx*ny];
+#pragma omp parallel for private(i)
 	for(i=0;i<ny;i++)	p[i] = d+3*nx*(ny-1-i);
-	if(md)	for(i=0;i<ny;i++)	for(j=0;j<nx;j++)
-	{
-		vv = md->a[j+nx*(i+ny*ns)];
-		k = long(num*(vv-v1)/(v2-v1));
-		if(k<0)	k=0;	if(k>=num) k=num-1;
-		memcpy(d+3*(j+i*nx),c+3*k,3);
-	}
-	else	for(i=0;i<ny;i++)	for(j=0;j<nx;j++)
-	{
-		k = long(num*(dd->v(j,i,ns)-v1)/(v2-v1));
-		if(k<0)	k=0;	if(k>=num) k=num-1;
-		memcpy(d+3*(j+i*nx),c+3*k,3);
-	}
+	if(md)
+#pragma omp parallel for private(i,j) collapse(2)
+		for(i=0;i<ny;i++)	for(j=0;j<nx;j++)
+		{
+			vv = md->a[j+nx*(i+ny*ns)];
+			k = long(num*(vv-v1)/(v2-v1));
+			if(k<0)	k=0;	if(k>=num) k=num-1;
+			memcpy(d+3*(j+i*nx),c+3*k,3);
+		}
+	else
+#pragma omp parallel for private(i,j) collapse(2)
+		for(i=0;i<ny;i++)	for(j=0;j<nx;j++)
+		{
+			k = long(num*(dd->v(j,i,ns)-v1)/(v2-v1));
+			if(k<0)	k=0;	if(k>=num) k=num-1;
+			memcpy(d+3*(j+i*nx),c+3*k,3);
+		}
 	delete []c;
 
 	FILE *fp = fopen(fname, "wb");

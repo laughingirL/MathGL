@@ -17,7 +17,7 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-// NOTE: Borland before 2007 (i.e. < 0x0600) use <algorithm.h>, fter 0x0630 it use <algorithm>.
+// NOTE: Borland before 2007 (i.e. < 0x0600) use <algorithm.h>, after 0x0630 it use <algorithm>.
 // I don't find information about 2009, 2010 versions (i.e. 0x0610 and 0x0620).
 // May be condition below can be rewritten as (__CODEGEARC__ >=  0x0600)
 #if !defined(__BORLANDC__) || (__CODEGEARC__ >=  0x0630)
@@ -124,10 +124,15 @@ void MGL_EXPORT mgl_textw_xyz(HMGL gr, HCDT x, HCDT y, HCDT z,const wchar_t *tex
 	const mglData *mdx = dynamic_cast<const mglData *>(x);
 	const mglData *mdy = dynamic_cast<const mglData *>(y);
 	const mglData *mdz = dynamic_cast<const mglData *>(z);
-	if(mdx && mdy && mdz)	for(i=0;i<n;i++)
-	{	p = mglPoint(mdx->a[i],mdy->a[i],mdz->a[i]);	ff[i] = gr->AddPnt(p,-1);	}
-	else	for(i=0;i<n;i++)
-	{	p = mglPoint(x->v(i),y->v(i),z->v(i));	ff[i] = gr->AddPnt(p,-1);	}
+	if(mdx && mdy && mdz)
+#pragma omp parallel for private(i,p)
+		for(i=0;i<n;i++)
+		{	p = mglPoint(mdx->a[i],mdy->a[i],mdz->a[i]);	ff[i] = gr->AddPnt(p,-1);	}
+	else
+#pragma omp parallel for private(i,p)
+		for(i=0;i<n;i++)
+		{	p = mglPoint(x->v(i),y->v(i),z->v(i));	ff[i] = gr->AddPnt(p,-1);	}
+#pragma omp parallel for private(i)
 	for(i=1;i<n;i++)	nn[i-1] = i;
 	nn[n-1]=-1;
 	mgl_string_curve(gr,0,n,ff,nn,text,font,-1);
@@ -409,17 +414,22 @@ void MGL_EXPORT mgl_cont_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const c
 		xx.Create(n, m);		yy.Create(n, m);
 		const mglData *mx = dynamic_cast<const mglData *>(x);
 		const mglData *my = dynamic_cast<const mglData *>(y);
-		if(mx && my)	for(i=0;i<n;i++)	for(j=0;j<m;j++)
-		{	xx.a[i+n*j] = mx->a[i];	yy.a[i+n*j] = my->a[j];	}
-		else	for(i=0;i<n;i++)	for(j=0;j<m;j++)
-		{	xx.a[i+n*j] = x->v(i);	yy.a[i+n*j] = y->v(j);	}
+		if(mx && my)
+#pragma omp parallel for private(i,j) collapse(2)
+			for(i=0;i<n;i++)	for(j=0;j<m;j++)
+			{	xx.a[i+n*j] = mx->a[i];	yy.a[i+n*j] = my->a[j];	}
+		else
+#pragma omp parallel for private(i,j) collapse(2)
+			for(i=0;i<n;i++)	for(j=0;j<m;j++)
+			{	xx.a[i+n*j] = x->v(i);	yy.a[i+n*j] = y->v(j);	}
 		x = &xx;	y = &yy;
 	}
 	// x, y -- have the same size z
 	mreal z0, v0;
+#pragma omp parallel for private(i,j) collapse(2)
 	for(j=0;j<z->GetNz();j++)	for(i=0;i<v->GetNx();i++)
 	{
-		if(gr->Stop)	return;
+		if(gr->Stop)	continue;
 		v0 = v->v(i);		z0 = fixed ? gr->Min.z : v0;
 		if(z->GetNz()>1)
 			z0 = gr->Min.z+(gr->Max.z-gr->Min.z)*mreal(j)/(z->GetNz()-1);
@@ -614,17 +624,22 @@ void MGL_EXPORT mgl_contf_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const 
 		xx.Create(n, m);		yy.Create(n, m);
 		const mglData *mx = dynamic_cast<const mglData *>(x);
 		const mglData *my = dynamic_cast<const mglData *>(y);
-		if(mx && my)	for(i=0;i<n;i++)	for(j=0;j<m;j++)
-		{	xx.a[i+n*j] = mx->a[i];	yy.a[i+n*j] = my->a[j];	}
-		else	for(i=0;i<n;i++)	for(j=0;j<m;j++)
-		{	xx.a[i+n*j] = x->v(i);	yy.a[i+n*j] = y->v(j);	}
+		if(mx && my)
+#pragma omp parallel for private(i,j) collapse(2)
+			for(i=0;i<n;i++)	for(j=0;j<m;j++)
+			{	xx.a[i+n*j] = mx->a[i];	yy.a[i+n*j] = my->a[j];	}
+		else
+#pragma omp parallel for private(i,j) collapse(2)
+			for(i=0;i<n;i++)	for(j=0;j<m;j++)
+			{	xx.a[i+n*j] = x->v(i);	yy.a[i+n*j] = y->v(j);	}
 		x = &xx;	y = &yy;
 	}
 	// x, y -- have the same size z
 	mreal z0, v0;
+#pragma omp parallel for private(i,j) collapse(2)
 	for(j=0;j<z->GetNz();j++)	for(i=0;i<v->GetNx()-1;i++)
 	{
-		if(gr->Stop)	return;
+		if(gr->Stop)	continue;
 		v0 = v->v(i);		z0 = fixed ? gr->Min.z : v0;
 		if(z->GetNz()>1)
 			z0 = gr->Min.z+(gr->Max.z-gr->Min.z)*mreal(j)/(z->GetNz()-1);
@@ -719,17 +734,22 @@ void MGL_EXPORT mgl_contd_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const 
 		xx.Create(n, m);		yy.Create(n, m);
 		const mglData *mx = dynamic_cast<const mglData *>(x);
 		const mglData *my = dynamic_cast<const mglData *>(y);
-		if(mx && my)	for(i=0;i<n;i++)	for(j=0;j<m;j++)
-		{	xx.a[i+n*j] = mx->a[i];	yy.a[i+n*j] = my->a[j];	}
-		else	for(i=0;i<n;i++)	for(j=0;j<m;j++)
-		{	xx.a[i+n*j] = x->v(i);	yy.a[i+n*j] = y->v(j);	}
+		if(mx && my)
+#pragma omp parallel for private(i,j) collapse(2)
+			for(i=0;i<n;i++)	for(j=0;j<m;j++)
+			{	xx.a[i+n*j] = mx->a[i];	yy.a[i+n*j] = my->a[j];	}
+		else
+#pragma omp parallel for private(i,j) collapse(2)
+			for(i=0;i<n;i++)	for(j=0;j<m;j++)
+			{	xx.a[i+n*j] = x->v(i);	yy.a[i+n*j] = y->v(j);	}
 		x = &xx;	y = &yy;
 	}
 	// x, y -- have the same size z
 	mreal z0, v0, dc = nc>1 ? 1/(MGL_FEPSILON*(nc-1)) : 0;
+#pragma omp parallel for private(i,j) collapse(2)
 	for(j=0;j<z->GetNz();j++)	for(i=0;i<v->GetNx()-1;i++)
 	{
-		if(gr->Stop)	return;
+		if(gr->Stop)	continue;
 		v0 = v->v(i);		z0 = fixed ? gr->Min.z : v0;
 		if(z->GetNz()>1)
 			z0 = gr->Min.z+(gr->Max.z-gr->Min.z)*mreal(j)/(z->GetNz()-1);
@@ -837,17 +857,22 @@ void MGL_EXPORT mgl_contv_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const 
 		xx.Create(n, m);		yy.Create(n, m);
 		const mglData *mx = dynamic_cast<const mglData *>(x);
 		const mglData *my = dynamic_cast<const mglData *>(y);
-		if(mx && my)	for(i=0;i<n;i++)	for(j=0;j<m;j++)
-		{	xx.a[i+n*j] = mx->a[i];	yy.a[i+n*j] = my->a[j];	}
-		else	for(i=0;i<n;i++)	for(j=0;j<m;j++)
-		{	xx.a[i+n*j] = x->v(i);	yy.a[i+n*j] = y->v(j);	}
+		if(mx && my)
+#pragma omp parallel for private(i,j) collapse(2)
+			for(i=0;i<n;i++)	for(j=0;j<m;j++)
+			{	xx.a[i+n*j] = mx->a[i];	yy.a[i+n*j] = my->a[j];	}
+		else
+#pragma omp parallel for private(i,j) collapse(2)
+			for(i=0;i<n;i++)	for(j=0;j<m;j++)
+			{	xx.a[i+n*j] = x->v(i);	yy.a[i+n*j] = y->v(j);	}
 		x = &xx;	y = &yy;
 	}
 	// x, y -- have the same size z
 	mreal z0, v0;
+#pragma omp parallel for private(i,j) collapse(2)
 	for(j=0;j<z->GetNz();j++)	for(i=0;i<v->GetNx();i++)
 	{
-		if(gr->Stop)	return;
+		if(gr->Stop)	continue;
 		v0 = v->v(i);		z0 = fixed ? gr->Min.z : v0;
 		if(z->GetNz()>1)	z0 = gr->Min.z+(gr->Max.z-gr->Min.z)*mreal(j)/(z->GetNz()-1);
 		zz.Fill(z0,z0);
@@ -1015,36 +1040,43 @@ void MGL_NO_EXPORT mgl_get_slice_md(_mgl_slice &s, const mglData *x, const mglDa
 
 	if(both)
 	{
-		if(dir=='x')	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
-		{
-			i0 = i+nx*j;	i1 = p+n*(i+m*j);
-			s.x.a[i0] = x->a[i1]*(1-d) + x->a[i1+1]*d;
-			s.y.a[i0] = y->a[i1]*(1-d) + y->a[i1+1]*d;
-			s.z.a[i0] = z->a[i1]*(1-d) + z->a[i1+1]*d;
-			s.a.a[i0] = a->a[i1]*(1-d) + a->a[i1+1]*d;
-		}
-		if(dir=='y')	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
-		{
-			i0 = i+nx*j;	i1 = i+n*(p+m*j);
-			s.x.a[i0] = x->a[i1]*(1-d) + x->a[i1+n]*d;
-			s.y.a[i0] = y->a[i1]*(1-d) + y->a[i1+n]*d;
-			s.z.a[i0] = z->a[i1]*(1-d) + z->a[i1+n]*d;
-			s.a.a[i0] = a->a[i1]*(1-d) + a->a[i1+n]*d;
-		}
-		if(dir=='z')	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
-		{
-			i0 = i+nx*j;	i1 = i+n*(j+m*p);
-			s.x.a[i0] = x->a[i1]*(1-d) + x->a[i1+n*m]*d;
-			s.y.a[i0] = y->a[i1]*(1-d) + y->a[i1+n*m]*d;
-			s.z.a[i0] = z->a[i1]*(1-d) + z->a[i1+n*m]*d;
-			s.a.a[i0] = a->a[i1]*(1-d) + a->a[i1+n*m]*d;
-		}
+		if(dir=='x')
+#pragma omp parallel for private(i,j,i0,i1) collapse(2)
+			for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
+			{
+				i0 = i+nx*j;	i1 = p+n*(i+m*j);
+				s.x.a[i0] = x->a[i1]*(1-d) + x->a[i1+1]*d;
+				s.y.a[i0] = y->a[i1]*(1-d) + y->a[i1+1]*d;
+				s.z.a[i0] = z->a[i1]*(1-d) + z->a[i1+1]*d;
+				s.a.a[i0] = a->a[i1]*(1-d) + a->a[i1+1]*d;
+			}
+		if(dir=='y')
+#pragma omp parallel for private(i,j,i0,i1) collapse(2)
+			for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
+			{
+				i0 = i+nx*j;	i1 = i+n*(p+m*j);
+				s.x.a[i0] = x->a[i1]*(1-d) + x->a[i1+n]*d;
+				s.y.a[i0] = y->a[i1]*(1-d) + y->a[i1+n]*d;
+				s.z.a[i0] = z->a[i1]*(1-d) + z->a[i1+n]*d;
+				s.a.a[i0] = a->a[i1]*(1-d) + a->a[i1+n]*d;
+			}
+		if(dir=='z')
+#pragma omp parallel for private(i,j,i0,i1) collapse(2)
+			for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
+			{
+				i0 = i+nx*j;	i1 = i+n*(j+m*p);
+				s.x.a[i0] = x->a[i1]*(1-d) + x->a[i1+n*m]*d;
+				s.y.a[i0] = y->a[i1]*(1-d) + y->a[i1+n*m]*d;
+				s.z.a[i0] = z->a[i1]*(1-d) + z->a[i1+n*m]*d;
+				s.a.a[i0] = a->a[i1]*(1-d) + a->a[i1+n*m]*d;
+			}
 	}
 	else	// x, y, z -- vectors
 	{
 		if(dir=='x')
 		{
 			v = x->a[p]*(1-d)+x->a[p+1]*d;
+#pragma omp parallel for private(i,j,i0,i1) collapse(2)
 			for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
 			{
 				i0 = i+nx*j;	s.x.a[i0] = v;	i1 = p+n*(i+m*j);
@@ -1055,6 +1087,7 @@ void MGL_NO_EXPORT mgl_get_slice_md(_mgl_slice &s, const mglData *x, const mglDa
 		if(dir=='y')
 		{
 			v = y->a[p]*(1-d)+y->a[p+1]*d;
+#pragma omp parallel for private(i,j,i0,i1) collapse(2)
 			for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
 			{
 				i0 = i+nx*j;	s.y.a[i0] = v;	i1 = i+n*(p+m*j);
@@ -1065,6 +1098,7 @@ void MGL_NO_EXPORT mgl_get_slice_md(_mgl_slice &s, const mglData *x, const mglDa
 		if(dir=='z')
 		{
 			v = z->a[p]*(1-d)+z->a[p+1]*d;
+#pragma omp parallel for private(i,j,i0,i1) collapse(2)
 			for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
 			{
 				i0 = i+nx*j;	s.z.a[i0] = v;	i1 = i+n*(j+m*p);
@@ -1097,6 +1131,7 @@ void MGL_EXPORT mgl_cont3_xyz_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, HCDT 
 	const mglData *ma = dynamic_cast<const mglData *>(a);
 	if(mx&&my&&mz&&ma)	mgl_get_slice_md(s,mx,my,mz,ma,dir,sVal,both);
 	else mgl_get_slice(s,x,y,z,a,dir,sVal,both);
+#pragma omp parallel for
 	for(long i=0;i<v->GetNx();i++)
 	{
 		mreal v0 = v->v(i);
@@ -1279,6 +1314,7 @@ void MGL_EXPORT mgl_contf3_xyz_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, HCDT
 	const mglData *ma = dynamic_cast<const mglData *>(a);
 	if(mx&&my&&mz&&ma)	mgl_get_slice_md(s,mx,my,mz,ma,dir,sVal,both);
 	else mgl_get_slice(s,x,y,z,a,dir,sVal,both);
+#pragma omp parallel for
 	for(long i=0;i<v->GetNx()-1;i++)
 	{
 		mreal v0 = v->v(i);
@@ -1508,20 +1544,24 @@ void MGL_EXPORT mgl_axial_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const 
 		xx.Create(n, m);		yy.Create(n, m);
 		const mglData *mx = dynamic_cast<const mglData *>(x);
 		const mglData *my = dynamic_cast<const mglData *>(y);
-		if(mx && my)	for(i=0;i<n;i++)	for(j=0;j<m;j++)
-		{	xx.a[i+n*j] = mx->a[i];	yy.a[i+n*j] = my->a[j];	}
-		else	for(i=0;i<n;i++)	for(j=0;j<m;j++)
-		{	xx.a[i+n*j] = x->v(i);	yy.a[i+n*j] = y->v(j);	}
+		if(mx && my)
+#pragma omp parallel for private(i,j) collapse(2)
+			for(i=0;i<n;i++)	for(j=0;j<m;j++)
+			{	xx.a[i+n*j] = mx->a[i];	yy.a[i+n*j] = my->a[j];	}
+		else
+#pragma omp parallel for private(i,j) collapse(2)
+			for(i=0;i<n;i++)	for(j=0;j<m;j++)
+			{	xx.a[i+n*j] = x->v(i);	yy.a[i+n*j] = y->v(j);	}
 		x = &xx;	y = &yy;
 	}
 	// x, y -- have the same size z
-	mreal v0;
 	int wire = mglchr(sch,'#')?1:0;
 	if(mglchr(sch,'.'))	wire = 2;
+#pragma omp parallel for private(i,j) collapse(2)
 	for(j=0;j<z->GetNz();j++)	for(i=0;i<v->GetNx();i++)
 	{
-		if(gr->Stop)	return;
-		v0 = v->v(i);
+		if(gr->Stop)	continue;
+		mreal v0 = v->v(i);
 		mgl_axial_gen(gr,v0,z,x,y,gr->GetC(s,v0),dir,j,wire);
 	}
 	gr->EndGroup();

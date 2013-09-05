@@ -387,8 +387,11 @@ void mglCanvas::Clf(mglColor Back)
 	Sub.clear();	Leg.clear();	Grp.clear();	Act.clear();
 
 	Txt.clear();	Txt.reserve(3);
-	MGL_PUSH(Txt,mglTexture(MGL_DEF_PAL,-1),mutexTxt);
-	MGL_PUSH(Txt,mglTexture(MGL_DEF_SCH,1),mutexTxt);
+#pragma omp critical(txt)
+	{
+		MGL_PUSH(Txt,mglTexture(MGL_DEF_PAL,-1),mutexTxt);
+		MGL_PUSH(Txt,mglTexture(MGL_DEF_SCH,1),mutexTxt);
+	}
 
 //	if(Back==NC)		Back = mglColor(1,1,1);
 	if((Flag&3)==2)	Back = mglColor(0,0,0);
@@ -1004,9 +1007,7 @@ void mglCanvas::glyph_draw(const mglPrim &P, mglDrawReg *d)
 	d->PDef = MGL_SOLID_MASK;	d->angle = 0;
 	mglPnt p=Pnt[P.n1];
 	mreal pf=sqrt((Bp.b[0]*Bp.b[0]+Bp.b[1]*Bp.b[1]+Bp.b[3]*Bp.b[3]+Bp.b[4]*Bp.b[4])/2), f = P.p*pf;
-#if MGL_HAVE_PTHREAD
-	pthread_mutex_lock(&mutexPnt);
-#endif
+
 	Push();		B.clear();
 	B.b[0] = B.b[4] = B.b[8] = P.s;
 	RotateN(phi,0,0,1);
@@ -1025,9 +1026,6 @@ void mglCanvas::glyph_draw(const mglPrim &P, mglDrawReg *d)
 		glyph_wire(p,f,g, d);
 	}
 	Pop();
-#if MGL_HAVE_PTHREAD
-	pthread_mutex_unlock(&mutexPnt);
-#endif
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::glyph_fill(const mglPnt &pp, mreal f, const mglGlyph &g, mglDrawReg *d)
@@ -1107,6 +1105,7 @@ void mglCanvas::glyph_line(const mglPnt &pp, mreal f, bool solid, mglDrawReg *d)
 long mglCanvas::setPp(mglPnt &q, const mglPoint &p)
 {
 	q.xx=q.x=p.x;	q.yy=q.y=p.y;	q.zz=q.z=p.z;
+#pragma omp critical(pnt)
 	MGL_PUSH(Pnt,q,mutexPnt);
 	return Pnt.size()-1;
 }

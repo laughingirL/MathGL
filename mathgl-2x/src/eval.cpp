@@ -155,18 +155,22 @@ double MGL_EXPORT mgl_rnd()
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_lock(&mutexRnd);
 #endif
-#if MGL_HAVE_GSL
-	if(mgl_rng==0)
+	double res;
+#pragma omp critical(rnd)
 	{
-		gsl_rng_env_setup();
-		mgl_rng = gsl_rng_alloc(gsl_rng_default);
-		gsl_rng_set(mgl_rng, time(0));
-	}
-	double res = gsl_rng_uniform(mgl_rng);
-//	gsl_rng_free(r);
+#if MGL_HAVE_GSL
+		if(mgl_rng==0)
+		{
+			gsl_rng_env_setup();
+			mgl_rng = gsl_rng_alloc(gsl_rng_default);
+			gsl_rng_set(mgl_rng, time(0));
+		}
+		res = gsl_rng_uniform(mgl_rng);
+//		gsl_rng_free(r);
 #else
-	double res = rand()/(RAND_MAX-1.);
+		res = rand()/(RAND_MAX-1.);
 #endif
+	}
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_unlock(&mutexRnd);
 #endif

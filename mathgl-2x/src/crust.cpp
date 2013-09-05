@@ -41,9 +41,10 @@ void MGL_EXPORT mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCD
 	if(nc!=n && nc>=m)	// colors per triangle
 	{
 		gr->Reserve(m*3);
+#pragma omp parallel for private(i,p1,p2,p3,k1,k2,k3)
 		for(i=0;i<m;i++)
 		{
-			if(gr->Stop)	return;
+			if(gr->Stop)	continue;
 			k1 = long(nums->v(0,i)+0.5);
 			p1 = mglPoint(x->v(k1), y->v(k1), z->v(k1));
 			k2 = long(nums->v(1,i)+0.5);
@@ -62,9 +63,10 @@ void MGL_EXPORT mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCD
 		gr->Reserve(n);
 		long *kk = new long[n];
 		mglPoint *pp = new mglPoint[n];
+#pragma omp parallel for private(i,q,k1,k2,k3)
 		for(i=0;i<m;i++)	// add averaged normales
 		{
-			if(gr->Stop)	{	delete []kk;	delete []pp;	return;	}
+			if(gr->Stop)	continue;
 			k1 = long(nums->v(0,i)+0.5);
 			k2 = long(nums->v(1,i)+0.5);
 			k3 = long(nums->v(2,i)+0.5);
@@ -78,15 +80,17 @@ void MGL_EXPORT mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCD
 				pp[k1] += q;	pp[k2] += q;	pp[k3] += q;
 			}
 		}
+#pragma omp parallel for private(i,q)
 		for(i=0;i<n;i++)	// add points
 		{
-			if(gr->Stop)	{	delete []kk;	delete []pp;	return;	}
+			if(gr->Stop)	continue;
 			q = mglPoint(x->v(i), y->v(i), z->v(i));
 			kk[i] = gr->AddPnt(q,gr->GetC(ss,a->v(i)),pp[i]);
 		}
+#pragma omp parallel for private(i,k1,k2,k3)
 		for(i=0;i<m;i++)	// draw triangles
 		{
-			if(gr->Stop)	{	delete []kk;	delete []pp;	return;	}
+			if(gr->Stop)	continue;
 			k1 = long(nums->v(0,i)+0.5);
 			k2 = long(nums->v(1,i)+0.5);
 			k3 = long(nums->v(2,i)+0.5);
@@ -151,9 +155,10 @@ void MGL_EXPORT mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HC
 	if(nc!=n && nc>=m)	// colors per triangle
 	{
 		gr->Reserve(m*4);
+#pragma omp parallel for private(i,p1,p2,p3,p4,k1,k2,k3,k4)
 		for(i=0;i<m;i++)
 		{
-			if(gr->Stop)	return;
+			if(gr->Stop)	continue;
 			k1 = long(nums->v(0,i)+0.5);
 			p1 = mglPoint(x->v(k1), y->v(k1), z->v(k1));
 			k2 = long(nums->v(1,i)+0.5);
@@ -175,9 +180,10 @@ void MGL_EXPORT mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HC
 		gr->Reserve(n);
 		long *kk = new long[n];
 		mglPoint *pp = new mglPoint[n];
+#pragma omp parallel for private(i,p1,p2,p3,p4,k1,k2,k3,k4)
 		for(i=0;i<m;i++)	// add averaged normales
 		{
-			if(gr->Stop)	{	delete []kk;	delete []pp;	return;	}
+			if(gr->Stop)	continue;
 			k1 = long(nums->v(0,i)+0.5);
 			p1 = mglPoint(x->v(k1), y->v(k1), z->v(k1));
 			k2 = long(nums->v(1,i)+0.5);
@@ -196,14 +202,16 @@ void MGL_EXPORT mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HC
 				q = (p1-p4) ^ (p4-p3);	if(q.z<0) q*=-1;	pp[k4] += q;
 			}
 		}
+#pragma omp parallel for private(i)
 		for(i=0;i<n;i++)	// add points
 		{
-			if(gr->Stop)	{	delete []kk;	delete []pp;	return;	}
+			if(gr->Stop)	continue;
 			kk[i] = gr->AddPnt(mglPoint(x->v(i), y->v(i), z->v(i)),gr->GetC(ss,a->v(i)), pp[i]);
 		}
+#pragma omp parallel for private(i,k1,k2,k3,k4)
 		for(i=0;i<m;i++)	// draw quads
 		{
-			if(gr->Stop)	{	delete []kk;	delete []pp;	return;	}
+			if(gr->Stop)	continue;
 			k1 = floor(nums->v(0,i)+0.5);
 			k2 = floor(nums->v(1,i)+0.5);
 			k3 = floor(nums->v(2,i)+0.5);
@@ -266,9 +274,10 @@ void MGL_EXPORT mgl_tricont_xyzcv(HMGL gr, HCDT v, HCDT nums, HCDT x, HCDT y, HC
 	bool zVal = !(mglchr(sch,'_'));
 	mreal d1,d2,d3;
 	mglPoint p1,p2,p3;
+#pragma omp parallel for private(k,i,d1,d2,d3,val,c,p1,p2,p3,k1,k2,k3) collapse(2)
 	for(k=0;k<v->GetNx();k++)	for(i=0;i<m;i++)
 	{
-		if(gr->Stop)	return;
+		if(gr->Stop)	continue;
 		k1 = long(nums->v(0,i)+0.1);	if(k1<0 || k1>=n)	continue;
 		k2 = long(nums->v(1,i)+0.1);	if(k2<0 || k2>=n)	continue;
 		k3 = long(nums->v(2,i)+0.1);	if(k3<0 || k3>=n)	continue;
@@ -359,16 +368,16 @@ void MGL_EXPORT mgl_dots_a(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *
 	
 	static int cgid=1;	gr->StartGroup("Dots",cgid++);
 	char mk=gr->SetPenPal(sch);
-	long ss=gr->AddTexture(sch), pp;
+	long ss=gr->AddTexture(sch);
 	if(mk==0)	mk='.';
 	gr->Reserve(n);
-	mglPoint p;
 
+#pragma omp parallel for
 	for(long i=0;i<n;i+=d)
 	{
-		if(gr->Stop)	return;
-		p = mglPoint(x->vthr(i),y->vthr(i),z->vthr(i));
-		pp = gr->AddPnt(p,gr->GetC(ss,a->vthr(i)));
+		if(gr->Stop)	continue;
+		mglPoint p = mglPoint(x->vthr(i),y->vthr(i),z->vthr(i));
+		long pp = gr->AddPnt(p,gr->GetC(ss,a->vthr(i)));
 		gr->mark_plot(pp, mk);
 	}
 	gr->EndGroup();
@@ -400,12 +409,14 @@ HMDT MGL_EXPORT mgl_triangulation_3d(HCDT x, HCDT y, HCDT z)
 	register long i;
 	mglPoint *pp = new mglPoint[n];
 	long *nn=0;
+#pragma omp parallel for private(i)
 	for(i=0;i<n;i++)	pp[i] = mglPoint(x->v(i), y->v(i), z->v(i));
 	m = mgl_crust(n,pp,&nn,0);
 
 	if(m>0)
 	{
 		nums=new mglData(3,m);
+#pragma omp parallel for private(i)
 		for(i=0;i<3*m;i++)	nums->a[i]=nn[i];
 	}
 	delete []pp;	free(nn);	return nums;
@@ -422,6 +433,7 @@ HMDT MGL_EXPORT mgl_triangulation_2d(HCDT x, HCDT y)
 	std::vector<size_t> out;
 	Shx pt;
 
+#pragma omp parallel for private(i)
 	for(i=0;i<n;i++)
 	{
 		pt.r = x->v(i);	pt.c = y->v(i);
@@ -433,6 +445,7 @@ HMDT MGL_EXPORT mgl_triangulation_2d(HCDT x, HCDT y)
 	s_hull_pro(pts, triads);
 	m = triads.size();
 	nums=new mglData(3,m);
+#pragma omp parallel for private(i)
 	for(i=0;i<m;i++)
 	{
 		nums->a[3*i]   = triads[i].a;
@@ -458,6 +471,9 @@ MGL_NO_EXPORT void *mgl_grid_t(void *par)
 	register long i0, k1,k2,k3;
 	mreal *b=t->a;
 	const mreal *x=t->b, *y=t->c, *d=t->d, *z=t->e;
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel for private(i0,k1,k2,k3)
+#endif
 	for(i0=t->id;i0<t->n;i0+=mglNumThr)
 	{
 		k1 = long(d[3*i0]); k2 = long(d[3*i0+1]); k3 = long(d[3*i0+2]);
@@ -509,7 +525,9 @@ void MGL_EXPORT mgl_data_grid(HMGL gr, HMDT d, HCDT xdat, HCDT ydat, HCDT zdat, 
 
 	register long i;
 	mreal *xc=new mreal[n], *yc=new mreal[n];
+#pragma omp parallel for private(i)
 	for(i=0;i<n;i++)	{	xc[i]=xx[1]*(x->a[i]-xx[0]);	yc[i]=xx[3]*(y->a[i]-xx[2]);	}
+#pragma omp parallel for
 	for(long i=0;i<d->nx*d->ny*d->nz;i++) d->a[i] = NAN;
 	
 	mglStartThread(mgl_grid_t,0,nn,d->a,xc,yc,par,0,nums->a,z->a);

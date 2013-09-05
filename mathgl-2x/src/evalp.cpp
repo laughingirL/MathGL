@@ -29,27 +29,43 @@ std::wstring mgl_trim_ws(const std::wstring &str);
 int mglFormulaError;
 mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring string, mglParser *arg);
 //-----------------------------------------------------------------------------
+void mglApplyFunc(mglData &d, double (*func)(double))
+{
+	long n = d.nx*d.ny*d.nz;
+#pragma omp parallel for
+	for(long i=0;i<n;i++)	d.a[i] = log(d.a[i]);
+}
+//-----------------------------------------------------------------------------
 mglData mglApplyOper(std::wstring a1, std::wstring a2, mglParser *arg, double (*func)(double,double))
 {
 	const mglData &a = mglFormulaCalc(a1,arg), &b = mglFormulaCalc(a2,arg);
 	long n = mgl_max(a.nx,b.nx), m = mgl_max(a.ny,b.ny), l = mgl_max(a.nz,b.nz);
 	mglData r(n, m, l);
 	register int i,j,k;
-	if(b.nx*b.ny*b.nz==1)	for(i=0;i<a.nx*a.ny*a.nz;i++)
-		r.a[i] = func(a.a[i],b.a[0]);
-	else if(a.nx*a.ny*a.nz==1)	for(i=0;i<b.nx*b.ny*b.nz;i++)
-		r.a[i] = func(a.a[0],b.a[i]);
-	else if(a.nx==b.nx && b.ny==a.ny && b.nz==a.nz)	for(i=0;i<n*m*l;i++)
-		r.a[i] = func(a.a[i], b.a[i]);
-	else if(a.nx==b.nx && b.ny*b.nz==1)	for(i=0;i<n;i++)	for(j=0;j<a.ny*a.nz;j++)
-		r.a[i+n*j] = func(a.a[i+n*j], b.a[i]);
-	else if(a.nx==b.nx && a.ny*a.nz==1)	for(i=0;i<n;i++)	for(j=0;j<b.ny*b.nz;j++)
-		r.a[i+n*j] = func(a.a[i], b.a[i+n*j]);
+	if(b.nx*b.ny*b.nz==1)
+#pragma omp parallel for private(i)
+		for(i=0;i<a.nx*a.ny*a.nz;i++)	r.a[i] = func(a.a[i],b.a[0]);
+	else if(a.nx*a.ny*a.nz==1)
+#pragma omp parallel for private(i)
+		for(i=0;i<b.nx*b.ny*b.nz;i++)	r.a[i] = func(a.a[0],b.a[i]);
+	else if(a.nx==b.nx && b.ny==a.ny && b.nz==a.nz)
+#pragma omp parallel for private(i)
+		for(i=0;i<n*m*l;i++)	r.a[i] = func(a.a[i], b.a[i]);
+	else if(a.nx==b.nx && b.ny*b.nz==1)
+#pragma omp parallel for private(i,j) collapse(2)
+		for(j=0;j<a.ny*a.nz;j++)	for(i=0;i<n;i++)
+			r.a[i+n*j] = func(a.a[i+n*j], b.a[i]);
+	else if(a.nx==b.nx && a.ny*a.nz==1)
+#pragma omp parallel for private(i,j) collapse(2)
+		for(i=0;i<n;i++)	for(j=0;j<b.ny*b.nz;j++)
+			r.a[i+n*j] = func(a.a[i], b.a[i+n*j]);
 	else if(a.nx==b.nx && b.ny==a.ny && b.nz==1)
-		for(i=0;i<n;i++)	for(j=0;j<m;j++)	for(k=0;k<a.nz;k++)
+#pragma omp parallel for private(i,j,k) collapse(3)
+		for(k=0;k<a.nz;k++)	for(j=0;j<m;j++)	for(i=0;i<n;i++)
 			r.a[i+n*(j+m*k)] = func(a.a[i+n*(j+m*k)], b.a[i+n*j]);
 	else if(a.nx==b.nx && b.ny==a.ny && a.nz==1)
-		for(i=0;i<n;i++)	for(j=0;j<m;j++)	for(k=0;k<b.nz;k++)
+#pragma omp parallel for private(i,j,k) collapse(3)
+		for(k=0;k<b.nz;k++)	for(j=0;j<m;j++)	for(i=0;i<n;i++)
 			r.a[i+n*(j+m*k)] = func(a.a[i+n*j], b.a[i+n*(j+m*k)]);
 	return r;
 }
@@ -286,14 +302,11 @@ mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg)
 		else if(nm[0]=='a')	// function
 		{
 			if(!nm.compare(L"asin"))
-			{	res=mglFormulaCalc(str, arg);
-				for(i=0;i<res.nx*res.ny*res.nz;i++)	res.a[i] = asin(res.a[i]);	}
+			{	res=mglFormulaCalc(str, arg);	mglApplyFunc(res,asin);	}
 			else if(!nm.compare(L"acos"))
-			{	res=mglFormulaCalc(str, arg);
-				for(i=0;i<res.nx*res.ny*res.nz;i++)	res.a[i] = acos(res.a[i]);	}
+			{	res=mglFormulaCalc(str, arg);	mglApplyFunc(res,acos);	}
 			else if(!nm.compare(L"atan"))
-			{	res=mglFormulaCalc(str, arg);
-				for(i=0;i<res.nx*res.ny*res.nz;i++)	res.a[i] = atan(res.a[i]);	}
+			{	res=mglFormulaCalc(str, arg);	mglApplyFunc(res,atan);	}
 			else if(!nm.compare(L"arg"))
 			{
 				n=mglFindInText(str,",");
@@ -301,23 +314,26 @@ mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg)
 				else	res = mglApplyOper(str.substr(n+1),str.substr(0,n),arg, atan2);
 			}
 			else if(!nm.compare(L"abs"))
-			{	res=mglFormulaCalc(str, arg);
-				for(i=0;i<res.nx*res.ny*res.nz;i++)	res.a[i] = fabs(res.a[i]);	}
+			{	res=mglFormulaCalc(str, arg);	mglApplyFunc(res,fabs);	}
 #if MGL_HAVE_GSL
 			else if(!nm.compare(L"ai") || !nm.compare(L"airy_ai"))
 			{	res=mglFormulaCalc(str, arg);
+#pragma omp parallel for private(i)
 				for(i=0;i<res.nx*res.ny*res.nz;i++)
 					res.a[i] = gsl_sf_airy_Ai(res.a[i],GSL_PREC_SINGLE);	}
 			else if(!nm.compare(L"airy_dai"))
 			{	res=mglFormulaCalc(str, arg);
+#pragma omp parallel for private(i)
 				for(i=0;i<res.nx*res.ny*res.nz;i++)
 					res.a[i] = gsl_sf_airy_Ai_deriv(res.a[i],GSL_PREC_SINGLE);	}
 			else if(!nm.compare(L"airy_bi"))
 			{	res=mglFormulaCalc(str, arg);
+#pragma omp parallel for private(i)
 				for(i=0;i<res.nx*res.ny*res.nz;i++)
 					res.a[i] = gsl_sf_airy_Bi(res.a[i],GSL_PREC_SINGLE);	}
 			else if(!nm.compare(L"airy_dbi"))
 			{	res=mglFormulaCalc(str, arg);
+#pragma omp parallel for private(i)
 				for(i=0;i<res.nx*res.ny*res.nz;i++)
 					res.a[i] = gsl_sf_airy_Bi_deriv(res.a[i],GSL_PREC_SINGLE);	}
 		}
@@ -331,6 +347,7 @@ mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg)
 			}
 			else if(!nm.compare(L"bi"))
 			{	res=mglFormulaCalc(str, arg);
+#pragma omp parallel for private(i)
 				for(i=0;i<res.nx*res.ny*res.nz;i++)
 					res.a[i] = gsl_sf_airy_Bi(res.a[i],GSL_PREC_SINGLE);	}
 			else if(!nm.compare(L"bessel_i"))
@@ -362,35 +379,30 @@ mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg)
 		else if(nm[0]=='c')
 		{
 			if(!nm.compare(L"cos"))
-			{	res=mglFormulaCalc(str, arg);
-				for(i=0;i<res.nx*res.ny*res.nz;i++)	res.a[i] = cos(res.a[i]);	}
+			{	res=mglFormulaCalc(str, arg);	mglApplyFunc(res,cos);	}
 			else if(!nm.compare(L"cosh") || !nm.compare(L"ch"))
-			{	res=mglFormulaCalc(str, arg);
-				for(i=0;i<res.nx*res.ny*res.nz;i++)	res.a[i] = cosh(res.a[i]);	}
+			{	res=mglFormulaCalc(str, arg);	mglApplyFunc(res,cosh);	}
 #if MGL_HAVE_GSL
 			else if(!nm.compare(L"ci"))
-			{	res=mglFormulaCalc(str, arg);
-				for(i=0;i<res.nx*res.ny*res.nz;i++)
-					res.a[i] = gsl_sf_Ci(res.a[i]);	}
+			{	res=mglFormulaCalc(str, arg);	mglApplyFunc(res,gsl_sf_Ci);	}
 #endif
 		}
 		else if(nm[0]=='e')
 		{
 			if(!nm.compare(L"exp"))
-			{	res=mglFormulaCalc(str, arg);
-				for(i=0;i<res.nx*res.ny*res.nz;i++)	res.a[i] = exp(res.a[i]);	}
+			{	res=mglFormulaCalc(str, arg);	mglApplyFunc(res,exp);	}
 #if MGL_HAVE_GSL
 			else if(!nm.compare(L"erf"))
-			{	res=mglFormulaCalc(str, arg);
-				for(i=0;i<res.nx*res.ny*res.nz;i++)
-					res.a[i] = gsl_sf_erf(res.a[i]);	}
+			{	res=mglFormulaCalc(str, arg);	mglApplyFunc(res,gsl_sf_erf);	}
 //			else if(!nm.compare(L"en"))	Kod=EQ_EN;	// NOTE: not supported
 			else if(!nm.compare(L"ee") || !nm.compare(L"elliptic_ec"))
 			{	res=mglFormulaCalc(str, arg);
+#pragma omp parallel for private(i)
 				for(i=0;i<res.nx*res.ny*res.nz;i++)
 					res.a[i] = gsl_sf_ellint_Ecomp(res.a[i],GSL_PREC_SINGLE);	}
 			else if(!nm.compare(L"ek") || !nm.compare(L"elliptic_kc"))
 			{	res=mglFormulaCalc(str, arg);
+#pragma omp parallel for private(i)
 				for(i=0;i<res.nx*res.ny*res.nz;i++)
 					res.a[i] = gsl_sf_ellint_Kcomp(res.a[i],GSL_PREC_SINGLE);	}
 			else if(!nm.compare(L"e") || !nm.compare(L"elliptic_e"))
@@ -407,25 +419,15 @@ mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg)
 			}
 
 			else if(!nm.compare(L"ei"))
-			{	res=mglFormulaCalc(str, arg);
-				for(i=0;i<res.nx*res.ny*res.nz;i++)
-					res.a[i] = gsl_sf_expint_Ei(res.a[i]);	}
+			{	res=mglFormulaCalc(str, arg);	mglApplyFunc(res,gsl_sf_expint_Ei);	}
 			else if(!nm.compare(L"e1"))
-			{	res=mglFormulaCalc(str, arg);
-				for(i=0;i<res.nx*res.ny*res.nz;i++)
-					res.a[i] = gsl_sf_expint_E1(res.a[i]);	}
+			{	res=mglFormulaCalc(str, arg);	mglApplyFunc(res,gsl_sf_expint_E1);	}
 			else if(!nm.compare(L"e2"))
-			{	res=mglFormulaCalc(str, arg);
-				for(i=0;i<res.nx*res.ny*res.nz;i++)
-					res.a[i] = gsl_sf_expint_E2(res.a[i]);	}
+			{	res=mglFormulaCalc(str, arg);	mglApplyFunc(res,gsl_sf_expint_E2);	}
 			else if(!nm.compare(L"eta"))
-			{	res=mglFormulaCalc(str, arg);
-				for(i=0;i<res.nx*res.ny*res.nz;i++)
-					res.a[i] = gsl_sf_eta(res.a[i]);	}
+			{	res=mglFormulaCalc(str, arg);	mglApplyFunc(res,gsl_sf_eta);	}
 			else if(!nm.compare(L"ei3"))
-			{	res=mglFormulaCalc(str, arg);
-				for(i=0;i<res.nx*res.ny*res.nz;i++)
-					res.a[i] = gsl_sf_expint_3(res.a[i]);	}
+			{	res=mglFormulaCalc(str, arg);	mglApplyFunc(res,gsl_sf_expint_3);	}
 #endif
 		}
 		else if(nm[0]=='l')
@@ -437,16 +439,12 @@ mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg)
 				else	res = mglApplyOper(str.substr(0,n),str.substr(n+1),arg, llg);
 			}
 			else if(!nm.compare(L"lg"))
-			{	res=mglFormulaCalc(str, arg);
-				for(i=0;i<res.nx*res.ny*res.nz;i++)	res.a[i] = log10(res.a[i]);	}
+			{	res=mglFormulaCalc(str, arg);	mglApplyFunc(res,log10);	}
 			else if(!nm.compare(L"ln"))
-			{	res=mglFormulaCalc(str, arg);
-				for(i=0;i<res.nx*res.ny*res.nz;i++)	res.a[i] = log(res.a[i]);	}
+			{	res=mglFormulaCalc(str, arg);	mglApplyFunc(res,log);	}
 #if MGL_HAVE_GSL
 			else if(!nm.compare(L"li2"))
-			{	res=mglFormulaCalc(str, arg);
-				for(i=0;i<res.nx*res.ny*res.nz;i++)
-					res.a[i] = gsl_sf_dilog(res.a[i]);	}
+			{	res=mglFormulaCalc(str, arg);	mglApplyFunc(res,gsl_sf_dilog);	}
 			else if(!nm.compare(L"legendre"))
 			{
 				n=mglFindInText(str,",");
@@ -458,40 +456,33 @@ mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg)
 		else if(nm[0]=='s')
 		{
 			if(!nm.compare(L"sqrt"))
-			{	res=mglFormulaCalc(str, arg);
-				for(i=0;i<res.nx*res.ny*res.nz;i++)	res.a[i] = sqrt(res.a[i]);	}
+			{	res=mglFormulaCalc(str, arg);	mglApplyFunc(res,sqrt);	}
 			else if(!nm.compare(L"sin"))
-			{	res=mglFormulaCalc(str, arg);
-				for(i=0;i<res.nx*res.ny*res.nz;i++)	res.a[i] = sin(res.a[i]);	}
+			{	res=mglFormulaCalc(str, arg);	mglApplyFunc(res,sin);	}
 			else if(!nm.compare(L"step"))
 			{	res=mglFormulaCalc(str, arg);
+#pragma omp parallel for private(i)
 				for(i=0;i<res.nx*res.ny*res.nz;i++)	res.a[i] = res.a[i]>0?1:0;	}
 			else if(!nm.compare(L"sign"))
 			{	res=mglFormulaCalc(str, arg);
+#pragma omp parallel for private(i)
 				for(i=0;i<res.nx*res.ny*res.nz;i++)
 					res.a[i] = res.a[i]>0?1:(res.a[i]<0?-1:0);	}
 			else if(!nm.compare(L"sinh") || !nm.compare(L"sh"))
-			{	res=mglFormulaCalc(str, arg);
-				for(i=0;i<res.nx*res.ny*res.nz;i++)	res.a[i] = sinh(res.a[i]);	}
+			{	res=mglFormulaCalc(str, arg);	mglApplyFunc(res,sinh);	}
 #if MGL_HAVE_GSL
 			else if(!nm.compare(L"si"))
-			{	res=mglFormulaCalc(str, arg);
-				for(i=0;i<res.nx*res.ny*res.nz;i++)
-					res.a[i] = gsl_sf_Si(res.a[i]);	}
+			{	res=mglFormulaCalc(str, arg);	mglApplyFunc(res,gsl_sf_Si);	}
 			else if(!nm.compare(L"sinc"))
-			{	res=mglFormulaCalc(str, arg);
-				for(i=0;i<res.nx*res.ny*res.nz;i++)
-					res.a[i] = gsl_sf_sinc(res.a[i]);	}
+			{	res=mglFormulaCalc(str, arg);	mglApplyFunc(res,gsl_sf_sinc);	}
 #endif
 		}
 		else if(nm[0]=='t')
 		{
 			if(!nm.compare(L"tg") || !nm.compare(L"tan"))
-			{	res=mglFormulaCalc(str, arg);
-				for(i=0;i<res.nx*res.ny*res.nz;i++)	res.a[i] = tan(res.a[i]);	}
+			{	res=mglFormulaCalc(str, arg);	mglApplyFunc(res,tan);	}
 			else if(!nm.compare(L"tanh") || !nm.compare(L"th"))
-			{	res=mglFormulaCalc(str, arg);
-				for(i=0;i<res.nx*res.ny*res.nz;i++)	res.a[i] = tanh(res.a[i]);	}
+			{	res=mglFormulaCalc(str, arg);	mglApplyFunc(res,tanh);	}
 		}
 		else if(!nm.compare(L"pow"))
 		{
@@ -506,8 +497,7 @@ mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg)
 			else	res = mglApplyOper(str.substr(0,n),str.substr(n+1),arg, fmod);
 		}
 		else if(!nm.compare(L"int"))
-		{	res=mglFormulaCalc(str, arg);
-			for(i=0;i<res.nx*res.ny*res.nz;i++)	res.a[i] = floor(res.a[i]);	}
+		{	res=mglFormulaCalc(str, arg);	mglApplyFunc(res,floor);	}
 #if MGL_HAVE_GSL
 		else if(!nm.compare(L"i"))
 		{
@@ -540,29 +530,17 @@ mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg)
 			else	res = mglApplyOper(str.substr(0,n),str.substr(n+1),arg, gslEllF);
 		}
 		else if(!nm.compare(L"gamma"))
-		{	res=mglFormulaCalc(str, arg);
-			for(i=0;i<res.nx*res.ny*res.nz;i++)
-				res.a[i] = gsl_sf_gamma(res.a[i]);	}
+		{	res=mglFormulaCalc(str, arg);	mglApplyFunc(res,gsl_sf_gamma);	}
 		else if(!nm.compare(L"w0"))
-		{	res=mglFormulaCalc(str, arg);
-			for(i=0;i<res.nx*res.ny*res.nz;i++)
-				res.a[i] = gsl_sf_lambert_W0(res.a[i]);	}
+		{	res=mglFormulaCalc(str, arg);	mglApplyFunc(res,gsl_sf_lambert_W0);	}
 		else if(!nm.compare(L"w1"))
-		{	res=mglFormulaCalc(str, arg);
-			for(i=0;i<res.nx*res.ny*res.nz;i++)
-				res.a[i] = gsl_sf_lambert_Wm1(res.a[i]);	}
+		{	res=mglFormulaCalc(str, arg);	mglApplyFunc(res,gsl_sf_lambert_Wm1);	}
 		else if(!nm.compare(L"psi"))
-		{	res=mglFormulaCalc(str, arg);
-			for(i=0;i<res.nx*res.ny*res.nz;i++)
-				res.a[i] = gsl_sf_psi(res.a[i]);	}
+		{	res=mglFormulaCalc(str, arg);	mglApplyFunc(res,gsl_sf_psi);	}
 		else if(!nm.compare(L"zeta"))
-		{	res=mglFormulaCalc(str, arg);
-			for(i=0;i<res.nx*res.ny*res.nz;i++)
-				res.a[i] = gsl_sf_zeta(res.a[i]);	}
+		{	res=mglFormulaCalc(str, arg);	mglApplyFunc(res,gsl_sf_zeta);	}
 		else if(!nm.compare(L"z"))
-		{	res=mglFormulaCalc(str, arg);
-			for(i=0;i<res.nx*res.ny*res.nz;i++)
-				res.a[i] = gsl_sf_dawson(res.a[i]);	}
+		{	res=mglFormulaCalc(str, arg);	mglApplyFunc(res,gsl_sf_dawson);	}
 #endif
 	}
 	return res;

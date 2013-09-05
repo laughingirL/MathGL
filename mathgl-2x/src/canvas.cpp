@@ -50,6 +50,7 @@ long mglCanvas::PushDrwDat()
 {
 	mglDrawDat d;
 	d.Pnt=Pnt;	d.Prm=Prm;	d.Glf=Glf;	d.Ptx=Ptx;	d.Txt=Txt;
+#pragma omp critical(drw)
 	MGL_PUSH(DrwDat,d,mutexDrw);
 	return DrwDat.size();
 }
@@ -65,9 +66,11 @@ void mglCanvas::SetFrame(long i)
 		d.Pnt=Pnt;	d.Prm=Prm;	d.Glf=Glf;	d.Ptx=Ptx;	d.Txt=Txt;
 #if MGL_HAVE_PTHREAD
 		pthread_mutex_lock(&mutexDrw);
+#pragma omp critical(drw)
 		DrwDat[i] = d;
 		pthread_mutex_unlock(&mutexDrw);
 #else
+#pragma omp critical(drw)
 		DrwDat[i] = d;
 #endif
 	}
@@ -85,7 +88,8 @@ void mglCanvas::GetFrame(long k)
 	pthread_mutex_lock(&mutexPtx);
 	pthread_mutex_lock(&mutexTxt);
 #endif
-	Pnt=d.Pnt;	Prm=d.Prm;	Glf=d.Glf;	Ptx=d.Ptx;	Txt=d.Txt;
+#pragma omp critical
+	{	Pnt=d.Pnt;	Prm=d.Prm;	Glf=d.Glf;	Ptx=d.Ptx;	Txt=d.Txt;	}
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_unlock(&mutexTxt);
 	pthread_mutex_unlock(&mutexPtx);
@@ -107,33 +111,36 @@ void mglCanvas::ShowFrame(long k)
 	pthread_mutex_lock(&mutexPtx);
 	pthread_mutex_lock(&mutexTxt);
 #endif
-	const mglDrawDat &d=DrwDat[k];
-	register size_t i;
-	Glf.reserve(d.Glf.size());	for(i=0;i<d.Glf.size();i++)	Glf.push_back(d.Glf[i]);
-	Ptx.reserve(d.Ptx.size());	for(i=0;i<d.Ptx.size();i++)	Ptx.push_back(d.Ptx[i]);
-	Txt.reserve(d.Pnt.size());	for(i=0;i<d.Txt.size();i++)	Txt.push_back(d.Txt[i]);
-	Pnt.reserve(d.Pnt.size());
-	for(i=0;i<d.Pnt.size();i++)
+#pragma omp critical
 	{
-		mglPnt p = d.Pnt[i]; 	p.c += ntxt;
-		Pnt.push_back(p);
-	}
-	Prm.reserve(d.Prm.size());
-	for(i=0;i<d.Prm.size();i++)
-	{
-		mglPrim p = d.Prm[i];
-		p.n1 += npnt;
-
-		switch(p.type)
+		const mglDrawDat &d=DrwDat[k];
+		register size_t i;
+		Glf.reserve(d.Glf.size());	for(i=0;i<d.Glf.size();i++)	Glf.push_back(d.Glf[i]);
+		Ptx.reserve(d.Ptx.size());	for(i=0;i<d.Ptx.size();i++)	Ptx.push_back(d.Ptx[i]);
+		Txt.reserve(d.Pnt.size());	for(i=0;i<d.Txt.size();i++)	Txt.push_back(d.Txt[i]);
+		Pnt.reserve(d.Pnt.size());
+		for(i=0;i<d.Pnt.size();i++)
 		{
-		case 1:	p.n2 += npnt;	break;
-		case 2:	p.n2 += npnt;	p.n3 += npnt;	break;
-		case 3:	p.n2 += npnt;	p.n3 += npnt;	p.n4 += npnt;	break;
-		case 4: p.n4 += nglf;	break;
-		case 5:	p.n2 += npnt;	break;
-		case 6: p.n3 += nptx;	break;
+			mglPnt p = d.Pnt[i]; 	p.c += ntxt;
+			Pnt.push_back(p);
 		}
-		Prm.push_back(p);
+		Prm.reserve(d.Prm.size());
+		for(i=0;i<d.Prm.size();i++)
+		{
+			mglPrim p = d.Prm[i];
+			p.n1 += npnt;
+
+			switch(p.type)
+			{
+			case 1:	p.n2 += npnt;	break;
+			case 2:	p.n2 += npnt;	p.n3 += npnt;	break;
+			case 3:	p.n2 += npnt;	p.n3 += npnt;	p.n4 += npnt;	break;
+			case 4: p.n4 += nglf;	break;
+			case 5:	p.n2 += npnt;	break;
+			case 6: p.n3 += nptx;	break;
+			}
+			Prm.push_back(p);
+		}
 	}
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_unlock(&mutexPnt);
@@ -153,7 +160,9 @@ void mglCanvas::add_prim(mglPrim &a)
 	if(a.n1>=0)
 	{
 		a.z = Pnt[a.n1].z;	// this is a bit less accurate but simpler for transformation
-		a.id = ObjId;	MGL_PUSH(Prm,a,mutexPrm);
+		a.id = ObjId;
+#pragma omp critical(prm)
+		MGL_PUSH(Prm,a,mutexPrm);
 		clr(MGL_FINISHED);
 	}
 }
@@ -408,72 +417,71 @@ mreal mglCanvas::text_plot(long p,const wchar_t *text,const char *font,mreal siz
 #if MGL_HAVE_PTHREAD
 pthread_mutex_lock(&mutexPtx);
 #endif
-	inv = inv ^ (strchr(font,'T')!=0);
-	if(inv)	shift = 0.2*h-shift;
-	shift += 0.015*h;	// Correction for glyph rotation around proper point
-//	shift *= h;
-
-	int align;	mglGetStyle(font,0,&align);	align = align&3;
-	B.x = q.x;	B.y = q.y - shift;	B.z = q.z;
-	if(ll>0)
+#pragma omp critical(ptx)
 	{
-		B.x += shift*q.v/sqrt(ll);	B.y += shift*(1-q.u/sqrt(ll));
-		if(q.u==0 && !get(MGL_ENABLE_RTEXT))	B.y -= 0.1*h;
-	}
-	fscl = fsize;	forg = p;
+		inv = inv ^ (strchr(font,'T')!=0);
+		if(inv)	shift = 0.2*h-shift;
+		shift += 0.015*h;	// Correction for glyph rotation around proper point
+//		shift *= h;
 
-	if(mgl_isnan(ll) || !get(MGL_ENABLE_RTEXT))	ftet = 0;
-	else if(ll)	ftet = -180*atan2(q.v,q.u)/M_PI;
-	else 	ftet = NAN;
-
-	if(!(Quality&MGL_DRAW_LMEM))	// add text itself
-	{
-		char ch = mglGetStyle(font,0,0);
-		mglColor mc(ch);
-		if(!ch)	mc = col<0 ? mglColor(char(0.5-col)):Txt[long(col)].GetC(col);
-
-/*		for(long i=0;i<Prm.size();i++)	// try don't draw text if one present at this point
+		int align;	mglGetStyle(font,0,&align);	align = align&3;
+		B.x = q.x;	B.y = q.y - shift;	B.z = q.z;
+		if(ll>0)
 		{
-			const mglPnt &t=Pnt[Prm[i].n1];
-			if(Prm[i].type==6 && t.x==q.x && t.y==q.y)
-			{
-#if MGL_HAVE_PTHREAD
-				pthread_mutex_unlock(&mutexPtx);
-#endif
-				Pop();
-				return 0;
-			}
-		}*/
+			B.x += shift*q.v/sqrt(ll);	B.y += shift*(1-q.u/sqrt(ll));
+			if(q.u==0 && !get(MGL_ENABLE_RTEXT))	B.y -= 0.1*h;
+		}
+		fscl = fsize;	forg = p;
 
-		mglPrim a(6);	a.n1 = p;
-		a.n2 = int(255*mc.r) + 256*(int(255*mc.g) + 256*int(255*mc.b));
-		mglText txt(text,font);
-		Ptx.push_back(txt);	a.n3 = Ptx.size()-1;
-		a.s = size;	a.w = shift;	a.p=ftet;
-		add_prim(a);
-	}
+		if(mgl_isnan(ll) || !get(MGL_ENABLE_RTEXT))	ftet = 0;
+		else if(ll)	ftet = -180*atan2(q.v,q.u)/M_PI;
+		else 	ftet = NAN;
 
-	memset(B.b,0,9*sizeof(mreal));
-	B.b[0] = B.b[4] = B.b[8] = fscl;
-	register mreal opf = B.pf;
-	RotateN(ftet,0,0,1);	B.pf = opf;
-	if(strchr(font,'@'))	// draw box around text
-	{
-		long k1,k2,k3,k4;	mglPnt pt;	mglPoint pp;
-		w = fnt->Width(text,font);	h = fnt->Height(font);
-//		int align;	mglGetStyle(font,0,&align);	align = align&3;
-		mreal d=-w*align/2.-h*0.2;	w+=h*0.4;
-		pt = q;	pp = mglPoint(d,-h*0.4);		PostScale(pp);
-		pt.x=pt.xx=pp.x;	pt.y=pt.yy=pp.y;	MGL_PUSH(Pnt,pt,mutexPnt);	k1=Pnt.size()-1;
-		pt = q;	pp = mglPoint(w+d,-h*0.4);		PostScale(pp);
-		pt.x=pt.xx=pp.x;	pt.y=pt.yy=pp.y;	MGL_PUSH(Pnt,pt,mutexPnt);	k2=Pnt.size()-1;
-		pt = q;	pp = mglPoint(d,h*1.2);			PostScale(pp);
-		pt.x=pt.xx=pp.x;	pt.y=pt.yy=pp.y;	MGL_PUSH(Pnt,pt,mutexPnt);	k3=Pnt.size()-1;
-		pt = q;	pp = mglPoint(w+d,h*1.2);		PostScale(pp);
-		pt.x=pt.xx=pp.x;	pt.y=pt.yy=pp.y;	MGL_PUSH(Pnt,pt,mutexPnt);	k4=Pnt.size()-1;
-		line_plot(k1,k2);	line_plot(k1,k3);	line_plot(k4,k2);	line_plot(k4,k3);
+		if(!(Quality&MGL_DRAW_LMEM))	// add text itself
+		{
+			char ch = mglGetStyle(font,0,0);
+			mglColor mc(ch);
+			if(!ch)	mc = col<0 ? mglColor(char(0.5-col)):Txt[long(col)].GetC(col);
+
+			mglPrim a(6);	a.n1 = p;
+			a.n2 = int(255*mc.r) + 256*(int(255*mc.g) + 256*int(255*mc.b));
+			mglText txt(text,font);
+			Ptx.push_back(txt);	a.n3 = Ptx.size()-1;
+			a.s = size;	a.w = shift;	a.p=ftet;
+			add_prim(a);
+		}
+
+		memset(B.b,0,9*sizeof(mreal));
+		B.b[0] = B.b[4] = B.b[8] = fscl;
+		register mreal opf = B.pf;
+		RotateN(ftet,0,0,1);	B.pf = opf;
+		if(strchr(font,'@'))	// draw box around text
+		{
+			long k1,k2,k3,k4;	mglPnt pt;	mglPoint pp;
+			w = fnt->Width(text,font);	h = fnt->Height(font);
+//			int align;	mglGetStyle(font,0,&align);	align = align&3;
+			mreal d=-w*align/2.-h*0.2;	w+=h*0.4;
+			pt = q;	pp = mglPoint(d,-h*0.4);		PostScale(pp);
+			pt.x=pt.xx=pp.x;	pt.y=pt.yy=pp.y;
+#pragma omp critical(pnt)
+			{MGL_PUSH(Pnt,pt,mutexPnt);	k1=Pnt.size()-1;}
+			pt = q;	pp = mglPoint(w+d,-h*0.4);		PostScale(pp);
+			pt.x=pt.xx=pp.x;	pt.y=pt.yy=pp.y;
+#pragma omp critical(pnt)
+			{MGL_PUSH(Pnt,pt,mutexPnt);	k2=Pnt.size()-1;}
+			pt = q;	pp = mglPoint(d,h*1.2);			PostScale(pp);
+			pt.x=pt.xx=pp.x;	pt.y=pt.yy=pp.y;
+#pragma omp critical(pnt)
+			{MGL_PUSH(Pnt,pt,mutexPnt);	k3=Pnt.size()-1;}
+			pt = q;	pp = mglPoint(w+d,h*1.2);		PostScale(pp);
+			pt.x=pt.xx=pp.x;	pt.y=pt.yy=pp.y;
+#pragma omp critical(pnt)
+			{MGL_PUSH(Pnt,pt,mutexPnt);	k4=Pnt.size()-1;}
+			line_plot(k1,k2);	line_plot(k1,k3);
+			line_plot(k4,k2);	line_plot(k4,k3);
+		}
+		fsize *= fnt->Puts(text,font,col)/2;
 	}
-	fsize *= fnt->Puts(text,font,col)/2;
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_unlock(&mutexPtx);
 #endif
@@ -509,6 +517,7 @@ void mglCanvas::InPlot(mreal x1,mreal x2,mreal y1,mreal y2, const char *st)
 	inX=Width*x1;	inY=Height*y1;	ZMin=1;
 	mglPrim p;	p.id = ObjId;
 	p.n1=x1*Width;	p.n2=x2*Width;	p.n3=y1*Height;	p.n4=y2*Height;
+#pragma omp critical(sub)
 	MGL_PUSH(Sub,p,mutexSub);
 
 	if(strchr(st,'T'))	{	y1*=0.9;	y2*=0.9;	}	// general title
@@ -563,6 +572,7 @@ void mglCanvas::InPlot(mreal x1,mreal x2,mreal y1,mreal y2, bool rel)
 	font_factor = B.b[0] < B.b[4] ? B.b[0] : B.b[4];
 	mglPrim p;	p.id = ObjId;
 	p.n1=x1*Width;	p.n2=x2*Width;	p.n3=y1*Height;	p.n4=y2*Height;
+#pragma omp critical(sub)
 	MGL_PUSH(Sub,p,mutexSub);
 }
 //-----------------------------------------------------------------------------
@@ -954,9 +964,11 @@ void mglCanvas::StartAutoGroup (const char *lbl)
 	if(ObjId<0)	{	ObjId = -id;	id++;	}
 	register size_t len = Grp.size();
 	if(ObjId>=0 && len>0 && ObjId!=Grp[len-1].Id)
-	{	MGL_PUSH(Grp,mglGroup(lbl,ObjId),mutexGrp);	}
+#pragma omp critical(grp)
+	{	MGL_PUSH(Grp,mglGroup(lbl,ObjId),mutexGrp);}
 	else if(ObjId<0)
-	{	MGL_PUSH(Grp,mglGroup(lbl,ObjId),mutexGrp);	}
+#pragma omp critical(grp)
+	{	MGL_PUSH(Grp,mglGroup(lbl,ObjId),mutexGrp);}
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::EndGroup()
@@ -980,5 +992,11 @@ int mglCanvas::IsActive(int xs, int ys,int &n)
 		{	n=p.n;	return p.id;		}
 	}
 	n=-1;	return GetObjId(xs,ys);
+}
+//-----------------------------------------------------------------------------
+void mglCanvas::Push()
+{
+#pragma omp critical(stk)
+	MGL_PUSH(stack,B,mutexStk);
 }
 //-----------------------------------------------------------------------------

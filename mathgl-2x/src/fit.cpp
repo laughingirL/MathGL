@@ -69,6 +69,7 @@ int	mgl_fit__f (const gsl_vector *x, void *data, gsl_vector *f)
 	register long i;
 	mreal val[MGL_VS];
 	for(i=0;i<fd->m;i++)	val[fd->var[i]-'a'] = gsl_vector_get(x,i);
+#pragma omp parallel for private(i)
 	for(i=0;i<fd->n;i++)
 	{
 		val['x'-'a'] = fd->x[i];
@@ -85,6 +86,7 @@ int MGL_NO_EXPORT mgl_fit__df (const gsl_vector * x, void *data, gsl_matrix * J)
 	register long i,j;
 	mreal val[MGL_VS],s;
 	for(i=0;i<fd->m;i++)	val[fd->var[i]-'a'] = gsl_vector_get(x,i);
+#pragma omp parallel for private(i,j)
 	for(i=0;i<fd->n;i++)
 	{
 		val['x'-'a'] = fd->x[i];	s = fd->s[i];
@@ -255,6 +257,7 @@ HMDT MGL_EXPORT mgl_fit_xys(HMGL gr, HCDT xx, HCDT yy, HCDT ss, const char *eq, 
 		fd.s = s.a+i*m;
 		res = mgl_fit_base(&fd,in.a);
 		for(j=0;j<fd.m;j++)	val[var[j]-'a'] = in.a[j];
+#pragma omp parallel for private(j)
 		for(j=0;j<nn;j++)
 		{
 			val['x'-'a'] = gr->Min.x+j*(gr->Max.x-gr->Min.x)/(nn-1);
@@ -284,6 +287,7 @@ HMDT MGL_EXPORT mgl_fit_xyzs(HMGL gr, HCDT xx, HCDT yy, HCDT zz, HCDT ss, const 
 
 	mglData x(m, n), y(m, n), z(zz), s(ss);
 	register long i,j;
+#pragma omp parallel for private(i,j) collapse(2)
 	for(i=0;i<m;i++)	for(j=0;j<n;j++)	// ñîçäàåì ìàññèâ òî÷åê
 	{
 		x.a[i+m*j] = GetX(xx,i,j,0).x;
@@ -303,6 +307,7 @@ HMDT MGL_EXPORT mgl_fit_xyzs(HMGL gr, HCDT xx, HCDT yy, HCDT zz, HCDT ss, const 
 		fd.a = z.a+i*m*n;		fd.s = s.a+i*m*n;
 		res = mgl_fit_base(&fd,in.a);
 		for(j=0;j<fd.m;j++)	val[var[j]-'a'] = in.a[j];
+#pragma omp parallel for private(j)
 		for(j=0;j<nn*nn;j++)
 		{
 			val['x'-'a'] = gr->Min.x+(j%nn)*(gr->Max.x-gr->Min.x)/(nn-1);
@@ -333,6 +338,7 @@ HMDT MGL_EXPORT mgl_fit_xyzas(HMGL gr, HCDT xx, HCDT yy, HCDT zz, HCDT aa, HCDT 
 	{	gr->SetWarn(mglWarnNull,"Fit[S]");	return 0;	}
 	
 	mglData x(aa), y(aa), z(aa), a(aa), s(ss);
+#pragma omp parallel for private(i,j,k) collapse(3)
 	for(i=0;i<m;i++)	for(j=0;j<n;j++)	for(k=0;k<l;k++)	// ñîçäàåì ìàññèâ òî÷åê
 	{
 		i0 = i+m*(j+n*k);
@@ -352,6 +358,7 @@ HMDT MGL_EXPORT mgl_fit_xyzas(HMGL gr, HCDT xx, HCDT yy, HCDT zz, HCDT aa, HCDT 
 	else in.Fill(0.,0);
 	res = mgl_fit_base(&fd,in.a);
 	for(j=0;j<fd.m;j++)	val[var[j]-'a'] = in.a[j];
+#pragma omp parallel for private(i,j) collapse(2)
 	for(i=0;i<nn;i++)	for(j=0;j<nn*nn;j++)
 	{
 		val['x'-'a'] = gr->Min.x+(j%nn)*(gr->Max.x-gr->Min.x)/(nn-1);
@@ -378,16 +385,20 @@ HMDT MGL_EXPORT mgl_hist_x(HMGL gr, HCDT x, HCDT a, const char *opt)
 	const mglData *dx = dynamic_cast<const mglData *>(x);
 	const mglData *da = dynamic_cast<const mglData *>(a);
 	mreal vx = n/(gr->Max.x-gr->Min.x);
-	if(dx && da)	for(i=0;i<nn;i++)
-	{
-		j1 = long((dx->a[i]-gr->Min.x)*vx);
-		if(j1>=0 && j1<n)	res->a[j1] += da->a[i];
-	}
-	else	for(i=0;i<nn;i++)
-	{
-		j1 = long((x->vthr(i)-gr->Min.x)*vx);
-		if(j1>=0 && j1<n)	res->a[j1] += a->vthr(i);
-	}
+	if(dx && da)
+#pragma omp parallel for private(i,j1)
+		for(i=0;i<nn;i++)
+		{
+			j1 = long((dx->a[i]-gr->Min.x)*vx);
+			if(j1>=0 && j1<n)	res->a[j1] += da->a[i];
+		}
+	else
+#pragma omp parallel for private(i,j1)
+		for(i=0;i<nn;i++)
+		{
+			j1 = long((x->vthr(i)-gr->Min.x)*vx);
+			if(j1>=0 && j1<n)	res->a[j1] += a->vthr(i);
+		}
 	gr->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
@@ -405,18 +416,22 @@ HMDT MGL_EXPORT mgl_hist_xy(HMGL gr, HCDT x, HCDT y, HCDT a, const char *opt)
 	const mglData *da = dynamic_cast<const mglData *>(a);
 	mreal vx = n/(gr->Max.x-gr->Min.x);
 	mreal vy = n/(gr->Max.y-gr->Min.y);
-	if(dx && dy && da)	for(i=0;i<nn;i++)
-	{
-		j1 = long((dx->a[i]-gr->Min.x)*vx);
-		j2 = long((dy->a[i]-gr->Min.y)*vy);
-		if(j1>=0 && j1<n && j2>=0 && j2<n)	res->a[j1+n*j2] += da->a[i];
-	}
-	else	for(i=0;i<nn;i++)
-	{
-		j1 = long((x->vthr(i)-gr->Min.x)*vx);
-		j2 = long((y->vthr(i)-gr->Min.y)*vy);
-		if(j1>=0 && j1<n && j2>=0 && j2<n)	res->a[j1+n*j2] += a->vthr(i);
-	}
+	if(dx && dy && da)
+#pragma omp parallel for private(i,j1,j2)
+		for(i=0;i<nn;i++)
+		{
+			j1 = long((dx->a[i]-gr->Min.x)*vx);
+			j2 = long((dy->a[i]-gr->Min.y)*vy);
+			if(j1>=0 && j1<n && j2>=0 && j2<n)	res->a[j1+n*j2] += da->a[i];
+		}
+	else
+#pragma omp parallel for private(i,j1,j2)
+		for(i=0;i<nn;i++)
+		{
+			j1 = long((x->vthr(i)-gr->Min.x)*vx);
+			j2 = long((y->vthr(i)-gr->Min.y)*vy);
+			if(j1>=0 && j1<n && j2>=0 && j2<n)	res->a[j1+n*j2] += a->vthr(i);
+		}
 	gr->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
@@ -434,24 +449,28 @@ HMDT MGL_EXPORT mgl_hist_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char
 	const mglData *dz = dynamic_cast<const mglData *>(z);
 	const mglData *da = dynamic_cast<const mglData *>(a);
 	mreal vx = n/(gr->Max.x-gr->Min.x), vy = n/(gr->Max.y-gr->Min.y), vz = n/(gr->Max.z-gr->Min.z);
-	if(dx && dy && dz && da)	for(i=0;i<nn;i++)
-	{
-		j1 = long((dx->a[i]-gr->Min.x)*vx);
-		j2 = long((dy->a[i]-gr->Min.y)*vy);
-		j3 = long((dz->a[i]-gr->Min.z)*vz);
-		if(j1>=0 && j1<n && j2>=0 && j2<n && j3>=0 && j3<n)
-			res->a[j1+n*(j2+n*j3)] += da->a[i];
-	}
-	else	for(i=0;i<nn;i++)
-	{
-		if(gr->Stop)	{	res->Create(1,1,1);	return res;	}
-		j1 = long((x->vthr(i)-gr->Min.x)*vx);
-		j2 = long((y->vthr(i)-gr->Min.y)*vy);
-		j3 = long((z->vthr(i)-gr->Min.z)*vz);
-		if(j1>=0 && j1<n && j2>=0 && j2<n && j3>=0 && j3<n)
-			res->a[j1+n*(j2+n*j3)] += a->vthr(i);
-	}
-	gr->LoadState();	return res;
+	if(dx && dy && dz && da)
+#pragma omp parallel for private(i,j1,j2,j3)
+		for(i=0;i<nn;i++)
+		{
+			j1 = long((dx->a[i]-gr->Min.x)*vx);
+			j2 = long((dy->a[i]-gr->Min.y)*vy);
+			j3 = long((dz->a[i]-gr->Min.z)*vz);
+			if(j1>=0 && j1<n && j2>=0 && j2<n && j3>=0 && j3<n)
+				res->a[j1+n*(j2+n*j3)] += da->a[i];
+		}
+	else
+#pragma omp parallel for private(i,j1,j2,j3)
+		for(i=0;i<nn;i++)
+		{
+			if(gr->Stop)	continue;
+			j1 = long((x->vthr(i)-gr->Min.x)*vx);
+			j2 = long((y->vthr(i)-gr->Min.y)*vy);
+			j3 = long((z->vthr(i)-gr->Min.z)*vz);
+			if(j1>=0 && j1<n && j2>=0 && j2<n && j3>=0 && j3<n)
+				res->a[j1+n*(j2+n*j3)] += a->vthr(i);
+		}
+	gr->LoadState();	return gr->Stop?0:res;
 }
 //-----------------------------------------------------------------------------
 uintptr_t MGL_EXPORT mgl_hist_x_(uintptr_t* gr, uintptr_t* x, uintptr_t* a, const char *opt, int lo)
