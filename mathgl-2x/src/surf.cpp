@@ -670,7 +670,6 @@ void MGL_EXPORT mgl_boxs_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, co
 	long k1,k2,k3,k4,k5,k6,k7,k8;
 	for(k=0;k<z->GetNz();k++)
 	{
-#pragma omp parallel for private(i,j,zz,z1,z2,x1,y1,x2,y2,x3,y3,c,p1,p2,p3,p4,q,s) collapse(2)
 		for(i=0;i<n;i+=dx)	for(j=0;j<m;j+=dy)
 		{
 			if(gr->Stop)	continue;

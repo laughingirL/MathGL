@@ -44,10 +44,14 @@ void MGL_EXPORT mgl_dens_x(HMGL gr, HCDT a, const char *sch, double sv, const ch
 		if(k>n-2)	{	k=n-2;	d=1;	}
 		if(k<0)		{	k=0;	d=0;	}
 		const mglData *ma=dynamic_cast<const mglData *>(a);
-		if(ma)	for(j=0;j<l;j++)	for(i=0;i<m;i++)
-			aa.a[i+m*j] = ma->a[k+n*(i+m*j)]*(1-d) + d*ma->a[k+1+n*(i+m*j)];
-		else	for(j=0;j<l;j++)	for(i=0;i<m;i++)
-			aa.a[i+m*j] = a->v(k,i,j)*(1-d) + d*a->v(k+1,i,j);
+		if(ma)
+#pragma omp parallel for private(i,j) collapse(2)
+			for(j=0;j<l;j++)	for(i=0;i<m;i++)
+				aa.a[i+m*j] = ma->a[k+n*(i+m*j)]*(1-d) + d*ma->a[k+1+n*(i+m*j)];
+		else
+#pragma omp parallel for private(i,j) collapse(2)
+			for(j=0;j<l;j++)	for(i=0;i<m;i++)
+				aa.a[i+m*j] = a->v(k,i,j)*(1-d) + d*a->v(k+1,i,j);
 		a = &aa;
 	}
 	else
@@ -75,10 +79,14 @@ void MGL_EXPORT mgl_dens_y(HMGL gr, HCDT a, const char *sch, double sv, const ch
 		if(k>m-2)	{	k=m-2;	d=1;	}
 		if(k<0)		{	k=0;	d=0;	}
 		const mglData *ma=dynamic_cast<const mglData *>(a);
-		if(ma)	for(j=0;j<l;j++)	for(i=0;i<n;i++)
-			aa.a[i+n*j] = ma->a[i+n*(k+m*j)]*(1-d) + d*ma->a[i+n+n*(k+m*j)];
-		else	for(j=0;j<l;j++)	for(i=0;i<n;i++)
-			aa.a[i+n*j] = a->v(i,k,j)*(1-d) + d*a->v(i,k+1,j);
+		if(ma)
+#pragma omp parallel for private(i,j) collapse(2)
+			for(j=0;j<l;j++)	for(i=0;i<n;i++)
+				aa.a[i+n*j] = ma->a[i+n*(k+m*j)]*(1-d) + d*ma->a[i+n+n*(k+m*j)];
+		else
+#pragma omp parallel for private(i,j) collapse(2)
+			for(j=0;j<l;j++)	for(i=0;i<n;i++)
+				aa.a[i+n*j] = a->v(i,k,j)*(1-d) + d*a->v(i,k+1,j);
 		a = &aa;
 	}
 	else
@@ -107,10 +115,14 @@ void MGL_EXPORT mgl_dens_z(HMGL gr, HCDT a, const char *sch, double sv, const ch
 		if(k>l-2)	{	k=l-2;	d=1;	}
 		if(k<0)		{	k=0;	d=0;	}
 		const mglData *ma=dynamic_cast<const mglData *>(a);
-		if(ma)	for(j=0;j<m;j++)	for(i=0;i<n;i++)
-			aa.a[i+n*j] = ma->a[i+n*(j+m*k)]*(1-d) + d*ma->a[i+n*m+n*(j+m*k)];
-		else	for(j=0;j<m;j++)	for(i=0;i<n;i++)
-			aa.a[i+n*j] = a->v(i,j,k)*(1-d) + d*a->v(i,j,k+1);
+		if(ma)
+#pragma omp parallel for private(i,j) collapse(2)
+			for(j=0;j<m;j++)	for(i=0;i<n;i++)
+				aa.a[i+n*j] = ma->a[i+n*(j+m*k)]*(1-d) + d*ma->a[i+n*m+n*(j+m*k)];
+		else
+#pragma omp parallel for private(i,j) collapse(2)
+			for(j=0;j<m;j++)	for(i=0;i<n;i++)
+				aa.a[i+n*j] = a->v(i,j,k)*(1-d) + d*a->v(i,j,k+1);
 		a = &aa;
 	}
 	zz.Fill(sv, sv);
@@ -163,10 +175,14 @@ void MGL_EXPORT mgl_cont_x_val(HMGL gr, HCDT v, HCDT a, const char *sch, double 
 		if(k>n-2)	{	k=n-2;	d=1;	}
 		if(k<0)		{	k=0;	d=0;	}
 		const mglData *ma=dynamic_cast<const mglData *>(a);
-		if(ma)	for(j=0;j<l;j++)	for(i=0;i<m;i++)
-			aa.a[i+m*j] = ma->a[k+n*(i+m*j)]*(1-d) + d*ma->a[k+1+n*(i+m*j)];
-		else	for(j=0;j<l;j++)	for(i=0;i<m;i++)
-			aa.a[i+m*j] = a->v(k,i,j)*(1-d) + d*a->v(k+1,i,j);
+		if(ma)
+#pragma omp parallel for private(i,j) collapse(2)
+			for(j=0;j<l;j++)	for(i=0;i<m;i++)
+				aa.a[i+m*j] = ma->a[k+n*(i+m*j)]*(1-d) + d*ma->a[k+1+n*(i+m*j)];
+		else
+#pragma omp parallel for private(i,j) collapse(2)
+			for(j=0;j<l;j++)	for(i=0;i<m;i++)
+				aa.a[i+m*j] = a->v(k,i,j)*(1-d) + d*a->v(k+1,i,j);
 		a = &aa;
 	}
 	else
@@ -174,6 +190,7 @@ void MGL_EXPORT mgl_cont_x_val(HMGL gr, HCDT v, HCDT a, const char *sch, double 
 	xx.Fill(sv, sv);
 	yy.Fill(gr->Min.y, gr->Max.y,'x');
 	zz.Fill(gr->Min.z, gr->Max.z,'y');
+#pragma omp parallel for
 	for(i=0;i<v->GetNx();i++)
 	{
 		register mreal v0 = v->v(i);
@@ -204,10 +221,14 @@ void MGL_EXPORT mgl_cont_y_val(HMGL gr, HCDT v, HCDT a, const char *sch, double 
 		if(k>m-2)	{	k=m-2;	d=1;	}
 		if(k<0)		{	k=0;	d=0;	}
 		const mglData *ma=dynamic_cast<const mglData *>(a);
-		if(ma)	for(j=0;j<l;j++)	for(i=0;i<n;i++)
-			aa.a[i+n*j] = ma->a[i+n*(k+m*j)]*(1-d) + d*ma->a[i+n+n*(k+m*j)];
-		else	for(j=0;j<l;j++)	for(i=0;i<n;i++)
-			aa.a[i+n*j] = a->v(i,k,j)*(1-d) + d*a->v(i,k+1,j);
+		if(ma)
+#pragma omp parallel for private(i,j) collapse(2)
+			for(j=0;j<l;j++)	for(i=0;i<n;i++)
+				aa.a[i+n*j] = ma->a[i+n*(k+m*j)]*(1-d) + d*ma->a[i+n+n*(k+m*j)];
+		else
+#pragma omp parallel for private(i,j) collapse(2)
+			for(j=0;j<l;j++)	for(i=0;i<n;i++)
+				aa.a[i+n*j] = a->v(i,k,j)*(1-d) + d*a->v(i,k+1,j);
 		a = &aa;
 	}
 	else
@@ -215,6 +236,7 @@ void MGL_EXPORT mgl_cont_y_val(HMGL gr, HCDT v, HCDT a, const char *sch, double 
 	yy.Fill(sv, sv);
 	xx.Fill(gr->Min.x, gr->Max.x,'x');
 	zz.Fill(gr->Min.z, gr->Max.z,'y');
+#pragma omp parallel for
 	for(i=0;i<v->GetNx();i++)
 	{
 		register mreal v0 = v->v(i);
@@ -246,15 +268,20 @@ void MGL_EXPORT mgl_cont_z_val(HMGL gr, HCDT v, HCDT a, const char *sch, double 
 		if(k>l-2)	{	k=l-2;	d=1;	}
 		if(k<0)		{	k=0;	d=0;	}
 		const mglData *ma=dynamic_cast<const mglData *>(a);
-		if(ma)	for(j=0;j<m;j++)	for(i=0;i<n;i++)
-			aa.a[i+n*j] = ma->a[i+n*(j+m*k)]*(1-d) + d*ma->a[i+n*m+n*(j+m*k)];
-		else	for(j=0;j<m;j++)	for(i=0;i<n;i++)
-			aa.a[i+n*j] = a->v(i,j,k)*(1-d) + d*a->v(i,j,k+1);
+		if(ma)
+#pragma omp parallel for private(i,j) collapse(2)
+			for(j=0;j<m;j++)	for(i=0;i<n;i++)
+				aa.a[i+n*j] = ma->a[i+n*(j+m*k)]*(1-d) + d*ma->a[i+n*m+n*(j+m*k)];
+		else
+#pragma omp parallel for private(i,j) collapse(2)
+			for(j=0;j<m;j++)	for(i=0;i<n;i++)
+				aa.a[i+n*j] = a->v(i,j,k)*(1-d) + d*a->v(i,j,k+1);
 		a = &aa;
 	}
 	zz.Fill(sv, sv);
 	yy.Fill(gr->Min.y, gr->Max.y,'y');
 	xx.Fill(gr->Min.x, gr->Max.x,'x');
+#pragma omp parallel for
 	for(i=0;i<v->GetNx();i++)
 	{
 		register mreal v0 = v->v(i);
@@ -347,10 +374,14 @@ void MGL_EXPORT mgl_contf_x_val(HMGL gr, HCDT v, HCDT a, const char *sch, double
 		if(k>n-2)	{	k=n-2;	d=1;	}
 		if(k<0)		{	k=0;	d=0;	}
 		const mglData *ma=dynamic_cast<const mglData *>(a);
-		if(ma)	for(j=0;j<l;j++)	for(i=0;i<m;i++)
-			aa.a[i+m*j] = ma->a[k+n*(i+m*j)]*(1-d) + d*ma->a[k+1+n*(i+m*j)];
-		else	for(j=0;j<l;j++)	for(i=0;i<m;i++)
-			aa.a[i+m*j] = a->v(k,i,j)*(1-d) + d*a->v(k+1,i,j);
+		if(ma)
+#pragma omp parallel for private(i,j) collapse(2)
+			for(j=0;j<l;j++)	for(i=0;i<m;i++)
+				aa.a[i+m*j] = ma->a[k+n*(i+m*j)]*(1-d) + d*ma->a[k+1+n*(i+m*j)];
+		else
+#pragma omp parallel for private(i,j) collapse(2)
+			for(j=0;j<l;j++)	for(i=0;i<m;i++)
+				aa.a[i+m*j] = a->v(k,i,j)*(1-d) + d*a->v(k+1,i,j);
 		a = &aa;
 	}
 	else
@@ -358,6 +389,7 @@ void MGL_EXPORT mgl_contf_x_val(HMGL gr, HCDT v, HCDT a, const char *sch, double
 	xx.Fill(sv, sv);
 	yy.Fill(gr->Min.y, gr->Max.y,'x');
 	zz.Fill(gr->Min.z, gr->Max.z,'y');
+#pragma omp parallel for
 	for(i=0;i<v->GetNx()-1;i++)
 	{
 		register mreal v0 = v->v(i);
@@ -385,10 +417,14 @@ void MGL_EXPORT mgl_contf_y_val(HMGL gr, HCDT v, HCDT a, const char *sch, double
 		if(k>m-2)	{	k=m-2;	d=1;	}
 		if(k<0)		{	k=0;	d=0;	}
 		const mglData *ma=dynamic_cast<const mglData *>(a);
-		if(ma)	for(j=0;j<l;j++)	for(i=0;i<n;i++)
-			aa.a[i+n*j] = ma->a[i+n*(k+m*j)]*(1-d) + d*ma->a[i+n+n*(k+m*j)];
-		else	for(j=0;j<l;j++)	for(i=0;i<n;i++)
-			aa.a[i+n*j] = a->v(i,k,j)*(1-d) + d*a->v(i,k+1,j);
+		if(ma)
+#pragma omp parallel for private(i,j) collapse(2)
+			for(j=0;j<l;j++)	for(i=0;i<n;i++)
+				aa.a[i+n*j] = ma->a[i+n*(k+m*j)]*(1-d) + d*ma->a[i+n+n*(k+m*j)];
+		else
+#pragma omp parallel for private(i,j) collapse(2)
+			for(j=0;j<l;j++)	for(i=0;i<n;i++)
+				aa.a[i+n*j] = a->v(i,k,j)*(1-d) + d*a->v(i,k+1,j);
 		a = &aa;
 	}
 	else
@@ -396,6 +432,7 @@ void MGL_EXPORT mgl_contf_y_val(HMGL gr, HCDT v, HCDT a, const char *sch, double
 	yy.Fill(sv, sv);
 	xx.Fill(gr->Min.x, gr->Max.x,'x');
 	zz.Fill(gr->Min.z, gr->Max.z,'y');
+#pragma omp parallel for
 	for(i=0;i<v->GetNx()-1;i++)
 	{
 		register mreal v0 = v->v(i);
@@ -424,15 +461,20 @@ void MGL_EXPORT mgl_contf_z_val(HMGL gr, HCDT v, HCDT a, const char *sch, double
 		if(k>l-2)	{	k=l-2;	d=1;	}
 		if(k<0)		{	k=0;	d=0;	}
 		const mglData *ma=dynamic_cast<const mglData *>(a);
-		if(ma)	for(j=0;j<m;j++)	for(i=0;i<n;i++)
-			aa.a[i+n*j] = ma->a[i+n*(j+m*k)]*(1-d) + d*ma->a[i+n*m+n*(j+m*k)];
-		else	for(j=0;j<m;j++)	for(i=0;i<n;i++)
-			aa.a[i+n*j] = a->v(i,j,k)*(1-d) + d*a->v(i,j,k+1);
+		if(ma)
+#pragma omp parallel for private(i,j) collapse(2)
+			for(j=0;j<m;j++)	for(i=0;i<n;i++)
+				aa.a[i+n*j] = ma->a[i+n*(j+m*k)]*(1-d) + d*ma->a[i+n*m+n*(j+m*k)];
+		else
+#pragma omp parallel for private(i,j) collapse(2)
+			for(j=0;j<m;j++)	for(i=0;i<n;i++)
+				aa.a[i+n*j] = a->v(i,j,k)*(1-d) + d*a->v(i,j,k+1);
 		a = &aa;
 	}
 	zz.Fill(sv, sv);
 	yy.Fill(gr->Min.y, gr->Max.y,'y');
 	xx.Fill(gr->Min.x, gr->Max.x,'x');
+#pragma omp parallel for
 	for(i=0;i<v->GetNx()-1;i++)
 	{
 		register mreal v0 = v->v(i);

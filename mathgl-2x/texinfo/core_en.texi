@@ -921,7 +921,7 @@ Parameter @var{size} set font size. This function set off any aspects or rotatio
 @end deftypefn
 
 @anchor{rotate}
-@deftypefn {MGL command} {} rotate @code{tetz tetx [tety=0]}
+@deftypefn {MGL command} {} rotate @code{tetx tetz [tety=0]}
 @ifclear UDAV
 @deftypefnx {Method on @code{mglGraph}} @code{void} Rotate (@code{mreal} TetX, @code{mreal} TetZ, @code{mreal} TetY=@code{0})
 @deftypefnx {C function} @code{void} mgl_rotate (@code{HMGL} gr, @code{mreal} TetX, @code{mreal} TetZ, @code{mreal} TetY)
@@ -3184,4 +3184,3 @@ Solves equation du/dz = i*k0*@var{ham}(p,q,x,y,z,|u|)[u], where p=-i/k0*d/dx, q=
 @c @end ifclear
 
 @external{}
-

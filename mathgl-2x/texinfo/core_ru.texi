@@ -874,7 +874,7 @@ Ternary -- специальный тип графика для 3 зависим�
 @end deftypefn
 
 @anchor{rotate}
-@deftypefn {Команда MGL} {} rotate @code{tetz tetx [tety=0]}
+@deftypefn {Команда MGL} {} rotate @code{tetx tetz [tety=0]}
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} Rotate (@code{mreal} TetX, @code{mreal} TetZ, @code{mreal} TetY=@code{0})
 @deftypefnx {Функция С} @code{void} mgl_rotate (@code{HMGL} gr, @code{mreal} TetX, @code{mreal} TetZ, @code{mreal} TetY)

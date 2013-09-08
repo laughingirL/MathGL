@@ -99,8 +99,8 @@ long mglCanvas::ProjScale(int nf, long id, bool text)
 //-----------------------------------------------------------------------------
 void mglCanvas::LightScale()
 {
-	register long i;
-	for(i=0;i<10;i++)
+#pragma omp parallel for
+	for(long i=0;i<10;i++)
 	{
 		if(!light[i].n)	continue;
 		light[i].p=light[i].d;	light[i].q=light[i].r;
@@ -231,6 +231,9 @@ void mglStartThread(void (mglCanvas::*func)(size_t i, size_t n, const void *p), 
 void mglCanvas::pxl_combine(size_t id, size_t n, const void *)
 {
 	unsigned char c[4],*cc;
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel for private(c,cc)
+#endif
 	for(size_t i=id;i<n;i+=mglNumThr)
 	{	cc = C+12*i;		memcpy(c,BDef,4);
 		combine(c,cc+8);	combine(c,cc+4);
@@ -238,22 +241,32 @@ void mglCanvas::pxl_combine(size_t id, size_t n, const void *)
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::pxl_memcpy(size_t id, size_t n, const void *)
-{	for(size_t i=id;i<n;i+=mglNumThr)	memcpy(G4+4*i,C+12*i,4);	}
+{
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel for
+#endif
+	for(size_t i=id;i<n;i+=mglNumThr)	memcpy(G4+4*i,C+12*i,4);
+}
 //-----------------------------------------------------------------------------
 void mglCanvas::pxl_backgr(size_t id, size_t n, const void *)
 {
 	unsigned char c[4];
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel for private(c)
+#endif
 	for(size_t i=id;i<n;i+=mglNumThr)
 	{	memcpy(c,BDef,4);	combine(c,G4+4*i);	memcpy(G+3*i,c,3);	}
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::pxl_transform(size_t id, size_t n, const void *)
 {
-	register float x,y,z;
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel for
+#endif
 	for(size_t i=id;i<n;i+=mglNumThr)
 	{
 		mglPnt &p=Pnt[i];
-		x = p.xx-Width/2.;	y = p.yy-Height/2.;	z = p.zz-Depth/2.;
+		register float x = p.xx-Width/2., y = p.yy-Height/2., z = p.zz-Depth/2.;
 		p.x = Bp.b[0]*x + Bp.b[1]*y + Bp.b[2]*z - Bp.x*Width/2;
 		p.y = Bp.b[3]*x + Bp.b[4]*y + Bp.b[5]*z - Bp.y*Height/2;
 		p.z = Bp.b[6]*x + Bp.b[7]*y + Bp.b[8]*z + Depth/2.;
@@ -264,6 +277,9 @@ void mglCanvas::pxl_transform(size_t id, size_t n, const void *)
 //-----------------------------------------------------------------------------
 void mglCanvas::pxl_setz_adv(size_t id, size_t n, const void *)
 {
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel for
+#endif
 	for(size_t i=id;i<n;i+=mglNumThr)
 	{
 		mglPrim &q=Prm[i];	q.z = Pnt[q.n1].z;
@@ -275,6 +291,9 @@ void mglCanvas::pxl_setz_adv(size_t id, size_t n, const void *)
 //-----------------------------------------------------------------------------
 void mglCanvas::pxl_setz(size_t id, size_t n, const void *)
 {
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel for
+#endif
 	for(size_t i=id;i<n;i+=mglNumThr)
 	{	mglPrim &q=Prm[i];	q.z = Pnt[q.n1].z;	}
 }
@@ -300,7 +319,7 @@ void mglCanvas::pxl_primdr(size_t id, size_t , const void *)
 {
 	int nx=1,ny=1;
 	register size_t i;
-	if(id<unsigned(mglNumThr))
+	if(id<unsigned(mglNumThr))	// TODO add omp here
 	{
 		for(i=1;i<=unsigned(sqrt(double(mglNumThr))+0.5);i++)
 			if(mglNumThr%i==0)	ny=i;
@@ -331,9 +350,12 @@ void mglCanvas::pxl_primdr(size_t id, size_t , const void *)
 void mglCanvas::pxl_dotsdr(size_t id, size_t , const void *)
 {
 	unsigned char r[4];
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel for private(r)
+#endif
 	for(size_t i=id;i<Prm.size();i+=mglNumThr)
 	{
-		if(Stop)	return;
+		if(Stop)	continue;
 		const mglPnt &q=Pnt[Prm[i].n1];
 		int id = Prm[i].id;
 		col2int(q,r,id);
@@ -374,9 +396,10 @@ void mglCanvas::Finish(bool fast)
 void mglCanvas::ClfZB(bool force)
 {
 	if(!force && (Quality&MGL_DRAW_LMEM))	return;
-	register long i,n=Width*Height;
+	register long n=Width*Height;
 	memset(C,0,12*n);	memset(OI,0,n*sizeof(int));
-	for(i=0;i<3*n;i++)	Z[i] = -1e20f;
+#pragma omp parallel for
+	for(long i=0;i<3*n;i++)	Z[i] = -1e20f;
 	clr(MGL_FINISHED);
 }
 //-----------------------------------------------------------------------------
@@ -405,18 +428,26 @@ void mglCanvas::pxl_other(size_t id, size_t n, const void *p)
 	size_t i,j,k;
 	const mglCanvas *gr = (const mglCanvas *)p;
 	if(!gr)	return;
-	if(Quality&MGL_DRAW_NORM)	for(k=id;k<n;k+=mglNumThr)
-	{
-		i = k%Width;	j = Height-1-(k/Width);
-		pnt_plot(i,j,gr->Z[3*k+2],gr->C+12*k+8,gr->OI[k]);
-		pnt_plot(i,j,gr->Z[3*k+1],gr->C+12*k+4,gr->OI[k]);
-		pnt_plot(i,j,gr->Z[3*k],gr->C+12*k,gr->OI[k]);
-	}
-	else	for(k=id;k<n;k+=mglNumThr)
-	{
-		i = k%Width;	j = Height-1-(k/Width);
-		pnt_plot(i,j,gr->Z[3*k],gr->C+12*k,gr->OI[k]);
-	}
+	if(Quality&MGL_DRAW_NORM)
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel for private(i,j,k)
+#endif
+		for(k=id;k<n;k+=mglNumThr)
+		{
+			i = k%Width;	j = Height-1-(k/Width);
+			pnt_plot(i,j,gr->Z[3*k+2],gr->C+12*k+8,gr->OI[k]);
+			pnt_plot(i,j,gr->Z[3*k+1],gr->C+12*k+4,gr->OI[k]);
+			pnt_plot(i,j,gr->Z[3*k],gr->C+12*k,gr->OI[k]);
+		}
+	else
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel for private(i,j,k)
+#endif
+		for(k=id;k<n;k+=mglNumThr)
+		{
+			i = k%Width;	j = Height-1-(k/Width);
+			pnt_plot(i,j,gr->Z[3*k],gr->C+12*k,gr->OI[k]);
+		}
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::Combine(const mglCanvas *gr)
@@ -568,6 +599,7 @@ unsigned char **mglCanvas::GetRGBLines(long &w, long &h, unsigned char *&f, bool
 	unsigned char **p;
 	Finish();
 	p = (unsigned char **)malloc(Height * sizeof(unsigned char *));
+#pragma omp parallel for
 	for(long i=0;i<Height;i++)	p[i] = (alpha?G4:G)+d*Width*i;
 	w = Width;	h = Height;		f = 0;
 	return p;
@@ -584,7 +616,7 @@ bool visible(long i, long j, unsigned char m[8], mreal pw, int a)	// Check if pi
 /* Bilinear interpolation r(u,v) = r0 + (r1-r0)*u + (r2-r0)*v + (r3+r0-r1-r2)*u*v
 	is used (where r is one of {x,y,z,R,G,B,A}. Variables u,v are determined
 	for each point (x,y) and selected one pair which 0<u<1 and 0<v<1.*/
-void mglCanvas::quad_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, const mglPnt &p4, mglDrawReg *d)
+void mglCanvas::quad_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, const mglPnt &p4, mglDrawReg *d)	// TODO should I add omp here?
 {
 	if(!(Quality&3))
 	{
@@ -655,7 +687,7 @@ void mglCanvas::quad_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 /* Linear interpolation r(u,v) = r0 + (r1-r0)*u + (r2-r0)*v is used, where r is
 	one of {x,y,z,R,G,B,A}. Variables u,v are determined for each point (x,y).
 	Point plotted is u>0 and v>0 and u+v<1.*/
-void mglCanvas::trig_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, bool anorm, mglDrawReg *d)
+void mglCanvas::trig_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, bool anorm, mglDrawReg *d)	// TODO should I add omp here?
 {
 	if(!(Quality&3) && anorm)
 	{
@@ -706,7 +738,7 @@ void mglCanvas::trig_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 	}
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::line_draw(const mglPnt &p1, const mglPnt &p2, mglDrawReg *dr)
+void mglCanvas::line_draw(const mglPnt &p1, const mglPnt &p2, mglDrawReg *dr)	// TODO should I add omp here?
 {
 	if(!(Quality&3))	{	fast_draw(p1,p2,dr);	return;	}
 	unsigned char r[4];
@@ -777,7 +809,7 @@ void mglCanvas::line_draw(const mglPnt &p1, const mglPnt &p2, mglDrawReg *dr)
 	set(aa,MGL_ENABLE_ALPHA);
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::fast_draw(const mglPnt &p1, const mglPnt &p2, mglDrawReg *dr)
+void mglCanvas::fast_draw(const mglPnt &p1, const mglPnt &p2, mglDrawReg *dr)	// TODO should I add omp here?
 {
 	mglPnt d=p2-p1;
 	unsigned char r[4];	col2int(p1,r,dr->ObjId);
@@ -806,7 +838,7 @@ void mglCanvas::fast_draw(const mglPnt &p1, const mglPnt &p2, mglDrawReg *dr)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::pnt_draw(const mglPnt &p, mglDrawReg *dr)
+void mglCanvas::pnt_draw(const mglPnt &p, mglDrawReg *dr)	// TODO should I add omp here?
 {
 //	if(k<0 || !dr)	return;
 	register long i,j;
@@ -832,7 +864,7 @@ void mglCanvas::pnt_draw(const mglPnt &p, mglDrawReg *dr)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
+void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)	// TODO should I add omp here?
 {
 	unsigned char cs[4];	col2int(q,cs,d->ObjId);	cs[3] = size>0 ? 255 : 255*q.t;
 	mglPnt p0=q,p1=q,p2=q,p3=q;
@@ -1105,9 +1137,10 @@ void mglCanvas::glyph_line(const mglPnt &pp, mreal f, bool solid, mglDrawReg *d)
 long mglCanvas::setPp(mglPnt &q, const mglPoint &p)
 {
 	q.xx=q.x=p.x;	q.yy=q.y=p.y;	q.zz=q.z=p.z;
+	long k;
 #pragma omp critical(pnt)
-	MGL_PUSH(Pnt,q,mutexPnt);
-	return Pnt.size()-1;
+	{MGL_PUSH(Pnt,q,mutexPnt);	k=Pnt.size()-1;}
+	return k;
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::arrow_draw(long n1, long n2, char st, float ll)

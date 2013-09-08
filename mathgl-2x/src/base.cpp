@@ -218,8 +218,9 @@ long mglBase::AddGlyph(int s, long j)
 	register size_t i;
 	for(i=0;i<Glf.size();i++)	if(g==Glf[i])	return i;
 	// if no one then let add it
+	long k;
 #pragma omp critical(glf)
-	MGL_PUSH(Glf,g,mutexGlf);	return Glf.size()-1;
+	{MGL_PUSH(Glf,g,mutexGlf);	k=Glf.size()-1;}	return k;
 }
 //-----------------------------------------------------------------------------
 //		Add points to the buffer
@@ -268,8 +269,9 @@ long mglBase::CopyNtoC(long from, mreal c)
 	if(from<0)	return -1;
 	mglPnt p=Pnt[from];
 	if(!mgl_isnan(c))	{	p.c=c;	p.t=0;	Txt[long(c)].GetC(c,0,p);	}
+	long k;
 #pragma omp critical(pnt)
-	MGL_PUSH(Pnt,p,mutexPnt);	return Pnt.size()-1;
+	{MGL_PUSH(Pnt,p,mutexPnt);	k=Pnt.size()-1;}	return k;
 }
 //-----------------------------------------------------------------------------
 long mglBase::CopyProj(long from, mglPoint p, mglPoint n)
@@ -278,8 +280,9 @@ long mglBase::CopyProj(long from, mglPoint p, mglPoint n)
 	mglPnt q=Pnt[from];
 	q.x=q.xx=p.x;	q.y=q.yy=p.y;	q.z=q.zz=p.z;
 	q.u = n.x;		q.v = n.y;		q.w = n.z;
+	long k;
 #pragma omp critical(pnt)
-	MGL_PUSH(Pnt,q,mutexPnt);	return Pnt.size()-1;
+	{MGL_PUSH(Pnt,q,mutexPnt);	k=Pnt.size()-1;}	return k;
 }
 //-----------------------------------------------------------------------------
 void mglBase::Reserve(long n)
@@ -875,8 +878,9 @@ long mglBase::AddTexture(const char *cols, int smooth)
 	// check if already exist
 	for(size_t i=0;i<Txt.size();i++)	if(t.IsSame(Txt[i]))	return i;
 	// create new one
+	long k;
 #pragma omp critical(txt)
-	MGL_PUSH(Txt,t,mutexTxt);	return Txt.size()-1;
+	{MGL_PUSH(Txt,t,mutexTxt);	k=Txt.size()-1;}	return k;
 }
 //-----------------------------------------------------------------------------
 mreal mglBase::AddTexture(mglColor c)
@@ -891,8 +895,9 @@ mreal mglBase::AddTexture(mglColor c)
 	mglTexture t;
 #pragma omp parallel for private(i)
 	for(i=0;i<MGL_TEXTURE_COLOURS;i++)	t.col[i]=c;
+	long k;
 #pragma omp critical(txt)
-	MGL_PUSH(Txt,t,mutexTxt);	return Txt.size()-1;
+	{MGL_PUSH(Txt,t,mutexTxt);	k=Txt.size()-1;}	return k;
 }
 //-----------------------------------------------------------------------------
 //		Coloring and palette

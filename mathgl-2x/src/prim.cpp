@@ -231,9 +231,10 @@ void MGL_EXPORT mgl_cone(HMGL gr, double x1, double y1, double z1, double x2, do
 	if(mglchr(stl,'4'))	n=2;
 	else if(mglchr(stl,'6'))	n=3;
 	else if(mglchr(stl,'8'))	n=4;
+#pragma omp parallel for private(i,f,p,q,co,si)
 	for(i=0;i<2*n+1;i++)
 	{
-		if(gr->Stop)	{	delete []kk;	return;	}
+		if(gr->Stop)	continue;
 		f = (i+0.5)*M_PI/n;	co = cos(f);	si = sin(f);
 		p = p1+(r1*co)*a+(r1*si)*b;
 		q = (si*a-co*b)^(d + (dr*co)*a + (dr*si)*b);
@@ -245,26 +246,30 @@ void MGL_EXPORT mgl_cone(HMGL gr, double x1, double y1, double z1, double x2, do
 		kk[i+2*n+1] = gr->AddPnt(p,c2,q,-1,3);
 		if(edge && !wire)	kk[i+123] = gr->AddPnt(p,c2,d,-1,3);
 	}
-	if(wire)	for(i=0;i<2*n;i++)
-	{
-		if(gr->Stop)	{	delete []kk;	return;	}
-		gr->line_plot(kk[i],kk[i+1]);
-		gr->line_plot(kk[i],kk[i+2*n+1]);
-		gr->line_plot(kk[i+2*n+2],kk[i+1]);
-		gr->line_plot(kk[i+2*n+2],kk[i+2*n+1]);
-	}
-	else	for(i=0;i<2*n;i++)
-	{
-		if(gr->Stop)	{	delete []kk;	return;	}
-//		gr->quad_plot(kk[i],kk[i+1],kk[i+2*n+1],kk[i+2*n+2]);
-		gr->trig_plot(kk[i],kk[i+1],kk[i+2*n+1]);
-		gr->trig_plot(kk[i+1],kk[i+2*n+1],kk[i+2*n+2]);
-		if(edge)
+	if(wire)
+#pragma omp parallel for private(i)
+		for(i=0;i<2*n;i++)
 		{
-			gr->trig_plot(k1,kk[i+82],kk[i+83]);
-			gr->trig_plot(k2,kk[i+123],kk[i+124]);
+			if(gr->Stop)	continue;
+			gr->line_plot(kk[i],kk[i+1]);
+			gr->line_plot(kk[i],kk[i+2*n+1]);
+			gr->line_plot(kk[i+2*n+2],kk[i+1]);
+			gr->line_plot(kk[i+2*n+2],kk[i+2*n+1]);
 		}
-	}
+	else
+#pragma omp parallel for private(i)
+		for(i=0;i<2*n;i++)
+		{
+			if(gr->Stop)	continue;
+//			gr->quad_plot(kk[i],kk[i+1],kk[i+2*n+1],kk[i+2*n+2]);
+			gr->trig_plot(kk[i],kk[i+1],kk[i+2*n+1]);
+			gr->trig_plot(kk[i+1],kk[i+2*n+1],kk[i+2*n+2]);
+			if(edge)
+			{
+				gr->trig_plot(k1,kk[i+82],kk[i+83]);
+				gr->trig_plot(k2,kk[i+123],kk[i+124]);
+			}
+		}
 	gr->EndGroup();	delete []kk;
 }
 //-----------------------------------------------------------------------------
@@ -533,9 +538,10 @@ void MGL_EXPORT mgl_dew_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char
 	for(k=0;k<ax->GetNz();k++)
 	{
 		if(ax->GetNz()>1)	zVal = gr->Min.z+(gr->Max.z-gr->Min.z)*mreal(k)/(ax->GetNz()-1);
+#pragma omp parallel for private(i,j,dx,dy) collapse(2)
 		for(i=0;i<n;i+=tx)	for(j=0;j<m;j+=ty)
 		{
-			if(gr->Stop)	return;
+			if(gr->Stop)	continue;
 			mreal xx=GetX(x,i,j,k).x, yy=GetY(y,i,j,k).x;
 			dx = i<n-1 ? (GetX(x,i+1,j,k).x-xx) : (xx-GetX(x,i-1,j,k).x);
 			dy = j<m-1 ? (GetY(y,i,j+1,k).x-yy) : (yy-GetY(y,i,j-1,k).x);
@@ -641,9 +647,10 @@ void MGL_EXPORT mgl_textmarkw_xyzr(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, cons
 		mx = j<x->GetNy() ? j:0;	my = j<y->GetNy() ? j:0;
 		mz = j<z->GetNy() ? j:0;	mr = j<r->GetNy() ? j:0;
 		register long i,k;
+#pragma omp parallel for private(i,p,k)
 		for(i=0;i<n;i++)
 		{
-			if(gr->Stop)	return;
+			if(gr->Stop)	continue;
 			p = mglPoint(x->v(i,mx), y->v(i,my), z->v(i,mz));
 			k = gr->AddPnt(p,-1,q);
 			gr->text_plot(k, text, fnt, -0.5*fabs(r->v(i,mr)));
@@ -738,9 +745,10 @@ void MGL_EXPORT mgl_labelw_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const wchar_t *t
 	for(j=0;j<m;j++)
 	{
 		mx = j<x->GetNy() ? j:0;	my = j<y->GetNy() ? j:0;	mz = j<z->GetNy() ? j:0;
+#pragma omp parallel for private(i,p,kk,k,l)
 		for(i=0;i<n;i++)
 		{
-			if(gr->Stop)	return;
+			if(gr->Stop)	continue;
 			mreal xx=x->v(i,mx), yy=y->v(i,my), zz=z->v(i,mz);
 			p = mglPoint(xx,yy,zz);
 			kk = gr->AddPnt(p,-1,q);
