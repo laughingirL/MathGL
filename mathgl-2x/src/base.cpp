@@ -260,8 +260,9 @@ long mglBase::AddPnt(mglPoint p, mreal c, mglPoint n, mreal a, int scl)
 	if(!get(MGL_ENABLE_ALPHA))	{	q.a=1;	if(txt.Smooth!=2)	q.ta=1-gap;	}
 //	if(q.ta<0.005)	q.ta = 0.005;	// bypass OpenGL/OBJ/PRC bug
 	if(!get(MGL_ENABLE_LIGHT) && !(scl&4))	q.u=q.v=NAN;
+	long k;
 #pragma omp critical(pnt)
-	MGL_PUSH(Pnt,q,mutexPnt);	return Pnt.size()-1;
+	{MGL_PUSH(Pnt,q,mutexPnt);	k=Pnt.size()-1;}	return k;
 }
 //-----------------------------------------------------------------------------
 long mglBase::CopyNtoC(long from, mreal c)

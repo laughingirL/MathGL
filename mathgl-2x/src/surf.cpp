@@ -60,6 +60,7 @@ void MGL_NO_EXPORT mgl_surf_plot(mglBase *gr, long *pos, long n, long m)
 		int d = gr->FaceNum+1,ns=n*s/((n-1)*(m-1)),ms=m*s/((n-1)*(m-1));
 		dx = ns>d?ns/d:1;		dy = ms>d?ms/d:1;
 	}
+#pragma omp parallel for private(i,j)
 	for(j=0;j<m-dy;j+=dy)	for(i=0;i<n-dx;i+=dx)
 		gr->quad_plot(pos[n*j+i],pos[n*j+i+dx],pos[n*j+i+n*dy],pos[n*j+i+n*dy+dx]);
 }

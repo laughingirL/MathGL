@@ -997,6 +997,6 @@ int mglCanvas::IsActive(int xs, int ys,int &n)
 void mglCanvas::Push()
 {
 #pragma omp critical(stk)
-	MGL_PUSH(stack,B,mutexStk);
+	{MGL_PUSH(stack,B,mutexStk);}
 }
 //-----------------------------------------------------------------------------

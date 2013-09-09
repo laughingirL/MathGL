@@ -25,6 +25,7 @@ A. Paper about MathGL!!!
 11. Check centered curved text (see text2)
 12. Axis labels are not optimal -- "Rotate(30,-26), everything is fine. For Rotate(30,-27) the axis labels get rotated too"
 13. Check colorbar sample
+14. Check wx + pthread in win32 ... may be I should disable pthread in wx.cpp ???
 
 ============= DOCUMENTATION =============
 
