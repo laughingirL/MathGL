@@ -67,19 +67,6 @@ void smgl_stfa(mglGraph *gr);	// STFA sample
 void smgl_text(mglGraph *gr);	// text drawing
 void test(mglGraph *gr)
 {
-	mglData a;	mgls_prepare2d(&a);
-	gr->Rotate(40,60);
-	gr->Surf(a);
-	return;
-//	mgl_set_num_thr(4);
-/*	mglData s(50,50,50);
-	gr->Fill(s,"-x^2-y^2-z^2");
-	long i,j,k;	s.Maximal(i,j,k);
-	printf("max = %ld, %ld, %ld\n",i,j,k);*/
-	mglData t(10000,10000);
-	t.Transpose();
-	return;
-	
 	gr->Axis("xyz","","");
 	return;
 

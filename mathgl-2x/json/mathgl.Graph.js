@@ -88,7 +88,7 @@ mathgl.Graph.prototype.__pickPointHandler = function(x, y) {
     var view1 = "view 0 "+this.__view.__pitch*180/Math.PI+" 0"+"\n";
     var view2 = "view 0 0 "+(-this.__view.__yaw)*180/Math.PI+"\n";
     // now ask server side for proper coordinates
-    var res = globalBackend.coor(xy, zoom+view1+view2+obj.mgl);
+    var res = this.__backend.coor(xy, zoom+view1+view2+obj.mgl);
 }
 
 

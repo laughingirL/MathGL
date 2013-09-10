@@ -149,7 +149,7 @@ int mglBase::GetHeight() const	{	return 1;	}
 //-----------------------------------------------------------------------------
 void mglBase::StartGroup(const char *name, int id)
 {
-	LightScale();
+	LightScale(GetB());
 	char buf[128];
 	snprintf(buf,128,"%s_%d",name,id);
 	StartAutoGroup(buf);
@@ -225,10 +225,10 @@ long mglBase::AddGlyph(int s, long j)
 //-----------------------------------------------------------------------------
 //		Add points to the buffer
 //-----------------------------------------------------------------------------
-long mglBase::AddPnt(mglPoint p, mreal c, mglPoint n, mreal a, int scl)
+long mglBase::AddPnt(const mglMatrix *mat, mglPoint p, mreal c, mglPoint n, mreal a, int scl)
 {
 	if(mgl_isnan(c) || mgl_isnan(a))	return -1;
-	if(scl>0)	ScalePoint(p,n,!(scl&2));
+	if(scl>0)	ScalePoint(mat,p,n,!(scl&2));
 	if(mgl_isnan(p.x))	return -1;
 	a = (a>=0 && a<=1) ? a : AlphaDef;
 	c = (c>=0) ? c:CDef;
@@ -372,7 +372,7 @@ void mglBase::SetFBord(mreal x,mreal y,mreal z)
 	}
 }
 //-----------------------------------------------------------------------------
-bool mglBase::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan) const
+bool mglBase::ScalePoint(const mglMatrix *, mglPoint &p, mglPoint &n, bool use_nan) const
 {
 	mreal &x=p.x, &y=p.y, &z=p.z;
 	if(mgl_isnan(x) || mgl_isnan(y) || mgl_isnan(z))	{	x=NAN;	return false;	}

@@ -341,7 +341,7 @@ void MGL_EXPORT mgl_plot_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, c
 					pt.x = p1.x*ii+p2.x*(1-ii);
 					pt.y = p1.y*ii+p2.y*(1-ii);
 					pt.z = p1.z*ii+p2.z*(1-ii);	p=pt;
-					t3 = gr->ScalePoint(p,q,false);
+					t3 = gr->ScalePoint(gr->GetB(),p,q,false);
 					if((t1 && t3) || (t2 && !t3))	i2 = ii;
 					else	i1 = ii;
 				} while(fabs(i2-i1)>1e-3);
@@ -439,7 +439,7 @@ void MGL_EXPORT mgl_tens_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char
 					pt.y = p1.y*ii+p2.y*(1-ii);
 					pt.z = p1.z*ii+p2.z*(1-ii);	p=pt;
 					pt.c = p1.c*ii+p2.c*(1-ii);
-					t3 = gr->ScalePoint(p,q,false);
+					t3 = gr->ScalePoint(gr->GetB(),p,q,false);
 					if((t1 && t3) || (t2 && !t3))	i2 = ii;
 					else	i1 = ii;
 				} while(fabs(i2-i1)>1e-3);

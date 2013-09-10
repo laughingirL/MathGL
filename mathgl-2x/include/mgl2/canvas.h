@@ -23,17 +23,6 @@
 //-----------------------------------------------------------------------------
 struct GifFileType;
 //-----------------------------------------------------------------------------
-/// Structure for transformation matrix
-struct mglMatrix
-{
-	mreal b[9];
-	mreal x,y,z,pf;
-	mglMatrix()	{	clear();	}
-	inline void clear()	{	x=y=z=0;	memset(b,0,9*sizeof(mreal));	b[0]=b[4]=b[8]=1;	}
-	inline mglMatrix &operator=(const mglMatrix &a)
-	{	x=a.x;	y=a.y;	z=a.z;	pf=a.pf;	memcpy(b,a.b,9*sizeof(mreal));	return *this;	}
-};
-//-----------------------------------------------------------------------------
 /// Structure for drawing axis and ticks
 struct mglAxis
 {
@@ -128,6 +117,7 @@ using mglBase::Light;
 
 	/// Clear transformation matrix.
 	inline void Identity(bool rel=false)	{	InPlot(0,1,0,1,rel);	}
+	inline void Identity(mglMatrix &M, bool rel=false)	{	InPlot(M,0,1,0,1,rel);	}
 	/// Push transformation matrix into stack
 	void Push();
 	/// Set PlotFactor
@@ -143,8 +133,10 @@ using mglBase::Light;
 	/// Put further plotting in cell of stick rotated on angles tet, phi
 	void StickPlot(int num, int i, mreal tet, mreal phi);
 	/// Put further plotting in some region of whole frame surface.
-	void InPlot(mreal x1,mreal x2,mreal y1,mreal y2,bool rel=true);
+	inline void InPlot(mreal x1,mreal x2,mreal y1,mreal y2,bool rel=true)
+	{	InPlot(B,x1,x2,y1,y2,rel);	}
 	void InPlot(mreal x1,mreal x2,mreal y1,mreal y2, const char *style);
+	void InPlot(mglMatrix &M,mreal x1,mreal x2,mreal y1,mreal y2,bool rel=true);
 	/// Add title for current subplot/inplot
 	void Title(const char *title,const char *stl="#",mreal size=-2);
 	void Title(const wchar_t *title,const char *stl="#",mreal size=-2);
@@ -153,7 +145,7 @@ using mglBase::Light;
 	/// Rotate a further plotting.
 	void Rotate(mreal TetX,mreal TetZ,mreal TetY=0);
 	/// Rotate a further plotting around vector {x,y,z}.
-	void RotateN(mreal Tet,mreal x,mreal y,mreal z);
+	void RotateN(mreal Tet,mreal x,mreal y,mreal z)	;
 	/// Set perspective (in range [0,1)) for plot. Set to zero for switching off.
 	void Perspective(mreal a)	{	Bp.pf = fabs(a);	}
 
@@ -331,9 +323,6 @@ protected:
 	int Width;			///< Width of the image
 	int Height;			///< Height of the image
 	int Depth;			///< Depth of the image
-	mglMatrix Bp;		///< Transformation matrix for View() and Zoom()
-	mglMatrix B;		///< Transformation matrix
-	mglMatrix B1;		///< Transformation matrix for colorbar
 	mreal inW, inH;		///< Width and height of last InPlot
 	mreal inX, inY;		///< Coordinates of last InPlot
 	mglLight light[10];	///< Light sources
@@ -357,8 +346,8 @@ protected:
 	/// Clear ZBuffer only
 	void ClfZB(bool force=false);
 	/// Scale coordinates and cut off some points
-	bool ScalePoint(mglPoint &p, mglPoint &n, bool use_nan=true) const;
-	void LightScale();	///< Additionally scale positions of light sources
+	bool ScalePoint(const mglMatrix *M, mglPoint &p, mglPoint &n, bool use_nan=true) const;
+	void LightScale(const mglMatrix *M);	///< Additionally scale positions of light sources
 	/// Push drawing data (for frames only). NOTE: can be VERY large
 	long PushDrwDat();
 	
@@ -411,6 +400,7 @@ private:
 	mreal fscl,ftet;	///< last scale and rotation for glyphs
 	long forg;		///< original point (for directions)
 	size_t grp_counter;	///< Counter for StartGroup(); EndGroup();
+	mglMatrix Bt;	///< temporary matrix for text 
 
 	/// Draw generic colorbar
 	void colorbar(HCDT v, const mreal *s, int where, mreal x, mreal y, mreal w, mreal h);
@@ -429,17 +419,17 @@ private:
 	void fast_draw(const mglPnt &p1, const mglPnt &p2, mglDrawReg *d);
 
 	/// Additionally scale points p for positioning in image
-	void PostScale(mglPoint &p) const;
+	void PostScale(const mglMatrix *M, mglPoint &p) const;
 	/// Scale points p for projection to the face number nface in image
 	long ProjScale(int nface, long p, bool text=false);
-	inline void PostScale(mglPoint *p,long n) const	{	for(long i=0;i<n;i++)	PostScale(p[i]);	}
+	void PostScale(mglPoint *p,long n) const;
 	/// Set coordinate and add the point, return its id
 	long setPp(mglPnt &q, const mglPoint &p);
 	
 	// functions for glyph drawing
-	void glyph_fill(const mglPnt &p, mreal f, const mglGlyph &g, mglDrawReg *d);
-	void glyph_wire(const mglPnt &p, mreal f, const mglGlyph &g, mglDrawReg *d);
-	void glyph_line(const mglPnt &p, mreal f, bool solid, mglDrawReg *d);
+	void glyph_fill(const mglMatrix *M, const mglPnt &p, mreal f, const mglGlyph &g, mglDrawReg *d);
+	void glyph_wire(const mglMatrix *M, const mglPnt &p, mreal f, const mglGlyph &g, mglDrawReg *d);
+	void glyph_line(const mglMatrix *M, const mglPnt &p, mreal f, bool solid, mglDrawReg *d);
 };
 //-----------------------------------------------------------------------------
 struct mglThreadG

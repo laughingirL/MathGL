@@ -615,7 +615,7 @@ void MGL_EXPORT mgl_contf_gen(HMGL gr, double v1, double v2, HCDT a, HCDT x, HCD
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_contf_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt)
 {
-	register long i,j,n=z->GetNx(),m=z->GetNy();
+	long n=z->GetNx(),m=z->GetNy();
 	if(mgl_check_dim2(gr,x,y,z,0,"ContF"))	return;
 
 	gr->SaveState(opt);
@@ -623,33 +623,36 @@ void MGL_EXPORT mgl_contf_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const 
 	long s=gr->AddTexture(sch);
 
 	bool fixed=(mglchr(sch,'_')) || (gr->Min.z==gr->Max.z);
-	mglData xx, yy, zz(n, m);
+	mglData xx, yy;
 	if(x->GetNx()*x->GetNy()!=m*n || y->GetNx()*y->GetNy()!=m*n)	// make
 	{
 		xx.Create(n, m);		yy.Create(n, m);
 		const mglData *mx = dynamic_cast<const mglData *>(x);
 		const mglData *my = dynamic_cast<const mglData *>(y);
 		if(mx && my)
-#pragma omp parallel for private(i,j) collapse(2)
-			for(i=0;i<n;i++)	for(j=0;j<m;j++)
+#pragma omp parallel for collapse(2)
+			for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
 			{	xx.a[i+n*j] = mx->a[i];	yy.a[i+n*j] = my->a[j];	}
 		else
-#pragma omp parallel for private(i,j) collapse(2)
-			for(i=0;i<n;i++)	for(j=0;j<m;j++)
+#pragma omp parallel for collapse(2)
+			for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
 			{	xx.a[i+n*j] = x->v(i);	yy.a[i+n*j] = y->v(j);	}
 		x = &xx;	y = &yy;
 	}
 	// x, y -- have the same size z
-	mreal z0, v0;
-#pragma omp parallel for private(i,j) collapse(2)
-	for(j=0;j<z->GetNz();j++)	for(i=0;i<v->GetNx()-1;i++)
+#pragma omp parallel
 	{
-		if(gr->Stop)	continue;
-		v0 = v->v(i);		z0 = fixed ? gr->Min.z : v0;
-		if(z->GetNz()>1)
-			z0 = gr->Min.z+(gr->Max.z-gr->Min.z)*mreal(j)/(z->GetNz()-1);
-		zz.Fill(z0,z0);
-		mgl_contf_gen(gr,v0,v->v(i+1),z,x,y,&zz,gr->GetC(s,v0),j);
+		mglData zz(n, m);
+#pragma omp for collapse(2)
+		for(long j=0;j<z->GetNz();j++)	for(long i=0;i<v->GetNx()-1;i++)
+		{
+			if(gr->Stop)	continue;
+			mreal v0 = v->v(i), z0 = fixed ? gr->Min.z : v0;
+			if(z->GetNz()>1)
+				z0 = gr->Min.z+(gr->Max.z-gr->Min.z)*mreal(j)/(z->GetNz()-1);
+			zz.Fill(z0,z0);
+			mgl_contf_gen(gr,v0,v->v(i+1),z,x,y,&zz,gr->GetC(s,v0),j);
+		}
 	}
 	gr->EndGroup();
 }
@@ -722,44 +725,48 @@ int MGL_NO_EXPORT mgl_get_ncol(const char *sch, char *res)
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_contd_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt)
 {
-	register long i,j=0,n=z->GetNx(),m=z->GetNy();
+	long i,j,n=z->GetNx(),m=z->GetNy();
 	if(mgl_check_dim2(gr,x,y,z,0,"ContD"))	return;
 
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("ContD",cgid++);
 
 	bool fixed=(mglchr(sch,'_')) || (gr->Min.z==gr->Max.z);
-	if(sch)	for(i=0;sch[i];i++)	if(strchr(MGL_COLORS,sch[i]))	j++;
+	if(sch)	for(i=j=0;sch[i];i++)	if(strchr(MGL_COLORS,sch[i]))	j++;
 	if(j==0)	sch = MGL_DEF_PAL;
 	long s = gr->AddTexture(sch,1);
 	int nc = gr->GetNumPal(s*256);
-	mglData xx, yy, zz(n, m);
+	mglData xx, yy;
 	if(x->GetNx()*x->GetNy()!=m*n || y->GetNx()*y->GetNy()!=m*n)	// make
 	{
 		xx.Create(n, m);		yy.Create(n, m);
 		const mglData *mx = dynamic_cast<const mglData *>(x);
 		const mglData *my = dynamic_cast<const mglData *>(y);
 		if(mx && my)
-#pragma omp parallel for private(i,j) collapse(2)
-			for(i=0;i<n;i++)	for(j=0;j<m;j++)
+#pragma omp parallel for collapse(2)
+			for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
 			{	xx.a[i+n*j] = mx->a[i];	yy.a[i+n*j] = my->a[j];	}
 		else
-#pragma omp parallel for private(i,j) collapse(2)
-			for(i=0;i<n;i++)	for(j=0;j<m;j++)
+#pragma omp parallel for collapse(2)
+			for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
 			{	xx.a[i+n*j] = x->v(i);	yy.a[i+n*j] = y->v(j);	}
 		x = &xx;	y = &yy;
 	}
 	// x, y -- have the same size z
-	mreal z0, v0, dc = nc>1 ? 1/(MGL_FEPSILON*(nc-1)) : 0;
-#pragma omp parallel for private(i,j) collapse(2)
-	for(j=0;j<z->GetNz();j++)	for(i=0;i<v->GetNx()-1;i++)
+	mreal dc = nc>1 ? 1/(MGL_FEPSILON*(nc-1)) : 0;
+#pragma omp parallel
 	{
-		if(gr->Stop)	continue;
-		v0 = v->v(i);		z0 = fixed ? gr->Min.z : v0;
-		if(z->GetNz()>1)
-			z0 = gr->Min.z+(gr->Max.z-gr->Min.z)*mreal(j)/(z->GetNz()-1);
-		zz.Fill(z0,z0);
-		mgl_contf_gen(gr,v0,v->v(i+1),z,x,y,&zz,s+i*dc,j);
+		mglData zz(n, m);
+#pragma omp for collapse(2)
+		for(long j=0;j<z->GetNz();j++)	for(long i=0;i<v->GetNx()-1;i++)
+		{
+			if(gr->Stop)	continue;
+			mreal v0 = v->v(i), z0 = fixed ? gr->Min.z : v0;
+			if(z->GetNz()>1)
+				z0 = gr->Min.z+(gr->Max.z-gr->Min.z)*mreal(j)/(z->GetNz()-1);
+			zz.Fill(z0,z0);
+			mgl_contf_gen(gr,v0,v->v(i+1),z,x,y,&zz,s+i*dc,j);
+		}
 	}
 	gr->EndGroup();
 }
@@ -847,7 +854,7 @@ void MGL_EXPORT mgl_contv_gen(HMGL gr, mreal val, mreal dval, HCDT a, HCDT x, HC
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_contv_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt)
 {
-	register long i,j,n=z->GetNx(),m=z->GetNy();
+	long n=z->GetNx(),m=z->GetNy();
 	if(mgl_check_dim2(gr,x,y,z,0,"ContV"))	return;
 
 	gr->SaveState(opt);
@@ -856,36 +863,39 @@ void MGL_EXPORT mgl_contv_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const 
 	long s=gr->AddTexture(sch);
 	gr->SetPenPal(sch);
 
-	mglData xx, yy, zz(n, m);
+	mglData xx, yy;
 	if(x->GetNx()*x->GetNy()!=m*n || y->GetNx()*y->GetNy()!=m*n)	// make
 	{
 		xx.Create(n, m);		yy.Create(n, m);
 		const mglData *mx = dynamic_cast<const mglData *>(x);
 		const mglData *my = dynamic_cast<const mglData *>(y);
 		if(mx && my)
-#pragma omp parallel for private(i,j) collapse(2)
-			for(i=0;i<n;i++)	for(j=0;j<m;j++)
+#pragma omp parallel for collapse(2)
+			for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
 			{	xx.a[i+n*j] = mx->a[i];	yy.a[i+n*j] = my->a[j];	}
 		else
-#pragma omp parallel for private(i,j) collapse(2)
-			for(i=0;i<n;i++)	for(j=0;j<m;j++)
+#pragma omp parallel for collapse(2)
+			for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
 			{	xx.a[i+n*j] = x->v(i);	yy.a[i+n*j] = y->v(j);	}
 		x = &xx;	y = &yy;
 	}
 	// x, y -- have the same size z
-	mreal z0, v0;
-#pragma omp parallel for private(i,j) collapse(2)
-	for(j=0;j<z->GetNz();j++)	for(i=0;i<v->GetNx();i++)
+#pragma omp parallel
 	{
-		if(gr->Stop)	continue;
-		v0 = v->v(i);		z0 = fixed ? gr->Min.z : v0;
-		if(z->GetNz()>1)	z0 = gr->Min.z+(gr->Max.z-gr->Min.z)*mreal(j)/(z->GetNz()-1);
-		zz.Fill(z0,z0);
-		mreal dv = (gr->Max.c-gr->Min.c)/8;
-		if(i>0)	dv = v->v(i-1)-v->v(i);
-		else if(i<v->GetNx()-1)	dv = v->v(i)-v->v(i+1);
-		if(fixed)	dv=-dv;
-		mgl_contv_gen(gr,v0,dv,z,x,y,&zz,gr->GetC(s,v0),j);
+		mglData zz(n, m);
+#pragma omp for collapse(2)
+		for(long j=0;j<z->GetNz();j++)	for(long i=0;i<v->GetNx();i++)
+		{
+			if(gr->Stop)	continue;
+			mreal v0 = v->v(i), z0 = fixed ? gr->Min.z : v0;
+			if(z->GetNz()>1)	z0 = gr->Min.z+(gr->Max.z-gr->Min.z)*mreal(j)/(z->GetNz()-1);
+			zz.Fill(z0,z0);
+			mreal dv = (gr->Max.c-gr->Min.c)/8;
+			if(i>0)	dv = v->v(i-1)-v->v(i);
+			else if(i<v->GetNx()-1)	dv = v->v(i)-v->v(i+1);
+			if(fixed)	dv=-dv;
+			mgl_contv_gen(gr,v0,dv,z,x,y,&zz,gr->GetC(s,v0),j);
+		}
 	}
 	gr->EndGroup();
 }

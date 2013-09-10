@@ -413,23 +413,24 @@ mreal mglCanvas::text_plot(long p,const wchar_t *text,const char *font,mreal siz
 
 	mreal fsize=size/6.5*font_factor, h = fnt->Height(font)*fsize, w, shift = -(sh+0.02)*h;
 	// text drawing itself
-	Push();
+
 #if MGL_HAVE_PTHREAD
 pthread_mutex_lock(&mutexPtx);
 #endif
 #pragma omp critical(ptx)
 	{
+		Bt = B;
 		inv = inv ^ (strchr(font,'T')!=0);
 		if(inv)	shift = 0.2*h-shift;
 		shift += 0.015*h;	// Correction for glyph rotation around proper point
-//		shift *= h;
+	//		shift *= h;
 
 		int align;	mglGetStyle(font,0,&align);	align = align&3;
-		B.x = q.x;	B.y = q.y - shift;	B.z = q.z;
+		Bt.x = q.x;	Bt.y = q.y - shift;	Bt.z = q.z;
 		if(ll>0)
 		{
-			B.x += shift*q.v/sqrt(ll);	B.y += shift*(1-q.u/sqrt(ll));
-			if(q.u==0 && !get(MGL_ENABLE_RTEXT))	B.y -= 0.1*h;
+			Bt.x += shift*q.v/sqrt(ll);	Bt.y += shift*(1-q.u/sqrt(ll));
+			if(q.u==0 && !get(MGL_ENABLE_RTEXT))	Bt.y -= 0.1*h;
 		}
 		fscl = fsize;	forg = p;
 
@@ -451,29 +452,29 @@ pthread_mutex_lock(&mutexPtx);
 			add_prim(a);
 		}
 
-		memset(B.b,0,9*sizeof(mreal));
-		B.b[0] = B.b[4] = B.b[8] = fscl;
-		register mreal opf = B.pf;
-		RotateN(ftet,0,0,1);	B.pf = opf;
+		memset(Bt.b,0,9*sizeof(mreal));
+		Bt.b[0] = Bt.b[4] = Bt.b[8] = fscl;
+		register mreal opf = Bt.pf;
+		Bt.RotateN(ftet,0,0,1);	Bt.pf = opf;
 		if(strchr(font,'@'))	// draw box around text
 		{
 			long k1,k2,k3,k4;	mglPnt pt;	mglPoint pp;
 			w = fnt->Width(text,font);	h = fnt->Height(font);
 //			int align;	mglGetStyle(font,0,&align);	align = align&3;
 			mreal d=-w*align/2.-h*0.2;	w+=h*0.4;
-			pt = q;	pp = mglPoint(d,-h*0.4);		PostScale(pp);
+			pt = q;	pp = mglPoint(d,-h*0.4);		PostScale(&Bt,pp);
 			pt.x=pt.xx=pp.x;	pt.y=pt.yy=pp.y;
 #pragma omp critical(pnt)
 			{MGL_PUSH(Pnt,pt,mutexPnt);	k1=Pnt.size()-1;}
-			pt = q;	pp = mglPoint(w+d,-h*0.4);		PostScale(pp);
+			pt = q;	pp = mglPoint(w+d,-h*0.4);		PostScale(&Bt,pp);
 			pt.x=pt.xx=pp.x;	pt.y=pt.yy=pp.y;
 #pragma omp critical(pnt)
 			{MGL_PUSH(Pnt,pt,mutexPnt);	k2=Pnt.size()-1;}
-			pt = q;	pp = mglPoint(d,h*1.2);			PostScale(pp);
+			pt = q;	pp = mglPoint(d,h*1.2);			PostScale(&Bt,pp);
 			pt.x=pt.xx=pp.x;	pt.y=pt.yy=pp.y;
 #pragma omp critical(pnt)
 			{MGL_PUSH(Pnt,pt,mutexPnt);	k3=Pnt.size()-1;}
-			pt = q;	pp = mglPoint(w+d,h*1.2);		PostScale(pp);
+			pt = q;	pp = mglPoint(w+d,h*1.2);		PostScale(&Bt,pp);
 			pt.x=pt.xx=pp.x;	pt.y=pt.yy=pp.y;
 #pragma omp critical(pnt)
 			{MGL_PUSH(Pnt,pt,mutexPnt);	k4=Pnt.size()-1;}
@@ -485,18 +486,18 @@ pthread_mutex_lock(&mutexPtx);
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_unlock(&mutexPtx);
 #endif
-	Pop();	return fsize;
+	return fsize;
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::Glyph(mreal x, mreal y, mreal f, int s, long j, mreal col)
 {
 	mglPrim a(4);	// NOTE: no projection since text_plot() did it
-	a.s = fscl/B.pf;
+	a.s = fscl/Bt.pf;
 	a.w = get(MGL_ENABLE_RTEXT)?ftet:1e5;
 	a.p = f/fnt->GetFact(s&3);
 	mreal cc = col<0 ? AddTexture(char(0.5-col)):col;
 	if(cc<0)	cc = CDef;
-	a.n1 = AddPnt(mglPoint(B.x,B.y,B.z), cc, mglPoint(x,y,NAN), -1, -1);
+	a.n1 = AddPnt(&Bt, mglPoint(Bt.x,Bt.y,Bt.z), cc, mglPoint(x,y,NAN), -1, -1);
 	a.n2 = forg; 	a.n3 = s;	a.n4 = AddGlyph(s,j);
 	if(a.n1<0)	return;
 
@@ -545,31 +546,31 @@ void mglCanvas::InPlot(mreal x1,mreal x2,mreal y1,mreal y2, const char *st)
 	B1=B;	font_factor = B.b[0] < B.b[4] ? B.b[0] : B.b[4];
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::InPlot(mreal x1,mreal x2,mreal y1,mreal y2, bool rel)
+void mglCanvas::InPlot(mglMatrix &M,mreal x1,mreal x2,mreal y1,mreal y2, bool rel)
 {
 	if(Width<=0 || Height<=0 || Depth<=0)	return;
-	B.clear();
-	if(get(MGL_AUTO_FACTOR)) B.pf = 1.55;	// Automatically change plot factor !!!
+	M.clear();
+	if(get(MGL_AUTO_FACTOR)) M.pf = 1.55;	// Automatically change plot factor !!!
 	if(rel)
 	{
-		B.x = B1.x + (x1+x2-1)/2*B1.b[0]/1.55;
-		B.y = B1.y + (y1+y2-1)/2*B1.b[4]/1.55;
-		B.b[0] = B1.b[0]*(x2-x1);	B.b[4] = B1.b[4]*(y2-y1);
-		B.b[8] = sqrt(B.b[0]*B.b[4]);
-		B.z = B1.z + (1.f-B.b[8]/(2*Depth))*B1.b[8];
+		M.x = B1.x + (x1+x2-1)/2*B1.b[0]/1.55;
+		M.y = B1.y + (y1+y2-1)/2*B1.b[4]/1.55;
+		M.b[0] = B1.b[0]*(x2-x1);	M.b[4] = B1.b[4]*(y2-y1);
+		M.b[8] = sqrt(M.b[0]*M.b[4]);
+		M.z = B1.z + (1.f-M.b[8]/(2*Depth))*B1.b[8];
 	}
 	else
 	{
-		B.x = (x1+x2)/2*Width;
-		B.y = (y1+y2)/2*Height;
-		B.b[0] = Width*(x2-x1);	B.b[4] = Height*(y2-y1);
-		B.b[8] = sqrt(B.b[0]*B.b[4]);
-		B.z = (1.f-B.b[8]/(2*Depth))*Depth;
+		M.x = (x1+x2)/2*Width;
+		M.y = (y1+y2)/2*Height;
+		M.b[0] = Width*(x2-x1);	M.b[4] = Height*(y2-y1);
+		M.b[8] = sqrt(M.b[0]*M.b[4]);
+		M.z = (1.f-M.b[8]/(2*Depth))*Depth;
 		B1=B;
 	}
-	inW=B.b[0];	inH=B.b[4];	ZMin=1;
+	inW=M.b[0];	inH=M.b[4];	ZMin=1;
 	inX=Width*x1;	inY=Height*y1;
-	font_factor = B.b[0] < B.b[4] ? B.b[0] : B.b[4];
+	font_factor = M.b[0] < M.b[4] ? M.b[0] : M.b[4];
 	mglPrim p;	p.id = ObjId;
 	p.n1=x1*Width;	p.n2=x2*Width;	p.n3=y1*Height;	p.n4=y2*Height;
 #pragma omp critical(sub)
@@ -582,7 +583,7 @@ void mglCanvas::StickPlot(int num, int id, mreal tet, mreal phi)
 	mglPoint p1(-1,0,0), p2(1,0,0);
 	// first iteration
 	InPlot(0,1,0,1,true);	Rotate(tet, phi);
-	PostScale(p1);	PostScale(p2);	f1 = B.pf;
+	PostScale(GetB(),p1);	PostScale(GetB(),p2);	f1 = B.pf;
 	dx=(p2.x-p1.x)*1.55/B1.b[0];	dy=(p2.y-p1.y)*1.55/B1.b[4];
 	wx=1/(1+(num-1)*fabs(dx));		wy=1/(1+(num-1)*fabs(dy));
 	x1=dx>0?dx*id:dx*(id-num+1);	y1=dy>0?dy*id:dy*(id-num+1);
@@ -599,6 +600,17 @@ void mglCanvas::StickPlot(int num, int id, mreal tet, mreal phi)
 //-----------------------------------------------------------------------------
 void mglCanvas::Rotate(mreal tetz,mreal tetx,mreal tety)
 {
+	B.Rotate(tetz,tetx,tety);
+	if(get(MGL_AUTO_FACTOR))
+	{
+		mreal w=(fabs(B.b[3])+fabs(B.b[4])+fabs(B.b[5]))/B1.b[4];
+		mreal h=(fabs(B.b[0])+fabs(B.b[1])+fabs(B.b[2]))/B1.b[0];
+		B.pf = 1.55+0.6147*(w<h ? (h-1):(w-1));
+	}
+}
+//-----------------------------------------------------------------------------
+void mglMatrix::Rotate(mreal tetz,mreal tetx,mreal tety)
+{
 //	RotateN(TetX,1.,0.,0.);
 //	RotateN(TetY,0.,1.,0.);
 //	RotateN(TetZ,0.,0.,1.);
@@ -607,16 +619,21 @@ void mglCanvas::Rotate(mreal tetz,mreal tetx,mreal tety)
 	R[0] = cx*cy;			R[1] = -cy*sx;			R[2] = sy;
 	R[3] = cx*sy*sz+cz*sx;	R[4] = cx*cz-sx*sy*sz;	R[5] =-cy*sz;
 	R[6] = sx*sz-cx*cz*sy;	R[7] = cx*sz+cz*sx*sy;	R[8] = cy*cz;
-	memcpy(O,B.b,9*sizeof(mreal));
-	B.b[0] = R[0]*O[0] + R[3]*O[1] + R[6]*O[2];
-	B.b[1] = R[1]*O[0] + R[4]*O[1] + R[7]*O[2];
-	B.b[2] = R[2]*O[0] + R[5]*O[1] + R[8]*O[2];
-	B.b[3] = R[0]*O[3] + R[3]*O[4] + R[6]*O[5];
-	B.b[4] = R[1]*O[3] + R[4]*O[4] + R[7]*O[5];
-	B.b[5] = R[2]*O[3] + R[5]*O[4] + R[8]*O[5];
-	B.b[6] = R[0]*O[6] + R[3]*O[7] + R[6]*O[8];
-	B.b[7] = R[1]*O[6] + R[4]*O[7] + R[7]*O[8];
-	B.b[8] = R[2]*O[6] + R[5]*O[7] + R[8]*O[8];
+	memcpy(O,b,9*sizeof(mreal));
+	b[0] = R[0]*O[0] + R[3]*O[1] + R[6]*O[2];
+	b[1] = R[1]*O[0] + R[4]*O[1] + R[7]*O[2];
+	b[2] = R[2]*O[0] + R[5]*O[1] + R[8]*O[2];
+	b[3] = R[0]*O[3] + R[3]*O[4] + R[6]*O[5];
+	b[4] = R[1]*O[3] + R[4]*O[4] + R[7]*O[5];
+	b[5] = R[2]*O[3] + R[5]*O[4] + R[8]*O[5];
+	b[6] = R[0]*O[6] + R[3]*O[7] + R[6]*O[8];
+	b[7] = R[1]*O[6] + R[4]*O[7] + R[7]*O[8];
+	b[8] = R[2]*O[6] + R[5]*O[7] + R[8]*O[8];
+}
+//-----------------------------------------------------------------------------
+void mglCanvas::RotateN(mreal Tet,mreal x,mreal y,mreal z)
+{
+	B.RotateN(Tet,x,y,z);
 	if(get(MGL_AUTO_FACTOR))
 	{
 		mreal w=(fabs(B.b[3])+fabs(B.b[4])+fabs(B.b[5]))/B1.b[4];
@@ -625,51 +642,27 @@ void mglCanvas::Rotate(mreal tetz,mreal tetx,mreal tety)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::RotateN(mreal Tet,mreal x,mreal y,mreal z)
+void mglMatrix::RotateN(mreal Tet,mreal x,mreal y,mreal z)
 {
 	mreal R[9],T[9],c=cos(Tet*M_PI/180),s=-sin(Tet*M_PI/180),r=1-c,n=sqrt(x*x+y*y+z*z);
 	x/=n;	y/=n;	z/=n;
 	T[0] = x*x*r+c;		T[1] = x*y*r-z*s;	T[2] = x*z*r+y*s;
 	T[3] = x*y*r+z*s;	T[4] = y*y*r+c;		T[5] = y*z*r-x*s;
 	T[6] = x*z*r-y*s;	T[7] = y*z*r+x*s;	T[8] = z*z*r+c;
-	memcpy(R,B.b,9*sizeof(mreal));
-	B.b[0] = T[0]*R[0] + T[3]*R[1] + T[6]*R[2];
-	B.b[1] = T[1]*R[0] + T[4]*R[1] + T[7]*R[2];
-	B.b[2] = T[2]*R[0] + T[5]*R[1] + T[8]*R[2];
-	B.b[3] = T[0]*R[3] + T[3]*R[4] + T[6]*R[5];
-	B.b[4] = T[1]*R[3] + T[4]*R[4] + T[7]*R[5];
-	B.b[5] = T[2]*R[3] + T[5]*R[4] + T[8]*R[5];
-	B.b[6] = T[0]*R[6] + T[3]*R[7] + T[6]*R[8];
-	B.b[7] = T[1]*R[6] + T[4]*R[7] + T[7]*R[8];
-	B.b[8] = T[2]*R[6] + T[5]*R[7] + T[8]*R[8];
-	if(get(MGL_AUTO_FACTOR))
-	{
-		mreal w=(fabs(B.b[3])+fabs(B.b[4])+fabs(B.b[5]))/B1.b[4];
-		mreal h=(fabs(B.b[0])+fabs(B.b[1])+fabs(B.b[2]))/B1.b[0];
-		B.pf = 1.55+0.6147*(w<h ? (h-1):(w-1));
-	}
+	memcpy(R,b,9*sizeof(mreal));
+	b[0] = T[0]*R[0] + T[3]*R[1] + T[6]*R[2];
+	b[1] = T[1]*R[0] + T[4]*R[1] + T[7]*R[2];
+	b[2] = T[2]*R[0] + T[5]*R[1] + T[8]*R[2];
+	b[3] = T[0]*R[3] + T[3]*R[4] + T[6]*R[5];
+	b[4] = T[1]*R[3] + T[4]*R[4] + T[7]*R[5];
+	b[5] = T[2]*R[3] + T[5]*R[4] + T[8]*R[5];
+	b[6] = T[0]*R[6] + T[3]*R[7] + T[6]*R[8];
+	b[7] = T[1]*R[6] + T[4]*R[7] + T[7]*R[8];
+	b[8] = T[2]*R[6] + T[5]*R[7] + T[8]*R[8];
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::View(mreal tetx,mreal tetz,mreal tety)
-{
-	mreal R[9], A[9];
-	mreal cx=cos(tetx*M_PI/180), sx=sin(tetx*M_PI/180);
-	mreal cy=cos(tety*M_PI/180), sy=sin(tety*M_PI/180);
-	mreal cz=cos(tetz*M_PI/180), sz=sin(tetz*M_PI/180);
-	R[0] = cx*cy;			R[1] = -cy*sx;			R[2] = sy;
-	R[3] = cx*sy*sz+cz*sx;	R[4] = cx*cz-sx*sy*sz;	R[5] =-cy*sz;
-	R[6] = sx*sz-cx*cz*sy;	R[7] = cx*sz+cz*sx*sy;	R[8] = cy*cz;
-	memcpy(A,Bp.b,9*sizeof(mreal));		ClfZB();
-	Bp.b[0] = R[0]*A[0] + R[3]*A[1] + R[6]*A[2];
-	Bp.b[1] = R[1]*A[0] + R[4]*A[1] + R[7]*A[2];
-	Bp.b[2] = R[2]*A[0] + R[5]*A[1] + R[8]*A[2];
-	Bp.b[3] = R[0]*A[3] + R[3]*A[4] + R[6]*A[5];
-	Bp.b[4] = R[1]*A[3] + R[4]*A[4] + R[7]*A[5];
-	Bp.b[5] = R[2]*A[3] + R[5]*A[4] + R[8]*A[5];
-	Bp.b[6] = R[0]*A[6] + R[3]*A[7] + R[6]*A[8];
-	Bp.b[7] = R[1]*A[6] + R[4]*A[7] + R[7]*A[8];
-	Bp.b[8] = R[2]*A[6] + R[5]*A[7] + R[8]*A[8];
-}
+{	Bp.Rotate(-tetz,-tetx,-tety);	}
 //-----------------------------------------------------------------------------
 void mglCanvas::Zoom(mreal x1, mreal y1, mreal x2, mreal y2)
 {
@@ -802,10 +795,10 @@ void mglCanvas::Legend(const std::vector<mglText> &leg, mreal x, mreal y, const 
 	if(strchr(ff,'#'))	// draw bounding box
 	{
 		SetPenPal("k-");
-		k1=AddPnt(mglPoint(x,y,Depth/MGL_FEPSILON),c1,q,-1,0);
-		k2=AddPnt(mglPoint(x+w*ncol,y,Depth/MGL_FEPSILON),c1,q,-1,0);
-		k3=AddPnt(mglPoint(x,y+h*nrow,Depth/MGL_FEPSILON),c1,q,-1,0);
-		k4=AddPnt(mglPoint(x+w*ncol,y+h*nrow,Depth/MGL_FEPSILON),c1,q,-1,0);
+		k1=AddPnt(&B,mglPoint(x,y,Depth/MGL_FEPSILON),c1,q,-1,0);
+		k2=AddPnt(&B,mglPoint(x+w*ncol,y,Depth/MGL_FEPSILON),c1,q,-1,0);
+		k3=AddPnt(&B,mglPoint(x,y+h*nrow,Depth/MGL_FEPSILON),c1,q,-1,0);
+		k4=AddPnt(&B,mglPoint(x+w*ncol,y+h*nrow,Depth/MGL_FEPSILON),c1,q,-1,0);
 		quad_plot(k1,k2,k3,k4);
 		k1=CopyNtoC(k1,c2);	k2=CopyNtoC(k2,c2);
 		k3=CopyNtoC(k3,c2);	k4=CopyNtoC(k4,c2);
@@ -816,8 +809,8 @@ void mglCanvas::Legend(const std::vector<mglText> &leg, mreal x, mreal y, const 
 	{
 		register long iy=nrow-(i%nrow)-1,ix=i/nrow;
 		char m=SetPenPal(leg[i].stl.c_str());
-		k1=AddPnt(mglPoint(x+ix*w+0.1*ll,y+iy*h+0.45*h,Depth),CDef,q,-1,0);
-		k2=AddPnt(mglPoint(x+ix*w+0.9*ll,y+iy*h+0.45*h,Depth),CDef,q,-1,0);	pPos=0;
+		k1=AddPnt(&B,mglPoint(x+ix*w+0.1*ll,y+iy*h+0.45*h,Depth),CDef,q,-1,0);
+		k2=AddPnt(&B,mglPoint(x+ix*w+0.9*ll,y+iy*h+0.45*h,Depth),CDef,q,-1,0);	pPos=0;
 		if(!leg[i].stl.empty())	line_plot(k1,k2);
 		if(m)	for(j=0;j<LegendMarks;j++)
 		{
@@ -881,24 +874,24 @@ void mglCanvas::Table(mreal x, mreal y, HCDT val, const wchar_t *text, const cha
 	if(grid)	// draw bounding box
 	{
 		SetPenPal("k-");
-		k1=AddPnt(mglPoint(x,y,Depth),-1,q,-1,0);
-		k2=AddPnt(mglPoint(x,y+m*h,Depth),-1,q,-1,0);
+		k1=AddPnt(&B,mglPoint(x,y,Depth),-1,q,-1,0);
+		k2=AddPnt(&B,mglPoint(x,y+m*h,Depth),-1,q,-1,0);
 		line_plot(k1,k2);
 		ww = *text ? TextWidth(text,frm,-1)+sp:0;
-		k1=AddPnt(mglPoint(x+ww,y,Depth),-1,q,-1,0);
-		k2=AddPnt(mglPoint(x+ww,y+m*h,Depth),-1,q,-1,0);
+		k1=AddPnt(&B,mglPoint(x+ww,y,Depth),-1,q,-1,0);
+		k2=AddPnt(&B,mglPoint(x+ww,y+m*h,Depth),-1,q,-1,0);
 		line_plot(k1,k2);
 		for(i=0,xx=x+ww,yy=y;i<n;i++)
 		{
 			xx += eqd ? w1:(TextWidth(str[i].c_str(),frm,-1)+sp);
-			k1=AddPnt(mglPoint(xx,yy,Depth),-1,q,-1,0);
-			k2=AddPnt(mglPoint(xx,yy+m*h,Depth),-1,q,-1,0);
+			k1=AddPnt(&B,mglPoint(xx,yy,Depth),-1,q,-1,0);
+			k2=AddPnt(&B,mglPoint(xx,yy+m*h,Depth),-1,q,-1,0);
 			line_plot(k1,k2);
 		}
 		for(i=0,xx=x,yy=y;i<=m;i++)
 		{
-			k1=AddPnt(mglPoint(xx,yy,Depth),-1,q,-1,0);
-			k2=AddPnt(mglPoint(xx+w,yy,Depth),-1,q,-1,0);
+			k1=AddPnt(&B,mglPoint(xx,yy,Depth),-1,q,-1,0);
+			k2=AddPnt(&B,mglPoint(xx+w,yy,Depth),-1,q,-1,0);
 			line_plot(k1,k2);	yy += h;
 		}
 	}
@@ -906,14 +899,14 @@ void mglCanvas::Table(mreal x, mreal y, HCDT val, const wchar_t *text, const cha
 	if(*text)
 	{
 		ww = TextWidth(text,frm,-1)+sp;
-		k1=AddPnt(mglPoint(x+ww*align/2.,y+h*(m-0.99),Depth),-1,q,-1,0);
+		k1=AddPnt(&B,mglPoint(x+ww*align/2.,y+h*(m-0.99),Depth),-1,q,-1,0);
 		text_plot(k1,text,frm);
 	}
 	else 	ww = 0;
 	for(i=0,xx=x+ww,yy=y+h*(m-0.99);i<n;i++)	// draw lines and legend
 	{
 		ww = eqd ? w1:(TextWidth(str[i].c_str(),frm,-1)+sp);
-		k1=AddPnt(mglPoint(xx+ww*align/2.,yy,Depth),-1,q,-1,0);
+		k1=AddPnt(&B,mglPoint(xx+ww*align/2.,yy,Depth),-1,q,-1,0);
 		text_plot(k1,str[i].c_str(),frm);	xx += ww;
 	}
 	FontSize = fsize;	EndGroup();
@@ -940,10 +933,10 @@ void mglCanvas::Title(const wchar_t *title,const char *stl,mreal size)
 		mreal c1=AddTexture('w'), c2=AddTexture('k');
 		if((Flag&3)==2)	{	mreal cc=c1;	c2=c1;	c1=cc;	}
 		long k1,k2,k3,k4;
-		k1=AddPnt(mglPoint(inX,y,Depth),c1,q,-1,0);
-		k2=AddPnt(mglPoint(inX+inW,y,Depth),c1,q,-1,0);
-		k3=AddPnt(mglPoint(inX,y+h,Depth),c1,q,-1,0);
-		k4=AddPnt(mglPoint(inX+inW,y+h,Depth),c1,q,-1,0);
+		k1=AddPnt(&B,mglPoint(inX,y,Depth),c1,q,-1,0);
+		k2=AddPnt(&B,mglPoint(inX+inW,y,Depth),c1,q,-1,0);
+		k3=AddPnt(&B,mglPoint(inX,y+h,Depth),c1,q,-1,0);
+		k4=AddPnt(&B,mglPoint(inX+inW,y+h,Depth),c1,q,-1,0);
 		quad_plot(k1,k2,k3,k4);
 		k1=CopyNtoC(k1,c2);	k2=CopyNtoC(k2,c2);
 		k3=CopyNtoC(k3,c2);	k4=CopyNtoC(k4,c2);
@@ -998,5 +991,11 @@ void mglCanvas::Push()
 {
 #pragma omp critical(stk)
 	{MGL_PUSH(stack,B,mutexStk);}
+}
+//-----------------------------------------------------------------------------
+void mglCanvas::PostScale(mglPoint *p,long n) const
+{
+#pragma omp parallel for
+	for(long i=0;i<n;i++)	PostScale(GetB(),p[i]);
 }
 //-----------------------------------------------------------------------------

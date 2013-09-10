@@ -82,6 +82,19 @@ mglPoint GetX(HCDT x, int i, int j, int k=0);
 mglPoint GetY(HCDT y, int i, int j, int k=0);
 mglPoint GetZ(HCDT z, int i, int j, int k=0);
 //-----------------------------------------------------------------------------
+/// Structure for transformation matrix
+struct mglMatrix
+{
+	mreal b[9];
+	mreal x,y,z,pf;
+	mglMatrix()	{	clear();	}
+	void Rotate(mreal tetz,mreal tetx,mreal tety);
+	void RotateN(mreal Tet,mreal x,mreal y,mreal z);
+	inline void clear()	{	x=y=z=0;	memset(b,0,9*sizeof(mreal));	b[0]=b[4]=b[8]=1;	}
+	inline mglMatrix &operator=(const mglMatrix &a)
+	{	x=a.x;	y=a.y;	z=a.z;	pf=a.pf;	memcpy(b,a.b,9*sizeof(mreal));	return *this;	}
+};
+//-----------------------------------------------------------------------------
 /// Structure for simplest primitives
 struct mglPrim	// NOTE: use float for reducing memory size
 {
@@ -399,7 +412,9 @@ public:
 
 	// ~~~~~~~~~~~~~~~~~~~~~~ Developer functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	/// Add point to the Pnt and return its position
-	long AddPnt(mglPoint p, mreal c=-1, mglPoint n=mglPoint(NAN), mreal a=-1, int scl=1);
+	inline long AddPnt(mglPoint p, mreal c=-1, mglPoint n=mglPoint(NAN), mreal a=-1, int scl=1)
+	{	AddPnt(&B,p,c,n,a,scl);	}
+	long AddPnt(const mglMatrix *M, mglPoint p, mreal c=-1, mglPoint n=mglPoint(NAN), mreal a=-1, int scl=1);
 	long CopyNtoC(long k, mreal c);
 	long CopyProj(long from, mglPoint p, mglPoint n);
 	virtual void Reserve(long n);		///< Allocate n-cells for Pnt and return current position
@@ -411,7 +426,8 @@ public:
 	void AddActive(long k,int n=0);
 	/// Clear unused points and primitives
 	void ClearUnused();
-	
+
+	inline const mglMatrix *GetB()	const	{	return &B;	}
 	inline mglPoint GetPntP(long i) const
 	{	const mglPnt &p=Pnt[i];	return mglPoint(p.x,p.y,p.z);	}
 	inline mglPoint GetPntN(long i) const
@@ -430,7 +446,7 @@ public:
 	inline const mglTexture &GetTxt(long i) const	{	return Txt[i];	}
 	inline long GetTxtNum() const		{	return Txt.size();	}
 	/// Scale coordinates and cut off some points
-	virtual bool ScalePoint(mglPoint &p, mglPoint &n, bool use_nan=true) const;
+	virtual bool ScalePoint(const mglMatrix *M, mglPoint &p, mglPoint &n, bool use_nan=true) const;
 
 	virtual mreal GetOrgX(char dir) const=0;	///< Get Org.x (parse NAN value)
 	virtual mreal GetOrgY(char dir) const=0;	///< Get Org.y (parse NAN value)
@@ -496,6 +512,10 @@ protected:
 	mreal AmbBr;		///< Default ambient light brightness
 	mreal DifBr;		///< Default diffusive light brightness
 
+	mglMatrix Bp;		///< Transformation matrix for View() and Zoom()
+	mglMatrix B;		///< Transformation matrix
+	mglMatrix B1;		///< Transformation matrix for colorbar
+
 	mglFont *fnt;		///< Class for printing vector text
 	mreal FontSize;		///< The size of font for tick and axis labels
 	char FontDef[32];	///< Font specification (see mglGraph::Puts). Default is Roman with align at center.
@@ -513,7 +533,7 @@ protected:
 	char last_style[64];///< Last pen style
 	mreal font_factor;	///< Font scaling factor
 
-	virtual void LightScale()=0;			///< Scale positions of light sources
+	virtual void LightScale(const mglMatrix *M)=0;			///< Scale positions of light sources
 
 	// block for SaveState()
 	mglPoint MinS;		///< Saved lower edge of bounding box for graphics.

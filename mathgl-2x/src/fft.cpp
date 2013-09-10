@@ -115,7 +115,7 @@ void MGL_EXPORT mgl_fft(double *x, long s, long n, const void *wt, void *ws, int
 	memset(d,0,2*n*sizeof(double));
 	register long i,j,ii,jj;
 	if(inv)
-#if !MGL_HAVE_PTHREAD
+#if !MGL_HAVE_PTHREAD	// TODO: move omp parallelization to higher level (be careful with "tmp arrays")!!!
 #pragma omp parallel for private(j)
 #endif
 		for(i=0;i<n;i++)	for(j=0;j<n;j++)
@@ -912,15 +912,21 @@ MGL_NO_EXPORT void* mgl_chnkx(void *par)
 	const gsl_dht *dht = (const gsl_dht*)t->v;
 
 	double mm = gsl_sf_bessel_zero_J0(nx+1);
-#if !MGL_HAVE_PTHREAD
-#pragma omp parallel for private(i,j)
-#endif
 	for(i=t->id;i<t->n;i+=mglNumThr)
 	{
+#if !MGL_HAVE_PTHREAD	// NOTE: stupid omp here
+#pragma omp parallel for private(j)
+#endif
 		for(j=0;j<nx;j++)	b[j] = real(a[j+nx*i]);
 		gsl_dht_apply(dht,b,b+nx);
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel for private(j)
+#endif
 		for(j=0;j<nx;j++)	b[j] = imag(a[j+nx*i]);
 		gsl_dht_apply(dht,b,b+2*nx);
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel for private(j)
+#endif
 		for(j=0;j<nx;j++)	a[j+nx*i] = dual(b[j+nx],b[j+2*nx])*mreal(mm);
 	}
 	return 0;
@@ -934,16 +940,22 @@ MGL_NO_EXPORT void* mgl_chnky(void *par)
 	const gsl_dht *dht = (const gsl_dht*)t->v;
 	
 	double mm = gsl_sf_bessel_zero_J0(ny+1);
-#if !MGL_HAVE_PTHREAD
-#pragma omp parallel for private(ii,i,k)
-#endif
 	for(ii=t->id;ii<t->n;ii+=mglNumThr)
 	{
 		i = ii%nx;	k = ii/nx;
+#if !MGL_HAVE_PTHREAD	// NOTE: stupid omp here
+#pragma omp parallel for private(j)
+#endif
 		for(j=0;j<ny;j++)	b[j] = real(a[i+nx*(j+ny*k)]);
 		gsl_dht_apply(dht,b,b+ny);
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel for private(j)
+#endif
 		for(j=0;j<ny;j++)	b[j] = imag(a[i+nx*(j+ny*k)]);
 		gsl_dht_apply(dht,b,b+2*ny);
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel for private(j)
+#endif
 		for(j=0;j<ny;j++)	a[i+nx*(j+ny*k)] = dual(b[j+ny],b[j+2*ny])*mreal(mm);
 	}
 	return 0;
@@ -957,15 +969,21 @@ MGL_NO_EXPORT void* mgl_chnkz(void *par)
 	const gsl_dht *dht = (const gsl_dht*)t->v;
 	
 	double mm = gsl_sf_bessel_zero_J0(nz+1);
-#if !MGL_HAVE_PTHREAD
-#pragma omp parallel for private(i,j)
-#endif
 	for(i=t->id;i<t->n;i+=mglNumThr)
 	{
+#if !MGL_HAVE_PTHREAD	// NOTE: stupid omp here
+#pragma omp parallel for private(j)
+#endif
 		for(j=0;j<nz;j++)	b[j] = real(a[i+j*k]);
 		gsl_dht_apply(dht,b,b+nz);
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel for private(j)
+#endif
 		for(j=0;j<nz;j++)	b[j] = imag(a[i+j*k]);
 		gsl_dht_apply(dht,b,b+2*nz);
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel for private(j)
+#endif
 		for(j=0;j<nz;j++)	a[i+j*k] = dual(b[j+nz],b[j+2*nz])*mreal(mm);
 	}
 	return 0;
@@ -1035,13 +1053,16 @@ MGL_NO_EXPORT void* mgl_hnkx(void *par)
 	const gsl_dht *dht = (const gsl_dht*)t->v;
 	
 	double mm = gsl_sf_bessel_zero_J0(nx+1);
-#if !MGL_HAVE_PTHREAD
-#pragma omp parallel for private(i,j)
-#endif
 	for(i=t->id;i<t->n;i+=mglNumThr)
 	{
+#if !MGL_HAVE_PTHREAD	// NOTE: stupid omp here
+#pragma omp parallel for private(j)
+#endif
 		for(j=0;j<nx;j++)	b[j] = a[j+nx*i];
 		gsl_dht_apply(dht,b,b+nx);
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel for private(j)
+#endif
 		for(j=0;j<nx;j++)	a[j+nx*i] = b[j+nx]*mreal(mm);
 	}
 	return 0;
@@ -1055,14 +1076,17 @@ MGL_NO_EXPORT void* mgl_hnky(void *par)
 	const gsl_dht *dht = (const gsl_dht*)t->v;
 	
 	double mm = gsl_sf_bessel_zero_J0(ny+1);
-#if !MGL_HAVE_PTHREAD
-#pragma omp parallel for private(ii,i,k)
-#endif
 	for(ii=t->id;ii<t->n;ii+=mglNumThr)
 	{
 		i = ii%nx;	k = ii/nx;
+#if !MGL_HAVE_PTHREAD	// NOTE: stupid omp here
+#pragma omp parallel for private(j)
+#endif
 		for(j=0;j<ny;j++)	b[j] = a[i+nx*(j+ny*k)];
 		gsl_dht_apply(dht,b,b+ny);
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel for private(j)
+#endif
 		for(j=0;j<ny;j++)a[i+nx*(j+ny*k)] = b[j+ny]*mreal(mm);
 	}
 	return 0;
@@ -1076,13 +1100,16 @@ MGL_NO_EXPORT void* mgl_hnkz(void *par)
 	const gsl_dht *dht = (const gsl_dht*)t->v;
 	
 	double mm = gsl_sf_bessel_zero_J0(nz+1);
-#if !MGL_HAVE_PTHREAD
-#pragma omp parallel for private(i,j)
-#endif
 	for(i=t->id;i<t->n;i+=mglNumThr)
 	{
+#if !MGL_HAVE_PTHREAD	// NOTE: stupid omp here
+#pragma omp parallel for private(j)
+#endif
 		for(j=0;j<nz;j++)	b[j] = a[i+j*k];
 		gsl_dht_apply(dht,b,b+nz);
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel for private(j)
+#endif
 		for(j=0;j<nz;j++)	a[i+j*k] = b[j+nz]*mreal(mm);
 	}
 	return 0;

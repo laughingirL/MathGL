@@ -532,12 +532,11 @@ void MGL_EXPORT mgl_surfc_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char
 	long ss = gr->AddTexture(sch);
 	long *pos = new long[n*m];
 	gr->Reserve(n*m*z->GetNz());
-	mreal col;
 
 	mglPoint p,q,s,xx,yy;
 	for(k=0;k<z->GetNz();k++)
 	{
-#pragma omp parallel for private(i,j,p,c,xx,yy,q,s,col) collapse(2)
+#pragma omp parallel for private(i,j,p,xx,yy,q,s) collapse(2)
 		for(j=0;j<m;j++)	for(i=0;i<n;i++)
 		{
 			if(gr->Stop)	continue;
@@ -545,8 +544,7 @@ void MGL_EXPORT mgl_surfc_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char
 			p = mglPoint(xx.x, yy.x, z->v(i,j,k));
 			q = mglPoint(xx.y, yy.y, z->dvx(i,j,k));
 			s = mglPoint(xx.z, yy.z, z->dvy(i,j,k));
-			col = gr->GetC(ss,c->v(i,j,k));
-			pos[i+n*j] = gr->AddPnt(p,col,q^s);
+			pos[i+n*j] = gr->AddPnt(p,gr->GetC(ss,c->v(i,j,k)),q^s);
 		}
 		if(sch && mglchr(sch,'.'))
 #pragma omp parallel for private(i)

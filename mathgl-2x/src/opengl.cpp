@@ -127,9 +127,9 @@ bool mglCanvasGL::Light(bool enable)
 	return mglCanvas::Light(enable);
 }
 //-----------------------------------------------------------------------------
-void mglCanvasGL::LightScale()
+void mglCanvasGL::LightScale(const mglMatrix *M)
 {
-	mglCanvas::LightScale();
+	mglCanvas::LightScale(M);
 	GLenum ll[8] = {GL_LIGHT0,GL_LIGHT1,GL_LIGHT2,GL_LIGHT3,GL_LIGHT4,
 			GL_LIGHT5,GL_LIGHT6,GL_LIGHT7};
 	float pos[4]={0,0,0,0};

@@ -481,17 +481,17 @@ void mglCanvas::DrawAxis(mglAxis &aa, bool text, char arr,const char *stl,const 
 	SetPenPal(mgl_have_color(stl) ? stl:AxisStl);
 	static int cgid=1;	StartGroup("Axis",cgid++);
 	
-	p = o + d*aa.v1;	k1 = AddPnt(p,CDef,q,-1,3);
+	p = o + d*aa.v1;	k1 = AddPnt(&B, p,CDef,q,-1,3);
 	for(i=1;i<31;i++)	// axis itself
 	{
 		p = o + d*(aa.v1+(aa.v2-aa.v1)*i/30.);
-		k2 = k1;	k1 = AddPnt(p,CDef,q,-1,3);
+		k2 = k1;	k1 = AddPnt(&B, p,CDef,q,-1,3);
 		line_plot(k2,k1);
 	}
 	if(arr)
 	{
 		p = o + d*(aa.v1+(aa.v2-aa.v1)*1.05);
-		k2 = k1;	k1 = AddPnt(p,CDef,q,-1,3);
+		k2 = k1;	k1 = AddPnt(&B, p,CDef,q,-1,3);
 		arrow_plot(k1,k2,arr);
 	}
 
@@ -537,7 +537,7 @@ void mglCanvas::DrawLabels(mglAxis &aa, bool inv)
 	for(i=0;i<n;i++)
 	{
 		w[i] = TextWidth(aa.txt[i].text.c_str(),FontDef,-1);
-		kk[i] = AddPnt(o+d*aa.txt[i].val,-1,d,0,7);
+		kk[i] = AddPnt(&B, o+d*aa.txt[i].val,-1,d,0,7);
 	}
 
 	for(l=0,c=1e7,i=0;i<n-1;i++)
@@ -561,7 +561,7 @@ void mglCanvas::DrawLabels(mglAxis &aa, bool inv)
 		c = aa.txt[i].val;
 		if(get(MGL_NO_ORIGIN) && c==aa.v0)	continue;
 		if(c>aa.v1 && c<aa.v2 && i%k!=0)	continue;
-		p = o+d*c;	nn = (s-o)/(Max-Min);	ScalePoint(p,nn);
+		p = o+d*c;	nn = (s-o)/(Max-Min);	ScalePoint(&B,p,nn);
 		mglPnt &qq = Pnt[kk[i]];
 		mreal ux=qq.u*cos(tet) + qq.v*sin(tet), uy=qq.v*cos(tet) - qq.u*sin(tet);
 		if(ux==0)	uy = fabs(uy);
@@ -596,7 +596,7 @@ char mglCanvas::GetLabelPos(mreal c, long kk, mglAxis &aa)
 	if(aa.ch=='c')	ts=(aa.ns==0 || aa.ns==3)?1:-1;
 	if(aa.ch=='T')	ts=-1;
 	
-	p = o+d*c;	nn = (s-o)/(Max-Min);	ScalePoint(p,nn);
+	p = o+d*c;	nn = (s-o)/(Max-Min);	ScalePoint(&B,p,nn);
 	mglPnt &qq = Pnt[kk];
 	
 	if(aa.ch=='c')	qq.u = qq.v = NAN;
@@ -619,11 +619,11 @@ void mglCanvas::tick_draw(mglPoint o, mglPoint d1, mglPoint d2, int f, const cha
 	if(*TickStl && !f)	SetPenPal(k3 ? stl:TickStl);
 	if(*SubTStl && f)	SetPenPal(k3 ? stl:SubTStl);
 
-	ScalePoint(o, d1, false);	d1.Normalize();
-	ScalePoint(p, d2, false);	d2.Normalize();
-	k2 = AddPnt(p, CDef, mglPoint(NAN), 0, 0);
-	p += d1*v;	k1 = AddPnt(p, CDef, mglPoint(NAN), 0, 0);
-	p = o+d2*v;	k3 = AddPnt(p, CDef, mglPoint(NAN), 0, 0);
+	ScalePoint(&B,o, d1, false);	d1.Normalize();
+	ScalePoint(&B,p, d2, false);	d2.Normalize();
+	k2 = AddPnt(&B, p, CDef, mglPoint(NAN), 0, 0);
+	k1 = AddPnt(&B, p+d1*v, CDef, mglPoint(NAN), 0, 0);
+	k3 = AddPnt(&B, p+d2*v, CDef, mglPoint(NAN), 0, 0);
 	line_plot(k1,k2);	line_plot(k2,k3);
 }
 //-----------------------------------------------------------------------------
@@ -650,7 +650,7 @@ void mglCanvas::DrawGrid(mglAxis &aa)
 	memcpy(oo,pp,8*sizeof(mglPoint));
 	for(int i=0;i<8;i++)	// find deepest point
 	{
-		ScalePoint(pp[i],nan,false);
+		ScalePoint(&B,pp[i],nan,false);
 		if(pp[i].z<zm)	{	zm=pp[i].z;	org=oo[i];	}
 	}
 	if(Org.x==Org.x) 	org.x = Org.x;
@@ -668,21 +668,21 @@ void mglCanvas::DrawGrid(mglAxis &aa)
 	if(n>0)	for(i=0;i<n;i++)
 	{
 		q = oa+d*aa.txt[i].val;	p = q+da1;	// lines along 'a'
-		k1 = AddPnt(p,CDef);
+		k1 = AddPnt(&B, p,CDef);
 		for(j=1;j<31;j++)
 		{
 			v = j/30.;
 			p = q+da1*(1-v)+da2*v;
-			k2 = k1;	k1 = AddPnt(p,CDef);
+			k2 = k1;	k1 = AddPnt(&B, p,CDef);
 			line_plot(k2,k1);
 		}
 		q = ob+d*aa.txt[i].val;	p = q+db1;	// lines along 'b'
-		k1 = AddPnt(p,CDef);
+		k1 = AddPnt(&B, p,CDef);
 		for(j=1;j<31;j++)
 		{
 			v = j/30.;
 			p = q+db1*(1-v)+db2*v;
-			k2 = k1;	k1 = AddPnt(p,CDef);
+			k2 = k1;	k1 = AddPnt(&B, p,CDef);
 			line_plot(k2,k1);
 		}
 	}
@@ -751,7 +751,7 @@ void mglCanvas::Labelw(char dir, const wchar_t *text, mreal pos, const char *opt
 	char font[64],ff[3]=":C";	memset(font,0,64);
 	if(pos<-0.2)	ff[1]='L';	if(pos>0.2)	ff[1]='R';
 	strncpy(font,FontDef,63);	strcat(font,ff);
-	long kk = AddPnt(p,-1,q,0,7);	ff[1]=0;
+	long kk = AddPnt(&B, p,-1,q,0,7);	ff[1]=0;
 	ff[0] = GetLabelPos(t, kk, *aa);	strcat(font,ff);
 	text_plot(kk,text,font,-1.4,0.35+shift);
 	LoadState();
@@ -803,7 +803,7 @@ void mglCanvas::Box(const char *col, bool ticks)
 			memcpy(oo,p,8*sizeof(mglPoint));
 			for(int i=0;i<8;i++)	// find deepest point
 			{
-				ScalePoint(p[i],nan,false);
+				ScalePoint(&B,p[i],nan,false);
 				if(p[i].z<zm)	{	zm=p[i].z;	im=i;	}
 			}
 			// now draw faces
@@ -914,7 +914,7 @@ void mglCanvas::colorbar(HCDT vv, const mreal *c, int where, mreal x, mreal y, m
 			case 3:	p1.y = y;	p2.y = y+0.1*h;	break;
 			default:p1.x = x-0.1*w;	p2.x = x;	break;
 		}
-		n1 = AddPnt(p1,c[i]);	n2 = AddPnt(p2,c[i]);
+		n1 = AddPnt(&B, p1,c[i]);	n2 = AddPnt(&B, p2,c[i]);
 		d = GetA(vv->v(i+1))*2-1;
 		p1 = p2 = mglPoint((ss*d+1)*w+x, (ss*d+1)*h+y, s3);
 		switch(where)
@@ -924,7 +924,7 @@ void mglCanvas::colorbar(HCDT vv, const mreal *c, int where, mreal x, mreal y, m
 			case 3:	p1.y = y;	p2.y = y+0.1*h;	break;
 			default:p1.x = x-0.1*w;	p2.x = x;	break;
 		}
-		n3 = AddPnt(p1,c[i]);	n4 = AddPnt(p2,c[i]);
+		n3 = AddPnt(&B, p1,c[i]);	n4 = AddPnt(&B, p2,c[i]);
 		quad_plot(n1,n2,n3,n4);
 	}
 	if(n<64)
@@ -951,7 +951,7 @@ void mglCanvas::colorbar(HCDT vv, const mreal *c, int where, mreal x, mreal y, m
 			case 3:	p1.y = y;	p2.y = y+0.1*h;	break;
 			default:p1.x = x-0.1*w;	p2.x = x;	break;
 		}
-		n1 = AddPnt(p1);	n2 = AddPnt(p2);
+		n1 = AddPnt(&B, p1);	n2 = AddPnt(&B, p2);
 		line_plot(n1,n2);
 	}
 	ac.dir = mglPoint(ss*w,ss*h,0);

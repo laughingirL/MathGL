@@ -56,7 +56,7 @@ protected:
 	void pnt_draw(const mglPnt &p, mglDrawReg *d);
 
 	unsigned char **GetRGBLines(long &w, long &h, unsigned char *&f, bool solid=true);
-	void LightScale();
+	void LightScale(const mglMatrix *M);
 	void set_pen(unsigned style,mreal width);
 };
 //-----------------------------------------------------------------------------

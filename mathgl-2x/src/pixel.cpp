@@ -55,24 +55,24 @@ void mglCanvas::PutDrawReg(mglDrawReg *d, const mglCanvas *gr)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::PostScale(mglPoint &p) const
+void mglCanvas::PostScale(const mglMatrix *M, mglPoint &p) const
 {
-	mglPoint q=p/(2*B.pf);
-	p.x = B.x + q.x*B.b[0] + q.y*B.b[1] + q.z*B.b[2];
-	p.y = B.y + q.x*B.b[3] + q.y*B.b[4] + q.z*B.b[5];
-	p.z = B.z + q.x*B.b[6] + q.y*B.b[7] + q.z*B.b[8];
+	mglPoint q=p/(2*M->pf);
+	p.x = M->x + q.x*M->b[0] + q.y*M->b[1] + q.z*M->b[2];
+	p.y = M->y + q.x*M->b[3] + q.y*M->b[4] + q.z*M->b[5];
+	p.z = M->z + q.x*M->b[6] + q.y*M->b[7] + q.z*M->b[8];
 }
 //-----------------------------------------------------------------------------
-bool mglCanvas::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan) const
+bool mglCanvas::ScalePoint(const mglMatrix *M, mglPoint &p, mglPoint &n, bool use_nan) const
 {
-	bool res = get(MGL_DISABLE_SCALE) || mglBase::ScalePoint(p,n,use_nan);
+	bool res = get(MGL_DISABLE_SCALE) || mglBase::ScalePoint(M,p,n,use_nan);
 //	if(TernAxis&4)	return res;
-	PostScale(p);
+	PostScale(M,p);
 
 	mglPoint y=n;
-	n.x = y.x*B.b[0] + y.y*B.b[1] + y.z*B.b[2];	// simpler for rotation only
-	n.y = y.x*B.b[3] + y.y*B.b[4] + y.z*B.b[5];
-	n.z = y.x*B.b[6] + y.y*B.b[7] + y.z*B.b[8];
+	n.x = y.x*M->b[0] + y.y*M->b[1] + y.z*M->b[2];	// simpler for rotation only
+	n.y = y.x*M->b[3] + y.y*M->b[4] + y.z*M->b[5];
+	n.z = y.x*M->b[6] + y.y*M->b[7] + y.z*M->b[8];
 	n.Normalize();
 	return res;
 }
@@ -97,14 +97,14 @@ long mglCanvas::ProjScale(int nf, long id, bool text)
 	return CopyProj(id,p,text?n:nn);
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::LightScale()
+void mglCanvas::LightScale(const mglMatrix *M)
 {
 #pragma omp parallel for
 	for(long i=0;i<10;i++)
 	{
 		if(!light[i].n)	continue;
 		light[i].p=light[i].d;	light[i].q=light[i].r;
-		ScalePoint(light[i].q,light[i].p,false);
+		ScalePoint(M,light[i].q,light[i].p,false);
 		light[i].p /= light[i].p.norm();
 	}
 }
@@ -175,7 +175,7 @@ mglPoint mglCanvas::CalcXYZ(int xs, int ys, bool real) const
 void mglCanvas::CalcScr(mglPoint p, int *xs, int *ys) const
 {
 	mglPoint n;
-	ScalePoint(p,n);
+	ScalePoint(GetB(),p,n);
 	if(xs)	*xs=int(p.x);
 	if(ys)	*ys=int(p.y);
 }
@@ -1040,27 +1040,26 @@ void mglCanvas::glyph_draw(const mglPrim &P, mglDrawReg *d)
 	mglPnt p=Pnt[P.n1];
 	mreal pf=sqrt((Bp.b[0]*Bp.b[0]+Bp.b[1]*Bp.b[1]+Bp.b[3]*Bp.b[3]+Bp.b[4]*Bp.b[4])/2), f = P.p*pf;
 
-	Push();		B.clear();
-	B.b[0] = B.b[4] = B.b[8] = P.s;
-	RotateN(phi,0,0,1);
-	B.x=p.x;	B.y=p.y;	B.z=p.z;	B.pf = 1;
+	mglMatrix M;
+	M.b[0] = M.b[4] = M.b[8] = P.s;
+	M.RotateN(phi,0,0,1);
+	M.x=p.x;	M.y=p.y;	M.z=p.z;	M.pf = 1;
 	p.u *= pf;	p.v *= pf;
 
 	const mglGlyph &g = Glf[P.n4];
 	if(P.n3&8)
 	{
-		if(!(P.n3&4))	glyph_line(p,f,true, d);
-		glyph_line(p,f,false, d);
+		if(!(P.n3&4))	glyph_line(&M,p,f,true, d);
+		glyph_line(&M,p,f,false, d);
 	}
 	else
 	{
-		if(!(P.n3&4))	glyph_fill(p,f,g, d);
-		glyph_wire(p,f,g, d);
+		if(!(P.n3&4))	glyph_fill(&M,p,f,g, d);
+		glyph_wire(&M,p,f,g, d);
 	}
-	Pop();
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::glyph_fill(const mglPnt &pp, mreal f, const mglGlyph &g, mglDrawReg *d)
+void mglCanvas::glyph_fill(const mglMatrix *M, const mglPnt &pp, mreal f, const mglGlyph &g, mglDrawReg *d)
 {
 	if(!g.trig || g.nt<=0)	return;
 	long ik,ii;
@@ -1069,9 +1068,9 @@ void mglCanvas::glyph_fill(const mglPnt &pp, mreal f, const mglGlyph &g, mglDraw
 	mglPoint p1,p2,p3;
 	for(ik=0;ik<g.nt;ik++)
 	{
-		ii = 6*ik;	p1 = mglPoint(f*g.trig[ii]+pp.u,f*g.trig[ii+1]+pp.v,0);	PostScale(p1);
-		ii+=2;		p2 = mglPoint(f*g.trig[ii]+pp.u,f*g.trig[ii+1]+pp.v,0);	PostScale(p2);
-		ii+=2;		p3 = mglPoint(f*g.trig[ii]+pp.u,f*g.trig[ii+1]+pp.v,0);	PostScale(p3);
+		ii = 6*ik;	p1 = mglPoint(f*g.trig[ii]+pp.u,f*g.trig[ii+1]+pp.v,0);	PostScale(M,p1);
+		ii+=2;		p2 = mglPoint(f*g.trig[ii]+pp.u,f*g.trig[ii+1]+pp.v,0);	PostScale(M,p2);
+		ii+=2;		p3 = mglPoint(f*g.trig[ii]+pp.u,f*g.trig[ii+1]+pp.v,0);	PostScale(M,p3);
 		q0.x = p1.x;	q0.y = p1.y;	q0.z = p1.z;
 		q1.x = p2.x;	q1.y = p2.y;	q1.z = p2.z;
 		q2.x = p3.x;	q2.y = p3.y;	q2.z = p3.z;
@@ -1079,7 +1078,7 @@ void mglCanvas::glyph_fill(const mglPnt &pp, mreal f, const mglGlyph &g, mglDraw
 	}
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::glyph_wire(const mglPnt &pp, mreal f, const mglGlyph &g, mglDrawReg *d)
+void mglCanvas::glyph_wire(const mglMatrix *M, const mglPnt &pp, mreal f, const mglGlyph &g, mglDrawReg *d)
 {
 	if(!g.line || g.nl<=0)	return;
 	long ik,ii,il=0;
@@ -1101,14 +1100,14 @@ void mglCanvas::glyph_wire(const mglPnt &pp, mreal f, const mglGlyph &g, mglDraw
 			p1 = mglPoint(f*g.line[ii]+pp.u,f*g.line[ii+1]+pp.v,0);	ii+=2;
 			p2 = mglPoint(f*g.line[ii]+pp.u,f*g.line[ii+1]+pp.v,0);
 		}
-		PostScale(p1);	PostScale(p2);
+		PostScale(M,p1);	PostScale(M,p2);
 		q0.x = p1.x;	q0.y = p1.y;	q0.z = p1.z;
 		q1.x = p2.x;	q1.y = p2.y;	q1.z = p2.z;
 		line_draw(q0,q1,d);
 	}
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::glyph_line(const mglPnt &pp, mreal f, bool solid, mglDrawReg *d)
+void mglCanvas::glyph_line(const mglMatrix *M, const mglPnt &pp, mreal f, bool solid, mglDrawReg *d)
 {
 	mglPnt q0=pp,q1=pp,q2=pp,q3=pp;
 	q0.u=q0.v=q1.u=q1.v=q2.u=q2.v=q3.u=q3.v=NAN;
@@ -1116,10 +1115,10 @@ void mglCanvas::glyph_line(const mglPnt &pp, mreal f, bool solid, mglDrawReg *d)
 	mglPoint p1,p2,p3,p4;
 
 	mreal dy = 0.004;
-	p1 = mglPoint(pp.u,pp.v-dy,0);	PostScale(p1);
-	p2 = mglPoint(pp.u,pp.v+dy,0);	PostScale(p2);
-	p3 = mglPoint(fabs(f)+pp.u,pp.v+dy,0);	PostScale(p3);
-	p4 = mglPoint(fabs(f)+pp.u,pp.v-dy,0);	PostScale(p4);
+	p1 = mglPoint(pp.u,pp.v-dy,0);	PostScale(M,p1);
+	p2 = mglPoint(pp.u,pp.v+dy,0);	PostScale(M,p2);
+	p3 = mglPoint(fabs(f)+pp.u,pp.v+dy,0);	PostScale(M,p3);
+	p4 = mglPoint(fabs(f)+pp.u,pp.v-dy,0);	PostScale(M,p4);
 
 	q0.x = p1.x;	q0.y = p1.y;	q0.z = p1.z;
 	q1.x = p2.x;	q1.y = p2.y;	q1.z = p2.z;
