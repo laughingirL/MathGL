@@ -25,12 +25,12 @@
 void MGL_NO_EXPORT mgl_mesh_plot(mglBase *gr, long *pos, long n, long m, int how)
 {
 	int d = gr->MeshNum>0 ? gr->MeshNum+1 : n*m, dx = n>d?n/d:1, dy = m>d?m/d:1;
-	register long i,j,s;
 	// NOTE: number of lines in each direction can be reduced too
 	if(how&1)
-#pragma omp parallel for private(i,j,s)
-		for(j=0;j<m;j+=dy)
+#pragma omp parallel for
+		for(long j=0;j<m;j+=dy)
 		{
+			register long s,i;
 			for(s=i=0;i<n-1;i++)	if(pos[n*j+i]>=0 && pos[n*j+i+1]>=0)	s++;
 			d = gr->FaceNum>0 ? gr->FaceNum+1 : n;	s = s>d?s/d:1;
 			for(i=0;i<n-s;i+=s)
@@ -38,9 +38,10 @@ void MGL_NO_EXPORT mgl_mesh_plot(mglBase *gr, long *pos, long n, long m, int how
 
 		}
 	if(how&2)
-#pragma omp parallel for private(i,j,s)
-		for(i=0;i<n;i+=dx)
+#pragma omp parallel for
+		for(long i=0;i<n;i+=dx)
 		{
+			register long s,j;
 			for(s=j=0;j<m-1;j++)	if(pos[n*j+i]>=0 && pos[n*j+i+n]>=0)	s++;
 			d = gr->FaceNum>0 ? gr->FaceNum+1 : n;	s = s>d?s/d:1;
 			for(j=0;j<m-s;j+=s)
@@ -50,8 +51,8 @@ void MGL_NO_EXPORT mgl_mesh_plot(mglBase *gr, long *pos, long n, long m, int how
 //-----------------------------------------------------------------------------
 void MGL_NO_EXPORT mgl_surf_plot(mglBase *gr, long *pos, long n, long m)
 {
-	register long i,j,s=0;
-	for(j=0;j<m-1;j++)	for(i=0;i<n-1;i++)
+	long s=0;
+	for(long j=0;j<m-1;j++)	for(long i=0;i<n-1;i++)
 		if(pos[n*j+i]>=0 && pos[n*j+i+1]>=0 && pos[n*j+i+n]>=0 && pos[n*j+i+n+1]>=0)
 			s++;
 	long dx=1,dy=1;
@@ -60,8 +61,8 @@ void MGL_NO_EXPORT mgl_surf_plot(mglBase *gr, long *pos, long n, long m)
 		int d = gr->FaceNum+1,ns=n*s/((n-1)*(m-1)),ms=m*s/((n-1)*(m-1));
 		dx = ns>d?ns/d:1;		dy = ms>d?ms/d:1;
 	}
-#pragma omp parallel for private(i,j)
-	for(j=0;j<m-dy;j+=dy)	for(i=0;i<n-dx;i+=dx)
+#pragma omp parallel for collapse(2)
+	for(long j=0;j<m-dy;j+=dy)	for(long i=0;i<n-dx;i+=dx)
 		gr->quad_plot(pos[n*j+i],pos[n*j+i+dx],pos[n*j+i+n*dy],pos[n*j+i+n*dy+dx]);
 }
 //-----------------------------------------------------------------------------
@@ -292,7 +293,7 @@ void MGL_EXPORT mgl_grid_(uintptr_t *gr, uintptr_t *a,const char *sch, const cha
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_surf_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt)
 {
-	register long i,j,k,n=z->GetNx(),m=z->GetNy();
+	long n=z->GetNx(),m=z->GetNy();
 	if(mgl_check_dim2(gr,x,y,z,0,"Surf"))	return;
 
 	gr->SaveState(opt);
@@ -303,29 +304,27 @@ void MGL_EXPORT mgl_surf_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, co
 	gr->Reserve(n*m*z->GetNz()*(wire?2:1));
 
 	mglPoint p,q,s,xx,yy;
-	mreal c;
-	for(k=0;k<z->GetNz();k++)
+	for(long k=0;k<z->GetNz();k++)
 	{
-#pragma omp parallel for private(i,j,p,c,xx,yy,q,s) collapse(2)
-		for(j=0;j<m;j++)	for(i=0;i<n;i++)
+#pragma omp parallel for private(p,q,s,xx,yy) collapse(2)
+		for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
 		{
 			if(gr->Stop)	continue;
 			xx = GetX(x,i,j,k);		yy = GetY(y,i,j,k);
 			p = mglPoint(xx.x, yy.x, z->v(i,j,k));
 			q = mglPoint(xx.y, yy.y, z->dvx(i,j,k));
 			s = mglPoint(xx.z, yy.z, z->dvy(i,j,k));
-			c = gr->GetC(ss,p.z);
-			pos[i+n*j] = gr->AddPnt(p,c,q^s);
+			pos[i+n*j] = gr->AddPnt(p,gr->GetC(ss,p.z),q^s);
 		}
 		if(sch && mglchr(sch,'.'))
-#pragma omp parallel for private(i)
-			for(i=0;i<n*m;i++)	gr->mark_plot(pos[i],'.');
+#pragma omp parallel for
+			for(long i=0;i<n*m;i++)	gr->mark_plot(pos[i],'.');
 		else	mgl_surf_plot(gr,pos,n,m);
 		if(wire && !gr->Stop)
 		{
 			gr->SetPenPal("k-");
-#pragma omp parallel for private(i)
-			for(i=0;i<n*m;i++)	pos[i] = gr->CopyNtoC(pos[i],gr->CDef);
+#pragma omp parallel for
+			for(long i=0;i<n*m;i++)	pos[i] = gr->CopyNtoC(pos[i],gr->CDef);
 			mgl_mesh_plot(gr,pos,n,m,3);
 		}
 	}

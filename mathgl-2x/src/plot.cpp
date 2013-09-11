@@ -1222,7 +1222,7 @@ void MGL_EXPORT mgl_boxplot_(uintptr_t *gr, uintptr_t *y,	const char *pen, const
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_error_exy(HMGL gr, HCDT x, HCDT y, HCDT ex, HCDT ey, const char *pen, const char *opt)
 {
-	long i,j,k,m,mx,my,m1,m2,n=ey->GetNx(),pal;
+	long i,j,m,mx,my,m1,m2,n=ey->GetNx(),pal;
 	if(mgl_check_dim1(gr,x,y,ey,ex,"Error"))	return;
 
 	gr->SaveState(opt);
@@ -1282,7 +1282,7 @@ void MGL_EXPORT mgl_error_exy(HMGL gr, HCDT x, HCDT y, HCDT ex, HCDT ey, const c
 				for(long i=0;i<n;i++)	// circle
 				{
 					mreal vx=x->v(i,mx), ve=ex->v(i,m1), vy=y->v(i,my), vf=ey->v(i,m2);
-					long n1,n2;
+					long n1,n2,k;
 					for(k=0,n2=-1;k<=40;k++)
 					{
 						n1 = n2;
@@ -1357,7 +1357,7 @@ void MGL_EXPORT mgl_error_exy(HMGL gr, HCDT x, HCDT y, HCDT ex, HCDT ey, const c
 				for(long i=0;i<n;i++)
 				{
 					mreal vx=x->v(i,mx), ve=ex->v(i,m1), vy=y->v(i,my), vf=ey->v(i,m2);
-					long n1, n2, n3 = gr->AddPnt(mglPoint(vx,vy,zVal));
+					long n1, n2, n3 = gr->AddPnt(mglPoint(vx,vy,zVal)),k;
 					for(k=0,n2=-1;k<=40;k++)
 					{
 						n1 = n2;

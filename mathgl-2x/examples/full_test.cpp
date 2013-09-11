@@ -65,9 +65,12 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 void save(mglGraph *gr,const char *name,const char *suf);
 void smgl_stfa(mglGraph *gr);	// STFA sample
 void smgl_text(mglGraph *gr);	// text drawing
+void smgl_surf(mglGraph *gr);
 void test(mglGraph *gr)
 {
-	gr->Axis("xyz","","");
+	mglData a;	mgls_prepare2d(&a);
+	gr->Surf(a);
+	gr->ExportMGLD("test.mgld");
 	return;
 
 	mglParse par;
