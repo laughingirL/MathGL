@@ -24,7 +24,7 @@ A. Paper about MathGL!!!
 
 11. Check centered curved text (see text2)
 12. Axis labels are not optimal -- "Rotate(30,-26), everything is fine. For Rotate(30,-27) the axis labels get rotated too"
-13. Check samples: colorbar, export, fit, paramv, pipe, qo2d, region, triangulation, triplot (QuadPlot), type0(Axial), tens&plot, tile&tiles, vecta
+13. Check samples: axial, colorbar, fit, param2(2,2?), paramv(1,2), pde, pipe, qo2d, triangulation, triplot (QuadPlot), vecta
 14. Check wx + pthread in win32 ... may be I should disable pthread in wx.cpp ???
 15. extend resolution in WriteJSON
 

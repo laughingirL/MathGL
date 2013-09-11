@@ -68,11 +68,6 @@ void smgl_text(mglGraph *gr);	// text drawing
 void smgl_surf(mglGraph *gr);
 void test(mglGraph *gr)
 {
-	mglData a;	mgls_prepare2d(&a);
-	gr->Surf(a);
-	gr->ExportMGLD("test.mgld");
-	return;
-
 	mglParse par;
 	par.AllowSetSize(true);
 	setlocale(LC_CTYPE, "");

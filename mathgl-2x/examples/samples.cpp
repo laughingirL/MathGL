@@ -335,7 +335,7 @@ void smgl_param1(mglGraph *gr)	// 1d parametric plots
 	gr->SubPlot(4,3,2);	gr->Rotate(40,60);	gr->Box();	gr->Tens(x,y,z,c);
 	gr->SubPlot(4,3,3);	gr->Rotate(40,60);	gr->Box();	gr->Bars(x,y,z);
 	gr->SubPlot(4,3,4);	gr->Rotate(40,60);	gr->Box();	gr->Stem(x,y,z);
-	gr->SubPlot(4,3,5);	gr->Rotate(40,60);	gr->Box();	gr->TextMark(x,y,z,"\\alpha");
+	gr->SubPlot(4,3,5);	gr->Rotate(40,60);	gr->Box();	gr->TextMark(x,y,z,c*2,"\\alpha");
 	gr->SubPlot(4,3,6);	gr->Rotate(40,60);	gr->Box();	gr->Tube(x,y,z,c/10,"","light on");
 	gr->SubPlot(4,3,7);	gr->Rotate(40,60);	gr->Box();	gr->Mark(x,y,z,c,"s");
 	gr->SubPlot(4,3,8);	gr->Rotate(40,60);	gr->Box();	gr->Error(x,y,z/10,c/10);

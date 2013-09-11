@@ -758,7 +758,7 @@ void MGL_EXPORT mgl_boxs_(uintptr_t *gr, uintptr_t *a, const char *sch, const ch
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_tile_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt)
 {
-	register long i,j,k,n=z->GetNx(),m=z->GetNy();
+	long n=z->GetNx(),m=z->GetNy();
 	if(mgl_check_dim2(gr,x,y,z,0,"Tile",true))	return;
 
 	gr->SaveState(opt);
@@ -770,26 +770,24 @@ void MGL_EXPORT mgl_tile_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, co
 	gr->Reserve(4*n*m*z->GetNz());
 
 	mglPoint s=mglPoint(0,0,1);
-	mreal zz,x0,y0,x1,y1,x2,y2,x3,y3,c;
-	long k1,k2,k3,k4;
-	for(k=0;k<z->GetNz();k++)
+	for(long k=0;k<z->GetNz();k++)
 	{
-#pragma omp parallel for private(i,j,zz,x0,y0,x1,y1,x2,y2,x3,y3,c) collapse(2)
-		for(j=0;j<m;j+=dx)	for(i=0;i<n;i+=dy)
+#pragma omp parallel for collapse(2)
+		for(long j=0;j<m;j+=dx)	for(long i=0;i<n;i+=dy)
 		{
 			if(gr->Stop)	continue;
-			zz = z->v(i,j,k);		c = gr->GetC(ss,zz);
-			x0 = GetX(x,i,j,k).x;	y0 = GetY(y,i,j,k).x;
-			x1 = i<lx-dx ? GetX(x,i+dx,j,k).x:NAN;
-			y1 = i<lx-dx ? GetY(y,i+dx,j,k).x:NAN;
-			x2 = j<ly-dy ? GetX(x,i,j+dy,k).x:NAN;
-			y2 = j<ly-dy ? GetY(y,i,j+dy,k).x:NAN;
-			x3 = i<lx-dx && j<ly-dy ? GetX(x,i+dx,j+dy,k).x:NAN;
-			y3 = i<lx-dx && j<ly-dy ? GetY(y,i+dx,j+dy,k).x:NAN;
-			k1 = gr->AddPnt(mglPoint(x0,y0,zz),c,s);
-			k2 = gr->AddPnt(mglPoint(x1,y1,zz),c,s);
-			k3 = gr->AddPnt(mglPoint(x2,y2,zz),c,s);
-			k4 = gr->AddPnt(mglPoint(x3,y3,zz),c,s);
+			register mreal zz = z->v(i,j,k), c = gr->GetC(ss,zz);
+			register mreal xx = GetX(x,i,j,k).x, yy = GetY(y,i,j,k).x;
+			register long k1 = gr->AddPnt(mglPoint(xx,yy,zz),c,s);
+			xx = i<lx-dx ? GetX(x,i+dx,j,k).x:NAN;
+			yy = i<lx-dx ? GetY(y,i+dx,j,k).x:NAN;
+			register long k2 = gr->AddPnt(mglPoint(xx,yy,zz),c,s);
+			xx = j<ly-dy ? GetX(x,i,j+dy,k).x:NAN;
+			yy = j<ly-dy ? GetY(y,i,j+dy,k).x:NAN;
+			register long k3 = gr->AddPnt(mglPoint(xx,yy,zz),c,s);
+			xx = i<lx-dx && j<ly-dy ? GetX(x,i+dx,j+dy,k).x:NAN;
+			yy = i<lx-dx && j<ly-dy ? GetY(y,i+dx,j+dy,k).x:NAN;
+			register long k4 = gr->AddPnt(mglPoint(xx,yy,zz),c,s);
 			gr->quad_plot(k1,k2,k3,k4);
 		}
 	}
@@ -822,7 +820,7 @@ void MGL_EXPORT mgl_tile_(uintptr_t *gr, uintptr_t *a, const char *sch, const ch
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_tiles_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT s, const char *sch, const char *opt)
 {
-	register long i,j,k,n=z->GetNx(),m=z->GetNy();
+	long n=z->GetNx(),m=z->GetNy();
 	if(mgl_check_dim2(gr,x,y,z,s,"TileS",true))	return;
 
 	gr->SaveState(opt);
@@ -834,16 +832,15 @@ void MGL_EXPORT mgl_tiles_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT s, const char
 	gr->Reserve(4*n*m*z->GetNz());
 
 	mglPoint t=mglPoint(0,0,1);
-	mreal zz,x1,x2,x3,x4,y1,y2,y3,y4,ss,sm,c;
-	long k1,k2,k3,k4;
-	for(k=0;k<z->GetNz();k++)
+	mreal x1,x2,x3,x4,y1,y2,y3,y4;
+	for(long k=0;k<z->GetNz();k++)
 	{
-#pragma omp parallel for private(i,j,zz,x1,x2,x3,x4,y1,y2,y3,y4,ss,sm,c) collapse(2)
-		for(j=0;j<m;j+=dx)	for(i=0;i<n;i+=dy)
+#pragma omp parallel for private(x1,x2,x3,x4,y1,y2,y3,y4) collapse(2)
+		for(long j=0;j<m;j+=dx)	for(long i=0;i<n;i+=dy)
 		{
 			if(gr->Stop)	continue;
-			zz = z->v(i,j,k);	c = gr->GetC(cc,zz);
-			ss = (1-gr->GetA(s->v(i,j,k)))/2;	sm = 1-ss;
+			register mreal zz = z->v(i,j,k), c = gr->GetC(cc,zz);
+			register mreal ss = (1-gr->GetA(s->v(i,j,k)))/2, sm = 1-ss;
 
 			x1 = GetX(x,i,j,k).x;	y1 = GetY(y,i,j,k).x;
 			x2 = x3 = x4 = y2 = y3 = y4 = NAN;
@@ -855,10 +852,10 @@ void MGL_EXPORT mgl_tiles_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT s, const char
 			{	x3 = GetX(x,i+dx,j+dy,k).x-x2-x4-x1;
 				y3 = GetY(y,i+dx,j+dy,k).x-y2-y4-y1;	}
 
-			k1 = gr->AddPnt(mglPoint(x1+x2*ss+x4*ss+x3*ss*ss, y1+y2*ss+y4*ss+y3*ss*ss, zz),c,t);
-			k2 = gr->AddPnt(mglPoint(x1+x2*sm+x4*ss+x3*ss*sm, y1+y2*sm+y4*ss+y3*ss*sm, zz),c,t);
-			k3 = gr->AddPnt(mglPoint(x1+x2*ss+x4*sm+x3*ss*sm, y1+y2*ss+y4*sm+y3*ss*sm, zz),c,t);
-			k4 = gr->AddPnt(mglPoint(x1+x2*sm+x4*sm+x3*sm*sm, y1+y2*sm+y4*sm+y3*sm*sm, zz),c,t);
+			register long k1 = gr->AddPnt(mglPoint(x1+x2*ss+x4*ss+x3*ss*ss, y1+y2*ss+y4*ss+y3*ss*ss, zz),c,t);
+			register long k2 = gr->AddPnt(mglPoint(x1+x2*sm+x4*ss+x3*ss*sm, y1+y2*sm+y4*ss+y3*ss*sm, zz),c,t);
+			register long k3 = gr->AddPnt(mglPoint(x1+x2*ss+x4*sm+x3*ss*sm, y1+y2*ss+y4*sm+y3*ss*sm, zz),c,t);
+			register long k4 = gr->AddPnt(mglPoint(x1+x2*sm+x4*sm+x3*sm*sm, y1+y2*sm+y4*sm+y3*sm*sm, zz),c,t);
 			gr->quad_plot(k1,k2,k3,k4);
 		}
 	}

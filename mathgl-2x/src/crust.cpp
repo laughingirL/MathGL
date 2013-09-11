@@ -33,25 +33,24 @@ void MGL_EXPORT mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCD
 	long ss=gr->AddTexture(sch);
 	gr->SaveState(opt);	gr->SetPenPal("-");
 	static int cgid=1;	gr->StartGroup("TriPlot",cgid++);
-	mglPoint p1,p2,p3,q=mglPoint(NAN,NAN);
+	mglPoint p1,p2,p3,q;
 
-	register long i,k1,k2,k3;
 	bool wire = mglchr(sch,'#');
 	long nc = a->GetNx();
 	if(nc!=n && nc>=m)	// colors per triangle
 	{
 		gr->Reserve(m*3);
-#pragma omp parallel for private(i,p1,p2,p3,k1,k2,k3)
-		for(i=0;i<m;i++)
+#pragma omp parallel for private(p1,p2,p3,q)
+		for(long i=0;i<m;i++)
 		{
 			if(gr->Stop)	continue;
-			k1 = long(nums->v(0,i)+0.5);
+			register long k1 = long(nums->v(0,i)+0.5);
 			p1 = mglPoint(x->v(k1), y->v(k1), z->v(k1));
-			k2 = long(nums->v(1,i)+0.5);
+			register long k2 = long(nums->v(1,i)+0.5);
 			p2 = mglPoint(x->v(k2), y->v(k2), z->v(k2));
-			k3 = long(nums->v(2,i)+0.5);
+			register long k3 = long(nums->v(2,i)+0.5);
 			p3 = mglPoint(x->v(k3), y->v(k3), z->v(k3));
-			if(!wire)	q = (p2-p1) ^ (p3-p1);
+			q = wire ? mglPoint(NAN,NAN) : (p2-p1) ^ (p3-p1);
 			k1 = gr->AddPnt(p1,gr->GetC(ss,a->v(k1)),q);
 			k2 = gr->AddPnt(p2,gr->GetC(ss,a->v(k2)),q);
 			k3 = gr->AddPnt(p3,gr->GetC(ss,a->v(k3)),q);
@@ -63,13 +62,13 @@ void MGL_EXPORT mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCD
 		gr->Reserve(n);
 		long *kk = new long[n];
 		mglPoint *pp = new mglPoint[n];
-#pragma omp parallel for private(i,q,k1,k2,k3)
-		for(i=0;i<m;i++)	// add averaged normales
+#pragma omp parallel for private(q)
+		for(long i=0;i<m;i++)	// add averaged normales
 		{
 			if(gr->Stop)	continue;
-			k1 = long(nums->v(0,i)+0.5);
-			k2 = long(nums->v(1,i)+0.5);
-			k3 = long(nums->v(2,i)+0.5);
+			register long k1 = long(nums->v(0,i)+0.5);
+			register long k2 = long(nums->v(1,i)+0.5);
+			register long k3 = long(nums->v(2,i)+0.5);
 			if(!wire)
 			{
 				q = mglPoint(x->v(k2)-x->v(k1), y->v(k2)-y->v(k1), z->v(k2)-z->v(k1)) ^
@@ -79,21 +78,21 @@ void MGL_EXPORT mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCD
 				if(q.z<0)	q *= -1;
 				pp[k1] += q;	pp[k2] += q;	pp[k3] += q;
 			}
+			else	pp[k1]=pp[k2]=pp[k3]=mglPoint(NAN,NAN);
 		}
-#pragma omp parallel for private(i,q)
-		for(i=0;i<n;i++)	// add points
+#pragma omp parallel for
+		for(long i=0;i<n;i++)	// add points
 		{
 			if(gr->Stop)	continue;
-			q = mglPoint(x->v(i), y->v(i), z->v(i));
-			kk[i] = gr->AddPnt(q,gr->GetC(ss,a->v(i)),pp[i]);
+			kk[i] = gr->AddPnt(mglPoint(x->v(i), y->v(i), z->v(i)), gr->GetC(ss,a->v(i)), pp[i]);
 		}
-#pragma omp parallel for private(i,k1,k2,k3)
-		for(i=0;i<m;i++)	// draw triangles
+#pragma omp parallel for
+		for(long i=0;i<m;i++)	// draw triangles
 		{
 			if(gr->Stop)	continue;
-			k1 = long(nums->v(0,i)+0.5);
-			k2 = long(nums->v(1,i)+0.5);
-			k3 = long(nums->v(2,i)+0.5);
+			register long k1 = long(nums->v(0,i)+0.5);
+			register long k2 = long(nums->v(1,i)+0.5);
+			register long k3 = long(nums->v(2,i)+0.5);
 			if(wire)
 			{
 				gr->line_plot(kk[k1],kk[k2]);	gr->line_plot(kk[k1],kk[k3]);
@@ -149,25 +148,24 @@ void MGL_EXPORT mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HC
 	static int cgid=1;	gr->StartGroup("QuadPlot",cgid++);
 	mglPoint p1,p2,p3,p4,q=mglPoint(NAN,NAN);
 
-	register long i,k1,k2,k3,k4;
 	long nc = a->GetNx();
 	bool wire = mglchr(sch,'#');
 	if(nc!=n && nc>=m)	// colors per triangle
 	{
 		gr->Reserve(m*4);
-#pragma omp parallel for private(i,p1,p2,p3,p4,k1,k2,k3,k4)
-		for(i=0;i<m;i++)
+#pragma omp parallel for private(p1,p2,p3,p4,q)
+		for(long i=0;i<m;i++)
 		{
 			if(gr->Stop)	continue;
-			k1 = long(nums->v(0,i)+0.5);
+			register long k1 = long(nums->v(0,i)+0.5);
 			p1 = mglPoint(x->v(k1), y->v(k1), z->v(k1));
-			k2 = long(nums->v(1,i)+0.5);
+			register long k2 = long(nums->v(1,i)+0.5);
 			p2 = mglPoint(x->v(k2), y->v(k2), z->v(k2));
-			k3 = long(nums->v(2,i)+0.5);
+			register long k3 = long(nums->v(2,i)+0.5);
 			p3 = mglPoint(x->v(k3), y->v(k3), z->v(k3));
-			k4 = floor(nums->v(3,i)+0.5);
+			register long k4 = floor(nums->v(3,i)+0.5);
 			p4 = mglPoint(x->v(k4), y->v(k4), z->v(k4));
-			if(!wire)	q = (p2-p1) ^ (p3-p1);
+			q = wire ? mglPoint(NAN,NAN):(p2-p1) ^ (p3-p1);
 			k1 = gr->AddPnt(p1,gr->GetC(ss,a->v(k1)),q);
 			k2 = gr->AddPnt(p2,gr->GetC(ss,a->v(k2)),q);
 			k3 = gr->AddPnt(p3,gr->GetC(ss,a->v(k3)),q);
@@ -180,17 +178,17 @@ void MGL_EXPORT mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HC
 		gr->Reserve(n);
 		long *kk = new long[n];
 		mglPoint *pp = new mglPoint[n];
-#pragma omp parallel for private(i,p1,p2,p3,p4,k1,k2,k3,k4)
-		for(i=0;i<m;i++)	// add averaged normales
+#pragma omp parallel for private(p1,p2,p3,p4,q)
+		for(long i=0;i<m;i++)	// add averaged normales
 		{
 			if(gr->Stop)	continue;
-			k1 = long(nums->v(0,i)+0.5);
+			register long k1 = long(nums->v(0,i)+0.5);
 			p1 = mglPoint(x->v(k1), y->v(k1), z->v(k1));
-			k2 = long(nums->v(1,i)+0.5);
+			register long k2 = long(nums->v(1,i)+0.5);
 			p2 = mglPoint(x->v(k2), y->v(k2), z->v(k2));
-			k3 = long(nums->v(2,i)+0.5);
+			register long k3 = long(nums->v(2,i)+0.5);
 			p3 = mglPoint(x->v(k3), y->v(k3), z->v(k3));
-			k4 = floor(nums->v(3,i)+0.5);
+			register long k4 = floor(nums->v(3,i)+0.5);
 			p4 = mglPoint(x->v(k4), y->v(k4), z->v(k4));
 
 			if(wire)	pp[k1]=pp[k2]=pp[k3]=pp[k4]=mglPoint(NAN,NAN);
@@ -202,20 +200,20 @@ void MGL_EXPORT mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HC
 				q = (p1-p4) ^ (p4-p3);	if(q.z<0) q*=-1;	pp[k4] += q;
 			}
 		}
-#pragma omp parallel for private(i)
-		for(i=0;i<n;i++)	// add points
+#pragma omp parallel for
+		for(long i=0;i<n;i++)	// add points
 		{
 			if(gr->Stop)	continue;
 			kk[i] = gr->AddPnt(mglPoint(x->v(i), y->v(i), z->v(i)),gr->GetC(ss,a->v(i)), pp[i]);
 		}
-#pragma omp parallel for private(i,k1,k2,k3,k4)
-		for(i=0;i<m;i++)	// draw quads
+#pragma omp parallel for
+		for(long i=0;i<m;i++)	// draw quads
 		{
 			if(gr->Stop)	continue;
-			k1 = floor(nums->v(0,i)+0.5);
-			k2 = floor(nums->v(1,i)+0.5);
-			k3 = floor(nums->v(2,i)+0.5);
-			k4 = floor(nums->v(3,i)+0.5);
+			register long k1 = floor(nums->v(0,i)+0.5);
+			register long k2 = floor(nums->v(1,i)+0.5);
+			register long k3 = floor(nums->v(2,i)+0.5);
+			register long k4 = floor(nums->v(3,i)+0.5);
 			if(wire)
 			{
 				gr->line_plot(kk[k1],kk[k2]);	gr->line_plot(kk[k1],kk[k3]);

@@ -1135,30 +1135,34 @@ void MGL_EXPORT mgl_boxplot_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const c
 	if(nx<n || nx<2 || m<2)	{	gr->SetWarn(mglWarnDim,"BoxPlot");	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("BoxPlot",cgid++);
-	mreal *b = new mreal[5*n], *d = new mreal[m], x1, x2, dd, dv=nx>n?1:0;
+	mreal *b = new mreal[5*n], x1, x2, dd, dv=nx>n?1:0;
 	if(mglchr(pen,'<'))	dv = 1;
 	if(mglchr(pen,'^'))	dv = 0;
 	if(mglchr(pen,'>'))	dv = -1;
 	mreal zVal = gr->AdjustZMin(), vv;
 	bool sh = mglchr(pen,'!');
-//#pragma omp parallel for	// NOTE: problem with array d
-	for(long i=0;i<n;i++)	// find quartiles by itself
+#pragma omp parallel
 	{
-		if(gr->Stop)	continue;
-		register long mm,k,j;
-		for(mm=j=0;j<m;j++)
+		mreal *d = new mreal[m];
+#pragma omp for
+		for(long i=0;i<n;i++)	// find quartiles by itself
 		{
-			mreal vv = y->v(i,j);
-			if(!mgl_isnan(vv))	{	d[mm]=vv;	mm++;	}
+			if(gr->Stop)	continue;
+			register long mm,k,j;
+			for(mm=j=0;j<m;j++)
+			{
+				mreal vv = y->v(i,j);
+				if(!mgl_isnan(vv))	{	d[mm]=vv;	mm++;	}
+			}
+//			if(m==0)	{	b[i]=NAN;	break;	}
+			qsort(d, mm, sizeof(mreal), mgl_cmp_flt);
+			b[i] = d[0];	b[i+4*n] = d[mm-1];		k = mm/4;
+			b[i+n] = (mm%4) ? d[k] : (d[k]+d[k-1])/2.;
+			b[i+2*n] = (mm%2) ? d[mm/2] : (d[mm/2]+d[mm/2-1])/2.;
+			b[i+3*n] = (mm%4) ? d[mm-k-1] : (d[mm-k-1]+d[mm-k])/2.;
 		}
-//		if(m==0)	{	b[i]=NAN;	break;	}
-		qsort(d, mm, sizeof(mreal), mgl_cmp_flt);
-		b[i] = d[0];	b[i+4*n] = d[mm-1];		k = mm/4;
-		b[i+n] = (mm%4) ? d[k] : (d[k]+d[k-1])/2.;
-		b[i+2*n] = (mm%2) ? d[mm/2] : (d[mm/2]+d[mm/2-1])/2.;
-		b[i+3*n] = (mm%4) ? d[mm-k-1] : (d[mm-k-1]+d[mm-k])/2.;
+		delete []d;
 	}
-	delete []d;
 
 	long pal;
 	gr->SetPenPal(pen,&pal);	gr->NextColor(pal);	gr->Reserve(18*n);
@@ -1171,12 +1175,23 @@ void MGL_EXPORT mgl_boxplot_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const c
 		x1 = vv + dd/2*(dv-gr->BarWidth);
 		x2 = x1 + gr->BarWidth*dd;
 		register long n1,n2;
-		for(long j=0;j<5;j++)	// horizontal lines
-		{
-			n1=gr->AddPnt(mglPoint(x1,b[i+j*n],zVal));
-			n2=gr->AddPnt(mglPoint(x2,b[i+j*n],zVal));
-			gr->line_plot(n1,n2);
-		}
+		// TODO why boxplot fail if I use for()
+		n1=gr->AddPnt(mglPoint(x1,b[i],zVal));	// horizontal lines
+		n2=gr->AddPnt(mglPoint(x2,b[i],zVal));
+		gr->line_plot(n1,n2);
+		n1=gr->AddPnt(mglPoint(x1,b[i+n],zVal));
+		n2=gr->AddPnt(mglPoint(x2,b[i+n],zVal));
+		gr->line_plot(n1,n2);
+		n1=gr->AddPnt(mglPoint(x1,b[i+2*n],zVal));
+		n2=gr->AddPnt(mglPoint(x2,b[i+2*n],zVal));
+		gr->line_plot(n1,n2);
+		n1=gr->AddPnt(mglPoint(x1,b[i+3*n],zVal));
+		n2=gr->AddPnt(mglPoint(x2,b[i+3*n],zVal));
+		gr->line_plot(n1,n2);
+		n1=gr->AddPnt(mglPoint(x1,b[i+4*n],zVal));
+		n2=gr->AddPnt(mglPoint(x2,b[i+4*n],zVal));
+		gr->line_plot(n1,n2);
+
 		//vertical lines
 		n1=gr->AddPnt(mglPoint(x1,b[i+n],zVal));
 		n2=gr->AddPnt(mglPoint(x1,b[i+3*n],zVal));

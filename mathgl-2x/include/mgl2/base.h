@@ -413,7 +413,7 @@ public:
 	// ~~~~~~~~~~~~~~~~~~~~~~ Developer functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	/// Add point to the Pnt and return its position
 	inline long AddPnt(mglPoint p, mreal c=-1, mglPoint n=mglPoint(NAN), mreal a=-1, int scl=1)
-	{	AddPnt(&B,p,c,n,a,scl);	}
+	{	return AddPnt(&B,p,c,n,a,scl);	}
 	long AddPnt(const mglMatrix *M, mglPoint p, mreal c=-1, mglPoint n=mglPoint(NAN), mreal a=-1, int scl=1);
 	long CopyNtoC(long k, mreal c);
 	long CopyProj(long from, mglPoint p, mglPoint n);

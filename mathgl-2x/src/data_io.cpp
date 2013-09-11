@@ -166,7 +166,7 @@ void MGL_EXPORT mgl_data_set_float2(HMDT d, float const * const *A,long N1,long 
 	if(N1<=0 || N2<=0)	return;
 	mgl_data_create(d, N2,N1,1);	if(!A)	return;
 #if MGL_USE_DOUBLE
-#pragma omp parallel for
+#pragma omp parallel for collapse(2)
 	for(long i=0;i<N1;i++)	for(long j=0;j<N2;j++)	d->a[j+i*N2] = A[i][j];
 #else
 #pragma omp parallel for
@@ -182,7 +182,7 @@ void MGL_EXPORT mgl_data_set_double2(HMDT d, double const *const *A,long N1,long
 #pragma omp parallel for
 	for(long i=0;i<N1;i++)	memcpy(d->a+i*N2,A[i],N2*sizeof(double));
 #else
-#pragma omp parallel for
+#pragma omp parallel for collapse(2)
 	for(long i=0;i<N1;i++)	for(long j=0;j<N2;j++)	d->a[j+i*N2] = A[i][j];
 #endif
 }
@@ -192,11 +192,11 @@ void MGL_EXPORT mgl_data_set_float3(HMDT d, float const * const * const *A,long 
 	if(N1<=0 || N2<=0 || N3<=0)	return;
 	mgl_data_create(d, N3,N2,N1);	if(!A)	return;
 #if MGL_USE_DOUBLE
-#pragma omp parallel for
+#pragma omp parallel for collapse(3)
 	for(long i=0;i<N1;i++)	for(long j=0;j<N2;j++)	for(long k=0;k<N3;k++)
 		d->a[k+N3*(j+i*N2)] = A[i][j][k];
 #else
-#pragma omp parallel for
+#pragma omp parallel for collapse(2)
 	for(long i=0;i<N1;i++)	for(long j=0;j<N2;j++)
 		memcpy(d->a+N3*(j+i*N2),A[i][j],N3*sizeof(float));
 #endif
@@ -207,11 +207,11 @@ void MGL_EXPORT mgl_data_set_double3(HMDT d, double const * const * const *A,lon
 	if(N1<=0 || N2<=0 || N3<=0)	return;
 	mgl_data_create(d, N3,N2,N1);	if(!A)	return;
 #if MGL_USE_DOUBLE
-#pragma omp parallel for
+#pragma omp parallel for collapse(2)
 	for(long i=0;i<N1;i++)	for(long j=0;j<N2;j++)
 		memcpy(d->a+N3*(j+i*N2),A[i][j],N3*sizeof(double));
 #else
-#pragma omp parallel for
+#pragma omp parallel for collapse(3)
 	for(long i=0;i<N1;i++)	for(long j=0;j<N2;j++)	for(long k=0;k<N3;k++)
 		d->a[k+N3*(j+i*N2)] = A[i][j][k];
 #endif
@@ -455,7 +455,7 @@ int MGL_EXPORT mgl_data_read_mat_(uintptr_t *d, const char *fname,int *dim,int l
 mreal MGL_EXPORT mgl_data_max(HCDT d)
 {
 	mreal m1=-1e10;
-	register long nn=d->GetNN();
+	long nn=d->GetNN();
 	const mglData *b = dynamic_cast<const mglData *>(d);
 #pragma omp parallel 
 	{
@@ -477,8 +477,8 @@ mreal MGL_EXPORT mgl_data_max_(uintptr_t *d)	{	return mgl_data_max(_DT_);	}
 //-----------------------------------------------------------------------------
 mreal MGL_EXPORT mgl_data_min(HCDT d)
 {
-	register mreal m1=1e10;
-	register long nn=d->GetNN();
+	mreal m1=1e10;
+	long nn=d->GetNN();
 	const mglData *b = dynamic_cast<const mglData *>(d);
 #pragma omp parallel 
 	{
@@ -500,7 +500,7 @@ mreal MGL_EXPORT mgl_data_min_(uintptr_t *d)	{	return mgl_data_min(_DT_);	}
 //-----------------------------------------------------------------------------
 mreal MGL_EXPORT mgl_data_max_int(HCDT d, long *i, long *j, long *k)
 {
-	register mreal m1=-1e10;
+	mreal m1=-1e10;
 	long nx=d->GetNx(), ny=d->GetNy(), nn=d->GetNN();
 #pragma omp parallel 
 	{
@@ -524,7 +524,7 @@ mreal MGL_EXPORT mgl_data_max_int_(uintptr_t *d, int *i, int *j, int *k)
 //-----------------------------------------------------------------------------
 mreal MGL_EXPORT mgl_data_min_int(HCDT d, long *i, long *j, long *k)
 {
-	register mreal m1=1e10;
+	mreal m1=1e10;
 	long nx=d->GetNx(), ny=d->GetNy(), nn=d->GetNN();
 #pragma omp parallel 
 	{
@@ -617,13 +617,13 @@ mreal MGL_EXPORT mgl_data_min_real_(uintptr_t *d, mreal *x, mreal *y, mreal *z)
 MGL_NO_EXPORT void *mgl_fill_x(void *par)
 {
 	mglThreadD *t=(mglThreadD *)par;
-	register long i0, nx=t->p[0],ny=t->p[1];
+	long nx=t->p[0],ny=t->p[1];
 	mreal *b=t->a, x1=t->b[0], dx=t->b[1];
 	register char dir = t->s[0];
 #if !MGL_HAVE_PTHREAD
-#pragma omp parallel for private(i0)
+#pragma omp parallel for
 #endif
-	for(i0=t->id;i0<t->n;i0+=mglNumThr)
+	for(long i0=t->id;i0<t->n;i0+=mglNumThr)
 	{
 		if(dir=='x') b[i0] = x1+dx*(i0%nx);
 		else if(dir=='y') b[i0] = x1+dx*((i0/nx)%ny);
@@ -647,11 +647,10 @@ void MGL_EXPORT mgl_data_fill_(uintptr_t *d, mreal *x1,mreal *x2,const char *dir
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_data_norm(HMDT d, mreal v1,mreal v2,long sym,long dim)
 {
-	long i,s,nn=d->nx*d->ny*d->nz;
+	long s,nn=d->nx*d->ny*d->nz;
 	mreal a1=1e20,a2=-1e20,v,*a=d->a;
-	if(d->nz>1)	s = dim*d->nx*d->ny;
-	else		s = dim*d->ny;
-	for(i=s;i<nn;i++)	// determines borders of existing data
+	s = dim*d->ny*(d->nz>1 ? d->nx : 1);
+	for(long i=s;i<nn;i++)	// determines borders of existing data
 	{
 		if(mgl_isnan(a[i]))	continue;
 		a1 = (a1<a[i] ? a1 : a[i]);	a2 = (a2>a[i] ? a2 : a[i]);
@@ -663,8 +662,8 @@ void MGL_EXPORT mgl_data_norm(HMDT d, mreal v1,mreal v2,long sym,long dim)
 		v2 = -v1>v2 ? -v1:v2;	v1 = -v2;
 		a2 = -a1>a2 ? -a1:a2;	a1 = -a2;
 	}
-#pragma omp parallel for private(i)
-	for(i=s;i<nn;i++)	// normalize
+#pragma omp parallel for
+	for(long i=s;i<nn;i++)	// normalize
 		a[i] = v1 + (v2-v1)*(a[i]-a1)/(a2-a1);
 }
 void MGL_EXPORT mgl_data_norm_(uintptr_t *d, mreal *v1,mreal *v2,int *sym,int *dim)
@@ -672,8 +671,7 @@ void MGL_EXPORT mgl_data_norm_(uintptr_t *d, mreal *v1,mreal *v2,int *sym,int *d
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_data_squeeze(HMDT d, long rx,long ry,long rz,long smooth)
 {
-	long kx,ky,kz,i,j,k;
-	long nx=d->nx, ny=d->ny, nz=d->nz;
+	long kx,ky,kz, nx=d->nx, ny=d->ny, nz=d->nz;
 	mreal *b;
 
 	// simple checking
@@ -684,12 +682,12 @@ void MGL_EXPORT mgl_data_squeeze(HMDT d, long rx,long ry,long rz,long smooth)
 	kx = 1+(nx-1)/rx;	ky = 1+(ny-1)/ry;	kz = 1+(nz-1)/rz;
 	b = new mreal[kx*ky*kz];
 	if(!smooth)
-#pragma omp parallel for private(i,j,k) collapse(3)
-		for(k=0;k<kz;k++)	for(j=0;j<ky;j++)	for(i=0;i<kx;i++)
+#pragma omp parallel for collapse(3)
+		for(long k=0;k<kz;k++)	for(long j=0;j<ky;j++)	for(long i=0;i<kx;i++)
 			b[i+kx*(j+ky*k)] = d->a[i*rx+nx*(j*ry+ny*rz*k)];
 	else
-#pragma omp parallel for private(i,j,k) collapse(3)
-		for(k=0;k<kz;k++)	for(j=0;j<ky;j++)	for(i=0;i<kx;i++)
+#pragma omp parallel for collapse(3)
+		for(long k=0;k<kz;k++)	for(long j=0;j<ky;j++)	for(long i=0;i<kx;i++)
 		{
 			long dx,dy,dz,i1,j1,k1;
 			dx = (i+1)*rx<=nx ? rx : nx-i*rx;
@@ -712,18 +710,17 @@ void MGL_EXPORT mgl_data_extend(HMDT d, long n1, long n2)
 	if(nz>2 || n1==0)	return;
 	long mx, my, mz;
 	mreal *b=0;
-	register long i,j;
 	if(n1>0) // extend to higher dimension(s)
 	{
 		n2 = n2>0 ? n2:1;
 		mx = nx;	my = ny>1?ny:n1;	mz = ny>1 ? n1 : n2;
 		b = new mreal[mx*my*mz];
 		if(ny>1)
-#pragma omp parallel for private(i)
-			for(i=0;i<n1;i++)	memcpy(b+i*nx*ny, d->a, nx*ny*sizeof(mreal));
+#pragma omp parallel for
+			for(long i=0;i<n1;i++)	memcpy(b+i*nx*ny, d->a, nx*ny*sizeof(mreal));
 		else
-#pragma omp parallel for private(i)
-			for(i=0;i<n1*n2;i++)	memcpy(b+i*nx, d->a, nx*sizeof(mreal));
+#pragma omp parallel for
+			for(long i=0;i<n1*n2;i++)	memcpy(b+i*nx, d->a, nx*sizeof(mreal));
 	}
 	else
 	{
@@ -732,16 +729,16 @@ void MGL_EXPORT mgl_data_extend(HMDT d, long n1, long n2)
 		b = new mreal[mx*my*mz];
 		register mreal v;
 		if(n2<0)
-#pragma omp parallel for private(i,j,v)
-			for(j=0;j<nx;j++)	for(i=0,v=d->a[j];i<mx*my;i++)
-				b[i+mx*my*j] = v;
+#pragma omp parallel for collapse(2)
+			for(long j=0;j<nx;j++)	for(long i=0;i<mx*my;i++)
+				b[i+mx*my*j] = d->a[j];
 		else
-#pragma omp parallel for private(i,j,v)
-			for(j=0;j<nx*ny;j++)	for(i=0,v=d->a[j];i<mx;i++)
-				b[i+mx*j] = v;
+#pragma omp parallel for collapse(2)
+			for(long j=0;j<nx*ny;j++)	for(long i=0;i<mx;i++)
+				b[i+mx*j] = d->a[j];
 		if(n2>0 && ny==1)
-#pragma omp parallel for private(i)
-			for(i=0;i<n2;i++)
+#pragma omp parallel for
+			for(long i=0;i<n2;i++)
 				memcpy(b+i*mx*my, d->a, mx*my*sizeof(mreal));
 	}
 	if(!d->link)	delete [](d->a);
@@ -753,42 +750,41 @@ void MGL_EXPORT mgl_data_extend_(uintptr_t *d, int *n1, int *n2)
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_data_transpose(HMDT d, const char *dim)
 {
-	long nx=d->nx, ny=d->ny, nz=d->nz;
+	long nx=d->nx, ny=d->ny, nz=d->nz, n;
 	mreal *b=new mreal[nx*ny*nz], *a=d->a;
-	register long i,j,k,n;
 	if(!strcmp(dim,"xyz"))	memcpy(b,a,nx*ny*nz*sizeof(mreal));
 	else if(!strcmp(dim,"xzy") || !strcmp(dim,"zy"))
 	{
-#pragma omp parallel for private(i,j,k) collapse(3)
-		for(j=0;j<ny;j++)	for(k=0;k<nz;k++)	for(i=0;i<nx;i++)
+#pragma omp parallel for collapse(3)
+		for(long j=0;j<ny;j++)	for(long k=0;k<nz;k++)	for(long i=0;i<nx;i++)
 			b[i+nx*(k+nz*j)] = a[i+nx*(j+ny*k)];
 		n=nz;	nz=ny;	ny=n;
 	}
 	else if(!strcmp(dim,"yxz") || !strcmp(dim,"yx"))
 	{
-#pragma omp parallel for private(i,j,k) collapse(3)
-		for(k=0;k<nz;k++)	for(i=0;i<nx;i++)	for(j=0;j<ny;j++)
+#pragma omp parallel for collapse(3)
+		for(long k=0;k<nz;k++)	for(long i=0;i<nx;i++)	for(long j=0;j<ny;j++)
 			b[j+ny*(i+nx*k)] = a[i+nx*(j+ny*k)];
 		n=nx;	nx=ny;	ny=n;
 	}
 	else if(!strcmp(dim,"yzx"))
 	{
-#pragma omp parallel for private(i,j,k) collapse(3)
-		for(k=0;k<nz;k++)	for(i=0;i<nx;i++)	for(j=0;j<ny;j++)
+#pragma omp parallel for collapse(3)
+		for(long k=0;k<nz;k++)	for(long i=0;i<nx;i++)	for(long j=0;j<ny;j++)
 			b[j+ny*(k+nz*i)] = a[i+nx*(j+ny*k)];
 		n=nx;	nx=ny;	ny=nz;	nz=n;
 	}
 	else if(!strcmp(dim,"zxy"))
 	{
-#pragma omp parallel for private(i,j,k) collapse(3)
-		for(i=0;i<nx;i++)	for(j=0;j<ny;j++)	for(k=0;k<nz;k++)
+#pragma omp parallel for collapse(3)
+		for(long i=0;i<nx;i++)	for(long j=0;j<ny;j++)	for(long k=0;k<nz;k++)
 			b[k+nz*(i+nx*j)] = a[i+nx*(j+ny*k)];
 		n=nx;	nx=nz;	nz=ny;	ny=n;
 	}
 	else if(!strcmp(dim,"zyx") || !strcmp(dim,"zx"))
 	{
-#pragma omp parallel for private(i,j,k) collapse(3)
-		for(i=0;i<nx;i++)	for(j=0;j<ny;j++)	for(k=0;k<nz;k++)
+#pragma omp parallel for collapse(3)
+		for(long i=0;i<nx;i++)	for(long j=0;j<ny;j++)	for(long k=0;k<nz;k++)
 			b[k+nz*(j+ny*i)] = a[i+nx*(j+ny*k)];
 		n=nz;	nz=nx;	nx=n;
 	}
@@ -804,16 +800,16 @@ MGL_NO_EXPORT void *mgl_modify(void *par)
 {
 	mglThreadD *t=(mglThreadD *)par;
 	const mglFormula *f = (const mglFormula *)(t->v);
-	register long i,j,k,i0, nx=t->p[0],ny=t->p[1],nz=t->p[2];
+	long nx=t->p[0],ny=t->p[1],nz=t->p[2];
 	mreal *b=t->a, dx,dy,dz;
 	const mreal *v=t->b, *w=t->c;
 	dx=nx>1?1/(nx-1.):0;	dy=ny>1?1/(ny-1.):0;	dz=nz>1?1/(nz-1.):0;
 #if !MGL_HAVE_PTHREAD
-#pragma omp parallel for private(i0,i,j,k)
+#pragma omp parallel for
 #endif
-	for(i0=t->id;i0<t->n;i0+=mglNumThr)
+	for(long i0=t->id;i0<t->n;i0+=mglNumThr)
 	{
-		i=i0%nx;	j=((i0/nx)%ny);	k=i0/(nx*ny);
+		register long i=i0%nx, j=((i0/nx)%ny), k=i0/(nx*ny);
 		b[i0] = f->Calc(i*dx, j*dy, k*dz, b[i0], v?v[i0]:0, w?w[i0]:0);
 	}
 	return 0;
@@ -842,16 +838,16 @@ MGL_NO_EXPORT void *mgl_modify_gen(void *par)
 {
 	mglThreadV *t=(mglThreadV *)par;
 	const mglFormula *f = (const mglFormula *)(t->v);
-	register long i,j,k,i0, nx=t->p[0],ny=t->p[1],nz=t->p[2];
+	register long nx=t->p[0],ny=t->p[1],nz=t->p[2];
 	mreal *b=t->a, dx,dy,dz;
 	HCDT v=(HCDT)t->b, w=(HCDT)t->c;
 	dx=nx>1?1/(nx-1.):0;	dy=ny>1?1/(ny-1.):0;	dz=nz>1?1/(nz-1.):0;
 #if !MGL_HAVE_PTHREAD
-#pragma omp parallel for private(i0,i,j,k)
+#pragma omp parallel for
 #endif
-	for(i0=t->id;i0<t->n;i0+=mglNumThr)
+	for(long i0=t->id;i0<t->n;i0+=mglNumThr)
 	{
-		i=i0%nx;	j=((i0/nx)%ny);	k=i0/(nx*ny);
+		register long i=i0%nx, j=((i0/nx)%ny), k=i0/(nx*ny);
 		b[i0] = f->Calc(i*dx, j*dy, k*dz, b[i0], v?v->vthr(i0):0, w?w->vthr(i0):0);
 	}
 	return 0;
@@ -878,15 +874,15 @@ MGL_NO_EXPORT void *mgl_fill_f(void *par)
 {
 	mglThreadD *t=(mglThreadD *)par;
 	const mglFormula *f = (const mglFormula *)(t->v);
-	register long i,j,k,i0, nx=t->p[0],ny=t->p[1];
+	long nx=t->p[0],ny=t->p[1];
 	mreal *b=t->a;
 	const mreal *v=t->b, *w=t->c, *x=t->d;
 #if !MGL_HAVE_PTHREAD
-#pragma omp parallel for private(i0,i,j,k)
+#pragma omp parallel for
 #endif
-	for(i0=t->id;i0<t->n;i0+=mglNumThr)
+	for(long i0=t->id;i0<t->n;i0+=mglNumThr)
 	{
-		i=i0%nx;	j=((i0/nx)%ny);	k=i0/(nx*ny);
+		register long i=i0%nx, j=((i0/nx)%ny), k=i0/(nx*ny);
 		b[i0] = f->Calc(x[0]+i*x[1], x[2]+j*x[3], x[4]+k*x[5], b[i0], v?v[i0]:0, w?w[i0]:0);
 	}
 	return 0;
@@ -895,16 +891,16 @@ MGL_NO_EXPORT void *mgl_fill_fgen(void *par)
 {
 	mglThreadV *t=(mglThreadV *)par;
 	const mglFormula *f = (const mglFormula *)(t->v);
-	register long i,j,k,i0, nx=t->p[0],ny=t->p[1];
+	long nx=t->p[0],ny=t->p[1];
 	mreal *b=t->a;
 	HCDT v=(HCDT)t->b, w=(HCDT)t->c;
 	const mreal *x=t->d;
 #if !MGL_HAVE_PTHREAD
-#pragma omp parallel for private(i0,i,j,k)
+#pragma omp parallel for
 #endif
-	for(i0=t->id;i0<t->n;i0+=mglNumThr)
+	for(long i0=t->id;i0<t->n;i0+=mglNumThr)
 	{
-		i=i0%nx;	j=((i0/nx)%ny);	k=i0/(nx*ny);
+		register long i=i0%nx, j=((i0/nx)%ny), k=i0/(nx*ny);
 		b[i0] = f->Calc(x[0]+i*x[1], x[2]+j*x[3], x[4]+k*x[5], b[i0], v?v->vthr(i0):0, w?w->vthr(i0):0);
 	}
 	return 0;

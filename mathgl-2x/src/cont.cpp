@@ -1149,7 +1149,7 @@ void MGL_EXPORT mgl_cont3_xyz_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, HCDT 
 #pragma omp parallel for
 	for(long i=0;i<v->GetNx();i++)
 	{
-		mreal v0 = v->v(i);
+		register mreal v0 = v->v(i);
 		mgl_cont_gen(gr,v0,&s.a,&s.x,&s.y,&s.z,gr->GetC(ss,v0),text,0);
 	}
 	gr->EndGroup();
@@ -1332,7 +1332,7 @@ void MGL_EXPORT mgl_contf3_xyz_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, HCDT
 #pragma omp parallel for
 	for(long i=0;i<v->GetNx()-1;i++)
 	{
-		mreal v0 = v->v(i);
+		register mreal v0 = v->v(i);
 		mgl_contf_gen(gr,v0,v->v(i+1),&s.a,&s.x,&s.y,&s.z,gr->GetC(ss,v0),0);
 	}
 	gr->EndGroup();
@@ -1542,12 +1542,10 @@ void MGL_EXPORT mgl_axial_gen(HMGL gr, mreal val, HCDT a, HCDT x, HCDT y, mreal 
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_axial_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt)
 {
-	register long i,j,n=z->GetNx(),m=z->GetNy();
+	long n=z->GetNx(),m=z->GetNy();
 	if(mgl_check_dim2(gr,x,y,z,0,"Axial"))	return;
-
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Axial",cgid++);
-
 	long s=gr->AddTexture(sch);
 	char dir='y';
 	if(mglchr(sch,'x'))	dir = 'x';
@@ -1560,23 +1558,23 @@ void MGL_EXPORT mgl_axial_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const 
 		const mglData *mx = dynamic_cast<const mglData *>(x);
 		const mglData *my = dynamic_cast<const mglData *>(y);
 		if(mx && my)
-#pragma omp parallel for private(i,j) collapse(2)
-			for(i=0;i<n;i++)	for(j=0;j<m;j++)
+#pragma omp parallel for collapse(2)
+			for(long i=0;i<n;i++)	for(long j=0;j<m;j++)
 			{	xx.a[i+n*j] = mx->a[i];	yy.a[i+n*j] = my->a[j];	}
 		else
-#pragma omp parallel for private(i,j) collapse(2)
-			for(i=0;i<n;i++)	for(j=0;j<m;j++)
+#pragma omp parallel for collapse(2)
+			for(long i=0;i<n;i++)	for(long j=0;j<m;j++)
 			{	xx.a[i+n*j] = x->v(i);	yy.a[i+n*j] = y->v(j);	}
 		x = &xx;	y = &yy;
 	}
 	// x, y -- have the same size z
 	int wire = mglchr(sch,'#')?1:0;
 	if(mglchr(sch,'.'))	wire = 2;
-#pragma omp parallel for private(i,j) collapse(2)
-	for(j=0;j<z->GetNz();j++)	for(i=0;i<v->GetNx();i++)
+#pragma omp parallel for collapse(2)
+	for(long j=0;j<z->GetNz();j++)	for(long i=0;i<v->GetNx();i++)
 	{
 		if(gr->Stop)	continue;
-		mreal v0 = v->v(i);
+		register mreal v0 = v->v(i);
 		mgl_axial_gen(gr,v0,z,x,y,gr->GetC(s,v0),dir,j,wire);
 	}
 	gr->EndGroup();

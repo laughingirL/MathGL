@@ -315,8 +315,10 @@ uintptr_t MGL_EXPORT mgl_data_correl_(uintptr_t dat1, uintptr_t dat2, const char
 
 /// Allocate and prepare data for Fourier transform by nthr threads
 MGL_EXPORT void *mgl_fft_alloc(long n, void **space, long nthr);
+MGL_EXPORT void *mgl_fft_alloc_thr(long n);
 /// Free data for Fourier transform
 void MGL_EXPORT mgl_fft_free(void *wt, void **ws, long nthr);
+void MGL_EXPORT mgl_fft_free_thr(void *wt);
 /// Make Fourier transform of data x of size n and step s between points
 void MGL_EXPORT mgl_fft(double *x, long s, long n, const void *wt, void *ws, int inv);
 /// Clear internal data for speeding up FFT and Hankel transforms

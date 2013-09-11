@@ -631,7 +631,7 @@ void MGL_EXPORT mgl_puts_dir_(uintptr_t *gr, mreal *x, mreal *y, mreal *z, mreal
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_textmarkw_xyzr(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const wchar_t *text, const char *fnt, const char *opt)
 {
-	long j,m,mx,my,mz,mr,n=y->GetNx();
+	long m,mx,my,mz,mr,n=y->GetNx();
 	if(mgl_check_dim0(gr,x,y,z,r,"TextMark"))	return;
 
 	gr->SaveState(opt);
@@ -642,17 +642,16 @@ void MGL_EXPORT mgl_textmarkw_xyzr(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, cons
 	gr->Reserve(n*m);
 
 	mglPoint p,q(NAN);
-	for(j=0;j<m;j++)
+	for(long j=0;j<m;j++)
 	{
 		mx = j<x->GetNy() ? j:0;	my = j<y->GetNy() ? j:0;
 		mz = j<z->GetNy() ? j:0;	mr = j<r->GetNy() ? j:0;
-		register long i,k;
-#pragma omp parallel for private(i,p,k)
-		for(i=0;i<n;i++)
+#pragma omp parallel for private(p)	// NOTE this should be useless ?!?
+		for(long i=0;i<n;i++)
 		{
 			if(gr->Stop)	continue;
 			p = mglPoint(x->v(i,mx), y->v(i,my), z->v(i,mz));
-			k = gr->AddPnt(p,-1,q);
+			register long k = gr->AddPnt(p,-1,q);
 			gr->text_plot(k, text, fnt, -0.5*fabs(r->v(i,mr)));
 		}
 	}
