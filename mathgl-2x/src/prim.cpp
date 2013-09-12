@@ -731,26 +731,24 @@ void MGL_EXPORT mgl_textmark_(uintptr_t *gr, uintptr_t *y, const char *text, con
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_labelw_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const wchar_t *text, const char *fnt, const char *opt)
 {
-	long j,m,mx,my,mz,n=y->GetNx();
+	long m,mx,my,mz,n=y->GetNx();
 	if(mgl_check_dim1(gr,x,y,z,0,"Label"))	return;
 
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Label",cgid++);
 	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();	m = z->GetNy() > m ? z->GetNy() : m;
 
-	register long i,k,kk,l,nn;
-	mglPoint p,q(NAN);
+	mglPoint q(NAN);
 	wchar_t tmp[32];
-	for(j=0;j<m;j++)
+	for(long j=0;j<m;j++)
 	{
 		mx = j<x->GetNy() ? j:0;	my = j<y->GetNy() ? j:0;	mz = j<z->GetNy() ? j:0;
-#pragma omp parallel for private(i,p,kk,k,l)
-		for(i=0;i<n;i++)
+#pragma omp parallel for
+		for(long i=0;i<n;i++)
 		{
 			if(gr->Stop)	continue;
 			mreal xx=x->v(i,mx), yy=y->v(i,my), zz=z->v(i,mz);
-			p = mglPoint(xx,yy,zz);
-			kk = gr->AddPnt(p,-1,q);
+			register long kk = gr->AddPnt(mglPoint(xx,yy,zz),-1,q),k,l;
 			std::wstring buf;
 			for(k=l=0;text[k];k++)
 			{

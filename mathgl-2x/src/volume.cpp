@@ -724,17 +724,18 @@ void MGL_NO_EXPORT mgl_beam_md(HMGL gr, double val, const mglData *tr, const mgl
 	if(tr->nx<3 || tr->ny<n || g1->nx<3 || g1->ny<n || g2->nx<3 || g2->ny<n)
 	{	gr->SetWarn(mglWarnDim,"Beam");	return;	}
 	mglData x(a),y(a),z(a),b(a);
-	register long i,j,k;
-	mreal asum=1, asum0=1, amax, aa;
+	mreal asum=1, asum0=0, amax, aa;
 	r = fabs(r);
-	if(flag & 4)	for(j=0;j<m*l;j++)	asum0 += a->a[j]*a->a[j];
+	if(flag & 4)
+#pragma omp parallel for reduction(+:asum0)
+		for(long j=0;j<m*l;j++)	asum0 += a->a[j]*a->a[j];
 	if(asum0==0)	{	gr->SetWarn(mglWarnZero,"Beam");	return;	}
-	for(i=0;i<n;i++)
+	for(long i=0;i<n;i++)
 	{
 		asum=amax=0;
 		if(flag & 4)
 		{
-			for(j=0;j<m*l;j++)
+			for(long j=0;j<m*l;j++)
 			{
 				aa = a->a[j+m*l*i];
 				asum += aa*aa;
@@ -742,10 +743,10 @@ void MGL_NO_EXPORT mgl_beam_md(HMGL gr, double val, const mglData *tr, const mgl
 			}
 			if(amax==0)	{	asum=0;	amax=1;	}
 #pragma omp parallel for
-			for(j=0;j<m*l;j++)	b.a[j+m*l*i] = b.a[j+m*l*i]*sqrt(asum/asum0)/amax;
+			for(long j=0;j<m*l;j++)	b.a[j+m*l*i] = b.a[j+m*l*i]*sqrt(asum/asum0)/amax;
 		}
-#pragma omp parallel for private(i,j) collapse(2)
-		for(k=0;k<l;k++)	for(j=0;j<m;j++)
+#pragma omp parallel for collapse(2)
+		for(long k=0;k<l;k++)	for(long j=0;j<m;j++)
 		{
 			if(gr->Stop)	continue;
 			register long i0 = j+m*(k+l*i);

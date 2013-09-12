@@ -158,8 +158,7 @@ void mglCanvas::SetTicksVal(char dir, HCDT v, const char **lbl, bool add)
 	if(add)	{	UpdateAxis();	AdjustTicks(aa,ff);	}
 	if(!v || !lbl)	{	aa.f = 0;	return;	}
 	aa.f = 2;	aa.ns=0;	aa.ds=0;
-	register size_t i,n=v->GetNx(),l=0;
-	for(i=0;i<n;i++)	MGL_TO_WCS(lbl[i],aa.AddLabel(wcs,v->v(i)));
+	for(size_t i=0;i<v->GetNx();i++)	MGL_TO_WCS(lbl[i],aa.AddLabel(wcs,v->v(i)));
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::SetTickTempl(char dir, const wchar_t *t)
@@ -964,7 +963,8 @@ void mglCanvas::colorbar(HCDT vv, const mreal *c, int where, mreal x, mreal y, m
 		default:ac.dir.x = 0;	ac.org.x = x-0.1*w;	break;
 	}
 	SetPenPal(AxisStl);
-	bool out = fabs(x)>1 && fabs(y)>1, inv = where!=3 && where!=0;
+//	bool out = fabs(x)>1 && fabs(y)>1;
+	bool inv = where!=3 && where!=0;
 	ac.ns = where;	DrawLabels(ac,inv);	// NOTE ns isn't used for colorbar
 	Pop();	clr(MGL_DISABLE_SCALE);	EndGroup();
 }

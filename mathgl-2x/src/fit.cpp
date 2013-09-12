@@ -66,16 +66,19 @@ struct mglFitData
 int	mgl_fit__f (const gsl_vector *x, void *data, gsl_vector *f)
 {
 	mglFitData *fd = (mglFitData *)data;
-	register long i;
-	mreal val[MGL_VS];
-	for(i=0;i<fd->m;i++)	val[fd->var[i]-'a'] = gsl_vector_get(x,i);
-#pragma omp parallel for private(i)
-	for(i=0;i<fd->n;i++)
+#pragma omp parallel
 	{
-		val['x'-'a'] = fd->x[i];
-		val['y'-'a'] = fd->y ? fd->y[i] : 0;
-		val['z'-'a'] = fd->z ? fd->z[i] : 0;
-		gsl_vector_set (f, i, (fd->eq->Calc(val) - fd->a[i])/fd->s[i]);
+		mreal val[MGL_VS];
+#pragma omp for
+		for(long i=0;i<fd->m;i++)	val[fd->var[i]-'a'] = gsl_vector_get(x,i);
+#pragma omp for
+		for(long i=0;i<fd->n;i++)
+		{
+			val['x'-'a'] = fd->x[i];
+			val['y'-'a'] = fd->y ? fd->y[i] : 0;
+			val['z'-'a'] = fd->z ? fd->z[i] : 0;
+			gsl_vector_set (f, i, (fd->eq->Calc(val) - fd->a[i])/fd->s[i]);
+		}
 	}
 	return GSL_SUCCESS;
 }
@@ -83,17 +86,20 @@ int	mgl_fit__f (const gsl_vector *x, void *data, gsl_vector *f)
 int MGL_NO_EXPORT mgl_fit__df (const gsl_vector * x, void *data, gsl_matrix * J)
 {
 	mglFitData *fd = (mglFitData *)data;
-	register long i,j;
-	mreal val[MGL_VS],s;
-	for(i=0;i<fd->m;i++)	val[fd->var[i]-'a'] = gsl_vector_get(x,i);
-#pragma omp parallel for private(i,j)
-	for(i=0;i<fd->n;i++)
+#pragma omp parallel
 	{
-		val['x'-'a'] = fd->x[i];	s = fd->s[i];
-		val['y'-'a'] = fd->y ? fd->y[i] : 0;
-		val['z'-'a'] = fd->z ? fd->z[i] : 0;
-		for(j=0;j<fd->m;j++)
-			gsl_matrix_set (J, i, j, fd->eq->CalcD(val, fd->var[j])/s);
+		mreal val[MGL_VS],s;
+#pragma omp for
+		for(long i=0;i<fd->m;i++)	val[fd->var[i]-'a'] = gsl_vector_get(x,i);
+#pragma omp for
+		for(long i=0;i<fd->n;i++)
+		{
+			val['x'-'a'] = fd->x[i];	s = fd->s[i];
+			val['y'-'a'] = fd->y ? fd->y[i] : 0;
+			val['z'-'a'] = fd->z ? fd->z[i] : 0;
+			for(long j=0;j<fd->m;j++)
+				gsl_matrix_set (J, i, j, fd->eq->CalcD(val, fd->var[j])/s);
+		}
 	}
 	return GSL_SUCCESS;
 }
@@ -226,6 +232,28 @@ HMDT MGL_EXPORT mgl_fit_ys(HMGL gr, HCDT y, HCDT s, const char *eq, const char *
 	return mgl_fit_xys(gr,&x,y,s,eq,var,ini,0);
 }
 //-----------------------------------------------------------------------------
+void MGL_NO_EXPORT mgl_fill_fit(HMGL gr, mglData &fit, mglData &in, mglFitData &fd, const char *var, long nx, long ny, long nz, long k)
+{
+	long nn = nx*ny*nz;
+	mreal dx = nx>1?(gr->Max.x-gr->Min.x)/(nx-1):0;
+	mreal dy = ny>1?(gr->Max.y-gr->Min.y)/(ny-1):0;
+	mreal dz = nz>1?(gr->Max.z-gr->Min.z)/(nz-1):0;
+#pragma omp parallel
+	{
+		mreal val[MGL_VS];	memset(val,0,MGL_VS*sizeof(mreal));
+#pragma omp for
+		for(long j=0;j<fd.m;j++)	val[var[j]-'a'] = in.a[j];
+#pragma omp for collapse(3)
+		for(long jz=0;jz<nz;jz++)	for(long jy=0;jy<ny;jy++)	for(long jx=0;jx<nx;jx++)
+		{
+			val['x'-'a'] = gr->Min.x+jx*dx;
+			if(dy)	val['y'-'a'] = gr->Min.y+jy*dy;
+			if(dz)	val['z'-'a'] = gr->Min.z+jz*dz;
+			fit.a[jx+nx*(jy+ny*jz)+k*nn] = fd.eq->Calc(val);
+		}
+	}
+}
+//-----------------------------------------------------------------------------
 HMDT MGL_EXPORT mgl_fit_xys(HMGL gr, HCDT xx, HCDT yy, HCDT ss, const char *eq, const char *var, HMDT ini, const char *opt)
 {
 	long m = yy->GetNx();
@@ -247,8 +275,7 @@ HMDT MGL_EXPORT mgl_fit_xys(HMGL gr, HCDT xx, HCDT yy, HCDT ss, const char *eq, 
 	fd.var = var;	fd.m = strlen(var);
 	fd.eq = new mglFormula(eq);
 	mglData in(fd.m), *fit=new mglData(nn, yy->GetNy(), yy->GetNz());
-	mreal val[MGL_VS],res=-1;
-	register long j;
+	mreal res=-1;
 	for(long i=0;i<yy->GetNy()*yy->GetNz();i++)
 	{
 		if(ini && ini->nx>=fd.m)	in.Set(ini->a,fd.m);
@@ -256,13 +283,7 @@ HMDT MGL_EXPORT mgl_fit_xys(HMGL gr, HCDT xx, HCDT yy, HCDT ss, const char *eq, 
 		fd.a = y.a+i*m;		fd.x = x.a+(i%x.ny)*m;
 		fd.s = s.a+i*m;
 		res = mgl_fit_base(&fd,in.a);
-		for(j=0;j<fd.m;j++)	val[var[j]-'a'] = in.a[j];
-#pragma omp parallel for private(j)
-		for(j=0;j<nn;j++)
-		{
-			val['x'-'a'] = gr->Min.x+j*(gr->Max.x-gr->Min.x)/(nn-1);
-			fit->a[j+i*nn] = fd.eq->Calc(val);
-		}
+		mgl_fill_fit(gr,*fit,in,fd,var,nn,1,1,i);
 		if(ini && ini->nx>=fd.m)	memcpy(ini->a,in.a,fd.m*sizeof(mreal));
 	}
 	mglPrepareFitEq(gr,res,eq,var,in.a);
@@ -286,9 +307,8 @@ HMDT MGL_EXPORT mgl_fit_xyzs(HMGL gr, HCDT xx, HCDT yy, HCDT zz, HCDT ss, const 
 	{	gr->SetWarn(mglWarnNull,"Fit[S]");	return 0;	}
 
 	mglData x(m, n), y(m, n), z(zz), s(ss);
-	register long i,j;
-#pragma omp parallel for private(i,j) collapse(2)
-	for(i=0;i<m;i++)	for(j=0;j<n;j++)	// ñîçäàåì ìàññèâ òî÷åê
+#pragma omp parallel for collapse(2)
+	for(long i=0;i<m;i++)	for(long j=0;j<n;j++)	// ñîçäàåì ìàññèâ òî÷åê
 	{
 		x.a[i+m*j] = GetX(xx,i,j,0).x;
 		y.a[i+m*j] = GetY(yy,i,j,0).x;
@@ -299,21 +319,14 @@ HMDT MGL_EXPORT mgl_fit_xyzs(HMGL gr, HCDT xx, HCDT yy, HCDT zz, HCDT ss, const 
 	fd.var = var;	fd.m = strlen(var);
 	fd.eq = new mglFormula(eq);
 	mglData in(fd.m), *fit=new mglData(nn, nn, zz->GetNz());
-	mreal val[MGL_VS], res = -1;
-	for(i=0;i<zz->GetNz();i++)
+	mreal res = -1;
+	for(long i=0;i<zz->GetNz();i++)
 	{
 		if(ini && ini->nx>=fd.m)	in.Set(ini->a,fd.m);
 		else in.Fill(0.,0);
 		fd.a = z.a+i*m*n;		fd.s = s.a+i*m*n;
 		res = mgl_fit_base(&fd,in.a);
-		for(j=0;j<fd.m;j++)	val[var[j]-'a'] = in.a[j];
-#pragma omp parallel for private(j)
-		for(j=0;j<nn*nn;j++)
-		{
-			val['x'-'a'] = gr->Min.x+(j%nn)*(gr->Max.x-gr->Min.x)/(nn-1);
-			val['y'-'a'] = gr->Min.y+(j/nn)*(gr->Max.y-gr->Min.y)/(nn-1);
-			fit->a[j+i*nn*nn] = fd.eq->Calc(val);
-		}
+		mgl_fill_fit(gr,*fit,in,fd,var,nn,nn,1,i);
 		if(ini && ini->nx>=fd.m)	memcpy(ini->a,in.a,fd.m*sizeof(mreal));
 	}
 	mglPrepareFitEq(gr,res, eq,var,in.a);
@@ -322,9 +335,7 @@ HMDT MGL_EXPORT mgl_fit_xyzs(HMGL gr, HCDT xx, HCDT yy, HCDT zz, HCDT ss, const 
 //-----------------------------------------------------------------------------
 HMDT MGL_EXPORT mgl_fit_xyzas(HMGL gr, HCDT xx, HCDT yy, HCDT zz, HCDT aa, HCDT ss, const char *eq, const char *var, HMDT ini, const char *opt)
 {
-	register long i,j,k,i0;
-	long m=aa->GetNx(), n=aa->GetNy(), l=aa->GetNz();
-	i = n*m*l;
+	long m=aa->GetNx(), n=aa->GetNy(), l=aa->GetNz(), i = n*m*l;
 	mreal rr = gr->SaveState(opt);
 	long nn = (mgl_isnan(rr) || rr<=0) ? mglFitPnts:long(rr+0.5);
 	if(m<2 || n<2 || l<2)
@@ -338,10 +349,10 @@ HMDT MGL_EXPORT mgl_fit_xyzas(HMGL gr, HCDT xx, HCDT yy, HCDT zz, HCDT aa, HCDT 
 	{	gr->SetWarn(mglWarnNull,"Fit[S]");	return 0;	}
 	
 	mglData x(aa), y(aa), z(aa), a(aa), s(ss);
-#pragma omp parallel for private(i,j,k) collapse(3)
-	for(i=0;i<m;i++)	for(j=0;j<n;j++)	for(k=0;k<l;k++)	// ñîçäàåì ìàññèâ òî÷åê
+#pragma omp parallel for collapse(3)
+	for(long i=0;i<m;i++)	for(long j=0;j<n;j++)	for(long k=0;k<l;k++)	// ñîçäàåì ìàññèâ òî÷åê
 	{
-		i0 = i+m*(j+n*k);
+		register long i0 = i+m*(j+n*k);
 		x.a[i0] = GetX(xx,i,j,k).x;
 		y.a[i0] = GetY(yy,i,j,k).x;
 		z.a[i0] = GetZ(zz,i,j,k).x;
@@ -352,20 +363,12 @@ HMDT MGL_EXPORT mgl_fit_xyzas(HMGL gr, HCDT xx, HCDT yy, HCDT zz, HCDT aa, HCDT 
 	fd.var = var;	fd.m = strlen(var);
 	fd.eq = new mglFormula(eq);
 	mglData in(fd.m), *fit=new mglData(nn, nn, nn);
-	mreal val[MGL_VS], res = -1;
+	mreal res = -1;
 
 	if(ini && ini->nx>=fd.m)	in.Set(ini->a,fd.m);
 	else in.Fill(0.,0);
 	res = mgl_fit_base(&fd,in.a);
-	for(j=0;j<fd.m;j++)	val[var[j]-'a'] = in.a[j];
-#pragma omp parallel for private(i,j) collapse(2)
-	for(i=0;i<nn;i++)	for(j=0;j<nn*nn;j++)
-	{
-		val['x'-'a'] = gr->Min.x+(j%nn)*(gr->Max.x-gr->Min.x)/(nn-1);
-		val['y'-'a'] = gr->Min.y+(j/nn)*(gr->Max.y-gr->Min.y)/(nn-1);
-		val['z'-'a'] = gr->Min.z+i*(gr->Max.y-gr->Min.y)/(nn-1);
-		fit->a[j+nn*nn*i] = fd.eq->Calc(val);
-	}
+	mgl_fill_fit(gr,*fit,in,fd,var,nn,nn,nn,0);
 	if(ini && ini->nx>=fd.m)	memcpy(ini->a,in.a,fd.m*sizeof(mreal));
 
 	mglPrepareFitEq(gr,res, eq,var,in.a);
@@ -380,23 +383,22 @@ HMDT MGL_EXPORT mgl_hist_x(HMGL gr, HCDT x, HCDT a, const char *opt)
 	mreal rr = gr->SaveState(opt);
 	long n = (mgl_isnan(rr) || rr<=0) ? mglFitPnts:long(rr+0.5);
 	mglData *res = new mglData(n);
-	register long i,j1;
 
 	const mglData *dx = dynamic_cast<const mglData *>(x);
 	const mglData *da = dynamic_cast<const mglData *>(a);
 	mreal vx = n/(gr->Max.x-gr->Min.x);
 	if(dx && da)
-#pragma omp parallel for private(i,j1)
-		for(i=0;i<nn;i++)
+#pragma omp parallel for
+		for(long i=0;i<nn;i++)
 		{
-			j1 = long((dx->a[i]-gr->Min.x)*vx);
+			register long j1 = long((dx->a[i]-gr->Min.x)*vx);
 			if(j1>=0 && j1<n)	res->a[j1] += da->a[i];
 		}
 	else
-#pragma omp parallel for private(i,j1)
-		for(i=0;i<nn;i++)
+#pragma omp parallel for
+		for(long i=0;i<nn;i++)
 		{
-			j1 = long((x->vthr(i)-gr->Min.x)*vx);
+			register long j1 = long((x->vthr(i)-gr->Min.x)*vx);
 			if(j1>=0 && j1<n)	res->a[j1] += a->vthr(i);
 		}
 	gr->LoadState();	return res;
@@ -410,26 +412,25 @@ HMDT MGL_EXPORT mgl_hist_xy(HMGL gr, HCDT x, HCDT y, HCDT a, const char *opt)
 	mreal rr = gr->SaveState(opt);
 	long n = (mgl_isnan(rr) || rr<=0) ? mglFitPnts:long(rr+0.5);
 	mglData *res = new mglData(n, n);
-	register long i,j1,j2;
 	const mglData *dx = dynamic_cast<const mglData *>(x);
 	const mglData *dy = dynamic_cast<const mglData *>(y);
 	const mglData *da = dynamic_cast<const mglData *>(a);
 	mreal vx = n/(gr->Max.x-gr->Min.x);
 	mreal vy = n/(gr->Max.y-gr->Min.y);
 	if(dx && dy && da)
-#pragma omp parallel for private(i,j1,j2)
-		for(i=0;i<nn;i++)
+#pragma omp parallel for
+		for(long i=0;i<nn;i++)
 		{
-			j1 = long((dx->a[i]-gr->Min.x)*vx);
-			j2 = long((dy->a[i]-gr->Min.y)*vy);
+			register long j1 = long((dx->a[i]-gr->Min.x)*vx);
+			register long j2 = long((dy->a[i]-gr->Min.y)*vy);
 			if(j1>=0 && j1<n && j2>=0 && j2<n)	res->a[j1+n*j2] += da->a[i];
 		}
 	else
-#pragma omp parallel for private(i,j1,j2)
-		for(i=0;i<nn;i++)
+#pragma omp parallel for
+		for(long i=0;i<nn;i++)
 		{
-			j1 = long((x->vthr(i)-gr->Min.x)*vx);
-			j2 = long((y->vthr(i)-gr->Min.y)*vy);
+			register long j1 = long((x->vthr(i)-gr->Min.x)*vx);
+			register long j2 = long((y->vthr(i)-gr->Min.y)*vy);
 			if(j1>=0 && j1<n && j2>=0 && j2<n)	res->a[j1+n*j2] += a->vthr(i);
 		}
 	gr->LoadState();	return res;
@@ -443,30 +444,29 @@ HMDT MGL_EXPORT mgl_hist_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char
 	mreal rr = gr->SaveState(opt);
 	long n = (mgl_isnan(rr) || rr<=0) ? mglFitPnts:long(rr+0.5);
 	mglData *res = new mglData(n, n, n);
-	register long i,j1,j2,j3;
 	const mglData *dx = dynamic_cast<const mglData *>(x);
 	const mglData *dy = dynamic_cast<const mglData *>(y);
 	const mglData *dz = dynamic_cast<const mglData *>(z);
 	const mglData *da = dynamic_cast<const mglData *>(a);
 	mreal vx = n/(gr->Max.x-gr->Min.x), vy = n/(gr->Max.y-gr->Min.y), vz = n/(gr->Max.z-gr->Min.z);
 	if(dx && dy && dz && da)
-#pragma omp parallel for private(i,j1,j2,j3)
-		for(i=0;i<nn;i++)
+#pragma omp parallel for
+		for(long i=0;i<nn;i++)
 		{
-			j1 = long((dx->a[i]-gr->Min.x)*vx);
-			j2 = long((dy->a[i]-gr->Min.y)*vy);
-			j3 = long((dz->a[i]-gr->Min.z)*vz);
+			register long j1 = long((dx->a[i]-gr->Min.x)*vx);
+			register long j2 = long((dy->a[i]-gr->Min.y)*vy);
+			register long j3 = long((dz->a[i]-gr->Min.z)*vz);
 			if(j1>=0 && j1<n && j2>=0 && j2<n && j3>=0 && j3<n)
 				res->a[j1+n*(j2+n*j3)] += da->a[i];
 		}
 	else
-#pragma omp parallel for private(i,j1,j2,j3)
-		for(i=0;i<nn;i++)
+#pragma omp parallel for
+		for(long i=0;i<nn;i++)
 		{
 			if(gr->Stop)	continue;
-			j1 = long((x->vthr(i)-gr->Min.x)*vx);
-			j2 = long((y->vthr(i)-gr->Min.y)*vy);
-			j3 = long((z->vthr(i)-gr->Min.z)*vz);
+			register long j1 = long((x->vthr(i)-gr->Min.x)*vx);
+			register long j2 = long((y->vthr(i)-gr->Min.y)*vy);
+			register long j3 = long((z->vthr(i)-gr->Min.z)*vz);
 			if(j1>=0 && j1<n && j2>=0 && j2<n && j3>=0 && j3<n)
 				res->a[j1+n*(j2+n*j3)] += a->vthr(i);
 		}

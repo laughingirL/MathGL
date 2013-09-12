@@ -725,14 +725,14 @@ int MGL_NO_EXPORT mgl_get_ncol(const char *sch, char *res)
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_contd_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt)
 {
-	long i,j,n=z->GetNx(),m=z->GetNy();
+	long i,j=0,n=z->GetNx(),m=z->GetNy();
 	if(mgl_check_dim2(gr,x,y,z,0,"ContD"))	return;
 
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("ContD",cgid++);
 
 	bool fixed=(mglchr(sch,'_')) || (gr->Min.z==gr->Max.z);
-	if(sch)	for(i=j=0;sch[i];i++)	if(strchr(MGL_COLORS,sch[i]))	j++;
+	if(sch)	for(i=0;sch[i];i++)	if(strchr(MGL_COLORS,sch[i]))	j++;
 	if(j==0)	sch = MGL_DEF_PAL;
 	long s = gr->AddTexture(sch,1);
 	int nc = gr->GetNumPal(s*256);

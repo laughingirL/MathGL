@@ -41,7 +41,7 @@ uintptr_t MGL_EXPORT mgl_data_trace_(uintptr_t *d)
 //-----------------------------------------------------------------------------
 HMDT MGL_EXPORT mgl_data_subdata_ext(HCDT d, HCDT xx, HCDT yy, HCDT zz)
 {
-	long n=0,m=0,l=0,i,j,k;
+	long n=0,m=0,l=0,j,k;
 	bool ix=false, iy=false, iz=false;
 	if(xx->GetNz()>1)	// 3d data
 	{

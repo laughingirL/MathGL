@@ -289,7 +289,7 @@ void MGL_EXPORT mgl_data_fourier(HMDT re, HMDT im, const char *dir)
 MGL_NO_EXPORT void* mgl_envx(void *par)
 {
 	mglThreadT *t=(mglThreadT *)par;
-	long nx=t->p[0],ny=t->p[1],nz=t->p[2];
+	long nx=t->p[0];
 	mreal *a = (mreal*)t->a;
 #if !MGL_HAVE_PTHREAD
 #pragma omp parallel
@@ -313,7 +313,7 @@ MGL_NO_EXPORT void* mgl_envx(void *par)
 MGL_NO_EXPORT void* mgl_envy(void *par)
 {
 	mglThreadT *t=(mglThreadT *)par;
-	long nx=t->p[0],ny=t->p[1],nz=t->p[2];
+	long nx=t->p[0],ny=t->p[1];
 	mreal *a = (mreal*)t->a;
 #if !MGL_HAVE_PTHREAD
 #pragma omp parallel
@@ -393,7 +393,7 @@ void MGL_EXPORT mgl_data_envelop(HMDT d, char dir)
 MGL_NO_EXPORT void* mgl_stfa1(void *par)
 {
 	mglThreadT *t=(mglThreadT *)par;
-	long mx=t->p[0],my=t->p[1],mz=t->p[2],dn=t->p[3],dd=dn/2,ny=t->p[4];
+	long mx=t->p[0],mz=t->p[2],dn=t->p[3],dd=dn/2,ny=t->p[4];
 	mreal *d = (mreal*)t->a;
 	HCDT re = (HCDT)t->re, im = (HCDT)t->im;
 #if !MGL_HAVE_PTHREAD
@@ -431,7 +431,7 @@ MGL_NO_EXPORT void* mgl_stfa1(void *par)
 MGL_NO_EXPORT void* mgl_stfa2(void *par)
 {
 	mglThreadT *t=(mglThreadT *)par;
-	long mx=t->p[0],my=t->p[1],mz=t->p[2],dn=t->p[3],dd=dn/2,nx=t->p[4];
+	long mx=t->p[0],my=t->p[1],dn=t->p[3],dd=dn/2,nx=t->p[4];
 	mreal *d = (mreal*)t->a;
 	HCDT re = (HCDT)t->re, im = (HCDT)t->im;
 #if !MGL_HAVE_PTHREAD
@@ -496,7 +496,7 @@ HMDT MGL_EXPORT mgl_data_stfa(HCDT re, HCDT im, long dn, char dir)
 MGL_NO_EXPORT void* mgl_sinx(void *par)
 {
 	mglThreadT *t=(mglThreadT *)par;
-	register long i,j,k,nx=t->p[0];
+	long nx=t->p[0];
 	mreal *a = (mreal*)t->a;
 #if !MGL_HAVE_PTHREAD
 #pragma omp parallel
@@ -525,7 +525,7 @@ MGL_NO_EXPORT void* mgl_sinx(void *par)
 MGL_NO_EXPORT void* mgl_siny(void *par)
 {
 	mglThreadT *t=(mglThreadT *)par;
-	register long ii,i,j,k,nx=t->p[0],ny=t->p[1],nz=t->p[2];
+	long nx=t->p[0],ny=t->p[1];
 	mreal *a = (mreal*)t->a;
 #if !MGL_HAVE_PTHREAD
 #pragma omp parallel
@@ -554,7 +554,7 @@ MGL_NO_EXPORT void* mgl_siny(void *par)
 MGL_NO_EXPORT void* mgl_sinz(void *par)
 {
 	mglThreadT *t=(mglThreadT *)par;
-	register long i,j,nx=t->p[0],ny=t->p[1],nz=t->p[2],k=nx*ny;
+	long nx=t->p[0],ny=t->p[1],nz=t->p[2],k=nx*ny;
 	mreal *a = (mreal*)t->a;
 #if !MGL_HAVE_PTHREAD
 #pragma omp parallel
@@ -585,8 +585,7 @@ void MGL_EXPORT mgl_data_sinfft(HMDT d, const char *dir)	// use DST-1
 	if(!dir || *dir==0)	return;
 	bool clear=false;
 	void *wt=0;
-	long nx=d->nx, ny=d->ny, nz=d->nz;
-	long par[3]={nx,ny,nz}, i;
+	long nx=d->nx, ny=d->ny, nz=d->nz, par[3]={nx,ny,nz};
 	if(strchr(dir,'x') && nx>1)
 	{
 		if(mgl_fft_data.wnx==nx)	wt = mgl_fft_data.wtx;
@@ -654,7 +653,7 @@ MGL_NO_EXPORT void* mgl_cosx(void *par)
 MGL_NO_EXPORT void* mgl_cosy(void *par)
 {
 	mglThreadT *t=(mglThreadT *)par;
-	long nx=t->p[0],ny=t->p[1],nz=t->p[2],nn=ny-1;
+	long nx=t->p[0],ny=t->p[1],nn=ny-1;
 	mreal *a = (mreal*)t->a;
 #if !MGL_HAVE_PTHREAD
 #pragma omp parallel
@@ -730,8 +729,7 @@ void MGL_EXPORT mgl_data_cosfft(HMDT d, const char *dir)
 	if(!dir || *dir==0)	return;
 	bool clear=false;
 	void *wt=0;
-	long nx=d->nx, ny=d->ny, nz=d->nz;
-	long par[3]={nx,ny,nz};
+	long nx=d->nx, ny=d->ny, nz=d->nz, par[3]={nx,ny,nz};
 	if(strchr(dir,'x') && nx>1)
 	{
 		if(mgl_fft_data.wnx==nx-1)	wt = mgl_fft_data.wtx;
@@ -1221,7 +1219,7 @@ MGL_NO_EXPORT double *mgl_d_correl(HCDT d1, HCDT d2, const char *dir)
 	if(nx*ny*nz!=d2->GetNN())	return 0;
 	void *wt=0;
 	bool clear=false;
-	long par[3]={nx,ny,nz}, i;
+	long par[3]={nx,ny,nz};
 
 	double *a = new double[2*nn];	memset(a,0,2*nn*sizeof(double));
 	double *b = new double[2*nn];	memset(b,0,2*nn*sizeof(double));

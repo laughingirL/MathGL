@@ -548,7 +548,7 @@ mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg)
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_wcslwr(wchar_t *str)
 {
-	register size_t k,l=mgl_wcslen(str);
+	register size_t l=mgl_wcslen(str);
 	for(size_t k=0;k<l;k++)
 		str[k] = (str[k]>='A' && str[k]<='Z') ? str[k]+'a'-'A' : str[k];
 }

@@ -1791,7 +1791,7 @@ MGL_NO_EXPORT void *mgl_diff_2(void *par)
 MGL_NO_EXPORT void *mgl_diff_1(void *par)
 {
 	mglThreadD *t=(mglThreadD *)par;
-	register long i,i0,i1, nx=t->p[0], nn=t->n, same=t->p[1];
+	long nx=t->p[0], nn=t->n, same=t->p[1];
 	mreal *b=t->a,au,xu;
 	const mreal *a=t->b, *x=t->c;
 #if !MGL_HAVE_PTHREAD

@@ -1237,7 +1237,7 @@ void MGL_EXPORT mgl_boxplot_(uintptr_t *gr, uintptr_t *y,	const char *pen, const
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_error_exy(HMGL gr, HCDT x, HCDT y, HCDT ex, HCDT ey, const char *pen, const char *opt)
 {
-	long i,j,m,mx,my,m1,m2,n=ey->GetNx(),pal;
+	long m,mx,my,m1,m2,n=ey->GetNx(),pal;
 	if(mgl_check_dim1(gr,x,y,ey,ex,"Error"))	return;
 
 	gr->SaveState(opt);
@@ -1254,7 +1254,7 @@ void MGL_EXPORT mgl_error_exy(HMGL gr, HCDT x, HCDT y, HCDT ex, HCDT ey, const c
 	if(ma && (mk==0 || !strchr("PXsSdD+xoOC",mk) ))	mk = 'S';
 	gr->ResetMask();
 	mglPoint q(NAN,NAN);
-	for(j=0;j<m;j++)
+	for(long j=0;j<m;j++)
 	{
 		if(gr->Stop)	return;
 		mx = j<x->GetNy() ? j:0;	my = j<y->GetNy() ? j:0;
