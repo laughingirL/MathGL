@@ -404,18 +404,17 @@ HMDT MGL_EXPORT mgl_triangulation_3d(HCDT x, HCDT y, HCDT z)
 	mglData *nums=0;
 	long n = x->GetNx(), m;
 	if(y->GetNx()!=n || z->GetNx()!=n)	return nums;
-	register long i;
 	mglPoint *pp = new mglPoint[n];
 	long *nn=0;
-#pragma omp parallel for private(i)
-	for(i=0;i<n;i++)	pp[i] = mglPoint(x->v(i), y->v(i), z->v(i));
+#pragma omp parallel for
+	for(long i=0;i<n;i++)	pp[i] = mglPoint(x->v(i), y->v(i), z->v(i));
 	m = mgl_crust(n,pp,&nn,0);
 
 	if(m>0)
 	{
 		nums=new mglData(3,m);
-#pragma omp parallel for private(i)
-		for(i=0;i<3*m;i++)	nums->a[i]=nn[i];
+#pragma omp parallel for
+		for(long i=0;i<3*m;i++)	nums->a[i]=nn[i];
 	}
 	delete []pp;	free(nn);	return nums;
 }
@@ -424,15 +423,15 @@ HMDT MGL_EXPORT mgl_triangulation_3d(HCDT x, HCDT y, HCDT z)
 HMDT MGL_EXPORT mgl_triangulation_2d(HCDT x, HCDT y)
 {
 	mglData *nums=0;
-	register long n = x->GetNx(), m,i;
+	long n = x->GetNx();
 	if(y->GetNx()!=n)	return nums;
 	// use s-hull here
 	std::vector<Shx> pts;
 	std::vector<size_t> out;
 	Shx pt;
 
-#pragma omp parallel for private(i)
-	for(i=0;i<n;i++)
+#pragma omp parallel for
+	for(long i=0;i<n;i++)
 	{
 		pt.r = x->v(i);	pt.c = y->v(i);
 		pt.id = i;	pts.push_back(pt);
@@ -441,10 +440,10 @@ HMDT MGL_EXPORT mgl_triangulation_2d(HCDT x, HCDT y)
 	if(de_duplicate(pts, out))
 		mglGlobalMess += "There are duplicated points for triangulation.\n";
 	s_hull_pro(pts, triads);
-	m = triads.size();
+	long m = triads.size();
 	nums=new mglData(3,m);
-#pragma omp parallel for private(i)
-	for(i=0;i<m;i++)
+#pragma omp parallel for
+	for(long i=0;i<m;i++)
 	{
 		nums->a[3*i]   = triads[i].a;
 		nums->a[3*i+1] = triads[i].b;
@@ -466,15 +465,14 @@ MGL_NO_EXPORT void *mgl_grid_t(void *par)
 {
 	mglThreadD *t=(mglThreadD *)par;
 	long nx=t->p[0],ny=t->p[1];
-	register long i0, k1,k2,k3;
 	mreal *b=t->a;
 	const mreal *x=t->b, *y=t->c, *d=t->d, *z=t->e;
 #if !MGL_HAVE_PTHREAD
-#pragma omp parallel for private(i0,k1,k2,k3)
+#pragma omp parallel for
 #endif
-	for(i0=t->id;i0<t->n;i0+=mglNumThr)
-	{
-		k1 = long(d[3*i0]); k2 = long(d[3*i0+1]); k3 = long(d[3*i0+2]);
+	for(long i0=t->id;i0<t->n;i0+=mglNumThr)
+	{	// TODO check if rounding needed
+		register long k1 = long(d[3*i0]), k2 = long(d[3*i0+1]), k3 = long(d[3*i0+2]);
 		mreal dxu,dxv,dyu,dyv;
 		mglPoint d1=mglPoint(x[k2]-x[k1],y[k2]-y[k1],z[k2]-z[k1]), d2=mglPoint(x[k3]-x[k1],y[k3]-y[k1],z[k3]-z[k1]), p;
 
@@ -521,10 +519,9 @@ void MGL_EXPORT mgl_data_grid(HMGL gr, HMDT d, HCDT xdat, HCDT ydat, HCDT zdat, 
 	if(d->nx>1) xx[1] = (d->nx-1.)/(gr->Max.x-gr->Min.x);
 	if(d->ny>1) xx[3] = (d->ny-1.)/(gr->Max.y-gr->Min.y);
 
-	register long i;
 	mreal *xc=new mreal[n], *yc=new mreal[n];
-#pragma omp parallel for private(i)
-	for(i=0;i<n;i++)	{	xc[i]=xx[1]*(x->a[i]-xx[0]);	yc[i]=xx[3]*(y->a[i]-xx[2]);	}
+#pragma omp parallel for
+	for(long i=0;i<n;i++)	{	xc[i]=xx[1]*(x->a[i]-xx[0]);	yc[i]=xx[3]*(y->a[i]-xx[2]);	}
 #pragma omp parallel for
 	for(long i=0;i<d->nx*d->ny*d->nz;i++) d->a[i] = NAN;
 	

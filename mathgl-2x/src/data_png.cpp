@@ -116,23 +116,21 @@ void MGL_EXPORT mgl_data_import(HMDT d, const char *fname, const char *scheme,mr
 void MGL_EXPORT mgl_data_export(HCDT dd, const char *fname, const char *scheme,mreal v1,mreal v2,long ns)
 {
 #if MGL_HAVE_PNG
-	register long i,j,k;
 	long nx=dd->GetNx(), ny=dd->GetNy(), nz=dd->GetNz();
 	const mglData *md = dynamic_cast<const mglData *>(dd);
-	mreal vv;
 	if(v1>v2)	return;
 	if(ns<0 || ns>=nz)	ns=0;
 	if(v1==v2)
 	{
 		v1 = 1e20;	v2=-1e20;
 		if(md)
-#pragma omp parallel for private(i)
-			for(i=0;i<nx*ny*nz;i++)
-			{	vv = md->a[i];	if(vv<v1)	v1=vv;	if(vv>v2)	v2=vv;	}
+//#pragma omp parallel for	// NOTE comparison here
+			for(long i=0;i<nx*ny*nz;i++)
+			{	register mreal vv = md->a[i];	if(vv<v1)	v1=vv;	if(vv>v2)	v2=vv;	}
 		else
-#pragma omp parallel for private(i)
-			for(i=0;i<nx*ny*nz;i++)
-			{	vv = dd->vthr(i);	if(vv<v1)	v1=vv;	if(vv>v2)	v2=vv;	}
+//#pragma omp parallel for	// NOTE comparison here
+			for(long i=0;i<nx*ny*nz;i++)
+			{	register mreal vv = dd->vthr(i);	if(vv<v1)	v1=vv;	if(vv>v2)	v2=vv;	}
 	}
 	if(v1==v2)	return;
 	long num=0;
@@ -141,22 +139,22 @@ void MGL_EXPORT mgl_data_export(HCDT dd, const char *fname, const char *scheme,m
 
 	unsigned char **p = new unsigned char*[ny];
 	unsigned char *d = new unsigned char[3*nx*ny];
-#pragma omp parallel for private(i)
-	for(i=0;i<ny;i++)	p[i] = d+3*nx*(ny-1-i);
+#pragma omp parallel for
+	for(long i=0;i<ny;i++)	p[i] = d+3*nx*(ny-1-i);
 	if(md)
-#pragma omp parallel for private(i,j) collapse(2)
-		for(i=0;i<ny;i++)	for(j=0;j<nx;j++)
+#pragma omp parallel for collapse(2)
+		for(long i=0;i<ny;i++)	for(long j=0;j<nx;j++)
 		{
-			vv = md->a[j+nx*(i+ny*ns)];
-			k = long(num*(vv-v1)/(v2-v1));
+			register mreal vv = md->a[j+nx*(i+ny*ns)];
+			register long k = long(num*(vv-v1)/(v2-v1));
 			if(k<0)	k=0;	if(k>=num) k=num-1;
 			memcpy(d+3*(j+i*nx),c+3*k,3);
 		}
 	else
-#pragma omp parallel for private(i,j) collapse(2)
-		for(i=0;i<ny;i++)	for(j=0;j<nx;j++)
+#pragma omp parallel for collapse(2)
+		for(long i=0;i<ny;i++)	for(long j=0;j<nx;j++)
 		{
-			k = long(num*(dd->v(j,i,ns)-v1)/(v2-v1));
+			register long k = long(num*(dd->v(j,i,ns)-v1)/(v2-v1));
 			if(k<0)	k=0;	if(k>=num) k=num-1;
 			memcpy(d+3*(j+i*nx),c+3*k,3);
 		}

@@ -36,53 +36,50 @@ MGL_NO_EXPORT void *mgl_pde_hprep(void *par)
 	mglThreadD *t=(mglThreadD *)par;
 	const mgl_pde_ham *f = (const mgl_pde_ham *)t->v;
 	mglFormula *eqs = f->eqs;
-	register long i,j,i0, nx=2*f->nx, ny=2*f->ny;
-	mreal var[MGL_VS];
-	dual *a = f->a,*h;
-	memset(var,0,('z'-'a')*sizeof(mreal));
-	var['z'-'a'] = f->zz;
+	long nx=2*f->nx, ny=2*f->ny;
+	dual *a = f->a;
+	
 #if !MGL_HAVE_PTHREAD
-#pragma omp parallel for private(i0,i,j)
+#pragma omp parallel
 #endif
-	for(i0=t->id;i0<t->n;i0+=mglNumThr)
 	{
-		i = i0%nx;	j = i0/nx;			var['u'-'a'] = abs(a[i0]);
-		var['x'-'a'] = f->xx+f->dx*i;	var['p'-'a'] = 0;
-		var['y'-'a'] = f->yy+f->dy*j;	var['q'-'a'] = 0;
-		f->hxy[i0] = dual(-eqs->CalcD(var,'i'), eqs->Calc(var))*f->dd;
-	}
-	if(f->ny>2)
-#if !MGL_HAVE_PTHREAD
-#pragma omp parallel for private(i0,i,j)
-#endif
-		for(i0=t->id;i0<t->n;i0+=mglNumThr)	// step 3/2
+		mreal var[MGL_VS];	memset(var,0,MGL_VS*sizeof(mreal));
+		var['z'-'a'] = f->zz;
+#pragma omp for //nowait
+		for(long i0=t->id;i0<t->n;i0+=mglNumThr)
 		{
-			i = i0%nx;	j = i0/nx;			var['u'-'a'] = abs(a[i0]);
-			var['x'-'a'] = f->xs;			var['p'-'a'] = f->dp*(i<nx/2 ? i:nx-i);
-			var['y'-'a'] = f->yy+f->dy*j;	var['q'-'a'] = 0;
-			f->huy[i0] = dual(-eqs->CalcD(var,'i'), eqs->Calc(var))*f->dd;
-		}
-#if !MGL_HAVE_PTHREAD
-#pragma omp parallel for private(i0,i,j)
-#endif
-	for(i0=t->id;i0<t->n;i0+=mglNumThr)	// step 2
-	{
-		i = i0%nx;	j = i0/nx;			var['u'-'a'] = abs(a[i0]);
-		var['x'-'a'] = f->xs;			var['p'-'a'] = f->dp*(i<nx/2 ? i:nx-i);
-		var['y'-'a'] = f->ys;			var['q'-'a'] = f->dq*(j<ny/2 ? j:ny-j);
-		f->huv[i0] = dual(-eqs->CalcD(var,'i'), eqs->Calc(var))*f->dd;
-	}
-	if(f->ny>2)
-#if !MGL_HAVE_PTHREAD
-#pragma omp parallel for private(i0,i,j)
-#endif
-		for(i0=t->id;i0<t->n;i0+=mglNumThr)	// step 3/2
-		{
-			i = i0%nx;	j = i0/nx;			var['u'-'a'] = abs(a[i0]);
+			register long i = i0%nx, j = i0/nx;		var['u'-'a'] = abs(a[i0]);
 			var['x'-'a'] = f->xx+f->dx*i;	var['p'-'a'] = 0;
-			var['y'-'a'] = f->ys;			var['q'-'a'] = f->dq*(j<ny/2 ? j:ny-j);
-			f->hxv[i0] = dual(-eqs->CalcD(var,'i'), eqs->Calc(var))*f->dd;
+			var['y'-'a'] = f->yy+f->dy*j;	var['q'-'a'] = 0;
+			f->hxy[i0] = dual(-eqs->CalcD(var,'i'), eqs->Calc(var))*f->dd;
 		}
+		if(f->ny>2)
+#pragma omp for //nowait
+			for(long i0=t->id;i0<t->n;i0+=mglNumThr)	// step 3/2
+			{
+				register long i = i0%nx, j = i0/nx;		var['u'-'a'] = abs(a[i0]);
+				var['x'-'a'] = f->xs;			var['p'-'a'] = f->dp*(i<nx/2 ? i:nx-i);
+				var['y'-'a'] = f->yy+f->dy*j;	var['q'-'a'] = 0;
+				f->huy[i0] = dual(-eqs->CalcD(var,'i'), eqs->Calc(var))*f->dd;
+			}
+#pragma omp for //nowait
+		for(long i0=t->id;i0<t->n;i0+=mglNumThr)	// step 2
+		{
+			register long i = i0%nx, j = i0/nx;		var['u'-'a'] = abs(a[i0]);
+			var['x'-'a'] = f->xs;			var['p'-'a'] = f->dp*(i<nx/2 ? i:nx-i);
+			var['y'-'a'] = f->ys;			var['q'-'a'] = f->dq*(j<ny/2 ? j:ny-j);
+			f->huv[i0] = dual(-eqs->CalcD(var,'i'), eqs->Calc(var))*f->dd;
+		}
+		if(f->ny>2)
+#pragma omp for //nowait
+			for(long i0=t->id;i0<t->n;i0+=mglNumThr)	// step 3/2
+			{
+				register long i = i0%nx, j = i0/nx;		var['u'-'a'] = abs(a[i0]);
+				var['x'-'a'] = f->xx+f->dx*i;	var['p'-'a'] = 0;
+				var['y'-'a'] = f->ys;			var['q'-'a'] = f->dq*(j<ny/2 ? j:ny-j);
+				f->hxv[i0] = dual(-eqs->CalcD(var,'i'), eqs->Calc(var))*f->dd;
+			}
+	}
 	return 0;
 }
 // Solve equation dx/dz = func(p,q,x,y,z,|u|)[u] where p=d/dx, q=d/dy. At this moment simplified form of ham is supported: ham = f(p,q,z) + g(x,y,z,'u'), where variable 'u'=|u| (for allowing solve nonlinear problems). You may specify imaginary part like ham = p^2 + i*x*(x>0) but only if dependence on variable 'i' is linear (i.e. ham = hre+i*him).
@@ -90,8 +87,7 @@ HMDT MGL_EXPORT mgl_pde_solve(HMGL gr, const char *ham, HCDT ini_re, HCDT ini_im
 {
 	gr->SaveState(opt);
 	mglPoint Min=gr->Min, Max=gr->Max;
-	int nx=ini_re->GetNx(), ny=ini_re->GetNy();
-	int nz = int((Max.z-Min.z)/dz)+1;
+	long nx=ini_re->GetNx(), ny=ini_re->GetNy(), nz = long((Max.z-Min.z)/dz)+1;
 	if(nx<2 || nz<2 || Max.x==Min.x)			// Too small data
 	{	gr->SetWarn(mglWarnLow,"PDE");	return 0;	}
 	if(ini_im->GetNx()*ini_im->GetNy() != nx*ny)// Wrong dimensions
@@ -106,19 +102,18 @@ HMDT MGL_EXPORT mgl_pde_solve(HMGL gr, const char *ham, HCDT ini_re, HCDT ini_im
 	dual *hy = new dual[2*ny], *hu = new dual[2*nx];
 	mreal *dmp = new mreal[4*nx*ny];
 	memset(a,0,4*nx*ny*sizeof(dual));
-	register int i,j,k,i0;
-#pragma omp parallel for private(i0,i,j) collapse(2)
-	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)	// Initial conditions
+	memset(dmp,0,4*nx*ny*sizeof(mreal));
+#pragma omp parallel for collapse(2)
+	for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)	// Initial conditions
 	{
-		i0 = i+nx/2+2*nx*(j+ny/2);
+		register long i0 = i+nx/2+2*nx*(j+ny/2);
 		a[i0] = dual(ini_re->v(i,j), ini_im->v(i,j));
 		res->a[nz*(i+nx*j)] = abs(a[i0]);
 	}
-	memset(dmp,0,4*nx*ny*sizeof(mreal));
-#pragma omp parallel for private(i0,i,j) collapse(2)
-	for(j=0;j<2*ny;j++)	for(i=0;i<2*nx;i++)	// step 1
+#pragma omp parallel for collapse(2)
+	for(long j=0;j<2*ny;j++)	for(long i=0;i<2*nx;i++)	// step 1
 	{
-		i0 = i+2*nx*j;
+		register long i0 = i+2*nx*j;
 		if(i<nx/2)		dmp[i0] += GAMMA*mgl_ipow((nx/2-i)/(nx/2.),2);
 		if(i>3*nx/2)	dmp[i0] += GAMMA*mgl_ipow((i-3*nx/2-1)/(nx/2.),2);
 		if(j<ny/2)		dmp[i0] += GAMMA*mgl_ipow((ny/2-j)/(ny/2.),2);
@@ -139,47 +134,50 @@ HMDT MGL_EXPORT mgl_pde_solve(HMGL gr, const char *ham, HCDT ini_re, HCDT ini_im
 	// prepare fft. NOTE: slow procedures due to unknown nx, ny.
 	void *wsx, *wtx = mgl_fft_alloc(2*nx,&wsx,1);
 	void *wsy, *wty = mgl_fft_alloc(2*ny,&wsy,1);
-	for(k=1;k<nz;k++)
+	for(long k=1;k<nz;k++)
 	{
-		if(gr->Stop)
-		{
-			mgl_fft_free(wtx,&wsx,1);	mgl_fft_free(wty,&wsy,1);
-			delete []a;		delete []dmp;	delete []hxy;	delete []hxv;
-			delete []huy;	delete []huv;	delete []hx;	delete []hy;
-			delete []hu;	delete []hv;	return 0;
-		}
+		if(gr->Stop)	continue;
 		tmp.zz = Min.z+dz*k;
 		memset(hxy,0,4*nx*ny*sizeof(dual));	memset(hxv,0,4*nx*ny*sizeof(dual));
 		memset(huv,0,4*nx*ny*sizeof(dual));	memset(huy,0,4*nx*ny*sizeof(dual));
 		mglStartThread(mgl_pde_hprep,0,4*nx*ny,0,0,0,0,&tmp);
-#pragma omp parallel for private(i)
-		for(i=0;i<2*nx;i++)	{	hx[i] = hxv[i];			hu[i] = huv[i];		}
-		for(j=0;j<2*ny;j++)	{	hy[j] = huy[2*nx*j];	hv[j] = huv[2*nx*j];}
+#pragma omp parallel for
+		for(long i=0;i<2*nx;i++)	{	hx[i] = hxv[i];			hu[i] = huv[i];		}
+#pragma omp parallel for
+		for(long j=0;j<2*ny;j++)	{	hy[j] = huy[2*nx*j];	hv[j] = huv[2*nx*j];}
 		// rearrange arrays
 		hh0=hu[0]/2.;
-		if(ny>1)	for(i=0;i<2*nx;i++) for(j=0;j<2*ny;j++)
-		{
-			i0 = i+2*nx*j;
-			huy[i0] -= (hu[i]+hy[j]-hh0)/2.;	huv[i0] -= (hu[i]+hv[j]-hh0)/2.;
-			hxy[i0] -= (hx[i]+hy[j]-hh0)/2.;	hxv[i0] -= (hx[i]+hv[j]-hh0)/2.;
-		}
+		if(ny>1)
+#pragma omp parallel for collapse(2)
+			for(long i=0;i<2*nx;i++) for(long j=0;j<2*ny;j++)
+			{
+				register long i0 = i+2*nx*j;
+				huy[i0] -= (hu[i]+hy[j]-hh0)/2.;	huv[i0] -= (hu[i]+hv[j]-hh0)/2.;
+				hxy[i0] -= (hx[i]+hy[j]-hh0)/2.;	hxv[i0] -= (hx[i]+hv[j]-hh0)/2.;
+			}
 		// solve equation
-#pragma omp parallel for private(i)
-		for(i=0;i<4*nx*ny;i++)	a[i] *= exp(hxy[i])*exp(-double(dmp[i]*dz));
-		for(i=0;i<2*ny;i++)		mgl_fft((double *)(a+i*2*nx), 1, 2*nx, wtx, wsx, false);
-#pragma omp parallel for private(i)
-		for(i=0;i<4*nx*ny;i++)	a[i] *= exp(huy[i]);
-		if(ny>1) for(i=0;i<2*nx;i++)	mgl_fft((double *)(a+i), 2*nx, 2*ny, wty, wsy, false);
-#pragma omp parallel for private(i)
-		for(i=0;i<4*nx*ny;i++)	a[i] *= exp(huv[i]);
-		for(i=0;i<2*ny;i++)		mgl_fft((double *)(a+2*i*nx), 1, 2*nx, wtx, wsx, true);
-#pragma omp parallel for private(i)
-		for(i=0;i<4*nx*ny;i++)	a[i] *= exp(hxv[i]);
-		if(ny>1) for(i=0;i<2*nx;i++)	mgl_fft((double *)(a+i), 2*nx, 2*ny, wty, wsy, true);
-#pragma omp parallel for private(i0,i,j) collapse(2)
-		for(i=0;i<nx;i++)	for(j=0;j<ny;j++)	// save result
+#pragma omp parallel for
+		for(long i=0;i<4*nx*ny;i++)	a[i] *= exp(hxy[i])*exp(-double(dmp[i]*dz));
+//#pragma omp parallel for	// NOTE I need separate wsx for each thread, but it is too slow to allocate/dealocate it each step
+		for(long i=0;i<2*ny;i++)	mgl_fft((double *)(a+i*2*nx), 1, 2*nx, wtx, wsx, false);
+#pragma omp parallel for
+		for(long i=0;i<4*nx*ny;i++)	a[i] *= exp(huy[i]);
+		if(ny>1)
+//#pragma omp parallel for
+			for(long i=0;i<2*nx;i++)	mgl_fft((double *)(a+i), 2*nx, 2*ny, wty, wsy, false);
+#pragma omp parallel for
+		for(long i=0;i<4*nx*ny;i++)	a[i] *= exp(huv[i]);
+//#pragma omp parallel for
+		for(long i=0;i<2*ny;i++)	mgl_fft((double *)(a+2*i*nx), 1, 2*nx, wtx, wsx, true);
+#pragma omp parallel for
+		for(long i=0;i<4*nx*ny;i++)	a[i] *= exp(hxv[i]);
+		if(ny>1)
+//#pragma omp parallel for
+			for(long i=0;i<2*nx;i++)	mgl_fft((double *)(a+i), 2*nx, 2*ny, wty, wsy, true);
+#pragma omp parallel for collapse(2)
+		for(long i=0;i<nx;i++)	for(long j=0;j<ny;j++)	// save result
 		{
-			i0 = i+nx/2+2*nx*(j+ny/2);
+			register long i0 = i+nx/2+2*nx*(j+ny/2);
 			res->a[k+nz*(i+nx*j)] = abs(a[i0]);
 		}
 	}

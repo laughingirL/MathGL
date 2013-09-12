@@ -775,10 +775,9 @@ HMDT MGL_EXPORT mgl_datac_real(HCDT d)
 	long nx=d->GetNx(),ny=d->GetNy(),nz=d->GetNz();
 	mglData *r=new mglData(nx,ny,nz);
 	const mglDataC *dd = dynamic_cast<const mglDataC*>(d);
-	register long i;
 	if(dd)
-#pragma omp parallel for private(i)
-		for(i=0;i<nx*ny*nz;i++)	r->a[i] = real(dd->a[i]);
+#pragma omp parallel for
+		for(long i=0;i<nx*ny*nz;i++)	r->a[i] = real(dd->a[i]);
 	else		r->Set(d);
 	return r;
 }

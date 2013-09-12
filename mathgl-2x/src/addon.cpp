@@ -168,15 +168,14 @@ MGL_EXPORT FILE *mgl_next_data(const char *fname,int p)
 //-----------------------------------------------------------------------------
 bool MGL_EXPORT mgl_difr_grid(dual *a,int n,dual q,int Border,dual *b,dual *d,int kk)
 {
-	register int i,k;
 	//	if(n<=0 || q>=0.5)	return false;
 	dual adt = dual(0.,1.)*q;
 
 	memcpy(b,a,n*sizeof(dual));
-	for(k=kk;k>0;k--)	// 3 iterations
+	for(long k=kk;k>0;k--)	// 3 iterations
 	{
-#pragma omp parallel for private(i)
-		for(i=1;i<n-1;i++)
+#pragma omp parallel for
+		for(long i=1;i<n-1;i++)
 			d[i] = a[i] + adt*(b[i-1]+b[i+1]-mreal(2)*b[i])/mreal(k);
 		memcpy(b,d,n*sizeof(dual));
 		switch(Border)
@@ -209,20 +208,20 @@ bool MGL_EXPORT mgl_difr_grid(dual *a,int n,dual q,int Border,dual *b,dual *d,in
 //-----------------------------------------------------------------------------
 bool MGL_EXPORT mgl_difr_axial(dual *a, int n, dual q, int Border,dual *b, dual *d, int kk, double di)
 {
-	register int i,k,ii = di<0 ? -int(floor(di)) : 0;
+	int ii = di<0 ? -int(floor(di)) : 0;
 	dual adt = dual(0.,1.)*q;
-	register mreal dd,ff= di==floor(di) ? 4. : 2.,gg;
+	register mreal ff= di==floor(di) ? 4. : 2.;
 
 	memcpy(b,a,n*sizeof(dual));
-	for(k=kk;k>0;k--)	// kk iterations
+	for(long k=kk;k>0;k--)	// kk iterations
 	{
 		d[ii] = a[ii] + adt*(b[ii+1]-b[ii])*(ff/k);
-#pragma omp parallel for private(i,dd,gg)
-		for(i=ii+1;i<n-1;i++)
+#pragma omp parallel for
+		for(long i=ii+1;i<n-1;i++)
 		{
-			dd = i+di;
+			register mreal dd = i+di;
 			dd = 1./(sqrt(dd*dd+1.)+dd);	// corrections for "axiality"
-			gg = 1+dd*dd;
+			register mreal gg = 1+dd*dd;
 			d[i] = a[i] + adt*( b[i-1]*((gg-dd)/k) -
 			b[i]*(2*gg/k) + b[i+1]*((gg+dd)/k) );
 		}

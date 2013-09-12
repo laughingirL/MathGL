@@ -791,8 +791,8 @@ void mglTexture::Set(const char *s, int smooth, mreal alpha)
 		if(s[i]=='A' && j<1 && m>0 && s[i+1]>'0' && s[i+1]<='9')
 		{	man=false;	alpha = 0.1*(s[i+1]-'0');	i++;	}
 	}
-#pragma omp parallel for private(i)
-	for(i=0;i<n;i++)	// default texture
+#pragma omp parallel for
+	for(long i=0;i<n;i++)	// default texture
 	{	c[2*i+1]=c[2*i];	c[2*i].a=man?0:alpha;	c[2*i+1].a=alpha;	}
 	if(map && sm)		// map texture
 	{
@@ -802,7 +802,8 @@ void mglTexture::Set(const char *s, int smooth, mreal alpha)
 		{	c[1]=c[2];	c[2]=c[0];	c[0]=BC;	c[3]=c[4];	n=2;}
 		else
 		{	c[1]=c[4];	c[3]=c[6];	n=2;	}
-		for(i=0;i<4;i++)	c[i].a=alpha;
+#pragma omp parallel for
+		for(long i=0;i<4;i++)	c[i].a=alpha;
 		val[0]=val[1]=-1;
 	}
 	// TODO if(!sm && n==1)	then try to find color in palette ???
@@ -811,7 +812,7 @@ void mglTexture::Set(const char *s, int smooth, mreal alpha)
 	float  v1=0,v2=1;
 	std::vector <long>  def;
 	val[0]=0;	val[n-1]=1;	// boundary have to be [0,1]
-	for(i=0;i<n;i++) if(val[i]>0 && val[i]<1) 	def.push_back(i);
+	for(long i=0;i<n;i++) if(val[i]>0 && val[i]<1) 	def.push_back(i);
 	def.push_back(n-1);
 	long i1=0,i2;
 	for(size_t j=0;j<def.size();j++)	for(i=i1+1;i<def[j];i++)
@@ -823,7 +824,6 @@ void mglTexture::Set(const char *s, int smooth, mreal alpha)
 	}
 	// fill texture itself
 	register mreal u,v=sm?(n-1)/255.:n/256.;
-#pragma omp parallel for private(i,i1,j,u)
 	for(i=i1=0;i<256;i++)
 	{
 		u = v*i;	j = long(u);	//u-=j;
@@ -886,16 +886,15 @@ long mglBase::AddTexture(const char *cols, int smooth)
 //-----------------------------------------------------------------------------
 mreal mglBase::AddTexture(mglColor c)
 {
-	register size_t i,j;
 	if(!c.Valid())	return -1;
 	// first lets try an existed one
-	for(i=0;i<Txt.size();i++)	for(j=0;j<255;j++)
+	for(size_t i=0;i<Txt.size();i++)	for(size_t j=0;j<255;j++)
 		if(c==Txt[i].col[2*j])
 			return i+j/255.;
 	// add new texture
 	mglTexture t;
-#pragma omp parallel for private(i)
-	for(i=0;i<MGL_TEXTURE_COLOURS;i++)	t.col[i]=c;
+#pragma omp parallel for
+	for(size_t i=0;i<MGL_TEXTURE_COLOURS;i++)	t.col[i]=c;
 	long k;
 #pragma omp critical(txt)
 	{MGL_PUSH(Txt,t,mutexTxt);	k=Txt.size()-1;}	return k;

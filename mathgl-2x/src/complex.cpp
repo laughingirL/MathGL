@@ -562,40 +562,32 @@ void MGL_EXPORT mgl_datac_mirror(HADT d, const char *dir)
 {
 	if(!dir || *dir==0)	return;
 	long nx=d->nx,ny=d->ny,nz=d->nz;
-	dual b, *a=d->a;
+	dual *a=d->a;
 	if(strchr(dir,'z') && nz>1)
 	{
-#pragma omp parallel for private(b) collapse(2)
+#pragma omp parallel for collapse(2)
 		for(long i=0;i<nx*ny;i++)	for(long j=0;j<nz/2;j++)
 		{
 			register long i0 = i+j*nx*ny, j0 = i+(nz-1-j)*nx*ny;
-			b = a[i0];	a[i0] = a[j0];	a[j0] = b;
+			register dual b = a[i0];	a[i0] = a[j0];	a[j0] = b;
 		}
 	}
 	if(strchr(dir,'y') && ny>1)
 	{
-#pragma omp parallel for private(b)
-		for(long i=0;i<nx*nz;i++)
+#pragma omp parallel for collapse(2)
+		for(long i=0;i<nx*nz;i++)	for(long j=0;j<ny/2;j++)
 		{
-			register long j0 = (i%nx)+nx*ny*(i/nx);
-			for(long j=0;j<ny/2;j++)
-			{
-				register long i0 = j0+(ny-1-j)*nx;
-				b = a[j0+j*nx];	a[j0+j*nx] = a[i0];	a[i0] = b;
-			}
+			register long j0 = (i%nx)+nx*(ny*(i/nx)+j), i0 = j0+(ny-1-2*j)*nx;
+			register dual b = a[j0];	a[j0] = a[i0];	a[i0] = b;
 		}
 	}
 	if(strchr(dir,'x') && nx>1)
 	{
-#pragma omp parallel for private(b)
-		for(long j=0;j<ny*nz;j++)
+#pragma omp parallel for collapse(2)
+		for(long j=0;j<ny*nz;j++)	for(long i=0;i<nx/2;i++)
 		{
-			register long j0 = j*nx;
-			for(long i=0;i<nx/2;i++)
-			{
-				register long i0 = nx-1-i+j0;
-				b = a[i+j0];	a[i+j0] = a[i0];	a[i0] = b;
-			}
+			register long i0 = nx-1-i+j*nx, j0 = i+j*nx;
+			register dual b = a[j0];	a[j0] = a[i0];	a[i0] = b;
 		}
 	}
 }

@@ -41,31 +41,30 @@ mglData mglApplyOper(std::wstring a1, std::wstring a2, mglParser *arg, double (*
 	const mglData &a = mglFormulaCalc(a1,arg), &b = mglFormulaCalc(a2,arg);
 	long n = mgl_max(a.nx,b.nx), m = mgl_max(a.ny,b.ny), l = mgl_max(a.nz,b.nz);
 	mglData r(n, m, l);
-	register int i,j,k;
 	if(b.nx*b.ny*b.nz==1)
-#pragma omp parallel for private(i)
-		for(i=0;i<a.nx*a.ny*a.nz;i++)	r.a[i] = func(a.a[i],b.a[0]);
+#pragma omp parallel for
+		for(long i=0;i<a.nx*a.ny*a.nz;i++)	r.a[i] = func(a.a[i],b.a[0]);
 	else if(a.nx*a.ny*a.nz==1)
-#pragma omp parallel for private(i)
-		for(i=0;i<b.nx*b.ny*b.nz;i++)	r.a[i] = func(a.a[0],b.a[i]);
+#pragma omp parallel for
+		for(long i=0;i<b.nx*b.ny*b.nz;i++)	r.a[i] = func(a.a[0],b.a[i]);
 	else if(a.nx==b.nx && b.ny==a.ny && b.nz==a.nz)
-#pragma omp parallel for private(i)
-		for(i=0;i<n*m*l;i++)	r.a[i] = func(a.a[i], b.a[i]);
+#pragma omp parallel for
+		for(long i=0;i<n*m*l;i++)	r.a[i] = func(a.a[i], b.a[i]);
 	else if(a.nx==b.nx && b.ny*b.nz==1)
-#pragma omp parallel for private(i,j) collapse(2)
-		for(j=0;j<a.ny*a.nz;j++)	for(i=0;i<n;i++)
+#pragma omp parallel for collapse(2)
+		for(long j=0;j<a.ny*a.nz;j++)	for(long i=0;i<n;i++)
 			r.a[i+n*j] = func(a.a[i+n*j], b.a[i]);
 	else if(a.nx==b.nx && a.ny*a.nz==1)
-#pragma omp parallel for private(i,j) collapse(2)
-		for(i=0;i<n;i++)	for(j=0;j<b.ny*b.nz;j++)
+#pragma omp parallel for collapse(2)
+		for(long i=0;i<n;i++)	for(long j=0;j<b.ny*b.nz;j++)
 			r.a[i+n*j] = func(a.a[i], b.a[i+n*j]);
 	else if(a.nx==b.nx && b.ny==a.ny && b.nz==1)
-#pragma omp parallel for private(i,j,k) collapse(3)
-		for(k=0;k<a.nz;k++)	for(j=0;j<m;j++)	for(i=0;i<n;i++)
+#pragma omp parallel for collapse(3)
+		for(long k=0;k<a.nz;k++)	for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
 			r.a[i+n*(j+m*k)] = func(a.a[i+n*(j+m*k)], b.a[i+n*j]);
 	else if(a.nx==b.nx && b.ny==a.ny && a.nz==1)
-#pragma omp parallel for private(i,j,k) collapse(3)
-		for(k=0;k<b.nz;k++)	for(j=0;j<m;j++)	for(i=0;i<n;i++)
+#pragma omp parallel for collapse(3)
+		for(long k=0;k<b.nz;k++)	for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
 			r.a[i+n*(j+m*k)] = func(a.a[i+n*j], b.a[i+n*(j+m*k)]);
 	return r;
 }
@@ -260,7 +259,6 @@ mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg)
 	}
 	else
 	{
-		register long i;
 		std::wstring nm = str.substr(0,n);
 		str = str.substr(n+1,len-n-2);	len -= n+2;
 		mglVar *v = arg->FindVar(nm.c_str());
@@ -318,23 +316,23 @@ mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg)
 #if MGL_HAVE_GSL
 			else if(!nm.compare(L"ai") || !nm.compare(L"airy_ai"))
 			{	res=mglFormulaCalc(str, arg);
-#pragma omp parallel for private(i)
-				for(i=0;i<res.nx*res.ny*res.nz;i++)
+#pragma omp parallel for
+				for(long i=0;i<res.nx*res.ny*res.nz;i++)
 					res.a[i] = gsl_sf_airy_Ai(res.a[i],GSL_PREC_SINGLE);	}
 			else if(!nm.compare(L"airy_dai"))
 			{	res=mglFormulaCalc(str, arg);
-#pragma omp parallel for private(i)
-				for(i=0;i<res.nx*res.ny*res.nz;i++)
+#pragma omp parallel for
+				for(long i=0;i<res.nx*res.ny*res.nz;i++)
 					res.a[i] = gsl_sf_airy_Ai_deriv(res.a[i],GSL_PREC_SINGLE);	}
 			else if(!nm.compare(L"airy_bi"))
 			{	res=mglFormulaCalc(str, arg);
-#pragma omp parallel for private(i)
-				for(i=0;i<res.nx*res.ny*res.nz;i++)
+#pragma omp parallel for
+				for(long i=0;i<res.nx*res.ny*res.nz;i++)
 					res.a[i] = gsl_sf_airy_Bi(res.a[i],GSL_PREC_SINGLE);	}
 			else if(!nm.compare(L"airy_dbi"))
 			{	res=mglFormulaCalc(str, arg);
-#pragma omp parallel for private(i)
-				for(i=0;i<res.nx*res.ny*res.nz;i++)
+#pragma omp parallel for
+				for(long i=0;i<res.nx*res.ny*res.nz;i++)
 					res.a[i] = gsl_sf_airy_Bi_deriv(res.a[i],GSL_PREC_SINGLE);	}
 		}
 		else if(nm[0]=='b')
@@ -347,8 +345,8 @@ mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg)
 			}
 			else if(!nm.compare(L"bi"))
 			{	res=mglFormulaCalc(str, arg);
-#pragma omp parallel for private(i)
-				for(i=0;i<res.nx*res.ny*res.nz;i++)
+#pragma omp parallel for
+				for(long i=0;i<res.nx*res.ny*res.nz;i++)
 					res.a[i] = gsl_sf_airy_Bi(res.a[i],GSL_PREC_SINGLE);	}
 			else if(!nm.compare(L"bessel_i"))
 			{
@@ -397,13 +395,13 @@ mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg)
 //			else if(!nm.compare(L"en"))	Kod=EQ_EN;	// NOTE: not supported
 			else if(!nm.compare(L"ee") || !nm.compare(L"elliptic_ec"))
 			{	res=mglFormulaCalc(str, arg);
-#pragma omp parallel for private(i)
-				for(i=0;i<res.nx*res.ny*res.nz;i++)
+#pragma omp parallel for
+				for(long i=0;i<res.nx*res.ny*res.nz;i++)
 					res.a[i] = gsl_sf_ellint_Ecomp(res.a[i],GSL_PREC_SINGLE);	}
 			else if(!nm.compare(L"ek") || !nm.compare(L"elliptic_kc"))
 			{	res=mglFormulaCalc(str, arg);
-#pragma omp parallel for private(i)
-				for(i=0;i<res.nx*res.ny*res.nz;i++)
+#pragma omp parallel for
+				for(long i=0;i<res.nx*res.ny*res.nz;i++)
 					res.a[i] = gsl_sf_ellint_Kcomp(res.a[i],GSL_PREC_SINGLE);	}
 			else if(!nm.compare(L"e") || !nm.compare(L"elliptic_e"))
 			{
@@ -461,12 +459,12 @@ mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg)
 			{	res=mglFormulaCalc(str, arg);	mglApplyFunc(res,sin);	}
 			else if(!nm.compare(L"step"))
 			{	res=mglFormulaCalc(str, arg);
-#pragma omp parallel for private(i)
-				for(i=0;i<res.nx*res.ny*res.nz;i++)	res.a[i] = res.a[i]>0?1:0;	}
+#pragma omp parallel for
+				for(long i=0;i<res.nx*res.ny*res.nz;i++)	res.a[i] = res.a[i]>0?1:0;	}
 			else if(!nm.compare(L"sign"))
 			{	res=mglFormulaCalc(str, arg);
-#pragma omp parallel for private(i)
-				for(i=0;i<res.nx*res.ny*res.nz;i++)
+#pragma omp parallel for
+				for(long i=0;i<res.nx*res.ny*res.nz;i++)
 					res.a[i] = res.a[i]>0?1:(res.a[i]<0?-1:0);	}
 			else if(!nm.compare(L"sinh") || !nm.compare(L"sh"))
 			{	res=mglFormulaCalc(str, arg);	mglApplyFunc(res,sinh);	}

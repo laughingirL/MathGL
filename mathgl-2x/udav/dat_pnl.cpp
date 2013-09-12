@@ -522,7 +522,6 @@ void DatPanel::newdat()
 //-----------------------------------------------------------------------------
 void DatPanel::oper()
 {
-	QLabel *l;
 	QLineEdit *f1;
 	QPushButton *b;
 	QDialog *d = new QDialog(this);
@@ -679,7 +678,7 @@ void DatPanel::toolTop(QBoxLayout *l)
 void DatPanel::toolLeft(QBoxLayout *l)
 {
 	QAction *a;
-	QMenu *o, *oo;
+	QMenu *o;
 	QToolButton *bb;
 
 	// size menu

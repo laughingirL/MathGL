@@ -350,8 +350,8 @@ void mglParser::FillArg(mglGraph *gr, int k, std::wstring *arg, mglArg *a)
 			a[n-1].type = 1;
 			std::wstring &w=arg[n],f;
 			wchar_t buf[32];
-			long i,i1,l,ll=w.length();
-			for(l=i=1;i<ll;i++)
+			long i,i1,ll=w.length();
+			for(i=1;i<ll;i++)
 			{
 				if(w[i]=='\'')
 				{

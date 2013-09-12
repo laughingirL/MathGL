@@ -127,7 +127,7 @@ void MGL_EXPORT mgl_fft(double *x, long s, long n, const void *wt, void *ws, int
 	double *d = (double *)ws, f = inv?1./n:1;
 	memset(d,0,2*n*sizeof(double));
 	if(inv)
-#pragma omp parallel for	// NOTE only 1st for can be used!
+//#pragma omp parallel for	// NOTE only 1st for can be used!
 		for(long i=0;i<n;i++)	for(long j=0;j<n;j++)
 		{
 			register long ii = 2*(i+n*j), jj = 2*j*s;
@@ -135,14 +135,14 @@ void MGL_EXPORT mgl_fft(double *x, long s, long n, const void *wt, void *ws, int
 			d[2*i+1]+= x[jj+1]*c[ii]-x[jj]*c[ii+1];
 		}
 	else
-#pragma omp parallel for	// NOTE only 1st for can be used!
+//#pragma omp parallel for	// NOTE only 1st for can be used!
 		for(long i=0;i<n;i++)	for(long j=0;j<n;j++)
 		{
 			register long ii = 2*(i+n*j), jj = 2*j*s;
 			d[2*i] 	+= x[jj]*c[ii]-x[jj+1]*c[ii+1];
 			d[2*i+1]+= x[jj+1]*c[ii]+x[jj]*c[ii+1];
 		}
-#pragma omp parallel for
+//#pragma omp parallel for
 	for(long j=0;j<n;j++)
 	{	register long jj = 2*j*s;	x[jj] = d[2*j]*f;	x[jj+1] = d[2*j+1]*f;	}
 #endif

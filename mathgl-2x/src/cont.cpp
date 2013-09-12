@@ -121,21 +121,19 @@ void MGL_EXPORT mgl_textw_xyz(HMGL gr, HCDT x, HCDT y, HCDT z,const wchar_t *tex
 	static int cgid=1;	gr->StartGroup("TextC",cgid++);
 
 	long *nn = new long[n], *ff = new long[n];
-	mglPoint p;
-	register long i;
 	const mglData *mdx = dynamic_cast<const mglData *>(x);
 	const mglData *mdy = dynamic_cast<const mglData *>(y);
 	const mglData *mdz = dynamic_cast<const mglData *>(z);
 	if(mdx && mdy && mdz)
-#pragma omp parallel for private(i,p)
-		for(i=0;i<n;i++)
-		{	p = mglPoint(mdx->a[i],mdy->a[i],mdz->a[i]);	ff[i] = gr->AddPnt(p,-1);	}
+#pragma omp parallel for
+		for(long i=0;i<n;i++)
+			ff[i] = gr->AddPnt(mglPoint(mdx->a[i],mdy->a[i],mdz->a[i]),-1);
 	else
-#pragma omp parallel for private(i,p)
-		for(i=0;i<n;i++)
-		{	p = mglPoint(x->v(i),y->v(i),z->v(i));	ff[i] = gr->AddPnt(p,-1);	}
-#pragma omp parallel for private(i)
-	for(i=1;i<n;i++)	nn[i-1] = i;
+#pragma omp parallel for
+		for(long i=0;i<n;i++)
+			ff[i] = gr->AddPnt(mglPoint(x->v(i),y->v(i),z->v(i)),-1);
+#pragma omp parallel for
+	for(long i=1;i<n;i++)	nn[i-1] = i;
 	nn[n-1]=-1;
 	mgl_string_curve(gr,0,n,ff,nn,text,font,-1);
 	gr->EndGroup();
@@ -1040,7 +1038,7 @@ void MGL_NO_EXPORT mgl_get_slice(_mgl_slice &s, HCDT x, HCDT y, HCDT z, HCDT a, 
 //-----------------------------------------------------------------------------
 void MGL_NO_EXPORT mgl_get_slice_md(_mgl_slice &s, const mglData *x, const mglData *y, const mglData *z, const mglData *a, char dir, mreal d, bool both)
 {
-	register long i,j,i0,i1,n=a->nx,m=a->ny,l=a->nz, nx=1,ny=1,p;
+	long n=a->nx,m=a->ny,l=a->nz, nx=1,ny=1,p;
 
 	if(dir=='x')	{	nx = m;	ny = l;	if(d<0)	d = n/2.;	}
 	if(dir=='y')	{	nx = n;	ny = l;	if(d<0)	d = m/2.;	}
@@ -1056,30 +1054,30 @@ void MGL_NO_EXPORT mgl_get_slice_md(_mgl_slice &s, const mglData *x, const mglDa
 	if(both)
 	{
 		if(dir=='x')
-#pragma omp parallel for private(i,j,i0,i1) collapse(2)
-			for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
+#pragma omp parallel for collapse(2)
+			for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
 			{
-				i0 = i+nx*j;	i1 = p+n*(i+m*j);
+				register long i0 = i+nx*j, i1 = p+n*(i+m*j);
 				s.x.a[i0] = x->a[i1]*(1-d) + x->a[i1+1]*d;
 				s.y.a[i0] = y->a[i1]*(1-d) + y->a[i1+1]*d;
 				s.z.a[i0] = z->a[i1]*(1-d) + z->a[i1+1]*d;
 				s.a.a[i0] = a->a[i1]*(1-d) + a->a[i1+1]*d;
 			}
 		if(dir=='y')
-#pragma omp parallel for private(i,j,i0,i1) collapse(2)
-			for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
+#pragma omp parallel for collapse(2)
+			for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
 			{
-				i0 = i+nx*j;	i1 = i+n*(p+m*j);
+				register long i0 = i+nx*j, i1 = i+n*(p+m*j);
 				s.x.a[i0] = x->a[i1]*(1-d) + x->a[i1+n]*d;
 				s.y.a[i0] = y->a[i1]*(1-d) + y->a[i1+n]*d;
 				s.z.a[i0] = z->a[i1]*(1-d) + z->a[i1+n]*d;
 				s.a.a[i0] = a->a[i1]*(1-d) + a->a[i1+n]*d;
 			}
 		if(dir=='z')
-#pragma omp parallel for private(i,j,i0,i1) collapse(2)
-			for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
+#pragma omp parallel for collapse(2)
+			for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
 			{
-				i0 = i+nx*j;	i1 = i+n*(j+m*p);
+				register long i0 = i+nx*j, i1 = i+n*(j+m*p);
 				s.x.a[i0] = x->a[i1]*(1-d) + x->a[i1+n*m]*d;
 				s.y.a[i0] = y->a[i1]*(1-d) + y->a[i1+n*m]*d;
 				s.z.a[i0] = z->a[i1]*(1-d) + z->a[i1+n*m]*d;
@@ -1091,33 +1089,33 @@ void MGL_NO_EXPORT mgl_get_slice_md(_mgl_slice &s, const mglData *x, const mglDa
 		if(dir=='x')
 		{
 			v = x->a[p]*(1-d)+x->a[p+1]*d;
-#pragma omp parallel for private(i,j,i0,i1) collapse(2)
-			for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
+#pragma omp parallel for collapse(2)
+			for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
 			{
-				i0 = i+nx*j;	s.x.a[i0] = v;	i1 = p+n*(i+m*j);
-				s.y.a[i0] = y->a[i];	s.z.a[i0] = z->a[j];
+				register long i0 = i+nx*j, i1 = p+n*(i+m*j);
+				s.x.a[i0] = v;	s.y.a[i0] = y->a[i];	s.z.a[i0] = z->a[j];
 				s.a.a[i0] = a->a[i1]*(1-d) + a->a[i1+1]*d;
 			}
 		}
 		if(dir=='y')
 		{
 			v = y->a[p]*(1-d)+y->a[p+1]*d;
-#pragma omp parallel for private(i,j,i0,i1) collapse(2)
-			for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
+#pragma omp parallel for collapse(2)
+			for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
 			{
-				i0 = i+nx*j;	s.y.a[i0] = v;	i1 = i+n*(p+m*j);
-				s.x.a[i0] = x->a[i];	s.z.a[i0] = z->a[j];
+				register long i0 = i+nx*j, i1 = i+n*(p+m*j);
+				s.x.a[i0] = x->a[i];	s.y.a[i0] = v;	s.z.a[i0] = z->a[j];
 				s.a.a[i0] = a->a[i1]*(1-d) + a->a[i1+n]*d;
 			}
 		}
 		if(dir=='z')
 		{
 			v = z->a[p]*(1-d)+z->a[p+1]*d;
-#pragma omp parallel for private(i,j,i0,i1) collapse(2)
-			for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
+#pragma omp parallel for collapse(2)
+			for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
 			{
-				i0 = i+nx*j;	s.z.a[i0] = v;	i1 = i+n*(j+m*p);
-				s.x.a[i0] = x->a[i];	s.y.a[i0] = y->a[j];
+				register long i0 = i+nx*j, i1 = i+n*(j+m*p);
+				s.x.a[i0] = x->a[i];	s.y.a[i0] = y->a[j];	s.z.a[i0] = v;
 				s.a.a[i0] = a->a[i1]*(1-d) + a->a[i1+n*m]*d;
 			}
 		}

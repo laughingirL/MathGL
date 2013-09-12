@@ -69,7 +69,6 @@ int	mgl_fit__f (const gsl_vector *x, void *data, gsl_vector *f)
 #pragma omp parallel
 	{
 		mreal val[MGL_VS];
-#pragma omp for
 		for(long i=0;i<fd->m;i++)	val[fd->var[i]-'a'] = gsl_vector_get(x,i);
 #pragma omp for
 		for(long i=0;i<fd->n;i++)
@@ -89,7 +88,6 @@ int MGL_NO_EXPORT mgl_fit__df (const gsl_vector * x, void *data, gsl_matrix * J)
 #pragma omp parallel
 	{
 		mreal val[MGL_VS],s;
-#pragma omp for
 		for(long i=0;i<fd->m;i++)	val[fd->var[i]-'a'] = gsl_vector_get(x,i);
 #pragma omp for
 		for(long i=0;i<fd->n;i++)
@@ -241,7 +239,6 @@ void MGL_NO_EXPORT mgl_fill_fit(HMGL gr, mglData &fit, mglData &in, mglFitData &
 #pragma omp parallel
 	{
 		mreal val[MGL_VS];	memset(val,0,MGL_VS*sizeof(mreal));
-#pragma omp for
 		for(long j=0;j<fd.m;j++)	val[var[j]-'a'] = in.a[j];
 #pragma omp for collapse(3)
 		for(long jz=0;jz<nz;jz++)	for(long jy=0;jy<ny;jy++)	for(long jx=0;jx<nx;jx++)
