@@ -289,6 +289,7 @@ long mglBase::CopyProj(long from, mglPoint p, mglPoint n)
 void mglBase::Reserve(long n)
 {
 	if(TernAxis&4)	n*=4;
+#pragma omp critical(pnt)
 	Pnt.reserve(n);
 }
 //-----------------------------------------------------------------------------

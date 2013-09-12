@@ -457,7 +457,7 @@ void smgl_paramv(mglGraph *gr)	// parametric plots for vector field
 	gr->SubPlot(3,3,4);	gr->Rotate(40,60);	gr->Box();	gr->Vect(x,y,z,ex,ey,ez);
 	gr->SubPlot(3,3,5);	gr->Rotate(40,60);	gr->Box();
 	gr->Vect3(x,y,z,ex,ey,ez);	gr->Vect3(x,y,z,ex,ey,ez,"x");	gr->Vect3(x,y,z,ex,ey,ez,"z");
-	gr->Grid3(x,y,z,z,"{r9}");	gr->Grid3(x,y,z,z,"{r9}x");		gr->Grid3(x,y,z,z,"{r9}z");
+	gr->Grid3(x,y,z,z,"{r9}");	gr->Grid3(x,y,z,z,"{g9}x");		gr->Grid3(x,y,z,z,"{b9}z");
 	gr->SubPlot(3,3,6);	gr->Rotate(40,60);	gr->Box();	gr->Flow(x,y,z,ex,ey,ez);
 	gr->SubPlot(3,3,7);	gr->Rotate(40,60);	gr->Box();	gr->Pipe(x,y,z,ex,ey,ez);
 }

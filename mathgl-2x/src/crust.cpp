@@ -76,7 +76,8 @@ void MGL_EXPORT mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCD
 				q.Normalize();
 				// try be sure that in the same direction ... 
 				if(q.z<0)	q *= -1;
-				pp[k1] += q;	pp[k2] += q;	pp[k3] += q;
+#pragma omp critical(quadplot)
+				{pp[k1] += q;	pp[k2] += q;	pp[k3] += q;}
 			}
 			else	pp[k1]=pp[k2]=pp[k3]=mglPoint(NAN,NAN);
 		}
@@ -146,14 +147,14 @@ void MGL_EXPORT mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HC
 	long ss=gr->AddTexture(sch);
 	gr->SaveState(opt);	gr->SetPenPal("-");
 	static int cgid=1;	gr->StartGroup("QuadPlot",cgid++);
-	mglPoint p1,p2,p3,p4,q=mglPoint(NAN,NAN);
+	mglPoint p1,p2,p3,p4;
 
 	long nc = a->GetNx();
 	bool wire = mglchr(sch,'#');
 	if(nc!=n && nc>=m)	// colors per triangle
 	{
 		gr->Reserve(m*4);
-#pragma omp parallel for private(p1,p2,p3,p4,q)
+#pragma omp parallel for private(p1,p2,p3,p4)
 		for(long i=0;i<m;i++)
 		{
 			if(gr->Stop)	continue;
@@ -165,7 +166,7 @@ void MGL_EXPORT mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HC
 			p3 = mglPoint(x->v(k3), y->v(k3), z->v(k3));
 			register long k4 = floor(nums->v(3,i)+0.5);
 			p4 = mglPoint(x->v(k4), y->v(k4), z->v(k4));
-			q = wire ? mglPoint(NAN,NAN):(p2-p1) ^ (p3-p1);
+			mglPoint q = wire ? mglPoint(NAN,NAN):(p2-p1) ^ (p3-p1);
 			k1 = gr->AddPnt(p1,gr->GetC(ss,a->v(k1)),q);
 			k2 = gr->AddPnt(p2,gr->GetC(ss,a->v(k2)),q);
 			k3 = gr->AddPnt(p3,gr->GetC(ss,a->v(k3)),q);
@@ -178,7 +179,7 @@ void MGL_EXPORT mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HC
 		gr->Reserve(n);
 		long *kk = new long[n];
 		mglPoint *pp = new mglPoint[n];
-#pragma omp parallel for private(p1,p2,p3,p4,q)
+#pragma omp parallel for private(p1,p2,p3,p4)
 		for(long i=0;i<m;i++)	// add averaged normales
 		{
 			if(gr->Stop)	continue;
@@ -194,10 +195,12 @@ void MGL_EXPORT mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HC
 			if(wire)	pp[k1]=pp[k2]=pp[k3]=pp[k4]=mglPoint(NAN,NAN);
 			else
 			{
-				q = (p2-p1) ^ (p3-p1);	if(q.z<0) q*=-1;	pp[k1] += q;
-				q = (p2-p4) ^ (p3-p4);	if(q.z<0) q*=-1;	pp[k2] += q;
-				q = (p1-p2) ^ (p4-p2);	if(q.z<0) q*=-1;	pp[k3] += q;
-				q = (p1-p4) ^ (p4-p3);	if(q.z<0) q*=-1;	pp[k4] += q;
+				mglPoint q1 = (p2-p1) ^ (p3-p1);	if(q1.z<0) q1*=-1;
+				mglPoint q2 = (p2-p4) ^ (p3-p4);	if(q2.z<0) q2*=-1;
+				mglPoint q3 = (p1-p2) ^ (p4-p2);	if(q3.z<0) q3*=-1;
+				mglPoint q4 = (p1-p4) ^ (p4-p3);	if(q4.z<0) q4*=-1;
+#pragma omp critical(quadplot)
+				{pp[k1] += q1;	pp[k2] += q2;	pp[k3] += q3;	pp[k4] += q4;}
 			}
 		}
 #pragma omp parallel for
@@ -266,21 +269,16 @@ void MGL_EXPORT mgl_tricont_xyzcv(HMGL gr, HCDT v, HCDT nums, HCDT x, HCDT y, HC
 	long ss=gr->AddTexture(sch);
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("TriCont",cgid++);
-	mreal val, c;
-	register long i,k;
-	long k1,k2,k3;
 	bool zVal = !(mglchr(sch,'_'));
-	mreal d1,d2,d3;
 	mglPoint p1,p2,p3;
-#pragma omp parallel for private(k,i,d1,d2,d3,val,c,p1,p2,p3,k1,k2,k3) collapse(2)
-	for(k=0;k<v->GetNx();k++)	for(i=0;i<m;i++)
+#pragma omp parallel for private(p1,p2,p3) collapse(2)
+	for(long k=0;k<v->GetNx();k++)	for(long i=0;i<m;i++)
 	{
 		if(gr->Stop)	continue;
-		k1 = long(nums->v(0,i)+0.1);	if(k1<0 || k1>=n)	continue;
-		k2 = long(nums->v(1,i)+0.1);	if(k2<0 || k2>=n)	continue;
-		k3 = long(nums->v(2,i)+0.1);	if(k3<0 || k3>=n)	continue;
-		val = v->v(k);
-		c = gr->GetC(ss,val);
+		register long k1 = long(nums->v(0,i)+0.1);	if(k1<0 || k1>=n)	continue;
+		register long k2 = long(nums->v(1,i)+0.1);	if(k2<0 || k2>=n)	continue;
+		register long k3 = long(nums->v(2,i)+0.1);	if(k3<0 || k3>=n)	continue;
+		register mreal val = v->v(k), c = gr->GetC(ss,val), d1,d2,d3;
 		
 		d1 = mgl_d(val,a->v(k1),a->v(k2));
 		p1 = mglPoint(x->v(k1)*(1-d1)+x->v(k2)*d1, y->v(k1)*(1-d1)+y->v(k2)*d1,
@@ -430,12 +428,8 @@ HMDT MGL_EXPORT mgl_triangulation_2d(HCDT x, HCDT y)
 	std::vector<size_t> out;
 	Shx pt;
 
-#pragma omp parallel for
 	for(long i=0;i<n;i++)
-	{
-		pt.r = x->v(i);	pt.c = y->v(i);
-		pt.id = i;	pts.push_back(pt);
-	}
+	{	pt.r = x->v(i);	pt.c = y->v(i);	pt.id = i;	pts.push_back(pt);	}
 	std::vector<Triad> triads;
 	if(de_duplicate(pts, out))
 		mglGlobalMess += "There are duplicated points for triangulation.\n";
