@@ -448,7 +448,7 @@ Sets RGB values for color with given @var{id}.
 @cindex SetWarn
 @cindex GetWarn
 
-Normally user should set it to zero by @code{SetWarn(0);} before plotting and check if @code{GetWarnCode()} or @code{Message()} return non zero after plotting. Only last warning will be saved. All warnings/errors produced by MathGL is not critical -- the plot just will not be drawn.
+Normally user should set it to zero by @code{SetWarn(0);} before plotting and check if @code{GetWarn()} or @code{Message()} return non zero after plotting. Only last warning will be saved. All warnings/errors produced by MathGL is not critical -- the plot just will not be drawn.
 
 @deftypefn {Method on @code{mglGraph}} @code{void} SetWarn (@code{int} code, @code{const char *}info=@code{""})
 @deftypefnx {C function} @code{void} mgl_set_warn (@code{HMGL} gr, @code{int} code, @code{const char *}info)
@@ -460,8 +460,8 @@ Set warning code. Normally you should call this function only for clearing the w
 Return messages about matters why some plot are not drawn. If returned string is empty then there are no messages.
 @end deftypefn
 
-@deftypefn {Method on @code{mglGraph}} @code{int} GetWarnCode ()
-@deftypefnx {C function} @code{int} mgl_get_warn_code (@code{HMGL} gr)
+@deftypefn {Method on @code{mglGraph}} @code{int} GetWarn ()
+@deftypefnx {C function} @code{int} mgl_get_warn (@code{HMGL} gr)
 Return the numerical ID of warning about the not drawn plot. Possible values are:
 @table @code
 @item mglWarnNone=0
@@ -478,8 +478,6 @@ No file or wrong data dimensions
 Not enough memory
 @item mglWarnZero
 Data values are zero
-@item mglWarnLegA
-Too many legend entries
 @item mglWarnLeg
 No legend entries
 @item mglWarnSlc
@@ -494,10 +492,23 @@ Light: ID is out of range
 Setsize: size(s) is zero or negative
 @item mglWarnFmt
 Format is not supported for that build
+@item mglWarnTern
+Axis ranges are incompatible
+@item mglWarnNull
+Pointer is NULL
+@item mglWarnSpc
+Not enough space for plot
+@item mglScrArg
+Wrong argument(s) of a command in MGL script
+@item mglScrCmd
+Wrong command in MGL script
+@item mglScrLong
+Too long line in MGL script
+@item mglScrStr
+Unbalanced ' in MGL script
 @end table
 @end deftypefn
 @end ifclear
-
 
 @c ==================================================================
 @external{}

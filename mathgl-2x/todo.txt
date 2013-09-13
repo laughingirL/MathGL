@@ -24,7 +24,7 @@ A. Paper about MathGL!!!
 
 11. Check centered curved text (see text2)
 12. Axis labels are not optimal -- "Rotate(30,-26), everything is fine. For Rotate(30,-27) the axis labels get rotated too"
-13. Check samples: colorbar + remove Push()
+13. Check samples: colorbar, triplot (alpha???) + remove Push()
 14. Check wx + pthread in win32 ... may be I should disable pthread in wx.cpp ???
 15. extend resolution in WriteJSON
 16. Add mglData::FillSpl(HCDT dat, HCDT coor, char dir='x', mreal cmin, mreal cmax); + the same from HMGL range(s)
@@ -43,6 +43,7 @@ A. Paper about MathGL!!!
 13. Update docs about mask symbols "-+=;oOsS~<>jdD*^" + in color scheme
 14. Add chapter with real samples
 15. Put & Spline in mglDataC
+16. Update list of warning codes
 
 ============= UDAV =============
 

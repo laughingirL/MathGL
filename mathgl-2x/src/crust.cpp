@@ -62,7 +62,7 @@ void MGL_EXPORT mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCD
 		gr->Reserve(n);
 		long *kk = new long[n];
 		mglPoint *pp = new mglPoint[n];
-#pragma omp parallel for private(q)
+#pragma omp parallel for
 		for(long i=0;i<m;i++)	// add averaged normales
 		{
 			if(gr->Stop)	continue;
@@ -71,7 +71,7 @@ void MGL_EXPORT mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCD
 			register long k3 = long(nums->v(2,i)+0.5);
 			if(!wire)
 			{
-				q = mglPoint(x->v(k2)-x->v(k1), y->v(k2)-y->v(k1), z->v(k2)-z->v(k1)) ^
+				mglPoint q = mglPoint(x->v(k2)-x->v(k1), y->v(k2)-y->v(k1), z->v(k2)-z->v(k1)) ^
 					mglPoint(x->v(k3)-x->v(k1), y->v(k3)-y->v(k1), z->v(k3)-z->v(k1));
 				q.Normalize();
 				// try be sure that in the same direction ... 

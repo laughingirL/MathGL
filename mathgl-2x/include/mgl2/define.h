@@ -166,6 +166,10 @@ enum{	// Codes for warnings/messages
 	mglWarnTern, 	// Axis ranges are incompatible
 	mglWarnNull, 	// Pointer is NULL
 	mglWarnSpc,		// Not enough space for plot
+	mglScrArg,		// Wrong argument(s) in MGL script
+	mglScrCmd,		// Wrong command in MGL script
+	mglScrLong,		// Too long line in MGL script
+	mglScrStr,		// Unbalanced ' in MGL script
 	mglWarnEnd		// Maximal number of warnings (must be last)
 };
 //-----------------------------------------------------------------------------

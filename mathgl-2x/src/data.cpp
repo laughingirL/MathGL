@@ -699,12 +699,13 @@ MGL_NO_EXPORT void *mgl_solve_x(void *par)
 	mglThreadD *t=(mglThreadD *)par;
 	long nx=t->p[0], ny=t->p[1], nz=t->p[2], n1=t->p[3]?nx-1:1, nn=t->n;
 	const mreal *a=t->b, *ii=t->c;
-	mreal *b=t->a,x,val=t->d[0],y1,y2,v,v0,dx,dy,dz,da = 1e-5*(val?fabs(val):1);
+	mreal *b=t->a,val=t->d[0],da = 1e-5*(val?fabs(val):1);
 #if !MGL_HAVE_PTHREAD
-#pragma omp parallel for private(y1,y2,v,v0,dx,dy,dz)
+#pragma omp parallel for
 #endif
 	for(long l=t->id;l<nn;l+=mglNumThr)
 	{
+		mreal y1,y2,v,v0,dx,dy,dz,x;
 		register long j=l%ny, k=l/ny;	b[l] = NAN;
 		if(ii && ii[l]!=ii[l])	continue;
 		register long i0 = ii?(ii[l]*n1+1):0;
@@ -750,12 +751,13 @@ MGL_NO_EXPORT void *mgl_solve_y(void *par)
 	mglThreadD *t=(mglThreadD *)par;
 	long nx=t->p[0], ny=t->p[1], nz=t->p[2], n1=t->p[3]?ny-1:1, nn=t->n;
 	const mreal *a=t->b, *ii=t->c;
-	mreal *b=t->a,x,val=t->d[0],y1,y2,v,v0,dx,dy,dz,da = 1e-5*(val?fabs(val):1);
+	mreal *b=t->a,val=t->d[0],da = 1e-5*(val?fabs(val):1);
 #if !MGL_HAVE_PTHREAD
-#pragma omp parallel for private(y1,y2,v,v0,dx,dy,dz)
+#pragma omp parallel for
 #endif
 	for(long l=t->id;l<nn;l+=mglNumThr)
 	{
+		mreal y1,y2,v,v0,dx,dy,dz,x;
 		register long j=l%nx, k=l/nx;	b[l] = NAN;
 		if(ii && ii[l]!=ii[l])	continue;
 		register long i0 = ii?(ii[l]*n1+1):0;
@@ -801,12 +803,13 @@ MGL_NO_EXPORT void *mgl_solve_z(void *par)
 	mglThreadD *t=(mglThreadD *)par;
 	long nx=t->p[0], ny=t->p[1], nz=t->p[2], n1=t->p[3]?nz-1:1, nn=t->n;
 	const mreal *a=t->b, *ii=t->c;
-	mreal *b=t->a,x,val=t->d[0],y1,y2,v,v0,dx,dy,dz,da = 1e-5*(val?fabs(val):1);
+	mreal *b=t->a,val=t->d[0],da = 1e-5*(val?fabs(val):1);
 #if !MGL_HAVE_PTHREAD
-#pragma omp parallel for private(y1,y2,v,v0,dx,dy,dz)
+#pragma omp parallel for
 #endif
 	for(long l=t->id;l<nn;l+=mglNumThr)
 	{
+		mreal y1,y2,v,v0,dx,dy,dz,x;
 		register long j=l%nx, k=l/nx;	b[l] = NAN;
 		if(ii && ii[l]!=ii[l])	continue;
 		register long i0 = ii?(ii[l]*n1+1):0;

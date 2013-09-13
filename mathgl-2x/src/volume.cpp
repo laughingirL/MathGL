@@ -30,7 +30,7 @@
 void MGL_EXPORT mgl_cloud_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, const char *opt)
 {
 	if(!(gr->GetQuality()&3))	return;	// do nothing in fast_draw
-	long i,j,k,n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
+	long n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
 	bool both = mgl_isboth(x,y,z,a);
 	if(mgl_check_dim3(gr,both,x,y,z,a,0,"Cloud"))	return;
 
@@ -56,22 +56,22 @@ void MGL_EXPORT mgl_cloud_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const cha
 	n /= tx;	m /= ty;	l /= tz;
 	long *pos=new long[n*m*l];
 	gr->Reserve(n*m*l);
-	mglPoint p,q=mglPoint(NAN);
-#pragma omp parallel for private(i,j,k,p) collapse(3)
-	for(k=0;k<l;k++)	for(j=0;j<m;j++)	for(i=0;i<n;i++)
+	mglPoint q=mglPoint(NAN);
+#pragma omp parallel for collapse(3)
+	for(long k=0;k<l;k++)	for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
 	{
 		if(gr->Stop)	continue;
-		p = both ? mglPoint(x->v(i*tx,j*ty,k*tz),y->v(i*tx,j*ty,k*tz),z->v(i*tx,j*ty,k*tz)) : mglPoint(x->v(i*tx),y->v(j*ty),z->v(k*tz));
+		mglPoint p = both ? mglPoint(x->v(i*tx,j*ty,k*tz),y->v(i*tx,j*ty,k*tz),z->v(i*tx,j*ty,k*tz)) : mglPoint(x->v(i*tx),y->v(j*ty),z->v(k*tz));
 		mreal aa = gr->GetA(a->v(i*tx,j*ty,k*tz));
 		mreal bb = inv ? (1-aa)*(1-aa)*alpha : aa*aa*alpha;
 		pos[i+n*(j+m*k)] = gr->AddPnt(p,gr->GetC(ss,aa,false),q,bb);
 	}
 	if(dot)
-#pragma omp parallel for private(i)
-		for(i=0;i<n*m*l;i++)	gr->mark_plot(pos[i],'.');
+#pragma omp parallel for
+		for(long i=0;i<n*m*l;i++)	gr->mark_plot(pos[i],'.');
 	else
-#pragma omp parallel for private(i,j,k) collapse(3)
-		for(k=0;k<l;k++)	for(j=0;j<m;j++)	for(i=0;i<n;i++)
+#pragma omp parallel for collapse(3)
+		for(long k=0;k<l;k++)	for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
 		{
 			if(gr->Stop)	continue;
 			register long i0 = i+n*(j+m*k);

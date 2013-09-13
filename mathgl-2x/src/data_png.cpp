@@ -92,12 +92,11 @@ void MGL_EXPORT mgl_data_import(HMDT d, const char *fname, const char *scheme,mr
 		long w=png_get_image_width(png_ptr, info_ptr);
 		long h=png_get_image_height(png_ptr, info_ptr);
 		d->Create(w,h,1);
-		register long i,j,k;
-		size_t pos=0,val,mval=256;
-#pragma omp parallel for private(i,j,k,mval,val) collapse(2)
-		for(i=0;i<d->ny;i++)	for(j=0;j<d->nx;j++)
+#pragma omp parallel for collapse(2)
+		for(long i=0;i<d->ny;i++)	for(long j=0;j<d->nx;j++)
 		{
-			for(mval=256,k=0;k<num;k++)
+			size_t pos=0,val,mval=256;
+			for(long k=0;k<num;k++)
 			{
 				val = mgl_col_dif(c+3*k,rows[d->ny-i-1]+3*j,true);
 				if(val==0)	{	pos=k;	break;	}

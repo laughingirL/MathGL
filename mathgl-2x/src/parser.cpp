@@ -879,7 +879,7 @@ void mglParser::Execute(mglGraph *gr, FILE *fp, bool print)
 void mglParser::Execute(mglGraph *gr, int n, const wchar_t **text)
 {
 	if(n<1 || text==0)	return;
-	long i, r;
+	long i, r, res=0;
 	char buf[64];
 	for_br=Skip=false;	if_pos=0;	ScanFunc(0);	fn_stack.clear();
 	for(i=0;i<n;i++)	ScanFunc(text[i]);
@@ -896,7 +896,10 @@ void mglParser::Execute(mglGraph *gr, int n, const wchar_t **text)
 		else if(gr->GetWarn()>0)	snprintf(buf,64," in line %ld\n", i+1);
 		else *buf=0;
 		if(*buf)	gr->SetWarn(-2,buf);
+		if(r>0 && r<5)	res=r;
 	}
+	int code[]={mglScrArg,	mglScrCmd,	mglScrLong,	mglScrStr};
+	if(res)	gr->SetWarn(code[res-1],"MGL Parser");
 }
 //-----------------------------------------------------------------------------
 void mglParser::Execute(mglGraph *gr, const wchar_t *text)

@@ -216,7 +216,7 @@ void MGL_EXPORT mgl_cone(HMGL gr, double x1, double y1, double z1, double x2, do
 	mglPoint p1(x1,y1,z1), p2(x2,y2,z2), p,q, d=p2-p1,a,b;
 	a=!d;	a.Normalize();		b=d^a;	b.Normalize();
 	long ss=gr->AddTexture(stl);
-	mreal c1=gr->GetC(ss,p1.z), c2=gr->GetC(ss,p2.z);
+	mreal c1=gr->GetC(ss,p1.z), c2=gr->GetC(ss,p2.z), dr=r2-r1;
 	long *kk=new long[164],k1=-1,k2=-1;
 	bool edge = mglchr(stl,'@');
 	bool wire = mglchr(stl,'#');
@@ -226,16 +226,15 @@ void MGL_EXPORT mgl_cone(HMGL gr, double x1, double y1, double z1, double x2, do
 		k1=gr->AddPnt(p1,c1,d,-1,3);
 		k2=gr->AddPnt(p2,c2,d,-1,3);
 	}
-	mreal f,si,co, dr=r2-r1;
-	register long i,n=wire?6:20;
+	long n=wire?6:20;
 	if(mglchr(stl,'4'))	n=2;
 	else if(mglchr(stl,'6'))	n=3;
 	else if(mglchr(stl,'8'))	n=4;
-#pragma omp parallel for private(i,f,p,q,co,si)
-	for(i=0;i<2*n+1;i++)
+#pragma omp parallel for private(p,q)
+	for(long i=0;i<2*n+1;i++)
 	{
 		if(gr->Stop)	continue;
-		f = (i+0.5)*M_PI/n;	co = cos(f);	si = sin(f);
+		register mreal f = (i+0.5)*M_PI/n, co = cos(f), si = sin(f);
 		p = p1+(r1*co)*a+(r1*si)*b;
 		q = (si*a-co*b)^(d + (dr*co)*a + (dr*si)*b);
 		if(wire)	q.x=q.y=NAN;
@@ -247,8 +246,8 @@ void MGL_EXPORT mgl_cone(HMGL gr, double x1, double y1, double z1, double x2, do
 		if(edge && !wire)	kk[i+123] = gr->AddPnt(p,c2,d,-1,3);
 	}
 	if(wire)
-#pragma omp parallel for private(i)
-		for(i=0;i<2*n;i++)
+#pragma omp parallel for
+		for(long i=0;i<2*n;i++)
 		{
 			if(gr->Stop)	continue;
 			gr->line_plot(kk[i],kk[i+1]);
@@ -257,8 +256,8 @@ void MGL_EXPORT mgl_cone(HMGL gr, double x1, double y1, double z1, double x2, do
 			gr->line_plot(kk[i+2*n+2],kk[i+2*n+1]);
 		}
 	else
-#pragma omp parallel for private(i)
-		for(i=0;i<2*n;i++)
+#pragma omp parallel for
+		for(long i=0;i<2*n;i++)
 		{
 			if(gr->Stop)	continue;
 //			gr->quad_plot(kk[i],kk[i+1],kk[i+2*n+1],kk[i+2*n+2]);
@@ -513,7 +512,7 @@ void MGL_EXPORT mgl_drop_(uintptr_t* gr, mreal *x1, mreal *y1, mreal *z1, mreal 
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_dew_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, const char *opt)
 {
-	long i,j,n=ax->GetNx(),m=ax->GetNy(),k;
+	long n=ax->GetNx(),m=ax->GetNy();
 	if(mgl_check_dim2(gr,x,y,ax,ay,"Dew"))	return;
 
 	gr->SaveState(opt);
@@ -527,7 +526,7 @@ void MGL_EXPORT mgl_dew_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char
 	if(gr->MeshNum>1)	{	tx=(n-1)/(gr->MeshNum-1);	ty=(m-1)/(gr->MeshNum-1);	}
 	if(tx<1)	tx=1;	if(ty<1)	ty=1;
 
-	for(k=0,xm=0;k<ax->GetNz();k++)	for(j=0;j<m;j++)	for(i=0;i<n;i++)
+	for(long k=0,xm=0;k<ax->GetNz();k++)	for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
 	{
 		ym = sqrt(ax->v(i,j,k)*ax->v(i,j,k)+ay->v(i,j,k)*ay->v(i,j,k));
 		xm = xm>ym ? xm : ym;
@@ -535,11 +534,11 @@ void MGL_EXPORT mgl_dew_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char
 	xm = 1./MGL_FEPSILON/(xm==0 ? 1:xm);
 	mglPoint q;
 
-	for(k=0;k<ax->GetNz();k++)
+	for(long k=0;k<ax->GetNz();k++)
 	{
 		if(ax->GetNz()>1)	zVal = gr->Min.z+(gr->Max.z-gr->Min.z)*mreal(k)/(ax->GetNz()-1);
-#pragma omp parallel for private(i,j,dx,dy) collapse(2)
-		for(i=0;i<n;i+=tx)	for(j=0;j<m;j+=ty)
+#pragma omp parallel for private(dx,dy) collapse(2)
+		for(long i=0;i<n;i+=tx)	for(long j=0;j<m;j+=ty)
 		{
 			if(gr->Stop)	continue;
 			mreal xx=GetX(x,i,j,k).x, yy=GetY(y,i,j,k).x;

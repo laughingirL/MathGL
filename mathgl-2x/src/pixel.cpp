@@ -425,27 +425,26 @@ void mglCanvas::Clf(mglColor Back)
 //-----------------------------------------------------------------------------
 void mglCanvas::pxl_other(size_t id, size_t n, const void *p)
 {
-	size_t i,j,k;
 	const mglCanvas *gr = (const mglCanvas *)p;
 	if(!gr)	return;
 	if(Quality&MGL_DRAW_NORM)
 #if !MGL_HAVE_PTHREAD
-#pragma omp parallel for private(i,j,k)
+#pragma omp parallel for
 #endif
-		for(k=id;k<n;k+=mglNumThr)
+		for(size_t k=id;k<n;k+=mglNumThr)
 		{
-			i = k%Width;	j = Height-1-(k/Width);
+			register size_t i = k%Width, j = Height-1-(k/Width);
 			pnt_plot(i,j,gr->Z[3*k+2],gr->C+12*k+8,gr->OI[k]);
 			pnt_plot(i,j,gr->Z[3*k+1],gr->C+12*k+4,gr->OI[k]);
 			pnt_plot(i,j,gr->Z[3*k],gr->C+12*k,gr->OI[k]);
 		}
 	else
 #if !MGL_HAVE_PTHREAD
-#pragma omp parallel for private(i,j,k)
+#pragma omp parallel for
 #endif
-		for(k=id;k<n;k+=mglNumThr)
+		for(size_t k=id;k<n;k+=mglNumThr)
 		{
-			i = k%Width;	j = Height-1-(k/Width);
+			register size_t i = k%Width, j = Height-1-(k/Width);
 			pnt_plot(i,j,gr->Z[3*k],gr->C+12*k,gr->OI[k]);
 		}
 }
