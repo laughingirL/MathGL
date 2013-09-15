@@ -68,10 +68,19 @@ void smgl_text(mglGraph *gr);	// text drawing
 void smgl_surf(mglGraph *gr);
 void test(mglGraph *gr)
 {
+	gr->SetRange('y',-1.1,1.1);
+	mglData a(10), b(10), r(100);
+	a.Modify("0.1+rnd");	a.CumSum("x");	a.Norm(-1,1);	b.Modify("sin(pi*v)",a);
+	gr->Axis();	gr->Plot(a,b,"b o");
+	gr->Refill(r,a,b);
+	gr->Plot(r,"r");
+	return;
+	
 	mglParse par;
 	par.AllowSetSize(true);
 	setlocale(LC_CTYPE, "");
-	par.Execute(gr,"list x 0 0 2 3 1 0 0 0:correl res x x 'x'\nyrange 0 20:plot res 'o':axis");
+	par.Execute(gr,"new a 10 '0.1+rnd':cumsum a 'x':norm a -1 1:new b 10:fill b 'sin(pi*v)' a\n"
+		"plot a b ' o':axis:new r 100\nrefill r a b\nplot r 'r'\n");
 
 //	FILE *fp=fopen("/home/balakin/progr/mathgl-code/mathgl-2x/build/test.mgl","r");
 //	par.Execute(gr,fp,true);

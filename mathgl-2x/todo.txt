@@ -27,7 +27,8 @@ A. Paper about MathGL!!!
 13. Check samples: colorbar, triplot (alpha???) + remove Push()
 14. Check wx + pthread in win32 ... may be I should disable pthread in wx.cpp ???
 15. extend resolution in WriteJSON
-16. Add mglData::FillSpl(HCDT dat, HCDT coor, char dir='x', mreal cmin, mreal cmax); + the same from HMGL range(s)
+16. test refill
+17. remove "ordered" for 1d plots (i.e. for NextColor if '!')
 
 ============= DOCUMENTATION =============
 
@@ -43,7 +44,8 @@ A. Paper about MathGL!!!
 13. Update docs about mask symbols "-+=;oOsS~<>jdD*^" + in color scheme
 14. Add chapter with real samples
 15. Put & Spline in mglDataC
-16. Update list of warning codes
+16. Add mglData::Refill() + 'refill' + mglGraph::Refill()
+
 
 ============= UDAV =============
 

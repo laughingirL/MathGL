@@ -146,7 +146,7 @@ public:
 	/// Join with another data array
 	inline void Join(const mglDataA &d)
 	{	mgl_data_join(this,&d);	}
-	
+
 	/// Modify the data by specified formula
 	inline void Modify(const char *eq,long dim=0)
 	{	mgl_data_modify(this, eq, dim);	}
@@ -166,6 +166,15 @@ public:
 	/// Equidistantly fill the data to range [x1,x2] in direction dir
 	inline void Fill(mreal x1,mreal x2=NaN,char dir='x')
 	{	return mgl_data_fill(this,x1,x2,dir);	}
+	/// Fill the data by interpolated values of vdat parametrically depended on xdat,ydat,zdat for x,y,z in range [p1,p2]
+	inline void Refill(const mglDataA &xdat, const mglDataA &vdat, mreal x1, mreal x2,long sl=-1)
+	{	mgl_data_refill_x(this,&xdat,&vdat,x1,x2,sl);	}
+	inline void Refill(const mglDataA &xdat, const mglDataA &vdat, mglPoint p1, mglPoint p2,long sl=-1)
+	{	mgl_data_refill_x(this,&xdat,&vdat,p1.x,p2.x,sl);	}
+	inline void Refill(const mglDataA &xdat, const mglDataA &ydat, const mglDataA &vdat, mglPoint p1, mglPoint p2,long sl=-1)
+	{	mgl_data_refill_xy(this,&xdat,&ydat,&vdat,p1.x,p2.x,p1.y,p2.y,sl);	}
+	inline void Refill(const mglDataA &xdat, const mglDataA &ydat, const mglDataA &zdat, const mglDataA &vdat, mglPoint p1, mglPoint p2)
+	{	mgl_data_refill_xyz(this,&xdat,&ydat,&zdat,&vdat,p1.x,p2.x,p1.y,p2.y,p1.z,p2.z);	}
 	/// Set the data by triangulated surface values assuming x,y,z in range [r1,r2]
 	inline void Grid(mglBase *gr, const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *opt="")
 	{	mgl_data_grid(gr,this,&x,&y,&z,opt);	}
@@ -266,7 +275,7 @@ public:
 	/// Find auto correlation function
 	inline mglData AutoCorrel(const char *dir) const
 	{	return mglData(true,mgl_data_correl(this,this,dir));	}
-	
+
 	/// Cumulative summation the data in given direction or directions
 	inline void CumSum(const char *dir)	{	mgl_data_cumsum(this,dir);	}
 	/// Integrate (cumulative summation) the data in given direction or directions
@@ -337,7 +346,7 @@ public:
 	{	return mglData(true,mgl_data_solve(this, val, dir, 0, norm));	}
 	inline mglData Solve(mreal val, char dir, const mglData &i0, bool norm=true) const
 	{	return mglData(true,mgl_data_solve(this, val, dir, &i0, norm));	}
-	
+
 	/// Interpolate by cubic spline the data and return its derivatives at given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
 	inline mreal Spline(mglPoint &dif, mreal x,mreal y=0,mreal z=0) const
 	{	return mgl_data_spline_ext(this, x,y,z, &(dif.x),&(dif.y), &(dif.z));	}
@@ -352,7 +361,7 @@ public:
 	inline mreal Linear1(mglPoint &dif, mreal x,mreal y=0,mreal z=0) const
 	{	mreal res=mgl_data_linear_ext(this,x*(nx-1),y*(ny-1),z*(nz-1), &(dif.x),&(dif.y), &(dif.z));
 		dif.x*=nx>1?nx-1:1;	dif.y*=ny>1?ny-1:1;	dif.z*=nz>1?nz-1:1;	return res;	}
-	
+
 	/// Get information about the data (sizes and momentum) to string
 	inline const char *PrintInfo() const	{	return mgl_data_info(this);	}
 	/// Print information about the data (sizes and momentum) to FILE (for example, stdout)

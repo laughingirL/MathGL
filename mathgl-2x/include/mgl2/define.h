@@ -62,6 +62,7 @@
 #endif
 
 #if defined(_MSC_VER)
+#define strtoull _strtoui64
 #define hypot	_hypot
 #define getcwd	_getcwd
 #define chdir	_chdir // BORLAND has chdir

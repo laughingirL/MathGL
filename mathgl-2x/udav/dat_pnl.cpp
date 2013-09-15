@@ -437,12 +437,12 @@ bool DatPanel::sizesDialog(const QString &cap, const QString &lab, const QString
 //-----------------------------------------------------------------------------
 #include "xpm/plot.xpm"
 #include "xpm/size.xpm"
-#include "xpm/smth.xpm"
+//#include "xpm/smth.xpm"
 #include "xpm/crop.xpm"
 #include "xpm/squize.xpm"
-#include "xpm/sum.xpm"
-#include "xpm/func.xpm"
-#include "xpm/swap.xpm"
+//#include "xpm/sum.xpm"
+//#include "xpm/func.xpm"
+//#include "xpm/swap.xpm"
 #include "xpm/hist.xpm"
 #include "xpm/oper_dir.xpm"
 #include "xpm/oper_of.xpm"
@@ -724,13 +724,13 @@ void DatPanel::toolLeft(QBoxLayout *l)
 	a->setToolTip(tr("Find histogram of data."));
 	a->setShortcut(Qt::CTRL+Qt::SHIFT+Qt::Key_H);	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
-	
+
 /*	a = new QAction(QPixmap(":/xpm/view-refresh.png"), tr("Refresh"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(refresh()));
 	a->setToolTip(tr("Refresh data values."));
 	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);*/
-	
+
 /*	a = new QAction(tr("Rearrange"), this);	// TODO: move in generalized dialog
 	connect(a, SIGNAL(triggered()), this, SLOT(rearrange()));
 	a->setToolTip(tr("Rearrange data sizes without changing data values."));

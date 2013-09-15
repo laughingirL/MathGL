@@ -1505,7 +1505,7 @@ void MGL_EXPORT mgl_chart(HMGL gr, HCDT a, const char *cols, const char *opt)
 		if(strchr(MGL_COLORS,cols[i]) || cols[i]==' ')
 		{	c[nc]=gr->AddTexture(cols[i]);	nc++;	}
 	// NOTE: nc>0 since j>0 or MGL_DEF_PAL is not empty
-	
+
 	mreal dy = (gr->Max.y-gr->Min.y)/a->GetNy(), dx, ss, cs, x1, y1, dz=gr->Max.z-gr->Min.z, vv;
 	mglPoint d1,d2,o;
 

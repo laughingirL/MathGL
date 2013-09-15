@@ -161,17 +161,20 @@ const char *mglWarn[mglWarnEnd] = {"data dimension(s) is incompatible",	//mglWar
 								"no file or wrong data dimensions",		//mglWarnFile
 								"not enough memory", 					//mglWarnMem
 								"data values are zero",					//mglWarnZero
-//								"too many legend entries",
-								"no legend entries",						//mglWarnLeg
+								"no legend entries",					//mglWarnLeg
 								"slice value is out of range",			//mglWarnSlc
 								"number of contours is zero or negative",//mglWarnCnt
 								"couldn't open file",					//mglWarnOpen
-								"light: ID is out of range",				//mglWarnLId
+								"light: ID is out of range",			//mglWarnLId
 								"size(s) is zero or negative",			//mglWarnSize
 								"format is not supported for that build",//mglWarnFmt
 								"axis ranges are incompatible",			//mglWarnTern
 								"pointer is NULL",						//mglWarnNull
-								"not enough space for plot"};			//mglWarnSpc
+								"not enough space for plot",			//mglWarnSpc
+								"There are wrong argument(s) in script",//mglScrArg
+								"There are wrong command in script",	//mglScrCmd
+								"There are too long string in script",	//mglScrLong
+								"There are unbalanced ' in script"};	//mglScrStr
 //-----------------------------------------------------------------------------
 void mglBase::SetWarn(int code, const char *who)
 {

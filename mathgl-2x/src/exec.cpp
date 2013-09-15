@@ -796,6 +796,17 @@ int MGL_NO_EXPORT mgls_fill(mglGraph *gr, long , mglArg *a, const char *k, const
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_refill(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+{
+	int res=0;
+	if(!strcmp(k,"ddd"))	gr->Refill(*(a[0].d),*(a[1].d),*(a[2].d),-1,opt);
+	if(!strcmp(k,"dddn"))	gr->Refill(*(a[0].d),*(a[1].d),*(a[2].d),iint(a[3].v),opt);
+	else if(!strcmp(k,"dddd"))	gr->Refill(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),-1,opt);
+	else if(!strcmp(k,"ddddn"))	gr->Refill(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),iint(a[4].v),opt);
+	else if(!strcmp(k,"ddddd"))	gr->Refill(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),opt);
+	else res = 1;	return res;
+}
+//-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_fillsample(mglGraph *, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
@@ -2696,6 +2707,7 @@ mglCommand mgls_base_cmd[] = {
 	{"readmat","Read data from file with sizes specified in first row","readmat Dat 'file' [dim]", mgls_readmat ,4},
 	{"rearrange","Rearrange data dimensions","rearrange Dat mx [my mz]", mgls_rearrange ,3},
 	{"rect","Draw rectangle","rect x1 y1 x2 y2 ['fmt']|x1 y1 z1 x2 y2 z2 ['fmt']", mgls_rect ,13},
+	{"refill","Fill data by interpolation of Vdat","refill Dat Xdat Vdat [sl] | Dat Xdat Ydat Vdat [sl] | Dat Xdat Ydat Zdat Vdat", mgls_fill ,3},
 	{"region","Draw filled region between 2 curves","region Ydat1 Ydat2 ['fmt' inside]|Xdat Ydat1 Ydat2 ['fmt' inside]", mgls_region ,7},
 	{"resize","Resize data","resize Res Dat mx [my mz]", mgls_resize ,4},
 	{"return","Return from function","return", 0, 6},

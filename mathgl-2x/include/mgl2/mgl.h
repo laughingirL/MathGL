@@ -56,7 +56,7 @@ public:
 	inline void SetPlotId(const char *id)	{	mgl_set_plotid(gr,id);	}
 	/// Get name of plot for saving filename
 	inline const char *GetPlotId()	{	return mgl_get_plotid(gr);	}
-	
+
 	/// Set the transparency on/off.
 	inline void Alpha(bool enable)			{	mgl_set_alpha(gr, enable);	}
 	/// Set default value of alpha-channel
@@ -92,7 +92,7 @@ public:
 	inline void SetMeshNum(int num)			{	mgl_set_meshnum(gr, num);	}
 	/// Set number of visible faces (use 0 to draw all of them)
 	inline void SetFaceNum(int num)			{	mgl_set_facenum(gr, num);	}
-	
+
 	/// Set cutting for points outside of bounding box
 	inline void SetCut(bool cut)				{	mgl_set_cut(gr, cut);	}
 	/// Set additional cutting box
@@ -235,7 +235,7 @@ public:
 	/// Set to draw tick labels at axis origin
 	inline void SetOriginTick(bool enable=true)
 	{	mgl_set_flag(gr,!enable, MGL_NO_ORIGIN);	}
-	
+
 	/// Put further plotting in some region of whole frame.
 	inline void SubPlot(int nx,int ny,int m,const char *style="<>_^", double dx=0, double dy=0)
 	{	mgl_subplot_d(gr, nx, ny, m, style, dx, dy);	}
@@ -263,7 +263,7 @@ public:
 	inline void Push()	{	mgl_mat_push(gr);	}
 	/// Pop transformation matrix from stack
 	inline void Pop()	{	mgl_mat_pop(gr);	}
-	
+
 	/// Add title for current subplot/inplot
 	inline 	void Title(const char *title,const char *stl="",double size=-2)
 	{	mgl_title(gr,title,stl,size);	}
@@ -380,7 +380,7 @@ public:
 	inline void SetFrame(int i)	{	mgl_set_frame(gr, i);	}
 	/// Append drawing data from i-th frame (work if MGL_VECT_FRAME is set on)
 	inline void ShowFrame(int i){	mgl_show_frame(gr, i);	}
-	
+
 	/// Start write frames to cinema using GIF format
 	inline void StartGIF(const char *fname, int ms=100)
 	{	mgl_start_gif(gr, fname,ms);	}
@@ -721,7 +721,7 @@ public:
 	{	mgl_table(gr, x, y, &val, text, fnt, opt);	}
 	inline void Table(double x, double y, const mglDataA &val, const wchar_t *text, const char *fnt="#|", const char *opt="")
 	{	mgl_tablew(gr, x, y, &val, text, fnt, opt);	}
-	
+
 	/// Draw tube with radius r around curve {x,y,z}
 	inline void Tube(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &r, const char *pen="", const char *opt="")
 	{	mgl_tube_xyzr(gr, &x, &y, &z, &r, pen, opt);	}
@@ -1153,11 +1153,19 @@ public:
 	{	mgl_datac_fill_eq(gr, &u, eq, &v, 0, opt);	}
 	inline void Fill(mglDataC &u, const char *eq, const mglDataA &v, const mglDataA &w, const char *opt="")
 	{	mgl_datac_fill_eq(gr, &u, eq, &v, &w, opt);	}
-	
+
+	/// Fill dat by interpolated values of vdat parametrically depended on xdat,ydat,zdat for x,y,z in axis range
+	inline void Refill(mglData &dat, const mglDataA &xdat, const mglDataA &vdat, long sl=-1, const char *opt="")
+	{	mgl_data_refill_gr(&dat,gr,&xdat,0,0,&vdat,sl,opt);	}
+	inline void Refill(mglData &dat, const mglDataA &xdat, const mglDataA &ydat, const mglDataA &vdat, long sl=-1, const char *opt="")
+	{	mgl_data_refill_gr(&dat,gr,&xdat,&ydat,0,&vdat,sl,opt);	}
+	inline void Refill(mglData &dat, const mglDataA &xdat, const mglDataA &ydat, const mglDataA &zdat, const mglDataA &vdat, const char *opt="")
+	{	mgl_data_refill_gr(&dat,gr,&xdat,&ydat,&zdat,&vdat,-1,opt);	}
+
 	/// Set the data by triangulated surface values assuming x,y,z in range [Min, Max]
 	inline void DataGrid(mglData &d, const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *opt="")
 	{	mgl_data_grid(gr,&d,&x,&y,&z,opt);	}
-	
+
 	/// Make histogram (distribution) of data. This function do not plot data.
 	inline mglData Hist(const mglDataA &x, const mglDataA &a, const char *opt="")
 	{	return mglData(true, mgl_hist_x(gr, &x, &a, opt));	}
@@ -1184,7 +1192,7 @@ public:
 	mglVar *prev;	///< Pointer to previous instance in list
 	bool temp;		///< This is temporary variable
 	void (*func)(void *);	///< Callback function for destroying
-	
+
 	mglVar():mglData()	{	o=0;	next=prev=0;	func=0;	temp=false;	}
 	virtual ~mglVar()
 	{
@@ -1272,7 +1280,7 @@ public:
 	{	return mglData(true,mgl_parser_calc(pr,formula)); 	}
 	inline mglData Calc(const wchar_t *formula)
 	{	return mglData(true,mgl_parser_calcw(pr,formula));	}
-	
+
 	/// Find variable with given name or add a new one
 	/// NOTE !!! You must not delete obtained data arrays !!!
 	inline mglVar *AddVar(const char *name)

@@ -173,6 +173,18 @@ void MGL_EXPORT mgl_data_fill_(uintptr_t *dat, mreal *x1,mreal *x2,const char *d
 /// Modify the data by specified formula assuming x,y,z in range [r1,r2]
 void MGL_EXPORT mgl_data_fill_eq(HMGL gr, HMDT dat, const char *eq, HCDT vdat, HCDT wdat,const char *opt);
 void MGL_EXPORT mgl_data_fill_eq_(uintptr_t *gr, uintptr_t *dat, const char *eq, uintptr_t *vdat, uintptr_t *wdat,const char *opt, int, int);
+/// Fill dat by interpolated values of vdat parametrically depended on xdat for x in range [x1,x2]
+void MGL_EXPORT mgl_data_refill_x(HMDT dat, HCDT xdat, HCDT vdat, mreal x1, mreal x2, long sl);
+void MGL_EXPORT mgl_data_refill_x_(uintptr_t *dat, uintptr_t *xdat, uintptr_t *vdat, mreal *x1, mreal *x2, long *sl);
+/// Fill dat by interpolated values of vdat parametrically depended on xdat,ydat for x,y in range [x1,x2]*[y1,y2]
+void MGL_EXPORT mgl_data_refill_xy(HMDT dat, HCDT xdat, HCDT ydat, HCDT vdat, mreal x1, mreal x2, mreal y1, mreal y2, long sl);
+void MGL_EXPORT mgl_data_refill_xy_(uintptr_t *dat, uintptr_t *xdat, uintptr_t *ydat, uintptr_t *vdat, mreal *x1, mreal *x2, mreal *y1, mreal *y2, long *sl);
+/// Fill dat by interpolated values of vdat parametrically depended on xdat,ydat,zdat for x,y,z in range [x1,x2]*[y1,y2]*[z1,z2]
+void MGL_EXPORT mgl_data_refill_xyz(HMDT dat, HCDT xdat, HCDT ydat, HCDT zdat, HCDT vdat, mreal x1, mreal x2, mreal y1, mreal y2, mreal z1, mreal z2);
+void MGL_EXPORT mgl_data_refill_xyz_(uintptr_t *dat, uintptr_t *xdat, uintptr_t *ydat, uintptr_t *zdat, uintptr_t *vdat, mreal *x1, mreal *x2, mreal *y1, mreal *y2, mreal *z1, mreal *z2);
+/// Fill dat by interpolated values of vdat parametrically depended on xdat,ydat,zdat for x,y,z in axis range
+void MGL_EXPORT mgl_data_refill_gr(HMDT dat, HMGL gr, HCDT xdat, HCDT ydat, HCDT zdat, HCDT vdat, long sl, const char *opt);
+void MGL_EXPORT mgl_data_refill_gr_(uintptr_t *dat, uintptr_t *gr, uintptr_t *xdat, uintptr_t *ydat, uintptr_t *zdat, uintptr_t *vdat, long *sl, const char *opt,int);
 /// Set the data by triangulated surface values assuming x,y,z in range [r1,r2]
 void MGL_EXPORT mgl_data_grid(HMGL gr, HMDT d, HCDT xdat, HCDT ydat, HCDT zdat,const char *opt);
 void MGL_EXPORT mgl_data_grid_(uintptr_t *gr, uintptr_t *dat, uintptr_t *xdat, uintptr_t *ydat, uintptr_t *zdat, const char *opt,int);

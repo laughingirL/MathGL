@@ -19,7 +19,8 @@
  ***************************************************************************/
 #ifndef _MGL_BASE_H_
 #define _MGL_BASE_H_
-#if !defined(_MSC_VER) && !defined(__BORLANDC__)
+//#if !defined(_MSC_VER) && !defined(__BORLANDC__)
+#if !defined(__BORLANDC__)
 #include <stdint.h>
 #endif
 #if defined(__BORLANDC__)
@@ -195,7 +196,7 @@ struct MGL_EXPORT mglTexture
 	char Sch[260];		///< Color scheme used
 	int Smooth;			///< Type of texture (smoothing and so on)
 	mreal Alpha;			///< Transparency
-	
+
 	mglTexture()	{	n=Smooth=0;	Alpha=1;	}
 	mglTexture(const char *cols, int smooth=0,mreal alpha=1)
 	{	n=0;	Set(cols,smooth,alpha);	}
@@ -390,7 +391,7 @@ public:
 	virtual mreal GetRatio() const;
 	virtual int GetWidth() const;
 	virtual int GetHeight() const;
-	
+
 	/// Set to use or not text rotation
 	inline void SetRotatedText(bool val)	{	set(val,MGL_ENABLE_RTEXT);	}
 	/// Set default font style and color
@@ -497,7 +498,7 @@ protected:
 	std::vector<mglPrim> Sub;	///< InPlot regions {n1=x1,n2=x2,n3=y1,n4=y2,id}
 	std::vector<mglText> Ptx;	///< Text labels for mglPrim
 	std::vector<mglText> Leg;	///< Text labels for legend
-	std::vector<mglGlyph> Glf;	///< Glyphs data 
+	std::vector<mglGlyph> Glf;	///< Glyphs data
 	std::vector<mglTexture> Txt;	///< Pointer to textures
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_t mutexPnt, mutexTxt, mutexLeg, mutexGlf, mutexAct, mutexDrw;

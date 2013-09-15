@@ -899,7 +899,7 @@ void mglParser::Execute(mglGraph *gr, int n, const wchar_t **text)
 		if(r>0 && r<5)	res=r;
 	}
 	int code[]={mglScrArg,	mglScrCmd,	mglScrLong,	mglScrStr};
-	if(res)	gr->SetWarn(code[res-1],"MGL Parser");
+	if(res>0)	gr->SetWarn(code[res-1],"MGL Parser");
 }
 //-----------------------------------------------------------------------------
 void mglParser::Execute(mglGraph *gr, const wchar_t *text)
