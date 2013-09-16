@@ -62,6 +62,7 @@
 #endif
 
 #if defined(_MSC_VER)
+#define collapse(a)	// MSVS don't support OpenMP 3.*
 #define strtoull _strtoui64
 #define hypot	_hypot
 #define getcwd	_getcwd

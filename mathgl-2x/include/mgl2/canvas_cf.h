@@ -205,6 +205,7 @@ void MGL_EXPORT mgl_write_json(HMGL gr, const char *fname,const char *descr);
 void MGL_EXPORT mgl_write_json_(uintptr_t *gr, const char *fname,const char *descr,int,int);
 void MGL_EXPORT mgl_write_json_z(HMGL gr, const char *fname,const char *descr);
 void MGL_EXPORT mgl_write_json_z_(uintptr_t *gr, const char *fname,const char *descr,int,int);
+MGL_EXPORT const char *mgl_get_json(HMGL gr);
 
 /// Get RGB values of current bitmap
 MGL_EXPORT const unsigned char *mgl_get_rgb(HMGL gr);

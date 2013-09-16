@@ -221,7 +221,8 @@ mreal mglCanvas::FindOptOrg(char dir, int ind) const
 	if(memcmp(B.b,bb.b,9*sizeof(mreal)) || m1!=Min || m2!=Max)
 	{
 		m1 = Min;	m2 = Max;	memcpy(&bb,&B,sizeof(mglMatrix));
-		PostScale(pp,8);
+#pragma omp parallel for
+		for(long i=0;i<8;i++)	PostScale(&B,pp[i]);
 		// find point with minimal y
 		register long i,j=0;
 		for(i=1;i<8;i++)	if(pp[i].y<pp[j].y)	j=i;
@@ -231,7 +232,7 @@ mreal mglCanvas::FindOptOrg(char dir, int ind) const
 		pp[1]=nn[j];	pp[1].x=1-pp[1].x;
 		pp[2]=nn[j];	pp[2].y=1-pp[2].y;
 		pp[3]=nn[j];	pp[3].z=1-pp[3].z;
-		PostScale(pp+1,3);
+		PostScale(&B,pp[1]);	PostScale(&B,pp[2]);	PostScale(&B,pp[3]);
 		pp[1]-=pp[0];	pp[2]-=pp[0];	pp[3]-=pp[0];
 		// find cosine of axis projection
 		mreal cxy, cxz, cyz, dx, dy, dz;
@@ -991,11 +992,5 @@ void mglCanvas::Push()
 {
 #pragma omp critical(stk)
 	{MGL_PUSH(stack,B,mutexStk);}
-}
-//-----------------------------------------------------------------------------
-void mglCanvas::PostScale(mglPoint *p,long n) const
-{
-#pragma omp parallel for
-	for(long i=0;i<n;i++)	PostScale(GetB(),p[i]);
 }
 //-----------------------------------------------------------------------------

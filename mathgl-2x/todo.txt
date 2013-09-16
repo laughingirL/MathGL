@@ -28,7 +28,6 @@ A. Paper about MathGL!!!
 14. Check wx + pthread in win32 ... may be I should disable pthread in wx.cpp ???
 15. extend resolution in WriteJSON
 16. test refill
-17. remove "ordered" for 1d plots (i.e. for NextColor if '!')
 
 ============= DOCUMENTATION =============
 

@@ -108,11 +108,12 @@ mglBase::mglBase()
 
 	InUse = 1;	SetQuality();	FaceNum = 0;
 	// Always create default palette txt[0] and default scheme txt[1]
-	Txt.reserve(3);
 #pragma omp critical(txt)
 	{
-		MGL_PUSH(Txt,mglTexture(MGL_DEF_PAL,-1),mutexTxt);
-		MGL_PUSH(Txt,mglTexture(MGL_DEF_SCH,1),mutexTxt);
+		mglTexture t1(MGL_DEF_PAL,-1), t2(MGL_DEF_SCH,1);
+		Txt.reserve(3);
+		MGL_PUSH(Txt,t1,mutexTxt);
+		MGL_PUSH(Txt,t2,mutexTxt);
 	}
 	memcpy(last_style,"{k5}-1\0",8);
 	MinS=mglPoint(-1,-1,-1);	MaxS=mglPoint(1,1,1);
@@ -928,6 +929,13 @@ mreal mglBase::NextColor(long &id)
 	{	AddLegend(leg_str.c_str(),last_style);	leg_str.clear();	}
 	CDef = i + (n>0 ? (p+0.5)/n : 0);	CurrPal++;
 	return CDef;
+}
+//-----------------------------------------------------------------------------
+mreal mglBase::NextColor(long id, long sh)
+{
+	long i=abs(id)/256, n=Txt[i].n, p=abs(id)&0xff;
+	if(id>=0)	p=(p+sh)%n;
+	return i + (n>0 ? (p+0.5)/n : 0);
 }
 //-----------------------------------------------------------------------------
 const char *mglchr(const char *str, char ch)

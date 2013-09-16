@@ -361,6 +361,8 @@ public:
 	inline void WriteJSON(const char *fname,const char *descr="",bool force_z=false)
 	{	if(force_z)	mgl_write_json_z(gr, fname, descr);
 		else 	mgl_write_json(gr, fname, descr);	}
+	/// Return string of JSON data suitable for later drawing by JavaScript
+	inline const char *GetJSON()	{	return mgl_get_json(gr);	}
 
 	/// Force preparing the image. It can be useful for OpenGL mode mostly.
 	inline void Finish()			{	mgl_finish(gr);	}

@@ -409,11 +409,12 @@ void mglCanvas::Clf(mglColor Back)
 	Pnt.clear();	Prm.clear();	Ptx.clear();	Glf.clear();
 	Sub.clear();	Leg.clear();	Grp.clear();	Act.clear();
 
-	Txt.clear();	Txt.reserve(3);
 #pragma omp critical(txt)
 	{
-		MGL_PUSH(Txt,mglTexture(MGL_DEF_PAL,-1),mutexTxt);
-		MGL_PUSH(Txt,mglTexture(MGL_DEF_SCH,1),mutexTxt);
+		Txt.clear();	Txt.reserve(3);
+		mglTexture t1(MGL_DEF_PAL,-1), t2(MGL_DEF_SCH,1);
+		MGL_PUSH(Txt,t1,mutexTxt);
+		MGL_PUSH(Txt,t2,mutexTxt);
 	}
 
 //	if(Back==NC)		Back = mglColor(1,1,1);

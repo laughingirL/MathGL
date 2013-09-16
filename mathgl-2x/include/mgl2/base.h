@@ -469,6 +469,7 @@ public:
 	void SetMask(const char *mask);
 	/// Set next color from palette
 	mreal NextColor(long &id);
+	mreal NextColor(long id, long sh);
 
 	virtual void mark_plot(long p, char type, mreal size=1)=0;
 	virtual void arrow_plot(long p1, long p2, char st)=0;

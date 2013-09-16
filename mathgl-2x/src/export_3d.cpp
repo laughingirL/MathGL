@@ -18,6 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include <time.h>
+#include <stdarg.h>
 #include "mgl2/canvas.h"
 #include "mgl2/canvas_cf.h"
 #undef _GR_
@@ -26,6 +27,7 @@
 int MGL_NO_EXPORT mgl_tga_save(const char *fname, int w, int h, unsigned char **p);
 int MGL_NO_EXPORT mgl_pnga_save(const char *fname, int w, int h, unsigned char **p);
 void MGL_NO_EXPORT mgl_printf(void *fp, bool gz, const char *str, ...);
+std::string MGL_NO_EXPORT mgl_sprintf(const char *str, ...);
 //-----------------------------------------------------------------------------
 void mglTexture::GetRGBA(unsigned char *f) const
 {
@@ -510,18 +512,35 @@ bool mglCanvas::WriteJSON(const char *fname, bool force_zlib)
 	bool gz = force_zlib || fname[strlen(fname)-1]=='z';
 	void *fp = fl ? (gz ? (void*)gzopen(fname,"wt") : (void*)fopen(fname,"wt")) : stdout;
 	if (!fp)	return true;
+	std::string s=GetJSON();
+	if(gz)	gzprintf((gzFile)fp, "%s", s.c_str());
+	else	fprintf((FILE *)fp, "%s", s.c_str());
+	if(fl)	{	if(gz)	gzclose((gzFile)fp);	else	fclose((FILE *)fp);	}
+	return false;
+}
+//-----------------------------------------------------------------------------
+MGL_EXPORT const char *mgl_get_json(HMGL gr)
+{
+	static std::string json;
+	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);
+	if(g)	json = g->GetJSON();
+	return json.c_str();
+}
+//-----------------------------------------------------------------------------
+std::string mglCanvas::GetJSON()
+{
 	ClearUnused();	// clear unused points
+	std::string res;
 	size_t i,l=Pnt.size();
-	mgl_printf(fp, gz,"{\n\"width\":%d,\t\"height\":%d,\t\"depth\":%d,\t\"plotid\":\"%s\",\t\"npnts\":%lu,\t\"pnts\":[\n",
+	res = res + mgl_sprintf("{\n\"width\":%d,\t\"height\":%d,\t\"depth\":%d,\t\"plotid\":\"%s\",\t\"npnts\":%lu,\t\"pnts\":[\n",
 			Width, Height, Depth, PlotId.c_str(), (unsigned long)l);
 	for(i=0;i<l;i++)
 	{
 		const mglPnt &q=Pnt[i];
-//		fprintf(fp,"[%.4g,%.4g,%.4g]%c\n", q.xx, Height-q.yy, q.zz, i+1<l?',':' ');
-		mgl_printf(fp, gz,"[%d,%d,%d]%c\n", int(q.xx), int(Height-q.yy), int(q.zz), i+1<l?',':' ');
+		res = res + mgl_sprintf("[%d,%d,%d]%c\n", int(q.xx), int(Height-q.yy), int(q.zz), i+1<l?',':' ');
 	}
 	l = Prm.size();
-	mgl_printf(fp, gz,"],\t\"nprim\":%lu,\t\"prim\":[\n",(unsigned long)l);
+	res = res + mgl_sprintf("],\t\"nprim\":%lu,\t\"prim\":[\n",(unsigned long)l);
 
 	std::vector<mglPoint> xy;	// vector for glyphs coordinates (to be separated from pnts)
 	for(i=0;i<l;i++)
@@ -540,46 +559,41 @@ bool mglCanvas::WriteJSON(const char *fname, bool force_zlib)
 		}
 		if(p.type==1 && n1>n2)	{	n1=p.n2;	n2=p.n1;	}
 		if(c.a==1 || p.type==0 || p.type==1 || p.type==4 || p.type==6)
-//			fprintf(fp,"[%d,%ld,%ld,%ld,%ld,%d,%.4g,%.4g,%.4g,%.4g,\"#%02x%02x%02x\"]%c\n",
-			mgl_printf(fp, gz,"[%d,%ld,%ld,%ld,%ld,%d,%.3g,%.2g,%.2g,%.2g,\"#%02x%02x%02x\"]%c\n",
+			res = res + mgl_sprintf("[%d,%ld,%ld,%ld,%ld,%d,%.3g,%.2g,%.2g,%.2g,\"#%02x%02x%02x\"]%c\n",
 				p.type, n1, n2, n3, n4, p.id, p.s, p.w==p.w?p.w:0, p.p==p.p?p.p:0,
 				0., int(255*c.r), int(255*c.g), int(255*c.b), i+1<l?',':' ');
 		else
-//			fprintf(fp,"[%d,%ld,%ld,%ld,%ld,%d,%.4g,%.4g,%.4g,%.4g,\"rgba(%d,%d,%d,%.2g)\"]%c\n",
-			mgl_printf(fp, gz,"[%d,%ld,%ld,%ld,%ld,%d,%.3g,%.2g,%.2g,%.2g,\"rgba(%d,%d,%d,%.2g)\"]%c\n",
+			res = res + mgl_sprintf("[%d,%ld,%ld,%ld,%ld,%d,%.3g,%.2g,%.2g,%.2g,\"rgba(%d,%d,%d,%.2g)\"]%c\n",
 				p.type, n1, n2, n3, n4, p.id, p.s, p.w==p.w?p.w:0, p.p==p.p?p.p:0,
 				0., int(255*c.r), int(255*c.g), int(255*c.b), c.a, i+1<l?',':' ');
 	}
 	
 	l = xy.size();
-	mgl_printf(fp, gz,"],\t\"ncoor\":%lu,\t\"coor\":[\n",(unsigned long)l);
+	res = res + mgl_sprintf("],\t\"ncoor\":%lu,\t\"coor\":[\n",(unsigned long)l);
 	for(i=0;i<l;i++)
 	{
 		const mglPoint &p=xy[i];
 		const mglPnt &q=Pnt[int(0.5+p.z)];
 		if(q.u==q.u && q.v==q.v && q.w==q.w)
-			mgl_printf(fp, gz,"[%.3g,%.3g,%.3g,%.3g,%.3g]%c\n", p.x, p.y, q.u, q.v, q.w, i+1<l?',':' ');
-//			fprintf(fp,"[%.4g,%.4g,%.4g,%.4g,%.4g]%c\n", p.x, p.y, q.u, q.v, q.w, i+1<l?',':' ');
+			res = res + mgl_sprintf("[%.3g,%.3g,%.3g,%.3g,%.3g]%c\n", p.x, p.y, q.u, q.v, q.w, i+1<l?',':' ');
 		else
-//			fprintf(fp,"[%.4g,%.4g,1e11,1e11,1e11]%c\n", p.x, p.y, i+1<l?',':' ');
-			mgl_printf(fp, gz,"[%.2g,%.2g,1e11,1e11,1e11]%c\n", p.x, p.y, i+1<l?',':' ');
+			res = res + mgl_sprintf("[%.2g,%.2g,1e11,1e11,1e11]%c\n", p.x, p.y, i+1<l?',':' ');
 	}
 
 	l = Glf.size();
-	mgl_printf(fp, gz,"],\t\"nglfs\":%lu,\t\"glfs\":[\n",(unsigned long)l);
+	res = res + mgl_sprintf("],\t\"nglfs\":%lu,\t\"glfs\":[\n",(unsigned long)l);
 	for(i=0;i<l;i++)
 	{
 		const mglGlyph &g=Glf[i];
-		mgl_printf(fp, gz,"[%ld,%ld,\n\t[", g.nt, g.nl);
+		res = res + mgl_sprintf("[%ld,%ld,\n\t[", g.nt, g.nl);
 		register long j;
-		for(j=0;j<6*g.nt;j++)	mgl_printf(fp, gz,"%d%c", g.trig[j], j+1<6*g.nt?',':' ');
-		mgl_printf(fp, gz,"],\n\t[");
-		for(j=0;j<2*g.nl;j++)	mgl_printf(fp, gz,"%d%c", g.line[j], j+1<2*g.nl?',':' ');
-		mgl_printf(fp, gz,"]\n]%c\n", i+1<l?',':' ');
+		for(j=0;j<6*g.nt;j++)	res = res + mgl_sprintf("%d%c", g.trig[j], j+1<6*g.nt?',':' ');
+		res = res + mgl_sprintf("],\n\t[");
+		for(j=0;j<2*g.nl;j++)	res = res + mgl_sprintf("%d%c", g.line[j], j+1<2*g.nl?',':' ');
+		res = res + mgl_sprintf("]\n]%c\n", i+1<l?',':' ');
 	}
-	mgl_printf(fp, gz,"]\n}\n");
-	if(fl)	{	if(gz)	gzclose((gzFile)fp);	else	fclose((FILE *)fp);	}
-	return false;
+	res = res + mgl_sprintf("]\n}\n");
+	return res;
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_write_json(HMGL gr, const char *fname,const char *)
@@ -665,7 +679,6 @@ bool mglCanvas::ImportMGLD(const char *fname, bool add)
 	if(n<=0 || m<=0 || l<=0)	{	delete []buf;	fclose(fp);	return true;	}
 	if(!add)	{	Clf();	Txt.clear();	}
 	else	{	ClfZB();	npnt=Pnt.size();	nglf=Glf.size();	}
-	Pnt.reserve(n);	Prm.reserve(m);	Txt.reserve(l);	Glf.reserve(k);
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_lock(&mutexGlf);
 	pthread_mutex_lock(&mutexPnt);
@@ -674,6 +687,7 @@ bool mglCanvas::ImportMGLD(const char *fname, bool add)
 #endif
 #pragma omp critical
 	{
+		Pnt.reserve(n);	Prm.reserve(m);	Txt.reserve(l);	Glf.reserve(k);
 		mglPnt p;
 		for(i=0;i<n;i++)
 		{

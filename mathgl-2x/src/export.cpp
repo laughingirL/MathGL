@@ -198,15 +198,26 @@ int MGL_NO_EXPORT mgl_jpeg_save(const char *fname, int w, int h, unsigned char *
 #endif
 }
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_printf(void *fp, bool gz, const char *str, ...)
+void MGL_NO_EXPORT mgl_printf(void *fp, bool gz, const char *str, ...)	// NOTE This function is not thread-safe
 {
-	char buf[512];
+	static char buf[1024];
 	va_list lst;
 	va_start(lst,str);
-	vsnprintf(buf,512,str,lst);
+	vsnprintf(buf,1023,str,lst);
 	va_end(lst);
 	if(gz)	gzprintf((gzFile)fp, "%s", buf);
 	else	fprintf((FILE *)fp, "%s", buf);
+}
+//---------------------------------------------------------------------------
+std::string MGL_NO_EXPORT mgl_sprintf(const char *str, ...)	// NOTE This function is not thread-safe
+{
+	static char buf[1024];
+	va_list lst;
+	va_start(lst,str);
+	vsnprintf(buf,1023,str,lst);
+	va_end(lst);
+	std::string res = buf;
+	return res;
 }
 //---------------------------------------------------------------------------
 int MGL_NO_EXPORT mgl_bps_save(const char *fname, int w, int h, unsigned char **p)

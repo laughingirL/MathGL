@@ -212,6 +212,7 @@ using mglBase::Light;
 	bool ImportMGLD(const char *fname, bool add=false);
 	/// Export in JSON format suitable for later drawing by JavaScript
 	bool WriteJSON(const char *fname, bool force_zlib=false);
+	std::string GetJSON();
 
 	/// Set the transparency type
 	inline void SetTranspType(int val)
@@ -422,7 +423,6 @@ private:
 	void PostScale(const mglMatrix *M, mglPoint &p) const;
 	/// Scale points p for projection to the face number nface in image
 	long ProjScale(int nface, long p, bool text=false);
-	void PostScale(mglPoint *p,long n) const;
 	/// Set coordinate and add the point, return its id
 	long setPp(mglPnt &q, const mglPoint &p);
 	

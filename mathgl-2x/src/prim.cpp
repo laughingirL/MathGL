@@ -153,7 +153,7 @@ void MGL_EXPORT mgl_face(HMGL gr, double x0, double y0, double z0, double x1, do
 	if(mgl_isnan(z2))	z2 = zz;	if(mgl_isnan(z3))	z3 = zz;
 	mglPoint p1(x0,y0,z0), p2(x1,y1,z1), p3(x2,y2,z2), p4(x3,y3,z3);
 	if(gr->GetNumPal(pal)>=4)
-	{	c2=gr->NextColor(pal);	c3=gr->NextColor(pal);	c4=gr->NextColor(pal);	}
+	{	c2=gr->NextColor(pal,1);	c3=gr->NextColor(pal,2);	c4=gr->NextColor(pal,3);	}
 	mglPoint q1,q2,q3,q4;
 	q1 = (p2-p1)^(p3-p1);	q4 = (p2-p4)^(p3-p4);
 	q2 = (p1-p2)^(p4-p2);	q3 = (p1-p3)^(p4-p3);
