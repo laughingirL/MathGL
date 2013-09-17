@@ -219,8 +219,7 @@ long mglBase::AddGlyph(int s, long j)
 	memcpy(g.trig, fnt->GetTr(s,j), 6*g.nt*sizeof(short));
 	memcpy(g.line, fnt->GetLn(s,j), 2*g.nl*sizeof(short));
 	// now let find the similar glyph
-	register size_t i;
-	for(i=0;i<Glf.size();i++)	if(g==Glf[i])	return i;
+	for(size_t i=0;i<Glf.size();i++)	if(g==Glf[i])	return i;
 	// if no one then let add it
 	long k;
 #pragma omp critical(glf)
@@ -893,13 +892,13 @@ mreal mglBase::AddTexture(mglColor c)
 {
 	if(!c.Valid())	return -1;
 	// first lets try an existed one
-	for(size_t i=0;i<Txt.size();i++)	for(size_t j=0;j<255;j++)
+	for(size_t i=0;i<Txt.size();i++)	for(int j=0;j<255;j++)
 		if(c==Txt[i].col[2*j])
 			return i+j/255.;
 	// add new texture
 	mglTexture t;
 #pragma omp parallel for
-	for(size_t i=0;i<MGL_TEXTURE_COLOURS;i++)	t.col[i]=c;
+	for(long i=0;i<MGL_TEXTURE_COLOURS;i++)	t.col[i]=c;
 	long k;
 #pragma omp critical(txt)
 	{MGL_PUSH(Txt,t,mutexTxt);	k=Txt.size()-1;}	return k;
@@ -970,8 +969,8 @@ char mglBase::SetPenPal(const char *p, long *Id, bool pal)
 		const char *wdh = "123456789";
 		const char *arr = "AKDTVISO_";
 		long m=0;
-		register size_t i,l=strlen(p);
-		for(i=0;i<l;i++)
+		size_t l=strlen(p);
+		for(size_t i=0;i<l;i++)
 		{
 			if(p[i]=='{')	m++;	if(p[i]=='}')	m--;
 			if(m>0)	continue;
@@ -1021,9 +1020,8 @@ void mglBase::SetMask(const char *p)
 	{
 		const char *msk = MGL_MASK_ID, *s;
 		const char *wdh = "123456789";
-		register size_t i,l=strlen(p);
-		long m=0;
-		for(i=0;i<l;i++)
+		long m=0, l=strlen(p);
+		for(long i=0;i<l;i++)
 		{
 			if(p[i]=='{')	m++;	if(p[i]=='}')	m--;
 			if(m>0)	continue;
@@ -1095,9 +1093,8 @@ void mglBase::vect_plot(long p1, long p2, mreal s)
 //-----------------------------------------------------------------------------
 int mglFindArg(const char *str)
 {
-	register long l=0,k=0;
-	register size_t i,len=strlen(str);
-	for(i=0;i<len;i++)
+	long l=0,k=0,len=strlen(str);
+	for(long i=0;i<len;i++)
 	{
 		if(str[i]=='\'') l++;
 		if(str[i]=='{') k++;
@@ -1301,10 +1298,10 @@ void mglBase::ClearUnused()
 #endif
 #pragma omp critical
 	{
-		register size_t i, l=Prm.size();
+		size_t l=Prm.size();
 		// find points which are actually used
 		long *used = new long[Pnt.size()];	memset(used,0,Pnt.size()*sizeof(long));
-		for(i=0;i<l;i++)
+		for(size_t i=0;i<l;i++)
 		{
 			const mglPrim &p=Prm[i];
 			if(p.n1<0)	continue;
@@ -1321,12 +1318,12 @@ void mglBase::ClearUnused()
 		// now add proper indexes
 		l=Pnt.size();
 		std::vector<mglPnt> pnt;
-		for(i=0;i<l;i++)	if(used[i])
+		for(size_t i=0;i<l;i++)	if(used[i])
 		{	pnt.push_back(Pnt[i]);	used[i]=pnt.size();	}
 		Pnt = pnt;	pnt.clear();
 		// now replace point id
 		l=Prm.size();
-		for(i=0;i<l;i++)
+		for(size_t i=0;i<l;i++)
 		{
 			mglPrim &p=Prm[i];	p.n1=used[p.n1]-1;
 			if(p.type==1 || p.type==4)	p.n2=used[p.n2]-1;

@@ -47,7 +47,7 @@ double MGL_EXPORT mgl_ipow(double x,int n);
 /// Get random number with Gaussian distribution
 double MGL_EXPORT mgl_gauss_rnd();
 /// Fill frequencies for FFT
-void MGL_EXPORT mgl_fft_freq(double *freq,size_t nn);
+void MGL_EXPORT mgl_fft_freq(double *freq,long nn);
 
 /// Remove double spaces from the string
 void MGL_EXPORT mgl_strcls(char *str);

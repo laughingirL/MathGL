@@ -75,7 +75,7 @@ MGL_EXPORT char *mgl_fgetstr(FILE *fp)
 		mgl_strtrim(s);
 		//		strlwr(s);
 	} while(!feof(fp) && (s[0]==0 || s[0]=='%' || s[0]=='#'));
-	for(size_t i=0;s[i];i++)	if(s[i]=='#')	{	s[i]=0;	break;	}
+	for(long i=0;s[i];i++)	if(s[i]=='#')	{	s[i]=0;	break;	}
 	return s;
 }
 //-----------------------------------------------------------------------------
@@ -88,7 +88,7 @@ void MGL_EXPORT mgl_fgetpar(FILE *fp, const char *str, ...)
 	va_list lst;
 	va_start(lst,str);
 	t = mgl_fgetstr(fp);
-	for(size_t i=0;i<len;i++)
+	for(long i=0;i<len;i++)
 	{
 		if(str[i]=='%')
 		{
@@ -258,10 +258,10 @@ double MGL_EXPORT mgl_gauss_rnd()
 	return v1!=0 ? sqrt(-2.*log(v1))*cos(2*M_PI*v2) : 0;
 }
 //-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_fft_freq(double *freq, size_t nn)
+void MGL_EXPORT mgl_fft_freq(double *freq, long nn)
 {
 #pragma omp parallel for
-	for(size_t i=0;i<=nn/2;i++)
+	for(long i=0;i<=nn/2;i++)
 	{
 		freq[i] = i;
 		if(i>0) freq[nn-i] = -(double)(i);

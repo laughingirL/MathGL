@@ -37,7 +37,7 @@ mglFunc::mglFunc(const mglFunc &f)
 mglFunc::mglFunc(long p, const wchar_t *f)
 {
 	pos = p;	func = f;
-	register size_t i;
+	size_t i;
 	for(i=0;(isalnum(f[i]) || f[i]=='_');i++);
 	narg = wcstol(f+i+1,0,0);	func = func.substr(0,i);
 	if(narg<0 || narg>9)	narg=0;
@@ -45,8 +45,7 @@ mglFunc::mglFunc(long p, const wchar_t *f)
 //-----------------------------------------------------------------------------
 long mglParser::IsFunc(const std::wstring &name, int *na)
 {
-	register size_t i;
-	for(i=0;i<func.size();i++)
+	for(size_t i=0;i<func.size();i++)
 	{
 		const mglFunc &f = func[i];
 		if(f.func==name)
@@ -904,17 +903,16 @@ void mglParser::Execute(mglGraph *gr, int n, const wchar_t **text)
 //-----------------------------------------------------------------------------
 void mglParser::Execute(mglGraph *gr, const wchar_t *text)
 {
-	size_t s = mgl_wcslen(text)+1;
+	size_t s = mgl_wcslen(text)+1, n=1;
 	wchar_t *wcs = new wchar_t[s];
 	const wchar_t **str;
-	register size_t i, n=1;
-	for(i=0;i<s;i++)	if(text[i]=='\n')	n++;
+	for(size_t i=0;i<s;i++)	if(text[i]=='\n')	n++;
 	str = (const wchar_t **)malloc(n*sizeof(wchar_t *));
 	memcpy(wcs, text, s*sizeof(wchar_t));
 	str[0] = wcs;	n=1;
 	long next=0;
 	Stop = false;
-	for(i=0;i<s;i++)
+	for(size_t i=0;i<s;i++)
 	{
 		if(text[i]=='\\')	next = i;
 		else if(text[i]>' ')next = 0;

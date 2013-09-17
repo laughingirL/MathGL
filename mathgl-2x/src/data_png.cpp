@@ -34,23 +34,22 @@ size_t MGL_NO_EXPORT mgl_col_dif(unsigned char *c1,unsigned char *c2,bool sum)
 MGL_NO_EXPORT unsigned char *mgl_create_scheme(const char *scheme,long &num)
 {
 	unsigned char *c=0,*cc=new unsigned char[3*strlen(scheme)+3],*c1,*c2;
-	size_t nc=1,np=0;
-	register size_t i,j,l=strlen(scheme);
+	size_t nc=1,np=0,l=strlen(scheme);
 	mglColor col;
-	for(i=0;i<l;i++)
+	for(size_t i=0;i<l;i++)
 	{
 		col = mglColor(scheme[i]);
 		if(col.Valid())
 		{	cc[3*np]=255*col.r;	cc[3*np+1]=255*col.g;	cc[3*np+2]=255*col.b;	np++;	}
 	}
 	if(np<2)	{	delete []cc;	return 0;	}
-	for(i=0;i<np-1;i++)	nc+=mgl_col_dif(cc+3*i,cc+3*i+3,false);
+	for(size_t i=0;i<np-1;i++)	nc+=mgl_col_dif(cc+3*i,cc+3*i+3,false);
 	c = new unsigned char[3*nc+3];
 	size_t dd,pos=0;
-	for(i=0;i<np-1;i++)
+	for(size_t i=0;i<np-1;i++)
 	{
 		dd=mgl_col_dif(cc+3*i,cc+3*i+3,false);
-		for(j=0;j<dd;j++)
+		for(size_t j=0;j<dd;j++)
 		{
 			c1 = c+3*(pos+j);	c2 = cc+3*i;
 			c1[0] = c2[0]+(c2[3]-c2[0])*j/dd;

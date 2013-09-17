@@ -59,7 +59,7 @@ void mglCanvas::ResetFrames()	{	CurFrameId=0;	DrwDat.clear();	}
 //-----------------------------------------------------------------------------
 void mglCanvas::SetFrame(long i)
 {
-	if(get(MGL_VECT_FRAME) && i>=0 && i<DrwDat.size())
+	if(get(MGL_VECT_FRAME) && i>=0 && i<long(DrwDat.size()))
 	{
 		Finish();	CurFrameId--;
 		mglDrawDat d;
@@ -114,18 +114,17 @@ void mglCanvas::ShowFrame(long k)
 #pragma omp critical
 	{
 		const mglDrawDat &d=DrwDat[k];
-		register size_t i;
-		Glf.reserve(d.Glf.size());	for(i=0;i<d.Glf.size();i++)	Glf.push_back(d.Glf[i]);
-		Ptx.reserve(d.Ptx.size());	for(i=0;i<d.Ptx.size();i++)	Ptx.push_back(d.Ptx[i]);
-		Txt.reserve(d.Pnt.size());	for(i=0;i<d.Txt.size();i++)	Txt.push_back(d.Txt[i]);
+		Glf.reserve(d.Glf.size());	for(size_t i=0;i<d.Glf.size();i++)	Glf.push_back(d.Glf[i]);
+		Ptx.reserve(d.Ptx.size());	for(size_t i=0;i<d.Ptx.size();i++)	Ptx.push_back(d.Ptx[i]);
+		Txt.reserve(d.Pnt.size());	for(size_t i=0;i<d.Txt.size();i++)	Txt.push_back(d.Txt[i]);
 		Pnt.reserve(d.Pnt.size());
-		for(i=0;i<d.Pnt.size();i++)
+		for(size_t i=0;i<d.Pnt.size();i++)
 		{
 			mglPnt p = d.Pnt[i]; 	p.c += ntxt;
 			Pnt.push_back(p);
 		}
 		Prm.reserve(d.Prm.size());
-		for(i=0;i<d.Prm.size();i++)
+		for(size_t i=0;i<d.Prm.size();i++)
 		{
 			mglPrim p = d.Prm[i];
 			p.n1 += npnt;

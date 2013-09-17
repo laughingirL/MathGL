@@ -381,15 +381,15 @@ protected:
 
 	// functions for multi-threading
 	void PreparePrim(bool fast);
-	void pxl_combine(size_t id, size_t n, const void *);
-	void pxl_memcpy(size_t id, size_t n, const void *);
-	void pxl_backgr(size_t id, size_t n, const void *);
-	void pxl_primdr(size_t id, size_t n, const void *);
-	void pxl_dotsdr(size_t id, size_t n, const void *);
-	void pxl_transform(size_t id, size_t n, const void *);
-	void pxl_setz(size_t id, size_t n, const void *);
-	void pxl_setz_adv(size_t id, size_t n, const void *);
-	void pxl_other(size_t id, size_t n, const void *p);
+	void pxl_combine(long id, long n, const void *);
+	void pxl_memcpy(long id, long n, const void *);
+	void pxl_backgr(long id, long n, const void *);
+	void pxl_primdr(long id, long n, const void *);
+	void pxl_dotsdr(long id, long n, const void *);
+	void pxl_transform(long id, long n, const void *);
+	void pxl_setz(long id, long n, const void *);
+	void pxl_setz_adv(long id, long n, const void *);
+	void pxl_other(long id, long n, const void *p);
 	/// Put drawing from other mglCanvas (for multithreading, like subplots)
 	void PutDrawReg(mglDrawReg *d, const mglCanvas *gr);
 	

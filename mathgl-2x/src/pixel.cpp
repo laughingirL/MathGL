@@ -207,7 +207,7 @@ bool operator>(const mglPrim &a, const mglPrim &b)
 //-----------------------------------------------------------------------------
 MGL_NO_EXPORT void *mgl_canvas_thr(void *par)
 {	mglThreadG *t=(mglThreadG *)par;	(t->gr->*(t->f))(t->id, t->n, t->p);	return NULL;	}
-void mglStartThread(void (mglCanvas::*func)(size_t i, size_t n, const void *p), mglCanvas *gr, size_t n, const void *p=NULL)
+void mglStartThread(void (mglCanvas::*func)(long i, long n, const void *p), mglCanvas *gr, long n, const void *p=NULL)
 {
 	if(!func || !gr)	return;
 #if MGL_HAVE_PTHREAD
@@ -216,7 +216,7 @@ void mglStartThread(void (mglCanvas::*func)(size_t i, size_t n, const void *p), 
 	{
 		pthread_t *tmp=new pthread_t[mglNumThr];
 		mglThreadG *par=new mglThreadG[mglNumThr];
-		register int i;
+		register long i;
 		for(i=0;i<mglNumThr;i++)	// put parameters into the structure
 		{	par[i].gr=gr;	par[i].f=func;	par[i].n=n;	par[i].p=p;	par[i].id=i;	}
 		for(i=0;i<mglNumThr;i++)	pthread_create(tmp+i, 0, mgl_canvas_thr, par+i);
@@ -228,42 +228,42 @@ void mglStartThread(void (mglCanvas::*func)(size_t i, size_t n, const void *p), 
 	{	mglNumThr = 1;	(gr->*func)(0,n,p);	}
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::pxl_combine(size_t id, size_t n, const void *)
+void mglCanvas::pxl_combine(long id, long n, const void *)
 {
 	unsigned char c[4],*cc;
 #if !MGL_HAVE_PTHREAD
 #pragma omp parallel for private(c,cc)
 #endif
-	for(size_t i=id;i<n;i+=mglNumThr)
+	for(long i=id;i<n;i+=mglNumThr)
 	{	cc = C+12*i;		memcpy(c,BDef,4);
 		combine(c,cc+8);	combine(c,cc+4);
 		combine(c,cc);		memcpy(G4+4*i,c,4);	}
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::pxl_memcpy(size_t id, size_t n, const void *)
+void mglCanvas::pxl_memcpy(long id, long n, const void *)
 {
 #if !MGL_HAVE_PTHREAD
 #pragma omp parallel for
 #endif
-	for(size_t i=id;i<n;i+=mglNumThr)	memcpy(G4+4*i,C+12*i,4);
+	for(long i=id;i<n;i+=mglNumThr)	memcpy(G4+4*i,C+12*i,4);
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::pxl_backgr(size_t id, size_t n, const void *)
+void mglCanvas::pxl_backgr(long id, long n, const void *)
 {
 	unsigned char c[4];
 #if !MGL_HAVE_PTHREAD
 #pragma omp parallel for private(c)
 #endif
-	for(size_t i=id;i<n;i+=mglNumThr)
+	for(long i=id;i<n;i+=mglNumThr)
 	{	memcpy(c,BDef,4);	combine(c,G4+4*i);	memcpy(G+3*i,c,3);	}
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::pxl_transform(size_t id, size_t n, const void *)
+void mglCanvas::pxl_transform(long id, long n, const void *)
 {
 #if !MGL_HAVE_PTHREAD
 #pragma omp parallel for
 #endif
-	for(size_t i=id;i<n;i+=mglNumThr)
+	for(long i=id;i<n;i+=mglNumThr)
 	{
 		mglPnt &p=Pnt[i];
 		register float x = p.xx-Width/2., y = p.yy-Height/2., z = p.zz-Depth/2.;
@@ -275,12 +275,12 @@ void mglCanvas::pxl_transform(size_t id, size_t n, const void *)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::pxl_setz_adv(size_t id, size_t n, const void *)
+void mglCanvas::pxl_setz_adv(long id, long n, const void *)
 {
 #if !MGL_HAVE_PTHREAD
 #pragma omp parallel for
 #endif
-	for(size_t i=id;i<n;i+=mglNumThr)
+	for(long i=id;i<n;i+=mglNumThr)
 	{
 		mglPrim &q=Prm[i];	q.z = Pnt[q.n1].z;
 		if(q.type==1)	q.z = (q.z + Pnt[q.n2].z)/2;
@@ -289,12 +289,12 @@ void mglCanvas::pxl_setz_adv(size_t id, size_t n, const void *)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::pxl_setz(size_t id, size_t n, const void *)
+void mglCanvas::pxl_setz(long id, long n, const void *)
 {
 #if !MGL_HAVE_PTHREAD
 #pragma omp parallel for
 #endif
-	for(size_t i=id;i<n;i+=mglNumThr)
+	for(long i=id;i<n;i+=mglNumThr)
 	{	mglPrim &q=Prm[i];	q.z = Pnt[q.n1].z;	}
 }
 //-----------------------------------------------------------------------------
@@ -315,20 +315,19 @@ void mglBase::resort()
 	clr(MGL_FINISHED);
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::pxl_primdr(size_t id, size_t , const void *)
+void mglCanvas::pxl_primdr(long id, long , const void *)
 {
 	int nx=1,ny=1;
-	register size_t i;
 	if(id<unsigned(mglNumThr))	// TODO add omp here
 	{
-		for(i=1;i<=unsigned(sqrt(double(mglNumThr))+0.5);i++)
+		for(long i=1;i<=long(sqrt(double(mglNumThr))+0.5);i++)
 			if(mglNumThr%i==0)	ny=i;
 		nx = mglNumThr/ny;
 	}
 	else 	{	nx=ny=1;	id=0;	}
 	mglDrawReg d;	d.set(this,nx,ny,id);
 
-	for(i=0;i<Prm.size();i++)
+	for(size_t i=0;i<Prm.size();i++)
 	{
 		if(Stop)	return;
 		const mglPrim &p=Prm[i];
@@ -347,13 +346,13 @@ void mglCanvas::pxl_primdr(size_t id, size_t , const void *)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::pxl_dotsdr(size_t id, size_t , const void *)
+void mglCanvas::pxl_dotsdr(long id, long , const void *)
 {
 	unsigned char r[4];
 #if !MGL_HAVE_PTHREAD
 #pragma omp parallel for private(r)
 #endif
-	for(size_t i=id;i<Prm.size();i+=mglNumThr)
+	for(long i=id;i<long(Prm.size());i+=mglNumThr)
 	{
 		if(Stop)	continue;
 		const mglPnt &q=Pnt[Prm[i].n1];
@@ -424,7 +423,7 @@ void mglCanvas::Clf(mglColor Back)
 	ClfZB(true);
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::pxl_other(size_t id, size_t n, const void *p)
+void mglCanvas::pxl_other(long id, long n, const void *p)
 {
 	const mglCanvas *gr = (const mglCanvas *)p;
 	if(!gr)	return;
@@ -432,9 +431,9 @@ void mglCanvas::pxl_other(size_t id, size_t n, const void *p)
 #if !MGL_HAVE_PTHREAD
 #pragma omp parallel for
 #endif
-		for(size_t k=id;k<n;k+=mglNumThr)
+		for(long k=id;k<n;k+=mglNumThr)
 		{
-			register size_t i = k%Width, j = Height-1-(k/Width);
+			register long i = k%Width, j = Height-1-(k/Width);
 			pnt_plot(i,j,gr->Z[3*k+2],gr->C+12*k+8,gr->OI[k]);
 			pnt_plot(i,j,gr->Z[3*k+1],gr->C+12*k+4,gr->OI[k]);
 			pnt_plot(i,j,gr->Z[3*k],gr->C+12*k,gr->OI[k]);
@@ -443,9 +442,9 @@ void mglCanvas::pxl_other(size_t id, size_t n, const void *p)
 #if !MGL_HAVE_PTHREAD
 #pragma omp parallel for
 #endif
-		for(size_t k=id;k<n;k+=mglNumThr)
+		for(long k=id;k<n;k+=mglNumThr)
 		{
-			register size_t i = k%Width, j = Height-1-(k/Width);
+			register long i = k%Width, j = Height-1-(k/Width);
 			pnt_plot(i,j,gr->Z[3*k],gr->C+12*k,gr->OI[k]);
 		}
 }

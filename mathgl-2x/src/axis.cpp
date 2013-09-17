@@ -52,7 +52,7 @@ void MGL_EXPORT mgl_wcstrim(wchar_t *str)
 //-----------------------------------------------------------------------------
 size_t MGL_EXPORT mgl_wcslen(const wchar_t *str)
 {
-	size_t i=0;
+	long i=0;
 	if(str)	while(str[i])	i++;
 	return i;
 }
@@ -158,7 +158,7 @@ void mglCanvas::SetTicksVal(char dir, HCDT v, const char **lbl, bool add)
 	if(add)	{	UpdateAxis();	AdjustTicks(aa,ff);	}
 	if(!v || !lbl)	{	aa.f = 0;	return;	}
 	aa.f = 2;	aa.ns=0;	aa.ds=0;
-	for(size_t i=0;i<v->GetNx();i++)	MGL_TO_WCS(lbl[i],aa.AddLabel(wcs,v->v(i)));
+	for(long i=0;i<v->GetNx();i++)	MGL_TO_WCS(lbl[i],aa.AddLabel(wcs,v->v(i)));
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::SetTickTempl(char dir, const wchar_t *t)
@@ -894,7 +894,7 @@ void mglCanvas::Colorbar(HCDT v, const char *sch, mreal x, mreal y, mreal w, mre
 void mglCanvas::colorbar(HCDT vv, const mreal *c, int where, mreal x, mreal y, mreal w, mreal h)
 {
 	static int cgid=1;	StartGroup("Colorbar",cgid++);
-	register size_t i,n=vv->GetNx();
+	long n=vv->GetNx();
 	long n1,n2,n3,n4;
 	mreal d,s3=B.pf,ss=1/s3;		// NOTE: colorbar was wider ss=0.9;
 	mglPoint p1,p2;
@@ -902,7 +902,7 @@ void mglCanvas::colorbar(HCDT vv, const mreal *c, int where, mreal x, mreal y, m
 	Push();	set(MGL_DISABLE_SCALE);	B=B1;	B.pf=s3;
 	x = s3*(2*x-1);	y = s3*(2*y-1);	w *= s3;	h *= s3;
 	mask = MGL_SOLID_MASK;	mask_an=0;
-	for(i=0;i<n-1;i++)
+	for(long i=0;i<n-1;i++)
 	{
 		d = GetA(vv->v(i))*2-1;
 		p1 = p2 = mglPoint((ss*d+1)*w+x, (ss*d+1)*h+y, s3);
@@ -929,7 +929,7 @@ void mglCanvas::colorbar(HCDT vv, const mreal *c, int where, mreal x, mreal y, m
 	if(n<64)
 	{
 		wchar_t buf[64];	ac.txt.clear();
-		for(i=0;i<n;i++)
+		for(long i=0;i<n;i++)
 		{
 			d = vv->v(i);
 			mglprintf(buf,64,ac.t.empty()?(fabs(d)<1 ? L"%.2g" :  L"%.3g"):ac.t.c_str(),d);
@@ -939,7 +939,7 @@ void mglCanvas::colorbar(HCDT vv, const mreal *c, int where, mreal x, mreal y, m
 	else	{	UpdateAxis();	AdjustTicks(ac,fa!=0);	}
 	// hint for using standard label drawing function
 	SetPenPal(TickStl);
-	for(i=0;i<ac.txt.size();i++)
+	for(size_t i=0;i<ac.txt.size();i++)
 	{
 		d = ac.txt[i].val = GetA(ac.txt[i].val)*2-1;
 		p1 = p2 = mglPoint((ss*d+1)*w+x, (ss*d+1)*h+y, s3);

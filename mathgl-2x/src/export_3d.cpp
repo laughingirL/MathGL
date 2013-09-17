@@ -286,13 +286,12 @@ void MGL_EXPORT mgl_obj_prim_old(HMGL gr, const mglPrim &q, const mglPnt &p, FIL
 void MGL_EXPORT mgl_write_obj_old(HMGL gr, const char *fname,const char *descr, int use_png)
 {
 	if(gr->GetPrmNum()==0)	return;	// nothing to do
-	register size_t i,j;
-	long m1=0,m2=0,m;
-	for(i=0;i<gr->Grp.size();i++)	// prepare array of indirect indexing
+	long m1=0,m2=0,m,j;
+	for(size_t i=0;i<gr->Grp.size();i++)	// prepare array of indirect indexing
 	{	m = gr->Grp[i].Id;	if(m<m1) m1=m;	if(m>m2) m2=m;	}
 	long *ng = new long[m2-m1+1];
-	for(i=0;i<gr->Grp.size();i++)	ng[gr->Grp[i].Id-m1] = i;
-	for(i=0;i<size_t(gr->GetPrmNum());i++)	// collect data for groups
+	for(size_t i=0;i<gr->Grp.size();i++)	ng[gr->Grp[i].Id-m1] = i;
+	for(long i=0;i<gr->GetPrmNum();i++)	// collect data for groups
 	// it is rather expensive (extra 4b per primitive) but need for export to 3D
 	{
 		m = gr->GetPrm(i).id-m1;
@@ -305,7 +304,7 @@ void MGL_EXPORT mgl_write_obj_old(HMGL gr, const char *fname,const char *descr, 
 	FILE *fp=fopen(fname,"wt");
 	// vertices definition
 	fprintf(fp,"# Created by MathGL library\n# Title: %s\n",(descr && *descr) ? descr : fname);
-	for(i=0;i<size_t(gr->GetPntNum());i++)
+	for(long i=0;i<gr->GetPntNum();i++)
 	{
 		const mglPnt &pp = gr->GetPnt(i);
 		fprintf(fp,"v %g %g %g\n",pp.x,pp.y,pp.z);
@@ -315,11 +314,11 @@ void MGL_EXPORT mgl_write_obj_old(HMGL gr, const char *fname,const char *descr, 
 	}
 	// primitive definition in groups
 	tname[len-4]=0;	fprintf(fp,"# Primitives Definitions\nmtllib %s.mtl\nusemtl %s\n",tname,tname);
-	for(i=0;i<gr->Grp.size();i++)
+	for(size_t i=0;i<gr->Grp.size();i++)
 	{
 		fprintf(fp,"g %s\n",gr->Grp[i].Lbl.c_str());
 		std::vector<long> &p = gr->Grp[i].p;
-		for(j=0;j<p.size();j++)
+		for(size_t j=0;j<p.size();j++)
 		{
 			const mglPrim &q=gr->GetPrm(p[j]);
 			mgl_obj_prim_old(gr, q, gr->GetPnt(q.n1), fp, q.s);
@@ -346,8 +345,8 @@ void MGL_EXPORT mgl_write_obj_old(HMGL gr, const char *fname,const char *descr, 
 	j=gr->GetTxtNum();
 	unsigned char *buf = new unsigned char[4*256*256*j];
 	unsigned char **pbuf= (unsigned char **)malloc(256*j*sizeof(unsigned char *));
-	for(i=0;i<256*j;i++)	pbuf[i] = buf+4*256*i;
-	for(i=0;i<j;i++)	gr->GetTxt(i).GetRGBA(buf+i*256*256*4);
+	for(long i=0;i<256*j;i++)	pbuf[i] = buf+4*256*i;
+	for(long i=0;i<j;i++)	gr->GetTxt(i).GetRGBA(buf+i*256*256*4);
 	if(use_png)	mgl_pnga_save(tname,256,256*j,pbuf);
 	else		mgl_tga_save(tname,256,256*j,pbuf);
 	free(pbuf);	delete []buf;	delete []tname;
@@ -617,27 +616,26 @@ bool mglCanvas::ExportMGLD(const char *fname, const char *descr)
 	if(!fp)	return true;
 	// NOTE: I'll save Ptx. So prim type=6 is useless,and no LaTeX
 	fprintf(fp,"MGLD %lu %lu %lu %lu %d %d\n# %s\n", (unsigned long)Pnt.size(), (unsigned long)Prm.size(), (unsigned long)Txt.size(), (unsigned long)Glf.size(), Width, Height, (descr && *descr) ? descr : fname);
-	register size_t i;
 	fprintf(fp,"# Vertexes: x y z c t ta u v w r g b a\n");
-	for(i=0;i<Pnt.size();i++)
+	for(size_t i=0;i<Pnt.size();i++)
 	{
 		const mglPnt &q=Pnt[i];
 		fprintf(fp,"%.4g\t%.4g\t%.4g\t%.4g\t%.4g\t%.4g\t%.4g\t%.4g\t%.4g\t%.4g\t%.4g\t%.4g\t%.4g\n", q.xx, q.yy, q.zz, q.c, q.t, q.ta, q.u, q.v, q.w, q.r, q.g, q.b, q.a);
 	}
 	fprintf(fp,"# Primitives: type n1 n2 n3 n4 id s w p\n");
-	for(i=0;i<Prm.size();i++)
+	for(size_t i=0;i<Prm.size();i++)
 	{
 		const mglPrim &p=Prm[i];	// TODO: check if better save p.m instead of p.s,p.p
 		fprintf(fp,"%d\t%ld\t%ld\t%ld\t%ld\t%d\t%g\t%g\t%g\n", p.type, p.n1, p.n2, p.n3, p.n4, p.id, p.s, p.w, p.p);
 	}
 	fprintf(fp,"# Textures: smooth alpha colors\n");
-	for(i=0;i<Txt.size();i++)
+	for(size_t i=0;i<Txt.size();i++)
 	{
 		const mglTexture &t=Txt[i];
 		fprintf(fp,"%d\t%.4g\t%s\n",t.Smooth,t.Alpha,t.Sch);
 	}
 	fprintf(fp,"# Glyphs: nt nl [trig] [line]\n");
-	for(i=0;i<Glf.size();i++)
+	for(size_t i=0;i<Glf.size();i++)
 	{
 		const mglGlyph &g=Glf[i];
 		fprintf(fp,"%ld\t%ld\n", g.nt, g.nl);
@@ -670,8 +668,7 @@ bool mglCanvas::ImportMGLD(const char *fname, bool add)
 	char *buf=new char[512];
 	if(!fgets(buf,512,fp))	*buf=0;
 	if(strncmp(buf,"MGLD",4))	{	delete []buf;	fclose(fp);	return true;	}
-	register size_t i;
-	unsigned long n=0,m=0,l=0,k=0, npnt=0, nglf=0;
+	unsigned long i,n=0,m=0,l=0,k=0, npnt=0, nglf=0;
 	int w=0,h=0,d;
 	sscanf(buf+5,"%lu%lu%lu%lu%d%d",&n,&m,&l,&k,&w,&h);
 	if(w<=0 || h<=0)	{	w=Width;	h=Height;	}
@@ -996,7 +993,7 @@ void MGL_EXPORT mgl_x3d_mdef(HMGL gr, void *fp, bool gz)
 	m_s=false,m_a=false,m_o=false,m_T=false,
 	m_V=false,m_S=false,m_D=false,m_Y=false,m_l=false,
 	m_L=false,m_r=false,m_R=false,m_X=false,m_P=false;
-	for(size_t i=0;i<gr->GetPrmNum();i++)
+	for(long i=0;i<gr->GetPrmNum();i++)
 	{
 		const mglPrim q = gr->GetPrm(i);
 		if(q.type>0)	continue;		if(q.n4=='+')	m_p = true;
@@ -1148,12 +1145,11 @@ void MGL_EXPORT mgl_write_x3d(HMGL gr, const char *fname,const char *descr)
 
 	// 2. now find group for primitives
 	long m1=0,m2=0,m;
-	register size_t i,j;
-	for(i=0;i<gr->Grp.size();i++)	// prepare array of indirect indexing
+	for(size_t i=0;i<gr->Grp.size();i++)	// prepare array of indirect indexing
 	{	m = gr->Grp[i].Id;	if(m<m1) m1=m;	if(m>m2) m2=m;	}
 	long *ng = new long[m2-m1+1];
-	for(i=0;i<gr->Grp.size();i++)	ng[gr->Grp[i].Id-m1] = i;
-	for(i=0;i<gr->GetPrmNum();i++)	// collect data for groups
+	for(size_t i=0;i<gr->Grp.size();i++)	ng[gr->Grp[i].Id-m1] = i;
+	for(long i=0;i<gr->GetPrmNum();i++)	// collect data for groups
 	// it is rather expensive (extra 4b per primitive) but need for export to 3D
 	{
 		m = gr->GetPrm(i).id-m1;
@@ -1168,14 +1164,14 @@ void MGL_EXPORT mgl_write_x3d(HMGL gr, const char *fname,const char *descr)
 	long npnt = gr->GetPntNum(), k;
 	long *pnt=new long[npnt];
 	mglPrim q;
-	for(i=0;i<gr->Grp.size();i++)
+	for(size_t i=0;i<gr->Grp.size();i++)
 	{
 		mgl_printf(fp,gz,"<Group><!--%s-->\n",gr->Grp[i].Lbl.c_str());
 		std::vector<long> &p = gr->Grp[i].p;
 
 		// define coordinates, colors and so on
-		long line=-1, face=-1, other=-1;
-		for(j=0,k=0;j<p.size();j++)	// find points for this group
+		long line=-1, face=-1, other=-1;	k=0;
+		for(size_t j=0;j<p.size();j++)	// find points for this group
 		{
 			const mglPrim &q=gr->GetPrm(p[j]);
 			if(q.type==1)	line=q.n1;	// find kind of primitives in the group
@@ -1188,13 +1184,13 @@ void MGL_EXPORT mgl_write_x3d(HMGL gr, const char *fname,const char *descr)
 		{
 			mglColor c=gr->GetPntC(line);
 			bool same=true;	// check if there are the same colors for all line segments
-			for(j=0;j<p.size();j++)
+			for(size_t j=0;j<p.size();j++)
 			{
 				const mglPrim &q=gr->GetPrm(p[j]);
 				if(q.type==1 && c!=gr->GetPntC(q.n1))	same=false;
 			}
 			memset(pnt,-1,npnt*sizeof(long));
-			for(j=0,k=0;j<p.size();j++)	// rearrange points for this group
+			for(size_t j=0,k=0;j<p.size();j++)	// rearrange points for this group
 			{
 				const mglPrim &q=gr->GetPrm(p[j]);
 				if(q.type!=1)	continue;
@@ -1202,11 +1198,11 @@ void MGL_EXPORT mgl_write_x3d(HMGL gr, const char *fname,const char *descr)
 				if(q.n2>=0 && pnt[q.n2]<0)	{	pnt[q.n2]=k;	k++;	}
 			}
 			mgl_printf(fp, gz, "<Shape><Coordinate DEF='Lpnts_%ld' point='",i);
-			for(j=0;j<gr->GetPntNum();j++)	if(pnt[j]>=0)
+			for(long j=0;j<gr->GetPntNum();j++)	if(pnt[j]>=0)
 			{	const mglPnt &p=gr->GetPnt(j);	mgl_printf(fp, gz, "%g %g %g, ", p.x,p.y,p.z);	}
 			mgl_printf(fp, gz, "0.0 0.0 0.0'/>");
 			mgl_printf(fp, gz, "<Color DEF='Lclrs_%ld' color='",i);
-			for(j=0;j<gr->GetPntNum();j++)	if(pnt[j]>=0)
+			for(long j=0;j<gr->GetPntNum();j++)	if(pnt[j]>=0)
 			{	const mglPnt &p=gr->GetPnt(j);	mgl_printf(fp, gz, "%g %g %g, ", p.r,p.g,p.b);	}
 			mgl_printf(fp, gz, "0.0 0.0 0.0'/>");
 
@@ -1220,13 +1216,13 @@ void MGL_EXPORT mgl_write_x3d(HMGL gr, const char *fname,const char *descr)
 		{
 			mglColor c=gr->GetPntC(face);
 			bool same=true;	// check if there are the same colors for all line segments
-			for(j=0;j<p.size();j++)
+			for(size_t j=0;j<p.size();j++)
 			{
 				const mglPrim &q=gr->GetPrm(p[j]);
 				if((q.type==2 || q.type==3) && c!=gr->GetPntC(q.n1))	same=false;
 			}
 			memset(pnt,-1,npnt*sizeof(long));
-			for(j=0,k=0;j<p.size();j++)	// rearrange points for this group
+			for(size_t j=0,k=0;j<p.size();j++)	// rearrange points for this group
 			{
 				const mglPrim &q=gr->GetPrm(p[j]);
 				if(q.type!=2 && q.type!=3)	continue;
@@ -1236,11 +1232,11 @@ void MGL_EXPORT mgl_write_x3d(HMGL gr, const char *fname,const char *descr)
 				if(q.type==3 && q.n4>=0 && pnt[q.n4]<0)	{	pnt[q.n4]=k;	k++;	}
 			}
 			mgl_printf(fp, gz, "<Shape><Coordinate DEF='Fpnts_%ld' point='",i);
-			for(j=0;j<gr->GetPntNum();j++)	if(pnt[j]>=0)
+			for(long j=0;j<gr->GetPntNum();j++)	if(pnt[j]>=0)
 			{	const mglPnt &p=gr->GetPnt(j);	mgl_printf(fp, gz, "%g %g %g, ", p.x,p.y,p.z);	}
 			mgl_printf(fp, gz, "0.0 0.0 0.0'/>");
 			mgl_printf(fp, gz, "<Color DEF='Fclrs_%ld' color='",i);
-			for(j=0;j<gr->GetPntNum();j++)	if(pnt[j]>=0)
+			for(long j=0;j<gr->GetPntNum();j++)	if(pnt[j]>=0)
 			{	const mglPnt &p=gr->GetPnt(j);	mgl_printf(fp, gz, "%g %g %g, ", p.r,p.g,p.b);	}
 			mgl_printf(fp, gz, "0.0 0.0 0.0'/>");
 
@@ -1277,7 +1273,7 @@ void MGL_EXPORT mgl_write_x3d(HMGL gr, const char *fname,const char *descr)
 		}
 		// no normals since mathgl ones are "signless" -- x3d should calculate it by itself
 
-		for(j=0;j<p.size();j++)
+		for(size_t j=0;j<p.size();j++)
 		{
 			const mglPrim &q=gr->GetPrm(p[j]);	// TODO: collect by type (quads,trig,line) and draw together???
 			mgl_x3d_prim(q, gr->GetPnt(q.n1), pnt, fp,gz, q.s*gr->FontFactor());
