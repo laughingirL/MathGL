@@ -1937,13 +1937,17 @@ void MGL_EXPORT mgl_data_refill_x(HMDT dat, HCDT xdat, HCDT vdat, mreal x1, mrea
 			val = mgl_data_spline_ext(xdat,dx,0,0,&d,0,0);
 		}	while(fabs(xx-val)>acx);
 		v2=mgl_data_spline(xdat,d2,0,0);
-		if(mgl_isnan(dx) && (v1-xx)*(v2-xx)<0)	do	// if failed then use bisection method
+		if(mgl_isnan(dx))
 		{
-			dx = (d1+d2)/2.;
-			val = mgl_data_spline(xdat,dx,0,0);
-			if((v1-xx)*(val-xx)<0)	{	v2=val;	d2=dx;	}	else	{	v1=val;	d1=dx;	}
-		}	while(fabs(xx-val)>acx);
-		d = mgl_isnan(dx)?NAN:mgl_data_spline(vdat,dx,0,0);
+			if((v1-xx)*(v2-xx)<0)	do	// if failed then use bisection method
+			{
+				dx = (d1+d2)/2.;
+				val = mgl_data_spline(xdat,dx,0,0);
+				if((v1-xx)*(val-xx)<0)	{	v2=val;	d2=dx;	}	else	{	v1=val;	d1=dx;	}
+			}	while(fabs(xx-val)>acx);
+			else	dx=(xx-v1)*(v2-v1)<0?0:mx-1;
+		}
+		d = mgl_data_spline(vdat,dx,0,0);
 		if(sl<0)	for(long j=0;j<nn;j++)	dat->a[i+j*nx] = d;
 		else	dat->a[i+sl*nx] = d;
 	}
@@ -1993,12 +1997,16 @@ void MGL_EXPORT mgl_data_refill_xy(HMDT dat, HCDT xdat, HCDT ydat, HCDT vdat, mr
 				val = mgl_data_spline_ext(xdat,dx,0,0,&d,0,0);
 			}	while(fabs(xx-val)>acx);	// this valid for linear interpolation
 			v2=mgl_data_spline(xdat,d2,0,0);
-			if(mgl_isnan(dx) && (v1-xx)*(v2-xx)<0)	do	// if failed then use bisection method
+			if(mgl_isnan(dx))
 			{
-				dx = (d1+d2)/2.;
-				val = mgl_data_spline(xdat,dx,0,0);
-				if((v1-xx)*(val-xx)<0)	{	v2=val;	d2=dx;	}	else	{	v1=val;	d1=dx;	}
-			}	while(fabs(xx-val)>acx);
+				if((v1-xx)*(v2-xx)<0)	do	// if failed then use bisection method
+				{
+					dx = (d1+d2)/2.;
+					val = mgl_data_spline(xdat,dx,0,0);
+					if((v1-xx)*(val-xx)<0)	{	v2=val;	d2=dx;	}	else	{	v1=val;	d1=dx;	}
+				}	while(fabs(xx-val)>acx);
+				else	dx=(xx-v1)*(v2-v1)<0?0:mx-1;
+			}
 			v1 = val = mgl_data_spline_ext(ydat,dy,0,0,&d,0,0);
 			count=0;
 			do	// use Newton method to find root
@@ -2008,14 +2016,17 @@ void MGL_EXPORT mgl_data_refill_xy(HMDT dat, HCDT xdat, HCDT ydat, HCDT vdat, mr
 				val = mgl_data_spline_ext(ydat,dy,0,0,&d,0,0);
 			}	while(fabs(yy-val)>acy);	// this valid for linear interpolation
 			d1=0;	d2=my-1;	v2=mgl_data_spline(ydat,0,d2,0);
-			if(mgl_isnan(dy) && (v1-yy)*(v2-yy)<0)	do	// if failed then use bisection method
+			if(mgl_isnan(dy))
 			{
-				dy = (d1+d2)/2.;
-				val = mgl_data_spline(ydat,0,dy,0);
-				if((v1-yy)*(val-yy)<0)	{	v2=val;	d2=dy;	}	else	{	v1=val;	d1=dy;	}
-			}	while(fabs(yy-val)>acy);
-
-			d = mgl_isnan(dx*dy) ? NAN : mgl_data_spline(vdat,dx,dy,0);
+				if((v1-yy)*(v2-yy)<0)	do	// if failed then use bisection method
+				{
+					dy = (d1+d2)/2.;
+					val = mgl_data_spline(ydat,0,dy,0);
+					if((v1-yy)*(val-yy)<0)	{	v2=val;	d2=dy;	}	else	{	v1=val;	d1=dy;	}
+				}	while(fabs(yy-val)>acy);
+				else	dy=(yy-v1)*(v2-v1)<0?0:my-1;
+			}
+			d = mgl_data_spline(vdat,dx,dy,0);
 			register long i0=i+nx*j;
 			if(sl<0)	for(long k=0;k<nz;k++)	dat->a[i0+k*nn] = d;
 			else	dat->a[i0+sl*nn] = d;
@@ -2068,13 +2079,16 @@ void MGL_EXPORT mgl_data_refill_xyz(HMDT dat, HCDT xdat, HCDT ydat, HCDT zdat, H
 				val = mgl_data_spline_ext(xdat,dx,0,0,&d,0,0);
 			}	while(fabs(xx-val)>acx);	// this valid for linear interpolation
 			v2=mgl_data_spline(xdat,d2,0,0);
-			if(mgl_isnan(dx) && (v1-xx)*(v2-xx)<0)	do	// if failed then use bisection method
+			if(mgl_isnan(dx))
 			{
-				dx = (d1+d2)/2.;
-				val = mgl_data_spline(xdat,dx,0,0);
-				if((v1-xx)*(val-xx)<0)	{	v2=val;	d2=dx;	}	else	{	v1=val;	d1=dx;	}
-			}	while(fabs(xx-val)>acx);
-
+				if((v1-xx)*(v2-xx)<0)	do	// if failed then use bisection method
+				{
+					dx = (d1+d2)/2.;
+					val = mgl_data_spline(xdat,dx,0,0);
+					if((v1-xx)*(val-xx)<0)	{	v2=val;	d2=dx;	}	else	{	v1=val;	d1=dx;	}
+				}	while(fabs(xx-val)>acx);
+				else	dx=(xx-v1)*(v2-v1)<0?0:mx-1;
+			}
 			v1 = val = mgl_data_spline_ext(ydat,dy,0,0,&d,0,0);
 			count=0;
 			do	// use Newton method to find root
@@ -2084,13 +2098,16 @@ void MGL_EXPORT mgl_data_refill_xyz(HMDT dat, HCDT xdat, HCDT ydat, HCDT zdat, H
 				val = mgl_data_spline_ext(ydat,dy,0,0,&d,0,0);
 			}	while(fabs(yy-val)>acy);	// this valid for linear interpolation
 			d1=0;	d2=my-1;	v2=mgl_data_spline(ydat,0,d2,0);
-			if(mgl_isnan(dy) && (v1-yy)*(v2-yy)<0)	do	// if failed then use bisection method
+			if(mgl_isnan(dy))
 			{
-				dy = (d1+d2)/2.;
-				val = mgl_data_spline(ydat,0,dy,0);
-				if((v1-yy)*(val-yy)<0)	{	v2=val;	d2=dy;	}	else	{	v1=val;	d1=dy;	}
-			}	while(fabs(yy-val)>acy);
-
+				if((v1-yy)*(v2-yy)<0)	do	// if failed then use bisection method
+				{
+					dy = (d1+d2)/2.;
+					val = mgl_data_spline(ydat,0,dy,0);
+					if((v1-yy)*(val-yy)<0)	{	v2=val;	d2=dy;	}	else	{	v1=val;	d1=dy;	}
+				}	while(fabs(yy-val)>acy);
+				else	dy=(yy-v1)*(v2-v1)<0?0:my-1;
+			}
 			v1 = val = mgl_data_spline_ext(zdat,dz,0,0,&d,0,0);
 			count=0;
 			do	// use Newton method to find root
@@ -2100,14 +2117,17 @@ void MGL_EXPORT mgl_data_refill_xyz(HMDT dat, HCDT xdat, HCDT ydat, HCDT zdat, H
 				val = mgl_data_spline_ext(zdat,dz,0,0,&d,0,0);
 			}	while(fabs(zz-val)>acz);	// this valid for linear interpolation
 			d1=0;	d2=mz-1;	v2=mgl_data_spline(ydat,0,0,d2);
-			if(mgl_isnan(dz) && (v1-zz)*(v2-zz)<0)	do	// if failed then use bisection method
+			if(mgl_isnan(dz))
 			{
-				dz = (d1+d2)/2.;
-				val = mgl_data_spline(ydat,0,0,dz);
-				if((v1-zz)*(val-zz)<0)	{	v2=val;	d2=dz;	}	else	{	v1=val;	d1=dz;	}
-			}	while(fabs(zz-val)>acz);
-
-			dat->a[i+nx*(j+ny*k)] = mgl_isnan(dx*dy*dz) ? NAN : mgl_data_spline(vdat,dx,dy,dz);
+				if((v1-zz)*(v2-zz)<0)	do	// if failed then use bisection method
+				{
+					dz = (d1+d2)/2.;
+					val = mgl_data_spline(ydat,0,0,dz);
+					if((v1-zz)*(val-zz)<0)	{	v2=val;	d2=dz;	}	else	{	v1=val;	d1=dz;	}
+				}	while(fabs(zz-val)>acz);
+				else	dz=(zz-v1)*(v2-v1)<0?0:mz-1;
+			}
+			dat->a[i+nx*(j+ny*k)] = mgl_data_spline(vdat,dx,dy,dz);
 		}
 }
 //-----------------------------------------------------------------------------

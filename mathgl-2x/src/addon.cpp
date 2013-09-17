@@ -68,14 +68,16 @@ int MGL_EXPORT mgl_chrpos(const char *str,char ch)
 //-----------------------------------------------------------------------------
 MGL_EXPORT char *mgl_fgetstr(FILE *fp)
 {
-	static char s[256];
+	const long size=10240;	// NOTE: this set maximal length of string to be read
+	static char s[size];
 	do
 	{
-		if(!fgets(s,256,fp))	break;
+		if(!fgets(s,size,fp))	break;
 		mgl_strtrim(s);
 		//		strlwr(s);
 	} while(!feof(fp) && (s[0]==0 || s[0]=='%' || s[0]=='#'));
 	for(long i=0;s[i];i++)	if(s[i]=='#')	{	s[i]=0;	break;	}
+	mgl_strtrim(s);
 	return s;
 }
 //-----------------------------------------------------------------------------
