@@ -50,10 +50,10 @@ protected:
 	void trig_draw(long n1, long n2, long n3);
 	void quad_draw(long n1, long n2, long n3, long n4);
 	// variant for glyphs or marks
-	void line_draw(const mglPnt &p1, const mglPnt &p2, mglDrawReg *d);
-	void trig_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, bool anorm, mglDrawReg *d);
-	void quad_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, const mglPnt &p4, mglDrawReg *d);
-	void pnt_draw(const mglPnt &p, mglDrawReg *d);
+	void line_draw(const mglPnt &p1, const mglPnt &p2, const mglDrawReg *d);
+	void trig_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, bool anorm, const mglDrawReg *d);
+	void quad_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, const mglPnt &p4, const mglDrawReg *d);
+	void pnt_draw(const mglPnt &p, const mglDrawReg *d);
 
 	unsigned char **GetRGBLines(long &w, long &h, unsigned char *&f, bool solid=true);
 	void LightScale(const mglMatrix *M);

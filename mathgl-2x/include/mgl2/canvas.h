@@ -366,11 +366,11 @@ protected:
 
 	void add_prim(mglPrim &a);	///< add primitive to list
 	void mark_draw(const mglPnt &p, char type, mreal size, mglDrawReg *d);
-	void arrow_draw(const mglPnt &p1, const mglPnt &p2, char st, mreal size, mglDrawReg *d);
-	virtual void line_draw(const mglPnt &p1, const mglPnt &p2, mglDrawReg *d);
-	virtual void trig_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, bool anorm, mglDrawReg *d);
-	virtual void quad_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, const mglPnt &p4, mglDrawReg *d);
-	virtual void pnt_draw(const mglPnt &p, mglDrawReg *d);
+	void arrow_draw(const mglPnt &p1, const mglPnt &p2, char st, mreal size, const mglDrawReg *d);
+	virtual void line_draw(const mglPnt &p1, const mglPnt &p2, const mglDrawReg *d);
+	virtual void trig_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, bool anorm, const mglDrawReg *d);
+	virtual void quad_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, const mglPnt &p4, const mglDrawReg *d);
+	virtual void pnt_draw(const mglPnt &p, const mglDrawReg *d);
 	void arrow_draw(long n1, long n2, char st, float ll);
 	void arrow_plot_3d(long n1, long n2, char st, float ll);
 	void glyph_draw(const mglPrim &P, mglDrawReg *d);
@@ -417,7 +417,7 @@ private:
 	/// Combine colors in 2 plane.
 	void combine(unsigned char *c1, const unsigned char *c2);
 	/// Fast drawing of line between 2 points
-	void fast_draw(const mglPnt &p1, const mglPnt &p2, mglDrawReg *d);
+	void fast_draw(const mglPnt &p1, const mglPnt &p2, const mglDrawReg *d);
 
 	/// Additionally scale points p for positioning in image
 	void PostScale(const mglMatrix *M, mglPoint &p) const;
@@ -427,9 +427,9 @@ private:
 	long setPp(mglPnt &q, const mglPoint &p);
 	
 	// functions for glyph drawing
-	void glyph_fill(const mglMatrix *M, const mglPnt &p, mreal f, const mglGlyph &g, mglDrawReg *d);
-	void glyph_wire(const mglMatrix *M, const mglPnt &p, mreal f, const mglGlyph &g, mglDrawReg *d);
-	void glyph_line(const mglMatrix *M, const mglPnt &p, mreal f, bool solid, mglDrawReg *d);
+	void glyph_fill(const mglMatrix *M, const mglPnt &p, mreal f, const mglGlyph &g, const mglDrawReg *d);
+	void glyph_wire(const mglMatrix *M, const mglPnt &p, mreal f, const mglGlyph &g, const mglDrawReg *d);
+	void glyph_line(const mglMatrix *M, const mglPnt &p, mreal f, bool solid, const mglDrawReg *d);
 };
 //-----------------------------------------------------------------------------
 struct mglThreadG

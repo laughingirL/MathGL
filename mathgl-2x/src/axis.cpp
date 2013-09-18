@@ -825,8 +825,8 @@ void mglCanvas::Box(const char *col, bool ticks)
 void mglCanvas::Colorbar(const char *sch)
 {
 	bool in = mglchr(sch,'I');
-	mreal sx = (fabs(B.b[0])+fabs(B.b[1])+fabs(B.b[2]))/B.pf/Width, x=1;
-	mreal sy = (fabs(B.b[3])+fabs(B.b[4])+fabs(B.b[5]))/B.pf/Height, y=0;
+	mreal sx = (fabs(B.b[0])+fabs(B.b[1])+fabs(B.b[2]))/B.pf/B1.b[0], x=1;
+	mreal sy = (fabs(B.b[3])+fabs(B.b[4])+fabs(B.b[5]))/B.pf/B1.b[4], y=0;
 	if(mglchr(sch,'>'))	{	x=in?(1+sx)/2:1;	y=0;	}
 	if(mglchr(sch,'<'))	{	x=in?(1-sx)/2:0;	y=0;	}
 	if(mglchr(sch,'^'))	{	x=0;	y=in?(1+sy)/2:1;	}
@@ -861,8 +861,8 @@ void mglCanvas::Colorbar(const char *sch, mreal x, mreal y, mreal w, mreal h)
 void mglCanvas::Colorbar(HCDT v, const char *sch)
 {
 	bool in = mglchr(sch,'I');
-	mreal sx = (fabs(B.b[0])+fabs(B.b[1])+fabs(B.b[2]))/B.pf/Width, x=1;
-	mreal sy = (fabs(B.b[3])+fabs(B.b[4])+fabs(B.b[5]))/B.pf/Height, y=0;
+	mreal sx = (fabs(B.b[0])+fabs(B.b[1])+fabs(B.b[2]))/B.pf/B1.b[0], x=1;
+	mreal sy = (fabs(B.b[3])+fabs(B.b[4])+fabs(B.b[5]))/B.pf/B1.b[4], y=0;
 	if(mglchr(sch,'>'))	{	x=in?(1+sx)/2:1;	y=0;	}
 	if(mglchr(sch,'<'))	{	x=in?(1-sx)/2:0;	y=0;	}
 	if(mglchr(sch,'^'))	{	x=0;	y=in?(1+sy)/2:1;	}
@@ -898,8 +898,9 @@ void mglCanvas::colorbar(HCDT vv, const mreal *c, int where, mreal x, mreal y, m
 	long n1,n2,n3,n4;
 	mreal d,s3=B.pf,ss=1/s3;		// NOTE: colorbar was wider ss=0.9;
 	mglPoint p1,p2;
+	mglMatrix M=B1;	M.pf=s3;
 
-	Push();	set(MGL_DISABLE_SCALE);	B=B1;	B.pf=s3;
+	set(MGL_DISABLE_SCALE);		// NOTE this make colorbar non-thread-safe!!!
 	x = s3*(2*x-1);	y = s3*(2*y-1);	w *= s3;	h *= s3;
 	mask = MGL_SOLID_MASK;	mask_an=0;
 	for(long i=0;i<n-1;i++)
@@ -913,7 +914,7 @@ void mglCanvas::colorbar(HCDT vv, const mreal *c, int where, mreal x, mreal y, m
 			case 3:	p1.y = y;	p2.y = y+0.1*h;	break;
 			default:p1.x = x-0.1*w;	p2.x = x;	break;
 		}
-		n1 = AddPnt(&B, p1,c[i]);	n2 = AddPnt(&B, p2,c[i]);
+		n1 = AddPnt(&M, p1,c[i]);	n2 = AddPnt(&M, p2,c[i]);
 		d = GetA(vv->v(i+1))*2-1;
 		p1 = p2 = mglPoint((ss*d+1)*w+x, (ss*d+1)*h+y, s3);
 		switch(where)
@@ -923,7 +924,7 @@ void mglCanvas::colorbar(HCDT vv, const mreal *c, int where, mreal x, mreal y, m
 			case 3:	p1.y = y;	p2.y = y+0.1*h;	break;
 			default:p1.x = x-0.1*w;	p2.x = x;	break;
 		}
-		n3 = AddPnt(&B, p1,c[i]);	n4 = AddPnt(&B, p2,c[i]);
+		n3 = AddPnt(&M, p1,c[i]);	n4 = AddPnt(&M, p2,c[i]);
 		quad_plot(n1,n2,n3,n4);
 	}
 	if(n<64)
@@ -950,7 +951,7 @@ void mglCanvas::colorbar(HCDT vv, const mreal *c, int where, mreal x, mreal y, m
 			case 3:	p1.y = y;	p2.y = y+0.1*h;	break;
 			default:p1.x = x-0.1*w;	p2.x = x;	break;
 		}
-		n1 = AddPnt(&B, p1);	n2 = AddPnt(&B, p2);
+		n1 = AddPnt(&M, p1);	n2 = AddPnt(&M, p2);
 		line_plot(n1,n2);
 	}
 	ac.dir = mglPoint(ss*w,ss*h,0);
@@ -966,6 +967,6 @@ void mglCanvas::colorbar(HCDT vv, const mreal *c, int where, mreal x, mreal y, m
 //	bool out = fabs(x)>1 && fabs(y)>1;
 	bool inv = where!=3 && where!=0;
 	ac.ns = where;	DrawLabels(ac,inv);	// NOTE ns isn't used for colorbar
-	Pop();	clr(MGL_DISABLE_SCALE);	EndGroup();
+	clr(MGL_DISABLE_SCALE);	EndGroup();
 }
 //-----------------------------------------------------------------------------

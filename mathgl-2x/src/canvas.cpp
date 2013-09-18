@@ -815,10 +815,10 @@ void mglCanvas::Legend(const std::vector<mglText> &leg, mreal x, mreal y, const 
 		if(m)	for(j=0;j<LegendMarks;j++)
 		{
 			p = mglPoint(x+ix*w+0.1f*ll + (j+1)*0.8f*ll/(1.+LegendMarks),y+iy*h+0.45*h,Depth);
-			mark_plot(AddPnt(p,CDef,q,-1,0),m);
+			mark_plot(AddPnt(&B,p,CDef,q,-1,0),m);
 		}
 		p = mglPoint(x+ix*w+((!leg[i].stl.empty())?ll:0.01*iw), y+iy*h+0.15*h, Depth);
-		text_plot(AddPnt(p,-1,q,-1,0), leg[i].text.c_str(), ff, size);
+		text_plot(AddPnt(&B,p,-1,q,-1,0), leg[i].text.c_str(), ff, size);
 	}
 	Pop();	EndGroup();	delete []ff;
 }

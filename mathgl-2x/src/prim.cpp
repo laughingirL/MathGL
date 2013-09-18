@@ -466,7 +466,6 @@ void MGL_EXPORT mgl_drop(HMGL gr, mglPoint p, mglPoint q, double r, double c, do
 
 	static int cgid=1;	gr->StartGroup("Drop",cgid++);
 	const int n = 24, m = n/2;
-	register long i,j;
 	gr->Reserve(n*m);
 	long *nn=new long[2*n],n1,n2;
 	mreal u,v,x,y,z,rr,dr, co,si;
@@ -474,9 +473,9 @@ void MGL_EXPORT mgl_drop(HMGL gr, mglPoint p, mglPoint q, double r, double c, do
 	z = r*(1+sh)*(1+sh);	n1 = gr->AddPnt(p + q*z,c,q,-1,3);
 	z = r*(1+sh)*(sh-1);	n2 = gr->AddPnt(p + q*z,c,q,-1,3);
 
-	for(i=0;i<m;i++)	for(j=0;j<n;j++)
+	for(long i=0;i<m;i++)	for(long j=0;j<n;j++)	// NOTE use prev.points => not for omp
 	{
-		if(gr->Stop)	{	delete []nn;	return;	}
+		if(gr->Stop)	continue;
 		if(i>0 && i<m-1)
 		{
 			u = i*M_PI/(m-1.);	v = 2*M_PI*j/(n-1.)-1;
@@ -518,38 +517,42 @@ void MGL_EXPORT mgl_dew_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("DewXY",cgid++);
 
-	mreal xm,ym,dx,dy,dd;
 	long ss = gr->AddTexture(sch);
 	bool inv = mglchr(sch,'i');
-	mreal	zVal = gr->Min.z;
+	mreal zVal = gr->Min.z, xm=0;
 	long tx=1,ty=1;
 	if(gr->MeshNum>1)	{	tx=(n-1)/(gr->MeshNum-1);	ty=(m-1)/(gr->MeshNum-1);	}
 	if(tx<1)	tx=1;	if(ty<1)	ty=1;
 
-	for(long k=0,xm=0;k<ax->GetNz();k++)	for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
+#pragma omp parallel
 	{
-		ym = sqrt(ax->v(i,j,k)*ax->v(i,j,k)+ay->v(i,j,k)*ay->v(i,j,k));
-		xm = xm>ym ? xm : ym;
+		register mreal xm1=0,ym;
+#pragma omp for nowait collapse(3)
+		for(long k=0;k<ax->GetNz();k++)	for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
+		{
+			ym = sqrt(ax->v(i,j,k)*ax->v(i,j,k)+ay->v(i,j,k)*ay->v(i,j,k));
+			xm1 = xm1>ym ? xm1 : ym;
+		}
+#pragma omp critical(max_vec)
+		{xm = xm>xm1 ? xm:xm1;}
 	}
 	xm = 1./MGL_FEPSILON/(xm==0 ? 1:xm);
-	mglPoint q;
 
 	for(long k=0;k<ax->GetNz();k++)
 	{
 		if(ax->GetNz()>1)	zVal = gr->Min.z+(gr->Max.z-gr->Min.z)*mreal(k)/(ax->GetNz()-1);
-#pragma omp parallel for private(dx,dy) collapse(2)
+#pragma omp parallel for collapse(2)
 		for(long i=0;i<n;i+=tx)	for(long j=0;j<m;j+=ty)
 		{
 			if(gr->Stop)	continue;
-			mreal xx=GetX(x,i,j,k).x, yy=GetY(y,i,j,k).x;
-			dx = i<n-1 ? (GetX(x,i+1,j,k).x-xx) : (xx-GetX(x,i-1,j,k).x);
-			dy = j<m-1 ? (GetY(y,i,j+1,k).x-yy) : (yy-GetY(y,i,j-1,k).x);
+			register mreal xx=GetX(x,i,j,k).x, yy=GetY(y,i,j,k).x, dd;
+			register mreal dx = i<n-1 ? (GetX(x,i+1,j,k).x-xx) : (xx-GetX(x,i-1,j,k).x);
+			register mreal dy = j<m-1 ? (GetY(y,i,j+1,k).x-yy) : (yy-GetY(y,i,j-1,k).x);
 			dx *= tx;	dy *= ty;
 
-			q = mglPoint(ax->v(i,j,k),ay->v(i,j,k));	dd = q.norm();
+			mglPoint q = mglPoint(ax->v(i,j,k),ay->v(i,j,k));	dd = q.norm();
 			if(inv)	q = -q;
-			mreal ccc = gr->GetC(ss,dd*xm,false);
-			mgl_drop(gr,mglPoint(xx, yy, zVal),q,(dx<dy?dx:dy)/2,ccc,dd*xm,1);
+			mgl_drop(gr,mglPoint(xx, yy, zVal),q,(dx<dy?dx:dy)/2,gr->GetC(ss,dd*xm,false),dd*xm,1);
 		}
 	}
 	gr->EndGroup();

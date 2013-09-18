@@ -318,7 +318,7 @@ void mglBase::resort()
 void mglCanvas::pxl_primdr(long id, long , const void *)
 {
 	int nx=1,ny=1;
-	if(id<unsigned(mglNumThr))	// TODO add omp here
+	if(id<unsigned(mglNumThr))	// TODO add omp here ???
 	{
 		for(long i=1;i<=long(sqrt(double(mglNumThr))+0.5);i++)
 			if(mglNumThr%i==0)	ny=i;
@@ -604,7 +604,7 @@ unsigned char **mglCanvas::GetRGBLines(long &w, long &h, unsigned char *&f, bool
 	return p;
 }
 //-----------------------------------------------------------------------------
-bool visible(long i, long j, unsigned char m[8], mreal pw, int a)	// Check if pixel visible
+bool visible(long i, long j, const unsigned char m[8], mreal pw, int a)	// Check if pixel visible
 {
 	register float c = cos(a*M_PI/180), s = sin(a*M_PI/180);
 	register int ii = long(0.5+(i*c+j*s)/pw)%8, jj = long(0.5+(j*c-i*s)/pw)%8;
@@ -615,7 +615,7 @@ bool visible(long i, long j, unsigned char m[8], mreal pw, int a)	// Check if pi
 /* Bilinear interpolation r(u,v) = r0 + (r1-r0)*u + (r2-r0)*v + (r3+r0-r1-r2)*u*v
 	is used (where r is one of {x,y,z,R,G,B,A}. Variables u,v are determined
 	for each point (x,y) and selected one pair which 0<u<1 and 0<v<1.*/
-void mglCanvas::quad_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, const mglPnt &p4, mglDrawReg *d)	// TODO should I add omp here?
+void mglCanvas::quad_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, const mglPnt &p4, const mglDrawReg *d)
 {
 	if(!(Quality&3))
 	{
@@ -646,19 +646,17 @@ void mglCanvas::quad_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 	mglPoint n2 = mglPoint(p2.x-p4.x,p2.y-p4.y,p2.z-p4.z)^mglPoint(p3.x-p4.x,p3.y-p4.y,p3.z-p4.z);
 	mglPoint nr = (n1+n2)*0.5;
 
-	register long i,j;
-	register float u,v,s,xx,yy,qu,qv;
 	float x0 = p1.x, y0 = p1.y;
-	for(i=x1;i<=x2;i++)	for(j=y1;j<=y2;j++)
+#pragma omp parallel for private(p,r) collapse(2)
+	for(long i=x1;i<=x2;i++)	for(long j=y1;j<=y2;j++)
 	{
 		if(!visible(i,j,d->m, d->PenWidth,d->angle))	continue;
-		xx = (i-x0);	yy = (j-y0);
+		register float xx = (i-x0), yy = (j-y0), s;
 		s = dsx*xx + dsy*yy + (dd+d3.y*xx-d3.x*yy)*(dd+d3.y*xx-d3.x*yy);
 		if(s<0)	continue;	// no solution
 		s = sqrt(s);
-		qu = d3.x*yy - d3.y*xx + dd + s;
-		qv = d3.y*xx - d3.x*yy + dd + s;
-		u = v = -1.f;
+		register float qu = d3.x*yy - d3.y*xx + dd + s, u=-1;
+		register float qv = d3.y*xx - d3.x*yy + dd + s, v=-1;
 		if(qu && qv)
 		{
 			u = 2.f*(d2.y*xx - d2.x*yy)/qu;
@@ -686,7 +684,7 @@ void mglCanvas::quad_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 /* Linear interpolation r(u,v) = r0 + (r1-r0)*u + (r2-r0)*v is used, where r is
 	one of {x,y,z,R,G,B,A}. Variables u,v are determined for each point (x,y).
 	Point plotted is u>0 and v>0 and u+v<1.*/
-void mglCanvas::trig_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, bool anorm, mglDrawReg *d)	// TODO should I add omp here?
+void mglCanvas::trig_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, bool anorm, const mglDrawReg *d)
 {
 	if(!(Quality&3) && anorm)
 	{
@@ -713,31 +711,33 @@ void mglCanvas::trig_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 	// default normale
 	mglPoint nr = mglPoint(p2.x-p1.x,p2.y-p1.y,p2.z-p1.z)^mglPoint(p3.x-p1.x,p3.y-p1.y,p3.z-p1.z);
 
-	register float u,v,xx,yy;
-	register long i,j;
 	float x0 = p1.x, y0 = p1.y;
-	if(Quality&MGL_DRAW_NORM)	for(i=x1;i<=x2;i++)	for(j=y1;j<=y2;j++)
-	{
-		if(!visible(i,j,d->m, d->PenWidth,d->angle))	continue;
-		xx = (i-x0);	yy = (j-y0);
-		u = dxu*xx+dyu*yy;	v = dxv*xx+dyv*yy;
-		if(u<0 || v<0 || u+v>1)	continue;
-		p = p1+d1*u+d2*v;
-		if(mgl_isnan(p.u) && !mgl_isnan(p.v) && anorm)
-		{	p.u = nr.x;	p.v = nr.y;	p.w = nr.z;	}
-		pnt_plot(i,j,p.z,col2int(p,r,d->ObjId),d->ObjId);
-	}
-	else	for(i=x1;i<=x2;i++)	for(j=y1;j<=y2;j++)
-	{
-		if(!visible(i,j,d->m, d->PenWidth,d->angle))	continue;
-		xx = (i-x0);	yy = (j-y0);
-		u = dxu*xx+dyu*yy;	v = dxv*xx+dyv*yy;
-		if(u<0 || v<0 || u+v>1)	continue;
-		pnt_plot(i,j,p1.z,col2int(p1,r,d->ObjId),d->ObjId);
-	}
+	if(Quality&MGL_DRAW_NORM)
+#pragma omp parallel for private(p,r) collapse(2)
+		for(long i=x1;i<=x2;i++)	for(long j=y1;j<=y2;j++)
+		{
+			if(!visible(i,j,d->m, d->PenWidth,d->angle))	continue;
+			register float xx = (i-x0), yy = (j-y0);
+			register float u = dxu*xx+dyu*yy, v = dxv*xx+dyv*yy;
+			if(u<0 || v<0 || u+v>1)	continue;
+			p = p1+d1*u+d2*v;
+			if(mgl_isnan(p.u) && !mgl_isnan(p.v) && anorm)
+			{	p.u = nr.x;	p.v = nr.y;	p.w = nr.z;	}
+			pnt_plot(i,j,p.z,col2int(p,r,d->ObjId),d->ObjId);
+		}
+	else
+#pragma omp parallel for private(r) collapse(2)
+		for(long i=x1;i<=x2;i++)	for(long j=y1;j<=y2;j++)
+		{
+			if(!visible(i,j,d->m, d->PenWidth,d->angle))	continue;
+			register float xx = (i-x0), yy = (j-y0);
+			register float u = dxu*xx+dyu*yy, v = dxv*xx+dyv*yy;
+			if(u<0 || v<0 || u+v>1)	continue;
+			pnt_plot(i,j,p1.z,col2int(p1,r,d->ObjId),d->ObjId);
+		}
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::line_draw(const mglPnt &p1, const mglPnt &p2, mglDrawReg *dr)	// TODO should I add omp here?
+void mglCanvas::line_draw(const mglPnt &p1, const mglPnt &p2, const mglDrawReg *dr)
 {
 	if(!(Quality&3))	{	fast_draw(p1,p2,dr);	return;	}
 	unsigned char r[4];
@@ -762,53 +762,55 @@ void mglCanvas::line_draw(const mglPnt &p1, const mglPnt &p2, mglDrawReg *dr)	//
 	dxv = d.y/dd;	dyv =-d.x/dd;
 	dxu = d.x/dd;	dyu = d.y/dd;
 
-	bool aa=get(MGL_ENABLE_ALPHA);
-	register float u,v,xx,yy;
-	register long i,j;
-	set(MGL_ENABLE_ALPHA);
-	if(hor)	for(i=x1;i<=x2;i++)
-	{
-		y1 = int(p1.y+d.y*(i-p1.x)/d.x - pw - 3.5);
-		y2 = int(p1.y+d.y*(i-p1.x)/d.x + pw + 3.5);
-		y1=y1>dr->y1?y1:dr->y1;	y2=y2<dr->y2?y2:dr->y2;
-		if(y1>y2)	continue;
-		for(j=y1;j<=y2;j++)
+//	bool aa=get(MGL_ENABLE_ALPHA);
+//	set(MGL_ENABLE_ALPHA);
+	if(hor)
+#pragma omp parallel for private(p,r,y1,y2)
+		for(long i=x1;i<=x2;i++)
 		{
-			xx = (i-p1.x);	yy = (j-p1.y);
-			u = dxu*xx+dyu*yy;	v = dxv*xx+dyv*yy;	v = v*v;
-			if(u<0)			v += u*u;
-			else if(u>dd)	v += (u-dd)*(u-dd);
-			if(v>pw*pw)		continue;
-			if(!(dr->PDef & ( 1<<long(fmod(dr->pPos+u/pw/1.5, 16)) ) ))	continue;
-			p = p1+d*(u/dd);	col2int(p,r,dr->ObjId);
-			r[3] = v<(pw-1)*(pw-1)/4 ? 255 : (unsigned char)(255/cosh(dpw*(sqrt(v)+(1-pw)/2)));
-			pnt_plot(i,j,p.z+dz,r,dr->ObjId);
+			y1 = int(p1.y+d.y*(i-p1.x)/d.x - pw - 3.5);
+			y2 = int(p1.y+d.y*(i-p1.x)/d.x + pw + 3.5);
+			y1=y1>dr->y1?y1:dr->y1;	y2=y2<dr->y2?y2:dr->y2;
+			if(y1>y2)	continue;
+			for(long j=y1;j<=y2;j++)
+			{
+				register float xx = (i-p1.x), yy = (j-p1.y);
+				register float u = dxu*xx+dyu*yy, v = dxv*xx+dyv*yy;	v = v*v;
+				if(u<0)			v += u*u;
+				else if(u>dd)	v += (u-dd)*(u-dd);
+				if(v>pw*pw)		continue;
+				if(!(dr->PDef & ( 1<<long(fmod(dr->pPos+u/pw/1.5, 16)) ) ))	continue;
+				p = p1+d*(u/dd);	col2int(p,r,dr->ObjId);
+				r[3] = v<(pw-1)*(pw-1)/4 ? 255 : (unsigned char)(255/cosh(dpw*(sqrt(v)+(1-pw)/2)));
+				pnt_plot(i,j,p.z+dz,r,dr->ObjId);
+			}
 		}
-	}
-	else	for(j=y1;j<=y2;j++)
-	{
-		x1 = int(p1.x+d.x*(j-p1.y)/d.y - pw - 3.5);
-		x2 = int(p1.x+d.x*(j-p1.y)/d.y + pw + 3.5);
-		x1=x1>dr->x1?x1:dr->x1;	x2=x2<dr->x2?x2:dr->x2;
-		if(x1>x2)	continue;
+	else
+#pragma omp parallel for private(p,r,x1,x2)
+		for(long j=y1;j<=y2;j++)
+		{
+			x1 = int(p1.x+d.x*(j-p1.y)/d.y - pw - 3.5);
+			x2 = int(p1.x+d.x*(j-p1.y)/d.y + pw + 3.5);
+			x1=x1>dr->x1?x1:dr->x1;	x2=x2<dr->x2?x2:dr->x2;
+			if(x1>x2)	continue;
 
-		for(i=x1;i<=x2;i++)
-		{
-			xx = (i-p1.x);	yy = (j-p1.y);
-			u = dxu*xx+dyu*yy;	v = dxv*xx+dyv*yy;	v = v*v;
-			if(u<0)			v += u*u;
-			else if(u>dd)	v += (u-dd)*(u-dd);
-			if(v>pw*pw)		continue;
-			if(!(dr->PDef & (1<<long(fmod(dr->pPos+u/pw/1.5, 16)))))		continue;
-			p = p1+d*(u/dd);	col2int(p,r,dr->ObjId);
-			r[3] = v<(pw-1)*(pw-1)/4 ? 255 : (unsigned char)(255/cosh(dpw*(sqrt(v)+(1-pw)/2)));
-			pnt_plot(i,j,p.z+dz,r,dr->ObjId);
+			for(long i=x1;i<=x2;i++)
+			{
+				register float xx = (i-p1.x), yy = (j-p1.y);
+				register float u = dxu*xx+dyu*yy, v = dxv*xx+dyv*yy;	v = v*v;
+				if(u<0)			v += u*u;
+				else if(u>dd)	v += (u-dd)*(u-dd);
+				if(v>pw*pw)		continue;
+				if(!(dr->PDef & (1<<long(fmod(dr->pPos+u/pw/1.5, 16)))))		continue;
+				p = p1+d*(u/dd);	col2int(p,r,dr->ObjId);
+				r[3] = v<(pw-1)*(pw-1)/4 ? 255 : (unsigned char)(255/cosh(dpw*(sqrt(v)+(1-pw)/2)));
+				pnt_plot(i,j,p.z+dz,r,dr->ObjId);
+			}
 		}
-	}
-	set(aa,MGL_ENABLE_ALPHA);
+//	set(aa,MGL_ENABLE_ALPHA);
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::fast_draw(const mglPnt &p1, const mglPnt &p2, mglDrawReg *dr)	// TODO should I add omp here?
+void mglCanvas::fast_draw(const mglPnt &p1, const mglPnt &p2, const mglDrawReg *dr)
 {
 	mglPnt d=p2-p1;
 	unsigned char r[4];	col2int(p1,r,dr->ObjId);
@@ -822,53 +824,58 @@ void mglCanvas::fast_draw(const mglPnt &p1, const mglPnt &p2, mglDrawReg *dr)	//
 	y1=y1>dr->y1?y1:dr->y1;	y2=y2<dr->y2?y2:dr->y2-1;
 	if(x1>x2 || y1>y2)	return;
 
-	register long i, c;
-	if(hor && d.x!=0)	for(i=x1;i<=x2;i++)
-	{
-		c = long(p1.y+d.y*(i-p1.x)/d.x);
-		if(c>=y1 && c<=y2)
-			pnt_plot(i, c, p1.z+d.z*(i-p1.x)/d.x, r,dr->ObjId);
-	}
-	else if(d.y!=0)		for(i=y1;i<=y2;i++)
-	{
-		c = long(p1.x+d.x*(i-p1.y)/d.y);
-		if(c>=x1 && c<=x2)
-			pnt_plot(c, i, p1.z+d.z*(i-p1.y)/d.y, r,dr->ObjId);
-	}
+	if(hor && d.x!=0)
+#pragma omp parallel for
+		for(long i=x1;i<=x2;i++)
+		{
+			register long c = long(p1.y+d.y*(i-p1.x)/d.x);
+			if(c>=y1 && c<=y2)
+				pnt_plot(i, c, p1.z+d.z*(i-p1.x)/d.x, r,dr->ObjId);
+		}
+	else if(d.y!=0)
+#pragma omp parallel for
+		for(long i=y1;i<=y2;i++)
+		{
+			register long c = long(p1.x+d.x*(i-p1.y)/d.y);
+			if(c>=x1 && c<=x2)
+				pnt_plot(c, i, p1.z+d.z*(i-p1.y)/d.y, r,dr->ObjId);
+		}
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::pnt_draw(const mglPnt &p, mglDrawReg *dr)	// TODO should I add omp here?
+void mglCanvas::pnt_draw(const mglPnt &p, const mglDrawReg *dr)
 {
 //	if(k<0 || !dr)	return;
-	register long i,j;
-	register float v,pw=3*dr->PenWidth,dpw=3;
+	float pw=3*dr->PenWidth,dpw=3;
 	if(dr->ObjId==HighId)	{	pw *= 2;	dpw=2;	}
 	unsigned char cs[4], cc;
 	col2int(p,cs,dr->ObjId);	cc = cs[3];
 	if(cc==0)	return;
 	long s = long(5.5+fabs(pw));
 	long i1=fmax(-s,dr->x1-p.x),i2=fmin(s,dr->x2-p.x), j1=fmax(-s,dr->y1-p.y),j2=fmin(s,dr->y2-p.y);
-	if(!(Quality&3))	for(j=j1;j<=j2;j++)	for(i=i1;i<=i2;i++)	// fast draw
-	{
-		v = i*i+j*j;
-		if(v>1+(pw-1)*(pw-1)/4)	continue;
-		pnt_plot(p.x+i,p.y+j,p.z,cs,dr->ObjId);
-	}
-	else	for(j=j1;j<=j2;j++)	for(i=i1;i<=i2;i++)
-	{
-		v = i*i+j*j;
-		cs[3] = v<(pw-1)*(pw-1)/4 ? cc : (unsigned char)(cc/cosh(dpw*(sqrt(v)+(1-pw)/2)));
-//		cs[3] = (unsigned char)(cc*exp(-6*v));
-		pnt_plot(p.x+i,p.y+j,p.z,cs,dr->ObjId);
-	}
+	if(!(Quality&3))
+#pragma omp parallel for collapse(2)
+		for(long j=j1;j<=j2;j++)	for(long i=i1;i<=i2;i++)	// fast draw
+		{
+			register float v = i*i+j*j;
+			if(v>1+(pw-1)*(pw-1)/4)	continue;
+			pnt_plot(p.x+i,p.y+j,p.z,cs,dr->ObjId);
+		}
+	else
+#pragma omp parallel for firstprivate(cs) collapse(2)
+		for(long j=j1;j<=j2;j++)	for(long i=i1;i<=i2;i++)
+		{
+			register float v = i*i+j*j;
+			cs[3] = v<(pw-1)*(pw-1)/4 ? cc : (unsigned char)(cc/cosh(dpw*(sqrt(v)+(1-pw)/2)));
+	//		cs[3] = (unsigned char)(cc*exp(-6*v));
+			pnt_plot(p.x+i,p.y+j,p.z,cs,dr->ObjId);
+		}
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)	// TODO should I add omp here?
+void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 {
 	unsigned char cs[4];	col2int(q,cs,d->ObjId);	cs[3] = size>0 ? 255 : 255*q.t;
 	mglPnt p0=q,p1=q,p2=q,p3=q;
 	mreal ss=fabs(size);
-	register long i,j;
 
 	if(type=='.' || ss==0)
 	{
@@ -983,14 +990,16 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 			line_draw(p0,p1,d);	line_draw(p1,p2,d);
 			line_draw(p2,p0,d);	break;
 		case 'O':
-			for(j=long(-ss);j<=long(ss);j++)	for(i=long(-ss);i<=long(ss);i++)
+#pragma omp parallel for collapse(2)
+			for(long j=long(-ss);j<=long(ss);j++)	for(long i=long(-ss);i<=long(ss);i++)
 			{
 				register long x=long(q.x)+i, y=long(q.y)+j;
 				if(i*i+j*j>=ss*ss || !d || x<d->x1 || x>d->x2 || y<d->y1 || y>d->y2)	continue;
 				pnt_plot(x,y,q.z+1,cs,d->ObjId);
 			}
 		case 'o':
-			for(i=0;i<=20;i++)
+#pragma omp parallel for firstprivate(p0,p1)
+			for(long i=0;i<=20;i++)
 			{
 				p0 = p1;	p1.x = q.x+ss*cos(i*M_PI/10);	p1.y = q.y+ss*sin(i*M_PI/10);
 				if(i>0)	line_draw(p0,p1,d);
@@ -998,7 +1007,8 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 			break;
 		case 'C':
 			pnt_draw(q,d);
-			for(i=0;i<=20;i++)
+#pragma omp parallel for firstprivate(p0,p1)
+			for(long i=0;i<=20;i++)
 			{
 				p0 = p1;	p1.x = q.x+ss*cos(i*M_PI/10);	p1.y = q.y+ss*sin(i*M_PI/10);
 				if(i>0)	line_draw(p0,p1,d);
@@ -1035,7 +1045,7 @@ void mglCanvas::glyph_draw(const mglPrim &P, mglDrawReg *d)
 	float phi = GetGlyphPhi(Pnt[P.n2],P.w);
 	if(mgl_isnan(phi))	return;
 
-	d->PDef = MGL_SOLID_MASK;	d->angle = 0;
+	d->PDef = MGL_SOLID_MASK;	d->angle = 0;	d->PenWidth=1;
 	mglPnt p=Pnt[P.n1];
 	mreal pf=sqrt((Bp.b[0]*Bp.b[0]+Bp.b[1]*Bp.b[1]+Bp.b[3]*Bp.b[3]+Bp.b[4]*Bp.b[4])/2), f = P.p*pf;
 
@@ -1058,35 +1068,35 @@ void mglCanvas::glyph_draw(const mglPrim &P, mglDrawReg *d)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::glyph_fill(const mglMatrix *M, const mglPnt &pp, mreal f, const mglGlyph &g, mglDrawReg *d)
+void mglCanvas::glyph_fill(const mglMatrix *M, const mglPnt &pp, mreal f, const mglGlyph &g, const mglDrawReg *d)
 {
 	if(!g.trig || g.nt<=0)	return;
-	long ik,ii;
 	mglPnt q0=pp, q1=pp, q2=pp;
 	q0.u=q0.v=q1.u=q1.v=q2.u=q2.v=NAN;
-	mglPoint p1,p2,p3;
-	for(ik=0;ik<g.nt;ik++)
+#pragma omp parallel for firstprivate(q0,q1,q2)
+	for(long ik=0;ik<g.nt;ik++)
 	{
-		ii = 6*ik;	p1 = mglPoint(f*g.trig[ii]+pp.u,f*g.trig[ii+1]+pp.v,0);	PostScale(M,p1);
-		ii+=2;		p2 = mglPoint(f*g.trig[ii]+pp.u,f*g.trig[ii+1]+pp.v,0);	PostScale(M,p2);
-		ii+=2;		p3 = mglPoint(f*g.trig[ii]+pp.u,f*g.trig[ii+1]+pp.v,0);	PostScale(M,p3);
-		q0.x = p1.x;	q0.y = p1.y;	q0.z = p1.z;
-		q1.x = p2.x;	q1.y = p2.y;	q1.z = p2.z;
-		q2.x = p3.x;	q2.y = p3.y;	q2.z = p3.z;
+		register long ii = 6*ik;	mglPoint p;
+		p = mglPoint(f*g.trig[ii]+pp.u,f*g.trig[ii+1]+pp.v,0);
+		PostScale(M,p);	q0.x = p.x;	q0.y = p.y;	q0.z = p.z;
+		ii+=2;	p = mglPoint(f*g.trig[ii]+pp.u,f*g.trig[ii+1]+pp.v,0);
+		PostScale(M,p);	q1.x = p.x;	q1.y = p.y;	q1.z = p.z;
+		ii+=2;	p = mglPoint(f*g.trig[ii]+pp.u,f*g.trig[ii+1]+pp.v,0);
+		PostScale(M,p);	q2.x = p.x;	q2.y = p.y;	q2.z = p.z;
 		trig_draw(q0,q1,q2,false,d);
 	}
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::glyph_wire(const mglMatrix *M, const mglPnt &pp, mreal f, const mglGlyph &g, mglDrawReg *d)
+void mglCanvas::glyph_wire(const mglMatrix *M, const mglPnt &pp, mreal f, const mglGlyph &g, const mglDrawReg *d)
 {
 	if(!g.line || g.nl<=0)	return;
-	long ik,ii,il=0;
+	long il=0;
 	mglPnt q0=pp, q1=pp;	q0.u=q0.v=q1.u=q1.v=NAN;
-	if(d)	{	d->PDef = 0xffff;	d->PenWidth=0.75;	}
 	mglPoint p1,p2;
-	for(ik=0;ik<g.nl;ik++)
+//#pragma omp parallel for firstprivate(q0,q1,i1) private(p1,p2)
+	for(long ik=0;ik<g.nl;ik++)
 	{
-		ii = 2*ik;
+		register long ii = 2*ik;
 		if(g.line[ii]==0x3fff && g.line[ii+1]==0x3fff)	// line breakthrough
 		{	il = ik+1;	continue;	}
 		else if(ik==g.nl-1 || (g.line[ii+2]==0x3fff && g.line[ii+3]==0x3fff))
@@ -1106,11 +1116,10 @@ void mglCanvas::glyph_wire(const mglMatrix *M, const mglPnt &pp, mreal f, const 
 	}
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::glyph_line(const mglMatrix *M, const mglPnt &pp, mreal f, bool solid, mglDrawReg *d)
+void mglCanvas::glyph_line(const mglMatrix *M, const mglPnt &pp, mreal f, bool solid, const mglDrawReg *d)
 {
 	mglPnt q0=pp,q1=pp,q2=pp,q3=pp;
 	q0.u=q0.v=q1.u=q1.v=q2.u=q2.v=q3.u=q3.v=NAN;
-	if(d)	{	d->PDef = 0xffff;	d->PenWidth=1;	}
 	mglPoint p1,p2,p3,p4;
 
 	mreal dy = 0.004;
