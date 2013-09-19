@@ -647,7 +647,9 @@ void mglCanvas::quad_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 	mglPoint nr = (n1+n2)*0.5;
 
 	float x0 = p1.x, y0 = p1.y;
+#if !MGL_HAVE_PTHREAD
 #pragma omp parallel for private(p,r) collapse(2)
+#endif
 	for(long i=x1;i<=x2;i++)	for(long j=y1;j<=y2;j++)
 	{
 		if(!visible(i,j,d->m, d->PenWidth,d->angle))	continue;
@@ -713,7 +715,9 @@ void mglCanvas::trig_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 
 	float x0 = p1.x, y0 = p1.y;
 	if(Quality&MGL_DRAW_NORM)
+#if !MGL_HAVE_PTHREAD
 #pragma omp parallel for private(p,r) collapse(2)
+#endif
 		for(long i=x1;i<=x2;i++)	for(long j=y1;j<=y2;j++)
 		{
 			if(!visible(i,j,d->m, d->PenWidth,d->angle))	continue;
@@ -726,7 +730,9 @@ void mglCanvas::trig_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 			pnt_plot(i,j,p.z,col2int(p,r,d->ObjId),d->ObjId);
 		}
 	else
+#if !MGL_HAVE_PTHREAD
 #pragma omp parallel for private(r) collapse(2)
+#endif
 		for(long i=x1;i<=x2;i++)	for(long j=y1;j<=y2;j++)
 		{
 			if(!visible(i,j,d->m, d->PenWidth,d->angle))	continue;
@@ -765,7 +771,9 @@ void mglCanvas::line_draw(const mglPnt &p1, const mglPnt &p2, const mglDrawReg *
 //	bool aa=get(MGL_ENABLE_ALPHA);
 //	set(MGL_ENABLE_ALPHA);
 	if(hor)
+#if !MGL_HAVE_PTHREAD
 #pragma omp parallel for private(p,r,y1,y2)
+#endif
 		for(long i=x1;i<=x2;i++)
 		{
 			y1 = int(p1.y+d.y*(i-p1.x)/d.x - pw - 3.5);
@@ -786,7 +794,9 @@ void mglCanvas::line_draw(const mglPnt &p1, const mglPnt &p2, const mglDrawReg *
 			}
 		}
 	else
+#if !MGL_HAVE_PTHREAD
 #pragma omp parallel for private(p,r,x1,x2)
+#endif
 		for(long j=y1;j<=y2;j++)
 		{
 			x1 = int(p1.x+d.x*(j-p1.y)/d.y - pw - 3.5);
@@ -825,7 +835,9 @@ void mglCanvas::fast_draw(const mglPnt &p1, const mglPnt &p2, const mglDrawReg *
 	if(x1>x2 || y1>y2)	return;
 
 	if(hor && d.x!=0)
+#if !MGL_HAVE_PTHREAD
 #pragma omp parallel for
+#endif
 		for(long i=x1;i<=x2;i++)
 		{
 			register long c = long(p1.y+d.y*(i-p1.x)/d.x);
@@ -833,7 +845,9 @@ void mglCanvas::fast_draw(const mglPnt &p1, const mglPnt &p2, const mglDrawReg *
 				pnt_plot(i, c, p1.z+d.z*(i-p1.x)/d.x, r,dr->ObjId);
 		}
 	else if(d.y!=0)
+#if !MGL_HAVE_PTHREAD
 #pragma omp parallel for
+#endif
 		for(long i=y1;i<=y2;i++)
 		{
 			register long c = long(p1.x+d.x*(i-p1.y)/d.y);
@@ -853,7 +867,9 @@ void mglCanvas::pnt_draw(const mglPnt &p, const mglDrawReg *dr)
 	long s = long(5.5+fabs(pw));
 	long i1=fmax(-s,dr->x1-p.x),i2=fmin(s,dr->x2-p.x), j1=fmax(-s,dr->y1-p.y),j2=fmin(s,dr->y2-p.y);
 	if(!(Quality&3))
+#if !MGL_HAVE_PTHREAD
 #pragma omp parallel for collapse(2)
+#endif
 		for(long j=j1;j<=j2;j++)	for(long i=i1;i<=i2;i++)	// fast draw
 		{
 			register float v = i*i+j*j;
@@ -861,7 +877,9 @@ void mglCanvas::pnt_draw(const mglPnt &p, const mglDrawReg *dr)
 			pnt_plot(p.x+i,p.y+j,p.z,cs,dr->ObjId);
 		}
 	else
+#if !MGL_HAVE_PTHREAD
 #pragma omp parallel for firstprivate(cs) collapse(2)
+#endif
 		for(long j=j1;j<=j2;j++)	for(long i=i1;i<=i2;i++)
 		{
 			register float v = i*i+j*j;
@@ -990,7 +1008,9 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 			line_draw(p0,p1,d);	line_draw(p1,p2,d);
 			line_draw(p2,p0,d);	break;
 		case 'O':
+#if !MGL_HAVE_PTHREAD
 #pragma omp parallel for collapse(2)
+#endif
 			for(long j=long(-ss);j<=long(ss);j++)	for(long i=long(-ss);i<=long(ss);i++)
 			{
 				register long x=long(q.x)+i, y=long(q.y)+j;
@@ -998,7 +1018,9 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 				pnt_plot(x,y,q.z+1,cs,d->ObjId);
 			}
 		case 'o':
+#if !MGL_HAVE_PTHREAD
 #pragma omp parallel for firstprivate(p0,p1)
+#endif
 			for(long i=0;i<=20;i++)
 			{
 				p0 = p1;	p1.x = q.x+ss*cos(i*M_PI/10);	p1.y = q.y+ss*sin(i*M_PI/10);
@@ -1007,7 +1029,9 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 			break;
 		case 'C':
 			pnt_draw(q,d);
+#if !MGL_HAVE_PTHREAD
 #pragma omp parallel for firstprivate(p0,p1)
+#endif
 			for(long i=0;i<=20;i++)
 			{
 				p0 = p1;	p1.x = q.x+ss*cos(i*M_PI/10);	p1.y = q.y+ss*sin(i*M_PI/10);
@@ -1073,7 +1097,9 @@ void mglCanvas::glyph_fill(const mglMatrix *M, const mglPnt &pp, mreal f, const 
 	if(!g.trig || g.nt<=0)	return;
 	mglPnt q0=pp, q1=pp, q2=pp;
 	q0.u=q0.v=q1.u=q1.v=q2.u=q2.v=NAN;
+#if !MGL_HAVE_PTHREAD
 #pragma omp parallel for firstprivate(q0,q1,q2)
+#endif
 	for(long ik=0;ik<g.nt;ik++)
 	{
 		register long ii = 6*ik;	mglPoint p;
@@ -1154,16 +1180,16 @@ void mglCanvas::arrow_draw(long n1, long n2, char st, float ll)
 {
 	const mglPnt &p1=Pnt[n1], &p2=Pnt[n2];
 	mglPnt q=p1; 	//q.u=q.v=q.w=0;
-	
+
 	mglPoint kl=mglPoint(p1.x-p2.x,p1.y-p2.y,p1.z-p2.z), kt, p0=mglPoint(p1.x,p1.y,p1.z), p;
 	mreal d = hypot(kl.x,kl.y);
 	if(d==0)	return;
 	kl /= d;	kt = !kl;
 	kl *= ll;	kt *= ll;
-	
+
 	Reserve(8);
 	long k1,k2,k3,k4;
-	
+
 	switch(st)	// S,D -- cube, T -- sq.pyramid, I -- square, O -- sphere???, A,K,V -- cone???
 	{
 		case 'I':
@@ -1204,15 +1230,15 @@ void mglCanvas::arrow_plot_3d(long n1, long n2, char st, float ll)
 {
 	const mglPnt &p1=Pnt[n1], &p2=Pnt[n2];
 	mglPnt q=p1; 	//q.u=q.v=q.w=0;
-	
+
 	mglPoint kl=mglPoint(p1.x-p2.x,p1.y-p2.y,p1.z-p2.z), kt, kz, p0=mglPoint(p1.x,p1.y,p1.z), p;
 	if(kl.norm()==0)	return;
 	kl.Normalize();	kt = !kl;	kz = kl^kt;
 	kl *= ll;	kt *= ll;	kz *= ll;
-	
+
 	Reserve(8);
 	long k1,k2,k3,k4,k5, k6,k7,k8;
-	
+
 	switch(st)	// S,D -- cube, T -- sq.pyramid, I -- square, O -- sphere???, A,K,V -- cone???
 	{
 		case 'I':

@@ -75,7 +75,7 @@ void test(mglGraph *gr)
 	gr->Refill(r,a,b);
 	gr->Plot(r,"r");
 	return;
-	
+
 	mglParse par;
 	par.AllowSetSize(true);
 	setlocale(LC_CTYPE, "");
@@ -184,7 +184,7 @@ void save(mglGraph *gr,const char *name,const char *suf="")
 		case 6:	// GIF
 			snprintf(buf,128,"%s%s.gif",name,suf);
 			gr->WriteGIF(buf);	break;
-		case 7:	// none
+		case 7:	gr->Finish();	// none
 			break;
 		case 8:	// EPS to PNG
 			snprintf(buf,128,"%s%s.png",name,suf);

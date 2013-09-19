@@ -182,7 +182,7 @@ using mglBase::Light;
 	int GetSplId(long xs,long ys) const;
 	/// Check if there is active point or primitive (n=-1)
 	int IsActive(int xs, int ys,int &n);
-	
+
 	/// Create new frame.
 	virtual int NewFrame();
 	/// Finish frame drawing
@@ -199,7 +199,7 @@ using mglBase::Light;
 	virtual void SetFrame(long i);
 	/// Add drawing data from i-th frame to the current drawing
 	void ShowFrame(long i);
-	
+
 	/// Start write frames to cinema using GIF format
 	void StartGIF(const char *fname, int ms=100);
 	/// Stop writing cinema using GIF format
@@ -300,7 +300,7 @@ using mglBase::Light;
 	int *OI;			///< ObjId arrays (size width*height)
 	/// Plot point p with color c
 	void pnt_plot(long x,long y,mreal z,const unsigned char c[4], int obj_id);
-	
+
 protected:
 	mreal Delay;		///< Delay for animation in seconds
 	// NOTE: Z should be float for reducing space and for compatibility reasons
@@ -351,7 +351,7 @@ protected:
 	void LightScale(const mglMatrix *M);	///< Additionally scale positions of light sources
 	/// Push drawing data (for frames only). NOTE: can be VERY large
 	long PushDrwDat();
-	
+
 	mreal GetOrgX(char dir) const;	///< Get Org.x (parse NAN value)
 	mreal GetOrgY(char dir) const;	///< Get Org.y (parse NAN value)
 	mreal GetOrgZ(char dir) const;	///< Get Org.z (parse NAN value)
@@ -392,7 +392,7 @@ protected:
 	void pxl_other(long id, long n, const void *p);
 	/// Put drawing from other mglCanvas (for multithreading, like subplots)
 	void PutDrawReg(mglDrawReg *d, const mglCanvas *gr);
-	
+
 private:
 //	mreal _tetx,_tety,_tetz;		// extra angles
 	std::vector<mglMatrix> stack;	///< stack for transformation matrices
@@ -401,7 +401,7 @@ private:
 	mreal fscl,ftet;	///< last scale and rotation for glyphs
 	long forg;		///< original point (for directions)
 	size_t grp_counter;	///< Counter for StartGroup(); EndGroup();
-	mglMatrix Bt;	///< temporary matrix for text 
+	mglMatrix Bt;	///< temporary matrix for text
 
 	/// Draw generic colorbar
 	void colorbar(HCDT v, const mreal *s, int where, mreal x, mreal y, mreal w, mreal h);
@@ -425,7 +425,7 @@ private:
 	long ProjScale(int nface, long p, bool text=false);
 	/// Set coordinate and add the point, return its id
 	long setPp(mglPnt &q, const mglPoint &p);
-	
+
 	// functions for glyph drawing
 	void glyph_fill(const mglMatrix *M, const mglPnt &p, mreal f, const mglGlyph &g, const mglDrawReg *d);
 	void glyph_wire(const mglMatrix *M, const mglPnt &p, mreal f, const mglGlyph &g, const mglDrawReg *d);
@@ -435,12 +435,12 @@ private:
 struct mglThreadG
 {
 	mglCanvas *gr;		// grapher
-	void (mglCanvas::*f)(size_t i, size_t n, const void *);
+	void (mglCanvas::*f)(long i, long n, const void *);
 	unsigned id;		// thread id
-	size_t n;	// total number of iteration
+	long n;	// total number of iteration
 	const void *p;		// external parameter
 };
 /// Start several thread for the task
-void mglStartThread(void (mglCanvas::*func)(size_t i, size_t n), mglCanvas *gr, size_t n);
+void mglStartThread(void (mglCanvas::*func)(long i, long n), mglCanvas *gr, long n);
 //-----------------------------------------------------------------------------
 #endif
