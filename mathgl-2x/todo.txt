@@ -1,13 +1,12 @@
 http://ubuntuforums.org/showthread.php?t=1862084
 Device 0 (VID=0502 and PID=337d) is UNKNOWN. (VID=18d1 and PID=4e41)
 
-Compare speed for i5 Debian sid
-kind	default	big
-none	27.7	83.3
-pthr	24.5	68.1
-omp+pth	25.0	64.7
-omp		28.5	65.3	==> need to rewrite pxl_primdr!!!
-
+Compare speed for i5 Debian sid	i7 Ubuntu 12.04	new var i7
+kind 			default	big		default	big		default	big		nof def	nof big	nod def	nod big
+none 			27.7 	83.3 	27.7 	58.2 					20.9 	34.6
+pthr 			24.5 	68.1 	22.5 	40.5
+omp+pth			25.0 	64.7 	21.6 	34.2 					18.4 	27.0 	19.6 	28.0
+omp				28.5 	65.3 	25.7 	37.3		19.3!	31.7!	17.2 	23.5 	17.3 	24.2
 
 ============= NEW FOR LATER =============
 
@@ -35,7 +34,7 @@ A. Paper about MathGL!!!
 14. Check wx + pthread in win32 ... may be I should disable pthread in wx.cpp ???
 15. extend resolution in WriteJSON
 16. test refill
-17. Add krug_plot() + krug_draw() ???
+17. Add adjust() to FLTK
 18. profiling
 
 ============= DOCUMENTATION =============

@@ -386,6 +386,7 @@ protected:
 	void pxl_backgr(long id, long n, const void *);
 	void pxl_primdr(long id, long n, const void *);
 	void pxl_dotsdr(long id, long n, const void *);
+	void pxl_primpx(long id, long n, const void *);
 	void pxl_transform(long id, long n, const void *);
 	void pxl_setz(long id, long n, const void *);
 	void pxl_setz_adv(long id, long n, const void *);
@@ -430,6 +431,20 @@ private:
 	void glyph_fill(const mglMatrix *M, const mglPnt &p, mreal f, const mglGlyph &g, const mglDrawReg *d);
 	void glyph_wire(const mglMatrix *M, const mglPnt &p, mreal f, const mglGlyph &g, const mglDrawReg *d);
 	void glyph_line(const mglMatrix *M, const mglPnt &p, mreal f, bool solid, const mglDrawReg *d);
+
+	// fill pixel for given primitive
+	void mark_pix(long i,long j,const mglPnt &p, char type, mreal size, mglDrawReg *d);
+	void arrow_pix(long i,long j,const mglPnt &p1, const mglPnt &p2, char st, mreal size, const mglDrawReg *d);
+	void line_pix(long i,long j,const mglPnt &p1, const mglPnt &p2, const mglDrawReg *d);
+	void trig_pix(long i,long j,const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, bool anorm, const mglDrawReg *d);
+	void quad_pix(long i,long j,const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, const mglPnt &p4, const mglDrawReg *d);
+	void glyph_pix(long i,long j,const mglPrim &P, mglDrawReg *d);
+	void pnt_pix(long i,long j,const mglPnt &p, const mglDrawReg *d);
+	void glyph_fpix(long i,long j,const mglMatrix *M, const mglPnt &p, mreal f, const mglGlyph &g, const mglDrawReg *d);
+	void glyph_wpix(long i,long j,const mglMatrix *M, const mglPnt &p, mreal f, const mglGlyph &g, const mglDrawReg *d);
+	void glyph_lpix(long i,long j,const mglMatrix *M, const mglPnt &p, mreal f, bool solid, const mglDrawReg *d);
+
+	
 };
 //-----------------------------------------------------------------------------
 struct mglThreadG

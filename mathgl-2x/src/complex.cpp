@@ -604,14 +604,20 @@ dual mglLinearC(const dual *a, long nx, long ny, long nz, mreal x, mreal y, mrea
 dual MGL_EXPORT mgl_datac_spline(HCDT d, mreal x,mreal y,mreal z)
 {
 	const mglDataC *dd=dynamic_cast<const mglDataC *>(d);
-	if(!dd)	return mgl_datac_spline(d,x,y,z);
-	return mglSpline3t<dual>(dd->a,dd->nx,dd->ny,dd->nz,x,y,z,0,0,0);
+	if(!dd)	return mgl_data_spline(d,x,y,z);
+	return dd->ny*dd->nz==1?mglSpline1st<dual>(dd->a,dd->nx,x):mglSpline3st<dual>(dd->a,dd->nx,dd->ny,dd->nz,x,y,z);
 }
 //-----------------------------------------------------------------------------
 dual MGL_EXPORT mgl_datac_spline_ext(HCDT d, mreal x,mreal y,mreal z, dual *dx,dual *dy,dual *dz)
 {
 	const mglDataC *dd=dynamic_cast<const mglDataC *>(d);
-	if(!dd)	return mgl_datac_spline_ext(d,x,y,z,dx,dy,dz);
+	if(!dd)
+	{
+		mreal rx,ry,rz,res;
+		res=mgl_data_spline_ext(d,x,y,z,&rx,&ry,&rz);
+		if(dx)	*dx=rx;	if(dy)	*dy=ry;	if(dz)	*dz=rz;
+		return res;
+	}
 	return mglSpline3t<dual>(dd->a,dd->nx,dd->ny,dd->nz,x,y,z,dx,dy,dz);
 }
 //-----------------------------------------------------------------------------

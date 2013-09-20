@@ -275,3 +275,110 @@ template <class Treal> Treal mglSpline3t(const Treal *a, long nx, long ny, long 
 	return b;
 }
 //-----------------------------------------------------------------------------
+template <class Treal> Treal mglSpline3st(const Treal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z)
+{
+	if(!a || nx<1 || ny<1 || nz<1)	return 0;
+	Treal _p[4][4];
+	register long i,j;
+	register Treal fx=1, fy=1;
+	long kx=long(x),ky=long(y),kz=long(z);
+	Treal b=0;
+	x = x>0 ?(x<nx-1 ? x:nx-1):0;
+	y = y>0 ?(y<ny-1 ? y:ny-1):0;
+	z = z>0 ?(z<nz-1 ? z:nz-1):0;
+	//	if(x<0 || y<0 || z<0 || x>nx-1 || y>ny-1 || z>nz-1)		return 0;
+	if(kx>nx-2)	kx = nx-2;	if(kx<0) 	kx = 0;
+	if(ky>ny-2)	ky = ny-2;	if(ky<0) 	ky = 0;
+	if(kz>nz-2)	kz = nz-2;	if(kz<0) 	kz = 0;
+//	if(nz>1 && z!=kz)		// 3d interpolation
+	if(nz>1)		// 3d interpolation
+	{
+		Treal b1[4]={0,0,0,0},  x1[4]={0,0,0,0},  y1[4]={0,0,0,0};
+		long kk=1;
+		if(kz==0)	{	kk=0;	}
+		else if(nz>3 && kz==nz-2)	{	kk=2;	}
+		for(long k=0;k<4;k++)
+		{
+			if(kz+k-kk<nz && kz+k-kk>=0)
+				mglFillP(kx, ky, a+(kz+k-kk)*nx*ny, nx, ny, _p);
+			else
+			{
+				memset(_p[0],0,4*sizeof(Treal));
+				memset(_p[1],0,4*sizeof(Treal));
+				memset(_p[2],0,4*sizeof(Treal));
+				memset(_p[3],0,4*sizeof(Treal));
+			}
+			for(i=0,fx=1;i<4;i++)
+			{
+				for(j=0,fy=1;j<4;j++)
+				{	b1[k] += fy*fx*_p[i][j];	fy *= y-ky;	}
+				fx *= x-kx;
+			}
+		}
+		mglFillP(kk, b1, nz>3 ? 4:3, _p[0]);
+		mglFillP(kk, x1, nz>3 ? 4:3, _p[1]);
+		mglFillP(kk, y1, nz>3 ? 4:3, _p[2]);
+		for(i=0,fx=1,b=0;i<4;i++)
+		{
+			b += fx*_p[0][i];
+			fx *= z-kz;
+		}
+	}
+//	else if(ny>1 && y!=ky)	// 2d interpolation
+	else if(ny>1)	// 2d interpolation
+	{
+		mglFillP(kx, ky, a+kz*nx*ny, nx, ny, _p);
+		for(i=0,fx=1,b=0;i<4;i++)
+		{
+			for(j=0,fy=1;j<4;j++)
+			{	b += fy*fx*_p[i][j];	fy *= y-ky;	}
+			fx *= x-kx;
+		}
+	}
+//	else if(nx>1 && x!=kx)	// 1d interpolation
+	else if(nx>1)	// 1d interpolation
+	{
+		mglFillP(kx, a+(ky+ny*kz)*nx, nx, _p[0]);
+		for(i=0,fx=1,b=0;i<4;i++)
+		{	b += fx*_p[0][i];	fx *= x-kx;	}
+	}
+	else					// no interpolation
+		b = a[kx+nx*(ky+ny*kz)];
+	return b;
+}
+//-----------------------------------------------------------------------------
+template <class Treal> Treal mglSpline1t(const Treal *a, long nx, mreal x, Treal *dx=0)
+{
+	Treal _p[4];
+	long kx=long(x);
+	Treal b=0;
+	x = x>0 ?(x<nx-1 ? x:nx-1):0;
+	if(kx>nx-2)	kx = nx-2;	if(kx<0) 	kx = 0;
+	if(nx>1)	// 1d interpolation
+	{
+		mglFillP(kx, a, nx, _p);
+		b = _p[0]+(x-kx)*(_p[1]+(x-kx)*(_p[2]+(x-kx)*_p[3]));
+		if(dx)	*dx = _p[1]+(x-kx)*(mreal(2)*_p[2]+mreal(3)*(x-kx)*_p[3]);
+	}
+	else		// no interpolation
+	{	b = a[0];	if(dx)	*dx=0;	}
+	return b;
+}
+//-----------------------------------------------------------------------------
+template <class Treal> Treal mglSpline1st(const Treal *a, long nx, mreal x)
+{
+	Treal _p[4];
+	long kx=long(x);
+	Treal b=0;
+	x = x>0 ?(x<nx-1 ? x:nx-1):0;
+	if(kx>nx-2)	kx = nx-2;	if(kx<0) 	kx = 0;
+	if(nx>1)	// 1d interpolation
+	{
+		mglFillP(kx, a, nx, _p);
+		b = _p[0]+(x-kx)*(_p[1]+(x-kx)*(_p[2]+(x-kx)*_p[3]));
+	}
+	else		// no interpolation
+		b = a[0];
+	return b;
+}
+//-----------------------------------------------------------------------------
