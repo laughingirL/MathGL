@@ -157,7 +157,7 @@ void MGL_EXPORT mgl_vect_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const cha
 			v = mglPoint(ax->v(i,j,k),ay->v(i,j,k));
 			mreal dd = v.norm(), c1, c2;
 			v *= cm*(fix?(dd>dm ? 1./dd : 0) : xm);
-			
+
 			if(end)		{	p1 = d-v;	p2 = d;	}
 			else if(beg)	{	p1 = d;	p2 = d+v;	}
 			else		{	p1=d-v/2.;	p2=d+v/2.;	}
@@ -223,7 +223,7 @@ void MGL_EXPORT mgl_vect_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, 
 	mreal dm=(fabs(gr->Max.c)+fabs(gr->Min.c))*1e-5;
 	// use whole array for determining maximal vectors length
 	mglPoint p1,p2, v, d;
-	
+
 #pragma omp parallel private(p1,p2,v,d)
 	{
 		mreal c1,c2,c3, xm1=0,cm1=0,xx;
@@ -256,7 +256,7 @@ void MGL_EXPORT mgl_vect_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, 
 		v = mglPoint(ax->v(i,j,k),ay->v(i,j,k),az->v(i,j,k));
 		mreal dd = v.norm(),c1,c2;
 		v *= cm*(fix?(dd>dm ? 1./dd : 0) : xm);
-		
+
 		if(end)		{	p1 = d-v;	p2 = d;	}
 		else if(beg)	{	p1 = d;	p2 = d+v;	}
 		else		{	p1=d-v/2.;	p2=d+v/2.;	}
@@ -529,7 +529,7 @@ void MGL_EXPORT mgl_vect3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay,
 	if(tx<1)	tx=1;	if(ty<1)	ty=1;
 	mreal xm=0,cm=0,ca=0;
 	mreal dm=(fabs(gr->Max.c)+fabs(gr->Min.c))*1e-5;
-	// use whole array for determining maximal vectors length 
+	// use whole array for determining maximal vectors length
 	mglPoint p1,p2, v, d=(gr->Max-gr->Min)/mglPoint(1./ax->GetNx(),1./ax->GetNy(),1./ax->GetNz());
 
 	long tn=ty*n;
@@ -1130,30 +1130,32 @@ void MGL_NO_EXPORT flowr(mglBase *gr, double zVal, double u, double v, const mgl
 	} while(!end);
 	if(k>1)
 	{
-		const int num=24;
-		long i,j,*id=new long[2*num];
+		const int num=25;
+		long *id=new long[2*num];
 		mglPoint p,l=pp[1]-pp[0],t,q,d;
 		t = !l;	t.Normalize();	q = t^l;	q.Normalize();
-		mreal si,co,fi, rr=pp[0].c,dr=l.c;
+		mreal rr=pp[0].c,dr=l.c;
 		gr->Reserve(num*k);
 
-		for(j=0;j<num;j++)
+		for(long j=0;j<num;j++)
 		{
-			fi = j*2*M_PI/(num-1);	co = cos(fi);	si = sin(fi);
+			register int fi=j*360/(num-1);
+			register float co = mgl_cos[fi%360], si = mgl_cos[(270+fi)%360];
 			p = pp[0] + t*(rr*co) + q*(rr*si);
 			d = (t*si - q*co)^(l + t*(dr*co) + q*(dr*si));
 			id[j] = gr->AddPnt(p,cc[0],d);
 		}
-		for(i=1;i<k;i++)
+		for(long i=1;i<k;i++)
 		{
 			if(i<k-1)	l = pp[i+1]-pp[i-1];
 			else	l = pp[i]-pp[i-1];
 			t = !l;	t.Normalize();	q = t^l;	q.Normalize();
 			rr=pp[i].c;	dr=l.c;
 			memcpy(id+num,id,num*sizeof(long));
-			for(j=0;j<num;j++)
+			for(long j=0;j<num;j++)
 			{
-				fi = j*2*M_PI/(num-1);	co = cos(fi);	si = sin(fi);
+				register int fi=j*360/(num-1);
+				register float co = mgl_cos[fi%360], si = mgl_cos[(270+fi)%360];
 				p = pp[i] + t*(rr*co) + q*(rr*si);
 				d = (t*si - q*co)^(l + t*(dr*co) + q*(dr*si));
 				id[j] = gr->AddPnt(p,cc[i],d);
@@ -1284,29 +1286,31 @@ void flowr(mglBase *gr, double u, double v, double w, const mglData &x, const mg
 	if(k>1)
 	{
 		const int num=24;
-		long i,j,*id=new long[2*num];
+		long *id=new long[2*num];
 		mglPoint p,l=pp[1]-pp[0],t,q,d;
 		t = !l;	t.Normalize();	q = t^l;	q.Normalize();
-		mreal si,co,fi, rr=pp[0].c,dr=l.c;
+		mreal rr=pp[0].c,dr=l.c;
 		gr->Reserve(num*k);
 
-		for(j=0;j<num;j++)
+		for(long j=0;j<num;j++)
 		{
-			fi = j*2*M_PI/(num-1);	co = cos(fi);	si = sin(fi);
+			register int fi=j*360/(num-1);
+			register float co = mgl_cos[fi%360], si = mgl_cos[(270+fi)%360];
 			p = pp[0] + t*(rr*co) + q*(rr*si);
 			d = (t*si - q*co)^(l + t*(dr*co) + q*(dr*si));
 			id[j] = gr->AddPnt(p,cc[0],d);
 		}
-		for(i=1;i<k;i++)
+		for(long i=1;i<k;i++)
 		{
 			if(i<k-1)	l = pp[i+1]-pp[i-1];
 			else	l = pp[i]-pp[i-1];
 			t = !l;	t.Normalize();	q = t^l;	q.Normalize();
 			rr=pp[i].c;	dr=l.c;
 			memcpy(id+num,id,num*sizeof(long));
-			for(j=0;j<num;j++)
+			for(long j=0;j<num;j++)
 			{
-				fi = j*2*M_PI/(num-1);	co = cos(fi);	si = sin(fi);
+				register int fi=j*360/(num-1);
+				register float co = mgl_cos[fi%360], si = mgl_cos[(270+fi)%360];
 				p = pp[i] + t*(rr*co) + q*(rr*si);
 				d = (t*si - q*co)^(l + t*(dr*co) + q*(dr*si));
 				id[j] = gr->AddPnt(p,cc[i],d);

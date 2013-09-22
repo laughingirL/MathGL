@@ -239,7 +239,7 @@ mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg)
 		else if(!p.compare(L"sa"))	{	d.Momentum('a',x,y,z,k);v=z;	}
 		else if(!p.compare(L"ka"))	{	d.Momentum('a',x,y,z,k);v=k;	}
 		// if this is valid suffix when finish parsing (it can be mreal number)
-		if(!mgl_isnan(v))	{	res.a[0] = v;	return res;	}
+		if(mgl_isnum(v))	{	res.a[0] = v;	return res;	}
 	}
 	for(n=0;n<len;n++)	if(str[n]=='(')	break;
 	if(n>=len)		// this is number or variable

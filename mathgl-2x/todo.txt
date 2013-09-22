@@ -1,12 +1,12 @@
 http://ubuntuforums.org/showthread.php?t=1862084
 Device 0 (VID=0502 and PID=337d) is UNKNOWN. (VID=18d1 and PID=4e41)
 
-Compare speed for i5 Debian sid	i7 Ubuntu 12.04	new var i7
-kind 			default	big		default	big		default	big		nof def	nof big	nod def	nod big
-none 			27.7 	83.3 	27.7 	58.2 					20.9 	34.6
+Compare speed for i5 Debian sid	i7 Ubuntu 12.04		new var i7/i5
+kind 			default	big		default	big 		default	big
+none 			27.7 	83.3 	27.7 	58.2
 pthr 			24.5 	68.1 	22.5 	40.5
-omp+pth			25.0 	64.7 	21.6 	34.2 					18.4 	27.0 	19.6 	28.0
-omp				28.5 	65.3 	25.7 	37.3		19.3!	31.7!	17.2 	23.5 	17.3 	24.2
+omp+pth			25.0 	64.7 	21.6 	34.2
+omp				28.5 	65.3 	25.7 	37.3		???/12.9	???/27.2
 
 ============= NEW FOR LATER =============
 
@@ -35,15 +35,17 @@ A. Paper about MathGL!!!
 15. extend resolution in WriteJSON
 16. test refill
 17. Add adjust() to FLTK
-18. profiling
+18. Rewrite mark_draw() to exclude line_draw() calls?!!
+19. fix overlapping errors (see venn)
+
 
 ============= DOCUMENTATION =============
 
 1. Add extra samples (data1, data2, data3, data4, text2, error2) ???
 2. Add "Triangulation sample"
 3. Add "Local light sample"
-4. Update docs about Cones (styles 't', '4', '6', '8')
-5. Update docs about Cone (style '4', '6', '8')
+4. Update docs about Cones (styles 't', '4', '6')
+5. Update docs about Cone (style '4', '6')
 6. Docs about mglData[C]::Correl() & AutoCorrel() + hint about Swap()
 10. Add "Data correlation sample"
 11. mgl_set_mask(char id, const char *mask); && mgl_set_mask_val(char id, uint64_t mask);
@@ -52,7 +54,8 @@ A. Paper about MathGL!!!
 14. Add chapter with real samples
 15. Put & Spline in mglDataC
 16. Add mglData::Refill() + 'refill' + mglGraph::Refill()
-
+17. Update cloud sample
+18. Add adjust in Fl_MGLView
 
 ============= UDAV =============
 

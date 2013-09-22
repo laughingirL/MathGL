@@ -262,14 +262,14 @@ void MGL_EXPORT mgl_obj_prim_old(HMGL gr, const mglPrim &q, const mglPnt &p, FIL
 			fprintf(fp,"l -1/%ld -3/%ld\n", i,i);	break;
 		case 'O':
 			for(j=0;j<=20;j++)
-				fprintf(fp,"v %g %g %g\n",p.x+ss*cos(j*M_PI/10),p.y+ss*sin(j*M_PI/10),p.z);
+				fprintf(fp,"v %g %g %g\n",p.x+ss*mgl_cos[(j*36)%360],p.y+ss*mgl_cos[(270+j*36)%360],p.z);
 			for(j=0;j<20;j++)
 				fprintf(fp,"f %ld/%ld %ld/%ld %ld/%ld\n", j-21,i, j-20,i, i,i);
 			break;
 		case 'C':	fprintf(fp,"p %ld\n", i);
 		case 'o':
 			for(j=0;j<=20;j++)
-				fprintf(fp,"v %g %g %g\n",p.x+ss*cos(j*M_PI/10),p.y+ss*sin(j*M_PI/10),p.z);
+				fprintf(fp,"v %g %g %g\n",p.x+ss*mgl_cos[(j*36)%360],p.y+ss*mgl_cos[(270+j*36)%360],p.z);
 			for(j=0;j<20;j++)
 				fprintf(fp,"l %ld/%ld %ld/%ld\n", j-21,i, j-20,i);
 			break;
@@ -566,7 +566,7 @@ std::string mglCanvas::GetJSON()
 				p.type, n1, n2, n3, n4, p.id, p.s, p.w==p.w?p.w:0, p.p==p.p?p.p:0,
 				0., int(255*c.r), int(255*c.g), int(255*c.b), c.a, i+1<l?',':' ');
 	}
-	
+
 	l = xy.size();
 	res = res + mgl_sprintf("],\t\"ncoor\":%lu,\t\"coor\":[\n",(unsigned long)l);
 	for(i=0;i<l;i++)
@@ -892,14 +892,14 @@ void MGL_EXPORT mgl_import_mgld_(uintptr_t *gr, const char *fname, int *add, int
 			fprintf(fp,"l -1/%ld -3/%ld\n", i,i);	break;
 		case 'O':
 			for(long j=0;j<=20;j++)
-				fprintf(fp,"v %g %g %g\n",p.x+ss*cos(j*M_PI/10),p.y+ss*sin(j*M_PI/10),p.z);
+				fprintf(fp,"v %g %g %g\n",p.x+ss*mgl_cos[(j*36)%360],p.y+ss*mgl_cos[(270+j*36)%360],p.z);
 			for(long j=0;j<20;j++)
 				fprintf(fp,"f %ld/%ld %ld/%ld %ld/%ld\n", j-21,i, j-20,i, i,i);
 			break;
 		case 'C':	fprintf(fp,"p %ld\n", i);
 		case 'o':
 			for(long j=0;j<=20;j++)
-				fprintf(fp,"v %g %g %g\n",p.x+ss*cos(j*M_PI/10),p.y+ss*sin(j*M_PI/10),p.z);
+				fprintf(fp,"v %g %g %g\n",p.x+ss*mgl_cos[(j*36)%360],p.y+ss*mgl_cos[(270+j*36)%360],p.z);
 			for(long j=0;j<20;j++)
 				fprintf(fp,"l %ld/%ld %ld/%ld\n", j-21,i, j-20,i);
 			break;
@@ -1119,7 +1119,7 @@ void MGL_EXPORT mgl_x3d_prim(const mglPrim &q, const mglPnt &p, const long *pnt,
 			if(q.n3&4)	mgl_printf(fp, gz, "dr");
 			else	mgl_printf(fp, gz, "eofill");
 			mgl_printf(fp, gz, " grestore\n");
-		}*/	
+		}*/
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_write_x3d(HMGL gr, const char *fname,const char *descr)
@@ -1159,7 +1159,7 @@ void MGL_EXPORT mgl_write_x3d(HMGL gr, const char *fname,const char *descr)
 
 	// resort in creation order for proper drawing of lines and faces
 	gr->resort();
-	
+
 	// primitive definition in groups
 	long npnt = gr->GetPntNum(), k;
 	long *pnt=new long[npnt];
@@ -1207,7 +1207,7 @@ void MGL_EXPORT mgl_write_x3d(HMGL gr, const char *fname,const char *descr)
 			mgl_printf(fp, gz, "0.0 0.0 0.0'/>");
 
 			// TODO save IndexedLineSet here + manual color is same==true
-			
+
 			mgl_printf(fp, gz, "</Shape>");
 		}
 

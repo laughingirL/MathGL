@@ -721,7 +721,7 @@ void MGL_EXPORT mgl_write_tex(HMGL gr, const char *fname,const char *descr)
 			put_line(gr,fp,false,i,wp,cp,st, "(%g,%g)", " -- (%g,%g)", false, 0.01);
 			fprintf(fp, ";\n");
 		}
-		else if(q.type==6 && !mgl_isnan(q.p))	// text
+		else if(q.type==6 && mgl_isnum(q.p))	// text
 		{
 			const mglText &t = gr->GetPtx(q.n3);
 			mreal dy = q.w*cos(q.p*M_PI/180)/100, dx = q.w*sin(q.p*M_PI/180)/100;

@@ -411,7 +411,7 @@ private:
 	/// Get label style
 	char GetLabelPos(mreal c, long kk, mglAxis &aa);
 	/// Draw tick
-	void tick_draw(mglPoint o, mglPoint d1, mglPoint d2, int f, const char *stl);
+	void tick_draw(mglPoint o, mglPoint d1, mglPoint d2, int f);
 	mreal FindOptOrg(char dir, int ind) const;
 	/// Transform mreal color and alpha to bits format
 	unsigned char* col2int(const mglPnt &p, unsigned char *r, int obj_id);
@@ -444,7 +444,7 @@ private:
 	void glyph_wpix(long i,long j,const mglMatrix *M, const mglPnt &p, mreal f, const mglGlyph &g, const mglDrawReg *d);
 	void glyph_lpix(long i,long j,const mglMatrix *M, const mglPnt &p, mreal f, bool solid, const mglDrawReg *d);
 
-	
+
 };
 //-----------------------------------------------------------------------------
 struct mglThreadG

@@ -511,11 +511,7 @@ void MGL_NO_EXPORT mgl_so_cb(Fl_Widget*, void* v)
 }
 //-----------------------------------------------------------------------------
 void MGL_NO_EXPORT mgl_adjust_cb(Fl_Widget*, void*v)
-{
-	Fl_MGLView *e = (Fl_MGLView*)v;	if(!e)	return;
-	mgl_set_size(e->FMGL->get_graph(), e->scroll->w(), e->scroll->h());
-	e->FMGL->size(e->scroll->w(), e->scroll->h());	e->update();
-}
+{	Fl_MGLView *e = (Fl_MGLView*)v;	if(e)	e->adjust();	}
 void mglCanvasFL::Adjust()	{	Fl::lock();	mgl_adjust_cb(0,mgl);	Fl::unlock();	}
 //-----------------------------------------------------------------------------
 void MGL_NO_EXPORT mgl_oncemore_cb(Fl_Widget*, void*v)
@@ -589,7 +585,7 @@ Fl_MGLView::Fl_MGLView(int xx, int yy, int ww, int hh, const char *lbl) : Fl_Win
 	grid_bt->image(xpm_wire);	grid_bt->callback(mgl_grid_cb,this);
 	grid_bt->tooltip(gettext("Switch on/off grid drawing"));
 	//	grid_bt->box(FL_PLASTIC_UP_BOX);		grid_bt->down_box(FL_PLASTIC_DOWN_BOX);
-	
+
 	rotate_bt = new Fl_Button(80, 1, 25, 25);rotate_bt->type(FL_TOGGLE_BUTTON);
 	rotate_bt->image(xpm_r1);	rotate_bt->callback(mgl_rotate_cb,this);
 	rotate_bt->tooltip(gettext("Rotate picture by holding left mouse button"));
@@ -692,7 +688,7 @@ void MGL_EXPORT mgl_makemenu_fltk(Fl_Menu_ *m, Fl_MGLView *w)
 	m->add("Graphics/Reload data", "f9", mgl_oncemore_cb, w);
 	//TODO	m->add("Graphics/Stop", "f7", mgl_stop_cb, w);
 	//TODO	m->add("Graphics/Copy graphics","+^c", mgl_copyimg_cb, w);
-	
+
 	m->add("Graphics/Export/as PNG", "#p", mgl_export_png_cb, w);
 	m->add("Graphics/Export/as solid PNG", "#f", mgl_export_pngn_cb, w);
 	m->add("Graphics/Export/as JPEG", "#j", mgl_export_jpeg_cb, w);

@@ -68,12 +68,8 @@ void smgl_text(mglGraph *gr);	// text drawing
 void smgl_surf(mglGraph *gr);
 void test(mglGraph *gr)
 {
-	gr->SetRange('y',-1.1,1.1);
-	mglData a(10), b(10), r(100);
-	a.Modify("0.1+rnd");	a.CumSum("x");	a.Norm(-1,1);	b.Modify("sin(pi*v)",a);
-	gr->Axis();	gr->Plot(a,b,"b o");
-	gr->Refill(r,a,b);
-	gr->Plot(r,"r");
+	mglExpr eq("x");
+	printf("res=%g\n",eq.Eval(2));
 	return;
 
 	mglParse par;

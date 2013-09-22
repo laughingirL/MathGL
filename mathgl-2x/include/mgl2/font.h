@@ -22,6 +22,7 @@
 #define _MGL_FONT_H_
 
 #include "mgl2/define.h"
+#include <vector>
 //-----------------------------------------------------------------------------
 #define MGL_FONT_BOLD		0x01000000	// This value is used binary
 #define MGL_FONT_ITAL		0x02000000	// This value is used binary
@@ -94,16 +95,16 @@ public:
 	inline short GetWidth(int s, long j) const	{	return width[s][j];	}
 	inline float GetFact(int s) const		{	return fact[s];	}
 protected:
-	wchar_t *id;		///< Unicode ID for glyph
-	unsigned *tr[4];	///< Shift of glyph description by triangles (for solid font)
-	unsigned *ln[4];	///< Shift of glyph description by lines (for wire font)
-	short *numt[4];		///< Number of triangles in glyph description (for solid font)
-	short *numl[4];		///< Number of lines in glyph description (for wire font)
-	short *width[4];	///< Width of glyph for wire font
-	float fact[4];		///< Divider for width of glyph
-	unsigned numg;		///< Number of glyphs
-	short *Buf;			///< Buffer for glyph descriptions
-	long numb;			///< Buffer size
+	wchar_t *id;	///< Unicode ID for glyph
+	int *tr[4];		///< Shift of glyph description by triangles (for solid font)
+	int *ln[4];		///< Shift of glyph description by lines (for wire font)
+	short *numt[4];	///< Number of triangles in glyph description (for solid font)
+	short *numl[4];	///< Number of lines in glyph description (for wire font)
+	short *width[4];///< Width of glyph for wire font
+	float fact[4];	///< Divider for width of glyph
+	unsigned numg;	///< Number of glyphs
+	short *Buf;		///< Buffer for glyph descriptions
+	long numb;		///< Buffer size
 
 	/// Print text string for font specified by integer constant
 	float Puts(const wchar_t *str,int font,int align, float col) const;
@@ -121,11 +122,11 @@ protected:
 	unsigned Symbol(char ch) const;
 private:
 	float get_ptr(long &i,unsigned *str, unsigned **b1, unsigned **b2,float &w1,float &w2, float f1, float f2, int st) const;
-	bool read_data(const char *fname, float *ff, short *wdt, short *numl, unsigned *posl, short *numt, unsigned *post, unsigned &cur);
+	bool read_data(const char *fname, float *ff, short *wdt, short *numl, int *posl, short *numt, int *post, std::vector<short> &buf);
 	void main_copy();
-	bool read_main(const char *fname, unsigned &cur);
+	bool read_main(const char *fname, std::vector<short> &buf);
 	void mem_alloc();
-	bool read_def(unsigned &cur);
+	bool read_def();
 	void draw_ouline(int st, float x, float y, float f, float g, float ww, float ccol) const;
 };
 //-----------------------------------------------------------------------------

@@ -167,14 +167,17 @@ void MGL_EXPORT mgl_radar(HMGL gr, HCDT a, const char *pen, const char *opt)
 	mglData x(n+1,ny), y(n+1,ny);
 	mreal m=a->Minimal(), r=gr->SaveState(opt);
 	if(mgl_isnan(r) || r<0)	r = m<0 ? -m:0;
+	mreal *co=new mreal[2*n];
+#pragma omp parallel for
+	for(long i=0;i<n;i++)	{	co[i]=cos(2*i*M_PI/n);	co[i+n]=sin(2*i*M_PI/n);	}
 	for(long j=0;j<ny;j++)
 	{
 #pragma omp parallel for
 		for(long i=0;i<n;i++)
 		{
 			register mreal v = a->v(i,j);
-			x.a[i+(n+1)*j] = (r+v)*cos(2*i*M_PI/n);
-			y.a[i+(n+1)*j] = (r+v)*sin(2*i*M_PI/n);
+			x.a[i+(n+1)*j] = (r+v)*co[i];
+			y.a[i+(n+1)*j] = (r+v)*co[i+n];
 		}
 		x.a[n+(n+1)*j] = r+a->v(0,j);	y.a[n+(n+1)*j] = 0;
 	}
@@ -185,19 +188,19 @@ void MGL_EXPORT mgl_radar(HMGL gr, HCDT a, const char *pen, const char *opt)
 		x.Create(2);	y.Create(2);
 		for(long i=0;i<n;i++)
 		{
-			x.a[1]=m*cos(2*i*M_PI/n);
-			y.a[1]=m*sin(2*i*M_PI/n);
+			x.a[1]=m*co[i];		y.a[1]=m*co[i+n];
 			mgl_plot_xy(gr,&x,&y,"k",0);
 		}
 		if(r>0)
 		{
 			x.Create(101);	y.Create(101);
 #pragma omp parallel for
-			for(long i=0;i<101;i++)
-			{	x.a[i]=r*cos(2*i*M_PI/100);	y.a[i]=r*sin(2*i*M_PI/100);	}
+			for(long i=0;i<91;i++)
+			{	x.a[i]=r*mgl_cos[(4*i)%360];	y.a[i]=r*mgl_cos[(270+4*i)%360];	}
 			mgl_plot_xy(gr,&x,&y,"k",0);
 		}
 	}
+	delete []co;
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_radar_(uintptr_t *gr, uintptr_t *a, const char *pen, const char *opt, int l,int lo)
@@ -1137,7 +1140,7 @@ void MGL_EXPORT mgl_boxplot_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const c
 			for(mm=j=0;j<m;j++)
 			{
 				mreal vv = y->v(i,j);
-				if(!mgl_isnan(vv))	{	d[mm]=vv;	mm++;	}
+				if(mgl_isnum(vv))	{	d[mm]=vv;	mm++;	}
 			}
 //			if(m==0)	{	b[i]=NAN;	break;	}
 			qsort(d, mm, sizeof(mreal), mgl_cmp_flt);
@@ -1281,8 +1284,8 @@ void MGL_EXPORT mgl_error_exy(HMGL gr, HCDT x, HCDT y, HCDT ex, HCDT ey, const c
 					for(k=0,n2=-1;k<=40;k++)
 					{
 						n1 = n2;
-						n2 = gr->AddPnt(mglPoint(vx+ve*cos(k*M_PI/20),
-								vy+vf*sin(k*M_PI/20), zVal),c,q,-1,11);
+						n2 = gr->AddPnt(mglPoint(vx+ve*mgl_cos[(18*k)%360],
+								vy+vf*mgl_cos[(270+18*k)%360], zVal),c,q,-1,11);
 						if(k>0)	gr->line_plot(n1,n2);
 					}
 				}
@@ -1346,8 +1349,8 @@ void MGL_EXPORT mgl_error_exy(HMGL gr, HCDT x, HCDT y, HCDT ex, HCDT ey, const c
 					for(k=0,n2=-1;k<=40;k++)
 					{
 						n1 = n2;
-						n2 = gr->AddPnt(mglPoint(vx+ve*cos(k*M_PI/20),
-								vy+vf*sin(k*M_PI/20), zVal),c,q,-1,11);
+						n2 = gr->AddPnt(mglPoint(vx+ve*mgl_cos[(18*k)%360],
+								vy+vf*mgl_cos[(270+18*k)%360], zVal),c,q,-1,11);
 						if(k>0)	gr->trig_plot(n1,n2,n3);
 					}
 				}	break;
@@ -1428,9 +1431,8 @@ void face_plot(mglBase *gr, mglPoint o, mglPoint d1, mglPoint d2, mreal c, bool 
 	for(long j=0;j<n;j++)	for(long i=0;i<n;i++)
 		id[i+n*j] = gr->AddPnt(o+d1*i+d2*j,c,nn);
 #pragma omp parallel for collapse(2)
-	for(long i=0;i<num;i++)	for(long j=0;j<num;j++)
+	for(long j=0;j<num;j++)	for(long i=0;i<num;i++)
 	{
-		if(gr->Stop)	continue;
 		long *ii = id+i+n*j;
 		gr->quad_plot(ii[0],ii[1],ii[n],ii[n+1]);
 	}
@@ -1442,7 +1444,6 @@ void face_plot(mglBase *gr, mglPoint o, mglPoint d1, mglPoint d2, mreal c, bool 
 		jj[2] = jj[3] = gr->CopyNtoC(id[n*n-1],gr->CDef);
 		for(long i=1;i<n;i++)
 		{
-			if(gr->Stop)	continue;
 			memcpy(jj+4,jj,4*sizeof(long));
 			jj[0] = gr->CopyNtoC(id[i],gr->CDef);
 			jj[1] = gr->CopyNtoC(id[n*i],gr->CDef);
@@ -1594,7 +1595,7 @@ void MGL_EXPORT mgl_tube_xyzr(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const cha
 	bool sh = mglchr(pen,'!');
 	bool wire = mglchr(pen,'#');
 
-	const int num=24;
+	const int num=25;
 	gr->SetPenPal(pen,&pal);
 	gr->Reserve(n*m*num);
 	mglPoint p,l,t,u,q,d;
@@ -1605,18 +1606,18 @@ void MGL_EXPORT mgl_tube_xyzr(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const cha
 		gr->NextColor(pal);
 		mx = j<x->GetNy() ? j:0;	my = j<y->GetNy() ? j:0;
 		mz = j<z->GetNy() ? j:0;	mr = j<r->GetNy() ? j:0;
-		register long i,k;
-		for(i=0;i<n;i++)
+		for(long i=0;i<n;i++)
 		{
 			l = mglPoint(x->dvx(i,mx),y->dvx(i,my),z->dvx(i,mz));
 			t = !l;		t.Normalize();	u = t^l;	u.Normalize();
 			q = mglPoint(x->v(i,mx),y->v(i,my),z->v(i,mz));
-			mreal si,co,ff, rr=r->v(i,mr), dr=r->dvx(i,mr);
+			mreal rr=r->v(i,mr), dr=r->dvx(i,mr);
 			mreal c = sh ? gr->NextColor(pal,i):gr->CDef;
-			for(k=0;k<num;k++)
+			for(long k=0;k<num;k++)
 			{
 				if(gr->Stop)	{	delete []nn;	return;	}
-				ff = k*2*M_PI/(num-1);	co = cos(ff);	si = sin(ff);
+				register int kk = k*360/(num-1);
+				register float  co = mgl_cos[(kk)%360], si = mgl_cos[(270+kk)%360];
 				p = q + t*(rr*co) + u*(rr*si);
 				d = (t*si - u*co)^(l + t*(dr*co) + u*(dr*si));
 				nn[k+num]=nn[k];	nn[k] = gr->AddPnt(p,c,wire?mglPoint(NAN,NAN):d,-1,3);

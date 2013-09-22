@@ -114,6 +114,7 @@ typedef float mreal;
 #define mgl_min(a,b)	(((a)>(b)) ? (b) : (a))
 #define mgl_max(a,b)	(((a)>(b)) ? (a) : (b))
 #define mgl_isnan(a)	((a)!=(a))
+#define mgl_isnum(a)	((a)==(a))
 //-----------------------------------------------------------------------------
 #define SMOOTH_NONE		0
 #define SMOOTH_LINE_3	1
@@ -204,6 +205,8 @@ enum{	// Codes for warnings/messages
 #define MGL_NO_ORIGIN 		0x100000 	///< Don't draw tick labels at axis origin
 //-----------------------------------------------------------------------------
 #ifdef __cplusplus
+//-----------------------------------------------------------------------------
+extern float mgl_cos[360];	///< contain cosine with step 1 degree
 //-----------------------------------------------------------------------------
 #include <complex>
 typedef std::complex<mreal> dual;

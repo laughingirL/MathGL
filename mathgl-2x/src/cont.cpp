@@ -86,7 +86,7 @@ void MGL_NO_EXPORT mgl_string_curve(mglBase *gr,long f,long ,const long *ff,cons
 
 	// next string for testing curve position
 	//for(i=0;i<m;i++) gr->mark_plot(gr->AddPnt(qa[i],c,s,-1,-1),'.');
-	
+
 	mreal a,b,d,w,t1,t2;
 	for(i=j=0,tt=0;j<len;j++)
 	{
@@ -1408,7 +1408,6 @@ void MGL_NO_EXPORT mgl_axial_plot(mglBase *gr,long pc, mglPoint *ff, long *nn,ch
 	b = !a;	c = a^b;
 
 	register long i,j,k;
-	mreal fi,si,co;
 	long p1,p2,p3,p4;
 	gr->Reserve(pc*82);
 	for(i=0;i<pc;i++)
@@ -1425,11 +1424,12 @@ void MGL_NO_EXPORT mgl_axial_plot(mglBase *gr,long pc, mglPoint *ff, long *nn,ch
 		p2 = wire ? gr->AddPnt(p,cc) : gr->AddPnt(p,cc,(a*q2.y + c*q2.x)^b);
 		if(wire==1)	gr->line_plot(p1,p2);
 		else if(wire)	{	gr->mark_plot(p1,'.');	gr->mark_plot(p2,'.');	}
-		
+
 		for(j=1;j<41;j++)
 		{
 			p3 = p1;	p4 = p2;
-			fi = j*M_PI/20;		si = sin(fi);	co = cos(fi);
+			register float co = mgl_cos[(j*18)%360], si = mgl_cos[(270+j*18)%360];
+//			fi = j*M_PI/20;		si = sin(fi);	co = cos(fi);
 			p = a*ff[i].y + b*(si*ff[i].x) +  c*(co*ff[i].x);
 			p1 = wire ?	gr->AddPnt(p,cc) : gr->AddPnt(p,cc,(a*q1.y + b*(si*q1.x) +  c*(co*q1.x))^(b*co-c*si));
 			p = a*ff[nn[i]].y + b*(si*ff[nn[i]].x) +  c*(co*ff[nn[i]].x);

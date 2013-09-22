@@ -427,14 +427,14 @@ int sample_d(mglGraph *gr)
 //-----------------------------------------------------------------------------
 void mgls_prepare1d(mglData *y, mglData *y1, mglData *y2, mglData *x1, mglData *x2)
 {
-	register long i,n=50;
+	long n=50;
 	if(y)	y->Create(n,3);
 	if(x1)	x1->Create(n);		if(x2)	x2->Create(n);
 	if(y1)	y1->Create(n);		if(y2)	y2->Create(n);
-	double xx;
-	for(i=0;i<n;i++)
+#pragma omp parallel for
+	for(long i=0;i<n;i++)
 	{
-		xx = i/(n-1.);
+		double xx = i/(n-1.);
 		if(y)
 		{
 			y->a[i] = 0.7*sin(2*M_PI*xx) + 0.5*cos(3*M_PI*xx) + 0.2*sin(M_PI*xx);
@@ -450,13 +450,14 @@ void mgls_prepare1d(mglData *y, mglData *y1, mglData *y2, mglData *x1, mglData *
 //-----------------------------------------------------------------------------
 void mgls_prepare2d(mglData *a, mglData *b, mglData *v)
 {
-	register long i,j,n=50,m=40,i0;
+	long n=50,m=40;
 	if(a)	a->Create(n,m);		if(b)	b->Create(n,m);
 	if(v)	{	v->Create(9);	v->Fill(-1,1);	}
-	double x,y;
-	for(i=0;i<n;i++)	for(j=0;j<m;j++)
+#pragma omp parallel for collapse(2)
+	for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
 	{
-		x = i/(n-1.);	y = j/(m-1.);	i0 = i+n*j;
+		double x = i/(n-1.), y = j/(m-1.);
+		register long i0 = i+n*j;
 		if(a)	a->a[i0] = 0.6*sin(2*M_PI*x)*sin(3*M_PI*y)+0.4*cos(3*M_PI*x*y);
 		if(b)	b->a[i0] = 0.6*cos(2*M_PI*x)*cos(3*M_PI*y)+0.4*cos(3*M_PI*x*y);
 	}
@@ -464,12 +465,13 @@ void mgls_prepare2d(mglData *a, mglData *b, mglData *v)
 //-----------------------------------------------------------------------------
 void mgls_prepare3d(mglData *a, mglData *b)
 {
-	register long i,j,k,n=61,m=50,l=40,i0;
+	long n=61,m=50,l=40;
 	if(a)	a->Create(n,m,l);		if(b)	b->Create(n,m,l);
-	double x,y,z;
-	for(i=0;i<n;i++)	for(j=0;j<m;j++)	for(k=0;k<l;k++)
+#pragma omp parallel for collapse(3)
+	for(long k=0;k<l;k++)	for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
 	{
-		x=2*i/(n-1.)-1;	y=2*j/(m-1.)-1;	z=2*k/(l-1.)-1;	i0 = i+n*(j+m*k);
+		double x=2*i/(n-1.)-1, y=2*j/(m-1.)-1, z=2*k/(l-1.)-1;
+		register long i0 = i+n*(j+m*k);
 		if(a)	a->a[i0] = -2*(x*x + y*y + z*z*z*z - z*z - 0.1);
 		if(b)	b->a[i0] = 1-2*tanh((x+y)*(x+y));
 	}
@@ -477,12 +479,13 @@ void mgls_prepare3d(mglData *a, mglData *b)
 //-----------------------------------------------------------------------------
 void mgls_prepare2v(mglData *a, mglData *b)
 {
-	register long i,j,n=20,m=30,i0;
+	long n=20,m=30;
 	if(a)	a->Create(n,m);		if(b)	b->Create(n,m);
-	double x,y;
-	for(i=0;i<n;i++)	for(j=0;j<m;j++)
+#pragma omp parallel for collapse(2)
+	for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
 	{
-		x=i/(n-1.);	y=j/(m-1.);	i0 = i+n*j;
+		double x=i/(n-1.), y=j/(m-1.);
+		register long i0 = i+n*j;
 		if(a)	a->a[i0] = 0.6*sin(2*M_PI*x)*sin(3*M_PI*y)+0.4*cos(3*M_PI*x*y);
 		if(b)	b->a[i0] = 0.6*cos(2*M_PI*x)*cos(3*M_PI*y)+0.4*cos(3*M_PI*x*y);
 	}
@@ -490,13 +493,14 @@ void mgls_prepare2v(mglData *a, mglData *b)
 //-----------------------------------------------------------------------------
 void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez)
 {
-	register long i,j,k,n=10,i0;
+	long n=10;
 	if(!ex || !ey || !ez)	return;
 	ex->Create(n,n,n);	ey->Create(n,n,n);	ez->Create(n,n,n);
-	double x,y,z, r1,r2;
-	for(i=0;i<n;i++)	for(j=0;j<n;j++)	for(k=0;k<n;k++)
+#pragma omp parallel for collapse(3)
+	for(long k=0;k<n;k++)	for(long j=0;j<n;j++)	for(long i=0;i<n;i++)
 	{
-		x=2*i/(n-1.)-1;	y=2*j/(n-1.)-1;	z=2*k/(n-1.)-1;	i0 = i+n*(j+k*n);
+		double x=2*i/(n-1.)-1, y=2*j/(n-1.)-1, z=2*k/(n-1.)-1;
+		register long i0 = i+n*(j+k*n);
 /* 		r1 = 1./(x*x+y*y+z*z+0.01);	r2=exp(-0.01/r1/r1)*r1;
  		ex->a[i0]=z*y*r2*r2;
  		ey->a[i0]=x*y*r2*r2+1;
@@ -504,8 +508,8 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez)
 /*		ex->a[i0]=3*z;
 		ey->a[i0]=1;
 		ez->a[i0]=-3*x;*/
-		r1 = pow(x*x+y*y+(z-0.3)*(z-0.3)+0.03,1.5);
-		r2 = pow(x*x+y*y+(z+0.3)*(z+0.3)+0.03,1.5);
+		double r1 = pow(x*x+y*y+(z-0.3)*(z-0.3)+0.03,1.5);
+		double r2 = pow(x*x+y*y+(z+0.3)*(z+0.3)+0.03,1.5);
 		ex->a[i0]=0.2*x/r1 - 0.2*x/r2;
 		ey->a[i0]=0.2*y/r1 - 0.2*y/r2;
 		ez->a[i0]=0.2*(z-0.3)/r1 - 0.2*(z+0.3)/r2;

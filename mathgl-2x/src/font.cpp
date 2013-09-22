@@ -545,48 +545,66 @@ void mglFont::mem_alloc()
 	id = new wchar_t[numg];
 	width[0] = new short[numg];	width[1] = new short[numg];
 	width[2] = new short[numg];	width[3] = new short[numg];
-	tr[0] = new unsigned[numg];	numt[0] = new short[numg];
-	tr[1] = new unsigned[numg];	numt[1] = new short[numg];
-	tr[2] = new unsigned[numg];	numt[2] = new short[numg];
-	tr[3] = new unsigned[numg];	numt[3] = new short[numg];
-	ln[0] = new unsigned[numg];	numl[0] = new short[numg];
-	ln[1] = new unsigned[numg];	numl[1] = new short[numg];
-	ln[2] = new unsigned[numg];	numl[2] = new short[numg];
-	ln[3] = new unsigned[numg];	numl[3] = new short[numg];
+	tr[0] = new int[numg];	numt[0] = new short[numg];
+	tr[1] = new int[numg];	numt[1] = new short[numg];
+	tr[2] = new int[numg];	numt[2] = new short[numg];
+	tr[3] = new int[numg];	numt[3] = new short[numg];
+	ln[0] = new int[numg];	numl[0] = new short[numg];
+	ln[1] = new int[numg];	numl[1] = new short[numg];
+	ln[2] = new int[numg];	numl[2] = new short[numg];
+	ln[3] = new int[numg];	numl[3] = new short[numg];
 }
 //-----------------------------------------------------------------------------
 // copy normal style as default for other styles
 void mglFont::main_copy()
 {
-	memcpy(numl[1],numl[0],numg*sizeof(short));
-	memcpy(numl[2],numl[0],numg*sizeof(short));
-	memcpy(numl[3],numl[0],numg*sizeof(short));
-	memcpy(ln[1],ln[0],numg*sizeof(unsigned));
-	memcpy(ln[2],ln[0],numg*sizeof(unsigned));
-	memcpy(ln[3],ln[0],numg*sizeof(unsigned));
-	memcpy(numt[1],numt[0],numg*sizeof(short));
-	memcpy(numt[2],numt[0],numg*sizeof(short));
-	memcpy(numt[3],numt[0],numg*sizeof(short));
-	memcpy(tr[1],tr[0],numg*sizeof(unsigned));
-	memcpy(tr[2],tr[0],numg*sizeof(unsigned));
-	memcpy(tr[3],tr[0],numg*sizeof(unsigned));
-	memcpy(width[1],width[0],numg*sizeof(short));
-	memcpy(width[2],width[0],numg*sizeof(short));
-	memcpy(width[3],width[0],numg*sizeof(short));
+#pragma omp parallel sections
+	{
+#pragma omp section
+		memcpy(numl[1],numl[0],numg*sizeof(short));
+#pragma omp section
+		memcpy(numl[2],numl[0],numg*sizeof(short));
+#pragma omp section
+		memcpy(numl[3],numl[0],numg*sizeof(short));
+#pragma omp section
+		memcpy(ln[1],ln[0],numg*sizeof(int));
+#pragma omp section
+		memcpy(ln[2],ln[0],numg*sizeof(int));
+#pragma omp section
+		memcpy(ln[3],ln[0],numg*sizeof(int));
+#pragma omp section
+		memcpy(numt[1],numt[0],numg*sizeof(short));
+#pragma omp section
+		memcpy(numt[2],numt[0],numg*sizeof(short));
+#pragma omp section
+		memcpy(numt[3],numt[0],numg*sizeof(short));
+#pragma omp section
+		memcpy(tr[1],tr[0],numg*sizeof(int));
+#pragma omp section
+		memcpy(tr[2],tr[0],numg*sizeof(int));
+#pragma omp section
+		memcpy(tr[3],tr[0],numg*sizeof(int));
+#pragma omp section
+		memcpy(width[1],width[0],numg*sizeof(short));
+#pragma omp section
+		memcpy(width[2],width[0],numg*sizeof(short));
+#pragma omp section
+		memcpy(width[3],width[0],numg*sizeof(short));
+	}
 }
 //-----------------------------------------------------------------------------
-bool mglFont::read_def(unsigned &cur)
+bool mglFont::read_def()
 {
-	numg = mgl_numg;	cur = mgl_cur;
+	numg = mgl_numg;
 	// copy default factor for other font styles;
 	fact[1] = fact[2] = fact[3] = fact[0] = mgl_fact*mgl_fgen;
-	Buf = (short *)malloc(cur*sizeof(short));	// prealocate buffer
-	memset(Buf,0,cur*sizeof(short));
+	Buf = (short *)malloc(mgl_cur*sizeof(short));	// prealocate buffer
+	memset(Buf,0,mgl_cur*sizeof(short));
 	// now allocate memory for all fonts
 	mem_alloc();
 	// and load symbols itself
-	register long i;
-	for(i=0;i<int(numg);i++)
+#pragma omp parallel for
+	for(long i=0;i<int(numg);i++)
 	{
 		id[i] = mgl_gen_fnt[i][0];
 		width[0][i] = mgl_gen_fnt[i][1];
@@ -595,20 +613,18 @@ bool mglFont::read_def(unsigned &cur)
 		numt[0][i] = mgl_gen_fnt[i][4];
 		tr[0][i] = mgl_gen_fnt[i][5];
 	}
-	memcpy(Buf, mgl_buf_fnt, cur*sizeof(short));
-	numb = cur;
+	memcpy(Buf, mgl_buf_fnt, mgl_cur*sizeof(short));
+	numb = mgl_cur;
 	main_copy();	// copy normal style as default for other styles
 	return true;
 }
 //-----------------------------------------------------------------------------
-bool mglFont::read_data(const char *fname, float *ff, short *wdt, short *lnum,
-						unsigned *posl, short *tnum, unsigned *post, unsigned &cur)
+bool mglFont::read_data(const char *fname, float *ff, short *wdt, short *lnum, int *posl, short *tnum, int *post, std::vector<short> &buf)	// TODO add buffer for input file?!
 {
 	gzFile fp;
 	char str[256];
-	int n, tmpw, tmpnl, tmpnt;
+	int n, tmpw, tmpnl, tmpnt, retVal;
 	unsigned s, tmpi, tmppl, tmppt;
-	register long i,j,ch,retVal;
 	fp = gzopen(fname,"r");	if(!fp)	return false;	// false if no file
 	// first string is comment (not used), second string have information
 	if(!gzgets(fp,str,256) || strncmp(str,"# font",6) || !gzgets(fp,str,256))
@@ -616,31 +632,27 @@ bool mglFont::read_data(const char *fname, float *ff, short *wdt, short *lnum,
 	retVal = sscanf(str, "%d%f%d", &n, ff, &s);
 	//Check sscanf read all data  (3 items)
 	if(retVal != 3)	{	gzclose(fp);	return false;	}
-	Buf = (short *)realloc(Buf, (cur+s)*sizeof(short));	// prealocate buffer
-	if(!Buf)		{	gzclose(fp);	return false;	}
 
-	for(i=0;i<n;i++)
+	for(int i=0;i<n;i++)
 	{
 		gzgets(fp,str,256);
 		retVal = sscanf(str,"%u%d%d%u%d%u", &tmpi, &tmpw, &tmpnl, &tmppl, &tmpnt, &tmppt);
-		if(retVal != 6)	{	gzclose(fp);	free(Buf);	return false;	}
-		j=Internal(unsigned(tmpi));	if(j<0)	continue;
+		if(retVal != 6)	{	gzclose(fp);	buf.clear();	return false;	}
+		long j=Internal(unsigned(tmpi));	if(j<0)	continue;
 		if(wdt)	wdt[j] = tmpw;
-		lnum[j] = tmpnl;	posl[j] = tmppl+cur;
-		tnum[j] = tmpnt;	post[j] = tmppt+cur;
+		lnum[j] = tmpnl;	posl[j] = -1-tmppl;
+		tnum[j] = tmpnt;	post[j] = -1-tmppt;
 	}
-	for(i=0;i<int(s);i++)
+	for(unsigned i=0;i<s;i++)
 	{
-		for(j=0;j<256;j++)
-		{	str[j] = ch = gzgetc(fp);	if(ch<=' ')	break;	}
-		Buf[i+cur] = atoi(str);
+		for(int j=0;j<256;j++)	if((str[j] = gzgetc(fp))<=' ')	break;
+		buf.push_back(atoi(str));
 	}
-	cur += s;
 	gzclose(fp);		// finish wire normal font
 	return true;
 }
 //-----------------------------------------------------------------------------
-bool mglFont::read_main(const char *fname, unsigned &cur)
+bool mglFont::read_main(const char *fname, std::vector<short> &buf)	// TODO add buffer for input file?!
 {
 	gzFile fp;
 	int tmpi, tmpw, tmpnl, tmpnt;
@@ -653,14 +665,10 @@ bool mglFont::read_main(const char *fname, unsigned &cur)
 	{	gzclose(fp);	return false;	}
 	sscanf(str, "%u%f%u", &numg, fact, &s);
 	fact[1] = fact[2] = fact[3] = fact[0];	// copy default factor for other font styles;
-	Buf = (short *)malloc(s*sizeof(short));	// preallocate buffer
-	memset(Buf,0,s*sizeof(short));
-	if(!Buf)	{	gzclose(fp);	numg=0;	return false;	}
 	// now allocate memory for all fonts
 	mem_alloc();
 	// and load symbols itself
-	register long i,j,ch;
-	for(i=0;i<int(numg);i++)
+	for(size_t i=0;i<numg;i++)
 	{
 		gzgets(fp,str,256);
 		sscanf(str,"%u%d%d%u%d%u", &tmpi, &tmpw, &tmpnl, &tmppl, &tmpnt, &tmppt);
@@ -668,14 +676,12 @@ bool mglFont::read_main(const char *fname, unsigned &cur)
 		numl[0][i] = tmpnl; ln[0][i] = tmppl;
 		numt[0][i] = tmpnt;	tr[0][i] = tmppt;
 	}
-	for(i=0;i<int(s);i++)
+	for(unsigned i=0;i<s;i++)
 	{
-		for(j=0;j<256;j++)
-		{	str[j] = ch = gzgetc(fp);	if(ch<=' ')	break;	}
-		Buf[i] = atoi(str);
+		for(int j=0;j<256;j++)	if((str[j] = gzgetc(fp))<=' ')	break;
+		buf.push_back(atoi(str));
 	}
 	gzclose(fp);	// finish wire normal font
-	cur += s;		numb = cur;
 	main_copy();	// copy normal style as default for other styles
 	return true;
 }
@@ -690,7 +696,6 @@ bool mglFont::Load(const char *base, const char *path)
 #endif
 	char str[256];
 	const char *oldLocale = setlocale(LC_NUMERIC,"C");
-	unsigned cur=0;
 	if(!path)	path = MGL_FONT_PATH;
 	if(base && *base)
 	{
@@ -706,34 +711,59 @@ bool mglFont::Load(const char *base, const char *path)
 	Clear();							// first clear old
 
 	snprintf(str,256,"%s%c%s.vfm",path,sep,base?base:"");
-	if(!(base && *base) || !read_main(str,cur))
+	std::vector<short> norm, bold, ital, both;
+	if(!(base && *base) || !read_main(str,norm))
 	{
 //		mglGlobalMess += "Load built-in font.\n";
-		read_def(cur);	setlocale(LC_NUMERIC,oldLocale);
+		read_def();	setlocale(LC_NUMERIC,oldLocale);
 		if(buf)	delete []buf;	return true;
 	}
+	fact[1] = fact[2] = fact[3] = fact[0];
 
-	//================== bold ===========================================
-	snprintf(str,256,"%s%c%s_b.vfm",path,sep,base);	// this file may absent
-	if(read_data(str, fact+1, width[1], numl[1], ln[1], numt[1], tr[1], cur))
+#pragma omp parallel sections
 	{
-		fact[3] = fact[1];		// copy default factor for bold-italic;
-		// copy normal style as default for other styles
-		memcpy(numl[3],numl[1],numg*sizeof(short));
-		memcpy(ln[3],ln[1],numg*sizeof(unsigned));
-		memcpy(numt[3],numt[1],numg*sizeof(short));
-		memcpy(tr[3],tr[1],numg*sizeof(unsigned));
-		memcpy(width[3],width[1],numg*sizeof(short));
+		//================== bold ===========================================
+#pragma omp section
+		{	char str[256];	snprintf(str,256,"%s%c%s_b.vfm",path,sep,base);	// this file may absent
+		read_data(str, fact+1, width[1], numl[1], ln[1], numt[1], tr[1], bold);	}
+
+		//================== italic =========================================
+#pragma omp section
+		{	char str[256];	snprintf(str,256,"%s%c%s_i.vfm",path,sep,base);
+		read_data(str, fact+2, width[2], numl[2], ln[2], numt[2], tr[2], ital);	}
+
+		//================== bold-italic ====================================
+#pragma omp section
+		{	char str[256];	snprintf(str,256,"%s%c%s_bi.vfm",path,sep,base);
+		read_data(str, fact+3, width[3], numl[3], ln[3], numt[3], tr[3], both);	}
 	}
 
-	//================== italic =========================================
-	snprintf(str,256,"%s%c%s_i.vfm",path,sep,base);
-	read_data(str, fact+2, width[2], numl[2], ln[2], numt[2], tr[2], cur);
-
-	//================== bold-italic ====================================
-	snprintf(str,256,"%s%c%s_bi.vfm",path,sep,base);
-	read_data(str, fact+3, width[3], numl[3], ln[3], numt[3], tr[3], cur);
-	numb = cur;
+	// now collect data
+	numb = norm.size()+bold.size()+ital.size()+both.size();
+	Buf = new short[numb];
+#pragma omp parallel for
+	for(long i=0;i<long(norm.size());i++)	Buf[i]=norm[i];
+	long cur = norm.size(), len = long(bold.size());
+	if(bold.size()>0)
+#pragma omp parallel for
+		for(long i=0;i<len;i++)	Buf[i+cur]=bold[i];
+#pragma omp parallel for
+	for(long i=0;i<numg;i++)	if(ln[1][i]<0)
+	{	ln[1][i] = cur-1-ln[1][i];	tr[1][i] = cur-1-tr[1][i];	}
+	cur += len;		len = long(ital.size());
+	if(ital.size()>0)
+#pragma omp parallel for
+		for(long i=0;i<len;i++)	Buf[i+cur]=ital[i];
+#pragma omp parallel for
+	for(long i=0;i<numg;i++)	if(ln[2][i]<0)
+	{	ln[2][i] = cur-1-ln[2][i];	tr[2][i] = cur-1-tr[2][i];	}
+	cur += len;		len = long(both.size());
+	if(both.size()>0)
+#pragma omp parallel for
+		for(long i=0;i<len;i++)	Buf[i+cur]=both[i];
+#pragma omp parallel for
+	for(long i=0;i<numg;i++)	if(ln[3][i]<0)
+	{	ln[3][i] = cur-1-ln[3][i];	tr[3][i] = cur-1-tr[3][i];	}
 
 	// Finally normalize all factors
 	fact[0] *= mgl_fgen;	fact[1] *= mgl_fgen;
@@ -746,6 +776,17 @@ bool mglFont::Load(const char *base, const char *path)
 #if MGL_HAVE_PTHREAD
 extern pthread_mutex_t mutexRnd;
 #endif
+//-----------------------------------------------------------------------------
+float mgl_cos[360];
+void MGL_NO_EXPORT mgl_init()
+{
+#if MGL_HAVE_PTHREAD
+	pthread_mutex_init(&mutexRnd,0);
+#endif
+#pragma omp parallel for
+	for(long i=0;i<360;i++)	mgl_cos[i] = cos(i*M_PI/180.);
+}
+//-----------------------------------------------------------------------------
 mglFont::mglFont(const char *name, const char *path)
 {
 	parse = true;	numg=0;	gr=0;
@@ -754,9 +795,7 @@ mglFont::mglFont(const char *name, const char *path)
 	else if(this!=&mglDefFont)	Copy(&mglDefFont);
 	else
 	{
-#if MGL_HAVE_PTHREAD
-		pthread_mutex_init(&mutexRnd,0);	// NOTE: this like init function for the library.
-#endif
+		mgl_init();		// NOTE: this call init function for the library.
 		Load(MGL_DEF_FONT_NAME,0);
 	}
 }
@@ -768,7 +807,7 @@ void mglFont::Clear()
 //	if(gr)	gr->Clf();
 	if(numg)
 	{
-		delete []id;		free(Buf);			numg = 0;
+		delete []id;	delete []Buf;	numg = 0;
 		delete [](width[0]);	delete [](width[1]);	delete [](width[2]);	delete [](width[3]);
 		delete [](tr[0]);		delete [](tr[1]);		delete [](tr[2]);		delete [](tr[3]);
 		delete [](ln[0]);		delete [](ln[1]);		delete [](ln[2]);		delete [](ln[3]);
@@ -784,30 +823,54 @@ void mglFont::Copy(mglFont *f)
 	numg = f->numg;		numb = f->numb;
 	mem_alloc();
 	// copy general data
-	memcpy(id,f->id,numg*sizeof(wchar_t));
-	memcpy(width[0],f->width[0],numg*sizeof(short));
-	memcpy(width[1],f->width[1],numg*sizeof(short));
-	memcpy(width[2],f->width[2],numg*sizeof(short));
-	memcpy(width[3],f->width[3],numg*sizeof(short));
-	memcpy(tr[0],f->tr[0],numg*sizeof(unsigned));
-	memcpy(tr[1],f->tr[1],numg*sizeof(unsigned));
-	memcpy(tr[2],f->tr[2],numg*sizeof(unsigned));
-	memcpy(tr[3],f->tr[3],numg*sizeof(unsigned));
-	memcpy(numt[0],f->numt[0],numg*sizeof(short));
-	memcpy(numt[1],f->numt[1],numg*sizeof(short));
-	memcpy(numt[2],f->numt[2],numg*sizeof(short));
-	memcpy(numt[3],f->numt[3],numg*sizeof(short));
-	memcpy(ln[0],f->ln[0],numg*sizeof(unsigned));
-	memcpy(ln[1],f->ln[1],numg*sizeof(unsigned));
-	memcpy(ln[2],f->ln[2],numg*sizeof(unsigned));
-	memcpy(ln[3],f->ln[3],numg*sizeof(unsigned));
-	memcpy(numl[0],f->numl[0],numg*sizeof(short));
-	memcpy(numl[1],f->numl[1],numg*sizeof(short));
-	memcpy(numl[2],f->numl[2],numg*sizeof(short));
-	memcpy(numl[3],f->numl[3],numg*sizeof(short));
-	memcpy(fact,f->fact,4*sizeof(float));
+#pragma omp parallel sections
+	{
+#pragma omp section
+		memcpy(id,f->id,numg*sizeof(wchar_t));
+#pragma omp section
+		memcpy(width[0],f->width[0],numg*sizeof(short));
+#pragma omp section
+		memcpy(width[1],f->width[1],numg*sizeof(short));
+#pragma omp section
+		memcpy(width[2],f->width[2],numg*sizeof(short));
+#pragma omp section
+		memcpy(width[3],f->width[3],numg*sizeof(short));
+#pragma omp section
+		memcpy(tr[0],f->tr[0],numg*sizeof(unsigned));
+#pragma omp section
+		memcpy(tr[1],f->tr[1],numg*sizeof(unsigned));
+#pragma omp section
+		memcpy(tr[2],f->tr[2],numg*sizeof(unsigned));
+#pragma omp section
+		memcpy(tr[3],f->tr[3],numg*sizeof(unsigned));
+#pragma omp section
+		memcpy(numt[0],f->numt[0],numg*sizeof(short));
+#pragma omp section
+		memcpy(numt[1],f->numt[1],numg*sizeof(short));
+#pragma omp section
+		memcpy(numt[2],f->numt[2],numg*sizeof(short));
+#pragma omp section
+		memcpy(numt[3],f->numt[3],numg*sizeof(short));
+#pragma omp section
+		memcpy(ln[0],f->ln[0],numg*sizeof(unsigned));
+#pragma omp section
+		memcpy(ln[1],f->ln[1],numg*sizeof(unsigned));
+#pragma omp section
+		memcpy(ln[2],f->ln[2],numg*sizeof(unsigned));
+#pragma omp section
+		memcpy(ln[3],f->ln[3],numg*sizeof(unsigned));
+#pragma omp section
+		memcpy(numl[0],f->numl[0],numg*sizeof(short));
+#pragma omp section
+		memcpy(numl[1],f->numl[1],numg*sizeof(short));
+#pragma omp section
+		memcpy(numl[2],f->numl[2],numg*sizeof(short));
+#pragma omp section
+		memcpy(numl[3],f->numl[3],numg*sizeof(short));
+#pragma omp section
+		memcpy(fact,f->fact,4*sizeof(float));
+	}
 	// now copy symbols descriptions
-	Buf = (short *)malloc(numb*sizeof(short));
-	memcpy(Buf, f->Buf, numb*sizeof(short));
+	Buf = new short[numb];	memcpy(Buf, f->Buf, numb*sizeof(short));
 }
 //-----------------------------------------------------------------------------

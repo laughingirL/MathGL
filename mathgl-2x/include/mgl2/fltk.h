@@ -108,7 +108,7 @@ public:
 	{	popup = pmenu;	wpar = wdg;	vpar = v;	}
 	inline void zoom_region(mreal xx1,mreal xx2,mreal yy1, mreal yy2)
 	{	x1=xx1;	y1=yy1;	x2=xx2;	y2=yy2;	}
-	
+
 protected:
 	mglCanvas *gr;		///< pointer to grapher
 	void *draw_par;		///< Parameters for drawing function mglCanvasWnd::DrawFunc.
@@ -155,6 +155,8 @@ public:
 	void setoff_zoom()	{	setoff(zoom, zoom_bt);	}
 	void setoff_rotate(){	setoff(rotate, rotate_bt);	}
 	bool is_sshow()		{	return sshow;	}
+	void adjust()
+	{	mgl_set_size(FMGL->get_graph(),scroll->w(),scroll->h());	FMGL->size(scroll->w(),scroll->h());	update();	}
 
 	Fl_MGLView(int x, int y, int w, int h, const char *label=0);
 	~Fl_MGLView();

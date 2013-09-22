@@ -73,7 +73,7 @@ void smgl_fexport(mglGraph *gr)	// test file export
 	gr->Line(mglPoint(x0,1-5*d),mglPoint(x1,1-5*d),"ki");	gr->Puts(mglPoint(x2,y-5*d),"Small dash-dot 'i'",":rL");
 	gr->Line(mglPoint(x0,1-6*d),mglPoint(x1,1-6*d),"k:");	gr->Puts(mglPoint(x2,y-6*d),"Dots ':'",":rL");
 	gr->Line(mglPoint(x0,1-7*d),mglPoint(x1,1-7*d),"k ");	gr->Puts(mglPoint(x2,y-7*d),"None ' '",":rL");
-	
+
 	d=0.25; x1=-1; x0=-0.8;	y = -0.05;
 	gr->Mark(mglPoint(x1,5*d),"k.");		gr->Puts(mglPoint(x0,y+5*d),"'.'",":rL");
 	gr->Mark(mglPoint(x1,4*d),"k+");		gr->Puts(mglPoint(x0,y+4*d),"'+'",":rL");
@@ -86,7 +86,7 @@ void smgl_fexport(mglGraph *gr)	// test file export
 	gr->Mark(mglPoint(x1,-3*d,0),"kv");	gr->Puts(mglPoint(x0,y-3*d),"'v'",":rL");
 	gr->Mark(mglPoint(x1,-4*d,0),"k<");	gr->Puts(mglPoint(x0,y-4*d),"'<'",":rL");
 	gr->Mark(mglPoint(x1,-5*d,0),"k>");	gr->Puts(mglPoint(x0,y-5*d),"'>'",":rL");
-	
+
 	d=0.25; x1=-0.5; x0=-0.3;	y = -0.05;
 	gr->Mark(mglPoint(x1,5*d),"k#.");	gr->Puts(mglPoint(x0,y+5*d),"'\\#.'",":rL");
 	gr->Mark(mglPoint(x1,4*d),"k#+");	gr->Puts(mglPoint(x0,y+4*d),"'\\#+'",":rL");
@@ -99,7 +99,7 @@ void smgl_fexport(mglGraph *gr)	// test file export
 	gr->Mark(mglPoint(x1,-3*d,0),"k#v");	gr->Puts(mglPoint(x0,y-3*d),"'\\#v'",":rL");
 	gr->Mark(mglPoint(x1,-4*d,0),"k#<");	gr->Puts(mglPoint(x0,y-4*d),"'\\#<'",":rL");
 	gr->Mark(mglPoint(x1,-5*d,0),"k#>");	gr->Puts(mglPoint(x0,y-5*d),"'\\#>'",":rL");
-	
+
 	gr->SubPlot(3,2,1);
 	double a=0.1,b=0.4,c=0.5;
 	gr->Line(mglPoint(a,1),mglPoint(b,1),"k-A");		gr->Puts(mglPoint(c,1),"Style 'A' or 'A\\_'",":rL");
@@ -113,7 +113,7 @@ void smgl_fexport(mglGraph *gr)	// test file export
 	gr->Line(mglPoint(a,-0.6),mglPoint(b,-0.6),"k-_");	gr->Puts(mglPoint(c,-0.6),"Style '\\_' or none",":rL");
 	gr->Line(mglPoint(a,-0.8),mglPoint(b,-0.8),"k-AS");	gr->Puts(mglPoint(c,-0.8),"Style 'AS'",":rL");
 	gr->Line(mglPoint(a,-1),mglPoint(b,-1),"k-_A");		gr->Puts(mglPoint(c,-1),"Style '\\_A'",":rL");
-	
+
 	a=-1;	b=-0.7;	c=-0.6;
 	gr->Line(mglPoint(a,1),mglPoint(b,1),"kAA");		gr->Puts(mglPoint(c,1),"Style 'AA'",":rL");
 	gr->Line(mglPoint(a,0.8),mglPoint(b,0.8),"kVV");	gr->Puts(mglPoint(c,0.8),"Style 'VV'",":rL");
@@ -126,7 +126,7 @@ void smgl_fexport(mglGraph *gr)	// test file export
 	gr->Line(mglPoint(a,-0.6),mglPoint(b,-0.6),"k-__");	gr->Puts(mglPoint(c,-0.6),"Style '\\_\\_'",":rL");
 	gr->Line(mglPoint(a,-0.8),mglPoint(b,-0.8),"k-VA");	gr->Puts(mglPoint(c,-0.8),"Style 'VA'",":rL");
 	gr->Line(mglPoint(a,-1),mglPoint(b,-1),"k-AV");		gr->Puts(mglPoint(c,-1),"Style 'AV'",":rL");
-	
+
 	gr->SubPlot(3,2,2);
 	//#LENUQ
 	gr->FaceZ(mglPoint(-1,	-1), 0.4, 0.3, "L#");	gr->Puts(mglPoint(-0.8,-0.9), "L", "w:C", -1.4);
@@ -173,7 +173,7 @@ void smgl_fexport(mglGraph *gr)	// test file export
 	// HEX
 	gr->FaceZ(mglPoint(-1, -1.3), 1, 0.3, "{xff9966}#");	gr->Puts(mglPoint(-0.5,-1.2), "\\{xff9966\\}", "k:C", -1.4);
 	gr->FaceZ(mglPoint(0,  -1.3), 1, 0.3, "{x83CAFF}#");	gr->Puts(mglPoint( 0.5,-1.2), "\\{x83CAFF\\}", "k:C", -1.4);
-	
+
 	gr->SubPlot(3,2,3);
 	char stl[3]="r1", txt[4]="'1'";
 	for(int i=0;i<10;i++)
@@ -182,20 +182,20 @@ void smgl_fexport(mglGraph *gr)	// test file export
 		gr->Line(mglPoint(-1,0.2*i-1),mglPoint(1,0.2*i-1),stl);
 		gr->Puts(mglPoint(1.05,0.2*i-1),txt,":L");
 	}
-	
+
 	gr->SubPlot(3,2,4);	gr->Title("TriPlot sample");	gr->Rotate(50,60);
 	double t[] = {0,1,2, 0,1,3, 0,2,3, 1,2,3};
 	double xt[] = {-1,1,0,0}, yt[] = {-1,-1,1,0}, zt[] = {-1,-1,-1,1};
 	mglData tt(4,3,t), uu(4,xt), vv(4,yt), ww(4,zt);
 	gr->TriPlot(tt,uu,vv,ww,"b");
 	gr->TriPlot(tt,uu,vv,ww,"k#");
-	
+
 	gr->SubPlot(3,2,5);
 	mglData r(4);	r.Fill(1,4);
 	gr->SetRanges(1,4,1,4);	gr->Axis();
 	gr->Mark(r,r,"s");
 	gr->Plot(r,"b");
-	
+
 	gr->WriteJPEG("fexport.jpg");
 	gr->WritePNG("fexport.png");
 	gr->WriteBMP("fexport.bmp");
@@ -203,7 +203,7 @@ void smgl_fexport(mglGraph *gr)	// test file export
 	gr->WriteEPS("fexport.eps");
 	gr->WriteSVG("fexport.svg");
 	gr->WriteGIF("fexport.gif");
-	
+
 	gr->WriteXYZ("fexport.xyz");
 	gr->WriteSTL("fexport.stl");
 	gr->WriteOFF("fexport.off");
@@ -369,7 +369,7 @@ void smgl_param2(mglGraph *gr)	// 2d parametric plots
 	mglData x(100,100), y(100,100), z(100,100), c(100,100);
 	gr->Fill(x,"sin(pi*(x+y)/2)*cos(pi*y/2)");	gr->Fill(y,"cos(pi*(x+y)/2)*cos(pi*y/2)");
 	gr->Fill(z,"sin(pi*y/2)");	gr->Fill(c,"cos(pi*x)");
-	
+
 	gr->SubPlot(4,4,0);	gr->Rotate(40,60);	gr->Box();	gr->Surf(x,y,z);
 	gr->SubPlot(4,4,1);	gr->Rotate(40,60);	gr->Box();	gr->SurfC(x,y,z,c);
 	gr->SubPlot(4,4,2);	gr->Rotate(40,60);	gr->Box();	gr->SurfA(x,y,z,c,"","alpha 1");
@@ -526,7 +526,7 @@ void smgl_triangulation(mglGraph *gr)	// surface triangulation
 	mglData x(100), y(100), z(100);
 	gr->Fill(x,"2*rnd-1");	gr->Fill(y,"2*rnd-1");	gr->Fill(z,"v^2-w^2",x,y);
 	mglData d = mglTriangulation(x,y), g(30,30);
-	
+
 	if(!mini)	gr->Title("Triangulation");
 	gr->Rotate(40,60);	gr->Box();	gr->Light(true);
 	gr->TriPlot(d,x,y,z);	gr->TriPlot(d,x,y,z,"#k");
@@ -1420,7 +1420,7 @@ void smgl_contf_xyz(mglGraph *gr)
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_cloud="call 'prepare3d'\nsubplot 2 2 0:title 'Cloud plot':rotate 50 60:alpha on:box:cloud c 'wyrRk'\n"
-"subplot 2 2 1:title '\"!\" style':rotate 50 60:box:cloud c '!wyrRk'\n"
+"subplot 2 2 1:title '\"i\" style':rotate 50 60:box:cloud c 'iwyrRk'\n"
 "subplot 2 2 2:title '\".\" style':rotate 50 60:box:cloud c '.wyrRk'\n"
 "subplot 2 2 3:title 'meshnum 10':rotate 50 60:box:cloud c 'wyrRk'; meshnum 10\n";
 void smgl_cloud(mglGraph *gr)
@@ -1430,8 +1430,8 @@ void smgl_cloud(mglGraph *gr)
 	gr->Rotate(50,60);	gr->Alpha(true);
 	gr->Box();	gr->Cloud(c,"wyrRk");
 	if(mini)	return;
-	gr->SubPlot(2,2,1);	gr->Title("'!' style");
-	gr->Rotate(50,60);	gr->Box();	gr->Cloud(c,"!wyrRk");
+	gr->SubPlot(2,2,1);	gr->Title("'i' style");
+	gr->Rotate(50,60);	gr->Box();	gr->Cloud(c,"iwyrRk");
 	gr->SubPlot(2,2,2);	gr->Title("'.' style");
 	gr->Rotate(50,60);	gr->Box();	gr->Cloud(c,".wyrRk");
 	gr->SubPlot(2,2,3);	gr->Title("meshnum 10");
@@ -2188,7 +2188,7 @@ void smgl_primitives(mglGraph *gr)	// flag #
 	gr->Puts(mglPoint(0.9,1),"sh=1");			gr->Ball(mglPoint(0.9,0,1),'k');
 	gr->Drop(mglPoint(0.9,0),mglPoint(0,1),0.5,"r",1);
 	gr->Line(mglPoint(-0.9,0,1),mglPoint(0.9,0,1),"b");
-	
+
 	gr->Puts(mglPoint(-0.9,-1.1),"asp=0.33");
 	gr->Drop(mglPoint(-0.9,-0.7),mglPoint(0,1),0.5,"b",0,0.33);
 	gr->Puts(mglPoint(-0.3,-1.1),"asp=0.67");
@@ -2248,12 +2248,12 @@ void smgl_colorbar(mglGraph *gr)
 	mglData a,v;	mgls_prepare2d(&a,0,&v);
 	gr->Box();	gr->ContD(v,a);
 	gr->Colorbar(v,"<");	gr->Colorbar(v,">");	gr->Colorbar(v,"_");	gr->Colorbar(v,"^");
-	
+
 	gr->SubPlot(2,2,3);	gr->Title(" ");
 	gr->Puts(mglPoint(-0.5,1.55),"Color positions",":C",-2);
 	gr->Colorbar("bwr>",0.25,0);	gr->Puts(mglPoint(-0.9,1.2),"Default");
 	gr->Colorbar("b{w,0.3}r>",0.5,0);	gr->Puts(mglPoint(-0.1,1.2),"Manual");
-	
+
 	gr->Puts(mglPoint(1,1.55),"log-scale",":C",-2);
 	gr->SetRange('c',0.01,1e3);
 	gr->Colorbar(">",0.75,0);	gr->Puts(mglPoint(0.65,1.2),"Normal scale");
@@ -2419,7 +2419,7 @@ void smgl_projection(mglGraph *gr)	// flag #
 	y.Modify("0.25*(1+sin(2*pi*x))");
 	rx.Modify("rnd"); ry.Modify("(1-v)*rnd",rx);
 	z.Modify("x");
-	
+
 	if(!mini)	gr->Title("Projection sample");
 	gr->Ternary(4);
 	gr->Rotate(50,60);		gr->Light(true);
@@ -2442,7 +2442,7 @@ void smgl_projection5(mglGraph *gr)	// flag #
 	y.Modify("0.25*(1+sin(2*pi*x))");
 	rx.Modify("rnd"); ry.Modify("(1-v)*rnd",rx);
 	z.Modify("x");
-	
+
 	if(!mini)	gr->Title("Projection sample (ternary)");
 	gr->Ternary(5);
 	gr->Rotate(50,60);		gr->Light(true);
@@ -2475,7 +2475,7 @@ void smgl_triplot(mglGraph *gr)
 	gr->SubPlot(2,2,2);	gr->Title("QuadPlot coloring");	gr->Rotate(50,60);
 	gr->QuadPlot(qq,xx,yy,zz,yy,"yr");
 	gr->QuadPlot(qq,xx,yy,zz,"k#");
-	
+
 	double t[] = {0,1,2, 0,1,3, 0,2,3, 1,2,3};
 	double xt[] = {-1,1,0,0}, yt[] = {-1,-1,1,0}, zt[] = {-1,-1,-1,1};
 	mglData tt(4,3,t), uu(4,xt), vv(4,yt), ww(4,zt);
@@ -2527,7 +2527,7 @@ void smgl_mirror(mglGraph *gr)	// flag #
 {
 	mglData a(31,41);
 	gr->Fill(a,"-pi*x*exp(-(y+1)^2-4*x^2)");
-	
+
 	if(!mini)	{	gr->SubPlot(2,2,0);	gr->Title("Options for coordinates");	}
 	gr->Alpha(true);	gr->Light(true);
 	gr->Rotate(40,60);	gr->Box();

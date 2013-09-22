@@ -150,7 +150,7 @@ int mglBase::GetHeight() const	{	return 1;	}
 //-----------------------------------------------------------------------------
 void mglBase::StartGroup(const char *name, int id)
 {
-	LightScale(GetB());
+	LightScale(&B);
 	char buf[128];
 	snprintf(buf,128,"%s_%d",name,id);
 	StartAutoGroup(buf);
@@ -196,7 +196,7 @@ void mglBase::SetWarn(int code, const char *who)
 void mglGlyph::Create(long Nt, long Nl)
 {
 	if(Nt<0 || Nl<0)	return;
-	nt=Nt;	nl=Nl;	
+	nt=Nt;	nl=Nl;
 	if(trig)	delete []trig;
 	trig = nt>0?new short[6*nt]:0;
 	if(line)	delete []line;
@@ -215,7 +215,7 @@ long mglBase::AddGlyph(int s, long j)
 {
 	// first create glyph for current typeface
 	s = s&3;
-	mglGlyph g(fnt->GetNt(s,j), fnt->GetNl(s,j));	
+	mglGlyph g(fnt->GetNt(s,j), fnt->GetNl(s,j));
 	memcpy(g.trig, fnt->GetTr(s,j), 6*g.nt*sizeof(short));
 	memcpy(g.line, fnt->GetLn(s,j), 2*g.nl*sizeof(short));
 	// now let find the similar glyph
@@ -258,7 +258,7 @@ long mglBase::AddPnt(const mglMatrix *mat, mglPoint p, mreal c, mglPoint n, mrea
 	q.c = ci+(q.c-ci)*(1-2*gap)+gap;
 	q.t = q.t*(1-2*gap)+gap;
 	q.ta = q.t;
-	
+
 	if(scl&8 && scl>0)	q.a=a;	// bypass palette for enabling alpha in Error()
 	if(!get(MGL_ENABLE_ALPHA))	{	q.a=1;	if(txt.Smooth!=2)	q.ta=1-gap;	}
 //	if(q.ta<0.005)	q.ta = 0.005;	// bypass OpenGL/OBJ/PRC bug
@@ -272,7 +272,7 @@ long mglBase::CopyNtoC(long from, mreal c)
 {
 	if(from<0)	return -1;
 	mglPnt p=Pnt[from];
-	if(!mgl_isnan(c))	{	p.c=c;	p.t=0;	Txt[long(c)].GetC(c,0,p);	}
+	if(mgl_isnum(c))	{	p.c=c;	p.t=0;	Txt[long(c)].GetC(c,0,p);	}
 	long k;
 #pragma omp critical(pnt)
 	{MGL_PUSH(Pnt,p,mutexPnt);	k=Pnt.size()-1;}	return k;
@@ -481,12 +481,12 @@ void mglBase::SetRanges(mglPoint m1, mglPoint m2)
 	if(m1.c!=m2.c)	{	Min.c=m1.c;	Max.c=m2.c;	}
 	else			{	Min.c=Min.z;Max.c=Max.z;}
 
-	if(Org.x<Min.x && !mgl_isnan(Org.x))	Org.x = Min.x;
-	if(Org.x>Max.x && !mgl_isnan(Org.x))	Org.x = Max.x;
-	if(Org.y<Min.y && !mgl_isnan(Org.y))	Org.y = Min.y;
-	if(Org.y>Max.y && !mgl_isnan(Org.y))	Org.y = Max.y;
-	if(Org.z<Min.z && !mgl_isnan(Org.z))	Org.z = Min.z;
-	if(Org.z>Max.z && !mgl_isnan(Org.z))	Org.z = Max.z;
+	if(Org.x<Min.x && mgl_isnum(Org.x))	Org.x = Min.x;
+	if(Org.x>Max.x && mgl_isnum(Org.x))	Org.x = Max.x;
+	if(Org.y<Min.y && mgl_isnum(Org.y))	Org.y = Min.y;
+	if(Org.y>Max.y && mgl_isnum(Org.y))	Org.y = Max.y;
+	if(Org.z<Min.z && mgl_isnum(Org.z))	Org.z = Min.z;
+	if(Org.z>Max.z && mgl_isnum(Org.z))	Org.z = Max.z;
 
 	if((TernAxis&3)==0)
 	{
@@ -495,7 +495,7 @@ void mglBase::SetRanges(mglPoint m1, mglPoint m2)
 		mglScaleAxis(Min.y, Max.y, Org.y, AMin.y, AMax.y);
 		mglScaleAxis(Min.z, Max.z, Org.z, AMin.z, AMax.z);
 		mglScaleAxis(Min.c, Max.c, Org.c, AMin.c, AMax.c);
-	}	
+	}
 
 	CutMin = mglPoint(0,0,0);	CutMax = mglPoint(0,0,0);
 	RecalcBorder();
@@ -518,8 +518,8 @@ void mglBase::CRange(HCDT a,bool add, mreal fact)
 		Min.c = v1<Max.c ? v1:Max.c;
 		Max.c = v2>dv ? v2:dv;
 	}
-	if(Org.c<Min.c && !mgl_isnan(Org.c))	Org.c = Min.c;
-	if(Org.c>Max.c && !mgl_isnan(Org.c))	Org.c = Max.c;
+	if(Org.c<Min.c && mgl_isnum(Org.c))	Org.c = Min.c;
+	if(Org.c>Max.c && mgl_isnum(Org.c))	Org.c = Max.c;
 	if((TernAxis&3)==0)
 	{
 		OMax.c = Max.c;	OMin.c = Min.c;
@@ -545,8 +545,8 @@ void mglBase::XRange(HCDT a,bool add,mreal fact)
 		Min.x = v1<Max.x ? v1:Max.x;
 		Max.x = v2>dv ? v2:dv;
 	}
-	if(Org.x<Min.x && !mgl_isnan(Org.x))	Org.x = Min.x;
-	if(Org.x>Max.x && !mgl_isnan(Org.x))	Org.x = Max.x;
+	if(Org.x<Min.x && mgl_isnum(Org.x))	Org.x = Min.x;
+	if(Org.x>Max.x && mgl_isnum(Org.x))	Org.x = Max.x;
 	if((TernAxis&3)==0)
 	{
 		OMax.x = Max.x;	OMin.x = Min.x;
@@ -572,13 +572,13 @@ void mglBase::YRange(HCDT a,bool add,mreal fact)
 		Min.y = v1<Max.y ? v1:Max.y;
 		Max.y = v2>dv ? v2:dv;
 	}
-	if(Org.y<Min.y && !mgl_isnan(Org.y))	Org.y = Min.y;
-	if(Org.y>Max.y && !mgl_isnan(Org.y))	Org.y = Max.y;
+	if(Org.y<Min.y && mgl_isnum(Org.y))	Org.y = Min.y;
+	if(Org.y>Max.y && mgl_isnum(Org.y))	Org.y = Max.y;
 	if((TernAxis&3)==0)
 	{
 		OMax.y = Max.y;	OMin.y = Min.y;
 		mglScaleAxis(Min.y, Max.y, Org.y, AMin.y, AMax.y);
-	
+
 	}
 	RecalcBorder();
 }
@@ -600,8 +600,8 @@ void mglBase::ZRange(HCDT a,bool add,mreal fact)
 		Min.z = v1<Max.z ? v1:Max.z;
 		Max.z = v2>dv ? v2:dv;
 	}
-	if(Org.z<Min.z && !mgl_isnan(Org.z))	Org.z = Min.z;
-	if(Org.z>Max.z && !mgl_isnan(Org.z))	Org.z = Max.z;
+	if(Org.z<Min.z && mgl_isnum(Org.z))	Org.z = Min.z;
+	if(Org.z>Max.z && mgl_isnum(Org.z))	Org.z = Max.z;
 	if((TernAxis&3)==0)
 	{
 		OMax.z = Max.z;	OMin.z = Min.z;
@@ -795,7 +795,6 @@ void mglTexture::Set(const char *s, int smooth, mreal alpha)
 		if(s[i]=='A' && j<1 && m>0 && s[i+1]>'0' && s[i+1]<='9')
 		{	man=false;	alpha = 0.1*(s[i+1]-'0');	i++;	}
 	}
-#pragma omp parallel for
 	for(long i=0;i<n;i++)	// default texture
 	{	c[2*i+1]=c[2*i];	c[2*i].a=man?0:alpha;	c[2*i+1].a=alpha;	}
 	if(map && sm)		// map texture
@@ -806,8 +805,7 @@ void mglTexture::Set(const char *s, int smooth, mreal alpha)
 		{	c[1]=c[2];	c[2]=c[0];	c[0]=BC;	c[3]=c[4];	n=2;}
 		else
 		{	c[1]=c[4];	c[3]=c[6];	n=2;	}
-#pragma omp parallel for
-		for(long i=0;i<4;i++)	c[i].a=alpha;
+		c[0].a = c[1].a = c[2].a = c[3].a = alpha;
 		val[0]=val[1]=-1;
 	}
 	// TODO if(!sm && n==1)	then try to find color in palette ???
@@ -827,24 +825,27 @@ void mglTexture::Set(const char *s, int smooth, mreal alpha)
 		val[i]=v1+v2*(i-i1);
 	}
 	// fill texture itself
-	register mreal u,v=sm?(n-1)/255.:n/256.;
-	for(i=i1=0;i<256;i++)
-	{
-		u = v*i;	j = long(u);	//u-=j;
-		if(!sm || j==n-1)
-		{	col[2*i] = c[2*j];	col[2*i+1] = c[2*j+1];	}
-		else if(j>n-1)	// NOTE: never should be here!
-		{	col[2*i] = c[2*n-2];col[2*i+1] = c[2*n-1];	/*printf("AddTexture -- out of bounds");*/	}
-		else
+	mreal v=sm?(n-1)/255.:n/256.;
+	if(!sm)
+#pragma omp parallel for
+		for(long i=0;i<256;i++)
 		{
-			// advanced scheme using val
+			register long j = 2*long(v*i);	//u-=j;
+			col[2*i] = c[j];	col[2*i+1] = c[j+1];
+		}
+	else	for(i=i1=0;i<256;i++)
+	{
+		register mreal u = v*i;	j = long(u);	//u-=j;
+		if(j<n-1)	// advanced scheme using val
+		{
 			for(;i1<n-1 && i>=255*val[i1];i1++);
 			v2 = i1<n?1/(val[i1]-val[i1-1]):0;
 			j=i1-1;	u=(i/255.-val[j])*v2;
-
 			col[2*i] = c[2*j]*(1-u)+c[2*j+2]*u;
 			col[2*i+1]=c[2*j+1]*(1-u)+c[2*j+3]*u;
 		}
+		else
+		{	col[2*i] = c[2*n-2];col[2*i+1] = c[2*n-1];	}
 	}
 	delete []c;	delete []val;
 }
@@ -853,13 +854,13 @@ mglColor mglTexture::GetC(mreal u,mreal v) const
 {
 	u -= long(u);
 	register long i=long(255*u);	u = u*255-i;
-	const mglColor *s=col+2*i;	mglColor p;
-	p.r = (s[0].r*(1-u)+s[2].r*u)*(1-v) + (s[1].r*(1-u)+s[3].r*u)*v;
-	p.g = (s[0].g*(1-u)+s[2].g*u)*(1-v) + (s[1].g*(1-u)+s[3].g*u)*v;
-	p.b = (s[0].b*(1-u)+s[2].b*u)*(1-v) + (s[1].b*(1-u)+s[3].b*u)*v;
-	p.a = (s[0].a*(1-u)+s[2].a*u)*(1-v) + (s[1].a*(1-u)+s[3].a*u)*v;
-	//	p.a = (s[0].a*(1-u)+s[2].a*u)*v + (s[1].a*(1-u)+s[3].a*u)*(1-v);	// for alpha use inverted
-	return p;
+	const mglColor *s=col+2*i;	//mglColor p;
+	return (s[0]*(1-u)+s[2]*u)*(1-v) + (s[1]*(1-u)+s[3]*u)*v;
+// 	p.r = (s[0].r*(1-u)+s[2].r*u)*(1-v) + (s[1].r*(1-u)+s[3].r*u)*v;
+// 	p.g = (s[0].g*(1-u)+s[2].g*u)*(1-v) + (s[1].g*(1-u)+s[3].g*u)*v;
+// 	p.b = (s[0].b*(1-u)+s[2].b*u)*(1-v) + (s[1].b*(1-u)+s[3].b*u)*v;
+// 	p.a = (s[0].a*(1-u)+s[2].a*u)*(1-v) + (s[1].a*(1-u)+s[3].a*u)*v;
+// 	return p;
 }
 //-----------------------------------------------------------------------------
 void mglTexture::GetC(mreal u,mreal v,mglPnt &p) const

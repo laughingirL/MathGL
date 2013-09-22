@@ -497,14 +497,14 @@ typedef double (*func_2)(double, double);
 // evaluation of embedded (included) expressions
 mreal mglFormula::CalcIn(const mreal *a1) const
 {
-	mreal z2[22] = {3,3,3,3,0,3,3,0,0,0,0,0,NAN,0
+	mreal z2[EQ_SIN-EQ_LT] = {3,3,3,3,0,3,3,0,0,0,0,0,NAN,0
 #if MGL_HAVE_GSL
 			,3,NAN, 3,NAN, 0,0,3,1
 #else
 			,0,0,0,0,0,0,0,0
 #endif
 		};
-	func_2 f2[22] = {clt,cgt,ceq,cor,cand,add,sub,mul,del,ipw,pow,fmod,llg,arg
+	func_2 f2[EQ_SIN-EQ_LT] = {clt,cgt,ceq,cor,cand,add,sub,mul,del,ipw,pow,fmod,llg,arg
 #if MGL_HAVE_GSL
 			,gsl_sf_bessel_Jnu,gsl_sf_bessel_Ynu,
 			gsl_sf_bessel_Inu,gsl_sf_bessel_Knu,
@@ -513,7 +513,7 @@ mreal mglFormula::CalcIn(const mreal *a1) const
 			,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2
 #endif
 		};
-	func_1 f1[42] = {sin,cos,tan,asin,acos,atan,sinh,cosh,tanh,
+	func_1 f1[EQ_SN-EQ_SIN] = {sin,cos,tan,asin,acos,atan,sinh,cosh,tanh,
 					asinh,acosh,atanh,sqrt,exp,log,log10,sgn,stp,floor,fabs
 #if MGL_HAVE_GSL
 			,gsl_sf_dilog,gslEllEc,gslEllFc,gslAi,gslBi,gsl_sf_erf,
@@ -533,14 +533,14 @@ mreal mglFormula::CalcIn(const mreal *a1) const
 		else	return (Kod==EQ_A) ? a1[int(Res)] : Res;
 	}
 	double a = Left->CalcIn(a1);
-	if(!mgl_isnan(a))
+	if(mgl_isnum(a))
 	{
 		if(Kod<EQ_SIN)
 		{
 			// try to bypass calc b if a==0
 			if(a==0 && z2[Kod-EQ_LT]!=3)	return z2[Kod-EQ_LT];
 			double b = Right->CalcIn(a1);
-			return !mgl_isnan(b) ? f2[Kod-EQ_LT](a,b) : NAN;
+			return mgl_isnum(b) ? f2[Kod-EQ_LT](a,b) : NAN;
 		}
 		else if(Kod<EQ_SN)	return f1[Kod-EQ_SIN](a);
 #if MGL_HAVE_GSL
@@ -619,21 +619,21 @@ double MGL_NO_EXPORT gamma_d(double a)	{return gsl_sf_psi(a)*gsl_sf_gamma(a);}
 // evaluation of derivative of embedded (included) expressions
 mreal mglFormula::CalcDIn(int id, const mreal *a1) const
 {
-	func_2 f21[22] = {mgz2,mgz2,mgz2, mgz2,mgz2,mgp, mgp,mul1,div1, ipw1,pow1,mgp,llg1, mgz2
+	func_2 f21[EQ_SIN-EQ_LT] = {mgz2,mgz2,mgz2, mgz2,mgz2,mgp, mgp,mul1,div1, ipw1,pow1,mgp,llg1, mgz2
 #if MGL_HAVE_GSL
 			,mgz2,mgz2,mgz2, mgz2,gslEllE1,gslEllF2, mgz2,mgz2
 #else
 			,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2
 #endif
 		};
-		func_2 f22[22] = {mgz2,mgz2,mgz2,mgz2,mgz2,mgp,mgm,mul2,div2,pow2,pow2,mgz2,llg2, mgz2
+		func_2 f22[EQ_SIN-EQ_LT] = {mgz2,mgz2,mgz2,mgz2,mgz2,mgp,mgm,mul2,div2,pow2,pow2,mgz2,llg2, mgz2
 #if MGL_HAVE_GSL
 			,gslJnuD,gslYnuD,gslInuD,gslKnuD,gslEllE2,gslEllF2,mgz2/*gslLegP*/,mgz2
 #else
 			,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2
 #endif
 		};
-	func_1 f11[42] = {cos,cos_d,tan_d,asin_d,acos_d,atan_d,cosh,sinh,tanh_d,
+	func_1 f11[EQ_SN-EQ_SIN] = {cos,cos_d,tan_d,asin_d,acos_d,atan_d,cosh,sinh,tanh_d,
 					asinh_d,acosh_d,atanh_d,sqrt_d,exp,log_d,log10_d,mgz1,mgz1,mgz1,sgn
 #if MGL_HAVE_GSL
 			,dilog_d,gslE_d,gslK_d,gslAi_d,gslBi_d,erf_d,exp3_d,ei_d,e1_d,e2_d,
@@ -646,12 +646,12 @@ mreal mglFormula::CalcDIn(int id, const mreal *a1) const
 	if(Kod<EQ_LT)	return (Kod==EQ_A && id==(int)Res)?1:0;
 
 	double a = Left->CalcIn(a1), d = Left->CalcDIn(id,a1);
-	if(!mgl_isnan(a) && !mgl_isnan(d))
+	if(mgl_isnum(a) && mgl_isnum(d))
 	{
 		if(Kod<EQ_SIN)
 		{
 			double b = Right->CalcIn(a1), c = Right->CalcDIn(id,a1);
-			return !mgl_isnan(b) ? (d?f21[Kod-EQ_LT](a,b)*d:0) + (c?f22[Kod-EQ_LT](a,b)*c:0) : NAN;
+			return mgl_isnum(b) ? (d?f21[Kod-EQ_LT](a,b)*d:0) + (c?f22[Kod-EQ_LT](a,b)*c:0) : NAN;
 		}
 		else if(Kod<EQ_SN)	return (d?f11[Kod-EQ_SIN](a)*d:0);
 #if MGL_HAVE_GSL

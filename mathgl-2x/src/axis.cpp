@@ -476,12 +476,14 @@ void mglCanvas::DrawAxis(mglAxis &aa, bool text, char arr,const char *stl,const 
 	da = aa.a*(dv*aa.a);	db = aa.b*(dv*aa.b);
 	if(aa.v2<aa.v1)	{	da *= -1;	db *= -1;	}
 
-	register long i,j,k1,k2;
-	SetPenPal(mgl_have_color(stl) ? stl:AxisStl);
+	long k1,k2;
+	bool have_color=mgl_have_color(stl);
+	bool dif_color = !have_color && aa.dv==0 && strcmp(TickStl,SubTStl);
+	SetPenPal(have_color ? stl:AxisStl);
 	static int cgid=1;	StartGroup("Axis",cgid++);
-	
+
 	p = o + d*aa.v1;	k1 = AddPnt(&B, p,CDef,q,-1,3);
-	for(i=1;i<31;i++)	// axis itself
+	for(long i=1;i<31;i++)	// axis itself
 	{
 		p = o + d*(aa.v1+(aa.v2-aa.v1)*i/30.);
 		k2 = k1;	k1 = AddPnt(&B, p,CDef,q,-1,3);
@@ -496,24 +498,30 @@ void mglCanvas::DrawAxis(mglAxis &aa, bool text, char arr,const char *stl,const 
 
 	k2 = aa.txt.size();
 	mreal v, u, v0 = mgl_isnan(aa.o) ? aa.v0 : aa.o;
-	if(k2>0)	for(i=0;i<k2;i++)
+	if(*TickStl && !have_color)	SetPenPal(TickStl);
+	if(k2>0)	for(long i=0;i<k2;i++)
 	{
 		v = aa.txt[i].val;	u = fabs(v);
-		if((v-aa.v2)*(v-aa.v1)<=0)	tick_draw(o+d*v, da, db, 0, stl);
+		if((v-aa.v2)*(v-aa.v1)<=0)	tick_draw(o+d*v, da, db, 0);
+		if(dif_color)	SetPenPal(SubTStl);
 		if(aa.dv==0 && aa.v2>aa.v1 && fabs(u-exp(M_LN10*floor(0.1+log10(u))))<0.01*u)
-			for(j=2;j<10 && v*j<aa.v2;j++)	tick_draw(o+d*(v*j),da,db,1,stl);
+			for(long j=2;j<10 && v*j<aa.v2;j++)	tick_draw(o+d*(v*j),da,db,1);
 		if(aa.dv==0 && aa.v2<aa.v1 && fabs(u-exp(M_LN10*floor(0.1+log10(u))))<0.01*u)
-			for(j=2;j<10 && v*j<aa.v1;j++)	tick_draw(o+d*(v*j),da,db,1,stl);
+			for(long j=2;j<10 && v*j<aa.v1;j++)	tick_draw(o+d*(v*j),da,db,1);
+		if(dif_color)	SetPenPal(TickStl);
 	}
 	if(aa.ds>0 && !get(MGL_NOSUBTICKS))
 	{
 		if(aa.v2>aa.v1)	v0 = v0 - aa.ds*floor((v0-aa.v1)/aa.ds+1e-3);
 		else			v0 = v0 - aa.ds*floor((v0-aa.v2)/aa.ds+1e-3);
 		if(v0+aa.ds!=v0 && aa.v2+aa.ds!=aa.v2)
+		{
+			if(*SubTStl && !have_color)	SetPenPal(SubTStl);
 			for(v=v0;(v-aa.v2)*(v-aa.v1)<=0;v+=aa.ds)
-				tick_draw(o+d*v,da,db,1,stl);
+				tick_draw(o+d*v,da,db,1);
+		}
 	}
-	SetPenPal(mgl_have_color(stl) ? stl:AxisStl);
+	if(!have_color)	SetPenPal(AxisStl);
 	if(text)	DrawLabels(aa);
 	EndGroup();
 }
@@ -594,10 +602,10 @@ char mglCanvas::GetLabelPos(mreal c, long kk, mglAxis &aa)
 	int ts = 1;
 	if(aa.ch=='c')	ts=(aa.ns==0 || aa.ns==3)?1:-1;
 	if(aa.ch=='T')	ts=-1;
-	
+
 	p = o+d*c;	nn = (s-o)/(Max-Min);	ScalePoint(&B,p,nn);
 	mglPnt &qq = Pnt[kk];
-	
+
 	if(aa.ch=='c')	qq.u = qq.v = NAN;
 	if(!get(MGL_DISABLE_SCALE))	ts = sign(qq.v*nn.x-qq.u*nn.y)*sign(aa.v2-aa.v1);
 	if(aa.ch=='T')	ts *= -1;
@@ -605,7 +613,7 @@ char mglCanvas::GetLabelPos(mreal c, long kk, mglAxis &aa)
 	return ts>0 ? 't':'T';
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::tick_draw(mglPoint o, mglPoint d1, mglPoint d2, int f, const char *stl)
+void mglCanvas::tick_draw(mglPoint o, mglPoint d1, mglPoint d2, int f)
 {
 	if(TickLen==0)	return;
 	// try to exclude ticks out of axis range
@@ -613,16 +621,12 @@ void mglCanvas::tick_draw(mglPoint o, mglPoint d1, mglPoint d2, int f, const cha
 		return;
 	mreal v = font_factor*TickLen/sqrt(1.f+f*st_t);
 	mglPoint p=o;
-	long k1,k2,k3=mgl_have_color(stl);
-
-	if(*TickStl && !f)	SetPenPal(k3 ? stl:TickStl);
-	if(*SubTStl && f)	SetPenPal(k3 ? stl:SubTStl);
 
 	ScalePoint(&B,o, d1, false);	d1.Normalize();
 	ScalePoint(&B,p, d2, false);	d2.Normalize();
-	k2 = AddPnt(&B, p, CDef, mglPoint(NAN), 0, 0);
-	k1 = AddPnt(&B, p+d1*v, CDef, mglPoint(NAN), 0, 0);
-	k3 = AddPnt(&B, p+d2*v, CDef, mglPoint(NAN), 0, 0);
+	long k2 = AddPnt(&B, p, CDef, mglPoint(NAN), 0, 0);
+	long k1 = AddPnt(&B, p+d1*v, CDef, mglPoint(NAN), 0, 0);
+	long k3 = AddPnt(&B, p+d2*v, CDef, mglPoint(NAN), 0, 0);
 	line_plot(k1,k2);	line_plot(k2,k3);
 }
 //-----------------------------------------------------------------------------

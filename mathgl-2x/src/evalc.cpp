@@ -56,7 +56,8 @@ EQ_EXP,		// exponential function \exp(x)
 EQ_EXPI,		// exponential function \exp(i*x)
 EQ_LN,		// logarithm of x, ln(x)
 EQ_LG,		// decimal logarithm of x, lg(x) = ln(x)/ln(10)
-EQ_ABS		// absolute value
+EQ_ABS,		// absolute value
+EQ_LAST		// id of last entry
 };
 //-----------------------------------------------------------------------------
 int mglFormulaC::Error=0;
@@ -238,8 +239,8 @@ typedef dual (*func_2)(dual, dual);
 // evaluation of embedded (included) expressions
 dual mglFormulaC::CalcIn(const dual *a1) const
 {
-	func_2 f2[7] = {addc,subc,mulc,divc,ipwc,powc,llgc};
-	func_1 f1[18] = {sinc,cosc,tanc,asinc,acosc,atanc,sinhc,coshc,tanhc,
+	func_2 f2[EQ_SIN-EQ_ADD] = {addc,subc,mulc,divc,ipwc,powc,llgc};
+	func_1 f1[EQ_LAST-EQ_SIN] = {sinc,cosc,tanc,asinc,acosc,atanc,sinhc,coshc,tanhc,
 					asinhc,acoshc,atanhc,sqrtc,expc,expi,logc,lgc,absc};
 //	if(Error)	return 0;
 	if(Kod==EQ_A)	return a1[(int)Res.real()];

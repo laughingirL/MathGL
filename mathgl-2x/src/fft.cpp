@@ -157,7 +157,7 @@ MGL_NO_EXPORT void* mgl_fftx(void *par)
 #endif
 	{
 		void *w = mgl_fft_alloc_thr(nx);
-#pragma omp for
+#pragma omp for nowait
 		for(long i=t->id;i<t->n;i+=mglNumThr)
 			mgl_fft(t->b+2*nx*i, 1, nx, t->v, w, t->p[3]);
 		mgl_fft_free_thr(w);
@@ -173,7 +173,7 @@ MGL_NO_EXPORT void* mgl_ffty(void *par)
 #endif
 	{
 		void *w = mgl_fft_alloc_thr(nx);
-#pragma omp for
+#pragma omp for nowait
 		for(i=t->id;i<t->n;i+=mglNumThr)
 			mgl_fft(t->b+2*(i%nx)+2*nx*ny*(i/nx), nx, ny, t->v, w, t->p[3]);
 		mgl_fft_free_thr(w);
@@ -189,7 +189,7 @@ MGL_NO_EXPORT void* mgl_fftz(void *par)
 #endif
 	{
 		void *w = mgl_fft_alloc_thr(nx);
-#pragma omp for
+#pragma omp for nowait
 		for(i=t->id;i<t->n;i+=mglNumThr)
 			mgl_fft(t->b+2*i, nx*ny, nz, t->v, w, t->p[3]);
 		mgl_fft_free_thr(w);
@@ -297,7 +297,7 @@ MGL_NO_EXPORT void* mgl_envx(void *par)
 	{
 		double *b =	new double[2*nx];
 		void *w = mgl_fft_alloc_thr(nx);
-#pragma omp for
+#pragma omp for nowait
 		for(long i=t->id;i<t->n;i+=mglNumThr)
 		{
 			for(long j=0;j<nx;j++)	{	b[2*j] = a[j+i*nx];	b[2*j+1] = 0;	}
@@ -321,7 +321,7 @@ MGL_NO_EXPORT void* mgl_envy(void *par)
 	{
 		double *b =	new double[2*ny];
 		void *w = mgl_fft_alloc_thr(ny);
-#pragma omp for
+#pragma omp for nowait
 		for(long i=t->id;i<t->n;i+=mglNumThr)
 		{
 			for(long j=0;j<ny;j++)	{	b[2*j] = a[(i%nx)+nx*(j+ny*(i/nx))];	b[2*j+1] = 0;	}
@@ -345,7 +345,7 @@ MGL_NO_EXPORT void* mgl_envz(void *par)
 	{
 		double *b =	new double[2*nz];
 		void *w = mgl_fft_alloc_thr(nz);
-#pragma omp for
+#pragma omp for nowait
 		for(long i=t->id;i<t->n;i+=mglNumThr)
 		{
 			for(long j=0;j<nz;j++)	{	b[2*j] = a[j*k+i];	b[2*j+1] = 0;	}
@@ -402,7 +402,7 @@ MGL_NO_EXPORT void* mgl_stfa1(void *par)
 	{
 		double *a = new double[4*dn], ff;
 		void *w = mgl_fft_alloc_thr(2*dn);
-#pragma omp for
+#pragma omp for nowait
 		for(long ii=t->id;ii<t->n;ii+=mglNumThr)
 		{
 			register long i = ii%mx, j = ii/mx, i0;
@@ -440,7 +440,7 @@ MGL_NO_EXPORT void* mgl_stfa2(void *par)
 	{
 		double *a = new double[4*dn], ff;
 		void *w = mgl_fft_alloc_thr(2*dn);
-#pragma omp for
+#pragma omp for nowait
 		for(long ii=t->id;ii<t->n;ii+=mglNumThr)
 		{
 			register long i = ii%my, j = ii/my, i0;
@@ -504,7 +504,7 @@ MGL_NO_EXPORT void* mgl_sinx(void *par)
 	{
 		double *b = new double[2*nx], f=sqrt(2./nx);
 		void *w = mgl_fft_alloc_thr(nx);
-#pragma omp for
+#pragma omp for nowait
 		for(long i=t->id;i<t->n;i+=mglNumThr)
 		{
 			register long k = i*nx;	memset(b,0,2*nx*sizeof(double));
@@ -533,7 +533,7 @@ MGL_NO_EXPORT void* mgl_siny(void *par)
 	{
 		double *b = new double[2*ny], f=sqrt(2./ny);
 		void *w = mgl_fft_alloc_thr(ny);
-#pragma omp for
+#pragma omp for nowait
 		for(long ii=t->id;ii<t->n;ii+=mglNumThr)
 		{
 			register long i = ii%nx, k = ii/nx;	memset(b,0,2*ny*sizeof(double));
@@ -562,7 +562,7 @@ MGL_NO_EXPORT void* mgl_sinz(void *par)
 	{
 		double *b = new double[2*nz], f=sqrt(2./nz);
 		void *w = mgl_fft_alloc_thr(nz);
-#pragma omp for
+#pragma omp for nowait
 		for(long i=t->id;i<t->n;i+=mglNumThr)
 		{
 			memset(b,0,2*nz*sizeof(double));
@@ -624,7 +624,7 @@ MGL_NO_EXPORT void* mgl_cosx(void *par)
 	{
 		double *b = new double[2*nx], f=sqrt(2./nn);
 		void *w = mgl_fft_alloc_thr(nn);
-#pragma omp for
+#pragma omp for nowait
 		for(long i=t->id;i<t->n;i+=mglNumThr)
 		{
 			register long k = i*nx;	memset(b,0,2*nx*sizeof(double));
@@ -661,7 +661,7 @@ MGL_NO_EXPORT void* mgl_cosy(void *par)
 	{
 		double *b = new double[2*ny], f=sqrt(2./nn);
 		void *w = mgl_fft_alloc_thr(nn);
-#pragma omp for
+#pragma omp for nowait
 		for(long ii=t->id;ii<t->n;ii+=mglNumThr)
 		{
 			register long i = ii%nx, k = ii/nx;	memset(b,0,2*ny*sizeof(double));
@@ -698,7 +698,7 @@ MGL_NO_EXPORT void* mgl_cosz(void *par)
 	{
 		double *b = new double[2*nz], f=sqrt(2./nn);
 		void *w = mgl_fft_alloc_thr(nn);
-#pragma omp for
+#pragma omp for nowait
 		for(long i=t->id;i<t->n;i+=mglNumThr)
 		{
 			memset(b,0,2*nz*sizeof(double));
@@ -860,7 +860,7 @@ MGL_NO_EXPORT void* mgl_chnkx(void *par)
 #endif
 	{
 		double *b = new double[3*nx];
-#pragma omp for
+#pragma omp for nowait
 		for(long i=t->id;i<t->n;i+=mglNumThr)
 		{
 			for(long j=0;j<nx;j++)	b[j] = real(a[j+nx*i]);
@@ -886,7 +886,7 @@ MGL_NO_EXPORT void* mgl_chnky(void *par)
 #endif
 	{
 		double *b = new double[3*ny];
-#pragma omp for
+#pragma omp for nowait
 		for(long ii=t->id;ii<t->n;ii+=mglNumThr)
 		{
 			register long i = ii%nx, k = ii/nx;
@@ -913,7 +913,7 @@ MGL_NO_EXPORT void* mgl_chnkz(void *par)
 #endif
 	{
 		double *b = new double[3*nz];
-#pragma omp for
+#pragma omp for nowait
 		for(long i=t->id;i<t->n;i+=mglNumThr)
 		{
 			for(long j=0;j<nz;j++)	b[j] = real(a[i+j*k]);
@@ -980,7 +980,7 @@ MGL_NO_EXPORT void* mgl_hnkx(void *par)
 #endif
 	{
 		double *b = new double[2*nx];
-#pragma omp for
+#pragma omp for nowait
 		for(long i=t->id;i<t->n;i+=mglNumThr)
 		{
 			for(long j=0;j<nx;j++)	b[j] = a[j+nx*i];
@@ -1004,7 +1004,7 @@ MGL_NO_EXPORT void* mgl_hnky(void *par)
 #endif
 	{
 		double *b = new double[2*ny];
-#pragma omp for
+#pragma omp for nowait
 		for(long ii=t->id;ii<t->n;ii+=mglNumThr)
 		{
 			register long i = ii%nx, k = ii/nx;
@@ -1029,7 +1029,7 @@ MGL_NO_EXPORT void* mgl_hnkz(void *par)
 #endif
 	{
 		double *b = new double[2*nz];
-#pragma omp for
+#pragma omp for nowait
 		for(long i=t->id;i<t->n;i+=mglNumThr)
 		{
 			for(long j=0;j<nz;j++)	b[j] = a[i+j*k];
@@ -1137,7 +1137,7 @@ MGL_NO_EXPORT void* mgl_corx(void *par)
 #endif
 	{
 		void *w = mgl_fft_alloc_thr(nx);
-#pragma omp for
+#pragma omp for nowait
 		for(long i=t->id;i<t->n;i+=mglNumThr)
 		{
 			mgl_fft(t->b+2*nx*i, 1, nx, t->v, w, false);
@@ -1165,7 +1165,7 @@ MGL_NO_EXPORT void* mgl_cory(void *par)
 #endif
 	{
 		void *w = mgl_fft_alloc_thr(ny);
-#pragma omp for
+#pragma omp for nowait
 		for(long i=t->id;i<t->n;i+=mglNumThr)
 		{
 			register long k = 2*(i%nx)+2*nx*ny*(i/nx);
@@ -1194,7 +1194,7 @@ MGL_NO_EXPORT void* mgl_corz(void *par)
 #endif
 	{
 		void *w = mgl_fft_alloc_thr(nz);
-#pragma omp for
+#pragma omp for nowait
 		for(long i=t->id;i<t->n;i+=mglNumThr)
 		{
 			mgl_fft(t->b+2*i, nx*ny, nz, t->v, w, false);

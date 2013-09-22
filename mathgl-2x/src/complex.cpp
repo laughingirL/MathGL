@@ -87,82 +87,121 @@ void MGL_EXPORT mglStartThreadV(void *(*func)(void *), long n, dual *a, const vo
 MGL_NO_EXPORT void *mgl_csmth_x(void *par)
 {
 	mglThreadC *t=(mglThreadC *)par;
-	long nx=t->p[0];
-	dual *b=t->a, y5,y3,x2y;
+	long nx=t->p[0], kind=t->p[2];
+	dual *b=t->a;
 	const dual *a=t->b;
+	if(kind==SMOOTH_LINE_3)
 #if !MGL_HAVE_PTHREAD
-#pragma omp parallel for private(y3,y5,x2y)
+#pragma omp parallel for
 #endif
-	for(long i=t->id;i<t->n;i+=mglNumThr)
-	{
-		register long j = i%nx, d3 = 0, d5 = 0;
-		if(j==0)	{	d3 = 1;		d5 = 2;	}
-		if(j==1)	{	d5 = 1;	}
-		if(j==nx-1)	{	d3 = -1;	d5 = -2;}
-		if(j==nx-2)	{	d5 = -1;}
-		y3 = (a[i+d3-1] + a[i+d3] + a[i+d3+1]);
-		y5 = (a[i+d5-2] + a[i+d5-1] + a[i+d5] + a[i+d5+1] + a[i+d5+2]);
-		x2y= (a[i+d5+1] + mgl4*a[i+d5+2] + mgl4*a[i+d5-2] + a[i+d5-1]);
-		j = t->p[2];
-		if(d3)	b[i] = a[i];
-		else if(j==SMOOTH_LINE_3 || d5)	b[i] = y3/mgl3;
-		else if(j==SMOOTH_LINE_5)		b[i] = y5/mreal(5);
-		else if(j==SMOOTH_QUAD_5)		b[i] = (mreal(17)*y5-mreal(5)*x2y)/mreal(35);
-	}
+		for(long i=t->id;i<t->n;i+=mglNumThr)
+		{
+			register long j = i%nx;
+			if(j>0 && j<nx-1)	b[i] = (a[i-1] + a[i] + a[i+1])/mreal(3);
+			else	b[i] = a[i];
+		}
+	else if(kind==SMOOTH_LINE_5)
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel for
+#endif
+		for(long i=t->id;i<t->n;i+=mglNumThr)
+		{
+			register long j = i%nx;
+			if(j>1 && j<nx-2)	b[i] = (a[i-2] + a[i-1] + a[i] + a[i+1] + a[i+2])/mreal(5);
+			else if(j==1 || j==nx-2)	b[i] = (a[i-1] + a[i] + a[i+1])/mreal(3);
+			else	b[i] = a[i];
+		}
+	else if(kind==SMOOTH_QUAD_5)
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel for
+#endif
+		for(long i=t->id;i<t->n;i+=mglNumThr)
+		{
+			register long j = i%nx;
+			if(j>1 && j<nx-2)	b[i] = (mreal(12)*a[i-2] - mreal(3)*a[i-1] + mreal(17)*a[i] - mreal(3)*a[i+1] + mreal(12)*a[i+2])/mreal(35);
+			else if(j==1 || j==nx-2)	b[i] = (a[i-1] + a[i] + a[i+1])/mreal(3);
+			else	b[i] = a[i];
+		}
 	return 0;
 }
 MGL_NO_EXPORT void *mgl_csmth_y(void *par)
 {
 	mglThreadC *t=(mglThreadC *)par;
-	long nx=t->p[0],ny=t->p[1];
-	dual *b=t->a, y5,y3,x2y;
+	long nx=t->p[0],ny=t->p[1], kind=t->p[2];
+	dual *b=t->a;
 	const dual *a=t->b;
+	if(kind==SMOOTH_LINE_3)
 #if !MGL_HAVE_PTHREAD
-#pragma omp parallel for private(y3,y5,x2y)
+#pragma omp parallel for
 #endif
-	for(long i=t->id;i<t->n;i+=mglNumThr)
-	{
-		register long j = (i/nx)%ny, d3 = 0, d5 = 0;
-		if(j==0)	{	d3 = 1;		d5 = 2;	}
-		if(j==1)	{	d5 = 1;	}
-		if(j==ny-1)	{	d3 = -1;	d5 = -2;}
-		if(j==ny-2)	{	d5 = -1;}
-		y3 = (a[i+nx*(d3-1)] + a[i+nx*d3] + a[i+nx*(d3+1)]);
-		y5 = (a[i+nx*(d5-2)] + a[i+nx*(d5-1)] + a[i+nx*d5] + a[i+nx*(d5+1)] + a[i+nx*(d5+2)]);
-		x2y= (a[i+nx*(d5+1)] + mgl4*a[i+nx*(d5+2)] + mgl4*a[i+nx*(d5-2)] + a[i+nx*(d5-1)]);
-		j = t->p[2];
-		if(d3)	b[i] = a[i];
-		else if(j==SMOOTH_LINE_3 || d5)	b[i] = y3/mgl3;
-		else if(j==SMOOTH_LINE_5)		b[i] = y5/mreal(5);
-		else if(j==SMOOTH_QUAD_5)		b[i] = (mreal(17)*y5-mreal(5)*x2y)/mreal(35);
-	}
+		for(long i=t->id;i<t->n;i+=mglNumThr)
+		{
+			register long j = (i/nx)%ny;
+			if(j>0 && j<ny-1)	b[i] = (a[i-nx] + a[i] + a[i+nx])/mreal(3);
+			else	b[i] = a[i];
+		}
+	else if(kind==SMOOTH_LINE_5)
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel for
+#endif
+		for(long i=t->id;i<t->n;i+=mglNumThr)
+		{
+			register long j = (i/nx)%ny;
+			if(j>1 && j<ny-2)	b[i] = (a[i-2*nx] + a[i-nx] + a[i] + a[i+nx] + a[i+2*nx])/mreal(5);
+			else if(j==1 || j==ny-2)	b[i] = (a[i-nx] + a[i] + a[i+nx])/mreal(3);
+			else	b[i] = a[i];
+		}
+	else if(kind==SMOOTH_QUAD_5)
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel for
+#endif
+		for(long i=t->id;i<t->n;i+=mglNumThr)
+		{
+			register long j = (i/nx)%ny;
+			if(j>1 && j<ny-2)	b[i] = (mreal(12)*a[i-2*nx] - mreal(3)*a[i-nx] + mreal(17)*a[i] - mreal(3)*a[i+nx] + mreal(12)*a[i+2*nx])/mreal(35);
+			else if(j==1 || j==ny-2)	b[i] = (a[i-nx] + a[i] + a[i+nx])/mreal(3);
+			else	b[i] = a[i];
+		}
 	return 0;
 }
 MGL_NO_EXPORT void *mgl_csmth_z(void *par)
 {
 	mglThreadC *t=(mglThreadC *)par;
-	register long nn=t->p[0]*t->p[1], nz=t->n/nn;
-	dual *b=t->a, y5,y3,x2y;
+	register long nn=t->p[0]*t->p[1], nz=t->n/nn, kind=t->p[2];
+	dual *b=t->a;
 	const dual *a=t->b;
+	if(kind==SMOOTH_LINE_3)
 #if !MGL_HAVE_PTHREAD
-#pragma omp parallel for private(y3,y5,x2y)
+#pragma omp parallel for
 #endif
-	for(long i=t->id;i<t->n;i+=mglNumThr)
-	{
-		register long j = i/nn, d3 = 0, d5 = 0;
-		if(j==0)	{	d3 = 1;		d5 = 2;	}
-		if(j==1)	{	d5 = 1;	}
-		if(j==nz-1)	{	d3 = -1;	d5 = -2;}
-		if(j==nz-2)	{	d5 = -1;}
-		y3 = (a[i+nn*(d3-1)] + a[i+nn*d3] + a[i+nn*(d3+1)]);
-		y5 = (a[i+nn*(d5-2)] + a[i+nn*(d5-1)] + a[i+nn*d5] + a[i+nn*(d5+1)] + a[i+nn*(d5+2)]);
-		x2y= (a[i+nn*(d5+1)] + mgl4*a[i+nn*(d5+2)] + mgl4*a[i+nn*(d5-2)] + a[i+nn*(d5-1)]);
-		j = t->p[2];
-		if(d3)	b[i] = a[i];
-		else if(j==SMOOTH_LINE_3 || d5)	b[i] = y3/mgl3;
-		else if(j==SMOOTH_LINE_5)		b[i] = y5/mreal(5);
-		else if(j==SMOOTH_QUAD_5)		b[i] = (mreal(17)*y5-mreal(5)*x2y)/mreal(35);
-	}
+		for(long i=t->id;i<t->n;i+=mglNumThr)
+		{
+			register long j = i/nn;
+			if(j>0 && j<nz-1)	b[i] = (a[i-nn] + a[i] + a[i+nn])/mreal(3);
+			else	b[i] = a[i];
+		}
+	else if(kind==SMOOTH_LINE_5)
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel for
+#endif
+		for(long i=t->id;i<t->n;i+=mglNumThr)
+		{
+			register long j = i/nn;
+			if(j>1 && j<nz-2)	b[i] = (a[i-2*nn] + a[i-nn] + a[i] + a[i+nn] + a[i+2*nn])/mreal(5);
+			else if(j==1 || j==nz-2)	b[i] = (a[i-nn] + a[i] + a[i+nn])/mreal(3);
+			else	b[i] = a[i];
+		}
+	else if(kind==SMOOTH_QUAD_5)
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel for
+#endif
+		for(long i=t->id;i<t->n;i+=mglNumThr)
+		{
+			register long j = i/nn;
+			if(j>1 && j<nz-2)	b[i] = (mreal(12)*a[i-2*nn] - mreal(3)*a[i-nn] + mreal(17)*a[i] - mreal(3)*a[i+nn] + mreal(12)*a[i+2*nn])/mreal(35);
+			else if(j==1 || j==nz-2)	b[i] = (a[i-nn] + a[i] + a[i+nn])/mreal(3);
+			else	b[i] = a[i];
+		}
 	return 0;
 }
 void MGL_EXPORT mgl_datac_smooth(HADT d, const char *dirs, mreal )
@@ -630,23 +669,45 @@ dual MGL_EXPORT mgl_datac_linear_ext(HCDT d, mreal x,mreal y,mreal z, dual *dx,d
 {
 	long kx=long(x), ky=long(y), kz=long(z);
 	dual b0,b1;
-	bool dif = (dx && dy && dz);
 	const mglDataC *dd=dynamic_cast<const mglDataC *>(d);
-	if(!dd)	return mgl_datac_linear_ext(d,x,y,z,dx,dy,dz);
+	if(!dd)
+	{
+		mreal rx,ry,rz,res;
+		res=mgl_data_linear_ext(d,x,y,z,&rx,&ry,&rz);
+		if(dx)	*dx=rx;	if(dy)	*dy=ry;	if(dz)	*dz=rz;
+		return res;
+	}
 
 	long nx=dd->nx, ny=dd->ny, nz=dd->nz, dn=ny>1?nx:0;
-	kx = kx<nx-1 ? kx:nx-2;	kx = kx>=0 ? kx:0;
-	ky = ky<ny-1 ? ky:ny-2;	ky = ky>=0 ? ky:0;
-	kz = kz<nz-1 ? kz:nz-2;	kz = kz>=0 ? kz:0;
-	x -= kx;	if(nx==1)	x=0;
-	y -= ky;	if(ny==1)	y=0;
-	z -= kz;	if(nz==1)	z=0;
+	kx = kx>=0 ? kx:0;	kx = kx<nx-1 ? kx:nx-2;
+	ky = ky>=0 ? ky:0;	ky = ky<ny-1 ? ky:ny-2;
+	kz = kz>=0 ? kz:0;	kz = kz<nz-1 ? kz:nz-2;
+	x -= kx;	y -= ky;	z -= kz;
+	const dual *aa = dd->a, *bb;
+	if(kz>=0)
+	{
+		aa=dd->a+kx+nx*(ky+ny*kz);	bb = aa+nx*ny;
+		b0 = aa[0]*(1-x-y+x*y) + x*(1-y)*aa[1] + y*(1-x)*aa[dn] + x*y*aa[1+dn];
+		b1 = bb[0]*(1-x-y+x*y) + x*(1-y)*bb[1] + y*(1-x)*bb[dn] + x*y*bb[1+dn];
+	}
+	else
+	{
+		z=0;
+		if(ky>=0)
+		{
+			aa=dd->a+kx+nx*ky;
+			b0 = b1 = aa[0]*(1-x-y+x*y) + x*(1-y)*aa[1] + y*(1-x)*aa[dn] + x*y*aa[1+dn];
+		}
+		else if(kx>=0)
+		{
+			aa=dd->a+kx;	b0 = b1 = aa[0]*(1-x) + x*aa[1];
+		}
+		else	b0 = b1 = dd->a[0];
+	}
+	if(dx)	*dx = kx>=0?aa[1]-aa[0]:0;
+	if(dy)	*dy = ky>=0?aa[dn]-aa[0]:0;
+	if(dz)	*dz = b1-b0;
 
-	const dual *aa=dd->a+kx+nx*(ky+ny*kz), *bb = aa+(nz>1?nx*ny:0);
-	b0 = aa[0]*(1-x-y+x*y) + x*(1-y)*aa[1] + y*(1-x)*aa[dn] + x*y*aa[1+dn];
-	b1 = bb[0]*(1-x-y+x*y) + x*(1-y)*bb[1] + y*(1-x)*bb[dn] + x*y*bb[1+dn];
-	if(dif)
-	{	*dx = aa[1]-aa[0];	*dy = aa[dn]-aa[0];	*dz = bb[0]-aa[0];	}
 	return b0 + z*(b1-b0);
 }
 dual MGL_EXPORT mgl_datac_linear(HCDT d, mreal x,mreal y,mreal z)
@@ -798,7 +859,7 @@ dual MGL_EXPORT mgl_datac_get_value(HCDT dat, long i, long j, long k)
 	if(i<0 || i>=dat->GetNx() || j<0 || j>=dat->GetNy() || k<0 || k>=dat->GetNz())
 		return NAN;
 	const mglDataC *d = dynamic_cast<const mglDataC*>(dat);
-	return d ? d->a[i+d->nx*(j+d->nz*k)] : dual(dat->v(i,j,k),0);	
+	return d ? d->a[i+d->nx*(j+d->nz*k)] : dual(dat->v(i,j,k),0);
 }
 dual MGL_EXPORT mgl_datac_get_value_(uintptr_t *d, int *i, int *j, int *k)
 {	return mgl_datac_get_value(_DA_(d),*i,*j,*k);	}
