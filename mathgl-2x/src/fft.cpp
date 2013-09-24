@@ -19,6 +19,7 @@
  ***************************************************************************/
 #include "mgl2/datac.h"
 #include "mgl2/data.h"
+#include "mgl2/thread.h"
 #if MGL_HAVE_GSL
 #include <gsl/gsl_fft_complex.h>
 #include <gsl/gsl_dht.h>

@@ -21,6 +21,7 @@
 #include "mgl2/surf.h"
 #include "mgl2/data.h"
 #include "mgl2/eval.h"
+#include "mgl2/base.h"
 //-----------------------------------------------------------------------------
 void MGL_NO_EXPORT mgl_mesh_plot(mglBase *gr, long *pos, long n, long m, int how)
 {

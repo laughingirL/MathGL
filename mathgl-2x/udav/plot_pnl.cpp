@@ -57,7 +57,7 @@ PlotPanel::PlotPanel(QWidget *parent) : QWidget(parent)
 	popup = new QMenu(this);
 	mgl = new QMathGL(this);
 	draw = new mglDrawScript(parser.Self());
-	mgl->getGraph()->set(MGL_SHOW_POS);	mgl->setDraw(draw);
+	mgl_set_flag(mgl->getGraph(),1,MGL_SHOW_POS);	mgl->setDraw(draw);
 	connect(mgl,SIGNAL(askStyle(int)),this,SLOT(setStyle(int)));
 
 	QBoxLayout *v,*h,*m;
@@ -92,7 +92,7 @@ void PlotPanel::execute()
 	raisePanel(this);
 	emit clearWarn();
 	QTime t;	t.start();
-	mgl->getGraph()->FaceNum=0;
+	mgl_set_facenum(mgl->getGraph(),0);
 	draw->text=textMGL->toPlainText();
 	draw->line=curPos;
 	mgl->update();
@@ -365,37 +365,37 @@ void PlotPanel::toolTop(QBoxLayout *l)
 	connect(mgl, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
 	a->setToolTip(tr("Add curve which properties can be changed later by mouse."));
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);	oo->addAction(a);
-	
+
 	a = new QAction(QPixmap(mark_s_xpm), tr("Add rect"), this);
 	connect(a, SIGNAL(triggered()), mgl, SLOT(addRect()));
 	connect(mgl, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
 	a->setToolTip(tr("Add rectangle which properties can be changed later by mouse."));
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);	oo->addAction(a);
-	
+
 	a = new QAction(QPixmap(mark_d_xpm), tr("Add rhombus"), this);
 	connect(a, SIGNAL(triggered()), mgl, SLOT(addRhomb()));
 	connect(mgl, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
 	a->setToolTip(tr("Add rhombus which properties can be changed later by mouse."));
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);	oo->addAction(a);
-	
+
 	a = new QAction(QPixmap(mark_o_xpm), tr("Add ellipse"), this);
 	connect(a, SIGNAL(triggered()), mgl, SLOT(addEllipse()));
 	connect(mgl, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
 	a->setToolTip(tr("Add ellipse which properties can be changed later by mouse."));
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);	oo->addAction(a);
-	
+
 	a = new QAction(QPixmap(mark_a_xpm), tr("Add mark"), this);
 	connect(a, SIGNAL(triggered()), mgl, SLOT(addMark()));
 	connect(mgl, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
 	a->setToolTip(tr("Add marker which properties can be changed later by mouse."));
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);	oo->addAction(a);
-	
+
 	a = new QAction(QPixmap(text_xpm), tr("Add text"), this);
 	connect(a, SIGNAL(triggered()), mgl, SLOT(addText()));
 	connect(mgl, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
 	a->setToolTip(tr("Add text which properties can be changed later by mouse."));
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);	oo->addAction(a);
-	
+
 	o->addMenu(oo);	l->addStretch(1);
 
 	tet = new QSpinBox(this);	tet->setWrapping(true);

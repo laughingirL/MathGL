@@ -20,6 +20,7 @@
 #include <ctype.h>
 #include "mgl2/data.h"
 #include "mgl2/eval.h"
+#include "mgl2/thread.h"
 //-----------------------------------------------------------------------------
 HMDT MGL_EXPORT mgl_data_trace(HCDT d)
 {

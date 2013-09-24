@@ -22,6 +22,7 @@
 #include "mgl2/cont.h"
 #include "mgl2/eval.h"
 #include "mgl2/data.h"
+#include "mgl2/base.h"
 //-----------------------------------------------------------------------------
 //
 //	DensX, DensY, DensZ series

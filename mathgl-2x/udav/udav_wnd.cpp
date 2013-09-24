@@ -568,7 +568,7 @@ void MainWindow::setStatus(const QString &txt)
 void MainWindow::setCurrentFile(const QString &fileName)
 {
 	filename = fileName;
-	graph->mgl->getGraph()->PlotId = fileName.toAscii().constData();
+	mgl_set_plotid(graph->mgl->getGraph(), fileName.toAscii().constData());
 	edit->setModified(false);
 	if(filename.isEmpty())
 		setWindowTitle(tr("untitled - UDAV"));

@@ -25,7 +25,7 @@
 #include <string>
 //-----------------------------------------------------------------------------
 /// Structure for the command argument.
-struct MGL_EXPORT mglArg
+struct mglArg
 {
 	int type;		///< Type of argument {0-data,1-string,2-number}
 	mglData *d;		///< Pointer to data (used if type==0)
@@ -36,7 +36,7 @@ struct MGL_EXPORT mglArg
 };
 //-----------------------------------------------------------------------------
 /// Structure for MGL command
-struct MGL_EXPORT mglCommand
+struct mglCommand
 {
 	const char *name;	///< Name of command
 	const char *desc;	///< Short command description (can be NULL)
@@ -52,7 +52,7 @@ struct MGL_EXPORT mglCommand
 extern mglCommand mgls_base_cmd[];
 //-----------------------------------------------------------------------------
 /// Structure for the number handling (see mglParse class).
-struct MGL_EXPORT mglNum
+struct mglNum
 {
 	mreal d;		///< Number itself
 	std::wstring s;	///< Number name
@@ -65,7 +65,7 @@ struct MGL_EXPORT mglNum
 };
 //-----------------------------------------------------------------------------
 /// Structure for function name and position.
-struct MGL_EXPORT mglFunc
+struct mglFunc
 {
 	long pos;
 	int narg;
@@ -77,7 +77,7 @@ struct MGL_EXPORT mglFunc
 };
 //-----------------------------------------------------------------------------
 /// Structure for stack of functions and its arguments.
-struct MGL_EXPORT mglFnStack
+struct mglFnStack
 {
 	mglFnStack()	{pos=0;}
 	long pos;
@@ -88,7 +88,7 @@ struct MGL_EXPORT mglFnStack
 void MGL_EXPORT mgl_ask_gets(const wchar_t *quest, wchar_t *res);
 //-----------------------------------------------------------------------------
 /// Structure for the command argument (see mglGraph::Exec()).
-class MGL_EXPORT mglParser
+class mglParser
 {
 friend void mgl_export(wchar_t *out, const wchar_t *in, int type);
 public:

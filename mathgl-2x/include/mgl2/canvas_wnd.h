@@ -64,7 +64,7 @@ public:
 						const char *title, void *par=NULL,
 						void (*reload)(void *p)=NULL, bool maximize=false)=0;
 	void SetDrawFunc(int (*draw)(mglBase *gr, void *p), void *par=NULL, void (*reload)(void *p)=NULL);
-	
+
 private:
 	int CurFig;			///< Current figure in the list.
 

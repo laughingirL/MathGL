@@ -48,7 +48,7 @@
 #endif
 //-----------------------------------------------------------------------------
 /// Base class for windows containing MathGL graphics
-class MGL_EXPORT mglCanvasQT : public mglCanvasWnd
+class mglCanvasQT : public mglCanvasWnd
 {
 public:
 using mglCanvasWnd::Window;
@@ -341,7 +341,7 @@ void QMathGL::mousePressEvent(QMouseEvent *ev)
 		emit mouseClick(p.x,p.y,p.z);
 		int id = mgl_get_obj_id(gr,ev->x(),ev->y());
 		if(id<MGL_MAX_LINES)	emit objChanged(id-1);
-		
+
 		p = gr->CalcXYZ(ev->x(), ev->y(), true);
 		if(mgl_isnan(p.x))	mousePos = "";
 		else	mousePos.sprintf("x=%g, y=%g, z=%g",p.x,p.y,p.z);

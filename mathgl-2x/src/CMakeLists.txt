@@ -1,6 +1,6 @@
 set(mgl_src
 	addon.cpp axis.cpp base_cf.cpp base.cpp canvas_cf.cpp canvas.cpp cont.cpp crust.cpp
-	complex.cpp complex_io.cpp fft.cpp
+	complex.cpp complex_io.cpp fft.cpp data_gr.cpp
 	data.cpp data_io.cpp data_ex.cpp data_png.cpp def_font.cpp
 	export_2d.cpp export_3d.cpp eval.cpp evalp.cpp exec.cpp export.cpp
 	fit.cpp font.cpp obj.cpp other.cpp parser.cpp pde.cpp pixel.cpp
@@ -18,7 +18,8 @@ ${MathGL_BINARY_DIR}/include/mgl2/dllexport.h
 	../include/mgl2/data.h		../include/mgl2/volume.h	../include/mgl2/data_cf.h
 	../include/mgl2/define.h	../include/mgl2/other.h		../include/mgl2/eval.h
 	../include/mgl2/parser.h	../include/mgl2/addon.h		../include/mgl2/evalc.h
-	s_hull/s_hull_pro.h		../include/mgl2/wnd.h		../include/mgl2/canvas_wnd.h
+	s_hull/s_hull_pro.h			../include/mgl2/wnd.h		../include/mgl2/canvas_wnd.h
+	../include/mgl2/thread.h	../include/mgl2/abstract.h
 )
 
 add_definitions(-DMGL_SRC)

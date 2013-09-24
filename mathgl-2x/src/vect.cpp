@@ -20,6 +20,7 @@
 #include "mgl2/vect.h"
 #include "mgl2/eval.h"
 #include "mgl2/data.h"
+#include "mgl2/base.h"
 //-----------------------------------------------------------------------------
 //
 //	Traj series

@@ -20,6 +20,7 @@
 #include <ctype.h>
 #include "mgl2/parser.h"
 #include "mgl2/canvas_cf.h"
+#include "mgl2/base.h"
 //-----------------------------------------------------------------------------
 #ifdef WIN32
 #include <io.h>

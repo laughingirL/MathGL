@@ -22,6 +22,7 @@
 #include "mgl2/prim.h"
 #include "mgl2/eval.h"
 #include "mgl2/data.h"
+#include "mgl2/base.h"
 
 #if MGL_HAVE_GSL
 #include <gsl/gsl_multifit_nlin.h>
@@ -344,7 +345,7 @@ HMDT MGL_EXPORT mgl_fit_xyzas(HMGL gr, HCDT xx, HCDT yy, HCDT zz, HCDT aa, HCDT 
 	{	gr->SetWarn(mglWarnDim,"Fit[S]");	return 0;	}
 	if(!var || *var==0)
 	{	gr->SetWarn(mglWarnNull,"Fit[S]");	return 0;	}
-	
+
 	mglData x(aa), y(aa), z(aa), a(aa), s(ss);
 #pragma omp parallel for collapse(3)
 	for(long i=0;i<m;i++)	for(long j=0;j<n;j++)	for(long k=0;k<l;k++)	// ñîçäàåì ìàññèâ òî÷åê

@@ -19,8 +19,8 @@
  ***************************************************************************/
 #include "mgl2/data.h"
 #include "mgl2/eval.h"
-#include <complex>
-#define dual	std::complex<double>
+#include "mgl2/thread.h"
+#include "mgl2/base.h"
 #define GAMMA	0.1
 //-----------------------------------------------------------------------------
 struct mgl_pde_ham
@@ -38,7 +38,7 @@ MGL_NO_EXPORT void *mgl_pde_hprep(void *par)
 	mglFormula *eqs = f->eqs;
 	long nx=2*f->nx, ny=2*f->ny;
 	dual *a = f->a;
-	
+
 #if !MGL_HAVE_PTHREAD
 #pragma omp parallel
 #endif
@@ -313,7 +313,7 @@ MGL_NO_EXPORT void *mgl_qo2d_hprep(void *par)
 	mglThreadD *t=(mglThreadD *)par;
 	mgl_qo2d_ham *f = (mgl_qo2d_ham *)t->v;
 	mgl_ap *ra = f->ra;
-	
+
 	const mreal *r = f->r;
 	long nx=t->n;
 #if !MGL_HAVE_PTHREAD
@@ -588,7 +588,7 @@ HMDT MGL_EXPORT mgl_qo3d_func(dual (*ham)(mreal u, mreal x, mreal y, mreal z, mr
 		for(long i=0;i<4*nx*nx;i++)	a[i] *= exp(hxv[i]*dt);		// x-v
 		for(long i=0;i<2*nx;i++)	// v->y
 			mgl_fft((double *)(a+i), 2*nx, 2*nx, wtx, wsx, true);
-		
+
 /*		// Calculate B1			// TODO make more general scheme later!!!
 		hh = ra[k].pt*(1/sqrt(sqrt(1.041))-1);
 		var['x'-'a'] = ray->a[n7*k];	// new coordiantes

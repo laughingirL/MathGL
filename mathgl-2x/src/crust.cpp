@@ -20,6 +20,8 @@
 #include <float.h>
 #include "mgl2/other.h"
 #include "mgl2/data.h"
+#include "mgl2/thread.h"
+#include "mgl2/base.h"
 //-----------------------------------------------------------------------------
 //
 //	TriPlot series
@@ -74,7 +76,7 @@ void MGL_EXPORT mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCD
 				mglPoint q = mglPoint(x->v(k2)-x->v(k1), y->v(k2)-y->v(k1), z->v(k2)-z->v(k1)) ^
 					mglPoint(x->v(k3)-x->v(k1), y->v(k3)-y->v(k1), z->v(k3)-z->v(k1));
 				q.Normalize();
-				// try be sure that in the same direction ... 
+				// try be sure that in the same direction ...
 				if(q.z<0)	q *= -1;
 #pragma omp critical(quadplot)
 				{pp[k1] += q;	pp[k2] += q;	pp[k3] += q;}
@@ -279,7 +281,7 @@ void MGL_EXPORT mgl_tricont_xyzcv(HMGL gr, HCDT v, HCDT nums, HCDT x, HCDT y, HC
 		register long k2 = long(nums->v(1,i)+0.1);	if(k2<0 || k2>=n)	continue;
 		register long k3 = long(nums->v(2,i)+0.1);	if(k3<0 || k3>=n)	continue;
 		register mreal val = v->v(k), c = gr->GetC(ss,val), d1,d2,d3;
-		
+
 		d1 = mgl_d(val,a->v(k1),a->v(k2));
 		p1 = mglPoint(x->v(k1)*(1-d1)+x->v(k2)*d1, y->v(k1)*(1-d1)+y->v(k2)*d1,
 					  zVal?z->v(k1)*(1-d1)+z->v(k2)*d1:gr->Min.z);
@@ -361,7 +363,7 @@ void MGL_EXPORT mgl_dots_a(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *
 
 	d = gr->MeshNum>0 ? mgl_ipow(gr->MeshNum+1,k) : n;
 	d = n>d ? n/d:1;
-	
+
 	static int cgid=1;	gr->StartGroup("Dots",cgid++);
 	char mk=gr->SetPenPal(sch);
 	long ss=gr->AddTexture(sch);
@@ -518,7 +520,7 @@ void MGL_EXPORT mgl_data_grid(HMGL gr, HMDT d, HCDT xdat, HCDT ydat, HCDT zdat, 
 	for(long i=0;i<n;i++)	{	xc[i]=xx[1]*(x->a[i]-xx[0]);	yc[i]=xx[3]*(y->a[i]-xx[2]);	}
 #pragma omp parallel for
 	for(long i=0;i<d->nx*d->ny*d->nz;i++) d->a[i] = NAN;
-	
+
 	mglStartThread(mgl_grid_t,0,nn,d->a,xc,yc,par,0,nums->a,z->a);
 	gr->LoadState();	delete nums;	delete []xc;	delete []yc;
 }

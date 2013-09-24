@@ -31,6 +31,7 @@
 #include "mgl2/data.h"
 #include "mgl2/eval.h"
 #include "mgl2/font.h"
+#include "mgl2/base.h"
 //-----------------------------------------------------------------------------
 //
 //	Text printing along a curve

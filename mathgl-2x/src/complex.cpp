@@ -19,6 +19,7 @@
  ***************************************************************************/
 #include "mgl2/datac.h"
 #include "mgl2/evalc.h"
+#include "mgl2/thread.h"
 
 #include "interp.hpp"
 

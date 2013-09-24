@@ -25,6 +25,7 @@
 
 #include "mgl2/datac.h"
 #include "mgl2/evalc.h"
+#include "mgl2/thread.h"
 
 #if MGL_HAVE_HDF5
 #define H5_USE_16_API
@@ -597,69 +598,6 @@ void MGL_EXPORT mgl_datac_modify_vw(HADT d, const char *eq,HCDT vdat,HCDT wdat)
 void MGL_EXPORT mgl_datac_modify_vw_(uintptr_t *d, const char *eq, uintptr_t *v, uintptr_t *w,int l)
 {	char *s=new char[l+1];	memcpy(s,eq,l);	s[l]=0;
 	mgl_datac_modify_vw(_DC_,s,_DA_(v),_DA_(w));	delete []s;	}
-//-----------------------------------------------------------------------------
-MGL_NO_EXPORT void *mgl_cfill_f(void *par)
-{
-	mglThreadC *t=(mglThreadC *)par;
-	const mglFormulaC *f = (const mglFormulaC *)(t->v);
-	long nx=t->p[0],ny=t->p[1];
-	dual *b=t->a;
-	const dual *v=t->b, *w=t->c, *x=t->d;
-#if !MGL_HAVE_PTHREAD
-#pragma omp parallel for
-#endif
-	for(long i0=t->id;i0<t->n;i0+=mglNumThr)
-	{
-		register long i=i0%nx, j=((i0/nx)%ny), k=i0/(nx*ny);
-		b[i0] = f->Calc(x[0]+mreal(i)*x[1], x[2]+mreal(j)*x[3], x[4]+mreal(k)*x[5],
-						b[i0], v?v[i0]:dual(0,0), w?w[i0]:dual(0,0));
-	}
-	return 0;
-}
-MGL_NO_EXPORT void *mgl_cfill_fgen(void *par)
-{
-	mglThreadV *t=(mglThreadV *)par;
-	const mglFormulaC *f = (const mglFormulaC *)(t->v);
-	long nx=t->p[0],ny=t->p[1];
-	dual *b=t->aa;
-	HCDT v=(HCDT)t->b, w=(HCDT)t->c;
-	const mreal *x=t->d;
-#if !MGL_HAVE_PTHREAD
-#pragma omp parallel for
-#endif
-	for(long i0=t->id;i0<t->n;i0+=mglNumThr)
-	{
-		register long i=i0%nx, j=((i0/nx)%ny), k=i0/(nx*ny);
-		b[i0] = f->Calc(x[0]+i*x[1], x[2]+j*x[3], x[4]+k*x[5],
-						b[i0], v?v->vthr(i0):0, w?w->vthr(i0):0);
-	}
-	return 0;
-}
-void MGL_EXPORT mgl_datac_fill_eq(HMGL gr, HADT d, const char *eq, HCDT vdat, HCDT wdat, const char *opt)
-{
-	const mglDataC *v = dynamic_cast<const mglDataC *>(vdat);
-	const mglDataC *w = dynamic_cast<const mglDataC *>(wdat);
-	long nn = d->nx*d->ny*d->nz, par[3]={d->nx,d->ny,d->nz};
-	if(v && v->nx*v->ny*v->nz!=nn)	return;
-	if(w && w->nx*w->ny*w->nz!=nn)	return;
-	gr->SaveState(opt);
-	mreal xx[6]={gr->Min.x,0, gr->Min.y,0, gr->Min.z,0};
-	if(d->nx>1)	xx[1] = (gr->Max.x-gr->Min.x)/(d->nx-1.);
-	if(d->ny>1)	xx[3] = (gr->Max.y-gr->Min.y)/(d->ny-1.);
-	if(d->nz>1)	xx[5] = (gr->Max.z-gr->Min.z)/(d->nz-1.);
-	dual cc[6]={xx[0],xx[1],xx[2],xx[3],xx[4],xx[5]};
-	mglFormulaC f(eq);
-	if(v && w)	mglStartThreadC(mgl_cfill_f,0,nn,d->a,v->a,w->a,par,&f,cc);
-	else if(vdat && wdat)	mglStartThreadV(mgl_cfill_fgen,nn,d->a,vdat,wdat,par,&f,xx);
-	else if(v)	mglStartThreadC(mgl_cfill_f,0,nn,d->a,v->a,0,par,&f,cc);
-	else if(vdat)	mglStartThreadV(mgl_cfill_fgen,nn,d->a,vdat,0,par,&f,xx);
-	else	mglStartThreadC(mgl_cfill_f,0,nn,d->a,0,0,par,&f,cc);
-	gr->LoadState();
-}
-void MGL_EXPORT mgl_datac_fill_eq_(uintptr_t *gr, uintptr_t *d, const char *eq, uintptr_t *v, uintptr_t *w, const char *opt,int l,int lo)
-{	char *s=new char[l+1];	memcpy(s,eq,l);	s[l]=0;
-	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
-	mgl_datac_fill_eq(_GR_,_DC_,s,_DA_(v),_DA_(w),o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
 bool MGL_NO_EXPORT mgl_add_file(long &kx,long &ky, long &kz, dual *&b, mglDataC *d,bool as_slice)
 {

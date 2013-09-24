@@ -40,7 +40,7 @@
 void _mgl_key_up(unsigned char ch,int ,int );
 //-----------------------------------------------------------------------------
 /// Class allows the window creation under OpenGL with the help of GLUT library
-class MGL_EXPORT mglCanvasGLUT : public mglCanvasGL
+class mglCanvasGLUT : public mglCanvasGL
 {
 friend void _mgl_display();
 friend void _mgl_key_up(unsigned char ch,int ,int );

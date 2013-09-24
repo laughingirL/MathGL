@@ -20,62 +20,20 @@
 #ifndef _MGL_BASE_H_
 #define _MGL_BASE_H_
 //#if !defined(_MSC_VER) && !defined(__BORLANDC__)
-#if !defined(__BORLANDC__)
-#include <stdint.h>
-#endif
-#if defined(__BORLANDC__)
-typedef unsigned uintptr_t;
-#endif
-#include "mgl2/define.h"
+#include "mgl2/abstract.h"
 
 #ifdef __cplusplus
 #include <vector>
 #include <string>
-#include "mgl2/type.h"
-//-----------------------------------------------------------------------------
-class mglBase;
-class mglData;
-class mglParser;
-class mglFormula;
-class mglFormulaC;
-class mglFont;
-typedef mglBase* HMGL;
-typedef mglData* HMDT;
-typedef mglParser* HMPR;
-typedef mglFormula* HMEX;
-typedef mglFormulaC* HAEX;
-//-----------------------------------------------------------------------------
-#if MGL_NO_DATA_A
-#define mglDataA mglData
-typedef const mglData* HCDT;
-#include "mgl2/data.h"
+
+#if MGL_HAVE_PTHREAD
+#include <pthread.h>
+#define MGL_PUSH(a,v,m)		{pthread_mutex_lock(&m);	a.push_back(v);	pthread_mutex_unlock(&m);}
 #else
-//-----------------------------------------------------------------------------
-/// Callback function for asking user a question. Result shouldn't exceed 1024.
-extern MGL_EXPORT void (*mgl_ask_func)(const wchar_t *quest, wchar_t *res);
-//-----------------------------------------------------------------------------
-/// Abstract class for data array
-class MGL_EXPORT mglDataA
-{
-public:
-	virtual ~mglDataA()	{}
-	virtual mreal v(long i,long j=0,long k=0) const = 0;
-	virtual mreal vthr(long i) const = 0;
-	virtual long GetNx() const = 0;
-	virtual long GetNy() const = 0;
-	virtual long GetNz() const = 0;
-	inline long GetNN() const {	return GetNx()*GetNy()*GetNz();	}
-	virtual mreal Maximal() const = 0;
-	virtual mreal Minimal() const = 0;
-	virtual mreal dvx(long i,long j=0,long k=0) const = 0;
-//	{	return i>0 ? (i<GetNx()-1 ? (v(i+1,j,k)-v(i-1,j,k))/2 : v(i,j,k)-v(i-1,j,k)) : v(1,j,k)-v(0,j,k);	}
-	virtual mreal dvy(long i,long j=0,long k=0) const = 0;
-//	{	return j>0 ? (j<GetNy()-1 ? (v(i,j+1,k)-v(i,j-1,k))/2 : v(i,j,k)-v(i,j-1,k)) : v(i,1,k)-v(i,0,k);	}
-	virtual mreal dvz(long i,long j=0,long k=0) const = 0;
-//	{	return k>0 ? (k<GetNz()-1 ? (v(i,j,k+1)-v(i,j,k-1))/2 : v(i,j,k)-v(i,j,k-1)) : v(i,j,1)-v(i,j,0);	}
-};
+#define MGL_PUSH(a,v,m)		a.push_back(v);
 #endif
-typedef const mglDataA* HCDT;
+
+#define MGL_TO_WCS(str,code)	if(str){size_t s=mbstowcs(0,str,0); wchar_t *wcs=new wchar_t[s+1]; mbstowcs(wcs,str,s); wcs[s]=0; code; delete []wcs;}
 //-----------------------------------------------------------------------------
 inline mreal mgl_d(mreal v,mreal v1,mreal v2) { return v2!=v1?(v-v1)/(v2-v1):NAN; }
 //-----------------------------------------------------------------------------
@@ -84,7 +42,7 @@ mglPoint GetY(HCDT y, int i, int j, int k=0);
 mglPoint GetZ(HCDT z, int i, int j, int k=0);
 //-----------------------------------------------------------------------------
 /// Structure for transformation matrix
-struct MGL_EXPORT mglMatrix
+struct mglMatrix
 {
 	mreal b[9];
 	mreal x,y,z,pf;
@@ -97,7 +55,7 @@ struct MGL_EXPORT mglMatrix
 };
 //-----------------------------------------------------------------------------
 /// Structure for simplest primitives
-struct MGL_EXPORT mglPrim	// NOTE: use float for reducing memory size
+struct mglPrim	// NOTE: use float for reducing memory size
 {
 	// NOTE: n4 is used as mark; n3 -- as pen style for type=0,1,4
 	// NOTE: n3 is used as position of txt,font in Ptxt for type=6
@@ -123,7 +81,7 @@ bool operator<(const mglPrim &a,const mglPrim &b);
 bool operator>(const mglPrim &a,const mglPrim &b);
 //-----------------------------------------------------------------------------
 /// Structure for group of primitives
-struct MGL_EXPORT mglGroup
+struct mglGroup
 {
 	std::vector<long> p;	///< list of primitives (not filled!!!)
 	int Id;				///< Current list of primitives
@@ -132,7 +90,7 @@ struct MGL_EXPORT mglGroup
 };
 //-----------------------------------------------------------------------------
 /// Structure for text label
-struct MGL_EXPORT mglText
+struct mglText
 {
 	std::wstring text;
 	std::string stl;
@@ -142,7 +100,7 @@ struct MGL_EXPORT mglText
 };
 //-----------------------------------------------------------------------------
 /// Structure for internal point representation
-struct MGL_EXPORT mglPnt	// NOTE: use float for reducing memory size
+struct mglPnt	// NOTE: use float for reducing memory size
 {
 	float xx,yy,zz;	// original coordinates
 	float x,y,z;	// coordinates
@@ -169,7 +127,7 @@ inline mglPnt operator*(float b, const mglPnt &a)
 	c.r*=b;	c.g*=b;	c.b*=b;	c.a*=b;	return c;	}
 //-----------------------------------------------------------------------------
 /// Structure for glyph representation
-struct MGL_EXPORT mglGlyph
+struct mglGlyph
 {
 	long nt, nl;			///< number of triangles and lines
 	short *trig, *line;	///< vertexes of triangles and lines
@@ -188,7 +146,7 @@ struct MGL_EXPORT mglGlyph
 //-----------------------------------------------------------------------------
 #define MGL_TEXTURE_COLOURS 512
 /// Structure for texture (color scheme + palette) representation
-struct MGL_EXPORT mglTexture
+struct mglTexture
 {
 	mglColor col[MGL_TEXTURE_COLOURS];	///< Colors itself
 	long n;				///< Number of initial colors along u
@@ -217,27 +175,13 @@ const mglColor BC( 0, 0, 0);
 const mglColor WC( 1, 1, 1);
 const mglColor RC( 1, 0, 0);
 //-----------------------------------------------------------------------------
-/// Structure for color ID
-struct MGL_EXPORT mglColorID
-{
-	char id;
-	mglColor col;
-};
-MGL_EXPORT extern mglColorID mglColorIds[31];
-MGL_EXPORT extern std::string mglGlobalMess;	///< Buffer for receiving global messages
-//-----------------------------------------------------------------------------
 /// Structure active points
-struct MGL_EXPORT mglActivePos
+struct mglActivePos
 {
 	int x,y;		///< coordinates of active point
 	int id;		///< object id for active point
 	int n;		///< position of active point in command (object id)
 };
-//-----------------------------------------------------------------------------
-/// Brushes for mask with symbol "-+=;oOsS~<>jdD*^" correspondingly
-extern uint64_t mgl_mask_val[16];
-#define MGL_MASK_ID		"-+=;oOsS~<>jdD*^"
-#define MGL_SOLID_MASK	0xffffffffffffffff
 //-----------------------------------------------------------------------------
 /// Base class for canvas which handle all basic drawing
 class MGL_EXPORT mglBase
@@ -565,20 +509,5 @@ bool MGL_EXPORT mgl_check_vec3(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay
 bool MGL_EXPORT mgl_check_trig(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const char *name, int d=3);
 bool MGL_EXPORT mgl_isboth(HCDT x, HCDT y, HCDT z, HCDT a);
 //-----------------------------------------------------------------------------
-#define _Da_(d)	(*((const mglDataA *)(d)))
-#define _DA_(a)	((const mglDataA *)*(a))
-#define _GR_	((mglBase *)(*gr))
-//-----------------------------------------------------------------------------
-//#define _D_(d)	*((mglData *)*(d))
-#define _DM_(a)	((mglData *)*(a))
-#define _DT_	((mglData *)*d)
-//-----------------------------------------------------------------------------
-#else
-typedef void *HMGL;
-typedef void *HMDT;
-typedef void *HMEX;
-typedef void *HAEX;
-typedef void *HMPR;
-typedef const void *HCDT;
 #endif
 #endif

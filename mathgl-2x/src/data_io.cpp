@@ -26,6 +26,7 @@
 #include "mgl2/data.h"
 #include "mgl2/datac.h"
 #include "mgl2/eval.h"
+#include "mgl2/thread.h"
 
 #if MGL_HAVE_HDF5
 //#define H5_NO_DEPRECATED_SYMBOLS
@@ -130,7 +131,6 @@ void MGL_EXPORT mgl_data_set_matrix(HMDT d, gsl_matrix *m)
 #if MGL_HAVE_GSL
 	if(!m || m->size1<1 || m->size2<1)	return;
 	mgl_data_create(d, m->size1,m->size2,1);
-	register long i,j;
 #pragma omp parallel for collapse(2)
 	for(long j=0;j<d->ny;j++)	for(long i=0;i<d->nx;i++)
 		d->a[i+j*d->nx] = m->data[i * m->tda + j];
@@ -871,66 +871,6 @@ void MGL_EXPORT mgl_data_modify_vw(HMDT d, const char *eq,HCDT vdat,HCDT wdat)
 void MGL_EXPORT mgl_data_modify_vw_(uintptr_t *d, const char *eq, uintptr_t *v, uintptr_t *w,int l)
 {	char *s=new char[l+1];	memcpy(s,eq,l);	s[l]=0;
 	mgl_data_modify_vw(_DT_,s,_DA_(v),_DA_(w));	delete []s;	}
-//-----------------------------------------------------------------------------
-MGL_NO_EXPORT void *mgl_fill_f(void *par)
-{
-	mglThreadD *t=(mglThreadD *)par;
-	const mglFormula *f = (const mglFormula *)(t->v);
-	long nx=t->p[0],ny=t->p[1];
-	mreal *b=t->a;
-	const mreal *v=t->b, *w=t->c, *x=t->d;
-#if !MGL_HAVE_PTHREAD
-#pragma omp parallel for
-#endif
-	for(long i0=t->id;i0<t->n;i0+=mglNumThr)
-	{
-		register long i=i0%nx, j=((i0/nx)%ny), k=i0/(nx*ny);
-		b[i0] = f->Calc(x[0]+i*x[1], x[2]+j*x[3], x[4]+k*x[5], b[i0], v?v[i0]:0, w?w[i0]:0);
-	}
-	return 0;
-}
-MGL_NO_EXPORT void *mgl_fill_fgen(void *par)
-{
-	mglThreadV *t=(mglThreadV *)par;
-	const mglFormula *f = (const mglFormula *)(t->v);
-	long nx=t->p[0],ny=t->p[1];
-	mreal *b=t->a;
-	HCDT v=(HCDT)t->b, w=(HCDT)t->c;
-	const mreal *x=t->d;
-#if !MGL_HAVE_PTHREAD
-#pragma omp parallel for
-#endif
-	for(long i0=t->id;i0<t->n;i0+=mglNumThr)
-	{
-		register long i=i0%nx, j=((i0/nx)%ny), k=i0/(nx*ny);
-		b[i0] = f->Calc(x[0]+i*x[1], x[2]+j*x[3], x[4]+k*x[5], b[i0], v?v->vthr(i0):0, w?w->vthr(i0):0);
-	}
-	return 0;
-}
-void MGL_EXPORT mgl_data_fill_eq(HMGL gr, HMDT d, const char *eq, HCDT vdat, HCDT wdat, const char *opt)
-{
-	const mglData *v = dynamic_cast<const mglData *>(vdat);
-	const mglData *w = dynamic_cast<const mglData *>(wdat);
-	long nn = d->nx*d->ny*d->nz, par[3]={d->nx,d->ny,d->nz};
-	if(vdat && vdat->GetNN()!=nn)	return;
-	if(wdat && wdat->GetNN()!=nn)	return;
-	gr->SaveState(opt);
-	mreal xx[6]={gr->Min.x,0, gr->Min.y,0, gr->Min.z,0};
-	if(d->nx>1)	xx[1] = (gr->Max.x-gr->Min.x)/(d->nx-1.);
-	if(d->ny>1)	xx[3] = (gr->Max.y-gr->Min.y)/(d->ny-1.);
-	if(d->nz>1)	xx[5] = (gr->Max.z-gr->Min.z)/(d->nz-1.);
-	mglFormula f(eq);
-	if(v && w)	mglStartThread(mgl_fill_f,0,nn,d->a,v->a,w->a,par,&f,xx);
-	else if(vdat && wdat)	mglStartThreadV(mgl_fill_fgen,nn,d->a,vdat,wdat,par,&f,xx);
-	else if(v)	mglStartThread(mgl_fill_f,0,nn,d->a,v->a,0,par,&f,xx);
-	else if(vdat)	mglStartThreadV(mgl_fill_fgen,nn,d->a,vdat,0,par,&f,xx);
-	else	mglStartThread(mgl_fill_f,0,nn,d->a,0,0,par,&f,xx);
-	gr->LoadState();
-}
-void MGL_EXPORT mgl_data_fill_eq_(uintptr_t *gr, uintptr_t *d, const char *eq, uintptr_t *v, uintptr_t *w, const char *opt,int l,int lo)
-{	char *s=new char[l+1];	memcpy(s,eq,l);	s[l]=0;
-	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
-	mgl_data_fill_eq(_GR_,_DT_,s,_DA_(v),_DA_(w),o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
 #if MGL_HAVE_HDF4
 int MGL_EXPORT mgl_data_read_hdf4(HMDT d,const char *fname,const char *data)
