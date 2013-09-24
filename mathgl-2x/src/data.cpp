@@ -945,7 +945,6 @@ mreal MGL_EXPORT mgl_data_solve_1d(HCDT d, mreal val, int spl, long i0)
 		y1=d->v(i-1);	y2=d->v(i);
 		if((y1-val)*(y2-val)<=0)
 			return i-1 + (val-y1)/(y2-y1);
-
 	}
 	return NAN;
 }

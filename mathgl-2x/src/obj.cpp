@@ -35,10 +35,6 @@ void MGL_NO_EXPORT mgl_printf(void *fp, bool gz, const char *str, ...);
 #include <string>
 #include <vector>
 #include <deque>
-#include <list>
-#ifdef __GNUC__
-#include <ext/slist>
-#endif
 #include <map>
 #include <iostream>
 

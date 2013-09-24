@@ -2099,12 +2099,13 @@ void smgl_loglog(mglGraph *gr)	// log-log axis
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_venn="list x -0.3 0 0.3:list y 0.3 -0.3 0.3:list e 0.7 0.7 0.7\n"
-"subplot 1 1 0:title 'Venn-like diagram':alpha on:error x y e e '!rgb@#o'";
+"subplot 1 1 0:title 'Venn-like diagram'\ntransptype 1:alpha on:error x y e e '!rgb@#o'";
 void smgl_venn(mglGraph *gr)
 {
 	double xx[3]={-0.3,0,0.3}, yy[3]={0.3,-0.3,0.3}, ee[3]={0.7,0.7,0.7};
 	mglData x(3,xx), y(3,yy), e(3,ee);
-	gr->SubPlot(1,1,0);	gr->Title("Venn-like diagram");	gr->Alpha(true);	gr->Error(x,y,e,e,"!rgb@#o");
+	gr->SubPlot(1,1,0);	gr->Title("Venn-like diagram");
+	gr->SetTranspType(1);	gr->Alpha(true);	gr->Error(x,y,e,e,"!rgb@#o","alpha 0.1");
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_stereo="call 'prepare2d'\nlight on\nsubplot 2 1 0:rotate 50 60+1:box:surf a\nsubplot 2 1 1:rotate 50 60-1:box:surf a\n";
