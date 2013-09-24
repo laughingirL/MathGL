@@ -25,7 +25,7 @@
 #include "mgl2/wx.h"
 //-----------------------------------------------------------------------------
 /// Wrapper class for all windows displaying graphics
-class mglWindow : public mglWnd
+class MGL_EXPORT mglWindow : public mglWnd
 {
 	int wnd;	///< Type of window
 public:

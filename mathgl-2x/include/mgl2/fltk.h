@@ -40,7 +40,7 @@ int MGL_EXPORT mgl_fltk_thr();
 #include <mgl2/wnd.h>
 //-----------------------------------------------------------------------------
 /// Wrapper class for windows displaying graphics
-class mglFLTK : public mglWnd
+class MGL_EXPORT mglFLTK : public mglWnd
 {
 public:
 	mglFLTK(const char *title="MathGL") : mglWnd()
@@ -69,7 +69,7 @@ public:
 class mglCanvas;
 //-----------------------------------------------------------------------------
 /// Class is FLTK widget which display MathGL graphics
-class Fl_MathGL : public Fl_Widget
+class MGL_EXPORT Fl_MathGL : public Fl_Widget
 {
 public:
 	Fl_Valuator	*tet_val;	///< pointer to external tet-angle validator
@@ -133,7 +133,7 @@ protected:
 	void resize(int x, int y, int w, int h);	///< resize control
 };
 //-----------------------------------------------------------------------------
-class Fl_MGLView : public Fl_Window
+class MGL_EXPORT Fl_MGLView : public Fl_Window
 {
 public:
 	Fl_MathGL *FMGL;		///< Control which draw graphics

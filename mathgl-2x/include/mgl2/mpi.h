@@ -37,7 +37,7 @@ void MGL_EXPORT mgl_mpi_recv_(uintptr_t *gr, int *id);
 #include "mgl2/mgl.h"
 //-----------------------------------------------------------------------------
 /// Wrapper class for all graphics
-class mglGraphMPI:public mglGraph
+class MGL_EXPORT mglGraphMPI:public mglGraph
 {
 	inline mglGraphMPI(int kind=0, int width=600, int height=400):mglGraph(kind,width,height){}
 	inline mglGraphMPI(const mglGraph &graph):mglGraph(graph){}

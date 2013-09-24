@@ -48,7 +48,7 @@
 #endif
 //-----------------------------------------------------------------------------
 /// Base class for windows containing MathGL graphics
-class mglCanvasQT : public mglCanvasWnd
+class MGL_EXPORT mglCanvasQT : public mglCanvasWnd
 {
 public:
 using mglCanvasWnd::Window;

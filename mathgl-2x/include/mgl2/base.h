@@ -55,7 +55,7 @@ typedef const mglData* HCDT;
 extern MGL_EXPORT void (*mgl_ask_func)(const wchar_t *quest, wchar_t *res);
 //-----------------------------------------------------------------------------
 /// Abstract class for data array
-class mglDataA
+class MGL_EXPORT mglDataA
 {
 public:
 	virtual ~mglDataA()	{}
@@ -84,7 +84,7 @@ mglPoint GetY(HCDT y, int i, int j, int k=0);
 mglPoint GetZ(HCDT z, int i, int j, int k=0);
 //-----------------------------------------------------------------------------
 /// Structure for transformation matrix
-struct mglMatrix
+struct MGL_EXPORT mglMatrix
 {
 	mreal b[9];
 	mreal x,y,z,pf;
@@ -97,7 +97,7 @@ struct mglMatrix
 };
 //-----------------------------------------------------------------------------
 /// Structure for simplest primitives
-struct mglPrim	// NOTE: use float for reducing memory size
+struct MGL_EXPORT mglPrim	// NOTE: use float for reducing memory size
 {
 	// NOTE: n4 is used as mark; n3 -- as pen style for type=0,1,4
 	// NOTE: n3 is used as position of txt,font in Ptxt for type=6
@@ -123,7 +123,7 @@ bool operator<(const mglPrim &a,const mglPrim &b);
 bool operator>(const mglPrim &a,const mglPrim &b);
 //-----------------------------------------------------------------------------
 /// Structure for group of primitives
-struct mglGroup
+struct MGL_EXPORT mglGroup
 {
 	std::vector<long> p;	///< list of primitives (not filled!!!)
 	int Id;				///< Current list of primitives
@@ -132,7 +132,7 @@ struct mglGroup
 };
 //-----------------------------------------------------------------------------
 /// Structure for text label
-struct mglText
+struct MGL_EXPORT mglText
 {
 	std::wstring text;
 	std::string stl;
@@ -142,7 +142,7 @@ struct mglText
 };
 //-----------------------------------------------------------------------------
 /// Structure for internal point representation
-struct mglPnt	// NOTE: use float for reducing memory size
+struct MGL_EXPORT mglPnt	// NOTE: use float for reducing memory size
 {
 	float xx,yy,zz;	// original coordinates
 	float x,y,z;	// coordinates
@@ -175,8 +175,8 @@ struct MGL_EXPORT mglGlyph
 	short *trig, *line;	///< vertexes of triangles and lines
 
 	mglGlyph()	{	nl=nt=0;	trig=line=0;	}
-	mglGlyph(const mglGlyph &a)	{	trig=line=0;	*this=a;	}
-	mglGlyph(long Nt, long Nl)		{	trig=line=0;	Create(Nt,Nl);	}
+	mglGlyph(const mglGlyph &a)	{	nl=nt=0;	trig=line=0;	*this=a;	}
+	mglGlyph(long Nt, long Nl)	{	nl=nt=0;	trig=line=0;	Create(Nt,Nl);	}
 	~mglGlyph()	{	if(trig)	delete []trig;	if(line)	delete []line;	}
 
 	void Create(long Nt, long Nl);
@@ -218,7 +218,7 @@ const mglColor WC( 1, 1, 1);
 const mglColor RC( 1, 0, 0);
 //-----------------------------------------------------------------------------
 /// Structure for color ID
-struct mglColorID
+struct MGL_EXPORT mglColorID
 {
 	char id;
 	mglColor col;
@@ -227,7 +227,7 @@ MGL_EXPORT extern mglColorID mglColorIds[31];
 MGL_EXPORT extern std::string mglGlobalMess;	///< Buffer for receiving global messages
 //-----------------------------------------------------------------------------
 /// Structure active points
-struct mglActivePos
+struct MGL_EXPORT mglActivePos
 {
 	int x,y;		///< coordinates of active point
 	int id;		///< object id for active point

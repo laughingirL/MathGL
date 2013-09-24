@@ -211,7 +211,7 @@ extern float mgl_cos[360];	///< contain cosine with step 1 degree
 #include <complex>
 typedef std::complex<mreal> dual;
 //-----------------------------------------------------------------------------
-struct mglThreadD
+struct MGL_EXPORT mglThreadD
 {
 	mreal *a;		// float* array with parameters or results
 	const mreal *b,*c,*d,*e;	// float* arrays with parameters
@@ -221,7 +221,7 @@ struct mglThreadD
 	long n;			// total number of iteration
 	const char *s;
 };
-struct mglThreadC
+struct MGL_EXPORT mglThreadC
 {
 	dual *a;		// dual* array with parameters or results
 	const dual *b,*c,*d,*e;	// dual* arrays with parameters
@@ -231,7 +231,7 @@ struct mglThreadC
 	long n;			// total number of iteration
 	const char *s;
 };
-struct mglThreadV
+struct MGL_EXPORT mglThreadV
 {
 	mreal *a;		// float* array with parameters or results
 	dual *aa;		// dual* array with parameters or results
@@ -242,7 +242,7 @@ struct mglThreadV
 	int id;			// thread id
 	long n;			// total number of iteration
 };
-struct mglThreadT
+struct MGL_EXPORT mglThreadT
 {
 	void *a; 		// dual* or mreal* array with input or results
 	double *b; 		// dual* array with input or results

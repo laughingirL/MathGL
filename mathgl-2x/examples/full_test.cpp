@@ -68,6 +68,7 @@ void smgl_text(mglGraph *gr);	// text drawing
 void smgl_surf(mglGraph *gr);
 void test(mglGraph *gr)
 {
+	gr->Puts(mglPoint(), "\\i xxx");
 	mglExpr eq("x");
 	printf("res=%g\n",eq.Eval(2));
 	return;

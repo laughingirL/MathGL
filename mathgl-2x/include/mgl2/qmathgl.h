@@ -191,7 +191,7 @@ private:
 };
 //-----------------------------------------------------------------------------
 /// Class for drawing the MGL script
-class mglDrawScript : public mglDraw
+class MGL_EXPORT mglDrawScript : public mglDraw
 {
 public:
 	HMPR par;		///< Parser to be used

@@ -37,7 +37,7 @@ int MGL_EXPORT mgl_wx_run_();
 #include <mgl2/wnd.h>
 //-----------------------------------------------------------------------------
 /// Wrapper class for windows displaying graphics
-class mglWX : public mglWnd
+class MGL_EXPORT mglWX : public mglWnd
 {
 public:
 	mglWX(const char *title="MathGL") : mglWnd()
@@ -60,7 +60,7 @@ public:
 class mglCanvas;
 //-----------------------------------------------------------------------------
 /// Class is Wx widget which display MathGL graphics
-class wxMathGL : public wxWindow
+class MGL_EXPORT wxMathGL : public wxWindow
 {
 public:
 	wxString appName;	///< Application name for message boxes

@@ -25,7 +25,7 @@
 #include "mgl2/datac.h"
 //-----------------------------------------------------------------------------
 /// Wrapper class for all graphics
-class mglGraph
+class MGL_EXPORT mglGraph
 {
 protected:
 	HMGL gr;
@@ -1185,7 +1185,7 @@ public:
 };
 //-----------------------------------------------------------------------------
 /// Structure for handling named mglData (used by mglParse class).
-class mglVar : public mglData
+class MGL_EXPORT mglVar : public mglData
 {
 public:
 	std::wstring s;	///< Data name
@@ -1219,7 +1219,7 @@ public:
 };
 //-----------------------------------------------------------------------------
 /// Wrapper class for MGL parsing
-class mglParse
+class MGL_EXPORT mglParse
 {
 	HMPR pr;
 public:
@@ -1303,7 +1303,7 @@ public:
 };
 //-----------------------------------------------------------------------------
 /// Wrapper class expression evaluating
-class mglExpr
+class MGL_EXPORT mglExpr
 {
 	HMEX ex;
 public:
@@ -1326,7 +1326,7 @@ public:
 };
 //-----------------------------------------------------------------------------
 /// Wrapper class expression evaluating
-class mglExprC
+class MGL_EXPORT mglExprC
 {
 	HAEX ex;
 public:

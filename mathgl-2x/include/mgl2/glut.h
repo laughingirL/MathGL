@@ -30,7 +30,7 @@ HMGL MGL_EXPORT mgl_create_graph_glut(int (*draw)(HMGL gr, void *p), const char 
 #ifdef __cplusplus
 }
 //-----------------------------------------------------------------------------
-class mglGLUT: public mglGraph
+class MGL_EXPORT mglGLUT: public mglGraph
 {
 public:
 	mglGLUT(int (*draw)(HMGL gr, void *p), const char *title="MathGL", void *par=0, void (*load)(void *p)=0) : mglGraph(-1)

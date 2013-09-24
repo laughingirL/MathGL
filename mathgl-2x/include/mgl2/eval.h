@@ -29,7 +29,7 @@
 const int MGL_VS = 'z'-'a'+1;
 //-----------------------------------------------------------------------------
 /// Class for evaluating formula specified by the string
-class mglFormula					// îáúåêò äëÿ ââîäà è âû÷èñëåíèÿ ôîðìóë
+class MGL_EXPORT mglFormula					// îáúåêò äëÿ ââîäà è âû÷èñëåíèÿ ôîðìóë
 {
 public:
 	/// Evaluates the formula for 'x','r'=\a x, 'y','n'=\a y, 'z','t'=\a z, 'u'=\a u

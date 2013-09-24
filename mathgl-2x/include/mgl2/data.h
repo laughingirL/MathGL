@@ -28,9 +28,9 @@
 //-----------------------------------------------------------------------------
 /// Class for working with data array
 #if MGL_NO_DATA_A
-class mglData
+class MGL_EXPORT mglData
 #else
-class mglData : public mglDataA
+class MGL_EXPORT mglData : public mglDataA
 #endif
 {
 public:

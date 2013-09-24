@@ -40,7 +40,7 @@
 void _mgl_key_up(unsigned char ch,int ,int );
 //-----------------------------------------------------------------------------
 /// Class allows the window creation under OpenGL with the help of GLUT library
-class mglCanvasGLUT : public mglCanvasGL
+class MGL_EXPORT mglCanvasGLUT : public mglCanvasGL
 {
 friend void _mgl_display();
 friend void _mgl_key_up(unsigned char ch,int ,int );
@@ -138,7 +138,8 @@ void _mgl_key_up(unsigned char ch,int ,int )
 	{
 		glDeleteLists(1,_mgl_glwnd->NumFig);
 		_mgl_glwnd->LoadFunc(_mgl_glwnd->FuncPar);
-		(_mgl_glwnd->DrawFunc)(_mgl_glwnd,_mgl_glwnd->FuncPar);
+		if(_mgl_glwnd->DrawFunc)
+			(_mgl_glwnd->DrawFunc)(_mgl_glwnd,_mgl_glwnd->FuncPar);
 		_mgl_glwnd->Finish();
 	}
 	if(ch=='P')
@@ -183,7 +184,8 @@ void _mgl_display()
 	if(_mgl_glwnd->NumFig>0)	glCallList(_mgl_glwnd->curr_fig);
 	else
 	{
-		(_mgl_glwnd->DrawFunc)(_mgl_glwnd,_mgl_glwnd->FuncPar);
+		if(_mgl_glwnd->DrawFunc)
+			(_mgl_glwnd->DrawFunc)(_mgl_glwnd,_mgl_glwnd->FuncPar);
 		_mgl_glwnd->Finish();
 	}
 	if(_mgl_glwnd->get(MGL_CLF_ON_UPD))
@@ -206,8 +208,13 @@ void mglCanvasGLUT::Window(int argc, char **argv,int (*draw)(mglBase *gr, void *
 	glutCreateWindow("MathPlotLibrary");
 
 	AddLight(0,mglPoint(0,0,3),false);
-	NumFig = draw(this,par)-1;	Finish();
-	DrawFunc = draw;	FuncPar = par;
+	if(draw)
+	{
+		NumFig = draw(this,par)-1;	Finish();
+		DrawFunc = draw;	FuncPar = par;
+	}
+	else
+	{	NumFig = 0;	DrawFunc=0;	FuncPar=0;	}
 	LoadFunc = reload;
 	glutSetWindowTitle(title);
 

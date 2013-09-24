@@ -1167,12 +1167,12 @@ int MGL_EXPORT mgl_data_read_all(HMDT dat, const char *templ, int as_slice)
 	{
 		if(mgl_data_read(&d,res.gl_pathv[i]))
 			if(!mgl_add_file(kx,ky,kz,b,&d,as_slice))
-			{	delete []fname;		return false;	}
+			{	delete []fname;	free(b);	return false;	}
 	}
 	dat->Set(b,kx,ky,kz);
 
 	globfree (&res);
-	delete []fname;		free(b);
+	delete []fname;	free(b);
 	return true;
 #else
 	return false;

@@ -67,7 +67,7 @@ Fl_Pixmap xpm_wire(wire_xpm);
 //-----------------------------------------------------------------------------
 /// Class allows the window creation for displaying plot bitmap with the help of FLTK library
 /** NOTE!!! All frames are saved in memory. So animation with many frames require a lot memory and CPU time (for example, for mouse rotation).*/
-class mglCanvasFL : public mglCanvasWnd
+class MGL_EXPORT mglCanvasFL : public mglCanvasWnd
 {
 public:
 using mglCanvasWnd::Window;

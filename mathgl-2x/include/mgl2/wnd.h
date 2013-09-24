@@ -24,7 +24,7 @@
 //-----------------------------------------------------------------------------
 /// Class for drawing in windows (like, mglCanvasFL, mglCanvasQT and so on)
 /// Make inherited class and redefine Draw() function if you don't want to use function pointers.
-class mglDraw
+class MGL_EXPORT mglDraw
 {
 public:
 	virtual int Draw(mglGraph *)=0;	///< Function for drawing
@@ -52,7 +52,7 @@ void MGL_EXPORT mgl_reload_class(void *p);
 }
 //-----------------------------------------------------------------------------
 /// Abstract class for windows displaying graphics
-class mglWnd : public mglGraph
+class MGL_EXPORT mglWnd : public mglGraph
 {
 public:
 	mglWnd() : mglGraph(-1)	{}

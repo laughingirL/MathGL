@@ -34,7 +34,7 @@ const mreal mgl_min_a = 1./256;
 #define MGL_SET_RGB(p,rr,gg,bb)		{p.r=(rr);p.g=(gg);p.b=(bb);}
 //-----------------------------------------------------------------------------
 /// Class for point in 3D space
-struct mglPoint
+struct MGL_EXPORT mglPoint
 {
 	mreal x,y,z,c;
 	mglPoint(mreal X=0,mreal Y=0,mreal Z=0,mreal C=0){x=X;y=Y;z=Z;c=C;}
@@ -88,7 +88,7 @@ inline mreal mgl_norm(const mglPoint &p)
 #endif
 //-----------------------------------------------------------------------------
 /// Class for RGBA color
-struct mglColor
+struct MGL_EXPORT mglColor
 {
 	float r;	///< Red component of color
 	float g;	///< Green component of color

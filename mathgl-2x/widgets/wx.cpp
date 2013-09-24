@@ -28,7 +28,7 @@
 #include "mgl2/canvas_wnd.h"
 #include "mgl2/wx.h"
 //-----------------------------------------------------------------------------
-class mglCanvasWX : public mglCanvasWnd
+class MGL_EXPORT mglCanvasWX : public mglCanvasWnd
 {
 friend class wxMathGL;
 public:

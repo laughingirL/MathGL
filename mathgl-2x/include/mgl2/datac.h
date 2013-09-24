@@ -31,7 +31,7 @@
 #define mgl4 	mreal(4)
 //-----------------------------------------------------------------------------
 /// Class for working with data array
-class mglDataC : public mglDataA
+class MGL_EXPORT mglDataC : public mglDataA
 {
 public:
 

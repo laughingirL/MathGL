@@ -36,7 +36,7 @@ int MGL_EXPORT mgl_qt_run_();
 #include <mgl2/wnd.h>
 //-----------------------------------------------------------------------------
 /// Wrapper class for windows displaying graphics
-class mglQT : public mglWnd
+class MGL_EXPORT mglQT : public mglWnd
 {
 public:
 	mglQT(const char *title="MathGL") : mglWnd()

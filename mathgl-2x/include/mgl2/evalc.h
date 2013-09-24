@@ -23,7 +23,7 @@
 #include "mgl2/eval.h"
 //-----------------------------------------------------------------------------
 /// Class for evaluating formula specified by the string
-class mglFormulaC					// ������ ��� ����� � ���������� ������
+class MGL_EXPORT mglFormulaC					// ������ ��� ����� � ���������� ������
 {
 public:
 	/// Evaluates the formula for 'x','r'=\a x, 'y','n'=\a y, 'z','t'=\a z, 'u'=\a u
