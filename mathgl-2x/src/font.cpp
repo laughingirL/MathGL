@@ -603,7 +603,9 @@ bool mglFont::read_def()
 	// now allocate memory for all fonts
 	mem_alloc();
 	// and load symbols itself
+#ifndef WIN32	// win32 don't initialized threads before main()
 #pragma omp parallel for
+#endif
 	for(long i=0;i<int(numg);i++)
 	{
 		id[i] = mgl_gen_fnt[i][0];
@@ -615,7 +617,25 @@ bool mglFont::read_def()
 	}
 	memcpy(Buf, mgl_buf_fnt, mgl_cur*sizeof(short));
 	numb = mgl_cur;
+#ifndef WIN32	// win32 don't initialized threads before main()
 	main_copy();	// copy normal style as default for other styles
+#else
+	memcpy(numl[1],numl[0],numg*sizeof(short));
+	memcpy(numl[2],numl[0],numg*sizeof(short));
+	memcpy(numl[3],numl[0],numg*sizeof(short));
+	memcpy(ln[1],ln[0],numg*sizeof(int));
+	memcpy(ln[2],ln[0],numg*sizeof(int));
+	memcpy(ln[3],ln[0],numg*sizeof(int));
+	memcpy(numt[1],numt[0],numg*sizeof(short));
+	memcpy(numt[2],numt[0],numg*sizeof(short));
+	memcpy(numt[3],numt[0],numg*sizeof(short));
+	memcpy(tr[1],tr[0],numg*sizeof(int));
+	memcpy(tr[2],tr[0],numg*sizeof(int));
+	memcpy(tr[3],tr[0],numg*sizeof(int));
+	memcpy(width[1],width[0],numg*sizeof(short));
+	memcpy(width[2],width[0],numg*sizeof(short));
+	memcpy(width[3],width[0],numg*sizeof(short));
+#endif
 	return true;
 }
 //-----------------------------------------------------------------------------
@@ -783,7 +803,9 @@ void MGL_NO_EXPORT mgl_init()
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_init(&mutexRnd,0);
 #endif
+#ifndef WIN32	// win32 don't initialized threads before main()
 #pragma omp parallel for
+#endif
 	for(long i=0;i<360;i++)	mgl_cos[i] = cos(i*M_PI/180.);
 }
 //-----------------------------------------------------------------------------
