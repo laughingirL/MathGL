@@ -24,7 +24,7 @@
 	file(COPY ${MGL_TEX}/qt.png ${MGL_TEX}/fltk.png ${MGL_TEX}/classes.png ${MGL_TEX}/emblem_sm.png ${MGL_TEX}/datadvance.png DESTINATION ${MGL_OUT})
 	file(COPY ${MGL_TEX}/toc_ru.html ${MGL_TEX}/toc_fr.html ${MGL_TEX}/toc_en.html ${MGL_TEX}/title.html ${MGL_TEX}/index.html ${MGL_TEX}/json.html ${MGL_TEX}/mathgl.js ${MGL_TEX}/gunzip.min.js ${MGL_TEX}/inflate.min.js DESTINATION ${MGL_OUT})
 
-	set(UDAV_IMG udav_arg.png udav_calc.png udav_cmd.png udav_data.png 
+	set(UDAV_IMG udav_arg.png udav_calc.png udav_cmd.png udav_data.png
 		udav_gen_set.png udav_help.png udav_light.png udav_main.png udav_opt.png
 		udav_pen.png udav_prop.png udav_sch.png udav_txt.png udav_var.png)
 	foreach(SAMPLE ${UDAV_IMG})
@@ -42,8 +42,8 @@
 			COMMAND mgl_example -kind=${SAMPLE} -mini
 			DEPENDS mgl_example
 			WORKING_DIRECTORY ${MGL_OUT}/small )
-		set(MGL_PNG_J ${MGL_PNG_J} ${MGL_OUT}/json/${SAMPLE}.json)
 if(MGL_HAVE_DOC_JSON)
+		set(MGL_PNG_J ${MGL_PNG_J} ${MGL_OUT}/json/${SAMPLE}.json)
 		add_custom_command(OUTPUT ${MGL_OUT}/json/${SAMPLE}.json
 			COMMAND mgl_example -json -kind=${SAMPLE}
 #			COMMAND ${CMAKE_BINARY_DIR}/examples/mgl_example -json -kind=${SAMPLE}

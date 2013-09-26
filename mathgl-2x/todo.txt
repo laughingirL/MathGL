@@ -54,6 +54,7 @@ A. Paper about MathGL!!!
 16. Add mglData::Refill() + 'refill' + mglGraph::Refill()
 17. Update cloud sample
 18. Add adjust in Fl_MGLView
+19. Style '^' for legend
 
 ============= UDAV =============
 

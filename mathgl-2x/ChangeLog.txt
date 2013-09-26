@@ -6,6 +6,7 @@
 * Add Quality=8 for dots drawing (extremely fast), Quality=9 for none drawing (for speed testing).
 * Add styles '4','6' for Cone() and Cones() to produce square, hex-prism.
 * Add style 't' for Cones() to produce tubes (cylinders).
+* Add style '^' for Legend() to left/right align legend if its coordinates are right/left from the center
 * Add style '<', '^', '>' for aligning/centering boxes in Bars(), Barh(), BoxPlot(), Cones(). Also this plots become centered by default if nx sizes are the same for all data.
 * Add mglData::Refill() for filling by interpolation of parametrically dependent data
 * Add transparency for Area() and Region() plots.
