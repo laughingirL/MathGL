@@ -774,8 +774,17 @@ void mglCanvas::Legend(const std::vector<mglText> &leg, mreal x, mreal y, const 
 		nrow = 1+(n-1)/j;
 		ncol = (n+nrow-1)/nrow;
 	}
-	x = x*(iw-w*ncol-2*dx)+B.x-iw/2+dx;
-	y = y*(ih-h*nrow-2*dy)+B.y-ih/2+dy;
+	if(mglchr(font,'^'))	// use "external" positioning
+	{
+		x = x>=0.5 ? x*iw : x*iw-w*ncol-2*dx;
+		y = y>=0.5 ? y*ih : y*ih-h*nrow-2*dy;
+	}
+	else
+	{
+		x *= iw-w*ncol-2*dx;
+		y *= ih-h*nrow-2*dy;
+	}
+	x += B.x-iw/2+dx;	y += B.y-ih/2+dy;
 	// draw it
 	long k1=0,k2=0,k3=0,k4=0;
 	mglPoint p,q=mglPoint(NAN,NAN);

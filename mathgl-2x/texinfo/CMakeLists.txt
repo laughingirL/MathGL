@@ -1,4 +1,3 @@
-if(MGL_HAVE_DOC)
 	set(MGL_EXTA light)
 	set(MGL_PNG alpha area aspect axial axis barh bars belt boxplot
 		box boxs candle chart cloud colorbar combined cones conta contd
@@ -44,18 +43,20 @@ if(MGL_HAVE_DOC)
 			DEPENDS mgl_example
 			WORKING_DIRECTORY ${MGL_OUT}/small )
 		set(MGL_PNG_J ${MGL_PNG_J} ${MGL_OUT}/json/${SAMPLE}.json)
+if(MGL_HAVE_DOC_JSON)
 		add_custom_command(OUTPUT ${MGL_OUT}/json/${SAMPLE}.json
 			COMMAND mgl_example -json -kind=${SAMPLE}
 #			COMMAND ${CMAKE_BINARY_DIR}/examples/mgl_example -json -kind=${SAMPLE}
 			DEPENDS mgl_example
 			WORKING_DIRECTORY ${MGL_OUT}/json )
-if(MGL_HAVE_PDF)
+endif(MGL_HAVE_DOC_JSON)
+if(MGL_HAVE_DOC_PRC)
 		set(MGL_PNG_D ${MGL_PNG_D} ${MGL_OUT}/pdf/${SAMPLE}.pdf)
 		add_custom_command(OUTPUT ${MGL_OUT}/pdf/${SAMPLE}.pdf
 			COMMAND mgl_example -pdf -kind=${SAMPLE}
 			DEPENDS mgl_example
 			WORKING_DIRECTORY ${MGL_OUT}/pdf )
-endif(MGL_HAVE_PDF)
+endif(MGL_HAVE_DOC_PRC)
 	endforeach(SAMPLE)
 
 	foreach(SAMPLE ${MGL_EXTRA})
@@ -72,9 +73,9 @@ endif(MGL_HAVE_PDF)
 	endforeach(SAMPLE)
 
 	set(list_texi_files_en overview_en.texi example_en.texi ex_mgl_en.texi parse_en.texi formats_en.texi udav_en.texi symbols_en.texi
-		core_en.texi concept_en.texi widget_en.texi data_en.texi other_en.texi appendix_en.texi fdl.texi )
+		core_en.texi concept_en.texi widget_en.texi data_en.texi other_en.texi appendix_en.texi fdl.texi version.texi )
 	set(list_texi_files_ru overview_ru.texi example_ru.texi ex_mgl_ru.texi parse_ru.texi formats_ru.texi udav_ru.texi symbols_ru.texi
-		core_ru.texi concept_ru.texi widget_ru.texi data_ru.texi other_ru.texi appendix_ru.texi fdl.texi )
+		core_ru.texi concept_ru.texi widget_ru.texi data_ru.texi other_ru.texi appendix_ru.texi fdl.texi version.texi )
 
 # 	add_custom_command(OUTPUT ${MGL_OUT}/web_en/web_en.html
 # 		COMMAND ${findth} -I=${MGL_OUT}/png --split=section -o web_en ${MGL_TEX}/web_en.texi
@@ -186,4 +187,3 @@ endif(MGL_HAVE_PDF)
 	install(FILES ${MGL_TEX}/mgl.5 DESTINATION ${MGL_MAN_PATH}/man5)
 # TODO: try to install all mathgl*.info* in future!!!
 	install(FILES ${MGL_OUT}/mathgl_en.info ${MGL_OUT}/mathgl_en.info-1 ${MGL_OUT}/mathgl_en.info-2 DESTINATION ${MGL_INFO_PATH})
-endif(MGL_HAVE_DOC)
