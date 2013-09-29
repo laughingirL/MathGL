@@ -903,8 +903,8 @@ void mglCanvas::fast_draw(const mglPnt &p1, const mglPnt &p2, const mglDrawReg *
 
 	x1 = long(p1.x<p2.x?p1.x:p2.x);	y1 = long(p1.y<p2.y?p1.y:p2.y);	// bounding box
 	x2 = long(p1.x>p2.x?p1.x:p2.x);	y2 = long(p1.y>p2.y?p1.y:p2.y);
-	x1=x1>dr->x1?x1:dr->x1;	x2=x2<dr->x2?x2:dr->x2-1;
-	y1=y1>dr->y1?y1:dr->y1;	y2=y2<dr->y2?y2:dr->y2-1;
+	x1=x1>dr->x1?x1:dr->x1;	x2=x2<dr->x2?x2:dr->x2;
+	y1=y1>dr->y1?y1:dr->y1;	y2=y2<dr->y2?y2:dr->y2;
 	if(x1>x2 || y1>y2)	return;
 
 	if(hor && d.x!=0)	for(long i=x1;i<=x2;i++)
@@ -979,141 +979,376 @@ void mglCanvas::pnt_pix(long i, long j, const mglPnt &p, const mglDrawReg *dr)
 //-----------------------------------------------------------------------------
 void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 {
-	unsigned char cs[4];	col2int(q,cs,d->ObjId);	cs[3] = size>0 ? 255 : 255*q.t;
+	unsigned char cs[4], ca;	col2int(q,cs,d->ObjId);	ca = cs[3] = size>0 ? 255 : 255*q.t;
 	mglPnt p0=q,p1=q,p2=q,p3=q;
-	mreal ss=fabs(size);
+	mreal ss=fabs(size), pw=1,dpw=3;
 
 	if(type=='.' || ss==0)
 	{
-		if(d)	d->PenWidth = ss?ss:sqrt(font_factor/400);
-		pnt_draw(q,d);
+		if(d)	pw = 3*(ss?ss:sqrt(font_factor/400));
+		long x1 = long(p1.x<p2.x?p1.x:p2.x), y1 = long(p1.y<p2.y?p1.y:p2.y);	// bounding box
+		long x2 = long(p1.x>p2.x?p1.x:p2.x), y2 = long(p1.y>p2.y?p1.y:p2.y);
+		x1 -= pw+3.5;	y1 -= pw+3.5;	x2 += pw+3.5;	y2 += pw+3.5;
+		x1=x1>d->x1?x1:d->x1;	x2=x2<d->x2?x2:d->x2;
+		y1=y1>d->y1?y1:d->y1;	y2=y2<d->y2?y2:d->y2;
+		if(x1>x2 || y1>y2)	return;
+
+		if(d->ObjId==HighId)	{	pw *= 2;	dpw=2;	}
+		for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
+		{
+			register float dx=i-q.x, dy=j-q.y, v=dx*dx+dy*dy;
+			register int sum = v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+			cs[3] = ca*sum/255;
+			pnt_plot(i,j,q.z+1,cs,d->ObjId);
+		}
 	}
 	else
 	{
 		if(d)
 		{
 			d->PDef = MGL_SOLID_MASK;	d->angle = 0;
-			d->PenWidth*=fabs(50*size);
-			if(d->PenWidth<1)	d->PenWidth=1;
+			pw = d->PenWidth*fabs(50*size);
+			if(pw<1)	pw=1;
 		}
 		if(!strchr("xsSoO",type))	ss *= 1.1;
+		if(d->ObjId==HighId)	{	pw *= 2;	dpw=2;	}
+
+		long x1 = long(p1.x<p2.x?p1.x:p2.x), y1 = long(p1.y<p2.y?p1.y:p2.y);	// bounding box
+		long x2 = long(p1.x>p2.x?p1.x:p2.x), y2 = long(p1.y>p2.y?p1.y:p2.y);
+		register mreal dd = ss+pw+3.5;
+		x1 -= dd;	y1 -= dd;	x2 += dd;	y2 += dd;
+		x1=x1>d->x1?x1:d->x1;	x2=x2<d->x2?x2:d->x2;
+		y1=y1>d->y1?y1:d->y1;	y2=y2<d->y2?y2:d->y2;
+		if(x1>x2 || y1>y2)	return;
+
 		switch(type)
 		{
 		case 'P':
-			p0.x = q.x-ss;	p0.y = q.y-ss;	p1.x = q.x+ss;	p1.y = q.y-ss;
-			p2.x = q.x+ss;	p2.y = q.y+ss;	p3.x = q.x-ss;	p3.y = q.y+ss;
-			line_draw(p0,p1,d);	line_draw(p1,p2,d);
-			line_draw(p2,p3,d);	line_draw(p3,p0,d);
+			for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
+			{
+				register float dx=i-q.x, dy=j-q.y, v,u;
+				register int sum=0;
+				u = fabs(dy)-ss;	v = (dx-ss)*(dx-ss)+(u<0?0:u*u);
+				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				u = fabs(dy)-ss;	v = (dx+ss)*(dx+ss)+(u<0?0:u*u);
+				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				u = fabs(dy)-ss;	v = dx*dx+(u<0?0:u*u);
+				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				u = fabs(dx)-ss;	v = (dy-ss)*(dy-ss)+(u<0?0:u*u);
+				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				u = fabs(dx)-ss;	v = (dy+ss)*(dy+ss)+(u<0?0:u*u);
+				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				u = fabs(dx)-ss;	v = dy*dy+(u<0?0:u*u);
+				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum = sum>255?255:sum;	cs[3] = ca*sum/255;
+				pnt_plot(i,j,q.z+1,cs,d->ObjId);
+			}
+			break;
 		case '+':
-			p0.x = q.x-ss;	p0.y = q.y;	p1.x = q.x+ss;	p1.y = q.y;	line_draw(p0,p1,d);
-			p2.x = q.x;	p2.y = q.y-ss;	p3.x = q.x;	p3.y = q.y+ss;	line_draw(p2,p3,d);
+			for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
+			{
+				register float dx=i-q.x, dy=j-q.y, v,u;
+				register int sum=0;
+				u = fabs(dy)-ss;	v = dx*dx+(u<0?0:u*u);
+				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				u = fabs(dx)-ss;	v = dy*dy+(u<0?0:u*u);
+				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum = sum>255?255:sum;	cs[3] = ca*sum/255;
+				pnt_plot(i,j,q.z+1,cs,d->ObjId);
+			}
 			break;
 		case 'X':
-			p0.x = q.x-ss;	p0.y = q.y-ss;	p1.x = q.x+ss;	p1.y = q.y-ss;
-			p2.x = q.x+ss;	p2.y = q.y+ss;	p3.x = q.x-ss;	p3.y = q.y+ss;
-			line_draw(p0,p1,d);	line_draw(p1,p2,d);
-			line_draw(p2,p3,d);	line_draw(p3,p0,d);
+			for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
+			{
+				register float dx=i-q.x, dy=j-q.y, v,u;
+				register int sum=0;
+				u = fabs(dy)-ss;	v = (dx-ss)*(dx-ss)+(u<0?0:u*u);
+				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				u = fabs(dy)-ss;	v = (dx+ss)*(dx+ss)+(u<0?0:u*u);
+				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				u = fabs(dx)-ss;	v = (dy-ss)*(dy-ss)+(u<0?0:u*u);
+				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				u = fabs(dx)-ss;	v = (dy+ss)*(dy+ss)+(u<0?0:u*u);
+				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+
+				u = fabs(dx+dy)-2*ss;	v = dx-dy;	v = v*v+(u<0?0:u*u);
+				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				u = fabs(dx-dy)-2*ss;	v = dx+dy;	v = v*v+(u<0?0:u*u);
+				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+
+				sum = sum>255?255:sum;	cs[3] = ca*sum/255;
+				pnt_plot(i,j,q.z+1,cs,d->ObjId);
+			}
+			break;
 		case 'x':
-			p0.x = q.x-ss;	p0.y = q.y-ss;	p1.x = q.x+ss;	p1.y = q.y+ss;	line_draw(p0,p1,d);
-			p2.x = q.x+ss;	p2.y = q.y-ss;	p3.x = q.x-ss;	p3.y = q.y+ss;	line_draw(p2,p3,d);
+			for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
+			{
+				register float dx=i-q.x, dy=j-q.y, v,u;
+				register int sum=0;
+				u = fabs(dx+dy)-2*ss;	v = dx-dy;	v = v*v+(u<0?0:u*u);
+				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				u = fabs(dx-dy)-2*ss;	v = dx+dy;	v = v*v+(u<0?0:u*u);
+				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum = sum>255?255:sum;	cs[3] = ca*sum/255;
+				pnt_plot(i,j,q.z+1,cs,d->ObjId);
+			}
 			break;
 		case 'S':
-			p0.x = q.x-ss;	p0.y = q.y-ss;	p1.x = q.x-ss;	p1.y = q.y+ss;
-			p2.x= q.x+ss;	p2.y= q.y+ss;	p3.x = q.x+ss;	p3.y = q.y-ss;
-			quad_draw(p0,p1,p3,p2,d);
+			for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
+			{
+				register float dx=i-q.x, dy=j-q.y, v,u;
+				u = fabs(dy)-ss;	if(u<0)	u=0;
+				v = fabs(dx)-ss;	if(v<0)	v=0;	v = u*u+v*v;
+				register int sum = v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				cs[3] = ca*sum/255;
+				pnt_plot(i,j,q.z+1,cs,d->ObjId);
+			}
+			break;
 		case 's':
-			p0.x = q.x-ss;	p0.y = q.y-ss;	p1.x = q.x+ss;	p1.y = q.y-ss;
-			p2.x = q.x+ss;	p2.y = q.y+ss;	p3.x = q.x-ss;	p3.y = q.y+ss;
-			line_draw(p0,p1,d);	line_draw(p1,p2,d);
-			line_draw(p2,p3,d);	line_draw(p3,p0,d);
+			for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
+			{
+				register float dx=i-q.x, dy=j-q.y, v,u;
+				register int sum=0;
+				u = fabs(dy)-ss;	v = (dx-ss)*(dx-ss)+(u<0?0:u*u);
+				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				u = fabs(dy)-ss;	v = (dx+ss)*(dx+ss)+(u<0?0:u*u);
+				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				u = fabs(dx)-ss;	v = (dy-ss)*(dy-ss)+(u<0?0:u*u);
+				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				u = fabs(dx)-ss;	v = (dy+ss)*(dy+ss)+(u<0?0:u*u);
+				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum = sum>255?255:sum;	cs[3] = ca*sum/255;
+				pnt_plot(i,j,q.z+1,cs,d->ObjId);
+			}
 			break;
 		case 'D':
-			p0.x = q.x;	p0.y = q.y-ss;	p1.x = q.x+ss;	p1.y = q.y;
-			p2.x= q.x;	p2.y= q.y+ss;	p3.x = q.x-ss;	p3.y = q.y;
-			quad_draw(p0,p1,p3,p2,d);
+			for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
+			{
+				register float dx=i-q.x, dy=j-q.y, v,u;
+				u = fabs(dx-dy)-ss;	if(u<0)	u=0;
+				v = fabs(dx+dy)-ss;	if(v<0)	v=0;	v = u*u+v*v;
+				register int sum = v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				cs[3] = ca*sum/255;
+				pnt_plot(i,j,q.z+1,cs,d->ObjId);
+			}
+			break;
 		case 'd':
-			p0.x = q.x;	p0.y = q.y-ss;	p1.x = q.x+ss;	p1.y = q.y;
-			p2.x = q.x;	p2.y = q.y+ss;	p3.x = q.x-ss;	p3.y = q.y;
-			line_draw(p0,p1,d);	line_draw(p1,p2,d);
-			line_draw(p2,p3,d);	line_draw(p3,p0,d);
+			for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
+			{
+				register float dx=i-q.x, dy=j-q.y, v,u;
+				register int sum=0;
+				u = fabs(dx+dy)-ss;	v = (dx-dy-ss)*(dx-dy-ss)+(u<0?0:u*u);
+				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				u = fabs(dx+dy)-ss;	v = (dx-dy+ss)*(dx-dy+ss)+(u<0?0:u*u);
+				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				u = fabs(dx-dy)-ss;	v = (dx+dy-ss)*(dx+dy-ss)+(u<0?0:u*u);
+				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				u = fabs(dx-dy)-ss;	v = (dx+dy+ss)*(dx+dy+ss)+(u<0?0:u*u);
+				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum = sum>255?255:sum;	cs[3] = ca*sum/255;
+				pnt_plot(i,j,q.z+1,cs,d->ObjId);
+			}
 			break;
 		case 'Y':
-			p1.x = q.x;	p1.y = q.y-ss;	line_draw(q,p1,d);
-			p2.x = q.x-0.8*ss;	p2.y = q.y+0.6*ss;	line_draw(q,p2,d);
-			p3.x = q.x+0.8*ss;	p3.y = q.y+0.6*ss;	line_draw(q,p3,d);
+			for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
+			{
+				register float dx=i-q.x, dy=j-q.y, v,u;
+				register int sum=0;
+				u = fabs(dy+ss/2)-ss/2;	v = dx*dx+(u<0?0:u*u);
+				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				u = fabs(0.87*dx+0.5*dy-ss/2)-ss/2;	v = (0.5*dx-0.87*dy)*(0.5*dx-0.87*dy)+(u<0?0:u*u);
+				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				u = fabs(-0.87*dx+0.5*dy-ss/2)-ss/2;	v = (0.5*dx+0.87*dy)*(0.5*dx+0.87*dy)+(u<0?0:u*u);
+				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum = sum>255?255:sum;	cs[3] = ca*sum/255;
+				pnt_plot(i,j,q.z+1,cs,d->ObjId);
+			}
 			break;
 		case '*':
-			p0.x = q.x-ss;		p0.y = q.y;
-			p1.x = q.x+ss;		p1.y = q.y;	line_draw(p0,p1,d);
-			p0.x = q.x-0.6*ss;	p0.y = q.y-0.8*ss;
-			p1.x = q.x+0.6*ss;	p1.y = q.y+0.8*ss;	line_draw(p0,p1,d);
-			p0.x = q.x-0.6*ss;	p0.y = q.y+0.8*ss;
-			p1.x = q.x+0.6*ss;	p1.y = q.y-0.8*ss;	line_draw(p0,p1,d);
+			for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
+			{
+				register float dx=i-q.x, dy=j-q.y, v,u;
+				register int sum=0;
+				u = fabs(dy)-ss;	v = dx*dx+(u<0?0:u*u);
+				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				u = fabs(0.87*dx+0.5*dy)-ss;	v = (0.5*dx-0.87*dy)*(0.5*dx-0.87*dy)+(u<0?0:u*u);
+				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				u = fabs(-0.87*dx+0.5*dy)-ss;	v = (0.5*dx+0.87*dy)*(0.5*dx+0.87*dy)+(u<0?0:u*u);
+				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum = sum>255?255:sum;	cs[3] = ca*sum/255;
+				pnt_plot(i,j,q.z+1,cs,d->ObjId);
+			}
 			break;
 		case 'T':
-			p0.x = q.x-ss;	p0.y = q.y-ss/2;
-			p1.x = q.x+ss;	p1.y = q.y-ss/2;
-			p2.x= q.x;		p2.y= q.y+ss;
-			trig_draw(p0,p1,p2,false,d);
-		case '^':
-			p0.x = q.x-ss;	p0.y = q.y-ss/2;
-			p1.x = q.x+ss;	p1.y = q.y-ss/2;
-			p2.x= q.x;		p2.y= q.y+ss;
-			line_draw(p0,p1,d);	line_draw(p1,p2,d);
-			line_draw(p2,p0,d);	break;
-		case 'V':
-			p0.x = q.x-ss;	p0.y = q.y+ss/2;
-			p1.x = q.x+ss;	p1.y = q.y+ss/2;
-			p2.x= q.x;		p2.y= q.y-ss;
-			trig_draw(p0,p1,p2,false,d);
-		case 'v':
-			p0.x = q.x-ss;	p0.y = q.y+ss/2;
-			p1.x = q.x+ss;	p1.y = q.y+ss/2;
-			p2.x= q.x;		p2.y= q.y-ss;
-			line_draw(p0,p1,d);	line_draw(p1,p2,d);
-			line_draw(p2,p0,d);	break;
-		case 'L':
-			p0.x = q.x+ss/2;	p0.y = q.y+ss;
-			p1.x = q.x+ss/2;	p1.y = q.y-ss;
-			p2.x= q.x-ss;		p2.y= q.y;
-			trig_draw(p0,p1,p2,false,d);
-		case '<':
-			p0.x = q.x+ss/2;	p0.y = q.y+ss;
-			p1.x = q.x+ss/2;	p1.y = q.y-ss;
-			p2.x= q.x-ss;		p2.y= q.y;
-			line_draw(p0,p1,d);	line_draw(p1,p2,d);
-			line_draw(p2,p0,d);	break;
-		case 'R':
-			p0.x = q.x-ss/2;	p0.y = q.y+ss;
-			p1.x = q.x-ss/2;	p1.y = q.y-ss;
-			p2.x= q.x+ss;		p2.y= q.y;
-			trig_draw(p0,p1,p2,false,d);
-		case '>':
-			p0.x = q.x-ss/2;	p0.y = q.y+ss;
-			p1.x = q.x-ss/2;	p1.y = q.y-ss;
-			p2.x= q.x+ss;		p2.y= q.y;
-			line_draw(p0,p1,d);	line_draw(p1,p2,d);
-			line_draw(p2,p0,d);	break;
-		case 'O':
-			for(long j=long(-ss);j<=long(ss);j++)	for(long i=long(-ss);i<=long(ss);i++)
+			for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
 			{
-				register long x=long(q.x)+i, y=long(q.y)+j;
-				if(i*i+j*j>=ss*ss || !d || x<d->x1 || x>d->x2 || y<d->y1 || y>d->y2)	continue;
-				pnt_plot(x,y,q.z+1,cs,d->ObjId);
+				register float dx=i-q.x, dy=j-q.y, v,u;
+				u=dy/1.5+ss/3;	v=(dx+ss-u)/2;
+				if(u>0 && v>0 && u+v<ss)	cs[3]=ca;
+				else
+				{
+					register int sum=0;
+					u = fabs(dx)-ss;	v = dy+ss/2;	v = v*v+(u<0?0:u*u);
+					sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+					u = fabs(0.55*dx+0.83*dy)-0.9*ss;	v = 0.83*dx-0.55*dy+0.55*ss;	v = v*v+(u<0?0:u*u);
+					sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+					u = fabs(0.55*dx-0.83*dy)-0.9*ss;	v = 0.83*dx+0.55*dy-0.55*ss;	v = v*v+(u<0?0:u*u);
+					sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+					sum = sum>255?255:sum;	cs[3] = ca*sum/255;
+				}
+				pnt_plot(i,j,q.z+1,cs,d->ObjId);
 			}
-		case 'o':
-			for(long i=0;i<=20;i++)	// TODO copy from mark_pix()?!
+			break;
+		case '^':
+			for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
 			{
-				p0 = p1;	p1.x = q.x+ss*cos(i*M_PI/10);	p1.y = q.y+ss*sin(i*M_PI/10);
-				if(i>0)	line_draw(p0,p1,d);
+				register float dx=i-q.x, dy=j-q.y, v,u;
+				register int sum=0;
+				u = fabs(dx)-ss;	v = dy+ss/2;	v = v*v+(u<0?0:u*u);
+				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				u = fabs(0.55*dx+0.83*dy)-0.9*ss;	v = 0.83*dx-0.55*dy+0.55*ss;	v = v*v+(u<0?0:u*u);
+				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				u = fabs(0.55*dx-0.83*dy)-0.9*ss;	v = 0.83*dx+0.55*dy-0.55*ss;	v = v*v+(u<0?0:u*u);
+				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum = sum>255?255:sum;	cs[3] = ca*sum/255;
+				pnt_plot(i,j,q.z+1,cs,d->ObjId);
+			}
+			break;
+		case 'V':
+			for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
+			{
+				register float dx=i-q.x, dy=j-q.y, v,u;
+				u=-dy/1.5+ss/3;	v=(dx+ss-u)/2;
+				if(u>0 && v>0 && u+v<ss)	cs[3]=ca;
+				else
+				{
+					register int sum=0;
+					u = fabs(dx)-ss;	v = dy-ss/2;	v = v*v+(u<0?0:u*u);
+					sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+					u = fabs(0.55*dx+0.83*dy)-0.9*ss;	v = 0.83*dx-0.55*dy-0.55*ss;	v = v*v+(u<0?0:u*u);
+					sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+					u = fabs(0.55*dx-0.83*dy)-0.9*ss;	v = 0.83*dx+0.55*dy+0.55*ss;	v = v*v+(u<0?0:u*u);
+					sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+					sum = sum>255?255:sum;	cs[3] = ca*sum/255;
+				}
+				pnt_plot(i,j,q.z+1,cs,d->ObjId);
+			}
+			break;
+		case 'v':
+			for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
+			{
+				register float dx=i-q.x, dy=j-q.y, v,u;
+				register int sum=0;
+				u = fabs(dx)-ss;	v = dy-ss/2;	v = v*v+(u<0?0:u*u);
+				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				u = fabs(0.55*dx+0.83*dy)-0.9*ss;	v = 0.83*dx-0.55*dy-0.55*ss;	v = v*v+(u<0?0:u*u);
+				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				u = fabs(0.55*dx-0.83*dy)-0.9*ss;	v = 0.83*dx+0.55*dy+0.55*ss;	v = v*v+(u<0?0:u*u);
+				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum = sum>255?255:sum;	cs[3] = ca*sum/255;
+				pnt_plot(i,j,q.z+1,cs,d->ObjId);
+			}
+			break;
+		case 'L':
+			for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
+			{
+				register float dx=i-q.x, dy=j-q.y, v,u;
+				u=-dx/1.5+ss/3;	v=(dy+ss-u)/2;
+				if(u>0 && v>0 && u+v<ss)	cs[3]=ca;
+				else
+				{
+					register int sum=0;
+					u = fabs(dy)-ss;	v = dx-ss/2;	v = v*v+(u<0?0:u*u);
+					sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+					u = fabs(0.55*dy+0.83*dx)-0.9*ss;	v = 0.83*dy-0.55*dx-0.55*ss;	v = v*v+(u<0?0:u*u);
+					sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+					u = fabs(0.55*dy-0.83*dx)-0.9*ss;	v = 0.83*dy+0.55*dx+0.55*ss;	v = v*v+(u<0?0:u*u);
+					sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+					sum = sum>255?255:sum;	cs[3] = ca*sum/255;
+				}
+				pnt_plot(i,j,q.z+1,cs,d->ObjId);
+			}
+			break;
+		case '<':
+			for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
+			{
+				register float dx=i-q.x, dy=j-q.y, v,u;
+				register int sum=0;
+				u = fabs(dy)-ss;	v = dx-ss/2;	v = v*v+(u<0?0:u*u);
+				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				u = fabs(0.55*dy+0.83*dx)-0.9*ss;	v = 0.83*dy-0.55*dx-0.55*ss;	v = v*v+(u<0?0:u*u);
+				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				u = fabs(0.55*dy-0.83*dx)-0.9*ss;	v = 0.83*dy+0.55*dx+0.55*ss;	v = v*v+(u<0?0:u*u);
+				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum = sum>255?255:sum;	cs[3] = ca*sum/255;
+				pnt_plot(i,j,q.z+1,cs,d->ObjId);
+			}
+			break;
+		case 'R':
+			for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
+			{
+				register float dx=i-q.x, dy=j-q.y, v,u;
+				u=dx/1.5+ss/3;	v=(dy+ss-u)/2;
+				if(u>0 && v>0 && u+v<ss)	cs[3]=ca;
+				else
+				{
+					register int sum=0;
+					u = fabs(dy)-ss;	v = dx+ss/2;	v = v*v+(u<0?0:u*u);
+					sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+					u = fabs(0.55*dy+0.83*dx)-0.9*ss;	v = 0.83*dy-0.55*dx+0.55*ss;	v = v*v+(u<0?0:u*u);
+					sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+					u = fabs(0.55*dy-0.83*dx)-0.9*ss;	v = 0.83*dy+0.55*dx-0.55*ss;	v = v*v+(u<0?0:u*u);
+					sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+					sum = sum>255?255:sum;	cs[3] = ca*sum/255;
+				}
+				pnt_plot(i,j,q.z+1,cs,d->ObjId);
+			}
+			break;
+		case '>':
+			for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
+			{
+				register float dx=i-q.x, dy=j-q.y, v,u;
+				register int sum=0;
+				u = fabs(dy)-ss;	v = dx+ss/2;	v = v*v+(u<0?0:u*u);
+				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				u = fabs(0.55*dy+0.83*dx)-0.9*ss;	v = 0.83*dy-0.55*dx+0.55*ss;	v = v*v+(u<0?0:u*u);
+				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				u = fabs(0.55*dy-0.83*dx)-0.9*ss;	v = 0.83*dy+0.55*dx-0.55*ss;	v = v*v+(u<0?0:u*u);
+				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum = sum>255?255:sum;	cs[3] = ca*sum/255;
+				pnt_plot(i,j,q.z+1,cs,d->ObjId);
+			}
+			break;
+		case 'O':
+			for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
+			{
+				register float dx=i-q.x, dy=j-q.y, v;
+				v = hypot(dx,dy)-ss;	v=v<0?0:v*v;
+				register int sum = v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				cs[3] = ca*sum/255;
+				pnt_plot(i,j,q.z+1,cs,d->ObjId);
+			}
+			break;
+		case 'o':
+			for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
+			{
+				register float dx=i-q.x, dy=j-q.y, v;
+				v = hypot(dx,dy)-ss;	v=v*v;
+				register int sum = v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				cs[3] = ca*sum/255;
+				pnt_plot(i,j,q.z+1,cs,d->ObjId);
 			}
 			break;
 		case 'C':
-			pnt_draw(q,d);
-			for(long i=0;i<=20;i++)
+			for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
 			{
-				p0 = p1;	p1.x = q.x+ss*cos(i*M_PI/10);	p1.y = q.y+ss*sin(i*M_PI/10);
-				if(i>0)	line_draw(p0,p1,d);
+				register float dx=i-q.x, dy=j-q.y, v;
+				v = hypot(dx,dy)-ss;	v=v*v;
+				register int sum = v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				v = dx*dx+dy*dy;
+				sum += v<(2*pw-1)*(2*pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-2*pw)/2));
+				sum = sum>255?255:sum;	cs[3] = ca*sum/255;		cs[3] = ca*sum/255;
+				pnt_plot(i,j,q.z+1,cs,d->ObjId);
 			}
 			break;
 		}

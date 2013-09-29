@@ -68,16 +68,13 @@ void smgl_text(mglGraph *gr);	// text drawing
 void smgl_surf(mglGraph *gr);
 void test(mglGraph *gr)
 {
-	gr->Puts(mglPoint(), "\\i xxx");
-	mglExpr eq("x");
-	printf("res=%g\n",eq.Eval(2));
+	gr->Axis();	gr->WriteJSON("test.json");
 	return;
 
 	mglParse par;
 	par.AllowSetSize(true);
 	setlocale(LC_CTYPE, "");
-	par.Execute(gr,"new a 10 '0.1+rnd':cumsum a 'x':norm a -1 1:new b 10:fill b 'sin(pi*v)' a\n"
-		"plot a b ' o':axis:new r 100\nrefill r a b\nplot r 'r'\n");
+	par.Execute(gr,"ball 0 0 '+'\n");
 
 //	FILE *fp=fopen("/home/balakin/progr/mathgl-code/mathgl-2x/build/test.mgl","r");
 //	par.Execute(gr,fp,true);

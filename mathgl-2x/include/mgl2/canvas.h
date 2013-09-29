@@ -365,8 +365,8 @@ protected:
 	mreal text_plot(long p,const wchar_t *text,const char *fnt,mreal size=-1,mreal sh=0,mreal  col=-('k'), bool rot=true);
 
 	void add_prim(mglPrim &a);	///< add primitive to list
-	void mark_draw(const mglPnt &p, char type, mreal size, mglDrawReg *d);
 	void arrow_draw(const mglPnt &p1, const mglPnt &p2, char st, mreal size, const mglDrawReg *d);
+	virtual void mark_draw(const mglPnt &p, char type, mreal size, mglDrawReg *d);
 	virtual void line_draw(const mglPnt &p1, const mglPnt &p2, const mglDrawReg *d);
 	virtual void trig_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, bool anorm, const mglDrawReg *d);
 	virtual void quad_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, const mglPnt &p4, const mglDrawReg *d);

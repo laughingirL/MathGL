@@ -36,7 +36,7 @@ public:
 	int NewFrame();
 	void EndFrame();
 	void DelFrame(long ){}
-	
+
 	bool Alpha(bool enable);
 	void Fog(mreal d, mreal dz=0.25);
 	bool Light(bool enable);
@@ -54,6 +54,7 @@ protected:
 	void trig_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, bool anorm, const mglDrawReg *d);
 	void quad_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, const mglPnt &p4, const mglDrawReg *d);
 	void pnt_draw(const mglPnt &p, const mglDrawReg *d);
+	void mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d);
 
 	unsigned char **GetRGBLines(long &w, long &h, unsigned char *&f, bool solid=true);
 	void LightScale(const mglMatrix *M);

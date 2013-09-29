@@ -32,7 +32,7 @@ void MGL_EXPORT mgl_mark(HMGL gr, double x, double y, double z,const char *mark)
 	if(mgl_isnan(z))	z=2*gr->Max.z-gr->Min.z;
 	static int cgid=1;	gr->StartGroup("MarkS",cgid++);
 	long k = gr->AddPnt(mglPoint(x,y,z),gr->CDef,mglPoint(NAN),-1,3);
-	gr->mark_plot(k,mk); 	gr->AddActive(k);
+	gr->mark_plot(k,mk,gr->GetPenWidth()); 	gr->AddActive(k);
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------

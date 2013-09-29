@@ -372,6 +372,8 @@ public:
 	/// Clear unused points and primitives
 	void ClearUnused();
 
+	inline mreal GetPenWidth()	{	return PenWidth;	}
+
 	inline const mglMatrix *GetB()	const	{	return &B;	}
 	inline mglPoint GetPntP(long i) const
 	{	const mglPnt &p=Pnt[i];	return mglPoint(p.x,p.y,p.z);	}

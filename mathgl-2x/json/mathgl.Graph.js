@@ -258,7 +258,8 @@ mathgl.Graph.prototype.__mgl_draw_good = function(obj, ctx, skip) {
         switch(obj.prim[i][0])		// draw it depending on its type
         {
         case 0: // marks
-            ctx.lineWidth = obj.prim[i][7]*obj.prim[i][6]*50;
+//            ctx.lineWidth = obj.prim[i][7]*obj.prim[i][6]*50;
+            ctx.lineWidth = obj.prim[i][7]*obj.prim[i][6]*5;
             this.__mgl_draw_mark(ctx, obj.pp[n1][0], obj.pp[n1][1], n4, obj.prim[i][6], scl);
             break;
         case 1: // lines
@@ -546,34 +547,34 @@ mathgl.Graph.prototype.__mgl_line_glyph = function(ctx, x,y, f,solid,b) {
 }
 
 
-mathgl.Graph.prototype.moveLeft = function() { 
+mathgl.Graph.prototype.moveLeft = function() {
 	var b = this.__geometry.b;
 	var f = 0.1/Math.sqrt(b[0]*b[0]+b[1]*b[1]+b[2]*b[2]);
 	this.shiftAxis(f*b[0],f*b[1],f*b[2]);
 }
 
-mathgl.Graph.prototype.moveRight = function() { 
+mathgl.Graph.prototype.moveRight = function() {
 	var b = this.__geometry.b;
 	var f = -0.1/Math.sqrt(b[0]*b[0]+b[1]*b[1]+b[2]*b[2]);
 	this.shiftAxis(f*b[0],f*b[1],f*b[2]);
 }
 
-mathgl.Graph.prototype.moveUp = function() { 
+mathgl.Graph.prototype.moveUp = function() {
 	var b = this.__geometry.b;
 	var f = -0.1/Math.sqrt(b[3]*b[3]+b[4]*b[4]+b[5]*b[5]);
 	this.shiftAxis(-f*b[3],f*b[4],-f*b[5]);
 }
 
-mathgl.Graph.prototype.moveDown = function() { 
+mathgl.Graph.prototype.moveDown = function() {
 	var b = this.__geometry.b;
 	var f = 0.1/Math.sqrt(b[3]*b[3]+b[4]*b[4]+b[5]*b[5]);
 	this.shiftAxis(-f*b[3],f*b[4],-f*b[5]);
 }
 
-mathgl.Graph.prototype.zoomIn = function() { 
+mathgl.Graph.prototype.zoomIn = function() {
   this.zoomAxis(1.1);
 }
 
-mathgl.Graph.prototype.zoomOut = function() { 
+mathgl.Graph.prototype.zoomOut = function() {
   this.zoomAxis(1./1.1);
 }

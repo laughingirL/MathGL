@@ -531,12 +531,13 @@ std::string mglCanvas::GetJSON()
 	ClearUnused();	// clear unused points
 	std::string res;
 	size_t i,l=Pnt.size();
+	long factor = Width>1?10:10000;
 	res = res + mgl_sprintf("{\n\"width\":%d,\t\"height\":%d,\t\"depth\":%d,\t\"plotid\":\"%s\",\t\"npnts\":%lu,\t\"pnts\":[\n",
-			Width, Height, Depth, PlotId.c_str(), (unsigned long)l);
+			factor*Width, factor*Height, Depth, PlotId.c_str(), (unsigned long)l);
 	for(i=0;i<l;i++)
 	{
 		const mglPnt &q=Pnt[i];
-		res = res + mgl_sprintf("[%d,%d,%d]%c\n", int(q.xx), int(Height-q.yy), int(q.zz), i+1<l?',':' ');
+		res = res + mgl_sprintf("[%ld,%ld,%ld]%c\n", long(factor*q.xx), long(factor*(Height-q.yy)), long(factor*q.zz), i+1<l?',':' ');
 	}
 	l = Prm.size();
 	res = res + mgl_sprintf("],\t\"nprim\":%lu,\t\"prim\":[\n",(unsigned long)l);
@@ -559,11 +560,11 @@ std::string mglCanvas::GetJSON()
 		if(p.type==1 && n1>n2)	{	n1=p.n2;	n2=p.n1;	}
 		if(c.a==1 || p.type==0 || p.type==1 || p.type==4 || p.type==6)
 			res = res + mgl_sprintf("[%d,%ld,%ld,%ld,%ld,%d,%.3g,%.2g,%.2g,%.2g,\"#%02x%02x%02x\"]%c\n",
-				p.type, n1, n2, n3, n4, p.id, p.s, p.w==p.w?p.w:0, p.p==p.p?p.p:0,
+				p.type, n1, n2, n3, n4, p.id, factor*p.s, p.w==p.w?p.w:0, p.p==p.p?p.p:0,
 				0., int(255*c.r), int(255*c.g), int(255*c.b), i+1<l?',':' ');
 		else
 			res = res + mgl_sprintf("[%d,%ld,%ld,%ld,%ld,%d,%.3g,%.2g,%.2g,%.2g,\"rgba(%d,%d,%d,%.2g)\"]%c\n",
-				p.type, n1, n2, n3, n4, p.id, p.s, p.w==p.w?p.w:0, p.p==p.p?p.p:0,
+				p.type, n1, n2, n3, n4, p.id, factor*p.s, p.w==p.w?p.w:0, p.p==p.p?p.p:0,
 				0., int(255*c.r), int(255*c.g), int(255*c.b), c.a, i+1<l?',':' ');
 	}
 

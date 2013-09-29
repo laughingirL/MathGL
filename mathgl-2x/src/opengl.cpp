@@ -294,4 +294,145 @@ void mglCanvasGL::pnt_draw(const mglPnt &p1, const mglDrawReg *)
 	glEnd();
 }
 //-----------------------------------------------------------------------------
+void mglCanvasGL::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
+{
+	mglPnt p0=q,p1=q,p2=q,p3=q;
+	mreal ss=fabs(size);
 
+	if(type=='.' || ss==0)
+	{
+		if(d)	d->PenWidth = ss?ss:sqrt(font_factor/400);
+		pnt_draw(q,d);
+	}
+	else
+	{
+		if(d)
+		{
+			d->PDef = MGL_SOLID_MASK;	d->angle = 0;
+			d->PenWidth*=fabs(50*size);
+			if(d->PenWidth<1)	d->PenWidth=1;
+		}
+		if(!strchr("xsSoO",type))	ss *= 1.1;
+		switch(type)
+		{
+		case 'P':
+			p0.x = q.x-ss;	p0.y = q.y-ss;	p1.x = q.x+ss;	p1.y = q.y-ss;
+			p2.x = q.x+ss;	p2.y = q.y+ss;	p3.x = q.x-ss;	p3.y = q.y+ss;
+			line_draw(p0,p1,d);	line_draw(p1,p2,d);
+			line_draw(p2,p3,d);	line_draw(p3,p0,d);
+		case '+':
+			p0.x = q.x-ss;	p0.y = q.y;	p1.x = q.x+ss;	p1.y = q.y;	line_draw(p0,p1,d);
+			p2.x = q.x;	p2.y = q.y-ss;	p3.x = q.x;	p3.y = q.y+ss;	line_draw(p2,p3,d);
+			break;
+		case 'X':
+			p0.x = q.x-ss;	p0.y = q.y-ss;	p1.x = q.x+ss;	p1.y = q.y-ss;
+			p2.x = q.x+ss;	p2.y = q.y+ss;	p3.x = q.x-ss;	p3.y = q.y+ss;
+			line_draw(p0,p1,d);	line_draw(p1,p2,d);
+			line_draw(p2,p3,d);	line_draw(p3,p0,d);
+		case 'x':
+			p0.x = q.x-ss;	p0.y = q.y-ss;	p1.x = q.x+ss;	p1.y = q.y+ss;	line_draw(p0,p1,d);
+			p2.x = q.x+ss;	p2.y = q.y-ss;	p3.x = q.x-ss;	p3.y = q.y+ss;	line_draw(p2,p3,d);
+			break;
+		case 'S':
+			p0.x = q.x-ss;	p0.y = q.y-ss;	p1.x = q.x-ss;	p1.y = q.y+ss;
+			p2.x= q.x+ss;	p2.y= q.y+ss;	p3.x = q.x+ss;	p3.y = q.y-ss;
+			quad_draw(p0,p1,p3,p2,d);
+		case 's':
+			p0.x = q.x-ss;	p0.y = q.y-ss;	p1.x = q.x+ss;	p1.y = q.y-ss;
+			p2.x = q.x+ss;	p2.y = q.y+ss;	p3.x = q.x-ss;	p3.y = q.y+ss;
+			line_draw(p0,p1,d);	line_draw(p1,p2,d);
+			line_draw(p2,p3,d);	line_draw(p3,p0,d);
+			break;
+		case 'D':
+			p0.x = q.x;	p0.y = q.y-ss;	p1.x = q.x+ss;	p1.y = q.y;
+			p2.x= q.x;	p2.y= q.y+ss;	p3.x = q.x-ss;	p3.y = q.y;
+			quad_draw(p0,p1,p3,p2,d);
+		case 'd':
+			p0.x = q.x;	p0.y = q.y-ss;	p1.x = q.x+ss;	p1.y = q.y;
+			p2.x = q.x;	p2.y = q.y+ss;	p3.x = q.x-ss;	p3.y = q.y;
+			line_draw(p0,p1,d);	line_draw(p1,p2,d);
+			line_draw(p2,p3,d);	line_draw(p3,p0,d);
+			break;
+		case 'Y':
+			p1.x = q.x;	p1.y = q.y-ss;	line_draw(q,p1,d);
+			p2.x = q.x-0.8*ss;	p2.y = q.y+0.6*ss;	line_draw(q,p2,d);
+			p3.x = q.x+0.8*ss;	p3.y = q.y+0.6*ss;	line_draw(q,p3,d);
+			break;
+		case '*':
+			p0.x = q.x-ss;		p0.y = q.y;
+			p1.x = q.x+ss;		p1.y = q.y;	line_draw(p0,p1,d);
+			p0.x = q.x-0.6*ss;	p0.y = q.y-0.8*ss;
+			p1.x = q.x+0.6*ss;	p1.y = q.y+0.8*ss;	line_draw(p0,p1,d);
+			p0.x = q.x-0.6*ss;	p0.y = q.y+0.8*ss;
+			p1.x = q.x+0.6*ss;	p1.y = q.y-0.8*ss;	line_draw(p0,p1,d);
+			break;
+		case 'T':
+			p0.x = q.x-ss;	p0.y = q.y-ss/2;
+			p1.x = q.x+ss;	p1.y = q.y-ss/2;
+			p2.x= q.x;		p2.y= q.y+ss;
+			trig_draw(p0,p1,p2,false,d);
+		case '^':
+			p0.x = q.x-ss;	p0.y = q.y-ss/2;
+			p1.x = q.x+ss;	p1.y = q.y-ss/2;
+			p2.x= q.x;		p2.y= q.y+ss;
+			line_draw(p0,p1,d);	line_draw(p1,p2,d);
+			line_draw(p2,p0,d);	break;
+		case 'V':
+			p0.x = q.x-ss;	p0.y = q.y+ss/2;
+			p1.x = q.x+ss;	p1.y = q.y+ss/2;
+			p2.x= q.x;		p2.y= q.y-ss;
+			trig_draw(p0,p1,p2,false,d);
+		case 'v':
+			p0.x = q.x-ss;	p0.y = q.y+ss/2;
+			p1.x = q.x+ss;	p1.y = q.y+ss/2;
+			p2.x= q.x;		p2.y= q.y-ss;
+			line_draw(p0,p1,d);	line_draw(p1,p2,d);
+			line_draw(p2,p0,d);	break;
+		case 'L':
+			p0.x = q.x+ss/2;	p0.y = q.y+ss;
+			p1.x = q.x+ss/2;	p1.y = q.y-ss;
+			p2.x= q.x-ss;		p2.y= q.y;
+			trig_draw(p0,p1,p2,false,d);
+		case '<':
+			p0.x = q.x+ss/2;	p0.y = q.y+ss;
+			p1.x = q.x+ss/2;	p1.y = q.y-ss;
+			p2.x= q.x-ss;		p2.y= q.y;
+			line_draw(p0,p1,d);	line_draw(p1,p2,d);
+			line_draw(p2,p0,d);	break;
+		case 'R':
+			p0.x = q.x-ss/2;	p0.y = q.y+ss;
+			p1.x = q.x-ss/2;	p1.y = q.y-ss;
+			p2.x= q.x+ss;		p2.y= q.y;
+			trig_draw(p0,p1,p2,false,d);
+		case '>':
+			p0.x = q.x-ss/2;	p0.y = q.y+ss;
+			p1.x = q.x-ss/2;	p1.y = q.y-ss;
+			p2.x= q.x+ss;		p2.y= q.y;
+			line_draw(p0,p1,d);	line_draw(p1,p2,d);
+			line_draw(p2,p0,d);	break;
+		case 'O':
+/*			for(long j=long(-ss);j<=long(ss);j++)	for(long i=long(-ss);i<=long(ss);i++)
+			{
+				register long x=long(q.x)+i, y=long(q.y)+j;
+				if(i*i+j*j>=ss*ss || !d || x<d->x1 || x>d->x2 || y<d->y1 || y>d->y2)	continue;
+				pnt_plot(x,y,q.z+1,cs,d->ObjId);
+			}*/
+		case 'o':
+			for(long i=0;i<=20;i++)	// TODO copy from mark_pix()?!
+			{
+				p0 = p1;	p1.x = q.x+ss*cos(i*M_PI/10);	p1.y = q.y+ss*sin(i*M_PI/10);
+				if(i>0)	line_draw(p0,p1,d);
+			}
+			break;
+		case 'C':
+			pnt_draw(q,d);
+			for(long i=0;i<=20;i++)
+			{
+				p0 = p1;	p1.x = q.x+ss*cos(i*M_PI/10);	p1.y = q.y+ss*sin(i*M_PI/10);
+				if(i>0)	line_draw(p0,p1,d);
+			}
+			break;
+		}
+	}
+}
+//-----------------------------------------------------------------------------
