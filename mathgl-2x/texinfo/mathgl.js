@@ -246,8 +246,8 @@ var mgl_draw_good = function(obj, ctx, skip)
 		switch(obj.prim[i][0])		// draw it depending on its type
 		{
 		case 0: // marks
-//			var d = 0.35*(obj.width>obj.height?obj.height:obj.width)*scl;
-			ctx.lineWidth = obj.prim[i][7]*obj.prim[i][6]*50;
+//			ctx.lineWidth = obj.prim[i][7]*obj.prim[i][6]*50;
+			ctx.lineWidth = obj.prim[i][7]*obj.prim[i][6]*5;
 			mgl_draw_mark(ctx, obj.pp[n1][0], obj.pp[n1][1], n4, obj.prim[i][6], scl);
 			break;
 		case 1: // lines
@@ -294,12 +294,12 @@ var mgl_draw_good = function(obj, ctx, skip)
 			if(n3&8)
 			{
 				if(!(n3&4))	mgl_line_glyph(ctx, x,y, f,1,b);
-				mgl_line_glyph(ctx, x,y, f,0,b);
+				else	mgl_line_glyph(ctx, x,y, f,0,b);
 			}
 			else
 			{
 				if(!(n3&4)) mgl_fill_glyph(ctx, x,y, f,obj.glfs[n4],b);
-				mgl_wire_glyph(ctx, x,y, f,obj.glfs[n4],b);
+				else	mgl_wire_glyph(ctx, x,y, f,obj.glfs[n4],b);
 			}
 			break;
 		}
@@ -476,30 +476,39 @@ var mgl_draw_mark = function(ctx,x,y,st,size,d)
 // This function for internal use only!!!
 var mgl_fill_glyph = function(ctx, x,y, f,g,b)
 {
-	var xx,yy,j,xs,ys;
+	var xx,yy,j;
+	var np=0;	ctx.beginPath();
 	for(j=0;j<g[0];j++)
 	{
-		xx = x+f*g[2][6*j];	yy = y+f*g[2][6*j+1]; ctx.beginPath();
-		ctx.moveTo(b[4]+b[0]*xx+b[1]*yy, b[5]+b[2]*xx+b[3]*yy)
-		xx = x+f*g[2][6*j+2]; yy = y+f*g[2][6*j+3];
-		ctx.lineTo(b[4]+b[0]*xx+b[1]*yy, b[5]+b[2]*xx+b[3]*yy)
-		xx = x+f*g[2][6*j+4]; yy = y+f*g[2][6*j+5];
-		ctx.lineTo(b[4]+b[0]*xx+b[1]*yy, b[5]+b[2]*xx+b[3]*yy)
-		ctx.closePath();	ctx.fill();
+		xx = g[1][2*j]; yy = g[1][2*j+1];
+		if(xx==16383 && yy==16383)
+		{
+			ctx.closePath();	np = 1;
+		}
+		else if(np)
+		{
+			xx = x+f*xx;	yy = y+f*yy;	np = 0;
+			ctx.moveTo(b[4]+b[0]*xx+b[1]*yy, b[5]+b[2]*xx+b[3]*yy);
+		}
+		else
+		{
+			xx = x+f*xx;	yy = y+f*yy;
+			ctx.lineTo(b[4]+b[0]*xx+b[1]*yy, b[5]+b[2]*xx+b[3]*yy);
+		}
 	}
+	ctx.closePath();	ctx.fill('evenodd');
 }
 // This function for internal use only!!!
 var mgl_wire_glyph = function(ctx, x,y, f,g,b)
 {
-	var xx,yy,j,xs,ys;
-	var np=1;	ctx.beginPath();
-	for(j=0;j<g[1];j++)
+	var xx,yy,j;
+	var np=0;	ctx.beginPath();
+	for(j=0;j<g[0];j++)
 	{
-		xx = g[3][2*j]; yy = g[3][2*j+1];
+		xx = g[1][2*j]; yy = g[1][2*j+1];
 		if(xx==16383 && yy==16383)
 		{
-			ctx.closePath();	ctx.stroke();
-			ctx.beginPath();	np = 1;
+			ctx.closePath();	np = 1;
 		}
 		else if(np)
 		{

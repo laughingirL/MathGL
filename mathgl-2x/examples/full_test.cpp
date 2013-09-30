@@ -68,7 +68,7 @@ void smgl_text(mglGraph *gr);	// text drawing
 void smgl_surf(mglGraph *gr);
 void test(mglGraph *gr)
 {
-	gr->Axis();	gr->WriteJSON("test.json");
+	gr->Puts(mglPoint(),"b");	gr->WriteJSON("test.json");
 	return;
 
 	mglParse par;

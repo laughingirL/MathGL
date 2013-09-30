@@ -585,11 +585,11 @@ std::string mglCanvas::GetJSON()
 	for(i=0;i<l;i++)
 	{
 		const mglGlyph &g=Glf[i];
-		res = res + mgl_sprintf("[%ld,%ld,\n\t[", g.nt, g.nl);
-		register long j;
-		for(j=0;j<6*g.nt;j++)	res = res + mgl_sprintf("%d%c", g.trig[j], j+1<6*g.nt?',':' ');
-		res = res + mgl_sprintf("],\n\t[");
-		for(j=0;j<2*g.nl;j++)	res = res + mgl_sprintf("%d%c", g.line[j], j+1<2*g.nl?',':' ');
+		res = res + mgl_sprintf("[%ld,\n\t[", g.nl);
+//		res = res + mgl_sprintf("[%ld,%ld,\n\t[", g.nt, g.nl);
+//		for(long j=0;j<6*g.nt;j++)	res = res + mgl_sprintf("%d%c", g.trig[j], j+1<6*g.nt?',':' ');
+//		res = res + mgl_sprintf("],\n\t[");
+		for(long j=0;j<2*g.nl;j++)	res = res + mgl_sprintf("%d%c", g.line[j], j+1<2*g.nl?',':' ');
 		res = res + mgl_sprintf("]\n]%c\n", i+1<l?',':' ');
 	}
 	res = res + mgl_sprintf("]\n}\n");
