@@ -128,7 +128,7 @@ if(MGL_HAVE_MPI)
 #	include_directories(${MPI_C_INCLUDE_PATH})
 	include_directories(${MPI_CXX_INCLUDE_PATH})
 
-	set_target_properties(mgl-mpi PROPERTIES SOVERSION 7.0.0)
+	set_target_properties(mgl-mpi PROPERTIES SOVERSION ${MathGL_SOVERSION})
 	install(
 		TARGETS mgl-mpi mgl-mpi-static
 		RUNTIME DESTINATION bin
@@ -141,7 +141,7 @@ if(M_LIB)
 	target_link_libraries(mgl ${M_LIB})
 endif(M_LIB)
 
-set_target_properties(mgl PROPERTIES SOVERSION 7.0.0)
+set_target_properties(mgl PROPERTIES SOVERSION ${MathGL_SOVERSION})
 install(
 	TARGETS mgl mgl-static
 	RUNTIME DESTINATION bin

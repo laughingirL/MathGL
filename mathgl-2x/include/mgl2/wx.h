@@ -20,44 +20,15 @@
 #ifndef MGL_WX_H
 #define MGL_WX_H
 //-----------------------------------------------------------------------------
-#include <mgl2/base.h>
-//-----------------------------------------------------------------------------
-#ifdef __cplusplus
-extern "C" {
-#endif
-/// Creates WX window for plotting
-HMGL MGL_EXPORT mgl_create_graph_wx(int (*draw)(HMGL gr, void *p), const char *title, void *par, void (*load)(void *p));
-uintptr_t MGL_EXPORT mgl_create_graph_wx_(const char *title, int);
-/// Run main WX loop for event handling.
-int MGL_EXPORT mgl_wx_run();
-int MGL_EXPORT mgl_wx_run_();
-#ifdef __cplusplus
-}
-//-----------------------------------------------------------------------------
 #include <mgl2/wnd.h>
-//-----------------------------------------------------------------------------
-/// Wrapper class for windows displaying graphics
-class MGL_EXPORT mglWX : public mglWnd
-{
-public:
-	mglWX(const char *title="MathGL") : mglWnd()
-	{	gr = mgl_create_graph_wx(0,title,0,0);	}
-	mglWX(int (*draw)(HMGL gr, void *p), const char *title="MathGL", void *par=NULL, void (*load)(void *p)=0) : mglWnd()
-	{	gr = mgl_create_graph_wx(draw,title,par,load);	}
-	mglWX(int (*draw)(mglGraph *gr), const char *title="MathGL") : mglWnd()
-	{	gr = mgl_create_graph_wx(draw?mgl_draw_graph:0,title,(void*)draw,0);	}
-	mglWX(mglDraw *draw, const char *title="MathGL") : mglWnd()
-	{	gr = mgl_create_graph_wx(draw?mgl_draw_class:0,title,draw,mgl_reload_class);
-		mgl_set_click_func(gr, mgl_click_class);	}
-	int Run()	{	return mgl_wx_run();	}	///< Run main loop for event handling
-
-};
-//-----------------------------------------------------------------------------
 #include <wx/window.h>
 #include <wx/image.h>
 #include <wx/timer.h>
 #include <wx/bitmap.h>
 class mglCanvas;
+//-----------------------------------------------------------------------------
+/// Convert MathGL image to wxBitmap
+wxBitmap MGL_EXPORT ConvertFromGraph(HMGL gr);
 //-----------------------------------------------------------------------------
 /// Class is Wx widget which display MathGL graphics
 class MGL_EXPORT wxMathGL : public wxWindow
@@ -163,8 +134,6 @@ protected:
 	DECLARE_EVENT_TABLE()
 private:
 	int x0, y0, xe, ye;		///< Temporary variables for mouse
-	unsigned char *grBuf;
 };
 //-----------------------------------------------------------------------------
-#endif
 #endif

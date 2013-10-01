@@ -21,7 +21,7 @@
 #ifndef _MGL_FLTK_H_
 #define _MGL_FLTK_H_
 
-#include <mgl2/base.h>
+#include <mgl2/abstract.h>
 //-----------------------------------------------------------------------------
 #ifdef __cplusplus
 extern "C" {

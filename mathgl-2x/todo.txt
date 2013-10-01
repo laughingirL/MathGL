@@ -13,7 +13,7 @@ omp				28.5 	65.3 	25.7 	37.3		15.3/12.2	26.2/27.2
 A. Paper about MathGL!!!
 
 1. Export to X3D, COLLADA !!!
-2. GTK and WX window/widgets ???
+2. GTK window/widgets ???
 3. Labels at TriCont()
 4. Use libtcc for Fill() and Modify() functions only ???
 
@@ -30,8 +30,7 @@ A. Paper about MathGL!!!
 	u. Test FlowP + 3d
 
 11. Check centered curved text (see text2)
-14. Check wx + pthread in win32 ... may be I should disable pthread in wx.cpp ???
-16. test refill
+16. Refill() sample
 
 
 ============= DOCUMENTATION =============

@@ -17,6 +17,7 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+#include <wx/wx.h>
 #include "mgl2/wx.h"
 //-----------------------------------------------------------------------------
 int test_wnd(mglGraph *gr);
@@ -26,48 +27,54 @@ int sample_2(mglGraph *gr);
 int sample_3(mglGraph *gr);
 int sample_d(mglGraph *gr);
 //-----------------------------------------------------------------------------
-//#define PTHREAD_SAMPLE
-#ifdef PTHREAD_SAMPLE
-#include <pthread.h>
-#endif
-mglPoint pnt;  // some global variable for changable data
-void *mgl_wx_tmp(void *)	{	mgl_wx_run();	return 0;	}
-//-----------------------------------------------------------------------------
-int main(int argc,char **argv)
+class testApp : public wxApp
 {
-#ifdef PTHREAD_SAMPLE
-	mglGraphWX gr;
-	gr.Window(argc,argv,NULL,"test",0,0);  // create window
-	gr.ClfOnUpdate = false;
-	static pthread_t tmp;
-	pthread_create(&tmp, 0, mgl_qt_tmp, 0);
-	pthread_detach(tmp);    // run window handling in the separate thread
-	for(int i=0;i<10;i++)   // do calculation
-	{
-		sleep(2);             // which can be very long
-		pnt = mglPoint(2*mgl_rnd()-1,2*mgl_rnd()-1);
-		gr.Clf();             // make new drawing
-		gr.Line(mglPoint(),pnt,"Ar2");
-		char str[10] = "i=0";	str[3] = '0'+i;
-		gr.Text(mglPoint(),"");
-		gr.Update();       // update window
-	}
-	return 0;   // finish calculations and close the window
-#else
-	mglWX *gr;
-	char key = 0;
-	if(argc>1 && argv[1][0]!='-')	key = argv[1][0];
-	else	printf("You may specify argument '1', '2', '3' or 'd' for viewing examples of 1d, 2d, 3d or dual plotting\n");
-	switch(key)
-	{
-	case '1':	gr = new mglWX(sample_1,"1D plots");	break;
-	case '2':	gr = new mglWX(sample_2,"2D plots");	break;
-	case '3':	gr = new mglWX(sample_3,"3D plots");	break;
-	case 'd':	gr = new mglWX(sample_d,"Dual plots");	break;
-	case 't':	gr = new mglWX(test_wnd,"Testing");	break;
-	default: 	gr = new mglWX(sample,"Drop and waves");	break;
-	}
-	gr->Run();	return 0;
-#endif
+public:
+	virtual bool OnInit();
+};
+//-----------------------------------------------------------------------------
+class testFrame: public wxFrame
+{
+public:
+	testFrame(wxFrame *frame, const wxString& title);
+	~testFrame() {}
+private:
+	enum	{	idMenuQuit = 1000	};
+	void OnClose(wxCloseEvent& event)	{	Destroy();	}
+	void OnQuit(wxCommandEvent& event)	{	Destroy();	}
+
+	wxScrolledWindow *scroll;
+	wxMathGL *mgl;
+	DECLARE_EVENT_TABLE()
+};
+//-----------------------------------------------------------------------------
+IMPLEMENT_APP(testApp);
+//-----------------------------------------------------------------------------
+bool testApp::OnInit()
+{
+	testFrame* frame = new testFrame(0L, _("MathGL + wxWidgets sample"));
+	frame->Show();
+	return true;
+}
+//-----------------------------------------------------------------------------
+BEGIN_EVENT_TABLE(testFrame, wxFrame)
+	EVT_CLOSE(testFrame::OnClose)
+	EVT_MENU(idMenuQuit, testFrame::OnQuit)
+END_EVENT_TABLE()
+//-----------------------------------------------------------------------------
+testFrame::testFrame(wxFrame *frame, const wxString& title) : wxFrame(frame, -1, title)
+{
+	// create a menu bar
+	wxMenuBar* mbar = new wxMenuBar();
+	wxMenu* fileMenu = new wxMenu(_T(""));
+	fileMenu->Append(idMenuQuit, _("&Quit\tAlt-F4"), _("Quit the application"));
+	mbar->Append(fileMenu, _("&File"));
+	SetMenuBar(mbar);
+	SetSize(800,620);
+
+	scroll = new wxScrolledWindow(this);
+	mgl = new wxMathGL(scroll);
+	mgl->SetDraw(mgl_draw_graph,(void*)sample);
+	mgl->Update();
 }
 //-----------------------------------------------------------------------------
