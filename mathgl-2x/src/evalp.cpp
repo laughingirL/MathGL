@@ -33,7 +33,7 @@ void mglApplyFunc(mglData &d, double (*func)(double))
 {
 	long n = d.nx*d.ny*d.nz;
 #pragma omp parallel for
-	for(long i=0;i<n;i++)	d.a[i] = log(d.a[i]);
+	for(long i=0;i<n;i++)	d.a[i] = func(d.a[i]);
 }
 //-----------------------------------------------------------------------------
 mglData mglApplyOper(std::wstring a1, std::wstring a2, mglParser *arg, double (*func)(double,double))
