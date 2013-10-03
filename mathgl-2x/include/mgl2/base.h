@@ -53,6 +53,10 @@ struct mglMatrix
 	inline mglMatrix &operator=(const mglMatrix &a)
 	{	x=a.x;	y=a.y;	z=a.z;	pf=a.pf;	memcpy(b,a.b,9*sizeof(mreal));	return *this;	}
 };
+inline bool operator==(const mglMatrix &a, const mglMatrix &b)
+{	return b.x==a.x&&b.y==a.y&&b.z==a.z&&b.pf==a.pf&&!memcmp(b.b,a.b,9*sizeof(mreal));}
+inline bool operator!=(const mglMatrix &a, const mglMatrix &b)
+{	return b.x!=a.x||b.y!=a.y||b.z!=a.z||b.pf!=a.pf||memcmp(b.b,a.b,9*sizeof(mreal));	}
 //-----------------------------------------------------------------------------
 /// Structure for simplest primitives
 struct mglPrim	// NOTE: use float for reducing memory size
@@ -395,9 +399,9 @@ public:
 	/// Scale coordinates and cut off some points
 	virtual bool ScalePoint(const mglMatrix *M, mglPoint &p, mglPoint &n, bool use_nan=true) const;
 
-	virtual mreal GetOrgX(char dir) const=0;	///< Get Org.x (parse NAN value)
-	virtual mreal GetOrgY(char dir) const=0;	///< Get Org.y (parse NAN value)
-	virtual mreal GetOrgZ(char dir) const=0;	///< Get Org.z (parse NAN value)
+	virtual mreal GetOrgX(char dir, bool inv=false) const=0;	///< Get Org.x (parse NAN value)
+	virtual mreal GetOrgY(char dir, bool inv=false) const=0;	///< Get Org.y (parse NAN value)
+	virtual mreal GetOrgZ(char dir, bool inv=false) const=0;	///< Get Org.z (parse NAN value)
 
 	/// Get color depending on single variable z, which should be scaled if scale=true
 	inline mreal GetC(long s,mreal z,bool scale = true) const

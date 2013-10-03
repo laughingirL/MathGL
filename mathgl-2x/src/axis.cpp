@@ -244,7 +244,7 @@ void mglCanvas::SetTickTime(char dir, mreal d, const char *t)
 	MGL_TO_WCS(t,aa.t=wcs);
 
 	if(strchr("xyztuvw",aa.ch))
-		aa.org = mglPoint(GetOrgX(aa.ch), GetOrgY(aa.ch), GetOrgZ(aa.ch));
+		aa.org = mglPoint(GetOrgX(aa.ch,aa.inv), GetOrgY(aa.ch,aa.inv), GetOrgZ(aa.ch,aa.inv));
 	if(aa.ch=='x')	aa.v0 = aa.org.x;
 	if(aa.ch=='y')	aa.v0 = aa.org.y;
 	if(aa.ch=='z')	aa.v0 = aa.org.z;
@@ -363,7 +363,7 @@ void MGL_NO_EXPORT mgl_tick_text(mreal z, mreal z0, mreal d, mreal v, int kind, 
 void mglCanvas::LabelTicks(mglAxis &aa)
 {
 	if(strchr("xyztuvw",aa.ch))
-		aa.org = mglPoint(GetOrgX(aa.ch), GetOrgY(aa.ch), GetOrgZ(aa.ch));
+		aa.org = mglPoint(GetOrgX(aa.ch,aa.inv), GetOrgY(aa.ch,aa.inv), GetOrgZ(aa.ch,aa.inv));
 	if(aa.ch=='x')	aa.v0 = aa.org.x;
 	if(aa.ch=='y')	aa.v0 = aa.org.y;
 	if(aa.ch=='z')	aa.v0 = aa.org.z;
@@ -429,16 +429,18 @@ void mglCanvas::LabelTicks(mglAxis &aa)
 //-----------------------------------------------------------------------------
 void mglCanvas::Axis(const char *dir, const char *stl, const char *opt)
 {
-	if(!dir || !dir[0])	dir="xyz";
-	bool text = !strchr(dir,'_');
+	bool text = !mglchr(dir,'_');
+	bool inv = mglchr(dir,'^');
+	bool adjust = mglchr(stl,'a');
+	bool ret = get(MGL_ENABLE_RTEXT);
+	if(mglchr(dir,'U'))	clr(MGL_ENABLE_RTEXT);
+
+	if(!mglchrs(dir,"xXyYzZ"))	dir="xyz";
 	const char *ar = "AKDTVISO";
 	char arr=0;
 	for(size_t i=0;i<strlen(ar);i++)
 		if(strchr(dir,ar[i]))	{	arr=ar[i];	break;	}
-	bool adjust = mglchr(stl,'a');
 
-	bool ret = get(MGL_ENABLE_RTEXT);
-	if(strchr(dir,'U'))	clr(MGL_ENABLE_RTEXT);
 	SaveState(opt);
 	AdjustTicks(dir,adjust);
 	LoadState();
@@ -446,8 +448,12 @@ void mglCanvas::Axis(const char *dir, const char *stl, const char *opt)
 	ax.pos = strchr(dir,'X') ? 'T':'t';
 	ay.pos = strchr(dir,'Y') ? 'T':'t';
 	az.pos = strchr(dir,'Z') ? 'T':'t';
-	if(strchr(dir,'X') || strchr(dir,'x'))	DrawAxis(ax, text, arr, stl, opt);
-	if(strchr(dir,'Z') || strchr(dir,'z'))	DrawAxis(az, text, arr, stl, opt);
+	ax.inv = ay.inv = az.inv = false;
+
+	if(strchr(dir,'X') || strchr(dir,'x'))
+	{	ax.inv = inv;	DrawAxis(ax, text, arr, stl, opt);	}
+	if(strchr(dir,'Z') || strchr(dir,'z'))
+	{	az.inv = inv;	DrawAxis(az, text, arr, stl, opt);	}
 	if((TernAxis&3))
 	{
 		mglAxis ty(ay);		ty.pos='t';	ty.ch='T';
@@ -456,7 +462,8 @@ void mglCanvas::Axis(const char *dir, const char *stl, const char *opt)
 		ty.dir = mglPoint(0,-1);		ty.org = mglPoint(0,1,ay.org.z);
 		DrawAxis(ty, text, arr, stl, opt);
 	}
-	else if(strchr(dir,'Y') || strchr(dir,'y')) 	DrawAxis(ay, text, arr, stl, opt);
+	else if(strchr(dir,'Y') || strchr(dir,'y'))
+	{	ay.inv = inv;	DrawAxis(ay, text, arr, stl, opt);	}
 	set(ret, MGL_ENABLE_RTEXT);
 }
 //-----------------------------------------------------------------------------
@@ -464,7 +471,7 @@ void mglCanvas::DrawAxis(mglAxis &aa, bool text, char arr,const char *stl,const 
 {
 	SaveState(opt);
 	if(strchr("xyz",aa.ch))
-		aa.org = mglPoint(GetOrgX(aa.ch), GetOrgY(aa.ch), GetOrgZ(aa.ch));
+		aa.org = mglPoint(GetOrgX(aa.ch,aa.inv), GetOrgY(aa.ch,aa.inv), GetOrgZ(aa.ch,aa.inv));
 	if(aa.ch=='x')	aa.v0 = aa.org.x;
 	if(aa.ch=='y')	aa.v0 = aa.org.y;
 	if(aa.ch=='z')	aa.v0 = aa.org.z;
@@ -529,7 +536,7 @@ void mglCanvas::DrawAxis(mglAxis &aa, bool text, char arr,const char *stl,const 
 void mglCanvas::DrawLabels(mglAxis &aa, bool inv)
 {
 	if(strchr("xyz",aa.ch))
-		aa.org = mglPoint(GetOrgX(aa.ch), GetOrgY(aa.ch), GetOrgZ(aa.ch));
+		aa.org = mglPoint(GetOrgX(aa.ch,aa.inv), GetOrgY(aa.ch,aa.inv), GetOrgZ(aa.ch,aa.inv));
 	mglPoint d = aa.dir, o = aa.org;	// "transverse" org
 	if(strchr("xyz",aa.ch))	o -= d*(o*d);
 	mglPoint p,q, s=(Min+Max)/2, nn;
@@ -593,7 +600,7 @@ void mglCanvas::DrawLabels(mglAxis &aa, bool inv)
 char mglCanvas::GetLabelPos(mreal c, long kk, mglAxis &aa)
 {
 	if(strchr("xyz",aa.ch))
-		aa.org = mglPoint(GetOrgX(aa.ch), GetOrgY(aa.ch), GetOrgZ(aa.ch));
+		aa.org = mglPoint(GetOrgX(aa.ch,aa.inv), GetOrgY(aa.ch,aa.inv), GetOrgZ(aa.ch,aa.inv));
 	mglPoint d = aa.dir, o = aa.org;	// "transverse" org
 	if(strchr("xyz",aa.ch))	o -= d*(o*d);
 	mglPoint p,q, s=(Min+Max)/2, nn;
@@ -698,9 +705,7 @@ void mglCanvas::Label(char dir, const char *str, mreal pos, const char *opt)
 //-----------------------------------------------------------------------------
 void mglCanvas::Labelw(char dir, const wchar_t *text, mreal pos, const char *opt)
 {
-	mreal shift =  SaveState(opt);	if(mgl_isnan(shift))	shift=0;
-	mreal t=0, x0, y0, z0;
-	x0 = GetOrgX(dir);	y0 = GetOrgY(dir);	z0 = GetOrgZ(dir);
+	mreal shift =  SaveState(opt), t=0;	if(mgl_isnan(shift))	shift=0;
 	mglPoint p,q;
 	mglAxis *aa=0;
 
@@ -711,14 +716,16 @@ void mglCanvas::Labelw(char dir, const wchar_t *text, mreal pos, const char *opt
 		AdjustTicks(ax,fx!=0);	aa = &ax;
 		if(ax.dv)	t = (Min.x+Max.x+pos*(Max.x-Min.x))/2;
 		else	t = Min.x*pow(Max.x/Min.x, (pos+1)/2);
-		p = mglPoint(t,y0,z0);	q = mglPoint(1,0,0);	shift += ax.sh;
+		p = mglPoint(t, GetOrgY(ax.ch,ax.inv), GetOrgZ(ax.ch,ax.inv));
+		q = mglPoint(1,0,0);	shift += ax.sh;
 	}
 	if(dir=='y' && !(TernAxis&3))
 	{
 		AdjustTicks(ay,fy!=0);	aa = &ay;
 		if(ay.dv)	t = (Min.y+Max.y+pos*(Max.y-Min.y))/2;
 		else	t = Min.y*pow(Max.y/Min.y, (pos+1)/2);
-		p = mglPoint(x0,t,z0);	q = mglPoint(0,1,0);	shift += ay.sh;
+		p = mglPoint(GetOrgX(ay.ch,ay.inv), t, GetOrgZ(ay.ch,ay.inv));
+		q = mglPoint(0,1,0);	shift += ay.sh;
 		if(TernAxis&3)
 		{
 			q = mglPoint(-1,1,0);	pos=-pos;
@@ -730,7 +737,8 @@ void mglCanvas::Labelw(char dir, const wchar_t *text, mreal pos, const char *opt
 		AdjustTicks(ty,fy!=0);	aa = &ty;
 		if(ty.dv)	t = (Min.y+Max.y+pos*(Max.y-Min.y))/2;
 		else	t = Min.y*pow(Max.y/Min.y, (pos+1)/2);
-		p = mglPoint(x0,t,z0);	q = mglPoint(0,1,0);	shift += ty.sh;
+		p = mglPoint(GetOrgX(ty.ch,ty.inv), t, GetOrgZ(ty.ch,ty.inv));
+		q = mglPoint(0,1,0);	shift += ty.sh;
 		if(TernAxis&3)
 		{
 			q = mglPoint(-1,1,0);	pos=-pos;
@@ -742,14 +750,16 @@ void mglCanvas::Labelw(char dir, const wchar_t *text, mreal pos, const char *opt
 		AdjustTicks(ty,fy!=0);	pos = -pos;	aa = &ty;
 		if(ty.dv)	t = (Min.y+Max.y+pos*(Max.y-Min.y))/2;
 		else	t = Min.y*pow(Max.y/Min.y, (pos+1)/2);
-		p = mglPoint(x0,t,z0);	q = mglPoint(0,1,0);	shift += ty.sh;
+		p = mglPoint(GetOrgX(ty.ch,ty.inv), t, GetOrgZ(ty.ch,ty.inv));
+		q = mglPoint(0,1,0);	shift += ty.sh;
 	}
 	if(dir=='z')
 	{
 		AdjustTicks(az,fz!=0);	aa = &az;
 		if(az.dv)	t = (Min.z+Max.z+pos*(Max.z-Min.z))/2;
 		else	t = Min.z*pow(Max.z/Min.z, (pos+1)/2);
-		p = mglPoint(x0,y0,t);	q = mglPoint(0,0,1);	shift += az.sh;
+		p = mglPoint(GetOrgX(az.ch,az.inv), GetOrgY(az.ch,az.inv), t);
+		q = mglPoint(0,0,1);	shift += az.sh;
 	}
 	if(aa)
 	{

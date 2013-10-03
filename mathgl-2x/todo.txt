@@ -51,6 +51,7 @@ A. Paper about MathGL!!!
 17. Update cloud sample
 18. Add adjust in Fl_MGLView
 19. Style '^' for legend
+20. Style '^' for Axis
 
 ============= UDAV =============
 

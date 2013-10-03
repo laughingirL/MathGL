@@ -211,71 +211,54 @@ GifFileType *gif;*/
 //-----------------------------------------------------------------------------
 mreal mglCanvas::FindOptOrg(char dir, int ind) const
 {
-	static mglPoint px, py, pz, m1, m2;
-	static mglMatrix bb;	bb.b[0]=1e30;
+	static mglPoint px, py, pz;
+	static mglMatrix bb;
 	mglPoint nn[8]={mglPoint(0,0,0), mglPoint(0,0,1), mglPoint(0,1,0,0), mglPoint(0,1,1),
-	mglPoint(1,0,0), mglPoint(1,0,1), mglPoint(1,1,0), mglPoint(1,1,1)}, pp[8];
+					mglPoint(1,0,0), mglPoint(1,0,1), mglPoint(1,1,0), mglPoint(1,1,1)}, pp[8];
 	memcpy(pp, nn, 8*sizeof(mglPoint));
-	// do nothing if transformation matrix the same
-	if(memcmp(B.b,bb.b,9*sizeof(mreal)) || m1!=Min || m2!=Max)
+	// do nothing if transformation matrix is the same
+	if(B!=bb)
 	{
-		m1 = Min;	m2 = Max;	memcpy(&bb,&B,sizeof(mglMatrix));
+		bb = B;
 #pragma omp parallel for
 		for(long i=0;i<8;i++)	PostScale(&B,pp[i]);
 		// find point with minimal y
-		register long i,j=0;
-		for(i=1;i<8;i++)	if(pp[i].y<pp[j].y)	j=i;
+		long j=0;
+		for(long i=1;i<8;i++)	if(pp[i].y<pp[j].y)	j=i;
 		pp[0]=pp[j];
-		// find max angle and left point
 		// first select 3 closest points
-		pp[1]=nn[j];	pp[1].x=1-pp[1].x;
-		pp[2]=nn[j];	pp[2].y=1-pp[2].y;
-		pp[3]=nn[j];	pp[3].z=1-pp[3].z;
-		PostScale(&B,pp[1]);	PostScale(&B,pp[2]);	PostScale(&B,pp[3]);
-		pp[1]-=pp[0];	pp[2]-=pp[0];	pp[3]-=pp[0];
+		pp[1].x=1-nn[j].x;	pp[1].y=nn[j].y;	pp[1].z=nn[j].z;	PostScale(&B,pp[1]);	pp[1]-=pp[0];
+		pp[2].x=nn[j].x;	pp[2].y=1-nn[j].y;	pp[2].z=nn[j].z;	PostScale(&B,pp[2]);	pp[2]-=pp[0];
+		pp[3].x=nn[j].x;	pp[3].y=nn[j].y;	pp[3].z=1-nn[j].z;	PostScale(&B,pp[3]);	pp[3]-=pp[0];
 		// find cosine of axis projection
-		mreal cxy, cxz, cyz, dx, dy, dz;
-		dx = pp[1].x*pp[1].x + pp[1].y*pp[1].y;
-		dy = pp[2].x*pp[2].x + pp[2].y*pp[2].y;
-		dz = pp[3].x*pp[3].x + pp[3].y*pp[3].y;
-		cxy= pp[1].x*pp[2].x + pp[1].y*pp[1].y;
-		cxz= pp[1].x*pp[3].x + pp[1].y*pp[3].y;
-		cyz= pp[3].x*pp[2].x + pp[3].y*pp[2].y;
-		if(dx==0)		cxy = cxz = 1;
-		else if(dy==0)	cxy = cyz = 1;
-		else if(dz==0)	cyz = cxz = 1;
-		else
-		{	cxy /= sqrt(dx*dy);	cxz /= sqrt(dx*dz);	cyz /= sqrt(dz*dy);	}
-		// find points for axis
-		px = py = pz = nn[j];
-		if(cxy<cxz && cxy<cyz)	// xy is lowest
-		{	// px, py the same as pp
-			if(pp[1].x<pp[2].x)	pz.x = 1-pz.x;
-			else	pz.y = 1-pz.y;
+		register mreal tx=fabs(pp[1].x/pp[1].y), ty=fabs(pp[2].x/pp[2].y), tz=fabs(pp[3].x/pp[3].y);
+		px=py=pz=nn[j];
+		if(tz==0 && (ty==0 || tx==0))	// (x- & z-) or (y- & z-) axis are vertical
+		{	if(pp[1].x>pp[2].x)	pz.y=1-pz.y;	else	pz.x=1-pz.x;	}
+		else if(tx==0 && ty==0)	// x- && y-axis is vertical
+		{
+			py.x=1-py.x;
+			if(pp[1].x>pp[3].x)
+			{	px.z=1-px.z;	py.z=1-py.z;	}
 		}
-		if(cxz<cxy && cxz<cyz)	// xz is lowest
-		{	// px, pz the same as pp
-			if(pp[1].x<pp[3].x)	py.x = 1-py.x;
-			else	py.z = 1-py.z;
-		}
-		if(cyz<cxz && cyz<cxy)	// yz is lowest
-		{	// py, pz the same as pp
-			if(pp[3].x<pp[2].x)	px.z = 1-px.z;
-			else	px.y = 1-px.y;
-		}
-		// return to normal variables
-		// NOTE: this may not work in "inverse" curvilinear coordinates like x->1-x
-		px = Min+(Max-Min)/px;
-		py = Min+(Max-Min)/py;
-		pz = Min+(Max-Min)/pz;
+		else if(tz<tx && tz<ty)	// z-axis is vertical
+		{	if(pp[1].x>pp[2].x)	pz.y=1-pz.y;	else	pz.x=1-pz.x;	}
+		else if(ty<tx && ty<tz)	// y-axis is vertical
+		{	if(pp[1].x>pp[3].x)	py.z=1-py.z;	else	py.x=1-py.x;	}
+		else if(tx<tz && tx<tz)	// x-axis is vertical
+		{	if(pp[3].x>pp[2].x)	px.y=1-px.y;	else	px.z=1-px.z;	}
 	}
-	mreal res = px.val(ind);
-	if(dir=='y')	res = py.val(ind);
-	if(dir=='z')	res = pz.val(ind);
+	// return to normal variables
+	mglPoint rx = Min+(Max-Min)/px;
+	mglPoint ry = Min+(Max-Min)/py;
+	mglPoint rz = Min+(Max-Min)/pz;
+	mreal res = rx.val(ind);
+	if(dir=='y')	res = ry.val(ind);
+	if(dir=='z')	res = rz.val(ind);
 	return res;
 }
 //-----------------------------------------------------------------------------
-mreal mglCanvas::GetOrgX(char dir) const
+mreal mglCanvas::GetOrgX(char dir, bool inv) const
 {
 	mreal res = Org.x;
 	if(mgl_isnan(res))
@@ -283,11 +266,12 @@ mreal mglCanvas::GetOrgX(char dir) const
 		if(strchr("xyz",dir))	res = FindOptOrg(dir,0);
 		else if(dir=='t')		res = Min.x;
 		else res = B.b[6]>0 ? Max.x:Min.x;
+		if(inv)	res = Min.x+Max.x-res;
 	}
 	return res;
 }
 //-----------------------------------------------------------------------------
-mreal mglCanvas::GetOrgY(char dir) const
+mreal mglCanvas::GetOrgY(char dir, bool inv) const
 {
 	mreal res = Org.y;
 	if(mgl_isnan(res))
@@ -295,11 +279,12 @@ mreal mglCanvas::GetOrgY(char dir) const
 		if(strchr("xyz",dir))	res = FindOptOrg(dir,1);
 		else if(dir=='t')	res = Min.y;
 		else res = B.b[7]>0 ? Max.y:Min.y;
+		if(inv)	res = Min.y+Max.y-res;
 	}
 	return res;
 }
 //-----------------------------------------------------------------------------
-mreal mglCanvas::GetOrgZ(char dir) const
+mreal mglCanvas::GetOrgZ(char dir, bool inv) const
 {
 	mreal res = Org.z;
 	if(mgl_isnan(res))
@@ -307,6 +292,7 @@ mreal mglCanvas::GetOrgZ(char dir) const
 		if(strchr("xyz",dir))	res = FindOptOrg(dir,2);
 		else if(dir=='t')	res = Min.z;
 		else res = B.b[8]>0 ? Max.z:Min.z;
+		if(inv)	res = Min.z+Max.z-res;
 	}
 	return res;
 }

@@ -26,11 +26,11 @@ struct GifFileType;
 /// Structure for drawing axis and ticks
 struct mglAxis
 {
-	mglAxis()	{	dv=ds=d=v0=v1=v2=o=sh=0;	ns=f=ch=0;	pos = 't';	}
+	mglAxis()	{	dv=ds=d=v0=v1=v2=o=sh=0;	ns=f=ch=0;	pos = 't';	inv=false;	}
 	mglAxis(const mglAxis &aa)
 	{	dv=aa.dv;	ds=aa.ds;	d=aa.d;		dir=aa.dir;	sh=aa.sh;
 		v0=aa.v0;	v1=aa.v1;	v2=aa.v2;	o=aa.o;		pos=aa.pos;
-		a = aa.a;	b = aa.b;	org=aa.org;	txt=aa.txt;
+		a = aa.a;	b = aa.b;	org=aa.org;	txt=aa.txt;	inv=aa.inv;
 		ns=aa.ns;	f=aa.f;		ch=aa.ch;	t=aa.t;	}
 	inline void AddLabel(const wchar_t *lbl, mreal v)
 	{	txt.push_back(mglText(lbl,"",v));	}
@@ -50,9 +50,10 @@ struct mglAxis
 	mreal o;			///< Point of starting ticks numbering (if NAN then Org is used).
 	int f;			///< Flag 0x1 - time, 0x2 - manual, 0x4 - fixed dv
 	std::vector<mglText> txt;	///< Axis labels
-	char ch;			///< Character of axis (like 'x','y','z','c')
+	char ch;		///< Character of axis (like 'x','y','z','c')
 	char pos;		///< Text position ('t' by default, or 'T' for opposite)
 	mreal sh;		///< Extra shift of ticks and axis labels
+	bool inv;		///< Inverse automatic origin position
 };
 //-----------------------------------------------------------------------------
 /// Structure for light source
@@ -352,9 +353,9 @@ protected:
 	/// Push drawing data (for frames only). NOTE: can be VERY large
 	long PushDrwDat();
 
-	mreal GetOrgX(char dir) const;	///< Get Org.x (parse NAN value)
-	mreal GetOrgY(char dir) const;	///< Get Org.y (parse NAN value)
-	mreal GetOrgZ(char dir) const;	///< Get Org.z (parse NAN value)
+	mreal GetOrgX(char dir, bool inv=false) const;	///< Get Org.x (parse NAN value)
+	mreal GetOrgY(char dir, bool inv=false) const;	///< Get Org.y (parse NAN value)
+	mreal GetOrgZ(char dir, bool inv=false) const;	///< Get Org.z (parse NAN value)
 
 	void mark_plot(long p, char type, mreal size=1);
 	void arrow_plot(long p1, long p2, char st);
