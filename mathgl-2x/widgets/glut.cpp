@@ -179,16 +179,18 @@ void _mgl_display()
 	if(!_mgl_glwnd)	return;
 //	glEnable(GL_LINE_SMOOTH);
 	_mgl_glwnd->CurFrameId = 1;
-	if(_mgl_glwnd->get(MGL_CLF_ON_UPD))	_mgl_glwnd->Clf();
+//	if(_mgl_glwnd->get(MGL_CLF_ON_UPD))
+		_mgl_glwnd->gl_clf();
 	_mgl_glwnd->InPlot(0,1,0,1,false);
-	if(_mgl_glwnd->NumFig>0)	glCallList(_mgl_glwnd->curr_fig);
+	if(_mgl_glwnd->NumFig>0)
+		glCallList(_mgl_glwnd->curr_fig);
 	else
 	{
 		if(_mgl_glwnd->DrawFunc)
 			(_mgl_glwnd->DrawFunc)(_mgl_glwnd,_mgl_glwnd->FuncPar);
 		_mgl_glwnd->Finish();
 	}
-	if(_mgl_glwnd->get(MGL_CLF_ON_UPD))
+//	if(_mgl_glwnd->get(MGL_CLF_ON_UPD))
 	{	glFinish();	glutSwapBuffers();	}
 }
 //-----------------------------------------------------------------------------

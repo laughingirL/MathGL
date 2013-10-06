@@ -49,9 +49,11 @@ void MGL_EXPORT mgl_set_quality_(uintptr_t *gr, int *qual);
 /// Is frames
 int MGL_EXPORT mgl_is_frames(HMGL gr);
 /// Get bit-value flag of HMGL state (for advanced users only)
-int MGL_EXPORT mgl_get_flag(HMGL gr, long flag);
+int MGL_EXPORT mgl_get_flag(HMGL gr, uint32_t flag);
+int MGL_EXPORT mgl_get_flag_(uintptr_t *gr, unsigned long *flag);
 /// Set bit-value flag of HMGL state (for advanced users only)
-void MGL_EXPORT mgl_set_flag(HMGL gr, int val, long flag);
+void MGL_EXPORT mgl_set_flag(HMGL gr, int val, uint32_t flag);
+void MGL_EXPORT mgl_set_flag_(uintptr_t *gr, int *val, unsigned long *flag);
 /// Change counter of HMGL uses (for advanced users only). Non-zero counter prevent automatic object removing.
 long MGL_EXPORT mgl_use_graph(HMGL gr, int inc);
 long MGL_EXPORT mgl_use_graph_(uintptr_t *gr, int *inc);

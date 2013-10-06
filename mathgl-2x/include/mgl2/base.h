@@ -212,7 +212,7 @@ public:
 	int FaceNum;		///< Set approximate number of visible faces and lines. By default (=0) it draw everything.
 	char Arrow1, Arrow2;///< Style of arrows at end and at start of curve
 	long InUse;			///< Smart pointer (number of users)
-	long Flag;			///< Flags for controlling drawing
+	uint32_t Flag;			///< Flags for controlling drawing
 	union
 	{
 		uint64_t mask;	///< Mask to be used for coloring
@@ -220,10 +220,10 @@ public:
 	};
 	int mask_an;		///< Mask rotation values in degrees
 
-	inline bool get(long fl) const	{	return Flag&fl;	}
-	inline void set(long fl)	{	Flag |= fl;	}
-	inline void clr(long fl)	{	Flag &=~fl;	}
-	inline void set(bool v,long fl)	{	Flag = v ? Flag|fl : Flag&(~fl);	}
+	inline bool get(uint32_t fl) const	{	return Flag&fl;	}
+	inline void set(uint32_t fl)	{	Flag |= fl;	}
+	inline void clr(uint32_t fl)	{	Flag &=~fl;	}
+	inline void set(bool v,uint32_t fl)	{	Flag = v ? Flag|fl : Flag&(~fl);	}
 
 	/// Set axis range scaling -- simplified way to shift/zoom axis range -- need to replot whole image!
 	inline void ZoomAxis(mglPoint p1=mglPoint(0,0,0,0), mglPoint p2=mglPoint(1,1,1,1))	{	AMin = p1;	AMax = p2;	}

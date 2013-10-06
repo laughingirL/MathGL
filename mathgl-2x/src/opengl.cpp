@@ -174,6 +174,11 @@ void mglCanvasGL::Fog(mreal d, mreal)
 void mglCanvasGL::Clf(mglColor Back)
 {
 	mglCanvas::Clf(Back);
+	gl_clf(Back);
+}
+//-----------------------------------------------------------------------------
+void mglCanvasGL::gl_clf(mglColor Back)
+{
 //	glDepthFunc(GL_LESS);
 	glDepthFunc(GL_GREATER);
 //	back[0]=Back.r;	back[1]=Back.g;	back[2]=Back.b;

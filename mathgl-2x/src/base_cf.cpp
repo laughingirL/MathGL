@@ -32,8 +32,10 @@ int MGL_EXPORT mgl_get_quality_(uintptr_t *gr)	{	return _GR_->GetQuality();	}
 int MGL_EXPORT mgl_is_frames(HMGL gr)
 {	return gr->get(MGL_VECT_FRAME) && !(gr->GetQuality()&MGL_DRAW_LMEM);	}
 //-----------------------------------------------------------------------------
-int MGL_EXPORT mgl_get_flag(HMGL gr, long flag)			{	return gr->get(flag);	}
-void MGL_EXPORT mgl_set_flag(HMGL gr, int val, long flag)	{	gr->set(val,flag);	}
+int MGL_EXPORT mgl_get_flag(HMGL gr, uint32_t flag)	{	return gr->get(flag);	}
+int MGL_EXPORT mgl_get_flag_(uintptr_t *gr, unsigned long *flag)	{	return _GR_->get(*flag);	}
+void MGL_EXPORT mgl_set_flag(HMGL gr, int val, uint32_t flag)		{	gr->set(val,flag);	}
+void MGL_EXPORT mgl_set_flag_(uintptr_t *gr, int *val, unsigned long *flag)	{	_GR_->set(*val,*flag);	}
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_set_color(char id, double r, double g, double b)
 {
