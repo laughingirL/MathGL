@@ -20,13 +20,6 @@
 #ifndef _MGL_ABSTRACT_H_
 #define _MGL_ABSTRACT_H_
 
-#if !defined(__BORLANDC__)
-#include <stdint.h>
-#endif
-#if defined(__BORLANDC__)
-typedef unsigned uintptr_t;
-#endif
-
 #include "mgl2/define.h"
 //-----------------------------------------------------------------------------
 #ifdef __cplusplus
