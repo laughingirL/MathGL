@@ -783,8 +783,10 @@ void mglCanvas::Box(const char *col, bool ticks)
 	Axis("xyz_",col);
 	if(TernAxis&1)
 	{
-		Org.z=Max.z;	Org.x=Max.x;	Axis("xz_",col);
-		Org.x=Min.x;	Org.y=Max.y;	Axis("z_",col);
+		Org.x=Max.x;	Org.y=Min.y;	Org.z=Max.z;
+		DrawAxis(ax, false, 0,col);	DrawAxis(az, false, 0,col);
+		Org.x=Min.x;	Org.y=Max.y;	Org.z=Max.z;
+		DrawAxis(az, false, 0,col);
 
 		mglAxis ty(ay);				ty.ch='T';
 		ty.dir = mglPoint(-1,1);	ty.org = mglPoint(1,0,Max.z);

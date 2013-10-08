@@ -68,12 +68,10 @@ void smgl_text(mglGraph *gr);	// text drawing
 void smgl_surf(mglGraph *gr);
 void test(mglGraph *gr)
 {
-printf("Start test");
-
 	mglParse par;
 	par.AllowSetSize(true);
 	setlocale(LC_CTYPE, "");
-	par.Execute(gr,"light on:light 0 1 0 0:cone 0 0 -1 0 0 1 1 0 '4r'\n");
+	par.Execute(gr,"zrange -5 10:ternary 5:rotate 50 60:box:axis");
 
 //	FILE *fp=fopen("/home/balakin/progr/mathgl-code/mathgl-2x/build/test.mgl","r");
 //	par.Execute(gr,fp,true);

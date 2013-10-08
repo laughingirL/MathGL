@@ -791,7 +791,7 @@ void mglCanvas::trig_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 		register float u = dxu*xx+dyu*yy, v = dxv*xx+dyv*yy;
 		if(u<0 || v<0 || u+v>1)	continue;
 		p = p1+d1*u+d2*v;
-		if(mgl_isnan(p.u) && anorm)
+		if(mgl_isnan(p.u) && mgl_isnum(p.v) && anorm)
 		{	p.u = nr.x;	p.v = nr.y;	p.w = nr.z;	}
 		pnt_plot(i,j,p.z,col2int(p,r,d->ObjId),d->ObjId);
 	}
@@ -978,7 +978,7 @@ void mglCanvas::pnt_pix(long i, long j, const mglPnt &p, const mglDrawReg *dr)
 //-----------------------------------------------------------------------------
 void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 {
-	unsigned char cs[4], ca;	col2int(q,cs,d->ObjId);	ca = cs[3] = size>0 ? 255 : 255*q.t;
+	unsigned char cs[4], ca;	col2int(q,cs,d->ObjId);	ca = cs[3];// = size>0 ? 255 : 255*q.t;
 	mglPnt p0=q,p1=q,p2=q,p3=q;
 	mreal ss=fabs(size), pw=1,dpw=3;
 

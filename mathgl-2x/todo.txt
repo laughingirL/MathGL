@@ -30,6 +30,8 @@ A. Paper about MathGL!!!
 	u. Test FlowP + 3d
 
 11. Check centered curved text (see text2)
+12. GLUT testing
+13. OpenGL in FLTK as test?!
 16. Refill() sample
 
 

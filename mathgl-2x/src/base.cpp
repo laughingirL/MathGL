@@ -231,6 +231,7 @@ long mglBase::AddGlyph(int s, long j)
 long mglBase::AddPnt(const mglMatrix *mat, mglPoint p, mreal c, mglPoint n, mreal a, int scl)
 {
 	if(mgl_isnan(c) || mgl_isnan(a))	return -1;
+	bool norefr = mgl_isnan(n.x) && mgl_isnan(n.y);
 	if(scl>0)	ScalePoint(mat,p,n,!(scl&2));
 	if(mgl_isnan(p.x))	return -1;
 	a = (a>=0 && a<=1) ? a : AlphaDef;
@@ -265,6 +266,7 @@ long mglBase::AddPnt(const mglMatrix *mat, mglPoint p, mreal c, mglPoint n, mrea
 	if(!get(MGL_ENABLE_ALPHA))	{	q.a=1;	if(txt.Smooth!=2)	q.ta=1-gap;	}
 //	if(q.ta<0.005)	q.ta = 0.005;	// bypass OpenGL/OBJ/PRC bug
 	if(!get(MGL_ENABLE_LIGHT) && !(scl&4))	q.u=q.v=NAN;
+	if(norefr)	q.v=0;
 	long k;
 #pragma omp critical(pnt)
 	{MGL_PUSH(Pnt,q,mutexPnt);	k=Pnt.size()-1;}	return k;
@@ -628,9 +630,8 @@ void mglBase::Ternary(int t)
 	if(t&3)
 	{
 		if(c)	{	x1 = Min;	x2 = Max;	o = Org;	}
-//		c = get(MGL_ENABLE_CUT);	clr(MGL_ENABLE_CUT);
-		SetRanges(mglPoint(0,0),mglPoint(1,1,t==1?0:1));
-		Org=mglPoint(0,0,0);	c = false;
+		SetRanges(mglPoint(0,0,0),mglPoint(1,1,(t&3)==1?0:1));
+		Org=mglPoint(0,0,(t&3)==1?NAN:0);	c = false;
 	}
 	else if(!c)	{	SetRanges(x1,x2);	Org=o;	c=true;	}
 }

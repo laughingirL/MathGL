@@ -82,13 +82,15 @@ void MGL_EXPORT mgl_set_range_val(HMGL gr, char dir, double v1,double v2)
 	if(dir=='c')		gr->CRange(v1,v2);
 	else if(dir=='x')	gr->XRange(v1,v2);
 	else if(dir=='y')	gr->YRange(v1,v2);
-	else if(dir=='z')	gr->ZRange(v1,v2);	}
+	else if(dir=='z')	gr->ZRange(v1,v2);
+}
 void MGL_EXPORT mgl_set_range_dat(HMGL gr, char dir, HCDT a, int add)
 {
 	if(dir=='c')		gr->CRange(a,add);
 	else if(dir=='x')	gr->XRange(a,add);
 	else if(dir=='y')	gr->YRange(a,add);
-	else if(dir=='z')	gr->ZRange(a,add);	}
+	else if(dir=='z')	gr->ZRange(a,add);
+}
 void MGL_EXPORT mgl_set_ranges(HMGL gr, double x1, double x2, double y1, double y2, double z1, double z2)
 {	gr->SetRanges(x1,x2,y1,y2,z1,z2);	}
 void MGL_EXPORT mgl_set_auto_ranges(HMGL gr, double x1, double x2, double y1, double y2, double z1, double z2, double c1, double c2)
