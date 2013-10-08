@@ -230,6 +230,11 @@ long mglBase::AddGlyph(int s, long j)
 //-----------------------------------------------------------------------------
 long mglBase::AddPnt(const mglMatrix *mat, mglPoint p, mreal c, mglPoint n, mreal a, int scl)
 {
+	// scl=0 -- no scaling
+	// scl&1 -- usual scaling
+	// scl&2 -- disable NAN at scaling
+	// scl&4 -- ???
+	// scl&8 -- bypass palette for enabling alpha
 	if(mgl_isnan(c) || mgl_isnan(a))	return -1;
 	bool norefr = mgl_isnan(n.x) && mgl_isnan(n.y);
 	if(scl>0)	ScalePoint(mat,p,n,!(scl&2));
@@ -264,9 +269,8 @@ long mglBase::AddPnt(const mglMatrix *mat, mglPoint p, mreal c, mglPoint n, mrea
 
 	if(scl&8 && scl>0)	q.a=a;	// bypass palette for enabling alpha in Error()
 	if(!get(MGL_ENABLE_ALPHA))	{	q.a=1;	if(txt.Smooth!=2)	q.ta=1-gap;	}
-//	if(q.ta<0.005)	q.ta = 0.005;	// bypass OpenGL/OBJ/PRC bug
-	if(!get(MGL_ENABLE_LIGHT) && !(scl&4))	q.u=q.v=NAN;
 	if(norefr)	q.v=0;
+	if(!get(MGL_ENABLE_LIGHT) && !(scl&4))	q.u=q.v=NAN;
 	long k;
 #pragma omp critical(pnt)
 	{MGL_PUSH(Pnt,q,mutexPnt);	k=Pnt.size()-1;}	return k;

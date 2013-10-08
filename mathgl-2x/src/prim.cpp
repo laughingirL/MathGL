@@ -230,7 +230,7 @@ void MGL_EXPORT mgl_cone(HMGL gr, double x1, double y1, double z1, double x2, do
 	if(mglchr(stl,'4'))	n=2;
 	else if(mglchr(stl,'6'))	n=3;
 	else if(mglchr(stl,'8'))	n=4;
-	bool refr = !wire && n>5;
+	bool refr = n>6;
 	if(refr)	t=d;
 
 #pragma omp parallel for firstprivate(p,q)
@@ -260,8 +260,7 @@ void MGL_EXPORT mgl_cone(HMGL gr, double x1, double y1, double z1, double x2, do
 #pragma omp parallel for
 		for(long i=0;i<2*n;i++)
 		{
-			gr->trig_plot(kk[i],kk[i+1],kk[i+2*n+1]);
-			gr->trig_plot(kk[i+1],kk[i+2*n+1],kk[i+2*n+2]);
+			gr->quad_plot(kk[i],kk[i+1],kk[i+2*n+1],kk[i+2*n+2]);
 			if(edge)
 			{
 				gr->trig_plot(k1,kk[i+82],kk[i+83]);

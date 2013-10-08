@@ -85,9 +85,6 @@ void MGL_NO_EXPORT mgl_string_curve(mglBase *gr,long f,long ,const long *ff,cons
 	mglPoint *pt=new mglPoint[len+1];
 	pt[0] = qa[0];	m = qa.size();
 
-	// next string for testing curve position
-	//for(i=0;i<m;i++) gr->mark_plot(gr->AddPnt(qa[i],c,s,-1,-1),'.');
-
 	mreal a,b,d,w,t1,t2;
 	for(i=j=0,tt=0;j<len;j++)
 	{
