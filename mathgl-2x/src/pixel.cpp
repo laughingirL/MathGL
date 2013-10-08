@@ -783,7 +783,6 @@ void mglCanvas::trig_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 	if(x1>x2 || y1>y2)	return;
 	// default normale
 	mglPoint nr = mglPoint(p2.x-p1.x,p2.y-p1.y,p2.z-p1.z)^mglPoint(p3.x-p1.x,p3.y-p1.y,p3.z-p1.z);
-
 	float x0 = p1.x, y0 = p1.y;
 	if(Quality&MGL_DRAW_NORM)	for(long i=x1;i<=x2;i++)	for(long j=y1;j<=y2;j++)
 	{
@@ -792,7 +791,7 @@ void mglCanvas::trig_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 		register float u = dxu*xx+dyu*yy, v = dxv*xx+dyv*yy;
 		if(u<0 || v<0 || u+v>1)	continue;
 		p = p1+d1*u+d2*v;
-		if(mgl_isnan(p.u) && mgl_isnum(p.v) && anorm)
+		if(mgl_isnan(p.u) && anorm)
 		{	p.u = nr.x;	p.v = nr.y;	p.w = nr.z;	}
 		pnt_plot(i,j,p.z,col2int(p,r,d->ObjId),d->ObjId);
 	}

@@ -69,13 +69,11 @@ void smgl_surf(mglGraph *gr);
 void test(mglGraph *gr)
 {
 printf("Start test");
-	gr->Rotate(40,60);	gr->Axis();
-	return;
 
 	mglParse par;
 	par.AllowSetSize(true);
 	setlocale(LC_CTYPE, "");
-	par.Execute(gr,"ball 0 0 '+'\n");
+	par.Execute(gr,"light on:light 0 1 0 0:cone 0 0 -1 0 0 1 1 0 '4r'\n");
 
 //	FILE *fp=fopen("/home/balakin/progr/mathgl-code/mathgl-2x/build/test.mgl","r");
 //	par.Execute(gr,fp,true);

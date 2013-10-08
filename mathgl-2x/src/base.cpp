@@ -241,7 +241,9 @@ long mglBase::AddPnt(const mglMatrix *mat, mglPoint p, mreal c, mglPoint n, mrea
 	{
 		q.x=q.xx=int(p.x*10)*0.1;	q.y=q.yy=int(p.y*10)*0.1;	q.z=q.zz=int(p.z*10)*0.1;
 		q.c=int(c*100)*0.01;	q.t=q.ta=int(a*100)*0.01;
-		q.u=int(n.x*100)*0.01;	q.v=int(n.y*100)*0.01;	q.w=int(n.z*100)*0.01;
+		q.u=mgl_isnum(n.x)?int(n.x*100)*0.01:NAN;
+		q.v=mgl_isnum(n.y)?int(n.y*100)*0.01:NAN;
+		q.w=mgl_isnum(n.z)?int(n.z*100)*0.01:NAN;
 	}
 	else
 	{
@@ -1037,6 +1039,7 @@ void mglBase::SetMask(const char *p)
 		{
 			if(p[i]=='{')	m++;	if(p[i]=='}')	m--;
 			if(m>0)	continue;
+			if(p[i]==':')	break;
 			s = mglchr(msk, p[i]);
 			if(s)	mask = mgl_mask_val[s-msk];
 			else if(mglchr(wdh,p[i]))	PenWidth = p[i]-'0';

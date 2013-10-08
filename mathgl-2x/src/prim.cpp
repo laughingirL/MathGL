@@ -213,7 +213,7 @@ void MGL_EXPORT mgl_cone(HMGL gr, double x1, double y1, double z1, double x2, do
 	if(r1==0 && r2==0)	return;
 
 	static int cgid=1;	gr->StartGroup("Cone",cgid++);
-	mglPoint p1(x1,y1,z1), p2(x2,y2,z2), p,q, d=p2-p1,a,b;
+	mglPoint p1(x1,y1,z1), p2(x2,y2,z2), p,q,t, d=p2-p1,a,b;
 	a=!d;	a.Normalize();		b=d^a;	b.Normalize();
 	long ss=gr->AddTexture(stl);
 	mreal c1=gr->GetC(ss,p1.z), c2=gr->GetC(ss,p2.z), dr=r2-r1;
@@ -229,20 +229,21 @@ void MGL_EXPORT mgl_cone(HMGL gr, double x1, double y1, double z1, double x2, do
 	long n=wire?6:18;	//wire?6:18;
 	if(mglchr(stl,'4'))	n=2;
 	else if(mglchr(stl,'6'))	n=3;
+	else if(mglchr(stl,'8'))	n=4;
 #pragma omp parallel for private(p,q)
 	for(long i=0;i<2*n+1;i++)
 	{
 		if(gr->Stop)	continue;
-		register int f=(2*i+1)*90/n;
+		register int f = n!=4?(2*i+1)*90/n:45*i;
 		register mreal co = mgl_cos[f%360], si = mgl_cos[(f+270)%360];
 		p = p1+(r1*co)*a+(r1*si)*b;
-		q = (si*a-co*b)^(d + (dr*co)*a + (dr*si)*b);
-		if(wire)	q.x=q.y=NAN;
+		q = (si*a-co*b)^(d + (dr*co)*a + (dr*si)*b);	t=d;
+		if(wire || n<6)	q.x=t.x=NAN;
 		kk[i] = gr->AddPnt(p,c1,q,-1,3);
-		if(edge && !wire)	kk[i+82] = gr->AddPnt(p,c1,d,-1,3);
+		if(edge && !wire)	kk[i+82] = gr->AddPnt(p,c1,t,-1,3);
 		p = p2+(r2*co)*a+(r2*si)*b;
 		kk[i+2*n+1] = gr->AddPnt(p,c2,q,-1,3);
-		if(edge && !wire)	kk[i+123] = gr->AddPnt(p,c2,d,-1,3);
+		if(edge && !wire)	kk[i+123] = gr->AddPnt(p,c2,t,-1,3);
 	}
 	if(wire)
 //#pragma omp parallel for		// useless
