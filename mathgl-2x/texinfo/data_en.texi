@@ -466,7 +466,7 @@ The same as previous ones but coordinates @samp{x}, @samp{y}, @samp{z} are suppo
 @deftypefn {MGL command} {} fillsample dat 'how'
 @ifclear UDAV
 @deftypefnx {Method on @code{mglData}} @code{void} FillSample (@code{const char *}how)
-@deftypefnx mglData @code{void} mgl_data_fill_sample (@code{HMDT} a, @code{const char *}how)
+@deftypefnx {C function} @code{void} mgl_data_fill_sample (@code{HMDT} a, @code{const char *}how)
 @end ifclear
 Fills data by 'x' or 'k' samples for Hankel ('h') or Fourier ('f') transform.
 @end deftypefn
@@ -486,7 +486,9 @@ Fills the value of array according to the linear interpolation of triangulated s
 @deftypefn {MGL command} {} put dat @code{val [i=: j=: k=:]}
 @ifclear UDAV
 @deftypefnx {Method on @code{mglData}} @code{void} Put (@code{mreal} val, @code{int} i=@code{-1}, @code{int} j=@code{-1}, @code{int} k=@code{-1})
-@deftypefnx mglData @code{void} mgl_data_put_val (@code{HMDT} a, @code{mreal} val, @code{int} i, @code{int} j, @code{int} k)
+@deftypefnx {Method on @code{mglDataC}} @code{void} Put (@code{dual} val, @code{int} i=@code{-1}, @code{int} j=@code{-1}, @code{int} k=@code{-1})
+@deftypefnx {C function} @code{void} mgl_data_put_val (@code{HMDT} a, @code{mreal} val, @code{int} i, @code{int} j, @code{int} k)
+@deftypefnx {C function} @code{void} mgl_datac_put_val (@code{HADT} a, @code{dual} val, @code{int} i, @code{int} j, @code{int} k)
 @end ifclear
 Sets value(s) of array a[@var{i}, @var{j}, @var{k}] = @var{val}. Negative indexes @var{i}, @var{j}, @var{k}=-1 set the value @var{val} to whole range in corresponding direction(s). For example, @code{Put(val,-1,0,-1);} sets a[i,0,j]=@var{val} for i=0...(nx-1), j=0...(nz-1).
 @end deftypefn
@@ -494,7 +496,9 @@ Sets value(s) of array a[@var{i}, @var{j}, @var{k}] = @var{val}. Negative indexe
 @deftypefn {MGL command} {} put dat vdat [@code{i=: j=: k=:}]
 @ifclear UDAV
 @deftypefnx {Method on @code{mglData}} @code{void} Put (@code{const mglDataA &}v, @code{int} i=@code{-1}, @code{int} j=@code{-1}, @code{int} k=@code{-1})
-@deftypefnx mglData @code{void} mgl_data_put_dat (@code{HMDT} a, @code{HCDT} v, @code{int} i, @code{int} j, @code{int} k)
+@deftypefnx {Method on @code{mglDataC}} @code{void} Put (@code{const mglDataA &}v, @code{int} i=@code{-1}, @code{int} j=@code{-1}, @code{int} k=@code{-1})
+@deftypefnx {C function} @code{void} mgl_data_put_dat (@code{HMDT} a, @code{HCDT} v, @code{int} i, @code{int} j, @code{int} k)
+@deftypefnx {C function} @code{void} mgl_datac_put_dat (@code{HADT} a, @code{HCDT} v, @code{int} i, @code{int} j, @code{int} k)
 @end ifclear
 Copies value(s) from array @var{v} to the range of original array. Negative indexes @var{i}, @var{j}, @var{k}=-1 set the range in corresponding direction(s). At this minor dimensions of array @var{v} should be large than corresponding dimensions of this array. For example, @code{Put(v,-1,0,-1);} sets a[i,0,j]=v.ny>nz ? v[i,j] : v[i], where i=0...(nx-1), j=0...(nz-1) and condition v.nx>=nx is true.
 @end deftypefn
@@ -503,9 +507,9 @@ Copies value(s) from array @var{v} to the range of original array. Negative inde
 @deftypefn {MGL command} {} idset dat 'ids'
 @ifclear UDAV
 @deftypefnx {Method on @code{mglData}} @code{void} SetColumnId (@code{const char *}ids)
-@deftypefnx mglData @code{void} mgl_data_set_id (@code{HMDT} a, @code{const char *}ids)
 @deftypefnx {Method on @code{mglDataC}} @code{void} SetColumnId (@code{const char *}ids)
-@deftypefnx mglData @code{void} mgl_datac_set_id (@code{HADT} a, @code{const char *}ids)
+@deftypefnx {C function} @code{void} mgl_data_set_id (@code{HMDT} a, @code{const char *}ids)
+@deftypefnx {C function} @code{void} mgl_datac_set_id (@code{HADT} a, @code{const char *}ids)
 @end ifclear
 Sets the symbol @var{ids} for data columns. The string should contain one symbol 'a'...'z' per column. These ids are used in @ref{column}.
 @end deftypefn
@@ -1043,16 +1047,20 @@ However, there are much special faster functions in other modes (C/C++/Fortran/P
 
 @cindex Spline
 @deftypefn {Method on @code{mglData}} @code{mreal} Spline (@code{mreal} x, @code{mreal} y=@code{0}, @code{mreal} z=@code{0}) @code{const}
+@deftypefnx {Method on @code{mglDataC}} @code{dual} Spline (@code{mreal} x, @code{mreal} y=@code{0}, @code{mreal} z=@code{0}) @code{const}
 @deftypefnx {C function} @code{mreal} mgl_data_spline (@code{HCDT} dat, @code{mreal} x, @code{mreal} y, @code{mreal} z)
+@deftypefnx {C function} @code{dual} mgl_datac_spline (@code{HCDT} dat, @code{mreal} x, @code{mreal} y, @code{mreal} z)
 Interpolates data by cubic spline to the given point @var{x} in [0...nx-1], @var{y} in [0...ny-1], @var{z} in [0...nz-1].
 @end deftypefn
 @cindex Spline1
 @deftypefn {Method on @code{mglData}} @code{mreal} Spline1 (@code{mreal} x, @code{mreal} y=@code{0}, @code{mreal} z=@code{0}) @code{const}
+@deftypefnx {Method on @code{mglDataC}} @code{dual} Spline1 (@code{mreal} x, @code{mreal} y=@code{0}, @code{mreal} z=@code{0}) @code{const}
 Interpolates data by cubic spline to the given point @var{x}, @var{y}, @var{z} which assumed to be normalized in range [0, 1].
 @end deftypefn
 
 @deftypefn {Method on @code{mglData}} @code{mreal} Spline (@code{mglPoint} &dif, @code{mreal} x, @code{mreal} y=@code{0}, @code{mreal} z=@code{0}) @code{const}
 @deftypefnx {C function} @code{mreal} mgl_data_spline_ext (@code{HCDT} dat, @code{mreal} x, @code{mreal} y, @code{mreal} z, @code{mreal *}dx, @code{mreal *}dy, @code{mreal *}dz)
+@deftypefnx {C function} @code{dual} mgl_datac_spline_ext (@code{HCDT} dat, @code{mreal} x, @code{mreal} y, @code{mreal} z, @code{dual *}dx, @code{dual *}dy, @code{dual *}dz)
 Interpolates data by cubic spline to the given point @var{x} in [0...nx-1], @var{y} in [0...ny-1], @var{z} in [0...nz-1]. The values of derivatives at the point are saved in @var{dif}.
 @end deftypefn
 @cindex Spline1

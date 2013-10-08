@@ -187,6 +187,9 @@ Set new grapher instead of built-in one. Note that Fl_MathGL will automatically 
 @deftypemethod Fl_MathGL @code{HMGL} get_graph ()
 Get pointer to grapher.
 @end deftypemethod
+@deftypemethod Fl_MathGL @code{void} adjust ()
+Adjust image size to fit whole widget.
+@end deftypemethod
 
 @deftypecv {Fl_MathGL option} Fl_MathGL @code{Fl_Valuator *} tet_val
 Pointer to external tet-angle validator.

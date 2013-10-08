@@ -185,6 +185,9 @@ public:
 @deftypemethod Fl_MathGL @code{mglGraph *} get_graph ()
 Возвращает указатель на объект, строящий графики.
 @end deftypemethod
+@deftypemethod Fl_MathGL @code{void} adjust ()
+Подгоняет размер картинки под размер окна.
+@end deftypemethod
 
 @deftypecv {Widget option} Fl_MathGL @code{Fl_Valuator *} tet_val
 Указатель на внешний элемент управления для изменения угла tet.

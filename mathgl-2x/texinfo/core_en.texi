@@ -1028,13 +1028,13 @@ Sets size of picture in pixels. This function @strong{must be} called before any
 @deftypefnx {Method on @code{mglGraph}} @code{void} SetQuality (@code{int} val=@code{MGL_DRAW_NORM})
 @deftypefnx {C function} @code{void} mgl_set_quality (@code{HMGL} gr, @code{int} val)
 @end ifclear
-Sets quality of the plot depending on value @var{val}: @code{MGL_DRAW_WIRE=0} -- no face drawing (fastest), @code{MGL_DRAW_FAST=1} -- no color interpolation (fast), @code{MGL_DRAW_NORM=2} -- high quality (normal), @code{MGL_DRAW_HIGH=3} -- high quality with 3d primitives (arrows and marks). If @code{MGL_DRAW_LMEM=0x4} is set then direct bitmap drawing is used (low memory usage).
+Sets quality of the plot depending on value @var{val}: @code{MGL_DRAW_WIRE=0} -- no face drawing (fastest), @code{MGL_DRAW_FAST=1} -- no color interpolation (fast), @code{MGL_DRAW_NORM=2} -- high quality (normal), @code{MGL_DRAW_HIGH=3} -- high quality with 3d primitives (arrows and marks); @code{MGL_DRAW_LMEM=0x4} -- direct bitmap drawing (low memory usage); @code{MGL_DRAW_DOTS=0x8} -- for dots drawing instead of primitives (extremely fast).
 @end deftypefn
 
 @ifclear UDAV
 @deftypefn {Method on @code{mglGraph}} @code{int} GetQuality ()
 @deftypefnx {C function} @code{int} mgl_get_quality (@code{HMGL} gr)
-Gets quality of the plot: @code{MGL_DRAW_WIRE=0} -- no face drawing (fastest), @code{MGL_DRAW_FAST=1} -- no color interpolation (fast), @code{MGL_DRAW_NORM=2} -- high quality (normal), @code{MGL_DRAW_HIGH=3} -- high quality with 3d primitives (arrows and marks). If @code{MGL_DRAW_LMEM=0x4} is set then direct bitmap drawing is used (low memory usage).
+Gets quality of the plot: @code{MGL_DRAW_WIRE=0} -- no face drawing (fastest), @code{MGL_DRAW_FAST=1} -- no color interpolation (fast), @code{MGL_DRAW_NORM=2} -- high quality (normal), @code{MGL_DRAW_HIGH=3} -- high quality with 3d primitives (arrows and marks); @code{MGL_DRAW_LMEM=0x4} -- direct bitmap drawing (low memory usage); @code{MGL_DRAW_DOTS=0x8} -- for dots drawing instead of primitives (extremely fast).
 @end deftypefn
 
 @deftypefn {Method on @code{mglGraph}} @code{void} StartGroup (const char *name)
@@ -1510,7 +1510,17 @@ Draw the drop with radius @var{r} at point @var{p} elongated in direction @var{d
 @deftypefnx {Method on @code{mglGraph}} @code{void} Cone (@code{mglPoint} p1, @code{mglPoint} p2, @code{mreal} r1, @code{mreal} r2=@code{-1}, @code{const char *}stl=@code{"B"})
 @deftypefnx {C function} @code{void} mgl_cone (@code{HMGL} gr, @code{mreal} x1, @code{mreal} y1, @code{mreal} z1, @code{mreal} x2, @code{mreal} y2, @code{mreal} z2, @code{mreal} r1, @code{mreal} r2, @code{const char *}stl)
 @end ifclear
-Draw tube (or truncated cone if @var{edge}=@code{false}) between points @var{p1}, @var{p2} with radius at the edges @var{r1}, @var{r2}. If @var{r2}<0 then it is supposed that @var{r2}=@var{r1}. The cone color is defined by string @var{stl}. If style contain @samp{@@} then edges will be drawn.
+Draw tube (or truncated cone if @var{edge}=@code{false}) between points @var{p1}, @var{p2} with radius at the edges @var{r1}, @var{r2}. If @var{r2}<0 then it is supposed that @var{r2}=@var{r1}. The cone color is defined by string @var{stl}. Parameter @var{stl} can contain:
+@itemize @bullet
+@item
+@samp{@@} for drawing edges;
+@item
+@samp{#} for wired cones;
+@item
+@samp{t} for drawing tubes/cylinder instead of cones/prisms;
+@item
+@samp{4}, @samp{6}, @samp{8}, @samp{t} for drawing square, hex- or octo-prism instead of cones.
+@end itemize
 @end deftypefn
 
 @anchor{circle}
@@ -1666,6 +1676,8 @@ Draws axes with ticks (see @ref{Axis settings}). Parameter @var{dir} may contain
 @item
 @samp{U} for disabling rotation of tick labels;
 @item
+@samp{^} for inverting default axis origin;
+@item
 @samp{AKDTVISO} for drawing arrow at the end of axis;
 @item
 @samp{a} for forced adjusting of axis ticks.
@@ -1769,6 +1781,8 @@ These functions draw legend to the graph (useful for @ref{1D plotting}). Legend 
 font style for legend text;
 @item
 @samp{A} for positioning in absolute coordinates;
+@item
+@samp{^} for positioning outside of specified point;
 @item
 @samp{#} for drawing box around legend;
 @item
@@ -2001,7 +2015,18 @@ These functions draw horizontal bars from points to axis plane. If string contai
 @deftypefnx {C function} @code{void} mgl_cones_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_cones_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-These functions draw cones from points to axis plane. If string contain symbol @samp{a} then cones are drawn one above another (like summation). You can give different colors for positive and negative values if number of specified colors is equal to 2*number of curves. See also @ref{bars}, @ref{barwidth}. @sref{Cones sample}
+These functions draw cones from points to axis plane. If string contain symbol @samp{a} then cones are drawn one above another (like summation). You can give different colors for positive and negative values if number of specified colors is equal to 2*number of curves. Parameter @var{pen} can contain:
+@itemize @bullet
+@item
+@samp{@@} for drawing edges;
+@item
+@samp{#} for wired cones;
+@item
+@samp{t} for drawing tubes/cylinders instead of cones/prisms;
+@item
+@samp{4}, @samp{6}, @samp{8}, @samp{t} for drawing square, hex- or octo-prism instead of cones.
+@end itemize
+See also @ref{bars}, @ref{cone}, @ref{barwidth}. @sref{Cones sample}
 @end deftypefn
 
 
