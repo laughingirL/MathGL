@@ -212,6 +212,88 @@ void smgl_fexport(mglGraph *gr)	// test file export
 	gr->WritePRC("fexport.prc");
 }
 //-----------------------------------------------------------------------------
+const char *mmgl_refill="new x 10 '0.5+rnd':cumsum x 'x':norm x -1 1\n"
+"copy y sin(pi*x)/2\nbox:axis:plot x y 'o '\n"
+"new r 100:refill r x y\nplot r 'r'\nfplot 'sin(pi*x)/2' 'B:'";
+void smgl_refill(mglGraph *gr)
+{
+	mglData x(10), y(10), r(100);
+	x.Modify("0.5+rnd");	x.CumSum("x");	x.Norm(-1,1);
+	y.Modify("sin(pi*v)/2",x);
+	gr->Axis();	gr->Box();	gr->Plot(x,y,"o ");
+	gr->Refill(r,x,y);	// or you can use r.Refill(x,y,-1,1);
+	gr->Plot(r,"r");	gr->FPlot("sin(pi*x)/2","B:");
+}
+//-----------------------------------------------------------------------------
+const char *mmgl_correl="new a 100 'exp(-10*x^2)'\n"
+"new b 100 'exp(-10*(x+0.5)^2)'\n"
+"yrange 0 1\nsubplot 1 2 0 '_':title 'Input fields'\n"
+"plot a:plot b:box:axis\n"
+"correl r a b 'x'\nnorm r 0 1:swap r 'x' # make it human readable\n"
+"subplot 1 2 1 '_':title 'Correlation of a and b'\n"
+"plot r 'r':axis:box\nline 0.5 0 0.5 1 'B|'\n";
+void smgl_correl(mglGraph *gr)
+{
+	mglData a(100),b(100);
+	gr->Fill(a,"exp(-10*x^2)");	gr->Fill(b,"exp(-10*(x+0.5)^2)");
+	gr->SetRange('y',0,1);
+	gr->SubPlot(1,2,0,"_");	gr->Title("Input fields");
+	gr->Plot(a);	gr->Plot(b);	gr->Axis();	gr->Box();
+	mglData r = a.Correl(b,"x");
+	r.Norm(0,1);	r.Swap("x");	// make it human readable
+	gr->SubPlot(1,2,1,"_");	gr->Title("Correlation of a and b");
+	gr->Plot(r,"r");	gr->Axis();	gr->Box();
+	gr->Line(mglPoint(0.5,0),mglPoint(0.5,1),"B|");
+}
+//-----------------------------------------------------------------------------
+const char *mmgl_mask="new a 10 10 'x'\n"
+"subplot 5 4 0 '':title '\"-\" mask':dens a '3-'\n"
+"subplot 5 4 1 '':title '\"+\" mask':dens a '3+'\n"
+"subplot 5 4 2 '':title '\"=\" mask':dens a '3='\n"
+"subplot 5 4 3 '':title '\";\" mask':dens a '3;'\n"
+"subplot 5 4 4 '':title '\";I\" mask':dens a '3;I'\n"
+"subplot 5 4 5 '':title '\"o\" mask':dens a '3o'\n"
+"subplot 5 4 6 '':title '\"O\" mask':dens a '3O'\n"
+"subplot 5 4 7 '':title '\"s\" mask':dens a '3s'\n"
+"subplot 5 4 8 '':title '\"S\" mask':dens a '3S'\n"
+"subplot 5 4 9 '':title '\";/\" mask':dens a '3;/'\n"
+"subplot 5 4 10 '':title '\"~\" mask':dens a '3~'\n"
+"subplot 5 4 11 '':title '\"<\" mask':dens a '3<'\n"
+"subplot 5 4 12 '':title '\">\" mask':dens a '3>'\n"
+"subplot 5 4 13 '':title '\"j\" mask':dens a '3j'\n"
+"subplot 5 4 14 '':title '\"-;\\\" mask':dens a '3;\\ '\n"
+"subplot 5 4 15 '':title '\"d\" mask':dens a '3d'\n"
+"subplot 5 4 16 '':title '\"D\" mask':dens a '3D'\n"
+"subplot 5 4 17 '':title '\"*\" mask':dens a '3*'\n"
+"subplot 5 4 18 '':title '\"^\" mask':dens a '3^'\n"
+"subplot 5 4 19 '':title 'manual mask'\n"
+"mask '+' 'ff00182424f80000':dens a '3+'";
+void smgl_mask(mglGraph *gr)
+{
+	mglData a(10,10);	a.Fill(-1,1);
+	gr->SubPlot(5,4,0,"");	gr->Title("'-' mask");	gr->Dens(a,"3-");
+	gr->SubPlot(5,4,1,"");	gr->Title("'+' mask");	gr->Dens(a,"3+");
+	gr->SubPlot(5,4,2,"");	gr->Title("'=' mask");	gr->Dens(a,"3=");
+	gr->SubPlot(5,4,3,"");	gr->Title("';' mask");	gr->Dens(a,"3;");
+	gr->SubPlot(5,4,4,"");	gr->Title("';I' mask");	gr->Dens(a,"3;I");
+	gr->SubPlot(5,4,5,"");	gr->Title("'o' mask");	gr->Dens(a,"3o");
+	gr->SubPlot(5,4,6,"");	gr->Title("'O' mask");	gr->Dens(a,"3O");
+	gr->SubPlot(5,4,7,"");	gr->Title("'s' mask");	gr->Dens(a,"3s");
+	gr->SubPlot(5,4,8,"");	gr->Title("'S' mask");	gr->Dens(a,"3S");
+	gr->SubPlot(5,4,9,"");	gr->Title("';/' mask");	gr->Dens(a,"3;/");
+	gr->SubPlot(5,4,10,"");	gr->Title("'~' mask");	gr->Dens(a,"3~");
+	gr->SubPlot(5,4,11,"");	gr->Title("'<' mask");	gr->Dens(a,"3<");
+	gr->SubPlot(5,4,12,"");	gr->Title("'>' mask");	gr->Dens(a,"3>");
+	gr->SubPlot(5,4,13,"");	gr->Title("'j' mask");	gr->Dens(a,"3j");
+	gr->SubPlot(5,4,14,"");	gr->Title("';\\\\' mask");	gr->Dens(a,"3;\\");
+	gr->SubPlot(5,4,15,"");	gr->Title("'d' mask");	gr->Dens(a,"3d");
+	gr->SubPlot(5,4,16,"");	gr->Title("'D' mask");	gr->Dens(a,"3D");
+	gr->SubPlot(5,4,17,"");	gr->Title("'*' mask");	gr->Dens(a,"3*");
+	gr->SubPlot(5,4,18,"");	gr->Title("'^' mask");	gr->Dens(a,"3^");
+	gr->SubPlot(5,4,19,"");	gr->Title("manual mask");
+	gr->SetMask('+', "ff00182424f80000");	gr->Dens(a,"3+");
+}
+//-----------------------------------------------------------------------------
 const char *mmgl_export="new a 100 100 'x^2*y':new b 100 100\n"
 "export a 'test_data.png' 'BbcyrR' -1 1\n"
 "import b 'test_data.png' 'BbcyrR' -1 1\n"
@@ -2573,6 +2655,7 @@ mglSample samp[] = {
 	{"contf_xyz", smgl_contf_xyz, mmgl_contf_xyz},
 	{"contfa", smgl_contfa, mmgl_contfa},
 	{"contv", smgl_contv, mmgl_contv},
+	{"correl", smgl_correl, mmgl_correl},
 //	{"crust", smgl_crust, mmgl_crust},	// TODO: open after triangulation
 	{"curvcoor", smgl_curvcoor, mmgl_curvcoor},
 	{"cut", smgl_cut, mmgl_cut},
@@ -2603,6 +2686,7 @@ mglSample samp[] = {
 	{"loglog", smgl_loglog, mmgl_loglog},
 	{"map", smgl_map, mmgl_map},
 	{"mark", smgl_mark, mmgl_mark},
+	{"mask", smgl_mask, mmgl_mask},
 	{"mesh", smgl_mesh, mmgl_mesh},
 	{"mirror", smgl_mirror, mmgl_mirror },
 	{"molecule", smgl_molecule, mmgl_molecule },
@@ -2619,6 +2703,7 @@ mglSample samp[] = {
 	{"projection5", smgl_projection5, mmgl_projection5 },
 	{"qo2d", smgl_qo2d, mmgl_qo2d},
 	{"radar", smgl_radar, mmgl_radar},
+	{"refill", smgl_refill, mmgl_refill},
 	{"region", smgl_region, mmgl_region},
 	{"schemes", smgl_schemes, mmgl_schemes },
 	{"several_light", smgl_several_light, mmgl_several_light },

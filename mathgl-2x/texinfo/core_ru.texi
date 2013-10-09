@@ -169,12 +169,13 @@ MGL не требует создания данного типа объекто�
 @end deftypefn
 
 @anchor{diffuse}
+@deftypefn {Команда MGL} {} diffuse @code{val}
 @ifclear UDAV
-@deftypefn {Метод класса @code{mglGraph}} @code{void} SetDifLight (@code{bool} enable)
-@deftypefnx {Функция С} @code{void} mgl_set_light_dif (@code{HMGL} gr, @code{int} enable)
-Задает использование диффузного освещения (только для локальных источников света).
-@end deftypefn
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} SetDifLight (@code{mreal} bright)
+@deftypefnx {Функция С} @code{void} mgl_set_difbr (@code{HMGL} gr, @code{mreal} bright)
 @end ifclear
+Задает яркость диффузного освещения (только для локальных источников света).
+@end deftypefn
 
 @anchor{ambient}
 @deftypefn {Команда MGL} {} ambient @code{val}

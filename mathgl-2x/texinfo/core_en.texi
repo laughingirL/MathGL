@@ -178,12 +178,13 @@ The function adds a light source with identification @var{n} in direction @var{d
 @end deftypefn
 
 @anchor{diffuse}
+@deftypefn {MGL command} {} diffuse @code{val}
 @ifclear UDAV
-@deftypefn {Method on @code{mglGraph}} @code{void} SetDifLight (@code{bool} enable)
-@deftypefnx {C function} @code{void} mgl_set_light_dif (@code{HMGL} gr, @code{int} enable)
-Set on/off to use diffusive light (only for local light sources).
-@end deftypefn
+@deftypefnx {Method on @code{mglGraph}} @code{void} SetDiffuse (@code{mreal} bright)
+@deftypefnx {C function} @code{void} mgl_set_difbr (@code{HMGL} gr, @code{mreal} bright)
 @end ifclear
+Set brightness of diffusive light (only for local light sources).
+@end deftypefn
 
 @anchor{ambient}
 @deftypefn {MGL command} {} ambient @code{val}

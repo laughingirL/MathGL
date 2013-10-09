@@ -8,7 +8,7 @@
 		several_light solve stem step stereo stfa style surf3a surf3c surf3
 		surfa surfc surf table tape tens ternary textmark text ticks tile tiles
 		torus traj triangulation triplot tube type0 type1 type2 vect vecta venn
-		projection5 param1 param2 param3 paramv )
+		projection5 param1 param2 param3 paramv mask correl refill )
 	set(MGL_PNG_N )
 	set(MGL_PNG_S )
 	set(MGL_PNG_J )
@@ -89,6 +89,7 @@ endif(MGL_HAVE_DOC_PRC)
 		WORKING_DIRECTORY ${MGL_OUT}
 	)
 	add_custom_command(OUTPUT ${MGL_OUT}/mathgl_en/mathgl_en.html
+#		COMMAND ${findmi} --html -I ${MGL_OUT}/png --force -o mathgl_en ${MGL_TEX}/mathgl_en.texi
 		COMMAND ${findth} -I=${MGL_OUT}/png --split=section -o mathgl_en ${MGL_TEX}/mathgl_en.texi
 		DEPENDS ${list_texi_files_en} mathgl_en.texi ${MGL_PNG_N}
 		WORKING_DIRECTORY ${MGL_OUT}

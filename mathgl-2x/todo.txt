@@ -33,7 +33,6 @@ A. Paper about MathGL!!!
 12. GLUT testing
 13. OpenGL in FLTK as test?!
 14. Test speed for different quality
-16. Refill() sample
 
 
 ============= DOCUMENTATION =============
@@ -43,13 +42,11 @@ A. Paper about MathGL!!!
 3. Add "Local light sample"
 6. Docs about mglData[C]::Correl() & AutoCorrel() + hint about Swap()
 10. Add "Data correlation sample"
-11. mgl_set_mask(char id, const char *mask); && mgl_set_mask_val(char id, uint64_t mask);
-12. Add 'Mask sample'
-13. Update docs about mask symbols "-+=;oOsS~<>jdD*^" + in color scheme
+11. mgl_set_mask(char id, const char *mask); && mgl_set_mask_val(char id, uint64_t mask); && SetMask && SetColor
+13. Update docs about mask symbols "-+=;oOsS~<>jdD*^" + in color scheme + mask sample
 14. Add chapter with real samples
 16. Add mglData::Refill() + 'refill' + mglGraph::Refill()
 17. Update cloud sample
-19. Add SetDiffuse() function.
 21. Add wxMathGL widget.
 
 ============= UDAV =============
@@ -61,7 +58,7 @@ A. Paper about MathGL!!!
 03. Dialog for InPlot(s):
 {SubPlot,MultiPlot}	-- enable rotate,aspect,title
 {ColumnPlot}		-- enable rotate,several
-{StickPlot}			-- enable several
+{StickPlot}		-- enable several
 {InPlot}			-- enable rotate,aspect,title
 Image with gray alternatives and black choice
 
