@@ -1575,6 +1575,7 @@ const char *mmgl_light="light on:quality 6\ncall 'prepare2d'\n"
 "line 1 0 1 -1 -1 0 'BAO'\n";
 void smgl_light(mglGraph *gr)	// local light sources
 {
+	int qual = gr->GetQuality();
 	gr->Light(true);	gr->SetQuality(6);
 	mglData a;	mgls_prepare2d(&a);
 	gr->SubPlot(2,2,0);	gr->Title("Default");	gr->Rotate(50,60);	gr->Box();	gr->Surf(a);
@@ -1589,6 +1590,7 @@ void smgl_light(mglGraph *gr)	// local light sources
 	gr->AddLight(0,mglPoint(1,0,1),mglPoint(-2,-1,-1),'w',0);
 	gr->SubPlot(2,2,3);	gr->Title("diffusive only");	gr->Rotate(50,60);	gr->Box();	gr->Surf(a);
 	gr->Line(mglPoint(1,0,1),mglPoint(-1,-1,0),"BAO");
+	gr->SetQuality(qual);
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_surf3="call 'prepare3d'\nlight on:alpha on\n"

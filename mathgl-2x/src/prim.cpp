@@ -744,7 +744,7 @@ void MGL_EXPORT mgl_labelw_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const wchar_t *t
 	for(long j=0;j<m;j++)
 	{
 		mx = j<x->GetNy() ? j:0;	my = j<y->GetNy() ? j:0;	mz = j<z->GetNy() ? j:0;
-#pragma omp parallel for
+#pragma omp parallel for private(tmp)
 		for(long i=0;i<n;i++)
 		{
 			if(gr->Stop)	continue;

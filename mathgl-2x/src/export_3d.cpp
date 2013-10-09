@@ -533,7 +533,7 @@ std::string mglCanvas::GetJSON()
 	size_t i,l=Pnt.size();
 	long factor = Width>1?10:10000;
 	res = res + mgl_sprintf("{\n\"width\":%d,\t\"height\":%d,\t\"depth\":%d,\t\"plotid\":\"%s\",\t\"npnts\":%lu,\t\"pnts\":[\n",
-			factor*Width, factor*Height, Depth, PlotId.c_str(), (unsigned long)l);
+			factor*Width, factor*Height, factor*Depth, PlotId.c_str(), (unsigned long)l);
 	for(i=0;i<l;i++)
 	{
 		const mglPnt &q=Pnt[i];

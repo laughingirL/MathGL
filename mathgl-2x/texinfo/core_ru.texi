@@ -1357,11 +1357,13 @@ gr.GetBGRN(bits, len(bits));
 Эти функции рисуют рисуют простые объекты типа линий, точек, сфер, капель, конусов, и т.д.
 
 @anchor{clf}
-@deftypefn {Команда MGL} {} clf
+@deftypefn {Команда MGL} {} clf ['col']
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} Clf ()
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Clf (@code{char} col)
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} Clf (@code{mreal} r, @code{mreal} g, @code{mreal} b)
 @deftypefnx {Функция С} @code{void} mgl_clf (@code{HMGL} gr)
+@deftypefnx {Функция С} @code{void} mgl_clf_chr (@code{HMGL} gr, @code{char} col)
 @deftypefnx {Функция С} @code{void} mgl_clf_rgb (@code{HMGL} gr, @code{mreal} r, @code{mreal} g, @code{mreal} b)
 @end ifclear
 Очищает рисунок и заполняет его заданным цветом.
@@ -1880,7 +1882,7 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Функция С} @code{void} mgl_bars_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_bars_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-Функции рисуют вертикальные полосы (прямоугольники) из точек до плоскости осей координат. Если строка @var{pen} содержит символ @samp{a}, то линии рисуются одна поверх другой. Если строка содержит символ @samp{f}, то рисуется график типа waterfall для определения кумулятивного эффекта последовательности положительных и отрицательных значений. Можно использовать разные цвета для положительных и отрицательных значений если число указанных цветов равно удвоенному числу кривых для построения. См. также @ref{barh}, @ref{cones}, @ref{area}, @ref{stem}, @ref{chart}, @ref{barwidth}. @sref{Bars sample}
+Функции рисуют вертикальные полосы (прямоугольники) из точек до плоскости осей координат. Если строка @var{pen} содержит символ @samp{a}, то линии рисуются одна поверх другой. Если строка содержит символ @samp{f}, то рисуется график типа waterfall для определения кумулятивного эффекта последовательности положительных и отрицательных значений. Можно использовать разные цвета для положительных и отрицательных значений если число указанных цветов равно удвоенному числу кривых для построения. Если @var{pen} содержит @samp{<}, @samp{^} или @samp{>}, то полоски будут выровнены влево, вправо или центрированы относительно их координат. См. также @ref{barh}, @ref{cones}, @ref{area}, @ref{stem}, @ref{chart}, @ref{barwidth}. @sref{Bars sample}
 @end deftypefn
 
 @anchor{barh}
@@ -1892,7 +1894,7 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Функция С} @code{void} mgl_barh (@code{HMGL} gr, @code{HCDT} v, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_barh_xy (@code{HMGL} gr, @code{HCDT} y, @code{HCDT} v, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-Функции рисуют горизонтальные полосы (прямоугольники) из точек до плоскости осей координат. Если строка @var{pen} содержит символ @samp{a}, то линии рисуются одна поверх другой. Если строка содержит символ @samp{f}, то рисуется график типа waterfall для определения кумулятивного эффекта последовательности положительных и отрицательных значений. Можно использовать разные цвета для положительных и отрицательных значений если число указанных цветов равно удвоенному числу кривых для построения. См. также @ref{bars}, @ref{barwidth}. @sref{Barh sample}
+Функции рисуют горизонтальные полосы (прямоугольники) из точек до плоскости осей координат. Если строка @var{pen} содержит символ @samp{a}, то линии рисуются одна поверх другой. Если строка содержит символ @samp{f}, то рисуется график типа waterfall для определения кумулятивного эффекта последовательности положительных и отрицательных значений. Можно использовать разные цвета для положительных и отрицательных значений если число указанных цветов равно удвоенному числу кривых для построения. Если @var{pen} содержит @samp{<}, @samp{^} или @samp{>}, то полоски будут выровнены влево, вправо или центрированы относительно их координат. См. также @ref{bars}, @ref{barwidth}. @sref{Barh sample}
 @end deftypefn
 
 @anchor{cones}
@@ -1916,7 +1918,9 @@ gr.GetBGRN(bits, len(bits));
 @item
 @samp{t} для рисования цилиндра вместо конуса/призмы;
 @item
-@samp{4}, @samp{6}, @samp{8}, @samp{t} для рисования квадратной, шестиугольной или восьмиугольной призмы вместо конуса.
+@samp{4}, @samp{6}, @samp{8}, @samp{t} для рисования квадратной, шестиугольной или восьмиугольной призмы вместо конуса;
+@item
+@samp{<}, @samp{^} или @samp{>} для выравнивания конусов влево, вправо или по центру относительно их координат.
 @end itemize
 См. также @ref{bars}, @ref{cone}, @ref{barwidth}. @sref{Cones sample}
 @end deftypefn
@@ -1941,7 +1945,7 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Функция С} @code{void} mgl_boxplot (@code{HMGL} gr, @code{HCDT} a, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_boxplot_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} a, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-Функции рисуют boxplot (называемый также как box-and-whisker diagram или как "ящик с усами") в точках @var{x}[i] на плоскости @var{z} = @var{zVal} (по умолчанию @var{z}=@var{Min.z}). Это график, компактно изображающий распределение вероятностей @var{a}[i,j] (минимум, нижний квартиль (Q1), медиана (Q2), верхний квартиль (Q3) и максимум) вдоль второго (j-го) направления. См. также @ref{plot}, @ref{error}, @ref{bars}, @ref{barwidth}. @sref{BoxPlot sample}
+Функции рисуют boxplot (называемый также как box-and-whisker diagram или как "ящик с усами") в точках @var{x}[i] на плоскости @var{z} = @var{zVal} (по умолчанию @var{z}=@var{Min.z}). Это график, компактно изображающий распределение вероятностей @var{a}[i,j] (минимум, нижний квартиль (Q1), медиана (Q2), верхний квартиль (Q3) и максимум) вдоль второго (j-го) направления. Если @var{pen} содержит @samp{<}, @samp{^} или @samp{>}, то полоски будут выровнены влево, вправо или центрированы относительно их координат. См. также @ref{plot}, @ref{error}, @ref{bars}, @ref{barwidth}. @sref{BoxPlot sample}
 @end deftypefn
 
 @anchor{candle}

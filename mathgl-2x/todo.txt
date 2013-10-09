@@ -32,6 +32,7 @@ A. Paper about MathGL!!!
 11. Check centered curved text (see text2)
 12. GLUT testing
 13. OpenGL in FLTK as test?!
+14. Test speed for different quality
 16. Refill() sample
 
 
@@ -40,7 +41,6 @@ A. Paper about MathGL!!!
 1. Add error2 sample
 2. Add "Triangulation sample"
 3. Add "Local light sample"
-4. Add style '<', '^', '>' for aligning/centering boxes in Bars(), Barh(), BoxPlot(), Cones(). Also this plots become centered by default if nx sizes are the same for all data.
 6. Docs about mglData[C]::Correl() & AutoCorrel() + hint about Swap()
 10. Add "Data correlation sample"
 11. mgl_set_mask(char id, const char *mask); && mgl_set_mask_val(char id, uint64_t mask);
@@ -50,9 +50,7 @@ A. Paper about MathGL!!!
 16. Add mglData::Refill() + 'refill' + mglGraph::Refill()
 17. Update cloud sample
 19. Add SetDiffuse() function.
-20. Add mgl_clf_chr() function and extend 'clf' command
 21. Add wxMathGL widget.
-22. C functions now return NULL if HMDT data cannot be created for given input argument(s).
 
 ============= UDAV =============
 

@@ -589,7 +589,7 @@ unsigned char* mglCanvas::col2int(const mglPnt &p,unsigned char *r, int obj_id)
 	r[1] = (unsigned char)(255*b1);
 	r[2] = (unsigned char)(255*b2);
 //	r[3] = get(MGL_ENABLE_ALPHA) ? (unsigned char)(255*p.a) : 255;
-	r[3] = (unsigned char)(255*p.a);
+	r[3] = (unsigned char)((Quality&MGL_DRAW_NORM)?255*p.a:255);
 	return r;
 }
 //-----------------------------------------------------------------------------
@@ -828,7 +828,7 @@ inline unsigned char mgl_sline(unsigned char c,float x)
 {	x*=x/2;	return (unsigned char)((c)/(1+x+x*x/5));	}
 void mglCanvas::line_draw(const mglPnt &p1, const mglPnt &p2, const mglDrawReg *dr)
 {
-	if(!(Quality&3))	{	fast_draw(p1,p2,dr);	return;	}
+	if((Quality&3)<2)	{	fast_draw(p1,p2,dr);	return;	}
 	unsigned char r[4];
 	long y1,x1,y2,x2;
 
@@ -905,18 +905,19 @@ void mglCanvas::fast_draw(const mglPnt &p1, const mglPnt &p2, const mglDrawReg *
 	x1=x1>dr->x1?x1:dr->x1;	x2=x2<dr->x2?x2:dr->x2;
 	y1=y1>dr->y1?y1:dr->y1;	y2=y2<dr->y2?y2:dr->y2;
 	if(x1>x2 || y1>y2)	return;
+	float dz = Width>2 ? 1 : 1e-5*Width;		// provide additional height to be well visible on the surfaces
 
 	if(hor && d.x!=0)	for(long i=x1;i<=x2;i++)
 	{
 		register long c = long(p1.y+d.y*(i-p1.x)/d.x);
 		if(c>=y1 && c<=y2)
-			pnt_plot(i, c, p1.z+d.z*(i-p1.x)/d.x, r,dr->ObjId);
+			pnt_plot(i, c, p1.z+d.z*(i-p1.x)/d.x+dz, r,dr->ObjId);
 	}
 	else if(d.y!=0)	for(long i=y1;i<=y2;i++)
 	{
 		register long c = long(p1.x+d.x*(i-p1.y)/d.y);
 		if(c>=x1 && c<=x2)
-			pnt_plot(c, i, p1.z+d.z*(i-p1.y)/d.y, r,dr->ObjId);
+			pnt_plot(c, i, p1.z+d.z*(i-p1.y)/d.y+dz, r,dr->ObjId);
 	}
 }
 //-----------------------------------------------------------------------------
@@ -979,15 +980,14 @@ void mglCanvas::pnt_pix(long i, long j, const mglPnt &p, const mglDrawReg *dr)
 void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 {
 	unsigned char cs[4], ca;	col2int(q,cs,d->ObjId);	ca = cs[3];// = size>0 ? 255 : 255*q.t;
-	mglPnt p0=q,p1=q,p2=q,p3=q;
 	mreal ss=fabs(size), pw=1,dpw=3;
 
 	if(type=='.' || ss==0)
 	{
 		if(d)	pw = 3*(ss?ss:sqrt(font_factor/400));
-		long x1 = long(p1.x<p2.x?p1.x:p2.x), y1 = long(p1.y<p2.y?p1.y:p2.y);	// bounding box
-		long x2 = long(p1.x>p2.x?p1.x:p2.x), y2 = long(p1.y>p2.y?p1.y:p2.y);
-		x1 -= pw+3.5;	y1 -= pw+3.5;	x2 += pw+3.5;	y2 += pw+3.5;
+		register mreal dd = pw+3.5;
+		long x1 = long(q.x-dd), y1 = long(q.y-dd);	// bounding box
+		long x2 = long(q.x+dd), y2 = long(q.y+dd);
 		x1=x1>d->x1?x1:d->x1;	x2=x2<d->x2?x2:d->x2;
 		y1=y1>d->y1?y1:d->y1;	y2=y2<d->y2?y2:d->y2;
 		if(x1>x2 || y1>y2)	return;
@@ -1012,10 +1012,9 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 		if(!strchr("xsSoO",type))	ss *= 1.1;
 		if(d->ObjId==HighId)	{	pw *= 2;	dpw=2;	}
 
-		long x1 = long(p1.x<p2.x?p1.x:p2.x), y1 = long(p1.y<p2.y?p1.y:p2.y);	// bounding box
-		long x2 = long(p1.x>p2.x?p1.x:p2.x), y2 = long(p1.y>p2.y?p1.y:p2.y);
 		register mreal dd = ss+pw+3.5;
-		x1 -= dd;	y1 -= dd;	x2 += dd;	y2 += dd;
+		long x1 = long(q.x-dd), y1 = long(q.y-dd);	// bounding box
+		long x2 = long(q.x+dd), y2 = long(q.y+dd);
 		x1=x1>d->x1?x1:d->x1;	x2=x2<d->x2?x2:d->x2;
 		y1=y1>d->y1?y1:d->y1;	y2=y2<d->y2?y2:d->y2;
 		if(x1>x2 || y1>y2)	return;

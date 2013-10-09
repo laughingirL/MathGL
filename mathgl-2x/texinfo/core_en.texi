@@ -1400,11 +1400,13 @@ Receive graphical information from node @var{id} using MPI. The width and height
 These functions draw some simple objects like line, point, sphere, drop, cone and so on. @sref{Using primitives}
 
 @anchor{clf}
-@deftypefn {MGL command} {} clf
+@deftypefn {MGL command} {} clf ['col']
 @ifclear UDAV
 @deftypefnx {Method on @code{mglGraph}} @code{void} Clf ()
+@deftypefnx {Method on @code{mglGraph}} @code{void} Clf (@code{char} col)
 @deftypefnx {Method on @code{mglGraph}} @code{void} Clf (@code{mreal} r, @code{mreal} g, @code{mreal} b)
 @deftypefnx {C function} @code{void} mgl_clf (@code{HMGL} gr)
+@deftypefnx {C function} @code{void} mgl_clf_chr (@code{HMGL} gr, @code{char} col)
 @deftypefnx {C function} @code{void} mgl_clf_rgb (@code{HMGL} gr, @code{mreal} r, @code{mreal} g, @code{mreal} b)
 @end ifclear
 Clear the picture and fill it by color specified color.
@@ -1988,7 +1990,7 @@ These functions draw vertical lines from points to axis plane. See also @ref{are
 @deftypefnx {C function} @code{void} mgl_bars_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_bars_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-These functions draw vertical bars from points to axis plane. If string @var{pen} contain symbol @samp{a} then lines are drawn one above another (like summation). If string contain symbol @samp{f} then waterfall chart is drawn for determining the cumulative effect of sequentially introduced positive or negative values. You can give different colors for positive and negative values if number of specified colors is equal to 2*number of curves. See also @ref{barh}, @ref{cones}, @ref{area}, @ref{stem}, @ref{chart}, @ref{barwidth}. @sref{Bars sample}
+These functions draw vertical bars from points to axis plane. If string @var{pen} contain symbol @samp{a} then lines are drawn one above another (like summation). If string contain symbol @samp{f} then waterfall chart is drawn for determining the cumulative effect of sequentially introduced positive or negative values. You can give different colors for positive and negative values if number of specified colors is equal to 2*number of curves. If @var{pen} contain @samp{<}, @samp{^} or @samp{>} then boxes will be aligned left, right or centered at its x-coordinates. See also @ref{barh}, @ref{cones}, @ref{area}, @ref{stem}, @ref{chart}, @ref{barwidth}. @sref{Bars sample}
 @end deftypefn
 
 @anchor{barh}
@@ -2000,7 +2002,7 @@ These functions draw vertical bars from points to axis plane. If string @var{pen
 @deftypefnx {C function} @code{void} mgl_barh (@code{HMGL} gr, @code{HCDT} v, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_barh_xy (@code{HMGL} gr, @code{HCDT} y, @code{HCDT} v, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-These functions draw horizontal bars from points to axis plane. If string contain symbol @samp{a} then lines are drawn one above another (like summation). If string contain symbol @samp{f} then waterfall chart is drawn for determining the cumulative effect of sequentially introduced positive or negative values. You can give different colors for positive and negative values if number of specified colors is equal to 2*number of curves. See also @ref{bars}, @ref{barwidth}. @sref{Barh sample}
+These functions draw horizontal bars from points to axis plane. If string contain symbol @samp{a} then lines are drawn one above another (like summation). If string contain symbol @samp{f} then waterfall chart is drawn for determining the cumulative effect of sequentially introduced positive or negative values. You can give different colors for positive and negative values if number of specified colors is equal to 2*number of curves. If @var{pen} contain @samp{<}, @samp{^} or @samp{>} then boxes will be aligned left, right or centered at its x-coordinates. See also @ref{bars}, @ref{barwidth}. @sref{Barh sample}
 @end deftypefn
 
 @anchor{cones}
@@ -2024,7 +2026,9 @@ These functions draw cones from points to axis plane. If string contain symbol @
 @item
 @samp{t} for drawing tubes/cylinders instead of cones/prisms;
 @item
-@samp{4}, @samp{6}, @samp{8}, @samp{t} for drawing square, hex- or octo-prism instead of cones.
+@samp{4}, @samp{6}, @samp{8}, @samp{t} for drawing square, hex- or octo-prism instead of cones;
+@item
+@samp{<}, @samp{^} or @samp{>} for aligning boxes left, right or centering them at its x-coordinates.
 @end itemize
 See also @ref{bars}, @ref{cone}, @ref{barwidth}. @sref{Cones sample}
 @end deftypefn
@@ -2049,7 +2053,7 @@ The function draws colored stripes (boxes) for data in array @var{a}. The number
 @deftypefnx {C function} @code{void} mgl_boxplot (@code{HMGL} gr, @code{HCDT} a, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_boxplot_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} a, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-These functions draw boxplot (also known as a box-and-whisker diagram) at points @var{x}[i]. This is five-number summaries of data @var{a}[i,j] (minimum, lower quartile (Q1), median (Q2), upper quartile (Q3) and maximum) along second (j-th) direction. See also @ref{plot}, @ref{error}, @ref{bars}, @ref{barwidth}. @sref{BoxPlot sample}
+These functions draw boxplot (also known as a box-and-whisker diagram) at points @var{x}[i]. This is five-number summaries of data @var{a}[i,j] (minimum, lower quartile (Q1), median (Q2), upper quartile (Q3) and maximum) along second (j-th) direction. If @var{pen} contain @samp{<}, @samp{^} or @samp{>} then boxes will be aligned left, right or centered at its x-coordinates. See also @ref{plot}, @ref{error}, @ref{bars}, @ref{barwidth}. @sref{BoxPlot sample}
 @end deftypefn
 
 @anchor{candle}
