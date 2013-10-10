@@ -69,8 +69,9 @@ int MGL_NO_EXPORT mgls_plotid(mglGraph *gr, long , mglArg *a, const char *k, con
 int MGL_NO_EXPORT mgls_mask(mglGraph *gr, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
-	if(!strcmp(k,"sn"))	mgl_set_mask_val(a[0].s[0],a[1].v);
-	else if(!strcmp(k,"ss"))	mgl_set_mask(a[0].s[0],a[1].s.c_str());
+	if(!strcmp(k,"sn"))	gr->SetMask(a[0].s[0],a[1].v);
+	else if(!strcmp(k,"ss"))	gr->SetMask(a[0].s[0],a[1].s.c_str());
+	else if(!strcmp(k,"n"))		gr->SetMaskAngle(iint(a[0].v));
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -2669,7 +2670,7 @@ mglCommand mgls_base_cmd[] = {
 	{"map","Draw mapping plot","map Udat Vdat ['fmt']|Xdat Ydat Udat Vdat ['fmt']", mgls_map ,10},
 	{"mark","Draw mark plot for 1D data","mark Ydat Rdat ['fmt']|Xdat Ydat Rdat ['fmt']|Xdat Ydat Zdat Rdat ['fmt']", mgls_mark ,7},
 	{"marksize","Set size of markers","marksize val", mgls_marksize ,2},
-	{"mask","Set brush for given mask","mask 'id' 'val'|'id' val", mgls_mask ,2},
+	{"mask","Set brush for given mask","mask 'id' 'val'|'id' val|angle", mgls_mask ,2},
 	{"max","Find maximal value over direction","max Res Dat 'dir'", mgls_max ,4},
 	{"mesh","Draw mesh surface","mesh Zdat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_mesh ,8},
 	{"meshnum","Set number of lines in mesh/fall/vect and so on","meshnum val", mgls_meshnum ,2},

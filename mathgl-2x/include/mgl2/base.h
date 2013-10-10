@@ -213,12 +213,6 @@ public:
 	char Arrow1, Arrow2;///< Style of arrows at end and at start of curve
 	long InUse;			///< Smart pointer (number of users)
 	uint32_t Flag;			///< Flags for controlling drawing
-	union
-	{
-		uint64_t mask;	///< Mask to be used for coloring
-		unsigned char mask_ch[8];
-	};
-	int mask_an;		///< Mask rotation values in degrees
 
 	inline bool get(uint32_t fl) const	{	return Flag&fl;	}
 	inline void set(uint32_t fl)	{	Flag |= fl;	}
@@ -270,7 +264,9 @@ public:
 	{	CutMin=mglPoint(x1,y1,z1);	CutMax=mglPoint(x2,y2,z2);	}
 	inline void SetCutBox(mglPoint v1, mglPoint v2)	{	CutMin=v1;	CutMax=v2;	}
 	/// Reset mask to solid state
-	inline void ResetMask()	{	mask = MGL_SOLID_MASK;	mask_an = 0;	}
+	inline void ResetMask()	{	mask = MGL_SOLID_MASK;	MaskAn = DefMaskAn;	}
+	/// Set default mask rotation angle
+	inline void SetMaskAngle(int angle)	{	DefMaskAn = angle;	}
 
 	/// Set the using of light on/off.
 	virtual bool Light(bool enable)
@@ -495,6 +491,14 @@ protected:
 	long CSS;			///< Saved flags
 	bool saved;			///< State is saved
 	std::string leg_str;///< text to be save in legend
+
+	union
+	{
+		uint64_t mask;	///< Mask to be used for coloring
+		unsigned char mask_ch[8];
+	};
+	int MaskAn;		///< Mask rotation angle in degrees
+	int DefMaskAn;	///< Default mask rotation angle in degrees
 
 private:
 

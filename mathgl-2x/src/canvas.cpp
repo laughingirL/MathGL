@@ -179,7 +179,7 @@ int Depth;			///< Depth of the image
 int CurFrameId;		///< Number of automaticle created frames
 GifFileType *gif;*/
 	memcpy(mgl_mask_val, mgl_mask_def, 16*sizeof(uint64_t));	// should be > 16*8
-	mgl_clear_fft();		ResetMask();
+	mgl_clear_fft();		DefMaskAn=0;	ResetMask();
 	SetTickRotate(true);	SetTickSkip(true);
 	SetWarn(mglWarnNone,"");	mglGlobalMess = "";
 	ObjId = -1;	HighId = INT_MIN;
@@ -344,7 +344,7 @@ void mglCanvas::line_plot(long p1, long p2)
 //-----------------------------------------------------------------------------
 #define MGL_TRIG_PLOT	if(Quality&MGL_DRAW_LMEM)	trig_draw(Pnt[p1],Pnt[p2],Pnt[p3],true,&d);else	\
 						{	mglPrim a(2);	a.n1 = p1;	a.n2 = p2;	a.n3 = p3;	\
-							a.m=mask;	a.angl=mask_an;	a.w = pw;	add_prim(a);}
+							a.m=mask;	a.angl=MaskAn;	a.w = pw;	add_prim(a);}
 void mglCanvas::trig_plot(long p1, long p2, long p3)
 {
 	if(p1<0 || p2<0 || p3<0 || mgl_isnan(Pnt[p1].x) || mgl_isnan(Pnt[p2].x) || mgl_isnan(Pnt[p3].x))	return;
@@ -359,7 +359,7 @@ void mglCanvas::trig_plot(long p1, long p2, long p3)
 //-----------------------------------------------------------------------------
 #define MGL_QUAD_PLOT	if(Quality&MGL_DRAW_LMEM)	quad_draw(Pnt[p1],Pnt[p2],Pnt[p3],Pnt[p4],&d);else	\
 						{	mglPrim a(3);	a.n1 = p1;	a.n2 = p2;	a.n3 = p3;	a.n4 = p4;	\
-							a.m=mask;	a.angl=mask_an;	a.w = pw;	add_prim(a);	}
+							a.m=mask;	a.angl=MaskAn;	a.w = pw;	add_prim(a);	}
 void mglCanvas::quad_plot(long p1, long p2, long p3, long p4)
 {
 	if(p1<0 || mgl_isnan(Pnt[p1].x))	{	trig_plot(p4,p2,p3);	return;	}
@@ -715,13 +715,13 @@ void mglCanvas::arrow_plot(long n1, long n2, char st)
 {
 	if(n1<0 || n2<0 || !strchr("AVKSDTIO",st))	return;
 	float ll = PenWidth*ArrowSize*0.35*font_factor;
-	uint64_t m=mask;	int ma=mask_an;
+	uint64_t m=mask;	int ma=MaskAn;
 	ResetMask();
 	if((Quality&3)==3)
 		arrow_plot_3d(n1, n2, st, ll);
 	else
 		arrow_draw(n1, n2, st, ll);
-	mask=m;	mask_an=ma;
+	mask=m;	MaskAn=ma;
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::Legend(const std::vector<mglText> &leg, mreal x, mreal y, const char *font, const char *opt)

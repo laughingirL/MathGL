@@ -82,6 +82,7 @@ Restore initial values for all of parameters.
 * Cutting::
 * Font settings::
 * Palette and colors::
+* Masks::
 * Error handling::
 @end menu
 
@@ -413,7 +414,7 @@ Load default font typeface (for all newly created HMGL/mglGraph objects) from @v
 
 @c ==================================================================
 @comment  @external{}
-@node Palette and colors, Error handling, Font settings, Graphics setup
+@node Palette and colors, Masks, Font settings, Graphics setup
 @subsection Palette and colors
 @ifclear UDAV
 @cindex SetPalette
@@ -435,14 +436,43 @@ Sets the palette as selected colors. Default value is @code{"Hbgrcmyhlnqeup"} th
 Sets the @var{sch} as default color scheme. Default value is @code{"BbcyrR"}.
 @end deftypefn
 
-@deftypefn {C function} @code{void} mgl_set_color (@code{char} id, @code{mreal} r, @code{mreal} g, @code{mreal} b)
-Sets RGB values for color with given @var{id}.
+@deftypefn {Method on @code{mglGraph}} @code{void} SetColor (@code{char} id, @code{mreal} r, @code{mreal} g, @code{mreal} b) static
+@deftypefnx {C function} @code{void} mgl_set_color (@code{char} id, @code{mreal} r, @code{mreal} g, @code{mreal} b)
+Sets RGB values for color with given @var{id}. This is global setting which influence on any later usage of symbol @var{id}.
 @end deftypefn
 @end ifclear
 
+
 @c ==================================================================
 @comment  @external{}
-@node Error handling, , Palette and colors, Graphics setup
+@node Masks, Error handling, Palette and colors, Graphics setup
+@subsection Masks
+@cindex SetMask
+@cindex SetMaskAngle
+
+@anchor{mask}
+@deftypefn {MGL command} {} mask 'id' 'hex'
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} SetMask (@code{char} id, @code{const char *}hex)
+@deftypefnx {Method on @code{mglGraph}} @code{void} SetMask (@code{char} id, @code{uint64_t} hex)
+@deftypefnx {C function} @code{void} mgl_set_mask (@code{HMGL} gr, @code{const char *}hex)
+@deftypefnx {C function} @code{void} mgl_set_mask_val (@code{HMGL} gr, @code{uint64_t} hex)
+@end ifclear
+Sets new bit matrix @var{hex} of size 8*8 for mask with given @var{id}. This is global setting which influence on any later usage of symbol @var{id}. The predefined masks are (see @ref{Color scheme}): @samp{-} is 000000FF00000000, @samp{+} is 080808FF08080808,	@samp{=} is 0000FF00FF000000,	@samp{;} is 0000007700000000, @samp{o} is 0000182424180000,	@samp{O} is 0000183C3C180000,	@samp{s} is 00003C24243C0000,	@samp{S} is 00003C3C3C3C0000, @samp{~} is 0000060990600000,	@samp{<} is 0060584658600000,	@samp{>} is 00061A621A060000,	@samp{j} is 0000005F00000000, @samp{d} is 0008142214080000,	@samp{D} is 00081C3E1C080000,	@samp{*} is 8142241818244281,	@samp{^} is 0000001824420000.
+@end deftypefn
+
+@deftypefn {MGL command} {} mask angle
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} SetMaskAngle (@code{int} angle)
+@deftypefnx {C function} @code{void} mgl_set_mask_angle (@code{HMGL} gr, @code{int} angle)
+@end ifclear
+Sets the default rotation angle (in degrees) for masks. Note, you can use symbols @samp{\}, @samp{/}, @samp{I} in color scheme for setting rotation angles as 45, -45 and 90 degrees correspondingly.
+@end deftypefn
+
+
+@c ==================================================================
+@comment  @external{}
+@node Error handling, , Masks, Graphics setup
 @subsection Error handling
 @ifclear UDAV
 @cindex Message
@@ -650,7 +680,7 @@ Sets one of the predefined transformation formulas for curvilinear coordinate. P
 @end ifclear
 The function sets to draws Ternary (@var{tern}=@code{1}), Quaternary (@var{tern}=@code{2}) plot or projections (@var{tern}=@code{4,5,6}).
 
-Ternary plot is special plot for 3 dependent coordinates (components) @var{a}, @var{b}, @var{c} so that @var{a}+@var{b}+@var{c}=1. MathGL uses only 2 independent coordinates @var{a}=x and @var{b}=y since it is enough to plot everything. At this third coordinate z act as another parameter to produce contour lines, surfaces and so on. 
+Ternary plot is special plot for 3 dependent coordinates (components) @var{a}, @var{b}, @var{c} so that @var{a}+@var{b}+@var{c}=1. MathGL uses only 2 independent coordinates @var{a}=x and @var{b}=y since it is enough to plot everything. At this third coordinate z act as another parameter to produce contour lines, surfaces and so on.
 
 Correspondingly, Quaternary plot is plot for 4 dependent coordinates @var{a}, @var{b}, @var{c} and @var{d} so that @var{a}+@var{b}+@var{c}+@var{d}=1. MathGL uses only 3 independent coordinates @var{a}=x, @var{b}=y and @var{d}=z since it is enough to plot everything.
 
@@ -1647,7 +1677,7 @@ Draws unrotated @var{n}-th line of file @var{fname} at position @{@var{x},@var{y
 @deftypefnx {C function} @code{void} mgl_text_xyz (@code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}text, @code{const char *}fnt, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_textw_xyz (@code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const wchar_t *}text, @code{const char *}fnt, @code{const char *}opt)
 @end ifclear
-The function draws @var{text} along the curve between points @{@var{x}[i], @var{y}[i], @var{z}[i]@} by font style @var{fnt}. The string @var{fnt} may contain symbols @samp{t} for printing the text under the curve (default), or @samp{T} for printing the text above the curve. The sizes of 1st dimension must be equal for all arrays @code{x.nx=y.nx=z.nx}. If array @var{x} is not specified then its an automatic array is used with values equidistantly distributed in interval [@var{Min}.x, @var{Max}.x] (see @ref{Ranges (bounding box)}). If array @var{z} is not specified then @var{z}[i] = @var{Min}.z is used. String @var{opt} contain command options (see @ref{Command options}). 
+The function draws @var{text} along the curve between points @{@var{x}[i], @var{y}[i], @var{z}[i]@} by font style @var{fnt}. The string @var{fnt} may contain symbols @samp{t} for printing the text under the curve (default), or @samp{T} for printing the text above the curve. The sizes of 1st dimension must be equal for all arrays @code{x.nx=y.nx=z.nx}. If array @var{x} is not specified then its an automatic array is used with values equidistantly distributed in interval [@var{Min}.x, @var{Max}.x] (see @ref{Ranges (bounding box)}). If array @var{z} is not specified then @var{z}[i] = @var{Min}.z is used. String @var{opt} contain command options (see @ref{Command options}).
 @end deftypefn
 
 @c ##################################################################

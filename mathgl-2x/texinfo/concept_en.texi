@@ -63,7 +63,7 @@ The color types are: @samp{k} -- black, @samp{r} -- red, @samp{R} -- dark red, @
 
 You can also use ``bright'' colors. The ``bright'' color contain 2 symbols in brackets @samp{@{cN@}}: first one is the usual symbol for color id, the second one is a digit for its brightness. The digit can be in range @samp{1}...@samp{9}. Number @samp{5} corresponds to a normal color, @samp{1} is a very dark version of the color (practically black), and @samp{9} is a very bright version of the color (practically white). For example, the colors can be @samp{@{b2@}} @samp{@{b7@}} @samp{@{r7@}} and so on.
 
-Finally, you can specify RGB or RGBA values of a color using format @samp{@{xRRGGBB@}} or @samp{@{xRRGGBBAA@}} correspondingly. For example, @samp{@{xFF9966@}} give you 
+Finally, you can specify RGB or RGBA values of a color using format @samp{@{xRRGGBB@}} or @samp{@{xRRGGBBAA@}} correspondingly. For example, @samp{@{xFF9966@}} give you
 @ifhtml
 @html
 <span style="color: rgb(255, 153, 102);">melone</span> color.
@@ -121,6 +121,18 @@ For more precise coloring, you can change default (equidistant) position of colo
 
 When coloring by @emph{coordinate} (used in @ref{map}), the final color is determined by the position of the point in 3d space and is calculated from formula c=x*c[1] + y*c[2]. Here, c[1], c[2] are the first two elements of color array; x, y are normalized to axis range coordinates of the point.
 @c This type of coloring is useful for isosurface plot where color may show the exact position of a piece of surface.
+
+Additionally, MathGL can apply mask to face filling at bitmap rendering. The kind of mask is specified by one of symbols @samp{-+=;oOsS~<>jdD*^} in color scheme. Mask can be rotated by arbitrary angle by command @ref{mask} or by three predefined values +45, -45 and 90 degree by symbols @samp{\/I} correspondingly. Examples of predefined masks are shown on the figure below.
+
+@pfig{mask, Example of masks for face coloring.}
+
+However, you can redefine mask for one symbol by specifying new matrix of size 8*8 as second argument for @ref{mask} command. For example, the right-down subplot on the figure above is produced by code@*
+@ifclear UDAV
+@code{gr->SetMask('+', "ff00182424f80000");	gr->Dens(a,"3+");}
+@end ifclear
+@ifset UDAV
+@code{mask '+' 'ff00182424f80000':dens a '3+'}
+@end ifset
 
 @c ------------------------------------------------------------------
 @external{}

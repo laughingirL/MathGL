@@ -37,7 +37,7 @@ void mglCanvas::SetSize(int w,int h)
 void mglDrawReg::set(mglCanvas *gr, int nx, int ny, int m)
 {
 	int mx = m%nx, my = m/nx;	ObjId = gr->ObjId;
-	PDef = gr->mask;	angle = gr->mask_an;
+	PDef = gr->mask;	angle = gr->MaskAn;
 	x1 = gr->GetWidth()*mx/nx;		y1 = gr->GetHeight()-gr->GetHeight()*(my+1)/ny;
 	x2 = gr->GetWidth()*(mx+1)/nx-1;	y2 = gr->GetHeight()-gr->GetHeight()*my/ny-1;
 }

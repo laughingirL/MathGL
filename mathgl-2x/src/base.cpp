@@ -1034,7 +1034,7 @@ uint64_t mgl_mask_val[16]={0x000000FF00000000,	0x080808FF08080808,	0x0000FF00FF0
 void mglBase::SetMask(const char *p)
 {
 	mask = MGL_SOLID_MASK;	// reset to solid face
-	PenWidth = 1;	mask_an=0;
+	PenWidth = 1;	MaskAn=DefMaskAn;
 	if(p && *p)
 	{
 		const char *msk = MGL_MASK_ID, *s;
@@ -1048,12 +1048,12 @@ void mglBase::SetMask(const char *p)
 			s = mglchr(msk, p[i]);
 			if(s)	mask = mgl_mask_val[s-msk];
 			else if(mglchr(wdh,p[i]))	PenWidth = p[i]-'0';
-			else if(p[i]=='I')	mask_an=90;
-			else if(p[i]=='/')	mask_an=315;	// =360-45
-			else if(p[i]=='\\')	mask_an=45;
+			else if(p[i]=='I')	MaskAn=90;
+			else if(p[i]=='/')	MaskAn=315;	// =360-45
+			else if(p[i]=='\\')	MaskAn=45;
 		}
 		// use line if rotation only specified
-		if(mask==MGL_SOLID_MASK && mask_an!=0)	mask = mgl_mask_val[0];
+		if(mask==MGL_SOLID_MASK && MaskAn!=0)	mask = mgl_mask_val[0];
 	}
 }
 //-----------------------------------------------------------------------------

@@ -251,6 +251,6 @@ void MGL_EXPORT mgl_set_mask_val(char id, uint64_t mask)
 void MGL_EXPORT mgl_set_mask_val_(const char *id, uint64_t *mask,int)
 {	mgl_set_mask_val(*id,*mask);	}
 //---------------------------------------------------------------------------
-void MGL_EXPORT mgl_reset_mask(HMGL gr)	{	gr->ResetMask();	}
-void MGL_EXPORT mgl_reset_mask_(uintptr_t *gr)	{	_GR_->ResetMask();	}
+void MGL_EXPORT mgl_set_mask_angle(HMGL gr, int angle)	{	gr->SetMaskAngle(angle);	}
+void MGL_EXPORT mgl_set_mask_angle_(uintptr_t *gr, int *angle)	{	_GR_->SetMaskAngle(*angle);	}
 //---------------------------------------------------------------------------

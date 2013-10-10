@@ -921,7 +921,7 @@ void mglCanvas::colorbar(HCDT vv, const mreal *c, int where, mreal x, mreal y, m
 
 	set(MGL_DISABLE_SCALE);		// NOTE this make colorbar non-thread-safe!!!
 	x = s3*(2*x-1);	y = s3*(2*y-1);	w *= s3;	h *= s3;
-	mask = MGL_SOLID_MASK;	mask_an=0;
+	mask = MGL_SOLID_MASK;
 	for(long i=0;i<n-1;i++)
 	{
 		d = GetA(vv->v(i))*2-1;

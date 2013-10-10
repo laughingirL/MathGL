@@ -132,8 +132,8 @@ public:
 	static inline void SetMask(char id, const char *mask)	{	mgl_set_mask(id, mask);	}
 	/// Set mask for face coloring as uint64_t number
 	static inline void SetMask(char id, uint64_t mask)	{	mgl_set_mask_val(id, mask);	}
-	/// Reset mask to solid state
-	inline void ResetMask()	{	mgl_reset_mask(gr);	}
+	/// Set default mask rotation angle
+	inline void SetMaskAngle(int angle)	{	mgl_set_mask_angle(gr, angle);	}
 
 	/// Get last warning code
 	inline int  GetWarn()	{	return mgl_get_warn(gr);}

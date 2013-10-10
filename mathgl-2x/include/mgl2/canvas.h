@@ -100,6 +100,7 @@ struct mglDrawDat
 class MGL_EXPORT mglCanvas : public mglBase
 {
 friend struct mglPrim;
+friend struct mglDrawReg;
 public:
 using mglBase::Light;
 
