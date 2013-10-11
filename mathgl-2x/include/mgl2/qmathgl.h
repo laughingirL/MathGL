@@ -88,6 +88,7 @@ public slots:
 	void imgSize(int w, int h);	///< Set image size
 	void setViewYZ(bool v);	///< Switch on/off rotation around Y and Z axis
 
+	void setCustZoom(bool a);	///< Switch on/off using custom zoom
 	void setZoom(bool z);	///< Switch on/off mouse zooming
 	void setRotate(bool r);	///< Switch on/off mouse rotation
 	void zoomIn();			///< Zoom in graphics
@@ -153,7 +154,9 @@ signals:
 	void objChanged(int objId);	///< User double-click to select object/line
 	void refreshData();
 	void doubleClick(int id);	///< Double mouse click by object with id
-	void askStyle(int id);	///< Update style
+	void askStyle(int id);		///< Update style
+	/// user can define its own zooming function
+	void customZoom(double x1, double y1, double x2, double y2, double tet, double phi, double per);
 
 protected:
 	void paintEvent(QPaintEvent *);
@@ -175,6 +178,7 @@ protected:
 	double per;			///< Value of perspective ( must be in [0,1) )
 	bool alpha;			///< Transparency state
 	bool light;			///< Lightning state
+	bool custZoom;		///< Use custom zoom instead of built in
 	bool zoom;			///< Mouse zoom state
 	bool grid;			///< Grid drawing state
 	bool rotate;			///< Mouse rotation state

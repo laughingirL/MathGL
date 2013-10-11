@@ -94,7 +94,7 @@ QMathGL::QMathGL(QWidget *parent, Qt::WindowFlags f) : QWidget(parent, f)
 	popup = 0;	grBuf = 0;	draw = 0;
 	phi = tet = per = 0;
 	x1 = y1 = ax1 = ay1 = 0;	x2 = y2 = ax2 = ay2 = 1;
-	alpha = light = zoom = rotate = grid = viewYZ = false;
+	alpha = light = zoom = rotate = grid = viewYZ = custZoom = false;
 	resize(600, 400);	mgl_set_flag(gr, true, MGL_CLF_ON_UPD);
 	timer = new QTimer(this);
 	enableWheel = enableMouse = true;
@@ -211,6 +211,8 @@ void QMathGL::setZoom(bool z)
 	emit zoomChanged(z);	emit rotateChanged(false);	}
 }
 //-----------------------------------------------------------------------------
+void QMathGL::setCustZoom(bool z)	{	custZoom = z;	}
+//-----------------------------------------------------------------------------
 void QMathGL::shiftDown()
 {	mreal d=(y2-y1)/4;	y1+=d;	y2+=d;	refresh();	}
 //-----------------------------------------------------------------------------
@@ -321,9 +323,13 @@ void QMathGL::refresh()
 			draw_thr();
 /*#endif*/
 		}
-		mgl_zoom(gr,x1,y1,x2,y2);	mgl_perspective(gr,per);
-		if(viewYZ)	mgl_view(gr,0,phi,tet);
-		else 		mgl_view(gr,phi,0,tet);
+		if(custZoom)	emit customZoom(x1,y1,x2,y2,tet,phi,per);
+		else
+		{	mgl_zoom(gr,x1,y1,x2,y2);
+			mgl_perspective(gr,per);
+			if(viewYZ)	mgl_view(gr,0,phi,tet);
+			else 		mgl_view(gr,phi,0,tet);
+		}
 	}
 	mglConvertFromGraph(pic, gr, &grBuf);
 	if(pic.size()!=size())	setSize(pic.width(), pic.height());

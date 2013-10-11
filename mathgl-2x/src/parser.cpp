@@ -300,41 +300,6 @@ int mglFindArg(const std::wstring &str)
 	return 0;
 }
 //-----------------------------------------------------------------------------
-bool mgls_suffix(const wchar_t *p, mglData *d, mreal *v)
-{
-	mreal x,y,z,k;
-	bool ok=false;
-	if(!wcscmp(p,L"a"))			{	ok = true;	*v = d->a[0];	}
-	else if(!wcscmp(p,L"fst"))	{	ok = true;	long i=-1,j=-1,l=-1;	*v = d->Find(0,i,j,l);	}
-	else if(!wcscmp(p,L"lst"))	{	ok = true;	long i=-1,j=-1,l=-1;	*v = d->Last(0,i,j,l);	}
-	else if(!wcscmp(p,L"nx"))	{	ok = true;	*v=d->nx;	}
-	else if(!wcscmp(p,L"ny"))	{	ok = true;	*v=d->ny;	}
-	else if(!wcscmp(p,L"nz"))	{	ok = true;	*v=d->nz;	}
-	else if(!wcscmp(p,L"max"))	{	ok = true;	*v=d->Maximal();	}
-	else if(!wcscmp(p,L"min"))	{	ok = true;	*v=d->Minimal();	}
-	else if(!wcscmp(p,L"sum"))	{	ok = true;	*v=d->Momentum('x',x,y);	}
-	else if(!wcscmp(p,L"mx"))	{	ok = true;	d->Maximal(x,y,z);		*v=x/d->nx;	}
-	else if(!wcscmp(p,L"my"))	{	ok = true;	d->Maximal(x,y,z);		*v=y/d->ny;	}
-	else if(!wcscmp(p,L"mz"))	{	ok = true;	d->Maximal(x,y,z);		*v=z/d->nz;	}
-	else if(!wcscmp(p,L"ax"))	{	ok = true;	d->Momentum('x',x,y);	*v=x/d->nx;	}
-	else if(!wcscmp(p,L"ay"))	{	ok = true;	d->Momentum('y',x,y);	*v=x/d->ny;	}
-	else if(!wcscmp(p,L"az"))	{	ok = true;	d->Momentum('z',x,y);	*v=x/d->nz;	}
-	else if(!wcscmp(p,L"wx"))	{	ok = true;	d->Momentum('x',x,y);	*v=y/d->nx;	}
-	else if(!wcscmp(p,L"wy"))	{	ok = true;	d->Momentum('y',x,y);	*v=y/d->ny;	}
-	else if(!wcscmp(p,L"wz"))	{	ok = true;	d->Momentum('z',x,y);	*v=y/d->nz;	}
-	else if(!wcscmp(p,L"sx"))	{	ok = true;	d->Momentum('x',x,y,z,k);	*v=z/d->nx;	}
-	else if(!wcscmp(p,L"sy"))	{	ok = true;	d->Momentum('y',x,y,z,k);	*v=z/d->ny;	}
-	else if(!wcscmp(p,L"sz"))	{	ok = true;	d->Momentum('z',x,y,z,k);	*v=z/d->nz;	}
-	else if(!wcscmp(p,L"kx"))	{	ok = true;	d->Momentum('x',x,y,z,k);	*v=k/d->nx;	}
-	else if(!wcscmp(p,L"ky"))	{	ok = true;	d->Momentum('y',x,y,z,k);	*v=k/d->ny;	}
-	else if(!wcscmp(p,L"kz"))	{	ok = true;	d->Momentum('z',x,y,z,k);	*v=k/d->nz;	}
-	else if(!wcscmp(p,L"aa"))	{	ok = true;	d->Momentum('a',x,y);	*v=x;	}
-	else if(!wcscmp(p,L"wa"))	{	ok = true;	d->Momentum('a',x,y);	*v=y;	}
-	else if(!wcscmp(p,L"sa"))	{	ok = true;	d->Momentum('a',x,y,z,k);*v=z;	}
-	else if(!wcscmp(p,L"ka"))	{	ok = true;	d->Momentum('a',x,y,z,k);*v=k;	}
-	return ok;
-}
-//-----------------------------------------------------------------------------
 // convert substrings to arguments
 mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg);
 void mglParser::FillArg(mglGraph *gr, int k, std::wstring *arg, mglArg *a)

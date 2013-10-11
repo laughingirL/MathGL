@@ -218,6 +218,8 @@ mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg)
 		else if(!p.compare(L"nz"))	v=d.nz;
 		else if(!p.compare(L"max"))	v=d.Maximal();
 		else if(!p.compare(L"min"))	v=d.Minimal();
+		else if(!p.compare(L"pmax"))	{	v=d.Maximal();	v = v>0?v:0;	}
+		else if(!p.compare(L"pmin"))	{	v=d.Minimal();	v = v>0?v:0;	}
 		else if(!p.compare(L"sum"))	v=d.Momentum('x',x,y);
 		else if(!p.compare(L"mx"))	{	d.Maximal(x,y,z);	v=x/d.nx;	}
 		else if(!p.compare(L"my"))	{	d.Maximal(x,y,z);	v=y/d.ny;	}

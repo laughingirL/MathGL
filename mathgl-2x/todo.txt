@@ -32,7 +32,9 @@ A. Paper about MathGL!!!
 11. Check centered curved text (see text2)
 12. GLUT testing
 13. OpenGL in FLTK as test?!
-14. Test speed for different quality
+14. Bug for suffixes:
+* correct "text 0 0 'pmin=',a.min,' pmax=',a.max" is not working
+* wrong "text 0 0 'pmin=',a.min' pmax=',a.max" is working
 
 
 ============= DOCUMENTATION =============
@@ -40,7 +42,7 @@ A. Paper about MathGL!!!
 1. Add error2 sample
 2. Add "Triangulation sample"
 3. Add "Local light sample"
-4. Section about speed
+4. Section about speed -- use time.texi produced by "mgl_example -time"
 6. Docs about mglData[C]::Correl() & AutoCorrel() + hint about Swap()
 10. Add "Data correlation sample"
 13. Update styles usage in appendix

@@ -108,6 +108,7 @@ static struct option longopts[] =
 	{ "jsonz",	no_argument,	&type,		16 },
 	{ "test",	no_argument,	&dotest,	1 },
 	{ "font",	no_argument,	&dotest,	2 },
+	{ "time",	no_argument,	&dotest,	3 },
 	{ "thread",	required_argument,	NULL,	't' },
 	{ "verbose",no_argument,	&verbose,	1 },
 	{ "width",	required_argument,	NULL,	'w' },
@@ -142,7 +143,8 @@ void usage()
 		"--kind=name	- produce only this sample\n"
 		"--thread=num	- number of threads used\n"
 		"--mgl		- use MGL scripts for samples\n"
-		"--test		- perform test\n"
+		"--test		- run in test mode\n"
+		"--time		- measure execution time for all samples\n"
 		"--font		- write current font as C++ file\n"
 		"--quality=val	- use specified quality for plot(s)\n"
 	);
@@ -267,6 +269,47 @@ int main(int argc,char **argv)
 	else if(dotest==2)
 	{	mgl_create_cpp_font(gr->Self(), L"!-~,¡-ÿ,̀-̏,Α-ω,ϑ,ϕ,ϖ,ϰ,ϱ,ϵ,А-я,ℏ,ℑ,ℓ,ℜ,←-↙,∀-∯,≠-≯,⟂");
 		delete gr;	return 0;	}
+	else if(dotest==3)
+	{
+		int qual[8]={0,1,2,4,5,6,8,9};
+		size_t ll=strlen(mmgl_dat_prepare)+1;
+		mglParse par;
+		par.AllowSetSize(true);	setlocale(LC_CTYPE, "");
+		FILE *fp = fopen("time.texi","w");
+		fprintf(fp,"@multitable @columnfractions .2 .1 .1 .1 .1 .1 .1 .1\n");
+		fprintf(fp,"@headitem Name");
+		for(int i=0;i<7;i++)	fprintf(fp," @tab q=%d",qual[i]);
+		clock_t beg,end,all;
+		while(s->name[0])	// all samples
+		{
+			char *buf = new char[strlen(s->mgl)+ll];
+			strcpy(buf,s->mgl);	strcat(buf,mmgl_dat_prepare);
+			fprintf(fp,"\n@item %s\n",s->name);
+
+			gr->DefaultPlotParam();	gr->SetQuality(0);	gr->Clf();
+			if(!use_mgl)	s->func(gr);
+			else 	par.Execute(gr,buf);
+			gr->Finish();
+			
+			printf("%s",s->name);	all = clock();
+			for(int i=0;i<8;i++)
+			{
+				gr->DefaultPlotParam();
+				gr->SetQuality(qual[i]);	gr->Clf();
+				beg = clock();
+				if(!use_mgl)	s->func(gr);
+				else 	par.Execute(gr,buf);
+				gr->Finish();
+				end = clock();
+				fprintf(fp,"@tab %.3g\n",double(end-beg)/CLOCKS_PER_SEC);
+				printf(" -- %d->%g",qual[i],double(end-beg)/CLOCKS_PER_SEC);
+				fflush(fp);	fflush(stdout);
+			}
+			printf(" -- total:%g\n",double(end-all)/CLOCKS_PER_SEC);
+			delete []buf;	s++;
+		}
+		fprintf(fp,"@end multitable\n");	fclose(fp);
+	}
 
 	if(type==15 || type==16)	mini=1;	// save mini version for json
 
