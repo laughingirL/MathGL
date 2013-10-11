@@ -1596,7 +1596,7 @@ void MGL_EXPORT mgl_tube_xyzr(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const cha
 	bool sh = mglchr(pen,'!');
 	bool wire = mglchr(pen,'#');
 
-	const int num=25;
+	int num=!(gr->GetQuality()&3)?13:25;
 	gr->SetPenPal(pen,&pal);
 	gr->Reserve(n*m*num);
 	mglPoint p,l,t,u,q,d;

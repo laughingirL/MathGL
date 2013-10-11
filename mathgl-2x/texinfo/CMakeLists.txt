@@ -73,9 +73,9 @@ endif(MGL_HAVE_DOC_PRC)
 	endforeach(SAMPLE)
 
 	set(list_texi_files_en overview_en.texi example_en.texi ex_mgl_en.texi parse_en.texi formats_en.texi udav_en.texi symbols_en.texi
-		core_en.texi concept_en.texi widget_en.texi data_en.texi other_en.texi appendix_en.texi fdl.texi version.texi )
+		core_en.texi concept_en.texi widget_en.texi data_en.texi other_en.texi appendix_en.texi fdl.texi version.texi time.texi )
 	set(list_texi_files_ru overview_ru.texi example_ru.texi ex_mgl_ru.texi parse_ru.texi formats_ru.texi udav_ru.texi symbols_ru.texi
-		core_ru.texi concept_ru.texi widget_ru.texi data_ru.texi other_ru.texi appendix_ru.texi fdl.texi version.texi )
+		core_ru.texi concept_ru.texi widget_ru.texi data_ru.texi other_ru.texi appendix_ru.texi fdl.texi version.texi time.texi )
 
 # 	add_custom_command(OUTPUT ${MGL_OUT}/web_en/web_en.html
 # 		COMMAND ${findth} -I=${MGL_OUT}/png --split=section -o web_en ${MGL_TEX}/web_en.texi

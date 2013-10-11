@@ -302,6 +302,7 @@ using mglBase::Light;
 	int *OI;			///< ObjId arrays (size width*height)
 	/// Plot point p with color c
 	void pnt_plot(long x,long y,mreal z,const unsigned char c[4], int obj_id);
+	void pnt_fast(long x,long y,mreal z,const unsigned char c[4], int obj_id);
 
 protected:
 	mreal Delay;		///< Delay for animation in seconds

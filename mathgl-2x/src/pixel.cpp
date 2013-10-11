@@ -384,8 +384,8 @@ void mglCanvas::pxl_dotsdr(long id, long , const void *)
 	for(long i=id;i<long(Prm.size());i+=mglNumThr)
 	{
 		if(Stop)	continue;
-		const mglPnt &q=Pnt[Prm[i].n1];
 		int id = Prm[i].id;
+		const mglPnt &q=Pnt[Prm[i].n1];
 		col2int(q,r,id);
 		pnt_plot(q.x,q.y,q.z,r, id);
 	}
@@ -650,8 +650,10 @@ void mglCanvas::quad_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 {
 	if(!(Quality&3))
 	{
-		fast_draw(p1,p2,d);	fast_draw(p1,p3,d);
-		fast_draw(p4,p2,d);	fast_draw(p4,p3,d);	return;
+//		fast_draw(p1,p2,d);	fast_draw(p1,p3,d);
+//		fast_draw(p4,p2,d);	fast_draw(p4,p3,d);
+		fast_draw(p1,p4,d);	fast_draw(p2,p3,d);
+		return;
 	}
 	unsigned char r[4];
 	long y1,x1,y2,x2;
@@ -892,8 +894,16 @@ void mglCanvas::line_draw(const mglPnt &p1, const mglPnt &p2, const mglDrawReg *
 	}
 }
 //-----------------------------------------------------------------------------
+void mglCanvas::pnt_fast(long x,long y,mreal z,const unsigned char ci[4], int obj_id)
+{
+	long i0=x+Width*(Height-1-y);
+	if(ci[3]!=0 && z>Z[3*i0])	// point upper the background
+	{	Z[3*i0]=z;	memcpy(C+12*i0,ci,4);	OI[i0]=obj_id;	}
+}
+//-----------------------------------------------------------------------------
 void mglCanvas::fast_draw(const mglPnt &p1, const mglPnt &p2, const mglDrawReg *dr)
 {
+	if(p1.x==p2.x && p1.y==p2.y) return;
 	mglPnt d=p2-p1;
 	unsigned char r[4];	col2int(p1,r,dr->ObjId);
 	long y1,x1,y2,x2;
@@ -907,17 +917,17 @@ void mglCanvas::fast_draw(const mglPnt &p1, const mglPnt &p2, const mglDrawReg *
 	if(x1>x2 || y1>y2)	return;
 	float dz = Width>2 ? 1 : 1e-5*Width;		// provide additional height to be well visible on the surfaces
 
-	if(hor && d.x!=0)	for(long i=x1;i<=x2;i++)
+	if(hor)	for(long i=x1;i<=x2;i++)
 	{
 		register long c = long(p1.y+d.y*(i-p1.x)/d.x);
 		if(c>=y1 && c<=y2)
-			pnt_plot(i, c, p1.z+d.z*(i-p1.x)/d.x+dz, r,dr->ObjId);
+			pnt_fast(i, c, p1.z+d.z*(i-p1.x)/d.x+dz, r,dr->ObjId);
 	}
-	else if(d.y!=0)	for(long i=y1;i<=y2;i++)
+	else	for(long i=y1;i<=y2;i++)
 	{
 		register long c = long(p1.x+d.x*(i-p1.y)/d.y);
 		if(c>=x1 && c<=x2)
-			pnt_plot(c, i, p1.z+d.z*(i-p1.y)/d.y+dz, r,dr->ObjId);
+			pnt_fast(c, i, p1.z+d.z*(i-p1.y)/d.y+dz, r,dr->ObjId);
 	}
 }
 //-----------------------------------------------------------------------------

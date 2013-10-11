@@ -71,7 +71,7 @@ void test(mglGraph *gr)
 	mglParse par;
 	par.AllowSetSize(true);
 	setlocale(LC_CTYPE, "");
-	par.Execute(gr,"light on:light 0 1 0 0:cone 0 0 -1 0 0 1 1 0.5 'r:4'");
+	par.Execute(gr,"var a 5 -1 1:text 0 0 'min=',a.min,' max=',a.max");
 
 //	FILE *fp=fopen("/home/balakin/progr/mathgl-code/mathgl-2x/build/test.mgl","r");
 //	par.Execute(gr,fp,true);
@@ -271,12 +271,12 @@ int main(int argc,char **argv)
 		delete gr;	return 0;	}
 	else if(dotest==3)
 	{
-		int qual[8]={0,1,2,4,5,6,8,9};
+		int qual[7]={0,1,2,4,5,6,8};
 		size_t ll=strlen(mmgl_dat_prepare)+1;
 		mglParse par;
 		par.AllowSetSize(true);	setlocale(LC_CTYPE, "");
 		FILE *fp = fopen("time.texi","w");
-		fprintf(fp,"@multitable @columnfractions .2 .1 .1 .1 .1 .1 .1 .1\n");
+		fprintf(fp,"@multitable @columnfractions .3 .1 .1 .1 .1 .1 .1 .1\n");
 		fprintf(fp,"@headitem Name");
 		for(int i=0;i<7;i++)	fprintf(fp," @tab q=%d",qual[i]);
 		clock_t beg,end,all;
@@ -284,15 +284,10 @@ int main(int argc,char **argv)
 		{
 			char *buf = new char[strlen(s->mgl)+ll];
 			strcpy(buf,s->mgl);	strcat(buf,mmgl_dat_prepare);
-			fprintf(fp,"\n@item %s\n",s->name);
+			fprintf(fp,"\n@item %s",s->name);
 
-			gr->DefaultPlotParam();	gr->SetQuality(0);	gr->Clf();
-			if(!use_mgl)	s->func(gr);
-			else 	par.Execute(gr,buf);
-			gr->Finish();
-			
 			printf("%s",s->name);	all = clock();
-			for(int i=0;i<8;i++)
+			for(int i=0;i<7;i++)
 			{
 				gr->DefaultPlotParam();
 				gr->SetQuality(qual[i]);	gr->Clf();
@@ -301,14 +296,14 @@ int main(int argc,char **argv)
 				else 	par.Execute(gr,buf);
 				gr->Finish();
 				end = clock();
-				fprintf(fp,"@tab %.3g\n",double(end-beg)/CLOCKS_PER_SEC);
-				printf(" -- %d->%g",qual[i],double(end-beg)/CLOCKS_PER_SEC);
+				fprintf(fp," @tab %.3g",double(end-beg)/CLOCKS_PER_SEC);
+				printf("\t%d->%g",qual[i],double(end-beg)/CLOCKS_PER_SEC);
 				fflush(fp);	fflush(stdout);
 			}
 			printf(" -- total:%g\n",double(end-all)/CLOCKS_PER_SEC);
 			delete []buf;	s++;
 		}
-		fprintf(fp,"@end multitable\n");	fclose(fp);
+		fprintf(fp,"\n@end multitable\n");	fclose(fp);
 	}
 
 	if(type==15 || type==16)	mini=1;	// save mini version for json

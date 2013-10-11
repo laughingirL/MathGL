@@ -1131,7 +1131,7 @@ void MGL_NO_EXPORT flowr(mglBase *gr, double zVal, double u, double v, const mgl
 	} while(!end);
 	if(k>1)
 	{
-		const int num=25;
+		int num=!(gr->GetQuality()&3)?13:25;
 		long *id=new long[2*num];
 		mglPoint p,l=pp[1]-pp[0],t,q,d;
 		t = !l;	t.Normalize();	q = t^l;	q.Normalize();

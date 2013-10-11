@@ -327,7 +327,7 @@ void mglParser::FillArg(mglGraph *gr, int k, std::wstring *arg, mglArg *a)
 					for(;i<ll && w[i]!='\'';i++);
 					if(i>i1)
 					{
-						mglData d = mglFormulaCalc(w.substr(i1,i-i1), this);
+						mglData d = mglFormulaCalc(w.substr(i1,i-i1-(w[i]=='\''?1:0)), this);
 						mglprintf(buf,32,L"%g",d.a[0]);	a[n-1].w += buf;
 					}
 				}
