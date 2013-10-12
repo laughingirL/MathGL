@@ -375,24 +375,40 @@ void mglCanvas::pxl_primpx(long id, long n, const void *)	// NOTE this variant i
 	}
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::pxl_dotsdr(long id, long , const void *)
+void mglCanvas::pxl_dotsdr(long id, long n, const void *)
 {
-	unsigned char r[4];
+	unsigned char r[4]={0,0,0,255};
 #if !MGL_HAVE_PTHREAD
-#pragma omp parallel for private(r)
+#pragma omp parallel for firstprivate(r)
 #endif
-	for(long i=id;i<long(Prm.size());i+=mglNumThr)
+	for(long i=id;i<n;i+=mglNumThr)
 	{
-		if(Stop)	continue;
-		int id = Prm[i].id;
-		const mglPnt &q=Pnt[Prm[i].n1];
-		col2int(q,r,id);
-		pnt_plot(q.x,q.y,q.z,r, id);
+		const mglPnt &p=Pnt[i];
+		register float x = p.xx-Width/2., y = p.yy-Height/2., z = p.zz-Depth/2.,xx,yy,zz;
+		xx = Bp.b[0]*x + Bp.b[1]*y + Bp.b[2]*z - Bp.x*Width/2;
+		yy = Bp.b[3]*x + Bp.b[4]*y + Bp.b[5]*z - Bp.y*Height/2;
+		zz = Bp.b[6]*x + Bp.b[7]*y + Bp.b[8]*z + Depth/2.;
+		register float d = (1-Bp.pf)/(1-Bp.pf*zz/Depth);
+		xx = Width/2 + d*xx;	yy = Height/2 + d*yy;
+
+		r[0] = (unsigned char)(255*p.r);
+		r[1] = (unsigned char)(255*p.g);
+		r[2] = (unsigned char)(255*p.b);
+		register long i0=long(xx)+Width*(Height-1-long(yy));
+		if(i0>=0 && i0<Width*Height && zz>Z[3*i0])
+		{	Z[3*i0]=z;	memcpy(C+12*i0,r,4);	OI[i0]=-1;	}
 	}
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::Finish(bool fast)
 {
+	if(Quality==MGL_DRAW_DOTS)
+	{
+		mglStartThread(&mglCanvas::pxl_dotsdr,this,Pnt.size());
+		mglStartThread(&mglCanvas::pxl_memcpy,this,Width*Height);
+		mglStartThread(&mglCanvas::pxl_backgr,this,Width*Height);
+		return;
+	}
 	static mglMatrix bp;
 	if(Quality==MGL_DRAW_NONE)	return;
 	if(Quality&MGL_DRAW_LMEM)	clr(MGL_FINISHED);
@@ -406,11 +422,7 @@ void mglCanvas::Finish(bool fast)
 	{
 		PreparePrim(fast);	bp=Bp;
 		clr(MGL_FINISHED);
-		if(Quality==MGL_DRAW_DOTS)
-			mglStartThread(&mglCanvas::pxl_dotsdr,this,Prm.size());
-		else
-//			mglStartThread(&mglCanvas::pxl_primpx,this,Width*Height);	// this variant is extremely slow ... may be later in CUDA???
-			mglStartThread(&mglCanvas::pxl_primdr,this,Prm.size());
+		mglStartThread(&mglCanvas::pxl_primdr,this,Prm.size());
 	}
 	size_t n=Width*Height;
 	BDef[3] = (Flag&3)!=2 ? 0:255;
@@ -896,7 +908,7 @@ void mglCanvas::line_draw(const mglPnt &p1, const mglPnt &p2, const mglDrawReg *
 //-----------------------------------------------------------------------------
 void mglCanvas::pnt_fast(long x,long y,mreal z,const unsigned char ci[4], int obj_id)
 {
-	long i0=x+Width*(Height-1-y);
+	register long i0=x+Width*(Height-1-y);
 	if(ci[3]!=0 && z>Z[3*i0])	// point upper the background
 	{	Z[3*i0]=z;	memcpy(C+12*i0,ci,4);	OI[i0]=obj_id;	}
 }

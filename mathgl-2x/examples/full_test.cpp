@@ -68,10 +68,12 @@ void smgl_text(mglGraph *gr);	// text drawing
 void smgl_surf(mglGraph *gr);
 void test(mglGraph *gr)
 {
+	gr->SetQuality(8);
 	mglParse par;
 	par.AllowSetSize(true);
 	setlocale(LC_CTYPE, "");
-	par.Execute(gr,"var a 5 -1 1:text 0 0 'min=',a.min,' max=',a.max");
+	par.Execute(gr,"fplot 'x'");
+//	par.Execute(gr,"var a 5 -1 1:text 0 0 'min=',a.min,' max=',a.max");
 
 //	FILE *fp=fopen("/home/balakin/progr/mathgl-code/mathgl-2x/build/test.mgl","r");
 //	par.Execute(gr,fp,true);
@@ -155,7 +157,6 @@ void save(mglGraph *gr,const char *name,const char *suf="")
 {
 	//	return;
 	char buf[128];
-	printf("%s ",name);	fflush(stdout);
 	switch(type)
 	{
 		case 1:	// EPS
@@ -275,8 +276,8 @@ int main(int argc,char **argv)
 		size_t ll=strlen(mmgl_dat_prepare)+1;
 		mglParse par;
 		par.AllowSetSize(true);	setlocale(LC_CTYPE, "");
-		FILE *fp = fopen("time.texi","w");
-		fprintf(fp,"@multitable @columnfractions .3 .1 .1 .1 .1 .1 .1 .1\n");
+		FILE *fp = fopen(big?"time_big.texi":"time.texi","w");
+		fprintf(fp,"@multitable @columnfractions .16 .12 .12 .12 .12 .12 .12 .12\n");
 		fprintf(fp,"@headitem Name");
 		for(int i=0;i<7;i++)	fprintf(fp," @tab q=%d",qual[i]);
 		clock_t beg,end,all;
@@ -300,8 +301,7 @@ int main(int argc,char **argv)
 				printf("\t%d->%g",qual[i],double(end-beg)/CLOCKS_PER_SEC);
 				fflush(fp);	fflush(stdout);
 			}
-			printf(" -- total:%g\n",double(end-all)/CLOCKS_PER_SEC);
-			delete []buf;	s++;
+			printf("\n");	delete []buf;	s++;
 		}
 		fprintf(fp,"\n@end multitable\n");	fclose(fp);
 	}
@@ -310,24 +310,28 @@ int main(int argc,char **argv)
 
 	if(srnd)	mgl_srnd(1);
 	gr->VertexColor(false);	gr->Compression(false);
-	if(name[0]==0)	while(s->name[0])	// all samples
+	if(name[0]==0)
 	{
-		gr->DefaultPlotParam();	gr->Clf();
-		if(use_mgl)
+		while(s->name[0])	// all samples
 		{
-			mglParse par;
-			par.AllowSetSize(true);
-			setlocale(LC_CTYPE, "");
-			char *buf = new char[strlen(s->mgl)+strlen(mmgl_dat_prepare)+1];
-			strcpy(buf,s->mgl);		strcat(buf,mmgl_dat_prepare);
-			printf("\n-------\n%s\n-------\n",verbose?buf:s->mgl);
-			par.Execute(gr,buf);	delete []buf;
-			const char *mess = gr->Message();
-			if(*mess)	printf("Warnings: %s\n-------\n",mess);
+			gr->DefaultPlotParam();	gr->Clf();
+			if(use_mgl)
+			{
+				mglParse par;
+				par.AllowSetSize(true);
+				setlocale(LC_CTYPE, "");
+				char *buf = new char[strlen(s->mgl)+strlen(mmgl_dat_prepare)+1];
+				strcpy(buf,s->mgl);		strcat(buf,mmgl_dat_prepare);
+				printf("\n-------\n%s\n-------\n",verbose?buf:s->mgl);
+				par.Execute(gr,buf);	delete []buf;
+				const char *mess = gr->Message();
+				if(*mess)	printf("Warnings: %s\n-------\n",mess);
+			}
+			else	s->func(gr);
+			save(gr, s->name, suf);
+			printf("%s ",s->name);	fflush(stdout);	s++;
 		}
-		else	s->func(gr);
-		save(gr, s->name, suf);
-		fflush(stdout);	s++;
+		printf("\n");
 	}
 	else	// manual sample
 	{
@@ -355,7 +359,6 @@ int main(int argc,char **argv)
 		}
 		else	printf("no sample %s\n",name);
 	}
-	printf("\n");
 	delete gr;	return 0;
 }
 //-----------------------------------------------------------------------------

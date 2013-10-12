@@ -1,12 +1,6 @@
 http://ubuntuforums.org/showthread.php?t=1862084
 Device 0 (VID=0502 and PID=337d) is UNKNOWN. (VID=18d1 and PID=4e41)
 
-Compare speed for i5 Debian sid	i7 Ubuntu 12.04		new var i7/i5
-kind 			default	big		default	big 		default	big
-none 			27.7 	83.3 	27.7 	58.2
-pthr 			24.5 	68.1 	22.5 	40.5
-omp+pth			25.0 	64.7 	21.6 	34.2
-omp				28.5 	65.3 	25.7 	37.3		15.3/12.2	26.2/27.2
 
 ============= NEW FOR LATER =============
 
@@ -32,7 +26,6 @@ A. Paper about MathGL!!!
 11. Check centered curved text (see text2)
 12. GLUT testing
 13. OpenGL in FLTK as test?!
-14. Bug with ternary and quality=8 ?!!
 
 
 ============= DOCUMENTATION =============
