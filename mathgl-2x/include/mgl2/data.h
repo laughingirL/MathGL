@@ -175,7 +175,14 @@ public:
 	{	mgl_data_refill_xy(this,&xdat,&ydat,&vdat,p1.x,p2.x,p1.y,p2.y,sl);	}
 	inline void Refill(const mglDataA &xdat, const mglDataA &ydat, const mglDataA &zdat, const mglDataA &vdat, mglPoint p1, mglPoint p2)
 	{	mgl_data_refill_xyz(this,&xdat,&ydat,&zdat,&vdat,p1.x,p2.x,p1.y,p2.y,p1.z,p2.z);	}
-	/// Set the data by triangulated surface values assuming x,y,z in range [r1,r2]
+	/// Fill the data by interpolated values of vdat parametrically depended on xdat,ydat,zdat for x,y,z in axis range of gr
+	inline void Refill(mglBase *gr, const mglDataA &xdat, const mglDataA &vdat, long sl=-1, const char *opt="")
+	{	mgl_data_refill_gr(gr,this,&xdat,0,0,&vdat,sl,opt);	}
+	inline void Refill(mglBase *gr, const mglDataA &xdat, const mglDataA &ydat, const mglDataA &vdat, long sl=-1, const char *opt="")
+	{	mgl_data_refill_gr(gr,this,&xdat,&ydat,0,&vdat,sl,opt);	}
+	inline void Refill(mglBase *gr, const mglDataA &xdat, const mglDataA &ydat, const mglDataA &zdat, const mglDataA &vdat, const char *opt="")
+	{	mgl_data_refill_gr(gr,this,&xdat,&ydat,&zdat,&vdat,-1,opt);	}
+/// Set the data by triangulated surface values assuming x,y,z in range [r1,r2]
 	inline void Grid(mglBase *gr, const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *opt="")
 	{	mgl_data_grid(gr,this,&x,&y,&z,opt);	}
 	/// Put value to data element(s)
@@ -270,7 +277,7 @@ public:
 	inline mglData Roots(const char *func, char var='x') const
 	{	return mglData(true,mgl_data_roots(func, this, var));	}
 	/// Find correlation with another data arrays
-	inline mglData Correl(const mglData &dat, const char *dir) const
+	inline mglData Correl(const mglDataA &dat, const char *dir) const
 	{	return mglData(true,mgl_data_correl(this,&dat,dir));	}
 	/// Find auto correlation function
 	inline mglData AutoCorrel(const char *dir) const

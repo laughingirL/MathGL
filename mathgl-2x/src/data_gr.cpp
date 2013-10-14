@@ -28,7 +28,7 @@
 #include "mgl2/thread.h"
 #include "mgl2/base.h"
 //-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_data_refill_gr(HMDT dat, HMGL gr, HCDT xdat, HCDT ydat, HCDT zdat, HCDT vdat, long sl, const char *opt)
+void MGL_EXPORT mgl_data_refill_gr(HMGL gr, HMDT dat, HCDT xdat, HCDT ydat, HCDT zdat, HCDT vdat, long sl, const char *opt)
 {
 	if(!vdat)	return;
 	gr->SaveState(opt);
@@ -48,9 +48,9 @@ void MGL_EXPORT mgl_data_refill_xy_(uintptr_t *d, uintptr_t *xdat, uintptr_t *yd
 {	mgl_data_refill_xy(_DT_,_DA_(xdat),_DA_(ydat),_DA_(vdat),*x1,*x2,*y1,*y2,*sl);	}
 void MGL_EXPORT mgl_data_refill_xyz_(uintptr_t *d, uintptr_t *xdat, uintptr_t *ydat, uintptr_t *zdat, uintptr_t *vdat, mreal *x1, mreal *x2, mreal *y1, mreal *y2, mreal *z1, mreal *z2)
 {	mgl_data_refill_xyz(_DT_,_DA_(xdat),_DA_(ydat),_DA_(zdat),_DA_(vdat),*x1,*x2,*y1,*y2,*z1,*z2);	}
-void MGL_EXPORT mgl_data_refill_gr_(uintptr_t *d, uintptr_t *gr, uintptr_t *xdat, uintptr_t *ydat, uintptr_t *zdat, uintptr_t *vdat, long *sl, const char *opt,int l)
+void MGL_EXPORT mgl_data_refill_gr_(uintptr_t *gr, uintptr_t *d, uintptr_t *xdat, uintptr_t *ydat, uintptr_t *zdat, uintptr_t *vdat, long *sl, const char *opt,int l)
 {	char *s=new char[l+1];	memcpy(s,opt,l);	s[l]=0;
-	mgl_data_refill_gr(_DT_,_GR_,_DA_(xdat),_DA_(ydat),_DA_(zdat),_DA_(vdat),*sl,s);	delete []s;	}
+	mgl_data_refill_gr(_GR_,_DT_,_DA_(xdat),_DA_(ydat),_DA_(zdat),_DA_(vdat),*sl,s);	delete []s;	}
 //-----------------------------------------------------------------------------
 MGL_NO_EXPORT void *mgl_fill_f(void *par)
 {

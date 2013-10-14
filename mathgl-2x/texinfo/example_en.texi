@@ -2675,8 +2675,8 @@ int sample(mglGraph *gr)
   gr->Rotate(50,60);  gr->Alpha(true);
   gr->Box();  gr->Cloud(c,"wyrRk");
 
-  gr->SubPlot(2,2,1); gr->Title("'!' style");
-  gr->Rotate(50,60);  gr->Box();  gr->Cloud(c,"!wyrRk");
+  gr->SubPlot(2,2,1); gr->Title("'i' style");
+  gr->Rotate(50,60);  gr->Box();  gr->Cloud(c,"iwyrRk");
 
   gr->SubPlot(2,2,2); gr->Title("'.' style");
   gr->Rotate(50,60);  gr->Box();  gr->Cloud(c,".wyrRk");
@@ -3119,10 +3119,11 @@ In this section I've included some small hints and advices for the improving of 
 * Types of transparency::
 * Axis projection::
 * Adding fog::
-* Several light sources::
+* Lighting sample::
 * Using primitives::
 * STFA sample::
 * Mapping visualization::
+* Making regular data::
 * Making histogram::
 * Nonlinear fitting sample::
 * PDE solving hints::
@@ -3285,7 +3286,7 @@ int sample(mglGraph *gr)
 
 @c ------------------------------------------------------------------
 @c @external{}
-@node Adding fog, Several light sources, Axis projection, Hints
+@node Adding fog, Lighting sample, Axis projection, Hints
 @subsection Adding fog
 
 MathGL can add a fog to the image. Its switching on is rather simple -- just use @ref{fog} function. There is the only feature -- fog is applied for whole image. Not to particular subplot. The sample code is:
@@ -3304,8 +3305,8 @@ int sample(mglGraph *gr)
 
 @c ------------------------------------------------------------------
 @c @external{}
-@node Several light sources, Using primitives, Adding fog, Hints
-@subsection Several light sources
+@node Lighting sample, Using primitives, Adding fog, Hints
+@subsection Lighting sample
 
 In contrast to the most of other programs, MathGL supports several (up to 10) light sources. Moreover, the color each of them can be different: white (this is usual), yellow, red, cyan, green and so on. The use of several light sources may be interesting for the highlighting of some peculiarities of the plot or just to make an amusing picture. Note, each light source can be switched on/off individually. The sample code is:
 @verbatim
@@ -3324,9 +3325,40 @@ int sample(mglGraph *gr)
 
 @pfig{several_light, Example of several light sources.}
 
+Additionally, you can use local light sources and set to use diffise reflection instead of specular one (by default) or both kinds.
+@verbatim
+int sample(mglGraph *gr)
+{
+  // use Quality=6 because need lighting in placed
+  int qual = gr->GetQuality();
+  gr->Light(true);   gr->SetQuality(6);
+
+  mglData a;	mgls_prepare2d(&a);
+  gr->SubPlot(2,2,0);  gr->Title("Default");
+  gr->Rotate(50,60); gr->Box(); gr->Surf(a);
+  gr->Line(mglPoint(-1,-0.7,1.7),mglPoint(-1,-0.7,0.7),"BA");
+  gr->AddLight(0,mglPoint(1,0,1),mglPoint(-2,-1,-1));
+  gr->SubPlot(2,2,1);  gr->Title("Local");
+  gr->Rotate(50,60); gr->Box(); gr->Surf(a);
+  gr->Line(mglPoint(1,0,1),mglPoint(-1,-1,0),"BAO");
+  gr->SetDiffuse(0);
+  gr->SubPlot(2,2,2);  gr->Title("no diffuse");
+  gr->Rotate(50,60); gr->Box(); gr->Surf(a);
+  gr->Line(mglPoint(1,0,1),mglPoint(-1,-1,0),"BAO");
+  gr->SetDiffuse(0.5);
+  gr->AddLight(0,mglPoint(1,0,1),mglPoint(-2,-1,-1),'w',0);
+  gr->SubPlot(2,2,3);  gr->Title("diffusive only");
+  gr->Rotate(50,60); gr->Box(); gr->Surf(a);
+  gr->Line(mglPoint(1,0,1),mglPoint(-1,-1,0),"BAO");
+  gr->SetQuality(qual);
+}
+@end verbatim
+
+@pfig{light, Example of different types of lighting.}
+
 @c ------------------------------------------------------------------
 @c @external{}
-@node Using primitives, STFA sample, Several light sources, Hints
+@node Using primitives, STFA sample, Lighting sample, Hints
 @subsection Using primitives
 
 MathGL provide a set of functions for drawing primitives (see @ref{Primitives}). Primitives are low level object, which used by most of plotting functions. Picture below demonstrate some of commonly used primitives.
@@ -3457,7 +3489,7 @@ int sample(mglGraph *gr)
 
 @c ------------------------------------------------------------------
 @c @external{}
-@node Mapping visualization, Making histogram, STFA sample, Hints
+@node Mapping visualization, Making regular data, STFA sample, Hints
 @subsection Mapping visualization
 
 Sometime ago I worked with mapping and have a question about its visualization. Let me remember you that mapping is some transformation rule for one set of number to another one. The 1d mapping is just an ordinary function -- it takes a number and transforms it to another one. The 2d mapping (which I used) is a pair of functions which take 2 numbers and transform them to another 2 ones. Except general plots (like @ref{surfc}, @ref{surfa}) there is a special plot -- Arnold diagram. It shows the area which is the result of mapping of some initial area (usually square).
@@ -3490,7 +3522,33 @@ int sample(mglGraph *gr)
 
 @c ------------------------------------------------------------------
 @c @external{}
-@node Making histogram, Nonlinear fitting sample, Mapping visualization, Hints
+@node Making regular data, Making histogram, Mapping visualization, Hints
+@subsection Making regular data
+
+Sometimes, one have only unregular data, like as data on triangular grids, or experimental results and so on. Such kind of data cannot be used as simple as regular data (like matrices). Only few functions, like @ref{dots}, can handle unregular data as is.
+
+However, one can use built in triangulation functions for interpolating unregular data points to a regular data grids. There are 2 ways. First way, one can use @ref{triangulation} function to obtain list of vertexes for triangles. Later this list can be used in functions like @ref{triplot} or @ref{tricont}. Second way consist in usage of @ref{datagrid} function, which fill regular data grid by interpolated values, assuming that coordinates of the data grid is equidistantly distributed in axis range. Note, you can use options (see @ref{Command options}) to change default axis range as well as in other plotting functions.
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData x(100), y(100), z(100);
+  gr->Fill(x,"2*rnd-1"); gr->Fill(y,"2*rnd-1"); gr->Fill(z,"v^2-w^2",x,y);
+  // first way - plot triangular surface for points
+  mglData d = mglTriangulation(x,y);
+  gr->Title("Triangulation");
+  gr->Rotate(40,60);	gr->Box();	gr->Light(true);
+  gr->TriPlot(d,x,y,z);	gr->TriPlot(d,x,y,z,"#k");
+  // second way - make regular data and plot it
+  mglData g(30,30);
+  gr->DataGrid(g,x,y,z);	gr->Mesh(g,"m");
+}
+@end verbatim
+
+@pfig{triangulation, Example of triangulation.}
+
+@c ------------------------------------------------------------------
+@c @external{}
+@node Making histogram, Nonlinear fitting sample, Making regular data, Hints
 @subsection Making histogram
 
 Using the @ref{hist} function(s) for making regular distributions is one of useful fast methods to process and plot irregular data. @code{Hist} can be used to find some momentum of set of points by specifying weight function. It is possible to create not only 1D distributions but also 2D and 3D ones. Below I place the simplest sample code which demonstrate @ref{hist} usage:

@@ -1158,11 +1158,11 @@ public:
 
 	/// Fill dat by interpolated values of vdat parametrically depended on xdat,ydat,zdat for x,y,z in axis range
 	inline void Refill(mglData &dat, const mglDataA &xdat, const mglDataA &vdat, long sl=-1, const char *opt="")
-	{	mgl_data_refill_gr(&dat,gr,&xdat,0,0,&vdat,sl,opt);	}
+	{	mgl_data_refill_gr(gr,&dat,&xdat,0,0,&vdat,sl,opt);	}
 	inline void Refill(mglData &dat, const mglDataA &xdat, const mglDataA &ydat, const mglDataA &vdat, long sl=-1, const char *opt="")
-	{	mgl_data_refill_gr(&dat,gr,&xdat,&ydat,0,&vdat,sl,opt);	}
+	{	mgl_data_refill_gr(gr,&dat,&xdat,&ydat,0,&vdat,sl,opt);	}
 	inline void Refill(mglData &dat, const mglDataA &xdat, const mglDataA &ydat, const mglDataA &zdat, const mglDataA &vdat, const char *opt="")
-	{	mgl_data_refill_gr(&dat,gr,&xdat,&ydat,&zdat,&vdat,-1,opt);	}
+	{	mgl_data_refill_gr(gr,&dat,&xdat,&ydat,&zdat,&vdat,-1,opt);	}
 
 	/// Set the data by triangulated surface values assuming x,y,z in range [Min, Max]
 	inline void DataGrid(mglData &d, const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *opt="")

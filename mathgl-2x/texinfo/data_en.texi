@@ -317,6 +317,7 @@ Join data cells from @var{vdat} to @var{dat}. At this, function increase @var{da
 @cindex Set
 @cindex List
 @cindex Var
+@cindex Refill
 
 @anchor{list}
 @deftypefn {MGL command} {} list @sc{dat} @code{v1 ...}
@@ -478,7 +479,7 @@ Fills data by 'x' or 'k' samples for Hankel ('h') or Fourier ('f') transform.
 @deftypefnx {Method on @code{mglData}} @code{mglData} Grid (@code{HMGL} gr, @code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const char *}opt=@code{""})
 @deftypefnx {C function} @code{void} mgl_data_grid (@code{HMGL} gr, @code{HMDT} u, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}opt)
 @end ifclear
-Fills the value of array according to the linear interpolation of triangulated surface, found for arbitrary placed points @samp{x}, @samp{y}, @samp{z}. NAN value is used for grid points placed outside of triangulated surface.
+Fills the value of array according to the linear interpolation of triangulated surface, found for arbitrary placed points @samp{x}, @samp{y}, @samp{z}. NAN value is used for grid points placed outside of triangulated surface. @sref{Making regular data}
 @end deftypefn
 
 
@@ -501,6 +502,26 @@ Sets value(s) of array a[@var{i}, @var{j}, @var{k}] = @var{val}. Negative indexe
 @deftypefnx {C function} @code{void} mgl_datac_put_dat (@code{HADT} a, @code{HCDT} v, @code{int} i, @code{int} j, @code{int} k)
 @end ifclear
 Copies value(s) from array @var{v} to the range of original array. Negative indexes @var{i}, @var{j}, @var{k}=-1 set the range in corresponding direction(s). At this minor dimensions of array @var{v} should be large than corresponding dimensions of this array. For example, @code{Put(v,-1,0,-1);} sets a[i,0,j]=v.ny>nz ? v[i,j] : v[i], where i=0...(nx-1), j=0...(nz-1) and condition v.nx>=nx is true.
+@end deftypefn
+
+@anchor{refill}
+@deftypefn {MGL command} {} refill dat xdat vdat [sl=-1]
+@deftypefnx {MGL command} {} refill dat xdat ydat vdat [sl=-1]
+@deftypefnx {MGL command} {} refill dat xdat ydat zdat vdat
+@ifclear UDAV
+@deftypefnx {Method on @code{mglData}} @code{void} Refill (@code{const mglDataA &}x, @code{const mglDataA &}v, @code{mreal} x1, @code{mreal} x2, @code{long} sl=@code{-1})
+@deftypefnx {Method on @code{mglData}} @code{void} Refill (@code{const mglDataA &}x, @code{const mglDataA &}v, @code{mglPoint} p1, @code{mglPoint} p2, @code{long} sl=@code{-1})
+@deftypefnx {Method on @code{mglData}} @code{void} Refill (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}v, @code{mglPoint} p1, @code{mglPoint} p2, @code{long} sl=@code{-1})
+@deftypefnx {Method on @code{mglData}} @code{void} Refill (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}v, @code{mglPoint} p1, @code{mglPoint} p2)
+@deftypefnx {Method on @code{mglData}} @code{void} Refill (@code{HMGL} gr, @code{const mglDataA &}x, @code{const mglDataA &}v, @code{long} sl=@code{-1}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglData}} @code{void} Refill (@code{HMGL} gr, @code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}v, @code{long} sl=@code{-1}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglData}} @code{void} Refill (@code{HMGL} gr, @code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}v, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_data_refill_x (@code{HMDT} a, @code{HCDT} x, @code{HCDT} v, @code{mreal} x1, @code{mreal} x2, @code{long} sl)
+@deftypefnx {C function} @code{void} mgl_data_refill_xy (@code{HMDT} a, @code{HCDT} x, @code{HCDT} y, @code{HCDT} v, @code{mreal} x1, @code{mreal} x2, @code{mreal} y1, @code{mreal} y2, @code{long} sl)
+@deftypefnx {C function} @code{void} mgl_data_refill_xyz (@code{HMDT} a, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} v, @code{mreal} x1, @code{mreal} x2, @code{mreal} y1, @code{mreal} y2, @code{mreal} z1, @code{mreal} z2)
+@deftypefnx {C function} @code{void} mgl_data_refill_gr (@code{HMGL} gr, @code{HMDT} a, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} v, @code{long} sl, @code{const char *}opt)
+@end ifclear
+Fills by interpolated values of array @var{v} at the point @{@var{x}, @var{y}, @var{z}@}=@{@code{X[i], Y[j], Z[k]}@} (or @{@var{x}, @var{y}, @var{z}@}=@{@code{X[i,j,k], Y[i,j,k], Z[i,j,k]}@} if @var{x}, @var{y}, @var{z} are not 1d arrays), where @code{X,Y,Z} are equidistantly distributed in range [@var{x1},@var{x2}]*[@var{y1},@var{y2}]*[@var{z1},@var{z2}] and have the same sizes as this array. If parameter @var{sl} is 0 or positive then changes will be applied only for slice @var{sl}.
 @end deftypefn
 
 @anchor{idset}
@@ -659,6 +680,9 @@ Saves data matrix (or @code{ns}-th slice for 3d data) to bitmap file (now suppor
 @cindex Min
 @cindex Max
 @cindex Roots
+@cindex Correl
+@cindex AutoCorrel
+
 
 @anchor{subdata}
 @deftypefn {MGL command} {} subdata @sc{res} dat @code{xx [yy=: zz=:]}
@@ -725,6 +749,17 @@ Gets array which values is result of interpolation of original array for coordin
 @deftypefnx {C function} @code{HMDT} mgl_data_solve (@code{HCDT} dat, @code{mreal} val, @code{char} dir, @code{HCDT} idat, @code{int} norm)
 @end ifclear
 Gets array which values is indexes (roots) along given direction @var{dir}, where interpolated values of data @var{dat} are equal to @var{val}. Output data will have the sizes of @var{dat} in directions transverse to @var{dir}. If data @var{idat} is provided then its values are used as starting points. This allows to find several branches by consequentive calls. Indexes are supposed to be normalized in range [0,1] (if @var{norm}=@code{true}) or in ranges [0,nx], [0,ny], [0,nz] correspondingly. Function return NULL or create empty data if data cannot be created for given arguments. @sref{Solve sample}
+@end deftypefn
+
+@anchor{roots}
+@deftypefn {MGL command} {} roots @sc{res} 'func' ini ['var'='x']
+@deftypefnx {MGL command} {} roots @sc{res} 'func' @code{ini} ['var'='x']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglData}} @code{mglData} Roots (@code{const char *}func, @code{char} var) @code{const}
+@deftypefnx {C function} @code{HMDT} mgl_data_roots (@code{const char *}func, @code{HCDT} ini, @code{char} var)
+@deftypefnx {C function} @code{mreal} mgl_find_root_txt (@code{const char *}func, @code{mreal} ini, @code{char} var)
+@end ifclear
+Find roots of equation 'func'=0 for variable @var{var} with initial guess @var{ini}. Secant method is used for root finding. Function return NULL or create empty data if data cannot be created for given arguments.
 @end deftypefn
 
 @anchor{hist}
@@ -808,6 +843,19 @@ Returns direct multiplication of arrays (like, res[i,j] = this[i]*a[j] and so on
 Gets array of diagonal elements a[i,i] (for 2D case) or a[i,i,i] (for 3D case) where i=0...nx-1. Function return copy of itself for 1D case. Data array must have dimensions ny,nz >= nx or ny,nz = 1. Function return NULL or create empty data if data cannot be created for given arguments.
 @end deftypefn
 
+@anchor{correl}
+@deftypefn {MGL command} {} correl @sc{res} adat bdat 'dir'
+@ifclear UDAV
+@deftypefnx {Method on @code{mglData}} @code{mglData} Correl (@code{const mglDataA &}b, @code{const char *}dir) @code{const}
+@deftypefnx {Method on @code{mglData}} @code{mglData} AutoCorrel (@code{const char *}dir) @code{const}
+@deftypefnx {Method on @code{mglDataC}} @code{mglDataC} Correl (@code{const mglDataA &}b, @code{const char *}dir) @code{const}
+@deftypefnx {Method on @code{mglDataC}} @code{mglDataC} AutoCorrel (@code{const char *}dir) @code{const}
+@deftypefnx {C function} @code{HMDT} mgl_data_correl (@code{HCDT} a, @code{HCDT} b, @code{const char *}dir)
+@deftypefnx {C function} @code{HADT} mgl_datac_correl (@code{HCDT} a, @code{HCDT} b, @code{const char *}dir)
+@end ifclear
+Find correlation between data @var{a} (or this in C++) and @var{b} along directions @var{dir}. Fourier transform is used to find the correlation. So, you may want to use functions @ref{swap} or @ref{norm} before plotting it. Function return NULL or create empty data if data cannot be created for given arguments.
+@end deftypefn
+
 @ifclear UDAV
 @deftypefn {Method on @code{mglDataC}} @code{mglData} Real () @code{const}
 @deftypefnx {C function} @code{HMDT} mgl_datac_real (@code{HCDT} dat)
@@ -826,17 +874,6 @@ Gets array of absolute values of the data.
 Gets array of arguments of the data.
 @end deftypefn
 @end ifclear
-
-@anchor{roots}
-@deftypefn {MGL command} {} roots @sc{res} 'func' ini ['var'='x']
-@deftypefnx {MGL command} {} roots @sc{res} 'func' @code{ini} ['var'='x']
-@ifclear UDAV
-@deftypefnx {Method on @code{mglData}} @code{mglData} Roots (@code{const char *}func, @code{char} var) @code{const}
-@deftypefnx {C function} @code{HMDT} mgl_data_roots (@code{const char *}func, @code{HCDT} ini, @code{char} var)
-@deftypefnx {C function} @code{mreal} mgl_find_root_txt (@code{const char *}func, @code{mreal} ini, @code{char} var)
-@end ifclear
-Find roots of equation 'func'=0 for variable @var{var} with initial guess @var{ini}. Secant method is used for root finding. Function return NULL or create empty data if data cannot be created for given arguments.
-@end deftypefn
 
 @c ------------------------------------------------------------------
 @external{}
@@ -1453,7 +1490,7 @@ Computes the Jacobian for transformation @{i,j,k@} to @{@var{x},@var{y},@var{z}@
 @deftypefnx {C function} @code{HMDT} mgl_triangulation_2d (@code{HCDT} x, @code{HCDT} y)
 @c @deftypefnx {C function} @code{HMDT} mgl_triangulation_3d (@code{HCDT} x, @code{HCDT} y, @code{HCDT} z)
 @end ifclear
-Computes triangulation for arbitrary placed points with coordinates @{@var{x},@var{y}@} (i.e. finds triangles which connect points). MathGL use @uref{http://www.s-hull.org/,s-hull} code for triangulation. The sizes of 1st dimension @strong{must be equal} for all arrays @code{x.nx=y.nx}. Resulting array can be used in @ref{triplot} or @ref{tricont} functions for visualization of reconstructed surface.
+Computes triangulation for arbitrary placed points with coordinates @{@var{x},@var{y}@} (i.e. finds triangles which connect points). MathGL use @uref{http://www.s-hull.org/,s-hull} code for triangulation. The sizes of 1st dimension @strong{must be equal} for all arrays @code{x.nx=y.nx}. Resulting array can be used in @ref{triplot} or @ref{tricont} functions for visualization of reconstructed surface. @sref{Making regular data}
 @end deftypefn
 
 

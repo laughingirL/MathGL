@@ -33,13 +33,8 @@ A. Paper about MathGL!!!
 A. Add chapter with real samples
 
 1. Add error2 sample
-2. Add "Triangulation sample"
-3. Add "Local light sample"
-6. Docs about mglData[C]::Correl() & AutoCorrel() + hint about Swap()
 10. Add "Data correlation sample"
 13. Update styles usage in appendix
-16. Add mglData::Refill() + 'refill' + mglGraph::Refill()
-17. Update cloud sample
 21. Add wxMathGL widget.
 
 ============= UDAV =============

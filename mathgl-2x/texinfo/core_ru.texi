@@ -2078,10 +2078,10 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} table vdat 'txt' ['stl'='#']
 @deftypefnx {Команда MGL} {} table x y vdat 'txt' ['stl'='#']
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} Table (@code{const mglDataA &}val, @code{const char *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Method on @code{mglGraph}} @code{void} Table (@code{const mglDataA &}val, @code{const wchar_t *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Method on @code{mglGraph}} @code{void} Table (@code{mreal} x, @code{mreal} y, @code{const mglDataA &}val, @code{const char *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Method on @code{mglGraph}} @code{void} Table (@code{mreal} x, @code{mreal} y, @code{const mglDataA &}val, @code{const wchar_t *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Table (@code{const mglDataA &}val, @code{const char *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Table (@code{const mglDataA &}val, @code{const wchar_t *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Table (@code{mreal} x, @code{mreal} y, @code{const mglDataA &}val, @code{const char *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Table (@code{mreal} x, @code{mreal} y, @code{const mglDataA &}val, @code{const wchar_t *}txt, @code{const char *}fnt=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_table (@code{HMGL} gr, @code{mreal} x, @code{mreal} y, @code{HCDT} val, @code{const char *}txt, @code{const char *}fnt, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_tablew (@code{HMGL} gr, @code{mreal} x, @code{mreal} y, @code{HCDT} val, @code{const wchar_t *}txt, @code{const char *}fnt, @code{const char *}opt)
 @end ifclear
@@ -2674,8 +2674,8 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Команда MGL} {} vect3 udat vdat wdat ['sch'='' sval]
 @deftypefnx {Команда MGL} {} vect3 xdat ydat zdat udat vdat wdat ['sch'='' sval]
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} Vect3 (@code{const mglDataA &}ax, @code{const mglDataA &}ay, @code{const mglDataA &}az, @code{const char *}sch=@code{""}, @code{mreal} sVal=@code{-1}, @code{const char *}opt=@code{""})
-@deftypefnx {Method on @code{mglGraph}} @code{void} Vect3 (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}ax, @code{const mglDataA &}ay, @code{const mglDataA &}az, @code{const char *}sch=@code{""}, @code{mreal} sVal=@code{-1}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Vect3 (@code{const mglDataA &}ax, @code{const mglDataA &}ay, @code{const mglDataA &}az, @code{const char *}sch=@code{""}, @code{mreal} sVal=@code{-1}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Vect3 (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}ax, @code{const mglDataA &}ay, @code{const mglDataA &}az, @code{const char *}sch=@code{""}, @code{mreal} sVal=@code{-1}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_vect3 (@code{HMGL} gr, @code{HCDT} ax, @code{HCDT} ay, @code{HCDT} az, @code{const char *}sch, @code{mreal} sVal, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_vect3_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} ax, @code{HCDT} ay, @code{HCDT} az, @code{const char *}sch, @code{mreal} sVal, @code{const char *}opt)
 @end ifclear
@@ -3114,7 +3114,19 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} DataGrid (@code{mglData &}u, @code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_data_grid (@code{HMGL} gr, @code{HMDT} u, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}opt)
 @end ifclear
-Заполняет значения массива @samp{u} результатом линейной интерполяции по триангулированной поверхности, найденной по произвольно расположенным точкам @samp{x}, @samp{y}, @samp{z}. NAN значение используется для точек сетки вне триангулированной поверхности.
+Заполняет значения массива @samp{u} результатом линейной интерполяции по триангулированной поверхности, найденной по произвольно расположенным точкам @samp{x}, @samp{y}, @samp{z}. NAN значение используется для точек сетки вне триангулированной поверхности. @sref{Making regular data}
+@end deftypefn
+
+@deftypefn {Команда MGL} {} refill dat xdat vdat [sl=-1]
+@deftypefnx {Команда MGL} {} refill dat xdat ydat vdat [sl=-1]
+@deftypefnx {Команда MGL} {} refill dat xdat ydat zdat vdat
+@ifclear UDAV
+@deftypefnx {Метод класса @code{mglData}} @code{void} Refill (@code{mglDataA &}dat, @code{const mglDataA &}x, @code{const mglDataA &}v, @code{long} sl=@code{-1}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglData}} @code{void} Refill (@code{mglDataA &}dat, @code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}v, @code{long} sl=@code{-1}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglData}} @code{void} Refill (@code{mglDataA &}dat, @code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}v, @code{const char *}opt=@code{""})
+@deftypefnx {Функция С} @code{void} mgl_data_refill_gr (@code{HMGL} gr, @code{HMDT} a, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} v, @code{long} sl, @code{const char *}opt)
+@end ifclear
+Заполняет значениями интерполяции массива @var{v} в точках @{@var{x}, @var{y}, @var{z}@}=@{@code{X[i], Y[j], Z[k]}@} (или @{@var{x}, @var{y}, @var{z}@}=@{@code{X[i,j,k], Y[i,j,k], Z[i,j,k]}@} если @var{x}, @var{y}, @var{z} не 1d массивы), где @code{X,Y,Z} равномерно распределены в диапазоне осей координат и имеют такой же размер как и массив @var{dat}. Если параметр @var{sl} равен 0 или положительный, то изменятся будет только @var{sl}-ый срез.
 @end deftypefn
 
 

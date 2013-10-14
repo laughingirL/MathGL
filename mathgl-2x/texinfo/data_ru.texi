@@ -315,6 +315,7 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @cindex Set
 @cindex List
 @cindex Var
+@cindex Refill
 
 @anchor{list}
 @deftypefn {Команда MGL} {} list @sc{dat} @code{v1 ...}
@@ -475,7 +476,7 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @deftypefnx {Метод класса @code{mglData}} @code{mglData} Grid (@code{HMGL} gr, @code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_data_grid (@code{HMGL} gr, @code{HMDT} u, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}opt)
 @end ifclear
-Заполняет значения массива результатом линейной интерполяции по триангулированной поверхности, найденной по произвольно расположенным точкам @samp{x}, @samp{y}, @samp{z}. NAN значение используется для точек сетки вне триангулированной поверхности.
+Заполняет значения массива результатом линейной интерполяции по триангулированной поверхности, найденной по произвольно расположенным точкам @samp{x}, @samp{y}, @samp{z}. NAN значение используется для точек сетки вне триангулированной поверхности. @sref{Making regular data}
 @end deftypefn
 
 
@@ -498,6 +499,26 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @deftypefnx {Функция С} @code{void} mgl_datac_put_dat (@code{HADT} a, @code{HCDT} v, @code{int} i, @code{int} j, @code{int} k)
 @end ifclear
 Копирует значения из массива @var{v} в диапазон значений данного массива. Индексы @var{i}, @var{j}, @var{k} равные @samp{-1} задают диапазон изменения значений в соответствующих направление(ях). Младшие размерности массива @var{v} должны быть больше выбранного диапазона массива. Например, @code{Put(v,-1,0,-1);} присвоит a[i,0,j]=@var{v}.ny>nz ? @var{v}.a[i,j] : @var{v}.a[i], где i=0...(nx-1), j=0...(nz-1) и условие v.nx>=nx выполнено.
+@end deftypefn
+
+@anchor{refill}
+@deftypefn {Команда MGL} {} refill dat xdat vdat [sl=-1]
+@deftypefnx {Команда MGL} {} refill dat xdat ydat vdat [sl=-1]
+@deftypefnx {Команда MGL} {} refill dat xdat ydat zdat vdat
+@ifclear UDAV
+@deftypefnx {Метод класса @code{mglData}} @code{void} Refill (@code{const mglDataA &}x, @code{const mglDataA &}v, @code{mreal} x1, @code{mreal} x2, @code{long} sl=@code{-1})
+@deftypefnx {Метод класса @code{mglData}} @code{void} Refill (@code{const mglDataA &}x, @code{const mglDataA &}v, @code{mglPoint} p1, @code{mglPoint} p2, @code{long} sl=@code{-1})
+@deftypefnx {Метод класса @code{mglData}} @code{void} Refill (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}v, @code{mglPoint} p1, @code{mglPoint} p2, @code{long} sl=@code{-1})
+@deftypefnx {Метод класса @code{mglData}} @code{void} Refill (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}v, @code{mglPoint} p1, @code{mglPoint} p2)
+@deftypefnx {Метод класса @code{mglData}} @code{void} Refill (@code{HMGL} gr, @code{const mglDataA &}x, @code{const mglDataA &}v, @code{long} sl=@code{-1}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglData}} @code{void} Refill (@code{HMGL} gr, @code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}v, @code{long} sl=@code{-1}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglData}} @code{void} Refill (@code{HMGL} gr, @code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}v, @code{const char *}opt=@code{""})
+@deftypefnx {Функция С} @code{void} mgl_data_refill_x (@code{HMDT} a, @code{HCDT} x, @code{HCDT} v, @code{mreal} x1, @code{mreal} x2, @code{long} sl)
+@deftypefnx {Функция С} @code{void} mgl_data_refill_xy (@code{HMDT} a, @code{HCDT} x, @code{HCDT} y, @code{HCDT} v, @code{mreal} x1, @code{mreal} x2, @code{mreal} y1, @code{mreal} y2, @code{long} sl)
+@deftypefnx {Функция С} @code{void} mgl_data_refill_xyz (@code{HMDT} a, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} v, @code{mreal} x1, @code{mreal} x2, @code{mreal} y1, @code{mreal} y2, @code{mreal} z1, @code{mreal} z2)
+@deftypefnx {Функция С} @code{void} mgl_data_refill_gr (@code{HMGL} gr, @code{HMDT} a, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} v, @code{long} sl, @code{const char *}opt)
+@end ifclear
+Заполняет значениями интерполяции массива @var{v} в точках @{@var{x}, @var{y}, @var{z}@}=@{@code{X[i], Y[j], Z[k]}@} (или @{@var{x}, @var{y}, @var{z}@}=@{@code{X[i,j,k], Y[i,j,k], Z[i,j,k]}@} если @var{x}, @var{y}, @var{z} не 1d массивы), где @code{X,Y,Z} равномерно распределены в диапазоне [@var{x1},@var{x2}]*[@var{y1},@var{y2}]*[@var{z1},@var{z2}] и имеют такой же размер как и заполняемый массив. Если параметр @var{sl} равен 0 или положительный, то изменятся будет только @var{sl}-ый срез.
 @end deftypefn
 
 @anchor{idset}
@@ -656,6 +677,8 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @cindex Min
 @cindex Max
 @cindex Roots
+@cindex Correl
+@cindex AutoCorrel
 
 @anchor{subdata}
 @deftypefn {Команда MGL} {} subdata @sc{res} dat @code{xx [yy=: zz=:]}
@@ -722,6 +745,17 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @deftypefnx {Функция С} @code{HMDT} mgl_data_solve (@code{HCDT} dat, @code{mreal} val, @code{char} dir, @code{HCDT} idat, @code{int} norm)
 @end ifclear
 Возвращает массив индексов (корней) вдоль выбранного направления @var{dir} в которых значения массива @var{dat} равны @var{val}. Выходной массив будет иметь размеры массива @var{dat} в направлениях поперечных @var{dir}. Если предоставлен массив @var{idat}, то его значения используются как стартовые при поиске. Это позволяет найти несколько веток с помощью последовательного вызова функции. Индексы полагаются нормированными в диапазон [0,1] (при @var{norm}=@code{true}) или в диапазоны [0,nx], [0,ny], [0,nz] соответственно. Функция возвращает NULL или пустой массив если данные не могут быть созданы при данных значениях аргументов. @sref{Solve sample}
+@end deftypefn
+
+@anchor{roots}
+@deftypefn {Команда MGL} {} roots @sc{res} 'func' ini ['var'='x']
+@deftypefnx {Команда MGL} {} roots @sc{res} 'func' @code{ini} ['var'='x']
+@ifclear UDAV
+@deftypefnx {Метод класса @code{mglData}} @code{mglData} Roots (@code{const char *}func, @code{char} var) @code{const}
+@deftypefnx {Функция С} @code{HMDT} mgl_data_roots (@code{const char *}func, @code{HCDT} ini, @code{char} var)
+@deftypefnx {Функция С} @code{mreal} mgl_find_root_txt (@code{const char *}func, @code{mreal} ini, @code{char} var)
+@end ifclear
+Возвращает массив корней уравнения 'func'=0 для переменной @var{var} с начальными положениями @var{ini}. Функция возвращает NULL или пустой массив если данные не могут быть созданы при данных значениях аргументов.
 @end deftypefn
 
 @anchor{hist}
@@ -805,6 +839,19 @@ res_k = \sum_ij how(x_i,y_j,z_k) a_ij/ \sum_ij a_ij
 Возвращает массив диагональных элементов a[i,i] (для 2D данных) или a[i,i,i] (для 3D данных) где i=0...nx-1. В 1D случае возвращается сам массив данных. Размеры массива данных должен быть ny,nz >= nx или ny,nz = 1. Функция возвращает NULL или пустой массив если данные не могут быть созданы при данных значениях аргументов.
 @end deftypefn
 
+@anchor{correl}
+@deftypefn {Команда MGL} {} correl @sc{res} adat bdat 'dir'
+@ifclear UDAV
+@deftypefnx {Метод класса @code{mglData}} @code{mglData} Correl (@code{const mglDataA &}b, @code{const char *}dir) @code{const}
+@deftypefnx {Метод класса @code{mglData}} @code{mglData} AutoCorrel (@code{const char *}dir) @code{const}
+@deftypefnx {Метод класса @code{mglDataC}} @code{mglDataC} Correl (@code{const mglDataA &}b, @code{const char *}dir) @code{const}
+@deftypefnx {Метод класса @code{mglDataC}} @code{mglDataC} AutoCorrel (@code{const char *}dir) @code{const}
+@deftypefnx {Функция С} @code{HMDT} mgl_data_correl (@code{HCDT} a, @code{HCDT} b, @code{const char *}dir)
+@deftypefnx {Функция С} @code{HADT} mgl_datac_correl (@code{HCDT} a, @code{HCDT} b, @code{const char *}dir)
+@end ifclear
+Возвращает корреляцию массивов @var{a} (или this в C++) и @var{b} вдоль направлений @var{dir}. При вычислении используется преобразование Фурье. Поэтому может потребоваться вызов функций @ref{swap} и/или @ref{norm} перед построением. Функция возвращает NULL или пустой массив если данные не могут быть созданы при данных значениях аргументов.
+@end deftypefn
+
 @ifclear UDAV
 @deftypefn {Метод класса @code{mglDataC}} @code{mglData} Real () @code{const}
 @deftypefnx {Функция С} @code{HMDT} mgl_datac_real (@code{HCDT} dat)
@@ -823,17 +870,6 @@ res_k = \sum_ij how(x_i,y_j,z_k) a_ij/ \sum_ij a_ij
 Возвращает массив аргументов массива данных.
 @end deftypefn
 @end ifclear
-
-@anchor{roots}
-@deftypefn {Команда MGL} {} roots @sc{res} 'func' ini ['var'='x']
-@deftypefnx {Команда MGL} {} roots @sc{res} 'func' @code{ini} ['var'='x']
-@ifclear UDAV
-@deftypefnx {Метод класса @code{mglData}} @code{mglData} Roots (@code{const char *}func, @code{char} var) @code{const}
-@deftypefnx {Функция С} @code{HMDT} mgl_data_roots (@code{const char *}func, @code{HCDT} ini, @code{char} var)
-@deftypefnx {Функция С} @code{mreal} mgl_find_root_txt (@code{const char *}func, @code{mreal} ini, @code{char} var)
-@end ifclear
-Возвращает массив корней уравнения 'func'=0 для переменной @var{var} с начальными положениями @var{ini}. Функция возвращает NULL или пустой массив если данные не могут быть созданы при данных значениях аргументов.
-@end deftypefn
 
 @c ------------------------------------------------------------------
 @external{}
@@ -1451,7 +1487,7 @@ These functions change the data in some direction like differentiations, integra
 @deftypefnx {Функция С} @code{HMDT} mgl_triangulation_2d (@code{HCDT} x, @code{HCDT} y)
 @deftypefnx {Функция С} @code{HMDT} mgl_triangulation_3d (@code{HCDT} x, @code{HCDT} y, @code{HCDT} z)
 @end ifclear
-Выполняет триангуляцию для произвольно расположенных точек с координатами @{@var{x},@var{y},@var{z}@} (т.е. находит треугольники, соединяющие точки). Первая размерность всех массивов должна быть одинакова @code{x.nx=y.nx=z.nx}. Получившийся массив можно использовать в @ref{triplot} или @ref{tricont} для визуализации реконструированной поверхности.
+Выполняет триангуляцию для произвольно расположенных точек с координатами @{@var{x},@var{y},@var{z}@} (т.е. находит треугольники, соединяющие точки). Первая размерность всех массивов должна быть одинакова @code{x.nx=y.nx=z.nx}. Получившийся массив можно использовать в @ref{triplot} или @ref{tricont} для визуализации реконструированной поверхности. @sref{Making regular data}
 @end deftypefn
 
 
@@ -1550,7 +1586,7 @@ Callback функция, вызываемая при удалении перем
 Удаляет переменную mglVar.
 @end deftypefn
 
-@deftypefn {Method on @code{mglVar}} @code{void} MoveAfter (@code{mglVar *}var)
+@deftypefn {Метод класса @code{mglVar}} @code{void} MoveAfter (@code{mglVar *}var)
 Перемещает переменную после @var{var} в списке переменных.
 @end deftypefn
 
