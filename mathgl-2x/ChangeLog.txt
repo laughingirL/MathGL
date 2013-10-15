@@ -3,8 +3,8 @@
 * Add OpenMP calls mostly everywhere (can work as replacement of pthreads - a bit faster since more loops is parallelized).
 * Greatly speed up consequent FFT and Hankel transforms. Add mgl_clear_fft() function for manual clearing of saved FFT/Hankel data.
 * Add wxMathGL widget.
-* Add mask for face drawing. This work only for export in bitmap images.
-* Add Quality=8 for dots drawing (extremely fast), Quality=9 for none drawing (for speed testing).
+* Add mask for face drawing if one of symbols "-+=;oOsS~<>jdD*^" is specified in color scheme. This work only for export in bitmap images.
+* Add Quality=8 for dots drawing (extremely fast).
 * Add styles '4','6','8' for Cone() and Cones() to produce square, hex-, octo-prism.
 * Add style 't' for Cones() to produce tubes (cylinders).
 * Add style '^' for Legend() to left/right align legend if its coordinates are right/left from the center
@@ -12,7 +12,7 @@
 * Improve automatic axis position. Add style '^' for inverse automatic axis position.
 * Add mglData::Refill() for filling by interpolation of parametrically dependent data
 * Add transparency for Area() and Region() plots.
-* Add mgl_clf_chr() function and extend 'clf' command
+* Add mgl_clf_chr() function and extend 'clf' command.
 * Fourier now perform true inverse Fourier transform (instead of backward one).
 * Improve/change lighting from local sources. Add SetDiffuse() function.
 * C functions now return NULL if HMDT data cannot be created for given input argument(s).

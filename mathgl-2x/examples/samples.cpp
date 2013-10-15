@@ -1176,37 +1176,36 @@ void smgl_molecule(mglGraph *gr)	// example of moleculas
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_error2="new x0 10 'rnd':new ex 10 '0.1'\nnew y0 10 'rnd':new ey 10 '0.1'\nranges 0 1 0 1\n"
-"subplot 4 3 0 '':box:error x0 y0 ex ey '#+@'; alpha 0.5\n"
-"subplot 4 3 1 '':box:error x0 y0 ex ey '#x@'; alpha 0.5\n"
+"subplot 4 3 0 '':box:error x0 y0 ex ey '#+@'\n"
+"subplot 4 3 1 '':box:error x0 y0 ex ey '#x@'\n"
 "subplot 4 3 2 '':box:error x0 y0 ex ey '#s@'; alpha 0.5\n"
-"subplot 4 3 3 '':box:error x0 y0 ex ey 's@'; alpha 0.5\n"
-"subplot 4 3 4 '':box:error x0 y0 ex ey 'd@'; alpha 0.5\n"
+"subplot 4 3 3 '':box:error x0 y0 ex ey 's@'\n"
+"subplot 4 3 4 '':box:error x0 y0 ex ey 'd@'\n"
 "subplot 4 3 5 '':box:error x0 y0 ex ey '#d@'; alpha 0.5\n"
-"subplot 4 3 6 '':box:error x0 y0 ex ey '+@'; alpha 0.5\n"
-"subplot 4 3 7 '':box:error x0 y0 ex ey 'x@'; alpha 0.5\n"
-"subplot 4 3 8 '':box:error x0 y0 ex ey 'o@'; alpha 0.5\n"
+"subplot 4 3 6 '':box:error x0 y0 ex ey '+@'\n"
+"subplot 4 3 7 '':box:error x0 y0 ex ey 'x@'\n"
+"subplot 4 3 8 '':box:error x0 y0 ex ey 'o@'\n"
 "subplot 4 3 9 '':box:error x0 y0 ex ey '#o@'; alpha 0.5\n"
-"subplot 4 3 10 '':box:error x0 y0 ex ey '#.@'; alpha 0.5\n";
+"subplot 4 3 10 '':box:error x0 y0 ex ey '#.@'\n"
+"subplot 4 3 11 '':box:error x0 y0 ex ey; alpha 0.5\n";
 void smgl_error2(mglGraph *gr)
 {
 	mglData x0(10), y0(10), ex(10), ey(10);
 	for(int i=0;i<10;i++)
-	{
-		x0.a[i] = mgl_rnd();	y0.a[i] = mgl_rnd();
-		ey.a[i] = ex.a[i] = 0.1;
-	}
+	{	x0.a[i] = mgl_rnd();	y0.a[i] = mgl_rnd();	ey.a[i] = ex.a[i] = 0.1;	}
 	gr->SetRanges(0,1,0,1);	gr->Alpha(true);
-	gr->SubPlot(4,3,0,"");	gr->Box();	gr->Error(x0,y0,ex,ey,"#+@","alpha 0.5");
-	gr->SubPlot(4,3,1,"");	gr->Box();	gr->Error(x0,y0,ex,ey,"#x@","alpha 0.5");
+	gr->SubPlot(4,3,0,"");	gr->Box();	gr->Error(x0,y0,ex,ey,"#+@");
+	gr->SubPlot(4,3,1,"");	gr->Box();	gr->Error(x0,y0,ex,ey,"#x@");
 	gr->SubPlot(4,3,2,"");	gr->Box();	gr->Error(x0,y0,ex,ey,"#s@","alpha 0.5");
-	gr->SubPlot(4,3,3,"");	gr->Box();	gr->Error(x0,y0,ex,ey,"s@","alpha 0.5");
-	gr->SubPlot(4,3,4,"");	gr->Box();	gr->Error(x0,y0,ex,ey,"d@","alpha 0.5");
+	gr->SubPlot(4,3,3,"");	gr->Box();	gr->Error(x0,y0,ex,ey,"s@");
+	gr->SubPlot(4,3,4,"");	gr->Box();	gr->Error(x0,y0,ex,ey,"d@");
 	gr->SubPlot(4,3,5,"");	gr->Box();	gr->Error(x0,y0,ex,ey,"#d@","alpha 0.5");
-	gr->SubPlot(4,3,6,"");	gr->Box();	gr->Error(x0,y0,ex,ey,"+@","alpha 0.5");
-	gr->SubPlot(4,3,7,"");	gr->Box();	gr->Error(x0,y0,ex,ey,"x@","alpha 0.5");
-	gr->SubPlot(4,3,8,"");	gr->Box();	gr->Error(x0,y0,ex,ey,"o@","alpha 0.5");
+	gr->SubPlot(4,3,6,"");	gr->Box();	gr->Error(x0,y0,ex,ey,"+@");
+	gr->SubPlot(4,3,7,"");	gr->Box();	gr->Error(x0,y0,ex,ey,"x@");
+	gr->SubPlot(4,3,8,"");	gr->Box();	gr->Error(x0,y0,ex,ey,"o@");
 	gr->SubPlot(4,3,9,"");	gr->Box();	gr->Error(x0,y0,ex,ey,"#o@","alpha 0.5");
-	gr->SubPlot(4,3,10,"");	gr->Box();	gr->Error(x0,y0,ex,ey,"#c@","alpha 0.5");
+	gr->SubPlot(4,3,10,"");	gr->Box();	gr->Error(x0,y0,ex,ey,"#.@");
+	gr->SubPlot(4,3,11,"");	gr->Box();	gr->Error(x0,y0,ex,ey);
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_error="call 'prepare1d'\nnew y 50 '0.7*sin(pi*x-pi) + 0.5*cos(3*pi*(x+1)/2) + 0.2*sin(pi*(x+1)/2)'\n"

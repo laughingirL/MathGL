@@ -25,6 +25,7 @@ You should inherit yours class from @code{mglDraw} and re-implement one or both 
 * mglWindow class::
 * Fl_MathGL class::
 * QMathGL class::
+* wxMathGL class::
 @end menu
 
 
@@ -36,7 +37,7 @@ You should inherit yours class from @code{mglDraw} and re-implement one or both 
 @cindex window
 @c @cindex mglDraw
 
-This class is derived from mglGraph class (see @ref{MathGL core}). It is defined in @code{#include <mgl2/window.h>}. It provide methods for handling window with MathGL graphics. Similar classes are exist for each widget library: @code{mglQT} in @code{#include <mgl2/qt.h>}, @code{mglFLTK} in @code{#include <mgl2/fltk.h>}, @code{mglWX} in @code{#include <mgl2/wx.h>}.
+This class is derived from mglGraph class (see @ref{MathGL core}). It is defined in @code{#include <mgl2/window.h>} and provide methods for handling window with MathGL graphics. Similar classes are exist for QT and FLTK widget libraries: @code{mglQT} in @code{#include <mgl2/qt.h>}, @code{mglFLTK} in @code{#include <mgl2/fltk.h>}.
 
 @deftypefn {Constructor on @code{mglWindow}} {} mglWindow (@code{const char *}title=@code{"MathGL"})
 @deftypefnx {Constructor on @code{mglWindow}} {} mglWindow (@code{int} (*draw)(@code{HMGL} gr, @code{void *}p), @code{const char *}title=@code{"MathGL"}, @code{void *}par=@code{NULL}, @code{int} kind=@code{0}, @code{void} (*reload)(@code{HMGL} gr, @code{void *}p)=0)
@@ -180,7 +181,7 @@ Get zoom in/out region
 Set popup menu pointer
 @end deftypemethod
 
-@deftypemethod Fl_MathGL @code{void} set_graph (@code{mglCanvas *}gr)
+@deftypemethod Fl_MathGL @code{void} set_graph (@code{HMGL} gr)
 @deftypemethodx Fl_MathGL @code{void} set_graph (@code{mglGraph *}gr)
 Set new grapher instead of built-in one. Note that Fl_MathGL will automatically delete this object at destruction or at new @code{set_graph()} call.
 @end deftypemethod
@@ -200,7 +201,7 @@ Pointer to external phi-angle validator.
 
 @c ------------------------------------------------------------------
 @external{}
-@node QMathGL class, , Fl_MathGL class, Widget classes
+@node QMathGL class, wxMathGL class, Fl_MathGL class, Widget classes
 @section QMathGL class
 @cindex QMathGL
 @cindex widgets
@@ -217,7 +218,7 @@ Sets drawing functions from a class inherited from @code{mglDraw}.
 Sets the drawing function @var{draw}. There is support of a list of plots (frames). So as one can prepare a set of frames at first and redraw it fast later (but it requires more memory). Function should return positive number of frames for the list or zero if it will plot directly. Parameter @var{par} contains pointer to data for the plotting function @var{draw}.
 @end deftypemethod
 
-@deftypemethod QMathGL @code{void} setGraph (@code{mglCanvas *}gr)
+@deftypemethod QMathGL @code{void} setGraph (@code{HMGL} gr)
 @deftypemethodx QMathGL @code{void} setGraph (@code{mglGraph *}gr)
 Set pointer to external grapher (instead of built-in one). Note that QMathGL will automatically delete this object at destruction or at new @code{setGraph()} call.
 @end deftypemethod
@@ -326,7 +327,7 @@ Shift graphics to left direction.
 @deftypefn {Slot on @code{QMathGL}} @code{void} shiftRight ()
 Shift graphics to right direction.
 @end deftypefn
-@deftypefn {Slot on @code{QMathGL}} @code{void}shiftUp  ()
+@deftypefn {Slot on @code{QMathGL}} @code{void} shiftUp ()
 Shift graphics to up direction.
 @end deftypefn
 @deftypefn {Slot on @code{QMathGL}} @code{void} shiftDown ()
@@ -449,6 +450,165 @@ Application name for message boxes.
 @deftypecv {QMathGL option} QMathGL @code{bool} autoResize
 Allow auto resizing (default is false).
 @end deftypecv
+
+@c ------------------------------------------------------------------
+@external{}
+@node wxMathGL class, , QMathGL class, Widget classes
+@section wxMathGL class
+@cindex wxMathGL
+@cindex widgets
+
+Class is WX widget which display MathGL graphics. It is defined in @code{#include <mgl2/wx.h>}.
+
+@deftypemethod wxMathGL @code{void} SetDraw (@code{mglDraw *}dr)
+Sets drawing functions from a class inherited from @code{mglDraw}.
+@end deftypemethod
+@deftypemethod wxMathGL @code{void} SetDraw (@code{int (*}draw@code{)(mglBase *}gr, @code{void *}p@code{)}, @code{void *}par=@code{NULL})
+@deftypemethodx wxMathGL @code{void} SetDraw (@code{int (*}draw@code{)(mglGraph *}gr@code{)})
+Sets the drawing function @var{draw}. There is support of a list of plots (frames). So as one can prepare a set of frames at first and redraw it fast later (but it requires more memory). Function should return positive number of frames for the list or zero if it will plot directly. Parameter @var{par} contains pointer to data for the plotting function @var{draw}.
+@end deftypemethod
+
+@deftypemethod wxMathGL @code{void} SetGraph (@code{HMGL} gr)
+@deftypemethodx wxMathGL @code{void} SetGraph (@code{mglGraph *}gr)
+Set pointer to external grapher (instead of built-in one). Note that wxMathGL will automatically delete this object at destruction or at new @code{setGraph()} call.
+@end deftypemethod
+@deftypemethod wxMathGL @code{HMGL} GetGraph ()
+Get pointer to grapher.
+@end deftypemethod
+
+@deftypemethod wxMathGL @code{void} SetPopup (@code{wxMenu *}p)
+Set popup menu pointer.
+@end deftypemethod
+@deftypemethod wxMathGL @code{void} SetSize (@code{int} w, @code{int} h)
+Set widget/picture sizes
+@end deftypemethod
+@deftypemethod wxMathGL @code{double} GetRatio ()
+Return aspect ratio of the picture.
+@end deftypemethod
+
+@deftypemethod wxMathGL @code{int} GetPer ()
+Get perspective value in percents.
+@end deftypemethod
+@deftypemethod wxMathGL @code{int} GetPhi ()
+Get Phi-angle value in degrees.
+@end deftypemethod
+@deftypemethod wxMathGL @code{int} GetTet ()
+Get Theta-angle value in degrees.
+@end deftypemethod
+@deftypemethod wxMathGL @code{bool} GetAlpha ()
+Get transparency state.
+@end deftypemethod
+@deftypemethod wxMathGL @code{bool} GetLight ()
+Get lightning state.
+@end deftypemethod
+@deftypemethod wxMathGL @code{bool} GetZoom ()
+Get mouse zooming state.
+@end deftypemethod
+@deftypemethod wxMathGL @code{bool} GetRotate ()
+Get mouse rotation state.
+@end deftypemethod
+
+
+@deftypemethod wxMathGL @code{void} Repaint ()
+Redraw saved bitmap without executing drawing function.
+@end deftypemethod
+@deftypemethod wxMathGL @code{void} Update ()
+Update picture by executing drawing function.
+@end deftypemethod
+@deftypemethod wxMathGL @code{void} Copy ()
+Copy graphics to clipboard.
+@end deftypemethod
+@deftypemethod wxMathGL @code{void} Print ()
+Print current picture.
+@end deftypemethod
+
+@comment  @deftypemethod wxMathGL @code{void} Stop ()
+@comment  Send signal to stop drawing.
+@comment  @end deftypemethod
+@deftypemethod wxMathGL @code{void} Adjust ()
+Adjust image size to fit whole widget.
+@end deftypemethod
+@deftypemethod wxMathGL @code{void} NextSlide ()
+Show next slide.
+@end deftypemethod
+@deftypemethod wxMathGL @code{void} PrevSlide ()
+Show previous slide.
+@end deftypemethod
+@deftypemethod wxMathGL @code{void} Animation (@code{bool} st=@code{true})
+Start/stop animation.
+@end deftypemethod
+
+@deftypemethod wxMathGL @code{void} SetPer (@code{int} val)
+Set perspective value.
+@end deftypemethod
+@deftypemethod wxMathGL @code{void} SetPhi (@code{int} val)
+Set Phi-angle value.
+@end deftypemethod
+@deftypemethod wxMathGL @code{void} SetTet (@code{int} val)
+Set Theta-angle value.
+@end deftypemethod
+@deftypemethod wxMathGL @code{void} SetAlpha (@code{bool} val)
+Switch on/off transparency.
+@end deftypemethod
+@deftypemethod wxMathGL @code{void} SetLight (@code{bool} val)
+Switch on/off lightning.
+@end deftypemethod
+@comment  @deftypemethod wxMathGL @code{void} SetGrid (@code{bool} val)
+@comment  Switch on/off drawing of grid for absolute coordinates.
+@comment  @end deftypemethod
+@deftypemethod wxMathGL @code{void} SetZoom (@code{bool} val)
+Switch on/off mouse zooming.
+@end deftypemethod
+@deftypemethod wxMathGL @code{void} SetRotate (@code{bool} val)
+Switch on/off mouse rotation.
+@end deftypemethod
+@deftypemethod wxMathGL @code{void} ZoomIn ()
+Zoom in graphics.
+@end deftypemethod
+@deftypemethod wxMathGL @code{void} ZoomOut ()
+Zoom out graphics.
+@end deftypemethod
+@deftypemethod wxMathGL @code{void} ShiftLeft ()
+Shift graphics to left direction.
+@end deftypemethod
+@deftypemethod wxMathGL @code{void} ShiftRight ()
+Shift graphics to right direction.
+@end deftypemethod
+@deftypemethod wxMathGL @code{void} ShiftUp  ()
+Shift graphics to up direction.
+@end deftypemethod
+@deftypemethod wxMathGL @code{void} ShiftDown ()
+Shift graphics to down direction.
+@end deftypemethod
+@deftypemethod wxMathGL @code{void} Restore ()
+Restore zoom and rotation to default values.
+@end deftypemethod
+@c @deftypemethod wxMathGL @code{void} reload ()
+@c Reload data and redraw graphics.
+@c @end deftypemethod
+
+@deftypemethod wxMathGL @code{void} About ()
+Show about information.
+@end deftypemethod
+
+@deftypemethod wxMathGL @code{void} ExportPNG (@code{QString} fname=@code{""})
+Export current picture to PNG file.
+@end deftypemethod
+@deftypemethod wxMathGL @code{void} ExportPNGs (@code{QString} fname=@code{""})
+Export current picture to PNG file (no transparency).
+@end deftypemethod
+@deftypemethod wxMathGL @code{void} ExportJPG (@code{QString} fname=@code{""})
+Export current picture to JPEG file.
+@end deftypemethod
+@deftypemethod wxMathGL @code{void} ExportBPS (@code{QString} fname=@code{""})
+Export current picture to bitmap EPS file.
+@end deftypemethod
+@deftypemethod wxMathGL @code{void} ExportEPS (@code{QString} fname=@code{""})
+Export current picture to vector EPS file.
+@end deftypemethod
+@deftypemethod wxMathGL @code{void} ExportSVG (@code{QString} fname=@code{""})
+Export current picture to SVG file.
+@end deftypemethod
 
 @external{}
 

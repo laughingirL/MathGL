@@ -2,13 +2,13 @@
 	set(MGL_PNG alpha area aspect axial axis barh bars belt boxplot
 		box boxs candle chart cloud colorbar combined cones conta contd
 		contfa contf contf_xyz cont contv cont_xyz curvcoor cut dat_diff
-		dat_extra densa dens dens_xyz dew dots error fall fit flow fonts
+		dat_extra densa dens dens_xyz dew dots error error2 fall fit flow fonts
 		fog grad hist inplot label legend loglog map mark mesh mirror
 		molecule parser pde pipe plot primitives projection qo2d radar region schemes
 		several_light solve stem step stereo stfa style surf3a surf3c surf3
 		surfa surfc surf table tape tens ternary textmark text ticks tile tiles
 		torus traj triangulation triplot tube type0 type1 type2 vect vecta venn
-		projection5 param1 param2 param3 paramv mask correl refill )
+		projection5 param1 param2 param3 paramv mask correl refill light )
 	set(MGL_PNG_N )
 	set(MGL_PNG_S )
 	set(MGL_PNG_J )

@@ -98,7 +98,6 @@ public:
 	void Animation(bool st=true);	///< Start animation
 
 	void About();		///< Show about information
-	void AboutQt();		///< Show information about Qt version
 
 protected:
 	void OnPaint(wxPaintEvent& event);

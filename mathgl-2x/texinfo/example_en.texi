@@ -1939,6 +1939,32 @@ int sample(mglGraph *gr)
 
 @pfig{error, Example of Error()}
 
+Additionally, you can use solid large "marks" instead of error boxes by selecting proper style.
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData x0(10), y0(10), ex(10), ey(10);
+  for(int i=0;i<10;i++)
+  {  x0.a[i] = mgl_rnd(); y0.a[i] = mgl_rnd(); ey.a[i] = ex.a[i] = 0.1; }
+  gr->SetRanges(0,1,0,1); gr->Alpha(true);
+  gr->SubPlot(4,3,0,"");  gr->Box(); gr->Error(x0,y0,ex,ey,"#+@");
+  gr->SubPlot(4,3,1,"");  gr->Box(); gr->Error(x0,y0,ex,ey,"#x@");
+  gr->SubPlot(4,3,2,"");  gr->Box(); gr->Error(x0,y0,ex,ey,"#s@","alpha 0.5");
+  gr->SubPlot(4,3,3,"");  gr->Box(); gr->Error(x0,y0,ex,ey,"s@");
+  gr->SubPlot(4,3,4,"");  gr->Box(); gr->Error(x0,y0,ex,ey,"d@");
+  gr->SubPlot(4,3,5,"");  gr->Box(); gr->Error(x0,y0,ex,ey,"#d@","alpha 0.5");
+  gr->SubPlot(4,3,6,"");  gr->Box(); gr->Error(x0,y0,ex,ey,"+@");
+  gr->SubPlot(4,3,7,"");  gr->Box(); gr->Error(x0,y0,ex,ey,"x@");
+  gr->SubPlot(4,3,8,"");  gr->Box(); gr->Error(x0,y0,ex,ey,"o@");
+  gr->SubPlot(4,3,9,"");  gr->Box(); gr->Error(x0,y0,ex,ey,"#o@","alpha 0.5");
+  gr->SubPlot(4,3,10,""); gr->Box(); gr->Error(x0,y0,ex,ey,"#.@");
+  gr->SubPlot(4,3,11,""); gr->Box(); gr->Error(x0,y0,ex,ey);
+}
+@end verbatim
+
+@pfig{error2, Example of Error() with marks}
+
+
 @c ------------------------------------------------------------------
 @c @external{}
 @node Mark sample, TextMark sample, Error sample, 1D samples

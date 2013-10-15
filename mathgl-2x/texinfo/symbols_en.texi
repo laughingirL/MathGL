@@ -53,10 +53,14 @@ denote string in @ref{MGL scripts} or in @ref{Command options}.
 @item *
 one of marks (see @ref{Line styles});
 
+one of mask for face filling (see @ref{Color scheme});
+
 operation in @ref{Textual formulas}.
 
 @item +
 one of marks (see @ref{Line styles}) or kind of @ref{error} boxes;
+
+one of mask for face filling (see @ref{Color scheme});
 
 operation in @ref{Textual formulas}.
 
@@ -66,12 +70,14 @@ separator for color positions (see @ref{Color styles}) or items in a list.
 @item -
 solid line style (see @ref{Line styles});
 
+one of mask for face filling (see @ref{Color scheme});
+
 place entries horizontally in @ref{legend};
 
 operation in @ref{Textual formulas}.
 
 @item .
-one of marks (see @ref{Line styles});
+one of marks (see @ref{Line styles}) or kind of @ref{error} boxes;
 
 set to draw hachures instead of arrows for @ref{vect}, @ref{vect3};
 
@@ -92,16 +98,22 @@ range operation in @ref{MGL scripts}.
 @item ;
 line dashing style (see @ref{Line styles});
 
+one of mask for face filling (see @ref{Color scheme});
+
 end of an option in @ref{MGL scripts} or in @ref{Command options}.
 
 @item <
 one of marks (see @ref{Line styles});
+
+one of mask for face filling (see @ref{Color scheme});
 
 style of @ref{subplot} and @ref{inplot};
 
 set position of @ref{colorbar};
 
 style of @ref{vect}, @ref{vect3};
+
+align left in @ref{bars}, @ref{barh}, @ref{boxplot}, @ref{cones};
 
 operation in @ref{Textual formulas}.
 
@@ -109,16 +121,22 @@ operation in @ref{Textual formulas}.
 @item >
 one of marks (see @ref{Line styles});
 
+one of mask for face filling (see @ref{Color scheme});
+
 style of @ref{subplot} and @ref{inplot};
 
 set position of @ref{colorbar};
 
 style of @ref{vect}, @ref{vect3};
 
+align right in @ref{bars}, @ref{barh}, @ref{boxplot}, @ref{cones};
+
 operation in @ref{Textual formulas}.
 
 @item =
 line dashing style (see @ref{Line styles});
+
+one of mask for face filling (see @ref{Color scheme});
 
 set to use equidistant columns for @ref{table};
 
@@ -144,11 +162,19 @@ reduce text size inside a string (see @ref{Font styles}).
 @item ^
 one of marks (see @ref{Line styles});
 
+one of mask for face filling (see @ref{Color scheme});
+
 style of @ref{subplot} and @ref{inplot};
 
 set position of @ref{colorbar};
 
+set outer position for @ref{legend};
+
+inverse default position for @ref{axis};
+
 switch to upper index inside a string (see @ref{Font styles});
+
+align center in @ref{bars}, @ref{barh}, @ref{boxplot}, @ref{cones};
 
 operation in @ref{Textual formulas}.
 
@@ -189,6 +215,9 @@ operation in @ref{Textual formulas}.
 @item \
 string continuation symbol on next line for @ref{MGL scripts}.
 
+@item ~
+one of mask for face filling (see @ref{Color scheme}).
+
 @item 0,1,2,3,4,5,6,7,8,9
 line width (see @ref{Line styles});
 
@@ -197,6 +226,9 @@ brightness of a color (see @ref{Color styles});
 kind of smoothing (for digits 1,3,5) in @ref{smooth};
 
 digits for a value.
+
+@item 4,6,8
+draw square, hex- or octo-pyramids instead of cones in @ref{cone}, @ref{cones}.
 
 @item A,B,C,D,E,F,a,b,c,d,e,f
 can be hex-digit for color specification if placed inside @{@} (see @ref{Color styles}).
@@ -232,10 +264,14 @@ name of color axis;
 cosine transform for @ref{transform}.
 
 @item D
-arrow style (see @ref{Line styles}).
+arrow style (see @ref{Line styles});
+
+one of mask for face filling (see @ref{Color scheme}).
 
 @item d
-one of marks (see @ref{Line styles}) or kind of @ref{error} boxes.
+one of marks (see @ref{Line styles}) or kind of @ref{error} boxes;
+
+one of mask for face filling (see @ref{Color scheme}).
 
 @item E
 dark green-yellow color (see @ref{Color styles}).
@@ -283,6 +319,8 @@ inverse Fourier transform for @ref{transform}.
 @item j
 line dashing style (see @ref{Line styles});
 
+one of mask for face filling (see @ref{Color scheme}).
+
 @item K
 arrow style (see @ref{Line styles}).
 
@@ -310,10 +348,14 @@ dark sky-blue color (see @ref{Color styles}).
 sky-blue color (see @ref{Color styles}).
 
 @item O
-arrow style (see @ref{Line styles}).
+arrow style (see @ref{Line styles});
+
+one of mask for face filling (see @ref{Color scheme}).
 
 @item o
 one of marks (see @ref{Line styles}) or kind of @ref{error} boxes;
+
+one of mask for face filling (see @ref{Color scheme});
 
 over-line text if placed after @samp{:} (see @ref{Font styles}).
 
@@ -340,10 +382,17 @@ red color (see @ref{Color styles}).
 @item S
 arrow style (see @ref{Line styles});
 
+one of mask for face filling (see @ref{Color scheme}).
+
 @item s
 one of marks (see @ref{Line styles}) or kind of @ref{error} boxes;
 
+one of mask for face filling (see @ref{Color scheme});
+
 sine transform for @ref{transform}.
+
+@item t
+draw tubes instead of cones in @ref{cone}, @ref{cones};
 
 @item T
 arrow style (see @ref{Line styles});

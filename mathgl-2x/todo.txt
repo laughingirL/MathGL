@@ -1,15 +1,9 @@
-http://ubuntuforums.org/showthread.php?t=1862084
-Device 0 (VID=0502 and PID=337d) is UNKNOWN. (VID=18d1 and PID=4e41)
-
 
 ============= NEW FOR LATER =============
 
-A. Paper about MathGL!!!
-
-1. Export to X3D, COLLADA !!!
+1. Export to COLLADA !!!
 2. GTK window/widgets ???
 3. Labels at TriCont()
-4. Use libtcc for Fill() and Modify() functions only ???
 
 5. 2D textures as one of standard way for coloring -- if '%' present in color scheme
 6. Graph(mreal x, mreal y, names, styles, font, size); -- names = "node1[node2,node3,node4[node5,node6]]", styles -- the same + apply for subnodes if absent. Styles are colors (fill,border,line), dash (to subnodes), marks "dos^v><", arrows.
@@ -19,23 +13,19 @@ A. Paper about MathGL!!!
 
 10. New tests:
 	c. Tests for mglDataC arrays (as separate flag)
-	e. Test for Crop, Momentum, NormSl, Sew, DiffParam, Envelope, STFA for all directions "xyz"; Clean, Last, First, Find, Spline3, FindAny, Insert, Delete, Put, SetId/Column, PrintInfo, Squeeze, Extend, Trace, Combine, new Max/Min/Momentum, FillSample, Hist, operators, Sort, Jacobian
-	h. Test for CalcXYZ -- in data samples
+	e. Test for Crop, Momentum, NormSl, Sew, DiffParam, Envelope, STFA for all directions "xyz"; Clean, Last, First, Find, Spline3, FindAny, Insert, Delete, Put, SetId/Column, Squeeze, Extend, Trace, Combine, new Max/Min/Momentum, FillSample, Hist, operators, Sort, Roots, Jacobian
 	u. Test FlowP + 3d
 
 11. Check centered curved text (see text2)
 12. GLUT testing
 13. OpenGL in FLTK as test?!
+14. Export to X3D
 
 
 ============= DOCUMENTATION =============
 
-A. Add chapter with real samples
-
-1. Add error2 sample
-10. Add "Data correlation sample"
-13. Update styles usage in appendix
-21. Add wxMathGL widget.
+A. Paper about MathGL!!!
+B. Add chapter with real samples
 
 ============= UDAV =============
 

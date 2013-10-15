@@ -25,6 +25,7 @@ public:
 * mglWindow class::
 * Fl_MathGL class::
 * QMathGL class::
+* wxMathGL class::
 @end menu
 
 
@@ -36,7 +37,7 @@ public:
 @cindex window
 @c @cindex mglDraw
 
-Этот класс производный от класса mglGraph (см. @ref{MathGL core}). Он определен в @code{#include <mgl2/window.h>}. Класс содержит методы для создания и управления окном, содержащим графику MathGL. Похожий набор классов существует отдельно для каждой библиотеки виджетов: @code{mglQT} в @code{#include <mgl2/qt.h>}, @code{mglFLTK} в @code{#include <mgl2/fltk.h>}, @code{mglWX} в @code{#include <mgl2/wx.h>}.
+Этот класс производный от класса mglGraph (см. @ref{MathGL core}). Он определен в @code{#include <mgl2/window.h>}. Класс содержит методы для создания и управления окном, содержащим графику MathGL. Похожий набор классов существует отдельно для каждой библиотеки виджетов: @code{mglQT} в @code{#include <mgl2/qt.h>}, @code{mglFLTK} в @code{#include <mgl2/fltk.h>}.
 
 @deftypefn {Конструктор класса @code{mglWindow}} {} mglWindow (@code{const char *}title=@code{"MathGL"})
 @deftypefnx {Конструктор класса @code{mglWindow}} {} mglWindow (@code{int} (*draw)(@code{HMGL} gr, @code{void *}p), @code{const char *}title=@code{"MathGL"}, @code{void *}par=@code{NULL}, @code{int} kind=@code{0}, @code{void} (*reload)(@code{HMGL} gr, @code{void *}p)=0)
@@ -198,7 +199,7 @@ public:
 
 @c ------------------------------------------------------------------
 @external{}
-@node QMathGL class, , Fl_MathGL class, Widget classes
+@node QMathGL class, wxMathGL class, Fl_MathGL class, Widget classes
 @section Класс QMathGL
 @cindex QMathGL
 @cindex widgets
@@ -324,7 +325,7 @@ public:
 @deftypefn {Slot on @code{QMathGL}} @code{void} shiftRight ()
 Сдвигает график вправо.
 @end deftypefn
-@deftypefn {Slot on @code{QMathGL}} @code{void}shiftUp  ()
+@deftypefn {Slot on @code{QMathGL}} @code{void} shiftUp  ()
 Сдвигает график вверх.
 @end deftypefn
 @deftypefn {Slot on @code{QMathGL}} @code{void} shiftDown ()
@@ -382,7 +383,7 @@ public:
 @c Сохраняет текущий рисунок в векторный X3D файл.
 @c @end deftypefn
 
-@deftypefn {Slot on @code{QMathGL}} @code{void}setUsePrimitives (@code{bool} use)
+@deftypefn {Slot on @code{QMathGL}} @code{void} setUsePrimitives (@code{bool} use)
 Разрешает использовать список примитивов для кадров. Это позволяет вращать/масштабировать кадры, но требует значительно больше памяти. По умолчанию разрешено (=@code{true}).
 @end deftypefn
 @deftypefn {Slot on @code{QMathGL}} @code{void} setMGLFont (@code{QString} path)
@@ -447,6 +448,171 @@ public:
 @deftypecv {QMathGL option} QMathGL @code{bool} autoResize
 Разрешить изменять размер рисунка (по умолчанию false).
 @end deftypecv
+
+@external{}
+
+
+@c ------------------------------------------------------------------
+@external{}
+@node wxMathGL class, , QMathGL class, Widget classes
+@section Класс wxMathGL
+@cindex wxMathGL
+@cindex widgets
+
+Класс реализует элемент интерфейса WX для отображения графики MathGL. Он определен в @code{#include <mgl2/wx.h>}.
+
+@deftypemethod wxMathGL @code{void} SetDraw (@code{mglDraw *}dr)
+Задает функцию рисования из класса производного от @code{mglDraw}.
+@end deftypemethod
+@deftypemethod wxMathGL @code{void} SetDraw (@code{int (*}draw@code{)(mglBase *}gr, @code{void *}p@code{)}, @code{void *}par=@code{NULL})
+@deftypemethodx wxMathGL @code{void} SetDraw (@code{int (*}draw@code{)(mglGraph *}gr@code{)})
+Задает функцию рисования @var{draw}. Поддерживается список графиков (кадров), так что можно вначале их нарисовать (требует довольно много памяти), а потом достаточно быстро отображать. Функция должна возвращать положительное число создаваемых кадров или ноль для непосредственного рисования. Параметр @var{par} содержит указатель на данные пользователя, передаваемый функции рисования @var{draw}.
+@end deftypemethod
+
+@deftypemethod wxMathGL @code{void} SetGraph (@code{mglCanvas *}gr)
+@deftypemethodx wxMathGL @code{void} SetGraph (@code{mglGraph *}gr)
+Устанавливает указатель на внешний экземпляр класса для рисования (вместо встроенного). Отмечу, что wxMathGL автоматически удалит этот объект при удалении элемента интерфейса или при новом вызове @code{setGraph()}.
+@end deftypemethod
+@deftypemethod wxMathGL @code{HMGL} GetGraph ()
+Возвращает указатель на объект, строящий графики.
+@end deftypemethod
+
+@deftypemethod wxMathGL @code{void} SetPopup (@code{QMenu *}p)
+Задает указатель на всплывающее меню.
+@end deftypemethod
+@deftypemethod wxMathGL @code{void} SetSize (@code{int} w, @code{int} h)
+Задает размеры элемента управления и картинки.
+@end deftypemethod
+@deftypemethod wxMathGL @code{double} GetRatio ()
+Возвращает соотношение сторон рисунка.
+@end deftypemethod
+
+@deftypemethod wxMathGL @code{int} GetPer ()
+Возвращает величину перспективы в процентах.
+@end deftypemethod
+@deftypemethod wxMathGL @code{int} GetPhi ()
+Возвращает величину угла Phi в градусах.
+@end deftypemethod
+@deftypemethod wxMathGL @code{int} GetTet ()
+Возвращает величину угла Theta в градусах.
+@end deftypemethod
+@deftypemethod wxMathGL @code{bool} GetAlpha ()
+Возвращает состояние переключателя прозрачности.
+@end deftypemethod
+@deftypemethod wxMathGL @code{bool} GetLight ()
+Возвращает состояние переключателя освещения.
+@end deftypemethod
+@deftypemethod wxMathGL @code{bool} GetZoom ()
+Возвращает состояние переключателя приближения мышью.
+@end deftypemethod
+@deftypemethod wxMathGL @code{bool} GetRotate ()
+Возвращает состояние переключателя вращения мышью.
+@end deftypemethod
+
+
+@deftypemethod wxMathGL @code{void} Repaint ()
+Перерисовывает (обновляет) элемент управления без вызова функции рисования.
+@end deftypemethod
+@deftypemethod wxMathGL @code{void} Update ()
+Обновляет рисунок путем вызова функции рисования.
+@end deftypemethod
+@deftypemethod wxMathGL @code{void} Copy ()
+Копирует график в буфер обмена.
+@end deftypemethod
+@comment  @deftypemethod wxMathGL @code{void} copyClickCoor ()
+@comment  Копирует координаты щелчка мышью (как текст).
+@comment  @end deftypemethod
+@deftypemethod wxMathGL @code{void} Print ()
+Печатает текущий рисунок.
+@end deftypemethod
+
+@comment  @deftypemethod wxMathGL @code{void} Stop ()
+@comment  Посылает сигнал остановки рисования.
+@comment  @end deftypemethod
+@deftypemethod wxMathGL @code{void} Adjust ()
+Подгоняет размер картинки под размер окна.
+@end deftypemethod
+@deftypemethod wxMathGL @code{void} NextSlide ()
+Показывает следующий кадр.
+@end deftypemethod
+@deftypemethod wxMathGL @code{void} PrevSlide ()
+Показывает предыдущий кадр.
+@end deftypemethod
+@deftypemethod wxMathGL @code{void} Animation (@code{bool} st=@code{true})
+Запускает анимацию.
+@end deftypemethod
+
+@deftypemethod wxMathGL @code{void} SetPer (@code{int} val)
+Задает величину перспективы.
+@end deftypemethod
+@deftypemethod wxMathGL @code{void} SetPhi (@code{int} val)
+Задает величину угла Phi.
+@end deftypemethod
+@deftypemethod wxMathGL @code{void} SetTet (@code{int} val)
+Задает величину угла Theta.
+@end deftypemethod
+@deftypemethod wxMathGL @code{void} SetAlpha (@code{bool} val)
+Включает/выключает прозрачность.
+@end deftypemethod
+@deftypemethod wxMathGL @code{void} SetLight (@code{bool} val)
+Включает/выключает освещение.
+@end deftypemethod
+@comment  @deftypemethod wxMathGL @code{void} SetGrid (@code{bool} val)
+@comment  Включает/выключает рисование сетки абсолютных координат на графике.
+@comment  @end deftypemethod
+@deftypemethod wxMathGL @code{void} SetZoom (@code{bool} val)
+Включает/выключает приближение мышью.
+@end deftypemethod
+@deftypemethod wxMathGL @code{void} SetRotate (@code{bool} val)
+Включает/выключает вращение мышью.
+@end deftypemethod
+@deftypemethod wxMathGL @code{void} ZoomIn ()
+Приблиажет график.
+@end deftypemethod
+@deftypemethod wxMathGL @code{void} ZoomOut ()
+Отдаляет график.
+@end deftypemethod
+@deftypemethod wxMathGL @code{void} ShiftLeft ()
+Сдвигает график влево.
+@end deftypemethod
+@deftypemethod wxMathGL @code{void} ShiftRight ()
+Сдвигает график вправо.
+@end deftypemethod
+@deftypemethod wxMathGL @code{void} ShiftUp  ()
+Сдвигает график вверх.
+@end deftypemethod
+@deftypemethod wxMathGL @code{void} ShiftDown ()
+Сдвигает график вниз.
+@end deftypemethod
+@deftypemethod wxMathGL @code{void} Restore ()
+Восстанавливает приближение и поворот графика в значения по умолчанию.
+@end deftypemethod
+@c @deftypemethod wxMathGL @code{void} reload ()
+@c Обновляет данные и перерисовывает график.
+@c @end deftypemethod
+
+@deftypemethod wxMathGL @code{void} About ()
+Показывает информацию о программе.
+@end deftypemethod
+
+@deftypemethod wxMathGL @code{void} ExportPNG (@code{QString} fname=@code{""})
+Сохраняет текущий рисунок в PNG файл.
+@end deftypemethod
+@deftypemethod wxMathGL @code{void} ExportPNGs (@code{QString} fname=@code{""})
+Сохраняет текущий рисунок в PNG файл без прозрачности.
+@end deftypemethod
+@deftypemethod wxMathGL @code{void} ExportJPG (@code{QString} fname=@code{""})
+Сохраняет текущий рисунок в JPEG файл.
+@end deftypemethod
+@deftypemethod wxMathGL @code{void} ExportBPS (@code{QString} fname=@code{""})
+Сохраняет текущий рисунок в растровый EPS файл.
+@end deftypemethod
+@deftypemethod wxMathGL @code{void} ExportEPS (@code{QString} fname=@code{""})
+Сохраняет текущий рисунок в векторный EPS файл.
+@end deftypemethod
+@deftypemethod wxMathGL @code{void} ExportSVG (@code{QString} fname=@code{""})
+Сохраняет текущий рисунок в векторный SVG файл.
+@end deftypemethod
 
 @external{}
 

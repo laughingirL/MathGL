@@ -1165,6 +1165,27 @@ next
 
 @pfig{error, Example of Error()}
 
+Additionally, you can use solid large "marks" instead of error boxes by selecting proper style.
+@verbatim
+new x0 10 'rnd':new ex 10 '0.1'
+new y0 10 'rnd':new ey 10 '0.1'
+ranges 0 1 0 1
+subplot 4 3 0 '':box:error x0 y0 ex ey '#+@'
+subplot 4 3 1 '':box:error x0 y0 ex ey '#x@'
+subplot 4 3 2 '':box:error x0 y0 ex ey '#s@'; alpha 0.5
+subplot 4 3 3 '':box:error x0 y0 ex ey 's@'
+subplot 4 3 4 '':box:error x0 y0 ex ey 'd@'
+subplot 4 3 5 '':box:error x0 y0 ex ey '#d@'; alpha 0.5
+subplot 4 3 6 '':box:error x0 y0 ex ey '+@'
+subplot 4 3 7 '':box:error x0 y0 ex ey 'x@'
+subplot 4 3 8 '':box:error x0 y0 ex ey 'o@'
+subplot 4 3 9 '':box:error x0 y0 ex ey '#o@'; alpha 0.5
+subplot 4 3 10 '':box:error x0 y0 ex ey '#.@'
+subplot 4 3 11 '':box:error x0 y0 ex ey; alpha 0.5
+@end verbatim
+
+@pfig{error2, Example of Error() with marks}
+
 @c ------------------------------------------------------------------
 @c @external{}
 @node Mark sample, TextMark sample, Error sample, 1D samples
