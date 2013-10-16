@@ -1,3 +1,5 @@
+@nav{}
+
 This appendix contain the full list of symbols (characters) used by MathGL for setting up plot. Also it contain sections for full list of hot-keys supported by mglview tool and by UDAV program.
 
 @menu
@@ -10,6 +12,7 @@ This appendix contain the full list of symbols (characters) used by MathGL for s
 @external{}
 @node Symbols for styles, Hot-keys for mglview, , Symbols and hot-keys
 @section Symbols for styles
+@nav{}
 
 Below is full list of all characters (symbols) which MathGL use for setting up the plot.
 
@@ -468,6 +471,7 @@ style of @ref{tape}.
 @external{}
 @node Hot-keys for mglview, Hot-keys for UDAV, Symbols for styles, Symbols and hot-keys
 @section Hot-keys for mglview
+@nav{}
 
 @multitable @columnfractions .3 .7
 @headitem Key @tab Description
@@ -539,6 +543,7 @@ style of @ref{tape}.
 @external{}
 @node Hot-keys for UDAV, , Hot-keys for mglview, Symbols and hot-keys
 @section Hot-keys for UDAV
+@nav{}
 
 @multitable @columnfractions .3 .7
 @headitem Key @tab Description

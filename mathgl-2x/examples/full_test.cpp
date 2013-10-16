@@ -49,7 +49,6 @@ int type = 0;
 int dotest  = 0;
 int width  = 800;
 int height = 600;
-int mini = 0;
 int big  = 0;
 int srnd = 0;
 int use_mgl = 0;
@@ -83,7 +82,9 @@ void test(mglGraph *gr)
 #if !defined(_MSC_VER) && !defined(__BORLANDC__)
 static struct option longopts[] =
 {
+	{ "mini",	no_argument,	&big,	3 },
 	{ "big",	no_argument,	&big,		1 },
+	{ "web",	no_argument,	&big,		2 },
 	{ "bps",	no_argument,	&type,		8 },
 	{ "help",	no_argument,	NULL,		'?' },
 	{ "height",	required_argument,	NULL,	'h' },
@@ -94,7 +95,6 @@ static struct option longopts[] =
 	{ "kind",	required_argument,	NULL,	'k' },
 	{ "list",	no_argument,	NULL,		'l' },
 	{ "mgl",	no_argument,	&use_mgl,	1 },
-	{ "mini",	no_argument,	&mini,		1 },
 	{ "none",	no_argument,	&type,		7 },
 	{ "obj",	no_argument,	&type,		11 },
 	{ "obj_old",no_argument,	&type,		10 },
@@ -126,6 +126,7 @@ void usage()
 		"--height=num	- png picture height\n"
 		"--mini		- png picture is 200x150\n"
 		"--big		- png picture is 1920x1440\n"
+		"--web		- png picture is 640x480\n"
 		"--prc		- output prc\n"
 		"--pdf		- output pdf\n"
 		"--eps		- output EPS\n"
@@ -251,10 +252,13 @@ int main(int argc,char **argv)
 	if(dotest==1)	printf("Global (before):%s\n",mglGlobalMess.c_str());
 	gr = new mglGraph;
 	if(	type==11|| type==12|| type==5 || type==9)	width=height;
-	if(mini)		{	gr->SetSize(190,145);	suf = "-sm";	}
-	else if(big)
-	{	gr->SetSize(1920,1440);	suf = "-lg";	}
-	else	gr->SetSize(width,height);
+	switch(big)
+	{
+	case 1:	gr->SetSize(1920,1440);	suf = "-lg";	break;
+	case 2:	gr->SetSize(640,480);	break;
+	case 3:	gr->SetSize(192,144);	suf = "-sm";	break;
+	default:	gr->SetSize(width,height);
+	}
 	gr->SetQuality(quality);
 
 	if(dotest==1)
@@ -280,14 +284,14 @@ int main(int argc,char **argv)
 		fprintf(fp,"@multitable @columnfractions .16 .12 .12 .12 .12 .12 .12 .12\n");
 		fprintf(fp,"@headitem Name");
 		for(int i=0;i<7;i++)	fprintf(fp," @tab q=%d",qual[i]);
-		clock_t beg,end,all;
+		clock_t beg,end;
 		while(s->name[0])	// all samples
 		{
 			char *buf = new char[strlen(s->mgl)+ll];
 			strcpy(buf,s->mgl);	strcat(buf,mmgl_dat_prepare);
 			fprintf(fp,"\n@item %s",s->name);
 
-			printf("%s",s->name);	all = clock();
+			printf("%s",s->name);
 			for(int i=0;i<7;i++)
 			{
 				gr->DefaultPlotParam();
@@ -306,7 +310,7 @@ int main(int argc,char **argv)
 		fprintf(fp,"\n@end multitable\n");	fclose(fp);
 	}
 
-	if(type==15 || type==16)	mini=1;	// save mini version for json
+	if(type==15 || type==16)	big=3;	// save mini version for json
 
 	if(srnd)	mgl_srnd(1);
 	gr->VertexColor(false);	gr->Compression(false);

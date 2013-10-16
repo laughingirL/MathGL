@@ -1,5 +1,6 @@
 @c ------------------------------------------------------------------
 @chapter Data processing
+@nav{}
 
 @ifset UDAV
 This chapter describe commands for allocation, resizing, loading and saving, modifying of data arrays. Also it can numerically differentiate and integrate data, interpolate, fill data by formula and so on. Class supports data with dimensions up to 3 (like function of 3 variables -- x,y,z). Data arrays are denoted by Small Caps (like @sc{dat}) if it can be (re-)created by MGL commands.
@@ -29,6 +30,7 @@ This chapter describe classes @code{mglData} and @code{mglDataC} for working wit
 @external{}
 @node Public variables, Data constructor, , Data processing
 @section Public variables
+@nav{}
 
 @ifset UDAV
 MGL don't support direct access to data arrays. See section @ref{Data filling}
@@ -97,6 +99,7 @@ Returns pointer to internal data array.
 @external{}
 @node Data constructor, Data resizing, Public variables, Data processing
 @section Data constructor
+@nav{}
 @cindex mglData
 
 @ifset UDAV
@@ -167,6 +170,7 @@ Deletes the instance of class mglData.
 @external{}
 @node Data resizing, Data filling, Data constructor, Data processing
 @section Data resizing
+@nav{}
 @cindex Create
 @cindex Rearrange
 @cindex Extend
@@ -312,6 +316,7 @@ Join data cells from @var{vdat} to @var{dat}. At this, function increase @var{da
 @external{}
 @node Data filling, File I/O, Data resizing, Data processing
 @section Data filling
+@nav{}
 @cindex Fill
 @cindex Modify
 @cindex Set
@@ -540,6 +545,7 @@ Sets the symbol @var{ids} for data columns. The string should contain one symbol
 @external{}
 @node File I/O, Make another data, Data filling, Data processing
 @section File I/O
+@nav{}
 @cindex Read
 @cindex ReadMat
 @cindex ReadRange
@@ -668,6 +674,7 @@ Saves data matrix (or @code{ns}-th slice for 3d data) to bitmap file (now suppor
 @external{}
 @node Make another data, Data changing, File I/O, Data processing
 @section Make another data
+@nav{}
 @cindex SubData
 @cindex Column
 @cindex Trace
@@ -879,6 +886,7 @@ Gets array of arguments of the data.
 @external{}
 @node Data changing, Interpolation, Make another data, Data processing
 @section Data changing
+@nav{}
 @cindex CumSum
 @cindex Integral
 @cindex Diff
@@ -1075,6 +1083,7 @@ Normalizes data slice-by-slice along direction @var{dir} the data in slices to r
 @external{}
 @node Interpolation, Data information, Data changing, Data processing
 @section Interpolation
+@nav{}
 
 MGL scripts can use linear interpolation by @ref{subdata} command, or spline interpolation by @ref{evaluate} command. Also you can use @ref{resize} for obtaining a data array with new sizes.
 
@@ -1136,6 +1145,7 @@ Interpolates data by linear function to the given point @var{x}, @var{y}, @var{z
 @external{}
 @node Data information, Operators, Interpolation, Data processing
 @section Data information
+@nav{}
 
 There are a set of functions for obtaining data properties in MGL language. However most of them can be found using "suffixes". Suffix can get some numerical value of the data array (like its size, maximal or minimal value, the sum of elements and so on) as number. Later it can be used as usual number in command arguments. The suffixes start from point @samp{.} right after (without spaces) variable name or its sub-array. For example, @code{a.nx} give the x-size of data @var{a}, @code{b(1).max} give maximal value of second row of variable @var{b}, @code{(c(:,0)^2).sum} give the sum of squares of elements in the first column of @var{c} and so on.
 
@@ -1309,6 +1319,7 @@ Give first (for @code{.a}, i.e. @code{dat->a[0]}).
 @external{}
 @node Operators, Global functions, Data information, Data processing
 @section Operators
+@nav{}
 
 @deftypefn {MGL command} {} copy @sc{dat} dat2 ['eq'='']
 @ifclear UDAV
@@ -1401,6 +1412,7 @@ Divides by the other data or the number.
 @external{}
 @node Global functions, Evaluate expression, Operators, Data processing
 @section Global functions
+@nav{}
 
 @ifclear UDAV
 These functions are not methods of @code{mglData} class. However it provide additional functionality to handle data. So I put it in this chapter.
@@ -1498,6 +1510,7 @@ Computes triangulation for arbitrary placed points with coordinates @{@var{x},@v
 @external{}
 @node Evaluate expression, MGL variables, Global functions, Data processing
 @section Evaluate expression
+@nav{}
 
 @ifset UDAV
 You can use arbitrary formulas of existed data arrays or constants as any argument of data processing or data plotting commands. There are only 2 limitations: formula shouldn't contain spaces (to be recognized as single argument), and formula cannot be used as argument which will be (re)created by MGL command.
@@ -1554,6 +1567,7 @@ Evaluates the formula derivation respect to @var{dir} for variables in array @va
 @external{}
 @node MGL variables, , Evaluate expression, Data processing
 @section MGL variables
+@nav{}
 
 @ifset UDAV
 For information about MGL variables see @ref{MGL definition}.

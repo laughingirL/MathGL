@@ -1,11 +1,12 @@
 \input texinfo
+@c @documentencoding UTF-8
+@documentlanguage ru
+
 @setfilename mathgl_ru.info
-@c @documentlanguage ru
 @documentencoding UTF-8
 @include version.texi
 @settitle MathGL @value{VERSION}
 @syncodeindex pg cp
-@comment %**end of header
 
 @copying
 Это документация для MathGL (версии @value{VERSION}) -- библиотеки классов и функций для построения научной графики. Пожалуйста сообщайте о любых ошибках в этом руководстве на @email{mathgl.abalakin@@gmail.org}.
@@ -59,46 +60,18 @@
 
 @macro external {}
 @end macro
+@macro nav {}
+@end macro
 
-@ifhtml
 @macro fig {fname,text}
-@center @image{../\fname\, 11cm, , \text\, .png}
+@center @image{\fname\, 11cm, , \text\, png}
 @end macro
 @macro pfig {fname,text}
-@center @image{../png/\fname\, 11cm, , \text\, .png}
-@c @center @image{../png/\fname\, 11cm, , \text\, .png}. See also @uref{../pdf/\fname\.pdf, U3D PDF} sample.
+@center @image{png/\fname\, 11cm, , \text\, png}
 @end macro
 @macro ufig {fname,width,text}
-@center @image{../udav/\fname\, \width\cm, , \text\, .png}
+@center @image{udav/\fname\, \width\cm, , \text\, png}
 @end macro
-@end ifhtml
-
-@ifnothtml
-@iftex
-@macro fig {fname,text}
-@center @image{\fname\, 11cm, , \text\, .png}
-@end macro
-@macro pfig {fname,text}
-@center @image{png/\fname\, 11cm, , \text\, .png}
-@end macro
-@macro ufig {fname,width,text}
-@center @image{udav/\fname\, \width\cm, , \text\, .png}
-@end macro
-@end iftex
-
-@ifnottex
-@macro fig {fname,text}
-@c @center @image{\fname\, 11cm, , \text\, .png}
-@end macro
-@macro pfig {fname,text}
-@c @center @image{png/\fname\, 11cm, , \text\, .png}
-@end macro
-@macro ufig {fname,width,text}
-@c @center @image{../udav/\fname\, 11cm, , \text\, .png}
-@end macro
-@end ifnottex
-@end ifnothtml
-
 
 @macro sref {arg}
 См. раздел @ref{\arg\}, для примеров кода и графика.
@@ -139,10 +112,6 @@
 @appendix File formats
 @include formats_ru.texi
 
-@node TeX-like symbols, Plotting time, File formats, Top
-@appendix Символы TeX
-@include appendix_ru.texi
-
 @node Plotting time, Copying This Manual, TeX-like symbols, Top
 @appendix Время отрисовки
 
@@ -155,6 +124,12 @@
 
 Результаты для изображения размером 1920*1440 (для печати)
 @include time_big.texi
+
+@ifhtml
+@node TeX-like symbols, Plotting time, File formats, Top
+@appendix Символы TeX
+@include appendix_ru.texi
+@end ifhtml
 
 @node Copying This Manual, Index, Plotting time, Top
 @appendix GNU Free Documentation License

@@ -1,4 +1,7 @@
 \input texinfo
+@documentencoding UTF-8
+@documentlanguage en
+
 @setfilename mgl_en.info
 @include version.texi
 @settitle MGL script language for version @value{VERSION}
@@ -51,33 +54,15 @@ This file documents the MGL script language. It corresponds to release @value{VE
 
 @macro external {}
 @end macro
+@macro nav {}
+@end macro
 
-@ifhtml
 @macro fig {fname,text}
-@center @image{\fname\, 11cm, , \text\, .png}
+@center @image{\fname\, 11cm, , \text\, png}
 @end macro
 @macro pfig {fname,text}
-@center @image{png/\fname\, 11cm, , \text\, .png}
+@center @image{png/\fname\, 11cm, , \text\, png}
 @end macro
-@end ifhtml
-
-@ifnothtml
-@iftex
-@macro fig {fname,text}
-@center @image{\fname\, 11cm, , \text\, .png}
-@end macro
-@macro pfig {fname,text}
-@center @image{png/\fname\, 11cm, , \text\, .png}
-@end macro
-@end iftex
-
-@ifnottex
-@macro fig {fname,text}
-@end macro
-@macro pfig {fname,text}
-@end macro
-@end ifnottex
-@end ifnothtml
 
 @macro sref {arg}
 @xref{\arg\}, for sample code and picture.

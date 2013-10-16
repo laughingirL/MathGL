@@ -115,14 +115,14 @@ var mgl_init = function(name)
 		}
 	};*/
 	req.send(null);
-	if(name[name.length-1]!='z')
+//	if(name[name.length-1]!='z')
 		txt = req.responseText;
-	else
-	{
-console.debug("compressed=",req.responseText);
-		var inflate = new Zlib.Inflate(req.responseText);
-		txt = inflate.decompress();
-	}
+// 	else
+// 	{
+// console.debug("compressed=",req.responseText);
+// 		var inflate = new Zlib.Inflate(req.responseText);
+// 		txt = inflate.decompress();
+// 	}
 	obj = JSON.parse(txt);
 
 	// copy original data for transformation

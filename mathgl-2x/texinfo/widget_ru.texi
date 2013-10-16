@@ -1,6 +1,7 @@
 
 @c ------------------------------------------------------------------
 @chapter ``Оконные'' классы
+@nav{}
 @cindex mglWindow
 @cindex mglGLUT
 @cindex Fl_MathGL
@@ -33,6 +34,7 @@ public:
 @external{}
 @node mglWindow class, Fl_MathGL class, , Widget classes
 @section Класс mglWindow
+@nav{}
 @cindex mglWindow
 @cindex window
 @c @cindex mglDraw
@@ -143,6 +145,7 @@ public:
 @external{}
 @node Fl_MathGL class, QMathGL class, , Widget classes
 @section Класс Fl_MathGL
+@nav{}
 @cindex Fl_MathGL
 @cindex widgets
 
@@ -201,6 +204,7 @@ public:
 @external{}
 @node QMathGL class, wxMathGL class, Fl_MathGL class, Widget classes
 @section Класс QMathGL
+@nav{}
 @cindex QMathGL
 @cindex widgets
 
@@ -456,6 +460,7 @@ public:
 @external{}
 @node wxMathGL class, , QMathGL class, Widget classes
 @section Класс wxMathGL
+@nav{}
 @cindex wxMathGL
 @cindex widgets
 

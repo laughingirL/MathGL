@@ -1,5 +1,6 @@
 @c ------------------------------------------------------------------
 @chapter Website
+@nav{}
 
 @menu
 * Main::
@@ -11,12 +12,15 @@
 * Other projects::
 @end menu
 
+@external{}
+
 @node Main, News, , Website
 @section MathGL is ...
+@nav{}
 
 @ifhtml
 @html
-<a href="surf_cont_fog.html"><img border="0" align="right" hspace="30" vspace="20" alt="Surface in fog" src="../surf_cont_fog_g.png"></a>
+<a href="surf_cont_fog.html"><img border="0" align="right" hspace="30" vspace="20" alt="Surface in fog" src="../small/fog-sm.png"></a>
 @end html
 @end ifhtml
 @itemize @bullet
@@ -75,6 +79,7 @@ Javascript interface was developed with support of @url{http://www.datadvance.ne
 
 @node News, Features, Main, Website
 @section News
+@nav{}
 
 @itemize
 @item
@@ -290,6 +295,7 @@ Different bugfixes.
 
 @node Features, Pictures, News, Website
 @section Features
+@nav{}
 
 MathGL can plot a wide range of graphics. It includes:
 @itemize @bullet
@@ -323,11 +329,12 @@ There is fast evaluation of a textual mathematical expression. It is based on st
 
 @node Pictures, Download, Features, Website
 @section Pictures
+@nav{}
 
 There are samples for @ref{1D data plotting, 1D arrays}, @ref{2D data plotting, 2D arrays}, @ref{3D data plotting, 3D arrays}, @ref{Vector fields plotting} and some @ref{Extra samples}.
 
 @anchor{1D data plotting}
-@subsection Examples of graphics for 1d arrays
+@subheading Examples of graphics for 1d arrays
 
 @sfig{plot, Plot sample}
 @sfig{radar, Radar sample}
@@ -355,7 +362,7 @@ There are samples for @ref{1D data plotting, 1D arrays}, @ref{2D data plotting, 
 @sfig{label,Label sample}
 
 @anchor{2D data plotting}
-@subsection Examples of graphics for 2d arrays
+@subheading Examples of graphics for 2d arrays
 
 @sfig{surf, Surf sample}
 @sfig{surfc,SurfC sample}
@@ -378,7 +385,7 @@ There are samples for @ref{1D data plotting, 1D arrays}, @ref{2D data plotting, 
 @sfig{contv,ContV sample}
 
 @anchor{3D data plotting}
-@subsection Examples of graphics for 3d arrays
+@subheading Examples of graphics for 3d arrays
 
 @sfig{surf3, Surf3 sample}
 @sfig{surf3c,Surf3C sample}
@@ -396,7 +403,7 @@ There are samples for @ref{1D data plotting, 1D arrays}, @ref{2D data plotting, 
 @sfig{triplot, TriPlot and QuadPlot}
 
 @anchor{Vector fields plotting}
-@subsection Examples of graphics for vector fields
+@subheading Examples of graphics for vector fields
 
 @sfig{vect, Vect sample}
 @sfig{vecta,Vect3 sample}
@@ -407,7 +414,7 @@ There are samples for @ref{1D data plotting, 1D arrays}, @ref{2D data plotting, 
 @sfig{dew, Dew sample}
 
 @anchor{Extra samples}
-@subsection Examples of additional features
+@subheading Examples of additional features
 
 @sfig{inplot, Subplots}
 @sfig{axis, Axis and ticks}
@@ -430,7 +437,7 @@ There are samples for @ref{1D data plotting, 1D arrays}, @ref{2D data plotting, 
 @sfig{fog, Adding fog}
 
 @sfig{combined, ``Compound'' graphics}
-@sfig{several_light, Several light sources}
+@sfig{several_light, Lighting sample}
 @sfig{stereo, Stereo image}
 @sfig{primitives, Using primitives}
 
@@ -448,6 +455,7 @@ There are samples for @ref{1D data plotting, 1D arrays}, @ref{2D data plotting, 
 
 @node Download, Other projects, Pictures, Website
 @section Download
+@nav{}
 
 @strong{Stable version (v.@value{VERSION})}
 
@@ -501,6 +509,7 @@ There are a set of @uref{http://sourceforge.net/project/showfiles.php?group_id=1
 
 @node Other projects, , Download, Website
 @section Other projects
+@nav{}
 
 Except scientific (non public) projects I also have some general interest projects:
 @itemize @bullet

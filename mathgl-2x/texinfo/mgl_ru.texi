@@ -1,11 +1,12 @@
 \input texinfo
-@setfilename mgl_ru.info
+@documentencoding UTF-8
 @c @documentlanguage ru
+
+@setfilename mgl_ru.info
 @documentencoding UTF-8
 @include version.texi
 @settitle Язык MGL для версии @value{VERSION}
 @syncodeindex pg cp
-@comment %**end of header
 
 @copying
 Это документация для MathGL (версии @value{VERSION}) -- библиотеки классов и функций для построения научной графики. Пожалуйста сообщайте о любых ошибках в этом руководстве на @email{mathgl.abalakin@@gmail.org}.
@@ -53,33 +54,15 @@
 
 @macro external {}
 @end macro
+@macro nav {}
+@end macro
 
-@ifhtml
 @macro fig {fname,text}
-@center @image{\fname\, 11cm, , \text\, .png}
+@center @image{\fname\, 11cm, , \text\, png}
 @end macro
 @macro pfig {fname,text}
-@center @image{png/\fname\, 11cm, , \text\, .png}
+@center @image{png/\fname\, 11cm, , \text\, png}
 @end macro
-@end ifhtml
-
-@ifnothtml
-@iftex
-@macro fig {fname,text}
-@center @image{\fname\, 11cm, , \text\, .png}
-@end macro
-@macro pfig {fname,text}
-@center @image{png/\fname\, 11cm, , \text\, .png}
-@end macro
-@end iftex
-
-@ifnottex
-@macro fig {fname,text}
-@end macro
-@macro pfig {fname,text}
-@end macro
-@end ifnottex
-@end ifnothtml
 
 @macro sref {arg}
 См. @ref{\arg\}, для примеров кода и графика.

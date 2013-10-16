@@ -52,6 +52,7 @@ void MGL_EXPORT mgl_obj_glyph_old(HMGL gr, const mglPrim &q, const mglPnt &p, FI
 {
 	mreal f = q.p/2, dx=p.u/2, dy=p.v/2, x,y;
 	mreal c=q.s*cos(q.w*M_PI/180), s=-q.s*sin(q.w*M_PI/180);
+	if(mgl_isnan(q.s))	c=s=0;
 	double b[4] = {c,-s, s,c};
 	long i=q.n1+1, ik,il=0;
 
@@ -321,7 +322,7 @@ void MGL_EXPORT mgl_write_obj_old(HMGL gr, const char *fname,const char *descr, 
 		for(size_t j=0;j<p.size();j++)
 		{
 			const mglPrim &q=gr->GetPrm(p[j]);
-			mgl_obj_prim_old(gr, q, gr->GetPnt(q.n1), fp, q.s);
+			mgl_obj_prim_old(gr, q, gr->GetPnt(q.n1), fp, mgl_isnan(q.s)?0:q.s);
 		}
 		gr->Grp[i].p.clear();	// we don't need indexes anymore
 	}
@@ -560,11 +561,11 @@ std::string mglCanvas::GetJSON()
 		if(p.type==1 && n1>n2)	{	n1=p.n2;	n2=p.n1;	}
 		if(c.a==1 || p.type==0 || p.type==1 || p.type==4 || p.type==6)
 			res = res + mgl_sprintf("[%d,%ld,%ld,%ld,%ld,%d,%.3g,%.2g,%.2g,%.2g,\"#%02x%02x%02x\"]%c\n",
-				p.type, n1, n2, n3, n4, p.id, factor*p.s, p.w==p.w?p.w:0, p.p==p.p?p.p:0,
+				p.type, n1, n2, n3, n4, p.id, p.s==p.s?factor*p.s:0, p.w==p.w?p.w:0, p.p==p.p?p.p:0,
 				0., int(255*c.r), int(255*c.g), int(255*c.b), i+1<l?',':' ');
 		else
 			res = res + mgl_sprintf("[%d,%ld,%ld,%ld,%ld,%d,%.3g,%.2g,%.2g,%.2g,\"rgba(%d,%d,%d,%.2g)\"]%c\n",
-				p.type, n1, n2, n3, n4, p.id, factor*p.s, p.w==p.w?p.w:0, p.p==p.p?p.p:0,
+				p.type, n1, n2, n3, n4, p.id, p.s==p.s?factor*p.s:0, p.w==p.w?p.w:0, p.p==p.p?p.p:0,
 				0., int(255*c.r), int(255*c.g), int(255*c.b), c.a, i+1<l?',':' ');
 	}
 
@@ -627,7 +628,7 @@ bool mglCanvas::ExportMGLD(const char *fname, const char *descr)
 	for(size_t i=0;i<Prm.size();i++)
 	{
 		const mglPrim &p=Prm[i];	// TODO: check if better save p.m instead of p.s,p.p
-		fprintf(fp,"%d\t%ld\t%ld\t%ld\t%ld\t%d\t%g\t%g\t%g\n", p.type, p.n1, p.n2, p.n3, p.n4, p.id, p.s, p.w, p.p);
+		fprintf(fp,"%d\t%ld\t%ld\t%ld\t%ld\t%d\t%g\t%g\t%g\n", p.type, p.n1, p.n2, p.n3, p.n4, p.id, p.s==p.s?p.s:0, p.w==p.w?p.w:0, p.p==p.p?p.p:0);
 	}
 	fprintf(fp,"# Textures: smooth alpha colors\n");
 	for(size_t i=0;i<Txt.size();i++)

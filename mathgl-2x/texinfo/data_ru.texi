@@ -1,5 +1,6 @@
 @c ------------------------------------------------------------------
 @chapter Обработка данных
+@nav{}
 
 @ifset UDAV
 В данной главе описываются команды для работы с массивами данных. Они включают команды для выделения памяти и изменения размера данных, чтения данных из файла, численного дифференцирования, интегрирования, интерполяции и пр., заполнения по текстовой формуле и т.д. Класс позволяет работать с данными размерности не более 3 (как функции от трёх переменных -- x,y,z). Массивы которые могут быть созданы командами MGL отображаются Small Caps шрифтом (например, @sc{dat}).
@@ -29,6 +30,7 @@
 @external{}
 @node Public variables, Data constructor, , Data processing
 @section Переменные
+@nav{}
 
 @ifset UDAV
 MGL не поддерживает прямой доступ к элементам массива. См. раздел @ref{Data filling}
@@ -96,6 +98,7 @@ MGL не поддерживает прямой доступ к элемента�
 @external{}
 @node Data constructor, Data resizing, Public variables, Data processing
 @section Создание и удаление данных
+@nav{}
 @cindex mglData
 
 @ifset UDAV
@@ -164,6 +167,7 @@ There are many functions, which can create data for output (see @ref{Data fillin
 @external{}
 @node Data resizing, Data filling, Data constructor, Data processing
 @section Изменение размеров данных
+@nav{}
 @cindex Create
 @cindex Rearrange
 @cindex Extend
@@ -310,6 +314,7 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @external{}
 @node Data filling, File I/O, Data resizing, Data processing
 @section Заполнение данных
+@nav{}
 @cindex Fill
 @cindex Modify
 @cindex Set
@@ -537,6 +542,7 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @external{}
 @node File I/O, Make another data, Data filling, Data processing
 @section Чтение/сохранение данных
+@nav{}
 @cindex Read
 @cindex ReadMat
 @cindex ReadRange
@@ -665,6 +671,7 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @external{}
 @node Make another data, Data changing, File I/O, Data processing
 @section Make another data
+@nav{}
 @cindex SubData
 @cindex Column
 @cindex Trace
@@ -875,6 +882,7 @@ res_k = \sum_ij how(x_i,y_j,z_k) a_ij/ \sum_ij a_ij
 @external{}
 @node Data changing, Interpolation, Make another data, Data processing
 @section Изменение данных
+@nav{}
 @cindex CumSum
 @cindex Integral
 @cindex Diff
@@ -1071,6 +1079,7 @@ These functions change the data in some direction like differentiations, integra
 @external{}
 @node Interpolation, Data information, Data changing, Data processing
 @section Интерполяция
+@nav{}
 
 Скрипты MGL могут использовать линейную интерполяцию с помощью команды @ref{subdata}, или кубические сплайны при использовании команды @ref{evaluate}. Также можно использовать @ref{resize} для массива с новыми размерами.
 
@@ -1133,6 +1142,7 @@ These functions change the data in some direction like differentiations, integra
 @external{}
 @node Data information, Operators, Interpolation, Data processing
 @section Информационные функции
+@nav{}
 
 В MathGL есть ряд функций для получения свойств массива данных. В MGL скриптах большинство из них реализовано в виде "суффиксов". Суффиксы дают числовое значение некоторой характеристики массива данных. Например, его размер, минимальное и максимальное значение, сумму элементов и т.д. Суффиксы начинаются с точки @samp{.} сразу после массива (без пробелов). Например, @code{a.nx} даст размер массива @var{a} вдоль x, @code{b(1).max} даст максимальное значение второй колонки массива @var{b}, @code{(c(:,0)^2).sum} даст сумму квадратов в первой строке массива @var{c} и т.д.
 
@@ -1306,6 +1316,7 @@ These functions change the data in some direction like differentiations, integra
 @external{}
 @node Operators, Global functions, Data information, Data processing
 @section Операторы
+@nav{}
 
 @deftypefn {Команда MGL} {} copy @sc{dat} dat2 ['eq'='']
 @ifclear UDAV
@@ -1398,6 +1409,7 @@ These functions change the data in some direction like differentiations, integra
 @external{}
 @node Global functions, Evaluate expression, Operators, Data processing
 @section Глобальные функции
+@nav{}
 
 @ifclear UDAV
 Эти функции не методы класса @code{mglData}, но они дают дополнительные возможности по обработке данных. Поэтому я поместил их в эту главу.
@@ -1495,6 +1507,7 @@ These functions change the data in some direction like differentiations, integra
 @external{}
 @node Evaluate expression, MGL variables, Global functions, Data processing
 @section Вычисление выражений
+@nav{}
 
 @ifset UDAV
 В MGL скриптах в качестве аргументов команд можно использовать произвольные формулы от существующих массивов данных и констант. Есть только 2 ограничения: формула не должна содержать пробелов (чтобы распознаваться как один аргумент), формула не может быть аргументом, который может быть пересоздан при выполнении скрипта.
@@ -1548,6 +1561,7 @@ These functions change the data in some direction like differentiations, integra
 @external{}
 @node MGL variables, , Evaluate expression, Data processing
 @section Переменные MGL
+@nav{}
 
 @ifset UDAV
 Для информации о переменных MGL см. @ref{MGL definition}.

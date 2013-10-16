@@ -24,7 +24,7 @@ void mgls_prepare2d(mglData *a, mglData *b=0, mglData *v=0);
 void mgls_prepare3d(mglData *a, mglData *b=0);
 void mgls_prepare2v(mglData *a, mglData *b);
 void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
-extern int mini;
+extern int big;
 //-----------------------------------------------------------------------------
 struct mglSample	/// Structure for list of samples
 {
@@ -609,7 +609,7 @@ void smgl_triangulation(mglGraph *gr)	// surface triangulation
 	gr->Fill(x,"2*rnd-1");	gr->Fill(y,"2*rnd-1");	gr->Fill(z,"v^2-w^2",x,y);
 	mglData d = mglTriangulation(x,y), g(30,30);
 
-	if(!mini)	gr->Title("Triangulation");
+	if(big!=3)	gr->Title("Triangulation");
 	gr->Rotate(40,60);	gr->Box();	gr->Light(true);
 	gr->TriPlot(d,x,y,z);	gr->TriPlot(d,x,y,z,"#k");
 
@@ -832,7 +832,7 @@ const char *mmgl_text="call 'prepare1d'\nsubplot 2 2 0 ''\ntext 0 1 'Text can be
 "line -1 -1 1 1 'rA':text 0 0 1 1 'At angle' '@'\nline -1 -1 -1 1 'rA':text -1 0 -1 1 'Vertical'\n";
 void smgl_text(mglGraph *gr)	// text drawing
 {
-	if(!mini)	gr->SubPlot(2,2,0,"");
+	if(big!=3)	gr->SubPlot(2,2,0,"");
 	gr->Putsw(mglPoint(0,1),L"Text can be in ASCII and in Unicode");
 	gr->Puts(mglPoint(0,0.6),"It can be \\wire{wire}, \\big{big} or #r{colored}");
 	gr->Puts(mglPoint(0,0.2),"One can change style in string: "
@@ -842,7 +842,7 @@ void smgl_text(mglGraph *gr)	// text drawing
 	gr->Puts(mglPoint(0,-0.6),"Easy to change indexes ^{up} _{down} @{center}");
 	gr->Puts(mglPoint(0,-1),"It parse TeX: \\int \\alpha \\cdot "
 	"\\sqrt3{sin(\\pi x)^2 + \\gamma_{i_k}} dx");
-	if(mini)	return;
+	if(big==3)	return;
 
 	gr->SubPlot(2,2,1,"");
 	gr->Puts(mglPoint(0,0.5), "\\sqrt{\\frac{\\alpha^{\\gamma^2}+\\overset 1{\\big\\infty}}{\\sqrt3{2+b}}}", "@", -2);
@@ -867,11 +867,11 @@ const char *mmgl_text2="call 'prepare1d'\n"
 void smgl_text2(mglGraph *gr)	// text drawing
 {
 	mglData y;	mgls_prepare1d(&y);
-	if(!mini)	gr->SubPlot(1,3,0,"");
+	if(big!=3)	gr->SubPlot(1,3,0,"");
 	gr->Box();	gr->Plot(y.SubData(-1,0));
 	gr->Text(y,"This is very very long string drawn along a curve","k");
 	gr->Text(y,"Another string drawn above a curve","Tr");
-	if(mini)	return;
+	if(big==3)	return;
 
 	gr->SubPlot(1,3,1,"");
 	gr->Box();	gr->Plot(y.SubData(-1,0));
@@ -913,9 +913,9 @@ void smgl_bars(mglGraph *gr)
 {
 	mglData ys(10,3);	ys.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
 	gr->SetOrigin(0,0,0);
-	if(!mini)	{	gr->SubPlot(3,2,0,"");	gr->Title("Bars plot (default)");	}
+	if(big!=3)	{	gr->SubPlot(3,2,0,"");	gr->Title("Bars plot (default)");	}
 	gr->Box();	gr->Bars(ys);
-	if(mini)	return;
+	if(big==3)	return;
 	gr->SubPlot(3,2,1,"");	gr->Title("2 colors");	gr->Box();	gr->Bars(ys,"cbgGyr");
 	gr->SubPlot(3,2,4,"");	gr->Title("'\\#' style");	gr->Box();	gr->Bars(ys,"#");
 	gr->SubPlot(3,2,5);	gr->Title("3d variant");	gr->Rotate(50,60);	gr->Box();
@@ -934,9 +934,9 @@ void smgl_barh(mglGraph *gr)
 {
 	mglData ys(10,3);	ys.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
 	gr->SetOrigin(0,0,0);
-	if(!mini)	{	gr->SubPlot(2,2,0,"");	gr->Title("Barh plot (default)");	}
+	if(big!=3)	{	gr->SubPlot(2,2,0,"");	gr->Title("Barh plot (default)");	}
 	gr->Box();	gr->Barh(ys);
-	if(mini)	return;
+	if(big==3)	return;
 	gr->SubPlot(2,2,1,"");	gr->Title("2 colors");	gr->Box();	gr->Barh(ys,"cbgGyr");
 	gr->SetRanges(-3,3,-1,1);	// increase range since summation can exceed [-1,1]
 	gr->SubPlot(2,2,2,"");	gr->Title("'a' style");	gr->Box();	gr->Barh(ys,"a");
@@ -950,9 +950,9 @@ const char *mmgl_area="call 'prepare1d'\norigin 0 0 0\nsubplot 2 2 0 '':title 'A
 void smgl_area(mglGraph *gr)
 {
 	mglData y;	mgls_prepare1d(&y);	gr->SetOrigin(0,0,0);
-	if(!mini)	{	gr->SubPlot(2,2,0,"");	gr->Title("Area plot (default)");	}
+	if(big!=3)	{	gr->SubPlot(2,2,0,"");	gr->Title("Area plot (default)");	}
 	gr->Box();	gr->Area(y);
-	if(mini)	return;
+	if(big==3)	return;
 	gr->SubPlot(2,2,1,"");	gr->Title("2 colors");	gr->Box();	gr->Area(y,"cbgGyr");
 	gr->SubPlot(2,2,2,"");	gr->Title("'!' style");	gr->Box();	gr->Area(y,"!");
 	gr->SubPlot(2,2,3);	gr->Title("3d variant");	gr->Rotate(50,60);	gr->Box();
@@ -968,9 +968,9 @@ const char *mmgl_plot="call 'prepare1d'\nsubplot 2 2 0 '':title 'Plot plot (defa
 void smgl_plot(mglGraph *gr)
 {
 	mglData y;	mgls_prepare1d(&y);	gr->SetOrigin(0,0,0);
-	if(!mini)	{	gr->SubPlot(2,2,0,"");	gr->Title("Plot plot (default)");	}
+	if(big!=3)	{	gr->SubPlot(2,2,0,"");	gr->Title("Plot plot (default)");	}
 	gr->Box();	gr->Plot(y);
-	if(mini)	return;
+	if(big==3)	return;
 	gr->SubPlot(2,2,2,"");	gr->Title("'!' style; 'rgb' palette");	gr->Box();	gr->Plot(y,"o!rgb");
 	gr->SubPlot(2,2,3,"");	gr->Title("just markers");	gr->Box();	gr->Plot(y," +");
 	gr->SubPlot(2,2,1);	gr->Title("3d variant");	gr->Rotate(50,60);	gr->Box();
@@ -986,9 +986,9 @@ const char *mmgl_tens="call 'prepare1d'\nsubplot 2 2 0 '':title 'Tens plot (defa
 void smgl_tens(mglGraph *gr)
 {
 	mglData y;	mgls_prepare1d(&y);	gr->SetOrigin(0,0,0);
-	if(!mini)	{	gr->SubPlot(2,2,0,"");	gr->Title("Tens plot (default)");	}
+	if(big!=3)	{	gr->SubPlot(2,2,0,"");	gr->Title("Tens plot (default)");	}
 	gr->Box();	gr->Tens(y.SubData(-1,0), y.SubData(-1,1));
-	if(mini)	return;
+	if(big==3)	return;
 	gr->SubPlot(2,2,2,"");	gr->Title("' ' style");	gr->Box();	gr->Tens(y.SubData(-1,0), y.SubData(-1,1),"o ");
 	gr->SubPlot(2,2,1);	gr->Title("3d variant");	gr->Rotate(50,60);	gr->Box();
 	mglData yc(30), xc(30), z(30);	z.Modify("2*x-1");
@@ -1005,9 +1005,9 @@ void smgl_region(mglGraph *gr)
 {
 	mglData y;	mgls_prepare1d(&y);
 	mglData y1 = y.SubData(-1,1), y2 = y.SubData(-1,2);	gr->SetOrigin(0,0,0);
-	if(!mini)	{	gr->SubPlot(2,2,0,"");	gr->Title("Region plot (default)");	}
+	if(big!=3)	{	gr->SubPlot(2,2,0,"");	gr->Title("Region plot (default)");	}
 	gr->Box();	gr->Region(y1,y2);	gr->Plot(y1,"k2");	gr->Plot(y2,"k2");
-	if(mini)	return;
+	if(big==3)	return;
 	gr->SubPlot(2,2,1,"");	gr->Title("2 colors");	gr->Box();	gr->Region(y1,y2,"yr");	gr->Plot(y1,"k2");	gr->Plot(y2,"k2");
 	gr->SubPlot(2,2,2,"");	gr->Title("'!' style");	gr->Box();	gr->Region(y1,y2,"!");	gr->Plot(y1,"k2");	gr->Plot(y2,"k2");
 	gr->SubPlot(2,2,3,"");	gr->Title("'i' style");	gr->Box();	gr->Region(y1,y2,"ir");	gr->Plot(y1,"k2");	gr->Plot(y2,"k2");
@@ -1021,9 +1021,9 @@ void smgl_stem(mglGraph *gr)
 	mglData y;	mgls_prepare1d(&y);	gr->SetOrigin(0,0,0);
 	mglData yc(30), xc(30), z(30);	z.Modify("2*x-1");
 	yc.Modify("sin(pi*(2*x-1))");	xc.Modify("cos(pi*2*x-pi)");
-	if(!mini)	{	gr->SubPlot(2,2,0,"");	gr->Title("Stem plot (default)");	}
+	if(big!=3)	{	gr->SubPlot(2,2,0,"");	gr->Title("Stem plot (default)");	}
 	gr->Box();	gr->Stem(y);
-	if(mini)	return;
+	if(big==3)	return;
 	gr->SubPlot(2,2,1);	gr->Title("3d variant");	gr->Rotate(50,60);
 	gr->Box();	gr->Stem(xc,yc,z,"rx");
 	gr->SubPlot(2,2,2,"");	gr->Title("'!' style");	gr->Box();	gr->Stem(y,"o!rgb");
@@ -1037,9 +1037,9 @@ void smgl_step(mglGraph *gr)
 	mglData y;	mgls_prepare1d(&y);	gr->SetOrigin(0,0,0);
 	mglData yc(30), xc(30), z(30);	z.Modify("2*x-1");
 	yc.Modify("sin(pi*(2*x-1))");	xc.Modify("cos(pi*2*x-pi)");
-	if(!mini)	{	gr->SubPlot(2,2,0,"");	gr->Title("Step plot (default)");	}
+	if(big!=3)	{	gr->SubPlot(2,2,0,"");	gr->Title("Step plot (default)");	}
 	gr->Box();	gr->Step(y);
-	if(mini)	return;
+	if(big==3)	return;
 	gr->SubPlot(2,2,1);	gr->Title("3d variant");	gr->Rotate(50,60);
 	gr->Box();	gr->Step(xc,yc,z,"r");
 	gr->SubPlot(2,2,2,"");	gr->Title("'!' style");	gr->Box();	gr->Step(y,"s!rgb");
@@ -1049,7 +1049,7 @@ const char *mmgl_boxplot="new a 10 7 '(2*rnd-1)^3/2'\nsubplot 1 1 0 '':title 'Bo
 void smgl_boxplot(mglGraph *gr)	// flow threads and density plot
 {
 	mglData a(10,7);	a.Modify("(2*rnd-1)^3/2");
-	if(!mini)	{	gr->SubPlot(1,1,0,"");	gr->Title("Boxplot plot");	}
+	if(big!=3)	{	gr->SubPlot(1,1,0,"");	gr->Title("Boxplot plot");	}
 	gr->Box();	gr->BoxPlot(a);
 }
 //-----------------------------------------------------------------------------
@@ -1228,9 +1228,9 @@ void smgl_error(mglGraph *gr)
 		y0.a[i] = 0.7*sin(2*M_PI*x)+0.5*cos(3*M_PI*x)+0.2*sin(M_PI*x)+0.2*mgl_rnd()-0.1;
 		ey0.a[i]=0.2;	ex0.a[i]=0.1;
 	}
-	if(!mini)	{	gr->SubPlot(2,2,0,"");	gr->Title("Error plot (default)");	}
+	if(big!=3)	{	gr->SubPlot(2,2,0,"");	gr->Title("Error plot (default)");	}
 	gr->Box();	gr->Plot(y.SubData(-1,0));	gr->Error(x0,y0,ex0,ey0,"ko");
-	if(mini)	return;
+	if(big==3)	return;
 	gr->SubPlot(2,2,1,"");	gr->Title("'!' style; no e_x");
 	gr->Box();	gr->Plot(y.SubData(-1,0));	gr->Error(x0,y0,ey0,"o!rgb");
 	gr->SubPlot(2,2,2,"");	gr->Title("'\\@' style");	gr->Alpha(true);
@@ -1251,9 +1251,9 @@ const char *mmgl_chart="new ch 7 2 'rnd+0.1':light on\n"
 void smgl_chart(mglGraph *gr)
 {
 	mglData ch(7,2);	for(int i=0;i<7*2;i++)	ch.a[i]=mgl_rnd()+0.1;
-	if(!mini)	{	gr->SubPlot(2,2,0);	gr->Title("Chart plot (default)");	}
+	if(big!=3)	{	gr->SubPlot(2,2,0);	gr->Title("Chart plot (default)");	}
 	gr->Light(true);	gr->Rotate(50,60);	gr->Box();	gr->Chart(ch);
-	if(mini)	return;
+	if(big==3)	return;
 	gr->SubPlot(2,2,1);	gr->Title("'\\#' style");
 	gr->Rotate(50,60);	gr->Box();	gr->Chart(ch,"#");
 	gr->SubPlot(2,2,2);	gr->Title("Pie chart; ' ' color");
@@ -1268,7 +1268,7 @@ const char *mmgl_mark="call 'prepare1d'\nsubplot 1 1 0 '':title 'Mark plot (defa
 void smgl_mark(mglGraph *gr)
 {
 	mglData y,y1;	mgls_prepare1d(&y,&y1);
-	if(!mini)	{	gr->SubPlot(1,1,0,"");	gr->Title("Mark plot (default)");	}
+	if(big!=3)	{	gr->SubPlot(1,1,0,"");	gr->Title("Mark plot (default)");	}
 	gr->Box();	gr->Mark(y,y1,"s");
 }
 //-----------------------------------------------------------------------------
@@ -1277,7 +1277,7 @@ const char *mmgl_radar="new yr 10 3 '0.4*sin(pi*(x+1.5+y/2)+0.1*rnd)'\n"
 void smgl_radar(mglGraph *gr)
 {
 	mglData yr(10,3);	yr.Modify("0.4*sin(pi*(2*x+y))+0.1*rnd");
-	if(!mini)	{	gr->SubPlot(1,1,0,"");	gr->Title("Radar plot (with grid, '\\#')");	}
+	if(big!=3)	{	gr->SubPlot(1,1,0,"");	gr->Title("Radar plot (with grid, '\\#')");	}
 	gr->Radar(yr,"#");
 }
 //-----------------------------------------------------------------------------
@@ -1288,7 +1288,7 @@ void smgl_candle(mglGraph *gr)
 	mglData y(30);	gr->Fill(y,"sin(pi*x/2)^2");
 	mglData y1(30);	gr->Fill(y1,"v/2",y);
 	mglData y2(30);	gr->Fill(y2,"(1+v)/2",y);
-	if(!mini)	{	gr->SubPlot(1,1,0,"");	gr->Title("Candle plot (default)");	}
+	if(big!=3)	{	gr->SubPlot(1,1,0,"");	gr->Title("Candle plot (default)");	}
 	gr->SetRange('y',0,1);	gr->Box();	gr->Candle(y,y1,y2);
 }
 //-----------------------------------------------------------------------------
@@ -1296,7 +1296,7 @@ const char *mmgl_textmark="call 'prepare1d'\nsubplot 1 1 0 '':title 'TextMark pl
 void smgl_textmark(mglGraph *gr)
 {
 	mglData y,y1;	mgls_prepare1d(&y,&y1);
-	if(!mini)	{	gr->SubPlot(1,1,0,"");	gr->Title("TextMark plot (default)");	}
+	if(big!=3)	{	gr->SubPlot(1,1,0,"");	gr->Title("TextMark plot (default)");	}
 	gr->Box();	gr->TextMark(y,y1,"\\gamma","r");
 }
 //-----------------------------------------------------------------------------
@@ -1309,9 +1309,9 @@ const char *mmgl_tube="call 'prepare1d'\nlight on\n"
 void smgl_tube(mglGraph *gr)
 {
 	mglData y,y1,y2;	mgls_prepare1d(&y,&y1,&y2);	y1/=20;
-	if(!mini)	{	gr->SubPlot(2,2,0,"");	gr->Title("Tube plot (default)");	}
+	if(big!=3)	{	gr->SubPlot(2,2,0,"");	gr->Title("Tube plot (default)");	}
 	gr->Light(true);	gr->Box();	gr->Tube(y,0.05);
-	if(mini)	return;
+	if(big==3)	return;
 	gr->SubPlot(2,2,1,"");	gr->Title("variable radius");	gr->Box();	gr->Tube(y,y1);
 	gr->SubPlot(2,2,2,"");	gr->Title("'\\#' style");	gr->Box();	gr->Tube(y,0.05,"#");
 	mglData yc(50), xc(50), z(50);	z.Modify("2*x-1");
@@ -1333,9 +1333,9 @@ void smgl_tape(mglGraph *gr)
 	mglData xc(50), yc(50), z(50);
 	yc.Modify("sin(pi*(2*x-1))");
 	xc.Modify("cos(pi*2*x-pi)");	z.Fill(-1,1);
-	if(!mini)	{	gr->SubPlot(2,2,0,"");	gr->Title("Tape plot (default)");	}
+	if(big!=3)	{	gr->SubPlot(2,2,0,"");	gr->Title("Tape plot (default)");	}
 	gr->Box();	gr->Tape(y);	gr->Plot(y,"k");
-	if(mini)	return;
+	if(big==3)	return;
 	gr->SubPlot(2,2,1);	gr->Title("3d variant, 2 colors");	gr->Rotate(50,60);	gr->Light(true);
 	gr->Box();	gr->Plot(xc,yc,z,"k");	gr->Tape(xc,yc,z,"rg");
 	gr->SubPlot(2,2,2);	gr->Title("3d variant, x only");	gr->Rotate(50,60);
@@ -1344,13 +1344,13 @@ void smgl_tape(mglGraph *gr)
 	gr->Box();	gr->Plot(xc,yc,z,"k");	gr->Tape(xc,yc,z,"zg");	gr->Tape(xc,yc,z,"zg#");
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_fog="call 'prepare2d'\ntitle 'Fog sample':rotate 50 60:light on:fog 1\nbox:surf a\n";
+const char *mmgl_fog="call 'prepare2d'\ntitle 'Fog sample':rotate 50 60:light on:fog 1\nbox:surf a:cont a 'y'\n";
 void smgl_fog(mglGraph *gr)
 {
 	mglData a;	mgls_prepare2d(&a);
-	if(!mini)	gr->Title("Fog sample");
+	if(big!=3)	gr->Title("Fog sample");
 	gr->Light(true);	gr->Rotate(50,60);	gr->Fog(1);	gr->Box();
-	gr->Surf(a);
+	gr->Surf(a);	gr->Cont(a,"y");
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_map="new a 50 40 'x':new b 50 40 'y':zrange -2 2:text 0 0 '\\to'\n"
@@ -1407,7 +1407,7 @@ void smgl_qo2d(mglGraph *gr)
 	mglData r, xx, yy, a, im(128), re(128);
 	const char *ham = "p^2+q^2-x-1+i*0.5*(y+x)*(y>-x)";
 	r = mglRay(ham, mglPoint(-0.7, -1), mglPoint(0, 0.5), 0.02, 2);
-	if(!mini)	{gr->SubPlot(1,1,0,"<_");	gr->Title("Beam and ray tracing");}
+	if(big!=3)	{gr->SubPlot(1,1,0,"<_");	gr->Title("Beam and ray tracing");}
 	gr->Plot(r.SubData(0), r.SubData(1), "k");
 	gr->Axis();	gr->Label('x', "\\i x");	gr->Label('y', "\\i y");
 	// now start beam tracing
@@ -1432,7 +1432,7 @@ void smgl_pde(mglGraph *gr)	// PDE sample
 	gr->Fill(re,"exp(-48*(x+0.7)^2)");
 	a = gr->PDE("p^2+q^2-x-1+i*0.5*(z+x)*(z>-x)", re, im, 0.01, 30);
 	a.Transpose("yxz");
-	if(!mini)	{gr->SubPlot(1,1,0,"<_");	gr->Title("PDE solver");	}
+	if(big!=3)	{gr->SubPlot(1,1,0,"<_");	gr->Title("PDE solver");	}
 	gr->SetRange('c',0,1);	gr->Dens(a,"wyrRk");
 	gr->Axis();	gr->Label('x', "\\i x");	gr->Label('y', "\\i z");
 	gr->FPlot("-x", "k|");
@@ -1443,7 +1443,7 @@ const char *mmgl_conta="call 'prepare3d'\ntitle 'Cont3 sample':rotate 50 60:box\
 void smgl_conta(mglGraph *gr)
 {
 	mglData c;	mgls_prepare3d(&c);
-	if(!mini)	gr->Title("Cont3 sample");
+	if(big!=3)	gr->Title("Cont3 sample");
 	gr->Rotate(50,60);	gr->Box();
 	gr->Cont3(c,"x");	gr->Cont3(c);	gr->Cont3(c,"z");
 }
@@ -1453,7 +1453,7 @@ const char *mmgl_contfa="call 'prepare3d'\ntitle 'Cont3 sample':rotate 50 60:box
 void smgl_contfa(mglGraph *gr)
 {
 	mglData c;	mgls_prepare3d(&c);
-	if(!mini)	gr->Title("ContF3 sample");
+	if(big!=3)	gr->Title("ContF3 sample");
 	gr->Rotate(50,60);	gr->Light(true);	gr->Box();
 	gr->ContF3(c,"x");	gr->ContF3(c);		gr->ContF3(c,"z");
 	gr->Cont3(c,"kx");	gr->Cont3(c,"k");	gr->Cont3(c,"kz");
@@ -1464,7 +1464,7 @@ const char *mmgl_densa="call 'prepare3d'\ntitle 'Dens3 sample':rotate 50 60:alph
 void smgl_densa(mglGraph *gr)
 {
 	mglData c;	mgls_prepare3d(&c);
-	if(!mini)	gr->Title("Dens3 sample");
+	if(big!=3)	gr->Title("Dens3 sample");
 	gr->Rotate(50,60);	gr->Alpha(true);	gr->SetAlphaDef(0.7);
 	gr->SetOrigin(0,0,0);	gr->Axis("_xyz");	gr->Box();
 	gr->Dens3(c,"x");	gr->Dens3(c);	gr->Dens3(c,"z");
@@ -1475,7 +1475,7 @@ const char *mmgl_dens_xyz="call 'prepare3d'\ntitle 'Dens[XYZ] sample':rotate 50 
 void smgl_dens_xyz(mglGraph *gr)
 {
 	mglData c;	mgls_prepare3d(&c);
-	if(!mini)	gr->Title("Dens[XYZ] sample");
+	if(big!=3)	gr->Title("Dens[XYZ] sample");
 	gr->Rotate(50,60);	gr->Box();	gr->DensX(c.Sum("x"),0,-1);
 	gr->DensY(c.Sum("y"),0,1);		gr->DensZ(c.Sum("z"),0,-1);
 }
@@ -1485,7 +1485,7 @@ const char *mmgl_cont_xyz="call 'prepare3d'\ntitle 'Cont[XYZ] sample':rotate 50 
 void smgl_cont_xyz(mglGraph *gr)
 {
 	mglData c;	mgls_prepare3d(&c);
-	if(!mini)	gr->Title("Cont[XYZ] sample");
+	if(big!=3)	gr->Title("Cont[XYZ] sample");
 	gr->Rotate(50,60);	gr->Box();	gr->ContX(c.Sum("x"),"",-1);
 	gr->ContY(c.Sum("y"),"",1);		gr->ContZ(c.Sum("z"),"",-1);
 }
@@ -1495,7 +1495,7 @@ const char *mmgl_contf_xyz="call 'prepare3d'\ntitle 'ContF[XYZ] sample':rotate 5
 void smgl_contf_xyz(mglGraph *gr)
 {
 	mglData c;	mgls_prepare3d(&c);
-	if(!mini)	gr->Title("ContF[XYZ] sample");
+	if(big!=3)	gr->Title("ContF[XYZ] sample");
 	gr->Rotate(50,60);	gr->Box();	gr->ContFX(c.Sum("x"),"",-1);
 	gr->ContFY(c.Sum("y"),"",1);	gr->ContFZ(c.Sum("z"),"",-1);
 }
@@ -1507,10 +1507,10 @@ const char *mmgl_cloud="call 'prepare3d'\nsubplot 2 2 0:title 'Cloud plot':rotat
 void smgl_cloud(mglGraph *gr)
 {
 	mglData c;	mgls_prepare3d(&c);
-	if(!mini)	{	gr->SubPlot(2,2,0);	gr->Title("Cloud plot");	}
+	if(big!=3)	{	gr->SubPlot(2,2,0);	gr->Title("Cloud plot");	}
 	gr->Rotate(50,60);	gr->Alpha(true);
 	gr->Box();	gr->Cloud(c,"wyrRk");
-	if(mini)	return;
+	if(big==3)	return;
 	gr->SubPlot(2,2,1);	gr->Title("'i' style");
 	gr->Rotate(50,60);	gr->Box();	gr->Cloud(c,"iwyrRk");
 	gr->SubPlot(2,2,2);	gr->Title("'.' style");
@@ -1526,9 +1526,9 @@ const char *mmgl_cont="call 'prepare2d'\nlist v -0.5 -0.15 0 0.15 0.5\nsubplot 2
 void smgl_cont(mglGraph *gr)
 {
 	mglData a,v(5);	mgls_prepare2d(&a);	v.a[0]=-0.5;	v.a[1]=-0.15;	v.a[2]=0;	v.a[3]=0.15;	v.a[4]=0.5;
-	if(!mini)	{	gr->SubPlot(2,2,0);	gr->Title("Cont plot (default)");	}
+	if(big!=3)	{	gr->SubPlot(2,2,0);	gr->Title("Cont plot (default)");	}
 	gr->Rotate(50,60);	gr->Box();	gr->Cont(a);
-	if(mini)	return;
+	if(big==3)	return;
 	gr->SubPlot(2,2,1);	gr->Title("manual levels");
 	gr->Rotate(50,60);	gr->Box();	gr->Cont(v,a);
 	gr->SubPlot(2,2,2);	gr->Title("'\\_' style");
@@ -1549,9 +1549,9 @@ void smgl_contf(mglGraph *gr)
 	v.a[1]=-0.15;	v.a[2]=0;	v.a[3]=0.15;	v.a[4]=0.5;
 	gr->Fill(a1,"0.6*sin(2*pi*x+pi*(z+1)/2)*sin(3*pi*y+pi*z) + 0.4*cos(3*pi*(x*y)+pi*(z+1)^2/2)");
 
-	if(!mini)	{	gr->SubPlot(2,2,0);	gr->Title("ContF plot (default)");	}
+	if(big!=3)	{	gr->SubPlot(2,2,0);	gr->Title("ContF plot (default)");	}
 	gr->Rotate(50,60);	gr->Box();	gr->ContF(a);
-	if(mini)	return;
+	if(big==3)	return;
 	gr->SubPlot(2,2,1);	gr->Title("manual levels");
 	gr->Rotate(50,60);	gr->Box();	gr->ContF(v,a);
 	gr->SubPlot(2,2,2);	gr->Title("'\\_' style");
@@ -1572,9 +1572,9 @@ void smgl_contd(mglGraph *gr)
 	v.a[1]=-0.15;	v.a[2]=0;	v.a[3]=0.15;	v.a[4]=0.5;
 	gr->Fill(a1,"0.6*sin(2*pi*x+pi*(z+1)/2)*sin(3*pi*y+pi*z) + 0.4*cos(3*pi*(x*y)+pi*(z+1)^2/2)");
 
-	if(!mini)	{	gr->SubPlot(2,2,0);	gr->Title("ContD plot (default)");	}
+	if(big!=3)	{	gr->SubPlot(2,2,0);	gr->Title("ContD plot (default)");	}
 	gr->Rotate(50,60);	gr->Box();	gr->ContD(a);
-	if(mini)	return;
+	if(big==3)	return;
 	gr->SubPlot(2,2,1);	gr->Title("manual levels");
 	gr->Rotate(50,60);	gr->Box();	gr->ContD(v,a);
 	gr->SubPlot(2,2,2);	gr->Title("'\\_' style");
@@ -1592,9 +1592,9 @@ void smgl_contv(mglGraph *gr)
 {
 	mglData a,v(5);	mgls_prepare2d(&a);	v.a[0]=-0.5;
 	v.a[1]=-0.15;	v.a[2]=0;	v.a[3]=0.15;	v.a[4]=0.5;
-	if(!mini)	{	gr->SubPlot(2,2,0);	gr->Title("ContV plot (default)");	}
+	if(big!=3)	{	gr->SubPlot(2,2,0);	gr->Title("ContV plot (default)");	}
 	gr->Rotate(50,60);	gr->Box();	gr->ContV(a);
-	if(mini)	return;
+	if(big==3)	return;
 	gr->SubPlot(2,2,1);	gr->Title("manual levels");
 	gr->Rotate(50,60);	gr->Box();	gr->ContV(v,a);
 	gr->SubPlot(2,2,2);	gr->Title("'\\_' style");
@@ -1611,9 +1611,9 @@ const char *mmgl_torus="call 'prepare1d'\nsubplot 2 2 0:title 'Torus plot (defau
 void smgl_torus(mglGraph *gr)
 {
 	mglData y1,y2;	mgls_prepare1d(0,&y1,&y2);
-	if(!mini)	{	gr->SubPlot(2,2,0);	gr->Title("Torus plot (default)");	}
+	if(big!=3)	{	gr->SubPlot(2,2,0);	gr->Title("Torus plot (default)");	}
 	gr->Light(true);	gr->Rotate(50,60);	gr->Box();	gr->Torus(y1,y2);
-	if(mini)	return;
+	if(big==3)	return;
 	gr->SubPlot(2,2,1);	gr->Title("'x' style");	gr->Rotate(50,60);	gr->Box();	gr->Torus(y1,y2,"x");
 	gr->SubPlot(2,2,2);	gr->Title("'z' style");	gr->Rotate(50,60);	gr->Box();	gr->Torus(y1,y2,"z");
 	gr->SubPlot(2,2,3);	gr->Title("'\\#' style");	gr->Rotate(50,60);	gr->Box();	gr->Torus(y1,y2,"#");
@@ -1626,9 +1626,9 @@ const char *mmgl_axial="call 'prepare2d'\nsubplot 2 2 0:title 'Axial plot (defau
 void smgl_axial(mglGraph *gr)
 {
 	mglData a;	mgls_prepare2d(&a);
-	if(!mini)	{	gr->SubPlot(2,2,0);	gr->Title("Axial plot (default)");	}
+	if(big!=3)	{	gr->SubPlot(2,2,0);	gr->Title("Axial plot (default)");	}
 	gr->Light(true);	gr->Alpha(true);	gr->Rotate(50,60);	gr->Box();	gr->Axial(a);
-	if(mini)	return;
+	if(big==3)	return;
 	gr->SubPlot(2,2,1);	gr->Title("'x' style; '.'style");	gr->Rotate(50,60);	gr->Box();	gr->Axial(a,"x.");
 	gr->SubPlot(2,2,2);	gr->Title("'z' style");	gr->Rotate(50,60);	gr->Box();	gr->Axial(a,"z");
 	gr->SubPlot(2,2,3);	gr->Title("'\\#' style");	gr->Rotate(50,60);	gr->Box();	gr->Axial(a,"#");
@@ -1639,7 +1639,7 @@ const char *mmgl_several_light="call 'prepare2d'\ntitle 'Several light sources':
 void smgl_several_light(mglGraph *gr)	// several light sources
 {
 	mglData a;	mgls_prepare2d(&a);
-	if(!mini)	gr->Title("Several light sources");
+	if(big!=3)	gr->Title("Several light sources");
 	gr->Rotate(50,60);	gr->Light(true);	gr->AddLight(1,mglPoint(0,1,0),'c');
 	gr->AddLight(2,mglPoint(1,0,0),'y');	gr->AddLight(3,mglPoint(0,-1,0),'m');
 	gr->Box();	gr->Surf(a,"h");
@@ -1681,10 +1681,10 @@ const char *mmgl_surf3="call 'prepare3d'\nlight on:alpha on\n"
 void smgl_surf3(mglGraph *gr)
 {
 	mglData c;	mgls_prepare3d(&c);
-	if(!mini)	{	gr->SubPlot(2,2,0);	gr->Title("Surf3 plot (default)");	}
+	if(big!=3)	{	gr->SubPlot(2,2,0);	gr->Title("Surf3 plot (default)");	}
 	gr->Rotate(50,60);	gr->Light(true);	gr->Alpha(true);
 	gr->Box();	gr->Surf3(c);
-	if(mini)	return;
+	if(big==3)	return;
 	gr->SubPlot(2,2,1);	gr->Title("'\\#' style");
 	gr->Rotate(50,60);	gr->Box();	gr->Surf3(c,"#");
 	gr->SubPlot(2,2,2);	gr->Title("'.' style");
@@ -1695,7 +1695,7 @@ const char *mmgl_surf3a="call 'prepare3d'\ntitle 'Surf3A plot':rotate 50 60:ligh
 void smgl_surf3a(mglGraph *gr)
 {
 	mglData c,d;	mgls_prepare3d(&c,&d);
-	if(!mini)	gr->Title("Surf3A plot");
+	if(big!=3)	gr->Title("Surf3A plot");
 	gr->Rotate(50,60);	gr->Light(true);	gr->Alpha(true);
 	gr->Box();	gr->Surf3A(c,d);
 }
@@ -1704,7 +1704,7 @@ const char *mmgl_surf3c="call 'prepare3d'\ntitle 'Surf3C plot':rotate 50 60:ligh
 void smgl_surf3c(mglGraph *gr)
 {
 	mglData c,d;	mgls_prepare3d(&c,&d);
-	if(!mini)	gr->Title("Surf3C plot");
+	if(big!=3)	gr->Title("Surf3C plot");
 	gr->Rotate(50,60);	gr->Light(true);	gr->Alpha(true);
 	gr->Box();	gr->Surf3C(c,d);
 }
@@ -1733,7 +1733,7 @@ const char *mmgl_traj="call 'prepare1d'\nsubplot 1 1 0 '':title 'Traj plot':box:
 void smgl_traj(mglGraph *gr)
 {
 	mglData x,y,y1,y2;	mgls_prepare1d(&y,&y1,&y2,&x);
-	if(!mini)	{gr->SubPlot(1,1,0,"");	gr->Title("Traj plot");}
+	if(big!=3)	{gr->SubPlot(1,1,0,"");	gr->Title("Traj plot");}
 	gr->Box();	gr->Plot(x,y);	gr->Traj(x,y,y1,y2);
 }
 //-----------------------------------------------------------------------------
@@ -1741,7 +1741,7 @@ const char *mmgl_mesh="call 'prepare2d'\ntitle 'Mesh plot':rotate 50 60:box:mesh
 void smgl_mesh(mglGraph *gr)
 {
 	mglData a;	mgls_prepare2d(&a);
-	if(!mini)	gr->Title("Mesh plot");
+	if(big!=3)	gr->Title("Mesh plot");
 	gr->Rotate(50,60);	gr->Box();	gr->Mesh(a);
 }
 //-----------------------------------------------------------------------------
@@ -1749,7 +1749,7 @@ const char *mmgl_fall="call 'prepare2d'\ntitle 'Fall plot':rotate 50 60:box:fall
 void smgl_fall(mglGraph *gr)
 {
 	mglData a;	mgls_prepare2d(&a);
-	if(!mini)	gr->Title("Fall plot");
+	if(big!=3)	gr->Title("Fall plot");
 	gr->Rotate(50,60);	gr->Box();	gr->Fall(a);
 }
 //-----------------------------------------------------------------------------
@@ -1761,9 +1761,9 @@ const char *mmgl_surf="call 'prepare2d'\nsubplot 2 2 0:title 'Surf plot (default
 void smgl_surf(mglGraph *gr)
 {
 	mglData a;	mgls_prepare2d(&a);
-	if(!mini)	{	gr->SubPlot(2,2,0);	gr->Title("Surf plot (default)");	}
+	if(big!=3)	{	gr->SubPlot(2,2,0);	gr->Title("Surf plot (default)");	}
 	gr->Light(true);	gr->Rotate(50,60);	gr->Box();	gr->Surf(a);
-	if(mini)	return;
+	if(big==3)	return;
 	gr->SubPlot(2,2,1);	gr->Title("'\\#' style; meshnum 10");
 	gr->Rotate(50,60);	gr->Box();	gr->Surf(a,"#","meshnum 10");
 	gr->SubPlot(2,2,2);	gr->Title("'.' style");
@@ -1803,7 +1803,7 @@ const char *mmgl_belt="call 'prepare2d'\ntitle 'Belt plot':rotate 50 60:box:belt
 void smgl_belt(mglGraph *gr)
 {
 	mglData a;	mgls_prepare2d(&a);
-	if(!mini)	gr->Title("Belt plot");
+	if(big!=3)	gr->Title("Belt plot");
 	gr->Rotate(50,60);	gr->Box();	gr->Belt(a);
 }
 //-----------------------------------------------------------------------------
@@ -1816,9 +1816,9 @@ void smgl_dens(mglGraph *gr)
 {
 	mglData a,a1(30,40,3);	mgls_prepare2d(&a);
 	gr->Fill(a1,"0.6*sin(2*pi*x+pi*(z+1)/2)*sin(3*pi*y+pi*z) + 0.4*cos(3*pi*(x*y)+pi*(z+1)^2/2)");
-	if(!mini)	{gr->SubPlot(2,2,0,"");	gr->Title("Dens plot (default)");}
+	if(big!=3)	{gr->SubPlot(2,2,0,"");	gr->Title("Dens plot (default)");}
 	gr->Box();	gr->Dens(a);
-	if(mini)	return;
+	if(big==3)	return;
 	gr->SubPlot(2,2,1);	gr->Title("3d variant");
 	gr->Rotate(50,60);	gr->Box();	gr->Dens(a);
 	gr->SubPlot(2,2,2,"");	gr->Title("'\\#' style; meshnum 10");
@@ -1831,7 +1831,7 @@ const char *mmgl_surfc="call 'prepare2d'\ntitle 'SurfC plot':rotate 50 60:light 
 void smgl_surfc(mglGraph *gr)
 {
 	mglData a,b;	mgls_prepare2d(&a,&b);
-	if(!mini)	gr->Title("SurfC plot");	gr->Rotate(50,60);
+	if(big!=3)	gr->Title("SurfC plot");	gr->Rotate(50,60);
 	gr->Light(true);	gr->Box();	gr->SurfC(a,b);
 }
 //-----------------------------------------------------------------------------
@@ -1839,7 +1839,7 @@ const char *mmgl_surfa="call 'prepare2d'\ntitle 'SurfA plot':rotate 50 60:light 
 void smgl_surfa(mglGraph *gr)
 {
 	mglData a,b;	mgls_prepare2d(&a,&b);
-	if(!mini)	gr->Title("SurfA plot");	gr->Rotate(50,60);
+	if(big!=3)	gr->Title("SurfA plot");	gr->Rotate(50,60);
 	gr->Alpha(true);	gr->Light(true);	gr->Box();	gr->SurfA(a,b);
 }
 //-----------------------------------------------------------------------------
@@ -1847,7 +1847,7 @@ const char *mmgl_tile="call 'prepare2d'\ntitle 'Tile plot':rotate 50 60:box:tile
 void smgl_tile(mglGraph *gr)
 {
 	mglData a;	mgls_prepare2d(&a);
-	if(!mini)	gr->Title("Tile plot");
+	if(big!=3)	gr->Title("Tile plot");
 	gr->Rotate(40,60);	gr->Box();	gr->Tile(a);
 }
 //-----------------------------------------------------------------------------
@@ -1855,7 +1855,7 @@ const char *mmgl_tiles="call 'prepare2d'\nsubplot 1 1 0 '':title 'Tiles plot':bo
 void smgl_tiles(mglGraph *gr)
 {
 	mglData a,b;	mgls_prepare2d(&a,&b);
-	if(!mini)	{gr->SubPlot(1,1,0,"");	gr->Title("TileS plot");}
+	if(big!=3)	{gr->SubPlot(1,1,0,"");	gr->Title("TileS plot");}
 	gr->Box();	gr->TileS(a,b);
 }
 //-----------------------------------------------------------------------------
@@ -1867,9 +1867,9 @@ void smgl_boxs(mglGraph *gr)
 {
 	mglData a;	mgls_prepare2d(&a);
 	gr->SetOrigin(0,0,0);	gr->Light(true);
-	if(!mini)	{gr->SubPlot(2,2,0);	gr->Title("Boxs plot (default)");}
+	if(big!=3)	{gr->SubPlot(2,2,0);	gr->Title("Boxs plot (default)");}
 	gr->Rotate(40,60);	gr->Box();	gr->Boxs(a);
-	if(mini)	return;
+	if(big==3)	return;
 	gr->SubPlot(2,2,1);	gr->Title("'\\@' style");
 	gr->Rotate(50,60);	gr->Box();	gr->Boxs(a,"@");
 	gr->SubPlot(2,2,2);	gr->Title("'\\#' style");
@@ -1891,7 +1891,7 @@ void smgl_fit(mglGraph *gr)	// nonlinear fitting
 	double ini[3] = {1,1,3};
 	mglData Ini(3,ini);
 	res = gr->Fit(rnd, "a+b*sin(c*x)", "abc", Ini);
-	if(!mini)	gr->Title("Fitting sample");
+	if(big!=3)	gr->Title("Fitting sample");
 	gr->SetRange('y',-2,2);	gr->Box();	gr->Plot(rnd, ". ");
 	gr->Axis();		gr->Plot(res, "r");	gr->Plot(in, "b");
 	gr->Puts(mglPoint(-0.9, -1.3), "fitted:", "r:L");
@@ -1908,10 +1908,10 @@ const char *mmgl_vecta="call 'prepare3v'\nsubplot 2 1 0:title 'Vect3 sample':rot
 void smgl_vecta(mglGraph *gr)
 {
 	mglData ex,ey,ez;	mgls_prepare3v(&ex,&ey,&ez);
-	if(!mini)	{	gr->SubPlot(2,1,0);	gr->Title("Vect3 sample");	}
+	if(big!=3)	{	gr->SubPlot(2,1,0);	gr->Title("Vect3 sample");	}
 	gr->Rotate(50,60);	gr->SetOrigin(0,0,0);	gr->Axis("_xyz");	gr->Box();
 	gr->Vect3(ex,ey,ez,"x");	gr->Vect3(ex,ey,ez);	gr->Vect3(ex,ey,ez,"z");
-	if(mini)	return;
+	if(big==3)	return;
 	gr->SubPlot(2,1,1);	gr->Title("'f' style");
 	gr->Rotate(50,60);	gr->SetOrigin(0,0,0);	gr->Axis("_xyz");	gr->Box();
 	gr->Vect3(ex,ey,ez,"fx");	gr->Vect3(ex,ey,ez,"f");	gr->Vect3(ex,ey,ez,"fz");
@@ -1927,9 +1927,9 @@ const char *mmgl_vect="call 'prepare2v'\ncall 'prepare3v'\nsubplot 3 2 0 '':titl
 void smgl_vect(mglGraph *gr)
 {
 	mglData a,b;	mgls_prepare2v(&a,&b);
-	if(!mini)	{gr->SubPlot(3,2,0,"");	gr->Title("Vect plot (default)");}
+	if(big!=3)	{gr->SubPlot(3,2,0,"");	gr->Title("Vect plot (default)");}
 	gr->Box();	gr->Vect(a,b);
-	if(mini)	return;
+	if(big==3)	return;
 	gr->SubPlot(3,2,1,"");	gr->Title("'.' style; '=' style");	gr->Box();	gr->Vect(a,b,"=.");
 	gr->SubPlot(3,2,2,"");	gr->Title("'f' style");	gr->Box();	gr->Vect(a,b,"f");
 	gr->SubPlot(3,2,3,"");	gr->Title("'>' style");	gr->Box();	gr->Vect(a,b,">");
@@ -1946,9 +1946,9 @@ const char *mmgl_flow="call 'prepare2v'\ncall 'prepare3v'\nsubplot 2 2 0 '':titl
 void smgl_flow(mglGraph *gr)
 {
 	mglData a,b;	mgls_prepare2v(&a,&b);
-	if(!mini)	{gr->SubPlot(2,2,0,"");	gr->Title("Flow plot (default)");}
+	if(big!=3)	{gr->SubPlot(2,2,0,"");	gr->Title("Flow plot (default)");}
 	gr->Box();	gr->Flow(a,b);
-	if(mini)	return;
+	if(big==3)	return;
 	gr->SubPlot(2,2,1,"");	gr->Title("'v' style");	gr->Box();	gr->Flow(a,b,"v");
 	gr->SubPlot(2,2,2,"");	gr->Title("'\\#' style");	gr->Box();	gr->Flow(a,b,"#");
 	mglData ex,ey,ez;	mgls_prepare3v(&ex,&ey,&ez);
@@ -1963,9 +1963,9 @@ const char *mmgl_pipe="call 'prepare2v'\ncall 'prepare3v'\nsubplot 2 2 0 '':titl
 void smgl_pipe(mglGraph *gr)
 {
 	mglData a,b;	mgls_prepare2v(&a,&b);
-	if(!mini)	{gr->SubPlot(2,2,0,"");	gr->Title("Pipe plot (default)");}
+	if(big!=3)	{gr->SubPlot(2,2,0,"");	gr->Title("Pipe plot (default)");}
 	gr->Light(true);	gr->Box();	gr->Pipe(a,b);
-	if(mini)	return;
+	if(big==3)	return;
 	gr->SubPlot(2,2,1,"");	gr->Title("'i' style");	gr->Box();	gr->Pipe(a,b,"i");
 	gr->SubPlot(2,2,2,"");	gr->Title("'\\#' style");	gr->Box();	gr->Pipe(a,b,"#");
 	mglData ex,ey,ez;	mgls_prepare3v(&ex,&ey,&ez);
@@ -1977,7 +1977,7 @@ const char *mmgl_dew="call 'prepare2v'\nsubplot 1 1 0 '':title 'Dew plot':light 
 void smgl_dew(mglGraph *gr)
 {
 	mglData a,b;	mgls_prepare2v(&a,&b);
-	if(!mini)	{gr->SubPlot(1,1,0,"");	gr->Title("Dew plot");}
+	if(big!=3)	{gr->SubPlot(1,1,0,"");	gr->Title("Dew plot");}
 	gr->Box();	gr->Light(true);	gr->Dew(a,b);
 }
 //-----------------------------------------------------------------------------
@@ -1985,7 +1985,7 @@ const char *mmgl_grad="call 'prepare2d'\nsubplot 1 1 0 '':title 'Grad plot':box:
 void smgl_grad(mglGraph *gr)
 {
 	mglData a;	mgls_prepare2d(&a);
-	if(!mini)	{gr->SubPlot(1,1,0,"");	gr->Title("Grad plot");}
+	if(big!=3)	{gr->SubPlot(1,1,0,"");	gr->Title("Grad plot");}
 	gr->Box();	gr->Grad(a);	gr->Dens(a,"{u8}w{q8}");
 }
 //-----------------------------------------------------------------------------
@@ -2000,9 +2000,9 @@ void smgl_cones(mglGraph *gr)
 {
 	mglData ys(10,3);	ys.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
 	gr->Light(true);	gr->SetOrigin(0,0,0);
-	if(!mini)	{	gr->SubPlot(3,2,0);	gr->Title("Cones plot");	}
+	if(big!=3)	{	gr->SubPlot(3,2,0);	gr->Title("Cones plot");	}
 	gr->Rotate(50,60);	gr->Box();	gr->Cones(ys);
-	if(mini)	return;
+	if(big==3)	return;
 	gr->SubPlot(3,2,1);	gr->Title("2 colors");
 	gr->Rotate(50,60);	gr->Box();	gr->Cones(ys,"cbgGyr");
 	gr->SubPlot(3,2,2);	gr->Title("'\\#' style");
@@ -2292,9 +2292,9 @@ const char *mmgl_table="new ys 10 3 '0.8*sin(pi*(x+y/4+1.25))+0.2*rnd'\n"
 void smgl_table(mglGraph *gr)
 {
 	mglData ys(10,3);	ys.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
-	if(!mini)	{	gr->SubPlot(2,2,0);	gr->Title("Table plot");	}
+	if(big!=3)	{	gr->SubPlot(2,2,0);	gr->Title("Table plot");	}
 	gr->Table(ys,"y_1\ny_2\ny_3");	gr->Box();
-	if(mini)	return;
+	if(big==3)	return;
 	gr->SubPlot(2,2,1);	gr->Title("no borders, colored");
 	gr->Table(ys,"y_1\ny_2\ny_3","r|");
 	gr->SubPlot(2,2,2);	gr->Title("no font decrease");
@@ -2308,7 +2308,7 @@ const char *mmgl_label="new ys 10 '0.2*rnd-0.8*sin(pi*x)'\n"
 void smgl_label(mglGraph *gr)
 {
 	mglData ys(10);	ys.Modify("0.8*sin(pi*2*x)+0.2*rnd");
-	if(!mini)	{	gr->SubPlot(1,1,0,"");	gr->Title("Label plot");	}
+	if(big!=3)	{	gr->SubPlot(1,1,0,"");	gr->Title("Label plot");	}
 	gr->Box();	gr->Plot(ys," *");	gr->Label(ys,"y=%y");
 }
 //-----------------------------------------------------------------------------
@@ -2360,9 +2360,9 @@ void smgl_legend(mglGraph *gr)
 	gr->AddLegend("sin(\\pi \\sqrt{x})","rd");
 	gr->AddLegend("just text"," ");
 	gr->AddLegend("no indent for this","");
-	if(!mini)	{gr->SubPlot(2,2,0,"");	gr->Title("Legend (default)");}
+	if(big!=3)	{gr->SubPlot(2,2,0,"");	gr->Title("Legend (default)");}
 	gr->Box();	gr->Legend();
-	if(mini)	return;
+	if(big==3)	return;
 	gr->Legend(3,"A#");
 	gr->Puts(mglPoint(0.75,0.65),"Absolute position","A");
 	gr->SubPlot(2,2,2,"");	gr->Title("coloring");	gr->Box();
@@ -2504,7 +2504,7 @@ void smgl_projection(mglGraph *gr)	// flag #
 	rx.Modify("rnd"); ry.Modify("(1-v)*rnd",rx);
 	z.Modify("x");
 
-	if(!mini)	gr->Title("Projection sample");
+	if(big!=3)	gr->Title("Projection sample");
 	gr->Ternary(4);
 	gr->Rotate(50,60);		gr->Light(true);
 	gr->Plot(x,y,z,"r2");	gr->Surf(a,"#");
@@ -2527,7 +2527,7 @@ void smgl_projection5(mglGraph *gr)	// flag #
 	rx.Modify("rnd"); ry.Modify("(1-v)*rnd",rx);
 	z.Modify("x");
 
-	if(!mini)	gr->Title("Projection sample (ternary)");
+	if(big!=3)	gr->Title("Projection sample (ternary)");
 	gr->Ternary(5);
 	gr->Rotate(50,60);		gr->Light(true);
 	gr->Plot(x,y,z,"r2");	gr->Surf(a,"#");
@@ -2586,7 +2586,7 @@ void smgl_dots(mglGraph *gr)
 		y.a[i] = 0.9*cos(t)*sin(f);
 		z.a[i] = 0.6*sin(t);
 	}
-	if(!mini)	gr->Title("Dots sample");
+	if(big!=3)	gr->Title("Dots sample");
 	gr->Rotate(50,60);	gr->Box();	gr->Dots(x,y,z);
 }
 //-----------------------------------------------------------------------------
@@ -2612,11 +2612,11 @@ void smgl_mirror(mglGraph *gr)	// flag #
 	mglData a(31,41);
 	gr->Fill(a,"-pi*x*exp(-(y+1)^2-4*x^2)");
 
-	if(!mini)	{	gr->SubPlot(2,2,0);	gr->Title("Options for coordinates");	}
+	if(big!=3)	{	gr->SubPlot(2,2,0);	gr->Title("Options for coordinates");	}
 	gr->Alpha(true);	gr->Light(true);
 	gr->Rotate(40,60);	gr->Box();
 	gr->Surf(a,"r","yrange 0 1"); gr->Surf(a,"b","yrange 0 -1");
-	if(mini)	return;
+	if(big==3)	return;
 	gr->SubPlot(2,2,1);	gr->Title("Option 'meshnum'");
 	gr->Rotate(40,60);	gr->Box();
 	gr->Mesh(a,"r","yrange 0 1"); gr->Mesh(a,"b","yrange 0 -1; meshnum 5");

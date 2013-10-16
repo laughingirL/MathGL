@@ -1,6 +1,7 @@
 
 @c ------------------------------------------------------------------
 @chapter MGL scripts
+@nav{}
 
 MathGL library supports the simplest scripts for data handling and plotting. These scripts can be used independently (with the help of UDAV, mglconv, mglview programs and others
 @ifclear UDAV
@@ -27,6 +28,7 @@ MathGL library supports the simplest scripts for data handling and plotting. The
 @external{}
 @node MGL definition, Program flow commands, , MGL scripts
 @section MGL definition
+@nav{}
 
 MGL script language is rather simple. Each string is a command. First word of string is the name of command. Other words are command arguments. Command may have up to 1000 arguments (at least for now). Words are separated from each other by space or tabulation symbol. The upper or lower case of words is important, i.e. variables @var{a} and @var{A} are different variables. Symbol @samp{#} starts the comment (all characters after # will be ignored). The exception is situation when @samp{#} is a part of some string. Also options can be specified after symbol @samp{;} (@pxref{Command options}). Symbol @samp{:} starts new command (like new line character) if it is not placed inside a string or inside brackets.
 
@@ -69,6 +71,7 @@ Command may have several set of possible arguments (for example, @code{plot ydat
 @external{}
 @node Program flow commands, MGL definition, MGL scripts
 @section Program flow commands
+@nav{}
 
 Below I show commands to control program flow, like, conditions, loops, define script arguments and so on. Other commands can be found in chapters @ref{MathGL core} and @ref{Data processing}. Note, that some of program flow commands (like @ref{define}, @ref{ask}, @ref{call}, @ref{for}, @ref{func}) should be placed alone in the string.
 
@@ -181,7 +184,8 @@ Terminate execution.
 @c ------------------------------------------------------------------
 @external{}
 @node mglParse class, , Program flow commands, MGL scripts
-@section Класс mglParse
+@section mglParse class
+@nav{}
 @cindex mglParse
 
 Class for parsing and executing MGL script. This class is defined in @code{#include <mgl2/mgl.h>}.

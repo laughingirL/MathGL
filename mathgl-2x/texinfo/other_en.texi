@@ -1,6 +1,6 @@
-
 @c ------------------------------------------------------------------
 @chapter Other classes
+@nav{}
 
 There are few end-user classes: @code{mglGraph} (see @ref{MathGL core}), @code{mglWindow} and @code{mglGLUT} (see @ref{Widget classes}), @code{mglData} (see @ref{Data processing}), @code{mglParse} (see @ref{MGL scripts}). Exactly these classes I recommend to use in most of user programs. All methods in all of these classes are inline and have exact C/Fortran analogue functions. This give compiler independent binary libraries for MathGL.
 
@@ -24,6 +24,7 @@ Below I show how this internal classes can be used.
 @external{}
 @node mglBase class, mglDataA class, , Other classes
 @section Define new kind of plot (mglBase class)
+@nav{}
 
 Basically most of new kinds of plot can be created using just MathGL primitives (see @ref{Primitives}). However the usage of @code{mglBase} methods can give you higher speed of drawing and better control of plot settings. 
 
@@ -328,6 +329,7 @@ int main()
 @external{}
 @node mglDataA class, mglColor class, mglBase class, Other classes
 @section User defined types (mglDataA class)
+@nav{}
 
 @code{mglData} class have abstract predecessor class @code{mglDataA}. Exactly the pointers to @code{mglDataA} instances are used in all plotting functions and some of data processing functions. This was done for taking possibility to define yours own class, which will handle yours own data (for example, complex numbers, or differently organized data). And this new class will be almost the same as @code{mglData} for plotting purposes.
 
@@ -416,6 +418,7 @@ int main()
 @external{}
 @node mglColor class, mglPoint class, mglDataA class, Other classes
 @section mglColor class
+@nav{}
 @cindex mglColor
 
 Structure for working with colors. This structure is defined in @code{#include <mgl2/type.h>}.
@@ -486,6 +489,7 @@ Return inverted color.
 @external{}
 @node mglPoint class, , mglColor class, Other classes
 @section mglPoint class
+@nav{}
 @cindex mglPoint
 
 Structure describes point in space. This structure is defined in @code{#include <mgl2/type.h>}

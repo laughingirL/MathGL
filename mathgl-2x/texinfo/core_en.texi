@@ -1,5 +1,6 @@
 @c ------------------------------------------------------------------
 @chapter MathGL core
+@nav{}
 @cindex mglGraph
 
 @ifset UDAV
@@ -35,6 +36,7 @@ The core of MathGL is @strong{mglGraph} class defined in @code{#include <mgl2/mg
 @external{}
 @node Constructor, Graphics setup, , MathGL core
 @section Create and delete objects
+@nav{}
 
 @ifclear UDAV
 @deftypefn {Constructor on @code{mglGraph}} {} mglGraph (@code{int} kind=@code{0}, @code{int} width=@code{600}, @code{int} height=@code{400})
@@ -63,6 +65,7 @@ You don't need to create canvas object in MGL.
 @external{}
 @node Graphics setup, Axis settings, Constructor, MathGL core
 @section Graphics setup
+@nav{}
 @cindex MathGL setup
 
 Functions and variables in this group influences on overall graphics appearance. So all of them should be placed @emph{before} any actual plotting function calls.
@@ -87,9 +90,10 @@ Restore initial values for all of parameters.
 @end menu
 
 @c ==================================================================
-@comment  @external{}
+@external{}
 @node Transparency, Lighting, , Graphics setup
 @subsection Transparency
+@nav{}
 @cindex Alpha
 @ifclear UDAV
 @cindex SetAlphaDef
@@ -137,9 +141,10 @@ Lamp-like transparency (@samp{2}) -- below and upper things are commutable and a
 @end deftypefn
 
 @c ==================================================================
-@comment  @external{}
+@external{}
 @node Lighting, Fog, Transparency, Graphics setup
 @subsection Lighting
+@nav{}
 @ifclear UDAV
 @cindex SetAmbient
 @cindex AddLight
@@ -197,9 +202,10 @@ Sets the brightness of ambient light. The value should be in range [0,1].
 @end deftypefn
 
 @c ==================================================================
-@comment  @external{}
+@external{}
 @node Fog, Default sizes, Lighting, Graphics setup
 @subsection Fog
+@nav{}
 @cindex Fog
 
 @anchor{fog}
@@ -212,9 +218,10 @@ Function imitate a fog in the plot. Fog start from relative distance @var{dz} fr
 @end deftypefn
 
 @c ==================================================================
-@comment  @external{}
+@external{}
 @node Default sizes, Cutting, Fog, Graphics setup
 @subsection Default sizes
+@nav{}
 @ifclear UDAV
 @cindex SetBarWidth
 @cindex SetMarkSize
@@ -292,9 +299,10 @@ Gets default name @var{id} as filename for saving (in FLTK window for example).
 @end ifclear
 
 @c ==================================================================
-@comment  @external{}
+@external{}
 @node Cutting, Font settings, Default sizes, Graphics setup
 @subsection Cutting
+@nav{}
 @ifclear UDAV
 @cindex SetCut
 @cindex SetCutBox
@@ -330,9 +338,10 @@ Sets the cutting off condition by formula @var{cond}. This condition determine w
 @end deftypefn
 
 @c ==================================================================
-@comment  @external{}
+@external{}
 @node Font settings, Palette and colors, Cutting, Graphics setup
 @subsection Font settings
+@nav{}
 @ifclear UDAV
 @cindex SetFontSize
 @cindex SetFontDef
@@ -406,16 +415,17 @@ Copy font data from another @code{mglGraph} object.
 Restore font data to default typeface.
 @end deftypefn
 
-@deftypefn {Функция С} @code{void} mgl_def_font (@code{const char *}name, @code{const char *}path)
+@deftypefn {C function} @code{void} mgl_def_font (@code{const char *}name, @code{const char *}path)
 Load default font typeface (for all newly created HMGL/mglGraph objects) from @var{path}/@var{name}.
 @end deftypefn
 
 @end ifclear
 
 @c ==================================================================
-@comment  @external{}
+@external{}
 @node Palette and colors, Masks, Font settings, Graphics setup
 @subsection Palette and colors
+@nav{}
 @ifclear UDAV
 @cindex SetPalette
 @end ifclear
@@ -444,9 +454,10 @@ Sets RGB values for color with given @var{id}. This is global setting which infl
 
 
 @c ==================================================================
-@comment  @external{}
+@external{}
 @node Masks, Error handling, Palette and colors, Graphics setup
 @subsection Masks
+@nav{}
 @cindex SetMask
 @cindex SetMaskAngle
 
@@ -471,9 +482,10 @@ Sets the default rotation angle (in degrees) for masks. Note, you can use symbol
 
 
 @c ==================================================================
-@comment  @external{}
+@external{}
 @node Error handling, , Masks, Graphics setup
 @subsection Error handling
+@nav{}
 @ifclear UDAV
 @cindex Message
 @cindex SetWarn
@@ -545,6 +557,7 @@ Unbalanced ' in MGL script
 @external{}
 @node Axis settings, Subplots and rotation, Graphics setup, MathGL core
 @section Axis settings
+@nav{}
 
 These large set of variables and functions control how the axis and ticks will be drawn. Note that there is 3-step transformation of data coordinates are performed. Firstly, coordinates are projected if @code{Cut=true} (see @ref{Cutting}), after it transformation formulas are applied, and finally the data was normalized in bounding box.
 
@@ -555,9 +568,10 @@ These large set of variables and functions control how the axis and ticks will b
 @end menu
 
 @c ------------------------------------------------------------------
-@comment  @external{}
+@external{}
 @node Ranges (bounding box), Curved coordinates, , Axis settings
 @subsection Ranges (bounding box)
+@nav{}
 @cindex CRange
 @cindex XRange
 @cindex YRange
@@ -646,9 +660,10 @@ Additionally extend axis range for any settings made by @code{SetRange} or @code
 
 
 @c ------------------------------------------------------------------
-@comment  @external{}
+@external{}
 @node Curved coordinates, Ticks, Ranges (bounding box), Axis settings
 @subsection Curved coordinates
+@nav{}
 @cindex Axis
 @ifclear UDAV
 @cindex SetFunc
@@ -690,9 +705,10 @@ Use @code{Ternary(0)} for returning to usual axis. @sref{Ternary axis} @sref{Axi
 @end deftypefn
 
 @c ------------------------------------------------------------------
-@comment  @external{}
+@external{}
 @node Ticks, , Curved coordinates, Axis settings
 @subsection Ticks
+@nav{}
 @cindex AxisStl
 @cindex TickLen
 @cindex Adjust
@@ -847,6 +863,7 @@ The line style of axis (@var{stl}), ticks (@var{tck}) and subticks (@var{sub}). 
 @external{}
 @node Subplots and rotation, Export picture, Axis settings, MathGL core
 @section Subplots and rotation
+@nav{}
 @cindex Aspect
 @cindex Rotate
 @cindex RotateN
@@ -1040,6 +1057,7 @@ The function changes the scale of graphics that correspond to zoom in/out of the
 @external{}
 @node Export picture, Primitives, Subplots and rotation, MathGL core
 @section Export picture
+@nav{}
 @cindex SetSize
 
 Functions in this group save or give access to produced picture. So, usually they should be called after plotting is done.
@@ -1087,9 +1105,10 @@ Ends group definition.
 @end menu
 
 @c ==================================================================
-@comment  @external{}
+@external{}
 @node Export to file, Frames/Animation, , Export picture
 @subsection Export to file
+@nav{}
 @cindex Write
 @ifclear UDAV
 @cindex WriteFrame
@@ -1229,9 +1248,10 @@ Imports points and primitives in file using @ref{MGLD format}. Later this file c
 
 
 @c ##################################################################
-@comment  @external{}
+@external{}
 @node Frames/Animation, Bitmap in memory, Export to file, Export picture
 @subsection Frames/Animation
+@nav{}
 
 @ifset UDAV
 There are no commands for making animation in MGL. However you can use features of @code{mglconv} and @code{mglview} utilities. For example, by busing special comments @samp{##a } or @samp{##c }.
@@ -1299,9 +1319,10 @@ Finish writing animated GIF and close connected pointers.
 @end ifclear
 
 @c ------------------------------------------------------------------
-@comment  @external{}
+@external{}
 @node Bitmap in memory, Parallelization, Frames/Animation, Export picture
 @subsection Bitmap in memory
+@nav{}
 
 @ifclear UDAV
 These functions return the created picture (bitmap), its width and height. You may display it by yourself in any graphical library (see also, @ref{Widget classes}) or save in file (see also, @ref{Export to file}).
@@ -1372,9 +1393,10 @@ Checks if point @{@var{xs}, @var{ys}@} is close to one of active point (i.e. mgl
 @end ifclear
 
 @c ------------------------------------------------------------------
-@comment  @external{}
+@external{}
 @node Parallelization, , Bitmap in memory, Export picture
 @subsection Parallelization
+@nav{}
 
 @ifclear UDAV
 @cindex Combine
@@ -1410,6 +1432,7 @@ Receive graphical information from node @var{id} using MPI. The width and height
 @external{}
 @node Primitives, Text printing, Export picture, MathGL core
 @section Primitives
+@nav{}
 @cindex Ball
 @cindex Clf
 @cindex Line
@@ -1613,6 +1636,7 @@ colors for filling and boundary (second one if style @samp{@@} is used, black co
 @external{}
 @node Text printing, Axis and Colorbar, Primitives, MathGL core
 @section Text printing
+@nav{}
 @ifclear UDAV
 @cindex Puts
 @cindex Putsw
@@ -1684,6 +1708,7 @@ The function draws @var{text} along the curve between points @{@var{x}[i], @var{
 @external{}
 @node Axis and Colorbar, Legend, Text printing, MathGL core
 @section Axis and Colorbar
+@nav{}
 @cindex Axis
 @cindex Box
 @cindex Grid
@@ -1802,6 +1827,7 @@ Prints the label @var{text} for axis @var{dir}=@samp{x},@samp{y},@samp{z},@samp{
 @external{}
 @node Legend, 1D plotting, Axis and Colorbar, MathGL core
 @section Legend
+@nav{}
 @cindex Legend
 @cindex AddLegend
 @cindex ClearLegend
@@ -1873,6 +1899,7 @@ Set the number of marks in the legend. By default 1 mark is used.
 @external{}
 @node 1D plotting, 2D plotting, Legend, MathGL core
 @section 1D plotting
+@nav{}
 @cindex Plot
 @cindex Radar
 @cindex Tens
@@ -2235,6 +2262,7 @@ These functions draw surface which is result of curve @{@var{r}, @var{z}@} rotat
 @external{}
 @node 2D plotting, 3D plotting, 1D plotting, MathGL core
 @section 2D plotting
+@nav{}
 @cindex Mesh
 @cindex Fall
 @cindex Belt
@@ -2467,6 +2495,7 @@ The function draws grid lines for density plot of surface specified parametrical
 @external{}
 @node 3D plotting, Dual plotting, 2D plotting, MathGL core
 @section 3D plotting
+@nav{}
 @cindex Surf3
 @cindex Dens3
 @cindex Cont3
@@ -2598,6 +2627,7 @@ Draws the isosurface for 3d array @var{a} at constant values of @var{a}=@var{val
 @external{}
 @node Dual plotting, Vector fields, 3D plotting, MathGL core
 @section Dual plotting
+@nav{}
 @cindex SurfC
 @cindex SurfA
 @cindex Surf3C
@@ -2720,6 +2750,7 @@ Draws spectrogram of complex array @var{re}+i*@var{im} for Fourier size of @var{
 @external{}
 @node Vector fields, Other plotting, Dual plotting, MathGL core
 @section Vector fields
+@nav{}
 @cindex Traj
 @cindex Vect
 @cindex Dew
@@ -2909,6 +2940,7 @@ This is 3D version of the first functions. Here arrays @var{ax}, @var{ay}, @var{
 @external{}
 @node Other plotting, Nonlinear fitting, Vector fields, MathGL core
 @section Other plotting
+@nav{}
 @cindex DensXYZ
 @cindex ContXYZ
 @cindex ContFXYZ
@@ -3095,6 +3127,7 @@ The function reconstruct and draws the surface for arbitrary placed points @{@va
 @external{}
 @node Nonlinear fitting, Data manipulation, Other plotting, MathGL core
 @section Nonlinear fitting
+@nav{}
 @cindex Fit
 @cindex FitS
 @cindex PutsFit
@@ -3183,6 +3216,7 @@ Get last fitted formula with found coefficients (as numbers).
 @external{}
 @node Data manipulation, , Nonlinear fitting, MathGL core
 @section Data manipulation
+@nav{}
 @cindex Hist
 @cindex Fill
 @cindex DataGrid
@@ -3247,6 +3281,7 @@ Solves equation du/dz = i*k0*@var{ham}(p,q,x,y,z,|u|)[u], where p=-i/k0*d/dx, q=
 @c @external{}
 @c @node IDTF functions, , Data manipulation, MathGL core
 @c @section IDTF functions
+@c @nav{}
 
 @c These functions provide IDTF specific features. In all other cases they do nothing.
 

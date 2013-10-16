@@ -1,4 +1,5 @@
 @chapter Overview
+@nav{}
 
 @cindex MathGL overview
 
@@ -27,6 +28,7 @@ a library with large and growing set of graphics.
 @external{}
 @node What is MathGL?, MathGL features, , Overview
 @section What is MathGL?
+@nav{}
 
 A code for making high-quality scientific graphics under Linux and Windows. A  code for the fast handling and plotting of large data arrays. A code for working in window and console regimes and for easy including into another program. A code with large and renewal set of graphics. Exactly such a code I tried to put in MathGL library.
 
@@ -35,6 +37,7 @@ At this version (@value{VERSION}) MathGL has more than 50 general types of graph
 @external{}
 @node MathGL features, Installation, What is MathGL?, Overview
 @section MathGL features
+@nav{}
 
 MathGL can plot a wide range of graphics. It includes:
 @itemize @bullet
@@ -67,6 +70,7 @@ There is fast evaluation of a textual mathematical expression (@pxref{Textual fo
 @external{}
 @node Installation, Quick guide, MathGL features, Overview
 @section Installation
+@nav{}
 
 MathGL can be installed in 4 different ways.
 @enumerate
@@ -91,6 +95,7 @@ svn checkout http://svn.code.sf.net/p/mathgl/code/mathgl-2x mathgl-code
 @external{}
 @node  Quick guide, Changes from v.1, Installation, Overview
 @section Quick guide
+@nav{}
 
 There are 3 steps to prepare the plot in MathGL: (1) prepare data to be plotted, (2) setup plot, (3) plot data. Let me show this on the example of surface plotting.
 
@@ -140,6 +145,7 @@ Fortran users also should add C++ library by the option @code{-lstdc++}. If libr
 @external{}
 @node  Changes from v.1, Utilities, Quick guide, Overview
 @section Changes from v.1.*
+@nav{}
 
 There are a lot of changes for v.2. Here I denote only main of them.
 @itemize @bullet
@@ -171,6 +177,7 @@ Add pipes support in utilities (@code{mglconv, mglview}).
 @external{}
 @node  Utilities, Thanks, Changes from v.1, Overview
 @section Utilities for parsing MGL
+@nav{}
 
 MathGL library provides several tools for parsing MGL scripts. There is tools saving it to bitmap or vectorial images (@code{mglconv}). Tool @code{mglview} show MGL script and allow to rotate and setup the image. Another feature of @code{mglview} is loading *.mgld files (see @code{ExportMGLD()}) for quick viewing 3d pictures.
 
@@ -203,6 +210,7 @@ MathGL also provide another simple tool @code{mgl.cgi} which parse MGL script fr
 @external{}
 @node Thanks, , Utilities, Overview
 @section Thanks
+@nav{}
 
 @itemize @bullet
 @item

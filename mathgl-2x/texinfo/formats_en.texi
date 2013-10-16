@@ -1,3 +1,5 @@
+@nav{}
+
 This appendix contain description of file formats used by MathGL.
 
 @menu
@@ -10,6 +12,7 @@ This appendix contain description of file formats used by MathGL.
 @external{}
 @node Font files, MGLD format, , File formats
 @section Font files
+@nav{}
 
 Starting from v.1.6 the MathGL library uses new font files. The font is defined in 4 files with suffixes @samp{*.vfm}, @samp{*_b.vfm}, @samp{*_i.vfm}, @samp{*_bi.vfm}. These files are text files containing the data for roman font, bold font, italic font and bold italic font. The files (or some symbols in the files) for bold, italic or bold italic fonts can be absent. In this case the roman glyph will be used for them. By analogy, if the bold italic font is absent but the bold font is present then bold glyph will be used for bold italic. You may create these font files by yourself from *.ttf, *.otf files with the help of program @code{font_tools}. This program can be found at MathGL home site.
 
@@ -34,6 +37,7 @@ Note: the closing contour line  is done automatically (so the last segment may b
 @external{}
 @node MGLD format, JSON format, Font files, File formats
 @section MGLD format
+@nav{}
 
 MGLD is textual file, which contain all required information for drawing 3D image, i.e. it contain vertexes with colors and normales, primitives with all properties, textures, and glyph descriptions. MGLD file can be imported or viewed separately, without parsing data files itself.
 
@@ -73,6 +77,7 @@ Here nT is the number of triangles; nL is the number of line vertexes; xA, yA, x
 @external{}
 @node JSON format, , MGLD format, File formats
 @section JSON format
+@nav{}
 
 MathGL can save points and primitives of 3D object. It contain a set of variables listed below.
 
@@ -104,7 +109,7 @@ array of glyph positions, each element is array in form [dx,dy]
 @item nglfs
 number of glyph descriptions
 @item glfs
-array of glyph descriptions, each element is array in form [nT, nL, [xA0, yA0, xB0, yB0, xC0, yC0, xA1, yA1, xB1, yB1, xC1, yC1 ...], [xP0, yP0, xP1, yP1 ...]]. Here nT is the number of triangles; nL is the number of line vertexes; xA, yA, xB, yB, xC, yC are coordinates of triangles; and xP, yP, xQ, yQ are coordinates of lines. Line coordinate xP=0x3fff, yP=0x3fff denote line breaking.
+array of glyph descriptions, each element is array in form @code{[nL, [xP0, yP0, xP1, yP1 ...]]}. Here @code{nL} is the number of line vertexes; and @code{xP, yP, xQ, yQ} are coordinates of lines. Line coordinate xP=0x3fff, yP=0x3fff denote line breaking.
 
 @end table
 @external{}

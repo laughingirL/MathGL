@@ -1,4 +1,7 @@
 \input texinfo
+@documentencoding UTF-8
+@documentlanguage en
+
 @setfilename mathgl_en.info
 @include version.texi
 @settitle MathGL @value{VERSION}
@@ -57,46 +60,19 @@ This file documents the Mathematical Graphic Library (MathGL), a collection of c
 
 @macro external {}
 @end macro
+@macro nav {}
+@end macro
 
-@ifhtml
 @macro fig {fname,text}
-@center @image{../\fname\, 11cm, , \text\, .png}
+@center @image{\fname\, 11cm, , \text\, png}
 @end macro
 @macro pfig {fname,text}
-@center @image{../png/\fname\, 11cm, , \text\, .png}
+@center @image{png/\fname\, 11cm, , \text\, png}
 @c @center @image{../png/\fname\, 11cm, , \text\. See also @uref{../pdf/\fname\.pdf, U3D PDF} sample, .png}
 @end macro
 @macro ufig {fname,width,text}
-@center @image{../udav/\fname\, \width\cm, , \text\, .png}
+@center @image{udav/\fname\, \width\cm, , \text\, png}
 @end macro
-@end ifhtml
-
-@ifnothtml
-@iftex
-@macro fig {fname,text}
-@center @image{\fname\, 11cm, , \text\, .png}
-@end macro
-@macro pfig {fname,text}
-@center @image{png/\fname\, 11cm, , \text\, .png}
-@end macro
-@macro ufig {fname,width,text}
-@center @image{udav/\fname\, \width\cm, , \text\, .png}
-@end macro
-@end iftex
-
-@ifnottex
-@macro fig {fname,text}
-@c @center @image{\fname\, 11cm, , \text\, .png}
-@end macro
-@macro pfig {fname,text}
-@c @center @image{png/\fname\, 11cm, , \text\, .png}
-@end macro
-@macro ufig {fname,width,text}
-@c @center @image{../udav/\fname\, 11cm, , \text\, .png}
-@end macro
-@end ifnottex
-@end ifnothtml
-
 
 @macro sref {arg}
 @xref{\arg\}, for sample code and picture.
@@ -137,10 +113,6 @@ This file documents the Mathematical Graphic Library (MathGL), a collection of c
 @appendix File formats
 @include formats_en.texi
 
-@node TeX-like symbols, Plotting time, File formats, Top
-@appendix TeX-like symbols
-@include appendix_en.texi
-
 @node Plotting time, Copying This Manual, TeX-like symbols, Top
 @appendix Plotting time
 
@@ -153,6 +125,12 @@ Results for image size 800*600 (default one).
 
 Results for image size 1920*1440 (print quality)
 @include time_big.texi
+
+@ifhtml
+@node TeX-like symbols, Plotting time, File formats, Top
+@appendix TeX-like symbols
+@include appendix_en.texi
+@end ifhtml
 
 @node Copying This Manual, Index, Plotting time, Top
 @appendix GNU Free Documentation License
