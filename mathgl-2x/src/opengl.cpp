@@ -179,10 +179,11 @@ void mglCanvasGL::Clf(mglColor Back)
 //-----------------------------------------------------------------------------
 void mglCanvasGL::gl_clf(mglColor Back)
 {
+	if(Back!=NC)	Back = WC;
 //	glDepthFunc(GL_LESS);
 	glDepthFunc(GL_GREATER);
 //	back[0]=Back.r;	back[1]=Back.g;	back[2]=Back.b;
-	glClearColor(Back.r,Back.g,Back.b,0.);
+	glClearColor(Back.r,Back.g,Back.b,1.);
 	glClearDepth(-10.);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_COLOR_MATERIAL);
@@ -206,7 +207,7 @@ void mglCanvasGL::set_pen(unsigned style,mreal width)
 	else			glLineWidth(1);
 }
 //-----------------------------------------------------------------------------
-void mglCanvasGL::EndFrame()
+/*void mglCanvasGL::EndFrame()
 {
 //	mglGraph::EndFrame();
 	glEndList();
@@ -218,7 +219,7 @@ int mglCanvasGL::NewFrame()
 	glNewList(CurFrameId,GL_COMPILE);
 	CurFrameId++;
 	return CurFrameId-1;
-}
+}*/
 //-----------------------------------------------------------------------------
 unsigned char **mglCanvasGL::GetRGBLines(long &width, long &height, unsigned char *&f, bool alpha)
 {

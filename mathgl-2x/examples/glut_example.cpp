@@ -21,6 +21,7 @@
 //-----------------------------------------------------------------------------
 int test_wnd(mglGraph *gr);
 int sample(mglGraph *gr);
+int sample_m(mglGraph *gr);
 int sample_1(mglGraph *gr);
 int sample_2(mglGraph *gr);
 int sample_3(mglGraph *gr);

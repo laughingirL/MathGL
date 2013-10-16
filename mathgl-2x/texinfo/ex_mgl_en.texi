@@ -1897,7 +1897,7 @@ densy {sum c 'y'} '' 1
 densz {sum c 'z'} '' -1
 @end verbatim
 
-@pfig{dens_xyz, {Example of DensX(), DensY(), DensZ()}}
+@pfig{dens_xyz, Example of DensX() DensY() DensZ()}
 
 @c ------------------------------------------------------------------
 @external{}
@@ -1914,7 +1914,7 @@ conty {sum c 'y'} '' 1
 contz {sum c 'z'} '' -1
 @end verbatim
 
-@pfig{cont_xyz, {Example of ContX(), ContY(), ContZ()}}
+@pfig{cont_xyz, Example of ContX() ContY() ContZ()}
 
 @c ------------------------------------------------------------------
 @external{}
@@ -1931,7 +1931,7 @@ contfy {sum c 'y'} '' 1
 contfz {sum c 'z'} '' -1
 @end verbatim
 
-@pfig{contf_xyz, {Example of ContFX(), ContFY(), ContFZ()}}
+@pfig{contf_xyz, Example of ContFX() ContFY() ContFZ()}
 
 @c ------------------------------------------------------------------
 @external{}

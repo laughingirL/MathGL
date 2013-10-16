@@ -49,7 +49,7 @@ mgl_set_test_mode(true);
 	gr->ShowFrame(1);
 	gr->ShowFrame(2);
 	gr->ShowFrame(3);
-	//	gr->Puts(mglPoint(0,1),"1");
+//	gr->Puts(mglPoint(0,1),"1");
 	gr->Finish();
 	return 0;
 }

@@ -542,7 +542,7 @@ qw.raise_()
 
 @c ------------------------------------------------------------------
 @external{}
-@node MathGL and MPI, , MathGL and PyQt, , Basic usage
+@node MathGL and MPI, , MathGL and PyQt, Basic usage
 @subsection MathGL and MPI
 @nav{}
 

@@ -178,20 +178,23 @@ void _mgl_display()
 {
 	if(!_mgl_glwnd)	return;
 //	glEnable(GL_LINE_SMOOTH);
-	_mgl_glwnd->CurFrameId = 1;
+//	_mgl_glwnd->CurFrameId = 1;
 //	if(_mgl_glwnd->get(MGL_CLF_ON_UPD))
 		_mgl_glwnd->gl_clf();
 	_mgl_glwnd->InPlot(0,1,0,1,false);
 	if(_mgl_glwnd->NumFig>0)
-		glCallList(_mgl_glwnd->curr_fig);
+	{
+		_mgl_glwnd->GetFrame(_mgl_glwnd->curr_fig);
+		_mgl_glwnd->Finish();
+//		glCallList(_mgl_glwnd->curr_fig);
+	}
 	else
 	{
 		if(_mgl_glwnd->DrawFunc)
 			(_mgl_glwnd->DrawFunc)(_mgl_glwnd,_mgl_glwnd->FuncPar);
 		_mgl_glwnd->Finish();
 	}
-//	if(_mgl_glwnd->get(MGL_CLF_ON_UPD))
-	{	glFinish();	glutSwapBuffers();	}
+	glFinish();
 }
 //-----------------------------------------------------------------------------
 mglCanvasGLUT::~mglCanvasGLUT()	{	_mgl_glwnd = 0;	}
@@ -205,7 +208,7 @@ void mglCanvasGLUT::Window(int argc, char **argv,int (*draw)(mglBase *gr, void *
 	char *tmp[1];	tmp[0]=new char[1];	tmp[0][0]=0;
 	glutInit(&argc, argv ? argv:tmp);
 	delete []tmp[0];
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+	glutInitDisplayMode(GLUT_RGB);
 	glutInitWindowSize(600, 600);
 	glutCreateWindow("MathPlotLibrary");
 

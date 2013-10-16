@@ -52,7 +52,9 @@ This file documents the Mathematical Graphic Library (MathGL), a collection of c
 * Other classes::
 * Symbols and hot-keys::
 * File formats::
+@ifhtml
 * TeX-like symbols::
+@end ifhtml
 * Plotting time::
 * Copying This Manual::
 * Index::
@@ -109,11 +111,16 @@ This file documents the Mathematical Graphic Library (MathGL), a collection of c
 @appendix Symbols and hot-keys
 @include symbols_en.texi
 
-@node File formats, TeX-like symbols, Symbols and hot-keys, Top
+@node File formats, Plotting time, Symbols and hot-keys, Top
 @appendix File formats
 @include formats_en.texi
 
-@node Plotting time, Copying This Manual, TeX-like symbols, Top
+@ifhtml
+@node Plotting time, TeX-like symbols, File formats, Top
+@end ifhtml
+@ifnothtml
+@node Plotting time, Copying This Manual, File formats, Top
+@end ifnothtml
 @appendix Plotting time
 
 Table below show plotting time in seconds for all samples in file @uref{http://sourceforge.net/p/mathgl/code/HEAD/tree/mathgl-2x/examples/samples.cpp, examples/samples.cpp}. The test was done in my laptop (i5-2430M) with 64-bit Debian.
@@ -127,7 +134,7 @@ Results for image size 1920*1440 (print quality)
 @include time_big.texi
 
 @ifhtml
-@node TeX-like symbols, Plotting time, File formats, Top
+@node TeX-like symbols, Copying This Manual, Plotting time, Top
 @appendix TeX-like symbols
 @include appendix_en.texi
 @end ifhtml

@@ -76,23 +76,23 @@ endif(MGL_HAVE_DOC_PRC)
 	set(list_texi_files_ru overview_ru.texi example_ru.texi ex_mgl_ru.texi parse_ru.texi formats_ru.texi udav_ru.texi symbols_ru.texi core_ru.texi concept_ru.texi widget_ru.texi data_ru.texi other_ru.texi appendix_ru.texi fdl.texi version.texi time.texi time_big.texi )
 
 	add_custom_command(OUTPUT ${MGL_OUT}/mathgl_en.info
-		COMMAND ${findmi} --no-validate ${MGL_TEX}/mathgl_en.texi
+		COMMAND ${findmi} ${MGL_TEX}/mathgl_en.texi
 		DEPENDS ${list_texi_files_en} mathgl_en.texi ${MGL_PNG_N}
 		WORKING_DIRECTORY ${MGL_OUT}
 	)
 	add_custom_command(OUTPUT ${MGL_OUT}/mathgl_en.html
 #		COMMAND ${findmi} --html -I ${MGL_OUT}/png --force -o mathgl_en ${MGL_TEX}/mathgl_en.texi
-		COMMAND ${findth} -I ${MGL_OUT} --split=no ${MGL_TEX}/mathgl_en.texi
+		COMMAND ${findth} --html -I ${MGL_OUT} --no-split ${MGL_TEX}/mathgl_en.texi
 		DEPENDS ${list_texi_files_en} mathgl_en.texi ${MGL_PNG_N}
 		WORKING_DIRECTORY ${MGL_OUT}
 	)
 	add_custom_command(OUTPUT ${MGL_OUT}/doc_en/doc_en.html
-		COMMAND ${findth} -I=${MGL_OUT}/png --split=node -o doc_en ${MGL_TEX}/doc_en.texi
+		COMMAND ${findth} --html -I=${MGL_OUT}/png --split=node -o doc_en ${MGL_TEX}/doc_en.texi
 		DEPENDS ${list_texi_files_en} doc_en.texi ${MGL_PNG_N} web_en.texi ${MGL_PNG_S} ${MGL_PNG_J} ${MGL_PNG_D}
 		WORKING_DIRECTORY ${MGL_OUT}
 	)
 	add_custom_command(OUTPUT ${MGL_OUT}/mgl_en.html
-		COMMAND ${findth} -I ${MGL_OUT} --split=no ${MGL_TEX}/mgl_en.texi
+		COMMAND ${findth} --html -I ${MGL_OUT} --no-split ${MGL_TEX}/mgl_en.texi
 		DEPENDS ${list_texi_files_en} mgl_en.texi ${MGL_PNG_N}
 		WORKING_DIRECTORY ${MGL_OUT}
 	)
@@ -119,17 +119,17 @@ endif(MGL_HAVE_DOC_PRC)
 		WORKING_DIRECTORY ${MGL_OUT}
 	)
 	add_custom_command(OUTPUT ${MGL_OUT}/mathgl_ru.html
-		COMMAND ${findth} -I=${MGL_OUT} --split=no ${MGL_TEX}/mathgl_ru.texi
+		COMMAND ${findth} --html -I=${MGL_OUT} --no-split ${MGL_TEX}/mathgl_ru.texi
 		DEPENDS ${list_texi_files_ru} mathgl_ru.texi ${MGL_PNG_N}
 		WORKING_DIRECTORY ${MGL_OUT}
 	)
 	add_custom_command(OUTPUT ${MGL_OUT}/doc_ru/doc_ru.html
-		COMMAND ${findth} -I=${MGL_OUT}/png --split=node -o doc_ru ${MGL_TEX}/doc_ru.texi
+		COMMAND ${findth} --html -I=${MGL_OUT}/png --split=node -o doc_ru ${MGL_TEX}/doc_ru.texi
 		DEPENDS ${list_texi_files_ru} doc_ru.texi ${MGL_PNG_N} web_ru.texi ${MGL_PNG_S} ${MGL_PNG_J} ${MGL_PNG_D}
 		WORKING_DIRECTORY ${MGL_OUT}
 	)
 	add_custom_command(OUTPUT ${MGL_OUT}/mgl_ru.html
-		COMMAND ${findth} -I=${MGL_OUT} --split=no ${MGL_TEX}/mgl_ru.texi
+		COMMAND ${findth} --html -I=${MGL_OUT} --no-split ${MGL_TEX}/mgl_ru.texi
 		DEPENDS ${list_texi_files_ru} mgl_ru.texi ${MGL_PNG_N}
 		WORKING_DIRECTORY ${MGL_OUT}
 	)
@@ -142,29 +142,60 @@ endif(MGL_HAVE_DOC_PRC)
 		WORKING_DIRECTORY ${MGL_OUT}
 	)
 
-	add_custom_target(documentation ALL
-		DEPENDS ${MGL_OUT}/mathgl_en.info
-		DEPENDS ${MGL_OUT}/mgl_en.pdf
-		DEPENDS ${MGL_OUT}/mathgl_en.pdf
-		DEPENDS ${MGL_OUT}/mgl_en.html
-		DEPENDS ${MGL_OUT}/mathgl_en.html
-		DEPENDS ${MGL_OUT}/doc_en/doc_en.html
-
-# 		DEPENDS ${MGL_OUT}/mathgl_ru.info
-#		DEPENDS ${MGL_OUT}/mathgl_ru.pdf
-		DEPENDS ${MGL_OUT}/mgl_ru.html
-		DEPENDS ${MGL_OUT}/mathgl_ru.html
-		DEPENDS ${MGL_OUT}/doc_ru/doc_ru.html
+	add_custom_command(OUTPUT ${MGL_OUT}/mgl_ru.pdf
+		COMMAND ${findtp} ${MGL_TEX}/mgl_ru.texi
+		COMMAND ${findtp} ${MGL_TEX}/mgl_ru.texi
+		COMMAND ${findtp} ${MGL_TEX}/mgl_ru.texi
+		DEPENDS ${list_texi_files_en} mgl_ru.texi ${MGL_PNG_N}
+		WORKING_DIRECTORY ${MGL_OUT}
 	)
 
-	set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "doc_en;mathgl_en;web_en;./mathgl*.*;small/*.*;png/*.*;json/*.*")
-	install(FILES ${MGL_TEX}/qt.png ${MGL_TEX}/fltk.png ${MGL_TEX}/classes.png ${MGL_TEX}/datadvance.png DESTINATION ${MGL_DOC_PATH})
-	install(FILES ${MGL_OUT}/mathgl_en.pdf ${MGL_OUT}/mgl_en.html DESTINATION ${MGL_DOC_PATH})
-	install(FILES ${MGL_OUT}/mathgl_en.html DESTINATION ${MGL_DOC_PATH})
-#	install(DIRECTORY ${MGL_OUT}/mathgl_en DESTINATION ${MGL_DOC_PATH})
-	install(DIRECTORY ${MGL_OUT}/png DESTINATION ${MGL_DOC_PATH})
-	install(DIRECTORY ${MGL_OUT}/udav DESTINATION ${MGL_DOC_PATH})
+	if(MGL_HAVE_DOC_INFO)
+		add_custom_target(doc_info ALL
+			DEPENDS ${MGL_OUT}/mathgl_en.info
+			DEPENDS ${MGL_OUT}/mathgl_ru.info
+		)
+# TODO: try to install all mathgl*.info* in future!!!
+		install(FILES ${MGL_OUT}/mathgl_en.info ${MGL_OUT}/mathgl_en.info-1 ${MGL_OUT}/mathgl_en.info-2 ${MGL_OUT}/mathgl_en.info-3 DESTINATION ${MGL_INFO_PATH})
+	endif(MGL_HAVE_DOC_INFO)
+	
+	if(MGL_HAVE_DOC_HTML)
+		add_custom_target(doc_html ALL
+		DEPENDS ${MGL_OUT}/mgl_en.html
+		DEPENDS ${MGL_OUT}/mathgl_en.html
+		DEPENDS ${MGL_OUT}/mgl_ru.html
+		DEPENDS ${MGL_OUT}/mathgl_ru.html
+		)
+		install(FILES ${MGL_TEX}/qt.png ${MGL_TEX}/fltk.png ${MGL_TEX}/classes.png ${MGL_TEX}/datadvance.png DESTINATION ${MGL_DOC_PATH})
+		install(FILES ${MGL_OUT}/mathgl_en.html ${MGL_OUT}/mgl_en.html ${MGL_OUT}/mathgl_ru.html ${MGL_OUT}/mgl_ru.html DESTINATION ${MGL_DOC_PATH})
+		install(DIRECTORY ${MGL_OUT}/png DESTINATION ${MGL_DOC_PATH})
+		install(DIRECTORY ${MGL_OUT}/udav DESTINATION ${MGL_DOC_PATH})
+	endif(MGL_HAVE_DOC_HTML)
+
+	if(MGL_HAVE_DOC_SITE)
+		add_custom_target(doc_site ALL
+		DEPENDS ${MGL_OUT}/doc_en/doc_en.html
+		DEPENDS ${MGL_OUT}/doc_ru/doc_ru.html
+		)
+	endif(MGL_HAVE_DOC_SITE)
+
+	if(MGL_HAVE_DOC_PDF_EN)
+		add_custom_target(doc_en ALL
+			DEPENDS ${MGL_OUT}/mgl_en.pdf
+			DEPENDS ${MGL_OUT}/mathgl_en.pdf
+		)
+		install(FILES ${MGL_OUT}/mathgl_en.pdf DESTINATION ${MGL_DOC_PATH})
+	endif(MGL_HAVE_DOC_PDF_EN)
+	
+	if(MGL_HAVE_DOC_PDF_RU)
+		add_custom_target(doc_ru ALL
+#			DEPENDS ${MGL_OUT}/mgl_ru.pdf
+#			DEPENDS ${MGL_OUT}/mathgl_ru.pdf
+		)
+#		install(FILES ${MGL_OUT}/mathgl_ru.pdf DESTINATION ${MGL_DOC_PATH})
+	endif(MGL_HAVE_DOC_PDF_RU)
+
+	set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "doc_en;doc_ru;./mathgl*.*;./mgl*.*")
+
 	install(FILES ${MGL_TEX}/mglconv.1 ${MGL_TEX}/mglview.1 ${MGL_TEX}/udav.1 ${MGL_TEX}/mgl.cgi.1 DESTINATION ${MGL_MAN_PATH}/man1)
 	install(FILES ${MGL_TEX}/mgl.5 DESTINATION ${MGL_MAN_PATH}/man5)
-# TODO: try to install all mathgl*.info* in future!!!
-	install(FILES ${MGL_OUT}/mathgl_en.info ${MGL_OUT}/mathgl_en.info-1 ${MGL_OUT}/mathgl_en.info-2 DESTINATION ${MGL_INFO_PATH})

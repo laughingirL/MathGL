@@ -33,16 +33,16 @@ public:
 	void SetSize(int ,int )	{}
 	void View(mreal tetX,mreal tetY,mreal tetZ);
 	void Zoom(mreal x1, mreal y1, mreal x2, mreal y2);
-	int NewFrame();
+/*	int NewFrame();
 	void EndFrame();
-	void DelFrame(long ){}
+	void DelFrame(long ){}*/
 
 	bool Alpha(bool enable);
 	void Fog(mreal d, mreal dz=0.25);
 	bool Light(bool enable);
 	void Light(int n, bool enable);
 	void AddLight(int n,mglPoint r,mglPoint d, char c='w', mreal bright=0.5, mreal ap=0);
-	void Clf(mglColor Back=WC);
+	void Clf(mglColor Back=NC);
 
 protected:
 	// provide fastest variant for usual points (not glyphs or marks)
