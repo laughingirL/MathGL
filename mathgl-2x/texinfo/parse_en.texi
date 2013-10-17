@@ -8,20 +8,13 @@ MathGL library supports the simplest scripts for data handling and plotting. The
 , @pxref{Utilities}) or in the frame of the library using.
 @end ifclear
 
+@menu
+* MGL definition::
+* Program flow commands::
 @ifclear UDAV
-@menu
-* MGL definition::
-* Program flow commands::
 * mglParse class::
-@end menu
 @end ifclear
-
-@ifset UDAV
-@menu
-* MGL definition::
-* Program flow commands::
 @end menu
-@end ifset
 
 
 @c ------------------------------------------------------------------
@@ -69,7 +62,12 @@ Command may have several set of possible arguments (for example, @code{plot ydat
 
 @c ------------------------------------------------------------------
 @external{}
+@ifclear UDAV
 @node Program flow commands, mglParse class, MGL definition, MGL scripts
+@end ifclear
+@ifset UDAV
+@node Program flow commands, , MGL definition, MGL scripts
+@end ifset
 @section Program flow commands
 @nav{}
 

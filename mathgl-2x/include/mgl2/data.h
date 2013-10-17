@@ -442,11 +442,11 @@ protected:
 #endif
 	/// Get the value in given cell of the data without border checking
 	inline mreal v(long i,long j=0,long k=0) const
-#ifdef DEBUG
+#ifndef DEBUG
+	{	return a[i+nx*(j+ny*k)];	}
+#else
 	{	if(i<0 || j<0 || k<0 || i>=nx || j>=ny || k>=nz)	printf("Wrong index in mglData");
 		return a[i+nx*(j+ny*k)];	}
-#else
-	{	return a[i+nx*(j+ny*k)];	}
 #endif
 	inline mreal vthr(long i) const {	return a[i];	}
 	// add for speeding up !!!

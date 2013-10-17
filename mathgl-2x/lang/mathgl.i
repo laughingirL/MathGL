@@ -37,11 +37,9 @@
 
 %{
 #define SWIG_FILE_WITH_INIT
-//#include "mgl2/config.h"
 #include "mgl2/type.h"
 #include "mgl2/data.h"
 #include "mgl2/mgl.h"
-//#include "mgl2/window.h"
 %}
 
 #if MGL_USE_DOUBLE
@@ -86,15 +84,13 @@ import_array();
 %apply (int DIM1, int DIM2, int DIM3, double* IN_ARRAY3) {(int rows, int cols, int slc, const double* d)};
 #endif
 
-//%include "mgl2/config.h"
-%include "mgl2/type.h"
-%include "mgl2/data.h"
-%include "mgl2/mgl.h"
-//%include "mgl2/window.h"
+%include "type.i"
+%include "data.i"
+%include "mgl.i"
 %extend mglData
 {
-	float __getitem__( int i)	{	return self->GetVal(i);	};
-	float __paren( int i)		{	return self->GetVal(i);	};
-	void __setitem__( int i, float y)	{	self->SetVal(y,i);	};
-	void __paren_asgn( int i, float y)	{	self->SetVal(y,i);	};
+	mreal __getitem__( int i)	{	return self->GetVal(i);	};
+	mreal __paren( int i)		{	return self->GetVal(i);	};
+	void __setitem__( int i, mreal y)	{	self->SetVal(y,i);	};
+	void __paren_asgn( int i, mreal y)	{	self->SetVal(y,i);	};
 };

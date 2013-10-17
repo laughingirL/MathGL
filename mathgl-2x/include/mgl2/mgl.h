@@ -21,6 +21,7 @@
 #define _MGL_H_
 
 #include "mgl2/mgl_cf.h"
+#ifdef __cplusplus
 #include "mgl2/data.h"
 #include "mgl2/datac.h"
 //-----------------------------------------------------------------------------
@@ -1184,6 +1185,7 @@ public:
 //	inline void TextureColor(bool){}	// NOTE: Add later -- IDTF
 };
 //-----------------------------------------------------------------------------
+#ifndef SWIG
 /// Structure for handling named mglData (used by mglParse class).
 class MGL_EXPORT mglVar : public mglData
 {
@@ -1217,6 +1219,7 @@ public:
 		if(next)	next->prev = this;
 	}
 };
+#endif
 //-----------------------------------------------------------------------------
 /// Wrapper class for MGL parsing
 class MGL_EXPORT mglParse
@@ -1325,6 +1328,7 @@ public:
 #endif
 };
 //-----------------------------------------------------------------------------
+#ifndef SWIG
 /// Wrapper class expression evaluating
 class MGL_EXPORT mglExprC
 {
@@ -1342,11 +1346,12 @@ public:
 		var['x'-'a']=x;	var['y'-'a']=y;	var['z'-'a']=z;
 		var['u'-'a']=u;	var['v'-'a']=v;	var['w'-'a']=w;
 		return mgl_cexpr_eval_v(ex,var);	}
-#ifndef SWIG
 	/// Return value of expression for given variables
 	inline dual Eval(dual var[26])
 	{	return mgl_cexpr_eval_v(ex,var);	}
-#endif
 };
+#endif
 //-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+#endif
 #endif

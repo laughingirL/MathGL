@@ -21,7 +21,12 @@
 #define _MGL_DEFINE_H_
 //-----------------------------------------------------------------------------
 #include "mgl2/config.h"
+#ifndef SWIG
 #include "mgl2/dllexport.h"
+#if MGL_HAVE_OMP
+#include <omp.h>
+#endif
+#endif
 
 #define MGL_VER2 	2.0	// minor version of MathGL 2.* (like 1.3 for v.2.1.3)
 //-----------------------------------------------------------------------------
@@ -67,10 +72,6 @@ typedef unsigned long uintptr_t;
 #include <stdlib.h>
 #include <string.h>
 #include <wchar.h>
-
-#if MGL_HAVE_OMP
-#include <omp.h>
-#endif
 
 #if defined(_MSC_VER) || defined(__BORLANDC__)
 #define fmin(a,b)	((a)<(b))?(a):(b)

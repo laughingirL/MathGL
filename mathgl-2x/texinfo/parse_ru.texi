@@ -8,20 +8,13 @@ MathGL имеет встроенный скриптовый язык MGL для 
 , см. @ref{Utilities}) или с использованием вызовов библиотеки.
 @end ifclear
 
+@menu
+* MGL definition::
+* Program flow commands::
 @ifclear UDAV
-@menu
-* MGL definition::
-* Program flow commands::
 * mglParse class::
-@end menu
 @end ifclear
-
-@ifset UDAV
-@menu
-* MGL definition::
-* Program flow commands::
 @end menu
-@end ifset
 
 
 @c ------------------------------------------------------------------
@@ -72,7 +65,12 @@ MathGL имеет встроенный скриптовый язык MGL для 
 
 @c ------------------------------------------------------------------
 @external{}
+@ifclear UDAV
 @node Program flow commands, mglParse class, MGL definition, MGL scripts
+@end ifclear
+@ifset UDAV
+@node Program flow commands, , MGL definition, MGL scripts
+@end ifset
 @section Управление ходом выполнения
 @nav{}
 
