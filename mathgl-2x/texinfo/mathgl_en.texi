@@ -80,7 +80,7 @@ This file documents the Mathematical Graphic Library (MathGL), a collection of c
 @xref{\arg\}, for sample code and picture.
 @end macro
 
-@node Overview, Examples, , Top
+@node Overview, Examples, Top, Top
 @include overview_en.texi
 
 @node Examples, General concepts, Overview, Top
@@ -137,9 +137,11 @@ Results for image size 1920*1440 (print quality)
 @node TeX-like symbols, Copying This Manual, Plotting time, Top
 @appendix TeX-like symbols
 @include appendix_en.texi
+@node Copying This Manual, Index, TeX-like symbols, Top
 @end ifhtml
-
+@ifnothtml
 @node Copying This Manual, Index, Plotting time, Top
+@end ifnothtml
 @appendix GNU Free Documentation License
 @include fdl.texi
 

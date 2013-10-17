@@ -1888,7 +1888,7 @@ cont3 c 'xk':cont3 c 'k':cont3 c 'zk'
 @subsection Dens projection sample
 @nav{}
 
-Functions @ref{DensXYZ} draw density plot on plane perpendicular to corresponding axis. One of possible application is drawing projections of 3D field. The sample code is:
+Functions @ref{densz}, @ref{densy}, @ref{densx} draw density plot on plane perpendicular to corresponding axis. One of possible application is drawing projections of 3D field. The sample code is:
 @verbatim
 call 'prepare3d'
 title 'Dens[XYZ] sample':rotate 50 60:box
@@ -1905,7 +1905,7 @@ densz {sum c 'z'} '' -1
 @subsection Cont projection sample
 @nav{}
 
-Functions @ref{ContXYZ} draw contour lines on plane perpendicular to corresponding axis. One of possible application is drawing projections of 3D field. The sample code is:
+Functions @ref{contz}, @ref{conty}, @ref{contx} draw contour lines on plane perpendicular to corresponding axis. One of possible application is drawing projections of 3D field. The sample code is:
 @verbatim
 call 'prepare3d'
 title 'Cont[XYZ] sample':rotate 50 60:box
@@ -1922,7 +1922,7 @@ contz {sum c 'z'} '' -1
 @subsection ContF projection sample
 @nav{}
 
-Functions @code{ContFXYZ} draw filled contours on plane perpendicular to corresponding axis. One of possible application is drawing projections of 3D field. The sample code is:
+Functions @ref{contfz}, @ref{contfy}, @ref{contfx} draw filled contours on plane perpendicular to corresponding axis. One of possible application is drawing projections of 3D field. The sample code is:
 @verbatim
 call 'prepare3d'
 title 'ContF[XYZ] sample':rotate 50 60:box
@@ -2179,7 +2179,7 @@ In this section I've included some small hints and advices for the improving of 
 * Mapping visualization::
 * Making regular data::
 * Making histogram::
-* Nonlinear fitting sample::
+* Nonlinear fitting hints::
 * PDE solving hints::
 * MGL parser using::
 * Using options::
@@ -2526,7 +2526,7 @@ new g 30 30:datagrid g x y z:mesh g 'm'
 
 @c ------------------------------------------------------------------
 @external{}
-@node Making histogram, Nonlinear fitting sample, Making regular data, Hints
+@node Making histogram, Nonlinear fitting hints, Making regular data, Hints
 @subsection Making histogram
 @nav{}
 
@@ -2545,7 +2545,7 @@ subplot 3 3 2:text 0.5 0.5 'Hist and\n{}MultiPlot\n{}sample' 'a' -3
 
 @c ------------------------------------------------------------------
 @external{}
-@node Nonlinear fitting sample, PDE solving hints, Making histogram, Hints
+@node Nonlinear fitting hints, PDE solving hints, Making histogram, Hints
 @subsection Nonlinear fitting hints
 @nav{}
 
@@ -2589,7 +2589,7 @@ text 0 2.2 'initial: y = 0.3+sin(2\pi x)' 'b'
 
 @c ------------------------------------------------------------------
 @external{}
-@node PDE solving hints, MGL parser using, Nonlinear fitting sample, Hints
+@node PDE solving hints, MGL parser using, Nonlinear fitting hints, Hints
 @subsection PDE solving hints
 @nav{}
 
@@ -2701,7 +2701,7 @@ box:axis:legend 2
 
 @c ------------------------------------------------------------------
 @external{}
-@node ``Templates'', Nonlinear fitting sample, Using options, Hints
+@node ``Templates'', Nonlinear fitting hints, Using options, Hints
 @subsection ``Templates''
 @nav{}
 

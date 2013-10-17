@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <mgl2/mgl.h>
+#include <mgl2/mpi.h>
 #include <mpi.h>
 #define MCW		MPI_COMM_WORLD
 
@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 
 	// initialize data similarly for all ranks
 	mglData a(128,128);
-	mglGraph gr;
+	mglGraphMPI gr;
 	// do the same plot for its own range
 	char buf[64];
 	sprintf(buf,"xrange %g %g",2.*rank/numproc-1,2.*(rank+1)/numproc-1);

@@ -1549,7 +1549,7 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Команда MGL} {} ellipse @code{x1 y1 z1 x2 y2 z2 r} ['col'='r']
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} Ellipse (@code{mglPoint} p1, @code{mglPoint} p2, @code{mreal} r, @code{const char *}col=@code{"r"})
-@deftypefnx {Функция С} @code{void} mgl_ellipse(@code{HMGL} gr, @code{mreal} x1, @code{mreal} y1, @code{mreal} z1, @code{mreal} x2, @code{mreal} y2, @code{mreal} z2, @code{mreal} r, @code{const char *}col)
+@deftypefnx {Функция С} @code{void} mgl_ellipse (@code{HMGL} gr, @code{mreal} x1, @code{mreal} y1, @code{mreal} z1, @code{mreal} x2, @code{mreal} y2, @code{mreal} z2, @code{mreal} r, @code{const char *}col)
 @end ifclear
 Рисует круг радиуса @var{r} с фокусами в точках @var{p1}, @var{p2} цветом @var{stl}. Если @var{col} содержит: @samp{#} то рисуется только граница, @samp{@@} то рисуется граница (вторым цветом из @var{col} или черными).
 @end deftypefn
@@ -1559,7 +1559,7 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Команда MGL} {} rhomb @code{x1 y1 z1 x2 y2 z2 r} ['col'='r']
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} Rhomb (@code{mglPoint} p1, @code{mglPoint} p2, @code{mreal} r, @code{const char *}col=@code{"r"})
-@deftypefnx {Функция С} @code{void} mgl_rhomb(@code{HMGL} gr, @code{mreal} x1, @code{mreal} y1, @code{mreal} z1, @code{mreal} x2, @code{mreal} y2, @code{mreal} z2, @code{mreal} r, @code{const char *}col)
+@deftypefnx {Функция С} @code{void} mgl_rhomb (@code{HMGL} gr, @code{mreal} x1, @code{mreal} y1, @code{mreal} z1, @code{mreal} x2, @code{mreal} y2, @code{mreal} z2, @code{mreal} r, @code{const char *}col)
 @end ifclear
 Рисует ромб ширины @var{r} с вершинами в точках @var{p1}, @var{p2} цветом @var{stl}. Если @var{col} содержит: @samp{#} то рисуется только граница, @samp{@@} то рисуется граница (вторым цветом из @var{col} или черными). Если @var{col} содержит 3 цвета, то используется градиентная заливка.
 @end deftypefn
@@ -3032,7 +3032,7 @@ gr.GetBGRN(bits, len(bits));
 
 Эти функции подбирают параметры функции для наилучшей аппроксимации данных, т.е. минимизируют сумму @math{\sum_i (f(x_i, y_i, z_i) - a_i)^2/s_i^2}. При этом аппроксимирующая функция @samp{f} может зависеть от одного аргумента @samp{x} (1D случай), от двух аргументов @samp{x,y} (2D случай) или от трех аргументов @samp{x,y,z} (3D случай). Функция @samp{f} также может зависеть от параметров. Список параметров задается строкой @var{var} (например, @samp{abcd}). Обычно пользователь должен предоставить начальные значения параметров в переменной @var{ini}. Однако, при его отсутствии используются нулевые значения. Параметр @var{print}=@code{true} включает вывод найденной формулы в @var{Message} (см. @ref{Error handling}).
 
-Функции Fit() и FitS() не рисуют полученные массивы. Они заполняют массив @var{fit} по формуле @samp{f} с найденными коэффициентами и возвращают @math{\chi^2} ошибку аппроксимации. При этом, координаты @samp{x,y,z} равно распределены в интервале @var{Min}--@var{Max}. Число точек в @var{fit} определяется опцией @code{value} (по умолчанию @var{mglFitPnts}=100). Функции используют библиотеку GSL. @sref{Nonlinear fitting sample}
+Функции Fit() и FitS() не рисуют полученные массивы. Они заполняют массив @var{fit} по формуле @samp{f} с найденными коэффициентами и возвращают @math{\chi^2} ошибку аппроксимации. При этом, координаты @samp{x,y,z} равно распределены в интервале @var{Min}--@var{Max}. Число точек в @var{fit} определяется опцией @code{value} (по умолчанию @var{mglFitPnts}=100). Функции используют библиотеку GSL. @sref{Nonlinear fitting hints}
 
 @anchor{fits}
 @deftypefn {Команда MGL} {} fits res adat sdat 'func' 'var' [ini=0]

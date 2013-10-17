@@ -1831,7 +1831,7 @@ int sample(mglGraph *gr)
 
 @c ------------------------------------------------------------------
 @external{}
-@node Cones sample, Chart sample, Bars sample, 1D samples
+@node Cones sample, Chart sample, Barh sample, 1D samples
 @subsection Cones sample
 @nav{}
 
@@ -2370,7 +2370,7 @@ int sample(mglGraph *gr)
 
 @c ------------------------------------------------------------------
 @external{}
-@node Boxs sample, Tile sample, Fall sample, 2D samples
+@node Boxs sample, Tile sample, Belt sample, 2D samples
 @subsection Boxs sample
 @nav{}
 
@@ -2851,7 +2851,7 @@ int sample(mglGraph *gr)
 @subsection Dens projection sample
 @nav{}
 
-Functions @ref{DensXYZ} draw density plot on plane perpendicular to corresponding axis. One of possible application is drawing projections of 3D field. The sample code is:
+Functions @ref{densz}, @ref{densy}, @ref{densx} draw density plot on plane perpendicular to corresponding axis. One of possible application is drawing projections of 3D field. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -2863,7 +2863,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@pfig{dens_xyz, Example of DensX()\, DensY()\, DensZ()}
+@pfig{dens_xyz, Example of DensX() DensY() DensZ()}
 
 @c ------------------------------------------------------------------
 @external{}
@@ -2871,7 +2871,7 @@ int sample(mglGraph *gr)
 @subsection Cont projection sample
 @nav{}
 
-Functions @ref{ContXYZ} draw contour lines on plane perpendicular to corresponding axis. One of possible application is drawing projections of 3D field. The sample code is:
+Functions @ref{contz}, @ref{conty}, @ref{contx} draw contour lines on plane perpendicular to corresponding axis. One of possible application is drawing projections of 3D field. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -2883,7 +2883,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@pfig{cont_xyz, Example of ContX()\, ContY()\, ContZ()}
+@pfig{cont_xyz, Example of ContX() ContY() ContZ()}
 
 @c ------------------------------------------------------------------
 @external{}
@@ -2891,7 +2891,7 @@ int sample(mglGraph *gr)
 @subsection ContF projection sample
 @nav{}
 
-Functions @code{ContFXYZ} draw filled contours on plane perpendicular to corresponding axis. One of possible application is drawing projections of 3D field. The sample code is:
+Functions @ref{contfz}, @ref{contfy}, @ref{contfx} draw filled contours on plane perpendicular to corresponding axis. One of possible application is drawing projections of 3D field. The sample code is:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -2903,11 +2903,11 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@pfig{contf_xyz, Example of ContFX()\, ContFY()\, ContFZ()}
+@pfig{contf_xyz, Example of ContFX() ContFY() ContFZ()}
 
 @c ------------------------------------------------------------------
 @external{}
-@node TriPlot and QuadPlot, Axial sample, ContF projection sample, 3D samples
+@node TriPlot and QuadPlot, Dots sample, ContF projection sample, 3D samples
 @subsection TriPlot and QuadPlot
 @nav{}
 
@@ -3233,7 +3233,7 @@ In this section I've included some small hints and advices for the improving of 
 * Mapping visualization::
 * Making regular data::
 * Making histogram::
-* Nonlinear fitting sample::
+* Nonlinear fitting hints::
 * PDE solving hints::
 * MGL parser using::
 * Using options::
@@ -3367,7 +3367,7 @@ int sample(mglGraph *gr)
 
 @c ------------------------------------------------------------------
 @external{}
-@node Axis projection, Adding fog, Ternary axis, Hints
+@node Axis projection, Adding fog, Types of transparency, Hints
 @subsection Axis projection
 @nav{}
 
@@ -3666,7 +3666,7 @@ int sample(mglGraph *gr)
 
 @c ------------------------------------------------------------------
 @external{}
-@node Making histogram, Nonlinear fitting sample, Making regular data, Hints
+@node Making histogram, Nonlinear fitting hints, Making regular data, Hints
 @subsection Making histogram
 @nav{}
 
@@ -3695,7 +3695,7 @@ int sample(mglGraph *gr)
 
 @c ------------------------------------------------------------------
 @external{}
-@node Nonlinear fitting sample, PDE solving hints, Making histogram, Hints
+@node Nonlinear fitting hints, PDE solving hints, Making histogram, Hints
 @subsection Nonlinear fitting hints
 @nav{}
 
@@ -3754,7 +3754,7 @@ int sample(mglGraph *gr)
 
 @c ------------------------------------------------------------------
 @external{}
-@node PDE solving hints, MGL parser using, Nonlinear fitting sample, Hints
+@node PDE solving hints, MGL parser using, Nonlinear fitting hints, Hints
 @subsection PDE solving hints
 @nav{}
 
@@ -3915,7 +3915,7 @@ void template(mglGraph *gr)
 
 @c ------------------------------------------------------------------
 @external{}
-@node ``Templates'', Nonlinear fitting sample, Using options, Hints
+@node ``Templates'', Stereo image, Using options, Hints
 @subsection ``Templates''
 @nav{}
 

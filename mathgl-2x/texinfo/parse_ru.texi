@@ -72,7 +72,7 @@ MathGL имеет встроенный скриптовый язык MGL для 
 
 @c ------------------------------------------------------------------
 @external{}
-@node Program flow commands, MGL definition, MGL scripts
+@node Program flow commands, mglParse class, MGL definition, MGL scripts
 @section Управление ходом выполнения
 @nav{}
 

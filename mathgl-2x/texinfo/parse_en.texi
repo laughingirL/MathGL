@@ -69,7 +69,7 @@ Command may have several set of possible arguments (for example, @code{plot ydat
 
 @c ------------------------------------------------------------------
 @external{}
-@node Program flow commands, MGL definition, MGL scripts
+@node Program flow commands, mglParse class, MGL definition, MGL scripts
 @section Program flow commands
 @nav{}
 

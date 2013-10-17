@@ -81,47 +81,39 @@ endif(MGL_HAVE_DOC_PRC)
 		WORKING_DIRECTORY ${MGL_OUT}
 	)
 	add_custom_command(OUTPUT ${MGL_OUT}/mathgl_ru.info
-		COMMAND ${findmi} --no-validate ${MGL_TEX}/mathgl_ru.texi
+		COMMAND ${findmi} ${MGL_TEX}/mathgl_ru.texi
 		DEPENDS ${list_texi_files_ru} mathgl_ru.texi ${MGL_PNG_N}
 		WORKING_DIRECTORY ${MGL_OUT}
 	)
 
 	add_custom_command(OUTPUT ${MGL_OUT}/mathgl_en.html
-		COMMAND ${findth} --html -I ${MGL_OUT} --no-split ${MGL_TEX}/mathgl_en.texi
+		COMMAND ${findth} ${th_opt} -I ${MGL_OUT} --no-split ${MGL_TEX}/mathgl_en.texi
 		DEPENDS ${list_texi_files_en} mathgl_en.texi ${MGL_PNG_N}
 		WORKING_DIRECTORY ${MGL_OUT}
 	)
 	add_custom_command(OUTPUT ${MGL_OUT}/mgl_en.html
-		COMMAND ${findth} --html -I ${MGL_OUT} --no-split ${MGL_TEX}/mgl_en.texi
+		COMMAND ${findth} ${th_opt} -I ${MGL_OUT} --no-split ${MGL_TEX}/mgl_en.texi
 		DEPENDS ${list_texi_files_en} mgl_en.texi ${MGL_PNG_N}
 		WORKING_DIRECTORY ${MGL_OUT}
 	)
 	add_custom_command(OUTPUT ${MGL_OUT}/mathgl_ru.html
-		COMMAND ${findth} --html -I=${MGL_OUT} --no-split ${MGL_TEX}/mathgl_ru.texi
+		COMMAND ${findth} ${th_opt} -I=${MGL_OUT} --no-split ${MGL_TEX}/mathgl_ru.texi
 		DEPENDS ${list_texi_files_ru} mathgl_ru.texi ${MGL_PNG_N}
 		WORKING_DIRECTORY ${MGL_OUT}
 	)
 	add_custom_command(OUTPUT ${MGL_OUT}/mgl_ru.html
-		COMMAND ${findth} --html -I=${MGL_OUT} --no-split ${MGL_TEX}/mgl_ru.texi
+		COMMAND ${findth} ${th_opt} -I=${MGL_OUT} --no-split ${MGL_TEX}/mgl_ru.texi
 		DEPENDS ${list_texi_files_ru} mgl_ru.texi ${MGL_PNG_N}
 		WORKING_DIRECTORY ${MGL_OUT}
 	)
 
-	if(MGL_HAVE_TEXI2HTML)
-		set(site_en ${MGL_OUT}/doc_en/doc_en.html)
-		set(site_ru ${MGL_OUT}/doc_ru/doc_ru.html)
-	else(MGL_HAVE_TEXI2HTML)
-		set(site_en ${MGL_OUT}/doc_en/index.html)
-		set(site_ru ${MGL_OUT}/doc_ru/index.html)
-	endif(MGL_HAVE_TEXI2HTML)
-
 	add_custom_command(OUTPUT ${site_en}
-		COMMAND ${findth} --html -I=${MGL_OUT}/png --split=node -o doc_en ${MGL_TEX}/doc_en.texi
+		COMMAND ${findth} ${th_opt} -I=${MGL_OUT}/png --split=node -o doc_en ${MGL_TEX}/doc_en.texi
 		DEPENDS ${list_texi_files_en} doc_en.texi ${MGL_PNG_N} web_en.texi ${MGL_PNG_S} ${MGL_PNG_J} ${MGL_PNG_D}
 		WORKING_DIRECTORY ${MGL_OUT}
 	)
 	add_custom_command(OUTPUT ${site_ru}
-		COMMAND ${findth} --html -I=${MGL_OUT}/png --split=node -o doc_ru ${MGL_TEX}/doc_ru.texi
+		COMMAND ${findth} ${th_opt} -I=${MGL_OUT}/png --split=node -o doc_ru ${MGL_TEX}/doc_ru.texi
 		DEPENDS ${list_texi_files_ru} doc_ru.texi ${MGL_PNG_N} web_ru.texi ${MGL_PNG_S} ${MGL_PNG_J} ${MGL_PNG_D}
 		WORKING_DIRECTORY ${MGL_OUT}
 	)
