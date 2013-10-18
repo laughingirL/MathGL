@@ -551,7 +551,7 @@ For using MathGL in MPI program you just need to: (1) plot its own part of data 
 First you need to initialize MPI
 @verbatim
 #include <stdio.h>
-#include <mgl2/mgl.h>
+#include <mgl2/mpi.h>
 #include <mpi.h>
 
 int main(int argc, char *argv[])
@@ -569,7 +569,7 @@ Next step is data creation. For simplicity, I create data arrays with the same s
 @verbatim
   // initialize data similarly for all nodes
   mglData a(128,256);
-  mglGraph gr;
+  mglGraphMPI gr;
 @end verbatim
 
 Now, data should be filled by numbers. In real case, it should be some kind of calculations. But I just fill it by formula.
@@ -616,7 +616,7 @@ In my case the program is done, and I finalize MPI. In real program, you can rep
 }
 @end verbatim
 
-You can type @samp{mpic++ test.cpp -lmgl && mpirun -np 8 ./a.out} for compilation and running the sample program on 8 nodes. Note, that you have to set enable-mpi=ON at MathGL configure to use this feature.
+You can type @samp{mpic++ test.cpp -lmgl-mpi -lmgl && mpirun -np 8 ./a.out} for compilation and running the sample program on 8 nodes. Note, that you have to set enable-mpi=ON at MathGL configure to use this feature.
 
 
 @c ------------------------------------------------------------------
