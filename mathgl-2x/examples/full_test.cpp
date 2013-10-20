@@ -67,16 +67,9 @@ void smgl_text(mglGraph *gr);	// text drawing
 void smgl_surf(mglGraph *gr);
 void test(mglGraph *gr)
 {
-	gr->SetQuality(8);
 	mglParse par;
-	par.AllowSetSize(true);
 	setlocale(LC_CTYPE, "");
-	par.Execute(gr,"fplot 'x'");
-//	par.Execute(gr,"var a 5 -1 1:text 0 0 'min=',a.min,' max=',a.max");
-
-//	FILE *fp=fopen("/home/balakin/progr/mathgl-code/mathgl-2x/build/test.mgl","r");
-//	par.Execute(gr,fp,true);
-//	fclose(fp);
+	par.Execute(gr,"axis:subplot 2 2 1:axis");
 }
 //-----------------------------------------------------------------------------
 #if !defined(_MSC_VER) && !defined(__BORLANDC__)

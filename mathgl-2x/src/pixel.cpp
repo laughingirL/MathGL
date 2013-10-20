@@ -1553,7 +1553,7 @@ void mglCanvas::glyph_draw(const mglPrim &P, mglDrawReg *d)
 	float phi = GetGlyphPhi(Pnt[P.n2],P.w);
 	if(mgl_isnan(phi))	return;
 
-	if(d)	{	d->PDef = MGL_SOLID_MASK;	d->angle = 0;	d->PenWidth=1;	}
+	if(d)	{	d->PDef = MGL_SOLID_MASK;	d->angle = 0;	d->PenWidth=0.5;	}
 	mglPnt p=Pnt[P.n1];
 	mreal pf=sqrt((Bp.b[0]*Bp.b[0]+Bp.b[1]*Bp.b[1]+Bp.b[3]*Bp.b[3]+Bp.b[4]*Bp.b[4])/2), f = P.p*pf;
 

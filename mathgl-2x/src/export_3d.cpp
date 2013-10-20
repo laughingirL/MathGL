@@ -530,21 +530,33 @@ MGL_EXPORT const char *mgl_get_json(HMGL gr)
 std::string mglCanvas::GetJSON()
 {
 	ClearUnused();	// clear unused points
-	std::string res;
-	size_t i,l=Pnt.size();
+	std::string res, buf;
+	long i,ll=0,l=(long)Pnt.size();
 	long factor = Width>1?10:10000;
-	res = res + mgl_sprintf("{\n\"width\":%d,\t\"height\":%d,\t\"depth\":%d,\t\"plotid\":\"%s\",\t\"npnts\":%lu,\t\"pnts\":[\n",
-			factor*Width, factor*Height, factor*Depth, PlotId.c_str(), (unsigned long)l);
-	for(i=0;i<l;i++)
+	res = res + mgl_sprintf("{\n\"width\":%d,\t\"height\":%d,\t\"depth\":%d,\t\"plotid\":\"%s\",\t\"npnts\":%ld,\t\"pnts\":[\n",
+			factor*Width, factor*Height, factor*Depth, PlotId.c_str(), l);
+	std::string *tmp=new std::string[l];
+#pragma omp parallel for reduction(+:ll)
+	for(long i=0;i<l;i++)
 	{
 		const mglPnt &q=Pnt[i];
-		res = res + mgl_sprintf("[%ld,%ld,%ld]%c\n", long(factor*q.xx), long(factor*(Height-q.yy)), long(factor*q.zz), i+1<l?',':' ');
+		tmp[i] = mgl_sprintf("[%ld,%ld,%ld]%c\n", long(factor*q.xx), long(factor*(Height-q.yy)), long(factor*q.zz), i+1<l?',':' ');
+		ll += tmp[i].length();
 	}
-	l = Prm.size();
-	res = res + mgl_sprintf("],\t\"nprim\":%lu,\t\"prim\":[\n",(unsigned long)l);
+	res.reserve(ll);
+	for(i=0;i<l;i++)	res = res + tmp[i];
+	delete []tmp;
+
+	l = (long)Prm.size();
+	for(ll=i=0;i<l;i++)
+	{	mglColor c = GetColor(Prm[i]);	if(c.a>=0.01)	ll++;	}
+
+	res = res + mgl_sprintf("],\t\"nprim\":%ld,\t\"prim\":[\n",ll);
 
 	std::vector<mglPoint> xy;	// vector for glyphs coordinates (to be separated from pnts)
-	for(i=0;i<l;i++)
+	res.reserve(60*ll);
+#pragma omp parallel for private(buf)
+	for(long i=0;i<l;i++)
 	{
 		const mglPrim &p=Prm[i];		mglColor c = GetColor(p);
 		if(p.n1<0 || (p.type==1 && p.n2<0) || (p.type==2 && (p.n2<0 || p.n3<0)) || (p.type==3 && (p.n2<0 || p.n3<0 || p.n4<0)))
@@ -554,22 +566,25 @@ std::string mglCanvas::GetJSON()
 		if(p.type==4)
 		{
 			const mglPnt &q = Pnt[p.n1];
-			xy.push_back(mglPoint(q.u,q.v,p.n2));
-			n2 = xy.size()-1;
+#pragma omp critical
+			{xy.push_back(mglPoint(q.u,q.v,p.n2));	n2 = xy.size()-1;}
 			n3 = p.n3;	n4 = p.n4;
 		}
 		if(p.type==1 && n1>n2)	{	n1=p.n2;	n2=p.n1;	}
 		if(c.a==1 || p.type==0 || p.type==1 || p.type==4 || p.type==6)
-			res = res + mgl_sprintf("[%d,%ld,%ld,%ld,%ld,%d,%.3g,%.2g,%.2g,%.2g,\"#%02x%02x%02x\"]%c\n",
+			buf = mgl_sprintf("[%d,%ld,%ld,%ld,%ld,%d,%.3g,%.2g,%.2g,%.2g,\"#%02x%02x%02x\"]%c\n",
 				p.type, n1, n2, n3, n4, p.id, p.s==p.s?factor*p.s:0, p.w==p.w?p.w:0, p.p==p.p?p.p:0,
 				0., int(255*c.r), int(255*c.g), int(255*c.b), i+1<l?',':' ');
-		else
-			res = res + mgl_sprintf("[%d,%ld,%ld,%ld,%ld,%d,%.3g,%.2g,%.2g,%.2g,\"rgba(%d,%d,%d,%.2g)\"]%c\n",
+		else if(c.a>=0.01)
+			buf = mgl_sprintf("[%d,%ld,%ld,%ld,%ld,%d,%.3g,%.2g,%.2g,%.2g,\"rgba(%d,%d,%d,%.2g)\"]%c\n",
 				p.type, n1, n2, n3, n4, p.id, p.s==p.s?factor*p.s:0, p.w==p.w?p.w:0, p.p==p.p?p.p:0,
 				0., int(255*c.r), int(255*c.g), int(255*c.b), c.a, i+1<l?',':' ');
+		else	buf = "";
+#pragma omp critical
+		res += buf;
 	}
 
-	l = xy.size();
+	l = (long)xy.size();
 	res = res + mgl_sprintf("],\t\"ncoor\":%lu,\t\"coor\":[\n",(unsigned long)l);
 	for(i=0;i<l;i++)
 	{
@@ -581,15 +596,12 @@ std::string mglCanvas::GetJSON()
 			res = res + mgl_sprintf("[%.2g,%.2g,1e11,1e11,1e11]%c\n", p.x, p.y, i+1<l?',':' ');
 	}
 
-	l = Glf.size();
+	l = (long)Glf.size();
 	res = res + mgl_sprintf("],\t\"nglfs\":%lu,\t\"glfs\":[\n",(unsigned long)l);
 	for(i=0;i<l;i++)
 	{
 		const mglGlyph &g=Glf[i];
 		res = res + mgl_sprintf("[%ld,\n\t[", g.nl);
-//		res = res + mgl_sprintf("[%ld,%ld,\n\t[", g.nt, g.nl);
-//		for(long j=0;j<6*g.nt;j++)	res = res + mgl_sprintf("%d%c", g.trig[j], j+1<6*g.nt?',':' ');
-//		res = res + mgl_sprintf("],\n\t[");
 		for(long j=0;j<2*g.nl;j++)	res = res + mgl_sprintf("%d%c", g.line[j], j+1<2*g.nl?',':' ');
 		res = res + mgl_sprintf("]\n]%c\n", i+1<l?',':' ');
 	}

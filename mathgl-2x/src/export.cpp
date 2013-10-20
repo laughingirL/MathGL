@@ -209,14 +209,14 @@ void MGL_NO_EXPORT mgl_printf(void *fp, bool gz, const char *str, ...)	// NOTE T
 	else	fprintf((FILE *)fp, "%s", buf);
 }
 //---------------------------------------------------------------------------
-std::string MGL_NO_EXPORT mgl_sprintf(const char *str, ...)	// NOTE This function is not thread-safe
+std::string MGL_NO_EXPORT mgl_sprintf(const char *str, ...)
 {
-	static char buf[1024];
+	char *buf=new char[1024];
 	va_list lst;
 	va_start(lst,str);
 	vsnprintf(buf,1023,str,lst);
 	va_end(lst);
-	std::string res = buf;
+	std::string res = buf;	delete []buf;
 	return res;
 }
 //---------------------------------------------------------------------------

@@ -1656,9 +1656,11 @@ const char *mmgl_light="light on:quality 6\ncall 'prepare2d'\n"
 "line 1 0 1 -1 -1 0 'BAO'\n";
 void smgl_light(mglGraph *gr)	// local light sources
 {
+	mglData a;	mgls_prepare2d(&a);
+	if(big==3)
+	{	gr->Light(true);	gr->Rotate(50,60);	gr->Box();	gr->Surf(a);	return;	}
 	int qual = gr->GetQuality();
 	gr->Light(true);	gr->SetQuality(6);
-	mglData a;	mgls_prepare2d(&a);
 	gr->SubPlot(2,2,0);	gr->Title("Default");	gr->Rotate(50,60);	gr->Box();	gr->Surf(a);
 	gr->Line(mglPoint(-1,-0.7,1.7),mglPoint(-1,-0.7,0.7),"BA");
 	gr->AddLight(0,mglPoint(1,0,1),mglPoint(-2,-1,-1));
