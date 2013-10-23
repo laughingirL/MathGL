@@ -548,8 +548,9 @@ std::string mglCanvas::GetJSON()
 	delete []tmp;
 
 	l = (long)Prm.size();
+	PreparePrim(3);
 	for(ll=i=0;i<l;i++)
-	{	mglColor c = GetColor(Prm[i]);	if(c.a>=0.01)	ll++;	}
+	{	mglRGBA c;	c.c = GetPrmCol(i);	if(c.r[3])	ll++;	}
 
 	res = res + mgl_sprintf("],\t\"nprim\":%ld,\t\"prim\":[\n",ll);
 
@@ -558,7 +559,7 @@ std::string mglCanvas::GetJSON()
 #pragma omp parallel for private(buf)
 	for(long i=0;i<l;i++)
 	{
-		const mglPrim &p=Prm[i];		mglColor c = GetColor(p);
+		const mglPrim &p=Prm[i];	mglRGBA cp;	cp.c = GetPrmCol(i);
 		if(p.n1<0 || (p.type==1 && p.n2<0) || (p.type==2 && (p.n2<0 || p.n3<0)) || (p.type==3 && (p.n2<0 || p.n3<0 || p.n4<0)))
 			continue;
 		long n1=p.n1, n2=p.n2, n3=0, n4=(p.type==3||p.type==0)?p.n4:0;
@@ -571,14 +572,14 @@ std::string mglCanvas::GetJSON()
 			n3 = p.n3;	n4 = p.n4;
 		}
 		if(p.type==1 && n1>n2)	{	n1=p.n2;	n2=p.n1;	}
-		if(c.a==1 || p.type==0 || p.type==1 || p.type==4 || p.type==6)
+		if(cp.r[3]==255 || p.type==0 || p.type==1 || p.type==4 || p.type==6)
 			buf = mgl_sprintf("[%d,%ld,%ld,%ld,%ld,%d,%.3g,%.2g,%.2g,%.2g,\"#%02x%02x%02x\"],\n",
 				p.type, n1, n2, n3, n4, p.id, p.s==p.s?factor*p.s:0, p.w==p.w?p.w:0, p.p==p.p?p.p:0,
-				0., int(255*c.r), int(255*c.g), int(255*c.b));
-		else if(c.a>=0.01)
+				0., int(cp.r[0]),int(cp.r[1]),int(cp.r[2]));
+		else if(cp.r[3])
 			buf = mgl_sprintf("[%d,%ld,%ld,%ld,%ld,%d,%.3g,%.2g,%.2g,%.2g,\"rgba(%d,%d,%d,%.2g)\"],\n",
 				p.type, n1, n2, n3, n4, p.id, p.s==p.s?factor*p.s:0, p.w==p.w?p.w:0, p.p==p.p?p.p:0,
-				0., int(255*c.r), int(255*c.g), int(255*c.b));
+				0., int(cp.r[0]),int(cp.r[1]),int(cp.r[2]),cp.r[3]/255.);
 		else	buf = "";
 #pragma omp critical
 		res += buf;

@@ -21,11 +21,11 @@ mglCanvasGL::mglCanvasGL() : mglCanvas(1,1)	{}
 //-----------------------------------------------------------------------------
 mglCanvasGL::~mglCanvasGL(){}
 //-----------------------------------------------------------------------------
-void mglCanvasGL::Finish(bool fast)
+void mglCanvasGL::Finish()
 {
 	if(Prm.size()>0)
 	{
-		PreparePrim(fast);
+		PreparePrim(0);
 		glVertexPointer(3, GL_FLOAT, sizeof(mglPnt), &(Pnt[0].x));
 		glNormalPointer(GL_FLOAT, sizeof(mglPnt), &(Pnt[0].u));
 		glColorPointer(4, GL_FLOAT, sizeof(mglPnt), &(Pnt[0].r));

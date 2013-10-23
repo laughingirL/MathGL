@@ -96,6 +96,8 @@ struct mglDrawDat
 	std::vector<mglTexture> Txt;	///< Pointer to textures
 };
 //-----------------------------------------------------------------------------
+union mglRGBA	{	uint32_t c; unsigned char r[4];	};
+//-----------------------------------------------------------------------------
 /// Class contains all functionality for creating different mathematical plots
 class MGL_EXPORT mglCanvas : public mglBase
 {
@@ -207,7 +209,7 @@ using mglBase::Light;
 	/// Stop writing cinema using GIF format
 	void CloseGIF();
 	/// Finish plotting. Normally this function is called internaly.
-	virtual void Finish(bool fast=true);
+	virtual void Finish();
 	/// Export points and primitives in file using MGLD format
 	bool ExportMGLD(const char *fname, const char *descr=0);
 	/// Import points and primitives from file using MGLD format
@@ -288,8 +290,6 @@ using mglBase::Light;
 
 	void StartAutoGroup (const char *);
 	void EndGroup();
-	/// Retur color for primitive depending lighting
-	mglColor GetColor(const mglPrim &p);
 	/// Set extra shift for tick and axis labels
 	inline void SetTickShift(mglPoint p)
 	{	ax.sh = p.x;	ay.sh = p.y;	az.sh = p.z;	ac.sh = p.c;	}
@@ -303,6 +303,10 @@ using mglBase::Light;
 	/// Plot point p with color c
 	void pnt_plot(long x,long y,mreal z,const unsigned char c[4], int obj_id);
 	void pnt_fast(long x,long y,mreal z,const unsigned char c[4], int obj_id);
+	/// preparing primitives for 2d export or bitmap drawing (0 default, 1 for 2d vector, 2 for 3d vector)
+	void PreparePrim(int fast);
+	inline uint32_t GetPntCol(long i)	{	return pnt_col[i];	}
+	inline uint32_t GetPrmCol(long i)	{	return prm_col[i];	}
 
 protected:
 	mreal Delay;		///< Delay for animation in seconds
@@ -354,6 +358,8 @@ protected:
 	void LightScale(const mglMatrix *M);	///< Additionally scale positions of light sources
 	/// Push drawing data (for frames only). NOTE: can be VERY large
 	long PushDrwDat();
+	/// Retur color for primitive depending lighting
+	uint32_t GetColor(const mglPrim &p);
 
 	mreal GetOrgX(char dir, bool inv=false) const;	///< Get Org.x (parse NAN value)
 	mreal GetOrgY(char dir, bool inv=false) const;	///< Get Org.y (parse NAN value)
@@ -383,7 +389,8 @@ protected:
 	mglPoint RestorePnt(mglPoint ps, bool norm=false) const;
 
 	// functions for multi-threading
-	void PreparePrim(bool fast);
+	void pxl_pntcol(long id, long n, const void *);
+	void pxl_prmcol(long id, long n, const void *);
 	void pxl_combine(long id, long n, const void *);
 	void pxl_memcpy(long id, long n, const void *);
 	void pxl_backgr(long id, long n, const void *);
@@ -398,6 +405,7 @@ protected:
 	void PutDrawReg(mglDrawReg *d, const mglCanvas *gr);
 
 private:
+	std::vector<uint32_t> pnt_col, prm_col;
 //	mreal _tetx,_tety,_tetz;		// extra angles
 	std::vector<mglMatrix> stack;	///< stack for transformation matrices
 	int dr_nx1, dr_nx2, dr_ny1, dr_ny2;	// Allowed drawing region

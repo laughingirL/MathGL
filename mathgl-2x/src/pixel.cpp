@@ -290,6 +290,63 @@ void mglCanvas::pxl_setz_adv(long id, long n, const void *)
 	}
 }
 //-----------------------------------------------------------------------------
+void mglCanvas::pxl_prmcol(long id, long n, const void *)
+{
+	prm_col.resize(n);
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel for
+#endif
+	for(long i=id;i<n;i+=mglNumThr)
+		prm_col[i] = GetColor(Prm[i]);
+}
+//-----------------------------------------------------------------------------
+uint32_t mglCanvas::GetColor(const mglPrim &p)
+{
+	mglRGBA res, c1,c2,c3,c4;
+	c1.c=pnt_col[p.type==1?p.n2:p.n1];
+	unsigned r=c1.r[0], g=c1.r[1], b=c1.r[2], a=c1.r[3];
+	switch(p.type)
+	{
+	case 2:
+		c2.c=pnt_col[p.n2];	c3.c=pnt_col[p.n3];
+		res.r[0]=(r+c2.r[0]+c3.r[0])/3;
+		res.r[1]=(g+c2.r[1]+c3.r[1])/3;
+		res.r[2]=(b+c2.r[2]+c3.r[2])/3;
+		res.r[3]=(a+c2.r[3]+c3.r[3])/3;	break;
+	case 3:
+		c2.c=pnt_col[p.n2];	c3.c=pnt_col[p.n3];	c4.c=pnt_col[p.n4];
+		res.r[0]=(r+c2.r[0]+c3.r[0]+c3.r[0])/4;
+		res.r[1]=(g+c2.r[1]+c3.r[1]+c3.r[1])/4;
+		res.r[2]=(b+c2.r[2]+c3.r[2]+c3.r[2])/4;
+		res.r[3]=(a+c2.r[3]+c3.r[3]+c3.r[3])/4;	break;
+	case 6:
+//		res.r[0]=p.n2&0xff;	res.r[1]=(p.n2/256)&0xff;	res.r[2]=(p.n2/65536)&0xff;	res.r[3]=255;	break;
+		res.c=p.n2;	break;
+	default:
+		res.c = c1.c;	res.r[3]=255;	break;
+	}
+	// add fog into resulting color
+	float zf = FogDist*(p.z/Depth-0.5-FogDz);
+	if(zf<0)	// add fog
+	{
+		int d = int(255.f-255.f*exp(5.f*zf));
+		unsigned char cb[4] = {BDef[0], BDef[1], BDef[2], (unsigned char)d};
+		if(d<255)	combine(res.r,cb);
+	}
+	return res.c;
+}
+//-----------------------------------------------------------------------------
+void mglCanvas::pxl_pntcol(long id, long n, const void *)
+{
+	mglRGBA c;
+	pnt_col.resize(n);
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel for private(c)
+#endif
+	for(long i=id;i<n;i+=mglNumThr)
+	{	col2int(Pnt[i],c.r,-1);	pnt_col[i]=c.c;	}
+}
+//-----------------------------------------------------------------------------
 void mglCanvas::pxl_setz(long id, long n, const void *)
 {
 #if !MGL_HAVE_PTHREAD
@@ -299,21 +356,35 @@ void mglCanvas::pxl_setz(long id, long n, const void *)
 	{	mglPrim &q=Prm[i];	q.z = Pnt[q.n1].z;	}
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::PreparePrim(bool fast)
+void mglCanvas::PreparePrim(int fast)
 {
+	if(fast==2)
+	{
+		mglStartThread(&mglCanvas::pxl_pntcol,this,Pnt.size());
+		mglStartThread(&mglCanvas::pxl_prmcol,this,Prm.size());
+		return;
+	}
 	mglStartThread(&mglCanvas::pxl_transform,this,Pnt.size());
-	if(fast)	mglStartThread(&mglCanvas::pxl_setz,this,Prm.size());
-	else	mglStartThread(&mglCanvas::pxl_setz_adv,this,Prm.size());
+	if(fast==0)	mglStartThread(&mglCanvas::pxl_setz,this,Prm.size());
+	else
+	{
+		mglStartThread(&mglCanvas::pxl_pntcol,this,Pnt.size());
+		mglStartThread(&mglCanvas::pxl_prmcol,this,Prm.size());
+		mglStartThread(&mglCanvas::pxl_setz_adv,this,Prm.size());
+	}
 	mglCreationOrder = false;
 	std::sort(Prm.begin(), Prm.end());
 }
 //-----------------------------------------------------------------------------
 void mglBase::resort()
 {
-	mglCreationOrder = true;
-	std::sort(Prm.begin(), Prm.end());
-	mglCreationOrder = false;
-	clr(MGL_FINISHED);
+#pragma omp critical
+	{
+		mglCreationOrder = true;
+		std::sort(Prm.begin(), Prm.end());
+		mglCreationOrder = false;
+		clr(MGL_FINISHED);
+	}
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::pxl_primdr(long id, long , const void *)
@@ -400,7 +471,7 @@ void mglCanvas::pxl_dotsdr(long id, long n, const void *)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::Finish(bool fast)
+void mglCanvas::Finish()
 {
 	if(Quality==MGL_DRAW_DOTS)
 	{
@@ -420,7 +491,7 @@ void mglCanvas::Finish(bool fast)
 	working = true;*/
 	if(!(Quality&MGL_DRAW_LMEM) && Prm.size()>0)
 	{
-		PreparePrim(fast);	bp=Bp;
+		PreparePrim(0);	bp=Bp;
 		clr(MGL_FINISHED);
 		mglStartThread(&mglCanvas::pxl_primdr,this,Prm.size());
 	}
