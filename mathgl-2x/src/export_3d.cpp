@@ -572,17 +572,18 @@ std::string mglCanvas::GetJSON()
 		}
 		if(p.type==1 && n1>n2)	{	n1=p.n2;	n2=p.n1;	}
 		if(c.a==1 || p.type==0 || p.type==1 || p.type==4 || p.type==6)
-			buf = mgl_sprintf("[%d,%ld,%ld,%ld,%ld,%d,%.3g,%.2g,%.2g,%.2g,\"#%02x%02x%02x\"]%c\n",
+			buf = mgl_sprintf("[%d,%ld,%ld,%ld,%ld,%d,%.3g,%.2g,%.2g,%.2g,\"#%02x%02x%02x\"],\n",
 				p.type, n1, n2, n3, n4, p.id, p.s==p.s?factor*p.s:0, p.w==p.w?p.w:0, p.p==p.p?p.p:0,
-				0., int(255*c.r), int(255*c.g), int(255*c.b), i+1<l?',':' ');
+				0., int(255*c.r), int(255*c.g), int(255*c.b));
 		else if(c.a>=0.01)
-			buf = mgl_sprintf("[%d,%ld,%ld,%ld,%ld,%d,%.3g,%.2g,%.2g,%.2g,\"rgba(%d,%d,%d,%.2g)\"]%c\n",
+			buf = mgl_sprintf("[%d,%ld,%ld,%ld,%ld,%d,%.3g,%.2g,%.2g,%.2g,\"rgba(%d,%d,%d,%.2g)\"],\n",
 				p.type, n1, n2, n3, n4, p.id, p.s==p.s?factor*p.s:0, p.w==p.w?p.w:0, p.p==p.p?p.p:0,
-				0., int(255*c.r), int(255*c.g), int(255*c.b), c.a, i+1<l?',':' ');
+				0., int(255*c.r), int(255*c.g), int(255*c.b));
 		else	buf = "";
 #pragma omp critical
 		res += buf;
 	}
+	res += "[0,0,0,0,0,0,0,0,0,0,\"#000000\"]\n";	// need to add this empty block
 
 	l = (long)xy.size();
 	res = res + mgl_sprintf("],\t\"ncoor\":%lu,\t\"coor\":[\n",(unsigned long)l);

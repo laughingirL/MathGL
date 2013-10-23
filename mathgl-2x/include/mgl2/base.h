@@ -78,8 +78,7 @@ struct mglPrim	// NOTE: use float for reducing memory size
 		};
 		uint64_t m;
 	};
-
-	mglPrim(int t=0)	{	n1=n2=n3=n4=id=0;	z=s=w=p=0;	type = t;	}
+	mglPrim(int t=0)	{	n1=n2=n3=n4=id=0;	z=s=w=p=0;	type=t;	}
 };
 bool operator<(const mglPrim &a,const mglPrim &b);
 bool operator>(const mglPrim &a,const mglPrim &b);

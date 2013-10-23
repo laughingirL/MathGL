@@ -25,7 +25,7 @@
 #endif
 
 #include "mgl2/parser.h"
-#define iint(x)	floor((x)+0.5)
+#define iint(x)	long((x)+0.5)
 wchar_t *mgl_str_copy(const char *s);
 //-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_addlegend(mglGraph *gr, long , mglArg *a, const char *k, const char *)
@@ -1150,8 +1150,8 @@ int MGL_NO_EXPORT mgls_rotatetext(mglGraph *gr, long , mglArg *a, const char *k,
 int MGL_NO_EXPORT mgls_tuneticks(mglGraph *gr, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
-	if(!strcmp(k,"n"))	gr->SetTuneTicks(a[0].v!=0);
-	else if(!strcmp(k,"nn"))	gr->SetTuneTicks(a[0].v!=0,a[1].v);
+	if(!strcmp(k,"n"))	gr->SetTuneTicks(iint(a[0].v));
+	else if(!strcmp(k,"nn"))	gr->SetTuneTicks(iint(a[0].v),a[1].v);
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------

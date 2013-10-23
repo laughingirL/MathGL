@@ -598,7 +598,7 @@ bool mglFont::read_def()
 	numg = mgl_numg;
 	// copy default factor for other font styles;
 	fact[1] = fact[2] = fact[3] = fact[0] = mgl_fact*mgl_fgen;
-	Buf = (short *)malloc(mgl_cur*sizeof(short));	// prealocate buffer
+	Buf = new short[mgl_cur];	// prealocate buffer
 	memset(Buf,0,mgl_cur*sizeof(short));
 	// now allocate memory for all fonts
 	mem_alloc();

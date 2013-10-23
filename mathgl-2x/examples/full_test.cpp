@@ -123,7 +123,7 @@ void usage()
 		"--prc		- output prc\n"
 		"--pdf		- output pdf\n"
 		"--eps		- output EPS\n"
-		"--eps		- output LaTeX\n"
+		"--tex		- output LaTeX\n"
 		"--jpeg		- output JPEG\n"
 		"--json		- output JSON\n"
 		"--jsonz		- output JSONz\n"
