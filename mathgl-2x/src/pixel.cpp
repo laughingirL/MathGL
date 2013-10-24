@@ -315,22 +315,22 @@ uint32_t mglCanvas::GetColor(const mglPrim &p)
 		res.r[3]=(a+c2.r[3]+c3.r[3])/3;	break;
 	case 3:
 		c2.c=pnt_col[p.n2];	c3.c=pnt_col[p.n3];	c4.c=pnt_col[p.n4];
-		res.r[0]=(r+c2.r[0]+c3.r[0]+c3.r[0])/4;
-		res.r[1]=(g+c2.r[1]+c3.r[1]+c3.r[1])/4;
-		res.r[2]=(b+c2.r[2]+c3.r[2]+c3.r[2])/4;
-		res.r[3]=(a+c2.r[3]+c3.r[3]+c3.r[3])/4;	break;
+		res.r[0]=(r+c2.r[0]+c3.r[0]+c4.r[0])/4;
+		res.r[1]=(g+c2.r[1]+c3.r[1]+c4.r[1])/4;
+		res.r[2]=(b+c2.r[2]+c3.r[2]+c4.r[2])/4;
+		res.r[3]=(a+c2.r[3]+c3.r[3]+c4.r[3])/4;	break;
 	case 6:
-//		res.r[0]=p.n2&0xff;	res.r[1]=(p.n2/256)&0xff;	res.r[2]=(p.n2/65536)&0xff;	res.r[3]=255;	break;
-		res.c=p.n2;	break;
+		res.r[0]=p.n2&0xff;	res.r[1]=(p.n2/256)&0xff;	res.r[2]=(p.n2/65536)&0xff;	res.r[3]=255;	break;
+//		res.c=p.n2;	break;
 	default:
-		res.c = c1.c;	res.r[3]=255;	break;
+		res.c = c1.c;	break;
 	}
 	// add fog into resulting color
 	float zf = FogDist*(p.z/Depth-0.5-FogDz);
 	if(zf<0)	// add fog
 	{
-		int d = int(255.f-255.f*exp(5.f*zf));
-		unsigned char cb[4] = {BDef[0], BDef[1], BDef[2], (unsigned char)d};
+		unsigned char d = (unsigned char)(255*(1.-exp(5*zf)));
+		unsigned char cb[4] = {BDef[0], BDef[1], BDef[2], d};
 		if(d<255)	combine(res.r,cb);
 	}
 	return res.c;
@@ -358,22 +358,19 @@ void mglCanvas::pxl_setz(long id, long n, const void *)
 //-----------------------------------------------------------------------------
 void mglCanvas::PreparePrim(int fast)
 {
-	if(fast==2)
+	if(fast!=2)
+	{
+		mglStartThread(&mglCanvas::pxl_transform,this,Pnt.size());
+		if(fast==0)	mglStartThread(&mglCanvas::pxl_setz,this,Prm.size());
+		else	mglStartThread(&mglCanvas::pxl_setz_adv,this,Prm.size());
+		mglCreationOrder = false;
+		std::sort(Prm.begin(), Prm.end());
+	}
+	if(fast>0)
 	{
 		mglStartThread(&mglCanvas::pxl_pntcol,this,Pnt.size());
 		mglStartThread(&mglCanvas::pxl_prmcol,this,Prm.size());
-		return;
 	}
-	mglStartThread(&mglCanvas::pxl_transform,this,Pnt.size());
-	if(fast==0)	mglStartThread(&mglCanvas::pxl_setz,this,Prm.size());
-	else
-	{
-		mglStartThread(&mglCanvas::pxl_pntcol,this,Pnt.size());
-		mglStartThread(&mglCanvas::pxl_prmcol,this,Prm.size());
-		mglStartThread(&mglCanvas::pxl_setz_adv,this,Prm.size());
-	}
-	mglCreationOrder = false;
-	std::sort(Prm.begin(), Prm.end());
 }
 //-----------------------------------------------------------------------------
 void mglBase::resort()
@@ -520,6 +517,7 @@ void mglCanvas::Clf(mglColor Back)
 	Fog(0);		PDef = 0xffff;	pPos = 0;	StartAutoGroup(NULL);
 	Pnt.clear();	Prm.clear();	Ptx.clear();	Glf.clear();
 	Sub.clear();	Leg.clear();	Grp.clear();	Act.clear();
+	pnt_col.clear();	prm_col.clear();
 
 #pragma omp critical(txt)
 	{
@@ -615,7 +613,7 @@ unsigned char* mglCanvas::col2int(const mglPnt &p,unsigned char *r, int obj_id)
 	ar = ag = ab = AmbBr;
 
 //	if(get(MGL_ENABLE_LIGHT) && mgl_isnum(p.u))
-	if(mgl_isnum(p.u))
+	if(mgl_isnum(p.u+p.v+p.w))
 	{
 		float d0,d1,d2,nn;
 		register long i;

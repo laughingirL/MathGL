@@ -58,7 +58,7 @@ bool MGL_NO_EXPORT mgl_is_same(HMGL gr, long i, mreal wp,uint32_t cp, int st)
 	if(abs(pr.type)!=1)	return false;
 	if(pr.w>=1 && wp!=pr.w)	return false;
 	if(pr.w<1 && wp!=1)	return false;
-	if(st!=pr.n3)			return false;
+	if(st!=pr.n3)	return false;
 	return (cp==_Gr_->GetPrmCol(i));
 }
 //-----------------------------------------------------------------------------
@@ -457,13 +457,13 @@ void MGL_EXPORT mgl_write_svg(HMGL gr, const char *fname,const char *descr)
 		else if(q.type==2 && cp.r[3])
 		{
 			const mglPnt &p2=gr->GetPnt(q.n2), &p3=gr->GetPnt(q.n3);
-			mgl_printf(fp, gz, "<g fill=\"#%02x%02x%02x\" opacity=\"%g\">\n", int(cp.r[0]),int(cp.r[1]),int(cp.r[2]),int(cp.r[3]));
+			mgl_printf(fp, gz, "<g fill=\"#%02x%02x%02x\" opacity=\"%g\">\n", int(cp.r[0]),int(cp.r[1]),int(cp.r[2]),cp.r[3]/255.);
 			mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g L %g %g Z\"/> </g>\n", p1.x, hh-p1.y, p2.x, hh-p2.y, p3.x, hh-p3.y);
 		}
 		else if(q.type==3 && cp.r[3])
 		{
 			const mglPnt &p2=gr->GetPnt(q.n2), &p3=gr->GetPnt(q.n3), &p4=gr->GetPnt(q.n4);
-			mgl_printf(fp, gz, "<g fill=\"#%02x%02x%02x\" opacity=\"%g\">\n", int(cp.r[0]),int(cp.r[1]),int(cp.r[2]),int(cp.r[3]));
+			mgl_printf(fp, gz, "<g fill=\"#%02x%02x%02x\" opacity=\"%g\">\n", int(cp.r[0]),int(cp.r[1]),int(cp.r[2]),cp.r[3]/255.);
 			mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g L %g %g L %g %g Z\"/> </g>\n", p1.x, hh-p1.y, p2.x, hh-p2.y, p4.x, hh-p4.y, p3.x, hh-p3.y);
 		}
 		else if(q.type==4)
