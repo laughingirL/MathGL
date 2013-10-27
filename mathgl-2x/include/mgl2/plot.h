@@ -98,7 +98,7 @@ void MGL_EXPORT mgl_stem_xy(HMGL graph, HCDT x, HCDT y, const char *pen, const c
 void MGL_EXPORT mgl_stem_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, const char *pen, const char *opt,int,int);
 /// Draw vertical lines from points {x,y} with x in x-axis range to axis plane
 void MGL_EXPORT mgl_stem(HMGL graph, HCDT y,	const char *pen, const char *opt);
-void MGL_EXPORT mgl_stem_(uintptr_t *graph, uintptr_t *y,	const char *pen, const char *opt,int,int);
+void MGL_EXPORT mgl_stem_(uintptr_t *graph, uintptr_t *y, const char *pen, const char *opt,int,int);
 
 /// Draw stairs for points in arrays {x,y,z}
 void MGL_EXPORT mgl_step_xyz(HMGL graph, HCDT x, HCDT y, HCDT z, const char *pen, const char *opt);
@@ -108,7 +108,7 @@ void MGL_EXPORT mgl_step_xy(HMGL graph, HCDT x, HCDT y, const char *pen, const c
 void MGL_EXPORT mgl_step_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, const char *pen, const char *opt,int,int);
 /// Draw stairs for points in arrays {x,y} with x in x-axis range
 void MGL_EXPORT mgl_step(HMGL graph, HCDT y,	const char *pen, const char *opt);
-void MGL_EXPORT mgl_step_(uintptr_t *graph, uintptr_t *y,	const char *pen, const char *opt,int,int);
+void MGL_EXPORT mgl_step_(uintptr_t *graph, uintptr_t *y, const char *pen, const char *opt,int,int);
 
 /// Draw vertical bars from points {x,y,z} to axis plane
 void MGL_EXPORT mgl_bars_xyz(HMGL graph, HCDT x, HCDT y, HCDT z, const char *pen, const char *opt);
@@ -118,14 +118,21 @@ void MGL_EXPORT mgl_bars_xy(HMGL graph, HCDT x, HCDT y, const char *pen, const c
 void MGL_EXPORT mgl_bars_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, const char *pen, const char *opt,int,int);
 /// Draw vertical bars from points {x,y} with x in x-axis range to axis plane
 void MGL_EXPORT mgl_bars(HMGL graph, HCDT y,	const char *pen, const char *opt);
-void MGL_EXPORT mgl_bars_(uintptr_t *graph, uintptr_t *y,	const char *pen, const char *opt,int,int);
+void MGL_EXPORT mgl_bars_(uintptr_t *graph, uintptr_t *y, const char *pen, const char *opt,int,int);
 
 /// Draw horizontal bars from points {v,y} to axis plane
 void MGL_EXPORT mgl_barh_yx(HMGL graph, HCDT y, HCDT v, const char *pen, const char *opt);
 void MGL_EXPORT mgl_barh_yx_(uintptr_t *graph, uintptr_t *y, uintptr_t *v, const char *pen, const char *opt,int,int);
 /// Draw horizontal bars from points {v,y} with y in y-axis range to axis plane
 void MGL_EXPORT mgl_barh(HMGL graph, HCDT v,	const char *pen, const char *opt);
-void MGL_EXPORT mgl_barh_(uintptr_t *graph, uintptr_t *v,	const char *pen, const char *opt,int,int);
+void MGL_EXPORT mgl_barh_(uintptr_t *graph, uintptr_t *v, const char *pen, const char *opt,int,int);
+
+/// Draw Open-High-Low-Close (OHLC) diagram
+void MGL_EXPORT mgl_ohlc_x(HMGL graph, HCDT x, HCDT open, HCDT high, HCDT low, HCDT close, const char *pen, const char *opt);
+void MGL_EXPORT mgl_ohlc_x_(uintptr_t *graph, uintptr_t *x, uintptr_t *open, uintptr_t *high, uintptr_t *low, uintptr_t *close, const char *pen, const char *opt,int,int);
+/// Draw Open-High-Low-Close (OHLC) diagram with x in x-axis range
+void MGL_EXPORT mgl_ohlc(HMGL graph, HCDT open, HCDT high, HCDT low, HCDT close, const char *pen, const char *opt);
+void MGL_EXPORT mgl_ohlc_(uintptr_t *graph, uintptr_t *open, uintptr_t *high, uintptr_t *low, uintptr_t *close, const char *pen, const char *opt,int,int);
 
 /// Draw chart for data a
 void MGL_EXPORT mgl_chart(HMGL graph, HCDT a, const char *col, const char *opt);

@@ -1045,12 +1045,24 @@ void smgl_step(mglGraph *gr)
 	gr->SubPlot(2,2,2,"");	gr->Title("'!' style");	gr->Box();	gr->Step(y,"s!rgb");
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_boxplot="new a 10 7 '(2*rnd-1)^3/2'\nsubplot 1 1 0 '':title 'Boxplot plot':box:boxplot a";
+const char *mmgl_boxplot="new a 10 7 '(2*rnd-1)^3/2'\nsubplot 1 1 0 '':title 'Boxplot plot':box:boxplot a\n";
 void smgl_boxplot(mglGraph *gr)	// flow threads and density plot
 {
 	mglData a(10,7);	a.Modify("(2*rnd-1)^3/2");
 	if(big!=3)	{	gr->SubPlot(1,1,0,"");	gr->Title("Boxplot plot");	}
 	gr->Box();	gr->BoxPlot(a);
+}
+//-----------------------------------------------------------------------------
+const char *mmgl_ohlc="new o 10 '0.5*sin(pi*x)'\nnew c 10 '0.5*sin(pi*(x+2/9))'\n"
+"new l 10 '0.3*rnd-0.8'\nnew h 10 '0.3*rnd+0.5'\n"
+"subplot 1 1 0 '':title 'OHLC plot':box:ohlc o h l c\n";
+void smgl_ohlc(mglGraph *gr)	// flow threads and density plot
+{
+	mglData o(10), h(10), l(10), c(10);
+	gr->Fill(o,"0.5*sin(pi*x)");	gr->Fill(c,"0.5*sin(pi*(x+2/9))");
+	gr->Fill(l,"0.3*rnd-0.8");		gr->Fill(h,"0.3*rnd+0.5");
+	if(big!=3)	{	gr->SubPlot(1,1,0,"");	gr->Title("OHLC plot");	}
+	gr->Box();	gr->OHLC(o,h,l,c);
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_type0="call 'prepare2d'\nalpha on:light on:transptype 0:clf\nsubplot 2 2 0:rotate 50 60:surf a:box\n"
@@ -2691,6 +2703,7 @@ mglSample samp[] = {
 	{"mesh", smgl_mesh, mmgl_mesh},
 	{"mirror", smgl_mirror, mmgl_mirror },
 	{"molecule", smgl_molecule, mmgl_molecule },
+	{"ohlc", smgl_ohlc, mmgl_ohlc},
 	{"param1", smgl_param1, mmgl_param1},
 	{"param2", smgl_param2, mmgl_param2},
 	{"param3", smgl_param3, mmgl_param3},

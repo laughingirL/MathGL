@@ -2,6 +2,7 @@
 
 * Add OpenMP calls mostly everywhere (can work as replacement of pthreads - a bit faster since more loops is parallelized).
 * Greatly speed up consequent FFT and Hankel transforms. Add mgl_clear_fft() function for manual clearing of saved FFT/Hankel data.
+* Add OHLC() plot for drawing Open-High-Low-Close diagram
 * Add wxMathGL widget.
 * Add mask for face drawing if one of symbols "-+=;oOsS~<>jdD*^" is specified in color scheme. This work only for export in bitmap images.
 * Add Quality=8 for dots drawing (extremely fast).

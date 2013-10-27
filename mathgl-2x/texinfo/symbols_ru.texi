@@ -116,7 +116,7 @@ set position of @ref{colorbar};
 
 style of @ref{vect}, @ref{vect3};
 
-align left in @ref{bars}, @ref{barh}, @ref{boxplot}, @ref{cones};
+align left in @ref{bars}, @ref{barh}, @ref{boxplot}, @ref{cones}, @ref{candle}, @ref{ohlc};
 
 operation in @ref{Textual formulas}.
 
@@ -132,7 +132,7 @@ set position of @ref{colorbar};
 
 style of @ref{vect}, @ref{vect3};
 
-align right in @ref{bars}, @ref{barh}, @ref{boxplot}, @ref{cones};
+align right in @ref{bars}, @ref{barh}, @ref{boxplot}, @ref{cones}, @ref{candle}, @ref{ohlc};
 
 operation in @ref{Textual formulas}.
 
@@ -177,7 +177,7 @@ inverse default position for @ref{axis};
 
 switch to upper index inside a string (see @ref{Font styles});
 
-align center in @ref{bars}, @ref{barh}, @ref{boxplot}, @ref{cones};
+align center in @ref{bars}, @ref{barh}, @ref{boxplot}, @ref{cones}, @ref{candle}, @ref{ohlc};
 
 operation in @ref{Textual formulas}.
 

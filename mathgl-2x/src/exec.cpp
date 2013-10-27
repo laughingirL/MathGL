@@ -157,6 +157,16 @@ int MGL_NO_EXPORT mgls_box(mglGraph *gr, long , mglArg *a, const char *k, const 
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_ohlc(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+{
+	int res=0;
+	if(!strcmp(k,"dddd"))	gr->OHLC(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d), "",opt);
+	else if(!strcmp(k,"dddds"))	gr->OHLC(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d), a[4].s.c_str(),opt);
+	else if(!strcmp(k,"ddddd"))	gr->OHLC(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d), "",opt);
+	else if(!strcmp(k,"ddddds"))	gr->OHLC(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d), a[5].s.c_str(),opt);
+	else res = 1;	return res;
+}
+//-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_bars(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;
@@ -2684,6 +2694,7 @@ mglCommand mgls_base_cmd[] = {
 	{"next","Start next for-cycle iteration","next", 0, 6},
 	{"norm","Normalize data","norm Dat v1 v2 [sym dim]", mgls_norm ,16},
 	{"normsl","Normalize data slice by slice","normsl Dat v1 v2 ['dir' keep sym] ", mgls_normsl ,16},
+	{"ohlc","Draw Open-High-Low-Close (OHLC) diagram","ohlc Odat Hdat Ldat Cdat ['fmt']|Xdat Odat Hdat Ldat Cdat ['fmt']", mgls_ohlc ,7},
 	{"once","Start/close commands which should executed only once","once val", 0, 6},
 	{"origin","Set axis origin","origin x0 y0 [z0]", mgls_origin ,14},
 	{"origintick","Set tick labels drawing at origin","origintick val", mgls_origintick ,14},

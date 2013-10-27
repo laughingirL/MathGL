@@ -637,6 +637,11 @@ public:
 	/// Draw chart for data a
 	inline void Chart(const mglData &a, const char *colors="", const char *opt="")
 	{	mgl_chart(gr, &a, colors,opt);	}
+	/// Draw OHLC diagram
+	inline void OHLC(const mglDataA &x, const mglDataA &open, const mglDataA &high, const mglDataA &low, const mglDataA &close, const char *pen, const char *opt="")
+	{	mgl_ohlc_x(&x, &open,&high,&low,&close,pen,opt);	}
+	inline void OHLC(const mglDataA &open, const mglDataA &high, const mglDataA &low, const mglDataA &close, const char *pen, const char *opt="")
+	{	mgl_ohlc(&open,&high,&low,&close,pen,opt);	}
 	/// Draw box-plot (special 5-value plot used in statistic)
 	inline void BoxPlot(const mglData &x, const mglData &y, const char *pen="", const char *opt="")
 	{	mgl_boxplot_xy(gr, &x, &y, pen,opt);	}

@@ -857,6 +857,7 @@ Basically, you can put this text after the script. Note, that you need to termin
 * Chart sample::
 * BoxPlot sample::
 * Candle sample::
+* OHLC sample::
 * Error sample::
 * Mark sample::
 * TextMark sample::
@@ -1153,7 +1154,7 @@ boxplot a
 
 @c ------------------------------------------------------------------
 @external{}
-@node Candle sample, Error sample, BoxPlot sample, 1D samples
+@node Candle sample, OHLC sample, BoxPlot sample, 1D samples
 @subsection Candle sample
 @nav{}
 
@@ -1168,7 +1169,25 @@ candle y y1 y2
 
 @c ------------------------------------------------------------------
 @external{}
-@node Error sample, Mark sample, Candle sample, 1D samples
+@node OHLC sample, Error sample, Candle sample, 1D samples
+@subsection OHLC sample
+@nav{}
+
+Command @ref{ohlc} draw Open-High-Low-Close diagram. This diagram show vertical line for between maximal(high) and minimal(low) values, as well as horizontal lines before/after vertical line for initial(open)/final(close) values of some process. The sample code is:
+@verbatim
+new o 10 '0.5*sin(pi*x)'
+new c 10 '0.5*sin(pi*(x+2/9))'
+new l 10 '0.3*rnd-0.8'
+new h 10 '0.3*rnd+0.5'
+subplot 1 1 0 '':title 'OHLC plot':box
+ohlc o h l c
+@end verbatim
+
+@pfig{candle, Example of OHLC()}
+
+@c ------------------------------------------------------------------
+@external{}
+@node Error sample, Mark sample, OHLC sample, 1D samples
 @subsection Error sample
 @nav{}
 

@@ -1107,6 +1107,75 @@ void MGL_EXPORT mgl_barh_(uintptr_t *gr, uintptr_t *v,	const char *pen, const ch
 	mgl_barh(_GR_,_DA_(v),s,o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
 //
+//	OHLC series
+//
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_ohlc_x(HMGL gr, HCDT x, HCDT open, HCDT high, HCDT low, HCDT close, const char *pen, const char *opt)
+{
+	long n=open->GetNx(), nx=x->GetNx(), m=open->GetNy(), mx;
+	if(nx<n || n*m!=high->GetNx()*high->GetNy() || n*m!=low->GetNx()*low->GetNy() || n*m!=close->GetNx()*close->GetNy())
+	{	gr->SetWarn(mglWarnDim,"OHLC");	return;	}
+	gr->SaveState(opt);
+	static int cgid=1;	gr->StartGroup("OHLC",cgid++);
+	mreal dv=nx>n?1:0,dd,vv,x1,x2,cc;
+	if(mglchr(pen,'<'))	dv = 1;
+	if(mglchr(pen,'^'))	dv = 0;
+	if(mglchr(pen,'>'))	dv = -1;
+	mreal zVal = gr->AdjustZMin();
+	bool sh = mglchr(pen,'!');
+
+	long pal;
+	gr->SetPenPal(pen,&pal);	gr->Reserve(6*n*m);
+	for(long j=0;j<m;j++)
+	{
+		cc=gr->NextColor(pal);
+		mx = j<x->GetNy() ? j:0;
+#pragma omp parallel for private(vv,dd,x1,x2)
+		for(long i=0;i<n;i++)
+		{
+			if(gr->Stop)	continue;
+			vv = x->v(i,mx);	dd = i<nx-1 ? x->v(i+1)-vv : vv-x->v(i-1);
+			x1 = vv + dd/2*(dv-gr->BarWidth);	x2 = x1 + gr->BarWidth*dd;
+			x2 = (x2-x1)/m;		x1 += j*x2;		x2 += x1;	vv = (x2+x1)/2;
+			mreal c = sh ? gr->NextColor(pal,i):cc;
+			register long n1,n2;
+
+			dd = open->v(i,j);
+			n1=gr->AddPnt(mglPoint(x1,dd,zVal),c);
+			n2=gr->AddPnt(mglPoint(vv,dd,zVal),c);
+			gr->line_plot(n1,n2);
+			dd = close->v(i,j);
+			n1=gr->AddPnt(mglPoint(vv,dd,zVal),c);
+			n2=gr->AddPnt(mglPoint(x2,dd,zVal),c);
+			gr->line_plot(n1,n2);
+			n1=gr->AddPnt(mglPoint(vv,low->v(i,j),zVal),c);
+			n2=gr->AddPnt(mglPoint(vv,high->v(i,j),zVal),c);
+			gr->line_plot(n1,n2);
+		}
+	}
+	gr->EndGroup();
+}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_ohlc(HMGL gr, HCDT open, HCDT high, HCDT low, HCDT close, const char *pen, const char *opt)
+{
+	gr->SaveState(opt);
+	mglData x(open->GetNx()+1);
+	x.Fill(gr->Min.x,gr->Max.x);
+	mgl_ohlc_x(gr,&x,open,high,low,close,pen,0);
+	gr->LoadState();
+}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_ohlc_y_(uintptr_t *gr, uintptr_t *x, uintptr_t *open, uintptr_t *high, uintptr_t *low, uintptr_t *close, const char *pen, const char *opt,int l,int lo)
+{	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
+	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+	mgl_ohlc_x(_GR_,_DA_(x),_DA_(open),_DA_(high),_DA_(low),_DA_(close),s,o);	delete []o;	delete []s;	}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_ohlc_(uintptr_t *gr, uintptr_t *open, uintptr_t *high, uintptr_t *low, uintptr_t *close, const char *pen, const char *opt,int l,int lo)
+{	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
+	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+	mgl_ohlc(_GR_,_DA_(open),_DA_(high),_DA_(low),_DA_(close),s,o);	delete []o;	delete []s;	}
+//-----------------------------------------------------------------------------
+//
 //	BoxPlot series
 //
 //-----------------------------------------------------------------------------

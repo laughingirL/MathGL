@@ -1557,6 +1557,7 @@ void mgls_prepare1d(HMDT y, HMDT y1=0, HMDT y2=0, HMDT x1=0, HMDT x2=0)
 * Chart sample::
 * BoxPlot sample::
 * Candle sample::
+* OHLC sample::
 * Error sample::
 * Mark sample::
 * TextMark sample::
@@ -1918,7 +1919,7 @@ int sample(mglGraph *gr)
 
 @c ------------------------------------------------------------------
 @external{}
-@node Candle sample, Error sample, BoxPlot sample, 1D samples
+@node Candle sample, OHLC sample, BoxPlot sample, 1D samples
 @subsection Candle sample
 @nav{}
 
@@ -1939,7 +1940,28 @@ int sample(mglGraph *gr)
 
 @c ------------------------------------------------------------------
 @external{}
-@node Error sample, Mark sample, Candle sample, 1D samples
+@node OHLC sample, Error sample, Candle sample, 1D samples
+@subsection OHLC sample
+@nav{}
+
+Function @ref{ohlc} draw Open-High-Low-Close diagram. This diagram show vertical line for between maximal(high) and minimal(low) values, as well as horizontal lines before/after vertical line for initial(open)/final(close) values of some process. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData o(10), h(10), l(10), c(10);
+  gr->Fill(o,"0.5*sin(pi*x)");  gr->Fill(c,"0.5*sin(pi*(x+2/9))");
+  gr->Fill(l,"0.3*rnd-0.8");    gr->Fill(h,"0.3*rnd+0.5");
+  gr->SubPlot(1,1,0,"");  gr->Title("OHLC plot");
+  gr->Box();  gr->OHLC(o,h,l,c);
+  return 0;
+}
+@end verbatim
+
+@pfig{ohlc, Example of OHLC()}
+
+@c ------------------------------------------------------------------
+@external{}
+@node Error sample, Mark sample, OHLC sample, 1D samples
 @subsection Error sample
 @nav{}
 
