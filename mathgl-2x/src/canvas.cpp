@@ -31,7 +31,6 @@ mglCanvas::mglCanvas(int w, int h) : mglBase()
 	CurFrameId=0;	Delay=0.5;
 	Width=Height=Depth=0;	ObjId=-1;
 	fscl=ftet=0;		PlotId = "frame";
-	dr_nx1=dr_nx2=dr_ny1=dr_ny2=0;	// Allowed drawing region
 
 	ac.ch='c';
 	ax.dir = mglPoint(1,0,0);	ax.a = mglPoint(0,1,0);	ax.b = mglPoint(0,0,1);	ax.ch='x';
@@ -178,6 +177,7 @@ int Height;			///< Height of the image
 int Depth;			///< Depth of the image
 int CurFrameId;		///< Number of automaticle created frames
 GifFileType *gif;*/
+	SetDrawReg(1,1,0);
 	memcpy(mgl_mask_val, mgl_mask_def, 16*sizeof(uint64_t));	// should be > 16*8
 	mgl_clear_fft();		DefMaskAn=0;	ResetMask();
 	SetTickRotate(true);	SetTickSkip(true);
@@ -308,7 +308,7 @@ void mglCanvas::mark_plot(long p, char type, mreal size)
 	long pp=p;
 //	mreal pw = fabs(PenWidth)*0.15/sqrt(font_factor);
 	mreal pw = 0.15/sqrt(font_factor);
-	mglDrawReg d;	d.set(this,1,1,0);
+	mglDrawReg d;	d.set(this,dr_x,dr_y,dr_p);
 	d.PDef = PDef;	d.pPos = pPos;	d.PenWidth=pw;
 //	if(size>=0)	size *= MarkSize;
 //	if(size==0)	size = MarkSize;
@@ -332,7 +332,7 @@ void mglCanvas::line_plot(long p1, long p2)
 	mreal pw = fabs(PenWidth)*sqrt(font_factor/400), d;
 	d = hypot(Pnt[p1].x-Pnt[p2].x, Pnt[p1].y-Pnt[p2].y);
 
-	mglDrawReg dd;	dd.set(this,1,1,0);
+	mglDrawReg dd;	dd.set(this,dr_x,dr_y,dr_p);
 	dd.PDef = PDef;	dd.pPos = pPos;	dd.PenWidth=pw;
 
 	if(TernAxis&4) for(int i=0;i<4;i++)
@@ -350,7 +350,7 @@ void mglCanvas::trig_plot(long p1, long p2, long p3)
 	if(p1<0 || p2<0 || p3<0 || mgl_isnan(Pnt[p1].x) || mgl_isnan(Pnt[p2].x) || mgl_isnan(Pnt[p3].x))	return;
 	long pp1=p1,pp2=p2,pp3=p3;
 	mreal pw = fabs(PenWidth)*sqrt(font_factor/400);
-	mglDrawReg d;	d.set(this,1,1,0);	d.PenWidth=pw;
+	mglDrawReg d;	d.set(this,dr_x,dr_y,dr_p);	d.PenWidth=pw;
 	if(TernAxis&4) for(int i=0;i<4;i++)
 	{	p1 = ProjScale(i, pp1);	p2 = ProjScale(i, pp2);
 		p3 = ProjScale(i, pp3);	MGL_TRIG_PLOT	}
@@ -368,7 +368,7 @@ void mglCanvas::quad_plot(long p1, long p2, long p3, long p4)
 	if(p4<0 || mgl_isnan(Pnt[p4].x))	{	trig_plot(p1,p2,p3);	return;	}
 	long pp1=p1,pp2=p2,pp3=p3,pp4=p4;
 	mreal pw = fabs(PenWidth)*sqrt(font_factor/400);
-	mglDrawReg d;	d.set(this,1,1,0);	d.PenWidth=pw;
+	mglDrawReg d;	d.set(this,dr_x,dr_y,dr_p);	d.PenWidth=pw;
 	if(TernAxis&4) for(int i=0;i<4;i++)
 	{	p1 = ProjScale(i, pp1);	p2 = ProjScale(i, pp2);
 		p3 = ProjScale(i, pp3);	p4 = ProjScale(i, pp4);
@@ -488,7 +488,7 @@ void mglCanvas::Glyph(mreal x, mreal y, mreal f, int s, long j, mreal col)
 	a.n2 = forg; 	a.n3 = s;	a.n4 = AddGlyph(s,j);
 	if(a.n1<0)	return;
 
-	mglDrawReg d;	d.set(this,1,1,0);
+	mglDrawReg d;	d.set(this,dr_x,dr_y,dr_p);
 	d.PDef = s;		d.pPos = a.s;	d.PenWidth=a.w;
 
 	if(Quality&MGL_DRAW_LMEM)	glyph_draw(a,&d);

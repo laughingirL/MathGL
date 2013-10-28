@@ -46,6 +46,10 @@ int MGL_EXPORT mgl_get_quality_(uintptr_t *gr);
 /// Set plot quality
 void MGL_EXPORT mgl_set_quality(HMGL gr, int qual);
 void MGL_EXPORT mgl_set_quality_(uintptr_t *gr, int *qual);
+/// Set drawing region for Quality&4
+void MGL_EXPORT mgl_set_draw_reg(HMGL gr, long nx, long ny, long m);
+void MGL_EXPORT mgl_set_draw_reg_(uintptr_t *gr, int *nx, int *ny, int *m);
+
 /// Is frames
 int MGL_EXPORT mgl_is_frames(HMGL gr);
 /// Get bit-value flag of HMGL state (for advanced users only)

@@ -29,6 +29,8 @@ A. Paper about MathGL!!!
 B. Add chapter with real samples
 C. Translate to Russian everything
 
+1. Doc about mgl_set_draw_reg()
+
 ============= UDAV =============
 
 01. Show plot at creation stage (if option is enabled -- can be long process!!!) + auto axis range or [-1,1] by default

@@ -353,6 +353,7 @@ public:
 	/// Set plot quality
 	virtual void SetQuality(int qual=MGL_DRAW_NORM)	{	Quality=qual;	}
 	inline int GetQuality() const	{	return Quality;	}
+	inline void SetDrawReg(long nx=1, long ny=1, long m=0)	{	dr_x=nx;	dr_y=ny;	dr_p=m;	}
 
 	// ~~~~~~~~~~~~~~~~~~~~~~ Developer functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	/// Add point to the Pnt and return its position
@@ -479,6 +480,8 @@ protected:
 	mreal ArrowSize;	///< The size of arrows.
 	char last_style[64];///< Last pen style
 	mreal font_factor;	///< Font scaling factor
+	
+	long dr_x, dr_y, dr_p;	///< default drawing region for quality&4 mode
 
 	virtual void LightScale(const mglMatrix *M)=0;			///< Scale positions of light sources
 

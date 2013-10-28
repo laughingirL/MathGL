@@ -408,7 +408,6 @@ private:
 	std::vector<uint32_t> pnt_col, prm_col;
 //	mreal _tetx,_tety,_tetz;		// extra angles
 	std::vector<mglMatrix> stack;	///< stack for transformation matrices
-	int dr_nx1, dr_nx2, dr_ny1, dr_ny2;	// Allowed drawing region
 	GifFileType *gif;
 	mreal fscl,ftet;	///< last scale and rotation for glyphs
 	long forg;		///< original point (for directions)

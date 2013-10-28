@@ -295,6 +295,8 @@ public:
 	inline void SetQuality(int qual=MGL_DRAW_NORM)	{	mgl_set_quality(gr, qual);	}
 	/// Get plot quality
 	inline int GetQuality()	{	return mgl_get_quality(gr);	}
+	/// Set drawing region for Quality&4
+	inline void SetDrawReg(long nx=1, long ny=1, long m=0)	{	mgl_set_draw_reg(gr,nx,ny,m);	}
 	/// Start group of objects
 	inline void StartGroup(const char *name)		{	mgl_start_group(gr, name);	}
 	/// End group of objects

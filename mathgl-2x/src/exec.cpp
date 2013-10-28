@@ -2543,6 +2543,14 @@ int MGL_NO_EXPORT mgls_zoomaxis(mglGraph *gr, long , mglArg *a, const char *k, c
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_drawreg(mglGraph *gr, long , mglArg *a, const char *k, const char *)
+{
+	int res=0;
+	if(!strcmp(k,""))	gr->SetDrawReg();
+	if(!strcmp(k,"nnn"))	gr->SetDrawReg(iint(a[0].v), iint(a[1].v), iint(a[2].v));
+	else res = 1;	return res;
+}
+//-----------------------------------------------------------------------------
 mglCommand mgls_base_cmd[] = {
 	{"addlegend","Add legend entry","addlegend 'txt' 'fmt'", mgls_addlegend,15},
 	{"addto","Add data or number","addto Var Dat|Var num", mgls_addto ,3},
@@ -2623,6 +2631,7 @@ mglCommand mgls_base_cmd[] = {
 	{"diffuse","Set diffusive light brightness","diffuse val", mgls_diffuse ,2},
 	{"divto","Divide by data or number","divto Var Dat|Var num", mgls_divto ,3},
 	{"dots","Draw dots for arbitrary data points","dots Xdat Ydat Zdat ['fmt']", mgls_dots ,9},
+	{"drawreg","Set draw region for quality&4","drawreg|nx ny m", mgls_drawreg ,2},
 	{"drop","Draw drop","drop x0 y0 dx dy r ['col' sh asp]|x0 y0 z0 dx dy dz r ['col' sh asp]", mgls_drop ,13},
 	{"ellipse","Draw ellipse","ellipse x1 y1 x2 y2 r ['fmt']|x1 y1 z1 x2 y2 z2 r ['fmt']", mgls_ellipse ,13},
 	{"else","Execute if condition is false","else", 0, 6},
