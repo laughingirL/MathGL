@@ -217,7 +217,7 @@ var mgl_draw_fast = function(obj, ctx, skip)
 			ctx.beginPath();
 			ctx.moveTo(obj.pp[n1][0],obj.pp[n1][1]);
 			ctx.lineTo(obj.pp[n2][0],obj.pp[n2][1]);
-			ctx.lineWidth = obj.prim[i][7];
+			ctx.lineWidth = obj.prim[i][7]/100;
 			ctx.stroke();
 		}
 		else
@@ -246,15 +246,14 @@ var mgl_draw_good = function(obj, ctx, skip)
 		switch(obj.prim[i][0])		// draw it depending on its type
 		{
 		case 0: // marks
-//			ctx.lineWidth = obj.prim[i][7]*obj.prim[i][6]*50;
-			ctx.lineWidth = obj.prim[i][7]*obj.prim[i][6]*5;
-			mgl_draw_mark(ctx, obj.pp[n1][0], obj.pp[n1][1], n4, obj.prim[i][6], scl);
+			ctx.lineWidth = obj.prim[i][7]*obj.prim[i][6]*5e-4;
+			mgl_draw_mark(ctx, obj.pp[n1][0], obj.pp[n1][1], n4, obj.prim[i][6]/100, scl);
 			break;
 		case 1: // lines
 			ctx.beginPath();
 			ctx.moveTo(obj.pp[n1][0],obj.pp[n1][1]);
 			ctx.lineTo(obj.pp[n2][0],obj.pp[n2][1]);
-			ctx.lineWidth = obj.prim[i][7];
+			ctx.lineWidth = obj.prim[i][7]/100;
 			ctx.stroke();	break;
 		case 2: // triangles
 			ctx.beginPath();
@@ -274,11 +273,11 @@ var mgl_draw_good = function(obj, ctx, skip)
 			if(obj.prim[i][10].charAt(0)=='#')	ctx.stroke();
 			ctx.fill();	break;
 		case 4: // glyphs
-			var t=obj.prim[i][7]*deg;
-			var xx=obj.coor[n2][2],yy=-obj.coor[n2][3],zz=obj.coor[n2][4];
+			var t=obj.prim[i][7]*deg/100;
+			var xx=obj.coor[n2][2]/100,yy=-obj.coor[n2][3]/100,zz=obj.coor[n2][4]/100;
 			var xc = obj.b[0]*xx + obj.b[1]*yy + obj.b[2]*zz;
 			var yc = obj.b[3]*xx + obj.b[4]*yy + obj.b[5]*zz;
-			var zc = obj.b[6]*xx + obj.b[7]*yy + obj.b[8]*zz;
+//			var zc = obj.b[6]*xx + obj.b[7]*yy + obj.b[8]*zz;
 			var ll = xc*xc+yc*yc;
 			if(ll < 1e-10)	break;
 			if(ll<1e10 && t/deg<1e4)
@@ -287,10 +286,10 @@ var mgl_draw_good = function(obj, ctx, skip)
 				if(Math.abs(t)>Math.PI/2)	t += Math.PI;
 			}
 			else t=0;
-			var c=Math.cos(t), s=Math.sin(t), d=obj.prim[i][6]/2;
+			var c=Math.cos(t), s=Math.sin(t), d=obj.prim[i][6]/200;
 
 			var b=[d*c, d*s, d*s, -d*c, obj.pp[n1][0],obj.pp[n1][1]];
-			var x=obj.coor[n2][0]*scl, y=obj.coor[n2][1]*scl, f=obj.prim[i][8]*scl;
+			var x=obj.coor[n2][0]*scl/100, y=obj.coor[n2][1]*scl/100, f=obj.prim[i][8]*scl/1e5;
 			if(n3&8)
 			{
 				if(!(n3&4))	mgl_line_glyph(ctx, x,y, f,1,b);

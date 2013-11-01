@@ -572,14 +572,13 @@ std::string mglCanvas::GetJSON()
 			n3 = p.n3;	n4 = p.n4;
 		}
 		if(p.type==1 && n1>n2)	{	n1=p.n2;	n2=p.n1;	}
+		register long ps=p.s==p.s?long(100*factor*p.s):0, pw=p.w==p.w?long(100*p.w):0, pp=p.p==p.p?long(1e5*p.p+0.5):0;
 		if(cp.r[3]==255 || p.type==0 || p.type==1 || p.type==4 || p.type==6)
-			buf = mgl_sprintf("[%d,%ld,%ld,%ld,%ld,%d,%.3g,%.2g,%.2g,%.2g,\"#%02x%02x%02x\"],\n",
-				p.type, n1, n2, n3, n4, p.id, p.s==p.s?factor*p.s:0, p.w==p.w?p.w:0, p.p==p.p?p.p:0,
-				0., int(cp.r[0]),int(cp.r[1]),int(cp.r[2]));
+			buf = mgl_sprintf("[%d,%ld,%ld,%ld,%ld,%d,%ld,%ld,%ld,0,\"#%02x%02x%02x\"],\n",
+				p.type, n1, n2, n3, n4, p.id, ps,pw,pp, int(cp.r[0]),int(cp.r[1]),int(cp.r[2]));
 		else if(cp.r[3])
-			buf = mgl_sprintf("[%d,%ld,%ld,%ld,%ld,%d,%.3g,%.2g,%.2g,%.2g,\"rgba(%d,%d,%d,%.2g)\"],\n",
-				p.type, n1, n2, n3, n4, p.id, p.s==p.s?factor*p.s:0, p.w==p.w?p.w:0, p.p==p.p?p.p:0,
-				0., int(cp.r[0]),int(cp.r[1]),int(cp.r[2]),cp.r[3]/255.);
+			buf = mgl_sprintf("[%d,%ld,%ld,%ld,%ld,%d,%ld,%ld,%ld,0,\"rgba(%d,%d,%d,%.2g)\"],\n",
+				p.type, n1, n2, n3, n4, p.id, ps,pw,pp, int(cp.r[0]),int(cp.r[1]),int(cp.r[2]),cp.r[3]/255.);
 		else	buf = "";
 #pragma omp critical
 		res += buf;
@@ -592,10 +591,11 @@ std::string mglCanvas::GetJSON()
 	{
 		const mglPoint &p=xy[i];
 		const mglPnt &q=Pnt[int(0.5+p.z)];
+		register long px=long(100*p.x), py=long(100*p.y);
 		if(q.u==q.u && q.v==q.v && q.w==q.w)
-			res = res + mgl_sprintf("[%.3g,%.3g,%.3g,%.3g,%.3g]%c\n", p.x, p.y, q.u, q.v, q.w, i+1<l?',':' ');
+			res = res + mgl_sprintf("[%ld,%ld,%ld,%ld,%ld]%c\n", px, py, long(100*q.u), long(100*q.v), long(100*q.w), i+1<l?',':' ');
 		else
-			res = res + mgl_sprintf("[%.2g,%.2g,1e11,1e11,1e11]%c\n", p.x, p.y, i+1<l?',':' ');
+			res = res + mgl_sprintf("[%ld,%ld,1e11,1e11,1e11]%c\n", px, py, i+1<l?',':' ');
 	}
 
 	l = (long)Glf.size();
