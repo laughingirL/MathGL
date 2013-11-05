@@ -1,4 +1,4 @@
-2.2 Release ??? 2013
+2.2 Release 12 November 2013
 
 * Add OpenMP calls mostly everywhere (can work as replacement of pthreads - a bit faster since more loops is parallelized).
 * Greatly speed up consequent FFT and Hankel transforms. Add mgl_clear_fft() function for manual clearing of saved FFT/Hankel data.
@@ -11,6 +11,7 @@
 * Add style '^' for Legend() to left/right align legend if its coordinates are right/left from the center
 * Add style '<', '^', '>' for aligning/centering boxes in Bars(), Barh(), BoxPlot(), Cones(). Also this plots become centered by default if nx sizes are the same for all data.
 * Improve automatic axis position. Add style '^' for inverse automatic axis position.
+* Improve tick labeling. Add style TuneTicks&4 for zero filling of tick labels.
 * Add mglData::Refill() for filling by interpolation of parametrically dependent data
 * Add transparency for Area() and Region() plots.
 * Add mgl_clf_chr() function and extend 'clf' command.
