@@ -803,7 +803,7 @@ Gets number of seconds from 1970 year to specified date/time @var{str}. The form
 @deftypefnx {Method on @code{mglGraph}} @code{void} SetTuneTicks (@code{int} tune, @code{mreal} pos=@code{1.15})
 @deftypefnx {C function} @code{void} mgl_tune_ticks (@code{HMGL} gr, @code{int} tune, @code{mreal} pos)
 @end ifclear
-Switch on/off ticks enhancing by factoring common multiplier (for small, like from 0.001 to 0.002, or large, like from 1000 to 2000, coordinate values -- enabled if @var{tune}&1 is nonzero) or common component (for narrow range, like from 0.999 to 1.000 -- enabled if @var{tune}&2 is nonzero). Also set the position @var{pos} of common multiplier/component on the axis: =0 at minimal axis value, =1 at maximal axis value. Default value is 1.15.
+Switch on/off ticks enhancing by factoring common multiplier (for small, like from 0.001 to 0.002, or large, like from 1000 to 2000, coordinate values -- enabled if @var{tune}&1 is nonzero) or common component (for narrow range, like from 0.999 to 1.000 -- enabled if @var{tune}&2 is nonzero). Also set the position @var{pos} of common multiplier/component on the axis: =0 at minimal axis value, =1 at maximal axis value. Default value is 1.15. If @var{tune}&4 is nonzero then zeros will be added to fixed width of all axis labels.
 @end deftypefn
 
 @anchor{tickshift}
