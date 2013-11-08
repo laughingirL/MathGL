@@ -19,7 +19,8 @@ if(MGL_HAVE_PYTHON)
 	SWIG_LINK_LIBRARIES(mathgl mgl ${PYTHON_LIBRARIES})
 	set_target_properties(_mathgl PROPERTIES BUILD_WITH_INSTALL_RPATH ON)
 	add_custom_command(OUTPUT mathgl.pyc
-		COMMAND ${PYTHON_EXECUTABLE} -c "from py_compile import compile; compile('mathgl.py')"
+		COMMAND ${PYTHON_EXECUTABLE}
+		ARGS -c \"from py_compile import compile\; compile('mathgl.py')\"
 		WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/lang
 		DEPENDS _mathgl
 	)
@@ -29,6 +30,16 @@ if(MGL_HAVE_PYTHON)
 	install (TARGETS _mathgl LIBRARY DESTINATION ${MGL_PYTHON_SITE_PACKAGES})
 	set(mgl_clean_files ${mgl_clean_files} mathgl.py)
 endif(MGL_HAVE_PYTHON)
+
+if(MGL_HAVE_LUA51)
+	include_directories(${LUA_INCLUDE_DIR})
+	set(SWIG_MODULE_mgl-lua51_EXTRA_DEPS numpy.i ${src_imp_dep})
+	SWIG_ADD_MODULE(mgl-lua51 lua mathgl.i)
+	SWIG_LINK_LIBRARIES(mgl-lua51 mgl ${LUA_LIBRARIES})
+	set_target_properties(mgl-lua51 PROPERTIES PREFIX "" BUILD_WITH_INSTALL_RPATH ON)
+
+	install (TARGETS mgl-lua51 LIBRARY DESTINATION ${MGL_LIB_INSTALL_DIR})
+endif(MGL_HAVE_LUA51)
 
 if(MGL_HAVE_OCTAVE)
 	execute_process(COMMAND ${oct_prog} -p CANONICAL_HOST_TYPE
