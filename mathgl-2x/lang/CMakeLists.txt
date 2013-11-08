@@ -19,7 +19,7 @@ if(MGL_HAVE_PYTHON)
 	SWIG_LINK_LIBRARIES(mathgl mgl ${PYTHON_LIBRARIES})
 	set_target_properties(_mathgl PROPERTIES BUILD_WITH_INSTALL_RPATH ON)
 	add_custom_command(OUTPUT mathgl.pyc
-		COMMAND ${PYTHON_EXECUTABLE} -c \"from py_compile import compile\; compile('mathgl.py')\"
+		COMMAND ${PYTHON_EXECUTABLE} -c "from py_compile import compile; compile('mathgl.py')"
 		WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/lang
 		DEPENDS _mathgl
 	)
