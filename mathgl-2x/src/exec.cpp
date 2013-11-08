@@ -650,6 +650,8 @@ int MGL_NO_EXPORT mgls_dots(mglGraph *gr, long , mglArg *a, const char *k, const
 	else if(!strcmp(k,"ddds"))	gr->Dots(*(a[0].d),*(a[1].d),*(a[2].d),a[3].s.c_str(),opt);
 	else if(!strcmp(k,"dddd"))	gr->Dots(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),"",opt);
 	else if(!strcmp(k,"dddds"))	gr->Dots(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),a[4].s.c_str(),opt);
+	else if(!strcmp(k,"ddddd"))	gr->Dots(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),"",opt);
+	else if(!strcmp(k,"ddddds"))gr->Dots(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),a[5].s.c_str(),opt);
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -2630,7 +2632,7 @@ mglCommand mgls_base_cmd[] = {
 	{"diff2","Numerically double differentiate data","diff2 Var 'dir'", mgls_diff2 ,16},
 	{"diffuse","Set diffusive light brightness","diffuse val", mgls_diffuse ,2},
 	{"divto","Divide by data or number","divto Var Dat|Var num", mgls_divto ,3},
-	{"dots","Draw dots for arbitrary data points","dots Xdat Ydat Zdat ['fmt']", mgls_dots ,9},
+	{"dots","Draw dots for arbitrary data points","dots Xdat Ydat Zdat ['fmt']|Xdat Ydat Zdat Adat ['fmt']|Xdat Ydat Zdat Cdat Adat ['fmt']", mgls_dots ,9},
 	{"drawreg","Set draw region for quality&4","drawreg|nx ny m", mgls_drawreg ,2},
 	{"drop","Draw drop","drop x0 y0 dx dy r ['col' sh asp]|x0 y0 z0 dx dy dz r ['col' sh asp]", mgls_drop ,13},
 	{"ellipse","Draw ellipse","ellipse x1 y1 x2 y2 r ['fmt']|x1 y1 z1 x2 y2 z2 r ['fmt']", mgls_ellipse ,13},

@@ -188,6 +188,9 @@ void MGL_EXPORT mgl_data_refill_gr_(uintptr_t *gr, uintptr_t *dat, uintptr_t *xd
 /// Set the data by triangulated surface values assuming x,y,z in range [r1,r2]
 void MGL_EXPORT mgl_data_grid(HMGL gr, HMDT d, HCDT xdat, HCDT ydat, HCDT zdat,const char *opt);
 void MGL_EXPORT mgl_data_grid_(uintptr_t *gr, uintptr_t *dat, uintptr_t *xdat, uintptr_t *ydat, uintptr_t *zdat, const char *opt,int);
+/// Set the data by triangulated surface values assuming x,y,z in range [x1,x2]*[y1,y2]
+void MGL_EXPORT mgl_data_grid_xy(HMDT d, HCDT xdat, HCDT ydat, HCDT zdat, mreal x1, mreal x2, mreal y1, mreal y2);
+void MGL_EXPORT mgl_data_grid_xy_(uintptr_t *dat, uintptr_t *xdat, uintptr_t *ydat, uintptr_t *zdat, mreal *x1, mreal *x2, mreal *y1, mreal *y2);
 /// Put value to data element(s)
 void MGL_EXPORT mgl_data_put_val(HMDT dat, mreal val, long i, long j, long k);
 void MGL_EXPORT mgl_data_put_val_(uintptr_t *dat, mreal *val, int *i, int *j, int *k);
@@ -414,28 +417,6 @@ void MGL_EXPORT mgl_data_add_num_(uintptr_t *dat, mreal *d);
 void MGL_EXPORT mgl_data_sub_num(HMDT dat, mreal d);
 void MGL_EXPORT mgl_data_sub_num_(uintptr_t *dat, mreal *d);
 
-/// Saves result of PDE solving (|u|^2) for "Hamiltonian" ham with initial conditions ini
-HMDT MGL_EXPORT mgl_pde_solve(HMGL gr, const char *ham, HCDT ini_re, HCDT ini_im, mreal dz, mreal k0,const char *opt);
-uintptr_t MGL_EXPORT mgl_pde_solve_(uintptr_t* gr, const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, mreal *dz, mreal *k0,const char *opt,int,int);
-/// Saves result of PDE solving for "Hamiltonian" ham with initial conditions ini along a curve ray (must have nx>=7 - x,y,z,px,py,pz,tau or nx=5 - x,y,px,py,tau)
-HMDT MGL_EXPORT mgl_qo2d_solve(const char *ham, HCDT ini_re, HCDT ini_im, HCDT ray, mreal r, mreal k0, HMDT xx, HMDT yy);
-HMDT MGL_EXPORT mgl_qo2d_func(dual (*ham)(mreal u, mreal x, mreal y, mreal px, mreal py, void *par), void *par, HCDT ini_re, HCDT ini_im, HCDT ray, mreal r, mreal k0, HMDT xx, HMDT yy);
-uintptr_t MGL_EXPORT mgl_qo2d_solve_(const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, uintptr_t* ray, mreal *r, mreal *k0, uintptr_t* xx, uintptr_t* yy, int);
-/// Saves result of PDE solving for "Hamiltonian" ham with initial conditions ini along a curve ray (must have nx>=7 - x,y,z,px,py,pz,tau or nx=5 - x,y,px,py,tau)
-HMDT MGL_EXPORT mgl_qo3d_solve(const char *ham, HCDT ini_re, HCDT ini_im, HCDT ray, mreal r, mreal k0, HMDT xx, HMDT yy, HMDT zz);
-HMDT MGL_EXPORT mgl_qo3d_func(dual (*ham)(mreal u, mreal x, mreal y, mreal z, mreal px, mreal py, mreal pz, void *par), void *par, HCDT ini_re, HCDT ini_im, HCDT ray, mreal r, mreal k0, HMDT xx, HMDT yy, HMDT zz);
-uintptr_t MGL_EXPORT mgl_qo3d_solve_(const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, uintptr_t* ray, mreal *r, mreal *k0, uintptr_t* xx, uintptr_t* yy, uintptr_t* zz, int);
-/// Saves result of ODE solving of n equations with right part func and initial conditions x0 over time interval [0,tmax] with time step dt
-HMDT MGL_EXPORT mgl_ode_solve(void (*func)(const mreal *x, mreal *dx, void *par), int n, mreal *x0, mreal dt, mreal tmax, void *par);
-/// Finds ray with starting point r0, p0 (and prepares ray data for mgl_qo2d_solve)
-HMDT MGL_EXPORT mgl_ray_trace(const char *ham, mreal x0, mreal y0, mreal z0, mreal px, mreal py, mreal pz, mreal dt, mreal tmax);
-uintptr_t MGL_EXPORT mgl_ray_trace_(const char *ham, mreal *x0, mreal *y0, mreal *z0, mreal *px, mreal *py, mreal *pz, mreal *dt, mreal *tmax,int);
-/// Calculate Jacobian determinant for D{x(u,v), y(u,v)} = dx/du*dy/dv-dx/dv*dy/du
-HMDT MGL_EXPORT mgl_jacobian_2d(HCDT x, HCDT y);
-uintptr_t MGL_EXPORT mgl_jacobian_2d_(uintptr_t* x, uintptr_t* y);
-/// Calculate Jacobian determinant for D{x(u,v,w), y(u,v,w), z(u,v,w)}
-HMDT MGL_EXPORT mgl_jacobian_3d(HCDT x, HCDT y, HCDT z);
-uintptr_t MGL_EXPORT mgl_jacobian_3d_(uintptr_t* x, uintptr_t* y, uintptr_t* z);
 /// Integral data transformation (like Fourier 'f' or 'i', Hankel 'h' or None 'n') for amplitude and phase
 HMDT MGL_EXPORT mgl_transform_a(HCDT am, HCDT ph, const char *tr);
 uintptr_t MGL_EXPORT mgl_transform_a_(uintptr_t *am, uintptr_t *ph, const char *tr, int);

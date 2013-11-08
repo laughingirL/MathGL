@@ -61,9 +61,12 @@ void MGL_EXPORT mgl_tricont_xyc_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, u
 /// Draw dots in points {x,y,z}.
 void MGL_EXPORT mgl_dots(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt);
 void MGL_EXPORT mgl_dots_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *sch, const char *opt,int,int);
-/// Draw semitransparent dots in points {x,y,z} with alpha a.
+/// Draw semitransparent dots in points {x,y,z} with specified alpha a.
 void MGL_EXPORT mgl_dots_a(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, const char *opt);
 void MGL_EXPORT mgl_dots_a_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, const char *opt,int,int);
+/// Draw semitransparent dots in points {x,y,z} with specified color c and alpha a.
+void MGL_EXPORT mgl_dots_ca(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, HCDT a, const char *sch, const char *opt);
+void MGL_EXPORT mgl_dots_ca_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *c, uintptr_t *a, const char *sch, const char *opt,int,int);
 
 /// Draw surface reconstructed for points in arrays {x,y,z}.
 void MGL_EXPORT mgl_crust(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt);

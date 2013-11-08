@@ -353,12 +353,13 @@ void MGL_EXPORT mgl_tricont_xyc_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, u
 //	Dots series
 //
 //-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_dots_a(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, const char *opt)
+void MGL_EXPORT mgl_dots_ca(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, HCDT a, const char *sch, const char *opt)
 {
 	long n = x->GetNN(), d, k=1;
 	if(x->GetNz()>1) 	k=3;		else if(x->GetNy()>1)	k=2;
 
-	if(y->GetNN()!=n || z->GetNN()!=n || a->GetNN()!=n)	{	gr->SetWarn(mglWarnDim,"Dots");	return;	}
+	if(y->GetNN()!=n || z->GetNN()!=n || c->GetNN()!=n || (a && a->GetNN()!=n))
+	{	gr->SetWarn(mglWarnDim,"Dots");	return;	}
 	gr->SaveState(opt);
 
 	d = gr->MeshNum>0 ? mgl_ipow(gr->MeshNum+1,k) : n;
@@ -375,14 +376,17 @@ void MGL_EXPORT mgl_dots_a(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *
 	{
 		if(gr->Stop)	continue;
 		mglPoint p = mglPoint(x->vthr(i),y->vthr(i),z->vthr(i));
-		long pp = gr->AddPnt(p,gr->GetC(ss,a->vthr(i)));
+		long pp = gr->AddPnt(p,gr->GetC(ss,c->vthr(i)),mglPoint(NAN),a?gr->GetA(a->vthr(i)):-1);
 		gr->mark_plot(pp, mk);
 	}
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_dots_a(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, const char *opt)
+{	mgl_dots_ca(gr, x, y, z, z, a, sch, opt);	}
+//-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_dots(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt)
-{	mgl_dots_a(gr, x, y, z, z, sch, opt);	}
+{	mgl_dots_ca(gr, x, y, z, z, NULL, sch, opt);	}
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_dots_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *sch, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
@@ -393,6 +397,11 @@ void MGL_EXPORT mgl_dots_a_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_dots_a(_GR_, _DA_(x),_DA_(y),_DA_(z),_DA_(a),s, o);	delete []o;	delete []s;	}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_dots_ca_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *c, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
+{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+	mgl_dots_ca(_GR_, _DA_(x),_DA_(y),_DA_(z),_DA_(c),_DA_(a),s, o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
 //
 //	mglTriangulation
@@ -423,15 +432,15 @@ HMDT MGL_EXPORT mgl_triangulation_3d(HCDT x, HCDT y, HCDT z)
 HMDT MGL_EXPORT mgl_triangulation_2d(HCDT x, HCDT y)
 {
 	mglData *nums=0;
-	long n = x->GetNx();
-	if(y->GetNx()!=n)	return nums;
+	long n = x->GetNN();
+	if(y->GetNN()!=n)	return nums;
 	// use s-hull here
 	std::vector<Shx> pts;
 	std::vector<size_t> out;
 	Shx pt;
 
 	for(long i=0;i<n;i++)
-	{	pt.r = x->v(i);	pt.c = y->v(i);	pt.id = i;	pts.push_back(pt);	}
+	{	pt.r = x->vthr(i);	pt.c = y->vthr(i);	pt.id = i;	pts.push_back(pt);	}
 	std::vector<Triad> triads;
 	if(de_duplicate(pts, out))
 		mglGlobalMess += "There are duplicated points for triangulation.\n";
@@ -498,22 +507,22 @@ MGL_NO_EXPORT void *mgl_grid_t(void *par)
 	}
 	return 0;
 }
-void MGL_EXPORT mgl_data_grid(HMGL gr, HMDT d, HCDT xdat, HCDT ydat, HCDT zdat, const char *opt)
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_data_grid_xy(HMDT d, HCDT xdat, HCDT ydat, HCDT zdat, mreal x1, mreal x2, mreal y1, mreal y2)
 { // NOTE: only for mglData
 	const mglData *x = dynamic_cast<const mglData *>(xdat);
 	const mglData *y = dynamic_cast<const mglData *>(ydat);
 	const mglData *z = dynamic_cast<const mglData *>(zdat);
 	if(!x || !y || !z) return;
-	long n=x->nx;
-	if((n<3) || (y->nx!=n) || (z->nx!=n))	return;
+	long n=x->GetNN();
+	if((n<3) || (y->GetNN()!=n) || (z->GetNN()!=n))	return;
 
-	gr->SaveState(opt);
 	mglData *nums = mgl_triangulation_2d(x,y);
 	if(nums->nx<3)	{	delete nums;	return;	}
 	long nn = nums->ny, par[3]={d->nx,d->ny,d->nz};
-	mreal xx[4]={gr->Min.x,0, gr->Min.y,0};
-	if(d->nx>1) xx[1] = (d->nx-1.)/(gr->Max.x-gr->Min.x);
-	if(d->ny>1) xx[3] = (d->ny-1.)/(gr->Max.y-gr->Min.y);
+	mreal xx[4]={x1,0, y1,0};
+	if(d->nx>1) xx[1] = (d->nx-1.)/(x2-x1);
+	if(d->ny>1) xx[3] = (d->ny-1.)/(y2-y1);
 
 	mreal *xc=new mreal[n], *yc=new mreal[n];
 #pragma omp parallel for
@@ -522,7 +531,16 @@ void MGL_EXPORT mgl_data_grid(HMGL gr, HMDT d, HCDT xdat, HCDT ydat, HCDT zdat, 
 	for(long i=0;i<d->nx*d->ny*d->nz;i++) d->a[i] = NAN;
 
 	mglStartThread(mgl_grid_t,0,nn,d->a,xc,yc,par,0,nums->a,z->a);
-	gr->LoadState();	delete nums;	delete []xc;	delete []yc;
+	delete nums;	delete []xc;	delete []yc;
+}
+void MGL_EXPORT mgl_data_grid_xy_(uintptr_t *d, uintptr_t *x, uintptr_t *y, uintptr_t *z, mreal *x1, mreal *x2, mreal *y1, mreal *y2)
+{	mgl_data_grid_xy(_DT_,_DA_(x),_DA_(y),_DA_(z),*x1,*x2,*y1,*y2);	}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_data_grid(HMGL gr, HMDT d, HCDT xdat, HCDT ydat, HCDT zdat, const char *opt)
+{
+	gr->SaveState(opt);
+	mgl_data_grid_xy(d,xdat,ydat,zdat,gr->Min.x,gr->Max.x,gr->Min.y,gr->Max.y);
+	gr->LoadState();
 }
 void MGL_EXPORT mgl_data_grid_(uintptr_t *gr, uintptr_t *d, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *opt,int lo)
 {	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;

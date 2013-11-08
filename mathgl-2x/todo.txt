@@ -30,6 +30,9 @@ B. Add chapter with real samples
 C. Translate to Russian everything
 
 1. Doc about mgl_set_draw_reg()
+2. Doc about mgl_data_grid_xy() && mglData::Grid
+3. Doc about mgl_dots_ca() && mglGraph::Dots
+4. Doc about warning for curved coordinates
 
 ============= UDAV =============
 

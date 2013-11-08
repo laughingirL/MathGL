@@ -1085,9 +1085,12 @@ public:
 	/// Draw dots in points {x,y,z}.
 	inline void Dots(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *sch="", const char *opt="")
 	{	mgl_dots(gr, &x, &y, &z, sch, opt);	}
-	/// Draw semitransparent dots in points {x,y,z} with alpha a.
+	/// Draw semitransparent dots in points {x,y,z} with specified alpha a.
 	inline void Dots(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *sch="", const char *opt="")
 	{	mgl_dots_a(gr, &x, &y, &z, &a, sch, opt);	}
+	/// Draw semitransparent dots in points {x,y,z} with specified alpha a.
+	inline void Dots(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &c, const mglDataA &a, const char *sch="", const char *opt="")
+	{	mgl_dots_ca(gr, &x, &y, &z, &c, &a, sch, opt);	}
 	/// Draw surface reconstructed for points in arrays {x,y,z}.
 	inline void Crust(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *sch="", const char *opt="")
 	{	mgl_crust(gr, &x, &y, &z, sch, opt);	}

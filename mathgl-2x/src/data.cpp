@@ -1983,6 +1983,27 @@ void MGL_EXPORT mgl_data_join(HMDT d, HCDT v)
 void MGL_EXPORT mgl_data_join_(uintptr_t *d, uintptr_t *val)
 {	mgl_data_join(_DT_,_DA_(val));	}
 //-----------------------------------------------------------------------------
+mreal MGL_NO_EXPORT mgl_index_1(mreal v, const mglData *dat, mreal acx)
+{
+	long mx=dat->nx;
+	mreal d,d1=0,d2=mx-1,v1,v2;
+	v1 = mglSpline1t<mreal>(dat->a,mx,d1);
+	v2 = mglSpline1t<mreal>(dat->a,mx,d2);
+	long count=0;
+
+	if(v1==v)	return d1;
+	if(v2==v)	return d2;
+	if((v1-v)*(v2-v)>0)	return NAN;
+	do
+	{
+		d = count<10?(d2-d1)*(v-v1)/(v2-v1)+d1:(d1+d2)/2;	count++;
+		register mreal val = mglSpline1st<mreal>(dat->a,mx,d);
+		if(fabs(val-v)<acx)	break;
+		if((v1-v)*(val-v)<0)	{	v2=val;	d2=d;	}	else	{	v1=val;	d1=d;	}
+	} while(fabs(d2-d1)>1e-3);
+	return d;
+}
+//-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_data_refill_x(HMDT dat, HCDT xdat, HCDT vdat, mreal x1, mreal x2, long sl)
 {
 	long nx=dat->nx,mx=vdat->GetNx(),nn=dat->ny*dat->nz;
@@ -1993,30 +2014,70 @@ void MGL_EXPORT mgl_data_refill_x(HMDT dat, HCDT xdat, HCDT vdat, mreal x1, mrea
 #pragma omp parallel for
 	for(long i=0;i<nx;i++)
 	{
-		mreal xx = x1+(x2-x1)*i/(nx-1.),d,val,dx=0,d1=0,d2=mx-1,v1,v2;
-		v1 = val = mglSpline1t<mreal>(xxd->a,mx,dx,&d);
-		long count=0;
-		do	// use Newton method to find root
-		{
-			if(count>20)	{	dx=NAN;	break;	}	count++;
-			dx += (xx-val)/d;
-			val = mglSpline1t<mreal>(xxd->a,mx,dx,&d);
-		}	while(fabs(xx-val)>acx);
-		v2=mglSpline1st<mreal>(xxd->a,mx,d2);
-		if(mgl_isnan(dx))
-		{
-			if((v1-xx)*(v2-xx)<0)	do	// if failed then use bisection method
-			{
-				dx = (d1+d2)/2.;
-				val = mglSpline1st<mreal>(xxd->a,mx,dx);
-				if((v1-xx)*(val-xx)<0)	{	v2=val;	d2=dx;	}	else	{	v1=val;	d1=dx;	}
-			}	while(fabs(xx-val)>acx);
-			else	dx=(xx-v1)*(v2-v1)<0?0:mx-1;
-		}
-		d = mglSpline1st<mreal>(vvd->a,mx,dx);
+		register mreal u = mgl_index_1(x1+(x2-x1)*i/(nx-1.),xxd,acx);
+		register mreal d = mglSpline1st<mreal>(vvd->a,mx,u);
 		if(sl<0)	for(long j=0;j<nn;j++)	dat->a[i+j*nx] = d;
 		else	dat->a[i+sl*nx] = d;
 	}
+}
+//-----------------------------------------------------------------------------
+mglPoint MGL_NO_EXPORT mgl_index_2(mreal x, mreal y, const mglData *xdat, const mglData *ydat, mreal acx, mreal acy)
+{
+	long mx=xdat->nx, my=xdat->ny;
+	mreal u=fabs(x),u1=0,u2=mx-1, v=fabs(y),v1=0,v2=my-1;
+	mreal x11 = mgl_data_spline(xdat,u1,v1,0), y11 = mgl_data_spline(ydat,u1,v1,0);
+	mreal x21 = mgl_data_spline(xdat,u2,v1,0), y21 = mgl_data_spline(ydat,u2,v1,0);
+	mreal x12 = mgl_data_spline(xdat,u1,v2,0), y12 = mgl_data_spline(ydat,u1,v2,0);
+	mreal x22 = mgl_data_spline(xdat,u2,v2,0), y22 = mgl_data_spline(ydat,u2,v2,0);
+	long count=0;
+
+	if(fabs(x11-x)<acx && fabs(y11-y)<acy)	return mglPoint(u1,v1);
+	if(fabs(x12-x)<acx && fabs(y12-y)<acy)	return mglPoint(u1,v2);
+	if(fabs(x21-x)<acx && fabs(y21-y)<acy)	return mglPoint(u2,v1);
+	if(fabs(x22-x)<acx && fabs(y22-y)<acy)	return mglPoint(u2,v2);
+	if((x11-x)*(x12-x)*(x21-x)*(x22-x)>0 && (x11-x)*(x12-x)*(x21-x)>0)	return mglPoint(NAN,NAN);
+	if((y11-y)*(y12-y)*(y21-y)*(y22-y)>0 && (y11-y)*(y12-y)*(y21-y)>0)	return mglPoint(NAN,NAN);
+
+	do
+	{
+		if(count<10)
+		{
+			register mreal dx0=x-x11, dx1=x21-x11, dx2=x12-x11, dx3=x22+x11-x12-x21;
+			register mreal dy0=y-y11, dy1=y21-y11, dy2=y12-y11, dy3=y22+y11-y12-y21;
+			register mreal t1 = dx0*dx0*dy3*dy3 + 2*dx0*dx1*dy2*dy3 + 2*dx0*dx2*dy1*dy3 - 
+								2*dx0*dx3*dy0*dy3 - 4*dx1*dx2*dy0*dy3 + dx1*dx1*dy2*dy2 - 
+								4*dx0*dx3*dy1*dy2 - 2*dx1*dx2*dy1*dy2 + 2*dx1*dx3*dy0*dy2 + 
+								dx2*dx2*dy1*dy1 + 2*dx2*dx3*dy0*dy1 + dx3*dx3*dy0*dy0, 
+							t2 = dx2*dy1+dx3*dy0-dx0*dy3-dx1*dy2, t3 = 2*(dx2*dy3-dx3*dy2);
+			if(t1<0 || t3==0)	{	count=10;	continue;	}
+			t1 = sqrt(t1);	v = (t2-t1)/t3;
+			if(v<0 || v>1)	v = (t2+t1)/t3;
+			u = (dx0-dx2*v)/(dx1+dx3*v);
+			if(u<0 || v<0 || u>1 || v>1)	{	count=10;	continue;	}
+			u = u1+(u2-u1)*u;	v = v1+(v2-v1)*v;	count++;
+		}
+		else	{	u = (u1+u2)/2;	v = (v1+v2)/2;	}
+
+		mreal tx  = mgl_data_spline(xdat,u,v,0),  ty  = mgl_data_spline(ydat,u,v,0);
+		if(fabs(tx-x)<acx && fabs(ty-y)<acy)	break;
+		mreal tx1 = mgl_data_spline(xdat,u1,v,0), ty1 = mgl_data_spline(ydat,u1,v,0);
+		if(fabs(tx1-x)<acx && fabs(ty1-y)<acy)	{u=u1;	break;}
+		mreal tx2 = mgl_data_spline(xdat,u2,v,0), ty2 = mgl_data_spline(ydat,u2,v,0);
+		if(fabs(tx2-x)<acx && fabs(ty2-y)<acy)	{u=u2;	break;}
+		mreal sx1 = mgl_data_spline(xdat,u,v1,0), sy1 = mgl_data_spline(ydat,u,v1,0);
+		if(fabs(sx1-x)<acx && fabs(sy1-y)<acy)	{v=v1;	break;}
+		mreal sx2 = mgl_data_spline(xdat,u,v2,0), sy2 = mgl_data_spline(ydat,u,v2,0);
+		if(fabs(sx2-x)<acx && fabs(sy2-y)<acy)	{v=v2;	break;}
+		if( ((x11-x)*(sx1-x)*(tx1-x)*(tx-x)>0 || (x11-x)*(sx1-x)*(tx1-x)>0) && ((y11-y)*(sy1-y)*(ty1-y)*(ty-y)>0 && (y11-y)*(sy1-y)*(ty1-y)>0) )
+		{	x12 = tx1;	y12 = ty1;	x21 = sx1;	y21 = sy1;	x22 = tx;	y22 = ty;	u2 = u;	v2 = v;	}
+		if( ((tx1-x)*(tx-x)*(x12-x)*(sx2-x)>0 || (tx1-x)*(tx-x)*(x12-x)>0) && ((ty1-y)*(ty-y)*(y12-y)*(sy2-y)>0 && (ty1-y)*(ty-y)*(y12-y)>0) )
+		{	x11 = tx1;	y11 = ty1;	x21 = tx;	y21 = ty;	x22 = sx2;	y22 = sy2;	u2 = u;	v1 = v;	}
+		if( ((tx-x)*(sx2-x)*(tx2-x)*(x22-x)>0 || (tx-x)*(sx2-x)*(tx2-x)>0) && ((ty-y)*(sy2-y)*(ty2-y)*(y22-y)>0 && (ty-y)*(sy2-y)*(ty2-y)>0) )
+		{	x11 = tx;	y11 = ty;	x12 = sx2;	y12 = sy2;	x21 = tx2;	y21 = ty2;	u1 = u;	v1 = v;	}
+		if( ((sx1-x)*(tx-x)*(x21-x)*(tx2-x)>0 || (sx1-x)*(tx-x)*(x21-x)>0) && ((sy1-y)*(ty-y)*(y21-y)*(ty2-y)>0 && (sy1-y)*(ty-y)*(y21-y)>0) )
+		{	x11 = sx1;	y11 = sy1;	x12 = tx;	y12 = ty;	x22 = tx2;	y22 = ty2;	u1 = u;	v2 = v;	}
+	} while(fabs(u2-u1)>1e-3 || fabs(v2-v1)>1e-3);
+	return mglPoint(u,v);
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_data_refill_xy(HMDT dat, HCDT xdat, HCDT ydat, HCDT vdat, mreal x1, mreal x2, mreal y1, mreal y2, long sl)
@@ -2030,77 +2091,32 @@ void MGL_EXPORT mgl_data_refill_xy(HMDT dat, HCDT xdat, HCDT ydat, HCDT vdat, mr
 	if(!both && (xdat->GetNx()!=mx || ydat->GetNx()!=my))	return;	// incompatible dimensions
 	mreal acx=1e-6*fabs(x2-x1), acy=1e-6*fabs(y2-y1);
 	if(both)
-#pragma omp parallel for collapse(2)
-		for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
+		mgl_data_grid_xy(dat,xdat,ydat,vdat,x1,x2,y1,y2);
+/*#pragma omp parallel for collapse(2)
+		for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)	// NOTE: too slow
 		{
-			mreal xx = x1+(x2-x1)*i/(nx-1.),dxx=0,dxy=0,vx,dx=0,dd;
-			mreal yy = y1+(y2-y1)*j/(ny-1.),dyx=0,dyy=0,vy,dy=0;
-			vx = mgl_data_spline_ext(xdat,dx,dy,0,&dxx,&dxy,0);
-			vy = mgl_data_spline_ext(ydat,dx,dy,0,&dyx,&dyy,0);
-			long count=0;
-			do	// use Newton method to find root
-			{
-				if(count>50)	{	dx=NAN;	break;	}	count++;
-				dd = dxy*dyx-dxx*dyy;
-				dx += (dxy*(yy-vy)-dyy*(xx-vx))/dd;
-				dy += (dyx*(xx-vx)-dxx*(yy-vy))/dd;
-				vx = mgl_data_spline_ext(xdat,dx,dy,0,&dxx,&dxy,0);
-				vy = mgl_data_spline_ext(ydat,dx,dy,0,&dyx,&dyy,0);
-			}	while(fabs(xx-vx)>acx && fabs(yy-vy)>acy);	// this valid for linear interpolation
-			dd = mgl_isnan(dx)?NAN:mgl_data_spline(vdat,dx,dy,0);
+			mglPoint p = mgl_index_2(x1+(x2-x1)*i/(nx-1.), y1+(y2-y1)*j/(ny-1.),xxd,yyd,acx,acy);
+			register mreal d = mgl_isnan(p.x)?NAN:mgl_data_spline(vdat,p.x,p.y,0);
 			register long i0=i+nx*j;
-			if(sl<0)	for(long k=0;k<nz;k++)	dat->a[i0+k*nn] = dd;
-			else	dat->a[i0+sl*nn] = dd;
-		}
+			if(sl<0)	for(long k=0;k<nz;k++)	dat->a[i0+k*nn] = d;
+			else	dat->a[i0+sl*nn] = d;
+		}*/
 	else
+	{
+		mglData u(nx), v(ny);
+#pragma omp parallel for
+		for(long i=0;i<nx;i++)	u.a[i] = mgl_index_1(x1+(x2-x1)*i/(nx-1.),xxd,acx);
+#pragma omp parallel for
+		for(long i=0;i<ny;i++)	v.a[i] = mgl_index_1(y1+(y2-y1)*i/(ny-1.),yyd,acy);
 #pragma omp parallel for collapse(2)
 		for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
 		{
-			mreal xx = x1+(x2-x1)*i/(nx-1.),d,val,dx=0,v1,v2;
-			mreal yy = y1+(y2-y1)*j/(ny-1.),dy=0,d1=0,d2=mx-1;
-			v1 = val = mglSpline1t<mreal>(xxd->a,mx,dx,&d);
-			long count=0;
-			do	// use Newton method to find root
-			{
-				if(count>20)	{	dx=NAN;	break;	}	count++;
-				dx += (xx-val)/d;
-				val = mglSpline1t<mreal>(xxd->a,mx,dx,&d);
-			}	while(fabs(xx-val)>acx);	// this valid for linear interpolation
-			v2=mglSpline1st<mreal>(xxd->a,mx,d2);
-			if(mgl_isnan(dx))
-			{
-				if((v1-xx)*(v2-xx)<0)	do	// if failed then use bisection method
-				{
-					dx = (d1+d2)/2.;
-					val = mglSpline1st<mreal>(xxd->a,mx,dx);
-					if((v1-xx)*(val-xx)<0)	{	v2=val;	d2=dx;	}	else	{	v1=val;	d1=dx;	}
-				}	while(fabs(xx-val)>acx);
-				else	dx=(xx-v1)*(v2-v1)<0?0:mx-1;
-			}
-			v1 = val = mglSpline1t<mreal>(yyd->a,my,dy,&d);
-			count=0;
-			do	// use Newton method to find root
-			{
-				if(count>20)	{	dy=NAN;	break;	}	count++;
-				dy = (yy-val)/d;
-				val = mglSpline1t<mreal>(yyd->a,my,dy,&d);
-			}	while(fabs(yy-val)>acy);	// this valid for linear interpolation
-			d1=0;	d2=my-1;	v2=mglSpline1st<mreal>(yyd->a,my,d2);
-			if(mgl_isnan(dy))
-			{
-				if((v1-yy)*(v2-yy)<0)	do	// if failed then use bisection method
-				{
-					dy = (d1+d2)/2.;
-					val = mglSpline1st<mreal>(yyd->a,my,dy);
-					if((v1-yy)*(val-yy)<0)	{	v2=val;	d2=dy;	}	else	{	v1=val;	d1=dy;	}
-				}	while(fabs(yy-val)>acy);
-				else	dy=(yy-v1)*(v2-v1)<0?0:my-1;
-			}
-			d = mgl_data_spline(vdat,dx,dy,0);
+			register mreal d = mgl_data_spline(vdat,u.a[i],v.a[j],0);
 			register long i0=i+nx*j;
 			if(sl<0)	for(long k=0;k<nz;k++)	dat->a[i0+k*nn] = d;
 			else	dat->a[i0+sl*nn] = d;
 		}
+	}
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_data_refill_xyz(HMDT dat, HCDT xdat, HCDT ydat, HCDT zdat, HCDT vdat, mreal x1, mreal x2, mreal y1, mreal y2, mreal z1, mreal z2)
@@ -2139,71 +2155,18 @@ void MGL_EXPORT mgl_data_refill_xyz(HMDT dat, HCDT xdat, HCDT ydat, HCDT zdat, H
 			dat->a[i+nx*(j+ny*k)] = mgl_isnan(dx)?NAN:mgl_data_spline(vdat,dx,dy,dz);
 		}
 	else
+	{
+		mglData u(nx), v(ny), w(nz);
+#pragma omp parallel for
+		for(long i=0;i<nx;i++)	u.a[i] = mgl_index_1(x1+(x2-x1)*i/(nx-1.),xxd,acx);
+#pragma omp parallel for
+		for(long i=0;i<ny;i++)	v.a[i] = mgl_index_1(y1+(y2-y1)*i/(ny-1.),yyd,acy);
+#pragma omp parallel for
+		for(long i=0;i<nz;i++)	w.a[i] = mgl_index_1(z1+(z2-z1)*i/(nz-1.),zzd,acz);
 #pragma omp parallel for collapse(3)
 		for(long k=0;k<nz;k++)	for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
-		{
-			mreal xx = x1+(x2-x1)*i/(nx-1.),d,val,dx=0;
-			mreal yy = y1+(y2-y1)*j/(ny-1.),dy=0,d1=0,d2=mx-1;
-			mreal zz = z1+(z2-z1)*k/(nz-1.),dz=0,v1,v2;
-			v1 = val = mglSpline1t<mreal>(xxd->a,mx,dx,&d);
-			long count=0;
-			do	// use Newton method to find root
-			{
-				if(count>20)	{	dx=NAN;	break;	}	count++;
-				dx += (xx-val)/d;
-				val = mglSpline1t<mreal>(xxd->a,mx,dx,&d);
-			}	while(fabs(xx-val)>acx);	// this valid for linear interpolation
-			v2=mglSpline1st<mreal>(xxd->a,mx,d2);
-			if(mgl_isnan(dx))
-			{
-				if((v1-xx)*(v2-xx)<0)	do	// if failed then use bisection method
-				{
-					dx = (d1+d2)/2.;
-					val = mglSpline1st<mreal>(xxd->a,mx,dx);
-					if((v1-xx)*(val-xx)<0)	{	v2=val;	d2=dx;	}	else	{	v1=val;	d1=dx;	}
-				}	while(fabs(xx-val)>acx);
-				else	dx=(xx-v1)*(v2-v1)<0?0:mx-1;
-			}
-			v1 = val = mglSpline1t<mreal>(yyd->a,my,dy,&d);
-			count=0;
-			do	// use Newton method to find root
-			{
-				if(count>20)	{	dy=NAN;	break;	}	count++;
-				dy = (yy-val)/d;
-				val = mglSpline1t<mreal>(yyd->a,my,dy,&d);
-			}	while(fabs(yy-val)>acy);	// this valid for linear interpolation
-			d1=0;	d2=my-1;	v2=mglSpline1st<mreal>(yyd->a,my,d2);
-			if(mgl_isnan(dy))
-			{
-				if((v1-yy)*(v2-yy)<0)	do	// if failed then use bisection method
-				{
-					dy = (d1+d2)/2.;
-					val = mglSpline1st<mreal>(yyd->a,my,dy);
-					if((v1-yy)*(val-yy)<0)	{	v2=val;	d2=dy;	}	else	{	v1=val;	d1=dy;	}
-				}	while(fabs(yy-val)>acy);
-				else	dy=(yy-v1)*(v2-v1)<0?0:my-1;
-			}
-			v1 = val = mglSpline1t<mreal>(zzd->a,mz,dz,&d);
-			count=0;
-			do	// use Newton method to find root
-			{
-				if(count>20)	{	dz=NAN;	break;	}	count++;
-				dz += (zz-val)/d;
-				val = mglSpline1t<mreal>(zzd->a,mz,dz,&d);
-			}	while(fabs(zz-val)>acz);	// this valid for linear interpolation
-			d1=0;	d2=mz-1;	v2=mglSpline1st<mreal>(zzd->a,mz,d2);
-			if(mgl_isnan(dz))
-			{
-				if((v1-zz)*(v2-zz)<0)	do	// if failed then use bisection method
-				{
-					dz = (d1+d2)/2.;
-					val = mglSpline1st<mreal>(zzd->a,mz,dz);
-					if((v1-zz)*(val-zz)<0)	{	v2=val;	d2=dz;	}	else	{	v1=val;	d1=dz;	}
-				}	while(fabs(zz-val)>acz);
-				else	dz=(zz-v1)*(v2-v1)<0?0:mz-1;
-			}
-			dat->a[i+nx*(j+ny*k)] = mgl_data_spline(vdat,dx,dy,dz);
-		}
+			dat->a[i+nx*(j+ny*k)] = mgl_data_spline(vdat,u.a[i],v.a[j],w.a[k]);
+	}
 }
 //-----------------------------------------------------------------------------
 MGL_NO_EXPORT void *mgl_eval(void *par)

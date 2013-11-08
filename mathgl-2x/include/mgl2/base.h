@@ -507,9 +507,9 @@ private:
 	mglPoint CutMin;	///< Lower edge of bounding box for cut off.
 	mglPoint CutMax;	///< Upper edge of bounding box for cut off.
 
-	void RecalcCRange();	///< Recalculate internal parameter for correct coloring.
+	bool RecalcCRange();	///< Recalculate internal parameter for correct coloring.
 	void RecalcBorder();	///< Recalculate internal parameter for correct transformation rules.
-	void SetFBord(mreal x,mreal y,mreal z);	///< Set internal boundng box depending on transformation formula
+	bool SetFBord(mreal x,mreal y,mreal z);	///< Set internal boundng box depending on transformation formula
 	void ClearEq();			///< Clear the used variables for axis transformation
 };
 //-----------------------------------------------------------------------------

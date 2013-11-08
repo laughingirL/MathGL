@@ -306,8 +306,9 @@ void mglBase::Reserve(long n)
 //-----------------------------------------------------------------------------
 //		Boundaries and scaling
 //---------------------------------------------------------------------------
-void mglBase::RecalcCRange()
+bool mglBase::RecalcCRange()
 {
+	bool wrong=false;
 	if(!fa)
 	{	FMin.c = Min.c;	FMax.c = Max.c;	}
 	else
@@ -319,15 +320,18 @@ void mglBase::RecalcCRange()
 		for(i=0;i<=n;i++)
 		{
 			a = fa->Calc(0,0,0,Min.c+i*(Max.c-Min.c)/n);
+			if(mgl_isnan(a))	wrong=true;
 			if(a<FMin.c)	FMin.c=a;
 			if(a>FMax.c)	FMax.c=a;
 		}
 	}
+	return wrong;
 }
 //-----------------------------------------------------------------------------
 void mglBase::RecalcBorder()
 {
 	ZMin = 1.;
+	bool wrong=false;
 	if(!fx && !fy && !fz)
 	{	FMin = Min;	FMax = Max;	}
 	else
@@ -338,18 +342,18 @@ void mglBase::RecalcBorder()
 		int n=30;
 		for(i=0;i<=n;i++)	for(j=0;j<=n;j++)	// x range
 		{
-			SetFBord(Min.x, Min.y+i*(Max.y-Min.y)/n, Min.z+j*(Max.z-Min.z)/n);
-			SetFBord(Max.x, Min.y+i*(Max.y-Min.y)/n, Min.z+j*(Max.z-Min.z)/n);
+			if(SetFBord(Min.x, Min.y+i*(Max.y-Min.y)/n, Min.z+j*(Max.z-Min.z)/n))	wrong=true;
+			if(SetFBord(Max.x, Min.y+i*(Max.y-Min.y)/n, Min.z+j*(Max.z-Min.z)/n))	wrong=true;
 		}
 		for(i=0;i<=n;i++)	for(j=0;j<=n;j++)	// y range
 		{
-			SetFBord(Min.x+i*(Max.x-Min.x)/n, Min.y, Min.z+j*(Max.z-Min.z)/n);
-			SetFBord(Min.x+i*(Max.x-Min.x)/n, Max.y, Min.z+j*(Max.z-Min.z)/n);
+			if(SetFBord(Min.x+i*(Max.x-Min.x)/n, Min.y, Min.z+j*(Max.z-Min.z)/n))	wrong=true;
+			if(SetFBord(Min.x+i*(Max.x-Min.x)/n, Max.y, Min.z+j*(Max.z-Min.z)/n))	wrong=true;
 		}
 		for(i=0;i<=n;i++)	for(j=0;j<=n;j++)	// x range
 		{
-			SetFBord(Min.x+i*(Max.x-Min.x)/n, Min.y+j*(Max.y-Min.y)/n, Min.x);
-			SetFBord(Min.x+i*(Max.x-Min.x)/n, Min.y+j*(Max.y-Min.y)/n, Max.z);
+			if(SetFBord(Min.x+i*(Max.x-Min.x)/n, Min.y+j*(Max.y-Min.y)/n, Min.x))	wrong=true;
+			if(SetFBord(Min.x+i*(Max.x-Min.x)/n, Min.y+j*(Max.y-Min.y)/n, Max.z))	wrong=true;
 		}
 		mreal d;
 		if(!fx)	{	FMin.x = Min.x;	FMax.x = Max.x;	}
@@ -359,29 +363,36 @@ void mglBase::RecalcBorder()
 		if(!fz)	{	FMin.z = Min.z;	FMax.z = Max.z;	}
 		else	{	d=0.01*(FMax.z-FMin.z);	FMin.z-=d;	FMax.z+=d;	}
 	}
-	RecalcCRange();
+	if(RecalcCRange())	wrong=true;
+	if(wrong)	SetWarn(mglWarnTern, "Curved coordinates");
+if(wrong)	printf("Fmin={%g,%g,%g}, Fmax={%g,%g,%g}\n",FMin.x,FMin.y,FMin.z, FMax.x,FMax.y,FMax.z);
 }
 //-----------------------------------------------------------------------------
-void mglBase::SetFBord(mreal x,mreal y,mreal z)
+bool mglBase::SetFBord(mreal x,mreal y,mreal z)
 {
+	bool wrong=false;
 	if(fx)
 	{
 		mreal v = fx->Calc(x,y,z);
+		if(mgl_isnan(v))	wrong = true;
 		if(FMax.x < v)	FMax.x = v;
 		if(FMin.x > v)	FMin.x = v;
 	}
 	if(fy)
 	{
 		mreal v = fy->Calc(x,y,z);
+		if(mgl_isnan(v))	wrong = true;
 		if(FMax.y < v)	FMax.y = v;
 		if(FMin.y > v)	FMin.y = v;
 	}
 	if(fz)
 	{
 		mreal v = fz->Calc(x,y,z);
+		if(mgl_isnan(v))	wrong = true;
 		if(FMax.z < v)	FMax.z = v;
 		if(FMin.z > v)	FMin.z = v;
 	}
+	return wrong;
 }
 //-----------------------------------------------------------------------------
 bool mglBase::ScalePoint(const mglMatrix *, mglPoint &p, mglPoint &n, bool use_nan) const

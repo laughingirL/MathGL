@@ -131,7 +131,7 @@ typedef float mreal;
 #define mgl_min(a,b)	(((a)>(b)) ? (b) : (a))
 #define mgl_max(a,b)	(((a)>(b)) ? (a) : (b))
 #define mgl_isnan(a)	((a)!=(a))
-#define mgl_isnum(a)	((a)==(a))
+#define mgl_isnum(a)	((a)==(a) && 2*(a)!=(a))
 //-----------------------------------------------------------------------------
 #define SMOOTH_NONE		0
 #define SMOOTH_LINE_3	1

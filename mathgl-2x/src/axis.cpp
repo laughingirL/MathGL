@@ -585,6 +585,7 @@ void mglCanvas::DrawLabels(mglAxis &aa, bool inv)
 		// exclude factors
 		if(aa.ch!='c' && (aa.txt[i].val<aa.v1 || aa.txt[i+1].val<aa.v1 || aa.txt[i].val>aa.v2 || aa.txt[i+1].val>aa.v2))
 			continue;
+		if(kk[i]<0 || kk[i+1]<0)	continue;
 		v = (GetPntP(kk[i+1])-GetPntP(kk[i])).norm();	// distance between ticks
 		vv = (w[i]+w[i+1])/2;	// length of labels
 		if(v>0 && l < vv/v)	l = vv/v;
@@ -597,7 +598,7 @@ void mglCanvas::DrawLabels(mglAxis &aa, bool inv)
 	long k = get(MGL_TICKS_SKIP) ? 1+l : 1;
 	if(n>0)	for(i=0;i<n;i++)
 	{
-		if(kk[i]<0)	continue;	// should be never here?!
+		if(kk[i]<0)	continue;
 		c = aa.txt[i].val;
 		if(get(MGL_NO_ORIGIN) && c==aa.v0)	continue;
 		if(c>aa.v1 && c<aa.v2 && i%k!=0)	continue;

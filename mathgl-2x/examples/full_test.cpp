@@ -67,12 +67,10 @@ void smgl_text(mglGraph *gr);	// text drawing
 void smgl_surf(mglGraph *gr);
 void test(mglGraph *gr)
 {
-	gr->SetTuneTicks(7);	gr->SetTicks('x',0.23);
-	gr->Axis();
-	return;
 	mglParse par;
 	setlocale(LC_CTYPE, "");
-	par.Execute(gr,"axis:subplot 2 2 1:axis");
+//	par.Execute(gr,"axis");
+	par.Execute(gr,"axis 'lg(x)' '' '':axis:box:fplot 'x^2'");
 }
 //-----------------------------------------------------------------------------
 #if !defined(_MSC_VER) && !defined(__BORLANDC__)
