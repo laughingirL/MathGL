@@ -42,7 +42,7 @@ mglPoint GetY(HCDT y, int i, int j, int k=0);
 mglPoint GetZ(HCDT z, int i, int j, int k=0);
 //-----------------------------------------------------------------------------
 /// Structure for transformation matrix
-struct mglMatrix
+struct MGL_EXPORT mglMatrix
 {
 	mreal b[9];
 	mreal x,y,z,pf;
@@ -59,7 +59,7 @@ inline bool operator!=(const mglMatrix &a, const mglMatrix &b)
 {	return b.x!=a.x||b.y!=a.y||b.z!=a.z||b.pf!=a.pf||memcmp(b.b,a.b,9*sizeof(mreal));	}
 //-----------------------------------------------------------------------------
 /// Structure for simplest primitives
-struct mglPrim	// NOTE: use float for reducing memory size
+struct MGL_EXPORT mglPrim	// NOTE: use float for reducing memory size
 {
 	// NOTE: n4 is used as mark; n3 -- as pen style for type=0,1,4
 	// NOTE: n3 is used as position of txt,font in Ptxt for type=6
@@ -84,7 +84,7 @@ bool operator<(const mglPrim &a,const mglPrim &b);
 bool operator>(const mglPrim &a,const mglPrim &b);
 //-----------------------------------------------------------------------------
 /// Structure for group of primitives
-struct mglGroup
+struct MGL_EXPORT mglGroup
 {
 	std::vector<long> p;	///< list of primitives (not filled!!!)
 	int Id;				///< Current list of primitives
@@ -93,7 +93,7 @@ struct mglGroup
 };
 //-----------------------------------------------------------------------------
 /// Structure for text label
-struct mglText
+struct MGL_EXPORT mglText
 {
 	std::wstring text;
 	std::string stl;
@@ -103,7 +103,7 @@ struct mglText
 };
 //-----------------------------------------------------------------------------
 /// Structure for internal point representation
-struct mglPnt	// NOTE: use float for reducing memory size
+struct MGL_EXPORT mglPnt	// NOTE: use float for reducing memory size
 {
 	float xx,yy,zz;	// original coordinates
 	float x,y,z;	// coordinates
@@ -130,7 +130,7 @@ inline mglPnt operator*(float b, const mglPnt &a)
 	c.r*=b;	c.g*=b;	c.b*=b;	c.a*=b;	return c;	}
 //-----------------------------------------------------------------------------
 /// Structure for glyph representation
-struct mglGlyph
+struct MGL_EXPORT mglGlyph
 {
 	long nt, nl;			///< number of triangles and lines
 	short *trig, *line;	///< vertexes of triangles and lines
@@ -149,7 +149,7 @@ struct mglGlyph
 //-----------------------------------------------------------------------------
 #define MGL_TEXTURE_COLOURS 512
 /// Structure for texture (color scheme + palette) representation
-struct mglTexture
+struct MGL_EXPORT mglTexture
 {
 	mglColor col[MGL_TEXTURE_COLOURS];	///< Colors itself
 	long n;				///< Number of initial colors along u
@@ -179,7 +179,7 @@ const mglColor WC( 1, 1, 1);
 const mglColor RC( 1, 0, 0);
 //-----------------------------------------------------------------------------
 /// Structure active points
-struct mglActivePos
+struct MGL_EXPORT mglActivePos
 {
 	int x,y;		///< coordinates of active point
 	int id;		///< object id for active point

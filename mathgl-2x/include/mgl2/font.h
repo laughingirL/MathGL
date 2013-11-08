@@ -44,7 +44,7 @@
 #define MGL_DEF_FONT_NAME	"STIX"
 #endif
 //-----------------------------------------------------------------------------
-struct mglTeXsymb	{	unsigned kod;	const wchar_t *tex;	};
+struct MGL_EXPORT mglTeXsymb	{	unsigned kod;	const wchar_t *tex;	};
 const float mgl_fgen = 4*14;
 /// Get font color, style and align for internal parser
 char mglGetStyle(const char *how, int *font, int *align=0);

@@ -24,7 +24,7 @@
 struct GifFileType;
 //-----------------------------------------------------------------------------
 /// Structure for drawing axis and ticks
-struct mglAxis
+struct MGL_EXPORT mglAxis
 {
 	mglAxis()	{	dv=ds=d=v0=v1=v2=o=sh=0;	ns=f=ch=0;	pos = 't';	inv=false;	}
 	mglAxis(const mglAxis &aa)
@@ -57,7 +57,7 @@ struct mglAxis
 };
 //-----------------------------------------------------------------------------
 /// Structure for light source
-struct mglLight
+struct MGL_EXPORT mglLight
 {
 	mglLight()	{	n=false;	a=b=0;	}
 	bool n;			///< Availability of light sources
@@ -72,7 +72,7 @@ struct mglLight
 //-----------------------------------------------------------------------------
 class mglCanvas;
 /// Structure for light source
-struct mglDrawReg
+struct MGL_EXPORT mglDrawReg
 {
 	union
 	{
@@ -87,7 +87,7 @@ struct mglDrawReg
 };
 //-----------------------------------------------------------------------------
 /// Structure contains everything for drawing
-struct mglDrawDat
+struct MGL_EXPORT mglDrawDat
 {
 	std::vector<mglPnt>  Pnt;	///< Internal points
 	std::vector<mglPrim> Prm;	///< Primitives (lines, triangles and so on) -- need for export
