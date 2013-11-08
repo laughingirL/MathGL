@@ -10,6 +10,7 @@
 * Add style 't' for Cones() to produce tubes (cylinders).
 * Add style '^' for Legend() to left/right align legend if its coordinates are right/left from the center
 * Add style '<', '^', '>' for aligning/centering boxes in Bars(), Barh(), BoxPlot(), Cones(). Also this plots become centered by default if nx sizes are the same for all data.
+* Add Dots() function which set independently both color and alpha of dots
 * Improve automatic axis position. Add style '^' for inverse automatic axis position.
 * Improve tick labeling. Add style TuneTicks&4 for zero filling of tick labels.
 * Add mglData::Refill() for filling by interpolation of parametrically dependent data

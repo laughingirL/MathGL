@@ -159,9 +159,12 @@ public:
 	{	mgl_data_refill_gr(gr,this,&xdat,&ydat,0,&vdat,sl,opt);	}
 	inline void Refill(mglBase *gr, const mglData &xdat, const mglData &ydat, const mglData &zdat, const mglData &vdat, const char *opt="")
 	{	mgl_data_refill_gr(gr,this,&xdat,&ydat,&zdat,&vdat,-1,opt);	}
-/// Set the data by triangulated surface values assuming x,y,z in range [r1,r2]
+/// Set the data by triangulated surface values assuming x,y,z in axis range of gr
 	inline void Grid(mglBase *gr, const mglData &x, const mglData &y, const mglData &z, const char *opt="")
 	{	mgl_data_grid(gr,this,&x,&y,&z,opt);	}
+	/// Set the data by triangulated surface values assuming x,y,z in range [p1, p2]
+	inline void Grid(const mglData &xdat, const mglData &ydat, const mglData &vdat, mglPoint p1, mglPoint p2)
+	{	mgl_data_grid_xy(this,&xdat,&ydat,&vdat,p1.x,p2.x,p1.y,p2.y);	}
 	/// Put value to data element(s)
 	inline void Put(mreal val, long i=-1, long j=-1, long k=-1)
 	{	mgl_data_put_val(this,val,i,j,k);	}

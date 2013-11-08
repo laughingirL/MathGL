@@ -639,11 +639,12 @@ public:
 	/// Draw chart for data a
 	inline void Chart(const mglData &a, const char *colors="", const char *opt="")
 	{	mgl_chart(gr, &a, colors,opt);	}
-	/// Draw OHLC diagram
-	inline void OHLC(const mglDataA &x, const mglDataA &open, const mglDataA &high, const mglDataA &low, const mglDataA &close, const char *pen, const char *opt="")
-	{	mgl_ohlc_x(&x, &open,&high,&low,&close,pen,opt);	}
-	inline void OHLC(const mglDataA &open, const mglDataA &high, const mglDataA &low, const mglDataA &close, const char *pen, const char *opt="")
-	{	mgl_ohlc(&open,&high,&low,&close,pen,opt);	}
+	/// Draw Open-High-Low-Close (OHLC) diagram
+	inline void OHLC(const mglData &x, const mglData &open, const mglData &high, const mglData &low, const mglData &close, const char *pen="", const char *opt="")
+	{	mgl_ohlc_x(gr, &x, &open,&high,&low,&close,pen,opt);	}
+	inline void OHLC(const mglData &open, const mglData &high, const mglData &low, const mglData &close, const char *pen="", const char *opt="")
+	{	mgl_ohlc(gr, &open,&high,&low,&close,pen,opt);	}
+
 	/// Draw box-plot (special 5-value plot used in statistic)
 	inline void BoxPlot(const mglData &x, const mglData &y, const char *pen="", const char *opt="")
 	{	mgl_boxplot_xy(gr, &x, &y, pen,opt);	}
@@ -1076,9 +1077,12 @@ public:
 	/// Draw dots in points {x,y,z}.
 	inline void Dots(const mglData &x, const mglData &y, const mglData &z, const char *sch="", const char *opt="")
 	{	mgl_dots(gr, &x, &y, &z, sch, opt);	}
-	/// Draw semitransparent dots in points {x,y,z} with alpha a.
+	/// Draw semitransparent dots in points {x,y,z} with specified alpha a.
 	inline void Dots(const mglData &x, const mglData &y, const mglData &z, const mglData &a, const char *sch="", const char *opt="")
 	{	mgl_dots_a(gr, &x, &y, &z, &a, sch, opt);	}
+	/// Draw semitransparent dots in points {x,y,z} with specified color c and alpha a.
+	inline void Dots(const mglData &x, const mglData &y, const mglData &z, const mglData &c, const mglData &a, const char *sch="", const char *opt="")
+	{	mgl_dots_ca(gr, &x, &y, &z, &c, &a, sch, opt);	}
 	/// Draw surface reconstructed for points in arrays {x,y,z}.
 	inline void Crust(const mglData &x, const mglData &y, const mglData &z, const char *sch="", const char *opt="")
 	{	mgl_crust(gr, &x, &y, &z, sch, opt);	}
