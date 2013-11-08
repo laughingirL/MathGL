@@ -20,7 +20,7 @@ if(MGL_HAVE_PYTHON)
 	set_target_properties(_mathgl PROPERTIES BUILD_WITH_INSTALL_RPATH ON)
 	add_custom_command(OUTPUT mathgl.pyc
 		COMMAND ${PYTHON_EXECUTABLE}
-		ARGS -c \"from py_compile import compile\; compile('mathgl.py')\"
+		ARGS -c \"from py_compile import compile\; compile('mathgl.py') \"
 		WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/lang
 		DEPENDS _mathgl
 	)
