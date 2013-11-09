@@ -365,7 +365,6 @@ void mglBase::RecalcBorder()
 	}
 	if(RecalcCRange())	wrong=true;
 	if(wrong)	SetWarn(mglWarnTern, "Curved coordinates");
-if(wrong)	printf("Fmin={%g,%g,%g}, Fmax={%g,%g,%g}\n",FMin.x,FMin.y,FMin.z, FMax.x,FMax.y,FMax.z);
 }
 //-----------------------------------------------------------------------------
 bool mglBase::SetFBord(mreal x,mreal y,mreal z)
