@@ -79,6 +79,9 @@ MathGL это ...
 
 Есть несколько дополнительных опций, которые по умолчанию отключены. К их числу относятся: @code{enable-fltk, enable-glut, enable-qt} для поддержки FLTK, GLUT и/или Qt окон; @code{enable-jpeg, enable-gif, enable-hdf5} для поддержки соответствующих форматов; @code{enable-all} для включения всех возможностей. Для использования типа @code{double} для внутреннего хранения данных используйте опцию @code{enable-double}. Для создания интерфейсов к другим языкам (кроме С/Фортран/MGL) используйте опции @code{enable-python, enable-octave} или @code{enable-all-swig} для всех поддерживаемых языков. Вы можете воспользоваться WYSIWYG утилитой (@code{cmake-gui}) для просмотра и изменения всех опций, или выполнить @code{cmake -D enable-all=on -D enable-all-widgets=on -D enable-all-swig=on .} в командной строке для включения всех опций.
 
+При сборке с помощью MinGW необходимо дополнительно установить опцию сборки @code{-fopenmp} (т.е. @code{CMAKE_EXE_LINKER_FLAGS:STRING='-fopenmp'} и @code{CMAKE_SHARED_LINKER_FLAGS:STRING='-fopenmp'}) если включена поддержка OpenMP (@code{enable-openmp=ON}).
+
+
 @item
 Использовать предварительно скомпилированные файлы -- с библиотекой поставляются файлы для MinGW (платформа Win32). В скомпилированной версии достаточно распаковать заголовочные файлы в папку с заголовочными файлами и библиотеку libmgl.a в папку с библиотеками. По умолчанию, скомпилированная версия включают поддержку GSL (www.gsl.org), PNG, GIF и JPEG. Соответственно, при сборке программы эти библиотеки должны быть установлены (их можно найти на @uref{http://gnuwin32.sourceforge.net/packages.html}).
 @item

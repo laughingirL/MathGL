@@ -21,6 +21,7 @@
 * Improve/change lighting from local sources. Add SetDiffuse() function.
 * C functions now return NULL if HMDT data cannot be created for given input argument(s).
 * Enable line width for Mesh() and Fall() plots.
+* Replace +INF and -INF by NAN in textual formula output.
 * Add manual compression of JSON.
 * Define WORDS_BIGENDIAN and HAVE_MEMRCHR (thanks to Dinar Valeev).
 * Bugfix for cleaning unused points.

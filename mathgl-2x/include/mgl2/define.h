@@ -133,6 +133,8 @@ typedef float mreal;
 #define mgl_isnan(a)	((a)!=(a))
 //#define mgl_isnum(a)	((a)==(a) && 2*(a)!=(a))
 #define mgl_isnum(a)	((a)==(a))
+#define mgl_isfin(a)	((a)-(a)==0.)
+#define mgl_isbad(a)	((a)-(a)!=0.)
 //-----------------------------------------------------------------------------
 #define SMOOTH_NONE		0
 #define SMOOTH_LINE_3	1

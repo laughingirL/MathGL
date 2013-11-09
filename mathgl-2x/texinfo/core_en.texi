@@ -559,7 +559,7 @@ Unbalanced ' in MGL script
 @section Axis settings
 @nav{}
 
-These large set of variables and functions control how the axis and ticks will be drawn. Note that there is 3-step transformation of data coordinates are performed. Firstly, coordinates are projected if @code{Cut=true} (see @ref{Cutting}), after it transformation formulas are applied, and finally the data was normalized in bounding box.
+These large set of variables and functions control how the axis and ticks will be drawn. Note that there is 3-step transformation of data coordinates are performed. Firstly, coordinates are projected if @code{Cut=true} (see @ref{Cutting}), after it transformation formulas are applied, and finally the data was normalized in bounding box. Note, that MathGL will produce warning if axis range and transformation formulas are not compatible.
 
 @menu
 * Ranges (bounding box)::
@@ -1389,6 +1389,12 @@ Highlight the object with given @var{id}.
 @deftypefnx {C function} @code{long} mgl_is_active (@code{HMGL} gr, @code{int} xs, @code{int} ys, @code{int} d)
 Checks if point @{@var{xs}, @var{ys}@} is close to one of active point (i.e. mglBase::Act) with accuracy @var{d} and return its index or @code{-1} if not found. Active points are special points which characterize primitives (like edges and so on). This function for advanced users only.
 @end deftypefn
+
+@deftypefn {Method on @code{mglGraph}} @code{long} SetDrawReg (@code{int} nx=@code{1}, @code{int} ny=@code{1}, @code{int} m=@code{0})
+@deftypefnx {C function} @code{long} mgl_set_draw_reg (@code{HMGL} gr, @code{int} nx, @code{int} ny, @code{int} m)
+Limits drawing region by rectangular area of @var{m}-th cell of matrix with sizes @var{nx}*@var{ny} (like in @ref{subplot}). This function can be used to update only small region of the image for purposes of higher speed. This function for advanced users only.
+@end deftypefn
+
 
 @end ifclear
 
@@ -3120,10 +3126,12 @@ The function draws the surface of quadrangles. Quadrangles vertexes are set by i
 @ifclear UDAV
 @deftypefnx {Method on @code{mglGraph}} @code{void} Dots (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Method on @code{mglGraph}} @code{void} Dots (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}a, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Dots (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}c, @code{const mglDataA &}a, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {C function} @code{void} mgl_dots (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_dots_a (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{const char *}sch, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_dots_ca (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} c, @code{HCDT} a, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-The function draws the arbitrary placed points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. String @var{sch} sets the color scheme. If array @var{a} is specified then it define colors of dots. Arrays @var{x}, @var{y}, @var{z}, @var{a} must have equal sizes. See also @ref{crust}, @ref{mark}, @ref{plot}. @sref{Dots sample}
+The function draws the arbitrary placed points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. String @var{sch} sets the color scheme and kind of marks. If arrays @var{c}, @var{a} are specified then they define colors and transparencies of dots. You can use @ref{tens} plot with style @samp{ .} to draw non-transparent dots with specified colors. Arrays @var{x}, @var{y}, @var{z}, @var{a} must have equal sizes. See also @ref{crust}, @ref{tens}, @ref{mark}, @ref{plot}. @sref{Dots sample}
 @end deftypefn
 
 @anchor{crust}

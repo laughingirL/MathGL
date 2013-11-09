@@ -482,9 +482,11 @@ Fills data by 'x' or 'k' samples for Hankel ('h') or Fourier ('f') transform.
 @deftypefn {MGL command} {} datagrid dat xdat ydat zdat
 @ifclear UDAV
 @deftypefnx {Method on @code{mglData}} @code{mglData} Grid (@code{HMGL} gr, @code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglData}} @code{mglData} Grid (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{mglPoint} p1, @code{mglPoint} p2)
 @deftypefnx {C function} @code{void} mgl_data_grid (@code{HMGL} gr, @code{HMDT} u, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_data_grid_xy (@code{HMDT} u, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{mreal} x1, @code{mreal} x2, @code{mreal} y1, @code{mreal} y2)
 @end ifclear
-Fills the value of array according to the linear interpolation of triangulated surface, found for arbitrary placed points @samp{x}, @samp{y}, @samp{z}. NAN value is used for grid points placed outside of triangulated surface. @sref{Making regular data}
+Fills the value of array according to the linear interpolation of triangulated surface assuming x-,y-coordinates equidistantly distributed in axis range (or in range [x1,x2]*[y1,y2]). Triangulated surface is found for arbitrary placed points @samp{x}, @samp{y}, @samp{z}. NAN value is used for grid points placed outside of triangulated surface. @sref{Making regular data}
 @end deftypefn
 
 

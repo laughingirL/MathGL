@@ -248,16 +248,18 @@ dual mglFormulaC::CalcIn(const dual *a1) const
 	if(Kod==EQ_NUM) return Res;
 
 	dual a = Left->CalcIn(a1);
-	if(mgl_isnan(a.real()) || mgl_isnan(a.imag()))	return NAN;
-
-	if(Kod<EQ_SIN)
+	if(mgl_isfin(a))
 	{
-		dual b = Right->CalcIn(a1);
-		if(mgl_isnan(b.real()) || mgl_isnan(b.imag()))	return NAN;
-		return f2[Kod-EQ_ADD](a,b);
+		if(Kod<EQ_SIN)
+		{
+			dual b = Right->CalcIn(a1);
+			b = mgl_isfin(b)?f2[Kod-EQ_ADD](a,b):NAN;
+			return mgl_isfin(b)?b:NAN;
+		}
+		else
+		{	a = f1[Kod-EQ_SIN](a);	return mgl_isfin(a)?a:NAN;	}
 	}
-	else	return f1[Kod-EQ_SIN](a);
-	return Res;
+	return NAN;
 }
 //-----------------------------------------------------------------------------
 dual MGL_EXPORT mgl_ipowc(dual x,int n)

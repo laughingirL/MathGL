@@ -79,6 +79,8 @@ Compile from sources. The cmake build system is useded in the library. To run it
 
 There are several additional options which are switched off by default. They are: @code{enable-fltk, enable-glut, enable-qt} for ebabling FLTK, GLUT and/or Qt windows; @code{enable-jpeg, enable-gif, enable-hdf5} and so on for enabling corresponding file formats; @code{enable-all} for enabling all additional features. For using @code{double} as base internal data type use option @code{enable-double}. For enabling language interfaces use @code{enable-python, enable-octave} or @code{enable-all-swig} for all languages. You can use WYSIWYG tool (@code{cmake-gui}) to view all of them, or type @code{cmake -D enable-all=on -D enable-all-widgets=on -D enable-all-swig=on .} in command line for enabling all features.
 
+There is known bug for building in MinGW -- you need to manually add linker option @code{-fopenmp} (i.e. @code{CMAKE_EXE_LINKER_FLAGS:STRING='-fopenmp'} and @code{CMAKE_SHARED_LINKER_FLAGS:STRING='-fopenmp'}) if you enable OpenMP support (i.e. if @code{enable-openmp=ON}).
+
 @item
 Use a precompiled binary. There are binaries for MinGW (platform Win32). For a precompiled variant one needs only to unpack the archive to the location of the compiler (i.e. mathgl/lib in mingw/lib, mathgl/include in mingw/include and so on) or in arbitrary other folder and setup paths in compiler. By default, precompiled versions include the support of GSL (www.gsl.org) and PNG. So, one needs to have these libraries installed on system (it can be found, for example, at @uref{http://gnuwin32.sourceforge.net/packages.html}).
 

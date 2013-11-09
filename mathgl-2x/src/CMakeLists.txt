@@ -19,7 +19,7 @@ ${MathGL_BINARY_DIR}/include/mgl2/dllexport.h
 	../include/mgl2/define.h	../include/mgl2/other.h		../include/mgl2/eval.h
 	../include/mgl2/parser.h	../include/mgl2/addon.h		../include/mgl2/evalc.h
 	s_hull/s_hull_pro.h			../include/mgl2/wnd.h		../include/mgl2/canvas_wnd.h
-	../include/mgl2/thread.h	../include/mgl2/abstract.h
+	../include/mgl2/thread.h	../include/mgl2/abstract.h	../include/mgl2/pde.h
 )
 
 add_definitions(-DMGL_SRC)

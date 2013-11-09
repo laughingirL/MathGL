@@ -479,9 +479,11 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @deftypefn {Команда MGL} {} datagrid dat xdat ydat zdat
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglData}} @code{mglData} Grid (@code{HMGL} gr, @code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglData}} @code{mglData} Grid (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{mglPoint} p1, @code{mglPoint} p2)
 @deftypefnx {Функция С} @code{void} mgl_data_grid (@code{HMGL} gr, @code{HMDT} u, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}opt)
+@deftypefnx {Функция С} @code{void} mgl_data_grid_xy (@code{HMDT} u, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{mreal} x1, @code{mreal} x2, @code{mreal} y1, @code{mreal} y2)
 @end ifclear
-Заполняет значения массива результатом линейной интерполяции по триангулированной поверхности, найденной по произвольно расположенным точкам @samp{x}, @samp{y}, @samp{z}. NAN значение используется для точек сетки вне триангулированной поверхности. @sref{Making regular data}
+Заполняет значения массива результатом линейной интерполяции (считая координаты равнораспределенными в диапазоне осей координат или в диапазоне [x1,x2]*[y1,y2]) по триангулированной поверхности, найденной по произвольно расположенным точкам @samp{x}, @samp{y}, @samp{z}. NAN значение используется для точек сетки вне триангулированной поверхности. @sref{Making regular data}
 @end deftypefn
 
 

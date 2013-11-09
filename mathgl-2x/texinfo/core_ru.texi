@@ -544,7 +544,7 @@ Setsize: размер(ы) равны нулю или отрицательны
 @section Настройки осей координат
 @nav{}
 
-Эти функции управляет видом и масштабом осей координат. Перед построением для каждой точки выполняются 3 преобразования: сначала определяется возможность рисования точки (см. @ref{Cutting}), далее применяются формулы перехода к криволинейным координатам и наконец точка отображается.
+Эти функции управляет видом и масштабом осей координат. Перед построением для каждой точки выполняются 3 преобразования: сначала определяется возможность рисования точки (см. @ref{Cutting}), далее применяются формулы перехода к криволинейным координатам и наконец точка отображается. Отмечу, что MathGL выдает предупреждение если масштабы осей координат лежат вне области определения формул преобразования координат.
 
 @menu
 * Ranges (bounding box)::
@@ -1343,6 +1343,11 @@ gr.GetBGRN(bits, len(bits));
 @deftypefn {Метод класса @code{mglGraph}} @code{long} IsActive (@code{int} xs, @code{int} ys, @code{int} d=@code{1})
 @deftypefnx {Функция С} @code{long} mgl_is_active (@code{HMGL} gr, @code{int} xs, @code{int} ys, @code{int} d)
 Проверяет близка ли точка @{@var{xs}, @var{ys}@} к активной точке (т.е. mglBase::Act) с точностью @var{d} и возвращает индекс активной точки или @code{-1} если не найдено. Активные точки -- специальные точки, которые характеризуют примитивы (например, вершины). Это функция только для опытных пользователей.
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglGraph}} @code{long} SetDrawReg (@code{int} nx=@code{1}, @code{int} ny=@code{1}, @code{int} m=@code{0})
+@deftypefnx {Функция С} @code{long} mgl_set_draw_reg (@code{HMGL} gr, @code{int} nx, @code{int} ny, @code{int} m)
+Ограничивает рисование прямоугольной областью @var{m}-ой клетки матрицы размером @var{nx}*@var{ny} (аналогично @ref{subplot}). Функция может бытб использована для ускорения вывода путем уменьшения выводимых примитивов. Это функция только для опытных пользователей.
 @end deftypefn
 
 @end ifclear
@@ -3015,10 +3020,12 @@ gr.GetBGRN(bits, len(bits));
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} Dots (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} Dots (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}a, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Dots (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}c, @code{const mglDataA &}a, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_dots (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_dots_a (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{const char *}sch, @code{const char *}opt)
+@deftypefnx {Функция С} @code{void} mgl_dots_ca (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} c, @code{HCDT} a, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-Рисует произвольно расположенные точки @{@var{x}[i], @var{y}[i], @var{z}[i]@}. Строка @var{sch} задает цветовую схему. Если определён массив @var{a}, то он задает прозрачность точек. Массивы @var{x}, @var{y}, @var{z}, @var{a} должны иметь одинаковые размеры. См. также @ref{crust}, @ref{mark}, @ref{plot}. @sref{Dots sample}
+Рисует произвольно расположенные точки @{@var{x}[i], @var{y}[i], @var{z}[i]@}. Строка @var{sch} задает цветовую схему и тип маркеров. Если определёны массивы @var{c}, @var{a} то они задают цвет и прозрачность точек соответственно. Непрозрачные точки с заданным цветом можно нарисовать с помощью @ref{tens}, используя стиль @samp{ .}. Массивы @var{x}, @var{y}, @var{z}, @var{a} должны иметь одинаковые размеры. См. также @ref{crust}, @ref{tens}, @ref{mark}, @ref{plot}. @sref{Dots sample}
 @end deftypefn
 
 @anchor{crust}

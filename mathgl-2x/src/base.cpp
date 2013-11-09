@@ -320,7 +320,7 @@ bool mglBase::RecalcCRange()
 		for(i=0;i<=n;i++)
 		{
 			a = fa->Calc(0,0,0,Min.c+i*(Max.c-Min.c)/n);
-			if(mgl_isnan(a))	wrong=true;
+			if(mgl_isbad(a))	wrong=true;
 			if(a<FMin.c)	FMin.c=a;
 			if(a>FMax.c)	FMax.c=a;
 		}
@@ -373,21 +373,21 @@ bool mglBase::SetFBord(mreal x,mreal y,mreal z)
 	if(fx)
 	{
 		mreal v = fx->Calc(x,y,z);
-		if(mgl_isnan(v))	wrong = true;
+		if(mgl_isbad(v))	wrong = true;
 		if(FMax.x < v)	FMax.x = v;
 		if(FMin.x > v)	FMin.x = v;
 	}
 	if(fy)
 	{
 		mreal v = fy->Calc(x,y,z);
-		if(mgl_isnan(v))	wrong = true;
+		if(mgl_isbad(v))	wrong = true;
 		if(FMax.y < v)	FMax.y = v;
 		if(FMin.y > v)	FMin.y = v;
 	}
 	if(fz)
 	{
 		mreal v = fz->Calc(x,y,z);
-		if(mgl_isnan(v))	wrong = true;
+		if(mgl_isbad(v))	wrong = true;
 		if(FMax.z < v)	FMax.z = v;
 		if(FMin.z > v)	FMin.z = v;
 	}
