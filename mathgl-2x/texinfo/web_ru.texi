@@ -20,7 +20,7 @@
 
 @ifhtml
 @html
-<a href="surf_cont_fog.html"><img border="0" align="right" hspace="30" vspace="20" alt="Surface in fog" src="../small/fog-sm.png"></a>
+<a href="Adding-fog.html"><img border="0" align="right" hspace="30" vspace="20" alt="Surface in fog" src="../small/fog-sm.png"></a>
 @end html
 @end ifhtml
 @itemize @bullet
