@@ -352,7 +352,7 @@ void mglBase::RecalcBorder()
 		}
 		for(i=0;i<=n;i++)	for(j=0;j<=n;j++)	// x range
 		{
-			if(SetFBord(Min.x+i*(Max.x-Min.x)/n, Min.y+j*(Max.y-Min.y)/n, Min.x))	wrong=true;
+			if(SetFBord(Min.x+i*(Max.x-Min.x)/n, Min.y+j*(Max.y-Min.y)/n, Min.z))	wrong=true;
 			if(SetFBord(Min.x+i*(Max.x-Min.x)/n, Min.y+j*(Max.y-Min.y)/n, Max.z))	wrong=true;
 		}
 		mreal d;
