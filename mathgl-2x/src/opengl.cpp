@@ -174,6 +174,7 @@ void mglCanvasGL::Fog(mreal d, mreal)
 void mglCanvasGL::Clf(mglColor Back)
 {
 	mglCanvas::Clf(Back);
+	if(Back==NC)	Back = mglColor(BDef[0]/255.,BDef[1]/255.,BDef[2]/255.);
 	gl_clf(Back);
 }
 //-----------------------------------------------------------------------------

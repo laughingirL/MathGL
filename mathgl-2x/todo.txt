@@ -18,8 +18,6 @@
 	u. Test FlowP + 3d
 
 11. Check centered curved text (see text2)
-12. GLUT testing
-13. OpenGL in FLTK as test?!
 14. Export to X3D
 
 

@@ -123,9 +123,9 @@ void _mgl_key_up(unsigned char ch,int ,int )
 	if(ch=='e')	_mgl_glwnd->View(0,10,0);
 	if(ch=='n')	_mgl_glwnd->Restore();
 	if(ch==',')
-		_mgl_glwnd->curr_fig = _mgl_glwnd->curr_fig == 1 ? _mgl_glwnd->NumFig : _mgl_glwnd->curr_fig-1;
+		_mgl_glwnd->curr_fig = _mgl_glwnd->curr_fig == 0 ? _mgl_glwnd->NumFig-1 : _mgl_glwnd->curr_fig-1;
 	if(ch=='.')
-		_mgl_glwnd->curr_fig = _mgl_glwnd->curr_fig == _mgl_glwnd->NumFig ? 1 : _mgl_glwnd->curr_fig+1;
+		_mgl_glwnd->curr_fig = _mgl_glwnd->curr_fig == _mgl_glwnd->NumFig-1 ? 0 : _mgl_glwnd->curr_fig+1;
 	if(ch=='r')	Alpha = !Alpha;
 	if(ch=='f')	Light = !Light;
 	if(ch=='u')	rL += 0.1;
@@ -180,7 +180,8 @@ void _mgl_display()
 //	glEnable(GL_LINE_SMOOTH);
 //	_mgl_glwnd->CurFrameId = 1;
 //	if(_mgl_glwnd->get(MGL_CLF_ON_UPD))
-		_mgl_glwnd->gl_clf();
+	_mgl_glwnd->Clf();
+//	_mgl_glwnd->gl_clf();
 	_mgl_glwnd->InPlot(0,1,0,1,false);
 	if(_mgl_glwnd->NumFig>0)
 	{

@@ -291,7 +291,9 @@ void QMathGL::update()
 void QMathGL::draw_thr()
 {
 	mgl_clf(gr);
-	mgl_get_frame(gr, mgl_get_num_frame(gr)-1);
+	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>(gr);
+	int c = g?g->GetCurFig():mgl_get_num_frame(gr)-1;
+	mgl_get_frame(gr, c);
 	mglParse pr;
 	long i, n=primitives.count('\n');
 	mglGraph gg(gr);
@@ -1150,7 +1152,7 @@ QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *&tet, QSpinBox *&p
 		Wnd->addToolBar(Qt::LeftToolBarArea, bb);
 		a = new QAction(QPixmap(next_sl_xpm), TR("&Next slide"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(nextSlide()));
-		a->setToolTip(TR("Show next slide (Alt+Right)."));
+		a->setToolTip(TR("Show next slide (Ctrl+.)."));
 		a->setShortcut(Qt::CTRL+Qt::Key_Period);	o->addAction(a);		bb->addAction(a);
 		a = new QAction(QPixmap(show_sl_xpm), TR("&Slideshow"), Wnd);
 		a->setCheckable(true);
@@ -1159,7 +1161,7 @@ QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *&tet, QSpinBox *&p
 		a->setShortcut(Qt::CTRL+Qt::Key_F5);	o->addAction(a);		bb->addAction(a);
 		a = new QAction(QPixmap(prev_sl_xpm), TR("&Prev slide"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(prevSlide()));
-		a->setToolTip(TR("Show previous slide (Alt+Left)."));
+		a->setToolTip(TR("Show previous slide (Ctrl+,)."));
 		a->setShortcut(Qt::CTRL+Qt::Key_Comma);	o->addAction(a);		bb->addAction(a);
 	}
 

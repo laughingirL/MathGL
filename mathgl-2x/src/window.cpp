@@ -95,6 +95,7 @@ void mglCanvasWnd::SetDrawFunc(int (*draw)(mglBase *gr, void *p), void *par, voi
 	LoadFunc = reload;
 
 	if(mgl_is_frames(this))	EndFrame();
+	if(n>=0)	SetCurFig(0);
 	setlocale(LC_NUMERIC, "");
 }
 //-----------------------------------------------------------------------------
