@@ -67,6 +67,8 @@ void smgl_text(mglGraph *gr);	// text drawing
 void smgl_surf(mglGraph *gr);
 void test(mglGraph *gr)
 {
+	mglData x,y;	x.a[0]=0;	y.a[0]=0.5;
+	gr->Stem(x,y,"o");	gr->Axis();	return;
 	mglParse par;
 	setlocale(LC_CTYPE, "");
 //	par.Execute(gr,"axis");

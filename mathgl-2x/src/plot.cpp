@@ -781,7 +781,7 @@ void MGL_EXPORT mgl_step_(uintptr_t *gr, uintptr_t *y,	const char *pen, const ch
 void MGL_EXPORT mgl_stem_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *opt)
 {
 	long m,mx,my,mz,n=y->GetNx(), pal;
-	if(mgl_check_dim1(gr,x,y,z,0,"Stem"))	return;
+	if(mgl_check_dim0(gr,x,y,z,0,"Stem"))	return;
 
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Stem3",cgid++);
@@ -811,7 +811,7 @@ void MGL_EXPORT mgl_stem_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, c
 void MGL_EXPORT mgl_stem_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
 {
 	long m,mx,my,n=y->GetNx(), pal;
-	if(mgl_check_dim1(gr,x,y,0,0,"Stem"))	return;
+	if(mgl_check_dim0(gr,x,y,0,0,"Stem"))	return;
 
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Stem",cgid++);
@@ -1294,7 +1294,7 @@ void MGL_EXPORT mgl_boxplot_(uintptr_t *gr, uintptr_t *y,	const char *pen, const
 void MGL_EXPORT mgl_error_exy(HMGL gr, HCDT x, HCDT y, HCDT ex, HCDT ey, const char *pen, const char *opt)
 {
 	long m,mx,my,m1,m2,n=ey->GetNx(),pal;
-	if(mgl_check_dim1(gr,x,y,ey,ex,"Error"))	return;
+	if(mgl_check_dim0(gr,x,y,ey,ex,"Error"))	return;
 
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Error",cgid++);

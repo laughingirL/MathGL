@@ -1,2 +1,3 @@
-@set VERSION 2.2.0
-@set MINVER .1
+@set VERSION 2.2
+@c @set MINVER .1
+@set MINVER 
