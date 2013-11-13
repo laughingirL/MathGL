@@ -552,10 +552,10 @@ std::string mglCanvas::GetJSON()
 	for(ll=i=0;i<l;i++)
 	{	mglRGBA c;	c.c = GetPrmCol(i);	if(c.r[3])	ll++;	}
 
-	res = res + mgl_sprintf("],\t\"nprim\":%ld,\t\"prim\":[\n",ll);
+	res = res + mgl_sprintf("],\t\"nprim\":%ld,\t\"prim\":[\n",ll+1);
 
 	std::vector<mglPoint> xy;	// vector for glyphs coordinates (to be separated from pnts)
-	res.reserve(60*ll);
+	res.reserve(60*(ll+1));
 #pragma omp parallel for private(buf)
 	for(long i=0;i<l;i++)
 	{
@@ -583,7 +583,7 @@ std::string mglCanvas::GetJSON()
 #pragma omp critical
 		res += buf;
 	}
-	res += "[0,0,0,0,0,0,0,0,0,0,\"#000000\"]\n";	// need to add this empty block
+	res += "[-1,0,0,0,0,0,0,0,0,0,\"#000000\"]\n";	// need to add this empty block
 
 	l = (long)xy.size();
 	res = res + mgl_sprintf("],\t\"ncoor\":%lu,\t\"coor\":[\n",(unsigned long)l);
