@@ -528,6 +528,7 @@ MGL_EXPORT mglTeXsymb mgl_tex_symb[] = {
 	{0x2021, L"ddagger"},
 	{0x22f1, L"ddots"},
 	{0x2a77, L"ddotseq"},
+	{0xb0, L"degree"},
 	{0x3b4, L"delta"},
 	{0xf0, L"dh"},
 	{0x2300, L"diameter"},
