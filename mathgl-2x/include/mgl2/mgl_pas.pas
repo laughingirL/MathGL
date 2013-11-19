@@ -1,6 +1,6 @@
 //**************************************************************************
 // mgl_pas.pas is part of Math Graphic Library                             *
-// Copyright (C) 2008 Mikhail Barg <mikemvpi@yandex.ru>                    *
+// Copyright (C) 2008-2013 Mikhail Barg, Alexey Balakin                    *
 //                                                                         *
 //   This program is free software; you can redistribute it and/or modify  *
 //   it under the terms of the GNU Library General Public License as       *
@@ -21,1779 +21,1324 @@
 unit mgl_pas;
 
 {$IFDEF FPC}
-  {$MODE DELPHI }
-  {$PACKENUM 4}    (* use 4-byte enums *)
-  {$PACKRECORDS C} (* C/C++-compatible record packing *)
+{$MODE DELPHI }
+{$PACKENUM 4}    (* use 4-byte enums *)
+{$PACKRECORDS C} (* C/C++-compatible record packing *)
 {$ELSE}
-  {$MINENUMSIZE 4} (* use 4-byte enums *)
+{$MINENUMSIZE 4} (* use 4-byte enums *)
 {$ENDIF}
 
 {$IFDEF DARWIN}
-  {$linklib mgl}
+{$linklib libmgl}
 {$ENDIF}
 
 interface
 
 uses
 {$IFDEF MSWINDOWS}
-  Windows, Graphics,
+Windows, Graphics,
 {$ENDIF}
-  Math;
+Math;
 
-const
-  MGL_VERSION = 11.2;
-
+const MGL_VER2 = 2.2;
 //* This define enables double precision in MathGL */
-  MGL_USE_DOUBLE = 0;
+MGL_USE_DOUBLE = 1;
 
 const
 {$IFDEF MSWINDOWS}
-  //win - .dll
-  libmgl = 'mgl.dll';
-  libmglglut = 'libmgl-glut.dll';
-  libmglfltk = 'libmgl-fltk.dll';
-  libmglqt   = 'libmgl-qt.dll';
+//win - .dll
+libmgl = 'libmgl.dll';
+libmglglut = 'libmgl-glut.dll';
+libmglfltk = 'libmgl-fltk.dll';
+libmglqt   = 'libmgl-qt.dll';
 {$ELSE}
 {$IFDEF LINUX}
-  //linux - .so
-  libmgl = 'mgl.so';
-  libmglglut = 'libmgl-glut.so';
-  libmglfltk = 'libmgl-fltk.so';
-  libmglqt   = 'libmgl-qt.so';
+//linux - .so
+libmgl = 'libmgl.so';
+libmglglut = 'libmgl-glut.so';
+libmglfltk = 'libmgl-fltk.so';
+libmglqt   = 'libmgl-qt.so';
 {$ELSE}
 {$IFDEF DARWIN}
-  //darwin - .dylib
-  libmgl = 'mgl.dylib';
-  libmglglut = 'libmgl-glut.dylib';
-  libmglfltk = 'libmgl-fltk.dylib';
-  libmglqt   = 'libmgl-qt.dylib';
+//darwin - .dylib
+libmgl = 'libmgl.dylib';
+libmglglut = 'libmgl-glut.dylib';
+libmglfltk = 'libmgl-fltk.dylib';
+libmglqt   = 'libmgl-qt.dylib';
 {$ELSE}
-  // other platforms?
+// other platforms?
 
 {$ENDIF}
 {$ENDIF}
 {$ENDIF}
 
 {$IF (MGL_USE_DOUBLE = 0)}
-  type mreal = double;
+type mreal = double;
 {$ELSE}
-  type mreal = real;
+type mreal = real;
 {$IFEND}
-  Pmreal = ^mreal;
+Pmreal = ^mreal;
 
 type TNGLDraw = record
-     end;
+end;
 type TMGLGraph = record
-     end;
+end;
 type TMGLData = record
-     end;
+end;
 type TMGLParse = record
-     end;
-
+end;
 type HMDR = ^TNGLDraw;
 type HMGL = ^TMGLGraph;
 type HMDT = ^TMGLData;
 type HMPR = ^TMGLParse;
-
-//*****************************************************************************/
-
-//HMGL mgl_create_graph_gl();
-function mgl_create_graph_gl(): HMGL; cdecl; external libmgl;
-
-//HMGL mgl_create_graph_zb(int width, int height);
-function mgl_create_graph_zb(width, height: integer): HMGL; cdecl; external libmgl;
-
-//HMGL mgl_create_graph_ps(int width, int height);
-function mgl_create_graph_ps(width, height: integer): HMGL; cdecl; external libmgl;
-
-//HMGL mgl_create_graph_glut(int (*draw)(HMGL gr, void *p), const char *title, void *par);
-type TGLUTDrawFunction = function (gr: HMGL; p: pointer): integer; cdecl;
 type PPChar = ^PChar;
-function mgl_create_graph_glut(draw: TGLUTDrawFunction; const title: PChar; par: pointer): HMGL; cdecl; external libmglglut;
-
-//HMGL mgl_create_graph_fltk(int (*draw)(HMGL gr, void *p), const char *title, void *par);
-function mgl_create_graph_fltk(draw: TGLUTDrawFunction; const title: PChar; par: pointer): HMGL; cdecl; external libmglfltk;
-
-//HMGL mgl_create_graph_qt(int (*draw)(HMGL gr, void *p), const char *title, void *par);
-function mgl_create_graph_qt(draw: TGLUTDrawFunction; const title: PChar; par: pointer): HMGL; cdecl; external libmglqt;
-
-//HMGL mgl_create_graph_idtf();
-function mgl_create_graph_idtf(): HMGL; cdecl; external libmgl;
-
-//void mgl_fltk_run();
-procedure mgl_fltk_run(); cdecl; external libmglfltk;
-
-//void mgl_qt_run();
-procedure mgl_qt_run(); cdecl; external libmglqt;
-
-//void mgl_wnd_set_delay(HMGL gr, mreal dt);
-procedure mgl_wnd_set_delay(gr: HMGL; dt: mreal); cdecl; external libmgl;
-
-//void mgl_wnd_set_auto_clf(HMGL gr, int val);
-procedure mgl_wnd_set_auto_clf(gr: HMGL; val: integer); cdecl; external libmgl;
-
-//void mgl_wnd_set_show_mouse_pos(HMGL gr, int val);
-procedure mgl_wnd_set_show_mouse_pos(gr: HMGL; vaj: integer); cdecl; external libmgl;
-
-//void mgl_wnd_set_clf_update(HMGL gr, int val);
-procedure mgl_wnd_set_clf_update(gr: HMGL; val: integer); cdecl; external libmgl;
-
-//void mgl_wnd_toggle_alpha(HMGL gr);
-procedure mgl_wnd_toggle_alpha(gr: HMGL); cdecl; external libmgl;
-
-//void mgl_wnd_toggle_light(HMGL gr);
-procedure mgl_wnd_toggle_light(gr: HMGL); cdecl; external libmgl;
-
-//void mgl_wnd_toggle_zoom(HMGL gr);
-procedure mgl_wnd_toggle_zoom(gr: HMGL); cdecl; external libmgl;
-
-//void mgl_wnd_toggle_rotate(HMGL gr);
-procedure mgl_wnd_toggle_rotate(gr: HMGL); cdecl; external libmgl;
-
-//void mgl_wnd_toggle_no(HMGL gr);
-procedure mgl_wnd_toggle_no(gr: HMGL); cdecl; external libmgl;
-
-//void mgl_wnd_update(HMGL gr);
-procedure mgl_wnd_update(gr: HMGL); cdecl; external libmgl;
-
-//void mgl_wnd_reload(HMGL gr, int o);
-procedure mgl_wnd_reload(gr: HMGL; o: integer); cdecl; external libmgl;
-
-//void mgl_wnd_adjust(HMGL gr);
-procedure mgl_wnd_adjust(gr: HMGL); cdecl; external libmgl;
-
-//void mgl_wnd_next_frame(HMGL gr);
-procedure mgl_wnd_next_frame(gr: HMGL); cdecl; external libmgl;
-
-//void mgl_wnd_prev_frame(HMGL gr);
-procedure mgl_wnd_prev_frame(gr: HMGL); cdecl; external libmgl;
-
-//void mgl_wnd_animation(HMGL gr);
-procedure mgl_wnd_animation(gr: HMGL); cdecl; external libmgl;
-
-//void mgl_set_show_mouse_pos(HMGL gr, int enable);
-procedure mgl_set_show_mouse_pos(graph: HMGL; enable: integer); cdecl; external libmgl;
-
-//void mgl_get_last_mouse_pos(HMGL gr, mreal *x, mreal *y, mreal *z);
-procedure mgl_get_last_mouse_pos(gr: HMGL; x: Pmreal; y: Pmreal; z: Pmreal); cdecl; external libmgl;
-
-//void mgl_calc_xyz(HMGL gr, int xs, int ys, mreal *x, mreal *y, mreal *z);
-procedure mgl_calc_xyz(gr: HMGL; xs: integer; ys: integer; x: Pmreal; y: Pmreal; z: Pmreal); cdecl; external libmgl;
-
-//void mgl_calc_scr(HMGL gr, mreal x, mreal y, mreal z, int *xs, int *ys);
-procedure mgl_calc_scr(gr: HMGL; x: Pmreal; y: Pmreal; z: Pmreal; xs: Pinteger; ys: Pinteger); cdecl; external libmgl;
-
-//void mgl_update(HMGL graph);
-procedure mgl_update(graph: HMGL); cdecl; external libmgl;
-
-//void mgl_delete_graph(HMGL graph);
-procedure mgl_delete_graph(graph: HMGL); cdecl; external libmgl;
-
-//*****************************************************************************/
-
-//HMDT mgl_create_data();
-function mgl_create_data(): HMDT; cdecl; external libmgl;
-
-//HMDT mgl_create_data_size(int nx, int ny, int nz);
-function mgl_create_data_size(nx, ny, nz: integer): HMDT; cdecl; external libmgl;
-
-//HMDT mgl_create_data_file(const char *fname);
-function mgl_create_data_file(const fname: PChar): HMDT; cdecl; external libmgl;
-
-//void mgl_delete_data(HMDT dat);
-procedure mgl_delete_data(dat: HMDT); cdecl; external libmgl;
-
-//*****************************************************************************/
-
-//HMPR mgl_create_parser();
-function mgl_create_parser(): HMPR; cdecl; external libmgl;
-
-//void mgl_delete_parser(HMPR p);
-procedure mgl_delete_parser(p: HMPR); cdecl; external libmgl;
-
-//void mgl_scan_func(HMPR p, const wchar_t *line);
-procedure mgl_scan_func(p: HMPR; const line: PWideChar); cdecl; external libmgl;
-
-//void mgl_add_param(HMPR p, int id, const char *str);
-procedure mgl_add_param(p: HMPR; id: integer; const str: PChar); cdecl; external libmgl;
-
-//void mgl_add_paramw(HMPR p, int id, const wchar_t *str);
-procedure mgl_add_paramw(p: HMPR; id: integer; const str: PWideChar); cdecl; external libmgl;
-
-//*===!!! NOTE !!! You must not delete obtained data arrays !!!===============*/
-//HMDT mgl_add_var(HMPR, const char *name);
-function mgl_add_var(p: HMPR; const name: PChar): HMDT; cdecl; external libmgl;
-
-//*===!!! NOTE !!! You must not delete obtained data arrays !!!===============*/
-//HMDT mgl_find_var(HMPR, const char *name);
-function mgl_find_var(p: HMPR; const name: PChar): HMDT; cdecl; external libmgl;
-
-//int mgl_parse(HMGL gr, HMPR p, const char *str, int pos);
-function mgl_parse(gr: HMGL; p: HMPR; const str: PChar; pos: integer): integer; cdecl; external libmgl;
-
-//int mgl_parsew(HMGL gr, HMPR p, const wchar_t *str, int pos);
-function mgl_parsew(gr: HMGL; p: HMPR; const str: PWideChar; pos: integer): integer; cdecl; external libmgl;
-
-//void mgl_parse_text(HMGL gr, HMPR p, const char *str);
-procedure mgl_parse_text(gr: HMGL; p: HMPR; const str: PChar); cdecl; external libmgl;
-
-//void mgl_parsew_text(HMGL gr, HMPR p, const wchar_t *str);
-procedure mgl_parsew_text(gr: HMGL; p: HMPR; const str: PWideChar); cdecl; external libmgl;
-
-//void mgl_restore_once(HMPR p);
-procedure mgl_restore_once(p: HMPR); cdecl; external libmgl;
-
-//void mgl_parser_allow_setsize(HMPR p, int a);
-procedure mgl_parser_allow_setsize(p: HMPR; a: integer); cdecl; external libmgl;
-
-
-//*****************************************************************************/
-//*             Setup mglGraph                                                */
-//*****************************************************************************/
-
-//void mgl_set_def_param(HMGL gr);
-procedure mgl_set_def_param(graph: HMGL); cdecl; external libmgl;
-
-//void mgl_set_palette(HMGL gr, const char *colors);
-procedure mgl_set_palette(graph: HMGL; colors: PChar); cdecl; external libmgl;
-
-//void mgl_set_pal_color(HMGL graph, int n, mreal r, mreal g, mreal b);
-procedure mgl_set_pal_color(graph: HMGL; n: integer; r, g, b: mreal); cdecl; external libmgl;
-
-//void mgl_set_pal_num(HMGL graph, int num);
-procedure mgl_set_pal_num(graph: HMGL; num: integer); cdecl; external libmgl;
-
-//void mgl_set_rotated_text(HMGL graph, int rotated);
-procedure mgl_set_rotated_text(graph: HMGL; rotated: integer); cdecl; external libmgl;
-
-//void mgl_set_cut(HMGL graph, int cut);
-procedure mgl_set_cut(graph: HMGL; cut: integer); cdecl; external libmgl;
-
-//void mgl_set_cut_box(HMGL gr, mreal x1,mreal y1,mreal z1,mreal x2,mreal y2,mreal z2);
-procedure mgl_set_cut_box(gr: HMGL; x1, y1, z1, x2, y2, z2: mreal); cdecl; external libmgl;
-
-//void mgl_set_tick_len(HMGL graph, mreal len);
-procedure mgl_set_tick_len(graph: HMGL; len: mreal); cdecl; external libmgl;
-
-//void mgl_set_bar_width(HMGL graph, mreal width);
-procedure mgl_set_bar_width(graph: HMGL; width: mreal); cdecl; external libmgl;
-
-//void mgl_set_base_line_width(HMGL gr, mreal size);
-procedure mgl_set_base_line_width(gr: HMGL; size: mreal); cdecl; external libmgl;
-
-//void mgl_set_mark_size(HMGL graph, mreal size);
-procedure mgl_set_mark_size(graph: HMGL; size: mreal); cdecl; external libmgl;
-
-//void mgl_set_arrow_size(HMGL graph, mreal size);
-procedure mgl_set_arrow_size(graph: HMGL; size: mreal); cdecl; external libmgl;
-
-//void mgl_set_font_size(HMGL graph, mreal size);
-procedure mgl_set_font_size(graph: HMGL; size: mreal); cdecl; external libmgl;
-
-//void mgl_set_font_def(HMGL graph, const char *fnt);
-procedure mgl_set_font_def(graph: HMGL; fnt: PChar); cdecl; external libmgl;
-
-//void mgl_set_alpha_default(HMGL graph, mreal alpha);
-procedure mgl_set_alpha_default(graph: HMGL; alpha: mreal); cdecl; external libmgl;
-
-//void mgl_set_size(HMGL graph, int width, int height);
-procedure mgl_set_size(graph: HMGL; width, height: integer); cdecl; external libmgl;
-
-//void mgl_set_axial_dir(HMGL graph, char dir);
-procedure mgl_set_axial_dir(graph: HMGL; dir: char); cdecl; external libmgl;
-
-//void mgl_set_meshnum(HMGL graph, int num);
-procedure mgl_set_meshnum(graph: HMGL; num: integer); cdecl; external libmgl;
-
-//void mgl_set_zoom(HMGL gr, mreal x1, mreal y1, mreal x2, mreal y2);
-procedure mgl_set_zoom(gr: HMGL; x1, y1, x2, y2: mreal); cdecl; external libmgl;
-
-//void mgl_set_plotfactor(HMGL gr, mreal val);
-procedure mgl_set_plotfactor(gr: HMGL; val: mreal); cdecl; external libmgl;
-
-//void mgl_set_draw_face(HMGL gr, int enable);
-procedure mgl_set_draw_face(gr: HMGL; enable: integer); cdecl; external libmgl;
-
-//void mgl_set_scheme(HMGL gr, const char *sch);
-procedure mgl_set_scheme(gr: HMGL; const sch: PChar); cdecl; external libmgl;
-
-//void mgl_load_font(HMGL gr, const char *name, const char *path);
-procedure mgl_load_font(gr: HMGL; const name: PChar; const path: char); cdecl; external libmgl;
-
-//void mgl_copy_font(HMGL gr, HMGL gr_from);
-procedure mgl_copy_font(gr, gr_from: HMGL); cdecl; external libmgl;
-
-//void mgl_restore_font(HMGL gr);
-procedure mgl_restore_font(gr: HMGL); cdecl; external libmgl;
-
-//int mgl_get_warn(HMGL gr);
-function mgl_get_warn(gr: HMGL): integer; cdecl; external libmgl;
-
-//*****************************************************************************/
-//*             Export to file or to memory                                   */
-//*****************************************************************************/
-
-//void mgl_show_image(HMGL graph, const char *viewer, int keep);
-procedure mgl_show_image(graph: HMGL; const viewer: PChar; keep: integer); cdecl; external libmgl;
-
-//void mgl_write_frame(HMGL graph, const char *fname,const char *descr);
-procedure mgl_write_frame(graph: HMGL; const fname: PChar; const descr: PChar); cdecl; external libmgl;
-
-//void mgl_write_bmp(HMGL graph, const char *fname,const char *descr);
-procedure mgl_write_bmp(graph: HMGL; const fname: PChar; const descr: PChar); cdecl; external libmgl;
-
-//void mgl_write_jpg(HMGL graph, const char *fname,const char *descr);
-procedure mgl_write_jpg(graph: HMGL; const fname: PChar; const descr: PChar); cdecl; external libmgl;
-
-//void mgl_write_png(HMGL graph, const char *fname,const char *descr);
-procedure mgl_write_png(graph: HMGL; const fname: PChar; const descr: PChar); cdecl; external libmgl;
-
-//void mgl_write_png_solid(HMGL graph, const char *fname,const char *descr);
-procedure mgl_write_png_solid(graph: HMGL; const fname: PChar; const descr: PChar); cdecl; external libmgl;
-
-//void mgl_write_eps(HMGL graph, const char *fname,const char *descr);
-procedure mgl_write_eps(graph: HMGL; const fname: PChar; const descr: PChar); cdecl; external libmgl;
-
-//void mgl_write_svg(HMGL graph, const char *fname,const char *descr);
-procedure mgl_write_svg(graph: HMGL; const fname: PChar; const descr: PChar); cdecl; external libmgl;
-
-//void mgl_write_idtf(HMGL graph, const char *fname,const char *descr);
-procedure mgl_write_idtf(graph: HMGL; const fname: PChar; const descr: PChar); cdecl; external libmgl;
-
-//void mgl_write_gif(HMGL graph, const char *fname,const char *descr);
-procedure mgl_write_gif(graph: HMGL; const fname: PChar; const descr: PChar); cdecl; external libmgl;
-
-//void mgl_start_gif(HMGL graph, const char *fname,int ms);
-procedure mgl_start_gif(graph: HMGL; const fname: PChar; ms: integer); cdecl; external libmgl;
-
-//void mgl_close_gif(HMGL graph);
-procedure mgl_close_gif(graph: HMGL); cdecl; external libmgl;
-
-//const unsigned char *mgl_get_rgb(HMGL graph);
-function mgl_get_rgb(graph: HMGL): PByte; cdecl; external libmgl;
-
-//const unsigned char *mgl_get_rgba(HMGL graph);
-function mgl_get_rgba(graph: HMGL): PByte; cdecl; external libmgl;
-
-//int mgl_get_width(HMGL graph);
-function mgl_get_width(graph: HMGL): integer; cdecl; external libmgl;
-
-//int mgl_get_height(HMGL graph);
-function mgl_get_height(graph: HMGL): integer; cdecl; external libmgl;
-
-//*****************************************************************************/
-//*             Setup frames transparency (alpha) and lightning               */
-//*****************************************************************************/
-
-//int mgl_new_frame(HMGL graph);
-function mgl_new_frame(graph: HMGL): integer; cdecl; external libmgl;
-
-//void mgl_end_frame(HMGL graph);
-procedure mgl_end_frame(graph: HMGL); cdecl; external libmgl;
-
-//int mgl_get_num_frame(HMGL graph);
-function mgl_get_num_frame(graph: HMGL): integer; cdecl; external libmgl;
-
-//void mgl_reset_frames(HMGL graph);
-procedure mgl_reset_frames(graph: HMGL); cdecl; external libmgl;
-
-//void mgl_set_transp_type(HMGL graph, int type);
-procedure mgl_set_transp_type(graph: HMGL; ttype: integer); cdecl; external libmgl;
-
-//void mgl_set_transp(HMGL graph, int enable);
-procedure mgl_set_transp(graph: HMGL; enable: integer); cdecl; external libmgl;
-
-//void mgl_set_alpha(HMGL graph, int enable);
-procedure mgl_set_alpha(graph: HMGL; enable: integer); cdecl; external libmgl;
-
-//void mgl_set_fog(HMGL graph, mreal d, mreal dz);
-procedure mgl_set_fog(graph: HMGL; d, dz: mreal); cdecl; external libmgl;
-
-//void mgl_set_light(HMGL graph, int enable);
-procedure mgl_set_light(graph: HMGL; enable: integer); cdecl; external libmgl;
-
-//void mgl_set_light_n(HMGL gr, int n, int enable);
-procedure mgl_set_light_n(graph: HMGL; n: integer; enable: integer); cdecl; external libmgl;
-
-//void mgl_add_light(HMGL graph, int n, mreal x, mreal y, mreal z, char c);
-procedure mgl_add_light(graph: HMGL; n: integer; x, y, z: mreal; c: char); cdecl; external libmgl;
-
-//void mgl_add_light_rgb(HMGL graph, int n, mreal x, mreal y, mreal z, int infty, mreal r, mreal g, mreal b, mreal i);
-procedure mgl_add_light_rgb(graph: HMGL; n: integer; x, y, z: mreal; infty: integer; r, g, b, i: mreal); cdecl; external libmgl;
-
-//void mgl_set_ambbr(HMGL gr, mreal i);
-procedure mgl_set_ambbr(graph: HMGL; i: mreal); cdecl; external libmgl;
-
-//*****************************************************************************/
-//*             Scale and rotate                                              */
-//*****************************************************************************/
-
-//void mgl_mat_pop(HMGL gr);
-procedure mgl_mat_pop(graph: HMGL); cdecl; external libmgl;
-
-//void mgl_mat_push(HMGL gr);
-procedure mgl_mat_push(graph: HMGL); cdecl; external libmgl;
-
-//void mgl_identity(HMGL graph, int rel);
-procedure mgl_identity(graph: HMGL; rel: integer); cdecl; external libmgl;
-
-//void mgl_clf(HMGL graph);
-procedure mgl_clf(graph: HMGL); cdecl; external libmgl;
-
-//void mgl_flush(HMGL gr);
-procedure mgl_flush(gr: HMGL); cdecl; external libmgl;
-
-//void mgl_clf_rgb(HMGL graph, mreal r, mreal g, mreal b);
-procedure mgl_clf_rgb(graph: HMGL; r, g, b: mreal); cdecl; external libmgl;
-
-//void mgl_subplot(HMGL graph, int nx,int ny,int m);
-procedure mgl_subplot(graph: HMGL; nx, ny, m: integer); cdecl; external libmgl;
-
-//void mgl_subplot_d(HMGL graph, int nx,int ny,int m, mreal dx, mreal dy);
-procedure mgl_subplot_d(graph: HMGL; nx, ny, m: integer; dx, dy: mreal); cdecl; external libmgl;
-
-//void mgl_subplot_s(HMGL graph, int nx,int ny,int m,const char *style);
-procedure mgl_subplot_s(graph: HMGL; nx, ny, m: integer; style: Pchar); cdecl; external libmgl;
-
-//void mgl_inplot(HMGL graph, mreal x1,mreal x2,mreal y1,mreal y2);
-procedure mgl_inplot(graph: HMGL; x1, x2, y1, y2: mreal); cdecl; external libmgl;
-
-//void mgl_relplot(HMGL graph, mreal x1,mreal x2,mreal y1,mreal y2);
-procedure mgl_relplot(graph: HMGL; x1, x2, y1, y2: mreal); cdecl; external libmgl;
-
-//void mgl_columnplot(HMGL graph, int num, int ind);
-procedure mgl_columnplot(graph: HMGL; num, ind: integer); cdecl; external libmgl;
-
-//void mgl_columnplot_d(HMGL graph, int num, int ind, mreal d);
-procedure mgl_columnplot_d(graph: HMGL; num, ind: integer; d: mreal); cdecl; external libmgl;
-
-//void mgl_stickplot(HMGL graph, int num, int ind, mreal tet, mreal phi);
-procedure mgl_stickplot(graph: HMGL; num, ind: integer; tet, phi: mreal); cdecl; external libmgl;
-
-//void mgl_aspect(HMGL graph, mreal Ax,mreal Ay,mreal Az);
-procedure mgl_aspect(graph: HMGL; Ax, Ay, Az: mreal); cdecl; external libmgl;
-
-//void mgl_rotate(HMGL graph, mreal TetX,mreal TetZ,mreal TetY);
-procedure mgl_rotate(graph: HMGL; TetX, TetZ, TetY: mreal); cdecl; external libmgl;
-
-//void mgl_rotate_vector(HMGL graph, mreal Tet,mreal x,mreal y,mreal z);
-procedure mgl_rotate_vector(graph: HMGL; Tet, x, y, z: mreal); cdecl; external libmgl;
-
-//void mgl_perspective(HMGL graph, mreal val);
-procedure mgl_perspective(graph: HMGL; val: mreal); cdecl; external libmgl;
-
-//*****************************************************************************/
-//*             Axis functions                                                */
-//*****************************************************************************/
-
-//void mgl_adjust_ticks(HMGL graph, const char *dir);
-procedure mgl_adjust_ticks(graph: HMGL; dir: Pchar); cdecl; external libmgl;
-
-//void mgl_set_ticks(HMGL graph, mreal DX, mreal DY, mreal DZ);
-procedure mgl_set_ticks(graph: HMGL; DX, DY, DZ: mreal); cdecl; external libmgl;
-
-//void mgl_set_subticks(HMGL graph, int NX, int NY, int NZ);
-procedure mgl_set_subticks(graph: HMGL; NX, NY, NZ: integer); cdecl; external libmgl;
-
-//void mgl_set_ticks_dir(HMGL graph, char dir, mreal d, int ns, mreal org);
-procedure mgl_set_ticks_dir(graph: HMGL; dir: char; d: mreal; ns: integer; org:mreal); cdecl; external libmgl;
-
-//void mgl_set_ticks_val(HMGL graph, char dir, int n, double val, const char *lbl, ...);
-// oops.. variadic paramerers functions are not supported
-
-//void mgl_set_ticks_vals(HMGL graph, char dir, int n, mreal *val, const char **lbl);
-procedure mgl_set_ticks_vals(graph: HMGL; dir: char; n: integer; val: Pmreal; lbl: PChar); cdecl; external libmgl;
-
-//void mgl_set_caxis(HMGL graph, mreal C1,mreal C2);
-procedure mgl_set_caxis(graph: HMGL; C1, C2: mreal); cdecl; external libmgl;
-
-//void mgl_set_axis(HMGL graph, mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mreal z2, mreal x0, mreal y0, mreal z0);
-procedure mgl_set_axis(graph: HMGL; x1, y1, z1, x2, y2, z2, x0, y0, z0: mreal); cdecl; external libmgl;
-
-//void mgl_set_axis_3d(HMGL graph, mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mreal z2);
-procedure mgl_set_axis_3d(graph: HMGL; x1, y1, z1, x2, y2, z2: mreal); cdecl; external libmgl;
-
-//void mgl_set_axis_2d(HMGL graph, mreal x1, mreal y1, mreal x2, mreal y2);
-procedure mgl_set_axis_2d(graph: HMGL; x1, y1, x2, y2: mreal); cdecl; external libmgl;
-
-//inline void mgl_set_ranges(HMGL graph, mreal x1, mreal x2, mreal y1, mreal y2, mreal z1, mreal z2)
-//{	mgl_set_axis_3d(graph, x1,y1,z1,x2,y2,z2);	};
-procedure mgl_set_ranges(graph: HMGL; x1, x2, y1, y2, z1, z2: mreal); inline;
-
-//void mgl_set_origin(HMGL graph, mreal x0, mreal y0, mreal z0);
-procedure mgl_set_origin(graph: HMGL; x0, y0, z0: mreal); cdecl; external libmgl;
-
-//void mgl_set_tick_origin(HMGL graph, mreal x0, mreal y0, mreal z0);
-procedure mgl_set_tick_origin(graph: HMGL; x0, y0, z0: mreal); cdecl; external libmgl;
-
-//void mgl_set_crange(HMGL graph, const HMDT a, int add);
-procedure mgl_set_crange(graph: HMGL; const a: HMDT; add: integer); cdecl; external libmgl;
-
-//void mgl_set_xrange(HMGL graph, const HMDT a, int add);
-procedure mgl_set_xrange(graph: HMGL; const a: HMDT; add: integer); cdecl; external libmgl;
-
-//void mgl_set_yrange(HMGL graph, const HMDT a, int add);
-procedure mgl_set_yrange(graph: HMGL; const a: HMDT; add: integer); cdecl; external libmgl;
-
-//void mgl_set_zrange(HMGL graph, const HMDT a, int add);
-procedure mgl_set_zrange(graph: HMGL; const a: HMDT; add: integer); cdecl; external libmgl;
-
-//void mgl_set_auto(HMGL graph, mreal x1, mreal x2, mreal y1, mreal y2, mreal z1, mreal z2);
-procedure mgl_set_auto(graph: HMGL; x1, x2, y1, y2, z1, z2: mreal); cdecl; external libmgl;
-
-//void mgl_set_func(HMGL graph, const char *EqX,const char *EqY,const char *EqZ);
-procedure mgl_set_func(graph: HMGL; const EqX: PChar; const EqY: PChar; const EqZ: PChar); cdecl; external libmgl;
-
-//void mgl_set_func_ext(HMGL graph, const char *EqX,const char *EqY,const char *EqZ,const char *EqA);
-procedure mgl_set_func_ext(graph: HMGL; const EqX: PChar; const EqY: PChar; const EqZ: PChar; const EqA: PChar); cdecl; external libmgl;
-
-//void mgl_set_coor(HMGL gr, int how);
-procedure mgl_set_coor(graph: HMGL; how: integer); cdecl; external libmgl;
-
-//void mgl_set_ternary(HMGL gr, int enable);
-procedure mgl_set_ternary(graph: HMGL; enable: integer); cdecl; external libmgl;
-
-//void mgl_set_cutoff(HMGL graph, const char *EqC);
-procedure mgl_set_cutoff(graph: HMGL; const EqC: PChar); cdecl; external libmgl;
-
-//void mgl_box(HMGL graph, int ticks);
-procedure mgl_box(graph: HMGL; ticks: integer); cdecl; external libmgl;
-
-//void mgl_box_str(HMGL graph, const char *col, int ticks);
-procedure mgl_box_str(graph: HMGL; const col: PChar; ticks: integer); cdecl; external libmgl;
-
-//void mgl_box_rgb(HMGL graph, mreal r, mreal g, mreal b, int ticks);
-procedure mgl_box_rgb(graph: HMGL; r, g, b: mreal; ticks: integer); cdecl; external libmgl;
-
-//void mgl_axis(HMGL graph, const char *dir);
-procedure mgl_axis(graph: HMGL; const dir: PChar); cdecl; external libmgl;
-
-//void mgl_axis_grid(HMGL graph, const char *dir,const char *pen);
-procedure mgl_axis_grid(graph: HMGL; const dir: PChar; const pen: PChar); cdecl; external libmgl;
-
-//void mgl_label(HMGL graph, char dir, const char *text);
-procedure mgl_label(graph: HMGL; dir: char; const text: PChar); cdecl; external libmgl;
-
-//void mgl_label_ext(HMGL graph, char dir, const char *text, mreal pos, mreal size, mreal shift);
-procedure mgl_label_ext(graph: HMGL; dir: char; const text: PChar; pos: mreal; size: mreal; shift: mreal); cdecl; external libmgl;
-
-//void mgl_labelw_ext(HMGL graph, char dir, const wchar_t *text, mreal pos, mreal size, mreal shift);
-procedure mgl_labelw_ext(graph: HMGL; dir: char; const text: PWideChar; pos: mreal; size: mreal; shift: mreal); cdecl; external libmgl;
-
-//void mgl_label_xy(HMGL graph, mreal x, mreal y, const char *text, const char *fnt, mreal size);
-procedure mgl_label_xy(graph: HMGL; x, y: mreal; const text: PChar; fnt: PChar; size: mreal); cdecl; external libmgl;
-
-//void mgl_labelw_xy(HMGL graph, mreal x, mreal y, const wchar_t *text, const char *fnt, mreal size);
-procedure mgl_labelw_xy(graph: HMGL; x, y: mreal; const text: PWideChar; fnt: PChar; size: mreal); cdecl; external libmgl;
-
-//void mgl_tune_ticks(HMGL graph, int tune, mreal fact_pos);
-procedure mgl_tune_ticks(graph: HMGL; tune: integer; fact_pos: mreal); cdecl; external libmgl;
-
-//void mgl_set_xttw(HMGL graph, const wchar_t *templ);
-procedure mgl_set_xttw(graph: HMGL; const templ: PWideChar); cdecl; external libmgl;
-
-//void mgl_set_yttw(HMGL graph, const wchar_t *templ);
-procedure mgl_set_yttw(graph: HMGL; const templ: PWideChar); cdecl; external libmgl;
-
-//void mgl_set_zttw(HMGL graph, const wchar_t *templ);
-procedure mgl_set_zttw(graph: HMGL; const templ: PWideChar); cdecl; external libmgl;
-
-//void mgl_set_cttw(HMGL graph, const wchar_t *templ);
-procedure mgl_set_cttw(graph: HMGL; const templ: PWideChar); cdecl; external libmgl;
-
-//void mgl_set_xtt(HMGL graph, const char *templ);
-procedure mgl_set_xtt(graph: HMGL; const templ: PChar); cdecl; external libmgl;
-
-//void mgl_set_ytt(HMGL graph, const char *templ);
-procedure mgl_set_ytt(graph: HMGL; const templ: PChar); cdecl; external libmgl;
-
-//void mgl_set_ztt(HMGL graph, const char *templ);
-procedure mgl_set_ztt(graph: HMGL; const templ: PChar); cdecl; external libmgl;
-
-//void mgl_set_ctt(HMGL graph, const char *templ);
-procedure mgl_set_ctt(graph: HMGL; const templ: PChar); cdecl; external libmgl;
-
-//*****************************************************************************/
-//*             Simple drawing                                                */
-//*****************************************************************************/
-
-//void mgl_ball(HMGL graph, mreal x,mreal y,mreal z);
-procedure mgl_ball(graph: HMGL; x, y, z: mreal); cdecl; external libmgl;
-
-//void mgl_ball_rgb(HMGL graph, mreal x, mreal y, mreal z, mreal r, mreal g, mreal b, mreal alpha);
-procedure mgl_ball_rgb(graph: HMGL; x, y, z, r, g, b, alpha: mreal); cdecl; external libmgl;
-
-//void mgl_ball_str(HMGL graph, mreal x, mreal y, mreal z, const char *col);
-procedure mgl_ball_str(graph: HMGL; x, y, z: mreal; const col: PChar); cdecl; external libmgl;
-
-//void mgl_line(HMGL graph, mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mreal z2, const char *pen,int n);
-procedure mgl_line(graph: HMGL; x1, y1, z1, x2, y2, z2: mreal; const pen: PChar; n: integer); cdecl; external libmgl;
-
-//void mgl_facex(HMGL graph, mreal x0, mreal y0, mreal z0, mreal wy, mreal wz, const char *stl, mreal dx, mreal dy);
-procedure mgl_facex(graph: HMGL; x0, y0, z0, wy, wz: mreal; const stl: PChar; dx, dy: mreal); cdecl; external libmgl;
-
-//void mgl_facey(HMGL graph, mreal x0, mreal y0, mreal z0, mreal wx, mreal wz, const char *stl, mreal dx, mreal dy);
-procedure mgl_facey(graph: HMGL; x0, y0, z0, wx, wz: mreal; const stl: PChar; dx, dy: mreal); cdecl; external libmgl;
-
-//void mgl_facez(HMGL graph, mreal x0, mreal y0, mreal z0, mreal wx, mreal wy, const char *stl, mreal dx, mreal dy);
-procedure mgl_facez(graph: HMGL; x0, y0, z0, wx, wy: mreal; const stl: PChar; dx, dy: mreal); cdecl; external libmgl;
-
-//void mgl_curve(HMGL graph, mreal x1, mreal y1, mreal z1, mreal dx1, mreal dy1, mreal dz1, mreal x2, mreal y2, mreal z2, mreal dx2, mreal dy2, mreal dz2, const char *pen,int n);
-procedure mgl_curve(graph: HMGL; x1, y1, z1, dx1, dy1, dz1, x2, y2, z2, dx2, dy2, dz2: mreal; const pen: PChar; n: integer); cdecl; external libmgl;
-
-//void mgl_puts(HMGL graph, mreal x, mreal y, mreal z,const char *text);
-procedure mgl_puts(graph: HMGL; x, y, z: mreal; const text: PChar); cdecl; external libmgl;
-
-//void mgl_putsw(HMGL graph, mreal x, mreal y, mreal z,const wchar_t *text);
-procedure mgl_putsw(graph: HMGL; x, y, z: mreal; const text: PWideChar); cdecl; external libmgl;
-
-//void mgl_puts_dir(HMGL graph, mreal x, mreal y, mreal z, mreal dx, mreal dy, mreal dz, const char *text, mreal size);
-procedure mgl_puts_dir(graph: HMGL; x, y, z, dx, dy, dz: mreal; const text: PChar; size: mreal); cdecl; external libmgl;
-
-//void mgl_putsw_dir(HMGL graph, mreal x, mreal y, mreal z, mreal dx, mreal dy, mreal dz, const wchar_t *text, mreal size);
-procedure mgl_putsw_dir(graph: HMGL; x, y, z, dx, dy, dz: mreal; const text: PWideChar; size: mreal); cdecl; external libmgl;
-
-//void mgl_text(HMGL graph, mreal x, mreal y, mreal z,const char *text);
-procedure mgl_text(graph: HMGL; x, y, z: mreal; const text: PChar); cdecl; external libmgl;
-
-//void mgl_title(HMGL graph, const char *text, const char *fnt, mreal size);
-procedure mgl_title(graph: HMGL; const text: PChar; const fnt: PChar; size: mreal); cdecl; external libmgl;
-
-//void mgl_titlew(HMGL graph, const wchar_t *text, const char *fnt, mreal size);
-procedure mgl_titlew(graph: HMGL; const text: PWideChar; const fnt: PChar; size: mreal); cdecl; external libmgl;
-
-//void mgl_putsw_ext(HMGL graph, mreal x, mreal y, mreal z,const wchar_t *text,const char *font,mreal size,char dir);
-procedure mgl_putsw_ext(graph: HMGL; x, y, z: mreal; const text: PWideChar; const font: PChar; size: mreal; dir: char); cdecl; external libmgl;
-
-//void mgl_puts_ext(HMGL graph, mreal x, mreal y, mreal z,const char *text,const char *font,mreal size,char dir);
-procedure mgl_puts_ext(graph: HMGL; x, y, z: mreal; const text: PChar; const font: PChar; size: mreal; dir: char); cdecl; external libmgl;
-
-//void mgl_text_ext(HMGL graph, mreal x, mreal y, mreal z,const char *text,const char *font,mreal size,char dir);
-procedure mgl_text_ext(graph: HMGL; x, y, z: mreal; const text: PChar; const font: PChar; size: mreal; dir: char); cdecl; external libmgl;
-
-//void mgl_colorbar(HMGL graph, const char *sch,int where);
-procedure mgl_colorbar(graph: HMGL; const sch: PCHar; where: integer); cdecl; external libmgl;
-
-//void mgl_colorbar_ext(HMGL graph, const char *sch, int where, mreal x, mreal y, mreal w, mreal h);
-procedure mgl_colorbar_ext(graph: HMGL; const sch: PCHar; where: integer; x, y, w, h: mreal); cdecl; external libmgl;
-
-//void mgl_colorbar_val(HMGL graph, const HMDT dat, const char *sch,int where);
-procedure mgl_colorbar_val(graph: HMGL; const dat: HMDT; const sch: PChar; where: integer); cdecl; external libmgl;
-
-//void mgl_simple_plot(HMGL graph, const HMDT a, int type, const char *stl);
-procedure mgl_simple_plot(graph: HMGL; const a: HMDT; ttype: integer; stl: PChar); cdecl; external libmgl;
-
-//void mgl_add_legend(HMGL graph, const char *text,const char *style);
-procedure mgl_add_legend(graph: HMGL; const text: PChar; const style: PChar); cdecl; external libmgl;
-
-//void mgl_add_legendw(HMGL graph, const wchar_t *text,const char *style);
-procedure mgl_add_legendw(graph: HMGL; const text: PWideChar; const style: PChar); cdecl; external libmgl;
-
-//void mgl_clear_legend(HMGL graph);
-procedure mgl_clear_legend(graph: HMGL); cdecl; external libmgl;
-
-//void mgl_legend_xy(HMGL graph, mreal x, mreal y, const char *font, mreal size, mreal llen);
-procedure mgl_legend_xy(graph: HMGL; x, y: mreal; const font: PChar; size: mreal; llen: mreal); cdecl; external libmgl;
-
-//void mgl_legend(HMGL graph, int where, const char *font, mreal size, mreal llen);
-procedure mgl_legend(graph: HMGL; where: integer; const font: PChar; size: mreal; llen: mreal); cdecl; external libmgl;
-
-//void mgl_set_legend_box(HMGL gr, int enable);
-procedure mgl_set_legend_box(graph: HMGL; enable: integer); cdecl; external libmgl;
-
-//void mgl_set_legend_marks(HMGL gr, int num);
-procedure mgl_set_legend_marks(graph: HMGL; num: integer); cdecl; external libmgl;
-
-//*****************************************************************************/
-//*             1D plotting functions                                         */
-//*****************************************************************************/
-
-//void mgl_fplot(HMGL graph, const char *fy, const char *stl, int n);
-procedure mgl_fplot(graph: HMGL; const fy: PChar; const pen: PChar; n: integer); cdecl; external libmgl;
-
-//void mgl_fplot_xyz(HMGL graph, const char *fx, const char *fy, const char *fz, const char *stl, int n);
-procedure mgl_fplot_xyz(graph: HMGL; const fx: PChar; const fy: PChar; const fz: PChar; const pen: PChar; n: integer); cdecl; external libmgl;
-
-//void mgl_plot_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const char *pen);
-procedure mgl_plot_xyz(graph: HMGL; const x, y, z: HMDT; const pen: PChar); cdecl; external libmgl;
-
-//void mgl_plot_xy(HMGL graph, const HMDT x, const HMDT y, const char *pen);
-procedure mgl_plot_xy(graph: HMGL; const x, y: HMDT; const pen: PChar); cdecl; external libmgl;
-
-//void mgl_plot(HMGL graph, const HMDT y, const char *pen);
-procedure mgl_plot(graph: HMGL; const y: HMDT; const pen: PChar); cdecl; external libmgl;
-
-//void mgl_radar(HMGL graph, const HMDT a, const char *pen, mreal r);
-procedure mgl_radar(graph: HMGL; const a: HMDT; const pen: PChar; r: mreal); cdecl; external libmgl;
-
-//void mgl_boxplot_xy(HMGL graph, const HMDT x, const HMDT a, const char *pen);
-procedure mgl_boxplot_xy(graph: HMGL; const x: HMDT; const a: HMDT; const pen: PChar); cdecl; external libmgl;
-
-//void mgl_boxplot(HMGL graph, const HMDT a, const char *pen);
-procedure mgl_boxplot(graph: HMGL; const a: HMDT; const pen: PChar); cdecl; external libmgl;
-
-//void mgl_tens_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT c, const char *pen);
-procedure mgl_tens_xyz(graph: HMGL; const x, y, z, c: HMDT; const pen: PChar); cdecl; external libmgl;
-
-//void mgl_tens_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT c,        const char *pen);
-procedure mgl_tens_xy(graph: HMGL; const x, y, c: HMDT; const pen: PChar); cdecl; external libmgl;
-
-//void mgl_tens(HMGL graph, const HMDT y,       const HMDT c,   const char *pen);
-procedure mgl_tens(graph: HMGL; const y, c: HMDT; const pen: PChar); cdecl; external libmgl;
-
-//void mgl_area_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const char *pen);
-procedure mgl_area_xyz(graph: HMGL; const x, y, z: HMDT; const pen: PChar); cdecl; external libmgl;
-
-//void mgl_area_xy(HMGL graph, const HMDT x, const HMDT y, const char *pen);
-procedure mgl_area_xy(graph: HMGL; const x, y: HMDT; const pen: PChar); cdecl; external libmgl;
-
-//void mgl_area_xys(HMGL graph, const HMDT x, const HMDT y, const char *pen);
-procedure mgl_area_xys(graph: HMGL; const x, y: HMDT; const pen: PChar); cdecl; external libmgl;
-
-//void mgl_area_s(HMGL graph, const HMDT y, const char *pen);
-procedure mgl_area_s(graph: HMGL; const y: HMDT; const pen: PChar); cdecl; external libmgl;
-
-//void mgl_area(HMGL graph, const HMDT y, const char *pen);
-procedure mgl_area(graph: HMGL; const y: HMDT; const pen: PChar); cdecl; external libmgl;
-
-//void mgl_region_xy(HMGL graph, const HMDT x, const HMDT y1, const HMDT y2, const char *pen, int inside);
-procedure mgl_region_xy(graph: HMGL; x, y1, y2: HMDT; const pen: PChar; inside: integer); cdecl; external libmgl;
-
-//void mgl_region(HMGL graph, const HMDT y1, const HMDT y2, const char *pen, int inside);
-procedure mgl_region(graph: HMGL; y1, y2: HMDT; const pen: PChar; inside: integer); cdecl; external libmgl;
-
-//void mgl_mark(HMGL graph, mreal x,mreal y,mreal z,char mark);
-procedure mgl_mark(graph: HMGL; x, y, z: mreal; mark: char); cdecl; external libmgl;
-
-//void mgl_stem_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const char *pen);
-procedure mgl_stem_xyz(graph: HMGL; const x, y, z: HMDT; const pen: PChar); cdecl; external libmgl;
-
-//void mgl_stem_xy(HMGL graph, const HMDT x, const HMDT y, const char *pen);
-procedure mgl_stem_xy(graph: HMGL; const x, y: HMDT; const pen: PChar); cdecl; external libmgl;
-
-//void mgl_stem(HMGL graph, const HMDT y,       const char *pen);
-procedure mgl_stem(graph: HMGL; const y: HMDT; const pen: PChar); cdecl; external libmgl;
-
-//void mgl_step_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const char *pen);
-procedure mgl_step_xyz(graph: HMGL; const x, y, z: HMDT; const pen: PChar); cdecl; external libmgl;
-
-//void mgl_step_xy(HMGL graph, const HMDT x, const HMDT y, const char *pen);
-procedure mgl_step_xy(graph: HMGL; const x, y: HMDT; const pen: PChar); cdecl; external libmgl;
-
-//void mgl_step(HMGL graph, const HMDT y,       const char *pen);
-procedure mgl_step(graph: HMGL; const y: HMDT; const pen: PChar); cdecl; external libmgl;
-
-//void mgl_bars_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const char *pen);
-procedure mgl_bars_xyz(graph: HMGL; const x, y, z: HMDT; const pen: PChar); cdecl; external libmgl;
-
-//void mgl_bars_xy(HMGL graph, const HMDT x, const HMDT y, const char *pen);
-procedure mgl_bars_xy(graph: HMGL; const x, y: HMDT; const pen: PChar); cdecl; external libmgl;
-
-//void mgl_bars(HMGL graph, const HMDT y,       const char *pen);
-procedure mgl_bars(graph: HMGL; const y: HMDT; const pen: PChar); cdecl; external libmgl;
-
-//void mgl_barh_yx(HMGL graph, const HMDT y, const HMDT v, const char *pen);
-procedure mgl_barh_yx(graph: HMGL; const y, v: HMDT; const pen: PChar); cdecl; external libmgl;
-
-//void mgl_barh(HMGL graph, const HMDT v,       const char *pen);
-procedure mgl_barh(graph: HMGL; const v: HMDT; const pen: PChar); cdecl; external libmgl;
-
-//*****************************************************************************/
-//*             Advanced 1D plotting functions                                */
-//*****************************************************************************/
-
-//void mgl_torus(HMGL graph, const HMDT r, const HMDT z, const char *pen);
-procedure mgl_torus(graph: HMGL; const r, z: HMDT; const pen: PChar); cdecl; external libmgl;
-
-//void mgl_text_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z,const char *text, const char *font, mreal size);
-procedure mgl_text_xyz(graph: HMGL; const x, y, z: HMDT; const text: PChar; const font: PChar; size: mreal); cdecl; external libmgl;
-
-//void mgl_text_xy(HMGL graph, const HMDT x, const HMDT y, const char *text, const char *font, mreal size);
-procedure mgl_text_xy(graph: HMGL; const x, y: HMDT; const text: PChar; const font: PChar; size: mreal); cdecl; external libmgl;
-
-//void mgl_text_y(HMGL graph, const HMDT y, const char *text, const char *font, mreal size);
-procedure mgl_text_y(graph: HMGL; const y: HMDT; const text: PChar; const font: PChar; size: mreal); cdecl; external libmgl;
-
-//void mgl_chart(HMGL graph, const HMDT a, const char *col);
-procedure mgl_chart(graph: HMGL; const a: HMDT; const col: PChar); cdecl; external libmgl;
-
-//void mgl_error(HMGL graph, const HMDT y, const HMDT ey, const char *pen);
-procedure mgl_error(graph: HMGL; const y, ey: HMDT; const pen: PChar); cdecl; external libmgl;
-
-//void mgl_error_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT ey, const char *pen);
-procedure mgl_error_xy(graph: HMGL; const x, y, ey: HMDT; const pen: PChar); cdecl; external libmgl;
-
-//void mgl_error_exy(HMGL graph, const HMDT x, const HMDT y, const HMDT ex, const HMDT ey, const char *pen);
-procedure mgl_error_exy(graph: HMGL; const x, y, ex, ey: HMDT; const pen: PChar); cdecl; external libmgl;
-
-//void mgl_mark_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT r, const char *pen);
-procedure mgl_mark_xyz(graph: HMGL; const x, y, z, r: HMDT; const pen: PChar); cdecl; external libmgl;
-
-//void mgl_mark_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT r, const char *pen);
-procedure mgl_mark_xy(graph: HMGL; const x, y, z: HMDT; const pen: PChar); cdecl; external libmgl;
-
-//void mgl_mark_y(HMGL graph, const HMDT y, const HMDT r, const char *pen);
-procedure mgl_mark_y(graph: HMGL; const y, r: HMDT; const pen: PChar); cdecl; external libmgl;
-
-//void mgl_tube_xyzr(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT r, const char *pen);
-procedure mgl_tube_xyzr(graph: HMGL; const x, y, z, r: HMDT; const pen: PChar); cdecl; external libmgl;
-
-//void mgl_tube_xyr(HMGL graph, const HMDT x, const HMDT y, const HMDT r, const char *pen);
-procedure mgl_tube_xyr(graph: HMGL; const x, y, r: HMDT; const pen: PChar); cdecl; external libmgl;
-
-//void mgl_tube_r(HMGL graph, const HMDT y, const HMDT r, const char *pen);
-procedure mgl_tube_r(graph: HMGL; const y, r: HMDT; const pen: PChar); cdecl; external libmgl;
-
-//void mgl_tube_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, mreal r, const char *pen);
-procedure mgl_tube_xyz(graph: HMGL; const x, y, z: HMDT; r: mreal; const pen: PChar); cdecl; external libmgl;
-
-//void mgl_tube_xy(HMGL graph, const HMDT x, const HMDT y, mreal r, const char *penl);
-procedure mgl_tube_xy(graph: HMGL; const x, y:  HMDT; r: mreal; const penl: PChar); cdecl; external libmgl;
-
-//void mgl_tube(HMGL graph, const HMDT y, mreal r, const char *pen);
-procedure mgl_tube(graph: HMGL; const y: HMDT; r: mreal; const pen: PChar); cdecl; external libmgl;
-
-//void mgl_textmark_xyzr(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT r, const char *text, const char *fnt);
-procedure mgl_textmark_xyzr(graph: HMGL; const x, y, z, r: HMDT; const text: PChar; const fnt: PChar); cdecl; external libmgl;
-
-//void mgl_textmark_xyr(HMGL graph, const HMDT x, const HMDT y, const HMDT r, const char *text, const char *fnt);
-procedure mgl_textmark_xyr(graph: HMGL; const x, y, r: HMDT; const text: PChar; const fnt: PChar); cdecl; external libmgl;
-
-//void mgl_textmark_yr(HMGL graph, const HMDT y, const HMDT r, const char *text, const char *fnt);
-procedure mgl_textmark_yr(graph: HMGL; const y, r: HMDT; const text: PChar; const fnt: PChar); cdecl; external libmgl;
-
-//void mgl_textmark(HMGL graph, const HMDT y, const char *text, const char *fnt);
-procedure mgl_textmark(graph: HMGL; const y: HMDT; const text: PChar; const fnt: PChar); cdecl; external libmgl;
-
-//void mgl_textmarkw_xyzr(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT r, const wchar_t *text, const char *fnt);
-procedure mgl_textmarkw_xyzr(graph: HMGL; const x, y, z, r: HMDT; const text: PWideChar; const fnt: PChar); cdecl; external libmgl;
-
-//void mgl_textmarkw_xyr(HMGL graph, const HMDT x, const HMDT y, const HMDT r, const wchar_t *text, const char *fnt);
-procedure mgl_textmarkw_xyr(graph: HMGL; const x, y, r: HMDT; const text: PWideChar; const fnt: PChar); cdecl; external libmgl;
-
-//void mgl_textmarkw_yr(HMGL graph, const HMDT y, const HMDT r, const wchar_t *text, const char *fnt);
-procedure mgl_textmarkw_yr(graph: HMGL; const y, r: HMDT; const text: PWideChar; const fnt: PChar); cdecl; external libmgl;
-
-//void mgl_textmarkw(HMGL graph, const HMDT y, const wchar_t *text, const char *fnt);
-procedure mgl_textmarkw(graph: HMGL; const y: HMDT; const text: PWideChar; const fnt: PChar); cdecl; external libmgl;
-
-//*****************************************************************************/
-//*             2D plotting functions                                         */
-//*****************************************************************************/
-
-//void mgl_fsurf(HMGL graph, const char *fz, const char *stl, int n);
-procedure mgl_fsurf(graph: HMGL; const fz: PChar; const stl: PChar; n: integer); cdecl; external libmgl;
-
-//void mgl_fsurf_xyz(HMGL graph, const char *fx, const char *fy, const char *fz, const char *stl, int n);
-procedure mgl_fsurf_xyz(graph: HMGL; const fx: PChar; const fy: PChar; const fz: PChar; const stl: PChar; n: integer); cdecl; external libmgl;
-
-//void mgl_grid_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const char *stl,mreal zVal);
-procedure mgl_grid_xy(graph: HMGL; const x, y, z: HMDT; const stl: PChar; zVal: mreal); cdecl; external libmgl;
-
-//void mgl_grid(HMGL graph, const HMDT a,const char *stl,mreal zVal);
-procedure mgl_grid(const graph: HMGL; a: HMDT; const stl: PChar; zVal: mreal); cdecl; external libmgl;
-
-//void mgl_mesh_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const char *sch);
-procedure mgl_mesh_xy(graph: HMGL; const x, y, z: HMDT; const stl: PChar); cdecl; external libmgl;
-
-//void mgl_mesh(HMGL graph, const HMDT z, const char *sch);
-procedure mgl_mesh(graph: HMGL; const z: HMDT; const stl: PChar); cdecl; external libmgl;
-
-//void mgl_fall_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const char *sch);
-procedure mgl_fall_xy(graph: HMGL; const x, y, z: HMDT; const stl: PChar); cdecl; external libmgl;
-
-//void mgl_fall(HMGL graph, const HMDT z, const char *sch);
-procedure mgl_fall(graph: HMGL; const z: HMDT; const stl: PChar); cdecl; external libmgl;
-
-//void mgl_belt_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const char *sch);
-procedure mgl_belt_xy(graph: HMGL; const x, y, z: HMDT; const stl: PChar); cdecl; external libmgl;
-
-//void mgl_belt(HMGL graph, const HMDT z, const char *sch);
-procedure mgl_belt(graph: HMGL; const z: HMDT; const sch: PChar); cdecl; external libmgl;
-
-//void mgl_surf_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const char *sch);
-procedure mgl_surf_xy(graph: HMGL; const x, y, z: HMDT; const sch: PChar); cdecl; external libmgl;
-
-//void mgl_surf(HMGL graph, const HMDT z, const char *sch);
-procedure mgl_surf(graph: HMGL; const z: HMDT; const sch: PChar); cdecl; external libmgl;
-
-//void mgl_dens_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const char *sch,mreal zVal);
-procedure mgl_dens_xy(graph: HMGL; const x, y, z: HMDT; const sch: PChar; zVal: mreal); cdecl; external libmgl;
-
-//void mgl_dens(HMGL graph, const HMDT z, const char *sch,mreal zVal);
-procedure mgl_dens(graph: HMGL; const z: HMDT; const sch: PChar; zVal: mreal); cdecl; external libmgl;
-
-//void mgl_boxs_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const char *sch,mreal zVal);
-procedure mgl_boxs_xy(graph: HMGL; const x, y, z: HMDT; const sch: PChar; zVal: mreal); cdecl; external libmgl;
-
-//void mgl_boxs(HMGL graph, const HMDT z, const char *sch,mreal zVal);
-procedure mgl_boxs(graph: HMGL; const z: HMDT; const sch: PChar; zVal: mreal); cdecl; external libmgl;
-
-//void mgl_tile_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const char *sch);
-procedure mgl_tile_xy(graph: HMGL; const x, y, z: HMDT; const sch: PChar); cdecl; external libmgl;
-
-//void mgl_tile(HMGL graph, const HMDT z, const char *sch);
-procedure mgl_tile(graph: HMGL; const z: HMDT; const sch: PChar); cdecl; external libmgl;
-
-//void mgl_tiles_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT r, const char *sch);
-procedure mgl_tiles_xy(graph: HMGL; const x, y, z, r: HMDT; const sch: PChar); cdecl; external libmgl;
-
-//void mgl_tiles(HMGL graph, const HMDT z, const HMDT r, const char *sch);
-procedure mgl_tiles(graph: HMGL; const z, r: HMDT; const sch: PChar); cdecl; external libmgl;
-
-//void mgl_cont_xy_val(HMGL graph, const HMDT v, const HMDT x, const HMDT y, const HMDT z, const char *sch, mreal zVal);
-procedure mgl_cont_xy_val(graph: HMGL; const v, x, y, z: HMDT; const sch: PChar; zVal: mreal); cdecl; external libmgl;
-
-//void mgl_cont_val(HMGL graph, const HMDT v, const HMDT z, const char *sch,mreal zVal);
-procedure mgl_cont_val(graph: HMGL; const v, z: HMDT; const sch: PChar; zVal: mreal); cdecl; external libmgl;
-
-//void mgl_cont_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const char *sch, int Num, mreal zVal);
-procedure mgl_cont_xy(graph: HMGL; const x, y, z: HMDT; const sch: PChar; Num: integer; zVal: mreal); cdecl; external libmgl;
-
-//void mgl_cont(HMGL graph, const HMDT z, const char *sch, int Num, mreal zVal);
-procedure mgl_cont(graph: HMGL; const z: HMDT; const sch: PChar; Num: integer; zVal: mreal); cdecl; external libmgl;
-
-//void mgl_contf_xy_val(HMGL graph, const HMDT v, const HMDT x, const HMDT y, const HMDT z, const char *sch, mreal zVal);
-procedure mgl_contf_xy_val(graph: HMGL; const v, x, y, z: HMDT; const sch: PChar; zVal: mreal); cdecl; external libmgl;
-
-//void mgl_contf_val(HMGL graph, const HMDT v, const HMDT z, const char *sch,mreal zVal);
-procedure mgl_contf_val(graph: HMGL; const v, z: HMDT; const sch: PChar; zVal: mreal); cdecl; external libmgl;
-
-//void mgl_contf_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const char *sch, int Num, mreal zVal);
-procedure mgl_contf_xy(graph: HMGL; const x, y, z: HMDT; const sch: PChar; Num: integer; zVal: mreal); cdecl; external libmgl;
-
-//void mgl_contf(HMGL graph, const HMDT z, const char *sch, int Num, mreal zVal);
-procedure mgl_contf(graph: HMGL; const z: HMDT; const sch: PChar; Num: integer; zVal: mreal); cdecl; external libmgl;
-
-//void mgl_axial_xy_val(HMGL graph, const HMDT v, const HMDT x, const HMDT y, const HMDT a, const char *sch);
-procedure mgl_axial_xy_val(graph: HMGL; const v, x, y, a: HMDT; const sch: PChar); cdecl; external libmgl;
-
-//void mgl_axial_val(HMGL graph, const HMDT v, const HMDT a, const char *sch);
-procedure mgl_axial_val(graph: HMGL; const v, a: HMDT; const sch: PChar); cdecl; external libmgl;
-
-//void mgl_axial_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT a, const char *sch, int Num);
-procedure mgl_axial_xy(graph: HMGL; const x, y, a: HMDT; const sch: PChar); cdecl; external libmgl;
-
-//void mgl_axial(HMGL graph, const HMDT a, const char *sch, int Num);
-procedure mgl_axial(graph: HMGL; const a: HMDT; const sch: PChar; Num: integer); cdecl; external libmgl;
-
-//*****************************************************************************/
-//*             Dual plotting functions                                       */
-//*****************************************************************************/
-
-//void mgl_surfc_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT c, const char *sch);
-procedure mgl_surfc_xy(graph: HMGL; const x, y, z, c: HMDT; const sch: PChar); cdecl; external libmgl;
-
-//void mgl_surfc(HMGL graph, const HMDT z, const HMDT c, const char *sch);
-procedure mgl_surfc(graph: HMGL; const z, c: HMDT; const sch: PChar); cdecl; external libmgl;
-
-//void mgl_surfa_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT c, const char *sch);
-procedure mgl_surfa_xy(graph: HMGL; const x, y, z, c: HMDT; const sch: PChar); cdecl; external libmgl;
-
-//void mgl_surfa(HMGL graph, const HMDT z, const HMDT c, const char *sch);
-procedure mgl_surfa(graph: HMGL; const z, c: HMDT; const sch: PChar); cdecl; external libmgl;
-
-//void mgl_stfa_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT re, const HMDT im, int dn, const char *sch, mreal zVal);
-procedure mgl_stfa_xy(graph: HMGL; const x, y, re, im: HMDT; dn: integer; const sch: PChar; zVal: mreal); cdecl; external libmgl;
-
-//void mgl_stfa(HMGL graph, const HMDT re, const HMDT im, int dn, const char *sch, mreal zVal);
-procedure mgl_stfa(graph: HMGL; const re, im: HMDT; dn: integer; const sch: PChar; zVal: mreal); cdecl; external libmgl;
-
-//void mgl_vect_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT ax, const HMDT ay, const char *sch,mreal zVal);
-procedure mgl_vect_xy(graph: HMGL; const x, y, z, ax, ay: HMDT; const sch: PChar; zVal: mreal); cdecl; external libmgl;
-
-//void mgl_vect_2d(HMGL graph, const HMDT ax, const HMDT ay, const char *sch,mreal zVal);
-procedure mgl_vect_2d(graph: HMGL; const ax, ay: HMDT; const sch: PChar; zVal: mreal); cdecl; external libmgl;
-
-//void mgl_vectl_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT ax, const HMDT ay, const char *sch,mreal zVal);
-procedure mgl_vectl_xy(graph: HMGL; const x, y, z, ax, ay: HMDT; const sch: PChar; zVal: mreal); cdecl; external libmgl;
-
-//void mgl_vectl_2d(HMGL graph, const HMDT ax, const HMDT ay, const char *sch,mreal zVal);
-procedure mgl_vectl_2d(graph: HMGL; const ax, ay: HMDT; const sch: PChar; zVal: mreal); cdecl; external libmgl;
-
-//void mgl_vectc_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT ax, const HMDT ay, const char *sch,mreal zVal);
-procedure mgl_vectc_xy(graph: HMGL; const x, y, ax, ay: HMDT; const sch: PChar; zVal: mreal); cdecl; external libmgl;
-
-//void mgl_vectc_2d(HMGL graph, const HMDT ax, const HMDT ay, const char *sch,mreal zVal);
-procedure mgl_vectc_2d(graph: HMGL; const ax, ay: HMDT; const sch: PChar; zVal: mreal); cdecl; external libmgl;
-
-//void mgl_vect_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT ax, const HMDT ay, const HMDT az, const char *sch);
-procedure mgl_vect_xyz(graph: HMGL; const x, y, z, ax, ay, az: HMDT; const sch: PChar); cdecl; external libmgl;
-
-//void mgl_vect_3d(HMGL graph, const HMDT ax, const HMDT ay, const HMDT az, const char *sch);
-procedure mgl_vect_3d(graph: HMGL; const ax, ay, az: HMDT; const sch: PChar); cdecl; external libmgl;
-
-//void mgl_vectl_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT ax, const HMDT ay, const HMDT az, const char *sch);
-procedure mgl_vectl_xyz(graph: HMGL; const x, y, z, ax, ay, az: HMDT; const sch: PChar); cdecl; external libmgl;
-
-//void mgl_vectl_3d(HMGL graph, const HMDT ax, const HMDT ay, const HMDT az, const char *sch);
-procedure mgl_vectl_3d(graph: HMGL; const ax, ay, az: HMDT; const sch: PChar); cdecl; external libmgl;
-
-//void mgl_vectc_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT ax, const HMDT ay, const HMDT az, const char *sch);
-procedure mgl_vectc_xyz(graph: HMGL; const x, y, z, ax, ay, az: HMDT; const sch: PChar); cdecl; external libmgl;
-
-//void mgl_vectc_3d(HMGL graph, const HMDT ax, const HMDT ay, const HMDT az, const char *sch);
-procedure mgl_vectc_3d(graph: HMGL; const ax, ay, az: HMDT; const sch: PChar); cdecl; external libmgl;
-
-//void mgl_map_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT a, const HMDT b, const char *sch, int ks, int pnts);
-procedure mgl_map_xy(graph: HMGL; const x, y, a, b: HMDT; const sch: PChar; ks: integer; pnts: integer); cdecl; external libmgl;
-
-//void mgl_map(HMGL graph, const HMDT a, const HMDT b, const char *sch, int ks, int pnts);
-procedure mgl_map(graph: HMGL; const a, b: HMDT; const sch: PChar; ks: integer; pnts: integer); cdecl; external libmgl;
-
-//void mgl_surf3a_xyz_val(HMGL graph, mreal Val, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const HMDT b, const char *stl);
-procedure mgl_surf3a_xyz_val(graph: HMGL; Val: mreal; const x, y, z, a, b: HMDT; const stla: PChar); cdecl; external libmgl;
-
-//void mgl_surf3a_val(HMGL graph, mreal Val, const HMDT a, const HMDT b, const char *stl);
-procedure mgl_surf3a_val(graph: HMGL; Val: mreal; const a, b: HMDT; const stl: PChar); cdecl; external libmgl;
-
-//void mgl_surf3a_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const HMDT b, const char *stl, int num);
-procedure mgl_surf3a_xyz(graph: HMGL; const x, y, z, a, b: HMDT; const stl: PChar; num: integer); cdecl; external libmgl;
-
-//void mgl_surf3a(HMGL graph, const HMDT a, const HMDT b, const char *stl, int num);
-procedure mgl_surf3a(graph: HMGL; const a, b: HMDT; const stl: PChar; num: integer); cdecl; external libmgl;
-
-//void mgl_surf3c_xyz_val(HMGL graph, mreal Val, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const HMDT b, const char *stl);
-procedure mgl_surf3c_xyz_val(graph: HMGL; Val: mreal; const x, y, z, a, b: HMDT; const stl: PChar); cdecl; external libmgl;
-
-//void mgl_surf3c_val(HMGL graph, mreal Val, const HMDT a, const HMDT b, const char *stl);
-procedure mgl_surf3c_val(graph: HMGL; Val: mreal; const a, b: HMDT; const stl: PChar); cdecl; external libmgl;
-
-//void mgl_surf3c_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const HMDT b,
-//                      const char *stl, int num);
-procedure mgl_surf3c_xyz(graph: HMGL; const x, y, z, a, b: HMDT; const stl: PChar; num: integer); cdecl; external libmgl;
-
-//void mgl_surf3c(HMGL graph, const HMDT a, const HMDT b, const char *stl, int num);
-procedure mgl_surf3c(graph: HMGL; const a, b: HMDT; const stl: PChar; num: integer); cdecl; external libmgl;
-
-//void mgl_flow_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT ax, const HMDT ay, const char *sch, int num, int central, mreal zVal);
-procedure mgl_flow_xy(graph: HMGL; const x, y, ax, ay: HMDT; const sch: PChar; num: integer; central: integer; zVal: mreal); cdecl; external libmgl;
-
-//void mgl_flow_2d(HMGL graph, const HMDT ax, const HMDT ay, const char *sch, int num, int central, mreal zVal);
-procedure mgl_flow_2d(graph: HMGL; const ax, ay: HMDT; const sch: PChar; num: integer; central: integer; zVal: mreal); cdecl; external libmgl;
-
-//void mgl_flow_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT ax, const HMDT ay, const HMDT az, const char *sch, int num, int central);
-procedure mgl_flow_xyz(graph: HMGL; const x, y, z, ax, ay, az: HMDT; const sch: PChar; num: integer; central: integer); cdecl; external libmgl;
-
-//void mgl_flow_3d(HMGL graph, const HMDT ax, const HMDT ay, const HMDT az, const char *sch, int num, int central);
-procedure mgl_flow_3d(graph: HMGL; const ax, ay, az: HMDT; const sch: PChar; num: integer; central: integer); cdecl; external libmgl;
-
-//void mgl_pipe_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT ax, const HMDT ay, const char *sch, mreal r0, int num, int central, mreal zVal);
-procedure mgl_pipe_xy(graph: HMGL; const x, y, ax, ay: HMDT; const sch: PChar; r0: mreal; num: integer; central: integer; zVal: mreal); cdecl; external libmgl;
-
-//void mgl_pipe_2d(HMGL graph, const HMDT ax, const HMDT ay, const char *sch, mreal r0, int num, int central, mreal zVal);
-procedure mgl_pipe_2d(graph: HMGL; const ax, ay: HMDT; const sch: PChar; r0: mreal; num: integer; central: integer; zVal: mreal); cdecl; external libmgl;
-
-//void mgl_pipe_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT ax, const HMDT ay, const HMDT az, const char *sch, mreal r0, int num, int central);
-procedure mgl_pipe_xyz(graph: HMGL; const x, y, z, ax, ay, az: HMDT; const sch: PChar; r0: mreal; num: integer; central: integer); cdecl; external libmgl;
-
-//void mgl_pipe_3d(HMGL graph, const HMDT ax, const HMDT ay, const HMDT az, const char *sch, mreal r0, int num, int central);
-procedure mgl_pipe_3d(graph: HMGL; const ax, ay, az: HMDT; const sch: PChar; r0: mreal; num: integer; central: integer); cdecl; external libmgl;
-
-//void mgl_dew_xy(HMGL gr, const HMDT x, const HMDT y, const HMDT ax, const HMDT ay, const char *sch,mreal zVal);
-procedure mgl_dew_xy(gr: HMGL; const x, y, z, ax, ay: HMDT; const sch: PChar; zVal: mreal); cdecl; external libmgl;
-
-//void mgl_dew_2d(HMGL gr, const HMDT ax, const HMDT ay, const char *sch,mreal zVal);
-procedure mgl_dew_2d(gr: HMGL; const ax, ay: HMDT; const sch: PChar; zVal: mreal); cdecl; external libmgl;
-
-//void mgl_grad_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT ph, const char *sch, int num);
-procedure mgl_grad_xyz(gr: HMGL; const x, y, z, ph: HMDT; const sch: PChar; num: integer); cdecl; external libmgl;
-
-//void mgl_grad_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT ph, const char *sch, int num, mreal zVal);
-procedure mgl_grad_xy(gr: HMGL; const x, y, ph: HMDT; const sch: PChar; num: integer; zVal: mreal); cdecl; external libmgl;
-
-//void mgl_grad(HMGL graph, const HMDT ph, const char *sch, int num, mreal zVal);
-procedure mgl_grad(gr: HMGL; const ph: HMDT; const sch: PChar; num: integer; zVal: mreal); cdecl; external libmgl;
-
-//*****************************************************************************/
-//*             3D plotting functions                                         */
-//*****************************************************************************/
-
-//void mgl_grid3_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT a, char dir, int sVal, const char *stl);
-procedure mgl_grid3_xyz(graph: HMGL; const x, y, z, a: HMDT; dir: char; sVal: integer; const stl: PChar); cdecl; external libmgl;
-
-//void mgl_grid3(HMGL graph, const HMDT a, char dir, int sVal, const char *stl);
-procedure mgl_grid3(graph: HMGL; const a: HMDT; dir: char; sVal: integer; const stl: PChar); cdecl; external libmgl;
-
-//void mgl_grid3_all_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const char *stl);
-procedure mgl_grid3_all_xyz(graph: HMGL; const x, y, z, a: HMDT; const stl: PChar); cdecl; external libmgl;
-
-//void mgl_grid3_all(HMGL graph, const HMDT a, const char *stl);
-procedure mgl_grid3_all(graph: HMGL; const a: HMDT; const stl: PChar); cdecl; external libmgl;
-
-//void mgl_dens3_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT a, char dir, int sVal, const char *stl);
-procedure mgl_dens3_xyz(graph: HMGL; const x, y, z, a: HMDT; dir: char; sVal: integer; const stl: PChar); cdecl; external libmgl;
-
-//void mgl_dens3(HMGL graph, const HMDT a, char dir, int sVal, const char *stl);
-procedure mgl_dens3(graph: HMGL; const a: HMDT; dir: char; sVal: integer; const stl: PChar); cdecl; external libmgl;
-
-//void mgl_dens3_all_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const char *stl);
-procedure mgl_dens3_all_xyz(graph: HMGL; const x, y, z, a: HMDT; const stl: PChar); cdecl; external libmgl;
-
-//void mgl_dens3_all(HMGL graph, const HMDT a, const char *stl);
-procedure mgl_dens3_all(graph: HMGL; const a: HMDT; const stl: PChar); cdecl; external libmgl;
-
-//void mgl_surf3_xyz_val(HMGL graph, mreal Val, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const char *stl);
-procedure mgl_surf3_xyz_val(graph: HMGL; Val: mreal; const x, y, z, a: HMDT; const stl: PChar); cdecl; external libmgl;
-
-//void mgl_surf3_val(HMGL graph, mreal Val, const HMDT a, const char *stl);
-procedure mgl_surf3_val(graph: HMGL; Val: mreal; const a: HMDT; const stl: PChar); cdecl; external libmgl;
-
-//void mgl_surf3_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const char *stl, int num);
-procedure mgl_surf3_xyz(graph: HMGL; const x, y, z, a: HMDT; const stl: PChar; num: integer); cdecl; external libmgl;
-
-//void mgl_surf3(HMGL graph, const HMDT a, const char *stl, int num);
-procedure mgl_surf3(graph: HMGL; const a: HMDT; const stl: PChar; num: integer); cdecl; external libmgl;
-
-//void mgl_cont3_xyz_val(HMGL graph, const HMDT v, const HMDT x, const HMDT y, const HMDT z, const HMDT a, char dir, int sVal, const char *sch);
-procedure mgl_cont3_xyz_val(graph: HMGL; const v, x, y, z, a: HMDT; dir: char; sVal: integer; const sch: PChar); cdecl; external libmgl;
-
-//void mgl_cont3_val(HMGL graph, const HMDT v, const HMDT a, char dir, int sVal, const char *sch);
-procedure mgl_cont3_val(graph: HMGL; const v, a: HMDT; dir: char; sVal: integer; const sch: PChar); cdecl; external libmgl;
-
-//void mgl_cont3_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT a, char dir, int sVal, const char *sch, int Num);
-procedure mgl_cont3_xyz(graph: HMGL; const x, y, z, a: HMDT; dir: char; sVal: integer; const sch: PChar; Num: integer); cdecl; external libmgl;
-
-//void mgl_cont3(HMGL graph, const HMDT a, char dir, int sVal, const char *sch, int Num);
-procedure mgl_cont3(graph: HMGL; const a: HMDT; dir: char; sVal: integer; const stl: PChar; Num: integer); cdecl; external libmgl;
-
-//void mgl_cont_all_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const char *sch, int Num);
-procedure mgl_cont_all_xyz(graph: HMGL; const x, y, z, a: HMDT; const sch: PChar; Num: integer); cdecl; external libmgl;
-
-//void mgl_cont_all(HMGL graph, const HMDT a, const char *sch, int Num);
-procedure mgl_cont_all(graph: HMGL; const a: HMDT; const sch: PChar; Num: integer); cdecl; external libmgl;
-
-//void mgl_cloudp_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const char *stl, mreal alpha);
-procedure mgl_cloudp_xyz(graph: HMGL; x, y, z, a: HMDT; const stl: PChar; alpha: mreal); cdecl; external libmgl;
-
-//void mgl_cloudp(HMGL graph, const HMDT a, const char *stl, mreal alpha);
-procedure mgl_cloudp(graph: HMGL; const a: HMDT; const stl: PChar; alpha: mreal); cdecl; external libmgl;
-
-//void mgl_cloud_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const char *stl, mreal alpha);
-procedure mgl_cloud_xyz(graph: HMGL; const x, y, z, a: HMDT; const stl: PChar; alpha: mreal); cdecl; external libmgl;
-
-//void mgl_cloud(HMGL graph, const HMDT a, const char *stl, mreal alpha);
-procedure mgl_cloud(graph: HMGL; const a: HMDT; const stl: PChar; alpha: mreal); cdecl; external libmgl;
-
-//void mgl_contf3_xyz_val(HMGL graph, const HMDT v, const HMDT x, const HMDT y, const HMDT z, const HMDT a, char dir, int sVal, const char *sch);
-procedure mgl_contf3_xyz_val(graph: HMGL; const v, x, y, z, a: HMDT; dir: char; sVal: integer; const sch: PChar); cdecl; external libmgl;
-
-//void mgl_contf3_val(HMGL graph, const HMDT v, const HMDT a, char dir, int sVal, const char *sch);
-procedure mgl_contf3_val(graph: HMGL; const v, a: HMDT; dir: char; sVal: integer; const stl: PChar); cdecl; external libmgl;
-
-//void mgl_contf3_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT a, char dir, int sVal, const char *sch, int Num);
-procedure mgl_contf3_xyz(graph: HMGL; const x, y, z, a: HMDT; dir: char; sVal: integer; const sch: PChar; Num: integer); cdecl; external libmgl;
-
-//void mgl_contf3(HMGL graph, const HMDT a, char dir, int sVal, const char *sch, int Num);
-procedure mgl_contf3(graph: HMGL; const a: HMDT; dir: char; sVal: integer; const sch: PChar; Num: integer); cdecl; external libmgl;
-
-//void mgl_contf_all_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const char *sch, int Num);
-procedure mgl_contf_all_xyz(graph: HMGL; const x, y, z, a: HMDT; const sch: PChar; Num: integer); cdecl; external libmgl;
-
-//void mgl_contf_all(HMGL graph, const HMDT a, const char *sch, int Num);
-procedure mgl_contf_all(graph: HMGL; const a: HMDT; const sch: PChar; Num: integer); cdecl; external libmgl;
-
-//void mgl_beam_val(HMGL graph, mreal Val, const HMDT tr, const HMDT g1, const HMDT g2, const HMDT a, mreal r, const char *stl, int norm);
-procedure mgl_beam_val(graph: HMGL; Val: mreal; const tr, g1, g2, a: HMDT; r: mreal; const stl: PChar; norm: integer); cdecl; external libmgl;
-
-//void mgl_beam(HMGL graph, const HMDT tr, const HMDT g1, const HMDT g2, const HMDT a, mreal r, const char *stl, int norm, int num);
-procedure mgl_beam(graph: HMGL; const tr, g1, g2, a: HMDT; r: mreal; const stl: PChar; norm, num: integer); cdecl; external libmgl;
-
-//*****************************************************************************/
-//*             Triangular plotting functions                                 */
-//*****************************************************************************/
-
-//void mgl_triplot_xyzc(HMGL gr, const HMDT nums, const HMDT x, const HMDT y, const HMDT z, const HMDT c, const char *sch);
-procedure mgl_triplot_xyzc(graph: HMGL; const nums, x, y, z, c: HMDT; const sch: PChar); cdecl; external libmgl;
-
-//void mgl_triplot_xyz(HMGL gr, const HMDT nums, const HMDT x, const HMDT y, const HMDT z, const char *sch);
-procedure mgl_triplot_xyz(graph: HMGL; const nums, x, y, z: HMDT; const sch: PChar); cdecl; external libmgl;
-
-//void mgl_triplot_xy(HMGL gr, const HMDT nums, const HMDT x, const HMDT y, const char *sch, mreal zVal);
-procedure mgl_triplot_xy(graph: HMGL; const nums, x, y: HMDT; const sch: PChar; zVal: mreal); cdecl; external libmgl;
-
-//void mgl_quadplot_xyzc(HMGL gr, const HMDT nums, const HMDT x, const HMDT y, const HMDT z, const HMDT c, const char *sch);
-procedure mgl_quadplot_xyzc(graph: HMGL; const nums, x, y, z, c: HMDT; const sch: PChar); cdecl; external libmgl;
-
-//void mgl_quadplot_xyz(HMGL gr, const HMDT nums, const HMDT x, const HMDT y, const HMDT z, const char *sch);
-procedure mgl_quadplot_xyz(graph: HMGL; const nums, x, y, z: HMDT; const sch: PChar); cdecl; external libmgl;
-
-//void mgl_quadplot_xy(HMGL gr, const HMDT nums, const HMDT x, const HMDT y, const char *sch, mreal zVal);
-procedure mgl_quadplot_xy(graph: HMGL; const nums, x, y: HMDT; const sch: PChar; zVal: mreal); cdecl; external libmgl;
-
-//void mgl_tricont_xyzcv(HMGL gr, const HMDT v, const HMDT nums, const HMDT x, const HMDT y, const HMDT z, const HMDT c, const char *sch, mreal zVal);
-procedure mgl_tricont_xyzcv(graph: HMGL; const v, nums, x, y, z, c: HMDT; const sch: PChar; zVal: mreal); cdecl; external libmgl;
-
-//void mgl_tricont_xyzv(HMGL gr, const HMDT v, const HMDT nums, const HMDT x, const HMDT y, const HMDT z, const char *sch, mreal zVal);
-procedure mgl_tricont_xyzv(graph: HMGL; const v, nums, x, y, z: HMDT; const sch: PChar; zVal: mreal); cdecl; external libmgl;
-
-//void mgl_tricont_xyzc(HMGL gr, const HMDT nums, const HMDT x, const HMDT y, const HMDT z, const HMDT c, const char *sch, int n, mreal zVal);
-procedure mgl_tricont_xyzc(graph: HMGL; const nums, x, y, z, c: HMDT; const sch: PChar; n: integer; zVal: mreal); cdecl; external libmgl;
-
-//void mgl_tricont_xyz(HMGL gr, const HMDT nums, const HMDT x, const HMDT y, const HMDT z, const char *sch, int n, mreal zVal);
-procedure mgl_tricont_xyz(graph: HMGL; const nums, x, y, z: HMDT; const sch: PChar; n: integer; zVal: mreal); cdecl; external libmgl;
-
-//void mgl_dots(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const char *sch);
-procedure mgl_dots(graph: HMGL; const x, y, z: HMDT; const sch: PChar); cdecl; external libmgl;
-
-//void mgl_dots_a(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const char *sch);
-procedure mgl_dots_a(graph: HMGL; const x, y, z, a: HMDT; const sch: PChar); cdecl; external libmgl;
-
-//void mgl_dots_tr(HMGL gr, const HMDT tr, const char *sch);
-procedure mgl_dots_tr(graph: HMGL; const tr: HMDT; const sch: PChar); cdecl; external libmgl;
-
-//void mgl_crust(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const char *sch, mreal er);
-procedure mgl_crust(graph: HMGL; const x, y, z: HMDT; const sch: PChar; er: mreal); cdecl; external libmgl;
-
-//void mgl_crust_tr(HMGL gr, const HMDT tr, const char *sch, mreal er);
-procedure mgl_crust_tr(graph: HMGL; const tr: HMDT; const sch: PChar; er: mreal); cdecl; external libmgl;
-
-//*****************************************************************************/
-//*             Combined plotting functions                                   */
-//*****************************************************************************/
-
-//void mgl_dens_x(HMGL graph, const HMDT a, const char *stl, mreal sVal);
-procedure mgl_dens_x(graph: HMGL; const a: HMDT; const stl: PChar; sVal: mreal); cdecl; external libmgl;
-
-//void mgl_dens_y(HMGL graph, const HMDT a, const char *stl, mreal sVal);
-procedure mgl_dens_y(graph: HMGL; const a: HMDT; const stl: PChar; sVal: mreal); cdecl; external libmgl;
-
-//void mgl_dens_z(HMGL graph, const HMDT a, const char *stl, mreal sVal);
-procedure mgl_dens_z(graph: HMGL; const a: HMDT; const stl: PChar; sVal: mreal); cdecl; external libmgl;
-
-//void mgl_cont_x(HMGL graph, const HMDT a, const char *stl, mreal sVal, int Num);
-procedure mgl_cont_x(graph: HMGL; const a: HMDT; const stl: PChar; sVal: mreal; Num: integer); cdecl; external libmgl;
-
-//void mgl_cont_y(HMGL graph, const HMDT a, const char *stl, mreal sVal, int Num);
-procedure mgl_cont_y(graph: HMGL; const a: HMDT; const stl: PChar; sVal: mreal; Num: integer); cdecl; external libmgl;
-
-//void mgl_cont_z(HMGL graph, const HMDT a, const char *stl, mreal sVal, int Num);
-procedure mgl_cont_z(graph: HMGL; const a: HMDT; const stl: PChar; sVal: mreal; Num: integer); cdecl; external libmgl;
-
-//void mgl_cont_x_val(HMGL graph, const HMDT v, const HMDT a, const char *stl, mreal sVal);
-procedure mgl_cont_x_val(graph: HMGL; const v, a: HMDT; const stl: PChar; sVal: mreal); cdecl; external libmgl;
-
-//void mgl_cont_y_val(HMGL graph, const HMDT v, const HMDT a, const char *stl, mreal sVal);
-procedure mgl_cont_y_val(graph: HMGL; const v, a: HMDT; const stl: PChar; sVal: mreal); cdecl; external libmgl;
-
-//void mgl_cont_z_val(HMGL graph, const HMDT v, const HMDT a, const char *stl, mreal sVal);
-procedure mgl_cont_z_val(graph: HMGL; const v, a: HMDT; const stl: PChar; sVal: mreal); cdecl; external libmgl;
-
-//void mgl_contf_x(HMGL graph, const HMDT a, const char *stl, mreal sVal, int Num);
-procedure mgl_contf_x(graph: HMGL; const a: HMDT; const stl: PChar; sVal: mreal; Num: integer); cdecl; external libmgl;
-
-//void mgl_contf_y(HMGL graph, const HMDT a, const char *stl, mreal sVal, int Num);
-procedure mgl_contf_y(graph: HMGL; const a: HMDT; const stl: PChar; sVal: mreal; Num: integer); cdecl; external libmgl;
-
-//void mgl_contf_z(HMGL graph, const HMDT a, const char *stl, mreal sVal, int Num);
-procedure mgl_contf_z(graph: HMGL; const a: HMDT; const stl: PChar; sVal: mreal; Num: integer); cdecl; external libmgl;
-
-//void mgl_contf_x_val(HMGL graph, const HMDT v, const HMDT a, const char *stl, mreal sVal);
-procedure mgl_contf_x_val(graph: HMGL; const v, a: HMDT; const stl: PChar; sVal: mreal); cdecl; external libmgl;
-
-//void mgl_contf_y_val(HMGL graph, const HMDT v, const HMDT a, const char *stl, mreal sVal);
-procedure mgl_contf_y_val(graph: HMGL; const v, a: HMDT; const stl: PChar; sVal: mreal); cdecl; external libmgl;
-
-//void mgl_contf_z_val(HMGL graph, const HMDT v, const HMDT a, const char *stl, mreal sVal);
-procedure mgl_contf_z_val(graph: HMGL; const v, a: HMDT; const stl: PChar; sVal: mreal); cdecl; external libmgl;
-
-//*****************************************************************************/
-//*             Data creation functions                                       */
-//*****************************************************************************/
-
-//void mgl_data_rearrange(HMDT dat, int mx, int my, int mz);
-procedure mgl_data_rearrange(dat: HMDT; mx, my, mz: integer); cdecl; external libmgl;
-
-//void mgl_data_set_mreal(HMDT dat, const mreal *A,int NX,int NY,int NZ);
-procedure mgl_data_set_mreal(dat: HMDT; const A: Pmreal; NX, NY, NZ: integer); cdecl; external libmgl;
-
-//void mgl_data_set_double(HMDT dat, const double *A,int NX,int NY,int NZ);
-procedure mgl_data_set_double(dat: HMDT; const A: PDouble; NX, NY, NZ: integer); cdecl; external libmgl;
-
-//void mgl_data_set_mreal2(HMDT d, const mreal **A,int N1,int N2);
-type PPmreal = ^Pmreal;
-procedure mgl_data_set_mreal2(d: HMDT; const A: PPmreal; N1, N2: integer); cdecl; external libmgl;
-
-//void mgl_data_set_double2(HMDT d, const double **A,int N1,int N2);
-type PPDouble = ^PDouble;
-procedure mgl_data_set_double2(d: HMDT; const A: PPDouble; N1, N2: integer); cdecl; external libmgl;
-
-//void mgl_data_set_mreal3(HMDT d, const mreal ***A,int N1,int N2,int N3);
-type PPPmreal = ^PPmreal;
-procedure mgl_data_set_mreal3(d: HMDT; const A: PPPmreal; N1, N2, N3: integer); cdecl; external libmgl;
-
-//void mgl_data_set_double3(HMDT d, const double ***A,int N1,int N2,int N3);
-type PPPDouble = ^PPDouble;
-procedure mgl_data_set_double3(d: HMDT; const A: PPPDouble; N1, N2: integer); cdecl; external libmgl;
-
-//void mgl_data_set(HMDT dat, const HMDT a);
-procedure mgl_data_set(dat: HMDT; const a: HMDT); cdecl; external libmgl;
-
 
 type TGSLVector = record
-     end;
-
+end;
 type TGSLMatrix = record
-     end;
-
+end;
 type PGSLVector = ^TGSLVector;
 type PGSLMatrix = ^TGSLMatrix;
 
-//void mgl_data_set_vector(HMDT dat, gsl_vector *v);
-procedure mgl_data_set_vector(dat: HMDT; v: PGSLVector); cdecl; external libmgl;
-
-//void mgl_data_set_matrix(HMDT dat, gsl_matrix *m);
-procedure mgl_data_set_matrix(dat: HMDT; m: PGSLMatrix); cdecl; external libmgl;
-
-//mreal mgl_data_get_value(const HMDT dat, int i, int j, int k);
-function mgl_data_get_value(const dat: HMDT; i, j, k: integer): mreal; cdecl; external libmgl;
-
-//int mgl_data_get_nx(const HMDT dat);
-function mgl_data_get_nx(const dat: HMDT): integer; cdecl; external libmgl;
-
-//int mgl_data_get_ny(const HMDT dat);
-function mgl_data_get_ny(const dat: HMDT): integer; cdecl; external libmgl;
-
-//int mgl_data_get_nz(const HMDT dat);
-function mgl_data_get_nz(const dat: HMDT): integer; cdecl; external libmgl;
-
-//void mgl_data_set_value(HMDT dat, mreal v, int i, int j, int k);
-procedure mgl_data_set_value(dat: HMDT; v: mreal; i, j, k: integer); cdecl; external libmgl;
-
-//void mgl_data_set_values(HMDT dat, const char *val, int nx, int ny, int nz);
-procedure mgl_data_set_values(dat: HMDT; const val: PChar; nx, ny, nz: integer); cdecl; external libmgl;
-
-//int mgl_data_read(HMDT dat, const char *fname);
-function mgl_data_read(dat: HMDT; const fname: PChar): integer; cdecl; external libmgl;
-
-//int mgl_data_read_mat(HMDT dat, const char *fname, int dim);
-function mgl_data_read_mat(dat: HMDT; const fname: PChar; dim: integer): integer; cdecl; external libmgl;
-
-//int mgl_data_read_dim(HMDT dat, const char *fname,int mx,int my,int mz);
-function mgl_data_read_dim(dat: HMDT; const fname: PChar; mx, my, mz: integer): integer; cdecl; external libmgl;
-
-//void mgl_data_save(HMDT dat, const char *fname,int ns);
-procedure mgl_data_save(dat: HMDT; const fname: PChar; ns: integer); cdecl; external libmgl;
-
-//void mgl_data_export(HMDT dat, const char *fname, const char *scheme,mreal v1,mreal v2,int ns);
-procedure mgl_data_export(dat: HMDT; const fname: PChar; const scheme: PChar; v1, v2: mreal; ns: integer); cdecl; external libmgl;
-
-//void mgl_data_import(HMDT dat, const char *fname, const char *scheme,mreal v1,mreal v2);
-procedure mgl_data_import(dat: HMDT; const fname: PChar; const scheme: PChar; v1, v2: mreal); cdecl; external libmgl;
-
-//void mgl_data_create(HMDT dat, int nx,int ny,int nz);
-procedure mgl_data_create(dat: HMDT; nx, ny, nz: integer); cdecl; external libmgl;
-
-//void mgl_data_transpose(HMDT dat, const char *dim);
-procedure mgl_data_transpose(dat: HMDT; const dim: PChar); cdecl; external libmgl;
-
-//void mgl_data_norm(HMDT dat, mreal v1,mreal v2,int sym,int dim);
-procedure mgl_data_norm(dat: HMDT; v1, v2: mreal; sym: integer; dim: integer); cdecl; external libmgl;
-
-//void mgl_data_norm_slice(HMDT dat, mreal v1,mreal v2,char dir,int keep_en,int sym);
-procedure mgl_data_norm_slice(dat: HMDT; v1, v2: mreal; dir: char; keep_en, sym: integer); cdecl; external libmgl;
-
-//HMDT mgl_data_subdata(const HMDT dat, int xx,int yy,int zz);
-function mgl_data_subdata(const dat: HMDT; xx, yy, zz: integer): HMDT; cdecl; external libmgl;
-
-//HMDT mgl_data_subdata_ext(const HMDT dat, const HMDT xx, const HMDT yy, const HMDT zz);
-function mgl_data_subdata_ext(const dat, xx, yy, zz: HMDT): HMDT; cdecl; external libmgl;
-
-//HMDT mgl_data_column(const HMDT dat, const char *eq);
-function mgl_data_column(const dat: HMDT; const eq: PChar): HMDT; cdecl; external libmgl;
-
-//void mgl_data_set_id(HMDT d, const char *id);
-procedure mgl_data_set_id(d: HMDT; const id: PChar); cdecl; external libmgl;
-
-//void mgl_data_fill(HMDT dat, mreal x1,mreal x2,char dir);
-procedure mgl_data_fill(dat: HMDT; x1, x2: mreal; dir: char); cdecl; external libmgl;
-
-//void mgl_data_fill_eq(HMGL gr, HMDT dat, const char *eq, const HMDT vdat, const HMDT wdat);
-procedure mgl_data_fill_eq(graph: HMGL; dat: HMDT; const eq: PChar; vdat, wdat: HMDT); cdecl; external libmgl;
-
-//void mgl_data_put_val(HMDT dat, mreal val, int i, int j, int k);
-procedure mgl_data_put_val(dat: HMDT; val: mreal; i, j, k: integer); cdecl; external libmgl;
-
-//void mgl_data_put_dat(HMDT dat, const HMDT val, int i, int j, int k);
-procedure mgl_data_put_dat(dat: HMDT; const val: HMDT; i, j, k: integer); cdecl; external libmgl;
-
-//void mgl_data_modify(HMDT dat, const char *eq,int dim);
-procedure mgl_data_modify(dat: HMDT; const eq: PChar; dim: integer); cdecl; external libmgl;
-
-//void mgl_data_modify_vw(HMDT dat, const char *eq,const HMDT vdat,const HMDT wdat);
-procedure mgl_data_modify_vw(dat: HMDT; const eq: PChar; const vdat, wdat: HMDT); cdecl; external libmgl;
-
-//void mgl_data_squeeze(HMDT dat, int rx,int ry,int rz,int smooth);
-procedure mgl_data_squeeze(dat: HMDT; rx, ry, rz, smooth: integer); cdecl; external libmgl;
-
-//mreal mgl_data_max(const HMDT dat);
+//-----------------------------------------------------------------------------
+/// Get last warning code
+function mgl_get_warn(gr: HMGL): int; cdecl; external libmgl;
+/// Set warning code ant fill message
+procedure mgl_set_warn(gr: HMGL;code: int;const text: PChar); cdecl; external libmgl;
+/// Set buffer for warning messages
+function gl_get_mess(gr: HMGL): PCHAR; cdecl; external libmgl;
+/// Set name of plot for saving filename
+procedure mgl_set_plotid(gr: HMGL;const id: PChar); cdecl; external libmgl;
+/// Get name of plot for saving filename
+function gl_get_plotid(gr: HMGL): PCHAR; cdecl; external libmgl;
+/// Get plot quality
+function mgl_get_quality(gr: HMGL): int; cdecl; external libmgl;
+/// Set plot quality
+procedure mgl_set_quality(gr: HMGL;qual: int); cdecl; external libmgl;
+/// Set drawing region for Quality&4
+procedure mgl_set_draw_reg(gr: HMGL;nx: int;ny: int;m: int); cdecl; external libmgl;
+/// Is frames
+function mgl_is_frames(gr: HMGL): int; cdecl; external libmgl;
+/// Get bit-value flag of HMGL state (for advanced users only)
+function mgl_get_flag(gr: HMGL;flag: int): int; cdecl; external libmgl;
+/// Set bit-value flag of HMGL state (for advanced users only)
+procedure mgl_set_flag(gr: HMGL;val: int;flag: int); cdecl; external libmgl;
+/// Change counter of HMGL uses (for advanced users only). Non-zero counter prevent automatic object removing.
+function mgl_use_graph(gr: HMGL;inc: int): int; cdecl; external libmgl;
+/// Start group of objects
+procedure mgl_start_group(gr: HMGL;const : PChar); cdecl; external libmgl;
+/// End group of objects
+procedure mgl_end_group(gr: HMGL); cdecl; external libmgl;
+/// Highlight objects with given id
+procedure mgl_highlight(gr: HMGL;id: int); cdecl; external libmgl;
+/// Set default palette
+procedure mgl_set_palette(gr: HMGL;const colors: PChar); cdecl; external libmgl;
+/// Sets RGB values for color with given id
+procedure mgl_set_color(id: char;r: double;g: double;b: double); cdecl; external libmgl;
+/// Set default color scheme
+procedure mgl_set_def_sch(gr: HMGL;const sch: PChar); cdecl; external libmgl;
+/// Set mask for face coloring as array of type 'unsigned char[8]'
+procedure mgl_set_mask(id: char;const mask: PChar); cdecl; external libmgl;
+/// Set mask for face coloring as unsigned long number
+/// Set default mask rotation angle
+procedure mgl_set_mask_angle(gr: HMGL;angle: int); cdecl; external libmgl;
+/// Set default value of alpha-channel
+procedure mgl_set_alpha_default(gr: HMGL;alpha: double); cdecl; external libmgl;
+/// Set relative width of rectangles in Bars, Barh, BoxPlot
+procedure mgl_set_bar_width(gr: HMGL;width: double); cdecl; external libmgl;
+/// Set number of mesh lines (use 0 to draw all of them)
+procedure mgl_set_meshnum(gr: HMGL;num: int); cdecl; external libmgl;
+/// Set number of visible faces (use 0 to draw all of them)
+procedure mgl_set_facenum(gr: HMGL;num: int); cdecl; external libmgl;
+/// Clear unused points and primitives. Useful only in combination with mgl_set_facenum().
+procedure mgl_clear_unused(gr: HMGL); cdecl; external libmgl;
+/// Set ambient light brightness
+procedure mgl_set_ambbr(gr: HMGL;i: double); cdecl; external libmgl;
+/// Set diffusive light brightness
+procedure mgl_set_difbr(gr: HMGL;i: double); cdecl; external libmgl;
+/// Use diffusive light (only for local light sources) -- OBSOLETE
+procedure mgl_set_light_dif(gr: HMGL;enable: int); cdecl; external libmgl;
+/// Set cutting for points outside of bounding box
+procedure mgl_set_cut(gr: HMGL;cut: int); cdecl; external libmgl;
+/// Set additional cutting box
+procedure mgl_set_cut_box(gr: HMGL;x1: double;y1: double;z1: double;x2: double;y2: double;z2: double); cdecl; external libmgl;
+/// Set the cutting off condition (formula)
+procedure mgl_set_cutoff(gr: HMGL;const EqC: PChar); cdecl; external libmgl;
+/// Set values of axis range
+procedure mgl_set_ranges(gr: HMGL;x1: double;x2: double;y1: double;y2: double;z1: double;z2: double); cdecl; external libmgl;
+/// Set range in direction dir as [v1, v2]
+procedure mgl_set_range_val(gr: HMGL;dir: char;v1: double;v2: double); cdecl; external libmgl;
+/// Set range in direction dir as minimal and maximal values of data a
+procedure mgl_set_range_dat(gr: HMGL;dir: char;const a: HMDT;add: int); cdecl; external libmgl;
+/// Set ranges for automatic variables
+procedure mgl_set_auto_ranges(gr: HMGL;x1: double;x2: double;y1: double;y2: double;z1: double;z2: double;c1: double;c2: double); cdecl; external libmgl;
+/// Set axis range scaling -- simplified way to shift/zoom axis range -- need to redraw whole image!
+procedure mgl_zoom_axis(gr: HMGL;x1: double;y1: double;z1: double;c1: double;x2: double;y2: double;z2: double;c2: double); cdecl; external libmgl;
+/// Set axis origin
+procedure mgl_set_origin(gr: HMGL;x0: double;y0: double;z0: double); cdecl; external libmgl;
+/// Set the transformation formulas for coordinate
+procedure mgl_set_func(gr: HMGL;const EqX: PChar;const EqY: PChar;const EqZ: PChar;const EqA: PChar); cdecl; external libmgl;
+/// Set one of predefined transformation rule
+procedure mgl_set_coor(gr: HMGL;how: int); cdecl; external libmgl;
+/// Set to draw Ternary axis (triangle like axis, grid and so on)
+procedure mgl_set_ternary(gr: HMGL;enable: int); cdecl; external libmgl;
+/// Set to use or not tick labels rotation
+procedure mgl_set_tick_rotate(gr: HMGL;enable: int); cdecl; external libmgl;
+/// Set to use or not tick labels skipping
+procedure mgl_set_tick_skip(gr: HMGL;enable: int); cdecl; external libmgl;
+/// Set default font for all new HMGL objects
+procedure mgl_def_font(const name: PChar;const path: PChar); cdecl; external libmgl;
+/// Set default size of marks (locally you can use "size" option)
+procedure mgl_set_mark_size(gr: HMGL;size: double); cdecl; external libmgl;
+/// Set default size of arrows (locally you can use "size" option)
+procedure mgl_set_arrow_size(gr: HMGL;size: double); cdecl; external libmgl;
+/// Set default font size
+procedure mgl_set_font_size(gr: HMGL;size: double); cdecl; external libmgl;
+/// Set default font style and color
+procedure mgl_set_font_def(gr: HMGL;const fnt: PChar); cdecl; external libmgl;
+/// Set to use or not text rotation
+procedure mgl_set_rotated_text(gr: HMGL;enable: int); cdecl; external libmgl;
+/// Load font from file
+procedure mgl_load_font(gr: HMGL;const name: PChar;const path: PChar); cdecl; external libmgl;
+/// Copy font from another mglGraph instance
+procedure mgl_copy_font(gr: HMGL;gr_from: HMGL); cdecl; external libmgl;
+/// Restore font (load default font for new HMGL objects)
+procedure mgl_restore_font(gr: HMGL); cdecl; external libmgl;
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+/// Set seed for random numbers
+procedure mgl_srnd(seed: int); cdecl; external libmgl;
+/// Get random number
+function mgl_rnd): double; cdecl; external libmgl;
+/// Get integer power of x
+function mgl_ipow(x: double;n: int): double; cdecl; external libmgl;
+/// Get number of seconds since 1970 for given string
+function mgl_get_time(const time: PChar;const fmt: PChar): double; cdecl; external libmgl;
+/// Create HMDT object
+function mgl_create_data): HMDT; cdecl; external libmgl;
+/// Create HMDT object with specified sizes
+function mgl_create_data_size(nx: int;ny: int;nz: int): HMDT; cdecl; external libmgl;
+/// Create HMDT object with data from file
+function mgl_create_data_file(const fname: PChar): HMDT; cdecl; external libmgl;
+/// Delete HMDT object
+procedure mgl_delete_data(dat: HMDT); cdecl; external libmgl;
+/// Get information about the data (sizes and momentum) to string
+function gl_data_info(const dat: HMDT): PCHAR; cdecl; external libmgl;
+/// Rearange data dimensions
+procedure mgl_data_rearrange(dat: HMDT;mx: int;my: int;mz: int); cdecl; external libmgl;
+/// Link external data array (don't delete it at exit)
+procedure mgl_data_link(dat: HMDT;A: Pmreal;mx: int;my: int;mz: int); cdecl; external libmgl;
+/// Allocate memory and copy the data from the (float *) array
+procedure mgl_data_set_float(dat: HMDT;const A: Preal;mx: int;my: int;mz: int); cdecl; external libmgl;
+/// Allocate memory and copy the data from the (double *) array
+procedure mgl_data_set_double(dat: HMDT;const A: Pdouble;mx: int;my: int;mz: int); cdecl; external libmgl;
+/// Allocate memory and copy the data from the (float **) array
+/// Allocate memory and copy the data from the (double **) array
+/// Allocate memory and copy the data from the (float ***) array
+/// Allocate memory and copy the data from the (double ***) array
+/// Import data from abstract type
+procedure mgl_data_set(dat: HMDT;const a: HMDT); cdecl; external libmgl;
+/// Allocate memory and copy the data from the gsl_vector
+procedure mgl_data_set_vector(dat: HMDT;v: PGSLVector); cdecl; external libmgl;
+/// Allocate memory and copy the data from the gsl_matrix
+procedure mgl_data_set_matrix(dat: HMDT;m: PGSLMatrix); cdecl; external libmgl;
+/// Set value of data element [i,j,k]
+procedure mgl_data_set_value(dat: HMDT;v: mreal;i: int;j: int;k: int); cdecl; external libmgl;
+/// Get value of data element [i,j,k]
+function mgl_data_get_value(const dat: HMDT;i: int;j: int;k: int): mreal; cdecl; external libmgl;
+/// Allocate memory and scanf the data from the string
+procedure mgl_data_set_values(dat: HMDT;const val: PChar;nx: int;ny: int;nz: int); cdecl; external libmgl;
+/// Read data array from HDF file (parse HDF4 and HDF5 files)
+function mgl_data_read_hdf(d: HMDT;const fname: PChar;const data: PChar): int; cdecl; external libmgl;
+/// Save data to HDF file
+procedure mgl_data_save_hdf(const d: HMDT;const fname: PChar;const data: PChar;rewrite: int); cdecl; external libmgl;
+/// Put HDF data names into buf as '\t' separated.
+function mgl_datas_hdf(const fname: PChar;buf: PChar;size: int): int; cdecl; external libmgl;
+/// Read data from tab-separated text file with auto determining size
+function mgl_data_read(dat: HMDT;const fname: PChar): int; cdecl; external libmgl;
+/// Read data from text file with size specified at beginning of the file
+function mgl_data_read_mat(dat: HMDT;const fname: PChar;dim: int): int; cdecl; external libmgl;
+/// Read data from text file with specifeid size
+function mgl_data_read_dim(dat: HMDT;const fname: PChar;mx: int;my: int;mz: int): int; cdecl; external libmgl;
+/// Read data from tab-separated text files with auto determining size which filenames are result of sprintf(fname,templ,t) where t=from:step:to
+function mgl_data_read_range(d: HMDT;const templ: PChar;from: double;to: double;step: double;as_slice: int): int; cdecl; external libmgl;
+/// Read data from tab-separated text files with auto determining size which filenames are satisfied to template (like "t_*.dat")
+function mgl_data_read_all(dat: HMDT;const templ: PChar;as_slice: int): int; cdecl; external libmgl;
+/// Save whole data array (for ns=-1) or only ns-th slice to text file
+procedure mgl_data_save(const dat: HMDT;const fname: PChar;ns: int); cdecl; external libmgl;
+/// Export data array (for ns=-1) or only ns-th slice to PNG file according color scheme
+procedure mgl_data_export(const dat: HMDT;const fname: PChar;const scheme: PChar;v1: mreal;v2: mreal;ns: int); cdecl; external libmgl;
+/// Import data array from PNG file according color scheme
+procedure mgl_data_import(dat: HMDT;const fname: PChar;const scheme: PChar;v1: mreal;v2: mreal); cdecl; external libmgl;
+/// Create or recreate the array with specified size and fill it by zero
+procedure mgl_data_create(dat: HMDT;nx: int;ny: int;nz: int); cdecl; external libmgl;
+/// Transpose dimensions of the data (generalization of Transpose)
+procedure mgl_data_transpose(dat: HMDT;const dim: PChar); cdecl; external libmgl;
+/// Normalize the data to range [v1,v2]
+procedure mgl_data_norm(dat: HMDT;v1: mreal;v2: mreal;sym: int;dim: int); cdecl; external libmgl;
+/// Normalize the data to range [v1,v2] slice by slice
+procedure mgl_data_norm_slice(dat: HMDT;v1: mreal;v2: mreal;dir: char;keep_en: int;sym: int); cdecl; external libmgl;
+/// Get sub-array of the data with given fixed indexes
+function mgl_data_subdata(const dat: HMDT;xx: int;yy: int;zz: int): HMDT; cdecl; external libmgl;
+/// Get sub-array of the data with given fixed indexes (like indirect access)
+function mgl_data_subdata_ext(const dat: HMDT;const xx: HMDT;const yy: HMDT;const zz: HMDT): HMDT; cdecl; external libmgl;
+/// Get column (or slice) of the data filled by formulas of named columns
+function mgl_data_column(const dat: HMDT;const eq: PChar): HMDT; cdecl; external libmgl;
+/// Set names for columns (slices)
+procedure mgl_data_set_id(d: HMDT;const id: PChar); cdecl; external libmgl;
+/// Equidistantly fill the data to range [x1,x2] in direction dir
+procedure mgl_data_fill(dat: HMDT;x1: mreal;x2: mreal;dir: char); cdecl; external libmgl;
+/// Modify the data by specified formula assuming x,y,z in range [r1,r2]
+procedure mgl_data_fill_eq(gr: HMGL;dat: HMDT;const eq: PChar;const vdat: HMDT;const wdat: HMDT;const opt: PChar); cdecl; external libmgl;
+/// Fill dat by interpolated values of vdat parametrically depended on xdat for x in range [x1,x2]
+procedure mgl_data_refill_x(dat: HMDT;const xdat: HMDT;const vdat: HMDT;x1: mreal;x2: mreal;sl: int); cdecl; external libmgl;
+/// Fill dat by interpolated values of vdat parametrically depended on xdat,ydat for x,y in range [x1,x2]*[y1,y2]
+procedure mgl_data_refill_xy(dat: HMDT;const xdat: HMDT;const ydat: HMDT;const vdat: HMDT;x1: mreal;x2: mreal;y1: mreal;y2: mreal;sl: int); cdecl; external libmgl;
+/// Fill dat by interpolated values of vdat parametrically depended on xdat,ydat,zdat for x,y,z in range [x1,x2]*[y1,y2]*[z1,z2]
+procedure mgl_data_refill_xyz(dat: HMDT;const xdat: HMDT;const ydat: HMDT;const zdat: HMDT;const vdat: HMDT;x1: mreal;x2: mreal;y1: mreal;y2: mreal;z1: mreal;z2: mreal); cdecl; external libmgl;
+/// Fill dat by interpolated values of vdat parametrically depended on xdat,ydat,zdat for x,y,z in axis range
+procedure mgl_data_refill_gr(gr: HMGL;dat: HMDT;const xdat: HMDT;const ydat: HMDT;const zdat: HMDT;const vdat: HMDT;sl: int;const opt: PChar); cdecl; external libmgl;
+/// Set the data by triangulated surface values assuming x,y,z in range [r1,r2]
+procedure mgl_data_grid(gr: HMGL;d: HMDT;const xdat: HMDT;const ydat: HMDT;const zdat: HMDT;const opt: PChar); cdecl; external libmgl;
+/// Set the data by triangulated surface values assuming x,y,z in range [x1,x2]*[y1,y2]
+procedure mgl_data_grid_xy(d: HMDT;const xdat: HMDT;const ydat: HMDT;const zdat: HMDT;x1: mreal;x2: mreal;y1: mreal;y2: mreal); cdecl; external libmgl;
+/// Put value to data element(s)
+procedure mgl_data_put_val(dat: HMDT;val: mreal;i: int;j: int;k: int); cdecl; external libmgl;
+/// Put array to data element(s)
+procedure mgl_data_put_dat(dat: HMDT;const val: HMDT;i: int;j: int;k: int); cdecl; external libmgl;
+/// Modify the data by specified formula
+procedure mgl_data_modify(dat: HMDT;const eq: PChar;dim: int); cdecl; external libmgl;
+/// Modify the data by specified formula
+procedure mgl_data_modify_vw(dat: HMDT;const eq: PChar;const vdat: HMDT;const wdat: HMDT); cdecl; external libmgl;
+/// Reduce size of the data
+procedure mgl_data_squeeze(dat: HMDT;rx: int;ry: int;rz: int;smooth: int); cdecl; external libmgl;
+/// Get maximal value of the data
 function mgl_data_max(const dat: HMDT): mreal; cdecl; external libmgl;
-
-//mreal mgl_data_min(const HMDT dat);
+/// Get minimal value of the data
 function mgl_data_min(const dat: HMDT): mreal; cdecl; external libmgl;
-
-//mreal *mgl_data_value(HMDT dat, int i,int j,int k);
-function mgl_data_value(dat: HMDT; i, j, k: integer): Pmreal; cdecl; external libmgl;
-
-//const mreal *mgl_data_data(const HMDT dat);
-function mgl_data_data(const dat: HMDT): Pmreal; cdecl; external libmgl;
-
-//mreal mgl_data_first(const HMDT dat, const char *cond, int *i, int *j, int *k);
-function mgl_data_first(const dat: HMDT; const cond: PChar; i, j, k: Pinteger): mreal; cdecl; external libmgl;
-
-//mreal mgl_data_last(const HMDT dat, const char *cond, int *i, int *j, int *k);
-function mgl_data_last(const dat: HMDT; const cond: PChar; i, j, k: Pinteger): mreal; cdecl; external libmgl;
-
-//int mgl_data_find(const HMDT dat, const char *cond, char dir, int i, int j, int k);
-function mgl_data_find(const dat: HMDT; const cond: PChar; dir: char; i, j, k: integer): integer; cdecl; external libmgl;
-
-//int mgl_data_find_any(const HMDT dat, const char *cond);
-function mgl_data_find_any(const dat: HMDT; const cond: PChar): integer; cdecl; external libmgl;
-
-//mreal mgl_data_max_int(const HMDT dat, int *i, int *j, int *k);
-function mgl_data_max_int(const dat: HMDT; i, j, k: Pinteger): mreal; cdecl; external libmgl;
-
-//mreal mgl_data_max_real(const HMDT dat, mreal *x, mreal *y, mreal *z);
-function mgl_data_max_real(const dat: HMDT; x, y, z: Pmreal): mreal; cdecl; external libmgl;
-
-//mreal mgl_data_min_int(const HMDT dat, int *i, int *j, int *k);
-function mgl_data_min_int(const dat: HMDT; i, j, k: Pinteger): mreal; cdecl; external libmgl;
-
-//mreal mgl_data_min_real(const HMDT dat, mreal *x, mreal *y, mreal *z);
-function mgl_data_min_real(const dat: HMDT; x, y, z: Pmreal): mreal; cdecl; external libmgl;
-
-//mreal mgl_data_momentum_mw(const HMDT dat, char dir, mreal *m, mreal *w);
-function mgl_data_momentum_mw(const dat: HMDT; dir: char; m, w: Pmreal): mreal; cdecl; external libmgl;
-
-//HMDT mgl_data_combine(const HMDT dat1, const HMDT dat2);
-function mgl_data_combine(const dat1, dat2: HMDT): HMDT; cdecl; external libmgl;
-
-//void mgl_data_extend(HMDT dat, int n1, int n2);
-procedure mgl_data_extend(dat: HMDT; n1, n2: integer); cdecl; external libmgl;
-
-//void mgl_data_insert(HMDT dat, char dir, int at, int num);
-procedure mgl_data_insert(dat: HMDT; dir: char; pos, num: integer); cdecl; external libmgl;
-
-//void mgl_data_delete(HMDT dat, char dir, int at, int num);
-procedure mgl_data_delete(dat: HMDT; dir: char; pos, num: integer); cdecl; external libmgl;
-
-//*****************************************************************************/
-//*             Data manipulation functions                                   */
-//*****************************************************************************/
-
-//void mgl_data_smooth(HMDT dat, int Type,mreal delta,const char *dirs);
-procedure mgl_data_smooth(dat: HMDT; tType: integer; delpa: mreal; const dirs: PChar); cdecl; external libmgl;
-
-//HMDT mgl_data_sum(const HMDT dat, const char *dir);
-function mgl_data_sum(const dat: HMDT; const dir: PChar): HMDT; cdecl; external libmgl;
-
-//HMDT mgl_data_max_dir(const HMDT dat, const char *dir);
-function mgl_data_max_dir(const dat: HMDT; const dir: PChar): HMDT; cdecl; external libmgl;
-
-//HMDT mgl_data_min_dir(const HMDT dat, const char *dir);
-function mgl_data_min_dir(const dat: HMDT; const dir: PChar): HMDT; cdecl; external libmgl;
-
-//void mgl_data_cumsum(HMDT dat, const char *dir);
-procedure mgl_data_cumsum(dat: HMDT; const dir: PChar); cdecl; external libmgl;
-
-//void mgl_data_integral(HMDT dat, const char *dir);
-procedure mgl_data_integral(dat: HMDT; const dir: PChar); cdecl; external libmgl;
-
-//void mgl_data_diff(HMDT dat, const char *dir);
-procedure mgl_data_diff(dat: HMDT; const dir: PChar); cdecl; external libmgl;
-
-//void mgl_data_diff_par(HMDT dat, const HMDT v1, const HMDT v2, const HMDT v3);
-procedure mgl_data_diff_par(dat, v1, v2, v3: HMDT); cdecl; external libmgl;
-
-//void mgl_data_diff2(HMDT dat, const char *dir);
-procedure mgl_data_diff2(dat: HMDT; const dir: PChar); cdecl; external libmgl;
-
-//void mgl_data_swap(HMDT dat, const char *dir);
-procedure mgl_data_swap(dat: HMDT; const dir: PChar); cdecl; external libmgl;
-
-//void mgl_data_roll(HMDT dat, char dir, int num);
-procedure mgl_data_roll(dat: HMDT; dir: char; num: integer); cdecl; external libmgl;
-
-//void mgl_data_mirror(HMDT dat, const char *dir);
-procedure mgl_data_mirror(dat: HMDT; const dir: PChar); cdecl; external libmgl;
-
-//void mgl_data_hankel(HMDT dat, const char *dir);
-procedure mgl_data_hankel(dat: HMDT; const dir: PChar); cdecl; external libmgl;
-
-//void mgl_data_sinfft(HMDT dat, const char *dir);
-procedure mgl_data_sinfft(dat: HMDT; const dir: PChar); cdecl; external libmgl;
-
-//void mgl_data_cosfft(HMDT dat, const char *dir);
-procedure mgl_data_cosfft(dat: HMDT; const dir: PChar); cdecl; external libmgl;
-
-//void mgl_data_fill_sample(HMDT dat, int num, const char *how);
-procedure mgl_data_fill_sample(dat: HMDT; num: integer; const how: PChar); cdecl; external libmgl;
-
-//mreal mgl_data_spline(const HMDT dat, mreal x,mreal y,mreal z);
-function mgl_data_spline(const dat: HMDT; x, y, z: mreal): mreal; cdecl; external libmgl;
-
-//mreal mgl_data_spline1(const HMDT dat, mreal x,mreal y,mreal z);
-function mgl_data_spline1(const dat: HMDT; x, y, z: mreal): mreal; cdecl; external libmgl;
-
-//mreal mgl_data_linear(const HMDT dat, mreal x,mreal y,mreal z);
-function mgl_data_linear(const dat: HMDT; x, y, z: mreal): mreal; cdecl; external libmgl;
-
-//mreal mgl_data_linear1(const HMDT dat, mreal x,mreal y,mreal z);
-function mgl_data_linear1(const dat: HMDT; x, y, z: mreal): mreal; cdecl; external libmgl;
-
-//HMDT mgl_data_resize(const HMDT dat, int mx,int my,int mz);
-function mgl_data_resize(const dat: HMDT; mx, my, mz: integer): HMDT; cdecl; external libmgl;
-
-//HMDT mgl_data_resize_box(const HMDT dat, int mx,int my,int mz,mreal x1,mreal x2,
-//              mreal y1,mreal y2,mreal z1,mreal z2);
-function mgl_data_resize_box(const dat: HMDT; mx, my, mz: integer; x1, x2, y1, y2, z1, z2: mreal): HMDT; cdecl; external libmgl;
-
-//HMDT mgl_data_hist(const HMDT dat, int n, mreal v1, mreal v2, int nsub);
-function mgl_data_hist(const dat: HMDT; n: integer; v1, v2: mreal; nsub: integer): HMDT; cdecl; external libmgl;
-
-//HMDT mgl_data_hist_w(const HMDT dat, const HMDT weight, int n, mreal v1, mreal v2, int nsub);
-function mgl_data_hist_w(const dat, weight: HMDT; n: integer; v1, v2: mreal; nsub: integer): HMDT; cdecl; external libmgl;
-
-//HMDT mgl_data_momentum(const HMDT dat, char dir, const char *how);
-function mgl_data_momentum(dat: HMDT; dir: char; const how: PChar): HMDT; cdecl; external libmgl;
-
-//HMDT mgl_data_evaluate_i(const HMDT dat, const HMDT idat, int norm);
-function mgl_data_evaluate_i(dat, idat: HMDT; norm: char): HMDT; cdecl; external libmgl;
-
-//HMDT mgl_data_evaluate_ij(const HMDT dat, const HMDT idat, const HMDT jdat, int norm);
-function mgl_data_evaluate_ij(dat, idat, jdat: HMDT; norm: char): HMDT; cdecl; external libmgl;
-
-//HMDT mgl_data_evaluate_ijk(const HMDT dat, const HMDT idat, const HMDT jdat, const HMDT kdat, int norm);
-function mgl_data_evaluate_ijk(dat, idat, jdat, kdat: HMDT; norm: char): HMDT; cdecl; external libmgl;
-
-//void mgl_data_envelop(HMDT dat, char dir);
-procedure mgl_data_envelop(dat: HMDT; dir: char); cdecl; external libmgl;
-
-//void mgl_data_sew(HMDT dat, const char *dirs, mreal da);
-procedure mgl_data_sew(dat: HMDT; dirs: PChar; da: mreal); cdecl; external libmgl;
-
-//void mgl_data_crop(HMDT dat, int n1, int n2, char dir);
-procedure mgl_data_crop(dat: HMDT; n1, n2: integer; dir: char); cdecl; external libmgl;
-
-//*****************************************************************************/
-//*             Data operations                                               */
-//*****************************************************************************/
-
-//void mgl_data_mul_dat(HMDT dat, const HMDT d);
-procedure mgl_data_mul_dat(dat: HMDT; const d: HMDT); cdecl; external libmgl;
-
-//void mgl_data_div_dat(HMDT dat, const HMDT d);
-procedure mgl_data_div_dat(dat: HMDT; const d: HMDT); cdecl; external libmgl;
-
-//void mgl_data_add_dat(HMDT dat, const HMDT d);
-procedure mgl_data_add_dat(dat: HMDT; const d: HMDT); cdecl; external libmgl;
-
-//void mgl_data_sub_dat(HMDT dat, const HMDT d);
-procedure mgl_data_sub_dat(dat: HMDT; const d: HMDT); cdecl; external libmgl;
-
-//void mgl_data_mul_num(HMDT dat, mreal d);
-procedure mgl_data_mul_num(dat: HMDT; d: mreal); cdecl; external libmgl;
-
-//void mgl_data_div_num(HMDT dat, mreal d);
-procedure mgl_data_div_num(dat: HMDT; d: mreal); cdecl; external libmgl;
-
-//void mgl_data_add_num(HMDT dat, mreal d);
-procedure mgl_data_add_num(dat: HMDT; d: mreal); cdecl; external libmgl;
-
-//void mgl_data_sub_num(HMDT dat, mreal d);
-procedure mgl_data_sub_num(dat: HMDT; d: mreal); cdecl; external libmgl;
-
-//*****************************************************************************/
-//*             Nonlinear fitting                                             */
-//*****************************************************************************/
-
-//void mgl_hist_x(HMGL gr, HMDT res, const HMDT x, const HMDT a);
-procedure mgl_hist_x(gr: HMGL; res: HMDT; const x, a: HMDT); cdecl; external libmgl;
-
-//void mgl_hist_xy(HMGL gr, HMDT res, const HMDT x, const HMDT y, const HMDT a);
-procedure mgl_hist_xy(gr: HMGL; res: HMDT; const x, y, a: HMDT); cdecl; external libmgl;
-
-//void mgl_hist_xyz(HMGL gr, HMDT res, const HMDT x, const HMDT y, const HMDT z, const HMDT a);
-procedure mgl_hist_xyz(gr: HMGL; res: HMDT; const x, y, z, a: HMDT); cdecl; external libmgl;
-
-//mreal mgl_fit_1(HMGL gr, HMDT fit, const HMDT y, const char *eq, const char *var, mreal *ini);
-function mgl_fit_1(gr: HMGL; fit: HMDT; const y: HMDT; const eq: PChar; const vvar: PChar; ini: Pmreal): mreal; cdecl; external libmgl;
-
-//mreal mgl_fit_2(HMGL gr, HMDT fit, const HMDT z, const char *eq, const char *var, mreal *ini);
-function mgl_fit_2(gr: HMGL; fit: HMDT; const z: HMDT; const eq: PChar; const vvar: PChar; ini: Pmreal): mreal; cdecl; external libmgl;
-
-//mreal mgl_fit_3(HMGL gr, HMDT fit, const HMDT a, const char *eq, const char *var, mreal *ini);
-function mgl_fit_3(gr: HMGL; fit: HMDT; const a: HMDT; const eq: PChar; const vvar: PChar; ini: Pmreal): mreal; cdecl; external libmgl;
-
-//mreal mgl_fit_xy(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const char *eq, const char *var, mreal *ini);
-function mgl_fit_xy(gr: HMGL; fit: HMDT; const x, y: HMDT; const eq: PChar; const vvar: PChar; ini: Pmreal): mreal; cdecl; external libmgl;
-
-//mreal mgl_fit_xyz(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z, const char *eq, const char *var, mreal *ini);
-function mgl_fit_xyz(gr: HMGL; fit: HMDT; const x, y, z: HMDT; const eq: PChar; const vvar: PChar; ini: Pmreal): mreal; cdecl; external libmgl;
-
-//mreal mgl_fit_xyza(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const char *eq, const char *var, mreal *ini);
-function mgl_fit_xyza(gr: HMGL; fit: HMDT; const x, y, z, a: HMDT; const eq: PChar; const vvar: PChar; ini: Pmreal): mreal; cdecl; external libmgl;
-
-//mreal mgl_fit_ys(HMGL gr, HMDT fit, const HMDT y, const HMDT s, const char *eq, const char *var, mreal *ini);
-function mgl_fit_ys(gr: HMGL; fit: HMDT; const y, s: HMDT; const eq: PChar; const vvar: PChar; ini: Pmreal): mreal; cdecl; external libmgl;
-
-//mreal mgl_fit_xys(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT s, const char *eq, const char *var, mreal *ini);
-function mgl_fit_xys(gr: HMGL; fit: HMDT; const x, y, s: HMDT; const eq: PChar; const vvar: PChar; ini: Pmreal): mreal; cdecl; external libmgl;
-
-//mreal mgl_fit_xyzs(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z, const HMDT s, const char *eq, const char *var, mreal *ini);
-function mgl_fit_xyzs(gr: HMGL; fit: HMDT; const x, y, z, s: HMDT; const eq: PChar; const vvar: PChar; ini: Pmreal): mreal; cdecl; external libmgl;
-
-//mreal mgl_fit_xyzas(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const HMDT s, const char *eq, const char *var, mreal *ini);
-function mgl_fit_xyzas(gr: HMGL; fit: HMDT; const x, y, z, a, s: HMDT; const eq: PChar; const vvar: PChar; ini: Pmreal): mreal; cdecl; external libmgl;
-
-//mreal mgl_fit_1_d(HMGL gr, HMDT fit, const HMDT y, const char *eq, const char *var, HMDT ini);
-function mgl_fit_1_d(gr: HMGL; fit: HMDT; const y: HMDT; const eq: PChar; const vvar: PChar; ini: Pmreal): mreal; cdecl; external libmgl;
-
-//mreal mgl_fit_2_d(HMGL gr, HMDT fit, const HMDT z, const char *eq, const char *var, HMDT ini);
-function mgl_fit_2_d(gr: HMGL; fit: HMDT; const z: HMDT; const eq: PChar; const vvar: PChar; ini: Pmreal): mreal; cdecl; external libmgl;
-
-//mreal mgl_fit_3_d(HMGL gr, HMDT fit, const HMDT a, const char *eq, const char *var, HMDT ini);
-function mgl_fit_3_d(gr: HMGL; fit: HMDT; const a: HMDT; const eq: PChar; const vvar: PChar; ini: Pmreal): mreal; cdecl; external libmgl;
-
-//mreal mgl_fit_xy_d(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const char *eq, const char *var, HMDT ini);
-function mgl_fit_xy_d(gr: HMGL; fit: HMDT; const x, y: HMDT; const eq: PChar; const vvar: PChar; ini: Pmreal): mreal; cdecl; external libmgl;
-
-//mreal mgl_fit_xyz_d(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z, const char *eq, const char *var, HMDT ini);
-function mgl_fit_xyz_d(gr: HMGL; fit: HMDT; const x, y, z: HMDT; const eq: PChar; const vvar: PChar; ini: Pmreal): mreal; cdecl; external libmgl;
-
-//mreal mgl_fit_xyza_d(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const char *eq, const char *var, HMDT ini);
-function mgl_fit_xyza_d(gr: HMGL; fit: HMDT; const x, y, z, a: HMDT; const eq: PChar; const vvar: PChar; ini: Pmreal): mreal; cdecl; external libmgl;
-
-//mreal mgl_fit_ys_d(HMGL gr, HMDT fit, const HMDT y, const HMDT s, const char *eq, const char *var, HMDT ini);
-function mgl_fit_ys_d(gr: HMGL; fit: HMDT; const y, s: HMDT; const eq: PChar; const vvar: PChar; ini: Pmreal): mreal; cdecl; external libmgl;
-
-//mreal mgl_fit_xys_d(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT s, const char *eq, const char *var, HMDT ini);
-function mgl_fit_xys_d(gr: HMGL; fit: HMDT; const x, y, s: HMDT; const eq: PChar; const vvar: PChar; ini: Pmreal): mreal; cdecl; external libmgl;
-
-//mreal mgl_fit_xyzs_d(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z, const HMDT s, const char *eq, const char *var, HMDT ini);
-function mgl_fit_xyzs_d(gr: HMGL; fit: HMDT; const x, y, z, s: HMDT; const eq: PChar; const vvar: PChar; ini: Pmreal): mreal; cdecl; external libmgl;
-
-//mreal mgl_fit_xyzas_d(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const HMDT s, const char *eq, const char *var, HMDT ini);
-function mgl_fit_xyzas_d(gr: HMGL; fit: HMDT; const x, y, z, a, s: HMDT; const eq: PChar; const vvar: PChar; ini: Pmreal): mreal; cdecl; external libmgl;
-
-//void mgl_puts_fit(HMGL gr, mreal x, mreal y, mreal z, const char *prefix, const char *font, mreal size);
-procedure mgl_puts_fit(gr: HMGL; x, y, z: mreal; const prefix: PChar; const font: PChar; size: mreal); cdecl; external libmgl;
-
-//const char *mgl_get_fit(HMGL gr);
-function mgl_get_fit(gr: HMGL): PChar; cdecl; external libmgl;
-
-//*****************************************************************************/
-
-//void mgl_sphere(HMGL graph, mreal x, mreal y, mreal z, mreal r, const char *stl);
-procedure mgl_sphere(gr: HMGL; x, y, z, r: mreal; const stl: PChar); cdecl; external libmgl;
-
-//void mgl_drop(HMGL graph, mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mreal z2, mreal r, const char *stl, mreal shift, mreal ap);
-procedure mgl_drop(gr: HMGL; x1, y1, z1, x2, y2, z2, r: mreal; const stl: PChar; shift, ap: mreal); cdecl; external libmgl;
-
-//void mgl_cone(HMGL graph, mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mreal z2, mreal r1, mreal r2, const char *stl, int edge);
-procedure mgl_cone(gr: HMGL; x1, y1, z1, x2, y2, z2, r1, r2: mreal; const stl: PChar; edge: integer); cdecl; external libmgl;
-
-//HMDT mgl_pde_solve(HMGL gr, const char *ham, const HMDT ini_re, const HMDT ini_im, mreal dz, mreal k0);
-function mgl_pde_solve(gr: HMGL; const ham: PChar; ini_re, ini_im: HMDT; dz, k0: mreal): HMDT; cdecl; external libmgl;
-
-//HMDT mgl_qo2d_solve(const char *ham, const HMDT ini_re, const HMDT ini_im, const HMDT ray, mreal r, mreal k0, HMDT xx, HMDT yy);
-function mgl_qo2d_solve(const ham: PChar; ini_re, ini_im, ray: HMDT; r, k0: mreal; xx, yy: HMDT): HMDT; cdecl; external libmgl;
-
-//HMDT mgl_af2d_solve(const char *ham, const HMDT ini_re, const HMDT ini_im, const HMDT ray, mreal r, mreal k0, HMDT xx, HMDT yy);
-function mgl_af2d_solve(const ham: PChar; ini_re, ini_im, ray: HMDT; r, k0: mreal; xx, yy: HMDT): HMDT; cdecl; external libmgl;
-
-//HMDT mgl_ray_trace(const char *ham, mreal x0, mreal y0, mreal z0, mreal px, mreal py, mreal pz, mreal dt, mreal tmax);
-function mgl_ray_trace(const ham: PChar; x0, y0, z0, px, py, pz, dt, tmax: mreal): HMDT; cdecl; external libmgl;
-
-//HMDT mgl_jacobian_2d(const HMDT x, const HMDT y);
-function mgl_jacobian_2d(x, y: HMDT): HMDT; cdecl; external libmgl;
-
-//HMDT mgl_jacobian_3d(const HMDT x, const HMDT y, const HMDT z);
-function mgl_jacobian_3d(x, y, z: HMDT): HMDT; cdecl; external libmgl;
-
-//HMDT mgl_transform_a(const HMDT am, const HMDT ph, const char *tr);
-function mgl_transform_a(am, ph: HMDT; tr: PChar): HMDT; cdecl; external libmgl;
-
-//HMDT mgl_transform(const HMDT re, const HMDT im, const char *tr);
-function mgl_transform(re, im: HMDT; tr: PChar): HMDT; cdecl; external libmgl;
-
-//HMDT mgl_data_stfa(const HMDT re, const HMDT im, int dn, char dir);
-function mgl_data_stfa(re, im: HMDT; dn: integer; dir: char): HMDT; cdecl; external libmgl;
-
-//*****************************************************************************/
-
-
-{$IFDEF MSWINDOWS}
-
-//*****************************************************************************/
-// Delphi - specific
-//*****************************************************************************/
-
-procedure mgl_begin();
-procedure mgl_end();
-
-procedure mgl_draw_on_canvas(gr: HMGL; width, height: integer; canvas: TCanvas; switchXY: boolean = false);
-
-implementation
-
-var _FPUCW: word;
-
-procedure mgl_begin();
- begin
-  _FPUCW := Get8087CW();     // backup current FPU CW
-  Set8087CW(_FPUCW or $3F); // masking all FPU exceptions
- end;
-
-procedure mgl_end();
- begin
-  Set8087CW(_FPUCW);         // restore old FPU CW
- end;
-
-procedure mgl_draw_on_canvas(gr: HMGL; width, height: integer; canvas: TCanvas; switchXY: boolean = false);
-  var i, j: integer;
-      bytes: PByte;
-      col: TColor;
- begin
-  bytes := mgl_get_rgb(gr);
-
-  if (not switchXY) then
-   for j := 0 to height - 1 do
-    for i := 0 to width - 1 do
-     begin
-      col := 0;
-      col := col or (bytes^);
-      inc(bytes);
-      col := col or (bytes^) shl 8;
-      inc(bytes);
-       col := col or (bytes^) shl 16;
-      inc(bytes);
-      canvas.Pixels[i, j] := col;
-    end
-  else
-   for j := height - 1 downto 0 do
-    for i := 0 to width - 1 do
-     begin
-      col := 0;
-      col := col or (bytes^);
-      inc(bytes);
-      col := col or (bytes^) shl 8;
-      inc(bytes);
-       col := col or (bytes^) shl 16;
-      inc(bytes);
-      canvas.Pixels[j, i] := col;
-     end;
- end;
-
-{$ELSE}
-
-implementation
-
-{$ENDIF}
-
-procedure mgl_set_ranges(graph: HMGL; x1, x2, y1, y2, z1, z2: mreal);
-begin
-  mgl_set_axis_3d(graph, x1, y1, z1, x2, y2, z2);
-end;
-
-end.
-
+/// Returns pointer to data element [i,j,k]
+function gl_data_value(dat: HMDT;i: int;j: int;k: int): Pmreal; cdecl; external libmgl;
+/// Returns pointer to internal data array
+function gl_data_data(dat: HMDT): Pmreal; cdecl; external libmgl;
+/// Gets the x-size of the data.
+function mgl_data_get_nx(const d: HMDT): int; cdecl; external libmgl;
+/// Gets the y-size of the data.
+function mgl_data_get_ny(const d: HMDT): int; cdecl; external libmgl;
+/// Gets the z-size of the data.
+function mgl_data_get_nz(const d: HMDT): int; cdecl; external libmgl;
+/// Find position (after specified in i,j,k) of first nonzero value of formula
+function mgl_data_first(const dat: HMDT;const cond: PChar;i: Pint;j: Pint;k: Pint): mreal; cdecl; external libmgl;
+/// Find position (before specified in i,j,k) of last nonzero value of formula
+function mgl_data_last(const dat: HMDT;const cond: PChar;i: Pint;j: Pint;k: Pint): mreal; cdecl; external libmgl;
+/// Find position of first in direction 'dir' nonzero value of formula
+function mgl_data_find(const dat: HMDT;const cond: PChar;dir: char;i: int;j: int;k: int): int; cdecl; external libmgl;
+/// Find if any nonzero value of formula
+function mgl_data_find_any(const dat: HMDT;const cond: PChar): int; cdecl; external libmgl;
+/// Get maximal value of the data and its position
+function mgl_data_max_int(const dat: HMDT;i: Pint;j: Pint;k: Pint): mreal; cdecl; external libmgl;
+/// Get maximal value of the data and its approximated position
+function mgl_data_max_real(const dat: HMDT;x: Pmreal;y: Pmreal;z: Pmreal): mreal; cdecl; external libmgl;
+/// Get minimal value of the data and its position
+function mgl_data_min_int(const dat: HMDT;i: Pint;j: Pint;k: Pint): mreal; cdecl; external libmgl;
+/// Get minimal value of the data and its approximated position
+function mgl_data_min_real(const dat: HMDT;x: Pmreal;y: Pmreal;z: Pmreal): mreal; cdecl; external libmgl;
+/// Get "energy and find 4 momenta of data: median, width, skewness, kurtosis
+function mgl_data_momentum_val(const d: HMDT;dir: char;m: Pmreal;w: Pmreal;s: Pmreal;k: Pmreal): mreal; cdecl; external libmgl;
+/// Get the data which is direct multiplication (like, d[i,j] = this[i]*a[j] and so on)
+function mgl_data_combine(const dat1: HMDT;const dat2: HMDT): HMDT; cdecl; external libmgl;
+/// Extend data dimensions
+procedure mgl_data_extend(dat: HMDT;n1: int;n2: int); cdecl; external libmgl;
+/// Insert data rows/columns/slices
+procedure mgl_data_insert(dat: HMDT;dir: char;at: int;num: int); cdecl; external libmgl;
+/// Delete data rows/columns/slices
+procedure mgl_data_delete(dat: HMDT;dir: char;at: int;num: int); cdecl; external libmgl;
+/// Joind another data array
+procedure mgl_data_join(dat: HMDT;const d: HMDT); cdecl; external libmgl;
+/// Smooth the data on specified direction or directions
+procedure mgl_data_smooth(d: HMDT;const dirs: PChar;delta: mreal); cdecl; external libmgl;
+/// Get array which is result of summation in given direction or directions
+function mgl_data_sum(const dat: HMDT;const dir: PChar): HMDT; cdecl; external libmgl;
+/// Get array which is result of maximal values in given direction or directions
+function mgl_data_max_dir(const dat: HMDT;const dir: PChar): HMDT; cdecl; external libmgl;
+/// Get array which is result of minimal values in given direction or directions
+function mgl_data_min_dir(const dat: HMDT;const dir: PChar): HMDT; cdecl; external libmgl;
+/// Cumulative summation the data in given direction or directions
+procedure mgl_data_cumsum(dat: HMDT;const dir: PChar); cdecl; external libmgl;
+/// Integrate (cumulative summation) the data in given direction or directions
+procedure mgl_data_integral(dat: HMDT;const dir: PChar); cdecl; external libmgl;
+/// Differentiate the data in given direction or directions
+procedure mgl_data_diff(dat: HMDT;const dir: PChar); cdecl; external libmgl;
+/// Differentiate the parametrically specified data along direction v1 with v2,v3=const (v3 can be NULL)
+procedure mgl_data_diff_par(dat: HMDT;const v1: HMDT;const v2: HMDT;const v3: HMDT); cdecl; external libmgl;
+/// Double-differentiate (like Laplace operator) the data in given direction
+procedure mgl_data_diff2(dat: HMDT;const dir: PChar); cdecl; external libmgl;
+/// Swap left and right part of the data in given direction (useful for Fourier spectrum)
+procedure mgl_data_swap(dat: HMDT;const dir: PChar); cdecl; external libmgl;
+/// Roll data along direction dir by num slices
+procedure mgl_data_roll(dat: HMDT;dir: char;num: int); cdecl; external libmgl;
+/// Mirror the data in given direction (useful for Fourier spectrum)
+procedure mgl_data_mirror(dat: HMDT;const dir: PChar); cdecl; external libmgl;
+/// Sort rows (or slices) by values of specified column
+procedure mgl_data_sort(dat: HMDT;idx: int;idy: int); cdecl; external libmgl;
+/// Apply Hankel transform
+procedure mgl_data_hankel(dat: HMDT;const dir: PChar); cdecl; external libmgl;
+/// Apply Sin-Fourier transform
+procedure mgl_data_sinfft(dat: HMDT;const dir: PChar); cdecl; external libmgl;
+/// Apply Cos-Fourier transform
+procedure mgl_data_cosfft(dat: HMDT;const dir: PChar); cdecl; external libmgl;
+/// Fill data by 'x'/'k' samples for Hankel ('h') or Fourier ('f') transform
+procedure mgl_data_fill_sample(dat: HMDT;const how: PChar); cdecl; external libmgl;
+/// Find correlation between 2 data arrays
+function mgl_data_correl(const dat1: HMDT;const dat2: HMDT;const dir: PChar): HMDT; cdecl; external libmgl;
+/// Allocate and prepare data for Fourier transform by nthr threads
+/// Free data for Fourier transform
+/// Make Fourier transform of data x of size n and step s between points
+/// Clear internal data for speeding up FFT and Hankel transforms
+procedure mgl_clear_fft); cdecl; external libmgl;
+/// Interpolate by cubic spline the data to given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
+function mgl_data_spline(const dat: HMDT;x: mreal;y: mreal;z: mreal): mreal; cdecl; external libmgl;
+/// Interpolate by linear function the data to given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
+function mgl_data_linear(const dat: HMDT;x: mreal;y: mreal;z: mreal): mreal; cdecl; external libmgl;
+/// Interpolate by cubic spline the data and return its derivatives at given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
+function mgl_data_spline_ext(const dat: HMDT;x: mreal;y: mreal;z: mreal;dx: Pmreal;dy: Pmreal;dz: Pmreal): mreal; cdecl; external libmgl;
+/// Interpolate by linear function the data and return its derivatives at given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
+function mgl_data_linear_ext(const dat: HMDT;x: mreal;y: mreal;z: mreal;dx: Pmreal;dy: Pmreal;dz: Pmreal): mreal; cdecl; external libmgl;
+/// Return an approximated x-value (root) when dat(x) = val
+function mgl_data_solve_1d(const dat: HMDT;val: mreal;spl: int;i0: int): mreal; cdecl; external libmgl;
+/// Return an approximated value (root) when dat(x) = val
+function mgl_data_solve(const dat: HMDT;val: mreal;dir: char;const i0: HMDT;norm: int): HMDT; cdecl; external libmgl;
+/// Get trace of the data array
+function mgl_data_trace(const d: HMDT): HMDT; cdecl; external libmgl;
+/// Resize the data to new sizes
+function mgl_data_resize(const dat: HMDT;mx: int;my: int;mz: int): HMDT; cdecl; external libmgl;
+/// Resize the data to new sizes of box [x1,x2]*[y1,y2]*[z1,z2]
+function mgl_data_resize_box(const dat: HMDT;mx: int;my: int;mz: int;x1: mreal;x2: mreal;y1: mreal;y2: mreal;z1: mreal;z2: mreal): HMDT; cdecl; external libmgl;
+/// Create n-th points distribution of this data values in range [v1, v2]
+function mgl_data_hist(const dat: HMDT;n: int;v1: mreal;v2: mreal;nsub: int): HMDT; cdecl; external libmgl;
+/// Create n-th points distribution of this data values in range [v1, v2] with weight w
+function mgl_data_hist_w(const dat: HMDT;const weight: HMDT;n: int;v1: mreal;v2: mreal;nsub: int): HMDT; cdecl; external libmgl;
+/// Get momentum (1D-array) of data along direction 'dir'. String looks like "x1" for median in x-direction, "x2" for width in x-dir and so on.
+function mgl_data_momentum(const dat: HMDT;dir: char;const how: PChar): HMDT; cdecl; external libmgl;
+/// Get array which values is result of interpolation this for coordinates from other arrays
+function mgl_data_evaluate(const dat: HMDT;const idat: HMDT;const jdat: HMDT;const kdat: HMDT;norm: int): HMDT; cdecl; external libmgl;
+/// Set as the data envelop
+procedure mgl_data_envelop(dat: HMDT;dir: char); cdecl; external libmgl;
+/// Remove phase jump
+procedure mgl_data_sew(dat: HMDT;const dirs: PChar;da: mreal); cdecl; external libmgl;
+/// Crop the data
+procedure mgl_data_crop(dat: HMDT;n1: int;n2: int;dir: char); cdecl; external libmgl;
+/// Remove rows with duplicate values in column id
+procedure mgl_data_clean(dat: HMDT;id: int); cdecl; external libmgl;
+/// Multiply the data by other one for each element
+procedure mgl_data_mul_dat(dat: HMDT;const d: HMDT); cdecl; external libmgl;
+/// Divide the data by other one for each element
+procedure mgl_data_div_dat(dat: HMDT;const d: HMDT); cdecl; external libmgl;
+/// Add the other data
+procedure mgl_data_add_dat(dat: HMDT;const d: HMDT); cdecl; external libmgl;
+/// Subtract the other data
+procedure mgl_data_sub_dat(dat: HMDT;const d: HMDT); cdecl; external libmgl;
+/// Multiply each element by the number
+procedure mgl_data_mul_num(dat: HMDT;d: mreal); cdecl; external libmgl;
+/// Divide each element by the number
+procedure mgl_data_div_num(dat: HMDT;d: mreal); cdecl; external libmgl;
+/// Add the number
+procedure mgl_data_add_num(dat: HMDT;d: mreal); cdecl; external libmgl;
+/// Subtract the number
+procedure mgl_data_sub_num(dat: HMDT;d: mreal); cdecl; external libmgl;
+/// Integral data transformation (like Fourier 'f' or 'i', Hankel 'h' or None 'n') for amplitude and phase
+function mgl_transform_a(const am: HMDT;const ph: HMDT;const tr: PChar): HMDT; cdecl; external libmgl;
+/// Integral data transformation (like Fourier 'f' or 'i', Hankel 'h' or None 'n') for real and imaginary parts
+function mgl_transform(const re: HMDT;const im: HMDT;const tr: PChar): HMDT; cdecl; external libmgl;
+/// Apply Fourier transform for the data and save result into it
+procedure mgl_data_fourier(re: HMDT;im: HMDT;const dir: PChar); cdecl; external libmgl;
+/// Short time Fourier analysis for real and imaginary parts. Output is amplitude of partial Fourier (result will have size {dn, floor(nx/dn), ny} for dir='x'
+function mgl_data_stfa(const re: HMDT;const im: HMDT;dn: int;dir: char): HMDT; cdecl; external libmgl;
+/// Do something like Delone triangulation for 3d points
+function mgl_triangulation_3d(const x: HMDT;const y: HMDT;const z: HMDT): HMDT; cdecl; external libmgl;
+/// Do Delone triangulation for 2d points
+function mgl_triangulation_2d(const x: HMDT;const y: HMDT): HMDT; cdecl; external libmgl;
+/// Find root for nonlinear equation
+/// Find root for nonlinear equation defined by textual formula
+function mgl_find_root_txt(const func: PChar;ini: mreal;var: char): mreal; cdecl; external libmgl;
+/// Find roots for nonlinear equation defined by textual formula
+function mgl_data_roots(const func: PChar;const ini: HMDT;var: char): HMDT; cdecl; external libmgl;
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+/// Create HMDT object
+/// Create HMDT object with specified sizes
+/// Create HMDT object with data from file
+/// Delete HMDT object
+/// Rearange data dimensions
+/// Link external data array (don't delete it at exit)
+/// Allocate memory and copy the data from the (float *) array
+/// Allocate memory and copy the data from the (double *) array
+/// Import data from abstract type
+/// Allocate memory and copy the data from the gsl_vector
+/// Allocate memory and copy the data from the gsl_matrix
+/// Set value of data element [i,j,k]
+/// Get value of data element [i,j,k]
+/// Allocate memory and scanf the data from the string
+/// Returns pointer to internal data array
+/// Returns pointer to data element [i,j,k]
+/// Set the data from HCDT objects for real and imaginary parts
+/// Set the data from HCDT objects as amplitude and phase of complex data
+/// Read data from tab-separated text file with auto determining size
+/// Read data from text file with size specified at beginning of the file
+/// Read data from text file with specifeid size
+/// Read data from tab-separated text files with auto determining size which filenames are result of sprintf(fname,templ,t) where t=from:step:to
+/// Read data from tab-separated text files with auto determining size which filenames are satisfied to template (like "t_*.dat")
+/// Save whole data array (for ns=-1) or only ns-th slice to text file
+procedure mgl_datac_save(const dat: HMDT;const fname: PChar;ns: int); cdecl; external libmgl;
+/// Read data array from HDF file (parse HDF4 and HDF5 files)
+/// Save data to HDF file
+procedure mgl_datac_save_hdf(const d: HMDT;const fname: PChar;const data: PChar;rewrite: int); cdecl; external libmgl;
+/// Create or recreate the array with specified size and fill it by zero
+/// Transpose dimensions of the data (generalization of Transpose)
+/// Set names for columns (slices)
+/// Equidistantly fill the data to range [x1,x2] in direction dir
+/// Modify the data by specified formula assuming x,y,z in range [r1,r2]
+/// Modify the data by specified formula
+/// Modify the data by specified formula
+/// Put value to data element(s)
+/// Put array to data element(s)
+/// Reduce size of the data
+/// Extend data dimensions
+/// Insert data rows/columns/slices
+/// Delete data rows/columns/slices
+/// Joind another data array
+/// Smooth the data on specified direction or directions
+/// Cumulative summation the data in given direction or directions
+/// Integrate (cumulative summation) the data in given direction or directions
+/// Differentiate the data in given direction or directions
+/// Double-differentiate (like Laplace operator) the data in given direction
+/// Swap left and right part of the data in given direction (useful for Fourier spectrum)
+/// Roll data along direction dir by num slices
+/// Mirror the data in given direction (useful for Fourier spectrum)
+/// Crop the data
+/// Apply Hankel transform
+/// Apply Fourier transform
+/// Find correlation between 2 data arrays
+function mgl_datac_real(const dat: HMDT): HMDT; cdecl; external libmgl;
+function mgl_datac_imag(const dat: HMDT): HMDT; cdecl; external libmgl;
+function mgl_datac_abs(const dat: HMDT): HMDT; cdecl; external libmgl;
+function mgl_datac_arg(const dat: HMDT): HMDT; cdecl; external libmgl;
+/// Interpolate by linear function the data to given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
+/// Interpolate by linear function the data and return its derivatives at given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
+/// Interpolate by cubic spline the data to given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
+/// Interpolate by cubic spline the data and return its derivatives at given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+/// Print text along the curve in parametric form {x,y,z}
+procedure mgl_text_xyz(gr: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const text: PChar;const font: PChar;const opt: PChar); cdecl; external libmgl;
+procedure mgl_textw_xyz(gr: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const text: PWideChar;const font: PChar;const opt: PChar); cdecl; external libmgl;
+/// Print text along the curve in parametric form {x,y}
+procedure mgl_text_xy(gr: HMGL;const x: HMDT;const y: HMDT;const text: PChar;const font: PChar;const opt: PChar); cdecl; external libmgl;
+procedure mgl_textw_xy(gr: HMGL;const x: HMDT;const y: HMDT;const text: PWideChar;const font: PChar;const opt: PChar); cdecl; external libmgl;
+/// Print text along the curve
+procedure mgl_text_y(gr: HMGL;const y: HMDT;const text: PChar;const font: PChar;const opt: PChar); cdecl; external libmgl;
+procedure mgl_textw_y(gr: HMGL;const y: HMDT;const text: PWideChar;const font: PChar;const opt: PChar); cdecl; external libmgl;
+procedure mgl_cont_gen(gr: HMGL;val: double;const a: HMDT;const x: HMDT;const y: HMDT;const z: HMDT;const stl: PChar); cdecl; external libmgl;
+procedure mgl_contf_gen(gr: HMGL;v1: double;v2: double;const a: HMDT;const x: HMDT;const y: HMDT;const z: HMDT;const stl: PChar); cdecl; external libmgl;
+//void MGL_EXPORT mgl_contv_gen(HMGL gr, double v1, double v2, HCDT a, HCDT x, HCDT y, HCDT z, const char *stl)
+//void MGL_EXPORT mgl_axial_gen(HMGL gr, double v1, double v2, HCDT a, HCDT x, HCDT y, HCDT z, const char *stl)
+/// Draw manual contour lines for 2d data specified parametrically
+procedure mgl_cont_xy_val(gr: HMGL;const v: HMDT;const x: HMDT;const y: HMDT;const z: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw manual contour lines for 2d data
+procedure mgl_cont_val(gr: HMGL;const v: HMDT;const z: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw contour lines for 2d data specified parametrically
+procedure mgl_cont_xy(gr: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw contour lines for 2d data
+procedure mgl_cont(gr: HMGL;const z: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw manual solid contours for 2d data specified parametrically
+procedure mgl_contf_xy_val(gr: HMGL;const v: HMDT;const x: HMDT;const y: HMDT;const z: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw manual solid contours for 2d data
+procedure mgl_contf_val(gr: HMGL;const v: HMDT;const z: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw solid contours for 2d data specified parametrically
+procedure mgl_contf_xy(gr: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw solid contours for 2d data
+procedure mgl_contf(gr: HMGL;const z: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw manual solid contours for 2d data specified parametrically with manual colors
+procedure mgl_contd_xy_val(gr: HMGL;const v: HMDT;const x: HMDT;const y: HMDT;const z: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw manual solid contours for 2d data with manual colors
+procedure mgl_contd_val(gr: HMGL;const v: HMDT;const z: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw solid contours for 2d data specified parametrically with manual colors
+procedure mgl_contd_xy(gr: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw solid contours for 2d data with manual colors
+procedure mgl_contd(gr: HMGL;const z: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw manual contour tubes for 2d data specified parametrically
+procedure mgl_contv_xy_val(gr: HMGL;const v: HMDT;const x: HMDT;const y: HMDT;const z: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw manual contour tubes for 2d data
+procedure mgl_contv_val(gr: HMGL;const v: HMDT;const z: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw contour tubes for 2d data specified parametrically
+procedure mgl_contv_xy(gr: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw contour tubes for 2d data
+procedure mgl_contv(gr: HMGL;const z: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw manual axial-symmetric isosurfaces for 2d data specified parametrically
+procedure mgl_axial_xy_val(gr: HMGL;const v: HMDT;const x: HMDT;const y: HMDT;const a: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw manual axial-symmetric isosurfaces for 2d data
+procedure mgl_axial_val(gr: HMGL;const v: HMDT;const a: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw axial-symmetric isosurfaces for 2d data specified parametrically
+procedure mgl_axial_xy(gr: HMGL;const x: HMDT;const y: HMDT;const a: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw axial-symmetric isosurfaces for 2d data
+procedure mgl_axial(gr: HMGL;const a: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw surface of curve {r,z} rotatation around axis
+procedure mgl_torus(gr: HMGL;const r: HMDT;const z: HMDT;const col: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw grid lines for density plot at slice for 3d data specified parametrically
+procedure mgl_grid3_xyz(gr: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const a: HMDT;const stl: PChar;sVal: double;const opt: PChar); cdecl; external libmgl;
+/// Draw grid lines for density plot at slice for 3d data
+procedure mgl_grid3(gr: HMGL;const a: HMDT;const stl: PChar;sVal: double;const opt: PChar); cdecl; external libmgl;
+/// Draw density plot at slice for 3d data specified parametrically
+procedure mgl_dens3_xyz(gr: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const a: HMDT;const stl: PChar;sVal: double;const opt: PChar); cdecl; external libmgl;
+/// Draw density plot at slice for 3d data
+procedure mgl_dens3(gr: HMGL;const a: HMDT;const stl: PChar;sVal: double;const opt: PChar); cdecl; external libmgl;
+/// Draw manual contour lines at slice for 3d data specified parametrically
+procedure mgl_cont3_xyz_val(gr: HMGL;const v: HMDT;const x: HMDT;const y: HMDT;const z: HMDT;const a: HMDT;const sch: PChar;sVal: double;const opt: PChar); cdecl; external libmgl;
+/// Draw manual contour lines at slice for 3d data
+procedure mgl_cont3_val(gr: HMGL;const v: HMDT;const a: HMDT;const sch: PChar;sVal: double;const opt: PChar); cdecl; external libmgl;
+/// Draw contour lines at slice for 3d data specified parametrically
+procedure mgl_cont3_xyz(gr: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const a: HMDT;const sch: PChar;sVal: double;const opt: PChar); cdecl; external libmgl;
+/// Draw contour lines at slice for 3d data
+procedure mgl_cont3(gr: HMGL;const a: HMDT;const sch: PChar;sVal: double;const opt: PChar); cdecl; external libmgl;
+/// Draw manual solid contours at slice for 3d data specified parametrically
+procedure mgl_contf3_xyz_val(gr: HMGL;const v: HMDT;const x: HMDT;const y: HMDT;const z: HMDT;const a: HMDT;const sch: PChar;sVal: double;const opt: PChar); cdecl; external libmgl;
+/// Draw manual solid contours at slice for 3d data
+procedure mgl_contf3_val(gr: HMGL;const v: HMDT;const a: HMDT;const sch: PChar;sVal: double;const opt: PChar); cdecl; external libmgl;
+/// Draw solid contours at slice for 3d data specified parametrically
+procedure mgl_contf3_xyz(gr: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const a: HMDT;const sch: PChar;sVal: double;const opt: PChar); cdecl; external libmgl;
+/// Draw solid contours at slice for 3d data
+procedure mgl_contf3(gr: HMGL;const a: HMDT;const sch: PChar;sVal: double;const opt: PChar); cdecl; external libmgl;
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+function mgl_fit_1(gr: HMGL;const y: HMDT;const eq: PChar;const var: PChar;ini: HMDT;const opt: PChar): HMDT; cdecl; external libmgl;
+function mgl_fit_2(gr: HMGL;const z: HMDT;const eq: PChar;const var: PChar;ini: HMDT;const opt: PChar): HMDT; cdecl; external libmgl;
+function mgl_fit_3(gr: HMGL;const a: HMDT;const eq: PChar;const var: PChar;ini: HMDT;const opt: PChar): HMDT; cdecl; external libmgl;
+function mgl_fit_xy(gr: HMGL;const x: HMDT;const y: HMDT;const eq: PChar;const var: PChar;ini: HMDT;const opt: PChar): HMDT; cdecl; external libmgl;
+function mgl_fit_xyz(gr: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const eq: PChar;const var: PChar;ini: HMDT;const opt: PChar): HMDT; cdecl; external libmgl;
+function mgl_fit_xyza(gr: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const a: HMDT;const eq: PChar;const var: PChar;ini: HMDT;const opt: PChar): HMDT; cdecl; external libmgl;
+function mgl_fit_ys(gr: HMGL;const y: HMDT;const s: HMDT;const eq: PChar;const var: PChar;ini: HMDT;const opt: PChar): HMDT; cdecl; external libmgl;
+function mgl_fit_xys(gr: HMGL;const x: HMDT;const y: HMDT;const s: HMDT;const eq: PChar;const var: PChar;ini: HMDT;const opt: PChar): HMDT; cdecl; external libmgl;
+function mgl_fit_xyzs(gr: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const s: HMDT;const eq: PChar;const var: PChar;ini: HMDT;const opt: PChar): HMDT; cdecl; external libmgl;
+function mgl_fit_xyzas(gr: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const a: HMDT;const s: HMDT;const eq: PChar;const var: PChar;ini: HMDT;const opt: PChar): HMDT; cdecl; external libmgl;
+function gl_get_fit(gr: HMGL): PCHAR; cdecl; external libmgl;
+function mgl_hist_x(gr: HMGL;const x: HMDT;const a: HMDT;const opt: PChar): HMDT; cdecl; external libmgl;
+function mgl_hist_xy(gr: HMGL;const x: HMDT;const y: HMDT;const a: HMDT;const opt: PChar): HMDT; cdecl; external libmgl;
+function mgl_hist_xyz(gr: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const a: HMDT;const opt: PChar): HMDT; cdecl; external libmgl;
+procedure mgl_puts_fit(gr: HMGL;x: double;y: double;z: double;const prefix: PChar;const font: PChar;size: double); cdecl; external libmgl;
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+/// Draw curve for formula with x in x-axis range
+procedure mgl_fplot(gr: HMGL;const eqY: PChar;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw curve for formulas parametrically depended on t in range [0,1]
+procedure mgl_fplot_xyz(gr: HMGL;const eqX: PChar;const eqY: PChar;const eqZ: PChar;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw radar chart (plot in curved coordinates)
+procedure mgl_radar(graph: HMGL;const a: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw usual curve {x,y,z}
+procedure mgl_plot_xyz(graph: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw usual curve {x,y}
+procedure mgl_plot_xy(graph: HMGL;const x: HMDT;const y: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw usual curve {x,y} with x in x-axis range
+procedure mgl_plot(graph: HMGL;const y: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw curve {x,y,z} which is colored by c (like tension plot)
+procedure mgl_tens_xyz(graph: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const c: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw curve {x,y} which is colored by c (like tension plot)
+procedure mgl_tens_xy(graph: HMGL;const x: HMDT;const y: HMDT;const c: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw curve {x,y} with x in x-axis range which is colored by c (like tension plot)
+procedure mgl_tens(graph: HMGL;const y: HMDT;const c: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw tape(s) which rotates as (bi-)normales of curve {x,y,z}
+procedure mgl_tape_xyz(graph: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw tape(s) which rotates as (bi-)normales of curve {x,y}
+procedure mgl_tape_xy(graph: HMGL;const x: HMDT;const y: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw tape(s) which rotates as (bi-)normales of curve {x,y} with x in x-axis range
+procedure mgl_tape(graph: HMGL;const y: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw box-plot (special 5-value plot used in statistic) for data specified parametrically
+procedure mgl_boxplot_xy(graph: HMGL;const x: HMDT;const a: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw box-plot (special 5-value plot used in statistic)
+procedure mgl_boxplot(graph: HMGL;const a: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Fill area between curve {x,y,z} and axis plane
+procedure mgl_area_xyz(graph: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Fill area between curve {x,y} and axis plane
+procedure mgl_area_xy(graph: HMGL;const x: HMDT;const y: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Fill area between curve {x,y} with x in x-axis range and axis plane
+procedure mgl_area(graph: HMGL;const y: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Fill area between curves {x,y1} and {x,y2}
+procedure mgl_region_xy(graph: HMGL;const x: HMDT;const y1: HMDT;const y2: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Fill area between curves {x,y1} and {x,y2} with x in x-axis range
+procedure mgl_region(graph: HMGL;const y1: HMDT;const y2: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw vertical lines from points {x,y,z} to axis plane
+procedure mgl_stem_xyz(graph: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw vertical lines from points {x,y} to axis plane
+procedure mgl_stem_xy(graph: HMGL;const x: HMDT;const y: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw vertical lines from points {x,y} with x in x-axis range to axis plane
+procedure mgl_stem(graph: HMGL;const y: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw stairs for points in arrays {x,y,z}
+procedure mgl_step_xyz(graph: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw stairs for points in arrays {x,y}
+procedure mgl_step_xy(graph: HMGL;const x: HMDT;const y: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw stairs for points in arrays {x,y} with x in x-axis range
+procedure mgl_step(graph: HMGL;const y: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw vertical bars from points {x,y,z} to axis plane
+procedure mgl_bars_xyz(graph: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw vertical bars from points {x,y} to axis plane
+procedure mgl_bars_xy(graph: HMGL;const x: HMDT;const y: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw vertical bars from points {x,y} with x in x-axis range to axis plane
+procedure mgl_bars(graph: HMGL;const y: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw horizontal bars from points {v,y} to axis plane
+procedure mgl_barh_yx(graph: HMGL;const y: HMDT;const v: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw horizontal bars from points {v,y} with y in y-axis range to axis plane
+procedure mgl_barh(graph: HMGL;const v: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw Open-High-Low-Close (OHLC) diagram
+procedure mgl_ohlc_x(graph: HMGL;const x: HMDT;const open: HMDT;const high: HMDT;const low: HMDT;const close: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw Open-High-Low-Close (OHLC) diagram with x in x-axis range
+procedure mgl_ohlc(graph: HMGL;const open: HMDT;const high: HMDT;const low: HMDT;const close: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw chart for data a
+procedure mgl_chart(graph: HMGL;const a: HMDT;const col: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw error boxes {ex,ey} at points {x,y}
+procedure mgl_error_exy(graph: HMGL;const x: HMDT;const y: HMDT;const ex: HMDT;const ey: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw error boxes {ey} at points {x,y}
+procedure mgl_error_xy(graph: HMGL;const x: HMDT;const y: HMDT;const ey: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw error boxes {ey} at points {x,y} with x in x-axis range
+procedure mgl_error(graph: HMGL;const y: HMDT;const ey: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw marks with size r at points {x,y,z}
+procedure mgl_mark_xyz(graph: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const r: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw marks with size r at points {x,y}
+procedure mgl_mark_xy(graph: HMGL;const x: HMDT;const y: HMDT;const r: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw marks with size r at points {x,y} with x in x-axis range
+procedure mgl_mark_y(graph: HMGL;const y: HMDT;const r: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw tube with variable radius r around curve {x,y,z}
+procedure mgl_tube_xyzr(graph: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const r: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw tube with variable radius r around curve {x,y}
+procedure mgl_tube_xyr(graph: HMGL;const x: HMDT;const y: HMDT;const r: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw tube with variable radius r around curve {x,y} with x in x-axis range
+procedure mgl_tube_r(graph: HMGL;const y: HMDT;const r: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw tube with constant radius r around curve {x,y,z}
+procedure mgl_tube_xyz(graph: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;r: double;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw tube with constant radius r around curve {x,y}
+procedure mgl_tube_xy(graph: HMGL;const x: HMDT;const y: HMDT;r: double;const penl: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw tube with constant radius r around curve {x,y} with x in x-axis range
+procedure mgl_tube(graph: HMGL;const y: HMDT;r: double;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw candle plot for data specified parametrically
+procedure mgl_candle_xyv(gr: HMGL;const x: HMDT;const v1: HMDT;const v2: HMDT;const y1: HMDT;const y2: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw candle plot
+procedure mgl_candle_yv(gr: HMGL;const v1: HMDT;const v2: HMDT;const y1: HMDT;const y2: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw candle plot with v1=v[i], v2=v[i+1]
+procedure mgl_candle(gr: HMGL;const v: HMDT;const y1: HMDT;const y2: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+/// Draw surface by formula with x,y in axis range
+procedure mgl_fsurf(graph: HMGL;const fz: PChar;const stl: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw surface by formulas parametrically depended on u,v in range [0,1]
+procedure mgl_fsurf_xyz(graph: HMGL;const fx: PChar;const fy: PChar;const fz: PChar;const stl: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw grid lines for density plot of 2d data specified parametrically
+procedure mgl_grid_xy(graph: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const stl: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw grid lines for density plot of 2d data
+procedure mgl_grid(graph: HMGL;const a: HMDT;const stl: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw mesh lines for 2d data specified parametrically
+procedure mgl_mesh_xy(graph: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw mesh lines for 2d data
+procedure mgl_mesh(graph: HMGL;const z: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw mesh lines for 2d data specified parametrically
+procedure mgl_fall_xy(graph: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw mesh lines for 2d data
+procedure mgl_fall(graph: HMGL;const z: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw belts for 2d data specified parametrically
+procedure mgl_belt_xy(graph: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw belts for 2d data
+procedure mgl_belt(graph: HMGL;const z: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw surface for 2d data specified parametrically with color proportional to z
+procedure mgl_surf_xy(graph: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw surface for 2d data with color proportional to z
+procedure mgl_surf(graph: HMGL;const z: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw density plot for 2d data specified parametrically
+procedure mgl_dens_xy(graph: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw density plot for 2d data
+procedure mgl_dens(graph: HMGL;const z: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw vertical boxes for 2d data specified parametrically
+procedure mgl_boxs_xy(graph: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw vertical boxes for 2d data
+procedure mgl_boxs(graph: HMGL;const z: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw vertical tiles for 2d data specified parametrically
+procedure mgl_tile_xy(graph: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw vertical tiles for 2d data
+procedure mgl_tile(graph: HMGL;const z: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw vertical tiles with variable size r for 2d data specified parametrically
+procedure mgl_tiles_xy(graph: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const r: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw vertical tiles with variable size r for 2d data
+procedure mgl_tiles(graph: HMGL;const z: HMDT;const r: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw surface for 2d data specified parametrically with color proportional to c
+procedure mgl_surfc_xy(graph: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const c: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw surface for 2d data with color proportional to c
+procedure mgl_surfc(graph: HMGL;const z: HMDT;const c: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw surface for 2d data specified parametrically with alpha proportional to c
+procedure mgl_surfa_xy(graph: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const c: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw surface for 2d data with alpha proportional to c
+procedure mgl_surfa(graph: HMGL;const z: HMDT;const c: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw density plot for spectra-gramm specified parametrically
+procedure mgl_stfa_xy(graph: HMGL;const x: HMDT;const y: HMDT;const re: HMDT;const im: HMDT;dn: int;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw density plot for spectra-gramm
+procedure mgl_stfa(graph: HMGL;const re: HMDT;const im: HMDT;dn: int;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Color map of matrix a to matrix b, both matrix can parametrically depend on coordinates
+procedure mgl_map_xy(graph: HMGL;const x: HMDT;const y: HMDT;const a: HMDT;const b: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Color map of matrix a to matrix b
+procedure mgl_map(graph: HMGL;const a: HMDT;const b: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+/// Draw isosurface for 3d data specified parametrically
+procedure mgl_surf3_xyz_val(graph: HMGL;Val: double;const x: HMDT;const y: HMDT;const z: HMDT;const a: HMDT;const stl: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw isosurface for 3d data
+procedure mgl_surf3_val(graph: HMGL;Val: double;const a: HMDT;const stl: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw isosurfaces for 3d data specified parametrically
+procedure mgl_surf3_xyz(graph: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const a: HMDT;const stl: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw isosurfaces for 3d data
+procedure mgl_surf3(graph: HMGL;const a: HMDT;const stl: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw isosurface for 3d data specified parametrically with alpha proportional to b
+procedure mgl_surf3a_xyz_val(graph: HMGL;Val: double;const x: HMDT;const y: HMDT;const z: HMDT;const a: HMDT;const b: HMDT;const stl: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw isosurface for 3d data with alpha proportional to b
+procedure mgl_surf3a_val(graph: HMGL;Val: double;const a: HMDT;const b: HMDT;const stl: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw isosurfaces for 3d data specified parametrically with alpha proportional to b
+procedure mgl_surf3a_xyz(graph: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const a: HMDT;const b: HMDT;const stl: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw isosurfaces for 3d data with alpha proportional to b
+procedure mgl_surf3a(graph: HMGL;const a: HMDT;const b: HMDT;const stl: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw isosurface for 3d data specified parametrically with color proportional to b
+procedure mgl_surf3c_xyz_val(graph: HMGL;Val: double;const x: HMDT;const y: HMDT;const z: HMDT;const a: HMDT;const b: HMDT;const stl: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw isosurface for 3d data with color proportional to b
+procedure mgl_surf3c_val(graph: HMGL;Val: double;const a: HMDT;const b: HMDT;const stl: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw isosurfaces for 3d data specified parametrically with color proportional to b
+procedure mgl_surf3c_xyz(graph: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const a: HMDT;const b: HMDT;const stl: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw isosurfaces for 3d data with color proportional to b
+procedure mgl_surf3c(graph: HMGL;const a: HMDT;const b: HMDT;const stl: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw a semi-transparent cloud for 3d data specified parametrically
+procedure mgl_cloud_xyz(graph: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const a: HMDT;const stl: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw a semi-transparent cloud for 3d data
+procedure mgl_cloud(graph: HMGL;const a: HMDT;const stl: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw isosurface for 3d beam in curvilinear coordinates
+procedure mgl_beam_val(graph: HMGL;Val: double;const tr: HMDT;const g1: HMDT;const g2: HMDT;const a: HMDT;r: double;const stl: PChar;norm: int); cdecl; external libmgl;
+/// Draw several isosurfaces for 3d beam in curvilinear coordinates
+procedure mgl_beam(graph: HMGL;const tr: HMDT;const g1: HMDT;const g2: HMDT;const a: HMDT;r: double;const stl: PChar;norm: int;num: int); cdecl; external libmgl;
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+/// Plot vectors at position {x,y} along {ax,ay} with length/color proportional to |a|
+procedure mgl_traj_xy(gr: HMGL;const x: HMDT;const y: HMDT;const ax: HMDT;const ay: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Plot vectors at position {x,y,z} along {ax,ay,az} with length/color proportional to |a|
+procedure mgl_traj_xyz(gr: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const ax: HMDT;const ay: HMDT;const az: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Plot vector field {ax,ay} parametrically depended on coordinate {x,y} with length/color proportional to |a|
+procedure mgl_vect_xy(gr: HMGL;const x: HMDT;const y: HMDT;const ax: HMDT;const ay: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Plot vector field {ax,ay} with length/color proportional to |a|
+procedure mgl_vect_2d(gr: HMGL;const ax: HMDT;const ay: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Plot vector field {ax,ay,az} parametrically depended on coordinate {x,y,z} with length/color proportional to |a|
+procedure mgl_vect_xyz(gr: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const ax: HMDT;const ay: HMDT;const az: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Plot vector field {ax,ay,az} with length/color proportional to |a|
+procedure mgl_vect_3d(gr: HMGL;const ax: HMDT;const ay: HMDT;const az: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Plot flows for vector field {ax,ay} parametrically depended on coordinate {x,y} with color proportional to |a|
+procedure mgl_flow_xy(gr: HMGL;const x: HMDT;const y: HMDT;const ax: HMDT;const ay: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Plot flows for vector field {ax,ay} with color proportional to |a|
+procedure mgl_flow_2d(gr: HMGL;const ax: HMDT;const ay: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Plot flows for vector field {ax,ay,az} parametrically depended on coordinate {x,y,z} with color proportional to |a|
+procedure mgl_flow_xyz(gr: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const ax: HMDT;const ay: HMDT;const az: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Plot flows for vector field {ax,ay,az} with color proportional to |a|
+procedure mgl_flow_3d(gr: HMGL;const ax: HMDT;const ay: HMDT;const az: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Plot flow from point p for vector field {ax,ay} parametrically depended on coordinate {x,y} with color proportional to |a|
+procedure mgl_flowp_xy(gr: HMGL;x0: double;y0: double;z0: double;const x: HMDT;const y: HMDT;const ax: HMDT;const ay: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Plot flow from point p for vector field {ax,ay} with color proportional to |a|
+procedure mgl_flowp_2d(gr: HMGL;x0: double;y0: double;z0: double;const ax: HMDT;const ay: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Plot flow from point p for vector field {ax,ay,az} parametrically depended on coordinate {x,y,z} with color proportional to |a|
+procedure mgl_flowp_xyz(gr: HMGL;x0: double;y0: double;z0: double;const x: HMDT;const y: HMDT;const z: HMDT;const ax: HMDT;const ay: HMDT;const az: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Plot flow from point p for vector field {ax,ay,az} with color proportional to |a|
+procedure mgl_flowp_3d(gr: HMGL;x0: double;y0: double;z0: double;const ax: HMDT;const ay: HMDT;const az: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Plot flow pipes for vector field {ax,ay} parametrically depended on coordinate {x,y} with color and radius proportional to |a|
+procedure mgl_pipe_xy(gr: HMGL;const x: HMDT;const y: HMDT;const ax: HMDT;const ay: HMDT;const sch: PChar;r0: double;const opt: PChar); cdecl; external libmgl;
+/// Plot flow pipes for vector field {ax,ay} with color and radius proportional to |a|
+procedure mgl_pipe_2d(gr: HMGL;const ax: HMDT;const ay: HMDT;const sch: PChar;r0: double;const opt: PChar); cdecl; external libmgl;
+/// Plot flow pipes for vector field {ax,ay,az} parametrically depended on coordinate {x,y,z} with color and radius proportional to |a|
+procedure mgl_pipe_xyz(gr: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const ax: HMDT;const ay: HMDT;const az: HMDT;const sch: PChar;r0: double;const opt: PChar); cdecl; external libmgl;
+/// Plot flow pipes for vector field {ax,ay,az} with color and radius proportional to |a|
+procedure mgl_pipe_3d(gr: HMGL;const ax: HMDT;const ay: HMDT;const az: HMDT;const sch: PChar;r0: double;const opt: PChar); cdecl; external libmgl;
+/// Plot flows for gradient of scalar field phi parametrically depended on coordinate {x,y,z}
+procedure mgl_grad_xyz(gr: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const ph: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Plot flows for gradient of scalar field phi parametrically depended on coordinate {x,y}
+procedure mgl_grad_xy(gr: HMGL;const x: HMDT;const y: HMDT;const ph: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Plot flows for gradient of scalar field phi
+procedure mgl_grad(gr: HMGL;const ph: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw vector plot at slice for 3d data specified parametrically
+procedure mgl_vect3_xyz(gr: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const ax: HMDT;const ay: HMDT;const az: HMDT;const sch: PChar;sVal: double;const opt: PChar); cdecl; external libmgl;
+/// Draw vector plot at slice for 3d data
+procedure mgl_vect3(gr: HMGL;const ax: HMDT;const ay: HMDT;const az: HMDT;const sch: PChar;sVal: double;const opt: PChar); cdecl; external libmgl;
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+/// Draws the mark at position {x,y,z}
+procedure mgl_mark(gr: HMGL;x: double;y: double;z: double;const mark: PChar); cdecl; external libmgl;
+/// Draws red point (ball) at position {x,y,z}
+procedure mgl_ball(gr: HMGL;x: double;y: double;z: double); cdecl; external libmgl;
+/// Draws the line between 2 points by specified pen
+procedure mgl_line(gr: HMGL;x1: double;y1: double;z1: double;x2: double;y2: double;z2: double;const pen: PChar;n: int); cdecl; external libmgl;
+/// Draws the spline curve between 2 points by specified pen
+procedure mgl_curve(gr: HMGL;x1: double;y1: double;z1: double;dx1: double;dy1: double;dz1: double;x2: double;y2: double;z2: double;dx2: double;dy2: double;dz2: double;const pen: PChar;n: int); cdecl; external libmgl;
+/// Draws the 3d error box {ex,ey,ez} for point {x,y,z}
+procedure mgl_error_box(gr: HMGL;x: double;y: double;z: double;ex: double;ey: double;ez: double;const pen: PChar); cdecl; external libmgl;
+/// Draws the face between points with color stl (include interpolation up to 4 colors).
+procedure mgl_face(gr: HMGL;x0: double;y0: double;z0: double;x1: double;y1: double;z1: double;x2: double;y2: double;z2: double;x3: double;y3: double;z3: double;const stl: PChar); cdecl; external libmgl;
+/// Draws the face in y-z plane at point p with color stl (include interpolation up to 4 colors).
+procedure mgl_facex(gr: HMGL;x0: double;y0: double;z0: double;wy: double;wz: double;const stl: PChar;dx: double;dy: double); cdecl; external libmgl;
+/// Draws the face in x-z plane at point p with color stl (include interpolation up to 4 colors).
+procedure mgl_facey(gr: HMGL;x0: double;y0: double;z0: double;wx: double;wz: double;const stl: PChar;dx: double;dy: double); cdecl; external libmgl;
+/// Draws the face in x-y plane at point p with color stl (include interpolation up to 4 colors).
+procedure mgl_facez(gr: HMGL;x0: double;y0: double;z0: double;wx: double;wy: double;const stl: PChar;dx: double;dy: double); cdecl; external libmgl;
+/// Draws the sphere at point {x,y,z} with color stl and radius r
+procedure mgl_sphere(gr: HMGL;x: double;y: double;z: double;r: double;const stl: PChar); cdecl; external libmgl;
+/// Draws the drop at point {x,y,z} in direction {dx,dy,dz} with color stl and radius r
+procedure mgl_drop(gr: HMGL;x: double;y: double;z: double;dx: double;dy: double;dz: double;r: double;const stl: PChar;shift: double;ap: double); cdecl; external libmgl;
+/// Draws the cone between points p1,p2 with radius r1,r2 and with style stl
+procedure mgl_cone(gr: HMGL;x1: double;y1: double;z1: double;x2: double;y2: double;z2: double;r1: double;r2: double;const stl: PChar); cdecl; external libmgl;
+/// Draws the ellipse between points p1,p2 with color stl and width r
+procedure mgl_ellipse(gr: HMGL;x1: double;y1: double;z1: double;x2: double;y2: double;z2: double;r: double;const stl: PChar); cdecl; external libmgl;
+/// Draws the rhomb between points p1,p2 with color stl and width r
+procedure mgl_rhomb(gr: HMGL;x1: double;y1: double;z1: double;x2: double;y2: double;z2: double;r: double;const stl: PChar); cdecl; external libmgl;
+/// Draw cones from points {x,y,z} to axis plane
+procedure mgl_cones_xyz(graph: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw cones from points {x,z} to axis plane
+procedure mgl_cones_xz(graph: HMGL;const x: HMDT;const z: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw cones from points {x,z} with x in x-axis range to axis plane
+procedure mgl_cones(graph: HMGL;const z: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Plot dew drops for vector field {ax,ay} parametrically depended on coordinate {x,y}
+procedure mgl_dew_xy(gr: HMGL;const x: HMDT;const y: HMDT;const ax: HMDT;const ay: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Plot dew drops for vector field {ax,ay}
+procedure mgl_dew_2d(gr: HMGL;const ax: HMDT;const ay: HMDT;const sch: PChar;const optl: PChar); cdecl; external libmgl;
+/// Print text in position {x,y,z} with specified font
+procedure mgl_puts_dir(graph: HMGL;x: double;y: double;z: double;dx: double;dy: double;dz: double;const text: PChar;const font: PChar;size: double); cdecl; external libmgl;
+procedure mgl_putsw_dir(graph: HMGL;x: double;y: double;z: double;dx: double;dy: double;dz: double;const text: PWideChar;const font: PChar;size: double); cdecl; external libmgl;
+/// Draw textual marks with size r at points {x,y,z}
+procedure mgl_textmark_xyzr(graph: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const r: HMDT;const text: PChar;const fnt: PChar;const opt: PChar); cdecl; external libmgl;
+procedure mgl_textmarkw_xyzr(graph: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const r: HMDT;const text: PWideChar;const fnt: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw textual marks with size r at points {x,y}
+procedure mgl_textmark_xyr(graph: HMGL;const x: HMDT;const y: HMDT;const r: HMDT;const text: PChar;const fnt: PChar;const opt: PChar); cdecl; external libmgl;
+procedure mgl_textmarkw_xyr(graph: HMGL;const x: HMDT;const y: HMDT;const r: HMDT;const text: PWideChar;const fnt: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw textual marks with size r at points {x,y} with x in x-axis range
+procedure mgl_textmark_yr(graph: HMGL;const y: HMDT;const r: HMDT;const text: PChar;const fnt: PChar;const opt: PChar); cdecl; external libmgl;
+procedure mgl_textmarkw_yr(graph: HMGL;const y: HMDT;const r: HMDT;const text: PWideChar;const fnt: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw textual marks with size r=1 at points {x,y} with x in x-axis range
+procedure mgl_textmark(graph: HMGL;const y: HMDT;const text: PChar;const fnt: PChar;const opt: PChar); cdecl; external libmgl;
+procedure mgl_textmarkw(graph: HMGL;const y: HMDT;const text: PWideChar;const fnt: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw labels for points coordinate(s) at points {x,y,z}
+procedure mgl_label_xyz(graph: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const text: PChar;const fnt: PChar;const opt: PChar); cdecl; external libmgl;
+procedure mgl_labelw_xyz(graph: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const text: PWideChar;const fnt: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw labels for points coordinate(s) at points {x,y}
+procedure mgl_label_xy(graph: HMGL;const x: HMDT;const y: HMDT;const text: PChar;const fnt: PChar;const opt: PChar); cdecl; external libmgl;
+procedure mgl_labelw_xy(graph: HMGL;const x: HMDT;const y: HMDT;const text: PWideChar;const fnt: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw labels for points coordinate(s) at points {x,y} with x in x-axis range
+procedure mgl_label_y(graph: HMGL;const y: HMDT;const text: PChar;const fnt: PChar;const opt: PChar); cdecl; external libmgl;
+procedure mgl_labelw_y(graph: HMGL;const y: HMDT;const text: PWideChar;const fnt: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw table for values val along given direction with row labels text at position {x,y}
+procedure mgl_table(gr: HMGL;x: double;y: double;const val: HMDT;const text: PChar;const fnt: PChar;const opt: PChar); cdecl; external libmgl;
+procedure mgl_tablew(gr: HMGL;x: double;y: double;const val: HMDT;const text: PWideChar;const fnt: PChar;const opt: PChar); cdecl; external libmgl;
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+/// Draw triangle mesh for points in arrays {x,y,z} with specified color c.
+procedure mgl_triplot_xyzc(gr: HMGL;const nums: HMDT;const x: HMDT;const y: HMDT;const z: HMDT;const c: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw triangle mesh for points in arrays {x,y,z} with color proportional to z.
+procedure mgl_triplot_xyz(gr: HMGL;const nums: HMDT;const x: HMDT;const y: HMDT;const z: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw triangle mesh for points in arrays {x,y}
+procedure mgl_triplot_xy(gr: HMGL;const nums: HMDT;const x: HMDT;const y: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw quad mesh for points in arrays {x,y,z} with specified color c.
+procedure mgl_quadplot_xyzc(gr: HMGL;const nums: HMDT;const x: HMDT;const y: HMDT;const z: HMDT;const c: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw quad mesh for points in arrays {x,y,z} with color proportional to z.
+procedure mgl_quadplot_xyz(gr: HMGL;const nums: HMDT;const x: HMDT;const y: HMDT;const z: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw quad mesh for points in arrays {x,y}.
+procedure mgl_quadplot_xy(gr: HMGL;const nums: HMDT;const x: HMDT;const y: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw manual contour lines for triangle mesh for points in arrays {x,y,z} with specified color c.
+procedure mgl_tricont_xyzcv(gr: HMGL;const v: HMDT;const nums: HMDT;const x: HMDT;const y: HMDT;const z: HMDT;const c: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw manual contour lines for triangle mesh for points in arrays {x,y,z}.
+procedure mgl_tricont_xycv(gr: HMGL;const v: HMDT;const nums: HMDT;const x: HMDT;const y: HMDT;const z: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw contour lines for triangle mesh for points in arrays {x,y,z} with specified color c.
+procedure mgl_tricont_xyzc(gr: HMGL;const nums: HMDT;const x: HMDT;const y: HMDT;const z: HMDT;const c: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw contour lines for triangle mesh for points in arrays {x,y,z}.
+procedure mgl_tricont_xyc(gr: HMGL;const nums: HMDT;const x: HMDT;const y: HMDT;const z: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw dots in points {x,y,z}.
+procedure mgl_dots(gr: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw semitransparent dots in points {x,y,z} with specified alpha a.
+procedure mgl_dots_a(gr: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const a: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw semitransparent dots in points {x,y,z} with specified color c and alpha a.
+procedure mgl_dots_ca(gr: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const c: HMDT;const a: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw surface reconstructed for points in arrays {x,y,z}.
+procedure mgl_crust(gr: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw density plot for data at x = sVal
+procedure mgl_dens_x(graph: HMGL;const a: HMDT;const stl: PChar;sVal: double;const opt: PChar); cdecl; external libmgl;
+/// Draw density plot for data at y = sVal
+procedure mgl_dens_y(graph: HMGL;const a: HMDT;const stl: PChar;sVal: double;const opt: PChar); cdecl; external libmgl;
+/// Draw density plot for data at z = sVal
+procedure mgl_dens_z(graph: HMGL;const a: HMDT;const stl: PChar;sVal: double;const opt: PChar); cdecl; external libmgl;
+/// Draw contour lines for data at x = sVal
+procedure mgl_cont_x(graph: HMGL;const a: HMDT;const stl: PChar;sVal: double;const opt: PChar); cdecl; external libmgl;
+/// Draw contour lines for data at y = sVal
+procedure mgl_cont_y(graph: HMGL;const a: HMDT;const stl: PChar;sVal: double;const opt: PChar); cdecl; external libmgl;
+/// Draw contour lines for data at z = sVal
+procedure mgl_cont_z(graph: HMGL;const a: HMDT;const stl: PChar;sVal: double;const opt: PChar); cdecl; external libmgl;
+/// Draw manual contour lines for data at x = sVal
+procedure mgl_cont_x_val(graph: HMGL;const v: HMDT;const a: HMDT;const stl: PChar;sVal: double;const opt: PChar); cdecl; external libmgl;
+/// Draw manual contour lines for data at y = sVal
+procedure mgl_cont_y_val(graph: HMGL;const v: HMDT;const a: HMDT;const stl: PChar;sVal: double;const opt: PChar); cdecl; external libmgl;
+/// Draw manual contour lines for data at z = sVal
+procedure mgl_cont_z_val(graph: HMGL;const v: HMDT;const a: HMDT;const stl: PChar;sVal: double;const opt: PChar); cdecl; external libmgl;
+/// Draw solid contours for data at x = sVal
+procedure mgl_contf_x(graph: HMGL;const a: HMDT;const stl: PChar;sVal: double;const opt: PChar); cdecl; external libmgl;
+/// Draw solid contours for data at y = sVal
+procedure mgl_contf_y(graph: HMGL;const a: HMDT;const stl: PChar;sVal: double;const opt: PChar); cdecl; external libmgl;
+/// Draw solid contours for data at z = sVal
+procedure mgl_contf_z(graph: HMGL;const a: HMDT;const stl: PChar;sVal: double;const opt: PChar); cdecl; external libmgl;
+/// Draw manual solid contours for data at x = sVal
+procedure mgl_contf_x_val(graph: HMGL;const v: HMDT;const a: HMDT;const stl: PChar;sVal: double;const opt: PChar); cdecl; external libmgl;
+/// Draw manual solid contours for data at y = sVal
+procedure mgl_contf_y_val(graph: HMGL;const v: HMDT;const a: HMDT;const stl: PChar;sVal: double;const opt: PChar); cdecl; external libmgl;
+/// Draw manual solid contours for data at z = sVal
+procedure mgl_contf_z_val(graph: HMGL;const v: HMDT;const a: HMDT;const stl: PChar;sVal: double;const opt: PChar); cdecl; external libmgl;
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+/// Create HMGL object with specified sizes
+function mgl_create_graph(width: int;height: int): HMGL; cdecl; external libmgl;
+/// Delete HMGL object
+procedure mgl_delete_graph(gr: HMGL); cdecl; external libmgl;
+/// Set size of frame in pixels. Normally this function is called internally.
+procedure mgl_set_size(gr: HMGL;width: int;height: int); cdecl; external libmgl;
+/// Set default parameters for plotting
+procedure mgl_set_def_param(gr: HMGL); cdecl; external libmgl;
+/// Combine plots from 2 canvases. Result will be saved into gr
+procedure mgl_combine_gr(gr: HMGL;in: HMGL); cdecl; external libmgl;
+/// Force preparing the image. It can be useful for OpenGL mode mostly.
+procedure mgl_finish(gr: HMGL); cdecl; external libmgl;
+/// Set tick length
+procedure mgl_set_tick_len(gr: HMGL;len: double;stt: double); cdecl; external libmgl;
+/// Set axis and ticks style
+procedure mgl_set_axis_stl(gr: HMGL;const stl: PChar;const tck: PChar;const sub: PChar); cdecl; external libmgl;
+/// Auto adjust ticks
+procedure mgl_adjust_ticks(gr: HMGL;const dir: PChar); cdecl; external libmgl;
+/// Set the ticks parameters
+procedure mgl_set_ticks(gr: HMGL;dir: char;d: double;ns: int;org: double); cdecl; external libmgl;
+/// Set ticks text (\n separated). Use "" to disable this feature.
+procedure mgl_set_ticks_str(gr: HMGL;dir: char;const lbl: PChar;add: int); cdecl; external libmgl;
+procedure mgl_set_ticks_wcs(gr: HMGL;dir: char;const lbl: PWideChar;add: int); cdecl; external libmgl;
+/// Set ticks position and text (\n separated). Use "" to disable this feature.
+procedure mgl_set_ticks_val(gr: HMGL;dir: char;const val: HMDT;const lbl: PChar;add: int); cdecl; external libmgl;
+procedure mgl_set_ticks_valw(gr: HMGL;dir: char;const val: HMDT;const lbl: PWideChar;add: int); cdecl; external libmgl;
+/// Tune ticks
+procedure mgl_tune_ticks(gr: HMGL;tune: int;fact_pos: double); cdecl; external libmgl;
+/// Set templates for ticks
+procedure mgl_set_tick_templ(gr: HMGL;dir: char;const templ: PChar); cdecl; external libmgl;
+procedure mgl_set_tick_templw(gr: HMGL;dir: char;const templ: PWideChar); cdecl; external libmgl;
+/// Set time templates for ticks
+procedure mgl_set_ticks_time(gr: HMGL;dir: char;d: double;const t: PChar); cdecl; external libmgl;
+/// Set additional shift of tick labels
+procedure mgl_set_tick_shift(gr: HMGL;sx: double;sy: double;sz: double;sc: double); cdecl; external libmgl;
+/// Draws bounding box outside the plotting volume
+procedure mgl_box(gr: HMGL); cdecl; external libmgl;
+/// Draws bounding box outside the plotting volume with color c
+procedure mgl_box_str(gr: HMGL;const col: PChar;ticks: int); cdecl; external libmgl;
+/// Draw axises with ticks in direction(s) dir.
+procedure mgl_axis(gr: HMGL;const dir: PChar;const stl: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw grid lines perpendicular to direction(s) dir.
+procedure mgl_axis_grid(gr: HMGL;const dir: PChar;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Print the label text for axis dir.
+procedure mgl_label(gr: HMGL;dir: char;const text: PChar;pos: double;const opt: PChar); cdecl; external libmgl;
+procedure mgl_labelw(gr: HMGL;dir: char;const text: PWideChar;pos: double;const opt: PChar); cdecl; external libmgl;
+/// Draw colorbar at edge of axis
+procedure mgl_colorbar(gr: HMGL;const sch: PChar); cdecl; external libmgl;
+/// Draw colorbar at manual position
+procedure mgl_colorbar_ext(gr: HMGL;const sch: PChar;x: double;y: double;w: double;h: double); cdecl; external libmgl;
+/// Draw colorbar with manual colors at edge of axis
+procedure mgl_colorbar_val(gr: HMGL;const dat: HMDT;const sch: PChar); cdecl; external libmgl;
+/// Draw colorbar with manual colors at manual position
+procedure mgl_colorbar_val_ext(gr: HMGL;const dat: HMDT;const sch: PChar;x: double;y: double;w: double;h: double); cdecl; external libmgl;
+/// Add string to legend
+procedure mgl_add_legend(gr: HMGL;const text: PChar;const style: PChar); cdecl; external libmgl;
+procedure mgl_add_legendw(gr: HMGL;const text: PWideChar;const style: PChar); cdecl; external libmgl;
+/// Clear saved legend string
+procedure mgl_clear_legend(gr: HMGL); cdecl; external libmgl;
+/// Draw legend of accumulated strings at position {x,y}
+procedure mgl_legend_pos(gr: HMGL;x: double;y: double;const font: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw legend of accumulated strings
+procedure mgl_legend(gr: HMGL;where: int;const font: PChar;const opt: PChar); cdecl; external libmgl;
+/// Set number of marks in legend sample
+procedure mgl_set_legend_marks(gr: HMGL;num: int); cdecl; external libmgl;
+/// Show current image
+procedure mgl_show_image(gr: HMGL;const viewer: PChar;keep: int); cdecl; external libmgl;
+/// Write the frame in file (depending extension, write current frame if fname is empty)
+procedure mgl_write_frame(gr: HMGL;const fname: PChar;const descr: PChar); cdecl; external libmgl;
+/// Write the frame in file using BMP format
+procedure mgl_write_tga(gr: HMGL;const fname: PChar;const descr: PChar); cdecl; external libmgl;
+/// Write the frame in file using BMP format
+procedure mgl_write_bmp(gr: HMGL;const fname: PChar;const descr: PChar); cdecl; external libmgl;
+/// Write the frame in file using JPEG format
+procedure mgl_write_jpg(gr: HMGL;const fname: PChar;const descr: PChar); cdecl; external libmgl;
+/// Write the frame in file using PNG format with transparency
+procedure mgl_write_png(gr: HMGL;const fname: PChar;const descr: PChar); cdecl; external libmgl;
+/// Write the frame in file using PNG format without transparency
+procedure mgl_write_png_solid(gr: HMGL;const fname: PChar;const descr: PChar); cdecl; external libmgl;
+/// Write the frame in file using PostScript format as bitmap
+procedure mgl_write_bps(gr: HMGL;const fname: PChar;const descr: PChar); cdecl; external libmgl;
+/// Write the frame in file using PostScript format
+procedure mgl_write_eps(gr: HMGL;const fname: PChar;const descr: PChar); cdecl; external libmgl;
+/// Write the frame in file using SVG format
+procedure mgl_write_svg(gr: HMGL;const fname: PChar;const descr: PChar); cdecl; external libmgl;
+/// Write the frame in file using LaTeX format
+procedure mgl_write_tex(gr: HMGL;const fname: PChar;const descr: PChar); cdecl; external libmgl;
+/// Write the frame in file using OBJ format
+procedure mgl_write_obj(gr: HMGL;const fname: PChar;const descr: PChar;use_png: int); cdecl; external libmgl;
+/// Write the frame in file using OBJ format (old version)
+procedure mgl_write_obj_old(gr: HMGL;const fname: PChar;const descr: PChar;use_png: int); cdecl; external libmgl;
+/// Write the frame in file using STL format (faces only)
+procedure mgl_write_stl(gr: HMGL;const fname: PChar;const descr: PChar); cdecl; external libmgl;
+/// Write the frame in file using OFF format
+procedure mgl_write_off(gr: HMGL;const fname: PChar;const descr: PChar;colored: int); cdecl; external libmgl;
+/// Write the frame in file using XYZ format
+procedure mgl_write_xyz(gr: HMGL;const fname: PChar;const descr: PChar); cdecl; external libmgl;
+/// Write the frame in file using PRC format
+procedure mgl_write_prc(gr: HMGL;const fname: PChar;const descr: PChar;make_pdf: int); cdecl; external libmgl;
+/// Write the frame in file using GIF format (only for current frame!)
+procedure mgl_write_gif(gr: HMGL;const fname: PChar;const descr: PChar); cdecl; external libmgl;
+/// Start write frames to cinema using GIF format
+procedure mgl_start_gif(gr: HMGL;const fname: PChar;ms: int); cdecl; external libmgl;
+/// Stop writing cinema using GIF format
+procedure mgl_close_gif(gr: HMGL); cdecl; external libmgl;
+/// Export points and primitives in file using MGLD format
+procedure mgl_export_mgld(gr: HMGL;const fname: PChar;const descr: PChar); cdecl; external libmgl;
+/// Import points and primitives from file using MGLD format
+procedure mgl_import_mgld(gr: HMGL;const fname: PChar;add: int); cdecl; external libmgl;
+/// Export in JSON format suitable for later drawing by JavaScript
+procedure mgl_write_json(gr: HMGL;const fname: PChar;const descr: PChar); cdecl; external libmgl;
+procedure mgl_write_json_z(gr: HMGL;const fname: PChar;const descr: PChar); cdecl; external libmgl;
+function gl_get_json(gr: HMGL): PCHAR; cdecl; external libmgl;
+/// Get RGB values of current bitmap
+function gl_get_rgb(gr: HMGL): PCHAR; cdecl; external libmgl;
+/// Get RGBA values of current bitmap
+function gl_get_rgba(gr: HMGL): PCHAR; cdecl; external libmgl;
+/// Set object/subplot id
+procedure mgl_set_obj_id(gr: HMGL;id: int); cdecl; external libmgl;
+/// Get object id
+function mgl_get_obj_id(gr: HMGL;x: int;y: int): int; cdecl; external libmgl;
+/// Get subplot id
+function mgl_get_spl_id(gr: HMGL;x: int;y: int): int; cdecl; external libmgl;
+/// Get width of the image
+function mgl_get_width(gr: HMGL): int; cdecl; external libmgl;
+/// Get height of the image
+function mgl_get_height(gr: HMGL): int; cdecl; external libmgl;
+/// Calculate 3D coordinate {x,y,z} for screen point {xs,ys}
+procedure mgl_calc_xyz(gr: HMGL;xs: int;ys: int;x: Pmreal;y: Pmreal;z: Pmreal); cdecl; external libmgl;
+/// Calculate screen point {xs,ys} for 3D coordinate {x,y,z}
+procedure mgl_calc_scr(gr: HMGL;x: double;y: double;z: double;xs: Pint;ys: Pint); cdecl; external libmgl;
+/// Check if {xs,ys} is close to active point with accuracy d, and return its position or -1
+function mgl_is_active(gr: HMGL;xs: int;ys: int;d: int): int; cdecl; external libmgl;
+/// Create new frame.
+function mgl_new_frame(gr: HMGL): int; cdecl; external libmgl;
+/// Finish frame drawing
+procedure mgl_end_frame(gr: HMGL); cdecl; external libmgl;
+/// Get the number of created frames
+function mgl_get_num_frame(gr: HMGL): int; cdecl; external libmgl;
+/// Reset frames counter (start it from zero)
+procedure mgl_reset_frames(gr: HMGL); cdecl; external libmgl;
+/// Get drawing data for i-th frame (work if MGL_VECT_FRAME is set on)
+procedure mgl_get_frame(gr: HMGL;i: int); cdecl; external libmgl;
+/// Set drawing data for i-th frame (work if MGL_VECT_FRAME is set on)
+procedure mgl_set_frame(gr: HMGL;i: int); cdecl; external libmgl;
+/// Append drawing data from i-th frame (work if MGL_VECT_FRAME is set on)
+procedure mgl_show_frame(gr: HMGL;i: int); cdecl; external libmgl;
+/// Delete primitives for i-th frame (work if MGL_VECT_FRAME is set on)
+procedure mgl_del_frame(gr: HMGL;i: int); cdecl; external libmgl;
+/// Set the transparency type (0 - usual, 1 - glass, 2 - lamp)
+procedure mgl_set_transp_type(gr: HMGL;type: int); cdecl; external libmgl;
+/// Set the transparency on/off.
+procedure mgl_set_alpha(gr: HMGL;enable: int); cdecl; external libmgl;
+/// Set the fog distance or switch it off (if d=0).
+procedure mgl_set_fog(gr: HMGL;d: double;dz: double); cdecl; external libmgl;
+/// Set the using of light on/off.
+procedure mgl_set_light(gr: HMGL;enable: int); cdecl; external libmgl;
+/// Switch on/off the specified light source.
+procedure mgl_set_light_n(gr: HMGL;n: int;enable: int); cdecl; external libmgl;
+/// Add white light source at infinity.
+procedure mgl_add_light(gr: HMGL;n: int;x: double;y: double;z: double); cdecl; external libmgl;
+/// Add light source at infinity (more settings).
+procedure mgl_add_light_ext(gr: HMGL;n: int;x: double;y: double;z: double;c: char;br: double;ap: double); cdecl; external libmgl;
+/// Add local light source.
+procedure mgl_add_light_loc(gr: HMGL;n: int;x: double;y: double;z: double;dx: double;dy: double;dz: double;c: char;br: double;ap: double); cdecl; external libmgl;
+/// Pop transformation matrix from stack
+procedure mgl_mat_pop(gr: HMGL); cdecl; external libmgl;
+/// Push transformation matrix into stack
+procedure mgl_mat_push(gr: HMGL); cdecl; external libmgl;
+/// Clear up the frame
+procedure mgl_clf(gr: HMGL); cdecl; external libmgl;
+/// Clear up the frame and fill background by specified color
+procedure mgl_clf_rgb(gr: HMGL;r: double;g: double;b: double); cdecl; external libmgl;
+/// Clear up the frame and fill background by specified color
+procedure mgl_clf_chr(gr: HMGL;col: char); cdecl; external libmgl;
+/// Put further plotting in some region of whole frame.
+procedure mgl_subplot(gr: HMGL;nx: int;ny: int;m: int;const style: PChar); cdecl; external libmgl;
+/// Put further plotting in some region of whole frame and shift it by distance {dx,dy}.
+procedure mgl_subplot_d(gr: HMGL;nx: int;ny: int;m: int;const style: PChar;dx: double;dy: double); cdecl; external libmgl;
+/// Like MGL_EXPORT mgl_subplot() but "join" several cells
+procedure mgl_multiplot(gr: HMGL;nx: int;ny: int;m: int;dx: int;dy: int;const style: PChar); cdecl; external libmgl;
+/// Put further plotting in a region of whole frame.
+procedure mgl_inplot(gr: HMGL;x1: double;x2: double;y1: double;y2: double); cdecl; external libmgl;
+/// Put further plotting in a region of current subplot/inplot.
+procedure mgl_relplot(gr: HMGL;x1: double;x2: double;y1: double;y2: double); cdecl; external libmgl;
+/// Put further plotting in column cell of previous subplot/inplot.
+procedure mgl_columnplot(gr: HMGL;num: int;ind: int;d: double); cdecl; external libmgl;
+/// Put further plotting in matrix cell of previous subplot/inplot.
+procedure mgl_gridplot(gr: HMGL;nx: int;ny: int;m: int;d: double); cdecl; external libmgl;
+/// Put further plotting in cell of stick rotated on angles tet, phi.
+procedure mgl_stickplot(gr: HMGL;num: int;ind: int;tet: double;phi: double); cdecl; external libmgl;
+/// Add title for current subplot/inplot.
+procedure mgl_title(gr: HMGL;const title: PChar;const stl: PChar;size: double); cdecl; external libmgl;
+procedure mgl_titlew(gr: HMGL;const title: PWideChar;const stl: PChar;size: double); cdecl; external libmgl;
+/// Set factor of plot size
+procedure mgl_set_plotfactor(gr: HMGL;val: double); cdecl; external libmgl;
+/// Set aspect ratio for further plotting.
+procedure mgl_aspect(gr: HMGL;Ax: double;Ay: double;Az: double); cdecl; external libmgl;
+/// Rotate a further plotting.
+procedure mgl_rotate(gr: HMGL;TetX: double;TetZ: double;TetY: double); cdecl; external libmgl;
+/// Rotate a further plotting around vector {x,y,z}.
+procedure mgl_rotate_vector(gr: HMGL;Tet: double;x: double;y: double;z: double); cdecl; external libmgl;
+/// Set perspective (in range [0,1)) for plot. Set to zero for switching off.
+procedure mgl_perspective(gr: HMGL;val: double); cdecl; external libmgl;
+/// Set angle of view independently from Rotate().
+procedure mgl_view(gr: HMGL;TetX: double;TetZ: double;TetY: double); cdecl; external libmgl;
+/// Zoom in/out a part of picture (use mgl_zoom(0, 0, 1, 1) for restore default)
+procedure mgl_zoom(gr: HMGL;x1: double;y1: double;x2: double;y2: double); cdecl; external libmgl;
+//-----------------------------------------------------------------------------
+/// Callback function for mouse click
+/// Set delay for animation in seconds
+procedure mgl_wnd_set_delay(gr: HMGL;dt: double); cdecl; external libmgl;
+/// Get delay for animation in seconds
+function mgl_wnd_get_delay(gr: HMGL): double; cdecl; external libmgl;
+/// Set window properties
+procedure mgl_setup_window(gr: HMGL;clf_upd: int;showpos: int); cdecl; external libmgl;
+/// Switch on/off transparency (do not overwrite user settings)
+procedure mgl_wnd_toggle_alpha(gr: HMGL); cdecl; external libmgl;
+/// Switch on/off lighting (do not overwrite user settings)
+procedure mgl_wnd_toggle_light(gr: HMGL); cdecl; external libmgl;
+/// Switch on/off zooming by mouse
+procedure mgl_wnd_toggle_zoom(gr: HMGL); cdecl; external libmgl;
+/// Switch on/off rotation by mouse
+procedure mgl_wnd_toggle_rotate(gr: HMGL); cdecl; external libmgl;
+/// Switch off all zooming and rotation
+procedure mgl_wnd_toggle_no(gr: HMGL); cdecl; external libmgl;
+/// Update picture by calling user drawing function
+procedure mgl_wnd_update(gr: HMGL); cdecl; external libmgl;
+/// Reload user data and update picture
+procedure mgl_wnd_reload(gr: HMGL); cdecl; external libmgl;
+/// Adjust size of bitmap to window size
+procedure mgl_wnd_adjust(gr: HMGL); cdecl; external libmgl;
+/// Show next frame (if one)
+procedure mgl_wnd_next_frame(gr: HMGL); cdecl; external libmgl;
+/// Show previous frame (if one)
+procedure mgl_wnd_prev_frame(gr: HMGL); cdecl; external libmgl;
+/// Run slideshow (animation) of frames
+procedure mgl_wnd_animation(gr: HMGL); cdecl; external libmgl;
+/// Get last mouse position
+procedure mgl_get_last_mouse_pos(gr: HMGL;x: Pmreal;y: Pmreal;z: Pmreal); cdecl; external libmgl;
+//-----------------------------------------------------------------------------
+/// Create HMPR object for parsing MGL scripts
+function mgl_create_parser): HMPR; cdecl; external libmgl;
+/// Change counter of HMPR uses (for advanced users only). Non-zero counter prevent automatic object removing.
+function mgl_use_parser(p: HMPR;inc: int): int; cdecl; external libmgl;
+/// Delete HMPR object
+procedure mgl_delete_parser(p: HMPR); cdecl; external libmgl;
+/// Set value for parameter $N
+procedure mgl_parser_add_param(p: HMPR;id: int;const str: PChar); cdecl; external libmgl;
+procedure mgl_parser_add_paramw(p: HMPR;id: int;const str: PWideChar); cdecl; external libmgl;
+/// Find variable with given name or add a new one
+/// NOTE !!! You must not delete obtained data arrays !!!
+function mgl_parser_add_var(p: HMPR;const name: PChar): HMDT; cdecl; external libmgl;
+function mgl_parser_add_varw(p: HMPR;const name: PWideChar): HMDT; cdecl; external libmgl;
+/// Find variable with given name or return NULL if no one
+/// NOTE !!! You must not delete obtained data arrays !!!
+function mgl_parser_find_var(p: HMPR;const name: PChar): HMDT; cdecl; external libmgl;
+function mgl_parser_find_varw(p: HMPR;const name: PWideChar): HMDT; cdecl; external libmgl;
+/// Delete variable with name
+procedure mgl_parser_del_var(p: HMPR;const name: PChar); cdecl; external libmgl;
+procedure mgl_parser_del_varw(p: HMPR;const name: PWideChar); cdecl; external libmgl;
+/// Delete all data variables
+procedure mgl_parser_del_all(p: HMPR); cdecl; external libmgl;
+/// Parse and draw single line of the MGL script
+function mgl_parse_line(gr: HMGL;p: HMPR;const str: PChar;pos: int): int; cdecl; external libmgl;
+function mgl_parse_linew(gr: HMGL;p: HMPR;const str: PWideChar;pos: int): int; cdecl; external libmgl;
+/// Execute and draw script from the file
+/// Execute MGL script text with '\n' separated lines
+procedure mgl_parse_text(gr: HMGL;p: HMPR;const str: PChar); cdecl; external libmgl;
+procedure mgl_parse_textw(gr: HMGL;p: HMPR;const str: PWideChar); cdecl; external libmgl;
+/// Restore once flag
+procedure mgl_parser_restore_once(p: HMPR); cdecl; external libmgl;
+/// Allow changing size of the picture
+procedure mgl_parser_allow_setsize(p: HMPR;a: int); cdecl; external libmgl;
+/// Allow reading/saving files
+procedure mgl_parser_allow_file_io(p: HMPR;a: int); cdecl; external libmgl;
+/// Set flag to stop script parsing
+procedure mgl_parser_stop(p: HMPR); cdecl; external libmgl;
+/// Return type of command: 0 - not found, 1 - data plot, 2 - other plot,
+///		3 - setup, 4 - data handle, 5 - data create, 6 - subplot, 7 - program
+///		8 - 1d plot, 9 - 2d plot, 10 - 3d plot, 11 - dd plot, 12 - vector plot
+///		13 - axis, 14 - primitives, 15 - axis setup, 16 - text/legend, 17 - data transform
+function mgl_parser_cmd_type(pr: HMPR;const name: PChar): int; cdecl; external libmgl;
+/// Return description of MGL command
+function gl_parser_cmd_desc(pr: HMPR;const name: PChar): PCHAR; cdecl; external libmgl;
+/// Return string of command format (command name and its argument[s])
+function gl_parser_cmd_frmt(pr: HMPR;const name: PChar): PCHAR; cdecl; external libmgl;
+/// Get name of command with nmber n
+function gl_parser_cmd_name(pr: HMPR;id: int): PCHAR; cdecl; external libmgl;
+/// Get number of defined commands
+function mgl_parser_cmd_num(pr: HMPR): int; cdecl; external libmgl;
+/// Return result of formula evaluation
+function mgl_parser_calc(pr: HMPR;const formula: PChar): HMDT; cdecl; external libmgl;
+function mgl_parser_calcw(pr: HMPR;const formula: PWideChar): HMDT; cdecl; external libmgl;
+//-----------------------------------------------------------------------------
+/// Create HMEX object for expression evaluating
+function mgl_create_expr(const expr: PChar): HMEX; cdecl; external libmgl;
+/// Delete HMEX object
+procedure mgl_delete_expr(ex: HMEX); cdecl; external libmgl;
+/// Return value of expression for given x,y,z variables
+function mgl_expr_eval(ex: HMEX;x: double;y: double;z: double): double; cdecl; external libmgl;
+/// Return value of expression for given variables
+function mgl_expr_eval_v(ex: HMEX;var: Pmreal): double; cdecl; external libmgl;
+/// Return value of expression differentiation over variable dir for given x,y,z variables
+function mgl_expr_diff(ex: HMEX;dir: char;x: double;y: double;z: double): double; cdecl; external libmgl;
+/// Return value of expression differentiation over variable dir for given variables
+function mgl_expr_diff_v(ex: HMEX;dir: char;var: Pmreal): double; cdecl; external libmgl;
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+/// Get integer power of x
+/// Get exp(i*a)
+/// Get exp(i*a)
+/// Explicit scheme for 1 step of axial diffraction
+/// Explicit scheme for 1 step of plane diffraction
+//-----------------------------------------------------------------------------
+/// Set seed for random numbers
+procedure mgl_srnd(seed: int); cdecl; external libmgl;
+/// Get random number
+function mgl_rnd): double; cdecl; external libmgl;
+/// Get integer power of x
+function mgl_ipow(x: double;n: int): double; cdecl; external libmgl;
+/// Get random number with Gaussian distribution
+function mgl_gauss_rnd): double; cdecl; external libmgl;
+/// Fill frequencies for FFT
+procedure mgl_fft_freq(freq: Pdouble;nn: int); cdecl; external libmgl;
+/// Remove double spaces from the string
+procedure mgl_strcls(str: PChar); cdecl; external libmgl;
+/// Get position of substring or return -1 if not found
+function mgl_strpos(const str: PChar;fnd: PChar): int; cdecl; external libmgl;
+/// Get position of symbol or return -1 if not found
+function mgl_chrpos(const str: PChar;fnd: char): int; cdecl; external libmgl;
+/// Get uncommented string from file (NOTE: it is not thread safe!!!)
+/// Get parameters from uncommented strings of file (NOTE: it is not thread safe!!!)
+/// Check if symbol denote true
+function mgl_istrue(ch: char): int; cdecl; external libmgl;
+/// Print test message
+/// Print info message
+/// Locate next data block (block started by -----)

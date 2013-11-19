@@ -168,7 +168,7 @@ MGL_EXPORT FILE *mgl_next_data(const char *fname,int p)
 	return fp;
 }
 //-----------------------------------------------------------------------------
-bool MGL_EXPORT mgl_difr_grid(dual *a,int n,dual q,int Border,dual *b,dual *d,int kk)
+int MGL_EXPORT mgl_difr_grid(dual *a,int n,dual q,int Border,dual *b,dual *d,int kk)
 {
 	//	if(n<=0 || q>=0.5)	return false;
 	dual adt = dual(0.,1.)*q;
@@ -208,7 +208,7 @@ bool MGL_EXPORT mgl_difr_grid(dual *a,int n,dual q,int Border,dual *b,dual *d,in
 	return true;
 }
 //-----------------------------------------------------------------------------
-bool MGL_EXPORT mgl_difr_axial(dual *a, int n, dual q, int Border,dual *b, dual *d, int kk, double di)
+int MGL_EXPORT mgl_difr_axial(dual *a, int n, dual q, int Border,dual *b, dual *d, int kk, double di)
 {
 	int ii = di<0 ? -int(floor(di)) : 0;
 	dual adt = dual(0.,1.)*q;

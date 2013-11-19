@@ -2713,7 +2713,7 @@ The function draws surface specified parametrically @{@var{x}[i,j], @var{y}[i,j]
 @deftypefnx {C function} @code{void} mgl_surf3a_val (@code{HMGL} gr, @code{mreal} val, @code{HCDT} a, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_surf3a_xyz_val (@code{HMGL} gr, @code{mreal} val, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-The function draws isosurface plot for 3d array specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]) at @var{a}(x,y,z)=@var{val}. It is mostly the same as @ref{surf3} function but the color of isosurface depends on values of array @var{c}. If string @var{sch} contain @samp{#} then wire plot is produced. If string @var{sch} have symbol @samp{.} then plot by dots is produced. See also @ref{surf3}, @ref{surfc}, @ref{surf3a}. @sref{Surf3A sample}
+The function draws isosurface plot for 3d array specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]) at @var{a}(x,y,z)=@var{val}. It is mostly the same as @ref{surf3} function but the transparency of isosurface depends on values of array @var{c}. If string @var{sch} contain @samp{#} then wire plot is produced. If string @var{sch} have symbol @samp{.} then plot by dots is produced. See also @ref{surf3}, @ref{surfc}, @ref{surf3a}. @sref{Surf3A sample}
 @end deftypefn
 
 @deftypefn {MGL command} {} surf3a adat cdat ['sch'='']

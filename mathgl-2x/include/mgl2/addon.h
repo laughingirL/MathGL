@@ -31,9 +31,9 @@ dual MGL_EXPORT mgl_expi(dual a);
 dual MGL_EXPORT mgl_expi(double a);
 
 /// Explicit scheme for 1 step of axial diffraction
-bool MGL_EXPORT mgl_difr_axial(dual *a, int n, dual q, int Border,dual *b, dual *d, int kk, double di);
+int MGL_EXPORT mgl_difr_axial(dual *a, int n, dual q, int Border,dual *b, dual *d, int kk, double di);
 /// Explicit scheme for 1 step of plane diffraction
-bool MGL_EXPORT mgl_difr_grid(dual *a,int n,dual q,int Border,dual *b,dual *d,int kk);
+int MGL_EXPORT mgl_difr_grid(dual *a,int n,dual q,int Border,dual *b,dual *d,int kk);
 //-----------------------------------------------------------------------------
 extern "C" {
 #endif
