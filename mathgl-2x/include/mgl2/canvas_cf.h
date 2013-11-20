@@ -38,8 +38,8 @@ void MGL_EXPORT mgl_set_size_(uintptr_t *gr, int *width, int *height);
 void MGL_EXPORT mgl_set_def_param(HMGL gr);
 void MGL_EXPORT mgl_set_def_param_(uintptr_t *gr);
 /// Combine plots from 2 canvases. Result will be saved into gr
-void MGL_EXPORT mgl_combine_gr(HMGL gr, HMGL in);
-void MGL_EXPORT mgl_combine_gr_(uintptr_t *gr, uintptr_t *in);
+void MGL_EXPORT mgl_combine_gr(HMGL gr, HMGL gr2);
+void MGL_EXPORT mgl_combine_gr_(uintptr_t *gr, uintptr_t *gr2);
 /// Force preparing the image. It can be useful for OpenGL mode mostly.
 void MGL_EXPORT mgl_finish(HMGL gr);
 void MGL_EXPORT mgl_finish_(uintptr_t *gr);
@@ -264,8 +264,8 @@ void MGL_EXPORT mgl_del_frame(HMGL gr, int i);
 void MGL_EXPORT mgl_del_frame_(uintptr_t *gr, int *i);
 
 /// Set the transparency type (0 - usual, 1 - glass, 2 - lamp)
-void MGL_EXPORT mgl_set_transp_type(HMGL gr, int type);
-void MGL_EXPORT mgl_set_transp_type_(uintptr_t *gr, int *type);
+void MGL_EXPORT mgl_set_transp_type(HMGL gr, int kind);
+void MGL_EXPORT mgl_set_transp_type_(uintptr_t *gr, int *kind);
 /// Set the transparency on/off.
 void MGL_EXPORT mgl_set_alpha(HMGL gr, int enable);
 void MGL_EXPORT mgl_set_alpha_(uintptr_t *gr, int *enable);
@@ -499,13 +499,13 @@ double MGL_EXPORT mgl_expr_eval(HMEX ex, double x, double y,double z);
 double MGL_EXPORT mgl_eval_expr_(uintptr_t *ex, mreal *x, mreal *y, mreal *z);
 dual MGL_EXPORT mgl_cexpr_eval(HAEX ex, dual x, dual y,dual z);
 /// Return value of expression for given variables
-double MGL_EXPORT mgl_expr_eval_v(HMEX ex, mreal *var);
-dual MGL_EXPORT mgl_cexpr_eval_v(HAEX ex, dual *var);
+double MGL_EXPORT mgl_expr_eval_v(HMEX ex, mreal *vars);
+dual MGL_EXPORT mgl_cexpr_eval_v(HAEX ex, dual *vars);
 /// Return value of expression differentiation over variable dir for given x,y,z variables
 double MGL_EXPORT mgl_expr_diff(HMEX ex, char dir, double x, double y,double z);
 double MGL_EXPORT mgl_diff_expr_(uintptr_t *ex, const char *dir, mreal *x, mreal *y, mreal *z, int);
 /// Return value of expression differentiation over variable dir for given variables
-double MGL_EXPORT mgl_expr_diff_v(HMEX ex, char dir, mreal *var);
+double MGL_EXPORT mgl_expr_diff_v(HMEX ex, char dir, mreal *vars);
 
 #ifdef __cplusplus
 }

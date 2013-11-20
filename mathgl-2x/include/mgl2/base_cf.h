@@ -65,8 +65,8 @@ void MGL_EXPORT mgl_set_rdc_acc(HMGL gr, int reduce);	// TODO
 void MGL_EXPORT mgl_set_rdc_acc_(uintptr_t *gr, int *reduce);
 
 /// Start group of objects
-void MGL_EXPORT mgl_start_group(HMGL gr, const char *);
-void MGL_EXPORT mgl_start_group_(uintptr_t *gr, const char *,int);
+void MGL_EXPORT mgl_start_group(HMGL gr, const char *name);
+void MGL_EXPORT mgl_start_group_(uintptr_t *gr, const char *name,int);
 /// End group of objects
 void MGL_EXPORT mgl_end_group(HMGL gr);
 void MGL_EXPORT mgl_end_group_(uintptr_t *gr);

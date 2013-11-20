@@ -82,17 +82,33 @@ type TMGLData = record\n\
 end;\n\
 type TMGLParse = record\n\
 end;\n\
+type TMGLFormula = record\n\
+end;\n\
+type TMGLFormulaC = record\n\
+end;\n\
 type HMDR = ^TNGLDraw;\n\
 type HMGL = ^TMGLGraph;\n\
 type HMDT = ^TMGLData;\n\
 type HMPR = ^TMGLParse;\n\
-type PPChar = ^PChar;\n\n\
+type PPChar = ^PChar;\n\
+type HMEX = ^TMGLFormula;\n\
+type HAEX = ^TMGLFormulaC;\n\n\
+type Preal = ^single;\n\
+type Pdouble = ^double;\n\
+type Pint = ^integer;\n\
 type TGSLVector = record\n\
 end;\n\
 type TGSLMatrix = record\n\
 end;\n\
 type PGSLVector = ^TGSLVector;\n\
-type PGSLMatrix = ^TGSLMatrix;\n";
+type PGSLMatrix = ^TGSLMatrix;\n\n\
+type TMglDrawFunction = function (gr: HMGL; p: pointer): integereger; cdecl;\n\
+function mgl_create_graph_gl(): HMGL; cdecl; external libmgl;\n\
+function mgl_create_graph_glut(draw: TMglDrawFunction; const title: PChar; par: pointer): HMGL; cdecl; external libmglglut;\n\
+function mgl_create_graph_fltk(draw: TMglDrawFunction; const title: PChar; par: pointer): HMGL; cdecl; external libmglfltk;\n\
+procedure mgl_fltk_run(); cdecl; external libmglfltk;\n\
+function mgl_create_graph_qt(draw: TMglDrawFunction; const title: PChar; par: pointer): HMGL; cdecl; external libmglqt;\n\
+procedure mgl_qt_run(); cdecl; external libmglqt;\n";
 
 const char *parse_name(char *name)
 {
@@ -111,6 +127,7 @@ const char *parse_name(char *name)
 		*ptr=0;	i=ptr-name+1;
 	}
 	ptr=strchr(name+i,')');	if(ptr) *ptr=0;
+	if(arg[0][0]==0)	strcat(res," ");
 	for(j=0;j<20;j++)
 	{
 		if(arg[j][0]==0)	break;
@@ -148,11 +165,11 @@ const char *parse_name(char *name)
 		else if(!strncmp(arg[j],"char ",5))
 			sprintf(ptr, "%s: char;", arg[j]+5);
 		else if(!strncmp(arg[j],"long ",5))		// TODO check
-			sprintf(ptr, "%s: int;", arg[j]+5);
+			sprintf(ptr, "%s: integer;", arg[j]+5);
 		else if(!strncmp(arg[j],"uint32_t ",9))	// TODO check
-			sprintf(ptr, "%s: int;", arg[j]+9);
+			sprintf(ptr, "%s: integer;", arg[j]+9);
 		else if(!strncmp(arg[j],"int ",4))
-			sprintf(ptr, "%s: int;", arg[j]+4);
+			sprintf(ptr, "%s: integer;", arg[j]+4);
 		else if(!strncmp(arg[j],"mreal ",6))
 			sprintf(ptr, "%s: mreal;", arg[j]+6);
 		else if(!strncmp(arg[j],"double ",7))
@@ -193,7 +210,7 @@ bool parse_file(const char *fname, FILE *out)
 		if(strstr(buf, "TODO"))	continue;
 		if(strstr(buf, "...)"))	continue;
 		
-		// TODO enable later
+		// TODO following 5 lines enable later
 		if(strstr(buf, "* const *"))	continue;
 		if(strstr(buf, "uint64_t"))	continue;
 		if(strstr(buf, "dual"))	continue;
@@ -213,23 +230,23 @@ bool parse_file(const char *fname, FILE *out)
 		else if(!strncmp(buf,"void MGL_EXPORT",15))
 			fprintf(out,"procedure %s; cdecl; external libmgl;\n",parse_name(buf+16));
 		else if(!strncmp(buf,"int MGL_EXPORT",14))
-			fprintf(out,"function %s: int; cdecl; external libmgl;\n",parse_name(buf+15));
+			fprintf(out,"function %s: integer; cdecl; external libmgl;\n",parse_name(buf+15));
 		else if(!strncmp(buf,"double MGL_EXPORT",17))
 			fprintf(out,"function %s: double; cdecl; external libmgl;\n",parse_name(buf+18));
 		else if(!strncmp(buf,"mreal MGL_EXPORT",16))
 			fprintf(out,"function %s: mreal; cdecl; external libmgl;\n",parse_name(buf+17));
 		else if(!strncmp(buf,"long MGL_EXPORT",15))
-			fprintf(out,"function %s: int; cdecl; external libmgl;\n",parse_name(buf+16));
+			fprintf(out,"function %s: integer; cdecl; external libmgl;\n",parse_name(buf+16));
 		else if(!strncmp(buf,"HMDT MGL_EXPORT",15))
 			fprintf(out,"function %s: HMDT; cdecl; external libmgl;\n",parse_name(buf+16));
 		else if(!strncmp(buf,"HMGL MGL_EXPORT",15))
 			fprintf(out,"function %s: HMGL; cdecl; external libmgl;\n",parse_name(buf+16));
 		else if(!strncmp(buf,"MGL_EXPORT const char *",23))
-			fprintf(out,"function %s: PCHAR; cdecl; external libmgl;\n",parse_name(buf+24));
+			fprintf(out,"function %s: PChar; cdecl; external libmgl;\n",parse_name(buf+24));
 		else if(!strncmp(buf,"MGL_EXPORT mreal *",18))
 			fprintf(out,"function %s: Pmreal; cdecl; external libmgl;\n",parse_name(buf+19));
 		else if(!strncmp(buf,"MGL_EXPORT const unsigned char *",32))
-			fprintf(out,"function %s: PCHAR; cdecl; external libmgl;\n",parse_name(buf+33));
+			fprintf(out,"function %s: PByte; cdecl; external libmgl;\n",parse_name(buf+33));
 		else if(!strncmp(buf,"HMPR MGL_EXPORT",15))
 			fprintf(out,"function %s: HMPR; cdecl; external libmgl;\n",parse_name(buf+16));
 		else if(!strncmp(buf,"HMEX MGL_EXPORT",15))

@@ -128,8 +128,8 @@ int MGL_EXPORT mgl_data_read_mat_(uintptr_t *dat, const char *fname, int *dim, i
 int MGL_EXPORT mgl_data_read_dim(HMDT dat, const char *fname,long mx,long my,long mz);
 int MGL_EXPORT mgl_data_read_dim_(uintptr_t *dat, const char *fname,int *mx,int *my,int *mz,int);
 /// Read data from tab-separated text files with auto determining size which filenames are result of sprintf(fname,templ,t) where t=from:step:to
-int MGL_EXPORT mgl_data_read_range(HMDT d, const char *templ, double from, double to, double step, int as_slice);
-int MGL_EXPORT mgl_data_read_range_(uintptr_t *d, const char *fname, mreal *from, mreal *to, mreal *step, int *as_slice,int l);
+int MGL_EXPORT mgl_data_read_range(HMDT d, const char *templ, double n1, double n2, double step, int as_slice);
+int MGL_EXPORT mgl_data_read_range_(uintptr_t *d, const char *fname, mreal *n1, mreal *n2, mreal *step, int *as_slice,int l);
 /// Read data from tab-separated text files with auto determining size which filenames are satisfied to template (like "t_*.dat")
 int MGL_EXPORT mgl_data_read_all(HMDT dat, const char *templ, int as_slice);
 int MGL_EXPORT mgl_data_read_all_(uintptr_t *d, const char *fname, int *as_slice,int l);
@@ -440,11 +440,11 @@ uintptr_t MGL_EXPORT mgl_triangulation_2d_(uintptr_t *x, uintptr_t *y);
 /// Find root for nonlinear equation
 mreal MGL_EXPORT mgl_find_root(mreal (*func)(mreal val, void *par), mreal ini, void *par);
 /// Find root for nonlinear equation defined by textual formula
-mreal MGL_EXPORT mgl_find_root_txt(const char *func, mreal ini, char var);
-mreal MGL_EXPORT mgl_find_root_txt_(const char *func, mreal *ini, const char *var,int,int);
+mreal MGL_EXPORT mgl_find_root_txt(const char *func, mreal ini, char var_id);
+mreal MGL_EXPORT mgl_find_root_txt_(const char *func, mreal *ini, const char *var_id,int,int);
 /// Find roots for nonlinear equation defined by textual formula
-HMDT MGL_EXPORT mgl_data_roots(const char *func, HCDT ini, char var);
-uintptr_t MGL_EXPORT mgl_data_roots_(const char *func, uintptr_t *ini, const char *var,int,int);
+HMDT MGL_EXPORT mgl_data_roots(const char *func, HCDT ini, char var_id);
+uintptr_t MGL_EXPORT mgl_data_roots_(const char *func, uintptr_t *ini, const char *var_id,int,int);
 
 #ifdef __cplusplus
 }

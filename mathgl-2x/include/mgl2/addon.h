@@ -37,13 +37,6 @@ int MGL_EXPORT mgl_difr_grid(dual *a,int n,dual q,int Border,dual *b,dual *d,int
 //-----------------------------------------------------------------------------
 extern "C" {
 #endif
-/// Set seed for random numbers
-void MGL_EXPORT mgl_srnd(long seed);
-/// Get random number
-double MGL_EXPORT mgl_rnd();
-/// Get integer power of x
-double MGL_EXPORT mgl_ipow(double x,int n);
-
 /// Get random number with Gaussian distribution
 double MGL_EXPORT mgl_gauss_rnd();
 /// Fill frequencies for FFT

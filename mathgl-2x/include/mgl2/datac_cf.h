@@ -105,7 +105,7 @@ int MGL_EXPORT mgl_datac_read_dim(HADT dat, const char *fname,long mx,long my,lo
 int MGL_EXPORT mgl_datac_read_dim_(uintptr_t *dat, const char *fname,int *mx,int *my,int *mz,int);
 /// Read data from tab-separated text files with auto determining size which filenames are result of sprintf(fname,templ,t) where t=from:step:to
 int MGL_EXPORT mgl_datac_read_range(HADT d, const char *templ, double from, double to, double step, int as_slice);
-int MGL_EXPORT mgl_data_read_range_(uintptr_t *d, const char *fname, mreal *from, mreal *to, mreal *step, int *as_slice,int l);
+int MGL_EXPORT mgl_datac_read_range_(uintptr_t *d, const char *fname, mreal *from, mreal *to, mreal *step, int *as_slice,int l);
 /// Read data from tab-separated text files with auto determining size which filenames are satisfied to template (like "t_*.dat")
 int MGL_EXPORT mgl_datac_read_all(HADT dat, const char *templ, int as_slice);
 int MGL_EXPORT mgl_data_read_all_(uintptr_t *d, const char *fname, int *as_slice,int l);

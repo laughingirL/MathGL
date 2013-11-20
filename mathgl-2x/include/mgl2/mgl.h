@@ -1096,54 +1096,54 @@ public:
 	{	mgl_crust(gr, &x, &y, &z, sch, opt);	}
 
 	/// Fit data along x-direction for each data row. Return array with values for found formula.
-	inline mglData Fit(const mglDataA &y, const char *eq, const char *var, const char *opt="")
-	{	return mglData(true,mgl_fit_1(gr, &y, eq,var,0, opt));	}
-	inline mglData Fit(const mglDataA &y, const char *eq, const char *var, mglData &ini, const char *opt="")
-	{	return mglData(true,mgl_fit_1(gr, &y, eq, var, &ini, opt));	}
+	inline mglData Fit(const mglDataA &y, const char *eq, const char *vars, const char *opt="")
+	{	return mglData(true,mgl_fit_1(gr, &y, eq,vars,0, opt));	}
+	inline mglData Fit(const mglDataA &y, const char *eq, const char *vars, mglData &ini, const char *opt="")
+	{	return mglData(true,mgl_fit_1(gr, &y, eq, vars, &ini, opt));	}
 	/// Fit data along x-, y-directions for each data slice. Return array with values for found formula.
-	inline mglData Fit2(const mglDataA &z, const char *eq, const char *var, const char *opt="")
-	{	return mglData(true,mgl_fit_2(gr, &z, eq, var,0, opt));	}
-	inline mglData Fit2(const mglDataA &z, const char *eq, const char *var, mglData &ini, const char *opt="")
-	{	return mglData(true,mgl_fit_2(gr, &z, eq, var, &ini, opt));	}
+	inline mglData Fit2(const mglDataA &z, const char *eq, const char *vars, const char *opt="")
+	{	return mglData(true,mgl_fit_2(gr, &z, eq, vars,0, opt));	}
+	inline mglData Fit2(const mglDataA &z, const char *eq, const char *vars, mglData &ini, const char *opt="")
+	{	return mglData(true,mgl_fit_2(gr, &z, eq, vars, &ini, opt));	}
 	/// Fit data along along all directions. Return array with values for found formula.
-	inline mglData Fit3(const mglDataA &a, const char *eq, const char *var, const char *opt="")
-	{	return mglData(true,mgl_fit_3(gr, &a, eq, var,0, opt));	}
-	inline mglData Fit3(const mglDataA &a, const char *eq, const char *var, mglData &ini, const char *opt="")
-	{	return mglData(true,mgl_fit_3(gr, &a, eq, var, &ini, opt));	}
+	inline mglData Fit3(const mglDataA &a, const char *eq, const char *vars, const char *opt="")
+	{	return mglData(true,mgl_fit_3(gr, &a, eq, vars,0, opt));	}
+	inline mglData Fit3(const mglDataA &a, const char *eq, const char *vars, mglData &ini, const char *opt="")
+	{	return mglData(true,mgl_fit_3(gr, &a, eq, vars, &ini, opt));	}
 	/// Fit data along x-direction for each data row. Return array with values for found formula.
-	inline mglData Fit(const mglDataA &x, const mglDataA &y, const char *eq, const char *var, const char *opt="")
-	{	return mglData(true,mgl_fit_xy(gr, &x, &y, eq, var,0, opt));	}
-	inline mglData Fit(const mglDataA &x, const mglDataA &y, const char *eq, const char *var, mglData &ini, const char *opt="")
-	{	return mglData(true,mgl_fit_xy(gr, &x, &y, eq, var, &ini, opt));	}
+	inline mglData Fit(const mglDataA &x, const mglDataA &y, const char *eq, const char *vars, const char *opt="")
+	{	return mglData(true,mgl_fit_xy(gr, &x, &y, eq, vars,0, opt));	}
+	inline mglData Fit(const mglDataA &x, const mglDataA &y, const char *eq, const char *vars, mglData &ini, const char *opt="")
+	{	return mglData(true,mgl_fit_xy(gr, &x, &y, eq, vars, &ini, opt));	}
 	/// Fit data along x-, y-directions for each data slice. Return array with values for found formula.
-	inline mglData Fit(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *eq, const char *var, const char *opt="")
-	{	return mglData(true,mgl_fit_xyz(gr, &x, &y, &z, eq, var,0, opt));	}
-	inline mglData Fit(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *eq, const char *var, mglData &ini, const char *opt="")
-	{	return mglData(true,mgl_fit_xyz(gr, &x, &y, &z, eq, var, &ini, opt));	}
+	inline mglData Fit(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *eq, const char *vars, const char *opt="")
+	{	return mglData(true,mgl_fit_xyz(gr, &x, &y, &z, eq, vars,0, opt));	}
+	inline mglData Fit(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *eq, const char *vars, mglData &ini, const char *opt="")
+	{	return mglData(true,mgl_fit_xyz(gr, &x, &y, &z, eq, vars, &ini, opt));	}
 	/// Fit data along along all directions. Return array with values for found formula.
-	inline mglData Fit(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *eq, const char *var, const char *opt="")
-	{	return mglData(true,mgl_fit_xyza(gr, &x, &y, &z, &a, eq, var,0, opt));	}
-	inline mglData Fit(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *eq, const char *var, mglData &ini, const char *opt="")
-	{	return mglData(true,mgl_fit_xyza(gr, &x, &y, &z, &a, eq,var, &ini, opt));	}
+	inline mglData Fit(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *eq, const char *vars, const char *opt="")
+	{	return mglData(true,mgl_fit_xyza(gr, &x, &y, &z, &a, eq, vars,0, opt));	}
+	inline mglData Fit(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *eq, const char *vars, mglData &ini, const char *opt="")
+	{	return mglData(true,mgl_fit_xyza(gr, &x, &y, &z, &a, eq,vars, &ini, opt));	}
 	/// Fit data with dispersion s along x-direction for each data row. Return array with values for found formula.
-	inline mglData FitS(const mglDataA &y, const mglDataA &s, const char *eq, const char *var, const char *opt="")
-	{	return mglData(true,mgl_fit_ys(gr, &y, &s, eq, var,0, opt));	}
-	inline mglData FitS(const mglDataA &y, const mglDataA &s, const char *eq, const char *var, mglData &ini, const char *opt="")
-	{	return mglData(true,mgl_fit_ys(gr, &y, &s, eq, var, &ini, opt));	}
-	inline mglData FitS(const mglDataA &x, const mglDataA &y, const mglDataA &s, const char *eq, const char *var, const char *opt="")
-	{	return mglData(true,mgl_fit_xys(gr, &x, &y, &s, eq, var,0, opt));	}
-	inline mglData FitS(const mglDataA &x, const mglDataA &y, const mglDataA &s, const char *eq, const char *var, mglData &ini, const char *opt="")
-	{	return mglData(true,mgl_fit_xys(gr, &x, &y, &s, eq, var, &ini, opt));	}
+	inline mglData FitS(const mglDataA &y, const mglDataA &s, const char *eq, const char *vars, const char *opt="")
+	{	return mglData(true,mgl_fit_ys(gr, &y, &s, eq, vars,0, opt));	}
+	inline mglData FitS(const mglDataA &y, const mglDataA &s, const char *eq, const char *vars, mglData &ini, const char *opt="")
+	{	return mglData(true,mgl_fit_ys(gr, &y, &s, eq, vars, &ini, opt));	}
+	inline mglData FitS(const mglDataA &x, const mglDataA &y, const mglDataA &s, const char *eq, const char *vars, const char *opt="")
+	{	return mglData(true,mgl_fit_xys(gr, &x, &y, &s, eq, vars,0, opt));	}
+	inline mglData FitS(const mglDataA &x, const mglDataA &y, const mglDataA &s, const char *eq, const char *vars, mglData &ini, const char *opt="")
+	{	return mglData(true,mgl_fit_xys(gr, &x, &y, &s, eq, vars, &ini, opt));	}
 	/// Fit data with dispersion s along x-, y-directions for each data slice. Return array with values for found formula.
-	inline mglData FitS(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &s, const char *eq, const char *var, const char *opt="")
-	{	return mglData(true,mgl_fit_xyzs(gr, &x, &y, &z, &s, eq, var,0, opt));	}
-	inline mglData FitS(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &s, const char *eq, const char *var, mglData &ini, const char *opt="")
-	{	return mglData(true,mgl_fit_xyzs(gr, &x, &y, &z, &s, eq, var, &ini, opt));	}
+	inline mglData FitS(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &s, const char *eq, const char *vars, const char *opt="")
+	{	return mglData(true,mgl_fit_xyzs(gr, &x, &y, &z, &s, eq, vars,0, opt));	}
+	inline mglData FitS(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &s, const char *eq, const char *vars, mglData &ini, const char *opt="")
+	{	return mglData(true,mgl_fit_xyzs(gr, &x, &y, &z, &s, eq, vars, &ini, opt));	}
 	/// Fit data with dispersion s along all directions. Return array with values for found formula.
-	inline mglData FitS(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const mglDataA &s, const char *eq, const char *var, const char *opt="")
-	{	return mglData(true,mgl_fit_xyzas(gr, &x, &y, &z, &a, &s, eq, var,0, opt));	}
-	inline mglData FitS(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const mglDataA &s, const char *eq, const char *var, mglData &ini, const char *opt="")
-	{	return mglData(true,mgl_fit_xyzas(gr, &x, &y, &z, &a, &s, eq, var, &ini, opt));	}
+	inline mglData FitS(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const mglDataA &s, const char *eq, const char *vars, const char *opt="")
+	{	return mglData(true,mgl_fit_xyzas(gr, &x, &y, &z, &a, &s, eq, vars,0, opt));	}
+	inline mglData FitS(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const mglDataA &s, const char *eq, const char *vars, mglData &ini, const char *opt="")
+	{	return mglData(true,mgl_fit_xyzas(gr, &x, &y, &z, &a, &s, eq, vars, &ini, opt));	}
 	/// Print fitted last formula (with coefficients)
 	inline void PutsFit(mglPoint p, const char *prefix=0, const char *font="", double size=-1)
 	{	mgl_puts_fit(gr, p.x, p.y, p.z, prefix, font, size);	}

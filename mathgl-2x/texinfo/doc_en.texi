@@ -89,7 +89,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 
 @macro external {}
 @html
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<br><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- Ref 728x15 -->
 <ins class="adsbygoogle"
 style="display:inline-block;width:728px;height:15px"
@@ -97,7 +97,7 @@ data-ad-client="ca-pub-1128070552722622"
 data-ad-slot="7008431385"></ins>
 <script>
 (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
+</script><br>
 
 <script type="text/javascript"><!--
 google_ad_client = "ca-pub-1128070552722622";
