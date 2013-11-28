@@ -958,7 +958,7 @@ mreal mglBase::NextColor(long id, long sh)
 const char *mglchrs(const char *str, const char *chr)
 {
 	if(!str || !str[0] || !chr || !chr[0])	return NULL;
-	size_t l=strlen(str);
+	size_t l=strlen(chr);
 	for(size_t i=0;i<l;i++)
 	{
 		const char *res = mglchr(str,chr[i]);
