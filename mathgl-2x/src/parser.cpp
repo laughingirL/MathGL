@@ -115,7 +115,10 @@ int mglParser::Exec(mglGraph *gr, const wchar_t *com, long n, mglArg *a, const s
 	for(i=0;i<n;i++)
 	{
 		k += id[a[i].type];
-		a[i].s.assign(a[i].w.begin(),a[i].w.end());
+		size_t len = wcstombs(NULL,a[i].w.c_str(),0)+1;
+		char *buf = new char[len];	memset(buf,0,len);
+		wcstombs(buf,a[i].w.c_str(),len);	
+		a[i].s = buf;	delete []buf;
 	}
 	mglCommand *rts=FindCommand(com);
 	if(!rts || rts->type==6)	return 2;
