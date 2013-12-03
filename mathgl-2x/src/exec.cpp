@@ -24,6 +24,7 @@
 #include <unistd.h>
 #endif
 
+#include "mgl2/base.h"
 #include "mgl2/parser.h"
 #define iint(x)	long((x)+0.5)
 wchar_t *mgl_str_copy(const char *s);
@@ -138,23 +139,23 @@ int MGL_NO_EXPORT mgls_axis(mglGraph *gr, long , mglArg *a, const char *k, const
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_ball(mglGraph *gr, long , mglArg *a, const char *k, const char *)
+int MGL_NO_EXPORT mgls_ball(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
-	int res=0;
+	int res=0;	gr->Self()->SaveState(opt);
 	if(!strcmp(k,"nn"))	gr->Mark(mglPoint(a[0].v,a[1].v,NAN),"r.");
 	else if(!strcmp(k,"nns"))	gr->Mark(mglPoint(a[0].v,a[1].v,NAN),a[2].s.c_str());
 	else if(!strcmp(k,"nnn"))	gr->Mark(mglPoint(a[0].v,a[1].v,a[2].v),"r.");
 	else if(!strcmp(k,"nnns"))	gr->Mark(mglPoint(a[0].v,a[1].v,a[2].v),a[3].s.c_str());
-	else res = 1;	return res;
+	else res = 1;	gr->Self()->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_box(mglGraph *gr, long , mglArg *a, const char *k, const char *)
+int MGL_NO_EXPORT mgls_box(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
-	int res=0;
+	int res=0;	gr->Self()->SaveState(opt);
 	if(!strcmp(k,""))	gr->Box();
 	else if(!strcmp(k,"s"))		gr->Box(a[0].s.c_str());
 	else if(!strcmp(k,"sn"))	gr->Box(a[0].s.c_str(), a[1].v);
-	else res = 1;	return res;
+	else res = 1;	gr->Self()->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_ohlc(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
@@ -349,9 +350,9 @@ int MGL_NO_EXPORT mgls_crust(mglGraph *gr, long , mglArg *a, const char *k, cons
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_colorbar(mglGraph *gr, long , mglArg *a, const char *k, const char *)
+int MGL_NO_EXPORT mgls_colorbar(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
-	int res=0;
+	int res=0;	gr->Self()->SaveState(opt);
 	if(!strcmp(k,""))	gr->Colorbar();
 	else if(!strcmp(k,"s"))		gr->Colorbar(a[0].s.c_str());
 	else if(!strcmp(k,"d"))		gr->Colorbar(*(a[0].d));
@@ -363,7 +364,7 @@ int MGL_NO_EXPORT mgls_colorbar(mglGraph *gr, long , mglArg *a, const char *k, c
 	else if(!strcmp(k,"dsnnn"))	gr->Colorbar(*(a[0].d), a[1].s.c_str(), a[2].v, a[3].v, a[4].v,1);
 	else if(!strcmp(k,"dsnnnn"))
 		gr->Colorbar(*(a[0].d), a[1].s.c_str(), a[2].v, a[3].v, a[4].v,a[5].v);
-	else res = 1;	return res;
+	else res = 1;	gr->Self()->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_copy(mglGraph *gr, long , mglArg *a, const char *k, const char *)
@@ -522,19 +523,19 @@ int MGL_NO_EXPORT mgls_contfz(mglGraph *gr, long , mglArg *a, const char *k, con
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_cone(mglGraph *gr, long , mglArg *a, const char *k, const char *)
+int MGL_NO_EXPORT mgls_cone(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
-	int res=0;
+	int res=0;	gr->Self()->SaveState(opt);
 	if(!strcmp(k,"nnnnnnn"))	gr->Cone(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[3].v,a[4].v,a[5].v), a[6].v);
 	else if(!strcmp(k,"nnnnnnns"))	gr->Cone(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[3].v,a[4].v,a[5].v), a[6].v,-1, a[7].s.c_str());
 	else if(!strcmp(k,"nnnnnnnn"))	gr->Cone(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[3].v,a[4].v,a[5].v), a[6].v, a[7].v);
 	else if(!strcmp(k,"nnnnnnnns"))	gr->Cone(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[3].v,a[4].v,a[5].v), a[6].v, a[7].v, a[8].s.c_str());
-	else res = 1;	return res;
+	else res = 1;	gr->Self()->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_ellipse(mglGraph *gr, long , mglArg *a, const char *k, const char *)
+int MGL_NO_EXPORT mgls_ellipse(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
-	int res=0;
+	int res=0;	gr->Self()->SaveState(opt);
 	if(!strcmp(k,"nnnnn"))
 		gr->Ellipse(mglPoint(a[0].v,a[1].v,NAN), mglPoint(a[2].v,a[3].v,NAN), a[4].v);
 	else if(!strcmp(k,"nnnnns"))
@@ -543,22 +544,22 @@ int MGL_NO_EXPORT mgls_ellipse(mglGraph *gr, long , mglArg *a, const char *k, co
 		gr->Ellipse(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[3].v,a[4].v,a[5].v), a[6].v);
 	else if(!strcmp(k,"nnnnnnns"))
 		gr->Ellipse(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[3].v,a[4].v,a[5].v), a[6].v, a[7].s.c_str());
-	else res = 1;	return res;
+	else res = 1;	gr->Self()->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_circle(mglGraph *gr, long , mglArg *a, const char *k, const char *)
+int MGL_NO_EXPORT mgls_circle(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
-	int res=0;
+	int res=0;	gr->Self()->SaveState(opt);
 	if(!strcmp(k,"nnn"))	gr->Circle(mglPoint(a[0].v,a[1].v, NAN), a[2].v);
 	else if(!strcmp(k,"nnns"))	gr->Circle(mglPoint(a[0].v,a[1].v, NAN), a[2].v, a[3].s.c_str());
 	else if(!strcmp(k,"nnnn"))	gr->Circle(mglPoint(a[0].v,a[1].v,a[2].v), a[3].v);
 	else if(!strcmp(k,"nnnns"))	gr->Circle(mglPoint(a[0].v,a[1].v,a[2].v), a[3].v, a[4].s.c_str());
-	else res = 1;	return res;
+	else res = 1;	gr->Self()->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_rhomb(mglGraph *gr, long , mglArg *a, const char *k, const char *)
+int MGL_NO_EXPORT mgls_rhomb(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
-	int res=0;
+	int res=0;	gr->Self()->SaveState(opt);
 	if(!strcmp(k,"nnnnn"))
 		gr->Rhomb(mglPoint(a[0].v,a[1].v,NAN), mglPoint(a[2].v,a[3].v,NAN), a[4].v);
 	else if(!strcmp(k,"nnnnns"))
@@ -567,7 +568,7 @@ int MGL_NO_EXPORT mgls_rhomb(mglGraph *gr, long , mglArg *a, const char *k, cons
 		gr->Rhomb(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[3].v,a[4].v,a[5].v), a[6].v);
 	else if(!strcmp(k,"nnnnnnns"))
 		gr->Rhomb(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[3].v,a[4].v,a[5].v), a[6].v, a[7].s.c_str());
-	else res = 1;	return res;
+	else res = 1;	gr->Self()->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_dens(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
@@ -671,9 +672,9 @@ int MGL_NO_EXPORT mgls_diff2(mglGraph *, long , mglArg *a, const char *k, const 
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_drop(mglGraph *gr, long n, mglArg *a, const char *k, const char *)
+int MGL_NO_EXPORT mgls_drop(mglGraph *gr, long n, mglArg *a, const char *k, const char *opt)
 {
-	int res=0;
+	int res=0;	gr->Self()->SaveState(opt);
 	if(!strcmp(k,"nnnnn"))
 		gr->Drop(mglPoint(a[0].v,a[1].v), mglPoint(a[2].v,a[3].v), a[4].v);
 	else if(!strcmp(k,"nnnnns"))
@@ -690,7 +691,7 @@ int MGL_NO_EXPORT mgls_drop(mglGraph *gr, long n, mglArg *a, const char *k, cons
 		gr->Drop(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[3].v,a[4].v,a[5].v), a[6].v, a[7].s.c_str(), a[8].v);
 	else if(!strcmp(k,"nnnnnnnsnn"))
 		gr->Drop(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[3].v,a[4].v,a[5].v), a[6].v, a[7].s.c_str(), a[8].v, a[9].v);
-	else res = 1;	return res;
+	else res = 1;	gr->Self()->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_dew(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
@@ -905,9 +906,9 @@ int MGL_NO_EXPORT mgls_light(mglGraph *gr, long , mglArg *a, const char *k, cons
 	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_line(mglGraph *gr, long n, mglArg *a, const char *k, const char *)
+int MGL_NO_EXPORT mgls_line(mglGraph *gr, long n, mglArg *a, const char *k, const char *opt)
 {
-	int res=0;
+	int res=0;	gr->Self()->SaveState(opt);
 	if(!strcmp(k,"nnnn"))
 		gr->Line(mglPoint(a[0].v,a[1].v,NAN), mglPoint(a[2].v,a[3].v,NAN));
 	else if(!strcmp(k,"nnnns"))
@@ -916,12 +917,12 @@ int MGL_NO_EXPORT mgls_line(mglGraph *gr, long n, mglArg *a, const char *k, cons
 		gr->Line(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[3].v,a[4].v,a[5].v));
 	else if(!strcmp(k,"nnnnnns"))
 		gr->Line(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[3].v,a[4].v,a[5].v), a[6].s.c_str());
-	else res = 1;	return res;
+	else res = 1;	gr->Self()->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_errbox(mglGraph *gr, long n, mglArg *a, const char *k, const char *)
+int MGL_NO_EXPORT mgls_errbox(mglGraph *gr, long n, mglArg *a, const char *k, const char *opt)
 {
-	int res=0;
+	int res=0;	gr->Self()->SaveState(opt);
 	if(!strcmp(k,"nnnn"))
 		gr->Error(mglPoint(a[0].v,a[1].v,NAN), mglPoint(a[2].v,a[3].v,NAN));
 	else if(!strcmp(k,"nnnns"))
@@ -930,7 +931,7 @@ int MGL_NO_EXPORT mgls_errbox(mglGraph *gr, long n, mglArg *a, const char *k, co
 		gr->Error(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[3].v,a[4].v,a[5].v));
 	else if(!strcmp(k,"nnnnnns"))
 		gr->Error(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[3].v,a[4].v,a[5].v), a[6].s.c_str());
-	else res = 1;	return res;
+	else res = 1;	gr->Self()->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_legend(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
@@ -1091,9 +1092,9 @@ int MGL_NO_EXPORT mgls_savehdf(mglGraph *, long , mglArg *a, const char *k, cons
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_rect(mglGraph *gr, long , mglArg *a, const char *k, const char *)
+int MGL_NO_EXPORT mgls_rect(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
-	int res=0;
+	int res=0;	gr->Self()->SaveState(opt);
 	if(!strcmp(k,"nnnn"))
 		gr->Face(mglPoint(a[0].v,a[1].v,NAN), mglPoint(a[0].v,a[3].v,NAN),
 				 mglPoint(a[2].v,a[1].v,NAN), mglPoint(a[2].v,a[3].v,NAN));
@@ -1113,12 +1114,12 @@ int MGL_NO_EXPORT mgls_rect(mglGraph *gr, long , mglArg *a, const char *k, const
 			mglPoint(a[3].v,a[4].v,a[5].v),
 			k[6]=='s' ? a[6].s.c_str() : 0);
 	}
-	else res = 1;	return res;
+	else res = 1;	gr->Self()->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_face(mglGraph *gr, long , mglArg *a, const char *k, const char *)
+int MGL_NO_EXPORT mgls_face(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
-	int res=0;
+	int res=0;	gr->Self()->SaveState(opt);
 	if(!strcmp(k,"nnnnnnnn"))
 		gr->Face(mglPoint(a[0].v,a[1].v,NAN), mglPoint(a[2].v,a[3].v,NAN),
 				mglPoint(a[4].v,a[5].v,NAN), mglPoint(a[6].v,a[7].v,NAN));
@@ -1131,7 +1132,7 @@ int MGL_NO_EXPORT mgls_face(mglGraph *gr, long , mglArg *a, const char *k, const
 	else if(!strcmp(k,"nnnnnnnnnnnns"))
 		gr->Face(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[3].v,a[4].v,a[5].v),
 				mglPoint(a[6].v,a[7].v,a[8].v), mglPoint(a[9].v,a[10].v,a[11].v), a[12].s.c_str());
-	else res = 1;	return res;
+	else res = 1;	gr->Self()->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_resize(mglGraph *, long , mglArg *a, const char *k, const char *)
@@ -1315,14 +1316,14 @@ int MGL_NO_EXPORT mgls_setsize(mglGraph *gr, long , mglArg *a, const char *k, co
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_sphere(mglGraph *gr, long , mglArg *a, const char *k, const char *)
+int MGL_NO_EXPORT mgls_sphere(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
-	int res=0;
+	int res=0;	gr->Self()->SaveState(opt);
 	if(!strcmp(k,"nnn"))	gr->Sphere(mglPoint(a[0].v,a[1].v), a[2].v);
 	else if(!strcmp(k,"nnns"))	gr->Sphere(mglPoint(a[0].v,a[1].v), a[2].v, a[3].s.c_str());
 	else if(!strcmp(k,"nnnn"))	gr->Sphere(mglPoint(a[0].v,a[1].v,a[2].v), a[3].v);
 	else if(!strcmp(k,"nnnns"))	gr->Sphere(mglPoint(a[0].v,a[1].v,a[2].v), a[3].v, a[4].s.c_str());
-	else res = 1;	return res;
+	else res = 1;	gr->Self()->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_stfa(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
@@ -1408,13 +1409,13 @@ int MGL_NO_EXPORT mgls_multiplot(mglGraph *gr, long , mglArg *a, const char *k, 
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_title(mglGraph *gr, long , mglArg *a, const char *k, const char *)
+int MGL_NO_EXPORT mgls_title(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
-	int res=0;
+	int res=0;	gr->Self()->SaveState(opt);
 	if(!strcmp(k,"s"))	gr->Title(a[0].w.c_str());
 	else if(!strcmp(k,"ss"))	gr->Title(a[0].w.c_str(), a[1].s.c_str());
 	else if(!strcmp(k,"ssn"))	gr->Title(a[0].w.c_str(), a[1].s.c_str(),a[2].v);
-	else res = 1;	return res;
+	else res = 1;	gr->Self()->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_column(mglGraph *, long , mglArg *a, const char *k, const char *)
@@ -1464,18 +1465,24 @@ int MGL_NO_EXPORT mgls_tiles(mglGraph *gr, long , mglArg *a, const char *k, cons
 int MGL_NO_EXPORT mgls_text(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)		// NOTE don't use options -- Puts can be part of group
 {
 	int res=0;
-	if(!strcmp(k,"nns"))	gr->Putsw(mglPoint(a[0].v,a[1].v,NAN),a[2].w.c_str());
-	else if(!strcmp(k,"nnss"))	gr->Putsw(mglPoint(a[0].v,a[1].v,NAN),a[2].w.c_str(), a[3].s.c_str());
-	else if(!strcmp(k,"nnssn"))	gr->Putsw(mglPoint(a[0].v,a[1].v,NAN),a[2].w.c_str(), a[3].s.c_str(),a[4].v);
-	else if(!strcmp(k,"nnns"))		gr->Putsw(mglPoint(a[0].v,a[1].v,a[2].v),a[3].w.c_str());
-	else if(!strcmp(k,"nnnss"))		gr->Putsw(mglPoint(a[0].v,a[1].v,a[2].v),a[3].w.c_str(), a[4].s.c_str());
-	else if(!strcmp(k,"nnnssn"))	gr->Putsw(mglPoint(a[0].v,a[1].v,a[2].v),a[3].w.c_str(), a[4].s.c_str(),a[5].v);
-	else if(!strcmp(k,"nnnns"))		gr->Putsw(mglPoint(a[0].v,a[1].v,NAN), mglPoint(a[2].v,a[3].v), a[4].w.c_str());
-	else if(!strcmp(k,"nnnnss"))	gr->Putsw(mglPoint(a[0].v,a[1].v,NAN), mglPoint(a[2].v,a[3].v), a[4].w.c_str(), a[5].s.c_str());
-	else if(!strcmp(k,"nnnnssn"))	gr->Putsw(mglPoint(a[0].v,a[1].v,NAN), mglPoint(a[2].v,a[3].v), a[4].w.c_str(), a[5].s.c_str(),a[6].v);
-	else if(!strcmp(k,"nnnnnns"))	gr->Putsw(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[3].v,a[4].v,a[5].v), a[6].w.c_str());
-	else if(!strcmp(k,"nnnnnnss"))	gr->Putsw(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[3].v,a[4].v,a[5].v), a[6].w.c_str(), a[7].s.c_str());
-	else if(!strcmp(k,"nnnnnnssn"))	gr->Putsw(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[3].v,a[4].v,a[5].v), a[6].w.c_str(), a[7].s.c_str(),a[8].v);
+	if(k[0]=='n')
+	{
+		gr->Self()->SaveState(opt);
+		if(!strcmp(k,"nns"))	gr->Putsw(mglPoint(a[0].v,a[1].v,NAN),a[2].w.c_str());
+		else if(!strcmp(k,"nnss"))	gr->Putsw(mglPoint(a[0].v,a[1].v,NAN),a[2].w.c_str(), a[3].s.c_str());
+		else if(!strcmp(k,"nnssn"))	gr->Putsw(mglPoint(a[0].v,a[1].v,NAN),a[2].w.c_str(), a[3].s.c_str(),a[4].v);
+		else if(!strcmp(k,"nnns"))		gr->Putsw(mglPoint(a[0].v,a[1].v,a[2].v),a[3].w.c_str());
+		else if(!strcmp(k,"nnnss"))		gr->Putsw(mglPoint(a[0].v,a[1].v,a[2].v),a[3].w.c_str(), a[4].s.c_str());
+		else if(!strcmp(k,"nnnssn"))	gr->Putsw(mglPoint(a[0].v,a[1].v,a[2].v),a[3].w.c_str(), a[4].s.c_str(),a[5].v);
+		else if(!strcmp(k,"nnnns"))		gr->Putsw(mglPoint(a[0].v,a[1].v,NAN), mglPoint(a[2].v,a[3].v), a[4].w.c_str());
+		else if(!strcmp(k,"nnnnss"))	gr->Putsw(mglPoint(a[0].v,a[1].v,NAN), mglPoint(a[2].v,a[3].v), a[4].w.c_str(), a[5].s.c_str());
+		else if(!strcmp(k,"nnnnssn"))	gr->Putsw(mglPoint(a[0].v,a[1].v,NAN), mglPoint(a[2].v,a[3].v), a[4].w.c_str(), a[5].s.c_str(),a[6].v);
+		else if(!strcmp(k,"nnnnnns"))	gr->Putsw(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[3].v,a[4].v,a[5].v), a[6].w.c_str());
+		else if(!strcmp(k,"nnnnnnss"))	gr->Putsw(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[3].v,a[4].v,a[5].v), a[6].w.c_str(), a[7].s.c_str());
+		else if(!strcmp(k,"nnnnnnssn"))	gr->Putsw(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[3].v,a[4].v,a[5].v), a[6].w.c_str(), a[7].s.c_str(),a[8].v);
+		else	res=1;
+		gr->Self()->LoadState();
+	}
 	else if(!strcmp(k,"ds"))	gr->Text(*(a[0].d),a[1].w.c_str(),"",opt);
 	else if(!strcmp(k,"dss"))	gr->Text(*(a[0].d),a[1].w.c_str(),a[2].s.c_str(),opt);
 	else if(!strcmp(k,"dds"))	gr->Text(*(a[0].d),*(a[1].d),a[2].w.c_str(),"",opt);
@@ -2036,31 +2043,31 @@ int MGL_NO_EXPORT mgls_perspective(mglGraph *gr, long , mglArg *a, const char *k
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_facex(mglGraph *gr, long , mglArg *a, const char *k, const char *)
+int MGL_NO_EXPORT mgls_facex(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
-	int res=0;
+	int res=0;	gr->Self()->SaveState(opt);
 	if(!strcmp(k,"nnnnn"))	gr->FaceX(mglPoint(a[0].v, a[1].v, a[2].v), a[3].v, a[4].v);
 	else if(!strcmp(k,"nnnnns"))	gr->FaceX(mglPoint(a[0].v, a[1].v, a[2].v), a[3].v, a[4].v, a[5].s.c_str());
 	else if(!strcmp(k,"nnnnnsnn"))	gr->FaceX(mglPoint(a[0].v, a[1].v, a[2].v), a[3].v, a[4].v, a[5].s.c_str(),a[6].v,a[7].v);
-	else res = 1;	return res;
+	else res = 1;	gr->Self()->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_facey(mglGraph *gr, long , mglArg *a, const char *k, const char *)
+int MGL_NO_EXPORT mgls_facey(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
-	int res=0;
+	int res=0;	gr->Self()->SaveState(opt);
 	if(!strcmp(k,"nnnnn"))	gr->FaceY(mglPoint(a[0].v, a[1].v, a[2].v), a[3].v, a[4].v);
 	else if(!strcmp(k,"nnnnns"))	gr->FaceY(mglPoint(a[0].v, a[1].v, a[2].v), a[3].v, a[4].v, a[5].s.c_str());
 	else if(!strcmp(k,"nnnnnsnn"))	gr->FaceY(mglPoint(a[0].v, a[1].v, a[2].v), a[3].v, a[4].v, a[5].s.c_str(),a[6].v,a[7].v);
-	else res = 1;	return res;
+	else res = 1;	gr->Self()->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_facez(mglGraph *gr, long , mglArg *a, const char *k, const char *)
+int MGL_NO_EXPORT mgls_facez(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
-	int res=0;
+	int res=0;	gr->Self()->SaveState(opt);
 	if(!strcmp(k,"nnnnn"))	gr->FaceZ(mglPoint(a[0].v, a[1].v, a[2].v), a[3].v, a[4].v);
 	else if(!strcmp(k,"nnnnns"))	gr->FaceZ(mglPoint(a[0].v, a[1].v, a[2].v), a[3].v, a[4].v, a[5].s.c_str());
 	else if(!strcmp(k,"nnnnnsnn"))	gr->FaceZ(mglPoint(a[0].v, a[1].v, a[2].v), a[3].v, a[4].v, a[5].s.c_str(),a[6].v,a[7].v);
-	else res = 1;	return res;
+	else res = 1;	gr->Self()->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_normsl(mglGraph *, long , mglArg *a, const char *k, const char *)
@@ -2125,9 +2132,9 @@ int MGL_NO_EXPORT mgls_fits(mglGraph *gr, long , mglArg *a, const char *k, const
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_putsfit(mglGraph *gr, long , mglArg *a, const char *k, const char *)
+int MGL_NO_EXPORT mgls_putsfit(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
-	int res=0;
+	int res=0;	gr->Self()->SaveState(opt);
 	if(!strcmp(k,"nn"))		gr->PutsFit(mglPoint(a[0].v,a[1].v));
 	else if(!strcmp(k,"nns"))	gr->PutsFit(mglPoint(a[0].v,a[1].v), a[2].s.c_str());
 	else if(!strcmp(k,"nnss"))	gr->PutsFit(mglPoint(a[0].v,a[1].v), a[2].s.c_str(),a[3].s.c_str());
@@ -2136,8 +2143,7 @@ int MGL_NO_EXPORT mgls_putsfit(mglGraph *gr, long , mglArg *a, const char *k, co
 	else if(!strcmp(k,"nnns"))	gr->PutsFit(mglPoint(a[0].v,a[1].v,a[2].v), a[3].s.c_str());
 	else if(!strcmp(k,"nnnss"))	gr->PutsFit(mglPoint(a[0].v,a[1].v,a[2].v), a[3].s.c_str(),a[4].s.c_str());
 	else if(!strcmp(k,"nnnssn"))gr->PutsFit(mglPoint(a[0].v,a[1].v,a[2].v), a[3].s.c_str(),a[4].s.c_str(),a[5].v);
-	else res = 1;
-	return res;
+	else res = 1;	gr->Self()->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_arrowsize(mglGraph *gr, long , mglArg *a, const char *k, const char *)
@@ -2184,9 +2190,9 @@ int MGL_NO_EXPORT mgls_fsurf(mglGraph *gr, long , mglArg *a, const char *k, cons
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_fgets(mglGraph *gr, long , mglArg *a, const char *k, const char *)		// NOTE don't use options -- Puts can be part of group
+int MGL_NO_EXPORT mgls_fgets(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)		// NOTE don't use options -- Puts can be part of group
 {
-	int res=0;
+	int res=0;	gr->Self()->SaveState(opt);
 	char buf[1024];
 	FILE *fp;
 	if(!strncmp(k,"nns",3))
@@ -2229,7 +2235,7 @@ int MGL_NO_EXPORT mgls_fgets(mglGraph *gr, long , mglArg *a, const char *k, cons
 		fclose(fp);
 		gr->Puts(mglPoint(a[0].v,a[1].v,a[2].v),buf, (k[5]=='s')?a[5].s.c_str():"", k[6]=='n'?a[6].v:-1);
 	}
-	else res = 1;	return res;
+	else res = 1;	gr->Self()->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_import(mglGraph *gr, long , mglArg *a, const char *k, const char *)

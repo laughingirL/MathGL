@@ -340,7 +340,6 @@ void MGL_EXPORT mgl_cones_xz(HMGL gr, HCDT x, HCDT z, const char *pen, const cha
 	mglData y(z);
 	y.Fill(gr->Min.y,gr->Max.y,'y');
 	mgl_cones_xyz(gr,x,&y,z,pen,0);
-	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_cones(HMGL gr, HCDT z, const char *pen, const char *opt)
@@ -349,7 +348,6 @@ void MGL_EXPORT mgl_cones(HMGL gr, HCDT z, const char *pen, const char *opt)
 	mglData x(z->GetNx()+1);
 	x.Fill(gr->Min.x,gr->Max.x);
 	mgl_cones_xz(gr,&x,z,pen,0);
-	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_cones_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *pen, const char *opt,int l,int lo)
@@ -564,7 +562,6 @@ void MGL_EXPORT mgl_dew_2d(HMGL gr, HCDT ax, HCDT ay, const char *sch, const cha
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	mgl_dew_xy(gr,&x,&y,ax,ay,sch,0);
-	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_dew_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch, const char *opt,int l,int lo)
@@ -664,7 +661,6 @@ void MGL_EXPORT mgl_textmarkw_xyr(HMGL gr, HCDT x, HCDT y, HCDT r, const wchar_t
 	gr->SaveState(opt);
 	mglData z(y->GetNx());	z.Fill(gr->Min.z,gr->Min.z);
 	mgl_textmarkw_xyzr(gr,x,y,&z,r,text,fnt,0);
-	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_textmarkw_yr(HMGL gr, HCDT y, HCDT r, const wchar_t *text, const char *fnt, const char *opt)
@@ -674,7 +670,6 @@ void MGL_EXPORT mgl_textmarkw_yr(HMGL gr, HCDT y, HCDT r, const wchar_t *text, c
 	mglData x(n);	x.Fill(gr->Min.x,gr->Max.x);
 	mglData z(n);	z.Fill(gr->Min.z,gr->Min.z);
 	mgl_textmarkw_xyzr(gr,&x,y,&z,r,text,fnt,0);
-	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_textmarkw(HMGL gr, HCDT y, const wchar_t *text, const char *fnt, const char *opt)
@@ -685,7 +680,6 @@ void MGL_EXPORT mgl_textmarkw(HMGL gr, HCDT y, const wchar_t *text, const char *
 	mglData x(n);	x.Fill(gr->Min.x,gr->Max.x);
 	mglData z(n);	z.Fill(gr->Min.z,gr->Min.z);
 	mgl_textmarkw_xyzr(gr,&x,y,&z,&r,text,fnt,0);
-	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_textmark_xyzr(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const char *str, const char *fnt, const char *opt)
@@ -774,7 +768,6 @@ void MGL_EXPORT mgl_labelw_xy(HMGL gr, HCDT x, HCDT y, const wchar_t *text, cons
 	gr->SaveState(opt);
 	mglData z(y->GetNx());	z.Fill(gr->Min.z,gr->Min.z);
 	mgl_labelw_xyz(gr,x,y,&z,text,fnt,0);
-	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_labelw_y(HMGL gr, HCDT y, const wchar_t *text, const char *fnt, const char *opt)
@@ -785,7 +778,6 @@ void MGL_EXPORT mgl_labelw_y(HMGL gr, HCDT y, const wchar_t *text, const char *f
 	mglData x(n);	x.Fill(gr->Min.x,gr->Max.x);
 	mglData z(n);	z.Fill(gr->Min.z,gr->Min.z);
 	mgl_labelw_xyz(gr,&x,y,&z,text,fnt,0);
-	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_label_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *str, const char *fnt, const char *opt)

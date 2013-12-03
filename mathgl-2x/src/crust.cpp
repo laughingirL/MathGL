@@ -117,7 +117,6 @@ void MGL_EXPORT mgl_triplot_xy(HMGL gr, HCDT nums, HCDT x, HCDT y, const char *s
 	mglData z(x->GetNx());
 	mreal zm = gr->AdjustZMin();	z.Fill(zm,zm);
 	mgl_triplot_xyzc(gr,nums,x,y,&z,&z,sch,0);
-	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_triplot_xyzc_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *c, const char *sch, const char *opt,int l,int lo)
@@ -239,7 +238,6 @@ void MGL_EXPORT mgl_quadplot_xy(HMGL gr, HCDT nums, HCDT x, HCDT y, const char *
 	gr->SaveState(opt);
 	mglData z(x->GetNx());	z.Fill(gr->Min.z,gr->Min.z);
 	mgl_quadplot_xyzc(gr,nums,x,y,&z,&z,sch,0);
-	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_quadplot_xyzc_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *c, const char *sch, const char *opt,int l,int lo)
@@ -316,7 +314,6 @@ void MGL_EXPORT mgl_tricont_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCD
 	mglData v(n);
 	for(long i=0;i<n;i++)	v.a[i] = gr->Min.c + (gr->Max.c-gr->Min.c)*mreal(i+1)/(n+1);
 	mgl_tricont_xyzcv(gr,&v,nums,x,y,z,a,sch,0);
-	gr->LoadState();
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_tricont_xyc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt)

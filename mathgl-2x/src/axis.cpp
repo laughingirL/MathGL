@@ -559,7 +559,7 @@ void mglCanvas::DrawAxis(mglAxis &aa, bool text, char arr,const char *stl,const 
 	EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::DrawLabels(mglAxis &aa, bool inv)
+void mglCanvas::DrawLabels(mglAxis &aa, bool inv, const mglMatrix *M)
 {
 	if(strchr("xyz",aa.ch))
 		aa.org = mglPoint(GetOrgX(aa.ch,aa.inv), GetOrgY(aa.ch,aa.inv), GetOrgZ(aa.ch,aa.inv));
@@ -567,6 +567,7 @@ void mglCanvas::DrawLabels(mglAxis &aa, bool inv)
 	if(strchr("xyz",aa.ch))	o -= d*(o*d);
 	mglPoint p,q, s=(Min+Max)/2, nn;
 	s = s - d*(s*d);
+	if(M==0)	M=&B;
 
 	register long i,n = aa.txt.size();
 	char pos[4]="t:C";
@@ -577,7 +578,7 @@ void mglCanvas::DrawLabels(mglAxis &aa, bool inv)
 	for(i=0;i<n;i++)
 	{
 		w[i] = TextWidth(aa.txt[i].text.c_str(),FontDef,-1);
-		kk[i] = AddPnt(&B, o+d*aa.txt[i].val,-1,d,0,7);
+		kk[i] = AddPnt(M, o+d*aa.txt[i].val,-1,d,0,7);
 	}
 
 	for(l=0,c=1e7,i=0;i<n-1;i++)
@@ -883,6 +884,7 @@ void mglCanvas::Colorbar(const char *sch)
 void mglCanvas::Colorbar(const char *sch, mreal x, mreal y, mreal w, mreal h)
 {
 	bool in = mglchr(sch,'I');
+	bool text = !mglchr(sch,'_');
 	int where = 0;		// ‘0’ - right, ‘1’ - left, ‘2’ - above, ‘3’ - under
 	if(mglchr(sch,'>'))	where = in?1:0;
 	if(mglchr(sch,'<'))	where = in?0:1;
@@ -899,7 +901,7 @@ void mglCanvas::Colorbar(const char *sch, mreal x, mreal y, mreal w, mreal h)
 	{	v.Fill(log(-Min.c), log(-Max.c));	v.Modify("-exp(u)");	}
 	mreal *c=new mreal[n];
 	for(long i=0;i<n;i++)	c[i] = GetC(s,v.a[i]);
-	colorbar(&v, c, where, x, y, w, h);
+	colorbar(&v, c, where, x, y, w, h, text);
 	delete []c;
 	if(mglchr(sch,'A'))	Pop();
 }
@@ -919,6 +921,7 @@ void mglCanvas::Colorbar(HCDT v, const char *sch)
 void mglCanvas::Colorbar(HCDT v, const char *sch, mreal x, mreal y, mreal w, mreal h)
 {
 	bool in = mglchr(sch,'I');
+	bool text = !mglchr(sch,'_');
 	int where = 0;
 	if(mglchr(sch,'>'))	where = in?1:0;
 	if(mglchr(sch,'<'))	where = in?0:1;
@@ -932,12 +935,12 @@ void mglCanvas::Colorbar(HCDT v, const char *sch, mreal x, mreal y, mreal w, mre
 	int nc = GetNumPal(s*256);
 	mreal dc = nc>1 ? 1/(MGL_EPSILON*(nc-1)):0;
 	for(long i=0;i<v->GetNx();i++)	c[i] = s+i*dc;
-	colorbar(v, c, where, x, y, w, h);
+	colorbar(v, c, where, x, y, w, h, text);
 	delete []c;
 	if(mglchr(sch,'A'))	Pop();
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::colorbar(HCDT vv, const mreal *c, int where, mreal x, mreal y, mreal w, mreal h)
+void mglCanvas::colorbar(HCDT vv, const mreal *c, int where, mreal x, mreal y, mreal w, mreal h, bool text)
 {
 	static int cgid=1;	StartGroup("Colorbar",cgid++);
 	long n=vv->GetNx();
@@ -1012,7 +1015,8 @@ void mglCanvas::colorbar(HCDT vv, const mreal *c, int where, mreal x, mreal y, m
 	SetPenPal(AxisStl);
 //	bool out = fabs(x)>1 && fabs(y)>1;
 	bool inv = where!=3 && where!=0;
-	ac.ns = where;	DrawLabels(ac,inv);	// NOTE ns isn't used for colorbar
+	ac.ns = where;
+	if(text)	DrawLabels(ac,inv,&M);	// NOTE ns isn't used for colorbar
 	clr(MGL_DISABLE_SCALE);	EndGroup();
 }
 //-----------------------------------------------------------------------------

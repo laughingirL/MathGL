@@ -126,14 +126,14 @@ HMDT MGL_EXPORT mgl_pde_solve(HMGL gr, const char *ham, HCDT ini_re, HCDT ini_im
 	double dd = k0*dz;
 
 	mgl_pde_ham tmp;tmp.eqs = &eqs;
-	tmp.nx = nx;	tmp.ny = ny;	tmp.a=a;		tmp.hxy=hxy;
-	tmp.hxv=hxv;	tmp.huy=huy;	tmp.huv=huv;	tmp.dd = dd;
+	tmp.nx = nx;	tmp.ny = ny;	tmp.dd = dd;	tmp.a=a;
+	tmp.hxy=hxy;	tmp.hxv=hxv;	tmp.huy=huy;	tmp.huv=huv;
 	tmp.xx = Min.x-dx*(nx/2);	tmp.xs = xs;	tmp.dx = dx;	tmp.dp = dp;
 	tmp.yy = Min.y-dy*(ny/2);	tmp.ys = ys;	tmp.dy = dy;	tmp.dq = dq;
 
 	// prepare fft. NOTE: slow procedures due to unknown nx, ny.
-	void *wsx, *wtx = mgl_fft_alloc(2*nx,&wsx,1);
-	void *wsy, *wty = mgl_fft_alloc(2*ny,&wsy,1);
+	void *wtx = mgl_fft_alloc(2*nx,0,0);
+	void *wty = mgl_fft_alloc(2*ny,0,0);
 	for(long k=1;k<nz;k++)
 	{
 		if(gr->Stop)	continue;
@@ -146,42 +146,54 @@ HMDT MGL_EXPORT mgl_pde_solve(HMGL gr, const char *ham, HCDT ini_re, HCDT ini_im
 #pragma omp parallel for
 		for(long j=0;j<2*ny;j++)	{	hy[j] = huy[2*nx*j];	hv[j] = huv[2*nx*j];}
 		// rearrange arrays
-		hh0=hu[0]/2.;
+		hh0=hu[0];
 		if(ny>1)
 #pragma omp parallel for collapse(2)
 			for(long i=0;i<2*nx;i++) for(long j=0;j<2*ny;j++)
 			{
-				register long i0 = i+2*nx*j;
-				huy[i0] -= (hu[i]+hy[j]-hh0)/2.;	huv[i0] -= (hu[i]+hv[j]-hh0)/2.;
-				hxy[i0] -= (hx[i]+hy[j]-hh0)/2.;	hxv[i0] -= (hx[i]+hv[j]-hh0)/2.;
+				register long i0 = i+2*nx*j;	huv[i0] -= hh0;
+				hxv[i0] -= hx[i]+hv[j]-hh0;
+				huy[i0] -= hu[i]+hy[j]-hh0;
 			}
-		// solve equation
+		else
 #pragma omp parallel for
-		for(long i=0;i<4*nx*ny;i++)	a[i] *= exp(hxy[i])*exp(-double(dmp[i]*dz));
-//#pragma omp parallel for	// NOTE I need separate wsx for each thread, but it is too slow to allocate/dealocate it each step
-		for(long i=0;i<2*ny;i++)	mgl_fft((double *)(a+i*2*nx), 1, 2*nx, wtx, wsx, false);
-#pragma omp parallel for
-		for(long i=0;i<4*nx*ny;i++)	a[i] *= exp(huy[i]);
-		if(ny>1)
-//#pragma omp parallel for
-			for(long i=0;i<2*nx;i++)	mgl_fft((double *)(a+i), 2*nx, 2*ny, wty, wsy, false);
-#pragma omp parallel for
-		for(long i=0;i<4*nx*ny;i++)	a[i] *= exp(huv[i]);
-//#pragma omp parallel for
-		for(long i=0;i<2*ny;i++)	mgl_fft((double *)(a+2*i*nx), 1, 2*nx, wtx, wsx, true);
-#pragma omp parallel for
-		for(long i=0;i<4*nx*ny;i++)	a[i] *= exp(hxv[i]);
-		if(ny>1)
-//#pragma omp parallel for
-			for(long i=0;i<2*nx;i++)	mgl_fft((double *)(a+i), 2*nx, 2*ny, wty, wsy, true);
-#pragma omp parallel for collapse(2)
-		for(long i=0;i<nx;i++)	for(long j=0;j<ny;j++)	// save result
+			for(long i=0;i<4*nx*ny;i++)	huv[i] -= hh0;
+			// solve equation
+#pragma omp parallel
 		{
-			register long i0 = i+nx/2+2*nx*(j+ny/2);
-			res->a[k+nz*(i+nx*j)] = abs(a[i0]);
+			void *wsx = mgl_fft_alloc_thr(2*nx), *wsy = ny>1?mgl_fft_alloc_thr(2*ny):0;
+#pragma omp for
+			for(long i=0;i<4*nx*ny;i++)	a[i] *= exp(hxy[i])*exp(-double(dmp[i]*dz));
+#pragma omp for
+			for(long i=0;i<2*ny;i++)	mgl_fft((double *)(a+i*2*nx), 1, 2*nx, wtx, wsx, false);
+			if(ny>1)
+			{
+#pragma omp for
+				for(long i=0;i<4*nx*ny;i++)	a[i] *= exp(huy[i]);
+#pragma omp for
+				for(long i=0;i<2*nx;i++)	mgl_fft((double *)(a+i), 2*nx, 2*ny, wty, wsy, false);
+			}
+#pragma omp for
+			for(long i=0;i<4*nx*ny;i++)	a[i] *= exp(huv[i]);
+#pragma omp for
+			for(long i=0;i<2*ny;i++)	mgl_fft((double *)(a+2*i*nx), 1, 2*nx, wtx, wsx, true);
+			if(ny>1)
+			{
+#pragma omp for
+				for(long i=0;i<4*nx*ny;i++)	a[i] *= exp(hxv[i]);
+#pragma omp for
+				for(long i=0;i<2*nx;i++)	mgl_fft((double *)(a+i), 2*nx, 2*ny, wty, wsy, true);
+			}
+#pragma omp for collapse(2)
+			for(long i=0;i<nx;i++)	for(long j=0;j<ny;j++)	// save result
+			{
+				register long i0 = i+nx/2+2*nx*(j+ny/2);
+				res->a[k+nz*(i+nx*j)] = abs(a[i0]);
+			}
+			mgl_fft_free_thr(wsx);	mgl_fft_free_thr(wsy);
 		}
 	}
-	mgl_fft_free(wtx,&wsx,1);	mgl_fft_free(wty,&wsy,1);
+	mgl_fft_free(wtx,0,0);	mgl_fft_free(wty,0,0);
 	delete []a;		delete []dmp;
 	delete []hxy;	delete []hxv;	delete []huy;	delete []huv;
 	delete []hx;	delete []hy;	delete []hu;	delete []hv;

@@ -102,9 +102,9 @@ MGL_EXPORT void *mgl_fft_alloc(long n, void **space, long nthr)
 void MGL_EXPORT mgl_fft_free_thr(void *ws)
 {
 #if MGL_HAVE_GSL
-	gsl_fft_complex_workspace_free((gsl_fft_complex_workspace*)ws);
+	if(ws)	gsl_fft_complex_workspace_free((gsl_fft_complex_workspace*)ws);
 #else
-	delete []((double*)ws);
+	if(ws)	delete []((double*)ws);
 #endif
 }
 //-----------------------------------------------------------------------------
@@ -112,9 +112,9 @@ void MGL_EXPORT mgl_fft_free(void *wt, void **ws, long nthr)
 {
 	if(ws && nthr>0)	for(long i=0;i<nthr;i++)	mgl_fft_free_thr(ws[i]);
 #if MGL_HAVE_GSL
-	gsl_fft_complex_wavetable_free((gsl_fft_complex_wavetable*)wt);
+	if(wt)	gsl_fft_complex_wavetable_free((gsl_fft_complex_wavetable*)wt);
 #else
-	delete []((double*)wt);
+	if(wt)	delete []((double*)wt);
 #endif
 }
 //-----------------------------------------------------------------------------

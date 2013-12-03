@@ -1,6 +1,11 @@
 2.2.1 Released ?? 2014
 
 * Allow nx=1 for Stem and Error
+* Bugfix for drawing single axis
+* Bugfix for missing options parsing for some of MGL commands
+* Bugfix for colorbar labels
+* Allow to disable colorbar labels
+* Speed up PDE solving
 
 
 2.2 Released 11 November 2013

@@ -415,9 +415,9 @@ private:
 	mglMatrix Bt;	///< temporary matrix for text
 
 	/// Draw generic colorbar
-	void colorbar(HCDT v, const mreal *s, int where, mreal x, mreal y, mreal w, mreal h);
+	void colorbar(HCDT v, const mreal *s, int where, mreal x, mreal y, mreal w, mreal h, bool text);
 	/// Draw labels for ticks
-	void DrawLabels(mglAxis &aa, bool inv=false);
+	void DrawLabels(mglAxis &aa, bool inv=false, const mglMatrix *M=0);
 	/// Get label style
 	char GetLabelPos(mreal c, long kk, mglAxis &aa);
 	/// Draw tick
