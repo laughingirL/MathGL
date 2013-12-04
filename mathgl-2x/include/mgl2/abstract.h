@@ -28,12 +28,14 @@
 //-----------------------------------------------------------------------------
 class mglBase;
 class mglData;
+class mglDataC;
 class mglParser;
 class mglFormula;
 class mglFormulaC;
 class mglFont;
 typedef mglBase* HMGL;
 typedef mglData* HMDT;
+typedef mglDataC* HADT;
 typedef mglParser* HMPR;
 typedef mglFormula* HMEX;
 typedef mglFormulaC* HAEX;
@@ -87,6 +89,7 @@ extern uint64_t mgl_mask_val[16];
 #else
 typedef void *HMGL;
 typedef void *HMDT;
+typedef void *HADT;
 typedef void *HMEX;
 typedef void *HAEX;
 typedef void *HMPR;

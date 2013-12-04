@@ -396,6 +396,20 @@ dual mglLinearC(const dual *a, long nx, long ny, long nz, mreal x, mreal y, mrea
 dual mglSpline3C(const dual *a, long nx, long ny, long nz, mreal x, mreal y, mreal z,dual *dx=0, dual *dy=0, dual *dz=0);
 #endif
 //-----------------------------------------------------------------------------
+/// Saves result of PDE solving (|u|^2) for "Hamiltonian" ham with initial conditions ini
+inline mglDataC mglPDEc(mglBase *gr, const char *ham, const mglDataA &ini_re, const mglDataA &ini_im, mreal dz=0.1, mreal k0=100,const char *opt="")
+{	return mglDataC(true, mgl_pde_solve_c(gr,ham, &ini_re, &ini_im, dz, k0,opt));	}
+/// Saves result of PDE solving for "Hamiltonian" ham with initial conditions ini along a curve ray (must have nx>=7 - x,y,z,px,py,pz,tau or nx=5 - x,y,px,py,tau)
+inline mglDataC mglQO2dc(const char *ham, const mglDataA &ini_re, const mglDataA &ini_im, const mglDataA &ray, mreal r=1, mreal k0=100)
+{	return mglDataC(true, mgl_qo2d_solve_c(ham, &ini_re, &ini_im, &ray, r, k0, 0, 0));	}
+inline mglDataC mglQO2dc(const char *ham, const mglDataA &ini_re, const mglDataA &ini_im, const mglDataA &ray, mglData &xx, mglData &yy, mreal r=1, mreal k0=100)
+{	return mglDataC(true, mgl_qo2d_solve_c(ham, &ini_re, &ini_im, &ray, r, k0, &xx, &yy));	}
+/// Saves result of PDE solving for "Hamiltonian" ham with initial conditions ini along a curve ray (must have nx>=7 - x,y,z,px,py,pz,tau or nx=5 - x,y,px,py,tau)
+inline mglDataC mglQO3dc(const char *ham, const mglDataA &ini_re, const mglDataA &ini_im, const mglDataA &ray, mreal r=1, mreal k0=100)
+{	return mglDataC(true, mgl_qo3d_solve_c(ham, &ini_re, &ini_im, &ray, r, k0, 0, 0, 0));	}
+inline mglDataC mglQO3dc(const char *ham, const mglDataA &ini_re, const mglDataA &ini_im, const mglDataA &ray, mglData &xx, mglData &yy, mglData &zz, mreal r=1, mreal k0=100)
+{	return mglDataC(true, mgl_qo3d_solve_c(ham, &ini_re, &ini_im, &ray, r, k0, &xx, &yy, &zz));	}
+//-----------------------------------------------------------------------------
 #define _DN_(a)	((mglDataC *)*(a))
 #define _DC_		((mglDataC *)*d)
 //-----------------------------------------------------------------------------

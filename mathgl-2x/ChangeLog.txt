@@ -6,6 +6,7 @@
 * Bugfix for colorbar labels
 * Allow to disable colorbar labels
 * Speed up PDE solving
+* Add complex versions of PDE, QO2d, QO3d
 
 
 2.2 Released 11 November 2013

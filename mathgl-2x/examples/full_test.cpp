@@ -65,11 +65,12 @@ void save(mglGraph *gr,const char *name,const char *suf);
 void smgl_stfa(mglGraph *gr);	// STFA sample
 void smgl_text(mglGraph *gr);	// text drawing
 void smgl_surf(mglGraph *gr);
+#include <mgl2/base.h>
+#include <mgl2/font.h>
 void test(mglGraph *gr)
 {
 	mglParse par;
 	setlocale(LC_CTYPE, "");
-//	par.Execute(gr,"axis");
 	par.Execute(gr,"axis 'lg(x)' '' '':axis:box:fplot 'x^2'");
 }
 //-----------------------------------------------------------------------------

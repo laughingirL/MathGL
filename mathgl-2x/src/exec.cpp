@@ -2365,6 +2365,21 @@ int MGL_NO_EXPORT mgls_pde(mglGraph *gr, long , mglArg *a, const char *k, const 
 		*(a[0].d) = gr->PDE(a[1].s.c_str(), *(a[2].d), *(a[3].d), a[4].v,100,opt);
 	else if(!strcmp(k,"dsddnn"))
 		*(a[0].d) = gr->PDE(a[1].s.c_str(), *(a[2].d), *(a[3].d), a[4].v,a[5].v,opt);
+	else if(!strcmp(k,"ddsdd"))
+	{
+		HADT res = mgl_pde_solve_c(gr->Self(),a[2].s.c_str(), a[3].d, a[4].d, 0.1,100,opt);
+		*(a[0].d) = res->Abs();	*(a[1].d) = res->Arg();
+	}
+	else if(!strcmp(k,"ddsddn"))
+	{
+		HADT res = mgl_pde_solve_c(gr->Self(),a[2].s.c_str(), a[3].d, a[4].d, a[5].v,100,opt);
+		*(a[0].d) = res->Abs();	*(a[1].d) = res->Arg();
+	}
+	else if(!strcmp(k,"ddsddnn"))
+	{
+		HADT res = mgl_pde_solve_c(gr->Self(),a[2].s.c_str(), a[3].d, a[4].d, a[5].v,a[6].v,opt);
+		*(a[0].d) = res->Abs();	*(a[1].d) = res->Arg();
+	}
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -2379,6 +2394,26 @@ int MGL_NO_EXPORT mgls_qo2d(mglGraph *, long , mglArg *a, const char *k, const c
 		*(a[0].d) = mglData(true, mgl_qo2d_solve(a[1].s.c_str(), a[2].d, a[3].d, a[4].d, a[5].v,a[6].v, 0,0));
 	else if(!strcmp(k,"dsdddnndd"))
 		*(a[0].d) = mglData(true, mgl_qo2d_solve(a[1].s.c_str(), a[2].d, a[3].d, a[4].d, a[5].v,a[6].v, a[7].d,a[8].d));
+	else if(!strcmp(k,"ddsddd"))
+	{
+		HADT res = mgl_qo2d_solve_c(a[2].s.c_str(), a[3].d, a[4].d, a[5].d, 1,100, 0,0);
+		*(a[0].d) = res->Abs();	*(a[1].d) = res->Arg();
+	}
+	else if(!strcmp(k,"ddsdddn"))
+	{
+		HADT res = mgl_qo2d_solve_c(a[2].s.c_str(), a[3].d, a[4].d, a[5].d, a[6].v,100, 0,0);
+		*(a[0].d) = res->Abs();	*(a[1].d) = res->Arg();
+	}
+	else if(!strcmp(k,"ddsdddnn"))
+	{
+		HADT res = mgl_qo2d_solve_c(a[2].s.c_str(), a[3].d, a[4].d, a[5].d, a[6].v,a[7].v, 0,0);
+		*(a[0].d) = res->Abs();	*(a[1].d) = res->Arg();
+	}
+	else if(!strcmp(k,"ddsdddnndd"))
+	{
+		HADT res = mgl_qo2d_solve_c(a[2].s.c_str(), a[3].d, a[4].d, a[5].d, a[6].v,a[7].v, a[8].d,a[9].d);
+		*(a[0].d) = res->Abs();	*(a[1].d) = res->Arg();
+	}
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -2393,6 +2428,26 @@ int MGL_NO_EXPORT mgls_qo3d(mglGraph *, long , mglArg *a, const char *k, const c
 		*(a[0].d) = mglData(true, mgl_qo3d_solve(a[1].s.c_str(), a[2].d, a[3].d, a[4].d, a[5].v,a[6].v, 0,0,0));
 	else if(!strcmp(k,"dsdddnnddd"))
 		*(a[0].d) = mglData(true, mgl_qo3d_solve(a[1].s.c_str(), a[2].d, a[3].d, a[4].d, a[5].v,a[6].v, a[7].d,a[8].d,a[9].d));
+	else if(!strcmp(k,"ddsddd"))
+	{
+		HADT res = mgl_qo3d_solve_c(a[2].s.c_str(), a[3].d, a[4].d, a[5].d, 1,100, 0,0,0);
+		*(a[0].d) = res->Abs();	*(a[1].d) = res->Arg();
+	}
+	else if(!strcmp(k,"ddsdddn"))
+	{
+		HADT res = mgl_qo3d_solve_c(a[2].s.c_str(), a[3].d, a[4].d, a[5].d, a[6].v,100, 0,0,0);
+		*(a[0].d) = res->Abs();	*(a[1].d) = res->Arg();
+	}
+	else if(!strcmp(k,"ddsdddnn"))
+	{
+		HADT res = mgl_qo3d_solve_c(a[2].s.c_str(), a[3].d, a[4].d, a[5].d, a[6].v,a[7].v, 0,0,0);
+		*(a[0].d) = res->Abs();	*(a[1].d) = res->Arg();
+	}
+	else if(!strcmp(k,"ddsdddnnddd"))
+	{
+		HADT res = mgl_qo3d_solve_c(a[2].s.c_str(), a[3].d, a[4].d, a[5].d, a[6].v,a[7].v, a[8].d,a[9].d,a[10].d);
+		*(a[0].d) = res->Abs();	*(a[1].d) = res->Arg();
+	}
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
