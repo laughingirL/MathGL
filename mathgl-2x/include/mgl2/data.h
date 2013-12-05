@@ -382,6 +382,10 @@ public:
 	inline mreal Maximal() const	{	return mgl_data_max(this);	}
 	/// Get minimal value of the data
 	inline mreal Minimal() const	{	return mgl_data_min(this);	}
+	/// Get maximal value of the data which is less than 0
+	inline mreal MaximalNeg() const	{	return mgl_data_neg_max(this);	}
+	/// Get minimal value of the data which is larger than 0
+	inline mreal MinimalPos() const	{	return mgl_data_pos_min(this);	}
 	/// Get maximal value of the data and its position
 	inline mreal Maximal(long &i,long &j,long &k) const
 	{	return mgl_data_max_int(this,&i,&j,&k);	}

@@ -89,6 +89,7 @@ public slots:
 	void setViewYZ(bool v);	///< Switch on/off rotation around Y and Z axis
 
 	void setCustZoom(bool a);	///< Switch on/off using custom zoom
+	void setCustDraw(bool a);	///< Switch on/off using custom draw
 	void setZoom(bool z);	///< Switch on/off mouse zooming
 	void setRotate(bool r);	///< Switch on/off mouse rotation
 	void zoomIn();			///< Zoom in graphics
@@ -157,6 +158,8 @@ signals:
 	void askStyle(int id);		///< Update style
 	/// user can define its own zooming function
 	void customZoom(double x1, double y1, double x2, double y2, double tet, double phi, double per);
+	/// user can define its own drawing/setting function which will be called before main drawing
+	void customDraw(double x1, double y1, double x2, double y2, bool draw);
 
 protected:
 	void paintEvent(QPaintEvent *);
@@ -179,6 +182,7 @@ protected:
 	bool alpha;			///< Transparency state
 	bool light;			///< Lightning state
 	bool custZoom;		///< Use custom zoom instead of built in
+	bool custDraw;		///< Use custom draw before main drawing
 	bool zoom;			///< Mouse zoom state
 	bool grid;			///< Grid drawing state
 	bool rotate;			///< Mouse rotation state

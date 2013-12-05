@@ -477,12 +477,12 @@ mreal MGL_EXPORT mgl_data_max_(uintptr_t *d)	{	return mgl_data_max(_DT_);	}
 //-----------------------------------------------------------------------------
 mreal MGL_EXPORT mgl_data_min(HCDT d)
 {
-	mreal m1=1e10;
+	mreal m1=0;
 	long nn=d->GetNN();
 	const mglData *b = dynamic_cast<const mglData *>(d);
 #pragma omp parallel
 	{
-		register mreal m=1e10, v;
+		register mreal m=0, v;
 		if(b)
 #pragma omp for nowait
 			for(long i=0;i<nn;i++)
@@ -497,6 +497,52 @@ mreal MGL_EXPORT mgl_data_min(HCDT d)
 	return m1;
 }
 mreal MGL_EXPORT mgl_data_min_(uintptr_t *d)	{	return mgl_data_min(_DT_);	}
+//-----------------------------------------------------------------------------
+mreal MGL_EXPORT mgl_data_neg_max(HCDT d)
+{
+	mreal m1=0;
+	long nn=d->GetNN();
+	const mglData *b = dynamic_cast<const mglData *>(d);
+#pragma omp parallel
+	{
+		register mreal m=0, v;
+		if(b)
+#pragma omp for nowait
+			for(long i=0;i<nn;i++)
+			{	v = b->a[i];	m = m<v && v<0 ? v:m;	}
+		else
+#pragma omp for nowait
+			for(long i=0;i<nn;i++)
+			{	v = d->vthr(i);	m = m<v && v<0 ? v:m;	}
+#pragma omp critical(max_dat)
+		{	m1 = m1>m ? m1:m;	}
+	}
+	return m1;
+}
+mreal MGL_EXPORT mgl_data_neg_max_(uintptr_t *d)	{	return mgl_data_neg_max(_DT_);	}
+//-----------------------------------------------------------------------------
+mreal MGL_EXPORT mgl_data_pos_min(HCDT d)
+{
+	mreal m1=1e10;
+	long nn=d->GetNN();
+	const mglData *b = dynamic_cast<const mglData *>(d);
+#pragma omp parallel
+	{
+		register mreal m=1e10, v;
+		if(b)
+#pragma omp for nowait
+			for(long i=0;i<nn;i++)
+			{	v = b->a[i];	m = m>v && v>0 ? v:m;	}
+		else
+#pragma omp for nowait
+			for(long i=0;i<nn;i++)
+			{	v = d->vthr(i);	m = m>v && v>0 ? v:m;	}
+#pragma omp critical(min_dat)
+		{	m1 = m1<m ? m1:m;	}
+	}
+	return m1;
+}
+mreal MGL_EXPORT mgl_data_pos_min_(uintptr_t *d)	{	return mgl_data_pos_min(_DT_);	}
 //-----------------------------------------------------------------------------
 mreal MGL_EXPORT mgl_data_max_int(HCDT d, long *i, long *j, long *k)
 {

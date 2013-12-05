@@ -210,9 +210,15 @@ void MGL_EXPORT mgl_data_squeeze_(uintptr_t *dat, int *rx,int *ry,int *rz,int *s
 /// Get maximal value of the data
 mreal MGL_EXPORT mgl_data_max(HCDT dat);
 mreal MGL_EXPORT mgl_data_max_(uintptr_t *dat);
+/// Get maximal value of the data which is less than 0
+mreal MGL_EXPORT mgl_data_neg_max(HCDT dat);
+mreal MGL_EXPORT mgl_data_neg_max_(uintptr_t *dat);
 /// Get minimal value of the data
 mreal MGL_EXPORT mgl_data_min(HCDT dat);
 mreal MGL_EXPORT mgl_data_min_(uintptr_t *dat);
+/// Get minimal value of the data which is larger than 0
+mreal MGL_EXPORT mgl_data_pos_min(HCDT dat);
+mreal MGL_EXPORT mgl_data_pos_min_(uintptr_t *dat);
 /// Returns pointer to data element [i,j,k]
 MGL_EXPORT mreal *mgl_data_value(HMDT dat, long i,long j,long k);
 /// Returns pointer to internal data array

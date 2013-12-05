@@ -94,7 +94,7 @@ QMathGL::QMathGL(QWidget *parent, Qt::WindowFlags f) : QWidget(parent, f)
 	popup = 0;	grBuf = 0;	draw = 0;
 	phi = tet = per = 0;
 	x1 = y1 = ax1 = ay1 = 0;	x2 = y2 = ax2 = ay2 = 1;
-	alpha = light = zoom = rotate = grid = viewYZ = custZoom = false;
+	alpha = light = zoom = rotate = grid = viewYZ = custZoom = custDraw = false;
 	resize(600, 400);	mgl_set_flag(gr, true, MGL_CLF_ON_UPD);
 	timer = new QTimer(this);
 	enableWheel = enableMouse = true;
@@ -213,6 +213,8 @@ void QMathGL::setZoom(bool z)
 //-----------------------------------------------------------------------------
 void QMathGL::setCustZoom(bool z)	{	custZoom = z;	}
 //-----------------------------------------------------------------------------
+void QMathGL::setCustDraw(bool z)	{	custDraw = z;	}
+//-----------------------------------------------------------------------------
 void QMathGL::shiftDown()
 {	mreal d=(y2-y1)/4;	y1+=d;	y2+=d;	refresh();	}
 //-----------------------------------------------------------------------------
@@ -275,6 +277,7 @@ void QMathGL::update()
 		if(!isHidden())	QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 		setlocale(LC_NUMERIC, "C");
 		// use frames for quickly redrawing while adding/changing primitives
+		if(custDraw)	emit customDraw(x1,y1,x2,y2,true);
 		if(mgl_is_frames(gr))	mgl_new_frame(gr);
 		if(draw_func)	draw_func(gr, draw_par);
 		else if(draw)	{	mglGraph g(gr);	draw->Draw(&g);	}
@@ -373,7 +376,12 @@ void QMathGL::mouseReleaseEvent(QMouseEvent *ev)
 			if(x1>x2)	{	_x1=x1;	x1=x2;	x2=_x1;	}
 			if(y1>y2)	{	_x1=y1;	y1=y2;	y2=_x1;	}
 			x0 = xe;	y0 = ye;
-			refresh();
+			if(custDraw)
+			{
+				emit customDraw(x1,y1,x2,y2,false);
+				update();
+			}
+			else	refresh();
 		}
 	}
 	if(ev->button()&Qt::RightButton && popup && !rotate)	// popup menu

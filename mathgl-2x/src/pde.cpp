@@ -161,39 +161,45 @@ HADT MGL_EXPORT mgl_pde_solve_c(HMGL gr, const char *ham, HCDT ini_re, HCDT ini_
 #pragma omp parallel for
 			for(long i=0;i<4*nx*ny;i++)	huv[i] -= hh0;
 			// solve equation
+		if(ny>1)
 #pragma omp parallel
 		{
-			void *wsx = mgl_fft_alloc_thr(2*nx), *wsy = ny>1?mgl_fft_alloc_thr(2*ny):0;
+			void *wsx = mgl_fft_alloc_thr(2*nx), *wsy = mgl_fft_alloc_thr(2*ny);
 #pragma omp for
 			for(long i=0;i<4*nx*ny;i++)	a[i] *= exp(hxy[i])*exp(-double(dmp[i]*dz));
 #pragma omp for
 			for(long i=0;i<2*ny;i++)	mgl_fft((double *)(a+i*2*nx), 1, 2*nx, wtx, wsx, false);
-			if(ny>1)
-			{
 #pragma omp for
-				for(long i=0;i<4*nx*ny;i++)	a[i] *= exp(huy[i]);
+			for(long i=0;i<4*nx*ny;i++)	a[i] *= exp(huy[i]);
 #pragma omp for
-				for(long i=0;i<2*nx;i++)	mgl_fft((double *)(a+i), 2*nx, 2*ny, wty, wsy, false);
-			}
+			for(long i=0;i<2*nx;i++)	mgl_fft((double *)(a+i), 2*nx, 2*ny, wty, wsy, false);
 #pragma omp for
 			for(long i=0;i<4*nx*ny;i++)	a[i] *= exp(huv[i]);
 #pragma omp for
 			for(long i=0;i<2*ny;i++)	mgl_fft((double *)(a+2*i*nx), 1, 2*nx, wtx, wsx, true);
-			if(ny>1)
-			{
 #pragma omp for
-				for(long i=0;i<4*nx*ny;i++)	a[i] *= exp(hxv[i]);
+			for(long i=0;i<4*nx*ny;i++)	a[i] *= exp(hxv[i]);
 #pragma omp for
-				for(long i=0;i<2*nx;i++)	mgl_fft((double *)(a+i), 2*nx, 2*ny, wty, wsy, true);
-			}
-#pragma omp for collapse(2)
-			for(long i=0;i<nx;i++)	for(long j=0;j<ny;j++)	// save result
-			{
-				register long i0 = i+nx/2+2*nx*(j+ny/2);
-				res->a[k+nz*(i+nx*j)] = a[i0];
-			}
+			for(long i=0;i<2*nx;i++)	mgl_fft((double *)(a+i), 2*nx, 2*ny, wty, wsy, true);
 			mgl_fft_free_thr(wsx);	mgl_fft_free_thr(wsy);
 		}
+		else
+#pragma omp parallel
+		{
+			void *wsx = mgl_fft_alloc_thr(2*nx);
+#pragma omp for
+			for(long i=0;i<4*nx*ny;i++)	a[i] *= exp(hxy[i])*exp(-double(dmp[i]*dz));
+#pragma omp for
+			for(long i=0;i<2*ny;i++)	mgl_fft((double *)(a+i*2*nx), 1, 2*nx, wtx, wsx, false);
+#pragma omp for
+			for(long i=0;i<4*nx*ny;i++)	a[i] *= exp(huv[i]);
+#pragma omp for
+			for(long i=0;i<2*ny;i++)	mgl_fft((double *)(a+2*i*nx), 1, 2*nx, wtx, wsx, true);
+			mgl_fft_free_thr(wsx);
+		}
+#pragma omp parallel for collapse(2)
+		for(long i=0;i<nx;i++)	for(long j=0;j<ny;j++)	// save result
+			res->a[k+nz*(i+nx*j)] = a[i+nx/2+2*nx*(j+ny/2)];
 	}
 	mgl_fft_free(wtx,0,0);	mgl_fft_free(wty,0,0);
 	delete []a;		delete []dmp;
@@ -570,7 +576,7 @@ HADT MGL_EXPORT mgl_qo3d_func_c(dual (*ham)(mreal u, mreal x, mreal y, mreal z, 
 #pragma omp parallel for collapse(2)
 	for(long i=0;i<nx;i++)	for(long j=0;j<nx;j++)	// init
 		a[i+nx/2+2*nx*(j+nx/2)] = dual(ini_re->v(i,j),ini_im->v(i,j));
-	void *wsx, *wtx = mgl_fft_alloc(2*nx,&wsx,1);
+	void *wtx = mgl_fft_alloc(2*nx,0,0);
 	if(xx && yy && zz)	{	xx->Create(nx,nx,nt);	yy->Create(nx,nx,nt);	zz->Create(nx,nx,nt);	}
 
 	mgl_qo3d_ham tmp;	// parameters for Hamiltonian calculation
@@ -604,22 +610,31 @@ HADT MGL_EXPORT mgl_qo3d_func_c(dual (*ham)(mreal u, mreal x, mreal y, mreal z, 
 		mglStartThread(mgl_qo3d_post,0,2*nx,0,0,0,0,&tmp);
 		// Step for field
 		dual dt = dual(0, -ra[k].dt*k0);	// TODO: this part can be paralleled
-#pragma omp parallel for
-		for(long i=0;i<4*nx*nx;i++)	a[i] *= exp(hxy[i]*dt);		// x-y
-		for(long i=0;i<2*nx;i++)	// x->u
-			mgl_fft((double *)(a+i*2*nx), 1, 2*nx, wtx, wsx, false);
-#pragma omp parallel for
-		for(long i=0;i<4*nx*nx;i++)	a[i] *= exp(huy[i]*dt);		// u-y
-		for(long i=0;i<2*nx;i++)	// y->v
-			mgl_fft((double *)(a+i), 2*nx, 2*nx, wtx, wsx, false);
-#pragma omp parallel for
-		for(long i=0;i<4*nx*nx;i++)	a[i] *= exp(huv[i]*dt);		// u-v
-		for(long i=0;i<2*nx;i++)	// u->x
-			mgl_fft((double *)(a+i*2*nx), 1, 2*nx, wtx, wsx, true);
-#pragma omp parallel for
-		for(long i=0;i<4*nx*nx;i++)	a[i] *= exp(hxv[i]*dt);		// x-v
-		for(long i=0;i<2*nx;i++)	// v->y
-			mgl_fft((double *)(a+i), 2*nx, 2*nx, wtx, wsx, true);
+#pragma omp parallel
+		{
+			void *wsx = mgl_fft_alloc_thr(2*nx);
+#pragma omp for
+			for(long i=0;i<4*nx*nx;i++)	a[i] *= exp(hxy[i]*dt);		// x-y
+#pragma omp for
+			for(long i=0;i<2*nx;i++)	// x->u
+				mgl_fft((double *)(a+i*2*nx), 1, 2*nx, wtx, wsx, false);
+#pragma omp for
+			for(long i=0;i<4*nx*nx;i++)	a[i] *= exp(huy[i]*dt);		// u-y
+#pragma omp for
+			for(long i=0;i<2*nx;i++)	// y->v
+				mgl_fft((double *)(a+i), 2*nx, 2*nx, wtx, wsx, false);
+#pragma omp for
+			for(long i=0;i<4*nx*nx;i++)	a[i] *= exp(huv[i]*dt);		// u-v
+#pragma omp for
+			for(long i=0;i<2*nx;i++)	// u->x
+				mgl_fft((double *)(a+i*2*nx), 1, 2*nx, wtx, wsx, true);
+#pragma omp for
+			for(long i=0;i<4*nx*nx;i++)	a[i] *= exp(hxv[i]*dt);		// x-v
+#pragma omp for
+			for(long i=0;i<2*nx;i++)	// v->y
+				mgl_fft((double *)(a+i), 2*nx, 2*nx, wtx, wsx, true);
+			mgl_fft_free_thr(wsx);
+		}
 
 /*		// Calculate B1			// TODO make more general scheme later!!!
 		hh = ra[k].pt*(1/sqrt(sqrt(1.041))-1);
@@ -644,7 +659,7 @@ HADT MGL_EXPORT mgl_qo3d_func_c(dual (*ham)(mreal u, mreal x, mreal y, mreal z, 
 		a1 = sqrt(a1/a2);
 		for(i=0;i<2*nx;i++)	a[i] *= a1;*/
 	}
-	mgl_fft_free(wtx,&wsx,1);
+	mgl_fft_free(wtx,0,0);
 	delete []a;		delete []ra;	delete []dmp;
 	delete []huv;	delete []hxy;	delete []hxv;	delete []huy;
 	delete []hu;	delete []hx;	delete []hv;	delete []hy;
