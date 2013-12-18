@@ -282,6 +282,11 @@ int MGL_NO_EXPORT mgls_crange(mglGraph *gr, long , mglArg *a, const char *k, con
 	if(!strcmp(k,"d"))	gr->SetRange('c',*(a[0].d));
 	else if(!strcmp(k,"dn"))	gr->SetRange('c',*(a[0].d),a[1].v);
 	else if(!strcmp(k,"nn"))	gr->SetRange('c', a[0].v, a[1].v);
+	else if(!strcmp(k,"nnn"))
+	{
+		if(a[2].v)	gr->SetRange('c', a[0].v, a[1].v);
+		else	gr->AddRange('c', a[0].v, a[1].v);
+	}
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -1737,6 +1742,11 @@ int MGL_NO_EXPORT mgls_xrange(mglGraph *gr, long , mglArg *a, const char *k, con
 	if(!strcmp(k,"d"))	gr->SetRange('x',*(a[0].d));
 	else if(!strcmp(k,"dn"))	gr->SetRange('x',*(a[0].d),a[1].v);
 	else if(!strcmp(k,"nn"))	gr->SetRange('x', a[0].v, a[1].v);
+	else if(!strcmp(k,"nnn"))
+	{
+		if(a[2].v)	gr->SetRange('x', a[0].v, a[1].v);
+		else	gr->AddRange('x', a[0].v, a[1].v);
+	}
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -1746,6 +1756,11 @@ int MGL_NO_EXPORT mgls_yrange(mglGraph *gr, long , mglArg *a, const char *k, con
 	if(!strcmp(k,"d"))	gr->SetRange('y',*(a[0].d));
 	else if(!strcmp(k,"dn"))	gr->SetRange('y',*(a[0].d),a[1].v);
 	else if(!strcmp(k,"nn"))	gr->SetRange('y', a[0].v, a[1].v);
+	else if(!strcmp(k,"nnn"))
+	{
+		if(a[2].v)	gr->SetRange('y', a[0].v, a[1].v);
+		else	gr->AddRange('y', a[0].v, a[1].v);
+	}
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -1755,6 +1770,11 @@ int MGL_NO_EXPORT mgls_zrange(mglGraph *gr, long , mglArg *a, const char *k, con
 	if(!strcmp(k,"d"))	gr->SetRange('z',*(a[0].d));
 	else if(!strcmp(k,"dn"))	gr->SetRange('z',*(a[0].d),a[1].v);
 	else if(!strcmp(k,"nn"))	gr->SetRange('z', a[0].v, a[1].v);
+	else if(!strcmp(k,"nnn"))
+	{
+		if(a[2].v)	gr->SetRange('z', a[0].v, a[1].v);
+		else	gr->AddRange('z', a[0].v, a[1].v);
+	}
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -2669,7 +2689,7 @@ mglCommand mgls_base_cmd[] = {
 	{"copy","Copy data from another variable","copy Dat1 Dat2 ['eq' onaxis]", mgls_copy ,4},
 	{"correl", "Find correlation between data arrays", "correl Res Adat Bdat 'dir'", mgls_correl ,4},
 	{"cosfft","Cos-Fourier transform at some direction","cosfft Dat 'dir'", mgls_cosfft ,16},
-	{"crange","Set color range","crange Dat [sym] | c1 c2", mgls_crange ,14},
+	{"crange","Set color range","crange Dat [add] | c1 c2 [add]", mgls_crange ,14},
 	{"crop","Crop edge of data","crop Dat n1 n2 'dir'", mgls_crop ,16},
 	{"crust","Draw reconstructed surface for arbitrary data points","crust Xdat Ydat Zdat ['fmt']", mgls_crust ,0},
 	{"ctick","Set ticks for colorbar","ctick 'tmpl' | dx", mgls_ctick ,14},
@@ -2858,15 +2878,15 @@ mglCommand mgls_base_cmd[] = {
 	{"view","Change view angles - use 'rotate' for plot rotation","view tetz tetx [tety]", mgls_view ,5},
 	{"write","Write current image to graphical file","write 'fname' [solid]", mgls_write ,2},
 	{"xlabel","Draw label for x-axis","xlabel 'txt' [pos]", mgls_xlabel ,12},
-	{"xrange","Set range for x-axis","xrange Dat [add] | x1 x2", mgls_xrange ,14},
+	{"xrange","Set range for x-axis","xrange Dat [add] | x1 x2 [add]", mgls_xrange ,14},
 	{"xtick","Set ticks for x-axis","xtick dx [sx tx] | 'tmpl' | Xdat 'lbl' [add] | v1 'lbl1' ...", mgls_xtick,14},
 	{"ylabel","Draw label for y-axis","ylabel 'txt' [pos]", mgls_ylabel,12},
-	{"yrange","Set range for y-axis","yrange Dat [add] | y1 y2", mgls_yrange,14},
+	{"yrange","Set range for y-axis","yrange Dat [add] | y1 y2 [add]", mgls_yrange,14},
 	{"ytick","Set ticks for y-axis","ytick dy [sy ty] | 'tmpl' | Ydat 'lbl' [add] | v1 'lbl1' ...", mgls_ytick,14},
 	{"zlabel","Draw label for z-axis","zlabel 'txt' [pos]", mgls_zlabel,12},
 	{"zoom","Zoom plot region","zoom x1 x2 y1 y2", mgls_zoom,5},
 	{"zoomaxis","Zoom axis range","zoomaxis x1 x2|x1 x2 y1 y2|x1 x2 y1 y2 z1 z2|x1 x2 y1 y2 z1 z2 c1 c2", mgls_zoomaxis,14},
-	{"zrange","Set range for z-axis","yrange Dat [add] | z1 z2", mgls_zrange ,14},
+	{"zrange","Set range for z-axis","yrange Dat [add] | z1 z2 [add]", mgls_zrange ,14},
 	{"ztick","Set ticks for z-axis","ztick dz [sz tz] | 'tmpl' | Zdat 'lbl' [add] | v1 'lbl1' ...", mgls_ztick,14},
 {"","","",NULL,0}};
 //-----------------------------------------------------------------------------

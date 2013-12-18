@@ -523,6 +523,10 @@ void mglBase::CRange(HCDT a,bool add, mreal fact)
 {
 	mreal v1=a->Minimal(), v2=a->Maximal(), dv;
 	dv=(v2-v1)*fact;	v1 -= dv;	v2 += dv;
+	CRange(v1,v2,add);
+}
+void mglBase::CRange(mreal v1,mreal v2,bool add)
+{
 	if(v1==v2 && !add)	return;
 	if(!add)	{	Min.c = v1;	Max.c = v2;	}
 	else if(Min.c<Max.c)
@@ -532,7 +536,7 @@ void mglBase::CRange(HCDT a,bool add, mreal fact)
 	}
 	else
 	{
-		dv = Min.c;
+		mreal dv = Min.c;
 		Min.c = v1<Max.c ? v1:Max.c;
 		Max.c = v2>dv ? v2:dv;
 	}
@@ -550,6 +554,10 @@ void mglBase::XRange(HCDT a,bool add,mreal fact)
 {
 	mreal v1=a->Minimal(), v2=a->Maximal(), dv;
 	dv=(v2-v1)*fact;	v1 -= dv;	v2 += dv;
+	XRange(v1,v2,add);
+}
+void mglBase::XRange(mreal v1,mreal v2,bool add)
+{
 	if(v1==v2 && !add)	return;
 	if(!add)	{	Min.x = v1;	Max.x = v2;	}
 	else if(Min.x<Max.x)
@@ -559,7 +567,7 @@ void mglBase::XRange(HCDT a,bool add,mreal fact)
 	}
 	else
 	{
-		dv = Min.x;
+		mreal dv = Min.x;
 		Min.x = v1<Max.x ? v1:Max.x;
 		Max.x = v2>dv ? v2:dv;
 	}
@@ -577,6 +585,10 @@ void mglBase::YRange(HCDT a,bool add,mreal fact)
 {
 	mreal v1=a->Minimal(), v2=a->Maximal(), dv;
 	dv=(v2-v1)*fact;	v1 -= dv;	v2 += dv;
+	YRange(v1,v2,add);
+}
+void mglBase::YRange(mreal v1,mreal v2,bool add)
+{
 	if(v1==v2 && !add)	return;
 	if(!add)	{	Min.y = v1;	Max.y = v2;	}
 	else if(Min.y<Max.y)
@@ -586,7 +598,7 @@ void mglBase::YRange(HCDT a,bool add,mreal fact)
 	}
 	else
 	{
-		dv = Min.y;
+		mreal dv = Min.y;
 		Min.y = v1<Max.y ? v1:Max.y;
 		Max.y = v2>dv ? v2:dv;
 	}
@@ -605,6 +617,10 @@ void mglBase::ZRange(HCDT a,bool add,mreal fact)
 {
 	mreal v1=a->Minimal(), v2=a->Maximal(), dv;
 	dv=(v2-v1)*fact;	v1 -= dv;	v2 += dv;
+	ZRange(v1,v2,add);
+}
+void mglBase::ZRange(mreal v1,mreal v2,bool add)
+{
 	if(v1==v2 && !add)	return;
 	if(!add)	{	Min.z = v1;	Max.z = v2;	}
 	else if(Min.z<Max.z)
@@ -614,7 +630,7 @@ void mglBase::ZRange(HCDT a,bool add,mreal fact)
 	}
 	else
 	{
-		dv = Min.z;
+		mreal dv = Min.z;
 		Min.z = v1<Max.z ? v1:Max.z;
 		Max.z = v2>dv ? v2:dv;
 	}

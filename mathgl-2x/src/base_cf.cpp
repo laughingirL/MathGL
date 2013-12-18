@@ -81,14 +81,21 @@ void MGL_EXPORT mgl_set_cutoff(HMGL gr, const char *EqC)	{	gr->CutOff(EqC);	}
 void MGL_EXPORT mgl_set_ternary(HMGL gr, int enable)			{	gr->Ternary(enable);	}
 void MGL_EXPORT mgl_set_range_val(HMGL gr, char dir, double v1,double v2)
 {
-	if(dir=='c')		gr->CRange(v1,v2);
+	if(dir=='c' || dir=='a')	gr->CRange(v1,v2);
 	else if(dir=='x')	gr->XRange(v1,v2);
 	else if(dir=='y')	gr->YRange(v1,v2);
 	else if(dir=='z')	gr->ZRange(v1,v2);
 }
+void MGL_EXPORT mgl_add_range_val(HMGL gr, char dir, double v1,double v2)
+{
+	if(dir=='c' || dir=='a')	gr->CRange(v1,v2,true);
+	else if(dir=='x')	gr->XRange(v1,v2,true);
+	else if(dir=='y')	gr->YRange(v1,v2,true);
+	else if(dir=='z')	gr->ZRange(v1,v2,true);
+}
 void MGL_EXPORT mgl_set_range_dat(HMGL gr, char dir, HCDT a, int add)
 {
-	if(dir=='c')		gr->CRange(a,add);
+	if(dir=='c' || dir=='a')	gr->CRange(a,add);
 	else if(dir=='x')	gr->XRange(a,add);
 	else if(dir=='y')	gr->YRange(a,add);
 	else if(dir=='z')	gr->ZRange(a,add);
@@ -135,6 +142,8 @@ void MGL_EXPORT mgl_set_cutoff_(uintptr_t *gr, const char *EqC, int l)
 void MGL_EXPORT mgl_set_ternary_(uintptr_t *gr, int *enable)	{	_GR_->Ternary(*enable);	}
 void MGL_EXPORT mgl_set_range_val_(uintptr_t *gr, const char *dir, mreal *v1, mreal *v2,int)
 {	mgl_set_range_val(_GR_,*dir,*v1,*v2);	}
+void MGL_EXPORT mgl_add_range_val_(uintptr_t *gr, const char *dir, mreal *v1, mreal *v2,int)
+{	mgl_add_range_val(_GR_,*dir,*v1,*v2);	}
 void MGL_EXPORT mgl_set_range_dat_(uintptr_t *gr, const char *dir, uintptr_t *a, int *add,int)
 {	mgl_set_range_dat(_GR_,*dir,_DA_(a),*add);	}
 void MGL_EXPORT mgl_set_ranges_(uintptr_t *gr, mreal *x1, mreal *x2, mreal *y1, mreal *y2, mreal *z1, mreal *z2)

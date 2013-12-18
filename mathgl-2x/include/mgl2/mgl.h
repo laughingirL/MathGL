@@ -146,6 +146,9 @@ public:
 	/// Set axis range scaling -- simplified way to shift/zoom axis range -- need to replot whole image!
 	inline void ZoomAxis(mglPoint p1=mglPoint(0,0,0,0), mglPoint p2=mglPoint(1,1,1,1))
 	{	mgl_zoom_axis(gr, p1.x,p1.y,p1.z,p1.c, p2.x,p2.y,p2.z,p2.c);	}
+	/// Add [v1, v2] to the current range in direction dir
+	inline void AddRange(char dir, double v1, double v2)
+	{	mgl_add_range_val(gr, dir, v1, v2);	}
 	/// Set range in direction dir as [v1, v2]
 	inline void SetRange(char dir, double v1, double v2)
 	{	mgl_set_range_val(gr, dir, v1, v2);	}

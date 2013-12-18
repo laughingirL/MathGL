@@ -137,6 +137,9 @@ void MGL_EXPORT mgl_set_ranges_(uintptr_t *gr, mreal *x1, mreal *x2, mreal *y1, 
 /// Set range in direction dir as [v1, v2]
 void MGL_EXPORT mgl_set_range_val(HMGL gr, char dir, double v1,double v2);
 void MGL_EXPORT mgl_set_range_val_(uintptr_t *gr, const char *dir, mreal *v1, mreal *v2,int);
+/// Add [v1, v2] to the current range in direction dir
+void MGL_EXPORT mgl_add_range_val(HMGL gr, char dir, double v1,double v2);
+void MGL_EXPORT mgl_add_range_val_(uintptr_t *gr, const char *dir, mreal *v1, mreal *v2,int);
 /// Set range in direction dir as minimal and maximal values of data a
 void MGL_EXPORT mgl_set_range_dat(HMGL gr, char dir, HCDT a, int add);
 void MGL_EXPORT mgl_set_range_dat_(uintptr_t *gr, const char *dir, uintptr_t *a, int *add,int);
