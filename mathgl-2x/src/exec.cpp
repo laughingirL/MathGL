@@ -284,8 +284,8 @@ int MGL_NO_EXPORT mgls_crange(mglGraph *gr, long , mglArg *a, const char *k, con
 	else if(!strcmp(k,"nn"))	gr->SetRange('c', a[0].v, a[1].v);
 	else if(!strcmp(k,"nnn"))
 	{
-		if(a[2].v)	gr->SetRange('c', a[0].v, a[1].v);
-		else	gr->AddRange('c', a[0].v, a[1].v);
+		if(a[2].v)	gr->AddRange('c', a[0].v, a[1].v);
+		else	gr->SetRange('c', a[0].v, a[1].v);
 	}
 	else res = 1;	return res;
 }
@@ -1744,8 +1744,8 @@ int MGL_NO_EXPORT mgls_xrange(mglGraph *gr, long , mglArg *a, const char *k, con
 	else if(!strcmp(k,"nn"))	gr->SetRange('x', a[0].v, a[1].v);
 	else if(!strcmp(k,"nnn"))
 	{
-		if(a[2].v)	gr->SetRange('x', a[0].v, a[1].v);
-		else	gr->AddRange('x', a[0].v, a[1].v);
+		if(a[2].v)	gr->AddRange('x', a[0].v, a[1].v);
+		else	gr->SetRange('x', a[0].v, a[1].v);
 	}
 	else res = 1;	return res;
 }
@@ -1758,8 +1758,8 @@ int MGL_NO_EXPORT mgls_yrange(mglGraph *gr, long , mglArg *a, const char *k, con
 	else if(!strcmp(k,"nn"))	gr->SetRange('y', a[0].v, a[1].v);
 	else if(!strcmp(k,"nnn"))
 	{
-		if(a[2].v)	gr->SetRange('y', a[0].v, a[1].v);
-		else	gr->AddRange('y', a[0].v, a[1].v);
+		if(a[2].v)	gr->AddRange('y', a[0].v, a[1].v);
+		else	gr->SetRange('y', a[0].v, a[1].v);
 	}
 	else res = 1;	return res;
 }
@@ -1772,8 +1772,8 @@ int MGL_NO_EXPORT mgls_zrange(mglGraph *gr, long , mglArg *a, const char *k, con
 	else if(!strcmp(k,"nn"))	gr->SetRange('z', a[0].v, a[1].v);
 	else if(!strcmp(k,"nnn"))
 	{
-		if(a[2].v)	gr->SetRange('z', a[0].v, a[1].v);
-		else	gr->AddRange('z', a[0].v, a[1].v);
+		if(a[2].v)	gr->AddRange('z', a[0].v, a[1].v);
+		else	gr->SetRange('z', a[0].v, a[1].v);
 	}
 	else res = 1;	return res;
 }

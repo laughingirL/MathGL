@@ -1469,7 +1469,7 @@ These functions draw some simple objects like line, point, sphere, drop, cone an
 @deftypefnx {C function} @code{void} mgl_clf_chr (@code{HMGL} gr, @code{char} col)
 @deftypefnx {C function} @code{void} mgl_clf_rgb (@code{HMGL} gr, @code{mreal} r, @code{mreal} g, @code{mreal} b)
 @end ifclear
-Clear the picture and fill it by color specified color.
+Clear the picture and fill it by specified color.
 @end deftypefn
 
 @anchor{ball}

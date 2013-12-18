@@ -18,7 +18,7 @@
 	u. Test FlowP + 3d
 
 11. Check centered curved text (see text2)
-14. Export to X3D
+12. Export to X3D
 
 
 ============= DOCUMENTATION =============
