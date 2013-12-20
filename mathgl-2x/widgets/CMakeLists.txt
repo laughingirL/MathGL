@@ -82,7 +82,7 @@ if(MGL_HAVE_WX)
 	)
 endif(MGL_HAVE_WX)
 
-if(MGL_HAVE_QT)
+if(MGL_HAVE_QT4)
 	include(${QT_USE_FILE})
 	qt4_wrap_cpp(MGL_MOC_FILES ../include/mgl2/qmathgl.h)
 	add_library(mgl-qt SHARED qt.cpp ${MGL_MOC_FILES} ../include/mgl2/qt.h ../include/mgl2/qmathgl.h)
@@ -108,12 +108,38 @@ if(MGL_HAVE_QT)
 		ARCHIVE DESTINATION ${MGL_LIB_INSTALL_DIR}
 		LIBRARY DESTINATION ${MGL_LIB_INSTALL_DIR}
 	)
-endif(MGL_HAVE_QT)
+endif(MGL_HAVE_QT4)
+
+if(MGL_HAVE_QT5)
+	qt5_wrap_cpp(MGL_MOC_FILES ../include/mgl2/qmathgl.h)
+	add_library(mgl-qt5 SHARED qt.cpp ${MGL_MOC_FILES} ../include/mgl2/qt.h ../include/mgl2/qmathgl.h)
+	add_library(mgl-qt5-static STATIC qt.cpp ${MGL_MOC_FILES} ../include/mgl2/qt.h ../include/mgl2/qmathgl.h)
+	set_target_properties(mgl-qt5 PROPERTIES SOVERSION ${MathGL_SOVERSION})
+	set_target_properties(mgl-qt5 PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+	set_target_properties(mgl-qt5 PROPERTIES DEFINE_SYMBOL "mgl_EXPORTS")
+	set_target_properties(mgl-qt5-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+	set_target_properties(mgl-qt5-static PROPERTIES COMPILE_FLAGS -DMGL_STATIC_DEFINE)
+	target_link_libraries(mgl-qt5 mgl)
+	qt5_use_modules(mgl-qt5 Core Gui Network WebKit)
+	qt5_use_modules(mgl-qt5-static Core Gui Network WebKit)
+	if(enable-mgl2)
+		set_target_properties(mgl-qt5 PROPERTIES OUTPUT_NAME "mgl2-qt5")
+		set_target_properties(mgl-qt5-static PROPERTIES OUTPUT_NAME "mgl2-qt5")
+	else(enable-mgl2)
+		set_target_properties(mgl-qt5-static PROPERTIES OUTPUT_NAME "mgl-qt5")
+	endif(enable-mgl2)
+
+	install(
+		TARGETS mgl-qt5 mgl-qt5-static
+		RUNTIME DESTINATION bin
+		ARCHIVE DESTINATION ${MGL_LIB_INSTALL_DIR}
+		LIBRARY DESTINATION ${MGL_LIB_INSTALL_DIR}
+	)
+endif(MGL_HAVE_QT5)
 
 
-if(MGL_HAVE_QT AND MGL_HAVE_FLTK)
+if((MGL_HAVE_QT4 OR MGL_HAVE_QT5) AND MGL_HAVE_FLTK)
 	include_directories(${FLTK_INCLUDE_DIR})
-	include(${QT_USE_FILE})
 
 	set(MGL_WND_SRC qt.cpp ../include/mgl2/qt.h ../include/mgl2/qmathgl.h fltk.cpp ../include/mgl2/fltk.h)
 
@@ -134,7 +160,11 @@ if(MGL_HAVE_QT AND MGL_HAVE_FLTK)
 	endif(enable-mgl2)
 
 	target_link_libraries(mgl-wnd mgl)
-	target_link_libraries(mgl-wnd ${QT_LIBRARIES})
+	if(MGL_HAVE_QT4)
+		target_link_libraries(mgl-wnd ${QT_LIBRARIES})
+	else(MGL_HAVE_QT4)
+		qt5_use_modules(mgl-wnd Core Gui Network WebKit)
+	endif(MGL_HAVE_QT4)
 	target_link_libraries(mgl-wnd ${FLTK_LIBRARIES})
 
 	install(
@@ -143,4 +173,4 @@ if(MGL_HAVE_QT AND MGL_HAVE_FLTK)
 		ARCHIVE DESTINATION ${MGL_LIB_INSTALL_DIR}
 		LIBRARY DESTINATION ${MGL_LIB_INSTALL_DIR}
 	)
-endif(MGL_HAVE_QT AND MGL_HAVE_FLTK)
+endif((MGL_HAVE_QT4 OR MGL_HAVE_QT5) AND MGL_HAVE_FLTK)
