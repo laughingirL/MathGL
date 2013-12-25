@@ -485,7 +485,7 @@ int main ( int argc, char **argv )
     double d1 = 500./fontT->Ascender(), d2 = -500./fontT->Descender(), d3 = 1000./ww, dx;
     dx = d1<d2 ? d1:d2;        dx = dx<d3 ? dx:d3;
     unsigned i, *ids, *posl, *post, len, cur, numg=TriangleFont.size();
-    short *wdt, *numl, *numt, *buf, *xx, *yy, *tt;
+    short *wdt, *numl, *numt, *buf, *xx, *yy;
     
     for ( chr =0, len=0; chr < numg; chr++ )
         len += TriangleFont[chr].contourpoints.size();
@@ -505,17 +505,18 @@ int main ( int argc, char **argv )
     {
         const TriangleGlyph& glyph = TriangleFont[chr];
         // removing the points in the same line
-        xx = new short[glyph.contourpoints.size()];
-        yy = new short[glyph.contourpoints.size()];
-        for ( i = 0 ; i < glyph.contourpoints.size(); i++ )
+		unsigned tcs = glyph.triangles.size();
+        xx = new short[tcs];
+        yy = new short[tcs];
+        for ( i = 0 ; i < tcs; i++ )
         {
             xx[i] = glyph.contourpoints[i].X()>-500. ? int(dx*glyph.contourpoints[i].X()+0.5) : 0x3fff;
             yy[i] = glyph.contourpoints[i].Y()>-500. ? int(dx*glyph.contourpoints[i].Y()+0.5) : 0x3fff;
         }
         unsigned last = 0;
-        for ( i = 0 ; i < glyph.contourpoints.size(); i++ )
+        for ( i = 0 ; i < tcs; i++ )
         {
-            if(i>0 && i<glyph.contourpoints.size())
+            if(i>0 && i<tcs-1)
             {
                 if(((xx[i]-xx[last-1])*(yy[i+1]-yy[last-1]) == (yy[i]-yy[last-1])*(xx[i+1]-xx[last-1])) &&
 				   xx[i]!=0x3fff && yy[i]!=0x3fff && xx[i+1]!=0x3fff && yy[i+1]!=0x3fff)
@@ -537,16 +538,16 @@ int main ( int argc, char **argv )
     {
         const TriangleGlyph& glyph = TriangleFont[chr];
         // removing the points in the same line
-        xx = new short[glyph.points.size()];
-        yy = new short[glyph.points.size()];
-        tt = new short[6*glyph.triangles.size()];
-        for ( i = 0 ; i < glyph.points.size(); i++ )
+		unsigned tts = glyph.triangles.size(), tps=glyph.points.size();
+		xx = new short[tps];	yy = new short[tps];
+       for ( i = 0 ; i < tps; i++ )
         {
             xx[i] = short(dx*glyph.points[i].X()+0.5);
             yy[i] = short(dx*glyph.points[i].Y()+0.5);
         }
-        unsigned last = 0, ii, ll;
-        for ( i = 0 ; i < glyph.triangles.size(); i++ )
+		short *tt = new short[6*tts];
+		unsigned last = 0, ii, ll;
+        for ( i = 0 ; i < tts; i++ )
         {
             ii = 6*i;    ll = 6*last;
             tt[ii]   = xx[glyph.triangles[i].first];
@@ -555,7 +556,7 @@ int main ( int argc, char **argv )
             tt[ii+3] = yy[glyph.triangles[i].second];
             tt[ii+4] = xx[glyph.triangles[i].third];
             tt[ii+5] = yy[glyph.triangles[i].third];
-            if(i>0 && i<glyph.triangles.size())
+            if(i>0 && i<tts)
             {
                 if( tt[ii]==tt[ii+2] && tt[ii+1]==tt[ii+3] )    continue;
                 if( tt[ii]==tt[ii+4] && tt[ii+1]==tt[ii+5] )    continue;

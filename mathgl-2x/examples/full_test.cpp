@@ -71,7 +71,7 @@ void test(mglGraph *gr)
 {
 	mglParse par;
 	setlocale(LC_CTYPE, "");
-	par.Execute(gr,"axis 'lg(x)' '' '':axis:box:fplot 'x^2'");
+	par.Execute(gr,"box\r\n\r\naxis");
 }
 //-----------------------------------------------------------------------------
 #if !defined(_MSC_VER) && !defined(__BORLANDC__)

@@ -20,6 +20,8 @@
 11. Check centered curved text (see text2)
 12. Export to X3D
 
+13. Clf in GLUT
+
 
 ============= DOCUMENTATION =============
 

@@ -12,7 +12,7 @@ clean:
 # 	g++ -DSMALL_SET -o make_font $(OBJ) -lfreetype -lftgl -lGL
 
 $(BIN): $(OBJ)
-	g++ -o $(BIN) $(OBJ) -L/opt/local/lib -lfreetype -lftgl
+	g++ -g -o $(BIN) $(OBJ) -L/opt/local/lib -lfreetype -lftgl
 
 make_font.o: make_font.cpp 
-	g++ $(FLAGS) -c -o make_font.o make_font.cpp
+	g++ $(FLAGS) -g -c -o make_font.o make_font.cpp
