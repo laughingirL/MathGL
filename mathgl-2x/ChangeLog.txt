@@ -1,4 +1,4 @@
-2.2.1 Released ?? 2014
+2.2.1 Released 20 January 2014
 
 * Add function AddRange(char dir, mreal v1, mreal v2) and extend corresponding MGL commands '[xyzc]range'
 * Allow nx=1 for Stem and Error

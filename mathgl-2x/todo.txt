@@ -21,6 +21,11 @@
 12. Export to X3D
 
 13. Clf in GLUT
+14. Add Qt5 support
+15. "Unrotatable" points
+16. Inplot data should have ranges + calc coor + JS
+16. frames in JS ?!?
+
 
 
 ============= DOCUMENTATION =============

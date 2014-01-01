@@ -587,3 +587,25 @@ mathgl.Graph.prototype.zoomIn = function() {
 mathgl.Graph.prototype.zoomOut = function() {
 	this.zoomAxis(1./1.1);
 }
+
+mathgl.Graph.prototype.getView = function(mgl) { 
+	return this.__view; 
+}
+
+mathgl.Graph.prototype.reloadGeometry = function() { 
+	var mgl = this.__geometry.mgl; 
+	this.__geometry = this.__backend.geometry(mgl); 
+	this.__geometry.mgl = mgl; 
+}
+
+mathgl.Graph.prototype.redraw = function() { 
+	this.__renderStart(); 
+}
+
+mathgl.Graph.prototype.destroy = function() { 
+  this.__view.destroy(); 
+  this.__view = null;
+  this.__backend = null;
+  this.__canvas = null;
+  this.__geometry = null;
+} 
