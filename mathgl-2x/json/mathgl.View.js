@@ -61,7 +61,7 @@ mathgl.View.prototype.attachCanvas = function(canvas) {
 	this.__canvas.addEventListener("dblclick",  this.__onDblClickFunc, false);
 	this.__canvas.addEventListener("mousewheel",  this.__onMouseWheelFunc, false);
 
-	// initiare redraw
+	// initiate redraw
 	this.__renderLauncherFunc();
 }
 
@@ -152,8 +152,9 @@ mathgl.View.prototype.__onMouseMove = function(e) {
 // 		this.__pitch = Math.max(this.__pitch, -Math.PI / 2);
 // 		this.__yaw = Math.min(this.__yaw, Math.PI);
 // 		this.__yaw = Math.max(this.__yaw, -Math.PI);
-		this.__onCameraChanged(this.getViewpoint());
+
 		this.__renderLauncherFunc();
+		this.__onCameraChanged(this.getViewpoint());	// TODO: something wrong here ???
 	}
 }
 
@@ -185,8 +186,8 @@ mathgl.View.prototype.__onMouseWheel = function(e) {
 	this.__distance -= 0.1 * e.wheelDelta / 120;
 	this.__distance = Math.min(this.__distance, 10.0);
 	this.__distance = Math.max(this.__distance, 0.2);
-	this.__onCameraChanged(this.getViewpoint());
 	this.__renderLauncherFunc();
+	this.__onCameraChanged(this.getViewpoint());	// TODO: something wrong here ???
 }
 
 mathgl.View.prototype.getViewpoint = function() { 

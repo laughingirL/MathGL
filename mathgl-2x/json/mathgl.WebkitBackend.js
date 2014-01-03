@@ -21,7 +21,5 @@ mathgl.WebkitBackend.prototype.geometry = function(mgl) {
 	
 	var obj = JSON.parse(geometryData);
 	obj.pp = new Array();
-	for(var i=0;i<obj.npnts;i++)	// copy original data for transformation
-		obj.pp[i] = [obj.pnts[i][0],obj.pnts[i][1],obj.pnts[i][2]];
-return obj;
+	return obj;
 }

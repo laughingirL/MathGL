@@ -540,7 +540,7 @@ std::string mglCanvas::GetJSON()
 	for(long i=0;i<l;i++)
 	{
 		const mglPnt &q=Pnt[i];
-		tmp[i] = mgl_sprintf("[%ld,%ld,%ld]%c\n", long(factor*q.xx), long(factor*(Height-q.yy)), long(factor*q.zz), i+1<l?',':' ');
+		tmp[i] = mgl_sprintf("[%ld,%ld,%ld,%d]%c\n", long(factor*q.xx), long(factor*(Height-q.yy)), long(factor*q.zz),q.sub, i+1<l?',':' ');
 		ll += tmp[i].length();
 	}
 	res.reserve(ll);

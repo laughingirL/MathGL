@@ -196,7 +196,8 @@ mathgl.Graph.prototype.__drawMesh = function(isPrecise) {
 	obj.b = [dx*m.e(1,1),	dx*m.e(2,1),	dx*m.e(3,1),
 			dy*m.e(1,2),	dy*m.e(2,2),	dy*m.e(3,2),
 			m.e(1,3),		m.e(2,3),		m.e(3,3),
-			w/2,			h/2,			obj.depth/2];
+			w/2,			h/2,			obj.depth/2,
+			dx,				dy,				1];
 
 	this.__drawBackground();
 
@@ -321,6 +322,7 @@ mathgl.Graph.prototype.__mgl_draw_good = function(obj, ctx, skip) {
 
 mathgl.Graph.prototype.__mgl_pf = function(obj, z) {
 	return 1/obj.pf;
+//	return 1/obj.pf/(1-this.__fov*z/obj.depth);	// TODO: check calc coordinates!!!
 //	return 1/(1+obj.pf*(1-z/obj.depth));
 }
 
@@ -339,7 +341,7 @@ mathgl.Graph.prototype.__mgl_prepare = function(obj, skip) {
 				dy*(cx*sy*sz+cz*sx), dy*(cx*cz-sx*sy*sz), -dy*cy*sz,
 				sx*sz-cx*cz*sy, cx*sz+cz*sx*sy, cy*cz,
 				obj.width/2*(1+dx-obj.z[1]-obj.z[0])/dx,
-				obj.height/2*(1+dy-obj.z[3]-obj.z[2])/dy, obj.depth/2];
+				obj.height/2*(1+dy-obj.z[3]-obj.z[2])/dy, obj.depth/2, dx,dy,1];
 	}
 	// now transform points for found transformation matrix
 	var b = obj.b, i;
@@ -348,15 +350,21 @@ mathgl.Graph.prototype.__mgl_prepare = function(obj, skip) {
 		var x = obj.pnts[i][0]-obj.width/2;
 		var y = obj.pnts[i][1]-obj.height/2;
 		var z = obj.pnts[i][2]-obj.depth/2;
-		obj.pp[i] = [b[9]  + b[0]*x + b[1]*y + b[2]*z,
-					 b[10] + b[3]*x + b[4]*y + b[5]*z,
-					 b[11] + b[6]*x + b[7]*y + b[8]*z];
+		if(obj.pnts[i][3]==0)	// TODO: check later when mglInPlot will be ready
+			obj.pp[i] = [b[9]  + b[0]*x + b[1]*y + b[2]*z,
+						b[10] + b[3]*x + b[4]*y + b[5]*z,
+						b[11] + b[6]*x + b[7]*y + b[8]*z];
+		else
+			obj.pp[i] = [b[9]+b[12]*x,b[10]+b[13]*y,b[11]+b[14]*z];
 	}
 	if(obj.pf)	for(var i=0;i<obj.npnts;i++)	// perspective
 	{	// NOTE: it is not supported for coordinate determining now
 		var d = this.__mgl_pf(obj, obj.pp[i][2]);
-		obj.pp[i][0] = d*obj.pp[i][0] + (1-d)*obj.b[9];
-		obj.pp[i][1] = d*obj.pp[i][1] + (1-d)*obj.b[10];
+		if(obj.pnts[i][3]==0)	// TODO: check later when mglInPlot will be ready
+		{
+			obj.pp[i][0] = d*obj.pp[i][0] + (1-d)*obj.b[9];
+			obj.pp[i][1] = d*obj.pp[i][1] + (1-d)*obj.b[10];
+		}
 	}
 	// fill z-coordinates for primitives
 	if(!obj.fast)	for(i=0;i<obj.nprim;i++)
@@ -603,9 +611,14 @@ mathgl.Graph.prototype.redraw = function() {
 }
 
 mathgl.Graph.prototype.destroy = function() { 
-  this.__view.destroy(); 
-  this.__view = null;
-  this.__backend = null;
-  this.__canvas = null;
-  this.__geometry = null;
+	this.__view.destroy(); 
+	this.__view = null;
+	this.__backend = null;
+	this.__canvas = null;
+	this.__geometry = null;
 } 
+
+/** @param type {String} data url type (e.g. "image/png") */ 
+mathgl.Graph.prototype.toDataURL = function(type) {
+	this.__canvas.toDataURL(type);
+}

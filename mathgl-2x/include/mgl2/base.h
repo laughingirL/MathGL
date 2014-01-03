@@ -46,12 +46,13 @@ struct MGL_EXPORT mglMatrix
 {
 	mreal b[9];
 	mreal x,y,z,pf;
+	bool norot;	// flag to disable pnts rotation
 	mglMatrix()	{	clear();	}
 	void Rotate(mreal tetz,mreal tetx,mreal tety);
 	void RotateN(mreal Tet,mreal x,mreal y,mreal z);
-	inline void clear()	{	x=y=z=0;	memset(b,0,9*sizeof(mreal));	b[0]=b[4]=b[8]=1;	}
+	inline void clear()	{	x=y=z=pf=0;	memset(b,0,9*sizeof(mreal));	b[0]=b[4]=b[8]=1;	norot=false;	}
 	inline mglMatrix &operator=(const mglMatrix &a)
-	{	x=a.x;	y=a.y;	z=a.z;	pf=a.pf;	memcpy(b,a.b,9*sizeof(mreal));	return *this;	}
+	{	x=a.x;	y=a.y;	z=a.z;	pf=a.pf;	memcpy(b,a.b,9*sizeof(mreal));	norot=false;	return *this;	}
 };
 inline bool operator==(const mglMatrix &a, const mglMatrix &b)
 {	return b.x==a.x&&b.y==a.y&&b.z==a.z&&b.pf==a.pf&&!memcmp(b.b,a.b,9*sizeof(mreal));}
@@ -87,7 +88,7 @@ bool operator>(const mglPrim &a,const mglPrim &b);
 struct MGL_EXPORT mglGroup
 {
 	std::vector<long> p;	///< list of primitives (not filled!!!)
-	int Id;				///< Current list of primitives
+	int Id;					///< Current list of primitives
 	std::string Lbl;		///< Group label
 	mglGroup(const char *lbl="", int id=0)	{	Lbl=lbl;	Id=id;	}
 };
@@ -110,7 +111,8 @@ struct MGL_EXPORT mglPnt	// NOTE: use float for reducing memory size
 	float c,t,ta;	// index in color scheme
 	float u,v,w;	// normales
 	float r,g,b,a;	// RGBA color
-	mglPnt()	{	xx=yy=zz=x=y=z=c=t=ta=u=v=w=r=g=b=a=0;	}
+	short sub;		// subplot id and rotation information (later will be in subplot)
+	mglPnt()	{	xx=yy=zz=x=y=z=c=t=ta=u=v=w=r=g=b=a=sub=0;	}
 };
 inline mglPnt operator+(const mglPnt &a, const mglPnt &b)
 {	mglPnt c=a;
@@ -181,7 +183,7 @@ const mglColor RC( 1, 0, 0);
 /// Structure active points
 struct MGL_EXPORT mglActivePos
 {
-	int x,y;		///< coordinates of active point
+	int x,y;	///< coordinates of active point
 	int id;		///< object id for active point
 	int n;		///< position of active point in command (object id)
 };

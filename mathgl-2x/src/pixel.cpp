@@ -110,7 +110,7 @@ void mglCanvas::LightScale(const mglMatrix *M)
 	}
 }
 //-----------------------------------------------------------------------------
-// NOTE: Perspective is not support just now !!! Also it use LAST InPlot parameters!!!
+// NOTE: Perspective is not fully supported now !!! Also it use LAST InPlot parameters!!!
 mglPoint mglCanvas::RestorePnt(mglPoint ps, bool norm) const
 {
 	mreal s3 = 2*B.pf;
@@ -131,6 +131,12 @@ mglPoint mglCanvas::RestorePnt(mglPoint ps, bool norm) const
 	mreal c8 = B.b[8]*Bp.b[8]+B.b[5]*Bp.b[7]+B.b[2]*Bp.b[6];
 	if(norm)	cx=cy=cz=0;
 
+	if(ps.z==ps.z)	// try to take into account perspective if z-value is provided
+	{
+		register float d = (1-Bp.pf)/(1-Bp.pf*ps.z/Depth);
+		ps.x = Width/2 + (ps.z-Width/2)/d;
+		ps.y = Height/2+ (ps.y-Height/2)/d;
+	}
 	mreal xx = ps.x-cx, yy = ps.y-cy, zz = ps.z-cz;
 	mreal d1=c0*c4-c1*c3, d2=c1*c5-c2*c4, d3=c0*c5-c2*c3;
 
@@ -267,6 +273,7 @@ void mglCanvas::pxl_transform(long id, long n, const void *)
 	for(long i=id;i<n;i+=mglNumThr)
 	{
 		mglPnt &p=Pnt[i];
+		if(p.sub)	continue;
 		register float x = p.xx-Width/2., y = p.yy-Height/2., z = p.zz-Depth/2.;
 		p.x = Bp.b[0]*x + Bp.b[1]*y + Bp.b[2]*z - Bp.x*Width/2;
 		p.y = Bp.b[3]*x + Bp.b[4]*y + Bp.b[5]*z - Bp.y*Height/2;
@@ -452,6 +459,7 @@ void mglCanvas::pxl_dotsdr(long id, long n, const void *)
 	for(long i=id;i<n;i+=mglNumThr)
 	{
 		const mglPnt &p=Pnt[i];
+		if(p.sub)	continue;
 		register float x = p.xx-Width/2., y = p.yy-Height/2., z = p.zz-Depth/2.,xx,yy,zz;
 		xx = Bp.b[0]*x + Bp.b[1]*y + Bp.b[2]*z - Bp.x*Width/2;
 		yy = Bp.b[3]*x + Bp.b[4]*y + Bp.b[5]*z - Bp.y*Height/2;
@@ -1598,14 +1606,20 @@ void mglCanvas::mark_pix(long i, long j, const mglPnt &q, char type, mreal size,
 // scale direction for new view/zoom
 float mglCanvas::GetGlyphPhi(const mglPnt &q, float phi)
 {
-	float dv = (1-Bp.pf)/(1-Bp.pf*q.z/Depth);
-	float x,y,z,c=Bp.pf/(1-Bp.pf)/Depth,ll;
-	x = Bp.b[0]*q.u + Bp.b[1]*q.v + Bp.b[2]*q.w;
-	y = Bp.b[3]*q.u + Bp.b[4]*q.v + Bp.b[5]*q.w;
-	z = Bp.b[6]*q.u + Bp.b[7]*q.v + Bp.b[8]*q.w;
+	float x,y,z,ll;
+	if(q.sub)
+	{	x = q.u;	y = q.v;	z = q.w;	}
+	else
+	{
+		x = Bp.b[0]*q.u + Bp.b[1]*q.v + Bp.b[2]*q.w;
+		y = Bp.b[3]*q.u + Bp.b[4]*q.v + Bp.b[5]*q.w;
+		z = Bp.b[6]*q.u + Bp.b[7]*q.v + Bp.b[8]*q.w;
 
-	x += (q.x-Width/2)*z*c*dv;
-	y += (q.y-Height/2)*z*c*dv;
+		register float dv = (1-Bp.pf)/(1-Bp.pf*q.z/Depth);
+		register float c=Bp.pf/(1-Bp.pf)/Depth;
+		x += (q.x-Width/2)*z*c*dv;
+		y += (q.y-Height/2)*z*c*dv;
+	}
 	ll = x*x+y*y;
 	if(ll < 1e-10)	return NAN;
 	if(ll==ll && phi<1e4)

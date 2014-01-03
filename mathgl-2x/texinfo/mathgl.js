@@ -322,7 +322,7 @@ var mgl_prepare = function(obj, skip)
 					dy*(cx*sy*sz+cz*sx), dy*(cx*cz-sx*sy*sz), -dy*cy*sz,
 					sx*sz-cx*cz*sy, cx*sz+cz*sx*sy, cy*cz,
 					obj.width/2*(1+dx-obj.z[1]-obj.z[0])/dx,
-					obj.height/2*(1+dy-obj.z[3]-obj.z[2])/dy, obj.depth/2];
+					obj.height/2*(1+dy-obj.z[3]-obj.z[2])/dy, obj.depth/2, dx,dy,1];
 	}
 	// now transform points for found transformation matrix
 	var b = obj.b, i;
@@ -331,15 +331,21 @@ var mgl_prepare = function(obj, skip)
 		var x = obj.pnts[i][0]-obj.width/2;
 		var y = obj.pnts[i][1]-obj.height/2;
 		var z = obj.pnts[i][2]-obj.depth/2;
-		obj.pp[i] = [b[9]  + b[0]*x + b[1]*y + b[2]*z,
-					 b[10] + b[3]*x + b[4]*y + b[5]*z,
-					 b[11] + b[6]*x + b[7]*y + b[8]*z];
+		if(obj.pnts[i][3]==0)	// TODO: check later when mglInPlot will be ready
+			obj.pp[i] = [b[9]  + b[0]*x + b[1]*y + b[2]*z,
+						b[10] + b[3]*x + b[4]*y + b[5]*z,
+						b[11] + b[6]*x + b[7]*y + b[8]*z];
+		else
+			obj.pp[i] = [b[9]+b[12]*x,b[10]+b[13]*y,b[11]+b[14]*z];
 	}
 	if(obj.pf)	for(var i=0;i<obj.npnts;i++)	// perspective
 	{	// NOTE: it is not supported for coordinate determining now
 		var d = (1-obj.pf)/(1-obj.pf*obj.pp[i][2]/obj.depth);
-		obj.pp[i][0] = d*obj.pp[i][0] + (1-d)/2*obj.width;
-		obj.pp[i][1] = d*obj.pp[i][1] + (1-d)/2*obj.height;
+		if(obj.pnts[i][3]==0)	// TODO: check later when mglInPlot will be ready
+		{
+			obj.pp[i][0] = d*obj.pp[i][0] + (1-d)/2*obj.width;
+			obj.pp[i][1] = d*obj.pp[i][1] + (1-d)/2*obj.height;
+		}
 	}
 	// fill z-coordinates for primitives
 	if(!obj.fast)

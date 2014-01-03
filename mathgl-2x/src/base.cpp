@@ -271,6 +271,7 @@ long mglBase::AddPnt(const mglMatrix *mat, mglPoint p, mreal c, mglPoint n, mrea
 	if(!get(MGL_ENABLE_ALPHA))	{	q.a=1;	if(txt.Smooth!=2)	q.ta=1-gap;	}
 	if(norefr)	q.v=0;
 	if(!get(MGL_ENABLE_LIGHT) && !(scl&4))	q.u=q.v=NAN;
+	if(mat->norot)	q.sub=-1;	// NOTE: temporary -- later should be mglInPlot here
 	long k;
 #pragma omp critical(pnt)
 	{MGL_PUSH(Pnt,q,mutexPnt);	k=Pnt.size()-1;}	return k;
