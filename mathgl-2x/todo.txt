@@ -25,7 +25,8 @@
 15. "Unrotatable" points
 16. Inplot data should have ranges (add mglInPlot{x1,x2,y1,y2,Bp or something like this} which include mglMatrix instead of mglBase::Bp) + calc coor + JS
 16. frames in JS ?!?
-17. 'perspective' command
+17. 'perspective' command + help about it as "f = Depth/(Depth+Distance) and should be in range [0,1)."
+18. Check octave 3.8
 
 
 

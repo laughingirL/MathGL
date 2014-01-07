@@ -235,11 +235,13 @@ var mgl_draw_good = function(obj, ctx, skip)
 	obj.fast = 0;
 	mgl_prepare(obj,skip);	// update coordinates
 	// NOTE: this valid only for current zoom/view. In general case it should be more complicated
-	var scl = Math.sqrt(obj.b[0]*obj.b[0]+obj.b[1]*obj.b[1]+obj.b[2]*obj.b[2]);
+	var s1 = Math.sqrt(obj.b[0]*obj.b[0]+obj.b[1]*obj.b[1]+obj.b[2]*obj.b[2]), s2 = Math.abs(obj.b[12]);
 	for(var i=0;i<obj.nprim;i++)	// for each primitive
 	{
+		var scl = s1;
 		var n1 = obj.prim[i][1], n2 = obj.prim[i][2];
 		var n3 = obj.prim[i][3], n4 = obj.prim[i][4];
+		if(obj.pnts[n1][3])	scl = s2;
 		ctx.strokeStyle = obj.prim[i][10];
 		ctx.fillStyle = obj.prim[i][10];
 		ctx.lineWidth = 1;

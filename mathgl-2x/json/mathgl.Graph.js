@@ -21,6 +21,7 @@ mathgl.Graph = function(canvas, backend) {
 	this.__preciseRenderingDelay = 700;
 	// TODO add setters/getters
 	this.__maxDraftPoints = 9000;
+	this.__fov = 0;
 	this.__x1 = 0;	this.__y1 = 0;	this.__z1 = 0;
 	this.__x2 = 1;	this.__y2 = 1;	this.__z2 = 1;
 }
@@ -87,8 +88,9 @@ mathgl.Graph.prototype.__pickPointHandler = function(x, y) {
 	var zoom = "zoom "+(0.5-obj.pf/2)+" "+(0.5-obj.pf/2)+" "+(0.5+obj.pf/2)+" "+(0.5+obj.pf/2)+"\n";
 	var view1 = "view 0 "+this.__view.__pitch*180/Math.PI+" 0"+"\n";
 	var view2 = "view 0 0 "+(-this.__view.__yaw)*180/Math.PI+"\n";
+	var persp = "perspective "+(-this.__fov)+"\n";
 	// now ask server side for proper coordinates
-	var res = this.__backend.coor(xy, zoom+view1+view2+obj.mgl);
+	var res = this.__backend.coor(xy, zoom+view1+view2+persp+obj.mgl);
 }
 
 
@@ -247,12 +249,15 @@ mathgl.Graph.prototype.__mgl_draw_good = function(obj, ctx, skip) {
 //	var scl = 1/Math.abs(obj.z[1]-obj.z[0]);
 	// NOTE: this valid only for current zoom/view. In general case it should be more complicated
 	var s1 = Math.sqrt(obj.b[0]*obj.b[0]+obj.b[1]*obj.b[1]+obj.b[2]*obj.b[2]);
+	var s2 = Math.abs(obj.b[12]);
 	var deg = Math.PI/180;  //0.017453293;
 	for(var i=0;i<obj.nprim;i++)	// for each primitive
 	{
 		var scl = s1*this.__mgl_pf(obj, obj.prim[i][9]);
 		var n1 = obj.prim[i][1], n2 = obj.prim[i][2];
 		var n3 = obj.prim[i][3], n4 = obj.prim[i][4];
+		if(obj.pnts[n1][3])	scl = s2;
+
 		ctx.strokeStyle = obj.prim[i][10];
 		ctx.fillStyle = obj.prim[i][10];
 		ctx.lineWidth = 1;
@@ -321,8 +326,8 @@ mathgl.Graph.prototype.__mgl_draw_good = function(obj, ctx, skip) {
 
 
 mathgl.Graph.prototype.__mgl_pf = function(obj, z) {
-	return 1/obj.pf;
-//	return 1/obj.pf/(1-this.__fov*z/obj.depth);	// TODO: check calc coordinates!!!
+//	return 1/obj.pf;
+	return (1-this.__fov)/obj.pf/(1-this.__fov*z/obj.depth);	// TODO: check calc coordinates!!!
 //	return 1/(1+obj.pf*(1-z/obj.depth));
 }
 
@@ -357,7 +362,7 @@ mathgl.Graph.prototype.__mgl_prepare = function(obj, skip) {
 		else
 			obj.pp[i] = [b[9]+b[12]*x,b[10]+b[13]*y,b[11]+b[14]*z];
 	}
-	if(obj.pf)	for(var i=0;i<obj.npnts;i++)	// perspective
+	if(obj.pf || this.__fov)	for(var i=0;i<obj.npnts;i++)	// perspective
 	{	// NOTE: it is not supported for coordinate determining now
 		var d = this.__mgl_pf(obj, obj.pp[i][2]);
 		if(obj.pnts[i][3]==0)	// TODO: check later when mglInPlot will be ready
