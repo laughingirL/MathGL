@@ -14,12 +14,16 @@ install(
 	RUNTIME DESTINATION ${MGL_CGI_PATH}
 )
 
-if(MGL_HAVE_QT)
-	include(${QT_USE_FILE})
+if(MGL_HAVE_QT4 OR MGL_HAVE_QT5)
 	add_executable(mglview mglview.cpp)
-	target_link_libraries(mglview mgl-qt)
+	if(MGL_HAVE_QT4)
+		include(${QT_USE_FILE})
+		target_link_libraries(mglview mgl-qt)
+	else(MGL_HAVE_QT4)
+		target_link_libraries(mglview mgl-qt5)
+	endif(MGL_HAVE_QT4)
 	install(
 		TARGETS mglview
 		RUNTIME DESTINATION bin
 	)
-endif(MGL_HAVE_QT)
+endif(MGL_HAVE_QT4 OR MGL_HAVE_QT5)
