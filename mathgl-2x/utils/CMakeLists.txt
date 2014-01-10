@@ -21,6 +21,7 @@ if(MGL_HAVE_QT4 OR MGL_HAVE_QT5)
 		target_link_libraries(mglview mgl-qt)
 	else(MGL_HAVE_QT4)
 		target_link_libraries(mglview mgl-qt5)
+		qt5_use_modules(mglview Core Widgets Gui Network WebKit PrintSupport)
 	endif(MGL_HAVE_QT4)
 	install(
 		TARGETS mglview

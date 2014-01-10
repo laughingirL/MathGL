@@ -18,6 +18,7 @@ if(MGL_HAVE_QT4)
 	target_link_libraries(MglForJsTestBench mgl-qt ${QT_LIBRARIES})
 else(MGL_HAVE_QT4)
 	target_link_libraries(MglForJsTestBench mgl-qt5)
+	qt5_use_modules(MglForJsTestBench Core Widgets Gui Network WebKit PrintSupport)
 endif(MGL_HAVE_QT4)
 
 endif(MGL_HAVE_QT4 OR MGL_HAVE_QT5)
