@@ -21,8 +21,8 @@
 #define _MGL_QMATHGL_H_
 //-----------------------------------------------------------------------------
 #include <string>
-#include <QtGui/QWidget>
-#include <QtGui/QPixmap>
+#include <QWidget>
+#include <QPixmap>
 #include <mgl2/wnd.h>
 //-----------------------------------------------------------------------------
 class QTextEdit;
