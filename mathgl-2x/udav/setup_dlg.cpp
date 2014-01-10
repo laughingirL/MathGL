@@ -24,7 +24,6 @@
 #include <QCheckBox>
 #include <QLineEdit>
 #include <QSpinBox>
-#include <QSlider>
 #include <QLayout>
 #include <QLabel>
 #include <QFile>
