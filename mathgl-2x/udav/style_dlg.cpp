@@ -183,7 +183,7 @@ StyleDialog::StyleDialog(QWidget *parent) : QDialog(parent)
 	connect(rbC,SIGNAL(toggled(bool)), this, SLOT(updatePic()));
 	connect(rbR,SIGNAL(toggled(bool)), this, SLOT(updatePic()));
 	tab->addTab(p, tr("Font style"));
-	connect(tab,SIGNAL(currentChanged(QWidget *)), this, SLOT(updatePic()));
+	connect(tab,SIGNAL(currentChanged(int)), this, SLOT(updatePic()));
 
 	// dialog itself
 	v = new QVBoxLayout(this);	v->addWidget(tab);

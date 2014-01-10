@@ -275,7 +275,7 @@ void PlotPanel::toolTop(QBoxLayout *l)
 	a = new QAction(QPixmap(":/xpm/alpha.png"), tr("Alpha"), this);
 	a->setShortcut(Qt::CTRL+Qt::Key_T);	a->setCheckable(true);
 	connect(a, SIGNAL(toggled(bool)), mgl, SLOT(setAlpha(bool)));
-	connect(mgl, SIGNAL(alphaChanged(bool)), a, SLOT(setOn(bool)));
+	connect(mgl, SIGNAL(alphaChanged(bool)), a, SLOT(setChecked(bool)));
 	a->setToolTip(tr("Switch on/off transparency for the graphics (Ctrl+T)."));
 	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
@@ -283,7 +283,7 @@ void PlotPanel::toolTop(QBoxLayout *l)
 	a = new QAction(QPixmap(":/xpm/weather-clear.png"), tr("Light"), this);
 	a->setShortcut(Qt::CTRL+Qt::Key_L);	a->setCheckable(true);
 	connect(a, SIGNAL(toggled(bool)), mgl, SLOT(setLight(bool)));
-	connect(mgl, SIGNAL(lightChanged(bool)), a, SLOT(setOn(bool)));
+	connect(mgl, SIGNAL(lightChanged(bool)), a, SLOT(setChecked(bool)));
 	a->setToolTip(tr("Switch on/off lightning for the graphics (Ctrl+L)."));
 	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
@@ -298,14 +298,14 @@ void PlotPanel::toolTop(QBoxLayout *l)
 	a = new QAction(QPixmap(":/xpm/object-rotate-right.png"), tr("Rotate by mouse"), this);
 	a->setCheckable(true);
 	connect(a, SIGNAL(toggled(bool)), mgl, SLOT(setRotate(bool)));
-	connect(mgl, SIGNAL(rotateChanged(bool)), a, SLOT(setOn(bool)));
+	connect(mgl, SIGNAL(rotateChanged(bool)), a, SLOT(setChecked(bool)));
 	a->setToolTip(tr("Switch on/off mouse handling of the graphics\n(rotation, shifting, zooming and perspective)."));
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
 /*	a = new QAction(QPixmap(":/xpm/zoom-fit-best.png"), tr("Zoom by mouse"), this);
 	a->setCheckable(true);
 	connect(a, SIGNAL(toggled(bool)), mgl, SLOT(setZoom(bool)));
-	connect(mgl, SIGNAL(zoomChanged(bool)), a, SLOT(setOn(bool)));
+	connect(mgl, SIGNAL(zoomChanged(bool)), a, SLOT(setChecked(bool)));
 	a->setToolTip(tr("Switch on/off mouse zoom of selected region."));
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);*/
 
