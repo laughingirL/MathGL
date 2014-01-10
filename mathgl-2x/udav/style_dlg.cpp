@@ -332,7 +332,7 @@ void StyleDialog::updatePic()
 			else		result += col[i-1];
 		}
 		i = width->value();		if(i>1)	result += char('0'+i);
-		gr.Plot(x,y,result.toAscii().constData());
+		gr.Plot(x,y,result.toStdString().c_str());
 		break;
 	case 1: // color sceheme
 		for(j=0;j<7;j++)
@@ -350,7 +350,7 @@ void StyleDialog::updatePic()
 		if(i==2)	result += 'T';
 		i = axial->currentIndex();
 		if(i>0)	result = result+':'+char('x'+i-1);
-		gr.Surf(a,result.toAscii().constData());
+		gr.Surf(a,result.toStdString().c_str());
 		break;
 	case 2: // text style
 		i = cfont->currentIndex();
@@ -364,7 +364,7 @@ void StyleDialog::updatePic()
 		if(rbL->isChecked())	result += 'L';
 		if(rbC->isChecked())	result += 'C';
 		if(rbR->isChecked())	result += 'R';
-		gr.Puts(mglPoint(0,-0.5),"Font test",result.toAscii().constData(),-10);
+		gr.Puts(mglPoint(0,-0.5),"Font test",result.toStdString().c_str(),-10);
 		break;
 	}
 	result = "'" + result + "'";

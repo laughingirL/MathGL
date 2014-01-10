@@ -308,7 +308,7 @@ void QMathGL::draw_thr()
 	{
 		mgl_set_obj_id(gr,i+MGL_MAX_LINES);
 		QString tst = primitives.section('\n',i,i);
-		pr.Parse(&gg,primitives.section('\n',i,i).toAscii().constData(),i+MGL_MAX_LINES);
+		pr.Parse(&gg,primitives.section('\n',i,i).toStdString().c_str(),i+MGL_MAX_LINES);
 	}
 	gg.SetRanges(ox1,ox2);	gg.Pop();	setlocale(LC_NUMERIC, "");
 }
@@ -595,28 +595,28 @@ void QMathGL::exportGIF(QString fname)
 {
 	if(fname.isEmpty())	fname = mgl_get_plotid(gr);
 	if(fname.isEmpty())	QMessageBox::critical(this, appName, tr("No filename."),QMessageBox::Ok,0,0);
-	else	mgl_write_gif(gr,setExtension(fname,"png").toAscii().constData(), appName.toAscii().constData());
+	else	mgl_write_gif(gr,setExtension(fname,"png").toStdString().c_str(), appName.toStdString().c_str());
 }
 //-----------------------------------------------------------------------------
 void QMathGL::exportPNG(QString fname)
 {
 	if(fname.isEmpty())	fname = mgl_get_plotid(gr);
 	if(fname.isEmpty())	QMessageBox::critical(this, appName, tr("No filename."),QMessageBox::Ok,0,0);
-	else	mgl_write_png(gr,setExtension(fname,"png").toAscii().constData(), appName.toAscii().constData());
+	else	mgl_write_png(gr,setExtension(fname,"png").toStdString().c_str(), appName.toStdString().c_str());
 }
 //-----------------------------------------------------------------------------
 void QMathGL::exportPNGs(QString fname)
 {
 	if(fname.isEmpty())	fname = mgl_get_plotid(gr);
 	if(fname.isEmpty())	QMessageBox::critical(this, appName, tr("No filename."),QMessageBox::Ok,0,0);
-	else	mgl_write_png_solid(gr,setExtension(fname,"png").toAscii().constData(), appName.toAscii().constData());
+	else	mgl_write_png_solid(gr,setExtension(fname,"png").toStdString().c_str(), appName.toStdString().c_str());
 }
 //-----------------------------------------------------------------------------
 void QMathGL::exportJPG(QString fname)
 {
 	if(fname.isEmpty())	fname = mgl_get_plotid(gr);
 	if(fname.isEmpty())	QMessageBox::critical(this, appName, tr("No filename."),QMessageBox::Ok,0,0);
-	else	mgl_write_jpg(gr,setExtension(fname,"jpg").toAscii().constData(), appName.toAscii().constData());
+	else	mgl_write_jpg(gr,setExtension(fname,"jpg").toStdString().c_str(), appName.toStdString().c_str());
 }
 //-----------------------------------------------------------------------------
 void QMathGL::exportBPS(QString fname)
@@ -626,7 +626,7 @@ void QMathGL::exportBPS(QString fname)
 	else
 	{
 		setlocale(LC_NUMERIC, "C");
-		mgl_write_bps(gr,setExtension(fname,"eps").toAscii().constData(), appName.toAscii().constData());
+		mgl_write_bps(gr,setExtension(fname,"eps").toStdString().c_str(), appName.toStdString().c_str());
 		setlocale(LC_NUMERIC, "");
 	}
 }
@@ -638,7 +638,7 @@ void QMathGL::exportEPS(QString fname)
 	else
 	{
 		setlocale(LC_NUMERIC, "C");
-		mgl_write_eps(gr,setExtension(fname,"eps").toAscii().constData(), appName.toAscii().constData());
+		mgl_write_eps(gr,setExtension(fname,"eps").toStdString().c_str(), appName.toStdString().c_str());
 		setlocale(LC_NUMERIC, "");
 	}
 }
@@ -650,7 +650,7 @@ void QMathGL::exportSVG(QString fname)
 	else
 	{
 		setlocale(LC_NUMERIC, "C");
-		mgl_write_svg(gr,setExtension(fname,"svg").toAscii().constData(), appName.toAscii().constData());
+		mgl_write_svg(gr,setExtension(fname,"svg").toStdString().c_str(), appName.toStdString().c_str());
 		setlocale(LC_NUMERIC, "");
 	}
 }
@@ -662,7 +662,7 @@ void QMathGL::exportXYZ(QString fname)
 	else
 	{
 		setlocale(LC_NUMERIC, "C");
-		mgl_write_xyz(gr,setExtension(fname,"xyz").toAscii().constData(), appName.toAscii().constData());
+		mgl_write_xyz(gr,setExtension(fname,"xyz").toStdString().c_str(), appName.toStdString().c_str());
 		setlocale(LC_NUMERIC, "");
 	}
 }
@@ -674,7 +674,7 @@ void QMathGL::exportTEX(QString fname)
 	else
 	{
 		setlocale(LC_NUMERIC, "C");
-		mgl_write_tex(gr,setExtension(fname,"tex").toAscii().constData(), appName.toAscii().constData());
+		mgl_write_tex(gr,setExtension(fname,"tex").toStdString().c_str(), appName.toStdString().c_str());
 		setlocale(LC_NUMERIC, "");
 	}
 }
@@ -686,7 +686,7 @@ void QMathGL::exportOFF(QString fname)
 	else
 	{
 		setlocale(LC_NUMERIC, "C");
-		mgl_write_off(gr,setExtension(fname,"off").toAscii().constData(), appName.toAscii().constData(),0);
+		mgl_write_off(gr,setExtension(fname,"off").toStdString().c_str(), appName.toStdString().c_str(),0);
 		setlocale(LC_NUMERIC, "");
 	}
 }
@@ -698,7 +698,7 @@ void QMathGL::exportOBJ(QString fname)
 	else
 	{
 		setlocale(LC_NUMERIC, "C");
-		mgl_write_obj(gr,setExtension(fname,"obj").toAscii().constData(), appName.toAscii().constData(),1);
+		mgl_write_obj(gr,setExtension(fname,"obj").toStdString().c_str(), appName.toStdString().c_str(),1);
 		setlocale(LC_NUMERIC, "");
 	}
 }
@@ -710,7 +710,7 @@ void QMathGL::exportSTL(QString fname)
 	else
 	{
 		setlocale(LC_NUMERIC, "C");
-		mgl_write_stl(gr,setExtension(fname,"stl").toAscii().constData(), appName.toAscii().constData());
+		mgl_write_stl(gr,setExtension(fname,"stl").toStdString().c_str(), appName.toStdString().c_str());
 		setlocale(LC_NUMERIC, "");
 	}
 }
@@ -722,7 +722,7 @@ void QMathGL::exportSTL(QString fname)
 	else
 	{
 		setlocale(LC_NUMERIC, "C");
-		mgl_write_x3d(gr,setExtension(fname,"x3d").toAscii().constData(), appName.toAscii().constData());
+		mgl_write_x3d(gr,setExtension(fname,"x3d").toStdString().c_str(), appName.toStdString().c_str());
 		setlocale(LC_NUMERIC, "");
 	}
 }*/
@@ -734,7 +734,7 @@ void QMathGL::exportTGA(QString fname)
 	else
 	{
 		setlocale(LC_NUMERIC, "C");
-		mgl_write_tga(gr,setExtension(fname,"tga").toAscii().constData(), appName.toAscii().constData());
+		mgl_write_tga(gr,setExtension(fname,"tga").toStdString().c_str(), appName.toStdString().c_str());
 		setlocale(LC_NUMERIC, "");
 	}
 }
@@ -746,7 +746,7 @@ void QMathGL::exportPRC(QString fname)
 	else
 	{
 		setlocale(LC_NUMERIC, "C");
-		mgl_write_prc(gr,setExtension(fname,"prc").toAscii().constData(), appName.toAscii().constData(),1);
+		mgl_write_prc(gr,setExtension(fname,"prc").toStdString().c_str(), appName.toStdString().c_str(),1);
 		setlocale(LC_NUMERIC, "");
 	}
 }
@@ -758,7 +758,7 @@ void QMathGL::exportMGLD(QString fname)
 	else
 	{
 		setlocale(LC_NUMERIC, "C");
-		mgl_export_mgld(gr,setExtension(fname,"mgld").toAscii().constData(), appName.toAscii().constData());
+		mgl_export_mgld(gr,setExtension(fname,"mgld").toStdString().c_str(), appName.toStdString().c_str());
 		setlocale(LC_NUMERIC, "");
 	}
 }
@@ -789,7 +789,7 @@ void QMathGL::copyClickCoor()
 //-----------------------------------------------------------------------------
 void QMathGL::setMGLFont(QString path)
 {	if(path.isEmpty())	mgl_restore_font(gr);
-	else 	mgl_load_font(gr,path.toAscii().constData(),0);	}
+	else 	mgl_load_font(gr,path.toStdString().c_str(),0);	}
 //-----------------------------------------------------------------------------
 void QMathGL::setSize(int w, int h)
 {

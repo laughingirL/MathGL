@@ -60,7 +60,7 @@ TextPanel::TextPanel(QWidget *parent) : QWidget(parent)
 	if(!files_dlg)	files_dlg= new FilesDialog;
 
 	register int i,n=parser.GetCmdNum();
-	for(i=0;i<n;i++) 	words<<QString::fromAscii(parser.GetCmdName(i));
+	for(i=0;i<n;i++) 	words<<QString::fromLocal8Bit(parser.GetCmdName(i));
 	vars = words;
 
 	connect(setupDlg, SIGNAL(putText(const QString &)), this, SLOT(animPutText(const QString &)));
@@ -262,7 +262,7 @@ void TextPanel::loadHDF5(const QString &fileName)
 	hid_t hf,hg,hd,hs,ht;
 	hsize_t dims[3];
 	long rank;
-	hf = H5Fopen(fileName.toAscii().constData(), H5F_ACC_RDONLY, H5P_DEFAULT);
+	hf = H5Fopen(fileName.toStdString().c_str(), H5F_ACC_RDONLY, H5P_DEFAULT);
 	if(!hf)	return;
 	hg = H5Gopen(hf, "/");
 	hsize_t num, nx, ny, nz, i;
@@ -328,7 +328,7 @@ void TextPanel::saveHDF5(const QString &fileName)
 	long rank = 3;
 
 	H5Eset_auto(0,0);
-	hf = H5Fcreate(fileName.toAscii().constData(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
+	hf = H5Fcreate(fileName.toStdString().c_str(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
 	if(hf<0)
 	{
 		setStatus(tr("Could not write to %1").arg(fileName));
@@ -341,7 +341,7 @@ void TextPanel::saveHDF5(const QString &fileName)
 		txt += edit->toPlainText();
 		dims[0] = txt.length()+1;
 		char *buf = new char[dims[0]+1];
-		memcpy(buf, txt.toAscii().constData(), dims[0]);
+		memcpy(buf, txt.toStdString().c_str(), dims[0]);
 		buf[dims[0]]=0;
 		hs = H5Screate_simple(1, dims, 0);
 		hd = H5Dcreate(hf, "mgl_script", H5T_C_S1, hs, H5P_DEFAULT);

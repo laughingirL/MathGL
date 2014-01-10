@@ -115,28 +115,28 @@ void DataOpenDialog::prepareResult()
 	code = "";	numDataOpened++;	data = name->text();
 	// prepare unique value of name for next time
 	char buf[32];	snprintf(buf,32,"mgl_%d",numDataOpened);	name->setText(buf);
-	mglVar *v = parser.AddVar(data.toAscii().constData());
+	mglVar *v = parser.AddVar(data.toStdString().c_str());
 	bool dd=0;
 	if(rA->isChecked())	//	auto sizes
 	{
-		setlocale(LC_NUMERIC, "C");	v->Read(file.toAscii().constData());	setlocale(LC_NUMERIC, "");
+		setlocale(LC_NUMERIC, "C");	v->Read(file.toStdString().c_str());	setlocale(LC_NUMERIC, "");
 		if(v->nx==1)	{	v->nx = v->ny;	v->ny = v->nz;	}
 		code=QString("#read %1 '%2'\n").arg(data).arg(file);
 	}
 	else if(rM->isChecked())	//	manual sizes
 	{
 		int x=nx->text().toInt(), y=ny->text().toInt(), z=nz->text().toInt();
-		setlocale(LC_NUMERIC, "C");	v->Read(file.toAscii().constData(),x,y,z);	setlocale(LC_NUMERIC, "");
+		setlocale(LC_NUMERIC, "C");	v->Read(file.toStdString().c_str(),x,y,z);	setlocale(LC_NUMERIC, "");
 		code=QString("#read %1 '%2' %3 %4 %5\n").arg(data).arg(file).arg(x).arg(y).arg(z);
 	}
 	else if(r2->isChecked())	//	matrix
 	{
-		setlocale(LC_NUMERIC, "C");	v->ReadMat(file.toAscii().constData());	setlocale(LC_NUMERIC, "");
+		setlocale(LC_NUMERIC, "C");	v->ReadMat(file.toStdString().c_str());	setlocale(LC_NUMERIC, "");
 		code=QString("#readmat %1 '%2'\n").arg(data).arg(file);		dd=1;
 	}
 	else if(r3->isChecked())	//	3d-data
 	{
-		setlocale(LC_NUMERIC, "C");	v->ReadMat(file.toAscii().constData(),3);	setlocale(LC_NUMERIC, "");
+		setlocale(LC_NUMERIC, "C");	v->ReadMat(file.toStdString().c_str(),3);	setlocale(LC_NUMERIC, "");
 		code=QString("#readmat %1 '%2' 3\n").arg(data).arg(file);	dd=2;
 	}
 	if(scr->lineEdit()->text().isEmpty() || scr->lineEdit()->text()==tr("default"))
@@ -171,7 +171,7 @@ void DataOpenDialog::prepareResult()
 void DataOpenDialog::setFile(const QString &fname)
 {
 	file=fname;
-	mglData d(file.toAscii().constData());
+	mglData d(file.toStdString().c_str());
 	rA->setText(tr("Auto detect data sizes (%1 x %2 x %3)").arg(d.nx).arg(d.ny).arg(d.nz));
 }
 //-----------------------------------------------------------------------------

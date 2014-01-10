@@ -180,15 +180,15 @@ void DatPanel::save()
 	{
 		bool ok;
 		QString s = QInputDialog::getText(this, tr("UDAV - Export to PNG"), tr("Enter color scheme for picture"), QLineEdit::Normal, MGL_DEF_SCH, &ok);
-		if(ok)	var->Export(fn.toAscii().constData(), s.toAscii().constData());
+		if(ok)	var->Export(fn.toStdString().c_str(), s.toStdString().c_str());
 	}
 	else if(ext=="h5" || ext=="hdf")
 	{
 		bool ok;
 		QString s = QInputDialog::getText(this, tr("UDAV - Save to HDF"), tr("Enter data name"), QLineEdit::Normal, QString::fromStdWString(var->s), &ok);
-		if(ok)	var->SaveHDF(fn.toAscii().constData(), s.toAscii().constData());
+		if(ok)	var->SaveHDF(fn.toStdString().c_str(), s.toStdString().c_str());
 	}
-	else 	var->Save(fn.toAscii().constData());
+	else 	var->Save(fn.toStdString().c_str());
 }
 //-----------------------------------------------------------------------------
 void DatPanel::load()
@@ -201,15 +201,15 @@ void DatPanel::load()
 	{
 		bool ok;
 		QString s = QInputDialog::getText(this, tr("UDAV - Import PNG"), tr("Enter color scheme for picture"), QLineEdit::Normal, MGL_DEF_SCH, &ok);
-		if(ok)	var->Import(fn.toAscii().constData(), s.toAscii().constData());
+		if(ok)	var->Import(fn.toStdString().c_str(), s.toStdString().c_str());
 	}
 	else if(ext=="h5" || ext=="hdf")
 	{
 		bool ok;
 		QString s = QInputDialog::getText(this, tr("UDAV - Read from HDF"), tr("Enter data name"), QLineEdit::Normal, QString::fromStdWString(var->s), &ok);
-		if(ok)	var->ReadHDF(fn.toAscii().constData(), s.toAscii().constData());
+		if(ok)	var->ReadHDF(fn.toStdString().c_str(), s.toStdString().c_str());
 	}
-	else 	var->Read(fn.toAscii().constData());
+	else 	var->Read(fn.toStdString().c_str());
 	refresh();
 }
 //-----------------------------------------------------------------------------
@@ -379,7 +379,7 @@ void DatPanel::hist()
 	bool res = d->exec();
 	if(res && !v1->text().isEmpty() && !v2->text().isEmpty() && !id->text().isEmpty())
 	{
-		mglVar *vv = parser.AddVar(id->text().toAscii().constData());
+		mglVar *vv = parser.AddVar(id->text().toStdString().c_str());
 		if(!vv)	return;
 		vv->Set(var->Hist(nm->value(), v1->text().toDouble(), v2->text().toDouble()));
 		updateDataItems();
@@ -514,7 +514,7 @@ void DatPanel::newdat()
 	if(!mgl.isEmpty())
 	{
 		mglGraph gr;
-		parser.Execute(&gr,mgl.toAscii().constData());
+		parser.Execute(&gr,mgl.toStdString().c_str());
 		opers += mgl+"\n";
 		updateDataItems();
 	}
@@ -585,7 +585,7 @@ void DatPanel::oper()
 	if(!mgl.isEmpty())
 	{
 		mglGraph gr;
-		parser.Execute(&gr,mgl.toAscii().constData());
+		parser.Execute(&gr,mgl.toStdString().c_str());
 		opers += mgl+"\n";
 		updateDataItems();
 	}
