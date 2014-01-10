@@ -20,5 +20,6 @@
 #define MGL_HAVE_HDF4	${MGL_HAVE_HDF4}
 #define MGL_HAVE_HDF5	${MGL_HAVE_HDF5}
 #define MGL_FONT_PATH	"${MGL_FONT_PATH}"
+#define MGL_USE_QT5		${MGL_HAVE_QT5}
 
 #endif

@@ -1,9 +1,10 @@
 #include "MainWindow.hpp"
 #include "ui_MainWindow.h"
+#include "mgl2/config.h"
 
-#include <QtWebKit/QWebFrame>
-#include <QtNetwork/QNetworkDiskCache>
-#include <QtGui/QDesktopServices>
+#include <QWebFrame>
+#include <QNetworkDiskCache>
+#include <QDesktopServices>
 //-----------------------------------------------------------------------------
 int main(int argc, char *argv[])
 {
@@ -30,7 +31,11 @@ MainWindow::MainWindow(QWidget* const parent) : QMainWindow(parent), ui(new Ui::
 	// create non-cached QNetworkAccessManager and assign to webview
 	QNetworkAccessManager* manager = new QNetworkAccessManager(this);
 	QNetworkDiskCache* diskCache = new QNetworkDiskCache();
+#ifdef MGL_USE_QT5
+	const QString location = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
+#else
 	const QString location = QDesktopServices::storageLocation(QDesktopServices::CacheLocation);
+#endif
 	diskCache->setCacheDirectory(location);
 	diskCache->setMaximumCacheSize(0);
 	manager->setCache(diskCache);
@@ -46,7 +51,11 @@ MainWindow::MainWindow(QWidget* const parent) : QMainWindow(parent), ui(new Ui::
 //-----------------------------------------------------------------------------
 void MainWindow::injectBackendObject()
 {
+#ifdef MGL_USE_QT5
+	ui->webView->page()->mainFrame()->addToJavaScriptWindowObject("globalBackend", &_backend);
+#else
 	ui->webView->page()->mainFrame()->addToJavaScriptWindowObject("globalBackend", &_backend, QScriptEngine::QtOwnership);
+#endif
 }
 //-----------------------------------------------------------------------------
 MainWindow::~MainWindow()	{	delete ui;	}

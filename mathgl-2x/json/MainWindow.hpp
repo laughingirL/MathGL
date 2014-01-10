@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Backend.hpp"
-#include <QtGui/QMainWindow>
-#include <QtCore/QObject>
+#include <QMainWindow>
+//#include <QObject>
 
 namespace Ui {	class MainWindow;	}
 

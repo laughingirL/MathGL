@@ -17,7 +17,7 @@ QString Backend::show(const QString& text) const
 	pr.AllowSetSize(true);
 	setlocale(LC_CTYPE, "");
 	setlocale(LC_NUMERIC, "C");
-	pr.Execute(&gr,text.toAscii());
+	pr.Execute(&gr,text.toStdWString().c_str());
 	gr.WriteJSON(tmp);
 	setlocale(LC_NUMERIC, "");
 
@@ -38,7 +38,7 @@ QString Backend::coor(const QString& xy, const QString& text) const
 	pr.AllowSetSize(true);
 	setlocale(LC_CTYPE, "");
 	setlocale(LC_NUMERIC, "C");
-	pr.Execute(&gr,text.toAscii());
+	pr.Execute(&gr,text.toStdWString().c_str());
 	gr.Finish();
 
 	int x = (int)xy.section(" ",0,0).toDouble();
@@ -62,7 +62,7 @@ QString Backend::geometry(const QString& mgl) const
 	pr.AllowSetSize(true);
 	setlocale(LC_CTYPE, "");
 	setlocale(LC_NUMERIC, "C");
-	pr.Execute(&gr,mgl.toAscii());
+	pr.Execute(&gr,mgl.toStdWString().c_str());
 	gr.WriteJSON(tmp);
 	setlocale(LC_NUMERIC, "");
 
