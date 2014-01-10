@@ -412,7 +412,9 @@ pthread_mutex_lock(&mutexPtx);
 		shift += 0.015*h;	// Correction for glyph rotation around proper point
 	//		shift *= h;
 
-		int align;	mglGetStyle(font,0,&align);	align = align&3;
+		int align;	
+		char cc = mglGetStyle(font,0,&align);	align = align&3;
+		if(cc)	col = -cc;
 		Bt.x = q.x;	Bt.y = q.y - shift;	Bt.z = q.z;
 		if(ll>0)
 		{
@@ -439,6 +441,9 @@ pthread_mutex_lock(&mutexPtx);
 			add_prim(a);
 		}
 
+		col = col<0 ? AddTexture(char(0.5-col)):col;
+		q.c=col;	q.t=0;	Txt[long(col)].GetC(col,0,q);
+		q.u = q.v = NAN;
 		memset(Bt.b,0,9*sizeof(mreal));
 		Bt.b[0] = Bt.b[4] = Bt.b[8] = fscl;
 		register mreal opf = Bt.pf;
@@ -467,6 +472,10 @@ pthread_mutex_lock(&mutexPtx);
 			{MGL_PUSH(Pnt,pt,mutexPnt);	k4=Pnt.size()-1;}
 			line_plot(k1,k2);	line_plot(k1,k3);
 			line_plot(k4,k2);	line_plot(k4,k3);
+			mreal bl = AddTexture('w');
+			k1 = CopyNtoC(k1,bl);	k2 = CopyNtoC(k2,bl);
+			k3 = CopyNtoC(k3,bl);	k4 = CopyNtoC(k4,bl);
+			quad_plot(k1,k2,k3,k4);
 		}
 		fsize *= fnt->Puts(text,font,col)/2;
 	}
@@ -921,20 +930,22 @@ void mglCanvas::Title(const wchar_t *title,const char *stl,mreal size)
 	if(h>=inH)	{	SetWarn(mglWarnSpc,"Title");	return;	}
 	static int cgid=1;	StartGroup("Title",cgid++);
 	bool box=mglchr(stl,'#');
-	int align;	mglGetStyle(stl,0,&align);	align = align&3;
+	int align;
+	char col = mglGetStyle(stl,0,&align);	align = align&3;
+	if(col==0)	col = 'k';
 	mreal y=inY+inH-h;
-	mglPoint p(inX + inW*align/2.,y,Depth),q(NAN);
+	mglPoint p(inX + inW*align/2.,y,3*Depth),q(NAN);
 	mglMatrix M=B;	M.norot=true;
 	if(title)	text_plot(AddPnt(&M,p,-1,q,-1,0),title,stl,size);
 	if(box)	//	draw boungind box
 	{
-		mreal c1=AddTexture('w'), c2=AddTexture('k');
+		mreal c1=AddTexture('w'), c2=AddTexture(col);
 		if((Flag&3)==2)	{	mreal cc=c1;	c2=c1;	c1=cc;	}
 		long k1,k2,k3,k4;
-		k1=AddPnt(&M,mglPoint(inX,y,Depth),c1,q,-1,0);
-		k2=AddPnt(&M,mglPoint(inX+inW,y,Depth),c1,q,-1,0);
-		k3=AddPnt(&M,mglPoint(inX,y+h,Depth),c1,q,-1,0);
-		k4=AddPnt(&M,mglPoint(inX+inW,y+h,Depth),c1,q,-1,0);
+		k1=AddPnt(&M,mglPoint(inX,y-h*0.4,3*Depth),c1,q,-1,0);
+		k2=AddPnt(&M,mglPoint(inX+inW,y-h*0.4,3*Depth),c1,q,-1,0);
+		k3=AddPnt(&M,mglPoint(inX,y+h,3*Depth),c1,q,-1,0);
+		k4=AddPnt(&M,mglPoint(inX+inW,y+h,3*Depth),c1,q,-1,0);
 		quad_plot(k1,k2,k3,k4);
 		k1=CopyNtoC(k1,c2);	k2=CopyNtoC(k2,c2);
 		k3=CopyNtoC(k3,c2);	k4=CopyNtoC(k4,c2);

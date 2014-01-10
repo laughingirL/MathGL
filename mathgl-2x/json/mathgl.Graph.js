@@ -219,24 +219,17 @@ mathgl.Graph.prototype.__drawMesh = function(isPrecise) {
 mathgl.Graph.prototype.__mgl_draw_fast = function(obj, ctx, skip) {
 	if(obj.fast==0)	return;
 	this.__mgl_prepare(obj,skip);	// update coordinates
-	var i,n1,n2;
 	// for each primitive skipping superfluous
 	for(var i=0;i<obj.nprim;i += 1 + Math.round(obj.nprim / this.__maxDraftPoints))
 	{
-		n1 = obj.prim[i][1];	n2 = obj.prim[i][2];
-		if(obj.prim[i][0]==1)
-		{
-			ctx.strokeStyle = obj.prim[i][10];
-			ctx.beginPath();
-			ctx.moveTo(obj.pp[n1][0],obj.pp[n1][1]);
-			ctx.lineTo(obj.pp[n2][0],obj.pp[n2][1]);
-			ctx.lineWidth = obj.prim[i][7]/100;
-			ctx.stroke();
-		}
-		else
+		var prim = obj.prim[i];
+		var n1 = prim[1], nn = obj.pp[n1];
+		if(prim[0]==1 || obj.pnts[n1][3]<0)
+			this.__mgl_draw_prim(obj,ctx,prim,Math.abs(obj.b[12]));
+		else if(obj.prim[i][0]<4)
 		{
 			ctx.fillStyle = obj.prim[i][10];
-			ctx.fillRect(obj.pp[n1][0], obj.pp[n1][1], 2, 2);
+			ctx.fillRect(nn[0], nn[1], 2, 2);
 		}
 	}
 }
@@ -250,80 +243,85 @@ mathgl.Graph.prototype.__mgl_draw_good = function(obj, ctx, skip) {
 	// NOTE: this valid only for current zoom/view. In general case it should be more complicated
 	var s1 = Math.sqrt(obj.b[0]*obj.b[0]+obj.b[1]*obj.b[1]+obj.b[2]*obj.b[2]);
 	var s2 = Math.abs(obj.b[12]);
-	var deg = Math.PI/180;  //0.017453293;
 	for(var i=0;i<obj.nprim;i++)	// for each primitive
 	{
-		var scl = s1*this.__mgl_pf(obj, obj.prim[i][9]);
-		var n1 = obj.prim[i][1], n2 = obj.prim[i][2];
-		var n3 = obj.prim[i][3], n4 = obj.prim[i][4];
-		if(obj.pnts[n1][3])	scl = s2;
-
-		ctx.strokeStyle = obj.prim[i][10];
-		ctx.fillStyle = obj.prim[i][10];
-		ctx.lineWidth = 1;
-		switch(obj.prim[i][0])		// draw it depending on its type
-		{
-		case 0: // marks
-//			ctx.lineWidth = obj.prim[i][7]*obj.prim[i][6]*50;
-			ctx.lineWidth = obj.prim[i][7]*obj.prim[i][6]*5e-4;
-			this.__mgl_draw_mark(ctx, obj.pp[n1][0], obj.pp[n1][1], n4, obj.prim[i][6]/100, scl);
-			break;
-		case 1: // lines
-			ctx.beginPath();
-			ctx.moveTo(obj.pp[n1][0],obj.pp[n1][1]);
-			ctx.lineTo(obj.pp[n2][0],obj.pp[n2][1]);
-			ctx.lineWidth = obj.prim[i][7]/100;
-			ctx.stroke();	break;
-		case 2: // triangles
-			ctx.beginPath();
-			ctx.moveTo(obj.pp[n1][0],obj.pp[n1][1]);
-			ctx.lineTo(obj.pp[n2][0],obj.pp[n2][1]);
-			ctx.lineTo(obj.pp[n3][0],obj.pp[n3][1]);
-			ctx.closePath();	ctx.fill();	break;
-		case 3: // quadrangles
-			ctx.beginPath();
-			ctx.moveTo(obj.pp[n1][0],obj.pp[n1][1]);
-			ctx.lineTo(obj.pp[n2][0],obj.pp[n2][1]);
-			ctx.lineTo(obj.pp[n4][0],obj.pp[n4][1]);
-			ctx.lineTo(obj.pp[n3][0],obj.pp[n3][1]);
-			ctx.closePath();
-			// NOTE: look as alpha is disabled for lines
-			// So, next code should be only for the case alpha=false
-			if(obj.prim[i][10].charAt(0)=='#')	ctx.stroke();
-			ctx.fill();	break;
-		case 4: // glyphs
-			var t=obj.prim[i][7]*deg/100;
-			var xx=obj.coor[n2][2]/100,yy=-obj.coor[n2][3]/100,zz=obj.coor[n2][4]/100;
-			var xc = obj.b[0]*xx + obj.b[1]*yy + obj.b[2]*zz;
-			var yc = obj.b[3]*xx + obj.b[4]*yy + obj.b[5]*zz;
-//			var zc = obj.b[6]*xx + obj.b[7]*yy + obj.b[8]*zz;
-			var ll = xc*xc+yc*yc;
-			if(ll < 1e-10)	break;
-			if(ll<1e10 && t/deg<1e4)
-			{
-				t = Math.atan2(yc,xc);
-				if(Math.abs(t)>Math.PI/2)	t += Math.PI;
-			}
-			else t=0;
-			var c=Math.cos(t), s=Math.sin(t), d=obj.prim[i][6]/200;
-
-			var b=[d*c, d*s, d*s, -d*c, obj.pp[n1][0],obj.pp[n1][1]];
-			var x=obj.coor[n2][0]*scl/100, y=obj.coor[n2][1]*scl/100, f=obj.prim[i][8]*scl/1e5;
-			if(n3&8)
-			{
-				if(!(n3&4))	this.__mgl_line_glyph(ctx, x,y, f,1,b);
-				else this.__mgl_line_glyph(ctx, x,y, f,0,b);
-			}
-			else
-			{
-				if(!(n3&4)) this.__mgl_fill_glyph(ctx, x,y, f,obj.glfs[n4],b);
-				else this.__mgl_wire_glyph(ctx, x,y, f,obj.glfs[n4],b);
-			}
-			break;
-		}
+		var prim = obj.prim[i];
+		var scl = s1*this.__mgl_pf(obj, prim[9]);
+		if(obj.pnts[prim[1]][3])	scl = s2;
+		this.__mgl_draw_prim(obj,ctx,prim,scl);
 	}
 }
 
+/** perform high-quality drawing */
+mathgl.Graph.prototype.__mgl_draw_prim = function(obj, ctx, prim, scl) {
+	var n1 = prim[1], n2 = prim[2];
+	var n3 = prim[3], n4 = prim[4];
+	var pp = obj.pp;
+	var deg = Math.PI/180;  //0.017453293;
+
+	ctx.strokeStyle = prim[10];
+	ctx.fillStyle = prim[10];
+	ctx.lineWidth = 1;
+	switch(prim[0])		// draw it depending on its type
+	{
+	case 0: // marks
+		ctx.lineWidth = prim[7]*prim[6]*5e-4;
+		this.__mgl_draw_mark(ctx, pp[n1][0], pp[n1][1], n4, prim[6]/100, scl);
+		break;
+	case 1: // lines
+		ctx.beginPath();
+		ctx.moveTo(pp[n1][0],pp[n1][1]);
+		ctx.lineTo(pp[n2][0],pp[n2][1]);
+		ctx.lineWidth = prim[7]/100;
+		ctx.stroke();	break;
+	case 2: // triangles
+		ctx.beginPath();
+		ctx.moveTo(pp[n1][0],pp[n1][1]);
+		ctx.lineTo(pp[n2][0],pp[n2][1]);
+		ctx.lineTo(pp[n3][0],pp[n3][1]);
+		ctx.closePath();	ctx.fill();	break;
+	case 3: // quadrangles
+		ctx.beginPath();
+		ctx.moveTo(pp[n1][0],pp[n1][1]);
+		ctx.lineTo(pp[n2][0],pp[n2][1]);
+		ctx.lineTo(pp[n4][0],pp[n4][1]);
+		ctx.lineTo(pp[n3][0],pp[n3][1]);
+		ctx.closePath();
+		// NOTE: look as alpha is disabled for lines
+		// So, next code should be only for the case alpha=false
+		if(prim[10].charAt(0)=='#')	ctx.stroke();
+		ctx.fill();	break;
+	case 4: // glyphs
+		var t=prim[7]*deg/100;
+		var xx=obj.coor[n2][2]/100,yy=-obj.coor[n2][3]/100,zz=obj.coor[n2][4]/100;
+		var xc = obj.b[0]*xx + obj.b[1]*yy + obj.b[2]*zz;
+		var yc = obj.b[3]*xx + obj.b[4]*yy + obj.b[5]*zz;
+//		var zc = obj.b[6]*xx + obj.b[7]*yy + obj.b[8]*zz;
+		var ll = xc*xc+yc*yc;
+		if(ll < 1e-10)	break;
+		if(ll<1e10 && t/deg<1e4)
+		{
+			t = Math.atan2(yc,xc);
+			if(Math.abs(t)>Math.PI/2)	t += Math.PI;
+		}
+		else t=0;
+		var c=Math.cos(t), s=Math.sin(t), d=prim[6]/200;
+
+		var b=[d*c, d*s, d*s, -d*c, pp[n1][0],pp[n1][1]];
+		var x=obj.coor[n2][0]*scl/100, y=obj.coor[n2][1]*scl/100, f=prim[8]*scl/1e5;
+		if(n3&8)
+		{
+			if(!(n3&4))	this.__mgl_line_glyph(ctx, x,y, f,1,b);
+			else this.__mgl_line_glyph(ctx, x,y, f,0,b);
+		}
+		else
+		{
+			if(!(n3&4)) this.__mgl_fill_glyph(ctx, x,y, f,obj.glfs[n4],b);
+			else this.__mgl_wire_glyph(ctx, x,y, f,obj.glfs[n4],b);
+		}
+		break;
+	}
+}
 
 mathgl.Graph.prototype.__mgl_pf = function(obj, z) {
 //	return 1/obj.pf;
@@ -374,17 +372,18 @@ mathgl.Graph.prototype.__mgl_prepare = function(obj, skip) {
 	// fill z-coordinates for primitives
 	if(!obj.fast)	for(i=0;i<obj.nprim;i++)
 	{
-		var n1 = obj.prim[i][1], n2 = obj.prim[i][2], n3 = obj.prim[i][3], n4 = obj.prim[i][4];
-		switch(obj.prim[i][0])
+		var prim = obj.prim[i];
+		var n1 = prim[1], n2 = prim[2], n3 = prim[3], n4 = prim[4];
+		switch(prim[0])
 		{
 		case 1: // lines
-			obj.prim[i][9] = (obj.pp[n1][2]+obj.pp[n2][2])/2;	break;
+			prim[9] = (obj.pp[n1][2]+obj.pp[n2][2])/2;	break;
 		case 2: // triangles
-			obj.prim[i][9] = (obj.pp[n1][2]+obj.pp[n2][2]+obj.pp[n3][2])/3;	break;
+			prim[9] = (obj.pp[n1][2]+obj.pp[n2][2]+obj.pp[n3][2])/3;	break;
 		case 3: // quadrangles
-			obj.prim[i][9] = (obj.pp[n1][2]+obj.pp[n2][2]+obj.pp[n3][2]+obj.pp[n4][2])/4;	break;
+			prim[9] = (obj.pp[n1][2]+obj.pp[n2][2]+obj.pp[n3][2]+obj.pp[n4][2])/4;	break;
 		default:
-			obj.prim[i][9] = obj.pp[n1][2];	break;
+			prim[9] = obj.pp[n1][2];	break;
 		}
 	}
 	if(!obj.fast) // sort primitives according its z-coordinate
@@ -627,3 +626,8 @@ mathgl.Graph.prototype.destroy = function() {
 mathgl.Graph.prototype.toDataURL = function(type) {
 	this.__canvas.toDataURL(type);
 }
+
+/** Set perspective angle of view: @param val - degree of perspective in range 0...1 (0 - use default orthogonal projection)  */ 
+mathgl.Graph.prototype.setPerspective = function(val) {
+	this.__fov = val; 
+} 

@@ -31,7 +31,7 @@ MainWindow::MainWindow(QWidget* const parent) : QMainWindow(parent), ui(new Ui::
 	// create non-cached QNetworkAccessManager and assign to webview
 	QNetworkAccessManager* manager = new QNetworkAccessManager(this);
 	QNetworkDiskCache* diskCache = new QNetworkDiskCache();
-#ifdef MGL_USE_QT5
+#if MGL_USE_QT5
 	const QString location = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
 #else
 	const QString location = QDesktopServices::storageLocation(QDesktopServices::CacheLocation);
@@ -51,11 +51,8 @@ MainWindow::MainWindow(QWidget* const parent) : QMainWindow(parent), ui(new Ui::
 //-----------------------------------------------------------------------------
 void MainWindow::injectBackendObject()
 {
-#ifdef MGL_USE_QT5
 	ui->webView->page()->mainFrame()->addToJavaScriptWindowObject("globalBackend", &_backend);
-#else
-	ui->webView->page()->mainFrame()->addToJavaScriptWindowObject("globalBackend", &_backend, QScriptEngine::QtOwnership);
-#endif
+//	ui->webView->page()->mainFrame()->addToJavaScriptWindowObject("globalBackend", &_backend, QScriptEngine::QtOwnership);
 }
 //-----------------------------------------------------------------------------
 MainWindow::~MainWindow()	{	delete ui;	}
