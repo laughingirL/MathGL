@@ -6,11 +6,12 @@
 * Bugfix for missing options parsing for some of MGL commands
 * Bugfix for .pmin suffix in MGL. Add mglData::MaximalNeg() and mglData::MinimalPos() functions. Add .nmin and .nmax suffixes.
 * Bugfix for colorbar labels
-* Disable changes (by View,Zoom,Perspective) of position for Title() and Legend().
+* Disable changes (by View,Zoom,Perspective) of position for Title(), Legend(), Colorbar().
 * Partially support of perspective in CalcXYZ().
 * Allow to disable colorbar labels
 * Speed up PDE solving
 * Add complex versions of PDE, QO2d, QO3d
+* Minor bugfixes and memory leaks
 
 
 2.2 Released 11 November 2013

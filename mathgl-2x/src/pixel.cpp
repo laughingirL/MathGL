@@ -1638,7 +1638,8 @@ void mglCanvas::glyph_draw(const mglPrim &P, mglDrawReg *d)
 
 	if(d)	{	d->PDef = MGL_SOLID_MASK;	d->angle = 0;	d->PenWidth=0.6;	}
 	mglPnt p=Pnt[P.n1];
-	mreal pf=sqrt((Bp.b[0]*Bp.b[0]+Bp.b[1]*Bp.b[1]+Bp.b[3]*Bp.b[3]+Bp.b[4]*Bp.b[4])/2), f = P.p*pf;
+	// NOTE check this later for mglInPlot
+	mreal pf=p.sub<0?1:sqrt((Bp.b[0]*Bp.b[0]+Bp.b[1]*Bp.b[1]+Bp.b[3]*Bp.b[3]+Bp.b[4]*Bp.b[4])/2), f = P.p*pf;
 
 	mglMatrix M;
 	M.b[0] = M.b[4] = M.b[8] = P.s;

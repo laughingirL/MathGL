@@ -1108,7 +1108,7 @@ int MGL_EXPORT mgl_data_read_range(HMDT dat, const char *templ, double from, dou
 	//read first file
 	do{	snprintf(fname,n,templ,t);	t+= step;	} while(!mgl_data_read(&d,fname) && t<=to);
 
-	if(t>to)	return false;
+	if(t>to)	{	delete []fname;	return false;	}
 	kx = d.nx;	ky = d.ny;	kz = d.nz;
 	b = (mreal *)malloc(kx*ky*kz*sizeof(mreal));
 	memcpy(b,d.a,kx*ky*kz*sizeof(mreal));

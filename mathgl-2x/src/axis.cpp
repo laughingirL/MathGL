@@ -947,7 +947,7 @@ void mglCanvas::colorbar(HCDT vv, const mreal *c, int where, mreal x, mreal y, m
 	long n1,n2,n3,n4;
 	mreal d,s3=B.pf,ss=1/s3;		// NOTE: colorbar was wider ss=0.9;
 	mglPoint p1,p2;
-	mglMatrix M=B1;	M.pf=s3;
+	mglMatrix M=B1;	M.pf=s3;	M.norot=true;
 
 	set(MGL_DISABLE_SCALE);		// NOTE this make colorbar non-thread-safe!!!
 	x = s3*(2*x-1);	y = s3*(2*y-1);	w *= s3;	h *= s3;

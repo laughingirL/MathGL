@@ -648,7 +648,7 @@ int MGL_EXPORT mgl_datac_read_range(HADT dat, const char *templ, double from, do
 	//read first file
 	do{	snprintf(fname,n,templ,t);	t+= step;	} while(!mgl_datac_read(&d,fname) && t<=to);
 
-	if(t>to)	return false;
+	if(t>to)	{	delete []fname;	return false;	}
 	kx = d.nx;	ky = d.ny;	kz = d.nz;
 	b = (dual *)malloc(kx*ky*kz*sizeof(dual));
 	memcpy(b,d.a,kx*ky*kz*sizeof(dual));

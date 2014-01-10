@@ -63,7 +63,7 @@ bool mglCompleter = true;
 bool loadInNewWnd = false;
 QString pathHelp;
 extern mglParse parser;
-extern QColor mglColorScheme[9];
+extern QColor mglColorScheme[10];
 extern QString defFontFamily;
 extern int defFontSize;
 extern QString pathFont;

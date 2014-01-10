@@ -85,8 +85,7 @@ void MGL_EXPORT mgl_fgetpar(FILE *fp, const char *str, ...)
 {
 	if(!str || !str[0])	return;
 	long len=strlen(str), *n;	double *v;
-	char *s, *t, *buf=new char[len+1];
-	memcpy(buf,str,len+1);
+	char *s, *t;
 	va_list lst;
 	va_start(lst,str);
 	t = mgl_fgetstr(fp);

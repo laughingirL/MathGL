@@ -458,6 +458,7 @@ bool parse_file(const char *fname, FILE *out)
 			fprintf(out, "!!!!\t%s\n", buf);	// NOTE should be never here!
 		}
 	}
+	fclose(fp);
 	return true;
 }
 

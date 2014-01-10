@@ -154,6 +154,7 @@ bool parse_file(const char *fname, FILE *out)
 			fprintf(out,"libmgl %s\t(ptr)\t%s\n",parse_name(buf+16,fnc),fnc);
 		else	fprintf(out,"!!!!\t%s\n",buf);	// NOTE should be never here!
 	}
+	fclose(fp);
 	return true;
 }
 

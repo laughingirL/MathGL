@@ -8,6 +8,7 @@ mathgl.View = function() {
 	this.__canvas = null;
 	this.__renderLauncherFunc = null;
 	this.__pickPointHandlerFunc = null;
+	this.__onCameraChanged = null;
 	this.__onMouseMoveFunc = mathgl.bind(this.__onMouseMove, this);
 	this.__onMouseDownFunc = mathgl.bind(this.__onMouseDown, this);
 	this.__onMouseUpFunc = mathgl.bind(this.__onMouseUp, this);
@@ -153,8 +154,9 @@ mathgl.View.prototype.__onMouseMove = function(e) {
 // 		this.__yaw = Math.min(this.__yaw, Math.PI);
 // 		this.__yaw = Math.max(this.__yaw, -Math.PI);
 
+		if(this.__onCameraChanged)
+			this.__onCameraChanged(this.getViewpoint());
 		this.__renderLauncherFunc();
-		this.__onCameraChanged(this.getViewpoint());	// TODO: something wrong here ???
 	}
 }
 
@@ -186,8 +188,9 @@ mathgl.View.prototype.__onMouseWheel = function(e) {
 	this.__distance -= 0.1 * e.wheelDelta / 120;
 	this.__distance = Math.min(this.__distance, 10.0);
 	this.__distance = Math.max(this.__distance, 0.2);
+	if(this.__onCameraChanged)
+		this.__onCameraChanged(this.getViewpoint());
 	this.__renderLauncherFunc();
-	this.__onCameraChanged(this.getViewpoint());	// TODO: something wrong here ???
 }
 
 mathgl.View.prototype.getViewpoint = function() { 

@@ -63,12 +63,13 @@ int main(int argc, char *argv[])
 
 	char *str, *buf;
 	const char *method = getenv("REQUEST_METHOD");
+	bool alloc=false;
 	if(method && strcmp(method,"GET"))
 	{
 		long len=atol(getenv("CONTENT_LENGTH"));
 		buf = new char[len+1];
 		fread(buf,len,1,stdin);
-		buf[len]=0;
+		buf[len]=0;	alloc=true;
 	}
 	else		buf = getenv("QUERY_STRING");
 	if(buf==0)	{	printf("There is no query. Exit.\n");	return 0;	}
@@ -85,6 +86,7 @@ int main(int argc, char *argv[])
 	printf("</img></body></html>\n");*/
 
 	printf("Content-Type: image/png\n\n");	gr.WritePNG("-");
+	if(alloc)	delete []buf;
 	return 0;
 }
 //-----------------------------------------------------------------------------
