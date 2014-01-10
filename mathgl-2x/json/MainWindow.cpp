@@ -31,7 +31,7 @@ MainWindow::MainWindow(QWidget* const parent) : QMainWindow(parent), ui(new Ui::
 	// create non-cached QNetworkAccessManager and assign to webview
 	QNetworkAccessManager* manager = new QNetworkAccessManager(this);
 	QNetworkDiskCache* diskCache = new QNetworkDiskCache();
-#if MGL_USE_QT5
+#ifdef MGL_USE_QT5
 	const QString location = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
 #else
 	const QString location = QDesktopServices::storageLocation(QDesktopServices::CacheLocation);
