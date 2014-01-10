@@ -23,6 +23,7 @@
 #include <QSyntaxHighlighter>
 #include <QDialog>
 #include <QLineEdit>
+#include <QTextEdit>
 //-----------------------------------------------------------------------------
 ///Syntax highlighter for MGL script language.
 class QMGLSyntax : public QSyntaxHighlighter

@@ -38,6 +38,7 @@
 #include <QTextCodec>
 #include <QTranslator>
 #include <QVariant>
+#include <QMimeData>
 //-----------------------------------------------------------------------------
 #if !defined(WIN32) && !defined(__APPLE__)
 #include <X11/Xlib.h>
@@ -383,7 +384,7 @@ void MainWindow::dragEnterEvent(QDragEnterEvent *event)
 {
 	QTextCodec *codec = QTextCodec::codecForLocale();
 	QString filename = codec->toUnicode(event->mimeData()->data("text/plain"));
-	if ( event->provides("text/plain") )
+	/*if ( event->provides("text/plain") )
 	{
 		QTextCodec *codec = QTextCodec::codecForLocale();
 		QString instring = codec->toUnicode(event->mimeData()->data("text/plain"));
@@ -392,8 +393,9 @@ void MainWindow::dragEnterEvent(QDragEnterEvent *event)
 			event->acceptProposedAction();
 			setStatus(instring);
 		}
-	}else
-	if ( event->mimeData()->hasUrls() )
+	}
+	else */
+	if(event->mimeData()->hasUrls())
 	{
 		QList<QUrl> UrlList;
 		QFileInfo finfo;
@@ -401,11 +403,11 @@ void MainWindow::dragEnterEvent(QDragEnterEvent *event)
 		if ( UrlList.size() > 0) // if at least one QUrl is present in list
 		{
 			filename = UrlList[0].toLocalFile(); // convert first QUrl to local path
-			finfo.setFile( filename );
+			finfo.setFile(filename);
 			if ( finfo.isFile() )
 			{
-				setStatus(filename);
 				event->acceptProposedAction();
+				setStatus(filename);
 			}
 		}
 	}

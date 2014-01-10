@@ -36,6 +36,7 @@ class AnimParam;
 class DatPanel;
 class mglVar;
 class StyleDialog;
+class QPrinter;
 //-----------------------------------------------------------------------------
 class PlotPanel : public QWidget
 {
