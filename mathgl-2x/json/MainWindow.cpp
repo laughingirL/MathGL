@@ -11,7 +11,6 @@ int main(int argc, char *argv[])
 	QApplication a(argc, argv);
 	MainWindow w;
 	w.show();
-	
 	return a.exec();
 }
 //-----------------------------------------------------------------------------
@@ -43,16 +42,13 @@ MainWindow::MainWindow(QWidget* const parent) : QMainWindow(parent), ui(new Ui::
 
 	// inject backend object each time javascript object is cleared
 	connect(ui->webView->page()->mainFrame(), SIGNAL(javaScriptWindowObjectCleared()), this, SLOT(injectBackendObject()));
-
 	// set url to load
-//	ui->webView->load(QUrl(QString("file:///%1/%2").arg(qApp->applicationDirPath()).arg("index.html")));
-	ui->webView->load(QUrl("index.html"));
+	ui->webView->load(QUrl(QString("file:///%1/../../json/%2").arg(qApp->applicationDirPath()).arg("index.html")));
 }
 //-----------------------------------------------------------------------------
 void MainWindow::injectBackendObject()
 {
 	ui->webView->page()->mainFrame()->addToJavaScriptWindowObject("globalBackend", &_backend);
-//	ui->webView->page()->mainFrame()->addToJavaScriptWindowObject("globalBackend", &_backend, QScriptEngine::QtOwnership);
 }
 //-----------------------------------------------------------------------------
 MainWindow::~MainWindow()	{	delete ui;	}

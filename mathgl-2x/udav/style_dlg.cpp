@@ -104,7 +104,7 @@ StyleDialog::StyleDialog(QWidget *parent) : QDialog(parent)
 
 	nline = new QSlider(p);		g->addWidget(nline, 2, 2);
 	nline->setRange(1, 9);		nline->setValue(5);
-//	nline->setTickPosition(QSlider::TicksAbove);
+	nline->setTickPosition(QSlider::TicksBothSides);
 	nline->setTickInterval(1);	nline->setPageStep(2);
 	nline->setOrientation(Qt::Horizontal);
 	
@@ -134,7 +134,7 @@ StyleDialog::StyleDialog(QWidget *parent) : QDialog(parent)
 		fillColors(cc[i]);
 		nn[i] = new QSlider(p);		g->addWidget(nn[i], i+1, 1);
 		nn[i]->setRange(1, 9);		nn[i]->setValue(5);
-//		nn[i]->setTickPosition(QSlider::TicksAbove);
+		nn[i]->setTickPosition(QSlider::TicksBothSides);
 		nn[i]->setTickInterval(1);	nn[i]->setPageStep(2);
 		nn[i]->setOrientation(Qt::Horizontal);
 		connect(cc[i],SIGNAL(activated(int)), this, SLOT(updatePic()));

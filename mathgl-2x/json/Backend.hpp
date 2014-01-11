@@ -1,7 +1,6 @@
 #pragma once
 
-#include <QtCore/QStringList>
-#include <QtCore/QObject>
+#include <QStringList>
 
 class Backend : public QObject
 {
