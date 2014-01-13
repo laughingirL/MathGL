@@ -97,7 +97,6 @@ void TextPanel::setCompleter(bool en)
 //	completer->setCompletionMode(en ? QCompleter::PopupCompletion : QCompleter::InlineCompletion);
 }
 //-----------------------------------------------------------------------------
-mglData mglFormulaCalc(const wchar_t *string, mglParser *arg);
 void TextPanel::insNVal()
 {
 	QString sel=edit->textCursor().selectedText();

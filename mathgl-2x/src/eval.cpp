@@ -49,6 +49,7 @@ EQ_POW,		// power x^y
 EQ_MOD,		// x modulo y
 EQ_LOG,		// logarithm of x on base a, log_a(x) = ln(x)/ln(a)
 EQ_ARG,		// argument of complex number arg(x,y) = atan2(x,y)
+EQ_HYPOT,	// sqrt(x^2+y^2)=hypot(x,y)
 // special functions of 2 arguments
 EQ_BESJ,		// regular cylindrical Bessel function of fractional order
 EQ_BESY,		// irregular cylindrical Bessel function of fractional order
@@ -363,6 +364,7 @@ mglFormula::mglFormula(const char *string)
 			else if(!strcmp(name+1,"anh"))	Kod=EQ_TANH;
 			else if(!strcmp(name+1,"h"))	Kod=EQ_TANH;
 		}
+		else if(!strcmp(name,"hypot"))	Kod=EQ_HYPOT;
 		else if(!strcmp(name,"pow"))	Kod=EQ_POW;
 		else if(!strcmp(name,"mod"))	Kod=EQ_MOD;
 		else if(!strcmp(name,"i"))		Kod=EQ_BESI;
@@ -504,7 +506,7 @@ mreal mglFormula::CalcIn(const mreal *a1) const
 			,0,0,0,0,0,0,0,0
 #endif
 		};
-	func_2 f2[EQ_SIN-EQ_LT] = {clt,cgt,ceq,cor,cand,add,sub,mul,del,ipw,pow,fmod,llg,arg
+	func_2 f2[EQ_SIN-EQ_LT] = {clt,cgt,ceq,cor,cand,add,sub,mul,del,ipw,pow,fmod,llg,arg,hypot
 #if MGL_HAVE_GSL
 			,gsl_sf_bessel_Jnu,gsl_sf_bessel_Ynu,
 			gsl_sf_bessel_Inu,gsl_sf_bessel_Knu,

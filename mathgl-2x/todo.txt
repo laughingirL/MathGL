@@ -25,6 +25,7 @@
 18. Check octave 3.8
 19. Check mathgl.js
 20. aspect in JS for norot
+21. Use mglFormulaCalc() for data transformation/filling (much faster but require more memory)
 
 
 

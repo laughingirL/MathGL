@@ -1,18 +1,19 @@
-2.2.1 Released 20 January 2014
+2.2.1 Released 22 January 2014
 
 * Add Qt5 support.
 * Add function AddRange(char dir, mreal v1, mreal v2) and extend corresponding MGL commands '[xyzc]range'.
+* Add 'hypot' function for known functions in formula parsing.
+* Change Aspect() if Ax=NAN. Now, Ay and Az set the ratio to optimal aspect (not exact value as previously).
+* Disable changes by View(),Zoom(),Perspective() for position of Title(), Legend(), Colorbar().
+* Partial support of perspective in CalcXYZ().
+* Speed up PDE solving.
+* Add complex versions of PDE, QO2d, QO3d.
 * Allow nx=1 for Stem and Error.
+* Allow to disable colorbar labels.
 * Bugfix for drawing single axis.
 * Bugfix for missing options parsing for some of MGL commands.
 * Bugfix for .pmin suffix in MGL. Add mglData::MaximalNeg() and mglData::MinimalPos() functions. Add .nmin and .nmax suffixes.
 * Bugfix for colorbar labels.
-* Disable changes (by View,Zoom,Perspective) of position for Title(), Legend(), Colorbar().
-* Partial support of perspective in CalcXYZ().
-* Change Aspect() if Ax=NAN. Now, Ay and Az set the ratio to optimal aspect (not exact value as previously).
-* Allow to disable colorbar labels.
-* Speed up PDE solving.
-* Add complex versions of PDE, QO2d, QO3d.
 * Minor bugfixes and memory leaks.
 
 

@@ -304,7 +304,7 @@ int mglFindArg(const std::wstring &str)
 }
 //-----------------------------------------------------------------------------
 // convert substrings to arguments
-mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg);
+mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const mglVar *head);
 void mglParser::FillArg(mglGraph *gr, int k, std::wstring *arg, mglArg *a)
 {
 	register long n;
@@ -330,7 +330,7 @@ void mglParser::FillArg(mglGraph *gr, int k, std::wstring *arg, mglArg *a)
 					for(;i<ll && w[i]!='\'';i++);
 					if(i>i1)
 					{
-						mglData d = mglFormulaCalc(w.substr(i1,i-i1-(w[i]=='\''?1:0)), this);
+						mglData d = mglFormulaCalc(w.substr(i1,i-i1-(w[i]=='\''?1:0)), this, DataList);
 						mglprintf(buf,32,L"%g",d.a[0]);	a[n-1].w += buf;
 					}
 				}
@@ -353,7 +353,7 @@ void mglParser::FillArg(mglGraph *gr, int k, std::wstring *arg, mglArg *a)
 		{	a[n-1].type=2;	a[n-1].d=0;	a[n-1].v=f->d;	a[n-1].w = f->s;	}
 		else
 		{	// parse all numbers and formulas by unified way
-			mglData d = mglFormulaCalc(arg[n], this);
+			mglData d = mglFormulaCalc(arg[n], this, DataList);
 			if(d.nx*d.ny*d.nz==1)
 			{	a[n-1].type = 2;	a[n-1].v = d.a[0];	}
 			else
@@ -489,7 +489,7 @@ int mglParser::ParseDef(std::wstring &str)
 			if(s[0]=='$' && nn>=0 && nn<='z'-'a'+10)
 			{
 				res = 0;
-				d = mglFormulaCalc(mgl_trim_ws(s.substr(2)), this).a[0];
+				d = mglFormulaCalc(mgl_trim_ws(s.substr(2)), this, DataList).a[0];
 				char buf[32];	snprintf(buf,32,"%g",d);	AddParam(nn, buf);
 			}
 			return res+1;
@@ -500,7 +500,7 @@ int mglParser::ParseDef(std::wstring &str)
 			if(s[0]=='$' && nn>=0 && nn<='z'-'a'+10)
 			{
 				res = 0;
-				d=mglFormulaCalc(mgl_trim_ws(s.substr(2)), this).a[0];
+				d=mglFormulaCalc(mgl_trim_ws(s.substr(2)), this, DataList).a[0];
 				wchar_t buf[2]={0,0};	buf[0] = wchar_t(d);	AddParam(nn, buf);
 			}
 			return res+1;
@@ -595,7 +595,7 @@ int mglParser::Parse(mglGraph *gr, std::wstring str, long pos)
 			if(k==3)
 			{
 				mglNum *v=AddNum(arg[1].c_str());
-				v->d = mglFormulaCalc(arg[2],this).a[0];
+				v->d = mglFormulaCalc(arg[2],this, DataList).a[0];
 			}
 			delete []a;	return k==3?0:1;
 		}
@@ -1029,7 +1029,7 @@ HMDT MGL_EXPORT mgl_parser_calc(HMPR pr, const char *formula)
 	return d;
 }
 HMDT MGL_EXPORT mgl_parser_calcw(HMPR pr, const wchar_t *formula)
-{	mglData *d = new mglData(mglFormulaCalc(formula,pr)); 	return d;	}
+{	mglData *d = new mglData(mglFormulaCalc(formula,pr, pr->DataList)); 	return d;	}
 uintptr_t MGL_EXPORT mgl_parser_calc_(uintptr_t *p, const char *str,int l)
 {	char *s=new char[l+1];	memcpy(s,str,l);	s[l]=0;
 	uintptr_t d = (uintptr_t)mgl_parser_calc(_PR_, s);	delete []s;	return d;	}
