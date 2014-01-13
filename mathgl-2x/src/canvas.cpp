@@ -686,12 +686,15 @@ void mglCanvas::Aspect(mreal Ax,mreal Ay,mreal Az)
 {
 	if(mgl_isnan(Ax))
 	{
-		mreal dy = (Max.y-Min.y), dx = (Max.x-Min.x);
+		mreal dy = (Max.y-Min.y), dx = (Max.x-Min.x), dz = (Max.z-Min.z);
 		if(islog(Min.x,Max.x) && fx)	dx = log10(Max.x/Min.x);
 		if(islog(Min.y,Max.y) && fy)	dy = log10(Max.y/Min.y);
-		mreal f=exp(M_LN10*floor(0.5+log10(fabs(dy/dx))));
-		if(mgl_isnum(Ay))	f=Ay;
-		Ax = Height*dx*f;	Ay = Width*dy;	Az = Depth;
+		if(islog(Min.z,Max.z) && fz)	dz = log10(Max.z/Min.z);
+		mreal fy=exp(M_LN10*floor(0.5+log10(fabs(dy/dx))));
+		mreal fz=exp(M_LN10*floor(0.5+log10(fabs(dz/dx))));
+		if(Ay>0)	fy*=Ay;
+		if(Az>0)	fz*=Az;
+		Ax = Height*dx;	Ay = Width*dy*fy;	Az = Depth*dz*fz;
 	}
 	mreal a = fabs(Ax) > fabs(Ay) ? fabs(Ax) : fabs(Ay);
 	a = a > fabs(Az) ? a : fabs(Az);

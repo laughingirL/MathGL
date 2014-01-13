@@ -207,23 +207,17 @@ var mgl_draw_fast = function(obj, ctx, skip)
 {
 	if(obj.fast==0)	return;
 	mgl_prepare(obj,skip);	// update coordinates
-	var i,n1;
-	for(var i=0;i<obj.nprim;i++)	// for each primitive
+	// for each primitive skipping superfluous
+	for(var i=0;i<obj.nprim;i ++)
 	{
-		var n1 = obj.prim[i][1], n2 = obj.prim[i][2];
-		if(obj.prim[i][0]==1)
-		{
-			ctx.strokeStyle = obj.prim[i][10];
-			ctx.beginPath();
-			ctx.moveTo(obj.pp[n1][0],obj.pp[n1][1]);
-			ctx.lineTo(obj.pp[n2][0],obj.pp[n2][1]);
-			ctx.lineWidth = obj.prim[i][7]/100;
-			ctx.stroke();
-		}
-		else
+		var prim = obj.prim[i];
+		var n1 = prim[1], nn = obj.pp[n1];
+		if(prim[0]==1 || obj.pnts[n1][3]<0)
+			mgl_draw_prim(obj,ctx,prim,Math.abs(obj.b[12]));
+		else if(obj.prim[i][0]<4)
 		{
 			ctx.fillStyle = obj.prim[i][10];
-			ctx.fillRect(obj.pp[n1][0], obj.pp[n1][1], 2, 2);
+			ctx.fillRect(nn[0], nn[1], 2, 2);
 		}
 	}
 	obj.fast = 0;
@@ -238,74 +232,84 @@ var mgl_draw_good = function(obj, ctx, skip)
 	var s1 = Math.sqrt(obj.b[0]*obj.b[0]+obj.b[1]*obj.b[1]+obj.b[2]*obj.b[2]), s2 = Math.abs(obj.b[12]);
 	for(var i=0;i<obj.nprim;i++)	// for each primitive
 	{
-		var scl = s1;
-		var n1 = obj.prim[i][1], n2 = obj.prim[i][2];
-		var n3 = obj.prim[i][3], n4 = obj.prim[i][4];
-		if(obj.pnts[n1][3])	scl = s2;
-		ctx.strokeStyle = obj.prim[i][10];
-		ctx.fillStyle = obj.prim[i][10];
-		ctx.lineWidth = 1;
-		switch(obj.prim[i][0])		// draw it depending on its type
-		{
-		case 0: // marks
-			ctx.lineWidth = obj.prim[i][7]*obj.prim[i][6]*5e-4;
-			mgl_draw_mark(ctx, obj.pp[n1][0], obj.pp[n1][1], n4, obj.prim[i][6]/100, scl);
-			break;
-		case 1: // lines
-			ctx.beginPath();
-			ctx.moveTo(obj.pp[n1][0],obj.pp[n1][1]);
-			ctx.lineTo(obj.pp[n2][0],obj.pp[n2][1]);
-			ctx.lineWidth = obj.prim[i][7]/100;
-			ctx.stroke();	break;
-		case 2: // triangles
-			ctx.beginPath();
-			ctx.moveTo(obj.pp[n1][0],obj.pp[n1][1]);
-			ctx.lineTo(obj.pp[n2][0],obj.pp[n2][1]);
-			ctx.lineTo(obj.pp[n3][0],obj.pp[n3][1]);
-			ctx.closePath();	ctx.fill();	break;
-		case 3: // quadrangles
-			ctx.beginPath();
-			ctx.moveTo(obj.pp[n1][0],obj.pp[n1][1]);
-			ctx.lineTo(obj.pp[n2][0],obj.pp[n2][1]);
-			ctx.lineTo(obj.pp[n4][0],obj.pp[n4][1]);
-			ctx.lineTo(obj.pp[n3][0],obj.pp[n3][1]);
-			ctx.closePath();
-			// NOTE: look as alpha is disabled for lines
-			// So, next code should be only for the case alpha=false
-			if(obj.prim[i][10].charAt(0)=='#')	ctx.stroke();
-			ctx.fill();	break;
-		case 4: // glyphs
-			var t=obj.prim[i][7]*deg/100;
-			var xx=obj.coor[n2][2]/100,yy=-obj.coor[n2][3]/100,zz=obj.coor[n2][4]/100;
-			var xc = obj.b[0]*xx + obj.b[1]*yy + obj.b[2]*zz;
-			var yc = obj.b[3]*xx + obj.b[4]*yy + obj.b[5]*zz;
-//			var zc = obj.b[6]*xx + obj.b[7]*yy + obj.b[8]*zz;
-			var ll = xc*xc+yc*yc;
-			if(ll < 1e-10)	break;
-			if(ll<1e10 && t/deg<1e4)
-			{
-				t = Math.atan2(yc,xc);
-				if(Math.abs(t)>Math.PI/2)	t += Math.PI;
-			}
-			else t=0;
-			var c=Math.cos(t), s=Math.sin(t), d=obj.prim[i][6]/200;
-
-			var b=[d*c, d*s, d*s, -d*c, obj.pp[n1][0],obj.pp[n1][1]];
-			var x=obj.coor[n2][0]*scl/100, y=obj.coor[n2][1]*scl/100, f=obj.prim[i][8]*scl/1e5;
-			if(n3&8)
-			{
-				if(!(n3&4))	mgl_line_glyph(ctx, x,y, f,1,b);
-				else	mgl_line_glyph(ctx, x,y, f,0,b);
-			}
-			else
-			{
-				if(!(n3&4)) mgl_fill_glyph(ctx, x,y, f,obj.glfs[n4],b);
-				else	mgl_wire_glyph(ctx, x,y, f,obj.glfs[n4],b);
-			}
-			break;
-		}
+		var prim = obj.prim[i];
+		var scl = s1*this.__mgl_pf(obj, prim[9]);
+		if(obj.pnts[prim[1]][3])	scl = s2;
+		this.__mgl_draw_prim(obj,ctx,prim,scl);
 	}
 	obj.good = 0;
+}
+
+/** perform high-quality drawing */
+var mgl_draw_prim = function(obj, ctx, prim, scl)
+{
+	var n1 = prim[1], n2 = prim[2];
+	var n3 = prim[3], n4 = prim[4];
+	var pp = obj.pp;
+	var deg = Math.PI/180;  //0.017453293;
+
+	ctx.strokeStyle = prim[10];
+	ctx.fillStyle = prim[10];
+	ctx.lineWidth = 1;
+	switch(obj.prim[i][0])		// draw it depending on its type
+	{
+	case 0: // marks
+		ctx.lineWidth = obj.prim[i][7]*obj.prim[i][6]*5e-4;
+		mgl_draw_mark(ctx, obj.pp[n1][0], obj.pp[n1][1], n4, obj.prim[i][6]/100, scl);
+		break;
+	case 1: // lines
+		ctx.beginPath();
+		ctx.moveTo(obj.pp[n1][0],obj.pp[n1][1]);
+		ctx.lineTo(obj.pp[n2][0],obj.pp[n2][1]);
+		ctx.lineWidth = obj.prim[i][7]/100;
+		ctx.stroke();	break;
+	case 2: // triangles
+		ctx.beginPath();
+		ctx.moveTo(obj.pp[n1][0],obj.pp[n1][1]);
+		ctx.lineTo(obj.pp[n2][0],obj.pp[n2][1]);
+		ctx.lineTo(obj.pp[n3][0],obj.pp[n3][1]);
+		ctx.closePath();	ctx.fill();	break;
+	case 3: // quadrangles
+		ctx.beginPath();
+		ctx.moveTo(obj.pp[n1][0],obj.pp[n1][1]);
+		ctx.lineTo(obj.pp[n2][0],obj.pp[n2][1]);
+		ctx.lineTo(obj.pp[n4][0],obj.pp[n4][1]);
+		ctx.lineTo(obj.pp[n3][0],obj.pp[n3][1]);
+		ctx.closePath();
+		// NOTE: look as alpha is disabled for lines
+		// So, next code should be only for the case alpha=false
+		if(obj.prim[i][10].charAt(0)=='#')	ctx.stroke();
+		ctx.fill();	break;
+	case 4: // glyphs
+		var t=obj.prim[i][7]*deg/100;
+		var xx=obj.coor[n2][2]/100,yy=-obj.coor[n2][3]/100,zz=obj.coor[n2][4]/100;
+		var xc = obj.b[0]*xx + obj.b[1]*yy + obj.b[2]*zz;
+		var yc = obj.b[3]*xx + obj.b[4]*yy + obj.b[5]*zz;
+//			var zc = obj.b[6]*xx + obj.b[7]*yy + obj.b[8]*zz;
+		var ll = xc*xc+yc*yc;
+		if(ll < 1e-10)	break;
+		if(ll<1e10 && t/deg<1e4)
+		{
+			t = Math.atan2(yc,xc);
+			if(Math.abs(t)>Math.PI/2)	t += Math.PI;
+		}
+		else t=0;
+		var c=Math.cos(t), s=Math.sin(t), d=obj.prim[i][6]/200;
+
+		var b=[d*c, d*s, d*s, -d*c, obj.pp[n1][0],obj.pp[n1][1]];
+		var x=obj.coor[n2][0]*scl/100, y=obj.coor[n2][1]*scl/100, f=obj.prim[i][8]*scl/1e5;
+		if(n3&8)
+		{
+			if(!(n3&4))	mgl_line_glyph(ctx, x,y, f,1,b);
+			else	mgl_line_glyph(ctx, x,y, f,0,b);
+		}
+		else
+		{
+			if(!(n3&4)) mgl_fill_glyph(ctx, x,y, f,obj.glfs[n4],b);
+			else	mgl_wire_glyph(ctx, x,y, f,obj.glfs[n4],b);
+		}
+		break;
+	}
 }
 
 // This function change coordinates according current transformations

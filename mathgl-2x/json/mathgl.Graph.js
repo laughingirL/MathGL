@@ -199,8 +199,7 @@ mathgl.Graph.prototype.__drawMesh = function(isPrecise) {
 			dy*m.e(1,2),	dy*m.e(2,2),	dy*m.e(3,2),
 			m.e(1,3),		m.e(2,3),		m.e(3,3),
 			w/2,			h/2,			obj.depth/2,
-			dx,				dy,				1];
-
+			dx,				dy,				1];	// TODO change this line for aspect + dubl previous
 	this.__drawBackground();
 
 	if (!isPrecise) {
@@ -306,6 +305,7 @@ mathgl.Graph.prototype.__mgl_draw_prim = function(obj, ctx, prim, scl) {
 		}
 		else t=0;
 		var c=Math.cos(t), s=Math.sin(t), d=prim[6]/200;
+		if(obj.pnts[n1][3]<0)	{c=1;	s=0;}
 
 		var b=[d*c, d*s, d*s, -d*c, pp[n1][0],pp[n1][1]];
 		var x=obj.coor[n2][0]*scl/100, y=obj.coor[n2][1]*scl/100, f=prim[8]*scl/1e5;
