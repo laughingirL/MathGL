@@ -1200,42 +1200,6 @@ public:
 //	inline void TextureColor(bool){}	// NOTE: Add later -- IDTF
 };
 //-----------------------------------------------------------------------------
-#ifndef SWIG
-/// Structure for handling named mglData (used by mglParse class).
-class MGL_EXPORT mglVar : public mglData
-{
-public:
-	std::wstring s;	///< Data name
-	void *o; 		///< Pointer to external object
-	mglVar *next;	///< Pointer to next instance in list
-	mglVar *prev;	///< Pointer to previous instance in list
-	bool temp;		///< This is temporary variable
-	void (*func)(void *);	///< Callback function for destroying
-
-	mglVar():mglData()	{	o=0;	next=prev=0;	func=0;	temp=false;	}
-	virtual ~mglVar()
-	{
-		if(func)	func(o);
-		if(prev)	prev->next = next;
-		if(next)	next->prev = prev;
-	}
-	/// Move variable after var and copy func from var (if func is 0)
-	void MoveAfter(mglVar *var)
-	{
-		if(prev)	prev->next = next;
-		if(next)	next->prev = prev;
-		prev = next = 0;
-		if(var)
-		{
-			prev = var;	next = var->next;
-			var->next = this;
-			if(func==0)	func = var->func;
-		}
-		if(next)	next->prev = this;
-	}
-};
-#endif
-//-----------------------------------------------------------------------------
 /// Wrapper class for MGL parsing
 class MGL_EXPORT mglParse
 {

@@ -19,9 +19,10 @@ mathgl.Graph = function(canvas, backend) {
 	this.__draftFinishedTimestamp = new Date();
 	this.__backgroundFillStyle = '#EEEEFF';
 	this.__preciseRenderingDelay = 700;
-	// TODO add setters/getters
+
 	this.__maxDraftPoints = 9000;
-	this.__fov = 0;
+	this.__asp_scl=0;	// inertia of aspect scaling
+	this.__fov = 0;		// perspective
 	this.__x1 = 0;	this.__y1 = 0;	this.__z1 = 0;
 	this.__x2 = 1;	this.__y2 = 1;	this.__z2 = 1;
 }
@@ -191,15 +192,24 @@ mathgl.Graph.prototype.__drawMesh = function(isPrecise) {
 //	var vvv = $M([[1,0,0,1]]);
 	var obj = this.__geometry;
 	var h = this.__canvas.height;
-	var dy = h / obj.height;
+	var fy = h / obj.height;
 	var w = this.__canvas.width;
-	var dx = w / obj.width;
+	var fx = w / obj.width;
+//	var df=dx<dy?dx:dy;
+	var dx, dy;
+	if(fx<fy)	{	dx=fx;	dy=fx+(fy-fx)*this.__asp_scl;	}
+	else		{	dy=fy;	dx=fy+(fx-fy)*this.__asp_scl;	}
 	obj.pf = -m.e(4,3);
 	obj.b = [dx*m.e(1,1),	dx*m.e(2,1),	dx*m.e(3,1),
 			dy*m.e(1,2),	dy*m.e(2,2),	dy*m.e(3,2),
 			m.e(1,3),		m.e(2,3),		m.e(3,3),
 			w/2,			h/2,			obj.depth/2,
-			dx,				dy,				1];	// TODO change this line for aspect + dubl previous
+			fx,				fy,				1];
+/*	obj.b = [dx*m.e(1,1),	dx*m.e(2,1),	dx*m.e(3,1),
+			dy*m.e(1,2),	dy*m.e(2,2),	dy*m.e(3,2),
+			m.e(1,3),		m.e(2,3),		m.e(3,3),
+			w/2,			h/2,			obj.depth/2,
+			dx,				dy,				1];	*/
 	this.__drawBackground();
 
 	if (!isPrecise) {
@@ -296,6 +306,7 @@ mathgl.Graph.prototype.__mgl_draw_prim = function(obj, ctx, prim, scl) {
 		var xc = obj.b[0]*xx + obj.b[1]*yy + obj.b[2]*zz;
 		var yc = obj.b[3]*xx + obj.b[4]*yy + obj.b[5]*zz;
 //		var zc = obj.b[6]*xx + obj.b[7]*yy + obj.b[8]*zz;
+		if(obj.pnts[n1][3]<0)	{	xc=xx;	yc=yy;	}
 		var ll = xc*xc+yc*yc;
 		if(ll < 1e-10)	break;
 		if(ll<1e10 && t/deg<1e4)
@@ -305,7 +316,6 @@ mathgl.Graph.prototype.__mgl_draw_prim = function(obj, ctx, prim, scl) {
 		}
 		else t=0;
 		var c=Math.cos(t), s=Math.sin(t), d=prim[6]/200;
-		if(obj.pnts[n1][3]<0)	{c=1;	s=0;}
 
 		var b=[d*c, d*s, d*s, -d*c, pp[n1][0],pp[n1][1]];
 		var x=obj.coor[n2][0]*scl/100, y=obj.coor[n2][1]*scl/100, f=prim[8]*scl/1e5;
@@ -630,4 +640,9 @@ mathgl.Graph.prototype.toDataURL = function(type) {
 /** Set perspective angle of view: @param val - degree of perspective in range 0...1 (0 - use default orthogonal projection)  */ 
 mathgl.Graph.prototype.setPerspective = function(val) {
 	this.__fov = val; 
-} 
+}
+
+/** Set maximal number of drawable points in draft mode */ 
+mathgl.Graph.prototype.setMaxDraftPoints = function(val) {
+	this.__maxDraftPoints = val; 
+}
