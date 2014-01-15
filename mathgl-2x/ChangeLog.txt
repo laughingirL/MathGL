@@ -3,13 +3,14 @@
 * Add Qt5 support.
 * Add function AddRange(char dir, mreal v1, mreal v2) and extend corresponding MGL commands '[xyzc]range'.
 * Add 'hypot' function for known functions in formula parsing.
+* Add style '~' to disable colorbar or axis labels. NOTE, axis style '_' is obsolete and should be replaced by '~'.
 * Change Aspect() if Ax=NAN. Now, Ay and Az set the ratio to optimal aspect (not exact value as previously).
 * Disable changes by View(),Zoom(),Perspective() for position of Title(), Legend(), Colorbar().
 * Partial support of perspective in CalcXYZ().
 * Speed up PDE solving.
 * Add complex versions of PDE, QO2d, QO3d.
+* Correct filled background for Box() in curved coordinates.
 * Allow nx=1 for Stem and Error.
-* Allow to disable colorbar labels.
 * Bugfix for drawing single axis.
 * Bugfix for missing options parsing for some of MGL commands.
 * Bugfix for .pmin suffix in MGL. Add mglData::MaximalNeg() and mglData::MinimalPos() functions. Add .nmin and .nmax suffixes.

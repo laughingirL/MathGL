@@ -36,7 +36,11 @@ MGL_NO_EXPORT inline struct tm *mgl_localtime (const time_t *clock, tm *result, 
 long MGL_EXPORT mgl_have_color(const char *stl)
 {
 	register long i,j=0;
-	if(stl)	for(i=0;stl[i];i++)	if(strchr(MGL_COLORS,stl[i]))	j++;
+	if(stl)	for(i=0;stl[i];i++)
+	{
+		if(strchr(MGL_COLORS,stl[i]))	j++;
+		if(stl[i]=='{' && stl[i+1]=='x')	j++;
+	}
 	return j;
 }
 //-----------------------------------------------------------------------------
@@ -455,7 +459,7 @@ void mglCanvas::LabelTicks(mglAxis &aa)
 //-----------------------------------------------------------------------------
 void mglCanvas::Axis(const char *dir, const char *stl, const char *opt)
 {
-	bool text = !mglchr(dir,'_');
+	bool text = !(mglchr(dir,'_') || mglchr(dir,'~'));
 	bool inv = mglchr(dir,'^');
 	bool adjust = mglchr(stl,'a');
 	bool ret = get(MGL_ENABLE_RTEXT);
@@ -839,7 +843,7 @@ void mglCanvas::Box(const char *col, bool ticks)
 		Org.z=Min.z;	Axis("xy_",col);
 		Org.x=Min.x;	DrawAxis(az,0,0,col);
 		Org.x=Max.x;	Org.y=Min.y;	DrawAxis(az,0,0,col);
-		if(col && strchr(col,'@'))
+		if(mglchr(col,'@'))
 		{
 			// edge points
 			mglPoint p[8]={Min,Min,Min,Min,Max,Max,Max,Max},nan=mglPoint(NAN),oo[8];
@@ -853,16 +857,38 @@ void mglCanvas::Box(const char *col, bool ticks)
 				if(p[i].z<zm)	{	zm=p[i].z;	im=i;	}
 			}
 			// now draw faces
-			char color[5]="{y9}";
-			register int i;	// first color used for faces, last one for edges
-			for(i=0;col[i];i++)	if(strchr(MGL_COLORS,col[i]))
+			char color[10]="{y9}";
+			for(int i=0;col[i];i++)
 			{
-				if(i>1 && col[i-1]=='{')	{	color[1]=col[i];	color[2]=col[i+1];	break;	}
-				else	{	color[0]=col[i];	color[1]=0;	break;	}
+				if(col[i]=='{' && col[i+1]=='x')
+				{	memcpy(color,col+i,9);	color[9]=0;	break;	}
+				if(strchr(MGL_COLORS,col[i]))
+				{
+					if(i>1 && col[i-1]=='{')	{	color[1]=col[i];	color[2]=col[i+1];	break;	}
+					else	{	color[0]=col[i];	color[1]=0;	break;	}
+				}
 			}
-			mgl_facex(this, oo[im].x, Min.y, Min.z, Max.y-Min.y, Max.z-Min.z, color,0,0);
-			mgl_facey(this, Min.x, oo[im].y, Min.z, Max.x-Min.x, Max.z-Min.z, color,0,0);
-			mgl_facez(this, Min.x, Min.y, oo[im].z, Max.x-Min.x, Max.y-Min.y, color,0,0);
+			long *pos = new long[3*31*31];
+			SetPenPal(color);
+			mreal dx = (Max.x-Min.x)/30, dy = (Max.y-Min.y)/30, dz = (Max.z-Min.z)/30;
+			for(long i=0;i<31;i++)	for(long j=0;j<31;j++)
+			{
+				register long i0=3*(i+31*j);
+				pos[i0]   = AddPnt(mglPoint(oo[im].x,Min.y+dy*i,Min.z+dz*j));
+				pos[i0+1] = AddPnt(mglPoint(Min.x+dx*i,oo[im].y,Min.z+dz*j));
+				pos[i0+2] = AddPnt(mglPoint(Min.x+dx*i,Min.y+dy*j,oo[im].z));
+			}
+			for(long i=0;i<30;i++)	for(long j=0;j<30;j++)
+			{
+				register long i0=3*(i+31*j);
+				quad_plot(pos[i0],pos[i0+3],pos[i0+93],pos[i0+96]);
+				quad_plot(pos[i0+1],pos[i0+4],pos[i0+94],pos[i0+97]);
+				quad_plot(pos[i0+2],pos[i0+5],pos[i0+95],pos[i0+98]);
+			}
+			delete []pos;
+// 			mgl_facex(this, oo[im].x, Min.y, Min.z, Max.y-Min.y, Max.z-Min.z, color,0,0);
+// 			mgl_facey(this, Min.x, oo[im].y, Min.z, Max.x-Min.x, Max.z-Min.z, color,0,0);
+// 			mgl_facez(this, Min.x, Min.y, oo[im].z, Max.x-Min.x, Max.y-Min.y, color,0,0);
 		}
 	}
 	EndGroup();
@@ -884,7 +910,7 @@ void mglCanvas::Colorbar(const char *sch)
 void mglCanvas::Colorbar(const char *sch, mreal x, mreal y, mreal w, mreal h)
 {
 	bool in = mglchr(sch,'I');
-	bool text = !mglchr(sch,'_');
+	bool text = !mglchr(sch,'~');
 	int where = 0;		// ‘0’ - right, ‘1’ - left, ‘2’ - above, ‘3’ - under
 	if(mglchr(sch,'>'))	where = in?1:0;
 	if(mglchr(sch,'<'))	where = in?0:1;
@@ -921,7 +947,7 @@ void mglCanvas::Colorbar(HCDT v, const char *sch)
 void mglCanvas::Colorbar(HCDT v, const char *sch, mreal x, mreal y, mreal w, mreal h)
 {
 	bool in = mglchr(sch,'I');
-	bool text = !mglchr(sch,'_');
+	bool text = !mglchr(sch,'~');
 	int where = 0;
 	if(mglchr(sch,'>'))	where = in?1:0;
 	if(mglchr(sch,'<'))	where = in?0:1;

@@ -559,18 +559,31 @@ public:
 	bool temp;		///< This is temporary variable
 	void (*func)(void *);	///< Callback function for destroying
 
-	mglVar():mglData()
-	{	o=0;	next=prev=0;	func=0;	temp=false;	}
-	mglVar(mglVar **head):mglData()
-	{	o=0;	next=*head;	prev=0;	*head=this;	func=0;	temp=false;	}
+	mglVar(std::wstring name=L""):mglData()
+	{	o=0;	next=prev=0;	func=0;	temp=false;	s=name;	}
+	mglVar(mglVar **head, std::wstring name=L""):mglData()
+	{	o=0;	next=*head;	prev=0;	*head=this;	func=0;	temp=false;	s=name;	}
+	mglVar(mglVar **head, const mglData &dat, std::wstring name):mglData(dat)
+	{	o=0;	next=*head;	prev=0;	*head=this;	func=0;	temp=false;	s=name;	}
+	mglVar(mglVar **head, HCDT dat, std::wstring name):mglData(dat)
+	{	o=0;	next=*head;	prev=0;	*head=this;	func=0;	temp=false;	s=name;	}
+	mglVar(mglVar *v, std::wstring name, bool link=true):mglData()	// NOTE: use carefully due to Link()!
+	{	if(!v)	throw mglWarnZero;
+		if(link)	Link(*v);	else	Set(*v);
+		o=0;	temp=false;	s=name;	func = v->func;
+		prev = v;	next = v->next;	v->next = this;
+		if(next)	next->prev = this;	}
 	virtual ~mglVar()
 	{
 		if(func)	func(o);
 		if(prev)	prev->next = next;
 		if(next)	next->prev = prev;
 	}
+	/// Make copy which link on the same data but have different name. NOTE: use carefully due to Link()!
+	inline void Duplicate(std::wstring name)
+	{	mglVar *v=new mglVar(name);	v->Link(*this);	v->MoveAfter(this);	}
 	/// Move variable after var and copy func from var (if func is 0)
-	void MoveAfter(mglVar *var)
+	inline void MoveAfter(mglVar *var)
 	{
 		if(prev)	prev->next = next;
 		if(next)	next->prev = prev;
