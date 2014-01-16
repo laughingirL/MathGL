@@ -16,13 +16,13 @@ install(
 
 if(MGL_HAVE_QT4 OR MGL_HAVE_QT5)
 	add_executable(mglview mglview.cpp)
-	if(MGL_HAVE_QT4)
-		include(${QT_USE_FILE})
-		target_link_libraries(mglview mgl-qt)
-	else(MGL_HAVE_QT4)
+	if(MGL_HAVE_QT5)
 		target_link_libraries(mglview mgl-qt5)
 		qt5_use_modules(mglview Core Widgets Gui Network WebKit PrintSupport)
-	endif(MGL_HAVE_QT4)
+	else(MGL_HAVE_QT5)
+		include(${QT_USE_FILE})
+		target_link_libraries(mglview mgl-qt)
+	endif(MGL_HAVE_QT5)
 	install(
 		TARGETS mglview
 		RUNTIME DESTINATION bin
