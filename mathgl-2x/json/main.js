@@ -29,7 +29,7 @@ var makeSampleScript = function() {
 	mgl += "facenum 50:";
 	mgl += "origin 0 0 0:axis :xlabel 'x':ylabel 'y':zlabel 'z':"
 	mgl += "box:fplot 'sin(x^2)'\n";   // This is just for testing zoomaxis features
-	mgl += "fplot 'sin(2*pi*t)' '2*t-1' 'cos(2*pi*t)' 'm2o':";
+	mgl += "fplot 'sin(2*pi*t)' '2*t-1' 'cos(2*pi*t)' 'm2o':fsurf 'sin(pi*x*y)':";
 	mgl += "text 0 0 'aaa'";
 	return mgl;
 }

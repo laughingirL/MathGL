@@ -1284,53 +1284,5 @@ public:
 	void DeleteAll()	{	mgl_parser_del_all(pr);	}
 };
 //-----------------------------------------------------------------------------
-/// Wrapper class expression evaluating
-class MGL_EXPORT mglExpr
-{
-	HMEX ex;
-public:
-	mglExpr(const char *expr)		{	ex = mgl_create_expr(expr);	}
-	~mglExpr()	{	mgl_delete_expr(ex);	}
-	/// Return value of expression for given x,y,z variables
-	inline double Eval(double x, double y=0, double z=0)
-	{	return mgl_expr_eval(ex,x,y,z);	}
-	/// Return value of expression differentiation over variable dir for given x,y,z variables
-	inline double Diff(char dir, double x, double y=0, double z=0)
-	{	return mgl_expr_diff(ex,dir, x,y,z);	}
-#ifndef SWIG
-	/// Return value of expression for given variables
-	inline double Eval(mreal var[26])
-	{	return mgl_expr_eval_v(ex,var);	}
-	/// Return value of expression differentiation over variable dir for given variables
-	inline double Diff(char dir, mreal var[26])
-	{	return mgl_expr_diff_v(ex,dir, var);	}
-#endif
-};
-//-----------------------------------------------------------------------------
-#ifndef SWIG
-/// Wrapper class expression evaluating
-class MGL_EXPORT mglExprC
-{
-	HAEX ex;
-public:
-	mglExprC(const char *expr)		{	ex = mgl_create_cexpr(expr);	}
-	~mglExprC()	{	mgl_delete_cexpr(ex);	}
-	/// Return value of expression for given x,y,z variables
-	inline dual Eval(dual x, dual y=0, dual z=0)
-	{	return mgl_cexpr_eval(ex,x,y,z);	}
-	/// Return value of expression for given x,y,z,u,v,w variables
-	inline dual Eval(dual x, dual y, dual z, dual u, dual v, dual w)
-	{
-		dual var[26];
-		var['x'-'a']=x;	var['y'-'a']=y;	var['z'-'a']=z;
-		var['u'-'a']=u;	var['v'-'a']=v;	var['w'-'a']=w;
-		return mgl_cexpr_eval_v(ex,var);	}
-	/// Return value of expression for given variables
-	inline dual Eval(dual var[26])
-	{	return mgl_cexpr_eval_v(ex,var);	}
-};
-#endif
-//-----------------------------------------------------------------------------
-//-----------------------------------------------------------------------------
 #endif
 #endif

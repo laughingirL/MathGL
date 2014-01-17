@@ -1522,7 +1522,7 @@ You can use arbitrary formulas of existed data arrays or constants as any argume
 @cindex mglExpr
 @cindex mglExprC
 
-MathGL have a special classes @code{mglExpr} and @code{mglExprC} for evaluating of formula specified by the string for real and complex numbers correspondingly. These classes are defined in @code{#include <mgl2/mgl.h>}. It is the fast variant of formula evaluation. At creation it will be recognized and compiled to tree-like internal code. At evaluation stage only fast calculations are performed. There is no difference between lower or upper case in formulas. If argument value lie outside the range of function definition then function returns NaN. @xref{Textual formulas}.
+MathGL have a special classes @code{mglExpr} and @code{mglExprC} for evaluating of formula specified by the string for real and complex numbers correspondingly. These classes are defined in @code{#include <mgl2/data.h>} and @code{#include <mgl2/datac.h>} correspondingly. It is the fast variant of formula evaluation. At creation it will be recognized and compiled to tree-like internal code. At evaluation stage only fast calculations are performed. There is no difference between lower or upper case in formulas. If argument value lie outside the range of function definition then function returns NaN. @xref{Textual formulas}.
 
 @deftypefn {Constructor on @code{mglExpr}} @code{} mglExpr (@code{const char *}expr)
 @deftypefnx {Constructor on @code{mglExprC}} @code{} mglExprC (@code{const char *}expr)

@@ -15,6 +15,7 @@
 * Bugfix for missing options parsing for some of MGL commands.
 * Bugfix for .pmin suffix in MGL. Add mglData::MaximalNeg() and mglData::MinimalPos() functions. Add .nmin and .nmax suffixes.
 * Bugfix for colorbar labels.
+* Force using python 2.7 by default due to bug in Ubuntu. Debian sid works well with python 3.* too.
 * Minor bugfixes and memory leaks.
 
 

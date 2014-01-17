@@ -20,7 +20,7 @@ mathgl.Graph = function(canvas, backend) {
 	this.__backgroundFillStyle = '#EEEEFF';
 	this.__preciseRenderingDelay = 700;
 
-	this.__maxDraftPoints = 9000;
+	this.__maxDraftPoints = 30000;
 	this.__asp_scl=0;	// inertia of aspect scaling
 	this.__fov = 0;		// perspective
 	this.__x1 = 0;	this.__y1 = 0;	this.__z1 = 0;
@@ -228,14 +228,15 @@ mathgl.Graph.prototype.__drawMesh = function(isPrecise) {
 mathgl.Graph.prototype.__mgl_draw_fast = function(obj, ctx, skip) {
 	if(obj.fast==0)	return;
 	this.__mgl_prepare(obj,skip);	// update coordinates
+	var di = 1 + Math.round(obj.nprim / this.__maxDraftPoints);
 	// for each primitive skipping superfluous
-	for(var i=0;i<obj.nprim;i += 1 + Math.round(obj.nprim / this.__maxDraftPoints))
+	for(var i=0;i<obj.nprim;i ++)
 	{
 		var prim = obj.prim[i];
 		var n1 = prim[1], nn = obj.pp[n1];
 		if(prim[0]==1 || obj.pnts[n1][3]<0)
 			this.__mgl_draw_prim(obj,ctx,prim,Math.abs(obj.b[12]));
-		else if(obj.prim[i][0]<4)
+		else if(obj.prim[i][0]<4 && i%di==0)
 		{
 			ctx.fillStyle = obj.prim[i][10];
 			ctx.fillRect(nn[0], nn[1], 2, 2);
@@ -643,6 +644,10 @@ mathgl.Graph.prototype.setPerspective = function(val) {
 }
 
 /** Set maximal number of drawable points in draft mode */ 
-mathgl.Graph.prototype.setMaxDraftPoints = function(val) {
-	this.__maxDraftPoints = val; 
+mathgl.Graph.prototype.setMaxDraftPoints = function(count) {
+	this.__maxDraftPoints = count;
+}
+
+mathgl.Graph.prototype.setPreciseRenderingDelay = function(delayMillisec) {
+	this.__preciseRenderingDelay = delayMillisec;
 }

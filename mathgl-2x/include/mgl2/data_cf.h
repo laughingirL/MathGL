@@ -452,6 +452,24 @@ mreal MGL_EXPORT mgl_find_root_txt_(const char *func, mreal *ini, const char *va
 HMDT MGL_EXPORT mgl_data_roots(const char *func, HCDT ini, char var_id);
 uintptr_t MGL_EXPORT mgl_data_roots_(const char *func, uintptr_t *ini, const char *var_id,int,int);
 
+//-----------------------------------------------------------------------------
+/// Create HMEX object for expression evaluating
+HMEX MGL_EXPORT mgl_create_expr(const char *expr);
+uintptr_t MGL_EXPORT mgl_create_expr_(const char *expr, int);
+/// Delete HMEX object
+void MGL_EXPORT mgl_delete_expr(HMEX ex);
+void MGL_EXPORT mgl_delete_expr_(uintptr_t *ex);
+/// Return value of expression for given x,y,z variables
+double MGL_EXPORT mgl_expr_eval(HMEX ex, double x, double y,double z);
+double MGL_EXPORT mgl_eval_expr_(uintptr_t *ex, mreal *x, mreal *y, mreal *z);
+/// Return value of expression for given variables
+double MGL_EXPORT mgl_expr_eval_v(HMEX ex, mreal *vars);
+/// Return value of expression differentiation over variable dir for given x,y,z variables
+double MGL_EXPORT mgl_expr_diff(HMEX ex, char dir, double x, double y,double z);
+double MGL_EXPORT mgl_diff_expr_(uintptr_t *ex, const char *dir, mreal *x, mreal *y, mreal *z, int);
+/// Return value of expression differentiation over variable dir for given variables
+double MGL_EXPORT mgl_expr_diff_v(HMEX ex, char dir, mreal *vars);
+
 #ifdef __cplusplus
 }
 #endif

@@ -225,6 +225,16 @@ dual MGL_EXPORT mgl_datac_spline_(uintptr_t *dat, mreal *x,mreal *y,mreal *z);
 dual MGL_EXPORT mgl_datac_spline_ext(HCDT dat, mreal x,mreal y,mreal z, dual *dx,dual *dy,dual *dz);
 dual MGL_EXPORT mgl_datac_spline_ext_(uintptr_t *dat, mreal *x,mreal *y,mreal *z, dual *dx,dual *dy,dual *dz);
 
+//-----------------------------------------------------------------------------
+/// Create HAEX object for expression evaluating
+HAEX MGL_EXPORT mgl_create_cexpr(const char *expr);
+/// Delete HAEX object
+void MGL_EXPORT mgl_delete_cexpr(HAEX ex);
+/// Return value of expression for given x,y,z variables
+dual MGL_EXPORT mgl_cexpr_eval(HAEX ex, dual x, dual y,dual z);
+/// Return value of expression for given variables
+dual MGL_EXPORT mgl_cexpr_eval_v(HAEX ex, dual *vars);
+
 #ifdef __cplusplus
 }
 #endif
