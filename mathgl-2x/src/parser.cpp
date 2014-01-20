@@ -698,14 +698,14 @@ int mglParser::Parse(mglGraph *gr, std::wstring str, long pos)
 int mglParser::ParseDat(mglGraph *gr, std::wstring str, mglData &res)
 {
 	std::wstring arg[32];
-	mgl_trim_ws(str);
+	str = mgl_trim_ws(str);
 	long n,k=0;
 	for(k=0;k<32;k++)	// parse string to substrings (by spaces)
 	{
 		n = mglFindArg(str);
 		if(n<1)	{	if(n<0)	str=str.substr(0,-n);	break;	}
 		arg[k] = str.substr(0,n);//	k++;
-		str = str.substr(n+1);	mgl_trim_ws(str);
+		str = str.substr(n+1);	str = mgl_trim_ws(str);
 	}
 	// try to find last argument
 	if(!str.empty())	{	arg[k] = str;	k++;	}
