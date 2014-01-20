@@ -1659,7 +1659,7 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} Axis (@code{const char *}dir=@code{"xyz"}, @code{const char *}stl=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_axis (@code{HMGL} gr, @code{const char *}dir, @code{const char *}stl, @code{const char *}opt)
 @end ifclear
-Рисует оси координат и метки на них (см. @ref{Axis settings}) в направлениях @samp{xyz}, указанных строкой @var{dir}. Заглавные буквы @samp{XYZ} приведут к расположению меток с другой стороны от оси. Если строка содержит символ @samp{_}, то подписи меток отображаться не будут. Если строка содержит символ @samp{^}, то инвертируется положение осей по умолчанию. Если строка содержит символ @samp{AKDTVISO}, то будет нарисована соответствующая стрелка на конце оси. Стиль меток и оси(ей) задается строкой @var{stl}. @sref{Axis and ticks}
+Рисует оси координат и метки на них (см. @ref{Axis settings}) в направлениях @samp{xyz}, указанных строкой @var{dir}. Заглавные буквы @samp{XYZ} приведут к расположению меток с другой стороны от оси. Если строка содержит символ @samp{~} или @samp{_}, то подписи меток отображаться не будут. Если строка содержит символ @samp{^}, то инвертируется положение осей по умолчанию. Если строка содержит символ @samp{AKDTVISO}, то будет нарисована соответствующая стрелка на конце оси. Стиль меток и оси(ей) задается строкой @var{stl}. @sref{Axis and ticks}
 @end deftypefn
 
 @anchor{colorbar}
@@ -1668,7 +1668,7 @@ gr.GetBGRN(bits, len(bits));
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} Colorbar (@code{const char *}sch=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_colorbar (@code{HMGL} gr, @code{const char *}sch)
 @end ifclear
-Рисует полосу соответствия цвета и числовых значений (colorbar) для цветовой схемы @var{sch} (используется текущая для @code{sch=""}) с краю от графика. Если строка @var{sch} содержит @samp{<>^_}, то положение выбирается: @samp{>} -- справа, @samp{<} -- слева, @samp{^} -- сверху, @samp{_} -- снизу. Если строка содержит @samp{A}, то используются абсолютные координаты (относительно рисунка). @sref{Colorbars}
+Рисует полосу соответствия цвета и числовых значений (colorbar) для цветовой схемы @var{sch} (используется текущая для @code{sch=""}) с краю от графика. Если строка @var{sch} содержит @samp{<>^_}, то положение выбирается: @samp{>} -- справа, @samp{<} -- слева, @samp{^} -- сверху, @samp{_} -- снизу. Если строка содержит @samp{A}, то используются абсолютные координаты (относительно рисунка). Если строка содержит @samp{~}, то подписи меток не рисуются. @sref{Colorbars}
 @end deftypefn
 
 @deftypefn {Команда MGL} {} colorbar vdat ['sch'='']

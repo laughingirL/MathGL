@@ -1736,7 +1736,7 @@ Draws axes with ticks (see @ref{Axis settings}). Parameter @var{dir} may contain
 @item
 @samp{XYZ} for drawing axis in corresponding direction but with inverted positions of labels;
 @item
-@samp{_} for disabling tick labels;
+@samp{~} or @samp{_} for disabling tick labels;
 @item
 @samp{U} for disabling rotation of tick labels;
 @item
@@ -1764,7 +1764,9 @@ color scheme (see @ref{Color scheme});
 @item
 @samp{I} for positioning near bounding (by default, is positioned at edges of subplot);
 @item
-@samp{A} for using absolute coordinates.
+@samp{A} for using absolute coordinates;
+@item
+@samp{~} for disabling tick labels.
 @end itemize
 @sref{Colorbars}
 @end deftypefn

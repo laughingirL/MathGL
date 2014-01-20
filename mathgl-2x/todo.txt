@@ -24,10 +24,7 @@
 17. 'perspective' command in UDAV
 18. Check octave 3.8
 19. Check mathgl.js
-21. Use mglFormulaCalc() for data transformation/filling (much faster but require more memory) + mglFormulaCalcD
-
-22. Text about '~' disable labels + '_' is obsolete for axis
-
+21. Use mglFormulaCalc() for data transformation/filling (much faster but require more memory) + the same for complex
 
 
 ============= DOCUMENTATION =============

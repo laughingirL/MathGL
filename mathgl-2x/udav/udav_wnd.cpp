@@ -473,7 +473,7 @@ void MainWindow::warnChanged()
 void MainWindow::about()
 {
 	QString s = tr("UDAV v. 2.")+QString::number(MGL_VER2)+
-				tr("\n(c) Alexey Balakin, 2008-2012\nhttp://mathgl.sf.net/");
+				tr("\n(c) Alexey Balakin, 2007-2014\nhttp://mathgl.sf.net/");
 	QMessageBox::about(this, tr("UDAV - about"), s);
 }
 //-----------------------------------------------------------------------------

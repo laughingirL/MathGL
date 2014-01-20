@@ -1,6 +1,6 @@
 /***************************************************************************
  * pixel.cpp is part of Math Graphic Library
- * Copyright (C) 2007-2012 Alexey Balakin <mathgl.abalakin@gmail.ru>       *
+ * Copyright (C) 2007-2014 Alexey Balakin <mathgl.abalakin@gmail.ru>       *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU Library General Public License as       *
@@ -134,7 +134,7 @@ mglPoint mglCanvas::RestorePnt(mglPoint ps, bool norm) const
 	if(ps.z==ps.z)	// try to take into account perspective if z-value is provided
 	{
 		register float d = (1-Bp.pf)/(1-Bp.pf*ps.z/Depth);
-		ps.x = Width/2 + (ps.z-Width/2)/d;
+		ps.x = Width/2 + (ps.x-Width/2)/d;
 		ps.y = Height/2+ (ps.y-Height/2)/d;
 	}
 	mreal xx = ps.x-cx, yy = ps.y-cy, zz = ps.z-cz;
