@@ -1,57 +1,38 @@
 include(GenerateExportHeader)
 add_compiler_export_flags()
 
+function(libmglqt mglqt)
+	add_library(mgl-${mglqt} SHARED ${MGL_QT_FILES})
+	add_library(mgl-${mglqt}-static STATIC ${MGL_QT_FILES})
+	set_target_properties(mgl-${mglqt} PROPERTIES SOVERSION ${MathGL_SOVERSION})
+	set_target_properties(mgl-${mglqt} PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+	set_target_properties(mgl-${mglqt} PROPERTIES DEFINE_SYMBOL "mgl_EXPORTS")
+	set_target_properties(mgl-${mglqt}-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+	set_target_properties(mgl-${mglqt}-static PROPERTIES COMPILE_FLAGS -DMGL_STATIC_DEFINE)
+	target_link_libraries(mgl-${mglqt} mgl)
+	qt5_use_modules(mgl-${mglqt} Core Widgets Gui Network WebKit PrintSupport)
+	qt5_use_modules(mgl-${mglqt}-static Core Widgets Gui Network WebKit PrintSupport)
+	if(enable-mgl2)
+		set_target_properties(mgl-${mglqt} PROPERTIES OUTPUT_NAME "mgl2-${mglqt}")
+		set_target_properties(mgl-${mglqt}-static PROPERTIES OUTPUT_NAME "mgl2-${mglqt}")
+	else(enable-mgl2)
+		set_target_properties(mgl-${mglqt}-static PROPERTIES OUTPUT_NAME "mgl-${mglqt}")
+	endif(enable-mgl2)
+	install(
+		TARGETS mgl-${mglqt} mgl-${mglqt}-static
+		RUNTIME DESTINATION bin
+		ARCHIVE DESTINATION ${MGL_LIB_INSTALL_DIR}
+		LIBRARY DESTINATION ${MGL_LIB_INSTALL_DIR}
+	)
+endfunction(libmglqt mglqt)
+
 if(enable-qt5)
 	include(../../cmake-qt5.txt)
 	qt5_wrap_cpp(MGL_MOC_FILES ${MathGL_SOURCE_DIR}/include/mgl2/qmathgl.h)
 	set(MGL_QT_FILES ../qt.cpp ${MGL_MOC_FILES} ${MathGL_SOURCE_DIR}/include/mgl2/qt.h ${MathGL_SOURCE_DIR}/include/mgl2/qmathgl.h)
-	add_library(mgl-qt5 SHARED ${MGL_QT_FILES})
-	add_library(mgl-qt5-static STATIC ${MGL_QT_FILES})
-	set_target_properties(mgl-qt5 PROPERTIES SOVERSION ${MathGL_SOVERSION})
-	set_target_properties(mgl-qt5 PROPERTIES CLEAN_DIRECT_OUTPUT 1)
-	set_target_properties(mgl-qt5 PROPERTIES DEFINE_SYMBOL "mgl_EXPORTS")
-	set_target_properties(mgl-qt5-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
-	set_target_properties(mgl-qt5-static PROPERTIES COMPILE_FLAGS -DMGL_STATIC_DEFINE)
-	target_link_libraries(mgl-qt5 mgl)
-	qt5_use_modules(mgl-qt5 Core Widgets Gui Network WebKit PrintSupport)
-	qt5_use_modules(mgl-qt5-static Core Widgets Gui Network WebKit PrintSupport)
-	if(enable-mgl2)
-		set_target_properties(mgl-qt5 PROPERTIES OUTPUT_NAME "mgl2-qt5")
-		set_target_properties(mgl-qt5-static PROPERTIES OUTPUT_NAME "mgl2-qt5")
-	else(enable-mgl2)
-		set_target_properties(mgl-qt5-static PROPERTIES OUTPUT_NAME "mgl-qt5")
-	endif(enable-mgl2)
-
-	install(
-		TARGETS mgl-qt5 mgl-qt5-static
-		RUNTIME DESTINATION bin
-		ARCHIVE DESTINATION ${MGL_LIB_INSTALL_DIR}
-		LIBRARY DESTINATION ${MGL_LIB_INSTALL_DIR}
-	)
+	libmglqt(qt5)
 	if(enable-qt5asqt)
-	add_library(mgl-qt SHARED ${MGL_QT_FILES})
-	add_library(mgl-qt-static STATIC ${MGL_QT_FILES})
-	set_target_properties(mgl-qt PROPERTIES SOVERSION ${MathGL_SOVERSION})
-	set_target_properties(mgl-qt PROPERTIES CLEAN_DIRECT_OUTPUT 1)
-	set_target_properties(mgl-qt PROPERTIES DEFINE_SYMBOL "mgl_EXPORTS")
-	set_target_properties(mgl-qt-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
-	set_target_properties(mgl-qt-static PROPERTIES COMPILE_FLAGS -DMGL_STATIC_DEFINE)
-	target_link_libraries(mgl-qt mgl)
-	qt5_use_modules(mgl-qt Core Widgets Gui Network WebKit PrintSupport)
-	qt5_use_modules(mgl-qt-static Core Widgets Gui Network WebKit PrintSupport)
-	if(enable-mgl2)
-		set_target_properties(mgl-qt PROPERTIES OUTPUT_NAME "mgl2-qt")
-		set_target_properties(mgl-qt-static PROPERTIES OUTPUT_NAME "mgl2-qt")
-	else(enable-mgl2)
-		set_target_properties(mgl-qt-static PROPERTIES OUTPUT_NAME "mgl-qt")
-	endif(enable-mgl2)
-
-	install(
-		TARGETS mgl-qt mgl-qt-static
-		RUNTIME DESTINATION bin
-		ARCHIVE DESTINATION ${MGL_LIB_INSTALL_DIR}
-		LIBRARY DESTINATION ${MGL_LIB_INSTALL_DIR}
-	)
+		libmglqt(qt)
 	endif(enable-qt5asqt)
 
 	if(MGL_HAVE_FLTK)

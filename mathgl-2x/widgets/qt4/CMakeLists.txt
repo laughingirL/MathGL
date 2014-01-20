@@ -1,58 +1,38 @@
 include(GenerateExportHeader)
 add_compiler_export_flags()
+function(libmglqt mglqt)
+	add_library(mgl-${mglqt} SHARED ${MGL_QT_FILES})
+	add_library(mgl-${mglqt}-static STATIC ${MGL_QT_FILES})
+	set_target_properties(mgl-${mglqt} PROPERTIES SOVERSION ${MathGL_SOVERSION})
+	set_target_properties(mgl-${mglqt} PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+	set_target_properties(mgl-${mglqt} PROPERTIES DEFINE_SYMBOL "mgl_EXPORTS")
+	set_target_properties(mgl-${mglqt}-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+	set_target_properties(mgl-${mglqt}-static PROPERTIES COMPILE_FLAGS -DMGL_STATIC_DEFINE)
+	target_link_libraries(mgl-${mglqt} mgl)
+	target_link_libraries(mgl-${mglqt} ${QT_LIBRARIES})
+
+	if(enable-mgl2)
+		set_target_properties(mgl-${mglqt} PROPERTIES OUTPUT_NAME "mgl2-${mglqt}")
+		set_target_properties(mgl-${mglqt}-static PROPERTIES OUTPUT_NAME "mgl2-${mglqt}")
+	else(enable-mgl2)
+		set_target_properties(mgl-${mglqt}-static PROPERTIES OUTPUT_NAME "mgl-${mglqt}")
+	endif(enable-mgl2)
+
+	install(
+		TARGETS mgl-${mglqt} mgl-${mglqt}-static
+		RUNTIME DESTINATION bin
+		ARCHIVE DESTINATION ${MGL_LIB_INSTALL_DIR}
+		LIBRARY DESTINATION ${MGL_LIB_INSTALL_DIR}
+	)
+endfunction(libmglqt mglqt)
 
 if(enable-qt4)
 	include(../../cmake-qt4.txt)
 	qt4_wrap_cpp(MGL_MOC_FILES ${MathGL_SOURCE_DIR}/include/mgl2/qmathgl.h)
 	set(MGL_QT_FILES ../qt.cpp ${MGL_MOC_FILES} ${MathGL_SOURCE_DIR}/include/mgl2/qt.h ${MathGL_SOURCE_DIR}/include/mgl2/qmathgl.h)
-	add_library(mgl-qt4 SHARED ${MGL_QT_FILES})
-	add_library(mgl-qt4-static STATIC ${MGL_QT_FILES})
-	set_target_properties(mgl-qt4 PROPERTIES SOVERSION ${MathGL_SOVERSION})
-	set_target_properties(mgl-qt4 PROPERTIES CLEAN_DIRECT_OUTPUT 1)
-	set_target_properties(mgl-qt4 PROPERTIES DEFINE_SYMBOL "mgl_EXPORTS")
-	set_target_properties(mgl-qt4-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
-	set_target_properties(mgl-qt4-static PROPERTIES COMPILE_FLAGS -DMGL_STATIC_DEFINE)
-	target_link_libraries(mgl-qt4 mgl)
-	target_link_libraries(mgl-qt4 ${QT_LIBRARIES})
-
-	if(enable-mgl2)
-		set_target_properties(mgl-qt4 PROPERTIES OUTPUT_NAME "mgl2-qt4")
-		set_target_properties(mgl-qt4-static PROPERTIES OUTPUT_NAME "mgl2-qt4")
-	else(enable-mgl2)
-		set_target_properties(mgl-qt4-static PROPERTIES OUTPUT_NAME "mgl-qt4")
-	endif(enable-mgl2)
-
-	install(
-		TARGETS mgl-qt4 mgl-qt4-static
-		RUNTIME DESTINATION bin
-		ARCHIVE DESTINATION ${MGL_LIB_INSTALL_DIR}
-		LIBRARY DESTINATION ${MGL_LIB_INSTALL_DIR}
-	)
-
+	libmglqt(qt4)
 	if(NOT enable-qt5asqt)
-	add_library(mgl-qt SHARED ${MGL_QT_FILES})
-	add_library(mgl-qt-static STATIC ${MGL_QT_FILES})
-	set_target_properties(mgl-qt PROPERTIES SOVERSION ${MathGL_SOVERSION})
-	set_target_properties(mgl-qt PROPERTIES CLEAN_DIRECT_OUTPUT 1)
-	set_target_properties(mgl-qt PROPERTIES DEFINE_SYMBOL "mgl_EXPORTS")
-	set_target_properties(mgl-qt-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
-	set_target_properties(mgl-qt-static PROPERTIES COMPILE_FLAGS -DMGL_STATIC_DEFINE)
-	target_link_libraries(mgl-qt mgl)
-	target_link_libraries(mgl-qt ${QT_LIBRARIES})
-
-	if(enable-mgl2)
-		set_target_properties(mgl-qt PROPERTIES OUTPUT_NAME "mgl2-qt")
-		set_target_properties(mgl-qt-static PROPERTIES OUTPUT_NAME "mgl2-qt")
-	else(enable-mgl2)
-		set_target_properties(mgl-qt-static PROPERTIES OUTPUT_NAME "mgl-qt")
-	endif(enable-mgl2)
-
-	install(
-		TARGETS mgl-qt mgl-qt-static
-		RUNTIME DESTINATION bin
-		ARCHIVE DESTINATION ${MGL_LIB_INSTALL_DIR}
-		LIBRARY DESTINATION ${MGL_LIB_INSTALL_DIR}
-	)
+		libmglqt(qt)
 	endif(NOT enable-qt5asqt)
 
 	if(MGL_HAVE_FLTK AND NOT enable-qt5)
