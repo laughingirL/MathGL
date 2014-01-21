@@ -19,11 +19,14 @@
  ***************************************************************************/
 var obj;
 var ctx;
+var cw,ch;
 var deg = Math.PI/180;  //0.017453293;
 
 var main = function()
 {
 	ctx = document.getElementById("canvas").getContext("2d");
+	cw = document.getElementById("canvas").width;
+	ch = document.getElementById("canvas").height;
 	ctx.lineCap="round";	// global setting
 
 	mgl_init("json/alpha.json");
@@ -40,7 +43,7 @@ var mglChange = function()
 	var name = document.getElementById("select").value;
 	mgl_init("json/"+name+".json");
 	var t1 = new Date();
-	ctx.clearRect(0,0,obj.width,obj.height);
+	ctx.clearRect(0,0,cw,ch);
 	mgl_draw_good(obj, ctx);
 //	draw_fast(obj, ctx);
 	var t2 = new Date();
@@ -50,7 +53,7 @@ var mglChange = function()
 // mouse handling functions
 var mglMouseUp = function()
 {	obj.button = 0;	obj.good = 0;
-	ctx.clearRect(0,0,obj.width,obj.height);
+	ctx.clearRect(0,0,cw,ch);
 	mgl_draw_good(obj, ctx);	}
 var mglMouseDown = function(event)
 {
@@ -90,7 +93,7 @@ var mglMouseWheel = function(event)
 var mglRestore = function()
 {
 	mgl_restore(obj);
-	ctx.clearRect(0,0,obj.width,obj.height);
+	ctx.clearRect(0,0,cw,ch);
 	mgl_draw_good(obj,ctx);
 }
 
@@ -136,10 +139,10 @@ var mgl_init = function(name)
 	obj.phi= 0;		// current phi-angle for rotation
 	obj.bet= 0;		// current beta-angle for rotation
 	obj.button = 0;	// pressed mouse buttons (0-none, 1-left, 2-right)
-	obj.mouseX=0;
-	obj.mouseY=0;
-	obj.fast = 0;
-	obj.good = 0;
+	obj.mouseX=0;	obj.mouseY=0;
+	obj.fast = 0;	obj.good = 0;
+	obj.dx = cw/obj.width;
+	obj.dy = ch/obj.height;
 }
 
 // Functions for rotation, shifting and zooming of the picture as whole
@@ -183,7 +186,7 @@ var mgl_shift_right = function(obj,val)	// shift right
 // This function make drawing itself
 var mgl_draw = function(obj, ctx)
 {
-	ctx.clearRect(0,0,obj.width,obj.height);
+	ctx.clearRect(0,0,cw,ch);
 	if(obj.good==0)
 	{
 		obj.good = 1;
@@ -233,9 +236,7 @@ var mgl_draw_good = function(obj, ctx, skip)
 	for(var i=0;i<obj.nprim;i++)	// for each primitive
 	{
 		var prim = obj.prim[i];
-		var scl = s1*this.__mgl_pf(obj, prim[9]);
-		if(obj.pnts[prim[1]][3])	scl = s2;
-		this.__mgl_draw_prim(obj,ctx,prim,scl);
+		mgl_draw_prim(obj,ctx,prim,obj.pnts[prim[1]][3]?s2:s1);
 	}
 	obj.good = 0;
 }
@@ -251,17 +252,17 @@ var mgl_draw_prim = function(obj, ctx, prim, scl)
 	ctx.strokeStyle = prim[10];
 	ctx.fillStyle = prim[10];
 	ctx.lineWidth = 1;
-	switch(obj.prim[i][0])		// draw it depending on its type
+	switch(prim[0])		// draw it depending on its type
 	{
 	case 0: // marks
-		ctx.lineWidth = obj.prim[i][7]*obj.prim[i][6]*5e-4;
-		mgl_draw_mark(ctx, obj.pp[n1][0], obj.pp[n1][1], n4, obj.prim[i][6]/100, scl);
+		ctx.lineWidth = prim[7]*prim[6]*5e-4;
+		mgl_draw_mark(ctx, obj.pp[n1][0], obj.pp[n1][1], n4, prim[6]/100, scl);
 		break;
 	case 1: // lines
 		ctx.beginPath();
 		ctx.moveTo(obj.pp[n1][0],obj.pp[n1][1]);
 		ctx.lineTo(obj.pp[n2][0],obj.pp[n2][1]);
-		ctx.lineWidth = obj.prim[i][7]/100;
+		ctx.lineWidth = prim[7]/100;
 		ctx.stroke();	break;
 	case 2: // triangles
 		ctx.beginPath();
@@ -278,10 +279,10 @@ var mgl_draw_prim = function(obj, ctx, prim, scl)
 		ctx.closePath();
 		// NOTE: look as alpha is disabled for lines
 		// So, next code should be only for the case alpha=false
-		if(obj.prim[i][10].charAt(0)=='#')	ctx.stroke();
+		if(prim[10].charAt(0)=='#')	ctx.stroke();
 		ctx.fill();	break;
 	case 4: // glyphs
-		var t=obj.prim[i][7]*deg/100;
+		var t=prim[7]*deg/100;
 		var xx=obj.coor[n2][2]/100,yy=-obj.coor[n2][3]/100,zz=obj.coor[n2][4]/100;
 		var xc = obj.b[0]*xx + obj.b[1]*yy + obj.b[2]*zz;
 		var yc = obj.b[3]*xx + obj.b[4]*yy + obj.b[5]*zz;
@@ -294,10 +295,10 @@ var mgl_draw_prim = function(obj, ctx, prim, scl)
 			if(Math.abs(t)>Math.PI/2)	t += Math.PI;
 		}
 		else t=0;
-		var c=Math.cos(t), s=Math.sin(t), d=obj.prim[i][6]/200;
+		var c=Math.cos(t), s=Math.sin(t), d=prim[6]/200;
 
 		var b=[d*c, d*s, d*s, -d*c, obj.pp[n1][0],obj.pp[n1][1]];
-		var x=obj.coor[n2][0]*scl/100, y=obj.coor[n2][1]*scl/100, f=obj.prim[i][8]*scl/1e5;
+		var x=obj.coor[n2][0]*scl/100, y=obj.coor[n2][1]*scl/100, f=prim[8]*scl/1e5;
 		if(n3&8)
 		{
 			if(!(n3&4))	mgl_line_glyph(ctx, x,y, f,1,b);
@@ -324,11 +325,11 @@ var mgl_prepare = function(obj, skip)
 		var cx=Math.cos(obj.tet*deg), sx=Math.sin(obj.tet*deg);	// tetx
 		var cy=Math.cos(obj.phi*deg), sy=Math.sin(obj.phi*deg);	// tety
 		var cz=Math.cos(obj.bet*deg), sz=Math.sin(obj.bet*deg);	// tetz
-		obj.b = [dx*cx*cy, -dx*cy*sx, dx*sy,
-					dy*(cx*sy*sz+cz*sx), dy*(cx*cz-sx*sy*sz), -dy*cy*sz,
-					sx*sz-cx*cz*sy, cx*sz+cz*sx*sy, cy*cz,
-					obj.width/2*(1+dx-obj.z[1]-obj.z[0])/dx,
-					obj.height/2*(1+dy-obj.z[3]-obj.z[2])/dy, obj.depth/2, dx,dy,1];
+		obj.b = [obj.dx*dx*cx*cy, -obj.dx*dx*cy*sx, obj.dx*dx*sy,
+				obj.dy*dy*(cx*sy*sz+cz*sx), obj.dy*dy*(cx*cz-sx*sy*sz), -obj.dy*dy*cy*sz,
+				sx*sz-cx*cz*sy, cx*sz+cz*sx*sy, cy*cz,
+				cw/2*(1+dx-obj.z[1]-obj.z[0])/dx,
+				ch/2*(1+dy-obj.z[3]-obj.z[2])/dy, obj.depth/2, obj.dx*dx,obj.dy*dy,1];
 	}
 	// now transform points for found transformation matrix
 	var b = obj.b, i;
