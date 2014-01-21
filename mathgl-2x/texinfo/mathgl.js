@@ -69,11 +69,11 @@ var mglMouseMove = function(event)
 	switch(obj.button)
 	{
 	case 1: // rotate
-		mgl_rotate_down(obj, y*90/obj.height);
-		mgl_rotate_left(obj, x*90/obj.width);	break;
+		mgl_rotate_down(obj, y*180/ch);
+		mgl_rotate_left(obj, x*180/cw);	break;
 	case 2: // shift
-		mgl_shift_down(obj, y/obj.height);
-		mgl_shift_right(obj, x/obj.width);		break;
+		mgl_shift_down(obj, y/ch);
+		mgl_shift_right(obj, x/cw);		break;
 	case 3: // zoom
 		mgl_zoom_in(obj, Math.pow(1.003,x));	break;
 	 }
