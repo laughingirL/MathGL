@@ -1,6 +1,8 @@
 2.2.1 Released 22 January 2014
 
 * Add Qt5 support.
+* Add Pascal interface.
+* Improve JavaScript interface.
 * Add function AddRange(char dir, mreal v1, mreal v2) and extend corresponding MGL commands '[xyzc]range'.
 * Add 'hypot' function for known functions in formula parsing.
 * Add style '~' to disable colorbar or axis labels. NOTE, axis style '_' is obsolete and should be replaced by '~'.

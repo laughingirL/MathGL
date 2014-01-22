@@ -52,8 +52,10 @@ Generally MathGL is GPL library. However, you can use LGPL license for MathGL co
 
 @strong{Latest news}
 @itemize
+@item @emph{22 January 2014.}
+New version (v.@value{VERSION}) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are support of Qt5 and Pascal, improvements in JavaScript interface, bugfixes, and other improvements, which denoted @ref{News, here}.
 @item @emph{11 November 2013.}
-New version (v.@value{VERSION}) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are speeding up, new plot kinds and data handling functions, new plot styles, masks for bitmap output, wx-widget, Lua interface, and many other improvements, which denoted @ref{News, here}.
+New version (v.2.2) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are speeding up, new plot kinds and data handling functions, new plot styles, masks for bitmap output, wx-widget, Lua interface, and many other improvements, which denoted @ref{News, here}.
 @end itemize
 
 There is detailed @ref{News, news list}. Sourceforge project page @uref{http://sourceforge.net/projects/mathgl/, here}.
@@ -73,6 +75,31 @@ Javascript interface was developed with support of @url{http://www.datadvance.ne
 
 @itemize
 @item
+@strong{22 January 2014.}
+New version (v.2.2.1) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are minor improvements and bugfixes:
+@itemize @bullet
+@item Add Qt5 support.
+@item Add Pascal interface.
+@item Improve JavaScript interface.
+@item Add function mglGraph::AddRange(char dir, mreal v1, mreal v2) and extend corresponding MGL commands '[xyzc]range'.
+@item Add 'hypot(x,y)' function for known functions in formula parsing.
+@item Add style '~' to disable colorbar or axis labels. NOTE, axis style '_' is obsolete and should be replaced by '~'.
+@item Change Aspect() if Ax=NAN. Now, Ay and Az set the ratio to optimal aspect (not exact value as previously).
+@item Disable changes by View(),Zoom(),Perspective() for position of Title(), Legend(), Colorbar().
+@item Partial support of perspective in CalcXYZ().
+@item Speed up PDE solving.
+@item Add complex versions of PDE, QO2d, QO3d.
+@item Correct filled background for Box() in curved coordinates.
+@item Allow nx=1 for Stem and Error.
+@item Bugfix for drawing single axis.
+@item Bugfix for missing options parsing for some of MGL commands.
+@item Bugfix for .pmin suffix in MGL. Add mglData::MaximalNeg() and mglData::MinimalPos() functions. Add .nmin and .nmax suffixes.
+@item Bugfix for colorbar labels.
+@item Force using python 2.7 by default due to bug in Ubuntu. Debian sid works well with python 3.* too.
+@item Other minor bugfixes and memory leaks.
+@end itemize
+
+@item
 @strong{11 November 2013.}
 New version (v.2.2) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are minor bugfixes and improvements:
 @itemize @bullet
@@ -87,7 +114,7 @@ New version (v.2.2) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is 
 @item Add style 't' for @ref{cones} to produce tubes (cylinders).
 @item Add style '^' for @ref{legend} to left/right align legend if its coordinates are right/left from the center
 @item Add style '<', '^', '>' for aligning/centering boxes in @ref{bars}, @ref{barh}, @ref{boxplot}, @ref{cones}. Also this plots become centered by default if nx sizes are the same for all data.
-@item Add @ref{dots} function which set independently both color and alpha of dots.
+@item Add @ref{dots} function which set independently both color and transparency of dots.
 @item Improve automatic axis position. Add style '^' for inverse automatic axis position.
 @item Improve tick labeling. Add style @ref{tuneticks}&4 for zero filling of tick labels.
 @item Add @ref{refill} for filling by interpolation of parametrically dependent data
