@@ -412,34 +412,6 @@ double MGL_EXPORT mgl_wnd_get_delay(HMGL gr)
 void MGL_EXPORT mgl_wnd_set_delay_(uintptr_t *gr, mreal *dt)	{	_GR_->SetDelay(*dt);	}
 double MGL_EXPORT mgl_wnd_get_delay_(uintptr_t *gr)	{	return _GR_->GetDelay();	}
 //-----------------------------------------------------------------------------
-HMEX MGL_EXPORT mgl_create_expr(const char *expr)	{	return new mglFormula(expr);	}
-void MGL_EXPORT mgl_delete_expr(HMEX ex)	{	delete ex;	}
-double MGL_EXPORT mgl_expr_eval(HMEX ex, double x, double y,double z)
-{	return ex->Calc(x,y,z);	}
-double MGL_EXPORT mgl_expr_eval_v(HMEX ex, mreal *var)
-{	return ex->Calc(var);	}
-double MGL_EXPORT mgl_expr_diff(HMEX ex, char dir, double x, double y,double z)
-{	return ex->CalcD(dir,x,y,z);	}
-double MGL_EXPORT mgl_expr_diff_v(HMEX ex, char dir, mreal *var)
-{	return ex->CalcD(var, dir);		}
-//-----------------------------------------------------------------------------
-uintptr_t MGL_EXPORT mgl_create_expr_(const char *expr, int l)
-{	char *s=new char[l+1];	memcpy(s,expr,l);	s[l]=0;
-	uintptr_t res = uintptr_t(mgl_create_expr(s));
-	delete []s;	return res;	}
-void MGL_EXPORT mgl_delete_expr_(uintptr_t *ex)	{	mgl_delete_expr((HMEX)ex);	}
-double MGL_EXPORT mgl_eval_expr_(uintptr_t *ex, mreal *x, mreal *y, mreal *z)
-{	return mgl_expr_eval((HMEX) ex, *x,*y,*z);		}
-double MGL_EXPORT mgl_diff_expr_(uintptr_t *ex, const char *dir, mreal *x, mreal *y, mreal *z, int)
-{	return mgl_expr_diff((HMEX) ex, *dir,*x,*y,*z);	}
-//-----------------------------------------------------------------------------
-HAEX MGL_EXPORT mgl_create_cexpr(const char *expr)	{	return new mglFormulaC(expr);	}
-void MGL_EXPORT mgl_delete_cexpr(HAEX ex)	{	delete ex;	}
-dual MGL_EXPORT mgl_cexpr_eval(HAEX ex, dual x, dual y,dual z)
-{	return ex->Calc(x,y,z);	}
-dual MGL_EXPORT mgl_cexpr_eval_v(HAEX ex, dual *var)
-{	return ex->Calc(var);	}
-//-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_set_plotfactor(HMGL gr, double val)
 {	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->SetPlotFactor(val);	}
 void MGL_EXPORT mgl_set_plotfactor_(uintptr_t *gr, mreal *val)

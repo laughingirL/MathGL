@@ -23,13 +23,6 @@
 #include "mgl2/define.h"
 #ifdef __cplusplus
 //-----------------------------------------------------------------------------
-/// Get integer power of x
-dual MGL_EXPORT mgl_ipowc(dual x,int n);
-/// Get exp(i*a)
-dual MGL_EXPORT mgl_expi(dual a);
-/// Get exp(i*a)
-dual MGL_EXPORT mgl_expi(double a);
-
 /// Explicit scheme for 1 step of axial diffraction
 int MGL_EXPORT mgl_difr_axial(dual *a, int n, dual q, int Border,dual *b, dual *d, int kk, double di);
 /// Explicit scheme for 1 step of plane diffraction

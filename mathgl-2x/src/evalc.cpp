@@ -18,9 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include <time.h>
-#include "mgl2/data_cf.h"
+#include "mgl2/datac_cf.h"
 #include "mgl2/evalc.h"
-#include "mgl2/addon.h"
 #if MGL_HAVE_GSL
 #include <gsl/gsl_sf.h>
 #endif
@@ -273,4 +272,11 @@ dual MGL_EXPORT mgl_ipowc(dual x,int n)
 	if(n%2==1)	t *= x;
 	return t;
 }
+//-----------------------------------------------------------------------------
+HAEX MGL_EXPORT mgl_create_cexpr(const char *expr)	{	return new mglFormulaC(expr);	}
+void MGL_EXPORT mgl_delete_cexpr(HAEX ex)	{	delete ex;	}
+dual MGL_EXPORT mgl_cexpr_eval(HAEX ex, dual x, dual y,dual z)
+{	return ex->Calc(x,y,z);	}
+dual MGL_EXPORT mgl_cexpr_eval_v(HAEX ex, dual *var)
+{	return ex->Calc(var);	}
 //-----------------------------------------------------------------------------

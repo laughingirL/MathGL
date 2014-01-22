@@ -713,3 +713,24 @@ int MGL_NO_EXPORT mglFindInText(char *str,const char *lst)
 	return -1;
 }
 //-----------------------------------------------------------------------------
+HMEX MGL_EXPORT mgl_create_expr(const char *expr)	{	return new mglFormula(expr);	}
+void MGL_EXPORT mgl_delete_expr(HMEX ex)	{	delete ex;	}
+double MGL_EXPORT mgl_expr_eval(HMEX ex, double x, double y,double z)
+{	return ex->Calc(x,y,z);	}
+double MGL_EXPORT mgl_expr_eval_v(HMEX ex, mreal *var)
+{	return ex->Calc(var);	}
+double MGL_EXPORT mgl_expr_diff(HMEX ex, char dir, double x, double y,double z)
+{	return ex->CalcD(dir,x,y,z);	}
+double MGL_EXPORT mgl_expr_diff_v(HMEX ex, char dir, mreal *var)
+{	return ex->CalcD(var, dir);		}
+//-----------------------------------------------------------------------------
+uintptr_t MGL_EXPORT mgl_create_expr_(const char *expr, int l)
+{	char *s=new char[l+1];	memcpy(s,expr,l);	s[l]=0;
+	uintptr_t res = uintptr_t(mgl_create_expr(s));
+	delete []s;	return res;	}
+void MGL_EXPORT mgl_delete_expr_(uintptr_t *ex)	{	mgl_delete_expr((HMEX)ex);	}
+double MGL_EXPORT mgl_eval_expr_(uintptr_t *ex, mreal *x, mreal *y, mreal *z)
+{	return mgl_expr_eval((HMEX) ex, *x,*y,*z);		}
+double MGL_EXPORT mgl_diff_expr_(uintptr_t *ex, const char *dir, mreal *x, mreal *y, mreal *z, int)
+{	return mgl_expr_diff((HMEX) ex, *dir,*x,*y,*z);	}
+//-----------------------------------------------------------------------------

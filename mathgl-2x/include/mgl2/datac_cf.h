@@ -38,6 +38,15 @@ extern "C" {
 typedef void *HADT;
 #endif
 
+/// Set seed for random numbers
+void MGL_EXPORT mgl_srnd(long seed);
+/// Get random number
+double MGL_EXPORT mgl_rnd();
+/// Get integer power of x
+dual MGL_EXPORT mgl_ipowc(dual x,int n);
+/// Get exp(i*a)
+dual MGL_EXPORT mgl_expi(dual a);
+
 /// Create HMDT object
 HADT MGL_EXPORT mgl_create_datac();
 uintptr_t MGL_EXPORT mgl_create_datac_();
