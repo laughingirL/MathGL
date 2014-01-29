@@ -27,6 +27,25 @@ extern "C" {
 #endif
 void _mgl_key_up(unsigned char ch,int ,int );
 HMGL MGL_EXPORT mgl_create_graph_glut(int (*draw)(HMGL gr, void *p), const char *title, void *par, void (*load)(void *p));
+
+
+/// Switch on/off transparency (do not overwrite user settings)
+void MGL_EXPORT mgl_glut_toggle_alpha(HMGL gr);
+/// Switch on/off lighting (do not overwrite user settings)
+void MGL_EXPORT mgl_glut_toggle_light(HMGL gr);
+/// Switch off all zooming and rotation
+void MGL_EXPORT mgl_glut_toggle_no(HMGL gr);
+/// Update picture by calling user drawing function
+void MGL_EXPORT mgl_glut_update(HMGL gr);
+/// Reload user data and update picture
+void MGL_EXPORT mgl_glut_reload(HMGL gr);
+/// Show next frame (if one)
+void MGL_EXPORT mgl_glut_next_frame(HMGL gr);
+/// Show previous frame (if one)
+void MGL_EXPORT mgl_glut_prev_frame(HMGL gr);
+/// Run slideshow (animation) of frames
+void MGL_EXPORT mgl_glut_animation(HMGL gr);
+
 #ifdef __cplusplus
 }
 //-----------------------------------------------------------------------------
@@ -39,6 +58,23 @@ public:
 	{	gr = mgl_create_graph_glut(draw?mgl_draw_graph:0,title,(void*)draw,0);	}
 	mglGLUT(mglDraw *draw=0, const char *title="MathGL") : mglGraph(-1)
 	{	gr = mgl_create_graph_glut(draw?mgl_draw_class:0,title,draw,mgl_reload_class);	}
+
+	inline void ToggleAlpha()	///< Switch on/off transparency (do not overwrite user settings)
+	{	mgl_glut_toggle_alpha(gr);	}
+	inline void ToggleLight()	///< Switch on/off lighting (do not overwrite user settings)
+	{	mgl_glut_toggle_light(gr);	}
+	inline void ToggleNo()		///< Switch off all zooming and rotation
+	{	mgl_glut_toggle_no(gr);	}
+	inline void Update()		///< Update picture by calling user drawing function
+	{	mgl_glut_update(gr);	}
+	inline void ReLoad()		///< Reload user data and update picture
+	{	mgl_glut_reload(gr);	}
+	inline void NextFrame()		///< Show next frame (if one)
+	{	mgl_glut_next_frame(gr);	}
+	inline void PrevFrame()		///< Show previous frame (if one)
+	{	mgl_glut_prev_frame(gr);	}
+	inline void Animation()		///< Run slideshow (animation) of frames
+	{	mgl_glut_animation(gr);	}
 };
 //-----------------------------------------------------------------------------
 #endif

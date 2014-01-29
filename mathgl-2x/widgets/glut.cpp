@@ -65,7 +65,7 @@ public:
 	void ToggleLight()	{	_mgl_key_up('f',0,0);	}
 	void ToggleNo()		{	_mgl_key_up('n',0,0);	}	///< Switch off all zooming and rotation
 	void Update()		{	_mgl_key_up(' ',0,0);	}	///< Update picture by calling user drawing function
-	void ReLoad(bool o)	{	_mgl_key_up(o?']':'[',0,0);	}	///< Reload user data and update picture
+	void ReLoad()		{	_mgl_key_up('[',0,0);	}	///< Reload user data and update picture
 	void NextFrame()	{	_mgl_key_up('.',0,0);	}	///< Show next frame (if one)
 	void PrevFrame()	{	_mgl_key_up(',',0,0);	}	///< Show previous frame (if one)
 	void Animation()	{	_mgl_key_up('m',0,0);	}	///< Run slideshow (animation) of frames
@@ -242,4 +242,29 @@ HMGL MGL_EXPORT mgl_create_graph_glut(int (*draw)(HMGL gr, void *p), const char 
 }
 //-----------------------------------------------------------------------------
 mglCanvasGLUT::mglCanvasGLUT() : mglCanvasGL()	{}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_glut_toggle_alpha(HMGL gr)
+{	mglCanvasGLUT *g = dynamic_cast<mglCanvasGLUT*>(gr);
+	if(g)	g->ToggleAlpha();	}
+void MGL_EXPORT mgl_glut_toggle_light(HMGL gr)
+{	mglCanvasGLUT *g = dynamic_cast<mglCanvasGLUT*>(gr);
+	if(g)	g->ToggleLight();	}
+void MGL_EXPORT mgl_glut_toggle_no(HMGL gr)
+{	mglCanvasGLUT *g = dynamic_cast<mglCanvasGLUT*>(gr);
+	if(g)	g->ToggleNo();	}
+void MGL_EXPORT mgl_glut_update(HMGL gr)
+{	mglCanvasGLUT *g = dynamic_cast<mglCanvasGLUT*>(gr);
+	if(g)	g->Update();	}
+void MGL_EXPORT mgl_glut_reload(HMGL gr)
+{	mglCanvasGLUT *g = dynamic_cast<mglCanvasGLUT*>(gr);
+	if(g)	g->ReLoad();	}
+void MGL_EXPORT mgl_glut_next_frame(HMGL gr)
+{	mglCanvasGLUT *g = dynamic_cast<mglCanvasGLUT*>(gr);
+	if(g)	g->NextFrame();	}
+void MGL_EXPORT mgl_glut_prev_frame(HMGL gr)
+{	mglCanvasGLUT *g = dynamic_cast<mglCanvasGLUT*>(gr);
+	if(g)	g->PrevFrame();	}
+void MGL_EXPORT mgl_glut_animation(HMGL gr)
+{	mglCanvasGLUT *g = dynamic_cast<mglCanvasGLUT*>(gr);
+	if(g)	g->Animation();	}
 //-----------------------------------------------------------------------------

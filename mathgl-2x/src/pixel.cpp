@@ -171,6 +171,7 @@ mglPoint mglCanvas::RestorePnt(mglPoint ps, bool norm) const
 //-----------------------------------------------------------------------------
 mglPoint mglCanvas::CalcXYZ(int xs, int ys, bool real) const
 {
+	if(xs<0 || ys<0 || xs>=Width || ys>=Height)	return mglPoint(NAN,NAN,NAN);
 	mglPoint p, ps(xs,Height-ys,NAN);
 	float zz = Z[3*(xs+Width*(Height-1-ys))];
 	if(zz>-1e20f)	{	ps.z = zz;	real=false;	}
