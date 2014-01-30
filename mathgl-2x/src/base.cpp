@@ -236,7 +236,7 @@ long mglBase::AddPnt(const mglMatrix *mat, mglPoint p, mreal c, mglPoint n, mrea
 	// scl&4 -- ???
 	// scl&8 -- bypass palette for enabling alpha
 	if(mgl_isnan(c) || mgl_isnan(a))	return -1;
-	bool norefr = mgl_isnan(n.x) && mgl_isnan(n.y);
+	bool norefr = mgl_isnan(n.x) && mgl_isnan(n.y) && !mgl_isnan(n.z);
 	if(scl>0)	ScalePoint(mat,p,n,!(scl&2));
 	if(mgl_isnan(p.x))	return -1;
 	a = (a>=0 && a<=1) ? a : AlphaDef;

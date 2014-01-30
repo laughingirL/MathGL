@@ -786,7 +786,7 @@ void mglCanvas::Legend(const std::vector<mglText> &leg, mreal x, mreal y, const 
 	x += B.x-iw/2+dx;	y += B.y-ih/2+dy;
 	// draw it
 	long k1=0,k2=0,k3=0,k4=0;
-	mglPoint p,q=mglPoint(NAN);
+	mglPoint p,q=mglPoint(NAN,NAN,NAN);
 
 	for(i=0;ff[i] && ff[i]!=':';i++)	if(strchr(MGL_COLORS,ff[i]))
 	{
@@ -937,7 +937,7 @@ void mglCanvas::Title(const wchar_t *title,const char *stl,mreal size)
 	char col = mglGetStyle(stl,0,&align);	align = align&3;
 	if(col==0)	col = 'k';
 	mreal y=inY+inH-h;
-	mglPoint p(inX + inW*align/2.,y,3*Depth),q(NAN);
+	mglPoint p(inX + inW*align/2.,y,3*Depth),q(NAN,NAN,NAN);
 	mglMatrix M=B;	M.norot=true;
 	if(title)	text_plot(AddPnt(&M,p,-1,q,-1,0),title,stl,size);
 	if(box)	//	draw boungind box

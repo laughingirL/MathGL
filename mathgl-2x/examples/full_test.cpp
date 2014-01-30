@@ -71,7 +71,7 @@ void test(mglGraph *gr)
 {
 	mglParse par;
 	setlocale(LC_CTYPE, "");
-	par.Execute(gr,"box\r\n\r\naxis");
+	par.Execute(gr,"light on:addlegend 'r' 'r':legend");
 }
 //-----------------------------------------------------------------------------
 #if !defined(_MSC_VER) && !defined(__BORLANDC__)
