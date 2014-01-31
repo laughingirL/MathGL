@@ -83,6 +83,9 @@ void MGL_EXPORT mgl_area_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, const
 void MGL_EXPORT mgl_area(HMGL graph, HCDT y, const char *pen, const char *opt);
 void MGL_EXPORT mgl_area_(uintptr_t *graph, uintptr_t *y, const char *pen, const char *opt,int,int);
 
+/// Fill area (draw ribbon) between curves {x1,y1,z1} and {x2,y2,z2}
+void MGL_EXPORT mgl_region_3d(HMGL graph, HCDT x1, HCDT y1, HCDT z1, HCDT x2, HCDT y2, HCDT z2, const char *pen, const char *opt);
+void MGL_EXPORT mgl_region_3d_(uintptr_t *graph, uintptr_t *x1, uintptr_t *y1, uintptr_t *z1, uintptr_t *x2, uintptr_t *y2, uintptr_t *z2, const char *pen, const char *opt,int,int);
 /// Fill area between curves {x,y1} and {x,y2}
 void MGL_EXPORT mgl_region_xy(HMGL graph, HCDT x, HCDT y1, HCDT y2, const char *pen, const char *opt);
 void MGL_EXPORT mgl_region_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y1, uintptr_t *y2, const char *pen, const char *opt,int, int);

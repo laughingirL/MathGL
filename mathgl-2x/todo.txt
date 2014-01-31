@@ -36,6 +36,8 @@ C. Translate to Russian everything
 2. Extend Refill sample (add 2d)
 3. Docs about JS interface
 
+4. Extend docs about region
+
 ============= UDAV =============
 
 01. Show plot at creation stage (if option is enabled -- can be long process!!!) + auto axis range or [-1,1] by default

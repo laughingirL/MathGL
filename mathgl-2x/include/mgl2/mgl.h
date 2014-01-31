@@ -626,6 +626,11 @@ public:
 	{	mgl_region(gr, &y1, &y2, pen, opt);	}
 	inline void Region(const mglDataA &x, const mglDataA &y1, const mglDataA &y2, const char *pen="", const char *opt="")
 	{	mgl_region_xy(gr, &x, &y1, &y2, pen, opt);	}
+	/// Fill area (draw ribbon) between curves {x1,y1,z1} and {x2,y2,z2}
+	inline void Region(const mglDataA &x1, const mglDataA &y1, const mglDataA &z1, const mglDataA &x2, const mglDataA &y2, const mglDataA &z2, const char *pen="", const char *opt="")
+	{	mgl_region_3d(gr, &x1, &y1, &z1, &x2, &y2, &z2, pen, opt);	}
+	inline void Region(const mglDataA &x1, const mglDataA &y1, const mglDataA &x2, const mglDataA &y2, const char *pen="", const char *opt="")
+	{	mgl_region_3d(gr, &x1, &y1, NULL, &x2, &y2, NULL, pen, opt);	}
 	/// Draw vertical lines from points {x,y,z} to axis plane
 	inline void Stem(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *pen="", const char *opt="")
 	{	mgl_stem_xyz(gr, &x, &y, &z, pen, opt);	}

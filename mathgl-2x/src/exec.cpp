@@ -2289,6 +2289,10 @@ int MGL_NO_EXPORT mgls_region(mglGraph *gr, long , mglArg *a, const char *k, con
 	else if(!strcmp(k,"dds"))	gr->Region(*(a[0].d),*(a[1].d),a[2].s.c_str(),opt);
 	else if(!strcmp(k,"ddd"))	gr->Region(*(a[0].d),*(a[1].d),*(a[2].d),"",opt);
 	else if(!strcmp(k,"ddds"))	gr->Region(*(a[0].d),*(a[1].d),*(a[2].d),a[3].s.c_str(),opt);
+	else if(!strcmp(k,"dddd"))	gr->Region(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),"",opt);
+	else if(!strcmp(k,"dddds"))	gr->Region(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),a[4].s.c_str(),opt);
+	else if(!strcmp(k,"dddddd"))	gr->Region(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),*(a[5].d),"",opt);
+	else if(!strcmp(k,"dddddds"))	gr->Region(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),*(a[5].d),a[6].s.c_str(),opt);
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -2812,7 +2816,7 @@ mglCommand mgls_base_cmd[] = {
 	{"rearrange","Rearrange data dimensions","rearrange Dat mx [my mz]", mgls_rearrange ,3},
 	{"rect","Draw rectangle","rect x1 y1 x2 y2 ['fmt']|x1 y1 z1 x2 y2 z2 ['fmt']", mgls_rect ,13},
 	{"refill","Fill data by interpolation of Vdat","refill Dat Xdat Vdat [sl] | Dat Xdat Ydat Vdat [sl] | Dat Xdat Ydat Zdat Vdat", mgls_refill ,3},
-	{"region","Draw filled region between 2 curves","region Ydat1 Ydat2 ['fmt' inside]|Xdat Ydat1 Ydat2 ['fmt' inside]", mgls_region ,7},
+	{"region","Draw filled region (ribbon) between 2 curves","region Ydat1 Ydat2 ['fmt']|Xdat Ydat1 Ydat2 ['fmt']||Xdat1 Ydat1 Xdat2 Ydat2 ['fmt']|Xdat1 Ydat1 Zdat1 Xdat2 Ydat2 Zdat2 ['fmt']", mgls_region ,7},
 	{"resize","Resize data","resize Res Dat mx [my mz]", mgls_resize ,4},
 	{"return","Return from function","return", 0, 6},
 	{"rhomb","Draw rhombus","rhomb x1 y1 x2 y2 r ['fmt']|x1 y1 z1 x2 y2 z2 r ['fmt']", mgls_rhomb ,13},

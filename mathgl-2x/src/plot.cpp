@@ -602,6 +602,53 @@ void MGL_EXPORT mgl_area_(uintptr_t *gr, uintptr_t *y, const char *pen, const ch
 //	Region series
 //
 //-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_region_3d(HMGL gr, HCDT x1, HCDT y1, HCDT z1, HCDT x2, HCDT y2, HCDT z2, const char *pen, const char *opt)
+{
+	long i,j, n=y1->GetNx(), m, mx, my, mz, pal;
+	if(mgl_check_dim1(gr,x1,y1,z1,0,"Region"))	return;
+	if(mgl_check_dim1(gr,x1,x2,y2,z2,"Region"))	return;
+	m = x1->GetNy() > y1->GetNy() ? x1->GetNy() : y1->GetNy();	m = z1->GetNy() > m ? z1->GetNy() : m;
+	bool zhave = z1 && z2;
+	if(x1->GetNy()!=x2->GetNy() || y1->GetNy()!=y2->GetNy())
+	{	gr->SetWarn(mglWarnDim,"Region");	return;	}
+	if(zhave && z1->GetNy()!=z2->GetNy())
+	{	gr->SetWarn(mglWarnDim,"Region");	return;	}
+
+	gr->SaveState(opt);
+	static int cgid=1;	gr->StartGroup("Region",cgid++);
+	mreal c1,c2;
+	mglPoint nn=mglPoint(0,0,1);
+	long n1,n2,n3,n4;
+	mreal zm = gr->AdjustZMin();
+//	bool inside = (mglchr(pen,'i'));	// NOTE: check if 'i' is free (used here for inside flag)
+	bool sh = mglchr(pen,'!');
+
+	gr->SetPenPal(pen,&pal);	gr->Reserve(2*n*m);
+//	long s=gr->AddTexture(pen,1);
+	for(j=0;j<m;j++)
+	{
+		c2=c1=gr->NextColor(pal);
+		if(gr->GetNumPal(pal)==2*m && !sh)	c2=gr->NextColor(pal);
+		mx = j<x1->GetNy() ? j:0;
+		my = j<y1->GetNy() ? j:0;
+		mz = (zhave && j<z1->GetNy()) ? j:0;
+		mreal z0 = zm + (m-1-j)*(gr->Max.z-zm)/m;
+
+		n1 = gr->AddPnt(mglPoint(x1->v(0,mx),y1->v(0,my),zhave?z1->v(0,mz):z0),c1,nn,-1,11);
+		n2 = gr->AddPnt(mglPoint(x2->v(0,mx),y2->v(0,my),zhave?z2->v(0,mz):z0),c2,nn,-1,11);
+		for(i=1;i<n;i++)
+		{
+			if(gr->Stop)	return;
+			n3=n1;	n4=n2;
+			if(sh)	c2=c1=gr->NextColor(pal,i);
+			n1 = gr->AddPnt(mglPoint(x1->v(i,mx),y1->v(i,my),zhave?z1->v(i,mz):z0),c1,nn,-1,11);
+			n2 = gr->AddPnt(mglPoint(x2->v(i,mx),y2->v(i,my),zhave?z2->v(i,mz):z0),c2,nn,-1,11);
+			gr->quad_plot(n1,n2,n3,n4);
+		}
+	}
+	gr->EndGroup();
+}
+//-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_region_xy(HMGL gr, HCDT x, HCDT y1, HCDT y2, const char *pen, const char *opt)
 {
 	long i,j, n=y1->GetNx(), m=y1->GetNy(), mx, pal;
@@ -651,6 +698,11 @@ void MGL_EXPORT mgl_region(HMGL gr, HCDT y1, HCDT y2, const char *pen, const cha
 	x.Fill(gr->Min.x, gr->Max.x);
 	mgl_region_xy(gr,&x,y1,y2,pen,0);
 }
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_region_3d_(uintptr_t *gr, uintptr_t *x1, uintptr_t *y1, uintptr_t *z1, uintptr_t *x2, uintptr_t *y2, uintptr_t *z2, const char *pen, const char *opt, int l, int lo)
+{	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
+	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+	mgl_region_3d(_GR_, _DA_(x1),_DA_(y1),_DA_(z1),_DA_(x2),_DA_(y2),_DA_(z2),s,o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_region_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y1, uintptr_t *y2, const char *pen, const char *opt, int l, int lo)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
