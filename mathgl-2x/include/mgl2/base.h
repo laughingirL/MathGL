@@ -47,7 +47,7 @@ struct MGL_EXPORT mglMatrix
 	mreal b[9];
 	mreal x,y,z,pf;
 	bool norot;	// flag to disable pnts rotation
-	mglMatrix()	{	clear();	}
+	mglMatrix()	{	memset(this,0,sizeof(mglMatrix));	clear();	}
 	void Rotate(mreal tetz,mreal tetx,mreal tety);
 	void RotateN(mreal Tet,mreal x,mreal y,mreal z);
 	inline void clear()	{	x=y=z=pf=0;	memset(b,0,9*sizeof(mreal));	b[0]=b[4]=b[8]=1;	norot=false;	}

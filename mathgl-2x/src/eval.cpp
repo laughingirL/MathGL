@@ -148,6 +148,8 @@ void MGL_EXPORT mgl_srnd(long seed)
 }
 void MGL_EXPORT mgl_srnd_(int *seed)	{	mgl_srnd(*seed);	}
 //-----------------------------------------------------------------------------
+double MGL_EXPORT mgl_hypot(double x, double y)	{	return hypot(x,y);	}
+//-----------------------------------------------------------------------------
 #if MGL_HAVE_PTHREAD
 pthread_mutex_t mutexRnd;
 #endif

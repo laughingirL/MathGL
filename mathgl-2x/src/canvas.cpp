@@ -436,7 +436,7 @@ pthread_mutex_lock(&mutexPtx);
 			mglPrim a(6);	a.n1 = p;
 			a.n2 = int(255*mc.r) + 256*(int(255*mc.g) + 256*int(255*mc.b));
 			mglText txt(text,font);
-			Ptx.push_back(txt);	a.n3 = Ptx.size()-1;
+			a.n3 = Ptx.size();	Ptx.push_back(txt);
 			a.s = size;	a.w = shift;	a.p=ftet;
 			add_prim(a);
 		}
@@ -457,19 +457,19 @@ pthread_mutex_lock(&mutexPtx);
 			pt = q;	pp = mglPoint(d,-h*0.4);		PostScale(&Bt,pp);
 			pt.x=pt.xx=pp.x;	pt.y=pt.yy=pp.y;
 #pragma omp critical(pnt)
-			{MGL_PUSH(Pnt,pt,mutexPnt);	k1=Pnt.size()-1;}
+			{k1=Pnt.size();	MGL_PUSH(Pnt,pt,mutexPnt);}
 			pt = q;	pp = mglPoint(w+d,-h*0.4);		PostScale(&Bt,pp);
 			pt.x=pt.xx=pp.x;	pt.y=pt.yy=pp.y;
 #pragma omp critical(pnt)
-			{MGL_PUSH(Pnt,pt,mutexPnt);	k2=Pnt.size()-1;}
+			{k2=Pnt.size();	MGL_PUSH(Pnt,pt,mutexPnt);}
 			pt = q;	pp = mglPoint(d,h*1.2);			PostScale(&Bt,pp);
 			pt.x=pt.xx=pp.x;	pt.y=pt.yy=pp.y;
 #pragma omp critical(pnt)
-			{MGL_PUSH(Pnt,pt,mutexPnt);	k3=Pnt.size()-1;}
+			{k3=Pnt.size();	MGL_PUSH(Pnt,pt,mutexPnt);}
 			pt = q;	pp = mglPoint(w+d,h*1.2);		PostScale(&Bt,pp);
 			pt.x=pt.xx=pp.x;	pt.y=pt.yy=pp.y;
 #pragma omp critical(pnt)
-			{MGL_PUSH(Pnt,pt,mutexPnt);	k4=Pnt.size()-1;}
+			{k4=Pnt.size();	MGL_PUSH(Pnt,pt,mutexPnt);}
 			line_plot(k1,k2);	line_plot(k1,k3);
 			line_plot(k4,k2);	line_plot(k4,k3);
 			mreal bl = AddTexture('w');

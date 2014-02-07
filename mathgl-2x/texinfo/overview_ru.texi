@@ -227,10 +227,10 @@ MathGL also provide another simple tool @code{mgl.cgi} which parse MGL script fr
 @item
 Я благодарен С. Скобелеву, К. Михайленко, М. Вейсману, A. Прохорову, A. Короткевичу, В. Онучину, С. Плису, Р. Киселеву, A. Иванову, Н. Троицкому and В. Липатову за продуктивные предложения и обсуждения.
 @item
-Я благодарен спонсорам М. Вейсману (@url{http://www.jiht.ru/about/structure.php?set_filter_structure=Y&structure_UF_DEPARTMENT=241&filter=Y&set_filter=Y, ОИВТ РАН}) и A. Прохорову (@url{www.datadvance.net, $DATADVANCE}).
+Я благодарен спонсорам М. Вейсману (@url{http://www.jiht.ru/about/structure.php?set_filter_structure=Y&structure_UF_DEPARTMENT=241&filter=Y&set_filter=Y, ОИВТ РАН}) и A. Прохорову (@url{www.datadvance.net, DATADVANCE}).
 @end itemize
 
-Javascript интерфейс был разработан при поддержке компании @url{www.datadvance.net, $DATADVANCE}.
+Javascript интерфейс был разработан при поддержке компании @url{www.datadvance.net, DATADVANCE}.
 
 
 @external{}

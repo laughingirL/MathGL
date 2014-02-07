@@ -303,7 +303,9 @@ void MGL_EXPORT mgl_write_obj_old(HMGL gr, const char *fname,const char *descr, 
 	size_t len=strlen(fname),ntxt=gr->GetTxtNum();
 	char *tname = new char[len+5];	strcpy(tname,fname);
 	FILE *fp=fopen(fname,"wt");
+	if(!fp)		{	gr->SetWarn(mglWarnOpen,fname);	return;	}
 	// vertices definition
+	setlocale(LC_NUMERIC, "C");
 	fprintf(fp,"# Created by MathGL library\n# Title: %s\n",(descr && *descr) ? descr : fname);
 	for(long i=0;i<gr->GetPntNum();i++)
 	{
@@ -351,6 +353,7 @@ void MGL_EXPORT mgl_write_obj_old(HMGL gr, const char *fname,const char *descr, 
 	if(use_png)	mgl_pnga_save(tname,256,256*j,pbuf);
 	else		mgl_tga_save(tname,256,256*j,pbuf);
 	free(pbuf);	delete []buf;	delete []tname;
+	setlocale(LC_NUMERIC, "");
 }
 void MGL_EXPORT mgl_write_obj_old_(uintptr_t *gr, const char *fname,const char *descr, int *use_png,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
@@ -361,6 +364,8 @@ void MGL_EXPORT mgl_write_stl(HMGL gr, const char *fname,const char *descr)
 {
 	if(gr->GetPrmNum()==0)	return;	// nothing to do
 	FILE *fp = fopen(fname,"wt");
+	if(!fp)		{	gr->SetWarn(mglWarnOpen,fname);	return;	}
+	setlocale(LC_NUMERIC, "C");
 	fprintf(fp,"solid %s\n",(descr && *descr)?descr:"mathgl");
 	register long i;
 	mglPnt pp;
@@ -401,6 +406,7 @@ void MGL_EXPORT mgl_write_stl(HMGL gr, const char *fname,const char *descr)
 	}
 	fprintf(fp,"endsolid %s",(descr && *descr)?descr:"mathgl");
 	fclose(fp);
+	setlocale(LC_NUMERIC, "");
 }
 void MGL_EXPORT mgl_write_stl_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
@@ -413,6 +419,8 @@ void MGL_EXPORT mgl_write_xyz(HMGL gr, const char *fname,const char *descr)
 
 	register long i;
 	FILE *fp=fopen(fname,"wt"), *ff;	// vertices definition
+	if(!fp)		{	gr->SetWarn(mglWarnOpen,fname);	return;	}
+	setlocale(LC_NUMERIC, "C");
 	fprintf(fp,"# Created by MathGL library\n# Title: %s\n",(descr && *descr) ? descr : fname);
 	fprintf(fp,"# List of Vertices, with (x,y,z) coordinates.\n");
 	for(i=0;i<gr->GetPntNum();i++)
@@ -439,6 +447,7 @@ void MGL_EXPORT mgl_write_xyz(HMGL gr, const char *fname,const char *descr)
 		if(q.type==3)	fprintf(ff,"%ld %ld %ld\n%ld %ld %ld\n",q.n1+1,q.n2+1,q.n3+1,q.n4+1,q.n2+1,q.n3+1);
 	}
 	fclose(fp);	fclose(ff);	delete []tname;
+	setlocale(LC_NUMERIC, "");
 }
 void MGL_EXPORT mgl_write_xyz_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
@@ -456,6 +465,8 @@ void MGL_EXPORT mgl_write_off(HMGL gr, const char *fname,const char *descr, int 
 	if(nf<=0)	return;	// nothing to do
 
 	FILE *fp=fopen(fname,"wt");
+	if(!fp)		{	gr->SetWarn(mglWarnOpen,fname);	return;	}
+	setlocale(LC_NUMERIC, "C");
 	// vertices definition
 	if(colored)
 		fprintf(fp,"COFF\n# Created by MathGL library\n# Title: %s\n",(descr && *descr) ? descr : fname);
@@ -500,6 +511,7 @@ void MGL_EXPORT mgl_write_off(HMGL gr, const char *fname,const char *descr, int 
 		}
 	}
 	fclose(fp);
+	setlocale(LC_NUMERIC, "");
 }
 void MGL_EXPORT mgl_write_off_(uintptr_t *gr, const char *fname,const char *descr,int *colored,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
@@ -533,6 +545,7 @@ std::string mglCanvas::GetJSON()
 	std::string res, buf;
 	long i,ll=0,l=(long)Pnt.size();
 	long factor = Width>1?10:10000;
+	setlocale(LC_NUMERIC, "C");
 	res = res + mgl_sprintf("{\n\"width\":%d,\t\"height\":%d,\t\"depth\":%d,\t\"plotid\":\"%s\",\t\"npnts\":%ld,\t\"pnts\":[\n",
 			factor*Width, factor*Height, factor*Depth, PlotId.c_str(), l);
 	std::string *tmp=new std::string[l];
@@ -568,7 +581,7 @@ std::string mglCanvas::GetJSON()
 		{
 			const mglPnt &q = Pnt[p.n1];
 #pragma omp critical
-			{xy.push_back(mglPoint(q.u,q.v,p.n2));	n2 = xy.size()-1;}
+			{n2 = xy.size();	xy.push_back(mglPoint(q.u,q.v,p.n2));}
 			n3 = p.n3;	n4 = p.n4;
 		}
 		if(p.type==1 && n1>n2)	{	n1=p.n2;	n2=p.n1;	}
@@ -608,6 +621,7 @@ std::string mglCanvas::GetJSON()
 		res = res + mgl_sprintf("]\n]%c\n", i+1<l?',':' ');
 	}
 	res = res + mgl_sprintf("]\n}\n");
+	setlocale(LC_NUMERIC, "");
 	return res;
 }
 //-----------------------------------------------------------------------------
@@ -630,6 +644,7 @@ bool mglCanvas::ExportMGLD(const char *fname, const char *descr)
 	if(Pnt.size()<1 || Prm.size()<1)	return true;
 	FILE *fp=fopen(fname,"wt");
 	if(!fp)	return true;
+	setlocale(LC_NUMERIC, "C");
 	// NOTE: I'll save Ptx. So prim type=6 is useless,and no LaTeX
 	fprintf(fp,"MGLD %lu %lu %lu %lu %d %d\n# %s\n", (unsigned long)Pnt.size(), (unsigned long)Prm.size(), (unsigned long)Txt.size(), (unsigned long)Glf.size(), Width, Height, (descr && *descr) ? descr : fname);
 	fprintf(fp,"# Vertexes: x y z c t ta u v w r g b a\n");
@@ -667,6 +682,7 @@ bool mglCanvas::ExportMGLD(const char *fname, const char *descr)
 		}
 	}
 	fclose(fp);
+	setlocale(LC_NUMERIC, "");
 	return false;
 }
 //-----------------------------------------------------------------------------
@@ -690,6 +706,7 @@ bool mglCanvas::ImportMGLD(const char *fname, bool add)
 	if(w<=0 || h<=0)	{	w=Width;	h=Height;	}
 	d = long(sqrt(double(w*h)));
 	if(n<=0 || m<=0 || l<=0)	{	delete []buf;	fclose(fp);	return true;	}
+	setlocale(LC_NUMERIC, "C");
 	if(!add)	{	Clf();	Txt.clear();	}
 	else	{	ClfZB();	npnt=Pnt.size();	nglf=Glf.size();	}
 #if MGL_HAVE_PTHREAD
@@ -757,6 +774,7 @@ bool mglCanvas::ImportMGLD(const char *fname, bool add)
 	pthread_mutex_unlock(&mutexPrm);
 	pthread_mutex_unlock(&mutexTxt);
 #endif
+	setlocale(LC_NUMERIC, "");
 	delete []buf;	fclose(fp);	return false;
 }
 //-----------------------------------------------------------------------------
@@ -1146,6 +1164,7 @@ void MGL_EXPORT mgl_write_x3d(HMGL gr, const char *fname,const char *descr)
 	bool gz = fname[strlen(fname)-1]=='z';
 	void *fp = gz ? (void*)gzopen(fname,"wt") : (void*)fopen(fname,"wt");
 	if(!fp)		{	gr->SetWarn(mglWarnOpen,fname);	return;	}
+	setlocale(LC_NUMERIC, "C");
 	mgl_printf(fp, gz, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
 	mgl_printf(fp, gz, "<!DOCTYPE X3D PUBLIC \"ISO//Web3D//DTD X3D 3.0//EN\" \"http://www.web3d.org/specifications/x3d-3.0.dtd\">\n");
 	mgl_printf(fp, gz, "<X3D profile='Immersive'>\n<head>\n<meta name='filename' content='%s'/>\n",fname);
@@ -1299,6 +1318,7 @@ void MGL_EXPORT mgl_write_x3d(HMGL gr, const char *fname,const char *descr)
 	}
 	mgl_printf(fp, gz, "</Scene>\n");
 	if(gz)	gzclose((gzFile)fp);	else	fclose((FILE *)fp);
+	setlocale(LC_NUMERIC, "");
 }
 void MGL_EXPORT mgl_write_x3d_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;

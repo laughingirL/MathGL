@@ -224,9 +224,9 @@ I'm thankful to D. Eftaxiopoulos, V. Lipatov and S.M. Plis for making binary pac
 @item
 I'm thankful to S. Skobelev, C. Mikhailenko, M. Veysman, A. Prokhorov, A. Korotkevich, V. Onuchin, S.M. Plis, R. Kiselev, A. Ivanov, N. Troickiy and V. Lipatov for fruitful comments.
 @item
-I'm thankful to sponsors M. Veysman (@uref{http://jiht.ru/en/about/structure.php?set_filter_structure=Y&structure_UF_DEPARTMENT=241&filter=Y&set_filter=Y, IHED RAS}) and A. Prokhorov (@url{www.datadvance.net, $DATADVANCE}).
+I'm thankful to sponsors M. Veysman (@uref{http://jiht.ru/en/about/structure.php?set_filter_structure=Y&structure_UF_DEPARTMENT=241&filter=Y&set_filter=Y, IHED RAS}) and A. Prokhorov (@url{www.datadvance.net, DATADVANCE}).
 @end itemize
 
-Javascript interface was developed with support of @url{www.datadvance.net, $DATADVANCE} company.
+Javascript interface was developed with support of @url{www.datadvance.net, DATADVANCE} company.
 
 @external{}

@@ -181,6 +181,7 @@ void MGL_EXPORT mgl_write_eps(HMGL gr, const char *fname,const char *descr)
 	if(!strcmp(fname,"-"))	fp = stdout;		// allow to write in stdout
 	else		fp = gz ? (void*)gzopen(fname,"wt") : (void*)fopen(fname,"wt");
 	if(!fp)		{	gr->SetWarn(mglWarnOpen,fname);	return;	}
+	setlocale(LC_NUMERIC, "C");
 	mgl_printf(fp, gz, "%%!PS-Adobe-3.0 EPSF-3.0\n%%%%BoundingBox: 0 0 %d %d\n", _Gr_->GetWidth(), _Gr_->GetHeight());
 	mgl_printf(fp, gz, "%%%%Created by MathGL library\n%%%%Title: %s\n",descr ? descr : fname);
 	mgl_printf(fp, gz, "%%%%CreationDate: %s\n",ctime(&now));
@@ -340,6 +341,7 @@ void MGL_EXPORT mgl_write_eps(HMGL gr, const char *fname,const char *descr)
 	}
 	mgl_printf(fp, gz, "\nshowpage\n%%%%EOF\n");
 	if(strcmp(fname,"-"))	{	if(gz)	gzclose((gzFile)fp);	else	fclose((FILE *)fp);	}
+	setlocale(LC_NUMERIC, "");
 }
 void MGL_EXPORT mgl_write_eps_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
@@ -359,6 +361,7 @@ void MGL_EXPORT mgl_write_svg(HMGL gr, const char *fname,const char *descr)
 	if(!strcmp(fname,"-"))	fp = stdout;		// allow to write in stdout
 	else		fp = gz ? (void*)gzopen(fname,"wt") : (void*)fopen(fname,"wt");
 	if(!fp)		{	gr->SetWarn(mglWarnOpen,fname);	return;	}
+	setlocale(LC_NUMERIC, "C");
 	mgl_printf(fp, gz, "<?xml version=\"1.0\" standalone=\"no\"?>\n");
 	mgl_printf(fp, gz, "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 20000303 Stylable//EN\" \"http://www.w3.org/TR/2000/03/WD-SVG-20000303/DTD/svg-20000303-stylable.dtd\">\n");
 	mgl_printf(fp, gz, "<svg width=\"%d\" height=\"%d\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n", _Gr_->GetWidth(), hh);
@@ -498,6 +501,7 @@ void MGL_EXPORT mgl_write_svg(HMGL gr, const char *fname,const char *descr)
 	{	mglPrim &q=gr->GetPrm(i);	if(q.type==-1)	q.type = 1;	}
 	mgl_printf(fp, gz, "</g></svg>");
 	if(strcmp(fname,"-"))	{	if(gz)	gzclose((gzFile)fp);	else	fclose((FILE *)fp);	}
+	setlocale(LC_NUMERIC, "");
 }
 void MGL_EXPORT mgl_write_svg_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
@@ -605,6 +609,7 @@ void MGL_EXPORT mgl_write_tex(HMGL gr, const char *fname,const char *descr)
 
 	FILE *fp = fopen(fname,"wt");
 	if(!fp)		{	gr->SetWarn(mglWarnOpen,fname);	return;	}
+	setlocale(LC_NUMERIC, "C");
 	fprintf(fp, "%% Created by MathGL library\n%% Title: %s\n\n",descr?descr:fname);
 	fprintf(fp, "\\begin{tikzpicture}\n");
 
@@ -705,40 +710,47 @@ void MGL_EXPORT mgl_write_tex(HMGL gr, const char *fname,const char *descr)
 	for(i=0;i<gr->GetPrmNum();i++)
 	{	mglPrim &q=gr->GetPrm(i);	if(q.type==-1)	q.type = 1;	}
 	fclose(fp);
+	setlocale(LC_NUMERIC, "");
 
 	// provide colors used by figure
 	fp=fopen("mglcolors.tex","wt");
-	for(ii=0;ii<6;ii++)	for(jj=0;jj<6;jj++)	for(kk=0;kk<6;kk++)
-		fprintf(fp,"\\definecolor{mgl_%d}{RGB}{%d,%d,%d}\n",ii+6*(jj+6*kk),51*ii,51*jj,51*kk);
-	mreal ms=0.4*gr->mark_size()/100;	// also provide marks
-	fprintf(fp, "\\providecommand{\\mglp}[4]{\\draw[#3] (#1-#4, #2) -- (#1+#4,#2) (#1,#2-#4) -- (#1,#2+#4);}\n");
-	fprintf(fp, "\\providecommand{\\mglx}[4]{\\draw[#3] (#1-#4, #2-#4) -- (#1+#4,#2+#4) (#1+#4,#2-#4) -- (#1-#4,#2+#4);}\n");
-	fprintf(fp, "\\providecommand{\\mgls}[4]{\\draw[#3] (#1-#4, #2-#4) -- (#1+#4,#2-#4) -- (#1+#4,#2+#4) -- (#1-#4,#2+#4) -- cycle;}\n");
-	fprintf(fp, "\\providecommand{\\mglS}[4]{\\fill[#3] (#1-#4, #2-#4) -- (#1+#4,#2-#4) -- (#1+#4,#2+#4) -- (#1-#4,#2+#4) -- cycle;}\n");
-	fprintf(fp, "\\providecommand{\\mgld}[4]{\\draw[#3] (#1, #2-#4) -- (#1+#4,#2) -- (#1,#2+#4) -- (#1-#4,#2) -- cycle;}\n");
-	fprintf(fp, "\\providecommand{\\mglD}[4]{\\fill[#3] (#1, #2-#4) -- (#1+#4,#2) -- (#1,#2+#4) -- (#1-#4,#2) -- cycle;}\n");
-	fprintf(fp, "\\providecommand{\\mglv}[4]{\\draw[#3] (#1-#4, #2+#4/2) -- (#1+#4,#2+#4/2) -- (#1,#2-#4) -- cycle;}\n");
-	fprintf(fp, "\\providecommand{\\mglV}[4]{\\fill[#3] (#1-#4, #2+#4/2) -- (#1+#4,#2+#4/2) -- (#1,#2-#4) -- cycle;}\n");
-	fprintf(fp, "\\providecommand{\\mglt}[4]{\\draw[#3] (#1-#4, #2-#4/2) -- (#1+#4,#2-#4/2) -- (#1,#2+#4) -- cycle;}\n");
-	fprintf(fp, "\\providecommand{\\mglT}[4]{\\fill[#3] (#1-#4, #2-#4/2) -- (#1+#4,#2-#4/2) -- (#1,#2+#4) -- cycle;}\n");
-	fprintf(fp, "\\providecommand{\\mgll}[4]{\\draw[#3] (#1+#4/2, #2-#4) -- (#1+#4/2,#2+#4) -- (#1-#4,#2) -- cycle;}\n");
-	fprintf(fp, "\\providecommand{\\mglL}[4]{\\fill[#3] (#1+#4/2, #2-#4) -- (#1+#4/2,#2+#4) -- (#1-#4,#2) -- cycle;}\n");
-	fprintf(fp, "\\providecommand{\\mglr}[4]{\\draw[#3] (#1-#4/2, #2-#4) -- (#1-#4/2,#2+#4) -- (#1+#4,#2) -- cycle;}\n");
-	fprintf(fp, "\\providecommand{\\mglR}[4]{\\fill[#3] (#1-#4/2, #2-#4) -- (#1-#4/2,#2+#4) -- (#1+#4,#2) -- cycle;}\n");
-	fprintf(fp, "\\providecommand{\\mglR}[4]{\\draw[#3] (#1, #2-#4) -- (#1,#2) -- (#1-#4,#2+#4) (#1,#2) -- (#1+#4,#2+#4);}\n");
-	fprintf(fp, "\\providecommand{\\mgla}[4]{\\draw[#3] (#1-#4, #2) -- (#1+#4,#2) (#1-0.6*#4,#2-0.8*#4) -- (#1+0.6*#4,#2+0.8*#4) (#1-0.6*#4,#2+0.8*#4) -- (#1+0.6*#4,#2-0.8*#4);}\n");
-	fprintf(fp, "\\providecommand{\\mglY}[4]{\\draw[#3] (#1, #2-#4) -- (#1,#2) (#1-#4,#2+#4) -- (#1,#2) (#1+#4,#2+#4) -- (#1,#2);}\n");
-	fprintf(fp, "\\providecommand{\\mglo}[4]{\\draw[#3] (#1, #2) circle (#4);}\n");
-	fprintf(fp, "\\providecommand{\\mglO}[4]{\\fill[#3] (#1, #2) circle (#4);}\n");
-	fprintf(fp, "\\providecommand{\\mglc}[3]{\\draw[#3] (#1, #2) circle (%g);}\n\n", 0.1*ms);
-	fclose(fp);
+	if(fp)
+	{
+		for(ii=0;ii<6;ii++)	for(jj=0;jj<6;jj++)	for(kk=0;kk<6;kk++)
+			fprintf(fp,"\\definecolor{mgl_%d}{RGB}{%d,%d,%d}\n",ii+6*(jj+6*kk),51*ii,51*jj,51*kk);
+		mreal ms=0.4*gr->mark_size()/100;	// also provide marks
+		fprintf(fp, "\\providecommand{\\mglp}[4]{\\draw[#3] (#1-#4, #2) -- (#1+#4,#2) (#1,#2-#4) -- (#1,#2+#4);}\n");
+		fprintf(fp, "\\providecommand{\\mglx}[4]{\\draw[#3] (#1-#4, #2-#4) -- (#1+#4,#2+#4) (#1+#4,#2-#4) -- (#1-#4,#2+#4);}\n");
+		fprintf(fp, "\\providecommand{\\mgls}[4]{\\draw[#3] (#1-#4, #2-#4) -- (#1+#4,#2-#4) -- (#1+#4,#2+#4) -- (#1-#4,#2+#4) -- cycle;}\n");
+		fprintf(fp, "\\providecommand{\\mglS}[4]{\\fill[#3] (#1-#4, #2-#4) -- (#1+#4,#2-#4) -- (#1+#4,#2+#4) -- (#1-#4,#2+#4) -- cycle;}\n");
+		fprintf(fp, "\\providecommand{\\mgld}[4]{\\draw[#3] (#1, #2-#4) -- (#1+#4,#2) -- (#1,#2+#4) -- (#1-#4,#2) -- cycle;}\n");
+		fprintf(fp, "\\providecommand{\\mglD}[4]{\\fill[#3] (#1, #2-#4) -- (#1+#4,#2) -- (#1,#2+#4) -- (#1-#4,#2) -- cycle;}\n");
+		fprintf(fp, "\\providecommand{\\mglv}[4]{\\draw[#3] (#1-#4, #2+#4/2) -- (#1+#4,#2+#4/2) -- (#1,#2-#4) -- cycle;}\n");
+		fprintf(fp, "\\providecommand{\\mglV}[4]{\\fill[#3] (#1-#4, #2+#4/2) -- (#1+#4,#2+#4/2) -- (#1,#2-#4) -- cycle;}\n");
+		fprintf(fp, "\\providecommand{\\mglt}[4]{\\draw[#3] (#1-#4, #2-#4/2) -- (#1+#4,#2-#4/2) -- (#1,#2+#4) -- cycle;}\n");
+		fprintf(fp, "\\providecommand{\\mglT}[4]{\\fill[#3] (#1-#4, #2-#4/2) -- (#1+#4,#2-#4/2) -- (#1,#2+#4) -- cycle;}\n");
+		fprintf(fp, "\\providecommand{\\mgll}[4]{\\draw[#3] (#1+#4/2, #2-#4) -- (#1+#4/2,#2+#4) -- (#1-#4,#2) -- cycle;}\n");
+		fprintf(fp, "\\providecommand{\\mglL}[4]{\\fill[#3] (#1+#4/2, #2-#4) -- (#1+#4/2,#2+#4) -- (#1-#4,#2) -- cycle;}\n");
+		fprintf(fp, "\\providecommand{\\mglr}[4]{\\draw[#3] (#1-#4/2, #2-#4) -- (#1-#4/2,#2+#4) -- (#1+#4,#2) -- cycle;}\n");
+		fprintf(fp, "\\providecommand{\\mglR}[4]{\\fill[#3] (#1-#4/2, #2-#4) -- (#1-#4/2,#2+#4) -- (#1+#4,#2) -- cycle;}\n");
+		fprintf(fp, "\\providecommand{\\mglR}[4]{\\draw[#3] (#1, #2-#4) -- (#1,#2) -- (#1-#4,#2+#4) (#1,#2) -- (#1+#4,#2+#4);}\n");
+		fprintf(fp, "\\providecommand{\\mgla}[4]{\\draw[#3] (#1-#4, #2) -- (#1+#4,#2) (#1-0.6*#4,#2-0.8*#4) -- (#1+0.6*#4,#2+0.8*#4) (#1-0.6*#4,#2+0.8*#4) -- (#1+0.6*#4,#2-0.8*#4);}\n");
+		fprintf(fp, "\\providecommand{\\mglY}[4]{\\draw[#3] (#1, #2-#4) -- (#1,#2) (#1-#4,#2+#4) -- (#1,#2) (#1+#4,#2+#4) -- (#1,#2);}\n");
+		fprintf(fp, "\\providecommand{\\mglo}[4]{\\draw[#3] (#1, #2) circle (#4);}\n");
+		fprintf(fp, "\\providecommand{\\mglO}[4]{\\fill[#3] (#1, #2) circle (#4);}\n");
+		fprintf(fp, "\\providecommand{\\mglc}[3]{\\draw[#3] (#1, #2) circle (%g);}\n\n", 0.1*ms);
+		fclose(fp);
+	}
 
 	// provide main file for viewing figure
 	fp=fopen("mglmain.tex","wt");
-	fprintf(fp, "\\documentclass{article}\n\n");
-	fprintf(fp, "%% following lines should be placed before \\begin{document}\n");
-	fprintf(fp,"\\usepackage{tikz}\n\\input{mglcolors.tex}\n");
-	fprintf(fp, "\\begin{document}\n%% start figure itself\n\\input{%s}\\end{document}\n",fname);
-	fclose(fp);
+	if(fp)
+	{
+		fprintf(fp, "\\documentclass{article}\n\n");
+		fprintf(fp, "%% following lines should be placed before \\begin{document}\n");
+		fprintf(fp,"\\usepackage{tikz}\n\\input{mglcolors.tex}\n");
+		fprintf(fp, "\\begin{document}\n%% start figure itself\n\\input{%s}\\end{document}\n",fname);
+		fclose(fp);
+	}
 }
 //-----------------------------------------------------------------------------

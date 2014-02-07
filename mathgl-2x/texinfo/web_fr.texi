@@ -136,10 +136,10 @@ There is detailed @ref{News, news list}. Sourceforge project page @uref{http://s
 
 @ifhtml
 @html
-<a href="http://www.datadvance.net"><img border="0" align="right" hspace="10" alt="$DATADVANCE" src="../datadvance.png"></a>
+<a href="http://www.datadvance.net"><img border="0" align="right" hspace="10" alt="DATADVANCE" src="../datadvance.png"></a>
 @end html
 @end ifhtml
-Javascript interface was developed with support of @url{http://www.datadvance.net, $DATADVANCE} company.
+Javascript interface was developed with support of @url{http://www.datadvance.net, DATADVANCE} company.
 
 @external{}
 

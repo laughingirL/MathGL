@@ -223,7 +223,7 @@ long mglBase::AddGlyph(int s, long j)
 	// if no one then let add it
 	long k;
 #pragma omp critical(glf)
-	{MGL_PUSH(Glf,g,mutexGlf);	k=Glf.size()-1;}	return k;
+	{k=Glf.size();	MGL_PUSH(Glf,g,mutexGlf);}	return k;
 }
 //-----------------------------------------------------------------------------
 //		Add points to the buffer
@@ -274,7 +274,7 @@ long mglBase::AddPnt(const mglMatrix *mat, mglPoint p, mreal c, mglPoint n, mrea
 	if(mat->norot)	q.sub=-1;	// NOTE: temporary -- later should be mglInPlot here
 	long k;
 #pragma omp critical(pnt)
-	{MGL_PUSH(Pnt,q,mutexPnt);	k=Pnt.size()-1;}	return k;
+	{k=Pnt.size();	MGL_PUSH(Pnt,q,mutexPnt);}	return k;
 }
 //-----------------------------------------------------------------------------
 long mglBase::CopyNtoC(long from, mreal c)
@@ -284,7 +284,7 @@ long mglBase::CopyNtoC(long from, mreal c)
 	if(mgl_isnum(c))	{	p.c=c;	p.t=0;	Txt[long(c)].GetC(c,0,p);	}
 	long k;
 #pragma omp critical(pnt)
-	{MGL_PUSH(Pnt,p,mutexPnt);	k=Pnt.size()-1;}	return k;
+	{k=Pnt.size();	MGL_PUSH(Pnt,p,mutexPnt);}	return k;
 }
 //-----------------------------------------------------------------------------
 long mglBase::CopyProj(long from, mglPoint p, mglPoint n)
@@ -295,7 +295,7 @@ long mglBase::CopyProj(long from, mglPoint p, mglPoint n)
 	q.u = n.x;		q.v = n.y;		q.w = n.z;
 	long k;
 #pragma omp critical(pnt)
-	{MGL_PUSH(Pnt,q,mutexPnt);	k=Pnt.size()-1;}	return k;
+	{k=Pnt.size();	MGL_PUSH(Pnt,q,mutexPnt);}	return k;
 }
 //-----------------------------------------------------------------------------
 void mglBase::Reserve(long n)
@@ -861,7 +861,7 @@ void mglTexture::Set(const char *s, int smooth, mreal alpha)
 	// fill texture itself
 	mreal v=sm?(n-1)/255.:n/256.;
 	if(!sm)
-#pragma omp parallel for
+//#pragma omp parallel for	// remove parallel here due to possible race conditions for v<1
 		for(long i=0;i<256;i++)
 		{
 			register long j = 2*long(v*i);	//u-=j;
@@ -920,7 +920,7 @@ long mglBase::AddTexture(const char *cols, int smooth)
 	// create new one
 	long k;
 #pragma omp critical(txt)
-	{MGL_PUSH(Txt,t,mutexTxt);	k=Txt.size()-1;}	return k;
+	{k=Txt.size();	MGL_PUSH(Txt,t,mutexTxt);}	return k;
 }
 //-----------------------------------------------------------------------------
 mreal mglBase::AddTexture(mglColor c)
@@ -936,7 +936,7 @@ mreal mglBase::AddTexture(mglColor c)
 	for(long i=0;i<MGL_TEXTURE_COLOURS;i++)	t.col[i]=c;
 	long k;
 #pragma omp critical(txt)
-	{MGL_PUSH(Txt,t,mutexTxt);	k=Txt.size()-1;}	return k;
+	{k=Txt.size();	MGL_PUSH(Txt,t,mutexTxt);}	return k;
 }
 //-----------------------------------------------------------------------------
 //		Coloring and palette

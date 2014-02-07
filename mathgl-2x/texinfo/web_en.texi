@@ -62,10 +62,10 @@ There is detailed @ref{News, news list}. Sourceforge project page @uref{http://s
 
 @ifhtml
 @html
-<a href="http://www.datadvance.net"><img border="0" align="right" hspace="10" alt="$DATADVANCE" src="../datadvance.png"></a>
+<a href="http://www.datadvance.net"><img border="0" align="right" hspace="10" alt="DATADVANCE" src="../datadvance.png"></a>
 @end html
 @end ifhtml
-Javascript interface was developed with support of @url{http://www.datadvance.net, $DATADVANCE} company.
+Javascript interface was developed with support of @url{http://www.datadvance.net, DATADVANCE} company.
 
 @external{}
 
@@ -516,15 +516,15 @@ You may download current version of MathGL for following configurations:
 @item
 @uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}@value{MINVER}.tar.gz,source} file with cmake build system.
 @item
-@uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}-mingw.i686.7z,Win32 GPL} binaries for MinGW (build for i686)
+@uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}@value{MINVER}-mingw.i686.7z,Win32 GPL} binaries for MinGW (build for i686)
 @item
-@uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}.LGPL-mingw.i686.7z,Win32 LGPL} binaries for MinGW (build for i686, no GSL and HDF5 support)
+@uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}@value{MINVER}.LGPL-mingw.i686.7z,Win32 LGPL} binaries for MinGW (build for i686, no GSL and HDF5 support)
 @c @item
-@c @uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}.LGPL-win64.7z,Win64 LGPL} binaries for MSVS 2010 (no GSL and HDF5 support)
+@c @uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}@value{MINVER}.LGPL-win64.7z,Win64 LGPL} binaries for MSVS 2010 (no GSL and HDF5 support)
 @item
-@uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}.eng.pdf,PDF} documentation in English
+@uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}@value{MINVER}.eng.pdf,PDF} documentation in English
 @item
-@uref{http://downloads.sourceforge.net/mathgl/mgl_scripts-@value{VERSION}.7z, UDAV and utilities} with all required DLL files (build for i686)
+@uref{http://downloads.sourceforge.net/mathgl/mgl_scripts-@value{VERSION}@value{MINVER}.7z, UDAV and utilities} with all required DLL files (build for i686)
 @c HTML documentation in English
 @c HTML documentation in Russian
 @c @item

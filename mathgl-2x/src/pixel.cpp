@@ -715,12 +715,13 @@ void mglCanvas::combine(unsigned char *c1, const unsigned char *c2)
 //-----------------------------------------------------------------------------
 unsigned char **mglCanvas::GetRGBLines(long &w, long &h, unsigned char *&f, bool alpha)
 {
-	long d = alpha ? 4:3;
 	unsigned char **p;
 	Finish();
 	p = (unsigned char **)malloc(Height * sizeof(unsigned char *));
+	long d = (alpha ? 4:3)*Width;
+	unsigned char *gg = (alpha?G4:G);
 #pragma omp parallel for
-	for(long i=0;i<Height;i++)	p[i] = (alpha?G4:G)+d*Width*i;
+	for(long i=0;i<Height;i++)	p[i] = gg + d*i;
 	w = Width;	h = Height;		f = 0;
 	return p;
 }
@@ -1838,7 +1839,7 @@ long mglCanvas::setPp(mglPnt &q, const mglPoint &p)
 	q.xx=q.x=p.x;	q.yy=q.y=p.y;	q.zz=q.z=p.z;
 	long k;
 #pragma omp critical(pnt)
-	{MGL_PUSH(Pnt,q,mutexPnt);	k=Pnt.size()-1;}
+	{k=Pnt.size();	MGL_PUSH(Pnt,q,mutexPnt);}
 	return k;
 }
 //-----------------------------------------------------------------------------

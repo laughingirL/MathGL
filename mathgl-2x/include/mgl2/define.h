@@ -51,7 +51,7 @@
 #endif
 #endif
 
-#if defined(_MSC_VER) || defined(__BORLANDC__)
+#if (defined(_MSC_VER) && (_MSC_VER<1600)) || defined(__BORLANDC__)
 typedef signed char int8_t;
 typedef signed short int16_t;
 typedef signed long int32_t;
@@ -240,6 +240,8 @@ typedef double _Complex dual;
 typedef float _Complex dual;
 #endif
 #endif
+/// Find length of wchar_t string (bypass standard wcslen bug)
+double MGL_EXPORT mgl_hypot(double x, double y);
 /// Find length of wchar_t string (bypass standard wcslen bug)
 size_t MGL_EXPORT mgl_wcslen(const wchar_t *str);
 /// Get RGB values for given color id or fill by -1 if no one found

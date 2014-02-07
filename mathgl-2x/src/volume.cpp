@@ -285,7 +285,7 @@ void MGL_EXPORT mgl_surf3_xyz_val(HMGL gr, double val, HCDT x, HCDT y, HCDT z, H
 					q = mgl_find_norm(both, x,y,z,a, u, inv,n,m,l);
 					pos = gr->AddPnt(p,c,q);	u.c=pos;
 					if(pos<0)	continue;
-					kk.push_back(u);	kx2[i1] = kk.size()-1;
+					kx2[i1] = kk.size();	kk.push_back(u);
 				}
 			}
 			if(j<m-1)
@@ -301,7 +301,7 @@ void MGL_EXPORT mgl_surf3_xyz_val(HMGL gr, double val, HCDT x, HCDT y, HCDT z, H
 					q = mgl_find_norm(both, x,y,z,a, u, inv,n,m,l);
 					pos = gr->AddPnt(p,c,q);	u.c=pos;
 					if(pos<0)	continue;
-					kk.push_back(u);	ky2[i1] = kk.size()-1;
+					ky2[i1] = kk.size();	kk.push_back(u);
 				}
 			}
 			if(k>0)
@@ -317,7 +317,7 @@ void MGL_EXPORT mgl_surf3_xyz_val(HMGL gr, double val, HCDT x, HCDT y, HCDT z, H
 					q = mgl_find_norm(both, x,y,z,a, u, inv,n,m,l);
 					pos = gr->AddPnt(p,c,q);	u.c=pos;
 					if(pos<0)	continue;
-					kk.push_back(u);	kz[i1] = kk.size()-1;
+					kz[i1] = kk.size();	kk.push_back(u);
 				}
 			}
 		}
@@ -436,7 +436,7 @@ void MGL_EXPORT mgl_surf3a_xyz_val(HMGL gr, double val, HCDT x, HCDT y, HCDT z, 
 					q = mgl_find_norm(both, x,y,z,a, u, inv,n,m,l);
 					pos = gr->AddPnt(p,c,q,aa);	u.c=pos;
 					if(pos<0)	continue;
-					kk.push_back(u);	kx2[i1] = kk.size()-1;
+					kx2[i1] = kk.size();	kk.push_back(u);
 				}
 			}
 			if(j<m-1)
@@ -453,7 +453,7 @@ void MGL_EXPORT mgl_surf3a_xyz_val(HMGL gr, double val, HCDT x, HCDT y, HCDT z, 
 					q = mgl_find_norm(both, x,y,z,a, u, inv,n,m,l);
 					pos = gr->AddPnt(p,c,q,aa);	u.c=pos;
 					if(pos<0)	continue;
-					kk.push_back(u);	ky2[i1] = kk.size()-1;
+					ky2[i1] = kk.size();	kk.push_back(u);
 				}
 			}
 			if(k>0)
@@ -470,7 +470,7 @@ void MGL_EXPORT mgl_surf3a_xyz_val(HMGL gr, double val, HCDT x, HCDT y, HCDT z, 
 					q = mgl_find_norm(both, x,y,z,a, u, inv,n,m,l);
 					pos = gr->AddPnt(p,c,q,aa);	u.c=pos;
 					if(pos<0)	continue;
-					kk.push_back(u);	kz[i1] = kk.size()-1;
+					kz[i1] = kk.size();	kk.push_back(u);
 				}
 			}
 		}
@@ -603,7 +603,7 @@ void MGL_EXPORT mgl_surf3c_xyz_val(HMGL gr, double val, HCDT x, HCDT y, HCDT z, 
 					q = mgl_find_norm(both, x,y,z,a, u, inv,n,m,l);
 					pos = gr->AddPnt(p,c,q);	u.c=pos;
 					if(pos<0)	continue;
-					kk.push_back(u);	kx2[i1] = kk.size()-1;
+					kx2[i1] = kk.size();	kk.push_back(u);
 				}
 			}
 			if(j<m-1)
@@ -620,7 +620,7 @@ void MGL_EXPORT mgl_surf3c_xyz_val(HMGL gr, double val, HCDT x, HCDT y, HCDT z, 
 					q = mgl_find_norm(both, x,y,z,a, u, inv,n,m,l);
 					pos = gr->AddPnt(p,c,q);	u.c=pos;
 					if(pos<0)	continue;
-					kk.push_back(u);	ky2[i1] = kk.size()-1;
+					ky2[i1] = kk.size();	kk.push_back(u);
 				}
 			}
 			if(k>0)
@@ -637,7 +637,7 @@ void MGL_EXPORT mgl_surf3c_xyz_val(HMGL gr, double val, HCDT x, HCDT y, HCDT z, 
 					q = mgl_find_norm(both, x,y,z,a, u, inv,n,m,l);
 					pos = gr->AddPnt(p,c,q);	u.c=pos;
 					if(pos<0)	continue;
-					kk.push_back(u);	kz[i1] = kk.size()-1;
+					kz[i1] = kk.size();	kk.push_back(u);
 				}
 			}
 		}
