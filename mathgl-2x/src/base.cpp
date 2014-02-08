@@ -303,10 +303,12 @@ void mglBase::Reserve(long n)
 	if(TernAxis&4)	n*=4;
 #pragma omp critical(pnt)
 	Pnt.reserve(n);
+#pragma omp critical(prm)
+	Prm.reserve(n);
 }
 //-----------------------------------------------------------------------------
 //		Boundaries and scaling
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 bool mglBase::RecalcCRange()
 {
 	bool wrong=false;

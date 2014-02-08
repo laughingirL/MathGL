@@ -291,7 +291,7 @@ void MGL_EXPORT mgl_surf_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, co
 	long ss = gr->AddTexture(sch);
 	long *pos = new long[n*m];
 	bool wire = (mglchr(sch,'#'));
-	gr->Reserve(n*m*z->GetNz()*(wire?2:1));
+	gr->Reserve((n+1)*(m+1)*z->GetNz()*(wire?2:1));
 
 	mglPoint p,q,s,xx,yy;
 	for(long k=0;k<z->GetNz();k++)
@@ -432,7 +432,8 @@ void MGL_EXPORT mgl_dens_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, co
 
 	long ss = gr->AddTexture(sch);
 	long *pos = new long[n*m];
-	gr->Reserve(n*m*z->GetNz());
+	bool wire = (mglchr(sch,'#'));
+	gr->Reserve((n+1)*(m+1)*z->GetNz()*(wire?2:1));
 
 	mglPoint p,s=mglPoint(0,0,1);
 	mreal zz, c;
@@ -453,9 +454,9 @@ void MGL_EXPORT mgl_dens_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, co
 #pragma omp parallel for
 			for(long i=0;i<n*m;i++)	gr->mark_plot(pos[i],'.');
 		else	mgl_surf_plot(gr,pos,n,m);
-		if(mglchr(sch,'#') && !gr->Stop)
+		if(wire && !gr->Stop)
 		{
-			gr->Reserve(n*m);	gr->SetPenPal("k-");
+			gr->SetPenPal("k-");
 #pragma omp parallel for
 			for(long i=0;i<n*m;i++)	pos[i] = gr->CopyNtoC(pos[i],gr->CDef);
 			mgl_mesh_plot(gr,pos,n,m,3);
@@ -516,7 +517,8 @@ void MGL_EXPORT mgl_surfc_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char
 	static int cgid=1;	gr->StartGroup("SurfC",cgid++);
 	long ss = gr->AddTexture(sch);
 	long *pos = new long[n*m];
-	gr->Reserve(n*m*z->GetNz());
+	bool wire = (mglchr(sch,'#'));
+	gr->Reserve((n+1)*(m+1)*z->GetNz()*(wire?2:1));
 
 	mglPoint p,q,s,xx,yy;
 	for(long k=0;k<z->GetNz();k++)
@@ -535,9 +537,9 @@ void MGL_EXPORT mgl_surfc_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char
 #pragma omp parallel for
 			for(long i=0;i<n*m;i++)	gr->mark_plot(pos[i],'.');
 		else	mgl_surf_plot(gr,pos,n,m);
-		if(mglchr(sch,'#') && !gr->Stop)
+		if(wire && !gr->Stop)
 		{
-			gr->Reserve(n*m);	gr->SetPenPal("k-");
+			gr->SetPenPal("k-");
 #pragma omp parallel for
 			for(long i=0;i<n*m;i++)	pos[i] = gr->CopyNtoC(pos[i],gr->CDef);
 			mgl_mesh_plot(gr,pos,n,m,3);
@@ -578,7 +580,8 @@ void MGL_EXPORT mgl_surfa_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char
 	static int cgid=1;	gr->StartGroup("SurfA",cgid++);
 	long ss = gr->AddTexture(sch);
 	long *pos = new long[n*m];
-	gr->Reserve(n*m*z->GetNz());
+	bool wire = (mglchr(sch,'#'));
+	gr->Reserve((n+1)*(m+1)*z->GetNz()*(wire?2:1));
 
 	mglPoint p,q,s,xx,yy;
 	for(k=0;k<z->GetNz();k++)
@@ -597,9 +600,9 @@ void MGL_EXPORT mgl_surfa_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char
 #pragma omp parallel for
 			for(long i=0;i<n*m;i++)	gr->mark_plot(pos[i],'.');
 		else	mgl_surf_plot(gr,pos,n,m);
-		if(mglchr(sch,'#'))
+		if(wire && !gr->Stop)
 		{
-			gr->Reserve(n*m);	gr->SetPenPal("k-");
+			gr->SetPenPal("k-");
 #pragma omp parallel for
 			for(long i=0;i<n*m;i++)	pos[i] = gr->CopyNtoC(pos[i],gr->CDef);
 			mgl_mesh_plot(gr,pos,n,m,3);

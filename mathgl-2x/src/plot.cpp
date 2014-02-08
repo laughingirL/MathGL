@@ -932,7 +932,7 @@ void MGL_EXPORT mgl_bars_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, c
 	memset(dd,0,n*sizeof(mreal));
 
 	gr->SetPenPal(pen,&pal);
-	if(wire)	gr->Reserve(4*n*m);	else	gr->Reserve(4*n*m);
+	gr->Reserve(4*n*m);
 	for(long j=0;j<m;j++)
 	{
 		c2=c1=gr->NextColor(pal);
@@ -1000,7 +1000,7 @@ void MGL_EXPORT mgl_bars_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char
 	memset(dd,0,n*sizeof(mreal));
 
 	gr->SetPenPal(pen,&pal);
-	if(wire)	gr->Reserve(4*n*m);	else	gr->Reserve(4*n*m);
+	gr->Reserve(4*n*m);
 	for(long j=0;j<m;j++)
 	{
 		c2=c1=gr->NextColor(pal);
@@ -1089,7 +1089,7 @@ void MGL_EXPORT mgl_barh_yx(HMGL gr, HCDT y, HCDT v, const char *pen, const char
 	memset(dd,0,n*sizeof(mreal));
 
 	gr->SetPenPal(pen,&pal);
-	if(wire)	gr->Reserve(4*n*m);	else	gr->Reserve(4*n*m);
+	gr->Reserve(4*n*m);
 	for(long j=0;j<m;j++)
 	{
 		c2=c1=gr->NextColor(pal);
