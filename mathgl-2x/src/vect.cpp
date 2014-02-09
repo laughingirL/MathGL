@@ -1021,7 +1021,7 @@ void MGL_EXPORT mgl_grad_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT phi, const ch
 	mglData ax(phi), ay,az,xx,yy,zz;
 	ay.Set(ax);	az.Set(ax);	xx.Set(ax);	yy.Set(ax);	zz.Set(ax);
 	long n=xx.nx, m=xx.ny, l=xx.nz, nn = n*m*l;
-	if(x->GetNx()*x->GetNy()*x->GetNz()==nn && y->GetNx()*y->GetNy()*y->GetNz()==nn && x->GetNx()*x->GetNy()*x->GetNz()==nn)
+	if(x->GetNx()*x->GetNy()*x->GetNz()==nn && y->GetNx()*y->GetNy()*y->GetNz()==nn && z->GetNx()*z->GetNy()*z->GetNz()==nn)
 	{	xx.Set(x);	yy.Set(y);	zz.Set(z);	}	// nothing to do
 	else if(x->GetNx()==n && y->GetNx()==m && z->GetNx()==l)
 #pragma omp parallel for collapse(3)

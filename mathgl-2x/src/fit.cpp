@@ -112,13 +112,13 @@ int MGL_NO_EXPORT mgl_fit__fdf (const gsl_vector * x, void *data, gsl_vector * f
 #endif
 //-----------------------------------------------------------------------------
 /// GSL based fitting procedure for formula/arguments specified by string
-mreal MGL_NO_EXPORT mgl_fit_base(mglFitData *fd, mreal *ini)
+mreal MGL_NO_EXPORT mgl_fit_base(mglFitData &fd, mreal *ini)
 {
 #if MGL_HAVE_GSL
-	register long i,m=fd->m,n=fd->n,iter=0;
-	if(n<1 || fd==0 || ini==0)	return -1;
+	register long i,m=fd.m,n=fd.n,iter=0;
+	if(n<1 || ini==0)	return -1;
 	// setup data
-	double *x_init = new double[fd->m];
+	double *x_init = new double[fd.m];
 	for(i=0;i<m;i++)	x_init[i] = ini[i];
 	// setup fitting
 	gsl_matrix *covar = gsl_matrix_alloc(m, m);
@@ -128,7 +128,7 @@ mreal MGL_NO_EXPORT mgl_fit_base(mglFitData *fd, mreal *ini)
 	gsl_multifit_function_fdf f;
 	f.f = mgl_fit__f;		f.df = mgl_fit__df;
 	f.fdf = mgl_fit__fdf;	f.n = n;	f.p = m;
-	f.params = fd;
+	f.params = &fd;
 	gsl_multifit_fdfsolver_set(s, &f, &vx.vector);
 	int status;	// start fitting
 	do
@@ -280,7 +280,7 @@ HMDT MGL_EXPORT mgl_fit_xys(HMGL gr, HCDT xx, HCDT yy, HCDT ss, const char *eq, 
 		else in.Fill(0.,0);
 		fd.a = y.a+i*m;		fd.x = x.a+(i%x.ny)*m;
 		fd.s = s.a+i*m;
-		res = mgl_fit_base(&fd,in.a);
+		res = mgl_fit_base(fd,in.a);
 		mgl_fill_fit(gr,*fit,in,fd,var,nn,1,1,i);
 		if(ini && ini->nx>=fd.m)	memcpy(ini->a,in.a,fd.m*sizeof(mreal));
 	}
@@ -323,7 +323,7 @@ HMDT MGL_EXPORT mgl_fit_xyzs(HMGL gr, HCDT xx, HCDT yy, HCDT zz, HCDT ss, const 
 		if(ini && ini->nx>=fd.m)	in.Set(ini->a,fd.m);
 		else in.Fill(0.,0);
 		fd.a = z.a+i*m*n;		fd.s = s.a+i*m*n;
-		res = mgl_fit_base(&fd,in.a);
+		res = mgl_fit_base(fd,in.a);
 		mgl_fill_fit(gr,*fit,in,fd,var,nn,nn,1,i);
 		if(ini && ini->nx>=fd.m)	memcpy(ini->a,in.a,fd.m*sizeof(mreal));
 	}
@@ -365,7 +365,7 @@ HMDT MGL_EXPORT mgl_fit_xyzas(HMGL gr, HCDT xx, HCDT yy, HCDT zz, HCDT aa, HCDT 
 
 	if(ini && ini->nx>=fd.m)	in.Set(ini->a,fd.m);
 	else in.Fill(0.,0);
-	res = mgl_fit_base(&fd,in.a);
+	res = mgl_fit_base(fd,in.a);
 	mgl_fill_fit(gr,*fit,in,fd,var,nn,nn,nn,0);
 	if(ini && ini->nx>=fd.m)	memcpy(ini->a,in.a,fd.m*sizeof(mreal));
 

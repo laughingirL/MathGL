@@ -648,7 +648,7 @@ int mglParser::Parse(mglGraph *gr, std::wstring str, long pos)
 			int r = ch-'0';
 			if(ch>='a' && ch<='z')	r = 10+ch-'a';
 //			int r = int(a[0].v);
-			if(arg[1][1]==0 && (r>=0 || r<=39))
+			if(arg[1][1]==0 && (r>=0 && r<40))	// TODO: check this
 			{
 				if(a[1].type==0)
 				{

@@ -27,6 +27,7 @@
 22. Remove hypot() from header file type.h
 
 23. Change to LGPL for Qt,FLTK,Wx + add notice to put "About MathGL" section.
+24. Use mglStack<T> instead of std::vector<T> due to multi-threading
 
 
 ============= DOCUMENTATION =============

@@ -301,7 +301,6 @@ void MGL_EXPORT mgl_write_obj_old(HMGL gr, const char *fname,const char *descr, 
 	delete []ng;
 
 	size_t len=strlen(fname),ntxt=gr->GetTxtNum();
-	char *tname = new char[len+5];	strcpy(tname,fname);
 	FILE *fp=fopen(fname,"wt");
 	if(!fp)		{	gr->SetWarn(mglWarnOpen,fname);	return;	}
 	// vertices definition
@@ -316,6 +315,7 @@ void MGL_EXPORT mgl_write_obj_old(HMGL gr, const char *fname,const char *descr, 
 //		else fprintf(fp,"vn %g %g %g\n",pp.u,pp.v,pp.w);
 	}
 	// primitive definition in groups
+	char *tname = new char[len+5];	strcpy(tname,fname);
 	tname[len-4]=0;	fprintf(fp,"# Primitives Definitions\nmtllib %s.mtl\nusemtl %s\n",tname,tname);
 	for(size_t i=0;i<gr->Grp.size();i++)
 	{
@@ -705,7 +705,7 @@ bool mglCanvas::ImportMGLD(const char *fname, bool add)
 	sscanf(buf+5,"%lu%lu%lu%lu%d%d",&n,&m,&l,&k,&w,&h);
 	if(w<=0 || h<=0)	{	w=Width;	h=Height;	}
 	d = long(sqrt(double(w*h)));
-	if(n<=0 || m<=0 || l<=0)	{	delete []buf;	fclose(fp);	return true;	}
+	if(n==0 || m==0 || l==0)	{	delete []buf;	fclose(fp);	return true;	}
 	setlocale(LC_NUMERIC, "C");
 	if(!add)	{	Clf();	Txt.clear();	}
 	else	{	ClfZB();	npnt=Pnt.size();	nglf=Glf.size();	}
@@ -1319,6 +1319,7 @@ void MGL_EXPORT mgl_write_x3d(HMGL gr, const char *fname,const char *descr)
 	mgl_printf(fp, gz, "</Scene>\n");
 	if(gz)	gzclose((gzFile)fp);	else	fclose((FILE *)fp);
 	setlocale(LC_NUMERIC, "");
+	delete []pnt;
 }
 void MGL_EXPORT mgl_write_x3d_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;

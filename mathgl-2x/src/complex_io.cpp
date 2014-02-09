@@ -677,14 +677,13 @@ int MGL_EXPORT mgl_datac_read_all(HADT dat, const char *templ, int as_slice)
 	size_t i;
 	dual *b;
 	long kx,ky,kz;
-	char *fname = new char[256];
 	glob (templ, GLOB_TILDE, NULL, &res);
 
 	//read first file
 	for(i=0;i<res.gl_pathc;i++)
 		if(mgl_datac_read(&d,res.gl_pathv[i]))	break;
 
-	if(i>=res.gl_pathc)	{	delete []fname;	return false;	}
+	if(i>=res.gl_pathc)	{	globfree (&res);	return false;	}
 	kx = d.nx;	ky = d.ny;	kz = d.nz;
 	b = (dual *)malloc(kx*ky*kz*sizeof(dual));
 	memcpy(b,d.a,kx*ky*kz*sizeof(dual));
@@ -693,12 +692,11 @@ int MGL_EXPORT mgl_datac_read_all(HADT dat, const char *templ, int as_slice)
 	{
 		if(mgl_datac_read(&d,res.gl_pathv[i]))
 			if(!mgl_add_file(kx,ky,kz,b,&d,as_slice))
-			{	delete []fname;	free(b);	return false;	}
+			{	globfree (&res);	free(b);	return false;	}
 	}
 	dat->Set(b,kx,ky,kz);
 
-	globfree (&res);
-	delete []fname;	free(b);
+	globfree (&res);	free(b);
 	return true;
 #else
 	return false;

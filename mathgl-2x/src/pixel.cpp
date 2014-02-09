@@ -665,8 +665,8 @@ unsigned char* mglCanvas::col2int(const mglPnt &p,unsigned char *r, int obj_id)
 			}
 		}
 		b0 += (ar>1 ? 1:ar)*p.r;	// diffuse light
-		b1 += (ar>1 ? 1:ar)*p.g;
-		b2 += (ar>1 ? 1:ar)*p.b;
+		b1 += (ag>1 ? 1:ag)*p.g;
+		b2 += (ab>1 ? 1:ab)*p.b;
 		b0 = b0<1 ? b0 : 1;			// normalize components
 		b1 = b1<1 ? b1 : 1;
 		b2 = b2<1 ? b2 : 1;
