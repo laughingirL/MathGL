@@ -85,6 +85,8 @@ void MGL_EXPORT mglStartThreadV(void *(*func)(void *), long n, dual *a, const vo
 	}
 }
 //-----------------------------------------------------------------------------
+dual MGL_EXPORT mgl_expi(dual a)	{	return exp(dual(0,1)*a);	}
+//-----------------------------------------------------------------------------
 MGL_NO_EXPORT void *mgl_csmth_x(void *par)
 {
 	mglThreadC *t=(mglThreadC *)par;

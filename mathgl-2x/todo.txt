@@ -24,9 +24,7 @@
 17. 'perspective' command in UDAV
 18. Check octave 3.8
 21. Use mglFormulaCalc() for data transformation/filling (much faster but require more memory) + the same for complex
-22. Remove hypot() from header file type.h
 
-23. Change to LGPL for Qt,FLTK,Wx + add notice to put "About MathGL" section.
 24. Use mglStack<T> instead of std::vector<T> due to multi-threading
 
 

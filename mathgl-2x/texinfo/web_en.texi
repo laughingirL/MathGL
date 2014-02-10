@@ -48,7 +48,7 @@ Email: <input type=text name=email> <input type=submit name="sub" value="Subscri
 @end ifhtml
 
 @strong{About LGPL and GPL licenses.}
-Generally MathGL is GPL library. However, you can use LGPL license for MathGL core if you don't use wrapper widget classes, SWIG-based interfaces and disable GSL features. This can be done by using @code{lgpl} option at build time. According this, I've added the LGPL win32 binaries into @ref{Download} page.
+Generally, MathGL is GPL library. However, you can use LGPL license for MathGL core and widgets if you don't use SWIG-based interfaces and disable GSL features. This can be done by using @code{lgpl} option at build time. According this, I've added the LGPL win32 binaries into @ref{Download} page.
 
 @strong{Latest news}
 @itemize
