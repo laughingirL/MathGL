@@ -164,17 +164,16 @@ MGL_EXPORT FILE *mgl_next_data(const char *fname,int p)
 	return fp;
 }
 //-----------------------------------------------------------------------------
-int MGL_EXPORT mgl_difr_grid(dual *a,int n,dual q,int Border,dual *b,dual *d,int kk)
+void MGL_EXPORT mgl_difr_grid(dual *a,int n,int step,dual q,int Border,dual *tmp,int kk)
 {
-	//	if(n<=0 || q>=0.5)	return false;
-	dual adt = dual(0.,1.)*q;
-
-	memcpy(b,a,n*sizeof(dual));
+	const dual adt = dual(0.,1.)*q;
+	dual *b = tmp, *d = tmp+n;
+	for(long i=0;i<n;i++)	b[i] = a[i*step];
 	for(long k=kk;k>0;k--)	// 3 iterations
 	{
-#pragma omp parallel for
+//#pragma omp parallel for
 		for(long i=1;i<n-1;i++)
-			d[i] = a[i] + adt*(b[i-1]+b[i+1]-mreal(2)*b[i])/mreal(k);
+			d[i] = a[i*step] + adt*(b[i-1]+b[i+1]-mreal(2)*b[i])/mreal(k);
 		memcpy(b,d,n*sizeof(dual));
 		switch(Border)
 		{
@@ -191,36 +190,37 @@ int MGL_EXPORT mgl_difr_grid(dual *a,int n,dual q,int Border,dual *b,dual *d,int
 				b[n-1] = b[n-4]+mreal(3)*(b[n-2]-b[n-3]);
 				break;
 			case -1:		// exponent at border
+			case 4:
 				b[0] = norm(b[2])<norm(b[1]) ? b[1] : b[1]*b[1]/b[2];
 				b[n-1] = norm(b[n-3])<norm(b[n-2]) ? b[n-2] : b[n-2]*b[n-2]/b[n-3];
 				break;
 			case -2:		// gaussian at border
+			case 5:
 				b[0] = norm(b[2])<norm(b[1]) ? b[3] : pow(b[1]/b[2],3)*b[3];
 				b[n-1] = norm(b[n-3])<norm(b[n-2]) ? b[n-4] : pow(b[n-2]/b[n-3],3)*b[n-4];
 				break;
 		}
 	}
-	memcpy(a,b,n*sizeof(dual));
-	return true;
+	for(long i=0;i<n;i++)	a[i*step] = b[i];
 }
 //-----------------------------------------------------------------------------
-int MGL_EXPORT mgl_difr_axial(dual *a, int n, dual q, int Border,dual *b, dual *d, int kk, double di)
+void MGL_EXPORT mgl_difr_axial(dual *a,int n,int step,dual q,int Border,dual *tmp,int kk, double di)
 {
 	int ii = di<0 ? -int(floor(di)) : 0;
-	dual adt = dual(0.,1.)*q;
 	register mreal ff= di==floor(di) ? 4. : 2.;
-
-	memcpy(b,a,n*sizeof(dual));
+	const dual adt = dual(0.,1.)*q;
+	dual *b = tmp, *d = tmp+n;
+	for(long i=0;i<n;i++)	b[i] = a[i*step];
 	for(long k=kk;k>0;k--)	// kk iterations
 	{
 		d[ii] = a[ii] + adt*(b[ii+1]-b[ii])*(ff/k);
-#pragma omp parallel for
+//#pragma omp parallel for
 		for(long i=ii+1;i<n-1;i++)
 		{
 			register mreal dd = i+di;
 			dd = 1./(sqrt(dd*dd+1.)+dd);	// corrections for "axiality"
 			register mreal gg = 1+dd*dd;
-			d[i] = a[i] + adt*( b[i-1]*((gg-dd)/k) -
+			d[i] = a[i*step] + adt*( b[i-1]*((gg-dd)/k) -
 			b[i]*(2*gg/k) + b[i+1]*((gg+dd)/k) );
 		}
 		memcpy(b,d,n*sizeof(dual));
@@ -244,8 +244,7 @@ int MGL_EXPORT mgl_difr_axial(dual *a, int n, dual q, int Border,dual *b, dual *
 				break;
 		}
 	}
-	memcpy(a,b,n*sizeof(dual));
-	return true;
+	for(long i=0;i<n;i++)	a[i*step] = b[i];
 }
 //-----------------------------------------------------------------------------
 double MGL_EXPORT mgl_gauss_rnd()

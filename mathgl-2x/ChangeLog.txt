@@ -1,8 +1,11 @@
 2.2.2 Released ?? 2014
 
-* Add mgl_region_3d() to draw region (or ribbon) between 2 curves.
+* Add mgl_region_3d() to draw region (or ribbon) between 2 curves. Correspondingly extend mglGraph::Region() function and MGL command 'region'.
+* Add mgl_datac_diffr() for calculation of one step of diffraction by finite-difference method
+* Extend number of colors for TeX export
 * Bugfix for legend with enabled lighting
-* Add range checking in CalcXYZ
+* Minor bugfixes and memory leaks
+
 
 2.2.1 Released 22 January 2014
 

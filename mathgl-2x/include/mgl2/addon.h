@@ -24,9 +24,9 @@
 #ifdef __cplusplus
 //-----------------------------------------------------------------------------
 /// Explicit scheme for 1 step of axial diffraction
-int MGL_EXPORT mgl_difr_axial(dual *a, int n, dual q, int Border,dual *b, dual *d, int kk, double di);
+void MGL_EXPORT mgl_difr_axial(dual *a,int n,int step,dual q,int Border,dual *tmp,int kk, double di);
 /// Explicit scheme for 1 step of plane diffraction
-int MGL_EXPORT mgl_difr_grid(dual *a,int n,dual q,int Border,dual *b,dual *d,int kk);
+void MGL_EXPORT mgl_difr_grid(dual *a,int n,int step,dual q,int Border,dual *tmp,int kk);
 //-----------------------------------------------------------------------------
 extern "C" {
 #endif

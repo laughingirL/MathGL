@@ -26,6 +26,7 @@
 21. Use mglFormulaCalc() for data transformation/filling (much faster but require more memory) + the same for complex
 
 24. Use mglStack<T> instead of std::vector<T> due to multi-threading
+25. Get true coordinates in CalcXYZ for curved equations too
 
 
 ============= DOCUMENTATION =============
@@ -39,6 +40,7 @@ C. Translate to Russian everything
 3. Docs about JS interface
 
 4. Extend docs about region
+5. Docs about mgl_datac_diffr
 
 ============= UDAV =============
 

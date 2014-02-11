@@ -293,6 +293,8 @@ public:
 	inline void Hankel(const char *dir)	{	mgl_datac_hankel(this,dir);	}
 	/// Fourier transform
 	inline void FFT(const char *dir)	{	mgl_datac_fft(this,dir);	}
+	/// Calculate one step of diffraction by finite-difference method with parameter q
+	inline void Diffraction(const char *how, mreal q)	{	mgl_datac_diffr(this,how,q);	}
 
 	/// Interpolate by cubic spline the data to given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
 	inline dual Spline(mreal x,mreal y=0,mreal z=0) const

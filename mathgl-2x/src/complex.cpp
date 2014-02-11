@@ -1066,3 +1066,60 @@ void MGL_EXPORT mgl_datac_put_val_(uintptr_t *d, dual *val, int *i, int *j, int 
 void MGL_EXPORT mgl_datac_put_dat_(uintptr_t *d, uintptr_t *val, int *i, int *j, int *k)
 {	mgl_datac_put_dat(_DC_,_DA_(val), *i,*j,*k);	}
 //-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_difr_grid(dual *a,int n,int step,dual q,int Border,dual *tmp,int kk);
+void MGL_EXPORT mgl_difr_axial(dual *a,int n,int step,dual q,int Border,dual *tmp,int kk, double di);
+//-----------------------------------------------------------------------------
+MGL_NO_EXPORT void *mgl_difr(void *par)
+{
+	mglThreadC *t=(mglThreadC *)par;
+	long n=t->p[0], st=t->p[1], bord=t->p[3], nn=t->n;
+	dual *b=t->a, q = *(t->b);
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel
+#endif
+	{
+		dual *tmp = new dual[2*n];
+		if(t->p[2])
+#if !MGL_HAVE_PTHREAD
+#pragma omp for
+#endif
+			for(long i=t->id;i<nn;i+=mglNumThr)
+				mgl_difr_axial(b + ((i%st)+n*(i/st)), n,st, q, bord,tmp,3,0);
+		else
+#if !MGL_HAVE_PTHREAD
+#pragma omp for
+#endif
+			for(long i=t->id;i<nn;i+=mglNumThr)
+				mgl_difr_grid(b + ((i%st)+n*(i/st)), n,st, q, bord,tmp,3);
+		delete []tmp;
+	}
+	return 0;
+}
+void MGL_EXPORT mgl_datac_diffr(HADT d, const char *how, mreal q)
+{
+	if(!how || *how==0)	return;
+	long nx=d->nx,ny=d->ny,nz=d->nz,nn=nx*ny*nz,ll=strlen(how);
+	long p[4]={0,0,mglchr(how,'a')?1:0,0};
+	dual qq=q;
+	for(long i=0;i<ll;i++)	if(how[i]>='0' && how[i]<='9')	p[3] = how[i]-'0';
+	if(strchr(how,'z') && nz>1)
+	{
+		p[0]=nz;	p[1]=nx*ny;
+		mglStartThreadC(mgl_difr,0,nx*ny,0,&qq,0,p);
+	}
+	if(strchr(how,'y') && ny>1)
+	{
+		p[0]=ny;	p[1]=nx;
+		mglStartThreadC(mgl_difr,0,nx*nz,0,&qq,0,p);
+	}
+	if(strchr(how,'x') && nx>1)
+	{
+		p[0]=nx;	p[1]=1;
+		mglStartThreadC(mgl_difr,0,ny*nz,0,&qq,0,p);
+	}
+}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_datac_diffr_(uintptr_t *d, const char *how, double q,int l)
+{	char *s=new char[l+1];	memcpy(s,how,l);	s[l]=0;
+	mgl_datac_diffr(_DC_,s,q);	delete []s;	}
+//-----------------------------------------------------------------------------

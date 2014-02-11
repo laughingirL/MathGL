@@ -211,6 +211,9 @@ void MGL_EXPORT mgl_datac_fft_(uintptr_t *dat, const char *dir,int);
 /// Find correlation between 2 data arrays
 HADT MGL_EXPORT mgl_datac_correl(HCDT dat1, HCDT dat2, const char *dir);
 uintptr_t MGL_EXPORT mgl_datac_correl_(uintptr_t dat1, uintptr_t dat2, const char *dir,int);
+/// Calculate one step of diffraction by finite-difference method with parameter q
+void MGL_EXPORT mgl_datac_diffr(HADT dat, const char *how, mreal q);
+void MGL_EXPORT mgl_datac_diffr_(uintptr_t *d, const char *how, double q,int l);
 
 HMDT MGL_EXPORT mgl_datac_real(HCDT dat);
 uintptr_t MGL_EXPORT mgl_datac_real_(uintptr_t *dat);

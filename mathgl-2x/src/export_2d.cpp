@@ -627,10 +627,10 @@ void MGL_EXPORT mgl_write_tex(HMGL gr, const char *fname,const char *descr)
 		if(q.type<0)	continue;	// q.n1>=0 always
 		cp.c = _Gr_->GetPrmCol(i);
 
-		ii = (cp.r[0]+25L)/51;
-		jj = (cp.r[1]+25L)/51;
-		kk = (cp.r[2]+25L)/51;
-		snprintf(cname,16,"mgl_%d",ii+6*(jj+6*kk));
+		ii = (cp.r[0]+18L)/36;
+		jj = (cp.r[1]+18L)/36;
+		kk = (cp.r[2]+18L)/36;
+		snprintf(cname,16,"mgl_%d",ii+8*(jj+8*kk));
 //		cname = mglColorName(cp);
 		const mglPnt p1=gr->GetPnt(q.n1);
 		mreal x=p1.x/100,y=p1.y/100,s=q.s/100;
@@ -716,8 +716,8 @@ void MGL_EXPORT mgl_write_tex(HMGL gr, const char *fname,const char *descr)
 	fp=fopen("mglcolors.tex","wt");
 	if(fp)
 	{
-		for(ii=0;ii<6;ii++)	for(jj=0;jj<6;jj++)	for(kk=0;kk<6;kk++)
-			fprintf(fp,"\\definecolor{mgl_%d}{RGB}{%d,%d,%d}\n",ii+6*(jj+6*kk),51*ii,51*jj,51*kk);
+		for(ii=0;ii<8;ii++)	for(jj=0;jj<8;jj++)	for(kk=0;kk<8;kk++)
+			fprintf(fp,"\\definecolor{mgl_%d}{RGB}{%d,%d,%d}\n",ii+8*(jj+8*kk),int(36.5*ii),int(36.5*jj),int(36.5*kk));
 		mreal ms=0.4*gr->mark_size()/100;	// also provide marks
 		fprintf(fp, "\\providecommand{\\mglp}[4]{\\draw[#3] (#1-#4, #2) -- (#1+#4,#2) (#1,#2-#4) -- (#1,#2+#4);}\n");
 		fprintf(fp, "\\providecommand{\\mglx}[4]{\\draw[#3] (#1-#4, #2-#4) -- (#1+#4,#2+#4) (#1+#4,#2-#4) -- (#1-#4,#2+#4);}\n");
