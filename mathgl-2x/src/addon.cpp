@@ -168,7 +168,8 @@ void MGL_EXPORT mgl_difr_grid(dual *a,int n,int step,dual q,int Border,dual *tmp
 {
 	const dual adt = dual(0.,1.)*q;
 	dual *b = tmp, *d = tmp+n;
-	for(long i=0;i<n;i++)	b[i] = a[i*step];
+	if(step==1)	memcpy(b,a,n*sizeof(dual));
+	else	for(long i=0;i<n;i++)	b[i] = a[i*step];
 	for(long k=kk;k>0;k--)	// 3 iterations
 	{
 //#pragma omp parallel for
@@ -201,7 +202,8 @@ void MGL_EXPORT mgl_difr_grid(dual *a,int n,int step,dual q,int Border,dual *tmp
 				break;
 		}
 	}
-	for(long i=0;i<n;i++)	a[i*step] = b[i];
+	if(step==1)	memcpy(a,b,n*sizeof(dual));
+	else	for(long i=0;i<n;i++)	a[i*step] = b[i];
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_difr_axial(dual *a,int n,int step,dual q,int Border,dual *tmp,int kk, double di)
@@ -210,7 +212,8 @@ void MGL_EXPORT mgl_difr_axial(dual *a,int n,int step,dual q,int Border,dual *tm
 	register mreal ff= di==floor(di) ? 4. : 2.;
 	const dual adt = dual(0.,1.)*q;
 	dual *b = tmp, *d = tmp+n;
-	for(long i=0;i<n;i++)	b[i] = a[i*step];
+	if(step==1)	memcpy(b,a,n*sizeof(dual));
+	else	for(long i=0;i<n;i++)	b[i] = a[i*step];
 	for(long k=kk;k>0;k--)	// kk iterations
 	{
 		d[ii] = a[ii] + adt*(b[ii+1]-b[ii])*(ff/k);
@@ -244,7 +247,8 @@ void MGL_EXPORT mgl_difr_axial(dual *a,int n,int step,dual q,int Border,dual *tm
 				break;
 		}
 	}
-	for(long i=0;i<n;i++)	a[i*step] = b[i];
+	if(step==1)	memcpy(a,b,n*sizeof(dual));
+	else	for(long i=0;i<n;i++)	a[i*step] = b[i];
 }
 //-----------------------------------------------------------------------------
 double MGL_EXPORT mgl_gauss_rnd()
