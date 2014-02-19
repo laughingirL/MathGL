@@ -22,13 +22,17 @@
 //-----------------------------------------------------------------------------
 #include "mgl2/config.h"
 #ifndef SWIG
+
 #include "mgl2/dllexport.h"
+#ifdef MGL_SRC
 #if MGL_HAVE_OMP
 #include <omp.h>
 #endif
 #endif
 
-#define MGL_VER2 	2.1	// minor version of MathGL 2.* (like 1.3 for v.2.1.3)
+#endif
+
+#define MGL_VER2 	2.2	// minor version of MathGL 2.* (like 1.3 for v.2.1.3)
 //-----------------------------------------------------------------------------
 #ifdef WIN32 //_MSC_VER needs this before math.h
 #define	_USE_MATH_DEFINES

@@ -926,7 +926,7 @@ void mglFourier(mglData &re, mglData &im, const char *dir)
 	if(nx*ny*nz != im.nx*im.ny*im.nz || !dir || dir[0]==0)	return;
 	double *a = new double[2*nx*ny*nz];
 	register long i,j;
-	gsl_fft_direction how = strchr(dir,'i')?backward:forward;
+	gsl_fft_direction how = strchr(dir,'i')?gsl_fft_backward:gsl_fft_forward;
 	for(i=0;i<nx*ny*nz;i++)
 	{	a[2*i] = re.a[i];	a[2*i+1] = im.a[i];	}
 	if(strchr(dir,'x') && nx>1)
@@ -1122,7 +1122,7 @@ void mglData::CosFFT(const char *dir)
 		{
 			k = i*nx;	memset(b,0,4*nx*sizeof(double));	b[0] = b[2*nx] = a[k];
 			for(j=1;j<nx;j++)	{	b[2*j] = a[k+j];	b[4*nx-2*j] = a[k+j];	}
-			gsl_fft_complex_transform(b, 1, 2*nx, wt, ws, forward);
+			gsl_fft_complex_forward(b, 1, 2*nx, wt, ws);
 			for(j=0;j<nx;j++)	a[k+j] = b[2*j]/sqrt(2*nx);
 		}
 	}
@@ -1135,7 +1135,7 @@ void mglData::CosFFT(const char *dir)
 		{
 			memset(b,0,4*ny*sizeof(double));	b[0] = b[2*ny] = a[i+nx*ny*k];
 			for(j=1;j<ny;j++)	{	b[2*j] = a[i+nx*(ny*k+j)];	b[4*ny-2*j] = a[i+nx*(ny*k+j)];	}
-			gsl_fft_complex_transform(b, 1, 2*ny, wt, ws, forward);
+			gsl_fft_complex_forward(b, 1, 2*ny, wt, ws);
 			for(j=0;j<ny;j++)	a[i+nx*(ny*k+j)] = b[2*j]/sqrt(2*ny);
 		}
 	}
@@ -1148,7 +1148,7 @@ void mglData::CosFFT(const char *dir)
 		{
 			memset(b,0,4*nz*sizeof(double));	b[0] = b[2*nx] = a[i];
 			for(j=1;j<nx;j++)	{	b[2*j] = a[i+k*j];	b[4*nx-2*j] = a[i+k*j];	}
-			gsl_fft_complex_transform(b, 1, 2*nz, wt, ws, forward);
+			gsl_fft_complex_forward(b, 1, 2*nz, wt, ws);
 			for(j=0;j<nz;j++)	a[i+k*j] = b[2*j]/sqrt(2*nz);
 		}
 	}
@@ -1175,7 +1175,7 @@ void mglData::SinFFT(const char *dir)
 		{
 			k = i*nx;	memset(b,0,4*nx*sizeof(double));	b[0] = a[k];	b[2*nx] = -a[k];
 			for(j=1;j<nx;j++)	{	b[2*j] = a[k+j];	b[4*nx-2*j] = -a[k+j];	}
-			gsl_fft_complex_transform(b, 1, 2*nx, wt, ws, forward);
+			gsl_fft_complex_forward(b, 1, 2*nx, wt, ws);
 			for(j=0;j<nx;j++)	a[k+j] = -b[2*j+1]/sqrt(2*nx);
 		}
 	}
@@ -1188,7 +1188,7 @@ void mglData::SinFFT(const char *dir)
 		{
 			memset(b,0,4*ny*sizeof(double));	b[0] = a[i+nx*ny*k];	b[2*ny] = -a[i+nx*ny*k];
 			for(j=1;j<ny;j++)	{	b[2*j] = a[i+nx*(ny*k+j)];	b[4*ny-2*j] = -a[i+nx*(ny*k+j)];	}
-			gsl_fft_complex_transform(b, 1, 2*ny, wt, ws, forward);
+			gsl_fft_complex_forward(b, 1, 2*ny, wt, ws);
 			for(j=0;j<ny;j++)	a[i+nx*(ny*k+j)] = -b[2*j+1]/sqrt(2*ny);
 		}
 	}
@@ -1201,7 +1201,7 @@ void mglData::SinFFT(const char *dir)
 		{
 			memset(b,0,4*nz*sizeof(double));	b[0] = a[i];	b[2*nx] = -a[i];
 			for(j=1;j<nx;j++)	{	b[2*j] = a[i+k*j];	b[4*nx-2*j] = -a[i+k*j];	}
-			gsl_fft_complex_transform(b, 1, 2*nz, wt, ws, forward);
+			gsl_fft_complex_forward(b, 1, 2*nz, wt, ws);
 			for(j=0;j<nz;j++)	a[i+k*j] = -b[2*j+1]/sqrt(2*nz);
 		}
 	}
@@ -1732,10 +1732,10 @@ void mglData::Envelop(char dir)
 		gsl_fft_complex_workspace *ws = gsl_fft_complex_workspace_alloc(nx);
 		for(i=0;i<ny*nz;i++)
 		{
-			gsl_fft_complex_transform(b+2*i*nx, 1, nx, wt, ws, forward);
+			gsl_fft_complex_forward(b+2*i*nx, 1, nx, wt, ws);
 			for(j=0;j<nx;j++)
 			{	b[j+2*i*nx] /= nx/2.;	b[j+nx+2*i*nx] = 0;	}
-			gsl_fft_complex_transform(b+2*i*nx, 1, nx, wt, ws, backward);
+			gsl_fft_complex_backward(b+2*i*nx, 1, nx, wt, ws);
 		}
 		gsl_fft_complex_workspace_free(ws);
 		gsl_fft_complex_wavetable_free(wt);
@@ -1747,10 +1747,10 @@ void mglData::Envelop(char dir)
 		for(i=0;i<nx;i++)	for(j=0;j<nz;j++)
 		{
 			i0 = 2*i+2*j*nx*ny;
-			gsl_fft_complex_transform(b+i0, nx, ny, wt, ws, forward);
+			gsl_fft_complex_forward(b+i0, nx, ny, wt, ws);
 			for(k=0;k<ny;k++)
 			{	b[i0+k*2*nx] /= ny/2.;	b[i0+2*nx*k+2*nx*ny] = 0;	}
-			gsl_fft_complex_transform(b+i0, nx, ny, wt, ws, backward);
+			gsl_fft_complex_backward(b+i0, nx, ny, wt, ws);
 		}
 		gsl_fft_complex_workspace_free(ws);
 		gsl_fft_complex_wavetable_free(wt);
@@ -1762,10 +1762,10 @@ void mglData::Envelop(char dir)
 		for(i=0;i<ny*nx;i++)
 		{
 			i0 = 2*nx*ny;
-			gsl_fft_complex_transform(b+2*i, nx*ny, nz, wt, ws, forward);
+			gsl_fft_complex_forward(b+2*i, nx*ny, nz, wt, ws);
 			for(j=0;j<nz;j++)
 			{	b[i+j*i0] /= nz/2.;	b[i+j*i0+nz*i0] = 0;	}
-			gsl_fft_complex_transform(b+2*i, nx*ny, nz, wt, ws, backward);
+			gsl_fft_complex_backward(b+2*i, nx*ny, nz, wt, ws);
 		}
 		gsl_fft_complex_workspace_free(ws);
 		gsl_fft_complex_wavetable_free(wt);

@@ -40,7 +40,7 @@ if(use_doc)
 		WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/texinfo
 	)
 	add_custom_target(documentation ALL
-#		DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/mathgl_en.pdf
+		DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/mathgl_en.pdf
 		DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/mathgl_en.info
 		DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/mathgl_en
 #		DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/mathgl_ru.pdf

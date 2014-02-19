@@ -88,7 +88,7 @@ mglData mglPDE(const char *ham, const mglData &ini_re, const mglData &ini_im, mg
 		h0 = dual(-eqs.CalcD(var,'i'), eqs.Calc(var))*dd;
 		// do fft
 		for(i=0;i<2*ny;i++)
-			gsl_fft_complex_transform((double *)(a+i*2*nx), 1, 2*nx, wtx, wsx, forward);
+			gsl_fft_complex_forward((double *)(a+i*2*nx), 1, 2*nx, wtx, wsx);
 		if(ny>1) for(j=0;j<2*ny;j++)	for(i=0;i<2*nx;i++)	// step 3/2
 		{
 			i0 = i+2*nx*j;
@@ -104,7 +104,7 @@ mglData mglPDE(const char *ham, const mglData &ini_re, const mglData &ini_im, mg
 			a[i0] *= exp(h-h1-h2+h0);
 		}
 		if(ny>1) for(i=0;i<2*nx;i++)
-			gsl_fft_complex_transform((double *)(a+i), 2*nx, 2*ny, wty, wsy, forward);
+			gsl_fft_complex_forward((double *)(a+i), 2*nx, 2*ny, wty, wsy);
 		for(j=0;j<2*ny;j++)	for(i=0;i<2*nx;i++)	// step 2
 		{
 			i0 = i+2*nx*j;
@@ -115,7 +115,7 @@ mglData mglPDE(const char *ham, const mglData &ini_re, const mglData &ini_im, mg
 		}
 		// do ifft
 		if(ny>1) for(i=0;i<2*nx;i++)
-			gsl_fft_complex_transform((double *)(a+i), 2*nx, 2*ny, wty, wsy, backward);
+			gsl_fft_complex_backward((double *)(a+i), 2*nx, 2*ny, wty, wsy);
 		if(ny>1) for(j=0;j<2*ny;j++)	for(i=0;i<2*nx;i++)	// step 3/2
 		{
 			i0 = i+2*nx*j;
@@ -131,7 +131,7 @@ mglData mglPDE(const char *ham, const mglData &ini_re, const mglData &ini_im, mg
 			a[i0] *= exp(h-h1-h2+h0);
 		}
 		for(i=0;i<2*ny;i++)
-			gsl_fft_complex_transform((double *)(a+2*i*nx), 1, 2*nx, wtx, wsx, backward);
+			gsl_fft_complex_backward((double *)(a+2*i*nx), 1, 2*nx, wtx, wsx);
 		// save result
 		for(i=0;i<nx;i++)	for(j=0;j<ny;j++)
 			res.a[k+nz*(i+nx*j)] = abs(a[i+nx/2+2*ny*(j+ny/2)]);
@@ -330,10 +330,10 @@ mglData mglQO2d(const char *ham, const mglData &ini_re, const mglData &ini_im, c
 		dual dt = dual(0, -ra[k].dt*k0);
 		for(i=0;i<2*nx;i++)
 			a[i] *= exp(hx[i]*dt)*((UseR && k>0)?sqrt(px[i]/rx[i]):1.);
-		gsl_fft_complex_transform((double *)a, 1, 2*nx, wtx, wsx, forward);
+		gsl_fft_complex_forward((double *)a, 1, 2*nx, wtx, wsx);
 		for(i=0;i<2*nx;i++)
 			a[i] *= exp(hu[i]*dt)*((UseR && k>0)?sqrt(pu[i]/ru[i]):1.)/(2.*nx);
-		gsl_fft_complex_transform((double *)a, 1, 2*nx, wtx, wsx, backward);
+		gsl_fft_complex_backward((double *)a, 1, 2*nx, wtx, wsx);
 		double a1=0, a2=0;
 		for(i=0;i<2*nx;i++)	a1 += norm(a[i]);
 		hx[0] = hx[2*nx-1] = 0.;
@@ -424,10 +424,10 @@ mglData mglAF2d(const char *ham, const mglData &ini_re, const mglData &ini_im, c
 		dual dt = dual(0, -ra[k].dt*k0);
 		for(i=0;i<2*nx;i++)
 			a[i] *= exp(hx[i]*dt)/(2.*nx);
-		gsl_fft_complex_transform((double *)a, 1, 2*nx, wtx, wsx, forward);
+		gsl_fft_complex_forward((double *)a, 1, 2*nx, wtx, wsx);
 		for(i=0;i<2*nx;i++)
 			a[i] *= exp((hu[i]-hu[0])*dt);
-		gsl_fft_complex_transform((double *)a, 1, 2*nx, wtx, wsx, backward);
+		gsl_fft_complex_backward((double *)a, 1, 2*nx, wtx, wsx);
 		double a1=0, a2=0;
 		for(i=0;i<2*nx;i++)	a1 += norm(a[i]);
 		hx[0] = hx[2*nx-1] = 0.;
