@@ -28,6 +28,8 @@
 
 24. Use mglStack<T> instead of std::vector<T> due to multi-threading
 25. Get true coordinates in CalcXYZ for curved equations too
+26. Add "opacity=0.33" to TeX
+27. Add mglDataVar, mglDataCol, mglDataFunc for handling special (temporary) data + add real(), imag(), conj() + accurate types in MGL + add 'expr'/'complex' in MGL
 
 
 ============= DOCUMENTATION =============

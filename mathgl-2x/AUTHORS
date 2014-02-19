@@ -3,6 +3,7 @@ Author of MathGL:
 Alexey Balakin <balakin@appl.sci-nnov.ru>
 
 Some extensions was written by:
-Dmitriy Kulagin	- autoconf/automake script
+Dmitriy Kulagin	- cmake script
+Mikhail Vidassov - U3D/PDF/OBJ export
 Mikhail Barg	- Pascal/Delphi interface
 Sergey Plis	- Forth interface

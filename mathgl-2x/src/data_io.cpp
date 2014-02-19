@@ -63,6 +63,7 @@ void mglFromStr(HMDT d,char *buf,long NX,long NY,long NZ)	// TODO: add multithre
 	mgl_data_create(d, NX,NY,NZ);
 	long nb = strlen(buf);
 	register long i=0, j=0;
+	setlocale(LC_NUMERIC, "C");
 	while(j<nb)
 	{
 		while(buf[j]<=' ' && j<nb)	j++;
@@ -87,6 +88,7 @@ void mglFromStr(HMDT d,char *buf,long NX,long NY,long NZ)	// TODO: add multithre
 		d->a[i] = strstr(s,"NAN")?NAN:atof(s);
 		i++;	if(i>=NX*NY*NZ)	break;
 	}
+	setlocale(LC_NUMERIC, "");
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_data_set(HMDT d, HCDT a)
@@ -253,10 +255,11 @@ void MGL_EXPORT mgl_data_set_id_(uintptr_t *d, const char *eq,int l)
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_data_save(HCDT d, const char *fname,long ns)
 {
-	FILE *fp;
-	fp = fopen(fname,"w");
+	FILE *fp = fopen(fname,"w");
+	if(!fp)	return;
 	register long i,j,k;
 	long nx=d->GetNx(), ny=d->GetNy(), nz=d->GetNz();
+	setlocale(LC_NUMERIC, "C");
 	if(ns<0 || (ns>=nz && nz>1))	for(k=0;k<nz;k++)
 	{	// save whole data
 		const mglData *dr = dynamic_cast<const mglData *>(d);
@@ -280,6 +283,7 @@ void MGL_EXPORT mgl_data_save(HCDT d, const char *fname,long ns)
 		else if(ns<ny)	for(j=0;j<nx;j++)
 			fprintf(fp,"%g\t",d->v(j,ns));
 	}
+	setlocale(LC_NUMERIC, "");
 	fclose(fp);
 }
 void MGL_EXPORT mgl_data_save_(uintptr_t *d, const char *fname,int *ns,int l)

@@ -16,6 +16,11 @@ if(WIN32)
 	set(udav_src ${udav_src} udav.rc)
 endif(WIN32)
 
+if(MGL_HAVE_HDF5)
+#	target_link_libraries(mgl ${HDF5_LIBRARIES})
+	include_directories(${HDF5_INCLUDE_DIR})
+endif(MGL_HAVE_HDF5)
+
 if(MGL_HAVE_GSL)
 #	target_link_libraries(mgl ${GSL_LIB} ${GSL_CBLAS_LIB} )
 	include_directories(${GSL_INCLUDE_DIR})
