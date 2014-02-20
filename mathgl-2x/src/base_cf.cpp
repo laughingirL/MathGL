@@ -182,7 +182,7 @@ void MGL_EXPORT mgl_set_rotated_text_(uintptr_t *gr, int *rotated)	{	_GR_->SetRo
 void MGL_EXPORT mgl_set_mark_size_(uintptr_t *gr, mreal *size)		{	_GR_->SetMarkSize(*size);	}
 void MGL_EXPORT mgl_set_arrow_size_(uintptr_t *gr, mreal *size)	{	_GR_->SetArrowSize(*size);	}
 void MGL_EXPORT mgl_set_font_size_(uintptr_t *gr, mreal *size)		{	_GR_->SetFontSize(*size);	}
-void MGL_EXPORT mgl_set_font_def_(uintptr_t *gr, char *name, int l)
+void MGL_EXPORT mgl_set_font_def_(uintptr_t *gr, const char *name, int l)
 {	char *s=new char[l+1];		memcpy(s,name,l);	s[l]=0;
 	_GR_->SetFontDef(s);	delete []s;	}
 void MGL_EXPORT mgl_load_font_(uintptr_t *gr, char *name, char *path, int l,int n)

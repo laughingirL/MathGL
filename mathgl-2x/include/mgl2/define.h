@@ -256,8 +256,9 @@ long MGL_EXPORT mgl_have_color(const char *stl);
 const char *mglchr(const char *str, char ch);
 /// Find any symbol from chr in string excluding {} and return its position or NULL
 const char *mglchrs(const char *str, const char *chr);
-/// Set number of thread for plotting and data handling
+/// Set number of thread for plotting and data handling (for pthread version only)
 void MGL_EXPORT mgl_set_num_thr(int n);
+void MGL_EXPORT mgl_set_num_thr_(int *n);
 void MGL_EXPORT mgl_test_txt(const char *str, ...);
 void MGL_EXPORT mgl_set_test_mode(int enable);
 /// Remove spaces at begining and at the end of the string

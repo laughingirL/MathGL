@@ -52,6 +52,7 @@ void MGL_EXPORT mgl_set_num_thr(int n)
 #else
 void MGL_EXPORT mgl_set_num_thr(int)	{	mglNumThr = 1;	}
 #endif
+void MGL_EXPORT mgl_set_num_thr_(int *n)	{	mgl_set_num_thr(*n);	}
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mglStartThread(void *(*func)(void *), void (*post)(mglThreadD *,mreal *), long n,
 					mreal *a, const mreal *b, const mreal *c, const long *p,

@@ -1205,7 +1205,7 @@ void MGL_EXPORT mgl_ohlc(HMGL gr, HCDT open, HCDT high, HCDT low, HCDT close, co
 	mgl_ohlc_x(gr,&x,open,high,low,close,pen,0);
 }
 //-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_ohlc_y_(uintptr_t *gr, uintptr_t *x, uintptr_t *open, uintptr_t *high, uintptr_t *low, uintptr_t *close, const char *pen, const char *opt,int l,int lo)
+void MGL_EXPORT mgl_ohlc_x_(uintptr_t *gr, uintptr_t *x, uintptr_t *open, uintptr_t *high, uintptr_t *low, uintptr_t *close, const char *pen, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_ohlc_x(_GR_,_DA_(x),_DA_(open),_DA_(high),_DA_(low),_DA_(close),s,o);	delete []o;	delete []s;	}

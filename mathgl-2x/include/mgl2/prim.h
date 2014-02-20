@@ -77,7 +77,7 @@ void MGL_EXPORT mgl_cones_xyz(HMGL graph, HCDT x, HCDT y, HCDT z, const char *pe
 void MGL_EXPORT mgl_cones_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *pen, const char *opt,int,int);
 /// Draw cones from points {x,z} to axis plane
 void MGL_EXPORT mgl_cones_xz(HMGL graph, HCDT x, HCDT z, const char *pen, const char *opt);
-void MGL_EXPORT mgl_coners_xz_(uintptr_t *graph, uintptr_t *x, uintptr_t *z, const char *pen, const char *opt,int,int);
+void MGL_EXPORT mgl_cones_xz_(uintptr_t *graph, uintptr_t *x, uintptr_t *z, const char *pen, const char *opt,int,int);
 /// Draw cones from points {x,z} with x in x-axis range to axis plane
 void MGL_EXPORT mgl_cones(HMGL graph, HCDT z,	const char *pen, const char *opt);
 void MGL_EXPORT mgl_cones_(uintptr_t *graph, uintptr_t *z,	const char *pen, const char *opt,int,int);

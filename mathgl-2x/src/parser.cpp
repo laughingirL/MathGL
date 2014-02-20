@@ -978,7 +978,7 @@ uintptr_t MGL_EXPORT mgl_parser_add_var_(uintptr_t* p, const char *name, int l)
 uintptr_t MGL_EXPORT mgl_parser_find_var_(uintptr_t* p, const char *name, int l)
 {	char *s=new char[l+1];		memcpy(s,name,l);	s[l]=0;
 	mglVar *v=_PR_->FindVar(s);	delete []s;	return uintptr_t(v);	}
-void MGL_EXPORT mgl_del_var_(uintptr_t* p, const char *name, int l)
+void MGL_EXPORT mgl_parser_del_var_(uintptr_t* p, const char *name, int l)
 {	char *s=new char[l+1];		memcpy(s,name,l);	s[l]=0;
 	_PR_->DeleteVar(s);	delete []s;	}
 int MGL_EXPORT mgl_parse_line_(uintptr_t* gr, uintptr_t* p, const char *str, int *pos, int l)

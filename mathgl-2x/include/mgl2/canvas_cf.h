@@ -93,7 +93,7 @@ void MGL_EXPORT mgl_axis_grid(HMGL gr, const char *dir,const char *pen, const ch
 void MGL_EXPORT mgl_axis_grid_(uintptr_t *gr, const char *dir,const char *pen, const char *opt,int,int,int);
 /// Print the label text for axis dir.
 void MGL_EXPORT mgl_label(HMGL gr, char dir, const char *text, double pos, const char *opt);
-void MGL_EXPORT mgl_label_(uintptr_t *gr, const char *dir, const char *text, const char *opt,int,int,int);
+void MGL_EXPORT mgl_label_(uintptr_t *gr, const char *dir, const char *text, mreal *pos, const char *opt,int,int,int);
 void MGL_EXPORT mgl_labelw(HMGL gr, char dir, const wchar_t *text, double pos, const char *opt);
 
 /// Draw colorbar at edge of axis
@@ -326,7 +326,7 @@ void MGL_EXPORT mgl_columnplot(HMGL gr, int num, int ind, double d);
 void MGL_EXPORT mgl_columnplot_(uintptr_t *gr, int *num, int *i, mreal *d);
 /// Put further plotting in matrix cell of previous subplot/inplot.
 void MGL_EXPORT mgl_gridplot(HMGL gr, int nx, int ny, int m, double d);
-void MGL_EXPORT mgl_gridplot_(uintptr_t *gr, int *nx, int *ny, int *i, mreal *d);
+void MGL_EXPORT mgl_gridplot_(uintptr_t *gr, int *nx, int *ny, int *m, mreal *d);
 /// Put further plotting in cell of stick rotated on angles tet, phi.
 void MGL_EXPORT mgl_stickplot(HMGL gr, int num, int ind, double tet, double phi);
 void MGL_EXPORT mgl_stickplot_(uintptr_t *gr, int *num, int *i, mreal *tet, mreal *phi);

@@ -753,4 +753,8 @@ void MGL_EXPORT mgl_write_tex(HMGL gr, const char *fname,const char *descr)
 		fclose(fp);
 	}
 }
+void MGL_EXPORT mgl_write_tex_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
+{	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
+	char *d=new char[n+1];	memcpy(d,descr,n);	d[n]=0;
+	mgl_write_tex(_GR_,s,d);	delete []s;		delete []d;	}
 //-----------------------------------------------------------------------------

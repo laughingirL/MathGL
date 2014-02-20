@@ -44,6 +44,7 @@ void MGL_EXPORT mgl_srnd(long seed);
 double MGL_EXPORT mgl_rnd();
 /// Get integer power of x
 dual MGL_EXPORT mgl_ipowc(dual x,int n);
+dual MGL_EXPORT mgl_ipowc_(dual *x,int *n);
 /// Get exp(i*a)
 dual MGL_EXPORT mgl_expi(dual a);
 
@@ -84,9 +85,10 @@ void MGL_EXPORT mgl_datac_set_vector(HADT dat, gsl_vector *v);
 void MGL_EXPORT mgl_datac_set_matrix(HADT dat, gsl_matrix *m);
 /// Set value of data element [i,j,k]
 void MGL_EXPORT mgl_datac_set_value(HADT dat, dual v, long i, long j, long k);
-void MGL_EXPORT mgl_datac_set_value_(uintptr_t *d, mreal *v, int *i, int *j, int *k);
+void MGL_EXPORT mgl_datac_set_value_(uintptr_t *d, dual *v, int *i, int *j, int *k);
 /// Get value of data element [i,j,k]
 dual MGL_EXPORT mgl_datac_get_value(HCDT dat, long i, long j, long k);
+dual MGL_EXPORT mgl_datac_get_value_(uintptr_t *d, int *i, int *j, int *k);
 /// Allocate memory and scanf the data from the string
 void MGL_EXPORT mgl_datac_set_values(HADT dat, const char *val, long nx, long ny, long nz);
 void MGL_EXPORT mgl_datac_set_values_(uintptr_t *d, const char *val, int *nx, int *ny, int *nz, int l);
@@ -117,7 +119,7 @@ int MGL_EXPORT mgl_datac_read_range(HADT d, const char *templ, double from, doub
 int MGL_EXPORT mgl_datac_read_range_(uintptr_t *d, const char *fname, mreal *from, mreal *to, mreal *step, int *as_slice,int l);
 /// Read data from tab-separated text files with auto determining size which filenames are satisfied to template (like "t_*.dat")
 int MGL_EXPORT mgl_datac_read_all(HADT dat, const char *templ, int as_slice);
-int MGL_EXPORT mgl_data_read_all_(uintptr_t *d, const char *fname, int *as_slice,int l);
+int MGL_EXPORT mgl_datac_read_all_(uintptr_t *d, const char *fname, int *as_slice,int l);
 /// Save whole data array (for ns=-1) or only ns-th slice to text file
 void MGL_EXPORT mgl_datac_save(HCDT dat, const char *fname,long ns);
 void MGL_EXPORT mgl_datac_save_(uintptr_t *dat, const char *fname,int *ns,int);
@@ -140,7 +142,7 @@ void MGL_EXPORT mgl_datac_set_id(HADT d, const char *id);
 void MGL_EXPORT mgl_datac_set_id_(uintptr_t *dat, const char *id,int l);
 /// Equidistantly fill the data to range [x1,x2] in direction dir
 void MGL_EXPORT mgl_datac_fill(HADT dat, dual x1,dual x2,char dir);
-void MGL_EXPORT mgl_datac_fill_(uintptr_t *dat, mreal *x1,mreal *x2,const char *dir,int);
+void MGL_EXPORT mgl_datac_fill_(uintptr_t *dat, dual *x1,dual *x2,const char *dir,int);
 /// Modify the data by specified formula assuming x,y,z in range [r1,r2]
 void MGL_EXPORT mgl_datac_fill_eq(HMGL gr, HADT dat, const char *eq, HCDT vdat, HCDT wdat,const char *opt);
 void MGL_EXPORT mgl_datac_fill_eq_(uintptr_t *gr, uintptr_t *dat, const char *eq, uintptr_t *vdat, uintptr_t *wdat,const char *opt, int, int);
@@ -200,7 +202,7 @@ void MGL_EXPORT mgl_datac_mirror(HADT dat, const char *dir);
 void MGL_EXPORT mgl_datac_mirror_(uintptr_t *dat, const char *dir,int);
 /// Crop the data
 void MGL_EXPORT mgl_datac_crop(HADT dat, long n1, long n2, char dir);
-void MGL_EXPORT mgl_data_crop_(uintptr_t *dat, int *n1, int *n2, const char *dir,int);
+void MGL_EXPORT mgl_datac_crop_(uintptr_t *dat, int *n1, int *n2, const char *dir,int);
 
 /// Apply Hankel transform
 void MGL_EXPORT mgl_datac_hankel(HADT dat, const char *dir);
@@ -210,7 +212,7 @@ void MGL_EXPORT mgl_datac_fft(HADT dat, const char *dir);
 void MGL_EXPORT mgl_datac_fft_(uintptr_t *dat, const char *dir,int);
 /// Find correlation between 2 data arrays
 HADT MGL_EXPORT mgl_datac_correl(HCDT dat1, HCDT dat2, const char *dir);
-uintptr_t MGL_EXPORT mgl_datac_correl_(uintptr_t dat1, uintptr_t dat2, const char *dir,int);
+uintptr_t MGL_EXPORT mgl_datac_correl_(uintptr_t *dat1, uintptr_t *dat2, const char *dir,int);
 /// Calculate one step of diffraction by finite-difference method with parameter q
 void MGL_EXPORT mgl_datac_diffr(HADT dat, const char *how, mreal q);
 void MGL_EXPORT mgl_datac_diffr_(uintptr_t *d, const char *how, double q,int l);
@@ -240,10 +242,13 @@ dual MGL_EXPORT mgl_datac_spline_ext_(uintptr_t *dat, mreal *x,mreal *y,mreal *z
 //-----------------------------------------------------------------------------
 /// Create HAEX object for expression evaluating
 HAEX MGL_EXPORT mgl_create_cexpr(const char *expr);
+uintptr_t MGL_EXPORT mgl_create_cexpr_(const char *expr, int);
 /// Delete HAEX object
 void MGL_EXPORT mgl_delete_cexpr(HAEX ex);
+void MGL_EXPORT mgl_delete_cexpr_(uintptr_t *ex);
 /// Return value of expression for given x,y,z variables
 dual MGL_EXPORT mgl_cexpr_eval(HAEX ex, dual x, dual y,dual z);
+dual MGL_EXPORT mgl_cexpr_eval_(uintptr_t *ex, dual *x, dual *y, dual *z);
 /// Return value of expression for given variables
 dual MGL_EXPORT mgl_cexpr_eval_v(HAEX ex, dual *vars);
 

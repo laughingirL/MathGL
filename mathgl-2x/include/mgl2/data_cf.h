@@ -332,7 +332,7 @@ void MGL_EXPORT mgl_data_fill_sample(HMDT dat, const char *how);
 void MGL_EXPORT mgl_data_fill_sample_(uintptr_t *dat, const char *how,int);
 /// Find correlation between 2 data arrays
 HMDT MGL_EXPORT mgl_data_correl(HCDT dat1, HCDT dat2, const char *dir);
-uintptr_t MGL_EXPORT mgl_data_correl_(uintptr_t dat1, uintptr_t dat2, const char *dir,int);
+uintptr_t MGL_EXPORT mgl_data_correl_(uintptr_t *dat1, uintptr_t *dat2, const char *dir,int);
 
 /// Allocate and prepare data for Fourier transform by nthr threads
 MGL_EXPORT void *mgl_fft_alloc(long n, void **space, long nthr);
@@ -461,12 +461,12 @@ void MGL_EXPORT mgl_delete_expr(HMEX ex);
 void MGL_EXPORT mgl_delete_expr_(uintptr_t *ex);
 /// Return value of expression for given x,y,z variables
 double MGL_EXPORT mgl_expr_eval(HMEX ex, double x, double y,double z);
-double MGL_EXPORT mgl_eval_expr_(uintptr_t *ex, mreal *x, mreal *y, mreal *z);
+double MGL_EXPORT mgl_expr_eval_(uintptr_t *ex, mreal *x, mreal *y, mreal *z);
 /// Return value of expression for given variables
 double MGL_EXPORT mgl_expr_eval_v(HMEX ex, mreal *vars);
 /// Return value of expression differentiation over variable dir for given x,y,z variables
 double MGL_EXPORT mgl_expr_diff(HMEX ex, char dir, double x, double y,double z);
-double MGL_EXPORT mgl_diff_expr_(uintptr_t *ex, const char *dir, mreal *x, mreal *y, mreal *z, int);
+double MGL_EXPORT mgl_expr_diff_(uintptr_t *ex, const char *dir, mreal *x, mreal *y, mreal *z, int);
 /// Return value of expression differentiation over variable dir for given variables
 double MGL_EXPORT mgl_expr_diff_v(HMEX ex, char dir, mreal *vars);
 

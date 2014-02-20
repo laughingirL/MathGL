@@ -731,8 +731,8 @@ uintptr_t MGL_EXPORT mgl_create_expr_(const char *expr, int l)
 	uintptr_t res = uintptr_t(mgl_create_expr(s));
 	delete []s;	return res;	}
 void MGL_EXPORT mgl_delete_expr_(uintptr_t *ex)	{	mgl_delete_expr((HMEX)ex);	}
-double MGL_EXPORT mgl_eval_expr_(uintptr_t *ex, mreal *x, mreal *y, mreal *z)
+double MGL_EXPORT mgl_expr_eval_(uintptr_t *ex, mreal *x, mreal *y, mreal *z)
 {	return mgl_expr_eval((HMEX) ex, *x,*y,*z);		}
-double MGL_EXPORT mgl_diff_expr_(uintptr_t *ex, const char *dir, mreal *x, mreal *y, mreal *z, int)
+double MGL_EXPORT mgl_expr_diff_(uintptr_t *ex, const char *dir, mreal *x, mreal *y, mreal *z, int)
 {	return mgl_expr_diff((HMEX) ex, *dir,*x,*y,*z);	}
 //-----------------------------------------------------------------------------

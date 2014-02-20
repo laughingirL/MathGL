@@ -149,6 +149,8 @@ void MGL_EXPORT mgl_gridplot(HMGL gr, int nx, int ny, int i, double dd)
 	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);
 	if(g)	g->InPlot(ix*wx,wx*(ix+1-dd),1-wy*(iy+1-dd),1-iy*wy,true);
 }
+void MGL_EXPORT mgl_gridplot_(uintptr_t *gr, int *nx, int *ny, int *m, mreal *d)
+{	mgl_gridplot(_GR_,*nx,*ny,*m,*d);	}
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_stickplot(HMGL gr, int num, int i, double tet, double phi)
 {	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->StickPlot(num, i, tet, phi);	}
@@ -371,7 +373,7 @@ void MGL_EXPORT mgl_axis_grid_(uintptr_t *gr, const char *dir,const char *pen, c
 	char *p=new char[n+1];	memcpy(p,pen,n);	p[n]=0;
 	char *o=new char[m+1];	memcpy(o,opt,m);	o[m]=0;
 	_GR_->Grid(s,p,o);	delete []s;	delete []p;	delete []o;	}
-	void MGL_EXPORT mgl_label_(uintptr_t *gr, const char *dir, const char *text, mreal *pos, const char *opt,int,int l,int m)
+void MGL_EXPORT mgl_label_(uintptr_t *gr, const char *dir, const char *text, mreal *pos, const char *opt,int,int l,int m)
 {	char *s=new char[l+1];	memcpy(s,text,l);	s[l]=0;
 	char *o=new char[m+1];	memcpy(o,opt,m);	o[m]=0;
 	_GR_->Label(*dir, s, *pos, o);	delete []s;	delete []o;	}

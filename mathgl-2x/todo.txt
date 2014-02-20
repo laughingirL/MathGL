@@ -31,6 +31,7 @@
 26. Add "opacity=0.33" to TeX
 27. Add mglDataVar, mglDataCol, mglDataFunc for handling special (temporary) data + add real(), imag(), conj() + accurate types in MGL + add 'expr'/'complex' in MGL
 
+28. Check if Fortran versions possible for: mgl_data_info, mgl_datas_hdf, mgl_get_fit, mgl_get_mess, mgl_get_plotid
 
 ============= DOCUMENTATION =============
 
