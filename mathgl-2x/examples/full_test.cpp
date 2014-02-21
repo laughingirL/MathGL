@@ -71,7 +71,12 @@ void test(mglGraph *gr)
 {
 	mglParse par;
 	setlocale(LC_CTYPE, "");
-	par.Execute(gr,"light on:addlegend 'r' 'r':legend");
+	par.Execute(gr,"new x 50 40 '0.8*sin(pi*x)*sin(pi*(y+1)/2)'\n\
+					new y 50 40 '0.8*cos(pi*x)*sin(pi*(y+1)/2)'\n\
+					new z 50 40 '0.8*cos(pi*(y+1)/2)'\nlight on\n\
+					title 'parametric form':rotate 50 60:box\n\
+					surf x y z ''\nwrite '1.tex'");
+//	par.Execute(gr,"light on:addlegend 'r' 'r':legend");
 }
 //-----------------------------------------------------------------------------
 #if !defined(_MSC_VER) && !defined(__BORLANDC__)

@@ -508,100 +508,6 @@ void MGL_EXPORT mgl_write_svg_(uintptr_t *gr, const char *fname,const char *desc
 	char *d=new char[n+1];	memcpy(d,descr,n);	d[n]=0;
 	mgl_write_svg(_GR_,s,d);	delete []s;		delete []d;	}
 //-----------------------------------------------------------------------------
-/// Color names easely parsed by LaTeX
-struct mglSVGName	{	const char *name;	mreal r,g,b;	};
-MGL_NO_EXPORT mglSVGName mgl_names[]={{"AliceBlue",.94,.972,1},
-{"Apricot", 0.984, 0.725, 0.51},
-{"Aquamarine", 0, 0.71, 0.745},
-{"Bittersweet", 0.753, 0.31, 0.0902},
-{"Black", 0.133, 0.118, 0.122},
-{"Blue", 0.176, 0.184, 0.573},
-{"BlueGreen", 0, 0.702, 0.722},
-{"BlueViolet", 0.278, 0.224, 0.573},
-{"BrickRed", 0.714, 0.196, 0.11},
-{"Brown", 0.475, 0.145, 0},
-{"BurntOrange", 0.969, 0.573, 0.114},
-{"CadetBlue", 0.455, 0.447, 0.604},
-{"CarnationPink", 0.949, 0.51, 0.706},
-{"Cerulean", 0, 0.635, 0.89},
-{"CornflowerBlue", 0.255, 0.69, 0.894},
-{"Cyan", 0, 0.682, 0.937},
-{"Dandelion", 0.992, 0.737, 0.259},
-{"DarkOrchid", 0.643, 0.325, 0.541},
-{"Emerald", 0, 0.663, 0.616},
-{"ForestGreen", 0, 0.608, 0.333},
-{"Fuchsia", 0.549, 0.212, 0.549},
-{"Goldenrod", 1, 0.875, 0.259},
-{"Gray", 0.58, 0.588, 0.596},
-{"Green", 0, 0.651, 0.31},
-{"GreenYellow", 0.875, 0.902, 0.455},
-{"JungleGreen", 0, 0.663, 0.604},
-{"Lavender", 0.957, 0.62, 0.769},
-{"LimeGreen", 0.553, 0.78, 0.243},
-{"Magenta", 0.925, 0, 0.549},
-{"Mahogany", 0.663, 0.204, 0.122},
-{"Maroon", 0.686, 0.196, 0.208},
-{"Melon", 0.973, 0.62, 0.482},
-{"MidnightBlue", 0, 0.404, 0.584},
-{"Mulberry", 0.663, 0.235, 0.576},
-{"NavyBlue", 0, 0.431, 0.722},
-{"OliveGreen", 0.235, 0.502, 0.192},
-{"Orange", 0.961, 0.506, 0.216},
-{"OrangeRed", 0.929, 0.0745, 0.353},
-{"Orchid", 0.686, 0.447, 0.69},
-{"Peach", 0.969, 0.588, 0.353},
-{"Periwinkle", 0.475, 0.467, 0.722},
-{"PineGreen", 0, 0.545, 0.447},
-{"Plum", 0.573, 0.149, 0.561},
-{"ProcessBlue", 0, 0.69, 0.941},
-{"Purple", 0.6, 0.278, 0.608},
-{"RawSienna", 0.592, 0.251, 0.0235},
-{"Red", 0.929, 0.106, 0.137},
-{"RedOrange", 0.949, 0.376, 0.208},
-{"RedViolet", 0.631, 0.141, 0.42},
-{"Rhodamine", 0.937, 0.333, 0.624},
-{"RoyalBlue", 0, 0.443, 0.737},
-{"RoyalPurple", 0.38, 0.247, 0.6},
-{"RubineRed", 0.929, 0.00392, 0.49},
-{"Salmon", 0.965, 0.573, 0.537},
-{"SeaGreen", 0.247, 0.737, 0.616},
-{"Sepia", 0.404, 0.0941, 0},
-{"SkyBlue", 0.275, 0.773, 0.867},
-{"SpringGreen", 0.776, 0.863, 0.404},
-{"Tan", 0.855, 0.616, 0.463},
-{"TealBlue", 0, 0.682, 0.702},
-{"Thistle", 0.847, 0.514, 0.718},
-{"Turquoise", 0, 0.706, 0.808},
-{"Violet", 0.345, 0.259, 0.608},
-{"VioletRed", 0.937, 0.345, 0.627},
-{"White", 0.6, 0.6, 0.6},
-{"WildStrawberry", 0.933, 0.161, 0.404},
-{"Yellow", 1, 0.949, 0},
-{"YellowGreen", 0.596, 0.8, 0.439},
-{"YellowOrange", 0.98, 0.635, 0.102},
-{"white", 1,1,1},
-{"black", 0,0,0},
-{"red", 1,0,0},
-{"green", 0,1,0},
-{"blue", 0,0,1},
-{"cyan", 0,1,1},
-{"magenta", 1,0,1},
-{"yellow", 1,1,0},
-{"",-1,-1,-1}};
-//-----------------------------------------------------------------------------
-MGL_NO_EXPORT const char *mglColorName(mglColor c)	// return closest SVG color
-{
-	register long i;
-	register mreal d, dm=10;
-	const char *name="";
-	for(i=0;mgl_names[i].name[0];i++)
-	{
-		d = fabs(c.r-mgl_names[i].r)+fabs(c.g-mgl_names[i].g)+fabs(c.b-mgl_names[i].b);
-		if(d<dm)	{	dm=d;	name=mgl_names[i].name;	}
-	}
-	return name;
-}
-//-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_write_tex(HMGL gr, const char *fname,const char *descr)
 {
 	if(gr->GetPrmNum()<1)	return;
@@ -611,27 +517,42 @@ void MGL_EXPORT mgl_write_tex(HMGL gr, const char *fname,const char *descr)
 	if(!fp)		{	gr->SetWarn(mglWarnOpen,fname);	return;	}
 	setlocale(LC_NUMERIC, "C");
 	fprintf(fp, "%% Created by MathGL library\n%% Title: %s\n\n",descr?descr:fname);
+	mreal ms=0.4*gr->mark_size()/100;	// provide marks
+	fprintf(fp, "\\providecommand{\\mglp}[4]{\\draw[#3] (#1-#4, #2) -- (#1+#4,#2) (#1,#2-#4) -- (#1,#2+#4);}\n");
+	fprintf(fp, "\\providecommand{\\mglx}[4]{\\draw[#3] (#1-#4, #2-#4) -- (#1+#4,#2+#4) (#1+#4,#2-#4) -- (#1-#4,#2+#4);}\n");
+	fprintf(fp, "\\providecommand{\\mgls}[4]{\\draw[#3] (#1-#4, #2-#4) -- (#1+#4,#2-#4) -- (#1+#4,#2+#4) -- (#1-#4,#2+#4) -- cycle;}\n");
+	fprintf(fp, "\\providecommand{\\mglS}[4]{\\fill[#3] (#1-#4, #2-#4) -- (#1+#4,#2-#4) -- (#1+#4,#2+#4) -- (#1-#4,#2+#4) -- cycle;}\n");
+	fprintf(fp, "\\providecommand{\\mgld}[4]{\\draw[#3] (#1, #2-#4) -- (#1+#4,#2) -- (#1,#2+#4) -- (#1-#4,#2) -- cycle;}\n");
+	fprintf(fp, "\\providecommand{\\mglD}[4]{\\fill[#3] (#1, #2-#4) -- (#1+#4,#2) -- (#1,#2+#4) -- (#1-#4,#2) -- cycle;}\n");
+	fprintf(fp, "\\providecommand{\\mglv}[4]{\\draw[#3] (#1-#4, #2+#4/2) -- (#1+#4,#2+#4/2) -- (#1,#2-#4) -- cycle;}\n");
+	fprintf(fp, "\\providecommand{\\mglV}[4]{\\fill[#3] (#1-#4, #2+#4/2) -- (#1+#4,#2+#4/2) -- (#1,#2-#4) -- cycle;}\n");
+	fprintf(fp, "\\providecommand{\\mglt}[4]{\\draw[#3] (#1-#4, #2-#4/2) -- (#1+#4,#2-#4/2) -- (#1,#2+#4) -- cycle;}\n");
+	fprintf(fp, "\\providecommand{\\mglT}[4]{\\fill[#3] (#1-#4, #2-#4/2) -- (#1+#4,#2-#4/2) -- (#1,#2+#4) -- cycle;}\n");
+	fprintf(fp, "\\providecommand{\\mgll}[4]{\\draw[#3] (#1+#4/2, #2-#4) -- (#1+#4/2,#2+#4) -- (#1-#4,#2) -- cycle;}\n");
+	fprintf(fp, "\\providecommand{\\mglL}[4]{\\fill[#3] (#1+#4/2, #2-#4) -- (#1+#4/2,#2+#4) -- (#1-#4,#2) -- cycle;}\n");
+	fprintf(fp, "\\providecommand{\\mglr}[4]{\\draw[#3] (#1-#4/2, #2-#4) -- (#1-#4/2,#2+#4) -- (#1+#4,#2) -- cycle;}\n");
+	fprintf(fp, "\\providecommand{\\mglR}[4]{\\fill[#3] (#1-#4/2, #2-#4) -- (#1-#4/2,#2+#4) -- (#1+#4,#2) -- cycle;}\n");
+	fprintf(fp, "\\providecommand{\\mglR}[4]{\\draw[#3] (#1, #2-#4) -- (#1,#2) -- (#1-#4,#2+#4) (#1,#2) -- (#1+#4,#2+#4);}\n");
+	fprintf(fp, "\\providecommand{\\mgla}[4]{\\draw[#3] (#1-#4, #2) -- (#1+#4,#2) (#1-0.6*#4,#2-0.8*#4) -- (#1+0.6*#4,#2+0.8*#4) (#1-0.6*#4,#2+0.8*#4) -- (#1+0.6*#4,#2-0.8*#4);}\n");
+	fprintf(fp, "\\providecommand{\\mglY}[4]{\\draw[#3] (#1, #2-#4) -- (#1,#2) (#1-#4,#2+#4) -- (#1,#2) (#1+#4,#2+#4) -- (#1,#2);}\n");
+	fprintf(fp, "\\providecommand{\\mglo}[4]{\\draw[#3] (#1, #2) circle (#4);}\n");
+	fprintf(fp, "\\providecommand{\\mglO}[4]{\\fill[#3] (#1, #2) circle (#4);}\n");
+	fprintf(fp, "\\providecommand{\\mglc}[3]{\\draw[#3] (#1, #2) circle (%g);}\n\n", 0.1*ms);
 	fprintf(fp, "\\begin{tikzpicture}\n");
 
 	// write primitives first
 	mreal wp=-1;
-	register long i;
-	register int ii,jj,kk;
 	int st=0;
 	mglRGBA cp;
-	char cname[16];
+	char cname[128];
 
-	for(i=0;i<gr->GetPrmNum();i++)
+	for(long i=0;i<gr->GetPrmNum();i++)
 	{
 		const mglPrim &q = gr->GetPrm(i);
 		if(q.type<0)	continue;	// q.n1>=0 always
 		cp.c = _Gr_->GetPrmCol(i);
+		snprintf(cname,128,"color={rgb,255:red,%d;green,%d;blue,%d}",cp.r[0],cp.r[1],cp.r[2]);
 
-		ii = (cp.r[0]+18L)/36;
-		jj = (cp.r[1]+18L)/36;
-		kk = (cp.r[2]+18L)/36;
-		snprintf(cname,16,"mgl_%d",ii+8*(jj+8*kk));
-//		cname = mglColorName(cp);
 		const mglPnt p1=gr->GetPnt(q.n1);
 		mreal x=p1.x/100,y=p1.y/100,s=q.s/100;
 		if(q.type==0)
@@ -641,41 +562,48 @@ void MGL_EXPORT mgl_write_tex(HMGL gr, const char *fname,const char *descr)
 			switch(q.n4)	// NOTE: no thickness for marks in TeX
 			{
 				case 'P':
-					fprintf(fp, "\\mglp{%g}{%g}{%s}{%g} \\mgls{%g}{%g}{%s}{%g}\n", x,y,cname,s,x,y,cname,s);	break;
+					fprintf(fp, "\\mglp{%.4g}{%.4g}{%s}{%.4g} \\mgls{%.4g}{%.4g}{%s}{%.4g}\n", x,y,cname,s,x,y,cname,s);	break;
 				case 'X':
-					fprintf(fp, "\\mglx{%g}{%g}{%s}{%g} \\mgls{%g}{%g}{%s}{%g}\n", x,y,cname,s,x,y,cname,s);	break;
+					fprintf(fp, "\\mglx{%.4g}{%.4g}{%s}{%.4g} \\mgls{%.4g}{%.4g}{%s}{%.4g}\n", x,y,cname,s,x,y,cname,s);	break;
 				case 'C':
-					fprintf(fp, "\\mglc{%g}{%g}{%s}{%g} \\mglo{%g}{%g}{%s}{%g}\n", x,y,cname,s,x,y,cname,s);	break;
-				case '+':	fprintf(fp, "\\mglp{%g}{%g}{%s}{%g}\n", x,y,cname,s);	break;
-				case 'x':	fprintf(fp, "\\mglx{%g}{%g}{%s}{%g}\n", x,y,cname,s);	break;
-				case 's':	fprintf(fp, "\\mgls{%g}{%g}{%s}{%g}\n", x,y,cname,s);	break;
-				case 'S':	fprintf(fp, "\\mglS{%g}{%g}{%s}{%g}\n", x,y,cname,s);	break;
-				case 'd':	fprintf(fp, "\\mgld{%g}{%g}{%s}{%g}\n", x,y,cname,s);	break;
-				case 'D':	fprintf(fp, "\\mglD{%g}{%g}{%s}{%g}\n", x,y,cname,s);	break;
-				case '^':	fprintf(fp, "\\mglt{%g}{%g}{%s}{%g}\n", x,y,cname,s);	break;
-				case 'T':	fprintf(fp, "\\mglT{%g}{%g}{%s}{%g}\n", x,y,cname,s);	break;
-				case 'v':	fprintf(fp, "\\mglv{%g}{%g}{%s}{%g}\n", x,y,cname,s);	break;
-				case 'V':	fprintf(fp, "\\mglV{%g}{%g}{%s}{%g}\n", x,y,cname,s);	break;
-				case '<':	fprintf(fp, "\\mgll{%g}{%g}{%s}{%g}\n", x,y,cname,s);	break;
-				case 'L':	fprintf(fp, "\\mglL{%g}{%g}{%s}{%g}\n", x,y,cname,s);	break;
-				case '>':	fprintf(fp, "\\mglr{%g}{%g}{%s}{%g}\n", x,y,cname,s);	break;
-				case 'R':	fprintf(fp, "\\mglR{%g}{%g}{%s}{%g}\n", x,y,cname,s);	break;
-				case 'Y':	fprintf(fp, "\\mglY{%g}{%g}{%s}{%g}\n", x,y,cname,s);	break;
-				case 'o':	fprintf(fp, "\\mglo{%g}{%g}{%s}{%g}\n", x,y,cname,s);	break;
-				case 'O':	fprintf(fp, "\\mglO{%g}{%g}{%s}{%g}\n", x,y,cname,s);	break;
-				case '*':	fprintf(fp, "\\mgla{%g}{%g}{%s}{%g}\n", x,y,cname,s);	break;
-				default:	fprintf(fp, "\\mglc{%g}{%g}{%s}\n", x,y,cname);	break;
+					fprintf(fp, "\\mglc{%.4g}{%.4g}{%s}{%.4g} \\mglo{%.4g}{%.4g}{%s}{%.4g}\n", x,y,cname,s,x,y,cname,s);	break;
+				case '+':	fprintf(fp, "\\mglp{%.4g}{%.4g}{%s}{%.4g}\n", x,y,cname,s);	break;
+				case 'x':	fprintf(fp, "\\mglx{%.4g}{%.4g}{%s}{%.4g}\n", x,y,cname,s);	break;
+				case 's':	fprintf(fp, "\\mgls{%.4g}{%.4g}{%s}{%.4g}\n", x,y,cname,s);	break;
+				case 'S':	fprintf(fp, "\\mglS{%.4g}{%.4g}{%s}{%.4g}\n", x,y,cname,s);	break;
+				case 'd':	fprintf(fp, "\\mgld{%.4g}{%.4g}{%s}{%.4g}\n", x,y,cname,s);	break;
+				case 'D':	fprintf(fp, "\\mglD{%.4g}{%.4g}{%s}{%.4g}\n", x,y,cname,s);	break;
+				case '^':	fprintf(fp, "\\mglt{%.4g}{%.4g}{%s}{%.4g}\n", x,y,cname,s);	break;
+				case 'T':	fprintf(fp, "\\mglT{%.4g}{%.4g}{%s}{%.4g}\n", x,y,cname,s);	break;
+				case 'v':	fprintf(fp, "\\mglv{%.4g}{%.4g}{%s}{%.4g}\n", x,y,cname,s);	break;
+				case 'V':	fprintf(fp, "\\mglV{%.4g}{%.4g}{%s}{%.4g}\n", x,y,cname,s);	break;
+				case '<':	fprintf(fp, "\\mgll{%.4g}{%.4g}{%s}{%.4g}\n", x,y,cname,s);	break;
+				case 'L':	fprintf(fp, "\\mglL{%.4g}{%.4g}{%s}{%.4g}\n", x,y,cname,s);	break;
+				case '>':	fprintf(fp, "\\mglr{%.4g}{%.4g}{%s}{%.4g}\n", x,y,cname,s);	break;
+				case 'R':	fprintf(fp, "\\mglR{%.4g}{%.4g}{%s}{%.4g}\n", x,y,cname,s);	break;
+				case 'Y':	fprintf(fp, "\\mglY{%.4g}{%.4g}{%s}{%.4g}\n", x,y,cname,s);	break;
+				case 'o':	fprintf(fp, "\\mglo{%.4g}{%.4g}{%s}{%.4g}\n", x,y,cname,s);	break;
+				case 'O':	fprintf(fp, "\\mglO{%.4g}{%.4g}{%s}{%.4g}\n", x,y,cname,s);	break;
+				case '*':	fprintf(fp, "\\mgla{%.4g}{%.4g}{%s}{%.4g}\n", x,y,cname,s);	break;
+				default:	fprintf(fp, "\\mglc{%.4g}{%.4g}{%s}\n", x,y,cname);	break;
 			}
 		}
 		else if(q.type==2 && cp.r[3])
 		{
 			const mglPnt p2=gr->GetPnt(q.n2), p3=gr->GetPnt(q.n3);
-			fprintf(fp, "\\fill[%s, fill opacity=%g] (%g,%g) -- (%g,%g) -- (%g,%g) -- cycle;\n", cname,cp.r[3]/255., x,y, p2.x/100,p2.y/100, p3.x/100,p3.y/100);
+			if(cp.r[3]<255)
+				fprintf(fp, "\\fill[%s, fill opacity=%.4g] (%.4g,%.4g) -- (%.4g,%.4g) -- (%.4g,%.4g) -- cycle;\n", cname,cp.r[3]/255., x,y, p2.x/100,p2.y/100, p3.x/100,p3.y/100);
+			else
+				fprintf(fp, "\\fill[%s, fill] (%.4g,%.4g) -- (%.4g,%.4g) -- (%.4g,%.4g) -- cycle;\n", cname, x,y, p2.x/100,p2.y/100, p3.x/100,p3.y/100);
 		}
 		else if(q.type==3 && cp.r[3])
 		{
 			const mglPnt p2=gr->GetPnt(q.n2), p3=gr->GetPnt(q.n3), p4=gr->GetPnt(q.n4);
-			fprintf(fp, "\\fill[%s, fill opacity=%g] (%g,%g) -- (%g,%g) -- (%g,%g) -- (%g,%g) -- cycle;\n", cname,cp.r[3]/255., x,y, p2.x/100,p2.y/100, p4.x/100,p4.y/100, p3.x/100,p3.y/100);
+			if(cp.r[3]<255)
+				fprintf(fp, "\\fill[%s, fill opacity=%.4g] (%.4g,%.4g) -- (%.4g,%.4g) -- (%.4g,%.4g) -- (%.4g,%.4g) -- cycle;\n", cname,cp.r[3]/255., x,y, p2.x/100,p2.y/100, p4.x/100,p4.y/100, p3.x/100,p3.y/100);
+			else
+				fprintf(fp, "\\fill[%s, fill] (%.4g,%.4g) -- (%.4g,%.4g) -- (%.4g,%.4g) -- (%.4g,%.4g) -- cycle;\n", cname, x,y, p2.x/100,p2.y/100, p4.x/100,p4.y/100, p3.x/100,p3.y/100);
+
 		}
 		else if(q.type==1)	// lines
 		{
@@ -686,7 +614,7 @@ void MGL_EXPORT mgl_write_tex(HMGL gr, const char *fname,const char *descr)
 			else		fprintf(fp,"\\draw[%s,%s] ",cname,w[iw]);
 			// TODO: add line dashing
 			wp = q.w>1  ? q.w:1;	st = q.n3;
-			put_line(gr,fp,false,i,wp,cp.c,st, "(%g,%g)", " -- (%g,%g)", false, 0.01);
+			put_line(gr,fp,false,i,wp,cp.c,st, "(%.4g,%.4g)", " -- (%.4g,%.4g)", false, 0.01);
 			fprintf(fp, ";\n");
 		}
 		else if(q.type==6 && mgl_isnum(q.p))	// text
@@ -698,58 +626,27 @@ void MGL_EXPORT mgl_write_tex(HMGL gr, const char *fname,const char *descr)
 			if((a&3)==0)	ss.append(",anchor=base west");
 			if((a&3)==1)	ss.append(",anchor=base");
 			if((a&3)==2)	ss.append(",anchor=base east");
-			if(f&MGL_FONT_ITAL)	ss.append(",font=\\itshape");
-			if(f&MGL_FONT_BOLD)	ss.append(",font=\\bfshape");
+//			if(f&MGL_FONT_ITAL)	ss.append(",font=\\itshape");
+//			if(f&MGL_FONT_BOLD)	ss.append(",font=\\bfshape");
 			if(t.text.find('\\')!=std::string::npos || t.text.find('{')!=std::string::npos || t.text.find('_')!=std::string::npos || t.text.find('^')!=std::string::npos)
-				fprintf(fp,"\\draw[%s] (%g,%g) node[rotate=%.2g]{$%ls$};\n", ss.c_str(),x-dx,y-dy, -q.p, t.text.c_str());
+				fprintf(fp,"\\draw[%s] (%.4g,%.4g) node[rotate=%.2g]{$%ls$};\n", ss.c_str(),x-dx,y-dy, -q.p, t.text.c_str());
 			else
-				fprintf(fp,"\\draw[%s] (%g,%g) node[rotate=%.2g]{%ls};\n", ss.c_str(),x-dx,y-dy, -q.p, t.text.c_str());
+				fprintf(fp,"\\draw[%s] (%.4g,%.4g) node[rotate=%.2g]{%ls};\n", ss.c_str(),x-dx,y-dy, -q.p, t.text.c_str());
 		}
 	}
 	fprintf(fp, "\\end{tikzpicture}\n");
-	for(i=0;i<gr->GetPrmNum();i++)
+	for(long i=0;i<gr->GetPrmNum();i++)
 	{	mglPrim &q=gr->GetPrm(i);	if(q.type==-1)	q.type = 1;	}
 	fclose(fp);
 	setlocale(LC_NUMERIC, "");
-
-	// provide colors used by figure
-	fp=fopen("mglcolors.tex","wt");
-	if(fp)
-	{
-		for(ii=0;ii<8;ii++)	for(jj=0;jj<8;jj++)	for(kk=0;kk<8;kk++)
-			fprintf(fp,"\\definecolor{mgl_%d}{RGB}{%d,%d,%d}\n",ii+8*(jj+8*kk),int(36.5*ii),int(36.5*jj),int(36.5*kk));
-		mreal ms=0.4*gr->mark_size()/100;	// also provide marks
-		fprintf(fp, "\\providecommand{\\mglp}[4]{\\draw[#3] (#1-#4, #2) -- (#1+#4,#2) (#1,#2-#4) -- (#1,#2+#4);}\n");
-		fprintf(fp, "\\providecommand{\\mglx}[4]{\\draw[#3] (#1-#4, #2-#4) -- (#1+#4,#2+#4) (#1+#4,#2-#4) -- (#1-#4,#2+#4);}\n");
-		fprintf(fp, "\\providecommand{\\mgls}[4]{\\draw[#3] (#1-#4, #2-#4) -- (#1+#4,#2-#4) -- (#1+#4,#2+#4) -- (#1-#4,#2+#4) -- cycle;}\n");
-		fprintf(fp, "\\providecommand{\\mglS}[4]{\\fill[#3] (#1-#4, #2-#4) -- (#1+#4,#2-#4) -- (#1+#4,#2+#4) -- (#1-#4,#2+#4) -- cycle;}\n");
-		fprintf(fp, "\\providecommand{\\mgld}[4]{\\draw[#3] (#1, #2-#4) -- (#1+#4,#2) -- (#1,#2+#4) -- (#1-#4,#2) -- cycle;}\n");
-		fprintf(fp, "\\providecommand{\\mglD}[4]{\\fill[#3] (#1, #2-#4) -- (#1+#4,#2) -- (#1,#2+#4) -- (#1-#4,#2) -- cycle;}\n");
-		fprintf(fp, "\\providecommand{\\mglv}[4]{\\draw[#3] (#1-#4, #2+#4/2) -- (#1+#4,#2+#4/2) -- (#1,#2-#4) -- cycle;}\n");
-		fprintf(fp, "\\providecommand{\\mglV}[4]{\\fill[#3] (#1-#4, #2+#4/2) -- (#1+#4,#2+#4/2) -- (#1,#2-#4) -- cycle;}\n");
-		fprintf(fp, "\\providecommand{\\mglt}[4]{\\draw[#3] (#1-#4, #2-#4/2) -- (#1+#4,#2-#4/2) -- (#1,#2+#4) -- cycle;}\n");
-		fprintf(fp, "\\providecommand{\\mglT}[4]{\\fill[#3] (#1-#4, #2-#4/2) -- (#1+#4,#2-#4/2) -- (#1,#2+#4) -- cycle;}\n");
-		fprintf(fp, "\\providecommand{\\mgll}[4]{\\draw[#3] (#1+#4/2, #2-#4) -- (#1+#4/2,#2+#4) -- (#1-#4,#2) -- cycle;}\n");
-		fprintf(fp, "\\providecommand{\\mglL}[4]{\\fill[#3] (#1+#4/2, #2-#4) -- (#1+#4/2,#2+#4) -- (#1-#4,#2) -- cycle;}\n");
-		fprintf(fp, "\\providecommand{\\mglr}[4]{\\draw[#3] (#1-#4/2, #2-#4) -- (#1-#4/2,#2+#4) -- (#1+#4,#2) -- cycle;}\n");
-		fprintf(fp, "\\providecommand{\\mglR}[4]{\\fill[#3] (#1-#4/2, #2-#4) -- (#1-#4/2,#2+#4) -- (#1+#4,#2) -- cycle;}\n");
-		fprintf(fp, "\\providecommand{\\mglR}[4]{\\draw[#3] (#1, #2-#4) -- (#1,#2) -- (#1-#4,#2+#4) (#1,#2) -- (#1+#4,#2+#4);}\n");
-		fprintf(fp, "\\providecommand{\\mgla}[4]{\\draw[#3] (#1-#4, #2) -- (#1+#4,#2) (#1-0.6*#4,#2-0.8*#4) -- (#1+0.6*#4,#2+0.8*#4) (#1-0.6*#4,#2+0.8*#4) -- (#1+0.6*#4,#2-0.8*#4);}\n");
-		fprintf(fp, "\\providecommand{\\mglY}[4]{\\draw[#3] (#1, #2-#4) -- (#1,#2) (#1-#4,#2+#4) -- (#1,#2) (#1+#4,#2+#4) -- (#1,#2);}\n");
-		fprintf(fp, "\\providecommand{\\mglo}[4]{\\draw[#3] (#1, #2) circle (#4);}\n");
-		fprintf(fp, "\\providecommand{\\mglO}[4]{\\fill[#3] (#1, #2) circle (#4);}\n");
-		fprintf(fp, "\\providecommand{\\mglc}[3]{\\draw[#3] (#1, #2) circle (%g);}\n\n", 0.1*ms);
-		fclose(fp);
-	}
 
 	// provide main file for viewing figure
 	fp=fopen("mglmain.tex","wt");
 	if(fp)
 	{
-		fprintf(fp, "\\documentclass{article}\n\n");
-		fprintf(fp, "%% following lines should be placed before \\begin{document}\n");
-		fprintf(fp,"\\usepackage{tikz}\n\\input{mglcolors.tex}\n");
-		fprintf(fp, "\\begin{document}\n%% start figure itself\n\\input{%s}\\end{document}\n",fname);
+		fprintf(fp, "%% this file just show figure\n");
+		fprintf(fp, "\\documentclass{article}\n\\usepackage{tikz}\n");
+		fprintf(fp, "\\begin{document}\n\\input{%s}\n\\end{document}\n",fname);
 		fclose(fp);
 	}
 }
