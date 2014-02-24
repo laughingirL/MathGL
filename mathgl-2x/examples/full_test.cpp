@@ -69,6 +69,16 @@ void smgl_surf(mglGraph *gr);
 #include <mgl2/font.h>
 void test(mglGraph *gr)
 {
+	mglData y(50);
+	y.Modify("sin(10*x) + 10");
+	gr->SetRange('y', y);
+	gr->Box();
+	gr->Axis();
+	gr->Plot(y);
+	y.Save("test.dat");
+	return;
+
+
 	mglParse par;
 	setlocale(LC_CTYPE, "");
 	par.Execute(gr,"new x 50 40 '0.8*sin(pi*x)*sin(pi*(y+1)/2)'\n\

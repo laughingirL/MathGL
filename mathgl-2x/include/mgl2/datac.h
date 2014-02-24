@@ -367,11 +367,7 @@ public:
 	/// Direct access to the data cell
 	inline dual &operator[](long i)	{	return a[i];	}
 #endif
-#if MGL_NO_DATA_A
-	inline long GetNN() const {	return nx*ny*nz;	}
-#else
-protected:
-#endif
+
 	/// Get the value in given cell of the data without border checking
 	inline mreal v(long i,long j=0,long k=0) const
 #ifdef DEBUG

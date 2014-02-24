@@ -1284,7 +1284,7 @@ void MGL_EXPORT mgl_data_norm_slice(HMDT d, mreal v1,mreal v2,char dir,long keep
 //#pragma omp parallel for private(m1,m2,aa,e,e0)	// TODO add omp comparison here
 		for(long k=0;k<nz;k++)
 		{
-			m1 = 1e20;	m2 = -1e20;	e=0;
+			m1 = INFINITY;	m2 = -INFINITY;	e=0;
 			for(long i=0;i<nx*ny;i++)
 			{
 				aa = a[i+nx*ny*k];
@@ -1305,7 +1305,7 @@ void MGL_EXPORT mgl_data_norm_slice(HMDT d, mreal v1,mreal v2,char dir,long keep
 //#pragma omp parallel for private(m1,m2,aa,e,e0)	// TODO add omp comparison here
 		for(long j=0;j<ny;j++)
 		{
-			m1 = 1e20;	m2 = -1e20;	e=0;
+			m1 = INFINITY;	m2 = -INFINITY;	e=0;
 			for(long k=0;k<nz;k++)	for(long i=0;i<nx;i++)
 			{
 				aa = a[i+nx*(j+ny*k)];
@@ -1327,7 +1327,7 @@ void MGL_EXPORT mgl_data_norm_slice(HMDT d, mreal v1,mreal v2,char dir,long keep
 //#pragma omp parallel for private(m1,m2,aa,e,e0)	// TODO add omp comparison here
 		for(long i=0;i<nx;i++)
 		{
-			m1 = 1e20;	m2 = -1e20;	e=0;
+			m1 = INFINITY;	m2 = -INFINITY;	e=0;
 			for(long k=0;k<ny*nz;k++)
 			{
 				aa = a[i+nx*k];

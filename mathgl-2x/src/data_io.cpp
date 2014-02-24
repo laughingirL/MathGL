@@ -458,12 +458,12 @@ int MGL_EXPORT mgl_data_read_mat_(uintptr_t *d, const char *fname,int *dim,int l
 //-----------------------------------------------------------------------------
 mreal MGL_EXPORT mgl_data_max(HCDT d)
 {
-	mreal m1=-1e10;
+	mreal m1=-INFINITY;
 	long nn=d->GetNN();
 	const mglData *b = dynamic_cast<const mglData *>(d);
 #pragma omp parallel
 	{
-		register mreal m=-1e10, v;
+		register mreal m=-INFINITY, v;
 		if(b)
 #pragma omp for nowait
 			for(long i=0;i<nn;i++)
@@ -481,12 +481,12 @@ mreal MGL_EXPORT mgl_data_max_(uintptr_t *d)	{	return mgl_data_max(_DT_);	}
 //-----------------------------------------------------------------------------
 mreal MGL_EXPORT mgl_data_min(HCDT d)
 {
-	mreal m1=0;
+	mreal m1=INFINITY;
 	long nn=d->GetNN();
 	const mglData *b = dynamic_cast<const mglData *>(d);
 #pragma omp parallel
 	{
-		register mreal m=0, v;
+		register mreal m=INFINITY, v;
 		if(b)
 #pragma omp for nowait
 			for(long i=0;i<nn;i++)
@@ -527,12 +527,12 @@ mreal MGL_EXPORT mgl_data_neg_max_(uintptr_t *d)	{	return mgl_data_neg_max(_DT_)
 //-----------------------------------------------------------------------------
 mreal MGL_EXPORT mgl_data_pos_min(HCDT d)
 {
-	mreal m1=1e10;
+	mreal m1=INFINITY;
 	long nn=d->GetNN();
 	const mglData *b = dynamic_cast<const mglData *>(d);
 #pragma omp parallel
 	{
-		register mreal m=1e10, v;
+		register mreal m=INFINITY, v;
 		if(b)
 #pragma omp for nowait
 			for(long i=0;i<nn;i++)
@@ -550,11 +550,11 @@ mreal MGL_EXPORT mgl_data_pos_min_(uintptr_t *d)	{	return mgl_data_pos_min(_DT_)
 //-----------------------------------------------------------------------------
 mreal MGL_EXPORT mgl_data_max_int(HCDT d, long *i, long *j, long *k)
 {
-	mreal m1=-1e10;
+	mreal m1=-INFINITY;
 	long nx=d->GetNx(), ny=d->GetNy(), nn=d->GetNN();
 #pragma omp parallel
 	{
-		register mreal m=-1e10, v;
+		register mreal m=-INFINITY, v;
 		long im=-1,jm=-1,km=-1;
 #pragma omp for nowait
 		for(long ii=0;ii<nn;ii++)
@@ -574,11 +574,11 @@ mreal MGL_EXPORT mgl_data_max_int_(uintptr_t *d, int *i, int *j, int *k)
 //-----------------------------------------------------------------------------
 mreal MGL_EXPORT mgl_data_min_int(HCDT d, long *i, long *j, long *k)
 {
-	mreal m1=1e10;
+	mreal m1=INFINITY;
 	long nx=d->GetNx(), ny=d->GetNy(), nn=d->GetNN();
 #pragma omp parallel
 	{
-		register mreal m=1e10, v;
+		register mreal m=INFINITY, v;
 		long im=-1,jm=-1,km=-1;
 #pragma omp for nowait
 		for(long ii=0;ii<nn;ii++)
@@ -704,7 +704,7 @@ void MGL_EXPORT mgl_data_fill_(uintptr_t *d, mreal *x1,mreal *x2,const char *dir
 void MGL_EXPORT mgl_data_norm(HMDT d, mreal v1,mreal v2,long sym,long dim)
 {
 	long s,nn=d->nx*d->ny*d->nz;
-	mreal a1=1e20,a2=-1e20,v,*a=d->a;
+	mreal a1=INFINITY,a2=-INFINITY,v,*a=d->a;
 	s = dim*d->ny*(d->nz>1 ? d->nx : 1);
 	for(long i=s;i<nn;i++)	// determines borders of existing data
 	{	a1 = a1>a[i] ? a[i]:a1;	a2 = a2<a[i] ? a[i]:a2;	}

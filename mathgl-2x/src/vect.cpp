@@ -739,7 +739,7 @@ void MGL_EXPORT mgl_flowp_xy(HMGL gr, double x0, double y0, double z0, HCDT x, H
 	bool vv = mglchr(sch,'v');
 	// find coordinates u, v
 	register long i,j;
-	register mreal d, dm=1e7;
+	register mreal d, dm=INFINITY;
 	long i0=0,j0=0;
 	for(i=0;i<n;i++)	for(j=0;j<m;j++)	// first find closest
 	{
@@ -952,7 +952,7 @@ void MGL_EXPORT mgl_flowp_xyz(HMGL gr, double x0, double y0, double z0, HCDT x, 
 
 	// find coordinates u, v, w
 	register long i,j,k;
-	register mreal d, dm=1e7;
+	register mreal d, dm=INFINITY;
 	long i0=0,j0=0,k0=0;
 	mreal dx,dy,dz;
 	for(i=0;i<n;i++)	for(j=0;j<m;j++)	for(k=0;k<l;k++)	// first find closest

@@ -585,7 +585,7 @@ void mglCanvas::DrawLabels(mglAxis &aa, bool inv, const mglMatrix *M)
 		kk[i] = AddPnt(M, o+d*aa.txt[i].val,-1,d,0,7);
 	}
 
-	for(l=0,c=1e7,i=0;i<n-1;i++)
+	for(l=0,c=INFINITY,i=0;i<n-1;i++)
 	{
 		// exclude factors
 		if(aa.ch!='c' && (aa.txt[i].val<aa.v1 || aa.txt[i+1].val<aa.v1 || aa.txt[i].val>aa.v2 || aa.txt[i+1].val>aa.v2))
@@ -688,7 +688,7 @@ void mglCanvas::DrawGrid(mglAxis &aa)
 	mglPoint pp[8]={Min,Min,Min,Min,Max,Max,Max,Max},nan=mglPoint(NAN), oo[8], org=Min;
 	pp[1].x=Max.x;	pp[2].y=Max.y;	pp[3].z=Max.z;
 	pp[4].x=Min.x;	pp[5].y=Min.y;	pp[6].z=Min.z;
-	mreal zm=1e5;
+	mreal zm=INFINITY;
 	memcpy(oo,pp,8*sizeof(mglPoint));
 	for(int i=0;i<8;i++)	// find deepest point
 	{
@@ -849,7 +849,7 @@ void mglCanvas::Box(const char *col, bool ticks)
 			mglPoint p[8]={Min,Min,Min,Min,Max,Max,Max,Max},nan=mglPoint(NAN),oo[8];
 			p[1].x=Max.x;	p[2].y=Max.y;	p[3].z=Max.z;
 			p[4].x=Min.x;	p[5].y=Min.y;	p[6].z=Min.z;
-			mreal zm=1e5;	int im=0;
+			mreal zm=INFINITY;	int im=0;
 			memcpy(oo,p,8*sizeof(mglPoint));
 			for(int i=0;i<8;i++)	// find deepest point
 			{

@@ -316,7 +316,7 @@ bool mglBase::RecalcCRange()
 	{	FMin.c = Min.c;	FMax.c = Max.c;	}
 	else
 	{
-		FMin.c = 1e30;	FMax.c = -1e30;
+		FMin.c = INFINITY;	FMax.c = -INFINITY;
 		register int i;
 		mreal a;
 		int n=30;
@@ -339,8 +339,8 @@ void mglBase::RecalcBorder()
 	{	FMin = Min;	FMax = Max;	}
 	else
 	{
-		FMin = mglPoint( 1e30, 1e30, 1e30);
-		FMax = mglPoint(-1e30,-1e30,-1e30);
+		FMin = mglPoint( INFINITY, INFINITY, INFINITY);
+		FMax = mglPoint(-INFINITY,-INFINITY,-INFINITY);
 		register int i,j;
 		int n=30;
 		for(i=0;i<=n;i++)	for(j=0;j<=n;j++)	// x range

@@ -120,7 +120,7 @@ void MGL_EXPORT mgl_data_export(HCDT dd, const char *fname, const char *scheme,m
 	if(ns<0 || ns>=nz)	ns=0;
 	if(v1==v2)
 	{
-		v1 = 1e20;	v2=-1e20;
+		v1 = INFINITY;	v2=-INFINITY;
 		if(md)
 //#pragma omp parallel for	// NOTE comparison here
 			for(long i=0;i<nx*ny*nz;i++)
