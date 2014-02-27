@@ -75,6 +75,7 @@ public:
 	{	mgl_glut_prev_frame(gr);	}
 	inline void Animation()		///< Run slideshow (animation) of frames
 	{	mgl_glut_animation(gr);	}
+	inline int Run() {};		///< Run main loop for event handling (placed for similarity to mglWnd)
 };
 //-----------------------------------------------------------------------------
 #endif

@@ -517,7 +517,7 @@ void MGL_EXPORT mgl_write_tex(HMGL gr, const char *fname,const char *descr)
 	if(!fp)		{	gr->SetWarn(mglWarnOpen,fname);	return;	}
 	setlocale(LC_NUMERIC, "C");
 	fprintf(fp, "%% Created by MathGL library\n%% Title: %s\n\n",descr?descr:fname);
-	mreal ms=0.4*gr->mark_size()/100;	// provide marks
+	// provide marks
 	fprintf(fp, "\\providecommand{\\mglp}[4]{\\draw[#3] (#1-#4, #2) -- (#1+#4,#2) (#1,#2-#4) -- (#1,#2+#4);}\n");
 	fprintf(fp, "\\providecommand{\\mglx}[4]{\\draw[#3] (#1-#4, #2-#4) -- (#1+#4,#2+#4) (#1+#4,#2-#4) -- (#1-#4,#2+#4);}\n");
 	fprintf(fp, "\\providecommand{\\mgls}[4]{\\draw[#3] (#1-#4, #2-#4) -- (#1+#4,#2-#4) -- (#1+#4,#2+#4) -- (#1-#4,#2+#4) -- cycle;}\n");
@@ -537,7 +537,7 @@ void MGL_EXPORT mgl_write_tex(HMGL gr, const char *fname,const char *descr)
 	fprintf(fp, "\\providecommand{\\mglY}[4]{\\draw[#3] (#1, #2-#4) -- (#1,#2) (#1-#4,#2+#4) -- (#1,#2) (#1+#4,#2+#4) -- (#1,#2);}\n");
 	fprintf(fp, "\\providecommand{\\mglo}[4]{\\draw[#3] (#1, #2) circle (#4);}\n");
 	fprintf(fp, "\\providecommand{\\mglO}[4]{\\fill[#3] (#1, #2) circle (#4);}\n");
-	fprintf(fp, "\\providecommand{\\mglc}[3]{\\draw[#3] (#1, #2) circle (%g);}\n\n", 0.1*ms);
+	fprintf(fp, "\\providecommand{\\mglc}[3]{\\draw[#3] (#1, #2) circle (%g);}\n\n", 4e-4*gr->mark_size());
 	fprintf(fp, "\\begin{tikzpicture}\n");
 
 	// write primitives first
