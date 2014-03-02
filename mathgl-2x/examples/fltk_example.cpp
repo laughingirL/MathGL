@@ -18,12 +18,67 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include "mgl2/fltk.h"
+//-----------------------------------------------------------------------------
 #if defined(WIN32) || defined(_MSC_VER) || defined(__BORLANDC__)
 #include <windows.h>
 #else
 #include <unistd.h>
 #endif
+void long_calculations()	// just delay which correspond to simulate calculations
+{
+#if defined(WIN32) || defined(_MSC_VER) || defined(__BORLANDC__)
+	Sleep(1000);
+#else
+	sleep(1);	// which can be very long
+#endif
+}
 //-----------------------------------------------------------------------------
+#if 1//defined(PTHREAD_SAMPLE1)	// first variant of multi-threading usage of mglFLTK window
+mglFLTK *gr=NULL;
+void *calc(void *)
+{
+	mglPoint pnt;
+	for(int i=0;i<10;i++)		// do calculation
+	{
+		long_calculations();	// which can be very long
+		pnt = mglPoint(2*mgl_rnd()-1,2*mgl_rnd()-1);
+		if(gr)
+		{
+			gr->Clf();			// make new drawing
+			gr->Line(mglPoint(),pnt,"Ar2");
+			char str[10] = "i=0";	str[2] = '0'+i;
+			gr->Puts(mglPoint(),str);
+			gr->Update();		// update window
+		}
+	}
+	exit(0);
+}
+int main(int argc,char **argv)
+{
+	static pthread_t thr;
+	pthread_create(&thr,0,calc,0);
+	pthread_detach(thr);
+	gr = new mglFLTK;
+	gr->Run();	return 0;
+}
+#elif defined(PTHREAD_SAMPLE2)	// another variant of multi-threading usage of mglFLTK window. Work only if pthread was enabled for MathGL
+mglPoint pnt;	// some global variable for changeable data
+int main(int argc,char **argv)
+{
+	mglFLTK gr("test");
+	gr.RunThr();	// <-- need MathGL version which use pthread
+	for(int i=0;i<10;i++)	// do calculation
+	{
+		long_calculations();// which can be very long
+		pnt = mglPoint(2*mgl_rnd()-1,2*mgl_rnd()-1);
+		gr.Clf();			// make new drawing
+		gr.Line(mglPoint(),pnt,"Ar2");
+		char str[10] = "i=0";	str[3] = '0'+i;
+		gr.Update();		// update window
+	}
+	return 0;	// finish calculations and close the window
+}
+#else		// just default samples
 int test_wnd(mglGraph *gr);
 int sample(mglGraph *gr);
 int sample_1(mglGraph *gr);
@@ -31,31 +86,8 @@ int sample_2(mglGraph *gr);
 int sample_3(mglGraph *gr);
 int sample_d(mglGraph *gr);
 //-----------------------------------------------------------------------------
-mglPoint pnt;  // some global variable for changeable data
-void *mgl_fltk_tmp(void *)	{	mgl_fltk_run();	return 0;	}
-//#define PTHREAD_SAMPLE
-//-----------------------------------------------------------------------------
 int main(int argc,char **argv)
 {
-#ifdef PTHREAD_SAMPLE
-	mglFLTK gr("test");
-	gr.RunThr();
-	for(int i=0;i<10;i++)	// do calculation
-	{
-#if defined(WIN32) || defined(_MSC_VER) || defined(__BORLANDC__)
-		Sleep(1000);
-#else
-		sleep(1);           // which can be very long
-#endif
-		pnt = mglPoint(2*mgl_rnd()-1,2*mgl_rnd()-1);
-		gr.Clf();			// make new drawing
-		gr.Line(mglPoint(),pnt,"Ar2");
-		char str[10] = "i=0";	str[3] = '0'+i;
-		gr.Puts(mglPoint(),"");
-		gr.Update();		// update window
-	}
-	return 0;	// finish calculations and close the window
-#else
 	mglFLTK *gr;
 	char key = 0;
 	if(argc>1)	key = argv[1][0]!='-' ? argv[1][0]:argv[1][1];
@@ -70,6 +102,5 @@ int main(int argc,char **argv)
 		default:	gr = new mglFLTK(sample,"Drop and waves");	break;
 	}
 	gr->Run();	return 0;
-#endif
 }
-//-----------------------------------------------------------------------------
+#endif

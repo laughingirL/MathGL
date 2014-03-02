@@ -211,7 +211,7 @@ void mglCanvasGLUT::Window(int argc, char **argv,int (*draw)(mglBase *gr, void *
 	delete []tmp[0];
 	glutInitDisplayMode(GLUT_RGB);
 	glutInitWindowSize(600, 600);
-	glutCreateWindow("MathPlotLibrary");
+	glutCreateWindow("MathGL");
 
 	AddLight(0,mglPoint(0,0,3),false);
 	if(draw)
@@ -231,7 +231,7 @@ void mglCanvasGLUT::Window(int argc, char **argv,int (*draw)(mglBase *gr, void *
 	// TODO Add window maximazing at start up ???
 
 	glutMainLoop();
-	glDeleteLists(1,NumFig);
+	if(NumFig>0)	glDeleteLists(1,NumFig);
 }
 //-----------------------------------------------------------------------------
 HMGL MGL_EXPORT mgl_create_graph_glut(int (*draw)(HMGL gr, void *p), const char *title, void *par, void (*load)(void *p))

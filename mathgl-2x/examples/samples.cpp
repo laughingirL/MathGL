@@ -213,14 +213,14 @@ void smgl_fexport(mglGraph *gr)	// test file export
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_refill="new x 10 '0.5+rnd':cumsum x 'x':norm x -1 1\n"
-"copy y sin(pi*x)/2\ntitle 'Refill sample'\nbox:axis:plot x y 'o '\n"
+"copy y sin(pi*x)/2\nsubplot 1 1 0 '<_':title 'Refill sample'\nbox:axis:plot x y 'o '\n"
 "new r 100:refill r x y\nplot r 'r'\nfplot 'sin(pi*x)/2' 'B:'";
 void smgl_refill(mglGraph *gr)
 {
 	mglData x(10), y(10), r(100);
 	x.Modify("0.5+rnd");	x.CumSum("x");	x.Norm(-1,1);
 	y.Modify("sin(pi*v)/2",x);
-	if(big!=3)	gr->Title("Refill sample");
+	if(big!=3)	{	gr->SubPlot(1,1,0,"<_");	gr->Title("Refill sample");	}
 	gr->Axis();	gr->Box();	gr->Plot(x,y,"o ");
 	gr->Refill(r,x,y);	// or you can use r.Refill(x,y,-1,1);
 	gr->Plot(r,"r");	gr->FPlot("sin(pi*x)/2","B:");

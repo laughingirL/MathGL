@@ -18,23 +18,50 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include "mgl2/qt.h"
+//-----------------------------------------------------------------------------
 #if defined(WIN32) || defined(_MSC_VER) || defined(__BORLANDC__)
 #include <windows.h>
 #else
 #include <unistd.h>
 #endif
+void long_calculations()	// just delay which correspond to simulate calculations
+{
+#if defined(WIN32) || defined(_MSC_VER) || defined(__BORLANDC__)
+	Sleep(1000);
+#else
+	sleep(1);           // which can be very long
+#endif
+}
 //-----------------------------------------------------------------------------
-int test_wnd(mglGraph *gr);
-int sample(mglGraph *gr);
-int sample_1(mglGraph *gr);
-int sample_2(mglGraph *gr);
-int sample_3(mglGraph *gr);
-int sample_d(mglGraph *gr);
-//-----------------------------------------------------------------------------
-//#define PTHREAD_SAMPLE
-mglPoint pnt;  // some global variable for changeable data
-void *mgl_qt_tmp(void *);
-//-----------------------------------------------------------------------------
+#if defined(PTHREAD_SAMPLE1)	// first variant of multi-threading usage of mglQT window
+mglQT *gr=NULL;
+void *calc(void *)
+{
+	mglPoint pnt;
+	for(int i=0;i<10;i++)	// do calculation
+	{
+		long_calculations();       // which can be very long
+		pnt = mglPoint(2*mgl_rnd()-1,2*mgl_rnd()-1);
+		if(gr)
+		{
+			gr->Clf();			// make new drawing
+			gr->Line(mglPoint(),pnt,"Ar2");
+			char str[10] = "i=0";	str[2] = '0'+i;
+			gr->Puts(mglPoint(),str);
+			gr->Update();		// update window
+		}
+	}
+	exit(0);
+}
+int main(int argc,char **argv)
+{
+	static pthread_t thr;
+	pthread_create(&thr,0,calc,0);
+	pthread_detach(thr);
+	gr = new mglQT;
+	gr->Run();	return 0;
+}
+#elif defined(PTHREAD_SAMPLE2)	// another variant of multi-threading usage of mglQT window. Work only if pthread was enabled for MathGL
 class Foo : public mglDraw
 {
 	mglPoint pnt;  // some result of calculation
@@ -43,36 +70,39 @@ public:
 	int Draw(mglGraph *gr);
 	void Calc();
 };
-//-----------------------------------------------------
 void Foo::Calc()
 {
-	for(int i=0;i<30;i++)   // do calculation
+	for(int i=0;i<30;i++)   	// do calculation
 	{
-#if defined(WIN32) || defined(_MSC_VER) || defined(__BORLANDC__)
-		Sleep(1000);
-#else
-		sleep(1);           // which can be very long
-#endif
+		long_calculations();	// which can be very long
 		pnt = mglPoint(2*mgl_rnd()-1,2*mgl_rnd()-1);
-		Gr->Update();        // update window
+		Gr->Update();			// update window
 	}
 }
-//-----------------------------------------------------
 int Foo::Draw(mglGraph *gr)
 {
 	gr->Line(mglPoint(),pnt,"Ar2");
 	gr->Box();
 	return 0;
 }
-//-----------------------------------------------------
 int main(int argc,char **argv)
 {
-#ifdef PTHREAD_SAMPLE
 	Foo *foo = new Foo;
 	mglQT gr(foo,"MathGL examples");
-	foo->Gr = &gr;   foo->Run();
+	foo->Gr = &gr;
+	foo->Run();	// <-- need MathGL version which use pthread
 	return gr.Run();
-#else
+}
+#else		// just default samples
+int test_wnd(mglGraph *gr);
+int sample(mglGraph *gr);
+int sample_1(mglGraph *gr);
+int sample_2(mglGraph *gr);
+int sample_3(mglGraph *gr);
+int sample_d(mglGraph *gr);
+//-----------------------------------------------------------------------------
+int main(int argc,char **argv)
+{
 	mglQT *gr;
 	char key = 0;
 	if(argc>1)	key = argv[1][0]!='-' ? argv[1][0]:argv[1][1];
@@ -87,6 +117,5 @@ int main(int argc,char **argv)
 	default: 	gr = new mglQT(sample,"Drop and waves");	break;
 	}
 	gr->Run();	return 0;
-#endif
 }
-//-----------------------------------------------------------------------------
+#endif
