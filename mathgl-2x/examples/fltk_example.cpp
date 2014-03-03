@@ -33,7 +33,7 @@ void long_calculations()	// just delay which correspond to simulate calculations
 #endif
 }
 //-----------------------------------------------------------------------------
-#if 1//defined(PTHREAD_SAMPLE1)	// first variant of multi-threading usage of mglFLTK window
+#if defined(PTHREAD_SAMPLE1)	// first variant of multi-threading usage of mglFLTK window
 mglFLTK *gr=NULL;
 void *calc(void *)
 {

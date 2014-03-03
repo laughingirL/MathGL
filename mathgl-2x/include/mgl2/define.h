@@ -93,15 +93,20 @@ typedef unsigned long uintptr_t;
 
 #if defined(_MSC_VER) || defined(__BORLANDC__)
 #include <float.h>
+#include <math.h>
 
 const unsigned long mgl_nan[2] = {0xffffffff, 0x7fffffff};
 #define NANd	(*(double*)mgl_nan)
 #define NANf	(*(float*)&(mgl_nan[1]))
+
+#if !defined(NAN)
 #if MGL_USE_DOUBLE
 #define NAN		NANd
 #else
 #define NAN		NANd
 #endif
+#endif
+
 #endif
 
 #ifndef M_PI
