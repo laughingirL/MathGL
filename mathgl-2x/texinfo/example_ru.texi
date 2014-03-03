@@ -256,7 +256,41 @@ int sample(mglGraph *gr)
 @end verbatim
 First, the function creates a frame by calling @code{NewFrame()} for rotated axes and draws the bounding box.  The function @code{EndFrame()} @strong{must be} called after the frame drawing! The second frame contains the bounding box and axes @code{Axis("xy")} in the initial (unrotated) coordinates. Function @code{sample} returns the number of created frames @code{GetNumFrame()}.
 
-Note, that such kind of animation is rather slow and not well suitable for visualization of running calculations. For the last case one can use @code{Update()} function. The most simple case for doing this is to use @code{mglDraw} class and reimplement its @code{Calc()} method.
+Note, that such kind of animation is rather slow and not well suitable for visualization of running calculations. For the last case one can use @code{Update()} function. The most simple case for doing this is running yours calculations firstly in separate thread and later start MathGL window (QT or FLTK) creation.
+@verbatim
+#include <mgl2/window.h>
+mglWindow *gr=NULL;
+void *calc(void *)
+{
+  mglPoint pnt;
+  for(int i=0;i<10;i++)   // do calculation
+  {
+    sleep(2);             // which can be very long
+    pnt = mglPoint(2*mgl_rnd()-1,2*mgl_rnd()-1);
+    if(gr)            // be sure that window is ready
+    {
+      gr->Clf();      // make new drawing
+      gr->Line(mglPoint(),pnt,"Ar2");
+      char str[10] = "i=0";  str[2] = '0'+i;
+      gr->Puts(mglPoint(),str);
+      gr->Update();   // update window
+    }
+  }
+  exit(0);
+}
+int main(int argc,char **argv)
+{
+  static pthread_t thr;
+  // first run yours routine in separate thread
+  pthread_create(&thr,0,calc,0);
+  pthread_detach(thr);
+  gr = new mglWindow;
+  gr->Run();  return 0;
+}
+@end verbatim
+Note, that such method looks as not working for GLUT windows due to limitation of @code{glutMainLoop()} function.
+
+Another ways use built-in MathGL feature to run a member function @code{mglDraw::Calc()} separate thread, which work only if pthread support is enabled. For this, you just need to use @code{mglDraw} class and reimplement its @code{Calc()} method.
 @verbatim
 #include <mgl2/window.h>
 class Foo : public mglDraw
@@ -293,11 +327,12 @@ int main(int argc,char **argv)
 }
 @end verbatim
 
-Previous sample can be run in C++ only since it use C++ class mglDraw. However similar idea can be used even in Fortran or SWIG-based (Python/Octave/...) if one use FLTK window. Such limitation come from the Qt requirement to be run in the primary thread only. The sample code will be:
+Finally, you can put the event-handling loop in separate instead of yours code by using @code{RunThr()} function instead of @code{Run()} one. Unfortunately, such method work well only for FLTK windows and only if pthread support was enabled. Such limitation come from the Qt requirement to be run in the primary thread only. The sample code will be:
 @verbatim
+#include <mgl2/fltk.h>
 int main(int argc,char **argv)
 {
-  mglWindow gr("test");   // create window
+  mglFLTK gr("test");     // create window
   gr.RunThr();            // run event loop in separate thread
   for(int i=0;i<10;i++)   // do calculation
   {
@@ -306,7 +341,7 @@ int main(int argc,char **argv)
     gr.Clf();             // make new drawing
     gr.Line(mglPoint(),pnt,"Ar2");
     char str[10] = "i=0"; str[2] = '0'+i;
-    gr.Puts(mglPoint(),"");
+    gr.Puts(mglPoint(),str);
     gr.Update();          // update window when you need it
   }
   return 0;   // finish calculations and close the window
@@ -4067,63 +4102,7 @@ gr->Window(argc,argv,foo_draw,"Title",this);
 Простейший путь -- использование комбинации CMake и MinGW. Также Вам может потребоваться дополнительные библиотеки, такие как GSL, PNG, JPEG и пр. Все они могут быть найдены на @url{http://gnuwin32.sourceforge.net/packages.html}. После установки всех компонент, просто запустите конфигуратор CMake и соберите MathGL командой make.
 
 @item Как создать окно FLTK/GLUT/Qt с текущими результатами параллельно с выполнением основных вычислений?
-Следует создать отдельный поток для обработки сообщений в окно. Кросс-платформенный путь -- использование библиотеки @code{pthread}. Обновление данных в окне можно выполнить вызовом функции @code{mglGraphFLTK::Update()}. Пример код имеет вид:
-@verbatim
-//-----------------------------------------------------------------------------
-#include <mgl2/window.h>
-#include <pthread.h>
-
-mglPoint pnt;  // some global variable for changable data
-//-----------------------------------------------------------------------------
-int sample(mglGraph *gr)
-{
-  gr->Box();  gr->Line(mglPoint(),pnt,"Ar2"); // just draw a vector
-  return 0;
-}
-//-----------------------------------------------------------------------------
-void *mgl_fltk_tmp(void *)      {       mglFlRun();     return 0;       }
-int main (int argc, char ** argv)
-{
-  mglWindow gr(0,sample,"test");  // create window
-  static pthread_t tmp;
-  pthread_create(&tmp, 0, mgl_fltk_tmp, 0);
-  pthread_detach(tmp);    // run window handling in the separate thread
-  for(int i=0;i<10;i++)   // do calculation
-  {
-    sleep(1);             // which can be very long
-    pnt = mglPoint(2*mgl_rnd()-1,2*mgl_rnd()-1);
-    gr.Update();          // update window
-  }
-  return 0;   // finish calculations and close the window
-}
-//-----------------------------------------------------------------------------
-@end verbatim
-В случае если требуется вывести статичную картинку с текущими результатами расчетов, то достаточно передать @code{NULL} вместо функции рисования и вызывать @code{Update()} по мере необходимости для обновления графика. Такой способ подходит и для пользователей фортрана.
-@verbatim
-//-----------------------------------------------------------------------------
-#include <mgl2/window.h>
-//-----------------------------------------------------------------------------
-int sample(mglGraph *gr)
-{
-  gr->Box();  gr->Line(mglPoint(),pnt,"Ar2"); // just draw a vector
-  return 0;
-}
-//-----------------------------------------------------------------------------
-void *mgl_fltk_tmp(void *)      {       mglFlRun();     return 0;       }
-int main (int argc, char ** argv)
-{
-  mglWindow gr(0,NULL,"test");  // create window
-  for(int i=0;i<10;i++)   // do calculation
-  {
-    sleep(1);             // which can be very long
-    pnt = mglPoint(2*mgl_rnd()-1,2*mgl_rnd()-1);
-    sample(&gr);          // draw picture
-    gr.Update();          // update window
-  }
-  return 0;   // finish calculations and close the window
-}
-//-----------------------------------------------------------------------------
-@end verbatim
+Следует создать отдельный поток для обработки сообщений в окно. Обновление данных в окне можно выполнить вызовом функции @code{Update()}. Подробнее см. @ref{Animation}.
 
 @item Сколько человек участвовало в создании библиотеки?
 Большую часть библиотеки написал один человек. Это результат примерно года работы на написание ядра библиотеки и базовых функций (в основном вечерами и по выходным). Процесс усовершенствования продолжается и теперь :). Скрипты сборки в основном написаны Д.Кулагиным, а экспорт в PRC/PDF написан М.Видассовым.

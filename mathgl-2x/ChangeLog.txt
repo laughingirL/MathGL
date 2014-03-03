@@ -1,4 +1,4 @@
-2.2.2 Released ?? February 2014
+2.2.2 Released 10 March 2014
 
 * Add mgl_region_3d() to draw region (or ribbon) between 2 curves. Correspondingly extend mglGraph::Region() function and MGL command 'region'.
 * Add mgl_datac_diffr() for calculation of one step of diffraction by finite-difference method

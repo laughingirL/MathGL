@@ -20,19 +20,17 @@
 11. Check centered curved text (see text2)
 12. Export to X3D
 
-16. Inplot data should have ranges (add mglInPlot{x1,x2,y1,y2,Bp or something like this} which include mglMatrix instead of mglBase::Bp) + calc coor + JS
-17. 'perspective' command in UDAV
-18. Check octave 3.8
-21. Use mglFormulaCalc() for data transformation/filling (much faster but require more memory) + the same for complex
-22. Test mglDataC::Diffraction() + write sample + add rational function???
+13. Inplot data should have ranges (add mglInPlot{x1,x2,y1,y2,Bp or something like this} which include mglMatrix instead of mglBase::Bp) + calc coor + JS
+14. 'perspective' command in UDAV
+15. Check octave 3.8
+16. Use mglFormulaCalc() for data transformation/filling (much faster but require more memory) + the same for complex
+17. Test mglDataC::Diffraction() + write sample + add rational function???
 
-24. Use mglStack<T> instead of std::vector<T> due to multi-threading
-25. Get true coordinates in CalcXYZ for curved equations too
-27. Add mglDataVar, mglDataCol, mglDataFunc for handling special (temporary) data + add real(), imag(), conj() + accurate types in MGL + add 'expr'/'complex' in MGL
+18. Use mglStack<T> instead of std::vector<T> due to multi-threading
+19. Get true coordinates in CalcXYZ for curved equations too
+20. Add mglDataVar, mglDataCol, mglDataFunc for handling special (temporary) data + add real(), imag(), conj() + accurate types in MGL + add 'expr'/'complex' in MGL
 
-28. Check if Fortran versions possible for: mgl_data_info, mgl_datas_hdf, mgl_get_fit, mgl_get_mess, mgl_get_plotid
-29. Check fitting sample ???
-30. Update docs about multi-threading drawing
+21. Check if Fortran versions possible for: mgl_data_info, mgl_datas_hdf, mgl_get_fit, mgl_get_mess, mgl_get_plotid
 
 
 ============= DOCUMENTATION =============

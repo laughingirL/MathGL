@@ -257,7 +257,41 @@ int sample(mglGraph *gr)
 @end verbatim
 First, the function creates a frame by calling @code{NewFrame()} for rotated axes and draws the bounding box.  The function @code{EndFrame()} @strong{must be} called after the frame drawing! The second frame contains the bounding box and axes @code{Axis("xy")} in the initial (unrotated) coordinates. Function @code{sample} returns the number of created frames @code{GetNumFrame()}.
 
-Note, that such kind of animation is rather slow and not well suitable for visualization of running calculations. For the last case one can use @code{Update()} function. The most simple case for doing this is to use @code{mglDraw} class and reimplement its @code{Calc()} method.
+Note, that such kind of animation is rather slow and not well suitable for visualization of running calculations. For the last case one can use @code{Update()} function. The most simple case for doing this is running yours calculations firstly in separate thread and later start MathGL window (QT or FLTK) creation.
+@verbatim
+#include <mgl2/window.h>
+mglWindow *gr=NULL;
+void *calc(void *)
+{
+  mglPoint pnt;
+  for(int i=0;i<10;i++)   // do calculation
+  {
+    sleep(2);             // which can be very long
+    pnt = mglPoint(2*mgl_rnd()-1,2*mgl_rnd()-1);
+    if(gr)            // be sure that window is ready
+    {
+      gr->Clf();      // make new drawing
+      gr->Line(mglPoint(),pnt,"Ar2");
+      char str[10] = "i=0";  str[2] = '0'+i;
+      gr->Puts(mglPoint(),str);
+      gr->Update();   // update window
+    }
+  }
+  exit(0);
+}
+int main(int argc,char **argv)
+{
+  static pthread_t thr;
+  // first run yours routine in separate thread
+  pthread_create(&thr,0,calc,0);
+  pthread_detach(thr);
+  gr = new mglWindow;
+  gr->Run();  return 0;
+}
+@end verbatim
+Note, that such method looks as not working for GLUT windows due to limitation of @code{glutMainLoop()} function.
+
+Another ways use built-in MathGL feature to run a member function @code{mglDraw::Calc()} separate thread, which work only if pthread support is enabled. For this, you just need to use @code{mglDraw} class and reimplement its @code{Calc()} method.
 @verbatim
 #include <mgl2/window.h>
 class Foo : public mglDraw
@@ -294,11 +328,12 @@ int main(int argc,char **argv)
 }
 @end verbatim
 
-Previous sample can be run in C++ only since it use C++ class mglDraw. However similar idea can be used even in Fortran or SWIG-based (Python/Octave/...) if one use FLTK window. Such limitation come from the Qt requirement to be run in the primary thread only. The sample code will be:
+Finally, you can put the event-handling loop in separate instead of yours code by using @code{RunThr()} function instead of @code{Run()} one. Unfortunately, such method work well only for FLTK windows and only if pthread support was enabled. Such limitation come from the Qt requirement to be run in the primary thread only. The sample code will be:
 @verbatim
+#include <mgl2/fltk.h>
 int main(int argc,char **argv)
 {
-  mglWindow gr("test");   // create window
+  mglFLTK gr("test");     // create window
   gr.RunThr();            // run event loop in separate thread
   for(int i=0;i<10;i++)   // do calculation
   {
@@ -307,13 +342,12 @@ int main(int argc,char **argv)
     gr.Clf();             // make new drawing
     gr.Line(mglPoint(),pnt,"Ar2");
     char str[10] = "i=0"; str[2] = '0'+i;
-    gr.Puts(mglPoint(),"");
+    gr.Puts(mglPoint(),str);
     gr.Update();          // update window when you need it
   }
   return 0;   // finish calculations and close the window
 }
 @end verbatim
-
 
 Pictures with @strong{animation can be saved in file(s)} as well. You can: export in animated GIF, or save each frame in separate file (usually JPEG) and convert these files into the movie (for example, by help of ImageMagic). Let me show both methods.
 
@@ -4054,6 +4088,10 @@ There are 3 general ways. First, the point with @code{NAN} value as one of the c
 In version 2.0, main classes (@code{mglGraph} and @code{mglData}) contains only @code{inline} functions and are acceptable for any compiler with the same binary files. However, if you plan to use widget classes (QMathGL, Fl_MathGL, ...) or to access low-level features (mglBase, mglCanvas, ...) then you have to recompile MathGL by yours compiler.
 
 Note, that you have to make import library(-ies) *.lib for provided binary *.dll. This procedure depend on used compiler -- please read documentation for yours compiler. For VisualStudio, it can be done by command @code{lib.exe /DEF:libmgl.def /OUT:libmgl.lib}.
+
+@item How make FLTK/GLUT/Qt window which will display result of my calculations?
+
+You need to put yours calculations or main event-handling loop in the separate thread. For static image you can give @code{NULL} as drawing function and call @code{Update()} function when you need to redraw it. For more details see @ref{Animation}.
 
 @item How I can build MathGL under Windows?
 Generally, it is the same procedure as for Linux or MacOS -- see section @ref{Installation}. The simplest way is using the combination CMake+MinGW. Also you may need some extra libraries like GSL, PNG, JPEG and so on. All of them can be found at @url{http://gnuwin32.sourceforge.net/packages.html}. After installing all components, just run @uref{http://www.cmake.org/cmake/help/runningcmake.html, cmake-gui} configurator and build the MathGL itself.
