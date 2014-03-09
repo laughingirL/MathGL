@@ -53,7 +53,7 @@ Generally, MathGL is GPL library. However, you can use LGPL license for MathGL c
 @strong{Latest news}
 @itemize
 @item @emph{10 March 2014.}
-New version (v.@value{VERSION}) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are extend of 'region' plot, improve export to TeX, add missing Fortran functions, bugfixes, and other improvements, which denoted @ref{News, here}.
+New version (v.@value{VERSION}) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are extend of 'region' plot, improve export to TeX, add missing Fortran functions, bugfixes, and other improvements, which denoted @ref{News, here}. Note, this release looks as bug free, but next release (v.2.3) will introduce a set of improvements which may not so stable at first time.
 @item @emph{22 January 2014.}
 New version (v.@value{VERSION}) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are support of Qt5 and Pascal, improvements in JavaScript interface, bugfixes, and other improvements, which denoted @ref{News, here}.
 @item @emph{11 November 2013.}
@@ -81,7 +81,7 @@ Javascript interface was developed with support of @url{http://www.datadvance.ne
 New version (v.2.2.2) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are minor improvements and bugfixes:
 @itemize @bullet
 @item Add mgl_region_3d() to draw region (or ribbon) between 2 curves. Correspondingly extend mglGraph::Region() function and MGL command 'region'.
-@item Add mgl_datac_diffr() for calculation of one step of diffraction by finite-difference method.
+@item Allow LGPL for MathGL widgets.
 @item Improve export to TeX.
 @item Add missing functions to Fortran interface.
 @item Bugfix for legend with enabled lighting.

@@ -2020,11 +2020,16 @@ These functions draw continuous lines between points and fills it to axis plane.
 @anchor{region}
 @deftypefn {MGL command} {} region ydat1 ydat2 ['stl'='']
 @deftypefnx {MGL command} {} region xdat ydat1 ydat2 ['stl'='']
+@deftypefnx {MGL command} {} region xdat1 ydat1 xdat2 ydat2 ['stl'='']
+@deftypefnx {MGL command} {} region xdat1 ydat1 zdat1 xdat2 ydat2 zdat2 ['stl'='']
 @ifclear UDAV
 @deftypefnx {Method on @code{mglGraph}} @code{void} Region (@code{const mglDataA &}y1, @code{const mglDataA &}y2, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Method on @code{mglGraph}} @code{void} Region (@code{const mglDataA &}x, @code{const mglDataA &}y1, @code{const mglDataA &}y2, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Region (@code{const mglDataA &}x1, @code{const mglDataA &}y1, @code{const mglDataA &}x2, @code{const mglDataA &}y2, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Region (@code{const mglDataA &}x1, @code{const mglDataA &}y1, @code{const mglDataA &}z1, @code{const mglDataA &}x2, @code{const mglDataA &}y2, @code{const mglDataA &}z2, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {C function} @code{void} mgl_region (@code{HMGL} gr, @code{HCDT} y1, @code{HCDT} y2, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_region_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y1, @code{HCDT} y2, @code{const char *}pen, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_region_3d (@code{HMGL} gr, @code{HCDT} x1, @code{HCDT} y1, @code{HCDT} z1, @code{HCDT} x2, @code{HCDT} y2, @code{HCDT} z2, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
 These functions fill area between 2 curves. Dimensions of arrays @var{y1} and @var{y2} must be equal. Also you can use gradient filling if number of specified colors is equal to 2*number of curves. If @var{pen} contain symbol @samp{i} then only area with y1<y<y2 will be filled else the area with y2<y<y1 will be filled too. See also @ref{area}, @ref{bars}, @ref{stem}. @sref{Region sample}
 @end deftypefn

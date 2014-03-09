@@ -1907,11 +1907,16 @@ gr.GetBGRN(bits, len(bits));
 @anchor{region}
 @deftypefn {Команда MGL} {} region ydat1 ydat2 ['stl'='']
 @deftypefnx {Команда MGL} {} region xdat ydat1 ydat2 ['stl'='']
+@deftypefnx {Команда MGL} {} region xdat1 ydat1 xdat2 ydat2 ['stl'='']
+@deftypefnx {Команда MGL} {} region xdat1 ydat1 zdat1 xdat2 ydat2 zdat2 ['stl'='']
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} Region (@code{const mglDataA &}y1, @code{const mglDataA &}y2, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} Region (@code{const mglDataA &}x, @code{const mglDataA &}y1, @code{const mglDataA &}y2, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Region (@code{const mglDataA &}x1, @code{const mglDataA &}y1, @code{const mglDataA &}x2, @code{const mglDataA &}y2, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Region (@code{const mglDataA &}x1, @code{const mglDataA &}y1, @code{const mglDataA &}z1, @code{const mglDataA &}x2, @code{const mglDataA &}y2, @code{const mglDataA &}z2, @code{const char *}pen=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_region (@code{HMGL} gr, @code{HCDT} y1, @code{HCDT} y2, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_region_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y1, @code{HCDT} y2, @code{const char *}pen, @code{const char *}opt)
+@deftypefnx {Функция С} @code{void} mgl_region_3d (@code{HMGL} gr, @code{HCDT} x1, @code{HCDT} y1, @code{HCDT} z1, @code{HCDT} x2, @code{HCDT} y2, @code{HCDT} z2, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
 Функции закрашивают область между 2 кривыми. Градиентная заливка используется если число цветов равно удвоенному число кривых. Если @var{pen} содержит @samp{i}, то закрашивается только область y1<y<y2, в противном случае будет закрашена и область y2<y<y1. См. также @ref{area}, @ref{bars}, @ref{stem}. @sref{Region sample}
 @end deftypefn
