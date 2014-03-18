@@ -25,8 +25,10 @@
 //-----------------------------------------------------------------------------
 /// Explicit scheme for 1 step of axial diffraction
 void MGL_EXPORT mgl_difr_axial(dual *a,int n,int step,dual q,int Border,dual *tmp,int kk, double di);
+void MGL_EXPORT mgl_difr_axial_old(dual *a,int n,int step,dual q,int Border,dual *tmp1,dual *tmp2,int kk, double di);	// restore for backward compatibility
 /// Explicit scheme for 1 step of plane diffraction
 void MGL_EXPORT mgl_difr_grid(dual *a,int n,int step,dual q,int Border,dual *tmp,int kk);
+void MGL_EXPORT mgl_difr_grid_old(dual *a,int n,int step,dual q,int Border,dual *tmp1,dual *tmp2,int kk);	// restore for backward compatibility
 //-----------------------------------------------------------------------------
 extern "C" {
 #endif
