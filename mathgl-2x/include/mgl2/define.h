@@ -95,10 +95,16 @@ typedef unsigned long uintptr_t;
 #include <float.h>
 #include <math.h>
 
+#ifdef WIN32
+const unsigned long long mgl_nan[2] = {0x7fffffffffffffff, 0x7fffffff};
+const unsigned long long mgl_inf[2] = {0x7ff0000000000000, 0x7f800000};
+#else
 const unsigned long mgl_nan[2] = {0x7fffffffffffffff, 0x7fffffff};
+const unsigned long mgl_inf[2] = {0x7ff0000000000000, 0x7f800000};
+#endif
+
 #define NANd    (*(double*)mgl_nan)
 #define NANf    (*(float*)(mgl_nan+1))
-const unsigned long mgl_inf[2] = {0x7ff0000000000000, 0x7f800000};
 #define INFd    (*(double*)mgl_inf)
 #define INFf    (*(float*)(mgl_inf+1))
 
