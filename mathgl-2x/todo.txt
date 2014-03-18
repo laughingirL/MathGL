@@ -31,7 +31,7 @@
 20. Add mglDataVar, mglDataCol, mglDataFunc for handling special (temporary) data + add real(), imag(), conj() + accurate types in MGL + add 'expr'/'complex' in MGL
 
 21. Check if Fortran versions possible for: mgl_data_info, mgl_datas_hdf, mgl_get_fit, mgl_get_mess, mgl_get_plotid
-
+22. Replace pthread by openmp in mgl_draw_thr() and similar
 
 ============= DOCUMENTATION =============
 

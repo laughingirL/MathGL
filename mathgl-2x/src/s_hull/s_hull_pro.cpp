@@ -159,7 +159,7 @@ long read_Shx(std::vector<Shx> &pts, char * fname)
 	nump = (long) pts.size();
 
 	return(nump);
-};
+}
 
 /*
 	write out a set of points to disk
@@ -181,7 +181,7 @@ void write_Shx(std::vector<Shx> &pts, char * fname)
 	out.close();
 
 	return;
-};
+}
 
 
 
@@ -204,7 +204,7 @@ void write_Triads(std::vector<Triad> &ts, char * fname)
 	out.close();
 
 	return;
-};
+}
 
 
 

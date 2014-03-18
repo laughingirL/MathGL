@@ -649,7 +649,7 @@ bool mglFont::read_data(const char *fname, float *ff, short *wdt, short *lnum, i
 	// first string is comment (not used), second string have information
 	if(!gzgets(fp,str,256) || strncmp(str,"# font",6) || !gzgets(fp,str,256))
 	{	gzclose(fp);	return false;	}
-	retVal = sscanf(str, "%d%f%d", &n, ff, &s);
+	retVal = sscanf(str, "%d%f%u", &n, ff, &s);
 	//Check sscanf read all data  (3 items)
 	if(retVal != 3)	{	gzclose(fp);	return false;	}
 
@@ -691,7 +691,7 @@ bool mglFont::read_main(const char *fname, std::vector<short> &buf)	// TODO add 
 	for(size_t i=0;i<numg;i++)
 	{
 		gzgets(fp,str,256);
-		sscanf(str,"%u%d%d%u%d%u", &tmpi, &tmpw, &tmpnl, &tmppl, &tmpnt, &tmppt);
+		sscanf(str,"%d%d%d%u%d%u", &tmpi, &tmpw, &tmpnl, &tmppl, &tmpnt, &tmppt);
 		id[i] = tmpi;		width[0][i] = tmpw;
 		numl[0][i] = tmpnl; ln[0][i] = tmppl;
 		numt[0][i] = tmpnt;	tr[0][i] = tmppt;

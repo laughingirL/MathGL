@@ -677,7 +677,7 @@ int MGL_NO_EXPORT mgls_diff2(mglGraph *, long , mglArg *a, const char *k, const 
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_drop(mglGraph *gr, long n, mglArg *a, const char *k, const char *opt)
+int MGL_NO_EXPORT mgls_drop(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;	gr->Self()->SaveState(opt);
 	if(!strcmp(k,"nnnnn"))
@@ -911,7 +911,7 @@ int MGL_NO_EXPORT mgls_light(mglGraph *gr, long , mglArg *a, const char *k, cons
 	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_line(mglGraph *gr, long n, mglArg *a, const char *k, const char *opt)
+int MGL_NO_EXPORT mgls_line(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;	gr->Self()->SaveState(opt);
 	if(!strcmp(k,"nnnn"))
@@ -925,7 +925,7 @@ int MGL_NO_EXPORT mgls_line(mglGraph *gr, long n, mglArg *a, const char *k, cons
 	else res = 1;	gr->Self()->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_errbox(mglGraph *gr, long n, mglArg *a, const char *k, const char *opt)
+int MGL_NO_EXPORT mgls_errbox(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;	gr->Self()->SaveState(opt);
 	if(!strcmp(k,"nnnn"))
@@ -1046,7 +1046,7 @@ int MGL_NO_EXPORT mgls_map(mglGraph *gr, long , mglArg *a, const char *k, const 
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_read(mglGraph *gr, long n, mglArg *a, const char *k, const char *)
+int MGL_NO_EXPORT mgls_read(mglGraph *gr, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
 	bool rr=true;
@@ -2258,7 +2258,7 @@ int MGL_NO_EXPORT mgls_fgets(mglGraph *gr, long , mglArg *a, const char *k, cons
 	else res = 1;	gr->Self()->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_import(mglGraph *gr, long , mglArg *a, const char *k, const char *)
+int MGL_NO_EXPORT mgls_import(mglGraph *, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
 	if(!strcmp(k,"dss"))	a[0].d->Import(a[1].s.c_str(), a[2].s.c_str());
@@ -2544,7 +2544,7 @@ int MGL_NO_EXPORT mgls_axisstl(mglGraph *gr, long , mglArg *a, const char *k, co
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_ranges(mglGraph *gr, long n, mglArg *a, const char *k, const char *)
+int MGL_NO_EXPORT mgls_ranges(mglGraph *gr, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
 	if(!strcmp(k,"nnnn"))	gr->SetRanges(a[0].v,a[1].v, a[2].v,a[3].v);

@@ -40,15 +40,15 @@ public:
 	~testFrame() {}
 private:
 	enum	{	idMenuQuit = 1000	};
-	void OnClose(wxCloseEvent& event)	{	Destroy();	}
-	void OnQuit(wxCommandEvent& event)	{	Destroy();	}
+	void OnClose(wxCloseEvent& )	{	Destroy();	}
+	void OnQuit(wxCommandEvent& )	{	Destroy();	}
 
 	wxScrolledWindow *scroll;
 	wxMathGL *mgl;
 	DECLARE_EVENT_TABLE()
 };
 //-----------------------------------------------------------------------------
-IMPLEMENT_APP(testApp);
+IMPLEMENT_APP(testApp)
 //-----------------------------------------------------------------------------
 bool testApp::OnInit()
 {

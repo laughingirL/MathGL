@@ -52,7 +52,7 @@ void mgl_get_value(const char *buf, const char *name, char *val)
 	}
 }
 //-----------------------------------------------------------------------------
-int main(int argc, char *argv[])
+int main()
 {
 	mglGraph gr;
 	mglParse p(true);

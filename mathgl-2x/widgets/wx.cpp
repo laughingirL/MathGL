@@ -97,7 +97,7 @@ wxMathGL::wxMathGL(wxWindow *parent, wxWindowID id, const wxPoint& pos, const wx
 //-----------------------------------------------------------------------------
 wxMathGL::~wxMathGL()	{	if(mgl_use_graph(gr,-1)<1)	mgl_delete_graph(gr);	}
 //-----------------------------------------------------------------------------
-double wxMathGL::GetRatio()	{	return double(mgl_get_width(gr))/mgl_get_height(gr);	};
+double wxMathGL::GetRatio()	{	return double(mgl_get_width(gr))/mgl_get_height(gr);	}
 //-----------------------------------------------------------------------------
 void wxMathGL::SetGraph(HMGL GR)
 {
@@ -107,7 +107,7 @@ void wxMathGL::SetGraph(HMGL GR)
 	gr=gg;	mgl_use_graph(gg,1);
 }
 //-----------------------------------------------------------------------------
-void wxMathGL::OnPaint(wxPaintEvent& event)
+void wxMathGL::OnPaint(wxPaintEvent& )
 {
 	wxPaintDC dc(this);
 	dc.DrawBitmap(pic,0,0);
@@ -128,7 +128,7 @@ void wxMathGL::OnSize(wxSizeEvent& event)
 	else 	SetSize(mgl_get_width(gr), mgl_get_height(gr));
 }
 //-----------------------------------------------------------------------------
-void wxMathGL::OnNextSlide(wxTimerEvent& evt)	{	NextSlide();	}
+void wxMathGL::OnNextSlide(wxTimerEvent& )	{	NextSlide();	}
 //-----------------------------------------------------------------------------
 void wxMathGL::SetPer(int p)
 {	if(100*per!=p && p>=0 && p<100)	{	per = 0.01*p;	Repaint();	}	}
@@ -241,7 +241,7 @@ void wxMathGL::OnMouseLeftDown(wxMouseEvent &ev)
 void wxMathGL::OnMouseDown(wxMouseEvent &ev)
 {	xe=x0=ev.GetX();	ye=y0=ev.GetY();	ev.Skip();	}
 //-----------------------------------------------------------------------------
-void wxMathGL::OnMouseLeftUp(wxMouseEvent &ev)
+void wxMathGL::OnMouseLeftUp(wxMouseEvent &)
 {
 	if(zoom)
 	{
@@ -386,7 +386,7 @@ void wxMathGL::Copy()
 }
 //-----------------------------------------------------------------------------
 void wxMathGL::SetSize(int w, int h)
-{	mgl_set_size(gr,w,h);	wxWindow::SetSize(w, h);	Update();	};
+{	mgl_set_size(gr,w,h);	wxWindow::SetSize(w, h);	Update();	}
 //-----------------------------------------------------------------------------
 void wxMathGL::Adjust()
 {

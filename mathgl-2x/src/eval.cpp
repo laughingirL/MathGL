@@ -119,7 +119,7 @@ EQ_DC,		// Jacobian elliptic function dn(u|m)/cn(u|m)
 			// MUST BE LAST ELLIPTIC FUNCTION
 // not-ready
 EQ_EN,
-EQ_CL,		// Clausen function
+EQ_CL		// Clausen function
 };
 //-----------------------------------------------------------------------------
 #ifndef M_PI

@@ -185,7 +185,7 @@ template <class Treal> Treal mglSpline3t(const Treal *a, long nx, long ny, long 
 	if(!a || nx<1 || ny<1 || nz<1)	return 0;
 	Treal _p[4][4];
 	register long i,j;
-	register Treal fx=1, fy=1;
+	Treal fx=1, fy=1;
 	long kx=long(x),ky=long(y),kz=long(z);
 	Treal b=0;
 	x = x>0 ?(x<nx-1 ? x:nx-1):0;
@@ -280,7 +280,7 @@ template <class Treal> Treal mglSpline3st(const Treal *a, long nx, long ny, long
 	if(!a || nx<1 || ny<1 || nz<1)	return 0;
 	Treal _p[4][4];
 	register long i,j;
-	register Treal fx=1, fy=1;
+	Treal fx=1, fy=1;
 	long kx=long(x),ky=long(y),kz=long(z);
 	Treal b=0;
 	x = x>0 ?(x<nx-1 ? x:nx-1):0;

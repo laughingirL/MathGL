@@ -611,7 +611,7 @@ void MGL_EXPORT mgl_datac_mirror(HADT d, const char *dir)
 		for(long i=0;i<nx*ny;i++)	for(long j=0;j<nz/2;j++)
 		{
 			register long i0 = i+j*nx*ny, j0 = i+(nz-1-j)*nx*ny;
-			register dual b = a[i0];	a[i0] = a[j0];	a[j0] = b;
+			dual b = a[i0];	a[i0] = a[j0];	a[j0] = b;
 		}
 	}
 	if(strchr(dir,'y') && ny>1)
@@ -620,7 +620,7 @@ void MGL_EXPORT mgl_datac_mirror(HADT d, const char *dir)
 		for(long i=0;i<nx*nz;i++)	for(long j=0;j<ny/2;j++)
 		{
 			register long j0 = (i%nx)+nx*(ny*(i/nx)+j), i0 = j0+(ny-1-2*j)*nx;
-			register dual b = a[j0];	a[j0] = a[i0];	a[i0] = b;
+			dual b = a[j0];	a[j0] = a[i0];	a[i0] = b;
 		}
 	}
 	if(strchr(dir,'x') && nx>1)
@@ -629,7 +629,7 @@ void MGL_EXPORT mgl_datac_mirror(HADT d, const char *dir)
 		for(long j=0;j<ny*nz;j++)	for(long i=0;i<nx/2;i++)
 		{
 			register long i0 = nx-1-i+j*nx, j0 = i+j*nx;
-			register dual b = a[j0];	a[j0] = a[i0];	a[i0] = b;
+			dual b = a[j0];	a[j0] = a[i0];	a[i0] = b;
 		}
 	}
 }
@@ -1098,7 +1098,7 @@ MGL_NO_EXPORT void *mgl_difr(void *par)
 void MGL_EXPORT mgl_datac_diffr(HADT d, const char *how, mreal q)
 {
 	if(!how || *how==0)	return;
-	long nx=d->nx,ny=d->ny,nz=d->nz,nn=nx*ny*nz,ll=strlen(how);
+	long nx=d->nx,ny=d->ny,nz=d->nz,ll=strlen(how);
 	long p[4]={0,0,(mglchr(how,'a')||mglchr(how,'r'))?1:0,0};
 	dual qq=q;
 	for(long i=0;i<ll;i++)	if(how[i]>='0' && how[i]<='9')	p[3] = how[i]-'0';

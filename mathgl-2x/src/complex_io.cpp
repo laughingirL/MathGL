@@ -459,7 +459,7 @@ void MGL_EXPORT mgl_datac_extend(HADT d, long n1, long n2)
 		mx = -n1;	my = n2<0 ? -n2 : nx;	mz = n2<0 ? nx : ny;
 		if(n2>0 && ny==1)	mz = n2;
 		b = new dual[mx*my*mz];
-		register dual v;
+		dual v;
 		if(n2<0)
 #pragma omp parallel for collapse(2)
 			for(long j=0;j<nx;j++)	for(long i=0;i<mx*my;i++)

@@ -2755,5 +2755,5 @@ mglSample samp[] = {
 	{"vect", smgl_vect, mmgl_vect},
 	{"vecta", smgl_vecta, mmgl_vecta},
 	{"venn", smgl_venn, mmgl_venn},
-{"", NULL}};
+{"", NULL, NULL}};
 //-----------------------------------------------------------------------------
