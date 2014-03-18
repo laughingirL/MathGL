@@ -531,7 +531,11 @@ void mglBase::CRange(HCDT a,bool add, mreal fact)
 void mglBase::CRange(mreal v1,mreal v2,bool add)
 {
 	if(v1==v2 && !add)	return;
-	if(!add)	{	Min.c = v1;	Max.c = v2;	}
+	if(!add)
+	{
+		if(v1==v1)	Min.c = v1;	
+		if(v2==v2)	Max.c = v2;		
+	}
 	else if(Min.c<Max.c)
 	{
 		if(Min.c>v1)	Min.c=v1;
@@ -562,7 +566,11 @@ void mglBase::XRange(HCDT a,bool add,mreal fact)
 void mglBase::XRange(mreal v1,mreal v2,bool add)
 {
 	if(v1==v2 && !add)	return;
-	if(!add)	{	Min.x = v1;	Max.x = v2;	}
+	if(!add)
+	{
+		if(v1==v1)	Min.x = v1;	
+		if(v2==v2)	Max.x = v2;		
+	}
 	else if(Min.x<Max.x)
 	{
 		if(Min.x>v1)	Min.x=v1;
@@ -593,7 +601,11 @@ void mglBase::YRange(HCDT a,bool add,mreal fact)
 void mglBase::YRange(mreal v1,mreal v2,bool add)
 {
 	if(v1==v2 && !add)	return;
-	if(!add)	{	Min.y = v1;	Max.y = v2;	}
+	if(!add)
+	{
+		if(v1==v1)	Min.y = v1;	
+		if(v2==v2)	Max.y = v2;		
+	}
 	else if(Min.y<Max.y)
 	{
 		if(Min.y>v1)	Min.y=v1;
@@ -625,7 +637,11 @@ void mglBase::ZRange(HCDT a,bool add,mreal fact)
 void mglBase::ZRange(mreal v1,mreal v2,bool add)
 {
 	if(v1==v2 && !add)	return;
-	if(!add)	{	Min.z = v1;	Max.z = v2;	}
+	if(!add)
+	{
+		if(v1==v1)	Min.z = v1;	
+		if(v2==v2)	Max.z = v2;		
+	}
 	else if(Min.z<Max.z)
 	{
 		if(Min.z>v1)	Min.z=v1;

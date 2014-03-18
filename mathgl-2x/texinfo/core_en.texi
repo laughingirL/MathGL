@@ -588,15 +588,17 @@ These large set of variables and functions control how the axis and ticks will b
 @anchor{yrange}
 @anchor{zrange}
 @anchor{crange}
-@deftypefn {MGL command} {} xrange @code{v1 v2}
-@deftypefnx {MGL command} {} yrange @code{v1 v2}
-@deftypefnx {MGL command} {} zrange @code{v1 v2}
-@deftypefnx {MGL command} {} crange @code{v1 v2}
+@deftypefn {MGL command} {} xrange @code{v1 v2} [@code{add=off}]
+@deftypefnx {MGL command} {} yrange @code{v1 v2} [@code{add=off}]
+@deftypefnx {MGL command} {} zrange @code{v1 v2} [@code{add=off}]
+@deftypefnx {MGL command} {} crange @code{v1 v2} [@code{add=off}]
 @ifclear UDAV
 @deftypefnx {Method on @code{mglGraph}} @code{void} SetRange (@code{char} dir, @code{mreal} v1, @code{mreal} v2)
+@deftypefnx {Method on @code{mglGraph}} @code{void} AddRange (@code{char} dir, @code{mreal} v1, @code{mreal} v2)
 @deftypefnx {C function} @code{void} mgl_set_range_val (@code{HMGL} gr, @code{char} dir, @code{mreal} v1, @code{mreal} v2)
+@deftypefnx {C function} @code{void} mgl_add_range_val (@code{HMGL} gr, @code{char} dir, @code{mreal} v1, @code{mreal} v2)
 @end ifclear
-Sets the range for @samp{x}-,@samp{y}-,@samp{z}- coordinate or coloring (@samp{c}). See also @ref{ranges}.
+Sets or adds the range for @samp{x}-,@samp{y}-,@samp{z}- coordinate or coloring (@samp{c}). If one of values is @code{NAN} then it is ignored. See also @ref{ranges}.
 @end deftypefn
 
 

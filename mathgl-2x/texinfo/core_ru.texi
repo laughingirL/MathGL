@@ -573,15 +573,17 @@ Setsize: размер(ы) равны нулю или отрицательны
 @anchor{yrange}
 @anchor{zrange}
 @anchor{crange}
-@deftypefn {Команда MGL} {} xrange @code{v1 v2}
-@deftypefnx {Команда MGL} {} yrange @code{v1 v2}
-@deftypefnx {Команда MGL} {} zrange @code{v1 v2}
-@deftypefnx {Команда MGL} {} crange @code{v1 v2}
+@deftypefn {Команда MGL} {} xrange @code{v1 v2} [@code{add=off}]
+@deftypefnx {Команда MGL} {} yrange @code{v1 v2} [@code{add=off}]
+@deftypefnx {Команда MGL} {} zrange @code{v1 v2} [@code{add=off}]
+@deftypefnx {Команда MGL} {} crange @code{v1 v2} [@code{add=off}]
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} SetRange (@code{char} dir, @code{mreal} v1, @code{mreal} v2)
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} AddRange (@code{char} dir, @code{mreal} v1, @code{mreal} v2)
 @deftypefnx {Функция С} @code{void} mgl_set_range_val (@code{HMGL} gr, @code{char} dir, @code{mreal} v1, @code{mreal} v2)
+@deftypefnx {Функция С} @code{void} mgl_add_range_val (@code{HMGL} gr, @code{char} dir, @code{mreal} v1, @code{mreal} v2)
 @end ifclear
-Задает диапазон изменения @samp{x}-,@samp{y}-,@samp{z}-,@samp{c}-координат. См. также @ref{ranges}.
+Задает диапазон изменения @samp{x}-,@samp{y}-,@samp{z}-,@samp{c}-координат. Если одно из значений равно @code{NAN}, то оно игнорируется. Параметр @code{add=on} указывает добавлять новый диапазон к существующему (не заменять его). См. также @ref{ranges}.
 @end deftypefn
 
 @deftypefn {Команда MGL} {} xrange dat [@code{add=off}]
