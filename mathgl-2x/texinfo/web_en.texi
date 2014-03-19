@@ -80,7 +80,13 @@ Javascript interface was developed with support of @url{http://www.datadvance.ne
 @itemize
 @item
 @strong{19 March 2014.}
-New version (v.2.2.2.1) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are compatibility changes for MS VisualStudio 2010 and early, function SetRange(v1,v2) ignore NAN values now, and documentation update.
+New version (v.2.2.2.1) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are compatibility changes for MS VisualStudio 2010 and early.
+@itemize @bullet
+@item Compatibility changes for MS VisualStudio 2010 and early.
+@item Function SetRange(v1,v2) ignore NAN values now.
+@item Add enable-json-sample for building json-samples on demand only.
+@item Update documentation.
+@end itemize
 
 @item
 @strong{10 March 2014.}

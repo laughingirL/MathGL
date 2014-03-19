@@ -2,6 +2,7 @@
 
 * Compatibility changes for MS VisualStudio 2010 and early.
 * Function SetRange(v1,v2) ignore NAN values now.
+* Add enable-json-sample for building json-samples on demand only.
 * Update docs.
 
 
