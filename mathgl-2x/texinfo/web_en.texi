@@ -52,6 +52,8 @@ Generally, MathGL is GPL library. However, you can use LGPL license for MathGL c
 
 @strong{Latest news}
 @itemize
+@item @emph{19 March 2014.}
+New version (v.2.2.2.1) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are compatibility changes for MS VisualStudio 2010 and early, and documentation update.
 @item @emph{10 March 2014.}
 New version (v.@value{VERSION}@value{MINVER}) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are extend of 'region' plot, improve export to TeX, add missing Fortran functions, bugfixes, and other improvements, which denoted @ref{News, here}. Note, this release looks as bug free, but next release (v.2.3) will introduce a set of improvements which may not so stable at first time.
 @item @emph{22 January 2014.}
@@ -76,6 +78,10 @@ Javascript interface was developed with support of @url{http://www.datadvance.ne
 @nav{}
 
 @itemize
+@item
+@strong{19 March 2014.}
+New version (v.2.2.2.1) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are compatibility changes for MS VisualStudio 2010 and early, function SetRange(v1,v2) ignore NAN values now, and documentation update.
+
 @item
 @strong{10 March 2014.}
 New version (v.2.2.2) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are minor improvements and bugfixes:

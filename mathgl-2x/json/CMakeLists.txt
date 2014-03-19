@@ -1,4 +1,4 @@
-if(enable-qt)
+if(enable-json-sample)
 
 set(json_src Backend.cpp MainWindow.cpp)
 set(json_moc_hdr Backend.hpp MainWindow.hpp)
@@ -22,4 +22,4 @@ else(enable-qt5)
 	target_link_libraries(MglForJsTestBench mgl-qt ${QT_LIBRARIES})
 endif(enable-qt5)
 
-endif(enable-qt)
+endif(enable-json-sample)

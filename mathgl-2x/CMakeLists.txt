@@ -95,6 +95,12 @@ CMAKE_DEPENDENT_OPTION(enable-wx "Enable wxWidget widget" OFF "NOT enable-all-wi
 CMAKE_DEPENDENT_OPTION(enable-qt4 "Enable Qt4 widget" OFF "NOT enable-all-widgets" ON)
 CMAKE_DEPENDENT_OPTION(enable-qt5 "Enable Qt5 widget" OFF "NOT enable-all-widgets" ON)
 CMAKE_DEPENDENT_OPTION(enable-qt5asqt "Set Qt5 as default libmgl-qt" ON "enable-qt5" OFF)
+
+if(enable-qt4 OR enable-qt5)
+set(enable-qt ON)
+endif(enable-qt4 OR enable-qt5)
+
+CMAKE_DEPENDENT_OPTION(enable-json-sample "Enable JSON sample" ON "enable-qt" OFF)
 MGL_DEPENDENT_OPTION(enable-python "Enable python interface" OFF "NOT enable-lgpl" ON "NOT enable-all-swig" ON)
 MGL_DEPENDENT_OPTION(enable-lua "Enable Lua (v.5.1) interface" OFF "NOT enable-lgpl" ON "NOT enable-all-swig" ON)
 MGL_DEPENDENT_OPTION(enable-octave "Enable octave interface" OFF "NOT enable-lgpl" ON "NOT enable-all-swig" ON)
@@ -103,10 +109,6 @@ MGL_DEPENDENT_OPTION(enable-octave-install "Octave interface will install for al
 include_directories( ${MathGL_SOURCE_DIR}/include ${MathGL_BINARY_DIR}/include)
 set(MGL_INCLUDE_PATH "${CMAKE_INSTALL_PREFIX}/include/mgl2")
 set(MGL_CGI_PATH "${CMAKE_INSTALL_PREFIX}/share/mathgl" CACHE STRING "Set CGI install directory")
-
-if(enable-qt4 OR enable-qt5)
-set(enable-qt ON)
-endif(enable-qt4 OR enable-qt5)
 
 if(NOT WIN32)
 #	set(MGL_CGI_PATH "${CMAKE_INSTALL_PREFIX}/share/mathgl")
