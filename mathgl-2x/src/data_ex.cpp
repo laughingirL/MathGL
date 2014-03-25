@@ -870,7 +870,7 @@ mreal MGL_EXPORT mgl_find_root(mreal (*func)(mreal x, void *par), mreal x0, void
 	{
 		x = x1-f1*(x1-x0)/(f1-f0);	f = func(x,par);
 		if(fabs(f)<1e-7)	return x;
-/*		if(fabs(f-f1)>0.5*fmin(fabs(f),fabs(f1)))	// TODO switch to bisection if slow
+/*		if(fabs(f-f1)>0.5*mgl_min(fabs(f),fabs(f1)))	// TODO switch to bisection if slow
 		{
 			x = (x1+x0)/2;	f = func(x,par);
 			if(fabs(f)<1e-7)	return x;

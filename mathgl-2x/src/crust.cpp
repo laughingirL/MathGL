@@ -484,10 +484,10 @@ MGL_NO_EXPORT void *mgl_grid_t(void *par)
 		dyu = d2.x/dxu; dxu =-d2.y/dxu;
 
 		long x1,y1,x2,y2;
-		x1 = long(fmin(fmin(x[k1],x[k2]),x[k3])); // bounding box
-		y1 = long(fmin(fmin(y[k1],y[k2]),y[k3]));
-		x2 = long(fmax(fmax(x[k1],x[k2]),x[k3]));
-		y2 = long(fmax(fmax(y[k1],y[k2]),y[k3]));
+		x1 = long(mgl_min(mgl_min(x[k1],x[k2]),x[k3])); // bounding box
+		y1 = long(mgl_min(mgl_min(y[k1],y[k2]),y[k3]));
+		x2 = long(mgl_max(mgl_max(x[k1],x[k2]),x[k3]));
+		y2 = long(mgl_max(mgl_max(y[k1],y[k2]),y[k3]));
 		x1 = x1>0 ? x1:0; x2 = x2<nx ? x2:nx-1;
 		y1 = y1>0 ? y1:0; y2 = y2<ny ? y2:ny-1;
 		if((x1>x2) | (y1>y2)) continue;

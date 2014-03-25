@@ -751,10 +751,10 @@ void mglCanvas::quad_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 	float dd,dsx,dsy;
 	mglPnt d1=p2-p1, d2=p3-p1, d3=p4+p1-p2-p3, p;
 
-	x1 = long(fmin(p1.x<p2.x?p1.x:p2.x, p3.x<p4.x?p3.x:p4.x));	// bounding box
-	y1 = long(fmin(p1.y<p2.y?p1.y:p2.y, p3.y<p4.y?p3.y:p4.y));
-	x2 = long(fmax(p1.x>p2.x?p1.x:p2.x, p3.x>p4.x?p3.x:p4.x));
-	y2 = long(fmax(p1.y>p2.y?p1.y:p2.y, p3.y>p4.y?p3.y:p4.y));
+	x1 = long(mgl_min(p1.x<p2.x?p1.x:p2.x, p3.x<p4.x?p3.x:p4.x));	// bounding box
+	y1 = long(mgl_min(p1.y<p2.y?p1.y:p2.y, p3.y<p4.y?p3.y:p4.y));
+	x2 = long(mgl_max(p1.x>p2.x?p1.x:p2.x, p3.x>p4.x?p3.x:p4.x));
+	y2 = long(mgl_max(p1.y>p2.y?p1.y:p2.y, p3.y>p4.y?p3.y:p4.y));
 	x1=x1>d->x1?x1:d->x1;	x2=x2<d->x2?x2:d->x2;
 	y1=y1>d->y1?y1:d->y1;	y2=y2<d->y2?y2:d->y2;
 	if(x1>x2 || y1>y2)	return;
@@ -867,10 +867,10 @@ void mglCanvas::trig_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 	dyv =-d1.x/dxu;	dxv = d1.y/dxu;
 	dyu = d2.x/dxu;	dxu =-d2.y/dxu;
 
-	x1 = long(fmin(p1.x<p2.x?p1.x:p2.x, p3.x));	// bounding box
-	y1 = long(fmin(p1.y<p2.y?p1.y:p2.y, p3.y));
-	x2 = long(fmax(p1.x>p2.x?p1.x:p2.x, p3.x));
-	y2 = long(fmax(p1.y>p2.y?p1.y:p2.y, p3.y));
+	x1 = long(mgl_min(p1.x<p2.x?p1.x:p2.x, p3.x));	// bounding box
+	y1 = long(mgl_min(p1.y<p2.y?p1.y:p2.y, p3.y));
+	x2 = long(mgl_max(p1.x>p2.x?p1.x:p2.x, p3.x));
+	y2 = long(mgl_max(p1.y>p2.y?p1.y:p2.y, p3.y));
 	x1=x1>d->x1?x1:d->x1;	x2=x2<d->x2?x2:d->x2;
 	y1=y1>d->y1?y1:d->y1;	y2=y2<d->y2?y2:d->y2;
 	if(x1>x2 || y1>y2)	return;
@@ -1051,7 +1051,7 @@ void mglCanvas::pnt_draw(const mglPnt &p, const mglDrawReg *dr)
 	col2int(p,cs,dr->ObjId);	cc = cs[3];
 	if(cc==0)	return;
 	long s = long(5.5+fabs(pw));
-	long i1=fmax(-s,dr->x1-p.x),i2=fmin(s,dr->x2-p.x), j1=fmax(-s,dr->y1-p.y),j2=fmin(s,dr->y2-p.y);
+	long i1=mgl_max(-s,dr->x1-p.x),i2=mgl_min(s,dr->x2-p.x), j1=mgl_max(-s,dr->y1-p.y),j2=mgl_min(s,dr->y2-p.y);
 	if(!(Quality&3))	for(long j=j1;j<=j2;j++)	for(long i=i1;i<=i2;i++)	// fast draw
 	{
 		register float v = i*i+j*j;

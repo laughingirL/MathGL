@@ -77,11 +77,6 @@ typedef unsigned long uintptr_t;
 #include <string.h>
 #include <wchar.h>
 
-#if defined(_MSC_VER) || defined(__BORLANDC__)
-#define fmin(a,b)	((a)<(b))?(a):(b)
-#define fmax(a,b)	((a)>(b))?(a):(b)
-#endif
-
 #if defined(_MSC_VER)
 #define collapse(a)	// MSVS don't support OpenMP 3.*
 #define strtoull _strtoui64
