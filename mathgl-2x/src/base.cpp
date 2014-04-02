@@ -1382,7 +1382,7 @@ void mglBase::ClearUnused()
 		}
 		// now add proper indexes
 		l=Pnt.size();
-		std::vector<mglPnt> pnt;
+		mglStack<mglPnt> pnt;
 		for(size_t i=0;i<l;i++)	if(used[i])
 		{	pnt.push_back(Pnt[i]);	used[i]=pnt.size();	}
 		Pnt = pnt;	pnt.clear();

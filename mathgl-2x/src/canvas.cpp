@@ -736,7 +736,7 @@ void mglCanvas::arrow_plot(long n1, long n2, char st)
 	mask=m;	MaskAn=ma;
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::Legend(const std::vector<mglText> &leg, mreal x, mreal y, const char *font, const char *opt)
+void mglCanvas::Legend(const mglStack<mglText> &leg, mreal x, mreal y, const char *font, const char *opt)
 {
 	long n=leg.size();
 	mreal iw, ih;

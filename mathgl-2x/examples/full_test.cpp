@@ -69,25 +69,8 @@ void smgl_surf(mglGraph *gr);
 #include <mgl2/font.h>
 void test(mglGraph *gr)
 {
-	union {unsigned long b;double d;float f;} t;	t.b=0;
-	t.d = NAN;	printf("NANd: %g --> %lx\t",t.d,t.b);	t.b=0;
-	t.f = NAN;	printf("NANf: %g --> %lx\n",t.f,t.b);	t.b=0;
-	
-	t.d = INFINITY;	printf("INFd: %g --> %lx\t",t.d,t.b);	t.b=0;
-	t.f = INFINITY;	printf("INFf: %g --> %lx\n",t.f,t.b);	t.b=0;
-
-const unsigned long mgl_nan[2] = {0x7fffffffffffffff, 0x7fffffff};
-#define NANd    (*(double*)mgl_nan)
-#define NANf    (*(float*)(mgl_nan+1))
-	t.d = NANd;	printf("NANd: %g --> %lx\t",t.d,t.b);	t.b=0;
-	t.f = NANf;	printf("NANf: %g --> %lx\n",t.f,t.b);	t.b=0;
-
-	
-const unsigned long mgl_inf[2] = {0x7ff0000000000000, 0x7f800000};
-#define INFd    (*(double*)mgl_inf)
-#define INFf    (*(float*)(mgl_inf+1))
-	t.d = INFd;	printf("INFd: %g --> %lx\t",t.d,t.b);	t.b=0;
-	t.f = INFf;	printf("INFf: %g --> %lx\n",t.f,t.b);	t.b=0;
+	gr->Axis();	gr->Box();
+	gr->FPlot("sin(x*pi)");
 
 	return;
 

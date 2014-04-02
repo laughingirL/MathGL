@@ -41,6 +41,63 @@ mglPoint GetX(HCDT x, int i, int j, int k=0);
 mglPoint GetY(HCDT y, int i, int j, int k=0);
 mglPoint GetZ(HCDT z, int i, int j, int k=0);
 //-----------------------------------------------------------------------------
+/// Class for replacement of std::vector
+template <class T> class mglStack
+{
+	T** dat;
+	size_t nb;	///< size of buffer
+	size_t np;	///< allocated pointers
+	size_t m;	///< used pointers (allocated size is m*nb)
+	size_t n;	///< used cells
+public:
+	mglStack(const mglStack<T> &st)
+	{
+		np=st.np;	dat = (T**)malloc(np*sizeof(T*));
+		nb=st.nb;	m=n=0;	reserve(st.n);
+#pragma omp parallel for
+		for(size_t i=0;i<st.n;i++)	dat[i/nb][i%nb] = st[i];
+		n=st.n;
+	}
+	mglStack(size_t Nbuf=1024)
+	{	np=16;	nb=Nbuf;	dat = (T**)malloc(np*sizeof(T*));
+		dat[0] = new T[nb];	n=0;	m=1;	}
+	~mglStack()	{	clear();	delete [](dat[0]);	free(dat);	}
+	void reserve(size_t num)
+	{
+		num+=n;
+		if(num>m*nb)
+		{
+			num = 1+ (num/nb);
+			if(num>np)
+			{	dat = (T**)realloc(dat, num*sizeof(T*));	np=num;	}
+#pragma omp parallel for
+			for(size_t i=m;i<num;i++)	dat[i] = new T[nb];
+			m = num;
+		}
+	}
+	void clear()
+	{
+#pragma omp parallel for
+		for(size_t i=0;i<m;i++)	delete [](dat[i]);
+		dat[0] = new T[nb];	n=0;	m=1;
+	}
+	T &operator[](size_t i)	{	return dat[i/nb][i%nb];	}
+	const T &operator[](size_t i)	const	{	return dat[i/nb][i%nb];	}
+	void push_back(const T &t)
+	{
+		if(n>=m*nb)	reserve(1);
+		dat[n/nb][n%nb] = t;	n++;
+	}
+	size_t size()	const	{	return n;	}
+	const mglStack<T> &operator=(const mglStack<T> &st)
+	{
+		nb=st.nb;	clear();	reserve(st.n);
+#pragma omp parallel for
+		for(size_t i=0;i<st.n;i++)	dat[i/nb][i%nb] = st[i];
+		n = st.n;
+	}
+};
+//-----------------------------------------------------------------------------
 /// Structure for transformation matrix
 struct MGL_EXPORT mglMatrix
 {
@@ -202,8 +259,8 @@ public:
 	std::string Mess;	///< Buffer for receiving messages
 	int ObjId;			///< object id for mglPrim
 	int HighId;			///< object id to be highlited
-	std::vector<mglGroup> Grp;		///< List of groups with names -- need for export
-	std::vector<mglActivePos> Act;	///< Position of active points
+	mglStack<mglGroup> Grp;		///< List of groups with names -- need for export
+	mglStack<mglActivePos> Act;	///< Position of active points
 	std::string PlotId;	///< Id of plot for saving filename (in GLUT window for example)
 
 	mreal CDef;			///< Default (current) color in texture
@@ -442,13 +499,13 @@ protected:
 	mglPoint FMax;		///< Actual upper edge after transformation formulas.
 	mglPoint Org;		///< Center of axis cross section.
 	int WarnCode;		///< Warning code
-	std::vector<mglPnt> Pnt; 	///< Internal points
+	mglStack<mglPnt> Pnt; 	///< Internal points
 	std::vector<mglPrim> Prm;	///< Primitives (lines, triangles and so on) -- need for export
-	std::vector<mglPrim> Sub;	///< InPlot regions {n1=x1,n2=x2,n3=y1,n4=y2,id}
-	std::vector<mglText> Ptx;	///< Text labels for mglPrim
-	std::vector<mglText> Leg;	///< Text labels for legend
-	std::vector<mglGlyph> Glf;	///< Glyphs data
-	std::vector<mglTexture> Txt;	///< Pointer to textures
+	mglStack<mglPrim> Sub;	///< InPlot regions {n1=x1,n2=x2,n3=y1,n4=y2,id}
+	mglStack<mglText> Ptx;	///< Text labels for mglPrim
+	mglStack<mglText> Leg;	///< Text labels for legend
+	mglStack<mglGlyph> Glf;	///< Glyphs data
+	mglStack<mglTexture> Txt;	///< Pointer to textures
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_t mutexPnt, mutexTxt, mutexLeg, mutexGlf, mutexAct, mutexDrw;
 	pthread_mutex_t mutexSub, mutexPrm, mutexPtx, mutexStk, mutexGrp;
