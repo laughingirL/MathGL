@@ -69,8 +69,10 @@ void smgl_surf(mglGraph *gr);
 #include <mgl2/font.h>
 void test(mglGraph *gr)
 {
+	gr->Rotate(40,60);
 	gr->Axis();	gr->Box();
 	gr->FPlot("sin(x*pi)");
+	gr->FSurf("sin(4*pi*(x+y^2))");
 
 	return;
 

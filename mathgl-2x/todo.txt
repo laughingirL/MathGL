@@ -34,6 +34,7 @@
 22. Replace pthread by openmp in mgl_draw_thr() and similar
 23. Add function Rasterize() -- Finish() + clear points -- m.b. add background image for export, which will be cleared at Clf()???
 24. Switch rotation axis if deviation from view direction is larger than 60 degree + the same in JS.
+25. Check samples in EPS,SVG (looks as something wrong with axis range???)
 
 ============= DOCUMENTATION =============
 

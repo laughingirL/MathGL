@@ -197,7 +197,7 @@ void MGL_NO_EXPORT mgl_prm_swap(mglPrim &s1,mglPrim &s2,mglPrim *buf)
 	memcpy(&s1, &s2, sizeof(mglPrim));
 	memcpy(&s2, buf, sizeof(mglPrim));
 }
-void mglBase::sort_prm_c(size_t l0, size_t r0, mglStack<mglPrim> &s, mglPrim *buf)
+void MGL_NO_EXPORT sort_prm_c(size_t l0, size_t r0, mglStack<mglPrim> &s, mglPrim *buf)
 {
 	if(l0==r0)	return;
 	if(l0+1==r0)
@@ -205,24 +205,29 @@ void mglBase::sort_prm_c(size_t l0, size_t r0, mglStack<mglPrim> &s, mglPrim *bu
 		if(s[r0].n1<s[l0].n1)	mgl_prm_swap(s[r0],s[l0],buf);
 		return;
 	}
+	bool del= (buf==0);
+	if(del)	buf = (mglPrim*)malloc(sizeof(mglPrim));
+
 	size_t l=l0, r=r0;
 	long v = s[(l+r)/2].n1;
 
+	for(size_t i=l0;i<=r0;i++)	// first collect <0
+		if(s[i].n1<v)
+		{
+			if(i>l)	mgl_prm_swap(s[i],s[l],buf);
+			l++;
+		}
+	r=l;
+	for(size_t i=l;i<=r0;i++)	// now collect =0
+		if(s[i].n1==v)
+		{
+			if(i>r)	mgl_prm_swap(s[i],s[r],buf);
+			r++;
+		}
 
-	while(s[l].n1<v && l<r)	l++;
-	while(s[r].n1>v && l<r)	r--;
-
-	for(long i=l;i<=r;i++)
-	{
-		if(s[i].n1<v && i>l)
-		{	mgl_prm_swap(s[i],s[l],buf);	l++;	i--;	}
-		if(s[i].n1>v && i>=0 && i<r)
-		{	mgl_prm_swap(s[i],s[r],buf);	i--;
-			while(s[r].n1>v && l<r)	r--;	}
-	}
-	while(s[l].n1<v && l<r)	l++;
 	if(l>l0+1)	sort_prm_c(l0,l-1,s,buf);
-	if(r+1<r0)	sort_prm_c(r+1,r0,s,buf);
+	if(r<r0)	sort_prm_c(r,r0,s,buf);
+	if(del)	free(buf);
 }
 //-----------------------------------------------------------------------------
 MGL_NO_EXPORT int mgl_type_prior[8]={1,2,4,5, 0,3,0, 7};
@@ -234,47 +239,58 @@ mreal MGL_NO_EXPORT mgl_prmcmp(const mglPrim &a, const mglPrim &b)
 	if(a.w!=b.w) 	return b.w - a.w;
 	return a.n3 - b.n3;
 }
-void mglBase::sort_prm_z(size_t l0, size_t r0, mglStack<mglPrim> &s, mglPrim *buf)
+void MGL_NO_EXPORT sort_prm_z(size_t l0, size_t r0, mglStack<mglPrim> &s, mglPrim *buf, char *cnd)
 {
 /*	size_t n = r0-l0;	// Bubble sort -- very slow!!!
 	for(size_t j=0;j<n;j++)
 		for(size_t i=0;i<n-j;i++)
 			if(mgl_prmcmp(s[l0+i],s[l0+i+1])>0)
 				mgl_prm_swap(s[l0+i],s[l0+i+1],buf);*/
-	
-	if(l0>=r0)	return;	// something wrong with quick sort
+
+	if(l0>=r0)	return;	// nothing to sort
 	if(l0+1==r0)
 	{
 		if(mgl_prmcmp(s[l0],s[r0])>0)	mgl_prm_swap(s[r0],s[l0],buf);
 		return;
 	}
+	bool del=(buf==0);
+	if(del)
+	{
+		buf = (mglPrim*)malloc(sizeof(mglPrim));
+		cnd = new char[r0-l0+1];
+	}
+
 	size_t l=l0, r=r0;
 	const mglPrim &v = s[(l+r)/2];
-
-	while(mgl_prmcmp(s[l],v)<0 && l<r)	l++;
-	while(mgl_prmcmp(s[r],v)>0 && l<r)	r--;
-
-	for(long i=l;i<=r;i++)
+#pragma omp parallel for
+	for(size_t i=l0;i<=r0;i++)
 	{
-		if(mgl_prmcmp(s[i],v)<0 && i>l)
-		{	mgl_prm_swap(s[i],s[l],buf);	l++;	i--;	}
-		if(mgl_prmcmp(s[i],v)>0 && i>=0 && i<r)
-		{	mgl_prm_swap(s[i],s[r],buf);	i--;
-			while(mgl_prmcmp(s[r],v)>0 && l<r)	r--;	}
+		mreal val = mgl_prmcmp(s[i],v);
+		cnd[i-l0] = val<0?0:(val>0?2:1);
 	}
-	while(mgl_prmcmp(s[l],v)<0 && l<r)	l++;
-	if(l>l0+1)	sort_prm_z(l0,l-1,s,buf);
-	if(r+1<r0)	sort_prm_z(r+1,r0,s,buf);
+	for(size_t i=l0;i<=r0;i++)	// first collect <0
+		if(cnd[i-l0]==0)
+		{
+			if(i>l)	mgl_prm_swap(s[i],s[l],buf);
+			l++;
+		}
+	r=l;
+	for(size_t i=l;i<=r0;i++)	// now collect =0
+		if(cnd[i-l0]==1)
+		{
+			if(i>r)	mgl_prm_swap(s[i],s[r],buf);
+			r++;
+		}
+
+	if(l>l0+1)	sort_prm_z(l0,l-1,s,buf,cnd);
+	if(r<r0)	sort_prm_z(r,r0,s,buf,cnd);
+	if(del)	{	free(buf);	delete []cnd;	}
 }
 //-----------------------------------------------------------------------------
 void mglBase::resort()
 {
 #pragma omp critical
-	{
-		mglPrim *buf = (mglPrim*)malloc(sizeof(mglPrim));
-		sort_prm_c(0,Prm.size(),Prm,buf);
-		free(buf);	clr(MGL_FINISHED);
-	}
+	{	sort_prm_c(0,Prm.size()-1,Prm,0);	clr(MGL_FINISHED);	}
 }
 //-----------------------------------------------------------------------------
 MGL_NO_EXPORT void *mgl_canvas_thr(void *par)
@@ -436,11 +452,7 @@ void mglCanvas::PreparePrim(int fast)
 		if(fast==0)	mglStartThread(&mglCanvas::pxl_setz,this,Prm.size());
 		else	mglStartThread(&mglCanvas::pxl_setz_adv,this,Prm.size());
 #pragma omp critical
-		{
-			mglPrim *buf = (mglPrim*)malloc(sizeof(mglPrim));
-			sort_prm_z(0,Prm.size(),Prm,buf);
-			free(buf);	clr(MGL_FINISHED);
-		}
+		{	sort_prm_z(0,Prm.size()-1,Prm,0,0);	clr(MGL_FINISHED);	}
 	}
 	if(fast>0)
 	{

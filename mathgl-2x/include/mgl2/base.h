@@ -94,7 +94,7 @@ public:
 		nb=st.nb;	clear();	reserve(st.n);
 #pragma omp parallel for
 		for(size_t i=0;i<st.n;i++)	dat[i/nb][i%nb] = st[i];
-		n = st.n;
+		n = st.n;	return st;
 	}
 };
 //-----------------------------------------------------------------------------
@@ -560,9 +560,6 @@ protected:
 	};
 	int MaskAn;		///< Mask rotation angle in degrees
 	int DefMaskAn;	///< Default mask rotation angle in degrees
-
-	void sort_prm_c(size_t l, size_t r, mglStack<mglPrim> &s, mglPrim *buf);
-	void sort_prm_z(size_t l, size_t r, mglStack<mglPrim> &s, mglPrim *buf);
 
 private:
 
