@@ -500,7 +500,7 @@ protected:
 	mglPoint Org;		///< Center of axis cross section.
 	int WarnCode;		///< Warning code
 	mglStack<mglPnt> Pnt; 	///< Internal points
-	std::vector<mglPrim> Prm;	///< Primitives (lines, triangles and so on) -- need for export
+	mglStack<mglPrim> Prm;	///< Primitives (lines, triangles and so on) -- need for export
 	mglStack<mglPrim> Sub;	///< InPlot regions {n1=x1,n2=x2,n3=y1,n4=y2,id}
 	mglStack<mglText> Ptx;	///< Text labels for mglPrim
 	mglStack<mglText> Leg;	///< Text labels for legend
@@ -560,6 +560,9 @@ protected:
 	};
 	int MaskAn;		///< Mask rotation angle in degrees
 	int DefMaskAn;	///< Default mask rotation angle in degrees
+
+	void sort_prm_c(size_t l, size_t r, mglStack<mglPrim> &s, mglPrim *buf);
+	void sort_prm_z(size_t l, size_t r, mglStack<mglPrim> &s, mglPrim *buf);
 
 private:
 

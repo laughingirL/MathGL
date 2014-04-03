@@ -191,26 +191,90 @@ void mglCanvas::CalcScr(mglPoint p, int *xs, int *ys) const
 mglPoint mglCanvas::CalcScr(mglPoint p) const
 {	int x,y;	CalcScr(p,&x,&y);	return mglPoint(x,y);	}
 //-----------------------------------------------------------------------------
-MGL_NO_EXPORT int mgl_type_prior[8]={1,2,4,5, 0,3,0, 7};
-bool mglCreationOrder=false;
-bool operator<(const mglPrim &a, const mglPrim &b)
+void MGL_NO_EXPORT mgl_prm_swap(mglPrim &s1,mglPrim &s2,mglPrim *buf)
 {
-	if(mglCreationOrder)	return a.n1<b.n1;
-	register int t1 = mgl_type_prior[a.type], t2 = mgl_type_prior[b.type];
-	if(a.z!=b.z) 	return a.z < b.z;
-	if(t1!=t2)		return t1 > t2;
-	if(a.w!=b.w) 	return a.w > b.w;
-	return a.n3 > b.n3;
+	memcpy(buf, &s1, sizeof(mglPrim));
+	memcpy(&s1, &s2, sizeof(mglPrim));
+	memcpy(&s2, buf, sizeof(mglPrim));
+}
+void mglBase::sort_prm_c(size_t l0, size_t r0, mglStack<mglPrim> &s, mglPrim *buf)
+{
+	if(l0==r0)	return;
+	if(l0+1==r0)
+	{
+		if(s[r0].n1<s[l0].n1)	mgl_prm_swap(s[r0],s[l0],buf);
+		return;
+	}
+	size_t l=l0, r=r0;
+	long v = s[(l+r)/2].n1;
+
+
+	while(s[l].n1<v && l<r)	l++;
+	while(s[r].n1>v && l<r)	r--;
+
+	for(long i=l;i<=r;i++)
+	{
+		if(s[i].n1<v && i>l)
+		{	mgl_prm_swap(s[i],s[l],buf);	l++;	i--;	}
+		if(s[i].n1>v && i>=0 && i<r)
+		{	mgl_prm_swap(s[i],s[r],buf);	i--;
+			while(s[r].n1>v && l<r)	r--;	}
+	}
+	while(s[l].n1<v && l<r)	l++;
+	if(l>l0+1)	sort_prm_c(l0,l-1,s,buf);
+	if(r+1<r0)	sort_prm_c(r+1,r0,s,buf);
 }
 //-----------------------------------------------------------------------------
-bool operator>(const mglPrim &a, const mglPrim &b)
+MGL_NO_EXPORT int mgl_type_prior[8]={1,2,4,5, 0,3,0, 7};
+mreal MGL_NO_EXPORT mgl_prmcmp(const mglPrim &a, const mglPrim &b)
 {
-	if(mglCreationOrder)	return a.n1>b.n1;
+	if(a.z!=b.z) 	return a.z - b.z;
 	register int t1 = mgl_type_prior[a.type], t2 = mgl_type_prior[b.type];
-	if(a.z!=b.z) 	return a.z > b.z;
-	if(t1!=t2)		return t1 < t2;
-	if(a.w!=b.w) 	return a.w < b.w;
-	return a.n3 < b.n3;
+	if(t1!=t2)		return t2 - t1;
+	if(a.w!=b.w) 	return b.w - a.w;
+	return a.n3 - b.n3;
+}
+void mglBase::sort_prm_z(size_t l0, size_t r0, mglStack<mglPrim> &s, mglPrim *buf)
+{
+/*	size_t n = r0-l0;	// Bubble sort -- very slow!!!
+	for(size_t j=0;j<n;j++)
+		for(size_t i=0;i<n-j;i++)
+			if(mgl_prmcmp(s[l0+i],s[l0+i+1])>0)
+				mgl_prm_swap(s[l0+i],s[l0+i+1],buf);*/
+	
+	if(l0>=r0)	return;	// something wrong with quick sort
+	if(l0+1==r0)
+	{
+		if(mgl_prmcmp(s[l0],s[r0])>0)	mgl_prm_swap(s[r0],s[l0],buf);
+		return;
+	}
+	size_t l=l0, r=r0;
+	const mglPrim &v = s[(l+r)/2];
+
+	while(mgl_prmcmp(s[l],v)<0 && l<r)	l++;
+	while(mgl_prmcmp(s[r],v)>0 && l<r)	r--;
+
+	for(long i=l;i<=r;i++)
+	{
+		if(mgl_prmcmp(s[i],v)<0 && i>l)
+		{	mgl_prm_swap(s[i],s[l],buf);	l++;	i--;	}
+		if(mgl_prmcmp(s[i],v)>0 && i>=0 && i<r)
+		{	mgl_prm_swap(s[i],s[r],buf);	i--;
+			while(mgl_prmcmp(s[r],v)>0 && l<r)	r--;	}
+	}
+	while(mgl_prmcmp(s[l],v)<0 && l<r)	l++;
+	if(l>l0+1)	sort_prm_z(l0,l-1,s,buf);
+	if(r+1<r0)	sort_prm_z(r+1,r0,s,buf);
+}
+//-----------------------------------------------------------------------------
+void mglBase::resort()
+{
+#pragma omp critical
+	{
+		mglPrim *buf = (mglPrim*)malloc(sizeof(mglPrim));
+		sort_prm_c(0,Prm.size(),Prm,buf);
+		free(buf);	clr(MGL_FINISHED);
+	}
 }
 //-----------------------------------------------------------------------------
 MGL_NO_EXPORT void *mgl_canvas_thr(void *par)
@@ -371,24 +435,17 @@ void mglCanvas::PreparePrim(int fast)
 		mglStartThread(&mglCanvas::pxl_transform,this,Pnt.size());
 		if(fast==0)	mglStartThread(&mglCanvas::pxl_setz,this,Prm.size());
 		else	mglStartThread(&mglCanvas::pxl_setz_adv,this,Prm.size());
-		mglCreationOrder = false;
-		std::sort(Prm.begin(), Prm.end());
+#pragma omp critical
+		{
+			mglPrim *buf = (mglPrim*)malloc(sizeof(mglPrim));
+			sort_prm_z(0,Prm.size(),Prm,buf);
+			free(buf);	clr(MGL_FINISHED);
+		}
 	}
 	if(fast>0)
 	{
 		mglStartThread(&mglCanvas::pxl_pntcol,this,Pnt.size());
 		mglStartThread(&mglCanvas::pxl_prmcol,this,Prm.size());
-	}
-}
-//-----------------------------------------------------------------------------
-void mglBase::resort()
-{
-#pragma omp critical
-	{
-		mglCreationOrder = true;
-		std::sort(Prm.begin(), Prm.end());
-		mglCreationOrder = false;
-		clr(MGL_FINISHED);
 	}
 }
 //-----------------------------------------------------------------------------
