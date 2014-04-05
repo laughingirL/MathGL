@@ -61,8 +61,8 @@ public:
 #endif
 
 #include <FL/Fl.H>
-#include <Fl/Fl_Window.H>
-#include <Fl/Fl_Scroll.H>
+#include <FL/Fl_Window.H>
+#include <FL/Fl_Scroll.H>
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Counter.H>
 #include <FL/Fl_Menu_Bar.H>

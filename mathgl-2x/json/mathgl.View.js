@@ -25,6 +25,7 @@ mathgl.View = function() {
 	this.__distance = 1.0;
 	this.__pitch = 0;
 	this.__yaw = 0;
+	this.__theta = 0;
 }
 
 
@@ -110,6 +111,8 @@ mathgl.View.prototype.viewMatrix = function() {
 	var sp = Math.sin(this.__pitch);
 	var cy = Math.cos(this.__yaw);
 	var sy = Math.sin(this.__yaw);
+	var ct = Math.cos(this.__theta);
+	var st = Math.sin(this.__theta);
 	var lh = true; // coordinate system is left handed
 
 	var distanceMatrix = $M([[1, 0,  0, 0],
@@ -124,7 +127,10 @@ mathgl.View.prototype.viewMatrix = function() {
 						[  0, 1,   0, 0],
 						[ sy, 0,  cy, 0],
 						[  0, 0,   0, 1]]);
-	var viewMatrix = Matrix.I(4);
+	var viewMatrix = $M([[ ct,-st, 0, 0],
+						[  st, ct, 0, 0],
+						[  0,  0,  1, 0],
+						[  0,  0,  0, 1]]);
 	viewMatrix = viewMatrix.x(distanceMatrix);
 	viewMatrix = viewMatrix.x(pitchMatrix);
 	viewMatrix = viewMatrix.x(yawMatrix);
@@ -141,8 +147,11 @@ mathgl.View.prototype.__onMouseMove = function(e) {
 	if (this.__isMouseDown) {
 		var x = e.offsetX;
 		var y = e.offsetY;
-		this.__yaw += 0.5 * (this.__mouseX - x) * Math.PI / 180;
 		this.__pitch += 0.5 * (y - this.__mouseY) * Math.PI / 180;
+		if(Math.abs(Math.cos(this._pitch))>0.3)
+			this.__yaw += 0.5 * (this.__mouseX - x) * Math.PI / 180;
+		else
+			this.__theta += 0.5 * (this.__mouseX - x) * Math.PI / 180;
 		this.__mouseX = x;
 		this.__mouseY = y;
 		if(this.__pitch > 63)	this.__pitch -= 20*Math.PI;
