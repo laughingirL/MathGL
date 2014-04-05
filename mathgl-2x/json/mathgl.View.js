@@ -147,11 +147,11 @@ mathgl.View.prototype.__onMouseMove = function(e) {
 	if (this.__isMouseDown) {
 		var x = e.offsetX;
 		var y = e.offsetY;
-		this.__pitch += 0.5 * (y - this.__mouseY) * Math.PI / 180;
-		if(Math.abs(Math.cos(this._pitch))>0.3)
 			this.__yaw += 0.5 * (this.__mouseX - x) * Math.PI / 180;
+		if(Math.abs(Math.cos(this.__yaw))>0.3)
+			this.__pitch += 0.5 * (y - this.__mouseY) * Math.PI / 180;
 		else
-			this.__theta += 0.5 * (this.__mouseX - x) * Math.PI / 180;
+			this.__theta += 0.5 * (y - this.__mouseY) * Math.PI / 180;
 		this.__mouseX = x;
 		this.__mouseY = y;
 		if(this.__pitch > 63)	this.__pitch -= 20*Math.PI;
