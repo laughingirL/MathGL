@@ -1,3 +1,7 @@
+2.3 Released ??? 2014
+
+* Add arrow style 'X'
+
 2.2.2.1 Released 19 March 2014
 
 * Compatibility changes for MS VisualStudio 2010 and early.

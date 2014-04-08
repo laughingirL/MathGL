@@ -1031,7 +1031,7 @@ char mglBase::SetPenPal(const char *p, long *Id, bool pal)
 		const char *mrk = "*o+xsd.^v<>";
 		const char *MRK = "YOPXSDCTVLR";
 		const char *wdh = "123456789";
-		const char *arr = "AKDTVISO_";
+		const char *arr = "AKDTVISOX_";
 		long m=0;
 		size_t l=strlen(p);
 		for(size_t i=0;i<l;i++)

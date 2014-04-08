@@ -725,7 +725,7 @@ void mglCanvas::AddLight(int n, mglPoint r, mglPoint d, char col, mreal br, mrea
 //-----------------------------------------------------------------------------
 void mglCanvas::arrow_plot(long n1, long n2, char st)
 {
-	if(n1<0 || n2<0 || !strchr("AVKSDTIO",st))	return;
+	if(n1<0 || n2<0 || !strchr("AVKSDTIOX",st))	return;
 	float ll = PenWidth*ArrowSize*0.35*font_factor;
 	uint64_t m=mask;	int ma=MaskAn;
 	ResetMask();

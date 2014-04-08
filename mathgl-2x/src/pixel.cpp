@@ -1937,6 +1937,10 @@ void mglCanvas::arrow_draw(long n1, long n2, char st, float ll)
 			k1=setPp(q,p0+kl+kt);	k2=setPp(q,p0+kl-kt);
 			k3=setPp(q,p0-kl-kt);	k4=setPp(q,p0-kl+kt);
 			quad_plot(k1,k2,k4,k3);	break;
+		case 'X':
+			k1=setPp(q,p0+kl+kt);	k2=setPp(q,p0+kl-kt);
+			k3=setPp(q,p0-kl-kt);	k4=setPp(q,p0-kl+kt);
+			line_plot(k1,k3);	line_plot(k2,k4);	break;
 		case 'T':
 			k1=setPp(q,p0-kl+kt);	k2=setPp(q,p0-kl-kt);	k3=setPp(q,p0+kl);
 			trig_plot(k1,k2,k3);	break;
@@ -1992,6 +1996,10 @@ void mglCanvas::arrow_plot_3d(long n1, long n2, char st, float ll)
 			k5=setPp(q,p0-kl+kt);	k6=setPp(q,p0-kl+kz);	k7=setPp(q,p0-kl-kt);	k8=setPp(q,p0-kl-kz);
 			quad_plot(k1,k2,k4,k3);	quad_plot(k1,k2,k5,k6);	quad_plot(k3,k2,k7,k6);
 			quad_plot(k1,k4,k5,k8);	quad_plot(k3,k4,k7,k8);	quad_plot(k5,k6,k8,k7);	break;
+		case 'X':
+			k1=setPp(q,p0+kl+kt);	k2=setPp(q,p0+kl+kz);	k3=setPp(q,p0+kl-kt);	k4=setPp(q,p0+kl-kz);
+			k5=setPp(q,p0-kl+kt);	k6=setPp(q,p0-kl+kz);	k7=setPp(q,p0-kl-kt);	k8=setPp(q,p0-kl-kz);
+			line_plot(k1,k7);	line_plot(k2,k8);	line_plot(k3,k5);	line_plot(k4,k6);	break;
 		case 'T':
 			k1=setPp(q,p0-kl+kt);	k2=setPp(q,p0-kl+kz);	k3=setPp(q,p0-kl-kt);
 			k4=setPp(q,p0-kl-kz);	k5=setPp(q,p0+kl);

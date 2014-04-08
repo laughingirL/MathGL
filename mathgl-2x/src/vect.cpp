@@ -726,7 +726,7 @@ void MGL_EXPORT mgl_flow_2d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, const 
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_flowp_xy(HMGL gr, double x0, double y0, double z0, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, const char *opt)
 {
-	mglPoint p(x0,y0,z0);
+	if(mgl_isnan(z0))	z0 = gr->Min.z;
 	mreal u,v;
 	long n=ax->GetNx(), m=ax->GetNy();
 	bool both = x->GetNx()==n && y->GetNx()==n && x->GetNy()==m && y->GetNy()==m;
@@ -743,7 +743,7 @@ void MGL_EXPORT mgl_flowp_xy(HMGL gr, double x0, double y0, double z0, HCDT x, H
 	long i0=0,j0=0;
 	for(i=0;i<n;i++)	for(j=0;j<m;j++)	// first find closest
 	{
-		d = both ? hypot(x->v(i,j)-p.x,y->v(i,j)-p.y) : hypot(x->v(i)-p.x,y->v(j)-p.y);
+		d = both ? hypot(x->v(i,j)-x0,y->v(i,j)-y0) : hypot(x->v(i)-x0,y->v(j)-y0);
 		if(d<dm)	{	i0=i;	j0=j;	dm=d;	}
 	}
 	if(dm==0)	{	u = i0/mreal(n);	v = j0/mreal(m);	}	// we find it
@@ -752,7 +752,7 @@ void MGL_EXPORT mgl_flowp_xy(HMGL gr, double x0, double y0, double z0, HCDT x, H
 		mreal dxu,dxv,dyu,dyv, dx, dy;
 		if(both)
 		{
-			dx = x->v(i0,j0)-p.x;	dy = y->v(i0,j0)-p.y;
+			dx = x->v(i0,j0)-x0;	dy = y->v(i0,j0)-y0;
 			dxu= x->dvx(i0,j0);		dyu= y->dvx(i0,j0);
 			dxv= x->dvy(i0,j0);		dyv= y->dvy(i0,j0);
 			d = dxv*dyu-dxu*dyv;
@@ -761,13 +761,13 @@ void MGL_EXPORT mgl_flowp_xy(HMGL gr, double x0, double y0, double z0, HCDT x, H
 		}
 		else
 		{
-			dx = x->v(i0)-p.x;	dy = y->v(j0)-p.y;
+			dx = x->v(i0)-x0;	dy = y->v(j0)-y0;
 			dxu= x->dvx(i0);	dyv= y->dvx(j0);
 			u = (i0+dx/dxu)/n;	v = (j0+dy/dyv)/m;
 		}
 	}
 	mglData xx(x), yy(y), bx(ax), by(ay);
-	flow(gr, p.z, u, v, xx, yy, bx, by,ss,vv);
+	flow(gr, z0, u, v, xx, yy, bx, by,ss,vv);
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
