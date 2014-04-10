@@ -287,11 +287,11 @@ void MGL_NO_EXPORT sort_prm_z(size_t l0, size_t r0, mglStack<mglPrim> &s, mglPri
 	if(del)	{	free(buf);	delete []cnd;	}
 }
 //-----------------------------------------------------------------------------
-void mglBase::resort()
+/*void mglBase::resort()
 {
 #pragma omp critical
 	{	sort_prm_c(0,Prm.size()-1,Prm,0);	clr(MGL_FINISHED);	}
-}
+}*/
 //-----------------------------------------------------------------------------
 MGL_NO_EXPORT void *mgl_canvas_thr(void *par)
 {	mglThreadG *t=(mglThreadG *)par;	(t->gr->*(t->f))(t->id, t->n, t->p);	return NULL;	}
@@ -444,6 +444,22 @@ void mglCanvas::pxl_setz(long id, long n, const void *)
 	{	mglPrim &q=Prm[i];	q.z = Pnt[q.n1].z;	}
 }
 //-----------------------------------------------------------------------------
+HMGL mgl_qsort_gr=0;
+int mglBase::PrmCmp(long i, long j) const
+{
+	const mglPrim &a = Prm[i];
+	const mglPrim &b = Prm[j];
+	if(a.z!=b.z) 	return int(100*(a.z - b.z));
+	register int t1 = mgl_type_prior[a.type], t2 = mgl_type_prior[b.type];
+	if(t1!=t2)		return t2 - t1;
+	if(a.w!=b.w) 	return int(100*(b.w - a.w));
+	return a.n3 - b.n3;
+}
+int MGL_NO_EXPORT mgl_prm_cmp(const void *i,const void *j)
+{
+	return mgl_qsort_gr->PrmCmp(*(const long *)i, *(const long *)j);
+}
+//-----------------------------------------------------------------------------
 void mglCanvas::PreparePrim(int fast)
 {
 	if(fast!=2)
@@ -452,7 +468,17 @@ void mglCanvas::PreparePrim(int fast)
 		if(fast==0)	mglStartThread(&mglCanvas::pxl_setz,this,Prm.size());
 		else	mglStartThread(&mglCanvas::pxl_setz_adv,this,Prm.size());
 #pragma omp critical
-		{	sort_prm_z(0,Prm.size()-1,Prm,0,0);	clr(MGL_FINISHED);	}	// TODO indexed here -- make PrmInd here
+//		{	sort_prm_z(0,Prm.size()-1,Prm,0,0);	clr(MGL_FINISHED);	}	// TODO indexed here -- make PrmInd here
+		{
+			ClearPrmInd();	mgl_qsort_gr = this;
+			register size_t n = Prm.size();
+			PrmInd = new long[n];
+			for(size_t i=0;i<n;i++)	PrmInd[i]=i;
+			qsort(PrmInd,n,sizeof(long),mgl_prm_cmp);
+//			sort_prm_z(0,Prm.size()-1,Prm,0,0);	
+			clr(MGL_FINISHED);
+			
+		}
 	}
 	if(fast>0)
 	{

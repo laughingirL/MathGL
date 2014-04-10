@@ -89,7 +89,7 @@ void MGL_EXPORT mgl_strlwr(char *str)
 //-----------------------------------------------------------------------------
 mglBase::mglBase()
 {
-	Flag=0;	saved=false;
+	Flag=0;	saved=false;	PrmInd=NULL;
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_init(&mutexPnt,0);
 	pthread_mutex_init(&mutexTxt,0);
@@ -119,7 +119,7 @@ mglBase::mglBase()
 	MinS=mglPoint(-1,-1,-1);	MaxS=mglPoint(1,1,1);
 	fnt = new mglFont;	fnt->gr = this;	PrevState=NAN;
 }
-mglBase::~mglBase()	{	ClearEq();	delete fnt;	}
+mglBase::~mglBase()	{	ClearEq();	ClearPrmInd();	delete fnt;	}
 //-----------------------------------------------------------------------------
 void mglBase::RestoreFont()	{	fnt->Restore();	}
 void mglBase::LoadFont(const char *name, const char *path)

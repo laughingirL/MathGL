@@ -91,7 +91,7 @@ struct MGL_EXPORT mglDrawDat
 {
 	mglStack<mglPnt>  Pnt;	///< Internal points
 	mglStack<mglPrim> Prm;	///< Primitives (lines, triangles and so on) -- need for export
-	mglStack<mglText> Ptx;	///< Text labels for mglPrim
+	std::vector<mglText> Ptx;	///< Text labels for mglPrim
 	mglStack<mglGlyph> Glf;	///< Glyphs data
 	mglStack<mglTexture> Txt;	///< Pointer to textures
 };
@@ -278,10 +278,10 @@ using mglBase::Light;
 	inline void Legend(int where=0x3, const char *font="#", const char *opt="")
 	{	Legend(Leg,(where&1)?1:0,(where&2)?1:0,font,opt);	}
 	/// Draw legend of accumulated strings by font with size
-	inline void Legend(const mglStack<mglText> &leg, int where=3, const char *font="#", const char *opt="")
+	inline void Legend(const std::vector<mglText> &leg, int where=3, const char *font="#", const char *opt="")
 	{	Legend(leg,(where&1)?1:0,(where&2)?1:0,font,opt);	}
 	/// Draw legend strings text at position (x, y) by font with size
-	void Legend(const mglStack<mglText> &leg, mreal x, mreal y, const char *font="#", const char *opt="");
+	void Legend(const std::vector<mglText> &leg, mreal x, mreal y, const char *font="#", const char *opt="");
 	/// Number of marks in legend sample
 	inline void SetLegendMarks(int num=1)	{	LegendMarks = num>0?num:1;	}
 

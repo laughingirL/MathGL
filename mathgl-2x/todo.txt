@@ -38,6 +38,8 @@
 26. Exclude gettext() ???
 27. Add arrow style 'X' into sample and docs
 28. Add FlowData() for getting flow thread coordinates as output array?!!
+29. Docs about GetBGRN
+30. Semi-transparent background.
 
 ============= DOCUMENTATION =============
 

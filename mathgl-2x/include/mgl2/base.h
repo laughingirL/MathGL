@@ -42,10 +42,11 @@ mglPoint GetY(HCDT y, int i, int j, int k=0);
 mglPoint GetZ(HCDT z, int i, int j, int k=0);
 //-----------------------------------------------------------------------------
 /// Class for replacement of std::vector
+// NOTE memcpy is used --> no memory allocation in T
 template <class T> class mglStack
 {
 	T** dat;
-	size_t nb;	///< size of buffer
+	size_t pb;	///< size of buffer (real size is 2^pb == 1<<pb)
 	size_t np;	///< allocated pointers
 	size_t m;	///< used pointers (allocated size is m*nb)
 	size_t n;	///< used cells
@@ -53,47 +54,44 @@ public:
 	mglStack(const mglStack<T> &st)
 	{
 		np=st.np;	dat = (T**)malloc(np*sizeof(T*));
-		nb=st.nb;	m=n=0;	reserve(st.n);
-#pragma omp parallel for
-		for(size_t i=0;i<st.n;i++)	dat[i/nb][i%nb] = st[i];
+		pb=st.pb;	m=n=0;	reserve(st.n);
+		for(size_t i=0;i<pb;i++)	memcpy(dat[i],st.dat[i],(1<<pb)*sizeof(T));
 		n=st.n;
 	}
-	mglStack(size_t Nbuf=1024)
-	{	np=16;	nb=Nbuf;	dat = (T**)malloc(np*sizeof(T*));
-		dat[0] = new T[nb];	n=0;	m=1;	}
+	mglStack(size_t Pbuf=10)
+	{	np=16;	pb=Pbuf;	dat = (T**)malloc(np*sizeof(T*));
+		dat[0] = new T[1<<pb];	n=0;	m=1;	}
 	~mglStack()	{	clear();	delete [](dat[0]);	free(dat);	}
 	void reserve(size_t num)
 	{
 		num+=n;
-		if(num>m*nb)
+		if(num>(m<<pb))
 		{
-			num = 1+ (num/nb);
+			num = 1+ (num>>pb);
 			if(num>np)
 			{	dat = (T**)realloc(dat, num*sizeof(T*));	np=num;	}
-#pragma omp parallel for
-			for(size_t i=m;i<num;i++)	dat[i] = new T[nb];
+			for(size_t i=m;i<num;i++)	dat[i] = new T[1<<pb];
 			m = num;
 		}
 	}
 	void clear()
 	{
-#pragma omp parallel for
 		for(size_t i=0;i<m;i++)	delete [](dat[i]);
-		dat[0] = new T[nb];	n=0;	m=1;
+		dat[0] = new T[1<<pb];	n=0;	m=1;
 	}
-	T &operator[](size_t i)	{	return dat[i/nb][i%nb];	}
-	const T &operator[](size_t i)	const	{	return dat[i/nb][i%nb];	}
+	T &operator[](size_t i)	{	register size_t d=i>>pb;	return dat[d][i-(d<<pb)];	}
+	const T &operator[](size_t i)	const	{	register size_t d=i>>pb;	return dat[d][i-(d<<pb)];	}
 	void push_back(const T &t)
 	{
-		if(n>=m*nb)	reserve(1);
-		dat[n/nb][n%nb] = t;	n++;
+		if(n>=(m<<pb))	reserve(1);
+		register size_t d=n>>pb;
+		dat[d][n-(d<<pb)] = t;	n++;
 	}
 	size_t size()	const	{	return n;	}
 	const mglStack<T> &operator=(const mglStack<T> &st)
 	{
-		nb=st.nb;	clear();	reserve(st.n);
-#pragma omp parallel for
-		for(size_t i=0;i<st.n;i++)	dat[i/nb][i%nb] = st[i];
+		pb=st.pb;	clear();	reserve(st.n);
+		for(size_t i=0;i<pb;i++)	memcpy(dat[i],st.dat[i],(1<<pb)*sizeof(T));
 		n = st.n;	return st;
 	}
 };
@@ -445,9 +443,11 @@ public:
 	inline long GetGlfNum() const		{	return Glf.size();	}
 	inline const mglPnt &GetPnt(long i) const	{	return Pnt[i];		}
 	inline long GetPntNum() const		{	return Pnt.size();	}
-	inline mglPrim &GetPrm(long i)		{	return Prm[i];		}
-//	inline mglPrim &GetPrm(long i, bool sort=true)		{	return (sort && PrmInd) ? Prm[PrmInd[i]]:Prm[i];		}	// TODO indexed here
-//	inline const mglPrim &GetPrm(long i, bool sort=true)	const	{	return (sort && PrmInd) ? Prm[PrmInd[i]]:Prm[i];		}	// TODO indexed here
+//	inline mglPrim &GetPrm(long i)		{	return Prm[i];		}
+	inline mglPrim &GetPrm(long i, bool sort=true)
+	{	return (sort && PrmInd) ? Prm[PrmInd[i]]:Prm[i];	}
+	inline const mglPrim &GetPrm(long i, bool sort=true) const
+	{	return (sort && PrmInd) ? Prm[PrmInd[i]]:Prm[i];	}
 	inline long GetPrmNum() const		{	return Prm.size();	}
 	inline const mglText &GetPtx(long i) const	{	return Ptx[i];		}
 	inline long GetPtxNum() const		{	return Ptx.size();	}
@@ -490,7 +490,7 @@ public:
 	inline mreal mark_size()	{	return MarkSize*font_factor;	}
 //	inline char last_color()	{	return last_style[1];	}
 	inline const char *last_line()	{	return last_style;	}
-	void resort();	///< Resort primitives in creation order (need for export in 3D formats)		// TODO indexed here -- remove this
+	int PrmCmp(long i, long j) const;	// compare 2 primitives with indexes i,j
 
 protected:
 	mglPoint OMin;		///< Lower edge for original axis (before scaling)
@@ -501,11 +501,12 @@ protected:
 	mglPoint FMax;		///< Actual upper edge after transformation formulas.
 	mglPoint Org;		///< Center of axis cross section.
 	int WarnCode;		///< Warning code
+	long *PrmInd;		///< Indexes of sorted primitives
 	mglStack<mglPnt> Pnt; 	///< Internal points
 	mglStack<mglPrim> Prm;	///< Primitives (lines, triangles and so on) -- need for export
 	mglStack<mglPrim> Sub;	///< InPlot regions {n1=x1,n2=x2,n3=y1,n4=y2,id}
-	mglStack<mglText> Ptx;	///< Text labels for mglPrim
-	mglStack<mglText> Leg;	///< Text labels for legend
+	std::vector<mglText> Ptx;	///< Text labels for mglPrim
+	std::vector<mglText> Leg;	///< Text labels for legend
 	mglStack<mglGlyph> Glf;	///< Glyphs data
 	mglStack<mglTexture> Txt;	///< Pointer to textures
 #if MGL_HAVE_PTHREAD
@@ -545,6 +546,8 @@ protected:
 	long dr_x, dr_y, dr_p;	///< default drawing region for quality&4 mode
 
 	virtual void LightScale(const mglMatrix *M)=0;			///< Scale positions of light sources
+	inline void ClearPrmInd()
+	{	long *tmp = PrmInd;	PrmInd=NULL;	if(tmp)	delete []tmp;	}
 
 	// block for SaveState()
 	mglPoint MinS;		///< Saved lower edge of bounding box for graphics.

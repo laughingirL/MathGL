@@ -88,7 +88,7 @@ void mglCanvas::GetFrame(long k)
 	pthread_mutex_lock(&mutexTxt);
 #endif
 #pragma omp critical
-	{	Pnt=d.Pnt;	Prm=d.Prm;	Glf=d.Glf;	Ptx=d.Ptx;	Txt=d.Txt;	}	// TODO indexed here -- delete PrmInd
+	{	Pnt=d.Pnt;	Prm=d.Prm;	Glf=d.Glf;	Ptx=d.Ptx;	Txt=d.Txt;	ClearPrmInd();	}
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_unlock(&mutexTxt);
 	pthread_mutex_unlock(&mutexPtx);
@@ -116,7 +116,7 @@ void mglCanvas::ShowFrame(long k)
 		Glf.reserve(d.Glf.size());	for(size_t i=0;i<d.Glf.size();i++)	Glf.push_back(d.Glf[i]);
 		Ptx.reserve(d.Ptx.size());	for(size_t i=0;i<d.Ptx.size();i++)	Ptx.push_back(d.Ptx[i]);
 		Txt.reserve(d.Pnt.size());	for(size_t i=0;i<d.Txt.size();i++)	Txt.push_back(d.Txt[i]);
-		Pnt.reserve(d.Pnt.size());
+		Pnt.reserve(d.Pnt.size());	ClearPrmInd();
 		for(size_t i=0;i<d.Pnt.size();i++)
 		{
 			mglPnt p = d.Pnt[i]; 	p.c += ntxt;
@@ -137,7 +137,7 @@ void mglCanvas::ShowFrame(long k)
 			case 5:	p.n2 += npnt;	break;
 			case 6: p.n3 += nptx;	break;
 			}
-			Prm.push_back(p);	// TODO indexed here -- delete PrmInd
+			Prm.push_back(p);
 		}
 	}
 #if MGL_HAVE_PTHREAD
@@ -160,8 +160,8 @@ void mglCanvas::add_prim(mglPrim &a)
 		a.z = Pnt[a.n1].z;	// this is a bit less accurate but simpler for transformation
 		a.id = ObjId;
 #pragma omp critical(prm)
-		MGL_PUSH(Prm,a,mutexPrm);	// TODO indexed here -- delete PrmInd
-		clr(MGL_FINISHED);
+		MGL_PUSH(Prm,a,mutexPrm);
+		ClearPrmInd();	clr(MGL_FINISHED);
 	}
 }
 //-----------------------------------------------------------------------------
@@ -736,7 +736,7 @@ void mglCanvas::arrow_plot(long n1, long n2, char st)
 	mask=m;	MaskAn=ma;
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::Legend(const mglStack<mglText> &leg, mreal x, mreal y, const char *font, const char *opt)
+void mglCanvas::Legend(const std::vector<mglText> &leg, mreal x, mreal y, const char *font, const char *opt)
 {
 	long n=leg.size();
 	mreal iw, ih;
@@ -981,7 +981,7 @@ void mglCanvas::EndGroup()
 	LoadState();
 	if(Quality&MGL_DRAW_LMEM)
 	{
-		Pnt.clear();	Prm.clear();	Ptx.clear();	// TODO indexed here -- delete PrmInd
+		Pnt.clear();	Prm.clear();	Ptx.clear();	ClearPrmInd();
 		Glf.clear();	Act.clear(); 	Grp.clear();
 	}
 	if(grp_counter>0)	grp_counter--;
