@@ -446,6 +446,8 @@ public:
 	inline const mglPnt &GetPnt(long i) const	{	return Pnt[i];		}
 	inline long GetPntNum() const		{	return Pnt.size();	}
 	inline mglPrim &GetPrm(long i)		{	return Prm[i];		}
+//	inline mglPrim &GetPrm(long i, bool sort=true)		{	return (sort && PrmInd) ? Prm[PrmInd[i]]:Prm[i];		}	// TODO indexed here
+//	inline const mglPrim &GetPrm(long i, bool sort=true)	const	{	return (sort && PrmInd) ? Prm[PrmInd[i]]:Prm[i];		}	// TODO indexed here
 	inline long GetPrmNum() const		{	return Prm.size();	}
 	inline const mglText &GetPtx(long i) const	{	return Ptx[i];		}
 	inline long GetPtxNum() const		{	return Ptx.size();	}
@@ -488,7 +490,7 @@ public:
 	inline mreal mark_size()	{	return MarkSize*font_factor;	}
 //	inline char last_color()	{	return last_style[1];	}
 	inline const char *last_line()	{	return last_style;	}
-	void resort();	///< Resort primitives in creation order (need for export in 3D formats)
+	void resort();	///< Resort primitives in creation order (need for export in 3D formats)		// TODO indexed here -- remove this
 
 protected:
 	mglPoint OMin;		///< Lower edge for original axis (before scaling)

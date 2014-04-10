@@ -385,7 +385,7 @@ void mglCanvas::pxl_prmcol(long id, long n, const void *)
 #pragma omp parallel for
 #endif
 	for(long i=id;i<n;i+=mglNumThr)
-		prm_col[i] = GetColor(Prm[i]);
+		prm_col[i] = GetColor(GetPrm(i));
 }
 //-----------------------------------------------------------------------------
 uint32_t mglCanvas::GetColor(const mglPrim &p)
@@ -452,7 +452,7 @@ void mglCanvas::PreparePrim(int fast)
 		if(fast==0)	mglStartThread(&mglCanvas::pxl_setz,this,Prm.size());
 		else	mglStartThread(&mglCanvas::pxl_setz_adv,this,Prm.size());
 #pragma omp critical
-		{	sort_prm_z(0,Prm.size()-1,Prm,0,0);	clr(MGL_FINISHED);	}
+		{	sort_prm_z(0,Prm.size()-1,Prm,0,0);	clr(MGL_FINISHED);	}	// TODO indexed here -- make PrmInd here
 	}
 	if(fast>0)
 	{
@@ -474,7 +474,7 @@ void mglCanvas::pxl_primdr(long id, long , const void *)
 		for(size_t k=0;k<Prm.size();k++)
 		{
 			if(Stop)	continue;
-			const mglPrim &p=Prm[k];
+			const mglPrim &p=GetPrm(k);
 			d.PDef = p.n3;	d.pPos = p.s;
 			d.ObjId = p.id;	d.PenWidth=p.w;
 			d.angle = p.angl;
@@ -503,7 +503,7 @@ void mglCanvas::pxl_primpx(long id, long n, const void *)	// NOTE this variant i
 		for(size_t k=0;k<Prm.size();k++)
 		{
 			if(Stop)	continue;
-			const mglPrim &p=Prm[k];
+			const mglPrim &p=GetPrm(k);
 			d.PDef = p.n3;	d.pPos = p.s;
 			d.ObjId = p.id;	d.PenWidth=p.w;
 			d.angle = p.angl;

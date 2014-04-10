@@ -38,7 +38,7 @@ void mglCanvasGL::Finish()
 		mglPrim p;
 		for(size_t i=0;i<Prm.size();i++)
 		{
-			p=Prm[i];	PDef=p.n3;	pPos=p.s;	PenWidth=p.w;
+			p=GetPrm(i);	PDef=p.n3;	pPos=p.s;	PenWidth=p.w;
 			switch(p.type)
 			{
 			case 0:	mark_draw(Pnt[p.n1],p.n4,p.s,0);	break;

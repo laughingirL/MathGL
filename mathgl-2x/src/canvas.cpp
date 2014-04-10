@@ -88,7 +88,7 @@ void mglCanvas::GetFrame(long k)
 	pthread_mutex_lock(&mutexTxt);
 #endif
 #pragma omp critical
-	{	Pnt=d.Pnt;	Prm=d.Prm;	Glf=d.Glf;	Ptx=d.Ptx;	Txt=d.Txt;	}
+	{	Pnt=d.Pnt;	Prm=d.Prm;	Glf=d.Glf;	Ptx=d.Ptx;	Txt=d.Txt;	}	// TODO indexed here -- delete PrmInd
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_unlock(&mutexTxt);
 	pthread_mutex_unlock(&mutexPtx);
@@ -137,7 +137,7 @@ void mglCanvas::ShowFrame(long k)
 			case 5:	p.n2 += npnt;	break;
 			case 6: p.n3 += nptx;	break;
 			}
-			Prm.push_back(p);
+			Prm.push_back(p);	// TODO indexed here -- delete PrmInd
 		}
 	}
 #if MGL_HAVE_PTHREAD
@@ -160,7 +160,7 @@ void mglCanvas::add_prim(mglPrim &a)
 		a.z = Pnt[a.n1].z;	// this is a bit less accurate but simpler for transformation
 		a.id = ObjId;
 #pragma omp critical(prm)
-		MGL_PUSH(Prm,a,mutexPrm);
+		MGL_PUSH(Prm,a,mutexPrm);	// TODO indexed here -- delete PrmInd
 		clr(MGL_FINISHED);
 	}
 }
@@ -981,8 +981,8 @@ void mglCanvas::EndGroup()
 	LoadState();
 	if(Quality&MGL_DRAW_LMEM)
 	{
-		Pnt.clear();		Prm.clear();		Ptx.clear();
-		Glf.clear();		Act.clear(); 	Grp.clear();
+		Pnt.clear();	Prm.clear();	Ptx.clear();	// TODO indexed here -- delete PrmInd
+		Glf.clear();	Act.clear(); 	Grp.clear();
 	}
 	if(grp_counter>0)	grp_counter--;
 }

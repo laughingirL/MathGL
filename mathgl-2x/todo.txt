@@ -37,6 +37,7 @@
 25. Check samples in EPS,SVG (looks as something wrong with axis range???)
 26. Exclude gettext() ???
 27. Add arrow style 'X' into sample and docs
+28. Add FlowData() for getting flow thread coordinates as output array?!!
 
 ============= DOCUMENTATION =============
 
