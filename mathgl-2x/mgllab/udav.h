@@ -24,7 +24,7 @@
 #ifdef USE_GETTEXT
 	#include <libintl.h>
 #else
-	#define gettext(x)	(x)
+	#define mgl_gettext(x)	(x)
 #endif
 #include <FL/Fl.H>
 #include <FL/Fl_Group.H>

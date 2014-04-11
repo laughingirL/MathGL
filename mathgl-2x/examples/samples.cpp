@@ -746,9 +746,10 @@ void smgl_style(mglGraph *gr)	// pen styles
 	gr->Line(mglPoint(a,0),mglPoint(b,0),"k-S");		gr->Puts(mglPoint(c,0),"Style 'S' or 'S\\_'",":rL");
 	gr->Line(mglPoint(a,-0.2),mglPoint(b,-0.2),"k-O");	gr->Puts(mglPoint(c,-0.2),"Style 'O' or 'O\\_'",":rL");
 	gr->Line(mglPoint(a,-0.4),mglPoint(b,-0.4),"k-T");	gr->Puts(mglPoint(c,-0.4),"Style 'T' or 'T\\_'",":rL");
-	gr->Line(mglPoint(a,-0.6),mglPoint(b,-0.6),"k-_");	gr->Puts(mglPoint(c,-0.6),"Style '\\_' or none",":rL");
-	gr->Line(mglPoint(a,-0.8),mglPoint(b,-0.8),"k-AS");	gr->Puts(mglPoint(c,-0.8),"Style 'AS'",":rL");
-	gr->Line(mglPoint(a,-1),mglPoint(b,-1),"k-_A");		gr->Puts(mglPoint(c,-1),"Style '\\_A'",":rL");
+	gr->Line(mglPoint(a,-0.6),mglPoint(b,-0.6),"k-X");	gr->Puts(mglPoint(c,-0.6),"Style 'X' or 'X\\_'",":rL");
+	gr->Line(mglPoint(a,-0.8),mglPoint(b,-0.8),"k-_");	gr->Puts(mglPoint(c,-0.8),"Style '\\_' or none",":rL");
+	gr->Line(mglPoint(a,-1),mglPoint(b,-1),"k-AS");		gr->Puts(mglPoint(c,-1),"Style 'AS'",":rL");
+	gr->Line(mglPoint(a,-1.2),mglPoint(b,-1.2),"k-_A");	gr->Puts(mglPoint(c,-1.2),"Style '\\_A'",":rL");
 
 	a=-1;	b=-0.7;	c=-0.6;
 	gr->Line(mglPoint(a,1),mglPoint(b,1),"kAA");		gr->Puts(mglPoint(c,1),"Style 'AA'",":rL");
@@ -759,9 +760,10 @@ void smgl_style(mglGraph *gr)	// pen styles
 	gr->Line(mglPoint(a,0),mglPoint(b,0),"kSS");		gr->Puts(mglPoint(c,0),"Style 'SS'",":rL");
 	gr->Line(mglPoint(a,-0.2),mglPoint(b,-0.2),"kOO");	gr->Puts(mglPoint(c,-0.2),"Style 'OO'",":rL");
 	gr->Line(mglPoint(a,-0.4),mglPoint(b,-0.4),"kTT");	gr->Puts(mglPoint(c,-0.4),"Style 'TT'",":rL");
-	gr->Line(mglPoint(a,-0.6),mglPoint(b,-0.6),"k-__");	gr->Puts(mglPoint(c,-0.6),"Style '\\_\\_'",":rL");
-	gr->Line(mglPoint(a,-0.8),mglPoint(b,-0.8),"k-VA");	gr->Puts(mglPoint(c,-0.8),"Style 'VA'",":rL");
-	gr->Line(mglPoint(a,-1),mglPoint(b,-1),"k-AV");		gr->Puts(mglPoint(c,-1),"Style 'AV'",":rL");
+	gr->Line(mglPoint(a,-0.6),mglPoint(b,-0.6),"kXX");	gr->Puts(mglPoint(c,-0.6),"Style 'XX'",":rL");
+	gr->Line(mglPoint(a,-0.8),mglPoint(b,-0.8),"k-__");	gr->Puts(mglPoint(c,-0.8),"Style '\\_\\_'",":rL");
+	gr->Line(mglPoint(a,-1),mglPoint(b,-1),"k-VA");		gr->Puts(mglPoint(c,-1),"Style 'VA'",":rL");
+	gr->Line(mglPoint(a,-1.2),mglPoint(b,-1.2),"k-AV");	gr->Puts(mglPoint(c,-1.2),"Style 'AV'",":rL");
 
 	gr->SubPlot(2,2,2);
 	//#LENUQ

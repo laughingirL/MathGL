@@ -64,27 +64,13 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 void save(mglGraph *gr,const char *name,const char *suf);
 void smgl_stfa(mglGraph *gr);	// STFA sample
 void smgl_text(mglGraph *gr);	// text drawing
-void smgl_surf(mglGraph *gr);
+void smgl_style(mglGraph *gr);
 #include <mgl2/base.h>
 #include <mgl2/font.h>
 void test(mglGraph *gr)
 {
-	gr->Rotate(40,60);
-	gr->Axis();	gr->Box();
-	gr->FPlot("sin(x*pi)");
-	gr->FSurf("sin(4*pi*(x+y^2))");
-
+	smgl_style(gr);
 	return;
-
-	mglData y(50);
-	y.Modify("sin(10*x) + 10");
-	gr->SetRange('y', y);
-	gr->Box();
-	gr->Axis();
-	gr->Plot(y);
-	y.Save("test.dat");
-	return;
-
 
 	mglParse par;
 	setlocale(LC_CTYPE, "");

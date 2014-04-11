@@ -224,14 +224,14 @@ void style_update(int pos,		// Position of update
 //-----------------------------------------------------------------------------
 ScriptWindow::ScriptWindow(int w, int h, const char* t) : Fl_Double_Window(w, h, t)
 {
-	replace_dlg = new Fl_Window(300, 105, gettext("Replace"));
-	replace_find = new Fl_Input(80, 10, 210, 25, gettext("Find:"));
+	replace_dlg = new Fl_Window(300, 105, mgl_gettext("Replace"));
+	replace_find = new Fl_Input(80, 10, 210, 25, mgl_gettext("Find:"));
 	replace_find->align(FL_ALIGN_LEFT);
 
-	replace_with = new Fl_Input(80, 40, 210, 25, gettext("Replace:"));
+	replace_with = new Fl_Input(80, 40, 210, 25, mgl_gettext("Replace:"));
 	replace_with->align(FL_ALIGN_LEFT);
 
-	replace_all = new Fl_Button(10, 70, 90, 25, gettext("Replace All"));
+	replace_all = new Fl_Button(10, 70, 90, 25, mgl_gettext("Replace All"));
 	replace_all->callback((Fl_Callback *)replall_cb, this);
 	replace_all->box(UDAV_UP_BOX);	replace_all->down_box(UDAV_DOWN_BOX);
 
@@ -239,7 +239,7 @@ ScriptWindow::ScriptWindow(int w, int h, const char* t) : Fl_Double_Window(w, h,
 	replace_next->callback((Fl_Callback *)replace2_cb, this);
 	replace_next->box(UDAV_UP_BOX);	replace_next->down_box(UDAV_DOWN_BOX);
 
-	replace_cancel = new Fl_Button(230, 70, 60, 25, gettext("Cancel"));
+	replace_cancel = new Fl_Button(230, 70, 60, 25, mgl_gettext("Cancel"));
 	replace_cancel->callback((Fl_Callback *)replcan_cb, this);
 	replace_cancel->box(UDAV_UP_BOX);	replace_cancel->down_box(UDAV_DOWN_BOX);
 
@@ -260,9 +260,9 @@ ScriptWindow::~ScriptWindow()
 int check_save(void)
 {
   if (!changed) return 1;
-  int r = fl_choice(gettext("The current file has not been saved.\n"
+  int r = fl_choice(mgl_gettext("The current file has not been saved.\n"
 					"Would you like to save it now?"),
-					gettext("Cancel"), gettext("Save"), gettext("Don't Save"));
+					mgl_gettext("Cancel"), mgl_gettext("Save"), mgl_gettext("Don't Save"));
   if(r==1)	{	save_cb(0,0);	return !changed;	} // Save the file...
   return (r==2) ? 1 : 0;
 }
@@ -297,7 +297,7 @@ void load_file(char *newfile, int ipos)
 		fill_animate(t);	free(t);
 
 		if (r)
-			fl_alert(gettext("Error reading from file \'%s\':\n%s."), newfile, strerror(errno));
+			fl_alert(mgl_gettext("Error reading from file \'%s\':\n%s."), newfile, strerror(errno));
 		else	if(!insert)	strncpy(filename, newfile,256);
 		loading = 0;
 		textbuf->call_modify_callbacks();
@@ -308,7 +308,7 @@ void save_file(char *newfile)
 {
 	pref.set("last_file",newfile);
 	if (textbuf->savefile(newfile))
-		fl_alert(gettext("Error writing to file \'%s\':\n%s."), newfile, strerror(errno));
+		fl_alert(mgl_gettext("Error writing to file \'%s\':\n%s."), newfile, strerror(errno));
 	else
 		strncpy(filename, newfile,256);
 	changed = 0;
@@ -333,7 +333,7 @@ void find_cb(Fl_Widget* w, void* v)
 {
 	ScriptWindow* e = (ScriptWindow*)v;
 	const char *val;
-	val = fl_input(gettext("Search String:"), e->search);
+	val = fl_input(mgl_gettext("Search String:"), e->search);
 	if (val != NULL) {	strncpy(e->search, val,256);	find2_cb(w, v);	}
 }
 //-----------------------------------------------------------------------------
@@ -350,7 +350,7 @@ void find2_cb(Fl_Widget* w, void* v)
 		e->editor->insert_position(pos+strlen(e->search));
 		e->editor->show_insert_position();
 	}
-	else fl_alert(gettext("No occurrences of \'%s\' found!"), e->search);
+	else fl_alert(mgl_gettext("No occurrences of \'%s\' found!"), e->search);
 }
 //-----------------------------------------------------------------------------
 void changed_cb(int, int nInserted, int nDeleted,int, const char*, void* v)
@@ -363,7 +363,7 @@ void changed_cb(int, int nInserted, int nDeleted,int, const char*, void* v)
 //-----------------------------------------------------------------------------
 void insert_cb(Fl_Widget*, void *v)
 {
-	char *newfile = fl_file_chooser(gettext("Insert File?"), "*", filename);
+	char *newfile = fl_file_chooser(mgl_gettext("Insert File?"), "*", filename);
 	ScriptWindow *w = (ScriptWindow *)v;
 	if (newfile != NULL) load_file(newfile, w->editor->insert_position());
 }
@@ -400,7 +400,7 @@ void replace2_cb(Fl_Widget*, void* v)
 		e->editor->insert_position(pos+strlen(replace));
 		e->editor->show_insert_position();
 	}
-	else fl_alert(gettext("No occurrences of \'%s\' found!"), find);
+	else fl_alert(mgl_gettext("No occurrences of \'%s\' found!"), find);
 }
 //-----------------------------------------------------------------------------
 void replall_cb(Fl_Widget*, void* v)
@@ -431,8 +431,8 @@ void replall_cb(Fl_Widget*, void* v)
 			times++;
 		}
 	}
-	if (times) fl_message(gettext("Replaced %ld occurrences."), times);
-	else fl_alert(gettext("No occurrences of \'%s\' found!"), find);
+	if (times) fl_message(mgl_gettext("Replaced %ld occurrences."), times);
+	else fl_alert(mgl_gettext("No occurrences of \'%s\' found!"), find);
 }
 //-----------------------------------------------------------------------------
 void replcan_cb(Fl_Widget*, void* v)
@@ -461,41 +461,41 @@ Fl_Widget *add_editor(ScriptWindow *w)
 	Fl_Button *o;
 
 	o = new Fl_Button(0, 1, 25, 25);	o->image(new Fl_Pixmap(document_new_xpm));
-	o->tooltip(gettext("New script"));	o->callback(new_cb,w);
+	o->tooltip(mgl_gettext("New script"));	o->callback(new_cb,w);
 //	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
-	o = new Fl_Button(25, 1, 25, 25);	o->tooltip(gettext("Open script or data file"));
+	o = new Fl_Button(25, 1, 25, 25);	o->tooltip(mgl_gettext("Open script or data file"));
 	o->image(new Fl_Pixmap(document_open_xpm));	o->callback(open_cb,w);
 //	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
-	o = new Fl_Button(50, 1, 25, 25);	o->tooltip(gettext("Save script to file"));
+	o = new Fl_Button(50, 1, 25, 25);	o->tooltip(mgl_gettext("Save script to file"));
 	o->image(new Fl_Pixmap(document_save_xpm));	o->callback(save_cb,w);
 //	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 
-	o = new Fl_Button(80, 1, 25, 25);	o->tooltip(gettext("Cut selection to clipboard"));
+	o = new Fl_Button(80, 1, 25, 25);	o->tooltip(mgl_gettext("Cut selection to clipboard"));
 	o->image(new Fl_Pixmap(edit_cut_xpm));	o->callback(cut_cb,w);
 //	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
-	o = new Fl_Button(105, 1, 25, 25);	o->tooltip(gettext("Copy selection to clipboard"));
+	o = new Fl_Button(105, 1, 25, 25);	o->tooltip(mgl_gettext("Copy selection to clipboard"));
 	o->image(new Fl_Pixmap(edit_copy_xpm));	o->callback(copy_cb,w);
 //	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
-	o = new Fl_Button(130, 1, 25, 25);	o->tooltip(gettext("Paste text from clipboard"));
+	o = new Fl_Button(130, 1, 25, 25);	o->tooltip(mgl_gettext("Paste text from clipboard"));
 	o->image(new Fl_Pixmap(edit_paste_xpm));	o->callback(paste_cb,w);
 //	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
-	o = new Fl_Button(155, 1, 25, 25);	o->tooltip(gettext("Find text"));
+	o = new Fl_Button(155, 1, 25, 25);	o->tooltip(mgl_gettext("Find text"));
 	o->image(new Fl_Pixmap(edit_find_xpm));	o->callback(find_cb,w);
 //	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 
-	o = new Fl_Button(185, 1, 25, 25);	o->tooltip(gettext("Insert MGL command"));
+	o = new Fl_Button(185, 1, 25, 25);	o->tooltip(mgl_gettext("Insert MGL command"));
 	o->image(new Fl_Pixmap(plot_xpm));	o->callback(command_cb,w);
 	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
-//	o = new Fl_Button(185, 1, 25, 25);	o->tooltip(gettext("Insert command options"));
+//	o = new Fl_Button(185, 1, 25, 25);	o->tooltip(mgl_gettext("Insert command options"));
 //	o->image(new Fl_Pixmap(option_xpm));	o->callback(option_cb,w);
 //	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
-//	o = new Fl_Button(210, 1, 25, 25);	o->tooltip(gettext("Edit data array"));
+//	o = new Fl_Button(210, 1, 25, 25);	o->tooltip(mgl_gettext("Edit data array"));
 //	o->image(new Fl_Pixmap(table_xpm));	o->callback(table_cb,w);
 //	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
-//	o = new Fl_Button(235, 1, 25, 25);	o->tooltip(gettext("New view window"));
+//	o = new Fl_Button(235, 1, 25, 25);	o->tooltip(mgl_gettext("New view window"));
 //	o->image(new Fl_Pixmap(window_xpm));o->callback(view_cb,w);
 //	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
-	o = new Fl_Button(210, 1, 25, 25);	o->tooltip(gettext("Show help window"));
+	o = new Fl_Button(210, 1, 25, 25);	o->tooltip(mgl_gettext("Show help window"));
 	o->image(new Fl_Pixmap(help_contents_xpm));	o->callback(help_cb,w);
 //	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 	g->end();	g->resizable(0);

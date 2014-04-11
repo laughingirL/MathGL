@@ -45,14 +45,14 @@ void set_title(Fl_Window* w)
 		if (slash != NULL) strncpy(title, slash + 1,256);
 		else strncpy(title, filename,256);
 	}
-	if (changed) strcat(title, gettext(" (modified)"));
+	if (changed) strcat(title, mgl_gettext(" (modified)"));
 	w->label(title);
 }
 //-----------------------------------------------------------------------------
 void fname_cb(Fl_Widget*, void *v)
 {
 	ScriptWindow* e = (ScriptWindow*)v;
-	char *file = fl_file_chooser(gettext("Insert File Name?"), gettext("All Files (*)"), 0);
+	char *file = fl_file_chooser(mgl_gettext("Insert File Name?"), mgl_gettext("All Files (*)"), 0);
 	if(file)
 	{
 		char *str = new char[strlen(file)+4];
@@ -77,8 +77,8 @@ void open_cb(Fl_Widget*, void *v)
 	if (!check_save()) return;
 	char *lastname=0;
 	if(*filename==0)	{	pref.get("last_file",lastname,"");	strncpy(filename, lastname,256);	}
-	char *newfile = fl_file_chooser(gettext("Open File?"),
-		gettext("MGL Files (*.mgl)\tDAT Files (*.{dat,csv})\tAll Files (*)"), filename);
+	char *newfile = fl_file_chooser(mgl_gettext("Open File?"),
+		mgl_gettext("MGL Files (*.mgl)\tDAT Files (*.{dat,csv})\tAll Files (*)"), filename);
 	if(lastname)	free(lastname);
 	if(newfile != NULL)
 	{
@@ -117,7 +117,7 @@ void saveas_cb(Fl_Widget*, void*)
 	FILE *fp=0;
 	while(1)
 	{
-		newfile = fl_file_chooser(gettext("Save File As?"), "*.mgl", filename);
+		newfile = fl_file_chooser(mgl_gettext("Save File As?"), "*.mgl", filename);
 		if(!newfile || !newfile[0])	break;
 		if(!strchr(newfile,'.'))
 		{
@@ -130,7 +130,7 @@ void saveas_cb(Fl_Widget*, void*)
 		if(fp)
 		{
 			fclose(fp);
-			if(fl_choice(gettext("File is exesist. Overwrite it?"),0,gettext("No"),gettext(" Yes "))==2)
+			if(fl_choice(mgl_gettext("File is exesist. Overwrite it?"),0,mgl_gettext("No"),mgl_gettext(" Yes "))==2)
 				break;
 		}
 		else	break;
@@ -146,43 +146,43 @@ void view_cb(Fl_Widget*, void*)
 void hint_cb(Fl_Widget*, void*)	{}
 //-----------------------------------------------------------------------------
 Fl_Menu_Item menuitems[] = {
-//	{ gettext("File"), 0, 0, 0, FL_SUBMENU },
-	{ gettext("File/New File"),			0, new_cb },
-	{ gettext("File/Open File..."),		FL_CTRL + 'o', open_cb },
-	{ gettext("File/Insert File..."),	FL_CTRL + 'i', insert_cb },
-	{ gettext("File/Save File"),			FL_CTRL + 's', save_cb },
-	{ gettext("File/Save File As..._"),	FL_CTRL + FL_SHIFT + 's', saveas_cb, 0, FL_MENU_DIVIDER },
-/*TODO	{ gettext("Export"), 0, 0, 0, 	FL_SUBMENU },*/
-	{ gettext("File/New View"),		FL_ALT + 'w', view_cb },
-	{ gettext("File/Close View_"),	FL_CTRL + 'w', close_cb, 0, FL_MENU_DIVIDER },
-	{ gettext("File/Exit"),			FL_ALT + 'x', quit_cb },
+//	{ mgl_gettext("File"), 0, 0, 0, FL_SUBMENU },
+	{ mgl_gettext("File/New File"),			0, new_cb },
+	{ mgl_gettext("File/Open File..."),		FL_CTRL + 'o', open_cb },
+	{ mgl_gettext("File/Insert File..."),	FL_CTRL + 'i', insert_cb },
+	{ mgl_gettext("File/Save File"),			FL_CTRL + 's', save_cb },
+	{ mgl_gettext("File/Save File As..._"),	FL_CTRL + FL_SHIFT + 's', saveas_cb, 0, FL_MENU_DIVIDER },
+/*TODO	{ mgl_gettext("Export"), 0, 0, 0, 	FL_SUBMENU },*/
+	{ mgl_gettext("File/New View"),		FL_ALT + 'w', view_cb },
+	{ mgl_gettext("File/Close View_"),	FL_CTRL + 'w', close_cb, 0, FL_MENU_DIVIDER },
+	{ mgl_gettext("File/Exit"),			FL_ALT + 'x', quit_cb },
 //		{ 0 },
-	{ gettext("Edit"), 0, 0, 0, FL_SUBMENU },
-		{ gettext("Cut"),			FL_CTRL + 'x', cut_cb },
-		{ gettext("Copy"),			FL_CTRL + 'c', copy_cb },
-		{ gettext("Paste"),			FL_CTRL + 'v', paste_cb },
-		{ gettext("Delete"),		0, delete_cb, 0, FL_MENU_DIVIDER },
-		{ gettext("Insert"), 0, 0, 0, 	FL_SUBMENU },
-			{ gettext("options"),	FL_ALT + 'o', option_cb },
-			{ gettext("style"),		FL_ALT + 'i', style_cb },
-			{ gettext("filename"),	0, fname_cb },
-			{ gettext("command"),	FL_ALT + 'c', command_cb },
+	{ mgl_gettext("Edit"), 0, 0, 0, FL_SUBMENU },
+		{ mgl_gettext("Cut"),			FL_CTRL + 'x', cut_cb },
+		{ mgl_gettext("Copy"),			FL_CTRL + 'c', copy_cb },
+		{ mgl_gettext("Paste"),			FL_CTRL + 'v', paste_cb },
+		{ mgl_gettext("Delete"),		0, delete_cb, 0, FL_MENU_DIVIDER },
+		{ mgl_gettext("Insert"), 0, 0, 0, 	FL_SUBMENU },
+			{ mgl_gettext("options"),	FL_ALT + 'o', option_cb },
+			{ mgl_gettext("style"),		FL_ALT + 'i', style_cb },
+			{ mgl_gettext("filename"),	0, fname_cb },
+			{ mgl_gettext("command"),	FL_ALT + 'c', command_cb },
 			{ 0 },
-		{ gettext("Properties"),	0, settings_cb },
+		{ mgl_gettext("Properties"),	0, settings_cb },
 		{ 0 },
-	{ gettext("Search"), 0, 0, 0, FL_SUBMENU },
-		{ gettext("Find..."),		FL_CTRL + 'f', find_cb },
-		{ gettext("Find Again"),	FL_F + 3, find2_cb },
-		{ gettext("Replace..."),	FL_CTRL + 'r', replace_cb },
-		{ gettext("Replace Again"), FL_F + 4, replace2_cb },
+	{ mgl_gettext("Search"), 0, 0, 0, FL_SUBMENU },
+		{ mgl_gettext("Find..."),		FL_CTRL + 'f', find_cb },
+		{ mgl_gettext("Find Again"),	FL_F + 3, find2_cb },
+		{ mgl_gettext("Replace..."),	FL_CTRL + 'r', replace_cb },
+		{ mgl_gettext("Replace Again"), FL_F + 4, replace2_cb },
 		{ 0 },
-/*TODO{ gettext("Graphics"), 0, 0, 0, FL_SUBMENU },*/
-/*TODO{ gettext("Data"), 0, 0, 0, FL_SUBMENU },*/
-	{ gettext("Help"), 0, 0, 0, FL_SUBMENU },
-		{ gettext("MGL Help"),		FL_F + 1, help_cb },
-		{ gettext("MGL Examples"),	0, example_cb },
-		{ gettext("Hints and FAQ"),	0, hint_cb , 0, FL_MENU_INACTIVE},
-		{ gettext("About UDAV"),	0, about_cb },
+/*TODO{ mgl_gettext("Graphics"), 0, 0, 0, FL_SUBMENU },*/
+/*TODO{ mgl_gettext("Data"), 0, 0, 0, FL_SUBMENU },*/
+	{ mgl_gettext("Help"), 0, 0, 0, FL_SUBMENU },
+		{ mgl_gettext("MGL Help"),		FL_F + 1, help_cb },
+		{ mgl_gettext("MGL Examples"),	0, example_cb },
+		{ mgl_gettext("Hints and FAQ"),	0, hint_cb , 0, FL_MENU_INACTIVE},
+		{ mgl_gettext("About UDAV"),	0, about_cb },
 		{ 0 },
 	{ 0 }
 };
@@ -198,30 +198,30 @@ ScriptWindow *new_view()
 	w->begin();
 	w->menu = new Fl_Menu_Bar(0, 0, 930, 30);
 
-//	w->menu->add(gettext("File"), 0, 0, 0, FL_SUBMENU);	
-	w->menu->add(gettext("File/New File"), "", new_cb);
-	w->menu->add(gettext("File/Open File..."), "^o", open_cb, w);
-	w->menu->add(gettext("File/Insert File..."),	"^i", insert_cb, w);
-	w->menu->add(gettext("File/Save File"), "^s", save_cb, w);
-	w->menu->add(gettext("File/Save File As..."), 0, saveas_cb, w, FL_MENU_DIVIDER);
-	/*TODO	{ gettext("Export"), 0, 0, 0, 	FL_SUBMENU },*/
-	w->menu->add(gettext("File/New View"), "#w", view_cb, w);
-	w->menu->add(gettext("File/Close View"), "^w", close_cb, w, FL_MENU_DIVIDER);
-	w->menu->add(gettext("File/Exit"), "#x", quit_cb);
+//	w->menu->add(mgl_gettext("File"), 0, 0, 0, FL_SUBMENU);	
+	w->menu->add(mgl_gettext("File/New File"), "", new_cb);
+	w->menu->add(mgl_gettext("File/Open File..."), "^o", open_cb, w);
+	w->menu->add(mgl_gettext("File/Insert File..."),	"^i", insert_cb, w);
+	w->menu->add(mgl_gettext("File/Save File"), "^s", save_cb, w);
+	w->menu->add(mgl_gettext("File/Save File As..."), 0, saveas_cb, w, FL_MENU_DIVIDER);
+	/*TODO	{ mgl_gettext("Export"), 0, 0, 0, 	FL_SUBMENU },*/
+	w->menu->add(mgl_gettext("File/New View"), "#w", view_cb, w);
+	w->menu->add(mgl_gettext("File/Close View"), "^w", close_cb, w, FL_MENU_DIVIDER);
+	w->menu->add(mgl_gettext("File/Exit"), "#x", quit_cb);
 //	w->menu->copy(menuitems, w);
 
 	Fl_Tile *t = new Fl_Tile(0,30,930,455);
 	tt = new Fl_Tabs(0,30,300,455,0);	tt->box(UDAV_UP_BOX);	w->ltab = tt;
-	gg = new Fl_Group(0,30,300,430);	gg->label(gettext("Script"));
+	gg = new Fl_Group(0,30,300,430);	gg->label(mgl_gettext("Script"));
 	add_editor(w);	gg->end();
 	tt->end();
 
 	tt = new Fl_Tabs(300,30,630,455,0);	tt->box(UDAV_UP_BOX);	w->rtab = tt;
-	gg = new Fl_Group(300,30,630,430,gettext("Canvas"));
+	gg = new Fl_Group(300,30,630,430,mgl_gettext("Canvas"));
 	w->graph = new Fl_MGL(300,30,630,430);	gg->end();
-	gg = new Fl_Group(300,30,630,430,gettext("Help"));
+	gg = new Fl_Group(300,30,630,430,mgl_gettext("Help"));
 	w->ghelp = gg;	add_help(w);	gg->end();
-	gg = new Fl_Group(300,30,630,430,gettext("Memory"));
+	gg = new Fl_Group(300,30,630,430,mgl_gettext("Memory"));
 	add_mem(w);		gg->end();
 	tt->end();
 

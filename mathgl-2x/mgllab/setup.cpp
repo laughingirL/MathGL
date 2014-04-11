@@ -61,12 +61,12 @@ void SetupDlg::CreateGen()
 	ylab = new Fl_Input(190, 140, 75, 25);
 	zlab = new Fl_Input(275, 140, 75, 25);
 
-	xpos = new Fl_Choice(105, 170, 75, 25);	xpos->add(gettext("at minumum"));
-		xpos->add("at center");	xpos->add(gettext("at maxumum"));	xpos->value(1);
-	ypos = new Fl_Choice(190, 170, 75, 25);	ypos->add(gettext("at minumum"));
-		ypos->add("at center");	ypos->add(gettext("at maxumum"));	ypos->value(1);
-	zpos = new Fl_Choice(275, 170, 75, 25);	zpos->add(gettext("at minumum"));
-		zpos->add("at center");	zpos->add(gettext("at maxumum"));	zpos->value(1);
+	xpos = new Fl_Choice(105, 170, 75, 25);	xpos->add(mgl_gettext("at minumum"));
+		xpos->add("at center");	xpos->add(mgl_gettext("at maxumum"));	xpos->value(1);
+	ypos = new Fl_Choice(190, 170, 75, 25);	ypos->add(mgl_gettext("at minumum"));
+		ypos->add("at center");	ypos->add(mgl_gettext("at maxumum"));	ypos->value(1);
+	zpos = new Fl_Choice(275, 170, 75, 25);	zpos->add(mgl_gettext("at minumum"));
+		zpos->add("at center");	zpos->add(mgl_gettext("at maxumum"));	zpos->value(1);
 	xtik = new Fl_Input(105, 200, 75, 25);
 	ytik = new Fl_Input(190, 200, 75, 25);
 	ztik = new Fl_Input(275, 200, 75, 25);
@@ -75,19 +75,19 @@ void SetupDlg::CreateGen()
 	zsub = new Fl_Input(275, 230, 75, 25);
 
 	{ Fl_Box* o = new Fl_Box(10, 260, 470, 5);	o->box(FL_DOWN_BOX);	}
-	alphad = new Fl_Input(20, 285, 75, 25, gettext("AlphaDef"));	alphad->align(FL_ALIGN_TOP);
-	ambient = new Fl_Input(105, 285, 75, 25, gettext("Ambient"));	ambient->align(FL_ALIGN_TOP);
-	basew = new Fl_Input(190, 285, 75, 25, gettext("Base Width"));	basew->align(FL_ALIGN_TOP);
-	mesh = new Fl_Input(275, 285, 75, 25, gettext("Mesh Num"));		mesh->align(FL_ALIGN_TOP);
-	axial = new Fl_Choice(360, 285, 75, 25, gettext("Axial Dir"));	axial->align(FL_ALIGN_TOP);
+	alphad = new Fl_Input(20, 285, 75, 25, mgl_gettext("AlphaDef"));	alphad->align(FL_ALIGN_TOP);
+	ambient = new Fl_Input(105, 285, 75, 25, mgl_gettext("Ambient"));	ambient->align(FL_ALIGN_TOP);
+	basew = new Fl_Input(190, 285, 75, 25, mgl_gettext("Base Width"));	basew->align(FL_ALIGN_TOP);
+	mesh = new Fl_Input(275, 285, 75, 25, mgl_gettext("Mesh Num"));		mesh->align(FL_ALIGN_TOP);
+	axial = new Fl_Choice(360, 285, 75, 25, mgl_gettext("Axial Dir"));	axial->align(FL_ALIGN_TOP);
 	axial->add("x");	axial->add("y");	axial->add("z");
-	font = new Fl_Input(20, 330, 50, 25, gettext("Font"));			font->align(FL_ALIGN_TOP);
+	font = new Fl_Input(20, 330, 50, 25, mgl_gettext("Font"));			font->align(FL_ALIGN_TOP);
 	{ Fl_Button* o = new Fl_Button(70, 330, 25, 25, "..");	o->callback(font_cb, font);
 		o->box(UDAV_UP_BOX);	o->down_box(UDAV_DOWN_BOX);	}
-	size = new Fl_Input(105, 330, 75, 25, gettext("Font Size"));	size->align(FL_ALIGN_TOP);
-	alpha = new Fl_Check_Button(190, 330, 75, 25, gettext("Alpha on"));
-	light = new Fl_Check_Button(275, 330, 75, 25, gettext("Light on"));
-	rotate = new Fl_Check_Button(360, 330, 90, 25, gettext("Rotate text"));
+	size = new Fl_Input(105, 330, 75, 25, mgl_gettext("Font Size"));	size->align(FL_ALIGN_TOP);
+	alpha = new Fl_Check_Button(190, 330, 75, 25, mgl_gettext("Alpha on"));
+	light = new Fl_Check_Button(275, 330, 75, 25, mgl_gettext("Light on"));
+	rotate = new Fl_Check_Button(360, 330, 90, 25, mgl_gettext("Rotate text"));
 }
 //-----------------------------------------------------------------------------
 void SetupDlg::CreateLid()
@@ -98,7 +98,7 @@ void SetupDlg::CreateLid()
 	{
 		h = 55 + 30*i;
 		new Fl_Box(10, h, 25, 25, str[i]);
-		lid[i] = new Fl_Check_Button(35, h, 40, 25, gettext("on"));
+		lid[i] = new Fl_Check_Button(35, h, 40, 25, mgl_gettext("on"));
 		xid[i] = new Fl_Input(85, h, 75, 25);
 		yid[i] = new Fl_Input(165, h, 75, 25);
 		zid[i] = new Fl_Input(245, h, 75, 25);
@@ -111,51 +111,51 @@ void SetupDlg::CreateLid()
 void SetupDlg::CreateDlg()
 {
 	OK = false;
-	wnd = new Fl_Window(490, 406, gettext("Setup graphics"));
+	wnd = new Fl_Window(490, 406, mgl_gettext("Setup graphics"));
 	Fl_Tabs* t = new Fl_Tabs(0, 0, 490, 360);	t->box(UDAV_UP_BOX);
 
-	Fl_Group *g = new Fl_Group(0, 25, 485, 330, gettext("General"));
-	new Fl_Box(105, 30, 75, 20, gettext("X axis"));
-	new Fl_Box(190, 30, 75, 20, gettext("Y axis"));
-	new Fl_Box(275, 30, 75, 20, gettext("Z axis"));
-	new Fl_Box(360, 30, 75, 20, gettext("Color"));
+	Fl_Group *g = new Fl_Group(0, 25, 485, 330, mgl_gettext("General"));
+	new Fl_Box(105, 30, 75, 20, mgl_gettext("X axis"));
+	new Fl_Box(190, 30, 75, 20, mgl_gettext("Y axis"));
+	new Fl_Box(275, 30, 75, 20, mgl_gettext("Z axis"));
+	new Fl_Box(360, 30, 75, 20, mgl_gettext("Color"));
 
-	new Fl_Box(25, 50, 75, 25, gettext("Minimal"));
-	new Fl_Box(25, 80, 75, 25, gettext("Maximal"));
-	new Fl_Box(25, 110, 75, 25, gettext("Origin"));
-	new Fl_Box(25, 140, 75, 25, gettext("Label"));
-	new Fl_Box(25, 170, 75, 25, gettext("Position"));
-	new Fl_Box(25, 200, 75, 25, gettext("Ticks"));
-	new Fl_Box(25, 230, 75, 25, gettext("SubTicks"));
+	new Fl_Box(25, 50, 75, 25, mgl_gettext("Minimal"));
+	new Fl_Box(25, 80, 75, 25, mgl_gettext("Maximal"));
+	new Fl_Box(25, 110, 75, 25, mgl_gettext("Origin"));
+	new Fl_Box(25, 140, 75, 25, mgl_gettext("Label"));
+	new Fl_Box(25, 170, 75, 25, mgl_gettext("Position"));
+	new Fl_Box(25, 200, 75, 25, mgl_gettext("Ticks"));
+	new Fl_Box(25, 230, 75, 25, mgl_gettext("SubTicks"));
 	CreateGen();
 	g->end();
 
-	g = new Fl_Group(0, 25, 485, 330, gettext("Light"));	g->hide();
-	new Fl_Box(10, 30, 25, 25, gettext("ID"));
-	new Fl_Box(40, 30, 40, 25, gettext("State"));
-	new Fl_Box(85, 30, 75, 25, gettext("X position"));
-	new Fl_Box(165, 30, 75, 25, gettext("Y position"));
-	new Fl_Box(245, 30, 75, 25, gettext("Z position"));
-	new Fl_Box(325, 30, 75, 25, gettext("Color"));
-	new Fl_Box(405, 30, 75, 25, gettext("Brightness"));
+	g = new Fl_Group(0, 25, 485, 330, mgl_gettext("Light"));	g->hide();
+	new Fl_Box(10, 30, 25, 25, mgl_gettext("ID"));
+	new Fl_Box(40, 30, 40, 25, mgl_gettext("State"));
+	new Fl_Box(85, 30, 75, 25, mgl_gettext("X position"));
+	new Fl_Box(165, 30, 75, 25, mgl_gettext("Y position"));
+	new Fl_Box(245, 30, 75, 25, mgl_gettext("Z position"));
+	new Fl_Box(325, 30, 75, 25, mgl_gettext("Color"));
+	new Fl_Box(405, 30, 75, 25, mgl_gettext("Brightness"));
 	CreateLid();
 	g->end();
 
-	g = new Fl_Group(0, 25, 485, 330, gettext("Setup code"));	g->hide();
+	g = new Fl_Group(0, 25, 485, 330, mgl_gettext("Setup code"));	g->hide();
 	code = new Fl_Help_View(0, 25, 485, 330);
 	g->end();
 
 	t->end();	//Fl_Group::current()->resizable(t);
 	Fl_Button *o;
-	templ = new Fl_Input(120, 370, 110, 25, gettext("Template name"));
+	templ = new Fl_Input(120, 370, 110, 25, mgl_gettext("Template name"));
 	templ->value("template.mgl");
-	o = new Fl_Button(230, 370, 80, 25, gettext("Save"));	o->callback(setup_sav_cb, wnd);
+	o = new Fl_Button(230, 370, 80, 25, mgl_gettext("Save"));	o->callback(setup_sav_cb, wnd);
 	o->box(UDAV_UP_BOX);	o->down_box(UDAV_DOWN_BOX);
-	o->tooltip(gettext("Save settings to file template.mgl.\nYou may use it later by 'call template.mgl'"));
+	o->tooltip(mgl_gettext("Save settings to file template.mgl.\nYou may use it later by 'call template.mgl'"));
 
-	o = new Fl_Button(315, 370, 80, 25, gettext("Cancel"));	o->callback(close_dlg_cb, wnd);
+	o = new Fl_Button(315, 370, 80, 25, mgl_gettext("Cancel"));	o->callback(close_dlg_cb, wnd);
 	o->box(UDAV_UP_BOX);	o->down_box(UDAV_DOWN_BOX);
-	o = new Fl_Return_Button(400, 370, 80, 25, gettext("OK"));	o->callback(setup_dlg_cb, this);
+	o = new Fl_Return_Button(400, 370, 80, 25, mgl_gettext("OK"));	o->callback(setup_dlg_cb, this);
 	o->box(UDAV_UP_BOX);	o->down_box(UDAV_DOWN_BOX);
 	wnd->end();
 }
@@ -394,20 +394,20 @@ void prop_dlg_cb(Fl_Widget *, void *v)
 //-----------------------------------------------------------------------------
 void PropDlg::create_dlg()
 {
-	wnd = new Fl_Double_Window(320, 300, gettext("UDAV settings"));
-	path = new Fl_Input(10, 25, 305, 25, gettext("Path for help files"));	path->align(FL_ALIGN_TOP_LEFT);
+	wnd = new Fl_Double_Window(320, 300, mgl_gettext("UDAV settings"));
+	path = new Fl_Input(10, 25, 305, 25, mgl_gettext("Path for help files"));	path->align(FL_ALIGN_TOP_LEFT);
 
-	font = new Fl_Input(10, 75, 305, 25, gettext("Font typeface"));	font->align(FL_ALIGN_TOP_LEFT);
-	fpath = new Fl_Input(10, 125, 305, 25, gettext("Path for font files"));	fpath->align(FL_ALIGN_TOP_LEFT);
-	locale = new Fl_Input(10, 175, 305, 25, gettext("Select locale"));	locale->align(FL_ALIGN_TOP_LEFT);
+	font = new Fl_Input(10, 75, 305, 25, mgl_gettext("Font typeface"));	font->align(FL_ALIGN_TOP_LEFT);
+	fpath = new Fl_Input(10, 125, 305, 25, mgl_gettext("Path for font files"));	fpath->align(FL_ALIGN_TOP_LEFT);
+	locale = new Fl_Input(10, 175, 305, 25, mgl_gettext("Select locale"));	locale->align(FL_ALIGN_TOP_LEFT);
 
-	plast = new Fl_Check_Button(10, 210, 210, 25, gettext("Use plastic scheme"));
-	aexec = new Fl_Check_Button(10, 240, 210, 25, gettext("Execute after script loading"));
-	ifont = new Fl_Check_Button(10, 270, 210, 25, gettext("Use only internal font"));
+	plast = new Fl_Check_Button(10, 210, 210, 25, mgl_gettext("Use plastic scheme"));
+	aexec = new Fl_Check_Button(10, 240, 210, 25, mgl_gettext("Execute after script loading"));
+	ifont = new Fl_Check_Button(10, 270, 210, 25, mgl_gettext("Use only internal font"));
 
 	Fl_Button *o;
-	o = new Fl_Button(240, 210, 75, 25, gettext("Cancel"));		o->callback(close_dlg_cb,wnd);
-	o = new Fl_Return_Button(240, 240, 75, 25, gettext("OK"));	o->callback(prop_dlg_cb,wnd);
+	o = new Fl_Button(240, 210, 75, 25, mgl_gettext("Cancel"));		o->callback(close_dlg_cb,wnd);
+	o = new Fl_Return_Button(240, 240, 75, 25, mgl_gettext("OK"));	o->callback(prop_dlg_cb,wnd);
 	wnd->end();
 }
 //-----------------------------------------------------------------------------

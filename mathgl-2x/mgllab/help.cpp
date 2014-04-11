@@ -80,7 +80,7 @@ void help_out_cb(Fl_Widget*, void*v)
 void about_cb(Fl_Widget*, void*)
 {
 	static char s[128];
-	snprintf(s,128,gettext("UDAV v. 2.%g\n(c) Alexey Balakin, 2007\nhttp://udav.sf.net/"), MGL_VER2);
+	snprintf(s,128,mgl_gettext("UDAV v. 2.%g\n(c) Alexey Balakin, 2007\nhttp://udav.sf.net/"), MGL_VER2);
 	Fl_Double_Window* w = new Fl_Double_Window(355, 130, "About UDAV");
 	Fl_Box* o = new Fl_Box(10, 15, 65, 65);
 	o->box(FL_UP_BOX);	o->color(55);	o->image(new Fl_Pixmap(udav_xpm));
@@ -105,13 +105,13 @@ Fl_Widget *add_help(ScriptWindow *w)
 	w->link_cmd->when(FL_WHEN_CHANGED);
 	w->link_cmd->callback(link_cb,w);
 
-	o = new Fl_Button(155, 1, 25, 25);	o->tooltip(gettext("MGL samples and hints"));
+	o = new Fl_Button(155, 1, 25, 25);	o->tooltip(mgl_gettext("MGL samples and hints"));
 	o->image(new Fl_Pixmap(help_faq_xpm));	o->callback(example_cb,w);
 //	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
-	o = new Fl_Button(180, 1, 25, 25);	o->tooltip(gettext("Increase font size"));
+	o = new Fl_Button(180, 1, 25, 25);	o->tooltip(mgl_gettext("Increase font size"));
 	o->image(new Fl_Pixmap(zoom_in_xpm));	o->callback(help_in_cb,w);
 //	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
-	o = new Fl_Button(205, 1, 25, 25);	o->tooltip(gettext("Decrease font size"));
+	o = new Fl_Button(205, 1, 25, 25);	o->tooltip(mgl_gettext("Decrease font size"));
 	o->image(new Fl_Pixmap(zoom_out_xpm));	o->callback(help_out_cb,w);
 //	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 
@@ -142,36 +142,36 @@ Fl_Widget *add_mem(ScriptWindow *w)
 	static int widths[] = {220,205,0};
 	Fl_Button *o;
 	Fl_Box *b;
-//	wnd = new Fl_Double_Window(335, 405, gettext("Data browser"));
+//	wnd = new Fl_Double_Window(335, 405, mgl_gettext("Data browser"));
 	Fl_Window *wnd = new Fl_Window(300,30,630,430,0);
 
 //	Fl_Group *g = new Fl_Group(10,10,610,395);
-	b = new Fl_Box(0, 10, 630, 25, gettext("Existed data arrays"));	b->labeltype(FL_ENGRAVED_LABEL);
-	b = new Fl_Box(0, 35, 220, 25, gettext("name"));
+	b = new Fl_Box(0, 10, 630, 25, mgl_gettext("Existed data arrays"));	b->labeltype(FL_ENGRAVED_LABEL);
+	b = new Fl_Box(0, 35, 220, 25, mgl_gettext("name"));
 	b->box(FL_THIN_UP_BOX);	b->align(FL_ALIGN_LEFT|FL_ALIGN_INSIDE);
-	b = new Fl_Box(220, 35, 205, 25, gettext("dimensions"));
+	b = new Fl_Box(220, 35, 205, 25, mgl_gettext("dimensions"));
 	b->box(FL_THIN_UP_BOX);	b->align(FL_ALIGN_LEFT|FL_ALIGN_INSIDE);
-	b = new Fl_Box(425, 35, 205, 25, gettext("mem. usage"));
+	b = new Fl_Box(425, 35, 205, 25, mgl_gettext("mem. usage"));
 	b->box(FL_THIN_UP_BOX);	b->align(FL_ALIGN_LEFT|FL_ALIGN_INSIDE);
 
 	w->var = new Fl_Select_Browser(0, 60, 630, 335);	w->var->column_char('\t');
 	w->var->align(FL_ALIGN_TOP);	w->var->column_widths(widths);
-	w->var->tooltip(gettext("List of available data."));
+	w->var->tooltip(mgl_gettext("List of available data."));
 //	g->end();
 
-	o = new Fl_Button(10, 400, 95, 25, gettext("Edit"));	o->callback(mem_dlg_cb0,w);
-	o->tooltip(gettext("Open table with selected data for editing."));
-	o = new Fl_Button(120, 400, 95, 25, gettext("Plot"));	o->callback(mem_dlg_cb1,w);
-	o->tooltip(gettext("Plot selected data."));
-	o = new Fl_Button(230, 400, 95, 25, gettext("Delete"));	o->callback(mem_dlg_cb2,w);
-	o->tooltip(gettext("Delete selected data."));
-	o = new Fl_Button(340, 400, 95, 25, gettext("New"));	o->callback(mem_dlg_cb3,w);
-	o->tooltip(gettext("Open dialog for new data creation."));
-	o = new Fl_Button(450, 400, 95, 25, gettext("Refresh"));	o->callback(mem_update_cb,w);
-	o->tooltip(gettext("Refresh list of variables."));
-//	o = new Fl_Button(120, 335, 95, 25, gettext("Load"));	o->callback(mem_dlg_cb,(void *)4);
-//	o = new Fl_Button(230, 335, 95, 25, gettext("Save"));	o->callback(mem_dlg_cb,(void *)5);
-//	o = new Fl_Button(10, 370, 95, 25, gettext("Update"));	o->callback(mem_upd_cb,0);
+	o = new Fl_Button(10, 400, 95, 25, mgl_gettext("Edit"));	o->callback(mem_dlg_cb0,w);
+	o->tooltip(mgl_gettext("Open table with selected data for editing."));
+	o = new Fl_Button(120, 400, 95, 25, mgl_gettext("Plot"));	o->callback(mem_dlg_cb1,w);
+	o->tooltip(mgl_gettext("Plot selected data."));
+	o = new Fl_Button(230, 400, 95, 25, mgl_gettext("Delete"));	o->callback(mem_dlg_cb2,w);
+	o->tooltip(mgl_gettext("Delete selected data."));
+	o = new Fl_Button(340, 400, 95, 25, mgl_gettext("New"));	o->callback(mem_dlg_cb3,w);
+	o->tooltip(mgl_gettext("Open dialog for new data creation."));
+	o = new Fl_Button(450, 400, 95, 25, mgl_gettext("Refresh"));	o->callback(mem_update_cb,w);
+	o->tooltip(mgl_gettext("Refresh list of variables."));
+//	o = new Fl_Button(120, 335, 95, 25, mgl_gettext("Load"));	o->callback(mem_dlg_cb,(void *)4);
+//	o = new Fl_Button(230, 335, 95, 25, mgl_gettext("Save"));	o->callback(mem_dlg_cb,(void *)5);
+//	o = new Fl_Button(10, 370, 95, 25, mgl_gettext("Update"));	o->callback(mem_upd_cb,0);
 	wnd->end();	wnd->resizable(w->var);	return wnd;
 }
 //-----------------------------------------------------------------------------
@@ -220,7 +220,7 @@ void ScriptWindow::mem_pressed(int kind)
 		Parse->DeleteVar(v->s.c_str());
 	else if(kind==3)
 	{
-		const char *name = fl_input(gettext("Enter name for new variable"),"dat");
+		const char *name = fl_input(mgl_gettext("Enter name for new variable"),"dat");
 		if(!name)	return;
 		v = Parse->AddVar(name);
 

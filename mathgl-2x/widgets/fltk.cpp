@@ -26,11 +26,11 @@
 //-----------------------------------------------------------------------------
 #ifdef USE_GETTEXT
 #include <libintl.h>
-#else
-// Workaround for gcc 4.2
-#ifndef _LIBINTL_H
-#define gettext(x)	(x)
 #endif
+#ifndef _LIBINTL_H	// Workaround for gcc 4.2
+#define mgl_gettext(x)	(x)
+#else
+#define mgl_gettext(x)	gettext(x)
 #endif
 //-----------------------------------------------------------------------------
 #include "mgl2/canvas_wnd.h"
@@ -313,7 +313,7 @@ void Fl_MGLView::toggle(int &val, Fl_Button *b, const char *txt)
 	val = 1-val;	b->value(val);
 	if(menu && txt && *txt)
 	{
-		Fl_Menu_Item *m = (Fl_Menu_Item *)menu->find_item(gettext(txt));
+		Fl_Menu_Item *m = (Fl_Menu_Item *)menu->find_item(mgl_gettext(txt));
 		if(m && val)	m->set();
 		if(m && !val)	m->clear();
 	}
@@ -325,7 +325,7 @@ void Fl_MGLView::setoff(int &val, Fl_Button *b, const char *txt)
 	val = 0;	b->value(val);
 	if(menu && txt && *txt)
 	{
-		Fl_Menu_Item *m = (Fl_Menu_Item *)menu->find_item(gettext(txt));
+		Fl_Menu_Item *m = (Fl_Menu_Item *)menu->find_item(mgl_gettext(txt));
 		if(m && val)	m->set();
 		if(m && !val)	m->clear();
 	}
@@ -379,77 +379,77 @@ void mglCanvasFL::Update()		{	Fl::lock();	mgl->update();	Fl::unlock();	}
 //-----------------------------------------------------------------------------
 void MGL_NO_EXPORT mgl_export_png_cb(Fl_Widget*, void* v)
 {
-	char *fname = fl_file_chooser(gettext("Save File As?"), "*.png", 0);
+	char *fname = fl_file_chooser(mgl_gettext("Save File As?"), "*.png", 0);
 	if(!fname || !fname[0])	return;
 	mgl_write_png(((Fl_MGLView*)v)->FMGL->get_graph(),fname,0);
 }
 //-----------------------------------------------------------------------------
 void MGL_NO_EXPORT mgl_export_bps_cb(Fl_Widget*, void* v)
 {
-	char *fname = fl_file_chooser(gettext("Save File As?"), "*.eps", 0);
+	char *fname = fl_file_chooser(mgl_gettext("Save File As?"), "*.eps", 0);
 	if(!fname || !fname[0])	return;
 	mgl_write_bps(((Fl_MGLView*)v)->FMGL->get_graph(),fname,0);
 }
 //-----------------------------------------------------------------------------
 void MGL_NO_EXPORT mgl_export_pngn_cb(Fl_Widget*, void* v)
 {
-	char *fname = fl_file_chooser(gettext("Save File As?"), "*.png", 0);
+	char *fname = fl_file_chooser(mgl_gettext("Save File As?"), "*.png", 0);
 	if(!fname || !fname[0])	return;
 	mgl_write_png_solid(((Fl_MGLView*)v)->FMGL->get_graph(),fname,0);
 }
 //-----------------------------------------------------------------------------
 void MGL_NO_EXPORT mgl_export_jpeg_cb(Fl_Widget*, void* v)
 {
-	char *fname = fl_file_chooser(gettext("Save File As?"), "*.jpg", 0);
+	char *fname = fl_file_chooser(mgl_gettext("Save File As?"), "*.jpg", 0);
 	if(!fname || !fname[0])	return;
 	mgl_write_jpg(((Fl_MGLView*)v)->FMGL->get_graph(),fname,0);
 }
 //-----------------------------------------------------------------------------
 void MGL_NO_EXPORT mgl_export_svg_cb(Fl_Widget*, void* v)
 {
-	char *fname = fl_file_chooser(gettext("Save File As?"), "*.svg", 0);
+	char *fname = fl_file_chooser(mgl_gettext("Save File As?"), "*.svg", 0);
 	if(!fname || !fname[0])	return;
 	mgl_write_svg(((Fl_MGLView*)v)->FMGL->get_graph(),fname,0);
 }
 //-----------------------------------------------------------------------------
 void MGL_NO_EXPORT mgl_export_eps_cb(Fl_Widget*, void* v)
 {
-	char *fname = fl_file_chooser(gettext("Save File As?"), "*.eps", 0);
+	char *fname = fl_file_chooser(mgl_gettext("Save File As?"), "*.eps", 0);
 	if(!fname || !fname[0])	return;
 	mgl_write_eps(((Fl_MGLView*)v)->FMGL->get_graph(),fname,0);
 }
 //-----------------------------------------------------------------------------
 void MGL_NO_EXPORT mgl_export_prc_cb(Fl_Widget*, void* v)
 {
-	char *fname = fl_file_chooser(gettext("Save File As?"), "*.prc", 0);
+	char *fname = fl_file_chooser(mgl_gettext("Save File As?"), "*.prc", 0);
 	if(!fname || !fname[0])	return;
 	mgl_write_prc(((Fl_MGLView*)v)->FMGL->get_graph(),fname,0,1);
 }
 //-----------------------------------------------------------------------------
 void MGL_NO_EXPORT mgl_export_tex_cb(Fl_Widget*, void* v)
 {
-	char *fname = fl_file_chooser(gettext("Save File As?"), "*.tex", 0);
+	char *fname = fl_file_chooser(mgl_gettext("Save File As?"), "*.tex", 0);
 	if(!fname || !fname[0])	return;
 	mgl_write_tex(((Fl_MGLView*)v)->FMGL->get_graph(),fname,0);
 }
 //-----------------------------------------------------------------------------
 void MGL_NO_EXPORT mgl_export_obj_cb(Fl_Widget*, void* v)
 {
-	char *fname = fl_file_chooser(gettext("Save File As?"), "*.obj", 0);
+	char *fname = fl_file_chooser(mgl_gettext("Save File As?"), "*.obj", 0);
 	if(!fname || !fname[0])	return;
 	mgl_write_obj(((Fl_MGLView*)v)->FMGL->get_graph(),fname,0,1);
 }
 //-----------------------------------------------------------------------------
 void MGL_NO_EXPORT mgl_export_off_cb(Fl_Widget*, void* v)
 {
-	char *fname = fl_file_chooser(gettext("Save File As?"), "*.off", 0);
+	char *fname = fl_file_chooser(mgl_gettext("Save File As?"), "*.off", 0);
 	if(!fname || !fname[0])	return;
 	mgl_write_off(((Fl_MGLView*)v)->FMGL->get_graph(),fname,0,0);
 }
 //-----------------------------------------------------------------------------
 void MGL_NO_EXPORT mgl_export_stl_cb(Fl_Widget*, void* v)
 {
-	char *fname = fl_file_chooser(gettext("Save File As?"), "*.stl", 0);
+	char *fname = fl_file_chooser(mgl_gettext("Save File As?"), "*.stl", 0);
 	if(!fname || !fname[0])	return;
 	mgl_write_stl(((Fl_MGLView*)v)->FMGL->get_graph(),fname,0);
 }
@@ -544,24 +544,24 @@ void mglCanvasFL::Animation()	{	Fl::lock();	mgl_sshow_cb(0,mgl);	Fl::unlock();	}
 void MGL_NO_EXPORT mgl_no_cb(Fl_Widget *, void *)	{}
 //-----------------------------------------------------------------------------
 Fl_Menu_Item pop_graph[20] = {
-	{ gettext("Export"), 0, mgl_no_cb, 0, FL_SUBMENU,0,0,0,0},
-		{ gettext("... as PNG"),	0, mgl_export_png_cb,0,0,0,0,0,0 },
-		{ gettext("... as PNG (solid)"),	0, mgl_export_pngn_cb,0,0,0,0,0,0 },
-		{ gettext("... as JPEG"),	0, mgl_export_jpeg_cb,0,0,0,0,0,0 },
-		{ gettext("... as SVG"),	0, mgl_export_svg_cb,0,0,0,0,0,0 },
-		{ gettext("... as vector EPS"),	0, mgl_export_eps_cb,0,0,0,0,0,0 },
-		{ gettext("... as bitmap EPS"),	0, mgl_export_bps_cb, 0, FL_MENU_DIVIDER,0,0,0,0 },
-		{ gettext("... as TeX"),	0, mgl_export_tex_cb,0,0,0,0,0,0 },
-		{ gettext("... as OBJ"),	0, mgl_export_obj_cb,0,0,0,0,0,0 },
-		{ gettext("... as PRC"),	0, mgl_export_prc_cb,0,0,0,0,0,0 },
-		{ gettext("... as OFF"),	0, mgl_export_off_cb,0,0,0,0,0,0 },
-		{ gettext("... as STL"),	0, mgl_export_stl_cb,0,0,0,0,0,0 },
+	{ mgl_gettext("Export"), 0, mgl_no_cb, 0, FL_SUBMENU,0,0,0,0},
+		{ mgl_gettext("... as PNG"),	0, mgl_export_png_cb,0,0,0,0,0,0 },
+		{ mgl_gettext("... as PNG (solid)"),	0, mgl_export_pngn_cb,0,0,0,0,0,0 },
+		{ mgl_gettext("... as JPEG"),	0, mgl_export_jpeg_cb,0,0,0,0,0,0 },
+		{ mgl_gettext("... as SVG"),	0, mgl_export_svg_cb,0,0,0,0,0,0 },
+		{ mgl_gettext("... as vector EPS"),	0, mgl_export_eps_cb,0,0,0,0,0,0 },
+		{ mgl_gettext("... as bitmap EPS"),	0, mgl_export_bps_cb, 0, FL_MENU_DIVIDER,0,0,0,0 },
+		{ mgl_gettext("... as TeX"),	0, mgl_export_tex_cb,0,0,0,0,0,0 },
+		{ mgl_gettext("... as OBJ"),	0, mgl_export_obj_cb,0,0,0,0,0,0 },
+		{ mgl_gettext("... as PRC"),	0, mgl_export_prc_cb,0,0,0,0,0,0 },
+		{ mgl_gettext("... as OFF"),	0, mgl_export_off_cb,0,0,0,0,0,0 },
+		{ mgl_gettext("... as STL"),	0, mgl_export_stl_cb,0,0,0,0,0,0 },
 		{ 0,0,0,0,0,0,0,0,0 },
-	{ gettext("Copy graphics"),	0, 0, 0, FL_MENU_INACTIVE|FL_MENU_DIVIDER,0,0,0,0},
-	{ gettext("Normal view"),	0, mgl_norm_cb,0,0,0,0,0,0 },
-	{ gettext("Redraw plot"),	0, mgl_draw_cb,0,0,0,0,0,0 },
-	{ gettext("Adjust size"),	0, mgl_adjust_cb,0,0,0,0,0,0 },
-	{ gettext("Reload data"),	0, mgl_oncemore_cb,0,0,0,0,0,0 },
+	{ mgl_gettext("Copy graphics"),	0, 0, 0, FL_MENU_INACTIVE|FL_MENU_DIVIDER,0,0,0,0},
+	{ mgl_gettext("Normal view"),	0, mgl_norm_cb,0,0,0,0,0,0 },
+	{ mgl_gettext("Redraw plot"),	0, mgl_draw_cb,0,0,0,0,0,0 },
+	{ mgl_gettext("Adjust size"),	0, mgl_adjust_cb,0,0,0,0,0,0 },
+	{ mgl_gettext("Reload data"),	0, mgl_oncemore_cb,0,0,0,0,0,0 },
 	{ 0,0,0,0,0,0,0,0,0 }
 };
 //-----------------------------------------------------------------------------
@@ -575,30 +575,30 @@ Fl_MGLView::Fl_MGLView(int xx, int yy, int ww, int hh, const char *lbl) : Fl_Win
 
 	alpha_bt = new Fl_Button(0, 1, 25, 25);	alpha_bt->type(FL_TOGGLE_BUTTON);
 	alpha_bt->image(xpm_a1);	alpha_bt->callback(mgl_alpha_cb,this);
-	alpha_bt->tooltip(gettext("Switch on/off transparency in the picture"));
+	alpha_bt->tooltip(mgl_gettext("Switch on/off transparency in the picture"));
 //	alpha_bt->box(FL_PLASTIC_UP_BOX);		alpha_bt->down_box(FL_PLASTIC_DOWN_BOX);
 	light_bt = new Fl_Button(25, 1, 25, 25);	light_bt->type(FL_TOGGLE_BUTTON);
 	light_bt->image(xpm_l1);	light_bt->callback(mgl_light_cb,this);
-	light_bt->tooltip(gettext("Switch on/off lightning in the picture"));
+	light_bt->tooltip(mgl_gettext("Switch on/off lightning in the picture"));
 //	light_bt->box(FL_PLASTIC_UP_BOX);		light_bt->down_box(FL_PLASTIC_DOWN_BOX);
 	grid_bt = new Fl_Button(50, 1, 25, 25);	grid_bt->type(FL_TOGGLE_BUTTON);
 	grid_bt->image(xpm_wire);	grid_bt->callback(mgl_grid_cb,this);
-	grid_bt->tooltip(gettext("Switch on/off grid drawing"));
+	grid_bt->tooltip(mgl_gettext("Switch on/off grid drawing"));
 	//	grid_bt->box(FL_PLASTIC_UP_BOX);		grid_bt->down_box(FL_PLASTIC_DOWN_BOX);
 
 	rotate_bt = new Fl_Button(80, 1, 25, 25);rotate_bt->type(FL_TOGGLE_BUTTON);
 	rotate_bt->image(xpm_r1);	rotate_bt->callback(mgl_rotate_cb,this);
-	rotate_bt->tooltip(gettext("Rotate picture by holding left mouse button"));
+	rotate_bt->tooltip(mgl_gettext("Rotate picture by holding left mouse button"));
 //	rotate_bt->box(FL_PLASTIC_UP_BOX);		rotate_bt->down_box(FL_PLASTIC_DOWN_BOX);
 	zoom_bt = new Fl_Button(105, 1, 25, 25);	zoom_bt->type(FL_TOGGLE_BUTTON);
 	zoom_bt->image(xpm_z1);	zoom_bt->callback(mgl_zoom_cb,this);
-	zoom_bt->tooltip(gettext("Zoom in selected region of the picture"));
+	zoom_bt->tooltip(mgl_gettext("Zoom in selected region of the picture"));
 //	zoom_bt->box(FL_PLASTIC_UP_BOX);			zoom_bt->down_box(FL_PLASTIC_DOWN_BOX);
-	o = new Fl_Button(130, 1, 25, 25);		o->tooltip(gettext("Return picture to normal zoom"));
+	o = new Fl_Button(130, 1, 25, 25);		o->tooltip(mgl_gettext("Return picture to normal zoom"));
 	o->image(new Fl_Pixmap(zoom_out_xpm));	o->callback(mgl_norm_cb,this);
 //	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 
-	o = new Fl_Button(160, 1, 25, 25);	o->tooltip(gettext("Refresh the picture"));
+	o = new Fl_Button(160, 1, 25, 25);	o->tooltip(mgl_gettext("Refresh the picture"));
 	o->image(new Fl_Pixmap(ok_xpm));	o->callback(mgl_draw_cb,this);
 //	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 
@@ -606,40 +606,40 @@ Fl_MGLView::Fl_MGLView(int xx, int yy, int ww, int hh, const char *lbl) : Fl_Win
 	tet = new Fl_Counter(195, 1, 90, 25, 0);	tet->callback(mgl_draw_cb,this);
 	phi = new Fl_Counter(290, 1, 90, 25, 0);	phi->callback(mgl_draw_cb,this);
 	tet->lstep(10);	tet->step(1);	tet->range(-180,180);
-	tet->tooltip(gettext("Theta angle (tilt z-axis)"));
+	tet->tooltip(mgl_gettext("Theta angle (tilt z-axis)"));
 	phi->lstep(10);	phi->step(1);	phi->range(-180,180);
-	phi->tooltip(gettext("Phi angle (rotate in x*y plane)"));
+	phi->tooltip(mgl_gettext("Phi angle (rotate in x*y plane)"));
 //	tet->box(FL_PLASTIC_UP_BOX);	phi->box(FL_PLASTIC_UP_BOX);
 	g->end();	g->resizable(0);
 
 	g = new Fl_Group(0,30,30,260);
-	o = new Fl_Button(1, 30, 25, 25);		o->tooltip(gettext("Shift the picture up"));
+	o = new Fl_Button(1, 30, 25, 25);		o->tooltip(mgl_gettext("Shift the picture up"));
 	o->image(new Fl_Pixmap(up_1_xpm));		o->callback(mgl_su_cb,this);
 //	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
-	o = new Fl_Button(1, 55, 25, 25);		o->tooltip(gettext("Shift the picture left"));
+	o = new Fl_Button(1, 55, 25, 25);		o->tooltip(mgl_gettext("Shift the picture left"));
 	o->image(new Fl_Pixmap(left_1_xpm));	o->callback(mgl_sl_cb,this);
 //	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
-	o = new Fl_Button(1, 80, 25, 25);		o->tooltip(gettext("Zoom in the picture"));
+	o = new Fl_Button(1, 80, 25, 25);		o->tooltip(mgl_gettext("Zoom in the picture"));
 	o->image(new Fl_Pixmap(zoom_1_xpm));	o->callback(mgl_sz_cb,this);
 //	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
-	o = new Fl_Button(1, 105, 25, 25);		o->tooltip(gettext("Zoom out the picture"));
+	o = new Fl_Button(1, 105, 25, 25);		o->tooltip(mgl_gettext("Zoom out the picture"));
 	o->image(new Fl_Pixmap(norm_1_xpm));	o->callback(mgl_so_cb,this);
 //	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
-	o = new Fl_Button(1, 130, 25, 25);		o->tooltip(gettext("Shift the picture right"));
+	o = new Fl_Button(1, 130, 25, 25);		o->tooltip(mgl_gettext("Shift the picture right"));
 	o->image(new Fl_Pixmap(right_1_xpm));	o->callback(mgl_sr_cb,this);
 //	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
-	o = new Fl_Button(1, 155, 25, 25);		o->tooltip(gettext("Shift the picture down"));
+	o = new Fl_Button(1, 155, 25, 25);		o->tooltip(mgl_gettext("Shift the picture down"));
 	o->image(new Fl_Pixmap(down_1_xpm));	o->callback(mgl_sd_cb,this);
 //	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 
-	o = new Fl_Button(1, 185, 25, 25);		o->tooltip(gettext("Show previous frame in slideshow"));
+	o = new Fl_Button(1, 185, 25, 25);		o->tooltip(mgl_gettext("Show previous frame in slideshow"));
 	o->image(new Fl_Pixmap(prev_sl_xpm));	o->callback(mgl_sprev_cb,this);
 //	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 	anim_bt = new Fl_Button(1, 210, 25, 25);	anim_bt->type(FL_TOGGLE_BUTTON);
 	anim_bt->image(xpm_s1);	anim_bt->callback(mgl_sshow_cb,this);
-	anim_bt->tooltip(gettext("Run/Stop slideshow (graphics animation)"));
+	anim_bt->tooltip(mgl_gettext("Run/Stop slideshow (graphics animation)"));
 //	anim_bt->box(FL_PLASTIC_UP_BOX);		anim_bt->down_box(FL_PLASTIC_DOWN_BOX);
-	o = new Fl_Button(1, 235, 25, 25);		o->tooltip(gettext("Show next frame in slideshow"));
+	o = new Fl_Button(1, 235, 25, 25);		o->tooltip(mgl_gettext("Show next frame in slideshow"));
 	o->image(new Fl_Pixmap(next_sl_xpm));	o->callback(mgl_snext_cb,this);
 //	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 

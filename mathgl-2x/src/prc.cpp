@@ -256,7 +256,7 @@ void MGL_EXPORT mgl_write_prc(HMGL gr, const char *fname,const char* /*descr*/, 
 		for(size_t i=0;i<size_t(gr->GetPrmNum());i++)	// collect data for groups
 		// it is rather expensive (extra 4b per primitive) but need for export to 3D
 		{
-			m = gr->GetPrm(i).id-mmin;
+			m = gr->GetPrm(i,false).id-mmin;
 			if(m>=0 && m<mmax-mmin+1)	gr->Grp[ng[m]].p.push_back(i);
 		}
 		delete []ng;
@@ -373,7 +373,7 @@ void MGL_EXPORT mgl_write_prc(HMGL gr, const char *fname,const char* /*descr*/, 
 		file.begingroup(grp.Lbl.c_str(),&grpopt);
 		for(size_t j=0;j<prm.size();j++)
 		{
-			const mglPrim &q=gr->GetPrm(prm[j]);
+			const mglPrim &q=gr->GetPrm(prm[j],false);
 			const double w = (q.w>1)?(q.w*sqrt(gr->FontFactor()/400.)):1;
 
 			const mglPnt p = gr->GetPnt(q.n1) - p0;

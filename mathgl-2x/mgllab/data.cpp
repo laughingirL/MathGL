@@ -111,21 +111,21 @@ void var_dlg_cb(Fl_Widget *, void *v)
 //-----------------------------------------------------------------------------
 void VarDlg::create_dlg()
 {
-	wnd = new Fl_Double_Window(190, 180, gettext("Variable"));
-	var = new Fl_Choice(100, 10, 75, 25, gettext("Variable name"));	// !!!  add variables here !!!
+	wnd = new Fl_Double_Window(190, 180, mgl_gettext("Variable"));
+	var = new Fl_Choice(100, 10, 75, 25, mgl_gettext("Variable name"));	// !!!  add variables here !!!
 	var->callback(var_chg_cb);
-	dim1 = new Fl_Spinner(100, 40, 75, 25, gettext("First index"));
+	dim1 = new Fl_Spinner(100, 40, 75, 25, mgl_gettext("First index"));
 	dim1->range(-1,0);	dim1->value(-1);	dim1->step(1);
-	dim1->tooltip(gettext("Value of first dimensions (-1 for all range)"));
-	dim2 = new Fl_Spinner(100, 70, 75, 25, gettext("Second index"));
+	dim1->tooltip(mgl_gettext("Value of first dimensions (-1 for all range)"));
+	dim2 = new Fl_Spinner(100, 70, 75, 25, mgl_gettext("Second index"));
 	dim2->range(-1,0);	dim2->value(-1);	dim2->step(1);
-	dim2->tooltip(gettext("Value of second dimensions (-1 for all range)"));
-	dim3 = new Fl_Spinner(100, 100, 75, 25, gettext("Third index"));
+	dim2->tooltip(mgl_gettext("Value of second dimensions (-1 for all range)"));
+	dim3 = new Fl_Spinner(100, 100, 75, 25, mgl_gettext("Third index"));
 	dim3->range(-1,0);	dim3->value(-1);	dim3->step(1);
-	dim3->tooltip(gettext("Value of third dimensions (-1 for all range)"));
+	dim3->tooltip(mgl_gettext("Value of third dimensions (-1 for all range)"));
 	Fl_Button *o;
-	o = new Fl_Button(15, 140, 75, 25, gettext("Cancel"));		o->callback(close_dlg_cb,wnd);
-	o = new Fl_Return_Button(100, 140, 75, 25, gettext("OK"));	o->callback(var_dlg_cb,wnd);
+	o = new Fl_Button(15, 140, 75, 25, mgl_gettext("Cancel"));		o->callback(close_dlg_cb,wnd);
+	o = new Fl_Return_Button(100, 140, 75, 25, mgl_gettext("OK"));	o->callback(var_dlg_cb,wnd);
 	wnd->end();
 }
 //-----------------------------------------------------------------------------
@@ -228,22 +228,22 @@ void desc_cmd_cb(Fl_Widget *, void *)
 void CmdDlg::create_dlg()
 {
 	Fl_Button *o;
-	wnd = new Fl_Double_Window(500, 450, gettext("Command properties"));
-	type = new Fl_Choice(90, 10, 170, 25, gettext("Type of plot"));
-	type->tooltip(gettext("Select one of general types of plot"));
-	cmd = new Fl_Choice(350, 10, 100, 25, gettext("Command"));
-	cmd->tooltip(gettext("Select kind of plot in this group"));
+	wnd = new Fl_Double_Window(500, 450, mgl_gettext("Command properties"));
+	type = new Fl_Choice(90, 10, 170, 25, mgl_gettext("Type of plot"));
+	type->tooltip(mgl_gettext("Select one of general types of plot"));
+	cmd = new Fl_Choice(350, 10, 100, 25, mgl_gettext("Command"));
+	cmd->tooltip(mgl_gettext("Select kind of plot in this group"));
 
 	fmt = new Fl_Box(0, 40, 500, 25);
 	fmt->box(UDAV_DOWN_BOX);
 	fmt->align(FL_ALIGN_LEFT|FL_ALIGN_INSIDE);
-	fmt->tooltip(gettext("Format of command and its arguments"));
+	fmt->tooltip(mgl_gettext("Format of command and its arguments"));
 	dsc = new Fl_Box(0, 70, 500, 25);
 	dsc->align(FL_ALIGN_LEFT|FL_ALIGN_INSIDE);
-	dsc->tooltip(gettext("Short command description"));
+	dsc->tooltip(mgl_gettext("Short command description"));
 
 	type->callback(type_cmd_cb,cmd);	cmd->callback(desc_cmd_cb,0);
-	type->add(gettext(cmd_types));		type_cmd_cb(0,0);
+	type->add(mgl_gettext(cmd_types));		type_cmd_cb(0,0);
 
 	var_x = new Fl_Input(15, 115, 50, 25, "X");	var_x->align(FL_ALIGN_TOP);
 	o = new Fl_Button(65, 115, 25, 25, "..");	o->callback(var_in_cb,var_x);
@@ -251,34 +251,34 @@ void CmdDlg::create_dlg()
 	o = new Fl_Button(145, 115, 25, 25, "..");	o->callback(var_in_cb,var_y);
 	var_z = new Fl_Input(175, 115, 50, 25, "Z");	var_z->align(FL_ALIGN_TOP);
 	o = new Fl_Button(225, 115, 25, 25, "..");	o->callback(var_in_cb,var_z);
-	var_u = new Fl_Input(255, 115, 50, 25, gettext("Vx or A"));	var_u->align(FL_ALIGN_TOP);
+	var_u = new Fl_Input(255, 115, 50, 25, mgl_gettext("Vx or A"));	var_u->align(FL_ALIGN_TOP);
 	o = new Fl_Button(305, 115, 25, 25, "..");	o->callback(var_in_cb,var_u);
-	var_v = new Fl_Input(335, 115, 50, 25, gettext("Vy or C"));	var_v->align(FL_ALIGN_TOP);
+	var_v = new Fl_Input(335, 115, 50, 25, mgl_gettext("Vy or C"));	var_v->align(FL_ALIGN_TOP);
 	o = new Fl_Button(385, 115, 25, 25, "..");	o->callback(var_in_cb,var_v);
 	var_w = new Fl_Input(415, 115, 50, 25, "Vz");var_w->align(FL_ALIGN_TOP);
 	o = new Fl_Button(465, 115, 25, 25, "..");	o->callback(var_in_cb,var_w);
 
-	stl = new Fl_Input(15, 165, 50, 25, gettext("Style"));
-	stl->align(FL_ALIGN_TOP);	stl->tooltip(gettext("String argument with command style (or scheme or font)"));
+	stl = new Fl_Input(15, 165, 50, 25, mgl_gettext("Style"));
+	stl->align(FL_ALIGN_TOP);	stl->tooltip(mgl_gettext("String argument with command style (or scheme or font)"));
 	o = new Fl_Button(65, 165, 25, 25, "..");	o->callback(style_in_cb, stl);
 
-	zval = new Fl_Input(95, 165, 75, 25, gettext("zVal or sVal"));
+	zval = new Fl_Input(95, 165, 75, 25, mgl_gettext("zVal or sVal"));
 	zval->align(FL_ALIGN_TOP);
-	zval->tooltip(gettext("Z-value or value of slice.\nKeep empty for default value"));
-	par1 = new Fl_Input(175, 165, 75, 25, gettext("Text or dir"));
+	zval->tooltip(mgl_gettext("Z-value or value of slice.\nKeep empty for default value"));
+	par1 = new Fl_Input(175, 165, 75, 25, mgl_gettext("Text or dir"));
 	par1->align(FL_ALIGN_TOP);
-	par1->tooltip(gettext("Text (in text command) or direction (in cont3, contf3, dens3)"));
-	par2 = new Fl_Input(255, 165, 75, 25, gettext("Number"));
+	par1->tooltip(mgl_gettext("Text (in text command) or direction (in cont3, contf3, dens3)"));
+	par2 = new Fl_Input(255, 165, 75, 25, mgl_gettext("Number"));
 	par2->align(FL_ALIGN_TOP);
-	par2->tooltip(gettext("Number of contours in cont* commands"));
+	par2->tooltip(mgl_gettext("Number of contours in cont* commands"));
 
-	opt = new Fl_Input(15, 215, 290, 25, gettext("Options"));
+	opt = new Fl_Input(15, 215, 290, 25, mgl_gettext("Options"));
 	opt->align(FL_ALIGN_TOP_LEFT);
-	opt->tooltip(gettext("Command options"));
+	opt->tooltip(mgl_gettext("Command options"));
 	o = new Fl_Button(305, 215, 25, 25, "..");			o->callback(option_in_cb, opt);
 
-	o = new Fl_Button(405, 180, 75, 25, gettext("Cancel"));		o->callback(close_dlg_cb, wnd);
-	o = new Fl_Return_Button(405, 215, 75, 25, gettext("OK"));	o->callback(cmd_dlg_cb, wnd);
+	o = new Fl_Button(405, 180, 75, 25, mgl_gettext("Cancel"));		o->callback(close_dlg_cb, wnd);
+	o = new Fl_Return_Button(405, 215, 75, 25, mgl_gettext("OK"));	o->callback(cmd_dlg_cb, wnd);
 
 	help = new Fl_Help_View(0, 250, 500, 200);
 	wnd->end();
@@ -303,7 +303,7 @@ char *CmdDlg::get_result()
 	if(sl3 && !par1->value()[0])
 	{
 		strcat(res," 'x'");
-		fl_message(gettext("You should specify direction.\nDirection 'x' is selected by default"));
+		fl_message(mgl_gettext("You should specify direction.\nDirection 'x' is selected by default"));
 		if(zval->value()[0])
 		{	snprintf(buf,128," %d",atoi(zval->value()));	strcat(res,buf);	}
 	}

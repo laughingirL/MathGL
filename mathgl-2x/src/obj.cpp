@@ -416,7 +416,7 @@ void MGL_EXPORT mgl_write_obj(HMGL gr, const char *fname,const char *descr, int 
 		for(i=0;i<size_t(gr->GetPrmNum());i++)	// collect data for groups
 		// it is rather expensive (extra 4b per primitive) but need for export to 3D
 		{
-			m = gr->GetPrm(i).id-mmin;
+			m = gr->GetPrm(i,false).id-mmin;
 			if(m>=0 && m<mmax-mmin+1)	gr->Grp[ng[m]].p.push_back(i);
 		}
 		delete []ng;
@@ -509,7 +509,7 @@ void MGL_EXPORT mgl_write_obj(HMGL gr, const char *fname,const char *descr, int 
     ObjGroup grp(fp, vertexcoords);
 		for(j=0;j<p.size();j++)
 		{
-			const mglPrim &q = gr->GetPrm(p[j]);
+			const mglPrim &q = gr->GetPrm(p[j],false);
 
       register long n1=q.n1,n2=q.n2,n3=q.n3,n4=q.n4;
       switch(q.type)

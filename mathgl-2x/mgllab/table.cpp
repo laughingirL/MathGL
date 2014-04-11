@@ -24,28 +24,28 @@
 void addto_cb(Fl_Widget*, void*v)
 {
 	TableWindow* e = (TableWindow*)v;
-	const char *s = fl_input(gettext("Enter number for addition to data values"),0);
+	const char *s = fl_input(mgl_gettext("Enter number for addition to data values"),0);
 	if(s)	{	mgl_data_add_num(e->var, atof(s));	e->refresh();	}
 }
 //-----------------------------------------------------------------------------
 void subto_cb(Fl_Widget*, void*v)
 {
 	TableWindow* e = (TableWindow*)v;
-	const char *s = fl_input(gettext("Enter number for subtraction from data values"),0);
+	const char *s = fl_input(mgl_gettext("Enter number for subtraction from data values"),0);
 	if(s)	{	mgl_data_sub_num(e->var, atof(s));	e->refresh();	}
 }
 //-----------------------------------------------------------------------------
 void multo_cb(Fl_Widget*, void*v)
 {
 	TableWindow* e = (TableWindow*)v;
-	const char *s = fl_input(gettext("Enter number for multiplication of data values"),0);
+	const char *s = fl_input(mgl_gettext("Enter number for multiplication of data values"),0);
 	if(s)	{	mgl_data_mul_num(e->var, atof(s));	e->refresh();	}
 }
 //-----------------------------------------------------------------------------
 void divto_cb(Fl_Widget*, void*v)
 {
 	TableWindow* e = (TableWindow*)v;
-	const char *s = fl_input(gettext("Enter number for division of data values"),0);
+	const char *s = fl_input(mgl_gettext("Enter number for division of data values"),0);
 	if(s)	{	mgl_data_div_num(e->var, atof(s));	e->refresh();	}
 }
 //-----------------------------------------------------------------------------
@@ -67,34 +67,34 @@ void xyz_dlg_cb(Fl_Widget *, void *v)
 //-----------------------------------------------------------------------------
 void XYZDlg::create_dlg()
 {
-	wnd = new Fl_Double_Window(325, 125, gettext("Change data sizes"));
+	wnd = new Fl_Double_Window(325, 125, mgl_gettext("Change data sizes"));
 	box = new Fl_Box(10, 10, 305, 40);
 	box->box(UDAV_THIN_UP_BOX);
 	box->align(FL_ALIGN_LEFT|FL_ALIGN_INSIDE);
 
 	mx = new Fl_Spinner(30, 55, 75, 25, "mx");
-	mx->tooltip(gettext("New size of data on 1st dimension (x-direction)"));
+	mx->tooltip(mgl_gettext("New size of data on 1st dimension (x-direction)"));
 	my = new Fl_Spinner(135, 55, 75, 25, "my");
-	my->tooltip(gettext("New size of data on 2nd dimension (y-direction)"));
+	my->tooltip(mgl_gettext("New size of data on 2nd dimension (y-direction)"));
 	mz = new Fl_Spinner(240, 55, 75, 25, "mz");
-	mz->tooltip(gettext("New size of data on 3d dimension (z-direction)"));
+	mz->tooltip(mgl_gettext("New size of data on 3d dimension (z-direction)"));
 	ch = new Fl_Check_Button(15, 90, 95, 25);
 
 	Fl_Button *o;
-	o = new Fl_Button(125, 90, 85, 25, gettext("Cancel"));	o->callback(close_dlg_cb,wnd);
+	o = new Fl_Button(125, 90, 85, 25, mgl_gettext("Cancel"));	o->callback(close_dlg_cb,wnd);
 	o->box(UDAV_UP_BOX);	o->down_box(UDAV_DOWN_BOX);
-	o->tooltip(gettext("Do nothing and close this window"));
-	o = new Fl_Return_Button(230, 90, 85, 25, gettext("Change"));o->callback(xyz_dlg_cb,wnd);
+	o->tooltip(mgl_gettext("Do nothing and close this window"));
+	o = new Fl_Return_Button(230, 90, 85, 25, mgl_gettext("Change"));o->callback(xyz_dlg_cb,wnd);
 	o->box(UDAV_UP_BOX);	o->down_box(UDAV_DOWN_BOX);
-	o->tooltip(gettext("Change (resize) data"));
+	o->tooltip(mgl_gettext("Change (resize) data"));
 	wnd->end();
 }
 //-----------------------------------------------------------------------------
 void new_dat_cb(Fl_Widget*, void*v)
 {
 	TableWindow* e = (TableWindow*)v;
-	xyz_dlg.box->label(gettext("Specify new data size\nData will be zero filled"));
-	xyz_dlg.ch->label(gettext("not used"));	xyz_dlg.OK = false;
+	xyz_dlg.box->label(mgl_gettext("Specify new data size\nData will be zero filled"));
+	xyz_dlg.ch->label(mgl_gettext("not used"));	xyz_dlg.OK = false;
 	xyz_dlg.wnd->set_modal();		xyz_dlg.wnd->show();
 	while(xyz_dlg.wnd->shown())	Fl::wait();
 	if(xyz_dlg.OK)
@@ -108,8 +108,8 @@ void new_dat_cb(Fl_Widget*, void*v)
 void resize_cb(Fl_Widget*, void*v)
 {
 	TableWindow* e = (TableWindow*)v;
-	xyz_dlg.box->label(gettext("Specify new data size\nData will be interpolated"));
-	xyz_dlg.ch->label(gettext("not used"));	xyz_dlg.OK = false;
+	xyz_dlg.box->label(mgl_gettext("Specify new data size\nData will be interpolated"));
+	xyz_dlg.ch->label(mgl_gettext("not used"));	xyz_dlg.OK = false;
 	xyz_dlg.wnd->set_modal();		xyz_dlg.wnd->show();
 	while(xyz_dlg.wnd->shown())	Fl::wait();
 	if(xyz_dlg.OK)
@@ -123,8 +123,8 @@ void resize_cb(Fl_Widget*, void*v)
 void squeeze_cb(Fl_Widget*, void*v)
 {
 	TableWindow* e = (TableWindow*)v;
-	xyz_dlg.box->label(gettext("Specify the skiping step\nEach m-th point will be skiped"));
-	xyz_dlg.ch->label(gettext("smoothed"));	xyz_dlg.OK = false;
+	xyz_dlg.box->label(mgl_gettext("Specify the skiping step\nEach m-th point will be skiped"));
+	xyz_dlg.ch->label(mgl_gettext("smoothed"));	xyz_dlg.OK = false;
 	xyz_dlg.wnd->set_modal();		xyz_dlg.wnd->show();
 	while(xyz_dlg.wnd->shown())	Fl::wait();
 	if(xyz_dlg.OK)
@@ -173,22 +173,22 @@ void ChngDlg::execute(mglData *d)
 //-----------------------------------------------------------------------------
 void ChngDlg::create_dlg()
 {
-	Fl_Menu_Item k[]={{gettext("Smooth")}, {gettext("CumSum")}, { gettext("Integrate")},
-		{ gettext("Difference")}, { gettext("Double diff.")}, { gettext("Swap parts")}, {0}};
-	Fl_Menu_Item t[]={{gettext("Linear *3")}, {gettext("Linear *5")}, {gettext("Parabolic *5")},{0}};
-	wnd = new Fl_Double_Window(165, 215, gettext("Change data"));
-	kind = new Fl_Choice(10, 25, 145, 25, gettext("Type of operation"));
+	Fl_Menu_Item k[]={{mgl_gettext("Smooth")}, {mgl_gettext("CumSum")}, { mgl_gettext("Integrate")},
+		{ mgl_gettext("Difference")}, { mgl_gettext("Double diff.")}, { mgl_gettext("Swap parts")}, {0}};
+	Fl_Menu_Item t[]={{mgl_gettext("Linear *3")}, {mgl_gettext("Linear *5")}, {mgl_gettext("Parabolic *5")},{0}};
+	wnd = new Fl_Double_Window(165, 215, mgl_gettext("Change data"));
+	kind = new Fl_Choice(10, 25, 145, 25, mgl_gettext("Type of operation"));
 	kind->align(FL_ALIGN_TOP_LEFT);	kind->copy(k);
-	dx = new Fl_Check_Button(10, 55, 140, 25, gettext("apply in x direction"));
-	dy = new Fl_Check_Button(10, 80, 140, 25, gettext("apply in y direction"));
-	dz = new Fl_Check_Button(10, 105, 140, 25, gettext("apply in z direction"));
-	type = new Fl_Choice(10, 145, 145, 25, gettext("Type of smoothing"));
+	dx = new Fl_Check_Button(10, 55, 140, 25, mgl_gettext("apply in x direction"));
+	dy = new Fl_Check_Button(10, 80, 140, 25, mgl_gettext("apply in y direction"));
+	dz = new Fl_Check_Button(10, 105, 140, 25, mgl_gettext("apply in z direction"));
+	type = new Fl_Choice(10, 145, 145, 25, mgl_gettext("Type of smoothing"));
 	type->align(FL_ALIGN_TOP_LEFT);	type->copy(t);
 
 	Fl_Button *o;
-	o = new Fl_Button(10, 180, 65, 25, gettext("Cancel"));	o->callback(close_dlg_cb,wnd);
+	o = new Fl_Button(10, 180, 65, 25, mgl_gettext("Cancel"));	o->callback(close_dlg_cb,wnd);
 	o->box(UDAV_UP_BOX);	o->down_box(UDAV_DOWN_BOX);
-	o = new Fl_Return_Button(90, 180, 65, 25, gettext("Do"));o->callback(chng_dlg_cb,wnd);
+	o = new Fl_Return_Button(90, 180, 65, 25, mgl_gettext("Do"));o->callback(chng_dlg_cb,wnd);
 	o->box(UDAV_UP_BOX);	o->down_box(UDAV_DOWN_BOX);
 	wnd->end();
 }
@@ -277,20 +277,20 @@ void nwdt_dlg_cb(Fl_Widget *, void *v)
 //-----------------------------------------------------------------------------
 void NwdtDlg::create_dlg()
 {
-	Fl_Menu_Item k[]={{gettext("Summation of")}, {gettext("Maximum of")}, { gettext("Minimum of")}, {0}};
-	wnd = new Fl_Double_Window(165, 215, gettext("Extract data"));
-	kind = new Fl_Choice(10, 25, 145, 25, gettext("Type of operation"));
+	Fl_Menu_Item k[]={{mgl_gettext("Summation of")}, {mgl_gettext("Maximum of")}, { mgl_gettext("Minimum of")}, {0}};
+	wnd = new Fl_Double_Window(165, 215, mgl_gettext("Extract data"));
+	kind = new Fl_Choice(10, 25, 145, 25, mgl_gettext("Type of operation"));
 	kind->align(FL_ALIGN_TOP_LEFT);	kind->copy(k);
-	dx = new Fl_Check_Button(10, 55, 140, 25, gettext("apply in x direction"));
-	dy = new Fl_Check_Button(10, 80, 140, 25, gettext("apply in y direction"));
-	dz = new Fl_Check_Button(10, 105, 140, 25, gettext("apply in z direction"));
-	name = new Fl_Input(10, 145, 145, 25, gettext("Name for output"));
+	dx = new Fl_Check_Button(10, 55, 140, 25, mgl_gettext("apply in x direction"));
+	dy = new Fl_Check_Button(10, 80, 140, 25, mgl_gettext("apply in y direction"));
+	dz = new Fl_Check_Button(10, 105, 140, 25, mgl_gettext("apply in z direction"));
+	name = new Fl_Input(10, 145, 145, 25, mgl_gettext("Name for output"));
 	name->align(FL_ALIGN_TOP_LEFT);
 
 	Fl_Button *o;
-	o = new Fl_Button(10, 180, 65, 25, gettext("Cancel"));	o->callback(close_dlg_cb,wnd);
+	o = new Fl_Button(10, 180, 65, 25, mgl_gettext("Cancel"));	o->callback(close_dlg_cb,wnd);
 	o->box(UDAV_UP_BOX);	o->down_box(UDAV_DOWN_BOX);
-	o = new Fl_Return_Button(90, 180, 65, 25, gettext("Do"));o->callback(chng_dlg_cb,wnd);
+	o = new Fl_Return_Button(90, 180, 65, 25, mgl_gettext("Do"));o->callback(chng_dlg_cb,wnd);
 	o->box(UDAV_UP_BOX);	o->down_box(UDAV_DOWN_BOX);
 	wnd->end();
 }
@@ -309,7 +309,7 @@ void asum_cb(Fl_Widget*, void*v)
 		if(nwdt_dlg.dz->value())	strcat(r,"z");
 		if(!r[0])	return;
 		if(!nwdt_dlg.name->value()[0] || !strcmp(nwdt_dlg.name->value(),e->label()))
-			fl_alert(gettext("Name for output variable should be differ from this name"));
+			fl_alert(mgl_gettext("Name for output variable should be differ from this name"));
 		else
 		{
 			mglData d = e->var->Sum(r);
@@ -332,7 +332,7 @@ void amax_cb(Fl_Widget*, void*v)
 		if(nwdt_dlg.dz->value())	strcat(r,"z");
 		if(!r[0])	return;
 		if(!nwdt_dlg.name->value()[0] || !strcmp(nwdt_dlg.name->value(),e->label()))
-			fl_alert(gettext("Name for output variable should be differ from this name"));
+			fl_alert(mgl_gettext("Name for output variable should be differ from this name"));
 		else
 		{
 			mglData d = e->var->Max(r);
@@ -355,7 +355,7 @@ void amin_cb(Fl_Widget*, void*v)
 		if(nwdt_dlg.dz->value())	strcat(r,"z");
 		if(!r[0])	return;
 		if(!nwdt_dlg.name->value()[0] || !strcmp(nwdt_dlg.name->value(), e->label()))
-			fl_alert(gettext("Name for output variable should be differ from this name"));
+			fl_alert(mgl_gettext("Name for output variable should be differ from this name"));
 		else
 		{
 			mglData d = e->var->Min(r);
@@ -367,8 +367,8 @@ void amin_cb(Fl_Widget*, void*v)
 void load_dat_cb(Fl_Widget*, void*v)
 {
 	TableWindow* e = (TableWindow*)v;
-	char *newfile = fl_file_chooser(gettext("Load Data?"),
-		gettext("DAT Files (*.{dat,csv})\tAll Files (*)"), 0);
+	char *newfile = fl_file_chooser(mgl_gettext("Load Data?"),
+		mgl_gettext("DAT Files (*.{dat,csv})\tAll Files (*)"), 0);
 	if(newfile != NULL)
 	{	e->var->Read(newfile);	e->refresh();	}
 }
@@ -376,19 +376,19 @@ void load_dat_cb(Fl_Widget*, void*v)
 void save_dat_cb(Fl_Widget*, void*v)
 {
 	TableWindow* e = (TableWindow*)v;
-	char *newfile = fl_file_chooser(gettext("Save Data?"),
-		gettext("DAT Files (*.{dat,csv})\tAll Files (*)"), 0);
+	char *newfile = fl_file_chooser(mgl_gettext("Save Data?"),
+		mgl_gettext("DAT Files (*.{dat,csv})\tAll Files (*)"), 0);
 	if(newfile != NULL)	e->var->Save(newfile);
 }
 //-----------------------------------------------------------------------------
 void exp_dat_cb(Fl_Widget*, void*v)
 {
 	TableWindow* e = (TableWindow*)v;
-	const char *scheme, *newfile = fl_file_chooser(gettext("Export Data?"),
-		gettext("PNG Files (*.png)\tAll Files (*)"), 0);
+	const char *scheme, *newfile = fl_file_chooser(mgl_gettext("Export Data?"),
+		mgl_gettext("PNG Files (*.png)\tAll Files (*)"), 0);
 	if(newfile != NULL)
 	{
-		scheme = fl_input(gettext("Enter color scheme"),MGL_DEF_SCH);
+		scheme = fl_input(mgl_gettext("Enter color scheme"),MGL_DEF_SCH);
 		if(scheme)	e->var->Export(newfile,scheme);
 	}
 }
@@ -396,11 +396,11 @@ void exp_dat_cb(Fl_Widget*, void*v)
 void imp_dat_cb(Fl_Widget*, void*v)
 {
 	TableWindow* e = (TableWindow*)v;
-	const char *scheme, *newfile = fl_file_chooser(gettext("Import Data?"),
-		gettext("PNG Files (*.png)\tAll Files (*)"), 0);
+	const char *scheme, *newfile = fl_file_chooser(mgl_gettext("Import Data?"),
+		mgl_gettext("PNG Files (*.png)\tAll Files (*)"), 0);
 	if (newfile != NULL)
 	{
-		scheme = fl_input(gettext("Enter color scheme"),MGL_DEF_SCH);
+		scheme = fl_input(mgl_gettext("Enter color scheme"),MGL_DEF_SCH);
 		if(scheme)
 		{	e->var->Import(newfile,scheme);	e->refresh();	}
 	}
@@ -411,8 +411,8 @@ void list_dat_cb(Fl_Widget*, void*v)
 	TableWindow* e = (TableWindow*)v;
 	mglData *d = e->var;
 	if(d->nx*d->ny+d->ny>1020)
-	{	fl_message(gettext("Too many numbers (>1000) on slice"));	return;	}
-	if(d->nz>1)	fl_message(gettext("Only current slice will be inserted"));
+	{	fl_message(mgl_gettext("Too many numbers (>1000) on slice"));	return;	}
+	if(d->nz>1)	fl_message(mgl_gettext("Only current slice will be inserted"));
 	char *list = new char[16384];
 	strcpy(list,"list\t");
 	register long i,j;
@@ -433,7 +433,7 @@ void list_dat_cb(Fl_Widget*, void*v)
 void modify_cb(Fl_Widget*, void*v)
 {
 	TableWindow* e = (TableWindow*)v;
-	const char *eq=fl_input(gettext("Enter formula for data modification\nHere x, y, z in range [0,1], u is data value"),0);
+	const char *eq=fl_input(mgl_gettext("Enter formula for data modification\nHere x, y, z in range [0,1], u is data value"),0);
 	if (eq != NULL)	{	e->var->Modify(eq);	e->refresh();	}
 }
 //-----------------------------------------------------------------------------
@@ -459,32 +459,32 @@ void NrmDlg::create_dlg()
 {
 	Fl_Menu_Item k[]={{"x"}, {"y"}, { "z"}, {0}};
 	wnd = new Fl_Double_Window(135, 215);
-	min = new Fl_Value_Input(10, 25, 115, 25, gettext("Minimal value (v1)"));
+	min = new Fl_Value_Input(10, 25, 115, 25, mgl_gettext("Minimal value (v1)"));
 	min->align(FL_ALIGN_TOP_LEFT);
-	min->tooltip(gettext("Minimal value for resulting data values"));
-	max = new Fl_Value_Input(10, 70, 115, 25, gettext("Maximal value (v2)"));
+	min->tooltip(mgl_gettext("Minimal value for resulting data values"));
+	max = new Fl_Value_Input(10, 70, 115, 25, mgl_gettext("Maximal value (v2)"));
 	max->align(FL_ALIGN_TOP_LEFT);
-	max->tooltip(gettext("Maximal value for resulting data values"));
-	dir = new Fl_Choice(10, 115, 115, 25, gettext("Direction"));
+	max->tooltip(mgl_gettext("Maximal value for resulting data values"));
+	dir = new Fl_Choice(10, 115, 115, 25, mgl_gettext("Direction"));
 	dir->align(FL_ALIGN_TOP_LEFT);	dir->copy(k);
-	dir->tooltip(gettext("Direction along which data will be filled"));
-	sym = new Fl_Check_Button(10, 115, 115, 25, gettext("Symetrical range"));
-	sym->tooltip(gettext("Normalize in symmetrical range: -max(|v1|,|v2|) ... max(|v1|,|v2|)"));
+	dir->tooltip(mgl_gettext("Direction along which data will be filled"));
+	sym = new Fl_Check_Button(10, 115, 115, 25, mgl_gettext("Symetrical range"));
+	sym->tooltip(mgl_gettext("Normalize in symmetrical range: -max(|v1|,|v2|) ... max(|v1|,|v2|)"));
 
 	Fl_Button *o;
-	o = new Fl_Button(25, 150, 85, 25, gettext("Cancel"));	o->callback(close_dlg_cb,wnd);
+	o = new Fl_Button(25, 150, 85, 25, mgl_gettext("Cancel"));	o->callback(close_dlg_cb,wnd);
 	o->box(UDAV_UP_BOX);	o->down_box(UDAV_DOWN_BOX);
-	o->tooltip(gettext("Do nothing and close this window"));
-	o = new Fl_Return_Button(25, 180, 85, 25, gettext("Change"));o->callback(nrm_dlg_cb,wnd);
+	o->tooltip(mgl_gettext("Do nothing and close this window"));
+	o = new Fl_Return_Button(25, 180, 85, 25, mgl_gettext("Change"));o->callback(nrm_dlg_cb,wnd);
 	o->box(UDAV_UP_BOX);	o->down_box(UDAV_DOWN_BOX);
-	o->tooltip(gettext("Change data values and close this window"));
+	o->tooltip(mgl_gettext("Change data values and close this window"));
 	wnd->end();
 }
 //-----------------------------------------------------------------------------
 void fill_cb(Fl_Widget*, void*v)
 {
 	TableWindow* e = (TableWindow*)v;
-	nrm_dlg.OK = false;			nrm_dlg.wnd->label(gettext("Fill in range"));
+	nrm_dlg.OK = false;			nrm_dlg.wnd->label(mgl_gettext("Fill in range"));
 	nrm_dlg.dir->show();		nrm_dlg.sym->hide();
 	nrm_dlg.wnd->set_modal();	nrm_dlg.wnd->show();
 	while(nrm_dlg.wnd->shown())	Fl::wait();
@@ -501,7 +501,7 @@ void fill_cb(Fl_Widget*, void*v)
 void normal_cb(Fl_Widget*, void*v)
 {
 	TableWindow* e = (TableWindow*)v;
-	nrm_dlg.OK = false;			nrm_dlg.wnd->label(gettext("Normalize data"));
+	nrm_dlg.OK = false;			nrm_dlg.wnd->label(mgl_gettext("Normalize data"));
 	nrm_dlg.dir->hide();		nrm_dlg.sym->show();
 	nrm_dlg.wnd->set_modal();	nrm_dlg.wnd->show();
 	while(nrm_dlg.wnd->shown())	Fl::wait();
@@ -528,9 +528,9 @@ void crop_dlg_cb(Fl_Widget *, void *v)
 //-----------------------------------------------------------------------------
 void CropDlg::create_dlg()
 {
-	wnd = new Fl_Double_Window(230, 155, gettext("Crop data"));
-	x1 = new Fl_Input(45, 25, 80, 25, gettext("Lower bound"));	x1->align(FL_ALIGN_TOP);
-	x2 = new Fl_Input(140, 25, 80, 25, gettext("Upper bound"));	x2->align(FL_ALIGN_TOP);
+	wnd = new Fl_Double_Window(230, 155, mgl_gettext("Crop data"));
+	x1 = new Fl_Input(45, 25, 80, 25, mgl_gettext("Lower bound"));	x1->align(FL_ALIGN_TOP);
+	x2 = new Fl_Input(140, 25, 80, 25, mgl_gettext("Upper bound"));	x2->align(FL_ALIGN_TOP);
 	y1 = new Fl_Input(45, 55, 80, 25);
 	y2 = new Fl_Input(140, 55, 80, 25);
 	z1 = new Fl_Input(45, 85, 80, 25);
@@ -540,12 +540,12 @@ void CropDlg::create_dlg()
 	new Fl_Box(15, 55, 25, 25, "Y");
 	new Fl_Box(15, 85, 25, 25, "Z");
 	Fl_Button *o;
-	o = new Fl_Button(45, 120, 75, 25, gettext("Cancel"));		o->callback(close_dlg_cb,wnd);
+	o = new Fl_Button(45, 120, 75, 25, mgl_gettext("Cancel"));		o->callback(close_dlg_cb,wnd);
 	o->box(UDAV_UP_BOX);	o->down_box(UDAV_DOWN_BOX);
-	o->tooltip(gettext("Do nothing and close this window"));
-	o = new Fl_Return_Button(145, 120, 75, 25, gettext("Crop"));	o->callback(crop_dlg_cb,wnd);
+	o->tooltip(mgl_gettext("Do nothing and close this window"));
+	o = new Fl_Return_Button(145, 120, 75, 25, mgl_gettext("Crop"));	o->callback(crop_dlg_cb,wnd);
 	o->box(UDAV_UP_BOX);	o->down_box(UDAV_DOWN_BOX);
-	o->tooltip(gettext("Change data values and close this window"));
+	o->tooltip(mgl_gettext("Change data values and close this window"));
 	wnd->end();
 }
 //-----------------------------------------------------------------------------
@@ -599,8 +599,8 @@ void trsp_rad_cb(Fl_Widget *w, void *v)
 //-----------------------------------------------------------------------------
 void TrspDlg::create_dlg()
 {
-	wnd = new Fl_Double_Window(220, 170, gettext("Transpose data"));
-	Fl_Group *g = new Fl_Group(10, 30, 200, 90, gettext("Select new order of dimensions"));
+	wnd = new Fl_Double_Window(220, 170, mgl_gettext("Transpose data"));
+	Fl_Group *g = new Fl_Group(10, 30, 200, 90, mgl_gettext("Select new order of dimensions"));
 	g->box(FL_DOWN_BOX);
 	yxz = new Fl_Round_Button(20, 40, 75, 25, "y - x - z");	yxz->callback(trsp_rad_cb,this);
 	zyx = new Fl_Round_Button(20, 65, 75, 25, "z - y - x");	zyx->callback(trsp_rad_cb,this);
@@ -611,12 +611,12 @@ void TrspDlg::create_dlg()
 	g->end();
 
 	Fl_Button *o;
-	o = new Fl_Button(25, 130, 75, 25, gettext("Cancel"));	o->callback(close_dlg_cb,wnd);
+	o = new Fl_Button(25, 130, 75, 25, mgl_gettext("Cancel"));	o->callback(close_dlg_cb,wnd);
 	o->box(UDAV_UP_BOX);	o->down_box(UDAV_DOWN_BOX);
-	o->tooltip(gettext("Do nothing and close this window"));
-	o = new Fl_Return_Button(125, 130, 75, 25, gettext("Do"));	o->callback(trsp_dlg_cb,wnd);
+	o->tooltip(mgl_gettext("Do nothing and close this window"));
+	o = new Fl_Return_Button(125, 130, 75, 25, mgl_gettext("Do"));	o->callback(trsp_dlg_cb,wnd);
 	o->box(UDAV_UP_BOX);	o->down_box(UDAV_DOWN_BOX);
-	o->tooltip(gettext("Change data values and close this window"));
+	o->tooltip(mgl_gettext("Change data values and close this window"));
 	wnd->end();
 }
 //-----------------------------------------------------------------------------
@@ -686,56 +686,56 @@ void change_sl_cb(Fl_Widget*w, void*v)
 }
 //-----------------------------------------------------------------------------
 Fl_Menu_Item tablemenu[60] = {
-	{ gettext("General"), 0, 0, 0, FL_SUBMENU },
-		{ gettext("Load from file"),	0, load_dat_cb },
-		{ gettext("Import from PNG"),0, imp_dat_cb },
-		{ gettext("Save to file"),	0, save_dat_cb },
-		{ gettext("Export to PNG"),	0, exp_dat_cb, 0, FL_MENU_DIVIDER },
-		{ gettext("Insert as list"),	0, list_dat_cb },
-		{ gettext("Plot data"),		0, plot_dat_cb },
-//		{ gettext("Info for data"),	0, info_dat_cb },
+	{ mgl_gettext("General"), 0, 0, 0, FL_SUBMENU },
+		{ mgl_gettext("Load from file"),	0, load_dat_cb },
+		{ mgl_gettext("Import from PNG"),0, imp_dat_cb },
+		{ mgl_gettext("Save to file"),	0, save_dat_cb },
+		{ mgl_gettext("Export to PNG"),	0, exp_dat_cb, 0, FL_MENU_DIVIDER },
+		{ mgl_gettext("Insert as list"),	0, list_dat_cb },
+		{ mgl_gettext("Plot data"),		0, plot_dat_cb },
+//		{ mgl_gettext("Info for data"),	0, info_dat_cb },
 		{ 0 },
-	{ gettext("Sizes"), 0, 0, 0, FL_SUBMENU },
-		{ gettext("Create new"),	0, new_dat_cb },
-		{ gettext("Resize"),		0, resize_cb },
-		{ gettext("Squeeze"),	0, squeeze_cb },
-		{ gettext("Crop"),		0, crop_cb },
-		{ gettext("Transpose"),	0, transp_cb },
-//		{ gettext("Extend"),		0, extend_cb },
+	{ mgl_gettext("Sizes"), 0, 0, 0, FL_SUBMENU },
+		{ mgl_gettext("Create new"),	0, new_dat_cb },
+		{ mgl_gettext("Resize"),		0, resize_cb },
+		{ mgl_gettext("Squeeze"),	0, squeeze_cb },
+		{ mgl_gettext("Crop"),		0, crop_cb },
+		{ mgl_gettext("Transpose"),	0, transp_cb },
+//		{ mgl_gettext("Extend"),		0, extend_cb },
 		{ 0 },
-	{ gettext("Fill"), 0, 0, 0, FL_SUBMENU },
-		{ gettext("By formula"),	0, modify_cb },
-		{ gettext("In range"),	0, fill_cb },
-		{ gettext("Normalize"),	0, normal_cb },
+	{ mgl_gettext("Fill"), 0, 0, 0, FL_SUBMENU },
+		{ mgl_gettext("By formula"),	0, modify_cb },
+		{ mgl_gettext("In range"),	0, fill_cb },
+		{ mgl_gettext("Normalize"),	0, normal_cb },
 		{ 0 },
-	{ gettext("Change"), 0, 0, 0, FL_SUBMENU },
-		{ gettext("Smooth"),		0, smooth_cb },
-		{ gettext("CumSum"),		0, cumsum_cb },
-		{ gettext("Integrate"),	0, integr_cb },
-		{ gettext("Difference"),	0, diff_cb },
-		{ gettext("Double diff."),	0, diff2_cb },
-		{ gettext("Swap parts"),	0, swap_cb },
+	{ mgl_gettext("Change"), 0, 0, 0, FL_SUBMENU },
+		{ mgl_gettext("Smooth"),		0, smooth_cb },
+		{ mgl_gettext("CumSum"),		0, cumsum_cb },
+		{ mgl_gettext("Integrate"),	0, integr_cb },
+		{ mgl_gettext("Difference"),	0, diff_cb },
+		{ mgl_gettext("Double diff."),	0, diff2_cb },
+		{ mgl_gettext("Swap parts"),	0, swap_cb },
 		{ 0 },
-	{ gettext("Another"), 0, 0, 0, FL_SUBMENU },
-//		{ gettext("Histogram of"),	0, hist_cb },
-		{ gettext("Summation of"),	0, asum_cb },
-		{ gettext("Maximum of"),	0, amax_cb },
-		{ gettext("Minimum of"),	0, amin_cb },
+	{ mgl_gettext("Another"), 0, 0, 0, FL_SUBMENU },
+//		{ mgl_gettext("Histogram of"),	0, hist_cb },
+		{ mgl_gettext("Summation of"),	0, asum_cb },
+		{ mgl_gettext("Maximum of"),	0, amax_cb },
+		{ mgl_gettext("Minimum of"),	0, amin_cb },
 		{ 0 },
-	{ gettext("Operations"), 0, 0, 0, FL_SUBMENU },
-		{ gettext("Add to"),		0, addto_cb },
-		{ gettext("Subtract to"),0, subto_cb },
-		{ gettext("Multiply by"),0, multo_cb },
-		{ gettext("Divide by"),	0, divto_cb },
+	{ mgl_gettext("Operations"), 0, 0, 0, FL_SUBMENU },
+		{ mgl_gettext("Add to"),		0, addto_cb },
+		{ mgl_gettext("Subtract to"),0, subto_cb },
+		{ mgl_gettext("Multiply by"),0, multo_cb },
+		{ mgl_gettext("Divide by"),	0, divto_cb },
 		{ 0 },
-	{ gettext("Navigation"), 0, 0, 0, FL_SUBMENU },
-		{ gettext("First slice"), FL_CTRL + FL_F + 1, first_sl_cb },
-		{ gettext("Prev slice"), FL_CTRL + FL_F + 2, prev_sl_cb },
-		{ gettext("Next slice"), FL_CTRL + FL_F + 3, next_sl_cb },
-		{ gettext("Last slice"),	FL_CTRL + FL_F + 4, last_sl_cb, 0, FL_MENU_DIVIDER },
-		{ gettext("First cell"), FL_ALT + FL_F + 1, first_cl_cb },
-//		{ gettext("Last cell"), FL_ALT + FL_F + 2, last_cl_cb },
-//		{ gettext("Center grid"), FL_ALT + FL_F + 3, center_cl_cb },
+	{ mgl_gettext("Navigation"), 0, 0, 0, FL_SUBMENU },
+		{ mgl_gettext("First slice"), FL_CTRL + FL_F + 1, first_sl_cb },
+		{ mgl_gettext("Prev slice"), FL_CTRL + FL_F + 2, prev_sl_cb },
+		{ mgl_gettext("Next slice"), FL_CTRL + FL_F + 3, next_sl_cb },
+		{ mgl_gettext("Last slice"),	FL_CTRL + FL_F + 4, last_sl_cb, 0, FL_MENU_DIVIDER },
+		{ mgl_gettext("First cell"), FL_ALT + FL_F + 1, first_cl_cb },
+//		{ mgl_gettext("Last cell"), FL_ALT + FL_F + 2, last_cl_cb },
+//		{ mgl_gettext("Center grid"), FL_ALT + FL_F + 3, center_cl_cb },
 		{ 0 },
 	{ 0 }
 };
@@ -765,55 +765,55 @@ TableWindow::TableWindow(int x, int y, int w, int h, const char* t) : Fl_Window(
 
 	g = new Fl_Group(0,0,30,350);
 	o = new Fl_Button(0, 0, 25, 25);	o->image(new Fl_Pixmap(document_new_xpm));
-	o->callback(new_dat_cb,this);		o->tooltip(gettext("Create new data with zero filling"));
+	o->callback(new_dat_cb,this);		o->tooltip(mgl_gettext("Create new data with zero filling"));
 //	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 	o = new Fl_Button(0, 25, 25, 25);	o->image(new Fl_Pixmap(document_open_xpm));
-	o->callback(load_dat_cb,this);		o->tooltip(gettext("Load data from file"));
+	o->callback(load_dat_cb,this);		o->tooltip(mgl_gettext("Load data from file"));
 //	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 	o = new Fl_Button(0, 50, 25, 25);	o->image(new Fl_Pixmap(document_import_xpm));
-	o->callback(imp_dat_cb,this);		o->tooltip(gettext("Import data from PNG file"));
+	o->callback(imp_dat_cb,this);		o->tooltip(mgl_gettext("Import data from PNG file"));
 //	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 	o = new Fl_Button(0, 75, 25, 25);	o->image(new Fl_Pixmap(document_save_xpm));
-	o->callback(save_dat_cb,this);		o->tooltip(gettext("Save data to file"));
+	o->callback(save_dat_cb,this);		o->tooltip(mgl_gettext("Save data to file"));
 //	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 	o = new Fl_Button(0, 100, 25, 25);	o->image(new Fl_Pixmap(document_export_xpm));
-	o->callback(exp_dat_cb,this);		o->tooltip(gettext("Export data to PNG file"));
+	o->callback(exp_dat_cb,this);		o->tooltip(mgl_gettext("Export data to PNG file"));
 //	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 
 	o = new Fl_Button(0, 130, 25, 25);	o->image(new Fl_Pixmap(format_indent_more_xpm));
-	o->callback(list_dat_cb,this);		o->tooltip(gettext("Insert to script as 'list' command"));
+	o->callback(list_dat_cb,this);		o->tooltip(mgl_gettext("Insert to script as 'list' command"));
 //	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 	o = new Fl_Button(0, 155, 25, 25);	o->image(new Fl_Pixmap(plot_xpm));
-	o->callback(plot_dat_cb,this);		o->tooltip(gettext("Plot data"));
+	o->callback(plot_dat_cb,this);		o->tooltip(mgl_gettext("Plot data"));
 //	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 
 	o = new Fl_Button(0, 185, 25, 25);	o->image(new Fl_Pixmap(diff_xpm));
-	o->callback(smooth_cb,this);		o->tooltip(gettext("Apply operator (smoothing, integration, difference ...) to data"));
+	o->callback(smooth_cb,this);		o->tooltip(mgl_gettext("Apply operator (smoothing, integration, difference ...) to data"));
 //	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 	o = new Fl_Button(0, 210, 25, 25);	o->image(new Fl_Pixmap(func_xpm));
-	o->callback(modify_cb,this);		o->tooltip(gettext("Fill data by formula"));
+	o->callback(modify_cb,this);		o->tooltip(mgl_gettext("Fill data by formula"));
 //	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 	o = new Fl_Button(0, 235, 25, 25);	o->image(new Fl_Pixmap(size_xpm));
-	o->callback(resize_cb,this);		o->tooltip(gettext("Resize data with smoothing"));
+	o->callback(resize_cb,this);		o->tooltip(mgl_gettext("Resize data with smoothing"));
 //	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 	o = new Fl_Button(0, 260, 25, 25);	o->image(new Fl_Pixmap(crop_xpm));
-	o->callback(crop_cb,this);		o->tooltip(gettext("Crop (cut off edges) data"));
+	o->callback(crop_cb,this);		o->tooltip(mgl_gettext("Crop (cut off edges) data"));
 //	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 	o = new Fl_Button(0, 285, 25, 25);	o->image(new Fl_Pixmap(tran_xpm));
-	o->callback(transp_cb,this);		o->tooltip(gettext("Transpose data dimensions"));
+	o->callback(transp_cb,this);		o->tooltip(mgl_gettext("Transpose data dimensions"));
 //	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 	g->end();	g->resizable(0);
 
 
 	g = new Fl_Group(30,0,200,30);
 	o = new Fl_Button(30, 0, 25, 25);	o->image(new Fl_Pixmap(go_first_xpm));
-	o->callback(first_sl_cb,this);		o->tooltip(gettext("Go to first slice (Ctrl-F1)"));
+	o->callback(first_sl_cb,this);		o->tooltip(mgl_gettext("Go to first slice (Ctrl-F1)"));
 //	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 	slice = new Fl_Counter(55, 0, 90, 25, 0);	slice->callback(change_sl_cb,this);
-	slice->lstep(10);	slice->step(1);	slice->tooltip(gettext("Id of slice on third (z-) dimension"));
+	slice->lstep(10);	slice->step(1);	slice->tooltip(mgl_gettext("Id of slice on third (z-) dimension"));
 //	slice->box(FL_PLASTIC_UP_BOX);//	slice->down_box(FL_PLASTIC_DOWN_BOX);
 	o = new Fl_Button(147, 0, 25, 25);	o->image(new Fl_Pixmap(go_last_xpm));
-	o->callback(last_sl_cb,this);		o->tooltip(gettext("Go to last slice (Ctrl-F4)"));
+	o->callback(last_sl_cb,this);		o->tooltip(mgl_gettext("Go to last slice (Ctrl-F4)"));
 	g->end();	g->resizable(0);
 
 	data = new Fl_Data_Table(30,30,w-30,h-30);

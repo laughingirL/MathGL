@@ -41,22 +41,22 @@ void argument_dlg_cb(Fl_Widget *, void *v)
 //-----------------------------------------------------------------------------
 void ArgumentDlg::create_dlg()
 {
-	wnd = new Fl_Window(325, 275, gettext("Script arguments"));
-	a[1] = new Fl_Input(10, 25, 150, 25, gettext("Value for $1"));	a[1]->align(FL_ALIGN_TOP_LEFT);
-	a[2] = new Fl_Input(165, 25, 150, 25, gettext("Value for $2"));	a[2]->align(FL_ALIGN_TOP_LEFT);
-	a[3] = new Fl_Input(10, 70, 150, 25, gettext("Value for $3"));	a[3]->align(FL_ALIGN_TOP_LEFT);
-	a[4] = new Fl_Input(165, 70, 150, 25, gettext("Value for $4"));	a[4]->align(FL_ALIGN_TOP_LEFT);
-	a[5] = new Fl_Input(10, 115, 150, 25, gettext("Value for $5"));	a[5]->align(FL_ALIGN_TOP_LEFT);
-	a[6] = new Fl_Input(165, 115, 150, 25, gettext("Value for $6"));a[6]->align(FL_ALIGN_TOP_LEFT);
-	a[7] = new Fl_Input(10, 160, 150, 25, gettext("Value for $7"));	a[7]->align(FL_ALIGN_TOP_LEFT);
-	a[8] = new Fl_Input(165, 160, 150, 25, gettext("Value for $8"));a[8]->align(FL_ALIGN_TOP_LEFT);
-	a[9] = new Fl_Input(10, 205, 150, 25, gettext("Value for $9"));	a[9]->align(FL_ALIGN_TOP_LEFT);
-	a[0] = new Fl_Input(165, 205, 150, 25, gettext("Value for $0"));a[0]->align(FL_ALIGN_TOP_LEFT);
+	wnd = new Fl_Window(325, 275, mgl_gettext("Script arguments"));
+	a[1] = new Fl_Input(10, 25, 150, 25, mgl_gettext("Value for $1"));	a[1]->align(FL_ALIGN_TOP_LEFT);
+	a[2] = new Fl_Input(165, 25, 150, 25, mgl_gettext("Value for $2"));	a[2]->align(FL_ALIGN_TOP_LEFT);
+	a[3] = new Fl_Input(10, 70, 150, 25, mgl_gettext("Value for $3"));	a[3]->align(FL_ALIGN_TOP_LEFT);
+	a[4] = new Fl_Input(165, 70, 150, 25, mgl_gettext("Value for $4"));	a[4]->align(FL_ALIGN_TOP_LEFT);
+	a[5] = new Fl_Input(10, 115, 150, 25, mgl_gettext("Value for $5"));	a[5]->align(FL_ALIGN_TOP_LEFT);
+	a[6] = new Fl_Input(165, 115, 150, 25, mgl_gettext("Value for $6"));a[6]->align(FL_ALIGN_TOP_LEFT);
+	a[7] = new Fl_Input(10, 160, 150, 25, mgl_gettext("Value for $7"));	a[7]->align(FL_ALIGN_TOP_LEFT);
+	a[8] = new Fl_Input(165, 160, 150, 25, mgl_gettext("Value for $8"));a[8]->align(FL_ALIGN_TOP_LEFT);
+	a[9] = new Fl_Input(10, 205, 150, 25, mgl_gettext("Value for $9"));	a[9]->align(FL_ALIGN_TOP_LEFT);
+	a[0] = new Fl_Input(165, 205, 150, 25, mgl_gettext("Value for $0"));a[0]->align(FL_ALIGN_TOP_LEFT);
 
 	Fl_Button *o;
-	o = new Fl_Button(75, 240, 75, 25, gettext("Cancel"));		o->callback(close_dlg_cb,wnd);
+	o = new Fl_Button(75, 240, 75, 25, mgl_gettext("Cancel"));		o->callback(close_dlg_cb,wnd);
 	o->box(UDAV_UP_BOX);	o->down_box(UDAV_DOWN_BOX);
-	o = new Fl_Return_Button(175, 240, 75, 25, gettext("OK"));	o->callback(argument_dlg_cb,wnd);
+	o = new Fl_Return_Button(175, 240, 75, 25, mgl_gettext("OK"));	o->callback(argument_dlg_cb,wnd);
 	o->box(UDAV_UP_BOX);	o->down_box(UDAV_DOWN_BOX);
 	wnd->end();
 }
@@ -98,22 +98,22 @@ void animate_dlg_cb(Fl_Widget *, void *v)
 {
 	animate_dlg.swap = false;
 	if(!animate_dlg.rt->value() && !animate_dlg.rv->value())
-		fl_message(gettext("You have to select textual string or numeric cycle"));
+		fl_message(mgl_gettext("You have to select textual string or numeric cycle"));
 	else if(animate_dlg.rv->value() && animate_dlg.dx->value()==0)
-		fl_message(gettext("You have to set nonzero step in cycle"));
+		fl_message(mgl_gettext("You have to set nonzero step in cycle"));
 	else
 	{
 		double t0=atof(animate_dlg.x0->value()), t1=atof(animate_dlg.x1->value()), dt=atof(animate_dlg.dx->value());
 		if((t1-t0)*dt<0)
 		{
-			if(fl_ask(gettext("Order of first and last value is wrong. Swap it?")))
+			if(fl_ask(mgl_gettext("Order of first and last value is wrong. Swap it?")))
 			{
 				char s[32];	snprintf(s,32,"%g",t0);
 				animate_dlg.x0->value(animate_dlg.x1->value());
 				animate_dlg.x1->value(s);
 			}
 			else
-			{	fl_message(gettext("Wrong boundaries"));	return;	}
+			{	fl_message(mgl_gettext("Wrong boundaries"));	return;	}
 		}
 		animate_dlg.OK = true;	((Fl_Window *)v)->hide();
 	}
@@ -158,29 +158,29 @@ void animate_put_cb(Fl_Widget *, void *)
 //-----------------------------------------------------------------------------
 void AnimateDlg::create_dlg()
 {
-	wnd = new Fl_Window(335, 350, gettext("Animation"));
-	new Fl_Box(10, 5, 315, 25, gettext("Redraw picture for $0 equal to:"));
-	rt = new Fl_Round_Button(10, 30, 200, 25, gettext("strings in lines below"));
+	wnd = new Fl_Window(335, 350, mgl_gettext("Animation"));
+	new Fl_Box(10, 5, 315, 25, mgl_gettext("Redraw picture for $0 equal to:"));
+	rt = new Fl_Round_Button(10, 30, 200, 25, mgl_gettext("strings in lines below"));
 	rt->callback(animate_rad_cb, rt);
-	rv = new Fl_Round_Button(220, 30, 105, 25, gettext("values"));
+	rv = new Fl_Round_Button(220, 30, 105, 25, mgl_gettext("values"));
 	rv->callback(animate_rad_cb, rv);
 	txt = new Fl_Multiline_Input(10, 60, 200, 250);
-	x0 = new Fl_Float_Input(220, 80, 105, 25, gettext("from"));			x0->align(FL_ALIGN_TOP_LEFT);
-	x1 = new Fl_Float_Input(220, 130, 105, 25, gettext("to"));			x1->align(FL_ALIGN_TOP_LEFT);
-	dx = new Fl_Float_Input(220, 180, 105, 25, gettext("with step"));	dx->align(FL_ALIGN_TOP_LEFT);
+	x0 = new Fl_Float_Input(220, 80, 105, 25, mgl_gettext("from"));			x0->align(FL_ALIGN_TOP_LEFT);
+	x1 = new Fl_Float_Input(220, 130, 105, 25, mgl_gettext("to"));			x1->align(FL_ALIGN_TOP_LEFT);
+	dx = new Fl_Float_Input(220, 180, 105, 25, mgl_gettext("with step"));	dx->align(FL_ALIGN_TOP_LEFT);
 
 	Fl_Button *o;
-	o = new Fl_Button(230, 215, 80, 25, gettext("Cancel"));		o->callback(close_dlg_cb,wnd);
+	o = new Fl_Button(230, 215, 80, 25, mgl_gettext("Cancel"));		o->callback(close_dlg_cb,wnd);
 	o->box(UDAV_UP_BOX);	o->down_box(UDAV_DOWN_BOX);
-	o = new Fl_Return_Button(230, 250, 80, 25, gettext("OK"));	o->callback(animate_dlg_cb,wnd);
+	o = new Fl_Return_Button(230, 250, 80, 25, mgl_gettext("OK"));	o->callback(animate_dlg_cb,wnd);
 	o->box(UDAV_UP_BOX);	o->down_box(UDAV_DOWN_BOX);
-	save = new Fl_Check_Button(220, 285, 105, 25, gettext("save slides"));
-	save->tooltip(gettext("Keep slides in memory (faster animation but require more memory)"));
+	save = new Fl_Check_Button(220, 285, 105, 25, mgl_gettext("save slides"));
+	save->tooltip(mgl_gettext("Keep slides in memory (faster animation but require more memory)"));
 	save->down_box(FL_DOWN_BOX);	save->hide();
 
-	o = new Fl_Button(10, 315, 100, 25, gettext("Put to script"));	o->callback(animate_put_cb,wnd);
+	o = new Fl_Button(10, 315, 100, 25, mgl_gettext("Put to script"));	o->callback(animate_put_cb,wnd);
 	o->box(UDAV_UP_BOX);	o->down_box(UDAV_DOWN_BOX);
-	dt = new Fl_Float_Input(220, 315, 105, 25, gettext("Delay (in sec)"));//	dx->align(FL_ALIGN_TOP_LEFT);
+	dt = new Fl_Float_Input(220, 315, 105, 25, mgl_gettext("Delay (in sec)"));//	dx->align(FL_ALIGN_TOP_LEFT);
 
 	wnd->end();
 }
@@ -213,7 +213,7 @@ void AnimateDlg::FillResult(Fl_MGL* e)
 		}
 		if((t1-t0)/dt>999)
 		{
-			fl_message(gettext("Too many slides. Reduce to 1000 slides."));
+			fl_message(mgl_gettext("Too many slides. Reduce to 1000 slides."));
 			dt = (t1-t0)/998;
 		}
 		e->ArgBuf = new char[32*int(1+(t1-t0)/dt)];
@@ -224,7 +224,7 @@ void AnimateDlg::FillResult(Fl_MGL* e)
 			e->NArgs += 1;
 		}
 	}
-	else	fl_message(gettext("No selection. So nothing to do"));
+	else	fl_message(mgl_gettext("No selection. So nothing to do"));
 }
 //-----------------------------------------------------------------------------
 void animate_cb(Fl_Widget *, void *v)
