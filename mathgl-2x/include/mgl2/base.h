@@ -55,7 +55,7 @@ public:
 	{
 		np=st.np;	dat = (T**)malloc(np*sizeof(T*));
 		pb=st.pb;	m=n=0;	reserve(st.n);
-		for(size_t i=0;i<pb;i++)	memcpy(dat[i],st.dat[i],(1<<pb)*sizeof(T));
+		for(size_t i=0;i<m;i++)	memcpy(dat[i],st.dat[i],(1<<pb)*sizeof(T));
 		n=st.n;
 	}
 	mglStack(size_t Pbuf=10)
@@ -91,7 +91,7 @@ public:
 	const mglStack<T> &operator=(const mglStack<T> &st)
 	{
 		pb=st.pb;	clear();	reserve(st.n);
-		for(size_t i=0;i<pb;i++)	memcpy(dat[i],st.dat[i],(1<<pb)*sizeof(T));
+		for(size_t i=0;i<m;i++)	memcpy(dat[i],st.dat[i],(1<<pb)*sizeof(T));
 		n = st.n;	return st;
 	}
 };

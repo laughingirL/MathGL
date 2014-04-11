@@ -342,7 +342,7 @@ void mglCanvas::pxl_backgr(long id, long n, const void *)
 #if !MGL_HAVE_PTHREAD
 #pragma omp parallel for private(c)
 #endif
-	for(long i=id;i<n;i+=mglNumThr)
+	for(long i=id;i<n;i+=mglNumThr)	// TODO external bitmap can be here if((Flag&3)!=2)
 	{	memcpy(c,BDef,4);	combine(c,G4+4*i);	memcpy(G+3*i,c,3);	}
 }
 //-----------------------------------------------------------------------------

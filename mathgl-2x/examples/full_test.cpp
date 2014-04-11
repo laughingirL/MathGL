@@ -69,16 +69,11 @@ void smgl_style(mglGraph *gr);
 #include <mgl2/font.h>
 void test(mglGraph *gr)
 {
-	smgl_style(gr);
-	return;
-
 	mglParse par;
 	setlocale(LC_CTYPE, "");
-	par.Execute(gr,"new x 50 40 '0.8*sin(pi*x)*sin(pi*(y+1)/2)'\n\
-					new y 50 40 '0.8*cos(pi*x)*sin(pi*(y+1)/2)'\n\
-					new z 50 40 '0.8*cos(pi*(y+1)/2)'\nlight on\n\
-					title 'parametric form':rotate 50 60:box\n\
-					surf x y z ''\nwrite '1.tex'");
+	par.Execute(gr,"alpha on:subplot 1 1 0 '#':box\nrect 0 0 1 1 1 1 '{x0FFF00ff}'\nline 0 0 0 1 1 0 'b'");
+//	par.Execute(gr,"alpha on:fsurf 'x' 'Bb{A1}cy{xFF000088}R'");
+	gr->WritePNG("1.png");
 //	par.Execute(gr,"light on:addlegend 'r' 'r':legend");
 }
 //-----------------------------------------------------------------------------

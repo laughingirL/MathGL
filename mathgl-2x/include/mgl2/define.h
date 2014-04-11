@@ -78,11 +78,13 @@ typedef unsigned long uintptr_t;
 #include <wchar.h>
 
 #if defined(_MSC_VER)
+#if (_MSC_VER<1800)
 #define collapse(a)	// MSVS don't support OpenMP 3.*
 #define strtoull _strtoui64
 #define hypot	_hypot
 #define getcwd	_getcwd
 #define chdir	_chdir // BORLAND has chdir
+#endif
 #define snprintf _snprintf
 #endif
 

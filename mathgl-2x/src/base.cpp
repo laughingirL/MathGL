@@ -826,13 +826,13 @@ void mglTexture::Set(const char *s, int smooth, mreal alpha)
 			if(m>0 && s[i+1]>'0' && s[i+1]<='9')// ext color
 			{	c[2*n] = mglColor(s[i],(s[i+1]-'0')/5.f);	i++;	}
 			else	c[2*n] = mglColor(s[i]);	// usual color
-			val[n]=-1;	n++;
+			val[n]=-1;	c[2*n].a = -1;	n++;
 		}
 		if(s[i]=='x' && i>0 && s[i-1]=='{' && j<1)	// {xRRGGBB,val} format, where val in [0,1]
 		{
 			if(strchr(dig,s[i+1]) && strchr(dig,s[i+2]) && strchr(dig,s[i+3]) && strchr(dig,s[i+4]) && strchr(dig,s[i+5]) && strchr(dig,s[i+6]))
 			{
-				char ss[3]="00";	c[2*n].a = 1;
+				char ss[3]="00";	c[2*n].a = -1;
 				ss[0] = s[i+1];	ss[1] = s[i+2];	c[2*n].r = strtol(ss,0,16)/255.;
 				ss[0] = s[i+3];	ss[1] = s[i+4];	c[2*n].g = strtol(ss,0,16)/255.;
 				ss[0] = s[i+5];	ss[1] = s[i+6];	c[2*n].b = strtol(ss,0,16)/255.;
@@ -848,7 +848,11 @@ void mglTexture::Set(const char *s, int smooth, mreal alpha)
 		{	man=false;	alpha = 0.1*(s[i+1]-'0');	i++;	}
 	}
 	for(long i=0;i<n;i++)	// default texture
-	{	c[2*i+1]=c[2*i];	c[2*i].a=man?0:alpha;	c[2*i+1].a=alpha;	}
+	{
+		if(c[2*i].a<0)	c[2*i].a=alpha;
+		c[2*i+1]=c[2*i];
+		if(man)	c[2*i].a=0;
+	}
 	if(map && sm)		// map texture
 	{
 		if(n==2)
@@ -1382,18 +1386,18 @@ void mglBase::ClearUnused()
 		}
 		// now add proper indexes
 		l=Pnt.size();
-		mglStack<mglPnt> pnt;
+		mglStack<mglPnt> pnt;	pnt.reserve(l);
 		for(size_t i=0;i<l;i++)	if(used[i])
-		{	pnt.push_back(Pnt[i]);	used[i]=pnt.size();	}
+		{	pnt.push_back(Pnt[i]);	used[i]=pnt.size()-1;	}
 		Pnt = pnt;	pnt.clear();
 		// now replace point id
 		l=Prm.size();
 		for(size_t i=0;i<l;i++)
 		{
-			mglPrim &p=Prm[i];	p.n1=used[p.n1]-1;
-			if(p.type==1 || p.type==4)	p.n2=used[p.n2]-1;
-			if(p.type==2)	{	p.n2=used[p.n2]-1;	p.n3=used[p.n3]-1;	}
-			if(p.type==3)	{	p.n2=used[p.n2]-1;	p.n3=used[p.n3]-1;	p.n4=used[p.n4]-1;	}
+			mglPrim &p=Prm[i];	p.n1=used[p.n1];
+			if(p.type==1 || p.type==4)	p.n2=used[p.n2];
+			if(p.type==2)	{	p.n2=used[p.n2];	p.n3=used[p.n3];	}
+			if(p.type==3)	{	p.n2=used[p.n2];	p.n3=used[p.n3];	p.n4=used[p.n4];	}
 		}
 		delete []used;
 	}

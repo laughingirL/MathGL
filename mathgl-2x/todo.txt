@@ -34,9 +34,9 @@
 24. Enable consecutive (as multiplication of matrices instead of single summary one) rotation of axis + the same in JS. Problem with widgets?!?
 25. Check samples in EPS,SVG (looks as something wrong with axis range???)
 28. Add FlowData() for getting flow thread coordinates as output array?!!
-30. Semi-transparent background.
 31. Complex (hex) colors in inline text command (like #{b9} or #{x0000ff})
 32. Gradient for text (glyph-by-glyph) for whole string (not inline) ???
+33. Alpha for Face,Rhomb,... ?!?
 
 ============= DOCUMENTATION =============
 
@@ -52,6 +52,8 @@ C. Translate to Russian everything
 5. Docs about mgl_datac_diffr
 6. Docs about GetBGRN
 7. Add arrow style 'X' into docs
+8. Semi-transparent background can be done by
+subplot 1 1 0 '#':rect -1 -1 1 1 '{x00FF00FF}'
 
 
 ============= UDAV =============
