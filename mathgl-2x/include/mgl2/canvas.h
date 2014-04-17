@@ -92,7 +92,7 @@ struct MGL_EXPORT mglDrawDat
 	mglStack<mglPnt>  Pnt;	///< Internal points
 	mglStack<mglPrim> Prm;	///< Primitives (lines, triangles and so on) -- need for export
 	std::vector<mglText> Ptx;	///< Text labels for mglPrim
-	mglStack<mglGlyph> Glf;	///< Glyphs data
+	std::vector<mglGlyph> Glf;	///< Glyphs data
 	mglStack<mglTexture> Txt;	///< Pointer to textures
 };
 //-----------------------------------------------------------------------------
