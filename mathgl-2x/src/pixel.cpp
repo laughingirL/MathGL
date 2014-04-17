@@ -380,7 +380,6 @@ void mglCanvas::pxl_setz_adv(long id, long n, const void *)
 //-----------------------------------------------------------------------------
 void mglCanvas::pxl_prmcol(long id, long n, const void *)
 {
-	prm_col.resize(n);
 #if !MGL_HAVE_PTHREAD
 #pragma omp parallel for
 #endif
@@ -426,13 +425,11 @@ uint32_t mglCanvas::GetColor(const mglPrim &p)
 //-----------------------------------------------------------------------------
 void mglCanvas::pxl_pntcol(long id, long n, const void *)
 {
-	mglRGBA c;
-	pnt_col.resize(n);
 #if !MGL_HAVE_PTHREAD
-#pragma omp parallel for private(c)
+#pragma omp parallel for
 #endif
 	for(long i=id;i<n;i+=mglNumThr)
-	{	col2int(Pnt[i],c.r,-1);	pnt_col[i]=c.c;	}
+	{	mglRGBA c;	col2int(Pnt[i],c.r,-1);	pnt_col[i]=c.c;	}
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::pxl_setz(long id, long n, const void *)
@@ -482,7 +479,9 @@ void mglCanvas::PreparePrim(int fast)
 	}
 	if(fast>0)
 	{
+		pnt_col.resize(Pnt.size());
 		mglStartThread(&mglCanvas::pxl_pntcol,this,Pnt.size());
+		prm_col.resize(Prm.size());
 		mglStartThread(&mglCanvas::pxl_prmcol,this,Prm.size());
 	}
 }
