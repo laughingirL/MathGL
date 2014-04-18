@@ -1436,6 +1436,9 @@ int MGL_NO_EXPORT mgls_subdata(mglGraph *, long , mglArg *a, const char *k, cons
 	if(!strcmp(k,"ddn"))	*(a[0].d) = a[1].d->SubData(iint(a[2].v));
 	else if(!strcmp(k,"ddnn"))	*(a[0].d) = a[1].d->SubData(iint(a[2].v), iint(a[3].v));
 	else if(!strcmp(k,"ddnnn"))	*(a[0].d) = a[1].d->SubData(iint(a[2].v), iint(a[3].v), iint(a[4].v));
+	else if(!strcmp(k,"ddd"))	*(a[0].d) = a[1].d->SubData(*(a[2].d));
+	else if(!strcmp(k,"dddd"))	*(a[0].d) = a[1].d->SubData(*(a[2].d), *(a[3].d));
+	else if(!strcmp(k,"ddddd"))	*(a[0].d) = a[1].d->SubData(*(a[2].d), *(a[3].d), *(a[4].d));
 	else res = 1;
 	return res;
 }

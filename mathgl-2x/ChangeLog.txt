@@ -1,6 +1,9 @@
 2.3 Released ??? 2014
 
 * Add arrow style 'X'
+* Add manual dash style, like "{df090}"
+* Add manual mask style, like "{s00ff00182424f800}"
+* Function mgl_data_subdata_ext() handle NULL argument(s). Add variants of mglData::SubData() with 1 and 2 arguments.
 
 2.2.2.1 Released 19 March 2014
 

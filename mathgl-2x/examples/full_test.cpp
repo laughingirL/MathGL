@@ -71,9 +71,10 @@ void test(mglGraph *gr)
 {
 	mglParse par;
 	setlocale(LC_CTYPE, "");
-	par.Execute(gr,"alpha on:subplot 1 1 0 '#':box\nrect 0 0 1 1 1 1 '{x0FFF00ff}'\nline 0 0 0 1 1 0 'b'");
+	par.Execute(gr,"fplot 'x' ';'");
+//	par.Execute(gr,"alpha on:subplot 1 1 0 '#':box\nrect 0 0 1 1 1 1 '{x0FFF00ff}'\nline 0 0 0 1 1 0 'b'");
 //	par.Execute(gr,"alpha on:fsurf 'x' 'Bb{A1}cy{xFF000088}R'");
-	gr->WritePNG("1.png");
+	gr->WriteSVG("test.svg");
 //	par.Execute(gr,"light on:addlegend 'r' 'r':legend");
 }
 //-----------------------------------------------------------------------------

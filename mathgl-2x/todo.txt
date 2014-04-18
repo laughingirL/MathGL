@@ -38,10 +38,7 @@
 32. Gradient for text (glyph-by-glyph) for whole string (not inline) ???
 33. Alpha for Face,Rhomb,... ?!?
 34. Axis ticks as number+string, which are proportional to factor (like SetTicks('x',M_PI,"\pi");???
-35. Test dashing in SVG ?!?
 36. Extra markers for '&' and '&#' signs ?!?
-37. Extra dashing like "{dFEDC}" for manual dashing ?!!
-38. Extra masking like "{mFEDCBA9876543210}" for manual masks ?!!
 
 ============= DOCUMENTATION =============
 
@@ -59,7 +56,10 @@ C. Translate to Russian everything
 7. Add arrow style 'X' into docs
 8. Semi-transparent background can be done by
 subplot 1 1 0 '#':rect -1 -1 1 1 '{x00FF00FF}'
-
+9. Extend "How can I exclude a point or a region of plot from the drawing?" + using SubData()/Evaluate()
+10. Docs about mgl_data_subdata_ext() with NULL argument(s) + new SubData() variants
+11. Manual dashing, like "{df090}" + extend "style"-sample by manual dashing
+12. Manual mask, like "{s00ff00182424f800}" + change "mask"-sample + fix text about manual mask
 
 ============= UDAV =============
 
@@ -90,11 +90,13 @@ Buttons: new,load,save // newcmd,hide,annotation,collapse on/off,setup // calc. 
 
 13. Manual rotate (i.e. change rotate arguments) by spinboxes ???
 
-14. Close button on data tabs ?!?
+14. Close button on data tabs
 
 15. Add dialog for mask creation.
 
 16. New View() is used after each mouse click?!?
+
+17. Hex colors, hex masks, hex dashing into dialog of styles
 
 ============= UNSURE ===========
 

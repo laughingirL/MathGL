@@ -231,6 +231,10 @@ public:
 	{	return mglData(true,mgl_data_subdata(this,xx,yy,zz));	}
 	inline mglData SubData(const mglDataA &xx, const mglDataA &yy, const mglDataA &zz) const
 	{	return mglData(true,mgl_data_subdata_ext(this,&xx,&yy,&zz));	}
+	inline mglData SubData(const mglDataA &xx, const mglDataA &yy) const
+	{	return mglData(true,mgl_data_subdata_ext(this,&xx,&yy,0));	}
+	inline mglData SubData(const mglDataA &xx) const
+	{	return mglData(true,mgl_data_subdata_ext(this,&xx,0,0));	}
 	/// Get trace of the data array
 	inline mglData Trace() const
 	{	return mglData(true,mgl_data_trace(this));	}

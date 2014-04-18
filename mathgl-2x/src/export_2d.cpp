@@ -30,7 +30,7 @@
 #define _Gr_	((mglCanvas *)(gr))
 void mgl_printf(void *fp, bool gz, const char *str, ...);
 //-----------------------------------------------------------------------------
-MGL_NO_EXPORT const char *mgl_get_dash(unsigned short d, mreal w)
+MGL_NO_EXPORT const char *mgl_get_dash(unsigned short d, mreal w,char dlm)
 {
 	static char b[32];
 	static std::string s;
@@ -43,11 +43,11 @@ MGL_NO_EXPORT const char *mgl_get_dash(unsigned short d, mreal w)
 		if(((d>>j)&1) == p)	f++;
 		else
 		{
-			snprintf(b,32," %g",f*w);	s += b;
+			snprintf(b,32," %g%c",f*w,dlm);	s += b;
 			p = (d>>j)&1;	f = 1;	n++;
 		}
 	}
-	snprintf(b,32," %g",f*w);	s += b;
+	snprintf(b,32,"%g",f*w);	s += b;
 	s += n%2 ? "" : " 0";
 	return s.c_str();
 }
@@ -309,7 +309,7 @@ void MGL_EXPORT mgl_write_eps(HMGL gr, const char *fname,const char *descr)
 			snprintf(str,256,"%.2g lw %.2g %.2g %.2g rgb ", q.w>1 ? q.w:1., cp.r[0]/255.,cp.r[1]/255.,cp.r[2]/255.);
 			wp = q.w>1  ? q.w:1;	st = q.n3;
 			put_line(gr,fp,gz,i,wp,cp.c,st, "np %g %g mt ", "%g %g ll ", false, 1);
-			const char *sd = mgl_get_dash(q.n3,q.w);
+			const char *sd = mgl_get_dash(q.n3,q.w,' ');
 			if(sd && sd[0])	mgl_printf(fp, gz, "%s [%s] %g sd dr\n",str,sd,q.w*q.s);
 			else			mgl_printf(fp, gz, "%s d0 dr\n",str);
 		}
@@ -449,7 +449,7 @@ void MGL_EXPORT mgl_write_svg(HMGL gr, const char *fname,const char *descr)
 			mgl_printf(fp,gz,"<g stroke=\"#%02x%02x%02x\"",int(cp.r[0]),int(cp.r[1]),int(cp.r[2]));
 			if(q.n3)
 			{
-				mgl_printf(fp, gz, " stroke-dasharray=\"%s\"", mgl_get_dash(q.n3,q.w));
+				mgl_printf(fp, gz, " stroke-dasharray=\"%s\"", mgl_get_dash(q.n3,q.w,','));
 				mgl_printf(fp, gz, " stroke-dashoffset=\"%g\"", q.s*q.w);
 			}
 			if(q.w>1)	mgl_printf(fp, gz, " stroke-width=\"%g\"", q.w);

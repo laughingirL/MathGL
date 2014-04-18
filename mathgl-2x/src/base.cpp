@@ -115,7 +115,7 @@ mglBase::mglBase()
 		MGL_PUSH(Txt,t1,mutexTxt);
 		MGL_PUSH(Txt,t2,mutexTxt);
 	}
-	memcpy(last_style,"{k5}-1\0",8);
+	strcpy(last_style,"__1 {dFFFF}k\0");
 	MinS=mglPoint(-1,-1,-1);	MaxS=mglPoint(1,1,1);
 	fnt = new mglFont;	fnt->gr = this;	PrevState=NAN;
 }
@@ -967,10 +967,10 @@ mreal mglBase::NextColor(long &id)
 {
 	long i=abs(id)/256, n=Txt[i].n, p=abs(id)&0xff;
 	if(id>=0)	{	p=(p+1)%n;	id = 256*i+p;	}
-	mglColor c = Txt[i].col[int(MGL_TEXTURE_COLOURS*(p+0.5)/n)];
+//	mglColor c = Txt[i].col[int(MGL_TEXTURE_COLOURS*(p+0.5)/n)];
 	mreal dif, dmin=1;
 	// try to find closest color
-	for(long j=0;mglColorIds[j].id;j++)	for(long k=1;k<10;k++)
+/*	for(long j=0;mglColorIds[j].id;j++)	for(long k=1;k<10;k++)
 	{
 		mglColor cc;	cc.Set(mglColorIds[j].col,k/5.);
 		dif = (c-cc).NormS();
@@ -980,10 +980,11 @@ mreal mglBase::NextColor(long &id)
 			last_style[2] = k+'0';
 			dmin=dif;
 		}
-	}
+	}*/
+	CDef = i + (n>0 ? (p+0.5)/n : 0);	CurrPal++;
+	sprintf(last_style+11,"{p%g}",CDef);
 	if(!leg_str.empty())
 	{	AddLegend(leg_str.c_str(),last_style);	leg_str.clear();	}
-	CDef = i + (n>0 ? (p+0.5)/n : 0);	CurrPal++;
 	return CDef;
 }
 //-----------------------------------------------------------------------------
@@ -991,7 +992,9 @@ mreal mglBase::NextColor(long id, long sh)
 {
 	long i=abs(id)/256, n=Txt[i].n, p=abs(id)&0xff;
 	if(id>=0)	p=(p+sh)%n;
-	return i + (n>0 ? (p+0.5)/n : 0);
+	mreal cc = i + (n>0 ? (p+0.5)/n : 0);
+	sprintf(last_style+11,"{p%g}",cc);
+	return cc;
 }
 //-----------------------------------------------------------------------------
 const char *mglchrs(const char *str, const char *chr)
@@ -1024,14 +1027,15 @@ char mglBase::SetPenPal(const char *p, long *Id, bool pal)
 {
 	char mk=0;
 	PDef = 0xffff;	// reset to solid line
-	memcpy(last_style,"{k5}-1\0",8);
+	strcpy(last_style,"__1 {dFFFF}k\0");
 
-	Arrow1 = Arrow2 = 0;	PenWidth = 1;
+	const char *s;
+	Arrow1 = Arrow2 = '_';	PenWidth = 1;
 	if(p && *p)
 	{
 //		const char *col = "wkrgbcymhRGBCYMHWlenuqpLENUQP";
 		unsigned val[8] = {0x0000, 0xffff, 0x00ff, 0x0f0f, 0x1111, 0x087f, 0x2727, 0x3333};
-		const char *stl = " -|;:ji=", *s;
+		const char *stl = " -|;:ji=";
 		const char *mrk = "*o+xsd.^v<>";
 		const char *MRK = "YOPXSDCTVLR";
 		const char *wdh = "123456789";
@@ -1041,33 +1045,49 @@ char mglBase::SetPenPal(const char *p, long *Id, bool pal)
 		for(size_t i=0;i<l;i++)
 		{
 			if(p[i]=='{')	m++;	if(p[i]=='}')	m--;
+			if(m>0 && p[i]=='d')	PDef = strtol(p+i+1,0,16);
 			if(m>0)	continue;
 			s = mglchr(stl,p[i]);
-			if(s)	{	PDef = val[s-stl];	last_style[4]=p[i];	}
-			else if(mglchr(mrk,p[i]))	mk = p[i];
+			if(s)
+			{	PDef = val[s-stl];	sprintf(last_style+6,"%04x",PDef);	last_style[10]='}';	}
+			else if(mglchr(mrk,p[i]))
+			{	mk = p[i];	last_style[3] = mk;	}
 			else if(mglchr(wdh,p[i]))
-			{	last_style[5] = p[i];	PenWidth = p[i]-'0';	}
+			{	PenWidth = p[i]-'0';	last_style[2] = p[i];	}
 			else if(mglchr(arr,p[i]))
 			{
 				if(!Arrow2)	Arrow2 = p[i];
 				else	Arrow1 = p[i];
 			}
 		}
-		if(Arrow1=='_')	Arrow1=0;	if(Arrow2=='_')	Arrow2=0;
 		if(mglchr(p,'#'))
 		{
 			s = mglchr(mrk,mk);
-			if(s)	mk = MRK[s-mrk];
+			if(s)
+			{	mk = MRK[s-mrk];	last_style[3] = mk;	}
 		}
+		if((s=strstr(p,"{p"))!=0)
+		{	mk = last_style[3] = p[3];	strcpy(last_style+11,s);	}
+		last_style[0] = Arrow1;	last_style[1] = Arrow2;
 	}
 	if(pal)
 	{
-		last_style[6]=mk;
-		long tt, n;
-		tt = AddTexture(p,-1);	n=Txt[tt].n;
-		CDef = tt+((n+CurrPal-1)%n+0.5)/n;
-		if(Id)	*Id=long(tt)*256+(n+CurrPal-1)%n;
+//		last_style[3]=mk;	TODO check this
+		if((s=strstr(p,"{p"))!=0)
+		{
+			CDef = atof(s+2);
+//			if(Id)	*Id=long(tt)*256+(n+CurrPal-1)%n;
+		}
+		else
+		{
+			long tt, n;
+			tt = AddTexture(p,-1);	n=Txt[tt].n;
+			CDef = tt+((n+CurrPal-1)%n+0.5)/n;
+			if(Id)	*Id=long(tt)*256+(n+CurrPal-1)%n;
+			sprintf(last_style+11,"{p%g}",CDef);
+		}
 	}
+	if(Arrow1=='_')	Arrow1=0;	if(Arrow2=='_')	Arrow2=0;
 	return mk;
 }
 //-----------------------------------------------------------------------------
@@ -1092,6 +1112,7 @@ void mglBase::SetMask(const char *p)
 		for(long i=0;i<l;i++)
 		{
 			if(p[i]=='{')	m++;	if(p[i]=='}')	m--;
+			if(m>0 && p[i]=='s')	mask = strtol(p+i+1,0,16);
 			if(m>0)	continue;
 			if(p[i]==':')	break;
 			s = mglchr(msk, p[i]);
