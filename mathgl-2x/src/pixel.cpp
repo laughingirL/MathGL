@@ -25,9 +25,10 @@ void mglCanvas::SetSize(int w,int h)
 {
 	if(w<=0 || h<=0)	{	SetWarn(mglWarnSize,"SetSize");	return;	}
 	Width = w;	Height = h;	Depth = long(sqrt(double(w*h)));
-	if(G)	{	delete []G;	delete []C;	delete []Z;	delete []G4;delete []OI;	}
+	if(G)	{	delete []G;	delete []C;	delete []Z;	delete []G4;delete []GB;delete []OI;	}
 	G = new unsigned char[w*h*3];
 	G4= new unsigned char[w*h*4];
+	GB= new unsigned char[w*h*4];
 	C = new unsigned char[w*h*12];
 	Z = new float[w*h*3];	// only 3 planes
 	OI= new int[w*h];
@@ -316,6 +317,25 @@ void mglStartThread(void (mglCanvas::*func)(long i, long n, const void *p), mglC
 	{	mglNumThr = 1;	(gr->*func)(0,n,p);	}
 }
 //-----------------------------------------------------------------------------
+void mglCanvas::Rasterize()
+{
+	Finish();
+	memccpy(GB,G4,4*Width*Height);
+}
+//-----------------------------------------------------------------------------
+void mglCanvas::LoadBackground(const char *fname)
+{
+	
+}
+//-----------------------------------------------------------------------------
+void mglCanvas::FillBackground(const char *col)
+{
+/*	mglColor c(col);
+	mglRGBA cc;
+#pragma omp parallel for
+	*/
+}
+//-----------------------------------------------------------------------------
 void mglCanvas::pxl_combine(long id, long n, const void *)
 {
 	unsigned char c[4],*cc;
@@ -465,14 +485,12 @@ void mglCanvas::PreparePrim(int fast)
 		if(fast==0)	mglStartThread(&mglCanvas::pxl_setz,this,Prm.size());
 		else	mglStartThread(&mglCanvas::pxl_setz_adv,this,Prm.size());
 #pragma omp critical
-//		{	sort_prm_z(0,Prm.size()-1,Prm,0,0);	clr(MGL_FINISHED);	}	// TODO indexed here -- make PrmInd here
 		{
 			ClearPrmInd();	mgl_qsort_gr = this;
 			register size_t n = Prm.size();
 			PrmInd = new long[n];
 			for(size_t i=0;i<n;i++)	PrmInd[i]=i;
 			qsort(PrmInd,n,sizeof(long),mgl_prm_cmp);
-//			sort_prm_z(0,Prm.size()-1,Prm,0,0);	
 			clr(MGL_FINISHED);
 			
 		}

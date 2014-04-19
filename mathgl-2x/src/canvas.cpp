@@ -27,7 +27,7 @@ mglCanvas::mglCanvas(int w, int h) : mglBase()
 {
 	clr(MGL_DISABLE_SCALE);
 	set(MGL_VECT_FRAME);	// NOTE: require a lot of memory!
-	Z=0;	C=G=G4=0;	OI=0;	gif=0;
+	Z=0;	C=G=G4=GB=0;	OI=0;	gif=0;
 	CurFrameId=0;	Delay=0.5;
 	Width=Height=Depth=0;	ObjId=-1;
 	fscl=ftet=0;		PlotId = "frame";
@@ -42,7 +42,7 @@ mglCanvas::mglCanvas(int w, int h) : mglBase()
 //-----------------------------------------------------------------------------
 mglCanvas::~mglCanvas()
 {
-	if(G)	{	delete []G;	delete []C;	delete []Z;	delete []G4;delete []OI;	}
+	if(G)	{	delete []G;	delete []C;	delete []Z;	delete []G4;delete []GB;delete []OI;	}
 }
 //-----------------------------------------------------------------------------
 long mglCanvas::PushDrwDat()

@@ -169,6 +169,13 @@ using mglBase::Light;
 	int GetHeight() const	{	return Height;	}
 	/// Combine plots from 2 canvases. Result will be saved into this.
 	void Combine(const mglCanvas *gr);
+	
+	/// Rasterize current plot and set it as background image
+	void Rasterize();
+	/// Load image for background from file
+	void LoadBackground(const char *fname);
+	/// Fill background image by specified color
+	void FillBackground(const char *col);
 
 	inline mreal GetDelay() const	{	return Delay;	}
 	inline void SetDelay(mreal d)	{	Delay=d;	}
@@ -313,6 +320,7 @@ protected:
 	// NOTE: Z should be float for reducing space and for compatibility reasons
 	unsigned char *G4;	///< Final picture in RGBA format. Prepared in Finish().
 	unsigned char *G;	///< Final picture in RGB format. Prepared in Finish().
+	unsigned char *GB;	///< Background picture in RGBA format.
 	std::vector<mglDrawDat> DrwDat;	///< Set of ALL drawing data for each frames
 
 	int LegendMarks;	///< Number of marks in the Legend
