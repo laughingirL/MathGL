@@ -320,7 +320,7 @@ void mglStartThread(void (mglCanvas::*func)(long i, long n, const void *p), mglC
 void mglCanvas::Rasterize()
 {
 	Finish();
-	memccpy(GB,G4,4*Width*Height);
+	memcpy(GB,G4,4*Width*Height);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::LoadBackground(const char *fname)

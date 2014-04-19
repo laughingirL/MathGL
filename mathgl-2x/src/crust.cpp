@@ -469,6 +469,7 @@ MGL_NO_EXPORT void *mgl_grid_t(void *par)
 	long nx=t->p[0],ny=t->p[1];
 	mreal *b=t->a;
 	const mreal *x=t->b, *y=t->c, *d=t->d, *z=t->e;
+	HCDT zdat = (HCDT) t->v;
 #if !MGL_HAVE_PTHREAD
 #pragma omp parallel for
 #endif
@@ -476,7 +477,12 @@ MGL_NO_EXPORT void *mgl_grid_t(void *par)
 	{	// TODO check if rounding needed
 		register long k1 = long(d[3*i0]), k2 = long(d[3*i0+1]), k3 = long(d[3*i0+2]);
 		mreal dxu,dxv,dyu,dyv;
-		mglPoint d1=mglPoint(x[k2]-x[k1],y[k2]-y[k1],z[k2]-z[k1]), d2=mglPoint(x[k3]-x[k1],y[k3]-y[k1],z[k3]-z[k1]), p;
+		mreal z1,z2,z3;
+		
+		if(z)	{	z1=z[k1];	z2=z[k2];	z3=z[k3];	}
+		else	{	z1=zdat->vthr(k1);	z2=zdat->vthr(k2);	z3=zdat->vthr(k3);	}
+		
+		mglPoint d1=mglPoint(x[k2]-x[k1],y[k2]-y[k1],z2-z1), d2=mglPoint(x[k3]-x[k1],y[k3]-y[k1],z3-z1), p;
 
 		dxu = d2.x*d1.y - d1.x*d2.y;
 		if(fabs(dxu)<1e-5) continue; // points lies on the same line
@@ -499,7 +505,7 @@ MGL_NO_EXPORT void *mgl_grid_t(void *par)
 			xx = (i-x0); yy = (j-y0);
 			u = dxu*xx+dyu*yy; v = dxv*xx+dyv*yy;
 			if((u<0) | (v<0) | (u+v>1)) continue;
-			b[i+nx*j] = z[k1] + d1.z*u + d2.z*v;
+			b[i+nx*j] = z1 + d1.z*u + d2.z*v;
 		}
 	}
 	return 0;
@@ -510,7 +516,6 @@ void MGL_EXPORT mgl_data_grid_xy(HMDT d, HCDT xdat, HCDT ydat, HCDT zdat, mreal 
 	const mglData *x = dynamic_cast<const mglData *>(xdat);
 	const mglData *y = dynamic_cast<const mglData *>(ydat);
 	const mglData *z = dynamic_cast<const mglData *>(zdat);
-	if(!x || !y || !z) return;
 	long n=x->GetNN();
 	if((n<3) || (y->GetNN()!=n) || (z->GetNN()!=n))	return;
 
@@ -522,12 +527,18 @@ void MGL_EXPORT mgl_data_grid_xy(HMDT d, HCDT xdat, HCDT ydat, HCDT zdat, mreal 
 	if(d->ny>1) xx[3] = (d->ny-1.)/(y2-y1);
 
 	mreal *xc=new mreal[n], *yc=new mreal[n];
+	if(x && y)
 #pragma omp parallel for
-	for(long i=0;i<n;i++)	{	xc[i]=xx[1]*(x->a[i]-xx[0]);	yc[i]=xx[3]*(y->a[i]-xx[2]);	}
+		for(long i=0;i<n;i++)
+		{	xc[i]=xx[1]*(x->a[i]-xx[0]);	yc[i]=xx[3]*(y->a[i]-xx[2]);	}
+	else
+#pragma omp parallel for
+		for(long i=0;i<n;i++)
+		{	xc[i]=xx[1]*(xdat->vthr(i)-xx[0]);	yc[i]=xx[3]*(ydat->vthr(i)-xx[2]);	}
 #pragma omp parallel for
 	for(long i=0;i<d->nx*d->ny*d->nz;i++) d->a[i] = NAN;
 
-	mglStartThread(mgl_grid_t,0,nn,d->a,xc,yc,par,0,nums->a,z->a);
+	mglStartThread(mgl_grid_t,0,nn,d->a,xc,yc,par,zdat,nums->a,z?z->a:0);
 	delete nums;	delete []xc;	delete []yc;
 }
 void MGL_EXPORT mgl_data_grid_xy_(uintptr_t *d, uintptr_t *x, uintptr_t *y, uintptr_t *z, mreal *x1, mreal *x2, mreal *y1, mreal *y2)

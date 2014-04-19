@@ -69,6 +69,11 @@ void smgl_style(mglGraph *gr);
 #include <mgl2/font.h>
 void test(mglGraph *gr)
 {
+	mglData dat("semisphere.csv");  // read data points from file
+	mglData x=dat.SubData(0), y=dat.SubData(1); // extract x-, y-coordinates
+	mglData res = mglTriangulation(x,y); // do triangulation
+	return;
+
 	mglParse par;
 	setlocale(LC_CTYPE, "");
 	par.Execute(gr,"fplot 'x' ';'");
