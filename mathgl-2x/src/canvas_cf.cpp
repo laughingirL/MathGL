@@ -105,6 +105,8 @@ void MGL_EXPORT mgl_clf_rgb(HMGL gr, double r, double g, double b)
 {	mglCanvas *gg = dynamic_cast<mglCanvas *>(gr);	if(gg)	gg->Clf(mglColor(r,g,b));	}
 void MGL_EXPORT mgl_clf_str(HMGL gr, const char *col)
 {	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->Clf(col);	}
+void MGL_EXPORT mgl_load_background(HMGL gr, const char *fn)
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->LoadBackground(fn);	}
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_subplot_d(HMGL gr, int nx,int ny,int m,const char *style,double dx,double dy)
 {
@@ -207,6 +209,9 @@ void MGL_EXPORT mgl_clf_rgb_(uintptr_t *gr, mreal *r, mreal *g, mreal *b)
 void MGL_EXPORT mgl_clf_str_(uintptr_t *gr, const char *col, int l)
 {	char *s=new char[l+1];	memcpy(s,col,l);	s[l]=0;
 	mgl_clf_str(_GR_,s);	delete []s;	}
+void MGL_EXPORT mgl_load_background_(uintptr_t *gr, const char *fn, int l)
+{	char *s=new char[l+1];	memcpy(s,fn,l);	s[l]=0;
+	mgl_load_background(_GR_,s);	delete []s;	}
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_subplot_d_(uintptr_t *gr, int *nx,int *ny,int *m,const char *st, mreal *dx, mreal *dy,int l)
 {	char *s=new char[l+1];	memcpy(s,st,l);	s[l]=0;

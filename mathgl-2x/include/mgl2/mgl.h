@@ -467,6 +467,10 @@ public:
 	inline void Clf()	{	mgl_clf(gr);	}
 	/// Clear unused points and primitives. Useful only in combination with SetFaceNum().
 	inline void ClearUnused()	{	mgl_clear_unused(gr);	}
+	/// Load background image
+	inline void LoadBackground(const char *fname)
+	{	mgl_load_background(gr,fname);	}
+
 	/// Draws the point (ball) at position {x,y,z} with color c
 	inline void Ball(mglPoint p, char c='r')
 	{	char s[3]={'.',c,0};	mgl_mark(gr, p.x, p.y, p.z, s);	}

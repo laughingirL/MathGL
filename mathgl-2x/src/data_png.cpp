@@ -64,6 +64,39 @@ MGL_NO_EXPORT unsigned char *mgl_create_scheme(const char *scheme,long &num)
 	return c;
 }
 //-----------------------------------------------------------------------------
+bool MGL_NO_EXPORT mgl_read_image(unsigned char *g, int w, int h, const char *fname)
+{
+#if MGL_HAVE_PNG
+	FILE *fp = fopen(fname, "rb");
+	if (!fp)	return false;
+	png_structp png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, 0, 0, 0);
+	if (!png_ptr)	{	fclose(fp);	return false;	}
+	png_infop info_ptr = png_create_info_struct(png_ptr);
+	if (!info_ptr)
+	{	png_destroy_read_struct(&png_ptr,0,0);	fclose(fp);	return false;	}
+	png_infop end_info = png_create_info_struct(png_ptr);
+	if (!end_info)
+	{	png_destroy_read_struct(&png_ptr,&info_ptr,0);	fclose(fp);	return false;	}
+
+	png_init_io(png_ptr, fp);
+	png_read_png(png_ptr, info_ptr, PNG_TRANSFORM_PACKING|PNG_TRANSFORM_STRIP_16|PNG_TRANSFORM_EXPAND,0);
+	unsigned char **rows = png_get_rows(png_ptr, info_ptr);
+
+	long wi=png_get_image_width(png_ptr, info_ptr);
+	long hi=png_get_image_height(png_ptr, info_ptr);
+	if(w<wi)	wi=w;
+	if(h>hi)	h=hi;
+#pragma omp parallel for collapse(2)
+	for(long i=0;i<h;i++)	for(long j=0;j<wi;j++)
+		memcpy(g+4*(w*i+j),rows[i]+4*j,4);
+	png_destroy_read_struct(&png_ptr, &info_ptr,&end_info);
+	fclose(fp);
+#else
+	mglGlobalMess += "PNG support was disabled. Please, enable it and rebuild MathGL.\n";
+#endif
+	return true;
+}
+//-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_data_import(HMDT d, const char *fname, const char *scheme,mreal v1,mreal v2)
 {
 #if MGL_HAVE_PNG

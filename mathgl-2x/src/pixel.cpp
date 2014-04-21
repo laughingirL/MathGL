@@ -663,9 +663,10 @@ void mglCanvas::Rasterize()
 	memcpy(GB,G4,4*Width*Height);
 }
 //-----------------------------------------------------------------------------
+bool MGL_NO_EXPORT mgl_read_image(unsigned char *g, int w, int h, const char *fname);
 void mglCanvas::LoadBackground(const char *fname)
 {
-	// TODO
+	mgl_read_image(GB,Width,Height,fname);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::FillBackground(const mglColor &cc)

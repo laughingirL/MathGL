@@ -254,6 +254,13 @@ int MGL_NO_EXPORT mgls_rasterize(mglGraph *gr, long , mglArg *, const char *, co
 	gr->Rasterize();	return 0;
 }
 //-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_background(mglGraph *gr, long , mglArg *a, const char *k, const char *)
+{
+	int res=0;
+	if(!strcmp(k,"s"))	gr->LoadBackground(a[0].s.c_str());
+	else res = 1;	return res;
+}
+//-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_clf(mglGraph *gr, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
@@ -2660,6 +2667,7 @@ mglCommand mgls_base_cmd[] = {
 	{"axial","Draw surfaces of contour lines rotation","axial Zdat ['fmt' num]|Xdat Ydat Zdat ['fmt' num]", mgls_axial ,8},
 	{"axis","Setup or draw axis","axis ['dir' 'fmt']|'fx' 'fy' 'fz' ['fc']|how", mgls_axis ,12},
 	{"axisstl","Set axis and tick style","axisstl 'stl' ['sub']", mgls_axisstl ,14},
+	{"background","Load image for background","background 'fname'", mgls_background ,12},
 	{"ball","Draw point (ball)","ball posx posy ['fmt']|posx posy posz ['fmt']", mgls_ball ,13},
 	{"barh","Draw horizontal bars for 1D data", "barh Ydat ['fmt' above]|Xdat Ydat ['fmt' above]", mgls_barh ,7},
 	{"bars","Draw bars for 1D data","bars Ydat ['fmt' above]|Xdat Ydat ['fmt' above]|Xdat Ydat Zdat ['fmt' above]", mgls_bars ,7},
