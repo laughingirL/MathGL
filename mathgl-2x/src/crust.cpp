@@ -433,7 +433,7 @@ HMDT MGL_EXPORT mgl_triangulation_2d(HCDT x, HCDT y)
 	if(y->GetNN()!=n)	return nums;
 	// use s-hull here
 	std::vector<Shx> pts;
-	std::vector<size_t> out;
+	std::vector<long> out;
 	Shx pt;
 
 	for(long i=0;i<n;i++)
