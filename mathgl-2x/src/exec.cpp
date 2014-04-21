@@ -249,11 +249,16 @@ int MGL_NO_EXPORT mgls_clearlegend(mglGraph *gr, long , mglArg *, const char *k,
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_rasterize(mglGraph *gr, long , mglArg *, const char *, const char *)
+{
+	gr->Rasterize();	return 0;
+}
+//-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_clf(mglGraph *gr, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
 	if(!strcmp(k,""))	gr->Clf();
-	else if(!strcmp(k,"s"))	gr->Clf(a[0].s[0]);
+	else if(!strcmp(k,"s"))	gr->Clf(a[0].s.c_str());
 	else if(!strcmp(k,"nnn"))	gr->Clf(a[0].v,a[1].v,a[2].v);
 	else res = 1;	return res;
 }
@@ -2811,6 +2816,7 @@ mglCommand mgls_base_cmd[] = {
 	{"quality","Set plot quality","quality [val]", mgls_quality ,2},
 	{"radar","Draw radar chart","radar Rdat ['fmt']", mgls_radar ,7},
 	{"ranges","Set axis ranges","ranges x1 x2 y1 y2 [z1 z2]", mgls_ranges ,14},
+	{"rasterize","Rasterize and save to background","rasterize", mgls_rasterize ,12},
 	{"ray","Solve Hamiltonian ODE (find GO ray or trajectory)","ray Res 'ham' x0 y0 z0 px0 py0 pz0 [dz=0.1 tmax=10]", mgls_ray ,4},
 	{"read","Read data from file","read Dat 'file' [nx ny nz]", mgls_read ,4},
 	{"readall","Read and join data from several files","readall Dat 'templ' [slice]", mgls_readall ,4},

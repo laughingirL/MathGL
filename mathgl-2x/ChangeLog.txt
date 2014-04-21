@@ -1,5 +1,7 @@
 2.3 Released ??? 2014
 
+* Add background image, which allow in particular semi-transparent background color.
+* Add function Rasterize() and MGL command 'rasterize' to save current image as background one.
 * Add arrow style 'X'
 * Add manual dash style, like "{df090}"
 * Add manual mask style, like "{s00ff00182424f800}"

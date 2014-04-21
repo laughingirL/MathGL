@@ -133,6 +133,7 @@ using mglBase::Light;
 	inline void Pop()	{	B = stack.back(); stack.pop_back();	}
 	/// Clear up the frame
 	virtual void Clf(mglColor back=NC);
+	virtual void Clf(const char *col);
 
 	/// Put further plotting in cell of stick rotated on angles tet, phi
 	void StickPlot(int num, int i, mreal tet, mreal phi);
@@ -175,7 +176,7 @@ using mglBase::Light;
 	/// Load image for background from file
 	void LoadBackground(const char *fname);
 	/// Fill background image by specified color
-	void FillBackground(const char *col);
+	void FillBackground(const mglColor &cc);
 
 	inline mreal GetDelay() const	{	return Delay;	}
 	inline void SetDelay(mreal d)	{	Delay=d;	}

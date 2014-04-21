@@ -388,6 +388,8 @@ public:
 	inline void SetFrame(int i)	{	mgl_set_frame(gr, i);	}
 	/// Append drawing data from i-th frame (work if MGL_VECT_FRAME is set on)
 	inline void ShowFrame(int i){	mgl_show_frame(gr, i);	}
+	/// Force preparing the image. It can be useful for OpenGL mode mostly.
+	inline void Rasterize()			{	mgl_rasterize(gr);	}
 
 	/// Start write frames to cinema using GIF format
 	inline void StartGIF(const char *fname, int ms=100)
@@ -460,6 +462,7 @@ public:
 
 	/// Clear up the frame
 	inline void Clf(double r, double g, double b)	{	mgl_clf_rgb(gr, r, g, b);	}
+	inline void Clf(const char *col)	{	mgl_clf_str(gr, col);	}
 	inline void Clf(char col)	{	mgl_clf_chr(gr, col);	}
 	inline void Clf()	{	mgl_clf(gr);	}
 	/// Clear unused points and primitives. Useful only in combination with SetFaceNum().

@@ -317,25 +317,6 @@ void mglStartThread(void (mglCanvas::*func)(long i, long n, const void *p), mglC
 	{	mglNumThr = 1;	(gr->*func)(0,n,p);	}
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::Rasterize()
-{
-	Finish();
-	memcpy(GB,G4,4*Width*Height);
-}
-//-----------------------------------------------------------------------------
-void mglCanvas::LoadBackground(const char *fname)
-{
-	
-}
-//-----------------------------------------------------------------------------
-void mglCanvas::FillBackground(const char *col)
-{
-/*	mglColor c(col);
-	mglRGBA cc;
-#pragma omp parallel for
-	*/
-}
-//-----------------------------------------------------------------------------
 void mglCanvas::pxl_combine(long id, long n, const void *)
 {
 	unsigned char c[4],*cc;
@@ -343,7 +324,7 @@ void mglCanvas::pxl_combine(long id, long n, const void *)
 #pragma omp parallel for private(c,cc)
 #endif
 	for(long i=id;i<n;i+=mglNumThr)
-	{	cc = C+12*i;		memcpy(c,BDef,4);
+	{	cc = C+12*i;		memcpy(c,GB+4*i,4);	// memcpy(c,BDef,4);
 		combine(c,cc+8);	combine(c,cc+4);
 		combine(c,cc);		memcpy(G4+4*i,c,4);	}
 }
@@ -362,8 +343,9 @@ void mglCanvas::pxl_backgr(long id, long n, const void *)
 #if !MGL_HAVE_PTHREAD
 #pragma omp parallel for private(c)
 #endif
-	for(long i=id;i<n;i+=mglNumThr)	// TODO external bitmap can be here if((Flag&3)!=2)
-	{	memcpy(c,BDef,4);	combine(c,G4+4*i);	memcpy(G+3*i,c,3);	}
+	for(long i=id;i<n;i+=mglNumThr)
+//	{	memcpy(c,BDef,4);	combine(c,G4+4*i);	memcpy(G+3*i,c,3);	}
+	{	memcpy(c,GB+4*i,4);	combine(c,G4+4*i);	memcpy(G+3*i,c,3);	}
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::pxl_transform(long id, long n, const void *)
@@ -649,10 +631,49 @@ void mglCanvas::Clf(mglColor Back)
 	}
 
 //	if(Back==NC)		Back = mglColor(1,1,1);
-	if((Flag&3)==2)	Back = mglColor(0,0,0);
-	if(Back!=NC)
-	{	BDef[0]=Back.r*255;	BDef[1]=Back.g*255;BDef[2]=Back.b*255;	BDef[3]=0;	}
+	if((Flag&3)==2)	Back = mglColor(0,0,0,0);
+	if(Back!=NC)	FillBackground(Back);
+//	{	BDef[0]=Back.r*255;	BDef[1]=Back.g*255;BDef[2]=Back.b*255;	BDef[3]=0;	}
 	ClfZB(true);
+}
+//-----------------------------------------------------------------------------
+void mglCanvas::Clf(const char *col)
+{
+	Fog(0);		PDef = 0xffff;	pPos = 0;	StartAutoGroup(NULL);
+	Pnt.clear();	Prm.clear();	Ptx.clear();	Glf.clear();
+	Sub.clear();	Leg.clear();	Grp.clear();	Act.clear();
+	pnt_col.clear();	prm_col.clear();
+
+#pragma omp critical(txt)
+	{
+		Txt.clear();	Txt.reserve(3);
+		mglTexture t1(MGL_DEF_PAL,-1), t2(MGL_DEF_SCH,1);
+		MGL_PUSH(Txt,t1,mutexTxt);
+		MGL_PUSH(Txt,t2,mutexTxt);
+	}
+
+	mglTexture txt(col,0,0);
+	FillBackground(txt.col[1]);
+	ClfZB(true);
+}
+//-----------------------------------------------------------------------------
+void mglCanvas::Rasterize()
+{
+	Finish();
+	memcpy(GB,G4,4*Width*Height);
+}
+//-----------------------------------------------------------------------------
+void mglCanvas::LoadBackground(const char *fname)
+{
+	// TODO
+}
+//-----------------------------------------------------------------------------
+void mglCanvas::FillBackground(const mglColor &cc)
+{
+	BDef[0] = (unsigned char)(255*cc.r);	BDef[1] = (unsigned char)(255*cc.g);
+	BDef[2] = (unsigned char)(255*cc.b);	BDef[3] = (unsigned char)(255*cc.a);
+#pragma omp parallel for
+	for(long i=0;i<Width*Height;i++)	memcpy(GB+4*i,BDef,4);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::pxl_other(long id, long n, const void *p)

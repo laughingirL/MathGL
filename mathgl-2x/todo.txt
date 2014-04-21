@@ -30,7 +30,6 @@
 
 21. Check if Fortran versions possible for: mgl_data_info, mgl_datas_hdf, mgl_get_fit, mgl_get_mess, mgl_get_plotid
 22. Replace pthread by openmp in mgl_draw_thr() and similar
-23. Add function Rasterize() -- Finish() + clear points -- m.b. add background image for export, which will be cleared at Clf()???
 24. Enable consecutive (as multiplication of matrices instead of single summary one) rotation of axis + the same in JS. Problem with widgets?!?
 25. Check samples in EPS,SVG (looks as something wrong with axis range or formulas filling???)
 28. Add FlowData() for getting flow thread coordinates as output array?!!
@@ -39,6 +38,8 @@
 33. Alpha for Face,Rhomb,... ?!?
 34. Axis ticks as number+string, which are proportional to factor (like SetTicks('x',M_PI,"\pi");???
 36. Extra markers for '&' and '&#' signs ?!?
+37. Put s-hull in GPL only block ?!! -- wait D.S. answer
+38. Add function LoadBackground()
 
 ============= DOCUMENTATION =============
 
@@ -53,13 +54,14 @@ C. Translate to Russian everything
 4. Extend docs about region
 5. Docs about mgl_datac_diffr
 6. Docs about GetBGRN
-7. Add arrow style 'X' into docs
-8. Semi-transparent background can be done by
-subplot 1 1 0 '#':rect -1 -1 1 1 '{x00FF00FF}'
+7. Add arrow style 'X' into docs and samples
+8. Semi-transparent background can be done by "clf 'r{A5}'"
 9. Extend "How can I exclude a point or a region of plot from the drawing?" + using SubData()/Evaluate()
 10. Docs about mgl_data_subdata_ext() with NULL argument(s) + new SubData() variants
 11. Manual dashing, like "{df090}" + extend "style"-sample by manual dashing
 12. Manual mask, like "{s00ff00182424f800}" + change "mask"-sample + fix text about manual mask
+13. Replace Cmin,Cmax,Min,Max,... by "color range", "axis range" and so on
+14. Docs about Rasterize()
 
 ============= UDAV =============
 

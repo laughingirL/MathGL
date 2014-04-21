@@ -103,6 +103,8 @@ void MGL_EXPORT mgl_clf_chr(HMGL gr, char ch)
 {	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->Clf(mglColor(ch));	}
 void MGL_EXPORT mgl_clf_rgb(HMGL gr, double r, double g, double b)
 {	mglCanvas *gg = dynamic_cast<mglCanvas *>(gr);	if(gg)	gg->Clf(mglColor(r,g,b));	}
+void MGL_EXPORT mgl_clf_str(HMGL gr, const char *col)
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->Clf(col);	}
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_subplot_d(HMGL gr, int nx,int ny,int m,const char *style,double dx,double dy)
 {
@@ -202,6 +204,9 @@ void MGL_EXPORT mgl_clf_chr_(uintptr_t *gr, const char *ch, int)
 {	_GR_->Clf(mglColor(*ch));	}
 void MGL_EXPORT mgl_clf_rgb_(uintptr_t *gr, mreal *r, mreal *g, mreal *b)
 {	_GR_->Clf(mglColor(*r,*g,*b));	}
+void MGL_EXPORT mgl_clf_str_(uintptr_t *gr, const char *col, int l)
+{	char *s=new char[l+1];	memcpy(s,col,l);	s[l]=0;
+	mgl_clf_str(_GR_,s);	delete []s;	}
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_subplot_d_(uintptr_t *gr, int *nx,int *ny,int *m,const char *st, mreal *dx, mreal *dy,int l)
 {	char *s=new char[l+1];	memcpy(s,st,l);	s[l]=0;
@@ -434,4 +439,8 @@ void MGL_EXPORT mgl_write_prc_(uintptr_t *graph, const char *fname,const char *d
 void MGL_EXPORT mgl_finish(HMGL gr)
 {	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->Finish();	}
 void MGL_EXPORT mgl_finish_(uintptr_t *gr)	{	_GR_->Finish();	}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_rasterize(HMGL gr)
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->Rasterize();	}
+void MGL_EXPORT mgl_rasterize_(uintptr_t *gr)	{	_GR_->Rasterize();	}
 //-----------------------------------------------------------------------------
