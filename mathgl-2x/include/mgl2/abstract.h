@@ -53,7 +53,13 @@ extern MGL_EXPORT void (*mgl_ask_func)(const wchar_t *quest, wchar_t *res);
 class MGL_EXPORT mglDataA
 {
 public:
-	virtual ~mglDataA()	{}
+	std::wstring s;	///< Data name
+	bool temp;		///< This is temporary variable
+	void (*func)(void *);	///< Callback function for destroying
+	void *o; 		///< Pointer to external object
+
+	mglDataA()	{	temp=false;	func=0;	o=0;	}
+	virtual ~mglDataA()	{	if(func)	func(o);	}
 	virtual mreal v(long i,long j=0,long k=0) const = 0;
 	virtual mreal vthr(long i) const = 0;
 	virtual long GetNx() const = 0;

@@ -1279,16 +1279,23 @@ public:
 
 	/// Find variable with given name or add a new one
 	/// NOTE !!! You must not delete obtained data arrays !!!
-	inline mglVar *AddVar(const char *name)
-	{	return dynamic_cast<mglVar *>(mgl_parser_add_var(pr, name));	}
-	inline mglVar *AddVar(const wchar_t *name)
-	{	return dynamic_cast<mglVar *>(mgl_parser_add_varw(pr, name));	}
+	inline mglData *AddVar(const char *name)
+	{	return mgl_parser_add_var(pr, name);	}
+	inline mglData *AddVar(const wchar_t *name)
+	{	return mgl_parser_add_varw(pr, name);	}
 	/// Find variable with given name or return NULL if no one
 	/// NOTE !!! You must not delete obtained data arrays !!!
-	inline mglVar *FindVar(const char *name)
-	{	return dynamic_cast<mglVar *>(mgl_parser_find_var(pr, name));	}
-	inline mglVar *FindVar(const wchar_t *name)
-	{	return dynamic_cast<mglVar *>(mgl_parser_find_varw(pr, name));	}
+	inline mglData *FindVar(const char *name)
+	{	return mgl_parser_find_var(pr, name);	}
+	inline mglData *FindVar(const wchar_t *name)
+	{	return mgl_parser_find_varw(pr, name);	}
+	/// Get variable with given id
+	/// NOTE !!! You must not delete obtained data arrays !!!
+	inline mglData *GetVar(unsigned long id)
+	{	return mgl_parser_get_var(pr,id);	}
+	/// Get number of variables
+	inline long GetNumVar()
+	{	return mgl_parser_num_var(pr);	}
 	/// Delete variable with name
 	inline void DeleteVar(const char *name)		{	mgl_parser_del_var(pr, name);		}
 	inline void DeleteVar(const wchar_t *name)	{	mgl_parser_del_varw(pr, name);		}

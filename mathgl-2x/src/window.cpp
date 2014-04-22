@@ -227,15 +227,12 @@ int MGL_EXPORT mgl_draw_graph(HMGL gr, void *p)
 	return func ? func(&g) : 0;
 }
 //-----------------------------------------------------------------------------
+#if MGL_HAVE_PTHREAD
 MGL_NO_EXPORT void *mgl_draw_calc(void *p)
 {
-#if MGL_HAVE_PTHREAD
-	((mglDraw *)p)->Calc();
-#endif
-	return 0;
+	((mglDraw *)p)->Calc();	return 0;
 }
 //-----------------------------------------------------------------------------
-#if MGL_HAVE_PTHREAD
 void MGL_EXPORT mgl_draw_thr(void *p)
 {
 	mglDraw *d = (mglDraw *)p;

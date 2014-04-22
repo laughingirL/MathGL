@@ -34,7 +34,6 @@ class mglDrawScript;
 class InfoDialog;
 class AnimParam;
 class DatPanel;
-class mglVar;
 class StyleDialog;
 class QPrinter;
 //-----------------------------------------------------------------------------

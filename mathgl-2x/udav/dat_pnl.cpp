@@ -47,7 +47,7 @@ void addDataPanel(QWidget *wnd, QWidget *w, QString name);
 void deleteDat(void *o)		{	if(o)	delete ((DatPanel *)o);	}
 void refreshData(QWidget *w)	{	((DatPanel *)w)->refresh();	}
 //-----------------------------------------------------------------------------
-QWidget *newDataWnd(InfoDialog *inf, QWidget *wnd, mglVar *v)
+QWidget *newDataWnd(InfoDialog *inf, QWidget *wnd, mglData *v)
 {
 	DatPanel *t = new DatPanel(inf);
 	if(v)	t->setVar(v);
@@ -125,7 +125,7 @@ void DatPanel::refresh()
 	ready = true;
 }
 //-----------------------------------------------------------------------------
-void DatPanel::setVar(mglVar *v)
+void DatPanel::setVar(mglData *v)
 {
 	ready = false;
 	if(var)	var->o = 0;
@@ -379,8 +379,7 @@ void DatPanel::hist()
 	bool res = d->exec();
 	if(res && !v1->text().isEmpty() && !v2->text().isEmpty() && !id->text().isEmpty())
 	{
-		mglVar *vv = parser.AddVar(id->text().toStdString().c_str());
-		if(!vv)	return;
+		mglData *vv = parser.AddVar(id->text().toStdString().c_str());
 		vv->Set(var->Hist(nm->value(), v1->text().toDouble(), v2->text().toDouble()));
 		updateDataItems();
 	}

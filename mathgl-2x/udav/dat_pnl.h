@@ -22,7 +22,7 @@
 //-----------------------------------------------------------------------------
 #include <QWidget>
 //-----------------------------------------------------------------------------
-class mglVar;
+class mglData;
 class QMenu;
 class QBoxLayout;
 class QTableWidget;
@@ -39,7 +39,7 @@ public:
 	DatPanel(InfoDialog *inf, QWidget *parent = 0);
 	~DatPanel();
 
-	void setVar(mglVar *v);
+	void setVar(mglData *v);
 	inline long GetNz()	{	return nz;	}	///< Get number of slices
 	QString dataName();
 
@@ -90,7 +90,7 @@ private:
 	QString opers;
 	QTableWidget *tab;	///< Table itself
 	int kz;			///< Current z-slice
-	mglVar *var;	///< Variable with data
+	mglData *var;	///< Variable with data
 //	QSpinBox *sb;	///< SpinBox for selecting slice
 	bool ready;		///< Data is refreshed
 	QSpinBox *sb;

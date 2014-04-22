@@ -30,12 +30,24 @@
 /// Class for working with data array
 #if MGL_NO_DATA_A
 class MGL_EXPORT mglData
+{
+	inline void _init()	{	a=0;	temp=false;	func=0;	o=0;	}
+public:
+	std::wstring s;	///< Data name
+	bool temp;		///< This is temporary variable
+	void (*func)(void *);	///< Callback function for destroying
+	void *o; 		///< Pointer to external object
+	/// Delete the array
+	virtual ~mglData()
+	{	if(func)	func(o);	if(!link && a)	delete []a;	}
 #else
 class MGL_EXPORT mglData : public mglDataA
-#endif
 {
+	inline void _init()	{	a=0;	}
 public:
-
+	/// Delete the array
+	virtual ~mglData()	{	if(!link && a)	delete []a;	}
+#endif
 	long nx;		///< number of points in 1st dimensions ('x' dimension)
 	long ny;		///< number of points in 2nd dimensions ('y' dimension)
 	long nz;		///< number of points in 3d dimensions ('z' dimension)
@@ -44,26 +56,26 @@ public:
 	bool link;		///< use external data (i.e. don't free it)
 
 	/// Initiate by other mglData variable
-	inline mglData(const mglData &d)	{	a=0;	mgl_data_set(this,&d);		}	// NOTE: must be constructor for mglData& to exclude copy one
-	inline mglData(const mglDataA *d)	{	a=0;	mgl_data_set(this, d);		}
+	inline mglData(const mglData &d)	{	_init();	mgl_data_set(this,&d);		}	// NOTE: must be constructor for mglData& to exclude copy one
+	inline mglData(const mglDataA *d)	{	_init();	mgl_data_set(this, d);		}
 	inline mglData(bool, mglData *d)	// NOTE: Variable d will be deleted!!!
 	{	if(d)
 		{	nx=d->nx;	ny=d->ny;	nz=d->nz;	a=d->a;	d->a=0;
+			temp=d->temp;	func=d->func;	o=d->o;	s=d->s;
 			id=d->id;	link=d->link;	delete d;	}
-		else	{	a=0;	Create(1);	}	}
+		else	{	_init();	Create(1);	}	}
 	/// Initiate by flat array
-	inline mglData(int size, const float *d)	{	a=0;	Set(d,size);	}
-	inline mglData(int rows, int cols, const float *d)	{	a=0;	Set(d,cols,rows);	}
-	inline mglData(int size, const double *d)	{	a=0;	Set(d,size);	}
-	inline mglData(int rows, int cols, const double *d)	{	a=0;	Set(d,cols,rows);	}
-	inline mglData(const double *d, int size)	{	a=0;	Set(d,size);	}
-	inline mglData(const double *d, int rows, int cols)	{	a=0;	Set(d,cols,rows);	}
+	inline mglData(int size, const float *d)	{	_init();	Set(d,size);	}
+	inline mglData(int rows, int cols, const float *d)	{	_init();	Set(d,cols,rows);	}
+	inline mglData(int size, const double *d)	{	_init();	Set(d,size);	}
+	inline mglData(int rows, int cols, const double *d)	{	_init();	Set(d,cols,rows);	}
+	inline mglData(const double *d, int size)	{	_init();	Set(d,size);	}
+	inline mglData(const double *d, int rows, int cols)	{	_init();	Set(d,cols,rows);	}
 	/// Read data from file
-	inline mglData(const char *fname)			{	a=0;	Read(fname);	}
+	inline mglData(const char *fname)			{	_init();	Read(fname);	}
 	/// Allocate the memory for data array and initialize it zero
-	inline mglData(long xx=1,long yy=1,long zz=1)	{	a=0;	Create(xx,yy,zz);	}
-	/// Delete the array
-	virtual ~mglData()	{	if(!link && a)	delete []a;	}
+	inline mglData(long xx=1,long yy=1,long zz=1)	{	_init();	Create(xx,yy,zz);	}
+
 	inline mreal GetVal(long i, long j=0, long k=0)
 	{	return mgl_data_get_value(this,i,j,k);}
 	inline void SetVal(mreal f, long i, long j=0, long k=0)
@@ -423,9 +435,9 @@ public:
 
 	/// Copy data from other mglData variable
 	inline mglData &operator=(const mglData &d)
-	{	if(this!=&d)	Set(d.a,d.nx,d.ny,d.nz);	return *this;	}
+	{	if(this!=&d)	mgl_data_set(this,&d);	return *this;	}
 	inline mreal operator=(mreal val)
-	{	for(long i=0;i<nx*ny*nz;i++)	a[i]=val;	return val;	}
+	{	mgl_data_fill(this,val,val,'x');	return val;	}
 	/// Multiply the data by other one for each element
 	inline void operator*=(const mglDataA &d)	{	mgl_data_mul_dat(this,&d);	}
 	/// Divide the data by other one for each element
@@ -571,58 +583,6 @@ public:
 	{	return mgl_expr_diff_v(ex,dir, var);	}
 #endif
 };
-//-----------------------------------------------------------------------------
-#ifndef SWIG
-/// Structure for handling named mglData (used by mglParse class).
-class MGL_EXPORT mglVar : public mglData
-{
-public:
-	std::wstring s;	///< Data name
-	void *o; 		///< Pointer to external object
-	mglVar *next;	///< Pointer to next instance in list
-	mglVar *prev;	///< Pointer to previous instance in list
-	bool temp;		///< This is temporary variable
-	void (*func)(void *);	///< Callback function for destroying
-
-	mglVar(std::wstring name=L""):mglData()
-	{	o=0;	next=prev=0;	func=0;	temp=false;	s=name;	}
-	mglVar(mglVar **head, std::wstring name=L""):mglData()
-	{	o=0;	next=*head;	prev=0;	*head=this;	func=0;	temp=false;	s=name;	}
-	mglVar(mglVar **head, const mglData &dat, std::wstring name):mglData(dat)
-	{	o=0;	next=*head;	prev=0;	*head=this;	func=0;	temp=false;	s=name;	}
-	mglVar(mglVar **head, HCDT dat, std::wstring name):mglData(dat)
-	{	o=0;	next=*head;	prev=0;	*head=this;	func=0;	temp=false;	s=name;	}
-	mglVar(mglVar *v, std::wstring name, bool link=true):mglData()	// NOTE: use carefully due to Link()!
-	{	if(!v)	throw mglWarnZero;
-		if(link)	Link(*v);	else	Set(*v);
-		o=0;	temp=false;	s=name;	func = v->func;
-		prev = v;	next = v->next;	v->next = this;
-		if(next)	next->prev = this;	}
-	virtual ~mglVar()
-	{
-		if(func)	func(o);
-		if(prev)	prev->next = next;
-		if(next)	next->prev = prev;
-	}
-	/// Make copy which link on the same data but have different name. NOTE: use carefully due to Link()!
-	inline void Duplicate(std::wstring name)
-	{	mglVar *v=new mglVar(name);	v->Link(*this);	v->MoveAfter(this);	}
-	/// Move variable after var and copy func from var (if func is 0)
-	inline void MoveAfter(mglVar *var)
-	{
-		if(prev)	prev->next = next;
-		if(next)	next->prev = prev;
-		prev = next = 0;
-		if(var)
-		{
-			prev = var;	next = var->next;
-			var->next = this;
-			if(func==0)	func = var->func;
-		}
-		if(next)	next->prev = this;
-	}
-};
-#endif
 //-----------------------------------------------------------------------------
 #endif
 #endif

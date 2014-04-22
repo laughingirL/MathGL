@@ -32,7 +32,7 @@
 //-----------------------------------------------------------------------------
 extern bool mglAutoSave;
 extern mglParse parser;
-QWidget *newDataWnd(InfoDialog *inf, QWidget *wnd, mglVar *v);
+QWidget *newDataWnd(InfoDialog *inf, QWidget *wnd, mglData *v);
 void refreshData(QWidget *w);
 //-----------------------------------------------------------------------------
 QWidget *createMemPanel(QWidget *p)	// NOTE: parent should be MainWindow
@@ -98,7 +98,7 @@ void MemPanel::newTable()
 	QString name = QInputDialog::getText(this, tr("UDAV - New variable"),
 				tr("Enter name for new variable"), QLineEdit::Normal, "", &ok);
 	if(!ok || name.isEmpty())	return;
-	mglVar *v = parser.AddVar(name.toStdString().c_str());
+	mglData *v = parser.AddVar(name.toStdString().c_str());
 	QWidget *t;
 	if(v->o)	t = (QWidget *)v->o;
 	else		t = newDataWnd(infoDlg,wnd,v);
@@ -111,7 +111,7 @@ void MemPanel::editData(int n)
 	if(tab->rowCount()<1)	return;
 	if(n<0)	n = tab->currentRow();
 	if(n<0)	n = 0;
-	mglVar *v = parser.FindVar(tab->item(n,0)->text().toStdString().c_str());
+	mglData *v = parser.FindVar(tab->item(n,0)->text().toStdString().c_str());
 	if(!v)	return;
 	QWidget *t;
 	if(v->o)	t = (QWidget *)v->o;
@@ -124,7 +124,7 @@ void MemPanel::delData()
 	if(tab->rowCount()<1)	return;
 	int	n = tab->currentRow();
 	if(n<0)	n = 0;
-	mglVar *v = parser.FindVar(tab->item(n,0)->text().toStdString().c_str());
+	mglData *v = parser.FindVar(tab->item(n,0)->text().toStdString().c_str());
 	if(!v && v->o)	((QWidget *)v->o)->close();
 	parser.DeleteVar(tab->item(n,0)->text().toStdString().c_str());
 	refresh();
@@ -143,7 +143,7 @@ void MemPanel::infoData()
 	if(tab->rowCount()<1)	return;
 	int	n = tab->currentRow();
 	if(n<0)	n = 0;
-	mglVar *v = parser.FindVar(tab->item(n,0)->text().toStdString().c_str());
+	mglData *v = parser.FindVar(tab->item(n,0)->text().toStdString().c_str());
 	if(!v)	return;
 	infoDlg->setVar(v);
 	QString s = QString::fromStdWString(v->s);
@@ -154,29 +154,26 @@ void MemPanel::infoData()
 //-----------------------------------------------------------------------------
 void MemPanel::refresh()
 {
-	mglVar *v = parser.FindVar("");
-	int n = 0;
-	while(v)	{	v = v->next;	n++;	}
+	long n = parser.GetNumVar();
 	tab->setRowCount(n);
-	v = parser.FindVar("");	n = 0;
 	QString s;
 	QTableWidgetItem *it;
 	Qt::ItemFlags flags=Qt::ItemIsSelectable|Qt::ItemIsEnabled;
-	while(v)
+	for(long i=0;i<n;i++)
 	{
+		mglData *v = parser.GetVar(i);
 		s = QString::fromStdWString(v->s);
 		it = new QTableWidgetItem(s);
-		tab->setItem(n,0,it);	it->setFlags(flags);
+		tab->setItem(i,0,it);	it->setFlags(flags);
 		s.sprintf("%ld * %ld * %ld", v->nx, v->ny, v->nz);
 		it = new QTableWidgetItem(s);
-		tab->setItem(n,1,it);	it->setFlags(flags);
+		tab->setItem(i,1,it);	it->setFlags(flags);
 		it->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
 		s.sprintf("%12ld", v->nx*v->ny*v->nz*sizeof(mreal));
 		it = new QTableWidgetItem(s);
-		tab->setItem(n,2,it);	it->setFlags(flags);
+		tab->setItem(i,2,it);	it->setFlags(flags);
 		it->setTextAlignment(Qt::AlignRight|Qt::AlignVCenter);
 		if(v->o)	refreshData((QWidget *)v->o);
-		v = v->next;	n++;
 	}
 	tab->sortItems(colSort);
 }

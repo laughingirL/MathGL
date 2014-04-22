@@ -904,8 +904,9 @@ long T_flip_pro( std::vector<Shx> &pts, std::vector<Triad> &triads, std::vector<
 			}
 
 
-			if( pd < 0 || pd > 100)
-				long dfx = 9;
+// Commented by A.Balakin 21 April 2014 -- unused variable
+//			if( pd < 0 || pd > 100)
+//				long dfx = 9;
 
 			r3 = pts[pd].r;
 			c3 = pts[pd].c;
@@ -1838,8 +1839,9 @@ long T_flip_edge( std::vector<Shx> &pts, std::vector<Triad> &triads, std::vector
 			}
 
 
-			if( pd < 0 || pd > 100)
-				long dfx = 9;
+// Commented by A.Balakin 21 April 2014 -- unused variable
+//			if( pd < 0 || pd > 100)
+//				long dfx = 9;
 
 			r3 = pts[pd].r;
 			c3 = pts[pd].c;

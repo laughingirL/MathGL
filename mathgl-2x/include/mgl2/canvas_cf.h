@@ -443,6 +443,13 @@ HMDT MGL_EXPORT mgl_parser_add_varw(HMPR p, const wchar_t *name);
 HMDT MGL_EXPORT mgl_parser_find_var(HMPR p, const char *name);
 uintptr_t MGL_EXPORT mgl_parser_find_var_(uintptr_t* p, const char *name, int);
 HMDT MGL_EXPORT mgl_parser_find_varw(HMPR p, const wchar_t *name);
+/// Get variable with given id
+/// NOTE !!! You must not delete obtained data arrays !!!
+HMDT MGL_EXPORT mgl_parser_get_var(HMPR p, unsigned long id);
+uintptr_t MGL_EXPORT mgl_parser_get_var_(uintptr_t* p, unsigned long *id);
+/// Get number of variables
+long MGL_EXPORT mgl_parser_num_var(HMPR p);
+long MGL_EXPORT mgl_parser_num_var_(uintptr_t* p);
 
 /// Delete variable with name
 void MGL_EXPORT mgl_parser_del_var(HMPR p, const char *name);

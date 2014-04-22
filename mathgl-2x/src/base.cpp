@@ -968,9 +968,9 @@ mreal mglBase::NextColor(long &id)
 	long i=abs(id)/256, n=Txt[i].n, p=abs(id)&0xff;
 	if(id>=0)	{	p=(p+1)%n;	id = 256*i+p;	}
 //	mglColor c = Txt[i].col[int(MGL_TEXTURE_COLOURS*(p+0.5)/n)];
-	mreal dif, dmin=1;
+/*	mreal dif, dmin=1;
 	// try to find closest color
-/*	for(long j=0;mglColorIds[j].id;j++)	for(long k=1;k<10;k++)
+	for(long j=0;mglColorIds[j].id;j++)	for(long k=1;k<10;k++)
 	{
 		mglColor cc;	cc.Set(mglColorIds[j].col,k/5.);
 		dif = (c-cc).NormS();

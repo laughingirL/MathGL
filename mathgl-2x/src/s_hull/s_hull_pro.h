@@ -58,13 +58,12 @@ struct Triad
 struct Shx
 {
 	long id, trid;
-	double r,c, tr,tc ;
-	double ro;
+	double r,c, tr,tc, ro;
 	Shx() {r=c=tr=tc=ro=0;	id=-1;	trid=0;}	// added by A.Balakin 21 April 2014 -- uninitialised variable
-	Shx(double a, double b) : r(a), c(b), ro(0.0), tr(0.0), tc(0.0), id(-1)
-	{	trid=0;	}		// added by A.Balakin 21 April 2014 -- uninitialised variable
-	Shx(double a, double b, double x) : r(a), c(b), ro(x), id(-1), tr(0), tc(0)
-	{	trid=0;	}		// added by A.Balakin 21 April 2014 -- uninitialised variable
+	Shx(double a, double b) : r(a), c(b)
+	{	trid=0;	ro=tr=tc=0;	id=-1;	}			// added by A.Balakin 21 April 2014 -- uninitialised variable
+	Shx(double a, double b, double x) : r(a), c(b), ro(x)
+	{	trid=0;	tr=tc=0;	id=-1;	}			// added by A.Balakin 21 April 2014 -- uninitialised variable
 	Shx(const Shx &p) : id(p.id), trid(p.trid), r(p.r), c(p.c), tr(p.tr), tc(p.tc), ro(p.ro) {}
 
 	Shx &operator=(const Shx &p)
@@ -100,8 +99,8 @@ struct Dupex
 	double r,c;
 
 	Dupex() {	r=c=0;	id=-1;	}	// added by A.Balakin 21 April 2014 -- uninitialised variable
-	Dupex(double a, double b) : r(a), c(b), id(-1) {}
-	Dupex(double a, double b, long x) : r(a), c(b), id(x) {}
+	Dupex(double a, double b) : id(-1), r(a), c(b) {}
+	Dupex(double a, double b, long x) : id(x), r(a), c(b) {}
 	Dupex(const Dupex &p) : id(p.id),  r(p.r), c(p.c) {}
 
 	Dupex &operator=(const Dupex &p)

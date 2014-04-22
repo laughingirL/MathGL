@@ -115,7 +115,7 @@ void DataOpenDialog::prepareResult()
 	code = "";	numDataOpened++;	data = name->text();
 	// prepare unique value of name for next time
 	char buf[32];	snprintf(buf,32,"mgl_%d",numDataOpened);	name->setText(buf);
-	mglVar *v = parser.AddVar(data.toStdString().c_str());
+	mglData *v = parser.AddVar(data.toStdString().c_str());
 	bool dd=0;
 	if(rA->isChecked())	//	auto sizes
 	{

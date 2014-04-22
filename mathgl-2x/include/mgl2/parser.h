@@ -56,12 +56,7 @@ struct mglNum
 {
 	mreal d;		///< Number itself
 	std::wstring s;	///< Number name
-	mglNum *next;	///< Pointer to next instance in list
-	mglNum *prev;	///< Pointer to prev instance in list
-	mglNum()	{	d=0;	next=prev=0;	}
-	~mglNum();
-	/// Move variable after var and copy func from var (if func is 0)
-	void MoveAfter(mglNum *var);
+	mglNum(mreal val=0)	{	d=val;	}
 };
 //-----------------------------------------------------------------------------
 /// Structure for function name and position.
@@ -92,8 +87,8 @@ class mglParser
 {
 friend void mgl_export(wchar_t *out, const wchar_t *in, int type);
 public:
-	mglVar *DataList;	///< List with data and its names
-	mglNum *NumList;	///< List with numbers and its names
+	std::vector<mglData> DataList;	///< List with data and its names
+	std::vector<mglNum> NumList;	///< List with numbers and its names
 	bool AllowSetSize;	///< Allow using setsize command
 	bool AllowFileIO;	///< Allow reading/saving files
 	bool Stop;			///< Stop command was. Flag prevent further execution
@@ -134,11 +129,11 @@ public:
 	/// Check if name is function and return its address (or 0 if no)
 	long IsFunc(const std::wstring &name, int *narg=0);
 	/// Find variable or return 0 if absent
-	mglVar *FindVar(const char *name);
-	mglVar *FindVar(const wchar_t *name);
+	mglData *FindVar(const char *name);
+	mglData *FindVar(const wchar_t *name);
 	/// Find variable or create it if absent
-	mglVar *AddVar(const char *name);
-	mglVar *AddVar(const wchar_t *name);
+	mglData *AddVar(const char *name);
+	mglData *AddVar(const wchar_t *name);
 	/// Find number or return 0 if absent
 	mglNum *FindNum(const char *name);
 	mglNum *FindNum(const wchar_t *name);
@@ -152,8 +147,6 @@ public:
 	void AddCommand(mglCommand *cmd, int num=0);
 	/// Restore Once flag
 	inline void RestoreOnce()	{	Once = true;	}
-	/// Delete variable
-	void DeleteVar(mglVar *v);
 	/// Delete variable by its name
 	void DeleteVar(const char *name);
 	void DeleteVar(const wchar_t *name);

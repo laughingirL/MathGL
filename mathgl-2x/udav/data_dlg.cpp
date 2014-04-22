@@ -128,11 +128,9 @@ void DataDialog::updateRes()
 void DataDialog::updateNames()
 {
 	name->clear();
-	mglVar *v = parser.FindVar("");
-	QString s;
-	while(v)
-	{	name->addItem(QString::fromStdWString(v->s));		v = v->next;		}
-	
+	long i, n = parser.GetNumVar();
+	for(i=0;i<n;i++)
+		name->addItem(QString::fromStdWString(parser.GetVar(i)->s));
 }
 //-----------------------------------------------------------------------------
 void DataDialog::userRes()

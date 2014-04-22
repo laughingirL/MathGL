@@ -25,7 +25,7 @@
 //-----------------------------------------------------------------------------
 class QMathGL;
 class mglDrawScript;
-class mglVar;
+class mglData;
 class QComboBox;
 class QTextEdit;
 //-----------------------------------------------------------------------------
@@ -36,7 +36,7 @@ Q_OBJECT
 public:
 	InfoDialog(QWidget *parent = 0);
 	virtual ~InfoDialog();
-	void setVar(mglVar *v);
+	void setVar(mglData *v);
 	void setSlice(int k)	{	kz=k;	refresh();	}
 	bool allowRefresh;
 //	void setName(QString &name);
@@ -47,7 +47,7 @@ public slots:
 
 private:
 	int kz;
-	mglVar *var;
+	mglData *var;
 	QMathGL *mgl;
 	QTextEdit *info;
 	QComboBox *kind;

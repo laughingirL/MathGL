@@ -140,11 +140,11 @@ void TextPanel::insPath()
 void TextPanel::refreshData()
 {
 	vars=words;
-	mglVar *v = parser.FindVar("");
-	while(v)
+	long i,n=parser.GetNumVar();
+	for(i=0;i<n;i++)
 	{
+		const mglData *v=parser.GetVar(i);
 		if(v->s.length()>2)	vars<<QString::fromStdWString(v->s);
-		v = v->next;
 	}
 	setCompleter(mglCompleter);
 }
@@ -296,7 +296,7 @@ void TextPanel::loadHDF5(const QString &fileName)
 		else if(H5Tget_class(ht)==H5T_FLOAT || H5Tget_class(ht)==H5T_INTEGER)
 		{
 			for(int j=0;name[j];j++)	if(!isalnum(name[j]))	name[j]='_';
-			mglVar *v = parser.AddVar(name);
+			mglData *v = parser.AddVar(name);
 			nx = ny = nz = 1;
 			if(rank>0 && rank<=3)
 			{
@@ -348,10 +348,11 @@ void TextPanel::saveHDF5(const QString &fileName)
 		H5Dclose(hd);	H5Sclose(hs);
 		delete []buf;
 	}
-	mglVar *v = parser.FindVar("");
+	long i, n = parser.GetNumVar();
 	char name[256];
-	while(v)
+	for(i=0;i<n;i++);
 	{
+		const mglData *v = parser.GetVar(i);
 		wcstombs(name,v->s.c_str(),v->s.length()+1);
 		if(v->nz==1 && v->ny == 1)
 		{	rank = 1;	dims[0] = v->nx;	}
@@ -364,7 +365,6 @@ void TextPanel::saveHDF5(const QString &fileName)
 
 		H5Dwrite(hd, H5T_NATIVE_FLOAT, hs, hs, H5P_DEFAULT, v->a);
 		H5Dclose(hd);	H5Sclose(hs);
-		v = v->next;
 	}
 	H5Fclose(hf);
 	setCurrentFile(fileName);
