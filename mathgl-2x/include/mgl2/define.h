@@ -156,8 +156,8 @@ typedef float mreal;
 #define mgl_isnan(a)	((a)!=(a))
 //#define mgl_isnum(a)	((a)==(a) && 2*(a)!=(a))
 #define mgl_isnum(a)	((a)==(a))
-#define mgl_isfin(a)	((a)-(a)==0.)
-#define mgl_isbad(a)	((a)-(a)!=0.)
+#define mgl_isfin(a)	((a)-(a)==mreal(0.))
+#define mgl_isbad(a)	((a)-(a)!=mreal(0.))
 //-----------------------------------------------------------------------------
 #define SMOOTH_NONE		0
 #define SMOOTH_LINE_3	1
@@ -253,6 +253,7 @@ extern float mgl_cos[360];	///< contain cosine with step 1 degree
 //-----------------------------------------------------------------------------
 #include <complex>
 typedef std::complex<mreal> dual;
+typedef std::complex<double> ddual;
 //-----------------------------------------------------------------------------
 extern "C" {
 #else

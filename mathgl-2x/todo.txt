@@ -29,7 +29,6 @@
 20. Add mglDataVar, mglDataCol, mglDataFunc for handling special (temporary) data + add real(), imag(), conj() + accurate types in MGL + add 'expr'/'complex' in MGL
 
 21. Check if Fortran versions possible for: mgl_data_info, mgl_datas_hdf, mgl_get_fit, mgl_get_mess, mgl_get_plotid
-22. Replace pthread by openmp in mgl_draw_thr() and similar
 24. Enable consecutive (as multiplication of matrices instead of single summary one) rotation of axis + the same in JS. Problem with widgets?!?
 25. Check samples in EPS,SVG (looks as something wrong with axis range or formulas filling???)
 28. Add FlowData() for getting flow thread coordinates as output array?!!
@@ -39,7 +38,7 @@
 34. Axis ticks as number+string, which are proportional to factor (like SetTicks('x',M_PI,"\pi");???
 36. Extra markers for '&' and '&#' signs ?!?
 37. Put s-hull in GPL only block ?!! -- wait D.S. answer
-38. Add function LoadBackground()
+38. Read JPEG files for Background() and mglData::Import()
 
 ============= DOCUMENTATION =============
 

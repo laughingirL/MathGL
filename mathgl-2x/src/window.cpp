@@ -235,13 +235,13 @@ MGL_NO_EXPORT void *mgl_draw_calc(void *p)
 	return 0;
 }
 //-----------------------------------------------------------------------------
+#if MGL_HAVE_PTHREAD
 void MGL_EXPORT mgl_draw_thr(void *p)
 {
-#if MGL_HAVE_PTHREAD
 	mglDraw *d = (mglDraw *)p;
 	if(!d || d->running)	return;
 	pthread_create(&(d->thr),0,mgl_draw_calc,d);
 	pthread_detach(d->thr);
-#endif
 }
+#endif
 //-----------------------------------------------------------------------------
