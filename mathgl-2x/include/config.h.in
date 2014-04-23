@@ -2,7 +2,6 @@
 #define _MGL_CONFIG_H_
 
 #define MGL_USE_DOUBLE	${MGL_USE_DOUBLE}
-#define MGL_NO_DATA_A	${MGL_NO_DATA_A}
 
 #if defined(_MSC_VER) || defined(__BORLANDC__)
 #define MGL_HAVE_PTHREAD	0

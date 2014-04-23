@@ -43,24 +43,24 @@ public:
 	bool link;		///< use external data (i.e. don't free it)
 
 	/// Initiate by other mglDataC variable
-	inline mglDataC(const mglDataC &d)	{	a=0;	mgl_datac_set(this,&d);		}	// NOTE: must be constructor for mglDataC& to exclude copy one
-	inline mglDataC(const mglDataA *d)	{	a=0;	mgl_datac_set(this, d);		}
-	inline mglDataC(bool, mglDataC *d)	// NOTE: Variable d will be deleted!!!
+	mglDataC(const mglDataC &d)	{	a=0;	mgl_datac_set(this,&d);		}	// NOTE: must be constructor for mglDataC& to exclude copy one
+	mglDataC(const mglDataA *d)	{	a=0;	mgl_datac_set(this, d);		}
+	mglDataC(bool, mglDataC *d)	// NOTE: Variable d will be deleted!!!
 	{	if(d)
 		{	nx=d->nx;	ny=d->ny;	nz=d->nz;	a=d->a;	d->a=0;
 			id=d->id;	link=d->link;	delete d;	}
 		else	{	a=0;	Create(1);	}	}
 	/// Initiate by flat array
-	inline mglDataC(int size, const dual *d)	{	a=0;	Set(d,size);	}
-	inline mglDataC(int rows, int cols, const dual *d)	{	a=0;	Set(d,cols,rows);	}
-	inline mglDataC(int size, const double *d)	{	a=0;	Set(d,size);	}
-	inline mglDataC(int rows, int cols, const double *d)	{	a=0;	Set(d,cols,rows);	}
-	inline mglDataC(int size, const float *d)	{	a=0;	Set(d,size);	}
-	inline mglDataC(int rows, int cols, const float *d)	{	a=0;	Set(d,cols,rows);	}
+	mglDataC(int size, const dual *d)	{	a=0;	Set(d,size);	}
+	mglDataC(int rows, int cols, const dual *d)	{	a=0;	Set(d,cols,rows);	}
+	mglDataC(int size, const double *d)	{	a=0;	Set(d,size);	}
+	mglDataC(int rows, int cols, const double *d)	{	a=0;	Set(d,cols,rows);	}
+	mglDataC(int size, const float *d)	{	a=0;	Set(d,size);	}
+	mglDataC(int rows, int cols, const float *d)	{	a=0;	Set(d,cols,rows);	}
 	/// Read data from file
-	inline mglDataC(const char *fname)			{	a=0;	Read(fname);	}
+	mglDataC(const char *fname)			{	a=0;	Read(fname);	}
 	/// Allocate the memory for data array and initialize it zero
-	inline mglDataC(long xx=1,long yy=1,long zz=1)	{	a=0;	Create(xx,yy,zz);	}
+	mglDataC(long xx=1,long yy=1,long zz=1)	{	a=0;	Create(xx,yy,zz);	}
 	/// Delete the array
 	virtual ~mglDataC()	{	if(!link && a)	delete []a;	}
 	inline dual GetVal(long i, long j=0, long k=0)
@@ -68,9 +68,9 @@ public:
 	inline void SetVal(dual f, long i, long j=0, long k=0)
 	{	mgl_datac_set_value(this,f,i,j,k);	}
 	/// Get sizes
-	inline long GetNx() const	{	return nx;	}
-	inline long GetNy() const	{	return ny;	}
-	inline long GetNz() const	{	return nz;	}
+	long GetNx() const	{	return nx;	}
+	long GetNy() const	{	return ny;	}
+	long GetNz() const	{	return nz;	}
 
 	/// Link external data array (don't delete it at exit)
 	inline void Link(dual *A, long NX, long NY=1, long NZ=1)
@@ -343,9 +343,9 @@ public:
 	inline void PrintInfo(FILE *fp) const
 	{	if(fp)	{	fprintf(fp,"%s",mgl_data_info(this));	fflush(fp);	}	}
 	/// Get maximal value of the data
-	inline mreal Maximal() const	{	return mgl_data_max(this);	}
+	mreal Maximal() const	{	return mgl_data_max(this);	}
 	/// Get minimal value of the data
-	inline mreal Minimal() const	{	return mgl_data_min(this);	}
+	mreal Minimal() const	{	return mgl_data_min(this);	}
 	/// Get maximal value of the data and its position
 	inline mreal Maximal(long &i,long &j,long &k) const
 	{	return mgl_data_max_int(this,&i,&j,&k);	}
@@ -373,24 +373,24 @@ public:
 #endif
 
 	/// Get the value in given cell of the data without border checking
-	inline mreal v(long i,long j=0,long k=0) const
+	mreal v(long i,long j=0,long k=0) const
 #ifdef DEBUG
 	{	if(i<0 || j<0 || k<0 || i>=nx || j>=ny || k>=nz)	printf("Wrong index in mglData");
 		return abs(a[i+nx*(j+ny*k)]);	}
 #else
 	{	return abs(a[i+nx*(j+ny*k)]);	}
 #endif
-	inline mreal vthr(long i) const {	return abs(a[i]);	}
+	mreal vthr(long i) const {	return abs(a[i]);	}
 	// add for speeding up !!!
-	inline mreal dvx(long i,long j=0,long k=0) const
+	mreal dvx(long i,long j=0,long k=0) const
 	{   register long i0=i+nx*(j+ny*k);
 		return i>0? abs(i<nx-1? (a[i0+1]-a[i0-1])/mgl2:a[i0]-a[i0-1]) : abs(a[i0+1]-a[i0]);	}
-	inline mreal dvy(long i,long j=0,long k=0) const
+	mreal dvy(long i,long j=0,long k=0) const
 	{   register long i0=i+nx*(j+ny*k);
-	return j>0? abs(j<ny-1? (a[i0+nx]-a[i0-nx])/mgl2:a[i0]-a[i0-nx]) : abs(a[i0+nx]-a[i0]);}
-	inline mreal dvz(long i,long j=0,long k=0) const
+		return j>0? abs(j<ny-1? (a[i0+nx]-a[i0-nx])/mgl2:a[i0]-a[i0-nx]) : abs(a[i0+nx]-a[i0]);}
+	mreal dvz(long i,long j=0,long k=0) const
 	{   register long i0=i+nx*(j+ny*k), n=nx*ny;
-	return k>0? abs(k<nz-1? (a[i0+n]-a[i0-n])/mgl2:a[i0]-a[i0-n]) : abs(a[i0+n]-a[i0]);	}
+		return k>0? abs(k<nz-1? (a[i0+n]-a[i0-n])/mgl2:a[i0]-a[i0-n]) : abs(a[i0+n]-a[i0]);	}
 };
 //-----------------------------------------------------------------------------
 #ifndef SWIG

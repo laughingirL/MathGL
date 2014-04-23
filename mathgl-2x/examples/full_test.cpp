@@ -69,14 +69,9 @@ void smgl_style(mglGraph *gr);
 #include <mgl2/font.h>
 void test(mglGraph *gr)
 {
-	mglData dat("semisphere.csv");  // read data points from file
-	mglData x=dat.SubData(0), y=dat.SubData(1); // extract x-, y-coordinates
-	mglData res = mglTriangulation(x,y); // do triangulation
-	return;
-
 	mglParse par;
 	setlocale(LC_CTYPE, "");
-	par.Execute(gr,"fplot 'x' ';'");
+	par.Execute(gr,"new x 10 'x':area x x^3");
 //	par.Execute(gr,"alpha on:subplot 1 1 0 '#':box\nrect 0 0 1 1 1 1 '{x0FFF00ff}'\nline 0 0 0 1 1 0 'b'");
 //	par.Execute(gr,"alpha on:fsurf 'x' 'Bb{A1}cy{xFF000088}R'");
 	gr->WriteSVG("test.svg");

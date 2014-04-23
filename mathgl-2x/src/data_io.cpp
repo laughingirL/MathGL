@@ -1174,3 +1174,6 @@ int MGL_EXPORT mgl_data_read_all_(uintptr_t *d, const char *fname, int *as_slice
 {	char *s=new char[l+1];		memcpy(s,fname,l);	s[l]=0;
 	int r = mgl_data_read_all(_DT_,s,*as_slice);	delete []s;	return r;	}
 //-----------------------------------------------------------------------------
+void MGL_EXPORT print_del(void *o)
+{	printf("Delete '%s'\n",((const mglDataA *)o)->s.c_str());	fflush(stdout);	}
+//-----------------------------------------------------------------------------

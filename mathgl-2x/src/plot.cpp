@@ -366,9 +366,9 @@ void MGL_EXPORT mgl_plot(HMGL gr, HCDT y, const char *pen, const char *opt)
 	register long n=y->GetNx();
 	if(n<2)	{	gr->SetWarn(mglWarnLow,"Plot");	return;	}
 	gr->SaveState(opt);
-	mglData x(n), z(n);
+	mglDataV x(n), z(n);
 	x.Fill(gr->Min.x,gr->Max.x);
-	mreal zm = gr->AdjustZMin();	z.Fill(zm,zm);
+	z.Fill(gr->AdjustZMin());
 	mgl_plot_xyz(gr,&x,y,&z,pen,0);
 }
 //-----------------------------------------------------------------------------

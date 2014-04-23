@@ -37,6 +37,9 @@
 34. Axis ticks as number+string, which are proportional to factor (like SetTicks('x',M_PI,"\pi");???
 36. Extra markers for '&' and '&#' signs ?!?
 38. Read JPEG files for Background() and mglData::Import()
+39. Polygon(mglPoint cnt, mglPoint rad, const char *col, mglPoint axis=mglPoint(NAN));
+40. Angle(mglPoint p0, mglPoint p1, mreal degree, const char *style); 't' for text label
+41. Fractals ???
 
 ============= DOCUMENTATION =============
 
@@ -59,6 +62,7 @@ C. Translate to Russian everything
 12. Manual mask, like "{s00ff00182424f800}" + change "mask"-sample + fix text about manual mask
 13. Replace Cmin,Cmax,Min,Max,... by "color range", "axis range" and so on
 14. Docs about Rasterize()
+15. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using Stem()
 
 ============= UDAV =============
 

@@ -40,15 +40,10 @@ typedef mglParser* HMPR;
 typedef mglFormula* HMEX;
 typedef mglFormulaC* HAEX;
 //-----------------------------------------------------------------------------
-#if MGL_NO_DATA_A
-#define mglDataA mglData
-typedef const mglData* HCDT;
-#include "mgl2/data.h"
-#else
-//-----------------------------------------------------------------------------
 /// Callback function for asking user a question. Result shouldn't exceed 1024.
 extern MGL_EXPORT void (*mgl_ask_func)(const wchar_t *quest, wchar_t *res);
 //-----------------------------------------------------------------------------
+void MGL_EXPORT print_del(void *o);
 /// Abstract class for data array
 class MGL_EXPORT mglDataA
 {
@@ -58,7 +53,7 @@ public:
 	void (*func)(void *);	///< Callback function for destroying
 	void *o; 		///< Pointer to external object
 
-	mglDataA()	{	temp=false;	func=0;	o=0;	}
+	mglDataA()	{	temp=false;	func=print_del;	o=this;	}
 	virtual ~mglDataA()	{	if(func)	func(o);	}
 	virtual mreal v(long i,long j=0,long k=0) const = 0;
 	virtual mreal vthr(long i) const = 0;
@@ -75,7 +70,6 @@ public:
 	virtual mreal dvz(long i,long j=0,long k=0) const = 0;
 //	{	return k>0 ? (k<GetNz()-1 ? (v(i,j,k+1)-v(i,j,k-1))/2 : v(i,j,k)-v(i,j,k-1)) : v(i,j,1)-v(i,j,0);	}
 };
-#endif
 typedef const mglDataA* HCDT;
 //-----------------------------------------------------------------------------
 /// Structure for color ID
