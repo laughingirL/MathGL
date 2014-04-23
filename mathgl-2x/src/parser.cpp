@@ -125,10 +125,9 @@ int mglParser::Exec(mglGraph *gr, const wchar_t *com, long n, mglArg *a, const s
 	if(rts->type == 4)
 	{
 		if(n<1 || mgl_check_for_name(var))	return 2;
-		mglData *v = AddVar(var.c_str());
-		v->Create(1,1,1);
-		a[0].type = 0;	a[0].d = v;
+		a[0].type = 0;	a[0].d = AddVar(var.c_str());
 		a[0].w = var;	k[0] = 'd';
+		a[0].d->Create(1,1,1);
 	}
 	char *o=0;
 	if(opt && *opt)	// TODO: parse arguments of options
@@ -307,13 +306,14 @@ void mglParser::FillArg(mglGraph *gr, int k, std::wstring *arg, mglArg *a)
 			u=new mglData;
 			std::wstring s = arg[n].substr(1,arg[n].length()-2);
 			a[n-1].w = L"/*"+s+L"*/";
-			a[n-1].type = 0;	a[n-1].d = u;
+			a[n-1].type = 0;
 			ParseDat(gr, s, *u);
 			u->temp=true;	DataList.push_back(*u);
+			a[n-1].d = &(DataList[DataList.size()-1]);
 		}
-		else if((v = FindVar(arg[n].c_str()))!=0)	// have to find normal variables (for data creation)
+		else if((v = FindVar(arg[n].c_str()))!=0)	// try to find normal variables (for data creation)
 		{	a[n-1].type=0;	a[n-1].d=v;	a[n-1].w=v->s;	}
-		else if((f = FindNum(arg[n].c_str()))!=0)	// have to find normal variables (for data creation)
+		else if((f = FindNum(arg[n].c_str()))!=0)	// try to find normal number (for data creation)
 		{	a[n-1].type=2;	a[n-1].d=0;	a[n-1].v=f->d;	a[n-1].w = f->s;	}
 		else
 		{	// parse all numbers and formulas by unified way
@@ -325,7 +325,7 @@ void mglParser::FillArg(mglGraph *gr, int k, std::wstring *arg, mglArg *a)
 				u=new mglData;	u->Set(d);
 				a[n-1].w = L"/*"+arg[n]+L"*/";
 				u->temp=true;	DataList.push_back(*u);
-				a[n-1].type = 0;	a[n-1].d = u;
+				a[n-1].type = 0;	a[n-1].d = &(DataList[DataList.size()-1]);
 			}
 		}
 	}
