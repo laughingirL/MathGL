@@ -7,7 +7,7 @@
 * Add manual dash style, like "{df090}"
 * Add manual mask style, like "{s00ff00182424f800}"
 * Function mgl_data_subdata_ext() handle NULL argument(s). Add variants of mglData::SubData() with 1 and 2 arguments.
-* Use new s-hull version.
+* Use new s-hull version for triangulation.
 
 2.2.2.1 Released 19 March 2014
 

@@ -106,8 +106,8 @@ struct MGL_EXPORT mglMatrix
 	void Rotate(mreal tetz,mreal tetx,mreal tety);
 	void RotateN(mreal Tet,mreal x,mreal y,mreal z);
 	inline void clear()	{	x=y=z=pf=0;	memset(b,0,9*sizeof(mreal));	b[0]=b[4]=b[8]=1;	norot=false;	}
-	inline mglMatrix &operator=(const mglMatrix &a)
-	{	x=a.x;	y=a.y;	z=a.z;	pf=a.pf;	memcpy(b,a.b,9*sizeof(mreal));	norot=false;	return *this;	}
+	inline const mglMatrix &operator=(const mglMatrix &a)
+	{	x=a.x;	y=a.y;	z=a.z;	pf=a.pf;	memcpy(b,a.b,9*sizeof(mreal));	norot=false;	return a;	}
 };
 inline bool operator==(const mglMatrix &a, const mglMatrix &b)
 {	return b.x==a.x&&b.y==a.y&&b.z==a.z&&b.pf==a.pf&&!memcmp(b.b,a.b,9*sizeof(mreal));}
@@ -199,9 +199,9 @@ struct MGL_EXPORT mglGlyph
 
 	void Create(long Nt, long Nl);
 	bool operator==(const mglGlyph &g);
-	inline mglGlyph &operator=(const mglGlyph &a)
+	inline const mglGlyph &operator=(const mglGlyph &a)
 	{	Create(a.nt, a.nl);	memcpy(trig, a.trig, 6*nt*sizeof(short));
-		memcpy(line, a.line, 2*nl*sizeof(short));	return *this;	}
+		memcpy(line, a.line, 2*nl*sizeof(short));	return a;	}
 };
 //-----------------------------------------------------------------------------
 #define MGL_TEXTURE_COLOURS 512

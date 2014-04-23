@@ -279,7 +279,7 @@ uintptr_t MGL_EXPORT mgl_create_cexpr_(const char *expr, int l)
 {	char *s=new char[l+1];	memcpy(s,expr,l);	s[l]=0;
 	uintptr_t res = uintptr_t(mgl_create_cexpr(s));
 	delete []s;	return res;	}
-void MGL_EXPORT mgl_delete_cexpr(HAEX ex)	{	delete ex;	}
+void MGL_EXPORT mgl_delete_cexpr(HAEX ex)	{	if(ex)	delete ex;	}
 void MGL_EXPORT mgl_delete_cexpr_(uintptr_t *ex)	{	mgl_delete_cexpr((HAEX)ex);	}
 dual MGL_EXPORT mgl_cexpr_eval(HAEX ex, dual x, dual y,dual z)
 {	return ex->Calc(x,y,z);	}

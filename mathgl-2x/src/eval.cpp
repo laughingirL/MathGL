@@ -716,7 +716,7 @@ int MGL_NO_EXPORT mglFindInText(char *str,const char *lst)
 }
 //-----------------------------------------------------------------------------
 HMEX MGL_EXPORT mgl_create_expr(const char *expr)	{	return new mglFormula(expr);	}
-void MGL_EXPORT mgl_delete_expr(HMEX ex)	{	delete ex;	}
+void MGL_EXPORT mgl_delete_expr(HMEX ex)	{	if(ex)	delete ex;	}
 double MGL_EXPORT mgl_expr_eval(HMEX ex, double x, double y,double z)
 {	return ex->Calc(x,y,z);	}
 double MGL_EXPORT mgl_expr_eval_v(HMEX ex, mreal *var)

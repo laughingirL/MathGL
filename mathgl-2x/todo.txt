@@ -34,10 +34,8 @@
 28. Add FlowData() for getting flow thread coordinates as output array?!!
 31. Complex (hex) colors in inline text command (like #{b9} or #{x0000ff})
 32. Gradient for text (glyph-by-glyph) for whole string (not inline) ???
-33. Alpha for Face,Rhomb,... ?!?
 34. Axis ticks as number+string, which are proportional to factor (like SetTicks('x',M_PI,"\pi");???
 36. Extra markers for '&' and '&#' signs ?!?
-37. Put s-hull in GPL only block ?!! -- wait D.S. answer
 38. Read JPEG files for Background() and mglData::Import()
 
 ============= DOCUMENTATION =============

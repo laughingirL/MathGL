@@ -170,15 +170,15 @@ public:
 	inline void Modify(const char *eq,const mglDataA &vdat)
 	{	mgl_data_modify_vw(this,eq,&vdat,0);	}
 	/// Modify the data by specified formula assuming x,y,z in range [r1,r2]
-	inline void Fill(mglBase *gr, const char *eq, const char *opt="")
+	inline void Fill(HMGL gr, const char *eq, const char *opt="")
 	{	mgl_data_fill_eq(gr,this,eq,0,0,opt);	}
-	inline void Fill(mglBase *gr, const char *eq, const mglDataA &vdat, const char *opt="")
+	inline void Fill(HMGL gr, const char *eq, const mglDataA &vdat, const char *opt="")
 	{	mgl_data_fill_eq(gr,this,eq,&vdat,0,opt);	}
-	inline void Fill(mglBase *gr, const char *eq, const mglDataA &vdat, const mglDataA &wdat,const char *opt="")
+	inline void Fill(HMGL gr, const char *eq, const mglDataA &vdat, const mglDataA &wdat,const char *opt="")
 	{	mgl_data_fill_eq(gr,this,eq,&vdat,&wdat,opt);	}
 	/// Equidistantly fill the data to range [x1,x2] in direction dir
 	inline void Fill(mreal x1,mreal x2=NaN,char dir='x')
-	{	return mgl_data_fill(this,x1,x2,dir);	}
+	{	mgl_data_fill(this,x1,x2,dir);	}
 	/// Fill the data by interpolated values of vdat parametrically depended on xdat,ydat,zdat for x,y,z in range [p1,p2]
 	inline void Refill(const mglDataA &xdat, const mglDataA &vdat, mreal x1, mreal x2,long sl=-1)
 	{	mgl_data_refill_x(this,&xdat,&vdat,x1,x2,sl);	}
@@ -189,14 +189,14 @@ public:
 	inline void Refill(const mglDataA &xdat, const mglDataA &ydat, const mglDataA &zdat, const mglDataA &vdat, mglPoint p1, mglPoint p2)
 	{	mgl_data_refill_xyz(this,&xdat,&ydat,&zdat,&vdat,p1.x,p2.x,p1.y,p2.y,p1.z,p2.z);	}
 	/// Fill the data by interpolated values of vdat parametrically depended on xdat,ydat,zdat for x,y,z in axis range of gr
-	inline void Refill(mglBase *gr, const mglDataA &xdat, const mglDataA &vdat, long sl=-1, const char *opt="")
+	inline void Refill(HMGL gr, const mglDataA &xdat, const mglDataA &vdat, long sl=-1, const char *opt="")
 	{	mgl_data_refill_gr(gr,this,&xdat,0,0,&vdat,sl,opt);	}
-	inline void Refill(mglBase *gr, const mglDataA &xdat, const mglDataA &ydat, const mglDataA &vdat, long sl=-1, const char *opt="")
+	inline void Refill(HMGL gr, const mglDataA &xdat, const mglDataA &ydat, const mglDataA &vdat, long sl=-1, const char *opt="")
 	{	mgl_data_refill_gr(gr,this,&xdat,&ydat,0,&vdat,sl,opt);	}
-	inline void Refill(mglBase *gr, const mglDataA &xdat, const mglDataA &ydat, const mglDataA &zdat, const mglDataA &vdat, const char *opt="")
+	inline void Refill(HMGL gr, const mglDataA &xdat, const mglDataA &ydat, const mglDataA &zdat, const mglDataA &vdat, const char *opt="")
 	{	mgl_data_refill_gr(gr,this,&xdat,&ydat,&zdat,&vdat,-1,opt);	}
 	/// Set the data by triangulated surface values assuming x,y,z in axis range of gr
-	inline void Grid(mglBase *gr, const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *opt="")
+	inline void Grid(HMGL gr, const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *opt="")
 	{	mgl_data_grid(gr,this,&x,&y,&z,opt);	}
 	/// Set the data by triangulated surface values assuming x,y,z in range [p1, p2]
 	inline void Grid(const mglDataA &xdat, const mglDataA &ydat, const mglDataA &vdat, mglPoint p1, mglPoint p2)
@@ -434,8 +434,8 @@ public:
 	{	return mgl_data_find_any(this,cond);	}
 
 	/// Copy data from other mglData variable
-	inline mglData &operator=(const mglData &d)
-	{	if(this!=&d)	mgl_data_set(this,&d);	return *this;	}
+	inline const mglData &operator=(const mglData &d)
+	{	if(this!=&d)	mgl_data_set(this,&d);	return d;	}
 	inline mreal operator=(mreal val)
 	{	mgl_data_fill(this,val,val,'x');	return val;	}
 	/// Multiply the data by other one for each element
@@ -534,7 +534,7 @@ inline mglData mglSTFA(const mglDataA &re, const mglDataA &im, long dn, char dir
 {	return mglData(true, mgl_data_stfa(&re,&im,dn,dir));	}
 //-----------------------------------------------------------------------------
 /// Saves result of PDE solving (|u|^2) for "Hamiltonian" ham with initial conditions ini
-inline mglData mglPDE(mglBase *gr, const char *ham, const mglDataA &ini_re, const mglDataA &ini_im, mreal dz=0.1, mreal k0=100,const char *opt="")
+inline mglData mglPDE(HMGL gr, const char *ham, const mglDataA &ini_re, const mglDataA &ini_im, mreal dz=0.1, mreal k0=100,const char *opt="")
 {	return mglData(true, mgl_pde_solve(gr,ham, &ini_re, &ini_im, dz, k0,opt));	}
 /// Saves result of PDE solving for "Hamiltonian" ham with initial conditions ini along a curve ray (must have nx>=7 - x,y,z,px,py,pz,tau or nx=5 - x,y,px,py,tau)
 inline mglData mglQO2d(const char *ham, const mglDataA &ini_re, const mglDataA &ini_im, const mglDataA &ray, mreal r=1, mreal k0=100)
@@ -561,7 +561,7 @@ inline mglData mglTriangulation(const mglDataA &x, const mglDataA &y, const mglD
 inline mglData mglTriangulation(const mglDataA &x, const mglDataA &y)
 {	return mglData(true,mgl_triangulation_2d(&x,&y));	}
 //-----------------------------------------------------------------------------
-/// Wrapper class expression evaluating
+/// Wrapper class for expression evaluating
 class MGL_EXPORT mglExpr
 {
 	HMEX ex;

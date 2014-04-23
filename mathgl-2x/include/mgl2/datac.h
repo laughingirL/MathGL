@@ -1,5 +1,5 @@
 /***************************************************************************
- * data.h is part of Math Graphic Library
+ * datac.h is part of Math Graphic Library
  * Copyright (C) 2007-2014 Alexey Balakin <mathgl.abalakin@gmail.ru>       *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -30,7 +30,7 @@
 #define mgl3 	mreal(3)
 #define mgl4 	mreal(4)
 //-----------------------------------------------------------------------------
-/// Class for working with data array
+/// Class for working with complex data array
 class MGL_EXPORT mglDataC : public mglDataA
 {
 public:
@@ -42,7 +42,7 @@ public:
 	std::string id;	///< column (or slice) names
 	bool link;		///< use external data (i.e. don't free it)
 
-	/// Initiate by other mglData variable
+	/// Initiate by other mglDataC variable
 	inline mglDataC(const mglDataC &d)	{	a=0;	mgl_datac_set(this,&d);		}	// NOTE: must be constructor for mglDataC& to exclude copy one
 	inline mglDataC(const mglDataA *d)	{	a=0;	mgl_datac_set(this, d);		}
 	inline mglDataC(bool, mglDataC *d)	// NOTE: Variable d will be deleted!!!
@@ -160,7 +160,7 @@ public:
 	{	mgl_datac_fill_eq(gr,this,eq,&vdat,&wdat,opt);	}
 	/// Equidistantly fill the data to range [x1,x2] in direction dir
 	inline void Fill(dual x1,dual x2=NaN,char dir='x')
-	{	return mgl_datac_fill(this,x1,x2,dir);	}
+	{	mgl_datac_fill(this,x1,x2,dir);	}
 
 		/// Put value to data element(s)
 	inline void Put(dual val, long i=-1, long j=-1, long k=-1)
@@ -360,11 +360,11 @@ public:
 	{	return mgl_data_min_real(this,&x,&y,&z);	}
 
 	/// Copy data from other mglData variable
-	inline mglDataC &operator=(const mglData &d)
+	inline const mglDataC &operator=(const mglData &d)
 	{	Set(&d);	return *this;	}
 	/// Copy data from other mglDataC variable
-	inline mglDataC &operator=(const mglDataC &d)
-	{	if(this!=&d)	Set(d.a,d.nx,d.ny,d.nz);	return *this;	}
+	inline const mglDataC &operator=(const mglDataC &d)
+	{	if(this!=&d)	Set(d.a,d.nx,d.ny,d.nz);	return d;	}
 	inline dual operator=(dual val)
 	{	for(long i=0;i<nx*ny*nz;i++)	a[i]=val;	return val;	}
 #ifndef SWIG
@@ -416,7 +416,7 @@ inline mglDataC mglQO3dc(const char *ham, const mglDataA &ini_re, const mglDataA
 #define _DC_		((mglDataC *)*d)
 //-----------------------------------------------------------------------------
 #ifndef SWIG
-/// Wrapper class expression evaluating
+/// Wrapper class for complex expression evaluating
 class MGL_EXPORT mglExprC
 {
 	HAEX ex;
