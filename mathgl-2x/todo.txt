@@ -41,6 +41,7 @@
 40. Angle(mglPoint p0, mglPoint p1, mreal degree, const char *style); 't' for text label
 41. Fractals ???
 42. MGL samples update: candle, correl, dots, fit, hist, pde, qo2d, radar, refill, region, schemes, solve, triangulation
+43. Update *.i for new functions {before release!!!}
 
 ============= DOCUMENTATION =============
 

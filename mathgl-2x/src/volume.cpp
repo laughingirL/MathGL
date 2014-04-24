@@ -86,7 +86,7 @@ void MGL_EXPORT mgl_cloud_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const cha
 void MGL_EXPORT mgl_cloud(HMGL gr, HCDT a, const char *sch, const char *opt)
 {
 	gr->SaveState(opt);
-	mglData x(a->GetNx()), y(a->GetNy()),z(a->GetNz());
+	mglDataV x(a->GetNx()), y(a->GetNy()),z(a->GetNz());
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	z.Fill(gr->Min.z,gr->Max.z);
@@ -331,7 +331,7 @@ void MGL_EXPORT mgl_surf3_xyz_val(HMGL gr, double val, HCDT x, HCDT y, HCDT z, H
 void MGL_EXPORT mgl_surf3_val(HMGL gr, double val, HCDT a, const char *sch, const char *opt)
 {
 	gr->SaveState(opt);
-	mglData x(a->GetNx()), y(a->GetNy()), z(a->GetNz());
+	mglDataV x(a->GetNx()), y(a->GetNy()), z(a->GetNz());
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	z.Fill(gr->Min.z,gr->Max.z);
@@ -352,7 +352,7 @@ void MGL_EXPORT mgl_surf3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const cha
 void MGL_EXPORT mgl_surf3(HMGL gr, HCDT a, const char *sch, const char *opt)
 {
 	gr->SaveState(opt);
-	mglData x(a->GetNx()), y(a->GetNy()), z(a->GetNz());
+	mglDataV x(a->GetNx()), y(a->GetNy()), z(a->GetNz());
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	z.Fill(gr->Min.z,gr->Max.z);
@@ -484,7 +484,7 @@ void MGL_EXPORT mgl_surf3a_xyz_val(HMGL gr, double val, HCDT x, HCDT y, HCDT z, 
 void MGL_EXPORT mgl_surf3a_val(HMGL gr, double val, HCDT a, HCDT b, const char *sch, const char *opt)
 {
 	gr->SaveState(opt);
-	mglData x(a->GetNx()), y(a->GetNy()),z(a->GetNz());
+	mglDataV x(a->GetNx()), y(a->GetNy()),z(a->GetNz());
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	z.Fill(gr->Min.z,gr->Max.z);
@@ -517,7 +517,7 @@ void MGL_EXPORT mgl_surf3a_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, HCDT b, 
 void MGL_EXPORT mgl_surf3a(HMGL gr, HCDT a, HCDT b, const char *sch, const char *opt)
 {
 	gr->SaveState(opt);
-	mglData x(a->GetNx()), y(a->GetNy()),z(a->GetNz());
+	mglDataV x(a->GetNx()), y(a->GetNy()),z(a->GetNz());
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	z.Fill(gr->Min.z,gr->Max.z);
@@ -651,7 +651,7 @@ void MGL_EXPORT mgl_surf3c_xyz_val(HMGL gr, double val, HCDT x, HCDT y, HCDT z, 
 void MGL_EXPORT mgl_surf3c_val(HMGL gr, double val, HCDT a, HCDT b, const char *sch, const char *opt)
 {
 	gr->SaveState(opt);
-	mglData x(a->GetNx()), y(a->GetNy()),z(a->GetNz());
+	mglDataV x(a->GetNx()), y(a->GetNy()),z(a->GetNz());
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	z.Fill(gr->Min.z,gr->Max.z);
@@ -673,7 +673,7 @@ void MGL_EXPORT mgl_surf3c_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, HCDT b, 
 void MGL_EXPORT mgl_surf3c(HMGL gr, HCDT a, HCDT b, const char *sch, const char *opt)
 {
 	gr->SaveState(opt);
-	mglData x(a->GetNx()), y(a->GetNy()),z(a->GetNz());
+	mglDataV x(a->GetNx()), y(a->GetNy()),z(a->GetNz());
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	z.Fill(gr->Min.z,gr->Max.z);

@@ -80,7 +80,7 @@ void MGL_EXPORT mgl_traj_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, 
 void MGL_EXPORT mgl_traj_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, const char *opt)
 {
 	gr->SaveState(opt);
-	mglData z(x->GetNx()), az(x->GetNx());	z.Fill(gr->Min.z,gr->Min.z);
+	mglDataV z(x->GetNx()), az(x->GetNx());	z.Fill(gr->AdjustZMin());
 	mgl_traj_xyz(gr,x,y,&z,ax,ay,&az,sch,0);
 }
 //-----------------------------------------------------------------------------
@@ -177,7 +177,7 @@ void MGL_EXPORT mgl_vect_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const cha
 void MGL_EXPORT mgl_vect_2d(HMGL gr, HCDT ax, HCDT ay, const char *sch, const char *opt)
 {
 	gr->SaveState(opt);
-	mglData x(ax->GetNx()), y(ax->GetNy());
+	mglDataV x(ax->GetNx()), y(ax->GetNy());
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	mgl_vect_xy(gr,&x,&y,ax,ay,sch,0);
@@ -274,7 +274,7 @@ void MGL_EXPORT mgl_vect_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, 
 void MGL_EXPORT mgl_vect_3d(HMGL gr, HCDT ax, HCDT ay, HCDT az, const char *sch, const char *opt)
 {
 	gr->SaveState(opt);
-	mglData x(ax->GetNx()), y(ax->GetNy()), z(ax->GetNz());
+	mglDataV x(ax->GetNx()), y(ax->GetNy()), z(ax->GetNz());
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	z.Fill(gr->Min.z,gr->Max.z);
@@ -583,7 +583,7 @@ void MGL_EXPORT mgl_vect3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay,
 void MGL_EXPORT mgl_vect3(HMGL gr, HCDT ax, HCDT ay, HCDT az, const char *sch, double sVal, const char *opt)
 {
 	gr->SaveState(opt);
-	mglData x(ax->GetNx()), y(ax->GetNy()),z(ax->GetNz());
+	mglDataV x(ax->GetNx()), y(ax->GetNy()),z(ax->GetNz());	// NOTE mglDataV here is useless
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	z.Fill(gr->Min.z,gr->Max.z);
@@ -709,7 +709,7 @@ void MGL_EXPORT mgl_flow_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const cha
 void MGL_EXPORT mgl_flow_2d(HMGL gr, HCDT ax, HCDT ay, const char *sch, const char *opt)
 {
 	gr->SaveState(opt);
-	mglData x(ax->GetNx()), y(ax->GetNy());
+	mglDataV x(ax->GetNx()), y(ax->GetNy());	// NOTE mglDataV here is useless
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	mgl_flow_xy(gr,&x,&y,ax,ay,sch,0);
@@ -774,7 +774,7 @@ void MGL_EXPORT mgl_flowp_xy(HMGL gr, double x0, double y0, double z0, HCDT x, H
 void MGL_EXPORT mgl_flowp_2d(HMGL gr, double x0, double y0, double z0, HCDT ax, HCDT ay, const char *sch, const char *opt)
 {
 	gr->SaveState(opt);
-	mglData x(ax->GetNx()), y(ax->GetNy());
+	mglDataV x(ax->GetNx()), y(ax->GetNy());
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	mgl_flowp_xy(gr,x0,y0,z0,&x,&y,ax,ay,sch,0);
@@ -921,7 +921,7 @@ void MGL_EXPORT mgl_flow_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, 
 void MGL_EXPORT mgl_flow_3d(HMGL gr, HCDT ax, HCDT ay, HCDT az, const char *sch, const char *opt)
 {
 	gr->SaveState(opt);
-	mglData x(ax->GetNx()), y(ax->GetNy()), z(ax->GetNz());
+	mglDataV x(ax->GetNx()), y(ax->GetNy()), z(ax->GetNz());	// NOTE mglDataV here is useless
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	z.Fill(gr->Min.z,gr->Max.z);
@@ -995,7 +995,7 @@ void MGL_EXPORT mgl_flowp_xyz(HMGL gr, double x0, double y0, double z0, HCDT x, 
 void MGL_EXPORT mgl_flowp_3d(HMGL gr, double x0, double y0, double z0, HCDT ax, HCDT ay, HCDT az, const char *sch, const char *opt)
 {
 	gr->SaveState(opt);
-	mglData x(ax->GetNx()), y(ax->GetNy()), z(ax->GetNz());
+	mglDataV x(ax->GetNx()), y(ax->GetNy()), z(ax->GetNz());	// NOTE mglDataV here is useless
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	z.Fill(gr->Min.z,gr->Max.z);
@@ -1052,7 +1052,7 @@ void MGL_EXPORT mgl_grad_xy(HMGL gr, HCDT x, HCDT y, HCDT phi, const char *sch, 
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_grad(HMGL gr, HCDT phi, const char *sch, const char *opt)
 {
-	mglData x(phi->GetNx()), y(phi->GetNy()), z(phi->GetNz());
+	mglDataV x(phi->GetNx()), y(phi->GetNy()), z(phi->GetNz());
 	gr->SaveState(opt);
 	x.Fill(gr->Min.x,gr->Max.x);	y.Fill(gr->Min.y,gr->Max.y);	z.Fill(gr->Min.z,gr->Max.z);
 	if(phi->GetNz()==1)	mgl_grad_xy(gr,&x,&y,phi,sch,0);
@@ -1205,7 +1205,7 @@ void MGL_EXPORT mgl_pipe_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const cha
 void MGL_EXPORT mgl_pipe_2d(HMGL gr, HCDT ax, HCDT ay, const char *sch, double r0, const char *opt)
 {
 	gr->SaveState(opt);
-	mglData x(ax->GetNx()), y(ax->GetNy());
+	mglDataV x(ax->GetNx()), y(ax->GetNy());	// NOTE mglDataV here is useless
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	mgl_pipe_xy(gr,&x,&y,ax,ay,sch,r0,0);
@@ -1359,7 +1359,7 @@ void MGL_EXPORT mgl_pipe_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, 
 void MGL_EXPORT mgl_pipe_3d(HMGL gr, HCDT ax, HCDT ay, HCDT az, const char *sch, double r0, const char *opt)
 {
 	gr->SaveState(opt);
-	mglData x(ax->GetNx()), y(ax->GetNy()), z(ax->GetNz());
+	mglDataV x(ax->GetNx()), y(ax->GetNy()), z(ax->GetNz());	// NOTE mglDataV here is useless
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	z.Fill(gr->Min.z,gr->Max.z);

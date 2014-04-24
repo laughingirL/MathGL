@@ -78,9 +78,8 @@ void MGL_EXPORT mgl_fplot(HMGL gr, const char *eqY, const char *pen, const char 
 	}
 
 	delete eq;
-	mglData yy,xx;
-	xx.Set(x,n);	free(x);
-	yy.Set(y,n);	free(y);
+	mglData yy(y,n),xx(x,n);
+	free(x);	free(y);
 	mgl_plot_xy(gr,&xx,&yy,pen,0);
 }
 //-----------------------------------------------------------------------------
@@ -135,8 +134,7 @@ void MGL_EXPORT mgl_fplot_xyz(HMGL gr, const char *eqX, const char *eqY, const c
 	}
 	delete ex;	delete ey;	delete ez;
 
-	mglData xx,yy,zz;
-	xx.Set(x,n);	yy.Set(y,n);	zz.Set(z,n);
+	mglData xx(x,n),yy(y,n),zz(z,n);
 	free(x);	free(y);	free(z);	free(t);
 	mgl_plot_xyz(gr,&xx,&yy,&zz,pen,0);
 }
@@ -264,7 +262,7 @@ void MGL_EXPORT mgl_candle_xyv(HMGL gr, HCDT x, HCDT v1, HCDT v2, HCDT y1, HCDT 
 void MGL_EXPORT mgl_candle_yv(HMGL gr, HCDT v1, HCDT v2, HCDT y1, HCDT y2, const char *pen, const char *opt)
 {
 	gr->SaveState(opt);
-	mglData x(v1->GetNx()+1);
+	mglDataV x(v1->GetNx()+1);
 	x.Fill(gr->Min.x,gr->Max.x);
 	mgl_candle_xyv(gr,&x,v1,v2,y1,y2,pen,0);
 }
@@ -356,8 +354,7 @@ void MGL_EXPORT mgl_plot_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, c
 void MGL_EXPORT mgl_plot_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
 {
 	gr->SaveState(opt);
-	mglData z(y->GetNx());
-	mreal zm = gr->AdjustZMin();	z.Fill(zm,zm);
+	mglDataV z(y->GetNx());	z.Fill(gr->AdjustZMin());
 	mgl_plot_xyz(gr,x,y,&z,pen,0);
 }
 //-----------------------------------------------------------------------------
@@ -367,8 +364,7 @@ void MGL_EXPORT mgl_plot(HMGL gr, HCDT y, const char *pen, const char *opt)
 	if(n<2)	{	gr->SetWarn(mglWarnLow,"Plot");	return;	}
 	gr->SaveState(opt);
 	mglDataV x(n), z(n);
-	x.Fill(gr->Min.x,gr->Max.x);
-	z.Fill(gr->AdjustZMin());
+	x.Fill(gr->Min.x,gr->Max.x);	z.Fill(gr->AdjustZMin());
 	mgl_plot_xyz(gr,&x,y,&z,pen,0);
 }
 //-----------------------------------------------------------------------------
@@ -451,8 +447,7 @@ void MGL_EXPORT mgl_tens_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char
 void MGL_EXPORT mgl_tens_xy(HMGL gr, HCDT x, HCDT y, HCDT c, const char *pen, const char *opt)
 {
 	gr->SaveState(opt);
-	mglData z(y->GetNx());
-	mreal zm = gr->AdjustZMin();	z.Fill(zm,zm);
+	mglDataV z(y->GetNx());	z.Fill(gr->AdjustZMin());
 	mgl_tens_xyz(gr,x,y,&z,c,pen,0);
 }
 //-----------------------------------------------------------------------------
@@ -461,9 +456,8 @@ void MGL_EXPORT mgl_tens(HMGL gr, HCDT y, HCDT c, const char *pen, const char *o
 	register long n=y->GetNx();
 	if(n<2)	{	gr->SetWarn(mglWarnLow,"Tens");	return;	}
 	gr->SaveState(opt);
-	mglData x(n), z(n);
-	x.Fill(gr->Min.x,gr->Max.x);
-	mreal zm = gr->AdjustZMin();	z.Fill(zm,zm);
+	mglDataV x(n), z(n);
+	x.Fill(gr->Min.x,gr->Max.x);	z.Fill(gr->AdjustZMin());
 	mgl_tens_xyz(gr,&x,y,&z,c,pen,0);
 }
 //-----------------------------------------------------------------------------
@@ -578,8 +572,7 @@ void MGL_EXPORT mgl_area_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char
 void MGL_EXPORT mgl_area(HMGL gr, HCDT y, const char *pen, const char *opt)
 {
 	gr->SaveState(opt);
-	mglData x(y->GetNx());
-	x.Fill(gr->Min.x,gr->Max.x);
+	mglDataV x(y->GetNx());	x.Fill(gr->Min.x,gr->Max.x);
 	mgl_area_xy(gr,&x,y,pen,0);
 }
 //-----------------------------------------------------------------------------
@@ -694,8 +687,7 @@ void MGL_EXPORT mgl_region_xy(HMGL gr, HCDT x, HCDT y1, HCDT y2, const char *pen
 void MGL_EXPORT mgl_region(HMGL gr, HCDT y1, HCDT y2, const char *pen, const char *opt)
 {
 	gr->SaveState(opt);
-	mglData x(y1->GetNx());
-	x.Fill(gr->Min.x, gr->Max.x);
+	mglDataV x(y1->GetNx());	x.Fill(gr->Min.x, gr->Max.x);
 	mgl_region_xy(gr,&x,y1,y2,pen,0);
 }
 //-----------------------------------------------------------------------------
@@ -798,8 +790,7 @@ void MGL_EXPORT mgl_step_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char
 void MGL_EXPORT mgl_step(HMGL gr, HCDT y,	const char *pen, const char *opt)
 {
 	gr->SaveState(opt);
-	mglData x(y->GetNx());
-	x.Fill(gr->Min.x,gr->Max.x);
+	mglDataV x(y->GetNx());	x.Fill(gr->Min.x,gr->Max.x);
 	mgl_step_xy(gr,&x,y,pen,0);
 }
 //-----------------------------------------------------------------------------
@@ -886,8 +877,7 @@ void MGL_EXPORT mgl_stem_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char
 void MGL_EXPORT mgl_stem(HMGL gr, HCDT y,	const char *pen, const char *opt)
 {
 	gr->SaveState(opt);
-	mglData x(y->GetNx());
-	x.Fill(gr->Min.x,gr->Max.x);
+	mglDataV x(y->GetNx());	x.Fill(gr->Min.x,gr->Max.x);
 	mgl_stem_xy(gr,&x,y,pen,0);
 }
 //-----------------------------------------------------------------------------
@@ -1043,8 +1033,7 @@ void MGL_EXPORT mgl_bars_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char
 void MGL_EXPORT mgl_bars(HMGL gr, HCDT y, const char *pen, const char *opt)
 {
 	gr->SaveState(opt);
-	mglData x(y->GetNx()+1);
-	x.Fill(gr->Min.x,gr->Max.x);
+	mglDataV x(y->GetNx()+1);	x.Fill(gr->Min.x,gr->Max.x);
 	mgl_bars_xy(gr,&x,y,pen,0);
 }
 //-----------------------------------------------------------------------------
@@ -1132,8 +1121,7 @@ void MGL_EXPORT mgl_barh_yx(HMGL gr, HCDT y, HCDT v, const char *pen, const char
 void MGL_EXPORT mgl_barh(HMGL gr, HCDT v,	const char *pen, const char *opt)
 {
 	gr->SaveState(opt);
-	mglData y(v->GetNx()+1);
-	y.Fill(gr->Min.y,gr->Max.y);
+	mglDataV y(v->GetNx()+1);	y.Fill(gr->Min.y,gr->Max.y);
 	mgl_barh_yx(gr,&y,v,pen,0);
 }
 //-----------------------------------------------------------------------------
@@ -1200,8 +1188,7 @@ void MGL_EXPORT mgl_ohlc_x(HMGL gr, HCDT x, HCDT open, HCDT high, HCDT low, HCDT
 void MGL_EXPORT mgl_ohlc(HMGL gr, HCDT open, HCDT high, HCDT low, HCDT close, const char *pen, const char *opt)
 {
 	gr->SaveState(opt);
-	mglData x(open->GetNx()+1);
-	x.Fill(gr->Min.x,gr->Max.x);
+	mglDataV x(open->GetNx()+1);	x.Fill(gr->Min.x,gr->Max.x);
 	mgl_ohlc_x(gr,&x,open,high,low,close,pen,0);
 }
 //-----------------------------------------------------------------------------
@@ -1311,8 +1298,7 @@ void MGL_EXPORT mgl_boxplot_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const c
 void MGL_EXPORT mgl_boxplot(HMGL gr, HCDT y, const char *pen, const char *opt)
 {
 	gr->SaveState(opt);
-	mglData x(y->GetNx()+1);
-	x.Fill(gr->Min.x,gr->Max.x);
+	mglDataV x(y->GetNx()+1);	x.Fill(gr->Min.x,gr->Max.x);
 	mgl_boxplot_xy(gr,&x,y,pen,0);
 }
 //-----------------------------------------------------------------------------
@@ -1494,17 +1480,16 @@ void MGL_EXPORT mgl_error_exy(HMGL gr, HCDT x, HCDT y, HCDT ex, HCDT ey, const c
 void MGL_EXPORT mgl_error_xy(HMGL gr, HCDT x, HCDT y, HCDT ey, const char *pen, const char *opt)
 {
 	gr->SaveState(opt);
-	mglData ex(y->GetNx());
-	ex.Fill(NAN,NAN);
+	mglDataV ex(y->GetNx());	ex.Fill(NAN);
 	mgl_error_exy(gr,x,y,&ex,ey,pen,0);
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_error(HMGL gr, HCDT y, HCDT ey, const char *pen, const char *opt)
 {
 	gr->SaveState(opt);
-	mglData x(y->GetNx());
-	x.Fill(gr->Min.x,gr->Max.x);
-	mgl_error_xy(gr,&x,y,ey,pen,0);
+	mglDataV x(y->GetNx()), ex(y->GetNx());
+	x.Fill(gr->Min.x,gr->Max.x);	ex.Fill(NAN);
+	mgl_error_exy(gr,&x,y,&ex,ey,pen,0);
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_error_(uintptr_t *gr, uintptr_t *y, uintptr_t *ey, const char *pen, const char *opt,int l,int lo)
@@ -1652,8 +1637,7 @@ void MGL_EXPORT mgl_mark_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const char
 void MGL_EXPORT mgl_mark_xy(HMGL gr, HCDT x, HCDT y, HCDT r, const char *pen, const char *opt)
 {
 	gr->SaveState(opt);
-	mglData z(y->GetNx());
-	mreal zm = gr->AdjustZMin();	z.Fill(zm,zm);
+	mglDataV z(y->GetNx());	z.Fill(gr->AdjustZMin());
 	mgl_mark_xyz(gr,x,y,&z,r,pen,0);
 }
 //-----------------------------------------------------------------------------
@@ -1661,9 +1645,8 @@ void MGL_EXPORT mgl_mark_y(HMGL gr, HCDT y, HCDT r, const char *pen, const char 
 {
 	register long n=y->GetNx();
 	gr->SaveState(opt);
-	mglData x(n), z(n);
-	x.Fill(gr->Min.x,gr->Max.x);
-	mreal zm = gr->AdjustZMin();	z.Fill(zm,zm);
+	mglDataV x(n), z(n);
+	x.Fill(gr->Min.x,gr->Max.x);	z.Fill(gr->AdjustZMin());
 	mgl_mark_xyz(gr,&x,y,&z,r,pen,0);
 }
 //-----------------------------------------------------------------------------
@@ -1738,8 +1721,7 @@ void MGL_EXPORT mgl_tube_xyzr(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const cha
 void MGL_EXPORT mgl_tube_xyr(HMGL gr, HCDT x, HCDT y, HCDT r, const char *pen, const char *opt)
 {
 	gr->SaveState(opt);
-	mglData z(y->GetNx());
-	mreal zm = gr->AdjustZMin();	z.Fill(zm,zm);
+	mglDataV z(y->GetNx());	z.Fill(gr->AdjustZMin());
 	mgl_tube_xyzr(gr,x,y,&z,r,pen,0);
 }
 //-----------------------------------------------------------------------------
@@ -1748,9 +1730,8 @@ void MGL_EXPORT mgl_tube_r(HMGL gr, HCDT y, HCDT r, const char *pen, const char 
 	register long n=y->GetNx();
 	if(n<2)	{	gr->SetWarn(mglWarnLow,"Tube");	return;	}
 	gr->SaveState(opt);
-	mglData x(n), z(n);
-	x.Fill(gr->Min.x,gr->Max.x);
-	mreal zm = gr->AdjustZMin();	z.Fill(zm,zm);
+	mglDataV x(n), z(n);
+	x.Fill(gr->Min.x,gr->Max.x);	z.Fill(gr->AdjustZMin());
 	mgl_tube_xyzr(gr,&x,y,&z,r,pen,0);
 }
 //-----------------------------------------------------------------------------
@@ -1759,10 +1740,9 @@ void MGL_EXPORT mgl_tube(HMGL gr, HCDT y, double rr, const char *pen, const char
 	register long n=y->GetNx();
 	if(n<2)	{	gr->SetWarn(mglWarnLow,"Tube");	return;	}
 	gr->SaveState(opt);
-	mglData x(n), r(n), z(n);
+	mglDataV x(n), r(n), z(n);
 	x.Fill(gr->Min.x,gr->Max.x);
-	r.Fill(rr,rr);
-	mreal zm = gr->AdjustZMin();	z.Fill(zm,zm);
+	r.Fill(rr);	z.Fill(gr->AdjustZMin());
 	mgl_tube_xyzr(gr,&x,y,&z,&r,pen,0);
 }
 //-----------------------------------------------------------------------------
@@ -1771,17 +1751,15 @@ void MGL_EXPORT mgl_tube_xy(HMGL gr, HCDT x, HCDT y, double rr, const char *pen,
 	register long n=y->GetNx();
 	if(n<2)	{	gr->SetWarn(mglWarnLow,"Tube");	return;	}
 	gr->SaveState(opt);
-	mglData r(n), z(n);
-	r.Fill(rr,rr);
-	mreal zm = gr->AdjustZMin();	z.Fill(zm,zm);
+	mglDataV r(n), z(n);
+	r.Fill(rr);	z.Fill(gr->AdjustZMin());
 	mgl_tube_xyzr(gr,x,y,&z,&r,pen,0);
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_tube_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, double rr, const char *pen, const char *opt)
 {
 	gr->SaveState(opt);
-	mglData r(y->GetNx());
-	r.Fill(rr,rr);
+	mglDataV r(y->GetNx());	r.Fill(rr);
 	mgl_tube_xyzr(gr,x,y,z,&r,pen,0);
 }
 //-----------------------------------------------------------------------------
@@ -1888,8 +1866,7 @@ void MGL_EXPORT mgl_tape_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, c
 void MGL_EXPORT mgl_tape_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
 {
 	gr->SaveState(opt);
-	mglData z(y->GetNx());
-	mreal zm = gr->AdjustZMin();	z.Fill(zm,zm);
+	mglDataV z(y->GetNx());	z.Fill(gr->AdjustZMin());
 	mgl_tape_xyz(gr,x,y,&z,pen,0);
 }
 //-----------------------------------------------------------------------------
@@ -1898,9 +1875,8 @@ void MGL_EXPORT mgl_tape(HMGL gr, HCDT y, const char *pen, const char *opt)
 	register long n=y->GetNx();
 	if(n<2)	{	gr->SetWarn(mglWarnLow,"Plot");	return;	}
 	gr->SaveState(opt);
-	mglData x(n), z(n);
-	x.Fill(gr->Min.x,gr->Max.x);
-	mreal zm = gr->AdjustZMin();	z.Fill(zm,zm);
+	mglDataV x(n), z(n);
+	x.Fill(gr->Min.x,gr->Max.x);	z.Fill(gr->AdjustZMin());
 	mgl_tape_xyz(gr,&x,y,&z,pen,0);
 }
 //-----------------------------------------------------------------------------
