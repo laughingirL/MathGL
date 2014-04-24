@@ -87,8 +87,8 @@ class mglParser
 {
 friend void mgl_export(wchar_t *out, const wchar_t *in, int type);
 public:
-	std::vector<mglData> DataList;	///< List with data and its names
-	std::vector<mglNum> NumList;	///< List with numbers and its names
+	std::vector<mglData*> DataList;	///< List with data and its names
+	std::vector<mglNum*> NumList;	///< List with numbers and its names
 	bool AllowSetSize;	///< Allow using setsize command
 	bool AllowFileIO;	///< Allow reading/saving files
 	bool Stop;			///< Stop command was. Flag prevent further execution

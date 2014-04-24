@@ -144,7 +144,7 @@ void TextPanel::refreshData()
 	for(i=0;i<n;i++)
 	{
 		const mglData *v=parser.GetVar(i);
-		if(v->s.length()>2)	vars<<QString::fromStdWString(v->s);
+		if(v && v->s.length()>2)	vars<<QString::fromStdWString(v->s);
 	}
 	setCompleter(mglCompleter);
 }
@@ -353,18 +353,21 @@ void TextPanel::saveHDF5(const QString &fileName)
 	for(i=0;i<n;i++);
 	{
 		const mglData *v = parser.GetVar(i);
-		wcstombs(name,v->s.c_str(),v->s.length()+1);
-		if(v->nz==1 && v->ny == 1)
-		{	rank = 1;	dims[0] = v->nx;	}
-		else if(v->nz==1)
-		{	rank = 2;	dims[0] = v->ny;	dims[1] = v->nx;	}
-		else
-		{	rank = 3;	dims[0] = v->nz;	dims[1] = v->ny;	dims[2] = v->nx;	}
-		hs = H5Screate_simple(rank, dims, 0);
-		hd = H5Dcreate(hf, name, H5T_IEEE_F32LE, hs, H5P_DEFAULT);
+		if(v)
+		{
+			wcstombs(name,v->s.c_str(),v->s.length()+1);
+			if(v->nz==1 && v->ny == 1)
+			{	rank = 1;	dims[0] = v->nx;	}
+			else if(v->nz==1)
+			{	rank = 2;	dims[0] = v->ny;	dims[1] = v->nx;	}
+			else
+			{	rank = 3;	dims[0] = v->nz;	dims[1] = v->ny;	dims[2] = v->nx;	}
+			hs = H5Screate_simple(rank, dims, 0);
+			hd = H5Dcreate(hf, name, H5T_IEEE_F32LE, hs, H5P_DEFAULT);
 
-		H5Dwrite(hd, H5T_NATIVE_FLOAT, hs, hs, H5P_DEFAULT, v->a);
-		H5Dclose(hd);	H5Sclose(hs);
+			H5Dwrite(hd, H5T_NATIVE_FLOAT, hs, hs, H5P_DEFAULT, v->a);
+			H5Dclose(hd);	H5Sclose(hs);
+		}
 	}
 	H5Fclose(hf);
 	setCurrentFile(fileName);

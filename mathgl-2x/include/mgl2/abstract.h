@@ -43,7 +43,6 @@ typedef mglFormulaC* HAEX;
 /// Callback function for asking user a question. Result shouldn't exceed 1024.
 extern MGL_EXPORT void (*mgl_ask_func)(const wchar_t *quest, wchar_t *res);
 //-----------------------------------------------------------------------------
-void MGL_EXPORT print_del(void *o);
 /// Abstract class for data array
 class MGL_EXPORT mglDataA
 {
@@ -53,7 +52,7 @@ public:
 	void (*func)(void *);	///< Callback function for destroying
 	void *o; 		///< Pointer to external object
 
-	mglDataA()	{	temp=false;	func=print_del;	o=this;	}
+	mglDataA()	{	temp=false;	func=0;	o=0;	}
 	virtual ~mglDataA()	{	if(func)	func(o);	}
 	virtual mreal v(long i,long j=0,long k=0) const = 0;
 	virtual mreal vthr(long i) const = 0;

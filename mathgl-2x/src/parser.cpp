@@ -164,7 +164,14 @@ mglParser::~mglParser()
 }
 //-----------------------------------------------------------------------------
 void mglParser::DeleteAll()
-{	DataList.clear();	NumList.clear();	}
+{
+	for(size_t i=0;i<DataList.size();i++)
+		if(DataList[i])	delete DataList[i];
+	DataList.clear();
+	for(size_t i=0;i<NumList.size();i++)
+		if(NumList[i])	delete NumList[i];
+	NumList.clear();
+}
 //-----------------------------------------------------------------------------
 void mglParser::AddParam(int n, const char *str)
 {
@@ -215,7 +222,7 @@ void mglParser::AddParam(int n, const wchar_t *str)
 mglData *mglParser::FindVar(const wchar_t *name)
 {
  	for(size_t i=0;i<DataList.size();i++)
- 		if(DataList[i].s==name)	return &(DataList[i]);
+ 		if(DataList[i] && DataList[i]->s==name)	return DataList[i];
 	return 0;
 }
 //-----------------------------------------------------------------------------
@@ -224,9 +231,9 @@ mglData *mglParser::AddVar(const wchar_t *name)
 	mglData *v = FindVar(name);
 	if(!v)
 	{
-		mglData d;	d.s = name;
+		mglData *d=new mglData;	d->s = name;
 		DataList.push_back(d);
-		v = &(DataList[DataList.size()-1]);
+		v = DataList[DataList.size()-1];
 	}
 	return v;
 }
@@ -234,7 +241,7 @@ mglData *mglParser::AddVar(const wchar_t *name)
 mglNum *mglParser::FindNum(const wchar_t *name)
 {
 	for(size_t i=0;i<NumList.size();i++)
-		if(NumList[i].s==name)	return &(NumList[i]);
+		if(NumList[i] && NumList[i]->s==name)	return NumList[i];
 	return 0;
 }
 //-----------------------------------------------------------------------------
@@ -243,9 +250,9 @@ mglNum *mglParser::AddNum(const wchar_t *name)
 	mglNum *v = FindNum(name);
 	if(!v)
 	{
-		mglNum n;	n.s = name;
+		mglNum *n=new mglNum;	n->s = name;
 		NumList.push_back(n);
-		v = &(NumList[NumList.size()-1]);
+		v = NumList[NumList.size()-1];
 	}
 	return v;
 }
@@ -268,7 +275,7 @@ int mglFindArg(const std::wstring &str)
 }
 //-----------------------------------------------------------------------------
 // convert substrings to arguments
-mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring string, mglParser *arg, const std::vector<mglData> &head);
+mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring string, mglParser *arg, const std::vector<mglData*> &head);
 void mglParser::FillArg(mglGraph *gr, int k, std::wstring *arg, mglArg *a)
 {
 	register long n;
@@ -307,9 +314,8 @@ void mglParser::FillArg(mglGraph *gr, int k, std::wstring *arg, mglArg *a)
 			std::wstring s = arg[n].substr(1,arg[n].length()-2);
 			a[n-1].w = L"/*"+s+L"*/";
 			a[n-1].type = 0;
-			ParseDat(gr, s, *u);
-			u->temp=true;	DataList.push_back(*u);
-			a[n-1].d = &(DataList[DataList.size()-1]);
+			ParseDat(gr, s, *u);	a[n-1].d = u;
+			u->temp=true;	DataList.push_back(u);
 		}
 		else if((v = FindVar(arg[n].c_str()))!=0)	// try to find normal variables (for data creation)
 		{	a[n-1].type=0;	a[n-1].d=v;	a[n-1].w=v->s;	}
@@ -324,8 +330,8 @@ void mglParser::FillArg(mglGraph *gr, int k, std::wstring *arg, mglArg *a)
 			{
 				u=new mglData;	u->Set(d);
 				a[n-1].w = L"/*"+arg[n]+L"*/";
-				u->temp=true;	DataList.push_back(*u);
-				a[n-1].type = 0;	a[n-1].d = &(DataList[DataList.size()-1]);
+				u->temp=true;	DataList.push_back(u);
+				a[n-1].type = 0;	a[n-1].d = u;
 			}
 		}
 	}
@@ -647,8 +653,8 @@ int mglParser::Parse(mglGraph *gr, std::wstring str, long pos)
 		delete []a;
 	}
 	// delete temporary data arrays
-	for(size_t i=0;i<DataList.size();i++)
-		while(DataList[i].temp && i<DataList.size())	DataList.erase(DataList.begin()+i);
+	for(size_t i=0;i<DataList.size();i++)	if(DataList[i] && DataList[i]->temp)
+	{	mglData *u=DataList[i];	DataList[i]=0;	delete u;	}
 	return n;
 }
 //-----------------------------------------------------------------------------
@@ -870,8 +876,8 @@ void mglParser::DeleteVar(const char *name)
 //-----------------------------------------------------------------------------
 void mglParser::DeleteVar(const wchar_t *name)
 {
-	for (std::vector<mglData>::iterator it = DataList.begin() ; it != DataList.end(); it++)
-		if((*it).s==name)	DataList.erase(it);
+	for(size_t i=0;i<DataList.size();i++)	if(DataList[i] && DataList[i]->s==name)
+	{	mglData *u=DataList[i];	DataList[i]=0;	delete u;	break;	}
 }
 //-----------------------------------------------------------------------------
 void mglParser::AddCommand(mglCommand *cmd, int mc)
@@ -948,7 +954,7 @@ long MGL_EXPORT mgl_use_parser_(uintptr_t *p, int *inc)
 {	_PR_->InUse+=*inc;	return _PR_->InUse;	}
 //---------------------------------------------------------------------------
 HMDT MGL_EXPORT mgl_parser_get_var(HMPR p, unsigned long id)
-{	return (id>=0 && id<p->DataList.size())?&(p->DataList[id]):0;	}
+{	return id<p->DataList.size()?p->DataList[id]:0;	}
 uintptr_t MGL_EXPORT mgl_parser_get_var_(uintptr_t* p, unsigned long *id)
 {	return uintptr_t(mgl_parser_get_var(_PR_,*id));	}
 long MGL_EXPORT mgl_parser_num_var(HMPR p)	{	return p->DataList.size();	}

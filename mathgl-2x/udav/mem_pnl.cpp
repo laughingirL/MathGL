@@ -162,6 +162,7 @@ void MemPanel::refresh()
 	for(long i=0;i<n;i++)
 	{
 		mglData *v = parser.GetVar(i);
+		if(!v)	continue;
 		s = QString::fromStdWString(v->s);
 		it = new QTableWidgetItem(s);
 		tab->setItem(i,0,it);	it->setFlags(flags);

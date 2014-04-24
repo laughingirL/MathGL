@@ -1289,7 +1289,7 @@ public:
 	{	return mgl_parser_find_var(pr, name);	}
 	inline mglData *FindVar(const wchar_t *name)
 	{	return mgl_parser_find_varw(pr, name);	}
-	/// Get variable with given id
+	/// Get variable with given id. Can be NULL for temporary ones.
 	/// NOTE !!! You must not delete obtained data arrays !!!
 	inline mglData *GetVar(unsigned long id)
 	{	return mgl_parser_get_var(pr,id);	}
