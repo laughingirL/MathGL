@@ -511,14 +511,14 @@ void MGL_EXPORT mgl_vect3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay,
 	long ss = gr->AddTexture(sch);
 
 	_mgl_vec_slice s;
-	const mglData *mx = dynamic_cast<const mglData *>(x);
-	const mglData *my = dynamic_cast<const mglData *>(y);
-	const mglData *mz = dynamic_cast<const mglData *>(z);
-	const mglData *max = dynamic_cast<const mglData *>(ax);
-	const mglData *may = dynamic_cast<const mglData *>(ay);
-	const mglData *maz = dynamic_cast<const mglData *>(az);
-	if(mx&&my&&mz&&max&&may&&maz)
-		mgl_get_slice_md(s,mx,my,mz,max,may,maz,dir,sVal,both);
+	const mglData *dx = dynamic_cast<const mglData *>(x);
+	const mglData *dy = dynamic_cast<const mglData *>(y);
+	const mglData *dz = dynamic_cast<const mglData *>(z);
+	const mglData *dax = dynamic_cast<const mglData *>(ax);
+	const mglData *day = dynamic_cast<const mglData *>(ay);
+	const mglData *daz = dynamic_cast<const mglData *>(az);
+	if(dx&&dy&&dz&&dax&&day&&daz)
+		mgl_get_slice_md(s,dx,dy,dz,dax,day,daz,dir,sVal,both);
 	else
 		mgl_get_slice(s,x,y,z,ax,ay,az,dir,sVal,both);
 

@@ -463,18 +463,12 @@ mreal MGL_EXPORT mgl_data_max(HCDT d)
 {
 	mreal m1=-INFINITY;
 	long nn=d->GetNN();
-	const mglData *b = dynamic_cast<const mglData *>(d);
 #pragma omp parallel
 	{
 		register mreal m=-INFINITY, v;
-		if(b)
 #pragma omp for nowait
-			for(long i=0;i<nn;i++)
-			{	v = b->a[i];	m = m<v ? v:m;	}
-		else
-#pragma omp for nowait
-			for(long i=0;i<nn;i++)
-			{	v = d->vthr(i);	m = m<v ? v:m;	}
+		for(long i=0;i<nn;i++)
+		{	v = d->vthr(i);	m = m<v ? v:m;	}
 #pragma omp critical(max_dat)
 		{	m1 = m1>m ? m1:m;	}
 	}
@@ -486,18 +480,12 @@ mreal MGL_EXPORT mgl_data_min(HCDT d)
 {
 	mreal m1=INFINITY;
 	long nn=d->GetNN();
-	const mglData *b = dynamic_cast<const mglData *>(d);
 #pragma omp parallel
 	{
 		register mreal m=INFINITY, v;
-		if(b)
 #pragma omp for nowait
-			for(long i=0;i<nn;i++)
-			{	v = b->a[i];	m = m>v ? v:m;	}
-		else
-#pragma omp for nowait
-			for(long i=0;i<nn;i++)
-			{	v = d->vthr(i);	m = m>v ? v:m;	}
+		for(long i=0;i<nn;i++)
+		{	v = d->vthr(i);	m = m>v ? v:m;	}
 #pragma omp critical(min_dat)
 		{	m1 = m1<m ? m1:m;	}
 	}
@@ -509,19 +497,13 @@ mreal MGL_EXPORT mgl_data_neg_max(HCDT d)
 {
 	mreal m1=0;
 	long nn=d->GetNN();
-	const mglData *b = dynamic_cast<const mglData *>(d);
 #pragma omp parallel
 	{
 		register mreal m=0, v;
-		if(b)
 #pragma omp for nowait
-			for(long i=0;i<nn;i++)
-			{	v = b->a[i];	m = m<v && v<0 ? v:m;	}
-		else
-#pragma omp for nowait
-			for(long i=0;i<nn;i++)
-			{	v = d->vthr(i);	m = m<v && v<0 ? v:m;	}
-#pragma omp critical(max_dat)
+		for(long i=0;i<nn;i++)
+		{	v = d->vthr(i);	m = m<v && v<0 ? v:m;	}
+#pragma omp critical(nmax_dat)
 		{	m1 = m1>m ? m1:m;	}
 	}
 	return m1;
@@ -532,19 +514,13 @@ mreal MGL_EXPORT mgl_data_pos_min(HCDT d)
 {
 	mreal m1=INFINITY;
 	long nn=d->GetNN();
-	const mglData *b = dynamic_cast<const mglData *>(d);
 #pragma omp parallel
 	{
 		register mreal m=INFINITY, v;
-		if(b)
 #pragma omp for nowait
-			for(long i=0;i<nn;i++)
-			{	v = b->a[i];	m = m>v && v>0 ? v:m;	}
-		else
-#pragma omp for nowait
-			for(long i=0;i<nn;i++)
-			{	v = d->vthr(i);	m = m>v && v>0 ? v:m;	}
-#pragma omp critical(min_dat)
+		for(long i=0;i<nn;i++)
+		{	v = d->vthr(i);	m = m>v && v>0 ? v:m;	}
+#pragma omp critical(pmin_dat)
 		{	m1 = m1<m ? m1:m;	}
 	}
 	return m1;
@@ -971,7 +947,7 @@ int MGL_EXPORT mgl_data_read_hdf4(HMDT ,const char *,const char *)
 #if MGL_HAVE_HDF5
 void MGL_EXPORT mgl_data_save_hdf(HCDT dat,const char *fname,const char *data,int rewrite)
 {
-	const mglData *d = dynamic_cast<const mglData *>(dat);	// NOTE: only for mglData
+	const mglData *d = dynamic_cast<const mglData *>(dat);	// NOTE: slow for non-mglData
 	if(!d)	{	mglData d(dat);	mgl_data_save_hdf(&d,fname,data,rewrite);	return;	}
 	hid_t hf,hd,hs;
 	hsize_t dims[3];

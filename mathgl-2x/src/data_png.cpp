@@ -148,20 +148,13 @@ void MGL_EXPORT mgl_data_export(HCDT dd, const char *fname, const char *scheme,m
 {
 #if MGL_HAVE_PNG
 	long nx=dd->GetNx(), ny=dd->GetNy(), nz=dd->GetNz();
-	const mglData *md = dynamic_cast<const mglData *>(dd);
 	if(v1>v2)	return;
 	if(ns<0 || ns>=nz)	ns=0;
 	if(v1==v2)
 	{
 		v1 = INFINITY;	v2=-INFINITY;
-		if(md)
-//#pragma omp parallel for	// NOTE comparison here
-			for(long i=0;i<nx*ny*nz;i++)
-			{	register mreal vv = md->a[i];	if(vv<v1)	v1=vv;	if(vv>v2)	v2=vv;	}
-		else
-//#pragma omp parallel for	// NOTE comparison here
-			for(long i=0;i<nx*ny*nz;i++)
-			{	register mreal vv = dd->vthr(i);	if(vv<v1)	v1=vv;	if(vv>v2)	v2=vv;	}
+		for(long i=0;i<nx*ny*nz;i++)
+		{	register mreal vv = dd->vthr(i);	if(vv<v1)	v1=vv;	if(vv>v2)	v2=vv;	}
 	}
 	if(v1==v2)	return;
 	long num=0;
@@ -172,23 +165,13 @@ void MGL_EXPORT mgl_data_export(HCDT dd, const char *fname, const char *scheme,m
 	unsigned char *d = new unsigned char[3*nx*ny];
 #pragma omp parallel for
 	for(long i=0;i<ny;i++)	p[i] = d+3*nx*(ny-1-i);
-	if(md)
 #pragma omp parallel for collapse(2)
-		for(long i=0;i<ny;i++)	for(long j=0;j<nx;j++)
-		{
-			register mreal vv = md->a[j+nx*(i+ny*ns)];
-			register long k = long(num*(vv-v1)/(v2-v1));
-			if(k<0)	k=0;	if(k>=num) k=num-1;
-			memcpy(d+3*(j+i*nx),c+3*k,3);
-		}
-	else
-#pragma omp parallel for collapse(2)
-		for(long i=0;i<ny;i++)	for(long j=0;j<nx;j++)
-		{
-			register long k = long(num*(dd->v(j,i,ns)-v1)/(v2-v1));
-			if(k<0)	k=0;	if(k>=num) k=num-1;
-			memcpy(d+3*(j+i*nx),c+3*k,3);
-		}
+	for(long i=0;i<ny;i++)	for(long j=0;j<nx;j++)
+	{
+		register long k = long(num*(dd->v(j,i,ns)-v1)/(v2-v1));
+		if(k<0)	k=0;	if(k>=num) k=num-1;
+		memcpy(d+3*(j+i*nx),c+3*k,3);
+	}
 	delete []c;
 
 	FILE *fp = fopen(fname, "wb");

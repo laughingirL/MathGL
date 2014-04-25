@@ -794,7 +794,7 @@ void MGL_EXPORT mgl_datac_set_ap_(uintptr_t *d, uintptr_t *a, uintptr_t *p)
 #if MGL_HAVE_HDF5
 void MGL_EXPORT mgl_datac_save_hdf(HCDT dat,const char *fname,const char *data,int rewrite)
 {
-	const mglDataC *d = dynamic_cast<const mglDataC *>(dat);	// NOTE: only for mglDataC
+	const mglDataC *d = dynamic_cast<const mglDataC *>(dat);
 	if(!d)	{	mgl_data_save_hdf(dat,fname,data,rewrite);	return;	}
 	hid_t hf,hd,hs;
 	hsize_t dims[4];

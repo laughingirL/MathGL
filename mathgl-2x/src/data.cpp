@@ -900,19 +900,19 @@ HMDT MGL_EXPORT mgl_data_solve(HCDT dat, mreal val, char dir, HCDT i0, int norm)
 	if(dir=='x' && p[0]>1)
 	{
 		r->Create(p[1],p[2]);
-		if(i && i->nx*i->ny==p[1]*p[2])	ii = i->a;
+		ii = (i && i->nx*i->ny==p[1]*p[2])?i->a:0;	// TODO non-mglData try to use i0
 		mglStartThread(mgl_solve_x,0,p[1]*p[2],r->a,d?d->a:0,ii,p,dat,&val);
 	}
 	if(dir=='y' && p[1]>1)
 	{
 		r->Create(p[0],p[2]);
-		if(i && i->nx*i->ny==p[0]*p[2])	ii = i->a;
+		ii = (i && i->nx*i->ny==p[0]*p[2])?i->a:0;	// TODO non-mglData try to use i0
 		mglStartThread(mgl_solve_y,0,p[0]*p[2],r->a,d?d->a:0,ii,p,dat,&val);
 	}
 	if(dir=='z' && p[2]>1)
 	{
 		r->Create(p[0],p[1]);
-		if(i && i->nx*i->ny==p[0]*p[1])	ii = i->a;
+		ii = (i && i->nx*i->ny==p[0]*p[1])?i->a:0;	// TODO non-mglData try to use i0
 		mglStartThread(mgl_solve_z,0,p[0]*p[1],r->a,d?d->a:0,ii,p,dat,&val);
 	}
 	return r;
@@ -942,7 +942,7 @@ mreal MGL_EXPORT mgl_data_solve_1d(HCDT d, mreal val, int spl, long i0)
 			return x;
 		}
 	}
-	else 	for(long i=i0+1;i<nx;i++)
+	else 	for(long i=i0+1;i<nx;i++)	// TODO non-mglData use spl
 	{
 		y1=d->v(i-1);	y2=d->v(i);
 		if((y1-val)*(y2-val)<=0)
@@ -1029,14 +1029,14 @@ mreal MGL_EXPORT mgl_data_linear(HCDT d, mreal x,mreal y,mreal z)
 mreal MGL_EXPORT mgl_data_spline(HCDT d, mreal x,mreal y,mreal z)
 {
 	const mglData *dd=dynamic_cast<const mglData *>(d);
-	if(!d)	return 0;	// NOTE: don't support general arrays
+	if(!dd)	return 0;	// TODO non-mglData: don't support general arrays
 	return dd->ny*dd->nz==1?mglSpline1st<mreal>(dd->a,dd->nx,x):mglSpline3st<mreal>(dd->a,dd->nx,dd->ny,dd->nz,x,y,z);
 }
 //-----------------------------------------------------------------------------
 mreal MGL_EXPORT mgl_data_spline_ext(HCDT d, mreal x,mreal y,mreal z, mreal *dx,mreal *dy,mreal *dz)
 {
 	const mglData *dd=dynamic_cast<const mglData *>(d);
-	if(!d)	return 0;	// NOTE: don't support general arrays
+	if(!dd)	return 0;	// TODO non-mglData: don't support general arrays
 	return mglSpline3t<mreal>(dd->a,dd->nx,dd->ny,dd->nz,x,y,z,dx,dy,dz);
 }
 //-----------------------------------------------------------------------------
@@ -1180,47 +1180,7 @@ mreal MGL_EXPORT mgl_data_momentum_val(HCDT dd, char dir, mreal *x, mreal *w, mr
 {
 	long nx=dd->GetNx(),ny=dd->GetNy(),nz=dd->GetNz();
 	mreal i0=0,i1=0,i2=0,i3=0,i4=0;
-	const mglData *md = dynamic_cast<const mglData *>(dd);
-	if(dd)	switch(dir)
-	{
-	case 'x':
-#pragma omp parallel for reduction(+:i0,i1,i2,i3,i4)
-		for(long i=0;i<nx*ny*nz;i++)
-		{
-			register mreal d = i%nx, t = d*d, v = md->a[i];
-			i0+= v;	i1+= v*d;	i2+= v*t;
-			i3+= v*d*t;		i4+= v*t*t;
-		}
-		break;
-	case 'y':
-#pragma omp parallel for reduction(+:i0,i1,i2,i3,i4)
-		for(long i=0;i<nx*ny*nz;i++)
-		{
-			register mreal d = (i/nx)%ny, t = d*d, v = md->a[i];
-			i0+= v;	i1+= v*d;	i2+= v*t;
-			i3+= v*d*t;		i4+= v*t*t;
-		}
-		break;
-	case 'z':
-#pragma omp parallel for reduction(+:i0,i1,i2,i3,i4)
-		for(long i=0;i<nx*ny*nz;i++)
-		{
-			register mreal d = i/(nx*ny), t = d*d, v = md->a[i];
-			i0+= v;	i1+= v*d;	i2+= v*t;
-			i3+= v*d*t;		i4+= v*t*t;
-		}
-		break;
-	default:	// "self-dispersion"
-		i0 = nx*ny*nz;
-#pragma omp parallel for reduction(+:i1,i2,i3,i4)
-		for(long i=0;i<nx*ny*nz;i++)
-		{
-			register mreal v=md->a[i], t  = v*v;
-			i1+= v;			i2+= t;
-			i3+= v*t;		i4+= t*t;
-		}
-	}
-	else	switch(dir)
+	switch(dir)
 	{
 	case 'x':
 #pragma omp parallel for reduction(+:i0,i1,i2,i3,i4)
@@ -1888,7 +1848,7 @@ MGL_NO_EXPORT void *mgl_diff_1(void *par)
 }
 void MGL_EXPORT mgl_data_diff_par(HMDT d, HCDT v1, HCDT v2, HCDT v3)
 {	// NOTE: only for mglData!!!
-	const mglData *x = dynamic_cast<const mglData *>(v1);
+	const mglData *x = dynamic_cast<const mglData *>(v1);	// TODO non-mglData: param diff
 	const mglData *y = dynamic_cast<const mglData *>(v2);
 	const mglData *z = dynamic_cast<const mglData *>(v3);
 	long nx=d->nx,ny=d->ny,nz=d->nz, nn=nx*ny*nz;
@@ -2009,7 +1969,7 @@ void MGL_EXPORT mgl_data_refill_x(HMDT dat, HCDT xdat, HCDT vdat, mreal x1, mrea
 {
 	long nx=dat->nx,mx=vdat->GetNx(),nn=dat->ny*dat->nz;
 	mreal acx=1e-6*fabs(x2-x1);
-	const mglData *xxd=dynamic_cast<const mglData *>(xdat);
+	const mglData *xxd=dynamic_cast<const mglData *>(xdat);	// TODO non-mglData: spline
 	const mglData *vvd=dynamic_cast<const mglData *>(vdat);
 	if(!xxd || !vvd || mx!=xxd->nx)	return;	// incompatible dimensions and for mglData only
 #pragma omp parallel for
@@ -2087,22 +2047,12 @@ void MGL_EXPORT mgl_data_refill_xy(HMDT dat, HCDT xdat, HCDT ydat, HCDT vdat, mr
 	const mglData *xxd=dynamic_cast<const mglData *>(xdat);
 	const mglData *yyd=dynamic_cast<const mglData *>(ydat);
 	const mglData *vvd=dynamic_cast<const mglData *>(vdat);
-	if(!xxd || !vvd || !yyd)	return;	// for mglData only
 	bool both=(xdat->GetNN()==vdat->GetNN() && ydat->GetNN()==vdat->GetNN());
 	if(!both && (xdat->GetNx()!=mx || ydat->GetNx()!=my))	return;	// incompatible dimensions
 	mreal acx=1e-6*fabs(x2-x1), acy=1e-6*fabs(y2-y1);
 	if(both)
 		mgl_data_grid_xy(dat,xdat,ydat,vdat,x1,x2,y1,y2);
-/*#pragma omp parallel for collapse(2)
-		for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)	// NOTE: too slow
-		{
-			mglPoint p = mgl_index_2(x1+(x2-x1)*i/(nx-1.), y1+(y2-y1)*j/(ny-1.),xxd,yyd,acx,acy);
-			register mreal d = mgl_isnan(p.x)?NAN:mgl_data_spline(vdat,p.x,p.y,0);
-			register long i0=i+nx*j;
-			if(sl<0)	for(long k=0;k<nz;k++)	dat->a[i0+k*nn] = d;
-			else	dat->a[i0+sl*nn] = d;
-		}*/
-	else
+	else if(xxd && vvd && yyd)	// TODO non-mglData: spline
 	{
 		mglData u(nx), v(ny);
 #pragma omp parallel for
@@ -2127,7 +2077,7 @@ void MGL_EXPORT mgl_data_refill_xyz(HMDT dat, HCDT xdat, HCDT ydat, HCDT zdat, H
 	const mglData *yyd=dynamic_cast<const mglData *>(ydat);
 	const mglData *zzd=dynamic_cast<const mglData *>(zdat);
 	const mglData *vvd=dynamic_cast<const mglData *>(vdat);
-	if(!xxd || !vvd || !yyd || !zzd)	return;	// for mglData only
+	if(!xxd || !vvd || !yyd || !zzd)	return;	// TODO non-mglData: spline
 	bool both=(xdat->GetNN()==vdat->GetNN() && ydat->GetNN()==vdat->GetNN() && zdat->GetNN()==vdat->GetNN());
 	if(!both && (xdat->GetNx()!=mx || ydat->GetNx()!=my || zdat->GetNx()!=mz))	return;	// incompatible dimensions
 	mreal acx=1e-6*fabs(x2-x1), acy=1e-6*fabs(y2-y1), acz=1e-6*fabs(z2-z1);
@@ -2207,7 +2157,7 @@ MGL_NO_EXPORT void *mgl_eval_s(void *par)
 }
 HMDT MGL_EXPORT mgl_data_evaluate(HCDT dat, HCDT idat, HCDT jdat, HCDT kdat, int norm)
 {
-	const mglData *d=dynamic_cast<const mglData *>(dat);
+	const mglData *d=dynamic_cast<const mglData *>(dat);	// TODO non-mglData: evaluate
 	const mglData *i=dynamic_cast<const mglData *>(idat);
 	const mglData *j=dynamic_cast<const mglData *>(jdat);
 	const mglData *k=dynamic_cast<const mglData *>(kdat);

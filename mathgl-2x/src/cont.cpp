@@ -119,17 +119,9 @@ void MGL_EXPORT mgl_textw_xyz(HMGL gr, HCDT x, HCDT y, HCDT z,const wchar_t *tex
 	static int cgid=1;	gr->StartGroup("TextC",cgid++);
 
 	long *nn = new long[n], *ff = new long[n];
-	const mglData *mdx = dynamic_cast<const mglData *>(x);
-	const mglData *mdy = dynamic_cast<const mglData *>(y);
-	const mglData *mdz = dynamic_cast<const mglData *>(z);
-	if(mdx && mdy && mdz)
 #pragma omp parallel for
-		for(long i=0;i<n;i++)
-			ff[i] = gr->AddPnt(mglPoint(mdx->a[i],mdy->a[i],mdz->a[i]),-1);
-	else
-#pragma omp parallel for
-		for(long i=0;i<n;i++)
-			ff[i] = gr->AddPnt(mglPoint(x->v(i),y->v(i),z->v(i)),-1);
+	for(long i=0;i<n;i++)
+		ff[i] = gr->AddPnt(mglPoint(x->v(i),y->v(i),z->v(i)),-1);
 #pragma omp parallel for
 	for(long i=1;i<n;i++)	nn[i-1] = i;
 	nn[n-1]=-1;
@@ -408,16 +400,13 @@ void MGL_EXPORT mgl_cont_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const c
 	if(x->GetNx()*x->GetNy()!=m*n || y->GetNx()*y->GetNy()!=m*n)	// make
 	{
 		xx.Create(n, m);		yy.Create(n, m);
-		const mglData *mx = dynamic_cast<const mglData *>(x);
-		const mglData *my = dynamic_cast<const mglData *>(y);
-		if(mx && my)
-#pragma omp parallel for collapse(2)
-			for(long i=0;i<n;i++)	for(long j=0;j<m;j++)
-			{	xx.a[i+n*j] = mx->a[i];	yy.a[i+n*j] = my->a[j];	}
-		else
-#pragma omp parallel for collapse(2)
-			for(long i=0;i<n;i++)	for(long j=0;j<m;j++)
-			{	xx.a[i+n*j] = x->v(i);	yy.a[i+n*j] = y->v(j);	}
+#pragma omp parallel for
+		for(long i=0;i<n;i++)	xx.a[i]=x->v(i);
+#pragma omp parallel for
+		for(long j=1;j<m;j++)	memcpy(xx.a+n*j,xx.a,n*sizeof(mreal));
+#pragma omp parallel for
+		for(long j=0;j<m;j++)	// TODO check which parallel is faster
+		{	mreal t=y->v(j);	for(long i=0;i<n;i++)	yy.a[i+n*j]=t;	}
 		x = &xx;	y = &yy;
 	}
 	// x, y -- have the same size z
@@ -618,16 +607,13 @@ void MGL_EXPORT mgl_contf_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const 
 	if(x->GetNx()*x->GetNy()!=m*n || y->GetNx()*y->GetNy()!=m*n)	// make
 	{
 		xx.Create(n, m);		yy.Create(n, m);
-		const mglData *mx = dynamic_cast<const mglData *>(x);
-		const mglData *my = dynamic_cast<const mglData *>(y);
-		if(mx && my)
-#pragma omp parallel for collapse(2)
-			for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
-			{	xx.a[i+n*j] = mx->a[i];	yy.a[i+n*j] = my->a[j];	}
-		else
-#pragma omp parallel for collapse(2)
-			for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
-			{	xx.a[i+n*j] = x->v(i);	yy.a[i+n*j] = y->v(j);	}
+#pragma omp parallel for
+		for(long i=0;i<n;i++)	xx.a[i]=x->v(i);
+#pragma omp parallel for
+		for(long j=1;j<m;j++)	memcpy(xx.a+n*j,xx.a,n*sizeof(mreal));
+#pragma omp parallel for
+		for(long j=0;j<m;j++)	// TODO check which parallel is faster
+		{	mreal t=y->v(j);	for(long i=0;i<n;i++)	yy.a[i+n*j]=t;	}
 		x = &xx;	y = &yy;
 	}
 	// x, y -- have the same size z
@@ -728,16 +714,13 @@ void MGL_EXPORT mgl_contd_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const 
 	if(x->GetNx()*x->GetNy()!=m*n || y->GetNx()*y->GetNy()!=m*n)	// make
 	{
 		xx.Create(n, m);		yy.Create(n, m);
-		const mglData *mx = dynamic_cast<const mglData *>(x);
-		const mglData *my = dynamic_cast<const mglData *>(y);
-		if(mx && my)
-#pragma omp parallel for collapse(2)
-			for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
-			{	xx.a[i+n*j] = mx->a[i];	yy.a[i+n*j] = my->a[j];	}
-		else
-#pragma omp parallel for collapse(2)
-			for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
-			{	xx.a[i+n*j] = x->v(i);	yy.a[i+n*j] = y->v(j);	}
+#pragma omp parallel for
+		for(long i=0;i<n;i++)	xx.a[i]=x->v(i);
+#pragma omp parallel for
+		for(long j=1;j<m;j++)	memcpy(xx.a+n*j,xx.a,n*sizeof(mreal));
+#pragma omp parallel for
+		for(long j=0;j<m;j++)	// TODO check which parallel is faster
+		{	mreal t=y->v(j);	for(long i=0;i<n;i++)	yy.a[i+n*j]=t;	}
 		x = &xx;	y = &yy;
 	}
 	// x, y -- have the same size z
@@ -852,16 +835,13 @@ void MGL_EXPORT mgl_contv_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const 
 	if(x->GetNx()*x->GetNy()!=m*n || y->GetNx()*y->GetNy()!=m*n)	// make
 	{
 		xx.Create(n, m);		yy.Create(n, m);
-		const mglData *mx = dynamic_cast<const mglData *>(x);
-		const mglData *my = dynamic_cast<const mglData *>(y);
-		if(mx && my)
-#pragma omp parallel for collapse(2)
-			for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
-			{	xx.a[i+n*j] = mx->a[i];	yy.a[i+n*j] = my->a[j];	}
-		else
-#pragma omp parallel for collapse(2)
-			for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
-			{	xx.a[i+n*j] = x->v(i);	yy.a[i+n*j] = y->v(j);	}
+#pragma omp parallel for
+		for(long i=0;i<n;i++)	xx.a[i]=x->v(i);
+#pragma omp parallel for
+		for(long j=1;j<m;j++)	memcpy(xx.a+n*j,xx.a,n*sizeof(mreal));
+#pragma omp parallel for
+		for(long j=0;j<m;j++)	// TODO check which parallel is faster
+		{	mreal t=y->v(j);	for(long i=0;i<n;i++)	yy.a[i+n*j]=t;	}
 		x = &xx;	y = &yy;
 	}
 	// x, y -- have the same size z
@@ -1529,16 +1509,13 @@ void MGL_EXPORT mgl_axial_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const 
 	if(x->GetNx()*x->GetNy()!=m*n || y->GetNx()*y->GetNy()!=m*n)	// make
 	{
 		xx.Create(n, m);		yy.Create(n, m);
-		const mglData *mx = dynamic_cast<const mglData *>(x);
-		const mglData *my = dynamic_cast<const mglData *>(y);
-		if(mx && my)
-#pragma omp parallel for collapse(2)
-			for(long i=0;i<n;i++)	for(long j=0;j<m;j++)
-			{	xx.a[i+n*j] = mx->a[i];	yy.a[i+n*j] = my->a[j];	}
-		else
-#pragma omp parallel for collapse(2)
-			for(long i=0;i<n;i++)	for(long j=0;j<m;j++)
-			{	xx.a[i+n*j] = x->v(i);	yy.a[i+n*j] = y->v(j);	}
+#pragma omp parallel for
+		for(long i=0;i<n;i++)	xx.a[i]=x->v(i);
+#pragma omp parallel for
+		for(long j=1;j<m;j++)	memcpy(xx.a+n*j,xx.a,n*sizeof(mreal));
+#pragma omp parallel for
+		for(long j=0;j<m;j++)	// TODO check which parallel is faster
+		{	mreal t=y->v(j);	for(long i=0;i<n;i++)	yy.a[i+n*j]=t;	}
 		x = &xx;	y = &yy;
 	}
 	// x, y -- have the same size z
@@ -1633,16 +1610,20 @@ void MGL_EXPORT mgl_torus(HMGL gr, HCDT r, HCDT z, const char *sch, const char *
 	if(mglchr(sch,'.'))	wire = 2;
 	for(j=0;j<r->GetNy();j++)
 	{
-		if(mr&&mz)	for(i=0;i<n;i++)
-		{
-			nn[i] = i<n-1 ? i+1 : -1;
-			pp[i] = mglPoint(mr->a[i+n*j], mz->a[i+n*j]);
-		}
-		else	for(i=0;i<n;i++)
-		{
-			nn[i] = i<n-1 ? i+1 : -1;
-			pp[i] = mglPoint(r->v(i,j), z->v(i,j));
-		}
+		if(mr&&mz)
+#pragma omp parallel for
+			for(i=0;i<n;i++)
+			{
+				nn[i] = i<n-1 ? i+1 : -1;
+				pp[i] = mglPoint(mr->a[i+n*j], mz->a[i+n*j]);
+			}
+		else	
+#pragma omp parallel for
+			for(i=0;i<n;i++)
+			{
+				nn[i] = i<n-1 ? i+1 : -1;
+				pp[i] = mglPoint(r->v(i,j), z->v(i,j));
+			}
 		mgl_axial_plot(gr,n,pp,nn,dir,c,wire);
 	}
 	gr->EndGroup();

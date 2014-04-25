@@ -382,23 +382,13 @@ HMDT MGL_EXPORT mgl_hist_x(HMGL gr, HCDT x, HCDT a, const char *opt)
 	long n = (mgl_isnan(rr) || rr<=0) ? mglFitPnts:long(rr+0.5);
 	mglData *res = new mglData(n);
 
-	const mglData *dx = dynamic_cast<const mglData *>(x);
-	const mglData *da = dynamic_cast<const mglData *>(a);
 	mreal vx = n/(gr->Max.x-gr->Min.x);
-	if(dx && da)
 #pragma omp parallel for
-		for(long i=0;i<nn;i++)
-		{
-			register long j1 = long((dx->a[i]-gr->Min.x)*vx);
-			if(j1>=0 && j1<n)	res->a[j1] += da->a[i];
-		}
-	else
-#pragma omp parallel for
-		for(long i=0;i<nn;i++)
-		{
-			register long j1 = long((x->vthr(i)-gr->Min.x)*vx);
-			if(j1>=0 && j1<n)	res->a[j1] += a->vthr(i);
-		}
+	for(long i=0;i<nn;i++)
+	{
+		register long j1 = long((x->vthr(i)-gr->Min.x)*vx);
+		if(j1>=0 && j1<n)	res->a[j1] += a->vthr(i);
+	}
 	gr->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
@@ -410,27 +400,15 @@ HMDT MGL_EXPORT mgl_hist_xy(HMGL gr, HCDT x, HCDT y, HCDT a, const char *opt)
 	mreal rr = gr->SaveState(opt);
 	long n = (mgl_isnan(rr) || rr<=0) ? mglFitPnts:long(rr+0.5);
 	mglData *res = new mglData(n, n);
-	const mglData *dx = dynamic_cast<const mglData *>(x);
-	const mglData *dy = dynamic_cast<const mglData *>(y);
-	const mglData *da = dynamic_cast<const mglData *>(a);
 	mreal vx = n/(gr->Max.x-gr->Min.x);
 	mreal vy = n/(gr->Max.y-gr->Min.y);
-	if(dx && dy && da)
 #pragma omp parallel for
-		for(long i=0;i<nn;i++)
-		{
-			register long j1 = long((dx->a[i]-gr->Min.x)*vx);
-			register long j2 = long((dy->a[i]-gr->Min.y)*vy);
-			if(j1>=0 && j1<n && j2>=0 && j2<n)	res->a[j1+n*j2] += da->a[i];
-		}
-	else
-#pragma omp parallel for
-		for(long i=0;i<nn;i++)
-		{
-			register long j1 = long((x->vthr(i)-gr->Min.x)*vx);
-			register long j2 = long((y->vthr(i)-gr->Min.y)*vy);
-			if(j1>=0 && j1<n && j2>=0 && j2<n)	res->a[j1+n*j2] += a->vthr(i);
-		}
+	for(long i=0;i<nn;i++)
+	{
+		register long j1 = long((x->vthr(i)-gr->Min.x)*vx);
+		register long j2 = long((y->vthr(i)-gr->Min.y)*vy);
+		if(j1>=0 && j1<n && j2>=0 && j2<n)	res->a[j1+n*j2] += a->vthr(i);
+	}
 	gr->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
@@ -442,32 +420,17 @@ HMDT MGL_EXPORT mgl_hist_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char
 	mreal rr = gr->SaveState(opt);
 	long n = (mgl_isnan(rr) || rr<=0) ? mglFitPnts:long(rr+0.5);
 	mglData *res = new mglData(n, n, n);
-	const mglData *dx = dynamic_cast<const mglData *>(x);
-	const mglData *dy = dynamic_cast<const mglData *>(y);
-	const mglData *dz = dynamic_cast<const mglData *>(z);
-	const mglData *da = dynamic_cast<const mglData *>(a);
 	mreal vx = n/(gr->Max.x-gr->Min.x), vy = n/(gr->Max.y-gr->Min.y), vz = n/(gr->Max.z-gr->Min.z);
-	if(dx && dy && dz && da)
 #pragma omp parallel for
-		for(long i=0;i<nn;i++)
-		{
-			register long j1 = long((dx->a[i]-gr->Min.x)*vx);
-			register long j2 = long((dy->a[i]-gr->Min.y)*vy);
-			register long j3 = long((dz->a[i]-gr->Min.z)*vz);
-			if(j1>=0 && j1<n && j2>=0 && j2<n && j3>=0 && j3<n)
-				res->a[j1+n*(j2+n*j3)] += da->a[i];
-		}
-	else
-#pragma omp parallel for
-		for(long i=0;i<nn;i++)
-		{
-			if(gr->Stop)	continue;
-			register long j1 = long((x->vthr(i)-gr->Min.x)*vx);
-			register long j2 = long((y->vthr(i)-gr->Min.y)*vy);
-			register long j3 = long((z->vthr(i)-gr->Min.z)*vz);
-			if(j1>=0 && j1<n && j2>=0 && j2<n && j3>=0 && j3<n)
-				res->a[j1+n*(j2+n*j3)] += a->vthr(i);
-		}
+	for(long i=0;i<nn;i++)
+	{
+		if(gr->Stop)	continue;
+		register long j1 = long((x->vthr(i)-gr->Min.x)*vx);
+		register long j2 = long((y->vthr(i)-gr->Min.y)*vy);
+		register long j3 = long((z->vthr(i)-gr->Min.z)*vz);
+		if(j1>=0 && j1<n && j2>=0 && j2<n && j3>=0 && j3<n)
+			res->a[j1+n*(j2+n*j3)] += a->vthr(i);
+	}
 	gr->LoadState();	return gr->Stop?0:res;
 }
 //-----------------------------------------------------------------------------

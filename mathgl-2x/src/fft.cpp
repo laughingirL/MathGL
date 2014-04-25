@@ -764,18 +764,12 @@ HMDT MGL_EXPORT mgl_transform_a(HCDT am, HCDT ph, const char *tr)
 	if(nx*ny*nz != ph->GetNx()*ph->GetNy()*ph->GetNz() || !tr || tr[0]==0)
 		return 0;
 	mglData re(nx,ny,nz), im(nx,ny,nz);
-	const mglData *da=dynamic_cast<const mglData *>(am);
-	const mglData *dp=dynamic_cast<const mglData *>(ph);
-	if(da && dp)
 #pragma omp parallel for
-		for(long i=0;i<nx*ny*nz;i++)
-		{	re.a[i] = da->a[i]*cos(dp->a[i]);
-			im.a[i] = da->a[i]*sin(dp->a[i]);	}
-	else
-#pragma omp parallel for
-		for(long i=0;i<nx*ny*nz;i++)
-		{	re.a[i] = am->vthr(i)*cos(ph->vthr(i));
-			im.a[i] = am->vthr(i)*sin(ph->vthr(i));	}
+	for(long i=0;i<nx*ny*nz;i++)
+	{
+		register mreal a=am->vthr(i), p=ph->vthr(i);
+		re.a[i] = a*cos(p);	im.a[i] = a*sin(p);
+	}
 	return mgl_transform(&re, &im, tr);
 }
 //-----------------------------------------------------------------------------
