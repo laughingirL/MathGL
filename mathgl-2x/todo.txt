@@ -26,7 +26,7 @@
 17. Test mglDataC::Diffraction() + write sample + add rational function???
 
 19. Get true coordinates in CalcXYZ for curved equations too.
-20. Add mglDataVar, mglDataCol, mglDataFunc for handling special (temporary) data + add real(), imag(), conj() + accurate types in MGL + add 'expr'/'complex' in MGL
+20. add real(), imag(), conj() + accurate types in MGL + add 'complex' in MGL
 
 21. Check if Fortran versions possible for: mgl_data_info, mgl_datas_hdf, mgl_get_fit, mgl_get_mess, mgl_get_plotid
 24. Enable consecutive (as multiplication of matrices instead of single summary one) rotation of axis + the same in JS. Problem with widgets?!?
@@ -41,7 +41,10 @@
 40. Angle(mglPoint p0, mglPoint p1, mreal degree, const char *style); 't' for text label
 41. Fractals ???
 42. MGL samples update: candle, correl, dots, fit, hist, pde, qo2d, radar, refill, region, schemes, solve, triangulation
-43. Update *.i for new functions {before release!!!}
+
+
+
+ZZ. Update *.i for new functions {before release!!!}
 
 ============= DOCUMENTATION =============
 

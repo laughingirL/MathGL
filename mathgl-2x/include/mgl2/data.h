@@ -54,6 +54,8 @@ public:
 	mglData(int rows, int cols, const double *d)	{	a=0;	Set(d,cols,rows);	}
 	mglData(const double *d, int size)	{	a=0;	Set(d,size);	}
 	mglData(const double *d, int rows, int cols)	{	a=0;	Set(d,cols,rows);	}
+	mglData(const float *d, int size)	{	a=0;	Set(d,size);	}
+	mglData(const float *d, int rows, int cols)	{	a=0;	Set(d,cols,rows);	}
 	/// Read data from file
 	mglData(const char *fname)			{	a=0;	Read(fname);	}
 	/// Allocate the memory for data array and initialize it zero
@@ -419,7 +421,7 @@ public:
 	{	return mgl_data_find_any(this,cond);	}
 
 	/// Copy data from other mglData variable
-	inline const mglData &operator=(const mglData &d)
+	inline const mglDataA &operator=(const mglDataA &d)
 	{	if(this!=&d)	mgl_data_set(this,&d);	return d;	}
 	inline mreal operator=(mreal val)
 	{	mgl_data_fill(this,val,val,'x');	return val;	}

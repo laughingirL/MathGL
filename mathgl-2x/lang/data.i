@@ -31,24 +31,26 @@ public:
 	bool link;		///< use external data (i.e. don't free it)
 
 	/// Initiate by other mglData variable
-	inline mglData(const mglData &d)	{	a=0;	mgl_data_set(this,&d);		}	// NOTE: must be constructor for mglData& to exclude copy one
-	inline mglData(const mglData *d)	{	a=0;	mgl_data_set(this, d);		}
-	inline mglData(bool, mglData *d)	// NOTE: Variable d will be deleted!!!
+	mglData(const mglData &d)	{	a=0;	mgl_data_set(this,&d);		}	// NOTE: must be constructor for mglData& to exclude copy one
+	mglData(const mglData *d)	{	a=0;	mgl_data_set(this, d);		}
+	mglData(bool, mglData *d)	// NOTE: Variable d will be deleted!!!
 	{	if(d)
 		{	nx=d->nx;	ny=d->ny;	nz=d->nz;	a=d->a;	d->a=0;
 			id=d->id;	link=d->link;	delete d;	}
 		else	{	a=0;	Create(1);	}	}
 	/// Initiate by flat array
-	inline mglData(int size, const float *d)	{	a=0;	Set(d,size);	}
-	inline mglData(int rows, int cols, const float *d)	{	a=0;	Set(d,cols,rows);	}
-	inline mglData(int size, const double *d)	{	a=0;	Set(d,size);	}
-	inline mglData(int rows, int cols, const double *d)	{	a=0;	Set(d,cols,rows);	}
-	inline mglData(const double *d, int size)	{	a=0;	Set(d,size);	}
-	inline mglData(const double *d, int rows, int cols)	{	a=0;	Set(d,cols,rows);	}
+	mglData(int size, const float *d)	{	a=0;	Set(d,size);	}
+	mglData(int rows, int cols, const float *d)	{	a=0;	Set(d,cols,rows);	}
+	mglData(int size, const double *d)	{	a=0;	Set(d,size);	}
+	mglData(int rows, int cols, const double *d)	{	a=0;	Set(d,cols,rows);	}
+	mglData(const double *d, int size)	{	a=0;	Set(d,size);	}
+	mglData(const double *d, int rows, int cols)	{	a=0;	Set(d,cols,rows);	}
+	mglData(const float *d, int size)	{	a=0;	Set(d,size);	}
+	mglData(const float *d, int rows, int cols)	{	a=0;	Set(d,cols,rows);	}
 	/// Read data from file
-	inline mglData(const char *fname)			{	a=0;	Read(fname);	}
+	mglData(const char *fname)			{	a=0;	Read(fname);	}
 	/// Allocate the memory for data array and initialize it zero
-	inline mglData(long xx=1,long yy=1,long zz=1)	{	a=0;	Create(xx,yy,zz);	}
+	mglData(long xx=1,long yy=1,long zz=1)	{	a=0;	Create(xx,yy,zz);	}
 	/// Delete the array
 	virtual ~mglData()	{	if(!link && a)	delete []a;	}
 	inline mreal GetVal(long i, long j=0, long k=0)
@@ -56,9 +58,9 @@ public:
 	inline void SetVal(mreal f, long i, long j=0, long k=0)
 	{	mgl_data_set_value(this,f,i,j,k);	}
 	/// Get sizes
-	inline long GetNx() const	{	return nx;	}
-	inline long GetNy() const	{	return ny;	}
-	inline long GetNz() const	{	return nz;	}
+	long GetNx() const	{	return nx;	}
+	long GetNy() const	{	return ny;	}
+	long GetNz() const	{	return nz;	}
 
 	/// Link external data array (don't delete it at exit)
 	inline void Link(mreal *A, long NX, long NY=1, long NZ=1)
@@ -159,7 +161,7 @@ public:
 	{	mgl_data_refill_gr(gr,this,&xdat,&ydat,0,&vdat,sl,opt);	}
 	inline void Refill(mglBase *gr, const mglData &xdat, const mglData &ydat, const mglData &zdat, const mglData &vdat, const char *opt="")
 	{	mgl_data_refill_gr(gr,this,&xdat,&ydat,&zdat,&vdat,-1,opt);	}
-/// Set the data by triangulated surface values assuming x,y,z in axis range of gr
+	/// Set the data by triangulated surface values assuming x,y,z in axis range of gr
 	inline void Grid(mglBase *gr, const mglData &x, const mglData &y, const mglData &z, const char *opt="")
 	{	mgl_data_grid(gr,this,&x,&y,&z,opt);	}
 	/// Set the data by triangulated surface values assuming x,y,z in range [p1, p2]
@@ -222,6 +224,10 @@ public:
 	{	return mglData(true,mgl_data_subdata(this,xx,yy,zz));	}
 	inline mglData SubData(const mglData &xx, const mglData &yy, const mglData &zz) const
 	{	return mglData(true,mgl_data_subdata_ext(this,&xx,&yy,&zz));	}
+	inline mglData SubData(const mglData &xx, const mglData &yy) const
+	{	return mglData(true,mgl_data_subdata_ext(this,&xx,&yy,0));	}
+	inline mglData SubData(const mglData &xx) const
+	{	return mglData(true,mgl_data_subdata_ext(this,&xx,0,0));	}
 	/// Get trace of the data array
 	inline mglData Trace() const
 	{	return mglData(true,mgl_data_trace(this));	}
@@ -358,6 +364,10 @@ public:
 	inline mreal Maximal() const	{	return mgl_data_max(this);	}
 	/// Get minimal value of the data
 	inline mreal Minimal() const	{	return mgl_data_min(this);	}
+	/// Get maximal value of the data which is less than 0
+	inline mreal MaximalNeg() const	{	return mgl_data_neg_max(this);	}
+	/// Get minimal value of the data which is larger than 0
+	inline mreal MinimalPos() const	{	return mgl_data_pos_min(this);	}
 	/// Get maximal value of the data and its position
 	inline mreal Maximal(long &i,long &j,long &k) const
 	{	return mgl_data_max_int(this,&i,&j,&k);	}
@@ -390,10 +400,10 @@ public:
 	{	return mgl_data_find_any(this,cond);	}
 
 	/// Copy data from other mglData variable
-	inline mglData &operator=(const mglData &d)
-	{	if(this!=&d)	Set(d.a,d.nx,d.ny,d.nz);	return *this;	}
+	inline const mglData &operator=(const mglData &d)
+	{	if(this!=&d)	mgl_data_set(this,&d);	return d;	}
 	inline mreal operator=(mreal val)
-	{	for(long i=0;i<nx*ny*nz;i++)	a[i]=val;	return val;	}
+	{	mgl_data_fill(this,val,val,'x');	return val;	}
 	/// Multiply the data by other one for each element
 	inline void operator*=(const mglData &d)	{	mgl_data_mul_dat(this,&d);	}
 	/// Divide the data by other one for each element

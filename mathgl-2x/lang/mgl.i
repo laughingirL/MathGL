@@ -1,6 +1,6 @@
 /***************************************************************************
  * mgl.h is part of Math Graphic Library
- * Copyright (C) 2007-2012 Alexey Balakin <mathgl.abalakin@gmail.ru>       *
+ * Copyright (C) 2007-2014 Alexey Balakin <mathgl.abalakin@gmail.ru>       *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -289,7 +289,7 @@ public:
 	/// Get plot quality
 	inline int GetQuality()	{	return mgl_get_quality(gr);	}
 	/// Set drawing region for Quality&4
-	inline void SetDrawReg(long nx, long ny, long m){	mgl_set_draw_reg(gr,nx,ny,m);	}
+	inline void SetDrawReg(long nx=1, long ny=1, long m=0)	{	mgl_set_draw_reg(gr,nx,ny,m);	}
 	/// Start group of objects
 	inline void StartGroup(const char *name)		{	mgl_start_group(gr, name);	}
 	/// End group of objects
@@ -378,6 +378,8 @@ public:
 	inline void SetFrame(int i)	{	mgl_set_frame(gr, i);	}
 	/// Append drawing data from i-th frame (work if MGL_VECT_FRAME is set on)
 	inline void ShowFrame(int i){	mgl_show_frame(gr, i);	}
+	/// Force preparing the image. It can be useful for OpenGL mode mostly.
+	inline void Rasterize()			{	mgl_rasterize(gr);	}
 
 	/// Start write frames to cinema using GIF format
 	inline void StartGIF(const char *fname, int ms=100)
@@ -450,10 +452,15 @@ public:
 
 	/// Clear up the frame
 	inline void Clf(double r, double g, double b)	{	mgl_clf_rgb(gr, r, g, b);	}
+	inline void Clf(const char *col)	{	mgl_clf_str(gr, col);	}
 	inline void Clf(char col)	{	mgl_clf_chr(gr, col);	}
 	inline void Clf()	{	mgl_clf(gr);	}
 	/// Clear unused points and primitives. Useful only in combination with SetFaceNum().
 	inline void ClearUnused()	{	mgl_clear_unused(gr);	}
+	/// Load background image
+	inline void LoadBackground(const char *fname)
+	{	mgl_load_background(gr,fname);	}
+
 	/// Draws the point (ball) at position {x,y,z} with color c
 	inline void Ball(mglPoint p, char c='r')
 	{	char s[3]={'.',c,0};	mgl_mark(gr, p.x, p.y, p.z, s);	}
@@ -616,6 +623,11 @@ public:
 	{	mgl_region(gr, &y1, &y2, pen, opt);	}
 	inline void Region(const mglData &x, const mglData &y1, const mglData &y2, const char *pen="", const char *opt="")
 	{	mgl_region_xy(gr, &x, &y1, &y2, pen, opt);	}
+	/// Fill area (draw ribbon) between curves {x1,y1,z1} and {x2,y2,z2}
+	inline void Region(const mglData &x1, const mglData &y1, const mglData &z1, const mglData &x2, const mglData &y2, const mglData &z2, const char *pen="", const char *opt="")
+	{	mgl_region_3d(gr, &x1, &y1, &z1, &x2, &y2, &z2, pen, opt);	}
+	inline void Region(const mglData &x1, const mglData &y1, const mglData &x2, const mglData &y2, const char *pen="", const char *opt="")
+	{	mgl_region_3d(gr, &x1, &y1, NULL, &x2, &y2, NULL, pen, opt);	}
 	/// Draw vertical lines from points {x,y,z} to axis plane
 	inline void Stem(const mglData &x, const mglData &y, const mglData &z, const char *pen="", const char *opt="")
 	{	mgl_stem_xyz(gr, &x, &y, &z, pen, opt);	}
@@ -1266,6 +1278,13 @@ public:
 	{	return mgl_parser_find_var(pr, name);	}
 	inline mglData *FindVar(const wchar_t *name)
 	{	return mgl_parser_find_varw(pr, name);	}
+	/// Get variable with given id. Can be NULL for temporary ones.
+	/// NOTE !!! You must not delete obtained data arrays !!!
+	inline mglData *GetVar(unsigned long id)
+	{	return mgl_parser_get_var(pr,id);	}
+	/// Get number of variables
+	inline long GetNumVar()
+	{	return mgl_parser_num_var(pr);	}
 	/// Delete variable with name
 	inline void DeleteVar(const char *name)		{	mgl_parser_del_var(pr, name);		}
 	inline void DeleteVar(const wchar_t *name)	{	mgl_parser_del_varw(pr, name);		}

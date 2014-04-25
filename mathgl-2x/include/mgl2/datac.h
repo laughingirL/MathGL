@@ -359,12 +359,9 @@ public:
 	inline mreal Minimal(mreal &x,mreal &y,mreal &z) const
 	{	return mgl_data_min_real(this,&x,&y,&z);	}
 
-	/// Copy data from other mglData variable
-	inline const mglDataC &operator=(const mglData &d)
-	{	Set(&d);	return *this;	}
-	/// Copy data from other mglDataC variable
-	inline const mglDataC &operator=(const mglDataC &d)
-	{	if(this!=&d)	Set(d.a,d.nx,d.ny,d.nz);	return d;	}
+	/// Copy data from other mglDataA variable
+	inline const mglDataA &operator=(const mglDataA &d)
+	{	Set(&d);	return d;	}
 	inline dual operator=(dual val)
 	{	for(long i=0;i<nx*ny*nz;i++)	a[i]=val;	return val;	}
 #ifndef SWIG

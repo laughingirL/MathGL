@@ -318,7 +318,7 @@ void mglFont::Convert(const wchar_t *str, unsigned *res) const
 		else if(ch=='{')	res[j++] = unsigned(-3);
 		else if(ch=='}')	res[j++] = unsigned(-4);
 		else if(ch=='#' && str[i+1]>' ')
-			res[j++] = MGL_COLOR_MASK + (0xff & str[++i]);
+			res[j++] = MGL_COLOR_MASK + (0xff & str[++i]);	// TODO inline colors -- stack of RGBA colors + index
 		else	res[j++] = ch;				// It is just symbol
 	}
 	res[j] = 0;
@@ -499,7 +499,7 @@ float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,floa
 		else if(s==unsigned(-1))	// set normal font
 			st = style & MGL_FONT_ROMAN;
 		else if((s&MGL_COLOR_MASK)==MGL_COLOR_MASK)	// color specification
-			ccol = -float(s & 0xff);
+			ccol = -float(s & 0xff);	// TODO inline colors -- make textures
 		else
 		{
 			ss = s&MGL_FONT_MASK;
