@@ -95,8 +95,7 @@ void mglFromStr(HMDT d,char *buf,long NX,long NY,long NZ)	// TODO: add multithre
 void MGL_EXPORT mgl_data_set(HMDT d, HCDT a)
 {
 	if(!a)	return;
-	d->temp = a->temp;	d->s = a->s;
-	d->func = a->func;	d->o = a->o;
+//	d->temp = a->temp;	d->s = a->s;	d->func = a->func;	d->o = a->o;
 
 	mgl_data_create(d, a->GetNx(), a->GetNy(), a->GetNz());
 	const mglData *dd = dynamic_cast<const mglData *>(a);	// faster for mglData

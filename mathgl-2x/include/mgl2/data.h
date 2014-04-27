@@ -540,8 +540,7 @@ class MGL_EXPORT mglDataV : public mglDataA
 public:
 
 	mglDataV(const mglDataV &d)	// NOTE: must be constructor for mglDataV& to exclude copy one
-	{	temp=d.temp;	s=d.s;	func=d.func;	o=d.o;
-		nx=d.nx;	ny=d.ny;	nz=d.nz;	a0=d.a0;
+	{	nx=d.nx;	ny=d.ny;	nz=d.nz;	a0=d.a0;
 		di=d.di;	dj=d.dj;	dk=d.dk;	}
 	mglDataV()	{	di=dj=dk=a0=0;	nx=ny=nz=1;	}
 	mglDataV(long xx=1,long yy=1,long zz=1)
@@ -575,8 +574,7 @@ public:
 
 	/// Copy data from other mglDataV variable
 	inline const mglDataV &operator=(const mglDataV &d)
-	{	temp=d.temp;	s=d.s;	func=d.func;	o=d.o;
-		nx=d.nx;	ny=d.ny;	nz=d.nz;	a0=d.a0;
+	{	nx=d.nx;	ny=d.ny;	nz=d.nz;	a0=d.a0;
 		di=d.di;	dj=d.dj;	dk=d.dk;	return d;	}
 	inline mreal operator=(mreal val)
 	{	di=dj=dk=0;	a0=val;	return val;	}
@@ -610,8 +608,7 @@ class MGL_EXPORT mglDataF : public mglDataA
 public:
 
 	mglDataF(const mglDataF &d)	// NOTE: must be constructor for mglDataF& to exclude copy one
-	{	temp=d.temp;	s=d.s;	func=d.func;	o=d.o;
-		nx=d.nx;	ny=d.ny;	nz=d.nz;	v1=d.v1;	v2=d.v2;
+	{	nx=d.nx;	ny=d.ny;	nz=d.nz;	v1=d.v1;	v2=d.v2;
 		str=d.str;	ex = mgl_create_expr(str.c_str());	setD();	}
 	mglDataF()	{	ex=0;	v2=mglPoint(1,1,1);	nx=ny=nz=1;	setD();	}
 	mglDataF(long xx=1,long yy=1,long zz=1)
@@ -634,8 +631,7 @@ public:
 
 	/// Copy data from other mglDataV variable
 	inline const mglDataF &operator=(const mglDataF &d)
-	{	temp=d.temp;	s=d.s;	func=d.func;	o=d.o;
-		nx=d.nx;	ny=d.ny;	nz=d.nz;	v1=d.v1;	v2=d.v2;	setD();
+	{	nx=d.nx;	ny=d.ny;	nz=d.nz;	v1=d.v1;	v2=d.v2;	setD();
 		str=d.str;	ex = mgl_create_expr(str.c_str());	return d;	}
 	/// Get the value in given cell of the data without border checking
 	mreal v(long i,long j=0,long k=0) const

@@ -40,7 +40,6 @@
 39. Polygon(mglPoint cnt, mglPoint rad, const char *col, mglPoint axis=mglPoint(NAN));
 40. Angle(mglPoint p0, mglPoint p1, mreal degree, const char *style); 't' for text label
 41. Fractals ???
-42. MGL samples update: candle, correl, dots, fit, hist, pde, qo2d, radar, refill, region, schemes, solve, triangulation
 43. Spline for HCDT
 44. Exclude "TODO non-mglData"
 
@@ -66,7 +65,7 @@ C. Translate to Russian everything
 11. Manual dashing, like "{df090}" + extend "style"-sample by manual dashing
 12. Manual mask, like "{s00ff00182424f800}" + change "mask"-sample + fix text about manual mask
 13. Replace Cmin,Cmax,Min,Max,... by "color range", "axis range" and so on
-14. Docs about Rasterize()
+14. Docs + sample about Rasterize()
 15. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using Stem()
 16. mgl_ode_solve_ex()
 17. AddVar() always recreate data as mglData

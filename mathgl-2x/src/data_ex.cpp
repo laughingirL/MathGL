@@ -585,7 +585,7 @@ uintptr_t MGL_EXPORT mgl_data_momentum_(uintptr_t *d, char *dir, const char *how
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_data_mul_dat(HMDT d, HCDT a)
 {
-	long n, nx=d->nx, ny=d->ny, nz=d->nz;
+	long nx=d->nx, ny=d->ny, nz=d->nz;
 	long mx=a->GetNx(), my=a->GetNy(), mz=a->GetNz();
 	if(mz==1 && my==1 && mx==1)
 	{
@@ -618,7 +618,7 @@ void MGL_EXPORT mgl_data_mul_num(HMDT d, mreal a)
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_data_div_dat(HMDT d, HCDT a)
 {
-	long n, nx=d->nx, ny=d->ny, nz=d->nz;
+	long nx=d->nx, ny=d->ny, nz=d->nz;
 	long mx=a->GetNx(), my=a->GetNy(), mz=a->GetNz();
 	if(mz==1 && my==1 && mx==1)
 	{
@@ -651,7 +651,7 @@ void MGL_EXPORT mgl_data_div_num(HMDT d, mreal a)
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_data_add_dat(HMDT d, HCDT a)
 {
-	long n, nx=d->nx, ny=d->ny, nz=d->nz;
+	long nx=d->nx, ny=d->ny, nz=d->nz;
 	long mx=a->GetNx(), my=a->GetNy(), mz=a->GetNz();
 	if(mz==1 && my==1 && mx==1)
 	{

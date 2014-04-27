@@ -1037,7 +1037,9 @@ int MGL_NO_EXPORT mgls_min(mglGraph *, long , mglArg *a, const char *k, const ch
 int MGL_NO_EXPORT mgls_sum(mglGraph *, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
-	if(!strcmp(k,"dds"))	*(a[0].d) = mglData(true,mgl_data_sum(a[1].d,a[2].s.c_str()));
+	mglData *d = dynamic_cast<mglData *>(a[0].d);
+	if(!d)	return 1;
+	if(!strcmp(k,"dds"))	*d = mglData(true,mgl_data_sum(a[1].d,a[2].s.c_str()));
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -2633,7 +2635,7 @@ int MGL_NO_EXPORT mgls_ray(mglGraph *, long , mglArg *a, const char *k, const ch
 int MGL_NO_EXPORT mgls_jacobian(mglGraph *, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
-	mglData *d = dynamic_cast<mglData *>(a[0].d), *c = dynamic_cast<mglData *>(a[1].d);
+	mglData *d = dynamic_cast<mglData *>(a[0].d);
 	if(!d)	return 1;
 	if(!strcmp(k,"ddd"))	*d = mglJacobian(*(a[1].d), *(a[2].d));
 	else if(!strcmp(k,"dddd"))	*d = mglJacobian(*(a[1].d), *(a[2].d), *(a[3].d));

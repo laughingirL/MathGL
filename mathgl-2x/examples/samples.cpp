@@ -638,7 +638,7 @@ const char *mmgl_schemes="call 'sch' 0 'kw'\ncall 'sch' 1 'wk'\ncall 'sch' 2 'kH
 "call 'sch' 4 'kRryw'\ncall 'sch' 5 'kGgew'\ncall 'sch' 6 'BbwrR'\ncall 'sch' 7 'BbwgG'\n"
 "call 'sch' 8 'GgwmM'\ncall 'sch' 9 'UuwqR'\ncall 'sch' 10 'QqwcC'\ncall 'sch' 11 'CcwyY'\n"
 "call 'sch' 12 'bcwyr'\ncall 'sch' 13 'bwr'\ncall 'sch' 14 'BbcyrR'\ncall 'sch' 15 'UbcyqR'\n"
-"call 'sch' 16 'BbcwyrR'\ncall 'sch' 17 'bgr'\ncall 'sch' 18 'BbcyrR|'\ncall 'sch' 19 'b\\{g,0.3\\}r'\n"
+"call 'sch' 16 'BbcwyrR'\ncall 'sch' 17 'bgr'\ncall 'sch' 18 'BbcyrR|'\ncall 'sch' 19 'b{g,0.3}r'\n"
 "stop\nfunc 'sch' 2\nsubplot 2 10 $1 '<>_^' 0.2 0:fsurf 'x' $2\n"
 "text 0.07+0.5*mod($1,2) 0.92-0.1*int($1/2) $2 'A'\nreturn\n";
 void smgl_schemes(mglGraph *gr)	// Color table
@@ -1296,8 +1296,8 @@ void smgl_radar(mglGraph *gr)
 	gr->Radar(yr,"#");
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_candle="new y 30 'sin(pi*x/2)^2':copy y1 y/2:copy y2 (y+1)/2\n"
-"subplot 1 1 0 '':title 'Candle plot (default)'\nyrange 0 1:box:candle y y1 y2\n";
+const char *mmgl_candle="new y 30 'sin(pi*x/2)^2'\n"
+"subplot 1 1 0 '':title 'Candle plot (default)'\nyrange 0 1:box\ncandle y y/2 (y+1)/2\n";
 void smgl_candle(mglGraph *gr)
 {
 	mglData y(30);	gr->Fill(y,"sin(pi*x/2)^2");

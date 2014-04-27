@@ -154,27 +154,29 @@ void MemPanel::infoData()
 //-----------------------------------------------------------------------------
 void MemPanel::refresh()
 {
-	long n = parser.GetNumVar();
-	tab->setRowCount(n);
+	long n = parser.GetNumVar(), m=0;
+	for(long i=0;i<n;i++)	if(parser.GetVar(i))	m++;
+	tab->setRowCount(m);
 	QString s;
 	QTableWidgetItem *it;
 	Qt::ItemFlags flags=Qt::ItemIsSelectable|Qt::ItemIsEnabled;
-	for(long i=0;i<n;i++)
+	for(long i=m=0;i<n;i++)
 	{
 		mglDataA *v = parser.GetVar(i);
 		if(!v)	continue;
 		s = QString::fromStdWString(v->s);
 		it = new QTableWidgetItem(s);
-		tab->setItem(i,0,it);	it->setFlags(flags);
+		tab->setItem(m,0,it);	it->setFlags(flags);
 		s.sprintf("%ld * %ld * %ld", v->GetNx(), v->GetNy(), v->GetNz());
 		it = new QTableWidgetItem(s);
-		tab->setItem(i,1,it);	it->setFlags(flags);
+		tab->setItem(m,1,it);	it->setFlags(flags);
 		it->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
 		s.sprintf("%12ld", v->GetNN()*sizeof(mreal));
 		it = new QTableWidgetItem(s);
-		tab->setItem(i,2,it);	it->setFlags(flags);
+		tab->setItem(m,2,it);	it->setFlags(flags);
 		it->setTextAlignment(Qt::AlignRight|Qt::AlignVCenter);
 		if(v->o)	refreshData((QWidget *)v->o);
+		m++;
 	}
 	tab->sortItems(colSort);
 }

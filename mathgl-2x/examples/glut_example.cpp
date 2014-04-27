@@ -78,15 +78,14 @@ int main(int argc,char **argv)
 	char key = 0;
 	if(argc>1)	key = argv[1][0]!='-' ? argv[1][0] : argv[1][1];
 	else	printf("You may specify argument '1', '2', '3' or 'd' for viewing examples of 1d, 2d, 3d or dual plotting\n");
-	mglGLUT *gr;
 	switch(key)
 	{
-	case '1':	gr = new mglGLUT(sample_1, "1D plots");	break;
-	case '2':	gr = new mglGLUT(sample_2, "2D plots");	break;
-	case '3':	gr = new mglGLUT(sample_3, "3D plots");	break;
-	case 'd':	gr = new mglGLUT(sample_d, "Dual plots");	break;
-	case 't':	gr = new mglGLUT(test_wnd, "Testing");	break;
-	default:	gr = new mglGLUT(sample, "Example of molecules");	break;
+	case '1':	new mglGLUT(sample_1, "1D plots");	break;
+	case '2':	new mglGLUT(sample_2, "2D plots");	break;
+	case '3':	new mglGLUT(sample_3, "3D plots");	break;
+	case 'd':	new mglGLUT(sample_d, "Dual plots");	break;
+	case 't':	new mglGLUT(test_wnd, "Testing");	break;
+	default:	new mglGLUT(sample, "Example of molecules");	break;
 	}
 	return 0;
 }

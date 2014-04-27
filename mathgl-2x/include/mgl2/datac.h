@@ -48,6 +48,7 @@ public:
 	mglDataC(bool, mglDataC *d)	// NOTE: Variable d will be deleted!!!
 	{	if(d)
 		{	nx=d->nx;	ny=d->ny;	nz=d->nz;	a=d->a;	d->a=0;
+			temp=d->temp;	func=d->func;	o=d->o;	s=d->s;
 			id=d->id;	link=d->link;	delete d;	}
 		else	{	a=0;	Create(1);	}	}
 	/// Initiate by flat array

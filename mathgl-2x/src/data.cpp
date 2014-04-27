@@ -1228,7 +1228,7 @@ mreal MGL_EXPORT mgl_data_momentum_val(HCDT dd, char dir, mreal *x, mreal *w, mr
 	return i0;
 }
 mreal MGL_EXPORT mgl_data_momentum_val_(uintptr_t *d, char *dir, mreal *m, mreal *w, mreal *s, mreal *k,int)
-{	mreal mm,ww,ss,kk,aa;
+{	mreal mm=0,ww=0,ss=0,kk=0,aa=0;
 	aa = mgl_data_momentum_val(_DT_,*dir,&mm,&ww,&ss,&kk);
 	*m=mm;	*w=ww;	*s=ss;	*k=kk;	return aa;	}
 //-----------------------------------------------------------------------------

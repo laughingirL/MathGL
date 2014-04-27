@@ -32,7 +32,7 @@ mglData MGL_NO_EXPORT mglFormulaCalc(const char *str, const std::vector<mglDataA
 {
 	std::wstring s;
 	for(long i=0;str[i];i++)	s.push_back(str[i]);
-	mglFormulaCalc(s,0,head);
+	return mglFormulaCalc(s,0,head);
 }
 //-----------------------------------------------------------------------------
 void mglApplyFunc(mglData &d, double (*func)(double))

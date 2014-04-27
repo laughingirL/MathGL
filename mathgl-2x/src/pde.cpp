@@ -216,7 +216,7 @@ HMDT MGL_EXPORT mgl_pde_solve(HMGL gr, const char *ham, HCDT ini_re, HCDT ini_im
 }
 //-----------------------------------------------------------------------------
 HMDT MGL_EXPORT mgl_ode_solve(void (*func)(const mreal *x, mreal *dx, void *par), int n, mreal *x0, mreal dt, mreal tmax, void *par)
-{	mgl_ode_solve_ex(func,n,x0,dt,tmax,par,0);	}
+{	return mgl_ode_solve_ex(func,n,x0,dt,tmax,par,0);	}
 HMDT MGL_EXPORT mgl_ode_solve_ex(void (*func)(const mreal *x, mreal *dx, void *par), int n, mreal *x0, mreal dt, mreal tmax, void *par, void (*bord)(mreal *x, void *par))
 {
 	if(tmax<dt)	return 0;	// nothing to do
