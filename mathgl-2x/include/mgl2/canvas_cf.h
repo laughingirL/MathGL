@@ -440,12 +440,12 @@ uintptr_t MGL_EXPORT mgl_parser_add_var_(uintptr_t* p, const char *name, int);
 HMDT MGL_EXPORT mgl_parser_add_varw(HMPR p, const wchar_t *name);
 /// Find variable with given name or return NULL if no one
 /// NOTE !!! You must not delete obtained data arrays !!!
-HMDT MGL_EXPORT mgl_parser_find_var(HMPR p, const char *name);
+MGL_EXPORT mglDataA *mgl_parser_find_var(HMPR p, const char *name);
 uintptr_t MGL_EXPORT mgl_parser_find_var_(uintptr_t* p, const char *name, int);
-HMDT MGL_EXPORT mgl_parser_find_varw(HMPR p, const wchar_t *name);
+MGL_EXPORT mglDataA *mgl_parser_find_varw(HMPR p, const wchar_t *name);
 /// Get variable with given id
 /// NOTE !!! You must not delete obtained data arrays !!!
-HMDT MGL_EXPORT mgl_parser_get_var(HMPR p, unsigned long id);
+MGL_EXPORT mglDataA *mgl_parser_get_var(HMPR p, unsigned long id);
 uintptr_t MGL_EXPORT mgl_parser_get_var_(uintptr_t* p, unsigned long *id);
 /// Get number of variables
 long MGL_EXPORT mgl_parser_num_var(HMPR p);

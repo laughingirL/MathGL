@@ -72,10 +72,10 @@ void InfoDialog::refresh(bool force)
 	draw->text = text;	mgl->update();
 }
 //-----------------------------------------------------------------------------
-void InfoDialog::setVar(mglData *v)
+void InfoDialog::setVar(mglDataA *v)
 {
 	var=v;
-	if(v)	kind->setCurrentIndex(v->ny>1 ? 1:0);
+	if(v)	kind->setCurrentIndex(v->GetNy()>1 ? 1:0);
 	refresh();
 }
 //-----------------------------------------------------------------------------

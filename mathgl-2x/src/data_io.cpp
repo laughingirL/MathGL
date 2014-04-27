@@ -41,6 +41,7 @@
 
 //#define isn(ch)		((ch)<' ' && (ch)!='\t')
 #define isn(ch)		((ch)=='\n')
+mglData MGL_NO_EXPORT mglFormulaCalc(const char *str, const std::vector<mglDataA*> &head);
 //-----------------------------------------------------------------------------
 HMDT MGL_EXPORT mgl_create_data()	{	return new mglData;	}
 HMDT MGL_EXPORT mgl_create_data_size(long nx, long ny, long nz){	return new mglData(nx,ny,nz);	}
@@ -97,8 +98,8 @@ void MGL_EXPORT mgl_data_set(HMDT d, HCDT a)
 	d->temp = a->temp;	d->s = a->s;
 	d->func = a->func;	d->o = a->o;
 
-	const mglData *dd = dynamic_cast<const mglData *>(a);	// faster for mglData
 	mgl_data_create(d, a->GetNx(), a->GetNy(), a->GetNz());
+	const mglData *dd = dynamic_cast<const mglData *>(a);	// faster for mglData
 	if(dd)	// this one should be much faster
 		memcpy(d->a, dd->a, d->nx*d->ny*d->nz*sizeof(mreal));
 	else	// very inefficient!!!
@@ -865,37 +866,19 @@ void MGL_EXPORT mgl_data_modify_(uintptr_t *d, const char *eq,int *dim,int l)
 {	char *s=new char[l+1];	memcpy(s,eq,l);	s[l]=0;
 	mgl_data_modify(_DT_,s,*dim);	delete []s;	}
 //-----------------------------------------------------------------------------
-MGL_NO_EXPORT void *mgl_modify_gen(void *par)
-{
-	mglThreadV *t=(mglThreadV *)par;
-	const mglFormula *f = (const mglFormula *)(t->v);
-	register long nx=t->p[0],ny=t->p[1],nz=t->p[2];
-	mreal *b=t->a, dx,dy,dz;
-	HCDT v=(HCDT)t->b, w=(HCDT)t->c;
-	dx=nx>1?1/(nx-1.):0;	dy=ny>1?1/(ny-1.):0;	dz=nz>1?1/(nz-1.):0;
-#if !MGL_HAVE_PTHREAD
-#pragma omp parallel for
-#endif
-	for(long i0=t->id;i0<t->n;i0+=mglNumThr)
-	{
-		register long i=i0%nx, j=((i0/nx)%ny), k=i0/(nx*ny);
-		b[i0] = f->Calc(i*dx, j*dy, k*dz, b[i0], v?v->vthr(i0):0, w?w->vthr(i0):0);
-	}
-	return 0;
-}
 void MGL_EXPORT mgl_data_modify_vw(HMDT d, const char *eq,HCDT vdat,HCDT wdat)
 {
-	const mglData *v = dynamic_cast<const mglData *>(vdat);
-	const mglData *w = dynamic_cast<const mglData *>(wdat);
-	long nn = d->nx*d->ny*d->nz, par[3]={d->nx,d->ny,d->nz};
-	if(vdat && vdat->GetNN()!=nn)	return;
-	if(wdat && wdat->GetNN()!=nn)	return;
-	mglFormula f(eq);
-	if(v && w)	mglStartThread(mgl_modify,0,nn,d->a,v->a,w->a,par,&f);
-	else if(vdat && wdat)	mglStartThreadV(mgl_modify_gen,nn,d->a,vdat,wdat,par,&f);
-	else if(v)	mglStartThread(mgl_modify,0,nn,d->a,v->a,0,par,&f);
-	else if(vdat)	mglStartThreadV(mgl_modify_gen,nn,d->a,vdat,0,par,&f);
-	else	mglStartThread(mgl_modify,0,nn,d->a,0,0,par,&f);
+	std::wstring s = d->s;	d->s = L"u";
+	mglDataV x(d->nx,d->ny,d->nz);	x.Fill(0,1,'x');	x.s=L"x";
+	mglDataV y(d->nx,d->ny,d->nz);	y.Fill(0,1,'y');	y.s=L"y";
+	mglDataV z(d->nx,d->ny,d->nz);	z.Fill(0,1,'z');	z.s=L"z";
+	mglData v(vdat), w(wdat);	v.s = L"v";	w.s = L"w";
+	std::vector<mglDataA*> list;
+	list.push_back(&x);	list.push_back(&y);	list.push_back(&z);
+	list.push_back(d);	list.push_back(&v);	list.push_back(&w);
+	d->Set(mglFormulaCalc(eq,list));
+//	d->Set(res);
+	d->s = s;
 }
 void MGL_EXPORT mgl_data_modify_vw_(uintptr_t *d, const char *eq, uintptr_t *v, uintptr_t *w,int l)
 {	char *s=new char[l+1];	memcpy(s,eq,l);	s[l]=0;

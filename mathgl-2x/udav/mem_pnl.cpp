@@ -32,7 +32,7 @@
 //-----------------------------------------------------------------------------
 extern bool mglAutoSave;
 extern mglParse parser;
-QWidget *newDataWnd(InfoDialog *inf, QWidget *wnd, mglData *v);
+QWidget *newDataWnd(InfoDialog *inf, QWidget *wnd, mglDataA *v);
 void refreshData(QWidget *w);
 //-----------------------------------------------------------------------------
 QWidget *createMemPanel(QWidget *p)	// NOTE: parent should be MainWindow
@@ -111,7 +111,7 @@ void MemPanel::editData(int n)
 	if(tab->rowCount()<1)	return;
 	if(n<0)	n = tab->currentRow();
 	if(n<0)	n = 0;
-	mglData *v = parser.FindVar(tab->item(n,0)->text().toStdString().c_str());
+	mglDataA *v = parser.FindVar(tab->item(n,0)->text().toStdString().c_str());
 	if(!v)	return;
 	QWidget *t;
 	if(v->o)	t = (QWidget *)v->o;
@@ -124,7 +124,7 @@ void MemPanel::delData()
 	if(tab->rowCount()<1)	return;
 	int	n = tab->currentRow();
 	if(n<0)	n = 0;
-	mglData *v = parser.FindVar(tab->item(n,0)->text().toStdString().c_str());
+	mglDataA *v = parser.FindVar(tab->item(n,0)->text().toStdString().c_str());
 	if(!v && v->o)	((QWidget *)v->o)->close();
 	parser.DeleteVar(tab->item(n,0)->text().toStdString().c_str());
 	refresh();
@@ -143,7 +143,7 @@ void MemPanel::infoData()
 	if(tab->rowCount()<1)	return;
 	int	n = tab->currentRow();
 	if(n<0)	n = 0;
-	mglData *v = parser.FindVar(tab->item(n,0)->text().toStdString().c_str());
+	mglDataA *v = parser.FindVar(tab->item(n,0)->text().toStdString().c_str());
 	if(!v)	return;
 	infoDlg->setVar(v);
 	QString s = QString::fromStdWString(v->s);
@@ -161,16 +161,16 @@ void MemPanel::refresh()
 	Qt::ItemFlags flags=Qt::ItemIsSelectable|Qt::ItemIsEnabled;
 	for(long i=0;i<n;i++)
 	{
-		mglData *v = parser.GetVar(i);
+		mglDataA *v = parser.GetVar(i);
 		if(!v)	continue;
 		s = QString::fromStdWString(v->s);
 		it = new QTableWidgetItem(s);
 		tab->setItem(i,0,it);	it->setFlags(flags);
-		s.sprintf("%ld * %ld * %ld", v->nx, v->ny, v->nz);
+		s.sprintf("%ld * %ld * %ld", v->GetNx(), v->GetNy(), v->GetNz());
 		it = new QTableWidgetItem(s);
 		tab->setItem(i,1,it);	it->setFlags(flags);
 		it->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
-		s.sprintf("%12ld", v->nx*v->ny*v->nz*sizeof(mreal));
+		s.sprintf("%12ld", v->GetNN()*sizeof(mreal));
 		it = new QTableWidgetItem(s);
 		tab->setItem(i,2,it);	it->setFlags(flags);
 		it->setTextAlignment(Qt::AlignRight|Qt::AlignVCenter);

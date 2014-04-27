@@ -1285,13 +1285,13 @@ public:
 	{	return mgl_parser_add_varw(pr, name);	}
 	/// Find variable with given name or return NULL if no one
 	/// NOTE !!! You must not delete obtained data arrays !!!
-	inline mglData *FindVar(const char *name)
+	inline mglDataA *FindVar(const char *name)
 	{	return mgl_parser_find_var(pr, name);	}
-	inline mglData *FindVar(const wchar_t *name)
+	inline mglDataA *FindVar(const wchar_t *name)
 	{	return mgl_parser_find_varw(pr, name);	}
 	/// Get variable with given id. Can be NULL for temporary ones.
 	/// NOTE !!! You must not delete obtained data arrays !!!
-	inline mglData *GetVar(unsigned long id)
+	inline mglDataA *GetVar(unsigned long id)
 	{	return mgl_parser_get_var(pr,id);	}
 	/// Get number of variables
 	inline long GetNumVar()

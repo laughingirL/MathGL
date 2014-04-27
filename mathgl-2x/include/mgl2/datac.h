@@ -182,7 +182,7 @@ public:
 	inline bool Read(const char *fname,long mx,long my=1,long mz=1)
 	{	return mgl_datac_read_dim(this,fname,mx,my,mz);	}
 	/// Save whole data array (for ns=-1) or only ns-th slice to text file
-	inline void Save(const char *fname,long ns=-1) const
+	void Save(const char *fname,long ns=-1) const
 	{	mgl_datac_save(this,fname,ns);	}
 	/// Read data from tab-separated text files with auto determining size which filenames are result of sprintf(fname,templ,t) where t=from:step:to
 	inline bool ReadRange(const char *templ, double from, double to, double step=1, bool as_slice=false)
@@ -193,15 +193,12 @@ public:
 	/// Read data from text file with size specified at beginning of the file
 	inline bool ReadMat(const char *fname, long dim=2)
 	{	return mgl_datac_read_mat(this,fname,dim);	}
-	/// Export data array (for ns=-1) or only ns-th slice to PNG file according color scheme
-	inline void Export(const char *fname,const char *scheme,mreal v1=0,mreal v2=0,long ns=-1) const
-	{	mgl_data_export(this,fname,scheme,v1,v2,ns);	}
 
 		/// Read data array from HDF file (parse HDF4 and HDF5 files)
 	inline int ReadHDF(const char *fname,const char *data)
 	{	return mgl_datac_read_hdf(this,fname,data);	}
 	/// Save data to HDF file
-	inline void SaveHDF(const char *fname,const char *data,bool rewrite=false) const
+	void SaveHDF(const char *fname,const char *data,bool rewrite=false) const
 	{	mgl_datac_save_hdf(this,fname,data,rewrite);	}
 	/// Put HDF data names into buf as '\t' separated.
 	inline static int DatasHDF(const char *fname, char *buf, long size)
@@ -336,32 +333,12 @@ public:
 	{	return mglData(true,mgl_data_solve(this, val, dir, 0, norm));	}
 	inline mglData Solve(mreal val, char dir, const mglData &i0, bool norm=true) const
 	{	return mglData(true,mgl_data_solve(this, val, dir, &i0, norm));	}
-	
-	/// Print information about the data (sizes and momentum) to string
-	inline const char *PrintInfo() const	{	return mgl_data_info(this);	}
-	/// Print information about the data (sizes and momentum) to FILE (for example, stdout)
-	inline void PrintInfo(FILE *fp) const
-	{	if(fp)	{	fprintf(fp,"%s",mgl_data_info(this));	fflush(fp);	}	}
-	/// Get maximal value of the data
-	mreal Maximal() const	{	return mgl_data_max(this);	}
-	/// Get minimal value of the data
-	mreal Minimal() const	{	return mgl_data_min(this);	}
-	/// Get maximal value of the data and its position
-	inline mreal Maximal(long &i,long &j,long &k) const
-	{	return mgl_data_max_int(this,&i,&j,&k);	}
-	/// Get minimal value of the data and its position
-	inline mreal Minimal(long &i,long &j,long &k) const
-	{	return mgl_data_min_int(this,&i,&j,&k);	}
-	/// Get maximal value of the data and its approximated position
-	inline mreal Maximal(mreal &x,mreal &y,mreal &z) const
-	{	return mgl_data_max_real(this,&x,&y,&z);	}
-	/// Get minimal value of the data and its approximated position
-	inline mreal Minimal(mreal &x,mreal &y,mreal &z) const
-	{	return mgl_data_min_real(this,&x,&y,&z);	}
 
 	/// Copy data from other mglDataA variable
 	inline const mglDataA &operator=(const mglDataA &d)
-	{	Set(&d);	return d;	}
+	{	if(this!=&d)	Set(&d);	return d;	}
+	inline const mglDataC &operator=(const mglDataC &d)
+	{	if(this!=&d)	Set(&d);	return d;	}
 	inline dual operator=(dual val)
 	{	for(long i=0;i<nx*ny*nz;i++)	a[i]=val;	return val;	}
 #ifndef SWIG
@@ -369,13 +346,17 @@ public:
 	inline dual &operator[](long i)	{	return a[i];	}
 #endif
 
-	/// Get the value in given cell of the data without border checking
-	mreal v(long i,long j=0,long k=0) const
-#ifdef DEBUG
-	{	if(i<0 || j<0 || k<0 || i>=nx || j>=ny || k>=nz)	printf("Wrong index in mglData");
-		return abs(a[i+nx*(j+ny*k)]);	}
+
+#ifndef DEBUG
+	/// Get the value in given cell of the data
+	mreal v(long i,long j=0,long k=0) const	{	return abs(a[i+nx*(j+ny*k)]);	}
+	/// Set the value in given cell of the data
+	void set_v(mreal val, long i,long j=0,long k=0)	{	a[i+nx*(j+ny*k)]=val;	}
 #else
-	{	return abs(a[i+nx*(j+ny*k)]);	}
+	/// Get the value in given cell of the data with border checking
+	mreal v(long i,long j=0,long k=0) const	{	return abs(mgl_datac_get_value(this,i,j,k));	}
+	/// Set the value in given cell of the data
+	void set_v(mreal val, long i,long j=0,long k=0)	{	mgl_datac_set_value(this,val,i,j,k);	}
 #endif
 	mreal vthr(long i) const {	return abs(a[i]);	}
 	// add for speeding up !!!

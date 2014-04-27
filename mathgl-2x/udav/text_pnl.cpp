@@ -143,7 +143,7 @@ void TextPanel::refreshData()
 	long i,n=parser.GetNumVar();
 	for(i=0;i<n;i++)
 	{
-		const mglData *v=parser.GetVar(i);
+		const mglDataA *v=parser.GetVar(i);
 		if(v && v->s.length()>2)	vars<<QString::fromStdWString(v->s);
 	}
 	setCompleter(mglCompleter);
@@ -352,8 +352,8 @@ void TextPanel::saveHDF5(const QString &fileName)
 	char name[256];
 	for(i=0;i<n;i++);
 	{
-		const mglData *v = parser.GetVar(i);
-		if(v)
+		const mglData *v = dynamic_cast<const mglData *>(parser.GetVar(i));
+		if(v)	// TODO non-mglData allow to HDF5 save in UDAV
 		{
 			wcstombs(name,v->s.c_str(),v->s.length()+1);
 			if(v->nz==1 && v->ny == 1)

@@ -28,6 +28,7 @@
 //-----------------------------------------------------------------------------
 class mglBase;
 class mglData;
+class mglDataA;
 class mglDataC;
 class mglParser;
 class mglFormula;
@@ -39,6 +40,65 @@ typedef mglDataC* HADT;
 typedef mglParser* HMPR;
 typedef mglFormula* HMEX;
 typedef mglFormulaC* HAEX;
+typedef const mglDataA* HCDT;
+#ifdef __cplusplus
+extern "C" {
+#endif
+/// Save whole data array (for ns=-1) or only ns-th slice to text file
+void MGL_EXPORT mgl_data_save(HCDT dat, const char *fname,long ns);
+void MGL_EXPORT mgl_data_save_(uintptr_t *dat, const char *fname,int *ns,int);
+/// Export data array (for ns=-1) or only ns-th slice to PNG file according color scheme
+void MGL_EXPORT mgl_data_export(HCDT dat, const char *fname, const char *scheme,mreal v1,mreal v2,long ns);
+void MGL_EXPORT mgl_data_export_(uintptr_t *dat, const char *fname, const char *scheme,mreal *v1,mreal *v2,int *ns,int,int);
+/// Save data to HDF file
+void MGL_EXPORT mgl_data_save_hdf(HCDT d,const char *fname,const char *data,int rewrite);
+void MGL_EXPORT mgl_data_save_hdf_(uintptr_t *d, const char *fname, const char *data, int *rewrite,int l,int n);
+/// Get information about the data (sizes and momentum) to string
+MGL_EXPORT const char *mgl_data_info(HCDT dat);
+
+/// Get maximal value of the data
+mreal MGL_EXPORT mgl_data_max(HCDT dat);
+mreal MGL_EXPORT mgl_data_max_(uintptr_t *dat);
+/// Get maximal value of the data which is less than 0
+mreal MGL_EXPORT mgl_data_neg_max(HCDT dat);
+mreal MGL_EXPORT mgl_data_neg_max_(uintptr_t *dat);
+/// Get minimal value of the data
+mreal MGL_EXPORT mgl_data_min(HCDT dat);
+mreal MGL_EXPORT mgl_data_min_(uintptr_t *dat);
+/// Get minimal value of the data which is larger than 0
+mreal MGL_EXPORT mgl_data_pos_min(HCDT dat);
+mreal MGL_EXPORT mgl_data_pos_min_(uintptr_t *dat);
+/// Find position (after specified in i,j,k) of first nonzero value of formula
+mreal MGL_EXPORT mgl_data_first(HCDT dat, const char *cond, long *i, long *j, long *k);
+mreal MGL_EXPORT mgl_data_first_(uintptr_t *dat, const char *cond, int *i, int *j, int *k, int);
+/// Find position (before specified in i,j,k) of last nonzero value of formula
+mreal MGL_EXPORT mgl_data_last(HCDT dat, const char *cond, long *i, long *j, long *k);
+mreal MGL_EXPORT mgl_data_last_(uintptr_t *dat, const char *cond, int *i, int *j, int *k, int);
+/// Find position of first in direction 'dir' nonzero value of formula
+long MGL_EXPORT mgl_data_find(HCDT dat, const char *cond, char dir, long i, long j, long k);
+int MGL_EXPORT mgl_data_find_(uintptr_t *dat, const char *cond, char *dir, int *i, int *j, int *k, int,int);
+/// Find if any nonzero value of formula
+int MGL_EXPORT mgl_data_find_any(HCDT dat, const char *cond);
+int MGL_EXPORT mgl_data_find_any_(uintptr_t *dat, const char *cond, int);
+/// Get maximal value of the data and its position
+mreal MGL_EXPORT mgl_data_max_int(HCDT dat, long *i, long *j, long *k);
+mreal MGL_EXPORT mgl_data_max_int_(uintptr_t *dat, int *i, int *j, int *k);
+/// Get maximal value of the data and its approximated position
+mreal MGL_EXPORT mgl_data_max_real(HCDT dat, mreal *x, mreal *y, mreal *z);
+mreal MGL_EXPORT mgl_data_max_real_(uintptr_t *dat, mreal *x, mreal *y, mreal *z);
+/// Get minimal value of the data and its position
+mreal MGL_EXPORT mgl_data_min_int(HCDT dat, long *i, long *j, long *k);
+mreal MGL_EXPORT mgl_data_min_int_(uintptr_t *dat, int *i, int *j, int *k);
+/// Get minimal value of the data and its approximated position
+mreal MGL_EXPORT mgl_data_min_real(HCDT dat, mreal *x, mreal *y, mreal *z);
+mreal MGL_EXPORT mgl_data_min_real_(uintptr_t *dat, mreal *x, mreal *y, mreal *z);
+/// Get "energy and find 4 momenta of data: median, width, skewness, kurtosis
+mreal MGL_EXPORT mgl_data_momentum_val(HCDT d, char dir, mreal *m, mreal *w, mreal *s, mreal *k);
+mreal MGL_EXPORT mgl_data_momentum_val_(uintptr_t *dat, char *dir, mreal *m, mreal *w, mreal *s, mreal *k,int);
+
+#ifdef __cplusplus
+}
+#endif
 //-----------------------------------------------------------------------------
 /// Callback function for asking user a question. Result shouldn't exceed 1024.
 extern MGL_EXPORT void (*mgl_ask_func)(const wchar_t *quest, wchar_t *res);
@@ -54,22 +114,75 @@ public:
 
 	mglDataA()	{	temp=false;	func=0;	o=0;	}
 	virtual ~mglDataA()	{	if(func)	func(o);	}
+	virtual void set_v(mreal val, long i,long j=0,long k=0)	{}
 	virtual mreal v(long i,long j=0,long k=0) const = 0;
 	virtual mreal vthr(long i) const = 0;
 	virtual long GetNx() const = 0;
 	virtual long GetNy() const = 0;
 	virtual long GetNz() const = 0;
 	inline long GetNN() const {	return GetNx()*GetNy()*GetNz();	}
-	virtual mreal Maximal() const = 0;
-	virtual mreal Minimal() const = 0;
 	virtual mreal dvx(long i,long j=0,long k=0) const = 0;
 //	{	return i>0 ? (i<GetNx()-1 ? (v(i+1,j,k)-v(i-1,j,k))/2 : v(i,j,k)-v(i-1,j,k)) : v(1,j,k)-v(0,j,k);	}
 	virtual mreal dvy(long i,long j=0,long k=0) const = 0;
 //	{	return j>0 ? (j<GetNy()-1 ? (v(i,j+1,k)-v(i,j-1,k))/2 : v(i,j,k)-v(i,j-1,k)) : v(i,1,k)-v(i,0,k);	}
 	virtual mreal dvz(long i,long j=0,long k=0) const = 0;
 //	{	return k>0 ? (k<GetNz()-1 ? (v(i,j,k+1)-v(i,j,k-1))/2 : v(i,j,k)-v(i,j,k-1)) : v(i,j,1)-v(i,j,0);	}
+	
+	// Now some common function which applicable for most of data types
+	/// Save whole data array (for ns=-1) or only ns-th slice to text file
+	virtual void Save(const char *fname,long ns=-1) const
+	{	mgl_data_save(this,fname,ns);	}
+	/// Export data array (for ns=-1) or only ns-th slice to PNG file according color scheme
+	inline void Export(const char *fname,const char *scheme,mreal v1=0,mreal v2=0,long ns=-1) const
+	{	mgl_data_export(this,fname,scheme,v1,v2,ns);	}
+	/// Save data to HDF file
+	virtual void SaveHDF(const char *fname,const char *data,bool rewrite=false) const
+	{	mgl_data_save_hdf(this,fname,data,rewrite);	}
+
+	/// Get information about the data (sizes and momentum) to string
+	inline const char *PrintInfo() const	{	return mgl_data_info(this);	}
+	/// Print information about the data (sizes and momentum) to FILE (for example, stdout)
+	inline void PrintInfo(FILE *fp) const
+	{	if(fp)	{	fprintf(fp,"%s",mgl_data_info(this));	fflush(fp);	}	}
+	/// Get maximal value of the data
+	mreal Maximal() const	{	return mgl_data_max(this);	}
+	/// Get minimal value of the data
+	mreal Minimal() const	{	return mgl_data_min(this);	}
+	/// Get maximal value of the data which is less than 0
+	inline mreal MaximalNeg() const	{	return mgl_data_neg_max(this);	}
+	/// Get minimal value of the data which is larger than 0
+	inline mreal MinimalPos() const	{	return mgl_data_pos_min(this);	}
+	/// Get maximal value of the data and its position
+	inline mreal Maximal(long &i,long &j,long &k) const
+	{	return mgl_data_max_int(this,&i,&j,&k);	}
+	/// Get minimal value of the data and its position
+	inline mreal Minimal(long &i,long &j,long &k) const
+	{	return mgl_data_min_int(this,&i,&j,&k);	}
+	/// Get maximal value of the data and its approximated position
+	inline mreal Maximal(mreal &x,mreal &y,mreal &z) const
+	{	return mgl_data_max_real(this,&x,&y,&z);	}
+	/// Get minimal value of the data and its approximated position
+	inline mreal Minimal(mreal &x,mreal &y,mreal &z) const
+	{	return mgl_data_min_real(this,&x,&y,&z);	}
+	/// Get "energy" and find first (median) and second (width) momenta of data
+	inline mreal Momentum(char dir,mreal &m,mreal &w) const
+	{	return mgl_data_momentum_val(this,dir,&m,&w,0,0);	}
+	/// Get "energy and find 4 momenta of data: median, width, skewness, kurtosis
+	inline mreal Momentum(char dir,mreal &m,mreal &w,mreal &s,mreal &k) const
+	{	return mgl_data_momentum_val(this,dir,&m,&w,&s,&k);	}
+	/// Find position (after specified in i,j,k) of first nonzero value of formula
+	inline mreal Find(const char *cond, long &i, long &j, long &k) const
+	{	return mgl_data_first(this,cond,&i,&j,&k);	}
+	/// Find position (before specified in i,j,k) of last nonzero value of formula
+	inline mreal Last(const char *cond, long &i, long &j, long &k) const
+	{	return mgl_data_last(this,cond,&i,&j,&k);	}
+	/// Find position of first in direction 'dir' nonzero value of formula
+	inline long Find(const char *cond, char dir, long i=0, long j=0, long k=0) const
+	{	return mgl_data_find(this,cond,dir,i,j,k);	}
+	/// Find if any nonzero value of formula
+	inline bool FindAny(const char *cond) const
+	{	return mgl_data_find_any(this,cond);	}
 };
-typedef const mglDataA* HCDT;
 //-----------------------------------------------------------------------------
 /// Structure for color ID
 struct MGL_EXPORT mglColorID
@@ -86,6 +199,7 @@ extern uint64_t mgl_mask_val[16];
 #define MGL_SOLID_MASK	0xffffffffffffffff
 //-----------------------------------------------------------------------------
 #else
+#define mglDataA void
 typedef void *HMGL;
 typedef void *HMDT;
 typedef void *HADT;

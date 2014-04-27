@@ -131,7 +131,7 @@ void DataDialog::updateNames()
 	long i, n = parser.GetNumVar();
 	for(i=0;i<n;i++)
 	{
-		const mglData *v = parser.GetVar(i);
+		const mglDataA *v = parser.GetVar(i);
 		if(v)	name->addItem(QString::fromStdWString(v->s));
 	}
 }

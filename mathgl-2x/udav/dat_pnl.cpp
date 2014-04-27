@@ -47,7 +47,7 @@ void addDataPanel(QWidget *wnd, QWidget *w, QString name);
 void deleteDat(void *o)		{	if(o)	delete ((DatPanel *)o);	}
 void refreshData(QWidget *w)	{	((DatPanel *)w)->refresh();	}
 //-----------------------------------------------------------------------------
-QWidget *newDataWnd(InfoDialog *inf, QWidget *wnd, mglData *v)
+QWidget *newDataWnd(InfoDialog *inf, QWidget *wnd, mglDataA *v)
 {
 	DatPanel *t = new DatPanel(inf);
 	if(v)	t->setVar(v);
@@ -80,11 +80,12 @@ void DatPanel::refresh()
 	bool rc = false;
 	if(!var)	return;
 	infoDlg->allowRefresh=false;
-	if(nx!=var->nx)	{	nx = var->nx;	tab->setColumnCount(nx);	rc=true;	}
-	if(ny!=var->ny)	{	ny = var->ny;	tab->setRowCount(ny);	rc=true;	}
-	if(kz>=var->nz)	{	kz = 0;			emit sliceChanged(0);	}
-	if(nz!=var->ny)	{	nz = var->nz;	emit nzChanged(nz);		}
-	id = QString(var->id.c_str());
+	if(nx!=var->GetNx())	{	nx = var->GetNx();	tab->setColumnCount(nx);	rc=true;	}
+	if(ny!=var->GetNy())	{	ny = var->GetNy();	tab->setRowCount(ny);	rc=true;	}
+	if(kz>=var->GetNz())	{	kz = 0;	emit sliceChanged(0);	}
+	if(nz!=var->GetNz())	{	nz = var->GetNz();	emit nzChanged(nz);		}
+	const mglData *dd = dynamic_cast<const mglData *>(var);	if(dd)	id = QString(dd->id.c_str());
+	const mglDataC *dc = dynamic_cast<const mglDataC *>(var);	if(dc)	id = QString(dc->id.c_str());
 	if(nz==1 && ny>1 && !id.isEmpty())
 	{
 		QStringList head;
@@ -112,7 +113,7 @@ void DatPanel::refresh()
 	}
 	for(i=0;i<nx;i++)	for(j=0;j<ny;j++)
 	{
-		f = var->GetVal(i,j,kz);
+		f = var->v(i,j,kz);
 		if(mgl_isnan(f))	s = "nan";
 		else	s.sprintf("%g",f);
 		tab->item(j,i)->setText(s);
@@ -125,7 +126,7 @@ void DatPanel::refresh()
 	ready = true;
 }
 //-----------------------------------------------------------------------------
-void DatPanel::setVar(mglData *v)
+void DatPanel::setVar(mglDataA *v)
 {
 	ready = false;
 	if(var)	var->o = 0;
@@ -161,12 +162,12 @@ void DatPanel::putValue(int r, int c)
 	QString s = tab->item(r,c)->text().toLower();
 	mreal f;
 	f = s=="nan" ? NAN : s.toDouble();
-	if(f!=var->GetVal(c,r,kz))
+	if(f!=var->v(c,r,kz))
 	{
 		if(mgl_isnan(f))	s="nan";	else	s.sprintf("%g", f);
 		tab->item(r,c)->setText(s);
 	}
-	var->SetVal(f,c,r,kz);
+	var->set_v(f,c,r,kz);
 	infoDlg->refresh();
 }
 //-----------------------------------------------------------------------------
@@ -193,6 +194,7 @@ void DatPanel::save()
 //-----------------------------------------------------------------------------
 void DatPanel::load()
 {
+	mglData *d = dynamic_cast<mglData *>(var);	if(!d)	return;
 	QString fn = QFileDialog::getOpenFileName(this, tr("UDAV - Load data"), "",
 				tr("Data files (*.dat)\nHDF5 files (*.h5 *.hdf)\nPNG files (*.png)\nAll files (*.*)"));
 	if(fn.isEmpty())	return;
@@ -201,15 +203,15 @@ void DatPanel::load()
 	{
 		bool ok;
 		QString s = QInputDialog::getText(this, tr("UDAV - Import PNG"), tr("Enter color scheme for picture"), QLineEdit::Normal, MGL_DEF_SCH, &ok);
-		if(ok)	var->Import(fn.toStdString().c_str(), s.toStdString().c_str());
+		if(ok)	d->Import(fn.toStdString().c_str(), s.toStdString().c_str());
 	}
 	else if(ext=="h5" || ext=="hdf")
 	{
 		bool ok;
 		QString s = QInputDialog::getText(this, tr("UDAV - Read from HDF"), tr("Enter data name"), QLineEdit::Normal, QString::fromStdWString(var->s), &ok);
-		if(ok)	var->ReadHDF(fn.toStdString().c_str(), s.toStdString().c_str());
+		if(ok)	d->ReadHDF(fn.toStdString().c_str(), s.toStdString().c_str());
 	}
-	else 	var->Read(fn.toStdString().c_str());
+	else 	d->Read(fn.toStdString().c_str());
 	refresh();
 }
 //-----------------------------------------------------------------------------
@@ -243,7 +245,7 @@ void DatPanel::paste()
 		{
 			t = s.section('\t',j,j,QString::SectionSkipEmpty);
 			if(t.isEmpty())	{	j=nx;	continue;	}
-			var->SetVal(t.toDouble(),j+c,i+r,kz);
+			var->set_v(t.toDouble(),j+c,i+r,kz);
 		}
 	}
 	refresh();
@@ -278,7 +280,8 @@ void DatPanel::inrange()
 	QString v1("-1"), v2("1"), dir("x");
 	if(sizesDialog(tr("UDAV - Fill data"), tr("Enter range for data and direction of filling"), tr("From"), tr("To"), tr("Direction"), v1, v2, dir))
 	{
-		var->Fill(v1.toDouble(), v2.toDouble(), dir[0].toLatin1());
+		mglData *d = dynamic_cast<mglData *>(var);	// TODO non-mglData can be here for Fill
+		if(d)	d->Fill(v1.toDouble(), v2.toDouble(), dir[0].toLatin1());
 		refresh();
 	}
 }
@@ -288,7 +291,8 @@ void DatPanel::norm()
 	QString v1("0"), v2("1"), how;
 	if(sizesDialog(tr("UDAV - Normalize data"), tr("Enter range for final data"), tr("From"), tr("To"), tr("Symmetrical?"), v1, v2, how))
 	{
-		var->Norm(v1.toDouble(), v2.toDouble(), (how=="on" || how.contains('s')));
+		mglData *d = dynamic_cast<mglData *>(var);
+		if(d)	d->Norm(v1.toDouble(), v2.toDouble(), (how=="on" || how.contains('s')));
 		refresh();
 	}
 }
@@ -298,7 +302,8 @@ void DatPanel::normsl()
 	QString v1("0"), v2("1"), dir("z");
 	if(sizesDialog(tr("UDAV - Normalize by slice"), tr("Enter range for final data"), tr("From"), tr("To"), tr("Direction"), v1, v2, dir))
 	{
-		var->NormSl(v1.toDouble(), v2.toDouble(), dir[0].toLatin1());
+		mglData *d = dynamic_cast<mglData *>(var);
+		if(d)	d->NormSl(v1.toDouble(), v2.toDouble(), dir[0].toLatin1());
 		refresh();
 	}
 }
@@ -308,7 +313,10 @@ void DatPanel::create()
 	QString mx, my("1"), mz("1");
 	if(sizesDialog(tr("UDAV - Clear data"), tr("Enter new data sizes"), tr("X-size"), tr("Y-size"), tr("Z-size"), mx, my, mz))
 	{
-		var->Create(mx.toInt(), my.toInt(), mz.toInt());
+		mglData *d = dynamic_cast<mglData *>(var);
+		if(d)	d->Create(mx.toInt(), my.toInt(), mz.toInt());
+		mglDataC *c = dynamic_cast<mglDataC *>(var);
+		if(c)	c->Create(mx.toInt(), my.toInt(), mz.toInt());
 		refresh();	updateDataItems();
 	}
 }
@@ -319,7 +327,8 @@ void DatPanel::reSize()
 	mx.sprintf("%d",nx);	my.sprintf("%d",ny);	mz.sprintf("%d",nz);
 	if(sizesDialog(tr("UDAV - Resize data"), tr("Enter new data sizes"), tr("X-size"), tr("Y-size"), tr("Z-size"), mx, my, mz))
 	{
-		var->Set(var->Resize(mx.toInt(), my.toInt(), mz.toInt()));
+		mglData *d = dynamic_cast<mglData *>(var);
+		if(d)	d->Set(d->Resize(mx.toInt(), my.toInt(), mz.toInt()));
 		refresh();	updateDataItems();
 	}
 }
@@ -329,7 +338,8 @@ void DatPanel::squize()
 	QString mx("1"), my("1"), mz("1");
 	if(sizesDialog(tr("UDAV - Squeeze data"), tr("Enter step of saved points. For example, '1' save all, '2' save each 2nd point, '3' save each 3d and so on."), tr("X-direction"), tr("Y-direction"), tr("Z-direction"), mx, my, mz))
 	{
-		var->Squeeze(mx.toInt(), my.toInt(), mz.toInt());
+		mglData *d = dynamic_cast<mglData *>(var);
+		if(d)	d->Squeeze(mx.toInt(), my.toInt(), mz.toInt());
 		refresh();	updateDataItems();
 	}
 }
@@ -339,7 +349,8 @@ void DatPanel::crop()
 	QString n1("1"), n2("1"), dir;
 	if(sizesDialog(tr("UDAV - Crop data"), tr("Enter range of saved date."), tr("From"), tr("To"), tr("Direction"), n1, n2, dir))
 	{
-		var->Squeeze(n1.toInt(), n2.toInt(), dir[0].toLatin1());
+		mglData *d = dynamic_cast<mglData *>(var);
+		if(d)	d->Squeeze(n1.toInt(), n2.toInt(), dir[0].toLatin1());
 		refresh();	updateDataItems();
 	}
 }
@@ -350,7 +361,8 @@ void DatPanel::rearrange()
 	mx.sprintf("%d",nx);	my.sprintf("%d",ny);	mz.sprintf("%d",nz);
 	if(sizesDialog(tr("UDAV - Rearrange data"), tr("Enter new data sizes"), tr("X-size"), tr("Y-size"), tr("Z-size"), mx, my, mz))
 	{
-		var->Rearrange(mx.toInt(), my.toInt(), mz.toInt());
+		mglData *d = dynamic_cast<mglData *>(var);
+		if(d)	d->Rearrange(mx.toInt(), my.toInt(), mz.toInt());
 		refresh();	updateDataItems();
 	}
 }
@@ -380,7 +392,7 @@ void DatPanel::hist()
 	if(res && !v1->text().isEmpty() && !v2->text().isEmpty() && !id->text().isEmpty())
 	{
 		mglData *vv = parser.AddVar(id->text().toStdString().c_str());
-		vv->Set(var->Hist(nm->value(), v1->text().toDouble(), v2->text().toDouble()));
+		vv->Set(mglData(true,mgl_data_hist(var, nm->value(), v1->text().toDouble(), v2->text().toDouble(),0)));
 		updateDataItems();
 	}
 }

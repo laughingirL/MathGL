@@ -27,7 +27,13 @@
 //-----------------------------------------------------------------------------
 std::wstring mgl_trim_ws(const std::wstring &str);
 int mglFormulaError;
-mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring string, mglParser *arg, const std::vector<mglData*> &head);
+mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring string, mglParser *arg, const std::vector<mglDataA*> &head);
+mglData MGL_NO_EXPORT mglFormulaCalc(const char *str, const std::vector<mglDataA*> &head)
+{
+	std::wstring s;
+	for(long i=0;str[i];i++)	s.push_back(str[i]);
+	mglFormulaCalc(s,0,head);
+}
 //-----------------------------------------------------------------------------
 void mglApplyFunc(mglData &d, double (*func)(double))
 {
@@ -36,7 +42,7 @@ void mglApplyFunc(mglData &d, double (*func)(double))
 	for(long i=0;i<n;i++)	d.a[i] = func(d.a[i]);
 }
 //-----------------------------------------------------------------------------
-mglData mglApplyOper(std::wstring a1, std::wstring a2, mglParser *arg, const std::vector<mglData*> &head, double (*func)(double,double))
+mglData mglApplyOper(std::wstring a1, std::wstring a2, mglParser *arg, const std::vector<mglDataA*> &head, double (*func)(double,double))
 {
 	const mglData &a = mglFormulaCalc(a1,arg,head), &b = mglFormulaCalc(a2,arg,head);
 	long n = mgl_max(a.nx,b.nx), m = mgl_max(a.ny,b.ny), l = mgl_max(a.nz,b.nz);
@@ -120,7 +126,7 @@ void MGL_EXPORT mgl_wcstombs(char *dst, const wchar_t *src, int size)
 	dst[j] = 0;
 }
 //-----------------------------------------------------------------------------
-const mglData *FindVar(const std::vector<mglData*> &head, std::wstring &name)
+const mglDataA *FindVar(const std::vector<mglDataA*> &head, std::wstring &name)
 {
 	for(size_t i=0;i<head.size();i++)
 		if(head[i] && head[i]->s==name)	return head[i];
@@ -132,7 +138,7 @@ const mglData *FindVar(const std::vector<mglData*> &head, std::wstring &name)
 // NOTE: In any case where number is required the mglData::a[0] is used.
 // String flag is binary 0x1 -> 'x', 0x2 -> 'y', 0x4 -> 'z'
 // NOTE: the speed is not a goal (mglFormula is faster). It is true interpreter!
-mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std::vector<mglData*> &head)
+mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std::vector<mglDataA*> &head)
 {
 #if MGL_HAVE_GSL
 	gsl_set_error_handler_off();

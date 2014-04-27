@@ -28,7 +28,7 @@
 struct mglArg
 {
 	int type;		///< Type of argument {0-data,1-string,2-number}
-	mglData *d;		///< Pointer to data (used if type==0)
+	mglDataA *d;	///< Pointer to data (used if type==0)
 	std::wstring w;	///< String with parameters
 	std::string s;	///< String with parameters
 	mreal v;		///< Numerical value (used if type==2)
@@ -87,7 +87,7 @@ class mglParser
 {
 friend void mgl_export(wchar_t *out, const wchar_t *in, int type);
 public:
-	std::vector<mglData*> DataList;	///< List with data and its names
+	std::vector<mglDataA*> DataList;	///< List with data and its names
 	std::vector<mglNum*> NumList;	///< List with numbers and its names
 	bool AllowSetSize;	///< Allow using setsize command
 	bool AllowFileIO;	///< Allow reading/saving files
@@ -129,8 +129,8 @@ public:
 	/// Check if name is function and return its address (or 0 if no)
 	long IsFunc(const std::wstring &name, int *narg=0);
 	/// Find variable or return 0 if absent
-	mglData *FindVar(const char *name);
-	mglData *FindVar(const wchar_t *name);
+	mglDataA *FindVar(const char *name);
+	mglDataA *FindVar(const wchar_t *name);
 	/// Find variable or create it if absent
 	mglData *AddVar(const char *name);
 	mglData *AddVar(const wchar_t *name);

@@ -69,6 +69,7 @@ C. Translate to Russian everything
 14. Docs about Rasterize()
 15. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using Stem()
 16. mgl_ode_solve_ex()
+17. AddVar() always recreate data as mglData
 
 ============= UDAV =============
 
