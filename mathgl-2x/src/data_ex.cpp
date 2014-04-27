@@ -139,33 +139,23 @@ uintptr_t MGL_EXPORT mgl_data_subdata_(uintptr_t *d, int *xx,int *yy,int *zz)
 uintptr_t MGL_EXPORT mgl_data_subdata_ext_(uintptr_t *d, uintptr_t *xx, uintptr_t *yy, uintptr_t *zz)
 {	return uintptr_t(mgl_data_subdata_ext(_DT_,_DA_(xx),_DA_(yy),_DA_(zz)));	}
 //-----------------------------------------------------------------------------
-MGL_NO_EXPORT void *mgl_column(void *par)
-{
-	mglThreadD *t=(mglThreadD *)par;
-	const mglFormula *f = (const mglFormula *)t->v;
-	long nx=t->p[0];
-	mreal *b=t->a, var[MGL_VS];
-	const mreal *a=t->b;
-	memset(var,0,('z'-'a')*sizeof(mreal));
-#if !MGL_HAVE_PTHREAD
-#pragma omp parallel for
-#endif
-	for(long i=t->id;i<t->n;i+=mglNumThr)
-	{
-		for(long j=0;j<nx;j++)
-			if(t->s[j]>='a' && t->s[j]<='z')
-				var[t->s[j]-'a'] = a[j+nx*i];
-		b[i] = f->Calc(var);
-	}
-	return 0;
-}
 HMDT MGL_EXPORT mgl_data_column(HCDT dat, const char *eq)
 {	// NOTE: only for mglData (for speeding up)
 	long nx=dat->GetNx(),ny=dat->GetNy(),nz=dat->GetNz();
 	mglFormula f(eq);
 	mglData *r=new mglData(ny,nz);
-	const mglData *d=dynamic_cast<const mglData *>(dat);	// TODO non-mglData: not applicable ?!?
-	if(d)	mglStartThread(mgl_column,0,ny*nz,r->a,d->a,0,&nx,&f,0,0,d->id.c_str());
+	std::string ids;
+	const mglData *dd=dynamic_cast<const mglData *>(dat);	if(dd)	ids = dd->id;
+	const mglData *dc=dynamic_cast<const mglData *>(dat);	if(dc)	ids = dc->id;
+#pragma omp parallel for
+	for(long i=0;i<ny*nz;i++)
+	{
+		mreal var[MGL_VS];
+		for(long j=0;j<nx;j++)
+			if(ids[j]>='a' && ids[j]<='z')
+				var[ids[j]-'a'] = dat->vthr(j+nx*i);
+		r->a[i] = f.Calc(var);
+	}
 	return r;
 }
 uintptr_t MGL_EXPORT mgl_data_column_(uintptr_t *d, const char *eq,int l)

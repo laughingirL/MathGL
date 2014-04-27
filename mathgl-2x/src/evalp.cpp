@@ -256,7 +256,7 @@ mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std
 	for(n=0;n<len;n++)	if(str[n]=='(')	break;
 	if(n>=len)		// this is number or variable
 	{
-		const mglData *v = FindVar(head, str);
+		HCDT v = FindVar(head, str);
 		mglNum *f = arg?arg->FindNum(str.c_str()):0;
 		if(v)	res = v;
 		else if(f)	res.a[0] = f->d;
@@ -273,7 +273,7 @@ mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std
 	{
 		std::wstring nm = str.substr(0,n);
 		str = str.substr(n+1,len-n-2);	len -= n+2;
-		const mglData *v = FindVar(head, nm);
+		HCDT v = FindVar(head, nm);
 //		mglVar *v = arg->FindVar(nm.c_str());
 		if(!v && !nm.compare(0,7,L"jacobi_"))	nm = nm.substr(7);
 		if(v)	// subdata
@@ -282,7 +282,11 @@ mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std
 			{
 				char *buf = new char[len];
 				mgl_wcstombs(buf, str.substr(1).c_str(), len-1);	buf[len-1]=0;
-				res=v->Column(buf);	delete []buf;
+				const mglData *vd = dynamic_cast<const mglData *>(v);
+				if(vd)	res=vd->Column(buf);
+				const mglDataC *vc = dynamic_cast<const mglDataC *>(v);
+				if(vc)	res=vc->Column(buf);
+				delete []buf;
 			}
 			else
 			{
@@ -307,7 +311,7 @@ mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std
 					}
 				}
 				else	a1 = mglFormulaCalc(str, arg, head);
-				res = v->SubData(a1,a2,a3);
+				res = mglSubData(*v,a1,a2,a3);
 			}
 		}
 		else if(nm[0]=='a')	// function

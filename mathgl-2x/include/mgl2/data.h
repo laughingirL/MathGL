@@ -543,6 +543,14 @@ inline mglData mglTriangulation(const mglDataA &x, const mglDataA &y, const mglD
 inline mglData mglTriangulation(const mglDataA &x, const mglDataA &y)
 {	return mglData(true,mgl_triangulation_2d(&x,&y));	}
 //-----------------------------------------------------------------------------
+/// Get sub-array of the data with given fixed indexes
+inline mglData mglSubData(const mglDataA &dat, const mglDataA &xx, const mglDataA &yy, const mglDataA &zz)
+{	return mglData(true,mgl_data_subdata_ext(&dat,&xx,&yy,&zz));	}
+inline mglData mglSubData(const mglDataA &dat, const mglDataA &xx, const mglDataA &yy)
+{	return mglData(true,mgl_data_subdata_ext(&dat,&xx,&yy,0));	}
+inline mglData mglSubData(const mglDataA &dat, const mglDataA &xx)
+{	return mglData(true,mgl_data_subdata_ext(&dat,&xx,0,0));	}
+//-----------------------------------------------------------------------------
 /// Wrapper class for expression evaluating
 class MGL_EXPORT mglExpr
 {

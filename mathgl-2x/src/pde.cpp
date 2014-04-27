@@ -216,6 +216,8 @@ HMDT MGL_EXPORT mgl_pde_solve(HMGL gr, const char *ham, HCDT ini_re, HCDT ini_im
 }
 //-----------------------------------------------------------------------------
 HMDT MGL_EXPORT mgl_ode_solve(void (*func)(const mreal *x, mreal *dx, void *par), int n, mreal *x0, mreal dt, mreal tmax, void *par)
+{	mgl_ode_solve_ex(func,n,x0,dt,tmax,par,0);	}
+HMDT MGL_EXPORT mgl_ode_solve_ex(void (*func)(const mreal *x, mreal *dx, void *par), int n, mreal *x0, mreal dt, mreal tmax, void *par, void (*bord)(mreal *x, void *par))
 {
 	if(tmax<dt)	return 0;	// nothing to do
 	int nt = int(tmax/dt)+1;
@@ -234,7 +236,9 @@ HMDT MGL_EXPORT mgl_ode_solve(void (*func)(const mreal *x, mreal *dx, void *par)
 		func(v,k3,par);
 		for(i=0;i<n;i++)	{	v[i] = x[i]+k3[i]*dt;	k3[i] += k2[i];	}
 		func(v,k2,par);
-		for(i=0;i<n;i++)	res->a[i+n*k] = x[i] += (k1[i]+k2[i]+2*k3[i])*dt/6;
+		for(i=0;i<n;i++)	x[i] += (k1[i]+k2[i]+2*k3[i])*dt/6;
+		if(bord)	bord(x,par);
+		for(i=0;i<n;i++)	res->a[i+n*k] = x[i];
 	}
 	delete []x;	delete []k1;	delete []k2;	delete []k3;	delete []v;
 	return res;

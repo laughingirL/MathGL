@@ -41,8 +41,8 @@
 40. Angle(mglPoint p0, mglPoint p1, mreal degree, const char *style); 't' for text label
 41. Fractals ???
 42. MGL samples update: candle, correl, dots, fit, hist, pde, qo2d, radar, refill, region, schemes, solve, triangulation
-
-
+43. Spline for HCDT
+44. Exclude "TODO non-mglData"
 
 ZZ. Update *.i for new functions {before release!!!}
 
@@ -68,6 +68,7 @@ C. Translate to Russian everything
 13. Replace Cmin,Cmax,Min,Max,... by "color range", "axis range" and so on
 14. Docs about Rasterize()
 15. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using Stem()
+16. mgl_ode_solve_ex()
 
 ============= UDAV =============
 
