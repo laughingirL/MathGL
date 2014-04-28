@@ -71,46 +71,39 @@ void MGL_NO_EXPORT mgl_surf_plot(mglBase *gr, long *pos, long n, long m)
 //	Plot by formulas series
 //
 //-----------------------------------------------------------------------------
+mglData MGL_NO_EXPORT mglFormulaCalc(const char *str, const std::vector<mglDataA*> &head);
+//-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_fsurf(HMGL gr, const char *eqZ, const char *sch, const char *opt)
-{	// TODO: Add strong function variation analysis ???
+{	// NOTE Strong function variation analysis can be added here
 	if(eqZ==0 || eqZ[0]==0)	return;		// nothing to plot
 	mreal r = gr->SaveState(opt);
 	long n = (mgl_isnan(r) || r<=0) ? 100:long(r+0.5);
-	mglData z(n,n);
-	mglFormula *eq = new mglFormula(eqZ);
-	mreal dx = (gr->Max.x - gr->Min.x)/(n-1.), dy = (gr->Max.y - gr->Min.y)/(n-1.);
-#pragma omp parallel for collapse(2)
-	for(long j=0;j<n;j++)	for(long i=0;i<n;i++)
-	{
-		if(gr->Stop)	continue;
-		z.a[i+n*j] = eq->Calc(gr->Min.x+i*dx, gr->Min.y+j*dy);
-	}
+	mglData z(n,n),res;
+	mglDataV x(n,n);	x.Fill(gr->Min.x,gr->Max.x,'x');	x.s=L"x";
+	mglDataV y(n,n);	y.Fill(gr->Min.y,gr->Max.y,'y');	y.s=L"y";
+	std::vector<mglDataA*> list;
+	list.push_back(&x);	list.push_back(&y);
+	res.Set(mglFormulaCalc(eqZ,list));
+	if(res.nx==1 && res.ny==1)	z = res.a[0];	else	z = res;
 	mgl_surf(gr, &z, sch,0);
-	delete eq;
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_fsurf_xyz(HMGL gr, const char *eqX, const char *eqY, const char *eqZ, const char *sch, const char *opt)
-{	// TODO: Add strong function variation analisys ???
+{	// NOTE Strong function variation analysis can be added here
 	if(eqZ==0 || eqZ[0]==0)	return;		// nothing to plot
 	mreal r = gr->SaveState(opt);
 	long n = (mgl_isnan(r) || r<=0) ? 100:long(r+0.5);
-	mglData x(n,n), y(n,n), z(n,n);
-	if(n<=0)	n=100;
-	mglFormula *ex, *ey, *ez;
-	ex = new mglFormula(eqX ? eqX : "u");
-	ey = new mglFormula(eqY ? eqY : "v");
-	ez = new mglFormula(eqZ);
-#pragma omp parallel for collapse(2)
-	for(long j=0;j<n;j++)	for(long i=0;i<n;i++)
-	{
-		if(gr->Stop)	continue;
-		register mreal u = j/(n-1.), v = i/(n-1.);
-		x.a[i+n*j] = ex->Calc(0,v,0,u);
-		y.a[i+n*j] = ey->Calc(0,v,0,u);
-		z.a[i+n*j] = ez->Calc(0,v,0,u);
-	}
+	mglData z(n,n), x(n,n), y(n,n), res;
+	mglDataV u(n,n);	u.Fill(0,1,'x');	u.s=L"u";
+	mglDataV v(n,n);	v.Fill(0,1,'y');	v.s=L"v";
+	std::vector<mglDataA*> list;	list.push_back(&u);	list.push_back(&v);
+	res.Set(mglFormulaCalc(eqX,list));
+	if(res.nx==1 && res.ny==1)	x = res.a[0];	else	x = res;
+	res.Set(mglFormulaCalc(eqY,list));
+	if(res.nx==1 && res.ny==1)	y = res.a[0];	else	y = res;
+	res.Set(mglFormulaCalc(eqZ,list));
+	if(res.nx==1 && res.ny==1)	z = res.a[0];	else	z = res;
 	mgl_surf_xy(gr,&x,&y,&z,sch,0);
-	delete ex;	delete ey;	delete ez;
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_fsurf_(uintptr_t *gr, const char *fy, const char *stl, const char *opt, int ly, int ls, int lo)

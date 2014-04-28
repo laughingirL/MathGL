@@ -727,7 +727,7 @@ void MGL_EXPORT mgl_textmark_(uintptr_t *gr, uintptr_t *y, const char *text, con
 void MGL_EXPORT mgl_labelw_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const wchar_t *text, const char *fnt, const char *opt)
 {
 	long m,mx,my,mz,n=y->GetNx();
-	if(mgl_check_dim1(gr,x,y,z,0,"Label"))	return;
+	if(mgl_check_dim0(gr,x,y,z,0,"Label"))	return;
 
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Label",cgid++);

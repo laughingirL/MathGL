@@ -848,15 +848,16 @@ MGL_NO_EXPORT void *mgl_modify(void *par)
 void MGL_EXPORT mgl_data_modify(HMDT d, const char *eq,long dim)
 {
 	long nx=d->nx, ny=d->ny, nz=d->nz, par[3]={nx,ny,nz};
-	mglFormula f(eq);
-	if(dim<0)	dim=0;
-	if(nz>1)	// 3D array
+	if(dim<=0)	mgl_data_modify_vw(d,eq,0,0);	// fastes variant for whole array
+	else if(nz>1)	// 3D array
 	{
+		mglFormula f(eq);
 		par[2] -= dim;	if(par[2]<0)	par[2]=0;
 		mglStartThread(mgl_modify,0,nx*ny*par[2],d->a+nx*ny*dim,0,0,par,&f);
 	}
 	else		// 2D or 1D array
 	{
+		mglFormula f(eq);
 		par[1] -= dim;	if(par[1]<0)	par[1]=0;
 		mglStartThread(mgl_modify,0,nx*par[1],d->a+nx*dim,0,0,par,&f);
 	}
@@ -875,9 +876,7 @@ void MGL_EXPORT mgl_data_modify_vw(HMDT d, const char *eq,HCDT vdat,HCDT wdat)
 	std::vector<mglDataA*> list;
 	list.push_back(&x);	list.push_back(&y);	list.push_back(&z);
 	list.push_back(d);	list.push_back(&v);	list.push_back(&w);
-	d->Set(mglFormulaCalc(eq,list));
-//	d->Set(res);
-	d->s = s;
+	d->Set(mglFormulaCalc(eq,list));	d->s = s;
 }
 void MGL_EXPORT mgl_data_modify_vw_(uintptr_t *d, const char *eq, uintptr_t *v, uintptr_t *w,int l)
 {	char *s=new char[l+1];	memcpy(s,eq,l);	s[l]=0;
@@ -1131,4 +1130,32 @@ int MGL_EXPORT mgl_data_read_all(HMDT dat, const char *templ, int as_slice)
 int MGL_EXPORT mgl_data_read_all_(uintptr_t *d, const char *fname, int *as_slice,int l)
 {	char *s=new char[l+1];		memcpy(s,fname,l);	s[l]=0;
 	int r = mgl_data_read_all(_DT_,s,*as_slice);	delete []s;	return r;	}
+//-----------------------------------------------------------------------------
+HMDT MGL_EXPORT mgl_data_column(HCDT dat, const char *eq)
+{
+	const mglData *dd=dynamic_cast<const mglData *>(dat);
+	std::vector<mglDataA*> list;
+	if(dd && dd->id.length()>0)	for(size_t i=0;i<dd->id.length();i++)
+	{
+		mglDataT *col = new mglDataT(*dat);
+		col->SetInd(i,dd->id[i]);
+		list.push_back(col);
+	}
+	const mglDataC *dc=dynamic_cast<const mglDataC *>(dat);
+	if(dc && dc->id.length()>0)	for(size_t i=0;i<dc->id.length();i++)
+	{
+		mglDataT *col = new mglDataT(*dat);
+		col->SetInd(i,dc->id[i]);
+		list.push_back(col);
+	}
+	if(list.size()==0)	return 0;	// no named columns
+	mglData *r = new mglData;
+	r->Set(mglFormulaCalc(eq,list));
+	for(size_t i=0;i<list.size();i++)	delete list[i];
+	return r;
+}
+uintptr_t MGL_EXPORT mgl_data_column_(uintptr_t *d, const char *eq,int l)
+{	char *s=new char[l+1];	memcpy(s,eq,l);	s[l]=0;
+	uintptr_t r = uintptr_t(mgl_data_column(_DT_,s));
+	delete []s;	return r;	}
 //-----------------------------------------------------------------------------

@@ -500,6 +500,8 @@ inline mglData mglTriangulation(const mglDataA &x, const mglDataA &y)
 {	return mglData(true,mgl_triangulation_2d(&x,&y));	}
 //-----------------------------------------------------------------------------
 /// Get sub-array of the data with given fixed indexes
+inline mglData mglSubData(const mglDataA &dat, long xx, long yy=-1, long zz=-1)
+{	return mglData(true,mgl_data_subdata(&dat,xx,yy,zz));	}
 inline mglData mglSubData(const mglDataA &dat, const mglDataA &xx, const mglDataA &yy, const mglDataA &zz)
 {	return mglData(true,mgl_data_subdata_ext(&dat,&xx,&yy,&zz));	}
 inline mglData mglSubData(const mglDataA &dat, const mglDataA &xx, const mglDataA &yy)
@@ -645,6 +647,44 @@ public:
 	{	return ex?mgl_expr_eval(ex,v1.x+dx*i, v1.y+dy+dy*j, v1.z+dz*k)-mgl_expr_eval(ex,v1.x+dx*i, v1.y+dy*j, v1.z+dz*k):0;	}
 	mreal dvz(long i,long j=0,long k=0) const
 	{	return ex?mgl_expr_eval(ex,v1.x+dx*i, v1.y+dy*j, v1.z+dz+dz*k)-mgl_expr_eval(ex,v1.x+dx*i, v1.y+dy*j, v1.z+dz*k):0;	}
+};
+//-----------------------------------------------------------------------------
+/// Class which present variable as data array
+class MGL_EXPORT mglDataT : public mglDataA
+{
+	const mglDataA &dat;
+	long ind;
+public:
+	mglDataT(const mglDataT &d) : dat(d.dat), ind(d.ind)	{	s = d.s;	}
+	mglDataT(const mglDataA &d) : dat(d), ind(0)	{}
+	virtual ~mglDataT()	{}
+
+	/// Get sizes
+	long GetNx() const	{	return dat.GetNy();	}
+	long GetNy() const	{	return dat.GetNz();	}
+	long GetNz() const	{	return 1;	}
+
+	mreal Maximal() const
+	{	return mglSubData(dat,ind).Maximal();	}
+	mreal Minimal() const
+	{	return mglSubData(dat,ind).Minimal();	}
+	inline void SetInd(long i, const wchar_t *name)
+	{	ind = i;	s = name;	}
+	inline void SetInd(long i, wchar_t name)
+	{	ind = i;	s = name;	}
+
+	/// Get the value in given cell of the data without border checking
+	mreal v(long i,long j=0,long =0) const
+	{	return dat.v(ind,i,j);	}
+	mreal vthr(long i) const
+	{	return dat.vthr(ind+dat.GetNx()*i);	}
+	// add for speeding up !!!
+	mreal dvx(long i,long j=0,long =0) const
+	{	return	dat.dvy(ind,i,j);	}
+	mreal dvy(long i,long j=0,long =0) const
+	{	return dat.dvz(ind,i,j);	}
+	mreal dvz(long ,long =0,long =0) const
+	{	return 0;	}
 };
 //-----------------------------------------------------------------------------
 #endif

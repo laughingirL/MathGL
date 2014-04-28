@@ -137,7 +137,6 @@ const mglDataA *FindVar(const std::vector<mglDataA*> &head, std::wstring &name)
 // All numbers are presented as mglData(1). Do boundary checking.
 // NOTE: In any case where number is required the mglData::a[0] is used.
 // String flag is binary 0x1 -> 'x', 0x2 -> 'y', 0x4 -> 'z'
-// NOTE: the speed is not a goal (mglFormula is faster). It is true interpreter!
 mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std::vector<mglDataA*> &head)
 {
 #if MGL_HAVE_GSL

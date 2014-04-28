@@ -22,7 +22,6 @@
 
 13. Inplot data should have ranges (add mglInPlot{x1,x2,y1,y2,Bp or something like this} which include mglMatrix instead of mglBase::Bp) + calc coor + JS
 14. 'perspective' command in UDAV
-16. Use mglFormulaCalc() for data transformation/filling (much faster but require more memory) + the same for complex
 17. Test mglDataC::Diffraction() + write sample + add rational function???
 
 19. Get true coordinates in CalcXYZ for curved equations too.
@@ -42,6 +41,8 @@
 41. Fractals ???
 43. Spline for HCDT
 44. Exclude "TODO non-mglData"
+45. mglFormulaCalcC() for complex numbers + corrseponding changes in mglDataC::Modify(), Fill()
+46. Exclude mglFormulaCalc() in PDE(?!), data comparison (???), Momentum(!), Fit(???)
 
 ZZ. Update *.i for new functions {before release!!!}
 

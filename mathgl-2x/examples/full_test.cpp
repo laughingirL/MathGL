@@ -71,7 +71,7 @@ void test(mglGraph *gr)
 {
 	mglParse par;
 	setlocale(LC_CTYPE, "");
-	par.Execute(gr,"new a 20 30 'x+y'\ncopy b {sum a 'x'}\nplot b");
+	par.Execute(gr,"new a 3 100 'cos(pi*y*(x+1))'\nidset a 'abx'\nplot a('(a+b)/2')");
 //	par.Execute(gr,"alpha on:subplot 1 1 0 '#':box\nrect 0 0 1 1 1 1 '{x0FFF00ff}'\nline 0 0 0 1 1 0 'b'");
 //	par.Execute(gr,"alpha on:fsurf 'x' 'Bb{A1}cy{xFF000088}R'");
 	gr->WriteSVG("test.svg");

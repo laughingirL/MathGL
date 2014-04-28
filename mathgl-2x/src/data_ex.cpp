@@ -139,30 +139,6 @@ uintptr_t MGL_EXPORT mgl_data_subdata_(uintptr_t *d, int *xx,int *yy,int *zz)
 uintptr_t MGL_EXPORT mgl_data_subdata_ext_(uintptr_t *d, uintptr_t *xx, uintptr_t *yy, uintptr_t *zz)
 {	return uintptr_t(mgl_data_subdata_ext(_DT_,_DA_(xx),_DA_(yy),_DA_(zz)));	}
 //-----------------------------------------------------------------------------
-HMDT MGL_EXPORT mgl_data_column(HCDT dat, const char *eq)
-{	// NOTE: only for mglData (for speeding up)
-	long nx=dat->GetNx(),ny=dat->GetNy(),nz=dat->GetNz();
-	mglFormula f(eq);
-	mglData *r=new mglData(ny,nz);
-	std::string ids;
-	const mglData *dd=dynamic_cast<const mglData *>(dat);	if(dd)	ids = dd->id;
-	const mglData *dc=dynamic_cast<const mglData *>(dat);	if(dc)	ids = dc->id;
-#pragma omp parallel for
-	for(long i=0;i<ny*nz;i++)
-	{
-		mreal var[MGL_VS];
-		for(long j=0;j<nx;j++)
-			if(ids[j]>='a' && ids[j]<='z')
-				var[ids[j]-'a'] = dat->vthr(j+nx*i);
-		r->a[i] = f.Calc(var);
-	}
-	return r;
-}
-uintptr_t MGL_EXPORT mgl_data_column_(uintptr_t *d, const char *eq,int l)
-{	char *s=new char[l+1];	memcpy(s,eq,l);	s[l]=0;
-	uintptr_t r = uintptr_t(mgl_data_column(_DT_,s));
-	delete []s;	return r;	}
-//-----------------------------------------------------------------------------
 MGL_NO_EXPORT void *mgl_resize(void *par)
 {
 	mglThreadD *t=(mglThreadD *)par;

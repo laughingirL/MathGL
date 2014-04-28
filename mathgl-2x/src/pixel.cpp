@@ -32,6 +32,8 @@ void mglCanvas::SetSize(int w,int h)
 	C = new unsigned char[w*h*12];
 	Z = new float[w*h*3];	// only 3 planes
 	OI= new int[w*h];
+#pragma omp parallel for
+	for(long i=0;i<Width*Height;i++)	memcpy(GB+4*i,BDef,4);
 	InPlot(0,1,0,1,false);	Clf();
 }
 //-----------------------------------------------------------------------------
