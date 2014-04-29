@@ -56,6 +56,7 @@ EQ_EXPI,		// exponential function \exp(i*x)
 EQ_LN,		// logarithm of x, ln(x)
 EQ_LG,		// decimal logarithm of x, lg(x) = ln(x)/ln(10)
 EQ_ABS,		// absolute value
+EQ_ARG,		// argument (or phase) of complex number
 EQ_LAST		// id of last entry
 };
 //-----------------------------------------------------------------------------
@@ -155,6 +156,7 @@ mglFormulaC::mglFormulaC(const char *string)
 		else if(!strcmp(name,"lg")) Kod=EQ_LG;
 		else if(!strcmp(name,"ln")) Kod=EQ_LN;
 		else if(!strcmp(name,"abs")) Kod=EQ_ABS;
+		else if(!strcmp(name,"arg")) Kod=EQ_ARG;
 		else {	delete []str;	return;	}	// unknown function
 		n=mglFindInText(str,",");
 		if(n>=0)
@@ -231,6 +233,7 @@ dual MGL_NO_EXPORT expc(dual x)	{	return exp(x);	}
 dual MGL_NO_EXPORT sqrtc(dual x)	{	return sqrt(x);	}
 dual MGL_NO_EXPORT logc(dual x)	{	return log(x);	}
 dual MGL_NO_EXPORT absc(dual x)	{	return abs(x);	}
+dual MGL_NO_EXPORT argc(dual x)	{	return arg(x);	}
 dual MGL_NO_EXPORT lgc(dual x)	{	return log10(x);}
 //-----------------------------------------------------------------------------
 typedef dual (*func_1)(dual);

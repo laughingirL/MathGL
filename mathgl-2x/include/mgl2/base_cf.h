@@ -25,6 +25,9 @@
 extern "C" {
 #endif
 
+/// Suppress printing warnings to stderr
+void MGL_EXPORT mgl_suppress_warn(int on);
+void MGL_EXPORT mgl_suppress_warn_(int *on);
 /// Get last warning code
 int MGL_EXPORT mgl_get_warn(HMGL gr);
 int MGL_EXPORT mgl_get_warn_(uintptr_t *gr);

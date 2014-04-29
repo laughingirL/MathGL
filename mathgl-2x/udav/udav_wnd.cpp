@@ -96,6 +96,7 @@ void mgl_ask_qt(const wchar_t *quest, wchar_t *res);
 //-----------------------------------------------------------------------------
 int main(int argc, char **argv)
 {
+	mgl_suppress_warn(true);
 //	QCoreApplication::setAttribute(Qt::AA_X11InitThreads);
 #if !defined(WIN32) && !defined(__APPLE__)
 	// try to fix possible multi-threading errors

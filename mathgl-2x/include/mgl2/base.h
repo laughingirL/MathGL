@@ -32,8 +32,6 @@
 #else
 #define MGL_PUSH(a,v,m)		a.push_back(v);
 #endif
-
-#define MGL_TO_WCS(str,code)	if(str){size_t s=mbstowcs(0,str,0); wchar_t *wcs=new wchar_t[s+1]; mbstowcs(wcs,str,s); wcs[s]=0; code; delete []wcs;}
 //-----------------------------------------------------------------------------
 inline mreal mgl_d(mreal v,mreal v1,mreal v2) { return v2!=v1?(v-v1)/(v2-v1):NAN; }
 //-----------------------------------------------------------------------------

@@ -25,6 +25,7 @@
 #ifdef __cplusplus
 #include <string>
 #include "mgl2/type.h"
+#define MGL_TO_WCS(str,code)	if(str){size_t s=mbstowcs(0,str,0); wchar_t *wcs=new wchar_t[s+1]; mbstowcs(wcs,str,s); wcs[s]=0; code; delete []wcs;}
 //-----------------------------------------------------------------------------
 class mglBase;
 class mglData;
@@ -44,6 +45,13 @@ typedef const mglDataA* HCDT;
 #ifdef __cplusplus
 extern "C" {
 #endif
+/// Set name for data variable (can be used in mgl_formula_calc() or in MGL scripts)
+void MGL_EXPORT mgl_data_set_name(mglDataA *dat, const char *name);
+void MGL_EXPORT mgl_data_set_name_(uintptr_t *dat, const char *name,int);
+void MGL_EXPORT mgl_data_set_name_w(mglDataA *dat, const wchar_t *name);
+/// Set callback function which is called at deleting variable
+void MGL_EXPORT mgl_data_set_func(mglDataA *dat, void (*func)(void *), void *par);
+
 /// Save whole data array (for ns=-1) or only ns-th slice to text file
 void MGL_EXPORT mgl_data_save(HCDT dat, const char *fname,long ns);
 void MGL_EXPORT mgl_data_save_(uintptr_t *dat, const char *fname,int *ns,int);

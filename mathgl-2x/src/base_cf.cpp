@@ -25,6 +25,9 @@
 //		C interfaces
 //
 //-----------------------------------------------------------------------------
+bool mglPrintWarn = true;
+void MGL_EXPORT mgl_suppress_warn(int on)	{	mglPrintWarn = !on;	}
+void MGL_EXPORT mgl_suppress_warn_(int *on)	{	mgl_suppress_warn(*on);	}
 void MGL_EXPORT mgl_set_quality(HMGL gr, int qual)	{	gr->SetQuality(qual);	}
 void MGL_EXPORT mgl_set_quality_(uintptr_t *gr, int *qual)	{	_GR_->SetQuality(*qual);	}
 int MGL_EXPORT mgl_get_quality(HMGL gr)	{	return gr->GetQuality();	}

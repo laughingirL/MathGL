@@ -294,12 +294,27 @@ void MGL_EXPORT mgl_candle_(uintptr_t *gr, uintptr_t *y, uintptr_t *y1, uintptr_
 //	Plot series
 //
 //-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_mark(HMGL gr, double x, double y, double z,const char *mark);
 void MGL_EXPORT mgl_plot_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *opt)
 {
+	static int cgid=1;
 	long j,m,mx,my,mz,n=y->GetNx(),pal;
+	if(n<2 && !mgl_check_dim0(gr,x,y,z,0,"Plot"))
+	{
+		gr->StartGroup("Plot",cgid++);
+		gr->SaveState(opt);
+
+		char mk = gr->SetPenPal(pen);
+		if(mk)
+		{
+			long k = gr->AddPnt(mglPoint(x->v(0),y->v(0),z->v(0)),gr->CDef,mglPoint(NAN),-1,3);
+			gr->mark_plot(k,mk,gr->GetPenWidth()); 	gr->AddActive(k);
+		}
+		gr->EndGroup(); return;
+	}
 	if(mgl_check_dim1(gr,x,y,z,0,"Plot"))	return;
 
-	static int cgid=1;	gr->StartGroup("Plot",cgid++);
+	gr->StartGroup("Plot",cgid++);
 	gr->SaveState(opt);
 	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();	m = z->GetNy() > m ? z->GetNy() : m;
 	char mk=gr->SetPenPal(pen,&pal);	gr->Reserve(2*n*m);

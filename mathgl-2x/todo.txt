@@ -29,7 +29,6 @@
 
 21. Check if Fortran versions possible for: mgl_data_info, mgl_datas_hdf, mgl_get_fit, mgl_get_mess, mgl_get_plotid
 24. Enable consecutive (as multiplication of matrices instead of single summary one) rotation of axis + the same in JS. Problem with widgets?!?
-25. Check samples in EPS,SVG (looks as something wrong with axis range or formulas filling???)
 28. Add FlowData() for getting flow thread coordinates as output array?!!
 31. Complex (hex) colors in inline text command (like #{b9} or #{x0000ff})
 32. Gradient for text (glyph-by-glyph) for whole string (not inline) ???
@@ -43,6 +42,10 @@
 44. Exclude "TODO non-mglData"
 45. mglFormulaCalcC() for complex numbers + corrseponding changes in mglDataC::Modify(), Fill()
 46. Exclude mglFormulaCalc() in PDE(?!), data comparison (???), Momentum(!), Fit(???)
+47. mglDataC functions should return mglDataC rather than mglData if possible.
+48. Test mgl_suppress_warn() + mgl
+
+YY. Samples: refill, error(mgl), venn(mgl)
 
 ZZ. Update *.i for new functions {before release!!!}
 
@@ -70,6 +73,9 @@ C. Translate to Russian everything
 15. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using Stem()
 16. mgl_ode_solve_ex()
 17. AddVar() always recreate data as mglData
+18. Add function random(dat) for list of known functions
+19. Docs about mgl_data_set_name, mgl_data_set_func
+20. Docs about mgl_suppress_warn
 
 ============= UDAV =============
 

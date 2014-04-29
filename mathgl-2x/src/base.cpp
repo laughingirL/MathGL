@@ -177,17 +177,20 @@ const char *mglWarn[mglWarnEnd] = {"data dimension(s) is incompatible",	//mglWar
 								"There are too long string in script",	//mglScrLong
 								"There are unbalanced ' in script"};	//mglScrStr
 //-----------------------------------------------------------------------------
+extern bool mglPrintWarn;
 void mglBase::SetWarn(int code, const char *who)
 {
+	std::string warn;
 	WarnCode = code>0 ? code:0;
 	if(code>0 && code<mglWarnEnd)
 	{
-		if(who && *who)	Mess = Mess+"\n"+who+": ";
-		else Mess += "\n";
-		Mess = Mess+mglWarn[code-1];
+		if(who && *who)	warn = std::string(who)+": ";
+		warn = warn+mglWarn[code-1];
 	}
 	else if(!code)	Mess="";
-	else if(who && *who)	Mess = Mess+(code==-2?"":"\n")+who;
+	else if(who && *who)	warn = who;
+	if(mglPrintWarn && warn.length()>0)	fprintf(stderr,"%s\n",warn.c_str());
+	if(code)	Mess = Mess+(code==-2?"":"\n")+warn;
 	LoadState();
 }
 //-----------------------------------------------------------------------------

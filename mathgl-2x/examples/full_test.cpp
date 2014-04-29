@@ -221,6 +221,7 @@ void save(mglGraph *gr,const char *name,const char *suf="")
 //-----------------------------------------------------------------------------
 int main(int argc,char **argv)
 {
+	mgl_suppress_warn(true);
 	const char *suf = "";
 	char name[256]="", *tmp;
 	int ch;

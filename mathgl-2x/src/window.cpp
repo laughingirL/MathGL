@@ -85,7 +85,7 @@ void mglCanvasWnd::SetDrawFunc(int (*draw)(mglBase *gr, void *p), void *par, voi
 {
 	ResetFrames();
 	if(get(MGL_CLF_ON_UPD))	DefaultPlotParam();
-	setlocale(LC_NUMERIC, "C");
+	std::string loc = setlocale(LC_NUMERIC, "C");
 	// use frames for quickly redrawing while adding/changing primitives
 	if(mgl_is_frames(this))	NewFrame();
 
@@ -96,7 +96,7 @@ void mglCanvasWnd::SetDrawFunc(int (*draw)(mglBase *gr, void *p), void *par, voi
 
 	if(mgl_is_frames(this))	EndFrame();
 	if(n>=0)	SetCurFig(0);
-	setlocale(LC_NUMERIC, "");
+	setlocale(LC_NUMERIC, loc.c_str());
 }
 //-----------------------------------------------------------------------------
 const unsigned char *mglCanvasWnd::GetBits()
@@ -114,7 +114,7 @@ void mglCanvasWnd::ReLoad()
 		LoadFunc(FuncPar);
 		// update number of slides
 		ResetFrames();
-		setlocale(LC_NUMERIC, "C");
+		std::string loc = setlocale(LC_NUMERIC, "C");
 		// use frames for quickly redrawing while adding/changing primitives
 		if(mgl_is_frames(this))	NewFrame();
 		
@@ -122,7 +122,7 @@ void mglCanvasWnd::ReLoad()
 		if(n<NumFig && n>=0)	NumFig = n;
 		
 		if(mgl_is_frames(this))	EndFrame();
-		setlocale(LC_NUMERIC, "");
+		setlocale(LC_NUMERIC, loc.c_str());
 		Update();
 	}
 }

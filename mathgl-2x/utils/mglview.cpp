@@ -40,7 +40,7 @@ int show(mglGraph *gr)
 int main(int argc, char **argv)
 {
 	char ch, iname[256]="";
-	
+	mgl_suppress_warn(true);
 	while(1)
 	{
 		ch = getopt(argc, argv, "1:2:3:4:5:6:7:8:9:ho:L:");

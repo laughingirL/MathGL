@@ -715,7 +715,7 @@ bool mglFont::Load(const char *base, const char *path)
 	sep='\\';
 #endif
 	char str[256];
-	const char *oldLocale = setlocale(LC_NUMERIC,"C");
+	std::string loc = setlocale(LC_NUMERIC,"C");
 	if(!path)	path = MGL_FONT_PATH;
 	if(base && *base)
 	{
@@ -735,7 +735,7 @@ bool mglFont::Load(const char *base, const char *path)
 	if(!(base && *base) || !read_main(str,norm))
 	{
 //		mglGlobalMess += "Load built-in font.\n";
-		read_def();	setlocale(LC_NUMERIC,oldLocale);
+		read_def();	setlocale(LC_NUMERIC,loc.c_str());
 		if(buf)	delete []buf;	return true;
 	}
 	fact[1] = fact[2] = fact[3] = fact[0];
@@ -788,7 +788,7 @@ bool mglFont::Load(const char *base, const char *path)
 	// Finally normalize all factors
 	fact[0] *= mgl_fgen;	fact[1] *= mgl_fgen;
 	fact[2] *= mgl_fgen;	fact[3] *= mgl_fgen;
-	setlocale(LC_NUMERIC,oldLocale);
+	setlocale(LC_NUMERIC,loc.c_str());
 	if(buf)	delete []buf;
 	return true;
 }

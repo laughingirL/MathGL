@@ -54,6 +54,7 @@ void mgl_get_value(const char *buf, const char *name, char *val)
 //-----------------------------------------------------------------------------
 int main()
 {
+	mgl_suppress_warn(true);
 	mglGraph gr;
 	mglParse p(true);
 

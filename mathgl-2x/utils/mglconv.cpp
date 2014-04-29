@@ -25,6 +25,7 @@ void mgl_ask_gets(const wchar_t *quest, wchar_t *res);
 //-----------------------------------------------------------------------------
 int main(int argc, char *argv[])
 {
+	mgl_suppress_warn(true);
 	mglGraph gr;
 	mglParse p(true);
 	char ch, buf[2048], iname[256]="", oname[256]="";
