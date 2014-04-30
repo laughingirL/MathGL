@@ -189,8 +189,8 @@ void mglBase::SetWarn(int code, const char *who)
 	}
 	else if(!code)	Mess="";
 	else if(who && *who)	warn = who;
-	if(mglPrintWarn && warn.length()>0)	fprintf(stderr,"%s\n",warn.c_str());
-	if(code)	Mess = Mess+(code==-2?"":"\n")+warn;
+	if(mglPrintWarn && !warn.empty())	fprintf(stderr,"MathGL message - %s\n",warn.c_str());
+	if(code && !warn.empty())	Mess = Mess+(code==-2?"":"\n")+warn;
 	LoadState();
 }
 //-----------------------------------------------------------------------------

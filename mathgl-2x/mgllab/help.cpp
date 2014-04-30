@@ -222,7 +222,7 @@ void ScriptWindow::mem_pressed(int kind)
 	{
 		const char *name = fl_input(mgl_gettext("Enter name for new variable"),"dat");
 		if(!name)	return;
-		v = Parse->AddVar(name);
+		v = Parse->AddVar(name);	
 
 		ltab->begin();
 		Fl_Group *gg = new Fl_Group(0,30,300,430);

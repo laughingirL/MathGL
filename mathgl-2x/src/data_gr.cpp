@@ -63,7 +63,7 @@ void MGL_EXPORT mgl_data_fill_eq(HMGL gr, HMDT d, const char *eq, HCDT vdat, HCD
 	mglDataV x(d->nx,d->ny,d->nz);	x.Fill(gr->Min.x,gr->Max.x,'x');	x.s=L"x";
 	mglDataV y(d->nx,d->ny,d->nz);	y.Fill(gr->Min.y,gr->Max.y,'y');	y.s=L"y";
 	mglDataV z(d->nx,d->ny,d->nz);	z.Fill(gr->Min.z,gr->Max.z,'z');	z.s=L"z";
-	mglDataV r(d->nx,d->ny,d->nz);	r.s=L"rnd";
+	mglDataV r(d->nx,d->ny,d->nz);	r.s=L"#$mgl";
 	mglData v(vdat), w(wdat);	v.s = L"v";	w.s = L"w";
 	std::vector<mglDataA*> list;
 	list.push_back(&x);	list.push_back(&y);	list.push_back(&z);	list.push_back(&r);

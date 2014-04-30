@@ -56,15 +56,15 @@ mglData mglApplyOper(std::wstring a1, std::wstring a2, mglParser *arg, const std
 	const mglData &a = mglFormulaCalc(a1,arg,head), &b = mglFormulaCalc(a2,arg,head);
 	long n = mgl_max(a.nx,b.nx), m = mgl_max(a.ny,b.ny), l = mgl_max(a.nz,b.nz);
 	mglData r(n, m, l);
-	if(b.nx*b.ny*b.nz==1)
+	if(a.nx==b.nx && b.ny==a.ny && b.nz==a.nz)
+#pragma omp parallel for
+		for(long i=0;i<n*m*l;i++)	r.a[i] = func(a.a[i], b.a[i]);
+	else if(b.nx*b.ny*b.nz==1)
 #pragma omp parallel for
 		for(long i=0;i<a.nx*a.ny*a.nz;i++)	r.a[i] = func(a.a[i],b.a[0]);
 	else if(a.nx*a.ny*a.nz==1)
 #pragma omp parallel for
 		for(long i=0;i<b.nx*b.ny*b.nz;i++)	r.a[i] = func(a.a[0],b.a[i]);
-	else if(a.nx==b.nx && b.ny==a.ny && b.nz==a.nz)
-#pragma omp parallel for
-		for(long i=0;i<n*m*l;i++)	r.a[i] = func(a.a[i], b.a[i]);
 	else if(a.nx==b.nx && b.ny*b.nz==1)
 #pragma omp parallel for collapse(2)
 		for(long j=0;j<a.ny*a.nz;j++)	for(long i=0;i<n;i++)
@@ -317,26 +317,22 @@ mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std
 	for(n=0;n<len;n++)	if(str[n]=='(')	break;
 	if(n>=len)		// this is number or variable
 	{
-		HCDT v = (str!=L"rnd")?FindVar(head, str):0;
+		HCDT v = (str!=L"#$mgl")?FindVar(head, str):0;
 		mglNum *f = arg?arg->FindNum(str.c_str()):0;
 		if(v)	res = v;
 		else if(f)	res.a[0] = f->d;
-		else if(!str.compare(L"rnd"))
-		{
-			HCDT v=FindVar(head, L"rnd");
-			if(v)
-			{
-				res.Create(v->GetNx(),v->GetNy(),v->GetNz());
-				for(long i=0;i<v->GetNN();i++)	res.a[i] = mgl_rnd();
-			}
-			else	res.a[0] = mgl_rnd();
-		}
-		else if(!str.compare(L"nan"))	res.a[0] = NAN;
-		else if(!str.compare(L"pi"))	res.a[0] = M_PI;
-		else if(!str.compare(L"on"))	res.a[0] = 1;
-		else if(!str.compare(L"off"))	res.a[0] = 0;
 		else if(!str.compare(L":"))		res.a[0] = -1;
-		else res.a[0] = wcstod(str.c_str(),0);	// this is number
+		else
+		{
+			HCDT v=FindVar(head, L"#$mgl");
+			if(v)	res.Create(v->GetNx(),v->GetNy(),v->GetNz());
+			if(!str.compare(L"rnd"))	for(long i=0;i<res.GetNN();i++)	res.a[i] = mgl_rnd();
+			else if(!str.compare(L"nan"))	res = NAN;
+			else if(!str.compare(L"pi"))	res = M_PI;
+			else if(!str.compare(L"on"))	res = 1;
+			else if(!str.compare(L"off"))	res = 0;
+			else res = wcstod(str.c_str(),0);	// this is number
+		}
 		return res;
 	}
 	else
@@ -795,28 +791,24 @@ mglDataC MGL_NO_EXPORT mglFormulaCalcC(std::wstring str, mglParser *arg, const s
 	for(n=0;n<len;n++)	if(str[n]=='(')	break;
 	if(n>=len)		// this is number or variable
 	{
-		HCDT v = (str!=L"rnd")?FindVar(head, str):0;
+		HCDT v = (str!=L"#$mgl")?FindVar(head, str):0;
 		mglNum *f = arg?arg->FindNum(str.c_str()):0;
 		if(v)	res = v;
 		else if(f)	res.a[0] = f->d;
-		else if(!str.compare(L"rnd"))
-		{
-			HCDT v=FindVar(head, L"rnd");
-			if(v)
-			{
-				res.Create(v->GetNx(),v->GetNy(),v->GetNz());
-				for(long i=0;i<v->GetNN();i++)	res.a[i] = mgl_rnd();
-			}
-			else	res.a[0] = mgl_rnd();
-		}
-		else if(!str.compare(L"nan"))	res.a[0] = NAN;
-		else if(!str.compare(L"pi"))	res.a[0] = M_PI;
-		else if(!str.compare(L"on"))	res.a[0] = 1;
-		else if(!str.compare(L"off"))	res.a[0] = 0;
 		else if(!str.compare(L":"))		res.a[0] = -1;
-		else if(str[0]=='i')	// this is imaginary number
-			res.a[0] = dual(0,(str.length()>1 && str[1]>' ')?wcstod(str.c_str(),0):1);
-		else res.a[0] = wcstod(str.c_str(),0);	// this is real number
+		else
+		{
+			HCDT v=FindVar(head, L"#$mgl");
+			if(v)	res.Create(v->GetNx(),v->GetNy(),v->GetNz());
+			if(!str.compare(L"rnd"))	for(long i=0;i<res.GetNN();i++)	res.a[i] = mgl_rnd();
+			else if(!str.compare(L"nan"))	res = mreal(NAN);
+			else if(!str.compare(L"pi"))	res = mreal(M_PI);
+			else if(!str.compare(L"on"))	res = mreal(1.);
+			else if(!str.compare(L"off"))	res = mreal(0.);
+			else if(str[0]=='i')	// this is imaginary number
+				res = dual(0,(str.length()>1 && str[1]>' ')?wcstod(str.c_str(),0):1);
+			else res = mreal(wcstod(str.c_str(),0));	// this is real number
+		}
 		return res;
 	}
 	else

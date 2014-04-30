@@ -226,7 +226,7 @@ mglDataA *mglParser::FindVar(const wchar_t *name)
 }
 //-----------------------------------------------------------------------------
 mglData *mglParser::AddVar(const wchar_t *name)
-{
+{	// TODO add list of forbidden names (like function names)
  	for(size_t i=0;i<DataList.size();i++)
  		if(DataList[i] && DataList[i]->s==name)
 		{

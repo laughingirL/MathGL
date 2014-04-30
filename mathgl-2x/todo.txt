@@ -45,8 +45,6 @@
 47. mglDataC functions should return mglDataC rather than mglData if possible.
 48. Test mgl_suppress_warn() + mgl
 
-YY. Samples: refill, error(mgl), venn(mgl)
-
 ZZ. Update *.i for new functions {before release!!!}
 
 ============= DOCUMENTATION =============

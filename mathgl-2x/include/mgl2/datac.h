@@ -342,6 +342,8 @@ public:
 	{	if(this!=&d)	Set(&d);	return d;	}
 	inline dual operator=(dual val)
 	{	for(long i=0;i<nx*ny*nz;i++)	a[i]=val;	return val;	}
+	inline dual operator=(mreal val)
+	{	for(long i=0;i<nx*ny*nz;i++)	a[i]=val;	return val;	}
 #ifndef SWIG
 	/// Direct access to the data cell
 	inline dual &operator[](long i)	{	return a[i];	}

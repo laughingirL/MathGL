@@ -85,7 +85,7 @@ void QMGLSyntax::highlightBlock(const QString &text)
 			for(j=0;j<13;j++)
 			{
 				l = strlen(o[j]);
-				if(text.indexOf(o[j],i)==i && (i+l==text.length() || text[i+l].isSpace()))
+				if(text.indexOf(o[j],i)==i && (i+l==long(text.length()) || text[i+l].isSpace()))
 					setFormat(i,l,mglColorScheme[3]);
 			}
 		}
