@@ -40,10 +40,10 @@
 41. Fractals ???
 43. Spline for HCDT
 44. Exclude "TODO non-mglData"
-45. mglFormulaCalcC() for complex numbers + corrseponding changes in mglDataC::Modify(), Fill()
+45. mglFormulaCalcC() for complex numbers + corresponding changes in mglDataC::Modify(), Fill()
 46. Exclude mglFormulaCalc() in PDE(?!), data comparison (???), Momentum(!), Fit(???)
 47. mglDataC functions should return mglDataC rather than mglData if possible.
-48. Test mgl_suppress_warn() + mgl
+48. Try to speed up new Spline
 
 ZZ. Update *.i for new functions {before release!!!}
 

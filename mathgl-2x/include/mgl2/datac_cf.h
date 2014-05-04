@@ -43,10 +43,10 @@ void MGL_EXPORT mgl_srnd(long seed);
 /// Get random number
 double MGL_EXPORT mgl_rnd();
 /// Get integer power of x
-dual MGL_EXPORT mgl_ipowc(dual x,int n);
-dual MGL_EXPORT mgl_ipowc_(dual *x,int *n);
+mdual MGL_EXPORT mgl_ipowc(dual x,int n);
+mdual MGL_EXPORT mgl_ipowc_(dual *x,int *n);
 /// Get exp(i*a)
-dual MGL_EXPORT mgl_expi(dual a);
+mdual MGL_EXPORT mgl_expi(dual a);
 
 /// Create HMDT object
 HADT MGL_EXPORT mgl_create_datac();
@@ -87,8 +87,8 @@ void MGL_EXPORT mgl_datac_set_matrix(HADT dat, gsl_matrix *m);
 void MGL_EXPORT mgl_datac_set_value(HADT dat, dual v, long i, long j, long k);
 void MGL_EXPORT mgl_datac_set_value_(uintptr_t *d, dual *v, int *i, int *j, int *k);
 /// Get value of data element [i,j,k]
-dual MGL_EXPORT mgl_datac_get_value(HCDT dat, long i, long j, long k);
-dual MGL_EXPORT mgl_datac_get_value_(uintptr_t *d, int *i, int *j, int *k);
+mdual MGL_EXPORT mgl_datac_get_value(HCDT dat, long i, long j, long k);
+mdual MGL_EXPORT mgl_datac_get_value_(uintptr_t *d, int *i, int *j, int *k);
 /// Allocate memory and scanf the data from the string
 void MGL_EXPORT mgl_datac_set_values(HADT dat, const char *val, long nx, long ny, long nz);
 void MGL_EXPORT mgl_datac_set_values_(uintptr_t *d, const char *val, int *nx, int *ny, int *nz, int l);
@@ -227,17 +227,17 @@ HMDT MGL_EXPORT mgl_datac_arg(HCDT dat);
 uintptr_t MGL_EXPORT mgl_datac_arg_(uintptr_t *dat);
 
 /// Interpolate by linear function the data to given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
-dual MGL_EXPORT mgl_datac_linear(HCDT d, mreal x,mreal y,mreal z);
-dual MGL_EXPORT mgl_datac_linear_(uintptr_t *d, mreal *x,mreal *y,mreal *z);
+mdual MGL_EXPORT mgl_datac_linear(HCDT d, mreal x,mreal y,mreal z);
+mdual MGL_EXPORT mgl_datac_linear_(uintptr_t *d, mreal *x,mreal *y,mreal *z);
 /// Interpolate by linear function the data and return its derivatives at given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
-dual MGL_EXPORT mgl_datac_linear_ext(HCDT d, mreal x,mreal y,mreal z, dual *dx,dual *dy,dual *dz);
-dual MGL_EXPORT mgl_datac_linear_ext_(uintptr_t *d, mreal *x,mreal *y,mreal *z, dual *dx,dual *dy,dual *dz);
+mdual MGL_EXPORT mgl_datac_linear_ext(HCDT d, mreal x,mreal y,mreal z, dual *dx,dual *dy,dual *dz);
+mdual MGL_EXPORT mgl_datac_linear_ext_(uintptr_t *d, mreal *x,mreal *y,mreal *z, dual *dx,dual *dy,dual *dz);
 /// Interpolate by cubic spline the data to given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
-dual MGL_EXPORT mgl_datac_spline(HCDT dat, mreal x,mreal y,mreal z);
-dual MGL_EXPORT mgl_datac_spline_(uintptr_t *dat, mreal *x,mreal *y,mreal *z);
+mdual MGL_EXPORT mgl_datac_spline(HCDT dat, mreal x,mreal y,mreal z);
+mdual MGL_EXPORT mgl_datac_spline_(uintptr_t *dat, mreal *x,mreal *y,mreal *z);
 /// Interpolate by cubic spline the data and return its derivatives at given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
-dual MGL_EXPORT mgl_datac_spline_ext(HCDT dat, mreal x,mreal y,mreal z, dual *dx,dual *dy,dual *dz);
-dual MGL_EXPORT mgl_datac_spline_ext_(uintptr_t *dat, mreal *x,mreal *y,mreal *z, dual *dx,dual *dy,dual *dz);
+mdual MGL_EXPORT mgl_datac_spline_ext(HCDT dat, mreal x,mreal y,mreal z, dual *dx,dual *dy,dual *dz);
+mdual MGL_EXPORT mgl_datac_spline_ext_(uintptr_t *dat, mreal *x,mreal *y,mreal *z, dual *dx,dual *dy,dual *dz);
 
 //-----------------------------------------------------------------------------
 /// Create HAEX object for expression evaluating
@@ -247,10 +247,10 @@ uintptr_t MGL_EXPORT mgl_create_cexpr_(const char *expr, int);
 void MGL_EXPORT mgl_delete_cexpr(HAEX ex);
 void MGL_EXPORT mgl_delete_cexpr_(uintptr_t *ex);
 /// Return value of expression for given x,y,z variables
-dual MGL_EXPORT mgl_cexpr_eval(HAEX ex, dual x, dual y,dual z);
-dual MGL_EXPORT mgl_cexpr_eval_(uintptr_t *ex, dual *x, dual *y, dual *z);
+mdual MGL_EXPORT mgl_cexpr_eval(HAEX ex, dual x, dual y,dual z);
+mdual MGL_EXPORT mgl_cexpr_eval_(uintptr_t *ex, dual *x, dual *y, dual *z);
 /// Return value of expression for given variables
-dual MGL_EXPORT mgl_cexpr_eval_v(HAEX ex, dual *vars);
+mdual MGL_EXPORT mgl_cexpr_eval_v(HAEX ex, dual *vars);
 
 #ifdef __cplusplus
 }

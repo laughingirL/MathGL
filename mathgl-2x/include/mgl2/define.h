@@ -247,6 +247,12 @@ enum{	// Codes for warnings/messages
 #define MGL_ONESIDED 		0x080000 	///< Render only front side of surfaces if output format supports (for debugging)
 #define MGL_NO_ORIGIN 		0x100000 	///< Don't draw tick labels at axis origin
 //-----------------------------------------------------------------------------
+#include <complex.h>
+#if MGL_USE_DOUBLE
+typedef double _Complex mdual;
+#else
+typedef float _Complex mdual;
+#endif
 #ifdef __cplusplus
 //-----------------------------------------------------------------------------
 extern float mgl_cos[360];	///< contain cosine with step 1 degree
@@ -258,11 +264,8 @@ typedef std::complex<double> ddual;
 extern "C" {
 #else
 #include <complex.h>
-#if MGL_USE_DOUBLE
-typedef double _Complex dual;
-#else
-typedef float _Complex dual;
-#endif
+typedef double _Complex ddual;
+#define dual	mdual
 #endif
 /// Find length of wchar_t string (bypass standard wcslen bug)
 double MGL_EXPORT mgl_hypot(double x, double y);

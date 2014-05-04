@@ -23,8 +23,6 @@
 #else
 #include <unistd.h>
 #endif
-#include <QUrl>
-#include <QFile>
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QApplication>
@@ -32,12 +30,10 @@
 #include <QSplitter>
 #include <QFileDialog>
 #include <QStatusBar>
-#include <QTextStream>
 #include <QDockWidget>
 #include <QCloseEvent>
 #include <QTextCodec>
 #include <QTranslator>
-#include <QVariant>
 #include <QMimeData>
 //-----------------------------------------------------------------------------
 #if !defined(WIN32) && !defined(__APPLE__)

@@ -8,6 +8,7 @@
 * Add manual dash style, like "{df090}"
 * Add manual mask style, like "{s00ff00182424f800}"
 * Add function "random(dat)" to the list of known functions for formula parsing
+* Spline() now use 5-th order polynomials to keep continuity of 2nd derivative too.
 * Function mgl_data_subdata_ext() handle NULL argument(s). Add variants of mglData::SubData() with 1 and 2 arguments.
 * Use new s-hull version for triangulation.
 * Warning messages are printed to stderr until call of mgl_suppress_warn() will disable it.
