@@ -63,6 +63,29 @@ template <class Treal> Treal mgl_spline3t(const Treal y[4], long n, mreal dx, Tr
 	return b[0] + dx*(b[1]+dx*(b[2]+dx*(b[3]+dx*(b[4]+dx*b[5]))));
 }
 //-----------------------------------------------------------------------------
+template <class Treal> Treal mgl_spline3st(const Treal y[4], long n, mreal dx)
+{
+	Treal d[4], t0,t1, f0,d0,d1,f1, b[6];
+	d[0] = y[1]-y[0];	//-(y[2]-4*y[1]+3*y[0])/2;
+	d[1] = (y[2]-y[0])/mreal(2);
+	d[2] = (y[3]-y[1])/mreal(2);
+	d[3] = y[3]-y[2];	//-(y[3]-4*y[2]+3*y[1])/2;
+	
+	t0 = (y[2]-mreal(2)*y[1]+y[0])/mreal(2);
+	t1 = (y[3]-mreal(2)*y[2]+y[1])/mreal(2);
+	if(n<1)	t1=t0;
+	if(n>2)	t0=t1;
+
+	f0 = y[n];		d0 = d[n];
+	f1 = y[n+1];	d1 = d[n+1];
+
+	b[0] = f0;	b[1] = d0;	b[2] = t0;
+	b[3] = mreal(10)*(f1-f0)+t1-mreal(3)*t0-mreal(4)*d1-mreal(6)*d0;
+	b[4] = mreal(15)*(f0-f1)-mreal(2)*t1+mreal(3)*t0+mreal(7)*d1+mreal(8)*d0;
+	b[5] = mreal(6)*(f1-f0)+t1-t0-mreal(3)*d1-mreal(3)*d0;
+	return b[0] + dx*(b[1]+dx*(b[2]+dx*(b[3]+dx*(b[4]+dx*b[5]))));
+}
+//-----------------------------------------------------------------------------
 template <class Treal> Treal mglSpline1t(const Treal *a, long nx, mreal x, Treal *dx=0)
 {
 	Treal r,d;
@@ -86,13 +109,13 @@ template <class Treal> Treal mglSpline1t(const Treal *a, long nx, mreal x, Treal
 //-----------------------------------------------------------------------------
 template <class Treal> Treal mglSpline1st(const Treal *a, long nx, mreal x)
 {
-	Treal r,d;
+	Treal r;
 	if(nx>3)
 	{
 		register long k = long(x);
-		if(k>0 && k<nx-2)	r = mgl_spline3t<Treal>(a+k-1, 1, x-k, d);
-		else if(k<1)		r = mgl_spline3t<Treal>(a, 0, x, d);
-		else	r = mgl_spline3t<Treal>(a+nx-4, 2, x+2-nx, d);
+		if(k>0 && k<nx-2)	r = mgl_spline3st<Treal>(a+k-1, 1, x-k);
+		else if(k<1)		r = mgl_spline3st<Treal>(a, 0, x);
+		else	r = mgl_spline3st<Treal>(a+nx-4, 2, x+2-nx);
 	}
 	else if(nx<2)	r = a[0];
 	else if(nx==2)	r = a[0]+(a[1]-a[0])*x;
