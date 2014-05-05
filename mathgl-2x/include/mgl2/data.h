@@ -544,7 +544,6 @@ public:
 	mglDataV(const mglDataV &d)	// NOTE: must be constructor for mglDataV& to exclude copy one
 	{	nx=d.nx;	ny=d.ny;	nz=d.nz;	a0=d.a0;
 		di=d.di;	dj=d.dj;	dk=d.dk;	}
-	mglDataV()	{	di=dj=dk=a0=0;	nx=ny=nz=1;	}
 	mglDataV(long xx=1,long yy=1,long zz=1)
 	{	nx=xx;	ny=yy;	nz=zz;	di=dj=dk=a0=0;	}
 	virtual ~mglDataV()	{}
@@ -612,7 +611,6 @@ public:
 	mglDataF(const mglDataF &d)	// NOTE: must be constructor for mglDataF& to exclude copy one
 	{	nx=d.nx;	ny=d.ny;	nz=d.nz;	v1=d.v1;	v2=d.v2;
 		str=d.str;	ex = mgl_create_expr(str.c_str());	setD();	}
-	mglDataF()	{	ex=0;	v2=mglPoint(1,1,1);	nx=ny=nz=1;	setD();	}
 	mglDataF(long xx=1,long yy=1,long zz=1)
 	{	ex=0;	v2=mglPoint(1,1,1);	nx=xx;	ny=yy;	nz=zz;	setD();	}
 	virtual ~mglDataF()	{	mgl_delete_expr(ex);	}

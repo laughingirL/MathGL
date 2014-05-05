@@ -247,11 +247,13 @@ enum{	// Codes for warnings/messages
 #define MGL_ONESIDED 		0x080000 	///< Render only front side of surfaces if output format supports (for debugging)
 #define MGL_NO_ORIGIN 		0x100000 	///< Don't draw tick labels at axis origin
 //-----------------------------------------------------------------------------
+#if !defined(_MSC_VER)
 #include <complex.h>
 #if MGL_USE_DOUBLE
 typedef double _Complex mdual;
 #else
 typedef float _Complex mdual;
+#endif
 #endif
 #ifdef __cplusplus
 //-----------------------------------------------------------------------------
@@ -260,6 +262,9 @@ extern float mgl_cos[360];	///< contain cosine with step 1 degree
 #include <complex>
 typedef std::complex<mreal> dual;
 typedef std::complex<double> ddual;
+#if defined(_MSC_VER)
+#define mdual dual
+#endif
 //-----------------------------------------------------------------------------
 extern "C" {
 #else
