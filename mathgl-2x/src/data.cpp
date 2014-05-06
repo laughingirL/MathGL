@@ -115,6 +115,9 @@ void MGL_EXPORT mglStartThreadV(void *(*func)(void *), long n, mreal *a, const v
 	}
 }
 //-----------------------------------------------------------------------------
+mreal mglSpline3s(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z)
+{	return mglSpline3st<mreal>(a,nx,ny,nz,x,y,z);	}
+//-----------------------------------------------------------------------------
 mreal mglSpline3(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z,mreal *dx, mreal *dy, mreal *dz)
 {	return mglSpline3t<mreal>(a,nx,ny,nz,x,y,z,dx,dy,dz);	}
 //-----------------------------------------------------------------------------
@@ -1328,6 +1331,12 @@ MGL_EXPORT const char *mgl_data_info(HCDT d)	// NOTE: Not thread safe function!
 	snprintf(s,128,"Widths are:\nWa = %g\tWx = %g\tWy = %g\tWz = %g\n", Wa,Wx,Wy,Wz);	strcat(buf,s);
 	return buf;
 }
+int MGL_EXPORT mgl_data_info_(uintptr_t *d, char *out, int len)
+{
+	const char *res = mgl_data_info(_DA_(d));
+	if(out)	strncpy(out,res,len);
+	return strlen(res);
+}
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_data_insert(HMDT d, char dir, long at, long num)
 {
@@ -2169,56 +2178,26 @@ void MGL_EXPORT mgl_data_refill_xyz(HMDT dat, HCDT xdat, HCDT ydat, HCDT zdat, H
 	}
 }
 //-----------------------------------------------------------------------------
-MGL_NO_EXPORT void *mgl_eval(void *par)
-{
-	mglThreadD *t=(mglThreadD *)par;
-	long nx=t->p[0], ny=t->p[1], nz=t->p[2], n1=t->p[3], nn=t->n;
-	const mreal *a=t->b, *ii=t->c, *jj=t->d, *kk=t->e;
-	mreal *b=t->a;
-#if !MGL_HAVE_PTHREAD
-#pragma omp parallel for
-#endif
-	for(long i=t->id;i<nn;i+=mglNumThr)
-	{
-		register mreal x=ii?ii[i]:0, y=jj?jj[i]:0, z=kk?kk[i]:0;
-		if(n1)	{	x*=nx-1;	y*=ny-1;	z*=nz-1;	}
-		b[i] = x*y*z==x*y*z ? mglSpline3st<mreal>(a,nx,ny,nz,x,y,z):NAN;
-	}
-	return 0;
-}
-MGL_NO_EXPORT void *mgl_eval_s(void *par)
-{
-	mglThreadD *t=(mglThreadD *)par;
-	long nx=t->p[0], ny=t->p[1], nz=t->p[2], n1=t->p[3], nn=t->n;
-	const mreal *ii=t->c, *jj=t->d, *kk=t->e;
-	HCDT a = (HCDT)t->v;
-	mreal *b=t->a;
-#if !MGL_HAVE_PTHREAD
-#pragma omp parallel for
-#endif
-	for(long i=t->id;i<nn;i+=mglNumThr)
-	{
-		register mreal x=ii?ii[i]:0, y=jj?jj[i]:0, z=kk?kk[i]:0;
-		if(n1)	{	x*=nx-1;	y*=ny-1;	z*=nz-1;	}
-		b[i] = x*y*z==x*y*z ? mgl_data_linear(a, x,y,z):NAN;
-	}
-	return 0;
-}
 HMDT MGL_EXPORT mgl_data_evaluate(HCDT dat, HCDT idat, HCDT jdat, HCDT kdat, int norm)
 {
-	const mglData *d=dynamic_cast<const mglData *>(dat);	// TODO non-mglData: evaluate
-	const mglData *i=dynamic_cast<const mglData *>(idat);
-	const mglData *j=dynamic_cast<const mglData *>(jdat);
-	const mglData *k=dynamic_cast<const mglData *>(kdat);
-	if(!i)	return 0;
-
-	long p[4]={dat->GetNx(), dat->GetNy(), dat->GetNz(),norm};
-	register long n=i->nx*i->ny*i->nz;
-	if(j && j->nx*j->ny*j->nz!=n)	return 0;
-	if(k && k->nx*k->ny*k->nz!=n)	return 0;
-	mglData *r=new mglData(i->nx,i->ny,i->nz);
-	if(d)	mglStartThread(mgl_eval,0,n,r->a,d->a,i->a,p,0,j?j->a:0,k?k->a:0);
-	else 	mglStartThread(mgl_eval_s,0,n,r->a,0,i->a,p,dat,j?j->a:0,k?k->a:0);
+	if(!idat || (jdat && jdat->GetNN()!=idat->GetNN()) || (kdat && kdat->GetNN()!=idat->GetNN()))	return 0;
+	const mglData *dd=dynamic_cast<const mglData *>(dat);
+	long nx=dat->GetNx(), ny=dat->GetNy(), nz=dat->GetNz();
+	mglData *r=new mglData(idat->GetNx(),idat->GetNy(),idat->GetNz());
+	if(dd)
+#pragma omp parallel for
+		for(long i=0;i<idat->GetNN();i++)
+		{
+			mreal x=idat->vthr(i), y=jdat?jdat->vthr(i):0, z=kdat?kdat->vthr(i):0;
+			r->a[i] = mgl_isnum(x*y*z)?mglSpline3st<mreal>(dd->a,nx,ny,nz, x,y,z):NAN;
+		}
+	else
+#pragma omp parallel for
+		for(long i=0;i<idat->GetNN();i++)
+		{
+			mreal x=idat->vthr(i), y=jdat?jdat->vthr(i):0, z=kdat?kdat->vthr(i):0;
+			r->a[i] = mgl_isnum(x*y*z)?mgl_data_linear(dat, x,y,z):NAN;;
+		}
 	return r;
 }
 uintptr_t MGL_EXPORT mgl_data_evaluate_(uintptr_t *d, uintptr_t *idat, uintptr_t *jdat, uintptr_t *kdat, int *norm)

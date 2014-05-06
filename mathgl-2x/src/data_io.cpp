@@ -1034,6 +1034,9 @@ void MGL_EXPORT mgl_data_save_hdf_(uintptr_t *d, const char *fname, const char *
 {	char *s=new char[l+1];		memcpy(s,fname,l);	s[l]=0;
 	char *t=new char[n+1];		memcpy(t,data,n);	t[n]=0;
 	mgl_data_save_hdf(_DT_,s,t,*rewrite);	delete []s;	delete []t;	}
+int MGL_EXPORT mgl_datas_hdf_(const char *fname, char *buf, int l, int size)
+{	char *s=new char[l+1];		memcpy(s,fname,l);	s[l]=0;
+	int r = mgl_datas_hdf(s,buf,size);	delete []s;	return r;	}
 //-----------------------------------------------------------------------------
 bool MGL_EXPORT mgl_add_file(long &kx,long &ky, long &kz, mreal *&b, mglData *d,bool as_slice)
 {

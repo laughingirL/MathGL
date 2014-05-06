@@ -641,6 +641,9 @@ void MGL_EXPORT mgl_datac_mirror_(uintptr_t *d, const char *dir,int l)
 {	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
 	mgl_datac_mirror(_DC_,s);	delete []s;	}
 //-----------------------------------------------------------------------------
+dual mglSpline3Cs(const dual *a, long nx, long ny, long nz, mreal x, mreal y, mreal z)
+{	return mglSpline3st<dual>(a,nx,ny,nz,x,y,z);	}
+//-----------------------------------------------------------------------------
 dual mglSpline3C(const dual *a, long nx, long ny, long nz, mreal x, mreal y, mreal z,dual *dx, dual *dy, dual *dz)
 {	return mglSpline3t<dual>(a,nx,ny,nz,x,y,z,dx,dy,dz);	}
 //-----------------------------------------------------------------------------

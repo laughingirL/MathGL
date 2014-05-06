@@ -59,8 +59,20 @@ void MGL_EXPORT mgl_set_plotid_(uintptr_t *gr, const char *id,int l)
 {	char *s=new char[l+1];	memcpy(s,id,l);	s[l]=0;
 	_GR_->PlotId = s;	delete []s;	}
 MGL_EXPORT const char *mgl_get_plotid(HMGL gr)	{	return gr->PlotId.c_str();	}
+int MGL_EXPORT mgl_get_plotid_(uintptr_t *gr, char *out, int len)
+{
+	const char *res = mgl_get_plotid(_GR_);
+	if(out)	strncpy(out,res,len);
+	return strlen(res);
+}
 //-----------------------------------------------------------------------------
 MGL_EXPORT const char *mgl_get_mess(HMGL gr)	{	return gr->Mess.c_str();	}
+int MGL_EXPORT mgl_get_mess_(uintptr_t *gr, char *out, int len)
+{
+	const char *res = mgl_get_mess(_GR_);
+	if(out)	strncpy(out,res,len);
+	return strlen(res);
+}
 int MGL_EXPORT mgl_get_warn(HMGL gr)	{	return gr->GetWarn();	}
 void MGL_EXPORT mgl_set_warn(HMGL gr, int code, const char *txt)
 {	gr->SetWarn(code,txt);	}

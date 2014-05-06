@@ -21,6 +21,7 @@
 #include "mgl2/data.h"
 #include "mgl2/eval.h"
 #include "mgl2/thread.h"
+mglData MGL_NO_EXPORT mglFormulaCalc(const char *str, const std::vector<mglDataA*> &head);
 //-----------------------------------------------------------------------------
 HMDT MGL_EXPORT mgl_data_trace(HCDT d)
 {
@@ -152,7 +153,7 @@ MGL_NO_EXPORT void *mgl_resize(void *par)
 	for(long i0=t->id;i0<t->n;i0+=mglNumThr)
 	{
 		register long i=i0%nx, j=((i0/nx)%ny), k=i0/(nx*ny);
-		b[i0] = mglSpline3(a,n1,n2,n3, c[0]+i*c[1], c[2]+j*c[3], c[4]+k*c[5]);
+		b[i0] = mglSpline3s(a,n1,n2,n3, c[0]+i*c[1], c[2]+j*c[3], c[4]+k*c[5]);
 	}
 	return 0;
 }
@@ -179,18 +180,6 @@ uintptr_t MGL_EXPORT mgl_data_resize_(uintptr_t *d, int *mx,int *my,int *mz)
 uintptr_t MGL_EXPORT mgl_data_resize_box_(uintptr_t *d, int *mx,int *my,int *mz, mreal *x1,mreal *x2, mreal *y1,mreal *y2, mreal *z1,mreal *z2)
 {	return uintptr_t(mgl_data_resize_box(_DT_,*mx,*my,*mz,*x1,*x2,*y1,*y2,*z1,*z2));	}
 //-----------------------------------------------------------------------------
-MGL_NO_EXPORT void *mgl_combine(void *par)
-{
-	mglThreadD *t=(mglThreadD *)par;
-	long nx=t->p[0];
-	mreal *b=t->a;
-	const mreal *c=t->b, *d=t->c;
-#if !MGL_HAVE_PTHREAD
-#pragma omp parallel for
-#endif
-	for(long i0=t->id;i0<t->n;i0+=mglNumThr)	b[i0] = c[i0%nx]*d[i0/nx];
-	return 0;
-}
 HMDT MGL_EXPORT mgl_data_combine(HCDT d1, HCDT d2)
 {
 	long n1=d1->GetNy(),n2=d2->GetNx(),nx=d1->GetNx();
@@ -466,98 +455,70 @@ uintptr_t MGL_EXPORT mgl_data_min_dir_(uintptr_t *d, const char *dir,int l)
 {	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
 	uintptr_t r=uintptr_t(mgl_data_min_dir(_DT_,s));	delete []s;	return r;	}
 //-----------------------------------------------------------------------------
-MGL_NO_EXPORT void *mgl_mom_z(void *par)
-{
-	mglThreadD *t=(mglThreadD *)par;
-	long nx=t->p[0], ny=t->p[1], nz=t->p[2], nn=t->n;
-	mreal *b=t->a;
-	const mreal *a=t->b;
-	const mglFormula *eq = (const mglFormula *)t->v;
-#if !MGL_HAVE_PTHREAD
-#pragma omp parallel for
-#endif
-	for(long i=t->id;i<nn;i+=mglNumThr)
-	{
-		register mreal i0 = 0, i1 = 0;
-		for(long k=0;k<nx;k++)	for(long j=0;j<ny;j++)
-		{
-			register long ii = k+nx*(j+ny*i);
-			register mreal x = k/(nx-1.), y = j/(ny-1.), z = i/(nz-1.);
-			i0+= a[ii];
-			i1+= a[ii]*eq->Calc(x,y,z,a[ii]);
-		}
-		b[i] = i0>0 ? i1/i0 : 0;
-	}
-	return 0;
-}
-MGL_NO_EXPORT void *mgl_mom_y(void *par)
-{
-	mglThreadD *t=(mglThreadD *)par;
-	long nx=t->p[0], ny=t->p[1], nz=t->p[2], nn=t->n;
-	mreal *b=t->a;
-	const mreal *a=t->b;
-	const mglFormula *eq = (const mglFormula *)t->v;
-#if !MGL_HAVE_PTHREAD
-#pragma omp parallel for
-#endif
-	for(long i=t->id;i<nn;i+=mglNumThr)
-	{
-		register mreal i0 = 0, i1 = 0;
-		for(long j=0;j<nx;j++)	for(long k=0;k<nz;k++)
-		{
-			register long ii = j+nx*(i+ny*k);
-			register mreal x = k/(nx-1.), y = j/(ny-1.), z = i/(nz-1.);
-			i0+= a[ii];
-			i1+= a[ii]*eq->Calc(x,y,z,a[ii]);
-		}
-		b[i] = i0>0 ? i1/i0 : 0;
-	}
-	return 0;
-}
-MGL_NO_EXPORT void *mgl_mom_x(void *par)
-{
-	mglThreadD *t=(mglThreadD *)par;
-	long nx=t->p[0], ny=t->p[1], nz=t->p[2], nn=t->n;
-	mreal *b=t->a;
-	const mreal *a=t->b;
-	const mglFormula *eq = (const mglFormula *)t->v;
-#if !MGL_HAVE_PTHREAD
-#pragma omp parallel for
-#endif
-	for(long i=t->id;i<nn;i+=mglNumThr)
-	{
-		register mreal i0 = 0, i1 = 0;
-		for(long j=0;j<ny;j++)	for(long k=0;k<nz;k++)
-		{
-			register long ii = i+nx*(j+ny*k);
-			register mreal x = k/(nx-1.), y = j/(ny-1.), z = i/(nz-1.);
-			i0+= a[ii];
-			i1+= a[ii]*eq->Calc(x,y,z,a[ii]);
-		}
-		b[i] = i0>0 ? i1/i0 : 0;
-	}
-	return 0;
-}
 HMDT MGL_EXPORT mgl_data_momentum(HCDT dat, char dir, const char *how)
-{	// NOTE: only for mglData (for speeding up)
+{
+	if(!how || !(*how) || !strchr("xyz",dir))	return 0;
 	long nx=dat->GetNx(),ny=dat->GetNy(),nz=dat->GetNz();
-	const mglData *d=dynamic_cast<const mglData *>(dat);	// TODO non-mglData: momentum
-	if(!d)	return 0;
-	mglFormula eq(how);
-	long p[3]={nx,ny,nz};
+	mglDataV x(nx,ny,nz);	x.Fill(0,1,'x');	x.s=L"x";
+	mglDataV y(nx,ny,nz);	y.Fill(0,1,'y');	y.s=L"y";
+	mglDataV z(nx,ny,nz);	z.Fill(0,1,'z');	z.s=L"z";
+	mglData u(dat);	u.s=L"u";	// NOTE slow !!!
+	std::vector<mglDataA*> list;
+	list.push_back(&x);	list.push_back(&y);	list.push_back(&z);	list.push_back(&u);
+	mglData res=mglFormulaCalc(how,list);
+
 	mglData *b=0;
 	if(dir=='x')
-	{	b=new mglData(nx);	mglStartThread(mgl_mom_x,0,nx,b->a,d->a,0,p,&eq);	}
+	{
+		b=new mglData(nx);
+#pragma omp parallel for
+		for(long i=0;i<nx;i++)
+		{
+			register mreal i1=0,i0=0;
+			for(long j=0;j<ny*nz;j++)
+			{
+				register mreal u=dat->vthr(i+nx*j);
+				i0 += u;	i1 += u*res.a[i+nx*j];
+			}
+			b->a[i] = i0>0 ? i1/i0 : 0;
+		}
+	}
 	if(dir=='y')
-	{	b=new mglData(ny);	mglStartThread(mgl_mom_y,0,ny,b->a,d->a,0,p,&eq);	}
+	{
+		b=new mglData(ny);
+#pragma omp parallel for
+		for(long i=0;i<ny;i++)
+		{
+			register mreal i1=0,i0=0;
+			for(long k=0;k<nz;k++)	for(long j=0;j<nx;j++)
+			{
+				register mreal u=dat->v(j,i,k);
+				i0 += u;	i1 += u*res.a[j+nx*(i+ny*k)];
+			}
+			b->a[i] = i0>0 ? i1/i0 : 0;
+		}
+	}
 	if(dir=='z')
-	{	b=new mglData(nz);	mglStartThread(mgl_mom_z,0,nz,b->a,d->a,0,p,&eq);	}
+	{
+		long nn=nx*ny;
+		b=new mglData(nz);
+#pragma omp parallel for
+		for(long i=0;i<nz;i++)
+		{
+			register mreal i1=0,i0=0;
+			for(long j=0;j<nn;j++)
+			{
+				register mreal u=dat->vthr(j+nn*i);
+				i0 += u;	i1 += u*res.a[j+nn*i];
+			}
+			b->a[i] = i0>0 ? i1/i0 : 0;
+		}
+	}
 	return b;
 }
 uintptr_t MGL_EXPORT mgl_data_momentum_(uintptr_t *d, char *dir, const char *how, int,int l)
 {	char *s=new char[l+1];	memcpy(s,how,l);	s[l]=0;
-	uintptr_t r=uintptr_t(mgl_data_momentum(_DT_,*dir, s));
-	delete []s;	return r;	}
+	uintptr_t r=uintptr_t(mgl_data_momentum(_DT_,*dir, s));	delete []s;	return r;	}
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_data_mul_dat(HMDT d, HCDT a)
 {
@@ -750,8 +711,8 @@ MGL_NO_EXPORT void *mgl_hist_2(void *par)
 	for(long i=t->id;i<nn;i+=mglNumThr)
 	{
 		register mreal x = d*(i%(nx*ns)), y = d*((i/(nx*ns))%(ny*ns)), z = d*(i/(nx*ny*ns*ns));
-		register mreal f = sp ? mglSpline3(a,nx,ny,nz,x,y,z) : mglLinear(a,nx,ny,nz,x,y,z), w=1;
-		if(c)	w = sp ? mglSpline3(c,nx,ny,nz,x,y,z) : mglLinear(c,nx,ny,nz,x,y,z);
+		register mreal f = sp ? mglSpline3s(a,nx,ny,nz,x,y,z) : mglLinear(a,nx,ny,nz,x,y,z), w=1;
+		if(c)	w = sp ? mglSpline3s(c,nx,ny,nz,x,y,z) : mglLinear(c,nx,ny,nz,x,y,z);
 		if(mgl_isnan(f) || mgl_isnan(w))	continue;
 		register long k = long(n*(f-v[0])/(v[1]-v[0]));
 		if(k>=0 && k<n)

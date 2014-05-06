@@ -1,6 +1,6 @@
 set(mgl_src
 	addon.cpp axis.cpp base_cf.cpp base.cpp canvas_cf.cpp canvas.cpp cont.cpp crust.cpp
-	complex.cpp complex_io.cpp fft.cpp data_gr.cpp
+	complex.cpp complex_ex.cpp complex_io.cpp fft.cpp data_gr.cpp
 	data.cpp data_io.cpp data_ex.cpp data_png.cpp def_font.cpp
 	export_2d.cpp export_3d.cpp eval.cpp evalp.cpp exec.cpp export.cpp
 	fit.cpp font.cpp obj.cpp other.cpp parser.cpp pde.cpp pixel.cpp

@@ -36,12 +36,14 @@ void MGL_EXPORT mgl_set_warn(HMGL gr, int code, const char *text);
 void MGL_EXPORT mgl_set_warn_(uintptr_t *gr, int *code, const char *text,int);
 /// Set buffer for warning messages
 MGL_EXPORT const char *mgl_get_mess(HMGL gr);
+int MGL_EXPORT mgl_get_mess_(uintptr_t *gr, char *out, int len);
 
 /// Set name of plot for saving filename
 void MGL_EXPORT mgl_set_plotid(HMGL gr, const char *id);
 void MGL_EXPORT mgl_set_plotid_(uintptr_t *gr, const char *id,int);
 /// Get name of plot for saving filename
 MGL_EXPORT const char *mgl_get_plotid(HMGL gr);
+int MGL_EXPORT mgl_get_plotid_(uintptr_t *gr, char *out, int len);
 
 /// Get plot quality
 int MGL_EXPORT mgl_get_quality(HMGL gr);

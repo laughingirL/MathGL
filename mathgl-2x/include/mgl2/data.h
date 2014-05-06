@@ -456,6 +456,7 @@ inline bool operator>(const mglDataA &b, const mglDataA &d)
 //-----------------------------------------------------------------------------
 mreal mglLinear(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z);
 mreal mglSpline3(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z,mreal *dx=0, mreal *dy=0, mreal *dz=0);
+mreal mglSpline3s(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z);
 #endif
 //-----------------------------------------------------------------------------
 /// Integral data transformation (like Fourier 'f' or 'i', Hankel 'h' or None 'n') for amplitude and phase
@@ -539,13 +540,14 @@ class MGL_EXPORT mglDataV : public mglDataA
 	long ny;	///< number of points in 2nd dimensions ('y' dimension)
 	long nz;	///< number of points in 3d dimensions ('z' dimension)
 	mreal di, dj, dk, a0;
+	bool simpl;	///< simple variable or "frequency" one
 public:
 
 	mglDataV(const mglDataV &d)	// NOTE: must be constructor for mglDataV& to exclude copy one
-	{	nx=d.nx;	ny=d.ny;	nz=d.nz;	a0=d.a0;
+	{	nx=d.nx;	ny=d.ny;	nz=d.nz;	a0=d.a0;	simpl=true;
 		di=d.di;	dj=d.dj;	dk=d.dk;	}
 	mglDataV(long xx=1,long yy=1,long zz=1)
-	{	nx=xx;	ny=yy;	nz=zz;	di=dj=dk=a0=0;	}
+	{	nx=xx;	ny=yy;	nz=zz;	di=dj=dk=a0=0;	simpl=true;	}
 	virtual ~mglDataV()	{}
 
 	/// Get sizes
@@ -555,18 +557,25 @@ public:
 
 	/// Create or recreate the array with specified size and fill it by zero
 	inline void Create(long mx,long my=1,long mz=1)
-	{	di=mx>1?di*(nx-1)/(mx-1):0;	dj=my>1?dj*(ny-1)/(my-1):0;
+	{	di=mx>1?di*(nx-1)/(mx-1):0;	dj=my>1?dj*(ny-1)/(my-1):0;	simpl=true;
 		dk=mz>1?dk*(nz-1)/(mz-1):0;	nx=mx;	ny=my;	nz=mz;	}
 	/// Equidistantly fill the data to range [x1,x2] in direction dir
 	inline void Fill(mreal x1,mreal x2=NaN,char dir='x')
 	{
-		di=dj=dk=0;	a0=x1;
+		di=dj=dk=0;	a0=x1;	simpl=true;
 		if(mgl_isnum(x2))
 		{
 			if(dir=='x' && nx>1)	di=(x2-x1)/(nx-1);
 			if(dir=='y' && ny>1)	dj=(x2-x1)/(ny-1);
 			if(dir=='z' && nz>1)	dk=(x2-x1)/(nz-1);
 		}
+	}
+	inline void Freq(mreal dp,char dir='x')
+	{
+		di=dj=dk=0;	a0=0;	simpl=false;
+		if(dir=='x')	di=dp;
+		if(dir=='y')	dj=dp;
+		if(dir=='z')	dk=dp;
 	}
 	mreal Maximal() const
 	{	return a0+fmax(fmax(di*(nx-1),dj*(ny-1)),fmax(dk*(nz-1),0));	}
@@ -581,9 +590,10 @@ public:
 	{	di=dj=dk=0;	a0=val;	return val;	}
 	/// Get the value in given cell of the data without border checking
 	mreal v(long i,long j=0,long k=0) const
-	{	return a0+di*i+dj*j+dk*k;	}
-	mreal vthr(long i) const
-	{	return a0+di*(i%nx)+dj*((i/nx)%ny)+dk*(i/(nx*ny));	}
+	{	return simpl?(a0+di*i+dj*j+dk*k) : (di*(i<nx/2?i:nx-i)+dj*(j<ny/2?j:ny-j)+dk*(k<nz/2?k:nz-k));	}
+	mreal vthr(long ii) const
+	{	register long i=ii%nx, j=(ii/nx)%ny, k=ii/(nx*ny);
+		return simpl?(a0+di*i+dj*j+dk*k) : (di*(i<nx/2?i:nx-i)+dj*(j<ny/2?j:ny-j)+dk*(k<nz/2?k:nz-k));	}
 	// add for speeding up !!!
 	mreal dvx(long ,long =0,long =0) const	{	return di;	}
 	mreal dvy(long ,long =0,long =0) const	{	return dj;	}
@@ -681,6 +691,43 @@ public:
 	{	return	dat.dvy(ind,i,j);	}
 	mreal dvy(long i,long j=0,long =0) const
 	{	return dat.dvz(ind,i,j);	}
+	mreal dvz(long ,long =0,long =0) const
+	{	return 0;	}
+};
+//-----------------------------------------------------------------------------
+class MGL_EXPORT mglDataR : public mglDataA
+{
+	const mglDataA &dat;
+	long ind;
+public:
+	mglDataR(const mglDataR &d) : dat(d.dat), ind(d.ind)	{	s = d.s;	}
+	mglDataR(const mglDataA &d) : dat(d), ind(0)	{}
+	virtual ~mglDataR()	{}
+
+	/// Get sizes
+	long GetNx() const	{	return dat.GetNx();	}
+	long GetNy() const	{	return 1;	}
+	long GetNz() const	{	return 1;	}
+
+	mreal Maximal() const
+	{	return mglSubData(dat,-1,ind).Maximal();	}
+	mreal Minimal() const
+	{	return mglSubData(dat,-1,ind).Minimal();	}
+	inline void SetInd(long i, const wchar_t *name)
+	{	ind = i;	s = name;	}
+	inline void SetInd(long i, wchar_t name)
+	{	ind = i;	s = name;	}
+
+	/// Get the value in given cell of the data without border checking
+	mreal v(long i,long =0,long =0) const
+	{	return dat.v(i,ind,0);	}
+	mreal vthr(long i) const
+	{	return dat.vthr(i+dat.GetNx()*ind);	}
+	// add for speeding up !!!
+	mreal dvx(long i,long j=0,long =0) const
+	{	return	dat.dvx(i,ind,0);	}
+	mreal dvy(long i,long j=0,long =0) const
+	{	return 0;	}
 	mreal dvz(long ,long =0,long =0) const
 	{	return 0;	}
 };

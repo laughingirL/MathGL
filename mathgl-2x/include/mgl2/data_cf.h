@@ -113,6 +113,7 @@ int MGL_EXPORT mgl_data_read_hdf(HMDT d,const char *fname,const char *data);
 int MGL_EXPORT mgl_data_read_hdf_(uintptr_t *d, const char *fname, const char *data,int l,int n);
 /// Put HDF data names into buf as '\t' separated.
 int MGL_EXPORT mgl_datas_hdf(const char *fname, char *buf, long size);
+int MGL_EXPORT mgl_datas_hdf_(const char *fname, char *buf, int l, int size);
 /// Read data from tab-separated text file with auto determining size
 int MGL_EXPORT mgl_data_read(HMDT dat, const char *fname);
 int MGL_EXPORT mgl_data_read_(uintptr_t *d, const char *fname,int l);
@@ -324,13 +325,13 @@ HMDT MGL_EXPORT mgl_data_resize_box(HCDT dat, long mx,long my,long mz,mreal x1,m
 uintptr_t MGL_EXPORT mgl_data_resize_box_(uintptr_t *dat, int *mx,int *my,int *mz,mreal *x1,mreal *x2,mreal *y1,mreal *y2,mreal *z1,mreal *z2);
 /// Create n-th points distribution of this data values in range [v1, v2]
 HMDT MGL_EXPORT mgl_data_hist(HCDT dat, long n, mreal v1, mreal v2, long nsub);
-uintptr_t MGL_EXPORT mgl_data_momentum_(uintptr_t *dat, char *dir, const char *how, int,int);
+uintptr_t MGL_EXPORT mgl_data_hist_(uintptr_t *dat, int *n, mreal *v1, mreal *v2, int *nsub);
 /// Create n-th points distribution of this data values in range [v1, v2] with weight w
 HMDT MGL_EXPORT mgl_data_hist_w(HCDT dat, HCDT weight, long n, mreal v1, mreal v2, long nsub);
-uintptr_t MGL_EXPORT mgl_data_hist_(uintptr_t *dat, int *n, mreal *v1, mreal *v2, int *nsub);
+uintptr_t MGL_EXPORT mgl_data_hist_w_(uintptr_t *dat, uintptr_t *weight, int *n, mreal *v1, mreal *v2, int *nsub);
 /// Get momentum (1D-array) of data along direction 'dir'. String looks like "x1" for median in x-direction, "x2" for width in x-dir and so on.
 HMDT MGL_EXPORT mgl_data_momentum(HCDT dat, char dir, const char *how);
-uintptr_t MGL_EXPORT mgl_data_hist_w_(uintptr_t *dat, uintptr_t *weight, int *n, mreal *v1, mreal *v2, int *nsub);
+uintptr_t MGL_EXPORT mgl_data_momentum_(uintptr_t *dat, char *dir, const char *how, int,int);
 /// Get array which values is result of interpolation this for coordinates from other arrays
 HMDT MGL_EXPORT mgl_data_evaluate(HCDT dat, HCDT idat, HCDT jdat, HCDT kdat, int norm);
 uintptr_t MGL_EXPORT mgl_data_evaluate_(uintptr_t *dat, uintptr_t *idat, uintptr_t *jdat, uintptr_t *kdat, int *norm);

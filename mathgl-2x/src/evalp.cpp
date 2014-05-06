@@ -640,6 +640,10 @@ mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std
 	return res;
 }
 //-----------------------------------------------------------------------------
+dual MGL_NO_EXPORT ceqc(dual a,dual b)	{return a==b?1:0;}
+dual MGL_NO_EXPORT cltc(dual a,dual b)	{return real(a-b)<0?1:0;}
+dual MGL_NO_EXPORT cgtc(dual a,dual b)	{return real(a-b)>0?1:0;}
+
 dual MGL_NO_EXPORT addc(dual a,dual b);	//{return a+b;}
 dual MGL_NO_EXPORT subc(dual a,dual b);	//{return a-b;}
 dual MGL_NO_EXPORT mulc(dual a,dual b);	//{return a*b;}
@@ -726,6 +730,9 @@ mglDataC MGL_NO_EXPORT mglFormulaCalcC(std::wstring str, mglParser *arg, const s
 		return res;
 	}
 
+	n=mglFindInText(str,"<>=");				// low priority -- conditions
+	if(n>=0)
+		return mglApplyOperC(str.substr(0,n),str.substr(n+1),arg, head, str[n]=='<'?cltc:(str[n]=='>'?cgtc:ceqc));
 	n=mglFindInText(str,"+-");				// normal priority -- additions
 	if(n>=0 && (n<2 || str[n-1]!='e' || (str[n-2]!='.' && !isdigit(str[n-2]))))
 		return mglApplyOperC(str.substr(0,n),str.substr(n+1),arg, head, str[n]=='+'?addc:subc);

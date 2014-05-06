@@ -219,51 +219,39 @@ public:
 	{	return mglData(true,mgl_datac_arg(this));	}
 	
 	/// Get column (or slice) of the data filled by formulas of named columns
-	inline mglData Column(const char *eq) const
-	{	return mglData(true,mgl_data_column(this,eq));	}
+	inline mglDataC Column(const char *eq) const
+	{	return mglDataC(true,mgl_datac_column(this,eq));	}
 	/// Get momentum (1D-array) of data along direction 'dir'. String looks like "x1" for median in x-direction, "x2" for width in x-dir and so on.
-	inline mglData Momentum(char dir, const char *how) const
-	{	return mglData(true,mgl_data_momentum(this,dir,how));	}
+	inline mglDataC Momentum(char dir, const char *how) const
+	{	return mglDataC(true,mgl_datac_momentum(this,dir,how));	}
 	/// Get sub-array of the data with given fixed indexes
-	inline mglData SubData(long xx,long yy=-1,long zz=-1) const
-	{	return mglData(true,mgl_data_subdata(this,xx,yy,zz));	}
-	inline mglData SubData(const mglDataA &xx, const mglDataA &yy, const mglDataA &zz) const
-	{	return mglData(true,mgl_data_subdata_ext(this,&xx,&yy,&zz));	}
-	inline mglData SubData(const mglDataA &xx, const mglDataA &yy) const
-	{	return mglData(true,mgl_data_subdata_ext(this,&xx,&yy,0));	}
-	inline mglData SubData(const mglDataA &xx) const
-	{	return mglData(true,mgl_data_subdata_ext(this,&xx,0,0));	}
+	inline mglDataC SubData(long xx,long yy=-1,long zz=-1) const
+	{	return mglDataC(true,mgl_datac_subdata(this,xx,yy,zz));	}
+	inline mglDataC SubData(const mglDataA &xx, const mglDataA &yy, const mglDataA &zz) const
+	{	return mglDataC(true,mgl_datac_subdata_ext(this,&xx,&yy,&zz));	}
+	inline mglDataC SubData(const mglDataA &xx, const mglDataA &yy) const
+	{	return mglDataC(true,mgl_datac_subdata_ext(this,&xx,&yy,0));	}
+	inline mglDataC SubData(const mglDataA &xx) const
+	{	return mglDataC(true,mgl_datac_subdata_ext(this,&xx,0,0));	}
 	/// Get trace of the data array
-	inline mglData Trace() const
-	{	return mglData(true,mgl_data_trace(this));	}
-	/// Create n-th points distribution of this data values in range [v1, v2]
-	inline mglData Hist(long n,mreal v1=0,mreal v2=1, long nsub=0) const
-	{	return mglData(true,mgl_data_hist(this,n,v1,v2,nsub));	}
-	/// Create n-th points distribution of this data values in range [v1, v2] with weight w
-	inline mglData Hist(const mglDataA &w, long n,mreal v1=0,mreal v2=1, long nsub=0) const
-	{	return mglData(true,mgl_data_hist_w(this,&w,n,v1,v2,nsub));	}
+	inline mglDataC Trace() const
+	{	return mglDataC(true,mgl_datac_trace(this));	}
 	/// Get array which is result of summation in given direction or directions
-	inline mglData Sum(const char *dir) const
-	{	return mglData(true,mgl_data_sum(this,dir));	}
-	/// Get array which is result of maximal values in given direction or directions
-	inline mglData Max(const char *dir) const
-	{	return mglData(true,mgl_data_max_dir(this,dir));	}
-	/// Get array which is result of minimal values in given direction or directions
-	inline mglData Min(const char *dir) const
-	{	return mglData(true,mgl_data_min_dir(this,dir));	}
+	inline mglDataC Sum(const char *dir) const
+	{	return mglDataC(true,mgl_datac_sum(this,dir));	}
 	/// Get the data which is direct multiplication (like, d[i,j] = this[i]*a[j] and so on)
-	inline mglData Combine(const mglDataA &dat) const
-	{	return mglData(true,mgl_data_combine(this,&dat));	}
+	inline mglDataC Combine(const mglDataA &dat) const
+	{	return mglDataC(true,mgl_datac_combine(this,&dat));	}
 	/// Resize the data to new size of box [x1,x2]*[y1,y2]*[z1,z2]
-	inline mglData Resize(long mx,long my=1,long mz=1, mreal x1=0,mreal x2=1, mreal y1=0,mreal y2=1, mreal z1=0,mreal z2=1) const
-	{	return mglData(true,mgl_data_resize_box(this,mx,my,mz,x1,x2,y1,y2,z1,z2));	}
+	inline mglDataC Resize(long mx,long my=1,long mz=1, mreal x1=0,mreal x2=1, mreal y1=0,mreal y2=1, mreal z1=0,mreal z2=1) const
+	{	return mglDataC(true,mgl_datac_resize_box(this,mx,my,mz,x1,x2,y1,y2,z1,z2));	}
 	/// Get array which values is result of interpolation this for coordinates from other arrays
-	inline mglData Evaluate(const mglData &idat, bool norm=true) const
-	{	return mglData(true,mgl_data_evaluate(this,&idat,0,0,norm));	}
-	inline mglData Evaluate(const mglData &idat, const mglData &jdat, bool norm=true) const
-	{	return mglData(true,mgl_data_evaluate(this,&idat,&jdat,0,norm));	}
-	inline mglData Evaluate(const mglData &idat, const mglData &jdat, const mglData &kdat, bool norm=true) const
-	{	return mglData(true,mgl_data_evaluate(this,&idat,&jdat,&kdat,norm));	}
+	inline mglDataC Evaluate(const mglData &idat, bool norm=true) const
+	{	return mglDataC(true,mgl_datac_evaluate(this,&idat,0,0,norm));	}
+	inline mglDataC Evaluate(const mglData &idat, const mglData &jdat, bool norm=true) const
+	{	return mglDataC(true,mgl_datac_evaluate(this,&idat,&jdat,0,norm));	}
+	inline mglDataC Evaluate(const mglData &idat, const mglData &jdat, const mglData &kdat, bool norm=true) const
+	{	return mglDataC(true,mgl_datac_evaluate(this,&idat,&jdat,&kdat,norm));	}
 
 	/// Find correlation with another data arrays
 	inline mglDataC Correl(const mglData &dat, const char *dir) const
@@ -271,6 +259,19 @@ public:
 	/// Find auto correlation function
 	inline mglDataC AutoCorrel(const char *dir) const
 	{	return mglDataC(true,mgl_datac_correl(this,this,dir));	}
+
+	/// Create n-th points distribution of this data values in range [v1, v2]
+	inline mglData Hist(long n,mreal v1=0,mreal v2=1, long nsub=0) const
+	{	return mglData(true,mgl_data_hist(this,n,v1,v2,nsub));	}
+	/// Create n-th points distribution of this data values in range [v1, v2] with weight w
+	inline mglData Hist(const mglDataA &w, long n,mreal v1=0,mreal v2=1, long nsub=0) const
+	{	return mglData(true,mgl_data_hist_w(this,&w,n,v1,v2,nsub));	}
+	/// Get array which is result of maximal values in given direction or directions
+	inline mglData Max(const char *dir) const
+	{	return mglData(true,mgl_data_max_dir(this,dir));	}
+	/// Get array which is result of minimal values in given direction or directions
+	inline mglData Min(const char *dir) const
+	{	return mglData(true,mgl_data_min_dir(this,dir));	}
 
 	/// Cumulative summation the data in given direction or directions
 	inline void CumSum(const char *dir)	{	mgl_datac_cumsum(this,dir);	}
@@ -377,6 +378,7 @@ public:
 #ifndef SWIG
 dual mglLinearC(const dual *a, long nx, long ny, long nz, mreal x, mreal y, mreal z);
 dual mglSpline3C(const dual *a, long nx, long ny, long nz, mreal x, mreal y, mreal z,dual *dx=0, dual *dy=0, dual *dz=0);
+dual mglSpline3Cs(const dual *a, long nx, long ny, long nz, mreal x, mreal y, mreal z);
 #endif
 //-----------------------------------------------------------------------------
 /// Saves result of PDE solving (|u|^2) for "Hamiltonian" ham with initial conditions ini

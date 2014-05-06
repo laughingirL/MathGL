@@ -27,7 +27,6 @@
 19. Get true coordinates in CalcXYZ for curved equations too.
 20. add real(), imag(), conj() + accurate types in MGL + add 'complex' in MGL
 
-21. Check if Fortran versions possible for: mgl_data_info, mgl_datas_hdf, mgl_get_fit, mgl_get_mess, mgl_get_plotid
 24. Enable consecutive (as multiplication of matrices instead of single summary one) rotation of axis + the same in JS. Problem with widgets?!?
 28. Add FlowData() for getting flow thread coordinates as output array?!!
 31. Complex (hex) colors in inline text command (like #{b9} or #{x0000ff})
@@ -40,11 +39,8 @@
 41. Fractals ???
 43. Spline for HCDT
 44. Exclude "TODO non-mglData"
-45. mglFormulaCalcC() for complex numbers + corresponding changes in mglDataC::Modify(), Fill()
-46. Exclude mglFormulaCalc() in PDE(?!), data comparison (???), Momentum(!), Fit(???)
-47. mglDataC functions should return mglDataC rather than mglData if possible.
-48. Try to speed up new Spline
 
+YY. Optimize code (especially Quality=0 ?!?)
 ZZ. Update *.i for new functions {before release!!!}
 
 ============= DOCUMENTATION =============
@@ -74,6 +70,7 @@ C. Translate to Russian everything
 18. Add function random(dat) for list of known functions
 19. Docs about mgl_data_set_name, mgl_data_set_func
 20. Docs about mgl_suppress_warn
+21. Fortran versions for: mgl_data_info, mgl_datas_hdf, mgl_get_fit, mgl_get_mess, mgl_get_plotid
 
 ============= UDAV =============
 

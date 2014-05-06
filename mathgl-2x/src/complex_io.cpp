@@ -34,6 +34,7 @@
 
 #define isn(ch)		((ch)=='\n')
 MGL_NO_EXPORT char *mgl_read_gz(gzFile fp);
+mglDataC MGL_NO_EXPORT mglFormulaCalcC(const char *str, const std::vector<mglDataA*> &head);
 //-----------------------------------------------------------------------------
 HADT MGL_EXPORT mgl_create_datac()	{	return new mglDataC;	}
 HADT MGL_EXPORT mgl_create_datac_size(long nx, long ny, long nz){	return new mglDataC(nx,ny,nz);	}
@@ -549,8 +550,8 @@ MGL_NO_EXPORT void *mgl_cmodify(void *par)
 void MGL_EXPORT mgl_datac_modify(HADT d, const char *eq,long dim)
 {
 	long nx=d->nx, ny=d->ny, nz=d->nz, par[3]={nx,ny,nz};
+	if(dim<=0)	mgl_datac_modify_vw(d,eq,0,0);	// fastes variant for whole array
 	mglFormulaC f(eq);
-	if(dim<0)	dim=0;
 	if(nz>1)	// 3D array
 	{
 		par[2] -= dim;	if(par[2]<0)	par[2]=0;
@@ -566,38 +567,18 @@ void MGL_EXPORT mgl_datac_modify_(uintptr_t *d, const char *eq,int *dim,int l)
 {	char *s=new char[l+1];	memcpy(s,eq,l);	s[l]=0;
 	mgl_datac_modify(_DC_,s,*dim);	delete []s;	}
 //-----------------------------------------------------------------------------
-MGL_NO_EXPORT void *mgl_cmodify_gen(void *par)
-{
-	mglThreadV *t=(mglThreadV *)par;
-	const mglFormulaC *f = (const mglFormulaC *)(t->v);
-	long nx=t->p[0],ny=t->p[1],nz=t->p[2];
-	dual *b=t->aa;
-	mreal dx,dy,dz;
-	HCDT v=(HCDT)t->b, w=(HCDT)t->c;
-	dx=nx>1?1/(nx-1.):0;	dy=ny>1?1/(ny-1.):0;	dz=nz>1?1/(nz-1.):0;
-#if !MGL_HAVE_PTHREAD
-#pragma omp parallel for
-#endif
-	for(long i0=t->id;i0<t->n;i0+=mglNumThr)
-	{
-		register long i=i0%nx, j=((i0/nx)%ny), k=i0/(nx*ny);
-		b[i0] = f->Calc(i*dx, j*dy, k*dz, b[i0], v?v->vthr(i0):0, w?w->vthr(i0):0);
-	}
-	return 0;
-}
 void MGL_EXPORT mgl_datac_modify_vw(HADT d, const char *eq,HCDT vdat,HCDT wdat)
 {
-	const mglDataC *v = dynamic_cast<const mglDataC *>(vdat);
-	const mglDataC *w = dynamic_cast<const mglDataC *>(wdat);
-	long nn = d->nx*d->ny*d->nz, par[3]={d->nx,d->ny,d->nz};
-	if(vdat && vdat->GetNN()!=nn)	return;
-	if(wdat && wdat->GetNN()!=nn)	return;
-	mglFormulaC f(eq);
-	if(v && w)	mglStartThreadC(mgl_cmodify,0,nn,d->a,v->a,w->a,par,&f);
-	else if(vdat && wdat)	mglStartThreadV(mgl_cmodify_gen,nn,d->a,vdat,wdat,par,&f);
-	else if(v)	mglStartThreadC(mgl_cmodify,0,nn,d->a,v->a,0,par,&f);
-	else if(vdat)	mglStartThreadV(mgl_cmodify_gen,nn,d->a,vdat,0,par,&f);
-	else	mglStartThreadC(mgl_cmodify,0,nn,d->a,0,0,par,&f);
+	std::wstring s = d->s;	d->s = L"u";
+	mglDataV x(d->nx,d->ny,d->nz);	x.Fill(0,1,'x');	x.s=L"x";
+	mglDataV y(d->nx,d->ny,d->nz);	y.Fill(0,1,'y');	y.s=L"y";
+	mglDataV z(d->nx,d->ny,d->nz);	z.Fill(0,1,'z');	z.s=L"z";
+	mglDataV r(d->nx,d->ny,d->nz);	r.s=L"#$mgl";
+	mglData v(vdat), w(wdat);	v.s = L"v";	w.s = L"w";
+	std::vector<mglDataA*> list;
+	list.push_back(&x);	list.push_back(&y);	list.push_back(&z);	list.push_back(d);
+	list.push_back(&v);	list.push_back(&w);	list.push_back(&r);
+	d->Set(mglFormulaCalcC(eq,list));	d->s = s;
 }
 void MGL_EXPORT mgl_datac_modify_vw_(uintptr_t *d, const char *eq, uintptr_t *v, uintptr_t *w,int l)
 {	char *s=new char[l+1];	memcpy(s,eq,l);	s[l]=0;

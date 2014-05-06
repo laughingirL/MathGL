@@ -63,6 +63,7 @@ void MGL_EXPORT mgl_data_save_hdf(HCDT d,const char *fname,const char *data,int 
 void MGL_EXPORT mgl_data_save_hdf_(uintptr_t *d, const char *fname, const char *data, int *rewrite,int l,int n);
 /// Get information about the data (sizes and momentum) to string
 MGL_EXPORT const char *mgl_data_info(HCDT dat);
+int MGL_EXPORT mgl_data_info_(uintptr_t *dat, char *out, int len);
 
 /// Get maximal value of the data
 mreal MGL_EXPORT mgl_data_max(HCDT dat);

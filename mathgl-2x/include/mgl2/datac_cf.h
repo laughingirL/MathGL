@@ -137,6 +137,38 @@ void MGL_EXPORT mgl_datac_create_(uintptr_t *dat, int *nx,int *ny,int *nz);
 /// Transpose dimensions of the data (generalization of Transpose)
 void MGL_EXPORT mgl_datac_transpose(HADT dat, const char *dim);
 void MGL_EXPORT mgl_datac_transpose_(uintptr_t *dat, const char *dim,int);
+
+/// Get sub-array of the data with given fixed indexes
+HADT MGL_EXPORT mgl_datac_subdata(HCDT dat, long xx,long yy,long zz);
+uintptr_t MGL_EXPORT mgl_datac_subdata_(uintptr_t *dat, int *xx,int *yy,int *zz);
+/// Get sub-array of the data with given fixed indexes (like indirect access)
+HADT MGL_EXPORT mgl_datac_subdata_ext(HCDT dat, HCDT xx, HCDT yy, HCDT zz);
+uintptr_t MGL_EXPORT mgl_datac_subdata_ext_(uintptr_t *dat, uintptr_t *xx,uintptr_t *yy,uintptr_t *zz);
+/// Get column (or slice) of the data filled by formulas of named columns
+HADT MGL_EXPORT mgl_datac_column(HCDT dat, const char *eq);
+uintptr_t MGL_EXPORT mgl_datac_column_(uintptr_t *dat, const char *eq,int l);
+/// Get trace of the data array
+HADT MGL_EXPORT mgl_datac_trace(HCDT d);
+uintptr_t MGL_EXPORT mgl_datac_trace_(uintptr_t *d);
+/// Resize the data to new sizes
+HADT MGL_EXPORT mgl_datac_resize(HCDT dat, long mx,long my,long mz);
+uintptr_t MGL_EXPORT mgl_datac_resize_(uintptr_t *dat, int *mx,int *my,int *mz);
+/// Resize the data to new sizes of box [x1,x2]*[y1,y2]*[z1,z2]
+HADT MGL_EXPORT mgl_datac_resize_box(HCDT dat, long mx,long my,long mz,mreal x1,mreal x2,mreal y1,mreal y2,mreal z1,mreal z2);
+uintptr_t MGL_EXPORT mgl_datac_resize_box_(uintptr_t *dat, int *mx,int *my,int *mz,mreal *x1,mreal *x2,mreal *y1,mreal *y2,mreal *z1,mreal *z2);
+/// Get momentum (1D-array) of data along direction 'dir'. String looks like "x1" for median in x-direction, "x2" for width in x-dir and so on.
+HADT MGL_EXPORT mgl_datac_momentum(HCDT dat, char dir, const char *how);
+uintptr_t MGL_EXPORT mgl_datac_momentum_(uintptr_t *dat, char *dir, const char *how, int,int);
+/// Get array which values is result of interpolation this for coordinates from other arrays
+HADT MGL_EXPORT mgl_datac_evaluate(HCDT dat, HCDT idat, HCDT jdat, HCDT kdat, int norm);
+uintptr_t MGL_EXPORT mgl_datac_evaluate_(uintptr_t *dat, uintptr_t *idat, uintptr_t *jdat, uintptr_t *kdat, int *norm);
+/// Get array which is result of summation in given direction or directions
+HADT MGL_EXPORT mgl_datac_sum(HCDT dat, const char *dir);
+uintptr_t MGL_EXPORT mgl_datac_sum_(uintptr_t *dat, const char *dir,int);
+/// Get the data which is direct multiplication (like, d[i,j] = this[i]*a[j] and so on)
+HADT MGL_EXPORT mgl_datac_combine(HCDT dat1, HCDT dat2);
+uintptr_t MGL_EXPORT mgl_datac_combine_(uintptr_t *dat1, uintptr_t *dat2);
+
 /// Set names for columns (slices)
 void MGL_EXPORT mgl_datac_set_id(HADT d, const char *id);
 void MGL_EXPORT mgl_datac_set_id_(uintptr_t *dat, const char *id,int l);

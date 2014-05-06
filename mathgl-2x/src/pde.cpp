@@ -23,65 +23,55 @@
 #include "mgl2/thread.h"
 #include "mgl2/base.h"
 #define GAMMA	0.1
+mglData MGL_NO_EXPORT mglFormulaCalc(const char *str, const std::vector<mglDataA*> &head);
+mglDataC MGL_NO_EXPORT mglFormulaCalcC(const char *str, const std::vector<mglDataA*> &head);
 //-----------------------------------------------------------------------------
 struct mgl_pde_ham
 {
 	ddual *a,*hxy,*hxv,*huv,*huy;
-	mglFormula *eqs;
+	const char *eqs;
 	long nx,ny;
 	double xx,yy,xs,ys,dx,dy,dq,dp,zz;
 	double dd;
 };
-MGL_NO_EXPORT void *mgl_pde_hprep(void *par)
+void MGL_NO_EXPORT mgl_pde_hprep(const mgl_pde_ham *f)
 {
-	mglThreadD *t=(mglThreadD *)par;
-	const mgl_pde_ham *f = (const mgl_pde_ham *)t->v;
-	mglFormula *eqs = f->eqs;
-	long nx=2*f->nx, ny=2*f->ny;
-	ddual *a = f->a;
-
-#if !MGL_HAVE_PTHREAD
-#pragma omp parallel
-#endif
+	long nx = f->nx, ny = f->ny;
+	mglDataV x(nx,ny), y(nx,ny), p(nx,ny), q(nx,ny), z, r(nx,ny);
+	x.s = L"x";	y.s = L"y";	p.s = L"p";	q.s = L"q";	r.s=L"#$mgl";
+	z.s = L"z";	z.Fill(f->zz);
+	dual dd(0,f->dd);
+	mglData u(nx,ny);	u.s = L"u";
+#pragma omp parallel for
+	for(long i=0;i<nx*ny;i++)	u.a[i] = abs(f->a[i]);
+	std::vector<mglDataA*> list;
+	list.push_back(&x);	list.push_back(&y);	list.push_back(&z);
+	list.push_back(&p);	list.push_back(&q);	list.push_back(&u);
+	
+	x.Fill(f->xx,f->xx+f->dx*(nx-1),'x');	p.Fill(0);
+	y.Fill(f->yy,f->yy+f->dy*(ny-1),'y');	q.Fill(0);
+	mglDataC res = mglFormulaCalcC(f->eqs, list);
+#pragma omp parallel for
+	for(long i=0;i<nx*ny;i++)	f->hxy[i] = res.a[i]*dd;
+	if(ny>2)
 	{
-		mreal var[MGL_VS];	memset(var,0,MGL_VS*sizeof(mreal));
-		var['z'-'a'] = f->zz;
-#pragma omp for nowait
-		for(long i0=t->id;i0<t->n;i0+=mglNumThr)
-		{
-			register long i = i0%nx, j = i0/nx;		var['u'-'a'] = abs(a[i0]);
-			var['x'-'a'] = f->xx+f->dx*i;	var['p'-'a'] = 0;
-			var['y'-'a'] = f->yy+f->dy*j;	var['q'-'a'] = 0;
-			f->hxy[i0] = ddual(-eqs->CalcD(var,'i'), eqs->Calc(var))*f->dd;
-		}
-		if(f->ny>2)
-#pragma omp for nowait
-			for(long i0=t->id;i0<t->n;i0+=mglNumThr)	// step 3/2
-			{
-				register long i = i0%nx, j = i0/nx;		var['u'-'a'] = abs(a[i0]);
-				var['x'-'a'] = f->xs;			var['p'-'a'] = f->dp*(i<nx/2 ? i:nx-i);
-				var['y'-'a'] = f->yy+f->dy*j;	var['q'-'a'] = 0;
-				f->huy[i0] = ddual(-eqs->CalcD(var,'i'), eqs->Calc(var))*f->dd;
-			}
-#pragma omp for nowait
-		for(long i0=t->id;i0<t->n;i0+=mglNumThr)	// step 2
-		{
-			register long i = i0%nx, j = i0/nx;		var['u'-'a'] = abs(a[i0]);
-			var['x'-'a'] = f->xs;			var['p'-'a'] = f->dp*(i<nx/2 ? i:nx-i);
-			var['y'-'a'] = f->ys;			var['q'-'a'] = f->dq*(j<ny/2 ? j:ny-j);
-			f->huv[i0] = ddual(-eqs->CalcD(var,'i'), eqs->Calc(var))*f->dd;
-		}
-		if(f->ny>2)
-#pragma omp for nowait
-			for(long i0=t->id;i0<t->n;i0+=mglNumThr)	// step 3/2
-			{
-				register long i = i0%nx, j = i0/nx;		var['u'-'a'] = abs(a[i0]);
-				var['x'-'a'] = f->xx+f->dx*i;	var['p'-'a'] = 0;
-				var['y'-'a'] = f->ys;			var['q'-'a'] = f->dq*(j<ny/2 ? j:ny-j);
-				f->hxv[i0] = ddual(-eqs->CalcD(var,'i'), eqs->Calc(var))*f->dd;
-			}
+		x.Fill(f->xs);	p.Freq(f->dp,'x');
+		res = mglFormulaCalcC(f->eqs, list);
+#pragma omp parallel for
+		for(long i=0;i<nx*ny;i++)	f->huy[i] = res.a[i]*dd;
 	}
-	return 0;
+	x.Fill(f->xs);	p.Freq(f->dp,'x');
+	y.Fill(f->ys);	q.Freq(f->dq,'y');
+	res = mglFormulaCalcC(f->eqs, list);
+#pragma omp parallel for
+	for(long i=0;i<nx*ny;i++)	f->huv[i] = res.a[i]*dd;
+	if(ny>2)
+	{
+		x.Fill(f->xx,f->xx+f->dx*(nx-1),'x');	p.Fill(0);
+		res = mglFormulaCalcC(f->eqs, list);
+#pragma omp parallel for
+		for(long i=0;i<nx*ny;i++)	f->hxv[i] = res.a[i]*dd;
+	}
 }
 //-----------------------------------------------------------------------------
 // Solve equation dx/dz = func(p,q,x,y,z,|u|)[u] where p=d/dx, q=d/dy. At this moment simplified form of ham is supported: ham = f(p,q,z) + g(x,y,z,'u'), where variable 'u'=|u| (for allowing solve nonlinear problems). You may specify imaginary part like ham = p^2 + i*x*(x>0) but only if dependence on variable 'i' is linear (i.e. ham = hre+i*him).
@@ -96,7 +86,6 @@ HADT MGL_EXPORT mgl_pde_solve_c(HMGL gr, const char *ham, HCDT ini_re, HCDT ini_
 	{	gr->SetWarn(mglWarnDim,"PDE");	return 0;	}
 	mglDataC *res=new mglDataC(nz, nx, ny);
 
-	mglFormula eqs(ham);
 	ddual *a = new ddual[4*nx*ny], hh0;	// Add "damping" area
 	ddual *hxy = new ddual[4*nx*ny], *hxv = new ddual[4*nx*ny];
 	ddual *huy = new ddual[4*nx*ny], *huv = new ddual[4*nx*ny];
@@ -124,11 +113,10 @@ HADT MGL_EXPORT mgl_pde_solve_c(HMGL gr, const char *ham, HCDT ini_re, HCDT ini_
 	mreal dx = (Max.x-Min.x)/(nx-1), dy = ny>1?(Max.y-Min.y)/(ny-1):0;
 	mreal dp = M_PI/(Max.x-Min.x)/k0, dq = M_PI/(Max.y-Min.y)/k0;
 	mreal xs=(Min.x+Max.x)/2, ys=(Min.y+Max.y)/2;
-//	double xx = Min.x - dx*nx/2, yy = Min.x - dy*ny/2;
 	double dd = k0*dz;
 
-	mgl_pde_ham tmp;tmp.eqs = &eqs;
-	tmp.nx = nx;	tmp.ny = ny;	tmp.dd = dd;	tmp.a=a;
+	mgl_pde_ham tmp;tmp.eqs = ham;
+	tmp.nx = 2*nx;	tmp.ny = 2*ny;	tmp.dd = dd;	tmp.a=a;
 	tmp.hxy=hxy;	tmp.hxv=hxv;	tmp.huy=huy;	tmp.huv=huv;
 	tmp.xx = Min.x-dx*(nx/2);	tmp.xs = xs;	tmp.dx = dx;	tmp.dp = dp;
 	tmp.yy = Min.y-dy*(ny/2);	tmp.ys = ys;	tmp.dy = dy;	tmp.dq = dq;
@@ -142,7 +130,7 @@ HADT MGL_EXPORT mgl_pde_solve_c(HMGL gr, const char *ham, HCDT ini_re, HCDT ini_
 		tmp.zz = Min.z+dz*k;
 		memset(hxy,0,4*nx*ny*sizeof(dual));	memset(hxv,0,4*nx*ny*sizeof(dual));
 		memset(huv,0,4*nx*ny*sizeof(dual));	memset(huy,0,4*nx*ny*sizeof(dual));
-		mglStartThread(mgl_pde_hprep,0,4*nx*ny,0,0,0,0,&tmp);
+		mgl_pde_hprep(&tmp);
 #pragma omp parallel for
 		for(long i=0;i<2*nx;i++)	{	hx[i] = hxv[i];			hu[i] = huv[i];		}
 #pragma omp parallel for

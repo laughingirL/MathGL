@@ -923,83 +923,6 @@ void MGL_EXPORT mgl_contv_(uintptr_t *gr, uintptr_t *a, const char *sch, const c
 //-----------------------------------------------------------------------------
 struct _mgl_slice	{	mglData x,y,z,a;	};
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_get_slice(_mgl_slice &s, HCDT x, HCDT y, HCDT z, HCDT a, char dir, mreal d, bool both)
-{
-	register long i,j,i0,n=a->GetNx(),m=a->GetNy(),l=a->GetNz(), nx=1,ny=1,p;
-
-	if(dir=='x')	{	nx = m;	ny = l;	if(d<0)	d = n/2.;	}
-	if(dir=='y')	{	nx = n;	ny = l;	if(d<0)	d = m/2.;	}
-	if(dir=='z')	{	nx = n;	ny = m;	if(d<0)	d = l/2.;	}
-	s.x.Create(nx,ny);	s.y.Create(nx,ny);
-	s.z.Create(nx,ny);	s.a.Create(nx,ny);
-	p = long(d);	d -= p;
-	if(dir=='x' && p>=n-1)	{	d+=p-n+2;	p=n-2;	}
-	if(dir=='y' && p>=m-1)	{	d+=p-m+2.;	p=m-2;	}
-	if(dir=='z' && p>=l-1)	{	d+=p-l+2;	p=l-2;	}
-	mreal v;
-
-	if(both)
-	{
-		if(dir=='x')	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
-		{
-			i0 = i+nx*j;
-			s.x.a[i0] = x->v(p,i,j)*(1-d) + x->v(p+1,i,j)*d;
-			s.y.a[i0] = y->v(p,i,j)*(1-d) + y->v(p+1,i,j)*d;
-			s.z.a[i0] = z->v(p,i,j)*(1-d) + z->v(p+1,i,j)*d;
-			s.a.a[i0] = a->v(p,i,j)*(1-d) + a->v(p+1,i,j)*d;
-		}
-		if(dir=='y')	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
-		{
-			i0 = i+nx*j;
-			s.x.a[i0] = x->v(i,p,j)*(1-d) + x->v(i,p+1,j)*d;
-			s.y.a[i0] = y->v(i,p,j)*(1-d) + y->v(i,p+1,j)*d;
-			s.z.a[i0] = z->v(i,p,j)*(1-d) + z->v(i,p+1,j)*d;
-			s.a.a[i0] = a->v(i,p,j)*(1-d) + a->v(i,p+1,j)*d;
-		}
-		if(dir=='z')	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
-		{
-			i0 = i+nx*j;
-			s.x.a[i0] = x->v(i,j,p)*(1-d) + x->v(i,j,p+1)*d;
-			s.y.a[i0] = y->v(i,j,p)*(1-d) + y->v(i,j,p+1)*d;
-			s.z.a[i0] = z->v(i,j,p)*(1-d) + z->v(i,j,p+1)*d;
-			s.a.a[i0] = a->v(i,j,p)*(1-d) + a->v(i,j,p+1)*d;
-		}
-	}
-	else	// x, y, z -- vectors
-	{
-		if(dir=='x')
-		{
-			v = x->v(p)*(1-d)+x->v(p+1)*d;
-			for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
-			{
-				i0 = i+nx*j;	s.x.a[i0] = v;
-				s.y.a[i0] = y->v(i);	s.z.a[i0] = z->v(j);
-				s.a.a[i0] = a->v(p,i,j)*(1-d) + a->v(p+1,i,j)*d;
-			}
-		}
-		if(dir=='y')
-		{
-			v = y->v(p)*(1-d)+y->v(p+1)*d;
-			for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
-			{
-				i0 = i+nx*j;	s.y.a[i0] = v;
-				s.x.a[i0] = x->v(i);	s.z.a[i0] = z->v(j);
-				s.a.a[i0] = a->v(i,p,j)*(1-d) + a->v(i,p+1,j)*d;
-			}
-		}
-		if(dir=='z')
-		{
-			v = z->v(p)*(1-d)+z->v(p+1)*d;
-			for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
-			{
-				i0 = i+nx*j;	s.z.a[i0] = v;
-				s.x.a[i0] = x->v(i);	s.y.a[i0] = y->v(j);
-				s.a.a[i0] = a->v(i,j,p)*(1-d) + a->v(i,j,p+1)*d;
-			}
-		}
-	}
-}
-//-----------------------------------------------------------------------------
 void MGL_NO_EXPORT mgl_get_slice_md(_mgl_slice &s, const mglData *x, const mglData *y, const mglData *z, const mglData *a, char dir, mreal d, bool both)
 {
 	long n=a->nx,m=a->ny,l=a->nz, nx=1,ny=1,p;
@@ -1086,6 +1009,94 @@ void MGL_NO_EXPORT mgl_get_slice_md(_mgl_slice &s, const mglData *x, const mglDa
 	}
 }
 //-----------------------------------------------------------------------------
+void MGL_NO_EXPORT mgl_get_slice(_mgl_slice &s, HCDT x, HCDT y, HCDT z, HCDT a, char dir, mreal d, bool both)
+{
+	{
+		const mglData *mx = dynamic_cast<const mglData *>(x);
+		const mglData *my = dynamic_cast<const mglData *>(y);
+		const mglData *mz = dynamic_cast<const mglData *>(z);
+		const mglData *ma = dynamic_cast<const mglData *>(a);
+		if(mx&&my&&mz&&ma)
+		{
+			mgl_get_slice_md(s,mx,my,mz,ma,dir,d,both);
+			return;
+		}
+	}
+	register long i,j,i0,n=a->GetNx(),m=a->GetNy(),l=a->GetNz(), nx=1,ny=1,p;
+
+	if(dir=='x')	{	nx = m;	ny = l;	if(d<0)	d = n/2.;	}
+	if(dir=='y')	{	nx = n;	ny = l;	if(d<0)	d = m/2.;	}
+	if(dir=='z')	{	nx = n;	ny = m;	if(d<0)	d = l/2.;	}
+	s.x.Create(nx,ny);	s.y.Create(nx,ny);
+	s.z.Create(nx,ny);	s.a.Create(nx,ny);
+	p = long(d);	d -= p;
+	if(dir=='x' && p>=n-1)	{	d+=p-n+2;	p=n-2;	}
+	if(dir=='y' && p>=m-1)	{	d+=p-m+2.;	p=m-2;	}
+	if(dir=='z' && p>=l-1)	{	d+=p-l+2;	p=l-2;	}
+	mreal v;
+
+	if(both)
+	{
+		if(dir=='x')	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
+		{
+			i0 = i+nx*j;
+			s.x.a[i0] = x->v(p,i,j)*(1-d) + x->v(p+1,i,j)*d;
+			s.y.a[i0] = y->v(p,i,j)*(1-d) + y->v(p+1,i,j)*d;
+			s.z.a[i0] = z->v(p,i,j)*(1-d) + z->v(p+1,i,j)*d;
+			s.a.a[i0] = a->v(p,i,j)*(1-d) + a->v(p+1,i,j)*d;
+		}
+		if(dir=='y')	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
+		{
+			i0 = i+nx*j;
+			s.x.a[i0] = x->v(i,p,j)*(1-d) + x->v(i,p+1,j)*d;
+			s.y.a[i0] = y->v(i,p,j)*(1-d) + y->v(i,p+1,j)*d;
+			s.z.a[i0] = z->v(i,p,j)*(1-d) + z->v(i,p+1,j)*d;
+			s.a.a[i0] = a->v(i,p,j)*(1-d) + a->v(i,p+1,j)*d;
+		}
+		if(dir=='z')	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
+		{
+			i0 = i+nx*j;
+			s.x.a[i0] = x->v(i,j,p)*(1-d) + x->v(i,j,p+1)*d;
+			s.y.a[i0] = y->v(i,j,p)*(1-d) + y->v(i,j,p+1)*d;
+			s.z.a[i0] = z->v(i,j,p)*(1-d) + z->v(i,j,p+1)*d;
+			s.a.a[i0] = a->v(i,j,p)*(1-d) + a->v(i,j,p+1)*d;
+		}
+	}
+	else	// x, y, z -- vectors
+	{
+		if(dir=='x')
+		{
+			v = x->v(p)*(1-d)+x->v(p+1)*d;
+			for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
+			{
+				i0 = i+nx*j;	s.x.a[i0] = v;
+				s.y.a[i0] = y->v(i);	s.z.a[i0] = z->v(j);
+				s.a.a[i0] = a->v(p,i,j)*(1-d) + a->v(p+1,i,j)*d;
+			}
+		}
+		if(dir=='y')
+		{
+			v = y->v(p)*(1-d)+y->v(p+1)*d;
+			for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
+			{
+				i0 = i+nx*j;	s.y.a[i0] = v;
+				s.x.a[i0] = x->v(i);	s.z.a[i0] = z->v(j);
+				s.a.a[i0] = a->v(i,p,j)*(1-d) + a->v(i,p+1,j)*d;
+			}
+		}
+		if(dir=='z')
+		{
+			v = z->v(p)*(1-d)+z->v(p+1)*d;
+			for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
+			{
+				i0 = i+nx*j;	s.z.a[i0] = v;
+				s.x.a[i0] = x->v(i);	s.y.a[i0] = y->v(j);
+				s.a.a[i0] = a->v(i,j,p)*(1-d) + a->v(i,j,p+1)*d;
+			}
+		}
+	}
+}
+//-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_cont3_xyz_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, double sVal, const char *opt)
 {
 	bool both = mgl_isboth(x,y,z,a);
@@ -1102,12 +1113,7 @@ void MGL_EXPORT mgl_cont3_xyz_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, HCDT 
 	gr->SetPenPal(sch);
 
 	_mgl_slice s;
-	const mglData *mx = dynamic_cast<const mglData *>(x);
-	const mglData *my = dynamic_cast<const mglData *>(y);
-	const mglData *mz = dynamic_cast<const mglData *>(z);
-	const mglData *ma = dynamic_cast<const mglData *>(a);
-	if(mx&&my&&mz&&ma)	mgl_get_slice_md(s,mx,my,mz,ma,dir,sVal,both);
-	else mgl_get_slice(s,x,y,z,a,dir,sVal,both);
+	mgl_get_slice(s,x,y,z,a,dir,sVal,both);
 #pragma omp parallel for
 	for(long i=0;i<v->GetNx();i++)
 	{
@@ -1185,12 +1191,7 @@ void MGL_EXPORT mgl_dens3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const cha
 	if(mglchr(sch,'z'))	dir='z';
 
 	_mgl_slice s;
-	const mglData *mx = dynamic_cast<const mglData *>(x);
-	const mglData *my = dynamic_cast<const mglData *>(y);
-	const mglData *mz = dynamic_cast<const mglData *>(z);
-	const mglData *ma = dynamic_cast<const mglData *>(a);
-	if(mx&&my&&mz&&ma)	mgl_get_slice_md(s,mx,my,mz,ma,dir,sVal,both);
-	else mgl_get_slice(s,x,y,z,a,dir,sVal,both);
+	mgl_get_slice(s,x,y,z,a,dir,sVal,both);
 	mgl_surfc_xy(gr,&s.x,&s.y,&s.z,&s.a,sch,0);
 	gr->EndGroup();
 }
@@ -1232,12 +1233,7 @@ void MGL_EXPORT mgl_grid3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const cha
 	if(mglchr(sch,'z'))	dir='z';
 
 	_mgl_slice s;
-	const mglData *mx = dynamic_cast<const mglData *>(x);
-	const mglData *my = dynamic_cast<const mglData *>(y);
-	const mglData *mz = dynamic_cast<const mglData *>(z);
-	const mglData *ma = dynamic_cast<const mglData *>(a);
-	if(mx&&my&&mz&&ma)	mgl_get_slice_md(s,mx,my,mz,ma,dir,sVal,both);
-	else mgl_get_slice(s,x,y,z,a,dir,sVal,both);
+	mgl_get_slice(s,x,y,z,a,dir,sVal,both);
 	mgl_mesh_xy(gr,&s.x,&s.y,&s.z,sch,0);
 	gr->EndGroup();
 }
@@ -1280,12 +1276,7 @@ void MGL_EXPORT mgl_contf3_xyz_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, HCDT
 
 	long ss=gr->AddTexture(sch);
 	_mgl_slice s;
-	const mglData *mx = dynamic_cast<const mglData *>(x);
-	const mglData *my = dynamic_cast<const mglData *>(y);
-	const mglData *mz = dynamic_cast<const mglData *>(z);
-	const mglData *ma = dynamic_cast<const mglData *>(a);
-	if(mx&&my&&mz&&ma)	mgl_get_slice_md(s,mx,my,mz,ma,dir,sVal,both);
-	else mgl_get_slice(s,x,y,z,a,dir,sVal,both);
+	mgl_get_slice(s,x,y,z,a,dir,sVal,both);
 #pragma omp parallel for
 	for(long i=0;i<v->GetNx()-1;i++)
 	{

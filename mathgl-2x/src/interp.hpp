@@ -40,50 +40,48 @@ template <class Treal> Treal mglLineart(const Treal *a, long nx, long ny, long n
 //-----------------------------------------------------------------------------
 template <class Treal> Treal mgl_spline3t(const Treal y[4], long n, mreal dx, Treal &dy)
 {
-	Treal d[4], t0,t1, f0,d0,d1,f1, b[6];
+	Treal d[4], t0,t1, f0,d0,d1,f1;
 	d[0] = y[1]-y[0];	//-(y[2]-4*y[1]+3*y[0])/2;
 	d[1] = (y[2]-y[0])/mreal(2);
 	d[2] = (y[3]-y[1])/mreal(2);
 	d[3] = y[3]-y[2];	//-(y[3]-4*y[2]+3*y[1])/2;
 	
-	t0 = (y[2]-mreal(2)*y[1]+y[0])/mreal(2);
-	t1 = (y[3]-mreal(2)*y[2]+y[1])/mreal(2);
+	t0 = (y[2]+y[0])/mreal(2)-y[1];
+	t1 = (y[3]+y[1])/mreal(2)-y[2];
 	if(n<1)	t1=t0;
 	if(n>2)	t0=t1;
 
 	f0 = y[n];		d0 = d[n];
 	f1 = y[n+1];	d1 = d[n+1];
 
-	b[0] = f0;	b[1] = d0;	b[2] = t0;
-	b[3] = mreal(10)*(f1-f0)+t1-mreal(3)*t0-mreal(4)*d1-mreal(6)*d0;
-	b[4] = mreal(15)*(f0-f1)-mreal(2)*t1+mreal(3)*t0+mreal(7)*d1+mreal(8)*d0;
-	b[5] = mreal(6)*(f1-f0)+t1-t0-mreal(3)*d1-mreal(3)*d0;
-	dy = b[1] + dx*(mreal(2)*b[2]+dx*(mreal(3)*b[3]+dx*(mreal(4)*b[4]+dx*mreal(5)*b[5])));
-//	d2y = mreal(2)*b[2] + dx*(mreal(6)*b[3]+dx*(mreal(12)*b[4]+dx*mreal(20)*b[5]));	// 2nd derivative for future
-	return b[0] + dx*(b[1]+dx*(b[2]+dx*(b[3]+dx*(b[4]+dx*b[5]))));
+	Treal b3 = mreal(10)*(f1-f0)+t1-mreal(3)*t0-mreal(4)*d1-mreal(6)*d0;
+	Treal b4 = mreal(15)*(f0-f1)-mreal(2)*t1+mreal(3)*t0+mreal(7)*d1+mreal(8)*d0;
+	Treal b5 = mreal(6)*(f1-f0)+t1-t0-mreal(3)*d1-mreal(3)*d0;
+	dy = d0 + dx*(mreal(2)*t0+dx*(mreal(3)*b3+dx*(mreal(4)*b4+dx*mreal(5)*b5)));
+//	d2y = mreal(2)*t0 + dx*(mreal(6)*b3+dx*(mreal(12)*b4+dx*mreal(20)*b5));	// 2nd derivative for future
+	return f0 + dx*(d0+dx*(t0+dx*(b3+dx*(b4+dx*b5))));
 }
 //-----------------------------------------------------------------------------
 template <class Treal> Treal mgl_spline3st(const Treal y[4], long n, mreal dx)
 {
-	Treal d[4], t0,t1, f0,d0,d1,f1, b[6];
+	Treal d[4], t0,t1, f0,d0,d1,f1;
 	d[0] = y[1]-y[0];	//-(y[2]-4*y[1]+3*y[0])/2;
 	d[1] = (y[2]-y[0])/mreal(2);
 	d[2] = (y[3]-y[1])/mreal(2);
 	d[3] = y[3]-y[2];	//-(y[3]-4*y[2]+3*y[1])/2;
 	
-	t0 = (y[2]-mreal(2)*y[1]+y[0])/mreal(2);
-	t1 = (y[3]-mreal(2)*y[2]+y[1])/mreal(2);
+	t0 = (y[2]+y[0])/mreal(2)-y[1];
+	t1 = (y[3]+y[1])/mreal(2)-y[2];
 	if(n<1)	t1=t0;
 	if(n>2)	t0=t1;
 
 	f0 = y[n];		d0 = d[n];
 	f1 = y[n+1];	d1 = d[n+1];
 
-	b[0] = f0;	b[1] = d0;	b[2] = t0;
-	b[3] = mreal(10)*(f1-f0)+t1-mreal(3)*t0-mreal(4)*d1-mreal(6)*d0;
-	b[4] = mreal(15)*(f0-f1)-mreal(2)*t1+mreal(3)*t0+mreal(7)*d1+mreal(8)*d0;
-	b[5] = mreal(6)*(f1-f0)+t1-t0-mreal(3)*d1-mreal(3)*d0;
-	return b[0] + dx*(b[1]+dx*(b[2]+dx*(b[3]+dx*(b[4]+dx*b[5]))));
+	Treal b3 = mreal(10)*(f1-f0)+t1-mreal(3)*t0-mreal(4)*d1-mreal(6)*d0;
+	Treal b4 = mreal(15)*(f0-f1)-mreal(2)*t1+mreal(3)*t0+mreal(7)*d1+mreal(8)*d0;
+	Treal b5 = mreal(6)*(f1-f0)+t1-t0-mreal(3)*d1-mreal(3)*d0;
+	return f0 + dx*(d0+dx*(t0+dx*(b3+dx*(b4+dx*b5))));
 }
 //-----------------------------------------------------------------------------
 template <class Treal> Treal mglSpline1t(const Treal *a, long nx, mreal x, Treal *dx=0)
@@ -190,10 +188,10 @@ template <class Treal> Treal mglSpline3st(const Treal *a, long nx, long ny, long
 		for(long j=0;j<mz;j++)
 		{
 			for(long i=0;i<m;i++)
-				t[i] = mglSpline1t<Treal>(a+nx*(i+k+ny*(j+kz)),nx,x,0);
-			tz[j] = mglSpline1t<Treal>(t,m,y-k,0);
+				t[i] = mglSpline1st<Treal>(a+nx*(i+k+ny*(j+kz)),nx,x);
+			tz[j] = mglSpline1st<Treal>(t,m,y-k);
 		}
-		b = mglSpline1t<Treal>(tz,mz,z-kz,0);
+		b = mglSpline1st<Treal>(tz,mz,z-kz);
 	}
 	else if(ny>1)	// 2d interpolation
 	{
@@ -202,11 +200,11 @@ template <class Treal> Treal mglSpline3st(const Treal *a, long nx, long ny, long
 		if(k>=ny-3)	k = ny-4;
 		k = k>1?k-1:0;	m = k+4<ny?4:ny-k;
 		for(long i=0;i<m;i++)
-			t[i] = mglSpline1t<Treal>(a+nx*(i+k),nx,x,0);
-		b = mglSpline1t<Treal>(t,m,y-k,0);
+			t[i] = mglSpline1st<Treal>(a+nx*(i+k),nx,x);
+		b = mglSpline1st<Treal>(t,m,y-k);
 	}
 	else	// 1d interpolation
-		b = mglSpline1t<Treal>(a,nx,x,0);
+		b = mglSpline1st<Treal>(a,nx,x);
 	return b;
 }
 //-----------------------------------------------------------------------------
