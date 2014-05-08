@@ -420,12 +420,12 @@ double MGL_EXPORT mgl_expr_diff_(uintptr_t *ex, const char *dir, mreal *x, mreal
 /// Return value of expression differentiation over variable dir for given variables
 double MGL_EXPORT mgl_expr_diff_v(HMEX ex, char dir, mreal *vars);
 //-----------------------------------------------------------------------------
+#ifdef __cplusplus
+}
 mreal MGL_EXPORT mgl_spline5(mreal y[6], long n, mreal dx, mreal &dy, mreal &d2y);
 mreal MGL_EXPORT mgl_spline3(mreal y[4], long n, mreal dx, mreal &dy, mreal &d2y);
 mreal MGL_EXPORT mgl_splineS(mreal y[4], long n, mreal dx, mreal &dy, mreal &d2y);
 //-----------------------------------------------------------------------------
-#ifdef __cplusplus
-}
 #endif
 //-----------------------------------------------------------------------------
 #endif

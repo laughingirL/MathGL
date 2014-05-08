@@ -173,8 +173,8 @@ MGL_NO_EXPORT void *mgl_cresize(void *par)
 	return 0;
 }
 HADT MGL_EXPORT mgl_datac_resize_box(HCDT dat, long mx,long my,long mz, mreal x1,mreal x2, mreal y1,mreal y2, mreal z1,mreal z2)
-{	// NOTE: only for mglData (for speeding up)
-	const mglDataC *d=dynamic_cast<const mglDataC *>(dat);	// TODO non-mglData: spline
+{	// NOTE: only for mglDataC
+	const mglDataC *d=dynamic_cast<const mglDataC *>(dat);
 	if(!d)	return 0;
 	register long nx = d->nx-1, ny = d->ny-1, nz = d->nz-1;
 	mx = mx<1 ? nx+1:mx;	my = my<1 ? ny+1:my;	mz = mz<1 ? nz+1:mz;

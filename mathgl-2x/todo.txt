@@ -34,7 +34,6 @@
 34. Axis ticks as number+string, which are proportional to factor (like SetTicks('x',M_PI,"\pi");???
 36. Extra markers for '&' and '&#' signs ?!?
 38. Read JPEG files for Background() and mglData::Import()
-41. Fractals ???
 43. Spline for HCDT
 44. Exclude "TODO non-mglData"
 

@@ -280,8 +280,12 @@ void DatPanel::inrange()
 	QString v1("-1"), v2("1"), dir("x");
 	if(sizesDialog(tr("UDAV - Fill data"), tr("Enter range for data and direction of filling"), tr("From"), tr("To"), tr("Direction"), v1, v2, dir))
 	{
-		mglData *d = dynamic_cast<mglData *>(var);	// TODO non-mglData can be here for Fill
+		mglData *d = dynamic_cast<mglData *>(var);
 		if(d)	d->Fill(v1.toDouble(), v2.toDouble(), dir[0].toLatin1());
+		mglDataC *dc = dynamic_cast<mglDataC *>(var);
+		if(dc)	dc->Fill(v1.toDouble(), v2.toDouble(), dir[0].toLatin1());
+		mglDataV *dv = dynamic_cast<mglDataV *>(var);
+		if(dv)	dv->Fill(v1.toDouble(), v2.toDouble(), dir[0].toLatin1());
 		refresh();
 	}
 }

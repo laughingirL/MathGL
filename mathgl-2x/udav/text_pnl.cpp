@@ -353,21 +353,20 @@ void TextPanel::saveHDF5(const QString &fileName)
 	for(i=0;i<n;i++);
 	{
 		const mglData *v = dynamic_cast<const mglData *>(parser.GetVar(i));
-		if(v)	// TODO non-mglData allow to HDF5 save in UDAV
-		{
-			wcstombs(name,v->s.c_str(),v->s.length()+1);
-			if(v->nz==1 && v->ny == 1)
-			{	rank = 1;	dims[0] = v->nx;	}
-			else if(v->nz==1)
-			{	rank = 2;	dims[0] = v->ny;	dims[1] = v->nx;	}
-			else
-			{	rank = 3;	dims[0] = v->nz;	dims[1] = v->ny;	dims[2] = v->nx;	}
-			hs = H5Screate_simple(rank, dims, 0);
-			hd = H5Dcreate(hf, name, H5T_IEEE_F32LE, hs, H5P_DEFAULT);
+		mglData tmp;
+		if(!v)	{	tmp.Set(parser.GetVar(i));	v = &tmp;	}
+		wcstombs(name,v->s.c_str(),v->s.length()+1);
+		if(v->nz==1 && v->ny == 1)
+		{	rank = 1;	dims[0] = v->nx;	}
+		else if(v->nz==1)
+		{	rank = 2;	dims[0] = v->ny;	dims[1] = v->nx;	}
+		else
+		{	rank = 3;	dims[0] = v->nz;	dims[1] = v->ny;	dims[2] = v->nx;	}
+		hs = H5Screate_simple(rank, dims, 0);
+		hd = H5Dcreate(hf, name, H5T_IEEE_F32LE, hs, H5P_DEFAULT);
 
-			H5Dwrite(hd, H5T_NATIVE_FLOAT, hs, hs, H5P_DEFAULT, v->a);
-			H5Dclose(hd);	H5Sclose(hs);
-		}
+		H5Dwrite(hd, H5T_NATIVE_FLOAT, hs, hs, H5P_DEFAULT, v->a);
+		H5Dclose(hd);	H5Sclose(hs);
 	}
 	H5Fclose(hf);
 	setCurrentFile(fileName);

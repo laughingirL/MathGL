@@ -19,6 +19,7 @@
  ***************************************************************************/
 #include <time.h>
 #include "mgl2/data.h"
+#include "mgl2/datac.h"
 #include "mgl2/eval.h"
 #include "mgl2/thread.h"
 #include "interp.hpp"
@@ -899,23 +900,24 @@ HMDT MGL_EXPORT mgl_data_solve(HCDT dat, mreal val, char dir, HCDT i0, int norm)
 	const mglData *d = dynamic_cast<const mglData *>(dat);
 	long p[4]={dat->GetNx(), dat->GetNy(), dat->GetNz(), norm};
 	const mreal *ii=0;
-	mglData *r=new mglData;
+	mglData *r=new mglData, id0;
+	if(i0 && !i)	{	id0.Set(i0);	i=&id0;	}	// <-- slow but should work
 	if(dir=='x' && p[0]>1)
 	{
 		r->Create(p[1],p[2]);
-		ii = (i && i->nx*i->ny==p[1]*p[2])?i->a:0;	// TODO non-mglData try to use i0
+		ii = (i && i->nx*i->ny==p[1]*p[2])?i->a:0;
 		mglStartThread(mgl_solve_x,0,p[1]*p[2],r->a,d?d->a:0,ii,p,dat,&val);
 	}
 	if(dir=='y' && p[1]>1)
 	{
 		r->Create(p[0],p[2]);
-		ii = (i && i->nx*i->ny==p[0]*p[2])?i->a:0;	// TODO non-mglData try to use i0
+		ii = (i && i->nx*i->ny==p[0]*p[2])?i->a:0;
 		mglStartThread(mgl_solve_y,0,p[0]*p[2],r->a,d?d->a:0,ii,p,dat,&val);
 	}
 	if(dir=='z' && p[2]>1)
 	{
 		r->Create(p[0],p[1]);
-		ii = (i && i->nx*i->ny==p[0]*p[1])?i->a:0;	// TODO non-mglData try to use i0
+		ii = (i && i->nx*i->ny==p[0]*p[1])?i->a:0;
 		mglStartThread(mgl_solve_z,0,p[0]*p[1],r->a,d?d->a:0,ii,p,dat,&val);
 	}
 	return r;
@@ -928,6 +930,7 @@ mreal MGL_EXPORT mgl_data_solve_1d(HCDT d, mreal val, int spl, long i0)
 	if(i0<0 || i0>=nx)	i0=0;
 	if(val==d->v(i0+1))	return i0+1;
 	const mglData *dd=dynamic_cast<const mglData *>(d);
+	const mglDataC *dc=dynamic_cast<const mglDataC *>(d);
 	if(dd)	for(long i=i0+1;i<nx;i++)
 	{
 		y1=dd->a[i-1];	y2=dd->a[i];
@@ -945,7 +948,26 @@ mreal MGL_EXPORT mgl_data_solve_1d(HCDT d, mreal val, int spl, long i0)
 			return x;
 		}
 	}
-	else 	for(long i=i0+1;i<nx;i++)	// TODO non-mglData use spl
+	else if(dc)	for(long i=i0+1;i<nx;i++)
+	{
+		y1=abs(dc->a[i-1]);	y2=abs(dc->a[i]);
+		if((y1-val)*(y2-val)<=0)
+		{
+			x = i-1 + (val-y1)/(y2-y1);
+			dual cx, ca = mglSpline1t<dual>(dc->a,nx,x,&cx);
+			a0 = a = abs(ca);	dx = a?(cx.real()*ca.real()+cx.imag()*ca.imag())/a:0;
+			if(spl)	for(unsigned k=0;fabs(a-val)>da || dx==0;)
+			{
+				x += (val-a)/dx;		k++;
+				ca = mglSpline1t<dual>(dc->a,nx,x,&cx);
+				a = abs(ca);	dx = a?(cx.real()*ca.real()+cx.imag()*ca.imag())/a:0;
+				if(k>=10)
+					return fabs(a-val)<fabs(a0-val) ? x:i-1 + (val-y1)/(y2-y1);
+			}
+			return x;
+		}
+	}
+	else 	for(long i=i0+1;i<nx;i++)
 	{
 		y1=d->v(i-1);	y2=d->v(i);
 		if((y1-val)*(y2-val)<=0)
@@ -1032,14 +1054,14 @@ mreal MGL_EXPORT mgl_data_linear(HCDT d, mreal x,mreal y,mreal z)
 mreal MGL_EXPORT mgl_data_spline(HCDT d, mreal x,mreal y,mreal z)
 {
 	const mglData *dd=dynamic_cast<const mglData *>(d);
-	if(!dd)	return 0;	// TODO non-mglData: don't support general arrays
+	if(!dd)	return 0;	// TODO non-mglData: spline
 	return dd->ny*dd->nz==1?mglSpline1st<mreal>(dd->a,dd->nx,x):mglSpline3st<mreal>(dd->a,dd->nx,dd->ny,dd->nz,x,y,z);
 }
 //-----------------------------------------------------------------------------
 mreal MGL_EXPORT mgl_data_spline_ext(HCDT d, mreal x,mreal y,mreal z, mreal *dx,mreal *dy,mreal *dz)
 {
 	const mglData *dd=dynamic_cast<const mglData *>(d);
-	if(!dd)	return 0;	// TODO non-mglData: don't support general arrays
+	if(!dd)	return 0;	// TODO non-mglData: spline
 	return mglSpline3t<mreal>(dd->a,dd->nx,dd->ny,dd->nz,x,y,z,dx,dy,dz);
 }
 //-----------------------------------------------------------------------------
