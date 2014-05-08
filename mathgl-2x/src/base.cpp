@@ -1033,7 +1033,7 @@ char mglBase::SetPenPal(const char *p, long *Id, bool pal)
 	strcpy(last_style,"__1 {dFFFF}k\0");
 
 	const char *s;
-	Arrow1 = Arrow2 = '_';	PenWidth = 1;
+	Arrow1 = Arrow2 = 0;	PenWidth = 1;
 	if(p && *p)
 	{
 //		const char *col = "wkrgbcymhRGBCYMHWlenuqpLENUQP";
@@ -1063,6 +1063,7 @@ char mglBase::SetPenPal(const char *p, long *Id, bool pal)
 				else	Arrow1 = p[i];
 			}
 		}
+		if(!Arrow1)	Arrow1='_';		if(!Arrow2)	Arrow2='_';
 		if(mglchr(p,'#'))
 		{
 			s = mglchr(mrk,mk);

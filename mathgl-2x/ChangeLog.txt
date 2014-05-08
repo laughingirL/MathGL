@@ -3,6 +3,7 @@
 * Add background image, which allow in particular semi-transparent background color.
 * Add function Rasterize() and MGL command 'rasterize' to save current image as background.
 * Add function LoadBackground() and MGL command 'background' to load image for background.
+* Add primitives to draw polygon and angle arc.
 * Greatly increase speed of formula parsing (i.e. of functions mglData::Modify(), mglData::Fill() and similar).
 * Add arrow style 'X'
 * Add manual dash style, like "{df090}"

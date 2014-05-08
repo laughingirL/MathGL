@@ -600,6 +600,38 @@ int MGL_NO_EXPORT mgls_rhomb(mglGraph *gr, long , mglArg *a, const char *k, cons
 	else res = 1;	gr->Self()->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_polygon(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+{
+	int res=0;	gr->Self()->SaveState(opt);
+	if(!strcmp(k,"nnnnn"))
+		gr->Polygon(mglPoint(a[0].v,a[1].v,NAN), mglPoint(a[2].v,a[3].v,NAN), iint(a[4].v));
+	else if(!strcmp(k,"nnnnns"))
+		gr->Polygon(mglPoint(a[0].v,a[1].v,NAN), mglPoint(a[2].v,a[3].v,NAN), iint(a[4].v), a[5].s.c_str());
+	else if(!strcmp(k,"nnnnnnn"))
+		gr->Polygon(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[3].v,a[4].v,a[5].v), iint(a[6].v));
+	else if(!strcmp(k,"nnnnnnns"))
+		gr->Polygon(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[3].v,a[4].v,a[5].v), iint(a[6].v), a[7].s.c_str());
+	else res = 1;	gr->Self()->LoadState();	return res;
+}
+//-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_angle(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+{
+	int res=0;	gr->Self()->SaveState(opt);
+	if(!strcmp(k,"nnnnn"))
+		gr->Angle(mglPoint(a[0].v,a[1].v,NAN), mglPoint(a[2].v,a[3].v,NAN), a[4].v);
+	else if(!strcmp(k,"nnnnns"))
+		gr->Angle(mglPoint(a[0].v,a[1].v,NAN), mglPoint(a[2].v,a[3].v,NAN), a[4].v, a[5].s.c_str());
+	else if(!strcmp(k,"nnnnnn"))
+		gr->Angle(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[3].v,a[4].v), a[5].v);
+	else if(!strcmp(k,"nnnnnns"))
+		gr->Angle(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[3].v,a[4].v), a[5].v, a[6].s.c_str());
+	else if(!strcmp(k,"nnnnnnnnnn"))
+		gr->Angle(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[3].v,a[4].v, a[5].v), mglPoint(a[6].v,a[7].v, a[8].v), a[9].v);
+	else if(!strcmp(k,"nnnnnnnnnns"))
+		gr->Angle(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[3].v,a[4].v, a[5].v), mglPoint(a[6].v,a[7].v, a[8].v), a[9].v, a[10].s.c_str());
+	else res = 1;	gr->Self()->LoadState();	return res;
+}
+//-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_dens(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;
@@ -2796,6 +2828,7 @@ mglCommand mgls_base_cmd[] = {
 	{"alpha","Switch on/off transparency","alpha [val]", mgls_alpha ,2},
 	{"alphadef","Set default transparency","alphadef val", mgls_alphadef ,2},
 	{"ambient","Set ambient light brightness","ambient val", mgls_ambient ,2},
+	{"angle","Draw angle arc","angle x0 y0 x1 y1 a ['fmt']|x0 y0 z0 x1 y1 a ['fmt']|x0 y0 z0 xr yr zr x1 y1 z1 a ['fmt']", mgls_angle ,13},
 	{"area","Draw area plot for 1D data","area Ydat ['fmt']|Xdat Ydat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_area ,7},
 	{"arrowsize","Set size of arrows","arrowsize val", mgls_arrowsize ,2},
 	{"ask","Define parameter from user input","ask $N 'question'", 0, 6},
@@ -2952,6 +2985,7 @@ mglCommand mgls_base_cmd[] = {
 	{"pipe","Draw flow pipes for vector field","pipe Udat Vdat ['fmt' rad num]|Xdat Ydat Udat Vdat ['fmt' rad num]|Udat Vdat Wdat ['fmt' rad num]|Xdat Ydat Zdat Udat Vdat Wdat ['fmt' rad num]", mgls_pipe ,11},
 	{"plot","Draw usual plot for 1D data","plot Ydat ['fmt']|Xdat Ydat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_plot ,7},
 	{"plotid","Set default filename","plotid 'name'", mgls_plotid ,2},
+	{"polygon","Draw polygon","polygon x1 y1 x2 y2 r ['fmt']|x1 y1 z1 x2 y2 z2 r ['fmt']", mgls_polygon ,13},
 	{"put","Put value (numeric or array) to given data element","put Dat val [i j k] | Dat Val [i j k]", mgls_put ,3},
 	{"putsfit","Print fitted formula","putsfit x y ['pre' 'font' size]|x y z ['pre' 'font' size]", mgls_putsfit ,15},
 	{"qo2d","Solve PDE in accompanied coordinates for 2d case","qo2d Res 'ham' IniRe IniIm Ray [r k0 Xout Yout]", mgls_qo2d ,4},

@@ -25,7 +25,7 @@
 17. Test mglDataC::Diffraction() + write sample + add rational function???
 
 19. Get true coordinates in CalcXYZ for curved equations too.
-20. add real(), imag(), conj() + accurate types in MGL + add 'complex' in MGL
+20. add real(), imag(), conj() + accurate types in MGL + add 'complex' in MGL ???
 
 24. Enable consecutive (as multiplication of matrices instead of single summary one) rotation of axis + the same in JS. Problem with widgets?!?
 28. Add FlowData() for getting flow thread coordinates as output array?!!
@@ -34,8 +34,6 @@
 34. Axis ticks as number+string, which are proportional to factor (like SetTicks('x',M_PI,"\pi");???
 36. Extra markers for '&' and '&#' signs ?!?
 38. Read JPEG files for Background() and mglData::Import()
-39. Polygon(mglPoint cnt, mglPoint rad, const char *col, mglPoint axis=mglPoint(NAN));
-40. Angle(mglPoint p0, mglPoint p1, mreal degree, const char *style); 't' for text label
 41. Fractals ???
 43. Spline for HCDT
 44. Exclude "TODO non-mglData"
@@ -71,6 +69,7 @@ C. Translate to Russian everything
 19. Docs about mgl_data_set_name, mgl_data_set_func
 20. Docs about mgl_suppress_warn
 21. Fortran versions for: mgl_data_info, mgl_datas_hdf, mgl_get_fit, mgl_get_mess, mgl_get_plotid
+22. Docs about Polygon, Angle.
 
 ============= UDAV =============
 
@@ -108,6 +107,8 @@ Buttons: new,load,save // newcmd,hide,annotation,collapse on/off,setup // calc. 
 16. New View() is used after each mouse click?!?
 
 17. Hex colors, hex masks, hex dashing into dialog of styles
+
+18. Add Polygon and Angle as primitives to toolbar
 
 ============= UNSURE ===========
 

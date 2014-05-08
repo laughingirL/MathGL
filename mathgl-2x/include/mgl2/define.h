@@ -264,6 +264,7 @@ typedef std::complex<mreal> dual;
 typedef std::complex<double> ddual;
 #if defined(_MSC_VER)
 #define mdual dual
+#define _Complex_I dual(0,1)
 #endif
 //-----------------------------------------------------------------------------
 extern "C" {

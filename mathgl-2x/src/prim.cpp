@@ -369,6 +369,85 @@ void MGL_EXPORT mgl_cones_(uintptr_t *gr, uintptr_t *y,	const char *pen, const c
 //	Ellipse & Rhomb
 //
 //-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_polygon(HMGL gr, double x1, double y1, double z1, double x2, double y2, double z2, int n, const char *stl)
+{
+	if(n<3)	return;	
+	long pal=0, n0,n1,n2,np,k1=-1,kp=-1;
+	static int cgid=1;	gr->StartGroup("Polygon",cgid++);
+	gr->SetPenPal(stl,&pal);
+	mreal c=gr->NextColor(pal);
+	mreal k=(gr->GetNumPal(pal)>1)?gr->NextColor(pal):gr->AddTexture('k');
+	bool fill = !mglchr(stl,'#'), box = mglchr(stl,'@') || !fill;
+	if(!fill)	k=c;
+	gr->Reserve(box?2*n+1:n+1);
+	if(mgl_isnan(z1) || mgl_isnan(z2))	z1=z2=2*gr->Max.z-gr->Min.z;
+	mglPoint p1(x1,y1,z1), p2(x2,y2,z2), d=p2-p1, u=!d, p,qq;
+	n0 = gr->AddPnt(p1,c,qq,-1,11);
+	u = (d.norm()/u.norm())*u;
+	n1 = np = gr->AddPnt(p2,c,qq,-1,11);
+	gr->AddActive(n0,0);	gr->AddActive(n1,1);
+	if(box) k1 = kp = gr->CopyNtoC(n1,k);
+	for(long i=1;i<n;i++)
+	{
+		p = p1+d*cos(2*M_PI*i/n)+u*sin(2*M_PI*i/n);
+		n2 = gr->AddPnt(p,c,qq,-1,11);
+		if(fill)	gr->trig_plot(n0,n1,n2);
+		if(box)
+		{
+			long kk = gr->CopyNtoC(n2,k);
+			gr->line_plot(k1, kk);	k1 = kk;
+		}
+		n1 = n2;
+	}
+	if(fill)	gr->trig_plot(n0,n2,np);
+	if(box)		gr->line_plot(k1, kp);
+	gr->EndGroup();
+}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_angle_ext(HMGL gr, double x0, double y0, double z0, double xr, double yr, double zr, double x1, double y1, double z1, double a, const char* stl)
+{
+	long n = long(fabs(a)/9+1.5);	a *= M_PI/180;
+	long pal=0, n1,n2;
+	static int cgid=1;	gr->StartGroup("Angle",cgid++);
+	gr->SetPenPal(stl,&pal);
+	mreal c=gr->NextColor(pal);
+	gr->Reserve(n+2);
+	if(mgl_isnan(z0) || mgl_isnan(z1))	z0=z1=2*gr->Max.z-gr->Min.z;
+	mglPoint p0(x0,y0,z0), p1(x1,y1,z1), d=p1-p0, u=mglPoint(xr,yr,zr)^d, p,qq;
+	if(u.norm()==0)	return;	// wrong vector orientation
+	u = (d.norm()/u.norm())*u;
+	gr->AddActive(gr->AddPnt(p0,gr->CDef,qq,-1,3),0);
+	n1 = gr->AddPnt(p1,c,qq,-1,11);	gr->AddActive(n1,1);
+	for(long i=1;i<n;i++)
+	{
+		p = p0+d*cos(a*i/(n-1))+u*sin(a*i/(n-1));
+		n2 = gr->AddPnt(p,c,qq,-1,11);
+		if(i==1)	gr->arrow_plot(n1,n2,gr->Arrow1);
+		if(i==n-1)	gr->arrow_plot(n2,n1,gr->Arrow2);
+		gr->line_plot(n1,n2);	n1 = n2;
+	}
+	gr->EndGroup();
+}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_angle(HMGL gr, double x0, double y0, double x1, double y1, double a, const char* stl)
+{	mgl_angle_ext(gr,x0,y0,NAN,0,0,1,x1,y1,NAN,a,stl);	}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_polygon_(uintptr_t* gr, mreal *x1, mreal *y1, mreal *z1, mreal *x2, mreal *y2, mreal *z2, int *n, const char *stl,int l)
+{	char *s=new char[l+1];	memcpy(s,stl,l);	s[l]=0;
+	mgl_polygon(_GR_,*x1,*y1,*z1,*x2,*y2,*z2,*n,s);	delete []s;	}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_angle_ext_(uintptr_t* gr, mreal *x0, mreal *y0, mreal *z0, mreal *x1, mreal *y1, mreal *z1, mreal *x2, mreal *y2, mreal *z2, mreal *r, const char *stl,int l)
+{	char *s=new char[l+1];	memcpy(s,stl,l);	s[l]=0;
+	mgl_angle_ext(_GR_,*x0,*y0,*z0,*x1,*y1,*z1,*x2,*y2,*z2,*r,s);	delete []s;	}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_angle_(uintptr_t* gr, mreal *x0, mreal *y0, mreal *x1, mreal *y1, mreal *a, const char *stl,int l)
+{	char *s=new char[l+1];	memcpy(s,stl,l);	s[l]=0;
+	mgl_angle(_GR_,*x0,*y0,*x1,*y1,*a,s);	delete []s;	}
+//-----------------------------------------------------------------------------
+//
+//	Ellipse & Rhomb
+//
+//-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_ellipse(HMGL gr, double x1, double y1, double z1, double x2, double y2, double z2, double r, const char *stl)
 {
 	const int n = 41;
@@ -419,12 +498,12 @@ void MGL_EXPORT mgl_rhomb(HMGL gr, double x1, double y1, double z1, double x2, d
 	if(!fill)	k=c;
 	gr->Reserve(8);
 	if(mgl_isnan(z1) || mgl_isnan(z2))	z1=z2=2*gr->Max.z-gr->Min.z;
-	mglPoint p1(x1,y1,z1), p2(x2,y2,z2), u=mglPoint(0,0,1)^(p1-p2), q=u^(p1-p2), p, s,qq;
+	mglPoint p1(x1,y1,z1), p2(x2,y2,z2), u=!(p1-p2), p, s,qq;
 	u = (r/u.norm())*u;	s = (p1+p2)/2.;
-	p = p1;	q = qq;	n1 = gr->AddPnt(p,c,qq,-1,11);
-	p = s+u;q = qq;	n2 = gr->AddPnt(p,b==c?c:k,qq,-1,11);
-	p = p2;	q = qq;	n3 = gr->AddPnt(p,b,qq,-1,11);
-	p = s-u;q = qq;	n4 = gr->AddPnt(p,b==c?c:k,qq,-1,11);
+	p = p1;		n1 = gr->AddPnt(p,c,qq,-1,11);
+	p = s+u;	n2 = gr->AddPnt(p,b==c?c:k,qq,-1,11);
+	p = p2;		n3 = gr->AddPnt(p,b,qq,-1,11);
+	p = s-u;	n4 = gr->AddPnt(p,b==c?c:k,qq,-1,11);
 	gr->AddActive(n1,0);	gr->AddActive(n2,2);	gr->AddActive(n3,1);
 	if(fill)	gr->quad_plot(n1,n2,n4,n3);
 	n1 = gr->CopyNtoC(n1,k);	n2 = gr->CopyNtoC(n2,k);
