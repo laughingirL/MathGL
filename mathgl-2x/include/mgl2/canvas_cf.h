@@ -60,6 +60,11 @@ void MGL_EXPORT mgl_adjust_ticks_(uintptr_t *gr, const char *dir, int);
 /// Set the ticks parameters
 void MGL_EXPORT mgl_set_ticks(HMGL gr, char dir, double d, int ns, double org);
 void MGL_EXPORT mgl_set_ticks_(uintptr_t *gr, char *dir, mreal *d, int *ns, mreal *org, int);
+/// Set the ticks parameters and specify ticks factor string
+void MGL_EXPORT mgl_set_ticks_fact(HMGL gr, char dir, double d, int ns, double org, const char *fact);
+void MGL_EXPORT mgl_set_ticks_factw(HMGL gr, char dir, double d, int ns, double org, const wchar_t *fact);
+void MGL_EXPORT mgl_set_ticks_fact_(uintptr_t *gr, char *dir, double *d, int *ns, double *org, const char *fact,int,int);
+
 /// Set ticks text (\n separated). Use "" to disable this feature.
 void MGL_EXPORT mgl_set_ticks_str(HMGL gr, char dir, const char *lbl, int add);
 void MGL_EXPORT mgl_set_ticks_str_(uintptr_t *gr, const char *dir, const char *lbl, int *add,int,int);

@@ -1899,6 +1899,7 @@ int MGL_NO_EXPORT mgls_xtick(mglGraph *gr, long n, mglArg *a, const char *k, con
 	if(!strcmp(k,"n"))	gr->SetTicks('x', a[0].v);
 	else if(!strcmp(k,"nn"))	gr->SetTicks('x', a[0].v, iint(a[1].v));
 	else if(!strcmp(k,"nnn"))	gr->SetTicks('x', a[0].v, iint(a[1].v), a[2].v);
+	else if(!strcmp(k,"nnns"))	gr->SetTicks('x', a[0].v, iint(a[1].v), a[2].v, a[3].w.c_str());
 	else if(!strcmp(k,"s"))		gr->SetTickTempl('x',a[0].w.c_str());
 	else if(!strcmp(k,"ds"))	gr->SetTicksVal('x', *(a[0].d), a[1].w.c_str());
 	else if(!strcmp(k,"dsn"))	gr->SetTicksVal('x', *(a[0].d), a[1].w.c_str(), a[2].v);
@@ -1922,6 +1923,7 @@ int MGL_NO_EXPORT mgls_ytick(mglGraph *gr, long n, mglArg *a, const char *k, con
 	if(!strcmp(k,"n"))	gr->SetTicks('y', a[0].v);
 	else if(!strcmp(k,"nn"))	gr->SetTicks('y', a[0].v, iint(a[1].v));
 	else if(!strcmp(k,"nnn"))	gr->SetTicks('y', a[0].v, iint(a[1].v), a[2].v);
+	else if(!strcmp(k,"nnns"))	gr->SetTicks('y', a[0].v, iint(a[1].v), a[2].v, a[3].w.c_str());
 	else if(!strcmp(k,"s"))		gr->SetTickTempl('y',a[0].w.c_str());
 	else if(!strcmp(k,"ds"))	gr->SetTicksVal('y', *(a[0].d), a[1].w.c_str());
 	else if(!strcmp(k,"dsn"))	gr->SetTicksVal('y', *(a[0].d), a[1].w.c_str(), a[2].v);
@@ -1945,6 +1947,7 @@ int MGL_NO_EXPORT mgls_ztick(mglGraph *gr, long n, mglArg *a, const char *k, con
 	if(!strcmp(k,"n"))	gr->SetTicks('z', a[0].v);
 	else if(!strcmp(k,"nn"))	gr->SetTicks('z', a[0].v, iint(a[1].v));
 	else if(!strcmp(k,"nnn"))	gr->SetTicks('z', a[0].v, iint(a[1].v), a[2].v);
+	else if(!strcmp(k,"nnns"))	gr->SetTicks('z', a[0].v, iint(a[1].v), a[2].v, a[3].w.c_str());
 	else if(!strcmp(k,"s"))		gr->SetTickTempl('z',a[0].w.c_str());
 	else if(!strcmp(k,"ds"))	gr->SetTicksVal('z', *(a[0].d), a[1].w.c_str());
 	else if(!strcmp(k,"dsn"))	gr->SetTicksVal('z', *(a[0].d), a[1].w.c_str(), a[2].v);
@@ -2360,6 +2363,7 @@ int MGL_NO_EXPORT mgls_ctick(mglGraph *gr, long , mglArg *a, const char *k, cons
 	int res=0;
 	if(!strcmp(k,"s"))	gr->SetTickTempl('c',a[0].w.c_str());
 	else if(!strcmp(k,"n"))	gr->SetTicks('c',a[0].v);
+	else if(!strcmp(k,"ns"))	gr->SetTicks('c',a[0].v,0,NAN,a[1].w.c_str());
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -2817,7 +2821,16 @@ int MGL_NO_EXPORT mgls_drawreg(mglGraph *gr, long , mglArg *a, const char *k, co
 {
 	int res=0;
 	if(!strcmp(k,""))	gr->SetDrawReg();
-	if(!strcmp(k,"nnn"))	gr->SetDrawReg(iint(a[0].v), iint(a[1].v), iint(a[2].v));
+	else if(!strcmp(k,"nnn"))	gr->SetDrawReg(iint(a[0].v), iint(a[1].v), iint(a[2].v));
+	else res = 1;	return res;
+}
+//-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_version(mglGraph *gr, long , mglArg *a, const char *k, const char *)
+{
+	int res=0;
+	char buf[32];	sprintf(buf,"MathGL version is 2.%g",MGL_VER2);
+	if(!strcmp(k,""))	gr->SetWarn(-1,buf);
+	else if(!strcmp(k,"s"))	res = mgl_check_version(a[0].s.c_str())?1:0;
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -2881,7 +2894,7 @@ mglCommand mgls_base_cmd[] = {
 	{"crange","Set color range","crange Dat [add] | c1 c2 [add]", mgls_crange ,14},
 	{"crop","Crop edge of data","crop Dat n1 n2 'dir'", mgls_crop ,16},
 	{"crust","Draw reconstructed surface for arbitrary data points","crust Xdat Ydat Zdat ['fmt']", mgls_crust ,0},
-	{"ctick","Set ticks for colorbar","ctick 'tmpl' | dx", mgls_ctick ,14},
+	{"ctick","Set ticks for colorbar","ctick 'tmpl' | dc ['factor']", mgls_ctick ,14},
 	{"cumsum","Cumulative summation","cumsum Dat 'dir'", mgls_cumsum ,16},
 	{"curve","Draw curve","curve x1 y1 dx1 dy1 x2 y2 dx2 dy2 ['fmt']|x1 y1 z1 dx1 dy1 dz1 x2 y2 z2 dx2 dy2 dz2 ['fmt']", mgls_curve ,13},
 	{"cut","Setup plot points cutting","cut val|x1 y1 z1 x2 y2 z2|'cond'", mgls_cut ,2},
@@ -3066,18 +3079,19 @@ mglCommand mgls_base_cmd[] = {
 	{"var","Create new 1D data and fill it in range","var Dat nx x1 [x2]", mgls_var ,4},
 	{"vect","Draw vector field","vect Udat Vdat ['fmt']|Xdat Ydat Udat Vdat ['fmt']|Udat Vdat Wdat ['fmt']|Xdat Ydat Zdat Udat Vdat Wdat ['fmt']", mgls_vect ,11},
 	{"vect3","Draw vector field at slices of 3D data","vect Udat Vdat Wdat ['fmt' sval]|Xdat Ydat Zdat Udat Vdat Wdat ['fmt' sval]", mgls_vect3 ,11},
+	{"version","Print MathGL version or check if it is valid","version |'ver'", mgls_version, 2},
 	{"view","Change view angles - use 'rotate' for plot rotation","view tetz tetx [tety]", mgls_view ,5},
 	{"write","Write current image to graphical file","write 'fname' [solid]", mgls_write ,2},
 	{"xlabel","Draw label for x-axis","xlabel 'txt' [pos]", mgls_xlabel ,12},
 	{"xrange","Set range for x-axis","xrange Dat [add] | x1 x2 [add]", mgls_xrange ,14},
-	{"xtick","Set ticks for x-axis","xtick dx [sx tx] | 'tmpl' | Xdat 'lbl' [add] | v1 'lbl1' ...", mgls_xtick,14},
+	{"xtick","Set ticks for x-axis","xtick dx [sx tx 'factor'] | 'tmpl' | Xdat 'lbl' [add] | v1 'lbl1' ...", mgls_xtick,14},
 	{"ylabel","Draw label for y-axis","ylabel 'txt' [pos]", mgls_ylabel,12},
 	{"yrange","Set range for y-axis","yrange Dat [add] | y1 y2 [add]", mgls_yrange,14},
-	{"ytick","Set ticks for y-axis","ytick dy [sy ty] | 'tmpl' | Ydat 'lbl' [add] | v1 'lbl1' ...", mgls_ytick,14},
+	{"ytick","Set ticks for y-axis","ytick dy [sy ty 'factor'] | 'tmpl' | Ydat 'lbl' [add] | v1 'lbl1' ...", mgls_ytick,14},
 	{"zlabel","Draw label for z-axis","zlabel 'txt' [pos]", mgls_zlabel,12},
 	{"zoom","Zoom plot region","zoom x1 x2 y1 y2", mgls_zoom,5},
 	{"zoomaxis","Zoom axis range","zoomaxis x1 x2|x1 x2 y1 y2|x1 x2 y1 y2 z1 z2|x1 x2 y1 y2 z1 z2 c1 c2", mgls_zoomaxis,14},
 	{"zrange","Set range for z-axis","yrange Dat [add] | z1 z2 [add]", mgls_zrange ,14},
-	{"ztick","Set ticks for z-axis","ztick dz [sz tz] | 'tmpl' | Zdat 'lbl' [add] | v1 'lbl1' ...", mgls_ztick,14},
+	{"ztick","Set ticks for z-axis","ztick dz [sz tz 'factor'] | 'tmpl' | Zdat 'lbl' [add] | v1 'lbl1' ...", mgls_ztick,14},
 {"","","",NULL,0}};
 //-----------------------------------------------------------------------------

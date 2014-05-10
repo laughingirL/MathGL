@@ -216,6 +216,13 @@ void MGL_EXPORT mgl_def_font_(const char *name, const char *path,int l,int n)
 	char *d=new char[n+1];		memcpy(d,path,n);	d[n]=0;
 	mglDefFont.Load(name,path);	delete []s;		delete []d;	}
 //-----------------------------------------------------------------------------
+int MGL_EXPORT mgl_check_version(const char *ver)
+{	double v=0;	int r = sscanf(ver,"2.%lg",&v);
+	return r<1 || v>MGL_VER2;	}
+int MGL_EXPORT mgl_check_version_(const char *ver, int l)
+{	char *s=new char[l+1];		memcpy(s,ver,l);	s[l]=0;
+	int r=mgl_check_version(s);	delete []s;	return r;	}
+//-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_start_group(HMGL gr, const char *s)	{	gr->StartAutoGroup(s);	}
 void MGL_EXPORT mgl_end_group(HMGL gr)	{	gr->EndGroup();	}
 void MGL_EXPORT mgl_start_group_(uintptr_t *gr, const char *name,int l)

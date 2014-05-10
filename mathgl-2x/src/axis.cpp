@@ -76,7 +76,7 @@ void mglCanvas::SetAxisStl(const char *stl, const char *tck, const char *sub)
 void mglCanvas::SetTickLen(mreal tlen, mreal stt)
 {	TickLen = tlen?tlen:0.02;	st_t=stt>0?stt:1;	}
 //-----------------------------------------------------------------------------
-void mglCanvas::SetTicks(char dir, mreal d, int ns, mreal org)
+void mglCanvas::SetTicks(char dir, mreal d, int ns, mreal org, const wchar_t *lbl)
 {
 	if(!strchr("xyzca",dir))	return;
 	mglAxis &aa = (dir=='x' ? ax : (dir=='y' ? ay : (dir=='z' ? az : ac)));
@@ -84,6 +84,8 @@ void mglCanvas::SetTicks(char dir, mreal d, int ns, mreal org)
 	if(aa.f==1)	aa.t.clear();
 	aa.d=d;	aa.f=0;	aa.ns=ns;	aa.o=org;
 	aa.txt.clear();
+	if(!lbl || *lbl==0)	aa.fact.clear();
+	else	aa.fact = lbl;
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::SetTicksVal(char dir, HCDT v, const wchar_t *lbl, bool add)
@@ -353,13 +355,21 @@ std::wstring MGL_NO_EXPORT mgl_format(mreal v1, mreal v2, bool zero)
 	return str;
 }
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_tick_text(mreal z, mreal z0, mreal d, std::wstring fmt, mreal v, int kind, wchar_t str[64])
+void MGL_NO_EXPORT mgl_tick_text(mreal z, mreal z0, mreal d, std::wstring fmt, mreal v, int kind, wchar_t str[64], const std::wstring &fact, mreal step)
 {
+	bool ff = step>0 && !fact.empty() && mgl_wcslen(str)+fact.length()<62;
+	if(ff)	z/=step;
 	mreal u = fabs(z)<d ? 0:z;
 	if((kind&1) && z>z0)	u = fabs(z-z0)<d ? 0:(z-z0);
 	if(kind==2 || (kind==3 && z>z0))	u /= v;
 	if(kind&1)	fmt = z>z0?L"@{(+"+fmt+L")}":L"%g";
 	mglprintf(str,64,fmt.c_str(), u);
+	if(ff)
+	{
+		if((str[1]!=0 || (str[0]!=L'0' && str[0]!=L'1')) && wcscmp(str,L"-1"))	wcscat(str,fact.c_str());
+ 		else if(str[0]==L'1')	wcscpy(str,fact.c_str());
+ 		else if(str[0]==L'-' && str[1]==L'1')	wcscpy(str+1,fact.c_str());
+	}
 	
 /*	mreal u = fabs(z)<d ? 0:z;
 	if((kind&1) && z>z0)	u = fabs(z-z0)<d ? 0:(z-z0);
@@ -448,7 +458,7 @@ void mglCanvas::LabelTicks(mglAxis &aa)
 		if(v0+aa.dv!=v0 && v1+aa.dv!=v1)	for(v=v0;v<=v1;v+=aa.dv)
 		{
 			if(aa.t.empty())
-				mgl_tick_text(v,v0,aa.dv/100,fmt,w,kind,buf);
+				mgl_tick_text(v,v0,aa.dv/100,fmt,w,kind,buf,aa.fact,aa.d);
 			else
 				mglprintf(buf, 64, aa.t.c_str(), fabs(v)<aa.dv/100 ? 0 : v);
 			mgl_wcstrim(buf);	aa.AddLabel(buf,v);

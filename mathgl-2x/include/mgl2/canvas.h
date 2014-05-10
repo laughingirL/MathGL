@@ -41,6 +41,7 @@ struct MGL_EXPORT mglAxis
 	mreal d;			///< Step for axis ticks (if positive) or its number (if negative).
 	int ns;			///< Number of axis subticks.
 	std::wstring t;	///< Tick template (set "" to use default one ("%.2g" in simplest case))
+	std::wstring fact;	///< Factor which should be placed after number (like L"\pi")
 	mglPoint dir;	///< Axis direction
 	mglPoint a,b;	///< Directions of over axis
 	mglPoint org;
@@ -251,7 +252,7 @@ using mglBase::Light;
 	/// Set time templates for ticks
 	void SetTickTime(char dir, mreal d=0, const char *t="");
 	/// Set the ticks parameters
-	void SetTicks(char dir, mreal d=0, int ns=0, mreal org=NAN);
+	void SetTicks(char dir, mreal d=0, int ns=0, mreal org=NAN, const wchar_t *lbl=0);
 	/// Auto adjust ticks
 	void AdjustTicks(const char *dir="xyzc", bool force=false);
 	/// Tune ticks

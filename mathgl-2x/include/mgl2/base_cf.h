@@ -25,6 +25,9 @@
 extern "C" {
 #endif
 
+/// Check if MathGL version is valid
+int MGL_EXPORT mgl_check_version(const char *ver);
+int MGL_EXPORT mgl_check_version_(const char *ver, int);
 /// Suppress printing warnings to stderr
 void MGL_EXPORT mgl_suppress_warn(int on);
 void MGL_EXPORT mgl_suppress_warn_(int *on);

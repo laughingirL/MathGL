@@ -216,9 +216,11 @@ public:
 	{	mgl_set_ticks_val(gr,dir,&v,lbl,add);	}
 	inline void SetTicksVal(char dir, const mglDataA &v, const wchar_t *lbl, bool add=false)
 	{	mgl_set_ticks_valw(gr,dir,&v,lbl,add);	}
-	/// Set the ticks parameters
-	inline void SetTicks(char dir, double d=0, int ns=0, double org=NaN)
-	{	mgl_set_ticks(gr, dir, d, ns, org);	}
+	/// Set the ticks parameters and string for its factor
+	inline void SetTicks(char dir, double d=0, int ns=0, double org=NaN, const char *factor="")
+	{	mgl_set_ticks_fact(gr, dir, d, ns, org, factor);	}
+	inline void SetTicks(char dir, double d, int ns, double org, const wchar_t *factor)
+	{	mgl_set_ticks_factw(gr, dir, d, ns, org, factor);	}
 	/// Auto adjust ticks
 	inline void Adjust(const char *dir="xyzc")
 	{	mgl_adjust_ticks(gr, dir);	}

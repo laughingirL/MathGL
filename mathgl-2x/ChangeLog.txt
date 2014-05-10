@@ -4,6 +4,7 @@
 * Add function Rasterize() and MGL command 'rasterize' to save current image as background.
 * Add function LoadBackground() and MGL command 'background' to load image for background.
 * Add primitives to draw polygon and angle arc.
+* Allow arbitrary factor for axis ticks (like, gr->SetTicks('x',M_PI,0,NAN,"\\pi");).
 * Greatly increase speed of formula parsing (i.e. of functions mglData::Modify(), mglData::Fill() and similar).
 * Add arrow style 'X'
 * Add manual dash style, like "{df090}"
@@ -13,6 +14,7 @@
 * Function mgl_data_subdata_ext() handle NULL argument(s). Add variants of mglData::SubData() with 1 and 2 arguments.
 * Use new s-hull version for triangulation.
 * Warning messages and information are printed to stderr until call of mgl_suppress_warn(true) will disable it.
+* Add function mgl_check_version() and MGL command 'version' to check if MathGL version is valid.
 
 2.2.2.1 Released 19 March 2014
 

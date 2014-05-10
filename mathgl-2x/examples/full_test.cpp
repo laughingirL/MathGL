@@ -70,7 +70,7 @@ void smgl_style(mglGraph *gr);
 void test(mglGraph *gr)
 {
 	mglParse par;
-	par.Execute(gr,"new a 10 15 20 'x^2+y^4+z^6-1'\nresize b a 400 400 400");
+	par.Execute(gr,"xrange -4*pi 4*pi:xtick pi 0 nan '\\pi':axis");
 //	par.Execute(gr,"alpha on:fsurf 'x' 'Bb{A1}cy{xFF000088}R'");
 //	gr->WriteSVG("test.svg");
 //	par.Execute(gr,"light on:addlegend 'r' 'r':legend");
