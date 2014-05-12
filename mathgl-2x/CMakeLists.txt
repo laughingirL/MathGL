@@ -146,6 +146,14 @@ endif(NOT MGL_SIN)
 if(HAVE_MEMRCHR)
 	ADD_DEFINITIONS("-DHAVE_MEMRCHR")
 endif(HAVE_MEMRCHR)
+include(CheckCSourceCompiles)
+CHECK_C_SOURCE_COMPILES(
+"
+    #include<complex.h>
+    int main(void){
+	_Complex double c;
+    }
+"    MGL_HAVE_C99_COMPLEX)
 
 if(enable-double)
 	set(MGL_USE_DOUBLE 1)
