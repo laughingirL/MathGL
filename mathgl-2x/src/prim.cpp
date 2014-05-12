@@ -319,7 +319,7 @@ void MGL_EXPORT mgl_cones_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, 
 			vx=x->v(i,mx);	vy=y->v(i,my);	vz=z->v(i,mz);
 			v0=y->v(i,0);	v1=i<nx-1 ? x->v(i+1,mx):x->v(i-1,mx);
 			d = i<nx-1 ? v1-vx : vx-v1;
-			x1 = vx + d/2*(dv-0.*gr->BarWidth);	// TODO
+			x1 = vx + d/2*(dv-0.*gr->BarWidth);
 			d *= 0.7*gr->BarWidth;
 			if(above)
 			{

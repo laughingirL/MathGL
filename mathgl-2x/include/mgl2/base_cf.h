@@ -69,7 +69,7 @@ void MGL_EXPORT mgl_set_flag_(uintptr_t *gr, int *val, unsigned long *flag);
 /// Change counter of HMGL uses (for advanced users only). Non-zero counter prevent automatic object removing.
 long MGL_EXPORT mgl_use_graph(HMGL gr, int inc);
 long MGL_EXPORT mgl_use_graph_(uintptr_t *gr, int *inc);
-void MGL_EXPORT mgl_set_rdc_acc(HMGL gr, int reduce);	// TODO
+void MGL_EXPORT mgl_set_rdc_acc(HMGL gr, int reduce);
 void MGL_EXPORT mgl_set_rdc_acc_(uintptr_t *gr, int *reduce);
 
 /// Start group of objects

@@ -754,24 +754,25 @@ mglDataC MGL_NO_EXPORT mglFormulaCalcC(std::wstring str, mglParser *arg, const s
 		res.Fill(a1.a[0], a2.a[0]);
 		return res;
 	}
-/*	n=mglFindInText(str,".");				// highest priority -- suffixes
-	if(n>=0)	// TODO enable later
+	n=mglFindInText(str,".");				// highest priority -- suffixes
+	if(n>=0)
 	{
-		dual x,y,z,k,v=NAN;
+		mreal x,y,z,k;
+		dual v=NAN;
 		mglDataC d = mglFormulaCalcC(str.substr(0,n), arg, head);
 		const std::wstring &p=str.substr(n+1);
 		if(!p.compare(L"a"))			v = d.a[0];
-		else if(!p.compare(L"fst"))	{	long i=-1,j=-1,l=-1;	v = d.Find(0,i,j,l);	}
-		else if(!p.compare(L"lst"))	{	long i=-1,j=-1,l=-1;	v = d.Last(0,i,j,l);	}
+ 		else if(!p.compare(L"fst"))	{	long i=-1,j=-1,l=-1;	v = d.Find(0,i,j,l);	}
+ 		else if(!p.compare(L"lst"))	{	long i=-1,j=-1,l=-1;	v = d.Last(0,i,j,l);	}
 		else if(!p.compare(L"nx"))	v=d.nx;
 		else if(!p.compare(L"ny"))	v=d.ny;
 		else if(!p.compare(L"nz"))	v=d.nz;
 		else if(!p.compare(L"max"))	v=d.Maximal();
 		else if(!p.compare(L"min"))	v=d.Minimal();
-		else if(!p.compare(L"pmax"))	{	v=d.Maximal();	v = v>0?v:0;	}
-		else if(!p.compare(L"pmin"))	{	v=d.MinimalPos();	}
-		else if(!p.compare(L"nmax"))	{	v=d.MaximalNeg();	}
-		else if(!p.compare(L"nmin"))	{	v=d.Minimal();	v = v<0?v:0;	}
+ 		else if(!p.compare(L"pmax"))	{	v=d.Maximal();	}
+// 		else if(!p.compare(L"pmin"))	{	v=d.MinimalPos();	}
+// 		else if(!p.compare(L"nmax"))	{	v=d.MaximalNeg();	}
+ 		else if(!p.compare(L"nmin"))	{	v=0;	}
 		else if(!p.compare(L"sum"))	v=d.Momentum('x',x,y);
 		else if(!p.compare(L"mx"))	{	d.Maximal(x,y,z);	v=x/d.nx;	}
 		else if(!p.compare(L"my"))	{	d.Maximal(x,y,z);	v=y/d.ny;	}
@@ -794,7 +795,7 @@ mglDataC MGL_NO_EXPORT mglFormulaCalcC(std::wstring str, mglParser *arg, const s
 		else if(!p.compare(L"ka"))	{	d.Momentum('a',x,y,z,k);v=k;	}
 		// if this is valid suffix when finish parsing (it can be mreal number)
 		if(mgl_isfin(v))	{	res.a[0] = v;	return res;	}
-	}*/
+	}
 	for(n=0;n<len;n++)	if(str[n]=='(')	break;
 	if(n>=len)		// this is number or variable
 	{

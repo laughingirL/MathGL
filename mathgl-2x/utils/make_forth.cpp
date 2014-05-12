@@ -73,10 +73,10 @@ const char *parse_name(char *name, char *fnc)
 		else if(!strncmp(arg[j],"const char *",12))	strcat(res, "ptr ");
 		else if(!strncmp(arg[j],"const wchar_t *",15))	strcat(res, "ptr ");
 		else if(!strncmp(arg[j],"char ",5)) 	strcat(res, "char ");
-		else if(!strncmp(arg[j],"long ",5)) 	strcat(res, "int ");	// TODO check
-		else if(!strncmp(arg[j],"uint32_t ",9))	strcat(res, "int ");	// TODO check
+		else if(!strncmp(arg[j],"long ",5)) 	strcat(res, "int ");
+		else if(!strncmp(arg[j],"uint32_t ",9))	strcat(res, "int ");
 		else if(!strncmp(arg[j],"int ",4))		strcat(res, "int ");
-		else if(!strncmp(arg[j],"mreal ",6))	strcat(res, "sf ");		// TODO check
+		else if(!strncmp(arg[j],"mreal ",6))	strcat(res, "sf ");
 		else if(!strncmp(arg[j],"double ",7))	strcat(res, "double ");
 		else if(!strncmp(arg[j],"gsl_vector *",12))	strcat(res, "ptr ");
 		else if(!strncmp(arg[j],"gsl_matrix *",12))	strcat(res, "ptr ");
@@ -108,7 +108,7 @@ bool parse_file(const char *fname, FILE *out)
 		if(strstr(buf, "TODO"))	continue;
 		if(strstr(buf, "//"))	continue;
 		if(strstr(buf, "...)"))	continue;
-		
+
 		// TODO following 5 lines enable later
 		if(strstr(buf, "* const *"))	continue;
 		if(strstr(buf, "uint64_t"))	continue;

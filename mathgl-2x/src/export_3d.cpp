@@ -656,7 +656,7 @@ bool mglCanvas::ExportMGLD(const char *fname, const char *descr)
 	fprintf(fp,"# Primitives: type n1 n2 n3 n4 id s w p\n");
 	for(size_t i=0;i<Prm.size();i++)
 	{
-		const mglPrim &p=Prm[i];	// TODO: check if better save p.m instead of p.s,p.p
+		const mglPrim &p=Prm[i];
 		fprintf(fp,"%d\t%ld\t%ld\t%ld\t%ld\t%d\t%g\t%g\t%g\n", p.type, p.n1, p.n2, p.n3, p.n4, p.id, p.s==p.s?p.s:0, p.w==p.w?p.w:0, p.p==p.p?p.p:0);
 	}
 	fprintf(fp,"# Textures: smooth alpha colors\n");

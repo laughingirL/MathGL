@@ -1276,7 +1276,7 @@ void MGL_EXPORT mgl_boxplot_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const c
 		x2 = x1 + gr->BarWidth*dd;
 		mreal c = sh ? gr->NextColor(pal,i):gr->CDef;
 		register long n1,n2;
-		// TODO why boxplot fail if I use for()
+
 		n1=gr->AddPnt(mglPoint(x1,b[i],zVal),c);	// horizontal lines
 		n2=gr->AddPnt(mglPoint(x2,b[i],zVal),c);
 		gr->line_plot(n1,n2);

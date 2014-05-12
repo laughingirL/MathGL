@@ -406,7 +406,7 @@ void MGL_EXPORT mgl_dots_ca_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_
 //-----------------------------------------------------------------------------
 long MGL_NO_EXPORT mgl_crust(long n,mglPoint *pp,long **nn,mreal ff);
 HMDT MGL_EXPORT mgl_triangulation_3d(HCDT x, HCDT y, HCDT z)
-{	// TODO: should be used s-hull or q-hull
+{
 	mglData *nums=0;
 	long n = x->GetNx(), m;
 	if(y->GetNx()!=n || z->GetNx()!=n)	return nums;
@@ -474,8 +474,8 @@ MGL_NO_EXPORT void *mgl_grid_t(void *par)
 #pragma omp parallel for
 #endif
 	for(long i0=t->id;i0<t->n;i0+=mglNumThr)
-	{	// TODO check if rounding needed
-		register long k1 = long(d[3*i0]), k2 = long(d[3*i0+1]), k3 = long(d[3*i0+2]);
+	{
+		register long k1 = long(d[3*i0]+0.5), k2 = long(d[3*i0+1]+0.5), k3 = long(d[3*i0+2]+0.5);
 		mreal dxu,dxv,dyu,dyv;
 		mreal z1,z2,z3;
 		

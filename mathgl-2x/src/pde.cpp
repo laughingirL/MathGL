@@ -601,7 +601,7 @@ HADT MGL_EXPORT mgl_qo3d_func_c(ddual (*ham)(mreal u, mreal x, mreal y, mreal z,
 		}
 		mglStartThread(mgl_qo3d_post,0,2*nx,0,0,0,0,&tmp);
 		// Step for field
-		ddual dt = ddual(0, -ra[k].dt*k0);	// TODO: this part can be paralleled
+		ddual dt = ddual(0, -ra[k].dt*k0);
 #pragma omp parallel
 		{
 			void *wsx = mgl_fft_alloc_thr(2*nx);

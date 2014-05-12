@@ -34,7 +34,7 @@
 class MGL_EXPORT mglDataC : public mglDataA
 {
 public:
-
+using mglDataA::Momentum;
 	long nx;		///< number of points in 1st dimensions ('x' dimension)
 	long ny;		///< number of points in 2nd dimensions ('y' dimension)
 	long nz;		///< number of points in 3d dimensions ('z' dimension)

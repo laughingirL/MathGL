@@ -405,7 +405,7 @@ void MGL_EXPORT mgl_cont_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const c
 #pragma omp parallel for
 		for(long j=1;j<m;j++)	memcpy(xx.a+n*j,xx.a,n*sizeof(mreal));
 #pragma omp parallel for
-		for(long j=0;j<m;j++)	// TODO check which parallel is faster
+		for(long j=0;j<m;j++)
 		{	mreal t=y->v(j);	for(long i=0;i<n;i++)	yy.a[i+n*j]=t;	}
 		x = &xx;	y = &yy;
 	}
@@ -612,7 +612,7 @@ void MGL_EXPORT mgl_contf_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const 
 #pragma omp parallel for
 		for(long j=1;j<m;j++)	memcpy(xx.a+n*j,xx.a,n*sizeof(mreal));
 #pragma omp parallel for
-		for(long j=0;j<m;j++)	// TODO check which parallel is faster
+		for(long j=0;j<m;j++)
 		{	mreal t=y->v(j);	for(long i=0;i<n;i++)	yy.a[i+n*j]=t;	}
 		x = &xx;	y = &yy;
 	}
@@ -719,7 +719,7 @@ void MGL_EXPORT mgl_contd_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const 
 #pragma omp parallel for
 		for(long j=1;j<m;j++)	memcpy(xx.a+n*j,xx.a,n*sizeof(mreal));
 #pragma omp parallel for
-		for(long j=0;j<m;j++)	// TODO check which parallel is faster
+		for(long j=0;j<m;j++)
 		{	mreal t=y->v(j);	for(long i=0;i<n;i++)	yy.a[i+n*j]=t;	}
 		x = &xx;	y = &yy;
 	}
@@ -840,7 +840,7 @@ void MGL_EXPORT mgl_contv_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const 
 #pragma omp parallel for
 		for(long j=1;j<m;j++)	memcpy(xx.a+n*j,xx.a,n*sizeof(mreal));
 #pragma omp parallel for
-		for(long j=0;j<m;j++)	// TODO check which parallel is faster
+		for(long j=0;j<m;j++)
 		{	mreal t=y->v(j);	for(long i=0;i<n;i++)	yy.a[i+n*j]=t;	}
 		x = &xx;	y = &yy;
 	}
@@ -1505,7 +1505,7 @@ void MGL_EXPORT mgl_axial_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const 
 #pragma omp parallel for
 		for(long j=1;j<m;j++)	memcpy(xx.a+n*j,xx.a,n*sizeof(mreal));
 #pragma omp parallel for
-		for(long j=0;j<m;j++)	// TODO check which parallel is faster
+		for(long j=0;j<m;j++)
 		{	mreal t=y->v(j);	for(long i=0;i<n;i++)	yy.a[i+n*j]=t;	}
 		x = &xx;	y = &yy;
 	}

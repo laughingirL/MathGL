@@ -393,10 +393,11 @@ int mglParser::PreExec(mglGraph *, long k, std::wstring *arg, mglArg *a)
 				nn = b->nx*b->ny;
 				for(i=2,j=0;i<k;i++)
 				{
+					if(nn!=a[i-1].d->GetNx()*a[i-1].d->GetNy())	continue;
 					b = dynamic_cast<mglData *>(a[i-1].d);
-					if(b==0 || nn!=b->nx*b->ny)	continue;	// TODO non-mglData partial copy
-					memcpy(v->a+j*nn,b->a,nn*(b->nz)*sizeof(mreal));
-					j+=b->nz;
+					if(b)	memcpy(v->a+j*nn,b->a,nn*(b->nz)*sizeof(mreal));
+					else	for(long ii=0;ii<a[i-1].d->GetNN();ii++)	v->a[ii+j*nn] = a[i-1].d->vthr(ii);
+					j+=a[i-1].d->GetNz();
 				}
 			}
 			else
@@ -405,10 +406,12 @@ int mglParser::PreExec(mglGraph *, long k, std::wstring *arg, mglArg *a)
 				nn = b->nx;
 				for(i=2,j=0;i<k;i++)
 				{
+					if(nn!=a[i-1].d->GetNx())	continue;
 					b = dynamic_cast<mglData *>(a[i-1].d);
-					if(b==0 || nn!=b->nx)	continue;	// TODO non-mglData partial copy
-					memcpy(v->a+j*nn,b->a,nn*(b->ny)*sizeof(mreal));
-					j+=b->ny;
+					long nny = a[i-1].d->GetNy();
+					if(b)	memcpy(v->a+j*nn,b->a,nn*nny*sizeof(mreal));
+					else	for(long ii=0;ii<nn*nny;ii++)	v->a[ii+j*nn] = a[i-1].d->vthr(ii);
+					j+=nny;
 				}
 			}
 		}
@@ -630,7 +633,7 @@ int mglParser::Parse(mglGraph *gr, std::wstring str, long pos)
 			int r = ch-'0';
 			if(ch>='a' && ch<='z')	r = 10+ch-'a';
 //			int r = int(a[0].v);
-			if(arg[1][1]==0 && (r>=0 && r<40))	// TODO: check this
+			if(arg[1][1]==0 && (r>=0 && r<40))
 			{
 				if(a[1].type==0)
 				{
