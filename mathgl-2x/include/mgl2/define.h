@@ -88,18 +88,11 @@ typedef unsigned long uintptr_t;
 #define snprintf _snprintf
 #endif
 
-#if defined(_MSC_VER) || defined(__BORLANDC__)
+#if !MGL_SYS_NAN
 #include <float.h>
 #include <math.h>
-
-#ifdef WIN32
 const unsigned long long mgl_nan[2] = {0x7fffffffffffffff, 0x7fffffff};
 const unsigned long long mgl_inf[2] = {0x7ff0000000000000, 0x7f800000};
-#else
-const unsigned long mgl_nan[2] = {0x7fffffffffffffff, 0x7fffffff};
-const unsigned long mgl_inf[2] = {0x7ff0000000000000, 0x7f800000};
-#endif
-
 #define NANd    (*(double*)mgl_nan)
 #define NANf    (*(float*)(mgl_nan+1))
 #define INFd    (*(double*)mgl_inf)
@@ -120,8 +113,7 @@ const unsigned long mgl_inf[2] = {0x7ff0000000000000, 0x7f800000};
 #define INFINITY	INFf
 #endif
 #endif
-
-#endif
+#endif	// !MGL_SYS_NAN
 
 #ifndef M_PI
 #define M_PI	3.14159265358979323846  /* pi */
@@ -247,7 +239,7 @@ enum{	// Codes for warnings/messages
 #define MGL_ONESIDED 		0x080000 	///< Render only front side of surfaces if output format supports (for debugging)
 #define MGL_NO_ORIGIN 		0x100000 	///< Don't draw tick labels at axis origin
 //-----------------------------------------------------------------------------
-#if !defined(_MSC_VER) && MGL_HAVE_C99_COMPLEX
+#if MGL_HAVE_C99_COMPLEX
 #include <complex.h>
 #if MGL_USE_DOUBLE
 typedef double _Complex mdual;
@@ -262,7 +254,7 @@ extern float mgl_cos[360];	///< contain cosine with step 1 degree
 #include <complex>
 typedef std::complex<mreal> dual;
 typedef std::complex<double> ddual;
-#if defined(_MSC_VER) || !MGL_HAVE_C99_COMPLEX
+#if !MGL_HAVE_C99_COMPLEX
 #define mdual dual
 #define _Complex_I dual(0,1)
 #endif

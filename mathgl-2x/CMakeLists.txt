@@ -148,15 +148,19 @@ if(HAVE_MEMRCHR)
 endif(HAVE_MEMRCHR)
 
 include(CheckCXXSourceCompiles)
-unset(HAVE_C99_COMPLEX CACHE)
-set(MGL_HAVE_C99_COMPLEX 0)
+#unset(MGL_HAVE_C99_COMPLEX CACHE)
 CHECK_CXX_SOURCE_COMPILES(
 "#include <complex.h>
-int main(int argc, char *args[])
-{double _Complex a;return 0;}" HAVE_C99_COMPLEX)
-if(HAVE_C99_COMPLEX)
-	set(MGL_HAVE_C99_COMPLEX 1)
-endif(HAVE_C99_COMPLEX)
+int main(){double _Complex a;return 0;}" MGL_HAVE_C99_COMPLEX)
+if(NOT MGL_HAVE_C99_COMPLEX)
+	set(MGL_HAVE_C99_COMPLEX 0)
+endif(NOT MGL_HAVE_C99_COMPLEX)
+CHECK_CXX_SOURCE_COMPILES(
+"#include <math.h>
+int main(){double a=NAN, b=INFINITY;return 0;}" MGL_HAVE_NAN_INF)
+if(NOT MGL_HAVE_NAN_INF)
+	set(MGL_HAVE_NAN_INF 0)
+endif(NOT MGL_HAVE_NAN_INF)
 
 if(enable-double)
 	set(MGL_USE_DOUBLE 1)

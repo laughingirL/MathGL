@@ -71,7 +71,7 @@ C. Translate to Russian everything
 22. Docs about Polygon, Angle.
 23. Docs about mgl_check_version() and 'version'
 24. Docs about new SetTicks() and mgl_set_ticks_fact*()
-25. Notice about MGL_HAVE_C99_COMPLEX into "Installation" section.
+25. Notice about MGL_HAVE_C99_COMPLEX, MGL_SYS_NAN into "Installation" section.
 26. Style 'f' for fixed format (like "%.2f") in Table() and Label().
 
 ============= UDAV =============
