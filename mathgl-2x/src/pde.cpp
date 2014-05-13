@@ -213,6 +213,7 @@ HMDT MGL_EXPORT mgl_ode_solve_ex(void (*func)(const mreal *x, mreal *dx, void *p
 	mreal *x=new mreal[n], *k1=new mreal[n], *k2=new mreal[n], *k3=new mreal[n], *v=new mreal[n], hh=dt/2;
 	register long i,k;
 	// initial conditions
+#pragma omp parallel for
 	for(i=0;i<n;i++)	x[i] = res->a[i] = x0[i];
 	// Runge Kutta scheme of 4th order
 	for(k=1;k<nt;k++)

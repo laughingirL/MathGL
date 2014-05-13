@@ -839,7 +839,8 @@ void mglCanvas::Table(mreal x, mreal y, HCDT val, const wchar_t *text, const cha
 //	mreal pos=SaveState(opt);
 	mreal vw = SaveState(opt);
 	static int cgid=1;	StartGroup("Table",cgid++);
-	bool grid = mglchr(frm,'#'), eqd = mglchr(frm,'='), lim = mglchr(frm,'|');
+	bool grid = mglchr(frm,'#'), eqd = mglchr(frm,'=');
+	bool fix = mglchr(frm,'f'), lim = mglchr(frm,'|');
 	if(mgl_isnan(vw))	vw=1;	else 	lim = true;
 	if(!text)	text=L"";
 	if(x<0)	x=0; 	if(y<0)	y=0; 	if(y>1)	y=1;
@@ -852,10 +853,10 @@ void mglCanvas::Table(mreal x, mreal y, HCDT val, const wchar_t *text, const cha
 		*buf=0;
 		for(j=0;j+1<m;j++)
 		{
-			mglprintf(sng,32,L"%.3g\n",val->v(i,j));
+			mglprintf(sng,32,fix?L"%.2f\n":L"%.3g\n",val->v(i,j));
 			wcscat(buf,sng);
 		}
-		mglprintf(sng,32,L"%.3g",val->v(i,m-1));
+		mglprintf(sng,32,fix?L"%.2f":L"%.3g",val->v(i,m-1));
 		wcscat(buf,sng);		str.push_back(buf);
 	}
 	delete []buf;

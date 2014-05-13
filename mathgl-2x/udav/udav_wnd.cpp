@@ -35,6 +35,7 @@
 #include <QTextCodec>
 #include <QTranslator>
 #include <QMimeData>
+#include <QUrl>
 //-----------------------------------------------------------------------------
 #if !defined(WIN32) && !defined(__APPLE__)
 #include <X11/Xlib.h>

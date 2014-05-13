@@ -9,6 +9,7 @@
 * Add arrow style 'X'
 * Add manual dash style, like "{df090}"
 * Add manual mask style, like "{s00ff00182424f800}"
+* Add style 'f' for printing numbers in fixed format for functions Table() and Label().
 * Add function "random(dat)" to the list of known functions for formula parsing
 * Spline() now use 5-th order polynomials to keep continuity of 2nd derivative too.
 * Function mgl_data_subdata_ext() handle NULL argument(s). Add variants of mglData::SubData() with 1 and 2 arguments.

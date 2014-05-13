@@ -812,6 +812,7 @@ void MGL_EXPORT mgl_labelw_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const wchar_t *t
 	static int cgid=1;	gr->StartGroup("Label",cgid++);
 	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();	m = z->GetNy() > m ? z->GetNy() : m;
 
+	bool fix = mglchr(fnt,'f');
 	mglPoint q(NAN);
 	wchar_t tmp[32];
 	for(long j=0;j<m;j++)
@@ -830,9 +831,9 @@ void MGL_EXPORT mgl_labelw_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const wchar_t *t
 				{	buf += text[k];	continue;	}
 				else if(text[k+1]=='%')	{	buf+='%';	k++;	continue;	}
 				else if(text[k+1]=='n')	mglprintf(tmp,32,L"%ld",i);
-				else if(text[k+1]=='x')	mglprintf(tmp,32,L"%.2g",xx);
-				else if(text[k+1]=='y')	mglprintf(tmp,32,L"%.2g",yy);
-				else if(text[k+1]=='z')	mglprintf(tmp,32,L"%.2g",zz);
+				else if(text[k+1]=='x')	mglprintf(tmp,32,fix?L"%.2f":L"%.2g",xx);
+				else if(text[k+1]=='y')	mglprintf(tmp,32,fix?L"%.2f":L"%.2g",yy);
+				else if(text[k+1]=='z')	mglprintf(tmp,32,fix?L"%.2f":L"%.2g",zz);
 				else {	buf+='%';	continue;	}
 				buf += tmp;	k++;
 			}
