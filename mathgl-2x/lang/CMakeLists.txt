@@ -8,7 +8,32 @@ set(mgl_clean_files "")
 
 SET_SOURCE_FILES_PROPERTIES(mathgl.i numpy.i PROPERTIES CPLUSPLUS ON)
 
-if(MGL_HAVE_PYTHON)
+FIND_PACKAGE(SWIG)
+if(NOT SWIG_FOUND)
+	message(SEND_ERROR "Couldn't find swig needed for interfaces compiling.")
+endif(NOT SWIG_FOUND)
+INCLUDE(${SWIG_USE_FILE})
+
+if(enable-python)
+	set(Python_ADDITIONAL_VERSIONS 2.7)
+	FIND_PACKAGE(PythonInterp)
+	if(NOT PYTHONINTERP_FOUND)
+		message(SEND_ERROR "Couldn't find python interpreter.")
+	endif(NOT PYTHONINTERP_FOUND)
+	FIND_PACKAGE(PythonLibs)
+	if(NOT PYTHONLIBS_FOUND)
+		message(SEND_ERROR "Couldn't find python development libraries.")
+	endif(NOT PYTHONLIBS_FOUND)
+	execute_process(
+		COMMAND ${PYTHON_EXECUTABLE} -c "import numpy; print numpy.get_include()"
+		OUTPUT_VARIABLE NUMPY_INCLUDE_PATH
+		RESULT_VARIABLE NUMPY_ERR
+		OUTPUT_STRIP_TRAILING_WHITESPACE
+	)
+	if(NOT NUMPY_INCLUDE_PATH)
+		message(SEND_ERROR "Couldn't find numpy.")
+	endif(NOT NUMPY_INCLUDE_PATH)
+
 	include_directories(${PYTHON_INCLUDE_DIR})
 	execute_process(
 		COMMAND ${PYTHON_EXECUTABLE} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(prefix='${CMAKE_INSTALL_PREFIX}')"
@@ -29,9 +54,14 @@ if(MGL_HAVE_PYTHON)
 	install(FILES ${MathGL_BINARY_DIR}/lang/mathgl.py ${MathGL_BINARY_DIR}/lang/mathgl.pyc DESTINATION ${MGL_PYTHON_SITE_PACKAGES})
 	install (TARGETS _mathgl LIBRARY DESTINATION ${MGL_PYTHON_SITE_PACKAGES})
 	set(mgl_clean_files ${mgl_clean_files} mathgl.py)
-endif(MGL_HAVE_PYTHON)
+endif(enable-python)
 
-if(MGL_HAVE_LUA)
+if(enable-lua)
+	INCLUDE(FindLua51)
+	if(NOT LUA51_FOUND)
+		message(SEND_ERROR "Couldn't find Lua 5.1 library.")
+	endif(NOT LUA51_FOUND)
+
 	include_directories(${LUA_INCLUDE_DIR})
 	set(SWIG_MODULE_mgl-lua_EXTRA_DEPS numpy.i ${src_imp_dep})
 	SWIG_ADD_MODULE(mgl-lua lua mathgl.i)
@@ -39,9 +69,26 @@ if(MGL_HAVE_LUA)
 	set_target_properties(mgl-lua PROPERTIES PREFIX "" BUILD_WITH_INSTALL_RPATH ON)
 
 	install (TARGETS mgl-lua LIBRARY DESTINATION ${MGL_LIB_INSTALL_DIR})
-endif(MGL_HAVE_LUA)
+endif(enable-lua)
 
-if(MGL_HAVE_OCTAVE)
+if(enable-octave)
+	find_program(oct_prog octave-config)
+	if(NOT oct_prog)
+		message(SEND_ERROR "Couldn't find octave-config needed for octave interfaces compiling.")
+	endif(NOT oct_prog)
+	find_program(oct_exec octave)
+	if(NOT oct_exec)
+		message(SEND_ERROR "Couldn't find octave needed for octave interfaces compiling.")
+	endif(NOT oct_exec)
+	find_program(oct_mk mkoctfile)
+	if(NOT oct_mk)
+		message(SEND_ERROR "Couldn't find mkoctfile needed for octave interfaces compiling.")
+	endif(NOT oct_mk)
+	find_program(oct_tar tar)
+	if(NOT oct_tar)
+		message(SEND_ERROR "Couldn't find tar needed for octave interfaces creation.")
+	endif(NOT oct_tar)
+
 	execute_process(COMMAND ${oct_prog} -p CANONICAL_HOST_TYPE
 	OUTPUT_VARIABLE oct_host
 	OUTPUT_STRIP_TRAILING_WHITESPACE)
@@ -82,5 +129,5 @@ message(STATUS "${oct_prog} ${oct_host} ${oct_api}")
 			WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/lang )")
 	endif(enable-octave-install)
 	set(mgl_clean_files ${mgl_clean_files} mathgl)
-endif(MGL_HAVE_OCTAVE)
+endif(enable-octave)
 set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "${mgl_clean_files}")
