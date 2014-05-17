@@ -89,7 +89,7 @@ public:
 	const mglStack<T> &operator=(const mglStack<T> &st)
 	{
 		pb=st.pb;	clear();	reserve(st.n);
-		for(size_t i=0;i<m;i++)	memcpy(dat[i],st.dat[i],(1<<pb)*sizeof(T));
+		for(size_t i=0;i<st.m;i++)	memcpy(dat[i],st.dat[i],(1<<pb)*sizeof(T));
 		n = st.n;	return st;
 	}
 };
@@ -220,7 +220,7 @@ struct MGL_EXPORT mglTexture
 	void Set(const char *cols, int smooth=0,mreal alpha=1);
 	void Set(HCDT val, const char *cols);
 	void GetC(mreal u,mreal v,mglPnt &p) const;
-	mglColor GetC(mreal u,mreal v=0) const;
+	mglColor GetC(mreal u,mreal v=0) const __attribute__((pure));
 	inline bool IsSame(const mglTexture &t) const
 	{	return n==t.n && !memcmp(col,t.col,MGL_TEXTURE_COLOURS*sizeof(mglColor));	}
 	void GetRGBA(unsigned char *f) const;
@@ -382,13 +382,13 @@ public:
 	/// Set default font size
 	inline void SetFontSize(mreal val)	{	FontSize=val>0 ? val:-FontSize*val;	}
 	inline mreal GetFontSize() const	{	return FontSize;	}
-	mreal TextWidth(const char *text, const char *font, mreal size) const;
-	mreal TextWidth(const wchar_t *text, const char *font, mreal size) const;
-	mreal TextHeight(const char *font, mreal size) const;
+	mreal TextWidth(const char *text, const char *font, mreal size) const __attribute__((pure));
+	mreal TextWidth(const wchar_t *text, const char *font, mreal size) const __attribute__((pure));
+	mreal TextHeight(const char *font, mreal size) const __attribute__((pure));
 	inline mreal FontFactor() const		{	return font_factor;	}
-	virtual mreal GetRatio() const;
-	virtual int GetWidth() const;
-	virtual int GetHeight() const;
+	virtual mreal GetRatio() const __attribute__((const));
+	virtual int GetWidth() const __attribute__((const));
+	virtual int GetHeight() const __attribute__((const));
 
 	/// Set to use or not text rotation
 	inline void SetRotatedText(bool val)	{	set(val,MGL_ENABLE_RTEXT);	}
@@ -462,7 +462,7 @@ public:
 	inline mreal GetC(long s,mreal z,bool scale = true) const
 	{	return s+(scale?GetA(z):(z>0?z/MGL_FEPSILON:0));	}
 	/// Get alpha value depending on single variable a
-	mreal GetA(mreal a) const;
+	mreal GetA(mreal a) const __attribute__((pure));
 	/// Set pen/palette
 	char SetPenPal(const char *stl, long *id=0, bool pal=true);
 	/// Add texture (like color scheme) and return the position of first color
@@ -488,7 +488,7 @@ public:
 	inline mreal mark_size()	{	return MarkSize*font_factor;	}
 //	inline char last_color()	{	return last_style[1];	}
 	inline const char *last_line()	{	return last_style;	}
-	int PrmCmp(long i, long j) const;	// compare 2 primitives with indexes i,j
+	int PrmCmp(long i, long j) const __attribute__((pure));	// compare 2 primitives with indexes i,j
 
 protected:
 	mglPoint OMin;		///< Lower edge for original axis (before scaling)

@@ -116,16 +116,16 @@ void MGL_EXPORT mglStartThreadV(void *(*func)(void *), long n, mreal *a, const v
 	}
 }
 //-----------------------------------------------------------------------------
-mreal mglSpline3s(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z)
+mreal MGL_EXPORT_PURE mglSpline3s(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z)
 {	return mglSpline3st<mreal>(a,nx,ny,nz,x,y,z);	}
 //-----------------------------------------------------------------------------
-mreal mglSpline3(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z,mreal *dx, mreal *dy, mreal *dz)
+mreal MGL_EXPORT_PURE mglSpline3(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z,mreal *dx, mreal *dy, mreal *dz)
 {	return mglSpline3t<mreal>(a,nx,ny,nz,x,y,z,dx,dy,dz);	}
 //-----------------------------------------------------------------------------
-mreal mglLinear(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z)
+mreal MGL_EXPORT_PURE mglLinear(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z)
 {	return mglLineart<mreal>(a,nx,ny,nz,x,y,z);	}
 //-----------------------------------------------------------------------------
-double mgl_ipow(double x,int n)
+double MGL_EXPORT_CONST mgl_ipow(double x,int n)
 {
 	double t;
 	if(n==2)	return x*x;
@@ -136,7 +136,7 @@ double mgl_ipow(double x,int n)
 	if(n%2==1)	t *= x;
 	return t;
 }
-double mgl_ipow_(mreal *x,int *n)	{	return mgl_ipow(*x,*n);	}
+double MGL_EXPORT_PURE mgl_ipow_(mreal *x,int *n)	{	return mgl_ipow(*x,*n);	}
 //-----------------------------------------------------------------------------
 double mgl_get_time(const char *time, const char *fmt)
 {
@@ -923,7 +923,7 @@ HMDT MGL_EXPORT mgl_data_solve(HCDT dat, mreal val, char dir, HCDT i0, int norm)
 	return r;
 }
 //-----------------------------------------------------------------------------
-mreal MGL_EXPORT mgl_data_solve_1d(HCDT d, mreal val, int spl, long i0)
+mreal MGL_EXPORT_PURE mgl_data_solve_1d(HCDT d, mreal val, int spl, long i0)
 {
 	mreal x=0, y1, y2, a, a0, dx=0, da = 1e-5*(val?fabs(val):1);
 	long nx = d->GetNx();
@@ -976,7 +976,7 @@ mreal MGL_EXPORT mgl_data_solve_1d(HCDT d, mreal val, int spl, long i0)
 	return NAN;
 }
 //-----------------------------------------------------------------------------
-mreal MGL_EXPORT mgl_data_linear_ext(HCDT d, mreal x,mreal y,mreal z, mreal *dx,mreal *dy,mreal *dz)
+mreal MGL_EXPORT_PURE mgl_data_linear_ext(HCDT d, mreal x,mreal y,mreal z, mreal *dx,mreal *dy,mreal *dz)
 {
 	long kx=long(x), ky=long(y), kz=long(z);
 	mreal b0,b1;
@@ -1048,32 +1048,32 @@ mreal MGL_EXPORT mgl_data_linear_ext(HCDT d, mreal x,mreal y,mreal z, mreal *dx,
 	return b0 + z*(b1-b0);
 }
 //-----------------------------------------------------------------------------
-mreal MGL_EXPORT mgl_data_linear(HCDT d, mreal x,mreal y,mreal z)
+mreal MGL_EXPORT_PURE mgl_data_linear(HCDT d, mreal x,mreal y,mreal z)
 {	return mgl_data_linear_ext(d, x,y,z, 0,0,0);	}
 //-----------------------------------------------------------------------------
-mreal MGL_EXPORT mgl_data_spline(HCDT d, mreal x,mreal y,mreal z)
+mreal MGL_EXPORT_PURE mgl_data_spline(HCDT d, mreal x,mreal y,mreal z)
 {
 	const mglData *dd=dynamic_cast<const mglData *>(d);
 	if(!dd)	return 0;	// TODO non-mglData: spline
 	return dd->ny*dd->nz==1?mglSpline1st<mreal>(dd->a,dd->nx,x):mglSpline3st<mreal>(dd->a,dd->nx,dd->ny,dd->nz,x,y,z);
 }
 //-----------------------------------------------------------------------------
-mreal MGL_EXPORT mgl_data_spline_ext(HCDT d, mreal x,mreal y,mreal z, mreal *dx,mreal *dy,mreal *dz)
+mreal MGL_EXPORT_PURE mgl_data_spline_ext(HCDT d, mreal x,mreal y,mreal z, mreal *dx,mreal *dy,mreal *dz)
 {
 	const mglData *dd=dynamic_cast<const mglData *>(d);
 	if(!dd)	return 0;	// TODO non-mglData: spline
 	return mglSpline3t<mreal>(dd->a,dd->nx,dd->ny,dd->nz,x,y,z,dx,dy,dz);
 }
 //-----------------------------------------------------------------------------
-mreal MGL_EXPORT mgl_data_spline_(uintptr_t *d, mreal *x,mreal *y,mreal *z)
+mreal MGL_EXPORT_PURE mgl_data_spline_(uintptr_t *d, mreal *x,mreal *y,mreal *z)
 {	return mgl_data_spline(_DA_(d),*x,*y,*z);	}
-mreal MGL_EXPORT mgl_data_linear_(uintptr_t *d, mreal *x,mreal *y,mreal *z)
+mreal MGL_EXPORT_PURE mgl_data_linear_(uintptr_t *d, mreal *x,mreal *y,mreal *z)
 {	return mgl_data_linear(_DA_(d),*x,*y,*z);	}
-mreal MGL_EXPORT mgl_data_spline_ext_(uintptr_t *d, mreal *x,mreal *y,mreal *z, mreal *dx,mreal *dy,mreal *dz)
+mreal MGL_EXPORT_PURE mgl_data_spline_ext_(uintptr_t *d, mreal *x,mreal *y,mreal *z, mreal *dx,mreal *dy,mreal *dz)
 {	return mgl_data_spline_ext(_DA_(d),*x,*y,*z,dx,dy,dz);	}
-mreal MGL_EXPORT mgl_data_linear_ext_(uintptr_t *d, mreal *x,mreal *y,mreal *z, mreal *dx,mreal *dy,mreal *dz)
+mreal MGL_EXPORT_PURE mgl_data_linear_ext_(uintptr_t *d, mreal *x,mreal *y,mreal *z, mreal *dx,mreal *dy,mreal *dz)
 {	return mgl_data_linear_ext(_DA_(d),*x,*y,*z,dx,dy,dz);	}
-mreal MGL_EXPORT mgl_data_solve_1d_(uintptr_t *d, mreal *val, int *spl, int *i0)
+mreal MGL_EXPORT_PURE mgl_data_solve_1d_(uintptr_t *d, mreal *val, int *spl, int *i0)
 {	return mgl_data_solve_1d(_DA_(d),*val, *spl, *i0);	}
 uintptr_t MGL_EXPORT mgl_data_solve_(uintptr_t *d, mreal *val, const char *dir, uintptr_t *i0, int *norm,int)
 {	return uintptr_t(mgl_data_solve(_DA_(d),*val, *dir, _DA_(i0), *norm));	}

@@ -46,8 +46,8 @@ void MGL_EXPORT mgl_srnd_(int *seed);
 double MGL_EXPORT mgl_rnd();
 double MGL_EXPORT mgl_rnd_();
 /// Get integer power of x
-double MGL_EXPORT mgl_ipow(double x,int n);
-double MGL_EXPORT mgl_ipow_(mreal *x,int *n);
+double MGL_EXPORT_CONST mgl_ipow(double x,int n);
+double MGL_EXPORT_PURE mgl_ipow_(mreal *x,int *n);
 /// Get number of seconds since 1970 for given string
 double MGL_EXPORT mgl_get_time(const char *time, const char *fmt);
 double MGL_EXPORT mgl_get_time_(const char *time, const char *fmt,int,int);
@@ -296,20 +296,20 @@ void MGL_EXPORT mgl_fft(double *x, long s, long n, const void *wt, void *ws, int
 void MGL_EXPORT mgl_clear_fft();
 
 /// Interpolate by cubic spline the data to given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
-mreal MGL_EXPORT mgl_data_spline(HCDT dat, mreal x,mreal y,mreal z);
-mreal MGL_EXPORT mgl_data_spline_(uintptr_t *dat, mreal *x,mreal *y,mreal *z);
+mreal MGL_EXPORT_PURE mgl_data_spline(HCDT dat, mreal x,mreal y,mreal z);
+mreal MGL_EXPORT_PURE mgl_data_spline_(uintptr_t *dat, mreal *x,mreal *y,mreal *z);
 /// Interpolate by linear function the data to given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
-mreal MGL_EXPORT mgl_data_linear(HCDT dat, mreal x,mreal y,mreal z);
-mreal MGL_EXPORT mgl_data_linear_(uintptr_t *dat, mreal *x,mreal *y,mreal *z);
+mreal MGL_EXPORT_PURE mgl_data_linear(HCDT dat, mreal x,mreal y,mreal z);
+mreal MGL_EXPORT_PURE mgl_data_linear_(uintptr_t *dat, mreal *x,mreal *y,mreal *z);
 /// Interpolate by cubic spline the data and return its derivatives at given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
-mreal MGL_EXPORT mgl_data_spline_ext(HCDT dat, mreal x,mreal y,mreal z, mreal *dx,mreal *dy,mreal *dz);
-mreal MGL_EXPORT mgl_data_spline_ext_(uintptr_t *dat, mreal *x,mreal *y,mreal *z, mreal *dx,mreal *dy,mreal *dz);
+mreal MGL_EXPORT_PURE mgl_data_spline_ext(HCDT dat, mreal x,mreal y,mreal z, mreal *dx,mreal *dy,mreal *dz);
+mreal MGL_EXPORT_PURE mgl_data_spline_ext_(uintptr_t *dat, mreal *x,mreal *y,mreal *z, mreal *dx,mreal *dy,mreal *dz);
 /// Interpolate by linear function the data and return its derivatives at given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
-mreal MGL_EXPORT mgl_data_linear_ext(HCDT dat, mreal x,mreal y,mreal z, mreal *dx,mreal *dy,mreal *dz);
-mreal MGL_EXPORT mgl_data_linear_ext_(uintptr_t *dat, mreal *x,mreal *y,mreal *z, mreal *dx,mreal *dy,mreal *dz);
+mreal MGL_EXPORT_PURE mgl_data_linear_ext(HCDT dat, mreal x,mreal y,mreal z, mreal *dx,mreal *dy,mreal *dz);
+mreal MGL_EXPORT_PURE mgl_data_linear_ext_(uintptr_t *dat, mreal *x,mreal *y,mreal *z, mreal *dx,mreal *dy,mreal *dz);
 /// Return an approximated x-value (root) when dat(x) = val
-mreal MGL_EXPORT mgl_data_solve_1d(HCDT dat, mreal val, int spl, long i0);
-mreal MGL_EXPORT mgl_data_solve_1d_(uintptr_t *dat, mreal *val, int *spl, int *i0);
+mreal MGL_EXPORT_PURE mgl_data_solve_1d(HCDT dat, mreal val, int spl, long i0);
+mreal MGL_EXPORT_PURE mgl_data_solve_1d_(uintptr_t *dat, mreal *val, int *spl, int *i0);
 /// Return an approximated value (root) when dat(x) = val
 HMDT MGL_EXPORT mgl_data_solve(HCDT dat, mreal val, char dir, HCDT i0, int norm);
 uintptr_t MGL_EXPORT mgl_data_solve_(uintptr_t *dat, mreal *val, const char *dir, uintptr_t *i0, int *norm,int);

@@ -52,7 +52,7 @@ MGL_NO_EXPORT const char *mgl_get_dash(unsigned short d, mreal w,char dlm)
 	return s.c_str();
 }
 //-----------------------------------------------------------------------------
-bool MGL_NO_EXPORT mgl_is_same(HMGL gr, long i, mreal wp,uint32_t cp, int st)
+bool MGL_LOCAL_PURE mgl_is_same(HMGL gr, long i, mreal wp,uint32_t cp, int st)
 {
 	const mglPrim &pr=_Gr_->GetPrm(i);
 	if(abs(pr.type)!=1)	return false;

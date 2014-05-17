@@ -234,7 +234,7 @@ void MGL_NO_EXPORT sort_prm_c(size_t l0, size_t r0, mglStack<mglPrim> &s, mglPri
 }
 //-----------------------------------------------------------------------------
 MGL_NO_EXPORT int mgl_type_prior[8]={1,2,4,5, 0,3,0, 7};
-mreal MGL_NO_EXPORT mgl_prmcmp(const mglPrim &a, const mglPrim &b)
+mreal MGL_LOCAL_PURE mgl_prmcmp(const mglPrim &a, const mglPrim &b)
 {
 	if(a.z!=b.z) 	return a.z - b.z;
 	register int t1 = mgl_type_prior[a.type], t2 = mgl_type_prior[b.type];
@@ -456,7 +456,7 @@ int mglBase::PrmCmp(long i, long j) const
 	if(a.w!=b.w) 	return int(100*(b.w - a.w));
 	return a.n3 - b.n3;
 }
-int MGL_NO_EXPORT mgl_prm_cmp(const void *i,const void *j)
+int MGL_LOCAL_PURE mgl_prm_cmp(const void *i,const void *j)
 {
 	return mgl_qsort_gr->PrmCmp(*(const long *)i, *(const long *)j);
 }
@@ -862,7 +862,7 @@ unsigned char **mglCanvas::GetRGBLines(long &w, long &h, unsigned char *&f, bool
 	return p;
 }
 //-----------------------------------------------------------------------------
-bool visible(long i, long j, const unsigned char m[8], mreal pw, int a)	// Check if pixel visible
+bool MGL_LOCAL_PURE visible(long i, long j, const unsigned char m[8], mreal pw, int a)	// Check if pixel visible
 {
 	register float c = mgl_cos[(a+360)%360], s = mgl_cos[(a+450)%360];
 	register int ii = long(0.5+(i*c+j*s)/pw)%8, jj = long(0.5+(j*c-i*s)/pw)%8;

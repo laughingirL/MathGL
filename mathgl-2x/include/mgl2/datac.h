@@ -376,9 +376,9 @@ using mglDataA::Momentum;
 };
 //-----------------------------------------------------------------------------
 #ifndef SWIG
-dual mglLinearC(const dual *a, long nx, long ny, long nz, mreal x, mreal y, mreal z);
-dual mglSpline3C(const dual *a, long nx, long ny, long nz, mreal x, mreal y, mreal z,dual *dx=0, dual *dy=0, dual *dz=0);
-dual mglSpline3Cs(const dual *a, long nx, long ny, long nz, mreal x, mreal y, mreal z);
+dual MGL_EXPORT_PURE mglLinearC(const dual *a, long nx, long ny, long nz, mreal x, mreal y, mreal z);
+dual MGL_EXPORT_PURE mglSpline3C(const dual *a, long nx, long ny, long nz, mreal x, mreal y, mreal z,dual *dx=0, dual *dy=0, dual *dz=0);
+dual MGL_EXPORT_PURE mglSpline3Cs(const dual *a, long nx, long ny, long nz, mreal x, mreal y, mreal z);
 #endif
 //-----------------------------------------------------------------------------
 /// Saves result of PDE solving (|u|^2) for "Hamiltonian" ham with initial conditions ini

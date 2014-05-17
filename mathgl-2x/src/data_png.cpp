@@ -22,7 +22,7 @@
 #include <png.h>
 #endif
 //-----------------------------------------------------------------------------
-size_t MGL_NO_EXPORT mgl_col_dif(unsigned char *c1,unsigned char *c2,bool sum)
+size_t MGL_LOCAL_PURE mgl_col_dif(unsigned char *c1,unsigned char *c2,bool sum)
 {
 	size_t res,d1=abs(long(c1[0])-long(c2[0])),
 		d2=abs(long(c1[1])-long(c2[1])),d3=abs(long(c1[2])-long(c2[2]));

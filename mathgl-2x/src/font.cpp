@@ -226,7 +226,7 @@ MGL_NO_EXPORT mglTeXsymb mgl_act_symb[] = {
 	{0x02c6, L"hat"}, {0x02dc, L"tilde"}, {0x02d9, L"dot"}, {0x00a8, L"ddot"}, {0x20db, L"dddot"}, {0x20dc, L"ddddot"}, {0x02ca, L"acute"}, {0x02c7, L"check"}, {0x02cb, L"grave"}, {0x20d7, L"vec"}, {0x02c9, L"bar"}, {0x02d8, L"breve"},
 	/*end*/{0, L"\0"}};
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgl_tex_symb_cmp(const void *a, const void *b)
+int MGL_LOCAL_PURE mgl_tex_symb_cmp(const void *a, const void *b)
 {
 	const mglTeXsymb *aa = (const mglTeXsymb *)a;
 	const mglTeXsymb *bb = (const mglTeXsymb *)b;

@@ -1342,7 +1342,7 @@ delete []o;	delete []s;	}
 //	Axial series
 //
 //-----------------------------------------------------------------------------
-long MGL_NO_EXPORT mgl_find_prev(long i, long pc, long *nn)
+long MGL_LOCAL_PURE mgl_find_prev(long i, long pc, long *nn)
 {
 	for(long k=0;k<pc;k++)	if(nn[k]==i)	return k;
 	return -1;

@@ -21,7 +21,7 @@
 #include <unistd.h>
 #include "mgl2/mgl.h"
 //-----------------------------------------------------------------------------
-int mgl_hex(char ch)
+int MGL_LOCAL_CONST mgl_hex(char ch)
 {
 	int res=-1;
 	if(ch>='0' && ch<='9')	res = ch-'0';

@@ -465,7 +465,7 @@ uintptr_t MGL_EXPORT mgl_hist_xyz_(uintptr_t* gr, uintptr_t* x, uintptr_t* y, ui
 	uintptr_t r = (uintptr_t)mgl_hist_xyz(_GR_, _DA_(x), _DA_(y), _DA_(z), _DA_(a), o);
 	delete []o;	return r;	}
 //-----------------------------------------------------------------------------
-MGL_EXPORT const char *mgl_get_fit(HMGL )	{	return mglFitRes;	}
+MGL_EXPORT_CONST const char *mgl_get_fit(HMGL )	{	return mglFitRes;	}
 int MGL_EXPORT mgl_get_fit_(uintptr_t *gr, char *out, int len)
 {
 	const char *res = mgl_get_fit(_GR_);

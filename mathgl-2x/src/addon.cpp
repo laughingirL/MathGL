@@ -45,7 +45,7 @@ void MGL_EXPORT mgl_strcls(char *str)
 	delete []tmp;
 }
 //-----------------------------------------------------------------------------
-int MGL_EXPORT mgl_strpos(const char *str,char *fnd)
+int MGL_EXPORT_PURE mgl_strpos(const char *str,char *fnd)
 {
 	const char *p=strstr(str,fnd);
 	int res;
@@ -54,7 +54,7 @@ int MGL_EXPORT mgl_strpos(const char *str,char *fnd)
 	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_EXPORT mgl_chrpos(const char *str,char ch)
+int MGL_EXPORT_PURE mgl_chrpos(const char *str,char ch)
 {
 	const char *p=str?strchr(str,ch):0;
 	int res;
@@ -104,7 +104,7 @@ void MGL_EXPORT mgl_fgetpar(FILE *fp, const char *str, ...)
 	}
 }
 //-----------------------------------------------------------------------------
-int MGL_EXPORT mgl_istrue(char ch)
+int MGL_EXPORT_CONST mgl_istrue(char ch)
 {	return (ch=='1' || ch=='t' || ch=='+' || ch=='v');	}
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_test(const char *str, ...)

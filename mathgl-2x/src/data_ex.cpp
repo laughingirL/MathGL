@@ -757,7 +757,7 @@ uintptr_t MGL_EXPORT mgl_data_hist_w_(uintptr_t *d, uintptr_t *w, int *n, mreal 
 {	return uintptr_t(mgl_data_hist_w(_DT_,_DA_(w),*n,*v1,*v2,*nsub));	}
 //-----------------------------------------------------------------------------
 long MGL_NO_EXPORT mgl_idx_var;
-int MGL_NO_EXPORT mgl_cmd_idx(const void *a, const void *b)
+int MGL_LOCAL_PURE mgl_cmd_idx(const void *a, const void *b)
 {
 	mreal *aa = (mreal *)a, *bb = (mreal *)b;
 	return (aa[mgl_idx_var]>bb[mgl_idx_var] ? 1:(aa[mgl_idx_var]<bb[mgl_idx_var]?-1:0) );

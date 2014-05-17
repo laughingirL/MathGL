@@ -33,7 +33,7 @@ MGL_NO_EXPORT inline struct tm *mgl_localtime (const time_t *clock, tm *result, 
 	const tm *res = use_utc?gmtime(clock):localtime(clock);
 	memcpy(result,res,sizeof(tm));	return result;	}
 //-----------------------------------------------------------------------------
-long MGL_EXPORT mgl_have_color(const char *stl)
+long MGL_EXPORT_PURE mgl_have_color(const char *stl)
 {
 	register long i,j=0;
 	if(stl)	for(i=0;stl[i];i++)
@@ -54,7 +54,7 @@ void MGL_EXPORT mgl_wcstrim(wchar_t *str)
 	str[i-k]=0;
 }
 //-----------------------------------------------------------------------------
-size_t MGL_EXPORT mgl_wcslen(const wchar_t *str)
+size_t MGL_EXPORT_PURE mgl_wcslen(const wchar_t *str)
 {
 	long i=0;
 	if(str)	while(str[i])	i++;

@@ -148,23 +148,23 @@ int mglFindInText(std::wstring str,const char *lst)
 	return -1;
 }
 //-----------------------------------------------------------------------------
-double MGL_NO_EXPORT cand(double a,double b);//	{return a&&b?1:0;}
-double MGL_NO_EXPORT cor(double a,double b);//	{return a||b?1:0;}
-double MGL_NO_EXPORT ceq(double a,double b);//	{return a==b?1:0;}
-double MGL_NO_EXPORT clt(double a,double b);//	{return a<b?1:0;}
-double MGL_NO_EXPORT cgt(double a,double b);//	{return a>b?1:0;}
-double MGL_NO_EXPORT add(double a,double b);//	{return a+b;}
-double MGL_NO_EXPORT sub(double a,double b);//	{return a-b;}
-double MGL_NO_EXPORT mul(double a,double b);//	{return a&&b?a*b:0;}
-double MGL_NO_EXPORT del(double a,double b);//	{return b?a/b:NAN;}
-double MGL_NO_EXPORT ipw(double a,double b);//	{return mgl_ipow(a,int(b));}
-double MGL_NO_EXPORT llg(double a,double b);//	{return log(a)/log(b);}
-//double MGL_NO_EXPORT asinh(double x);//	{	return log(x+sqrt(x*x+1));	}
-//double MGL_NO_EXPORT acosh(double x);//	{	return x>1 ? log(x+sqrt(x*x-1)) : NAN;	}
-//double MGL_NO_EXPORT atanh(double x);//	{	return fabs(x)<1 ? log((1+x)/(1-x))/2 : NAN;	}
-double MGL_NO_EXPORT gslEllE(double a,double b);//	{return gsl_sf_ellint_E(a,b,GSL_PREC_SINGLE);}
-double MGL_NO_EXPORT gslEllF(double a,double b);//	{return gsl_sf_ellint_F(a,b,GSL_PREC_SINGLE);}
-double MGL_NO_EXPORT gslLegP(double a,double b);//	{return gsl_sf_legendre_Pl(int(a),b);}
+double MGL_LOCAL_CONST cand(double a,double b);//	{return a&&b?1:0;}
+double MGL_LOCAL_CONST cor(double a,double b);//	{return a||b?1:0;}
+double MGL_LOCAL_CONST ceq(double a,double b);//	{return a==b?1:0;}
+double MGL_LOCAL_CONST clt(double a,double b);//	{return a<b?1:0;}
+double MGL_LOCAL_CONST cgt(double a,double b);//	{return a>b?1:0;}
+double MGL_LOCAL_CONST add(double a,double b);//	{return a+b;}
+double MGL_LOCAL_CONST sub(double a,double b);//	{return a-b;}
+double MGL_LOCAL_CONST mul(double a,double b);//	{return a&&b?a*b:0;}
+double MGL_LOCAL_CONST del(double a,double b);//	{return b?a/b:NAN;}
+double MGL_LOCAL_CONST ipw(double a,double b);//	{return mgl_ipow(a,int(b));}
+double MGL_LOCAL_CONST llg(double a,double b);//	{return log(a)/log(b);}
+//double MGL_LOCAL_CONST asinh(double x);//	{	return log(x+sqrt(x*x+1));	}
+//double MGL_LOCAL_CONST acosh(double x);//	{	return x>1 ? log(x+sqrt(x*x-1)) : NAN;	}
+//double MGL_LOCAL_CONST atanh(double x);//	{	return fabs(x)<1 ? log((1+x)/(1-x))/2 : NAN;	}
+double MGL_LOCAL_CONST gslEllE(double a,double b);//	{return gsl_sf_ellint_E(a,b,GSL_PREC_SINGLE);}
+double MGL_LOCAL_CONST gslEllF(double a,double b);//	{return gsl_sf_ellint_F(a,b,GSL_PREC_SINGLE);}
+double MGL_LOCAL_CONST gslLegP(double a,double b);//	{return gsl_sf_legendre_Pl(int(a),b);}
 //-----------------------------------------------------------------------------
 // It seems that standard wcstombs() have a bug. So, I replace by my own.
 void MGL_EXPORT mgl_wcstombs(char *dst, const wchar_t *src, int size)
@@ -175,7 +175,7 @@ void MGL_EXPORT mgl_wcstombs(char *dst, const wchar_t *src, int size)
 	dst[j] = 0;
 }
 //-----------------------------------------------------------------------------
-const mglDataA *FindVar(const std::vector<mglDataA*> &head, const std::wstring &name)
+MGL_LOCAL_PURE const mglDataA *FindVar(const std::vector<mglDataA*> &head, const std::wstring &name)
 {
 	for(size_t i=0;i<head.size();i++)
 		if(head[i] && head[i]->s==name)	return head[i];
@@ -640,38 +640,37 @@ mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std
 	return res;
 }
 //-----------------------------------------------------------------------------
-dual MGL_NO_EXPORT ceqc(dual a,dual b)	{return a==b?1:0;}
-dual MGL_NO_EXPORT cltc(dual a,dual b)	{return real(a-b)<0?1:0;}
-dual MGL_NO_EXPORT cgtc(dual a,dual b)	{return real(a-b)>0?1:0;}
-
-dual MGL_NO_EXPORT addc(dual a,dual b);	//{return a+b;}
-dual MGL_NO_EXPORT subc(dual a,dual b);	//{return a-b;}
-dual MGL_NO_EXPORT mulc(dual a,dual b);	//{return a*b;}
-dual MGL_NO_EXPORT divc(dual a,dual b);	//{return a/b;}
-dual MGL_NO_EXPORT ipwc(dual a,dual b);	//{return mgl_ipowc(a,int(b.real()));}
-dual MGL_NO_EXPORT powc(dual a,dual b);	//{return exp(b*log(a));	}
-dual MGL_NO_EXPORT llgc(dual a,dual b);	//{return log(a)/log(b);	}
-dual MGL_NO_EXPORT expi(dual a);	//{	return exp(dual(0,1)*a);	}
-dual MGL_NO_EXPORT expi(double a);	//{	return dual(cos(a),sin(a));	}
+dual MGL_LOCAL_CONST ceqc(dual a,dual b)	{return a==b?1:0;}
+dual MGL_LOCAL_CONST cltc(dual a,dual b)	{return real(a-b)<0?1:0;}
+dual MGL_LOCAL_CONST cgtc(dual a,dual b)	{return real(a-b)>0?1:0;}
+dual MGL_LOCAL_CONST addc(dual a,dual b);	//{return a+b;}
+dual MGL_LOCAL_CONST subc(dual a,dual b);	//{return a-b;}
+dual MGL_LOCAL_CONST mulc(dual a,dual b);	//{return a*b;}
+dual MGL_LOCAL_CONST divc(dual a,dual b);	//{return a/b;}
+dual MGL_LOCAL_CONST ipwc(dual a,dual b);	//{return mgl_ipowc(a,int(b.real()));}
+dual MGL_LOCAL_CONST powc(dual a,dual b);	//{return exp(b*log(a));	}
+dual MGL_LOCAL_CONST llgc(dual a,dual b);	//{return log(a)/log(b);	}
+dual MGL_LOCAL_CONST expi(dual a);	//{	return exp(dual(0,1)*a);	}
+dual MGL_LOCAL_CONST expi(double a);	//{	return dual(cos(a),sin(a));	}
 //-----------------------------------------------------------------------------
-dual MGL_NO_EXPORT asinhc(dual x);	//{	return log(x+sqrt(x*x+mreal(1)));	}
-dual MGL_NO_EXPORT acoshc(dual x);	//{	return log(x+sqrt(x*x-mreal(1)));	}
-dual MGL_NO_EXPORT atanhc(dual x);	//{	return log((mreal(1)+x)/(mreal(1)-x))/mreal(2);	}
-dual MGL_NO_EXPORT sinc(dual x);	//{	return sin(x);	}
-dual MGL_NO_EXPORT cosc(dual x);	//{	return cos(x);	}
-dual MGL_NO_EXPORT tanc(dual x);	//{	return tan(x);	}
-dual MGL_NO_EXPORT sinhc(dual x);	//{	return sinh(x);	}
-dual MGL_NO_EXPORT coshc(dual x);	//{	return cosh(x);	}
-dual MGL_NO_EXPORT tanhc(dual x);	//{	return tanh(x);	}
-dual MGL_NO_EXPORT asinc(dual x);	//{	return log(ic*x+sqrt(mreal(1)-x*x))/ic;	}
-dual MGL_NO_EXPORT acosc(dual x);	//{	return log(x+sqrt(x*x-mreal(1)))/ic;	}
-dual MGL_NO_EXPORT atanc(dual x);	//{	return log((ic-x)/(ic+x))/(mreal(2)*ic);	}
-dual MGL_NO_EXPORT expc(dual x);	//{	return exp(x);	}
-dual MGL_NO_EXPORT sqrtc(dual x);	//{	return sqrt(x);	}
-dual MGL_NO_EXPORT logc(dual x);	//{	return log(x);	}
-dual MGL_NO_EXPORT absc(dual x);	//{	return abs(x);	}
-dual MGL_NO_EXPORT argc(dual x);	//{	return arg(x);	}
-dual MGL_NO_EXPORT lgc(dual x);		//{	return log10(x);}
+dual MGL_LOCAL_CONST asinhc(dual x);	//{	return log(x+sqrt(x*x+mreal(1)));	}
+dual MGL_LOCAL_CONST acoshc(dual x);	//{	return log(x+sqrt(x*x-mreal(1)));	}
+dual MGL_LOCAL_CONST atanhc(dual x);	//{	return log((mreal(1)+x)/(mreal(1)-x))/mreal(2);	}
+dual MGL_LOCAL_CONST sinc(dual x);	//{	return sin(x);	}
+dual MGL_LOCAL_CONST cosc(dual x);	//{	return cos(x);	}
+dual MGL_LOCAL_CONST tanc(dual x);	//{	return tan(x);	}
+dual MGL_LOCAL_CONST sinhc(dual x);	//{	return sinh(x);	}
+dual MGL_LOCAL_CONST coshc(dual x);	//{	return cosh(x);	}
+dual MGL_LOCAL_CONST tanhc(dual x);	//{	return tanh(x);	}
+dual MGL_LOCAL_CONST asinc(dual x);	//{	return log(ic*x+sqrt(mreal(1)-x*x))/ic;	}
+dual MGL_LOCAL_CONST acosc(dual x);	//{	return log(x+sqrt(x*x-mreal(1)))/ic;	}
+dual MGL_LOCAL_CONST atanc(dual x);	//{	return log((ic-x)/(ic+x))/(mreal(2)*ic);	}
+dual MGL_LOCAL_CONST expc(dual x);	//{	return exp(x);	}
+dual MGL_LOCAL_CONST sqrtc(dual x);	//{	return sqrt(x);	}
+dual MGL_LOCAL_CONST logc(dual x);	//{	return log(x);	}
+dual MGL_LOCAL_CONST absc(dual x);	//{	return abs(x);	}
+dual MGL_LOCAL_CONST argc(dual x);	//{	return arg(x);	}
+dual MGL_LOCAL_CONST lgc(dual x);		//{	return log10(x);}
 //-----------------------------------------------------------------------------
 /// Parse string and substitute the script argument
 // All numbers are presented as mglData(1). Do boundary checking.

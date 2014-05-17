@@ -116,7 +116,7 @@ void DataOpenDialog::prepareResult()
 	// prepare unique value of name for next time
 	char buf[32];	snprintf(buf,32,"mgl_%d",numDataOpened);	name->setText(buf);
 	mglData *v = parser.AddVar(data.toStdString().c_str());
-	bool dd=0;
+	int dd=0;
 	if(rA->isChecked())	//	auto sizes
 	{
 		setlocale(LC_NUMERIC, "C");	v->Read(file.toStdString().c_str());	setlocale(LC_NUMERIC, "");

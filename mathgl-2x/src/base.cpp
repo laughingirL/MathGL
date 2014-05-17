@@ -145,7 +145,7 @@ void mglBase::AddActive(long k,int n)
 }
 //-----------------------------------------------------------------------------
 mreal mglBase::GetRatio() const	{	return 1;	}
-int mglBase::GetWidth() const	{	return 1;	}
+int mglBase::GetWidth()  const	{	return 1;	}
 int mglBase::GetHeight() const	{	return 1;	}
 //-----------------------------------------------------------------------------
 void mglBase::StartGroup(const char *name, int id)
@@ -206,7 +206,7 @@ void mglGlyph::Create(long Nt, long Nl)
 	line = nl>0?new short[2*nl]:0;
 }
 //-----------------------------------------------------------------------------
-bool mglGlyph::operator==(const mglGlyph &g)
+bool __attribute__((pure)) mglGlyph::operator==(const mglGlyph &g)
 {
 	if(nl!=g.nl || nt!=g.nt)	return false;
 	if(trig && memcmp(trig,g.trig,6*nt*sizeof(short)))	return false;
@@ -1000,7 +1000,7 @@ mreal mglBase::NextColor(long id, long sh)
 	return cc;
 }
 //-----------------------------------------------------------------------------
-const char *mglchrs(const char *str, const char *chr)
+MGL_EXPORT_PURE const char *mglchrs(const char *str, const char *chr)
 {
 	if(!str || !str[0] || !chr || !chr[0])	return NULL;
 	size_t l=strlen(chr);
@@ -1012,7 +1012,7 @@ const char *mglchrs(const char *str, const char *chr)
 	return NULL;
 }
 //-----------------------------------------------------------------------------
-const char *mglchr(const char *str, char ch)
+MGL_EXPORT_PURE const char *mglchr(const char *str, char ch)
 {
 	if(!str || !str[0])	return NULL;
 	size_t l=strlen(str),k=0;
@@ -1184,7 +1184,7 @@ void mglBase::vect_plot(long p1, long p2, mreal s)
 	line_plot(p1,p2);	line_plot(n1,p2);	line_plot(p2,n2);
 }
 //-----------------------------------------------------------------------------
-int mglFindArg(const char *str)
+int MGL_LOCAL_PURE mglFindArg(const char *str)
 {
 	long l=0,k=0,len=strlen(str);
 	for(long i=0;i<len;i++)

@@ -27,13 +27,13 @@ class MGL_EXPORT mglFormulaC					// ������ ��� �����
 {
 public:
 	/// Evaluates the formula for 'x','r'=\a x, 'y','n'=\a y, 'z','t'=\a z, 'u'=\a u
-	dual Calc(dual x,dual y=0,dual z=0,dual u=0) const;
+	dual Calc(dual x,dual y=0,dual z=0,dual u=0) const __attribute__((pure));
 	/// Evaluates the formula for 'x, y, z, u, v, w'
-	dual Calc(dual x,dual y,dual z,dual u,dual v,dual w) const;
+	dual Calc(dual x,dual y,dual z,dual u,dual v,dual w) const __attribute__((pure));
 	/// Evaluates the formula for variables var
-	dual Calc(const dual var[MGL_VS]) const;
+	dual Calc(const dual var[MGL_VS]) const __attribute__((pure));
 	/// Return error code
-	int GetError() const;
+	inline int GetError() const	{	return Error;	}
 	/// Parse the formula str and create formula-tree
 	mglFormulaC(const char *str);
 	/// Clean up formula-tree

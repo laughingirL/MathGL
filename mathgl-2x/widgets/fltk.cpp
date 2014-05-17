@@ -541,7 +541,7 @@ void MGL_NO_EXPORT mgl_sshow_cb(Fl_Widget *, void *v)
 	if(e->is_sshow())	Fl::add_timeout(e->delay(e->par), mgl_time_cb, v);
 }
 void mglCanvasFL::Animation()	{	Fl::lock();	mgl_sshow_cb(0,mgl);	Fl::unlock();	}
-void MGL_NO_EXPORT mgl_no_cb(Fl_Widget *, void *)	{}
+void MGL_LOCAL_CONST mgl_no_cb(Fl_Widget *, void *)	{}
 //-----------------------------------------------------------------------------
 Fl_Menu_Item pop_graph[20] = {
 	{ mgl_gettext("Export"), 0, mgl_no_cb, 0, FL_SUBMENU,0,0,0,0},
@@ -674,7 +674,7 @@ void mglCanvasFL::GotoFrame(int d)
 void MGL_NO_EXPORT mgl_fl_next(void *v)	{	((mglCanvasWnd*)v)->NextFrame();	}	///< Callback function for next frame
 void MGL_NO_EXPORT mgl_fl_prev(void *v)	{	((mglCanvasWnd*)v)->PrevFrame();	}	///< Callback function for prev frame
 void MGL_NO_EXPORT mgl_fl_reload(void *v)	{	((mglCanvasWnd*)v)->ReLoad();	}		///< Callback function for reloading
-mreal MGL_NO_EXPORT mgl_fl_delay(void *v)	{	return ((mglCanvasWnd*)v)->GetDelay();	}	///< Callback function for delay
+mreal MGL_LOCAL_PURE mgl_fl_delay(void *v)	{	return ((mglCanvasWnd*)v)->GetDelay();	}	///< Callback function for delay
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_makemenu_fltk(Fl_Menu_ *m, Fl_MGLView *w)
 {

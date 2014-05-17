@@ -454,9 +454,9 @@ inline bool operator<(const mglDataA &b, const mglDataA &d)
 inline bool operator>(const mglDataA &b, const mglDataA &d)
 {	return b.Minimal()>d.Minimal();	}
 //-----------------------------------------------------------------------------
-mreal mglLinear(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z);
-mreal mglSpline3(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z,mreal *dx=0, mreal *dy=0, mreal *dz=0);
-mreal mglSpline3s(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z);
+mreal MGL_EXPORT_PURE mglLinear(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z);
+mreal MGL_EXPORT_PURE mglSpline3(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z,mreal *dx=0, mreal *dy=0, mreal *dz=0);
+mreal MGL_EXPORT_PURE mglSpline3s(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z);
 #endif
 //-----------------------------------------------------------------------------
 /// Integral data transformation (like Fourier 'f' or 'i', Hankel 'h' or None 'n') for amplitude and phase

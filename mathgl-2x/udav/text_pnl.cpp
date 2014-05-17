@@ -348,9 +348,9 @@ void TextPanel::saveHDF5(const QString &fileName)
 		H5Dclose(hd);	H5Sclose(hs);
 		delete []buf;
 	}
-	long i, n = parser.GetNumVar();
+	long n = parser.GetNumVar();
 	char name[256];
-	for(i=0;i<n;i++);
+	for(long i=0;i<n;i++)
 	{
 		const mglData *v = dynamic_cast<const mglData *>(parser.GetVar(i));
 		mglData tmp;

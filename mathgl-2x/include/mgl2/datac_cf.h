@@ -43,10 +43,10 @@ void MGL_EXPORT mgl_srnd(long seed);
 /// Get random number
 double MGL_EXPORT mgl_rnd();
 /// Get integer power of x
-mdual MGL_EXPORT mgl_ipowc(dual x,int n);
-mdual MGL_EXPORT mgl_ipowc_(dual *x,int *n);
+mdual MGL_EXPORT_CONST mgl_ipowc(dual x,int n);
+mdual MGL_EXPORT_PURE mgl_ipowc_(dual *x,int *n);
 /// Get exp(i*a)
-mdual MGL_EXPORT mgl_expi(dual a);
+mdual MGL_EXPORT_CONST mgl_expi(dual a);
 
 /// Create HMDT object
 HADT MGL_EXPORT mgl_create_datac();
@@ -259,17 +259,17 @@ HMDT MGL_EXPORT mgl_datac_arg(HCDT dat);
 uintptr_t MGL_EXPORT mgl_datac_arg_(uintptr_t *dat);
 
 /// Interpolate by linear function the data to given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
-mdual MGL_EXPORT mgl_datac_linear(HCDT d, mreal x,mreal y,mreal z);
-mdual MGL_EXPORT mgl_datac_linear_(uintptr_t *d, mreal *x,mreal *y,mreal *z);
+mdual MGL_EXPORT_PURE mgl_datac_linear(HCDT d, mreal x,mreal y,mreal z);
+mdual MGL_EXPORT_PURE mgl_datac_linear_(uintptr_t *d, mreal *x,mreal *y,mreal *z);
 /// Interpolate by linear function the data and return its derivatives at given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
-mdual MGL_EXPORT mgl_datac_linear_ext(HCDT d, mreal x,mreal y,mreal z, dual *dx,dual *dy,dual *dz);
-mdual MGL_EXPORT mgl_datac_linear_ext_(uintptr_t *d, mreal *x,mreal *y,mreal *z, dual *dx,dual *dy,dual *dz);
+mdual MGL_EXPORT_PURE mgl_datac_linear_ext(HCDT d, mreal x,mreal y,mreal z, dual *dx,dual *dy,dual *dz);
+mdual MGL_EXPORT_PURE mgl_datac_linear_ext_(uintptr_t *d, mreal *x,mreal *y,mreal *z, dual *dx,dual *dy,dual *dz);
 /// Interpolate by cubic spline the data to given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
-mdual MGL_EXPORT mgl_datac_spline(HCDT dat, mreal x,mreal y,mreal z);
-mdual MGL_EXPORT mgl_datac_spline_(uintptr_t *dat, mreal *x,mreal *y,mreal *z);
+mdual MGL_EXPORT_PURE mgl_datac_spline(HCDT dat, mreal x,mreal y,mreal z);
+mdual MGL_EXPORT_PURE mgl_datac_spline_(uintptr_t *dat, mreal *x,mreal *y,mreal *z);
 /// Interpolate by cubic spline the data and return its derivatives at given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
-mdual MGL_EXPORT mgl_datac_spline_ext(HCDT dat, mreal x,mreal y,mreal z, dual *dx,dual *dy,dual *dz);
-mdual MGL_EXPORT mgl_datac_spline_ext_(uintptr_t *dat, mreal *x,mreal *y,mreal *z, dual *dx,dual *dy,dual *dz);
+mdual MGL_EXPORT_PURE mgl_datac_spline_ext(HCDT dat, mreal x,mreal y,mreal z, dual *dx,dual *dy,dual *dz);
+mdual MGL_EXPORT_PURE mgl_datac_spline_ext_(uintptr_t *dat, mreal *x,mreal *y,mreal *z, dual *dx,dual *dy,dual *dz);
 
 //-----------------------------------------------------------------------------
 /// Create HAEX object for expression evaluating

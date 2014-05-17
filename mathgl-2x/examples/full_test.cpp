@@ -38,7 +38,7 @@ struct mglSample	/// Structure for list of samples
 extern mglSample samp[];
 extern const char *mmgl_dat_prepare;
 //-----------------------------------------------------------------------------
-int mgl_cmd_smp(const void *a, const void *b)
+int MGL_LOCAL_PURE mgl_cmd_smp(const void *a, const void *b)
 {
 	const mglSample *aa = (const mglSample *)a;
 	const mglSample *bb = (const mglSample *)b;
@@ -69,6 +69,11 @@ void smgl_style(mglGraph *gr);
 #include <mgl2/font.h>
 void test(mglGraph *gr)
 {
+	mglData x("x.txt"), y("y.txt"), z("z.txt");
+	gr->SetRanges(x,y,z);
+	gr->SubPlot(2,1,0);	gr->Cont(z);	gr->Mesh(z,"k");
+	gr->SubPlot(2,1,1);	gr->ContF(z);	gr->Mesh(z,"k");
+	return;
 	mglParse par;
 	par.Execute(gr,"xrange -4*pi 4*pi:xtick pi 0 nan '\\pi':axis");
 //	par.Execute(gr,"alpha on:fsurf 'x' 'Bb{A1}cy{xFF000088}R'");

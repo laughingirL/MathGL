@@ -38,7 +38,7 @@ HMDT MGL_EXPORT mgl_fit_xys(HMGL gr, HCDT x, HCDT y, HCDT s, const char *eq, con
 HMDT MGL_EXPORT mgl_fit_xyzs(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT s, const char *eq, const char *vars, HMDT ini, const char *opt);
 HMDT MGL_EXPORT mgl_fit_xyzas(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, HCDT s, const char *eq, const char *vars, HMDT ini, const char *opt);
 
-MGL_EXPORT const char *mgl_get_fit(HMGL gr);
+MGL_EXPORT_CONST const char *mgl_get_fit(HMGL gr);
 int MGL_EXPORT mgl_get_fit_(uintptr_t *gr, char *out, int len);
 
 HMDT MGL_EXPORT mgl_hist_x(HMGL gr, HCDT x, HCDT a, const char *opt);

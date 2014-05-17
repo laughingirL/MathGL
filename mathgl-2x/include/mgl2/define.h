@@ -24,6 +24,11 @@
 #ifndef SWIG
 
 #include "mgl2/dllexport.h"
+#define MGL_EXPORT_CONST	MGL_EXPORT __attribute__((const))
+#define MGL_EXPORT_PURE		MGL_EXPORT __attribute__((pure))
+#define MGL_LOCAL_CONST		MGL_NO_EXPORT __attribute__((const))
+#define MGL_LOCAL_PURE		MGL_NO_EXPORT __attribute__((pure))
+
 #ifdef MGL_SRC
 #if MGL_HAVE_OMP
 #include <omp.h>
@@ -143,13 +148,20 @@ typedef float mreal;
 #define MGL_DEF_VIEWER "evince"
 #endif
 //-----------------------------------------------------------------------------
-#define mgl_min(a,b)	(((a)>(b)) ? (b) : (a))
-#define mgl_max(a,b)	(((a)>(b)) ? (a) : (b))
-#define mgl_isnan(a)	((a)!=(a))
-//#define mgl_isnum(a)	((a)==(a) && 2*(a)!=(a))
-#define mgl_isnum(a)	((a)==(a))
-#define mgl_isfin(a)	((a)-(a)==mreal(0.))
-#define mgl_isbad(a)	((a)-(a)!=mreal(0.))
+//#define mgl_min(a,b)	(((a)>(b)) ? (b) : (a))
+//#define mgl_max(a,b)	(((a)>(b)) ? (a) : (b))
+//#define mgl_isnan(a)	((a)!=(a))
+//#define mgl_isnum(a)	((a)==(a))
+//#define mgl_isfin(a)	((a)-(a)==mreal(0.))
+//#define mgl_isbad(a)	((a)-(a)!=mreal(0.))
+
+#define mgl_isbad(a)	({typeof (a) _a = (a); _a-_a!=mreal(0.);})
+#define mgl_isfin(a)	({typeof (a) _a = (a); _a-_a==mreal(0.);})
+#define mgl_isnum(a)	({typeof (a) _a = (a); _a==_a;})
+#define mgl_isnan(a)	({typeof (a) _a = (a); _a!=_a;})
+#define mgl_min(a,b)	({typeof (a) _a = (a); typeof (b) _b = (b); _a > _b ? _b : _a;})
+#define mgl_max(a,b)	({typeof (a) _a = (a); typeof (b) _b = (b); _a > _b ? _a : _b;})
+
 //-----------------------------------------------------------------------------
 #define SMOOTH_NONE		0
 #define SMOOTH_LINE_3	1
@@ -266,17 +278,17 @@ typedef double _Complex ddual;
 #define dual	mdual
 #endif
 /// Find length of wchar_t string (bypass standard wcslen bug)
-double MGL_EXPORT mgl_hypot(double x, double y);
+double MGL_EXPORT_CONST mgl_hypot(double x, double y);
 /// Find length of wchar_t string (bypass standard wcslen bug)
-size_t MGL_EXPORT mgl_wcslen(const wchar_t *str);
+size_t MGL_EXPORT_PURE mgl_wcslen(const wchar_t *str);
 /// Get RGB values for given color id or fill by -1 if no one found
 void MGL_EXPORT mgl_chrrgb(char id, float rgb[3]);
 /// Check if string contain color id and return its number
-long MGL_EXPORT mgl_have_color(const char *stl);
+long MGL_EXPORT_PURE mgl_have_color(const char *stl);
 /// Find symbol in string excluding {} and return its position or NULL
-const char *mglchr(const char *str, char ch);
+MGL_EXPORT_PURE const char *mglchr(const char *str, char ch);
 /// Find any symbol from chr in string excluding {} and return its position or NULL
-const char *mglchrs(const char *str, const char *chr);
+MGL_EXPORT_PURE const char *mglchrs(const char *str, const char *chr);
 /// Set number of thread for plotting and data handling (for pthread version only)
 void MGL_EXPORT mgl_set_num_thr(int n);
 void MGL_EXPORT mgl_set_num_thr_(int *n);

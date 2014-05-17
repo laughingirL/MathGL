@@ -722,15 +722,15 @@ void MainWindow::addPanel(QWidget *w, QString name)
 	ltab->setCurrentWidget(w);
 }
 //-----------------------------------------------------------------------------
-MainWindow *findMain(QWidget *wnd)
+MGL_LOCAL_PURE MainWindow *findMain(QWidget *wnd)
 {
 	MainWindow *mw=0;
 	QObject *w=wnd;
 
-	while(w)
+	while(w && !mw)
 	{
 		mw = dynamic_cast<MainWindow *>(w);
-		if(mw)	break;	else w = w->parent();
+		w = w->parent();
 	}
 	return mw;
 }
