@@ -261,9 +261,9 @@ void MGL_NO_EXPORT mgl_fill_fit(HMGL gr, mglData &fit, mglData &in, mglFitData &
 	std::vector<mglDataA*> list;
 	for(long i=0;i<fd.m;i++)
 	{	vv[i].s=var[i];	vv[i].Fill(in.a[i]);	list.push_back(vv+i);	}
-	mglDataV x(nx,ny,nz);	x.Fill(gr->Min.x,gr->Max.x,'x');	x.s = L"x";	list.push_back(&x);
-	mglDataV y(nx,ny,nz);	y.Fill(gr->Min.y,gr->Max.y,'y');	y.s = L"y";	list.push_back(&y);
-	mglDataV z(nx,ny,nz);	z.Fill(gr->Min.z,gr->Max.z,'z');	z.s = L"z";	list.push_back(&z);
+	mglDataV x(nx,ny,nz, gr->Min.x,gr->Max.x,'x');	x.s = L"x";	list.push_back(&x);
+	mglDataV y(nx,ny,nz, gr->Min.y,gr->Max.y,'y');	y.s = L"y";	list.push_back(&y);
+	mglDataV z(nx,ny,nz, gr->Min.z,gr->Max.z,'z');	z.s = L"z";	list.push_back(&z);
 	mglData res = mglFormulaCalc(fd.eq, list);
 	long nn = nx*ny*nz;
 	memcpy(fit.a+k*nn,res.a,nn*sizeof(mreal));

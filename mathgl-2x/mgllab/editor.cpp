@@ -70,6 +70,7 @@ bool is_num(const char *s)	// number
 	if(n>=2 && !strncmp("on",s,2) && (s[2]<=' ' || s[2]==';' || s[2]==':'))	return true;
 	if(n>=3 && !strncmp("off",s,3) && (s[3]<=' ' || s[3]==';' || s[2]==':'))	return true;
 	if(n>=3 && !strncmp("nan",s,3) && (s[3]<=' ' || s[3]==';' || s[2]==':'))	return true;
+	if(n>=3 && !strncmp("inf",s,3) && (s[3]<=' ' || s[3]==';' || s[2]==':'))	return true;
 	for(i=0;i<n;i++)
 	{
 		if(s[i]<=' ' || s[i]==';')	break;

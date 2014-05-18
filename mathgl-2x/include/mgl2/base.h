@@ -89,7 +89,7 @@ public:
 	const mglStack<T> &operator=(const mglStack<T> &st)
 	{
 		pb=st.pb;	clear();	reserve(st.n);
-		for(size_t i=0;i<st.m;i++)	memcpy(dat[i],st.dat[i],(1<<pb)*sizeof(T));
+		for(size_t i=0;i<st.m && i<m;i++)	memcpy(dat[i],st.dat[i],(1<<pb)*sizeof(T));
 		n = st.n;	return st;
 	}
 };

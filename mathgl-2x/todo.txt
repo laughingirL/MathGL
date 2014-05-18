@@ -31,13 +31,13 @@
 24. Enable consecutive (as multiplication of matrices instead of single summary one) rotation of axis + the same in JS. Problem with widgets?!?
 28. Add FlowData() for getting flow thread coordinates as output array?!!
 31. Complex (hex) colors in inline text command (like #{b9} or #{x0000ff})
-32. Gradient for text (glyph-by-glyph) for whole string (not inline) ???
 36. Extra markers for '&' and '&#' signs ?!?
 38. Read JPEG files for Background() and mglData::Import()
 43. Spline for HCDT
 44. Exclude "TODO non-mglData"
 45. Adjust format for printed numbers (i.e. write function which will produce shortest text) + flag of fixed format + flag of TeX-notation
 46. New algorithm for Cont,ContF for "quasi-random" values
+47. Improve fplot, fsurf ???
 
 YY. Optimize code (especially Quality=0 ?!?)
 ZZ. Update *.i for new functions {before release!!!}
@@ -75,6 +75,8 @@ C. Translate to Russian everything
 24. Docs about new SetTicks() and mgl_set_ticks_fact*()
 25. Notice about MGL_HAVE_C99_COMPLEX, MGL_SYS_NAN into "Installation" section.
 26. Style 'f' for fixed format (like "%.2f") in Table() and Label().
+27. Color gradient (color scheme) for glyphs of text
+
 
 ============= UDAV =============
 

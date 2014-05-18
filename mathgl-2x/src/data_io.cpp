@@ -653,39 +653,35 @@ mreal MGL_EXPORT mgl_data_min_real(HCDT d, mreal *x, mreal *y, mreal *z)
 mreal MGL_EXPORT mgl_data_min_real_(uintptr_t *d, mreal *x, mreal *y, mreal *z)
 {	return mgl_data_min_real(_DT_,x,y,z);	}
 //-----------------------------------------------------------------------------
-MGL_NO_EXPORT void *mgl_fill_x(void *par)
-{
-	mglThreadD *t=(mglThreadD *)par;
-	long nx=t->p[0],ny=t->p[1];
-	mreal *b=t->a, x1=t->b[0], dx=t->b[1];
-	register char dir = t->s[0];
-	if(dir=='x')
-#if !MGL_HAVE_PTHREAD
-#pragma omp parallel for
-#endif
-		for(long i0=t->id;i0<t->n;i0+=mglNumThr)	b[i0] = x1+dx*(i0%nx);
-	else if(dir=='y')
-#if !MGL_HAVE_PTHREAD
-#pragma omp parallel for
-#endif
-		for(long i0=t->id;i0<t->n;i0+=mglNumThr)	b[i0] = x1+dx*((i0/nx)%ny);
-	else if(dir=='z')
-#if !MGL_HAVE_PTHREAD
-#pragma omp parallel for
-#endif
-		for(long i0=t->id;i0<t->n;i0+=mglNumThr)	b[i0] = x1+dx*(i0/(nx*ny));
-	return 0;
-}
 void MGL_EXPORT mgl_data_fill(HMDT d, mreal x1,mreal x2,char dir)
 {
 	if(mgl_isnan(x2))	x2=x1;
 	if(dir<'x' || dir>'z')	dir='x';
-	long par[2]={d->nx,d->ny};
-	mreal b[2]={x1,x2-x1};
-	if(dir=='x')	b[1] *= d->nx>1 ? 1./(d->nx-1):0;
-	if(dir=='y')	b[1] *= d->ny>1 ? 1./(d->ny-1):0;
-	if(dir=='z')	b[1] *= d->nz>1 ? 1./(d->nz-1):0;
-	mglStartThread(mgl_fill_x,0,d->nx*d->ny*d->nz,d->a,b,0,par,0,0,0,&dir);
+	long nx=d->nx,ny=d->ny,nz=d->nz;
+	if(dir=='x')
+	{
+		mreal dx = d->nx>1 ? (x2-x1)/(d->nx-1):0;
+#pragma omp parallel for collapse(2)
+		for(long j=0;j<ny*nz;j++)	for(long i=1;i<nx;i++)	d->a[i+nx*j] = x1+dx*i;
+#pragma omp parallel for
+		for(long j=0;j<ny*nz;j++)	d->a[nx*j] = x1;
+	}
+	if(dir=='y')
+	{
+		mreal dx = d->ny>1 ? (x2-x1)/(d->ny-1):0;
+#pragma omp parallel for collapse(3)
+		for(long k=0;k<nz;k++)	for(long j=1;j<ny;j++)	for(long i=0;i<nx;i++)	d->a[i+nx*(j+ny*k)] = x1+dx*j;
+#pragma omp parallel for collapse(2)
+		for(long j=0;j<nz;j++)	for(long i=0;i<nx;i++)	d->a[i+nx*ny*j] = x1;
+	}
+	if(dir=='z')
+	{
+		mreal dx = d->nz>1 ? (x2-x1)/(d->nz-1):0;
+#pragma omp parallel for collapse(2)
+		for(long j=1;j<nz;j++)	for(long i=0;i<nx*ny;i++)	d->a[i+nx*ny*j] = x1+dx*j;
+#pragma omp parallel for
+		for(long j=0;j<nx*ny;j++)	d->a[j] = x1;
+	}
 }
 void MGL_EXPORT mgl_data_fill_(uintptr_t *d, mreal *x1,mreal *x2,const char *dir,int)
 {	mgl_data_fill(_DT_,*x1,*x2,*dir);	}
@@ -879,9 +875,9 @@ void MGL_EXPORT mgl_data_modify_(uintptr_t *d, const char *eq,int *dim,int l)
 void MGL_EXPORT mgl_data_modify_vw(HMDT d, const char *eq,HCDT vdat,HCDT wdat)
 {
 	std::wstring s = d->s;	d->s = L"u";
-	mglDataV x(d->nx,d->ny,d->nz);	x.Fill(0,1,'x');	x.s=L"x";
-	mglDataV y(d->nx,d->ny,d->nz);	y.Fill(0,1,'y');	y.s=L"y";
-	mglDataV z(d->nx,d->ny,d->nz);	z.Fill(0,1,'z');	z.s=L"z";
+	mglDataV x(d->nx,d->ny,d->nz, 0,1,'x');	x.s=L"x";
+	mglDataV y(d->nx,d->ny,d->nz, 0,1,'y');	y.s=L"y";
+	mglDataV z(d->nx,d->ny,d->nz, 0,1,'z');	z.s=L"z";
 	mglDataV r(d->nx,d->ny,d->nz);	r.s=L"#$mgl";
 	mglData v(vdat), w(wdat);	v.s = L"v";	w.s = L"w";
 	std::vector<mglDataA*> list;

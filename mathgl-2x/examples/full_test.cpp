@@ -69,16 +69,17 @@ void smgl_style(mglGraph *gr);
 #include <mgl2/font.h>
 void test(mglGraph *gr)
 {
-	mglData x("x.txt"), y("y.txt"), z("z.txt");
-	gr->SetRanges(x,y,z);
-	gr->SubPlot(2,1,0);	gr->Cont(z);	gr->Mesh(z,"k");
-	gr->SubPlot(2,1,1);	gr->ContF(z);	gr->Mesh(z,"k");
-	return;
 	mglParse par;
 	par.Execute(gr,"xrange -4*pi 4*pi:xtick pi 0 nan '\\pi':axis");
 //	par.Execute(gr,"alpha on:fsurf 'x' 'Bb{A1}cy{xFF000088}R'");
 //	gr->WriteSVG("test.svg");
 //	par.Execute(gr,"light on:addlegend 'r' 'r':legend");
+	return;
+	mglData x("x.txt"), y("y.txt"), z("z.txt");
+	gr->SetRanges(x,y,z);
+	gr->SubPlot(2,1,0);	gr->Cont(z);	gr->Mesh(z,"k");
+	gr->SubPlot(2,1,1);	gr->ContF(z);	gr->Mesh(z,"k");
+	return;
 }
 //-----------------------------------------------------------------------------
 #if !defined(_MSC_VER) && !defined(__BORLANDC__)

@@ -64,6 +64,7 @@ void Fl_Data_Table::draw_cell(TableContext context, int R, int C, int X, int Y, 
 		fl_font(FL_HELVETICA, 14);
 		fl_color(FL_BLACK);
 		if(mgl_isnan(data[C+nx*R]))	strcpy(s,"nan");
+		else if(mgl_isbad(data[C+nx*R]))	strcpy(s,data[C+nx*R]>0?"inf":"-inf");
 		else	snprintf(s,32,"%g",data[C+nx*R]);
 		fl_draw(s, X+3, Y+3, W-6, H-6, FL_ALIGN_RIGHT);
 		break;
@@ -88,7 +89,10 @@ void Fl_Data_Table::cell_click()
 		if (input->visible())	//input->do_callback();
 		{
 			const char *s = input->value();
-			data[col + nx*row] = (s[0]==0 || !strcmp(s,"nan")) ? NAN : atof(s);
+			if(s[0]==0 || !strcmp(s,"nan"))	data[col + nx*row] = NAN;
+			else if(!strcmp(s,"inf"))	data[col + nx*row] = INFINITY;
+			else if(!strcmp(s,"-inf"))	data[col + nx*row] = -INFINITY;
+			else	data[col + nx*row] = atof(s);
 		}
 		row = R;		col = C;
 		int XX,YY,WW,HH;
@@ -96,6 +100,7 @@ void Fl_Data_Table::cell_click()
 		input->resize(XX,YY,WW,HH);
 		char s[32];
 		if(mgl_isnan(data[C+nx*R]))	strcpy(s,"nan");
+		else if(mgl_isbad(data[C+nx*R]))	strcpy(s,data[C+nx*R]>0?"inf":"-inf");
 		else	snprintf(s,32,"%g",data[C+nx*R]);
 		input->value(s);	input->show();
 		input->take_focus();
@@ -105,6 +110,9 @@ void Fl_Data_Table::cell_click()
 void Fl_Data_Table::set_value()
 {
 	const char *s = input->value();
-	data[col + nx*row] = (s[0]==0 || !strcmp(s,"nan")) ? NAN : atof(s);
+	if(s[0]==0 || !strcmp(s,"nan"))	data[col + nx*row] = NAN;
+	else if(!strcmp(s,"inf"))	data[col + nx*row] = INFINITY;
+	else if(!strcmp(s,"-inf"))	data[col + nx*row] = -INFINITY;
+	else	data[col + nx*row] = atof(s);
 }
 //-----------------------------------------------------------------------------

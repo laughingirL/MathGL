@@ -320,9 +320,9 @@ HADT MGL_EXPORT mgl_datac_momentum(HCDT dat, char dir, const char *how)
 {
 	if(!how || !(*how) || !strchr("xyz",dir))	return 0;
 	long nx=dat->GetNx(),ny=dat->GetNy(),nz=dat->GetNz();
-	mglDataV x(nx,ny,nz);	x.Fill(0,1,'x');	x.s=L"x";
-	mglDataV y(nx,ny,nz);	y.Fill(0,1,'y');	y.s=L"y";
-	mglDataV z(nx,ny,nz);	z.Fill(0,1,'z');	z.s=L"z";
+	mglDataV x(nx,ny,nz, 0,1,'x');	x.s=L"x";
+	mglDataV y(nx,ny,nz, 0,1,'y');	y.s=L"y";
+	mglDataV z(nx,ny,nz, 0,1,'z');	z.s=L"z";
 	mglDataC u(dat);	u.s=L"u";	// NOTE slow !!!
 	std::vector<mglDataA*> list;
 	list.push_back(&x);	list.push_back(&y);	list.push_back(&z);	list.push_back(&u);

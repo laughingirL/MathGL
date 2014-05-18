@@ -7,14 +7,17 @@
 * Allow arbitrary factor for axis ticks (like, gr->SetTicks('x',M_PI,0,NAN,"\\pi");).
 * Greatly increase speed of formula parsing (i.e. of functions mglData::Modify(), mglData::Fill() and similar).
 * Add arrow style 'X'
+* Add color gradient (color scheme) of glyphs in text.
 * Add manual dash style, like "{df090}"
 * Add manual mask style, like "{s00ff00182424f800}"
 * Add style 'f' for printing numbers in fixed format for functions Table() and Label().
 * Add function "random(dat)" to the list of known functions for formula parsing
+* Add 'inf' variable to the MGL and formula parsing
 * Spline() now use 5-th order polynomials to keep continuity of 2nd derivative too.
 * Function mgl_data_subdata_ext() handle NULL argument(s). Add variants of mglData::SubData() with 1 and 2 arguments.
 * Use new s-hull version for triangulation.
 * Warning messages and information are printed to stderr until call of mgl_suppress_warn(true) will disable it.
+* Add function attributes 'pure' or 'const', which potentially can speed up drawing.
 * Add function mgl_check_version() and MGL command 'version' to check if MathGL version is valid.
 
 2.2.2.1 Released 19 March 2014

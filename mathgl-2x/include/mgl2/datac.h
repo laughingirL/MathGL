@@ -44,7 +44,10 @@ using mglDataA::Momentum;
 
 	/// Initiate by other mglDataC variable
 	mglDataC(const mglDataC &d)	{	a=0;	mgl_datac_set(this,&d);		}	// NOTE: must be constructor for mglDataC& to exclude copy one
-	mglDataC(const mglDataA *d)	{	a=0;	mgl_datac_set(this, d);		}
+	mglDataC(const mglDataA &d)	{	a=0;	mgl_datac_set(this,&d);		}
+	mglDataC(const mglDataA &re, const mglDataA &im)	{	a=0;	mgl_datac_set_ri(this,&re,&im);	}
+	mglDataC(HCDT d)	{	a=0;	mgl_datac_set(this, d);		}
+	mglDataC(HCDT re, HCDT im)	{	a=0;	mgl_datac_set_ri(this, re, im);		}
 	mglDataC(bool, mglDataC *d)	// NOTE: Variable d will be deleted!!!
 	{	if(d)
 		{	nx=d->nx;	ny=d->ny;	nz=d->nz;	a=d->a;	d->a=0;
@@ -58,6 +61,12 @@ using mglDataA::Momentum;
 	mglDataC(int rows, int cols, const double *d)	{	a=0;	Set(d,cols,rows);	}
 	mglDataC(int size, const float *d)	{	a=0;	Set(d,size);	}
 	mglDataC(int rows, int cols, const float *d)	{	a=0;	Set(d,cols,rows);	}
+	mglDataC(const dual *d, int size)	{	a=0;	Set(d,size);	}
+	mglDataC(const dual *d, int rows, int cols)	{	a=0;	Set(d,cols,rows);	}
+	mglDataC(const double *d, int size)	{	a=0;	Set(d,size);	}
+	mglDataC(const double *d, int rows, int cols)	{	a=0;	Set(d,cols,rows);	}
+	mglDataC(const float *d, int size)	{	a=0;	Set(d,size);	}
+	mglDataC(const float *d, int rows, int cols)	{	a=0;	Set(d,cols,rows);	}
 	/// Read data from file
 	mglDataC(const char *fname)			{	a=0;	Read(fname);	}
 	/// Allocate the memory for data array and initialize it zero

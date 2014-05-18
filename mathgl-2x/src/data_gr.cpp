@@ -61,9 +61,9 @@ void MGL_EXPORT mgl_data_fill_eq(HMGL gr, HMDT d, const char *eq, HCDT vdat, HCD
 	if(wdat && wdat->GetNN()!=d->GetNN())	return;
 	gr->SaveState(opt);
 	std::wstring s = d->s;	d->s = L"u";
-	mglDataV x(d->nx,d->ny,d->nz);	x.Fill(gr->Min.x,gr->Max.x,'x');	x.s=L"x";
-	mglDataV y(d->nx,d->ny,d->nz);	y.Fill(gr->Min.y,gr->Max.y,'y');	y.s=L"y";
-	mglDataV z(d->nx,d->ny,d->nz);	z.Fill(gr->Min.z,gr->Max.z,'z');	z.s=L"z";
+	mglDataV x(d->nx,d->ny,d->nz, gr->Min.x,gr->Max.x,'x');	x.s=L"x";
+	mglDataV y(d->nx,d->ny,d->nz, gr->Min.y,gr->Max.y,'y');	y.s=L"y";
+	mglDataV z(d->nx,d->ny,d->nz, gr->Min.z,gr->Max.z,'z');	z.s=L"z";
 	mglDataV r(d->nx,d->ny,d->nz);	r.s=L"#$mgl";
 	mglData v(vdat), w(wdat);	v.s = L"v";	w.s = L"w";
 	std::vector<mglDataA*> list;
@@ -83,9 +83,9 @@ void MGL_EXPORT mgl_datac_fill_eq(HMGL gr, HADT d, const char *eq, HCDT vdat, HC
 	if(wdat && wdat->GetNN()!=d->GetNN())	return;
 	gr->SaveState(opt);
 	std::wstring s = d->s;	d->s = L"u";
-	mglDataV x(d->nx,d->ny,d->nz);	x.Fill(gr->Min.x,gr->Max.x,'x');	x.s=L"x";
-	mglDataV y(d->nx,d->ny,d->nz);	y.Fill(gr->Min.y,gr->Max.y,'y');	y.s=L"y";
-	mglDataV z(d->nx,d->ny,d->nz);	z.Fill(gr->Min.z,gr->Max.z,'z');	z.s=L"z";
+	mglDataV x(d->nx,d->ny,d->nz, gr->Min.x,gr->Max.x,'x');	x.s=L"x";
+	mglDataV y(d->nx,d->ny,d->nz, gr->Min.y,gr->Max.y,'y');	y.s=L"y";
+	mglDataV z(d->nx,d->ny,d->nz, gr->Min.z,gr->Max.z,'z');	z.s=L"z";
 	mglDataV r(d->nx,d->ny,d->nz);	r.s=L"#$mgl";
 	mglData v(vdat), w(wdat);	v.s = L"v";	w.s = L"w";
 	std::vector<mglDataA*> list;

@@ -546,8 +546,8 @@ public:
 	mglDataV(const mglDataV &d)	// NOTE: must be constructor for mglDataV& to exclude copy one
 	{	nx=d.nx;	ny=d.ny;	nz=d.nz;	a0=d.a0;	simpl=true;
 		di=d.di;	dj=d.dj;	dk=d.dk;	}
-	mglDataV(long xx=1,long yy=1,long zz=1)
-	{	nx=xx;	ny=yy;	nz=zz;	di=dj=dk=a0=0;	simpl=true;	}
+	mglDataV(long xx=1,long yy=1,long zz=1,mreal x1=0,mreal x2=NaN,char dir='x')
+	{	nx=xx;	ny=yy;	nz=zz;	Fill(x1,x2,dir);	}
 	virtual ~mglDataV()	{}
 
 	/// Get sizes

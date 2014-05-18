@@ -127,6 +127,7 @@ mglFormulaC::mglFormulaC(const char *string)
 		{	Kod=EQ_A;	Res = str[0]-'a';	}
 		else if(!strcmp(str,"rnd")) Kod=EQ_RND;
 		else if(!strcmp(str,"pi")) Res=M_PI;
+		else if(!strcmp(str,"inf")) Res=INFINITY;
 		else if(str[0]=='i')	Res = dual(0,str[1]>' '?atof(str+1):1);
 		else Res=atof(str);					// this is number
 	}

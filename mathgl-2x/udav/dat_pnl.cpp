@@ -115,6 +115,7 @@ void DatPanel::refresh()
 	{
 		f = var->v(i,j,kz);
 		if(mgl_isnan(f))	s = "nan";
+		else if(mgl_isbad(f))	s=f>0?"inf":"-inf";
 		else	s.sprintf("%g",f);
 		tab->item(j,i)->setText(s);
 	}
@@ -161,10 +162,15 @@ void DatPanel::putValue(int r, int c)
 	if(!var || r<0 || c<0 || r>=ny || c>=nx || !ready)	return;
 	QString s = tab->item(r,c)->text().toLower();
 	mreal f;
-	f = s=="nan" ? NAN : s.toDouble();
+	if(s=="nan")	f=NAN;
+	else if(s=="inf")	f=INFINITY;
+	else if(s=="-inf")	f=-INFINITY;
+	else	f = s.toDouble();
 	if(f!=var->v(c,r,kz))
 	{
-		if(mgl_isnan(f))	s="nan";	else	s.sprintf("%g", f);
+		if(mgl_isnan(f))	s="nan";
+		else if(mgl_isbad(f))	s=f>0?"inf":"-inf";
+		else	s.sprintf("%g", f);
 		tab->item(r,c)->setText(s);
 	}
 	var->set_v(f,c,r,kz);

@@ -387,7 +387,7 @@ mreal mglCanvas::text_plot(long p,const wchar_t *text,const char *font,mreal siz
 		mreal res;
 		TernAxis = TernAxis&(~4);
 		for(int i=0;i<4;i++)
-			res = text_plot(ProjScale(i,p,true),text,font,size/2,sh,col);
+			res = text_plot(ProjScale(i,p,true),text,font,size/2,sh,col,rot);
 		TernAxis = TernAxis|4;
 		return res;
 	}
@@ -414,7 +414,15 @@ pthread_mutex_lock(&mutexPtx);
 
 		int align;	
 		char cc = mglGetStyle(font,0,&align);	align = align&3;
-		if(cc)	col = -cc;
+		mreal col1=col, col2=col;
+		if(cc)
+		{
+			col1 = AddTexture(font);
+			col2 = col1+1/MGL_FEPSILON;
+		}
+		else if(col<0)
+			col1 = col2 = AddTexture(char(0.5-col));
+
 		Bt.x = q.x;	Bt.y = q.y - shift;	Bt.z = q.z;
 		if(ll>0)
 		{
@@ -431,7 +439,7 @@ pthread_mutex_lock(&mutexPtx);
 		{
 			char ch = mglGetStyle(font,0,0);
 			mglColor mc(ch);
-			if(!ch)	mc = col<0 ? mglColor(char(0.5-col)):Txt[long(col)].GetC(col);
+			if(!ch)	mc = Txt[long(col1)].GetC(col1);
 
 			mglPrim a(6);	a.n1 = p;
 			a.n2 = int(255*mc.r) + 256*(int(255*mc.g) + 256*int(255*mc.b));
@@ -441,8 +449,7 @@ pthread_mutex_lock(&mutexPtx);
 			add_prim(a);
 		}
 
-		col = col<0 ? AddTexture(char(0.5-col)):col;
-		q.c=col;	q.t=0;	Txt[long(col)].GetC(col,0,q);
+		q.c=col1;	q.t=0;	Txt[long(col1)].GetC(col1,0,q);
 		q.u = q.v = NAN;
 		memset(Bt.b,0,9*sizeof(mreal));
 		Bt.b[0] = Bt.b[4] = Bt.b[8] = fscl;
@@ -477,7 +484,9 @@ pthread_mutex_lock(&mutexPtx);
 			k3 = CopyNtoC(k3,bl);	k4 = CopyNtoC(k4,bl);
 			quad_plot(k1,k2,k3,k4);
 		}
-		fsize *= fnt->Puts(text,font,col)/2;
+		const char *ffont = font;
+		while(*ffont && *ffont!=':')	ffont++;
+		fsize *= fnt->Puts(text,ffont,col1,col2)/2;
 	}
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_unlock(&mutexPtx);
