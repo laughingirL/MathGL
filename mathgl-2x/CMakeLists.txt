@@ -164,6 +164,13 @@ int main(){double a=NAN, b=INFINITY;return 0;}" MGL_HAVE_NAN_INF)
 if(NOT MGL_HAVE_NAN_INF)
 	set(MGL_HAVE_NAN_INF 0)
 endif(NOT MGL_HAVE_NAN_INF)
+CHECK_CXX_SOURCE_COMPILES(
+"int __attribute__((pure)) test1() {return 0;}
+int __attribute__((const)) test2(int x) {return x*x;}
+int main(int argc, char* argv[]) {return 0;}" MGL_HAVE_ATTRIBUTE)
+if(NOT MGL_HAVE_ATTRIBUTE)
+	set(MGL_HAVE_ATTRIBUTE 0)
+endif(NOT MGL_HAVE_ATTRIBUTE)
 
 if(enable-double)
 	set(MGL_USE_DOUBLE 1)

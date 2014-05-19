@@ -24,10 +24,17 @@
 #ifndef SWIG
 
 #include "mgl2/dllexport.h"
+#if MGL_HAVE_ATTRIBUTE
 #define MGL_EXPORT_CONST	MGL_EXPORT __attribute__((const))
 #define MGL_EXPORT_PURE		MGL_EXPORT __attribute__((pure))
 #define MGL_LOCAL_CONST		MGL_NO_EXPORT __attribute__((const))
 #define MGL_LOCAL_PURE		MGL_NO_EXPORT __attribute__((pure))
+#else
+#define MGL_EXPORT_CONST	MGL_EXPORT
+#define MGL_EXPORT_PURE		MGL_EXPORT
+#define MGL_LOCAL_CONST		MGL_NO_EXPORT
+#define MGL_LOCAL_PURE		MGL_NO_EXPORT
+#endif
 
 #ifdef MGL_SRC
 #if MGL_HAVE_OMP
