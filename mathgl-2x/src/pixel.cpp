@@ -73,10 +73,10 @@ bool mglCanvas::ScalePoint(const mglMatrix *M, mglPoint &p, mglPoint &n, bool us
 //	if(TernAxis&4)	return res;
 	PostScale(M,p);
 
-	mglPoint y=n;
-	n.x = y.x*M->b[0] + y.y*M->b[1] + y.z*M->b[2];	// simpler for rotation only
-	n.y = y.x*M->b[3] + y.y*M->b[4] + y.z*M->b[5];
-	n.z = y.x*M->b[6] + y.y*M->b[7] + y.z*M->b[8];
+	register mreal nx=n.x, ny=n.y, nz=n.z;
+	n.x = nx*M->b[0] + ny*M->b[1] + nz*M->b[2];	// simpler for rotation only
+	n.y = nx*M->b[3] + ny*M->b[4] + nz*M->b[5];
+	n.z = nx*M->b[6] + ny*M->b[7] + nz*M->b[8];
 	n.Normalize();
 	return res;
 }

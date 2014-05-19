@@ -117,6 +117,8 @@ Buttons: new,load,save // newcmd,hide,annotation,collapse on/off,setup // calc. 
 
 18. Add Polygon and Angle as primitives to toolbar
 
+19. Text in toolbar primitives should have rotation
+
 ============= UNSURE ===========
 
 1. Problem with \calB and so on (\calH, ...) -- they are present only in italic font :(.

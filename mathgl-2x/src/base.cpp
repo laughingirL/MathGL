@@ -236,7 +236,7 @@ long mglBase::AddPnt(const mglMatrix *mat, mglPoint p, mreal c, mglPoint n, mrea
 	// scl=0 -- no scaling
 	// scl&1 -- usual scaling
 	// scl&2 -- disable NAN at scaling
-	// scl&4 -- ???
+	// scl&4 -- disable NAN for normales if no light
 	// scl&8 -- bypass palette for enabling alpha
 	if(mgl_isnan(c) || mgl_isnan(a))	return -1;
 	bool norefr = mgl_isnan(n.x) && mgl_isnan(n.y) && !mgl_isnan(n.z);
@@ -430,17 +430,21 @@ bool mglBase::ScalePoint(const mglMatrix *, mglPoint &p, mglPoint &n, bool use_n
 		if(z2>Max.z)	{z=Max.z;	n=mglPoint(0,0,1);}
 	}
 
-	x1=x;	y1=y;	z1=z;	x2=y2=z2=1;
-	if(fx)	{	x1 = fx->Calc(x,y,z);	x2 = fx->CalcD('x',x,y,z);	}
-	if(fy)	{	y1 = fy->Calc(x,y,z);	y2 = fy->CalcD('y',x,y,z);	}
-	if(fz)	{	z1 = fz->Calc(x,y,z);	z2 = fz->CalcD('z',x,y,z);	}
+	x1=x;	y1=y;	z1=z;
+	register mreal xx=1,xy=0,xz=0,yx=0,yy=1,yz=0,zx=0,zy=0,zz=1;
+	if(fx)	{	x1 = fx->Calc(x,y,z);	xx = fx->CalcD('x',x,y,z);	xy = fx->CalcD('y',x,y,z);	xz = fx->CalcD('z',x,y,z);	}
+	if(fy)	{	y1 = fy->Calc(x,y,z);	yx = fy->CalcD('x',x,y,z);	yy = fy->CalcD('y',x,y,z);	yz = fy->CalcD('z',x,y,z);	}
+	if(fz)	{	z1 = fz->Calc(x,y,z);	zx = fz->CalcD('x',x,y,z);	zy = fz->CalcD('y',x,y,z);	zz = fz->CalcD('z',x,y,z);	}
 	if(mgl_isnan(x1) || mgl_isnan(y1) || mgl_isnan(z1))	{	x=NAN;	return false;	}
 
 	register mreal d;
-	d = 1/(FMax.x - FMin.x);	x = (2*x1 - FMin.x - FMax.x)*d;	x2 *= 2*d;
-	d = 1/(FMax.y - FMin.y);	y = (2*y1 - FMin.y - FMax.y)*d;	y2 *= 2*d;
-	d = 1/(FMax.z - FMin.z);	z = (2*z1 - FMin.z - FMax.z)*d;	z2 *= 2*d;
-	n.x *= y2*z2;	n.y *= x2*z2;	n.z *= x2*y2;
+	d = 1/(FMax.x - FMin.x);	x = (2*x1 - FMin.x - FMax.x)*d;	xx *= d;	xy *= d;	xz *= d;
+	d = 1/(FMax.y - FMin.y);	y = (2*y1 - FMin.y - FMax.y)*d;	yx *= d;	yy *= d;	yz *= d;
+	d = 1/(FMax.z - FMin.z);	z = (2*z1 - FMin.z - FMax.z)*d;	zx *= d;	zy *= d;	zz *= d;
+	register mreal nx=n.x, ny=n.y, nz=n.z;
+	n.x = nx*xx+ny*xy+nz*xz;
+	n.y = nx*yx+ny*yy+nz*yz;
+	n.z = nx*zx+ny*zy+nz*zz;
 	if((TernAxis&3)==1)	// usual ternary axis
 	{
 		if(x+y>0)

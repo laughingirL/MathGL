@@ -39,9 +39,9 @@ public:
 	/// Clean up formula-tree
 	virtual ~mglFormulaC();
 protected:
-	dual CalcIn(const dual *a1) const;
+	dual CalcIn(const dual *a1) const __attribute__((pure));
 	mglFormulaC *Left,*Right;	// first and second argument of the function
-	int Kod;						// the function ID
+	int Kod;					// the function ID
 	dual Res;					// the number or the variable ID
 	static int Error;
 };

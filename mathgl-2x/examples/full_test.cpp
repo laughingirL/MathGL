@@ -69,8 +69,10 @@ void smgl_style(mglGraph *gr);
 #include <mgl2/font.h>
 void test(mglGraph *gr)
 {
+	gr->SetSize(800,800);
 	mglParse par;
-	par.Execute(gr,"xrange -4*pi 4*pi:xtick pi 0 nan '\\pi':axis");
+	par.Execute(gr,"ranges 0 1 0 1 0 1\ntext 0 0 0 1 1 0 'aaaaaaaa'");
+//	par.Execute(gr,"xrange -4*pi 4*pi:xtick pi 0 nan '\\pi':axis");
 //	par.Execute(gr,"alpha on:fsurf 'x' 'Bb{A1}cy{xFF000088}R'");
 //	gr->WriteSVG("test.svg");
 //	par.Execute(gr,"light on:addlegend 'r' 'r':legend");
