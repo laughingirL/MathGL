@@ -155,20 +155,21 @@ typedef float mreal;
 #define MGL_DEF_VIEWER "evince"
 #endif
 //-----------------------------------------------------------------------------
-//#define mgl_min(a,b)	(((a)>(b)) ? (b) : (a))
-//#define mgl_max(a,b)	(((a)>(b)) ? (a) : (b))
-//#define mgl_isnan(a)	((a)!=(a))
-//#define mgl_isnum(a)	((a)==(a))
-//#define mgl_isfin(a)	((a)-(a)==mreal(0.))
-//#define mgl_isbad(a)	((a)-(a)!=mreal(0.))
-
+#if defined(_MSC_VER) || defined(__BORLANDC__)
+#define mgl_min(a,b)	(((a)>(b)) ? (b) : (a))
+#define mgl_max(a,b)	(((a)>(b)) ? (a) : (b))
+#define mgl_isnan(a)	((a)!=(a))
+#define mgl_isnum(a)	((a)==(a))
+#define mgl_isfin(a)	((a)-(a)==mreal(0.))
+#define mgl_isbad(a)	((a)-(a)!=mreal(0.))
+#else
 #define mgl_isbad(a)	({typeof (a) _a = (a); _a-_a!=mreal(0.);})
 #define mgl_isfin(a)	({typeof (a) _a = (a); _a-_a==mreal(0.);})
 #define mgl_isnum(a)	({typeof (a) _a = (a); _a==_a;})
 #define mgl_isnan(a)	({typeof (a) _a = (a); _a!=_a;})
 #define mgl_min(a,b)	({typeof (a) _a = (a); typeof (b) _b = (b); _a > _b ? _b : _a;})
 #define mgl_max(a,b)	({typeof (a) _a = (a); typeof (b) _b = (b); _a > _b ? _a : _b;})
-
+#endif
 //-----------------------------------------------------------------------------
 #define SMOOTH_NONE		0
 #define SMOOTH_LINE_3	1
