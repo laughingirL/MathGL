@@ -42,7 +42,7 @@ void MGL_NO_EXPORT mgl_string_curve(mglBase *gr,long f,long ,const long *ff,cons
 	if(f<0 || nn[f]==-1)	return;	// do nothing since there is no curve
 	if(!font)	font="";
 	int pos = strchr(font,'T') ? 1:-1, align;
-	char cc=mglGetStyle(font,0,&align);		align = align&3;
+	bool cc=mglGetStyle(font,0,&align);		align = align&3;
 	mreal c=cc?gr->AddTexture(font) : gr->GetClrC(ff[f]);
 	mreal h=gr->TextHeight(font,size)/2, tet, tt;
 	wchar_t L[2]=L"a";
@@ -105,7 +105,7 @@ void MGL_NO_EXPORT mgl_string_curve(mglBase *gr,long f,long ,const long *ff,cons
 		tt=t1;	pt[j+1] = q+(s-q)*tt;
 	}
 	if(rev)	pos=-pos;
-	mreal dc = len>1?1/MGL_FEPSILON/(len-1):0;
+	mreal dc = (cc && len>1)?1/MGL_FEPSILON/(len-1):0;
 	for(j=0;j<len;j++)	// draw text
 	{
 		L[0] = text[align!=2?j:len-1-j];	s = pt[j+1]-pt[j];	l = !s;

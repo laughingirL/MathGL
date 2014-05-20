@@ -32,14 +32,17 @@ extern mglTeXsymb mgl_tex_symb[];
 //mglFont mglDefFont("nofont");
 mglFont mglDefFont;
 //-----------------------------------------------------------------------------
-char mglGetStyle(const char *how, int *font, int *align)
+bool mglGetStyle(const char *how, int *font, int *align)
 {
-	char col=0;
+	bool col=false;
 	if(align)	*align = 1;	// centering text by default
 	if(!how || *how==0)	return col;
 	// NOTE: no brightness for text color
 	for(;*how && *how!=':';how++)
-		if(strchr(MGL_COLORS,*how))	col=*how;
+	{
+		if(strchr(MGL_COLORS,*how))		col = true;
+		if(*how=='{' && how[1]=='x')	col = true;
+	}
 	if(align)
 	{
 		*align = 1;
@@ -63,8 +66,7 @@ char mglGetStyle(const char *how, int *font, int *align)
 float mglFont::Puts(const char *str,const char *how,float c1,float c2) const
 {
 	int font=0, align=1;	float w=0;
-	char cc=mglGetStyle(how,&font,&align);
-	if(cc)	c1=c2=-cc;
+	mglGetStyle(how,&font,&align);
 	MGL_TO_WCS(str,w = Puts(wcs,font,align,c1,c2));
 	return w;
 }
@@ -80,8 +82,7 @@ float mglFont::Width(const char *str,const char *how) const
 float mglFont::Puts(const wchar_t *str,const char *how,float c1,float c2) const
 {
 	int font=0, align=1;
-	char cc=mglGetStyle(how,&font,&align);
-	if(cc)	c1=c2=-cc;
+	mglGetStyle(how,&font,&align);
 	return Puts(str, font, align,c1,c2);
 }
 //-----------------------------------------------------------------------------

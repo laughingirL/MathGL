@@ -413,15 +413,15 @@ pthread_mutex_lock(&mutexPtx);
 	//		shift *= h;
 
 		int align;	
-		char cc = mglGetStyle(font,0,&align);	align = align&3;
 		mreal col1=col, col2=col;
-		if(cc)
+		if(mglGetStyle(font,0,&align))
 		{
 			col1 = AddTexture(font);
 			col2 = col1+1/MGL_FEPSILON;
 		}
 		else if(col<0)
 			col1 = col2 = AddTexture(char(0.5-col));
+		align = align&3;
 
 		Bt.x = q.x;	Bt.y = q.y - shift;	Bt.z = q.z;
 		if(ll>0)
@@ -437,10 +437,7 @@ pthread_mutex_lock(&mutexPtx);
 
 		if(!(Quality&MGL_DRAW_LMEM))	// add text itself
 		{
-			char ch = mglGetStyle(font,0,0);
-			mglColor mc(ch);
-			if(!ch)	mc = Txt[long(col1)].GetC(col1);
-
+			mglColor mc = Txt[long(col1)].GetC(col1);
 			mglPrim a(6);	a.n1 = p;
 			a.n2 = int(255*mc.r) + 256*(int(255*mc.g) + 256*int(255*mc.b));
 			mglText txt(text,font);
@@ -459,7 +456,6 @@ pthread_mutex_lock(&mutexPtx);
 		{
 			long k1,k2,k3,k4;	mglPnt pt;	mglPoint pp;
 			w = fnt->Width(text,font);	h = fnt->Height(font);
-//			int align;	mglGetStyle(font,0,&align);	align = align&3;
 			mreal d=-w*align/2.-h*0.2;	w+=h*0.4;
 			pt = q;	pp = mglPoint(d,-h*0.4);		PostScale(&Bt,pp);
 			pt.x=pt.xx=pp.x;	pt.y=pt.yy=pp.y;
@@ -942,18 +938,18 @@ void mglCanvas::Title(const wchar_t *title,const char *stl,mreal size)
 	mreal s = size>0 ? size/FontSize:-size, h=TextHeight(stl,size)*s/2;
 	if(h>=inH)	{	SetWarn(mglWarnSpc,"Title");	return;	}
 	static int cgid=1;	StartGroup("Title",cgid++);
-	bool box=mglchr(stl,'#');
 	int align;
-	char col = mglGetStyle(stl,0,&align);	align = align&3;
-	if(col==0)	col = 'k';
+	bool box=mglchr(stl,'#'), col = mglGetStyle(stl,0,&align);
+	align = align&3;
 	mreal y=inY+inH-h;
 	mglPoint p(inX + inW*align/2.,y,3*Depth),q(NAN,NAN,NAN);
 	mglMatrix M=B;	M.norot=true;
 	if(title)	text_plot(AddPnt(&M,p,-1,q,-1,0),title,stl,size);
 	if(box)	//	draw boungind box
 	{
-		mreal c1=AddTexture('w'), c2=AddTexture(col);
-		if((Flag&3)==2)	{	mreal cc=c1;	c2=c1;	c1=cc;	}
+		mreal c1=AddTexture('w'), c2=col?AddTexture(stl):AddTexture('k');
+		if((Flag&3)==2 && !col)	{	mreal cc=c1;	c2=c1;	c1=cc;	}
+		else if((Flag&3)==2)	c1=AddTexture('k')
 		long k1,k2,k3,k4;
 		k1=AddPnt(&M,mglPoint(inX,y-h*0.4,3*Depth),c1,q,-1,0);
 		k2=AddPnt(&M,mglPoint(inX+inW,y-h*0.4,3*Depth),c1,q,-1,0);
