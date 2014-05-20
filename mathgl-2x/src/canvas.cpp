@@ -447,7 +447,7 @@ pthread_mutex_lock(&mutexPtx);
 		}
 
 		q.c=col1;	q.t=0;	Txt[long(col1)].GetC(col1,0,q);
-		q.u = q.v = NAN;
+		q.u = q.v = NAN;	q.a=q.t=q.ta=1;
 		memset(Bt.b,0,9*sizeof(mreal));
 		Bt.b[0] = Bt.b[4] = Bt.b[8] = fscl;
 		register mreal opf = Bt.pf;
@@ -949,7 +949,7 @@ void mglCanvas::Title(const wchar_t *title,const char *stl,mreal size)
 	{
 		mreal c1=AddTexture('w'), c2=col?AddTexture(stl):AddTexture('k');
 		if((Flag&3)==2 && !col)	{	mreal cc=c1;	c2=c1;	c1=cc;	}
-		else if((Flag&3)==2)	c1=AddTexture('k')
+		else if((Flag&3)==2)	c1=AddTexture('k');
 		long k1,k2,k3,k4;
 		k1=AddPnt(&M,mglPoint(inX,y-h*0.4,3*Depth),c1,q,-1,0);
 		k2=AddPnt(&M,mglPoint(inX+inW,y-h*0.4,3*Depth),c1,q,-1,0);

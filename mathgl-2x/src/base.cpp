@@ -284,7 +284,7 @@ long mglBase::CopyNtoC(long from, mreal c)
 {
 	if(from<0)	return -1;
 	mglPnt p=Pnt[from];
-	if(mgl_isnum(c))	{	p.c=c;	p.t=0;	Txt[long(c)].GetC(c,0,p);	}
+	if(mgl_isnum(c))	{	p.c=c;	p.t=1;	Txt[long(c)].GetC(c,0,p);	p.a=1;	}
 	long k;
 #pragma omp critical(pnt)
 	{k=Pnt.size();	MGL_PUSH(Pnt,p,mutexPnt);}	return k;
