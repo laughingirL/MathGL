@@ -71,7 +71,9 @@ void test(mglGraph *gr)
 {
 	gr->SetSize(800,800);
 	mglParse par;
-	par.Execute(gr,"text 0 0 ' ' 'r@'");
+	par.Execute(gr,"new a 10 15 'rnd*2-1'\n"
+		"subplot 2 2 0:dens a '#':box\nsubplot 2 2 1:cont a:mesh a 'k':box\n"
+		"subplot 2 2 2:contf a:mesh a 'k':box\nsubplot 2 2 3:boxs a:box");
 //	par.Execute(gr,"xrange -4*pi 4*pi:xtick pi 0 nan '\\pi':axis");
 //	par.Execute(gr,"alpha on:fsurf 'x' 'Bb{A1}cy{xFF000088}R'");
 //	gr->WriteSVG("test.svg");

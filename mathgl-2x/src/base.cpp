@@ -206,7 +206,7 @@ void mglGlyph::Create(long Nt, long Nl)
 	line = nl>0?new short[2*nl]:0;
 }
 //-----------------------------------------------------------------------------
-bool __attribute__((pure)) mglGlyph::operator==(const mglGlyph &g)
+bool MGL_FUNC_PURE mglGlyph::operator==(const mglGlyph &g)
 {
 	if(nl!=g.nl || nt!=g.nt)	return false;
 	if(trig && memcmp(trig,g.trig,6*nt*sizeof(short)))	return false;

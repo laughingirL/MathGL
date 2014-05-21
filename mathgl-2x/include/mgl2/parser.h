@@ -98,8 +98,8 @@ public:
 	mglParser(bool setsize=false);
 	~mglParser();
 	/// Find the command by the keyword name
-	const mglCommand *FindCommand(const char *name) const __attribute__((pure));
-	const mglCommand *FindCommand(const wchar_t *name) const __attribute__((pure));
+	const mglCommand *FindCommand(const char *name) const MGL_FUNC_PURE;
+	const mglCommand *FindCommand(const wchar_t *name) const MGL_FUNC_PURE;
 	/// Parse and execute the string of MGL script
 	inline int Parse(HMGL gr, const char *str, long pos=0)
 	{	mglGraph GR(gr);	return Parse(&GR,str,pos);	}
@@ -129,14 +129,14 @@ public:
 	/// Check if name is function and return its address (or 0 if no)
 	long IsFunc(const std::wstring &name, int *narg=0);
 	/// Find variable or return 0 if absent
-	mglDataA *FindVar(const char *name) __attribute__((pure));
-	mglDataA *FindVar(const wchar_t *name) __attribute__((pure));
+	mglDataA *FindVar(const char *name) MGL_FUNC_PURE;
+	mglDataA *FindVar(const wchar_t *name) MGL_FUNC_PURE;
 	/// Find variable or create it if absent
 	mglData *AddVar(const char *name);
 	mglData *AddVar(const wchar_t *name);
 	/// Find number or return 0 if absent
-	mglNum *FindNum(const char *name) __attribute__((pure));
-	mglNum *FindNum(const wchar_t *name) __attribute__((pure));
+	mglNum *FindNum(const char *name) MGL_FUNC_PURE;
+	mglNum *FindNum(const wchar_t *name) MGL_FUNC_PURE;
 	/// Find number or create it if absent
 	mglNum *AddNum(const char *name);
 	mglNum *AddNum(const wchar_t *name);

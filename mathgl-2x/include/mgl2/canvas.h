@@ -158,7 +158,7 @@ using mglBase::Light;
 	/// Set size of frame in pixels. Normally this function is called internaly.
 	virtual void SetSize(int w,int h);
 	/// Get ratio (mreal width)/(mreal height).
-	mreal GetRatio() const __attribute__((pure));
+	mreal GetRatio() const MGL_FUNC_PURE;
 	/// Get bitmap data prepared for saving to file
 	virtual unsigned char **GetRGBLines(long &w, long &h, unsigned char *&f, bool alpha=false);
 	/// Get RGB bitmap of current state image.
@@ -183,7 +183,7 @@ using mglBase::Light;
 	inline void SetDelay(mreal d)	{	Delay=d;	}
 
 	/// Calculate 3D coordinate {x,y,z} for screen point {xs,ys}
-	mglPoint CalcXYZ(int xs, int ys, bool real=false) const __attribute__((pure));
+	mglPoint CalcXYZ(int xs, int ys, bool real=false) const MGL_FUNC_PURE;
 	/// Calculate screen point {xs,ys} for 3D coordinate {x,y,z}
 	void CalcScr(mglPoint p, int *xs, int *ys) const;
 	mglPoint CalcScr(mglPoint p) const;
@@ -192,7 +192,7 @@ using mglBase::Light;
 	/// Get object id
 	inline int GetObjId(long xs,long ys) const	{	return OI[xs+Width*ys];	}
 	/// Get subplot id
-	int GetSplId(long xs,long ys) const __attribute__((pure));
+	int GetSplId(long xs,long ys) const MGL_FUNC_PURE;
 	/// Check if there is active point or primitive (n=-1)
 	int IsActive(int xs, int ys,int &n);
 
@@ -371,9 +371,9 @@ protected:
 	/// Retur color for primitive depending lighting
 	uint32_t GetColor(const mglPrim &p);
 
-	mreal GetOrgX(char dir, bool inv=false) const __attribute__((pure));	///< Get Org.x (parse NAN value)
-	mreal GetOrgY(char dir, bool inv=false) const __attribute__((pure));	///< Get Org.y (parse NAN value)
-	mreal GetOrgZ(char dir, bool inv=false) const __attribute__((pure));	///< Get Org.z (parse NAN value)
+	mreal GetOrgX(char dir, bool inv=false) const MGL_FUNC_PURE;	///< Get Org.x (parse NAN value)
+	mreal GetOrgY(char dir, bool inv=false) const MGL_FUNC_PURE;	///< Get Org.y (parse NAN value)
+	mreal GetOrgZ(char dir, bool inv=false) const MGL_FUNC_PURE;	///< Get Org.z (parse NAN value)
 
 	void mark_plot(long p, char type, mreal size=1);
 	void arrow_plot(long p1, long p2, char st);
@@ -396,7 +396,7 @@ protected:
 	bool IsSame(const mglPrim &pr,mreal wp,mglColor cp,int st);
 
 	// restore normalized coordinates from screen ones
-	mglPoint RestorePnt(mglPoint ps, bool norm=false) const __attribute__((pure));
+	mglPoint RestorePnt(mglPoint ps, bool norm=false) const MGL_FUNC_PURE;
 
 	// functions for multi-threading
 	void pxl_pntcol(long id, long n, const void *);
@@ -432,7 +432,7 @@ private:
 	char GetLabelPos(mreal c, long kk, mglAxis &aa);
 	/// Draw tick
 	void tick_draw(mglPoint o, mglPoint d1, mglPoint d2, int f);
-	mreal FindOptOrg(char dir, int ind) const __attribute__((pure));
+	mreal FindOptOrg(char dir, int ind) const MGL_FUNC_PURE;
 	/// Transform mreal color and alpha to bits format
 	unsigned char* col2int(const mglPnt &p, unsigned char *r, int obj_id);
 	/// Combine colors in 2 plane.

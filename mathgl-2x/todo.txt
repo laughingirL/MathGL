@@ -38,6 +38,7 @@
 45. Adjust format for printed numbers (i.e. write function which will produce shortest text) + flag of fixed format + flag of TeX-notation
 46. New algorithm for Cont,ContF for "quasi-random" values
 47. Improve fplot, fsurf ???
+48. Check reading complex numbers + simple number as imag=0
 49. Add color gradient in text sample
 
 YY. Optimize code (especially Quality=0 ?!?)

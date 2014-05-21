@@ -71,9 +71,9 @@ public:
 	inline bool Ready() const	{	return numg!=0;	}
 
 	/// Get height of text
-	float Height(int font) const __attribute__((pure));
+	float Height(int font) const MGL_FUNC_PURE;
 	/// Get height of text
-	float Height(const char *how) const __attribute__((pure));
+	float Height(const char *how) const MGL_FUNC_PURE;
 	/// Print text string for font specified by string
 	float Puts(const char *str,const char *how,float c1,float c2) const;
 	/// Get width of text string for font specified by string
@@ -84,7 +84,7 @@ public:
 	float Width(const wchar_t *str,const char *how) const;
 
 	/// Get internal code for symbol
-	long Internal(unsigned s) const __attribute__((pure));
+	long Internal(unsigned s) const MGL_FUNC_PURE;
 	/// Return number of glyphs
 	inline unsigned GetNumGlyph() const	{	return numg;	};
 	/// Return some of pointers
@@ -119,7 +119,7 @@ protected:
 	/// Parse LaTeX command
 	unsigned Parse(const wchar_t *s) const;
 	/// Get symbol for character ch with given font style
-	unsigned Symbol(char ch) const __attribute__((pure));
+	unsigned Symbol(char ch) const MGL_FUNC_PURE;
 private:
 	float get_ptr(long &i,unsigned *str, unsigned **b1, unsigned **b2,float &w1,float &w2, float f1, float f2, int st) const;
 	bool read_data(const char *fname, float *ff, short *wdt, short *numl, int *posl, short *numt, int *post, std::vector<short> &buf);
