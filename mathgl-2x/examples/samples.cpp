@@ -210,6 +210,7 @@ void smgl_fexport(mglGraph *gr)	// test file export
 	gr->WriteTEX("fexport.tex");
 	gr->WriteOBJ("fexport.obj");
 	gr->WritePRC("fexport.prc");
+	gr->WriteJSON("fexport.json");
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_refill="new x 10 '0.5+rnd':cumsum x 'x':norm x -1 1\n"

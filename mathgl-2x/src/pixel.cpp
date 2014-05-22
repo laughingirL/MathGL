@@ -382,16 +382,7 @@ void mglCanvas::pxl_setz_adv(long id, long n, const void *)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::pxl_prmcol(long id, long n, const void *)
-{
-#if !MGL_HAVE_PTHREAD
-#pragma omp parallel for
-#endif
-	for(long i=id;i<n;i+=mglNumThr)
-		prm_col[i] = GetColor(GetPrm(i));
-}
-//-----------------------------------------------------------------------------
-uint32_t mglCanvas::GetColor(const mglPrim &p)
+uint32_t mglCanvas::GetColor(const mglPrim &p) const
 {
 	mglRGBA res, c1,c2,c3,c4;
 	c1.c=pnt_col[p.type==1?p.n2:p.n1];
@@ -481,10 +472,8 @@ void mglCanvas::PreparePrim(int fast)
 	}
 	if(fast>0)
 	{
-		pnt_col.resize(Pnt.size());
+		if(pnt_col)	delete []pnt_col;	pnt_col = new uint32_t[Pnt.size()];
 		mglStartThread(&mglCanvas::pxl_pntcol,this,Pnt.size());
-		prm_col.resize(Prm.size());
-		mglStartThread(&mglCanvas::pxl_prmcol,this,Prm.size());
 	}
 }
 //-----------------------------------------------------------------------------
@@ -622,7 +611,7 @@ void mglCanvas::Clf(mglColor Back)
 	Fog(0);		PDef = 0xffff;	pPos = 0;	StartAutoGroup(NULL);
 	Pnt.clear();	Prm.clear();	Ptx.clear();	Glf.clear();
 	Sub.clear();	Leg.clear();	Grp.clear();	Act.clear();
-	pnt_col.clear();	prm_col.clear();
+//	pnt_col.clear();	prm_col.clear();
 
 #pragma omp critical(txt)
 	{
@@ -644,7 +633,7 @@ void mglCanvas::Clf(const char *col)
 	Fog(0);		PDef = 0xffff;	pPos = 0;	StartAutoGroup(NULL);
 	Pnt.clear();	Prm.clear();	Ptx.clear();	Glf.clear();
 	Sub.clear();	Leg.clear();	Grp.clear();	Act.clear();
-	pnt_col.clear();	prm_col.clear();
+//	pnt_col.clear();	prm_col.clear();
 
 #pragma omp critical(txt)
 	{
@@ -750,7 +739,7 @@ void mglCanvas::pnt_plot(long x,long y,mreal z,const unsigned char ci[4], int ob
 	}
 }
 //-----------------------------------------------------------------------------
-unsigned char* mglCanvas::col2int(const mglPnt &p,unsigned char *r, int obj_id)
+unsigned char* mglCanvas::col2int(const mglPnt &p,unsigned char *r, int obj_id) const
 {
 	if(!r)	return r;
 	if(p.a<=0)	{	memset(r,0,4);	return r;	}
@@ -820,7 +809,7 @@ unsigned char* mglCanvas::col2int(const mglPnt &p,unsigned char *r, int obj_id)
 }
 //-----------------------------------------------------------------------------
 /// color mixing: color c1 is under color c2 !!!
-void mglCanvas::combine(unsigned char *c1, const unsigned char *c2)
+void mglCanvas::combine(unsigned char *c1, const unsigned char *c2) const
 {
 	if(!c2[3])	return;
 	register unsigned int a1=c1[3], a2=c2[3],b1=255-a2;

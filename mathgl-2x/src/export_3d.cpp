@@ -542,6 +542,7 @@ MGL_EXPORT const char *mgl_get_json(HMGL gr)
 std::string mglCanvas::GetJSON()
 {
 	ClearUnused();	// clear unused points
+	PreparePrim(3);
 	std::string res, buf;
 	long i,ll=0,l=(long)Pnt.size();
 	long factor = Width>1?10:10000;
@@ -561,7 +562,6 @@ std::string mglCanvas::GetJSON()
 	delete []tmp;
 
 	l = (long)Prm.size();
-	PreparePrim(3);
 	for(ll=i=0;i<l;i++)
 	{	mglRGBA c;	c.c = GetPrmCol(i);	if(c.r[3])	ll++;	}
 
@@ -572,7 +572,7 @@ std::string mglCanvas::GetJSON()
 #pragma omp parallel for private(buf)
 	for(long i=0;i<l;i++)
 	{
-		const mglPrim &p=Prm[i];	mglRGBA cp;	cp.c = GetPrmCol(i);
+		const mglPrim &p=Prm[i];	mglRGBA cp;	cp.c = GetPrmCol(i,false);
 		if(p.n1<0 || (p.type==1 && p.n2<0) || (p.type==2 && (p.n2<0 || p.n3<0)) || (p.type==3 && (p.n2<0 || p.n3<0 || p.n4<0)))
 			continue;
 		long n1=p.n1, n2=p.n2, n3=0, n4=(p.type==3||p.type==0)?p.n4:0;

@@ -314,8 +314,8 @@ using mglBase::Light;
 	void pnt_fast(long x,long y,mreal z,const unsigned char c[4], int obj_id);
 	/// preparing primitives for 2d export or bitmap drawing (0 default, 1 for 2d vector, 2 for 3d vector)
 	void PreparePrim(int fast);
-	inline uint32_t GetPntCol(long i)	{	return pnt_col[i];	}
-	inline uint32_t GetPrmCol(long i)	{	return prm_col[i];	}
+	inline uint32_t GetPntCol(long i) const	{	return pnt_col[i];	}
+	inline uint32_t GetPrmCol(long i, bool sort=true) const	{	return GetColor(GetPrm(i, sort));	}
 
 protected:
 	mreal Delay;		///< Delay for animation in seconds
@@ -369,7 +369,7 @@ protected:
 	/// Push drawing data (for frames only). NOTE: can be VERY large
 	long PushDrwDat();
 	/// Retur color for primitive depending lighting
-	uint32_t GetColor(const mglPrim &p);
+	uint32_t GetColor(const mglPrim &p) const MGL_FUNC_PURE;
 
 	mreal GetOrgX(char dir, bool inv=false) const MGL_FUNC_PURE;	///< Get Org.x (parse NAN value)
 	mreal GetOrgY(char dir, bool inv=false) const MGL_FUNC_PURE;	///< Get Org.y (parse NAN value)
@@ -400,7 +400,6 @@ protected:
 
 	// functions for multi-threading
 	void pxl_pntcol(long id, long n, const void *);
-	void pxl_prmcol(long id, long n, const void *);
 	void pxl_combine(long id, long n, const void *);
 	void pxl_memcpy(long id, long n, const void *);
 	void pxl_backgr(long id, long n, const void *);
@@ -415,7 +414,7 @@ protected:
 	void PutDrawReg(mglDrawReg *d, const mglCanvas *gr);
 
 private:
-	std::vector<uint32_t> pnt_col, prm_col;
+	uint32_t *pnt_col;
 //	mreal _tetx,_tety,_tetz;		// extra angles
 	std::vector<mglMatrix> stack;	///< stack for transformation matrices
 	GifFileType *gif;
@@ -434,9 +433,9 @@ private:
 	void tick_draw(mglPoint o, mglPoint d1, mglPoint d2, int f);
 	mreal FindOptOrg(char dir, int ind) const MGL_FUNC_PURE;
 	/// Transform mreal color and alpha to bits format
-	unsigned char* col2int(const mglPnt &p, unsigned char *r, int obj_id);
+	unsigned char* col2int(const mglPnt &p, unsigned char *r, int obj_id) const;
 	/// Combine colors in 2 plane.
-	void combine(unsigned char *c1, const unsigned char *c2);
+	void combine(unsigned char *c1, const unsigned char *c2) const;
 	/// Fast drawing of line between 2 points
 	void fast_draw(const mglPnt &p1, const mglPnt &p2, const mglDrawReg *d);
 

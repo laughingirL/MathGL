@@ -31,6 +31,7 @@ mglCanvas::mglCanvas(int w, int h) : mglBase()
 	CurFrameId=0;	Delay=0.5;
 	Width=Height=Depth=0;	ObjId=-1;
 	fscl=ftet=0;		PlotId = "frame";
+	pnt_col = 0;
 
 	ac.ch='c';
 	ax.dir = mglPoint(1,0,0);	ax.a = mglPoint(0,1,0);	ax.b = mglPoint(0,0,1);	ax.ch='x';
@@ -43,6 +44,7 @@ mglCanvas::mglCanvas(int w, int h) : mglBase()
 mglCanvas::~mglCanvas()
 {
 	if(G)	{	delete []G;	delete []C;	delete []Z;	delete []G4;delete []GB;delete []OI;	}
+	if(pnt_col)	delete []pnt_col;
 }
 //-----------------------------------------------------------------------------
 long mglCanvas::PushDrwDat()
