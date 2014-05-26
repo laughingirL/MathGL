@@ -18,6 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include <float.h>
+#include <list>
 #include "mgl2/other.h"
 #include "mgl2/data.h"
 #include "mgl2/thread.h"
@@ -261,49 +262,57 @@ void MGL_EXPORT mgl_quadplot_xy_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, u
 //	TriCont series
 //
 //-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_tricont_xyzcv(HMGL gr, HCDT v, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, const char *opt)
+#include "cont.hpp"
+//-----------------------------------------------------------------------------
+std::vector<mglSegment> MGL_NO_EXPORT mgl_tri_lines(mreal val, HCDT nums, HCDT a, HCDT x, HCDT y, HCDT z)
 {
 	long n = x->GetNx(), m = nums->GetNy();
-	if(mgl_check_trig(gr,nums,x,y,z,a,"TriCont"))	return;
-
-	long ss=gr->AddTexture(sch);
-	gr->SaveState(opt);
-	static int cgid=1;	gr->StartGroup("TriCont",cgid++);
-	bool zVal = !(mglchr(sch,'_'));
-	mglPoint p1,p2,p3;
-#pragma omp parallel for private(p1,p2,p3) collapse(2)
-	for(long k=0;k<v->GetNx();k++)	for(long i=0;i<m;i++)
+	std::vector<mglSegment> lines;
+	for(long i=0;i<m;i++)
 	{
-		if(gr->Stop)	continue;
 		register long k1 = long(nums->v(0,i)+0.1);	if(k1<0 || k1>=n)	continue;
 		register long k2 = long(nums->v(1,i)+0.1);	if(k2<0 || k2>=n)	continue;
 		register long k3 = long(nums->v(2,i)+0.1);	if(k3<0 || k3>=n)	continue;
-		register mreal val = v->v(k), c = gr->GetC(ss,val), d1,d2,d3;
-
-		d1 = mgl_d(val,a->v(k1),a->v(k2));
-		p1 = mglPoint(x->v(k1)*(1-d1)+x->v(k2)*d1, y->v(k1)*(1-d1)+y->v(k2)*d1,
-					  zVal?z->v(k1)*(1-d1)+z->v(k2)*d1:gr->Min.z);
-		d2 = mgl_d(val,a->v(k1),a->v(k3));
-		p2 = mglPoint(x->v(k1)*(1-d2)+x->v(k3)*d2, y->v(k1)*(1-d2)+y->v(k3)*d2,
-					  zVal?z->v(k1)*(1-d2)+z->v(k3)*d2:gr->Min.z);
-		d3 = mgl_d(val,a->v(k2),a->v(k3));
-		p3 = mglPoint(x->v(k2)*(1-d3)+x->v(k3)*d3, y->v(k2)*(1-d3)+y->v(k3)*d3,
-					  zVal?z->v(k2)*(1-d3)+z->v(k3)*d3:gr->Min.z);
+		register mreal v1 = a->v(k1), v2 = a->v(k2), v3 = a->v(k3);
+		register mreal d1 = mgl_d(val,v1,v2), d2 = mgl_d(val,v1,v3), d3 = mgl_d(val,v2,v3);
+		mglSegment line;
 		if(d1>=0 && d1<=1 && d2>=0 && d2<=1)
 		{
-			k1 = gr->AddPnt(p1,c);	k2 = gr->AddPnt(p2,c);
-			gr->line_plot(k1,k2);
+			line.p1 = mglPoint(x->v(k1)*(1-d1)+x->v(k2)*d1, y->v(k1)*(1-d1)+y->v(k2)*d1, z->v(k1)*(1-d1)+z->v(k2)*d1);
+			line.p2 = mglPoint(x->v(k1)*(1-d2)+x->v(k3)*d2, y->v(k1)*(1-d2)+y->v(k3)*d2, z->v(k1)*(1-d2)+z->v(k3)*d2);
 		}
 		else if(d1>=0 && d1<=1 && d3>=0 && d3<=1)
 		{
-			k1 = gr->AddPnt(p1,c);	k2 = gr->AddPnt(p3,c);
-			gr->line_plot(k1,k2);
+			line.p1 = mglPoint(x->v(k1)*(1-d1)+x->v(k2)*d1, y->v(k1)*(1-d1)+y->v(k2)*d1, z->v(k1)*(1-d1)+z->v(k2)*d1);
+			line.p2 = mglPoint(x->v(k2)*(1-d3)+x->v(k3)*d3, y->v(k2)*(1-d3)+y->v(k3)*d3, z->v(k2)*(1-d3)+z->v(k3)*d3);
 		}
 		else if(d3>=0 && d3<=1 && d2>=0 && d2<=1)
 		{
-			k1 = gr->AddPnt(p3,c);	k2 = gr->AddPnt(p2,c);
-			gr->line_plot(k1,k2);
+			line.p1 = mglPoint(x->v(k1)*(1-d2)+x->v(k3)*d2, y->v(k1)*(1-d2)+y->v(k3)*d2, z->v(k1)*(1-d2)+z->v(k3)*d2);
+			line.p2 = mglPoint(x->v(k2)*(1-d3)+x->v(k3)*d3, y->v(k2)*(1-d3)+y->v(k3)*d3, z->v(k2)*(1-d3)+z->v(k3)*d3);
 		}
+		if(line.p1!=line.p2)	lines.push_back(line);
+	}
+	return lines;
+}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_tricont_xyzcv(HMGL gr, HCDT v, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, const char *opt)
+{
+	mglDataV zz(x->GetNx(),x->GetNy());
+	if(!z)	z = &zz;
+	if(mgl_check_trig(gr,nums,x,y,z,a,"TriCont"))	return;
+
+	gr->SaveState(opt);
+	static int cgid=1;	gr->StartGroup("TriCont",cgid++);
+	bool text=(mglchr(sch,'t'));
+	bool fixed=(mglchr(sch,'_')) || (gr->Min.z==gr->Max.z);
+	long s=gr->AddTexture(sch);
+	gr->SetPenPal(sch);
+
+	for(long k=0;k<v->GetNx();k++)
+	{
+		mreal v0 = v->v(k);		zz.Fill(fixed ? gr->Min.z : v0);
+		mgl_draw_curvs(gr,v0,gr->GetC(s,v0),text,mgl_get_curvs(mgl_tri_lines(v0,nums,a,x,y,fixed?&zz:z)));
 	}
 }
 //-----------------------------------------------------------------------------
@@ -317,10 +326,10 @@ void MGL_EXPORT mgl_tricont_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCD
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_tricont_xyc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt)
-{	mgl_tricont_xyzc(gr,nums,x,y,z,z,sch,opt);	}
+{	mgl_tricont_xyzc(gr,nums,x,y,0,z,sch,opt);	}
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_tricont_xycv(HMGL gr, HCDT v, HCDT nums, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt)
-{	mgl_tricont_xyzcv(gr,v,nums,x,y,z,z,sch,opt);	}
+{	mgl_tricont_xyzcv(gr,v,nums,x,y,0,z,sch,opt);	}
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_tricont_xyzcv_(uintptr_t *gr, uintptr_t *v, uintptr_t *nums, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *c, const char *sch, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
@@ -344,6 +353,85 @@ void MGL_EXPORT mgl_tricont_xyc_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, u
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_tricont_xyc(_GR_, _DA_(nums), _DA_(x), _DA_(y), _DA_(z), s, o);
+	delete []o;	delete []s;	}
+//-----------------------------------------------------------------------------
+//
+//	TriContV series
+//
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_tricontv_xyzcv(HMGL gr, HCDT v, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, const char *opt)
+{
+	mglDataV zz(x->GetNx(),x->GetNy());
+	if(!z)	z = &zz;
+	if(mgl_check_trig(gr,nums,x,y,z,a,"TriContV"))	return;
+
+	gr->SaveState(opt);
+	static int cgid=1;	gr->StartGroup("TriContV",cgid++);
+	bool fixed=(mglchr(sch,'_')) || (gr->Min.z==gr->Max.z);
+	long s=gr->AddTexture(sch);
+	gr->SetPenPal(sch);
+
+	for(long k=0;k<v->GetNx();k++)
+	{
+		mreal v0 = v->v(k);		zz.Fill(fixed ? gr->Min.z : v0);
+		mreal dv = (gr->Max.c-gr->Min.c)/8, c = gr->GetC(s,v0);
+		if(k>0)	dv = v->v(k-1)-v->v(k);
+		else if(k<v->GetNx()-1)	dv = v->v(k)-v->v(k+1);
+		if(fixed)	dv=-dv;
+
+		const std::vector<mglSegment> curvs = mgl_get_curvs(mgl_tri_lines(v0,nums,a,x,y,fixed?&zz:z));
+		for(size_t i=0;i<curvs.size();i++)
+		{
+			const std::list<mglPoint> &pp=curvs[i].pp;
+			long f1=-1,f2=-1,g1=-1,g2=-1;
+			for(std::list<mglPoint>::const_iterator it=pp.begin(); it != pp.end(); ++it)
+			{
+				mglPoint p=*it,q(p.y,-p.x);
+				f1 = f2;	f2 = gr->AddPnt(p,c,q);	p.z+=dv;
+				g1 = g2;	g2 = gr->AddPnt(p,c,q);
+				gr->quad_plot(f1,g1,f2,g2);
+			}
+		}
+	}
+}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_tricontv_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, const char *opt)
+{
+	mreal r = gr->SaveState(opt);
+	long n = (mgl_isnan(r) || r<=0) ? 7:long(r+0.5);
+	mglData v(n);
+	for(long i=0;i<n;i++)	v.a[i] = gr->Min.c + (gr->Max.c-gr->Min.c)*mreal(i+1)/(n+1);
+	mgl_tricontv_xyzcv(gr,&v,nums,x,y,z,a,sch,0);
+}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_tricontv_xyc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt)
+{	mgl_tricontv_xyzc(gr,nums,x,y,0,z,sch,opt);	}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_tricontv_xycv(HMGL gr, HCDT v, HCDT nums, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt)
+{	mgl_tricontv_xyzcv(gr,v,nums,x,y,0,z,sch,opt);	}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_tricontv_xyzcv_(uintptr_t *gr, uintptr_t *v, uintptr_t *nums, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *c, const char *sch, const char *opt,int l,int lo)
+{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+	mgl_tricontv_xyzcv(_GR_, _DA_(v), _DA_(nums), _DA_(x), _DA_(y), _DA_(z), _DA_(c), s, o);
+	delete []o;	delete []s;	}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_tricontv_xycv_(uintptr_t *gr, uintptr_t *v, uintptr_t *nums, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *sch, const char *opt,int l,int lo)
+{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+	mgl_tricontv_xycv(_GR_, _DA_(v), _DA_(nums), _DA_(x), _DA_(y), _DA_(z), s, o);
+	delete []o;	delete []s;	}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_tricontv_xyzc_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *c, const char *sch, const char *opt, int l,int lo)
+{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+	mgl_tricontv_xyzc(_GR_, _DA_(nums), _DA_(x), _DA_(y), _DA_(z), _DA_(c), s, o);
+	delete []o;	delete []s;	}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_tricontv_xyc_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *sch, const char *opt, int l,int lo)
+{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+	mgl_tricontv_xyc(_GR_, _DA_(nums), _DA_(x), _DA_(y), _DA_(z), s, o);
 	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
 //

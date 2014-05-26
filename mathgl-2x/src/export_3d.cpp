@@ -563,7 +563,7 @@ std::string mglCanvas::GetJSON()
 
 	l = (long)Prm.size();
 	for(ll=i=0;i<l;i++)
-	{	mglRGBA c;	c.c = GetPrmCol(i);	if(c.r[3])	ll++;	}
+	{	mglRGBA c;	c.c = GetPrmCol(i,false);	if(c.r[3])	ll++;	}
 
 	res = res + mgl_sprintf("],\t\"nprim\":%ld,\t\"prim\":[\n",ll+1);
 

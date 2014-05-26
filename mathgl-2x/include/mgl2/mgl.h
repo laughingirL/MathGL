@@ -1107,6 +1107,16 @@ public:
 	{	mgl_tricont_xyzc(gr, &nums, &x, &y, &z, &a, sch, opt);	}
 	inline void TriContV(const mglDataA &v, const mglDataA &nums, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *sch="", const char *opt="")
 	{	mgl_tricont_xyzcv(gr, &v, &nums, &x, &y, &z, &a, sch, opt);	}
+	inline void TriCont(const mglDataA &v, const mglDataA &nums, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *sch="", const char *opt="")
+	{	mgl_tricont_xyzcv(gr, &v, &nums, &x, &y, &z, &a, sch, opt);	}
+
+	/// Draw contour tubes for triangle mesh for points in arrays {x,y,z} with specified color c.
+	inline void TriContVt(const mglDataA &nums, const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *sch="", const char *opt="")
+	{	mgl_tricontv_xyc(gr, &nums, &x, &y, &z, sch, opt);	}
+	inline void TriContVt(const mglDataA &nums, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *sch="", const char *opt="")
+	{	mgl_tricontv_xyzc(gr, &nums, &x, &y, &z, &a, sch, opt);	}
+	inline void TriContVt(const mglDataA &v, const mglDataA &nums, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *sch="", const char *opt="")
+	{	mgl_tricontv_xyzcv(gr, &v, &nums, &x, &y, &z, &a, sch, opt);	}
 
 	/// Draw dots in points {x,y,z}.
 	inline void Dots(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *sch="", const char *opt="")

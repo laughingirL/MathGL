@@ -4,7 +4,6 @@
 
 1. Export to COLLADA !!!
 2. GTK window/widgets ???
-3. Labels at TriCont()
 4. Rewrite glyph drawing for bitmaps (speeding up by excluding boundary checks) ?!?
 
 5. 2D textures as one of standard way for coloring -- if '%' present in color scheme

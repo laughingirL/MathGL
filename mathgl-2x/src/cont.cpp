@@ -25,6 +25,7 @@
 #else
 #include <algorithm.h>
 #endif
+#include <list>
 
 #include "mgl2/surf.h"
 #include "mgl2/cont.h"
@@ -195,136 +196,118 @@ mgl_text_y(_GR_, _DA_(y),s,f,o);	delete []o;	delete []s;	delete []f;	}
 //	Cont series
 //
 //-----------------------------------------------------------------------------
-struct mglSegment
-{
-	long next,prev;
-	mglPoint p1,p2;
-	mglSegment(mglPoint q1,mglPoint q2)	{p1=q1;p2=q2;next=prev=-1;}
-};
-// function for connecting arbitrary line segments
-/*void MGL_NO_EXPORT mgl_connect(HMGL gr, mreal val, HCDT a, HCDT x, HCDT y, HCDT z, mreal c, int text,long ak)
-{
-	long n=a->GetNx(), m=a->GetNy();
-	if(n<2 || m<2 || x->GetNx()*x->GetNy()!=n*m || y->GetNx()*y->GetNy()!=n*m || z->GetNx()*z->GetNy()!=n*m)
-	{	gr->SetWarn(mglWarnDim,"ContGen");	return;	}
-	std::vector<mglSegment> ss,cc;
-
-	register long i,j;
-	mreal d1,d2,d3,d4;
-	bool o1,o2,o3,o4;
-	mglPoint p1,p2,p3,p4,q1,q2,q3,q4;
-	for(i=0;i<n;i++)	for(j=0;j<m;j++)	// prepare segments
-	{
-		if(gr->Stop)	return;
-		d1 = mgl_d(val,a->v(i,j,ak),a->v(i+1,j,ak));		o1 = d1>=0 && d1<1;
-		d2 = mgl_d(val,a->v(i,j,ak),a->v(i,j+1,ak));		o2 = d2>=0 && d2<1;
-		d3 = mgl_d(val,a->v(i+1,j+1,ak),a->v(i+1,j,ak));	o3 = d3>=0 && d3<1;
-		d4 = mgl_d(val,a->v(i+1,j+1,ak),a->v(i,j+1,ak));	o4 = d4>=0 && d4<1;
-		p1 = mglPoint(x->v(i,j), y->v(i,j),z->v(i,j));
-		p2 = mglPoint(x->v(i+1,j), y->v(i+1,j),z->v(i+1,j));
-		p3 = mglPoint(x->v(i,j+1), y->v(i,j+1),z->v(i,j+1));
-		p4 = mglPoint(x->v(i+1,j+1), y->v(i+1,j+1),z->v(i+1,j+1));
-		q1 = p1*(1-d1)+p2*d1;	q2 = p1*(1-d2)+p3*d1;
-		q3 = p4*(1-d3)+p2*d3;	q4 = p4*(1-d4)+p3*d4;
-		if(o1 && o2)	{	o1 = o2 = false;	ss.push_back(mglSegment(q1,q2));	}
-		if(o1 && o3)	{	o1 = o3 = false;	ss.push_back(mglSegment(q1,q3));	}
-		if(o1 && o4)	{	o1 = o4 = false;	ss.push_back(mglSegment(q1,q4));	}
-		if(o2 && o3)	{	o2 = o3 = false;	ss.push_back(mglSegment(q2,q3));	}
-		if(o2 && o4)	{	o2 = o4 = false;	ss.push_back(mglSegment(q2,q4));	}
-		if(o3 && o4)	{	o3 = o4 = false;	ss.push_back(mglSegment(q3,q4));	}
-	}
-	// connect it
-	if(ss.size()==0)	return;
-	for(i=0;i<ss.size();i++)	// lets try most stupid algorithm (can be VERY slow)
-	{
-		mglSegment &s1=ss[i];
-		for(j=0;j<ss.size();j++)
-		{
-			mglSegment &s2=ss[j];
-			if(s2.prev<0 && s1.p2==s2.p1)	{	s1.next = j;	s2.prev=i;	continue;	}
-			if(s2.next<0 && s1.p1==s2.p2)	{	s1.prev = j;	s2.next=i;	continue;	}
-			//			if(s2.prev<0 && s1.p2==s2.p1)
-			//			{	s1.next = j;	s2.prev=i;	continue;	}
-		}
-	}
-}*/
+#include "cont.hpp"
 //-----------------------------------------------------------------------------
-// NOTE! returned must be deleted!!!
-struct mglPnt2	{	mreal x,y;	mglPnt2(mreal xx=0,mreal yy=0)	{x=xx;y=yy;}	};
-long *mgl_cont_prep(mreal val, HCDT a,long ak, std::vector<mglPnt2> &kk)
+std::vector<mglSegment> MGL_NO_EXPORT mgl_get_lines(mreal val, HCDT a, HCDT x, HCDT y, HCDT z, long ak)
 {
 	long n=a->GetNx(), m=a->GetNy();
-	mreal d, r, kx, ky;
-	register long i,j,k, pc=0;
-	kk.clear();
-	// add intersection point of isoline and Y axis
-	const mglData *ma = dynamic_cast<const mglData *>(a);
-	if(ma)
+	std::vector<mglSegment> lines;
+	// first add all possible lines
+	for(long j=0;j<m-1;j++)	for(long i=0;i<n-1;i++)
 	{
-		for(j=0;j<m;j++)	for(i=0;i<n-1;i++)
+		register mreal v1=a->v(i,j,ak),v2=a->v(i+1,j,ak),v3=a->v(i,j+1,ak),v4=a->v(i+1,j+1,ak);
+		register mreal dl=mgl_d(val,v1,v3),dr=mgl_d(val,v2,v4),dp=mgl_d(val,v1,v2),dn=mgl_d(val,v3,v4);
+		bool added=false;
+		if(v1>val || v4>val)
 		{
-			d = mgl_d(val,ma->a[i+n*(j+m*ak)],ma->a[i+1+n*(j+m*ak)]);
-			if(d>=0 && d<1)	kk.push_back(mglPnt2(i+d,j));
+			mglSegment line;
+			if(line.set(0,dl,dn,1,i,j,ak,x,y,z))	{	lines.push_back(line);	added=true;	}
+			if(line.set(1,dr,dp,0,i,j,ak,x,y,z))	{	lines.push_back(line);	added=true;	}
 		}
-		// add intersection point of isoline and X axis
-		for(j=0;j<m-1;j++)	for(i=0;i<n;i++)
+		else
 		{
-			d = mgl_d(val,ma->a[i+n*(j+m*ak)],ma->a[i+n*(j+1+m*ak)]);
-			if(d>=0 && d<1)	kk.push_back(mglPnt2(i,j+d));
+			mglSegment line;
+			if(line.set(0,dl,dp,0,i,j,ak,x,y,z))	{	lines.push_back(line);	added=true;	}
+			if(line.set(1,dr,dn,1,i,j,ak,x,y,z))	{	lines.push_back(line);	added=true;	}
+		}
+		if(!added)	// try to add any other variants
+		{
+			mglSegment line;
+			if(line.set(0,dl,1,dr,i,j,ak,x,y,z))	{	lines.push_back(line);	added=true;	}
+			else if(line.set(dp,0,dn,1,i,j,ak,x,y,z))	{	lines.push_back(line);	added=true;	}
+			else if(line.set(0,dl,dn,1,i,j,ak,x,y,z))	{	lines.push_back(line);	added=true;	}
+			else if(line.set(1,dr,dp,0,i,j,ak,x,y,z))	{	lines.push_back(line);	added=true;	}
+			else if(line.set(0,dl,dp,0,i,j,ak,x,y,z))	{	lines.push_back(line);	added=true;	}
+			else if(line.set(1,dr,dn,1,i,j,ak,x,y,z))	{	lines.push_back(line);	added=true;	}
 		}
 	}
-	else	for(j=0;j<m-1;j++)	for(i=0;i<n-1;i++)
+	return lines;
+}
+//-----------------------------------------------------------------------------
+std::vector<mglSegment> MGL_NO_EXPORT mgl_get_curvs(std::vector<mglSegment> lines)
+{
+	long n = lines.size(), m = n;
+	std::vector<mglSegment> curvs;
+	// create curves from lines
+	while(m>0)	// NOTE! This algorithm can be *very* slow!!!
 	{
-		register mreal vv = a->v(i,j,ak);
-		d = (i<n-1)?mgl_d(val,vv,a->v(i+1,j,ak)):-1;
-		if(d>=0 && d<1)	kk.push_back(mglPnt2(i+d,j));
-		d = (j<m-1)?mgl_d(val,vv,a->v(i,j+1,ak)):-1;
-		if(d>=0 && d<1)	kk.push_back(mglPnt2(i,j+d));
+		mglSegment curv;
+		for(long i=0;i<n;i++)	if(!lines[i].used)	// find any first line segment
+		{
+			curv.before(lines[i].p1);
+			curv.after(lines[i].p2);
+			lines[i].used=true;	m--;	break;
+		}
+		for(long i=0;i<n && m>0;i++)
+		{
+			mglSegment &l=lines[i];
+			if(l.used)	continue;
+			if(l.p1==curv.p1)		{	curv.before(l.p2);	l.used=true;	m--;	i=0;	}
+			else if(l.p2==curv.p1)	{	curv.before(l.p1);	l.used=true;	m--;	i=0;	}
+			else if(l.p1==curv.p2)	{	curv.after(l.p2);	l.used=true;	m--;	i=0;	}
+			else if(l.p2==curv.p2)	{	curv.after(l.p1);	l.used=true;	m--;	i=0;	}
+		}
+		curvs.push_back(curv);
 	}
-
-	pc = kk.size();
-	if(pc==0)	return	NULL;	// deallocate arrays and finish if no point
-	// allocate arrays for curve (nn - next, ff - prev)
-	long *nn = new long[pc], *ff = new long[pc];
-	// -1 is not parsed, -2 starting
-	for(i=0;i<pc;i++)	nn[i] = ff[i] = -1;
-	// connect points to line
-	long i11,i12,i21,i22,j11,j12,j21,j22;
-	j=-1;	// current point
-	do{
-		if(j>=0)
+	return curvs;
+}
+//-----------------------------------------------------------------------------
+void MGL_NO_EXPORT mgl_draw_curvs(HMGL gr, mreal val, mreal c, int text, const std::vector<mglSegment> curvs)
+{
+	long pc=0;
+	for(size_t i=0;i<curvs.size();i++)	pc += curvs[i].pp.size();
+	gr->Reserve(pc);
+	// fill arguments for other functions
+	long *ff = new long[pc], *nn = new long[pc], m=0, n;
+	for(size_t i=0;i<curvs.size();i++)
+	{
+		const std::list<mglPoint> &pp=curvs[i].pp;
+		for(std::list<mglPoint>::const_iterator it=pp.begin(); it != pp.end(); ++it)
 		{
-			kx = kk[j].x;	ky = kk[j].y;	i = -1;
-			i11 = long(kx+1e-5);	i12 = long(kx-1e-5);
-			j11 = long(ky+1e-5);	j12 = long(ky-1e-5);
-			r=10;
-			for(k=0;k<pc;k++)	// find closest point in grid
-			{
-				if(k==j || k==ff[j] || ff[k]!=-1)	continue;	// point is marked
-				i21 = long(kk[k].x+1e-5);	i22 = long(kk[k].x-1e-5);
-				j21 = long(kk[k].y+1e-5);	j22 = long(kk[k].y-1e-5);
-				// check if in the same cell
-				register bool cond = (i11==i21 || i11==i22 || i12==i21 || i12==i22) &&
-				(j11==j21 || j11==j22 || j12==j21 || j12==j22);
-				d = hypot(kk[k].x-kx,kk[k].y-ky);	// if several then select closest
-				if(cond && d<r)	{	r=d;	i=k;	}
-			}
-			if(i<0)	j = -1;	// no free close points
-			else			// mark the point
-			{	nn[j] = i;	ff[i] = j;	j = nn[i]<0 ? i : -1;	}
+			ff[m] = gr->AddPnt(*it, c);
+			nn[m] = m+1;	m++;
 		}
-		if(j<0)
+		nn[m-1]=-1;
+	}
+	if(text && pc>1)
+	{
+		wchar_t wcs[64];
+		mglprintf(wcs,64,L"%4.3g",val);
+		mreal del = 2*gr->TextWidth(wcs,"",-0.5);
+		// find width and height of drawing area
+		mreal ar=gr->GetRatio(), w=gr->FontFactor(), h;
+		if(del<w/5)	del = w/5;
+		if(ar<1) h=w/ar;	else {	h=w;	w*=ar;	}
+		m=long(2*w/del)+1;	n=long(2*h/del)+1;	// don't need data size anymore
+		long *oo=new long[n*m];
+		mreal *rr=new mreal[n*m];
+		for(long i=0;i<n*m;i++)	{	oo[i]=-1;	rr[i]=del*del/4;	}
+		for(long k=0;k<pc;k++)	// print label several times if possible
 		{
-			for(k=0;k<pc;k++)	if(nn[k]==-1)	// first check edges
-			{
-				if(kk[k].x==0 || fabs(kk[k].x-n+1)<1e-5 || kk[k].y==0 || fabs(kk[k].y-m+1)<1e-5)
-				{	nn[k]=-2;	j = k;	break;	}
-			}
-			if(j<0)	for(k=0;k<pc;k++)	if(nn[k]==-1)	// or any points inside
-			{	j = k;	nn[k]=-2;	break;	}
+			if(nn[k]<0)	continue;
+			mglPoint t = gr->GetPntP(ff[k]);
+			long i = long(t.x/del);	t.x -= i*del;
+			long j = long(t.y/del);	t.y -= j*del;
+			if(i<0 || i>=m || j<0 || j>=n)	continue;	// never should be here!
+			mreal xx = t.x*t.x+t.y*t.y;	i += m*j;
+			if(rr[i]>xx)	{	rr[i]=xx;	oo[i]=k;	}
 		}
-	}while(j>=0);
-	delete []ff;	return nn;
+		for(long i=0;i<n*m;i++)	if(oo[i]>=0)
+			mgl_string_curve(gr,oo[i],pc,ff,nn,wcs,"t:C",-0.5);
+		delete []oo;	delete []rr;
+	}
+	for(long i=0;i<pc;i++)	if(nn[i]>=0)	gr->line_plot(ff[i], ff[nn[i]]);
+	delete []nn;	delete []ff;
 }
 //-----------------------------------------------------------------------------
 // NOTE! All data MUST have the same size! Only first slice is used!
@@ -334,50 +317,7 @@ void MGL_EXPORT mgl_cont_gen(HMGL gr, mreal val, HCDT a, HCDT x, HCDT y, HCDT z,
 	if(n<2 || m<2 || x->GetNx()*x->GetNy()!=n*m || y->GetNx()*y->GetNy()!=n*m || z->GetNx()*z->GetNy()!=n*m)
 	{	gr->SetWarn(mglWarnDim,"ContGen");	return;	}
 
-	std::vector<mglPnt2> kk;
-	long *nn = mgl_cont_prep(val, a, ak, kk), *ff;
-	if(!nn)	return;	// nothing to do
-	register long i, pc=kk.size();
-	register mreal xx, yy;
-	ff = new long[pc];	gr->Reserve(pc);
-	for(i=0;i<pc;i++)
-	{
-		xx = kk[i].x;	yy = kk[i].y;
-		ff[i] = gr->AddPnt(mglPoint(mgl_data_linear(x,xx,yy,ak), mgl_data_linear(y,xx,yy,ak), mgl_data_linear(z,xx,yy,ak)), c);
-	}
-
-	if(text && pc>1)
-	{
-		wchar_t wcs[64];
-		mglprintf(wcs,64,L"%4.3g",val);
-		mglPoint t;
-		mreal del = 2*gr->TextWidth(wcs,"",-0.5);
-		// find width and height of drawing area
-		mreal ar=gr->GetRatio(), w=gr->FontFactor(), h;
-		if(del<w/5)	del = w/5;
-		if(ar<1) h=w/ar;	else {	h=w;	w*=ar;	}
-		m=long(2*w/del)+1;	n=long(2*h/del)+1;	// don't need data size anymore
-		long *oo=new long[n*m];
-		mreal *rr=new mreal[n*m];
-		for(i=0;i<n*m;i++)	{	oo[i]=-1;	rr[i]=del*del/4;	}
-
-		register long j,k;
-		for(k=0;k<pc;k++)	// print label several times if possible
-		{
-			if(nn[k]<0)	continue;
-			t = gr->GetPntP(ff[k]);
-			i = long(t.x/del);	t.x -= i*del;
-			j = long(t.y/del);	t.y -= j*del;
-			if(i<0 || i>=m || j<0 || j>=n)	continue;	// never should be here!
-			xx = t.x*t.x+t.y*t.y;	i += m*j;
-			if(rr[i]>xx)	{	rr[i]=xx;	oo[i]=k;	}
-		}
-		for(i=0;i<n*m;i++)	if(oo[i]>=0)
-			mgl_string_curve(gr,oo[i],pc,ff,nn,wcs,"t:C",-0.5);
-		delete []oo;	delete []rr;
-	}
-	for(i=0;i<pc;i++)	if(nn[i]>=0)	gr->line_plot(ff[i], ff[nn[i]]);
-	delete []nn;	delete []ff;
+	mgl_draw_curvs(gr,val,c,text,mgl_get_curvs(mgl_get_lines(val,a,x,y,z,ak)));
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_cont_gen(HMGL gr, double val, HCDT a, HCDT x, HCDT y, HCDT z, const char *sch)
@@ -416,7 +356,7 @@ void MGL_EXPORT mgl_cont_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const c
 	// x, y -- have the same size z
 #pragma omp parallel
 	{
-		mglData zz(n, m);
+		mglDataV zz(n, m);
 #pragma omp for collapse(2)
 		for(long j=0;j<z->GetNz();j++)	for(long i=0;i<v->GetNx();i++)
 		{
@@ -805,23 +745,19 @@ void MGL_EXPORT mgl_contv_gen(HMGL gr, mreal val, mreal dval, HCDT a, HCDT x, HC
 	if(n<2 || m<2 || x->GetNx()*x->GetNy()!=n*m || y->GetNx()*y->GetNy()!=n*m || z->GetNx()*z->GetNy()!=n*m)
 	{	gr->SetWarn(mglWarnDim,"ContGen");	return;	}
 
-	std::vector<mglPnt2> kk;
-	long *nn = mgl_cont_prep(val, a, ak, kk), *ff;
-	if(!nn)	return;	// nothing to do
-	register long i, pc=kk.size();
-	register mreal xx, yy;
-	ff = new long[2*pc];	gr->Reserve(2*pc);
-	mglPoint p,q;
-	for(i=0;i<pc;i++)
+	const std::vector<mglSegment> curvs = mgl_get_curvs(mgl_get_lines(val,a,x,y,z,ak));
+	for(size_t i=0;i<curvs.size();i++)
 	{
-		xx = kk[i].x;	yy = kk[i].y;
-		p = mglPoint(mgl_data_linear(x,xx,yy,ak), mgl_data_linear(y,xx,yy,ak), mgl_data_linear(z,xx,yy,ak));
-		q = mglPoint(p.y,-p.x);		ff[i] = gr->AddPnt(p, c, q);
-		ff[i+pc] = gr->AddPnt(mglPoint(p.x, p.y, p.z+dval), c, q);
+		const std::list<mglPoint> &pp=curvs[i].pp;
+		long f1=-1,f2=-1,g1=-1,g2=-1;
+		for(std::list<mglPoint>::const_iterator it=pp.begin(); it != pp.end(); ++it)
+		{
+			mglPoint p=*it,q(p.y,-p.x);
+			f1 = f2;	f2 = gr->AddPnt(p,c,q);	p.z+=dval;
+			g1 = g2;	g2 = gr->AddPnt(p,c,q);
+			gr->quad_plot(f1,g1,f2,g2);
+		}
 	}
-
-	for(i=0;i<pc;i++)	if(nn[i]>=0)	gr->quad_plot(ff[i], ff[nn[i]], ff[i+pc], ff[nn[i]+pc]);
-	delete []nn;	delete []ff;
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_contv_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt)

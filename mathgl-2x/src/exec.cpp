@@ -1726,9 +1726,27 @@ int MGL_NO_EXPORT mgls_tricont(mglGraph *gr, long , mglArg *a, const char *k, co
 	else if(!strcmp(k,"ddddds"))
 		gr->TriContV(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),a[5].s.c_str(),opt);
 	else if(!strcmp(k,"dddddd"))
-		gr->TriContV(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),*(a[5].d),"",opt);
+		gr->TriCont(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),*(a[5].d),"",opt);
 	else if(!strcmp(k,"dddddds"))
-		gr->TriContV(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),*(a[5].d),a[6].s.c_str(),opt);
+		gr->TriCont(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),*(a[5].d),a[6].s.c_str(),opt);
+	else res = 1;	return res;
+}
+//-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_tricontv(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+{
+	int res=0;
+	if(!strcmp(k,"dddd"))
+		gr->TriContVt(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),"",opt);
+	else if(!strcmp(k,"dddds"))
+		gr->TriContVt(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),a[4].s.c_str(),opt);
+	else if(!strcmp(k,"ddddd"))
+		gr->TriContVt(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),"",opt);
+	else if(!strcmp(k,"ddddds"))
+		gr->TriContVt(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),a[5].s.c_str(),opt);
+	else if(!strcmp(k,"dddddd"))
+		gr->TriContVt(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),*(a[5].d),"",opt);
+	else if(!strcmp(k,"dddddds"))
+		gr->TriContVt(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),*(a[5].d),a[6].s.c_str(),opt);
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -3072,7 +3090,8 @@ mglCommand mgls_base_cmd[] = {
 	{"transpose","Transpose data array","transpose Dat ['dir']", mgls_transpose ,16},
 	{"transptype","Set type transparency","transptype val", mgls_transptype ,2},
 	{"triangulate","Find triangles of randomly placed points","triangulate Res Xdat Ydat [er]|Res Xdat Ydat Zdat [er]", mgls_triangulate ,4},
-	{"tricont","Draw contour lines for surface of triangles","tricont Vdat Idat Xdat Ydat ['fmt']|Vdat Idat Xdat Ydat Zdat ['fmt']|Vdat Idat Xdat Ydat Zdat Cdat ['fmt'] ", mgls_tricont ,0},
+	{"tricont","Draw contour lines for surface of triangles","tricont Idat Xdat Ydat Cdat ['fmt']|Idat Xdat Ydat Zdat Cdat ['fmt']|Vdat Idat Xdat Ydat Cdat ['fmt']|Vdat Idat Xdat Ydat Zdat Cdat ['fmt']", mgls_tricont ,0},
+	{"tricontv","Draw contour tubes for surface of triangles","tricontv Idat Xdat Ydat Cdat ['fmt']|Idat Xdat Ydat Zdat Cdat ['fmt']|Vdat Idat Xdat Ydat Cdat ['fmt']|Vdat Idat Xdat Ydat Zdat Cdat ['fmt']", mgls_tricontv ,0},
 	{"triplot","Draw surface of triangles","triplot Idat Xdat Ydat ['fmt']|Idat Xdat Ydat Zdat ['fmt']|Idat Xdat Ydat Zdat Cdat ['fmt'] ", mgls_triplot ,0},
 	{"tube","Draw curve by tube","tube Ydat Rdat ['fmt']|Ydat rval ['fmt']|Xdat Ydat Rdat ['fmt']|Xdat Ydat rval ['fmt']|Xdat Ydat Zdat Rdat ['fmt']|Xdat Ydat Zdat rval ['fmt']", mgls_tube ,7},
 	{"tuneticks","Set ticks tuning","tuneticks val [fctr]", mgls_tuneticks ,14},
