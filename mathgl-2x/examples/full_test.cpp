@@ -23,9 +23,6 @@
 #if !defined(_MSC_VER) && !defined(__BORLANDC__)
 #include <getopt.h>
 #endif
-#include <vector>
-#include <list>
-#include "mgl2/base.h"
 
 #include "mgl2/mgl.h"
 #include "mgl2/eval.h"
@@ -65,27 +62,13 @@ void mgls_prepare2v(mglData *a, mglData *b);
 void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 //-----------------------------------------------------------------------------
 void save(mglGraph *gr,const char *name,const char *suf);
-void smgl_stfa(mglGraph *gr);	// STFA sample
-void smgl_text(mglGraph *gr);	// text drawing
-void smgl_style(mglGraph *gr);
-#include <mgl2/base.h>
-#include <mgl2/font.h>
 void test(mglGraph *gr)
 {
-	gr->SetSize(1200,800);	gr->SubPlot(1,1,0,"");
-	mglData a(100,100);	gr->Fill(a,"2*rnd-1");
-	mglDataV x(100,100), y(100,100);
-	x.Fill(-1,1,'x');	y.Fill(-1,1,'y');
-	return;
 	gr->SetSize(800,800);
 	mglParse par;
 	par.Execute(gr,"new a 10 15 'rnd*2-1'\n"
 		"subplot 2 2 0:dens a '#':box\nsubplot 2 2 1:cont a:mesh a 'k':box\n"
 		"subplot 2 2 2:contf a:mesh a 'k':box\nsubplot 2 2 3:boxs a:box");
-//	par.Execute(gr,"xrange -4*pi 4*pi:xtick pi 0 nan '\\pi':axis");
-//	par.Execute(gr,"alpha on:fsurf 'x' 'Bb{A1}cy{xFF000088}R'");
-//	gr->WriteSVG("test.svg");
-//	par.Execute(gr,"light on:addlegend 'r' 'r':legend");
 	return;
 }
 //-----------------------------------------------------------------------------

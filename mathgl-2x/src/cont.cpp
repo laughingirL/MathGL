@@ -457,6 +457,7 @@ void MGL_NO_EXPORT mgl_add_range(HMGL gr, HCDT a, HCDT x, HCDT y, HCDT z, long i
 	d2 = mgl_d(v2,f1,f2);
 	u2 = mgl_add_pnt(gr,d2,x,y,z,i1,j1,i2,j2,c,false);
 	if(d1>d2)	{	j2=u1;	u1=u2;	u2=j2;	}
+	if(u1<0)	{	u1=u2;	u2=-1;	}
 }
 //-----------------------------------------------------------------------------
 void MGL_NO_EXPORT mgl_add_edges(HMGL gr, HCDT a, HCDT x, HCDT y, HCDT z, long i1, long j1, long di, long dj, mreal c, long &u1, long &u2, long ak, mreal v1, mreal v2)
@@ -512,7 +513,17 @@ void MGL_EXPORT mgl_contf_gen(HMGL gr, mreal v1, mreal v2, HCDT a, HCDT x, HCDT 
 			if(d2>=0)	p[num++] = d2;	if(u2>=0)	p[num++] = u2;
 			if(u1>=0)	p[num++] = u1;	if(d1>=0)	p[num++] = d1;
 			if(l2>=0)	p[num++] = l2;	if(l1>=0)	p[num++] = l1;
+
+			//	d1	u1	u2	d2
+			//	l2			r2
+			//	l1			r1
+			//	b1	t1	t2	b2
+
 			// draw it
+			bool b1d2 = a->v(i+1,j,ak)>v2 && a->v(i,j-1,ak)>v2;
+			bool b2d1 = a->v(i,j,ak)>v2 && a->v(i+1,j-1,ak)>v2;
+			mreal vv = mgl_data_linear(a,i+0.5,j-0.5,ak);
+			vv = (vv-v1)*(vv-v2);
 			if(num<3)	continue;
 			if(num==4)	gr->quad_plot(p[0],p[1],p[3],p[2]);
 			else if(num==3)	gr->trig_plot(p[0],p[1],p[2]);
@@ -523,8 +534,74 @@ void MGL_EXPORT mgl_contf_gen(HMGL gr, mreal v1, mreal v2, HCDT a, HCDT x, HCDT 
 			}
 			else if(num==6)
 			{
-				gr->quad_plot(p[0],p[1],p[3],p[2]);
-				gr->quad_plot(p[0],p[3],p[5],p[4]);
+				if(b1>=0 && b2>=0)
+				{
+					gr->quad_plot(b1,b2,l1,r1);
+					gr->quad_plot(l1,r1,u1,u2);
+				}
+				else if(d1>=0 && d2>=0)
+				{
+					gr->quad_plot(d1,d2,l1,r1);
+					gr->quad_plot(l1,r1,t1,t2);
+				}
+				else if(b1>=0 && d2>=0)
+				{
+					if(b2d1)
+					{	gr->trig_plot(b1,t1,l1);	gr->trig_plot(r1,u1,d2);	}
+					else
+					{	gr->quad_plot(b1,t1,l1,r1);	gr->quad_plot(l1,r1,u1,d2);	}
+				}
+				else if(d1>=0 && b2>=0)
+				{
+					if(b1d2)
+					{	gr->trig_plot(t1,b2,r1);	gr->trig_plot(l1,d1,u1);	}
+					else
+					{	gr->quad_plot(t1,b2,l1,r1);	gr->quad_plot(l1,r1,d1,u1);	}
+				}
+				else if(b1>=0 && d1>=0)
+				{
+					gr->quad_plot(b1,d1,t1,u1);
+					gr->quad_plot(t1,u1,r1,r2);
+				}
+				else if(d2>=0 && b2>=0)
+				{
+					gr->quad_plot(d2,b2,u1,t1);
+					gr->quad_plot(t1,u1,l1,l2);
+				}
+			}
+			else if(num==7)
+			{
+				if(b1>=0)
+				{
+					gr->trig_plot(b1,l1,t1);	gr->quad_plot(r1,r2,u1,u2);
+					if(!b2d1)	gr->quad_plot(l1,t1,u1,r1);
+				}
+				else if(b2>=0)
+				{
+					gr->trig_plot(b2,r1,t1);	gr->quad_plot(l1,l2,u2,u1);
+					if(!b1d2)	gr->quad_plot(r1,t1,u2,l1);
+				}
+				else if(d2>=0)
+				{
+					gr->trig_plot(d2,r1,u1);	gr->quad_plot(l1,l2,t1,t2);
+					if(!b2d1)	gr->quad_plot(r1,u1,t2,l2);
+				}
+				else if(d1>=0)
+				{
+					gr->trig_plot(d1,l1,u1);	gr->quad_plot(r1,r2,t2,t1);
+					if(!b1d2)	gr->quad_plot(l1,u1,t1,r2);
+				}
+			}
+			else if(num==8)
+			{
+				if(b2d1)
+				{	if(l2<0)	{	l2=l1;	l1=b1;	}	if(r2<0)	r2=d2;
+					if(t2<0)	{	t2=t1;	t1=b1;	}	if(u2<0)	u2=d2;
+					gr->quad_plot(r1,r2,u1,u2);	gr->quad_plot(l1,l2,t1,t2);	}
+				else
+				{	if(l2<0)	l2=d1;	if(r2<0)	{	r2=r1;	r1=b2;	}
+					if(t2<0)	t2=b2;	if(u2<0)	{	u2=u1;	u1=d1;	}
+					gr->quad_plot(r1,r2,t2,t1);	gr->quad_plot(l1,l2,u2,u1);	}
 			}
 		}
 	}

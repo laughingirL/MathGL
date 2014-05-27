@@ -24,13 +24,13 @@ var main = function() {
 //var script = "rotate 10 20: box:axis:fsurf 'sin(pi*x*y)'";
 
 var makeSampleScript = function() {
-	var mgl = "fsurf 'x' 'rgb';value 4";
+//	var mgl = "fsurf 'x' 'rgb';value 4";
 
-// 	var mgl = "origintick off\n";
-// 	mgl += "title 'qqq' '@k':ranges -2 2 -2 2 -2 2:colorbar '>'\n"   // NOTE: Ranges MUST BE specified for correctly work of zoomaxis feature
-// 	mgl += "facenum 50:";
-// 	mgl += "origin 0 0 0:axis :xlabel 'x':ylabel 'y':zlabel 'z':"
-// 	mgl += "box:fplot 'sin(x^2)'\n";   // This is just for testing zoomaxis features
-// 	mgl += "text 0 0 'aaa'";
+	var mgl = "origintick off\n";
+	mgl += "title 'qqq' '@k':ranges -2 2 -2 2 -2 2:colorbar '>'\n"   // NOTE: Ranges MUST BE specified for correctly work of zoomaxis feature
+	mgl += "facenum 50:";
+	mgl += "origin 0 0 0:axis :xlabel 'x':ylabel 'y':zlabel 'z':"
+	mgl += "box:fplot 'sin(x^2)'\n";   // This is just for testing zoomaxis features
+	mgl += "text 0 0 'aaa'";
 	return mgl;
 }
