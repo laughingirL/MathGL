@@ -64,9 +64,8 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	gr->SetSize(800,800);
 	mglParse par;
-	par.Execute(gr,"new a 10 15 'rnd*2-1'\n"
+	par.Execute(gr,"new a 100 100 'rnd*2-1'\n"
 		"subplot 2 2 0:dens a '#':box\nsubplot 2 2 1:cont a:mesh a 'k':box\n"
 		"subplot 2 2 2:contf a:mesh a 'k':box\nsubplot 2 2 3:boxs a:box");
 	return;
@@ -260,7 +259,7 @@ int main(int argc,char **argv)
 		mgl_set_test_mode(true);	test(gr);
 		time(&en);	printf("time is %g sec\n",difftime(en,st));
 		gr->WritePNG("test.png","",false);
-		gr->WriteEPS("test.eps");
+//		gr->WriteEPS("test.eps");
 		printf("Messages:%s\n",gr->Message());
 		printf("Global:%s\n",mglGlobalMess.c_str());
 		delete gr;	return 0;

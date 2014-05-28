@@ -978,6 +978,7 @@ mreal MGL_EXPORT_PURE mgl_data_solve_1d(HCDT d, mreal val, int spl, long i0)
 //-----------------------------------------------------------------------------
 mreal MGL_EXPORT_PURE mgl_data_linear_ext(HCDT d, mreal x,mreal y,mreal z, mreal *dx,mreal *dy,mreal *dz)
 {
+	if(!d)	return NAN;
 	long kx=long(x), ky=long(y), kz=long(z);
 	mreal b0,b1;
 	const mglData *dd=dynamic_cast<const mglData *>(d);

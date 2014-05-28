@@ -61,10 +61,10 @@ void mglCanvas::PutDrawReg(mglDrawReg *d, const mglCanvas *gr)
 //-----------------------------------------------------------------------------
 void mglCanvas::PostScale(const mglMatrix *M, mglPoint &p) const
 {
-	mglPoint q=p/(2*M->pf);
-	p.x = M->x + q.x*M->b[0] + q.y*M->b[1] + q.z*M->b[2];
-	p.y = M->y + q.x*M->b[3] + q.y*M->b[4] + q.z*M->b[5];
-	p.z = M->z + q.x*M->b[6] + q.y*M->b[7] + q.z*M->b[8];
+	register mreal f = 1./(2*M->pf),x=p.x,y=p.y,z=p.z;
+	p.x = M->x + f*(x*M->b[0] + y*M->b[1] + z*M->b[2]);
+	p.y = M->y + f*(x*M->b[3] + y*M->b[4] + z*M->b[5]);
+	p.z = M->z + f*(x*M->b[6] + y*M->b[7] + z*M->b[8]);
 }
 //-----------------------------------------------------------------------------
 bool mglCanvas::ScalePoint(const mglMatrix *M, mglPoint &p, mglPoint &n, bool use_nan) const

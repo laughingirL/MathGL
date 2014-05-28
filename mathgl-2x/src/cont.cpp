@@ -138,17 +138,15 @@ void MGL_EXPORT mgl_textw_xyz(HMGL gr, HCDT x, HCDT y, HCDT z,const wchar_t *tex
 void MGL_EXPORT mgl_textw_xy(HMGL gr, HCDT x, HCDT y, const wchar_t *text, const char *font, const char *opt)
 {
 	gr->SaveState(opt);
-	mglData z(y->GetNx());
-	mreal zm = gr->AdjustZMin();	z.Fill(zm,zm);
+	mglDataV z(y->GetNx());	z.Fill(gr->AdjustZMin());
 	mgl_textw_xyz(gr,x,y,&z,text,font,0);
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_textw_y(HMGL gr, HCDT y, const wchar_t *text, const char *font, const char *opt)
 {
 	gr->SaveState(opt);
-	mglData x(y->GetNx()), z(y->GetNx());
-	x.Fill(gr->Min.x,gr->Max.x);
-	mreal zm = gr->AdjustZMin();	z.Fill(zm,zm);
+	mglDataV x(y->GetNx()), z(y->GetNx());
+	x.Fill(gr->Min.x,gr->Max.x);	z.Fill(gr->AdjustZMin());
 	mgl_textw_xyz(gr,&x,y,&z,text,font,0);
 }
 //-----------------------------------------------------------------------------
@@ -159,16 +157,14 @@ void MGL_EXPORT mgl_text_xyz(HMGL gr, HCDT x, HCDT y, HCDT z,const char *text, c
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_text_xy(HMGL gr, HCDT x, HCDT y, const char *text, const char *font, const char *opt)
 {
-	mglData z(y->GetNx());
-	mreal zm = gr->AdjustZMin();	z.Fill(zm,zm);
+	mglDataV z(y->GetNx());	z.Fill(gr->AdjustZMin());
 	mgl_text_xyz(gr,x,y,&z,text,font,opt);
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_text_y(HMGL gr, HCDT y, const char *text, const char *font, const char *opt)
 {
-	mglData x(y->GetNx()), z(y->GetNx());
-	x.Fill(gr->Min.x,gr->Max.x);
-	mreal zm = gr->AdjustZMin();	z.Fill(zm,zm);
+	mglDataV x(y->GetNx()), z(y->GetNx());
+	x.Fill(gr->Min.x,gr->Max.x);	z.Fill(gr->AdjustZMin());
 	mgl_text_xyz(gr,&x,y,&z,text,font,opt);
 }
 //-----------------------------------------------------------------------------
@@ -198,7 +194,7 @@ mgl_text_y(_GR_, _DA_(y),s,f,o);	delete []o;	delete []s;	delete []f;	}
 //-----------------------------------------------------------------------------
 #include "cont.hpp"
 //-----------------------------------------------------------------------------
-std::vector<mglSegment> MGL_NO_EXPORT mgl_get_lines(mreal val, HCDT a, HCDT x, HCDT y, HCDT z, long ak)
+std::vector<mglSegment> MGL_EXPORT mgl_get_lines(mreal val, HCDT a, HCDT x, HCDT y, HCDT z, long ak)
 {
 	long n=a->GetNx(), m=a->GetNy();
 	std::vector<mglSegment> lines;
@@ -223,12 +219,12 @@ std::vector<mglSegment> MGL_NO_EXPORT mgl_get_lines(mreal val, HCDT a, HCDT x, H
 		if(!added)	// try to add any other variants
 		{
 			mglSegment line;
-			if(line.set(0,dl,1,dr,i,j,ak,x,y,z))	{	lines.push_back(line);	added=true;	}
-			else if(line.set(dp,0,dn,1,i,j,ak,x,y,z))	{	lines.push_back(line);	added=true;	}
-			else if(line.set(0,dl,dn,1,i,j,ak,x,y,z))	{	lines.push_back(line);	added=true;	}
-			else if(line.set(1,dr,dp,0,i,j,ak,x,y,z))	{	lines.push_back(line);	added=true;	}
-			else if(line.set(0,dl,dp,0,i,j,ak,x,y,z))	{	lines.push_back(line);	added=true;	}
-			else if(line.set(1,dr,dn,1,i,j,ak,x,y,z))	{	lines.push_back(line);	added=true;	}
+			if(line.set(0,dl,1,dr,i,j,ak,x,y,z))		lines.push_back(line);
+			else if(line.set(dp,0,dn,1,i,j,ak,x,y,z))	lines.push_back(line);
+			else if(line.set(0,dl,dn,1,i,j,ak,x,y,z))	lines.push_back(line);
+			else if(line.set(1,dr,dp,0,i,j,ak,x,y,z))	lines.push_back(line);
+			else if(line.set(0,dl,dp,0,i,j,ak,x,y,z))	lines.push_back(line);
+			else if(line.set(1,dr,dn,1,i,j,ak,x,y,z))	lines.push_back(line);
 		}
 	}
 	return lines;
@@ -238,27 +234,29 @@ std::vector<mglSegment> MGL_NO_EXPORT mgl_get_curvs(std::vector<mglSegment> line
 {
 	long n = lines.size(), m = n;
 	std::vector<mglSegment> curvs;
+	char *used = new char[n];	memset(used,0,n);
 	// create curves from lines
 	while(m>0)	// NOTE! This algorithm can be *very* slow!!!
 	{
 		mglSegment curv;
-		for(long i=0;i<n;i++)	if(!lines[i].used)	// find any first line segment
+		for(long i=0;i<n;i++)	if(!used[i])	// find any first line segment
 		{
 			curv.before(lines[i].p1);
 			curv.after(lines[i].p2);
-			lines[i].used=true;	m--;	break;
+			used[i]=1;	m--;	break;
 		}
-		for(long i=0;i<n && m>0;i++)
+		for(long i=0;i<n && m>0;i++)	// NOTE very VERY *VERY* slow!!!
 		{
-			mglSegment &l=lines[i];
-			if(l.used)	continue;
-			if(l.p1==curv.p1)		{	curv.before(l.p2);	l.used=true;	m--;	i=0;	}
-			else if(l.p2==curv.p1)	{	curv.before(l.p1);	l.used=true;	m--;	i=0;	}
-			else if(l.p1==curv.p2)	{	curv.after(l.p2);	l.used=true;	m--;	i=0;	}
-			else if(l.p2==curv.p2)	{	curv.after(l.p1);	l.used=true;	m--;	i=0;	}
+			const mglSegment &l=lines[i];
+			if(used[i])	continue;
+			if(l.p1==curv.p1)		{	curv.before(l.p2);	used[i]=1;	m--;	i=0;	}
+			else if(l.p2==curv.p1)	{	curv.before(l.p1);	used[i]=1;	m--;	i=0;	}
+			else if(l.p1==curv.p2)	{	curv.after(l.p2);	used[i]=1;	m--;	i=0;	}
+			else if(l.p2==curv.p2)	{	curv.after(l.p1);	used[i]=1;	m--;	i=0;	}
 		}
 		curvs.push_back(curv);
 	}
+	delete []used;
 	return curvs;
 }
 //-----------------------------------------------------------------------------
@@ -376,7 +374,7 @@ void MGL_EXPORT mgl_cont_val(HMGL gr, HCDT v, HCDT z, const char *sch, const cha
 	register long n = z->GetNx(), m = z->GetNy();
 	if(m<2 || n<2)	{	gr->SetWarn(mglWarnLow,"Cont");	return;	}
 	gr->SaveState(opt);
-	mglData x(n, m), y(n, m);
+	mglDataV x(n, m), y(n, m);
 	x.Fill(gr->Min.x,gr->Max.x,'x');
 	y.Fill(gr->Min.y,gr->Max.y,'y');
 	mgl_cont_xy_val(gr,v,&x,&y,z,sch,0);
@@ -432,16 +430,15 @@ long MGL_NO_EXPORT mgl_add_pnt(HMGL gr, mreal d, HCDT x, HCDT y, HCDT z, long i1
 	long res=-1;
 	if(edge || (d>0 && d<1))
 	{
-		mglPoint p,u,v;
-		p = mglPoint(x->v(i1,j1)*(1-d)+x->v(i2,j2)*d,
-					 y->v(i1,j1)*(1-d)+y->v(i2,j2)*d,
-					 z->v(i1,j1)*(1-d)+z->v(i2,j2)*d);
-		u = mglPoint(x->dvx(i1,j1)*(1-d)+x->dvx(i2,j2)*d,
-					 y->dvx(i1,j1)*(1-d)+y->dvx(i2,j2)*d,
-					 z->dvx(i1,j1)*(1-d)+z->dvx(i2,j2)*d);
-		v = mglPoint(x->dvy(i1,j1)*(1-d)+x->dvy(i2,j2)*d,
-					 y->dvy(i1,j1)*(1-d)+y->dvy(i2,j2)*d,
-					 z->dvy(i1,j1)*(1-d)+z->dvy(i2,j2)*d);
+		mglPoint p(x->v(i1,j1)*(1-d)+x->v(i2,j2)*d,
+					y->v(i1,j1)*(1-d)+y->v(i2,j2)*d,
+					z->v(i1,j1)*(1-d)+z->v(i2,j2)*d);
+		mglPoint u(x->dvx(i1,j1)*(1-d)+x->dvx(i2,j2)*d,
+					y->dvx(i1,j1)*(1-d)+y->dvx(i2,j2)*d,
+					z->dvx(i1,j1)*(1-d)+z->dvx(i2,j2)*d);
+		mglPoint v(x->dvy(i1,j1)*(1-d)+x->dvy(i2,j2)*d,
+					y->dvy(i1,j1)*(1-d)+y->dvy(i2,j2)*d,
+					z->dvy(i1,j1)*(1-d)+z->dvy(i2,j2)*d);
 		res = gr->AddPnt(p,c,u^v);
 	}
 	return res;
@@ -450,7 +447,6 @@ long MGL_NO_EXPORT mgl_add_pnt(HMGL gr, mreal d, HCDT x, HCDT y, HCDT z, long i1
 void MGL_NO_EXPORT mgl_add_range(HMGL gr, HCDT a, HCDT x, HCDT y, HCDT z, long i1, long j1, long di, long dj, mreal c, long &u1, long &u2, long ak, mreal v1, mreal v2)
 {
 	long i2=i1+di, j2=j1+dj;
-
 	mreal f1 = a->v(i1,j1,ak),	f2 = a->v(i2,j2,ak), d1, d2;
 	d1 = mgl_d(v1,f1,f2);
 	u1 = mgl_add_pnt(gr,d1,x,y,z,i1,j1,i2,j2,c,false);
@@ -464,12 +460,9 @@ void MGL_NO_EXPORT mgl_add_edges(HMGL gr, HCDT a, HCDT x, HCDT y, HCDT z, long i
 {
 	long i2=i1+di, j2=j1+dj;
 	u1 = u2 = -1;
-
 	mreal f1 = a->v(i1,j1,ak),	f2 = a->v(i2,j2,ak);
-	if(f1<=v2 && f1>=v1)
-		u1 = mgl_add_pnt(gr,0,x,y,z,i1,j1,i2,j2,c,true);
-	if(f2<=v2 && f2>=v1)
-		u2 = mgl_add_pnt(gr,1,x,y,z,i1,j1,i2,j2,c,true);
+	if(f1<=v2 && f1>=v1)	u1 = mgl_add_pnt(gr,0,x,y,z,i1,j1,i2,j2,c,true);
+	if(f2<=v2 && f2>=v1)	u2 = mgl_add_pnt(gr,1,x,y,z,i1,j1,i2,j2,c,true);
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_contf_gen(HMGL gr, mreal v1, mreal v2, HCDT a, HCDT x, HCDT y, HCDT z, mreal c, long ak)
@@ -479,7 +472,7 @@ void MGL_EXPORT mgl_contf_gen(HMGL gr, mreal v1, mreal v2, HCDT a, HCDT x, HCDT 
 	{	gr->SetWarn(mglWarnDim,"ContFGen");	return;	}
 
 	register long i,j;
-	gr->Reserve(n*m);
+	gr->Reserve(8*n*m);
 	long *kk = new long[4*n], l1,l2, r1,r2, t1,t2, u1,u2, b1,b2, d1,d2, p[8],num;
 	memset(kk,-1,2*n*sizeof(long));
 	for(i=0;i<n-1;i++)	// add intersection points for first line
@@ -640,7 +633,7 @@ void MGL_EXPORT mgl_contf_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const 
 	// x, y -- have the same size z
 #pragma omp parallel
 	{
-		mglData zz(n, m);
+		mglDataV zz(n, m);
 #pragma omp for collapse(2)
 		for(long j=0;j<z->GetNz();j++)	for(long i=0;i<v->GetNx()-1;i++)
 		{
@@ -660,7 +653,7 @@ void MGL_EXPORT mgl_contf_val(HMGL gr, HCDT v, HCDT z, const char *sch, const ch
 	register long n = z->GetNx(), m = z->GetNy();
 	if(n<2 || m<2)	{	gr->SetWarn(mglWarnLow,"Cont");	return;	}
 	gr->SaveState(opt);
-	mglData x(n, m), y(n, m);
+	mglDataV x(n, m), y(n, m);
 	x.Fill(gr->Min.x,gr->Max.x,'x');
 	y.Fill(gr->Min.y,gr->Max.y,'y');
 	mgl_contf_xy_val(gr,v,&x,&y,z,sch,0);
@@ -671,7 +664,7 @@ void MGL_EXPORT mgl_contf_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, c
 	mreal r = gr->SaveState(opt);
 	long Num = mgl_isnan(r)?7:long(r+0.5);
 	if(Num<1)	{	gr->SetWarn(mglWarnCnt,"Cont");	return;	}
-	mglData v(Num+2);	v.Fill(gr->Min.c, gr->Max.c);
+	mglDataV v(Num+2);	v.Fill(gr->Min.c, gr->Max.c);
 	mgl_contf_xy_val(gr,&v,x,y,z,sch,0);
 }
 //-----------------------------------------------------------------------------
@@ -680,7 +673,7 @@ void MGL_EXPORT mgl_contf(HMGL gr, HCDT z, const char *sch, const char *opt)
 	mreal r = gr->SaveState(opt);
 	long Num = mgl_isnan(r)?7:long(r+0.5);
 	if(Num<1)	{	gr->SetWarn(mglWarnCnt,"Cont");	return;	}
-	mglData v(Num+2);	v.Fill(gr->Min.c, gr->Max.c);
+	mglDataV v(Num+2);	v.Fill(gr->Min.c, gr->Max.c);
 	mgl_contf_val(gr,&v,z,sch,0);
 }
 //-----------------------------------------------------------------------------
@@ -748,7 +741,7 @@ void MGL_EXPORT mgl_contd_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const 
 	mreal dc = nc>1 ? 1/(MGL_FEPSILON*(nc-1)) : 0;
 #pragma omp parallel
 	{
-		mglData zz(n, m);
+		mglDataV zz(n, m);
 #pragma omp for collapse(2)
 		for(long j=0;j<z->GetNz();j++)	for(long i=0;i<v->GetNx()-1;i++)
 		{
@@ -768,7 +761,7 @@ void MGL_EXPORT mgl_contd_val(HMGL gr, HCDT v, HCDT z, const char *sch, const ch
 	register long n = z->GetNx(), m = z->GetNy();
 	if(n<2 || m<2)	{	gr->SetWarn(mglWarnLow,"ContD");	return;	}
 	gr->SaveState(opt);
-	mglData x(n, m), y(n, m);
+	mglDataV x(n, m), y(n, m);
 	x.Fill(gr->Min.x,gr->Max.x,'x');
 	y.Fill(gr->Min.y,gr->Max.y,'y');
 	mgl_contd_xy_val(gr,v,&x,&y,z,sch,0);
@@ -777,7 +770,7 @@ void MGL_EXPORT mgl_contd_val(HMGL gr, HCDT v, HCDT z, const char *sch, const ch
 void MGL_EXPORT mgl_contd_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt)
 {
 	gr->SaveState(opt);
-	mglData v(mgl_get_ncol(sch,0)+1);
+	mglDataV v(mgl_get_ncol(sch,0)+1);
 	v.Fill(gr->Min.c, gr->Max.c);
 	mgl_contd_xy_val(gr,&v,x,y,z,sch,0);
 }
@@ -785,7 +778,7 @@ void MGL_EXPORT mgl_contd_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, c
 void MGL_EXPORT mgl_contd(HMGL gr, HCDT z, const char *sch, const char *opt)
 {
 	gr->SaveState(opt);
-	mglData v(mgl_get_ncol(sch,0)+1);
+	mglDataV v(mgl_get_ncol(sch,0)+1);
 	v.Fill(gr->Min.c, gr->Max.c);
 	mgl_contd_val(gr,&v,z,sch,0);
 }
@@ -864,7 +857,7 @@ void MGL_EXPORT mgl_contv_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const 
 	// x, y -- have the same size z
 #pragma omp parallel
 	{
-		mglData zz(n, m);
+		mglDataV zz(n, m);
 #pragma omp for collapse(2)
 		for(long j=0;j<z->GetNz();j++)	for(long i=0;i<v->GetNx();i++)
 		{
@@ -887,7 +880,7 @@ void MGL_EXPORT mgl_contv_val(HMGL gr, HCDT v, HCDT z, const char *sch, const ch
 	register long n = z->GetNx(), m = z->GetNy();
 	if(n<2 || m<2)	{	gr->SetWarn(mglWarnLow,"Cont");	return;	}
 	gr->SaveState(opt);
-	mglData x(n, m), y(n, m);
+	mglDataV x(n, m), y(n, m);
 	x.Fill(gr->Min.x,gr->Max.x,'x');
 	y.Fill(gr->Min.y,gr->Max.y,'y');
 	mgl_contv_xy_val(gr,v,&x,&y,z,sch,0);
@@ -1143,7 +1136,7 @@ void MGL_EXPORT mgl_cont3_xyz_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, HCDT 
 void MGL_EXPORT mgl_cont3_val(HMGL gr, HCDT v, HCDT a, const char *sch, double sVal, const char *opt)
 {
 	gr->SaveState(opt);
-	mglData x(a->GetNx()), y(a->GetNy()),z(a->GetNz());
+	mglDataV x(a->GetNx()), y(a->GetNy()),z(a->GetNz());
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	z.Fill(gr->Min.z,gr->Max.z);
@@ -1216,7 +1209,7 @@ void MGL_EXPORT mgl_dens3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const cha
 void MGL_EXPORT mgl_dens3(HMGL gr, HCDT a, const char *sch, double sVal, const char *opt)
 {
 	gr->SaveState(opt);
-	mglData x(a->GetNx()), y(a->GetNy()),z(a->GetNz());
+	mglDataV x(a->GetNx()), y(a->GetNy()),z(a->GetNz());
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	z.Fill(gr->Min.z,gr->Max.z);
@@ -1258,7 +1251,7 @@ void MGL_EXPORT mgl_grid3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const cha
 void MGL_EXPORT mgl_grid3(HMGL gr, HCDT a, const char *sch, double sVal, const char *opt)
 {
 	gr->SaveState(opt);
-	mglData x(a->GetNx()), y(a->GetNy()), z(a->GetNz());
+	mglDataV x(a->GetNx()), y(a->GetNy()), z(a->GetNz());
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	z.Fill(gr->Min.z,gr->Max.z);
@@ -1306,7 +1299,7 @@ void MGL_EXPORT mgl_contf3_xyz_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, HCDT
 void MGL_EXPORT mgl_contf3_val(HMGL gr, HCDT v, HCDT a, const char *sch, double sVal, const char *opt)
 {
 	gr->SaveState(opt);
-	mglData x(a->GetNx()), y(a->GetNy()),z(a->GetNz());
+	mglDataV x(a->GetNx()), y(a->GetNy()),z(a->GetNz());
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	z.Fill(gr->Min.z,gr->Max.z);
@@ -1318,7 +1311,7 @@ void MGL_EXPORT mgl_contf3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const ch
 	mreal r = gr->SaveState(opt);
 	long Num = mgl_isnan(r)?7:long(r+0.5);
 	if(Num<1)	{	gr->SetWarn(mglWarnCnt,"ContF3");	return;	}
-	mglData v(Num+2);	v.Fill(gr->Min.c, gr->Max.c);
+	mglDataV v(Num+2);	v.Fill(gr->Min.c, gr->Max.c);
 	mgl_contf3_xyz_val(gr,&v,x,y,z,a,sch,sVal,0);
 }
 //-----------------------------------------------------------------------------
@@ -1327,7 +1320,7 @@ void MGL_EXPORT mgl_contf3(HMGL gr, HCDT a, const char *sch, double sVal, const 
 	mreal r = gr->SaveState(opt);
 	long Num = mgl_isnan(r)?7:long(r+0.5);
 	if(Num<1)	{	gr->SetWarn(mglWarnCnt,"ContF3");	return;	}
-	mglData v(Num+2);	v.Fill(gr->Min.c, gr->Max.c);
+	mglDataV v(Num+2);	v.Fill(gr->Min.c, gr->Max.c);
 	mgl_contf3_val(gr,&v,a,sch,sVal,0);
 }
 //-----------------------------------------------------------------------------
@@ -1544,7 +1537,7 @@ void MGL_EXPORT mgl_axial_val(HMGL gr, HCDT v, HCDT a, const char *sch, const ch
 	register long n=a->GetNx(), m=a->GetNy();
 	if(n<2 || m<2)	{	gr->SetWarn(mglWarnLow,"Axial");	return;	}
 	gr->SaveState(opt);
-	mglData x(n, m), y(n, m);
+	mglDataV x(n, m), y(n, m);
 	if(gr->Max.x*gr->Min.x>=0)	x.Fill(gr->Min.x,gr->Max.x,'x');
 	else	x.Fill(0,gr->Max.x,'x');
 	y.Fill(gr->Min.y,gr->Max.y,'y');

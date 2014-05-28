@@ -1,44 +1,46 @@
 -Wall -Wsuggest-attribute=pure -Wsuggest-attribute=const
 
+============= FAR FUTURE ================
+
+1. Graph(mreal x, mreal y, names, styles, font, size); -- names = "node1[node2,node3,node4[node5,node6]]", styles -- the same + apply for subnodes if absent. Styles are colors (fill,border,line), dash (to subnodes), marks "dos^v><", arrows.
+2. introduce new primitive type=5 -- arrow for Quality&3!=3. for better drawing in projections + json/view ?!?
+3. GTK window/widgets ???
+4. 2D textures as one of standard way for coloring -- if '%' present in color scheme
+5. Improve fplot, fsurf ???
+6. Get true coordinates in CalcXYZ for curved equations too.
+7. setLineDash in JSON
+
 ============= NEW FOR LATER =============
 
 1. Export to COLLADA !!!
-2. GTK window/widgets ???
-4. Rewrite glyph drawing for bitmaps (speeding up by excluding boundary checks) ?!?
+2. 3D text (with depth, for Quality=3)
+3. Text along 3D curve (for Quality=3)
+4. Check centered curved text (see text2)
+5. Export to X3D
 
-5. 2D textures as one of standard way for coloring -- if '%' present in color scheme
-6. Graph(mreal x, mreal y, names, styles, font, size); -- names = "node1[node2,node3,node4[node5,node6]]", styles -- the same + apply for subnodes if absent. Styles are colors (fill,border,line), dash (to subnodes), marks "dos^v><", arrows.
-7. 3D text (with depth, for Quality=3)
-8. Text along 3D curve (for Quality=3)
-9. introduce new primitive type=5 -- arrow for Quality&3!=3. for better drawing in projections + json/view ?!?
-
-10. New tests:
+6. New tests:
 	c. Tests for mglDataC arrays (as separate flag)
 	e. Test for Crop, Momentum, NormSl, Sew, DiffParam, Envelope, STFA for all directions "xyz"; Clean, Last, First, Find, Spline3, FindAny, Insert, Delete, Put, SetId/Column, Squeeze, Extend, Trace, Combine, new Max/Min/Momentum, FillSample, Hist, operators, Sort, Roots, Jacobian
 	u. Test FlowP + 3d
 
-11. Check centered curved text (see text2)
-12. Export to X3D
 
-13. Inplot data should have ranges (add mglInPlot{x1,x2,y1,y2,Bp or something like this} which include mglMatrix instead of mglBase::Bp) + calc coor + JS
-14. 'perspective' command in UDAV
-17. Test mglDataC::Diffraction() + write sample + add rational function???
+7. Inplot data should have ranges (add mglInPlot{x1,x2,y1,y2,Bp or something like this} which include mglMatrix instead of mglBase::Bp) + calc coor + JS
+8. 'perspective' command in UDAV
+9. Test mglDataC::Diffraction() + write sample + add rational function???
 
-19. Get true coordinates in CalcXYZ for curved equations too.
-20. add real(), imag(), conj() + accurate types in MGL + add 'complex' in MGL ???
+10. add real(), imag(), conj() + accurate types in MGL + add 'complex' in MGL ???
 
-24. Enable consecutive (as multiplication of matrices instead of single summary one) rotation of axis + the same in JS. Problem with widgets?!?
-28. Add FlowData() for getting flow thread coordinates as output array?!!
-31. Complex (hex) colors in inline text command (like #{b9} or #{x0000ff})
-36. Extra markers for '&' and '&#' signs ?!?
-38. Read JPEG files for Background() and mglData::Import()
-43. Spline for HCDT
-44. Exclude "TODO non-mglData"
-45. Adjust format for printed numbers (i.e. write function which will produce shortest text) + flag of fixed format + flag of TeX-notation
-46. New algorithm for Cont,ContF for "quasi-random" values
-47. Improve fplot, fsurf ???
-48. Check reading complex numbers + simple number as imag=0
-49. Add color gradient in text sample
+11. Enable consecutive (as multiplication of matrices instead of single summary one) rotation of axis + the same in JS. Problem with widgets?!?
+12. Add FlowData() for getting flow thread coordinates as output array?!!
+13. Complex (hex) colors in inline text command (like #{b9} or #{x0000ff})
+14. Extra markers for '&' and '&#' signs ?!?
+15. Read JPEG files for Background() and mglData::Import()
+16. Spline for HCDT
+17. Exclude "TODO non-mglData"
+18. Adjust format for printed numbers (i.e. write function which will produce shortest text) + flag of fixed format + flag of TeX-notation
+19. Check reading complex numbers + simple number as imag=0
+20. Check contour labels rotation
+21. Add color gradient in text sample
 
 YY. Optimize code (especially Quality=0 ?!?)
 ZZ. Update *.i for new functions {before release!!!}

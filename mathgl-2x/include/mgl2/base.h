@@ -108,9 +108,9 @@ struct MGL_EXPORT mglMatrix
 	{	x=a.x;	y=a.y;	z=a.z;	pf=a.pf;	memcpy(b,a.b,9*sizeof(mreal));	norot=false;	return a;	}
 };
 inline bool operator==(const mglMatrix &a, const mglMatrix &b)
-{	return b.x==a.x&&b.y==a.y&&b.z==a.z&&b.pf==a.pf&&!memcmp(b.b,a.b,9*sizeof(mreal));}
+{	return ((a.x-b.x)*(a.x-b.x)+(a.y-b.y)*(a.y-b.y)+(a.z-b.z)*(a.z-b.z)+(a.pf-b.pf)*(a.pf-b.pf)==0)&&!memcmp(b.b,a.b,9*sizeof(mreal));}
 inline bool operator!=(const mglMatrix &a, const mglMatrix &b)
-{	return b.x!=a.x||b.y!=a.y||b.z!=a.z||b.pf!=a.pf||memcmp(b.b,a.b,9*sizeof(mreal));	}
+{	return ((a.x-b.x)*(a.x-b.x)+(a.y-b.y)*(a.y-b.y)+(a.z-b.z)*(a.z-b.z)+(a.pf-b.pf)*(a.pf-b.pf)!=0)||memcmp(b.b,a.b,9*sizeof(mreal));	}
 //-----------------------------------------------------------------------------
 /// Structure for simplest primitives
 struct MGL_EXPORT mglPrim	// NOTE: use float for reducing memory size
@@ -196,7 +196,7 @@ struct MGL_EXPORT mglGlyph
 	~mglGlyph()	{	if(trig)	delete []trig;	if(line)	delete []line;	}
 
 	void Create(long Nt, long Nl);
-	bool operator==(const mglGlyph &g);
+	bool operator==(const mglGlyph &g) MGL_FUNC_PURE;
 	inline const mglGlyph &operator=(const mglGlyph &a)
 	{	Create(a.nt, a.nl);	memcpy(trig, a.trig, 6*nt*sizeof(short));
 		memcpy(line, a.line, 2*nl*sizeof(short));	return a;	}

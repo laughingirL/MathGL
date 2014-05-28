@@ -75,9 +75,11 @@ inline mglPoint operator^(const mglPoint &a, const mglPoint &b)
 inline mglPoint operator!(const mglPoint &a)
 {	mreal f=mgl_hypot(a.x,a.y);	return f==0?mglPoint(0.,1.,0.):mglPoint(-a.y/f, a.x/f, 0);	}
 inline bool operator==(const mglPoint &a, const mglPoint &b)
-{	return !memcmp(&a, &b, sizeof(mglPoint));	}
+{	return (a.x-b.x)*(a.x-b.x)+(a.y-b.y)*(a.y-b.y)+(a.z-b.z)*(a.z-b.z)+(a.c-b.c)*(a.c-b.c)==0;	}
+//{	return !memcmp(&a, &b, sizeof(mglPoint));	}
 inline bool operator!=(const mglPoint &a, const mglPoint &b)
-{	return memcmp(&a, &b, sizeof(mglPoint));	}
+{	return (a.x-b.x)*(a.x-b.x)+(a.y-b.y)*(a.y-b.y)+(a.z-b.z)*(a.z-b.z)+(a.c-b.c)*(a.c-b.c)!=0;	}
+//{	return memcmp(&a, &b, sizeof(mglPoint));	}
 inline bool operator<(const mglPoint &a, const mglPoint &b)
 {	return a.x<=b.x && a.y<=b.y && a.z<=b.z;	}
 inline bool operator>(const mglPoint &a, const mglPoint &b)
@@ -126,9 +128,11 @@ struct MGL_EXPORT mglColor
 	}
 	/// Copy color from other one
 	inline bool operator==(const mglColor &c) const
-	{	return !memcmp(this, &c, sizeof(mglColor));	}
+	{	return (r-c.r)*(r-c.r)+(g-c.g)*(g-c.g)+(b-c.b)*(b-c.b)+(a-c.a)*(a-c.a)==0;	}
+//	{	return !memcmp(this, &c, sizeof(mglColor));	}
 	inline bool operator!=(const mglColor &c) const
-	{	return memcmp(this, &c, sizeof(mglColor));		}
+	{	return (r-c.r)*(r-c.r)+(g-c.g)*(g-c.g)+(b-c.b)*(b-c.b)+(a-c.a)*(a-c.a)!=0;	}
+//	{	return memcmp(this, &c, sizeof(mglColor));		}
 	inline bool operator<(const mglColor &c) const
 	{	return memcmp(this, &c, sizeof(mglColor))<0;	}
 	// transparency still the same

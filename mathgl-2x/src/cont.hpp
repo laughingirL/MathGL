@@ -20,10 +20,8 @@
 //-----------------------------------------------------------------------------
 struct mglSegment
 {
-	bool used;
 	mglPoint p1,p2;	// edges
 	std::list<mglPoint> pp;
-	mglSegment()	{	used=false;	}
 	bool set(mreal u1,mreal v1,mreal u2,mreal v2,long i,long j,long k,HCDT x, HCDT y, HCDT z)
 	{
 		bool res=(v1>=0 && v1<=MGL_FEPSILON && u1>=0 && u1<=MGL_FEPSILON && v2>=0 && v2<=MGL_FEPSILON && u2>=0 && u2<=MGL_FEPSILON);
