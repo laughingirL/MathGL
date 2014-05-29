@@ -870,7 +870,7 @@ void mglParser::Execute(mglGraph *gr, const wchar_t *text)
 		{	// if string need to be continued then I but ' ' instead of 0x0 and
 			// pointer next string to 0x0. Last one for keeping number of strings.
 			if(next)
-			{	wcs[i]=wcs[next]=' ';	str[n] = wcs+s-1;	next=0;	}
+			{	for(size_t ii=next;ii<=i;ii++)	wcs[ii]='\b';	str[n] = wcs+s-1;	next=0;	}
 			else
 			{	wcs[i]=0;	str[n] = wcs+i+1;	}
 			n++;

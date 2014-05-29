@@ -830,7 +830,8 @@ const char *mmgl_text="call 'prepare1d'\nsubplot 2 2 0 ''\ntext 0 1 'Text can be
 "text 0 -0.6 'Easy to change indexes ^{up} _{down} @{center}'\n"
 "text 0 -1 'It parse TeX: \\int \\alpha \\cdot \\\n\\sqrt3{sin(\\pi x)^2 + \\gamma_{i_k}} dx'\n"
 "subplot 2 2 1 ''\n text 0 0.5 '\\sqrt{\\frac{\\alpha^{\\gamma^2}+\\overset 1{\\big\\infty}}{\\sqrt3{2+b}}}' '@' -2\n"
-"text 0 -0.5 'Text can be printed\\n{}on several lines'\n"
+"text 0 -0.3 'Text can be printed\\n{}on several lines'\n"
+"text 0 -0.7 'or with color gradient' 'BbcyrR'\n"
 "subplot 2 2 2 '':box:plot y(:,0)\ntext y 'This is very very long string drawn along a curve' 'k'\ntext y 'Another string drawn above a curve' 'Tr'\n"
 "subplot 2 2 3 '':line -1 -1 1 -1 'rA':text 0 -1 1 -1 'Horizontal'\n"
 "line -1 -1 1 1 'rA':text 0 0 1 1 'At angle' '@'\nline -1 -1 -1 1 'rA':text -1 0 -1 1 'Vertical'\n";
@@ -850,7 +851,8 @@ void smgl_text(mglGraph *gr)	// text drawing
 
 	gr->SubPlot(2,2,1,"");
 	gr->Puts(mglPoint(0,0.5), "\\sqrt{\\frac{\\alpha^{\\gamma^2}+\\overset 1{\\big\\infty}}{\\sqrt3{2+b}}}", "@", -2);
-	gr->Puts(mglPoint(0,-0.5),"Text can be printed\non several lines");
+	gr->Puts(mglPoint(0,-0.3),"Text can be printed\non several lines");
+	gr->Puts(mglPoint(0,-0.7),"or with col\bor gradient","BbcyrR");
 
 	gr->SubPlot(2,2,2,"");
 	mglData y;	mgls_prepare1d(&y);

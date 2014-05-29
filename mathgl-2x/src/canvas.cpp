@@ -397,8 +397,8 @@ mreal mglCanvas::text_plot(long p,const wchar_t *text,const char *font,mreal siz
 	mglPnt q=Pnt[p];
 	mreal ll = q.u*q.u+q.v*q.v;
 	bool inv=false;
-	if(rot && (q.u<0 || (q.u==0 && q.v<0)))
-	{	q.u=-q.u;	q.v=-q.v;	q.w=-q.w;	inv=true;	}
+//	if(rot && (q.u<0 || (q.u==0 && q.v<0)))		// NOTE this is 1st part of rotation changes (see also GetGlyphPhi())
+//	{	q.u=-q.u;	q.v=-q.v;	q.w=-q.w;	inv=true;	}
 
 	mreal fsize=size/6.5*font_factor, h = fnt->Height(font)*fsize, w, shift = -(sh+0.02)*h;
 	// text drawing itself
@@ -757,7 +757,8 @@ void mglCanvas::Legend(const std::vector<mglText> &leg, mreal x, mreal y, const 
 	// setup font and parse absolute coordinates
 	if(!font)	font="#";
 	char *pA, *ff = new char[strlen(font)+3];
-	strcpy(ff,font);	strcat(ff,":L");	Push();
+	const char *fmt = strchr(font,':');
+	strcpy(ff,fmt?fmt:"");	strcat(ff,":L");	Push();
 	if((pA=strchr(ff,'A')))
 	{	*pA = ' ';	InPlot(0,1,0,1,false);	iw=B1.b[0];	ih=B1.b[4];	}
 	else	{	iw=B1.b[0]/B1.pf;	ih=B1.b[4]/B1.pf;	}
@@ -795,20 +796,20 @@ void mglCanvas::Legend(const std::vector<mglText> &leg, mreal x, mreal y, const 
 	long k1=0,k2=0,k3=0,k4=0;
 	mglPoint p,q=mglPoint(NAN,NAN,NAN);
 
-	for(i=0;ff[i] && ff[i]!=':';i++)	if(strchr(MGL_COLORS,ff[i]))
+	mreal cc = AddTexture(font);
+	mreal c1,c2;	//=AddTexture(char(k1?k1:'w')), c2=AddTexture(char(k2?k2:'k'));
+	if(cc<2 || Txt[long(cc+0.5)].n==0)
+	{	c1 = AddTexture('w');	cc = c2 = AddTexture('k');	}
+	else switch(Txt[long(cc+0.5)].n)
 	{
-
-		if(k1 && k2)	{	k3=ff[i];	k4++;	}	// NOTE: keep k3 for future usage
-		if(k1 && !k2)	{	k2=ff[i];	k4++;	}
-		if(!k1)	{	k1=ff[i];	k4++;	}
+	case 1:	c1 = AddTexture('w');	c2 = AddTexture('k');	break;
+	case 2:	c1 = cc;	cc+=1/MGL_FEPSILON;	c2 = AddTexture('k');	break;
+	default:	c1 = cc;	c2 = cc+0.5;	cc += 1/MGL_FEPSILON;	break;
 	}
-	if(k4==2)	k2=0;
-	if(k4==1)	k1=k2=0;
-	mreal c1=AddTexture(char(k1?k1:'w')), c2=AddTexture(char(k2?k2:'k'));
-	if((Flag&3)==2)	{	mreal cc=c1;	c2=c1;	c1=cc;	}
+	if((Flag&3)==2)	{	mreal tt=c1;	c2=c1;	c1=tt;	}
 
 	mglMatrix M=B;	M.norot=true;
-	if(strchr(ff,'#'))	// draw bounding box
+	if(strchr(font,'#'))	// draw bounding box
 	{
 		SetPenPal("k-");
 		k1=AddPnt(&M,mglPoint(x,y,Depth/MGL_FEPSILON),c1,q,-1,0);
@@ -834,7 +835,7 @@ void mglCanvas::Legend(const std::vector<mglText> &leg, mreal x, mreal y, const 
 			mark_plot(AddPnt(&M,p,CDef,q,-1,0),m);
 		}
 		p = mglPoint(x+ix*w+((!leg[i].stl.empty())?ll:0.01*iw), y+iy*h+0.15*h, Depth);
-		text_plot(AddPnt(&M,p,-1,q,-1,0), leg[i].text.c_str(), ff, size);
+		text_plot(AddPnt(&M,p,-1,q,-1,0), leg[i].text.c_str(), ff, size,0,cc);
 	}
 	Pop();	EndGroup();	delete []ff;
 }

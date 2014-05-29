@@ -308,6 +308,7 @@ void mglFont::Convert(const wchar_t *str, unsigned *res) const
 				}
 			}
 		}
+		else if(ch=='\b'){}
 		else if(ch<=' ' && ch!='\n')	res[j++] = ' ';	// no \t at this moment :(
 		else if(ch=='_')	res[j++] = MGL_FONT_LOWER;
 		else if(ch=='^')	res[j++] = MGL_FONT_UPPER;

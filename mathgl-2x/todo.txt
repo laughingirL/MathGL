@@ -39,8 +39,6 @@
 17. Exclude "TODO non-mglData"
 18. Adjust format for printed numbers (i.e. write function which will produce shortest text) + flag of fixed format + flag of TeX-notation
 19. Check reading complex numbers + simple number as imag=0
-20. Check contour labels rotation
-21. Add color gradient in text sample
 
 YY. Optimize code (especially Quality=0 ?!?)
 ZZ. Update *.i for new functions {before release!!!}
@@ -78,7 +76,7 @@ C. Translate to Russian everything
 24. Docs about new SetTicks() and mgl_set_ticks_fact*()
 25. Notice about MGL_HAVE_C99_COMPLEX, MGL_SYS_NAN into "Installation" section.
 26. Style 'f' for fixed format (like "%.2f") in Table() and Label().
-27. Color gradient (color scheme) for glyphs of text
+27. Color gradient (color scheme) for glyphs of text + update sample
 
 
 ============= UDAV =============

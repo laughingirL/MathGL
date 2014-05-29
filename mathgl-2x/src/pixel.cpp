@@ -1752,7 +1752,7 @@ float mglCanvas::GetGlyphPhi(const mglPnt &q, float phi)
 	if(ll==ll && phi<1e4)
 	{
 		phi = -atan2(y,x)*180/M_PI;
-		if(fabs(phi)>90) 	phi+=180;
+//		if(fabs(phi)>90) 	phi+=180;	// NOTE this is 2nd part of rotation changes (see also text_plot())
 	}
 	else phi=0;
 	return phi;

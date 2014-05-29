@@ -234,19 +234,36 @@ std::vector<mglSegment> MGL_NO_EXPORT mgl_get_curvs(HMGL gr, std::vector<mglSegm
 {
 	long n = lines.size(), m = n;
 	const long nsl=(n>0 && sqrt(n)>10)?sqrt(n):10;
-	mreal dnsl = nsl/((gr->Max.x-gr->Min.x)*MGL_FEPSILON), x0 = gr->Min.x;
-	std::vector<long> isl[nsl+1];
+	mreal dxsl = nsl/((gr->Max.x-gr->Min.x)*MGL_FEPSILON), x0 = gr->Min.x;
+	mreal dysl = nsl/((gr->Max.y-gr->Min.y)*MGL_FEPSILON), y0 = gr->Min.y;
+	std::vector<long> xsl[nsl+1], ysl[nsl+1];
 	for(long i=0;i<n;i++)	// group lines by position of its x-coor
 	{
-		register long i1 = (lines[i].p1.x-x0)*dnsl, i2 = (lines[i].p2.x-x0)*dnsl;
+		register long i1 = (lines[i].p1.x-x0)*dxsl, i2 = (lines[i].p2.x-x0)*dxsl;
 		if(i1<0)	i1=0;	if(i1>nsl)	i1=nsl;
 		if(i2<0)	i2=0;	if(i2>nsl)	i2=nsl;
-		if(i1==i2 && i1*(i1-nsl)<=0)	isl[i1].push_back(i);
+		if(i1==i2 && i1*(i1-nsl)<=0)	xsl[i1].push_back(i);
 		else
 		{
-			if(i1*(i1-nsl)<=0)	isl[i1].push_back(i);
-			if(i2*(i2-nsl)<=0)	isl[i2].push_back(i);
+			if(i1*(i1-nsl)<=0)	xsl[i1].push_back(i);
+			if(i2*(i2-nsl)<=0)	xsl[i2].push_back(i);
 		}
+		i1 = (lines[i].p1.y-y0)*dysl;
+		i2 = (lines[i].p2.y-y0)*dysl;
+		if(i1<0)	i1=0;	if(i1>nsl)	i1=nsl;
+		if(i2<0)	i2=0;	if(i2>nsl)	i2=nsl;
+		if(i1==i2 && i1*(i1-nsl)<=0)	ysl[i1].push_back(i);
+		else
+		{
+			if(i1*(i1-nsl)<=0)	ysl[i1].push_back(i);
+			if(i2*(i2-nsl)<=0)	ysl[i2].push_back(i);
+		}
+	}
+	size_t xm=0,ym=0;
+	for(long i=0;i<=nsl;i++)
+	{
+		if(xm<xsl[i].size())	xm=xsl[i].size();
+		if(ym<ysl[i].size())	ym=ysl[i].size();
 	}
 	std::vector<mglSegment> curvs;
 	char *used = new char[n];	memset(used,0,n);
@@ -265,10 +282,14 @@ std::vector<mglSegment> MGL_NO_EXPORT mgl_get_curvs(HMGL gr, std::vector<mglSegm
 		while(added && m>0)
 		{
 			added = false;
-			register long i1 = (curv.p1.x-x0)*dnsl, i2 = (curv.p2.x-x0)*dnsl;
+			register long i1, i2;
+			if(xm<=ym)
+			{	i1 = (curv.p1.x-x0)*dxsl;	i2 = (curv.p2.x-x0)*dxsl;	}
+			else
+			{	i1 = (curv.p1.y-y0)*dysl;	i2 = (curv.p2.y-y0)*dysl;	}
 			if(i1<0)	i1=0;	if(i1>nsl)	i1=nsl;
 			if(i2<0)	i2=0;	if(i2>nsl)	i2=nsl;
-			const std::vector<long> &isl1=isl[i1];
+			const std::vector<long> &isl1=(xm<=ym)?xsl[i1]:ysl[i1];
 			for(size_t i=0;i<isl1.size();i++)	// first find continuation of first point
 			{
 				register long ii = isl1[i];
@@ -277,7 +298,7 @@ std::vector<mglSegment> MGL_NO_EXPORT mgl_get_curvs(HMGL gr, std::vector<mglSegm
 				if(l.p1==curv.p1)		{	curv.before(l.p2);	used[ii]=1;	m--;	added=true;	break;	}
 				else if(l.p2==curv.p1)	{	curv.before(l.p1);	used[ii]=1;	m--;	added=true;	break;	}
 			}
-			const std::vector<long> &isl2=isl[i2];
+			const std::vector<long> &isl2=(xm<=ym)?xsl[i2]:ysl[i2];
 			if(m>0)	for(size_t i=0;i<isl2.size();i++)	// now the same for second point
 			{
 				register long ii = isl2[i];
