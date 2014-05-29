@@ -230,29 +230,62 @@ std::vector<mglSegment> MGL_EXPORT mgl_get_lines(mreal val, HCDT a, HCDT x, HCDT
 	return lines;
 }
 //-----------------------------------------------------------------------------
-std::vector<mglSegment> MGL_NO_EXPORT mgl_get_curvs(std::vector<mglSegment> lines)
+std::vector<mglSegment> MGL_NO_EXPORT mgl_get_curvs(HMGL gr, std::vector<mglSegment> lines)
 {
 	long n = lines.size(), m = n;
+	const long nsl=(n>0 && sqrt(n)>10)?sqrt(n):10;
+	mreal dnsl = nsl/((gr->Max.x-gr->Min.x)*MGL_FEPSILON), x0 = gr->Min.x;
+	std::vector<long> isl[nsl+1];
+	for(long i=0;i<n;i++)	// group lines by position of its x-coor
+	{
+		register long i1 = (lines[i].p1.x-x0)*dnsl, i2 = (lines[i].p2.x-x0)*dnsl;
+		if(i1<0)	i1=0;	if(i1>nsl)	i1=nsl;
+		if(i2<0)	i2=0;	if(i2>nsl)	i2=nsl;
+		if(i1==i2 && i1*(i1-nsl)<=0)	isl[i1].push_back(i);
+		else
+		{
+			if(i1*(i1-nsl)<=0)	isl[i1].push_back(i);
+			if(i2*(i2-nsl)<=0)	isl[i2].push_back(i);
+		}
+	}
 	std::vector<mglSegment> curvs;
 	char *used = new char[n];	memset(used,0,n);
 	// create curves from lines
 	while(m>0)	// NOTE! This algorithm can be *very* slow!!!
 	{
 		mglSegment curv;
+		bool added = false;
 		for(long i=0;i<n;i++)	if(!used[i])	// find any first line segment
 		{
 			curv.before(lines[i].p1);
 			curv.after(lines[i].p2);
-			used[i]=1;	m--;	break;
+			used[i]=1;	m--;
+			added=true;	break;
 		}
-		for(long i=0;i<n && m>0;i++)	// NOTE very VERY *VERY* slow!!!
+		while(added && m>0)
 		{
-			const mglSegment &l=lines[i];
-			if(used[i])	continue;
-			if(l.p1==curv.p1)		{	curv.before(l.p2);	used[i]=1;	m--;	i=0;	}
-			else if(l.p2==curv.p1)	{	curv.before(l.p1);	used[i]=1;	m--;	i=0;	}
-			else if(l.p1==curv.p2)	{	curv.after(l.p2);	used[i]=1;	m--;	i=0;	}
-			else if(l.p2==curv.p2)	{	curv.after(l.p1);	used[i]=1;	m--;	i=0;	}
+			added = false;
+			register long i1 = (curv.p1.x-x0)*dnsl, i2 = (curv.p2.x-x0)*dnsl;
+			if(i1<0)	i1=0;	if(i1>nsl)	i1=nsl;
+			if(i2<0)	i2=0;	if(i2>nsl)	i2=nsl;
+			const std::vector<long> &isl1=isl[i1];
+			for(size_t i=0;i<isl1.size();i++)	// first find continuation of first point
+			{
+				register long ii = isl1[i];
+				const mglSegment &l=lines[ii];
+				if(used[ii])	continue;
+				if(l.p1==curv.p1)		{	curv.before(l.p2);	used[ii]=1;	m--;	added=true;	break;	}
+				else if(l.p2==curv.p1)	{	curv.before(l.p1);	used[ii]=1;	m--;	added=true;	break;	}
+			}
+			const std::vector<long> &isl2=isl[i2];
+			if(m>0)	for(size_t i=0;i<isl2.size();i++)	// now the same for second point
+			{
+				register long ii = isl2[i];
+				const mglSegment &l=lines[ii];
+				if(used[ii])	continue;
+				if(l.p1==curv.p2)		{	curv.after(l.p2);	used[ii]=1;	m--;	added=true;	break;	}
+				else if(l.p2==curv.p2)	{	curv.after(l.p1);	used[ii]=1;	m--;	added=true;	break;	}
+			}
 		}
 		curvs.push_back(curv);
 	}
@@ -315,7 +348,7 @@ void MGL_EXPORT mgl_cont_gen(HMGL gr, mreal val, HCDT a, HCDT x, HCDT y, HCDT z,
 	if(n<2 || m<2 || x->GetNx()*x->GetNy()!=n*m || y->GetNx()*y->GetNy()!=n*m || z->GetNx()*z->GetNy()!=n*m)
 	{	gr->SetWarn(mglWarnDim,"ContGen");	return;	}
 
-	mgl_draw_curvs(gr,val,c,text,mgl_get_curvs(mgl_get_lines(val,a,x,y,z,ak)));
+	mgl_draw_curvs(gr,val,c,text,mgl_get_curvs(gr,mgl_get_lines(val,a,x,y,z,ak)));
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_cont_gen(HMGL gr, double val, HCDT a, HCDT x, HCDT y, HCDT z, const char *sch)
@@ -815,7 +848,7 @@ void MGL_EXPORT mgl_contv_gen(HMGL gr, mreal val, mreal dval, HCDT a, HCDT x, HC
 	if(n<2 || m<2 || x->GetNx()*x->GetNy()!=n*m || y->GetNx()*y->GetNy()!=n*m || z->GetNx()*z->GetNy()!=n*m)
 	{	gr->SetWarn(mglWarnDim,"ContGen");	return;	}
 
-	const std::vector<mglSegment> curvs = mgl_get_curvs(mgl_get_lines(val,a,x,y,z,ak));
+	const std::vector<mglSegment> curvs = mgl_get_curvs(gr,mgl_get_lines(val,a,x,y,z,ak));
 	for(size_t i=0;i<curvs.size();i++)
 	{
 		const std::list<mglPoint> &pp=curvs[i].pp;

@@ -11,6 +11,7 @@
 * Add manual dash style, like "{df090}"
 * Add manual mask style, like "{s00ff00182424f800}"
 * Add style 'f' for printing numbers in fixed format for functions Table() and Label().
+* Improve and slightly speed up algorithm for contours drawing and filling, taking special attention to quasi-random data.
 * Add function "random(dat)" to the list of known functions for formula parsing
 * Add 'inf' variable to the MGL and formula parsing
 * Spline() now use 5-th order polynomials to keep continuity of 2nd derivative too.

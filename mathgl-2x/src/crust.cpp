@@ -312,7 +312,7 @@ void MGL_EXPORT mgl_tricont_xyzcv(HMGL gr, HCDT v, HCDT nums, HCDT x, HCDT y, HC
 	for(long k=0;k<v->GetNx();k++)
 	{
 		mreal v0 = v->v(k);		zz.Fill(fixed ? gr->Min.z : v0);
-		mgl_draw_curvs(gr,v0,gr->GetC(s,v0),text,mgl_get_curvs(mgl_tri_lines(v0,nums,a,x,y,fixed?&zz:z)));
+		mgl_draw_curvs(gr,v0,gr->GetC(s,v0),text,mgl_get_curvs(gr,mgl_tri_lines(v0,nums,a,x,y,fixed?&zz:z)));
 	}
 }
 //-----------------------------------------------------------------------------
@@ -379,7 +379,7 @@ void MGL_EXPORT mgl_tricontv_xyzcv(HMGL gr, HCDT v, HCDT nums, HCDT x, HCDT y, H
 		else if(k<v->GetNx()-1)	dv = v->v(k)-v->v(k+1);
 		if(fixed)	dv=-dv;
 
-		const std::vector<mglSegment> curvs = mgl_get_curvs(mgl_tri_lines(v0,nums,a,x,y,fixed?&zz:z));
+		const std::vector<mglSegment> curvs = mgl_get_curvs(gr,mgl_tri_lines(v0,nums,a,x,y,fixed?&zz:z));
 		for(size_t i=0;i<curvs.size();i++)
 		{
 			const std::list<mglPoint> &pp=curvs[i].pp;
