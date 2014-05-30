@@ -64,6 +64,10 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
+	mglDataC a;
+	a.Read("test.dat");
+	a.Save("out.dat");
+	return;
 	mglParse par;
 	par.Execute(gr,"new a 100 100 'rnd*2-1'\n"
 		"subplot 2 2 0:dens a '#':box\nsubplot 2 2 1:cont a:mesh a 'k':box\n"

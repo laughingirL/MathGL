@@ -589,6 +589,9 @@ public:
 	inline mreal operator=(mreal val)
 	{	di=dj=dk=0;	a0=val;	return val;	}
 	/// Get the value in given cell of the data without border checking
+	mreal value(mreal x,mreal y,mreal z,mreal *dx=0,mreal *dy=0,mreal *dz=0) const
+	{	if(dx)	*dx=di;	if(dy)	*dy=dj;	if(dz)	*dz=dk;
+		return simpl?(a0+di*x+dj*y+dk*z) : (di*(x<nx/2?x:nx-x)+dj*(y<ny/2?y:ny-y)+dk*(z<nz/2?z:nz-z));	}
 	mreal v(long i,long j=0,long k=0) const
 	{	return simpl?(a0+di*i+dj*j+dk*k) : (di*(i<nx/2?i:nx-i)+dj*(j<ny/2?j:ny-j)+dk*(k<nz/2?k:nz-k));	}
 	mreal vthr(long ii) const
@@ -639,6 +642,13 @@ public:
 		if(eq && *eq)	{	ex = mgl_create_expr(eq);	str=eq;	}
 		else	{	ex=0;	str="";	}	}
 
+	mreal value(mreal i,mreal j=0,mreal k=0, mreal *di=0,mreal *dj=0,mreal *dk=0) const
+	{
+		if(di)	*di = ex?mgl_expr_diff(ex,'x',v1.x+dx*i, v1.y+dy*j, v1.z+dz*k)*dx:0;
+		if(dj)	*dj = ex?mgl_expr_diff(ex,'y',v1.x+dx*i, v1.y+dy*j, v1.z+dz*k)*dy:0;
+		if(dk)	*dk = ex?mgl_expr_diff(ex,'z',v1.x+dx*i, v1.y+dy*j, v1.z+dz*k)*dz:0;
+		return ex?mgl_expr_eval(ex,v1.x+dx*i, v1.y+dy*j, v1.z+dz*k):0;
+	}
 	/// Copy data from other mglDataV variable
 	inline const mglDataF &operator=(const mglDataF &d)
 	{	nx=d.nx;	ny=d.ny;	nz=d.nz;	v1=d.v1;	v2=d.v2;	setD();

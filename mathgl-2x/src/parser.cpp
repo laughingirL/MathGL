@@ -874,7 +874,6 @@ void mglParser::Execute(mglGraph *gr, const wchar_t *text)
 			else
 			{	wcs[i]=0;	str[n] = wcs+i+1;	}
 			n++;
-
 		}
 	}
 	Execute(gr, n, str);
