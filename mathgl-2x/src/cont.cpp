@@ -236,7 +236,9 @@ std::vector<mglSegment> MGL_NO_EXPORT mgl_get_curvs(HMGL gr, std::vector<mglSegm
 	const long nsl=(n>0 && sqrt(n)>10)?sqrt(n):10;
 	mreal dxsl = nsl/((gr->Max.x-gr->Min.x)*MGL_FEPSILON), x0 = gr->Min.x;
 	mreal dysl = nsl/((gr->Max.y-gr->Min.y)*MGL_FEPSILON), y0 = gr->Min.y;
-	std::vector<long> xsl[nsl+1], ysl[nsl+1];
+	std::vector<long> *xsl, *ysl;
+	xsl = new std::vector<long>[nsl+1];
+	ysl = new std::vector<long>[nsl+1];
 	for(long i=0;i<n;i++)	// group lines by position of its x-coor
 	{
 		register long i1 = (lines[i].p1.x-x0)*dxsl, i2 = (lines[i].p2.x-x0)*dxsl;
@@ -310,7 +312,7 @@ std::vector<mglSegment> MGL_NO_EXPORT mgl_get_curvs(HMGL gr, std::vector<mglSegm
 		}
 		curvs.push_back(curv);
 	}
-	delete []used;
+	delete []used;	delete []xsl;	delete []ysl;
 	return curvs;
 }
 //-----------------------------------------------------------------------------

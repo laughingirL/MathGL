@@ -208,7 +208,7 @@ HMDT MGL_EXPORT mgl_ode_solve(void (*func)(const mreal *x, mreal *dx, void *par)
 HMDT MGL_EXPORT mgl_ode_solve_ex(void (*func)(const mreal *x, mreal *dx, void *par), int n, mreal *x0, mreal dt, mreal tmax, void *par, void (*bord)(mreal *x, const mreal *xp, void *par))
 {
 	if(tmax<dt)	return 0;	// nothing to do
-	int nt = int(tmax/dt)+1;
+	int nt = int(tmax/dt+0.5)+1;
 	mglData *res=new mglData(n,nt);
 	mreal *x=new mreal[n], *k1=new mreal[n], *k2=new mreal[n], *k3=new mreal[n], *v=new mreal[n], hh=dt/2;
 	register long i,k;
