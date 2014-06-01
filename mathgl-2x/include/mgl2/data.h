@@ -514,6 +514,8 @@ inline mglData mglSubData(const mglDataA &dat, const mglDataA &xx)
 class MGL_EXPORT mglExpr
 {
 	HMEX ex;
+	mglExpr(const mglExpr &){}	// copying is not allowed
+	const mglExpr &operator=(const mglExpr &t){return t;}	// copying is not allowed
 public:
 	mglExpr(const char *expr)		{	ex = mgl_create_expr(expr);	}
 	~mglExpr()	{	mgl_delete_expr(ex);	}

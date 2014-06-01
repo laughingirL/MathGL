@@ -1041,7 +1041,6 @@ void mglCanvas::trig_pix(long i, long j, const mglPnt &p1, const mglPnt &p2, con
 	pnt_plot(i,j,p.z,col2int(p,r,d->ObjId),d->ObjId);
 }
 //-----------------------------------------------------------------------------
-//#define mgl_sline(c,x)	(unsigned char)((c)/cosh(x))
 inline unsigned char mgl_sline(unsigned char c,float x)
 {	x*=x/2;	return (unsigned char)((c)/(1+x+x*x/5));	}
 void mglCanvas::line_draw(const mglPnt &p1, const mglPnt &p2, const mglDrawReg *dr)

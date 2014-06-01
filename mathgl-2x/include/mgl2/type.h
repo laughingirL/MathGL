@@ -36,7 +36,7 @@ const mreal mgl_min_a = 1./256;
 struct MGL_EXPORT mglPoint
 {
 	mreal x,y,z,c;
-	mglPoint(mreal X=0,mreal Y=0,mreal Z=0,mreal C=0){x=X;y=Y;z=Z;c=C;}
+	mglPoint(mreal X=0,mreal Y=0,mreal Z=0,mreal C=0):x(X),y(Y),z(Z),c(C) {}
 	inline bool IsNAN()		{	return (x!=x || y!=y || z!=z || c!=c);	}
 	inline mreal val(int i)	{	return (i<2 ? (i==0 ? x:y) : (i==2 ? z:c));	}
 	inline mreal norm()		{	return sqrt(x*x+y*y+z*z);	}
@@ -97,9 +97,9 @@ struct MGL_EXPORT mglColor
 	float a;	///< Alpha component of color
 
 	/// Constructor for RGB components manualy
-	mglColor(float R,float G,float B, float A=1){	r=R;	g=G;	b=B;	a=A;	}
+	mglColor(float R,float G,float B, float A=1):r(R),g(G),b(B),a(A)	{}
 	/// Constructor set default color
-	mglColor()		{	r=g=b=0;	a=1;	}
+	mglColor():r(0),g(0),b(0),a(1)	{}
 	/// Constructor set color from character id
 	mglColor(char c, float bright=1)		{	Set(c,bright);	}
 	/// Set color as Red, Green, Blue values

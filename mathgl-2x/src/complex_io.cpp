@@ -32,7 +32,7 @@
 #include <hdf5.h>
 #endif
 
-#define isn(ch)		((ch)=='\n')
+inline bool isn(char ch)	{return ch=='\n';}
 MGL_NO_EXPORT char *mgl_read_gz(gzFile fp);
 mglDataC MGL_NO_EXPORT mglFormulaCalcC(const char *str, const std::vector<mglDataA*> &head);
 //-----------------------------------------------------------------------------

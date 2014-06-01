@@ -23,11 +23,6 @@
 #include "mgl2/canvas.h"
 #include "mgl2/prim.h"
 //-----------------------------------------------------------------------------
-#define islog(a, b) (((a)>0 && (b)>10*(a)) || ((b)<0 && (a)<10*(b)))
-// NOTE: I use <=0 for proper tick labels rotation. But this mirror labels for central origin!
-#define sign(a)	((a)<0 ? -1:1)
-//#define sign(a)	((a)<0 ? -1:((a)>0 ? 1:0))
-//-----------------------------------------------------------------------------
 MGL_NO_EXPORT inline struct tm *mgl_localtime (const time_t *clock, tm *result, bool use_utc)
 {	if (!clock || !result) return NULL;
 	const tm *res = use_utc?gmtime(clock):localtime(clock);
@@ -286,7 +281,7 @@ void mglCanvas::AdjustTicks(mglAxis &aa, bool ff)
 {
 	double d = fabs(aa.v2-aa.v1), n;
 	if(aa.f>0)	return;
-	if(ff && islog(aa.v1,aa.v2))
+	if(ff && mgl_islog(aa.v1,aa.v2))
 	{	aa.dv = 0;	aa.ds=0;	}
 	else if(aa.d>0)
 	{	aa.dv = aa.d;	aa.ds = aa.d/(abs(aa.ns)+1);	}
@@ -519,7 +514,7 @@ void mglCanvas::DrawAxis(mglAxis &aa, bool text, char arr,const char *stl,const 
 	mglPoint d = aa.dir, o = aa.org, q(NAN);	// "transverse" org
 	if(strchr("xyz",aa.ch))	o -= d*(o*d);
 	mglPoint av=(Min+Max)/2, dv,da,db, p;
-	dv = mglPoint(sign((av.x-o.x)*(Max.x-Min.x)), sign((av.y-o.y)*(Max.y-Min.y)), sign((av.z-o.z)*(Max.z-Min.z)));
+	dv = mglPoint(mgl_sign((av.x-o.x)*(Max.x-Min.x)), mgl_sign((av.y-o.y)*(Max.y-Min.y)), mgl_sign((av.z-o.z)*(Max.z-Min.z)));
 	da = aa.a*(dv*aa.a);	db = aa.b*(dv*aa.b);
 	if(aa.v2<aa.v1)	{	da *= -1;	db *= -1;	}
 
@@ -627,7 +622,7 @@ void mglCanvas::DrawLabels(mglAxis &aa, bool inv, const mglMatrix *M)
 //		if(tet && nn.x==0)	pos[2] = 'R';
 		if(aa.ch=='c' && aa.txt[i].text[0]==' ')	qq.u = qq.v = NAN;
 		int ts = 1;
-		if(!get(MGL_DISABLE_SCALE))	ts = sign(qq.v*nn.x-qq.u*nn.y)*sign(aa.v2-aa.v1);
+		if(!get(MGL_DISABLE_SCALE))	ts = mgl_sign(qq.v*nn.x-qq.u*nn.y)*mgl_sign(aa.v2-aa.v1);
 		if(aa.ch=='c')	ts=inv?-1:1;	// use manual settings by inv argument
 //		else if(ux==0 && uy<0)	ts *= -1;
 		if(aa.ch=='T')	ts *= -1;
@@ -656,7 +651,7 @@ char mglCanvas::GetLabelPos(mreal c, long kk, mglAxis &aa)
 	mglPnt &qq = Pnt[kk];
 
 	if(aa.ch=='c')	qq.u = qq.v = NAN;
-	if(!get(MGL_DISABLE_SCALE))	ts = sign(qq.v*nn.x-qq.u*nn.y)*sign(aa.v2-aa.v1);
+	if(!get(MGL_DISABLE_SCALE))	ts = mgl_sign(qq.v*nn.x-qq.u*nn.y)*mgl_sign(aa.v2-aa.v1);
 	if(aa.ch=='T')	ts *= -1;
 	if(aa.pos=='T')	ts *= -1;
 	return ts>0 ? 't':'T';

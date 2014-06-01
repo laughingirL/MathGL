@@ -76,7 +76,7 @@ public:
 	Fl_Valuator	*phi_val;	///< pointer to external phi-angle validator
 
 	Fl_MathGL(int x, int y, int w, int h, const char *label=0);
-	~Fl_MathGL();
+	virtual ~Fl_MathGL();
 
 	/// Update (redraw) plot
 	virtual void update();
@@ -159,7 +159,7 @@ public:
 	{	mgl_set_size(FMGL->get_graph(),scroll->w(),scroll->h());	FMGL->size(scroll->w(),scroll->h());	update();	}
 
 	Fl_MGLView(int x, int y, int w, int h, const char *label=0);
-	~Fl_MGLView();
+	virtual ~Fl_MGLView();
 	void update();			///< Update picture by calling user drawing function
 protected:
 	Fl_Button *alpha_bt, *light_bt, *rotate_bt, *anim_bt, *zoom_bt, *grid_bt;

@@ -132,7 +132,7 @@ struct MGL_EXPORT mglPrim	// NOTE: use float for reducing memory size
 		};
 		uint64_t m;
 	};
-	mglPrim(int t=0)	{	n1=n2=n3=n4=id=0;	z=s=w=p=0;	type=t;	}
+	mglPrim(int t=0):n1(0),n2(0),n3(0),n4(0),type(t),angl(0),id(0),z(0),w(0),m(0)	{}
 };
 bool operator<(const mglPrim &a,const mglPrim &b);
 bool operator>(const mglPrim &a,const mglPrim &b);
@@ -143,7 +143,7 @@ struct MGL_EXPORT mglGroup
 	std::vector<long> p;	///< list of primitives (not filled!!!)
 	int Id;					///< Current list of primitives
 	std::string Lbl;		///< Group label
-	mglGroup(const char *lbl="", int id=0)	{	Lbl=lbl;	Id=id;	}
+	mglGroup(const char *lbl="", int id=0) : Id(id), Lbl(lbl)	{}
 };
 //-----------------------------------------------------------------------------
 /// Structure for text label
@@ -152,8 +152,8 @@ struct MGL_EXPORT mglText
 	std::wstring text;
 	std::string stl;
 	mreal val;
-	mglText(const wchar_t *txt=L"", const char *fnt="", mreal v=0)	{	text=txt;	stl=fnt;	val=v;	}
-	mglText(const std::wstring &txt, mreal v=0)	{	text=txt;	val=v;	}
+	mglText(const wchar_t *txt=L"", const char *fnt="", mreal v=0) : text(txt), stl(fnt), val(v) {}
+	mglText(const std::wstring &txt, mreal v=0): text(txt), val(v)	{}
 };
 //-----------------------------------------------------------------------------
 /// Structure for internal point representation
@@ -165,7 +165,7 @@ struct MGL_EXPORT mglPnt	// NOTE: use float for reducing memory size
 	float u,v,w;	// normales
 	float r,g,b,a;	// RGBA color
 	short sub;		// subplot id and rotation information (later will be in subplot)
-	mglPnt()	{	xx=yy=zz=x=y=z=c=t=ta=u=v=w=r=g=b=a=sub=0;	}
+	mglPnt()	{	memset(this,0,sizeof(mglPnt));	}
 };
 inline mglPnt operator+(const mglPnt &a, const mglPnt &b)
 {	mglPnt c=a;
@@ -190,9 +190,9 @@ struct MGL_EXPORT mglGlyph
 	long nt, nl;			///< number of triangles and lines
 	short *trig, *line;	///< vertexes of triangles and lines
 
-	mglGlyph()	{	nl=nt=0;	trig=line=0;	}
-	mglGlyph(const mglGlyph &a)	{	nl=nt=0;	trig=line=0;	*this=a;	}
-	mglGlyph(long Nt, long Nl)	{	nl=nt=0;	trig=line=0;	Create(Nt,Nl);	}
+	mglGlyph():nt(0),nl(0),trig(0),line(0)	{}
+	mglGlyph(const mglGlyph &a):nt(0),nl(0),trig(0),line(0)	{	*this=a;	}
+	mglGlyph(long Nt, long Nl):nt(0),nl(0),trig(0),line(0)	{	Create(Nt,Nl);	}
 	~mglGlyph()	{	if(trig)	delete []trig;	if(line)	delete []line;	}
 
 	void Create(long Nt, long Nl);
@@ -213,9 +213,9 @@ struct MGL_EXPORT mglTexture
 	int Smooth;			///< Type of texture (smoothing and so on)
 	mreal Alpha;			///< Transparency
 
-	mglTexture()	{	n=Smooth=0;	Alpha=1;	}
-	mglTexture(const char *cols, int smooth=0,mreal alpha=1)
-	{	n=0;	Set(cols,smooth,alpha);	}
+	mglTexture():n(0),Smooth(0),Alpha(1)	{}
+	mglTexture(const char *cols, int smooth=0,mreal alpha=1):n(0)
+	{	Set(cols,smooth,alpha);	}
 	void Clear()	{	n=0;	}
 	void Set(const char *cols, int smooth=0,mreal alpha=1);
 	void Set(HCDT val, const char *cols);
@@ -565,6 +565,8 @@ protected:
 	int DefMaskAn;	///< Default mask rotation angle in degrees
 
 private:
+	mglBase(const mglBase &){}	// copying is not allowed
+	const mglBase &operator=(const mglBase &t){return t;}	// copying is not allowed
 
 	mglPoint CutMin;	///< Lower edge of bounding box for cut off.
 	mglPoint CutMax;	///< Upper edge of bounding box for cut off.
@@ -582,6 +584,7 @@ bool MGL_EXPORT mgl_check_dim3(HMGL gr, bool both, HCDT x, HCDT y, HCDT z, HCDT 
 bool MGL_EXPORT mgl_check_vec3(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *name);
 bool MGL_EXPORT mgl_check_trig(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const char *name, int d=3);
 bool MGL_EXPORT mgl_isboth(HCDT x, HCDT y, HCDT z, HCDT a);
+inline bool mgl_islog(mreal a,mreal b)	{	return (a>0 && b>10*a) || (b<0 && a<10*b);	}
 //-----------------------------------------------------------------------------
 #endif
 #endif

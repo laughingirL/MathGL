@@ -202,11 +202,6 @@ struct MGL_EXPORT mglColorID
 MGL_EXPORT extern mglColorID mglColorIds[31];
 MGL_EXPORT extern std::string mglGlobalMess;	///< Buffer for receiving global messages
 //-----------------------------------------------------------------------------
-/// Brushes for mask with symbol "-+=;oOsS~<>jdD*^" correspondingly
-extern uint64_t mgl_mask_val[16];
-#define MGL_MASK_ID		"-+=;oOsS~<>jdD*^"
-#define MGL_SOLID_MASK	0xffffffffffffffff
-//-----------------------------------------------------------------------------
 #else
 #define mglDataA void
 typedef void *HMGL;
@@ -218,7 +213,7 @@ typedef void *HMPR;
 typedef const void *HCDT;
 #endif
 
-#if MGL_SRC
+#ifdef MGL_SRC
 #define _Da_(d)	(*((const mglDataA *)(d)))
 #define _DA_(a)	((const mglDataA *)*(a))
 #define _GR_	((mglBase *)(*gr))

@@ -60,7 +60,7 @@ struct MGL_EXPORT mglAxis
 /// Structure for light source
 struct MGL_EXPORT mglLight
 {
-	mglLight()	{	n=false;	a=b=0;	}
+	mglLight():n(false),a(0),b(0)	{}
 	bool n;			///< Availability of light sources
 	mglPoint d;		///< Direction of light sources
 	mglPoint r;		///< Position of light sources (NAN for infinity)
@@ -414,6 +414,9 @@ protected:
 	void PutDrawReg(mglDrawReg *d, const mglCanvas *gr);
 
 private:
+    mglCanvas(const mglCanvas &){}	// copying is not allowed
+	const mglCanvas &operator=(const mglCanvas &t){return t;}	// copying is not allowed
+
 	uint32_t *pnt_col;
 //	mreal _tetx,_tety,_tetz;		// extra angles
 	std::vector<mglMatrix> stack;	///< stack for transformation matrices

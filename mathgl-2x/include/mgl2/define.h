@@ -162,6 +162,7 @@ typedef float mreal;
 #define mgl_isnum(a)	((a)==(a))
 #define mgl_isfin(a)	((a)-(a)==mreal(0.))
 #define mgl_isbad(a)	((a)-(a)!=mreal(0.))
+#define mgl_sign(a)		((a)<0 ? -1:1)
 #else
 #define mgl_isbad(a)	({typeof (a) _a = (a); _a-_a!=mreal(0.);})
 #define mgl_isfin(a)	({typeof (a) _a = (a); _a-_a==mreal(0.);})
@@ -169,6 +170,7 @@ typedef float mreal;
 #define mgl_isnan(a)	({typeof (a) _a = (a); _a!=_a;})
 #define mgl_min(a,b)	({typeof (a) _a = (a); typeof (b) _b = (b); _a > _b ? _b : _a;})
 #define mgl_max(a,b)	({typeof (a) _a = (a); typeof (b) _b = (b); _a > _b ? _a : _b;})
+#define mgl_sign(a)		({typeof (a) _a = (a); _a<0 ? -1:1;})
 #endif
 //-----------------------------------------------------------------------------
 #define SMOOTH_NONE		0
@@ -234,6 +236,11 @@ enum{	// Codes for warnings/messages
 #define MGL_DEF_PAL	"bgrcmyhlnqeupH"	// default palette
 #define MGL_DEF_SCH	"BbcyrR"	// default palette
 #define MGL_COLORS	"kwrgbcymhWRGBCYMHlenpquLENPQU"
+//-----------------------------------------------------------------------------
+/// Brushes for mask with symbol "-+=;oOsS~<>jdD*^" correspondingly
+extern uint64_t mgl_mask_val[16];
+#define MGL_MASK_ID		"-+=;oOsS~<>jdD*^"
+#define MGL_SOLID_MASK	0xffffffffffffffff
 //-----------------------------------------------------------------------------
 #define MGL_TRANSP_NORM		0x000000
 #define MGL_TRANSP_GLASS 	0x000001

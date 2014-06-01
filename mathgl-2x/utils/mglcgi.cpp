@@ -69,7 +69,7 @@ int main()
 	{
 		long len=atol(getenv("CONTENT_LENGTH"));
 		buf = new char[len+1];
-		fread(buf,len,1,stdin);
+		if(!fread(buf,len,1,stdin))	len=0;
 		buf[len]=0;	alloc=true;
 	}
 	else		buf = getenv("QUERY_STRING");

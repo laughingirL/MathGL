@@ -22,7 +22,7 @@
 #include "mgl2/eval.h"
 #include "mgl2/thread.h"
 #include "mgl2/base.h"
-#define GAMMA	0.1
+const double GAMMA=0.1;	///< value for damping
 mglData MGL_NO_EXPORT mglFormulaCalc(const char *str, const std::vector<mglDataA*> &head);
 mglDataC MGL_NO_EXPORT mglFormulaCalcC(const char *str, const std::vector<mglDataA*> &head);
 //-----------------------------------------------------------------------------

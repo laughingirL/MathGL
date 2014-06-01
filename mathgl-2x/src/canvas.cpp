@@ -308,12 +308,9 @@ void mglCanvas::mark_plot(long p, char type, mreal size)
 {
 	if(p<0 || mgl_isnan(Pnt[p].x) || mgl_isnan(size))	return;
 	long pp=p;
-//	mreal pw = fabs(PenWidth)*0.15/sqrt(font_factor);
 	mreal pw = 0.15/sqrt(font_factor);
 	mglDrawReg d;	d.set(this,dr_x,dr_y,dr_p);
 	d.PDef = PDef;	d.pPos = pPos;	d.PenWidth=pw;
-//	if(size>=0)	size *= MarkSize;
-//	if(size==0)	size = MarkSize;
 	size = size?fabs(size):1;
 	size *= MarkSize*0.35*font_factor;
 	if(type=='.')	size = fabs(PenWidth)*sqrt(font_factor/400);
@@ -688,15 +685,14 @@ int mglCanvas::GetSplId(long x,long y) const
 	return id;
 }
 //-----------------------------------------------------------------------------
-#define islog(a, b) (((a)>0 && (b)>10*(a)) || ((b)<0 && (a)<10*(b)))
 void mglCanvas::Aspect(mreal Ax,mreal Ay,mreal Az)
 {
 	if(mgl_isnan(Ax))
 	{
 		mreal dy = (Max.y-Min.y), dx = (Max.x-Min.x), dz = (Max.z-Min.z);
-		if(islog(Min.x,Max.x) && fx)	dx = log10(Max.x/Min.x);
-		if(islog(Min.y,Max.y) && fy)	dy = log10(Max.y/Min.y);
-		if(islog(Min.z,Max.z) && fz)	dz = log10(Max.z/Min.z);
+		if(mgl_islog(Min.x,Max.x) && fx)	dx = log10(Max.x/Min.x);
+		if(mgl_islog(Min.y,Max.y) && fy)	dy = log10(Max.y/Min.y);
+		if(mgl_islog(Min.z,Max.z) && fz)	dz = log10(Max.z/Min.z);
 		mreal fy=exp(M_LN10*floor(0.5+log10(fabs(dy/dx))));
 		mreal fz=exp(M_LN10*floor(0.5+log10(fabs(dz/dx))));
 		if(Ay>0)	fy*=Ay;
@@ -812,10 +808,10 @@ void mglCanvas::Legend(const std::vector<mglText> &leg, mreal x, mreal y, const 
 	if(strchr(font,'#'))	// draw bounding box
 	{
 		SetPenPal("k-");
-		k1=AddPnt(&M,mglPoint(x,y,Depth/MGL_FEPSILON),c1,q,-1,0);
-		k2=AddPnt(&M,mglPoint(x+w*ncol,y,Depth/MGL_FEPSILON),c1,q,-1,0);
-		k3=AddPnt(&M,mglPoint(x,y+h*nrow,Depth/MGL_FEPSILON),c1,q,-1,0);
-		k4=AddPnt(&M,mglPoint(x+w*ncol,y+h*nrow,Depth/MGL_FEPSILON),c1,q,-1,0);
+		k1=AddPnt(&M,mglPoint(x,y,Depth/MGL_FEPSILON),c1,q,1,0);
+		k2=AddPnt(&M,mglPoint(x+w*ncol,y,Depth/MGL_FEPSILON),c1,q,1,0);
+		k3=AddPnt(&M,mglPoint(x,y+h*nrow,Depth/MGL_FEPSILON),c1,q,1,0);
+		k4=AddPnt(&M,mglPoint(x+w*ncol,y+h*nrow,Depth/MGL_FEPSILON),c1,q,1,0);
 		quad_plot(k1,k2,k3,k4);
 		k1=CopyNtoC(k1,c2);	k2=CopyNtoC(k2,c2);
 		k3=CopyNtoC(k3,c2);	k4=CopyNtoC(k4,c2);

@@ -59,7 +59,6 @@ new ez 10 10 10 '0.2*(z-0.3)/$1-0.2*(z+0.3)/$2'\nreturn\n";
 //		Sample functions (v.2.*)
 //-----------------------------------------------------------------------------
 const char *mmgl_fexport="";
-#define splot1(b) {(b).Norm(-1,1,true);gr->Rotate(70,60);gr->Box();gr->Surf3(b);}
 void smgl_fexport(mglGraph *gr)	// test file export
 {
 	gr->SubPlot(3,2,0);
@@ -330,26 +329,27 @@ const char *mmgl_data1="new a 40 50 60 'exp(-x^2-4*y^2-16*z^2)'\n"
 "stop\nfunc splot 0\n"
 "title 'max=',b.max:norm b -1 1 on:rotate 70 60:box:surf3 b\n"
 "return\n";
-#define splot1(b) {(b).Norm(-1,1,true);gr->Rotate(70,60);gr->Box();gr->Surf3(b);}
+inline void splot1(mglGraph *gr, mglData &b)
+{b.Norm(-1,1,true);gr->Rotate(70,60);gr->Box();gr->Surf3(b);}
 void smgl_data1(mglGraph *gr)	// basic data operations
 {
 	mglData a(40,50,60),b;	gr->Fill(a,"exp(-x^2-4*y^2-16*z^2)");
 	gr->Light(true);		gr->Alpha(true);
-	b.Set(a);	b.Diff("x");	gr->SubPlot(5,3,0);	splot1(b);
-	b.Set(a);	b.Diff2("x");	gr->SubPlot(5,3,1);	splot1(b);
-	b.Set(a);	b.CumSum("x");	gr->SubPlot(5,3,2);	splot1(b);
-	b.Set(a);	b.Integral("x");gr->SubPlot(5,3,3);	splot1(b);
-	b.Mirror("x");	gr->SubPlot(5,3,4);	splot1(b);
-	b.Set(a);	b.Diff("y");	gr->SubPlot(5,3,5);	splot1(b);
-	b.Set(a);	b.Diff2("y");	gr->SubPlot(5,3,6);	splot1(b);
-	b.Set(a);	b.CumSum("y");	gr->SubPlot(5,3,7);	splot1(b);
-	b.Set(a);	b.Integral("y");gr->SubPlot(5,3,8);	splot1(b);
-	b.Mirror("y");	gr->SubPlot(5,3,9);	splot1(b);
-	b.Set(a);	b.Diff("z");	gr->SubPlot(5,3,10);splot1(b);
-	b.Set(a);	b.Diff2("z");	gr->SubPlot(5,3,11);splot1(b);
-	b.Set(a);	b.CumSum("z");	gr->SubPlot(5,3,12);splot1(b);
-	b.Set(a);	b.Integral("z");gr->SubPlot(5,3,13);splot1(b);
-	b.Mirror("z");	gr->SubPlot(5,3,14);splot1(b);
+	b.Set(a);	b.Diff("x");	gr->SubPlot(5,3,0);	splot1(gr,b);
+	b.Set(a);	b.Diff2("x");	gr->SubPlot(5,3,1);	splot1(gr,b);
+	b.Set(a);	b.CumSum("x");	gr->SubPlot(5,3,2);	splot1(gr,b);
+	b.Set(a);	b.Integral("x");gr->SubPlot(5,3,3);	splot1(gr,b);
+	b.Mirror("x");	gr->SubPlot(5,3,4);	splot1(gr,b);
+	b.Set(a);	b.Diff("y");	gr->SubPlot(5,3,5);	splot1(gr,b);
+	b.Set(a);	b.Diff2("y");	gr->SubPlot(5,3,6);	splot1(gr,b);
+	b.Set(a);	b.CumSum("y");	gr->SubPlot(5,3,7);	splot1(gr,b);
+	b.Set(a);	b.Integral("y");gr->SubPlot(5,3,8);	splot1(gr,b);
+	b.Mirror("y");	gr->SubPlot(5,3,9);	splot1(gr,b);
+	b.Set(a);	b.Diff("z");	gr->SubPlot(5,3,10);splot1(gr,b);
+	b.Set(a);	b.Diff2("z");	gr->SubPlot(5,3,11);splot1(gr,b);
+	b.Set(a);	b.CumSum("z");	gr->SubPlot(5,3,12);splot1(gr,b);
+	b.Set(a);	b.Integral("z");gr->SubPlot(5,3,13);splot1(gr,b);
+	b.Mirror("z");	gr->SubPlot(5,3,14);splot1(gr,b);
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_data2="new a 40 50 60 'exp(-x^2-4*y^2-16*z^2)'\n"
@@ -372,26 +372,27 @@ const char *mmgl_data2="new a 40 50 60 'exp(-x^2-4*y^2-16*z^2)'\n"
 "stop\nfunc splot 0\n"
 "title 'max=',b.max:norm b -1 1 on:rotate 70 60:box\n"
 "surf3 b 0.5:surf3 b -0.5\nreturn\n";
-#define splot2(b) {(b).Norm(-1,1,true);gr->Rotate(70,60);gr->Box();gr->Surf3(0.5,b);gr->Surf3(-0.5,b);}
+inline void splot2(mglGraph *gr, mglData &b)
+{b.Norm(-1,1,true);gr->Rotate(70,60);gr->Box();gr->Surf3(0.5,b);gr->Surf3(-0.5,b);}
 void smgl_data2(mglGraph *gr)	// data transforms
 {
 	mglData a(40,50,60),b;	gr->Fill(a,"exp(-x^2-4*y^2-16*z^2)");
 	gr->Light(true);		gr->Alpha(true);
-	b.Set(a);	b.SinFFT("x");	gr->SubPlot(5,3,0);	splot2(b);
-	b.Set(a);	b.CosFFT("x");	gr->SubPlot(5,3,1);	splot2(b);
-	b.Set(a);	b.Hankel("x");	gr->SubPlot(5,3,2);	splot2(b);
-	b.Set(a);	b.Swap("x");	gr->SubPlot(5,3,3);	splot2(b);
-	b.Set(a);	b.Smooth("x");	gr->SubPlot(5,3,4);	splot2(b);
-	b.Set(a);	b.SinFFT("y");	gr->SubPlot(5,3,5);	splot2(b);
-	b.Set(a);	b.CosFFT("y");	gr->SubPlot(5,3,6);	splot2(b);
-	b.Set(a);	b.Hankel("y");	gr->SubPlot(5,3,7);	splot2(b);
-	b.Set(a);	b.Swap("y");	gr->SubPlot(5,3,8);	splot2(b);
-	b.Set(a);	b.Smooth("y");	gr->SubPlot(5,3,9);	splot2(b);
-	b.Set(a);	b.SinFFT("z");	gr->SubPlot(5,3,10);splot2(b);
-	b.Set(a);	b.CosFFT("z");	gr->SubPlot(5,3,11);splot2(b);
-	b.Set(a);	b.Hankel("z");	gr->SubPlot(5,3,12);splot2(b);
-	b.Set(a);	b.Swap("z");	gr->SubPlot(5,3,13);splot2(b);
-	b.Set(a);	b.Smooth("z");	gr->SubPlot(5,3,14);splot2(b);
+	b.Set(a);	b.SinFFT("x");	gr->SubPlot(5,3,0);	splot2(gr,b);
+	b.Set(a);	b.CosFFT("x");	gr->SubPlot(5,3,1);	splot2(gr,b);
+	b.Set(a);	b.Hankel("x");	gr->SubPlot(5,3,2);	splot2(gr,b);
+	b.Set(a);	b.Swap("x");	gr->SubPlot(5,3,3);	splot2(gr,b);
+	b.Set(a);	b.Smooth("x");	gr->SubPlot(5,3,4);	splot2(gr,b);
+	b.Set(a);	b.SinFFT("y");	gr->SubPlot(5,3,5);	splot2(gr,b);
+	b.Set(a);	b.CosFFT("y");	gr->SubPlot(5,3,6);	splot2(gr,b);
+	b.Set(a);	b.Hankel("y");	gr->SubPlot(5,3,7);	splot2(gr,b);
+	b.Set(a);	b.Swap("y");	gr->SubPlot(5,3,8);	splot2(gr,b);
+	b.Set(a);	b.Smooth("y");	gr->SubPlot(5,3,9);	splot2(gr,b);
+	b.Set(a);	b.SinFFT("z");	gr->SubPlot(5,3,10);splot2(gr,b);
+	b.Set(a);	b.CosFFT("z");	gr->SubPlot(5,3,11);splot2(gr,b);
+	b.Set(a);	b.Hankel("z");	gr->SubPlot(5,3,12);splot2(gr,b);
+	b.Set(a);	b.Swap("z");	gr->SubPlot(5,3,13);splot2(gr,b);
+	b.Set(a);	b.Smooth("z");	gr->SubPlot(5,3,14);splot2(gr,b);
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_param1="new x 100 'sin(pi*x)'\nnew y 100 'cos(pi*x)'\n"

@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <mgl2/mpi.h>
 #include <mpi.h>
-#define MCW		MPI_COMM_WORLD
 
 int main(int argc, char *argv[])
 {

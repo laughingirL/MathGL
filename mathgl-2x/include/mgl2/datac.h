@@ -412,6 +412,8 @@ inline mglDataC mglQO3dc(const char *ham, const mglDataA &ini_re, const mglDataA
 class MGL_EXPORT mglExprC
 {
 	HAEX ex;
+	mglExprC(const mglExprC &){}	// copying is not allowed
+	const mglExprC &operator=(const mglExprC &t){return t;}	// copying is not allowed
 public:
 	mglExprC(const char *expr)		{	ex = mgl_create_cexpr(expr);	}
 	~mglExprC()	{	mgl_delete_cexpr(ex);	}

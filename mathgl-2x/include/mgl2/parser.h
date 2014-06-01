@@ -96,7 +96,7 @@ public:
 	long InUse;			///< Smart pointer (number of users)
 
 	mglParser(bool setsize=false);
-	~mglParser();
+	virtual ~mglParser();
 	/// Find the command by the keyword name
 	const mglCommand *FindCommand(const char *name) const MGL_FUNC_PURE;
 	const mglCommand *FindCommand(const wchar_t *name) const MGL_FUNC_PURE;

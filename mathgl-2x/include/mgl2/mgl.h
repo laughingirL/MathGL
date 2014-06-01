@@ -49,7 +49,7 @@ public:
 	{	gr = graph;		mgl_use_graph(gr,1);	}
 	virtual ~mglGraph()
 	{	if(mgl_use_graph(gr,-1)<1)	mgl_delete_graph(gr);	}
-	/// Get pointer to internal mglCanvas object
+	/// Get pointer to internal HMGL object.
 	inline HMGL Self()	{	return gr;	}
 	/// Set default parameters for plotting
 	inline void DefaultPlotParam()			{	mgl_set_def_param(gr);	}
@@ -1242,7 +1242,7 @@ public:
 	mglParse(mglParse &p)	{	pr = p.pr;	mgl_use_parser(pr,1);	}
 	mglParse(bool setsize=false)
 	{	pr=mgl_create_parser();	mgl_parser_allow_setsize(pr, setsize);	}
-	~mglParse()	{	if(mgl_use_parser(pr,-1)<1)	mgl_delete_parser(pr);	}
+	virtual ~mglParse()	{	if(mgl_use_parser(pr,-1)<1)	mgl_delete_parser(pr);	}
 	/// Get pointer to internal mglParser object
 	inline HMPR Self()	{	return pr;	}
 	/// Parse and draw single line of the MGL script

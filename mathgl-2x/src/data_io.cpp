@@ -39,8 +39,7 @@
 #undef intf
 #endif
 
-//#define isn(ch)		((ch)<' ' && (ch)!='\t')
-#define isn(ch)		((ch)=='\n')
+inline bool isn(char ch)	{return ch=='\n';}
 mglData MGL_NO_EXPORT mglFormulaCalc(const char *str, const std::vector<mglDataA*> &head);
 //-----------------------------------------------------------------------------
 HMDT MGL_EXPORT mgl_create_data()	{	return new mglData;	}

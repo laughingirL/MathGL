@@ -26,7 +26,7 @@ class MGL_EXPORT mglCanvasGL : public mglCanvas
 {
 public:
 	mglCanvasGL();
-	~mglCanvasGL();
+	virtual ~mglCanvasGL();
 
 	void SetQuality(int =0)	{	Quality=2;	}
 	void Finish();

@@ -37,7 +37,6 @@ void MGL_EXPORT mgl_fplot(HMGL gr, const char *eqY, const char *pen, const char 
 	mreal *y = (mreal *)malloc(n*sizeof(mreal));
 	mglFormula *eq = new mglFormula(eqY);
 	mreal xs, ys, yr, ym=fabs(gr->Max.y - gr->Min.y)/nd;
-#define islog(a, b) (((a)>0 && (b)>10*(a)) || ((b)<0 && (a)<10*(b)))
 	// initial data filling
 	if(gr->Min.x>0 && gr->Max.x>100*gr->Min.x)
 	{
