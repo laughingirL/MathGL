@@ -33,8 +33,6 @@ MGL_EXPORT void (*mgl_ask_func)(const wchar_t *, wchar_t *)=0;
 void MGL_EXPORT mgl_ask_gets(const wchar_t *quest, wchar_t *res)
 {	printf("%ls\n",quest);	if(!fgetws(res,1024,stdin))	*res=0;	}
 //-----------------------------------------------------------------------------
-mglFunc::mglFunc(const mglFunc &f)
-{	pos=f.pos;	narg=f.narg;	func=f.func;	}
 mglFunc::mglFunc(long p, const wchar_t *f)
 {
 	pos = p;	func = f;

@@ -32,7 +32,7 @@ struct mglArg
 	std::wstring w;	///< String with parameters
 	std::string s;	///< String with parameters
 	mreal v;		///< Numerical value (used if type==2)
-	mglArg()	{	type=-1;	d=0;	v=0;	}
+	mglArg():type(-1),d(0),v(0)	{}
 };
 //-----------------------------------------------------------------------------
 /// Structure for MGL command
@@ -56,7 +56,7 @@ struct mglNum
 {
 	mreal d;		///< Number itself
 	std::wstring s;	///< Number name
-	mglNum(mreal val=0)	{	d=val;	}
+	mglNum(mreal val=0):d(val)	{}
 };
 //-----------------------------------------------------------------------------
 /// Structure for function name and position.
@@ -67,16 +67,16 @@ struct mglFunc
 	std::wstring func;
 //	wchar_t func[64];
 	mglFunc(long p, const wchar_t *f);
-	mglFunc(const mglFunc &f);
-	mglFunc()	{	pos=narg=-1;	}
+	mglFunc(const mglFunc &f):pos(f.pos),narg(f.narg),func(f.func)	{}
+	mglFunc():pos(-1),narg(-1)	{}
 };
 //-----------------------------------------------------------------------------
 /// Structure for stack of functions and its arguments.
 struct mglFnStack
 {
-	mglFnStack()	{pos=0;}
 	long pos;
 	std::wstring par[10];
+	mglFnStack():pos(0)	{}
 };
 //-----------------------------------------------------------------------------
 /// Function for asking question in console mode
