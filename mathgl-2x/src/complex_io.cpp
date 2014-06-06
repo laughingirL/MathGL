@@ -57,7 +57,7 @@ void mglFromStr(HADT d,char *buf,long NX,long NY,long NZ)	// TODO: add multithre
 	mgl_datac_create(d, NX,NY,NZ);
 	long nb = strlen(buf);
 	register long i=0, j=0;
-	std::string loc = setlocale(LC_NUMERIC, "C");
+	const std::string loc = setlocale(LC_NUMERIC, NULL);	setlocale(LC_NUMERIC, "C");
 	while(j<nb)
 	{
 		while(buf[j]<=' ' && j<nb)	j++;
@@ -215,7 +215,7 @@ void MGL_EXPORT mgl_datac_save(HCDT d, const char *fname,long ns)
 	if(!fp)	return;
 	register long i,j,k;
 	long nx=dd->nx, ny=dd->ny, nz=dd->nz;
-	std::string loc = setlocale(LC_NUMERIC, "C");
+	const std::string loc = setlocale(LC_NUMERIC, NULL);	setlocale(LC_NUMERIC, "C");
 	if(ns<0 || (ns>=nz && nz>1))	for(k=0;k<nz;k++)
 	{	// save whole data
 		for(i=0;i<ny;i++)
