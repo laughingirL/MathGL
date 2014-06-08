@@ -493,7 +493,8 @@ void mgls_prepare2v(mglData *a, mglData *b)
 //-----------------------------------------------------------------------------
 void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez)
 {
-	long n=10;
+	long n=20;
+	double z0=0.33;
 	if(!ex || !ey || !ez)	return;
 	ex->Create(n,n,n);	ey->Create(n,n,n);	ez->Create(n,n,n);
 #pragma omp parallel for collapse(3)
@@ -508,11 +509,11 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez)
 /*		ex->a[i0]=3*z;
 		ey->a[i0]=1;
 		ez->a[i0]=-3*x;*/
-		double r1 = pow(x*x+y*y+(z-0.3)*(z-0.3)+0.03,1.5);
-		double r2 = pow(x*x+y*y+(z+0.3)*(z+0.3)+0.03,1.5);
+		double r1 = pow(x*x+y*y+(z-z0)*(z-z0)+0.03,1.5);
+		double r2 = pow(x*x+y*y+(z+z0)*(z+z0)+0.03,1.5);
 		ex->a[i0]=0.2*x/r1 - 0.2*x/r2;
 		ey->a[i0]=0.2*y/r1 - 0.2*y/r2;
-		ez->a[i0]=0.2*(z-0.3)/r1 - 0.2*(z+0.3)/r2;
+		ez->a[i0]=0.2*(z-z0)/r1 - 0.2*(z+z0)/r2;
 	}
 }
 //-----------------------------------------------------------------------------

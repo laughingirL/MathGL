@@ -230,7 +230,7 @@ std::vector<mglSegment> MGL_EXPORT mgl_get_lines(mreal val, HCDT a, HCDT x, HCDT
 	return lines;
 }
 //-----------------------------------------------------------------------------
-std::vector<mglSegment> MGL_NO_EXPORT mgl_get_curvs(HMGL gr, std::vector<mglSegment> lines)
+std::vector<mglSegment> MGL_EXPORT mgl_get_curvs(HMGL gr, std::vector<mglSegment> lines)
 {
 	long n = lines.size(), m = n;
 	const long nsl=(n>0 && sqrt(n)>10)?sqrt(n):10;

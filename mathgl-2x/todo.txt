@@ -30,7 +30,9 @@
 10. add real(), imag(), conj() + accurate types in MGL + add 'complex' in MGL ???
 
 11. Enable consecutive (as multiplication of matrices instead of single summary one) rotation of axis + the same in JS. Problem with widgets?!?
-12. Add FlowData() for getting flow thread coordinates as output array?!!
+
+12. Spline in 2d,3d -- last points
+
 13. Complex (hex) colors in inline text command (like #{b9} or #{x0000ff})
 14. Extra markers for '&' and '&#' signs ?!?
 15. Read JPEG files for Background() and mglData::Import()
@@ -73,6 +75,7 @@ C. Translate to Russian everything
 25. Notice about MGL_HAVE_C99_COMPLEX, MGL_SYS_NAN into "Installation" section.
 26. Style 'f' for fixed format (like "%.2f") in Table() and Label().
 27. Color gradient (color scheme) for glyphs of text + update sample
+28. Hint about flow threads and contour lines (as ODE and for advanced users).
 
 
 ============= UDAV =============

@@ -616,7 +616,6 @@ void MGL_NO_EXPORT flow(mglBase *gr, double zVal, double u, double v, const mglD
 	bool both = x.nx==ax.nx && y.nx==ax.nx && x.ny==ax.ny && y.ny==ax.ny;
 
 	mglPoint *pp = new mglPoint[n], dp;
-	mreal *cc = new mreal[n];
 	mglPoint dx(1/fabs(gr->Max.x-gr->Min.x),1/fabs(gr->Max.y-gr->Min.y),1/fabs(gr->Max.z-gr->Min.z));
 
 	mreal dt = 0.5/(ax.nx > ax.ny ? ax.nx : ax.ny),e,f,g,ff[4],gg[4],h,s=1;
@@ -624,26 +623,26 @@ void MGL_NO_EXPORT flow(mglBase *gr, double zVal, double u, double v, const mglD
 	register long k=0,m;
 	bool end = false;
 	do{
-		if(gr->Stop)	{	delete []pp;	delete []cc;	return;	}
+		if(gr->Stop)	{	delete []pp;	return;	}
 		pp[k].x = both ? x.Spline1(u,v,0):x.Spline1(u,0,0);
 		pp[k].y = both ? y.Spline1(u,v,0):y.Spline1(v,0,0);
 		pp[k].z = zVal;
 		for(m=0;m<k-1;m++)	// determines encircle
 			if(mgl_norm((pp[k]-pp[m])/dx)<dt/10.)	{	end = true;	break;	}
-		f = ax.Linear1(u,v,0);	g = ay.Linear1(u,v,0);
-		h = hypot(f,g);	cc[k] = gr->GetC(ss,s*h);
+		f = ax.Spline1(u,v,0);	g = ay.Spline1(u,v,0);
+		h = hypot(f,g);	pp[k].c = gr->GetC(ss,s*h);
 		if(h<1e-5)	break;	// stationary point
 		k++;
 		// find next point by midpoint method
 		h+=1;	ff[0]=f*dt/h;	gg[0]=g*dt/h;
 		e = u+ff[0]/2;	h = v+gg[0]/2;
-		f = ax.Linear1(e,h,0);	g = ay.Linear1(e,h,0);
+		f = ax.Spline1(e,h,0);	g = ay.Spline1(e,h,0);
 		h = 1+hypot(f,g);	ff[1]=f*dt/h;	gg[1]=g*dt/h;
 		e = u+ff[1]/2;	h = v+gg[1]/2;
-		f = ax.Linear1(e,h,0);	g = ay.Linear1(e,h,0);
+		f = ax.Spline1(e,h,0);	g = ay.Spline1(e,h,0);
 		h = 1+hypot(f,g);	ff[2]=f*dt/h;	gg[2]=g*dt/h;
 		e = u+ff[2];	h = v+gg[2];
-		f = ax.Linear1(e,h,0);	g = ay.Linear1(e,h,0);
+		f = ax.Spline1(e,h,0);	g = ay.Spline1(e,h,0);
 		h = 1+hypot(f,g);	ff[3]=f*dt/h;	gg[3]=g*dt/h;
 		u += ff[0]/6+ff[1]/3+ff[2]/3+ff[3]/6;
 		v += gg[0]/6+gg[1]/3+gg[2]/3+gg[3]/6;
@@ -653,10 +652,10 @@ void MGL_NO_EXPORT flow(mglBase *gr, double zVal, double u, double v, const mglD
 	if(k>1)
 	{
 		long i,j,jj,a=long(1./fabs(dt));
-		gr->Reserve(k);		j = gr->AddPnt(pp[0],cc[0]);
+		gr->Reserve(k);		j = gr->AddPnt(pp[0],pp[0].c);
 		for(i=1;i<k;i++)
 		{
-			jj=j;	j = gr->AddPnt(pp[i],cc[i]);
+			jj=j;	j = gr->AddPnt(pp[i],pp[i].c);
 			if(vv && i%a==0)
 			{
 				if(dt<0)	gr->vect_plot(j,jj,a/5);
@@ -665,7 +664,7 @@ void MGL_NO_EXPORT flow(mglBase *gr, double zVal, double u, double v, const mglD
 			else	gr->line_plot(jj,j);
 		}
 	}
-	delete []pp;	delete []cc;
+	delete []pp;
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_flow_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, const char *opt)
@@ -805,7 +804,6 @@ void flow(mglBase *gr, double u, double v, double w, const mglData &x, const mgl
 	long nn = ax.nx*ax.ny*ax.nz;
 	bool both = x.nx*x.ny*x.nz==nn && y.nx*y.ny*y.nz==nn && z.nx*z.ny*z.nz==nn;
 	mglPoint *pp = new mglPoint[n], dp;
-	mreal *cc = new mreal[n];
 	mglPoint dx(1/fabs(gr->Max.x-gr->Min.x),1/fabs(gr->Max.y-gr->Min.y),1/fabs(gr->Max.z-gr->Min.z));
 
 	nn = (ax.nx > ax.ny ? ax.nx : ax.ny);
@@ -816,29 +814,29 @@ void flow(mglBase *gr, double u, double v, double w, const mglData &x, const mgl
 	register long k=0,m;
 	bool end = false;
 	do{
-		if(gr->Stop)	{	delete []pp;	delete []cc;	return;	}
+		if(gr->Stop)	{	delete []pp;	return;	}
 		pp[k].x = both ? x.Spline1(u,v,w):x.Spline1(u,0,0);
 		pp[k].y = both ? y.Spline1(u,v,w):y.Spline1(v,0,0);
 		pp[k].z = both ? z.Spline1(u,v,w):z.Spline1(w,0,0);
 		for(m=0;m<k-1;m++)	// determines encircle
 			if(mgl_norm((pp[k]-pp[m])/dx)<dt/10.)	{	end = true;	break;	}
-		e = ax.Linear1(u,v,w);	f = ay.Linear1(u,v,w);	g = az.Linear1(u,v,w);
-		h = sqrt(e*e+f*f+g*g);	cc[k] = gr->GetC(ss,s*h);
+		e = ax.Spline1(u,v,w);	f = ay.Spline1(u,v,w);	g = az.Spline1(u,v,w);
+		h = sqrt(e*e+f*f+g*g);	pp[k].c = gr->GetC(ss,s*h);
 		if(h<1e-5)	break;	// stationary point
 		k++;
 		// find next point by midpoint method
 		h+=1;	ee[0]=e*dt/h;	ff[0]=f*dt/h;	gg[0]=g*dt/h;
 		u1 = u+ee[0]/2;	v1 = v+ff[0]/2;	w1 = w+gg[0]/2;
-		e = ax.Linear1(u1,v1,w1);	f = ay.Linear1(u1,v1,w1);
-		g = az.Linear1(u1,v1,w1);	h = 1+sqrt(e*e+f*f+g*g);
+		e = ax.Spline1(u1,v1,w1);	f = ay.Spline1(u1,v1,w1);
+		g = az.Spline1(u1,v1,w1);	h = 1+sqrt(e*e+f*f+g*g);
 		ee[1]=e*dt/h;	ff[1]=f*dt/h;	gg[1]=g*dt/h;
 		u1 = u+ee[1]/2;	v1 = v+ff[1]/2;	w1 = w+gg[1]/2;
-		e = ax.Linear1(u1,v1,w1);	f = ay.Linear1(u1,v1,w1);
-		g = az.Linear1(u1,v1,w1);	h = 1+sqrt(e*e+f*f+g*g);
+		e = ax.Spline1(u1,v1,w1);	f = ay.Spline1(u1,v1,w1);
+		g = az.Spline1(u1,v1,w1);	h = 1+sqrt(e*e+f*f+g*g);
 		ee[2]=e*dt/h;	ff[2]=f*dt/h;	gg[2]=g*dt/h;
 		u1 = u+ee[2];	v1 = v+ff[2];	w1 = w+gg[2];
-		e = ax.Linear1(u1,v1,w1);	f = ay.Linear1(u1,v1,w1);
-		g = az.Linear1(u1,v1,w1);	h = 1+sqrt(e*e+f*f+g*g);
+		e = ax.Spline1(u1,v1,w1);	f = ay.Spline1(u1,v1,w1);
+		g = az.Spline1(u1,v1,w1);	h = 1+sqrt(e*e+f*f+g*g);
 		ee[3]=e*dt/h;	ff[3]=f*dt/h;	gg[3]=g*dt/h;
 		u += ee[0]/6+ee[1]/3+ee[2]/3+ee[3]/6;
 		v += ff[0]/6+ff[1]/3+ff[2]/3+ff[3]/6;
@@ -853,7 +851,7 @@ void flow(mglBase *gr, double u, double v, double w, const mglData &x, const mgl
 		mglPoint q1,q2,l;
 		long n1=-1,n2=-1,n3=-1,n4=-1, m1=-1,m2=-1,m3=-1,m4=-1;
 
-		gr->Reserve(4*k);	j = gr->AddPnt(pp[0],cc[0]);
+		gr->Reserve(4*k);	j = gr->AddPnt(pp[0],pp[0].c);
 		l = pp[1] - pp[0];	l /= mgl_norm(l);
 		q1 = mglPoint(l.y,-l.x,0);	ll = mgl_norm(q1);
 		if(ll)	q1 /= ll;	else	q1 = mglPoint(0,1,0);
@@ -862,7 +860,7 @@ void flow(mglBase *gr, double u, double v, double w, const mglData &x, const mgl
 		if(zo)	{	n3 = gr->AddPnt(pp[0],-1,q1);	n4 = gr->AddPnt(pp[0]+rr*q2,-1,q1);	}
 		for(i=1;i<k;i++)
 		{
-			jj=j;	j = gr->AddPnt(pp[i],cc[i]);
+			jj=j;	j = gr->AddPnt(pp[i],pp[i].c);
 			if(vv && i%a==0)
 			{
 				if(dt<0)	gr->vect_plot(j,jj,a/5);
@@ -878,7 +876,7 @@ void flow(mglBase *gr, double u, double v, double w, const mglData &x, const mgl
 			{	n3 = gr->AddPnt(pp[i],-1,q1);	n4 = gr->AddPnt(pp[i]+rr*q2,-1,q1);	gr->quad_plot(n3,n4,m3,m4);	}
 		}
 	}
-	delete []pp;	delete []cc;
+	delete []pp;
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_flow_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, const char *opt)
@@ -1104,7 +1102,7 @@ void MGL_NO_EXPORT flowr(mglBase *gr, double zVal, double u, double v, const mgl
 		pp[k].z = zVal;
 		for(m=0;m<k-1;m++)	// determines encircle
 			if(mgl_norm((pp[k]-pp[m])/dx)<dt/10.)	{	end = true;	break;	}
-		f = ax.Linear1(u,v,0);	g = ay.Linear1(u,v,0);
+		f = ax.Spline1(u,v,0);	g = ay.Spline1(u,v,0);
 		h = hypot(f,g);	cc[k] = gr->GetC(sc,s*h);
 		pp[k].c = r0>0 ? r0*sqrt(1e-2+ss*h*h)/2 : -r0/sqrt(1e-2+ss*h*h)/5;
 		if(h<1e-5)	break;	// stationary point
@@ -1112,13 +1110,13 @@ void MGL_NO_EXPORT flowr(mglBase *gr, double zVal, double u, double v, const mgl
 		// find next point by midpoint method
 		h+=1;	ff[0]=f*dt/h;	gg[0]=g*dt/h;
 		e = u+ff[0]/2;	h = v+gg[0]/2;
-		f = ax.Linear1(e,h,0);	g = ay.Linear1(e,h,0);	h = 1+hypot(f,g);
+		f = ax.Spline1(e,h,0);	g = ay.Spline1(e,h,0);	h = 1+hypot(f,g);
 		ff[1]=f*dt/h;	gg[1]=g*dt/h;
 		e = u+ff[1]/2;	h = v+gg[1]/2;
-		f = ax.Linear1(e,h,0);	g = ay.Linear1(e,h,0);	h = 1+hypot(f,g);
+		f = ax.Spline1(e,h,0);	g = ay.Spline1(e,h,0);	h = 1+hypot(f,g);
 		ff[2]=f*dt/h;	gg[2]=g*dt/h;
 		e = u+ff[2];	h = v+gg[2];
-		f = ax.Linear1(e,h,0);	g = ay.Linear1(e,h,0);	h = 1+hypot(f,g);
+		f = ax.Spline1(e,h,0);	g = ay.Spline1(e,h,0);	h = 1+hypot(f,g);
 		ff[3]=f*dt/h;	gg[3]=g*dt/h;
 		u += ff[0]/6+ff[1]/3+ff[2]/3+ff[3]/6;
 		v += gg[0]/6+gg[1]/3+gg[2]/3+gg[3]/6;
@@ -1254,7 +1252,7 @@ void flowr(mglBase *gr, double u, double v, double w, const mglData &x, const mg
 		pp[k].z = both ? z.Spline1(u,v,w):z.Spline1(w,0,0);
 		for(m=0;m<k-1;m++)	// determines encircle
 			if(mgl_norm((pp[k]-pp[m])/dx)<dt/10.)	{	end = true;	break;	}
-		e = ax.Linear1(u,v,w);	f = ay.Linear1(u,v,w);	g = az.Linear1(u,v,w);
+		e = ax.Spline1(u,v,w);	f = ay.Spline1(u,v,w);	g = az.Spline1(u,v,w);
 		h = sqrt(e*e+f*f+g*g);	cc[k] = gr->GetC(sc,s*h);
 		pp[k].c = r0>0 ? r0*sqrt(1e-2+ss*h*h)/2 : -r0/sqrt(1e-2+ss*h*h)/5;
 		if(h<1e-5)	break;	// stationary point
@@ -1262,16 +1260,16 @@ void flowr(mglBase *gr, double u, double v, double w, const mglData &x, const mg
 		// find next point by midpoint method
 		h+=1;	ee[0]=e*dt/h;	ff[0]=f*dt/h;	gg[0]=g*dt/h;
 		u1 = u+ee[0]/2;	v1 = v+ff[0]/2;	w1 = w+gg[0]/2;
-		e = ax.Linear1(u1,v1,w1);	f = ay.Linear1(u1,v1,w1);
-		g = az.Linear1(u1,v1,w1);	h = 1+sqrt(e*e+f*f+g*g);
+		e = ax.Spline1(u1,v1,w1);	f = ay.Spline1(u1,v1,w1);
+		g = az.Spline1(u1,v1,w1);	h = 1+sqrt(e*e+f*f+g*g);
 		ee[1]=e*dt/h;	ff[1]=f*dt/h;	gg[1]=g*dt/h;
 		u1 = u+ee[1]/2;	v1 = v+ff[1]/2;	w1 = w+gg[1]/2;
-		e = ax.Linear1(u1,v1,w1);	f = ay.Linear1(u1,v1,w1);
-		g = az.Linear1(u1,v1,w1);	h = 1+sqrt(e*e+f*f+g*g);
+		e = ax.Spline1(u1,v1,w1);	f = ay.Spline1(u1,v1,w1);
+		g = az.Spline1(u1,v1,w1);	h = 1+sqrt(e*e+f*f+g*g);
 		ee[2]=e*dt/h;	ff[2]=f*dt/h;	gg[2]=g*dt/h;
 		u1 = u+ee[2];	v1 = v+ff[2];	w1 = w+gg[2];
-		e = ax.Linear1(u1,v1,w1);	f = ay.Linear1(u1,v1,w1);
-		g = az.Linear1(u1,v1,w1);	h = 1+sqrt(e*e+f*f+g*g);
+		e = ax.Spline1(u1,v1,w1);	f = ay.Spline1(u1,v1,w1);
+		g = az.Spline1(u1,v1,w1);	h = 1+sqrt(e*e+f*f+g*g);
 		ee[3]=e*dt/h;	ff[3]=f*dt/h;	gg[3]=g*dt/h;
 		u += ee[0]/6+ee[1]/3+ee[2]/3+ee[3]/6;
 		v += ff[0]/6+ff[1]/3+ff[2]/3+ff[3]/6;

@@ -64,14 +64,11 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	mglDataC a;
-	a.Read("test.dat");
-	a.Save("out.dat");
-	return;
 	mglParse par;
-	par.Execute(gr,"new a 100 100 'rnd*2-1'\n"
-		"subplot 2 2 0:dens a '#':box\nsubplot 2 2 1:cont a:mesh a 'k':box\n"
-		"subplot 2 2 2:contf a:mesh a 'k':box\nsubplot 2 2 3:boxs a:box");
+	par.Execute(gr,"new a 5 5 5 'x^3*y^3*z^3'\nresize b a 100 100 100\naxis\n"
+		"plot a(0,:,0) 'b;o':plot b(0,:,0) 'b'\n"
+		"plot a(:,0,0) 'r;s':plot b(:,0,0) 'r'\n"
+		"plot a(0,0,:) 'g;d':plot b(0,0,:) 'g'\n");
 	return;
 }
 //-----------------------------------------------------------------------------

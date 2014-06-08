@@ -65,7 +65,6 @@ struct mglFunc
 	long pos;
 	int narg;
 	std::wstring func;
-//	wchar_t func[64];
 	mglFunc(long p, const wchar_t *f);
 	mglFunc(const mglFunc &f):pos(f.pos),narg(f.narg),func(f.func)	{}
 	mglFunc():pos(-1),narg(-1)	{}
