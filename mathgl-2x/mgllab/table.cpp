@@ -25,28 +25,32 @@ void addto_cb(Fl_Widget*, void*v)
 {
 	TableWindow* e = (TableWindow*)v;
 	const char *s = fl_input(mgl_gettext("Enter number for addition to data values"),0);
-	if(s)	{	mgl_data_add_num(e->var, atof(s));	e->refresh();	}
+	HMDT d = dynamic_cast<HMDT>(e->var);
+	if(d && s)	{	mgl_data_add_num(d, atof(s));	e->refresh();	}
 }
 //-----------------------------------------------------------------------------
 void subto_cb(Fl_Widget*, void*v)
 {
 	TableWindow* e = (TableWindow*)v;
 	const char *s = fl_input(mgl_gettext("Enter number for subtraction from data values"),0);
-	if(s)	{	mgl_data_sub_num(e->var, atof(s));	e->refresh();	}
+	HMDT d = dynamic_cast<HMDT>(e->var);
+	if(d && s)	{	mgl_data_sub_num(d, atof(s));	e->refresh();	}
 }
 //-----------------------------------------------------------------------------
 void multo_cb(Fl_Widget*, void*v)
 {
 	TableWindow* e = (TableWindow*)v;
 	const char *s = fl_input(mgl_gettext("Enter number for multiplication of data values"),0);
-	if(s)	{	mgl_data_mul_num(e->var, atof(s));	e->refresh();	}
+	HMDT d = dynamic_cast<HMDT>(e->var);
+	if(d && s)	{	mgl_data_mul_num(d, atof(s));	e->refresh();	}
 }
 //-----------------------------------------------------------------------------
 void divto_cb(Fl_Widget*, void*v)
 {
 	TableWindow* e = (TableWindow*)v;
 	const char *s = fl_input(mgl_gettext("Enter number for division of data values"),0);
-	if(s)	{	mgl_data_div_num(e->var, atof(s));	e->refresh();	}
+	HMDT d = dynamic_cast<HMDT>(e->var);
+	if(d && s)	{	mgl_data_div_num(d, atof(s));	e->refresh();	}
 }
 //-----------------------------------------------------------------------------
 struct XYZDlg
@@ -97,9 +101,10 @@ void new_dat_cb(Fl_Widget*, void*v)
 	xyz_dlg.ch->label(mgl_gettext("not used"));	xyz_dlg.OK = false;
 	xyz_dlg.wnd->set_modal();		xyz_dlg.wnd->show();
 	while(xyz_dlg.wnd->shown())	Fl::wait();
-	if(xyz_dlg.OK)
+	HMDT d = dynamic_cast<HMDT>(e->var);
+	if(d && xyz_dlg.OK)
 	{
-		e->var->Create(int(xyz_dlg.mx->value()),
+		d->Create(int(xyz_dlg.mx->value()),
 			int(xyz_dlg.my->value()), int(xyz_dlg.mz->value()));
 		e->refresh();
 	}
@@ -112,10 +117,11 @@ void resize_cb(Fl_Widget*, void*v)
 	xyz_dlg.ch->label(mgl_gettext("not used"));	xyz_dlg.OK = false;
 	xyz_dlg.wnd->set_modal();		xyz_dlg.wnd->show();
 	while(xyz_dlg.wnd->shown())	Fl::wait();
-	if(xyz_dlg.OK)
+	HMDT d = dynamic_cast<HMDT>(e->var);
+	if(d && xyz_dlg.OK)
 	{
-		mglData d = e->var->Resize(int(xyz_dlg.mx->value()), int(xyz_dlg.my->value()), int(xyz_dlg.mz->value()));
-		mgl_data_set(e->var, &d);
+		mglData dd = d->Resize(int(xyz_dlg.mx->value()), int(xyz_dlg.my->value()), int(xyz_dlg.mz->value()));
+		mgl_data_set(d, &dd);
 		e->refresh();
 	}
 }
@@ -127,9 +133,10 @@ void squeeze_cb(Fl_Widget*, void*v)
 	xyz_dlg.ch->label(mgl_gettext("smoothed"));	xyz_dlg.OK = false;
 	xyz_dlg.wnd->set_modal();		xyz_dlg.wnd->show();
 	while(xyz_dlg.wnd->shown())	Fl::wait();
-	if(xyz_dlg.OK)
+	HMDT d = dynamic_cast<HMDT>(e->var);
+	if(d && xyz_dlg.OK)
 	{
-		e->var->Squeeze(int(xyz_dlg.mx->value()), int(xyz_dlg.my->value()),
+		d->Squeeze(int(xyz_dlg.mx->value()), int(xyz_dlg.my->value()),
 					int(xyz_dlg.mz->value()), xyz_dlg.ch->value());
 		e->refresh();
 	}
@@ -200,8 +207,9 @@ void smooth_cb(Fl_Widget*, void*v)
 	chng_dlg.type->activate();	chng_dlg.OK = false;
 	chng_dlg.wnd->set_modal();	chng_dlg.wnd->show();
 	while(chng_dlg.wnd->shown())	Fl::wait();
-	if(chng_dlg.OK)
-	{	chng_dlg.execute(e->var);	e->refresh();	}
+	HMDT d = dynamic_cast<HMDT>(e->var);
+	if(d && chng_dlg.OK)
+	{	chng_dlg.execute(d);	e->refresh();	}
 }
 //-----------------------------------------------------------------------------
 void cumsum_cb(Fl_Widget*, void*v)
@@ -211,8 +219,9 @@ void cumsum_cb(Fl_Widget*, void*v)
 	chng_dlg.type->deactivate();chng_dlg.OK = false;
 	chng_dlg.wnd->set_modal();	chng_dlg.wnd->show();
 	while(chng_dlg.wnd->shown())	Fl::wait();
-	if(chng_dlg.OK)
-	{	chng_dlg.execute(e->var);	e->refresh();	}
+	HMDT d = dynamic_cast<HMDT>(e->var);
+	if(d && chng_dlg.OK)
+	{	chng_dlg.execute(d);	e->refresh();	}
 }
 //-----------------------------------------------------------------------------
 void integr_cb(Fl_Widget*, void*v)
@@ -222,8 +231,9 @@ void integr_cb(Fl_Widget*, void*v)
 	chng_dlg.type->deactivate();chng_dlg.OK = false;
 	chng_dlg.wnd->set_modal();	chng_dlg.wnd->show();
 	while(chng_dlg.wnd->shown())	Fl::wait();
-	if(chng_dlg.OK)
-	{	chng_dlg.execute(e->var);	e->refresh();	}
+	HMDT d = dynamic_cast<HMDT>(e->var);
+	if(d && chng_dlg.OK)
+	{	chng_dlg.execute(d);	e->refresh();	}
 }
 //-----------------------------------------------------------------------------
 void diff_cb(Fl_Widget*, void*v)
@@ -233,8 +243,9 @@ void diff_cb(Fl_Widget*, void*v)
 	chng_dlg.type->deactivate();chng_dlg.OK = false;
 	chng_dlg.wnd->set_modal();	chng_dlg.wnd->show();
 	while(chng_dlg.wnd->shown())	Fl::wait();
-	if(chng_dlg.OK)
-	{	chng_dlg.execute(e->var);	e->refresh();	}
+	HMDT d = dynamic_cast<HMDT>(e->var);
+	if(d && chng_dlg.OK)
+	{	chng_dlg.execute(d);	e->refresh();	}
 }
 //-----------------------------------------------------------------------------
 void diff2_cb(Fl_Widget*, void*v)
@@ -244,8 +255,9 @@ void diff2_cb(Fl_Widget*, void*v)
 	chng_dlg.type->deactivate();chng_dlg.OK = false;
 	chng_dlg.wnd->set_modal();	chng_dlg.wnd->show();
 	while(chng_dlg.wnd->shown())	Fl::wait();
-	if(chng_dlg.OK)
-	{	chng_dlg.execute(e->var);	e->refresh();	}
+	HMDT d = dynamic_cast<HMDT>(e->var);
+	if(d && chng_dlg.OK)
+	{	chng_dlg.execute(d);	e->refresh();	}
 }
 //-----------------------------------------------------------------------------
 void swap_cb(Fl_Widget*, void*v)
@@ -255,8 +267,9 @@ void swap_cb(Fl_Widget*, void*v)
 	chng_dlg.type->deactivate();chng_dlg.OK = false;
 	chng_dlg.wnd->set_modal();	chng_dlg.wnd->show();
 	while(chng_dlg.wnd->shown())	Fl::wait();
-	if(chng_dlg.OK)
-	{	chng_dlg.execute(e->var);	e->refresh();	}
+	HMDT d = dynamic_cast<HMDT>(e->var);
+	if(d && chng_dlg.OK)
+	{	chng_dlg.execute(d);	e->refresh();	}
 }
 //-----------------------------------------------------------------------------
 struct NwdtDlg
@@ -308,12 +321,13 @@ void asum_cb(Fl_Widget*, void*v)
 		if(nwdt_dlg.dy->value())	strcat(r,"y");
 		if(nwdt_dlg.dz->value())	strcat(r,"z");
 		if(!r[0])	return;
+		HMDT d = dynamic_cast<HMDT>(e->var);
 		if(!nwdt_dlg.name->value()[0] || !strcmp(nwdt_dlg.name->value(),e->label()))
 			fl_alert(mgl_gettext("Name for output variable should be differ from this name"));
-		else
+		else if(d)
 		{
-			mglData d = e->var->Sum(r);
-			mgl_data_set(Parse->AddVar(nwdt_dlg.name->value()), &d);
+			mglData dd = d->Sum(r);
+			mgl_data_set(Parse->AddVar(nwdt_dlg.name->value()), &dd);
 		}
 	}
 }
@@ -331,12 +345,13 @@ void amax_cb(Fl_Widget*, void*v)
 		if(nwdt_dlg.dy->value())	strcat(r,"y");
 		if(nwdt_dlg.dz->value())	strcat(r,"z");
 		if(!r[0])	return;
+		HMDT d = dynamic_cast<HMDT>(e->var);
 		if(!nwdt_dlg.name->value()[0] || !strcmp(nwdt_dlg.name->value(),e->label()))
 			fl_alert(mgl_gettext("Name for output variable should be differ from this name"));
-		else
+		else if(d)
 		{
-			mglData d = e->var->Max(r);
-			mgl_data_set(Parse->AddVar(nwdt_dlg.name->value()), &d);
+			mglData dd = d->Max(r);
+			mgl_data_set(Parse->AddVar(nwdt_dlg.name->value()), &dd);
 		}
 	}
 }
@@ -354,12 +369,13 @@ void amin_cb(Fl_Widget*, void*v)
 		if(nwdt_dlg.dy->value())	strcat(r,"y");
 		if(nwdt_dlg.dz->value())	strcat(r,"z");
 		if(!r[0])	return;
-		if(!nwdt_dlg.name->value()[0] || !strcmp(nwdt_dlg.name->value(), e->label()))
+		HMDT d = dynamic_cast<HMDT>(e->var);
+		if(!nwdt_dlg.name->value()[0] || !strcmp(nwdt_dlg.name->value(),e->label()))
 			fl_alert(mgl_gettext("Name for output variable should be differ from this name"));
-		else
+		else if(d)
 		{
-			mglData d = e->var->Min(r);
-			mgl_data_set(Parse->AddVar(nwdt_dlg.name->value()), &d);
+			mglData dd = d->Min(r);
+			mgl_data_set(Parse->AddVar(nwdt_dlg.name->value()), &dd);
 		}
 	}
 }
@@ -369,8 +385,9 @@ void load_dat_cb(Fl_Widget*, void*v)
 	TableWindow* e = (TableWindow*)v;
 	char *newfile = fl_file_chooser(mgl_gettext("Load Data?"),
 		mgl_gettext("DAT Files (*.{dat,csv})\tAll Files (*)"), 0);
-	if(newfile != NULL)
-	{	e->var->Read(newfile);	e->refresh();	}
+	HMDT d = dynamic_cast<HMDT>(e->var);
+	if(d && newfile != NULL)
+	{	d->Read(newfile);	e->refresh();	}
 }
 //-----------------------------------------------------------------------------
 void save_dat_cb(Fl_Widget*, void*v)
@@ -398,18 +415,21 @@ void imp_dat_cb(Fl_Widget*, void*v)
 	TableWindow* e = (TableWindow*)v;
 	const char *scheme, *newfile = fl_file_chooser(mgl_gettext("Import Data?"),
 		mgl_gettext("PNG Files (*.png)\tAll Files (*)"), 0);
-	if (newfile != NULL)
+	HMDT d = dynamic_cast<HMDT>(e->var);
+	if(d && newfile != NULL)
 	{
 		scheme = fl_input(mgl_gettext("Enter color scheme"),MGL_DEF_SCH);
 		if(scheme)
-		{	e->var->Import(newfile,scheme);	e->refresh();	}
+		{	d->Import(newfile,scheme);	e->refresh();	}
 	}
 }
 //-----------------------------------------------------------------------------
 void list_dat_cb(Fl_Widget*, void*v)
 {
 	TableWindow* e = (TableWindow*)v;
-	mglData *d = e->var;
+	HMDT d = dynamic_cast<HMDT>(e->var);
+	if(!d)
+	{	fl_message(mgl_gettext("Incorrect type of base data"));	return;	}
 	if(d->nx*d->ny+d->ny>1020)
 	{	fl_message(mgl_gettext("Too many numbers (>1000) on slice"));	return;	}
 	if(d->nz>1)	fl_message(mgl_gettext("Only current slice will be inserted"));
@@ -434,7 +454,8 @@ void modify_cb(Fl_Widget*, void*v)
 {
 	TableWindow* e = (TableWindow*)v;
 	const char *eq=fl_input(mgl_gettext("Enter formula for data modification\nHere x, y, z in range [0,1], u is data value"),0);
-	if (eq != NULL)	{	e->var->Modify(eq);	e->refresh();	}
+	HMDT d = dynamic_cast<HMDT>(e->var);
+	if(d && eq != NULL)	{	d->Modify(eq);	e->refresh();	}
 }
 //-----------------------------------------------------------------------------
 void plot_dat_cb(Fl_Widget *, void *v);
@@ -488,12 +509,13 @@ void fill_cb(Fl_Widget*, void*v)
 	nrm_dlg.dir->show();		nrm_dlg.sym->hide();
 	nrm_dlg.wnd->set_modal();	nrm_dlg.wnd->show();
 	while(nrm_dlg.wnd->shown())	Fl::wait();
-	if(nrm_dlg.OK)
+	HMDT d = dynamic_cast<HMDT>(e->var);
+	if(d && nrm_dlg.OK)
 	{
 		char r='x';
 		if(nrm_dlg.dir->value()==1)	r='y';
 		if(nrm_dlg.dir->value()==2)	r='z';
-		e->var->Fill(nrm_dlg.min->value(),nrm_dlg.max->value(),r);
+		d->Fill(nrm_dlg.min->value(),nrm_dlg.max->value(),r);
 		e->refresh();
 	}
 }
@@ -505,9 +527,10 @@ void normal_cb(Fl_Widget*, void*v)
 	nrm_dlg.dir->hide();		nrm_dlg.sym->show();
 	nrm_dlg.wnd->set_modal();	nrm_dlg.wnd->show();
 	while(nrm_dlg.wnd->shown())	Fl::wait();
-	if(nrm_dlg.OK)
+	HMDT d = dynamic_cast<HMDT>(e->var);
+	if(d && nrm_dlg.OK)
 	{
-		e->var->Norm(nrm_dlg.min->value(), nrm_dlg.max->value(), nrm_dlg.sym->value());
+		d->Norm(nrm_dlg.min->value(), nrm_dlg.max->value(), nrm_dlg.sym->value());
 		e->refresh();
 	}
 }
@@ -555,21 +578,22 @@ void crop_cb(Fl_Widget*, void*v)
 	crop_dlg.OK = false;
 	crop_dlg.wnd->set_modal();	crop_dlg.wnd->show();
 	while(crop_dlg.wnd->shown())	Fl::wait();
-	if(crop_dlg.OK)
+	HMDT d = dynamic_cast<HMDT>(e->var);
+	if(d && crop_dlg.OK)
 	{
 		int n1,n2;
-		n1 = 0;	n2 = e->var->nx;
+		n1 = 0;	n2 = d->nx;
 		if(crop_dlg.x1->value()[0])	n1 = atoi(crop_dlg.x1->value());
 		if(crop_dlg.x2->value()[0])	n2 = atoi(crop_dlg.x2->value());
-		e->var->Crop(n1, n2, 'x');
-		n1 = 0;	n2 = e->var->ny;
+		d->Crop(n1, n2, 'x');
+		n1 = 0;	n2 = d->ny;
 		if(crop_dlg.y1->value()[0])	n1 = atoi(crop_dlg.y1->value());
 		if(crop_dlg.y2->value()[0])	n2 = atoi(crop_dlg.y2->value());
-		e->var->Crop(n1, n2, 'y');
-		n1 = 0;	n2 = e->var->nz;
+		d->Crop(n1, n2, 'y');
+		n1 = 0;	n2 = d->nz;
 		if(crop_dlg.z1->value()[0])	n1 = atoi(crop_dlg.z1->value());
 		if(crop_dlg.z2->value()[0])	n2 = atoi(crop_dlg.z2->value());
-		e->var->Crop(n1, n2, 'z');
+		d->Crop(n1, n2, 'z');
 		e->refresh();
 	}
 }
@@ -626,14 +650,15 @@ void transp_cb(Fl_Widget*, void*v)
 	trsp_dlg.OK = false;
 	trsp_dlg.wnd->set_modal();	trsp_dlg.wnd->show();
 	while(trsp_dlg.wnd->shown())	Fl::wait();
-	if(trsp_dlg.OK)
+	HMDT d = dynamic_cast<HMDT>(e->var);
+	if(d && trsp_dlg.OK)
 	{
-		if(trsp_dlg.xyz->value())	e->var->Transpose("xyz");
-		if(trsp_dlg.xzy->value())	e->var->Transpose("xzy");
-		if(trsp_dlg.yxz->value())	e->var->Transpose("yxz");
-		if(trsp_dlg.yzx->value())	e->var->Transpose("yzx");
-		if(trsp_dlg.zxy->value())	e->var->Transpose("zxy");
-		if(trsp_dlg.zyx->value())	e->var->Transpose("zyx");
+		if(trsp_dlg.xyz->value())	d->Transpose("xyz");
+		if(trsp_dlg.xzy->value())	d->Transpose("xzy");
+		if(trsp_dlg.yxz->value())	d->Transpose("yxz");
+		if(trsp_dlg.yzx->value())	d->Transpose("yzx");
+		if(trsp_dlg.zxy->value())	d->Transpose("zxy");
+		if(trsp_dlg.zyx->value())	d->Transpose("zyx");
 		e->refresh();
 	}
 }
@@ -835,7 +860,7 @@ TableWindow::~TableWindow()
 //-----------------------------------------------------------------------------
 void delete_cb(void *v)	{	if(v)	delete (TableWindow *)v;	}
 //-----------------------------------------------------------------------------
-void TableWindow::update(mglVar *v)
+void TableWindow::update(mglDataA *v)
 {
 	if(v==0)	return;
 	char ss[1024];
@@ -849,12 +874,12 @@ void TableWindow::update(mglVar *v)
 void TableWindow::refresh()
 {
 	if(var==0)	return;
-	deactivate();	nz = var->nz;
+	deactivate();	nz = var->GetNz();
 	sl = 0;	slice->range(0,nz-1);
 
-	data->rows(var->ny);	data->cols(var->nx);
-	data->ny = var->ny;	data->nx = var->nx;
-	data->data = var->a;
+	data->rows(var->GetNy());	data->cols(var->GetNx());
+	data->ny = var->GetNy();	data->nx = var->GetNx();
+	data->data = var;
 	activate();
 //	show();
 }
@@ -863,8 +888,7 @@ void TableWindow::set_slice(long s)
 {
 	if(s>=0 && s<nz)
 	{
-		sl = s;
-		data->data = var->a + var->nx * var->ny * sl;
+		data->sl = sl = s;
 		refresh();
 	}
 }

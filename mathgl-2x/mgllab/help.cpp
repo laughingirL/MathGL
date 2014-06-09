@@ -179,12 +179,11 @@ void ScriptWindow::mem_init()
 {
 	char str[128];
 	var->clear();
-	mglVar *v=Parse->FindVar("");
-	while(v)
+	for(long i=0;i<Parse->GetNumVar();i++)
 	{
-		snprintf(str,128,"%ls\t%ld*%ld*%ld\t%ld\t", v->s.c_str(), v->nx, v->ny, v->nz, sizeof(mreal)*v->nx*v->ny*v->nz);
+		mglDataA *v = Parse->GetVar(i);
+		snprintf(str,128,"%ls\t%ld*%ld*%ld\t%ld\t", v->s.c_str(), v->GetNx(), v->GetNy(), v->GetNz(), sizeof(mreal)*v->GetNN());
 		var->add(str,v);
-		v = v->next;
 	}
 }
 //-----------------------------------------------------------------------------
@@ -192,7 +191,7 @@ void ScriptWindow::mem_pressed(int kind)
 {
 	TableWindow *w;
 	int ind = var->value();
-	mglVar *v = (mglVar *)var->data(ind);
+	mglDataA *v = (mglDataA *)var->data(ind);
 	static char res[128];
 	if(!v && kind!=3)	return;
 	if(kind==0)
@@ -211,8 +210,8 @@ void ScriptWindow::mem_pressed(int kind)
 	}
 	else if(kind==1)
 	{
-		if(v->nz>1)		snprintf(res,128,"box\nsurf3 %ls\n",v->s.c_str());
-		else if(v->ny>1)	snprintf(res,128,"box\nsurf %ls\n",v->s.c_str());
+		if(v->GetNz()>1)		snprintf(res,128,"box\nsurf3 %ls\n",v->s.c_str());
+		else if(v->GetNy()>1)	snprintf(res,128,"box\nsurf %ls\n",v->s.c_str());
 		else				snprintf(res,128,"box\nplot %ls\n",v->s.c_str());
 		textbuf->text(res);
 	}

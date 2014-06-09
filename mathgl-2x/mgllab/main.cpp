@@ -17,6 +17,7 @@
 #include <ctype.h>
 #include <errno.h>
 #include <locale.h>
+#include <getopt.h>
 #include "udav.h"
 //-----------------------------------------------------------------------------
 #ifndef MGL_DOC_DIR

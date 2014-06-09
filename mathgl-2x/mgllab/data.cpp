@@ -41,12 +41,12 @@ void VarDlg::init()
 {
 	char ss[1024];
 	var->clear();
-	mglVar *v=Parse->FindVar("");
-	while(v)
+	long n = Parse->GetNumVar();
+	for(long i=0;i<n;i++)
 	{
+		mglDataA *v=Parse->GetVar(i);
 		wcstombs(ss,v->s.c_str(),1024);
 		var->add(ss,0,0,v);
-		v = v->next;
 	}
 }
 //-----------------------------------------------------------------------------
@@ -87,10 +87,10 @@ void var_chg_cb(Fl_Widget *, void *)
 	const Fl_Menu_Item m=var_dlg.var->menu()[var_dlg.var->value()];
 	if(m.text[0] && m.user_data())
 	{
-		mglVar *a = (mglVar *)m.user_data();
-		var_dlg.dim1->range(-1,a->nx-1);
-		var_dlg.dim2->range(-1,a->ny-1);
-		var_dlg.dim3->range(-1,a->nz-1);
+		mglDataA *a = (mglDataA *)m.user_data();
+		var_dlg.dim1->range(-1,a->GetNx()-1);
+		var_dlg.dim2->range(-1,a->GetNy()-1);
+		var_dlg.dim3->range(-1,a->GetNz()-1);
 	}
 }
 //-----------------------------------------------------------------------------

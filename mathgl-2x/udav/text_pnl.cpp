@@ -79,7 +79,8 @@ TextPanel::TextPanel(QWidget *parent) : QWidget(parent)
 	menu = new QMenu(tr("Edit"),this);
 	v = new QVBoxLayout(this);
 	h = new QHBoxLayout();	v->addLayout(h);
-	toolTop(h);				v->addWidget(edit);
+	toolTop(h);
+	v->addWidget(edit);
 }
 //-----------------------------------------------------------------------------
 TextPanel::~TextPanel()	{	delete printer;	}
@@ -466,7 +467,7 @@ void TextPanel::addSetup()	{	setupDlg->exec();	}
 //-----------------------------------------------------------------------------
 void TextPanel::toolTop(QBoxLayout *l)
 {
-	QAction *a;
+	QAction *a, *aa;
 	QMenu *o=menu, *oo;
 	QToolButton *bb;
 	const MainWindow *mw=findMain(this);
@@ -526,11 +527,11 @@ void TextPanel::toolTop(QBoxLayout *l)
 
 	// insert menu
 	oo = o->addMenu(tr("Insert"));
-	a = new QAction(QPixmap(":/xpm/format-indent-more.png"), tr("New command"), this);
+	aa=a = new QAction(QPixmap(":/xpm/format-indent-more.png"), tr("New command"), this);
 	a->setShortcut(Qt::META+Qt::Key_C);	connect(a, SIGNAL(triggered()), this, SLOT(newCmd()));
 	a->setToolTip(tr("Show dialog for new command and put it into the script."));
 	oo->addAction(a);
-	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
+//	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
 	a = new QAction(tr("Fitted formula"), this);
 	a->setShortcut(Qt::META+Qt::Key_F);	connect(a, SIGNAL(triggered()), this, SLOT(insFitF()));
@@ -557,10 +558,14 @@ void TextPanel::toolTop(QBoxLayout *l)
 	a->setToolTip(tr("Select and insert folder name."));
 	oo->addAction(a);
 
+	bb = new QToolButton(this);	l->addWidget(bb);
+	bb->setDefaultAction(aa);	bb->setMenu(oo);
+	bb->setPopupMode(QToolButton::MenuButtonPopup);
+
 	a = new QAction(QPixmap(":/xpm/document-properties.png"), tr("Graphics setup"), this);
 	a->setShortcut(Qt::META+Qt::Key_G);	connect(a, SIGNAL(triggered()), this, SLOT(addSetup()));
 	a->setToolTip(tr("Show dialog for plot setup and put code into the script.\nThis dialog setup axis, labels, lighting and other general things."));
-	oo->addAction(a);
+	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
 	l->addStretch(1);

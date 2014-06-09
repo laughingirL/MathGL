@@ -33,6 +33,7 @@ Fl_Data_Table::Fl_Data_Table(int x, int y, int w, int h, const char *l) : Fl_Tab
 	input->callback(input_cb, (void*)this);
 	input->when(FL_WHEN_ENTER_KEY_ALWAYS);
 	input->maximum_size(16);
+	sl = 0;
 //	(new Fl_Box(9999,9999,0,0))->hide();  // HACK: prevent flickering in Fl_Scroll
 	end();
 }
@@ -63,9 +64,9 @@ void Fl_Data_Table::draw_cell(TableContext context, int R, int C, int X, int Y, 
 		fl_push_clip(X+3, Y+3, W-6, H-6);
 		fl_font(FL_HELVETICA, 14);
 		fl_color(FL_BLACK);
-		if(mgl_isnan(data[C+nx*R]))	strcpy(s,"nan");
-		else if(mgl_isbad(data[C+nx*R]))	strcpy(s,data[C+nx*R]>0?"inf":"-inf");
-		else	snprintf(s,32,"%g",data[C+nx*R]);
+		if(mgl_isnan(data->v(C,R,sl)))	strcpy(s,"nan");
+		else if(mgl_isbad(data->v(C,R,sl)))	strcpy(s,data->v(C,R,sl)>0?"inf":"-inf");
+		else	snprintf(s,32,"%g",data->v(C,R,sl));
 		fl_draw(s, X+3, Y+3, W-6, H-6, FL_ALIGN_RIGHT);
 		break;
 	case CONTEXT_RC_RESIZE:
@@ -86,22 +87,15 @@ void Fl_Data_Table::cell_click()
 
     if(context==CONTEXT_CELL)
 	{
-		if (input->visible())	//input->do_callback();
-		{
-			const char *s = input->value();
-			if(s[0]==0 || !strcmp(s,"nan"))	data[col + nx*row] = NAN;
-			else if(!strcmp(s,"inf"))	data[col + nx*row] = INFINITY;
-			else if(!strcmp(s,"-inf"))	data[col + nx*row] = -INFINITY;
-			else	data[col + nx*row] = atof(s);
-		}
+		if (input->visible())	set_value();
 		row = R;		col = C;
 		int XX,YY,WW,HH;
 		find_cell(CONTEXT_CELL, R, C, XX, YY, WW, HH);
 		input->resize(XX,YY,WW,HH);
 		char s[32];
-		if(mgl_isnan(data[C+nx*R]))	strcpy(s,"nan");
-		else if(mgl_isbad(data[C+nx*R]))	strcpy(s,data[C+nx*R]>0?"inf":"-inf");
-		else	snprintf(s,32,"%g",data[C+nx*R]);
+		if(mgl_isnan(data->v(C,R,sl)))	strcpy(s,"nan");
+		else if(mgl_isbad(data->v(C,R,sl)))	strcpy(s,data->v(C,R,sl)>0?"inf":"-inf");
+		else	snprintf(s,32,"%g",data->v(C,R,sl));
 		input->value(s);	input->show();
 		input->take_focus();
 	}
@@ -110,9 +104,9 @@ void Fl_Data_Table::cell_click()
 void Fl_Data_Table::set_value()
 {
 	const char *s = input->value();
-	if(s[0]==0 || !strcmp(s,"nan"))	data[col + nx*row] = NAN;
-	else if(!strcmp(s,"inf"))	data[col + nx*row] = INFINITY;
-	else if(!strcmp(s,"-inf"))	data[col + nx*row] = -INFINITY;
-	else	data[col + nx*row] = atof(s);
+	if(s[0]==0 || !strcmp(s,"nan"))	data->set_v(NAN, col,row,sl);
+	else if(!strcmp(s,"inf"))	data->set_v(INFINITY, col,row,sl);
+	else if(!strcmp(s,"-inf"))	data->set_v(-INFINITY, col,row,sl);
+	else	data->set_v(atof(s), col,row,sl);
 }
 //-----------------------------------------------------------------------------

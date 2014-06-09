@@ -264,10 +264,12 @@ void PlotPanel::animParseText(const QString &txt)
 #include "xpm/mark_s.xpm"
 #include "xpm/mark_a.xpm"
 #include "xpm/mark_d.xpm"
+#include "xpm/arc.xpm"
+#include "xpm/polygon.xpm"
 //-----------------------------------------------------------------------------
 void PlotPanel::toolTop(QBoxLayout *l)
 {
-	QAction *a;
+	QAction *a, *aa;
 	QMenu *o=menu, *oo;
 	QToolButton *bb;
 
@@ -352,49 +354,65 @@ void PlotPanel::toolTop(QBoxLayout *l)
 	a->setToolTip(tr("Copy coordinates of last mouse click to clipboard."));
 	o->addAction(a);	popup->addAction(a);
 
-	l->addStretch(1);
+//	l->addStretch(1);
 	oo = new QMenu(tr("Primitives ..."),this);
-	a = new QAction(QPixmap(line_xpm), tr("Add line"), this);
+	aa=a = new QAction(QPixmap(line_xpm), tr("Add line"), this);
 	connect(a, SIGNAL(triggered()), mgl, SLOT(addLine()));
 	connect(mgl, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
 	a->setToolTip(tr("Add line which properties can be changed later by mouse."));
-	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);	oo->addAction(a);
+	oo->addAction(a);
+
+	a = new QAction(QPixmap(arc_xpm), tr("Add arc"), this);
+	connect(a, SIGNAL(triggered()), mgl, SLOT(addAngle()));
+	connect(mgl, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
+	a->setToolTip(tr("Add arc which properties can be changed later by mouse."));
+	oo->addAction(a);
 
 	a = new QAction(QPixmap(curve_xpm), tr("Add curve"), this);
 	connect(a, SIGNAL(triggered()), mgl, SLOT(addCurve()));
 	connect(mgl, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
 	a->setToolTip(tr("Add curve which properties can be changed later by mouse."));
-	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);	oo->addAction(a);
+	oo->addAction(a);
 
 	a = new QAction(QPixmap(mark_s_xpm), tr("Add rect"), this);
 	connect(a, SIGNAL(triggered()), mgl, SLOT(addRect()));
 	connect(mgl, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
 	a->setToolTip(tr("Add rectangle which properties can be changed later by mouse."));
-	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);	oo->addAction(a);
+	oo->addAction(a);
 
 	a = new QAction(QPixmap(mark_d_xpm), tr("Add rhombus"), this);
 	connect(a, SIGNAL(triggered()), mgl, SLOT(addRhomb()));
 	connect(mgl, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
 	a->setToolTip(tr("Add rhombus which properties can be changed later by mouse."));
-	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);	oo->addAction(a);
+	oo->addAction(a);
 
 	a = new QAction(QPixmap(mark_o_xpm), tr("Add ellipse"), this);
 	connect(a, SIGNAL(triggered()), mgl, SLOT(addEllipse()));
 	connect(mgl, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
 	a->setToolTip(tr("Add ellipse which properties can be changed later by mouse."));
-	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);	oo->addAction(a);
+	oo->addAction(a);
+
+	a = new QAction(QPixmap(polygon_xpm), tr("Add polygon"), this);
+	connect(a, SIGNAL(triggered()), mgl, SLOT(addPolygon()));
+	connect(mgl, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
+	a->setToolTip(tr("Add ellipse which properties can be changed later by mouse."));
+	oo->addAction(a);
 
 	a = new QAction(QPixmap(mark_a_xpm), tr("Add mark"), this);
 	connect(a, SIGNAL(triggered()), mgl, SLOT(addMark()));
 	connect(mgl, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
 	a->setToolTip(tr("Add marker which properties can be changed later by mouse."));
-	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);	oo->addAction(a);
+	oo->addAction(a);
 
 	a = new QAction(QPixmap(text_xpm), tr("Add text"), this);
 	connect(a, SIGNAL(triggered()), mgl, SLOT(addText()));
 	connect(mgl, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
 	a->setToolTip(tr("Add text which properties can be changed later by mouse."));
-	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);	oo->addAction(a);
+	oo->addAction(a);
+
+	bb = new QToolButton(this);	l->addWidget(bb);
+	bb->setDefaultAction(aa);	bb->setMenu(oo);
+	bb->setPopupMode(QToolButton::MenuButtonPopup);
 
 	o->addMenu(oo);	l->addStretch(1);
 

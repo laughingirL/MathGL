@@ -79,8 +79,8 @@ protected:
 	void cell_click();
 
 public:
-	mreal *data;
-	int nx, ny;
+	mglDataA *data;
+	int nx, ny, sl;
 
 	Fl_Data_Table(int x, int y, int w, int h, const char *l=0);
     ~Fl_Data_Table() { }
@@ -152,7 +152,7 @@ struct TableWindow : public Fl_Window
 public:
 	TableWindow(int x, int y, int w, int h, const char* t=0);
 	~TableWindow();
-	void update(mglVar *v);
+	void update(mglDataA *v);
 	void refresh();
 	void set_slice(long s);
 	inline long get_slice() { return sl; }
@@ -163,7 +163,7 @@ public:
 	Fl_Menu_Bar	*menu;
 //	Fl_Output *main;
 	Fl_Counter *slice;
-	mglData *var;
+	mglDataA *var;
 protected:
 //	long nx,ny,nz;
 	long nz;

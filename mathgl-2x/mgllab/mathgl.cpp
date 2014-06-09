@@ -119,12 +119,10 @@ void Fl_MGL::update()
 	if(!script || !strstr(script,"rotate"))	mgl_rotate(FMGL->get_graph(),0,0,0);
 
 	Fl_MGLView::update();
-
-	mglVar *v = Parse->FindVar("");
-	while(v)
+	for(long i=0;i<Parse->GetNumVar();i++)
 	{
-		if(v->o)	((TableWindow *)v->o)->update(v);
-		v = v->next;
+		mglDataA *v = Parse->GetVar(i);
+		if(v && v->o)	((TableWindow *)v->o)->update(v);
 	}
 }
 //-----------------------------------------------------------------------------

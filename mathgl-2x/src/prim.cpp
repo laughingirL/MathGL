@@ -423,7 +423,7 @@ void MGL_EXPORT mgl_angle_ext(HMGL gr, double x0, double y0, double z0, double x
 		p = p0+d*cos(a*i/(n-1))+u*sin(a*i/(n-1));
 		n2 = gr->AddPnt(p,c,qq,-1,11);
 		if(i==1)	gr->arrow_plot(n1,n2,gr->Arrow1);
-		if(i==n-1)	gr->arrow_plot(n2,n1,gr->Arrow2);
+		if(i==n-1)	{	gr->arrow_plot(n2,n1,gr->Arrow2);	gr->AddActive(n2,2);	}
 		gr->line_plot(n1,n2);	n1 = n2;
 	}
 	gr->EndGroup();

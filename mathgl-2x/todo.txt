@@ -30,13 +30,11 @@
 10. add real(), imag(), conj() + accurate types in MGL + add 'complex' in MGL ???
 
 11. Enable consecutive (as multiplication of matrices instead of single summary one) rotation of axis + the same in JS. Problem with widgets?!?
-
-12. Spline in 2d,3d -- last points
-
 13. Complex (hex) colors in inline text command (like #{b9} or #{x0000ff})
 14. Extra markers for '&' and '&#' signs ?!?
 15. Read JPEG files for Background() and mglData::Import()
 16. Adjust format for printed numbers (i.e. write function which will produce shortest text) + flag of fixed format + flag of TeX-notation
+17. Change angle degree in Qt primitives
 
 YY. Optimize code (especially Quality=0 ?!?)
 ZZ. Update *.i for new functions {before release!!!}
@@ -114,10 +112,6 @@ Buttons: new,load,save // newcmd,hide,annotation,collapse on/off,setup // calc. 
 16. New View() is used after each mouse click?!?
 
 17. Hex colors, hex masks, hex dashing into dialog of styles
-
-18. Add Polygon and Angle as primitives to toolbar
-
-19. Text in toolbar primitives should have rotation
 
 ============= UNSURE ===========
 

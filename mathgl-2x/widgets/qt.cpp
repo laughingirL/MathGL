@@ -489,6 +489,19 @@ void QMathGL::mouseMoveEvent(QMouseEvent *ev)
 					else	dr = hypot(dx,dy);
 					res = tst.section(' ',0,4)+" "+QString::number(tst.section(' ',5,5).toFloat()+dr)+" "+tst.section(' ',6);
 				}
+				else if(cmd=="angle")
+				{
+/*					float X_=tst.section(' ',1,1).toFloat()-xx, Y_=tst.section(' ',2,2).toFloat()-yy;
+					float x_=tst.section(' ',3,3).toFloat()-xx, y_=tst.section(' ',4,4).toFloat()-yy, dr=0;
+					if(x_*x_+y_*y_>0)
+					{
+						dr = (dx*x_+dy*y_)/(x_*x_+y_*y_);
+						dr = hypot(dx-dr*x_,dy-dr*y_);
+					}
+					else	dr = hypot(dx,dy);
+					res = tst.section(' ',0,4)+" "+QString::number(tst.section(' ',5,5).toFloat()+dr)+" "+tst.section(' ',6);*/
+					res = tst;	// TODO
+				}
 				else if(p.n==2)
 				{
 					xx=tst.section(' ',5,5).toFloat();	yy=tst.section(' ',6,6).toFloat();
@@ -510,7 +523,7 @@ void QMathGL::mouseMoveEvent(QMouseEvent *ev)
 			QString tst = primitives.section('\n',id,id), cmd=tst.section(' ',0,0), res;
 			float dx = 2*(xe-x0)/float(w), dy = 2*(y0-ye)/float(h);
 			float x1=tst.section(' ',1,1).toFloat(), y1=tst.section(' ',2,2).toFloat(),x2,y2;
-			if(cmd=="ball" || cmd=="text")
+			if(cmd=="ball")
 				res = cmd+" "+QString::number(x1+dx)+" "+QString::number(y1+dy)+" "+tst.section(' ',3);
 			else if(cmd=="curve")
 			{
@@ -870,12 +883,24 @@ void QMathGL::addRhomb()
 void QMathGL::addEllipse()
 {	primitives += "ellipse -0.2 0 0.2 0 0.1 'r'\n";	refresh();	}
 //-----------------------------------------------------------------------------
+void QMathGL::addAngle()
+{	primitives += "angle 0 0 0.2 0 60 'r2'\n";	refresh();	}
+//-----------------------------------------------------------------------------
+void QMathGL::addPolygon(int n)
+{
+	if(n<3)
+		n = QInputDialog::getText(QApplication::activeWindow(), "MathGL", tr("Enter number of vertexes")).toInt();
+	if(n>=3)
+	{	primitives += "polygon 0 0 0 0.2 "+QString::number(n)+" 'r'\n";	refresh();	}
+}
+//{	primitives += "angle -0.2 0 0.2 0 0.1 'r'\n";	refresh();	}
+//-----------------------------------------------------------------------------
 void QMathGL::addText(QString txt)
 {
 	if(txt.isEmpty())
 		txt = QInputDialog::getText(QApplication::activeWindow(), "MathGL", tr("Enter text"));
 	if(!txt.isEmpty())
-	{	primitives += "text 0 0 '"+txt+"' ''\n";	refresh();	}
+	{	primitives += "text 0 0 0.1 0 '"+txt+"' ''\n";	refresh();	}
 }
 //-----------------------------------------------------------------------------
 //
@@ -981,9 +1006,11 @@ void mglCanvasQT::Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p
 #include "xpm/mark_s.xpm"
 #include "xpm/mark_a.xpm"
 #include "xpm/mark_d.xpm"
+#include "xpm/arc.xpm"
+#include "xpm/polygon.xpm"
 //-----------------------------------------------------------------------------
 #define TR	QObject::tr
-QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *&tet, QSpinBox *&phi)
+MGL_EXPORT QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *&tet, QSpinBox *&phi)
 {
 	QAction *a;
 	QMenu *o, *oo;
@@ -1077,6 +1104,11 @@ QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *&tet, QSpinBox *&p
 		Wnd->connect(QMGL, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
 		a->setToolTip(TR("Add line which properties can be changed later by mouse."));
 		bb->addAction(a);	oo->addAction(a);
+		a = new QAction(QPixmap(arc_xpm), TR("Add arc"), Wnd);
+		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(addAngle()));
+		Wnd->connect(QMGL, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
+		a->setToolTip(TR("Add arc which properties can be changed later by mouse."));
+		bb->addAction(a);	oo->addAction(a);
 		a = new QAction(QPixmap(curve_xpm), TR("Add curve"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(addCurve()));
 		Wnd->connect(QMGL, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
@@ -1096,6 +1128,11 @@ QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *&tet, QSpinBox *&p
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(addEllipse()));
 		Wnd->connect(QMGL, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
 		a->setToolTip(TR("Add ellipse which properties can be changed later by mouse."));
+		bb->addAction(a);	oo->addAction(a);
+		a = new QAction(QPixmap(polygon_xpm), TR("Add polygon"), Wnd);
+		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(addPolygon()));
+		Wnd->connect(QMGL, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
+		a->setToolTip(TR("Add polygon which properties can be changed later by mouse."));
 		bb->addAction(a);	oo->addAction(a);
 		a = new QAction(QPixmap(mark_a_xpm), TR("Add mark"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(addMark()));
