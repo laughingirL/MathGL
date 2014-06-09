@@ -136,17 +136,15 @@ template <class Treal> Treal mglSpline3t(const Treal *a, long nx, long ny, long 
 	if(nz>1)		// 3d interpolation
 	{
 		Treal tz[4], yz[4], xz[4];
-		long kz = long(z), mz, k = long(y), m;
-		if(kz>=nz-3)	kz = nz-4;
-		kz = kz>1?kz-1:0;	mz = kz+4<nz?4:nz-kz;
-		if(mz<4 && nz>3)		{	kz+=mz-4;	mz=4;	}
-		else if(mz<3 && nz>2)	{	kz+=mz-3;	mz=3;	}
-		kz = kz>0?kz:0;	
-		if(k>=ny-3)	k = ny-4;
-		k = k>1?k-1:0;	m = k+4<ny?4:ny-k;
-		if(m<4 && ny>3)			{	k+=m-4;	m=4;	}
-		else if(m<3 && ny>2)	{	k+=m-3;	m=3;	}
-		k = k>0?k:0;
+		long kz=long(z)-1, mz, k=long(y)-1, m;
+		if(nz>3)
+		{	mz = 4;	kz = kz>=0?kz:0;
+			if(kz>nz-4)	kz = nz-4;	}
+		else	{	mz = nz;	kz=0;	}
+		if(ny>3)
+		{	m = 4;	k = k>=0?k:0;
+			if(k>ny-4)	k = ny-4;	}
+		else	{	m = ny;	k=0;	}
 		for(long j=0;j<mz;j++)
 		{
 			Treal t[4], d[4];
@@ -162,12 +160,10 @@ template <class Treal> Treal mglSpline3t(const Treal *a, long nx, long ny, long 
 	else if(ny>1)	// 2d interpolation
 	{
 		Treal t[4], d[4];
-		long k = long(y), m;
-		if(k>=ny-3)	k = ny-4;
-		k = k>1?k-1:0;	m = k+4<ny?4:ny-k;
-		if(m<4 && ny>3)			{	k+=m-4;	m=4;	}
-		else if(m<3 && ny>2)	{	k+=m-3;	m=3;	}
-		k = k>0?k:0;
+		long k = long(y)-1, m;
+		if(ny>3)
+		{	m = 4;	k = k>=0?k:0;	if(k>ny-4)	k = ny-4;	}
+		else	{	m = ny;	k=0;	}
 		for(long i=0;i<m;i++)
 			t[i] = mglSpline1t<Treal>(a+nx*(i+k),nx,x,d+i);
 		b = mglSpline1t<Treal>(t,m,y-k,&gy);
@@ -189,11 +185,15 @@ template <class Treal> Treal mglSpline3st(const Treal *a, long nx, long ny, long
 	if(nz>1)		// 3d interpolation
 	{
 		Treal tz[4], t[4];
-		long kz = long(z), mz, k = long(y), m;
-		if(kz>=nz-3)	kz = nz-4;
-		kz = kz>1?kz-1:0;	mz = kz+4<nz?4:nz-kz;
-		if(k>=ny-3)	k = ny-4;
-		k = k>1?k-1:0;	m = k+4<ny?4:ny-k;
+		long kz=long(z)-1, mz, k=long(y)-1, m;
+		if(nz>3)
+		{	mz = 4;	kz = kz>=0?kz:0;
+			if(kz>nz-4)	kz = nz-4;	}
+		else	{	mz = nz;	kz=0;	}
+		if(ny>3)
+		{	m = 4;	k = k>=0?k:0;
+			if(k>ny-4)	k = ny-4;	}
+		else	{	m = ny;	k=0;	}
 		for(long j=0;j<mz;j++)
 		{
 			for(long i=0;i<m;i++)
@@ -205,9 +205,11 @@ template <class Treal> Treal mglSpline3st(const Treal *a, long nx, long ny, long
 	else if(ny>1)	// 2d interpolation
 	{
 		Treal t[4];
-		long k = long(y), m;
-		if(k>=ny-3)	k = ny-4;
-		k = k>1?k-1:0;	m = k+4<ny?4:ny-k;
+		long k = long(y)-1, m;
+		if(ny>3)
+		{	m = 4;	k = k>=0?k:0;
+			if(k>ny-4)	k = ny-4;	}
+		else	{	m = ny;	k=0;	}
 		for(long i=0;i<m;i++)
 			t[i] = mglSpline1st<Treal>(a+nx*(i+k),nx,x);
 		b = mglSpline1st<Treal>(t,m,y-k);

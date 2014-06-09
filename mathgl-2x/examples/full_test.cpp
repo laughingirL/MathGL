@@ -65,10 +65,10 @@ void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
 	mglParse par;
-	par.Execute(gr,"new a 5 5 5 'x^3*y^3*z^3'\nresize b a 100 100 100\naxis\n"
+	par.Execute(gr,"new a 3 3 '(x+2)^3*(y+2)^3'\nresize b a 100 100\nyrange a:axis\n"
 		"plot a(0,:,0) 'b;o':plot b(0,:,0) 'b'\n"
 		"plot a(:,0,0) 'r;s':plot b(:,0,0) 'r'\n"
-		"plot a(0,0,:) 'g;d':plot b(0,0,:) 'g'\n");
+		"#plot a(0,0,:) 'g;d':plot b(0,0,:) 'g'\n");
 	return;
 }
 //-----------------------------------------------------------------------------

@@ -148,7 +148,7 @@ MGL_NO_EXPORT void *mgl_resize(void *par)
 	const mreal *c=t->c;
 	HCDT dat = (HCDT)(t->v);
 #if !MGL_HAVE_PTHREAD
-#pragma omp parallel for
+//#pragma omp parallel for
 #endif
 	for(long i0=t->id;i0<t->n;i0+=mglNumThr)
 	{

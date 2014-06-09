@@ -493,8 +493,8 @@ void mgls_prepare2v(mglData *a, mglData *b)
 //-----------------------------------------------------------------------------
 void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez)
 {
-	long n=20;
-	double z0=0.33;
+	long n=10;
+	double z0=0.3;
 	if(!ex || !ey || !ez)	return;
 	ex->Create(n,n,n);	ey->Create(n,n,n);	ez->Create(n,n,n);
 #pragma omp parallel for collapse(3)
