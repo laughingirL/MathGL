@@ -20,6 +20,14 @@
 * Warning messages and information are printed to stderr until call of mgl_suppress_warn(true) will disable it.
 * Add function attributes 'pure' or 'const', which potentially can speed up drawing.
 * Add function mgl_check_version() and MGL command 'version' to check if MathGL version is valid.
+* Add special symbol '\b' which will be ignored at printing
+* Allow 'negative' angles for text rotation
+* Common speeding up in many places
+* Use spline instead of linear interpolation in functions Flow() and Pipe().
+* Make function mgl_get_curvs() to be exported. This function is used internally to connect line segments to a set of curves (in particular, for contour lines).
+
+* Rearrange tool buttons in UDAV
+* Add new primitives (arc,polygon,rotated text) as mouse handled ones in UDAV
 
 2.2.2.1 Released 19 March 2014
 

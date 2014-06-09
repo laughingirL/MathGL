@@ -35,6 +35,8 @@
 15. Read JPEG files for Background() and mglData::Import()
 16. Adjust format for printed numbers (i.e. write function which will produce shortest text) + flag of fixed format + flag of TeX-notation
 17. Change angle degree in Qt primitives
+18. Problem with \calB and so on (\calH, ...) -- they are present only in italic font :(.
+19. create PWT fonts ???
 
 YY. Optimize code (especially Quality=0 ?!?)
 ZZ. Update *.i for new functions {before release!!!}
@@ -108,21 +110,15 @@ Buttons: new,load,save // newcmd,hide,annotation,collapse on/off,setup // calc. 
 14. Close button on data tabs
 
 15. Add dialog for mask creation.
-
-16. New View() is used after each mouse click?!?
-
+16. Menu to insert current primitives + clearing its current set (like "Move primitives to script")
 17. Hex colors, hex masks, hex dashing into dialog of styles
 
 ============= UNSURE ===========
 
-1. Problem with \calB and so on (\calH, ...) -- they are present only in italic font :(.
-2. create PWT fonts
-3. \dfrac for normal size and centering  (sample \big\big{\frac{1}{2}}) ???
-4. "Cut off" curves if text is printed inside it (for contour labels) ?!?
-5. String variables in MGL + readstr command.
-6. Pool of threads for speeding up ??? or openmp ???
-7. Read DICOM files
-8. Check RunThr() in python/octave
-9. Try libtcc (TinyCC) as alternative to MGL -- how to handle ^ operator???
-10. Auto axis range for formulas, like AutoRange("y(x)") or AutoRange('x',"x(t)").
-11. Use Hershey as built-in font ??? -- for smaller size only
+1. \dfrac for normal size and centering  (sample \big\big{\frac{1}{2}}) ???
+2. "Cut off" curves if text is printed inside it (for contour labels) ?!?
+3. String variables in MGL + readstr command.
+4. Read DICOM files
+5. Check RunThr() in python/octave
+6. Auto axis range for formulas, like AutoRange("y(x)") or AutoRange('x',"x(t)").
+7. Use Hershey as built-in font ??? -- for smaller size only
