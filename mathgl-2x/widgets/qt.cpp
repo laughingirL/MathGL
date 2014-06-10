@@ -491,16 +491,10 @@ void QMathGL::mouseMoveEvent(QMouseEvent *ev)
 				}
 				else if(cmd=="angle")
 				{
-/*					float X_=tst.section(' ',1,1).toFloat()-xx, Y_=tst.section(' ',2,2).toFloat()-yy;
-					float x_=tst.section(' ',3,3).toFloat()-xx, y_=tst.section(' ',4,4).toFloat()-yy, dr=0;
-					if(x_*x_+y_*y_>0)
-					{
-						dr = (dx*x_+dy*y_)/(x_*x_+y_*y_);
-						dr = hypot(dx-dr*x_,dy-dr*y_);
-					}
-					else	dr = hypot(dx,dy);
-					res = tst.section(' ',0,4)+" "+QString::number(tst.section(' ',5,5).toFloat()+dr)+" "+tst.section(' ',6);*/
-					res = tst;	// TODO
+					double x_=tst.section(' ',3,3).toFloat()-xx, y_=tst.section(' ',4,4).toFloat()-yy, a_=tst.section(' ',5,5).toFloat();
+					double c=cos(M_PI*a_/180), s=sin(M_PI*a_/180);
+					double a = atan2(x_,y_) - atan2(x_*c-y_*s+dx,x_*s+y_*c+dy);
+					res = tst.section(' ',0,4)+" "+QString::number(a*180/M_PI)+" "+tst.section(' ',6);
 				}
 				else if(p.n==2)
 				{

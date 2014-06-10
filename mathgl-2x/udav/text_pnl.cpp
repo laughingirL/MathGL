@@ -113,6 +113,19 @@ void TextPanel::insNVal()
 	edit->textCursor().insertText(QString::number(res.GetVal(0)));
 }
 //-----------------------------------------------------------------------------
+void TextPanel::insPrim()
+{
+	QString str(graph->mgl->primitives);
+	if(str.isEmpty())
+	{
+		QMessageBox::warning(this,tr("UDAV"),tr("There is manual primitives."));
+		return;
+	}
+	edit->moveCursor(QTextCursor::Start);
+	edit->insertPlainText("subplot 1 1 0 '#'\n"+str+"subplot 1 1 0\n#----------");
+	graph->mgl->primitives = "";
+}
+//-----------------------------------------------------------------------------
 void TextPanel::insFitF()
 {
 	QString str(graph->getFit());
@@ -464,6 +477,7 @@ void TextPanel::addSetup()	{	setupDlg->exec();	}
 //-----------------------------------------------------------------------------
 #include "xpm/option.xpm"
 #include "xpm/style.xpm"
+#include "xpm/curve.xpm"
 //-----------------------------------------------------------------------------
 void TextPanel::toolTop(QBoxLayout *l)
 {
@@ -556,6 +570,10 @@ void TextPanel::toolTop(QBoxLayout *l)
 	a = new QAction(QPixmap(":/xpm/folder.png"), tr("Folder path"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(insPath()));
 	a->setToolTip(tr("Select and insert folder name."));
+	oo->addAction(a);
+	a = new QAction(QPixmap(curve_xpm), tr("Manual primitives"), this);
+	a->setShortcut(Qt::META+Qt::Key_P);	connect(a, SIGNAL(triggered()), this, SLOT(insPrim()));
+	a->setToolTip(tr("Move mouse-handled primitives to script."));
 	oo->addAction(a);
 
 	bb = new QToolButton(this);	l->addWidget(bb);

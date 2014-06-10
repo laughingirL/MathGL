@@ -44,10 +44,24 @@
 #define MGL_DEF_FONT_NAME	"STIX"
 #endif
 //-----------------------------------------------------------------------------
+struct mglGlyphDescr
+{
+	wchar_t id;		///< Unicode ID for glyph
+	int tr[4];		///< Shift of glyph description by triangles (for solid font)
+	int ln[4];		///< Shift of glyph description by lines (for wire font)
+	short numt[4];	///< Number of triangles in glyph description (for solid font)
+	short numl[4];	///< Number of lines in glyph description (for wire font)
+	short width[4];	///< Width of glyph for wire font
+	mglGlyphDescr()	{	memset(this,0,sizeof(mglGlyphDescr));	}
+};
+inline bool operator<(const mglGlyphDescr &a,const mglGlyphDescr &b)	{	return a.id<b.id;	}
+inline bool operator>(const mglGlyphDescr &a,const mglGlyphDescr &b)	{	return a.id>b.id;	}
+//-----------------------------------------------------------------------------
 struct MGL_EXPORT mglTeXsymb	{	unsigned kod;	const wchar_t *tex;	};
 const float mgl_fgen = 4*14;
 /// Get font color, style and align for internal parser
-bool mglGetStyle(const char *how, int *font, int *align=0);
+bool MGL_EXPORT mglGetStyle(const char *how, int *font, int *align=0);
+long MGL_EXPORT_PURE mgl_internal_code(unsigned s, const std::vector<mglGlyphDescr> &glyphs);
 class mglBase;
 //-----------------------------------------------------------------------------
 /// Class for font typeface and text plotting procedures
@@ -68,7 +82,7 @@ public:
 	/// Restore default font
 	void Restore();
 	/// Return true if font is loaded
-	inline bool Ready() const	{	return numg!=0;	}
+	inline bool Ready() const	{	return GetNumGlyph()!=0;	}
 
 	/// Get height of text
 	float Height(int font) const MGL_FUNC_PURE;
@@ -84,25 +98,19 @@ public:
 	float Width(const wchar_t *str,const char *how) const;
 
 	/// Get internal code for symbol
-	long Internal(unsigned s) const MGL_FUNC_PURE;
+	inline long Internal(unsigned s) const	{	return mgl_internal_code(s,glyphs);	}
 	/// Return number of glyphs
-	inline unsigned GetNumGlyph() const	{	return numg;	};
+	inline unsigned GetNumGlyph() const	{	return glyphs.size();	};
 	/// Return some of pointers
-	inline const short *GetTr(int s, long j) const	{	return Buf+tr[s][j];	}
-	inline const short *GetLn(int s, long j) const	{	return Buf+ln[s][j];	}
-	inline int GetNt(int s, long j) const	{	return numt[s][j];	}
-	inline int GetNl(int s, long j) const	{	return numl[s][j];	}
-	inline short GetWidth(int s, long j) const	{	return width[s][j];	}
-	inline float GetFact(int s) const		{	return fact[s];	}
+	inline const short *GetTr(int s, long j) const	{	return Buf+glyphs[j].tr[s];	}
+	inline const short *GetLn(int s, long j) const	{	return Buf+glyphs[j].ln[s];	}
+	inline int GetNt(int s, long j) const		{	return glyphs[j].numt[s];	}
+	inline int GetNl(int s, long j) const		{	return glyphs[j].numl[s];	}
+	inline short GetWidth(int s, long j) const	{	return glyphs[j].width[s];	}
+	inline float GetFact(int s) const			{	return fact[s];	}
 protected:
-	wchar_t *id;	///< Unicode ID for glyph
-	int *tr[4];		///< Shift of glyph description by triangles (for solid font)
-	int *ln[4];		///< Shift of glyph description by lines (for wire font)
-	short *numt[4];	///< Number of triangles in glyph description (for solid font)
-	short *numl[4];	///< Number of lines in glyph description (for wire font)
-	short *width[4];///< Width of glyph for wire font
+	std::vector<mglGlyphDescr> glyphs;	///< information about know glyphs
 	float fact[4];	///< Divider for width of glyph
-	unsigned numg;	///< Number of glyphs
 	short *Buf;		///< Buffer for glyph descriptions
 	long numb;		///< Buffer size
 
@@ -122,10 +130,10 @@ protected:
 	unsigned Symbol(char ch) const MGL_FUNC_PURE;
 private:
 	float get_ptr(long &i,unsigned *str, unsigned **b1, unsigned **b2,float &w1,float &w2, float f1, float f2, int st) const;
-	bool read_data(const char *fname, float *ff, short *wdt, short *numl, int *posl, short *numt, int *post, std::vector<short> &buf);
+	bool read_data(const char *fname, int s, std::vector<short> &buf, std::vector<mglGlyphDescr> &extra);
 	void main_copy();
 	bool read_main(const char *fname, std::vector<short> &buf);
-	void mem_alloc();
+	inline void mem_alloc(long numg)	{	glyphs.resize(numg);	}
 	bool read_def();
 	void draw_ouline(int st, float x, float y, float f, float g, float ww, float ccol) const;
 };

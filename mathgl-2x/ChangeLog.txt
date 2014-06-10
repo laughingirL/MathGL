@@ -25,6 +25,7 @@
 * Common speeding up in many places
 * Use spline instead of linear interpolation in functions Flow() and Pipe().
 * Make function mgl_get_curvs() to be exported. This function is used internally to connect line segments to a set of curves (in particular, for contour lines).
+* Add calligraphic TeX symbols, like \calB, \calE, \calF, \calH, \calI, \calL, \calM, \calR, \ell, \scrg, \scro
 
 * Rearrange tool buttons in UDAV
 * Add new primitives (arc,polygon,rotated text) as mouse handled ones in UDAV
