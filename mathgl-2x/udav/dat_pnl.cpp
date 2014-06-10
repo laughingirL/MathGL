@@ -467,6 +467,7 @@ bool DatPanel::sizesDialog(const QString &cap, const QString &lab, const QString
 #include "xpm/hist.xpm"
 #include "xpm/oper_dir.xpm"
 #include "xpm/oper_of.xpm"
+#include "xpm/delete.xpm"
 //-----------------------------------------------------------------------------
 void DatPanel::newdat()
 {
@@ -770,6 +771,11 @@ void DatPanel::toolLeft(QBoxLayout *l)
 	o->addAction(a);*/
 
 	l->addStretch(1);
+
+	a = new QAction(QPixmap(delete_xpm), tr("Close tab"), this);
+	connect(a, SIGNAL(triggered()), this, SLOT(close()));
+	a->setToolTip(tr("Close this data tab."));
+	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 }
 //-----------------------------------------------------------------------------
 QString DatPanel::dataName()	{	return QString::fromStdWString(var->s);	}

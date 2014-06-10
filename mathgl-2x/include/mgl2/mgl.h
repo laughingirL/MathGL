@@ -1259,7 +1259,7 @@ public:
 	inline void Execute(mglGraph *gr, FILE *fp, bool print=false)
 	{	mgl_parse_file(gr->Self(), pr, fp, print);	}
 
-	/// Return type of command: 0 - not found, 1 - data plot, 2 - other plot,
+	/// Return type of command: 0 - not found, 1 - other data plot, 2 - func plot,
 	///		3 - setup, 4 - data handle, 5 - data create, 6 - subplot, 7 - program
 	///		8 - 1d plot, 9 - 2d plot, 10 - 3d plot, 11 - dd plot, 12 - vector plot
 	///		13 - axis, 14 - primitives, 15 - axis setup, 16 - text/legend, 17 - data transform

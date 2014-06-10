@@ -29,6 +29,7 @@
 
 * Rearrange tool buttons in UDAV
 * Add new primitives (arc,polygon,rotated text) as mouse handled ones in UDAV
+* Add close button to data tabs in UDAV
 
 2.2.2.1 Released 19 March 2014
 

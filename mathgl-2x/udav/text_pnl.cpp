@@ -122,7 +122,7 @@ void TextPanel::insPrim()
 		return;
 	}
 	edit->moveCursor(QTextCursor::Start);
-	edit->insertPlainText("subplot 1 1 0 '#'\n"+str+"subplot 1 1 0\n#----------");
+	edit->insertPlainText("subplot 1 1 0 '#'\n"+str+"subplot 1 1 0\n#----------\n");
 	graph->mgl->primitives = "";
 }
 //-----------------------------------------------------------------------------

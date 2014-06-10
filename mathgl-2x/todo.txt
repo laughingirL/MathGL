@@ -74,7 +74,7 @@ C. Translate to Russian everything
 26. Style 'f' for fixed format (like "%.2f") in Table() and Label().
 27. Color gradient (color scheme) for glyphs of text + update sample
 28. Hint about flow threads and contour lines (as ODE and for advanced users).
-
+29. Howto about plot ranges (subplot styles)
 
 ============= UDAV =============
 
@@ -85,13 +85,36 @@ C. Translate to Russian everything
 03. Dialog for InPlot(s):
 {SubPlot,MultiPlot}	-- enable rotate,aspect,title
 {ColumnPlot}		-- enable rotate,several
-{StickPlot}		-- enable several
+{StickPlot}			-- enable several
 {InPlot}			-- enable rotate,aspect,title
 Image with gray alternatives and black choice
 
 04. QTreeWidgetItem -- ICON (func/call,if,for,once,subplot,...); annotation/name; (keep LINE - POS in script). After editing/changing --> put text to editor.
+
+1 - other data plot	-- preview.xpm
+2 - func plot,		-- func.xpm [or plot.xpm ???]
+3 - setup			-- preferences-system.png
+4 - data handle		-- oper_dir.xpm
+5 - data create		-- table.xpm
+6 - subplot			-- box.xpm
+7 - program			-- media-playback-start.png
+8 - 1d plot			-- plot.xpm
+9 - 2d plot			-- preview.xpm
+10 - 3d plot		-- light.xpm
+11 - dd plot		-- preview.xpm
+12 - vector plot	-- view-fullscreen.png
+13 - axis			-- mark_pf.xpm
+14 - primitives		-- curve.xpm
+15 - axis setup		-- preferences-system.png
+16 - text/legend	-- text.xpm
+17 - data transform	-- oper_dir.xpm
+comment (not sure)	-- comment.xpm
+group of several	-- package-x-generic.png
+hidden				-- none.xpm ???
+
 Buttons: new,load,save // newcmd,hide,annotation,collapse on/off,setup // calc. Click on item cause change of line number in editor.
-05. Group/ungroup if command in single line, separated by ':'
+
+05. Group/ungroup if command in single line, separated by ':'. Autoreplace "::"->":", ":\n"->"\n".
 06. Hide plot/group by putting "#h " at beginning of line
 07. Annotation of plot/group -- comment before it
 08. Drag&drop plot/group between inplots (in tree widget)
@@ -104,8 +127,6 @@ Buttons: new,load,save // newcmd,hide,annotation,collapse on/off,setup // calc. 
 12. Multi-threading for enabling "stop".
 
 13. Manual rotate (i.e. change rotate arguments) by spinboxes ??? or sync View and Rotate
-
-14. Close button on data tabs
 
 15. Hex colors, hex masks, hex dashing into dialog of styles
 
