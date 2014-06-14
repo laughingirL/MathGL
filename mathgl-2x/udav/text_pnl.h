@@ -63,7 +63,7 @@ public slots:
 //	void setEditPos(bool bottom);
 	void animPutText(const QString &);
 //	void putText(const QString &txt);
-	void putLine(const QString &txt);
+	void putLine(const QString &txt, bool replace=false);
 	void setCursorPosition(int);
 
 	void addOptions();

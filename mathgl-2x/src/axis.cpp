@@ -618,13 +618,17 @@ void mglCanvas::DrawLabels(mglAxis &aa, bool inv, const mglMatrix *M)
 		if(ux==0)	uy = fabs(uy);
 		qq.u = ux;	qq.v = uy;
 
-		if((!get(MGL_ENABLE_RTEXT) || tet) && nn.x!=0 && aa.ch!='c')	pos[2] = nn.x<0 ? 'L':'R';
-//		if(tet && nn.x==0)	pos[2] = 'R';
+		if((!get(MGL_ENABLE_RTEXT) || tet) && nn.x!=0)
+		{
+			if(aa.ch!='c') pos[2] = nn.x<0 ? 'L':'R';
+			else	pos[2] = aa.ns==1?'L':'R';//  nn.x<0 ? 'R':'L';
+		}
+//		if((!get(MGL_ENABLE_RTEXT) || tet) && nn.x!=0 && aa.ch=='c')	pos[2] = nn.x<0 ? 'R':'L';
+//		if((!get(MGL_ENABLE_RTEXT) || tet) && nn.x!=0 && aa.ch!='c')	pos[2] = nn.x<0 ? 'L':'R';
 		if(aa.ch=='c' && aa.txt[i].text[0]==' ')	qq.u = qq.v = NAN;
 		int ts = 1;
 		if(!get(MGL_DISABLE_SCALE))	ts = mgl_sign(qq.v*nn.x-qq.u*nn.y)*mgl_sign(aa.v2-aa.v1);
 		if(aa.ch=='c')	ts=inv?-1:1;	// use manual settings by inv argument
-//		else if(ux==0 && uy<0)	ts *= -1;
 		if(aa.ch=='T')	ts *= -1;
 		if(aa.pos=='T')	ts *= -1;
 		pos[0] = ts>0 ? 't':'T';
@@ -1038,7 +1042,7 @@ void mglCanvas::colorbar(HCDT vv, const mreal *c, int where, mreal x, mreal y, m
 	ac.org = mglPoint(w+x,h+y,s3+1);
 	switch(where)
 	{
-		case 1:	ac.dir.x = 0;	ac.org.x = x+0.1*w;	break;
+		case 1:	ac.dir.x = 0;	ac.org.x = x+0.1*w-(get(MGL_ENABLE_RTEXT)?0:0.06);	break;
 		case 2:	ac.dir.y = 0;	ac.org.y = y-0.1*h;	break;
 		case 3:	ac.dir.y = 0;	ac.org.y = y+0.1*h;	break;
 		default:ac.dir.x = 0;	ac.org.x = x-0.1*w;	break;

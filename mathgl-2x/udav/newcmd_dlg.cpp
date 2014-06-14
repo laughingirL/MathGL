@@ -37,6 +37,7 @@ extern QString pathHelp;
 //-----------------------------------------------------------------------------
 NewCmdDialog::NewCmdDialog(QWidget *p) : QDialog(p,Qt::WindowStaysOnTopHint)
 {
+	replace = false;
 	fillList();
 	QPushButton *b;
 	QToolButton *t;
@@ -67,16 +68,11 @@ NewCmdDialog::NewCmdDialog(QWidget *p) : QDialog(p,Qt::WindowStaysOnTopHint)
 	connect(args,SIGNAL(cellDoubleClicked(int,int)), this, SLOT(insertData()));
 
 	a = new QHBoxLayout;	o->addLayout(a);
-	b = new QPushButton(tr("Add style"),this);	a->addWidget(b);
-	b->setToolTip(tr("Here you can select the plot style.\nThe result will be placed in 'fmt' argument."));
-	connect(b, SIGNAL(clicked()),this,SLOT(insertStl()));
-	b = new QPushButton(tr("Add data"),this);	a->addWidget(b);
-	connect(b, SIGNAL(clicked()),this,SLOT(insertData()));
 	b = new QPushButton(tr("Options"),this);	a->addWidget(b);
 	b->setToolTip(tr("Here you can specify command options.\nOptions are used for additional plot tunning."));
 	connect(b, SIGNAL(clicked()),this,SLOT(insertOpt()));
-	QLabel *l=new QLabel(tr("Options"));	o->addWidget(l);
-	opt = new QLineEdit(this);	o->addWidget(opt);
+	opt = new QLineEdit(this);	a->addWidget(opt);
+
 	a = new QHBoxLayout;	o->addLayout(a);
 	b = new QPushButton(tr("Cancel"),this);	a->addWidget(b);
 	connect(b, SIGNAL(clicked()), this, SLOT(reject()));
@@ -116,12 +112,13 @@ void NewCmdDialog::parseCmd(const QString &txt)
 	QRegExp sep("[ \t]");
 	QString cmd = str.section(sep,0,0),a,b;
 	bool opt,var,chr;
+	replace = false;
 	for(int i=0;i<17;i++)
 	{
 		if(cmds[i].contains(cmd))	// find command first
 		{
 			typeChanged(i);
-			nameChanged(cmds[i].indexOf(cmd));
+			name->setCurrentIndex(cmds[i].indexOf(cmd));
 			register int j,j0,k,k0;
 			bool ok;
 			for(j0=k0=-1,j=0;j<NUM_CH;j++)		// determine set of arguments
@@ -141,11 +138,11 @@ void NewCmdDialog::parseCmd(const QString &txt)
 			}
 			if(j0>=0)	// best choice
 			{
-				kindChanged(j0);
+				kind->setCurrentIndex(j0);
 				for(k=0;k<argn[j0].count();k++)
 					args->item(k,1)->setText(str.section(sep,k+1,k+1).trimmed());
 			}
-			return;		// selection is done
+			replace = true;	return;		// selection is done
 		}
 	}
 }
@@ -241,8 +238,7 @@ void NewCmdDialog::nameChanged(int s)
 		kinds<<n+" "+a;
 		parse(argn[k],a);
 	}
-	name->setCurrentIndex(s);
-	kind->addItems(kinds);	kind->setCurrentIndex(0);
+	kind->addItems(kinds);	kind->setCurrentIndex(0);	replace = false;
 }
 //-----------------------------------------------------------------------------
 void NewCmdDialog::kindChanged(int s)
@@ -291,7 +287,10 @@ void NewCmdDialog::insertData()
 	{
 		if(datDialog->exec())	args->item(row,1)->setText(datDialog->getData());
 	}
-	else		QMessageBox::warning(this,tr("New command"), tr("This argument is not data"));
+	else if(a=="'fmt'" || a=="_'fmt'")
+	{
+		if(stlDialog->exec())	args->item(row,1)->setText(stlDialog->getStyle());
+	}
 }
 //-----------------------------------------------------------------------------
 void NewCmdDialog::insertStl()
@@ -308,8 +307,7 @@ void NewCmdDialog::insertStl()
 	int i;
 	i = argn[s].indexOf("'fmt'");
 	if(i<0)	i = argn[s].indexOf("_'fmt'");
-	if(!stlDialog->exec())	return;
-	args->item(i,1)->setText(stlDialog->getStyle());
+	if(!stlDialog->exec())	args->item(i,1)->setText(stlDialog->getStyle());
 }
 //-----------------------------------------------------------------------------
 void NewCmdDialog::finish()
@@ -352,6 +350,6 @@ void NewCmdDialog::finish()
 			cmd = cmd + ' ' + txt;
 		}
 	}
-	cmd = cmd + opt->text();	accept();	emit result(cmd);
+	cmd = cmd + opt->text();	accept();	emit result(cmd, replace);
 }
 //-----------------------------------------------------------------------------

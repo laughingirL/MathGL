@@ -64,7 +64,7 @@ TextPanel::TextPanel(QWidget *parent) : QWidget(parent)
 	vars = words;
 
 	connect(setupDlg, SIGNAL(putText(const QString &)), this, SLOT(animPutText(const QString &)));
-	connect(newCmdDlg, SIGNAL(result(const QString&)), this, SLOT(putLine(const QString&)));
+	connect(newCmdDlg, SIGNAL(result(const QString&, bool)), this, SLOT(putLine(const QString&, bool)));
 	connect(findDialog, SIGNAL(findText(const QString &, bool, bool)), this, SLOT(findText(const QString &, bool, bool)));
 	connect(findDialog, SIGNAL(replText(const QString &, const QString &, bool, bool)), this, SLOT(replText(const QString &, const QString &, bool, bool)));
 
@@ -222,9 +222,20 @@ void TextPanel::animPutText(const QString &s)
 //-----------------------------------------------------------------------------
 //void TextPanel::putText(const QString &txt)	{	edit->insertPlainText(txt);	}
 //-----------------------------------------------------------------------------
-void TextPanel::putLine(const QString &txt)
-{	edit->moveCursor(QTextCursor::StartOfLine);
-	edit->insertPlainText(txt+"\n");	}
+void TextPanel::putLine(const QString &txt, bool replace)
+{
+	edit->moveCursor(QTextCursor::StartOfLine);
+	if(replace)
+	{
+		QTextCursor c = edit->textCursor();
+		c.select(QTextCursor::BlockUnderCursor);
+		c.removeSelectedText();
+		edit->setTextCursor(c);
+		if(c.atStart())	edit->insertPlainText(txt);
+		else	edit->insertPlainText("\n"+txt);
+	}
+	else	edit->insertPlainText(txt+"\n");
+}
 //-----------------------------------------------------------------------------
 void TextPanel::addStyle()
 {
@@ -295,10 +306,10 @@ void TextPanel::loadHDF5(const QString &fileName)
 			H5Dread(hd, H5T_C_S1, H5S_ALL, H5S_ALL, H5P_DEFAULT, buf);
 			buf[dims[0]]=0;		// to be sure :)
 			QString str = buf;
-			if(str.contains("#----- End of QMathGL block -----\n"))
+			if(str.contains("subplot 1 1 0\n#----- End of QMathGL block -----\n"))
 			{
-				graph->mgl->primitives = str.section("#----- End of QMathGL block -----\n",0,0);
-				str = str.section("#----- End of QMathGL block -----\n",1);
+				graph->mgl->primitives = str.section("subplot 1 1 0\n#----- End of QMathGL block -----\n",0,0).section("subplot 1 1 0 '#'\n",1);
+				str = str.section("subplot 1 1 0\n#----- End of QMathGL block -----\n",1);
 			}
 			edit->setText(str);
 			graph->animParseText(edit->toPlainText());
@@ -350,7 +361,7 @@ void TextPanel::saveHDF5(const QString &fileName)
 	{	// save script
 		QString txt;
 		if(!graph->mgl->primitives.isEmpty())
-			txt += graph->mgl->primitives + "#----- End of QMathGL block -----";
+			txt += "subplot 1 1 0 '#'\n"+graph->mgl->primitives + "subplot 1 1 0\n#----- End of QMathGL block -----\n";
 		txt += edit->toPlainText();
 		dims[0] = txt.length()+1;
 		char *buf = new char[dims[0]+1];

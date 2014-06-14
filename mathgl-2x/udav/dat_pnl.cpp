@@ -73,7 +73,7 @@ DatPanel::DatPanel(InfoDialog *inf, QWidget *parent) : QWidget(parent)
 	setWindowIcon(QPixmap(table_xpm));
 }
 //-----------------------------------------------------------------------------
-DatPanel::~DatPanel()	{	if(var)	var->o = 0;	}
+DatPanel::~DatPanel()	{	if(var && var->o==this)	var->o = 0;	}
 //-----------------------------------------------------------------------------
 void DatPanel::refresh()
 {

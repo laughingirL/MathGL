@@ -73,7 +73,7 @@ using mglDataA::Momentum;
 	mglDataC(long xx=1,long yy=1,long zz=1)	{	a=0;	Create(xx,yy,zz);	}
 	/// Delete the array
 	virtual ~mglDataC()	{	if(!link && a)	delete []a;	}
-	inline dual GetVal(long i, long j=0, long k=0)
+	inline dual GetVal(long i, long j=0, long k=0) const
 	{	return mgl_datac_get_value(this,i,j,k);}
 	inline void SetVal(dual f, long i, long j=0, long k=0)
 	{	mgl_datac_set_value(this,f,i,j,k);	}

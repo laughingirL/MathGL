@@ -54,7 +54,7 @@ public slots:
 	void parseCmd(const QString &txt);
 
 signals:
-	void result(const QString &txt);
+	void result(const QString &txt, bool replace);
 
 private:
 	QTextBrowser *help;
@@ -67,6 +67,7 @@ private:
 	OptionDialog *optDialog;
 	StyleDialog *stlDialog;
 	DataDialog *datDialog;
+	bool replace;	// flag to be used in result() signal
 
 	void fillList();
 };

@@ -37,8 +37,8 @@ struct MGL_EXPORT mglAxis
 	inline void AddLabel(const std::wstring &lbl, mreal v)
 	{	txt.push_back(mglText(lbl,v));	}
 
-	mreal dv,ds;		///< Actual step for ticks and subticks.
-	mreal d;			///< Step for axis ticks (if positive) or its number (if negative).
+	mreal dv,ds;	///< Actual step for ticks and subticks.
+	mreal d;		///< Step for axis ticks (if positive) or its number (if negative).
 	int ns;			///< Number of axis subticks.
 	std::wstring t;	///< Tick template (set "" to use default one ("%.2g" in simplest case))
 	std::wstring fact;	///< Factor which should be placed after number (like L"\pi")
@@ -48,7 +48,7 @@ struct MGL_EXPORT mglAxis
 	mreal v0;		///< Center of axis cross section
 	mreal v1;		///< Minimal axis range.
 	mreal v2;		///< Maximal axis range.
-	mreal o;			///< Point of starting ticks numbering (if NAN then Org is used).
+	mreal o;		///< Point of starting ticks numbering (if NAN then Org is used).
 	int f;			///< Flag 0x1 - time, 0x2 - manual, 0x4 - fixed dv
 	std::vector<mglText> txt;	///< Axis labels
 	char ch;		///< Character of axis (like 'x','y','z','c')

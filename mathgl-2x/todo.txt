@@ -34,7 +34,9 @@
 14. Extra markers for '&' and '&#' signs ?!?
 15. Read JPEG files for Background() and mglData::Import()
 16. Adjust format for printed numbers (i.e. write function which will produce shortest text) + flag of fixed format + flag of TeX-notation
-19. create PWT fonts ???
+17. Check adjust in FLTK, Qt -- why don't redraw existed data (if func=NULL)
+19. Move constructor for mglData* ???
+20. Check again about const modifier
 
 YY. Optimize code (especially Quality=0 ?!?)
 ZZ. Update *.i for new functions {before release!!!}
@@ -80,8 +82,6 @@ C. Translate to Russian everything
 
 01. Show plot at creation stage (if option is enabled -- can be long process!!!) + auto axis range or [-1,1] by default
 
-02. Double click -> setup dialog (optionally -- after QTreeWidgetItem)
-
 03. Dialog for InPlot(s):
 {SubPlot,MultiPlot}	-- enable rotate,aspect,title
 {ColumnPlot}		-- enable rotate,several
@@ -111,6 +111,8 @@ Image with gray alternatives and black choice
 comment (not sure)	-- comment.xpm
 group of several	-- package-x-generic.png
 hidden				-- none.xpm ???
+unknown				-- help-faq.png ???
+empty line			-- mark_n.xpm
 
 Buttons: new,load,save // newcmd,hide,annotation,collapse on/off,setup // calc. Click on item cause change of line number in editor.
 
@@ -129,6 +131,31 @@ Buttons: new,load,save // newcmd,hide,annotation,collapse on/off,setup // calc. 
 13. Manual rotate (i.e. change rotate arguments) by spinboxes ??? or sync View and Rotate
 
 15. Hex colors, hex masks, hex dashing into dialog of styles
+
+16. Copy style from existed command ???
+17. Option to redraw picture after adding new command
+
+
+что хочу
+
+1. добавление графиков, осей (+настройка+box -- сразу после subplot), примитивов, массивов, файлов щелчком мыши --> спец кнопки ?!?
+2. добавление subplot+rotate+aspect мышкой (как группу команд) + автоматическое перемещение в него выделенного
+3. перемещение графиков вверх/вниз между subplot 
+5. скрытие выделенного графика/группы 
+6. удаление выделенного графика/группы
+7. копирование/вставка выделенного ??? м.б. в "виртуальный subplot ??? либо предупреждение о дублировании
+8. показ границ subplot-ов ('box') + переход на активный
+9. показать список скрытых + набор кнопок для создания графиков
+
+a. при изменении данных предлагать сохранение в HDF5 + запись изменений во внутренний скрипт. HDF5 как формат по умолчанию???
+b. каждое изменение в ячейке как 'put dat val i j k' + команда вставить как 'list'
+c. после сохранения сбрасывать скрипт изменений данных
+d. при закрытии окна данных спрашивать о скрипте изменений
+
+A. мысли о frame??? для группы графиков -- не "удалять" их, а запихивать в отдельный кадр -- вопрос что с анимацией???
+B. как делать анимацию (кадры) для мышиной версии ... список кадров, кнопки добавить в кадры + вставить из кадра
+
+?. группировка графиков + разгруппировка графиков с автоматической перерисовкой ???
 
 ============= UNSURE ===========
 

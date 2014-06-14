@@ -26,10 +26,12 @@
 * Use spline instead of linear interpolation in functions Flow() and Pipe().
 * Make function mgl_get_curvs() to be exported. This function is used internally to connect line segments to a set of curves (in particular, for contour lines).
 * Add calligraphic TeX symbols, like \calB, \calE, \calF, \calH, \calI, \calL, \calM, \calR, \ell, \scrg, \scro
+* Improve colorbar labels drawing at SetRotatedText(false)
 
 * Rearrange tool buttons in UDAV
 * Add new primitives (arc,polygon,rotated text) as mouse handled ones in UDAV
 * Add close button to data tabs in UDAV
+* Improve NewCommand dialog in UDAV. Now it replace the script command if user change arguments only.
 
 2.2.2.1 Released 19 March 2014
 

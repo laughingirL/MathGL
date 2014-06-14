@@ -65,7 +65,7 @@ using mglDataA::Momentum;
 	/// Delete the array
 	virtual ~mglData()	{	if(!link && a)	delete []a;	}
 
-	inline mreal GetVal(long i, long j=0, long k=0)
+	inline mreal GetVal(long i, long j=0, long k=0) const
 	{	return mgl_data_get_value(this,i,j,k);}
 	inline void SetVal(mreal f, long i, long j=0, long k=0)
 	{	mgl_data_set_value(this,f,i,j,k);	}

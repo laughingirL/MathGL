@@ -87,7 +87,7 @@ private slots:
 private:
 	int nx,ny,nz;	///< Data sizes
 	QString id;
-	QString opers;
+	QString opers;	///< MGL script of all operations done on data
 	QTableWidget *tab;	///< Table itself
 	int kz;			///< Current z-slice
 	mglDataA *var;	///< Variable with data
