@@ -49,10 +49,9 @@ void mglCanvas::PutDrawReg(mglDrawReg *d, const mglCanvas *gr)
 {
 	if(!gr)	return;
 	int dd = d->x2 - d->x1;
-	register long i,j;
-	for(j=d->y1;j<d->y2;j++)
+	for(long j=d->y1;j<d->y2;j++)
 	{
-		i = d->x1+Width*(Height-1-j);
+		register long i = d->x1+Width*(Height-1-j);
 		memcpy(OI+i,gr->OI+i,dd*sizeof(int));
 		memcpy(Z+3*i,gr->Z+3*i,3*dd*sizeof(float));
 		memcpy(C+12*i,gr->C+12*i,12*dd);
@@ -134,7 +133,7 @@ mglPoint mglCanvas::RestorePnt(mglPoint ps, bool norm) const
 	mreal c8 = B.b[8]*Bp.b[8]+B.b[5]*Bp.b[7]+B.b[2]*Bp.b[6];
 	if(norm)	cx=cy=cz=0;
 
-	if(ps.z==ps.z)	// try to take into account perspective if z-value is provided
+	if(mgl_isnum(ps.z))	// try to take into account perspective if z-value is provided
 	{
 		register float d = (1-Bp.pf)/(1-Bp.pf*ps.z/Depth);
 		ps.x = Width/2 + (ps.x-Width/2)/d;
@@ -143,7 +142,7 @@ mglPoint mglCanvas::RestorePnt(mglPoint ps, bool norm) const
 	mreal xx = ps.x-cx, yy = ps.y-cy, zz = ps.z-cz;
 	mreal d1=c0*c4-c1*c3, d2=c1*c5-c2*c4, d3=c0*c5-c2*c3;
 
-	if(zz==zz)	// try to use z-values
+	if(mgl_isnum(zz))	// try to use z-values
 	{
 		// put inverse matrix here: [x,y,z]=B^(-1)[xx,yy,zz]
 		mreal det = (-c0*c4*c8+c1*c3*c8+c0*c5*c7-c2*c3*c7-c1*c5*c6+c2*c4*c6)/s3;
@@ -321,14 +320,17 @@ void mglStartThread(void (mglCanvas::*func)(long i, long n, const void *p), mglC
 //-----------------------------------------------------------------------------
 void mglCanvas::pxl_combine(long id, long n, const void *)
 {
-	unsigned char c[4],*cc;
+	unsigned char c[4];
 #if !MGL_HAVE_PTHREAD
-#pragma omp parallel for private(c,cc)
+#pragma omp parallel for private(c)
 #endif
 	for(long i=id;i<n;i+=mglNumThr)
-	{	cc = C+12*i;		memcpy(c,GB+4*i,4);	// memcpy(c,BDef,4);
+	{
+		unsigned char *cc = C+12*i;
+		memcpy(c,GB+4*i,4);	// memcpy(c,BDef,4);
 		combine(c,cc+8);	combine(c,cc+4);
-		combine(c,cc);		memcpy(G4+4*i,c,4);	}
+		combine(c,cc);		memcpy(G4+4*i,c,4);
+	}
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::pxl_memcpy(long id, long n, const void *)
@@ -467,7 +469,7 @@ void mglCanvas::PreparePrim(int fast)
 			for(size_t i=0;i<n;i++)	PrmInd[i]=i;
 			qsort(PrmInd,n,sizeof(long),mgl_prm_cmp);
 			clr(MGL_FINISHED);
-			
+
 		}
 	}
 	if(fast>0)
@@ -1704,11 +1706,11 @@ void mglCanvas::mark_pix(long i, long j, const mglPnt &q, char type, mreal size,
 			}
 		case 'o':
 			{
-				register float pw=d->PenWidth, dpw=2;
+				register float pw=d->PenWidth;
 				register float xx = (i-q.x), yy = (j-q.y), v = hypot(xx,yy);
 				v = (v-ss)*(v-ss);
 				if(v>pw*pw)	return;
-				if(v>(pw-1)*(pw-1)/4)	cs[3] = mgl_sline(cs[3],dpw*(sqrt(v)+(1-pw)/2));
+				if(v>(pw-1)*(pw-1)/4)	cs[3] = mgl_sline(cs[3],2*(sqrt(v)+(1-pw)/2));
 				register float dz = Width>2 ? 1 : 1e-5*Width;		// provide additional height to be well visible on the surfaces
 				pnt_plot(i,j,q.z+dz,cs,d->ObjId);
 			}
@@ -1716,11 +1718,11 @@ void mglCanvas::mark_pix(long i, long j, const mglPnt &q, char type, mreal size,
 		case 'C':
 			pnt_pix(i,j,q,d);
 			{
-				register float pw=d->PenWidth, dpw=2;
+				register float pw=d->PenWidth;
 				register float xx = (i-q.x), yy = (j-q.y), v = hypot(xx,yy);
 				v = (v-ss)*(v-ss);
 				if(v>pw*pw)	return;
-				if(v>(pw-1)*(pw-1)/4)	cs[3] = mgl_sline(cs[3],dpw*(sqrt(v)+(1-pw)/2));
+				if(v>(pw-1)*(pw-1)/4)	cs[3] = mgl_sline(cs[3],2*(sqrt(v)+(1-pw)/2));
 				register float dz = Width>2 ? 1 : 1e-5*Width;		// provide additional height to be well visible on the surfaces
 				pnt_plot(i,j,q.z+dz,cs,d->ObjId);
 			}

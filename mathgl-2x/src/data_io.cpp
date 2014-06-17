@@ -66,24 +66,24 @@ void mglFromStr(HMDT d,char *buf,long NX,long NY,long NZ)	// TODO: add multithre
 	const std::string loc = setlocale(LC_NUMERIC, NULL);	setlocale(LC_NUMERIC, "C");
 	while(j<nb)
 	{
-		while(buf[j]<=' ' && j<nb)	j++;
+		while(j<nb && buf[j]<=' ')	j++;
 		while(buf[j]=='#')		// skip comment
 		{
 			if(i>0 || buf[j+1]!='#')	// this is columns id
-				while(!isn(buf[j]) && j<nb)	j++;
+				while(j<nb && !isn(buf[j]))	j++;
 			else
 			{
-				while(!isn(buf[j]) && j<nb)
+				while(j<nb && !isn(buf[j]))
 				{
 					if(buf[j]>='a' && buf[j]<='z')
 						d->id.push_back(buf[j]);
 					j++;
 				}
 			}
-			while(buf[j]<=' ' && j<nb)	j++;
+			while(j<nb && buf[j]<=' ')	j++;
 		}
 		char *s=buf+j;
-		while(buf[j]>' ' && buf[j]!=',' && buf[j]!=';' && j<nb)	j++;
+		while(j<nb && buf[j]>' ' && buf[j]!=',' && buf[j]!=';')	j++;
 		buf[j]=0;
 		d->a[i] = strstr(s,"NAN")?NAN:atof(s);
 		i++;	if(i>=NX*NY*NZ)	break;
@@ -269,30 +269,29 @@ void MGL_EXPORT mgl_data_save(HCDT d, const char *fname,long ns)
 {
 	FILE *fp = fopen(fname,"w");
 	if(!fp)	return;
-	register long i,j,k;
 	long nx=d->GetNx(), ny=d->GetNy(), nz=d->GetNz();
 	const std::string loc = setlocale(LC_NUMERIC, NULL);	setlocale(LC_NUMERIC, "C");
-	if(ns<0 || (ns>=nz && nz>1))	for(k=0;k<nz;k++)
+	if(ns<0 || (ns>=nz && nz>1))	for(long k=0;k<nz;k++)
 	{	// save whole data
 		const mglData *dr = dynamic_cast<const mglData *>(d);
 		if(dr && !dr->id.empty())	fprintf(fp,"## %s\n",dr->id.c_str());
 		const mglDataC *dc = dynamic_cast<const mglDataC *>(d);
 		if(dc && !dc->id.empty())	fprintf(fp,"## %s\n",dc->id.c_str());
-		for(i=0;i<ny;i++)
+		for(long i=0;i<ny;i++)
 		{
-			for(j=0;j<nx-1;j++)	fprintf(fp,"%g\t",d->v(j,i,k));
+			for(long j=0;j<nx-1;j++)	fprintf(fp,"%g\t",d->v(j,i,k));
 			fprintf(fp,"%g\n",d->v(nx-1,i,k));
 		}
 		fprintf(fp,"\n");
 	}
 	else
 	{	// save selected slice
-		if(nz>1)	for(i=0;i<ny;i++)
+		if(nz>1)	for(long i=0;i<ny;i++)
 		{
-			for(j=0;j<nx-1;j++)	fprintf(fp,"%g\t",d->v(j,i,ns));
+			for(long j=0;j<nx-1;j++)	fprintf(fp,"%g\t",d->v(j,i,ns));
 			fprintf(fp,"%g\n",d->v(nx-1,i,ns));
 		}
-		else if(ns<ny)	for(j=0;j<nx;j++)
+		else if(ns<ny)	for(long j=0;j<nx;j++)
 			fprintf(fp,"%g\t",d->v(j,ns));
 	}
 	setlocale(LC_NUMERIC, loc.c_str());
@@ -415,24 +414,25 @@ int MGL_EXPORT mgl_data_read_mat(HMDT d, const char *fname, long dim)
 	char *buf = mgl_read_gz(fp);
 	long nb = strlen(buf);	gzclose(fp);
 
-	register long j=0,i,l;
+	long j=0;
 	while(j<nb)
 	{
 		if(buf[j]=='#')	while(!isn(buf[j]))	j++;	// skip comment
-		while(buf[j]<=' ' && j<nb)	j++;
+		while(j<nb && buf[j]<=' ')	j++;
 		break;
 	}
 	if(dim==1)
 	{
 		sscanf(buf+j,"%ld",&nx);
-		while(buf[j]!='\n' && j<nb)	j++;	j++;
+		while(j<nb && buf[j]!='\n')	j++;	j++;
 //		while(buf[j]>' ')	j++;
 	}
 	else if(dim==2)
 	{
 		sscanf(buf+j,"%ld%ld",&nx,&ny);
-		while(buf[j]!='\n' && j<nb)	j++;	j++;
-		char *b=buf+j, ch;
+		while(j<nb && buf[j]!='\n')	j++;	j++;
+		char *b=buf+j;
+		register long i,l;
 		for(i=l=0;b[i];i++)
 		{
 			while(b[i]=='#')	{	while(!isn(b[i]) && b[i])	i++;	}
@@ -445,7 +445,7 @@ int MGL_EXPORT mgl_data_read_mat(HMDT d, const char *fname, long dim)
 			for(i=l=0;b[i] && !isn(b[i]);i++)	// determine nx
 			{
 				while(b[i]=='#')	{	while(!isn(b[i]) && b[i])	i++;	}
-				ch = b[i];
+				char ch = b[i];
 				if(ch>' ' && !first)	first=true;
 				if(first && (ch==' ' || ch=='\t' || ch==',' || ch==';') && b[i+1]>' ') nx++;
 			}
@@ -454,7 +454,7 @@ int MGL_EXPORT mgl_data_read_mat(HMDT d, const char *fname, long dim)
 	else if(dim==3)
 	{
 		sscanf(buf+j,"%ld%ld%ld",&nx,&ny,&nz);
-		while(buf[j]!='\n' && j<nb)	j++;	j++;
+		while(j<nb && buf[j]!='\n')	j++;	j++;
 /*		while(buf[j]>' ' && j<nb)	j++;
 		while(buf[j]<=' ' && j<nb)	j++;
 		while(buf[j]>' ' && j<nb)	j++;

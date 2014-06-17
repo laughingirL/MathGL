@@ -1470,7 +1470,7 @@ void MGL_EXPORT mgl_data_delete_(uintptr_t *d, const char *dir, int *at, int *nu
 mreal MGL_EXPORT mgl_spline5(mreal y[6], long n, mreal dx, mreal &dy, mreal &d2y)
 {
 	mreal a1[6], a2[6], f0,d0,t0,f1,d1,t1, b[6];
-	
+
 	a1[0] = (12*y[5]-75*y[4]+200*y[3]-300*y[2]+300*y[1]-137*y[0])/60;
 	a1[1] = -(3*y[5]-20*y[4]+60*y[3]-120*y[2]+65*y[1]+12*y[0])/60;
 	a1[2] = (2*y[5]-15*y[4]+60*y[3]-20*y[2]-30*y[1]+3*y[0])/60;
@@ -1503,7 +1503,7 @@ mreal MGL_EXPORT mgl_spline3(mreal y[4], long n, mreal dx, mreal &dy, mreal &d2y
 	d[1] = (y[2]-y[0])/2;
 	d[2] = (y[3]-y[1])/2;
 	d[3] = y[3]-y[2];	//-(y[3]-4*y[2]+3*y[1])/2;
-	
+
 	t0 = (y[2]-2*y[1]+y[0])/2;
 	t1 = (y[3]-2*y[2]+y[1])/2;
 	if(n<1)	t1=t0;
@@ -1528,7 +1528,7 @@ mreal MGL_EXPORT mgl_splineS(mreal y[4], long n, mreal dx, mreal &dy, mreal &d2y
 	d[1] = (y[2]-y[0])/2;
 	d[2] = (y[3]-y[1])/2;
 	d[3] = y[3]-y[2];	//-(y[3]-4*y[2]+3*y[1])/2;
-	
+
 	t0 = (y[2]-2*y[1]+y[0])/2;
 	t1 = (y[3]-2*y[2]+y[1])/2;
 	if(n<1)	t1=t0;
@@ -1574,12 +1574,11 @@ mreal MGL_EXPORT mgl_splineS(mreal y[4], long n, mreal dx, mreal &dy, mreal &d2y
 #define omod(x,y)	(y)*((x)>0?int((x)/(y)+0.5):int((x)/(y)-0.5))
 void MGL_NO_EXPORT mgl_omod(mreal *a, mreal da, int nx, int n)
 {
-	register long i,ii;
 	bool qq=true;
 	register mreal q;
-	for(i=1;i<nx;i++)
+	for(long i=1;i<nx;i++)
 	{
-		ii = i*n;
+		register long ii = i*n;
 		if(mgl_isnan(a[ii-n]))	{	qq=true;	continue;	}
 		if(qq)
 		{
@@ -2102,10 +2101,10 @@ mglPoint MGL_NO_EXPORT mgl_index_2(mreal x, mreal y, const mglData *xdat, const 
 		{
 			register mreal dx0=x-x11, dx1=x21-x11, dx2=x12-x11, dx3=x22+x11-x12-x21;
 			register mreal dy0=y-y11, dy1=y21-y11, dy2=y12-y11, dy3=y22+y11-y12-y21;
-			register mreal t1 = dx0*dx0*dy3*dy3 + 2*dx0*dx1*dy2*dy3 + 2*dx0*dx2*dy1*dy3 - 
-								2*dx0*dx3*dy0*dy3 - 4*dx1*dx2*dy0*dy3 + dx1*dx1*dy2*dy2 - 
-								4*dx0*dx3*dy1*dy2 - 2*dx1*dx2*dy1*dy2 + 2*dx1*dx3*dy0*dy2 + 
-								dx2*dx2*dy1*dy1 + 2*dx2*dx3*dy0*dy1 + dx3*dx3*dy0*dy0, 
+			register mreal t1 = dx0*dx0*dy3*dy3 + 2*dx0*dx1*dy2*dy3 + 2*dx0*dx2*dy1*dy3 -
+								2*dx0*dx3*dy0*dy3 - 4*dx1*dx2*dy0*dy3 + dx1*dx1*dy2*dy2 -
+								4*dx0*dx3*dy1*dy2 - 2*dx1*dx2*dy1*dy2 + 2*dx1*dx3*dy0*dy2 +
+								dx2*dx2*dy1*dy1 + 2*dx2*dx3*dy0*dy1 + dx3*dx3*dy0*dy0,
 							t2 = dx2*dy1+dx3*dy0-dx0*dy3-dx1*dy2, t3 = 2*(dx2*dy3-dx3*dy2);
 			if(t1<0 || t3==0)	{	count=10;	continue;	}
 			t1 = sqrt(t1);	v = (t2-t1)/t3;

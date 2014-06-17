@@ -255,11 +255,9 @@ int MGL_NO_EXPORT mgl_gif_save(const char *fname, int w, int h, unsigned char **
 	// define colormap
 	GifColorType col[256];
 	memset(col,0,256*sizeof(GifColorType));
-	register long m;
-	register int i,j,k,ii;
-	for(i=0;i<6;i++)	for(j=0;j<6;j++)	for(k=0;k<6;k++)
+	for(int i=0;i<6;i++)	for(int j=0;j<6;j++)	for(int k=0;k<6;k++)
 	{
-		m = i+6*(j+6*k);		// part 1
+		long m = i+6*(j+6*k);		// part 1
 		col[m].Red = 51*i;
 		col[m].Green=51*j;
 		col[m].Blue =51*k;
@@ -277,11 +275,11 @@ int MGL_NO_EXPORT mgl_gif_save(const char *fname, int w, int h, unsigned char **
 	// write frame
 	EGifPutImageDesc(fg, 0, 0, w, h, 0, 0);
 	GifPixelType *line = new GifPixelType[w*h];
-	for(m=0;m<w*h;m++)
+	for(long m=0;m<w*h;m++)
 	{
-		ii = 3*(m%w);	k = m/w;
-		i = (l[k][ii]+25)/51;
-		j = (l[k][ii+1]+25)/51;
+		long ii = 3*(m%w), k = m/w;
+		int i = (l[k][ii]+25)/51;
+		int j = (l[k][ii+1]+25)/51;
 		k = (l[k][ii+2]+25)/51;
 		line[m] = i+6*(j+6*k);
 	}
@@ -387,13 +385,11 @@ void mglCanvas::EndFrame()
 	if(!l)	return;
 	EGifPutImageDesc(gif, 0, 0, width, height, 0, 0);
 	GifPixelType *line = new GifPixelType[n];
-	register long m;
-	register int i,j,k,ii;
-	for(m=0;m<n;m++)
+	for(long m=0;m<n;m++)
 	{
-		ii = 3*(m%width);	k = m/width;
-		i = (l[k][ii]+25)/51;
-		j = (l[k][ii+1]+25)/51;
+		long ii = 3*(m%width), k = m/width;
+		int i = (l[k][ii]+25)/51;
+		int j = (l[k][ii+1]+25)/51;
 		k = (l[k][ii+2]+25)/51;
 		line[m] = i+6*(j+6*k);
 	}

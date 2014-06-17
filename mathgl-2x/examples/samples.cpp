@@ -1239,10 +1239,9 @@ void smgl_error(mglGraph *gr)
 {
 	mglData y;	mgls_prepare1d(&y);
 	mglData x0(10), y0(10), ex0(10), ey0(10);
-	double x;
 	for(int i=0;i<10;i++)
 	{
-		x = i/9.;
+		double x = i/9.;
 		x0.a[i] = 2*x-1 + 0.1*mgl_rnd()-0.05;
 		y0.a[i] = 0.7*sin(2*M_PI*x)+0.5*cos(3*M_PI*x)+0.2*sin(M_PI*x)+0.2*mgl_rnd()-0.1;
 		ey0.a[i]=0.2;	ex0.a[i]=0.1;

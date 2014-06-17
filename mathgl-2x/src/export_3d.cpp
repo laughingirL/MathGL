@@ -31,15 +31,13 @@ std::string MGL_NO_EXPORT mgl_sprintf(const char *str, ...);
 //-----------------------------------------------------------------------------
 void mglTexture::GetRGBA(unsigned char *f) const
 {
-	register long i,j,i0;
-	mglColor c1,c2,c;
-	for(i=255;i>=0;i--)
+	for(long i=255;i>=0;i--)
 	{
-		c1 = col[2*i];	c2 = col[2*i+1];
-		for(j=0;j<256;j++)
+		mglColor c1 = col[2*i], c2 = col[2*i+1];
+		for(long j=0;j<256;j++)
 		{
-			i0 = 4*(j+256*i);
-			c = c1 + (c2-c1)*(j/255.);
+			register long i0 = 4*(j+256*i);
+			mglColor c = c1 + (c2-c1)*(j/255.);
 			f[i0]   = int(255*c.r);
 			f[i0+1] = int(255*c.g);
 			f[i0+2] = int(255*c.b);
@@ -54,7 +52,7 @@ void MGL_EXPORT mgl_obj_glyph_old(HMGL gr, const mglPrim &q, const mglPnt &p, FI
 	mreal c=q.s*cos(q.w*M_PI/180), s=-q.s*sin(q.w*M_PI/180);
 	if(mgl_isnan(q.s))	c=s=0;
 	double b[4] = {c,-s, s,c};
-	long i=q.n1+1, ik,il=0;
+	long i=q.n1+1;
 
 	const mglGlyph &g = gr->GetGlf(q.n4);
 	const mreal dd = 0.004;
@@ -81,7 +79,7 @@ void MGL_EXPORT mgl_obj_glyph_old(HMGL gr, const mglPrim &q, const mglPnt &p, FI
 	{
 		if(!(q.n3&4))	// glyph_fill(p,f,g, d);
 		{
-			for(ik=0;ik<g.nt;ik++)
+			for(long ik=0;ik<g.nt;ik++)
 			{
 				x = dx+f*g.trig[6*ik];		y = dy+f*g.trig[6*ik+1];
 				fprintf(fp,"v %g %g %g\n",p.x+b[0]*x+b[1]*y,p.y+b[2]*x+b[3]*y,p.z);
@@ -94,8 +92,9 @@ void MGL_EXPORT mgl_obj_glyph_old(HMGL gr, const mglPrim &q, const mglPnt &p, FI
 		}
 		else	// glyph_wire(p,f,g, d);
 		{
-			for(ik=0;ik<g.nl;ik++)
+			for(long ik=0;ik<g.nl;ik++)
 			{
+				long il=0;
 				x = g.line[2*ik];	y = g.line[2*ik+1];
 				if(x==0x3fff && y==0x3fff)	// line breakthrough
 				{	il = ik+1;	continue;	}
@@ -123,8 +122,7 @@ void MGL_EXPORT mgl_obj_glyph_old(HMGL gr, const mglPrim &q, const mglPnt &p, FI
 void MGL_EXPORT mgl_obj_prim_old(HMGL gr, const mglPrim &q, const mglPnt &p, FILE *fp, mreal size)
 {
 	char type = q.n4;	mreal ss=size;
-	register long i=q.n1+1,j;
-	register long n1=q.n1+1,n2=q.n2+1,n3=q.n3+1,n4=q.n4+1;
+	long i=q.n1+1, n1=q.n1+1,n2=q.n2+1,n3=q.n3+1,n4=q.n4+1;
 	switch(q.type)
 	{
 	case 0:
@@ -262,16 +260,16 @@ void MGL_EXPORT mgl_obj_prim_old(HMGL gr, const mglPrim &q, const mglPnt &p, FIL
 			fprintf(fp,"l -2/%ld -1/%ld\n", i,i);
 			fprintf(fp,"l -1/%ld -3/%ld\n", i,i);	break;
 		case 'O':
-			for(j=0;j<=20;j++)
+			for(long j=0;j<=20;j++)
 				fprintf(fp,"v %g %g %g\n",p.x+ss*mgl_cos[(j*36)%360],p.y+ss*mgl_cos[(270+j*36)%360],p.z);
-			for(j=0;j<20;j++)
+			for(long j=0;j<20;j++)
 				fprintf(fp,"f %ld/%ld %ld/%ld %ld/%ld\n", j-21,i, j-20,i, i,i);
 			break;
 		case 'C':	fprintf(fp,"p %ld\n", i);
 		case 'o':
-			for(j=0;j<=20;j++)
+			for(long j=0;j<=20;j++)
 				fprintf(fp,"v %g %g %g\n",p.x+ss*mgl_cos[(j*36)%360],p.y+ss*mgl_cos[(270+j*36)%360],p.z);
-			for(j=0;j<20;j++)
+			for(long j=0;j<20;j++)
 				fprintf(fp,"l %ld/%ld %ld/%ld\n", j-21,i, j-20,i);
 			break;
 		}
@@ -287,15 +285,15 @@ void MGL_EXPORT mgl_obj_prim_old(HMGL gr, const mglPrim &q, const mglPnt &p, FIL
 void MGL_EXPORT mgl_write_obj_old(HMGL gr, const char *fname,const char *descr, int use_png)
 {
 	if(gr->GetPrmNum()==0)	return;	// nothing to do
-	long m1=0,m2=0,m,j;
+	long m1=0,m2=0;
 	for(size_t i=0;i<gr->Grp.size();i++)	// prepare array of indirect indexing
-	{	m = gr->Grp[i].Id;	if(m<m1) m1=m;	if(m>m2) m2=m;	}
+	{	register long m = gr->Grp[i].Id;	if(m<m1) m1=m;	if(m>m2) m2=m;	}
 	long *ng = new long[m2-m1+1];
 	for(size_t i=0;i<gr->Grp.size();i++)	ng[gr->Grp[i].Id-m1] = i;
 	for(long i=0;i<gr->GetPrmNum();i++)	// collect data for groups
 	// it is rather expensive (extra 4b per primitive) but need for export to 3D
 	{
-		m = gr->GetPrm(i,false).id-m1;
+		register long m = gr->GetPrm(i,false).id-m1;
 		if(m>=0 && m<m2-m1+1)	gr->Grp[ng[m]].p.push_back(i);
 	}
 	delete []ng;
@@ -345,7 +343,7 @@ void MGL_EXPORT mgl_write_obj_old(HMGL gr, const char *fname,const char *descr, 
 	fprintf(fp,"map_Ka %s\nmap_Kd %s\nmap_Ks %s\n",tname,tname,tname);
 	fclose(fp);
 	// prepare texture file (TGA or PNG)
-	j=gr->GetTxtNum();
+	long j=gr->GetTxtNum();
 	unsigned char *buf = new unsigned char[4*256*256*j];
 	unsigned char **pbuf= (unsigned char **)malloc(256*j*sizeof(unsigned char *));
 	for(long i=0;i<256*j;i++)	pbuf[i] = buf+4*256*i;
@@ -367,9 +365,8 @@ void MGL_EXPORT mgl_write_stl(HMGL gr, const char *fname,const char *descr)
 	if(!fp)		{	gr->SetWarn(mglWarnOpen,fname);	return;	}
 	const std::string loc = setlocale(LC_NUMERIC, NULL);	setlocale(LC_NUMERIC, "C");
 	fprintf(fp,"solid %s\n",(descr && *descr)?descr:"mathgl");
-	register long i;
 	mglPnt pp;
-	for(i=0;i<gr->GetPrmNum();i++)
+	for(long i=0;i<gr->GetPrmNum();i++)
 	{
 		const mglPrim &q=gr->GetPrm(i,false);
 		if(q.type==2)	//	triangles
@@ -417,13 +414,12 @@ void MGL_EXPORT mgl_write_xyz(HMGL gr, const char *fname,const char *descr)
 {
 	if(gr->GetPrmNum()==0)	return;	// nothing to do
 
-	register long i;
 	FILE *fp=fopen(fname,"wt"), *ff;	// vertices definition
 	if(!fp)		{	gr->SetWarn(mglWarnOpen,fname);	return;	}
 	const std::string loc = setlocale(LC_NUMERIC, NULL);	setlocale(LC_NUMERIC, "C");
 	fprintf(fp,"# Created by MathGL library\n# Title: %s\n",(descr && *descr) ? descr : fname);
 	fprintf(fp,"# List of Vertices, with (x,y,z) coordinates.\n");
-	for(i=0;i<gr->GetPntNum();i++)
+	for(long i=0;i<gr->GetPntNum();i++)
 	{
 		const mglPnt &pp = gr->GetPnt(i);
 		fprintf(fp,"%g %g %g\n",pp.x,pp.y,pp.z);
@@ -439,7 +435,7 @@ void MGL_EXPORT mgl_write_xyz(HMGL gr, const char *fname,const char *descr)
 	fprintf(fp,"# Indices of vertices to connect for lines\n");
 	fprintf(ff,"# Created by MathGL library\n# Title: %s\n",(descr && *descr) ? descr : fname);
 	fprintf(ff,"# Indices of vertices to connect for faces\n");
-	for(i=0;i<gr->GetPrmNum();i++)
+	for(long i=0;i<gr->GetPrmNum();i++)
 	{
 		const mglPrim &q=gr->GetPrm(i,false);
 		if(q.type==1)	fprintf(fp,"%ld %ld\n",q.n1+1,q.n2+1);
@@ -456,8 +452,8 @@ void MGL_EXPORT mgl_write_xyz_(uintptr_t *gr, const char *fname,const char *desc
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_write_off(HMGL gr, const char *fname,const char *descr, int colored)
 {
-	register long i,nf=0;
-	for(i=0;i<gr->GetPrmNum();i++)	// find number of faces
+	long nf=0;
+	for(long i=0;i<gr->GetPrmNum();i++)	// find number of faces
 	{
 		const mglPrim &q=gr->GetPrm(i,false);
 		if(q.type==2 || q.type==3)	nf++;
@@ -474,14 +470,14 @@ void MGL_EXPORT mgl_write_off(HMGL gr, const char *fname,const char *descr, int 
 		fprintf(fp,"OFF\n# Created by MathGL library\n# Title: %s\n",(descr && *descr) ? descr : fname);
 	fprintf(fp,"# List of Vertices, with (x,y,z,r,g,b,a) coordinates.\n");
 	fprintf(fp,"%ld %ld 0\n",gr->GetPntNum(), nf);
-	for(i=0;i<gr->GetPntNum();i++)
+	for(long i=0;i<gr->GetPntNum();i++)
 	{
 		const mglPnt &pp = gr->GetPnt(i);
 		if(colored)
 			fprintf(fp,"%g %g %g %g %g %g %g\n", pp.x, pp.y, pp.z, pp.r, pp.g, pp.b, pp.a);
 		else	fprintf(fp,"%g %g %g\n", pp.x, pp.y, pp.z);
 	}
-	for(i=0;i<gr->GetPrmNum();i++)
+	for(long i=0;i<gr->GetPrmNum();i++)
 	{
 		const mglPrim &q=gr->GetPrm(i,false);
 		const mglPnt &p1=gr->GetPnt(q.n1);
@@ -544,7 +540,7 @@ std::string mglCanvas::GetJSON()
 	ClearUnused();	// clear unused points
 	PreparePrim(3);
 	std::string res, buf;
-	long i,ll=0,l=(long)Pnt.size();
+	long ll=0,l=(long)Pnt.size();
 	long factor = Width>1?10:10000;
 	const std::string loc = setlocale(LC_NUMERIC, NULL);	setlocale(LC_NUMERIC, "C");
 	res = res + mgl_sprintf("{\n\"width\":%d,\t\"height\":%d,\t\"depth\":%d,\t\"plotid\":\"%s\",\t\"npnts\":%ld,\t\"pnts\":[\n",
@@ -558,11 +554,11 @@ std::string mglCanvas::GetJSON()
 		ll += tmp[i].length();
 	}
 	res.reserve(ll);
-	for(i=0;i<l;i++)	res = res + tmp[i];
+	for(long i=0;i<l;i++)	res = res + tmp[i];
 	delete []tmp;
 
-	l = (long)Prm.size();
-	for(ll=i=0;i<l;i++)
+	l = (long)Prm.size();	ll = 0;
+	for(long i=0;i<l;i++)
 	{	mglRGBA c;	c.c = GetPrmCol(i,false);	if(c.r[3])	ll++;	}
 
 	res = res + mgl_sprintf("],\t\"nprim\":%ld,\t\"prim\":[\n",ll+1);
@@ -600,7 +596,7 @@ std::string mglCanvas::GetJSON()
 
 	l = (long)xy.size();
 	res = res + mgl_sprintf("],\t\"ncoor\":%lu,\t\"coor\":[\n",(unsigned long)l);
-	for(i=0;i<l;i++)
+	for(long i=0;i<l;i++)
 	{
 		const mglPoint &p=xy[i];
 		const mglPnt &q=Pnt[int(0.5+p.z)];
@@ -613,7 +609,7 @@ std::string mglCanvas::GetJSON()
 
 	l = (long)Glf.size();
 	res = res + mgl_sprintf("],\t\"nglfs\":%lu,\t\"glfs\":[\n",(unsigned long)l);
-	for(i=0;i<l;i++)
+	for(long i=0;i<l;i++)
 	{
 		const mglGlyph &g=Glf[i];
 		res = res + mgl_sprintf("[%ld,\n\t[", g.nl);
@@ -700,7 +696,7 @@ bool mglCanvas::ImportMGLD(const char *fname, bool add)
 	char *buf=new char[512];
 	if(!fgets(buf,512,fp))	*buf=0;
 	if(strncmp(buf,"MGLD",4))	{	delete []buf;	fclose(fp);	return true;	}
-	unsigned long i,n=0,m=0,l=0,k=0, npnt=0, nglf=0;
+	unsigned long n=0,m=0,l=0,k=0, npnt=0, nglf=0;
 	int w=0,h=0,d;
 	sscanf(buf+5,"%lu%lu%lu%lu%d%d",&n,&m,&l,&k,&w,&h);
 	if(w<=0 || h<=0)	{	w=Width;	h=Height;	}
@@ -719,7 +715,7 @@ bool mglCanvas::ImportMGLD(const char *fname, bool add)
 	{
 		Pnt.reserve(n);	Prm.reserve(m);	Txt.reserve(l);	Glf.reserve(k);
 		mglPnt p;
-		for(i=0;i<n;i++)
+		for(long i=0;i<n;i++)
 		{
 			do {	if(!fgets(buf,512,fp))	*buf=0;	mgl_strtrim(buf);	} while(*buf=='#');
 			sscanf(buf,"%g%g%g%g%g%g%g%g%g%g%g%g%g", &p.xx, &p.yy, &p.zz, &p.c, &p.t, &p.ta, &p.u, &p.v, &p.w, &p.r, &p.g, &p.b, &p.a);
@@ -728,7 +724,7 @@ bool mglCanvas::ImportMGLD(const char *fname, bool add)
 			Pnt.push_back(p);
 		}
 		mglPrim q;
-		for(i=0;i<m;i++)
+		for(long i=0;i<m;i++)
 		{
 			do {	if(!fgets(buf,512,fp))	*buf=0;	mgl_strtrim(buf);	} while(*buf=='#');
 			sscanf(buf,"%hd%ld%ld%ld%ld%d%g%g%g", &q.type, &q.n1, &q.n2, &q.n3, &q.n4, &q.id, &q.s, &q.w, &q.p);
@@ -741,11 +737,11 @@ bool mglCanvas::ImportMGLD(const char *fname, bool add)
 			if(q.type<5)	Prm.push_back(q);
 		}
 		mglTexture t;
-		for(i=0;i<l;i++)
+		for(long i=0;i<l;i++)
 		{
 			int sm=0;	float a;
 			do {	if(!fgets(buf,512,fp))	*buf=0;	mgl_strtrim(buf);	} while(*buf=='#');
-			register size_t j,k=0;
+			size_t j,k=0;
 			for(j=0;buf[j];j++)
 			{
 				if(buf[j]<=' ' && k)	{	sm++;	k=0;	}
@@ -757,14 +753,13 @@ bool mglCanvas::ImportMGLD(const char *fname, bool add)
 			Txt.push_back(t);
 		}
 		mglGlyph g;
-		for(i=0;i<k;i++)
+		for(long i=0;i<k;i++)
 		{
 			do {	if(!fgets(buf,512,fp))	*buf=0;	mgl_strtrim(buf);	} while(*buf=='#' || *buf==0);
 			long nt=0,nl=0;
 			sscanf(buf,"%ld%ld", &nt, &nl);	g.Create(nt,nl);
-			register long j;
-			for(j=0;j<6*nt;j++)	fscanf(fp,"%hd",g.trig+j);
-			for(j=0;j<2*nl;j++)	fscanf(fp,"%hd",g.line+j);
+			for(long j=0;j<6*nt;j++)	fscanf(fp,"%hd",g.trig+j);
+			for(long j=0;j<2*nl;j++)	fscanf(fp,"%hd",g.line+j);
 			Glf.push_back(g);
 		}
 	}

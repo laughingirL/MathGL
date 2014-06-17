@@ -30,8 +30,8 @@ MGL_NO_EXPORT inline struct tm *mgl_localtime (const time_t *clock, tm *result, 
 //-----------------------------------------------------------------------------
 long MGL_EXPORT_PURE mgl_have_color(const char *stl)
 {
-	register long i,j=0;
-	if(stl)	for(i=0;stl[i];i++)
+	long j=0;
+	if(stl)	for(long i=0;stl[i];i++)
 	{
 		if(strchr(MGL_COLORS,stl[i]))	j++;
 		if(stl[i]=='{' && stl[i+1]=='x')	j++;
@@ -250,7 +250,6 @@ void mglCanvas::SetTickTime(char dir, mreal d, const char *t)
 	if(aa.ch=='y')	aa.v0 = aa.org.y;
 	if(aa.ch=='z')	aa.v0 = aa.org.z;
 
-	wchar_t buf[64];
 	mreal v, v0 = mgl_isnan(aa.o) ? aa.v0 : aa.o, v1;
 	if(aa.v2>aa.v1)
 	{	v1 = aa.v2;		v0 = v0 - aa.dv*floor((v0-aa.v1)/aa.dv+1e-3);	}
@@ -258,6 +257,7 @@ void mglCanvas::SetTickTime(char dir, mreal d, const char *t)
 	{	v1 = aa.v1;		v0 = v0 - aa.dv*floor((v0-aa.v2)/aa.dv+1e-3);	}
 	if(v0+aa.dv!=v0 && v1+aa.dv!=v1)	for(v=v0;v<=v1;v+=aa.dv)
 	{
+		wchar_t buf[64];
 		tt = v;	tm tp;		mgl_localtime(&tt, &tp, get(MGL_USE_GMTIME));
 		wcsftime(buf,64,aa.t.c_str(),&tp);	aa.AddLabel(buf,v);
 	}
@@ -279,7 +279,7 @@ void mglCanvas::AdjustTicks(const char *dir, bool force)
 //-----------------------------------------------------------------------------
 void mglCanvas::AdjustTicks(mglAxis &aa, bool ff)
 {
-	double d = fabs(aa.v2-aa.v1), n;
+	double d = fabs(aa.v2-aa.v1);
 	if(aa.f>0)	return;
 	if(ff && mgl_islog(aa.v1,aa.v2))
 	{	aa.dv = 0;	aa.ds=0;	}
@@ -289,7 +289,8 @@ void mglCanvas::AdjustTicks(mglAxis &aa, bool ff)
 	{	aa.dv = mgl_adj_val(d,&aa.ds);	aa.o=0;	}
 	else
 	{
-		d /= -aa.d;		n = floor(log10(d));
+		d /= -aa.d;
+		long n = floor(log10(d));
 		int k = int(d*pow(10.,-n)+0.5);
 		aa.dv = pow(10.,n)*k;
 		aa.o=0;	aa.ds = pow(10.,n);
@@ -365,7 +366,7 @@ void MGL_NO_EXPORT mgl_tick_text(mreal z, mreal z0, mreal d, std::wstring fmt, m
  		else if(str[0]==L'1')	wcscpy(str,fact.c_str());
  		else if(str[0]==L'-' && str[1]==L'1')	wcscpy(str+1,fact.c_str());
 	}
-	
+
 /*	mreal u = fabs(z)<d ? 0:z;
 	if((kind&1) && z>z0)	u = fabs(z-z0)<d ? 0:(z-z0);
 	if(kind==2 || (kind==3 && z>z0))	u /= v;
@@ -382,7 +383,7 @@ void MGL_NO_EXPORT mgl_tick_text(mreal z, mreal z0, mreal d, std::wstring fmt, m
 		mglprintf(str, 64, fabs(u)<1 ? L"%.2g" : L"%.3g",u);
 		n1=mgl_wcslen(str);	mglprintf(str, 64, L"%g",u);	n2=mgl_wcslen(str);
 		if(n1<n2 && tune)	mglprintf(str, 64, fabs(u)<1 ? L"%.2g" : L"%.3g",u);
-	} 
+	}
 */
 }
 //-----------------------------------------------------------------------------
@@ -704,34 +705,33 @@ void mglCanvas::DrawGrid(mglAxis &aa)
 		ScalePoint(&B,pp[i],nan,false);
 		if(pp[i].z<zm)	{	zm=pp[i].z;	org=oo[i];	}
 	}
-	if(Org.x==Org.x) 	org.x = Org.x;
-	if(Org.y==Org.y) 	org.y = Org.y;
-	if(Org.z==Org.z) 	org.z = Org.z;
+	if(mgl_isnum(Org.x)) 	org.x = Org.x;
+	if(mgl_isnum(Org.y)) 	org.y = Org.y;
+	if(mgl_isnum(Org.z)) 	org.z = Org.z;
 	mglPoint d=aa.dir, da1,da2,db1,db2,oa,ob, p,q;
 	da1 = aa.a*(aa.a*Min);	da2 = aa.a*(aa.a*Max);
 	db1 = aa.b*(aa.b*Min);	db2 = aa.b*(aa.b*Max);
 	oa  = aa.b*(aa.b*org);	ob  = aa.a*(aa.a*org);
 
-	register long i,j,n=aa.txt.size(),k1,k2;
-	mreal v;
+	long n=aa.txt.size();
 
 	Reserve(62*n);
-	if(n>0)	for(i=0;i<n;i++)
+	if(n>0)	for(long i=0;i<n;i++)
 	{
 		q = oa+d*aa.txt[i].val;	p = q+da1;	// lines along 'a'
-		k1 = AddPnt(&B, p,CDef);
-		for(j=1;j<31;j++)
+		long k1 = AddPnt(&B, p,CDef), k2;
+		for(long j=1;j<31;j++)
 		{
-			v = j/30.;
+			mreal v = j/30.;
 			p = q+da1*(1-v)+da2*v;
 			k2 = k1;	k1 = AddPnt(&B, p,CDef);
 			line_plot(k2,k1);
 		}
 		q = ob+d*aa.txt[i].val;	p = q+db1;	// lines along 'b'
 		k1 = AddPnt(&B, p,CDef);
-		for(j=1;j<31;j++)
+		for(long j=1;j<31;j++)
 		{
-			v = j/30.;
+			mreal v = j/30.;
 			p = q+db1*(1-v)+db2*v;
 			k2 = k1;	k1 = AddPnt(&B, p,CDef);
 			line_plot(k2,k1);
@@ -979,8 +979,7 @@ void mglCanvas::colorbar(HCDT vv, const mreal *c, int where, mreal x, mreal y, m
 {
 	static int cgid=1;	StartGroup("Colorbar",cgid++);
 	long n=vv->GetNx();
-	long n1,n2,n3,n4;
-	mreal d,s3=B.pf,ss=1/s3;		// NOTE: colorbar was wider ss=0.9;
+	mreal s3=B.pf,ss=1/s3;		// NOTE: colorbar was wider ss=0.9;
 	mglPoint p1,p2;
 	mglMatrix M=B1;	M.pf=s3;	M.norot=true;
 
@@ -989,7 +988,7 @@ void mglCanvas::colorbar(HCDT vv, const mreal *c, int where, mreal x, mreal y, m
 	mask = MGL_SOLID_MASK;
 	for(long i=0;i<n-1;i++)
 	{
-		d = GetA(vv->v(i))*2-1;
+		mreal d = GetA(vv->v(i))*2-1;
 		p1 = p2 = mglPoint((ss*d+1)*w+x, (ss*d+1)*h+y, s3);
 		switch(where)
 		{
@@ -998,7 +997,7 @@ void mglCanvas::colorbar(HCDT vv, const mreal *c, int where, mreal x, mreal y, m
 			case 3:	p1.y = y;	p2.y = y+0.1*h;	break;
 			default:p1.x = x-0.1*w;	p2.x = x;	break;
 		}
-		n1 = AddPnt(&M, p1,c[i]);	n2 = AddPnt(&M, p2,c[i]);
+		long n1 = AddPnt(&M, p1,c[i]), n2 = AddPnt(&M, p2,c[i]);
 		d = GetA(vv->v(i+1))*2-1;
 		p1 = p2 = mglPoint((ss*d+1)*w+x, (ss*d+1)*h+y, s3);
 		switch(where)
@@ -1008,15 +1007,14 @@ void mglCanvas::colorbar(HCDT vv, const mreal *c, int where, mreal x, mreal y, m
 			case 3:	p1.y = y;	p2.y = y+0.1*h;	break;
 			default:p1.x = x-0.1*w;	p2.x = x;	break;
 		}
-		n3 = AddPnt(&M, p1,c[i]);	n4 = AddPnt(&M, p2,c[i]);
-		quad_plot(n1,n2,n3,n4);
+		quad_plot(n1,n2, AddPnt(&M, p1,c[i]), AddPnt(&M, p2,c[i]));
 	}
 	if(n<64)
 	{
 		wchar_t buf[64];	ac.txt.clear();
 		for(long i=0;i<n;i++)
 		{
-			d = vv->v(i);
+			mreal d = vv->v(i);
 			mglprintf(buf,64,ac.t.empty()?(fabs(d)<1 ? L"%.2g" :  L"%.3g"):ac.t.c_str(),d);
 			ac.AddLabel(buf,d);
 		}
@@ -1026,7 +1024,7 @@ void mglCanvas::colorbar(HCDT vv, const mreal *c, int where, mreal x, mreal y, m
 	SetPenPal(TickStl);
 	for(size_t i=0;i<ac.txt.size();i++)
 	{
-		d = ac.txt[i].val = GetA(ac.txt[i].val)*2-1;
+		mreal d = ac.txt[i].val = GetA(ac.txt[i].val)*2-1;
 		p1 = p2 = mglPoint((ss*d+1)*w+x, (ss*d+1)*h+y, s3);
 		switch(where)
 		{
@@ -1035,8 +1033,7 @@ void mglCanvas::colorbar(HCDT vv, const mreal *c, int where, mreal x, mreal y, m
 			case 3:	p1.y = y;	p2.y = y+0.1*h;	break;
 			default:p1.x = x-0.1*w;	p2.x = x;	break;
 		}
-		n1 = AddPnt(&M, p1);	n2 = AddPnt(&M, p2);
-		line_plot(n1,n2);
+		line_plot(AddPnt(&M, p1), AddPnt(&M, p2));
 	}
 	ac.dir = mglPoint(ss*w,ss*h,0);
 	ac.org = mglPoint(w+x,h+y,s3+1);

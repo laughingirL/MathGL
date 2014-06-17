@@ -35,11 +35,11 @@ MGL_NO_EXPORT const char *mgl_get_dash(unsigned short d, mreal w,char dlm)
 	static char b[32];
 	static std::string s;
 	if(d==0xffff)	return "";
-	int f=0, p=d&1, n=p?0:1, i, j;
+	int f=0, p=d&1, n=p?0:1;
 	s = p ? "" : "0";
-	for(i=0;i<16;i++)
+	for(int i=0;i<16;i++)
 	{
-		j = i;//15-i;
+		int j = i;//15-i;
 		if(((d>>j)&1) == p)	f++;
 		else
 		{
@@ -48,7 +48,7 @@ MGL_NO_EXPORT const char *mgl_get_dash(unsigned short d, mreal w,char dlm)
 		}
 	}
 	snprintf(b,32,"%g",f*w);	s += b;
-	s += n%2 ? "" : " 0";
+	s += (n%2) ? "" : " 0";
 	return s.c_str();
 }
 //-----------------------------------------------------------------------------
@@ -153,11 +153,10 @@ void MGL_NO_EXPORT put_desc(HMGL gr, void *fp, bool gz, const char *pre, const c
 		const mglGlyph &g = gr->GetGlf(q.n4);
 		int nl=g.nl;
 		const short *ln=g.line;
-		long ik,ii;
-		bool np=true;
-		if(ln && nl>0)	for(ik=0;ik<nl;ik++)
+		if(ln && nl>0)	for(long ik=0;ik<nl;ik++)
 		{
-			ii = 2*ik;
+			bool np=true;
+			long ii = 2*ik;
 			if(ln[ii]==0x3fff && ln[ii+1]==0x3fff)	// line breakthrough
 			{	mgl_printf(fp, gz, "%s",ln3);	np=true;	continue;	}
 			else if(np)	mgl_printf(fp, gz, ln1,ln[ii],ln[ii+1]);

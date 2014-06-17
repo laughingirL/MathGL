@@ -40,12 +40,12 @@ mglFont mglDefFont;
 //-----------------------------------------------------------------------------
 long MGL_EXPORT_PURE mgl_internal_code(unsigned s, const std::vector<mglGlyphDescr> &glyphs)
 {
-	register long i,i1=0,i2=glyphs.size()-1;
+	register long i1=0,i2=glyphs.size()-1;
 	register wchar_t j = wchar_t(s & MGL_FONT_MASK);
 	// let suppose that id[i]<id[i+1]
 	while(i1<i2)
 	{
-		i = (i1+i2)/2;
+		register long i = (i1+i2)/2;
 		if(j<glyphs[i].id)		i2 = i;
 		else if(j>glyphs[i].id)	i1=i+1;
 		else return i;
@@ -118,13 +118,13 @@ float mglFont::Puts(const wchar_t *str,int font,int align, float c1,float c2) co
 {
 	if(GetNumGlyph()==0 || !str || *str==0)	return 0;
 	float ww=0,w=0,h = (align&4) ? 500./fact[0] : 0;
-	size_t size = mgl_wcslen(str)+1,i,num=0;
+	size_t size = mgl_wcslen(str)+1,num=0;
 	if(parse)
 	{
 		unsigned *wcs = new unsigned[size], *buf=wcs;
 		memcpy(wcs,str,size*sizeof(wchar_t));
 		Convert(str, wcs);
-		for(i=0;wcs[i];i++)
+		for(size_t i=0;wcs[i];i++)
 		{
 			if(wcs[i]=='\n')	// parse '\n' symbol
 			{
@@ -148,24 +148,23 @@ float mglFont::Puts(const wchar_t *str,int font,int align, float c1,float c2) co
 	else
 	{
 		int s = (font/MGL_FONT_BOLD)&3;
-		long j;
 		h *= fact[0]/fact[s];
-		for(i=0;i<size;i++)		// find width
+		for(size_t i=0;i<size;i++)		// find width
 		{
-			j = str[i]!=' ' ? Internal(str[i]) : Internal('!');
+			long j = str[i]!=' ' ? Internal(str[i]) : Internal('!');
 			if(j==-1)	continue;
 			w+= GetWidth(s,j)/fact[s];
 		}
 		ww = w;		w *= -(align&3)/2.f;
-		if(gr)	for(i=0;i<size;i++)		// draw it
+		if(gr)	for(size_t i=0;i<size;i++)		// draw it
 		{
+			long j=0;	//Internal('!');
 			if(str[i]!=' ')
 			{
 				j = Internal(str[i]);
 				if(j==-1)	continue;
-				gr->Glyph(w, -h, 1, s+(font&MGL_FONT_WIRE)?4:0, j, c1+i*(c2-c1)/(size-1));
+				gr->Glyph(w, -h, 1, (s+(font&MGL_FONT_WIRE))?4:0, j, c1+i*(c2-c1)/(size-1));
 			}
-			else	j = 0;//Internal('!');
 			w+= GetWidth(s,j)/fact[s];
 		}
 	}
@@ -176,13 +175,13 @@ float mglFont::Width(const wchar_t *str,int font) const
 {
 	if(GetNumGlyph()==0 || !str || *str==0)	return 0;
 	float ww=0,w=0;
-	size_t size = mgl_wcslen(str)+1,i;
+	size_t size = mgl_wcslen(str)+1;
 	if(parse)
 	{
 		unsigned *wcs = new unsigned[size], *buf=wcs;
 		memcpy(wcs,str,size*sizeof(wchar_t));
 		Convert(str, wcs);
-		for(i=0;wcs[i];i++)	if(wcs[i]=='\n')	// parse '\n' symbol
+		for(size_t i=0;wcs[i];i++)	if(wcs[i]=='\n')	// parse '\n' symbol
 		{
 			wcs[i]=0;	w = Puts(buf,0,0,1.,0x10|font,'k','k');	// find width
 			buf=wcs+i+1;	if(w>ww)	ww=w;
@@ -193,11 +192,10 @@ float mglFont::Width(const wchar_t *str,int font) const
 	}
 	else
 	{
-		long j;
 		int s = (font/MGL_FONT_BOLD)&3;
-		for(i=0;i<size;i++)
+		for(size_t i=0;i<size;i++)
 		{
-			j = str[i]!=' ' ? Internal(str[i]) : Internal('!');
+			long j = str[i]!=' ' ? Internal(str[i]) : Internal('!');
 			if(j==-1)	continue;
 			w+= GetWidth(s,j)/fact[s];
 		}
@@ -290,10 +288,10 @@ unsigned mglFont::Parse(const wchar_t *s) const
 void mglFont::Convert(const wchar_t *str, unsigned *res) const
 {
 	register size_t r,i,j,k,i0;
-	wchar_t s[128]=L"", ch;		// TeX command and current char
+	wchar_t s[128]=L"";		// TeX command and current char
 	for(i=j=0;str[i];i++)
 	{
-		ch = str[i];
+		wchar_t ch = str[i];
 		if(ch=='\\')	// It can be TeX command
 		{
 			if(wcschr(L"{}_^\\@# ",str[i+1]))	// No, it is usual symbol
@@ -373,28 +371,26 @@ void mglFont::draw_ouline(int st, float x, float y, float f, float g, float ww, 
 float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,float c1,float c2) const
 {
 	if(GetNumGlyph()==0)	return 0;
-	register long j,k;
-	long i;
-	register unsigned s,ss;
 	float w=0;				// string width
 	int st = style;			// current style
 	unsigned *b1, *b2;		// pointer to substring
 	unsigned *str;			// string itself
 	float yy=y, ff=f, ww, w1, w2;
 	int a = (st/MGL_FONT_BOLD)&3;
+	long i;
 	for(i=0;text[i];i++);
 	float dc=i>1?(c2-c1)/(i-1):0;
 	str = new unsigned[i+1];
 	memcpy(str,text,(i+1)*sizeof(unsigned));
 
-	for(i=0;str[i];i++)
+	for(long i=0;str[i];i++)
 	{
 		float ccol = c1+dc*i;
-		s = str[i];		ww = 0;
+		unsigned s = str[i];		ww = 0;
 		if(s==unsigned(-3))	// recursion call here
 		{
 			i++;	b1 = str+i;
-			for(k=1;k>0 && str[i];i++)
+			for(long k=1;k>0 && str[i];i++)
 			{
 				if(str[i]==unsigned(-4))	k--;
 				if(str[i]==unsigned(-3))	k++;
@@ -490,8 +486,8 @@ float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,floa
 		else if(s==unsigned(-4))	MGL_CLEAR_STYLE	// should be never here but if I miss sth ...
 		else if(s==unsigned(-14))	// script symbols
 		{
-			k=1;
-			if(str[i+1]==unsigned(-3))	for(j=i+2;k>0 && str[j];j++)
+			long k=1;
+			if(str[i+1]==unsigned(-3))	for(long j=i+2;k>0 && str[j];j++)
 			{
 				if(str[j]==unsigned(-3))	k++;
 				if(str[j]==unsigned(-4))	k--;
@@ -507,9 +503,10 @@ float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,floa
 			ccol = -float(s & 0xff);	// TODO inline colors -- make textures
 		else
 		{
-			ss = s&MGL_FONT_MASK;
+			unsigned ss = s&MGL_FONT_MASK;
 			if(ss)	// draw symbol (glyph)
 			{
+				long j = Internal('!');
 				if(ss>' ')
 				{
 					j = Internal(ss);
@@ -521,7 +518,6 @@ float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,floa
 						else					gr->Glyph(x,yy,ff,a,j,ccol);
 					}
 				}
-				else	j = Internal('!');
 				ww = ff*GetWidth(a,j)/fact[a];
 				if(gr && !(style&0x10))	// add under-/over- line now
 					draw_ouline(st,x,y,f,fact[a],ww,ccol);
@@ -753,7 +749,7 @@ bool mglFont::Load(const char *base, const char *path)
 		g.ln[0] = g.ln[1] = g.ln[2] = g.ln[3] = cur-1-g.ln[2];
 		g.tr[0] = g.tr[1] = g.tr[2] = g.tr[3] = cur-1-g.tr[2];
 	}
-	cur += len;		len = long(both.size());
+	cur += len;
 	if(both.size()>0)
 		memcpy(Buf+cur,both.data(),both.size()*sizeof(short));
 #pragma omp parallel for

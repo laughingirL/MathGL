@@ -60,14 +60,13 @@ void MGL_EXPORT mgl_line(HMGL gr, double x1, double y1, double z1, double x2, do
 	gr->SetPenPal(pen);
 	n = (n<2) ? 2 : n;
 
-	register long i,k1,k2;
-	register mreal s;
 	gr->Reserve(n);
-	k1 = gr->AddPnt(p,gr->CDef,nn,-1,3);	gr->AddActive(k1);
-	for(i=1;i<n;i++)
+	long k1 = gr->AddPnt(p,gr->CDef,nn,-1,3);	gr->AddActive(k1);
+	for(long i=1;i<n;i++)
 	{
 		if(gr->Stop)	return;
-		s = i/mreal(n-1);	p = p1*(1-s)+p2*s;	k2 = k1;
+		mreal s = i/mreal(n-1);	p = p1*(1-s)+p2*s;
+		long k2 = k1;
 		k1 = gr->AddPnt(p,gr->CDef,nn,-1,3);
 		gr->line_plot(k2,k1);
 		if(i==1)	gr->arrow_plot(k2,k1,gr->Arrow1);
@@ -89,14 +88,13 @@ void MGL_EXPORT mgl_curve(HMGL gr, double x1, double y1, double z1, double dx1, 
 	n = (n<2) ? 2 : n;
 	gr->SetPenPal(pen);
 
-	register long i,k1,k2;
-	register mreal s;
 	gr->Reserve(n);
-	k1=gr->AddPnt(p,gr->CDef,nn,-1,3);	gr->AddActive(k1);
-	for(i=1;i<n;i++)
+	long k1=gr->AddPnt(p,gr->CDef,nn,-1,3);	gr->AddActive(k1);
+	for(long i=1;i<n;i++)
 	{
 		if(gr->Stop)	return;
-		s = i/(n-1.);	p = p1+s*(d1+s*(a+s*b));	k2 = k1;
+		mreal s = i/(n-1.);	p = p1+s*(d1+s*(a+s*b));
+		long k2 = k1;
 		k1 = gr->AddPnt(p,gr->CDef,nn,-1,3);
 		gr->line_plot(k2,k1);
 		if(i==1)	gr->arrow_plot(k2,k1,gr->Arrow1);
@@ -280,7 +278,7 @@ void MGL_EXPORT mgl_cone_(uintptr_t* gr, mreal *x1, mreal *y1, mreal *z1, mreal 
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_cones_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *opt)
 {
-	long i=5,j,m,mx,my,mz,n=z->GetNx(),nx=x->GetNx(), nz=z->GetNy(), pal;
+	long i=5,m,n=z->GetNx(),nx=x->GetNx(), nz=z->GetNy(), pal;
 	if(mgl_check_dim1(gr,x,z,y,0,"Cones",true))	return;
 
 	gr->SaveState(opt);
@@ -305,15 +303,15 @@ void MGL_EXPORT mgl_cones_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, 
 	else if(mglchr(pen,'8'))	c1[i]=c2[i]='8';
 	memset(dd,0,2*n*sizeof(mreal));
 	z0 = gr->GetOrgZ('x');
-	for(i=0;i<n;i++)	for(j=0;j<m;j++)	dd[i] += z->v(i, j<nz ? j:0);
-	for(j=0;j<m;j++)
+	for(long i=0;i<n;i++)	for(long j=0;j<m;j++)	dd[i] += z->v(i, j<nz ? j:0);
+	for(long j=0;j<m;j++)
 	{
 		gr->NextColor(pal);		memcpy(c1+1,gr->last_line(),4);
 		if(gr->GetNumPal(pal)==2*m)
 		{	gr->NextColor(pal);	memcpy(c2+1,gr->last_line(),4);	}
 		else	memcpy(c2,c1,8);
-		mx = j<x->GetNy() ? j:0;	my = j<y->GetNy() ? j:0;	mz = j<nz ? j:0;
-		for(i=0;i<n;i++)
+		long mx = j<x->GetNy() ? j:0, my = j<y->GetNy() ? j:0, mz = j<nz ? j:0;
+		for(long i=0;i<n;i++)
 		{
 			if(gr->Stop)	{	delete []dd;	return;	}
 			vx=x->v(i,mx);	vy=y->v(i,my);	vz=z->v(i,mz);
@@ -371,7 +369,7 @@ void MGL_EXPORT mgl_cones_(uintptr_t *gr, uintptr_t *y,	const char *pen, const c
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_polygon(HMGL gr, double x1, double y1, double z1, double x2, double y2, double z2, int n, const char *stl)
 {
-	if(n<3)	return;	
+	if(n<3)	return;
 	long pal=0, n0,n1,n2,np,k1=-1,kp=-1;
 	static int cgid=1;	gr->StartGroup("Polygon",cgid++);
 	gr->SetPenPal(stl,&pal);
@@ -406,8 +404,7 @@ void MGL_EXPORT mgl_polygon(HMGL gr, double x1, double y1, double z1, double x2,
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_angle_ext(HMGL gr, double x0, double y0, double z0, double xr, double yr, double zr, double x1, double y1, double z1, double a, const char* stl)
 {
-	long n = long(fabs(a)/9+1.5);	a *= M_PI/180;
-	long pal=0, n1,n2;
+	long pal=0, n = long(fabs(a)/9+1.5);	a *= M_PI/180;
 	static int cgid=1;	gr->StartGroup("Angle",cgid++);
 	gr->SetPenPal(stl,&pal);
 	mreal c=gr->NextColor(pal);
@@ -417,11 +414,11 @@ void MGL_EXPORT mgl_angle_ext(HMGL gr, double x0, double y0, double z0, double x
 	if(u.norm()==0)	return;	// wrong vector orientation
 	u = (d.norm()/u.norm())*u;
 	gr->AddActive(gr->AddPnt(p0,gr->CDef,qq,-1,3),0);
-	n1 = gr->AddPnt(p1,c,qq,-1,11);	gr->AddActive(n1,1);
+	long n1 = gr->AddPnt(p1,c,qq,-1,11);	gr->AddActive(n1,1);
 	for(long i=1;i<n;i++)
 	{
 		p = p0+d*cos(a*i/(n-1))+u*sin(a*i/(n-1));
-		n2 = gr->AddPnt(p,c,qq,-1,11);
+		long n2 = gr->AddPnt(p,c,qq,-1,11);
 		if(i==1)	gr->arrow_plot(n1,n2,gr->Arrow1);
 		if(i==n-1)	{	gr->arrow_plot(n2,n1,gr->Arrow2);	gr->AddActive(n2,2);	}
 		gr->line_plot(n1,n2);	n1 = n2;
@@ -451,7 +448,7 @@ void MGL_EXPORT mgl_angle_(uintptr_t* gr, mreal *x0, mreal *y0, mreal *x1, mreal
 void MGL_EXPORT mgl_ellipse(HMGL gr, double x1, double y1, double z1, double x2, double y2, double z2, double r, const char *stl)
 {
 	const int n = 41;
-	long pal=0,n0,n1=-1,n2,m1=-1,m2;
+	long pal=0,n0,n1=-1,m1=-1;
 	static int cgid=1;	gr->StartGroup("Ellipse",cgid++);
 	gr->SetPenPal(stl,&pal);
 	mreal c=gr->NextColor(pal), d;
@@ -474,9 +471,9 @@ void MGL_EXPORT mgl_ellipse(HMGL gr, double x1, double y1, double z1, double x2,
 		if(gr->Stop)	return;
 		register int t=i*360/(n-1);
 		p = s+v*mgl_cos[t%360]+u*mgl_cos[(270+t)%360];
-		n2 = n1;	n1 = gr->AddPnt(p,c,q,-1,11);
+		long n2 = n1;	n1 = gr->AddPnt(p,c,q,-1,11);
 		if(i==n/4)	gr->AddActive(n1,2);
-		m2 = m1;	m1 = gr->CopyNtoC(n1,k);
+		long m2 = m1;	m1 = gr->CopyNtoC(n1,k);
 		if(i>0)
 		{
 			if(fill)	gr->trig_plot(n0,n1,n2);
@@ -708,7 +705,7 @@ void MGL_EXPORT mgl_puts_dir_(uintptr_t *gr, mreal *x, mreal *y, mreal *z, mreal
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_textmarkw_xyzr(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const wchar_t *text, const char *fnt, const char *opt)
 {
-	long m,mx,my,mz,mr,n=y->GetNx();
+	long m,n=y->GetNx();
 	if(mgl_check_dim0(gr,x,y,z,r,"TextMark"))	return;
 
 	gr->SaveState(opt);
@@ -721,8 +718,8 @@ void MGL_EXPORT mgl_textmarkw_xyzr(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, cons
 	mglPoint p,q(NAN);
 	for(long j=0;j<m;j++)
 	{
-		mx = j<x->GetNy() ? j:0;	my = j<y->GetNy() ? j:0;
-		mz = j<z->GetNy() ? j:0;	mr = j<r->GetNy() ? j:0;
+		long mx = j<x->GetNy() ? j:0, my = j<y->GetNy() ? j:0;
+		long mz = j<z->GetNy() ? j:0, mr = j<r->GetNy() ? j:0;
 #pragma omp parallel for private(p)	// NOTE this should be useless ?!?
 		for(long i=0;i<n;i++)
 		{
@@ -805,7 +802,7 @@ void MGL_EXPORT mgl_textmark_(uintptr_t *gr, uintptr_t *y, const char *text, con
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_labelw_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const wchar_t *text, const char *fnt, const char *opt)
 {
-	long m,mx,my,mz,n=y->GetNx();
+	long m,n=y->GetNx();
 	if(mgl_check_dim0(gr,x,y,z,0,"Label"))	return;
 
 	gr->SaveState(opt);
@@ -817,7 +814,7 @@ void MGL_EXPORT mgl_labelw_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const wchar_t *t
 	wchar_t tmp[32];
 	for(long j=0;j<m;j++)
 	{
-		mx = j<x->GetNy() ? j:0;	my = j<y->GetNy() ? j:0;	mz = j<z->GetNy() ? j:0;
+		long mx = j<x->GetNy() ? j:0, my = j<y->GetNy() ? j:0, mz = j<z->GetNy() ? j:0;
 #pragma omp parallel for private(tmp)
 		for(long i=0;i<n;i++)
 		{

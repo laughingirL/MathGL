@@ -247,7 +247,7 @@ mreal mglCanvas::FindOptOrg(char dir, int ind) const
 		{	if(pp[1].x>pp[2].x)	pz.y=1-pz.y;	else	pz.x=1-pz.x;	}
 		else if(ty<tx && ty<tz)	// y-axis is vertical
 		{	if(pp[1].x>pp[3].x)	py.z=1-py.z;	else	py.x=1-py.x;	}
-		else if(tx<tz && tx<tz)	// x-axis is vertical
+		else if(tx<ty && tx<tz)	// x-axis is vertical
 		{	if(pp[3].x>pp[2].x)	px.y=1-px.y;	else	px.z=1-px.z;	}
 	}
 	// return to normal variables
@@ -411,7 +411,7 @@ pthread_mutex_lock(&mutexPtx);
 		shift += 0.015*h;	// Correction for glyph rotation around proper point
 	//		shift *= h;
 
-		int align;	
+		int align;
 		mreal col1=col, col2=col;
 		if(mglGetStyle(font,0,&align))
 		{
@@ -789,7 +789,6 @@ void mglCanvas::Legend(const std::vector<mglText> &leg, mreal x, mreal y, const 
 	}
 	x += B.x-iw/2+dx;	y += B.y-ih/2+dy;
 	// draw it
-	long k1=0,k2=0,k3=0,k4=0;
 	mglPoint p,q=mglPoint(NAN,NAN,NAN);
 
 	mreal cc = AddTexture(font);
@@ -808,10 +807,10 @@ void mglCanvas::Legend(const std::vector<mglText> &leg, mreal x, mreal y, const 
 	if(strchr(font,'#'))	// draw bounding box
 	{
 		SetPenPal("k-");
-		k1=AddPnt(&M,mglPoint(x,y,Depth/MGL_FEPSILON),c1,q,1,0);
-		k2=AddPnt(&M,mglPoint(x+w*ncol,y,Depth/MGL_FEPSILON),c1,q,1,0);
-		k3=AddPnt(&M,mglPoint(x,y+h*nrow,Depth/MGL_FEPSILON),c1,q,1,0);
-		k4=AddPnt(&M,mglPoint(x+w*ncol,y+h*nrow,Depth/MGL_FEPSILON),c1,q,1,0);
+		long k1=AddPnt(&M,mglPoint(x,y,Depth/MGL_FEPSILON),c1,q,1,0);
+		long k2=AddPnt(&M,mglPoint(x+w*ncol,y,Depth/MGL_FEPSILON),c1,q,1,0);
+		long k3=AddPnt(&M,mglPoint(x,y+h*nrow,Depth/MGL_FEPSILON),c1,q,1,0);
+		long k4=AddPnt(&M,mglPoint(x+w*ncol,y+h*nrow,Depth/MGL_FEPSILON),c1,q,1,0);
 		quad_plot(k1,k2,k3,k4);
 		k1=CopyNtoC(k1,c2);	k2=CopyNtoC(k2,c2);
 		k3=CopyNtoC(k3,c2);	k4=CopyNtoC(k4,c2);
@@ -822,8 +821,8 @@ void mglCanvas::Legend(const std::vector<mglText> &leg, mreal x, mreal y, const 
 	{
 		register long iy=nrow-(i%nrow)-1,ix=i/nrow;
 		char m=SetPenPal(leg[i].stl.c_str());
-		k1=AddPnt(&M,mglPoint(x+ix*w+0.1*ll,y+iy*h+0.45*h,Depth),CDef,q,-1,0);
-		k2=AddPnt(&M,mglPoint(x+ix*w+0.9*ll,y+iy*h+0.45*h,Depth),CDef,q,-1,0);	pPos=0;
+		long k1=AddPnt(&M,mglPoint(x+ix*w+0.1*ll,y+iy*h+0.45*h,Depth),CDef,q,-1,0);
+		long k2=AddPnt(&M,mglPoint(x+ix*w+0.9*ll,y+iy*h+0.45*h,Depth),CDef,q,-1,0);	pPos=0;
 		if(!leg[i].stl.empty())	line_plot(k1,k2);
 		if(m)	for(j=0;j<LegendMarks;j++)
 		{
@@ -883,11 +882,11 @@ void mglCanvas::Table(mreal x, mreal y, HCDT val, const wchar_t *text, const cha
 	y = y*(inH-h*m)+B.y-inH/2;
 
 	mglPoint p,q=mglPoint(NAN,NAN);
-	long k1,k2;
 	mreal xx,yy;
 	if(grid)	// draw bounding box
 	{
 		SetPenPal("k-");
+		long k1,k2;
 		k1=AddPnt(&B,mglPoint(x,y,Depth),-1,q,-1,0);
 		k2=AddPnt(&B,mglPoint(x,y+m*h,Depth),-1,q,-1,0);
 		line_plot(k1,k2);
@@ -913,14 +912,14 @@ void mglCanvas::Table(mreal x, mreal y, HCDT val, const wchar_t *text, const cha
 	if(*text)
 	{
 		ww = TextWidth(text,frm,-1)+sp;
-		k1=AddPnt(&B,mglPoint(x+ww*align/2.,y+h*(m-0.99),Depth),-1,q,-1,0);
+		long k1=AddPnt(&B,mglPoint(x+ww*align/2.,y+h*(m-0.99),Depth),-1,q,-1,0);
 		text_plot(k1,text,frm);
 	}
 	else 	ww = 0;
 	for(i=0,xx=x+ww,yy=y+h*(m-0.99);i<n;i++)	// draw lines and legend
 	{
 		ww = eqd ? w1:(TextWidth(str[i].c_str(),frm,-1)+sp);
-		k1=AddPnt(&B,mglPoint(xx+ww*align/2.,yy,Depth),-1,q,-1,0);
+		long k1=AddPnt(&B,mglPoint(xx+ww*align/2.,yy,Depth),-1,q,-1,0);
 		text_plot(k1,str[i].c_str(),frm);	xx += ww;
 	}
 	FontSize = fsize;	EndGroup();

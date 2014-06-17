@@ -168,14 +168,14 @@ MGL_NO_EXPORT void* mgl_fftx(void *par)
 MGL_NO_EXPORT void* mgl_ffty(void *par)
 {
 	mglThreadT *t=(mglThreadT *)par;
-	register long i,nx=t->p[0],ny=t->p[1];
+	long nx=t->p[0],ny=t->p[1];
 #if !MGL_HAVE_PTHREAD
 #pragma omp parallel
 #endif
 	{
 		void *w = mgl_fft_alloc_thr(nx);
 #pragma omp for nowait
-		for(i=t->id;i<t->n;i+=mglNumThr)
+		for(long i=t->id;i<t->n;i+=mglNumThr)
 			mgl_fft(t->b+2*(i%nx)+2*nx*ny*(i/nx), nx, ny, t->v, w, t->p[3]);
 		mgl_fft_free_thr(w);
 	}
@@ -184,14 +184,14 @@ MGL_NO_EXPORT void* mgl_ffty(void *par)
 MGL_NO_EXPORT void* mgl_fftz(void *par)
 {
 	mglThreadT *t=(mglThreadT *)par;
-	register long i,nx=t->p[0],ny=t->p[1],nz=t->p[2];
+	long nx=t->p[0],ny=t->p[1],nz=t->p[2];
 #if !MGL_HAVE_PTHREAD
 #pragma omp parallel
 #endif
 	{
 		void *w = mgl_fft_alloc_thr(nx);
 #pragma omp for nowait
-		for(i=t->id;i<t->n;i+=mglNumThr)
+		for(long i=t->id;i<t->n;i+=mglNumThr)
 			mgl_fft(t->b+2*i, nx*ny, nz, t->v, w, t->p[3]);
 		mgl_fft_free_thr(w);
 	}
@@ -632,7 +632,7 @@ MGL_NO_EXPORT void* mgl_cosx(void *par)
 			for(long j=0;j<nn;j++)	b[2*j]=(a[j+k]+a[nn-j+k])*0.5-sin(M_PI*j/nn)*(a[j+k]-a[nn-j+k]);
 			mgl_fft(b,1,nn,t->v,w,false);
 			double f1=0.5*(a[k]-a[nn+k]), s=-1;
-			a[nn+k]=0.5*(a[k]+a[nn+k]*(nn%2?-1:1));
+			a[nn+k]=0.5*(a[k]+a[nn+k]*((nn%2)?-1:1));
 			for(long j=1;j<nn;j++)
 			{
 				f1 += a[j+k]*cos(M_PI*j/nn);
@@ -669,7 +669,7 @@ MGL_NO_EXPORT void* mgl_cosy(void *par)
 			for(long j=0;j<nn;j++)	b[2*j]=(a[i+nx*(ny*k+j)]+a[i+nx*(ny*k+nn-j)])*0.5-sin(M_PI*j/nn)*(a[i+nx*(ny*k+j)]-a[i+nx*(ny*k+nn-j)]);
 			mgl_fft(b,1,nn,t->v,w,false);
 			double f1=0.5*(a[i+nx*ny*k]-a[i+nx*(ny*k+nn)]), s=-1;
-			a[i+nx*(ny*k+nn)]=0.5*(a[i+nx*ny*k]+a[i+nx*(ny*k+nn)]*(nn%2?-1:1));
+			a[i+nx*(ny*k+nn)]=0.5*(a[i+nx*ny*k]+a[i+nx*(ny*k+nn)]*((nn%2)?-1:1));
 			for(long j=1;j<nn;j++)
 			{
 				f1 += a[i+nx*(ny*k+j)]*cos(M_PI*j/nn);
@@ -706,7 +706,7 @@ MGL_NO_EXPORT void* mgl_cosz(void *par)
 			for(long j=0;j<nn;j++)	b[2*j]=(a[i+k*j]+a[i+k*(nn-j)])*0.5-sin(M_PI*j/nn)*(a[i+k*j]-a[i+k*(nn-j)]);
 			mgl_fft(b,1,nn,t->v,w,false);
 			double f1=0.5*(a[i]-a[i+k*nn]), s=-1;
-			a[i+k*nn]=0.5*(a[i]+a[i+k*nn]*(nn%2?-1:1));
+			a[i+k*nn]=0.5*(a[i]+a[i+k*nn]*((nn%2)?-1:1));
 			for(long j=1;j<nn;j++)
 			{
 				f1 += a[i+k*j]*cos(M_PI*j/nn);

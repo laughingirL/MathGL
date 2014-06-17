@@ -383,12 +383,12 @@ void MGL_EXPORT mgl_tricontv_xyzcv(HMGL gr, HCDT v, HCDT nums, HCDT x, HCDT y, H
 		for(size_t i=0;i<curvs.size();i++)
 		{
 			const std::list<mglPoint> &pp=curvs[i].pp;
-			long f1=-1,f2=-1,g1=-1,g2=-1;
+			long f2=-1,g2=-1;
 			for(std::list<mglPoint>::const_iterator it=pp.begin(); it != pp.end(); ++it)
 			{
 				mglPoint p=*it,q(p.y,-p.x);
-				f1 = f2;	f2 = gr->AddPnt(p,c,q);	p.z+=dv;
-				g1 = g2;	g2 = gr->AddPnt(p,c,q);
+				long f1 = f2;	f2 = gr->AddPnt(p,c,q);	p.z+=dv;
+				long g1 = g2;	g2 = gr->AddPnt(p,c,q);
 				gr->quad_plot(f1,g1,f2,g2);
 			}
 		}
@@ -566,10 +566,10 @@ MGL_NO_EXPORT void *mgl_grid_t(void *par)
 		register long k1 = long(d[3*i0]+0.5), k2 = long(d[3*i0+1]+0.5), k3 = long(d[3*i0+2]+0.5);
 		mreal dxu,dxv,dyu,dyv;
 		mreal z1,z2,z3;
-		
+
 		if(z)	{	z1=z[k1];	z2=z[k2];	z3=z[k3];	}
 		else	{	z1=zdat->vthr(k1);	z2=zdat->vthr(k2);	z3=zdat->vthr(k3);	}
-		
+
 		mglPoint d1=mglPoint(x[k2]-x[k1],y[k2]-y[k1],z2-z1), d2=mglPoint(x[k3]-x[k1],y[k3]-y[k1],z3-z1), p;
 
 		dxu = d2.x*d1.y - d1.x*d2.y;

@@ -81,7 +81,7 @@ MGL_EXPORT char *mgl_fgetstr(FILE *fp)
 void MGL_EXPORT mgl_fgetpar(FILE *fp, const char *str, ...)
 {
 	if(!str || !str[0])	return;
-	long len=strlen(str), *n;	double *v;
+	long len=strlen(str);
 	char *s, *t;
 	va_list lst;
 	va_start(lst,str);
@@ -91,8 +91,8 @@ void MGL_EXPORT mgl_fgetpar(FILE *fp, const char *str, ...)
 		if(str[i]=='%')
 		{
 			if(str[i+1]=='s')	{	s = va_arg(lst, char*);	strcpy(s, t);	}
-			if(strchr("efg",str[i+1]))	{	v = va_arg(lst, double*);	*v = atof(t);	}
-			if(strchr("ld",str[i+1]))	{	n = va_arg(lst, long*); 	*n = atol(t);	}
+			if(strchr("efg",str[i+1]))	{	double *v = va_arg(lst, double*);	*v = atof(t);	}
+			if(strchr("ld",str[i+1]))	{	long *n = va_arg(lst, long*); 	*n = atol(t);	}
 			i++;
 		}
 		if(str[i]==':')

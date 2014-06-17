@@ -809,7 +809,7 @@ void MGL_EXPORT mgl_datac_insert(HADT d, char dir, long at, long num)
 		if(at<nz)	memcpy(b.a+nx*ny*(at+num), d->a+nx*ny*at,(nz-at)*nx*ny*sizeof(dual));
 #pragma omp parallel for
 		for(long i=0;i<num;i++)	memcpy(b.a+nx*ny*(at+i),d->a+nx*ny*at,nx*ny*sizeof(dual));
-		d->Set(b);	nz+=num;
+		d->Set(b);
 	}
 }
 //-----------------------------------------------------------------------------
@@ -848,7 +848,7 @@ void MGL_EXPORT mgl_datac_delete(HADT d, char dir, long at, long num)
 		b.Create(nx,ny,nz-num);
 		if(at>0)	memcpy(b.a, d->a,at*nx*ny*sizeof(dual));
 		memcpy(b.a+nx*ny*at, d->a+nx*ny*(at+num),(nz-at-num)*nx*ny*sizeof(dual));
-		d->Set(b);	nz-=num;
+		d->Set(b);
 	}
 }
 //-----------------------------------------------------------------------------

@@ -540,8 +540,8 @@ void mglBase::CRange(mreal v1,mreal v2,bool add)
 	if(v1==v2 && !add)	return;
 	if(!add)
 	{
-		if(v1==v1)	Min.c = v1;	
-		if(v2==v2)	Max.c = v2;		
+		if(mgl_isnum(v1))	Min.c = v1;
+		if(mgl_isnum(v2))	Max.c = v2;
 	}
 	else if(Min.c<Max.c)
 	{
@@ -575,8 +575,8 @@ void mglBase::XRange(mreal v1,mreal v2,bool add)
 	if(v1==v2 && !add)	return;
 	if(!add)
 	{
-		if(v1==v1)	Min.x = v1;	
-		if(v2==v2)	Max.x = v2;		
+		if(mgl_isnum(v1))	Min.x = v1;
+		if(mgl_isnum(v2))	Max.x = v2;
 	}
 	else if(Min.x<Max.x)
 	{
@@ -610,8 +610,8 @@ void mglBase::YRange(mreal v1,mreal v2,bool add)
 	if(v1==v2 && !add)	return;
 	if(!add)
 	{
-		if(v1==v1)	Min.y = v1;	
-		if(v2==v2)	Max.y = v2;		
+		if(mgl_isnum(v1))	Min.y = v1;
+		if(mgl_isnum(v2))	Max.y = v2;
 	}
 	else if(Min.y<Max.y)
 	{
@@ -646,8 +646,8 @@ void mglBase::ZRange(mreal v1,mreal v2,bool add)
 	if(v1==v2 && !add)	return;
 	if(!add)
 	{
-		if(v1==v1)	Min.z = v1;	
-		if(v2==v2)	Max.z = v2;		
+		if(mgl_isnum(v1))	Min.z = v1;
+		if(mgl_isnum(v2))	Max.z = v2;
 	}
 	else if(Min.z<Max.z)
 	{
@@ -1217,8 +1217,7 @@ mreal mglBase::SaveState(const char *opt)
 	MNS=MeshNum;	CSS=Flag;	LSS=AmbBr;
 	MinS=Min;		MaxS=Max;	saved=true;
 	// parse option
-	char *qi=mgl_strdup(opt),*q=qi, *s,*a,*b,*c;
-	long n;
+	char *qi=mgl_strdup(opt),*q=qi, *s;
 	mgl_strtrim(q);
 	// NOTE: not consider '#' inside legend entry !!!
 	s=strchr(q,'#');	if(s)	*s=0;
@@ -1227,9 +1226,9 @@ mreal mglBase::SaveState(const char *opt)
 	{
 		s=q;	q=strchr(s,';');
 		if(q)	{	*q=0;	q++;	}
-		mgl_strtrim(s);		a=s;
-		n=mglFindArg(s);	if(n>0)	{	s[n]=0;		s=s+n+1;	}
-		mgl_strtrim(a);		b=s;
+		mgl_strtrim(s);		char *a=s;
+		long n=mglFindArg(s);	if(n>0)	{	s[n]=0;		s=s+n+1;	}
+		mgl_strtrim(a);		char *b=s;
 		n=mglFindArg(s);	if(n>0)	{	s[n]=0;		s=s+n+1;	}
 		mgl_strtrim(b);
 
@@ -1237,7 +1236,7 @@ mreal mglBase::SaveState(const char *opt)
 		if(!strcmp(b,"on"))	ff=1;
 		if(!strcmp(a+1,"range"))
 		{
-			n=mglFindArg(s);	c=s;
+			n=mglFindArg(s);	char *c=s;
 			if(n>0)	{	s[n]=0;	s=s+n+1;	}
 			mgl_strtrim(c);		ss = atof(c);
 			if(a[0]=='x')		{	Min.x=ff;	Max.x=ss;	}

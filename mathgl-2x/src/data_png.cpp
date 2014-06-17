@@ -45,10 +45,10 @@ MGL_NO_EXPORT unsigned char *mgl_create_scheme(const char *scheme,long &num)
 	if(np<2)	{	delete []cc;	return 0;	}
 	for(size_t i=0;i<np-1;i++)	nc+=mgl_col_dif(cc+3*i,cc+3*i+3,false);
 	c = new unsigned char[3*nc+3];
-	size_t dd,pos=0;
+	size_t pos=0;
 	for(size_t i=0;i<np-1;i++)
 	{
-		dd=mgl_col_dif(cc+3*i,cc+3*i+3,false);
+		size_t dd=mgl_col_dif(cc+3*i,cc+3*i+3,false);
 		for(size_t j=0;j<dd;j++)
 		{
 			c1 = c+3*(pos+j);	c2 = cc+3*i;
@@ -127,10 +127,10 @@ void MGL_EXPORT mgl_data_import(HMDT d, const char *fname, const char *scheme,mr
 #pragma omp parallel for collapse(2)
 		for(long i=0;i<d->ny;i++)	for(long j=0;j<d->nx;j++)
 		{
-			size_t pos=0,val,mval=256;
+			size_t pos=0,mval=256;
 			for(long k=0;k<num;k++)
 			{
-				val = mgl_col_dif(c+3*k,rows[d->ny-i-1]+3*j,true);
+				size_t val = mgl_col_dif(c+3*k,rows[d->ny-i-1]+3*j,true);
 				if(val==0)	{	pos=k;	break;	}
 				if(val<mval)	{	pos=k;	mval=val;	}
 			}

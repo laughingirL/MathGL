@@ -549,7 +549,7 @@ mreal mglFormula::CalcIn(const mreal *a1) const
 			return mgl_isfin(b) ? b : NAN;
 		}
 		else if(Kod<EQ_SN)
-		{	a = f1[Kod-EQ_SIN](a);	return mgl_isfin(a)?a:NAN;	}	
+		{	a = f1[Kod-EQ_SIN](a);	return mgl_isfin(a)?a:NAN;	}
 #if MGL_HAVE_GSL
 		else if(Kod<=EQ_DC)
 		{
@@ -628,7 +628,7 @@ mreal mglFormula::CalcDIn(int id, const mreal *a1) const
 {
 	func_2 f21[EQ_SIN-EQ_LT] = {mgz2,mgz2,mgz2, mgz2,mgz2,mgp, mgp,mul1,div1, ipw1,pow1,mgp,llg1, mgz2
 #if MGL_HAVE_GSL
-			,mgz2,mgz2,mgz2, mgz2,gslEllE1,gslEllF2, mgz2,mgz2
+			,mgz2,mgz2,mgz2, mgz2,gslEllE1,gslEllF1, mgz2,mgz2
 #else
 			,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2
 #endif

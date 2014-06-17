@@ -357,13 +357,12 @@ mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std
 			}
 			else
 			{
-				long m;
 				mglData a1, a2, a3;
 				a1.a[0] = a2.a[0] = a3.a[0] = -1;
 				n=mglFindInText(str,",");
 				if(n>0)
 				{
-					m=mglFindInText(str.substr(0,n),",");
+					long m=mglFindInText(str.substr(0,n),",");
 					if(m>0)
 					{
 						str[m]=0;
@@ -841,13 +840,12 @@ mglDataC MGL_NO_EXPORT mglFormulaCalcC(std::wstring str, mglParser *arg, const s
 			}
 			else
 			{
-				long m;
 				mglData a1, a2, a3;
 				a1.a[0] = a2.a[0] = a3.a[0] = -1;
 				n=mglFindInText(str,",");
 				if(n>0)
 				{
-					m=mglFindInText(str.substr(0,n),",");
+					long m=mglFindInText(str.substr(0,n),",");
 					if(m>0)
 					{
 						str[m]=0;

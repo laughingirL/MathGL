@@ -28,17 +28,18 @@
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_traj_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, const char *opt)
 {
-	long m,mx,my,mz,nx,ny,nz,n=ax->GetNx(),pal;
+	long n=ax->GetNx(),pal;
 	if(mgl_check_dim1(gr,x,z,y,ax,"Traj"))	return;
 	if(mgl_check_dim1(gr,ax,az,ay,0,"Traj"))	return;
 
 	mreal len=gr->SaveState(opt);	if(mgl_isnan(len))	len = 0;
 	static int cgid=1;	gr->StartGroup("Traj",cgid++);
 
-	register long i, j;
 	// find maximum
-	i = ax->GetNy()>ay->GetNy() ? ax->GetNy():ay->GetNy();	j = z->GetNy()>az->GetNy() ? z->GetNy():az->GetNy();
-	m = x->GetNy()>y->GetNy() ? x->GetNy():y->GetNy();		if(i>m)	m=i;	if(j>m)	m=j;
+	long m = x->GetNy()>y->GetNy() ? x->GetNy():y->GetNy();
+	long i = ax->GetNy()>ay->GetNy() ? ax->GetNy():ay->GetNy();
+	long j = z->GetNy()>az->GetNy() ? z->GetNy():az->GetNy();
+	if(i>m)	m=i;	if(j>m)	m=j;
 	gr->SetPenPal(sch,&pal);	gr->Reserve(4*n*m);
 
 	mglPoint p1,p2;
@@ -49,11 +50,11 @@ void MGL_EXPORT mgl_traj_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, 
 		xm = xm>da ? xm : da;
 	}
 	xm = 1./(xm ? sqrt(xm):1);*/
-	for(j=0;j<m;j++) // start prepare arrows
+	for(long j=0;j<m;j++) // start prepare arrows
 	{
 		gr->NextColor(pal);
-		nx = j<x->GetNy() ? j:0;	ny = j<y->GetNy() ? j:0;	nz = j<z->GetNy() ? j:0;
-		mx = j<ax->GetNy() ? j:0;	my = j<ay->GetNy() ? j:0;	mz = j<az->GetNy() ? j:0;
+		long nx = j<x->GetNy() ? j:0, ny = j<y->GetNy() ? j:0, nz = j<z->GetNy() ? j:0;
+		long mx = j<ax->GetNy() ? j:0,my = j<ay->GetNy() ? j:0,mz = j<az->GetNy() ? j:0;
 #pragma omp parallel for private(p1,p2)
 		for(long i=0;i<n;i++)
 		{
@@ -410,7 +411,7 @@ void MGL_NO_EXPORT mgl_get_slice(_mgl_vec_slice &s, HCDT x, HCDT y, HCDT z, HCDT
 			return;
 		}
 	}
-	
+
 	long n=ax->GetNx(),m=ax->GetNy(),l=ax->GetNz(), nx=1,ny=1,p;
 
 	if(dir=='x')	{	nx = m;	ny = l;	if(d<0)	d = n/2.;	}
@@ -651,11 +652,11 @@ void MGL_NO_EXPORT flow(mglBase *gr, double zVal, double u, double v, const mglD
 	} while(!end);
 	if(k>1)
 	{
-		long i,j,jj,a=long(1./fabs(dt));
+		long j,a=long(1./fabs(dt));
 		gr->Reserve(k);		j = gr->AddPnt(pp[0],pp[0].c);
-		for(i=1;i<k;i++)
+		for(long i=1;i<k;i++)
 		{
-			jj=j;	j = gr->AddPnt(pp[i],pp[i].c);
+			long jj=j;	j = gr->AddPnt(pp[i],pp[i].c);
 			if(vv && i%a==0)
 			{
 				if(dt<0)	gr->vect_plot(j,jj,a/5);
@@ -669,7 +670,6 @@ void MGL_NO_EXPORT flow(mglBase *gr, double zVal, double u, double v, const mglD
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_flow_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, const char *opt)
 {
-	mreal u,v;
 	if(mgl_check_dim2(gr,x,y,ax,ay,"Flow"))	return;
 
 	mreal r = gr->SaveState(opt);
@@ -686,11 +686,11 @@ void MGL_EXPORT mgl_flow_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const cha
 	for(long k=0;k<ax->GetNz();k++)
 	{
 		if(ax->GetNz()>1)	zVal = gr->Min.z+(gr->Max.z-gr->Min.z)*mreal(k)/(ax->GetNz()-1);
-#pragma omp parallel for private(u,v) collapse(2)
+#pragma omp parallel for collapse(2)
 		for(long i=0;i<num;i++)	for(int s=-1;s<=1;s+=2)
 		{
 			if(gr->Stop)	continue;
-			u = 0;	v = (i+1.)/(num+1.);
+			mreal u = 0, v = (i+1.)/(num+1.);
 			flow(gr, zVal, s*u, s*v, xx, yy, bx, by,ss,vv);
 			u = 1;	v = (i+1.)/(num+1.);
 			flow(gr, zVal, s*u, s*v, xx, yy, bx, by,ss,vv);
@@ -846,10 +846,10 @@ void flow(mglBase *gr, double u, double v, double w, const mglData &x, const mgl
 	} while(!end);
 	if(k>1)
 	{
-		long i,j,jj,a=long(1./fabs(dt));
+		long j,a=long(1./fabs(dt));
 		mreal rr = mgl_norm(gr->Max-gr->Min)*gr->BarWidth/25, ll;
 		mglPoint q1,q2,l;
-		long n1=-1,n2=-1,n3=-1,n4=-1, m1=-1,m2=-1,m3=-1,m4=-1;
+		long n1=-1,n2=-1,n3=-1,n4=-1;
 
 		gr->Reserve(4*k);	j = gr->AddPnt(pp[0],pp[0].c);
 		l = pp[1] - pp[0];	l /= mgl_norm(l);
@@ -858,9 +858,9 @@ void flow(mglBase *gr, double u, double v, double w, const mglData &x, const mgl
 		q2 = q1^l;
 		if(xo)	{	n1 = gr->AddPnt(pp[0],-1,q2);	n2 = gr->AddPnt(pp[0]+rr*q1,-1,q2);	}
 		if(zo)	{	n3 = gr->AddPnt(pp[0],-1,q1);	n4 = gr->AddPnt(pp[0]+rr*q2,-1,q1);	}
-		for(i=1;i<k;i++)
+		for(long i=1;i<k;i++)
 		{
-			jj=j;	j = gr->AddPnt(pp[i],pp[i].c);
+			long jj=j;	j = gr->AddPnt(pp[i],pp[i].c);
 			if(vv && i%a==0)
 			{
 				if(dt<0)	gr->vect_plot(j,jj,a/5);
@@ -869,7 +869,7 @@ void flow(mglBase *gr, double u, double v, double w, const mglData &x, const mgl
 			else	gr->line_plot(jj,j);
 			l = pp[i]-pp[i-1];		l /= mgl_norm(l);
 			q1 -= l*(l*q1);	q1/= mgl_norm(q1);	q2 = q1^l;
-			m1 = n1;	m2 = n2;	m3 = n3;	m4 = n4;
+			long m1 = n1, m2 = n2, m3 = n3, m4 = n4;
 			if(xo)
 			{	n1 = gr->AddPnt(pp[i],-1,q2);	n2 = gr->AddPnt(pp[i]+rr*q1,-1,q2);	gr->quad_plot(n1,n2,m1,m2);	}
 			if(zo)

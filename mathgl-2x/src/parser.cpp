@@ -115,7 +115,7 @@ int mglParser::Exec(mglGraph *gr, const wchar_t *com, long n, mglArg *a, const s
 		k += id[a[i].type];
 		size_t len = wcstombs(NULL,a[i].w.c_str(),0)+1;
 		char *buf = new char[len];	memset(buf,0,len);
-		wcstombs(buf,a[i].w.c_str(),len);	
+		wcstombs(buf,a[i].w.c_str(),len);
 		a[i].s = buf;	delete []buf;
 	}
 	const mglCommand *rts=FindCommand(com);
@@ -340,19 +340,15 @@ void mglParser::FillArg(mglGraph *gr, int k, std::wstring *arg, mglArg *a)
 int mglParser::PreExec(mglGraph *, long k, std::wstring *arg, mglArg *a)
 {
 	long n=0;
-	mglData *v;
 	if(!arg[0].compare(L"delete") && k==2)	// parse command "delete"
-	{
-		DeleteVar(arg[1].c_str());	n=1;
-	}
+	{	DeleteVar(arg[1].c_str());	n=1;	}
 	else if(!arg[0].compare(L"list"))	// parse command "list"
 	{
 		if(k<3 || mgl_check_for_name(arg[1]))	return 2;
 		long nx=0, ny=1,j=0,i,t=0;
-		char ch;
 		for(i=2;i<k;i++)
 		{
-			ch = arg[i][0];
+			char ch = arg[i][0];
 			if(a[i-1].type==1)	return 2;
 			if(a[i-1].type==0)
 			{
@@ -366,7 +362,7 @@ int mglParser::PreExec(mglGraph *, long k, std::wstring *arg, mglArg *a)
 			}
 			if(ch=='|' && t==1)		{	nx = j>nx ? j:nx;	j=0;	ny++;	}
 		}
-		v = AddVar(arg[1].c_str());
+		mglData *v = AddVar(arg[1].c_str());
 		if(t==1)	nx = j>nx ? j:nx;
 		if(t==1)	// list of numeric values
 		{
@@ -485,11 +481,14 @@ int mglParser::ParseDef(std::wstring &str)
 		int nn = s[1]<='9' ? s[1]-'0' : (s[1]>='a' ? s[1]-'a'+10:-1);
 		if(s[0]=='$' && nn>=0 && nn<='z'-'a'+10)
 		{
-			static wchar_t res[1024];
 			s = mgl_trim_ws(s.substr(2));
 			if(s[0]=='\'')	s=s.substr(1,s.length()-2);
 			if(mgl_ask_func)
-			{	mgl_ask_func(s.c_str(),res);	if(*res)	AddParam(nn, res);	}
+			{
+				static wchar_t res[1024];
+				mgl_ask_func(s.c_str(),res);
+				if(*res)	AddParam(nn, res);
+			}
 			return mgl_ask_func?1:2;
 		}
 		else	return 2;
@@ -826,15 +825,15 @@ void mglParser::Execute(mglGraph *gr, FILE *fp, bool print)
 void mglParser::Execute(mglGraph *gr, int n, const wchar_t **text)
 {
 	if(n<1 || text==0)	return;
-	long i, r, res=0;
+	long res=0;
 	char buf[64];
 	for_br=Skip=false;	if_pos=0;	ScanFunc(0);	fn_stack.clear();
-	for(i=0;i<n;i++)	ScanFunc(text[i]);
-	for(i=0;i<n;i++)
+	for(long i=0;i<n;i++)	ScanFunc(text[i]);
+	for(long i=0;i<n;i++)
 	{
 		gr->SetWarn(-1, "");
 		gr->SetObjId(i+1);
-		r = Parse(gr,text[i],i+1);
+		long r = Parse(gr,text[i],i+1);
 		if(r<0)	{	i = -r-2;	continue;	}
 		if(r==1)		snprintf(buf,64,"\nWrong argument(s) in line %ld\n", i+1);
 		else if(r==2)	snprintf(buf,64,"\nWrong command in line %ld\n", i+1);

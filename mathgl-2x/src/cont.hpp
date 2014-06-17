@@ -38,5 +38,5 @@ struct mglSegment
 };
 //-----------------------------------------------------------------------------
 std::vector<mglSegment> MGL_EXPORT mgl_get_curvs(HMGL gr, std::vector<mglSegment> lines);
-void MGL_NO_EXPORT mgl_draw_curvs(HMGL gr, mreal val, mreal c, int text, const std::vector<mglSegment> curvs);
+void MGL_NO_EXPORT mgl_draw_curvs(HMGL gr, mreal val, mreal c, int text, const std::vector<mglSegment> &curvs);
 //-----------------------------------------------------------------------------
