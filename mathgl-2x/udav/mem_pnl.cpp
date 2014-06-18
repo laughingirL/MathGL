@@ -57,23 +57,23 @@ MemPanel::MemPanel(QWidget *parent) : QWidget(parent)
 	infoDlg->setModal(true);	infoDlg->allowRefresh=false;
 
 	v = new QVBoxLayout(this);	h = new QHBoxLayout();	v->addLayout(h);
-	b = new QToolButton(this);	b->setIcon(QPixmap(":/xpm/document-new.png"));
+	b = new QToolButton(this);	b->setIcon(QPixmap(":/png/document-new.png"));
 	b->setToolTip(tr("Create new data array"));		h->addWidget(b);
 	connect(b, SIGNAL(clicked()), this, SLOT(newTable()));
 	b = new QToolButton(this);	b->setIcon(QPixmap(table_xpm));
 	b->setToolTip(tr("Edit selected data array"));	h->addWidget(b);
 	connect(b, SIGNAL(clicked()), this, SLOT(editData()));
-	b = new QToolButton(this);	b->setIcon(QPixmap(":/xpm/edit-delete.png"));
+	b = new QToolButton(this);	b->setIcon(QPixmap(":/png/edit-delete.png"));
 	b->setToolTip(tr("Delete selected data array"));		h->addWidget(b);
 	connect(b, SIGNAL(clicked()), this, SLOT(delData()));
 	b = new QToolButton(this);	b->setIcon(QPixmap(preview_xpm));
 	b->setToolTip(tr("Properties of selected data array"));	h->addWidget(b);
 	connect(b, SIGNAL(clicked()), this, SLOT(infoData()));
-	b = new QToolButton(this);	b->setIcon(QPixmap(":/xpm/view-refresh.png"));
+	b = new QToolButton(this);	b->setIcon(QPixmap(":/png/view-refresh.png"));
 	b->setToolTip(tr("Update list of data arrays"));		h->addWidget(b);
 	connect(b, SIGNAL(clicked()), this, SLOT(refresh()));
 	h->addStretch(1);
-	b = new QToolButton(this);	b->setIcon(QPixmap(":/xpm/edit-delete.png"));
+	b = new QToolButton(this);	b->setIcon(QPixmap(":/png/edit-clear.png"));
 	b->setToolTip(tr("Delete ALL data arrays"));	h->addWidget(b);
 	connect(b, SIGNAL(clicked()), this, SLOT(delAllData()));
 

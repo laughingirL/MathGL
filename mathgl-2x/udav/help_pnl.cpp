@@ -45,18 +45,18 @@ HelpPanel::HelpPanel(QWidget *parent) : QWidget(parent)
 	help = new QTextBrowser(this);		o->addWidget(help);
 	help->setOpenExternalLinks(false);
 
-	b = new QPushButton(QPixmap(":/xpm/go-previous.png"), tr("Backward"));
+	b = new QPushButton(QPixmap(":/png/go-previous.png"), tr("Backward"));
 	connect(b, SIGNAL(clicked()), help, SLOT(backward()));	a->addWidget(b);
 	entry = new QLineEdit(this);	a->addWidget(entry);
 	connect(entry, SIGNAL(textChanged(const QString &)), this, SLOT(showHelp(const QString &)));
 	connect(entry, SIGNAL(returnPressed()), this, SLOT(showHelp()));
-	b = new QPushButton(QPixmap(":/xpm/go-next.png"), tr("Forward"));
+	b = new QPushButton(QPixmap(":/png/go-next.png"), tr("Forward"));
 	connect(b, SIGNAL(clicked()), help, SLOT(forward()));	a->addWidget(b);
-//	b = new QPushButton(QPixmap(":/xpm/help-faq.png"), tr("Examples"));
+//	b = new QPushButton(QPixmap(":/png/help-faq.png"), tr("Examples"));
 //	connect(b, SIGNAL(clicked()), this, SLOT(showExamples()));	a->addWidget(b);
-	t = new QToolButton(this);	t->setIcon(QPixmap(":/xpm/zoom-in.png"));
+	t = new QToolButton(this);	t->setIcon(QPixmap(":/png/zoom-in.png"));
 	connect(t, SIGNAL(clicked()), this, SLOT(zoomIn()));	a->addWidget(t);
-	t = new QToolButton(this);	t->setIcon(QPixmap(":/xpm/zoom-out.png"));
+	t = new QToolButton(this);	t->setIcon(QPixmap(":/png/zoom-out.png"));
 	connect(t, SIGNAL(clicked()), this, SLOT(zoomOut()));	a->addWidget(t);
 	setWindowTitle(tr("Help"));
 }

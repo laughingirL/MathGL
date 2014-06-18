@@ -193,17 +193,17 @@ MainWindow::MainWindow(QWidget *wp) : QMainWindow(wp)
 
 	calcWnd = new QDockWidget(tr("Calculator"),this);
 
-	aload = a = new QAction(QPixmap(":/xpm/document-open.png"), tr("Open file"), this);
+	aload = a = new QAction(QPixmap(":/png/document-open.png"), tr("Open file"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(choose()));
 	a->setToolTip(tr("Open and execute/show script or data from file (Ctrl+O).\nYou may switch off automatic exection in UDAV properties."));
 	a->setShortcut(Qt::CTRL+Qt::Key_O);
 
-	asave = a = new QAction(QPixmap(":/xpm/document-save.png"), tr("Save script"), this);
+	asave = a = new QAction(QPixmap(":/png/document-save.png"), tr("Save script"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(save()));
 	a->setToolTip(tr("Save script to a file (Ctrl+S)"));
 	a->setShortcut(Qt::CTRL+Qt::Key_S);
 
-	acalc = a = new QAction(QPixmap(":/xpm/accessories-calculator.png"), tr("Calculator"), this);
+	acalc = a = new QAction(QPixmap(":/png/accessories-calculator.png"), tr("Calculator"), this);
 	a->setShortcut(Qt::Key_F4);	a->setCheckable(true);
 	connect(a, SIGNAL(toggled(bool)), calcWnd, SLOT(setVisible(bool)));
 	connect(calcWnd, SIGNAL(visibilityChanged(bool)), a, SLOT(setChecked(bool)));
@@ -217,17 +217,17 @@ MainWindow::MainWindow(QWidget *wp) : QMainWindow(wp)
 	a->setChecked(false);	messWnd->setVisible(false);
 
 	graph = new PlotPanel(this);
-	rtab->addTab(graph,QPixmap(":/xpm/x-office-presentation.png"),tr("Canvas"));
+	rtab->addTab(graph,QPixmap(":/png/office-chart-line.png"),tr("Canvas"));
 	//	connect(info,SIGNAL(addPanel(QWidget*)),this,SLOT(addPanel(QWidget*)));
 	info = createMemPanel(this);
-	rtab->addTab(info,QPixmap(":/xpm/system-file-manager.png"),tr("Info"));
+	rtab->addTab(info,QPixmap(":/png/system-file-manager.png"),tr("Info"));
 	hlp = createHlpPanel(this);
-	rtab->addTab(hlp,QPixmap(":/xpm/help-contents.png"),tr("Help"));
+	rtab->addTab(hlp,QPixmap(":/png/help-contents.png"),tr("Help"));
 	edit = new TextPanel(this);	edit->graph = graph;
 	graph->textMGL = edit->edit;
 	connect(graph->mgl,SIGNAL(showWarn(QString)),mess,SLOT(setText(QString)));
 	connect(graph,SIGNAL(clearWarn()),mess,SLOT(clear()));
-	ltab->addTab(edit,QPixmap(":/xpm/text-x-generic.png"),tr("Script"));
+	ltab->addTab(edit,QPixmap(":/png/text-plain.png"),tr("Script"));
 
 	calcWnd->setWidget(createCalcDlg(this, edit->edit));
 	calcWnd->setAllowedAreas(Qt::TopDockWidgetArea | Qt::BottomDockWidgetArea);
@@ -273,7 +273,7 @@ void MainWindow::makeMenu()
 	// file menu
 	{
 	o = menuBar()->addMenu(tr("File"));
-	a = new QAction(QPixmap(":/xpm/document-new.png"), tr("New script"), this);
+	a = new QAction(QPixmap(":/png/document-new.png"), tr("New script"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(newDoc()));
 	a->setToolTip(tr("Create new empty script window (Ctrl+N)."));
 	a->setShortcut(Qt::CTRL+Qt::Key_N);	o->addAction(a);
@@ -287,7 +287,7 @@ void MainWindow::makeMenu()
 
 	o->addSeparator();
 	o->addAction(tr("Print script"), edit, SLOT(printText()));
-	a = new QAction(QPixmap(":/xpm/document-print.png"), tr("Print graphics"), this);
+	a = new QAction(QPixmap(":/png/document-print.png"), tr("Print graphics"), this);
 	connect(a, SIGNAL(triggered()), graph->mgl, SLOT(print()));
 	a->setToolTip(tr("Open printer dialog and print graphics (Ctrl+P)"));
 	a->setShortcut(Qt::CTRL+Qt::Key_P);	o->addAction(a);
@@ -303,7 +303,7 @@ void MainWindow::makeMenu()
 	// settings menu
 	{
 	o = menuBar()->addMenu(tr("Settings"));
-	a = new QAction(QPixmap(":/xpm/preferences-system.png"), tr("Properties"), this);
+	a = new QAction(QPixmap(":/png/preferences-system.png"), tr("Properties"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(properties()));
 	a->setToolTip(tr("Show dialog for UDAV properties."));	o->addAction(a);
 	o->addAction(tr("Set arguments"), createArgsDlg(this), SLOT(exec()));
@@ -314,11 +314,11 @@ void MainWindow::makeMenu()
 
 	menuBar()->addSeparator();
 	o = menuBar()->addMenu(tr("Help"));
-	a = new QAction(QPixmap(":/xpm/help-contents.png"), tr("MGL help"), this);
+	a = new QAction(QPixmap(":/png/help-contents.png"), tr("MGL help"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(showHelp()));
 	a->setToolTip(tr("Show help on MGL commands (F1)."));
 	a->setShortcut(Qt::Key_F1);	o->addAction(a);
-	a = new QAction(QPixmap(":/xpm/help-faq.png"), tr("Hints"), this);
+	a = new QAction(QPixmap(":/png/help-faq.png"), tr("Hints"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(showHint()));
 	a->setToolTip(tr("Show hints of MGL usage."));	o->addAction(a);
 	o->addAction(tr("About"), this, SLOT(about()));
@@ -718,7 +718,7 @@ void updateDataItems()
 //-----------------------------------------------------------------------------
 void MainWindow::addPanel(QWidget *w, QString name)
 {
-	ltab->addTab(w,QPixmap(":/xpm/x-office-spreadsheet.png"),name);
+	ltab->addTab(w,QPixmap(":/png/text-csv.png"),name);
 	ltab->setCurrentWidget(w);
 }
 //-----------------------------------------------------------------------------

@@ -33,9 +33,8 @@
 13. Complex (hex) colors in inline text command (like #{b9} or #{x0000ff})
 14. Extra markers for '&' and '&#' signs ?!?
 15. Read JPEG files for Background() and mglData::Import()
-16. Adjust format for printed numbers (i.e. write function which will produce shortest text) + flag of fixed format + flag of TeX-notation
+16. Adjust format for printed numbers (i.e. write function which will produce shortest text) + flag of fixed format + flag of TeX-notation + use '−'
 17. Check adjust in FLTK, Qt -- why don't redraw existed data (if func=NULL)
-19. Move constructor for mglData* ???
 20. Check again about const modifier
 
 YY. Optimize code (especially Quality=0 ?!?)

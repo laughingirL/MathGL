@@ -83,14 +83,14 @@ NewCmdDialog::NewCmdDialog(QWidget *p) : QDialog(p,Qt::WindowStaysOnTopHint)
 	a = new QHBoxLayout;	o->addLayout(a);
 	help = new QTextBrowser(this);		help->setMinimumWidth(500);
 	help->setOpenExternalLinks(false);	o->addWidget(help);
-	t = new QToolButton(p);	t->setIcon(QPixmap(":/xpm/go-previous.png"));
+	t = new QToolButton(p);	t->setIcon(QPixmap(":/png/go-previous.png"));
 	connect(t, SIGNAL(clicked()), help, SLOT(backward()));	a->addWidget(t);
-	t = new QToolButton(p);	t->setIcon(QPixmap(":/xpm/go-next.png"));
+	t = new QToolButton(p);	t->setIcon(QPixmap(":/png/go-next.png"));
 	connect(t, SIGNAL(clicked()), help, SLOT(forward()));	a->addWidget(t);
 	a->addStretch(1);
-	t = new QToolButton(p);	t->setIcon(QPixmap(":/xpm/zoom-in.png"));
+	t = new QToolButton(p);	t->setIcon(QPixmap(":/png/zoom-in.png"));
 	connect(t, SIGNAL(clicked()), this, SLOT(zoomIn()));	a->addWidget(t);
-	t = new QToolButton(p);	t->setIcon(QPixmap(":/xpm/zoom-out.png"));
+	t = new QToolButton(p);	t->setIcon(QPixmap(":/png/zoom-out.png"));
 	connect(t, SIGNAL(clicked()), this, SLOT(zoomOut()));	a->addWidget(t);
 
 	connect(type, SIGNAL(currentIndexChanged(int)),this,SLOT(typeChanged(int)));

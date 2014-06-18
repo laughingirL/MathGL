@@ -95,6 +95,12 @@ CMAKE_DEPENDENT_OPTION(enable-qt4 "Enable Qt4 widget" OFF "NOT enable-all-widget
 CMAKE_DEPENDENT_OPTION(enable-qt5 "Enable Qt5 widget" OFF "NOT enable-all-widgets" ON)
 CMAKE_DEPENDENT_OPTION(enable-qt5asqt "Set Qt5 as default libmgl-qt" ON "enable-qt5" OFF)
 
+if(UNIX)
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
+endif()
+ 
+# MSVC does not require any special flags
+
 if(enable-qt4 OR enable-qt5)
 set(enable-qt ON)
 endif(enable-qt4 OR enable-qt5)
@@ -171,6 +177,18 @@ int main(int argc, char* argv[]) {return 0;}" MGL_HAVE_ATTRIBUTE)
 if(NOT MGL_HAVE_ATTRIBUTE)
 	set(MGL_HAVE_ATTRIBUTE 0)
 endif(NOT MGL_HAVE_ATTRIBUTE)
+CHECK_CXX_SOURCE_COMPILES(
+"#define mgl_isnum(a)	({typeof (a) _a = (a); _a==_a;})
+int main(){bool a=mgl_isnum(1);return 0;}" MGL_HAVE_TYPEOF)
+if(NOT MGL_HAVE_TYPEOF)
+	set(MGL_HAVE_TYPEOF 0)
+endif(NOT MGL_HAVE_TYPEOF)
+CHECK_CXX_SOURCE_COMPILES(
+"struct test { test() {} test(test&& a){} };
+int main() { test t;	return 0; }" MGL_HAVE_RVAL)
+if(NOT MGL_HAVE_RVAL)
+	set(MGL_HAVE_RVAL 0)
+endif(NOT MGL_HAVE_RVAL)
 
 if(enable-double)
 	set(MGL_USE_DOUBLE 1)

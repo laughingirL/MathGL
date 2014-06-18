@@ -504,13 +504,13 @@ void TextPanel::toolTop(QBoxLayout *l)
 		bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(mw->asave);
 	}
 	// edit menu
-	a = new QAction(QPixmap(":/xpm/edit-undo.png"), tr("Undo"), this);
+	a = new QAction(QPixmap(":/png/edit-undo.png"), tr("Undo"), this);
 	connect(a, SIGNAL(triggered()), edit, SLOT(undo()));
 	a->setToolTip(tr("Undo editor change (Ctrl+Z)."));
 	a->setShortcut(Qt::CTRL+Qt::Key_Z);	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
-	a = new QAction(QPixmap(":/xpm/edit-redo.png"), tr("Redo"), this);
+	a = new QAction(QPixmap(":/png/edit-redo.png"), tr("Redo"), this);
 	connect(a, SIGNAL(triggered()), edit, SLOT(redo()));
 	a->setToolTip(tr("Redo editor change (Ctrl+Shift+Z)."));
 	a->setShortcut(Qt::CTRL+Qt::SHIFT+Qt::Key_Z);	o->addAction(a);
@@ -518,28 +518,28 @@ void TextPanel::toolTop(QBoxLayout *l)
 
 	o->addSeparator();
 	o->addAction(tr("Clear all"), edit, SLOT(clear()));
-	a = new QAction(QPixmap(":/xpm/edit-cut.png"), tr("Cut text"), this);
+	a = new QAction(QPixmap(":/png/edit-cut.png"), tr("Cut text"), this);
 	connect(a, SIGNAL(triggered()), edit, SLOT(cut()));
 	a->setToolTip(tr("Cut selected text to clipboard (Ctrl+X)."));
 	a->setShortcut(Qt::CTRL+Qt::Key_X);	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
-	a = new QAction(QPixmap(":/xpm/edit-copy.png"), tr("Copy text"), this);
+	a = new QAction(QPixmap(":/png/edit-copy.png"), tr("Copy text"), this);
 	connect(a, SIGNAL(triggered()), edit, SLOT(copy()));
 	a->setToolTip(tr("Copy selected text or data to clipboard (Ctrl+C)."));
 	a->setShortcut(Qt::CTRL+Qt::Key_C);	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
-	a = new QAction(QPixmap(":/xpm/edit-paste.png"), tr("Paste text"), this);
+	a = new QAction(QPixmap(":/png/edit-paste.png"), tr("Paste text"), this);
 	connect(a, SIGNAL(triggered()), edit, SLOT(paste()));
 	a->setToolTip(tr("Paste text or data from clipboard (Ctrl+V)."));
 	a->setShortcut(Qt::CTRL+Qt::Key_V);	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
-	o->addAction(QPixmap(":/xpm/edit-select-all.png"), tr("Select all"), edit, SLOT(selectAll()), Qt::CTRL+Qt::Key_A);
+	o->addAction(QPixmap(":/png/edit-select-all.png"), tr("Select all"), edit, SLOT(selectAll()), Qt::CTRL+Qt::Key_A);
 	o->addSeparator();
 
-	a = new QAction(QPixmap(":/xpm/edit-find.png"), tr("Find/Replace"), this);
+	a = new QAction(QPixmap(":/png/edit-find.png"), tr("Find/Replace"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(find()));
 	a->setToolTip(tr("Show dialog for text finding (Ctrl+F)."));
 	a->setShortcut(Qt::CTRL+Qt::Key_F);	o->addAction(a);
@@ -552,7 +552,7 @@ void TextPanel::toolTop(QBoxLayout *l)
 
 	// insert menu
 	oo = o->addMenu(tr("Insert"));
-	aa=a = new QAction(QPixmap(":/xpm/format-indent-more.png"), tr("New command"), this);
+	aa=a = new QAction(QPixmap(":/png/format-indent-more.png"), tr("New command"), this);
 	a->setShortcut(Qt::META+Qt::Key_C);	connect(a, SIGNAL(triggered()), this, SLOT(newCmd()));
 	a->setToolTip(tr("Show dialog for new command and put it into the script."));
 	oo->addAction(a);
@@ -574,11 +574,11 @@ void TextPanel::toolTop(QBoxLayout *l)
 	a->setShortcut(Qt::META+Qt::Key_N);	connect(a, SIGNAL(triggered()), this, SLOT(insNVal()));
 	a->setToolTip(tr("Replace expression by its numerical value."));
 	oo->addAction(a);
-	a = new QAction(QPixmap(":/xpm/x-office-spreadsheet.png"), tr("File name"), this);
+	a = new QAction(QPixmap(":/png/text-csv.png"), tr("File name"), this);
 	a->setShortcut(Qt::META+Qt::Key_P);	connect(a, SIGNAL(triggered()), this, SLOT(insFile()));
 	a->setToolTip(tr("Select and insert file name."));
 	oo->addAction(a);
-	a = new QAction(QPixmap(":/xpm/folder.png"), tr("Folder path"), this);
+	a = new QAction(QPixmap(":/png/folder.png"), tr("Folder path"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(insPath()));
 	a->setToolTip(tr("Select and insert folder name."));
 	oo->addAction(a);
@@ -591,7 +591,7 @@ void TextPanel::toolTop(QBoxLayout *l)
 	bb->setDefaultAction(aa);	bb->setMenu(oo);
 	bb->setPopupMode(QToolButton::MenuButtonPopup);
 
-	a = new QAction(QPixmap(":/xpm/document-properties.png"), tr("Graphics setup"), this);
+	a = new QAction(QPixmap(":/png/document-properties.png"), tr("Graphics setup"), this);
 	a->setShortcut(Qt::META+Qt::Key_G);	connect(a, SIGNAL(triggered()), this, SLOT(addSetup()));
 	a->setToolTip(tr("Show dialog for plot setup and put code into the script.\nThis dialog setup axis, labels, lighting and other general things."));
 	o->addAction(a);

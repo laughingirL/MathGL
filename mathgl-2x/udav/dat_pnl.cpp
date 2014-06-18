@@ -456,18 +456,12 @@ bool DatPanel::sizesDialog(const QString &cap, const QString &lab, const QString
 	return res;
 }
 //-----------------------------------------------------------------------------
-#include "xpm/plot.xpm"
 #include "xpm/size.xpm"
-//#include "xpm/smth.xpm"
 #include "xpm/crop.xpm"
 #include "xpm/squize.xpm"
-//#include "xpm/sum.xpm"
-//#include "xpm/func.xpm"
-//#include "xpm/swap.xpm"
 #include "xpm/hist.xpm"
 #include "xpm/oper_dir.xpm"
 #include "xpm/oper_of.xpm"
-#include "xpm/delete.xpm"
 //-----------------------------------------------------------------------------
 void DatPanel::newdat()
 {
@@ -621,13 +615,13 @@ void DatPanel::toolTop(QBoxLayout *l)
 
 	// file menu
 	o = menu->addMenu(tr("File"));
-	a = new QAction(QPixmap(":/xpm/document-open.png"), tr("Load data"), this);
+	a = new QAction(QPixmap(":/png/document-open.png"), tr("Load data"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(load()));
 	a->setToolTip(tr("Load data from file. Data will be deleted only\nat exit but UDAV will not ask to save it (Ctrl+Shift+O)."));
 	a->setShortcut(Qt::CTRL+Qt::SHIFT+Qt::Key_O);	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
-	a = new QAction(QPixmap(":/xpm/document-save.png"), tr("Save data"), this);
+	a = new QAction(QPixmap(":/png/document-save.png"), tr("Save data"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(save()));
 	a->setToolTip(tr("Save data to a file (Ctrl+Shift+S)."));
 	a->setShortcut(Qt::CTRL+Qt::SHIFT+Qt::Key_S);	o->addAction(a);
@@ -640,19 +634,19 @@ void DatPanel::toolTop(QBoxLayout *l)
 //	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
 
-	a = new QAction(QPixmap(plot_xpm), tr("Plot data"), this);
+	a = new QAction(QPixmap(":/png/office-chart-line.png"), tr("Plot data"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(plot()));
 	a->setToolTip(tr("Plot data in new script window. You may select the kind\nof plot, its style and so on."));
 	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
-	a = new QAction(QPixmap(":/xpm/edit-copy.png"), tr("Copy data"), this);
+	a = new QAction(QPixmap(":/png/edit-copy.png"), tr("Copy data"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(copy()));
 	a->setToolTip(tr("Copy range of numbers to clipboard (Ctrl+Shift+C)."));
 	a->setShortcut(Qt::CTRL+Qt::SHIFT+Qt::Key_C);	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
-	a = new QAction(QPixmap(":/xpm/edit-paste.png"), tr("Paste data"), this);
+	a = new QAction(QPixmap(":/png/edit-paste.png"), tr("Paste data"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(copy()));
 	a->setToolTip(tr("Paste range of numbers from clipboard (Ctrl+Shift+P)."));
 	a->setShortcut(Qt::CTRL+Qt::SHIFT+Qt::Key_V);	o->addAction(a);
@@ -660,13 +654,13 @@ void DatPanel::toolTop(QBoxLayout *l)
 
 	// navigation menu
 	o = menu->addMenu(tr("Navigate"));
-	a = new QAction(QPixmap(":/xpm/go-first.png"), tr("First slice"), this);
+	a = new QAction(QPixmap(":/png/go-first.png"), tr("First slice"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(first()));
 	a->setToolTip(tr("Go to the first data slice for 3D data."));
 	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
-	a = new QAction(QPixmap(":/xpm/go-previous.png"), tr("Prev. slice"), this);
+	a = new QAction(QPixmap(":/png/go-previous.png"), tr("Prev. slice"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(prev()));
 	a->setToolTip(tr("Go to the previous data slice for 3D data."));
 	o->addAction(a);
@@ -684,13 +678,13 @@ void DatPanel::toolTop(QBoxLayout *l)
 	a->setToolTip(tr("Go to the specified data slice for 3D data."));
 	o->addAction(a);
 
-	a = new QAction(QPixmap(":/xpm/go-next.png"), tr("Next slice"), this);
+	a = new QAction(QPixmap(":/png/go-next.png"), tr("Next slice"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(next()));
 	a->setToolTip(tr("Go to the next data slice for 3D data."));
 	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
-	a = new QAction(QPixmap(":/xpm/go-last.png"), tr("Last slice"), this);
+	a = new QAction(QPixmap(":/png/go-last.png"), tr("Last slice"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(last()));
 	a->setToolTip(tr("Go to the last data slice for 3D data."));
 	o->addAction(a);
@@ -705,7 +699,7 @@ void DatPanel::toolLeft(QBoxLayout *l)
 
 	// size menu
 	o = menu->addMenu(tr("Sizes"));
-	a = new QAction(QPixmap(":/xpm/document-new.png"), tr("Create new"), this);
+	a = new QAction(QPixmap(":/png/document-new.png"), tr("Create new"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(create()));
 	a->setToolTip(tr("Recreate the data with new sizes and fill it by zeros (Ctrl+Shift+N)."));
 	a->setShortcut(Qt::CTRL+Qt::SHIFT+Qt::Key_N);	o->addAction(a);
@@ -747,7 +741,7 @@ void DatPanel::toolLeft(QBoxLayout *l)
 	a->setShortcut(Qt::CTRL+Qt::SHIFT+Qt::Key_H);	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
-/*	a = new QAction(QPixmap(":/xpm/view-refresh.png"), tr("Refresh"), this);
+/*	a = new QAction(QPixmap(":/png/view-refresh.png"), tr("Refresh"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(refresh()));
 	a->setToolTip(tr("Refresh data values."));
 	o->addAction(a);
@@ -772,7 +766,7 @@ void DatPanel::toolLeft(QBoxLayout *l)
 
 	l->addStretch(1);
 
-	a = new QAction(QPixmap(delete_xpm), tr("Close tab"), this);
+	a = new QAction(QPixmap(":/png/tab-close.png"), tr("Close tab"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(close()));
 	a->setToolTip(tr("Close this data tab."));
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);

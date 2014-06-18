@@ -274,7 +274,7 @@ void PlotPanel::toolTop(QBoxLayout *l)
 	QToolButton *bb;
 
 	// graphics menu
-	a = new QAction(QPixmap(":/xpm/alpha.png"), tr("Alpha"), this);
+	a = new QAction(QPixmap(":/png/alpha.png"), tr("Alpha"), this);
 	a->setShortcut(Qt::CTRL+Qt::Key_T);	a->setCheckable(true);
 	connect(a, SIGNAL(toggled(bool)), mgl, SLOT(setAlpha(bool)));
 	connect(mgl, SIGNAL(alphaChanged(bool)), a, SLOT(setChecked(bool)));
@@ -282,7 +282,7 @@ void PlotPanel::toolTop(QBoxLayout *l)
 	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
-	a = new QAction(QPixmap(":/xpm/weather-clear.png"), tr("Light"), this);
+	a = new QAction(QPixmap(":/png/weather-clear.png"), tr("Light"), this);
 	a->setShortcut(Qt::CTRL+Qt::Key_L);	a->setCheckable(true);
 	connect(a, SIGNAL(toggled(bool)), mgl, SLOT(setLight(bool)));
 	connect(mgl, SIGNAL(lightChanged(bool)), a, SLOT(setChecked(bool)));
@@ -290,21 +290,21 @@ void PlotPanel::toolTop(QBoxLayout *l)
 	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
-	a = new QAction(QPixmap(wire_xpm), tr("Grid"), this);
+	a = new QAction(QPixmap(":/png/view-grid.png"), tr("Grid"), this);
 	a->setShortcut(Qt::CTRL+Qt::Key_G);	a->setCheckable(true);
 	connect(a, SIGNAL(toggled(bool)), mgl, SLOT(setGrid(bool)));
 	a->setToolTip(tr("Switch on/off grid of absolute coordinates (Ctrl+G)."));
 	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
-	a = new QAction(QPixmap(":/xpm/object-rotate-right.png"), tr("Rotate by mouse"), this);
+	a = new QAction(QPixmap(":/png/transform-move.png"), tr("Rotate by mouse"), this);
 	a->setCheckable(true);
 	connect(a, SIGNAL(toggled(bool)), mgl, SLOT(setRotate(bool)));
 	connect(mgl, SIGNAL(rotateChanged(bool)), a, SLOT(setChecked(bool)));
 	a->setToolTip(tr("Switch on/off mouse handling of the graphics\n(rotation, shifting, zooming and perspective)."));
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
-/*	a = new QAction(QPixmap(":/xpm/zoom-fit-best.png"), tr("Zoom by mouse"), this);
+/*	a = new QAction(QPixmap(":/png/zoom-fit-best.png"), tr("Zoom by mouse"), this);
 	a->setCheckable(true);
 	connect(a, SIGNAL(toggled(bool)), mgl, SLOT(setZoom(bool)));
 	connect(mgl, SIGNAL(zoomChanged(bool)), a, SLOT(setChecked(bool)));
@@ -312,14 +312,14 @@ void PlotPanel::toolTop(QBoxLayout *l)
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);*/
 
 	o->addSeparator();
-	a = new QAction(QPixmap(":/xpm/zoom-original.png"), tr("Restore"), this);
+	a = new QAction(QPixmap(":/png/zoom-original.png"), tr("Restore"), this);
 	connect(a, SIGNAL(triggered()), mgl, SLOT(restore()));
 	a->setToolTip(tr("Restore default graphics rotation, zoom and perspective (Ctrl+Space)."));
 	a->setShortcut(Qt::CTRL+Qt::Key_Space);
 	o->addAction(a);	popup->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
-	a = new QAction(QPixmap(":/xpm/view-refresh.png"), tr("Redraw"), this);
+	a = new QAction(QPixmap(":/png/view-refresh.png"), tr("Redraw"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(execute()));
 	a->setToolTip(tr("Execute script and redraw graphics (F5)."));
 	a->setShortcut(Qt::Key_F5);
@@ -336,20 +336,20 @@ void PlotPanel::toolTop(QBoxLayout *l)
 	a->setToolTip(tr("Restore status for 'once' command and reload data (F9)."));
 	a->setShortcut(Qt::Key_F9);	o->addAction(a);	popup->addAction(a);
 
-	a = new QAction(QPixmap(":/xpm/process-stop.png"), tr("Stop"), this);
+	a = new QAction(QPixmap(":/png/process-stop.png"), tr("Stop"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(stop()));
 	a->setToolTip(tr("Stop script execution (F7)."));
 	a->setShortcut(Qt::Key_F7);	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
-	a = new QAction(QPixmap(":/xpm/edit-copy.png"), tr("Copy plot"), this);
+	a = new QAction(QPixmap(":/png/edit-copy.png"), tr("Copy plot"), this);
 	connect(a, SIGNAL(triggered()), mgl, SLOT(copy()));
 	a->setToolTip(tr("Copy graphics to clipboard (Ctrl+Shift+G)."));
 	a->setShortcut(Qt::CTRL+Qt::SHIFT+Qt::Key_G);
 	o->addAction(a);	popup->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
-	a = new QAction(QPixmap(":/xpm/edit-copy.png"), tr("Copy click coor."), this);
+	a = new QAction(QPixmap(":/png/edit-copy.png"), tr("Copy click coor."), this);
 	connect(a, SIGNAL(triggered()), mgl, SLOT(copyClickCoor()));
 	a->setToolTip(tr("Copy coordinates of last mouse click to clipboard."));
 	o->addAction(a);	popup->addAction(a);
@@ -456,42 +456,42 @@ void PlotPanel::toolLeft(QBoxLayout *l)
 
 	// zooming menu
 	oo = o->addMenu(tr("Zoom/move"));
-	a = new QAction(QPixmap(":/xpm/go-previous.png"), tr("Move left"), this);
+	a = new QAction(QPixmap(":/png/arrow-left.png"), tr("Move left"), this);
 	connect(a, SIGNAL(triggered()), mgl, SLOT(shiftLeft()));
 	a->setShortcut(Qt::ALT+Qt::Key_Left);
 	a->setToolTip(tr("Move graphics left by 1/3 of its width."));
 	oo->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
-	a = new QAction(QPixmap(":/xpm/go-up.png"), tr("Move up"), this);
+	a = new QAction(QPixmap(":/png/arrow-up.png"), tr("Move up"), this);
 	connect(a, SIGNAL(triggered()), mgl, SLOT(shiftUp()));
 	a->setShortcut(Qt::ALT+Qt::Key_Up);
 	a->setToolTip(tr("Move graphics up by 1/3 of its height."));
 	oo->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
-	a = new QAction(QPixmap(":/xpm/zoom-in.png"), tr("Zoom in"), this);
+	a = new QAction(QPixmap(":/png/zoom-in.png"), tr("Zoom in"), this);
 	connect(a, SIGNAL(triggered()), mgl, SLOT(zoomIn()));
 	a->setShortcut(Qt::ALT+Qt::Key_Equal);
 	a->setToolTip(tr("Zoom in graphics."));
 	oo->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
-	a = new QAction(QPixmap(":/xpm/zoom-out.png"), tr("Zoom out"), this);
+	a = new QAction(QPixmap(":/png/zoom-out.png"), tr("Zoom out"), this);
 	connect(a, SIGNAL(triggered()), mgl, SLOT(zoomOut()));
 	a->setShortcut(Qt::ALT+Qt::Key_Minus);
 	a->setToolTip(tr("Zoom out graphics."));
 	oo->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
-	a = new QAction(QPixmap(":/xpm/go-down.png"), tr("Move down"), this);
+	a = new QAction(QPixmap(":/png/arrow-down.png"), tr("Move down"), this);
 	connect(a, SIGNAL(triggered()), mgl, SLOT(shiftDown()));
 	a->setShortcut(Qt::ALT+Qt::Key_Down);
 	a->setToolTip(tr("Move graphics up down 1/3 of its height."));
 	oo->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
-	a = new QAction(QPixmap(":/xpm/go-next.png"), tr("Move right"), this);
+	a = new QAction(QPixmap(":/png/arrow-right.png"), tr("Move right"), this);
 	connect(a, SIGNAL(triggered()), mgl, SLOT(shiftRight()));
 	a->setShortcut(Qt::ALT+Qt::Key_Right);
 	a->setToolTip(tr("Move graphics right by 1/3 of its width."));
@@ -519,25 +519,25 @@ void PlotPanel::toolLeft(QBoxLayout *l)
 
 	// animation menu
 	oo = o->addMenu(tr("Animation"));
-	a = new QAction(QPixmap(":/xpm/media-seek-forward.png"), tr("Next slide"), this);
+	a = new QAction(QPixmap(":/png/media-seek-forward.png"), tr("Next slide"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(nextSlide()));
 	a->setShortcut(Qt::CTRL+Qt::Key_Period);
 	a->setToolTip(tr("Show next slide (Ctrl+.)."));	oo->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
-	a = new QAction(QPixmap(":/xpm/media-seek-backward.png"), tr("Prev slide"), this);
-	connect(a, SIGNAL(triggered()), this, SLOT(prevSlide()));
-	a->setShortcut(Qt::CTRL+Qt::Key_Comma);
-	a->setToolTip(tr("Show previous slide (Ctrl+,)."));	oo->addAction(a);
-	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
-
-	a = new QAction(QPixmap(":/xpm/film-b.png"), tr("Slideshow"), this);
+	a = new QAction(QPixmap(":/png/media-playback-start.png"), tr("Slideshow"), this);
 	a->setCheckable(true);
 	connect(a, SIGNAL(toggled(bool)), this, SLOT(animStart(bool)));
 	connect(this, SIGNAL(animSwitch(bool)),a,SLOT(setChecked(bool)));
 	a->setToolTip(tr("Run slideshow (Ctrl+F5). If no parameter specified\nthen the dialog with slideshow options will appear."));
 	a->setShortcut(Qt::CTRL+Qt::Key_F5);	oo->addAction(a);
 	oo->addAction(tr("Setup show"), this, SLOT(animSetup()), Qt::CTRL+Qt::Key_W);
+	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
+
+	a = new QAction(QPixmap(":/png/media-seek-backward.png"), tr("Prev slide"), this);
+	connect(a, SIGNAL(triggered()), this, SLOT(prevSlide()));
+	a->setShortcut(Qt::CTRL+Qt::Key_Comma);
+	a->setToolTip(tr("Show previous slide (Ctrl+,)."));	oo->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
 	l->addStretch(1);

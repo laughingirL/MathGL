@@ -41,6 +41,10 @@ using mglDataA::Momentum;
 
 	/// Initiate by other mglData variable
 	mglData(const mglData &d)	{	a=0;	mgl_data_set(this,&d);		}	// NOTE: must be constructor for mglData& to exclude copy one
+#if MGL_HAVE_RVAL
+	mglData(mglData &&d):nx(d.nx),ny(d.ny),nz(d.nz),a(d.a),id(d.id),link(d.link)
+	{	s=d.s;	temp=d.temp;	func=d.func;	o=d.o;	d.a=0;	d.func=0;	}
+#endif
 	mglData(const mglDataA *d)
 	{	a=0;	if(d)	mgl_data_set(this, d);	else	mgl_data_create(this,1,1,1);		}
 	mglData(bool, mglData *d)	// NOTE: Variable d will be deleted!!!

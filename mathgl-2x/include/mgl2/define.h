@@ -44,7 +44,7 @@
 
 #endif
 
-#define MGL_VER2 	2.3	// minor version of MathGL 2.* (like 1.3 for v.2.1.3)
+#define MGL_VER2 	3.0	// minor version of MathGL 2.* (like 1.3 for v.2.1.3)
 //-----------------------------------------------------------------------------
 #ifdef WIN32 //_MSC_VER needs this before math.h
 #define	_USE_MATH_DEFINES
@@ -155,15 +155,7 @@ typedef float mreal;
 #define MGL_DEF_VIEWER "evince"
 #endif
 //-----------------------------------------------------------------------------
-#if defined(_MSC_VER) || defined(__BORLANDC__)
-#define mgl_min(a,b)	(((a)>(b)) ? (b) : (a))
-#define mgl_max(a,b)	(((a)>(b)) ? (a) : (b))
-#define mgl_isnan(a)	((a)!=(a))
-#define mgl_isnum(a)	((a)==(a))
-#define mgl_isfin(a)	((a)-(a)==mreal(0.))
-#define mgl_isbad(a)	((a)-(a)!=mreal(0.))
-#define mgl_sign(a)		((a)<0 ? -1:1)
-#else
+#if MGL_HAVE_TYPEOF
 #define mgl_isbad(a)	({typeof (a) _a = (a); _a-_a!=mreal(0.);})
 #define mgl_isfin(a)	({typeof (a) _a = (a); _a-_a==mreal(0.);})
 #define mgl_isnum(a)	({typeof (a) _a = (a); _a==_a;})
@@ -171,6 +163,14 @@ typedef float mreal;
 #define mgl_min(a,b)	({typeof (a) _a = (a); typeof (b) _b = (b); _a > _b ? _b : _a;})
 #define mgl_max(a,b)	({typeof (a) _a = (a); typeof (b) _b = (b); _a > _b ? _a : _b;})
 #define mgl_sign(a)		({typeof (a) _a = (a); _a<0 ? -1:1;})
+#else
+#define mgl_min(a,b)	(((a)>(b)) ? (b) : (a))
+#define mgl_max(a,b)	(((a)>(b)) ? (a) : (b))
+#define mgl_isnan(a)	((a)!=(a))
+#define mgl_isnum(a)	((a)==(a))
+#define mgl_isfin(a)	((a)-(a)==mreal(0.))
+#define mgl_isbad(a)	((a)-(a)!=mreal(0.))
+#define mgl_sign(a)		((a)<0 ? -1:1)
 #endif
 //-----------------------------------------------------------------------------
 #define SMOOTH_NONE		0

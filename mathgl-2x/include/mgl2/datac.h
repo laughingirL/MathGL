@@ -45,6 +45,10 @@ using mglDataA::Momentum;
 	/// Initiate by other mglDataC variable
 	mglDataC(const mglDataC &d)	{	a=0;	mgl_datac_set(this,&d);		}	// NOTE: must be constructor for mglDataC& to exclude copy one
 	mglDataC(const mglDataA &d)	{	a=0;	mgl_datac_set(this,&d);		}
+#if MGL_HAVE_RVAL
+	mglDataC(mglDataC &&d):nx(d.nx),ny(d.ny),nz(d.nz),a(d.a),id(d.id),link(d.link)
+	{	s=d.s;	temp=d.temp;	func=d.func;	o=d.o;	d.a=0;	d.func=0;	}
+#endif
 	mglDataC(const mglDataA &re, const mglDataA &im)	{	a=0;	mgl_datac_set_ri(this,&re,&im);	}
 	mglDataC(HCDT d)	{	a=0;	mgl_datac_set(this, d);		}
 	mglDataC(HCDT re, HCDT im)	{	a=0;	mgl_datac_set_ri(this, re, im);		}

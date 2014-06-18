@@ -36,11 +36,6 @@
 #include "mgl2/canvas_wnd.h"
 #include "mgl2/fltk.h"
 //-----------------------------------------------------------------------------
-#include "xpm/alpha_on.xpm"
-#include "xpm/light_on.xpm"
-#include "xpm/zoom_on.xpm"
-#include "xpm/show_on.xpm"
-#include "xpm/rotate_on.xpm"
 #include "xpm/show_sl.xpm"
 #include "xpm/next_sl.xpm"
 #include "xpm/prev_sl.xpm"
@@ -58,11 +53,11 @@
 #include "xpm/ok.xpm"
 #include "xpm/wire.xpm"
 //-----------------------------------------------------------------------------
-Fl_Pixmap xpm_a1(alpha_xpm), xpm_a2(alpha_on_xpm);
-Fl_Pixmap xpm_l1(light_on_xpm), xpm_l2(light_xpm);
-Fl_Pixmap xpm_z1(zoom_in_xpm), xpm_z2(zoom_on_xpm);
-Fl_Pixmap xpm_s1(show_sl_xpm), xpm_s2(show_on_xpm);
-Fl_Pixmap xpm_r1(rotate_xpm), xpm_r2(rotate_on_xpm);
+Fl_Pixmap xpm_a1(alpha_xpm);
+Fl_Pixmap xpm_l1(light_xpm);
+Fl_Pixmap xpm_z1(zoom_in_xpm);
+Fl_Pixmap xpm_s1(show_sl_xpm);
+Fl_Pixmap xpm_r1(rotate_xpm);
 Fl_Pixmap xpm_wire(wire_xpm);
 //-----------------------------------------------------------------------------
 /// Class allows the window creation for displaying plot bitmap with the help of FLTK library
@@ -335,11 +330,11 @@ void Fl_MGLView::setoff(int &val, Fl_Button *b, const char *txt)
 void MGL_NO_EXPORT mgl_grid_cb(Fl_Widget*, void* v)
 {	if(v)	((Fl_MGLView*)v)->toggle_grid();	}
 //-------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_alpha_cb(Fl_Widget*, void* v)	// alpha?xpm_a2:xpm_a1
+void MGL_NO_EXPORT mgl_alpha_cb(Fl_Widget*, void* v)
 {	if(v)	((Fl_MGLView*)v)->toggle_alpha();	}
 void mglCanvasFL::ToggleAlpha()	{	Fl::lock();	mgl->toggle_alpha();	Fl::unlock();	}
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_light_cb(Fl_Widget*, void* v)	// light?xpm_l2:xpm_l1
+void MGL_NO_EXPORT mgl_light_cb(Fl_Widget*, void* v)
 {	if(v)	((Fl_MGLView*)v)->toggle_light();	}
 void mglCanvasFL::ToggleLight()	{	Fl::lock();	mgl->toggle_light();	Fl::unlock();	}
 //-----------------------------------------------------------------------------
