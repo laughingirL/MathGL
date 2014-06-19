@@ -66,6 +66,7 @@ option(enable-all-docs "Enable all documentation building")
 option(enable-all "Enable all core features")
 option(enable-all-widgets "Enable all Widgets")
 option(enable-all-swig "Enable all SWIG based interfaces")
+option(enable-rvalue "Enable move constructor support (need C++11)" OFF)
 option(enable-pthread "Enable POSIX threads support" OFF)
 option(enable-openmp "Enable OpenMP support" ON)
 option(enable-lgpl "Enable only LGPL part of MathGL")
@@ -95,9 +96,9 @@ CMAKE_DEPENDENT_OPTION(enable-qt4 "Enable Qt4 widget" OFF "NOT enable-all-widget
 CMAKE_DEPENDENT_OPTION(enable-qt5 "Enable Qt5 widget" OFF "NOT enable-all-widgets" ON)
 CMAKE_DEPENDENT_OPTION(enable-qt5asqt "Set Qt5 as default libmgl-qt" ON "enable-qt5" OFF)
 
-if(UNIX)
+if(UNIX AND enable-rvalue)
 	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
-endif()
+endif(UNIX AND enable-rvalue)
  
 # MSVC does not require any special flags
 
