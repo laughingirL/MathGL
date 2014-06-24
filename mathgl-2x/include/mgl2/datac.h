@@ -214,9 +214,6 @@ using mglDataA::Momentum;
 	/// Save data to HDF file
 	void SaveHDF(const char *fname,const char *data,bool rewrite=false) const
 	{	mgl_datac_save_hdf(this,fname,data,rewrite);	}
-	/// Put HDF data names into buf as '\t' separated.
-	inline static int DatasHDF(const char *fname, char *buf, long size)
-	{	return mgl_datas_hdf(fname,buf,size);	}
 
 	/// Get real part of data values
 	inline mglData Real() const

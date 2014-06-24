@@ -64,6 +64,9 @@ void MGL_EXPORT mgl_data_save_hdf_(uintptr_t *d, const char *fname, const char *
 /// Get information about the data (sizes and momentum) to string
 MGL_EXPORT const char *mgl_data_info(HCDT dat);
 int MGL_EXPORT mgl_data_info_(uintptr_t *dat, char *out, int len);
+/// Put HDF data names into buf as '\t' separated.
+int MGL_EXPORT mgl_datas_hdf(const char *fname, char *buf, long size);
+int MGL_EXPORT mgl_datas_hdf_(const char *fname, char *buf, int l, int size);
 
 /// Get maximal value of the data
 mreal MGL_EXPORT mgl_data_max(HCDT dat);
@@ -147,6 +150,9 @@ public:
 	/// Save data to HDF file
 	virtual void SaveHDF(const char *fname,const char *data,bool rewrite=false) const
 	{	mgl_data_save_hdf(this,fname,data,rewrite);	}
+	/// Put HDF data names into buf as '\t' separated.
+	inline static int DatasHDF(const char *fname, char *buf, long size)
+	{	return mgl_datas_hdf(fname,buf,size);	}
 
 	/// Get information about the data (sizes and momentum) to string
 	inline const char *PrintInfo() const	{	return mgl_data_info(this);	}

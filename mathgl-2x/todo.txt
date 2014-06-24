@@ -37,6 +37,8 @@
 17. Check adjust in FLTK, Qt -- why don't redraw existed data (if func=NULL)
 20. Check again about const modifier
 
+21. Check "dens a '3{sff00182424f80000}'
+
 YY. Optimize code (especially Quality=0 ?!?)
 ZZ. Update *.i for new functions {before release!!!}
 
@@ -56,23 +58,15 @@ C. Translate to Russian everything
 7. Add arrow style 'X' into docs and samples
 8. Semi-transparent background can be done by "clf 'r{A5}'"
 9. Extend "How can I exclude a point or a region of plot from the drawing?" + using SubData()/Evaluate()
-10. Docs about mgl_data_subdata_ext() with NULL argument(s) + new SubData() variants
 11. Manual dashing, like "{df090}" + extend "style"-sample by manual dashing
-12. Manual mask, like "{s00ff00182424f800}" + change "mask"-sample + fix text about manual mask
 13. Replace Cmin,Cmax,Min,Max,... by "color range", "axis range" and so on
 14. Docs + sample about Rasterize()
 15. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using Stem()
 16. mgl_ode_solve_ex()
-17. AddVar() always recreate data as mglData
-18. Add function random(dat) for list of known functions
-19. Docs about mgl_data_set_name, mgl_data_set_func
-20. Docs about mgl_suppress_warn
-21. Fortran versions for: mgl_data_info, mgl_datas_hdf, mgl_get_fit, mgl_get_mess, mgl_get_plotid
 22. Docs about Polygon, Angle.
 23. Docs about mgl_check_version() and 'version'
 24. Docs about new SetTicks() and mgl_set_ticks_fact*()
 25. Notice about MGL_HAVE_C99_COMPLEX, MGL_SYS_NAN into "Installation" section.
-26. Style 'f' for fixed format (like "%.2f") in Table() and Label().
 27. Color gradient (color scheme) for glyphs of text + update sample
 28. Hint about flow threads and contour lines (as ODE and for advanced users).
 29. Howto about plot ranges (subplot styles)

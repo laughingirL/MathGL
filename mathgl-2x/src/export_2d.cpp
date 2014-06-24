@@ -153,9 +153,9 @@ void MGL_NO_EXPORT put_desc(HMGL gr, void *fp, bool gz, const char *pre, const c
 		const mglGlyph &g = gr->GetGlf(q.n4);
 		int nl=g.nl;
 		const short *ln=g.line;
+		bool np=true;
 		if(ln && nl>0)	for(long ik=0;ik<nl;ik++)
 		{
-			bool np=true;
 			long ii = 2*ik;
 			if(ln[ii]==0x3fff && ln[ii+1]==0x3fff)	// line breakthrough
 			{	mgl_printf(fp, gz, "%s",ln3);	np=true;	continue;	}

@@ -293,7 +293,8 @@ Sets default name @var{id} as filename for saving (in FLTK window for example).
 
 @ifclear UDAV
 @deftypefn {Method on @code{mglGraph}} @code{const char *} GetPlotId ()
-@deftypefnx {C function} @code{const char *} mgl_get_plotid (@code{HMGL} gr)
+@deftypefnx {C function only} @code{const char *} mgl_get_plotid (@code{HMGL} gr)
+@deftypefnx {Fortran subroutine} @code{} mgl_get_plotid (@code{long} gr, @code{char *}out, @code{int} len)
 Gets default name @var{id} as filename for saving (in FLTK window for example).
 @end deftypefn
 @end ifclear
@@ -491,7 +492,7 @@ Sets the default rotation angle (in degrees) for masks. Note, you can use symbol
 @cindex SetWarn
 @cindex GetWarn
 
-Normally user should set it to zero by @code{SetWarn(0);} before plotting and check if @code{GetWarn()} or @code{Message()} return non zero after plotting. Only last warning will be saved. All warnings/errors produced by MathGL is not critical -- the plot just will not be drawn.
+Normally user should set it to zero by @code{SetWarn(0);} before plotting and check if @code{GetWarn()} or @code{Message()} return non zero after plotting. Only last warning will be saved. All warnings/errors produced by MathGL is not critical -- the plot just will not be drawn. By default, all warnings are printed in stderr. You can disable it by using @code{mgl_suppress_warn(true);}.
 
 @deftypefn {Method on @code{mglGraph}} @code{void} SetWarn (@code{int} code, @code{const char *}info=@code{""})
 @deftypefnx {C function} @code{void} mgl_set_warn (@code{HMGL} gr, @code{int} code, @code{const char *}info)
@@ -499,7 +500,8 @@ Set warning code. Normally you should call this function only for clearing the w
 @end deftypefn
 
 @deftypefn {Method on @code{mglGraph}} @code{const char *}Message ()
-@deftypefnx {C function} @code{const char *}mgl_get_mess (@code{HMGL} gr)
+@deftypefnx {C function only} @code{const char *}mgl_get_mess (@code{HMGL} gr)
+@deftypefnx {Fortran subroutine} @code{} mgl_get_mess (@code{long} gr, @code{char *}out, @code{int} len)
 Return messages about matters why some plot are not drawn. If returned string is empty then there are no messages.
 @end deftypefn
 
@@ -551,6 +553,11 @@ Too long line in MGL script
 Unbalanced ' in MGL script
 @end table
 @end deftypefn
+
+@deftypefn {C function} @code{void} mgl_suppress_warn (@code{int} state)
+Disable printing warnings to @code{stderr} if @var{state} is nonzero.
+@end deftypefn
+
 @end ifclear
 
 @c ==================================================================
@@ -2235,7 +2242,7 @@ These functions draw string @var{txt} as marks with size proportional to @var{r}
 @deftypefnx {C function} @code{void} mgl_label_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}txt, @code{const char *}fnt, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_labelw_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const wchar_t *}txt, @code{const char *}fnt, @code{const char *}opt)
 @end ifclear
-These functions draw string @var{txt} at points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. If string @var{txt} contain @samp{%x}, @samp{%y}, @samp{%z} or @samp{%n} then it will be replaced by the value of x-,y-,z-coordinate of the point or its index. See also @ref{plot}, @ref{mark}, @ref{textmark}, @ref{table}. @sref{Label sample}
+These functions draw string @var{txt} at points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. If string @var{txt} contain @samp{%x}, @samp{%y}, @samp{%z} or @samp{%n} then it will be replaced by the value of x-,y-,z-coordinate of the point or its index. String @var{fnt} may contain @ref{Font styles}; @samp{f} for fixed format of printed numbers. See also @ref{plot}, @ref{mark}, @ref{textmark}, @ref{table}. @sref{Label sample}
 @end deftypefn
 
 @anchor{table}
@@ -2249,7 +2256,15 @@ These functions draw string @var{txt} at points @{@var{x}[i], @var{y}[i], @var{z
 @deftypefnx {C function} @code{void} mgl_table (@code{HMGL} gr, @code{mreal} x, @code{mreal} y, @code{HCDT} val, @code{const char *}txt, @code{const char *}fnt, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_tablew (@code{HMGL} gr, @code{mreal} x, @code{mreal} y, @code{HCDT} val, @code{const wchar_t *}txt, @code{const char *}fnt, @code{const char *}opt)
 @end ifclear
-These functions draw table with values of @var{val} and captions from string @var{txt} (separated by newline symbol @samp{\n}) at points @{@var{x}, @var{y}@} (default at @{0,0@}) related to current subplot. If string @var{fnt} contain @samp{#} then cell border will be drawn. If string @var{fnt} contain @samp{|} then table width is limited by subplot width (equivalent option @samp{value 1}). If string @var{fnt} contain @samp{=} then widths of all cells are the same. Option @code{value} set the width of the table (default is 1). See also @ref{plot}, @ref{label}. @sref{Table sample}
+These functions draw table with values of @var{val} and captions from string @var{txt} (separated by newline symbol @samp{\n}) at points @{@var{x}, @var{y}@} (default at @{0,0@}) related to current subplot. String @var{fnt} may contain:
+@itemize
+@item @ref{Font styles};
+@item @samp{#} for drawing cell borders;
+@item @samp{|} for limiting table widh by subplot one (equal to option @samp{value 1});
+@item @samp{=} for equal width of all cells;
+@item @samp{f} for fixed format of printed numbers.
+@end itemize
+Option @code{value} set the width of the table (default is 1). See also @ref{plot}, @ref{label}. @sref{Table sample}
 @end deftypefn
 
 @anchor{tube}
@@ -3235,7 +3250,8 @@ Print last fitted formula with found coefficients (as numbers) at position @var{
 
 @ifclear UDAV
 @deftypefn {Method on @code{mglGraph}} @code{const char *}GetFit ()
-@deftypefnx {C function} @code{const char *} mgl_get_fit (@code{HMGL} gr)
+@deftypefnx {C function only} @code{const char *} mgl_get_fit (@code{HMGL} gr)
+@deftypefnx {Fortran subroutine} @code{} mgl_get_fit (@code{long} gr, @code{char *}out, @code{int} len)
 Get last fitted formula with found coefficients (as numbers).
 @end deftypefn
 @end ifclear

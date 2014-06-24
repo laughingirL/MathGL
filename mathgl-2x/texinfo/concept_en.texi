@@ -133,10 +133,14 @@ Additionally, MathGL can apply mask to face filling at bitmap rendering. The kin
 
 However, you can redefine mask for one symbol by specifying new matrix of size 8*8 as second argument for @ref{mask} command. For example, the right-down subplot on the figure above is produced by code@*
 @ifclear UDAV
-@code{gr->SetMask('+', "ff00182424f80000");	gr->Dens(a,"3+");}
+@code{gr->SetMask('+', "ff00182424f800");	gr->Dens(a,"3+");}@*
+or just use manual mask style (for v.2.3 and later)@*
+@code{gr->Dens(a,"3@{s00ff00182424f800@}");}
 @end ifclear
 @ifset UDAV
-@code{mask '+' 'ff00182424f80000':dens a '3+'}
+@code{mask '+' 'ff00182424f800':dens a '3+'}@*
+or just use manual mask style (for v.2.3 and later)@*
+@code{dens a '3@{s00ff00182424f800@}'}
 @end ifset
 
 @c ------------------------------------------------------------------
@@ -194,7 +198,7 @@ MathGL have the fast variant of textual formula evaluation
 @end ifclear
 . There are a lot of functions and operators available. The operators are: @samp{+} -- addition, @samp{-} -- subtraction, @samp{*} -- multiplication, @samp{/} -- division, @samp{^} -- integer power. Also there are logical ``operators'': @samp{<} -- true if x<y, @samp{>} -- true if x>y, @samp{=} -- true if x=y, @samp{&} -- true if x and y both nonzero, @samp{|} -- true if x or y nonzero. These logical operators have lowest priority and return 1 if true or 0 if false.
 
-The basic functions are: @samp{sqrt(x)} -- square root of @var{x}, @samp{pow(x,y)} -- power @var{x} in @var{y}, @samp{ln(x)} -- natural logarithm of @var{x}, @samp{lg(x)} -- decimal logarithm of @var{x}, @samp{log(a,x)} -- logarithm base @var{a} of @var{x}, @samp{abs(x)} -- absolute value of @var{x}, @samp{sign(x)} -- sign of @var{x}, @samp{mod(x,y)} -- x modulo y, @samp{step(x)} -- step function, @samp{int(x)} -- integer part of @var{x}, @samp{rnd} -- random number, @samp{pi} -- number
+The basic functions are: @samp{sqrt(x)} -- square root of @var{x}, @samp{pow(x,y)} -- power @var{x} in @var{y}, @samp{ln(x)} -- natural logarithm of @var{x}, @samp{lg(x)} -- decimal logarithm of @var{x}, @samp{log(a,x)} -- logarithm base @var{a} of @var{x}, @samp{abs(x)} -- absolute value of @var{x}, @samp{sign(x)} -- sign of @var{x}, @samp{mod(x,y)} -- @var{x} modulo @var{y}, @samp{step(x)} -- step function, @samp{int(x)} -- integer part of @var{x}, @samp{rnd} -- random number, @samp{random(x)} -- random data of size as in @var{x}, @samp{pi} -- number
 @ifhtml
 @html
 &pi; = 3.1415926&hellip;

@@ -227,9 +227,6 @@ using mglDataA::Momentum;
 	/// Read data array from HDF file (parse HDF4 and HDF5 files)
 	inline int ReadHDF(const char *fname,const char *data)
 	{	return mgl_data_read_hdf(this,fname,data);	}
-	/// Put HDF data names into buf as '\t' separated.
-	inline static int DatasHDF(const char *fname, char *buf, long size)
-	{	return mgl_datas_hdf(fname,buf,size);	}
 
 	/// Get column (or slice) of the data filled by formulas of named columns
 	inline mglData Column(const char *eq) const
@@ -625,13 +622,15 @@ class MGL_EXPORT mglDataF : public mglDataA
 		dy = ny>1?(v2.y-v1.y)/(ny-1):0;
 		dz = nz>1?(v2.z-v1.z)/(nz-1):0;
 	}
+	mreal (*func)(mreal i, mreal j, mreal k, void *par);
+	void *par;
 public:
 
 	mglDataF(const mglDataF &d)	// NOTE: must be constructor for mglDataF& to exclude copy one
-	{	nx=d.nx;	ny=d.ny;	nz=d.nz;	v1=d.v1;	v2=d.v2;
+	{	nx=d.nx;	ny=d.ny;	nz=d.nz;	v1=d.v1;	v2=d.v2;	func=d.func;	par=d.par;
 		str=d.str;	ex = mgl_create_expr(str.c_str());	setD();	}
 	mglDataF(long xx=1,long yy=1,long zz=1)
-	{	ex=0;	v2=mglPoint(1,1,1);	nx=xx;	ny=yy;	nz=zz;	setD();	}
+	{	ex=0;	v2=mglPoint(1,1,1);	nx=xx;	ny=yy;	nz=zz;	setD();	func=0;	par=0;	}
 	virtual ~mglDataF()	{	mgl_delete_expr(ex);	}
 
 	/// Get sizes
@@ -642,35 +641,78 @@ public:
 	/// Create or recreate the array with specified size and fill it by zero
 	inline void Create(long mx,long my=1,long mz=1)	{	nx=mx;	ny=my;	nz=mz;	setD();	}
 	inline void SetRanges(mglPoint p1, mglPoint p2)	{	v1=p1;	v2=p2;	setD();	}
-	/// Set formula and coordinates range [r1,r2]
-	inline void Fill(const char *eq)
-	{	mgl_delete_expr(ex);	
+	/// Set formula to be used as function
+	inline void SetFormula(const char *eq)
+	{
+		mgl_delete_expr(ex);	func=0;	par=0;
 		if(eq && *eq)	{	ex = mgl_create_expr(eq);	str=eq;	}
-		else	{	ex=0;	str="";	}	}
+		else	{	ex=0;	str="";	}
+	}
+	/// Set function and coordinates range [r1,r2]
+	inline void SetFunc(mreal (*f)(mreal,mreal,mreal,void*), void *p=NULL)
+	{	mgl_delete_expr(ex);	ex=0;	func=f;	par=p;	}
 
 	mreal value(mreal i,mreal j=0,mreal k=0, mreal *di=0,mreal *dj=0,mreal *dk=0) const
 	{
-		if(di)	*di = ex?mgl_expr_diff(ex,'x',v1.x+dx*i, v1.y+dy*j, v1.z+dz*k)*dx:0;
-		if(dj)	*dj = ex?mgl_expr_diff(ex,'y',v1.x+dx*i, v1.y+dy*j, v1.z+dz*k)*dy:0;
-		if(dk)	*dk = ex?mgl_expr_diff(ex,'z',v1.x+dx*i, v1.y+dy*j, v1.z+dz*k)*dz:0;
-		return ex?mgl_expr_eval(ex,v1.x+dx*i, v1.y+dy*j, v1.z+dz*k):0;
+		mreal res=0, x=v1.x+dx*i, y=v1.y+dy*j, z=v1.z+dz*k;
+		if(di)	*di = 0;	if(dj)	*dj = 0;	if(dk)	*dk = 0;
+		if(func)
+		{
+			res = func(x,y,z, par);
+			if(di)	*di = func(x+dx,y,z, par)-res;
+			if(dj)	*dj = func(x,y+dy,z, par)-res;
+			if(dk)	*dk = func(x,y,z+dz, par)-res;
+		}
+		else if(ex)
+		{
+			if(di)	*di = mgl_expr_diff(ex,'x',x,y,z)*dx;
+			if(dj)	*dj = mgl_expr_diff(ex,'y',x,y,z)*dy;
+			if(dk)	*dk = mgl_expr_diff(ex,'z',x,y,z)*dz;
+			res = mgl_expr_eval(ex,x,y,z);
+		}
+		return res;
 	}
 	/// Copy data from other mglDataV variable
 	inline const mglDataF &operator=(const mglDataF &d)
 	{	nx=d.nx;	ny=d.ny;	nz=d.nz;	v1=d.v1;	v2=d.v2;	setD();
-		str=d.str;	ex = mgl_create_expr(str.c_str());	return d;	}
+		str=d.str;	ex = mgl_create_expr(str.c_str());	func=d.func;	par=d.par;	return d;	}
 	/// Get the value in given cell of the data without border checking
 	mreal v(long i,long j=0,long k=0) const
-	{	return ex?mgl_expr_eval(ex,v1.x+dx*i, v1.y+dy*j, v1.z+dz*k):0;	}
+	{
+		mreal res=0, x=v1.x+dx*i, y=v1.y+dy*j, z=v1.z+dz*k;
+		if(func)	res = func(x,y,z, par);
+		else if(ex)	res = mgl_expr_eval(ex,x,y,z);
+		return res;
+	}
 	mreal vthr(long i) const
-	{	return ex?mgl_expr_eval(ex,v1.x+dx*(i%nx), v1.y+dy*((i/nx)%ny), v1.z+dz*(i/(nx*ny))/(nz-1)):0;	}
+	{
+		mreal res=0, x=v1.x+dx*(i%nx), y=v1.y+dy*((i/nx)%ny), z=v1.z+dz*(i/(nx*ny));
+		if(func)	res = func(x,y,z, par);
+		else if(ex)	res = mgl_expr_eval(ex,x,y,z);
+		return res;
+	}
 	// add for speeding up !!!
 	mreal dvx(long i,long j=0,long k=0) const
-	{	return ex?mgl_expr_eval(ex,v1.x+dx+dx*i, v1.y+dy*j, v1.z+dz*k)-mgl_expr_eval(ex,v1.x+dx*i, v1.y+dy*j, v1.z+dz*k):0;	}
+	{
+		mreal res=0, x=v1.x+dx*i, y=v1.y+dy*j, z=v1.z+dz*k;
+		if(func)	res = func(x+dx,y,z, par)-func(x,y,z, par);
+		else if(ex)	res = mgl_expr_eval(ex,x+dx,y,z)-mgl_expr_eval(ex,x,y,z);
+		return res;
+	}
 	mreal dvy(long i,long j=0,long k=0) const
-	{	return ex?mgl_expr_eval(ex,v1.x+dx*i, v1.y+dy+dy*j, v1.z+dz*k)-mgl_expr_eval(ex,v1.x+dx*i, v1.y+dy*j, v1.z+dz*k):0;	}
+	{
+		mreal res=0, x=v1.x+dx*i, y=v1.y+dy*j, z=v1.z+dz*k;
+		if(func)	res = func(x,y+dy,z, par)-func(x,y,z, par);
+		else if(ex)	res = mgl_expr_eval(ex,x,y+dy,z)-mgl_expr_eval(ex,x,y,z);
+		return res;
+	}
 	mreal dvz(long i,long j=0,long k=0) const
-	{	return ex?mgl_expr_eval(ex,v1.x+dx*i, v1.y+dy*j, v1.z+dz+dz*k)-mgl_expr_eval(ex,v1.x+dx*i, v1.y+dy*j, v1.z+dz*k):0;	}
+	{
+		mreal res=0, x=v1.x+dx*i, y=v1.y+dy*j, z=v1.z+dz*k;
+		if(func)	res = func(x,y,z+dz, par)-func(x,y,z, par);
+		else if(ex)	res = mgl_expr_eval(ex,x,y,z+dz)-mgl_expr_eval(ex,x,y,z);
+		return res;
+	}
 };
 //-----------------------------------------------------------------------------
 /// Class which present variable as data array
@@ -680,7 +722,7 @@ class MGL_EXPORT mglDataT : public mglDataA
 	long ind;
 public:
 	mglDataT(const mglDataT &d) : dat(d.dat), ind(d.ind)	{	s = d.s;	}
-	mglDataT(const mglDataA &d) : dat(d), ind(0)	{}
+	mglDataT(const mglDataA &d, long col=0) : dat(d), ind(col)	{}
 	virtual ~mglDataT()	{}
 
 	/// Get sizes
@@ -717,7 +759,7 @@ class MGL_EXPORT mglDataR : public mglDataA
 	long ind;
 public:
 	mglDataR(const mglDataR &d) : dat(d.dat), ind(d.ind)	{	s = d.s;	}
-	mglDataR(const mglDataA &d) : dat(d), ind(0)	{}
+	mglDataR(const mglDataA &d, long row=0) : dat(d), ind(row)	{}
 	virtual ~mglDataR()	{}
 
 	/// Get sizes

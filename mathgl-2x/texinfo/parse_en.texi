@@ -188,7 +188,7 @@ Terminate execution.
 
 Class for parsing and executing MGL script. This class is defined in @code{#include <mgl2/mgl.h>}.
 
-The main function of mglParse class is @code{Execute()}. Exactly this function parses and executes the script string-by-string. Also there are subservient functions for the finding and creation of a variable (object derived from @code{mglData} class, see @ref{MGL variables}). These functions can be useful for displaying values of variables (arrays) in some external object (like, window) or for providing access to internal data. Function @code{AllowSetSize()} allows one to prevent changing the size of the  picture inside the script (forbids the MGL command @code{setsize}).
+The main function of mglParse class is @code{Execute()}. Exactly this function parses and executes the script string-by-string. Also there are subservient functions for the finding and creation of a variable (object derived from @code{mglDataA}). These functions can be useful for displaying values of variables (arrays) in some external object (like, window) or for providing access to internal data. Function @code{AllowSetSize()} allows one to prevent changing the size of the  picture inside the script (forbids the MGL command @code{setsize}).
 
 @c Note an important feature -- if user defines function @var{func} in variable then it will be called before the destroying of this variable (@pxref{mglVar class}).
 

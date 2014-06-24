@@ -111,9 +111,6 @@ void MGL_EXPORT mgl_data_set_values_(uintptr_t *d, const char *val, int *nx, int
 /// Read data array from HDF file (parse HDF4 and HDF5 files)
 int MGL_EXPORT mgl_data_read_hdf(HMDT d,const char *fname,const char *data);
 int MGL_EXPORT mgl_data_read_hdf_(uintptr_t *d, const char *fname, const char *data,int l,int n);
-/// Put HDF data names into buf as '\t' separated.
-int MGL_EXPORT mgl_datas_hdf(const char *fname, char *buf, long size);
-int MGL_EXPORT mgl_datas_hdf_(const char *fname, char *buf, int l, int size);
 /// Read data from tab-separated text file with auto determining size
 int MGL_EXPORT mgl_data_read(HMDT dat, const char *fname);
 int MGL_EXPORT mgl_data_read_(uintptr_t *d, const char *fname,int l);

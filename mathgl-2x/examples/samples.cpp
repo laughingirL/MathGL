@@ -268,7 +268,7 @@ const char *mmgl_mask="new a 10 10 'x'\n"
 "subplot 5 4 17 '':title '\"*\" mask':dens a '3*'\n"
 "subplot 5 4 18 '':title '\"^\" mask':dens a '3^'\n"
 "subplot 5 4 19 '':title 'manual mask'\n"
-"mask '+' 'ff00182424f80000':dens a '3+'";
+"mask '+' 'ff00182424f800':dens a '3+'";
 void smgl_mask(mglGraph *gr)
 {
 	mglData a(10,10);	a.Fill(-1,1);

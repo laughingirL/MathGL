@@ -198,7 +198,7 @@ switch to lower index inside a string (see @ref{Font styles}).
 contain symbols excluded from color scheme parsing (see @ref{Color scheme}).
 
 @item @{@}
-contain extended color specification (see @ref{Color styles});
+contain extended specification of color (see @ref{Color styles}), dashing (see @ref{Line styles}) or mask (see @ref{Color scheme});
 
 denote special operation in @ref{MGL scripts};
 
@@ -276,7 +276,9 @@ one of mask for face filling (see @ref{Color scheme}).
 @item d
 one of marks (see @ref{Line styles}) or kind of @ref{error} boxes;
 
-one of mask for face filling (see @ref{Color scheme}).
+one of mask for face filling (see @ref{Color scheme});
+
+start hex-dash description if placed inside @{@} (see @ref{Line styles}).
 
 @item E
 dark green-yellow color (see @ref{Color styles}).
@@ -288,6 +290,8 @@ green-yellow color (see @ref{Color styles}).
 style of @ref{bars}, @ref{barh};
 
 style of @ref{vect}, @ref{vect3};
+
+style of @ref{table}, @ref{label}
 
 Fourier transform for @ref{transform}.
 
@@ -394,6 +398,8 @@ one of marks (see @ref{Line styles}) or kind of @ref{error} boxes;
 
 one of mask for face filling (see @ref{Color scheme});
 
+start hex-mask description if placed inside @{@} (see @ref{Color scheme});
+
 sine transform for @ref{transform}.
 
 @item t
@@ -448,7 +454,7 @@ one of marks (see @ref{Line styles}) or kind of @ref{error} boxes;
 
 name of x-axis or x-direction or 1st dimension of a data array;
 
-start hex-color described if placed inside @{@} (see @ref{Color styles});
+start hex-color description if placed inside @{@} (see @ref{Color styles});
 
 style of @ref{tape}.
 

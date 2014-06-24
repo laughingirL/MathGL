@@ -1119,7 +1119,7 @@ void mglBase::SetMask(const char *p)
 		for(long i=0;i<l;i++)
 		{
 			if(p[i]=='{')	m++;	if(p[i]=='}')	m--;
-			if(m>0 && p[i]=='s')	mask = strtol(p+i+1,0,16);
+			if(m>0 && p[i]=='s')	mask = strtoull(p+i+1,0,16);
 			if(m>0)	continue;
 			if(p[i]==':')	break;
 			s = mglchr(msk, p[i]);
