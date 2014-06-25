@@ -363,7 +363,7 @@ void PlotPanel::toolTop(QBoxLayout *l)
 	oo->addAction(a);
 
 	a = new QAction(QPixmap(arc_xpm), tr("Add arc"), this);
-	connect(a, SIGNAL(triggered()), mgl, SLOT(addAngle()));
+	connect(a, SIGNAL(triggered()), mgl, SLOT(addArc()));
 	connect(mgl, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
 	a->setToolTip(tr("Add arc which properties can be changed later by mouse."));
 	oo->addAction(a);

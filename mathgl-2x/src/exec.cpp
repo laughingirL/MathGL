@@ -614,21 +614,21 @@ int MGL_NO_EXPORT mgls_polygon(mglGraph *gr, long , mglArg *a, const char *k, co
 	else res = 1;	gr->Self()->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_angle(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+int MGL_NO_EXPORT mgls_arc(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;	gr->Self()->SaveState(opt);
 	if(!strcmp(k,"nnnnn"))
-		gr->Angle(mglPoint(a[0].v,a[1].v,NAN), mglPoint(a[2].v,a[3].v,NAN), a[4].v);
+		gr->Arc(mglPoint(a[0].v,a[1].v,NAN), mglPoint(a[2].v,a[3].v,NAN), a[4].v);
 	else if(!strcmp(k,"nnnnns"))
-		gr->Angle(mglPoint(a[0].v,a[1].v,NAN), mglPoint(a[2].v,a[3].v,NAN), a[4].v, a[5].s.c_str());
+		gr->Arc(mglPoint(a[0].v,a[1].v,NAN), mglPoint(a[2].v,a[3].v,NAN), a[4].v, a[5].s.c_str());
 	else if(!strcmp(k,"nnnnnn"))
-		gr->Angle(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[3].v,a[4].v), a[5].v);
+		gr->Arc(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[3].v,a[4].v), a[5].v);
 	else if(!strcmp(k,"nnnnnns"))
-		gr->Angle(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[3].v,a[4].v), a[5].v, a[6].s.c_str());
+		gr->Arc(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[3].v,a[4].v), a[5].v, a[6].s.c_str());
 	else if(!strcmp(k,"nnnnnnnnnn"))
-		gr->Angle(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[3].v,a[4].v, a[5].v), mglPoint(a[6].v,a[7].v, a[8].v), a[9].v);
+		gr->Arc(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[3].v,a[4].v, a[5].v), mglPoint(a[6].v,a[7].v, a[8].v), a[9].v);
 	else if(!strcmp(k,"nnnnnnnnnns"))
-		gr->Angle(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[3].v,a[4].v, a[5].v), mglPoint(a[6].v,a[7].v, a[8].v), a[9].v, a[10].s.c_str());
+		gr->Arc(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[3].v,a[4].v, a[5].v), mglPoint(a[6].v,a[7].v, a[8].v), a[9].v, a[10].s.c_str());
 	else res = 1;	gr->Self()->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
@@ -2591,6 +2591,18 @@ int MGL_NO_EXPORT mgls_roots(mglGraph *, long , mglArg *a, const char *k, const 
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_ode(mglGraph *, long , mglArg *a, const char *k, const char *)
+{
+	int res=0;
+	mglData *d = dynamic_cast<mglData *>(a[0].d);
+	if(!d)	return 1;
+	if(!strcmp(k,"dssd"))
+		*d = mglODE(a[1].s.c_str(), a[2].s.c_str(), *(a[3].d));
+	else if(!strcmp(k,"dssdnn"))
+		*d = mglODE(a[1].s.c_str(), a[2].s.c_str(), *(a[3].d), a[4].v, a[5].v);
+	else res = 1;	return res;
+}
+//-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_pde(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;
@@ -2859,7 +2871,7 @@ mglCommand mgls_base_cmd[] = {
 	{"alpha","Switch on/off transparency","alpha [val]", mgls_alpha ,2},
 	{"alphadef","Set default transparency","alphadef val", mgls_alphadef ,2},
 	{"ambient","Set ambient light brightness","ambient val", mgls_ambient ,2},
-	{"angle","Draw angle arc","angle x0 y0 x1 y1 a ['fmt']|x0 y0 z0 x1 y1 a ['fmt']|x0 y0 z0 xr yr zr x1 y1 z1 a ['fmt']", mgls_angle ,13},
+	{"arc","Draw angle arc","arc x0 y0 x1 y1 a ['fmt']|x0 y0 z0 x1 y1 a ['fmt']|x0 y0 z0 xr yr zr x1 y1 z1 a ['fmt']", mgls_arc ,13},
 	{"area","Draw area plot for 1D data","area Ydat ['fmt']|Xdat Ydat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_area ,7},
 	{"arrowsize","Set size of arrows","arrowsize val", mgls_arrowsize ,2},
 	{"ask","Define parameter from user input","ask $N 'question'", 0, 6},
@@ -3006,6 +3018,7 @@ mglCommand mgls_base_cmd[] = {
 	{"next","Start next for-cycle iteration","next", 0, 6},
 	{"norm","Normalize data","norm Dat v1 v2 [sym dim]", mgls_norm ,16},
 	{"normsl","Normalize data slice by slice","normsl Dat v1 v2 ['dir' keep sym] ", mgls_normsl ,16},
+	{"ode","Solve ODE","ode Res 'df' 'var' Ini [dt tmax]", mgls_ode ,4},
 	{"ohlc","Draw Open-High-Low-Close (OHLC) diagram","ohlc Odat Hdat Ldat Cdat ['fmt']|Xdat Odat Hdat Ldat Cdat ['fmt']", mgls_ohlc ,7},
 	{"once","Start/close commands which should executed only once","once val", 0, 6},
 	{"origin","Set axis origin","origin x0 y0 [z0]", mgls_origin ,14},

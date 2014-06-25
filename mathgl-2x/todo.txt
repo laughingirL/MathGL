@@ -37,8 +37,6 @@
 17. Check adjust in FLTK, Qt -- why don't redraw existed data (if func=NULL)
 20. Check again about const modifier
 
-21. Check "dens a '3{sff00182424f80000}'
-
 YY. Optimize code (especially Quality=0 ?!?)
 ZZ. Update *.i for new functions {before release!!!}
 
@@ -51,24 +49,13 @@ C. Translate to Russian everything
 1. Extend Dots sample (add A, CA, Tens)
 2. Extend Refill sample (add 2d)
 3. Docs about JS interface
+4. Docs about mgl_datac_diffr
 
-4. Extend docs about region
-5. Docs about mgl_datac_diffr
-6. Docs about GetBGRN
-7. Add arrow style 'X' into docs and samples
-8. Semi-transparent background can be done by "clf 'r{A5}'"
-9. Extend "How can I exclude a point or a region of plot from the drawing?" + using SubData()/Evaluate()
-11. Manual dashing, like "{df090}" + extend "style"-sample by manual dashing
-13. Replace Cmin,Cmax,Min,Max,... by "color range", "axis range" and so on
-14. Docs + sample about Rasterize()
-15. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using Stem()
-16. mgl_ode_solve_ex()
-22. Docs about Polygon, Angle.
-23. Docs about mgl_check_version() and 'version'
-24. Docs about new SetTicks() and mgl_set_ticks_fact*()
-25. Notice about MGL_HAVE_C99_COMPLEX, MGL_SYS_NAN into "Installation" section.
-27. Color gradient (color scheme) for glyphs of text + update sample
-28. Hint about flow threads and contour lines (as ODE and for advanced users).
+5. Semi-transparent background can be done by "clf 'r{A5}'"
+6. Extend "How can I exclude a point or a region of plot from the drawing?" + using SubData()/Evaluate()
+7. Docs + sample about Rasterize()
+8. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using Stem()
+9. Hint about flow threads and contour lines (as ODE and for advanced users).
 29. Howto about plot ranges (subplot styles)
 
 ============= UDAV =============
@@ -128,6 +115,7 @@ Buttons: new,load,save // newcmd,hide,annotation,collapse on/off,setup // calc. 
 16. Copy style from existed command ???
 17. Option to redraw picture after adding new command
 
+18. Link to website + GPL in "About"
 
 что хочу
 

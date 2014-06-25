@@ -489,7 +489,7 @@ void QMathGL::mouseMoveEvent(QMouseEvent *ev)
 					else	dr = hypot(dx,dy);
 					res = tst.section(' ',0,4)+" "+QString::number(tst.section(' ',5,5).toFloat()+dr)+" "+tst.section(' ',6);
 				}
-				else if(cmd=="angle")
+				else if(cmd=="arc")
 				{
 					double x_=tst.section(' ',3,3).toFloat()-xx, y_=tst.section(' ',4,4).toFloat()-yy, a_=tst.section(' ',5,5).toFloat();
 					double c=cos(M_PI*a_/180), s=sin(M_PI*a_/180);
@@ -877,8 +877,8 @@ void QMathGL::addRhomb()
 void QMathGL::addEllipse()
 {	primitives += "ellipse -0.2 0 0.2 0 0.1 'r'\n";	refresh();	}
 //-----------------------------------------------------------------------------
-void QMathGL::addAngle()
-{	primitives += "angle 0 0 0.2 0 60 'r2'\n";	refresh();	}
+void QMathGL::addArc()
+{	primitives += "arc 0 0 0.2 0 60 'r2'\n";	refresh();	}
 //-----------------------------------------------------------------------------
 void QMathGL::addPolygon(int n)
 {
@@ -887,7 +887,7 @@ void QMathGL::addPolygon(int n)
 	if(n>=3)
 	{	primitives += "polygon 0 0 0 0.2 "+QString::number(n)+" 'r'\n";	refresh();	}
 }
-//{	primitives += "angle -0.2 0 0.2 0 0.1 'r'\n";	refresh();	}
+//{	primitives += "arc -0.2 0 0.2 0 0.1 'r'\n";	refresh();	}
 //-----------------------------------------------------------------------------
 void QMathGL::addText(QString txt)
 {
@@ -1099,7 +1099,7 @@ MGL_EXPORT QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *&tet, Q
 		a->setToolTip(TR("Add line which properties can be changed later by mouse."));
 		bb->addAction(a);	oo->addAction(a);
 		a = new QAction(QPixmap(arc_xpm), TR("Add arc"), Wnd);
-		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(addAngle()));
+		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(addArc()));
 		Wnd->connect(QMGL, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
 		a->setToolTip(TR("Add arc which properties can be changed later by mouse."));
 		bb->addAction(a);	oo->addAction(a);

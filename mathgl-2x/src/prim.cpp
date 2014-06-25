@@ -402,10 +402,10 @@ void MGL_EXPORT mgl_polygon(HMGL gr, double x1, double y1, double z1, double x2,
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_angle_ext(HMGL gr, double x0, double y0, double z0, double xr, double yr, double zr, double x1, double y1, double z1, double a, const char* stl)
+void MGL_EXPORT mgl_arc_ext(HMGL gr, double x0, double y0, double z0, double xr, double yr, double zr, double x1, double y1, double z1, double a, const char* stl)
 {
 	long pal=0, n = long(fabs(a)/9+1.5);	a *= M_PI/180;
-	static int cgid=1;	gr->StartGroup("Angle",cgid++);
+	static int cgid=1;	gr->StartGroup("Arc",cgid++);
 	gr->SetPenPal(stl,&pal);
 	mreal c=gr->NextColor(pal);
 	gr->Reserve(n+2);
@@ -426,20 +426,20 @@ void MGL_EXPORT mgl_angle_ext(HMGL gr, double x0, double y0, double z0, double x
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_angle(HMGL gr, double x0, double y0, double x1, double y1, double a, const char* stl)
-{	mgl_angle_ext(gr,x0,y0,NAN,0,0,1,x1,y1,NAN,a,stl);	}
+void MGL_EXPORT mgl_arc(HMGL gr, double x0, double y0, double x1, double y1, double a, const char* stl)
+{	mgl_arc_ext(gr,x0,y0,NAN,0,0,1,x1,y1,NAN,a,stl);	}
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_polygon_(uintptr_t* gr, mreal *x1, mreal *y1, mreal *z1, mreal *x2, mreal *y2, mreal *z2, int *n, const char *stl,int l)
 {	char *s=new char[l+1];	memcpy(s,stl,l);	s[l]=0;
 	mgl_polygon(_GR_,*x1,*y1,*z1,*x2,*y2,*z2,*n,s);	delete []s;	}
 //-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_angle_ext_(uintptr_t* gr, mreal *x0, mreal *y0, mreal *z0, mreal *x1, mreal *y1, mreal *z1, mreal *x2, mreal *y2, mreal *z2, mreal *r, const char *stl,int l)
+void MGL_EXPORT mgl_arc_ext_(uintptr_t* gr, mreal *x0, mreal *y0, mreal *z0, mreal *x1, mreal *y1, mreal *z1, mreal *x2, mreal *y2, mreal *z2, mreal *r, const char *stl,int l)
 {	char *s=new char[l+1];	memcpy(s,stl,l);	s[l]=0;
-	mgl_angle_ext(_GR_,*x0,*y0,*z0,*x1,*y1,*z1,*x2,*y2,*z2,*r,s);	delete []s;	}
+	mgl_arc_ext(_GR_,*x0,*y0,*z0,*x1,*y1,*z1,*x2,*y2,*z2,*r,s);	delete []s;	}
 //-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_angle_(uintptr_t* gr, mreal *x0, mreal *y0, mreal *x1, mreal *y1, mreal *a, const char *stl,int l)
+void MGL_EXPORT mgl_arc_(uintptr_t* gr, mreal *x0, mreal *y0, mreal *x1, mreal *y1, mreal *a, const char *stl,int l)
 {	char *s=new char[l+1];	memcpy(s,stl,l);	s[l]=0;
-	mgl_angle(_GR_,*x0,*y0,*x1,*y1,*a,s);	delete []s;	}
+	mgl_arc(_GR_,*x0,*y0,*x1,*y1,*a,s);	delete []s;	}
 //-----------------------------------------------------------------------------
 //
 //	Ellipse & Rhomb

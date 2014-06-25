@@ -75,11 +75,11 @@ void MGL_EXPORT mgl_rhomb_(uintptr_t* gr, mreal *x1, mreal *y1, mreal *z1, mreal
 void MGL_EXPORT mgl_polygon(HMGL gr, double x1, double y1, double z1, double x2, double y2, double z2, int n, const char *stl);
 void MGL_EXPORT mgl_polygon_(uintptr_t* gr, mreal *x1, mreal *y1, mreal *z1, mreal *x2, mreal *y2, mreal *z2, int *n, const char *stl, int);
 	/// Draws the arc around axis pr with center at p0 and starting from p1, by color stl and angle a (in degrees)
-void MGL_EXPORT mgl_angle_ext(HMGL gr, double x0, double y0, double z0, double xr, double yr, double zr, double x1, double y1, double z1, double a, const char* stl);
-void MGL_EXPORT mgl_angle_ext_(uintptr_t* gr, mreal *x0, mreal *y0, mreal *z0, mreal *xr, mreal *yr, mreal *zr, mreal *x1, mreal *y1, mreal *z1, mreal *a, const char *stl, int);
+void MGL_EXPORT mgl_arc_ext(HMGL gr, double x0, double y0, double z0, double xr, double yr, double zr, double x1, double y1, double z1, double a, const char* stl);
+void MGL_EXPORT mgl_arc_ext_(uintptr_t* gr, mreal *x0, mreal *y0, mreal *z0, mreal *xr, mreal *yr, mreal *zr, mreal *x1, mreal *y1, mreal *z1, mreal *a, const char *stl, int);
 	/// Draws the arc around axis 'z' with center at p0 and starting from p1, by color stl and angle a (in degrees)
-void MGL_EXPORT mgl_angle(HMGL gr, double x0, double y0, double x1, double y1, double a, const char* stl);
-void MGL_EXPORT mgl_angle_(uintptr_t* gr, mreal *x0, mreal *y0, mreal *x1, mreal *y1, mreal *a, const char *stl,int l);
+void MGL_EXPORT mgl_arc(HMGL gr, double x0, double y0, double x1, double y1, double a, const char* stl);
+void MGL_EXPORT mgl_arc_(uintptr_t* gr, mreal *x0, mreal *y0, mreal *x1, mreal *y1, mreal *a, const char *stl,int l);
 
 
 /// Draw cones from points {x,y,z} to axis plane

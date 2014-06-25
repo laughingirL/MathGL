@@ -1478,14 +1478,45 @@ These functions change the data in some direction like differentiations, integra
 Решает систему геометрооптических уравнений d@emph{r}/dt = d @var{ham}/d@emph{p}, d@emph{p}/dt = -d @var{ham}/d@emph{r}. Это гамильтоновы уравнения для траектории частицы в 3D случае. Гамильтониан @var{ham} может зависеть от координат @samp{x}, @samp{y}, @samp{z}, импульсов @samp{p}=px, @samp{q}=py, @samp{v}=pz и времени @samp{t}: @math{ham = H(x,y,z,p,q,v,t)}. Начальная точка (при @code{t=0}) задается переменными @{@var{x0}, @var{y0}, @var{z0}, @var{p0}, @var{q0}, @var{v0}@}. Параметры @var{dt} и @var{tmax} задают шаг и максимальное время интегрирования. Результат -- массив @{x,y,z,p,q,v,t@} с размером @{7 * int(@var{tmax}/@var{dt}+1) @}.
 @end deftypefn
 
+@anchor{ode}
+@deftypefn {MGL command} {} ode @sc{res} 'df' 'var' ini [@code{dt=0.1 tmax=10}]
+@ifclear UDAV
+@deftypefnx {Global function} @code{mglData} mglODE (@code{const char *}df, @code{const char *}var, @code{const mglDataA &}ini, @code{mreal} dt=@code{0.1}, @code{mreal} tmax=@code{10})
+@deftypefnx {C function} @code{HMDT} mgl_ode_solve_str (@code{const char *}df, @code{const char *}var, @code{HCDT} ini, @code{mreal} dt, @code{mreal} tmax)
+@deftypefnx {C function} @code{HMDT} mgl_ode_solve (@code{void (*}df@code{)(const mreal *x, mreal *dx, void *par)}, @code{int} n, @code{const mreal *}ini, @code{mreal} dt, @code{mreal} tmax)
+@deftypefnx {C function} @code{HMDT} mgl_ode_solve_ex (@code{void (*}df@code{)(const mreal *x, mreal *dx, void *par)}, @code{int} n, @code{const mreal *}ini, @code{mreal} dt, @code{mreal} tmax, @code{void (*}bord@code{)(mreal *x, const mreal *xprev, void *par)})
+@end ifclear
+Решает систему обыкновенных дифференциальных уравнений dx/dt = df(x). Функции @var{df} могут быть заданны строкой с разделенными ';' формулами (аргумент @var{var} задает символы для переменных x[i]) или указателем на функцию, которая заполняет @code{dx} по заданным значениям @code{x}. Параметры @var{ini}, @var{dt}, @var{tmax} задают начальные значения, шаг и максимальное время интегрирования. Результат -- массив с размером @{@var{n} * int(@var{tmax}/@var{dt}+1)@}.
+@end deftypefn
+
 @anchor{qo2d}
 @deftypefn {Команда MGL} {} qo2d @sc{res} 'ham' ini_re ini_im ray [@code{r=1 k0=100} xx yy]
 @ifclear UDAV
 @deftypefnx {Global function} @code{mglData} mglQO2d (@code{const char *}ham, @code{const mglDataA &}ini_re, @code{const mglDataA &}ini_im, @code{const mglDataA &}ray, @code{mreal} r=@code{1}, @code{mreal} k0=@code{100}, @code{mglData *}xx=@code{0}, @code{mglData *}yy=@code{0})
 @deftypefnx {Global function} @code{mglData} mglQO2d (@code{const char *}ham, @code{const mglDataA &}ini_re, @code{const mglDataA &}ini_im, @code{const mglDataA &}ray, @code{mglData &}xx, @code{mglData &}yy, @code{mreal} r=@code{1}, @code{mreal} k0=@code{100})
+@deftypefnx {Global function} @code{mglDataC} mglQO2dc (@code{const char *}ham, @code{const mglDataA &}ini_re, @code{const mglDataA &}ini_im, @code{const mglDataA &}ray, @code{mreal} r=@code{1}, @code{mreal} k0=@code{100})
+@deftypefnx {Global function} @code{mglDataC} mglQO2dc (@code{const char *}ham, @code{const mglDataA &}ini_re, @code{const mglDataA &}ini_im, @code{const mglDataA &}ray, @code{mglData &}xx, @code{mglData &}yy, @code{mreal} r=@code{1}, @code{mreal} k0=@code{100})
 @deftypefnx {Функция С} @code{HMDT} mgl_qo2d_solve (@code{const char *}ham, @code{HCDT} ini_re, @code{HCDT} ini_im, @code{HCDT} ray, @code{mreal} r, @code{mreal} k0, @code{HMDT} xx, @code{HMDT} yy)
+@deftypefnx {Функция С} @code{HADT} mgl_qo2d_solve_c (@code{const char *}ham, @code{HCDT} ini_re, @code{HCDT} ini_im, @code{HCDT} ray, @code{mreal} r, @code{mreal} k0, @code{HMDT} xx, @code{HMDT} yy)
+@deftypefnx {Функция С} @code{HMDT} mgl_qo2d_func (@code{dual (*}ham@code{)(mreal u, mreal x, mreal y, mreal px, mreal py, void *par)}, @code{HCDT} ini_re, @code{HCDT} ini_im, @code{HCDT} ray, @code{mreal} r, @code{mreal} k0, @code{HMDT} xx, @code{HMDT} yy)
+@deftypefnx {Функция С} @code{HADT} mgl_qo2d_func_c (@code{dual (*}ham@code{)(mreal u, mreal x, mreal y, mreal px, mreal py, void *par)}, @code{HCDT} ini_re, @code{HCDT} ini_im, @code{HCDT} ray, @code{mreal} r, @code{mreal} k0, @code{HMDT} xx, @code{HMDT} yy)
 @end ifclear
-Решает уравнение в частных производных du/dt = i*k0*@var{ham}(p,q,x,y,|u|)[u] в сопровождающей системе координат, где p=-i/k0*d/dx, q=-i/k0*d/dy -- псевдо-дифференциальные операторы. Параметры @var{ini_re}, @var{ini_im} задают начальное распределение поля. Параметр @var{ray} задает опорный луч для сопровождающей системы координат. Можно использовать луч найденный с помощью @code{mglRay()}. Опорный луч должен быть достаточно гладкий, чтобы система координат была однозначной и для исключения ошибок интегрирования. Если массивы @var{xx} и @var{yy} указаны, то в них записываются декартовы координаты для каждой точки найденного решения. См. также @code{mglPDE()}. @sref{PDE solving hints}
+Решает уравнение в частных производных du/dt = i*k0*@var{ham}(p,q,x,y,|u|)[u] в сопровождающей системе координат, где p=-i/k0*d/dx, q=-i/k0*d/dy -- псевдо-дифференциальные операторы. Параметры @var{ini_re}, @var{ini_im} задают начальное распределение поля. Параметр @var{ray} задает опорный луч для сопровождающей системы координат. Можно использовать луч найденный с помощью @ref{ray}. Опорный луч должен быть достаточно гладкий, чтобы система координат была однозначной и для исключения ошибок интегрирования. Если массивы @var{xx} и @var{yy} указаны, то в них записываются декартовы координаты для каждой точки найденного решения. См. также @ref{pde}, @ref{qo3d}. @sref{PDE solving hints}
+@end deftypefn
+
+@anchor{qo3d}
+@deftypefn {Команда MGL} {} qo3d @sc{res} 'ham' ini_re ini_im ray [@code{r=1 k0=100} xx yy zz]
+@ifclear UDAV
+@deftypefnx {Global function} @code{mglData} mglQO3d (@code{const char *}ham, @code{const mglDataA &}ini_re, @code{const mglDataA &}ini_im, @code{const mglDataA &}ray, @code{mreal} r=@code{1}, @code{mreal} k0=@code{100})
+@deftypefnx {Global function} @code{mglData} mglQO3d (@code{const char *}ham, @code{const mglDataA &}ini_re, @code{const mglDataA &}ini_im, @code{const mglDataA &}ray, @code{mglData &}xx, @code{mglData &}yy, @code{mglData &}zz, @code{mreal} r=@code{1}, @code{mreal} k0=@code{100})
+@deftypefnx {Global function} @code{mglDataC} mglQO3dc (@code{const char *}ham, @code{const mglDataA &}ini_re, @code{const mglDataA &}ini_im, @code{const mglDataA &}ray, @code{mreal} r=@code{1}, @code{mreal} k0=@code{100})
+@deftypefnx {Global function} @code{mglDataC} mglQO3dc (@code{const char *}ham, @code{const mglDataA &}ini_re, @code{const mglDataA &}ini_im, @code{const mglDataA &}ray, @code{mglData &}xx, @code{mglData &}yy, @code{mglData &}zz, @code{mreal} r=@code{1}, @code{mreal} k0=@code{100})
+@deftypefnx {Функция С} @code{HMDT} mgl_qo3d_solve (@code{const char *}ham, @code{HCDT} ini_re, @code{HCDT} ini_im, @code{HCDT} ray, @code{mreal} r, @code{mreal} k0, @code{HMDT} xx, @code{HMDT} yy, @code{HMDT} zz)
+@deftypefnx {Функция С} @code{HADT} mgl_qo3d_solve_c (@code{const char *}ham, @code{HCDT} ini_re, @code{HCDT} ini_im, @code{HCDT} ray, @code{mreal} r, @code{mreal} k0, @code{HMDT} xx, @code{HMDT} yy, @code{HMDT} zz)
+@deftypefnx {Функция С} @code{HMDT} mgl_qo3d_func (@code{dual (*}ham@code{)(mreal u, mreal x, mreal y, mreal z, mreal px, mreal py, mreal pz, void *par)}, @code{HCDT} ini_re, @code{HCDT} ini_im, @code{HCDT} ray, @code{mreal} r, @code{mreal} k0, @code{HMDT} xx, @code{HMDT} yy, @code{HMDT} zz)
+@deftypefnx {Функция С} @code{HADT} mgl_qo3d_func_c (@code{dual (*}ham@code{)(mreal u, mreal x, mreal y, mreal z, mreal px, mreal py, mreal pz, void *par)}, @code{HCDT} ini_re, @code{HCDT} ini_im, @code{HCDT} ray, @code{mreal} r, @code{mreal} k0, @code{HMDT} xx, @code{HMDT} yy, @code{HMDT} zz)
+@end ifclear
+Решает уравнение в частных производных du/dt = i*k0*@var{ham}(p,q,v,x,y,z,|u|)[u] в сопровождающей системе координат, где p=-i/k0*d/dx, q=-i/k0*d/dy, v=-i/k0*d/dz -- псевдо-дифференциальные операторы. Параметры @var{ini_re}, @var{ini_im} задают начальное распределение поля. Параметр @var{ray} задает опорный луч для сопровождающей системы координат. Можно использовать луч найденный с помощью @ref{ray}. Опорный луч должен быть достаточно гладкий, чтобы система координат была однозначной и для исключения ошибок интегрирования. Если массивы @var{xx}, @var{yy} и @var{zz} указаны, то в них записываются декартовы координаты для каждой точки найденного решения. См. также @ref{pde}, @ref{qo2d}.
 @end deftypefn
 
 @anchor{jacobian}

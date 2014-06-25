@@ -701,16 +701,17 @@ const char *mmgl_style="";
 void smgl_style(mglGraph *gr)	// pen styles
 {
 	gr->SubPlot(2,2,0);
-	double d,x1,x2,x0,y=0.95;
+	double d,x1,x2,x0,y=1.1, y1=1.15;
 	d=0.3, x0=0.2, x1=0.5, x2=0.6;
-	gr->Line(mglPoint(x0,1-0*d),mglPoint(x1,1-0*d),"k-");	gr->Puts(mglPoint(x2,y-0*d),"Solid '-'",":rL");
-	gr->Line(mglPoint(x0,1-1*d),mglPoint(x1,1-1*d),"k|");	gr->Puts(mglPoint(x2,y-1*d),"Long Dash '|'",":rL");
-	gr->Line(mglPoint(x0,1-2*d),mglPoint(x1,1-2*d),"k;");	gr->Puts(mglPoint(x2,y-2*d),"Dash ';'",":rL");
-	gr->Line(mglPoint(x0,1-3*d),mglPoint(x1,1-3*d),"k=");	gr->Puts(mglPoint(x2,y-3*d),"Small dash '='",":rL");
-	gr->Line(mglPoint(x0,1-4*d),mglPoint(x1,1-4*d),"kj");	gr->Puts(mglPoint(x2,y-4*d),"Dash-dot 'j'",":rL");
-	gr->Line(mglPoint(x0,1-5*d),mglPoint(x1,1-5*d),"ki");	gr->Puts(mglPoint(x2,y-5*d),"Small dash-dot 'i'",":rL");
-	gr->Line(mglPoint(x0,1-6*d),mglPoint(x1,1-6*d),"k:");	gr->Puts(mglPoint(x2,y-6*d),"Dots ':'",":rL");
-	gr->Line(mglPoint(x0,1-7*d),mglPoint(x1,1-7*d),"k ");	gr->Puts(mglPoint(x2,y-7*d),"None ' '",":rL");
+	gr->Line(mglPoint(x0,y1-0*d),mglPoint(x1,y1-0*d),"k-");	gr->Puts(mglPoint(x2,y-0*d),"Solid '-'",":rL");
+	gr->Line(mglPoint(x0,y1-1*d),mglPoint(x1,y1-1*d),"k|");	gr->Puts(mglPoint(x2,y-1*d),"Long Dash '|'",":rL");
+	gr->Line(mglPoint(x0,y1-2*d),mglPoint(x1,y1-2*d),"k;");	gr->Puts(mglPoint(x2,y-2*d),"Dash ';'",":rL");
+	gr->Line(mglPoint(x0,y1-3*d),mglPoint(x1,y1-3*d),"k=");	gr->Puts(mglPoint(x2,y-3*d),"Small dash '='",":rL");
+	gr->Line(mglPoint(x0,y1-4*d),mglPoint(x1,y1-4*d),"kj");	gr->Puts(mglPoint(x2,y-4*d),"Dash-dot 'j'",":rL");
+	gr->Line(mglPoint(x0,y1-5*d),mglPoint(x1,y1-5*d),"ki");	gr->Puts(mglPoint(x2,y-5*d),"Small dash-dot 'i'",":rL");
+	gr->Line(mglPoint(x0,y1-6*d),mglPoint(x1,y1-6*d),"k:");	gr->Puts(mglPoint(x2,y-6*d),"Dots ':'",":rL");
+	gr->Line(mglPoint(x0,y1-7*d),mglPoint(x1,y1-7*d),"k ");	gr->Puts(mglPoint(x2,y-7*d),"None ' '",":rL");
+	gr->Line(mglPoint(x0,y1-8*d),mglPoint(x1,y1-8*d),"k{df090}");	gr->Puts(mglPoint(x2,y-8*d),"Manual '{df090}'",":rL");
 
 	d=0.25; x1=-1; x0=-0.8;	y = -0.05;
 	gr->Mark(mglPoint(x1,5*d),"k.");		gr->Puts(mglPoint(x0,y+5*d),"'.'",":rL");

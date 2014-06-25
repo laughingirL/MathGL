@@ -127,7 +127,7 @@ public slots:
 	void addCurve();					///< add curve into primitives
 	void addRhomb();					///< add rhombus into primitives
 	void addEllipse();					///< add ellipse into primitives
-	void addAngle();					///< add angle into primitives
+	void addArc();					///< add arc into primitives
 	void addPolygon(int n=-1);			///< add polygon into primitives
 	void addText(QString txt="");		///< add text into primitives
 	void setStyle(int id, QString stl);///< set style for primitive with id

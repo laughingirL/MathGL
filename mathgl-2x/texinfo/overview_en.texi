@@ -93,6 +93,9 @@ Note, you can download the latest sources (which can be not stable) from sourcef
 svn checkout http://svn.code.sf.net/p/mathgl/code/mathgl-2x mathgl-code
 @end verbatim
 
+@strong{IMPORTANT!} MathGL use a set of defines, which were determined at configure stage and may differ if used with non-default compiler (like using MathGL binaries compiled by MinGW in VisualStudio). There are @code{MGL_SYS_NAN, MGL_HAVE_TYPEOF, MGL_HAVE_PTHREAD, MGL_HAVE_ATTRIBUTE, MGL_HAVE_C99_COMPLEX, MGL_HAVE_RVAL}. I specially set them to @code{0} for Borland and Microsoft compilers due to compatibility reasons. Also default setting are good for GNU (gcc, mingw) and clang compilers. However, for another compiler you may need to manually set this defines to @code{0} in file @code{include/mgl2/config.h} if you are using precompiled binaries.
+
+
 @c ------------------------------------------------------------------
 @external{}
 @node  Quick guide, Changes from v.1, Installation, Overview

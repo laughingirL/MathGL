@@ -93,6 +93,9 @@ MathGL это ...
 svn checkout http://svn.code.sf.net/p/mathgl/code/mathgl-2x mathgl-code
 @end verbatim
 
+@strong{ВАЖНО!} MathGL использует набор defines, определяемых на этапе конфигурирования библиотеки. Это @code{MGL_SYS_NAN, MGL_HAVE_TYPEOF, MGL_HAVE_PTHREAD, MGL_HAVE_ATTRIBUTE, MGL_HAVE_C99_COMPLEX, MGL_HAVE_RVAL}. Они могут отличаться при использовании бинарников скомпилированных другим компилятором (например при использовании скомпилированных MinGW бинарников в VisualStudio). Я специально устанавливаю их в @code{0} для компиляторов Borland и Microsoft из соображений совместимости. Кроме того, настройки по умолчанию подходят для компиляторов GNU (gcc, mingw) и clang. Однако, для прочих компиляторов может потребоваться ручная установка defines в @code{0} в файле @code{include/mgl2/config.h} если вы используете предварительно скомпилированные файлы.
+
+
 @c TODO Translate it!
 
 @c ------------------------------------------------------------------

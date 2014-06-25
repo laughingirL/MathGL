@@ -449,6 +449,9 @@ wired text if placed after @samp{:} (see @ref{Font styles});
 
 name of w-axis (one of ternary axis);
 
+@item X
+arrow style (see @ref{Line styles}).
+
 @item x
 one of marks (see @ref{Line styles}) or kind of @ref{error} boxes;
 

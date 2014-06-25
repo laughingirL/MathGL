@@ -489,6 +489,9 @@ inline mglData mglQO3d(const char *ham, const mglDataA &ini_re, const mglDataA &
 /// Finds ray with starting point r0, p0 (and prepares ray data for mglQO2d)
 inline mglData mglRay(const char *ham, mglPoint r0, mglPoint p0, mreal dt=0.1, mreal tmax=10)
 {	return mglData(true, mgl_ray_trace(ham, r0.x, r0.y, r0.z, p0.x, p0.y, p0.z, dt, tmax));	}
+/// Saves result of ODE solving (|u|^2) for "Hamiltonian" ham with initial conditions ini
+inline mglData mglODE(const char *df, const char *var, const mglDataA &ini, mreal dt=0.1, mreal tmax=10)
+{	return mglData(true, mgl_ode_solve_str(df,var, &ini, dt, tmax));	}
 /// Calculate Jacobian determinant for D{x(u,v), y(u,v)} = dx/du*dy/dv-dx/dv*dy/du
 inline mglData mglJacobian(const mglDataA &x, const mglDataA &y)
 {	return mglData(true, mgl_jacobian_2d(&x, &y));	}

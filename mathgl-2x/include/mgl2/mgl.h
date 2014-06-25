@@ -523,11 +523,11 @@ public:
 	inline void Polygon(mglPoint p1, mglPoint p2, int n, const char *stl="r")
 	{	mgl_polygon(gr, p1.x, p1.y, p1.z, p2.x, p2.y, p2.z, n,stl);	}
 	/// Draws the arc around axis pr with center at p0 and starting from p1, by color stl and angle a (in degrees)
-	inline void Angle(mglPoint p0, mglPoint pr, mglPoint p1, double a, const char *stl="r")
-	{	mgl_angle_ext(gr, p0.x,p0.y,p0.z, pr.x,pr.y,pr.z, p1.x,p1.y,p1.z, a,stl);	}
+	inline void Arc(mglPoint p0, mglPoint pr, mglPoint p1, double a, const char *stl="r")
+	{	mgl_arc_ext(gr, p0.x,p0.y,p0.z, pr.x,pr.y,pr.z, p1.x,p1.y,p1.z, a,stl);	}
 	/// Draws the arc around axis 'z' with center at p0 and starting from p1, by color stl and angle a (in degrees)
-	inline void Angle(mglPoint p0, mglPoint p1, double a, const char *stl="r")
-	{	mgl_angle_ext(gr, p0.x,p0.y,p0.z, 0,0,1, p1.x,p1.y,p0.z, a,stl);	}
+	inline void Arc(mglPoint p0, mglPoint p1, double a, const char *stl="r")
+	{	mgl_arc_ext(gr, p0.x,p0.y,p0.z, 0,0,1, p1.x,p1.y,p0.z, a,stl);	}
 
 	/// Print text in position p with specified font
 	inline void Putsw(mglPoint p,const wchar_t *text,const char *font=":C",double size=-1)

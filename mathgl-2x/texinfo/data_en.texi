@@ -1489,11 +1489,16 @@ Solves equation du/dz = i*k0*@var{ham}(p,q,x,y,z,|u|)[u], where p=-i/k0*d/dx, q=
 Solves GO ray equation like dr/dt = d @var{ham}/dp, dp/dt = -d @var{ham}/dr. This is Hamiltonian equations for particle trajectory in 3D case. Here @var{ham} is Hamiltonian which may depend on coordinates @samp{x}, @samp{y}, @samp{z}, momentums @samp{p}=px, @samp{q}=py, @samp{v}=pz and time @samp{t}: @math{ham = H(x,y,z,p,q,v,t)}. The starting point (at @code{t=0}) is defined by variables @var{r0}, @var{p0}. Parameters @var{dt} and @var{tmax} specify the integration step and maximal time for ray tracing. Result is array of @{x,y,z,p,q,v,t@} with dimensions @{7 * int(@var{tmax}/@var{dt}+1) @}.
 @end deftypefn
 
-@comment  /// Saves result of ODE solving of n equations with right part func and initial conditions x0 over time interval [0,tmax] with time step dt
-@comment  HMDT MGL_EXPORT mgl_ode_solve(void (*func)(const mreal *x, mreal *dx, void *par), int n, mreal *x0, mreal dt, mreal tmax, void *par);
-@comment  /// Saves result of ODE solving of n equations with right part func and initial conditions x0 over time interval [0,tmax] with time step dt. Function bord (if not NULL) is called each time step to apply border reflection.
-@comment  HMDT MGL_EXPORT mgl_ode_solve_ex(void (*func)(const mreal *x, mreal *dx, void *par), int n, mreal *x0, mreal dt, mreal tmax, void *par, void (*bord)(mreal *x, const mreal *xp, void *par));
-
+@anchor{ode}
+@deftypefn {MGL command} {} ode @sc{res} 'df' 'var' ini [@code{dt=0.1 tmax=10}]
+@ifclear UDAV
+@deftypefnx {Global function} @code{mglData} mglODE (@code{const char *}df, @code{const char *}var, @code{const mglDataA &}ini, @code{mreal} dt=@code{0.1}, @code{mreal} tmax=@code{10})
+@deftypefnx {C function} @code{HMDT} mgl_ode_solve_str (@code{const char *}df, @code{const char *}var, @code{HCDT} ini, @code{mreal} dt, @code{mreal} tmax)
+@deftypefnx {C function} @code{HMDT} mgl_ode_solve (@code{void (*}df@code{)(const mreal *x, mreal *dx, void *par)}, @code{int} n, @code{const mreal *}ini, @code{mreal} dt, @code{mreal} tmax)
+@deftypefnx {C function} @code{HMDT} mgl_ode_solve_ex (@code{void (*}df@code{)(const mreal *x, mreal *dx, void *par)}, @code{int} n, @code{const mreal *}ini, @code{mreal} dt, @code{mreal} tmax, @code{void (*}bord@code{)(mreal *x, const mreal *xprev, void *par)})
+@end ifclear
+Solves ODE equations dx/dt = df(x). The functions @var{df} can be specified as string of ';'-separated textual formulas (argument @var{var} set the character ids of variables x[i]) or as callback function, which fill @code{dx} array for give @code{x}'s. Parameters @var{ini}, @var{dt}, @var{tmax} set initial values, time step and maximal time of the calculation. Result is data array with dimensions @{@var{n} * int(@var{tmax}/@var{dt}+1)@}.
+@end deftypefn
 
 @anchor{qo2d}
 @deftypefn {MGL command} {} qo2d @sc{res} 'ham' ini_re ini_im ray [@code{r=1 k0=100} xx yy]
@@ -1507,7 +1512,7 @@ Solves GO ray equation like dr/dt = d @var{ham}/dp, dp/dt = -d @var{ham}/dr. Thi
 @deftypefnx {C function} @code{HMDT} mgl_qo2d_func (@code{dual (*}ham@code{)(mreal u, mreal x, mreal y, mreal px, mreal py, void *par)}, @code{HCDT} ini_re, @code{HCDT} ini_im, @code{HCDT} ray, @code{mreal} r, @code{mreal} k0, @code{HMDT} xx, @code{HMDT} yy)
 @deftypefnx {C function} @code{HADT} mgl_qo2d_func_c (@code{dual (*}ham@code{)(mreal u, mreal x, mreal y, mreal px, mreal py, void *par)}, @code{HCDT} ini_re, @code{HCDT} ini_im, @code{HCDT} ray, @code{mreal} r, @code{mreal} k0, @code{HMDT} xx, @code{HMDT} yy)
 @end ifclear
-Solves equation du/dt = i*k0*@var{ham}(p,q,x,y,|u|)[u], where p=-i/k0*d/dx, q=-i/k0*d/dy are pseudo-differential operators (see @code{mglPDE()} for details). Parameters @var{ini_re}, @var{ini_im} specify real and imaginary part of initial field distribution. Parameters @var{ray} set the reference ray, i.e. the ray around which the accompanied coordinate system will be maked. You may use, for example, the array created by @code{mglRay()} function. Note, that the reference ray @strong{must be} smooth enough to make accompanied coodrinates unambiguity. Otherwise errors in the solution may appear. If @var{xx} and @var{yy} are non-zero then Cartesian coordinates for each point will be written into them. See also @ref{pde}, @ref{qo3d}. @sref{PDE solving hints}
+Solves equation du/dt = i*k0*@var{ham}(p,q,x,y,|u|)[u], where p=-i/k0*d/dx, q=-i/k0*d/dy are pseudo-differential operators (see @code{mglPDE()} for details). Parameters @var{ini_re}, @var{ini_im} specify real and imaginary part of initial field distribution. Parameters @var{ray} set the reference ray, i.e. the ray around which the accompanied coordinate system will be maked. You may use, for example, the array created by @ref{ray} function. Note, that the reference ray @strong{must be} smooth enough to make accompanied coodrinates unambiguity. Otherwise errors in the solution may appear. If @var{xx} and @var{yy} are non-zero then Cartesian coordinates for each point will be written into them. See also @ref{pde}, @ref{qo3d}. @sref{PDE solving hints}
 @end deftypefn
 
 
@@ -1523,7 +1528,7 @@ Solves equation du/dt = i*k0*@var{ham}(p,q,x,y,|u|)[u], where p=-i/k0*d/dx, q=-i
 @deftypefnx {C function} @code{HMDT} mgl_qo3d_func (@code{dual (*}ham@code{)(mreal u, mreal x, mreal y, mreal z, mreal px, mreal py, mreal pz, void *par)}, @code{HCDT} ini_re, @code{HCDT} ini_im, @code{HCDT} ray, @code{mreal} r, @code{mreal} k0, @code{HMDT} xx, @code{HMDT} yy, @code{HMDT} zz)
 @deftypefnx {C function} @code{HADT} mgl_qo3d_func_c (@code{dual (*}ham@code{)(mreal u, mreal x, mreal y, mreal z, mreal px, mreal py, mreal pz, void *par)}, @code{HCDT} ini_re, @code{HCDT} ini_im, @code{HCDT} ray, @code{mreal} r, @code{mreal} k0, @code{HMDT} xx, @code{HMDT} yy, @code{HMDT} zz)
 @end ifclear
-Solves equation du/dt = i*k0*@var{ham}(px,py,pz,x,y,z,|u|)[u], where px=-i/k0*d/dx, py=-i/k0*d/dy, pz=-i/k0*d/dz are pseudo-differential operators (see @code{mglPDE()} for details). Parameters @var{ini_re}, @var{ini_im} specify real and imaginary part of initial field distribution. Parameters @var{ray} set the reference ray, i.e. the ray around which the accompanied coordinate system will be maked. You may use, for example, the array created by @code{mglRay()} function. Note, that the reference ray @strong{must be} smooth enough to make accompanied coodrinates unambiguity. Otherwise errors in the solution may appear. If @var{xx} and @var{yy} and @var{zz} are non-zero then Cartesian coordinates for each point will be written into them. See also @ref{pde}, @ref{qo2d}. @sref{PDE solving hints}
+Solves equation du/dt = i*k0*@var{ham}(p,q,v,x,y,z,|u|)[u], where p=-i/k0*d/dx, q=-i/k0*d/dy, v=-i/k0*d/dz are pseudo-differential operators (see @code{mglPDE()} for details). Parameters @var{ini_re}, @var{ini_im} specify real and imaginary part of initial field distribution. Parameters @var{ray} set the reference ray, i.e. the ray around which the accompanied coordinate system will be maked. You may use, for example, the array created by @ref{ray} function. Note, that the reference ray @strong{must be} smooth enough to make accompanied coodrinates unambiguity. Otherwise errors in the solution may appear. If @var{xx} and @var{yy} and @var{zz} are non-zero then Cartesian coordinates for each point will be written into them. See also @ref{pde}, @ref{qo2d}. @sref{PDE solving hints}
 @end deftypefn
 
 

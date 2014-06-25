@@ -31,7 +31,6 @@ int main(int argc, char *argv[])
 	char ch, buf[2048], iname[256]="", oname[256]="";
 	std::vector<std::wstring> var;
 
-	register size_t i, n;
 	while(1)
 	{
 		ch = getopt(argc, argv, "1:2:3:4:5:6:7:8:9:ho:L:C:A:");
@@ -40,7 +39,7 @@ int main(int argc, char *argv[])
 		else if(ch=='A')
 		{
 			std::wstring str;
-			for(i=0;optarg[i];i++)	str.push_back(optarg[i]);
+			for(long i=0;optarg[i];i++)	str.push_back(optarg[i]);
 			var.push_back(str);
 		}
 		else if(ch=='C')
@@ -90,7 +89,8 @@ int main(int argc, char *argv[])
 //	while(!feof(fp))	str.push_back(fgetwc(fp));
 	if(*iname)	fclose(fp);
 
-	for(i=0;;)	// collect exact values
+	unsigned long n;
+	for(long i=0;;)	// collect exact values
 	{
 		n = str.find(L"##a ",i);
 		if(n==std::string::npos)	break;
@@ -109,7 +109,7 @@ int main(int argc, char *argv[])
 	if(var.size()>1)	// there is animation
 	{
 		if(gif)	gr.StartGIF(oname);
-		for(i=0;i<var.size();i++)
+		for(unsigned long i=0;i<var.size();i++)
 		{
 			gr.NewFrame();
 			printf("frame %ld for $0 = \"%ls\"\n",i,var[i].c_str());

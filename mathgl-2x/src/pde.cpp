@@ -203,9 +203,47 @@ HMDT MGL_EXPORT mgl_pde_solve(HMGL gr, const char *ham, HCDT ini_re, HCDT ini_im
 	HMDT out = mgl_datac_abs(res);	delete res;	return out;
 }
 //-----------------------------------------------------------------------------
-HMDT MGL_EXPORT mgl_ode_solve(void (*func)(const mreal *x, mreal *dx, void *par), int n, mreal *x0, mreal dt, mreal tmax, void *par)
+struct mglOdeTxt	{	long n;	HMEX *eq;	const char *var;	};
+void MGL_NO_EXPORT mgl_txt_func(const mreal *x, mreal *dx, void *par)
+{
+	mglOdeTxt *p=(mglOdeTxt *)par;
+	mreal vars['z'-'a'+1];
+#pragma omp parallel for
+	for(long i=0;i<p->n;i++)
+	{
+		char ch = p->var[i];
+		if(ch>='a' && ch<='z')	vars[ch-'a']=x[i];
+	}
+#pragma omp parallel for
+	for(long i=0;i<p->n;i++)
+		dx[i] = mgl_expr_eval_v(p->eq[i], vars);
+}
+HMDT MGL_EXPORT mgl_ode_solve_str(const char *func, const char *var, HCDT x0, mreal dt, mreal tmax)
+{
+	if(!var || !(*var) || !func)	return 0;
+	long len = strlen(func);
+	mglOdeTxt par;	par.var=var;
+	par.n = strlen(var);
+	par.eq = new HMEX[par.n];
+	char *buf = new char[len+1], *f=buf, *g;	memcpy(buf,func,len+1);
+	mreal *xx = new mreal[par.n];
+	for(long i=0;i<par.n;i++)
+	{
+		xx[i] = x0?x0->vthr(i):0;
+		for(long k=0;f[k];k++)	if(f[k]==';')
+		{ g = f+k+1;	f[k]=0;	break;	}
+		if(f==g)	g = f+strlen(f);
+		par.eq[i] = mgl_create_expr(f);
+		f = g;
+	}
+	HMDT res = mgl_ode_solve_ex(mgl_txt_func,par.n,xx,dt,tmax,&par,NULL);
+	for(long i=0;i<par.n;i++)	mgl_delete_expr(par.eq[i]);
+	delete []par.eq;	delete []buf;	delete []xx;
+	return res;
+}
+HMDT MGL_EXPORT mgl_ode_solve(void (*func)(const mreal *x, mreal *dx, void *par), int n, const mreal *x0, mreal dt, mreal tmax, void *par)
 {	return mgl_ode_solve_ex(func,n,x0,dt,tmax,par,0);	}
-HMDT MGL_EXPORT mgl_ode_solve_ex(void (*func)(const mreal *x, mreal *dx, void *par), int n, mreal *x0, mreal dt, mreal tmax, void *par, void (*bord)(mreal *x, const mreal *xp, void *par))
+HMDT MGL_EXPORT mgl_ode_solve_ex(void (*func)(const mreal *x, mreal *dx, void *par), int n, const mreal *x0, mreal dt, mreal tmax, void *par, void (*bord)(mreal *x, const mreal *xp, void *par))
 {
 	if(tmax<dt)	return 0;	// nothing to do
 	int nt = int(tmax/dt+0.5)+1;
