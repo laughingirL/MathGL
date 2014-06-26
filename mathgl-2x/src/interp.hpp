@@ -39,48 +39,55 @@ template <class Treal> Treal mglLineart(const Treal *a, long nx, long ny, long n
 //-----------------------------------------------------------------------------
 template <class Treal> Treal mgl_spline3t(const Treal y[4], long n, mreal dx, Treal &dy)
 {
-	Treal d[4], t0,t1, f0,d0,d1,f1;
-	d[0] = y[1]-y[0];	//-(y[2]-4*y[1]+3*y[0])/2;
+	Treal d[3], t0,t1, f0,d0;
+	d[0] = -(y[2]-mreal(4)*y[1]+mreal(3)*y[0])/mreal(2);
 	d[1] = (y[2]-y[0])/mreal(2);
 	d[2] = (y[3]-y[1])/mreal(2);
-	d[3] = y[3]-y[2];	//-(y[3]-4*y[2]+3*y[1])/2;
+//	d[3] = (mreal(3)*y[3]-mreal(4)*y[2]+y[1])/mreal(2);
 
 	t0 = (y[2]+y[0])/mreal(2)-y[1];
 	t1 = (y[3]+y[1])/mreal(2)-y[2];
-	if(n<1)	t1=t0;
-	if(n>2)	t0=t1;
-
 	f0 = y[n];		d0 = d[n];
-	f1 = y[n+1];	d1 = d[n+1];
-
-	Treal b3 = mreal(10)*(f1-f0)+t1-mreal(3)*t0-mreal(4)*d1-mreal(6)*d0;
-	Treal b4 = mreal(15)*(f0-f1)-mreal(2)*t1+mreal(3)*t0+mreal(7)*d1+mreal(8)*d0;
-	Treal b5 = mreal(6)*(f1-f0)+t1-t0-mreal(3)*d1-mreal(3)*d0;
-	dy = d0 + dx*(mreal(2)*t0+dx*(mreal(3)*b3+dx*(mreal(4)*b4+dx*mreal(5)*b5)));
-//	d2y = mreal(2)*t0 + dx*(mreal(6)*b3+dx*(mreal(12)*b4+dx*mreal(20)*b5));	// 2nd derivative for future
-	return f0 + dx*(d0+dx*(t0+dx*(b3+dx*(b4+dx*b5))));
+	Treal res = 0;
+	if(n==1)
+	{
+		Treal f1 = y[2], d1 = d[2];
+		Treal b3 = mreal(10)*(f1-f0)+t1-mreal(3)*t0-mreal(4)*d1-mreal(6)*d0;
+		Treal b4 = mreal(15)*(f0-f1)-mreal(2)*t1+mreal(3)*t0+mreal(7)*d1+mreal(8)*d0;
+		Treal b5 = mreal(6)*(f1-f0)+t1-t0-mreal(3)*d1-mreal(3)*d0;
+		dy = d0 + dx*(mreal(2)*t0+dx*(mreal(3)*b3+dx*(mreal(4)*b4+dx*mreal(5)*b5)));
+//		d2y = mreal(2)*t0 + dx*(mreal(6)*b3+dx*(mreal(12)*b4+dx*mreal(20)*b5));	// 2nd derivative for future
+		res = f0 + dx*(d0+dx*(t0+dx*(b3+dx*(b4+dx*b5))));
+	}
+	else if(n<1)
+	{	res = f0 + dx*(d0+dx*t0);	dy = d0+dx*t0*mreal(2);	}
+	else
+	{	res = f0 + dx*(d0+dx*t1);	dy = d0+dx*t1*mreal(2);	}
+	return res;
 }
 //-----------------------------------------------------------------------------
 template <class Treal> Treal mgl_spline3st(const Treal y[4], long n, mreal dx)
 {
-	Treal d[4], t0,t1, f0,d0,d1,f1;
-	d[0] = y[1]-y[0];	//-(y[2]-4*y[1]+3*y[0])/2;
+	Treal d[3], t0,t1, f0,d0;
+	d[0] = -(y[2]-mreal(4)*y[1]+mreal(3)*y[0])/mreal(2);
 	d[1] = (y[2]-y[0])/mreal(2);
 	d[2] = (y[3]-y[1])/mreal(2);
-	d[3] = y[3]-y[2];	//-(y[3]-4*y[2]+3*y[1])/2;
+//	d[3] = (mreal(3)*y[3]-mreal(4)*y[2]+y[1])/mreal(2);
 
+	Treal res;
+	f0 = y[n];		d0 = d[n];
 	t0 = (y[2]+y[0])/mreal(2)-y[1];
 	t1 = (y[3]+y[1])/mreal(2)-y[2];
-	if(n<1)	t1=t0;
-	if(n>2)	t0=t1;
-
-	f0 = y[n];		d0 = d[n];
-	f1 = y[n+1];	d1 = d[n+1];
-
-	Treal b3 = mreal(10)*(f1-f0)+t1-mreal(3)*t0-mreal(4)*d1-mreal(6)*d0;
-	Treal b4 = mreal(15)*(f0-f1)-mreal(2)*t1+mreal(3)*t0+mreal(7)*d1+mreal(8)*d0;
-	Treal b5 = mreal(6)*(f1-f0)+t1-t0-mreal(3)*d1-mreal(3)*d0;
-	return f0 + dx*(d0+dx*(t0+dx*(b3+dx*(b4+dx*b5))));
+	if(n==1)
+	{
+		Treal f1 = y[2], d1 = d[2];
+		Treal b3 = mreal(10)*(f1-f0)+t1-mreal(3)*t0-mreal(4)*d1-mreal(6)*d0;
+		Treal b4 = mreal(15)*(f0-f1)-mreal(2)*t1+mreal(3)*t0+mreal(7)*d1+mreal(8)*d0;
+		Treal b5 = mreal(6)*(f1-f0)+t1-t0-mreal(3)*d1-mreal(3)*d0;
+		res = f0 + dx*(d0+dx*(t0+dx*(b3+dx*(b4+dx*b5))));
+	}
+	else	res = f0 + dx*(d0+dx*(n<1?t0:t1));
+	return res;
 }
 //-----------------------------------------------------------------------------
 template <class Treal> Treal mglSpline1t(const Treal *a, long nx, mreal x, Treal *dx=0)

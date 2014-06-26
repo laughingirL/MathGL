@@ -46,7 +46,6 @@ if(MGL_HAVE_DOC_JSON)
 		set(MGL_PNG_J ${MGL_PNG_J} ${MGL_OUT}/json/${SAMPLE}.json)
 		add_custom_command(OUTPUT ${MGL_OUT}/json/${SAMPLE}.json
 			COMMAND mgl_example -json -kind=${SAMPLE}
-#			COMMAND ${CMAKE_BINARY_DIR}/examples/mgl_example -json -kind=${SAMPLE}
 			DEPENDS mgl_example
 			WORKING_DIRECTORY ${MGL_OUT}/json )
 endif(MGL_HAVE_DOC_JSON)

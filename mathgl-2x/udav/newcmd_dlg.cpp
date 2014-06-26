@@ -38,7 +38,6 @@ extern QString pathHelp;
 NewCmdDialog::NewCmdDialog(QWidget *p) : QDialog(p,Qt::WindowStaysOnTopHint)
 {
 	replace = false;
-	fillList();
 	QPushButton *b;
 	QToolButton *t;
 	QHBoxLayout *m = new QHBoxLayout(this), *a;
@@ -48,9 +47,10 @@ NewCmdDialog::NewCmdDialog(QWidget *p) : QDialog(p,Qt::WindowStaysOnTopHint)
 	datDialog = new DataDialog(this);
 	type = new QComboBox(this);		o->addWidget(type);
 	type->setToolTip(tr("Groups of MGL commands"));
+	fillList();
 	name = new QComboBox(this);		o->addWidget(name);
 	name->setToolTip(tr("MGL commands for selected group"));
-	type->addItems(types);	name->addItems(argn[0]);
+	name->addItems(argn[0]);
 	info = new QLabel(this);		o->addWidget(info);
 	info->setToolTip(tr("Short description of selected command"));
 	kind= new QComboBox(this);		o->addWidget(kind);	kind->addItem("");
@@ -147,13 +147,39 @@ void NewCmdDialog::parseCmd(const QString &txt)
 	}
 }
 //-----------------------------------------------------------------------------
+#include "xpm/preview.xpm"
+#include "xpm/text.xpm"
+#include "xpm/table.xpm"
+#include "xpm/oper_dir.xpm"
+#include "xpm/axis.xpm"
+#include "xpm/axis_sh.xpm"
+#include "xpm/plot.xpm"
+#include "xpm/func.xpm"
+#include "xpm/box.xpm"
+#include "xpm/curve.xpm"
+#include "xpm/other.xpm"
+#include "xpm/vect.xpm"
+#include "xpm/tiles.xpm"
+//-----------------------------------------------------------------------------
 void NewCmdDialog::fillList()
 {
-	types<<tr("1D plots")<<tr("2D plots")<<tr("3D plots")<<tr("Dual plots")
-			<<tr("Vector plots")<<tr("Other plots")<<tr("Text and legend")
-			<<tr("Create data and I/O")<<tr("Data transform")<<tr("Data handling")
-			<<tr("Axis and colorbar")<<tr("Axis setup")<<tr("General setup")
-			<<tr("Scale and rotate")<<tr("Program flow")<<tr("Primitives");
+	type->addItem(QPixmap(plot_xpm), tr("1D plots"));
+	type->addItem(QPixmap(preview_xpm), tr("2D plots"));
+	type->addItem(QPixmap(":/png/weather-clouds.png"), tr("3D plots"));
+	type->addItem(QPixmap(tiles_xpm), tr("Dual plots"));
+	type->addItem(QPixmap(vect_xpm), tr("Vector plots"));
+	type->addItem(QPixmap(other_xpm), tr("Other plots"));
+	type->addItem(QPixmap(text_xpm), tr("Text and legend"));
+	type->addItem(QPixmap(table_xpm), tr("Create data and I/O"));
+	type->addItem(QPixmap(oper_dir_xpm), tr("Data transform"));
+	type->addItem(QPixmap(oper_dir_xpm), tr("Data handling"));
+	type->addItem(QPixmap(axis_xpm), tr("Axis and colorbar"));
+	type->addItem(QPixmap(axis_sh_xpm), tr("Axis setup"));
+	type->addItem(QPixmap(":/png/preferences-system.png"), tr("General setup"));
+	type->addItem(QPixmap(box_xpm), tr("Scale and rotate"));
+	type->addItem(QPixmap(":/png/media-playback-start.png"), tr("Program flow"));
+	type->addItem(QPixmap(curve_xpm), tr("Primitives"));
+
 	// now fill it automatically from parser for all categories
 	long i, n = parser.GetCmdNum();
 	for(i=0;i<n;i++)
