@@ -584,9 +584,9 @@ public:
 		if(dir=='z')	dk=dp;
 	}
 	mreal Maximal() const
-	{	return a0+fmax(fmax(di*(nx-1),dj*(ny-1)),fmax(dk*(nz-1),0));	}
+	{	return a0+mgl_max(mgl_max(di*(nx-1),dj*(ny-1)),mgl_max(dk*(nz-1),0));	}
 	mreal Minimal() const
-	{	return a0+fmin(fmin(di*(nx-1),dj*(ny-1)),fmin(dk*(nz-1),0));	}
+	{	return a0+mgl_min(mgl_min(di*(nx-1),dj*(ny-1)),mgl_min(dk*(nz-1),0));	}
 
 	/// Copy data from other mglDataV variable
 	inline const mglDataV &operator=(const mglDataV &d)
