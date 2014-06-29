@@ -37,6 +37,8 @@
 #include "plot_pnl.h"
 #include "anim_dlg.h"
 #include "style_dlg.h"
+#include "newcmd_dlg.h"
+
 extern bool mglAutoSave;
 extern bool mglHighlight;
 extern mglParse parser;
@@ -48,10 +50,12 @@ PlotPanel::PlotPanel(QWidget *parent) : QWidget(parent)
 	gifOn = jpgOn = false;
 	animDialog = new AnimParam(this);	animPos = -1;
 	stlDialog = new StyleDialog(this);
-	printer = new QPrinter;		curPos = -1;
+	newCmdDlg = new NewCmdDialog(this);
+	printer = new QPrinter;		curPos = subId = -1;
 	timer = new QTimer(this);
 	connect(timer, SIGNAL(timeout()), this, SLOT(next()));
 	connect(animDialog, SIGNAL(putText(const QString &)), this, SLOT(animText(const QString &)));
+	connect(newCmdDlg, SIGNAL(result(const QString&, bool)), this, SLOT(putCmd(const QString&)));
 
 	menu = new QMenu(tr("Graphics"),this);
 	popup = new QMenu(this);
@@ -59,6 +63,7 @@ PlotPanel::PlotPanel(QWidget *parent) : QWidget(parent)
 	draw = new mglDrawScript(parser.Self());
 	mgl_set_flag(mgl->getGraph(),1,MGL_SHOW_POS);	mgl->setDraw(draw);
 	connect(mgl,SIGNAL(askStyle(int)),this,SLOT(setStyle(int)));
+	connect(mgl,SIGNAL(objChanged(int)),this,SLOT(setCurPos(int)));
 
 	QBoxLayout *v,*h,*m;
 	v = new QVBoxLayout(this);
@@ -76,7 +81,9 @@ PlotPanel::~PlotPanel()	{	delete printer;	}
 void PlotPanel::setStyle(int id)
 {	if(stlDialog->exec())	mgl->setStyle(id, stlDialog->getStyle());	}
 //-----------------------------------------------------------------------------
-void PlotPanel::animText(const QString &txt)		{	animPutText(txt);	}
+void PlotPanel::setSubId(int id)	{	subId = id;	}
+//-----------------------------------------------------------------------------
+void PlotPanel::animText(const QString &txt)	{	animPutText(txt);	}
 //-----------------------------------------------------------------------------
 void PlotPanel::setCurPos(int pos)
 {
@@ -90,6 +97,7 @@ void PlotPanel::execute()
 {
 	if(mglAutoSave)	save();
 	raisePanel(this);
+	objId = subId = -1;
 	emit clearWarn();
 	QTime t;	t.start();
 	mgl_set_facenum(mgl->getGraph(),0);
@@ -326,12 +334,12 @@ void PlotPanel::toolTop(QBoxLayout *l)
 	o->addAction(a);	popup->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
-	a = new QAction(tr("Adjust size"), this);
+	a = new QAction(QPixmap(":/png/view-fullscreen.png"), tr("Adjust size"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(adjust()));
 	a->setToolTip(tr("Change canvas size to fill whole region (F6)."));
 	a->setShortcut(Qt::Key_F6);		o->addAction(a);
 
-	a = new QAction(tr("Reload"), this);
+	a = new QAction(QPixmap(":/png/document-revert.png"), tr("Reload"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(pressF9()));
 	a->setToolTip(tr("Restore status for 'once' command and reload data (F9)."));
 	a->setShortcut(Qt::Key_F9);	o->addAction(a);	popup->addAction(a);
@@ -355,64 +363,86 @@ void PlotPanel::toolTop(QBoxLayout *l)
 	o->addAction(a);	popup->addAction(a);
 
 //	l->addStretch(1);
-	oo = new QMenu(tr("Primitives ..."),this);
-	aa=a = new QAction(QPixmap(line_xpm), tr("Add line"), this);
-	connect(a, SIGNAL(triggered()), mgl, SLOT(addLine()));
-	connect(mgl, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
-	a->setToolTip(tr("Add line which properties can be changed later by mouse."));
-	oo->addAction(a);
+	{
+		oo = new QMenu(tr("Primitives ..."),this);
+		aa=a = new QAction(QPixmap(line_xpm), tr("Add line"), this);
+		connect(a, SIGNAL(triggered()), mgl, SLOT(addLine()));
+		connect(mgl, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
+		a->setToolTip(tr("Add line which properties can be changed later by mouse."));
+		oo->addAction(a);
 
-	a = new QAction(QPixmap(arc_xpm), tr("Add arc"), this);
-	connect(a, SIGNAL(triggered()), mgl, SLOT(addArc()));
-	connect(mgl, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
-	a->setToolTip(tr("Add arc which properties can be changed later by mouse."));
-	oo->addAction(a);
+		a = new QAction(QPixmap(arc_xpm), tr("Add arc"), this);
+		connect(a, SIGNAL(triggered()), mgl, SLOT(addArc()));
+		connect(mgl, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
+		a->setToolTip(tr("Add arc which properties can be changed later by mouse."));
+		oo->addAction(a);
 
-	a = new QAction(QPixmap(curve_xpm), tr("Add curve"), this);
-	connect(a, SIGNAL(triggered()), mgl, SLOT(addCurve()));
-	connect(mgl, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
-	a->setToolTip(tr("Add curve which properties can be changed later by mouse."));
-	oo->addAction(a);
+		a = new QAction(QPixmap(curve_xpm), tr("Add curve"), this);
+		connect(a, SIGNAL(triggered()), mgl, SLOT(addCurve()));
+		connect(mgl, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
+		a->setToolTip(tr("Add curve which properties can be changed later by mouse."));
+		oo->addAction(a);
 
-	a = new QAction(QPixmap(mark_s_xpm), tr("Add rect"), this);
-	connect(a, SIGNAL(triggered()), mgl, SLOT(addRect()));
-	connect(mgl, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
-	a->setToolTip(tr("Add rectangle which properties can be changed later by mouse."));
-	oo->addAction(a);
+		a = new QAction(QPixmap(mark_s_xpm), tr("Add rect"), this);
+		connect(a, SIGNAL(triggered()), mgl, SLOT(addRect()));
+		connect(mgl, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
+		a->setToolTip(tr("Add rectangle which properties can be changed later by mouse."));
+		oo->addAction(a);
 
-	a = new QAction(QPixmap(mark_d_xpm), tr("Add rhombus"), this);
-	connect(a, SIGNAL(triggered()), mgl, SLOT(addRhomb()));
-	connect(mgl, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
-	a->setToolTip(tr("Add rhombus which properties can be changed later by mouse."));
-	oo->addAction(a);
+		a = new QAction(QPixmap(mark_d_xpm), tr("Add rhombus"), this);
+		connect(a, SIGNAL(triggered()), mgl, SLOT(addRhomb()));
+		connect(mgl, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
+		a->setToolTip(tr("Add rhombus which properties can be changed later by mouse."));
+		oo->addAction(a);
 
-	a = new QAction(QPixmap(mark_o_xpm), tr("Add ellipse"), this);
-	connect(a, SIGNAL(triggered()), mgl, SLOT(addEllipse()));
-	connect(mgl, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
-	a->setToolTip(tr("Add ellipse which properties can be changed later by mouse."));
-	oo->addAction(a);
+		a = new QAction(QPixmap(mark_o_xpm), tr("Add ellipse"), this);
+		connect(a, SIGNAL(triggered()), mgl, SLOT(addEllipse()));
+		connect(mgl, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
+		a->setToolTip(tr("Add ellipse which properties can be changed later by mouse."));
+		oo->addAction(a);
 
-	a = new QAction(QPixmap(polygon_xpm), tr("Add polygon"), this);
-	connect(a, SIGNAL(triggered()), mgl, SLOT(addPolygon()));
-	connect(mgl, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
-	a->setToolTip(tr("Add ellipse which properties can be changed later by mouse."));
-	oo->addAction(a);
+		a = new QAction(QPixmap(polygon_xpm), tr("Add polygon"), this);
+		connect(a, SIGNAL(triggered()), mgl, SLOT(addPolygon()));
+		connect(mgl, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
+		a->setToolTip(tr("Add ellipse which properties can be changed later by mouse."));
+		oo->addAction(a);
 
-	a = new QAction(QPixmap(mark_a_xpm), tr("Add mark"), this);
-	connect(a, SIGNAL(triggered()), mgl, SLOT(addMark()));
-	connect(mgl, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
-	a->setToolTip(tr("Add marker which properties can be changed later by mouse."));
-	oo->addAction(a);
+		a = new QAction(QPixmap(mark_a_xpm), tr("Add mark"), this);
+		connect(a, SIGNAL(triggered()), mgl, SLOT(addMark()));
+		connect(mgl, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
+		a->setToolTip(tr("Add marker which properties can be changed later by mouse."));
+		oo->addAction(a);
 
-	a = new QAction(QPixmap(text_xpm), tr("Add text"), this);
-	connect(a, SIGNAL(triggered()), mgl, SLOT(addText()));
-	connect(mgl, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
-	a->setToolTip(tr("Add text which properties can be changed later by mouse."));
-	oo->addAction(a);
+		a = new QAction(QPixmap(text_xpm), tr("Add text"), this);
+		connect(a, SIGNAL(triggered()), mgl, SLOT(addText()));
+		connect(mgl, SIGNAL(usePrimChanged(bool)), a, SLOT(setVisible(bool)));
+		a->setToolTip(tr("Add text which properties can be changed later by mouse."));
+		oo->addAction(a);
 
-	bb = new QToolButton(this);	l->addWidget(bb);
-	bb->setDefaultAction(aa);	bb->setMenu(oo);
-	bb->setPopupMode(QToolButton::MenuButtonPopup);
+		bb = new QToolButton(this);	l->addWidget(bb);
+		bb->setDefaultAction(aa);	bb->setMenu(oo);
+		bb->setPopupMode(QToolButton::MenuButtonPopup);
+	}
+
+	a = new QAction(QPixmap(":/png/edit-delete.png"), tr("Delete selected"), this);
+	connect(a, SIGNAL(triggered()), this, SLOT(deleteSelected()));
+	a->setToolTip(tr("Delete selected plot."));
+	o->addAction(a);	popup->addAction(a);
+	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
+
+	a = new QAction(QPixmap(":/png/layer-visible-off.png"), tr("Hide selected"), this);
+	connect(a, SIGNAL(triggered()), this, SLOT(hideSelected()));
+	a->setToolTip(tr("Hide selected plot."));
+	o->addAction(a);	popup->addAction(a);
+	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
+
+	a = new QAction(QPixmap(":/png/format-indent-more.png"), tr("New command"), this);
+	connect(a, SIGNAL(triggered()), newCmdDlg, SLOT(show()));
+	a->setToolTip(tr("Show dialog for new command and put it into the script."));
+	o->addAction(a);	popup->addAction(a);
+	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
+
+
 
 	o->addMenu(oo);	l->addStretch(1);
 
@@ -544,4 +574,42 @@ void PlotPanel::toolLeft(QBoxLayout *l)
 }
 //-----------------------------------------------------------------------------
 QString PlotPanel::getFit()	{	return QString(mgl_get_fit(mgl->getGraph()));	}
+//-----------------------------------------------------------------------------
+void PlotPanel::deleteSelected()
+{
+	if(curPos>=0)
+	{
+		textMGL->moveCursor(QTextCursor::Start);
+		for(int i=0;i<curPos;i++)	textMGL->moveCursor(QTextCursor::NextBlock);
+		QTextCursor tc= textMGL->textCursor();
+		tc.select(QTextCursor::LineUnderCursor);
+		tc.removeSelectedText();
+		tc.deleteChar();
+		curPos = -1;	execute();
+	}
+	else emit setStatus("No selection.");
+}
+//-----------------------------------------------------------------------------
+void PlotPanel::hideSelected()
+{
+	if(curPos>=0)
+	{
+		textMGL->moveCursor(QTextCursor::Start);
+		for(int i=0;i<curPos;i++)	textMGL->moveCursor(QTextCursor::NextBlock);
+		textMGL->insertPlainText("#h ");
+		curPos = -1;	execute();
+	}
+	else emit setStatus("No selection.");
+}
+//-----------------------------------------------------------------------------
+void PlotPanel::putCmd(const QString &cmd)
+{
+	textMGL->moveCursor(QTextCursor::Start);
+	if(curPos>=0)
+	{
+		for(int i=0;i<curPos;i++)	textMGL->moveCursor(QTextCursor::NextBlock);
+	}
+	textMGL->insertPlainText(cmd+"\n");
+	curPos = -1;	execute();
+}
 //-----------------------------------------------------------------------------

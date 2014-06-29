@@ -36,6 +36,7 @@ class AnimParam;
 class DatPanel;
 class StyleDialog;
 class QPrinter;
+class NewCmdDialog;
 //-----------------------------------------------------------------------------
 class PlotPanel : public QWidget
 {
@@ -43,8 +44,9 @@ Q_OBJECT
 public:
 	QMenu *menu;
 	QMathGL *mgl;
-	mglDrawScript *draw;		///< Class for drawing MGL script
-	const QTextEdit *textMGL;	///< Editor with MGL script body
+	mglDrawScript *draw;	///< Class for drawing MGL script
+	QTextEdit *textMGL;		///< Editor with MGL script body
+	NewCmdDialog *newCmdDlg;
 	PlotPanel(QWidget *wp=0);
 	~PlotPanel();
 	void setMGLFont(const QString &path);
@@ -74,6 +76,10 @@ private slots:
 	void pressF9();
 	void stop();
 	void setStyle(int id);
+	void setSubId(int id);
+	void deleteSelected();
+	void hideSelected();
+	void putCmd(const QString &cmd);
 
 private:
 	bool gifOn, jpgOn;
@@ -88,6 +94,8 @@ private:
 	QMenu *popup;
 	QPrinter *printer;
 	StyleDialog *stlDialog;
+	int objId;
+	int subId;
 	
 	void toolTop(QBoxLayout *l);
 	void toolLeft(QBoxLayout *l);

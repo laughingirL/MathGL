@@ -62,14 +62,14 @@ public:
 	inline void zoomRegion(mreal xx1,mreal xx2,mreal yy1, mreal yy2)
 	{	x1=xx1;	y1=yy1;	x2=xx2;	y2=yy2;	}
 
-	int getPer()	{return int(per);}	///< Get perspective value
-	int getPhi()	{return int(phi);}	///< Get Phi-angle value
-	int getTet()	{return int(tet);}	///< Get Theta-angle value
-	bool getAlpha()	{return alpha;}	///< Get transparency state
-	bool getLight()	{return light;}	///< Get lightning state
-	bool getZoom()	{return zoom;}	///< Get mouse zooming state
-	bool getRotate(){return rotate;}	///< Get mouse rotation state
-	bool getViewYZ(){return viewYZ;}	///< Get mouse rotation axis
+	int getPer() const	{return int(per);}	///< Get perspective value
+	int getPhi() const	{return int(phi);}	///< Get Phi-angle value
+	int getTet() const	{return int(tet);}	///< Get Theta-angle value
+	bool getAlpha() const	{return alpha;}	///< Get transparency state
+	bool getLight() const	{return light;}	///< Get lightning state
+	bool getZoom() const	{return zoom;}	///< Get mouse zooming state
+	bool getRotate() const	{return rotate;}///< Get mouse rotation state
+	bool getViewYZ() const	{return viewYZ;}///< Get mouse rotation axis
 	bool isActive(int xs,int ys);	///< Check if active point is pressed
 
 public slots:
@@ -154,7 +154,7 @@ signals:
 	void frameChanged(int);		///< Need another frame to show
 	void showWarn(QString);		///< Show warnings
 	void posChanged(QString message);	///< user click to show mouse position
-	void objChanged(int objId);	///< User double-click to select object/line
+	void objChanged(int objId);	///< User click to select object/line
 	void refreshData();
 	void doubleClick(int id);	///< Double mouse click by object with id
 	void askStyle(int id);		///< Update style
@@ -178,8 +178,8 @@ protected:
 	int (*draw_func)(mglBase *gr, void *par);
 	mglDraw *draw;		///< Class for drawing -- need to call directly due to inheritance mechanism
 	QString mousePos;	///< Last mouse position
-	QPixmap pic;			///< Pixmap for drawing (changed by update)
-	double tet, phi;		///< Rotation angles
+	QPixmap pic;		///< Pixmap for drawing (changed by update)
+	double tet, phi;	///< Rotation angles
 	double per;			///< Value of perspective ( must be in [0,1) )
 	bool alpha;			///< Transparency state
 	bool light;			///< Lightning state
@@ -187,8 +187,8 @@ protected:
 	bool custDraw;		///< Use custom draw before main drawing
 	bool zoom;			///< Mouse zoom state
 	bool grid;			///< Grid drawing state
-	bool rotate;			///< Mouse rotation state
-	bool viewYZ;			///< Set mouse rotation around Y and Z axis (instead of X and Z)
+	bool rotate;		///< Mouse rotation state
+	bool viewYZ;		///< Set mouse rotation around Y and Z axis (instead of X and Z)
 	mreal x1,x2,y1,y2;	///< Zoom in region
 	mreal ax1,ax2,ay1,ay2;	///< Axis range zoom
 	bool showMessage;	///< Flag for showing messages (enabled by each execute())
@@ -216,6 +216,6 @@ public:
 /// Convert bitmap from mglCanvasWnd to QPixmap
 void mglConvertFromGraph(QPixmap &pic, mglCanvas *gr, uchar **buf);
 /// Make menu, toolbars and return popup menu for MainWindow
-QMenu *mglMakeMenu(QMainWindow* Wnd, QMathGL* QMGL, QSpinBox*& tet, QSpinBox*& phi);
+MGL_EXPORT QMenu *mglMakeMenu(QMainWindow* Wnd, QMathGL* QMGL, QSpinBox*& tet, QSpinBox*& phi);
 //-----------------------------------------------------------------------------
 #endif

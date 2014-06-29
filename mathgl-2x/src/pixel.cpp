@@ -25,15 +25,16 @@ void mglCanvas::SetSize(int w,int h)
 {
 	if(w<=0 || h<=0)	{	SetWarn(mglWarnSize,"SetSize");	return;	}
 	Width = w;	Height = h;	Depth = long(sqrt(double(w*h)));
+	long s = long(w)*long(h);
 	if(G)	{	delete []G;	delete []C;	delete []Z;	delete []G4;delete []GB;delete []OI;	}
-	G = new unsigned char[w*h*3];
-	G4= new unsigned char[w*h*4];
-	GB= new unsigned char[w*h*4];
-	C = new unsigned char[w*h*12];
-	Z = new float[w*h*3];	// only 3 planes
-	OI= new int[w*h];
+	G = new unsigned char[s*3];
+	G4= new unsigned char[s*4];
+	GB= new unsigned char[s*4];
+	C = new unsigned char[s*12];
+	Z = new float[s*3];	// only 3 planes
+	OI= new int[s];
 #pragma omp parallel for
-	for(long i=0;i<Width*Height;i++)	memcpy(GB+4*i,BDef,4);
+	for(long i=0;i<s;i++)	memcpy(GB+4*i,BDef,4);
 	InPlot(0,1,0,1,false);	Clf();
 }
 //-----------------------------------------------------------------------------
@@ -233,68 +234,6 @@ void MGL_NO_EXPORT sort_prm_c(size_t l0, size_t r0, mglStack<mglPrim> &s, mglPri
 }
 //-----------------------------------------------------------------------------
 MGL_NO_EXPORT int mgl_type_prior[8]={1,2,4,5, 0,3,0, 7};
-mreal MGL_LOCAL_PURE mgl_prmcmp(const mglPrim &a, const mglPrim &b)
-{
-	if(a.z!=b.z) 	return a.z - b.z;
-	register int t1 = mgl_type_prior[a.type], t2 = mgl_type_prior[b.type];
-	if(t1!=t2)		return t2 - t1;
-	if(a.w!=b.w) 	return b.w - a.w;
-	return a.n3 - b.n3;
-}
-void MGL_NO_EXPORT sort_prm_z(size_t l0, size_t r0, mglStack<mglPrim> &s, mglPrim *buf, char *cnd)
-{
-/*	size_t n = r0-l0;	// Bubble sort -- very slow!!!
-	for(size_t j=0;j<n;j++)
-		for(size_t i=0;i<n-j;i++)
-			if(mgl_prmcmp(s[l0+i],s[l0+i+1])>0)
-				mgl_prm_swap(s[l0+i],s[l0+i+1],buf);*/
-
-	if(l0>=r0)	return;	// nothing to sort
-	if(l0+1==r0)
-	{
-		if(mgl_prmcmp(s[l0],s[r0])>0)	mgl_prm_swap(s[r0],s[l0],buf);
-		return;
-	}
-	bool del=(buf==0);
-	if(del)
-	{
-		buf = (mglPrim*)malloc(sizeof(mglPrim));
-		cnd = new char[r0-l0+1];
-	}
-
-	size_t l=l0, r=r0;
-	const mglPrim &v = s[(l+r)/2];
-#pragma omp parallel for
-	for(size_t i=l0;i<=r0;i++)
-	{
-		mreal val = mgl_prmcmp(s[i],v);
-		cnd[i-l0] = val<0?0:(val>0?2:1);
-	}
-	for(size_t i=l0;i<=r0;i++)	// first collect <0
-		if(cnd[i-l0]==0)
-		{
-			if(i>l)	mgl_prm_swap(s[i],s[l],buf);
-			l++;
-		}
-	r=l;
-	for(size_t i=l;i<=r0;i++)	// now collect =0
-		if(cnd[i-l0]==1)
-		{
-			if(i>r)	mgl_prm_swap(s[i],s[r],buf);
-			r++;
-		}
-
-	if(l>l0+1)	sort_prm_z(l0,l-1,s,buf,cnd);
-	if(r<r0)	sort_prm_z(r,r0,s,buf,cnd);
-	if(del)	{	free(buf);	delete []cnd;	}
-}
-//-----------------------------------------------------------------------------
-/*void mglBase::resort()
-{
-#pragma omp critical
-	{	sort_prm_c(0,Prm.size()-1,Prm,0);	clr(MGL_FINISHED);	}
-}*/
-//-----------------------------------------------------------------------------
 MGL_NO_EXPORT void *mgl_canvas_thr(void *par)
 {	mglThreadG *t=(mglThreadG *)par;	(t->gr->*(t->f))(t->id, t->n, t->p);	return NULL;	}
 void mglStartThread(void (mglCanvas::*func)(long i, long n, const void *p), mglCanvas *gr, long n, const void *p=NULL)
@@ -1004,6 +943,9 @@ void mglCanvas::trig_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 	// default normale
 	mglPoint nr = mglPoint(p2.x-p1.x,p2.y-p1.y,p2.z-p1.z)^mglPoint(p3.x-p1.x,p3.y-p1.y,p3.z-p1.z);
 	float x0 = p1.x, y0 = p1.y;
+	float dz = Width>2 ? 1 : 1e-5*Width;	// provide additional height to be well visible on the surfaces
+	if(anorm)	dz=0;
+
 	if(Quality&MGL_DRAW_NORM)	for(long i=x1;i<=x2;i++)	for(long j=y1;j<=y2;j++)
 	{
 		if(!visible(i,j,d->m, d->PenWidth,d->angle))	continue;
@@ -1013,15 +955,19 @@ void mglCanvas::trig_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 		p = p1+d1*u+d2*v;
 		if(mgl_isnan(p.u) && mgl_isnum(p.v) && anorm)
 		{	p.u = nr.x;	p.v = nr.y;	p.w = nr.z;	}
-		pnt_plot(i,j,p.z,col2int(p,r,d->ObjId),d->ObjId);
+		pnt_plot(i,j,p.z+dz,col2int(p,r,d->ObjId),d->ObjId);
 	}
-	else	for(long i=x1;i<=x2;i++)	for(long j=y1;j<=y2;j++)
+	else
 	{
-		if(!visible(i,j,d->m, d->PenWidth,d->angle))	continue;
-		register float xx = (i-x0), yy = (j-y0);
-		register float u = dxu*xx+dyu*yy, v = dxv*xx+dyv*yy;
-		if(u<0 || v<0 || u+v>1)	continue;
-		pnt_plot(i,j,p1.z,col2int(p1,r,d->ObjId),d->ObjId);
+		col2int(p1,r,d->ObjId);
+		for(long i=x1;i<=x2;i++)	for(long j=y1;j<=y2;j++)
+		{
+			if(!visible(i,j,d->m, d->PenWidth,d->angle))	continue;
+			register float xx = (i-x0), yy = (j-y0);
+			register float u = dxu*xx+dyu*yy, v = dxv*xx+dyv*yy;
+			if(u<0 || v<0 || u+v>1)	continue;
+			pnt_plot(i,j,p1.z+dz,r,d->ObjId);
+		}
 	}
 }
 //-----------------------------------------------------------------------------

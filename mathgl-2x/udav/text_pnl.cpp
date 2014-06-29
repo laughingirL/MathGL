@@ -146,7 +146,7 @@ void TextPanel::insFile()
 //-----------------------------------------------------------------------------
 void TextPanel::insPath()
 {
-	QString str = QFileDialog::getExistingDirectory(this, tr("UDAV - Insert filename"));
+	QString str = QFileDialog::getExistingDirectory(this, tr("UDAV - Insert path"));
 	if(str.isEmpty())	return;
 	edit->textCursor().insertText("'"+str+"'");
 }
@@ -262,7 +262,6 @@ QString TextPanel::selection()
 //-----------------------------------------------------------------------------
 void TextPanel::setCursorPosition(int n)
 {
-	graph->setCurPos(n);
 	if(n<0)	return;
 	edit->moveCursor(QTextCursor::Start);
 	for(int i=0;i<n;i++)	edit->moveCursor(QTextCursor::NextBlock);

@@ -108,13 +108,11 @@ mglBase::mglBase()
 
 	InUse = 1;	SetQuality();	FaceNum = 0;
 	// Always create default palette txt[0] and default scheme txt[1]
-#pragma omp critical(txt)
-	{
-		mglTexture t1(MGL_DEF_PAL,-1), t2(MGL_DEF_SCH,1);
-		Txt.reserve(3);
-		MGL_PUSH(Txt,t1,mutexTxt);
-		MGL_PUSH(Txt,t2,mutexTxt);
-	}
+	mglTexture t1(MGL_DEF_PAL,-1), t2(MGL_DEF_SCH,1);
+	Txt.reserve(3);
+	MGL_PUSH(Txt,t1,mutexTxt);
+	MGL_PUSH(Txt,t2,mutexTxt);
+
 	strcpy(last_style,"__1 {dFFFF}k\0");
 	MinS=mglPoint(-1,-1,-1);	MaxS=mglPoint(1,1,1);
 	fnt = new mglFont;	fnt->gr = this;	PrevState=NAN;

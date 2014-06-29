@@ -8,6 +8,7 @@
 		<file>png/document-properties.png</file>
 		<file>png/document-export.png</file>
 		<file>png/document-import.png</file>
+		<file>png/document-revert.png</file>
 		<file>png/alpha.png</file>
 		<file>png/preferences-system.png</file>
 		<file>png/edit-clear.png</file>
@@ -51,6 +52,10 @@
 		<file>png/office-chart-line.png</file>
 		<file>png/system-file-manager.png</file>
 		<file>png/view-grid.png</file>
+		<file>png/view-fullscreen.png</file>
 		<file>png/tab-close.png</file>
+		<file>png/layer-visible-off.png</file>
+		<file>png/object-order-lower.png</file>
+		<file>png/object-order-raise.png</file>
 	</qresource>
 </RCC>

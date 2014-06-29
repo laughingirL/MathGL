@@ -470,8 +470,8 @@ void MainWindow::warnChanged()
 //-----------------------------------------------------------------------------
 void MainWindow::about()
 {
-	QString s = tr("UDAV v. 2.")+QString::number(MGL_VER2)+
-				tr("\n(c) Alexey Balakin, 2007-2014\nhttp://mathgl.sf.net/");
+	QString s = tr("<a href='http://mathgl.sourceforge.net/doc_en/UDAV-overview.html'>UDAV</a> v. 2.")+QString::number(MGL_VER2)+
+	tr("<br>(c) Alexey Balakin, 2007-2014<br><br><a href='http://www.gnu.org/copyleft/gpl.html'>License is GPL v.2 or later.</a>");
 	QMessageBox::about(this, tr("UDAV - about"), s);
 }
 //-----------------------------------------------------------------------------

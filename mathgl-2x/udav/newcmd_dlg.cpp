@@ -26,6 +26,7 @@
 #include <QMessageBox>
 #include <QTextBrowser>
 #include <QToolButton>
+#include <QFileDialog>
 #include <mgl2/mgl.h>
 
 #include "newcmd_dlg.h"
@@ -316,6 +317,16 @@ void NewCmdDialog::insertData()
 	else if(a=="'fmt'" || a=="_'fmt'")
 	{
 		if(stlDialog->exec())	args->item(row,1)->setText(stlDialog->getStyle());
+	}
+	else if(a=="'file'")
+	{
+		QString str = QFileDialog::getOpenFileName(this, tr("UDAV - Insert filename"));
+		if(!str.isEmpty())	args->item(row,1)->setText(str);
+	}
+	else if(a=="'path'")
+	{
+		QString str = QFileDialog::getExistingDirectory(this, tr("UDAV - Insert path"));
+		if(!str.isEmpty())	args->item(row,1)->setText(str);
 	}
 }
 //-----------------------------------------------------------------------------
