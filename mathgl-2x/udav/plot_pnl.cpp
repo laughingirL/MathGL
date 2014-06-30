@@ -38,6 +38,7 @@
 #include "anim_dlg.h"
 #include "style_dlg.h"
 #include "newcmd_dlg.h"
+#include "subplot_dlg.h"
 
 extern bool mglAutoSave;
 extern bool mglHighlight;
@@ -51,11 +52,13 @@ PlotPanel::PlotPanel(QWidget *parent) : QWidget(parent)
 	animDialog = new AnimParam(this);	animPos = -1;
 	stlDialog = new StyleDialog(this);
 	newCmdDlg = new NewCmdDialog(this);
+	subplotDlg = new SubplotDialog(this);
 	printer = new QPrinter;		curPos = subId = -1;
 	timer = new QTimer(this);
 	connect(timer, SIGNAL(timeout()), this, SLOT(next()));
 	connect(animDialog, SIGNAL(putText(const QString &)), this, SLOT(animText(const QString &)));
 	connect(newCmdDlg, SIGNAL(result(const QString&, bool)), this, SLOT(putCmd(const QString&)));
+	connect(subplotDlg, SIGNAL(result(const QString&)), this, SLOT(insCmd(const QString&)));
 
 	menu = new QMenu(tr("Graphics"),this);
 	popup = new QMenu(this);
@@ -274,6 +277,7 @@ void PlotPanel::animParseText(const QString &txt)
 #include "xpm/mark_d.xpm"
 #include "xpm/arc.xpm"
 #include "xpm/polygon.xpm"
+#include "xpm/box.xpm"
 //-----------------------------------------------------------------------------
 void PlotPanel::toolTop(QBoxLayout *l)
 {
@@ -439,6 +443,12 @@ void PlotPanel::toolTop(QBoxLayout *l)
 	a = new QAction(QPixmap(":/png/format-indent-more.png"), tr("New command"), this);
 	connect(a, SIGNAL(triggered()), newCmdDlg, SLOT(show()));
 	a->setToolTip(tr("Show dialog for new command and put it into the script."));
+	o->addAction(a);	popup->addAction(a);
+	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
+
+	a = new QAction(QPixmap(box_xpm), tr("New inplot"), this);
+	connect(a, SIGNAL(triggered()), subplotDlg, SLOT(show()));
+	a->setToolTip(tr("Show dialog for new inplot and put it into the script."));
 	o->addAction(a);	popup->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
@@ -610,6 +620,13 @@ void PlotPanel::putCmd(const QString &cmd)
 		for(int i=0;i<curPos;i++)	textMGL->moveCursor(QTextCursor::NextBlock);
 	}
 	textMGL->insertPlainText(cmd+"\n");
+	curPos = -1;	execute();
+}
+//-----------------------------------------------------------------------------
+void PlotPanel::insCmd(const QString &cmd)
+{
+	textMGL->moveCursor(QTextCursor::EndOfBlock);
+	textMGL->insertPlainText("\n"+cmd);
 	curPos = -1;	execute();
 }
 //-----------------------------------------------------------------------------

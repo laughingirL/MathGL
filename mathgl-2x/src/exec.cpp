@@ -1511,7 +1511,7 @@ int MGL_NO_EXPORT mgls_multiplot(mglGraph *gr, long , mglArg *a, const char *k, 
 	if(!strcmp(k,"nnnnn"))
 		gr->MultiPlot(iint(a[0].v), iint(a[1].v), iint(a[2].v), iint(a[3].v), iint(a[4].v));
 	else if(!strcmp(k,"nnnnns"))
-		gr->MultiPlot(iint(a[0].v), iint(a[1].v), iint(a[2].v), iint(a[3].v), iint(a[4].v), a[3].s.c_str());
+		gr->MultiPlot(iint(a[0].v), iint(a[1].v), iint(a[2].v), iint(a[3].v), iint(a[4].v), a[5].s.c_str());
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------

@@ -17,91 +17,48 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef PLOT_PNL_H
-#define PLOT_PNL_H
+#ifndef SUBPLOTDIALOG_H
+#define SUBPLOTDIALOG_H
 //-----------------------------------------------------------------------------
-#include <QWidget>
-//-----------------------------------------------------------------------------
-class QMenu;
-class QTimer;
+#include <QDialog>
+class QRadioButton;
 class QSpinBox;
-class QPopupMenu;
-class QScrollArea;
-class QBoxLayout;
-class QTextEdit;
-class QMathGL;
-class mglDrawScript;
-class InfoDialog;
-class AnimParam;
-class DatPanel;
-class StyleDialog;
-class QPrinter;
-class NewCmdDialog;
-class SubplotDialog;
+class QCheckBox;
+class QLabel;
+class QLineEdit;
 //-----------------------------------------------------------------------------
-class PlotPanel : public QWidget
+class SubplotDialog : public QDialog
 {
 Q_OBJECT
 public:
-	QMenu *menu;
-	QMathGL *mgl;
-	mglDrawScript *draw;	///< Class for drawing MGL script
-	QTextEdit *textMGL;		///< Editor with MGL script body
-	NewCmdDialog *newCmdDlg;
-	SubplotDialog *subplotDlg;
-	PlotPanel(QWidget *wp=0);
-	~PlotPanel();
-	void setMGLFont(const QString &path);
-	QString getFit();
-
+	SubplotDialog(QWidget *p);
+	~SubplotDialog();
+	const QString &getCommand()	{	return cmd;	}
 public slots:
-	void animParseText(const QString &txt);
-	void setCurPos(int pos=-1);
-	void execute();
-
+	void parseCmd(const QString &txt, bool final=true);
+	void finish();
 signals:
-	void save();
-	void animPutText(const QString &);
-	void setStatus(const QString &);
-	void animSwitch(bool);
-	void giveFocus();
-	void clearWarn();
-
+	void result(const QString &txt);
 private slots:
-	void animText(const QString &);
-	void next();
-	void nextSlide();
-	void prevSlide();
-	void animStart(bool st);
-	void animSetup();
-	void adjust();
-	void pressF9();
-	void stop();
-	void setStyle(int id);
-	void setSubId(int id);
-	void deleteSelected();
-	void hideSelected();
-	void putCmd(const QString &cmd);
-	void insCmd(const QString &cmd);
-
+	void updatePic();
 private:
-	bool gifOn, jpgOn;
-	QScrollArea* sv;
+	QRadioButton *cb, *ci, *cm, *cg, *cc, *cs;
 	QSpinBox *tet, *phi;
-	// animation
-	QString animParam;
-	int animPos;
-	int curPos;
-	QTimer *timer;
-	AnimParam *animDialog;
-	QMenu *popup;
-	QPrinter *printer;
-	StyleDialog *stlDialog;
-	int objId;
-	int subId;
-	
-	void toolTop(QBoxLayout *l);
-	void toolLeft(QBoxLayout *l);
+	QLineEdit *axz, *ayz;
+	QLineEdit *title, *res;
+	QSpinBox *bn,*bm,*bk;			// subplot
+	QLineEdit *x1,*x2,*y1,*y2;		// inplot
+	QSpinBox *sn,*sk;				// stickplot
+	QSpinBox *mn,*mm,*mk,*mx,*my;	// multiplot
+	QSpinBox *gm,*gn,*gk;			// gridplot
+	QSpinBox *cn,*ck;				// columnplot
+	QLineEdit *cd;
+	QCheckBox *rb,*rr,*rl,*rt,*rw;	// style (where reserve)
+	QString cmd;
+	QLabel *pic;	// resulting image
+//	bool replace;	// flag to be used in result() signal
+	uchar *grBuf;
 };
 //-----------------------------------------------------------------------------
-#endif // PLOT_PNL_H
+#endif // SUBPLOTDIALOG_H
+//-----------------------------------------------------------------------------

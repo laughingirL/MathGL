@@ -38,6 +38,7 @@
 #include "setup_dlg.h"
 #include "text_pnl.h"
 #include "plot_pnl.h"
+#include "subplot_dlg.h"
 //-----------------------------------------------------------------------------
 FilesDialog *files_dlg=0;
 QString defFontFamily;
@@ -55,6 +56,7 @@ TextPanel::TextPanel(QWidget *parent) : QWidget(parent)
 	optDialog = new OptionDialog(this);
 	stlDialog = new StyleDialog(this);
 	newCmdDlg = new NewCmdDialog(this);
+	subplotDlg = new SubplotDialog(this);
 	setupDlg = new SetupDialog(this);
 	dataOpenDlg = createDataOpenDlg(this);
 	if(!files_dlg)	files_dlg= new FilesDialog;
@@ -65,6 +67,7 @@ TextPanel::TextPanel(QWidget *parent) : QWidget(parent)
 
 	connect(setupDlg, SIGNAL(putText(const QString &)), this, SLOT(animPutText(const QString &)));
 	connect(newCmdDlg, SIGNAL(result(const QString&, bool)), this, SLOT(putLine(const QString&, bool)));
+	connect(subplotDlg, SIGNAL(result(const QString&)), this, SLOT(putLine(const QString&)));
 	connect(findDialog, SIGNAL(findText(const QString &, bool, bool)), this, SLOT(findText(const QString &, bool, bool)));
 	connect(findDialog, SIGNAL(replText(const QString &, const QString &, bool, bool)), this, SLOT(replText(const QString &, const QString &, bool, bool)));
 
@@ -488,6 +491,7 @@ void TextPanel::addSetup()	{	setupDlg->exec();	}
 #include "xpm/option.xpm"
 #include "xpm/style.xpm"
 #include "xpm/curve.xpm"
+#include "xpm/box.xpm"
 //-----------------------------------------------------------------------------
 void TextPanel::toolTop(QBoxLayout *l)
 {
@@ -553,9 +557,12 @@ void TextPanel::toolTop(QBoxLayout *l)
 	oo = o->addMenu(tr("Insert"));
 	aa=a = new QAction(QPixmap(":/png/format-indent-more.png"), tr("New command"), this);
 	a->setShortcut(Qt::META+Qt::Key_C);	connect(a, SIGNAL(triggered()), this, SLOT(newCmd()));
-	a->setToolTip(tr("Show dialog for new command and put it into the script."));
+	a->setToolTip(tr("Show dialog for new command or edit arguments of existed one."));
 	oo->addAction(a);
-//	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
+	a = new QAction(QPixmap(box_xpm), tr("New inplot"), this);
+	a->setShortcut(Qt::META+Qt::Key_C);	connect(a, SIGNAL(triggered()), subplotDlg, SLOT(show()));
+	a->setToolTip(tr("Show dialog for new inplot and put it into the script."));
+	oo->addAction(a);
 
 	a = new QAction(tr("Fitted formula"), this);
 	a->setShortcut(Qt::META+Qt::Key_F);	connect(a, SIGNAL(triggered()), this, SLOT(insFitF()));

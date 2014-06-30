@@ -33,6 +33,7 @@ class StyleDialog;
 class SetupDialog;
 class NewCmdDialog;
 class PlotPanel;
+class SubplotDialog;
 //-----------------------------------------------------------------------------
 class TextPanel : public QWidget
 {
@@ -42,6 +43,7 @@ public:
 	TextEdit *edit;		///< script itself
 	PlotPanel *graph;	///< NOTE: have to be filled!!!
 	NewCmdDialog *newCmdDlg;
+	SubplotDialog *subplotDlg;
 
 	TextPanel(QWidget *parent = 0);
 	~TextPanel();
