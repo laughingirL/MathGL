@@ -188,8 +188,16 @@ MainWindow::MainWindow(QWidget *wp) : QMainWindow(wp)
 	messWnd->setAllowedAreas(Qt::TopDockWidgetArea | Qt::BottomDockWidgetArea);
 	addDockWidget(Qt::BottomDockWidgetArea, messWnd);
 	messWnd->resize(size().width(), 0);	new MessSyntax(mess);
-	connect(mess,SIGNAL(cursorPositionChanged()),this,SLOT(messClicked()));
+//	connect(mess,SIGNAL(cursorPositionChanged()),this,SLOT(messClicked()));
 	connect(mess,SIGNAL(selectionChanged()),this,SLOT(messClicked()));
+
+	hideWnd = new QDockWidget(tr("Hidden plots"),this);
+	hidden = new TextEdit(this);	hideWnd->setWidget(hidden);
+	hideWnd->setAllowedAreas(Qt::TopDockWidgetArea | Qt::BottomDockWidgetArea);
+	addDockWidget(Qt::BottomDockWidgetArea, hideWnd);
+	hideWnd->resize(size().width(), 0);	hidden->setReadOnly(true);
+	connect(hidden,SIGNAL(selectionChanged()),this,SLOT(hiddenClicked()));	// TODO
+//	connect(hidden,SIGNAL(cursorPositionChanged()),this,SLOT(hiddenClicked()));
 
 	calcWnd = new QDockWidget(tr("Calculator"),this);
 
@@ -215,6 +223,12 @@ MainWindow::MainWindow(QWidget *wp) : QMainWindow(wp)
 	connect(a, SIGNAL(toggled(bool)), messWnd, SLOT(setVisible(bool)));
 	connect(messWnd, SIGNAL(visibilityChanged(bool)), a, SLOT(setChecked(bool)));
 	a->setChecked(false);	messWnd->setVisible(false);
+
+	ahide = a = new QAction(QPixmap(":/png/layer-visible-on.png"), tr("Show hidden plots"), this);
+	a->setShortcut(Qt::Key_F8);	a->setCheckable(true);
+	connect(a, SIGNAL(toggled(bool)), hideWnd, SLOT(setVisible(bool)));
+	connect(hideWnd, SIGNAL(visibilityChanged(bool)), a, SLOT(setChecked(bool)));
+	a->setChecked(false);	hideWnd->setVisible(false);
 
 	graph = new PlotPanel(this);
 	rtab->addTab(graph,QPixmap(":/png/office-chart-line.png"),tr("Canvas"));
@@ -250,6 +264,7 @@ MainWindow::MainWindow(QWidget *wp) : QMainWindow(wp)
 	connect(graph->mgl, SIGNAL(refreshData()), edit, SLOT(refreshData()));
 	connect(graph->mgl,SIGNAL(doubleClick(int)),edit,SLOT(newCmd(int)));
 
+	connect(edit->edit,SIGNAL(textChanged()),this,SLOT(updateHidden()));
 	connect(mess, SIGNAL(textChanged()), this, SLOT(warnChanged()));
 //	connect(mdi, SIGNAL(subWindowActivated(QMdiSubWindow *)), this, SLOT(subActivated(QMdiSubWindow *)));
 	connect(propDlg, SIGNAL(sizeChanged(int,int)), graph->mgl, SLOT(imgSize(int,int)));
@@ -310,6 +325,7 @@ void MainWindow::makeMenu()
 
 	o->addAction(acalc);
 	o->addAction(ainfo);
+	o->addAction(ahide);
 	}
 
 	menuBar()->addSeparator();
@@ -440,33 +456,6 @@ void MainWindow::setEditPos(bool bottom)
 {	split->setOrientation(bottom ? Qt::Vertical : Qt::Horizontal);	}
 //-----------------------------------------------------------------------------
 void MainWindow::properties()	{	propDlg->exec();	}
-//-----------------------------------------------------------------------------
-void MainWindow::messClicked()
-{
-	QString m = mess->toPlainText(), q;
-	int p = mess->textCursor().blockNumber();
-	for(;p>=0;p--)
-	{
-		q = m.section('\n',p,p);
-		if(q.contains("in line "))
-		{
-			QString s = q.section(' ',-1);
-			int n = s.toInt()-1;	if(n<0)	return;
-			edit->moveCursor(QTextCursor::Start);
-			for(int i=0;i<n;i++)	edit->moveCursor(QTextCursor::NextBlock);
-			break;
-		}
-	}
-	edit->setFocus();
-}
-//-----------------------------------------------------------------------------
-void MainWindow::warnChanged()
-{
-	if(mess->toPlainText().isEmpty())
-	{	messWnd->hide();	ainfo->setChecked(false);	}
-	else
-	{	messWnd->show();	ainfo->setChecked(true);	}
-}
 //-----------------------------------------------------------------------------
 void MainWindow::about()
 {
@@ -739,5 +728,55 @@ void raisePanel(QWidget *w)
 {
 	MainWindow *mw=findMain(w);
 	if(mw)	mw->rtab->setCurrentWidget(w);
+}
+//-----------------------------------------------------------------------------
+void MainWindow::updateHidden()
+{
+	QTextCursor tc = edit->edit->textCursor();
+	long pos = tc.position(), i=0;
+	hidden->clear();
+	tc.movePosition(QTextCursor::Start);
+	do {
+		i++;
+		if(tc.block().text().startsWith("#h "))
+			hidden->append("Line "+QString::number(i)+QString::fromWCharArray(L" → ")+tc.block().text().mid(3)+"\n");
+	} while(tc.movePosition(QTextCursor::NextBlock));
+	tc.setPosition(pos);
+}
+//-----------------------------------------------------------------------------
+void MainWindow::hiddenClicked()
+{
+	QString q = hidden->textCursor().block().text();
+	if(q.contains("Line "))
+	{
+		int n = q.section(' ',1,1).toInt()-1;
+		edit->edit->moveCursor(QTextCursor::Start);
+		for(int i=0;i<n;i++)	edit->edit->moveCursor(QTextCursor::NextBlock);
+		edit->edit->textCursor().deleteChar();
+		edit->edit->textCursor().deleteChar();
+		edit->edit->textCursor().deleteChar();
+	}
+	graph->execute();
+}
+//-----------------------------------------------------------------------------
+void MainWindow::messClicked()
+{
+	QString q = mess->textCursor().block().text();
+	if(q.contains("in line "))
+	{
+		QString s = q.section(' ',-1);
+		int n = q.section(' ',-1).toInt()-1;	if(n<0)	return;
+		edit->moveCursor(QTextCursor::Start);
+		for(int i=0;i<n;i++)	edit->moveCursor(QTextCursor::NextBlock);
+	}
+	edit->setFocus();
+}
+//-----------------------------------------------------------------------------
+void MainWindow::warnChanged()
+{
+	if(mess->toPlainText().isEmpty())
+	{	messWnd->hide();	ainfo->setChecked(false);	}
+	else
+	{	messWnd->show();	ainfo->setChecked(true);	}
 }
 //-----------------------------------------------------------------------------

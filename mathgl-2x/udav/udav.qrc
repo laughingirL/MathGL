@@ -55,7 +55,13 @@
 		<file>png/view-fullscreen.png</file>
 		<file>png/tab-close.png</file>
 		<file>png/layer-visible-off.png</file>
+		<file>png/layer-visible-on.png</file>
 		<file>png/object-order-lower.png</file>
 		<file>png/object-order-raise.png</file>
+		<file>png/object-rotate-up.png</file>
+		<file>png/object-rotate-down.png</file>
+		<file>png/object-rotate-left.png</file>
+		<file>png/object-rotate-right.png</file>
+		<file>png/tools-wizard.png</file>
 	</qresource>
 </RCC>

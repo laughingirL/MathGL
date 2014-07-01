@@ -21,6 +21,7 @@
 #define PLOT_PNL_H
 //-----------------------------------------------------------------------------
 #include <QWidget>
+#include <qabstractitemmodel.h>
 //-----------------------------------------------------------------------------
 class QMenu;
 class QTimer;
@@ -83,6 +84,8 @@ private slots:
 	void hideSelected();
 	void putCmd(const QString &cmd);
 	void insCmd(const QString &cmd);
+	void movePlotUp();
+	void movePlotDown();
 
 private:
 	bool gifOn, jpgOn;

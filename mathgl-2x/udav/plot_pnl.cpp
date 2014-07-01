@@ -31,8 +31,10 @@
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QTextEdit>
+#include <QTextBlock>
 
 #include <QMdiArea>
+#include "udav_wnd.h"
 #include "mgl2/qmathgl.h"
 #include "plot_pnl.h"
 #include "anim_dlg.h"
@@ -440,6 +442,9 @@ void PlotPanel::toolTop(QBoxLayout *l)
 	o->addAction(a);	popup->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
+	const MainWindow *mw=findMain(this);
+	if(mw)	{	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(mw->ahide);	}
+
 	a = new QAction(QPixmap(":/png/format-indent-more.png"), tr("New command"), this);
 	connect(a, SIGNAL(triggered()), newCmdDlg, SLOT(show()));
 	a->setToolTip(tr("Show dialog for new command and put it into the script."));
@@ -452,6 +457,17 @@ void PlotPanel::toolTop(QBoxLayout *l)
 	o->addAction(a);	popup->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
+	a = new QAction(QPixmap(":/png/object-order-lower.png"), tr("Move plot up"), this);
+	connect(a, SIGNAL(triggered()), this, SLOT(movePlotUp()));
+	a->setToolTip(tr("Move selected plot up to previous subplot."));
+	o->addAction(a);	popup->addAction(a);
+	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
+
+	a = new QAction(QPixmap(":/png/object-order-raise.png"), tr("Move plot down"), this);
+	connect(a, SIGNAL(triggered()), this, SLOT(movePlotDown()));
+	a->setToolTip(tr("Move selected plot down to next subplot."));
+	o->addAction(a);	popup->addAction(a);
+	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
 
 	o->addMenu(oo);	l->addStretch(1);
@@ -540,19 +556,19 @@ void PlotPanel::toolLeft(QBoxLayout *l)
 
 	// rotate menu
 	oo = o->addMenu(tr("Rotate"));
-	a = new QAction(tr("Rotate up"), this);
+	a = new QAction(QPixmap(":/png/object-rotate-up.png"), tr("Rotate up"), this);
 	a->setShortcut(Qt::SHIFT+Qt::META+Qt::Key_Up);
 	connect(a, SIGNAL(triggered()), tet, SLOT(stepUp()));	oo->addAction(a);
 	a->setToolTip(tr("Increase \\theta angle by 10 degrees."));
-	a = new QAction(tr("Rotate down"), this);
+	a = new QAction(QPixmap(":/png/object-rotate-down.png"), tr("Rotate down"), this);
 	a->setShortcut(Qt::SHIFT+Qt::META+Qt::Key_Down);
 	connect(a, SIGNAL(triggered()), tet, SLOT(stepDown()));	oo->addAction(a);
 	a->setToolTip(tr("Decrease \\theta angle by 10 degrees."));
-	a = new QAction(tr("Rotate left"), this);
+	a = new QAction(QPixmap(":/png/object-rotate-left.png"), tr("Rotate left"), this);
 	a->setShortcut(Qt::SHIFT+Qt::META+Qt::Key_Right);
 	connect(a, SIGNAL(triggered()), phi, SLOT(stepUp()));	oo->addAction(a);
 	a->setToolTip(tr("Increase \\phi angle by 10 degrees."));
-	a = new QAction(tr("Rotate right"), this);
+	a = new QAction(QPixmap(":/png/object-rotate-right.png"), tr("Rotate right"), this);
 	a->setShortcut(Qt::SHIFT+Qt::META+Qt::Key_Left);
 	connect(a, SIGNAL(triggered()), phi, SLOT(stepDown()));	oo->addAction(a);
 	a->setToolTip(tr("Decrease \\phi angle by 10 degrees."));
@@ -615,10 +631,8 @@ void PlotPanel::hideSelected()
 void PlotPanel::putCmd(const QString &cmd)
 {
 	textMGL->moveCursor(QTextCursor::Start);
-	if(curPos>=0)
-	{
-		for(int i=0;i<curPos;i++)	textMGL->moveCursor(QTextCursor::NextBlock);
-	}
+	if(curPos>=0)	for(int i=0;i<curPos;i++)
+		textMGL->moveCursor(QTextCursor::NextBlock);
 	textMGL->insertPlainText(cmd+"\n");
 	curPos = -1;	execute();
 }
@@ -630,3 +644,63 @@ void PlotPanel::insCmd(const QString &cmd)
 	curPos = -1;	execute();
 }
 //-----------------------------------------------------------------------------
+void PlotPanel::movePlotUp()
+{
+	if(curPos>0)
+	{
+		QTextCursor tc = textMGL->textCursor();
+		tc.movePosition(QTextCursor::Start);
+		tc.movePosition(QTextCursor::NextBlock,QTextCursor::MoveAnchor,curPos);
+		tc.select(QTextCursor::BlockUnderCursor);
+		QString s = tc.selectedText();
+		tc.deleteChar();
+		bool ins=true;
+		
+		while(tc.movePosition(QTextCursor::PreviousBlock))
+		{
+			QString q = tc.block().text();
+			if(q.startsWith("subplot ") || q.startsWith("inplot ") || q.startsWith("multiplot ") || q.startsWith("gridplot ") || q.startsWith("columnplot ") || q.startsWith("stickplot "))
+			{
+				tc.movePosition(QTextCursor::EndOfBlock);
+				tc.insertText(s);	ins=false;	break;
+			}
+		}
+		if(ins)
+		{
+			tc.movePosition(QTextCursor::Start);	tc.insertText(s+"\n");
+			tc.movePosition(QTextCursor::Start);	tc.deleteChar();
+		}
+		curPos = tc.block().blockNumber();	execute();
+	}
+	else if(curPos<0)	emit setStatus("No selection.");
+}
+//-----------------------------------------------------------------------------
+void PlotPanel::movePlotDown()
+{
+	if(curPos>=0)
+	{
+		QTextCursor tc = textMGL->textCursor();
+		tc.movePosition(QTextCursor::Start);
+		tc.movePosition(QTextCursor::NextBlock,QTextCursor::MoveAnchor,curPos);
+		tc.select(QTextCursor::BlockUnderCursor);
+		QString s = tc.selectedText();
+		if(curPos==0)	s = "\n"+s;
+		tc.deleteChar();
+		bool ins=true;
+		
+		while(tc.movePosition(QTextCursor::NextBlock))
+		{
+			QString q = tc.block().text();
+			if(q.startsWith("subplot ") || q.startsWith("inplot ") || q.startsWith("multiplot ") || q.startsWith("gridplot ") || q.startsWith("columnplot ") || q.startsWith("stickplot "))
+			{
+				tc.movePosition(QTextCursor::EndOfBlock);
+				tc.insertText(s);	ins=false;	break;
+			}
+		}
+		if(ins)	{	tc.movePosition(QTextCursor::End);	tc.insertText(s);	}
+		curPos = tc.block().blockNumber();	execute();
+	}
+	else emit setStatus("No selection.");
+}
+//-----------------------------------------------------------------------------
+

@@ -10,6 +10,7 @@
 * Add color gradient (color scheme) of glyphs in text.
 * Add manual dash style, like "{df090}"
 * Add manual mask style, like "{s00ff00182424f800}"
+* Add ODE solving functions for textual formulas
 * Add style 'f' for printing numbers in fixed format for functions Table() and Label().
 * Improve and slightly speed up algorithm for contours drawing and filling, taking special attention to quasi-random data.
 * Add function "random(dat)" to the list of known functions for formula parsing
@@ -27,11 +28,17 @@
 * Make function mgl_get_curvs() to be exported. This function is used internally to connect line segments to a set of curves (in particular, for contour lines).
 * Add calligraphic TeX symbols, like \calB, \calE, \calF, \calH, \calI, \calL, \calM, \calR, \ell, \scrg, \scro
 * Improve colorbar labels drawing at SetRotatedText(false)
+* Add move constructor(s)
 
 * Rearrange tool buttons in UDAV
+* Add features for manual dashing and manual mask in Style dialog
+* Add dialog for new dialog for new inplots (including subplot, multiplot, columnplot, stickplot, gridplot)
 * Add new primitives (arc,polygon,rotated text) as mouse handled ones in UDAV
 * Add close button to data tabs in UDAV
+* Allow to delete/hide/unhide selected plot
+* Allow to move selected plot between inplots
 * Improve NewCommand dialog in UDAV. Now it replace the script command if user change arguments only.
+* Update UDAV icons to use Oxygen ones
 
 2.2.2.1 Released 19 March 2014
 

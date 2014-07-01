@@ -26,6 +26,7 @@
 #include <QLineEdit>
 #include <mgl2/qmathgl.h>
 #include "subplot_dlg.h"
+#include "style_dlg.h"
 //-----------------------------------------------------------------------------
 void convertFromGraph(QPixmap &pic, mglGraph *gr, uchar **buf);
 //-----------------------------------------------------------------------------
@@ -199,6 +200,8 @@ SubplotDialog::SubplotDialog(QWidget *parent) : QDialog(parent)
 	title = new QLineEdit(this);		H->addWidget(title);
 	title->setToolTip(tr("Title for plot. Can be used in SubPlot or MultiPlot only."));
 	connect(title,SIGNAL(textChanged(QString)),this,SLOT(updatePic()));
+	b = new QPushButton(tr("Style"),this);	H->addWidget(b);
+	connect(b, SIGNAL(clicked()),this, SLOT(titleStl()));
 
 	H = new QHBoxLayout;	u->addLayout(H);
 	l = new QLabel(tr("Result is"),this);	H->addWidget(l);
@@ -212,6 +215,8 @@ SubplotDialog::SubplotDialog(QWidget *parent) : QDialog(parent)
 	connect(b, SIGNAL(clicked()),this, SLOT(reject()));
 	b = new QPushButton(tr("OK"), this);	h->addWidget(b);	b->setDefault(true);
 	connect(b, SIGNAL(clicked()),this, SLOT(finish()));
+	
+	stlDialog = new StyleDialog(this);
 }
 //-----------------------------------------------------------------------------
 SubplotDialog::~SubplotDialog()	{	if(grBuf)	delete []grBuf;	}
@@ -242,7 +247,8 @@ void SubplotDialog::updatePic()
 		int n=bn->value(), m=bm->value(), k=bk->value();
 		for(int i=0;i<n*m;i++)	if(i!=k)	{	gr.SubPlot(n,m,i);	gr.Box("h");	}
 		cmd = "subplot "+QString::number(n)+" "+QString::number(m)+" "+QString::number(k)+" "+stl;
-		if(!title->text().isEmpty()) cmd += ":title '"+title->text()+"'";
+		if(!title->text().isEmpty())
+		{	cmd += ":title '"+title->text()+"'";	if(!fmt.isEmpty())	cmd += fmt;	}
 		if(Tet || Phi)	cmd += ":rotate "+QString::number(Tet)+" "+QString::number(Phi);
 		if(Ax!=1 || Ay!=1)	cmd += ":aspect "+QString::number(Ax)+" "+QString::number(Ay);
 		par.Execute(&gr, cmd.toStdWString().c_str());	gr.Box();
@@ -253,7 +259,8 @@ void SubplotDialog::updatePic()
 		int n=mn->value(), m=mm->value(), k=mk->value(), dx=mx->value(), dy=my->value();
 		for(int i=0;i<n*m;i++)	if(i!=k)	{	gr.SubPlot(n,m,i);	gr.Box("h");	}
 		cmd = "multiplot "+QString::number(n)+" "+QString::number(m)+" "+QString::number(k)+" "+QString::number(dx)+" "+QString::number(dy)+" "+stl;
-		if(!title->text().isEmpty()) cmd += ":title '"+title->text()+"'";
+		if(!title->text().isEmpty())
+		{	cmd += ":title '"+title->text()+"'";	if(!fmt.isEmpty())	cmd += fmt;	}
 		if(Tet || Phi)	cmd += ":rotate "+QString::number(Tet)+" "+QString::number(Phi);
 		if(Ax!=1 || Ay!=1)	cmd += ":aspect "+QString::number(Ax)+" "+QString::number(Ay);
 		par.Execute(&gr, cmd.toStdWString().c_str());	gr.Box();
@@ -291,7 +298,8 @@ void SubplotDialog::updatePic()
 	{
 		{	gr.SubPlot(1,1,0);	gr.Box("h");	}
 		cmd = "inplot "+x1->text()+" "+x2->text()+" "+y1->text()+" "+y2->text();
-		if(!title->text().isEmpty()) cmd += ":title '"+title->text()+"'";
+		if(!title->text().isEmpty())
+		{	cmd += ":title '"+title->text()+"'";	if(!fmt.isEmpty())	cmd += fmt;	}
 		if(Tet || Phi)	cmd += ":rotate "+QString::number(Tet)+" "+QString::number(Phi);
 		if(Ax!=1 || Ay!=1)	cmd += ":aspect "+QString::number(Ax)+" "+QString::number(Ay);
 		par.Execute(&gr, cmd.toStdWString().c_str());	gr.Box();
@@ -303,6 +311,12 @@ void SubplotDialog::updatePic()
 	QPixmap p;
 	convertFromGraph(p, &gr, &grBuf);
 	pic->setPixmap(p);
+}
+//-----------------------------------------------------------------------------
+void SubplotDialog::titleStl()
+{
+	stlDialog->showFontPage();
+	if(stlDialog->exec())	{	fmt = " "+stlDialog->getStyle();	updatePic();	}
 }
 //-----------------------------------------------------------------------------
 void SubplotDialog::parseCmd(const QString& txt, bool final)

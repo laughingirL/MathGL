@@ -29,57 +29,20 @@
 #include <QLayout>
 #include <QLabel>
 #include <QLineEdit>
+#include <QToolButton>
 #include <mgl2/mgl.h>
-//-----------------------------------------------------------------------------
-#include "xpm/none.xpm"
-#include "xpm/mark_.xpm"
-#include "xpm/mark_cf.xpm"
-#include "xpm/mark_x.xpm"
-#include "xpm/mark_p.xpm"
-#include "xpm/mark_pf.xpm"
-#include "xpm/mark_o.xpm"
-#include "xpm/mark_of.xpm"
-#include "xpm/mark_s.xpm"
-#include "xpm/mark_sf.xpm"
-#include "xpm/mark_d.xpm"
-#include "xpm/mark_df.xpm"
-#include "xpm/mark_v.xpm"
-#include "xpm/mark_vf.xpm"
-#include "xpm/mark_t.xpm"
-#include "xpm/mark_tf.xpm"
-#include "xpm/mark_l.xpm"
-#include "xpm/mark_lf.xpm"
-#include "xpm/mark_r.xpm"
-#include "xpm/mark_rf.xpm"
-#include "xpm/mark_y.xpm"
-#include "xpm/mark_a.xpm"
-#include "xpm/mark_n.xpm"
-#include "xpm/dash_e.xpm"
-#include "xpm/dash_s.xpm"
-#include "xpm/dash_l.xpm"
-#include "xpm/dash_m.xpm"
-#include "xpm/dash_d.xpm"
-#include "xpm/dash_i.xpm"
-#include "xpm/dash_j.xpm"
-#include "xpm/arrow_n.xpm"
-#include "xpm/arrow_a.xpm"
-#include "xpm/arrow_v.xpm"
-#include "xpm/arrow_i.xpm"
-#include "xpm/arrow_k.xpm"
-#include "xpm/arrow_t.xpm"
-#include "xpm/arrow_s.xpm"
-#include "xpm/arrow_d.xpm"
-#include "xpm/arrow_o.xpm"
 //-----------------------------------------------------------------------------
 #include "style_dlg.h"
 void fillColors(QComboBox *cb);
 void fillArrows(QComboBox *cb);
 void fillDashes(QComboBox *cb);
 void fillMarkers(QComboBox *cb);
+void fillMasks(QComboBox *cb);
 void convertFromGraph(QPixmap &pic, mglGraph *gr, uchar **buf);
 //-----------------------------------------------------------------------------
 StyleDialog::StyleDialog(QWidget *parent) : QDialog(parent)
 {
+	grBuf = 0;
 	setWindowTitle(tr("UDAV - Insert style/scheme"));
 	QWidget *p;
 	QHBoxLayout *h;
@@ -87,11 +50,11 @@ StyleDialog::StyleDialog(QWidget *parent) : QDialog(parent)
 	QGridLayout *g;
 	QLabel *l;
 	QPushButton *b;
-	grBuf = 0;
 	tab = new QTabWidget(this);
+
 	// line style
-	p = new QWidget(this);
-	g = new QGridLayout(p);	g->setAlignment(Qt::AlignTop);
+	p = new QWidget(this);	v = new QVBoxLayout(p);
+	g = new QGridLayout;	g->setAlignment(Qt::AlignTop);	v->addLayout(g);
 //	g->setColStretch(0, 1);	g->setColStretch(1, 1);	g->setColStretch(2, 1);
 	l = new QLabel(tr("Arrow at start"), p);	g->addWidget(l, 0, 0);
 	l = new QLabel(tr("Dashing"), p);		g->addWidget(l, 0, 1);
@@ -113,6 +76,17 @@ StyleDialog::StyleDialog(QWidget *parent) : QDialog(parent)
 	l = new QLabel(tr("Line width"), p);	g->addWidget(l, 4, 0, Qt::AlignRight);
 	width = new QSpinBox(p);	g->addWidget(width, 4, 1);
 	width->setRange(1,9);	width->setValue(1);
+	
+	v->addStretch(1);
+	l = new QLabel(tr("Manual dashing"), p);	v->addWidget(l);
+	h = new QHBoxLayout;	v->addLayout(h);	h->setSpacing(1);
+	for(int i=0;i<16;i++)
+	{
+		dash_bit[i] = new QToolButton(this);
+		dash_bit[i]->setCheckable(true);
+		h->addWidget(dash_bit[i]);
+		connect(dash_bit[i],SIGNAL(toggled(bool)), this, SLOT(updatePic()));
+	}
 	connect(a1,SIGNAL(activated(int)), this, SLOT(updatePic()));
 	connect(a2,SIGNAL(activated(int)), this, SLOT(updatePic()));
 	connect(dash,SIGNAL(activated(int)), this, SLOT(updatePic()));
@@ -121,6 +95,7 @@ StyleDialog::StyleDialog(QWidget *parent) : QDialog(parent)
 	connect(nline,SIGNAL(valueChanged(int)), this, SLOT(updatePic()));
 	connect(width,SIGNAL(valueChanged(int)), this, SLOT(updatePic()));
 	tab->addTab(p, tr("Line style"));
+
 	// color scheme
 	p = new QWidget(this);
 	v = new QVBoxLayout(p);	v->setAlignment(Qt::AlignTop);
@@ -144,15 +119,34 @@ StyleDialog::StyleDialog(QWidget *parent) : QDialog(parent)
 	g = new QGridLayout();	v->addLayout(g);
 	l = new QLabel(tr("Axial direction"), p);	g->addWidget(l, 0, 0, Qt::AlignRight);
 	l = new QLabel(tr("Text on contours"), p);	g->addWidget(l, 1, 0, Qt::AlignRight);
+	l = new QLabel(tr("Mask for bitmap coloring"), p);	g->addWidget(l, 2, 0, Qt::AlignRight);
+	l = new QLabel(tr("Mask rotation angle"), p);	g->addWidget(l, 3, 0, Qt::AlignRight);
+	l = new QLabel(tr("Mask size"), p);	g->addWidget(l, 4, 0, Qt::AlignRight);
 	axial = new QComboBox(p);	g->addWidget(axial, 0, 1);
 	axial->addItem(tr("none"));	axial->addItem("x");
 	axial->addItem("y");	axial->addItem("z");
 	ctext = new QComboBox(p);	g->addWidget(ctext, 1, 1);
 	ctext->addItem(tr("none"));	ctext->addItem(tr("under"));	ctext->addItem(tr("above"));
+	mask = new QComboBox(p);	g->addWidget(mask, 2, 1);	fillMasks(mask);
+	angle = new QComboBox(p);	g->addWidget(angle, 3, 1);
+	angle->addItem(tr("none"));	
+	angle->addItem(QString::fromWCharArray(L"+45°"));
+	angle->addItem(QString::fromWCharArray(L"-45°"));	
+	angle->addItem(QString::fromWCharArray(L"90°"));
+	msize = new QSlider(p);		g->addWidget(msize, 4, 1);
+	msize->setRange(1, 9);		msize->setValue(1);
+	msize->setTickPosition(QSlider::TicksBothSides);
+	msize->setTickInterval(1);	msize->setPageStep(2);
+	msize->setOrientation(Qt::Horizontal);
+
 	connect(axial,SIGNAL(activated(int)), this, SLOT(updatePic()));
 	connect(ctext,SIGNAL(activated(int)), this, SLOT(updatePic()));
 	connect(swire,SIGNAL(toggled(bool)), this, SLOT(updatePic()));
+	connect(mask,SIGNAL(activated(int)), this, SLOT(updatePic()));
+	connect(angle,SIGNAL(activated(int)), this, SLOT(updatePic()));
+	connect(msize,SIGNAL(valueChanged(int)), this, SLOT(updatePic()));
 	tab->addTab(p, tr("Color scheme"));
+
 	// font style
 	p = new QWidget(this);
 	v = new QVBoxLayout(p);	v->setAlignment(Qt::AlignTop);
@@ -163,6 +157,7 @@ StyleDialog::StyleDialog(QWidget *parent) : QDialog(parent)
 	wire = new QCheckBox(tr("Wire style"), p);	u->addWidget(wire);
 	uline = new QCheckBox(tr("Underline"), p);	u->addWidget(uline);
 	oline = new QCheckBox(tr("Overline"), p);	u->addWidget(oline);
+	font_sch = new QCheckBox(tr("Use color scheme"), p);	u->addWidget(font_sch);
 	u = new QVBoxLayout();	h->addLayout(u);
 	l = new QLabel(tr("Text color"), p);		u->addWidget(l);
 	cfont = new QComboBox(p);	fillColors(cfont);	u->addWidget(cfont);
@@ -178,12 +173,25 @@ StyleDialog::StyleDialog(QWidget *parent) : QDialog(parent)
 	connect(wire,SIGNAL(toggled(bool)), this, SLOT(updatePic()));
 	connect(uline,SIGNAL(toggled(bool)), this, SLOT(updatePic()));
 	connect(oline,SIGNAL(toggled(bool)), this, SLOT(updatePic()));
+	connect(font_sch,SIGNAL(toggled(bool)), this, SLOT(updatePic()));
 	connect(cfont,SIGNAL(activated(int)), this, SLOT(updatePic()));
 	connect(rbL,SIGNAL(toggled(bool)), this, SLOT(updatePic()));
 	connect(rbC,SIGNAL(toggled(bool)), this, SLOT(updatePic()));
 	connect(rbR,SIGNAL(toggled(bool)), this, SLOT(updatePic()));
 	tab->addTab(p, tr("Font style"));
 	connect(tab,SIGNAL(currentChanged(int)), this, SLOT(updatePic()));
+
+	// hex-mask
+	p = new QWidget(this);
+	g = new QGridLayout(p);	g->setAlignment(Qt::AlignTop);
+	for(int i=0;i<64;i++)
+	{
+		mask_bit[i] = new QToolButton(this);
+		mask_bit[i]->setCheckable(true);
+		g->addWidget(mask_bit[i],7-i/8,i%8);
+		connect(mask_bit[i],SIGNAL(toggled(bool)), this, SLOT(updatePic()));
+	}
+	tab->addTab(p, tr("Manual mask"));
 
 	// dialog itself
 	v = new QVBoxLayout(this);	v->addWidget(tab);
@@ -200,8 +208,9 @@ StyleDialog::StyleDialog(QWidget *parent) : QDialog(parent)
 	b->setDefault(true);
 }
 //-----------------------------------------------------------------------------
-StyleDialog::~StyleDialog()	{	if(grBuf)	delete []grBuf;	}
+StyleDialog::~StyleDialog()	{	if(grBuf)	delete []grBuf;	grBuf = 0;	}
 //-----------------------------------------------------------------------------
+#include "xpm/none.xpm"
 void fillColors(QComboBox *cb)
 {
 //	string id : 	"wbgrcmylenuqphkWBGRCMYLENUQPH"
@@ -238,6 +247,15 @@ void fillColors(QComboBox *cb)
 	pic.fill(QColor(77,77,77));		cb->addItem(pic, QObject::tr("H - darkgray"));
 }
 //-----------------------------------------------------------------------------
+#include "xpm/arrow_n.xpm"
+#include "xpm/arrow_a.xpm"
+#include "xpm/arrow_v.xpm"
+#include "xpm/arrow_i.xpm"
+#include "xpm/arrow_k.xpm"
+#include "xpm/arrow_t.xpm"
+#include "xpm/arrow_s.xpm"
+#include "xpm/arrow_d.xpm"
+#include "xpm/arrow_o.xpm"
 void fillArrows(QComboBox *cb)
 {
 	// "AVIKTSDO"
@@ -252,6 +270,14 @@ void fillArrows(QComboBox *cb)
 	cb->addItem(QPixmap(arrow_o_xpm), QObject::tr("circle"));
 }
 //-----------------------------------------------------------------------------
+#include "xpm/dash_e.xpm"
+#include "xpm/dash_s.xpm"
+#include "xpm/dash_l.xpm"
+#include "xpm/dash_m.xpm"
+#include "xpm/dash_d.xpm"
+#include "xpm/dash_i.xpm"
+#include "xpm/dash_j.xpm"
+#include "xpm/mark_n.xpm"
 void fillDashes(QComboBox *cb)
 {
 	// "-|;=ji: "
@@ -263,8 +289,69 @@ void fillDashes(QComboBox *cb)
 	cb->addItem(QPixmap(dash_i_xpm), QObject::tr("small dash dot"));
 	cb->addItem(QPixmap(dash_d_xpm), QObject::tr("dots"));
 	cb->addItem(QPixmap(mark_n_xpm), QObject::tr("none"));
+	cb->addItem(QPixmap(":/png/tools-wizard.png"), QObject::tr("manual"));
 }
 //-----------------------------------------------------------------------------
+#include "xpm/mask_a.xpm"
+#include "xpm/mask_d.xpm"
+#include "xpm/mask_d_.xpm"
+#include "xpm/mask_e.xpm"
+#include "xpm/mask_i.xpm"
+#include "xpm/mask_j.xpm"
+#include "xpm/mask_l.xpm"
+#include "xpm/mask_m.xpm"
+#include "xpm/mask_o.xpm"
+#include "xpm/mask_o_.xpm"
+#include "xpm/mask_p.xpm"
+#include "xpm/mask_r.xpm"
+#include "xpm/mask_s.xpm"
+#include "xpm/mask_s_.xpm"
+#include "xpm/mask_t.xpm"
+#include "xpm/mask_u.xpm"
+void fillMasks(QComboBox *cb)
+{
+	// "-+=;oOsS~<>jdD*^"
+	cb->addItem(QPixmap(none_xpm), QObject::tr("none"));
+	cb->addItem(QPixmap(mask_m_xpm), QObject::tr("line"));
+	cb->addItem(QPixmap(mask_p_xpm), QObject::tr("plus"));
+	cb->addItem(QPixmap(mask_e_xpm), QObject::tr("double line"));
+	cb->addItem(QPixmap(mask_i_xpm), QObject::tr("dash"));
+	cb->addItem(QPixmap(mask_o_xpm), QObject::tr("circle"));
+	cb->addItem(QPixmap(mask_O_xpm), QObject::tr("filled circle"));
+	cb->addItem(QPixmap(mask_s_xpm), QObject::tr("square"));
+	cb->addItem(QPixmap(mask_S_xpm), QObject::tr("filled square"));
+	cb->addItem(QPixmap(mask_t_xpm), QObject::tr("wave"));
+	cb->addItem(QPixmap(mask_l_xpm), QObject::tr("left sign"));
+	cb->addItem(QPixmap(mask_r_xpm), QObject::tr("right sign"));
+	cb->addItem(QPixmap(mask_j_xpm), QObject::tr("dash dot"));
+	cb->addItem(QPixmap(mask_d_xpm), QObject::tr("rhomb"));
+	cb->addItem(QPixmap(mask_D_xpm), QObject::tr("filled rhomb"));
+	cb->addItem(QPixmap(mask_a_xpm), QObject::tr("cross"));
+	cb->addItem(QPixmap(mask_u_xpm), QObject::tr("up sign"));
+	cb->addItem(QPixmap(":/png/tools-wizard.png"), QObject::tr("manual"));
+}
+//-----------------------------------------------------------------------------
+#include "xpm/mark_.xpm"
+#include "xpm/mark_cf.xpm"
+#include "xpm/mark_x.xpm"
+#include "xpm/mark_p.xpm"
+#include "xpm/mark_pf.xpm"
+#include "xpm/mark_o.xpm"
+#include "xpm/mark_of.xpm"
+#include "xpm/mark_s.xpm"
+#include "xpm/mark_sf.xpm"
+#include "xpm/mark_d.xpm"
+#include "xpm/mark_df.xpm"
+#include "xpm/mark_v.xpm"
+#include "xpm/mark_vf.xpm"
+#include "xpm/mark_t.xpm"
+#include "xpm/mark_tf.xpm"
+#include "xpm/mark_l.xpm"
+#include "xpm/mark_lf.xpm"
+#include "xpm/mark_r.xpm"
+#include "xpm/mark_rf.xpm"
+#include "xpm/mark_y.xpm"
+#include "xpm/mark_a.xpm"
 void fillMarkers(QComboBox *cb)
 {
 	// ".+x*sdv^<>o.*+xsdv^<>o" : nf = 10
@@ -312,6 +399,7 @@ void StyleDialog::updatePic()
 	result = "";
 	int i,j;
 	QString col="wbgrcmylenuqphkWBGRCMYLENUQPH", mrk=".+x*sdv^<>o.*+xsdv^<>o", dsh="|;=ji: ", arw="AVIKTSDO", s;
+	QString msk="-+=;oOsS~<>jdD*^", dir="/\\I";
 	switch(tab->currentIndex())
 	{
 	case 0:	// line style
@@ -321,7 +409,14 @@ void StyleDialog::updatePic()
 			if(i==0)	result += '_';
 			result += arw[j-1];
 		}
-		i = dash->currentIndex();	if(i>0)	result += dsh[i-1];
+		i = dash->currentIndex();
+		if(i>0 && i<8)	result += dsh[i-1];
+		else if(i==8)	// manual
+		{
+			int d=0;
+			for(int i=0;i<16;i++)	if(dash_bit[i]->isChecked())	d += 1<<i;
+			result += "{d"+QString::number(d,16)+"}";
+		}
 		i = mark->currentIndex();	if(i>0)	result += mrk[i-1];
 		if(i>11)	result += '#';
 		i = cline->currentIndex();
@@ -335,6 +430,7 @@ void StyleDialog::updatePic()
 		gr.Plot(x,y,result.toStdString().c_str());
 		break;
 	case 1: // color sceheme
+	case 3: // manual mask
 		for(j=0;j<7;j++)
 		{
 			i = cc[j]->currentIndex();
@@ -348,13 +444,47 @@ void StyleDialog::updatePic()
 		i = ctext->currentIndex();
 		if(i==1)	result += 't';
 		if(i==2)	result += 'T';
+		i = mask->currentIndex();
+		if(i>0 && i<17)
+		{
+			result += msk[i-1];
+			i = angle->currentIndex();
+			if(i>0)	result += dir[i-1];
+			i = msize->value();
+			if(i>1)	result += char('0'+i);
+		}
+		else if(i==17)
+		{
+			uint64_t t=0;
+			for(int j=0;j<64;j++)	if(mask_bit[j]->isChecked())	t += uint64_t(1)<<j;
+			result += "{s"+QString::number(t,16)+"}";
+			// TODO get hex-mask
+			i = angle->currentIndex();
+			if(i>0)	result += dir[i-1];
+			i = msize->value();
+			if(i>1)	result += char('0'+i);
+		}
+		
+		
 		i = axial->currentIndex();
 		if(i>0)	result = result+':'+char('x'+i-1);
 		gr.Surf(a,result.toStdString().c_str());
 		break;
 	case 2: // text style
-		i = cfont->currentIndex();
-		if(i>1)	result += col[i-1];
+		if(font_sch->isChecked())	for(j=0;j<7;j++)
+		{
+			i = cc[j]->currentIndex();
+			if(i<1)	break;
+			QCharRef c = col[i-1];
+			i = nn[j]->value();
+			if(i!=5)	result += "{"+c+char('0'+i)+"}";
+			else		result += c;
+		}
+		else
+		{
+			i = cfont->currentIndex();
+			if(i>1)	result += col[i-1];
+		}
 		result += ':';
 		if(bold->isChecked())	result += 'b';
 		if(ital->isChecked())	result += 'i';
@@ -383,4 +513,13 @@ void convertFromGraph(QPixmap &pic, mglGraph *gr, uchar **buf)
 	QImage img(*buf, w, h, QImage::Format_RGB32);
 	pic = QPixmap::fromImage(img);
 }
+//-----------------------------------------------------------------------------
+void StyleDialog::showFontPage()
+{	tab->setCurrentIndex(2);	}
+//-----------------------------------------------------------------------------
+void StyleDialog::showPenPage()
+{	tab->setCurrentIndex(0);	}
+//-----------------------------------------------------------------------------
+void StyleDialog::showSchPage()
+{	tab->setCurrentIndex(1);	}
 //-----------------------------------------------------------------------------

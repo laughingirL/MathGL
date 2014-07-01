@@ -58,19 +58,17 @@ C. Translate to Russian everything
 8. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using Stem()
 9. Hint about flow threads and contour lines (as ODE and for advanced users).
 10. No color interpolation for EPS,SVG
+11. Update UDAV images
+12. F8 for hideWnd in UDAV
 29. Howto about plot ranges (subplot styles)
 
 ============= UDAV =============
 
 1. Show plot at creation stage (if option is enabled -- can be long process!!!) + auto axis range or [-1,1] by default ???
-2. Title properties in subplotDlg ?!?
-3. Create default plot dependently of selected row/column/range in data table ?!?
+2. Create default plot depending on selected row/column/range in data table ?!?
 
-4. Show list of hidden + unhide
-5. Speed up rotation like as done in JavaScript
-6. Multi-threading for enabling "stop".
-7. Hex masks (new tab), hex dashing into dialog of styles
-8. Move selected graphics between inplot's
+3. Speed up rotation like as done in JavaScript ?!!
+4. Multi-threading for enabling "stop".
 
 9. Manual data changing should be written into script
 	a. Suggest to save into HDF5 if data changed manually

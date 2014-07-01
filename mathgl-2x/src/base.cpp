@@ -800,14 +800,13 @@ void mglTexture::Set(const char *s, int smooth, mreal alpha)
 	strncpy(Sch,s,259);	Smooth=smooth;	Alpha=alpha;
 
 	register long i,j=0,m=0,l=strlen(s);
-	const char *dig = "0123456789abcdefABCDEF";
 	bool map = smooth==2 || mglchr(s,'%'), sm = smooth>=0 && !strchr(s,'|');	// Use mapping, smoothed colors
-	for(i=0;i<l;i++)		// find number of colors
+	for(i=n=0;i<l;i++)		// find number of colors
 	{
 		if(smooth>=0 && s[i]==':' && j<1)	break;
-		if(s[i]=='[')	j++;	if(s[i]==']')	j--;
+		if(s[i]=='{' && strchr(MGL_COLORS"x",s[i+1]) && j<1)	n++;
+		if(s[i]=='[' || s[i]=='{')	j++;	if(s[i]==']' || s[i]=='}')	j--;
 		if(strchr(MGL_COLORS,s[i]) && j<1)	n++;
-		if(s[i]=='x' && i>0 && s[i-1]=='{' && j<1)	n++;
 //		if(smooth && s[i]==':')	break;	// NOTE: should use []
 	}
 	if(!n)
@@ -816,8 +815,8 @@ void mglTexture::Set(const char *s, int smooth, mreal alpha)
 		{	n=l=6;	s=MGL_DEF_SCH;	sm = false;	}
 		else if(smooth==0)		// none colors but color scheme
 		{	n=l=6;	s=MGL_DEF_SCH;	}
-		else	return;
 	}
+	if(n<=0)	return;
 	bool man=sm;
 	mglColor *c = new mglColor[2*n];		// Colors itself
 	mreal *val = new mreal[n];
@@ -835,16 +834,14 @@ void mglTexture::Set(const char *s, int smooth, mreal alpha)
 		}
 		if(s[i]=='x' && i>0 && s[i-1]=='{' && j<1)	// {xRRGGBB,val} format, where val in [0,1]
 		{
-			if(strchr(dig,s[i+1]) && strchr(dig,s[i+2]) && strchr(dig,s[i+3]) && strchr(dig,s[i+4]) && strchr(dig,s[i+5]) && strchr(dig,s[i+6]))
-			{
-				char ss[3]="00";	c[2*n].a = -1;
-				ss[0] = s[i+1];	ss[1] = s[i+2];	c[2*n].r = strtol(ss,0,16)/255.;
-				ss[0] = s[i+3];	ss[1] = s[i+4];	c[2*n].g = strtol(ss,0,16)/255.;
-				ss[0] = s[i+5];	ss[1] = s[i+6];	c[2*n].b = strtol(ss,0,16)/255.;
-				if(strchr(dig,s[i+7]) && strchr(dig,s[i+8]))
-				{	ss[0] = s[i+7];	ss[1] = s[i+8];	c[2*n].a = strtol(ss,0,16)/255.;	i+=2;	}
-				val[n]=-1;	i+=6;	n++;
-			}
+			uint32_t id = strtoul(s+1+i,0,16);
+			if(memchr(s+i+1,'}',8) || memchr(s+i+1,',',8))	c[2*n].a = -1;
+			else	{	c[2*n].a = (id%256)/255.;	id /= 256;	}
+			c[2*n].b = (id%256)/255.;	id /= 256;
+			c[2*n].g = (id%256)/255.;	id /= 256;
+			c[2*n].r = (id%256)/255.;
+			while(strchr("0123456789abcdefABCDEFx",s[i]))	i++;
+			val[n]=-1;	n++;	i--;
 		}
 		if(s[i]==',' && m>0 && j<1 && n>0)
 			val[n-1] = atof(s+i+1);

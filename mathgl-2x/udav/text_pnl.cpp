@@ -604,6 +604,6 @@ void TextPanel::toolTop(QBoxLayout *l)
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
 	l->addStretch(1);
-	if(mw)	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(mw->acalc);
+	if(mw)	{	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(mw->acalc);	}
 }
 //-----------------------------------------------------------------------------

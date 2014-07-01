@@ -26,6 +26,7 @@ class QSpinBox;
 class QCheckBox;
 class QLabel;
 class QLineEdit;
+class StyleDialog;
 //-----------------------------------------------------------------------------
 class SubplotDialog : public QDialog
 {
@@ -41,6 +42,7 @@ signals:
 	void result(const QString &txt);
 private slots:
 	void updatePic();
+	void titleStl();
 private:
 	QRadioButton *cb, *ci, *cm, *cg, *cc, *cs;
 	QSpinBox *tet, *phi;
@@ -54,10 +56,12 @@ private:
 	QSpinBox *cn,*ck;				// columnplot
 	QLineEdit *cd;
 	QCheckBox *rb,*rr,*rl,*rt,*rw;	// style (where reserve)
-	QString cmd;
+	QString cmd;	// resulting command
+	QString fmt;	// format for title
 	QLabel *pic;	// resulting image
 //	bool replace;	// flag to be used in result() signal
 	uchar *grBuf;
+	StyleDialog *stlDialog;
 };
 //-----------------------------------------------------------------------------
 #endif // SUBPLOTDIALOG_H

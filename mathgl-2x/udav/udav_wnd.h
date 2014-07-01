@@ -49,7 +49,7 @@ class MainWindow : public QMainWindow
 friend void raisePanel(QWidget *w);
 Q_OBJECT
 public:
-	QAction *ainfo, *acalc, *asave, *aload;
+	QAction *ainfo, *acalc, *asave, *aload, *ahide;
 	TextPanel *edit;
 	PlotPanel *graph;
 	QWidget *info;
@@ -82,6 +82,8 @@ private slots:
 	void aboutQt();
 	void openRecentFile();
 	void showHelp();
+	void updateHidden();
+	void hiddenClicked();
 
 	void messClicked();
 	void properties();
@@ -99,9 +101,10 @@ private:
 	QTabWidget *ltab, *rtab;
 	QSplitter *split;
 	QTextEdit *mess;	///< messages and warnings
+	QTextEdit *hidden;	///< commented(hidden) lines
 	QString filename;
 	QMenu *fileMenu;
-	QDockWidget *messWnd, *calcWnd;
+	QDockWidget *messWnd, *hideWnd, *calcWnd;
 
 	void makeMenu();
 	void makeDataMenu();

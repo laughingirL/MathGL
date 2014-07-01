@@ -30,6 +30,7 @@ class QCheckBox;
 class QLabel;
 class QLineEdit;
 class QRadioButton;
+class QToolButton;
 //-----------------------------------------------------------------------------
 /// Selecting styles of command (like line style, color scheme, font style, axis style)
 class StyleDialog : public QDialog
@@ -39,6 +40,10 @@ public:
 	QString getStyle()	{	return result;	};
 	StyleDialog(QWidget *parent = 0);
 	~StyleDialog();
+	
+	void showFontPage();
+	void showPenPage();
+	void showSchPage();
 private slots:
 	void updatePic();
 private:
@@ -55,6 +60,13 @@ private:
 	QLineEdit *res;
 	QRadioButton *rbL, *rbC, *rbR;
 	uchar *grBuf;
+	QCheckBox *font_sch;
+	QComboBox *mask;
+	QComboBox *angle;
+	QSlider *msize;
+
+	QToolButton *dash_bit[16];	// 8 buttons for dashing
+	QToolButton *mask_bit[64];	// 8*8 buttons for mask
 };
 //-----------------------------------------------------------------------------
 #endif
