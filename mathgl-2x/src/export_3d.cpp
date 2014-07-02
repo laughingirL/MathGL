@@ -715,7 +715,7 @@ bool mglCanvas::ImportMGLD(const char *fname, bool add)
 	{
 		Pnt.reserve(n);	Prm.reserve(m);	Txt.reserve(l);	Glf.reserve(k);
 		mglPnt p;
-		for(long i=0;i<n;i++)
+		for(unsigned long i=0;i<n;i++)
 		{
 			do {	if(!fgets(buf,512,fp))	*buf=0;	mgl_strtrim(buf);	} while(*buf=='#');
 			sscanf(buf,"%g%g%g%g%g%g%g%g%g%g%g%g%g", &p.xx, &p.yy, &p.zz, &p.c, &p.t, &p.ta, &p.u, &p.v, &p.w, &p.r, &p.g, &p.b, &p.a);
@@ -724,7 +724,7 @@ bool mglCanvas::ImportMGLD(const char *fname, bool add)
 			Pnt.push_back(p);
 		}
 		mglPrim q;
-		for(long i=0;i<m;i++)
+		for(unsigned long i=0;i<m;i++)
 		{
 			do {	if(!fgets(buf,512,fp))	*buf=0;	mgl_strtrim(buf);	} while(*buf=='#');
 			sscanf(buf,"%hd%ld%ld%ld%ld%d%g%g%g", &q.type, &q.n1, &q.n2, &q.n3, &q.n4, &q.id, &q.s, &q.w, &q.p);
@@ -737,7 +737,7 @@ bool mglCanvas::ImportMGLD(const char *fname, bool add)
 			if(q.type<5)	Prm.push_back(q);
 		}
 		mglTexture t;
-		for(long i=0;i<l;i++)
+		for(unsigned long i=0;i<l;i++)
 		{
 			int sm=0;	float a;
 			do {	if(!fgets(buf,512,fp))	*buf=0;	mgl_strtrim(buf);	} while(*buf=='#');
@@ -753,7 +753,7 @@ bool mglCanvas::ImportMGLD(const char *fname, bool add)
 			Txt.push_back(t);
 		}
 		mglGlyph g;
-		for(long i=0;i<k;i++)
+		for(unsigned long i=0;i<k;i++)
 		{
 			do {	if(!fgets(buf,512,fp))	*buf=0;	mgl_strtrim(buf);	} while(*buf=='#' || *buf==0);
 			long nt=0,nl=0;

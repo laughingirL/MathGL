@@ -391,17 +391,6 @@ struct ObjMaterials {
   }
 };
 
-
-static size_t power_of_two(size_t input)
-{
-	size_t value = 1;
-	while ( value < input ) {
-		value <<= 1;
-	}
-	return value;
-}
-
-
 void MGL_EXPORT mgl_write_obj(HMGL gr, const char *fname,const char *descr, int use_png)
 {
 	if(gr->GetPrmNum()==0)	return;	// nothing to do
@@ -424,7 +413,7 @@ void MGL_EXPORT mgl_write_obj(HMGL gr, const char *fname,const char *descr, int 
   
 	const size_t len=strlen(fname);
 	const size_t ntxt=gr->GetTxtNum();
-	const size_t Ntxt=power_of_two(ntxt);
+	const size_t Ntxt=size_t(1)<<(ntxt);
 	const size_t pntnum = gr->GetPntNum();
 	char *tname = new char[len+5];	strcpy(tname,fname);
 	FILE *fp=fopen(fname,"wt");

@@ -94,7 +94,7 @@ void MGL_EXPORT mgl_datac_set_values(HADT dat, const char *val, long nx, long ny
 void MGL_EXPORT mgl_datac_set_values_(uintptr_t *d, const char *val, int *nx, int *ny, int *nz, int l);
 
 /// Returns pointer to internal data array
-MGL_EXPORT dual *mgl_datac_data(HADT dat);
+MGL_EXPORT_PURE dual *mgl_datac_data(HADT dat);
 /// Returns pointer to data element [i,j,k]
 MGL_EXPORT dual *mgl_datac_value(HADT dat, long i,long j,long k);
 
@@ -279,7 +279,7 @@ uintptr_t MGL_EXPORT mgl_create_cexpr_(const char *expr, int);
 void MGL_EXPORT mgl_delete_cexpr(HAEX ex);
 void MGL_EXPORT mgl_delete_cexpr_(uintptr_t *ex);
 /// Return value of expression for given x,y,z variables
-mdual MGL_EXPORT mgl_cexpr_eval(HAEX ex, dual x, dual y,dual z);
+mdual MGL_EXPORT_PURE mgl_cexpr_eval(HAEX ex, dual x, dual y,dual z);
 mdual MGL_EXPORT mgl_cexpr_eval_(uintptr_t *ex, dual *x, dual *y, dual *z);
 /// Return value of expression for given variables
 mdual MGL_EXPORT mgl_cexpr_eval_v(HAEX ex, dual *vars);

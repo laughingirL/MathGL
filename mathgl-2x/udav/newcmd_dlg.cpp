@@ -155,7 +155,6 @@ void NewCmdDialog::parseCmd(const QString &txt)
 #include "xpm/axis.xpm"
 #include "xpm/axis_sh.xpm"
 #include "xpm/plot.xpm"
-#include "xpm/func.xpm"
 #include "xpm/box.xpm"
 #include "xpm/curve.xpm"
 #include "xpm/other.xpm"

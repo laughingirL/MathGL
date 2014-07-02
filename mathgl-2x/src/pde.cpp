@@ -225,7 +225,7 @@ HMDT MGL_EXPORT mgl_ode_solve_str(const char *func, const char *var, HCDT x0, mr
 	mglOdeTxt par;	par.var=var;
 	par.n = strlen(var);
 	par.eq = new HMEX[par.n];
-	char *buf = new char[len+1], *f=buf, *g;	memcpy(buf,func,len+1);
+	char *buf = new char[len+1], *f=buf, *g=f;	memcpy(buf,func,len+1);
 	mreal *xx = new mreal[par.n];
 	for(long i=0;i<par.n;i++)
 	{

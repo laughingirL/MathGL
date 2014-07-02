@@ -524,11 +524,27 @@ HMDT MGL_EXPORT mgl_triangulation_2d(HCDT x, HCDT y)
 	std::vector<long> out;
 	Shx pt;
 
+	double mx = 0, my = 0;
 	for(long i=0;i<n;i++)
-	{	pt.r = x->vthr(i);	pt.c = y->vthr(i);	pt.id = i;	pts.push_back(pt);	}
+	{
+		register double t;
+		t = fabs(x->vthr(i));	if(t>mx)	mx=t;
+		t = fabs(y->vthr(i));	if(t>my)	my=t;
+	}
+	mx *= 1e-15;	my *= 1e-15;
+	for(long i=0;i<n;i++)
+	{
+		pt.r = x->vthr(i);	pt.c = y->vthr(i);
+		if(mgl_isbad(pt.r) || mgl_isbad(pt.c))	continue;
+		if(fabs(pt.r)<mx)	pt.r=0;
+		if(fabs(pt.c)<my)	pt.c=0;
+		pt.id = i;    pts.push_back(pt);
+	}
+
 	std::vector<Triad> triads;
 	if(de_duplicate(pts, out))
 		mglGlobalMess += "There are duplicated points for triangulation.\n";
+printf("size 2=%ld\n",pts.size());	fflush(stdout);
 	s_hull_pro(pts, triads);
 	long m = triads.size();
 	nums=new mglData(3,m);

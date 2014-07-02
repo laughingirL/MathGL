@@ -60,6 +60,7 @@ C. Translate to Russian everything
 10. No color interpolation for EPS,SVG
 11. Update UDAV images
 12. F8 for hideWnd in UDAV
+13. Colorbar for subplot style "" -- can be out of image
 29. Howto about plot ranges (subplot styles)
 
 ============= UDAV =============

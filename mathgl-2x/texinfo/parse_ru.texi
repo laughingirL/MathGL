@@ -228,7 +228,7 @@ MathGL имеет встроенный скриптовый язык MGL для 
 @deftypefnx {Метод класса @code{mglParse}} @code{int} Parse (@code{mglGraph *}gr, @code{const wchar_t *}str, @code{long} pos=@code{0})
 @deftypefnx {Функция С} @code{int} mgl_parse_line (@code{HMGL} gr, @code{HMPR} p, @code{const char *}str, @code{int} pos)
 @deftypefnx {Функция С} @code{int} mgl_parse_linew (@code{HMGL} gr, @code{HMPR} p, @code{const wchar_t *}str, @code{int} pos)
-Выполняет строку @var{str} с выводом графики на @var{gr}. Возвращает код ошибки: 0 -- нет ошибок, 1 -- неправильные аргументы, 2 -- неизвестная команда, 3 -- строка слишком длинная. Аргумент @var{pos} задает позицию строки в документе/файле для использования в команде @ref{for}.
+Выполняет строку @var{str} с выводом графики на @var{gr}. Возвращает код ошибки: 0 -- нет ошибок, 1 -- неправильные аргументы, 2 -- неизвестная команда, 3 -- строка слишком длинная, 4 -- нет закрывающей скобки или @samp{'}. Аргумент @var{pos} задает позицию строки в документе/файле для использования в команде @ref{for}.
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglParse}} @code{mglData} Calc (@code{const char *}formula)

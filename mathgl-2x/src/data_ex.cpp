@@ -102,10 +102,10 @@ HMDT MGL_EXPORT mgl_data_subdata_ext(HCDT d, HCDT xx, HCDT yy, HCDT zz)
 #pragma omp parallel for
 		for(long i0=0;i0<n*m*l;i0++)
 		{
-			register mreal x = ix?xx->vthr(i0):vx;
-			register mreal y = iy?yy->vthr(i0):vy;
-			register mreal z = iz?zz->vthr(i0):vz;
-			r->a[i0] = mgl_data_linear(d,x,y,z);
+			register long x = ix?xx->vthr(i0):vx;	if(x<0)	x=0;	if(x>=nx)	x=nx-1;
+			register long y = iy?yy->vthr(i0):vy;	if(y<0)	y=0;	if(y>=ny)	y=ny-1;
+			register long z = iz?zz->vthr(i0):vz;	if(z<0)	z=0;	if(z>=nz)	z=nz-1;
+			r->a[i0] = d->v(x,y,z);
 		}
 		return r;
 	}
@@ -120,8 +120,11 @@ HMDT MGL_EXPORT mgl_data_subdata_ext(HCDT d, HCDT xx, HCDT yy, HCDT zz)
 #pragma omp parallel for collapse(3)
 	for(long k=0;k<l;k++)	for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
 	{
-		register mreal x = ix?xx->v(i):i, y = iy?yy->v(j):j, z = iz?zz->v(k):k;
-		r->a[i+n*(j+m*k)] = mgl_data_linear(d,x,y,z);
+		register long x = ix?xx->v(i):i, y = iy?yy->v(j):j, z = iz?zz->v(k):k;
+		if(x<0)	x=0;	if(x>=nx)	x=nx-1;
+		if(y<0)	y=0;	if(y>=ny)	y=ny-1;
+		if(z<0)	z=0;	if(z>=nz)	z=nz-1;
+		r->a[i+n*(j+m*k)] = d->v(x,y,z);
 	}
 	if(m==1)	{	r->ny=r->nz;	r->nz=1;	}// "squeeze" dimensions
 	if(n==1)	{	r->nx=r->ny;	r->ny=r->nz;	r->nz=1;	r->NewId();}

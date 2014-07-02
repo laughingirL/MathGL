@@ -269,7 +269,7 @@ void PlotPanel::animParseText(const QString &txt)
 	}
 }
 //-----------------------------------------------------------------------------
-#include "xpm/wire.xpm"
+//#include "xpm/wire.xpm"
 #include "xpm/text.xpm"
 #include "xpm/line.xpm"
 #include "xpm/curve.xpm"

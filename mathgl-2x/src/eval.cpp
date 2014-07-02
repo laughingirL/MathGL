@@ -718,11 +718,11 @@ int MGL_LOCAL_PURE mglFindInText(char *str,const char *lst)
 //-----------------------------------------------------------------------------
 HMEX MGL_EXPORT mgl_create_expr(const char *expr)	{	return new mglFormula(expr);	}
 void MGL_EXPORT mgl_delete_expr(HMEX ex)	{	if(ex)	delete ex;	}
-double MGL_EXPORT mgl_expr_eval(HMEX ex, double x, double y,double z)
+double MGL_EXPORT_PURE mgl_expr_eval(HMEX ex, double x, double y,double z)
 {	return ex->Calc(x,y,z);	}
 double MGL_EXPORT mgl_expr_eval_v(HMEX ex, mreal *var)
 {	return ex->Calc(var);	}
-double MGL_EXPORT mgl_expr_diff(HMEX ex, char dir, double x, double y,double z)
+double MGL_EXPORT_PURE mgl_expr_diff(HMEX ex, char dir, double x, double y,double z)
 {	return ex->CalcD(dir,x,y,z);	}
 double MGL_EXPORT mgl_expr_diff_v(HMEX ex, char dir, mreal *var)
 {	return ex->CalcD(var, dir);		}

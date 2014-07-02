@@ -876,7 +876,7 @@ mdual MGL_EXPORT mgl_datac_get_value(HCDT dat, long i, long j, long k)
 mdual MGL_EXPORT mgl_datac_get_value_(uintptr_t *d, int *i, int *j, int *k)
 {	return mgl_datac_get_value(_DA_(d),*i,*j,*k);	}
 //-----------------------------------------------------------------------------
-MGL_EXPORT dual *mgl_datac_data(HADT dat)	{	return dat->a;	}
+MGL_EXPORT_PURE dual *mgl_datac_data(HADT dat)	{	return dat->a;	}
 //-----------------------------------------------------------------------------
 MGL_EXPORT dual *mgl_datac_value(HADT dat, long i,long j,long k)
 {	register long ii=i*dat->nx*(j+dat->ny*k);
