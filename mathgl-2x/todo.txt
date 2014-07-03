@@ -37,6 +37,7 @@
 17. Check adjust in FLTK, Qt -- why don't redraw existed data (if func=NULL)
 18. ColumnPlot -- add rotation angles
 19. Sync View() and Rotate()
+20. Optimize SubData
 
 YY. Optimize code (especially Quality=0 ?!?)
 ZZ. Update *.i for new functions {before release!!!}
