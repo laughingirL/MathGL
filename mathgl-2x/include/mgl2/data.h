@@ -565,6 +565,8 @@ public:
 	inline void Create(long mx,long my=1,long mz=1)
 	{	di=mx>1?di*(nx-1)/(mx-1):0;	dj=my>1?dj*(ny-1)/(my-1):0;	simpl=true;
 		dk=mz>1?dk*(nz-1)/(mz-1):0;	nx=mx;	ny=my;	nz=mz;	}
+	/// For going throw all elements
+	inline void All()	{	di=dj=dk=1;	a0=0;	}
 	/// Equidistantly fill the data to range [x1,x2] in direction dir
 	inline void Fill(mreal x1,mreal x2=NaN,char dir='x')
 	{

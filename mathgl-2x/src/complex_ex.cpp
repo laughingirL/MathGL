@@ -108,35 +108,51 @@ HADT MGL_EXPORT mgl_datac_subdata_ext(HCDT d, HCDT xx, HCDT yy, HCDT zz)
 		iz = true;	iy = j>1;	ix = k>1;
 	}
 	long nx=d->GetNx(),ny=d->GetNy(),nz=d->GetNz();
-	mreal vx=xx->v(0), vy=yy->v(0), vz=zz->v(0);
-	mglDataC *r=new mglDataC;
+	long vx=long(xx->v(0)), vy=long(yy->v(0)), vz=long(zz->v(0));
+	const mglDataC *dd = dynamic_cast<const mglDataC *>(d);
 	if(n*m*l>1)	// this is 2d or 3d data
 	{
-		r->Create(n,m,l);
+		mglDataV tx(n,m,l),ty(n,m,l),tz(n,m,l);
+		if(!ix)	{	xx = &tx;	if(vx>=0)	tx.Fill(vx);	else tx.All();	}
+		if(!iy)	{	yy = &ty;	if(vy>=0)	ty.Fill(vy);	else ty.All();	}
+		if(!iz)	{	zz = &tz;	if(vz>=0)	tz.Fill(vz);	else tz.All();	}
+		mglDataC *r=new mglDataC(n,m,l);
+		if(dd)
 #pragma omp parallel for
-		for(long i0=0;i0<n*m*l;i0++)
-		{
-			register mreal x = ix?xx->vthr(i0):vx;
-			register mreal y = iy?yy->vthr(i0):vy;
-			register mreal z = iz?zz->vthr(i0):vz;
-			r->a[i0] = mgl_datac_linear(d,x,y,z);
-		}
+			for(long i0=0;i0<n*m*l;i0++)
+			{
+				register long x=long(0.5+xx->vthr(i0)), y=long(0.5+yy->vthr(i0)), z=long(0.5+zz->vthr(i0));
+				r->a[i0] = (x>=0 && x<nx && y>=0 && y<ny && z>=0 && z<nz)?dd->a[x+nx*(y+ny*z)]:NAN;
+			}
+		else
+#pragma omp parallel for
+			for(long i0=0;i0<n*m*l;i0++)
+			{
+				register long x=long(0.5+xx->vthr(i0)), y=long(0.5+yy->vthr(i0)), z=long(0.5+zz->vthr(i0));
+				r->a[i0] = (x>=0 && x<nx && y>=0 && y<ny && z>=0 && z<nz)?d->v(x,y,z):NAN;
+			}
 		return r;
 	}
 	// this is 1d data -> try as normal SubData()
-	if(xx->GetNx()>1 || vx>=0)	{	n=xx->GetNx();	ix=true;	}
-	else	{	n=nx;	ix=false;	}
-	if(yy->GetNx()>1 || vy>=0)	{	m=yy->GetNx();	iy=true;	}
-	else	{	m=ny;	iy=false;	}
-	if(zz->GetNx()>1 || vz>=0)	{	l=zz->GetNx();	iz=true;	}
-	else	{	l=nz;	iz=false;	}
-	r->Create(n,m,l);
+	mglDataV tx(nx),ty(ny),tz(nz);	tx.Fill(0,nx-1);	ty.Fill(0,ny-1);	tz.Fill(0,nz-1);
+	if(xx->GetNx()>1 || vx>=0)	n=xx->GetNx();	else	{	n=nx;	xx = &tx;	}
+	if(yy->GetNx()>1 || vy>=0)	m=yy->GetNx();	else	{	m=ny;	yy = &ty;	}
+	if(zz->GetNx()>1 || vz>=0)	l=zz->GetNx();	else	{	l=nz;	zz = &tz;	}
+	mglDataC *r=new mglDataC(n,m,l);
+	if(dd)
 #pragma omp parallel for collapse(3)
-	for(long k=0;k<l;k++)	for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
-	{
-		register mreal x = ix?xx->v(i):i, y = iy?yy->v(j):j, z = iz?zz->v(k):k;
-		r->a[i+n*(j+m*k)] = mgl_datac_linear(d,x,y,z);
-	}
+		for(long k=0;k<l;k++)	for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
+		{
+			register long x=long(0.5+xx->v(i)), y=long(0.5+yy->v(j)), z=long(0.5+zz->v(k));
+			r->a[i+n*(j+m*k)] = (x>=0 && x<nx && y>=0 && y<ny && z>=0 && z<nz)?dd->a[x+nx*(y+ny*z)]:NAN;
+		}
+	else
+#pragma omp parallel for collapse(3)
+		for(long k=0;k<l;k++)	for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
+		{
+			register long x=long(0.5+xx->v(i)), y=long(0.5+yy->v(j)), z=long(0.5+zz->v(k));
+			r->a[i+n*(j+m*k)] = (x>=0 && x<nx && y>=0 && y<ny && z>=0 && z<nz)?d->v(x,y,z):NAN;
+		}
 	if(m==1)	{	r->ny=r->nz;	r->nz=1;	}// "squeeze" dimensions
 	if(n==1)	{	r->nx=r->ny;	r->ny=r->nz;	r->nz=1;	r->NewId();}
 	return r;
@@ -144,9 +160,30 @@ HADT MGL_EXPORT mgl_datac_subdata_ext(HCDT d, HCDT xx, HCDT yy, HCDT zz)
 //-----------------------------------------------------------------------------
 HADT MGL_EXPORT mgl_datac_subdata(HCDT d, long xx,long yy,long zz)
 {
-	mglData x,y,z;
-	x.a[0]=xx;	y.a[0]=yy;	z.a[0]=zz;
-	return mgl_datac_subdata_ext(d,&x,&y,&z);
+	long nx=d->GetNx(),ny=d->GetNy(),nz=d->GetNz(), n=nx,m=ny,l=nz;
+	mglDataV tx(nx),ty(ny),tz(nz);	tx.All();	ty.All();	tz.All();
+	if(xx>=0)	{	n=1;	tx.Fill(xx);	}
+	if(yy>=0)	{	m=1;	ty.Fill(yy);	}
+	if(zz>=0)	{	l=1;	tz.Fill(zz);	}
+	const mglDataC *dd = dynamic_cast<const mglDataC *>(d);
+	mglDataC *r=new mglDataC(n,m,l);
+	if(dd)
+#pragma omp parallel for collapse(3)
+		for(long k=0;k<l;k++)	for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
+		{
+			register long x=long(tx.v(i)), y=long(ty.v(j)), z=long(tz.v(k));
+			r->a[i+n*(j+m*k)] = (x>=0 && x<nx && y>=0 && y<ny && z>=0 && z<nz)?dd->a[x+nx*(y+ny*z)]:NAN;
+		}
+	else
+#pragma omp parallel for collapse(3)
+		for(long k=0;k<l;k++)	for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
+		{
+			register long x=long(tx.v(i)), y=long(ty.v(j)), z=long(tz.v(k));
+			r->a[i+n*(j+m*k)] = (x>=0 && x<nx && y>=0 && y<ny && z>=0 && z<nz)?d->v(x,y,z):NAN;
+		}
+	if(m==1)	{	r->ny=r->nz;	r->nz=1;	}// "squeeze" dimensions
+	if(n==1)	{	r->nx=r->ny;	r->ny=r->nz;	r->nz=1;	r->NewId();}
+	return r;
 }
 //-----------------------------------------------------------------------------
 uintptr_t MGL_EXPORT mgl_datac_subdata_(uintptr_t *d, int *xx,int *yy,int *zz)
