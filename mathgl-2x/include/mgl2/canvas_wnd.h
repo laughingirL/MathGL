@@ -33,7 +33,7 @@ public:
 	mglCanvasWnd();
 	virtual ~mglCanvasWnd();
 
-	void SetSize(int w,int h);
+	void SetSize(int w,int h,bool clf=true);
 	void EndFrame();
 	void SetFrame(long i);
 	void DelFrame(long i);

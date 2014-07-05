@@ -54,7 +54,7 @@ private:
 	QSpinBox *mn,*mm,*mk,*mx,*my;	// multiplot
 	QSpinBox *gm,*gn,*gk;			// gridplot
 	QSpinBox *cn,*ck;				// columnplot
-	QLineEdit *cd;
+	QLineEdit *cd, *gd;
 	QCheckBox *rb,*rr,*rl,*rt,*rw;	// style (where reserve)
 	QString cmd;	// resulting command
 	QString fmt;	// format for title

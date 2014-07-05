@@ -160,27 +160,24 @@ HADT MGL_EXPORT mgl_datac_subdata_ext(HCDT d, HCDT xx, HCDT yy, HCDT zz)
 //-----------------------------------------------------------------------------
 HADT MGL_EXPORT mgl_datac_subdata(HCDT d, long xx,long yy,long zz)
 {
-	long nx=d->GetNx(),ny=d->GetNy(),nz=d->GetNz(), n=nx,m=ny,l=nz;
-	mglDataV tx(nx),ty(ny),tz(nz);	tx.All();	ty.All();	tz.All();
-	if(xx>=0)	{	n=1;	tx.Fill(xx);	}
-	if(yy>=0)	{	m=1;	ty.Fill(yy);	}
-	if(zz>=0)	{	l=1;	tz.Fill(zz);	}
+	long nx=d->GetNx(),ny=d->GetNy(),nz=d->GetNz(), n=1,m=1,l=1;
+	int dx=0,dy=0,dz=0;
+	if(xx<0)	{	xx=0;	dx=1;	n=nx;	}
+	if(yy<0)	{	yy=0;	dy=1;	m=ny;	}
+	if(zz<0)	{	zz=0;	dz=1;	l=nz;	}
 	const mglDataC *dd = dynamic_cast<const mglDataC *>(d);
 	mglDataC *r=new mglDataC(n,m,l);
-	if(dd)
+	if(xx>=nx || yy>=ny || zz>=nz)
+#pragma omp parallel for
+		for(long i=0;i<n*m*l;i++)	r->a[i] = NAN;
+	else if(dd)
 #pragma omp parallel for collapse(3)
 		for(long k=0;k<l;k++)	for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
-		{
-			register long x=long(tx.v(i)), y=long(ty.v(j)), z=long(tz.v(k));
-			r->a[i+n*(j+m*k)] = (x>=0 && x<nx && y>=0 && y<ny && z>=0 && z<nz)?dd->a[x+nx*(y+ny*z)]:NAN;
-		}
+			r->a[i+n*(j+m*k)] = dd->a[xx+dx*i + nx*(yy+dy*i + ny*(zz+dz*i))];
 	else
 #pragma omp parallel for collapse(3)
 		for(long k=0;k<l;k++)	for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
-		{
-			register long x=long(tx.v(i)), y=long(ty.v(j)), z=long(tz.v(k));
-			r->a[i+n*(j+m*k)] = (x>=0 && x<nx && y>=0 && y<ny && z>=0 && z<nz)?d->v(x,y,z):NAN;
-		}
+			r->a[i+n*(j+m*k)] = d->v(xx+dx*i, yy+dy*i, zz+dz*i);
 	if(m==1)	{	r->ny=r->nz;	r->nz=1;	}// "squeeze" dimensions
 	if(n==1)	{	r->nx=r->ny;	r->ny=r->nz;	r->nz=1;	r->NewId();}
 	return r;

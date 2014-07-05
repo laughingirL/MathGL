@@ -156,7 +156,7 @@ using mglBase::Light;
 	void Perspective(mreal a)	{	Bp.pf = fabs(a);	}
 
 	/// Set size of frame in pixels. Normally this function is called internaly.
-	virtual void SetSize(int w,int h);
+	virtual void SetSize(int w,int h,bool clf=true);
 	/// Get ratio (mreal width)/(mreal height).
 	mreal GetRatio() const MGL_FUNC_PURE;
 	/// Get bitmap data prepared for saving to file
@@ -175,7 +175,7 @@ using mglBase::Light;
 	/// Rasterize current plot and set it as background image
 	void Rasterize();
 	/// Load image for background from file
-	void LoadBackground(const char *fname);
+	void LoadBackground(const char *fname, double alpha=1);
 	/// Fill background image by specified color
 	void FillBackground(const mglColor &cc);
 

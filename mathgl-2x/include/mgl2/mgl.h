@@ -290,6 +290,9 @@ public:
 	/// Set angle of view independently from Rotate().
 	inline void View(double TetX,double TetZ=0,double TetY=0)
 	{	mgl_view(gr, TetX, TetZ, TetY);	}
+	/// Set angle of view independently from Rotate().
+	inline void ViewAsRotate(double TetZ,double TetX,double TetY=0)
+	{	mgl_view(gr, -TetX, -TetZ, -TetY);	}
 	/// Zoom in/out a part of picture (use Zoom(0, 0, 1, 1) for restore default)
 	inline void Zoom(double x1, double y1, double x2, double y2)
 	{	mgl_zoom(gr, x1, y1, x2, y2);	}
@@ -390,8 +393,6 @@ public:
 	inline void SetFrame(int i)	{	mgl_set_frame(gr, i);	}
 	/// Append drawing data from i-th frame (work if MGL_VECT_FRAME is set on)
 	inline void ShowFrame(int i){	mgl_show_frame(gr, i);	}
-	/// Force preparing the image. It can be useful for OpenGL mode mostly.
-	inline void Rasterize()			{	mgl_rasterize(gr);	}
 
 	/// Start write frames to cinema using GIF format
 	inline void StartGIF(const char *fname, int ms=100)
@@ -469,9 +470,12 @@ public:
 	inline void Clf()	{	mgl_clf(gr);	}
 	/// Clear unused points and primitives. Useful only in combination with SetFaceNum().
 	inline void ClearUnused()	{	mgl_clear_unused(gr);	}
+
 	/// Load background image
-	inline void LoadBackground(const char *fname)
-	{	mgl_load_background(gr,fname);	}
+	inline void LoadBackground(const char *fname, double alpha=1)
+	{	mgl_load_background(gr,fname,alpha);	}
+	/// Force preparing the image and use it as background one
+	inline void Rasterize()			{	mgl_rasterize(gr);	}
 
 	/// Draws the point (ball) at position {x,y,z} with color c
 	inline void Ball(mglPoint p, char c='r')

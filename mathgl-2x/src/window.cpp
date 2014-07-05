@@ -41,10 +41,10 @@ void mglCanvasWnd::ResetFrames()
 	mglCanvas::ResetFrames();
 }
 //-----------------------------------------------------------------------------
-void mglCanvasWnd::SetSize(int w,int h)
+void mglCanvasWnd::SetSize(int w,int h,bool)
 {
 	if(DrawFunc)	ResetFrames();
-	mglCanvas::SetSize(w,h);
+	mglCanvas::SetSize(w,h,false);
 //	if(Wnd)	Wnd->size(w,h);
 }
 //-----------------------------------------------------------------------------
@@ -213,11 +213,11 @@ void MGL_EXPORT mgl_reload_class(void *p)	// so stupid way to save mglDraw class
 void MGL_EXPORT mgl_click_class(void *p)	// so stupid way to save mglDraw class inheritance :(
 {	mglWindow *w = (mglWindow *)p;	if(w && w->dr)	w->dr->Click();	}*/
 int MGL_EXPORT mgl_draw_class(HMGL gr, void *p)
-{	mglGraph g(gr);	mglDraw *dr = (mglDraw *)p;	return dr->Draw(&g);	}
+{	mglGraph g(gr);	mglDraw *dr = (mglDraw *)p;	return dr?dr->Draw(&g):0;	}
 void MGL_EXPORT mgl_reload_class(void *p)
-{	mglDraw *dr = (mglDraw *)p;	dr->Reload();	}
+{	mglDraw *dr = (mglDraw *)p;	if(dr)	dr->Reload();	}
 void MGL_EXPORT mgl_click_class(void *p)
-{	mglDraw *dr = (mglDraw *)p;	dr->Click();		}
+{	mglDraw *dr = (mglDraw *)p;	if(dr)	dr->Click();		}
 //-----------------------------------------------------------------------------
 typedef int (*draw_func)(mglGraph *gr);
 int MGL_EXPORT mgl_draw_graph(HMGL gr, void *p)

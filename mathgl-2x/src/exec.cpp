@@ -262,6 +262,7 @@ int MGL_NO_EXPORT mgls_background(mglGraph *gr, long , mglArg *a, const char *k,
 {
 	int res=0;
 	if(!strcmp(k,"s"))	gr->LoadBackground(a[0].s.c_str());
+	else if(!strcmp(k,"sn"))	gr->LoadBackground(a[0].s.c_str(),a[1].v);
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------

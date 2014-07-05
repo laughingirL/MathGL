@@ -21,6 +21,9 @@
 #if MGL_HAVE_PNG
 #include <png.h>
 #endif
+#if MGL_HAVE_JPEG
+#include <jpeglib.h>
+#endif
 //-----------------------------------------------------------------------------
 size_t MGL_LOCAL_PURE mgl_col_dif(unsigned char *c1,unsigned char *c2,bool sum)
 {
@@ -66,34 +69,90 @@ MGL_NO_EXPORT unsigned char *mgl_create_scheme(const char *scheme,long &num)
 //-----------------------------------------------------------------------------
 bool MGL_NO_EXPORT mgl_read_image(unsigned char *g, int w, int h, const char *fname)
 {
+	const char *ext = rindex(fname,'.');
+	if(!strcmp(ext,".png"))
+	{
 #if MGL_HAVE_PNG
-	FILE *fp = fopen(fname, "rb");
-	if (!fp)	return false;
-	png_structp png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, 0, 0, 0);
-	if (!png_ptr)	{	fclose(fp);	return false;	}
-	png_infop info_ptr = png_create_info_struct(png_ptr);
-	if (!info_ptr)
-	{	png_destroy_read_struct(&png_ptr,0,0);	fclose(fp);	return false;	}
-	png_infop end_info = png_create_info_struct(png_ptr);
-	if (!end_info)
-	{	png_destroy_read_struct(&png_ptr,&info_ptr,0);	fclose(fp);	return false;	}
+		FILE *fp = fopen(fname, "rb");
+		if(!fp)	return false;
+		png_structp png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, 0, 0, 0);
+		if (!png_ptr)	{	fclose(fp);	return false;	}
+		png_infop info_ptr = png_create_info_struct(png_ptr);
+		if (!info_ptr)
+		{	png_destroy_read_struct(&png_ptr,0,0);	fclose(fp);	return false;	}
+		png_infop end_info = png_create_info_struct(png_ptr);
+		if (!end_info)
+		{	png_destroy_read_struct(&png_ptr,&info_ptr,0);	fclose(fp);	return false;	}
 
-	png_init_io(png_ptr, fp);
-	png_read_png(png_ptr, info_ptr, PNG_TRANSFORM_PACKING|PNG_TRANSFORM_STRIP_16|PNG_TRANSFORM_EXPAND,0);
-	unsigned char **rows = png_get_rows(png_ptr, info_ptr);
+		png_init_io(png_ptr, fp);
+		png_read_png(png_ptr, info_ptr, PNG_TRANSFORM_PACKING|PNG_TRANSFORM_STRIP_16|PNG_TRANSFORM_EXPAND,0);
+		unsigned char **rows = png_get_rows(png_ptr, info_ptr);
 
-	long wi=png_get_image_width(png_ptr, info_ptr);
-	long hi=png_get_image_height(png_ptr, info_ptr);
-	if(w<wi)	wi=w;
-	if(h>hi)	h=hi;
+		long wi=png_get_image_width(png_ptr, info_ptr);
+		long hi=png_get_image_height(png_ptr, info_ptr);
+		int type = png_get_color_type(png_ptr, info_ptr);
+		if(w<wi)	wi=w;
+		if(h>hi)	h=hi;
+		if(type==PNG_COLOR_TYPE_RGB_ALPHA)
+#pragma omp parallel for
+			for(long i=0;i<h;i++)	memcpy(g+4*w*i,rows[i],4*wi);
+		else if(type==PNG_COLOR_TYPE_RGB)
 #pragma omp parallel for collapse(2)
-	for(long i=0;i<h;i++)	for(long j=0;j<wi;j++)
-		memcpy(g+4*(w*i+j),rows[i]+4*j,4);
-	png_destroy_read_struct(&png_ptr, &info_ptr,&end_info);
-	fclose(fp);
+			for(long i=0;i<h;i++)	for(long j=0;j<wi;j++)
+				memcpy(g+4*(w*i+j),rows[i]+3*j,3);
+		else if(type==PNG_COLOR_TYPE_GRAY)
+#pragma omp parallel for collapse(2)
+			for(long i=0;i<h;i++)	for(long j=0;j<wi;j++)
+				g[4*(w*i+j)] = g[4*(w*i+j)+1] = g[4*(w*i+j)+2] = rows[i][j];
+		else if(type==PNG_COLOR_TYPE_GRAY_ALPHA)
+#pragma omp parallel for collapse(2)
+			for(long i=0;i<h;i++)	for(long j=0;j<wi;j++)
+			{
+				g[4*(w*i+j)] = g[4*(w*i+j)+1] = g[4*(w*i+j)+2] = rows[i][2*j];
+				g[4*(w*i+j)+3] = rows[i][2*j+1];
+			}
+		png_destroy_read_struct(&png_ptr, &info_ptr,&end_info);
+		fclose(fp);
 #else
-	mglGlobalMess += "PNG support was disabled. Please, enable it and rebuild MathGL.\n";
+		mglGlobalMess += "PNG support was disabled. Please, enable it and rebuild MathGL.\n";
 #endif
+	}
+	else if(!strcmp(ext,".jpg") || !strcmp(ext,".jpeg"))
+	{
+#if MGL_HAVE_JPEG
+		FILE *fp = fopen(fname, "rb");
+		if(!fp)	return false;
+
+		jpeg_decompress_struct info;
+		jpeg_error_mgr err;
+		info.err = jpeg_std_error(&err);     
+		jpeg_create_decompress(&info);
+
+		jpeg_stdio_src(&info, fp);    
+		jpeg_read_header(&info, TRUE);	// read jpeg file header
+		jpeg_start_decompress(&info);	// decompress the file
+
+		long wi = info.output_width;	//set width and height
+		long hi = info.output_height;
+		int channels = info.num_components;	// == 4 for RGBA else for RGB
+		unsigned char *buf = new unsigned char[(channels==4?4:3)*wi];
+		if(hi>h)	hi = h;
+		if(wi>w)	wi = w;
+		for(long i=0;i<hi;i++)
+		{
+			jpeg_read_scanlines(&info, &buf, 1);
+			if(channels==4)
+				memcpy(g+4*i*w,buf,4*wi);
+			else
+#pragma omp parallel for
+				for(long j=0;j<wi;j++)
+					memcpy(g+4*i*w+4*j,buf+3*j,3);
+		}
+		delete []buf;
+#else
+		mglGlobalMess += "JPEG support was disabled. Please, enable it and rebuild MathGL.\n";
+#endif
+	}
 	return true;
 }
 //-----------------------------------------------------------------------------

@@ -217,7 +217,7 @@ wxBitmap MGL_EXPORT ConvertFromGraph(HMGL gr)
 //-----------------------------------------------------------------------------
 void wxMathGL::Repaint()
 {
-	mgl_zoom(gr,x1,y1,x2,y2);	mgl_view(gr,phi,0,tet);	mgl_perspective(gr, per);
+	mgl_zoom(gr,x1,y1,x2,y2);	mgl_view(gr,-phi,-tet,0);	mgl_perspective(gr, per);
 	pic = ConvertFromGraph(gr);
 	wxSize sz=GetSize();
 	if(pic.GetWidth()!=sz.GetWidth() || pic.GetHeight()!=sz.GetHeight())

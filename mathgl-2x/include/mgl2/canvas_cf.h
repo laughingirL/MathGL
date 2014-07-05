@@ -317,8 +317,8 @@ void MGL_EXPORT mgl_clf_chr_(uintptr_t *gr, const char *col, int);
 void MGL_EXPORT mgl_clf_str(HMGL gr, const char *col);
 void MGL_EXPORT mgl_clf_str_(uintptr_t *gr, const char *col, int);
 /// Load background image
-void MGL_EXPORT mgl_load_background(HMGL gr, const char *fname);
-void MGL_EXPORT mgl_load_background_(uintptr_t *gr, const char *col, int);
+void MGL_EXPORT mgl_load_background(HMGL gr, const char *fname, double alpha);
+void MGL_EXPORT mgl_load_background_(uintptr_t *gr, const char *fname, mreal *alpha, int);
 
 /// Put further plotting in some region of whole frame.
 void MGL_EXPORT mgl_subplot(HMGL gr, int nx,int ny,int m,const char *style);

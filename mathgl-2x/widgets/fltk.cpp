@@ -156,7 +156,7 @@ void Fl_MathGL::update()
 		mgl_set_alpha(gr,flag&1);	mgl_set_light(gr,flag&2);
 		if(tet_val)	tet = tet_val->value();
 		if(phi_val)	phi = phi_val->value();
-		mgl_zoom(gr,x1,y1,x2,y2);	mgl_view(gr,phi,0,tet);
+		mgl_zoom(gr,x1,y1,x2,y2);	mgl_view(gr,-phi,-tet,0);
 		setlocale(LC_NUMERIC, "C");
 		// use frames for quickly redrawing while adding/changing primitives
 		if(mgl_is_frames(gr))	mgl_new_frame(gr);

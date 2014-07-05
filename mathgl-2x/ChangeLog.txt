@@ -28,7 +28,11 @@
 * Make function mgl_get_curvs() to be exported. This function is used internally to connect line segments to a set of curves (in particular, for contour lines).
 * Add calligraphic TeX symbols, like \calB, \calE, \calF, \calH, \calI, \calL, \calM, \calR, \ell, \scrg, \scro
 * Improve colorbar labels drawing at SetRotatedText(false)
-* Add move constructor(s)
+* Add move constructor(s) if compiler support C++11 rvalues.
+* Add ViewAsRotate() function which handle arguments of View() by the same way as Rotate() function, i.e View(tetx,tetz,tety) <=> ViewAsRotate(-tetz,-tetx,-tety)
+* Adjust columnplot and gridplot positions for non-zero distance between the inplots.
+* Function Adjust() for Quality&4==0 now show image in widgets even if draw function is absent (i.e. =NULL).
+* Allow reading JPEG files for mglData::Import().
 
 * Rearrange tool buttons in UDAV
 * Add features for manual dashing and manual mask in Style dialog

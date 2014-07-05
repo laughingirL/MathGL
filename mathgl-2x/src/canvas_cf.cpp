@@ -105,8 +105,8 @@ void MGL_EXPORT mgl_clf_rgb(HMGL gr, double r, double g, double b)
 {	mglCanvas *gg = dynamic_cast<mglCanvas *>(gr);	if(gg)	gg->Clf(mglColor(r,g,b));	}
 void MGL_EXPORT mgl_clf_str(HMGL gr, const char *col)
 {	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->Clf(col);	}
-void MGL_EXPORT mgl_load_background(HMGL gr, const char *fn)
-{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->LoadBackground(fn);	}
+void MGL_EXPORT mgl_load_background(HMGL gr, const char *fn, double alpha)
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->LoadBackground(fn,alpha);	}
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_subplot_d(HMGL gr, int nx,int ny,int m,const char *style,double dx,double dy)
 {
@@ -143,7 +143,7 @@ void MGL_EXPORT mgl_columnplot(HMGL gr, int num, int i, double dd)
 {
 	register double w = 1./num;
 	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);
-	if(g)	g->InPlot(0,1,1-w*(i+1-dd),1-i*w,true);
+	if(g)	g->InPlot(0,1,1-w*(i+1-dd/2),1-(i+dd/2)*w,true);
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_gridplot(HMGL gr, int nx, int ny, int i, double dd)
@@ -151,10 +151,8 @@ void MGL_EXPORT mgl_gridplot(HMGL gr, int nx, int ny, int i, double dd)
 	register int ix=i%nx, iy=i/nx;
 	register double wx = 1./nx, wy = 1./ny;
 	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);
-	if(g)	g->InPlot(ix*wx,wx*(ix+1-dd),1-wy*(iy+1-dd),1-iy*wy,true);
+	if(g)	g->InPlot((ix+dd/2)*wx,wx*(ix+1-dd/2),1-wy*(iy+1-dd/2),1-(iy+dd/2)*wy,true);
 }
-void MGL_EXPORT mgl_gridplot_(uintptr_t *gr, int *nx, int *ny, int *m, mreal *d)
-{	mgl_gridplot(_GR_,*nx,*ny,*m,*d);	}
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_stickplot(HMGL gr, int num, int i, double tet, double phi)
 {	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->StickPlot(num, i, tet, phi);	}
@@ -209,9 +207,9 @@ void MGL_EXPORT mgl_clf_rgb_(uintptr_t *gr, mreal *r, mreal *g, mreal *b)
 void MGL_EXPORT mgl_clf_str_(uintptr_t *gr, const char *col, int l)
 {	char *s=new char[l+1];	memcpy(s,col,l);	s[l]=0;
 	mgl_clf_str(_GR_,s);	delete []s;	}
-void MGL_EXPORT mgl_load_background_(uintptr_t *gr, const char *fn, int l)
+void MGL_EXPORT mgl_load_background_(uintptr_t *gr, const char *fn, mreal *a, int l)
 {	char *s=new char[l+1];	memcpy(s,fn,l);	s[l]=0;
-	mgl_load_background(_GR_,s);	delete []s;	}
+	mgl_load_background(_GR_,s,*a);	delete []s;	}
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_subplot_d_(uintptr_t *gr, int *nx,int *ny,int *m,const char *st, mreal *dx, mreal *dy,int l)
 {	char *s=new char[l+1];	memcpy(s,st,l);	s[l]=0;
@@ -228,7 +226,7 @@ void MGL_EXPORT mgl_relplot_(uintptr_t *gr, mreal *x1, mreal *x2, mreal *y1, mre
 {	_GR_->InPlot(*x1,*x2,*y1,*y2,true);	}
 void MGL_EXPORT mgl_columnplot_(uintptr_t *gr, int *num, int *i, mreal *d)
 {	mgl_columnplot(_GR_,*num,*i,*d);	}
-void MGL_EXPORT mgl_columnplot_d_(uintptr_t *gr, int *nx, int *ny, int *i, mreal *d)
+void MGL_EXPORT mgl_gridplot_(uintptr_t *gr, int *nx, int *ny, int *i, mreal *d)
 {	mgl_gridplot(_GR_,*nx,*ny,*i,*d);	}
 void MGL_EXPORT mgl_stickplot_(uintptr_t *gr, int *num, int *i, mreal *tet, mreal *phi)
 {	_GR_->StickPlot(*num, *i, *tet, *phi);	}

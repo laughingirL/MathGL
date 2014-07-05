@@ -332,8 +332,8 @@ void QMathGL::refresh()
 		else
 		{	mgl_zoom(gr,x1,y1,x2,y2);
 			mgl_perspective(gr,per);
-			if(viewYZ)	mgl_view(gr,0,phi,tet);
-			else 		mgl_view(gr,phi,0,tet);
+			if(viewYZ)	mgl_view(gr,0,-tet,-phi);
+			else 		mgl_view(gr,-phi,-tet,0);
 		}
 	}
 	mglConvertFromGraph(pic, gr, &grBuf);

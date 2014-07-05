@@ -99,6 +99,10 @@ SubplotDialog::SubplotDialog(QWidget *parent) : QDialog(parent)
 	gk = new QSpinBox(this);	g->addWidget(gk,2,6);
 	gk->setMinimum(0);	gk->setToolTip(tr("Cell index"));
 	connect(gk,SIGNAL(valueChanged(QString)),this,SLOT(updatePic()));
+	l = new QLabel("d",this);	g->addWidget(l,2,7);
+	gd = new QLineEdit(this);	g->addWidget(gd,2,8);
+	gd->setToolTip(tr("Distance between cells"));
+	connect(gd,SIGNAL(textChanged(QString)),this,SLOT(updatePic()));
 
 	// ColumnPlot section
 	cc = new QRadioButton("ColumnPlot",this);	g->addWidget(cc,3,0);
@@ -112,7 +116,7 @@ SubplotDialog::SubplotDialog(QWidget *parent) : QDialog(parent)
 	ck = new QSpinBox(this);	g->addWidget(ck,3,6);
 	ck->setMinimum(0);	ck->setToolTip(tr("Cell index"));
 	connect(ck,SIGNAL(valueChanged(QString)),this,SLOT(updatePic()));
-	l = new QLabel("dx",this);	g->addWidget(l,3,7);
+	l = new QLabel("d",this);	g->addWidget(l,3,7);
 	cd = new QLineEdit(this);	g->addWidget(cd,3,8);
 	cd->setToolTip(tr("Distance between cells"));
 	connect(cd,SIGNAL(textChanged(QString)),this,SLOT(updatePic()));
@@ -269,8 +273,9 @@ void SubplotDialog::updatePic()
 	else if(cg->isChecked())	// gridplot
 	{
 		int n=gn->value(), m=gm->value(), k=gk->value();
-		for(int i=0;i<n*m;i++)	if(i!=k)	{	gr.GridPlot(n,m,i);	gr.Box("h");	}
-		cmd = "gridplot "+QString::number(n)+" "+QString::number(m)+" "+QString::number(k);
+		double d = gd->text().isEmpty()?0:gd->text().toDouble();
+		for(int i=0;i<n*m;i++)	if(i!=k)	{	gr.GridPlot(n,m,i,d);	gr.Box("h");	}
+		cmd = "gridplot "+QString::number(n)+" "+QString::number(m)+" "+QString::number(k)+" "+QString::number(d);
 		if(Ax!=1 || Ay!=1)	cmd += ":aspect "+QString::number(Ax)+" "+QString::number(Ay);
 		par.Execute(&gr, cmd.toStdWString().c_str());	gr.Box();
 		res->setText(cmd);
@@ -288,8 +293,9 @@ void SubplotDialog::updatePic()
 	{
 		int n=cn->value(), k=ck->value();
 		double d = cd->text().isEmpty()?0:cd->text().toDouble();
-		for(int i=0;i<n;i++)	if(i!=k)	{	gr.ColumnPlot(n,i,d);	gr.Box("h");	}
-		cmd = "columnplot "+QString::number(n)+" "+QString::number(k)+" "+QString::number(d);//+" "+QString::number(Tet)+" "+QString::number(Phi);
+		for(int i=0;i<n;i++)	if(i!=k)	{	gr.ColumnPlot(n,i,d);	gr.Rotate(Tet,Phi);	gr.Box("h");	}
+		cmd = "columnplot "+QString::number(n)+" "+QString::number(k)+" "+QString::number(d);
+		if(Tet || Phi)	cmd += ":rotate "+QString::number(Tet)+" "+QString::number(Phi);
 		if(Ax!=1 || Ay!=1)	cmd += ":aspect "+QString::number(Ax)+" "+QString::number(Ay);
 		par.Execute(&gr, cmd.toStdWString().c_str());	gr.Box();
 		res->setText(cmd);

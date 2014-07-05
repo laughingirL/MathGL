@@ -109,6 +109,7 @@ int main(int argc,char **argv)
 	else	printf("You may specify argument '1', '2', '3' or 'd' for viewing examples of 1d, 2d, 3d or dual plotting\n");
 	switch(key)
 	{
+	case '0':	gr = new mglQT((mglDraw *)NULL,"1D plots");	break;
 	case '1':	gr = new mglQT(sample_1,"1D plots");	break;
 	case '2':	gr = new mglQT(sample_2,"2D plots");	break;
 	case '3':	gr = new mglQT(sample_3,"3D plots");	break;
@@ -116,6 +117,8 @@ int main(int argc,char **argv)
 	case 't':	gr = new mglQT(test_wnd,"Testing");	break;
 	default: 	gr = new mglQT(sample,"Drop and waves");	break;
 	}
+	if(key=='0')
+	{	gr->Rotate(40,60);	gr->Box();	gr->Light(true);	gr->FSurf("sin(4*pi*x*y)");	gr->Update();	}
 	gr->Run();	return 0;
 }
 #endif

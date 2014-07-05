@@ -21,9 +21,10 @@
 #include "mgl2/canvas.h"
 #include "mgl2/thread.h"
 //-----------------------------------------------------------------------------
-void mglCanvas::SetSize(int w,int h)
+void mglCanvas::SetSize(int w,int h,bool clf)
 {
 	if(w<=0 || h<=0)	{	SetWarn(mglWarnSize,"SetSize");	return;	}
+	double dx = double(w)/Width, dy = double(h)/Height, dz = sqrt(double(w*h))/Depth;
 	Width = w;	Height = h;	Depth = long(sqrt(double(w*h)));
 	long s = long(w)*long(h);
 	if(G)	{	delete []G;	delete []C;	delete []Z;	delete []G4;delete []GB;delete []OI;	}
@@ -35,7 +36,20 @@ void mglCanvas::SetSize(int w,int h)
 	OI= new int[s];
 #pragma omp parallel for
 	for(long i=0;i<s;i++)	memcpy(GB+4*i,BDef,4);
-	InPlot(0,1,0,1,false);	Clf();
+	InPlot(0,1,0,1,false);	
+	if(clf || (Quality&4))	Clf();
+	else
+	{
+#pragma omp parallel for
+		for(long i=0;i<long(Pnt.size());i++)
+		{
+			mglPnt &q = Pnt[i];
+			q.x*=dx;	q.y*=dy;	q.z*=dz;
+			q.xx*=dx;	q.yy*=dy;	q.zz*=dz;
+			q.u*=dx;	q.v*=dy;	q.w*=dz;
+		}
+		ClfZB();	Finish();
+	}
 }
 //-----------------------------------------------------------------------------
 void mglDrawReg::set(mglCanvas *gr, int nx, int ny, int m)
@@ -596,9 +610,12 @@ void mglCanvas::Rasterize()
 }
 //-----------------------------------------------------------------------------
 bool MGL_NO_EXPORT mgl_read_image(unsigned char *g, int w, int h, const char *fname);
-void mglCanvas::LoadBackground(const char *fname)
+void mglCanvas::LoadBackground(const char *fname, double alpha)
 {
 	mgl_read_image(GB,Width,Height,fname);
+	if(alpha<1 && alpha>0)
+#pragma omp parallel for
+		for(long i=0;i<Width*Height;i++)	GB[4*i+3] = (unsigned char)(GB[4*i+3]*alpha);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::FillBackground(const mglColor &cc)

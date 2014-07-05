@@ -12,6 +12,10 @@
 8. add real(), imag(), conj() + accurate types in MGL + add 'complex' in MGL ???
 9. Inplot data should have ranges (add mglInPlot{x1,x2,y1,y2,Bp or something like this} which include mglMatrix instead of mglBase::Bp) + calc coor + JS
 10. Test mglDataC::Diffraction() + write sample + add rational function???
+11. Complex (hex) colors in inline text command (like #{b9} or #{x0000ff})
+12. Extra markers for '&' and '&#' signs ?!?
+13. Enable consecutive (as multiplication of matrices instead of single summary one) rotation of axis + the same in JS. Problem with widgets?!?
+14. Export background image to eps/svg ???
 
 ============= NEW FEATURES =============
 
@@ -27,16 +31,7 @@
 	e. Test for Crop, Momentum, NormSl, Sew, DiffParam, Envelope, STFA for all directions "xyz"; Clean, Last, First, Find, Spline3, FindAny, Insert, Delete, Put, SetId/Column, Squeeze, Extend, Trace, Combine, new Max/Min/Momentum, FillSample, Hist, operators, Sort, Roots, Jacobian
 	u. Test FlowP + 3d
 
-10. Extra markers for '&' and '&#' signs ?!?
-11. Enable consecutive (as multiplication of matrices instead of single summary one) rotation of axis + the same in JS. Problem with widgets?!?
-
-12. Complex (hex) colors in inline text command (like #{b9} or #{x0000ff})
-13. Read JPEG files for Background() and mglData::Import()
-14. Adjust format for printed numbers (i.e. write function which will produce shortest text) + flag of fixed format + flag of TeX-notation + use '−'
-15. ColumnPlot -- add rotation angles
-16. Sync View() and Rotate()
-
-17. Check adjust in FLTK, Qt -- why don't redraw existed data (if func=NULL)
+7. Adjust format for printed numbers (i.e. write function which will produce shortest text) + flag of fixed format + flag of TeX-notation + use '−'
 
 YY. Optimize code (especially Quality=0 ?!?)
 ZZ. Update *.i for new functions {before release!!!}
@@ -54,13 +49,16 @@ C. Translate to Russian everything
 
 5. Semi-transparent background can be done by "clf 'r{A5}'"
 6. Extend "How can I exclude a point or a region of plot from the drawing?" + using SubData()/Evaluate()
-7. Docs + sample about Rasterize()
+7. Docs + sample about Rasterize() + LoadBackground() + Clf(for filling background image)
 8. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using Stem()
 9. Hint about flow threads and contour lines (as ODE and for advanced users).
 10. No color interpolation for EPS,SVG
 11. Update UDAV images
 12. F8 for hideWnd in UDAV
 13. Colorbar for subplot style "" -- can be out of image
+14. Sample for SubData()+Evaluate() + update difference of SubData and Evaluate
+15. Doc about SetFaceNum() -- check if present
+
 29. Howto about plot ranges (subplot styles)
 
 ============= UDAV =============
@@ -68,7 +66,7 @@ C. Translate to Russian everything
 1. Show plot at creation stage (if option is enabled -- can be long process!!!) + auto axis range or [-1,1] by default ???
 2. Create default plot depending on selected row/column/range in data table ?!?
 
-3. Speed up rotation like as done in JavaScript ?!!
+3. Speed up rotation like was done in JavaScript ?!!
 4. Multi-threading for enabling "stop".
 5. 'perspective' command in UDAV
 
