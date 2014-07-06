@@ -138,7 +138,7 @@ HMDT MGL_EXPORT mgl_data_subdata(HCDT d, long xx,long yy,long zz)
 	if(xx<nx && yy<ny && zz<nz)
 #pragma omp parallel for collapse(3)
 		for(long k=0;k<l;k++)	for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
-			r->a[i+n*(j+m*k)] = d->v(xx+dx*i, yy+dy*i, zz+dz*i);
+			r->a[i+n*(j+m*k)] = d->v(xx+dx*i, yy+dy*j, zz+dz*k);
 	else
 #pragma omp parallel for
 		for(long i=0;i<n*m*l;i++)	r->a[i] = NAN;

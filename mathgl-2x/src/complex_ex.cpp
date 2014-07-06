@@ -173,11 +173,11 @@ HADT MGL_EXPORT mgl_datac_subdata(HCDT d, long xx,long yy,long zz)
 	else if(dd)
 #pragma omp parallel for collapse(3)
 		for(long k=0;k<l;k++)	for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
-			r->a[i+n*(j+m*k)] = dd->a[xx+dx*i + nx*(yy+dy*i + ny*(zz+dz*i))];
+			r->a[i+n*(j+m*k)] = dd->a[xx+dx*i + nx*(yy+dy*j + ny*(zz+dz*k))];
 	else
 #pragma omp parallel for collapse(3)
 		for(long k=0;k<l;k++)	for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
-			r->a[i+n*(j+m*k)] = d->v(xx+dx*i, yy+dy*i, zz+dz*i);
+			r->a[i+n*(j+m*k)] = d->v(xx+dx*i, yy+dy*j, zz+dz*k);
 	if(m==1)	{	r->ny=r->nz;	r->nz=1;	}// "squeeze" dimensions
 	if(n==1)	{	r->nx=r->ny;	r->ny=r->nz;	r->nz=1;	r->NewId();}
 	return r;

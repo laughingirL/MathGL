@@ -2042,7 +2042,7 @@ void MGL_EXPORT mgl_data_join(HMDT d, HCDT v)
 void MGL_EXPORT mgl_data_join_(uintptr_t *d, uintptr_t *val)
 {	mgl_data_join(_DT_,_DA_(val));	}
 //-----------------------------------------------------------------------------
-mreal MGL_NO_EXPORT mgl_index_1(mreal v, HCDT dat, mreal acx)
+mreal MGL_NO_EXPORT mgl_index_1(mreal v, HCDT dat)
 {
 	long mx=dat->GetNx();
 	mreal d,d1=0,d2=mx-1,v1,v2;
@@ -2057,7 +2057,8 @@ mreal MGL_NO_EXPORT mgl_index_1(mreal v, HCDT dat, mreal acx)
 	{
 		d = count<10?(d2-d1)*(v-v1)/(v2-v1)+d1:(d1+d2)/2;	count++;
 		register mreal val = mgl_data_spline(dat,d,0,0);
-		if(fabs(val-v)<acx)	break;
+//		if(fabs(val-v)<acx)	break;
+		if(val==v || d2-d<1e-14)	break;
 		if((v1-v)*(val-v)<0)	{	v2=val;	d2=d;	}	else	{	v1=val;	d1=d;	}
 	} while(fabs(d2-d1)>1e-3);
 	return d;
@@ -2066,75 +2067,15 @@ mreal MGL_NO_EXPORT mgl_index_1(mreal v, HCDT dat, mreal acx)
 void MGL_EXPORT mgl_data_refill_x(HMDT dat, HCDT xdat, HCDT vdat, mreal x1, mreal x2, long sl)
 {
 	long nx=dat->nx,mx=vdat->GetNx(),nn=dat->ny*dat->nz;
-	mreal acx=1e-6*fabs(x2-x1);
 	if(mx!=xdat->GetNx())	return;	// incompatible dimensions
 #pragma omp parallel for
 	for(long i=0;i<nx;i++)
 	{
-		register mreal u = mgl_index_1(x1+(x2-x1)*i/(nx-1.),xdat,acx);
+		register mreal u = mgl_index_1(x1+(x2-x1)*i/(nx-1.),xdat);
 		register mreal d = mgl_data_spline(vdat,u,0,0);
 		if(sl<0)	for(long j=0;j<nn;j++)	dat->a[i+j*nx] = d;
 		else	dat->a[i+sl*nx] = d;
 	}
-}
-//-----------------------------------------------------------------------------
-mglPoint MGL_NO_EXPORT mgl_index_2(mreal x, mreal y, const mglData *xdat, const mglData *ydat, mreal acx, mreal acy)
-{
-	long mx=xdat->nx, my=xdat->ny;
-	mreal u=fabs(x),u1=0,u2=mx-1, v=fabs(y),v1=0,v2=my-1;
-	mreal x11 = mgl_data_spline(xdat,u1,v1,0), y11 = mgl_data_spline(ydat,u1,v1,0);
-	mreal x21 = mgl_data_spline(xdat,u2,v1,0), y21 = mgl_data_spline(ydat,u2,v1,0);
-	mreal x12 = mgl_data_spline(xdat,u1,v2,0), y12 = mgl_data_spline(ydat,u1,v2,0);
-	mreal x22 = mgl_data_spline(xdat,u2,v2,0), y22 = mgl_data_spline(ydat,u2,v2,0);
-	long count=0;
-
-	if(fabs(x11-x)<acx && fabs(y11-y)<acy)	return mglPoint(u1,v1);
-	if(fabs(x12-x)<acx && fabs(y12-y)<acy)	return mglPoint(u1,v2);
-	if(fabs(x21-x)<acx && fabs(y21-y)<acy)	return mglPoint(u2,v1);
-	if(fabs(x22-x)<acx && fabs(y22-y)<acy)	return mglPoint(u2,v2);
-	if((x11-x)*(x12-x)*(x21-x)*(x22-x)>0 && (x11-x)*(x12-x)*(x21-x)>0)	return mglPoint(NAN,NAN);
-	if((y11-y)*(y12-y)*(y21-y)*(y22-y)>0 && (y11-y)*(y12-y)*(y21-y)>0)	return mglPoint(NAN,NAN);
-
-	do
-	{
-		if(count<10)
-		{
-			register mreal dx0=x-x11, dx1=x21-x11, dx2=x12-x11, dx3=x22+x11-x12-x21;
-			register mreal dy0=y-y11, dy1=y21-y11, dy2=y12-y11, dy3=y22+y11-y12-y21;
-			register mreal t1 = dx0*dx0*dy3*dy3 + 2*dx0*dx1*dy2*dy3 + 2*dx0*dx2*dy1*dy3 -
-								2*dx0*dx3*dy0*dy3 - 4*dx1*dx2*dy0*dy3 + dx1*dx1*dy2*dy2 -
-								4*dx0*dx3*dy1*dy2 - 2*dx1*dx2*dy1*dy2 + 2*dx1*dx3*dy0*dy2 +
-								dx2*dx2*dy1*dy1 + 2*dx2*dx3*dy0*dy1 + dx3*dx3*dy0*dy0,
-							t2 = dx2*dy1+dx3*dy0-dx0*dy3-dx1*dy2, t3 = 2*(dx2*dy3-dx3*dy2);
-			if(t1<0 || t3==0)	{	count=10;	continue;	}
-			t1 = sqrt(t1);	v = (t2-t1)/t3;
-			if(v<0 || v>1)	v = (t2+t1)/t3;
-			u = (dx0-dx2*v)/(dx1+dx3*v);
-			if(u<0 || v<0 || u>1 || v>1)	{	count=10;	continue;	}
-			u = u1+(u2-u1)*u;	v = v1+(v2-v1)*v;	count++;
-		}
-		else	{	u = (u1+u2)/2;	v = (v1+v2)/2;	}
-
-		mreal tx  = mgl_data_spline(xdat,u,v,0),  ty  = mgl_data_spline(ydat,u,v,0);
-		if(fabs(tx-x)<acx && fabs(ty-y)<acy)	break;
-		mreal tx1 = mgl_data_spline(xdat,u1,v,0), ty1 = mgl_data_spline(ydat,u1,v,0);
-		if(fabs(tx1-x)<acx && fabs(ty1-y)<acy)	{u=u1;	break;}
-		mreal tx2 = mgl_data_spline(xdat,u2,v,0), ty2 = mgl_data_spline(ydat,u2,v,0);
-		if(fabs(tx2-x)<acx && fabs(ty2-y)<acy)	{u=u2;	break;}
-		mreal sx1 = mgl_data_spline(xdat,u,v1,0), sy1 = mgl_data_spline(ydat,u,v1,0);
-		if(fabs(sx1-x)<acx && fabs(sy1-y)<acy)	{v=v1;	break;}
-		mreal sx2 = mgl_data_spline(xdat,u,v2,0), sy2 = mgl_data_spline(ydat,u,v2,0);
-		if(fabs(sx2-x)<acx && fabs(sy2-y)<acy)	{v=v2;	break;}
-		if( ((x11-x)*(sx1-x)*(tx1-x)*(tx-x)>0 || (x11-x)*(sx1-x)*(tx1-x)>0) && ((y11-y)*(sy1-y)*(ty1-y)*(ty-y)>0 && (y11-y)*(sy1-y)*(ty1-y)>0) )
-		{	x12 = tx1;	y12 = ty1;	x21 = sx1;	y21 = sy1;	x22 = tx;	y22 = ty;	u2 = u;	v2 = v;	}
-		if( ((tx1-x)*(tx-x)*(x12-x)*(sx2-x)>0 || (tx1-x)*(tx-x)*(x12-x)>0) && ((ty1-y)*(ty-y)*(y12-y)*(sy2-y)>0 && (ty1-y)*(ty-y)*(y12-y)>0) )
-		{	x11 = tx1;	y11 = ty1;	x21 = tx;	y21 = ty;	x22 = sx2;	y22 = sy2;	u2 = u;	v1 = v;	}
-		if( ((tx-x)*(sx2-x)*(tx2-x)*(x22-x)>0 || (tx-x)*(sx2-x)*(tx2-x)>0) && ((ty-y)*(sy2-y)*(ty2-y)*(y22-y)>0 && (ty-y)*(sy2-y)*(ty2-y)>0) )
-		{	x11 = tx;	y11 = ty;	x12 = sx2;	y12 = sy2;	x21 = tx2;	y21 = ty2;	u1 = u;	v1 = v;	}
-		if( ((sx1-x)*(tx-x)*(x21-x)*(tx2-x)>0 || (sx1-x)*(tx-x)*(x21-x)>0) && ((sy1-y)*(ty-y)*(y21-y)*(ty2-y)>0 && (sy1-y)*(ty-y)*(y21-y)>0) )
-		{	x11 = sx1;	y11 = sy1;	x12 = tx;	y12 = ty;	x22 = tx2;	y22 = ty2;	u1 = u;	v2 = v;	}
-	} while(fabs(u2-u1)>1e-3 || fabs(v2-v1)>1e-3);
-	return mglPoint(u,v);
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_data_refill_xy(HMDT dat, HCDT xdat, HCDT ydat, HCDT vdat, mreal x1, mreal x2, mreal y1, mreal y2, long sl)
@@ -2142,16 +2083,15 @@ void MGL_EXPORT mgl_data_refill_xy(HMDT dat, HCDT xdat, HCDT ydat, HCDT vdat, mr
 	long nx=dat->nx,ny=dat->ny,nz=dat->nz,mx=vdat->GetNx(),my=vdat->GetNy(),nn=nx*ny;
 	bool both=(xdat->GetNN()==vdat->GetNN() && ydat->GetNN()==vdat->GetNN());
 	if(!both && (xdat->GetNx()!=mx || ydat->GetNx()!=my))	return;	// incompatible dimensions
-	mreal acx=1e-6*fabs(x2-x1), acy=1e-6*fabs(y2-y1);
 	if(both)
 		mgl_data_grid_xy(dat,xdat,ydat,vdat,x1,x2,y1,y2);
 	else
 	{
 		mglData u(nx), v(ny);
 #pragma omp parallel for
-		for(long i=0;i<nx;i++)	u.a[i] = mgl_index_1(x1+(x2-x1)*i/(nx-1.),xdat,acx);
+		for(long i=0;i<nx;i++)	u.a[i] = mgl_index_1(x1+(x2-x1)*i/(nx-1.),xdat);
 #pragma omp parallel for
-		for(long i=0;i<ny;i++)	v.a[i] = mgl_index_1(y1+(y2-y1)*i/(ny-1.),ydat,acy);
+		for(long i=0;i<ny;i++)	v.a[i] = mgl_index_1(y1+(y2-y1)*i/(ny-1.),ydat);
 #pragma omp parallel for collapse(2)
 		for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
 		{
@@ -2168,7 +2108,7 @@ void MGL_EXPORT mgl_data_refill_xyz(HMDT dat, HCDT xdat, HCDT ydat, HCDT zdat, H
 	long nx=dat->nx,ny=dat->ny,nz=dat->nz,mx=vdat->GetNx(),my=vdat->GetNy(),mz=vdat->GetNz();
 	bool both=(xdat->GetNN()==vdat->GetNN() && ydat->GetNN()==vdat->GetNN() && zdat->GetNN()==vdat->GetNN());
 	if(!both && (xdat->GetNx()!=mx || ydat->GetNx()!=my || zdat->GetNx()!=mz))	return;	// incompatible dimensions
-	mreal acx=1e-6*fabs(x2-x1), acy=1e-6*fabs(y2-y1), acz=1e-6*fabs(z2-z1);
+	const mreal acx=1e-6*fabs(x2-x1), acy=1e-6*fabs(y2-y1), acz=1e-6*fabs(z2-z1);
 	if(both)
 #pragma omp parallel for collapse(3)
 		for(long k=0;k<nz;k++)	for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
@@ -2197,11 +2137,11 @@ void MGL_EXPORT mgl_data_refill_xyz(HMDT dat, HCDT xdat, HCDT ydat, HCDT zdat, H
 	{
 		mglData u(nx), v(ny), w(nz);
 #pragma omp parallel for
-		for(long i=0;i<nx;i++)	u.a[i] = mgl_index_1(x1+(x2-x1)*i/(nx-1.),xdat,acx);
+		for(long i=0;i<nx;i++)	u.a[i] = mgl_index_1(x1+(x2-x1)*i/(nx-1.),xdat);
 #pragma omp parallel for
-		for(long i=0;i<ny;i++)	v.a[i] = mgl_index_1(y1+(y2-y1)*i/(ny-1.),ydat,acy);
+		for(long i=0;i<ny;i++)	v.a[i] = mgl_index_1(y1+(y2-y1)*i/(ny-1.),ydat);
 #pragma omp parallel for
-		for(long i=0;i<nz;i++)	w.a[i] = mgl_index_1(z1+(z2-z1)*i/(nz-1.),zdat,acz);
+		for(long i=0;i<nz;i++)	w.a[i] = mgl_index_1(z1+(z2-z1)*i/(nz-1.),zdat);
 #pragma omp parallel for collapse(3)
 		for(long k=0;k<nz;k++)	for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
 			dat->a[i+nx*(j+ny*k)] = mgl_data_spline(vdat,u.a[i],v.a[j],w.a[k]);
