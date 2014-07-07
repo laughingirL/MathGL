@@ -36,6 +36,7 @@
 #include <QPrintDialog>
 #include <QFileDialog>
 #include <QInputDialog>
+#include <QThread>
 #include <limits.h>
 
 #include "mgl2/canvas_wnd.h"
@@ -87,9 +88,38 @@ void MGL_EXPORT mgl_ask_qt(const wchar_t *quest, wchar_t *res)
 //		class QMathGL
 //
 //-----------------------------------------------------------------------------
+/// Internal class to be used for multi-threading plotting
+/*class mglTask : public QObject
+{
+	Q_OBJECT
+public:
+	mglCanvas *gr;		///< Built-in mglCanvasQT-er instance (used by default)
+	void *draw_par;		///< Parameters for drawing function mglCanvasWnd::DrawFunc.
+	/// Drawing function for window procedure. It should return the number of frames.
+	int (*draw_func)(mglBase *gr, void *par);
+	mglDraw *draw;		///< Class for drawing -- need to call directly due to inheritance mechanism
+public slots:
+	void doWork();
+signals:
+	void plotDone();
+};
+//-----------------------------------------------------------------------------
+void mglTask::doWork()
+{
+	setlocale(LC_NUMERIC, "C");
+	if(mgl_is_frames(gr))	mgl_new_frame(gr);
+	if(draw_func)	draw_func(gr, draw_par);
+	else if(draw)	{	mglGraph g(gr);	draw->Draw(&g);	}
+	if(mgl_is_frames(gr))	mgl_end_frame(gr);
+	setlocale(LC_NUMERIC, "");
+	gr->Finish();
+	emit plotDone();
+}*/
+//-----------------------------------------------------------------------------
 QMathGL::QMathGL(QWidget *parent, Qt::WindowFlags f) : QWidget(parent, f)
 {
 	autoResize = false;	draw_par = 0;	draw_func = 0;
+	dotsRefr = true;
 	gr = new mglCanvas;	appName = "MathGL";
 	popup = 0;	grBuf = 0;	draw = 0;
 	phi = tet = per = 0;
@@ -97,10 +127,18 @@ QMathGL::QMathGL(QWidget *parent, Qt::WindowFlags f) : QWidget(parent, f)
 	alpha = light = zoom = rotate = grid = viewYZ = custZoom = custDraw = false;
 	resize(600, 400);	mgl_set_flag(gr, true, MGL_CLF_ON_UPD);
 	timer = new QTimer(this);
+	timerRefr = new QTimer(this);	timerRefr->setInterval(100);
 	enableWheel = enableMouse = true;
 //	resize(graph->GetWidth(), graph->GetHeight());
 //	mglConvertFromGraph(pic, graph, &grBuf);
 	connect(timer, SIGNAL(timeout()), this, SLOT(nextSlide()));
+	connect(timerRefr, SIGNAL(timeout()), this, SLOT(refreshHQ()));
+
+/*	thread = new QThread();
+	task = new mglTask();	task->moveToThread(thread);
+	connect(thread, SIGNAL(started()), task, SLOT(doWork()));
+	connect(task, SIGNAL(plotDone()), thread, SLOT(quit()));
+	connect(thread, SIGNAL(finished()), this, SLOT(afterPlot()));*/
 }
 //-----------------------------------------------------------------------------
 QMathGL::~QMathGL()
@@ -109,6 +147,9 @@ QMathGL::~QMathGL()
 	if(grBuf)	delete []grBuf;
 	if(draw)	delete draw;
 }
+//-----------------------------------------------------------------------------
+void QMathGL::setDotsPreview(bool d)
+{	dotsRefr = d;	}
 //-----------------------------------------------------------------------------
 void QMathGL::setDraw(int (*func)(mglBase *gr, void *par), void *par)
 {
@@ -258,45 +299,46 @@ void QMathGL::restore()
 }
 //-----------------------------------------------------------------------------
 void QMathGL::stop()	{	gr->Stop=true;	}	//{	thr->terminate();	}
+//-----------------------------------------------------------------------------
 void QMathGL::update()
 {
-/*	if(!thr->isRunning())
-	{
-		thr->gr = gr;	thr->text = text;
-		thr->line = line;	thr->start();
-	}
-	if(rotate)	thr->wait();
-	else	while(thr->isRunning())	qApp->processEvents();
-	if(warnMGL)	warnMGL->setText(thr->warn);*/
-
 	if(draw_func || draw)
 	{
 		mgl_reset_frames(gr);	// remove previous frames
 		if(mgl_get_flag(gr,MGL_CLF_ON_UPD))	mgl_set_def_param(gr);
 		mgl_set_alpha(gr,alpha);	mgl_set_light(gr,light);
-		if(!isHidden())	QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-		setlocale(LC_NUMERIC, "C");
 		// use frames for quickly redrawing while adding/changing primitives
 		if(custDraw)	emit customDraw(x1,y1,x2,y2,true);
+
+		if(!isHidden())	QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+/*		task->gr = gr;	task->draw = draw;
+		task->draw_func = draw_func;
+		task->draw_par = draw_par;
+		thread->start();*/
+		setlocale(LC_NUMERIC, "C");
 		if(mgl_is_frames(gr))	mgl_new_frame(gr);
 		if(draw_func)	draw_func(gr, draw_par);
 		else if(draw)	{	mglGraph g(gr);	draw->Draw(&g);	}
 		if(mgl_is_frames(gr))	mgl_end_frame(gr);
 		setlocale(LC_NUMERIC, "");
-		if(!isHidden())	QApplication::restoreOverrideCursor();
-		emit refreshData();
-		emit showWarn(mgl_get_mess(gr));
-		mousePos="";
+		afterPlot();
 	}
+}
+//-----------------------------------------------------------------------------
+void QMathGL::afterPlot()
+{
+	emit refreshData();
+	emit showWarn(mgl_get_mess(gr));
+	mousePos="";
+	if(!isHidden())	QApplication::restoreOverrideCursor();
 	refresh();
 }
 //-----------------------------------------------------------------------------
-void QMathGL::draw_thr()
+void QMathGL::drawPrim()
 {
 	mgl_clf(gr);
 	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>(gr);
-	int c = g?g->GetCurFig():mgl_get_num_frame(gr)-1;
-	mgl_get_frame(gr, c);
+	mgl_get_frame(gr, g?g->GetCurFig():mgl_get_num_frame(gr)-1);
 	mglParse pr;
 	long i, n=primitives.count('\n');
 	mglGraph gg(gr);
@@ -313,21 +355,37 @@ void QMathGL::draw_thr()
 	gg.SetRanges(ox1,ox2);	gg.Pop();	setlocale(LC_NUMERIC, "");
 }
 //-----------------------------------------------------------------------------
-void *mgl_qt_thr(void *p)	{	QMathGL *q = (QMathGL *)p;	q->draw_thr();	return 0;	}
 void QMathGL::refresh()
 {
+	if(dotsRefr)
+	{
+		timerRefr->start();
+		int q = gr->GetQuality();
+		prevQuality = q!=MGL_DRAW_DOTS?q:prevQuality;
+		gr->SetQuality(MGL_DRAW_DOTS);
+	}
 	if(mgl_is_frames(gr) && mgl_get_num_frame(gr)>0)
 	{
-		if(draw_func || draw)
-		{
-/*#if MGL_HAVE_PTHREAD	// TODO add qthread here later
-			pthread_t tmp;
-			pthread_create(&tmp, 0, mgl_qt_thr, this);
-			pthread_join(tmp, 0);
-#else*/
-			draw_thr();
-/*#endif*/
+		drawPrim();
+		if(custZoom)	emit customZoom(x1,y1,x2,y2,tet,phi,per);
+		else
+		{	mgl_zoom(gr,x1,y1,x2,y2);
+			mgl_perspective(gr,per);
+			if(viewYZ)	mgl_view(gr,0,-tet,-phi);
+			else 		mgl_view(gr,-phi,-tet,0);
 		}
+	}
+	mglConvertFromGraph(pic, gr, &grBuf);
+	if(pic.size()!=size())	setSize(pic.width(), pic.height());
+	repaint();
+}
+//-----------------------------------------------------------------------------
+void QMathGL::refreshHQ()
+{
+	gr->SetQuality(prevQuality);
+	if(mgl_is_frames(gr) && mgl_get_num_frame(gr)>0)
+	{
+		drawPrim();
 		if(custZoom)	emit customZoom(x1,y1,x2,y2,tet,phi,per);
 		else
 		{	mgl_zoom(gr,x1,y1,x2,y2);
@@ -856,7 +914,7 @@ void QMathGL::adjust()
 {
 	mgl_set_size(gr, parentWidget()->width()-3, parentWidget()->height()-3);
 	setSize(parentWidget()->width()-3, parentWidget()->height()-3);
-	update();
+	update();	// TODO replace to refresh ?!?
 }
 //-----------------------------------------------------------------------------
 void QMathGL::addMark()

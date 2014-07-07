@@ -499,6 +499,7 @@ void TextPanel::toolTop(QBoxLayout *l)
 	QMenu *o=menu, *oo;
 	QToolButton *bb;
 	const MainWindow *mw=findMain(this);
+//	l->setSpacing(3);
 
 	// general buttons
 	if(mw)

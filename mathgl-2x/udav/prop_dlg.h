@@ -56,7 +56,7 @@ private:
 	void setC(int k);
 	QLabel *lbl;
 	QPushButton *cb[10];
-	QCheckBox *run, *edt, *load, *save, *pure, *cmpl, *high;
+	QCheckBox *run, *edt, *load, *save, *pure, *cmpl, *high, *dots;
 	QLineEdit *hlp, *defW, *defH;
 	QFont defFont;
 	QColor cc[10];

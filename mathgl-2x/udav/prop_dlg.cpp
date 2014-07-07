@@ -48,6 +48,7 @@ extern bool mglCompleter;
 extern bool editPosBottom;
 extern bool loadInNewWnd;
 extern bool mglHighlight;
+extern bool mglDotsRefr;
 int defWidth, defHeight;
 QString pathFont;
 QString lang[]={"","ru"};
@@ -103,7 +104,7 @@ PropDialog::PropDialog(QWidget *parent) : QDialog(parent)
 	pic.fill(cc[9]);	cb[9] = new QPushButton(pic, tr("CurrLine"), this);
 	connect(cb[9], SIGNAL(clicked()),this, SLOT(setC9()));
 	g->addWidget(cb[9], 2, 2);
-	
+
 	l = new QLabel(tr("Path for help files"), this);	v->addWidget(l);
 	h = new QHBoxLayout();		v->addLayout(h);
 	hlp = new QLineEdit(pathHelp, this);	h->addWidget(hlp,1);
@@ -166,7 +167,9 @@ PropDialog::PropDialog(QWidget *parent) : QDialog(parent)
 	cmpl->setChecked(mglCompleter);	v->addWidget(cmpl);
 	high = new QCheckBox(tr("Highlight current object(s)"), this);
 	high->setChecked(mglHighlight);	v->addWidget(high);
-	
+	dots = new QCheckBox(tr("Use dots plot for preview"), this);
+	dots->setChecked(mglDotsRefr);	v->addWidget(dots);
+
 	h = new QHBoxLayout();		v->addLayout(h);
 	h->addStretch(1);
 	b = new QPushButton(tr("Cancel"), this);	h->addWidget(b);
@@ -230,6 +233,7 @@ void PropDialog::applyChanges()
 	mglHighlight = high->isChecked();
 	mglAutoPure = pure->isChecked();
 	mglCompleter = cmpl->isChecked();
+	mglDotsRefr = dots->isChecked();
 
 	// apply changes for all windows
 #ifdef WIN32

@@ -56,6 +56,7 @@ int MaxRecentFiles=5;
 bool editPosBottom = false;
 bool mglAutoSave = false;
 bool mglHighlight = true;
+bool mglDotsRefr = true;
 bool mglAutoPure = true;
 bool mglCompleter = true;
 bool loadInNewWnd = false;
@@ -495,6 +496,7 @@ void MainWindow::writeSettings()
 	settings.setValue("/autoExec",  mglAutoExecute);
 	settings.setValue("/autoSave",  mglAutoSave);
 	settings.setValue("/highlight",  mglHighlight);
+	settings.setValue("/dotsRefresh", mglDotsRefr);
 	settings.setValue("/autoPure",  mglAutoPure);
 	settings.setValue("/editAtTop", editPosBottom);
 	settings.setValue("/fontFamily", defFontFamily);
@@ -537,6 +539,7 @@ void MainWindow::readSettings()
 	editPosBottom = settings.value("/editAtTop", false).toBool();
 	mglCompleter = settings.value("/completer",  true).toBool();
 	loadInNewWnd = settings.value("/loadInNewWnd", false).toBool();
+	mglDotsRefr = settings.value("/dotsRefresh", true).toBool();
 	defFontFamily = settings.value("/fontFamily", "Georgia").toString();
 	defFontSize = settings.value("/fontSize", 10).toInt();
 	edit->setEditorFont();	setEditPos(editPosBottom);

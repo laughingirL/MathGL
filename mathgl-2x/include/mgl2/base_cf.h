@@ -58,7 +58,7 @@ void MGL_EXPORT mgl_set_quality_(uintptr_t *gr, int *qual);
 void MGL_EXPORT mgl_set_draw_reg(HMGL gr, long nx, long ny, long m);
 void MGL_EXPORT mgl_set_draw_reg_(uintptr_t *gr, int *nx, int *ny, int *m);
 
-/// Is frames
+/// Check if support of frames is enabled (i.e. MGL_VECT_FRAME is set and Quality&MGL_DRAW_LMEM==0)
 int MGL_EXPORT_PURE mgl_is_frames(HMGL gr);
 /// Get bit-value flag of HMGL state (for advanced users only)
 int MGL_EXPORT_PURE mgl_get_flag(HMGL gr, uint32_t flag);

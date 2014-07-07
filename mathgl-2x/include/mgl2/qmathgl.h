@@ -32,13 +32,13 @@ class QScrollArea;
 class QSpinBox;
 class QTimer;
 class mglCanvas;
+class mglTask;
 //-----------------------------------------------------------------------------
 /// Class is Qt widget which display MathGL graphics
 class MGL_EXPORT QMathGL : public QWidget
 {
 	Q_OBJECT
 public:
-	friend void *mgl_qt_thr(void *);
 	QString appName; 	///< Application name for message boxes
 	bool autoResize; 	///< Allow auto resizing (default is false)
 	bool enableMouse;	///< Enable mouse handlers
@@ -73,7 +73,8 @@ public:
 	bool isActive(int xs,int ys);	///< Check if active point is pressed
 
 public slots:
-	void refresh();
+	void refresh();			///< Redraw image with new zoom and view parameters
+	void refreshHQ();		///< Redraw image with HQ (can be slower than refresh())
 	void update();			///< Update picture
 	void copy();			///< copy graphics to clipboard
 	void copyClickCoor();	///< copy click coordinates to clipboard
@@ -87,6 +88,7 @@ public slots:
 	void setGrid(bool r);	///< Switch on/off grid drawing
 	void imgSize(int w, int h);	///< Set image size
 	void setViewYZ(bool v);	///< Switch on/off rotation around Y and Z axis
+	void setDotsPreview(bool d=true);	///< Set to use dots for image preview/rotation
 
 	void setCustZoom(bool a);	///< Switch on/off using custom zoom
 	void setCustDraw(bool a);	///< Switch on/off using custom draw
@@ -189,15 +191,22 @@ protected:
 	bool grid;			///< Grid drawing state
 	bool rotate;		///< Mouse rotation state
 	bool viewYZ;		///< Set mouse rotation around Y and Z axis (instead of X and Z)
+	bool dotsRefr;		///< Set dots for image preview/rotation
 	mreal x1,x2,y1,y2;	///< Zoom in region
 	mreal ax1,ax2,ay1,ay2;	///< Axis range zoom
 	bool showMessage;	///< Flag for showing messages (enabled by each execute())
 	QMenu *popup;		///< Pointer to pop-up menu
 	QTimer *timer;		///< Timer for animation
+	QTimer *timerRefr;	///< Timer for redrawing
+private slots:
+	void afterPlot();	///< minor tuning after plot was done
 private:
 	int x0, y0, xe, ye;		///< Temporary variables for mouse
 	uchar *grBuf;
-	void draw_thr();
+	void drawPrim();
+	int prevQuality;
+//	QThread *thread;
+//	mglTask *task;
 };
 //-----------------------------------------------------------------------------
 /// Class for drawing the MGL script

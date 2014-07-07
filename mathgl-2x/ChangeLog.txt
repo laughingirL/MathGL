@@ -37,6 +37,7 @@
 * Rearrange tool buttons in UDAV
 * Add features for manual dashing and manual mask in Style dialog
 * Add dialog for new dialog for new inplots (including subplot, multiplot, columnplot, stickplot, gridplot)
+* Add option to use dots plot at image refreshing (for faster rotation etc)
 * Add new primitives (arc,polygon,rotated text) as mouse handled ones in UDAV
 * Add close button to data tabs in UDAV
 * Allow to delete/hide/unhide selected plot

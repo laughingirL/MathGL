@@ -16,6 +16,11 @@
 12. Extra markers for '&' and '&#' signs ?!?
 13. Enable consecutive (as multiplication of matrices instead of single summary one) rotation of axis + the same in JS. Problem with widgets?!?
 14. Export background image to eps/svg ???
+15. Multi-threading for enabling "stop" -- bug when Finish() is called in parallel with making new plot.
+16. Frames by mouse in UDAV ???
+	A. мысли о frame??? для группы графиков -- не "удалять" их, а запихивать в отдельный кадр -- вопрос что с анимацией???
+	B. как делать анимацию (кадры) для мышиной версии ... список кадров, кнопки добавить в кадры + вставить из кадра
+
 
 ============= NEW FEATURES =============
 
@@ -66,8 +71,6 @@ C. Translate to Russian everything
 1. Show plot at creation stage (if option is enabled -- can be long process!!!) + auto axis range or [-1,1] by default ???
 2. Create default plot depending on selected row/column/range in data table ?!?
 
-3. Speed up rotation like was done in JavaScript ?!!
-4. Multi-threading for enabling "stop".
 5. 'perspective' command in UDAV
 
 9. Manual data changing should be written into script
@@ -77,9 +80,6 @@ C. Translate to Russian everything
 	d. Reset script after saving to HDF5 or putting to main script
 	e. Ask about script changes before closing data tab
 
-10. Frames by mouse ???
-	A. мысли о frame??? для группы графиков -- не "удалять" их, а запихивать в отдельный кадр -- вопрос что с анимацией???
-	B. как делать анимацию (кадры) для мышиной версии ... список кадров, кнопки добавить в кадры + вставить из кадра
 
 ============= UNSURE ===========
 
