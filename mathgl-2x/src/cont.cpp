@@ -40,17 +40,23 @@
 //-----------------------------------------------------------------------------
 void MGL_NO_EXPORT mgl_string_curve(mglBase *gr,long f,long ,const long *ff,const long *nn,const wchar_t *text, const char *font, mreal size)
 {
-	if(f<0 || nn[f]==-1)	return;	// do nothing since there is no curve
+	if(f<0 || nn[f]<0)	return;	// do nothing since there is no curve
 	if(!font)	font="";
 	int pos = strchr(font,'T') ? 1:-1, align;
 	bool cc=mglGetStyle(font,0,&align);		align = align&3;
-	mreal c=cc?gr->AddTexture(font) : gr->GetClrC(ff[f]);
 	mreal h=gr->TextHeight(font,size)/2, tet, tt;
 	wchar_t L[2]=L"a";
 	register long i,j,k,m;
 
 	std::vector<mglPoint> qa, qb;	// curves above and below original
-	mglPoint p=gr->GetPntP(ff[f]), q=p, s=gr->GetPntP(ff[nn[f]]), l=!(s-q), t=l;
+	if(ff[f]<0)	for(i=nn[f];i>=0 && i!=f;i=nn[i])	// find first real point
+		if(ff[i]>=0)	{	f=i;	break;	}
+	if(ff[f]<0)	return;
+	mreal c=cc?gr->AddTexture(font) : gr->GetClrC(ff[f]);
+	mglPoint p=gr->GetPntP(ff[f]), q=p, s;
+	for(i=nn[f];i>=0 && i!=f;i=nn[i])	// find second real point
+		if(ff[i]>=0)	{	s=gr->GetPntP(ff[i]);	break;	}
+	mglPoint l=!(s-q), t=l;
 	qa.push_back(q+l*h);	qb.push_back(q-l*h);
 	for(i=nn[f];i>=0 && i!=f;i=nn[i])	// construct curves
 	{

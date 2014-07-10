@@ -63,6 +63,7 @@ C. Translate to Russian everything
 13. Colorbar for subplot style "" -- can be out of image
 14. Sample for SubData()+Evaluate() + update difference of SubData and Evaluate
 15. Doc about SetFaceNum() -- check if present
+16. Text style 'T' into "Font style" and "Text printing"
 
 29. Howto about plot ranges (subplot styles)
 
