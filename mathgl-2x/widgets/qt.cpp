@@ -46,6 +46,7 @@
 #define MGL_MAX_LINES	(INT_MAX-1000)
 #if !defined(WIN32) && !defined(__APPLE__)
 #include <X11/Xlib.h>
+#include <qt5/QtCore/QTimer>
 #endif
 //-----------------------------------------------------------------------------
 /// Base class for windows containing MathGL graphics
@@ -128,9 +129,8 @@ QMathGL::QMathGL(QWidget *parent, Qt::WindowFlags f) : QWidget(parent, f)
 	resize(600, 400);	mgl_set_flag(gr, true, MGL_CLF_ON_UPD);
 	timer = new QTimer(this);
 	timerRefr = new QTimer(this);	timerRefr->setInterval(100);
+	timerRefr->setSingleShot(true);
 	enableWheel = enableMouse = true;
-//	resize(graph->GetWidth(), graph->GetHeight());
-//	mglConvertFromGraph(pic, graph, &grBuf);
 	connect(timer, SIGNAL(timeout()), this, SLOT(nextSlide()));
 	connect(timerRefr, SIGNAL(timeout()), this, SLOT(refreshHQ()));
 

@@ -267,9 +267,7 @@ MainWindow::MainWindow(QWidget *wp) : QMainWindow(wp)
 
 	connect(edit->edit,SIGNAL(textChanged()),this,SLOT(updateHidden()));
 	connect(mess, SIGNAL(textChanged()), this, SLOT(warnChanged()));
-//	connect(mdi, SIGNAL(subWindowActivated(QMdiSubWindow *)), this, SLOT(subActivated(QMdiSubWindow *)));
 	connect(propDlg, SIGNAL(sizeChanged(int,int)), graph->mgl, SLOT(imgSize(int,int)));
-//	connect(propDlg, SIGNAL(propUpdated()), edit->edit, SLOT(update()));	// TODO: update qmglsyntax
 	connect(edit->edit,SIGNAL(textChanged()), this, SLOT(setAsterix()));
 	connect(edit->edit, SIGNAL(cursorPositionChanged()), this, SLOT(editPosChanged()));
 	connect(edit,SIGNAL(setCurrentFile(QString)),this,SLOT(setCurrentFile(QString)));
