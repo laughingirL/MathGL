@@ -225,3 +225,31 @@ template <class Treal> Treal mglSpline3st(const Treal *a, long nx, long ny, long
 	return b;
 }
 //-----------------------------------------------------------------------------
+template <class Treal> void mgl_gspline_init(long n, const mreal *x, const Treal *v, Treal *c)
+{	// c must have size 5*(n-1) !!!
+	if(n<2)	return;
+
+	Treal *a = new Treal[n], *b = new Treal[n];
+	for(long i=0;i<n-1;i++)	// basic coefficients
+	{	c[5*i] = x[i+1]-x[i];	c[5*i+1] = v[i];	}
+	// progonka
+	a[0] = -0.5;	b[0] = mreal(1.5)*(v[1]-v[0])/(x[1]-x[0]);
+	for(long i=1;i<n-1;i++)
+	{
+		mreal h0 = x[i]-x[i-1], h1 = x[i+1]-x[i];
+		Treal r = mreal(1)/(2/h0+2/h1 + a[i-1]/h0);
+		a[i] = - r/h1;
+		b[i] = ((3/h0/h0)*(v[i]-v[i-1]) + (1/h1/h1)*(v[i+1]-v[i]) + a[i-1]/h0)*r;
+	}
+	b[n-1] = ( (6/(x[n-1]-x[n-2]))*(v[n-1]-v[n-2]) - mreal(2)*b[n-2] )/(mreal(4)+mreal(2)*a[n-2]);
+	for(long i=n-2;i>=0;i--)	b[i] += a[i]*b[i+1];
+	// no spline coefficients
+	for(long i=0;i<n-1;i++)
+	{
+		c[5*i+2] = b[i];
+		mreal h = 1/(x[i+1]-x[i]), h2 = h*h;
+		c[5*i+3] = (3*h2)*(v[i+1]-v[i]) - (b[i+1]+b[i]+b[i])*h;
+		c[5*i+4] = (2*h2*h)*(v[i]-v[i+1]) + (b[i+1]+b[i])*h2;
+	}
+}
+//-----------------------------------------------------------------------------

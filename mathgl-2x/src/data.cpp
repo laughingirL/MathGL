@@ -2173,3 +2173,41 @@ HMDT MGL_EXPORT mgl_data_evaluate(HCDT dat, HCDT idat, HCDT jdat, HCDT kdat, int
 uintptr_t MGL_EXPORT mgl_data_evaluate_(uintptr_t *d, uintptr_t *idat, uintptr_t *jdat, uintptr_t *kdat, int *norm)
 {	return uintptr_t(mgl_data_evaluate(_DT_,_DA_(idat),_DA_(jdat),_DA_(kdat),*norm));	}
 //-----------------------------------------------------------------------------
+HMDT MGL_EXPORT mgl_gspline_init(HCDT x, HCDT v)
+{
+	long n = v->GetNx();
+	if(!x || x->GetNx()!=n)	return 0;
+	mglData *res = new mglData(5*(n-1));
+	mreal *xx=0, *vv=0;
+	const mglData *dx = dynamic_cast<const mglData *>(x);
+	if(!dx)
+	{
+		xx = new mreal[n];
+		for(long i=0;i<n;i++)	xx[i] = x->v(i);
+	}
+	const mglData *dv = dynamic_cast<const mglData *>(v);
+	if(!dv)
+	{
+		vv = new mreal[n];
+		for(long i=0;i<n;i++)	vv[i] = v->v(i);
+	}
+	mgl_gspline_init(n,dx?dx->a:xx,dv?dv->a:vv,res->a);
+	if(xx)	delete []xx;
+	if(vv)	delete []vv;
+	return res;
+}
+uintptr_t MGL_EXPORT mgl_gspline_init_(uintptr_t *x, uintptr_t *v)
+{	return uintptr_t(mgl_gspline_init(_DA_(x),_DA_(v)));	}
+//-----------------------------------------------------------------------------
+mreal MGL_EXPORT mgl_gspline(mreal dx, HCDT c, mreal *d1, mreal *d2)
+{
+	long i=0, n = c->GetNx();
+	if(n%5)	return NAN;	// not the table of coefficients
+	while(dx>c->v(5*i) && i<n-1)	{	dx-=c->v(5*i);	i++;	}
+	if(d1)	*d1 = c->v(5*i+2)+dx*(2*c->v(5*i+3)+3*dx*c->v(5*i+4));
+	if(d2)	*d2 = 2*c->v(5*i+3)+6*dx*c->v(5*i+4);
+	return c->v(5*i+1)+dx*(c->v(5*i+2)+dx*(c->v(5*i+3)+dx*c->v(5*i+4)));
+}
+mreal MGL_EXPORT mgl_gspline_(mreal *dx, uintptr_t *c, mreal *d1, mreal *d2)
+{	return mgl_gspline(*dx,_DA_(c),d1,d2);	}
+//-----------------------------------------------------------------------------

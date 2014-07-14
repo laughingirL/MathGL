@@ -64,6 +64,27 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
+	mglData x(10), y(10), r(100);
+	x.Modify("0.5+rnd");	x.CumSum("x");	x.Norm(-1,1);
+	y.Modify("sin(pi*v)/2",x);
+
+	gr->Axis();	gr->Box();	gr->Plot(x,y,"o ");
+	gr->Refill(r,x,y);	// or you can use r.Refill(x,y,-1,1);
+	gr->Plot(r,"r");	gr->FPlot("sin(pi*x)/2","B:");
+	gr->WriteFrame("1.png");
+
+	gr->Clf();
+	gr->Axis();	gr->Box();	gr->Plot(x,y,"o ");
+	HMDT coefs = mgl_gspline_init(&x,&y);
+	for(int i=0;i<100;i++)
+	{
+		register mreal dx = 2*i/99.-1-x[0];
+		r.a[i] = mgl_gspline(dx,coefs,0,0);
+	}
+	gr->Plot(r,"r");	gr->FPlot("sin(pi*x)/2","B:");
+	gr->WriteFrame("2.png");
+	return;
+
 	mglParse par;
 	par.Execute(gr,"xtick -10:axis\n");
 	return;

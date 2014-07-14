@@ -213,8 +213,15 @@ void MGL_EXPORT mgl_cone(HMGL gr, double x1, double y1, double z1, double x2, do
 	static int cgid=1;	gr->StartGroup("Cone",cgid++);
 	mglPoint p1(x1,y1,z1), p2(x2,y2,z2), p,q(NAN,NAN),t(NAN,NAN), d=p2-p1,a,b;
 	a=!d;	a.Normalize();		b=d^a;	b.Normalize();
-	long ss=gr->AddTexture(stl);
-	mreal c1=gr->GetC(ss,p1.z), c2=gr->GetC(ss,p2.z), dr=r2-r1;
+	mreal c1,c2,dr=r2-r1;
+	const char *s;
+	if((s=strstr(stl,"{&"))!=0)	c1 = c2 = atof(s+2);
+	else
+	{
+		register long ss=gr->AddTexture(stl);
+		c1=gr->GetC(ss,p1.z);
+		c2=gr->GetC(ss,p2.z);
+	}
 	long *kk=new long[164],k1=-1,k2=-1;
 	bool edge = mglchr(stl,'@');
 	bool wire = mglchr(stl,'#');
@@ -278,7 +285,7 @@ void MGL_EXPORT mgl_cone_(uintptr_t* gr, mreal *x1, mreal *y1, mreal *z1, mreal 
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_cones_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *opt)
 {
-	long i=5,m,n=z->GetNx(),nx=x->GetNx(), nz=z->GetNy(), pal;
+	long m,n=z->GetNx(),nx=x->GetNx(), nz=z->GetNy(), pal;
 	if(mgl_check_dim1(gr,x,z,y,0,"Cones",true))	return;
 
 	gr->SaveState(opt);
@@ -294,22 +301,24 @@ void MGL_EXPORT mgl_cones_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, 
 	if(mglchr(pen,'>'))	dv = -1;
 
 	gr->SetPenPal(pen,&pal);
-	char c1[8];	memset(c1,0,8);	c1[0] ='@';
-	char c2[8];	memset(c2,0,8);	c2[0] ='@';
-	if(wire)	{	c1[5]=c2[5]='#';	i++;	}
-	if(mglchr(pen,'&'))	c1[i]=c2[i]='4';
-	else if(mglchr(pen,'4'))	c1[i]=c2[i]='4';
-	else if(mglchr(pen,'6'))	c1[i]=c2[i]='6';
-	else if(mglchr(pen,'8'))	c1[i]=c2[i]='8';
+	std::string cb="@";
+	if(wire)	cb += '#';
+	if(mglchr(pen,'4'))	cb+='4';
+	else if(mglchr(pen,'6'))	cb+='6';
+	else if(mglchr(pen,'8'))	cb+='8';
+
 	memset(dd,0,2*n*sizeof(mreal));
 	z0 = gr->GetOrgZ('x');
+#pragma omp parallel for	// no collapse due to summation
 	for(long i=0;i<n;i++)	for(long j=0;j<m;j++)	dd[i] += z->v(i, j<nz ? j:0);
+
+	char buf[64];
 	for(long j=0;j<m;j++)
 	{
-		gr->NextColor(pal);		memcpy(c1+1,gr->last_line(),4);
+		sprintf(buf,"{&%g}",gr->NextColor(pal));
+		std::string c1=cb+buf, c2=c1;
 		if(gr->GetNumPal(pal)==2*m)
-		{	gr->NextColor(pal);	memcpy(c2+1,gr->last_line(),4);	}
-		else	memcpy(c2,c1,8);
+		{	sprintf(buf,"{&%g}",gr->NextColor(pal));	c2 = cb+buf;	}
 		long mx = j<x->GetNy() ? j:0, my = j<y->GetNy() ? j:0, mz = j<nz ? j:0;
 		for(long i=0;i<n;i++)
 		{
@@ -324,9 +333,9 @@ void MGL_EXPORT mgl_cones_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, 
 				zz = j>0?dd[i+n]:z0;	dd[i+n] += vz;
 				mgl_cone(gr, x1,v0,zz, x1,v0,dd[i+n],
 						 tube?d:d*(dd[i]-zz)/(dd[i]-z0),
-						 tube?d:d*(dd[i]-dd[i+n])/(dd[i]-z0), c1);
+						 tube?d:d*(dd[i]-dd[i+n])/(dd[i]-z0), c1.c_str());
 			}
-			else	mgl_cone(gr, x1,vy,z0, x1,vy,vz, d,tube?d:0, vz<0?c1:c2);
+			else	mgl_cone(gr, x1,vy,z0, x1,vy,vz, d,tube?d:0, vz<0?c1.c_str():c2.c_str());
 		}
 	}
 	gr->EndGroup();	delete []dd;

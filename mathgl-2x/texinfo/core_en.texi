@@ -2149,7 +2149,7 @@ These functions draw cones from points to axis plane. If string contain symbol @
 @item
 @samp{t} for drawing tubes/cylinders instead of cones/prisms;
 @item
-@samp{4}, @samp{6}, @samp{8}, @samp{t} for drawing square, hex- or octo-prism instead of cones;
+@samp{4}, @samp{6}, @samp{8} for drawing square, hex- or octo-prism instead of cones;
 @item
 @samp{<}, @samp{^} or @samp{>} for aligning boxes left, right or centering them at its x-coordinates.
 @end itemize

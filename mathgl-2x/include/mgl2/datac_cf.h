@@ -270,7 +270,12 @@ mdual MGL_EXPORT_PURE mgl_datac_spline_(uintptr_t *dat, mreal *x,mreal *y,mreal 
 /// Interpolate by cubic spline the data and return its derivatives at given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
 mdual MGL_EXPORT_PURE mgl_datac_spline_ext(HCDT dat, mreal x,mreal y,mreal z, dual *dx,dual *dy,dual *dz);
 mdual MGL_EXPORT_PURE mgl_datac_spline_ext_(uintptr_t *dat, mreal *x,mreal *y,mreal *z, dual *dx,dual *dy,dual *dz);
-
+/// Prepare coefficients for global spline interpolation
+HADT MGL_EXPORT mgl_gsplinec_init(HCDT x, HCDT v);
+uintptr_t MGL_EXPORT mgl_gspline_init_(uintptr_t *x, uintptr_t *v);
+/// Evaluate global spline (and its derivatives d1, d2 if not NULL) using prepared coefficients \a coef
+mdual MGL_EXPORT mgl_gsplinec(mreal dx, HCDT coef, dual *d1, dual *d2);
+mdual MGL_EXPORT mgl_gsplinec_(mreal *dx, uintptr_t *c, dual *d1, dual *d2);
 //-----------------------------------------------------------------------------
 /// Create HAEX object for expression evaluating
 HAEX MGL_EXPORT mgl_create_cexpr(const char *expr);

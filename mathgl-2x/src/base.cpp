@@ -969,22 +969,8 @@ mreal mglBase::NextColor(long &id)
 {
 	long i=abs(id)/256, n=Txt[i].n, p=abs(id)&0xff;
 	if(id>=0)	{	p=(p+1)%n;	id = 256*i+p;	}
-//	mglColor c = Txt[i].col[int(MGL_TEXTURE_COLOURS*(p+0.5)/n)];
-/*	mreal dif, dmin=1;
-	// try to find closest color
-	for(long j=0;mglColorIds[j].id;j++)	for(long k=1;k<10;k++)
-	{
-		mglColor cc;	cc.Set(mglColorIds[j].col,k/5.);
-		dif = (c-cc).NormS();
-		if(dif<dmin)
-		{
-			last_style[1] = mglColorIds[j].id;
-			last_style[2] = k+'0';
-			dmin=dif;
-		}
-	}*/
 	CDef = i + (n>0 ? (p+0.5)/n : 0);	CurrPal++;
-	sprintf(last_style+11,"{p%g}",CDef);
+	sprintf(last_style+11,"{&%g}",CDef);
 	if(!leg_str.empty())
 	{	AddLegend(leg_str.c_str(),last_style);	leg_str.clear();	}
 	return CDef;
@@ -995,7 +981,7 @@ mreal mglBase::NextColor(long id, long sh)
 	long i=abs(id)/256, n=Txt[i].n, p=abs(id)&0xff;
 	if(id>=0)	p=(p+sh)%n;
 	mreal cc = i + (n>0 ? (p+0.5)/n : 0);
-	sprintf(last_style+11,"{p%g}",cc);
+	sprintf(last_style+11,"{&%g}",cc);
 	return cc;
 }
 //-----------------------------------------------------------------------------
@@ -1069,13 +1055,13 @@ char mglBase::SetPenPal(const char *p, long *Id, bool pal)
 			if(s)
 			{	mk = MRK[s-mrk];	last_style[3] = mk;	}
 		}
-		if((s=strstr(p,"{p"))!=0)
+		if((s=strstr(p,"{&"))!=0)
 		{	mk = last_style[3] = p[3];	strcpy(last_style+11,s);	}
 		last_style[0] = Arrow1;	last_style[1] = Arrow2;
 	}
 	if(pal)
 	{
-		if((s=strstr(p,"{p"))!=0)
+		if((s=strstr(p,"{&"))!=0)
 		{
 			CDef = atof(s+2);
 //			if(Id)	*Id=long(tt)*256+(n+CurrPal-1)%n;
@@ -1086,7 +1072,7 @@ char mglBase::SetPenPal(const char *p, long *Id, bool pal)
 			tt = AddTexture(p,-1);	n=Txt[tt].n;
 			CDef = tt+((n+CurrPal-1)%n+0.5)/n;
 			if(Id)	*Id=long(tt)*256+(n+CurrPal-1)%n;
-			sprintf(last_style+11,"{p%g}",CDef);
+			sprintf(last_style+11,"{&%g}",CDef);
 		}
 	}
 	if(Arrow1=='_')	Arrow1=0;	if(Arrow2=='_')	Arrow2=0;

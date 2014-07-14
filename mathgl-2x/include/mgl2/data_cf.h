@@ -301,6 +301,12 @@ mreal MGL_EXPORT_PURE mgl_data_linear_(uintptr_t *dat, mreal *x,mreal *y,mreal *
 /// Interpolate by cubic spline the data and return its derivatives at given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
 mreal MGL_EXPORT_PURE mgl_data_spline_ext(HCDT dat, mreal x,mreal y,mreal z, mreal *dx,mreal *dy,mreal *dz);
 mreal MGL_EXPORT_PURE mgl_data_spline_ext_(uintptr_t *dat, mreal *x,mreal *y,mreal *z, mreal *dx,mreal *dy,mreal *dz);
+/// Prepare coefficients for global spline interpolation
+HMDT MGL_EXPORT mgl_gspline_init(HCDT x, HCDT v);
+uintptr_t MGL_EXPORT mgl_gspline_init_(uintptr_t *x, uintptr_t *v);
+/// Evaluate global spline (and its derivatives d1, d2 if not NULL) using prepared coefficients \a coef
+mreal MGL_EXPORT mgl_gspline(mreal dx, HCDT coef, mreal *d1, mreal *d2);
+mreal MGL_EXPORT mgl_gspline_(mreal *dx, uintptr_t *c, mreal *d1, mreal *d2);
 /// Interpolate by linear function the data and return its derivatives at given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
 mreal MGL_EXPORT_PURE mgl_data_linear_ext(HCDT dat, mreal x,mreal y,mreal z, mreal *dx,mreal *dy,mreal *dz);
 mreal MGL_EXPORT_PURE mgl_data_linear_ext_(uintptr_t *dat, mreal *x,mreal *y,mreal *z, mreal *dx,mreal *dy,mreal *dz);

@@ -1132,3 +1132,55 @@ void MGL_EXPORT mgl_datac_diffr_(uintptr_t *d, const char *how, double q,int l)
 {	char *s=new char[l+1];	memcpy(s,how,l);	s[l]=0;
 	mgl_datac_diffr(_DC_,s,q);	delete []s;	}
 //-----------------------------------------------------------------------------
+HADT MGL_EXPORT mgl_gsplinec_init(HCDT x, HCDT v)
+{
+	long n = v->GetNx();
+	if(!x || x->GetNx()!=n)	return 0;
+	mglDataC *res = new mglDataC(5*(n-1));
+	mreal *xx=0;
+	dual *vv=0;
+	const mglData *dx = dynamic_cast<const mglData *>(x);
+	if(!dx)
+	{
+		xx = new mreal[n];
+		for(long i=0;i<n;i++)	xx[i] = x->v(i);
+	}
+	const mglDataC *dv = dynamic_cast<const mglDataC *>(v);
+	if(!dv)
+	{
+		vv = new dual[n];
+		for(long i=0;i<n;i++)	vv[i] = v->v(i);
+	}
+	mgl_gspline_init(n,dx?dx->a:xx,dv?dv->a:vv,res->a);
+	if(xx)	delete []xx;
+	if(vv)	delete []vv;
+	return res;
+}
+uintptr_t MGL_EXPORT mgl_gsplinec_init_(uintptr_t *x, uintptr_t *v)
+{	return uintptr_t(mgl_gspline_init(_DA_(x),_DA_(v)));	}
+//-----------------------------------------------------------------------------
+mdual MGL_EXPORT mgl_gsplinec(mreal dx, HCDT c, dual *d1, dual *d2)
+{
+	long i=0, n = c->GetNx();
+	if(n%5)	return NAN;	// not the table of coefficients
+	while(dx>c->v(5*i) && i<n-1)	{	dx-=c->v(5*i);	i++;	}
+	dual res;
+	const mglDataC *d = dynamic_cast<const mglDataC *>(c);
+	if(c)
+	{
+		const dual *a = d->a+5*i;
+		if(d1)	*d1 = a[2]+dx*(mreal(2)*a[3]+(3*dx)*a[4]);
+		if(d2)	*d2 = mreal(2)*a[3]+(6*dx)*a[4];
+		res = a[1]+dx*(a[2]+dx*(a[3]+dx*a[4]));
+	}
+	else
+	{
+		if(d1)	*d1 = c->v(5*i+2)+dx*(2*c->v(5*i+3)+3*dx*c->v(5*i+4));
+		if(d2)	*d2 = 2*c->v(5*i+3)+6*dx*c->v(5*i+4);
+		res = c->v(5*i+1)+dx*(c->v(5*i+2)+dx*(c->v(5*i+3)+dx*c->v(5*i+4)));
+	}
+	return res.real()+res.imag()*_Complex_I;
+}
+mdual MGL_EXPORT mgl_gsplinec_(mreal *dx, uintptr_t *c, dual *d1, dual *d2)
+{	return mgl_gsplinec(*dx,_DA_(c),d1,d2);	}
+//-----------------------------------------------------------------------------
