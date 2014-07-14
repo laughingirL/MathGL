@@ -436,9 +436,9 @@ bool mglBase::ScalePoint(const mglMatrix *, mglPoint &p, mglPoint &n, bool use_n
 	if(mgl_isnan(x1) || mgl_isnan(y1) || mgl_isnan(z1))	{	x=NAN;	return false;	}
 
 	register mreal d;
-	d = 1/(FMax.x - FMin.x);	x = (2*x1 - FMin.x - FMax.x)*d;	xx *= d;	xy *= d;	xz *= d;
-	d = 1/(FMax.y - FMin.y);	y = (2*y1 - FMin.y - FMax.y)*d;	yx *= d;	yy *= d;	yz *= d;
-	d = 1/(FMax.z - FMin.z);	z = (2*z1 - FMin.z - FMax.z)*d;	zx *= d;	zy *= d;	zz *= d;
+	d = 1/(FMax.x - FMin.x);	x = (2*x1 - FMin.x - FMax.x)*d;	xx /= d;	xy /= d;	xz /= d;
+	d = 1/(FMax.y - FMin.y);	y = (2*y1 - FMin.y - FMax.y)*d;	yx /= d;	yy /= d;	yz /= d;
+	d = 1/(FMax.z - FMin.z);	z = (2*z1 - FMin.z - FMax.z)*d;	zx /= d;	zy /= d;	zz /= d;
 	register mreal nx=n.x, ny=n.y, nz=n.z;
 	n.x = nx*xx+ny*xy+nz*xz;
 	n.y = nx*yx+ny*yy+nz*yz;
