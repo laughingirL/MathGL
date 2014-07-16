@@ -64,6 +64,13 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
+	gr->FSurf("sin(4*pi*x*y)");
+	gr->ExportMGLD("1.mgld");
+	gr->Clf();
+	gr->Alpha(true);	gr->FPlot("x^3");
+	gr->ImportMGLD("1.mgld",true);
+	return;
+
 	mglData x(10), y(10), r(100);
 	x.Modify("0.5+rnd");	x.CumSum("x");	x.Norm(-1,1);
 	y.Modify("sin(pi*v)/2",x);

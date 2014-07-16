@@ -36,7 +36,7 @@ void mglCanvas::SetSize(int w,int h,bool clf)
 	OI= new int[s];
 #pragma omp parallel for
 	for(long i=0;i<s;i++)	memcpy(GB+4*i,BDef,4);
-	InPlot(0,1,0,1,false);	
+	InPlot(0,1,0,1,false);
 	if(clf || (Quality&4))	Clf();
 	else
 	{

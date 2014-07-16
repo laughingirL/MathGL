@@ -653,7 +653,8 @@ bool mglCanvas::ExportMGLD(const char *fname, const char *descr)
 	for(size_t i=0;i<Prm.size();i++)
 	{
 		const mglPrim &p=Prm[i];
-		fprintf(fp,"%d\t%ld\t%ld\t%ld\t%ld\t%d\t%g\t%g\t%g\n", p.type, p.n1, p.n2, p.n3, p.n4, p.id, p.s==p.s?p.s:0, p.w==p.w?p.w:0, p.p==p.p?p.p:0);
+		long long unsigned mask = p.m;
+		fprintf(fp,"%d\t%ld\t%ld\t%ld\t%ld\t%d\t%g\t%g\t%g\t%d\t%llu\n", p.type, p.n1, p.n2, p.n3, p.n4, p.id, p.s==p.s?p.s:0, p.w==p.w?p.w:0, p.p==p.p?p.p:0, p.angl, mask);
 	}
 	fprintf(fp,"# Textures: smooth alpha colors\n");
 	for(size_t i=0;i<Txt.size();i++)
@@ -727,14 +728,17 @@ bool mglCanvas::ImportMGLD(const char *fname, bool add)
 		for(unsigned long i=0;i<m;i++)
 		{
 			do {	if(!fgets(buf,512,fp))	*buf=0;	mgl_strtrim(buf);	} while(*buf=='#');
-			sscanf(buf,"%hd%ld%ld%ld%ld%d%g%g%g", &q.type, &q.n1, &q.n2, &q.n3, &q.n4, &q.id, &q.s, &q.w, &q.p);
-			q.n1 = q.n1>=0?q.n1+npnt:-1;
-			q.n2 = q.n2>=0?q.n2+npnt:-1;
-			if(q.type==2 || q.type==3)
-			{	q.n3 = q.n3>=0?q.n3+npnt:-1;	q.n4 = q.n4>=0?q.n4+npnt:-1;	}
-			if(q.type==4)
-			{	q.n4 = q.n4>=0?q.n4+nglf:-1;	q.s *= font_factor/(w<h?w:h);	}
-			if(q.type<5)	Prm.push_back(q);
+			long long unsigned mask=MGL_SOLID_MASK;
+			sscanf(buf,"%hd%ld%ld%ld%ld%d%g%g%g%hd%llu", &q.type, &q.n1, &q.n2, &q.n3, &q.n4, &q.id, &q.s, &q.w, &q.p, &q.angl, &mask);
+			q.n1 = q.n1>=0?q.n1+npnt:-1;	q.n2 = q.n2>=0?q.n2+npnt:-1;
+			switch(q.type)
+			{
+			case 3:	q.n4 = q.n4>=0?q.n4+npnt:-1;
+			case 2:	q.n3 = q.n3>=0?q.n3+npnt:-1;	q.m = mask;	break;
+			case 4:	q.s *= (Width<Height?Width:Height)/double(w<h?w:h);
+					q.n4 = q.n4>=0?q.n4+nglf:-1;	break;
+			}
+			Prm.push_back(q);
 		}
 		mglTexture t;
 		for(unsigned long i=0;i<l;i++)

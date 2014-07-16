@@ -66,6 +66,7 @@ C. Translate to Russian everything
 16. Text style 'T' into "Font style" and "Text printing"
 17. Global spline sample (m.b. howto about interpolation)?!!
 18. Docs about mgl_gspline_init(), mgl_gspline() and mgl_gsplinec_init(), mgl_gsplinec().
+19. Sample about MGLD
 
 29. Howto about plot ranges (subplot styles)
 
