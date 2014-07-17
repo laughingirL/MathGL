@@ -64,6 +64,11 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
+	mglParse par;
+	par.Execute(gr,"subplot 1 1 0:#rotate 40 60\nperspective 0.9:box:axis\n");
+//	par.Execute(gr,"subplot 1 1 0:#rotate 40 60\nperspective 1.22:box:axis\n");
+	return;
+
 	gr->FSurf("sin(4*pi*x*y)");
 	gr->ExportMGLD("1.mgld");
 	gr->Clf();
@@ -90,10 +95,6 @@ void test(mglGraph *gr)
 	}
 	gr->Plot(r,"r");	gr->FPlot("sin(pi*x)/2","B:");
 	gr->WriteFrame("2.png");
-	return;
-
-	mglParse par;
-	par.Execute(gr,"xtick -10:axis\n");
 	return;
 }
 //-----------------------------------------------------------------------------

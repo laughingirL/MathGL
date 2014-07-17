@@ -166,6 +166,7 @@ void QMathGL::setDraw(mglDraw *dr)
 }
 //-----------------------------------------------------------------------------
 double QMathGL::getRatio()	{	return double(mgl_get_width(gr))/mgl_get_height(gr);	}
+void mgl_qt_event_func(void *)	{	QApplication::processEvents();	}
 //-----------------------------------------------------------------------------
 void QMathGL::setGraph(HMGL GR)	///< Set grapher object
 {
@@ -173,6 +174,7 @@ void QMathGL::setGraph(HMGL GR)	///< Set grapher object
 	if(!gg)	return;
 	if(mgl_use_graph(gr,-1)<1)	mgl_delete_graph(gr);
 	gr=gg;	mgl_use_graph(gg,1);
+	gr->SetEventFunc(mgl_qt_event_func, NULL);
 }
 //-----------------------------------------------------------------------------
 void QMathGL::paintEvent(QPaintEvent *)
@@ -298,7 +300,7 @@ void QMathGL::restore()
 	else refresh();
 }
 //-----------------------------------------------------------------------------
-void QMathGL::stop()	{	gr->Stop=true;	}	//{	thr->terminate();	}
+void QMathGL::stop()	{	gr->AskStop(true);	}
 //-----------------------------------------------------------------------------
 void QMathGL::update()
 {
@@ -321,7 +323,7 @@ void QMathGL::update()
 		else if(draw)	{	mglGraph g(gr);	draw->Draw(&g);	}
 		if(mgl_is_frames(gr))	mgl_end_frame(gr);
 		setlocale(LC_NUMERIC, "");
-		afterPlot();
+		gr->AskStop(false);	afterPlot();
 	}
 }
 //-----------------------------------------------------------------------------
@@ -370,7 +372,7 @@ void QMathGL::refresh()
 		if(custZoom)	emit customZoom(x1,y1,x2,y2,tet,phi,per);
 		else
 		{	mgl_zoom(gr,x1,y1,x2,y2);
-			mgl_perspective(gr,per);
+			mgl_ask_perspective(gr,per);
 			if(viewYZ)	mgl_view(gr,0,-tet,-phi);
 			else 		mgl_view(gr,-phi,-tet,0);
 		}
@@ -389,7 +391,7 @@ void QMathGL::refreshHQ()
 		if(custZoom)	emit customZoom(x1,y1,x2,y2,tet,phi,per);
 		else
 		{	mgl_zoom(gr,x1,y1,x2,y2);
-			mgl_perspective(gr,per);
+			mgl_ask_perspective(gr,per);
 			if(viewYZ)	mgl_view(gr,0,-tet,-phi);
 			else 		mgl_view(gr,-phi,-tet,0);
 		}
@@ -1060,6 +1062,7 @@ void mglCanvasQT::Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p
 #include "xpm/zoom_in.xpm"
 #include "xpm/zoom_out.xpm"
 #include "xpm/up_1.xpm"
+#include "xpm/stop.xpm"
 //-----------------------------------------------------------------------------
 #define TR	QObject::tr
 MGL_EXPORT QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *&tet, QSpinBox *&phi)
@@ -1134,11 +1137,16 @@ MGL_EXPORT QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *&tet, Q
 		a->setShortcut(Qt::ALT+Qt::Key_Space);
 		o->addAction(a);	bb->addAction(a);	popup->addAction(a);
 		bb->addSeparator();
+		o->addAction(a);	bb->addAction(a);	popup->addAction(a);
 		a = new QAction(QPixmap(ok_xpm), TR("Re&draw"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(update()));
 		a->setToolTip(TR("Execute script and redraw graphics (F5)."));
 		a->setShortcut(Qt::Key_F5);
 		o->addAction(a);	bb->addAction(a);	popup->addAction(a);
+		a = new QAction(QPixmap(stop_xpm), TR("Stop"), Wnd);
+		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(stop()));
+		a->setToolTip(TR("Ask to stop plot drawing (F7)."));
+		a->setShortcut(Qt::Key_F7);
 		a = new QAction(TR("&Adjust size"), Wnd);
 		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(adjust()));
 		a->setToolTip(TR("Change canvas size to fill whole region (F6)."));

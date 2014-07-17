@@ -108,6 +108,7 @@ public:
 	{	popup = pmenu;	wpar = wdg;	vpar = v;	}
 	inline void zoom_region(mreal xx1,mreal xx2,mreal yy1, mreal yy2)
 	{	x1=xx1;	y1=yy1;	x2=xx2;	y2=yy2;	}
+	void stop(bool stop=true);
 
 protected:
 	mglCanvas *gr;		///< pointer to grapher

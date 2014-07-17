@@ -64,7 +64,6 @@ void MGL_EXPORT mgl_line(HMGL gr, double x1, double y1, double z1, double x2, do
 	long k1 = gr->AddPnt(p,gr->CDef,nn,-1,3);	gr->AddActive(k1);
 	for(long i=1;i<n;i++)
 	{
-		if(gr->Stop)	return;
 		mreal s = i/mreal(n-1);	p = p1*(1-s)+p2*s;
 		long k2 = k1;
 		k1 = gr->AddPnt(p,gr->CDef,nn,-1,3);
@@ -92,7 +91,6 @@ void MGL_EXPORT mgl_curve(HMGL gr, double x1, double y1, double z1, double dx1, 
 	long k1=gr->AddPnt(p,gr->CDef,nn,-1,3);	gr->AddActive(k1);
 	for(long i=1;i<n;i++)
 	{
-		if(gr->Stop)	return;
 		mreal s = i/(n-1.);	p = p1+s*(d1+s*(a+s*b));
 		long k2 = k1;
 		k1 = gr->AddPnt(p,gr->CDef,nn,-1,3);
@@ -241,7 +239,6 @@ void MGL_EXPORT mgl_cone(HMGL gr, double x1, double y1, double z1, double x2, do
 #pragma omp parallel for firstprivate(p,q)
 	for(long i=0;i<2*n+1;i++)
 	{
-		if(gr->Stop)	continue;
 		register int f = n!=4?(2*i+1)*90/n:45*i;
 		register mreal co = mgl_cos[f%360], si = mgl_cos[(f+270)%360];
 		p = p1+(r1*co)*a+(r1*si)*b;
@@ -315,6 +312,7 @@ void MGL_EXPORT mgl_cones_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, 
 	char buf[64];
 	for(long j=0;j<m;j++)
 	{
+		if(gr->NeedStop())	break;
 		sprintf(buf,"{&%g}",gr->NextColor(pal));
 		std::string c1=cb+buf, c2=c1;
 		if(gr->GetNumPal(pal)==2*m)
@@ -322,7 +320,6 @@ void MGL_EXPORT mgl_cones_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, 
 		long mx = j<x->GetNy() ? j:0, my = j<y->GetNy() ? j:0, mz = j<nz ? j:0;
 		for(long i=0;i<n;i++)
 		{
-			if(gr->Stop)	{	delete []dd;	return;	}
 			vx=x->v(i,mx);	vy=y->v(i,my);	vz=z->v(i,mz);
 			v0=y->v(i,0);	v1=i<nx-1 ? x->v(i+1,mx):x->v(i-1,mx);
 			d = i<nx-1 ? v1-vx : vx-v1;
@@ -477,7 +474,6 @@ void MGL_EXPORT mgl_ellipse(HMGL gr, double x1, double y1, double z1, double x2,
 	gr->AddActive(gr->AddPnt(p2,c,q,-1,11),1);
 	for(long i=0;i<n;i++)
 	{
-		if(gr->Stop)	return;
 		register int t=i*360/(n-1);
 		p = s+v*mgl_cos[t%360]+u*mgl_cos[(270+t)%360];
 		long n2 = n1;	n1 = gr->AddPnt(p,c,q,-1,11);
@@ -556,7 +552,6 @@ void MGL_EXPORT mgl_drop(HMGL gr, mglPoint p, mglPoint q, double r, double c, do
 
 	for(long i=0;i<=m;i++)	for(long j=0;j<n;j++)	// NOTE use prev.points => not for omp
 	{
-		if(gr->Stop)	continue;
 		if(i>0 && i<m)
 		{
 			register int u=i*180/m, v=180*j/m+202;
@@ -623,10 +618,9 @@ void MGL_EXPORT mgl_dew_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char
 	for(long k=0;k<ax->GetNz();k++)
 	{
 		if(ax->GetNz()>1)	zVal = gr->Min.z+(gr->Max.z-gr->Min.z)*mreal(k)/(ax->GetNz()-1);
-//#pragma omp parallel for collapse(2)	// gain looks negligible?!?
 		for(long i=0;i<n;i+=tx)	for(long j=0;j<m;j+=ty)
 		{
-			if(gr->Stop)	continue;
+			if(gr->NeedStop())	{	gr->EndGroup();	return;	}
 			register mreal xx=GetX(x,i,j,k).x, yy=GetY(y,i,j,k).x, dd;
 			register mreal dx = i<n-1 ? (GetX(x,i+1,j,k).x-xx) : (xx-GetX(x,i-1,j,k).x);
 			register mreal dy = j<m-1 ? (GetY(y,i,j+1,k).x-yy) : (yy-GetY(y,i,j-1,k).x);
@@ -727,12 +721,12 @@ void MGL_EXPORT mgl_textmarkw_xyzr(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, cons
 	mglPoint p,q(NAN);
 	for(long j=0;j<m;j++)
 	{
+		if(gr->NeedStop())	break;
 		long mx = j<x->GetNy() ? j:0, my = j<y->GetNy() ? j:0;
 		long mz = j<z->GetNy() ? j:0, mr = j<r->GetNy() ? j:0;
 #pragma omp parallel for private(p)	// NOTE this should be useless ?!?
 		for(long i=0;i<n;i++)
 		{
-			if(gr->Stop)	continue;
 			p = mglPoint(x->v(i,mx), y->v(i,my), z->v(i,mz));
 			register long k = gr->AddPnt(p,-1,q);
 			gr->text_plot(k, text, fnt, -0.5*fabs(r->v(i,mr)));
@@ -823,11 +817,11 @@ void MGL_EXPORT mgl_labelw_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const wchar_t *t
 	wchar_t tmp[32];
 	for(long j=0;j<m;j++)
 	{
+		if(gr->NeedStop())	break;
 		long mx = j<x->GetNy() ? j:0, my = j<y->GetNy() ? j:0, mz = j<z->GetNy() ? j:0;
 #pragma omp parallel for private(tmp)
 		for(long i=0;i<n;i++)
 		{
-			if(gr->Stop)	continue;
 			mreal xx=x->v(i,mx), yy=y->v(i,my), zz=z->v(i,mz);
 			register long kk = gr->AddPnt(mglPoint(xx,yy,zz),-1,q),k,l;
 			std::wstring buf;

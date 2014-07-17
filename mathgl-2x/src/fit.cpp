@@ -442,14 +442,13 @@ HMDT MGL_EXPORT mgl_hist_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char
 #pragma omp parallel for
 	for(long i=0;i<nn;i++)
 	{
-		if(gr->Stop)	continue;
 		register long j1 = long((x->vthr(i)-gr->Min.x)*vx);
 		register long j2 = long((y->vthr(i)-gr->Min.y)*vy);
 		register long j3 = long((z->vthr(i)-gr->Min.z)*vz);
 		if(j1>=0 && j1<n && j2>=0 && j2<n && j3>=0 && j3<n)
 			res->a[j1+n*(j2+n*j3)] += a->vthr(i);
 	}
-	gr->LoadState();	return gr->Stop?0:res;
+	gr->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
 uintptr_t MGL_EXPORT mgl_hist_x_(uintptr_t* gr, uintptr_t* x, uintptr_t* a, const char *opt, int lo)

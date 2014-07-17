@@ -519,7 +519,7 @@ int mglParser::ParseDef(std::wstring &str)
 // return values: 0 - OK, 1 - wrong arguments, 2 - wrong command, 3 - string too long, 4 -- unclosed string
 int mglParser::Parse(mglGraph *gr, std::wstring str, long pos)
 {
-	if(Stop)	return 0;
+	if(Stop || gr->NeedStop())	return 0;
 	std::wstring arg[1024];
 	str=mgl_trim_ws(str);
 	long n,k=0,m=0,mm=0,res;

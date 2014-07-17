@@ -221,6 +221,9 @@ MGL_EXPORT const unsigned char *mgl_get_rgb_(uintptr_t *gr);
 /// Get RGBA values of current bitmap
 MGL_EXPORT const unsigned char *mgl_get_rgba(HMGL gr);
 MGL_EXPORT const unsigned char *mgl_get_rgba_(uintptr_t *gr);
+/// Get RGB values of current bitmap
+MGL_EXPORT const unsigned char *mgl_get_background(HMGL gr);
+MGL_EXPORT const unsigned char *mgl_get_background_(uintptr_t *gr);
 /// Set object/subplot id
 void MGL_EXPORT mgl_set_obj_id(HMGL gr, int id);
 void MGL_EXPORT mgl_set_obj_id_(uintptr_t *gr, int *id);
@@ -363,7 +366,10 @@ void MGL_EXPORT mgl_rotate_vector(HMGL gr, double Tet,double x,double y,double z
 void MGL_EXPORT mgl_rotate_vector_(uintptr_t *gr, mreal *Tet, mreal *x, mreal *y, mreal *z);
 /// Set perspective (in range [0,1)) for plot. Set to zero for switching off.
 void MGL_EXPORT mgl_perspective(HMGL gr, double val);
-void MGL_EXPORT mgl_perspective_(uintptr_t *gr, double val);
+void MGL_EXPORT mgl_perspective_(uintptr_t *gr, mreal *val);
+/// Ask to set perspective (in range [0,1)) for plot. Set to zero for switching off.
+void MGL_EXPORT mgl_ask_perspective(HMGL gr, double val);
+void MGL_EXPORT mgl_ask_perspective_(uintptr_t *gr, mreal *val);
 /// Set angle of view independently from Rotate().
 void MGL_EXPORT mgl_view(HMGL gr, double TetX,double TetZ,double TetY);
 void MGL_EXPORT mgl_view_(uintptr_t *gr, mreal *TetX, mreal *TetZ, mreal *TetY);

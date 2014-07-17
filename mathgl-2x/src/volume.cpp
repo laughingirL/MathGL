@@ -58,28 +58,33 @@ void MGL_EXPORT mgl_cloud_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const cha
 	long *pos=new long[n*m*l];
 	gr->Reserve(n*m*l);
 	mglPoint q=mglPoint(NAN);
-#pragma omp parallel for collapse(3)
-	for(long k=0;k<l;k++)	for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
+	for(long k=0;k<l;k++)
 	{
-		if(gr->Stop)	continue;
-		mglPoint p = both ? mglPoint(x->v(i*tx,j*ty,k*tz),y->v(i*tx,j*ty,k*tz),z->v(i*tx,j*ty,k*tz)) : mglPoint(x->v(i*tx),y->v(j*ty),z->v(k*tz));
-		mreal aa = gr->GetA(a->v(i*tx,j*ty,k*tz));
-		mreal bb = inv ? (1-aa)*(1-aa)*alpha : aa*aa*alpha;
-		pos[i+n*(j+m*k)] = gr->AddPnt(p,gr->GetC(ss,aa,false),q,bb);
+		if(gr->NeedStop())	break;
+#pragma omp parallel for collapse(2)
+		for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
+		{
+			mglPoint p = both ? mglPoint(x->v(i*tx,j*ty,k*tz),y->v(i*tx,j*ty,k*tz),z->v(i*tx,j*ty,k*tz)) : mglPoint(x->v(i*tx),y->v(j*ty),z->v(k*tz));
+			mreal aa = gr->GetA(a->v(i*tx,j*ty,k*tz));
+			mreal bb = inv ? (1-aa)*(1-aa)*alpha : aa*aa*alpha;
+			pos[i+n*(j+m*k)] = gr->AddPnt(p,gr->GetC(ss,aa,false),q,bb);
+		}
 	}
 	if(dot)
 #pragma omp parallel for
 		for(long i=0;i<n*m*l;i++)	gr->mark_plot(pos[i],'.');
-	else
-#pragma omp parallel for collapse(3)
-		for(long k=0;k<l;k++)	for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
+	else	for(long k=0;k<l;k++)
+	{
+		if(gr->NeedStop())	break;
+#pragma omp parallel for collapse(2)
+		for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
 		{
-			if(gr->Stop)	continue;
 			register long i0 = i+n*(j+m*k);
 			if(i<n-1 && j<m-1)	gr->quad_plot(pos[i0],pos[i0+1],pos[i0+n],pos[i0+n+1]);
 			if(i<n-1 && k<l-1)	gr->quad_plot(pos[i0],pos[i0+1],pos[i0+n*m],pos[i0+n*m+1]);
 			if(k<l-1 && j<m-1)	gr->quad_plot(pos[i0],pos[i0+n],pos[i0+n*m],pos[i0+n+n*m]);
 		}
+	}
 	delete []pos;	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
@@ -164,7 +169,6 @@ void MGL_EXPORT mgl_surf3_plot(HMGL gr, long n,long m,long *kx1,long *kx2,long *
 #pragma omp parallel for private(id,us,pd,pp,ni,d,d0) collapse(2)
 	for(long j=0;j<m-1;j++)	for(long i=0;i<n-1;i++)
 	{
-		if(gr->Stop)	continue;
 		register long i0 = i+n*j,ii,jj,k;
 		// find ID of points of Surf3 intersection with cell i0
 		memset(id,-1,12*sizeof(long));	ni = 0;
@@ -262,6 +266,7 @@ void MGL_EXPORT mgl_surf3_xyz_val(HMGL gr, double val, HCDT x, HCDT y, HCDT z, H
 	mreal a0;
 	for(k=0;k<l;k++)
 	{
+		if(gr->NeedStop())	break;
 		memcpy(kx1,kx2,n*m*sizeof(long));	memset(kx2,-1,n*m*sizeof(long));
 		memcpy(ky1,ky2,n*m*sizeof(long));	memset(ky2,-1,n*m*sizeof(long));
 		memset(kz ,-1,n*m*sizeof(long));
@@ -269,7 +274,6 @@ void MGL_EXPORT mgl_surf3_xyz_val(HMGL gr, double val, HCDT x, HCDT y, HCDT z, H
 //#pragma omp parallel for collapse(2)	// NOTE: this part require a lot of memory for OpenMP. Omit it.
 		for(j=0;j<m;j++)	for(i=0;i<n;i++)
 		{
-			if(gr->Stop)	continue;
 			i1 = i+n*j;		a0 = a->v(i,j,k);
 			p0 = both?mglPoint(x->v(i,j,k), y->v(i,j,k), z->v(i,j,k)) : mglPoint(x->v(i), y->v(j), z->v(k));
 			if(i<n-1)
@@ -410,6 +414,7 @@ void MGL_EXPORT mgl_surf3a_xyz_val(HMGL gr, double val, HCDT x, HCDT y, HCDT z, 
 	mreal a0,b0;
 	for(k=0;k<l;k++)
 	{
+		if(gr->NeedStop())	break;
 		memcpy(kx1,kx2,n*m*sizeof(long));	memset(kx2,-1,n*m*sizeof(long));
 		memcpy(ky1,ky2,n*m*sizeof(long));	memset(ky2,-1,n*m*sizeof(long));
 		memset(kz ,-1,n*m*sizeof(long));
@@ -417,8 +422,6 @@ void MGL_EXPORT mgl_surf3a_xyz_val(HMGL gr, double val, HCDT x, HCDT y, HCDT z, 
 //#pragma omp parallel for collapse(2)	// NOTE: this part require a lot of memory for OpenMP. Omit it.
 		for(j=0;j<m;j++)	for(i=0;i<n;i++)
 		{
-			if(gr->Stop)	{	delete []kx1;	delete []kx2;	delete []ky1;
-								delete []ky2;	delete []kz;	return;	}
 			i1 = i+n*j;
 			a0 = a->v(i,j,k);	b0 = b->v(i,j,k);
 			p0 = both?mglPoint(x->v(i,j,k), y->v(i,j,k), z->v(i,j,k)) : mglPoint(x->v(i), y->v(j), z->v(k));
@@ -577,6 +580,7 @@ void MGL_EXPORT mgl_surf3c_xyz_val(HMGL gr, double val, HCDT x, HCDT y, HCDT z, 
 	mreal a0,b0;
 	for(k=0;k<l;k++)
 	{
+		if(gr->NeedStop())	break;
 		memcpy(kx1,kx2,n*m*sizeof(long));	memset(kx2,-1,n*m*sizeof(long));
 		memcpy(ky1,ky2,n*m*sizeof(long));	memset(ky2,-1,n*m*sizeof(long));
 		memset(kz ,-1,n*m*sizeof(long));
@@ -584,8 +588,6 @@ void MGL_EXPORT mgl_surf3c_xyz_val(HMGL gr, double val, HCDT x, HCDT y, HCDT z, 
 //#pragma omp parallel for collapse(2)	// NOTE: this part require a lot of memory for OpenMP. Omit it.
 		for(j=0;j<m;j++)	for(i=0;i<n;i++)
 		{
-			if(gr->Stop)	{	delete []kx1;	delete []kx2;	delete []ky1;
-								delete []ky2;	delete []kz;	return;	}
 			i1 = i+n*j;
 			a0 = a->v(i,j,k);	b0 = b->v(i,j,k);
 			p0 = both?mglPoint(x->v(i,j,k), y->v(i,j,k), z->v(i,j,k)) : mglPoint(x->v(i), y->v(j), z->v(k));
@@ -725,6 +727,7 @@ void MGL_NO_EXPORT mgl_beam_md(HMGL gr, double val, const mglData *tr, const mgl
 	if(asum0==0)	{	gr->SetWarn(mglWarnZero,"Beam");	return;	}
 	for(long i=0;i<n;i++)
 	{
+		if(gr->NeedStop())	break;
 		asum=amax=0;
 		if(flag & 4)
 		{
@@ -741,7 +744,6 @@ void MGL_NO_EXPORT mgl_beam_md(HMGL gr, double val, const mglData *tr, const mgl
 #pragma omp parallel for collapse(2)
 		for(long k=0;k<l;k++)	for(long j=0;j<m;j++)
 		{
-			if(gr->Stop)	continue;
 			register long i0 = j+m*(k+l*i);
 			if(flag & 1)
 			{
@@ -784,6 +786,7 @@ void MGL_EXPORT mgl_beam_val(HMGL gr, double val, HCDT tr, HCDT g1, HCDT g2, HCD
 	if(asum0==0)	{	gr->SetWarn(mglWarnZero,"Beam");	return;	}
 	for(i=0;i<n;i++)
 	{
+		if(gr->NeedStop())	break;
 		asum=amax=0;
 		if(flag & 4)
 		{
@@ -798,7 +801,6 @@ void MGL_EXPORT mgl_beam_val(HMGL gr, double val, HCDT tr, HCDT g1, HCDT g2, HCD
 		}
 		for(j=0;j<m;j++)	for(k=0;k<l;k++)
 		{
-			if(gr->Stop)	return;
 			i0 = j+m*(k+l*i);
 			if(flag & 1)
 			{

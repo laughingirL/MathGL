@@ -2477,7 +2477,7 @@ int MGL_NO_EXPORT mgls_write(mglGraph *gr, long , mglArg *a, const char *k, cons
 	int res=0;
 	if(!strcmp(k,""))	gr->WriteFrame("", "MathGL");
 	else if(!strcmp(k,"s"))	gr->WriteFrame(a[0].s.c_str(), "MathGL");
-	return res;
+	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_region(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
@@ -3114,7 +3114,7 @@ mglCommand mgls_base_cmd[] = {
 	{"vect3","Draw vector field at slices of 3D data","vect Udat Vdat Wdat ['fmt' sval]|Xdat Ydat Zdat Udat Vdat Wdat ['fmt' sval]", mgls_vect3 ,11},
 	{"version","Print MathGL version or check if it is valid","version |'ver'", mgls_version, 2},
 	{"view","Change view angles - use 'rotate' for plot rotation","view tetz tetx [tety]", mgls_view ,5},
-	{"write","Write current image to graphical file","write 'fname' [solid]", mgls_write ,2},
+	{"write","Write current image to graphical file","write ['fname']", mgls_write ,2},
 	{"xlabel","Draw label for x-axis","xlabel 'txt' [pos]", mgls_xlabel ,12},
 	{"xrange","Set range for x-axis","xrange Dat [add] | x1 x2 [add]", mgls_xrange ,14},
 	{"xtick","Set ticks for x-axis","xtick dx [sx tx 'factor'] | 'tmpl' | Xdat 'lbl' [add] | v1 'lbl1' ...", mgls_xtick,14},

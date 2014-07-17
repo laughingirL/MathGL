@@ -34,6 +34,7 @@
 * Function Adjust() for Quality&4==0 now show image in widgets even if draw function is absent (i.e. =NULL).
 * Allow reading JPEG files for mglData::Import().
 * Add function for global cubic spline interpolation.
+* Choose new scales for perspective.
 
 
 * Rearrange tool buttons in UDAV
@@ -42,9 +43,11 @@
 * Add option to use dots plot at image refreshing (for faster rotation etc)
 * Add new primitives (arc,polygon,rotated text) as mouse handled ones in UDAV
 * Add close button to data tabs in UDAV
+* Add button to stop script drawing in UDAV and stop() slot for QMathGL
 * Allow to delete/hide/unhide selected plot
 * Allow to move selected plot between inplots
 * Improve NewCommand dialog in UDAV. Now it replace the script command if user change arguments only.
+* MGL command 'perspective' now work correctly in UDAV
 * Update UDAV icons to use Oxygen ones
 
 2.2.2.1 Released 19 March 2014

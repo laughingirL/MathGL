@@ -60,7 +60,6 @@ void MGL_NO_EXPORT mgl_string_curve(mglBase *gr,long f,long ,const long *ff,cons
 	qa.push_back(q+l*h);	qb.push_back(q-l*h);
 	for(i=nn[f];i>=0 && i!=f;i=nn[i])	// construct curves
 	{
-		if(gr->Stop)	return;
 		p=q;	q=s;	l=t;
 		if(nn[i]>=0 && ff[nn[i]]>=0)	{	s=gr->GetPntP(ff[nn[i]]);	t=!(s-q);	}
 		tet = t.x*l.y-t.y*l.x;
@@ -98,7 +97,6 @@ void MGL_NO_EXPORT mgl_string_curve(mglBase *gr,long f,long ,const long *ff,cons
 	mreal a,b,d,w,t1,t2;
 	for(i=j=0,tt=0;j<len;j++)
 	{
-		if(gr->Stop)	{	delete []wdt;	delete []pt;	delete []fnt;	return;	}
 		w = align==1 ? wdt[j] : (wdt[j]+wdt[j+1])/2;	p = pt[j];
 		for(k=i+1;k<m;k++)	if((p-qa[k]).norm()>w)	break;
 		if(k>i+1 && k<m)	tt=-1;
@@ -418,9 +416,9 @@ void MGL_EXPORT mgl_cont_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const c
 	{
 		mglDataV zz(n, m);
 #pragma omp for collapse(2)
-		for(long j=0;j<z->GetNz();j++)	for(long i=0;i<v->GetNx();i++)
+		for(long i=0;i<v->GetNx();i++)	for(long j=0;j<z->GetNz();j++)
 		{
-			if(gr->Stop)	continue;
+			if(gr->NeedStop())	{	i = v->GetNx();	j = z->GetNz();	continue;	}
 			mreal v0 = v->v(i), z0 = fixed ? gr->Min.z : v0;
 			if(z->GetNz()>1)
 				z0 = gr->Min.z+(gr->Max.z-gr->Min.z)*mreal(j)/(z->GetNz()-1);
@@ -539,7 +537,6 @@ void MGL_EXPORT mgl_contf_gen(HMGL gr, mreal v1, mreal v2, HCDT a, HCDT x, HCDT 
 	memset(kk,-1,2*n*sizeof(long));
 	for(i=0;i<n-1;i++)	// add intersection points for first line
 	{
-		if(gr->Stop)	{	delete []kk;	return;	}
 		mgl_add_range(gr,a,x,y,z, i,0,1,0, c,u1,u2, ak,v1,v2);
 		kk[4*i]=u1;		kk[4*i+1]=u2;
 		mgl_add_edges(gr,a,x,y,z, i,0,1,0, c,d1,d2, ak,v1,v2);
@@ -550,7 +547,6 @@ void MGL_EXPORT mgl_contf_gen(HMGL gr, mreal v1, mreal v2, HCDT a, HCDT x, HCDT 
 		mgl_add_range(gr,a,x,y,z, 0,j-1,0,1, c,r1,r2, ak,v1,v2);
 		for(i=0;i<n-1;i++)
 		{
-			if(gr->Stop)	{	delete []kk;	return;	}
 			l1 = r1;		l2 = r2;	num=0;
 			t1 = kk[4*i];	t2 = kk[4*i+1];
 			b1 = kk[4*i+2];	b2 = kk[4*i+3];
@@ -697,9 +693,9 @@ void MGL_EXPORT mgl_contf_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const 
 	{
 		mglDataV zz(n, m);
 #pragma omp for collapse(2)
-		for(long j=0;j<z->GetNz();j++)	for(long i=0;i<v->GetNx()-1;i++)
+		for(long i=0;i<v->GetNx()-1;i++)	for(long j=0;j<z->GetNz();j++)
 		{
-			if(gr->Stop)	continue;
+			if(gr->NeedStop())	{	i = v->GetNx();	j = z->GetNz();	continue;	}
 			mreal v0 = v->v(i), z0 = fixed ? gr->Min.z : v0;
 			if(z->GetNz()>1)
 				z0 = gr->Min.z+(gr->Max.z-gr->Min.z)*mreal(j)/(z->GetNz()-1);
@@ -805,9 +801,9 @@ void MGL_EXPORT mgl_contd_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const 
 	{
 		mglDataV zz(n, m);
 #pragma omp for collapse(2)
-		for(long j=0;j<z->GetNz();j++)	for(long i=0;i<v->GetNx()-1;i++)
+		for(long i=0;i<v->GetNx()-1;i++)	for(long j=0;j<z->GetNz();j++)
 		{
-			if(gr->Stop)	continue;
+			if(gr->NeedStop())	{	i = v->GetNx();	j = z->GetNz();	continue;	}
 			mreal v0 = v->v(i), z0 = fixed ? gr->Min.z : v0;
 			if(z->GetNz()>1)
 				z0 = gr->Min.z+(gr->Max.z-gr->Min.z)*mreal(j)/(z->GetNz()-1);
@@ -921,9 +917,9 @@ void MGL_EXPORT mgl_contv_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const 
 	{
 		mglDataV zz(n, m);
 #pragma omp for collapse(2)
-		for(long j=0;j<z->GetNz();j++)	for(long i=0;i<v->GetNx();i++)
+		for(long i=0;i<v->GetNx();i++)	for(long j=0;j<z->GetNz();j++)
 		{
-			if(gr->Stop)	continue;
+			if(gr->NeedStop())	{	i = v->GetNx();	j = z->GetNz();	continue;	}
 			mreal v0 = v->v(i), z0 = fixed ? gr->Min.z : v0;
 			if(z->GetNz()>1)	z0 = gr->Min.z+(gr->Max.z-gr->Min.z)*mreal(j)/(z->GetNz()-1);
 			zz.Fill(z0,z0);
@@ -1430,7 +1426,7 @@ void MGL_NO_EXPORT mgl_axial_plot(mglBase *gr,long pc, mglPoint *ff, long *nn,ch
 	gr->Reserve(pc*82);
 	for(long i=0;i<pc;i++)
 	{
-		if(nn[i]<0 || gr->Stop)	continue;
+		if(nn[i]<0)	continue;
 		register long k = mgl_find_prev(i,pc,nn);
 		q1 = k<0 ? ff[nn[i]]-ff[i]  : (ff[nn[i]]-ff[k])*0.5;
 		q2 = nn[nn[i]]<0 ? ff[nn[i]]-ff[i]  : (ff[nn[nn[i]]]-ff[i])*0.5;
@@ -1478,7 +1474,6 @@ void MGL_EXPORT mgl_axial_gen(HMGL gr, mreal val, HCDT a, HCDT x, HCDT y, mreal 
 	const mglData *ma = dynamic_cast<const mglData *>(a);
 	if(mx&&my&&ma)	for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
 	{
-		if(gr->Stop)	{	delete []kk;	delete []pp;	return;	}
 		register long i0 = i+n*j;
 		mreal d = (i<n-1)?mgl_d(val,ma->a[i0+n*m*ak],ma->a[i0+1+n*m*ak]):-1;
 		if(d>=0 && d<1)
@@ -1495,7 +1490,6 @@ void MGL_EXPORT mgl_axial_gen(HMGL gr, mreal val, HCDT a, HCDT x, HCDT y, mreal 
 	}
 	else	for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
 	{
-		if(gr->Stop)	{	delete []kk;	delete []pp;	return;	}
 		register mreal va=a->v(i,j,ak),vx=x->v(i,j),vy=y->v(i,j);
 		mreal d = (i<n-1)?mgl_d(val,va,a->v(i+1,j,ak)):-1;
 		if(d>=0 && d<1)
@@ -1518,7 +1512,6 @@ void MGL_EXPORT mgl_axial_gen(HMGL gr, mreal val, HCDT a, HCDT x, HCDT y, mreal 
 	// connect points to line
 	long j=-1;	// current point
 	do{
-		if(gr->Stop)	{	delete []kk;	delete []pp;	delete []nn;	delete []ff;	return;	}
 		if(j>=0)
 		{
 			mreal kx = kk[j].x, ky = kk[j].y;	long i = -1;
@@ -1581,9 +1574,9 @@ void MGL_EXPORT mgl_axial_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const 
 	int wire = mglchr(sch,'#')?1:0;
 	if(mglchr(sch,'.'))	wire = 2;
 #pragma omp parallel for collapse(2)
-	for(long j=0;j<z->GetNz();j++)	for(long i=0;i<v->GetNx();i++)
+	for(long i=0;i<v->GetNx();i++)	for(long j=0;j<z->GetNz();j++)
 	{
-		if(gr->Stop)	continue;
+		if(gr->NeedStop())	{	i = v->GetNx();	j = z->GetNz();	continue;	}
 		register mreal v0 = v->v(i);
 		mgl_axial_gen(gr,v0,z,x,y,gr->GetC(s,v0),dir,j,wire);
 	}

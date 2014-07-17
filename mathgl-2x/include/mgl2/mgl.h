@@ -58,6 +58,14 @@ public:
 	/// Get name of plot for saving filename
 	inline const char *GetPlotId()	{	return mgl_get_plotid(gr);	}
 
+	/// Ask to stop drawing
+	inline void Stop(bool stop=true)	{	mgl_ask_stop(gr, stop);	}
+	/// Check if plot termination is asked
+	inline bool NeedStop()	{	return mgl_need_stop(gr);	}
+	/// Set callback function for event processing
+	inline void SetEventFunc(void (*func)(void *), void *par)
+	{	mgl_set_event_cb(gr, func, par);	}
+
 	/// Set the transparency on/off.
 	inline void Alpha(bool enable)			{	mgl_set_alpha(gr, enable);	}
 	/// Set default value of alpha-channel
@@ -433,6 +441,13 @@ public:
 			imgdata[4*i+3] = 255;
 		}
 	}
+	/// Copy RGBA values of background image into array which is allocated by user
+	inline void GetBackground(char *imgdata, int imglen)
+	{
+		long w=mgl_get_width(gr), h=mgl_get_height(gr);
+		if(imglen>=4*w*h)	memcpy(imgdata, mgl_get_background(gr),4*w*h);
+	}
+	inline const unsigned char *GetBackground()	{	return mgl_get_background(gr);	}
 	/// Get width of the image
 	inline int GetWidth()	{	return mgl_get_width(gr);	}
 	/// Get height of the image

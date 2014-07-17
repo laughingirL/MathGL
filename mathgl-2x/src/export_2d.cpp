@@ -181,7 +181,8 @@ void MGL_EXPORT mgl_write_eps(HMGL gr, const char *fname,const char *descr)
 	else		fp = gz ? (void*)gzopen(fname,"wt") : (void*)fopen(fname,"wt");
 	if(!fp)		{	gr->SetWarn(mglWarnOpen,fname);	return;	}
 	const std::string loc = setlocale(LC_NUMERIC, NULL);	setlocale(LC_NUMERIC, "C");
-	mgl_printf(fp, gz, "%%!PS-Adobe-3.0 EPSF-3.0\n%%%%BoundingBox: 0 0 %d %d\n", _Gr_->GetWidth(), _Gr_->GetHeight());
+	int w = _Gr_->GetWidth(), h = _Gr_->GetHeight();
+	mgl_printf(fp, gz, "%%!PS-Adobe-3.0 EPSF-3.0\n%%%%BoundingBox: 0 0 %d %d\n", w, h);
 	mgl_printf(fp, gz, "%%%%Created by MathGL library\n%%%%Title: %s\n",descr ? descr : fname);
 	mgl_printf(fp, gz, "%%%%CreationDate: %s\n",ctime(&now));
 	mgl_printf(fp, gz, "/lw {setlinewidth} def\n/rgb {setrgbcolor} def\n");
@@ -238,6 +239,25 @@ void MGL_EXPORT mgl_write_eps(HMGL gr, const char *fname,const char *descr)
 	if(m_X)	mgl_printf(fp, gz, "/m_X {m_x ss sm rm m_s} def\n");
 	//	if(m_C)	mgl_printf(fp, gz, "/m_C {m_c m_o} def\n");
 	mgl_printf(fp, gz, "\n");
+
+	// Write background image first
+	const unsigned char *img = mgl_get_background(gr);
+	bool same = true;
+	unsigned char white[3]={255,255,255};
+#pragma omp parallel for
+	for(long i=0;i<w*h;i++)	if(memcmp(img,img+4*i,3))	same=false;
+	if(!same)
+	{
+		mgl_printf(fp, gz, "%d %d 8 [1 0 0 1 0 0] {<", w,h,1+w*h/40);
+		for(long j=h-1;j>=0;j--)	for(long i=0;i<w;i++)
+		{
+			if((i+w*(h-j-1))%40==0 && i+j>0)	mgl_printf(fp, gz, "\n");
+			mgl_printf(fp, gz, "%02x%02x%02x",img[4*(i+w*j)],img[4*(i+w*j)+1],img[4*(i+w*j)+2]);
+		}
+		mgl_printf(fp, gz, "\n>} false 3 colorimage\n\n");
+	}
+	else if(memcmp(img,white,3))
+		mgl_printf(fp, gz, "np 0 0 mt 0 %d ll %d %d ll %d 0 ll cp %g %g %g rgb fill\n", h, w, h, w, img[0]/255., img[1]/255., img[2]/255.);
 
 	// write definition for all glyphs
 	put_desc(gr,fp,gz,"/%c%c_%04x { np\n", "\t%d %d mt ", "%d %d ll ", "cp\n", "} def\n");
@@ -355,7 +375,7 @@ void MGL_EXPORT mgl_write_svg(HMGL gr, const char *fname,const char *descr)
 	time_t now;	time(&now);
 
 	bool gz = fname[strlen(fname)-1]=='z';
-	long hh = _Gr_->GetHeight();
+	long hh = _Gr_->GetHeight(), ww = _Gr_->GetWidth();
 	void *fp;
 	if(!strcmp(fname,"-"))	fp = stdout;		// allow to write in stdout
 	else		fp = gz ? (void*)gzopen(fname,"wt") : (void*)fopen(fname,"wt");
@@ -363,7 +383,7 @@ void MGL_EXPORT mgl_write_svg(HMGL gr, const char *fname,const char *descr)
 	const std::string loc = setlocale(LC_NUMERIC, NULL);	setlocale(LC_NUMERIC, "C");
 	mgl_printf(fp, gz, "<?xml version=\"1.0\" standalone=\"no\"?>\n");
 	mgl_printf(fp, gz, "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 20000303 Stylable//EN\" \"http://www.w3.org/TR/2000/03/WD-SVG-20000303/DTD/svg-20000303-stylable.dtd\">\n");
-	mgl_printf(fp, gz, "<svg width=\"%d\" height=\"%d\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n", _Gr_->GetWidth(), hh);
+	mgl_printf(fp, gz, "<svg width=\"%d\" height=\"%d\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n", ww, hh);
 
 	mgl_printf(fp, gz, "<!--Created by MathGL library-->\n");
 	mgl_printf(fp, gz, "<!--Title: %s-->\n<!--CreationDate: %s-->\n\n",descr?descr:fname,ctime(&now));
@@ -371,6 +391,31 @@ void MGL_EXPORT mgl_write_svg(HMGL gr, const char *fname,const char *descr)
 	// write definition for all glyphs
 	put_desc(gr,fp,gz,"<symbol id=\"%c%c_%04x\"><path d=\"", "\tM %d %d ",
 			 "L %d %d ", "Z\n", "\"/></symbol>\n");
+
+
+	// Write background image first
+	const unsigned char *img = mgl_get_background(gr);
+	bool same = true;
+	unsigned char white[3]={255,255,255};
+#pragma omp parallel for
+	for(long i=0;i<ww*hh;i++)	if(memcmp(img,img+4*i,3))	same=false;
+	if(!same)
+	{	// TODO write as <image width="100" height="100" xlink:href="data:image/png;base64,...">
+/*		mgl_printf(fp, gz, "%d %d 8 [1 0 0 1 0 0] {<", ww,hh,1+ww*hh/40);
+		for(long j=hh-1;j>=0;j--)	for(long i=0;i<ww;i++)
+		{
+			if((i+ww*(hh-j-1))%40==0 && i+j>0)	mgl_printf(fp, gz, "\n");
+			mgl_printf(fp, gz, "%02x%02x%02x",img[4*(i+ww*j)],img[4*(i+ww*j)+1],img[4*(i+ww*j)+2]);
+		}
+		mgl_printf(fp, gz, "\n>} false 3 colorimage\n\n");*/
+	}
+	else if(memcmp(img,white,3))
+	{
+		mgl_printf(fp, gz, "<g fill=\"#%02x%02x%02x\" opacity=\"%g\">\n", img[0], img[1], img[2], img[3]/255.);
+		mgl_printf(fp, gz, "<path d=\"M 0 0 L 0 %ld L %ld %ld L %ld 0 Z\"/> </g>\n", hh, ww, hh, ww);
+	}
+
+
 	// currentColor -> inherit ???
 	mgl_printf(fp, gz, "<g fill=\"none\" stroke=\"none\" stroke-width=\"0.5\">\n");
 	// write primitives

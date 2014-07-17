@@ -46,7 +46,6 @@ void MGL_EXPORT mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCD
 #pragma omp parallel for private(p1,p2,p3,q)
 		for(long i=0;i<m;i++)
 		{
-			if(gr->Stop)	continue;
 			register long k1 = long(nums->v(0,i)+0.5);
 			p1 = mglPoint(x->v(k1), y->v(k1), z->v(k1));
 			register long k2 = long(nums->v(1,i)+0.5);
@@ -68,7 +67,6 @@ void MGL_EXPORT mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCD
 #pragma omp parallel for
 		for(long i=0;i<m;i++)	// add averaged normales
 		{
-			if(gr->Stop)	continue;
 			register long k1 = long(nums->v(0,i)+0.5);
 			register long k2 = long(nums->v(1,i)+0.5);
 			register long k3 = long(nums->v(2,i)+0.5);
@@ -86,14 +84,10 @@ void MGL_EXPORT mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCD
 		}
 #pragma omp parallel for
 		for(long i=0;i<n;i++)	// add points
-		{
-			if(gr->Stop)	continue;
 			kk[i] = gr->AddPnt(mglPoint(x->v(i), y->v(i), z->v(i)), gr->GetC(ss,a->v(i)), pp[i]);
-		}
 #pragma omp parallel for
 		for(long i=0;i<m;i++)	// draw triangles
 		{
-			if(gr->Stop)	continue;
 			register long k1 = long(nums->v(0,i)+0.5);
 			register long k2 = long(nums->v(1,i)+0.5);
 			register long k3 = long(nums->v(2,i)+0.5);
@@ -159,7 +153,6 @@ void MGL_EXPORT mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HC
 #pragma omp parallel for private(p1,p2,p3,p4)
 		for(long i=0;i<m;i++)
 		{
-			if(gr->Stop)	continue;
 			register long k1 = long(nums->v(0,i)+0.5);
 			p1 = mglPoint(x->v(k1), y->v(k1), z->v(k1));
 			register long k2 = long(nums->v(1,i)+0.5);
@@ -184,7 +177,6 @@ void MGL_EXPORT mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HC
 #pragma omp parallel for private(p1,p2,p3,p4)
 		for(long i=0;i<m;i++)	// add averaged normales
 		{
-			if(gr->Stop)	continue;
 			register long k1 = long(nums->v(0,i)+0.5);
 			p1 = mglPoint(x->v(k1), y->v(k1), z->v(k1));
 			register long k2 = long(nums->v(1,i)+0.5);
@@ -207,14 +199,10 @@ void MGL_EXPORT mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HC
 		}
 #pragma omp parallel for
 		for(long i=0;i<n;i++)	// add points
-		{
-			if(gr->Stop)	continue;
 			kk[i] = gr->AddPnt(mglPoint(x->v(i), y->v(i), z->v(i)),gr->GetC(ss,a->v(i)), pp[i]);
-		}
 #pragma omp parallel for
 		for(long i=0;i<m;i++)	// draw quads
 		{
-			if(gr->Stop)	continue;
 			register long k1 = floor(nums->v(0,i)+0.5);
 			register long k2 = floor(nums->v(1,i)+0.5);
 			register long k3 = floor(nums->v(2,i)+0.5);
@@ -459,7 +447,6 @@ void MGL_EXPORT mgl_dots_ca(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, HCDT a, con
 #pragma omp parallel for
 	for(long i=0;i<n;i+=d)
 	{
-		if(gr->Stop)	continue;
 		mglPoint p = mglPoint(x->vthr(i),y->vthr(i),z->vthr(i));
 		long pp = gr->AddPnt(p,gr->GetC(ss,c->vthr(i)),mglPoint(NAN),a?gr->GetA(a->vthr(i)):-1);
 		gr->mark_plot(pp, mk);

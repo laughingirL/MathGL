@@ -352,11 +352,11 @@ void PlotPanel::toolTop(QBoxLayout *l)
 	a->setToolTip(tr("Restore status for 'once' command and reload data (F9)."));
 	a->setShortcut(Qt::Key_F9);	o->addAction(a);	popup->addAction(a);
 
-/*	a = new QAction(QPixmap(":/png/process-stop.png"), tr("Stop"), this);
+	a = new QAction(QPixmap(":/png/process-stop.png"), tr("Stop"), this);
 	connect(a, SIGNAL(triggered()), this, SLOT(stop()));
 	a->setToolTip(tr("Stop script execution (F7)."));
 	a->setShortcut(Qt::Key_F7);	o->addAction(a);
-	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);*/
+	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
 	a = new QAction(QPixmap(":/png/edit-copy.png"), tr("Copy plot"), this);
 	connect(a, SIGNAL(triggered()), mgl, SLOT(copy()));

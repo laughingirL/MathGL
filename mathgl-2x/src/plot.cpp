@@ -62,7 +62,8 @@ void MGL_EXPORT mgl_fplot(HMGL gr, const char *eqY, const char *pen, const char 
 
 	for(long i=0;i<n-1 && n<nm;)
 	{
-		if(gr->Stop)	{	free(x);	free(y);	delete eq;	return;	}
+		if((i&0xfff)==0 && gr->NeedStop())
+		{	free(x);	free(y);	delete eq;	return;	}
 		xs=(x[i]+x[i+1])/2;
 		ys=(y[i]+y[i+1])/2;	yr=eq->Calc(xs);
 		if(fabs(yr-ys)>ym)	// bad approximation here
@@ -99,7 +100,6 @@ void MGL_EXPORT mgl_fplot_xyz(HMGL gr, const char *eqX, const char *eqY, const c
 #pragma omp parallel for
 	for(long i=0;i<n;i++)	// initial data filling
 	{
-		if(gr->Stop)	continue;
 		t[i] = i/(n-1.);
 		x[i] = ex->Calc(0,0,t[i]);
 		y[i] = ey->Calc(0,0,t[i]);
@@ -108,7 +108,7 @@ void MGL_EXPORT mgl_fplot_xyz(HMGL gr, const char *eqX, const char *eqY, const c
 
 	for(long i=0;i<n-1 && n<10000;)
 	{
-		if(gr->Stop)
+		if((i&0xfff)==0 && gr->NeedStop())
 		{
 			free(x);	free(y);	free(z);	free(t);
 			delete ex;	delete ey;	delete ez;	return;
@@ -233,7 +233,6 @@ void MGL_EXPORT mgl_candle_xyv(HMGL gr, HCDT x, HCDT v1, HCDT v2, HCDT y1, HCDT 
 #pragma omp parallel for
 	for(long i=0;i<n;i++)
 	{
-		if(gr->Stop)	continue;
 		mreal m1=v1->v(i),	m2 = v2->v(i),	xx = x->v(i);
 		mreal d = i<nx-1 ? x->v(i+1)-xx : xx-x->v(i-1);
 		mreal x1 = xx + d/2*(dv-gr->BarWidth);
@@ -323,12 +322,12 @@ void MGL_EXPORT mgl_plot_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, c
 
 	for(long j=0;j<m;j++)
 	{
+		if(gr->NeedStop())	break;
 		long mx = j<x->GetNy() ? j:0, my = j<y->GetNy() ? j:0, mz = j<z->GetNy() ? j:0;
 		gr->NextColor(pal);
 		bool t1 = false, t2 = false;
 		for(long i=0;i<n;i++)
 		{
-			if(gr->Stop)	return;
 			if(i>0)	{	n2=n1;	p2 = p1;	t2=t1;	}
 			p1 = mglPoint(x->v(i,mx), y->v(i,my), z->v(i,mz));
 			mreal c = sh ? gr->NextColor(pal,i):gr->CDef;
@@ -414,13 +413,13 @@ void MGL_EXPORT mgl_tens_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char
 
 	for(long j=0;j<m;j++)
 	{
+		if(gr->NeedStop())	break;
 		long mx = j<x->GetNy() ? j:0, my = j<y->GetNy() ? j:0;
 		long mz = j<z->GetNy() ? j:0, mc = j<c->GetNy() ? j:0;
 		register long i;
 		bool t1 = false, t2 = false;
 		for(i=0;i<n;i++)
 		{
-			if(gr->Stop)	return;
 			if(i>0)	{	n2=n1;	p2=p1;	t2=t1;	}
 			p1 = mglPoint(x->v(i,mx), y->v(i,my), z->v(i,mz), c->v(i,mc));
 			n1 = gr->AddPnt(p1,gr->GetC(ss,p1.c));	t1 = n1>=0;
@@ -508,6 +507,7 @@ void MGL_EXPORT mgl_area_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, c
 	gr->SetPenPal(pen,&pal);	gr->Reserve(2*n*m);
 	for(long j=0;j<m;j++)
 	{
+		if(gr->NeedStop())	break;
 		c2=c1=gr->NextColor(pal);
 		if(gr->GetNumPal(pal)==2*m && !sh)	c2 = gr->NextColor(pal);
 		long mx = j<x->GetNy() ? j:0, my = j<y->GetNy() ? j:0, mz = j<z->GetNy() ? j:0;
@@ -518,7 +518,6 @@ void MGL_EXPORT mgl_area_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, c
 		long n2 = gr->AddPnt(p,c2,nn,-1,11);
 		for(long i=1;i<n;i++)
 		{
-			if(gr->Stop)	return;
 			long n3=n1, n4=n2;
 			nn = mglPoint(-y->dvx(i,my),x->dvx(i,mx));
 			p = mglPoint(x->v(i,mx),y->v(i,my),z->v(i,mz));
@@ -553,17 +552,17 @@ void MGL_EXPORT mgl_area_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char
 //	long s=gr->AddTexture(pen,1);
 	for(long j=0;j<m;j++)
 	{
+		if(gr->NeedStop())	break;
 		c2=c1=gr->NextColor(pal);
 		if(gr->GetNumPal(pal)==2*m && !sh)	c2=gr->NextColor(pal);
 		long mx = j<x->GetNy() ? j:0, my = j<y->GetNy() ? j:0;
 		mreal z0 = zm + (m-1-j)*(gr->Max.z-zm)/m;
 
 		mglPoint p = mglPoint(x->v(0,mx),y->v(0,my),z0);
-		long n1 = gr->AddPnt(p,c1,nn,-1,11);	p.y = y0;	
+		long n1 = gr->AddPnt(p,c1,nn,-1,11);	p.y = y0;
 		long n2 = gr->AddPnt(p,c2,nn,-1,11);
 		for(long i=1;i<n;i++)
 		{
-			if(gr->Stop)	return;
 			long n3=n1, n4=n2;
 			p = mglPoint(x->v(i,mx),y->v(i,my),z0);
 			if(sh)	c2=c1=gr->NextColor(pal,i);
@@ -628,6 +627,7 @@ void MGL_EXPORT mgl_region_3d(HMGL gr, HCDT x1, HCDT y1, HCDT z1, HCDT x2, HCDT 
 	gr->SetPenPal(pen,&pal);	gr->Reserve(2*n*m);
 	for(long j=0;j<m;j++)
 	{
+		if(gr->NeedStop())	break;
 		c2=c1=gr->NextColor(pal);
 		if(gr->GetNumPal(pal)==2*m && !sh)	c2=gr->NextColor(pal);
 		long mx = j<x1->GetNy() ? j:0, my = j<y1->GetNy() ? j:0;
@@ -638,7 +638,6 @@ void MGL_EXPORT mgl_region_3d(HMGL gr, HCDT x1, HCDT y1, HCDT z1, HCDT x2, HCDT 
 		long n2 = gr->AddPnt(mglPoint(x2->v(0,mx),y2->v(0,my),zhave?z2->v(0,mz):z0),c2,nn,-1,11);
 		for(long i=1;i<n;i++)
 		{
-			if(gr->Stop)	return;
 			long n3=n1, n4=n2;
 			if(sh)	c2=c1=gr->NextColor(pal,i);
 			n1 = gr->AddPnt(mglPoint(x1->v(i,mx),y1->v(i,my),zhave?z1->v(i,mz):z0),c1,nn,-1,11);
@@ -667,6 +666,7 @@ void MGL_EXPORT mgl_region_xy(HMGL gr, HCDT x, HCDT y1, HCDT y2, const char *pen
 //	long s=gr->AddTexture(pen,1);
 	for(long j=0;j<m;j++)
 	{
+		if(gr->NeedStop())	break;
 		c2=c1=gr->NextColor(pal);
 		if(gr->GetNumPal(pal)==2*m && !sh)	c2=gr->NextColor(pal);
 		long mx = j<x->GetNy() ? j:0;
@@ -677,7 +677,6 @@ void MGL_EXPORT mgl_region_xy(HMGL gr, HCDT x, HCDT y1, HCDT y2, const char *pen
 		long n2 = gr->AddPnt(mglPoint(xx,f2,z0),c2,nn,-1,11);
 		for(long i=1;i<n;i++)
 		{
-			if(gr->Stop)	return;
 			long n3=n1, n4=n2;
 			mreal f3=f1, f4=f2;
 			f1 = y1->v(i,j);	f2 = y2->v(i,j);	xx = x->v(i,mx);
@@ -730,13 +729,13 @@ void MGL_EXPORT mgl_step_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, c
 	mglPoint p;
 	for(long j=0;j<m;j++)
 	{
+		if(gr->NeedStop())	break;
 		long mx = j<x->GetNy() ? j:0, my = j<y->GetNy() ? j:0, mz = j<z->GetNy() ? j:0;
 		gr->NextColor(pal);
 		long n1 = gr->AddPnt(mglPoint(x->v(0,mx), y->v(0,my), z->v(0,mz)));
 		if(mk)	gr->mark_plot(n1,mk);
 		for(long i=1;i<n;i++)
 		{
-			if(gr->Stop)	return;
 			long n2 = n1;	// horizontal
 			p = mglPoint(x->v(i,mx), y->v(i,my), z->v(i-1,mz));
 			mreal c = sh ? gr->NextColor(pal,i):gr->CDef;
@@ -768,13 +767,13 @@ void MGL_EXPORT mgl_step_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char
 	mglPoint p;
 	for(long j=0;j<m;j++)
 	{
+		if(gr->NeedStop())	break;
 		long mx = j<x->GetNy() ? j:0, my = j<y->GetNy() ? j:0;
 		gr->NextColor(pal);
 		long n1 = gr->AddPnt(mglPoint(x->v(0,mx), y->v(0,my), zVal));
 		if(mk)	gr->mark_plot(n1,mk);
 		for(long i=1;i<n;i++)
 		{
-			if(gr->Stop)	return;
 			long n2 = n1;	// horizontal
 			p = mglPoint(x->v(i,mx), y->v(i-1,my), zVal);
 			mreal c = sh ? gr->NextColor(pal,i):gr->CDef;
@@ -831,12 +830,12 @@ void MGL_EXPORT mgl_stem_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, c
 	char mk=gr->SetPenPal(pen,&pal);	gr->Reserve(2*n*m);
 	for(long j=0;j<m;j++)
 	{
+		if(gr->NeedStop())	break;
 		long mx = j<x->GetNy() ? j:0, my = j<y->GetNy() ? j:0, mz = j<z->GetNy() ? j:0;
 		gr->NextColor(pal);
 #pragma omp parallel for
 		for(long i=0;i<n;i++)
 		{
-			if(gr->Stop)	continue;
 			mreal c = sh ? gr->NextColor(pal,i):gr->CDef;
 			long n1 = gr->AddPnt(mglPoint(x->v(i,mx), y->v(i,my), z->v(i,mz)),c);
 			if(mk)	gr->mark_plot(n1,mk);
@@ -861,12 +860,12 @@ void MGL_EXPORT mgl_stem_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char
 	char mk=gr->SetPenPal(pen,&pal);	gr->Reserve(2*n*m);
 	for(long j=0;j<m;j++)
 	{
+		if(gr->NeedStop())	break;
 		long mx = j<x->GetNy() ? j:0, my = j<y->GetNy() ? j:0;
 		gr->NextColor(pal);
 #pragma omp parallel for
 		for(long i=0;i<n;i++)
 		{
-			if(gr->Stop)	continue;
 			mreal vv = x->v(i,mx);
 			mreal c = sh ? gr->NextColor(pal,i):gr->CDef;
 			long n1 = gr->AddPnt(mglPoint(vv, y->v(i,my), zVal),c);
@@ -929,6 +928,7 @@ void MGL_EXPORT mgl_bars_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, c
 	gr->Reserve(4*n*m);
 	for(long j=0;j<m;j++)
 	{
+		if(gr->NeedStop())	break;
 		c2=c1=gr->NextColor(pal);
 		if(gr->GetNumPal(pal)==2*m && !sh)	c2 = gr->NextColor(pal);
 		long mx = j<x->GetNy() ? j:0, my = j<y->GetNy() ? j:0, mz = j<z->GetNy() ? j:0;
@@ -936,7 +936,6 @@ void MGL_EXPORT mgl_bars_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, c
 #pragma omp parallel for ordered
 		for(long i=0;i<n;i++)
 		{
-			if(gr->Stop)	continue;
 			if(sh)	c2=c1=gr->NextColor(pal,i);
 			mreal vv = x->v(i,mx), d = i<nx-1 ? x->v(i+1,mx)-vv : vv-x->v(i-1,mx), zz;
 			mreal x1 = vv + d/2*(dv-gr->BarWidth), x2 = x1 + gr->BarWidth*d;
@@ -997,6 +996,7 @@ void MGL_EXPORT mgl_bars_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char
 	gr->Reserve(4*n*m);
 	for(long j=0;j<m;j++)
 	{
+		if(gr->NeedStop())	break;
 		c2=c1=gr->NextColor(pal);
 		if(gr->GetNumPal(pal)==2*m && !sh)	c2 = gr->NextColor(pal);
 		long mx = j<x->GetNy() ? j:0, my = j<y->GetNy() ? j:0;
@@ -1004,7 +1004,6 @@ void MGL_EXPORT mgl_bars_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char
 #pragma omp parallel for ordered
 		for(long i=0;i<n;i++)
 		{
-			if(gr->Stop)	continue;
 			if(sh)	c2=c1=gr->NextColor(pal,i);
 			mreal vv = x->v(i,mx), d = i<nx-1 ? x->v(i+1,mx)-vv : vv-x->v(i-1,mx), yy;
 			mreal x1 = vv + d/2*(dv-gr->BarWidth), x2 = x1 + gr->BarWidth*d;
@@ -1085,6 +1084,7 @@ void MGL_EXPORT mgl_barh_yx(HMGL gr, HCDT y, HCDT v, const char *pen, const char
 	gr->Reserve(4*n*m);
 	for(long j=0;j<m;j++)
 	{
+		if(gr->NeedStop())	break;
 		c2=c1=gr->NextColor(pal);
 		if(gr->GetNumPal(pal)==2*m && !sh)	c2 = gr->NextColor(pal);
 		long mx = j<v->GetNy() ? j:0, my = j<y->GetNy() ? j:0;
@@ -1092,7 +1092,6 @@ void MGL_EXPORT mgl_barh_yx(HMGL gr, HCDT y, HCDT v, const char *pen, const char
 #pragma omp parallel for ordered
 		for(long i=0;i<n;i++)
 		{
-			if(gr->Stop)	continue;
 			if(sh)	c2=c1=gr->NextColor(pal,i);
 			mreal vv = y->v(i,my), d = i<ny-1 ? y->v(i+1,my)-vv : vv-y->v(i-1,my), xx;
 			mreal y1 = vv + d/2*(dv-gr->BarWidth), y2 = y1 + gr->BarWidth*d;
@@ -1161,12 +1160,12 @@ void MGL_EXPORT mgl_ohlc_x(HMGL gr, HCDT x, HCDT open, HCDT high, HCDT low, HCDT
 	gr->SetPenPal(pen,&pal);	gr->Reserve(6*n*m);
 	for(long j=0;j<m;j++)
 	{
+		if(gr->NeedStop())	break;
 		cc=gr->NextColor(pal);
 		mx = j<x->GetNy() ? j:0;
 #pragma omp parallel for private(vv,dd,x1,x2)
 		for(long i=0;i<n;i++)
 		{
-			if(gr->Stop)	continue;
 			vv = x->v(i,mx);	dd = i<nx-1 ? x->v(i+1)-vv : vv-x->v(i-1);
 			x1 = vv + dd/2*(dv-gr->BarWidth);	x2 = x1 + gr->BarWidth*dd;
 			x2 = (x2-x1)/m;		x1 += j*x2;		x2 += x1;	vv = (x2+x1)/2;
@@ -1236,7 +1235,6 @@ void MGL_EXPORT mgl_boxplot_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const c
 #pragma omp for
 		for(long i=0;i<n;i++)	// find quartiles by itself
 		{
-			if(gr->Stop)	continue;
 			register long mm,k,j;
 			for(mm=j=0;j<m;j++)
 			{
@@ -1258,7 +1256,6 @@ void MGL_EXPORT mgl_boxplot_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const c
 #pragma omp parallel for private(vv,dd,x1,x2)
 	for(long i=0;i<n;i++)
 	{
-		if(gr->Stop)	continue;
 		vv = x->v(i);
 		dd = i<nx-1 ? x->v(i+1)-vv : vv-x->v(i-1);
 		x1 = vv + dd/2*(dv-gr->BarWidth);
@@ -1341,7 +1338,7 @@ void MGL_EXPORT mgl_error_exy(HMGL gr, HCDT x, HCDT y, HCDT ex, HCDT ey, const c
 	mglPoint q(NAN,NAN);
 	for(long j=0;j<m;j++)
 	{
-		if(gr->Stop)	return;
+		if(gr->NeedStop())	break;
 		long mx = j<x->GetNy() ? j:0, my = j<y->GetNy() ? j:0;
 		long m1 = j<ex->GetNy() ? j:0,m2 = j<ey->GetNy() ? j:0;
 		gr->NextColor(pal);
@@ -1576,12 +1573,12 @@ void MGL_EXPORT mgl_chart(HMGL gr, HCDT a, const char *cols, const char *opt)
 
 	for(j=0;j<a->GetNy();j++)
 	{
+		if(gr->NeedStop())	break;
 		y1 = gr->Min.y + dy*j;
 		for(i=0,ss=0;i<n;i++)	ss += a->v(i,j);
 		if(ss==0)	continue;
 		for(cs=0,i=0;i<n;i++)
 		{
-			if(gr->Stop)	{	delete []c;	return;	}
 			vv = a->v(i,j);	dx = vv/ss;	cc = c[i%nc];
 			if(dx==0)	continue;
 			x1 = gr->Min.x + (gr->Max.x-gr->Min.x)*cs/ss;	dx *= (gr->Max.x-gr->Min.x);
@@ -1625,12 +1622,12 @@ void MGL_EXPORT mgl_mark_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const char
 
 	for(long j=0;j<m;j++)
 	{
+		if(gr->NeedStop())	break;
 		gr->NextColor(pal);
 		long mx = j<x->GetNy() ? j:0, my = j<y->GetNy() ? j:0;
 		long mz = j<z->GetNy() ? j:0, mr = j<r->GetNy() ? j:0;
 		for(long i=0;i<n;i++)
 		{
-			if(gr->Stop)	return;
 			mreal c = sh ? gr->NextColor(pal,i):gr->CDef;
 			gr->mark_plot(gr->AddPnt(mglPoint(x->v(i,mx),y->v(i,my),z->v(i,mz)),c), mk, fabs(r->v(i,mr)));
 		}
@@ -1695,6 +1692,7 @@ void MGL_EXPORT mgl_tube_xyzr(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const cha
 	memset(nn,-1,2*num*sizeof(long));
 	for(long j=0;j<m;j++)
 	{
+		if(gr->NeedStop())	break;
 		gr->NextColor(pal);
 		long mx = j<x->GetNy() ? j:0, my = j<y->GetNy() ? j:0;
 		long mz = j<z->GetNy() ? j:0, mr = j<r->GetNy() ? j:0;
@@ -1707,7 +1705,6 @@ void MGL_EXPORT mgl_tube_xyzr(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const cha
 			mreal c = sh ? gr->NextColor(pal,i):gr->CDef;
 			for(long k=0;k<num;k++)
 			{
-				if(gr->Stop)	{	delete []nn;	return;	}
 				register int kk = k*360/(num-1);
 				register float  co = mgl_cos[(kk)%360], si = mgl_cos[(270+kk)%360];
 				p = q + t*(rr*co) + u*(rr*si);
@@ -1821,6 +1818,7 @@ void MGL_EXPORT mgl_tape_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, c
 
 	for(long j=0;j<m;j++)
 	{
+		if(gr->NeedStop())	break;
 		c2=c1=gr->NextColor(pal);
 		if(gr->GetNumPal(pal)==2*m && !sh)	c2 = gr->NextColor(pal);
 		long mx = j<x->GetNy() ? j:0, my = j<y->GetNy() ? j:0, mz = j<z->GetNy() ? j:0;
@@ -1839,7 +1837,6 @@ void MGL_EXPORT mgl_tape_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, c
 		register long i;
 		for(i=1;i<n;i++)
 		{
-			if(gr->Stop)	return;
 			p1 = p2;	p2 = mglPoint(x->v(i,mx), y->v(i,my), z->v(i,mz));
 			l = p2-p1;		l /= mgl_norm(l);
 			q1 -= l*(l*q1);	q1/= mgl_norm(q1);	q2 = (q1^l);

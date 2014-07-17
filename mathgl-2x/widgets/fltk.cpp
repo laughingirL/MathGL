@@ -52,6 +52,7 @@
 #include "xpm/rotate.xpm"
 #include "xpm/ok.xpm"
 #include "xpm/wire.xpm"
+#include "xpm/stop.xpm"
 //-----------------------------------------------------------------------------
 Fl_Pixmap xpm_a1(alpha_xpm);
 Fl_Pixmap xpm_l1(light_xpm);
@@ -118,12 +119,17 @@ Fl_MathGL::Fl_MathGL(int xx, int yy, int ww, int hh, const char *lbl) : Fl_Widge
 //-----------------------------------------------------------------------------
 Fl_MathGL::~Fl_MathGL()	{	if(mgl_use_graph(gr,-1)<1)	mgl_delete_graph(gr);	}
 //-----------------------------------------------------------------------------
+void Fl_MathGL::stop(bool stop)	{	gr->AskStop(stop);	}
+//-----------------------------------------------------------------------------
+void mgl_fltk_event_func(void *)	{	Fl::awake();	}
+//-----------------------------------------------------------------------------
 void Fl_MathGL::set_graph(HMGL GR)
 {
 	mglCanvas *gg = dynamic_cast<mglCanvas *>(GR);
 	if(!gg)	return;
 	if(mgl_use_graph(gr,-1)<1)	mgl_delete_graph(gr);
 	gr=gg;	mgl_use_graph(gg,1);
+	gr->SetEventFunc(mgl_fltk_event_func, NULL);
 }
 //-----------------------------------------------------------------------------
 void Fl_MathGL::draw()
@@ -169,7 +175,7 @@ void Fl_MathGL::update()
 	}
 	if(mgl_get_width(gr)!=w() || mgl_get_height(gr)!=h())
 		size(mgl_get_width(gr), mgl_get_height(gr));
-	redraw();	Fl::flush();
+	gr->AskStop(false);	redraw();	Fl::flush();
 }
 //-----------------------------------------------------------------------------
 void Fl_MathGL::resize(int xx, int yy, int ww, int hh)
@@ -538,6 +544,9 @@ void MGL_NO_EXPORT mgl_sshow_cb(Fl_Widget *, void *v)
 void mglCanvasFL::Animation()	{	Fl::lock();	mgl_sshow_cb(0,mgl);	Fl::unlock();	}
 void MGL_LOCAL_CONST mgl_no_cb(Fl_Widget *, void *)	{}
 //-----------------------------------------------------------------------------
+void MGL_NO_EXPORT mgl_stop_cb(Fl_Widget*, void* v)
+{	Fl_MGLView *e = (Fl_MGLView*)v;	if(e)	e->FMGL->stop();	}
+//-----------------------------------------------------------------------------
 Fl_Menu_Item pop_graph[20] = {
 	{ mgl_gettext("Export"), 0, mgl_no_cb, 0, FL_SUBMENU,0,0,0,0},
 		{ mgl_gettext("... as PNG"),	0, mgl_export_png_cb,0,0,0,0,0,0 },
@@ -592,6 +601,9 @@ Fl_MGLView::Fl_MGLView(int xx, int yy, int ww, int hh, const char *lbl) : Fl_Win
 	o = new Fl_Button(130, 1, 25, 25);		o->tooltip(mgl_gettext("Return picture to normal zoom"));
 	o->image(new Fl_Pixmap(zoom_out_xpm));	o->callback(mgl_norm_cb,this);
 //	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
+
+	o = new Fl_Button(160, 1, 25, 25);	o->tooltip(mgl_gettext("Stop drawing"));
+	o->image(new Fl_Pixmap(stop_xpm));	o->callback(mgl_stop_cb,this);
 
 	o = new Fl_Button(160, 1, 25, 25);	o->tooltip(mgl_gettext("Refresh the picture"));
 	o->image(new Fl_Pixmap(ok_xpm));	o->callback(mgl_draw_cb,this);
@@ -681,7 +693,7 @@ void MGL_EXPORT mgl_makemenu_fltk(Fl_Menu_ *m, Fl_MGLView *w)
 	m->add("Graphics/Redraw", "f5", mgl_draw_cb, w);
 	m->add("Graphics/Adjust size", "f6", mgl_adjust_cb, w);
 	m->add("Graphics/Reload data", "f9", mgl_oncemore_cb, w);
-	//TODO	m->add("Graphics/Stop", "f7", mgl_stop_cb, w);
+	m->add("Graphics/Stop", "f7", mgl_stop_cb, w);
 	//TODO	m->add("Graphics/Copy graphics","+^c", mgl_copyimg_cb, w);
 
 	m->add("Graphics/Export/as PNG", "#p", mgl_export_png_cb, w);

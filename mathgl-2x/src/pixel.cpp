@@ -20,6 +20,13 @@
 #include <algorithm>
 #include "mgl2/canvas.h"
 #include "mgl2/thread.h"
+
+inline mreal get_persp(float pf, float z, float Depth)
+//{	return (1-pf)/(1-pf*z/Depth);	}
+{	return (1-pf/1.37)/(1-pf*z/Depth);	}
+inline mreal get_pfact(float pf, float Depth)
+//{	return pf/(1-pf)/Depth;	}
+{	return pf/(1-pf/1.37)/Depth;	}
 //-----------------------------------------------------------------------------
 void mglCanvas::SetSize(int w,int h,bool clf)
 {
@@ -150,7 +157,7 @@ mglPoint mglCanvas::RestorePnt(mglPoint ps, bool norm) const
 
 	if(mgl_isnum(ps.z))	// try to take into account perspective if z-value is provided
 	{
-		register float d = (1-Bp.pf)/(1-Bp.pf*ps.z/Depth);
+		register float d =	get_persp(Bp.pf,ps.z,Depth);
 		ps.x = Width/2 + (ps.x-Width/2)/d;
 		ps.y = Height/2+ (ps.y-Height/2)/d;
 	}
@@ -318,7 +325,7 @@ void mglCanvas::pxl_transform(long id, long n, const void *)
 		p.x = Bp.b[0]*x + Bp.b[1]*y + Bp.b[2]*z - Bp.x*Width/2;
 		p.y = Bp.b[3]*x + Bp.b[4]*y + Bp.b[5]*z - Bp.y*Height/2;
 		p.z = Bp.b[6]*x + Bp.b[7]*y + Bp.b[8]*z + Depth/2.;
-		register float d = (1-Bp.pf)/(1-Bp.pf*p.z/Depth);
+		register float d = get_persp(Bp.pf,p.z,Depth);
 		p.x = Width/2 + d*p.x;	p.y = Height/2 + d*p.y;
 	}
 }
@@ -444,7 +451,7 @@ void mglCanvas::pxl_primdr(long id, long , const void *)
 		mglDrawReg d;	d.set(this,nx,ny,i);
 		for(size_t k=0;k<Prm.size();k++)
 		{
-			if(Stop)	continue;
+			if(Stop)	break;
 			const mglPrim &p=GetPrm(k);
 			d.PDef = p.n3;	d.pPos = p.s;
 			d.ObjId = p.id;	d.PenWidth=p.w;
@@ -473,7 +480,7 @@ void mglCanvas::pxl_primpx(long id, long n, const void *)	// NOTE this variant i
 		register long i=ii%Width, j=ii/Width;
 		for(size_t k=0;k<Prm.size();k++)
 		{
-			if(Stop)	continue;
+			if(Stop)	break;
 			const mglPrim &p=GetPrm(k);
 			d.PDef = p.n3;	d.pPos = p.s;
 			d.ObjId = p.id;	d.PenWidth=p.w;
@@ -505,7 +512,7 @@ void mglCanvas::pxl_dotsdr(long id, long n, const void *)
 		xx = Bp.b[0]*x + Bp.b[1]*y + Bp.b[2]*z - Bp.x*Width/2;
 		yy = Bp.b[3]*x + Bp.b[4]*y + Bp.b[5]*z - Bp.y*Height/2;
 		zz = Bp.b[6]*x + Bp.b[7]*y + Bp.b[8]*z + Depth/2.;
-		register float d = (1-Bp.pf)/(1-Bp.pf*zz/Depth);
+		register float d = get_persp(Bp.pf,zz,Depth);
 		xx = Width/2 + d*xx;	yy = Height/2 + d*yy;
 
 		r[0] = (unsigned char)(255*p.r);
@@ -1706,8 +1713,8 @@ float mglCanvas::GetGlyphPhi(const mglPnt &q, float phi)
 		y = Bp.b[3]*q.u + Bp.b[4]*q.v + Bp.b[5]*q.w;
 		z = Bp.b[6]*q.u + Bp.b[7]*q.v + Bp.b[8]*q.w;
 
-		register float dv = (1-Bp.pf)/(1-Bp.pf*q.z/Depth);
-		register float c=Bp.pf/(1-Bp.pf)/Depth;
+		register float dv= get_persp(Bp.pf,q.z,Depth);
+		register float c = get_pfact(Bp.pf,Depth);
 		x += (q.x-Width/2)*z*c*dv;
 		y += (q.y-Height/2)*z*c*dv;
 	}
@@ -1730,7 +1737,8 @@ void mglCanvas::glyph_draw(const mglPrim &P, mglDrawReg *d)
 	if(d)	{	d->PDef = MGL_SOLID_MASK;	d->angle = 0;	d->PenWidth=0.6;	}
 	mglPnt p=Pnt[P.n1];
 	// NOTE check this later for mglInPlot
-	mreal pf=p.sub<0?1:sqrt((Bp.b[0]*Bp.b[0]+Bp.b[1]*Bp.b[1]+Bp.b[3]*Bp.b[3]+Bp.b[4]*Bp.b[4])/2), f = P.p*pf;
+	mreal fact = get_persp(Bp.pf,p.z,Depth);
+	mreal pf=(p.sub<0?1:sqrt((Bp.b[0]*Bp.b[0]+Bp.b[1]*Bp.b[1]+Bp.b[3]*Bp.b[3]+Bp.b[4]*Bp.b[4])/2))*fact, f = P.p*pf;
 
 	mglMatrix M;
 	M.b[0] = M.b[4] = M.b[8] = P.s;

@@ -336,7 +336,7 @@ mathgl.Graph.prototype.__mgl_draw_prim = function(obj, ctx, prim, scl) {
 
 mathgl.Graph.prototype.__mgl_pf = function(obj, z) {
 //	return 1/obj.pf;
-	return (1-this.__fov)/obj.pf/(1-this.__fov*z/obj.depth);	// TODO: check calc coordinates!!!
+	return (1-this.__fov/1.37)/obj.pf/(1-this.__fov*z/obj.depth);	// TODO: check calc coordinates!!!
 //	return 1/(1+obj.pf*(1-z/obj.depth));
 }
 
@@ -611,39 +611,39 @@ mathgl.Graph.prototype.zoomOut = function() {
 	this.zoomAxis(1./1.1);
 }
 
-mathgl.Graph.prototype.getView = function(mgl) { 
-	return this.__view; 
+mathgl.Graph.prototype.getView = function(mgl) {
+	return this.__view;
 }
 
-mathgl.Graph.prototype.reloadGeometry = function() { 
-	var mgl = this.__geometry.mgl; 
-	this.__geometry = this.__backend.geometry(mgl); 
-	this.__geometry.mgl = mgl; 
+mathgl.Graph.prototype.reloadGeometry = function() {
+	var mgl = this.__geometry.mgl;
+	this.__geometry = this.__backend.geometry(mgl);
+	this.__geometry.mgl = mgl;
 }
 
-mathgl.Graph.prototype.redraw = function() { 
-	this.__renderStart(); 
+mathgl.Graph.prototype.redraw = function() {
+	this.__renderStart();
 }
 
-mathgl.Graph.prototype.destroy = function() { 
-	this.__view.destroy(); 
+mathgl.Graph.prototype.destroy = function() {
+	this.__view.destroy();
 	this.__view = null;
 	this.__backend = null;
 	this.__canvas = null;
 	this.__geometry = null;
-} 
+}
 
-/** @param type {String} data url type (e.g. "image/png") */ 
+/** @param type {String} data url type (e.g. "image/png") */
 mathgl.Graph.prototype.toDataURL = function(type) {
 	this.__canvas.toDataURL(type);
 }
 
-/** Set perspective angle of view: @param val - degree of perspective in range 0...1 (0 - use default orthogonal projection)  */ 
+/** Set perspective angle of view: @param val - degree of perspective in range 0...1 (0 - use default orthogonal projection)  */
 mathgl.Graph.prototype.setPerspective = function(val) {
-	this.__fov = val; 
+	this.__fov = val;
 }
 
-/** Set maximal number of drawable points in draft mode */ 
+/** Set maximal number of drawable points in draft mode */
 mathgl.Graph.prototype.setMaxDraftPoints = function(count) {
 	this.__maxDraftPoints = count;
 }

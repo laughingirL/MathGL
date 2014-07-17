@@ -248,7 +248,6 @@ public:
 	mglBase();
 	virtual ~mglBase();
 
-	bool Stop;			///< Flag that execution should be terminated.
 	mglPoint Min;		///< Lower edge of bounding box for graphics.
 	mglPoint Max;		///< Upper edge of bounding box for graphics.
 	mreal ZMin;			///< Adjusted minimal z-value 1D plots
@@ -489,8 +488,18 @@ public:
 //	inline char last_color()	{	return last_style[1];	}
 	inline const char *last_line()	{	return last_style;	}
 	int PrmCmp(long i, long j) const MGL_FUNC_PURE;	// compare 2 primitives with indexes i,j
+	/// Check if plot termination is asked
+	bool NeedStop()	{	if(event_cb)	event_cb(event_par);	return Stop;	}
+	/// Ask to stop drawing
+	void AskStop(bool stop=true)	{	Stop = stop;	}
+	/// Set callback function for event processing
+	void SetEventFunc(void (*func)(void *), void *par)	{	event_cb=func;	event_par=par;	}
 
 protected:
+	bool Stop;			///< Flag that execution should be terminated.
+	void (*event_cb)(void *);	///< Function to be called for event processing
+	void *event_par;	///< Parameter for event processing function
+
 	mglPoint OMin;		///< Lower edge for original axis (before scaling)
 	mglPoint OMax;		///< Upper edge for original axis (before scaling)
 	mglPoint AMin;		///< Lower edge for axis scaling
@@ -520,6 +529,7 @@ protected:
 	mreal AmbBr;		///< Default ambient light brightness
 	mreal DifBr;		///< Default diffusive light brightness
 
+	mreal persp;		///< Original value for perspective
 	mglMatrix Bp;		///< Transformation matrix for View() and Zoom()
 	mglMatrix B;		///< Transformation matrix
 	mglMatrix B1;		///< Transformation matrix for colorbar
@@ -540,7 +550,7 @@ protected:
 	mreal ArrowSize;	///< The size of arrows.
 	char last_style[64];///< Last pen style
 	mreal font_factor;	///< Font scaling factor
-	
+
 	long dr_x, dr_y, dr_p;	///< default drawing region for quality&4 mode
 
 	virtual void LightScale(const mglMatrix *M)=0;			///< Scale positions of light sources

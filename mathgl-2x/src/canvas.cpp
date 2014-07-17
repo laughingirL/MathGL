@@ -179,13 +179,14 @@ int Height;			///< Height of the image
 int Depth;			///< Depth of the image
 int CurFrameId;		///< Number of automaticle created frames
 GifFileType *gif;*/
-	SetDrawReg(1,1,0);
+	SetDrawReg(1,1,0);		Perspective(0);
 	memcpy(mgl_mask_val, mgl_mask_def, 16*sizeof(uint64_t));	// should be > 16*8
 	mgl_clear_fft();		DefMaskAn=0;	ResetMask();
 	SetTickRotate(true);	SetTickSkip(true);
 	SetWarn(mglWarnNone,"");	mglGlobalMess = "";
 	ObjId = -1;	HighId = INT_MIN;
-	SetFunc(0,0);	Stop=false;	CutOff(0);	Ternary(0);
+	SetFunc(0,0);	CutOff(0);	Ternary(0);
+	Stop=false;	event_cb = NULL;	event_par=NULL;
 	SetRanges(mglPoint(-1,-1,-1,-1), mglPoint(1,1,1,1));
 	SetOrigin(NAN,NAN,NAN,NAN);
 	SetBarWidth(0.7);	SetMarkSize(1);	SetArrowSize(1);

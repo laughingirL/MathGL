@@ -47,7 +47,7 @@ void MGL_NO_EXPORT mgl_pde_hprep(const mgl_pde_ham *f)
 	std::vector<mglDataA*> list;
 	list.push_back(&x);	list.push_back(&y);	list.push_back(&z);
 	list.push_back(&p);	list.push_back(&q);	list.push_back(&u);
-	
+
 	x.Fill(f->xx,f->xx+f->dx*(nx-1),'x');	p.Fill(0);
 	y.Fill(f->yy,f->yy+f->dy*(ny-1),'y');	q.Fill(0);
 	mglDataC res = mglFormulaCalcC(f->eqs, list);
@@ -126,7 +126,7 @@ HADT MGL_EXPORT mgl_pde_solve_c(HMGL gr, const char *ham, HCDT ini_re, HCDT ini_
 	void *wty = mgl_fft_alloc(2*ny,0,0);
 	for(long k=1;k<nz;k++)
 	{
-		if(gr->Stop)	continue;
+		if(gr->NeedStop())	break;
 		tmp.zz = Min.z+dz*k;
 		memset(hxy,0,4*nx*ny*sizeof(dual));	memset(hxv,0,4*nx*ny*sizeof(dual));
 		memset(huv,0,4*nx*ny*sizeof(dual));	memset(huy,0,4*nx*ny*sizeof(dual));

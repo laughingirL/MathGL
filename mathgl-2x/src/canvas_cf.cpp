@@ -29,6 +29,8 @@ MGL_EXPORT const unsigned char *mgl_get_rgb(HMGL gr)
 {	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	return g?g->GetBits():0;	}
 MGL_EXPORT const unsigned char *mgl_get_rgba(HMGL gr)
 {	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	return g?g->GetRGBA():0;	}
+MGL_EXPORT const unsigned char* mgl_get_background(HMGL gr)
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	return g?g->GetBackground():0;	}
 int MGL_EXPORT mgl_get_width(HMGL gr)
 {	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	return g?g->GetWidth():0;	}
 int MGL_EXPORT mgl_get_height(HMGL gr)
@@ -169,6 +171,8 @@ void MGL_EXPORT mgl_rotate_vector(HMGL gr, double Tet,double x,double y,double z
 {	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->RotateN(Tet,x,y,z);	}
 void MGL_EXPORT mgl_perspective(HMGL gr, double val)
 {	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->Perspective(val);	}
+void MGL_EXPORT mgl_ask_perspective(HMGL gr, double val)
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->Perspective(val,false);	}
 void MGL_EXPORT mgl_title(HMGL gr, const char *title, const char *stl, double size)
 {	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->Title(title,stl,size);	}
 void MGL_EXPORT mgl_titlew(HMGL gr, const wchar_t *title, const char *stl, double size)
@@ -245,11 +249,14 @@ void MGL_EXPORT mgl_zoom_(uintptr_t *gr, mreal *x1, mreal *y1, mreal *x2, mreal 
 {	_GR_->Zoom(*x1,*y1,*x2,*y2);	}
 void MGL_EXPORT mgl_rotate_vector_(uintptr_t *gr, mreal *Tet, mreal *x, mreal *y, mreal *z)
 {	_GR_->RotateN(*Tet,*x,*y,*z);	}
-void MGL_EXPORT mgl_perspective_(uintptr_t *gr, double val)
-{	_GR_->Perspective(val);	}
+void MGL_EXPORT mgl_perspective_(uintptr_t *gr, mreal *val)
+{	_GR_->Perspective(*val);	}
+void MGL_EXPORT mgl_ask_perspective_(uintptr_t *gr, mreal *val)
+{	mgl_ask_perspective(_GR_,*val);	}
 //-----------------------------------------------------------------------------
 MGL_EXPORT const unsigned char *mgl_get_rgb_(uintptr_t *gr)	{	return gr ? _GR_->GetBits():0;	}
 MGL_EXPORT const unsigned char *mgl_get_rgba_(uintptr_t *gr){	return gr ? _GR_->GetRGBA():0;	}
+MGL_EXPORT const unsigned char* mgl_get_background_(uintptr_t* gr)	{	return gr ? _GR_->GetBackground():0;	}
 int MGL_EXPORT mgl_get_width_(uintptr_t *gr)	{	return gr ? _GR_->GetWidth():0;	}
 int MGL_EXPORT mgl_get_height_(uintptr_t *gr)	{	return gr ? _GR_->GetHeight():0;}
 void MGL_EXPORT mgl_calc_xyz_(uintptr_t *gr, int *xs, int *ys, mreal *x, mreal *y, mreal *z)

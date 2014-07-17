@@ -151,9 +151,10 @@ using mglBase::Light;
 	/// Rotate a further plotting.
 	void Rotate(mreal TetX,mreal TetZ,mreal TetY=0);
 	/// Rotate a further plotting around vector {x,y,z}.
-	void RotateN(mreal Tet,mreal x,mreal y,mreal z)	;
-	/// Set perspective (in range [0,1)) for plot. Set to zero for switching off.
-	void Perspective(mreal a)	{	Bp.pf = fabs(a);	}
+	void RotateN(mreal Tet,mreal x,mreal y,mreal z);
+	/// Set perspective (in range [0,1)) for plot. Set to zero for switching off. Return the current perspective.
+	void Perspective(mreal a, bool req=true)
+	{	if(req)	persp = Bp.pf = a;	else	Bp.pf = persp?persp:fabs(a);	}
 
 	/// Set size of frame in pixels. Normally this function is called internaly.
 	virtual void SetSize(int w,int h,bool clf=true);
@@ -163,6 +164,8 @@ using mglBase::Light;
 	virtual unsigned char **GetRGBLines(long &w, long &h, unsigned char *&f, bool alpha=false);
 	/// Get RGB bitmap of current state image.
 	virtual const unsigned char *GetBits();
+	/// Get RGBA bitmap of background image.
+	const unsigned char *GetBackground()	{	return GB;	};
 	/// Get RGBA bitmap of current state image.
 	const unsigned char *GetRGBA()	{	Finish();	return G4;	}
 	/// Get width of the image
@@ -171,7 +174,7 @@ using mglBase::Light;
 	int GetHeight() const	{	return Height;	}
 	/// Combine plots from 2 canvases. Result will be saved into this.
 	void Combine(const mglCanvas *gr);
-	
+
 	/// Rasterize current plot and set it as background image
 	void Rasterize();
 	/// Load image for background from file
