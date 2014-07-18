@@ -53,25 +53,18 @@ C. Translate to Russian everything
 4. Docs about mgl_datac_diffr
 
 5. Semi-transparent background can be done by "clf 'r{A5}'"
-6. Extend "How can I exclude a point or a region of plot from the drawing?" + using SubData()/Evaluate()
 7. Docs + sample about Rasterize() + LoadBackground() + Clf(for filling background image)
 8. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using Stem()
 9. Hint about flow threads and contour lines (as ODE and for advanced users).
-10. No color interpolation for EPS,SVG
-11. Update UDAV images
-12. F8 for hideWnd in UDAV
-13. Colorbar for subplot style "" -- can be out of image
 14. Sample for SubData()+Evaluate() + update difference of SubData and Evaluate
-15. Doc about SetFaceNum() -- check if present
-16. Text style 'T' into "Font style" and "Text printing"
 17. Global spline sample (m.b. howto about interpolation)?!!
 18. Docs about mgl_gspline_init(), mgl_gspline() and mgl_gsplinec_init(), mgl_gsplinec().
-19. Sample about MGLD
-20. Docs about ODE solver
+20. Sample about ODE solver -- phase plain ??? + combine with  p.9
 21. Docs about 	Stop(), NeedStop(), SetEventFunc()
 22. Howto about combine bitmap and vector output in EPS
-
 29. Howto about plot ranges (subplot styles)
+
+ZZ. Update UDAV images
 
 ============= UDAV =============
 

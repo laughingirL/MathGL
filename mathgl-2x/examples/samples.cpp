@@ -196,7 +196,7 @@ void smgl_fexport(mglGraph *gr)	// test file export
 	gr->Plot(r,"b");
 
 	gr->WriteJPEG("fexport.jpg");
-	gr->WritePNG("fexport.png");
+//	gr->WritePNG("fexport.png");
 	gr->WriteBMP("fexport.bmp");
 	gr->WriteTGA("fexport.tga");
 	gr->WriteEPS("fexport.eps");
@@ -210,6 +210,10 @@ void smgl_fexport(mglGraph *gr)	// test file export
 	gr->WriteOBJ("fexport.obj");
 	gr->WritePRC("fexport.prc");
 	gr->WriteJSON("fexport.json");
+	
+	gr->ExportMGLD("fexport.mgld");
+	gr->Clf();
+	gr->ImportMGLD("fexport.mgld");
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_refill="new x 10 '0.5+rnd':cumsum x 'x':norm x -1 1\n"
@@ -860,7 +864,7 @@ void smgl_text(mglGraph *gr)	// text drawing
 	mglData y;	mgls_prepare1d(&y);
 	gr->Box();	gr->Plot(y.SubData(-1,0));
 	gr->Text(y,"This is very very long string drawn along a curve","k");
-	gr->Text(y,"Another string drawn above a curve","Tr");
+	gr->Text(y,"Another string drawn under a curve","Tr");
 
 	gr->SubPlot(2,2,3,"");
 	gr->Line(mglPoint(-1,-1),mglPoint(1,-1),"rA");	gr->Puts(mglPoint(0,-1),mglPoint(1,-1),"Horizontal");
@@ -869,27 +873,27 @@ void smgl_text(mglGraph *gr)	// text drawing
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_text2="call 'prepare1d'\n"
-"subplot 1 3 0 '':box:plot y(:,0)\ntext y 'This is very very long string drawn along a curve' 'k'\ntext y 'Another string drawn above a curve' 'Tr'\n"
-"subplot 1 3 1 '':box:plot y(:,0)\ntext y 'This is very very long string drawn along a curve' 'k:C'\ntext y 'Another string drawn above a curve' 'Tr:C'\n"
-"subplot 1 3 2 '':box:plot y(:,0)\ntext y 'This is very very long string drawn along a curve' 'k:R'\ntext y 'Another string drawn above a curve' 'Tr:R'\n";
+"subplot 1 3 0 '':box:plot y(:,0)\ntext y 'This is very very long string drawn along a curve' 'k'\ntext y 'Another string drawn under a curve' 'Tr'\n"
+"subplot 1 3 1 '':box:plot y(:,0)\ntext y 'This is very very long string drawn along a curve' 'k:C'\ntext y 'Another string drawn under a curve' 'Tr:C'\n"
+"subplot 1 3 2 '':box:plot y(:,0)\ntext y 'This is very very long string drawn along a curve' 'k:R'\ntext y 'Another string drawn under a curve' 'Tr:R'\n";
 void smgl_text2(mglGraph *gr)	// text drawing
 {
 	mglData y;	mgls_prepare1d(&y);
 	if(big!=3)	gr->SubPlot(1,3,0,"");
 	gr->Box();	gr->Plot(y.SubData(-1,0));
 	gr->Text(y,"This is very very long string drawn along a curve","k");
-	gr->Text(y,"Another string drawn above a curve","Tr");
+	gr->Text(y,"Another string drawn under a curve","Tr");
 	if(big==3)	return;
 
 	gr->SubPlot(1,3,1,"");
 	gr->Box();	gr->Plot(y.SubData(-1,0));
 	gr->Text(y,"This is very very long string drawn along a curve","k:C");
-	gr->Text(y,"Another string drawn above a curve","Tr:C");
+	gr->Text(y,"Another string drawn under a curve","Tr:C");
 
 	gr->SubPlot(1,3,2,"");
 	gr->Box();	gr->Plot(y.SubData(-1,0));
 	gr->Text(y,"This is very very long string drawn along a curve","k:R");
-	gr->Text(y,"Another string drawn above a curve","Tr:R");
+	gr->Text(y,"Another string drawn under a curve","Tr:R");
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_fonts="define d 0.25\nloadfont 'STIX':text 0 1.1 'default font (STIX)'\nloadfont 'adventor':text 0 1.1-d 'adventor font'\n"

@@ -429,7 +429,7 @@ text 0 -0.5 'Text can be printed\n{}on several lines'
 
 subplot 2 2 2 '':box:plot y(:,0)
 text y 'This is very very long string drawn along a curve' 'k'
-text y 'Another string drawn above a curve' 'Tr'
+text y 'Another string drawn under a curve' 'Tr'
 
 subplot 2 2 3 '':line -1 -1 1 -1 'rA':text 0 -1 1 -1 'Horizontal'
 line -1 -1 1 1 'rA':text 0 0 1 1 'At angle' '@'

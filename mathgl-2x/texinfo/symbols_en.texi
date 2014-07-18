@@ -507,6 +507,9 @@ style of @ref{tape}.
 @item @key{F6}
 @tab Change canvas size to fill whole region.
 
+@item @key{F7}
+@tab Stop drawing and script execution.
+
 @item @key{Ctrl-F5}
 @tab Run slideshow. If no parameter specified then the dialog with slideshow options will appear.
 
@@ -666,7 +669,10 @@ style of @ref{tape}.
 @tab Change canvas size to fill whole region.
 
 @item @key{F7}
-@tab Stop script execution.
+@tab Stop script execution and drawing.
+
+@item @key{F8}
+@tab Show/hide tool window with list of hidden plots.
 
 @item @key{F9}
 @tab Restore status for 'once' command and reload data.
