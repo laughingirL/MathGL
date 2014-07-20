@@ -405,6 +405,13 @@ inline mglDataC mglQO3dc(const char *ham, const mglDataA &ini_re, const mglDataA
 inline mglDataC mglQO3dc(const char *ham, const mglDataA &ini_re, const mglDataA &ini_im, const mglDataA &ray, mglData &xx, mglData &yy, mglData &zz, mreal r=1, mreal k0=100)
 {	return mglDataC(true, mgl_qo3d_solve_c(ham, &ini_re, &ini_im, &ray, r, k0, &xx, &yy, &zz));	}
 //-----------------------------------------------------------------------------
+/// Prepare coefficients for global spline interpolation
+inline mglDataC mglGSplineCInit(const mglDataA &xdat, const mglDataA &ydat)
+{	return mglDataC(true,mgl_gsplinec_init(&xdat, &ydat));	}
+/// Evaluate global spline (and its derivatives d1, d2 if not NULL) using prepared coefficients \a coef
+inline dual mglGSplineC(const mglDataA &coef, mreal dx, dual *d1=0, dual *d2=0)
+{	return mgl_gsplinec(&coef, dx, d1,d2);	}
+//-----------------------------------------------------------------------------
 #define _DN_(a)	((mglDataC *)*(a))
 #define _DC_		((mglDataC *)*d)
 //-----------------------------------------------------------------------------

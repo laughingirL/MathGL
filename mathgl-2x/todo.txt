@@ -46,23 +46,14 @@ ZZ. Update *.i for new functions {before release!!!}
 A. Paper about MathGL!!!
 B. Add chapter with real samples
 C. Translate to Russian everything
+D. Docs about JS interface
 
-1. Extend Dots sample (add A, CA, Tens)
-2. Extend Refill sample (add 2d)
-3. Docs about JS interface
+1. Sample "indirect"
+2. Sample about Refill before "Making regular data"
+3. Sample "ode" + about internal "contour" functions
 4. Docs about mgl_datac_diffr
 
-5. Semi-transparent background can be done by "clf 'r{A5}'"
-7. Docs + sample about Rasterize() + LoadBackground() + Clf(for filling background image)
-8. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using Stem()
-9. Hint about flow threads and contour lines (as ODE and for advanced users).
-14. Sample for SubData()+Evaluate() + update difference of SubData and Evaluate
-17. Global spline sample (m.b. howto about interpolation)?!!
-18. Docs about mgl_gspline_init(), mgl_gspline() and mgl_gsplinec_init(), mgl_gsplinec().
-20. Sample about ODE solver -- phase plain ??? + combine with  p.9
-21. Docs about 	Stop(), NeedStop(), SetEventFunc()
-22. Howto about combine bitmap and vector output in EPS
-29. Howto about plot ranges (subplot styles)
+5. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using Stem()
 
 ZZ. Update UDAV images
 

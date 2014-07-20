@@ -1159,7 +1159,7 @@ HADT MGL_EXPORT mgl_gsplinec_init(HCDT x, HCDT v)
 uintptr_t MGL_EXPORT mgl_gsplinec_init_(uintptr_t *x, uintptr_t *v)
 {	return uintptr_t(mgl_gspline_init(_DA_(x),_DA_(v)));	}
 //-----------------------------------------------------------------------------
-mdual MGL_EXPORT mgl_gsplinec(mreal dx, HCDT c, dual *d1, dual *d2)
+mdual MGL_EXPORT mgl_gsplinec(HCDT c, mreal dx, dual *d1, dual *d2)
 {
 	long i=0, n = c->GetNx();
 	if(n%5)	return NAN;	// not the table of coefficients
@@ -1181,6 +1181,6 @@ mdual MGL_EXPORT mgl_gsplinec(mreal dx, HCDT c, dual *d1, dual *d2)
 	}
 	return res.real()+res.imag()*_Complex_I;
 }
-mdual MGL_EXPORT mgl_gsplinec_(mreal *dx, uintptr_t *c, dual *d1, dual *d2)
-{	return mgl_gsplinec(*dx,_DA_(c),d1,d2);	}
+mdual MGL_EXPORT mgl_gsplinec_(uintptr_t *c, mreal *dx, dual *d1, dual *d2)
+{	return mgl_gsplinec(_DA_(c),*dx,d1,d2);	}
 //-----------------------------------------------------------------------------

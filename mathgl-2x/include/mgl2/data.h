@@ -172,6 +172,9 @@ using mglDataA::Momentum;
 	/// Equidistantly fill the data to range [x1,x2] in direction dir
 	inline void Fill(mreal x1,mreal x2=NaN,char dir='x')
 	{	mgl_data_fill(this,x1,x2,dir);	}
+	/// Fill the data by interpolated values of vdat parametrically depended on xdat,ydat,zdat for x,y,z in range [p1,p2] using global spline
+	inline void RefillGS(const mglDataA &xdat, const mglDataA &vdat, mreal x1, mreal x2,long sl=-1)
+	{	mgl_data_refill_gs(this,&xdat,&vdat,x1,x2,sl);	}
 	/// Fill the data by interpolated values of vdat parametrically depended on xdat,ydat,zdat for x,y,z in range [p1,p2]
 	inline void Refill(const mglDataA &xdat, const mglDataA &vdat, mreal x1, mreal x2,long sl=-1)
 	{	mgl_data_refill_x(this,&xdat,&vdat,x1,x2,sl);	}
@@ -513,6 +516,13 @@ inline mglData mglSubData(const mglDataA &dat, const mglDataA &xx, const mglData
 {	return mglData(true,mgl_data_subdata_ext(&dat,&xx,&yy,0));	}
 inline mglData mglSubData(const mglDataA &dat, const mglDataA &xx)
 {	return mglData(true,mgl_data_subdata_ext(&dat,&xx,0,0));	}
+//-----------------------------------------------------------------------------
+/// Prepare coefficients for global spline interpolation
+inline mglData mglGSplineInit(const mglDataA &xdat, const mglDataA &ydat)
+{	return mglData(true,mgl_gspline_init(&xdat, &ydat));	}
+/// Evaluate global spline (and its derivatives d1, d2 if not NULL) using prepared coefficients \a coef
+inline mreal mglGSpline(const mglDataA &coef, mreal dx, mreal *d1=0, mreal *d2=0)
+{	return mgl_gspline(&coef, dx, d1,d2);	}
 //-----------------------------------------------------------------------------
 /// Wrapper class for expression evaluating
 class MGL_EXPORT mglExpr

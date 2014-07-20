@@ -63,8 +63,8 @@ public:
 	/// Check if plot termination is asked
 	inline bool NeedStop()	{	return mgl_need_stop(gr);	}
 	/// Set callback function for event processing
-	inline void SetEventFunc(void (*func)(void *), void *par)
-	{	mgl_set_event_cb(gr, func, par);	}
+	inline void SetEventFunc(void (*func)(void *), void *par=NULL)
+	{	mgl_set_event_func(gr, func, par);	}
 
 	/// Set the transparency on/off.
 	inline void Alpha(bool enable)			{	mgl_set_alpha(gr, enable);	}
@@ -489,7 +489,7 @@ public:
 	/// Load background image
 	inline void LoadBackground(const char *fname, double alpha=1)
 	{	mgl_load_background(gr,fname,alpha);	}
-	/// Force preparing the image and use it as background one
+	/// Force drawing the image and use it as background one
 	inline void Rasterize()			{	mgl_rasterize(gr);	}
 
 	/// Draws the point (ball) at position {x,y,z} with color c

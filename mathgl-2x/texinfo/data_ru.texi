@@ -548,6 +548,15 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 Заполняет значениями интерполяции массива @var{v} в точках @{@var{x}, @var{y}, @var{z}@}=@{@code{X[i], Y[j], Z[k]}@} (или @{@var{x}, @var{y}, @var{z}@}=@{@code{X[i,j,k], Y[i,j,k], Z[i,j,k]}@} если @var{x}, @var{y}, @var{z} не 1d массивы), где @code{X,Y,Z} равномерно распределены в диапазоне [@var{x1},@var{x2}]*[@var{y1},@var{y2}]*[@var{z1},@var{z2}] и имеют такой же размер как и заполняемый массив. Если параметр @var{sl} равен 0 или положительный, то изменятся будет только @var{sl}-ый срез.
 @end deftypefn
 
+@anchor{gspline}
+@deftypefn {MGL command} {} gspline dat xdat vdat [sl=-1]
+@ifclear UDAV
+@deftypefnx {Method on @code{mglData}} @code{void} RefillGS (@code{const mglDataA &}x, @code{const mglDataA &}v, @code{mreal} x1, @code{mreal} x2, @code{long} sl=@code{-1})
+@deftypefnx {C function} @code{void} mgl_data_refill_gs (@code{HMDT} a, @code{HCDT} x, @code{HCDT} v, @code{mreal} x1, @code{mreal} x2, @code{long} sl)
+@end ifclear
+Заполняет значениями глобального кубического сплайна для массива @var{v} в точках @var{x}=@code{X[i]}, где @code{X} равномерно распределен в диапазоне [@var{x1},@var{x2}] и имеет такой же размер как и заполняемый массив. Если параметр @var{sl} равен 0 или положительный, то изменятся будет только @var{sl}-ый срез.
+@end deftypefn
+
 @anchor{idset}
 @deftypefn {Команда MGL} {} idset dat 'ids'
 @ifclear UDAV
@@ -1100,7 +1109,7 @@ These functions change the data in some direction like differentiations, integra
 @section Интерполяция
 @nav{}
 
-Скрипты MGL могут использовать линейную интерполяцию с помощью команды @ref{subdata}, или кубические сплайны при использовании команды @ref{evaluate}. Также можно использовать @ref{resize} для массива с новыми размерами.
+Скрипты MGL могут использовать интерполяцию кубическими сплайнами с помощью команд @ref{evaluate} или @ref{refill}. Также можно использовать @ref{resize} для массива с новыми размерами.
 
 @ifclear UDAV
 
@@ -1542,6 +1551,24 @@ These functions change the data in some direction like differentiations, integra
 Выполняет триангуляцию для произвольно расположенных точек с координатами @{@var{x},@var{y},@var{z}@} (т.е. находит треугольники, соединяющие точки). Первая размерность всех массивов должна быть одинакова @code{x.nx=y.nx=z.nx}. Получившийся массив можно использовать в @ref{triplot} или @ref{tricont} для визуализации реконструированной поверхности. @sref{Making regular data}
 @end deftypefn
 
+
+@ifclear UDAV
+
+@deftypefn {Global function} @code{mglData} mglGSplineInit (@code{const mglDataA &}x, @code{const mglDataA &}y)
+@deftypefnx {Global function} @code{mglDataC} mglGSplineCInit (@code{const mglDataA &}x, @code{const mglDataA &}y)
+@deftypefnx {Функция С} @code{HMDT} mgl_gspline_init (@code{HCDT} x, @code{HCDT} y)
+@deftypefnx {Функция С} @code{HADT} mgl_gsplinec_init (@code{HCDT} x, @code{HCDT} y)
+Подготавливает коэффициенты для глобального кубического сплайна.
+@end deftypefn
+
+@deftypefn {Global function} @code{mreal} mglGSpline (@code{const mglDataA &}coef, @code{mreal} dx, @code{mreal *}d1=@code{0}, @code{mreal *}d2=@code{0})
+@deftypefnx {Global function} @code{dual} mglGSplineC (@code{const mglDataA &}coef, @code{mreal} dx, @code{dual *}d1=@code{0}, @code{dual *}d2=@code{0})
+@deftypefnx {Функция С} @code{mreal} mgl_gspline (@code{HCDT} coef, @code{mreal} dx, @code{mreal *}d1, @code{mreal *}d2)
+@deftypefnx {Функция С} @code{dual} mgl_gsplinec (@code{HCDT} coef, @code{mreal} dx, @code{dual *}d1, @code{dual *}d2)
+Вычисляет глобальный кубический сплайн (а также 1ую и 2ую производные @var{d1}, @var{d2} если они не @code{NULL}), используя коэффициенты @var{coef} в точке @var{dx}+@var{x0} (здесь @var{x0} -- 1ый элемент массива @var{x} в функции @code{mglGSpline*Init()}).
+@end deftypefn
+
+@end ifclear
 
 @c ------------------------------------------------------------------
 @external{}

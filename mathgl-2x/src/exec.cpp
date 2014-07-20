@@ -897,6 +897,16 @@ int MGL_NO_EXPORT mgls_refill(mglGraph *gr, long , mglArg *a, const char *k, con
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_gspline(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+{
+	int res=0;
+	mglData *d = dynamic_cast<mglData *>(a[0].d);
+	if(!d)	return 1;
+	if(!strcmp(k,"ddd"))	d->RefillGS(*(a[1].d),*(a[2].d),gr->Self()->Min.x,gr->Self()->Max.x,-1);
+	else if(!strcmp(k,"dddn"))	d->RefillGS(*(a[1].d),*(a[2].d),gr->Self()->Min.x,gr->Self()->Max.x,iint(a[3].v));
+	else res = 1;	return res;
+}
+//-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_fillsample(mglGraph *, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
@@ -2984,6 +2994,7 @@ mglCommand mgls_base_cmd[] = {
 	{"grid2","Draw grid for data array(s)","grid Zdat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_grid2 ,8},
 	{"grid3","Draw grid at slices of 3D data","grid3 Adat 'dir' [pos 'fmt']|Xdat Ydat Zdat Adat 'dir' [pos 'fmt']", mgls_grid3 ,9},
 	{"gridplot","Set position of plot inside cell of matrix", "gridplot nx ny ind [d]", mgls_gridplot ,5},
+	{"gspline","Fill data by global spline of Vdat","gspline Dat Xdat Vdat [sl]", mgls_gspline ,3},
 	{"hankel","Hankel transform at some direction","hankel Dat 'dir'", mgls_hankel ,16},
 	{"hist","Create histogram (distribution) of data values","hist Res Dat num v1 v2 [nsub]|Res Dat Wdat num v1 v2 [nsub]", mgls_hist ,4},
 	{"idset","Set column id for data","idset Dat 'ids'", mgls_idset ,3},

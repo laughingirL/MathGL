@@ -26,6 +26,7 @@ Return nonzero if MathGL version is appropriate for required by @var{ver}, i.e. 
 * Axis settings::
 * Subplots and rotation::
 * Export picture::
+* Background::
 * Primitives::
 * Text printing::
 * Axis and Colorbar::
@@ -96,6 +97,7 @@ Restore initial values for all of parameters.
 * Palette and colors::
 * Masks::
 * Error handling::
+* Stop drawing::
 @end menu
 
 @c ==================================================================
@@ -493,9 +495,12 @@ Sets the default rotation angle (in degrees) for masks. Note, you can use symbol
 
 @c ==================================================================
 @external{}
-@node Error handling, , Masks, Graphics setup
+@node Error handling, Stop drawing, Masks, Graphics setup
 @subsection Error handling
 @nav{}
+@ifset UDAV
+All warnings will be displayed automatically in special tool-window or in console.
+@end ifset
 @ifclear UDAV
 @cindex Message
 @cindex SetWarn
@@ -565,6 +570,37 @@ Unbalanced ' in MGL script
 
 @deftypefn {C function} @code{void} mgl_suppress_warn (@code{int} state)
 Disable printing warnings to @code{stderr} if @var{state} is nonzero.
+@end deftypefn
+
+@end ifclear
+
+
+@c ==================================================================
+@external{}
+@node Stop drawing, , Error handling, Graphics setup
+@subsection Stop drawing
+@nav{}
+@ifset UDAV
+You can use @ref{stop} command or press corresponding toolbutton to stop drawing and script execution.
+@end ifset
+@ifclear UDAV
+@cindex Stop
+@cindex NeedStop
+@cindex SetEventFunc
+
+@deftypefn {Method on @code{mglGraph}} @code{void} Stop (@code{bool} stop=@code{true})
+@deftypefnx {C function only} @code{void} mgl_ask_stop (@code{HMGL} gr, @code{int} stop)
+Ask to stop drawing if @var{stop} is non-zero, otherwise reset stop flag.
+@end deftypefn
+
+@deftypefn {Method on @code{mglGraph}} @code{bool} NeedStop ()
+@deftypefnx {C function only} @code{void} mgl_need_stop (@code{HMGL} gr)
+Return @code{true} if drawing should be terminated. Also it process all events in GUI. User should call this function from time to time inside a long calculation to allow processing events for GUI.
+@end deftypefn
+
+@deftypefn {Method on @code{mglGraph}} @code{bool} SetEventFunc (@code{void (*}func@code{)(void *)}, @code{void *}par=@code{NULL})
+@deftypefnx {C function only} @code{void} mgl_set_event_func (@code{HMGL} gr, @code{void (*}func@code{)(void *)}, @code{void *}par)
+Set callback function which will be called to process events of GUI library.
 @end deftypefn
 
 @end ifclear
@@ -1076,7 +1112,7 @@ The function changes the scale of graphics that correspond to zoom in/out of the
 
 @c ##################################################################
 @external{}
-@node Export picture, Primitives, Subplots and rotation, MathGL core
+@node Export picture, Background, Subplots and rotation, MathGL core
 @section Export picture
 @nav{}
 @cindex SetSize
@@ -1457,11 +1493,56 @@ Receive graphical information from node @var{id} using MPI. The width and height
 
 @c ##################################################################
 @external{}
-@node Primitives, Text printing, Export picture, MathGL core
+@node Background, Primitives, Export picture, MathGL core
+@section Background
+@nav{}
+@cindex LoadBackground
+@cindex Clf
+@cindex Rasterize
+
+These functions change background image.
+
+@anchor{clf}
+@deftypefn {MGL command} {} clf ['col']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} Clf ()
+@deftypefnx {Method on @code{mglGraph}} @code{void} Clf (@code{const char *} col)
+@deftypefnx {Method on @code{mglGraph}} @code{void} Clf (@code{char} col)
+@deftypefnx {Method on @code{mglGraph}} @code{void} Clf (@code{mreal} r, @code{mreal} g, @code{mreal} b)
+@deftypefnx {C function} @code{void} mgl_clf (@code{HMGL} gr)
+@deftypefnx {C function} @code{void} mgl_clf_str (@code{HMGL} gr, @code{const char *} col)
+@deftypefnx {C function} @code{void} mgl_clf_chr (@code{HMGL} gr, @code{char} col)
+@deftypefnx {C function} @code{void} mgl_clf_rgb (@code{HMGL} gr, @code{mreal} r, @code{mreal} g, @code{mreal} b)
+@end ifclear
+Clear the picture and fill background by specified color.
+@end deftypefn
+
+@anchor{rasterize}
+@deftypefn {MGL command} {} rasterize
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} Rasterize ()
+@deftypefnx {C function} @code{void} mgl_rasterize (@code{HMGL} gr)
+@end ifclear
+Force drawing the plot and use it as background. After it, function clear the list of primitives, like @ref{clf}. This function is useful if you want save part of plot as bitmap one (for example, large surfaces, isosurfaces or vector fields) and keep some parts as vector one (like annotation, curves, axis and so on).
+@end deftypefn
+
+@anchor{background}
+@deftypefn {MGL command} {} background 'fname' [@code{alpha=1}]
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} LoadBackground (@code{const char *} fname, @code{double} alpha=@code{1})
+@deftypefnx {C function} @code{void} mgl_load_background (@code{HMGL} gr, @code{const char *} fname, @code{double} alpha)
+@end ifclear
+Load PNG or JPEG file @var{fname} as background for the plot. Parameter @var{alpha} manually set transparency of the background.
+@end deftypefn
+
+
+
+@c ##################################################################
+@external{}
+@node Primitives, Text printing, Background, MathGL core
 @section Primitives
 @nav{}
 @cindex Ball
-@cindex Clf
 @cindex Line
 @cindex Curve
 @cindex Glyph
@@ -1479,19 +1560,6 @@ Receive graphical information from node @var{id} using MPI. The width and height
 @end ifclear
 
 These functions draw some simple objects like line, point, sphere, drop, cone and so on. @sref{Using primitives}
-
-@anchor{clf}
-@deftypefn {MGL command} {} clf ['col']
-@ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} Clf ()
-@deftypefnx {Method on @code{mglGraph}} @code{void} Clf (@code{char} col)
-@deftypefnx {Method on @code{mglGraph}} @code{void} Clf (@code{mreal} r, @code{mreal} g, @code{mreal} b)
-@deftypefnx {C function} @code{void} mgl_clf (@code{HMGL} gr)
-@deftypefnx {C function} @code{void} mgl_clf_chr (@code{HMGL} gr, @code{char} col)
-@deftypefnx {C function} @code{void} mgl_clf_rgb (@code{HMGL} gr, @code{mreal} r, @code{mreal} g, @code{mreal} b)
-@end ifclear
-Clear the picture and fill it by specified color.
-@end deftypefn
 
 @anchor{ball}
 @deftypefn {MGL command} {} ball @code{x y} ['col'='r.']

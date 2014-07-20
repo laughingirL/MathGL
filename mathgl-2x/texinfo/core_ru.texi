@@ -26,6 +26,7 @@
 * Axis settings::
 * Subplots and rotation::
 * Export picture::
+* Background::
 * Primitives::
 * Text printing::
 * Axis and Colorbar::
@@ -96,6 +97,7 @@ MGL не требует создания данного типа объекто�
 * Palette and colors::
 * Masks::
 * Error handling::
+* Stop drawing::
 @end menu
 
 @c ==================================================================
@@ -477,9 +479,12 @@ MGL не требует создания данного типа объекто�
 
 @c ==================================================================
 @external{}
-@node Error handling, , Masks, Graphics setup
+@node Error handling, Stop drawing , Masks, Graphics setup
 @subsection Обработка ошибок
 @nav{}
+@ifset UDAV
+Все сообщения будут выведены автоматически в специальном окне или в консоли.
+@end ifset
 @ifclear UDAV
 @cindex Message
 @cindex SetWarn
@@ -551,6 +556,36 @@ Setsize: размер(ы) равны нулю или отрицательны
 Выключает вывод предупреждений в @code{stderr} если @var{state} не ноль.
 @end deftypefn
 
+
+@end ifclear
+
+@c ==================================================================
+@external{}
+@node Stop drawing, , Error handling, Graphics setup
+@subsection Остановка рисования
+@nav{}
+@ifset UDAV
+Вы можете использовать команду @ref{stop} или соответствующую кнопку панели инструментов для остановки рисования и выполнения скрипта.
+@end ifset
+@ifclear UDAV
+@cindex Stop
+@cindex NeedStop
+@cindex SetEventFunc
+
+@deftypefn {Method on @code{mglGraph}} @code{void} Stop (@code{bool} stop=@code{true})
+@deftypefnx {C function only} @code{void} mgl_ask_stop (@code{HMGL} gr, @code{int} stop)
+Просит остановить рисование если @var{stop} не ноль, иначе сбрасывает флаг остановки.
+@end deftypefn
+
+@deftypefn {Method on @code{mglGraph}} @code{bool} NeedStop ()
+@deftypefnx {C function only} @code{void} mgl_need_stop (@code{HMGL} gr)
+Возвращает @code{true} если рисование должно быть остановлено. Также запускает обработку всех отложенных событий в GUI. Пользователь должен вызывать эту функцию время от времени внутри долгих вычислений для плавности отклика GUI.
+@end deftypefn
+
+@deftypefn {Method on @code{mglGraph}} @code{bool} SetEventFunc (@code{void (*}func@code{)(void *)}, @code{void *}par=@code{NULL})
+@deftypefnx {C function only} @code{void} mgl_set_event_func (@code{HMGL} gr, @code{void (*}func@code{)(void *)}, @code{void *}par)
+Задает функцию, которая будет вызвана для обработки событий в GUI библиотеке.
+@end deftypefn
 
 @end ifclear
 
@@ -1030,7 +1065,7 @@ Ternary -- специальный тип графика для 3 зависим�
 
 @c ##################################################################
 @external{}
-@node Export picture, Primitives, Subplots and rotation, MathGL core
+@node Export picture, Background, Subplots and rotation, MathGL core
 @section Экспорт рисунка
 @nav{}
 @cindex SetSize
@@ -1412,11 +1447,55 @@ gr.GetBGRN(bits, len(bits));
 
 @c ##################################################################
 @external{}
+@node Background, Primitives, Export picture, MathGL core
+@section Фоновое изображение
+@nav{}
+@cindex LoadBackground
+@cindex Clf
+@cindex Rasterize
+
+These functions change background image.
+
+@anchor{clf}
+@deftypefn {Команда MGL} {} clf ['col']
+@ifclear UDAV
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Clf ()
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Clf (@code{const char *} col)
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Clf (@code{char} col)
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Clf (@code{mreal} r, @code{mreal} g, @code{mreal} b)
+@deftypefnx {Функция С} @code{void} mgl_clf (@code{HMGL} gr)
+@deftypefnx {Функция С} @code{void} mgl_clf_str (@code{HMGL} gr, @code{const char *} col)
+@deftypefnx {Функция С} @code{void} mgl_clf_chr (@code{HMGL} gr, @code{char} col)
+@deftypefnx {Функция С} @code{void} mgl_clf_rgb (@code{HMGL} gr, @code{mreal} r, @code{mreal} g, @code{mreal} b)
+@end ifclear
+Очищает рисунок и заполняет фон заданным цветом.
+@end deftypefn
+
+@anchor{rasterize}
+@deftypefn {Команда MGL} {} rasterize
+@ifclear UDAV
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Rasterize ()
+@deftypefnx {Функция С} @code{void} mgl_rasterize (@code{HMGL} gr)
+@end ifclear
+Завершает рисование графика и помещает результат в качестве фона. После этого, очищает список примитивов (как @ref{clf}). Функция полезна для сохранения части графика (например, поверхностей или векторных полей) в растровом виде, а другой части (кривых, осей и пр.) в векторном.
+@end deftypefn
+
+@anchor{background}
+@deftypefn {Команда MGL} {} background 'fname' [@code{alpha=1}]
+@ifclear UDAV
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} LoadBackground (@code{const char *} fname, @code{double} alpha=@code{1})
+@deftypefnx {Функция С} @code{void} mgl_load_background (@code{HMGL} gr, @code{const char *} fname, @code{double} alpha)
+@end ifclear
+Загружает PNG или JPEG файл @var{fname} в качестве фона для графика. Параметр @var{alpha} задает прозрачность фона вручную.
+@end deftypefn
+
+
+@c ##################################################################
+@external{}
 @node Primitives, Text printing, Export picture, MathGL core
 @section Рисование примитивов
 @nav{}
 @cindex Ball
-@cindex Clf
 @cindex Line
 @cindex Curve
 @cindex Glyph
@@ -1434,19 +1513,6 @@ gr.GetBGRN(bits, len(bits));
 @end ifclear
 
 Эти функции рисуют рисуют простые объекты типа линий, точек, сфер, капель, конусов, и т.д.
-
-@anchor{clf}
-@deftypefn {Команда MGL} {} clf ['col']
-@ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Clf ()
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Clf (@code{char} col)
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} Clf (@code{mreal} r, @code{mreal} g, @code{mreal} b)
-@deftypefnx {Функция С} @code{void} mgl_clf (@code{HMGL} gr)
-@deftypefnx {Функция С} @code{void} mgl_clf_chr (@code{HMGL} gr, @code{char} col)
-@deftypefnx {Функция С} @code{void} mgl_clf_rgb (@code{HMGL} gr, @code{mreal} r, @code{mreal} g, @code{mreal} b)
-@end ifclear
-Очищает рисунок и заполняет его заданным цветом.
-@end deftypefn
 
 @anchor{ball}
 @deftypefn {Команда MGL} {} ball @code{x y} ['col'='r.']

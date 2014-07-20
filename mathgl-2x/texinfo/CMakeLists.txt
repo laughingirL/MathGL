@@ -8,7 +8,7 @@
 		several_light solve stem step stereo stfa style surf3a surf3c surf3
 		surfa surfc surf table tape tens ternary textmark text ticks tile tiles
 		torus traj triangulation triplot tube type0 type1 type2 vect vecta venn
-		projection5 mask correl refill ohlc )
+		projection5 mask correl refill ohlc ode indirect)
 	set(MGL_PNG_N )
 	set(MGL_PNG_S )
 	set(MGL_PNG_J )

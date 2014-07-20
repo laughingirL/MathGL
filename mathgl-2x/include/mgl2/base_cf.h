@@ -55,7 +55,7 @@ void mgl_ask_stop_(uintptr_t *gr, int *stop);
 int mgl_need_stop(HMGL gr);
 int mgl_need_stop_(uintptr_t *gr);
 /// Set callback function for event processing
-void mgl_set_event_cb(HMGL gr, void (*func)(void *), void *par);
+void mgl_set_event_func(HMGL gr, void (*func)(void *), void *par);
 
 /// Get plot quality
 int MGL_EXPORT_PURE mgl_get_quality(HMGL gr);

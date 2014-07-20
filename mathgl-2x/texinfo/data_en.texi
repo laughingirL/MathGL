@@ -552,6 +552,15 @@ Copies value(s) from array @var{v} to the range of original array. Negative inde
 Fills by interpolated values of array @var{v} at the point @{@var{x}, @var{y}, @var{z}@}=@{@code{X[i], Y[j], Z[k]}@} (or @{@var{x}, @var{y}, @var{z}@}=@{@code{X[i,j,k], Y[i,j,k], Z[i,j,k]}@} if @var{x}, @var{y}, @var{z} are not 1d arrays), where @code{X,Y,Z} are equidistantly distributed in range [@var{x1},@var{x2}]*[@var{y1},@var{y2}]*[@var{z1},@var{z2}] and have the same sizes as this array. If parameter @var{sl} is 0 or positive then changes will be applied only for slice @var{sl}.
 @end deftypefn
 
+@anchor{gspline}
+@deftypefn {MGL command} {} gspline dat xdat vdat [sl=-1]
+@ifclear UDAV
+@deftypefnx {Method on @code{mglData}} @code{void} RefillGS (@code{const mglDataA &}x, @code{const mglDataA &}v, @code{mreal} x1, @code{mreal} x2, @code{long} sl=@code{-1})
+@deftypefnx {C function} @code{void} mgl_data_refill_gs (@code{HMDT} a, @code{HCDT} x, @code{HCDT} v, @code{mreal} x1, @code{mreal} x2, @code{long} sl)
+@end ifclear
+Fills by global cubic spline values of array @var{v} at the point @var{x}=@code{X[i]}, where @code{X} are equidistantly distributed in range [@var{x1},@var{x2}] and have the same sizes as this array. If parameter @var{sl} is 0 or positive then changes will be applied only for slice @var{sl}.
+@end deftypefn
+
 @anchor{idset}
 @deftypefn {MGL command} {} idset dat 'ids'
 @ifclear UDAV
@@ -1110,7 +1119,7 @@ Normalizes data slice-by-slice along direction @var{dir} the data in slices to r
 @section Interpolation
 @nav{}
 
-MGL scripts can use linear interpolation by @ref{subdata} command, or spline interpolation by @ref{evaluate} command. Also you can use @ref{resize} for obtaining a data array with new sizes.
+MGL scripts can use spline interpolation by @ref{evaluate} or @ref{refill} commands. Also you can use @ref{resize} for obtaining a data array with new sizes.
 
 @ifclear UDAV
 
@@ -1555,6 +1564,23 @@ Computes the Jacobian for transformation @{i,j,k@} to @{@var{x},@var{y},@var{z}@
 Computes triangulation for arbitrary placed points with coordinates @{@var{x},@var{y}@} (i.e. finds triangles which connect points). MathGL use @uref{http://www.s-hull.org/,s-hull} code for triangulation. The sizes of 1st dimension @strong{must be equal} for all arrays @code{x.nx=y.nx}. Resulting array can be used in @ref{triplot} or @ref{tricont} functions for visualization of reconstructed surface. @sref{Making regular data}
 @end deftypefn
 
+@ifclear UDAV
+
+@deftypefn {Global function} @code{mglData} mglGSplineInit (@code{const mglDataA &}x, @code{const mglDataA &}y)
+@deftypefnx {Global function} @code{mglDataC} mglGSplineCInit (@code{const mglDataA &}x, @code{const mglDataA &}y)
+@deftypefnx {C function} @code{HMDT} mgl_gspline_init (@code{HCDT} x, @code{HCDT} y)
+@deftypefnx {C function} @code{HADT} mgl_gsplinec_init (@code{HCDT} x, @code{HCDT} y)
+Prepare coefficients for global cubic spline interpolation.
+@end deftypefn
+
+@deftypefn {Global function} @code{mreal} mglGSpline (@code{const mglDataA &}coef, @code{mreal} dx, @code{mreal *}d1=@code{0}, @code{mreal *}d2=@code{0})
+@deftypefnx {Global function} @code{dual} mglGSplineC (@code{const mglDataA &}coef, @code{mreal} dx, @code{dual *}d1=@code{0}, @code{dual *}d2=@code{0})
+@deftypefnx {C function} @code{mreal} mgl_gspline (@code{HCDT} coef, @code{mreal} dx, @code{mreal *}d1, @code{mreal *}d2)
+@deftypefnx {C function} @code{dual} mgl_gsplinec (@code{HCDT} coef, @code{mreal} dx, @code{dual *}d1, @code{dual *}d2)
+Evaluate global cubic spline (and its 1st and 2nd derivatives @var{d1}, @var{d2} if they are not @code{NULL}) using prepared coefficients @var{coef} at point @var{dx}+@var{x0} (where @var{x0} is 1st element of data @var{x} provided to @code{mglGSpline*Init()} function). 
+@end deftypefn
+
+@end ifclear
 
 @c ------------------------------------------------------------------
 @external{}

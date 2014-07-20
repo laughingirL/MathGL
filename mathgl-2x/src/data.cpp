@@ -1054,6 +1054,7 @@ mreal MGL_EXPORT_PURE mgl_data_linear(HCDT d, mreal x,mreal y,mreal z)
 //-----------------------------------------------------------------------------
 mreal MGL_EXPORT_PURE mgl_data_spline(HCDT d, mreal x,mreal y,mreal z)
 {
+	if(mgl_isbad(x) || mgl_isbad(y) || mgl_isbad(z))	return NAN;
 	const mglData *dd=dynamic_cast<const mglData *>(d);
 	if(dd)	return dd->ny*dd->nz==1?mglSpline1st<mreal>(dd->a,dd->nx,x):mglSpline3st<mreal>(dd->a,dd->nx,dd->ny,dd->nz,x,y,z);
 	const mglDataC *dc=dynamic_cast<const mglDataC *>(d);
@@ -1067,6 +1068,7 @@ mreal MGL_EXPORT_PURE mgl_data_spline(HCDT d, mreal x,mreal y,mreal z)
 //-----------------------------------------------------------------------------
 mreal MGL_EXPORT_PURE mgl_data_spline_ext(HCDT d, mreal x,mreal y,mreal z, mreal *dx,mreal *dy,mreal *dz)
 {
+	if(mgl_isbad(x) || mgl_isbad(y) || mgl_isbad(z))	return NAN;
 	const mglData *dd=dynamic_cast<const mglData *>(d);
 	if(dd)	return mglSpline3t<mreal>(dd->a,dd->nx,dd->ny,dd->nz,x,y,z,dx,dy,dz);
 	const mglDataC *dc=dynamic_cast<const mglDataC *>(d);
@@ -2042,6 +2044,22 @@ void MGL_EXPORT mgl_data_join(HMDT d, HCDT v)
 void MGL_EXPORT mgl_data_join_(uintptr_t *d, uintptr_t *val)
 {	mgl_data_join(_DT_,_DA_(val));	}
 //-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_data_refill_gs(HMDT dat, HCDT xdat, HCDT vdat, mreal x1, mreal x2, long sl)
+{
+	HMDT coef = mgl_gspline_init(xdat, vdat);
+	if(!coef)	return;	// incompatible dimensions
+	const long nx = dat->nx, nn=dat->ny*dat->nz;
+	mreal x0 = x1-xdat->v(0), dx = (x2-x1)/(nx-1);
+#pragma omp parallel for
+	for(long i=0;i<nx;i++)
+	{
+		register mreal d = mgl_gspline(coef,x0+dx*i,0,0);
+		if(sl<0)	for(long j=0;j<nn;j++)	dat->a[i+j*nx] = d;
+		else	dat->a[i+sl*nx] = d;
+	}
+	mgl_delete_data(coef);
+}
+//-----------------------------------------------------------------------------
 mreal MGL_NO_EXPORT mgl_index_1(mreal v, HCDT dat)
 {
 	long mx=dat->GetNx();
@@ -2050,17 +2068,18 @@ mreal MGL_NO_EXPORT mgl_index_1(mreal v, HCDT dat)
 	v2 = mgl_data_spline(dat,d2,0,0);
 	long count=0;
 
-	if(v1==v)	return d1;
-	if(v2==v)	return d2;
+	const mreal eps = MGL_EPSILON-1.;
+	if(fabs(v-v1)<eps)	return d1;
+	if(fabs(v-v2)<eps)	return d2;
 	if((v1-v)*(v2-v)>0)	return NAN;
 	do
 	{
 		d = count<10?(d2-d1)*(v-v1)/(v2-v1)+d1:(d1+d2)/2;	count++;
 		register mreal val = mgl_data_spline(dat,d,0,0);
 //		if(fabs(val-v)<acx)	break;
-		if(val==v || d2-d<1e-14)	break;
+		if(val==v || d2-d<eps)	break;
 		if((v1-v)*(val-v)<0)	{	v2=val;	d2=d;	}	else	{	v1=val;	d1=d;	}
-	} while(fabs(d2-d1)>1e-3);
+	} while(fabs(d2-d1)>1e-5);
 	return d;
 }
 //-----------------------------------------------------------------------------
@@ -2088,10 +2107,11 @@ void MGL_EXPORT mgl_data_refill_xy(HMDT dat, HCDT xdat, HCDT ydat, HCDT vdat, mr
 	else
 	{
 		mglData u(nx), v(ny);
+		mreal dx = (x2-x1)/(nx-1), dy = (y2-y1)/(ny-1);
 #pragma omp parallel for
-		for(long i=0;i<nx;i++)	u.a[i] = mgl_index_1(x1+(x2-x1)*i/(nx-1.),xdat);
+		for(long i=0;i<nx;i++)	u.a[i] = mgl_index_1(x1+dx*i,xdat);
 #pragma omp parallel for
-		for(long i=0;i<ny;i++)	v.a[i] = mgl_index_1(y1+(y2-y1)*i/(ny-1.),ydat);
+		for(long i=0;i<ny;i++)	v.a[i] = mgl_index_1(y1+dy*i,ydat);
 #pragma omp parallel for collapse(2)
 		for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
 		{
@@ -2136,12 +2156,13 @@ void MGL_EXPORT mgl_data_refill_xyz(HMDT dat, HCDT xdat, HCDT ydat, HCDT zdat, H
 	else
 	{
 		mglData u(nx), v(ny), w(nz);
+		mreal dx = (x2-x1)/(nx-1), dy = (y2-y1)/(ny-1), dz = (z2-z1)/(nz-1);
 #pragma omp parallel for
-		for(long i=0;i<nx;i++)	u.a[i] = mgl_index_1(x1+(x2-x1)*i/(nx-1.),xdat);
+		for(long i=0;i<nx;i++)	u.a[i] = mgl_index_1(x1+dx*i,xdat);
 #pragma omp parallel for
-		for(long i=0;i<ny;i++)	v.a[i] = mgl_index_1(y1+(y2-y1)*i/(ny-1.),ydat);
+		for(long i=0;i<ny;i++)	v.a[i] = mgl_index_1(y1+dy*i,ydat);
 #pragma omp parallel for
-		for(long i=0;i<nz;i++)	w.a[i] = mgl_index_1(z1+(z2-z1)*i/(nz-1.),zdat);
+		for(long i=0;i<nz;i++)	w.a[i] = mgl_index_1(z1+dz*i,zdat);
 #pragma omp parallel for collapse(3)
 		for(long k=0;k<nz;k++)	for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
 			dat->a[i+nx*(j+ny*k)] = mgl_data_spline(vdat,u.a[i],v.a[j],w.a[k]);
@@ -2199,15 +2220,19 @@ HMDT MGL_EXPORT mgl_gspline_init(HCDT x, HCDT v)
 uintptr_t MGL_EXPORT mgl_gspline_init_(uintptr_t *x, uintptr_t *v)
 {	return uintptr_t(mgl_gspline_init(_DA_(x),_DA_(v)));	}
 //-----------------------------------------------------------------------------
-mreal MGL_EXPORT mgl_gspline(mreal dx, HCDT c, mreal *d1, mreal *d2)
+mreal MGL_EXPORT mgl_gspline(HCDT c, mreal dx, mreal *d1, mreal *d2)
 {
 	long i=0, n = c->GetNx();
-	if(n%5)	return NAN;	// not the table of coefficients
-	while(dx>c->v(5*i) && i<n-1)	{	dx-=c->v(5*i);	i++;	}
+	if(n%5 || dx<0)	return NAN;	// not the table of coefficients
+	while(dx>c->v(5*i))
+	{
+		dx-=c->v(5*i);	i++;
+		if(5*i>=n)	return NAN;
+	}
 	if(d1)	*d1 = c->v(5*i+2)+dx*(2*c->v(5*i+3)+3*dx*c->v(5*i+4));
 	if(d2)	*d2 = 2*c->v(5*i+3)+6*dx*c->v(5*i+4);
 	return c->v(5*i+1)+dx*(c->v(5*i+2)+dx*(c->v(5*i+3)+dx*c->v(5*i+4)));
 }
-mreal MGL_EXPORT mgl_gspline_(mreal *dx, uintptr_t *c, mreal *d1, mreal *d2)
-{	return mgl_gspline(*dx,_DA_(c),d1,d2);	}
+mreal MGL_EXPORT mgl_gspline_(uintptr_t *c, mreal *dx, mreal *d1, mreal *d2)
+{	return mgl_gspline(_DA_(c),*dx,d1,d2);	}
 //-----------------------------------------------------------------------------

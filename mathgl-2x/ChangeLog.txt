@@ -33,7 +33,7 @@
 * Adjust columnplot and gridplot positions for non-zero distance between the inplots.
 * Function Adjust() for Quality&4==0 now show image in widgets even if draw function is absent (i.e. =NULL).
 * Allow reading JPEG files for mglData::Import().
-* Add function for global cubic spline interpolation.
+* Add function for global cubic spline interpolation, and function to refill using global spline.
 * Choose new scales for perspective.
 
 
