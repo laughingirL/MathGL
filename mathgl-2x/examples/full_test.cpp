@@ -64,7 +64,7 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	gr->Puts(mglPoint(0),"#r{aaa}");	return;
+	gr->Puts(mglPoint(0),"#r{aaa}");	gr->Axis();	return;
 	gr->SubPlot(2,2,2,"");  gr->Title("coloring");  gr->Box();
 	gr->Legend(0,"r#"); gr->Legend(1,"Wb#");  gr->Legend(2,"ygr#");
 

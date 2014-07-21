@@ -389,8 +389,8 @@ void MGL_EXPORT mgl_write_svg(HMGL gr, const char *fname,const char *descr)
 	mgl_printf(fp, gz, "<!--Title: %s-->\n<!--CreationDate: %s-->\n\n",descr?descr:fname,ctime(&now));
 
 	// write definition for all glyphs
-	put_desc(gr,fp,gz,"<symbol id=\"%c%c_%04x\"><path d=\"", "\tM %d %d ",
-			 "L %d %d ", "Z\n", "\"/></symbol>\n");
+	put_desc(gr,fp,gz,"<defs><g id=\"%c%c_%04x\"><path d=\"", "\tM %d %d ",
+			 "L %d %d ", "Z\n", "\"/></g></defs>\n");
 
 
 	// Write background image first

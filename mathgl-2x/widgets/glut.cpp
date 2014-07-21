@@ -139,7 +139,10 @@ void _mgl_key_up(unsigned char ch,int ,int )
 		glDeleteLists(1,_mgl_glwnd->NumFig);
 		_mgl_glwnd->LoadFunc(_mgl_glwnd->FuncPar);
 		if(_mgl_glwnd->DrawFunc)
+		{
+			_mgl_glwnd->ResetFrames();
 			(_mgl_glwnd->DrawFunc)(_mgl_glwnd,_mgl_glwnd->FuncPar);
+		}
 		_mgl_glwnd->Finish();
 	}
 	if(ch=='P')
@@ -192,7 +195,10 @@ void _mgl_display()
 	else
 	{
 		if(_mgl_glwnd->DrawFunc)
+		{
+			_mgl_glwnd->ResetFrames();
 			(_mgl_glwnd->DrawFunc)(_mgl_glwnd,_mgl_glwnd->FuncPar);
+		}
 		_mgl_glwnd->Finish();
 	}
 	glFinish();
