@@ -69,7 +69,8 @@ MGL_NO_EXPORT unsigned char *mgl_create_scheme(const char *scheme,long &num)
 //-----------------------------------------------------------------------------
 bool MGL_NO_EXPORT mgl_read_image(unsigned char *g, int w, int h, const char *fname)
 {
-	const char *ext = rindex(fname,'.');
+	const char *ext = fname+strlen(fname)-1;	// rindex(fname,'.');
+	while(*ext!='.' && ext!=fname)	ext--;
 	if(!strcmp(ext,".png"))
 	{
 #if MGL_HAVE_PNG
@@ -125,10 +126,10 @@ bool MGL_NO_EXPORT mgl_read_image(unsigned char *g, int w, int h, const char *fn
 
 		jpeg_decompress_struct info;
 		jpeg_error_mgr err;
-		info.err = jpeg_std_error(&err);     
+		info.err = jpeg_std_error(&err);
 		jpeg_create_decompress(&info);
 
-		jpeg_stdio_src(&info, fp);    
+		jpeg_stdio_src(&info, fp);
 		jpeg_read_header(&info, TRUE);	// read jpeg file header
 		jpeg_start_decompress(&info);	// decompress the file
 

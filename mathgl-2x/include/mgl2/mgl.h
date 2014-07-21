@@ -415,21 +415,23 @@ public:
 	{	mgl_import_mgld(gr, fname, add);	}
 
 	/// Copy RGB values into array which is allocated by user
-	inline void GetRGB(char *imgdata, int imglen)
+	inline bool GetRGB(char *imgdata, int imglen)
 	{
 		long w=mgl_get_width(gr), h=mgl_get_height(gr);
 		if(imglen>=3*w*h)	memcpy(imgdata, mgl_get_rgb(gr),3*w*h);
+		return imglen>=3*w*h;
 	}
 	inline const unsigned char *GetRGB()		{	return mgl_get_rgb(gr);	}
 	/// Copy RGBA values into array which is allocated by user
-	inline void GetRGBA(char *imgdata, int imglen)
+	inline bool GetRGBA(char *imgdata, int imglen)
 	{
 		long w=mgl_get_width(gr), h=mgl_get_height(gr);
 		if(imglen>=4*w*h)	memcpy(imgdata, mgl_get_rgba(gr),4*w*h);
+		return imglen>=4*w*h;
 	}
 	inline const unsigned char *GetRGBA()	{	return mgl_get_rgba(gr);	}
 	/// Copy BGRN values into array which is allocated by user
-	inline void GetBGRN(unsigned char *imgdata, int imglen)
+	inline bool GetBGRN(unsigned char *imgdata, int imglen)
 	{
 		long w=mgl_get_width(gr), h=mgl_get_height(gr), i;
 		const unsigned char *buf=mgl_get_rgb(gr);
@@ -440,12 +442,14 @@ public:
 			imgdata[4*i+2] = buf[3*i];
 			imgdata[4*i+3] = 255;
 		}
+		return imglen>=4*w*h;
 	}
 	/// Copy RGBA values of background image into array which is allocated by user
-	inline void GetBackground(char *imgdata, int imglen)
+	inline bool GetBackground(char *imgdata, int imglen)
 	{
 		long w=mgl_get_width(gr), h=mgl_get_height(gr);
 		if(imglen>=4*w*h)	memcpy(imgdata, mgl_get_background(gr),4*w*h);
+		return imglen>=4*w*h;
 	}
 	inline const unsigned char *GetBackground()	{	return mgl_get_background(gr);	}
 	/// Get width of the image
