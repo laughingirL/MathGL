@@ -64,6 +64,15 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
+	gr->Puts(mglPoint(0),"#r{aaa}");	return;
+	gr->SubPlot(2,2,2,"");  gr->Title("coloring");  gr->Box();
+	gr->Legend(0,"r#"); gr->Legend(1,"Wb#");  gr->Legend(2,"ygr#");
+
+	gr->SubPlot(2,2,3,"");  gr->Title("manual position"); gr->Box();
+	gr->Legend(0.5,1);  gr->Puts(mglPoint(0.5,0.55),"at x=0.5, y=1","a");
+	gr->Legend(1,"#-"); gr->Puts(mglPoint(0.75,0.25),"Horizontal legend","a");
+	return;
+
 	mglParse par;
 	par.Execute(gr,"subplot 1 1 0:#rotate 40 60\nperspective 0.9:box:axis\n");
 //	par.Execute(gr,"subplot 1 1 0:#rotate 40 60\nperspective 1.22:box:axis\n");

@@ -383,9 +383,10 @@ float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,floa
 	str = new unsigned[i+1];
 	memcpy(str,text,(i+1)*sizeof(unsigned));
 
+	float ccol = 0;
 	for(long i=0;str[i];i++)
 	{
-		float ccol = c1+dc*i;
+		ccol = ccol<0?ccol:c1+dc*i;
 		unsigned s = str[i];		ww = 0;
 		if(s==unsigned(-3))	// recursion call here
 		{
