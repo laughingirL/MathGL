@@ -451,7 +451,7 @@ inline mglData operator/(const mglDataA &b, const mglDataA &d)
 inline mglData operator/(const mglDataA &d, mreal b)
 {	mglData a(&d);	a/=b;	return a;	}
 inline bool operator==(const mglData &b, const mglData &d)
-{	if(b.nx!=d.nx || b.ny!=d.ny || b.ny!=d.ny)	return false;
+{	if(b.nx!=d.nx || b.ny!=d.ny || b.nz!=d.nz)	return false;
 	return !memcmp(b.a,d.a,b.nx*b.ny*b.nz*sizeof(mreal));	}
 inline bool operator<(const mglDataA &b, const mglDataA &d)
 {	return b.Maximal()<d.Maximal();	}
