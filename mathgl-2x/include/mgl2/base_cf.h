@@ -49,13 +49,13 @@ MGL_EXPORT_PURE const char *mgl_get_plotid(HMGL gr);
 int MGL_EXPORT mgl_get_plotid_(uintptr_t *gr, char *out, int len);
 
 /// Ask to stop drawing
-void mgl_ask_stop(HMGL gr, int stop);
-void mgl_ask_stop_(uintptr_t *gr, int *stop);
+void MGL_EXPORT mgl_ask_stop(HMGL gr, int stop);
+void MGL_EXPORT mgl_ask_stop_(uintptr_t *gr, int *stop);
 /// Check if plot termination is asked
-int mgl_need_stop(HMGL gr);
-int mgl_need_stop_(uintptr_t *gr);
+int MGL_EXPORT mgl_need_stop(HMGL gr);
+int MGL_EXPORT mgl_need_stop_(uintptr_t *gr);
 /// Set callback function for event processing
-void mgl_set_event_func(HMGL gr, void (*func)(void *), void *par);
+void MGL_EXPORT mgl_set_event_func(HMGL gr, void (*func)(void *), void *par);
 
 /// Get plot quality
 int MGL_EXPORT_PURE mgl_get_quality(HMGL gr);

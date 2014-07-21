@@ -415,12 +415,8 @@ int MGL_EXPORT mgl_data_read_mat(HMDT d, const char *fname, long dim)
 	long nb = strlen(buf);	gzclose(fp);
 
 	long j=0;
-	while(j<nb)
-	{
-		if(buf[j]=='#')	while(!isn(buf[j]))	j++;	// skip comment
-		while(j<nb && buf[j]<=' ')	j++;
-		break;
-	}
+	if(buf[j]=='#')	while(!isn(buf[j]))	j++;	// skip comment
+	while(j<nb && buf[j]<=' ')	j++;
 	if(dim==1)
 	{
 		sscanf(buf+j,"%ld",&nx);

@@ -1542,7 +1542,7 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 				register int sum = v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
 				v = dx*dx+dy*dy;
 				sum += v<(2*pw-1)*(2*pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-2*pw)/2));
-				sum = sum>255?255:sum;	cs[3] = ca*sum/255;		cs[3] = ca*sum/255;
+				sum = sum>255?255:sum;	cs[3] = ca*sum/255;
 				pnt_plot(i,j,q.z+1,cs,d->ObjId);
 			}
 			break;

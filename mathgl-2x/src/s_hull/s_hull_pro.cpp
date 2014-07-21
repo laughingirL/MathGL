@@ -680,7 +680,7 @@ long s_hull_pro( std::vector<Shx> &pts, std::vector<Triad> &triads)
 
 	//  write_Triads(triads, "tris0.mat");
 
-	std::set<long> ids, ids2;
+	std::set<long> ids;
 
 	long tf = T_flip_pro( pts, triads, slump, numt, 0, ids);
 	if( tf < 0 )

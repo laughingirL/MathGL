@@ -287,10 +287,10 @@ void MGL_EXPORT mgl_set_mask_val_(const char *id, uint64_t *mask,int)
 void MGL_EXPORT mgl_set_mask_angle(HMGL gr, int angle)	{	gr->SetMaskAngle(angle);	}
 void MGL_EXPORT mgl_set_mask_angle_(uintptr_t *gr, int *angle)	{	_GR_->SetMaskAngle(*angle);	}
 //---------------------------------------------------------------------------
-void mgl_ask_stop(HMGL gr, int stop)		{	gr->AskStop(stop);	}
-void mgl_ask_stop_(uintptr_t *gr, int *stop){	_GR_->AskStop(*stop);	}
-int mgl_need_stop(HMGL gr)			{	return gr->NeedStop();	}
-int mgl_need_stop_(uintptr_t *gr)	{	return _GR_->NeedStop();}
-void mgl_set_event_func(HMGL gr, void (*func)(void *), void *par)
+void MGL_EXPORT mgl_ask_stop(HMGL gr, int stop)		{	gr->AskStop(stop);	}
+void MGL_EXPORT mgl_ask_stop_(uintptr_t *gr, int *stop){	_GR_->AskStop(*stop);	}
+int MGL_EXPORT mgl_need_stop(HMGL gr)			{	return gr->NeedStop();	}
+int MGL_EXPORT mgl_need_stop_(uintptr_t *gr)	{	return _GR_->NeedStop();}
+void MGL_EXPORT mgl_set_event_func(HMGL gr, void (*func)(void *), void *par)
 {	gr->SetEventFunc(func,par);	}
 //---------------------------------------------------------------------------
