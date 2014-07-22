@@ -48,18 +48,20 @@ template <class T> class mglStack
 	size_t np;	///< allocated pointers
 	size_t m;	///< used pointers (allocated size is m*nb)
 	size_t n;	///< used cells
+	void *mutex;
 public:
 	mglStack(const mglStack<T> &st)
 	{
 		np=st.np;	dat = (T**)malloc(np*sizeof(T*));
 		pb=st.pb;	m=n=0;	reserve(st.n);
 		for(size_t i=0;i<m;i++)	memcpy(dat[i],st.dat[i],(1<<pb)*sizeof(T));
-		n=st.n;
+		n=st.n;		mutex = 0;
 	}
 	mglStack(size_t Pbuf=10)
 	{	np=16;	pb=Pbuf;	dat = (T**)malloc(np*sizeof(T*));
-		dat[0] = new T[1<<pb];	n=0;	m=1;	}
+		dat[0] = new T[1<<pb];	n=0;	m=1;	mutex = 0;	}
 	~mglStack()	{	clear();	delete [](dat[0]);	free(dat);	}
+	inline void set_mutex(void *m)	{	mutex = m;	}
 	void reserve(size_t num)
 	{
 		num+=n;
@@ -74,8 +76,24 @@ public:
 	}
 	void clear()
 	{
+		if(mutex)
+		{
+#if MGL_HAVE_PTHREAD
+			pthread_mutex_lock((pthread_mutex_t *)mutex);
+#elif MGL_HAVE_OMP
+			omp_set_lock((omp_lock_t *)mutex);
+#endif
+		}
 		for(size_t i=0;i<m;i++)	delete [](dat[i]);
 		dat[0] = new T[1<<pb];	n=0;	m=1;
+		if(mutex)
+		{
+#if MGL_HAVE_PTHREAD
+			pthread_mutex_unlock((pthread_mutex_t *)mutex);
+#elif MGL_HAVE_OMP
+			omp_unset_lock((omp_lock_t *)mutex);
+#endif
+		}
 	}
 	T &operator[](size_t i)	{	register size_t d=i>>pb;	return dat[d][i-(d<<pb)];	}
 	const T &operator[](size_t i)	const	{	register size_t d=i>>pb;	return dat[d][i-(d<<pb)];	}
@@ -518,7 +536,10 @@ protected:
 	mglStack<mglTexture> Txt;	///< Pointer to textures
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_t mutexPnt, mutexTxt, mutexLeg, mutexGlf, mutexAct, mutexDrw;
-	pthread_mutex_t mutexSub, mutexPrm, mutexPtx, mutexStk, mutexGrp;
+	pthread_mutex_t mutexSub, mutexPrm, mutexPtx, mutexStk, mutexGrp, mutexClf;
+#endif
+#if MGL_HAVE_OMP
+	omp_lock_t lockClf;
 #endif
 
 	int TernAxis;		///< Flag that Ternary axis is used
@@ -555,7 +576,7 @@ protected:
 
 	virtual void LightScale(const mglMatrix *M)=0;			///< Scale positions of light sources
 	inline void ClearPrmInd()
-	{	long *tmp = PrmInd;	PrmInd=NULL;	if(tmp)	delete []tmp;	}
+	{	if(PrmInd)	delete []PrmInd;	PrmInd=NULL;	}
 
 	// block for SaveState()
 	mglPoint MinS;		///< Saved lower edge of bounding box for graphics.

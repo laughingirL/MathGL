@@ -526,36 +526,45 @@ void mglCanvas::pxl_dotsdr(long id, long n, const void *)
 //-----------------------------------------------------------------------------
 void mglCanvas::Finish()
 {
+	static mglMatrix bp;
+	if(Quality==MGL_DRAW_NONE)	return;
+#if MGL_HAVE_PTHREAD
+	pthread_mutex_lock(&mutexClf);
+#elif MGL_HAVE_OMP
+	omp_set_lock(&lockClf);
+#endif
 	if(Quality==MGL_DRAW_DOTS)
 	{
 		mglStartThread(&mglCanvas::pxl_dotsdr,this,Pnt.size());
 		mglStartThread(&mglCanvas::pxl_memcpy,this,Width*Height);
 		mglStartThread(&mglCanvas::pxl_backgr,this,Width*Height);
-		return;
 	}
-	static mglMatrix bp;
-	if(Quality==MGL_DRAW_NONE)	return;
-	if(Quality&MGL_DRAW_LMEM)	clr(MGL_FINISHED);
-	if(memcmp(&Bp,&bp,sizeof(mglMatrix)) && !(Quality&MGL_DRAW_LMEM) && Prm.size()>0)
-		clr(MGL_FINISHED);
-	if(get(MGL_FINISHED))	return;	// nothing to do
-/*	static bool working=false;
-	if(working)	return;
-	working = true;*/
-	if(!(Quality&MGL_DRAW_LMEM) && Prm.size()>0)
+	else
 	{
-		PreparePrim(0);	bp=Bp;
-		clr(MGL_FINISHED);
-		mglStartThread(&mglCanvas::pxl_primdr,this,Prm.size());
+		if((Quality&MGL_DRAW_LMEM) || (memcmp(&Bp,&bp,sizeof(mglMatrix)) && !(Quality&MGL_DRAW_LMEM) && Prm.size()>0))
+			clr(MGL_FINISHED);
+		if(!get(MGL_FINISHED))
+		{
+			if(!(Quality&MGL_DRAW_LMEM) && Prm.size()>0)
+			{
+				PreparePrim(0);	bp=Bp;
+				clr(MGL_FINISHED);
+				mglStartThread(&mglCanvas::pxl_primdr,this,Prm.size());
+			}
+			size_t n=Width*Height;
+			BDef[3] = (Flag&3)!=2 ? 0:255;
+			if(Quality&MGL_DRAW_NORM)	mglStartThread(&mglCanvas::pxl_combine,this,n);
+			else 			mglStartThread(&mglCanvas::pxl_memcpy,this,n);
+			BDef[3] = 255;
+			mglStartThread(&mglCanvas::pxl_backgr,this,n);
+			set(MGL_FINISHED);
+		}
 	}
-	size_t n=Width*Height;
-	BDef[3] = (Flag&3)!=2 ? 0:255;
-	if(Quality&MGL_DRAW_NORM)	mglStartThread(&mglCanvas::pxl_combine,this,n);
-	else 			mglStartThread(&mglCanvas::pxl_memcpy,this,n);
-	BDef[3] = 255;
-	mglStartThread(&mglCanvas::pxl_backgr,this,n);
-	set(MGL_FINISHED);
-//	working = false;
+#if MGL_HAVE_PTHREAD
+	pthread_mutex_unlock(&mutexClf);
+#elif MGL_HAVE_OMP
+	omp_unset_lock(&lockClf);
+#endif
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::ClfZB(bool force)

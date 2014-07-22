@@ -28,18 +28,16 @@
 #define MGL_FUNC_CONST	__attribute__((const))
 #define MGL_FUNC_PURE	__attribute__((pure))
 #else
-#define MGL_FUNC_CONST	
-#define MGL_FUNC_PURE	
+#define MGL_FUNC_CONST
+#define MGL_FUNC_PURE
 #endif
 #define MGL_EXPORT_CONST	MGL_EXPORT MGL_FUNC_CONST
 #define MGL_EXPORT_PURE		MGL_EXPORT MGL_FUNC_PURE
 #define MGL_LOCAL_CONST		MGL_NO_EXPORT MGL_FUNC_CONST
 #define MGL_LOCAL_PURE		MGL_NO_EXPORT MGL_FUNC_PURE
 
-#ifdef MGL_SRC
 #if MGL_HAVE_OMP
 #include <omp.h>
-#endif
 #endif
 
 #endif

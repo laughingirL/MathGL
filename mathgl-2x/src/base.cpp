@@ -102,6 +102,18 @@ mglBase::mglBase()
 	pthread_mutex_init(&mutexGlf,0);
 	pthread_mutex_init(&mutexAct,0);
 	pthread_mutex_init(&mutexDrw,0);
+	pthread_mutex_init(&mutexClf,0);
+	Pnt.set_mutex(&mutexClf);
+	Prm.set_mutex(&mutexClf);
+	Sub.set_mutex(&mutexClf);
+	Txt.set_mutex(&mutexClf);
+#endif
+#if MGL_HAVE_OMP
+	omp_init_lock(&lockClf);
+	Pnt.set_mutex(&lockClf);
+	Prm.set_mutex(&lockClf);
+	Sub.set_mutex(&lockClf);
+	Txt.set_mutex(&lockClf);
 #endif
 	fnt=0;	*FontDef=0;	fx=fy=fz=fa=fc=0;
 	AMin = mglPoint(0,0,0,0);	AMax = mglPoint(1,1,1,1);
@@ -117,7 +129,13 @@ mglBase::mglBase()
 	MinS=mglPoint(-1,-1,-1);	MaxS=mglPoint(1,1,1);
 	fnt = new mglFont;	fnt->gr = this;	PrevState=NAN;
 }
-mglBase::~mglBase()	{	ClearEq();	ClearPrmInd();	delete fnt;	}
+mglBase::~mglBase()
+{
+	ClearEq();	ClearPrmInd();	delete fnt;
+#if MGL_HAVE_OMP
+	omp_destroy_lock(&lockClf);
+#endif
+}
 //-----------------------------------------------------------------------------
 void mglBase::RestoreFont()	{	fnt->Restore();	}
 void mglBase::LoadFont(const char *name, const char *path)
@@ -1412,5 +1430,68 @@ void mglBase::ClearUnused()
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_unlock(&mutexPnt);	pthread_mutex_unlock(&mutexPrm);
 #endif
+}
+//-----------------------------------------------------------------------------
+std::wstring MGL_EXPORT mgl_ftoa(double v, const char *fmt)
+{
+	char se[64], sf[64], ff[8]="%.3f", ee[8]="%.3e";
+	int dig=3;
+	if(strchr(fmt,'1'))	dig=1;
+	if(strchr(fmt,'2'))	dig=2;
+//	if(strchr(fmt,'3'))	dig=3;	// NOTE dig = 3 is default value
+	if(strchr(fmt,'4'))	dig=4;
+	if(strchr(fmt,'5'))	dig=5;
+	if(strchr(fmt,'6'))	dig=6;
+	if(strchr(fmt,'7'))	dig=7;
+	if(strchr(fmt,'8'))	dig=8;
+	if(strchr(fmt,'9'))	dig=9;
+	if(strchr(fmt,'E'))	ee[3] = 'E';
+	ff[2] = ee[2] = dig+'0';
+	snprintf(se,64,ee,v);	snprintf(sf,64,ff,v);
+	long le=strlen(se), lf=strlen(sf), i;
+	// clear fix format
+	for(i=lf-1;i>=lf-dig && sf[i]=='0';i--)	sf[i]=0;
+	if(sf[i]=='.')	sf[i]=0;	lf = strlen(sf);
+	// parse -nan numbers
+	if(!strcmp(sf,"-nan"))	memcpy(sf,"nan",4);
+	// clear exp format
+	int st = se[0]=='-'?1:0;
+	if(strchr(fmt,'+') || se[3+st+dig]=='-')	// first remove zeros after 'e'
+	{
+		for(i=4+st+dig;i<le && se[i]=='0';i++);
+		memmove(se+4+st+dig,se+i,le-i+1);
+	}
+	else
+	{
+		for(i=3+st+dig;i<le && (se[i]=='0' || se[i]=='+');i++);
+		memmove(se+3+st+dig,se+i,le-i+1);
+	}
+	le=strlen(se);
+	// don't allow '+' at the end
+	if(se[le-1]=='+')	se[--le]=0;
+	// remove single 'e'
+	if(se[le-1]=='e' || se[le-1]=='E')	se[--le]=0;
+	for(i=1+st+dig;i>st && se[i]=='0';i--);	// remove final '0'
+	if(se[i]=='.')	i--;
+	memmove(se+i+1,se+2+st+dig,le-dig);	le=strlen(se);
+	// add '+' sign if required
+	if(strchr(fmt,'+') && !strchr("-0niNI",se[0]))
+	{	memmove(se+1,se,le);	se[0]='+';
+		memmove(sf+1,sf,lf);	sf[0]='+';	}
+	if(lf>le)	strcpy(sf,se);	lf = strlen(sf);
+	std::wstring res;	res.reserve(le+8);
+
+	if(strchr(fmt,'m'))	// replace '-' by "\minus"
+		for(i=0;i<lf;i++)	res += sf[i];
+	else
+		for(i=0;i<lf;i++)	res += sf[i]!='-'?sf[i]:L'−';
+	if(strchr(fmt,'T'))	// TeX notation: 'e' -> "\cdot 10^{...}"
+	{
+		size_t p;
+		for(p=0;p<res.length();p++)	if(res[p]==L'e' || res[p]==L'E')	break;
+		if(p<res.length())
+		{	res.replace(p,1,L"⋅10^{");	res += L'}';	}
+	}
+	return res;
 }
 //-----------------------------------------------------------------------------
