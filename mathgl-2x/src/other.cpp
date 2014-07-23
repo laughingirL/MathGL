@@ -164,7 +164,9 @@ void MGL_EXPORT mgl_cont_x_val(HMGL gr, HCDT v, HCDT a, const char *sch, double 
 	static int cgid=1;	gr->StartGroup("ContX",cgid++);
 	mglData xx,yy,zz,aa;
 
-	bool text=(mglchr(sch,'t'));
+	int text=0;
+	if(mglchr(sch,'t'))	text=1;
+	if(mglchr(sch,'T'))	text=2;
 	long ss=gr->AddTexture(sch);
 	gr->SetPenPal(sch);
 
@@ -210,7 +212,9 @@ void MGL_EXPORT mgl_cont_y_val(HMGL gr, HCDT v, HCDT a, const char *sch, double 
 	static int cgid=1;	gr->StartGroup("ContY",cgid++);
 	mglData xx,yy,zz,aa;
 
-	bool text=(mglchr(sch,'t'));
+	int text=0;
+	if(mglchr(sch,'t'))	text=1;
+	if(mglchr(sch,'T'))	text=2;
 	long ss=gr->AddTexture(sch);
 	gr->SetPenPal(sch);
 
@@ -256,7 +260,9 @@ void MGL_EXPORT mgl_cont_z_val(HMGL gr, HCDT v, HCDT a, const char *sch, double 
 	static int cgid=1;	gr->StartGroup("ContZ",cgid++);
 	mglData xx,yy,zz,aa;
 
-	bool text=(mglchr(sch,'t'));
+	int text=0;
+	if(mglchr(sch,'t'))	text=1;
+	if(mglchr(sch,'T'))	text=2;
 	long ss=gr->AddTexture(sch);
 	gr->SetPenPal(sch);
 

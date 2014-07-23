@@ -361,7 +361,7 @@ void MGL_NO_EXPORT mgl_draw_curvs(HMGL gr, mreal val, mreal c, int text, const s
 			if(rr[i]>xx)	{	rr[i]=xx;	oo[i]=k;	}
 		}
 		for(long i=0;i<n*m;i++)	if(oo[i]>=0)
-			mgl_string_curve(gr,oo[i],pc,ff,nn,wcs,"t:C",-0.5);
+			mgl_string_curve(gr,oo[i],pc,ff,nn,wcs,text==1?"t:C":"T:C",-0.5);
 		delete []oo;	delete []rr;
 	}
 	for(long i=0;i<pc;i++)	if(nn[i]>=0)	gr->line_plot(ff[i], ff[nn[i]]);
@@ -380,7 +380,9 @@ void MGL_EXPORT mgl_cont_gen(HMGL gr, mreal val, HCDT a, HCDT x, HCDT y, HCDT z,
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_cont_gen(HMGL gr, double val, HCDT a, HCDT x, HCDT y, HCDT z, const char *sch)
 {
-	bool text=(mglchr(sch,'t'));
+	int text=0;
+	if(mglchr(sch,'t'))	text=1;
+	if(mglchr(sch,'T'))	text=2;
 	gr->SetPenPal(sch);
 	mgl_cont_gen(gr,val,a,x,y,z,gr->CDef,text,0);
 }
@@ -393,7 +395,9 @@ void MGL_EXPORT mgl_cont_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const c
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Cont",cgid++);
 
-	bool text=(mglchr(sch,'t'));
+	int text=0;
+	if(mglchr(sch,'t'))	text=1;
+	if(mglchr(sch,'T'))	text=2;
 	bool fixed=(mglchr(sch,'_')) || (gr->Min.z==gr->Max.z);
 	long s=gr->AddTexture(sch);
 	gr->SetPenPal(sch);
@@ -1176,7 +1180,9 @@ void MGL_EXPORT mgl_cont3_xyz_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, HCDT 
 	if(mglchr(sch,'x'))	dir='x';
 	if(mglchr(sch,'z'))	dir='z';
 
-	bool text=(mglchr(sch,'t'));
+	int text=0;
+	if(mglchr(sch,'t'))	text=1;
+	if(mglchr(sch,'T'))	text=2;
 	long ss=gr->AddTexture(sch);
 	gr->SetPenPal(sch);
 
