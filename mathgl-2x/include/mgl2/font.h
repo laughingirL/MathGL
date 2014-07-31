@@ -108,6 +108,7 @@ public:
 	inline int GetNl(int s, long j) const		{	return glyphs[j].numl[s];	}
 	inline short GetWidth(int s, long j) const	{	return glyphs[j].width[s];	}
 	inline float GetFact(int s) const			{	return fact[s];	}
+	inline wchar_t GetUnicode(long j) const		{	return j>=0?glyphs[j].id:0;	}
 protected:
 	std::vector<mglGlyphDescr> glyphs;	///< information about know glyphs
 	float fact[4];	///< Divider for width of glyph

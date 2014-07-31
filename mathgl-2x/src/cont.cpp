@@ -235,7 +235,7 @@ std::vector<mglSegment> MGL_EXPORT mgl_get_lines(mreal val, HCDT a, HCDT x, HCDT
 std::vector<mglSegment> MGL_EXPORT mgl_get_curvs(HMGL gr, std::vector<mglSegment> lines)
 {
 	long n = lines.size(), m = n;
-	const long nsl=(n>0 && sqrt(n)>10)?sqrt(n):10;
+	const long nsl=(n>0 && n*n>100)?sqrt(double(n)):10;
 	mreal dxsl = nsl/((gr->Max.x-gr->Min.x)*MGL_FEPSILON), x0 = gr->Min.x;
 	mreal dysl = nsl/((gr->Max.y-gr->Min.y)*MGL_FEPSILON), y0 = gr->Min.y;
 	std::vector<long> *xsl, *ysl;
