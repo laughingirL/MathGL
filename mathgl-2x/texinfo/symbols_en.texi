@@ -23,7 +23,9 @@ empty line style (see @ref{Line styles});
 empty color in @ref{chart}.
 
 @item !
-set to use new color from palette for each point (not for each curve, as default) in @ref{1D plotting}.
+set to use new color from palette for each point (not for each curve, as default) in @ref{1D plotting};
+
+set to disable ticks tuning in @ref{axis} and @ref{colorbar}.
 
 @item #
 set to use solid marks (see @ref{Line styles}) or solid @ref{error} boxes;
@@ -65,6 +67,8 @@ one of marks (see @ref{Line styles}) or kind of @ref{error} boxes;
 
 one of mask for face filling (see @ref{Color scheme});
 
+set to print @samp{+} for positive numbers in @ref{axis}, @ref{label}, @ref{table};
+
 operation in @ref{Textual formulas}.
 
 @item ,
@@ -76,6 +80,8 @@ solid line style (see @ref{Line styles});
 one of mask for face filling (see @ref{Color scheme});
 
 place entries horizontally in @ref{legend};
+
+set to use usual @samp{-} for negative numbers in @ref{axis}, @ref{label}, @ref{table};
 
 operation in @ref{Textual formulas}.
 
@@ -228,12 +234,14 @@ line width (see @ref{Line styles});
 
 brightness of a color (see @ref{Color styles});
 
+precision of numbers in @ref{axis}, @ref{label}, @ref{table};
+
 kind of smoothing (for digits 1,3,5) in @ref{smooth};
 
 digits for a value.
 
 @item 4,6,8
-draw square, hex- or octo-pyramids instead of cones in @ref{cone}, @ref{cones}.
+set to draw square, hex- or octo-pyramids instead of cones in @ref{cone}, @ref{cones}.
 
 @item A,B,C,D,E,F,a,b,c,d,e,f
 can be hex-digit for color specification if placed inside @{@} (see @ref{Color styles}).
@@ -286,12 +294,16 @@ dark green-yellow color (see @ref{Color styles}).
 @item e
 green-yellow color (see @ref{Color styles}).
 
+@item F
+
+set LaTeX-like format for numbers in @ref{axis}, @ref{label}, @ref{table}.
+
 @item f
 style of @ref{bars}, @ref{barh};
 
 style of @ref{vect}, @ref{vect3};
 
-style of @ref{table}, @ref{label}
+set fixed format for numbers in @ref{axis}, @ref{label}, @ref{table};
 
 Fourier transform for @ref{transform}.
 

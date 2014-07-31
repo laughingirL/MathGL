@@ -18,6 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include <float.h>
+#include <math.h>
 #include <list>
 #include "mgl2/other.h"
 #include "mgl2/data.h"
@@ -36,14 +37,13 @@ void MGL_EXPORT mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCD
 	long ss=gr->AddTexture(sch);
 	gr->SaveState(opt);	gr->SetPenPal("-");
 	static int cgid=1;	gr->StartGroup("TriPlot",cgid++);
-	mglPoint p1,p2,p3,q;
 
 	bool wire = mglchr(sch,'#');
 	long nc = a->GetNx();
 	if(nc!=n && nc>=m)	// colors per triangle
 	{
+		mglPoint p1,p2,p3,q;
 		gr->Reserve(m*3);
-#pragma omp parallel for private(p1,p2,p3,q)
 		for(long i=0;i<m;i++)
 		{
 			register long k1 = long(nums->v(0,i)+0.5);
@@ -64,7 +64,6 @@ void MGL_EXPORT mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCD
 		gr->Reserve(n);
 		long *kk = new long[n];
 		mglPoint *pp = new mglPoint[n];
-#pragma omp parallel for
 		for(long i=0;i<m;i++)	// add averaged normales
 		{
 			register long k1 = long(nums->v(0,i)+0.5);
@@ -77,15 +76,12 @@ void MGL_EXPORT mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCD
 				q.Normalize();
 				// try be sure that in the same direction ...
 				if(q.z<0)	q *= -1;
-#pragma omp critical(quadplot)
-				{pp[k1] += q;	pp[k2] += q;	pp[k3] += q;}
+				pp[k1] += q;	pp[k2] += q;	pp[k3] += q;
 			}
 			else	pp[k1]=pp[k2]=pp[k3]=mglPoint(NAN,NAN);
 		}
-#pragma omp parallel for
 		for(long i=0;i<n;i++)	// add points
 			kk[i] = gr->AddPnt(mglPoint(x->v(i), y->v(i), z->v(i)), gr->GetC(ss,a->v(i)), pp[i]);
-#pragma omp parallel for
 		for(long i=0;i<m;i++)	// draw triangles
 		{
 			register long k1 = long(nums->v(0,i)+0.5);
@@ -150,7 +146,6 @@ void MGL_EXPORT mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HC
 	if(nc!=n && nc>=m)	// colors per triangle
 	{
 		gr->Reserve(m*4);
-#pragma omp parallel for private(p1,p2,p3,p4)
 		for(long i=0;i<m;i++)
 		{
 			register long k1 = long(nums->v(0,i)+0.5);
@@ -174,7 +169,6 @@ void MGL_EXPORT mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HC
 		gr->Reserve(n);
 		long *kk = new long[n];
 		mglPoint *pp = new mglPoint[n];
-#pragma omp parallel for private(p1,p2,p3,p4)
 		for(long i=0;i<m;i++)	// add averaged normales
 		{
 			register long k1 = long(nums->v(0,i)+0.5);
@@ -193,14 +187,11 @@ void MGL_EXPORT mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HC
 				mglPoint q2 = (p2-p4) ^ (p3-p4);	if(q2.z<0) q2*=-1;
 				mglPoint q3 = (p1-p2) ^ (p4-p2);	if(q3.z<0) q3*=-1;
 				mglPoint q4 = (p1-p4) ^ (p4-p3);	if(q4.z<0) q4*=-1;
-#pragma omp critical(quadplot)
-				{pp[k1] += q1;	pp[k2] += q2;	pp[k3] += q3;	pp[k4] += q4;}
+				pp[k1] += q1;	pp[k2] += q2;	pp[k3] += q3;	pp[k4] += q4;
 			}
 		}
-#pragma omp parallel for
 		for(long i=0;i<n;i++)	// add points
 			kk[i] = gr->AddPnt(mglPoint(x->v(i), y->v(i), z->v(i)),gr->GetC(ss,a->v(i)), pp[i]);
-#pragma omp parallel for
 		for(long i=0;i<m;i++)	// draw quads
 		{
 			register long k1 = floor(nums->v(0,i)+0.5);
@@ -446,7 +437,6 @@ void MGL_EXPORT mgl_dots_ca(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, HCDT a, con
 	if(mk==0)	mk='.';
 	gr->Reserve(n);
 
-#pragma omp parallel for
 	for(long i=0;i<n;i+=d)
 	{
 		mglPoint p = mglPoint(x->vthr(i),y->vthr(i),z->vthr(i));
@@ -489,14 +479,12 @@ HMDT MGL_EXPORT mgl_triangulation_3d(HCDT x, HCDT y, HCDT z)
 	if(y->GetNx()!=n || z->GetNx()!=n)	return nums;
 	mglPoint *pp = new mglPoint[n];
 	long *nn=0;
-#pragma omp parallel for
 	for(long i=0;i<n;i++)	pp[i] = mglPoint(x->v(i), y->v(i), z->v(i));
 	m = mgl_crust(n,pp,&nn,0);
 
 	if(m>0)
 	{
 		nums=new mglData(3,m);
-#pragma omp parallel for
 		for(long i=0;i<3*m;i++)	nums->a[i]=nn[i];
 	}
 	delete []pp;	free(nn);	return nums;
@@ -536,7 +524,6 @@ HMDT MGL_EXPORT mgl_triangulation_2d(HCDT x, HCDT y)
 	s_hull_pro(pts, triads);
 	long m = triads.size();
 	nums=new mglData(3,m);
-#pragma omp parallel for
 	for(long i=0;i<m;i++)
 	{
 		nums->a[3*i]   = triads[i].a;
@@ -560,7 +547,7 @@ MGL_NO_EXPORT void *mgl_grid_t(void *par)
 	mglThreadD *t=(mglThreadD *)par;
 	long nx=t->p[0],ny=t->p[1];
 	mreal *b=t->a;
-	const mreal *x=t->b, *y=t->c, *d=t->d, *z=t->e;
+	const mreal *x=t->b, *y=t->c, *d=t->d;
 	HCDT zdat = (HCDT) t->v;
 #if !MGL_HAVE_PTHREAD
 #pragma omp parallel for
@@ -569,11 +556,7 @@ MGL_NO_EXPORT void *mgl_grid_t(void *par)
 	{
 		register long k1 = long(d[3*i0]+0.5), k2 = long(d[3*i0+1]+0.5), k3 = long(d[3*i0+2]+0.5);
 		mreal dxu,dxv,dyu,dyv;
-		mreal z1,z2,z3;
-
-		if(z)	{	z1=z[k1];	z2=z[k2];	z3=z[k3];	}
-		else	{	z1=zdat->vthr(k1);	z2=zdat->vthr(k2);	z3=zdat->vthr(k3);	}
-
+		mreal z1=zdat->vthr(k1), z2=zdat->vthr(k2), z3=zdat->vthr(k3);
 		mglPoint d1=mglPoint(x[k2]-x[k1],y[k2]-y[k1],z2-z1), d2=mglPoint(x[k3]-x[k1],y[k3]-y[k1],z3-z1), p;
 
 		dxu = d2.x*d1.y - d1.x*d2.y;
@@ -607,11 +590,10 @@ void MGL_EXPORT mgl_data_grid_xy(HMDT d, HCDT xdat, HCDT ydat, HCDT zdat, mreal 
 { // NOTE: only for mglData
 	const mglData *x = dynamic_cast<const mglData *>(xdat);
 	const mglData *y = dynamic_cast<const mglData *>(ydat);
-	const mglData *z = dynamic_cast<const mglData *>(zdat);
-	long n=x->GetNN();
-	if((n<3) || (y->GetNN()!=n) || (z->GetNN()!=n))	return;
+	long n=xdat->GetNN();
+	if((n<3) || (ydat->GetNN()!=n) || (zdat->GetNN()!=n))	return;
 
-	mglData *nums = mgl_triangulation_2d(x,y);
+	mglData *nums = mgl_triangulation_2d(xdat,ydat);
 	if(nums->nx<3)	{	delete nums;	return;	}
 	long nn = nums->ny, par[3]={d->nx,d->ny,d->nz};
 	mreal xx[4]={x1,(d->nx-1.)/(x2-x1), y1,(d->ny-1.)/(y2-y1)};
@@ -625,10 +607,11 @@ void MGL_EXPORT mgl_data_grid_xy(HMDT d, HCDT xdat, HCDT ydat, HCDT zdat, mreal 
 #pragma omp parallel for
 		for(long i=0;i<n;i++)
 		{	xc[i]=xx[1]*(xdat->vthr(i)-xx[0]);	yc[i]=xx[3]*(ydat->vthr(i)-xx[2]);	}
+	long tmp = d->nx*d->ny*d->nz;
 #pragma omp parallel for
-	for(long i=0;i<d->nx*d->ny*d->nz;i++) d->a[i] = NAN;
+	for(long i=0;i<tmp;i++) d->a[i] = NAN;
 
-	mglStartThread(mgl_grid_t,0,nn,d->a,xc,yc,par,zdat,nums->a,z?z->a:0);
+	mglStartThread(mgl_grid_t,0,nn,d->a,xc,yc,par,zdat,nums->a);
 	delete nums;	delete []xc;	delete []yc;
 }
 void MGL_EXPORT mgl_data_grid_xy_(uintptr_t *d, uintptr_t *x, uintptr_t *y, uintptr_t *z, mreal *x1, mreal *x2, mreal *y1, mreal *y2)

@@ -532,6 +532,9 @@ class MGL_EXPORT mglExpr
 	const mglExpr &operator=(const mglExpr &t){return t;}	// copying is not allowed
 public:
 	mglExpr(const char *expr)		{	ex = mgl_create_expr(expr);	}
+#if MGL_HAVE_RVAL
+	mglExpr(mglExpr &&d):ex(d.ex)	{	d.ex=0;	}
+#endif
 	~mglExpr()	{	mgl_delete_expr(ex);	}
 	/// Return value of expression for given x,y,z variables
 	inline double Eval(double x, double y=0, double z=0)
@@ -556,14 +559,16 @@ class MGL_EXPORT mglDataV : public mglDataA
 	long ny;	///< number of points in 2nd dimensions ('y' dimension)
 	long nz;	///< number of points in 3d dimensions ('z' dimension)
 	mreal di, dj, dk, a0;
-	bool simpl;	///< simple variable or "frequency" one
 public:
 
 	mglDataV(const mglDataV &d)	// NOTE: must be constructor for mglDataV& to exclude copy one
-	{	nx=d.nx;	ny=d.ny;	nz=d.nz;	a0=d.a0;	simpl=true;
-		di=d.di;	dj=d.dj;	dk=d.dk;	}
+	{	nx=d.nx;	ny=d.ny;	nz=d.nz;	a0=d.a0;	di=d.di;	dj=d.dj;	dk=d.dk;	}
 	mglDataV(long xx=1,long yy=1,long zz=1,mreal x1=0,mreal x2=NaN,char dir='x')
 	{	nx=xx;	ny=yy;	nz=zz;	Fill(x1,x2,dir);	}
+#if MGL_HAVE_RVAL
+	mglDataV(mglDataV &&d):nx(d.nx),ny(d.ny),nz(d.nz),a0(d.a0),di(d.di),dj(d.dj),dk(d.dk)
+	{	s=d.s;	temp=d.temp;	func=d.func;	o=d.o;	d.func=0;	}
+#endif
 	virtual ~mglDataV()	{}
 
 	/// Get sizes
@@ -573,27 +578,20 @@ public:
 
 	/// Create or recreate the array with specified size and fill it by zero
 	inline void Create(long mx,long my=1,long mz=1)
-	{	di=mx>1?di*(nx-1)/(mx-1):0;	dj=my>1?dj*(ny-1)/(my-1):0;	simpl=true;
+	{	di=mx>1?di*(nx-1)/(mx-1):0;	dj=my>1?dj*(ny-1)/(my-1):0;
 		dk=mz>1?dk*(nz-1)/(mz-1):0;	nx=mx;	ny=my;	nz=mz;	}
 	/// For going throw all elements
 	inline void All()	{	di=dj=dk=1;	a0=0;	}
 	/// Equidistantly fill the data to range [x1,x2] in direction dir
 	inline void Fill(mreal x1,mreal x2=NaN,char dir='x')
 	{
-		di=dj=dk=0;	a0=x1;	simpl=true;
+		di=dj=dk=0;	a0=x1;
 		if(mgl_isnum(x2))
 		{
 			if(dir=='x' && nx>1)	di=(x2-x1)/(nx-1);
 			if(dir=='y' && ny>1)	dj=(x2-x1)/(ny-1);
 			if(dir=='z' && nz>1)	dk=(x2-x1)/(nz-1);
 		}
-	}
-	inline void Freq(mreal dp,char dir='x')
-	{
-		di=dj=dk=0;	a0=0;	simpl=false;
-		if(dir=='x')	di=dp;
-		if(dir=='y')	dj=dp;
-		if(dir=='z')	dk=dp;
 	}
 	mreal Maximal() const
 	{	return a0+mgl_max(mgl_max(di*(nx-1),dj*(ny-1)),mgl_max(dk*(nz-1),0));	}
@@ -609,12 +607,72 @@ public:
 	/// Get the value in given cell of the data without border checking
 	mreal value(mreal x,mreal y,mreal z,mreal *dx=0,mreal *dy=0,mreal *dz=0) const
 	{	if(dx)	*dx=di;	if(dy)	*dy=dj;	if(dz)	*dz=dk;
-		return simpl?(a0+di*x+dj*y+dk*z) : (di*(x<nx/2?x:nx-x)+dj*(y<ny/2?y:ny-y)+dk*(z<nz/2?z:nz-z));	}
+		return a0+di*x+dj*y+dk*z;	}
 	mreal v(long i,long j=0,long k=0) const
-	{	return simpl?(a0+di*i+dj*j+dk*k) : (di*(i<nx/2?i:nx-i)+dj*(j<ny/2?j:ny-j)+dk*(k<nz/2?k:nz-k));	}
+	{	return a0+di*i+dj*j+dk*k;	}
 	mreal vthr(long ii) const
 	{	register long i=ii%nx, j=(ii/nx)%ny, k=ii/(nx*ny);
-		return simpl?(a0+di*i+dj*j+dk*k) : (di*(i<nx/2?i:nx-i)+dj*(j<ny/2?j:ny-j)+dk*(k<nz/2?k:nz-k));	}
+		return a0+di*i+dj*j+dk*k;	}
+	// add for speeding up !!!
+	mreal dvx(long ,long =0,long =0) const	{	return di;	}
+	mreal dvy(long ,long =0,long =0) const	{	return dj;	}
+	mreal dvz(long ,long =0,long =0) const	{	return dk;	}
+};
+//-----------------------------------------------------------------------------
+/// Class which present FFT frequency as data array
+class MGL_EXPORT mglDataW : public mglDataA
+{
+	long nx;	///< number of points in 1st dimensions ('x' dimension)
+	long ny;	///< number of points in 2nd dimensions ('y' dimension)
+	long nz;	///< number of points in 3d dimensions ('z' dimension)
+	mreal di, dj, dk;
+public:
+
+	mglDataW(const mglDataW &d)	// NOTE: must be constructor for mglDataV& to exclude copy one
+	{	nx=d.nx;	ny=d.ny;	nz=d.nz;	di=d.di;	dj=d.dj;	dk=d.dk;	}
+	mglDataW(long xx=1,long yy=1,long zz=1,mreal dp=0,char dir='x')
+	{	nx=xx;	ny=yy;	nz=zz;	Freq(dp,dir);	}
+#if MGL_HAVE_RVAL
+	mglDataW(mglDataW &&d):nx(d.nx),ny(d.ny),nz(d.nz),di(d.di),dj(d.dj),dk(d.dk)
+	{	s=d.s;	temp=d.temp;	func=d.func;	o=d.o;	d.func=0;	}
+#endif
+	virtual ~mglDataW()	{}
+
+	/// Get sizes
+	long GetNx() const	{	return nx;	}
+	long GetNy() const	{	return ny;	}
+	long GetNz() const	{	return nz;	}
+
+	/// Create or recreate the array with specified size and fill it by zero
+	inline void Create(long mx,long my=1,long mz=1)
+	{	nx=mx;	ny=my;	nz=mz;	}
+	/// For going throw all elements
+	inline void All()	{	di=dj=dk=1;	}
+	/// Equidistantly fill the data to range [x1,x2] in direction dir
+	inline void Freq(mreal dp,char dir='x')
+	{
+		di=dj=dk=0;
+		if(dir=='x')	di=dp;
+		if(dir=='y')	dj=dp;
+		if(dir=='z')	dk=dp;
+	}
+	mreal Maximal() const
+	{	return mgl_max(mgl_max(di*(nx-1),dj*(ny-1)),mgl_max(dk*(nz-1),0));	}
+	mreal Minimal() const
+	{	return mgl_min(mgl_min(di*(nx-1),dj*(ny-1)),mgl_min(dk*(nz-1),0));	}
+
+	/// Copy data from other mglDataV variable
+	inline const mglDataW &operator=(const mglDataW &d)
+	{	nx=d.nx;	ny=d.ny;	nz=d.nz;	di=d.di;	dj=d.dj;	dk=d.dk;	return d;	}
+	/// Get the value in given cell of the data without border checking
+	mreal value(mreal x,mreal y,mreal z,mreal *dx=0,mreal *dy=0,mreal *dz=0) const
+	{	if(dx)	*dx=di;	if(dy)	*dy=dj;	if(dz)	*dz=dk;
+		return di*(x<nx/2?x:nx-x)+dj*(y<ny/2?y:ny-y)+dk*(z<nz/2?z:nz-z);	}
+	mreal v(long i,long j=0,long k=0) const
+	{	return di*(i<nx/2?i:nx-i)+dj*(j<ny/2?j:ny-j)+dk*(k<nz/2?k:nz-k);	}
+	mreal vthr(long ii) const
+	{	register long i=ii%nx, j=(ii/nx)%ny, k=ii/(nx*ny);
+		return di*(i<nx/2?i:nx-i)+dj*(j<ny/2?j:ny-j)+dk*(k<nz/2?k:nz-k);	}
 	// add for speeding up !!!
 	mreal dvx(long ,long =0,long =0) const	{	return di;	}
 	mreal dvy(long ,long =0,long =0) const	{	return dj;	}
@@ -646,6 +704,10 @@ public:
 		str=d.str;	ex = mgl_create_expr(str.c_str());	setD();	}
 	mglDataF(long xx=1,long yy=1,long zz=1)
 	{	ex=0;	v2=mglPoint(1,1,1);	nx=xx;	ny=yy;	nz=zz;	setD();	func=0;	par=0;	}
+#if MGL_HAVE_RVAL
+	mglDataF(mglDataF &&d):nx(d.nx),ny(d.ny),nz(d.nz),str(d.str),v1(d.v1),v2(d.v2),ex(d.ex),dx(d.dx),dy(d.dy),dz(d.dz)
+	{	s=d.s;	temp=d.temp;	func=d.func;	o=d.o;	d.ex=0;	d.func=0;	}
+#endif
 	virtual ~mglDataF()	{	mgl_delete_expr(ex);	}
 
 	/// Get sizes
@@ -738,6 +800,10 @@ class MGL_EXPORT mglDataT : public mglDataA
 public:
 	mglDataT(const mglDataT &d) : dat(d.dat), ind(d.ind)	{	s = d.s;	}
 	mglDataT(const mglDataA &d, long col=0) : dat(d), ind(col)	{}
+#if MGL_HAVE_RVAL
+	mglDataT(mglDataT &&d):dat(d.dat),ind(d.ind)
+	{	s=d.s;	temp=d.temp;	func=d.func;	o=d.o;	d.func=0;	}
+#endif
 	virtual ~mglDataT()	{}
 
 	/// Get sizes
@@ -775,6 +841,10 @@ class MGL_EXPORT mglDataR : public mglDataA
 public:
 	mglDataR(const mglDataR &d) : dat(d.dat), ind(d.ind)	{	s = d.s;	}
 	mglDataR(const mglDataA &d, long row=0) : dat(d), ind(row)	{}
+#if MGL_HAVE_RVAL
+	mglDataR(mglDataR &&d):dat(d.dat),ind(d.ind)
+	{	s=d.s;	temp=d.temp;	func=d.func;	o=d.o;	d.func=0;	}
+#endif
 	virtual ~mglDataR()	{}
 
 	/// Get sizes

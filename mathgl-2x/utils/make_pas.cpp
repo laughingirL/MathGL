@@ -3,19 +3,20 @@
 
 const char *files[] =
 {
-	"../include/mgl2/base_cf.h",
-	"../include/mgl2/data_cf.h",
-	"../include/mgl2/datac_cf.h",
-	"../include/mgl2/cont.h",
-	"../include/mgl2/fit.h",
-	"../include/mgl2/plot.h",
-	"../include/mgl2/surf.h",
-	"../include/mgl2/volume.h",
-	"../include/mgl2/vect.h",
-	"../include/mgl2/prim.h",
-	"../include/mgl2/other.h",
-	"../include/mgl2/canvas_cf.h",
-	"../include/mgl2/addon.h",
+	"../../include/mgl2/abstract.h",
+	"../../include/mgl2/base_cf.h",
+	"../../include/mgl2/data_cf.h",
+	"../../include/mgl2/datac_cf.h",
+	"../../include/mgl2/cont.h",
+	"../../include/mgl2/fit.h",
+	"../../include/mgl2/plot.h",
+	"../../include/mgl2/surf.h",
+	"../../include/mgl2/volume.h",
+	"../../include/mgl2/vect.h",
+	"../../include/mgl2/prim.h",
+	"../../include/mgl2/other.h",
+	"../../include/mgl2/canvas_cf.h",
+	"../../include/mgl2/addon.h",
 	"" };
 
 const char *head =
@@ -433,7 +434,39 @@ bool parse_file(const char *fname, FILE *out)
 		{
 			fprintf(out, "%s\n", buf);
 		}
-		else if ( 	   processDeclaration(out, buf, "void MGL_EXPORT", 		"procedure %s; cdecl; external libmgl;\n")
+		else if (	   processDeclaration(out, buf, "void MGL_EXPORT_PURE", 	"procedure %s; cdecl; external libmgl;\n")
+					|| processDeclaration(out, buf, "int MGL_EXPORT_PURE", 		"function %s: integer; cdecl; external libmgl;\n") 
+					|| processDeclaration(out, buf, "double MGL_EXPORT_PURE", 	"function %s: double; cdecl; external libmgl;\n") 
+					|| processDeclaration(out, buf, "mreal MGL_EXPORT_PURE", 	"function %s: mreal; cdecl; external libmgl;\n") 
+					|| processDeclaration(out, buf, "long MGL_EXPORT_PURE", 	"function %s: integer; cdecl; external libmgl;\n")
+					|| processDeclaration(out, buf, "mdual MGL_EXPORT_PURE", 	"function %s: dual; cdecl; external libmgl;\n")
+					|| processDeclaration(out, buf, "MGL_EXPORT_PURE dual *", 	"function %s: PDual; cdecl; external libmgl;\n")
+					|| processDeclaration(out, buf, "HMDT MGL_EXPORT_PURE", 	"function %s: HMDT; cdecl; external libmgl;\n") 
+					|| processDeclaration(out, buf, "HMGL MGL_EXPORT_PURE", 	"function %s: HMGL; cdecl; external libmgl;\n")
+					|| processDeclaration(out, buf, "MGL_EXPORT_PURE const char *", "function %s: PChar; cdecl; external libmgl;\n")
+					|| processDeclaration(out, buf, "MGL_EXPORT_PURE mreal *", 	"function %s: Pmreal; cdecl; external libmgl;\n")
+					|| processDeclaration(out, buf, "MGL_EXPORT_PURE const unsigned char *", "function %s: PByte; cdecl; external libmgl;\n") 
+					|| processDeclaration(out, buf, "HMPR MGL_EXPORT_PURE", 	"function %s: HMPR; cdecl; external libmgl;\n")
+					|| processDeclaration(out, buf, "HMEX MGL_EXPORT_PURE", 	"function %s: HMEX; cdecl; external libmgl;\n")
+					|| processDeclaration(out, buf, "HADT MGL_EXPORT_PURE", 	"function %s: HADT; cdecl; external libmgl;\n")
+					|| processDeclaration(out, buf, "HAEX MGL_EXPORT_PURE", 	"function %s: HAEX; cdecl; external libmgl;\n")
+					|| processDeclaration(out, buf, "void MGL_EXPORT_CONST", 		"procedure %s; cdecl; external libmgl;\n")
+					|| processDeclaration(out, buf, "int MGL_EXPORT_CONST", 		"function %s: integer; cdecl; external libmgl;\n") 
+					|| processDeclaration(out, buf, "double MGL_EXPORT_CONST", 	"function %s: double; cdecl; external libmgl;\n") 
+					|| processDeclaration(out, buf, "mreal MGL_EXPORT_CONST", 	"function %s: mreal; cdecl; external libmgl;\n") 
+					|| processDeclaration(out, buf, "long MGL_EXPORT_CONST", 		"function %s: integer; cdecl; external libmgl;\n")
+					|| processDeclaration(out, buf, "mdual MGL_EXPORT_CONST", 	"function %s: dual; cdecl; external libmgl;\n")
+					|| processDeclaration(out, buf, "MGL_EXPORT_CONST dual *", 	"function %s: PDual; cdecl; external libmgl;\n")
+					|| processDeclaration(out, buf, "HMDT MGL_EXPORT_CONST", 		"function %s: HMDT; cdecl; external libmgl;\n") 
+					|| processDeclaration(out, buf, "HMGL MGL_EXPORT_CONST", 		"function %s: HMGL; cdecl; external libmgl;\n")
+					|| processDeclaration(out, buf, "MGL_EXPORT_CONST const char *", "function %s: PChar; cdecl; external libmgl;\n")
+					|| processDeclaration(out, buf, "MGL_EXPORT_CONST mreal *", 	"function %s: Pmreal; cdecl; external libmgl;\n")
+					|| processDeclaration(out, buf, "MGL_EXPORT_CONST const unsigned char *", "function %s: PByte; cdecl; external libmgl;\n") 
+					|| processDeclaration(out, buf, "HMPR MGL_EXPORT_CONST", 		"function %s: HMPR; cdecl; external libmgl;\n")
+					|| processDeclaration(out, buf, "HMEX MGL_EXPORT_CONST", 		"function %s: HMEX; cdecl; external libmgl;\n")
+					|| processDeclaration(out, buf, "HADT MGL_EXPORT_CONST", 		"function %s: HADT; cdecl; external libmgl;\n")
+					|| processDeclaration(out, buf, "HAEX MGL_EXPORT_CONST", 		"function %s: HAEX; cdecl; external libmgl;\n")
+					|| processDeclaration(out, buf, "void MGL_EXPORT", 		"procedure %s; cdecl; external libmgl;\n")
 					|| processDeclaration(out, buf, "int MGL_EXPORT", 		"function %s: integer; cdecl; external libmgl;\n") 
 					|| processDeclaration(out, buf, "double MGL_EXPORT", 	"function %s: double; cdecl; external libmgl;\n") 
 					|| processDeclaration(out, buf, "mreal MGL_EXPORT", 	"function %s: mreal; cdecl; external libmgl;\n") 
@@ -453,10 +486,10 @@ bool parse_file(const char *fname, FILE *out)
 		{
 			//already processed by processDeclaration
 		}
-		else
+/*		else	// comment this -- it looks as it hangs on classes only, which should be omitted by anyway
 		{
-			fprintf(out, "!!!!\t%s\n", buf);	// NOTE should be never here!
-		}
+			fprintf(out, "{!!!!\t%s}\n", buf);	// NOTE should be never here!
+		}*/
 	}
 	fclose(fp);
 	return true;
@@ -464,7 +497,7 @@ bool parse_file(const char *fname, FILE *out)
 
 int main()
 {
-	FILE *fout = fopen("../include/mgl2/mgl_pas.pas", "wt");
+	FILE *fout = fopen("../../include/mgl2/mgl_pas.pas", "wt");
 	fprintf(fout, "%s\n", head);
 	for ( int i = 0; parse_file(files[i], fout); i++ ) {}
 	fprintf(fout, "%s\n", footer);

@@ -181,6 +181,7 @@ int CurFrameId;		///< Number of automaticle created frames
 GifFileType *gif;*/
 	SetDrawReg(1,1,0);		Perspective(0);
 	memcpy(mgl_mask_val, mgl_mask_def, 16*sizeof(uint64_t));	// should be > 16*8
+	ax.Clear();	ay.Clear();	az.Clear();	ac.Clear();
 	mgl_clear_fft();		DefMaskAn=0;	ResetMask();
 	SetTickRotate(true);	SetTickSkip(true);
 	SetWarn(mglWarnNone,"");	mglGlobalMess = "";
@@ -200,7 +201,6 @@ GifFileType *gif;*/
 	SetDifLight(false);		SetReduceAcc(false);
 	SetDefScheme(MGL_DEF_SCH);	SetPalette(MGL_DEF_PAL);
 	SetPenPal("k-1");		Alpha(false);
-	SetTicks('x');	SetTicks('y');	SetTicks('z');	SetTicks('c');
 	stack.clear();	Restore();	DefColor('k');
 	SetPlotFactor(0);	InPlot(0,1,0,1,false);
 	SetTickLen(0);	SetCut(true);
@@ -223,7 +223,6 @@ mreal mglCanvas::FindOptOrg(char dir, int ind) const
 	if(B!=bb)
 	{
 		bb = B;
-#pragma omp parallel for
 		for(long i=0;i<8;i++)	PostScale(&B,pp[i]);
 		// find point with minimal y
 		long j=0;
@@ -302,16 +301,16 @@ mreal mglCanvas::GetOrgZ(char dir, bool inv) const
 //-----------------------------------------------------------------------------
 //	Put primitives
 //-----------------------------------------------------------------------------
-#define MGL_MARK_PLOT	if(Quality&MGL_DRAW_LMEM)	mark_draw(Pnt[p],type,size,&d);else	\
-						{	mglPrim a;	a.w = pw;	a.s = size;	\
+#define MGL_MARK_PLOT	if(Quality&MGL_DRAW_LMEM)	\
+						{	mglDrawReg d;	d.set(this,dr_x,dr_y,dr_p);	d.PenWidth=pw;	\
+							d.PDef = PDef;	d.pPos = pPos;	mark_draw(Pnt[p],type,size,&d);	}\
+						else{	mglPrim a;	a.w = pw;	a.s = size;	\
 							a.n1 = p;	a.n4 = type;	a.angl=0;	add_prim(a);	}
 void mglCanvas::mark_plot(long p, char type, mreal size)
 {
 	if(p<0 || mgl_isnan(Pnt[p].x) || mgl_isnan(size))	return;
 	long pp=p;
 	mreal pw = 0.15/sqrt(font_factor);
-	mglDrawReg d;	d.set(this,dr_x,dr_y,dr_p);
-	d.PDef = PDef;	d.pPos = pPos;	d.PenWidth=pw;
 	size = size?fabs(size):1;
 	size *= MarkSize*0.35*font_factor;
 	if(type=='.')	size = fabs(PenWidth)*sqrt(font_factor/400);
@@ -320,8 +319,10 @@ void mglCanvas::mark_plot(long p, char type, mreal size)
 	else	{	MGL_MARK_PLOT	}
 }
 //-----------------------------------------------------------------------------
-#define MGL_LINE_PLOT	if(Quality&MGL_DRAW_LMEM)	line_draw(Pnt[p1],Pnt[p2],&dd);else	\
-						{	mglPrim a(1);	a.n3=PDef;	a.s = pPos;	\
+#define MGL_LINE_PLOT	if(Quality&MGL_DRAW_LMEM)	\
+						{	mglDrawReg d;	d.set(this,dr_x,dr_y,dr_p);	d.PenWidth=pw;	\
+							d.PDef = PDef;	d.pPos = pPos;	line_draw(Pnt[p1],Pnt[p2],&d);	}\
+						else	{	mglPrim a(1);	a.n3=PDef;	a.s = pPos;	\
 							a.n1 = p1;	a.n2 = p2;	a.w = pw;	a.angl=0;	add_prim(a);	}
 void mglCanvas::line_plot(long p1, long p2)
 {
@@ -329,36 +330,35 @@ void mglCanvas::line_plot(long p1, long p2)
 	if(p1<0 || p2<0 || mgl_isnan(Pnt[p1].x) || mgl_isnan(Pnt[p2].x))	return;
 	if(p1>p2)	{	long kk=p1;	p1=p2;	p2=kk;	}	// rearrange start/end for proper dashing
 	long pp1=p1,pp2=p2;
-	mreal pw = fabs(PenWidth)*sqrt(font_factor/400), d;
-	d = hypot(Pnt[p1].x-Pnt[p2].x, Pnt[p1].y-Pnt[p2].y);
-
-	mglDrawReg dd;	dd.set(this,dr_x,dr_y,dr_p);
-	dd.PDef = PDef;	dd.pPos = pPos;	dd.PenWidth=pw;
-
+	mreal pw = fabs(PenWidth)*sqrt(font_factor/400);
 	if(TernAxis&4) for(int i=0;i<4;i++)
 	{	p1 = ProjScale(i, pp1);	p2 = ProjScale(i, pp2);
 		MGL_LINE_PLOT	}
 	else	{	MGL_LINE_PLOT	}
+	register mreal d = hypot(Pnt[p1].x-Pnt[p2].x, Pnt[p1].y-Pnt[p2].y);
 	pPos = fmod(pPos+d/pw/1.5, 16);
 }
 //-----------------------------------------------------------------------------
-#define MGL_TRIG_PLOT	if(Quality&MGL_DRAW_LMEM)	trig_draw(Pnt[p1],Pnt[p2],Pnt[p3],true,&d);else	\
-						{	mglPrim a(2);	a.n1 = p1;	a.n2 = p2;	a.n3 = p3;	\
+#define MGL_TRIG_PLOT	if(Quality&MGL_DRAW_LMEM)	\
+						{	mglDrawReg d;	d.set(this,dr_x,dr_y,dr_p);	d.PenWidth=pw;	\
+							trig_draw(Pnt[p1],Pnt[p2],Pnt[p3],true,&d);	}\
+						else{	mglPrim a(2);	a.n1 = p1;	a.n2 = p2;	a.n3 = p3;	\
 							a.m=mask;	a.angl=MaskAn;	a.w = pw;	add_prim(a);}
 void mglCanvas::trig_plot(long p1, long p2, long p3)
 {
 	if(p1<0 || p2<0 || p3<0 || mgl_isnan(Pnt[p1].x) || mgl_isnan(Pnt[p2].x) || mgl_isnan(Pnt[p3].x))	return;
 	long pp1=p1,pp2=p2,pp3=p3;
 	mreal pw = fabs(PenWidth)*sqrt(font_factor/400);
-	mglDrawReg d;	d.set(this,dr_x,dr_y,dr_p);	d.PenWidth=pw;
 	if(TernAxis&4) for(int i=0;i<4;i++)
 	{	p1 = ProjScale(i, pp1);	p2 = ProjScale(i, pp2);
 		p3 = ProjScale(i, pp3);	MGL_TRIG_PLOT	}
 	else	{	MGL_TRIG_PLOT	}
 }
 //-----------------------------------------------------------------------------
-#define MGL_QUAD_PLOT	if(Quality&MGL_DRAW_LMEM)	quad_draw(Pnt[p1],Pnt[p2],Pnt[p3],Pnt[p4],&d);else	\
-						{	mglPrim a(3);	a.n1 = p1;	a.n2 = p2;	a.n3 = p3;	a.n4 = p4;	\
+#define MGL_QUAD_PLOT	if(Quality&MGL_DRAW_LMEM)	\
+						{	mglDrawReg d;	d.set(this,dr_x,dr_y,dr_p);	d.PenWidth=pw;	\
+							quad_draw(Pnt[p1],Pnt[p2],Pnt[p3],Pnt[p4],&d);	}\
+						else{	mglPrim a(3);	a.n1 = p1;	a.n2 = p2;	a.n3 = p3;	a.n4 = p4;	\
 							a.m=mask;	a.angl=MaskAn;	a.w = pw;	add_prim(a);	}
 void mglCanvas::quad_plot(long p1, long p2, long p3, long p4)
 {
@@ -368,7 +368,6 @@ void mglCanvas::quad_plot(long p1, long p2, long p3, long p4)
 	if(p4<0 || mgl_isnan(Pnt[p4].x))	{	trig_plot(p1,p2,p3);	return;	}
 	long pp1=p1,pp2=p2,pp3=p3,pp4=p4;
 	mreal pw = fabs(PenWidth)*sqrt(font_factor/400);
-	mglDrawReg d;	d.set(this,dr_x,dr_y,dr_p);	d.PenWidth=pw;
 	if(TernAxis&4) for(int i=0;i<4;i++)
 	{	p1 = ProjScale(i, pp1);	p2 = ProjScale(i, pp2);
 		p3 = ProjScale(i, pp3);	p4 = ProjScale(i, pp4);
@@ -502,10 +501,12 @@ void mglCanvas::Glyph(mreal x, mreal y, mreal f, int s, long j, mreal col)
 	a.n2 = forg; 	a.n3 = s;	a.n4 = AddGlyph(s,j);
 	if(a.n1<0)	return;
 
-	mglDrawReg d;	d.set(this,dr_x,dr_y,dr_p);
-	d.PDef = s;		d.pPos = a.s;	d.PenWidth=a.w;
-
-	if(Quality&MGL_DRAW_LMEM)	glyph_draw(a,&d);
+	if(Quality&MGL_DRAW_LMEM)
+	{
+		mglDrawReg d;	d.set(this,dr_x,dr_y,dr_p);
+		d.PDef = s;		d.pPos = a.s;	d.PenWidth=a.w;
+		glyph_draw(a,&d);
+	}
 	else	add_prim(a);
 }
 //-----------------------------------------------------------------------------
@@ -740,6 +741,74 @@ void mglCanvas::arrow_plot(long n1, long n2, char st)
 	mask=m;	MaskAn=ma;
 }
 //-----------------------------------------------------------------------------
+std::wstring MGL_EXPORT mgl_ftoa(double v, const char *fmt)
+{
+	char se[64], sf[64], ff[8]="%.3f", ee[8]="%.3e";
+	int dig=3;
+	for(const char *s="0123456789";*s;s++)	if(mglchr(fmt,*s))	dig = *s-'0';
+	if(mglchr(fmt,'E'))	ee[3] = 'E';
+	bool plus = mglchr(fmt,'+');
+	bool tex = mglchr(fmt,'F');
+	int fdig = int(log10(v));	fdig = fdig>0?(fdig<dig?dig-fdig:0):dig;
+	ff[2] = fdig+'0';	ee[2] = dig+'0';
+	snprintf(se,64,ee,v);	snprintf(sf,64,ff,v);
+	long le=strlen(se), lf=strlen(sf), i;
+
+	// clear fix format
+	for(i=lf-1;i>=lf-fdig && sf[i]=='0';i--)	sf[i]=0;
+	if(sf[i]=='.')	sf[i]=0;	lf = strlen(sf);
+	// parse -nan numbers
+	if(!strcmp(sf,"-nan"))	memcpy(sf,"nan",4);
+
+	
+	// clear exp format
+	int st = se[0]=='-'?1:0;
+	if(plus || se[3+st+dig]=='-')	// first remove zeros after 'e'
+	{
+		for(i=(dig>0?4:3)+st+dig;i<le && se[i]=='0';i++);
+		memmove(se+(dig>0?4:3)+st+dig,se+i,le-i+1);
+	}
+	else
+	{
+		for(i=(dig>0?3:2)+st+dig;i<le && (se[i]=='0' || se[i]=='+');i++);
+		memmove(se+(dig>0?3:2)+st+dig,se+i,le-i+1);
+	}
+	le=strlen(se);
+	// don't allow '+' at the end
+	if(se[le-1]=='+')	se[--le]=0;
+	// remove single 'e'
+	if(se[le-1]=='e' || se[le-1]=='E')	se[--le]=0;
+	for(i=1+st+dig;i>st && se[i]=='0';i--);	// remove final '0'
+	if(se[i]=='.')	i--;
+	memmove(se+i+1,se+2+st+dig,le-dig);	le=strlen(se);
+	// add '+' sign if required
+	if(plus && !strchr("-0niNI",se[0]))
+	{	memmove(se+1,se,le+1);	se[0]='+';
+		memmove(sf+1,sf,lf+1);	sf[0]='+';	}
+	if((lf>le && !mglchr(fmt,'f')) || !strcmp(sf,"0") || !strcmp(sf,"-0"))	strcpy(sf,se);	lf = strlen(sf);
+	std::wstring res;	res.reserve(lf+8);
+
+	if(mglchr(fmt,'-') && !(plus||tex))		// replace '-' by "\minus"
+		for(i=0;i<lf;i++)	res += sf[i];
+	else
+		for(i=0;i<lf;i++)	res += sf[i]!='-'?sf[i]:L'−';
+	if(tex)	// TeX notation: 'e' -> "\cdot 10^{...}"
+	{
+		if(res[0]=='1' && (res[1]=='e' || res[1]=='E'))
+		{	res.replace(0,2,L"10^{");	res += L'}';	}
+		else if(wcschr(L"+-−",res[0]) && res[1]=='1' && (res[2]=='e' || res[2]=='E'))
+ 		{	res.replace(1,2,L"10^{");	res += L'}';	}
+		else
+		{
+			size_t p;
+			for(p=1;p<res.length();p++)	if(res[p]==L'e' || res[p]==L'E')	break;
+			if(p<res.length())
+			{	res.replace(p,1,L"⋅10^{");	res += L'}';	}
+		}
+	}
+	return res;
+}
+//-----------------------------------------------------------------------------
 void mglCanvas::Legend(const std::vector<mglText> &leg, mreal x, mreal y, const char *font, const char *opt)
 {
 	long n=leg.size();
@@ -843,27 +912,25 @@ void mglCanvas::Table(mreal x, mreal y, HCDT val, const wchar_t *text, const cha
 //	mreal pos=SaveState(opt);
 	mreal vw = SaveState(opt);
 	static int cgid=1;	StartGroup("Table",cgid++);
-	bool grid = mglchr(frm,'#'), eqd = mglchr(frm,'=');
-	bool fix = mglchr(frm,'f'), lim = mglchr(frm,'|');
+	bool grid = mglchr(frm,'#'), eqd = mglchr(frm,'='), lim = mglchr(frm,'|');
 	if(mgl_isnan(vw))	vw=1;	else 	lim = true;
 	if(!text)	text=L"";
 	if(x<0)	x=0; 	if(y<0)	y=0; 	if(y>1)	y=1;
 //	if(vw>1-x)	vw=1-x;
 
-	wchar_t *buf = new wchar_t[m*32], sng[32];
+	char fmt[8]="3",ss[2]=" ";
+	for(const char *s="0123456789";*s;s++)	if(mglchr(frm,*s))	fmt[0]=*s;
+	for(const char *s="f+E-F";*s;s++)	if(mglchr(frm,*s))
+	{	ss[0] = *s;	strcat(fmt,ss);	}
 	std::vector<std::wstring> str;
 	for(i=0;i<n;i++)		// prepare list of strings first
 	{
-		*buf=0;
+		std::wstring buf;
 		for(j=0;j+1<m;j++)
-		{
-			mglprintf(sng,32,fix?L"%.2f\n":L"%.3g\n",val->v(i,j));
-			wcscat(buf,sng);
-		}
-		mglprintf(sng,32,fix?L"%.2f":L"%.3g",val->v(i,m-1));
-		wcscat(buf,sng);		str.push_back(buf);
+			buf += mgl_ftoa(val->v(i,j),fmt)+L'\n';
+		buf += mgl_ftoa(val->v(i,m-1),fmt);
+		str.push_back(buf);
 	}
-	delete []buf;
 
 	mreal sp=2*TextWidth(" ",frm,-1), w=*text ? sp+TextWidth(text,frm,-1):0, w1=0, ww, h;
 	for(i=0;i<n;i++)		// find width for given font size

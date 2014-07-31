@@ -1922,11 +1922,22 @@ int MGL_NO_EXPORT mgls_zrange(mglGraph *gr, long , mglArg *a, const char *k, con
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_ctick(mglGraph *gr, long , mglArg *a, const char *k, const char *)
+{
+	int res=0;
+	if(!strcmp(k,"s"))	gr->SetTickTempl('c',a[0].w.c_str());
+	else if(!strcmp(k,"n"))	gr->SetTicks('c',a[0].v,0,0);
+	else if(!strcmp(k,"ns"))	gr->SetTicks('c',a[0].v,0,0,a[1].w.c_str());
+	else res = 1;	return res;
+}
+//-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_xtick(mglGraph *gr, long n, mglArg *a, const char *k, const char *)
 {
 	int res=0;
 	if(!strcmp(k,"n"))	gr->SetTicks('x', a[0].v);
+	else if(!strcmp(k,"ns"))	gr->SetTicks('x', a[0].v, 0, NAN, a[1].w.c_str());
 	else if(!strcmp(k,"nn"))	gr->SetTicks('x', a[0].v, iint(a[1].v));
+	else if(!strcmp(k,"nns"))	gr->SetTicks('x', a[0].v, iint(a[1].v), NAN, a[2].w.c_str());
 	else if(!strcmp(k,"nnn"))	gr->SetTicks('x', a[0].v, iint(a[1].v), a[2].v);
 	else if(!strcmp(k,"nnns"))	gr->SetTicks('x', a[0].v, iint(a[1].v), a[2].v, a[3].w.c_str());
 	else if(!strcmp(k,"s"))		gr->SetTickTempl('x',a[0].w.c_str());
@@ -1941,7 +1952,7 @@ int MGL_NO_EXPORT mgls_xtick(mglGraph *gr, long n, mglArg *a, const char *k, con
 			{	v[i] = a[2*i].v;	s += a[2*i+1].w+L"\n";	}
 			else	break;
 		}
-		gr->SetTicksVal('x',mglData(i,v),s.c_str());
+		gr->SetTicksVal('x',mglData(i,v),s.c_str(),a[2*i].type==2?a[2*i].v:0);
 	}
 	else res = 1;	return res;
 }
@@ -1950,7 +1961,9 @@ int MGL_NO_EXPORT mgls_ytick(mglGraph *gr, long n, mglArg *a, const char *k, con
 {
 	int res=0;
 	if(!strcmp(k,"n"))	gr->SetTicks('y', a[0].v);
+	else if(!strcmp(k,"ns"))	gr->SetTicks('y', a[0].v, 0, NAN, a[1].w.c_str());
 	else if(!strcmp(k,"nn"))	gr->SetTicks('y', a[0].v, iint(a[1].v));
+	else if(!strcmp(k,"nns"))	gr->SetTicks('y', a[0].v, iint(a[1].v), NAN, a[2].w.c_str());
 	else if(!strcmp(k,"nnn"))	gr->SetTicks('y', a[0].v, iint(a[1].v), a[2].v);
 	else if(!strcmp(k,"nnns"))	gr->SetTicks('y', a[0].v, iint(a[1].v), a[2].v, a[3].w.c_str());
 	else if(!strcmp(k,"s"))		gr->SetTickTempl('y',a[0].w.c_str());
@@ -1974,7 +1987,9 @@ int MGL_NO_EXPORT mgls_ztick(mglGraph *gr, long n, mglArg *a, const char *k, con
 {
 	int res=0;
 	if(!strcmp(k,"n"))	gr->SetTicks('z', a[0].v);
+	else if(!strcmp(k,"ns"))	gr->SetTicks('z', a[0].v, 0, NAN, a[1].w.c_str());
 	else if(!strcmp(k,"nn"))	gr->SetTicks('z', a[0].v, iint(a[1].v));
+	else if(!strcmp(k,"nns"))	gr->SetTicks('z', a[0].v, iint(a[1].v), NAN, a[2].w.c_str());
 	else if(!strcmp(k,"nnn"))	gr->SetTicks('z', a[0].v, iint(a[1].v), a[2].v);
 	else if(!strcmp(k,"nnns"))	gr->SetTicks('z', a[0].v, iint(a[1].v), a[2].v, a[3].w.c_str());
 	else if(!strcmp(k,"s"))		gr->SetTickTempl('z',a[0].w.c_str());
@@ -2384,15 +2399,6 @@ int MGL_NO_EXPORT mgls_rearrange(mglGraph *, long , mglArg *a, const char *k, co
 	if(!strcmp(k,"dn"))	d->Rearrange(iint(a[1].v));
 	else if(!strcmp(k,"dnn"))	d->Rearrange(iint(a[1].v), iint(a[2].v));
 	else if(!strcmp(k,"dnnn"))	d->Rearrange(iint(a[1].v), iint(a[2].v), iint(a[3].v));
-	else res = 1;	return res;
-}
-//-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_ctick(mglGraph *gr, long , mglArg *a, const char *k, const char *)
-{
-	int res=0;
-	if(!strcmp(k,"s"))	gr->SetTickTempl('c',a[0].w.c_str());
-	else if(!strcmp(k,"n"))	gr->SetTicks('c',a[0].v);
-	else if(!strcmp(k,"ns"))	gr->SetTicks('c',a[0].v,0,NAN,a[1].w.c_str());
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -3128,14 +3134,14 @@ mglCommand mgls_base_cmd[] = {
 	{"write","Write current image to graphical file","write ['fname']", mgls_write ,2},
 	{"xlabel","Draw label for x-axis","xlabel 'txt' [pos]", mgls_xlabel ,12},
 	{"xrange","Set range for x-axis","xrange Dat [add] | x1 x2 [add]", mgls_xrange ,14},
-	{"xtick","Set ticks for x-axis","xtick dx [sx tx 'factor'] | 'tmpl' | Xdat 'lbl' [add] | v1 'lbl1' ...", mgls_xtick,14},
+	{"xtick","Set ticks for x-axis","xtick dx ['factor'] | dx sx ['factor'] | dx sx tx ['factor'] | 'tmpl' | Xdat 'lbl' [add] | v1 'lbl1' ...", mgls_xtick,14},
 	{"ylabel","Draw label for y-axis","ylabel 'txt' [pos]", mgls_ylabel,12},
 	{"yrange","Set range for y-axis","yrange Dat [add] | y1 y2 [add]", mgls_yrange,14},
-	{"ytick","Set ticks for y-axis","ytick dy [sy ty 'factor'] | 'tmpl' | Ydat 'lbl' [add] | v1 'lbl1' ...", mgls_ytick,14},
+	{"ytick","Set ticks for y-axis","ytick dy ['factor'] | dy sy ['factor'] | dy sy ty ['factor'] | 'tmpl' | Ydat 'lbl' [add] | v1 'lbl1' ...", mgls_ytick,14},
 	{"zlabel","Draw label for z-axis","zlabel 'txt' [pos]", mgls_zlabel,12},
 	{"zoom","Zoom plot region","zoom x1 x2 y1 y2", mgls_zoom,5},
 	{"zoomaxis","Zoom axis range","zoomaxis x1 x2|x1 x2 y1 y2|x1 x2 y1 y2 z1 z2|x1 x2 y1 y2 z1 z2 c1 c2", mgls_zoomaxis,14},
 	{"zrange","Set range for z-axis","yrange Dat [add] | z1 z2 [add]", mgls_zrange ,14},
-	{"ztick","Set ticks for z-axis","ztick dz [sz tz 'factor'] | 'tmpl' | Zdat 'lbl' [add] | v1 'lbl1' ...", mgls_ztick,14},
+	{"ztick","Set ticks for z-axis","ztick dz ['factor'] | dz sz ['factor'] | dz sz tz ['factor'] | 'tmpl' | Zdat 'lbl' [add] | v1 'lbl1' ...", mgls_ztick,14},
 {"","","",NULL,0}};
 //-----------------------------------------------------------------------------

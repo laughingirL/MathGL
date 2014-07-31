@@ -127,23 +127,18 @@ void MGL_EXPORT mgl_fft(double *x, long s, long n, const void *wt, void *ws, int
 	const double *c = (const double *)wt;
 	double *d = (double *)ws, f = inv?1./n:1;
 	memset(d,0,2*n*sizeof(double));
-	if(inv)
-//#pragma omp parallel for	// NOTE only 1st for can be used!
-		for(long i=0;i<n;i++)	for(long j=0;j<n;j++)
-		{
-			register long ii = 2*(i+n*j), jj = 2*j*s;
-			d[2*i] 	+= x[jj]*c[ii]+x[jj+1]*c[ii+1];
-			d[2*i+1]+= x[jj+1]*c[ii]-x[jj]*c[ii+1];
-		}
-	else
-//#pragma omp parallel for	// NOTE only 1st for can be used!
-		for(long i=0;i<n;i++)	for(long j=0;j<n;j++)
-		{
-			register long ii = 2*(i+n*j), jj = 2*j*s;
-			d[2*i] 	+= x[jj]*c[ii]-x[jj+1]*c[ii+1];
-			d[2*i+1]+= x[jj+1]*c[ii]+x[jj]*c[ii+1];
-		}
-//#pragma omp parallel for
+	if(inv)	for(long i=0;i<n;i++)	for(long j=0;j<n;j++)
+	{
+		register long ii = 2*(i+n*j), jj = 2*j*s;
+		d[2*i] 	+= x[jj]*c[ii]+x[jj+1]*c[ii+1];
+		d[2*i+1]+= x[jj+1]*c[ii]-x[jj]*c[ii+1];
+	}
+	else	for(long i=0;i<n;i++)	for(long j=0;j<n;j++)
+	{
+		register long ii = 2*(i+n*j), jj = 2*j*s;
+		d[2*i] 	+= x[jj]*c[ii]-x[jj+1]*c[ii+1];
+		d[2*i+1]+= x[jj+1]*c[ii]+x[jj]*c[ii+1];
+	}
 	for(long j=0;j<n;j++)
 	{	register long jj = 2*j*s;	x[jj] = d[2*j]*f;	x[jj+1] = d[2*j+1]*f;	}
 #endif
@@ -761,8 +756,7 @@ void MGL_EXPORT mgl_data_cosfft(HMDT d, const char *dir)
 HMDT MGL_EXPORT mgl_transform_a(HCDT am, HCDT ph, const char *tr)
 {
 	long nx = am->GetNx(), ny = am->GetNy(), nz = am->GetNz();
-	if(nx*ny*nz != ph->GetNx()*ph->GetNy()*ph->GetNz() || !tr || tr[0]==0)
-		return 0;
+	if(nx*ny*nz != ph->GetNN() || !tr || tr[0]==0)	return 0;
 	mglData re(nx,ny,nz), im(nx,ny,nz);
 #pragma omp parallel for
 	for(long i=0;i<nx*ny*nz;i++)
@@ -777,8 +771,7 @@ HMDT MGL_EXPORT mgl_transform(HCDT re, HCDT im, const char *tr)
 {
 	if(!tr || *tr==0)	return 0;
 	long nx = re->GetNx(), ny = re->GetNy(), nz = re->GetNz();
-	if(nx*ny*nz != im->GetNx()*im->GetNy()*im->GetNz() || !tr || tr[0]==0)
-		return 0;
+	if(nx*ny*nz != im->GetNN() || !tr || tr[0]==0)	return 0;
 	mglData rr(re),ii(im);
 	if(strchr(tr,'i') && strchr(tr,'f'))	// general case
 	{
@@ -1093,12 +1086,8 @@ void MGL_EXPORT mgl_data_fill_sample(HMDT d, const char *how)
 	}
 	else	// Fourier
 	{
-		if(xx)
-#pragma omp parallel for
-			for(long i=0;i<n;i++)	aa[i] = mreal(2*i-n)/n;
-		else
-#pragma omp parallel for
-			for(long i=0;i<n;i++)	aa[i] = M_PI*(i<n/2 ? i:i-n);
+		if(xx)	for(long i=0;i<n;i++)	aa[i] = mreal(2*i-n)/n;
+		else	for(long i=0;i<n;i++)	aa[i] = M_PI*(i<n/2 ? i:i-n);
 	}
 #pragma omp parallel for
 	for(long i=1;i<d->ny*d->nz;i++)	memcpy(aa+i*n,aa,n*sizeof(mreal));

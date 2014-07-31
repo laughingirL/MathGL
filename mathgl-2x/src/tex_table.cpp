@@ -20,6 +20,7 @@
 #include "mgl2/font.h"
 
 /// Table of LaTeX symbols and its UTF8 codes. This array MUST BE sorted!!!
+MGL_EXPORT long mgl_tex_num=1881-24;
 MGL_EXPORT mglTeXsymb mgl_tex_symb[] = {
 	{0x23, L"#"},
 	{0x25, L"%"},

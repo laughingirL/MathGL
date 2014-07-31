@@ -57,6 +57,9 @@ void MGL_EXPORT mgl_set_axis_stl_(uintptr_t *gr, const char *stl, const char *tc
 /// Auto adjust ticks
 void MGL_EXPORT mgl_adjust_ticks(HMGL gr, const char *dir);
 void MGL_EXPORT mgl_adjust_ticks_(uintptr_t *gr, const char *dir, int);
+/// Auto adjust ticks and set ticks format ("+E0123456789-fF")
+void MGL_EXPORT mgl_adjust_ticks_ext(HMGL gr, const char *dir, const char *stl);
+void MGL_EXPORT mgl_adjust_ticks_ext_(uintptr_t *gr, const char *dir, const char *stl, int, int);
 /// Set the ticks parameters
 void MGL_EXPORT mgl_set_ticks(HMGL gr, char dir, double d, int ns, double org);
 void MGL_EXPORT mgl_set_ticks_(uintptr_t *gr, char *dir, mreal *d, int *ns, mreal *org, int);
@@ -65,15 +68,19 @@ void MGL_EXPORT mgl_set_ticks_fact(HMGL gr, char dir, double d, int ns, double o
 void MGL_EXPORT mgl_set_ticks_factw(HMGL gr, char dir, double d, int ns, double org, const wchar_t *fact);
 void MGL_EXPORT mgl_set_ticks_fact_(uintptr_t *gr, char *dir, double *d, int *ns, double *org, const char *fact,int,int);
 
-/// Set ticks text (\n separated). Use "" to disable this feature.
+/// Set manual ticks text (\n separated). Use "" to disable this feature.
 void MGL_EXPORT mgl_set_ticks_str(HMGL gr, char dir, const char *lbl, int add);
 void MGL_EXPORT mgl_set_ticks_str_(uintptr_t *gr, const char *dir, const char *lbl, int *add,int,int);
 void MGL_EXPORT mgl_set_ticks_wcs(HMGL gr, char dir, const wchar_t *lbl, int add);
-/// Set ticks position and text (\n separated). Use "" to disable this feature.
+/// Set manual ticks position and text (\n separated). Use "" to disable this feature.
 void MGL_EXPORT mgl_set_ticks_val(HMGL gr, char dir, HCDT val, const char *lbl, int add);
 void MGL_EXPORT mgl_set_ticks_val_(uintptr_t *gr, const char *dir, uintptr_t *val, const char *lbl, int *add,int,int);
 void MGL_EXPORT mgl_set_ticks_valw(HMGL gr, char dir, HCDT val, const wchar_t *lbl, int add);
-/// Tune ticks
+/// Add manual tick at given position. Use "" to disable this feature.
+void MGL_EXPORT mgl_add_tick(HMGL gr, char dir, double val, const char *lbl);
+void MGL_EXPORT mgl_add_tick_(uintptr_t *gr, const char *dir, mreal *val, const char *lbl,int,int);
+void MGL_EXPORT mgl_add_tickw(HMGL gr, char dir, double val, const wchar_t *lbl);
+/// Tune ticks 
 void MGL_EXPORT mgl_tune_ticks(HMGL gr, int tune, double fact_pos);
 void MGL_EXPORT mgl_tune_ticks_(uintptr_t *gr, int *tune, mreal *fact_pos);
 /// Set templates for ticks

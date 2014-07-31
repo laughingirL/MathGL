@@ -5,13 +5,15 @@
 * Add function LoadBackground() and MGL command 'background' to load image for background.
 * Add primitives to draw polygon and angle arc.
 * Allow arbitrary factor for axis ticks (like, gr->SetTicks('x',M_PI,0,NAN,"\\pi");).
+* Add function AddTick() for adding manual tick to existed ones.
 * Greatly increase speed of formula parsing (i.e. of functions mglData::Modify(), mglData::Fill() and similar).
 * Add arrow style 'X'
 * Add color gradient (color scheme) of glyphs in text.
 * Add manual dash style, like "{df090}"
 * Add manual mask style, like "{s00ff00182424f800}"
 * Add ODE solving functions for textual formulas
-* Add style 'f' for printing numbers in fixed format for functions Table() and Label().
+* Add styles 'fFE0123456789+-' for printing numbers in functions Axis(), Colorbar(), Table() and Label().
+* Add style '!' to disable ticks tuning in Axis() and Colorbar().
 * Improve and slightly speed up algorithm for contours drawing and filling, taking special attention to quasi-random data.
 * Add function "random(dat)" to the list of known functions for formula parsing
 * Add 'inf' variable to the MGL and formula parsing
@@ -35,7 +37,7 @@
 * Allow reading JPEG files for mglData::Import().
 * Add function for global cubic spline interpolation, and function to refill using global spline.
 * Choose new scales for perspective.
-
+* General speeding up
 
 * Rearrange tool buttons in UDAV
 * Add features for manual dashing and manual mask in Style dialog

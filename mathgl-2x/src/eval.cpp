@@ -27,6 +27,7 @@
 #include <gsl/gsl_sf.h>
 #include <gsl/gsl_rng.h>
 #include <gsl/gsl_errno.h>
+#include <sys/stat.h>
 #endif
 //-----------------------------------------------------------------------------
 //	constants for expression parsing
@@ -499,39 +500,40 @@ double MGL_LOCAL_CONST atanh(double x)	{	return fabs(x)<1 ? log((1.+x)/(1.-x))/2
 //-----------------------------------------------------------------------------
 typedef double (*func_1)(double);
 typedef double (*func_2)(double, double);
+//-----------------------------------------------------------------------------
+static const mreal z2[EQ_SIN-EQ_LT] = {3,3,3,3,0,3,3,0,0,0,0,0,NAN,0
+#if MGL_HAVE_GSL
+	,3,NAN, 3,NAN, 0,0,3,1
+#else
+	,0,0,0,0,0,0,0,0
+#endif
+};
+static const func_2 f2[EQ_SIN-EQ_LT] = {clt,cgt,ceq,cor,cand,add,sub,mul,del,ipw,pow,fmod,llg,arg,hypot
+#if MGL_HAVE_GSL
+	,gsl_sf_bessel_Jnu,gsl_sf_bessel_Ynu,
+	gsl_sf_bessel_Inu,gsl_sf_bessel_Knu,
+	gslEllE,gslEllF,gslLegP,gsl_sf_beta
+#else
+	,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2
+#endif
+};
+static const func_1 f1[EQ_SN-EQ_SIN] = {sin,cos,tan,asin,acos,atan,sinh,cosh,tanh,
+			asinh,acosh,atanh,sqrt,exp,log,log10,sgn,stp,floor,fabs
+#if MGL_HAVE_GSL
+	,gsl_sf_dilog,gslEllEc,gslEllFc,gslAi,gslBi,gsl_sf_erf,
+	gsl_sf_expint_3,gsl_sf_expint_Ei,gsl_sf_expint_E1,gsl_sf_expint_E2,
+	gsl_sf_Si,gsl_sf_Ci,gsl_sf_gamma,gsl_sf_psi,gsl_sf_lambert_W0,
+	gsl_sf_lambert_Wm1,gsl_sf_sinc,gsl_sf_zeta,gsl_sf_eta,gslAi_d,gslBi_d,
+	gsl_sf_dawson
+#else
+	,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,
+	mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1
+#endif
+};
+//-----------------------------------------------------------------------------
 // evaluation of embedded (included) expressions
 mreal mglFormula::CalcIn(const mreal *a1) const
 {
-	mreal z2[EQ_SIN-EQ_LT] = {3,3,3,3,0,3,3,0,0,0,0,0,NAN,0
-#if MGL_HAVE_GSL
-			,3,NAN, 3,NAN, 0,0,3,1
-#else
-			,0,0,0,0,0,0,0,0
-#endif
-		};
-	func_2 f2[EQ_SIN-EQ_LT] = {clt,cgt,ceq,cor,cand,add,sub,mul,del,ipw,pow,fmod,llg,arg,hypot
-#if MGL_HAVE_GSL
-			,gsl_sf_bessel_Jnu,gsl_sf_bessel_Ynu,
-			gsl_sf_bessel_Inu,gsl_sf_bessel_Knu,
-			gslEllE,gslEllF,gslLegP,gsl_sf_beta
-#else
-			,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2
-#endif
-		};
-	func_1 f1[EQ_SN-EQ_SIN] = {sin,cos,tan,asin,acos,atan,sinh,cosh,tanh,
-					asinh,acosh,atanh,sqrt,exp,log,log10,sgn,stp,floor,fabs
-#if MGL_HAVE_GSL
-			,gsl_sf_dilog,gslEllEc,gslEllFc,gslAi,gslBi,gsl_sf_erf,
-			gsl_sf_expint_3,gsl_sf_expint_Ei,gsl_sf_expint_E1,gsl_sf_expint_E2,
-			gsl_sf_Si,gsl_sf_Ci,gsl_sf_gamma,gsl_sf_psi,gsl_sf_lambert_W0,
-			gsl_sf_lambert_Wm1,gsl_sf_sinc,gsl_sf_zeta,gsl_sf_eta,gslAi_d,gslBi_d,
-			gsl_sf_dawson
-#else
-			,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,
-			mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1
-#endif
-		};
-//	if(Error)	return 0;
 	if(Kod<EQ_LT)
 	{
 		if(Kod==EQ_RND)	return mgl_rnd();
@@ -623,33 +625,34 @@ double MGL_LOCAL_CONST gslK_d(double a)	{return (gsl_sf_ellint_Ecomp(a,GSL_PREC_
 double MGL_LOCAL_CONST gamma_d(double a)	{return gsl_sf_psi(a)*gsl_sf_gamma(a);}
 #endif
 //-----------------------------------------------------------------------------
+static const func_2 f21[EQ_SIN-EQ_LT] = {mgz2,mgz2,mgz2, mgz2,mgz2,mgp, mgp,mul1,div1, ipw1,pow1,mgp,llg1, mgz2
+#if MGL_HAVE_GSL
+	,mgz2,mgz2,mgz2, mgz2,gslEllE1,gslEllF1, mgz2,mgz2
+#else
+	,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2
+#endif
+};
+static const func_2 f22[EQ_SIN-EQ_LT] = {mgz2,mgz2,mgz2,mgz2,mgz2,mgp,mgm,mul2,div2,pow2,pow2,mgz2,llg2, mgz2
+#if MGL_HAVE_GSL
+	,gslJnuD,gslYnuD,gslInuD,gslKnuD,gslEllE2,gslEllF2,mgz2/*gslLegP*/,mgz2
+#else
+	,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2
+#endif
+};
+static const func_1 f11[EQ_SN-EQ_SIN] = {cos,cos_d,tan_d,asin_d,acos_d,atan_d,cosh,sinh,tanh_d,
+	asinh_d,acosh_d,atanh_d,sqrt_d,exp,log_d,log10_d,mgz1,mgz1,mgz1,sgn
+#if MGL_HAVE_GSL
+	,dilog_d,gslE_d,gslK_d,gslAi_d,gslBi_d,erf_d,exp3_d,ei_d,e1_d,e2_d,
+	si_d,ci_d,gamma_d,gsl_sf_psi_1,mgz1,mgz1,sinc_d,mgz1,mgz1,mgz1,mgz1,mgz1
+#else
+	,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,
+	mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1
+#endif
+};
+//-----------------------------------------------------------------------------
 // evaluation of derivative of embedded (included) expressions
 mreal mglFormula::CalcDIn(int id, const mreal *a1) const
 {
-	func_2 f21[EQ_SIN-EQ_LT] = {mgz2,mgz2,mgz2, mgz2,mgz2,mgp, mgp,mul1,div1, ipw1,pow1,mgp,llg1, mgz2
-#if MGL_HAVE_GSL
-			,mgz2,mgz2,mgz2, mgz2,gslEllE1,gslEllF1, mgz2,mgz2
-#else
-			,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2
-#endif
-		};
-		func_2 f22[EQ_SIN-EQ_LT] = {mgz2,mgz2,mgz2,mgz2,mgz2,mgp,mgm,mul2,div2,pow2,pow2,mgz2,llg2, mgz2
-#if MGL_HAVE_GSL
-			,gslJnuD,gslYnuD,gslInuD,gslKnuD,gslEllE2,gslEllF2,mgz2/*gslLegP*/,mgz2
-#else
-			,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2
-#endif
-		};
-	func_1 f11[EQ_SN-EQ_SIN] = {cos,cos_d,tan_d,asin_d,acos_d,atan_d,cosh,sinh,tanh_d,
-					asinh_d,acosh_d,atanh_d,sqrt_d,exp,log_d,log10_d,mgz1,mgz1,mgz1,sgn
-#if MGL_HAVE_GSL
-			,dilog_d,gslE_d,gslK_d,gslAi_d,gslBi_d,erf_d,exp3_d,ei_d,e1_d,e2_d,
-			si_d,ci_d,gamma_d,gsl_sf_psi_1,mgz1,mgz1,sinc_d,mgz1,mgz1,mgz1,mgz1,mgz1
-#else
-			,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,
-			mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1
-#endif
-		};
 	if(Kod<EQ_LT)	return (Kod==EQ_A && id==(int)Res)?1:0;
 
 	double a = Left->CalcIn(a1), d = Left->CalcDIn(id,a1);

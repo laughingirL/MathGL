@@ -58,164 +58,6 @@ new ez 10 10 10 '0.2*(z-0.3)/$1-0.2*(z+0.3)/$2'\nreturn";
 //-----------------------------------------------------------------------------
 //		Sample functions (v.2.*)
 //-----------------------------------------------------------------------------
-const char *mmgl_fexport="";
-void smgl_fexport(mglGraph *gr)	// test file export
-{
-	gr->SubPlot(3,2,0);
-	double d,x1,x2,x0,y=0.95;
-	d=0.3, x0=0.2, x1=0.5, x2=0.6;
-	gr->Line(mglPoint(x0,1-0*d),mglPoint(x1,1-0*d),"k-");	gr->Puts(mglPoint(x2,y-0*d),"Solid '-'",":rL");
-	gr->Line(mglPoint(x0,1-1*d),mglPoint(x1,1-1*d),"k|");	gr->Puts(mglPoint(x2,y-1*d),"Long Dash '|'",":rL");
-	gr->Line(mglPoint(x0,1-2*d),mglPoint(x1,1-2*d),"k;");	gr->Puts(mglPoint(x2,y-2*d),"Dash ';'",":rL");
-	gr->Line(mglPoint(x0,1-3*d),mglPoint(x1,1-3*d),"k=");	gr->Puts(mglPoint(x2,y-3*d),"Small dash '='",":rL");
-	gr->Line(mglPoint(x0,1-4*d),mglPoint(x1,1-4*d),"kj");	gr->Puts(mglPoint(x2,y-4*d),"Dash-dot 'j'",":rL");
-	gr->Line(mglPoint(x0,1-5*d),mglPoint(x1,1-5*d),"ki");	gr->Puts(mglPoint(x2,y-5*d),"Small dash-dot 'i'",":rL");
-	gr->Line(mglPoint(x0,1-6*d),mglPoint(x1,1-6*d),"k:");	gr->Puts(mglPoint(x2,y-6*d),"Dots ':'",":rL");
-	gr->Line(mglPoint(x0,1-7*d),mglPoint(x1,1-7*d),"k ");	gr->Puts(mglPoint(x2,y-7*d),"None ' '",":rL");
-
-	d=0.25; x1=-1; x0=-0.8;	y = -0.05;
-	gr->Mark(mglPoint(x1,5*d),"k.");	gr->Puts(mglPoint(x0,y+5*d),"'.'",":rL");
-	gr->Mark(mglPoint(x1,4*d),"k+");	gr->Puts(mglPoint(x0,y+4*d),"'+'",":rL");
-	gr->Mark(mglPoint(x1,3*d),"kx");	gr->Puts(mglPoint(x0,y+3*d),"'x'",":rL");
-	gr->Mark(mglPoint(x1,2*d),"k*");	gr->Puts(mglPoint(x0,y+2*d),"'*'",":rL");
-	gr->Mark(mglPoint(x1,d),"ks");		gr->Puts(mglPoint(x0,y+d),"'s'",":rL");
-	gr->Mark(mglPoint(x1,0),"kd");		gr->Puts(mglPoint(x0,y),"'d'",":rL");
-	gr->Mark(mglPoint(x1,-d,0),"ko");	gr->Puts(mglPoint(x0,y-d),"'o'",":rL");
-	gr->Mark(mglPoint(x1,-2*d,0),"k^");	gr->Puts(mglPoint(x0,y-2*d),"'\\^'",":rL");
-	gr->Mark(mglPoint(x1,-3*d,0),"kv");	gr->Puts(mglPoint(x0,y-3*d),"'v'",":rL");
-	gr->Mark(mglPoint(x1,-4*d,0),"k<");	gr->Puts(mglPoint(x0,y-4*d),"'<'",":rL");
-	gr->Mark(mglPoint(x1,-5*d,0),"k>");	gr->Puts(mglPoint(x0,y-5*d),"'>'",":rL");
-
-	d=0.25; x1=-0.5; x0=-0.3;	y = -0.05;
-	gr->Mark(mglPoint(x1,5*d),"k#.");	gr->Puts(mglPoint(x0,y+5*d),"'\\#.'",":rL");
-	gr->Mark(mglPoint(x1,4*d),"k#+");	gr->Puts(mglPoint(x0,y+4*d),"'\\#+'",":rL");
-	gr->Mark(mglPoint(x1,3*d),"k#x");	gr->Puts(mglPoint(x0,y+3*d),"'\\#x'",":rL");
-	gr->Mark(mglPoint(x1,2*d),"k#*");	gr->Puts(mglPoint(x0,y+2*d),"'\\#*'",":rL");
-	gr->Mark(mglPoint(x1,d),"k#s");		gr->Puts(mglPoint(x0,y+d),"'\\#s'",":rL");
-	gr->Mark(mglPoint(x1,0),"k#d");		gr->Puts(mglPoint(x0,y),"'\\#d'",":rL");
-	gr->Mark(mglPoint(x1,-d,0),"k#o");	gr->Puts(mglPoint(x0,y-d),"'\\#o'",":rL");
-	gr->Mark(mglPoint(x1,-2*d,0),"k#^");	gr->Puts(mglPoint(x0,y-2*d),"'\\#\\^'",":rL");
-	gr->Mark(mglPoint(x1,-3*d,0),"k#v");	gr->Puts(mglPoint(x0,y-3*d),"'\\#v'",":rL");
-	gr->Mark(mglPoint(x1,-4*d,0),"k#<");	gr->Puts(mglPoint(x0,y-4*d),"'\\#<'",":rL");
-	gr->Mark(mglPoint(x1,-5*d,0),"k#>");	gr->Puts(mglPoint(x0,y-5*d),"'\\#>'",":rL");
-
-	gr->SubPlot(3,2,1);
-	double a=0.1,b=0.4,c=0.5;
-	gr->Line(mglPoint(a,1),mglPoint(b,1),"k-A");		gr->Puts(mglPoint(c,1),"Style 'A' or 'A\\_'",":rL");
-	gr->Line(mglPoint(a,0.8),mglPoint(b,0.8),"k-V");	gr->Puts(mglPoint(c,0.8),"Style 'V' or 'V\\_'",":rL");
-	gr->Line(mglPoint(a,0.6),mglPoint(b,0.6),"k-K");	gr->Puts(mglPoint(c,0.6),"Style 'K' or 'K\\_'",":rL");
-	gr->Line(mglPoint(a,0.4),mglPoint(b,0.4),"k-I");	gr->Puts(mglPoint(c,0.4),"Style 'I' or 'I\\_'",":rL");
-	gr->Line(mglPoint(a,0.2),mglPoint(b,0.2),"k-D");	gr->Puts(mglPoint(c,0.2),"Style 'D' or 'D\\_'",":rL");
-	gr->Line(mglPoint(a,0),mglPoint(b,0),"k-S");		gr->Puts(mglPoint(c,0),"Style 'S' or 'S\\_'",":rL");
-	gr->Line(mglPoint(a,-0.2),mglPoint(b,-0.2),"k-O");	gr->Puts(mglPoint(c,-0.2),"Style 'O' or 'O\\_'",":rL");
-	gr->Line(mglPoint(a,-0.4),mglPoint(b,-0.4),"k-T");	gr->Puts(mglPoint(c,-0.4),"Style 'T' or 'T\\_'",":rL");
-	gr->Line(mglPoint(a,-0.6),mglPoint(b,-0.6),"k-_");	gr->Puts(mglPoint(c,-0.6),"Style '\\_' or none",":rL");
-	gr->Line(mglPoint(a,-0.8),mglPoint(b,-0.8),"k-AS");	gr->Puts(mglPoint(c,-0.8),"Style 'AS'",":rL");
-	gr->Line(mglPoint(a,-1),mglPoint(b,-1),"k-_A");		gr->Puts(mglPoint(c,-1),"Style '\\_A'",":rL");
-
-	a=-1;	b=-0.7;	c=-0.6;
-	gr->Line(mglPoint(a,1),mglPoint(b,1),"kAA");		gr->Puts(mglPoint(c,1),"Style 'AA'",":rL");
-	gr->Line(mglPoint(a,0.8),mglPoint(b,0.8),"kVV");	gr->Puts(mglPoint(c,0.8),"Style 'VV'",":rL");
-	gr->Line(mglPoint(a,0.6),mglPoint(b,0.6),"kKK");	gr->Puts(mglPoint(c,0.6),"Style 'KK'",":rL");
-	gr->Line(mglPoint(a,0.4),mglPoint(b,0.4),"kII");	gr->Puts(mglPoint(c,0.4),"Style 'II'",":rL");
-	gr->Line(mglPoint(a,0.2),mglPoint(b,0.2),"kDD");	gr->Puts(mglPoint(c,0.2),"Style 'DD'",":rL");
-	gr->Line(mglPoint(a,0),mglPoint(b,0),"kSS");		gr->Puts(mglPoint(c,0),"Style 'SS'",":rL");
-	gr->Line(mglPoint(a,-0.2),mglPoint(b,-0.2),"kOO");	gr->Puts(mglPoint(c,-0.2),"Style 'OO'",":rL");
-	gr->Line(mglPoint(a,-0.4),mglPoint(b,-0.4),"kTT");	gr->Puts(mglPoint(c,-0.4),"Style 'TT'",":rL");
-	gr->Line(mglPoint(a,-0.6),mglPoint(b,-0.6),"k-__");	gr->Puts(mglPoint(c,-0.6),"Style '\\_\\_'",":rL");
-	gr->Line(mglPoint(a,-0.8),mglPoint(b,-0.8),"k-VA");	gr->Puts(mglPoint(c,-0.8),"Style 'VA'",":rL");
-	gr->Line(mglPoint(a,-1),mglPoint(b,-1),"k-AV");		gr->Puts(mglPoint(c,-1),"Style 'AV'",":rL");
-
-	gr->SubPlot(3,2,2);
-	//#LENUQ
-	gr->FaceZ(mglPoint(-1,	-1), 0.4, 0.3, "L#");	gr->Puts(mglPoint(-0.8,-0.9), "L", "w:C", -1.4);
-	gr->FaceZ(mglPoint(-0.6,-1), 0.4, 0.3, "E#");	gr->Puts(mglPoint(-0.4,-0.9), "E", "w:C", -1.4);
-	gr->FaceZ(mglPoint(-0.2,-1), 0.4, 0.3, "N#");	gr->Puts(mglPoint(0,  -0.9), "N", "w:C", -1.4);
-	gr->FaceZ(mglPoint(0.2,	-1), 0.4, 0.3, "U#");	gr->Puts(mglPoint(0.4,-0.9), "U", "w:C", -1.4);
-	gr->FaceZ(mglPoint(0.6,	-1), 0.4, 0.3, "Q#");	gr->Puts(mglPoint(0.8,-0.9), "Q", "w:C", -1.4);
-	//#lenuq
-	gr->FaceZ(mglPoint(-1,	-0.7), 0.4, 0.3, "l#");	gr->Puts(mglPoint(-0.8,-0.6), "l", "k:C", -1.4);
-	gr->FaceZ(mglPoint(-0.6,-0.7), 0.4, 0.3, "e#");	gr->Puts(mglPoint(-0.4,-0.6), "e", "k:C", -1.4);
-	gr->FaceZ(mglPoint(-0.2,-0.7), 0.4, 0.3, "n#");	gr->Puts(mglPoint(0,  -0.6), "n", "k:C", -1.4);
-	gr->FaceZ(mglPoint(0.2,	-0.7), 0.4, 0.3, "u#");	gr->Puts(mglPoint(0.4,-0.6), "u", "k:C", -1.4);
-	gr->FaceZ(mglPoint(0.6,	-0.7), 0.4, 0.3, "q#");	gr->Puts(mglPoint(0.8,-0.6), "q", "k:C", -1.4);
-	//#CMYkP
-	gr->FaceZ(mglPoint(-1,	-0.4), 0.4, 0.3, "C#");	gr->Puts(mglPoint(-0.8,-0.3), "C", "w:C", -1.4);
-	gr->FaceZ(mglPoint(-0.6,-0.4), 0.4, 0.3, "M#");	gr->Puts(mglPoint(-0.4,-0.3), "M", "w:C", -1.4);
-	gr->FaceZ(mglPoint(-0.2,-0.4), 0.4, 0.3, "Y#");	gr->Puts(mglPoint(0,  -0.3), "Y", "w:C", -1.4);
-	gr->FaceZ(mglPoint(0.2,	-0.4), 0.4, 0.3, "k#");	gr->Puts(mglPoint(0.4,-0.3), "k", "w:C", -1.4);
-	gr->FaceZ(mglPoint(0.6,	-0.4), 0.4, 0.3, "P#");	gr->Puts(mglPoint(0.8,-0.3), "P", "w:C", -1.4);
-	//#cmywp
-	gr->FaceZ(mglPoint(-1,	-0.1), 0.4, 0.3, "c#");	gr->Puts(mglPoint(-0.8, 0), "c", "k:C", -1.4);
-	gr->FaceZ(mglPoint(-0.6,-0.1), 0.4, 0.3, "m#");	gr->Puts(mglPoint(-0.4, 0), "m", "k:C", -1.4);
-	gr->FaceZ(mglPoint(-0.2,-0.1), 0.4, 0.3, "y#");	gr->Puts(mglPoint(0,   0), "y", "k:C", -1.4);
-	gr->FaceZ(mglPoint(0.2,	-0.1), 0.4, 0.3, "w#");	gr->Puts(mglPoint(0.4, 0), "w", "k:C", -1.4);
-	gr->FaceZ(mglPoint(0.6,	-0.1), 0.4, 0.3, "p#");	gr->Puts(mglPoint(0.8, 0), "p", "k:C", -1.4);
-	//#BGRHW
-	gr->FaceZ(mglPoint(-1,	0.2), 0.4, 0.3, "B#");	gr->Puts(mglPoint(-0.8, 0.3), "B", "w:C", -1.4);
-	gr->FaceZ(mglPoint(-0.6,0.2), 0.4, 0.3, "G#");	gr->Puts(mglPoint(-0.4, 0.3), "G", "w:C", -1.4);
-	gr->FaceZ(mglPoint(-0.2,0.2), 0.4, 0.3, "R#");	gr->Puts(mglPoint(0,   0.3), "R", "w:C", -1.4);
-	gr->FaceZ(mglPoint(0.2,	0.2), 0.4, 0.3, "H#");	gr->Puts(mglPoint(0.4, 0.3), "H", "w:C", -1.4);
-	gr->FaceZ(mglPoint(0.6,	0.2), 0.4, 0.3, "W#");	gr->Puts(mglPoint(0.8, 0.3), "W", "w:C", -1.4);
-	//#bgrhw
-	gr->FaceZ(mglPoint(-1,	0.5), 0.4, 0.3, "b#");	gr->Puts(mglPoint(-0.8, 0.6), "b", "k:C", -1.4);
-	gr->FaceZ(mglPoint(-0.6,0.5), 0.4, 0.3, "g#");	gr->Puts(mglPoint(-0.4, 0.6), "g", "k:C", -1.4);
-	gr->FaceZ(mglPoint(-0.2,0.5), 0.4, 0.3, "r#");	gr->Puts(mglPoint(0,   0.6), "r", "k:C", -1.4);
-	gr->FaceZ(mglPoint(0.2,	0.5), 0.4, 0.3, "h#");	gr->Puts(mglPoint(0.4, 0.6), "h", "k:C", -1.4);
-	gr->FaceZ(mglPoint(0.6,	0.5), 0.4, 0.3, "w#");	gr->Puts(mglPoint(0.8, 0.6), "w", "k:C", -1.4);
-	//#brighted
-	gr->FaceZ(mglPoint(-1,	0.8), 0.4, 0.3, "{r1}#");	gr->Puts(mglPoint(-0.8, 0.9), "\\{r1\\}", "w:C", -1.4);
-	gr->FaceZ(mglPoint(-0.6,0.8), 0.4, 0.3, "{r3}#");	gr->Puts(mglPoint(-0.4, 0.9), "\\{r3\\}", "w:C", -1.4);
-	gr->FaceZ(mglPoint(-0.2,0.8), 0.4, 0.3, "{r5}#");	gr->Puts(mglPoint(0,   0.9), "\\{r5\\}", "k:C", -1.4);
-	gr->FaceZ(mglPoint(0.2,	0.8), 0.4, 0.3, "{r7}#");	gr->Puts(mglPoint(0.4, 0.9), "\\{r7\\}", "k:C", -1.4);
-	gr->FaceZ(mglPoint(0.6,	0.8), 0.4, 0.3, "{r9}#");	gr->Puts(mglPoint(0.8, 0.9), "\\{r9\\}", "k:C", -1.4);
-	// HEX
-	gr->FaceZ(mglPoint(-1, -1.3), 1, 0.3, "{xff9966}#");	gr->Puts(mglPoint(-0.5,-1.2), "\\{xff9966\\}", "k:C", -1.4);
-	gr->FaceZ(mglPoint(0,  -1.3), 1, 0.3, "{x83CAFF}#");	gr->Puts(mglPoint( 0.5,-1.2), "\\{x83CAFF\\}", "k:C", -1.4);
-
-	gr->SubPlot(3,2,3);
-	char stl[3]="r1", txt[4]="'1'";
-	for(int i=0;i<10;i++)
-	{
-		txt[1]=stl[1]='0'+i;
-		gr->Line(mglPoint(-1,0.2*i-1),mglPoint(1,0.2*i-1),stl);
-		gr->Puts(mglPoint(1.05,0.2*i-1),txt,":L");
-	}
-
-	gr->SubPlot(3,2,4);	gr->Title("TriPlot sample");	gr->Rotate(50,60);
-	double t[] = {0,1,2, 0,1,3, 0,2,3, 1,2,3};
-	double xt[] = {-1,1,0,0}, yt[] = {-1,-1,1,0}, zt[] = {-1,-1,-1,1};
-	mglData tt(4,3,t), uu(4,xt), vv(4,yt), ww(4,zt);
-	gr->TriPlot(tt,uu,vv,ww,"b");
-	gr->TriPlot(tt,uu,vv,ww,"k#");
-
-	gr->SubPlot(3,2,5);
-	mglData r(4);	r.Fill(1,4);
-	gr->SetRanges(1,4,1,4);	gr->Axis();
-	gr->Mark(r,r,"s");
-	gr->Plot(r,"b");
-
-	gr->WriteJPEG("fexport.jpg");
-//	gr->WritePNG("fexport.png");
-	gr->WriteBMP("fexport.bmp");
-	gr->WriteTGA("fexport.tga");
-	gr->WriteEPS("fexport.eps");
-	gr->WriteSVG("fexport.svg");
-	gr->WriteGIF("fexport.gif");
-
-	gr->WriteXYZ("fexport.xyz");
-	gr->WriteSTL("fexport.stl");
-	gr->WriteOFF("fexport.off");
-	gr->WriteTEX("fexport.tex");
-	gr->WriteOBJ("fexport.obj");
-	gr->WritePRC("fexport.prc");
-	gr->WriteJSON("fexport.json");
-	
-	gr->ExportMGLD("fexport.mgld");
-	gr->Clf();
-	gr->ImportMGLD("fexport.mgld");
-}
-//-----------------------------------------------------------------------------
 const char *mmgl_refill="new x 10 '0.5+rnd':cumsum x 'x':norm x -1 1\ncopy y sin(pi*x)/1.5\n"
 "subplot 2 2 0 '<_':title 'Refill sample'\nbox:axis:plot x y 'o ':fplot 'sin(pi*x)/1.5' 'B:'\n"
 "new r 100:refill r x y:plot r 'r'\n\n"
@@ -278,19 +120,25 @@ void smgl_indirect(mglGraph *gr)
 	gr->Legend(2);
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_ode="subplot 2 2 0 '':title 'Cont':box\nnew f 100 100 'y^2+2*x^3-x^2-0.5':cont f\n\n"
-"subplot 2 2 1 '':title 'Flow':box\nnew fx 100 100 'x-3*x^2'\nnew fy 100 100 'y'\nflow fy fx 'v';value 7\n\n"
-"subplot 2 2 2 '':title 'ODE':box\nfor $x -1 1 0.1\n"
-"ode r 'y;x-3*x^2' 'xy' [$x,0]\nplot r(0) r(1)\node r '-y;-x+3*x^2' 'xy' [$x,0]\nplot r(0) r(1)\nnext";
+const char *mmgl_ode="subplot 2 2 0 '<_':title 'Cont':box\naxis:xlabel 'x':ylabel '\\dot{x}'\n"
+"new f 100 100 'y^2+2*x^3-x^2-0.5':cont f\n\n"
+"subplot 2 2 1 '<_':title 'Flow':box\naxis:xlabel 'x':ylabel '\\dot{x}'\n"
+"new fx 100 100 'x-3*x^2'\nnew fy 100 100 'y'\nflow fy fx 'v';value 7\n\n"
+"subplot 2 2 2 '<_':title 'ODE':box\naxis:xlabel 'x':ylabel '\\dot{x}'\n"
+"for $x -1 1 0.1\n  ode r 'y;x-3*x^2' 'xy' [$x,0]\n  plot r(0) r(1)\n"
+"  ode r '-y;-x+3*x^2' 'xy' [$x,0]\n  plot r(0) r(1)\nnext";
 void smgl_ode(mglGraph *gr)
 {
-	gr->SubPlot(2,2,0,"");	gr->Title("Cont");	gr->Box();
+	gr->SubPlot(2,2,0,"<_");	gr->Title("Cont");	gr->Box();
+	gr->Axis();	gr->Label('x',"x");	gr->Label('y',"\\dot{x}");
 	mglData f(100,100);	gr->Fill(f,"y^2+2*x^3-x^2-0.5");
 	gr->Cont(f);
-	gr->SubPlot(2,2,1,"");	gr->Title("Flow");	gr->Box();
+	gr->SubPlot(2,2,1,"<_");	gr->Title("Flow");	gr->Box();
+	gr->Axis();	gr->Label('x',"x");	gr->Label('y',"\\dot{x}");
 	mglData fx(100,100), fy(100,100);	gr->Fill(fx,"x-3*x^2");	gr->Fill(fy,"y");
 	gr->Flow(fy,fx,"v","value 7");
-	gr->SubPlot(2,2,2,"");	gr->Title("ODE");	gr->Box();
+	gr->SubPlot(2,2,2,"<_");	gr->Title("ODE");	gr->Box();
+	gr->Axis();	gr->Label('x',"x");	gr->Label('y',"\\dot{x}");
 	for(double x=-1;x<1;x+=0.1)
 	{
 		mglData in(2), r;	in.a[0]=x;
@@ -2217,31 +2065,47 @@ void smgl_axis(mglGraph *gr)
 	gr->InPlot(0,0.5,0,0.5);	gr->SetRanges(1,0,4,0);	gr->FPlot("4*x^2");
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_ticks="subplot 3 2 0:title 'Usual axis':axis\n"
-"subplot 3 2 1:title 'Too big/small range':ranges -1000 1000 0 0.001:axis\n"
-"subplot 3 2 3:title 'Too narrow range':ranges 100 100.1 10 10.01:axis\n"
-"subplot 3 2 4:title 'Disable ticks tuning':tuneticks off:axis\n"
-"subplot 3 2 2:title 'Manual ticks':ranges -pi pi 0 2:\n"
-"xtick -pi '\\pi' -pi/2 '-\\pi/2' 0 '0' 0.886 'x^*' pi/2 '\\pi/2' pi 'pi'\n"
-"# or you can use:\n#list v -pi -pi/2 0 0.886 pi/2 pi:xtick v '-\\pi\\n-\\pi/2\\n{}0\\n{}x^*\\n\\pi/2\\n\\pi'\n"
-"axis:grid:fplot '2*cos(x^2)^2' 'r2'\n"
-"subplot 3 2 5:title 'Time ticks':xrange 0 3e5:ticktime 'x':axis";
+const char *mmgl_ticks="subplot 3 3 0:title 'Usual axis'\naxis\n\n"
+"subplot 3 3 1:title 'Too big/small range'\nranges -1000 1000 0 0.001:axis\n\n"
+"subplot 3 3 2:title 'LaTeX-like labels'\naxis 'F!'\n\n"
+"subplot 3 3 3:title 'Too narrow range'\nranges 100 100.1 10 10.01:axis\n\n"
+"subplot 3 3 4:title 'No tuning, manual \"+\"'\naxis '+!'\n"
+"# for version <2.3 you can use\n#tuneticks off:axis\n\n"
+"subplot 3 3 5:title 'Template for ticks'\nxtick 'xxx:%g':ytick 'y:%g'\naxis\n\n"
+"xtick '':ytick '' # switch it off for other plots\n\n"
+"subplot 3 3 6:title 'No tuning, higher precision'\naxis '!4'\n\n"
+"subplot 3 3 7:title 'Manual ticks'\nranges -pi pi 0 2\n"
+"xtick pi 3 '\\pi'\nxtick 0.886 'x^*' on # note this will disable subticks drawing\n"
+"# or you can use\n#xtick -pi '\\pi' -pi/2 '-\\pi/2' 0 '0' 0.886 'x^*' pi/2 '\\pi/2' pi 'pi'\n"
+"# or you can use\n#list v -pi -pi/2 0 0.886 pi/2 pi:xtick v '-\\pi\\n-\\pi/2\\n{}0\\n{}x^*\\n\\pi/2\\n\\pi'\n"
+"axis:grid:fplot '2*cos(x^2)^2' 'r2'\n\n"
+"subplot 3 3 8:title 'Time ticks'\nxrange 0 3e5:ticktime 'x':axis";
 void smgl_ticks(mglGraph *gr)
 {
-	gr->SubPlot(3,2,0);	gr->Title("Usual axis");	gr->Axis();
-	gr->SubPlot(3,2,1);	gr->Title("Too big/small range");
+	gr->SubPlot(3,3,0);	gr->Title("Usual axis");	gr->Axis();
+	gr->SubPlot(3,3,1);	gr->Title("Too big/small range");
 	gr->SetRanges(-1000,1000,0,0.001);	gr->Axis();
-	gr->SubPlot(3,2,3);	gr->Title("Too narrow range");
+	gr->SubPlot(3,3,2);	gr->Title("LaTeX-like labels");
+	gr->Axis("F!");
+	gr->SubPlot(3,3,3);	gr->Title("Too narrow range");
 	gr->SetRanges(100,100.1,10,10.01);	gr->Axis();
-	gr->SubPlot(3,2,4);	gr->Title("Disable ticks tuning");
-	gr->SetTuneTicks(0);	gr->Axis();
-
-	gr->SubPlot(3,2,2);	gr->Title("Manual ticks");	gr->SetRanges(-M_PI,M_PI, 0, 2);
-	double val[]={-M_PI, -M_PI/2, 0, 0.886, M_PI/2, M_PI};
-	gr->SetTicksVal('x', mglData(6,val), "-\\pi\n-\\pi/2\n0\nx^*\n\\pi/2\n\\pi");
+	gr->SubPlot(3,3,4);	gr->Title("No tuning, manual '+'");
+	// for version<2.3 you need first call gr->SetTuneTicks(0);
+	gr->Axis("+!");
+	gr->SubPlot(3,3,5);	gr->Title("Template for ticks");
+	gr->SetTickTempl('x',"xxx:%g");	gr->SetTickTempl('y',"y:%g");
+	gr->Axis();
+	// now switch it off for other plots
+	gr->SetTickTempl('x',"");	gr->SetTickTempl('y',"");
+	gr->SubPlot(3,3,6);	gr->Title("No tuning, higher precision");
+	gr->Axis("!4");
+	gr->SubPlot(3,3,7);	gr->Title("Manual ticks");	gr->SetRanges(-M_PI,M_PI, 0, 2);
+	gr->SetTicks('x',M_PI,0,0,"\\pi");	gr->AddTick('x',0.886,"x^*");
+	// alternatively you can use following lines
+	//double val[]={-M_PI, -M_PI/2, 0, 0.886, M_PI/2, M_PI};
+	//gr->SetTicksVal('x', mglData(6,val), "-\\pi\n-\\pi/2\n0\nx^*\n\\pi/2\n\\pi");
 	gr->Axis();	gr->Grid();	gr->FPlot("2*cos(x^2)^2", "r2");
-
-	gr->SubPlot(3,2,5);	gr->Title("Time ticks");	gr->SetRange('x',0,3e5);
+	gr->SubPlot(3,3,8);	gr->Title("Time ticks");	gr->SetRange('x',0,3e5);
 	gr->SetTicksTime('x',0);	gr->Axis();
 }
 //-----------------------------------------------------------------------------
@@ -2776,7 +2640,6 @@ mglSample samp[] = {
 	{"error2", smgl_error2, mmgl_error2},
 	{"export", smgl_export, mmgl_export},
 	{"fall", smgl_fall, mmgl_fall},
-	{"fexport", smgl_fexport, mmgl_fexport},
 	{"fit", smgl_fit, mmgl_fit},
 	{"flow", smgl_flow, mmgl_flow},
 	{"fog", smgl_fog, mmgl_fog},

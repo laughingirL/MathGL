@@ -572,17 +572,17 @@ Setsize: размер(ы) равны нулю или отрицательны
 @cindex NeedStop
 @cindex SetEventFunc
 
-@deftypefn {Method on @code{mglGraph}} @code{void} Stop (@code{bool} stop=@code{true})
+@deftypefn {Метод класса @code{mglGraph}} @code{void} Stop (@code{bool} stop=@code{true})
 @deftypefnx {C function only} @code{void} mgl_ask_stop (@code{HMGL} gr, @code{int} stop)
 Просит остановить рисование если @var{stop} не ноль, иначе сбрасывает флаг остановки.
 @end deftypefn
 
-@deftypefn {Method on @code{mglGraph}} @code{bool} NeedStop ()
+@deftypefn {Метод класса @code{mglGraph}} @code{bool} NeedStop ()
 @deftypefnx {C function only} @code{void} mgl_need_stop (@code{HMGL} gr)
 Возвращает @code{true} если рисование должно быть остановлено. Также запускает обработку всех отложенных событий в GUI. Пользователь должен вызывать эту функцию время от времени внутри долгих вычислений для плавности отклика GUI.
 @end deftypefn
 
-@deftypefn {Method on @code{mglGraph}} @code{bool} SetEventFunc (@code{void (*}func@code{)(void *)}, @code{void *}par=@code{NULL})
+@deftypefn {Метод класса @code{mglGraph}} @code{bool} SetEventFunc (@code{void (*}func@code{)(void *)}, @code{void *}par=@code{NULL})
 @deftypefnx {C function only} @code{void} mgl_set_event_func (@code{HMGL} gr, @code{void (*}func@code{)(void *)}, @code{void *}par)
 Задает функцию, которая будет вызвана для обработки событий в GUI библиотеке.
 @end deftypefn
@@ -764,6 +764,7 @@ Ternary -- специальный тип графика для 3 зависим�
 @cindex SetTickRotate
 @cindex SetTickSkip
 @cindex SetOriginTick
+@cindex AddTick
 @end ifclear
 
 @anchor{adjust}
@@ -796,6 +797,9 @@ Ternary -- специальный тип графика для 3 зависим�
 @deftypefn {Команда MGL} {} xtick @code{val1} 'lbl1' [@code{val2} 'lbl2' ...]
 @deftypefnx {Команда MGL} {} ytick @code{val1} 'lbl1' [@code{val2} 'lbl2' ...]
 @deftypefnx {Команда MGL} {} ztick @code{val1} 'lbl1' [@code{val2} 'lbl2' ...]
+@deftypefnx {Команда MGL} {} xtick vdat 'lbls' [@code{add=off}]
+@deftypefnx {Команда MGL} {} ytick vdat 'lbls' [@code{add=off}]
+@deftypefnx {Команда MGL} {} ztick vdat 'lbls' [@code{add=off}]
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} SetTicksVal (@code{char} dir, @code{const char *}lbl, @code{bool} add=@code{false})
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} SetTicksVal (@code{char} dir, @code{const wchar_t *}lbl, @code{bool} add=@code{false})
@@ -808,6 +812,15 @@ Ternary -- специальный тип графика для 3 зависим�
 @end ifclear
 Задает явное положение @var{val} и подписи @var{lbl} для меток вдоль оси @var{dir}. Если массив @var{val} не указан, то используются значения равно распределённые в диапазоне осей координат. Метки разделяются символом @samp{\n}. Используйте @code{SetTicks()} для восстановления автоматических меток.
 @end deftypefn
+
+@ifclear UDAV
+@deftypefn {Метод класса @code{mglGraph}} @code{void} AddTick (@code{char} dir, @code{double} val, @code{const char *}lbl)
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} AddTick (@code{char} dir, @code{double} val, @code{const wchar_t *}lbl)
+@deftypefnx {Функция С} @code{void} mgl_add_tick (@code{HMGL} gr, @code{char} dir, @code{double} val, @code{const char *}lbl)
+@deftypefnx {Функция С} @code{void} mgl_set_tickw (@code{HMGL} gr, @code{char} dir, @code{double} val, @code{const wchar_t *}lbl)
+Аналогично предыдущему, но добавляет одну метку оси к списку существующих меток.
+@end deftypefn
+@end ifclear
 
 @deftypefn {Команда MGL} {} xtick 'templ'
 @deftypefnx {Команда MGL} {} ytick 'templ'
@@ -1662,8 +1675,8 @@ These functions change background image.
 @deftypefnx {MGL command} {} arc @code{x0 y0 z0 x1 y1 a} ['col'='r']
 @deftypefnx {MGL command} {} arc @code{x0 y0 z0 xa ya za x1 y1 z1 a} ['col'='r']
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} Arc (@code{mglPoint} p0, @code{mglPoint} p1, @code{mreal} a, @code{const char *}col=@code{"r"})
-@deftypefnx {Method on @code{mglGraph}} @code{void} Arc (@code{mglPoint} p0, @code{mglPoint} pa, @code{mglPoint} p1, @code{mreal} a, @code{const char *}col=@code{"r"})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Arc (@code{mglPoint} p0, @code{mglPoint} p1, @code{mreal} a, @code{const char *}col=@code{"r"})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Arc (@code{mglPoint} p0, @code{mglPoint} pa, @code{mglPoint} p1, @code{mreal} a, @code{const char *}col=@code{"r"})
 @deftypefnx {C function} @code{void} mgl_arc (@code{HMGL} gr, @code{mreal} x0, @code{mreal} y0, @code{mreal} x1, @code{mreal} y1, @code{mreal} a, @code{const char *}col)
 @deftypefnx {C function} @code{void} mgl_arc_ext (@code{HMGL} gr, @code{mreal} x0, @code{mreal} y0, @code{mreal} z0, @code{mreal} xa, @code{mreal} ya, @code{mreal} za, @code{mreal} x1, @code{mreal} y1, @code{mreal} z1, @code{mreal} a, @code{const char *}col)
 @end ifclear
@@ -1674,7 +1687,7 @@ These functions change background image.
 @deftypefn {MGL command} {} polygon @code{x0 y0 x1 y1 num} ['col'='r']
 @deftypefnx {MGL command} {} polygon @code{x0 y0 z0 x1 y1 z1 num} ['col'='r']
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} Polygon (@code{mglPoint} p0, @code{mglPoint} p1, @code{int} num, @code{const char *}col=@code{"r"})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Polygon (@code{mglPoint} p0, @code{mglPoint} p1, @code{int} num, @code{const char *}col=@code{"r"})
 @deftypefnx {C function} @code{void} mgl_polygon (@code{HMGL} gr, @code{mreal} x0, @code{mreal} y0, @code{mreal} z0, @code{mreal} x1, @code{mreal} y1, @code{mreal} z1, @code{int} num, @code{const char *}col)
 @end ifclear
 Рисует правильный @var{num}-угольник с центром в @var{p0} с первой вершиной в @var{p1} цветом @var{col}. Если @var{col} содержит: @samp{#} то рисуется только граница, @samp{@@} то рисуется граница (вторым цветом из @var{col} или черными).
@@ -1771,7 +1784,24 @@ These functions change background image.
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} Axis (@code{const char *}dir=@code{"xyz"}, @code{const char *}stl=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_axis (@code{HMGL} gr, @code{const char *}dir, @code{const char *}stl, @code{const char *}opt)
 @end ifclear
-Рисует оси координат и метки на них (см. @ref{Axis settings}) в направлениях @samp{xyz}, указанных строкой @var{dir}. Заглавные буквы @samp{XYZ} приведут к расположению меток с другой стороны от оси. Если строка содержит символ @samp{~} или @samp{_}, то подписи меток отображаться не будут. Если строка содержит символ @samp{^}, то инвертируется положение осей по умолчанию. Если строка содержит символ @samp{AKDTVISO}, то будет нарисована соответствующая стрелка на конце оси. Стиль меток и оси(ей) задается строкой @var{stl}. @sref{Axis and ticks}
+Рисует оси координат и метки на них (см. @ref{Axis settings}) в направлениях @samp{xyz}, указанных строкой @var{dir}. Строка @var{dir} может содержать:
+@itemize
+@item @samp{xyz} для рисования соответствующих осей;
+@item @samp{XYZ} для рисования соответствующих осей с метками с другой стороны;
+@item @samp{~} или @samp{_} для осей без подписей;
+@item @samp{U} для невращаемых подписей;
+@item @samp{^} для инвертирования положения по умолчанию;
+@item @samp{!} для отключения улучшения вида меток (см. @ref{tuneticks});
+@item @samp{AKDTVISO} для вывода стрелки на конце оси;
+@item @samp{a} для принудительной автоматической расстановки меток;
+@item @samp{f} для вывода чисел в фиксированном формате;
+@item @samp{E} для вывода @samp{E} вместо @samp{e};
+@item @samp{F} для вывода в формате LaTeX;
+@item @samp{+} для вывода @samp{+} для положительных чисел;
+@item @samp{-} для вывода обычного @samp{-};
+@item @samp{0123456789} для задания точности при выводе чисел.
+@end itemize
+Стиль меток и оси(ей) задается строкой @var{stl}. @sref{Axis and ticks}
 @end deftypefn
 
 @anchor{colorbar}
@@ -1780,7 +1810,22 @@ These functions change background image.
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} Colorbar (@code{const char *}sch=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_colorbar (@code{HMGL} gr, @code{const char *}sch)
 @end ifclear
-Рисует полосу соответствия цвета и числовых значений (colorbar) для цветовой схемы @var{sch} (используется текущая для @code{sch=""}) с краю от графика. Если строка @var{sch} содержит @samp{<>^_}, то положение выбирается: @samp{>} -- справа, @samp{<} -- слева, @samp{^} -- сверху, @samp{_} -- снизу. Если строка содержит @samp{A}, то используются абсолютные координаты (относительно рисунка). Если строка содержит @samp{~}, то подписи меток не рисуются. @sref{Colorbars}
+Рисует полосу соответствия цвета и числовых значений (colorbar) для цветовой схемы @var{sch} (используется текущая для @code{sch=""}) с краю от графика. Строка @var{sch} также может содержать:
+@itemize
+@item @samp{<>^_} для расположения слева, справа, сверху или снизу соответственно;
+@item @samp{I} для расположения около осей (по умолчанию, на краях subplot);
+@item @samp{A} для использования абсолютных координат (относительно рисунка);
+@item @samp{~} для colorbar без подписей;
+@item @samp{!} для отключения улучшения вида меток (см. @ref{tuneticks});
+@item @samp{a} для принудительной автоматической расстановки меток;
+@item @samp{f} для вывода чисел в фиксированном формате;
+@item @samp{E} для вывода @samp{E} вместо @samp{e};
+@item @samp{F} для вывода в формате LaTeX;
+@item @samp{+} для вывода @samp{+} для положительных чисел;
+@item @samp{-} для вывода обычного @samp{-};
+@item @samp{0123456789} для задания точности при выводе чисел.
+@end itemize
+@sref{Colorbars}
 @end deftypefn
 
 @deftypefn {Команда MGL} {} colorbar vdat ['sch'='']
@@ -2232,7 +2277,17 @@ These functions change background image.
 @deftypefnx {Функция С} @code{void} mgl_label_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}txt, @code{const char *}fnt, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_labelw_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const wchar_t *}txt, @code{const char *}fnt, @code{const char *}opt)
 @end ifclear
-Функции выводят текстовую строку @var{txt} в точках @{@var{x}[i], @var{y}[i], @var{z}[i]@}. Если строка @var{txt} содержит @samp{%x}, @samp{%y}, @samp{%z} или @samp{%n}, то они будут заменены на значения соответствующих координат или на номер точки. Строка @var{fnt} может содержать: @ref{Font styles}; @samp{f} для вывода чисел в фиксированном формате.  См. также @ref{plot}, @ref{mark}, @ref{textmark}, @ref{table}. @sref{Label sample}
+Функции выводят текстовую строку @var{txt} в точках @{@var{x}[i], @var{y}[i], @var{z}[i]@}. Если строка @var{txt} содержит @samp{%x}, @samp{%y}, @samp{%z} или @samp{%n}, то они будут заменены на значения соответствующих координат или на номер точки. Строка @var{fnt} может содержать:
+@itemize
+@item @ref{Font styles};
+@item @samp{f} для вывода чисел в фиксированном формате;
+@item @samp{E} для вывода @samp{E} вместо @samp{e};
+@item @samp{F} для вывода в формате LaTeX;
+@item @samp{+} для вывода @samp{+} для положительных чисел;
+@item @samp{-} для вывода обычного @samp{-};
+@item @samp{0123456789} для задания точности при выводе чисел.
+@end itemize
+См. также @ref{plot}, @ref{mark}, @ref{textmark}, @ref{table}. @sref{Label sample}
 @end deftypefn
 
 @anchor{table}
@@ -2246,7 +2301,20 @@ These functions change background image.
 @deftypefnx {Функция С} @code{void} mgl_table (@code{HMGL} gr, @code{mreal} x, @code{mreal} y, @code{HCDT} val, @code{const char *}txt, @code{const char *}fnt, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_tablew (@code{HMGL} gr, @code{mreal} x, @code{mreal} y, @code{HCDT} val, @code{const wchar_t *}txt, @code{const char *}fnt, @code{const char *}opt)
 @end ifclear
-Рисует таблицу значений массива @var{val} с заголовками @var{txt} (разделенными символом новой строки @samp{\n}) в точке @{@var{x}, @var{y}@} (по умолчанию @{0,0@}) относительно текущего subplot. Строка @var{fnt} может содержать: @ref{Font styles}; @samp{#} для рисования границ ячеек; @samp{=} для одинаковой ширины всех ячеек; @samp{|} для ограничения ширины таблицы шириной subplot (эквивалентно опции @samp{value 1}); @samp{f} для вывода чисел в фиксированном формате. Опция @code{value} задает ширину таблицы (по умолчанию 1). См. также @ref{label}. @sref{Table sample}
+Рисует таблицу значений массива @var{val} с заголовками @var{txt} (разделенными символом новой строки @samp{\n}) в точке @{@var{x}, @var{y}@} (по умолчанию @{0,0@}) относительно текущего subplot. Строка @var{fnt} может содержать:
+@itemize
+@item @ref{Font styles};
+@item @samp{#} для рисования границ ячеек; 
+@item @samp{=} для одинаковой ширины всех ячеек; 
+@item @samp{|} для ограничения ширины таблицы шириной subplot (эквивалентно опции @samp{value 1});
+@item @samp{f} для вывода чисел в фиксированном формате;
+@item @samp{E} для вывода @samp{E} вместо @samp{e};
+@item @samp{F} для вывода в формате LaTeX;
+@item @samp{+} для вывода @samp{+} для положительных чисел;
+@item @samp{-} для вывода обычного @samp{-};
+@item @samp{0123456789} для задания точности при выводе чисел.
+@end itemize
+Опция @code{value} задает ширину таблицы (по умолчанию 1). См. также @ref{label}. @sref{Table sample}
 @end deftypefn
 
 @anchor{tube}

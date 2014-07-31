@@ -545,17 +545,11 @@ std::string mglCanvas::GetJSON()
 	const std::string loc = setlocale(LC_NUMERIC, NULL);	setlocale(LC_NUMERIC, "C");
 	res = res + mgl_sprintf("{\n\"width\":%d,\t\"height\":%d,\t\"depth\":%d,\t\"plotid\":\"%s\",\t\"npnts\":%ld,\t\"pnts\":[\n",
 			factor*Width, factor*Height, factor*Depth, PlotId.c_str(), l);
-	std::string *tmp=new std::string[l];
-#pragma omp parallel for reduction(+:ll)
 	for(long i=0;i<l;i++)
 	{
 		const mglPnt &q=Pnt[i];
-		tmp[i] = mgl_sprintf("[%ld,%ld,%ld,%d]%c\n", long(factor*q.xx), long(factor*(Height-q.yy)), long(factor*q.zz),q.sub, i+1<l?',':' ');
-		ll += tmp[i].length();
+		res += mgl_sprintf("[%ld,%ld,%ld,%d]%c\n", long(factor*q.xx), long(factor*(Height-q.yy)), long(factor*q.zz),q.sub, i+1<l?',':' ');
 	}
-	res.reserve(ll);
-	for(long i=0;i<l;i++)	res = res + tmp[i];
-	delete []tmp;
 
 	l = (long)Prm.size();	ll = 0;
 	for(long i=0;i<l;i++)

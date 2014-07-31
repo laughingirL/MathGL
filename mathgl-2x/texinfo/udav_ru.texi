@@ -57,21 +57,29 @@ There are a set of dialogs, which allow change/add a command, setup global plot 
 
 @ufig{udav_cmd,8, New command dialog}
 
-One of most interesting dialog (hotkey @key{Meta-C} or @key{Win-C}) is dialog which help to enter new command or change arguments of existed one. It allows consequently select the category of command, command name in category and appropriate set of command arguments. At this right side show detailed command description. Required argument(s) are denoted by bold text. Strings are placed in apostrophes, like @code{'txt'}. Buttons below table allow to call dialogs for changing style of command (if argument @code{'fmt'} is present in the list of command arguments); to set variable or expression for argument(s); to add options for command.
+One of most interesting dialog (hotkey @key{Meta-C} or @key{Win-C}) is dialog which help to enter new command or change arguments of existed one. It allows consequently select the category of command, command name in category and appropriate set of command arguments. At this right side show detailed command description. Required argument(s) are denoted by bold text. Strings are placed in apostrophes, like @code{'txt'}. Buttons below table allow to call dialogs for changing style of command (if argument @code{'fmt'} is present in the list of command arguments); to set variable or expression for argument(s); to add options for command. Note, you can click on a cell to enter value, or double-click to call corresponding dialog.
 
 @ufig{udav_pen,5, Style dialog - pen style}
 @ufig{udav_sch,5, Style dialog - color scheme}
 @ufig{udav_txt,5, Style dialog - text style}
+@ufig{udav_mask,5, Style dialog - manual mask}
 
-Dialog for changing style can be called independently, but usually is called from @emph{New command} dialog or by double click on primitive. It contain 3 tabs: one for pen style, one for color scheme, one for text style. You should select appropriate one. Resulting string of style and sample picture are shown at bottom of dialog.
+Dialog for changing style can be called independently, but usually is called from @emph{New command} dialog or by double click on primitive. It contain 3 tabs: one for pen style, one for color scheme, one for text style. You should select appropriate one. Resulting string of style and sample picture are shown at bottom of dialog. Usually it can be called from New command dialog.
 
 @ufig{udav_var,3, Variable dialog}
 
-Dialog for entering variable allow to select variable or expression which can be used as argument of a command. Here you can select the variable name; range of indexes in each directions; operation which will be applied (like, summation, finding minimal/maximal values and so on).
+Dialog for entering variable allow to select variable or expression which can be used as argument of a command. Here you can select the variable name; range of indexes in each directions; operation which will be applied (like, summation, finding minimal/maximal values and so on). Usually it can be called from New command dialog.
 
-@ufig{udav_opt,7.5, Variable dialog}
+@ufig{udav_opt,7.5, Dialog for options of a command}
 
-Dialog for command options allow to change @ref{Command options}.
+Dialog for command options allow to change @ref{Command options}. Usually it can be called from New command dialog.
+
+
+
+@ufig{udav_inplot,8, New inplot dialog}
+
+Another interesting dialog, which help to select and properly setup a @ref{subplot}, @ref{inplot}, @ref{columnplot}, @ref{stickplot} and similar commands.
+
 
 @ufig{udav_gen_set,9, Dialog for general properties}
 @ufig{udav_light,9, Dialog for light properties}

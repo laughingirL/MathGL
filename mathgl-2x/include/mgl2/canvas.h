@@ -26,22 +26,25 @@ struct GifFileType;
 /// Structure for drawing axis and ticks
 struct MGL_EXPORT mglAxis
 {
-	mglAxis()	{	dv=ds=d=v0=v1=v2=o=sh=0;	ns=f=ch=0;	pos = 't';	inv=false;	}
-	mglAxis(const mglAxis &aa)
-	{	dv=aa.dv;	ds=aa.ds;	d=aa.d;		dir=aa.dir;	sh=aa.sh;
-		v0=aa.v0;	v1=aa.v1;	v2=aa.v2;	o=aa.o;		pos=aa.pos;
-		a = aa.a;	b = aa.b;	org=aa.org;	txt=aa.txt;	inv=aa.inv;
-		ns=aa.ns;	f=aa.f;		ch=aa.ch;	t=aa.t;	}
+	mglAxis() : dv(0),ds(0),d(0),ns(0),	v0(0),v1(0),v2(0),o(NAN),	f(0),	ch(0),	pos('t'),sh(0),inv(false)	{}
+	mglAxis(const mglAxis &aa) : dv(aa.dv),ds(aa.ds),d(aa.d),ns(aa.ns),	t(aa.t),fact(aa.fact),stl(aa.stl),	dir(aa.dir),a(aa.a),b(aa.b),org(aa.org), v0(aa.v0),v1(aa.v1),v2(aa.v2),o(aa.o),	f(aa.f),txt(aa.txt),	ch(aa.ch),	pos(aa.pos),sh(aa.sh),inv(aa.inv)	{}
+#if MGL_HAVE_RVAL
+	mglAxis(mglAxis &&aa) : dv(aa.dv),ds(aa.ds),d(aa.d),ns(aa.ns),	t(aa.t),fact(aa.fact),stl(aa.stl),	dir(aa.dir),a(aa.a),b(aa.b),org(aa.org), v0(aa.v0),v1(aa.v1),v2(aa.v2),o(aa.o),	f(aa.f),txt(aa.txt),	ch(aa.ch),	pos(aa.pos),sh(aa.sh),inv(aa.inv)	{}
+#endif
 	inline void AddLabel(const wchar_t *lbl, mreal v)
 	{	txt.push_back(mglText(lbl,"",v));	}
 	inline void AddLabel(const std::wstring &lbl, mreal v)
 	{	txt.push_back(mglText(lbl,v));	}
+	inline void Clear()
+	{	dv=ds=d=v0=v1=v2=sh=0;	o=NAN;	ns=f=0;	pos = 't';	inv=false;
+		fact.clear();	stl.clear();	t.clear();	txt.clear();	}
 
 	mreal dv,ds;	///< Actual step for ticks and subticks.
 	mreal d;		///< Step for axis ticks (if positive) or its number (if negative).
 	int ns;			///< Number of axis subticks.
 	std::wstring t;	///< Tick template (set "" to use default one ("%.2g" in simplest case))
 	std::wstring fact;	///< Factor which should be placed after number (like L"\pi")
+	std::string stl;	///< Tick styles (default is ""=>"3m")
 	mglPoint dir;	///< Axis direction
 	mglPoint a,b;	///< Directions of over axis
 	mglPoint org;
@@ -61,6 +64,9 @@ struct MGL_EXPORT mglAxis
 struct MGL_EXPORT mglLight
 {
 	mglLight():n(false),a(0),b(0)	{}
+#if MGL_HAVE_RVAL
+	mglLight(mglLight &&aa) : n(aa.n),d(aa.d),r(aa.r),q(aa.q),p(aa.p),a(aa.a),b(aa.b),c(aa.c)	{}
+#endif
 	bool n;			///< Availability of light sources
 	mglPoint d;		///< Direction of light sources
 	mglPoint r;		///< Position of light sources (NAN for infinity)
@@ -75,6 +81,11 @@ class mglCanvas;
 /// Structure for light source
 struct MGL_EXPORT mglDrawReg
 {
+	mglDrawReg() {}
+	mglDrawReg(const mglDrawReg &aa) : PDef(aa.PDef),angle(aa.angle),ObjId(aa.ObjId),PenWidth(aa.PenWidth),pPos(aa.pPos) ,x1(aa.x1),x2(aa.x2),y1(aa.y1),y2(aa.y2)	{}
+#if MGL_HAVE_RVAL
+	mglDrawReg(mglDrawReg &&aa) : PDef(aa.PDef),angle(aa.angle),ObjId(aa.ObjId),PenWidth(aa.PenWidth),pPos(aa.pPos) ,x1(aa.x1),x2(aa.x2),y1(aa.y1),y2(aa.y2)	{}
+#endif
 	union
 	{
 		uint64_t PDef;
@@ -90,6 +101,11 @@ struct MGL_EXPORT mglDrawReg
 /// Structure contains everything for drawing
 struct MGL_EXPORT mglDrawDat
 {
+	mglDrawDat() {}
+	mglDrawDat(const mglDrawDat &aa) : Pnt(aa.Pnt),Prm(aa.Prm),Ptx(aa.Ptx),Glf(aa.Glf),Txt(aa.Txt)	{}
+#if MGL_HAVE_RVAL
+	mglDrawDat(mglDrawDat &&aa) : Pnt(aa.Pnt),Prm(aa.Prm),Ptx(aa.Ptx),Glf(aa.Glf),Txt(aa.Txt)	{}
+#endif
 	mglStack<mglPnt>  Pnt;	///< Internal points
 	mglStack<mglPrim> Prm;	///< Primitives (lines, triangles and so on) -- need for export
 	std::vector<mglText> Ptx;	///< Text labels for mglPrim
@@ -249,6 +265,10 @@ using mglBase::Light;
 	void SetTicksVal(char dir, const wchar_t *lbl, bool add=false);
 	void SetTicksVal(char dir, HCDT v, const wchar_t *lbl, bool add=false);
 	void SetTicksVal(char dir, HCDT v, const wchar_t **lbl, bool add=false);
+		/// Add manual tick at given position. Use "" to disable this feature.
+	void AddTick(char dir, double val, const char *lbl);
+	void AddTick(char dir, double val, const wchar_t *lbl);
+
 	/// Set templates for ticks
 	void SetTickTempl(char dir, const wchar_t *t);
 	void SetTickTempl(char dir, const char *t);
@@ -257,7 +277,7 @@ using mglBase::Light;
 	/// Set the ticks parameters
 	void SetTicks(char dir, mreal d=0, int ns=0, mreal org=NAN, const wchar_t *lbl=0);
 	/// Auto adjust ticks
-	void AdjustTicks(const char *dir="xyzc", bool force=false);
+	void AdjustTicks(const char *dir="xyzc", bool force=false, std::string stl="");
 	/// Tune ticks
 	inline void SetTuneTicks(int tune, mreal pos=1.15)
 	{	TuneTicks = tune;	FactorPos = pos;	}

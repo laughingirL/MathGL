@@ -19,6 +19,7 @@
 15. Frames by mouse in UDAV ???
 	A. мысли о frame??? для группы графиков -- не "удалять" их, а запихивать в отдельный кадр -- вопрос что с анимацией???
 	B. как делать анимацию (кадры) для мышиной версии ... список кадров, кнопки добавить в кадры + вставить из кадра
+16. Docs about mgl_datac_diffr
 
 
 ============= NEW FEATURES =============
@@ -35,11 +36,8 @@
 	e. Test for Crop, Momentum, NormSl, Sew, DiffParam, Envelope, STFA for all directions "xyz"; Clean, Last, First, Find, Spline3, FindAny, Insert, Delete, Put, SetId/Column, Squeeze, Extend, Trace, Combine, new Max/Min/Momentum, FillSample, Hist, operators, Sort, Roots, Jacobian
 	u. Test FlowP + 3d
 
-7. Adjust format for printed numbers (i.e. write function which will produce shortest text) + flag of fixed format + flag of TeX-notation + use '−'
-8. Test JSON output (for new perspective!!!)
 9. Extend QO ???
 
-YY. Optimize code (especially Quality=0 ?!?)
 ZZ. Update *.i for new functions {before release!!!}
 
 ============= DOCUMENTATION =============
@@ -49,14 +47,7 @@ B. Add chapter with real samples
 C. Translate to Russian everything
 D. Docs about JS interface
 
-1. Sample "indirect"
-2. Sample about Refill before "Making regular data"
-3. Sample "ode" + about internal "contour" functions
-4. Docs about mgl_datac_diffr
-
-5. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using Stem()
-
-ZZ. Update UDAV images
+YY. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using Stem()
 
 ============= UDAV =============
 

@@ -531,7 +531,7 @@ void DatPanel::newdat()
 	{
 		mglGraph gr;
 		parser.Execute(&gr,mgl.toStdString().c_str());
-		opers += mgl+"\n";
+		if(k>=6)	opers += mgl+"\n";
 		updateDataItems();
 	}
 }

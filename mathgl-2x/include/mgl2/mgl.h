@@ -224,6 +224,11 @@ public:
 	{	mgl_set_ticks_val(gr,dir,&v,lbl,add);	}
 	inline void SetTicksVal(char dir, const mglDataA &v, const wchar_t *lbl, bool add=false)
 	{	mgl_set_ticks_valw(gr,dir,&v,lbl,add);	}
+	/// Add manual tick at given position. Use "" to disable this feature.
+	inline void AddTick(char dir, double val, const char *lbl)
+	{	mgl_add_tick(gr,dir,val,lbl);	}
+	inline void AddTick(char dir, double val, const wchar_t *lbl)
+	{	mgl_add_tickw(gr,dir,val,lbl);	}
 	/// Set the ticks parameters and string for its factor
 	inline void SetTicks(char dir, double d=0, int ns=0, double org=NaN, const char *factor="")
 	{	mgl_set_ticks_fact(gr, dir, d, ns, org, factor);	}

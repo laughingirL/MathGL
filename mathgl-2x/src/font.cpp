@@ -35,6 +35,7 @@ extern float mgl_fact;
 extern long mgl_gen_fnt[516][6];
 extern short mgl_buf_fnt[246080];
 extern mglTeXsymb mgl_tex_symb[];
+extern long mgl_tex_num;
 //mglFont mglDefFont("nofont");
 mglFont mglDefFont;
 //-----------------------------------------------------------------------------
@@ -240,10 +241,10 @@ unsigned mglFont::Parse(const wchar_t *s) const
 	register long k;
 	unsigned res = unsigned(-2);		// Default is no symbol
 	if(!s || !s[0])	return res;
-	for(k=0;mgl_tex_symb[k].kod;k++);	// determine the number of symbols
+//	for(k=0;mgl_tex_symb[k].kod;k++);	// determine the number of symbols
 	mglTeXsymb tst, *rts;
 	tst.tex = s;
-	rts = (mglTeXsymb *) bsearch(&tst, mgl_tex_symb, k, sizeof(mglTeXsymb), mgl_tex_symb_cmp);
+	rts = (mglTeXsymb *) bsearch(&tst, mgl_tex_symb, mgl_tex_num, sizeof(mglTeXsymb), mgl_tex_symb_cmp);
 	if(rts)	return rts->kod;
 
 //	for(k=0;mgl_tex_symb[k].kod;k++)	// special symbols
@@ -584,7 +585,7 @@ bool mglFont::read_def()
 	return true;
 }
 //-----------------------------------------------------------------------------
-bool mglFont::read_data(const char *fname, int s, std::vector<short> &buf, std::vector<mglGlyphDescr> &extra)	// TODO add buffer for input file?!
+bool mglFont::read_data(const char *fname, int s, std::vector<short> &buf, std::vector<mglGlyphDescr> &extra)
 {
 	gzFile fp;
 	char str[256];
@@ -631,7 +632,7 @@ bool mglFont::read_data(const char *fname, int s, std::vector<short> &buf, std::
 	return true;
 }
 //-----------------------------------------------------------------------------
-bool mglFont::read_main(const char *fname, std::vector<short> &buf)	// TODO add buffer for input file?!
+bool mglFont::read_main(const char *fname, std::vector<short> &buf)
 {
 	gzFile fp;
 	int tmpi, tmpw, tmpnl, tmpnt;
@@ -845,12 +846,16 @@ mglFont::~mglFont()	{	Clear();	}
 void mglFont::Restore()	{	Copy(&mglDefFont);	}
 //-----------------------------------------------------------------------------
 void mglFont::Clear()
-{	if(Buf)	delete []Buf;	Buf=0;	glyphs.clear();	}
+{
+#pragma omp critical(font)
+	{	if(Buf)	delete []Buf;	Buf=0;	glyphs.clear();	}
+}
 //-----------------------------------------------------------------------------
 void mglFont::Copy(mglFont *f)
 {
 	if(!f || f==this)	return;
-	if(Buf)	delete []Buf;
+#pragma omp critical(font)
+	{	if(Buf)	delete []Buf;	Buf=0;	}
 	// copy scale factors
 	memcpy(fact,f->fact,4*sizeof(float));
 	// copy symbols descriptions

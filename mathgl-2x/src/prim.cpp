@@ -20,6 +20,7 @@
 #include "mgl2/canvas.h"
 #include "mgl2/prim.h"
 #include "mgl2/data.h"
+std::wstring MGL_EXPORT mgl_ftoa(double v, const char *fmt);
 //-----------------------------------------------------------------------------
 //
 //	Mark & Curve series
@@ -236,7 +237,6 @@ void MGL_EXPORT mgl_cone(HMGL gr, double x1, double y1, double z1, double x2, do
 	bool refr = n>6;
 	if(refr)	t=d;
 
-#pragma omp parallel for firstprivate(p,q)
 	for(long i=0;i<2*n+1;i++)
 	{
 		register int f = n!=4?(2*i+1)*90/n:45*i;
@@ -249,26 +249,22 @@ void MGL_EXPORT mgl_cone(HMGL gr, double x1, double y1, double z1, double x2, do
 		kk[i+2*n+1] = gr->AddPnt(p,c2,q,-1,3);
 		if(edge && !wire)	kk[i+123] = gr->AddPnt(p,c2,t,-1,3);
 	}
-	if(wire)
-//#pragma omp parallel for		// useless
-		for(long i=0;i<2*n;i++)
+	if(wire)	for(long i=0;i<2*n;i++)
+	{
+		gr->line_plot(kk[i],kk[i+1]);
+		gr->line_plot(kk[i],kk[i+2*n+1]);
+		gr->line_plot(kk[i+2*n+2],kk[i+1]);
+		gr->line_plot(kk[i+2*n+2],kk[i+2*n+1]);
+	}
+	else	for(long i=0;i<2*n;i++)
+	{
+		gr->quad_plot(kk[i],kk[i+1],kk[i+2*n+1],kk[i+2*n+2]);
+		if(edge)
 		{
-			gr->line_plot(kk[i],kk[i+1]);
-			gr->line_plot(kk[i],kk[i+2*n+1]);
-			gr->line_plot(kk[i+2*n+2],kk[i+1]);
-			gr->line_plot(kk[i+2*n+2],kk[i+2*n+1]);
+			gr->trig_plot(k1,kk[i+82],kk[i+83]);
+			gr->trig_plot(k2,kk[i+123],kk[i+124]);
 		}
-	else
-#pragma omp parallel for
-		for(long i=0;i<2*n;i++)
-		{
-			gr->quad_plot(kk[i],kk[i+1],kk[i+2*n+1],kk[i+2*n+2]);
-			if(edge)
-			{
-				gr->trig_plot(k1,kk[i+82],kk[i+83]);
-				gr->trig_plot(k2,kk[i+123],kk[i+124]);
-			}
-		}
+	}
 	gr->EndGroup();	delete []kk;
 }
 //-----------------------------------------------------------------------------
@@ -306,7 +302,6 @@ void MGL_EXPORT mgl_cones_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, 
 
 	memset(dd,0,2*n*sizeof(mreal));
 	z0 = gr->GetOrgZ('x');
-#pragma omp parallel for	// no collapse due to summation
 	for(long i=0;i<n;i++)	for(long j=0;j<m;j++)	dd[i] += z->v(i, j<nz ? j:0);
 
 	char buf[64];
@@ -601,17 +596,10 @@ void MGL_EXPORT mgl_dew_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char
 	if(gr->MeshNum>1)	{	tx=(n-1)/(gr->MeshNum-1);	ty=(m-1)/(gr->MeshNum-1);	}
 	if(tx<1)	tx=1;	if(ty<1)	ty=1;
 
-#pragma omp parallel
+	for(long k=0;k<ax->GetNz();k++)	for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
 	{
-		register mreal xm1=0,ym;
-#pragma omp for nowait collapse(3)
-		for(long k=0;k<ax->GetNz();k++)	for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
-		{
-			ym = sqrt(ax->v(i,j,k)*ax->v(i,j,k)+ay->v(i,j,k)*ay->v(i,j,k));
-			xm1 = xm1>ym ? xm1 : ym;
-		}
-#pragma omp critical(max_vec)
-		{xm = xm>xm1 ? xm:xm1;}
+		register mreal ym = sqrt(ax->v(i,j,k)*ax->v(i,j,k)+ay->v(i,j,k)*ay->v(i,j,k));
+		xm = xm>ym ? xm : ym;
 	}
 	xm = 1./MGL_FEPSILON/(xm==0 ? 1:xm);
 
@@ -724,7 +712,6 @@ void MGL_EXPORT mgl_textmarkw_xyzr(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, cons
 		if(gr->NeedStop())	break;
 		long mx = j<x->GetNy() ? j:0, my = j<y->GetNy() ? j:0;
 		long mz = j<z->GetNy() ? j:0, mr = j<r->GetNy() ? j:0;
-#pragma omp parallel for private(p)	// NOTE this should be useless ?!?
 		for(long i=0;i<n;i++)
 		{
 			p = mglPoint(x->v(i,mx), y->v(i,my), z->v(i,mz));
@@ -812,14 +799,17 @@ void MGL_EXPORT mgl_labelw_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const wchar_t *t
 	static int cgid=1;	gr->StartGroup("Label",cgid++);
 	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();	m = z->GetNy() > m ? z->GetNy() : m;
 
-	bool fix = mglchr(fnt,'f');
 	mglPoint q(NAN);
-	wchar_t tmp[32];
+
+	char fmt[8]="2",ss[2]=" ";
+	std::string Tstl;
+	for(const char *s="0123456789";*s;s++)	if(mglchr(fnt,*s))	fmt[0] = *s;
+	for(const char *s="f+E-F";*s;s++)	if(mglchr(fnt,*s))
+	{	ss[0] = *s;	strcat(fmt,ss);	}
 	for(long j=0;j<m;j++)
 	{
 		if(gr->NeedStop())	break;
 		long mx = j<x->GetNy() ? j:0, my = j<y->GetNy() ? j:0, mz = j<z->GetNy() ? j:0;
-#pragma omp parallel for private(tmp)
 		for(long i=0;i<n;i++)
 		{
 			mreal xx=x->v(i,mx), yy=y->v(i,my), zz=z->v(i,mz);
@@ -829,13 +819,13 @@ void MGL_EXPORT mgl_labelw_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const wchar_t *t
 			{
 				if(text[k]!='%' || (k>0 && text[k-1]=='\\'))
 				{	buf += text[k];	continue;	}
-				else if(text[k+1]=='%')	{	buf+='%';	k++;	continue;	}
-				else if(text[k+1]=='n')	mglprintf(tmp,32,L"%ld",i);
-				else if(text[k+1]=='x')	mglprintf(tmp,32,fix?L"%.2f":L"%.2g",xx);
-				else if(text[k+1]=='y')	mglprintf(tmp,32,fix?L"%.2f":L"%.2g",yy);
-				else if(text[k+1]=='z')	mglprintf(tmp,32,fix?L"%.2f":L"%.2g",zz);
-				else {	buf+='%';	continue;	}
-				buf += tmp;	k++;
+				else if(text[k+1]=='%')	buf+=L"%";
+				else if(text[k+1]=='n')	{	wchar_t tmp[32];	mglprintf(tmp,32,L"%ld",i);	buf += tmp;	}
+				else if(text[k+1]=='x')	buf += mgl_ftoa(xx,fmt);
+				else if(text[k+1]=='y')	buf += mgl_ftoa(yy,fmt);
+				else if(text[k+1]=='z')	buf += mgl_ftoa(zz,fmt);
+				else {	buf+=L"%";	continue;	}
+				k++;
 			}
 			gr->text_plot(kk, buf.c_str(), fnt, -0.7, 0.05);
 		}

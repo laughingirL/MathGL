@@ -216,10 +216,13 @@ void mglGlyph::Create(long Nt, long Nl)
 {
 	if(Nt<0 || Nl<0)	return;
 	nt=Nt;	nl=Nl;
-	if(trig)	delete []trig;
-	trig = nt>0?new short[6*nt]:0;
-	if(line)	delete []line;
-	line = nl>0?new short[2*nl]:0;
+#pragma omp critical(glf_create)
+	{
+		if(trig)	delete []trig;
+		trig = nt>0?new short[6*nt]:0;
+		if(line)	delete []line;
+		line = nl>0?new short[2*nl]:0;
+	}
 }
 //-----------------------------------------------------------------------------
 bool mglGlyph::operator==(const mglGlyph &g)
@@ -238,7 +241,8 @@ long mglBase::AddGlyph(int s, long j)
 	memcpy(g.trig, fnt->GetTr(s,j), 6*g.nt*sizeof(short));
 	memcpy(g.line, fnt->GetLn(s,j), 2*g.nl*sizeof(short));
 	// now let find the similar glyph
-	for(size_t i=0;i<Glf.size();i++)	if(g==Glf[i])	return i;
+	for(size_t i=0;i<Glf.size();i++)
+		if(g!=Glf[i])	continue;	else	return i;
 	// if no one then let add it
 	long k;
 #pragma omp critical(glf)
@@ -731,8 +735,11 @@ void mglBase::SetFunc(const char *EqX,const char *EqY,const char *EqZ,const char
 //-----------------------------------------------------------------------------
 void mglBase::CutOff(const char *EqC)
 {
-	if(fc)	delete fc;
-	if(EqC && EqC[0])	fc = new mglFormula(EqC);	else	fc = 0;
+#pragma omp critical(eq)
+	{
+		if(fc)	delete fc;
+		fc = (EqC && EqC[0])?new mglFormula(EqC):0;
+	}
 }
 //-----------------------------------------------------------------------------
 void mglBase::SetCoor(int how)
@@ -772,9 +779,12 @@ void mglBase::SetCoor(int how)
 //-----------------------------------------------------------------------------
 void mglBase::ClearEq()
 {
-	if(fx)	delete fx;	if(fy)	delete fy;	if(fz)	delete fz;
-	if(fa)	delete fa;	if(fc)	delete fc;
-	fx = fy = fz = fc = fa = 0;
+#pragma omp critical(eq)
+	{
+		if(fx)	delete fx;	if(fy)	delete fy;	if(fz)	delete fz;
+		if(fa)	delete fa;	if(fc)	delete fc;
+		fx = fy = fz = fc = fa = 0;
+	}
 	RecalcBorder();
 }
 //-----------------------------------------------------------------------------
@@ -829,7 +839,7 @@ void mglTexture::Set(const char *s, int smooth, mreal alpha)
 	}
 	if(!n)
 	{
-		if((strchr(s,'|') || strchr(s,'!')) && !smooth)	// sharp colors
+		if(strchr(s,'|') && !smooth)	// sharp colors
 		{	n=l=6;	s=MGL_DEF_SCH;	sm = false;	}
 		else if(smooth==0)		// none colors but color scheme
 		{	n=l=6;	s=MGL_DEF_SCH;	}
@@ -902,13 +912,11 @@ void mglTexture::Set(const char *s, int smooth, mreal alpha)
 	}
 	// fill texture itself
 	mreal v=sm?(n-1)/255.:n/256.;
-	if(!sm)
-//#pragma omp parallel for	// remove parallel here due to possible race conditions for v<1
-		for(long i=0;i<256;i++)
-		{
-			register long j = 2*long(v*i);	//u-=j;
-			col[2*i] = c[j];	col[2*i+1] = c[j+1];
-		}
+	if(!sm)	for(long i=0;i<256;i++)
+	{
+		register long j = 2*long(v*i);	//u-=j;
+		col[2*i] = c[j];	col[2*i+1] = c[j+1];
+	}
 	else	for(i=i1=0;i<256;i++)
 	{
 		register mreal u = v*i;	j = long(u);	//u-=j;
@@ -930,25 +938,20 @@ mglColor mglTexture::GetC(mreal u,mreal v) const
 {
 	u -= long(u);
 	register long i=long(255*u);	u = u*255-i;
-	const mglColor *s=col+2*i;	//mglColor p;
+	const mglColor *s=col+2*i;
 	return (s[0]*(1-u)+s[2]*u)*(1-v) + (s[1]*(1-u)+s[3]*u)*v;
-// 	p.r = (s[0].r*(1-u)+s[2].r*u)*(1-v) + (s[1].r*(1-u)+s[3].r*u)*v;
-// 	p.g = (s[0].g*(1-u)+s[2].g*u)*(1-v) + (s[1].g*(1-u)+s[3].g*u)*v;
-// 	p.b = (s[0].b*(1-u)+s[2].b*u)*(1-v) + (s[1].b*(1-u)+s[3].b*u)*v;
-// 	p.a = (s[0].a*(1-u)+s[2].a*u)*(1-v) + (s[1].a*(1-u)+s[3].a*u)*v;
-// 	return p;
 }
 //-----------------------------------------------------------------------------
 void mglTexture::GetC(mreal u,mreal v,mglPnt &p) const
 {
 	u -= long(u);
 	register long i=long(255*u);	u = u*255-i;
-	const mglColor *s=col+2*i;
-	p.r = (s[0].r*(1-u)+s[2].r*u)*(1-v) + (s[1].r*(1-u)+s[3].r*u)*v;
-	p.g = (s[0].g*(1-u)+s[2].g*u)*(1-v) + (s[1].g*(1-u)+s[3].g*u)*v;
-	p.b = (s[0].b*(1-u)+s[2].b*u)*(1-v) + (s[1].b*(1-u)+s[3].b*u)*v;
-	p.a = (s[0].a*(1-u)+s[2].a*u)*(1-v) + (s[1].a*(1-u)+s[3].a*u)*v;
-//	p.a = (s[0].a*(1-u)+s[2].a*u)*v + (s[1].a*(1-u)+s[3].a*u)*(1-v);	// for alpha use inverted
+	const mglColor &s0=col[2*i], &s1=col[2*i+1], &s2=col[2*i+2], &s3=col[2*i+3];
+	p.r = (s0.r*(1-u)+s2.r*u)*(1-v) + (s1.r*(1-u)+s3.r*u)*v;
+	p.g = (s0.g*(1-u)+s2.g*u)*(1-v) + (s1.g*(1-u)+s3.g*u)*v;
+	p.b = (s0.b*(1-u)+s2.b*u)*(1-v) + (s1.b*(1-u)+s3.b*u)*v;
+	p.a = (s0.a*(1-u)+s2.a*u)*(1-v) + (s1.a*(1-u)+s3.a*u)*v;
+//	p.a = (s0.a*(1-u)+s2.a*u)*v + (s1.a*(1-u)+s3.a*u)*(1-v);	// for alpha use inverted
 }
 //-----------------------------------------------------------------------------
 long mglBase::AddTexture(const char *cols, int smooth)
@@ -958,7 +961,8 @@ long mglBase::AddTexture(const char *cols, int smooth)
 	if(t.n==0)	return smooth<0 ? 0:1;
 	if(smooth<0)	CurrPal=0;
 	// check if already exist
-	for(size_t i=0;i<Txt.size();i++)	if(t.IsSame(Txt[i]))	return i;
+	for(size_t i=0;i<Txt.size();i++)
+		if(!t.IsSame(Txt[i]))	continue;	else	return i;
 	// create new one
 	long k;
 #pragma omp critical(txt)
@@ -974,7 +978,6 @@ mreal mglBase::AddTexture(mglColor c)
 			return i+j/255.;
 	// add new texture
 	mglTexture t;
-#pragma omp parallel for
 	for(long i=0;i<MGL_TEXTURE_COLOURS;i++)	t.col[i]=c;
 	long k;
 #pragma omp critical(txt)
@@ -1284,7 +1287,7 @@ bool MGL_EXPORT mgl_check_dim2(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const ch
 //	if(!gr || !x || !y || !z)	return true;		// if data is absent then should be segfault!!!
 	register long n=z->GetNx(),m=z->GetNy();
 	if(n<2 || m<2)	{	gr->SetWarn(mglWarnLow,name);	return true;	}
-	if(a && n*m*z->GetNz()!=a->GetNx()*a->GetNy()*a->GetNz())
+	if(a && z->GetNN()!=a->GetNN())
 	{	gr->SetWarn(mglWarnDim,name);	return true;	}
 	if(less)
 	{
@@ -1348,9 +1351,9 @@ bool MGL_EXPORT mgl_check_dim3(HMGL gr, bool both, HCDT x, HCDT y, HCDT z, HCDT 
 	register long n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
 	if(n<2 || m<2 || l<2)
 	{	gr->SetWarn(mglWarnLow,name);	return true;	}
-	if(!(both || (x->GetNx()==n && y->GetNx()==m && z->GetNx()==l)))
+	if(!both && (x->GetNx()!=n || y->GetNx()!=m || z->GetNx()!=l))
 	{	gr->SetWarn(mglWarnDim,name);	return true;	}
-	if(b && b->GetNx()*b->GetNy()*b->GetNz()!=n*m*l)
+	if(b && b->GetNN()!=n*m*l)
 	{	gr->SetWarn(mglWarnDim,name);	return true;	}
 	return false;
 }
@@ -1365,20 +1368,26 @@ bool MGL_EXPORT mgl_check_trig(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT 
 	return false;
 }
 //-----------------------------------------------------------------------------
+bool MGL_EXPORT mgl_isnboth(HCDT x, HCDT y, HCDT z, HCDT a)
+{
+	register long n=a->GetNN();
+	return x->GetNN()!=n || y->GetNN()!=n || z->GetNN()!=n;
+}
+//-----------------------------------------------------------------------------
 bool MGL_EXPORT mgl_isboth(HCDT x, HCDT y, HCDT z, HCDT a)
 {
-	register long n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
-	return x->GetNx()*x->GetNy()*x->GetNz()==n*m*l && y->GetNx()*y->GetNy()*y->GetNz()==n*m*l && z->GetNx()*z->GetNy()*z->GetNz()==n*m*l;
+	register long n=a->GetNN();
+	return x->GetNN()==n && y->GetNN()==n && z->GetNN()==n;
 }
 //-----------------------------------------------------------------------------
 bool MGL_EXPORT mgl_check_vec3(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *name)
 {
 // 	if(!gr || !x || !y || !z || !ax || !ay || !az)	return true;		// if data is absent then should be segfault!!!
-	register long n=ax->GetNx(),m=ax->GetNy(),l=ax->GetNz();
-	if(n*m*l!=ay->GetNx()*ay->GetNy()*ay->GetNz() || n*m*l!=az->GetNx()*az->GetNy()*az->GetNz())
+	register long n=ax->GetNx(),m=ax->GetNy(),l=ax->GetNz(), nn=n*m*l;
+	if(nn!=ay->GetNN() || nn!=az->GetNN())
 	{	gr->SetWarn(mglWarnDim,name);	return true;	}
 	if(n<2 || m<2 || l<2)	{	gr->SetWarn(mglWarnLow,name);	return true;	}
-	bool both = x->GetNx()*x->GetNy()*x->GetNz()==n*m*l && y->GetNx()*y->GetNy()*y->GetNz()==n*m*l && z->GetNx()*z->GetNy()*z->GetNz()==n*m*l;
+	bool both = x->GetNN()==nn && y->GetNN()==nn && z->GetNN()==nn;
 	if(!(both || (x->GetNx()==n && y->GetNx()==m && z->GetNx()==l)))
 	{	gr->SetWarn(mglWarnDim,name);	return true;	}
 	return false;
@@ -1432,66 +1441,9 @@ void mglBase::ClearUnused()
 #endif
 }
 //-----------------------------------------------------------------------------
-std::wstring MGL_EXPORT mgl_ftoa(double v, const char *fmt)
+void mglBase::ClearPrmInd()
 {
-	char se[64], sf[64], ff[8]="%.3f", ee[8]="%.3e";
-	int dig=3;
-	if(strchr(fmt,'1'))	dig=1;
-	if(strchr(fmt,'2'))	dig=2;
-//	if(strchr(fmt,'3'))	dig=3;	// NOTE dig = 3 is default value
-	if(strchr(fmt,'4'))	dig=4;
-	if(strchr(fmt,'5'))	dig=5;
-	if(strchr(fmt,'6'))	dig=6;
-	if(strchr(fmt,'7'))	dig=7;
-	if(strchr(fmt,'8'))	dig=8;
-	if(strchr(fmt,'9'))	dig=9;
-	if(strchr(fmt,'E'))	ee[3] = 'E';
-	ff[2] = ee[2] = dig+'0';
-	snprintf(se,64,ee,v);	snprintf(sf,64,ff,v);
-	long le=strlen(se), lf=strlen(sf), i;
-	// clear fix format
-	for(i=lf-1;i>=lf-dig && sf[i]=='0';i--)	sf[i]=0;
-	if(sf[i]=='.')	sf[i]=0;	lf = strlen(sf);
-	// parse -nan numbers
-	if(!strcmp(sf,"-nan"))	memcpy(sf,"nan",4);
-	// clear exp format
-	int st = se[0]=='-'?1:0;
-	if(strchr(fmt,'+') || se[3+st+dig]=='-')	// first remove zeros after 'e'
-	{
-		for(i=4+st+dig;i<le && se[i]=='0';i++);
-		memmove(se+4+st+dig,se+i,le-i+1);
-	}
-	else
-	{
-		for(i=3+st+dig;i<le && (se[i]=='0' || se[i]=='+');i++);
-		memmove(se+3+st+dig,se+i,le-i+1);
-	}
-	le=strlen(se);
-	// don't allow '+' at the end
-	if(se[le-1]=='+')	se[--le]=0;
-	// remove single 'e'
-	if(se[le-1]=='e' || se[le-1]=='E')	se[--le]=0;
-	for(i=1+st+dig;i>st && se[i]=='0';i--);	// remove final '0'
-	if(se[i]=='.')	i--;
-	memmove(se+i+1,se+2+st+dig,le-dig);	le=strlen(se);
-	// add '+' sign if required
-	if(strchr(fmt,'+') && !strchr("-0niNI",se[0]))
-	{	memmove(se+1,se,le);	se[0]='+';
-		memmove(sf+1,sf,lf);	sf[0]='+';	}
-	if(lf>le)	strcpy(sf,se);	lf = strlen(sf);
-	std::wstring res;	res.reserve(le+8);
-
-	if(strchr(fmt,'m'))	// replace '-' by "\minus"
-		for(i=0;i<lf;i++)	res += sf[i];
-	else
-		for(i=0;i<lf;i++)	res += sf[i]!='-'?sf[i]:L'−';
-	if(strchr(fmt,'T'))	// TeX notation: 'e' -> "\cdot 10^{...}"
-	{
-		size_t p;
-		for(p=0;p<res.length();p++)	if(res[p]==L'e' || res[p]==L'E')	break;
-		if(p<res.length())
-		{	res.replace(p,1,L"⋅10^{");	res += L'}';	}
-	}
-	return res;
+#pragma omp critical(prmind)
+	{	if(PrmInd)	delete []PrmInd;	PrmInd=NULL;	}
 }
 //-----------------------------------------------------------------------------

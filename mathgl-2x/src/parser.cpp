@@ -904,8 +904,8 @@ void mglParser::AddCommand(mglCommand *cmd, int mc)
 	memcpy(buf, cmd, mc*sizeof(mglCommand));
 	memcpy(buf+mc, Cmd, (mp+1)*sizeof(mglCommand));
 	qsort(buf, mp+mc, sizeof(mglCommand), mgl_cmd_cmp);
-	if(Cmd!=mgls_base_cmd)   delete []Cmd;
-	Cmd = buf;
+#pragma omp critical(cmd_parser)
+	{	if(Cmd!=mgls_base_cmd)   delete []Cmd;	Cmd = buf;	}
 }
 //-----------------------------------------------------------------------------
 HMPR MGL_EXPORT mgl_create_parser()		{	return new mglParser;	}

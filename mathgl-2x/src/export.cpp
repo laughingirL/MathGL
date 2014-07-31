@@ -405,7 +405,6 @@ void mglCanvas::DelFrame(long i)
 {
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_lock(&mutexDrw);
-#pragma omp critical(drw)
 	if(get(MGL_VECT_FRAME))	DrwDat.erase(DrwDat.begin()+i);
 	pthread_mutex_unlock(&mutexDrw);
 #else

@@ -781,6 +781,7 @@ Use @code{Ternary(0)} for returning to usual axis. @sref{Ternary axis} @sref{Axi
 @cindex SetTickRotate
 @cindex SetTickSkip
 @cindex SetOriginTick
+@cindex AddTick
 @end ifclear
 
 @anchor{adjust}
@@ -813,6 +814,9 @@ Set the ticks step @var{d}, number of sub-ticks @var{ns} (used for positive @var
 @deftypefn {MGL command} {} xtick @code{val1} 'lbl1' [@code{val2} 'lbl2' ...]
 @deftypefnx {MGL command} {} ytick @code{val1} 'lbl1' [@code{val2} 'lbl2' ...]
 @deftypefnx {MGL command} {} ztick @code{val1} 'lbl1' [@code{val2} 'lbl2' ...]
+@deftypefnx {MGL command} {} xtick vdat 'lbls' [@code{add=off}]
+@deftypefnx {MGL command} {} ytick vdat 'lbls' [@code{add=off}]
+@deftypefnx {MGL command} {} ztick vdat 'lbls' [@code{add=off}]
 @ifclear UDAV
 @deftypefnx {Method on @code{mglGraph}} @code{void} SetTicksVal (@code{char} dir, @code{const char *}lbl, @code{bool} add=@code{false})
 @deftypefnx {Method on @code{mglGraph}} @code{void} SetTicksVal (@code{char} dir, @code{const wchar_t *}lbl, @code{bool} add=@code{false})
@@ -825,6 +829,15 @@ Set the ticks step @var{d}, number of sub-ticks @var{ns} (used for positive @var
 @end ifclear
 Set the manual positions @var{val} and its labels @var{lbl} for ticks along axis @var{dir}. If array @var{val} is absent then values equidistantly distributed in x-axis range are used. Labels are separated by @samp{\n} symbol. Use @code{SetTicks()} to restore automatic ticks.
 @end deftypefn
+
+@ifclear UDAV
+@deftypefn {Method on @code{mglGraph}} @code{void} AddTick (@code{char} dir, @code{double} val, @code{const char *}lbl)
+@deftypefnx {Method on @code{mglGraph}} @code{void} AddTick (@code{char} dir, @code{double} val, @code{const wchar_t *}lbl)
+@deftypefnx {C function} @code{void} mgl_add_tick (@code{HMGL} gr, @code{char} dir, @code{double} val, @code{const char *}lbl)
+@deftypefnx {C function} @code{void} mgl_set_tickw (@code{HMGL} gr, @code{char} dir, @code{double} val, @code{const wchar_t *}lbl)
+The same as previous but add single tick label @var{lbl} at position @var{val} to the lest of existed ones.
+@end deftypefn
+@end ifclear
 
 @deftypefn {MGL command} {} xtick 'templ'
 @deftypefnx {MGL command} {} ytick 'templ'
@@ -1851,20 +1864,20 @@ These functions draw the ``things for measuring'', like axis with ticks, colorba
 @end ifclear
 Draws axes with ticks (see @ref{Axis settings}). Parameter @var{dir} may contain:
 @itemize @bullet
-@item
-@samp{xyz} for drawing axis in corresponding direction;
-@item
-@samp{XYZ} for drawing axis in corresponding direction but with inverted positions of labels;
-@item
-@samp{~} or @samp{_} for disabling tick labels;
-@item
-@samp{U} for disabling rotation of tick labels;
-@item
-@samp{^} for inverting default axis origin;
-@item
-@samp{AKDTVISO} for drawing arrow at the end of axis;
-@item
-@samp{a} for forced adjusting of axis ticks.
+@item @samp{xyz} for drawing axis in corresponding direction;
+@item @samp{XYZ} for drawing axis in corresponding direction but with inverted positions of labels;
+@item @samp{~} or @samp{_} for disabling tick labels;
+@item @samp{U} for disabling rotation of tick labels;
+@item @samp{^} for inverting default axis origin;
+@item @samp{!} for disabling ticks tuning (see @ref{tuneticks});
+@item @samp{AKDTVISO} for drawing arrow at the end of axis;
+@item @samp{a} for forced adjusting of axis ticks;
+@item @samp{f} for printing ticks labels in fixed format;
+@item @samp{E} for using @samp{E} instead of @samp{e} in ticks labels;
+@item @samp{F} for printing ticks labels in LaTeX format;
+@item @samp{+} for printing @samp{+} for positive ticks;
+@item @samp{-} for printing usual @samp{-} in ticks labels;
+@item @samp{0123456789} for precision at printing ticks labels.
 @end itemize
 Styles of ticks and axis can be overrided by using @var{stl} string. @sref{Axis and ticks}
 @end deftypefn
@@ -1879,14 +1892,17 @@ Draws colorbar. Parameter @var{sch} may contain:
 @itemize @bullet
 @item
 color scheme (see @ref{Color scheme});
-@item
-@samp{<>^_} for positioning at left, at right, at top or at bottom correspondingly;
-@item
-@samp{I} for positioning near bounding (by default, is positioned at edges of subplot);
-@item
-@samp{A} for using absolute coordinates;
-@item
-@samp{~} for disabling tick labels.
+@item @samp{<>^_} for positioning at left, at right, at top or at bottom correspondingly;
+@item @samp{I} for positioning near bounding (by default, is positioned at edges of subplot);
+@item @samp{A} for using absolute coordinates;
+@item @samp{~} for disabling tick labels.
+@item @samp{!} for disabling ticks tuning (see @ref{tuneticks});
+@item @samp{f} for printing ticks labels in fixed format;
+@item @samp{E} for using @samp{E} instead of @samp{e} in ticks labels;
+@item @samp{F} for printing ticks labels in LaTeX format;
+@item @samp{+} for printing @samp{+} for positive ticks;
+@item @samp{-} for printing usual @samp{-} in ticks labels;
+@item @samp{0123456789} for precision at printing ticks labels.
 @end itemize
 @sref{Colorbars}
 @end deftypefn
@@ -2353,7 +2369,17 @@ These functions draw string @var{txt} as marks with size proportional to @var{r}
 @deftypefnx {C function} @code{void} mgl_label_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}txt, @code{const char *}fnt, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_labelw_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const wchar_t *}txt, @code{const char *}fnt, @code{const char *}opt)
 @end ifclear
-These functions draw string @var{txt} at points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. If string @var{txt} contain @samp{%x}, @samp{%y}, @samp{%z} or @samp{%n} then it will be replaced by the value of x-,y-,z-coordinate of the point or its index. String @var{fnt} may contain @ref{Font styles}; @samp{f} for fixed format of printed numbers. See also @ref{plot}, @ref{mark}, @ref{textmark}, @ref{table}. @sref{Label sample}
+These functions draw string @var{txt} at points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. If string @var{txt} contain @samp{%x}, @samp{%y}, @samp{%z} or @samp{%n} then it will be replaced by the value of x-,y-,z-coordinate of the point or its index. String @var{fnt} may contain:
+@itemize
+@item @ref{Font styles};
+@item @samp{f} for fixed format of printed numbers;
+@item @samp{E} for using @samp{E} instead of @samp{e};
+@item @samp{F} for printing in LaTeX format;
+@item @samp{+} for printing @samp{+} for positive numbers;
+@item @samp{-} for printing usual @samp{-};
+@item @samp{0123456789} for precision at printing numbers.
+@end itemize
+See also @ref{plot}, @ref{mark}, @ref{textmark}, @ref{table}. @sref{Label sample}
 @end deftypefn
 
 @anchor{table}
@@ -2373,7 +2399,12 @@ These functions draw table with values of @var{val} and captions from string @va
 @item @samp{#} for drawing cell borders;
 @item @samp{|} for limiting table widh by subplot one (equal to option @samp{value 1});
 @item @samp{=} for equal width of all cells;
-@item @samp{f} for fixed format of printed numbers.
+@item @samp{f} for fixed format of printed numbers;
+@item @samp{E} for using @samp{E} instead of @samp{e};
+@item @samp{F} for printing in LaTeX format;
+@item @samp{+} for printing @samp{+} for positive numbers;
+@item @samp{-} for printing usual @samp{-};
+@item @samp{0123456789} for precision at printing numbers.
 @end itemize
 Option @code{value} set the width of the table (default is 1). See also @ref{plot}, @ref{label}. @sref{Table sample}
 @end deftypefn

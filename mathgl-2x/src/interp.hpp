@@ -133,7 +133,7 @@ template <class Treal> Treal mglSpline1st(const Treal *a, long nx, mreal x)
 //-----------------------------------------------------------------------------
 template <class Treal> Treal mglSpline3t(const Treal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z, Treal *dx=0, Treal *dy=0, Treal *dz=0)
 {
-	if(!a || nx<1 || ny<1 || nz<1)	return 0;
+//	if(!a || nx<1 || ny<1 || nz<1)	return 0;	// NOTE remove this line because this should already checked
 	Treal gx=0,gy=0,gz=0;
 	x = x>0 ?(x<nx-1 ? x:nx-1):0;
 	y = y>0 ?(y<ny-1 ? y:ny-1):0;
@@ -183,7 +183,7 @@ template <class Treal> Treal mglSpline3t(const Treal *a, long nx, long ny, long 
 //-----------------------------------------------------------------------------
 template <class Treal> Treal mglSpline3st(const Treal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z)
 {
-	if(!a || nx<1 || ny<1 || nz<1)	return 0;
+//	if(!a || nx<1 || ny<1 || nz<1)	return 0;	// NOTE remove this line because this should already checked
 	x = x>0 ?(x<nx-1 ? x:nx-1):0;
 	y = y>0 ?(y<ny-1 ? y:ny-1):0;
 	z = z>0 ?(z<nz-1 ? z:nz-1):0;
@@ -227,8 +227,7 @@ template <class Treal> Treal mglSpline3st(const Treal *a, long nx, long ny, long
 //-----------------------------------------------------------------------------
 template <class Treal> void mgl_gspline_init(long n, const mreal *x, const Treal *v, Treal *c)
 {	// c must have size 5*(n-1) !!!
-	if(n<2)	return;
-
+//	if(n<2)	return;	// NOTE remove this line because this should already checked
 	Treal *a = new Treal[n], *b = new Treal[n];
 	for(long i=0;i<n-1;i++)	// basic coefficients
 	{	c[5*i] = x[i+1]-x[i];	c[5*i+1] = v[i];	}

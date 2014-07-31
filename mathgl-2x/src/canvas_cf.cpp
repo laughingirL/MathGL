@@ -285,7 +285,9 @@ void MGL_EXPORT mgl_set_axis_stl(HMGL gr, const char *stl, const char *tck, cons
 void MGL_EXPORT mgl_tune_ticks(HMGL gr, int tune, double pos)
 {	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->SetTuneTicks(tune,pos);	}
 void MGL_EXPORT mgl_adjust_ticks(HMGL gr, const char *dir)
-{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->AdjustTicks(dir,true);	}
+{	mgl_adjust_ticks_ext(gr,dir,"");	}
+void MGL_EXPORT mgl_adjust_ticks_ext(HMGL gr, const char *dir, const char *stl)
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->AdjustTicks(dir,true,stl);	}
 void MGL_EXPORT mgl_set_ticks(HMGL gr, char dir, double d, int ns, double org)
 {	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->SetTicks(dir,d,ns,org);	}
 void MGL_EXPORT mgl_set_ticks_factw(HMGL gr, char dir, double d, int ns, double org, const wchar_t *fact)
@@ -300,6 +302,10 @@ void MGL_EXPORT mgl_set_ticks_val(HMGL gr, char dir, HCDT val, const char *lbl, 
 {	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->SetTicksVal(dir,val,lbl,add);	}
 void MGL_EXPORT mgl_set_ticks_valw(HMGL gr, char dir, HCDT val, const wchar_t *lbl, int add)
 {	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->SetTicksVal(dir,val,lbl,add);	}
+void MGL_EXPORT mgl_add_tick(HMGL gr, char dir, double val, const char *lbl)
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->AddTick(dir,val,lbl);	}
+void MGL_EXPORT mgl_add_tickw(HMGL gr, char dir, double val, const wchar_t *lbl)
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->AddTick(dir,val,lbl);	}
 void MGL_EXPORT mgl_set_tick_templ(HMGL gr, char dir, const char *templ)
 {	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->SetTickTempl(dir,templ);	}
 void MGL_EXPORT mgl_set_tick_templw(HMGL gr, char dir, const wchar_t *templ)
@@ -363,7 +369,11 @@ void MGL_EXPORT mgl_set_axis_stl_(uintptr_t *gr, const char *stl, const char *tc
 	_GR_->SetAxisStl(a,t,s);	delete []a;	delete []s;	delete []t;	}
 void MGL_EXPORT mgl_adjust_ticks_(uintptr_t *gr, const char *dir, int l)
 {	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
-	_GR_->AdjustTicks(s);	delete []s;	}
+	_GR_->AdjustTicks(s,true);	delete []s;	}
+void MGL_EXPORT mgl_adjust_ticks_(uintptr_t *gr, const char *dir, const char *stl, int l, int m)
+{	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
+	char *f=new char[m+1];	memcpy(f,stl,m);	f[m]=0;
+	_GR_->AdjustTicks(s,true,f);	delete []s;	delete []f;	}
 void MGL_EXPORT mgl_set_ticks_(uintptr_t *gr, char *dir, mreal *d, int *ns, mreal *org, int)
 {	_GR_->SetTicks(*dir, *d, *ns, *org);	}
 void MGL_EXPORT mgl_set_ticks_str_(uintptr_t *gr, const char *dir, const char *lbl, int *add,int,int l)
@@ -372,6 +382,9 @@ void MGL_EXPORT mgl_set_ticks_str_(uintptr_t *gr, const char *dir, const char *l
 void MGL_EXPORT mgl_set_ticks_val_(uintptr_t *gr, const char *dir, uintptr_t *val, const char *lbl, int *add,int,int l)
 {	char *s=new char[l+1];	memcpy(s,lbl,l);	s[l]=0;
 	_GR_->SetTicksVal(*dir,_DA_(val),s,*add);	delete []s;	}
+void MGL_EXPORT mgl_add_tick_(uintptr_t *gr, const char *dir, mreal *val, const char *lbl, int *add,int,int l)
+{	char *s=new char[l+1];	memcpy(s,lbl,l);	s[l]=0;
+	mgl_add_tick(_GR_,*dir,*val,s);	delete []s;	}
 void MGL_EXPORT mgl_tune_ticks_(uintptr_t *gr, int *tune, mreal *fact_pos)
 {	_GR_->SetTuneTicks(*tune, *fact_pos);	}
 void MGL_EXPORT mgl_set_tick_templ_(uintptr_t *gr, const char *dir, const char *templ,int,int l)

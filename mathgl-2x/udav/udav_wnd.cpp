@@ -161,6 +161,7 @@ void udavAddCommands(const mglCommand *cmd)	// NOTE it work but I don't how I ca
 	memcpy(buf, parser.Cmd, mp*sizeof(mglCommand));
 	memcpy(buf+mp, cmd, (mc+1)*sizeof(mglCommand));
 	qsort(buf, mp+mc, sizeof(mglCommand), mgl_cmd_cmp);
+#pragma omp critical(cmd_parser)
 	if(parser.Cmd!=mgls_base_cmd)	delete []parser.Cmd;
 	parser.Cmd = buf;
 }*/

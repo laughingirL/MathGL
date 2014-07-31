@@ -279,7 +279,7 @@ HMDT MGL_EXPORT mgl_fit_xys(HMGL gr, HCDT xx, HCDT yy, HCDT ss, const char *eq, 
 	{	gr->SetWarn(mglWarnDim,"Fit[S]");	return 0;	}
 	if(m<2)
 	{	gr->SetWarn(mglWarnLow,"Fit[S]");	return 0;	}
-	if(ss->GetNx()*ss->GetNy()*ss->GetNz() != m*yy->GetNy()*yy->GetNz())
+	if(ss->GetNN() != yy->GetNN())
 	{	gr->SetWarn(mglWarnDim,"Fit[S]");	return 0;	}
 	if(!var || *var==0)
 	{	gr->SetWarn(mglWarnNull,"Fit[S]");	return 0;	}
@@ -313,7 +313,7 @@ HMDT MGL_EXPORT mgl_fit_xyzs(HMGL gr, HCDT xx, HCDT yy, HCDT zz, HCDT ss, const 
 	long nn = (mgl_isnan(rr) || rr<=0) ? mglFitPnts:long(rr+0.5);
 	if(xx->GetNx()!=m)
 	{	gr->SetWarn(mglWarnDim,"Fit[S]");	return 0;	}
-	if(ss->GetNx()*ss->GetNy()*ss->GetNz() != m*n*zz->GetNz())
+	if(ss->GetNN() != zz->GetNN())
 	{	gr->SetWarn(mglWarnDim,"Fit[S]");	return 0;	}
 	if(yy->GetNx()!=n && (xx->GetNy()!=n || yy->GetNx()!=m || yy->GetNy()!=n))
 	{	gr->SetWarn(mglWarnDim,"Fit[S]");	return 0;	}
@@ -324,7 +324,7 @@ HMDT MGL_EXPORT mgl_fit_xyzs(HMGL gr, HCDT xx, HCDT yy, HCDT zz, HCDT ss, const 
 
 	mglData x(m, n), y(m, n), z(zz), s(ss);	x.s=L"x";	y.s=L"y";
 #pragma omp parallel for collapse(2)
-	for(long i=0;i<m;i++)	for(long j=0;j<n;j++)	// ñîçäàåì ìàññèâ òî÷åê
+	for(long i=0;i<m;i++)	for(long j=0;j<n;j++)
 	{
 		x.a[i+m*j] = GetX(xx,i,j,0).x;
 		y.a[i+m*j] = GetY(yy,i,j,0).x;
@@ -356,9 +356,9 @@ HMDT MGL_EXPORT mgl_fit_xyzas(HMGL gr, HCDT xx, HCDT yy, HCDT zz, HCDT aa, HCDT 
 	long nn = (mgl_isnan(rr) || rr<=0) ? mglFitPnts:long(rr+0.5);
 	if(m<2 || n<2 || l<2)
 	{	gr->SetWarn(mglWarnLow,"Fit[S]");	return 0;	}
-	if(ss->GetNx()*ss->GetNy()*ss->GetNz() != i)
+	if(ss->GetNN() != i)
 	{	gr->SetWarn(mglWarnDim,"Fit[S]");	return 0;	}
-	bool both = xx->GetNx()*xx->GetNy()*xx->GetNz()==i && yy->GetNx()*yy->GetNy()*yy->GetNz()==i && zz->GetNx()*zz->GetNy()*zz->GetNz()==i;
+	bool both = xx->GetNN()==i && yy->GetNN()==i && zz->GetNN()==i;
 	if(!(both || (xx->GetNx()==m && yy->GetNx()==n && zz->GetNx()==l)))
 	{	gr->SetWarn(mglWarnDim,"Fit[S]");	return 0;	}
 	if(!var || *var==0)
@@ -367,7 +367,7 @@ HMDT MGL_EXPORT mgl_fit_xyzas(HMGL gr, HCDT xx, HCDT yy, HCDT zz, HCDT aa, HCDT 
 	mglData x(m,n,l), y(m,n,l), z(m,n,l), a(aa), s(ss);
 	x.s=L"x";	y.s=L"y";	z.s=L"z";
 #pragma omp parallel for collapse(3)
-	for(long i=0;i<m;i++)	for(long j=0;j<n;j++)	for(long k=0;k<l;k++)	// ñîçäàåì ìàññèâ òî÷åê
+	for(long i=0;i<m;i++)	for(long j=0;j<n;j++)	for(long k=0;k<l;k++)
 	{
 		register long i0 = i+m*(j+n*k);
 		x.a[i0] = GetX(xx,i,j,k).x;
@@ -393,15 +393,14 @@ HMDT MGL_EXPORT mgl_fit_xyzas(HMGL gr, HCDT xx, HCDT yy, HCDT zz, HCDT aa, HCDT 
 //-----------------------------------------------------------------------------
 HMDT MGL_EXPORT mgl_hist_x(HMGL gr, HCDT x, HCDT a, const char *opt)
 {
-	long nn=a->GetNx()*a->GetNy()*a->GetNz();
-	if(nn!=x->GetNx()*x->GetNy()*x->GetNz())
+	long nn=a->GetNN();
+	if(nn!=x->GetNN())
 	{	gr->SetWarn(mglWarnDim,"Hist");	return 0;	}
 	mreal rr = gr->SaveState(opt);
 	long n = (mgl_isnan(rr) || rr<=0) ? mglFitPnts:long(rr+0.5);
 	mglData *res = new mglData(n);
 
 	mreal vx = n/(gr->Max.x-gr->Min.x);
-#pragma omp parallel for
 	for(long i=0;i<nn;i++)
 	{
 		register long j1 = long((x->vthr(i)-gr->Min.x)*vx);
@@ -412,15 +411,14 @@ HMDT MGL_EXPORT mgl_hist_x(HMGL gr, HCDT x, HCDT a, const char *opt)
 //-----------------------------------------------------------------------------
 HMDT MGL_EXPORT mgl_hist_xy(HMGL gr, HCDT x, HCDT y, HCDT a, const char *opt)
 {
-	long nn=a->GetNx()*a->GetNy()*a->GetNz();
-	if(nn!=x->GetNx()*x->GetNy()*x->GetNz() || nn!=y->GetNx()*y->GetNy()*y->GetNz())
+	long nn=a->GetNN();
+	if(nn!=x->GetNN() || nn!=y->GetNN())
 	{	gr->SetWarn(mglWarnDim,"Hist");	return 0;	}
 	mreal rr = gr->SaveState(opt);
 	long n = (mgl_isnan(rr) || rr<=0) ? mglFitPnts:long(rr+0.5);
 	mglData *res = new mglData(n, n);
 	mreal vx = n/(gr->Max.x-gr->Min.x);
 	mreal vy = n/(gr->Max.y-gr->Min.y);
-#pragma omp parallel for
 	for(long i=0;i<nn;i++)
 	{
 		register long j1 = long((x->vthr(i)-gr->Min.x)*vx);
@@ -432,14 +430,13 @@ HMDT MGL_EXPORT mgl_hist_xy(HMGL gr, HCDT x, HCDT y, HCDT a, const char *opt)
 //-----------------------------------------------------------------------------
 HMDT MGL_EXPORT mgl_hist_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *opt)
 {
-	long nn=a->GetNx()*a->GetNy()*a->GetNz();
-	if(nn!=x->GetNx()*x->GetNy()*x->GetNz() || nn!=y->GetNx()*y->GetNy()*y->GetNz() || nn!=z->GetNx()*z->GetNy()*z->GetNz())
+	long nn=a->GetNN();
+	if(nn!=x->GetNN() || nn!=y->GetNN() || nn!=z->GetNN())
 	{	gr->SetWarn(mglWarnDim,"Hist");	return 0;	}
 	mreal rr = gr->SaveState(opt);
 	long n = (mgl_isnan(rr) || rr<=0) ? mglFitPnts:long(rr+0.5);
 	mglData *res = new mglData(n, n, n);
 	mreal vx = n/(gr->Max.x-gr->Min.x), vy = n/(gr->Max.y-gr->Min.y), vz = n/(gr->Max.z-gr->Min.z);
-#pragma omp parallel for
 	for(long i=0;i<nn;i++)
 	{
 		register long j1 = long((x->vthr(i)-gr->Min.x)*vx);

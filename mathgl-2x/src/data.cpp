@@ -1385,7 +1385,7 @@ void MGL_EXPORT mgl_data_insert(HMDT d, char dir, long at, long num)
 {
 	if(num<1)	return;
 	at = at<0 ? 0:at;
-	long nn, nx=d->nx, ny=d->ny, nz=d->nz;
+	long nn, nx=d->nx, ny=d->ny, nz=d->nz, nxy=nx*ny;
 	mglData b;
 	if(dir=='x')
 	{
@@ -1396,7 +1396,8 @@ void MGL_EXPORT mgl_data_insert(HMDT d, char dir, long at, long num)
 		{
 			if(at>0)	memcpy(b.a+nn*k, d->a+nx*k,at*sizeof(mreal));
 			if(at<nx)	memcpy(b.a+at+num+nn*k, d->a+at+nx*k,(nx-at)*sizeof(mreal));
-			for(long i=0;i<num;i++)	b.a[nn*k+at+i]=d->a[nx*k+at];	// copy values
+			if(at<nx)	for(long i=0;i<num;i++)	b.a[nn*k+at+i]=d->a[nx*k+at];	// copy values
+			else		for(long i=0;i<num;i++)	b.a[nn*k+at+i]=d->a[nx*k+nx-1];	// copy values
 		}
 		d->Set(b);	nx+=num;
 	}
@@ -1407,9 +1408,12 @@ void MGL_EXPORT mgl_data_insert(HMDT d, char dir, long at, long num)
 #pragma omp parallel for
 		for(long k=0;k<nz;k++)
 		{
-			if(at>0)	memcpy(b.a+nx*nn*k, d->a+nx*ny*k,at*nx*sizeof(mreal));
+			if(at>0)	memcpy(b.a+nx*nn*k, d->a+nxy*k,at*nx*sizeof(mreal));
 			if(at<ny)	memcpy(b.a+nx*(at+num+nn*k), d->a+nx*(at+ny*k),(ny-at)*nx*sizeof(mreal));
-			for(long i=0;i<num;i++)	memcpy(b.a+nx*(nn*k+at+i),d->a+nx*(ny*k+at),nx*sizeof(mreal));
+			if(at<ny)	for(long i=0;i<num;i++)
+				memcpy(b.a+nx*(nn*k+at+i),d->a+nx*(ny*k+at),nx*sizeof(mreal));
+			else	for(long i=0;i<num;i++)
+				memcpy(b.a+nx*(nn*k+at+i),d->a+nx*(ny*k+ny-1),nx*sizeof(mreal));
 		}
 		d->Set(b);	ny+=num;
 	}
@@ -1417,10 +1421,14 @@ void MGL_EXPORT mgl_data_insert(HMDT d, char dir, long at, long num)
 	{
 		if(at>nz)	at=nz;
 		b.Create(nx,ny,nz+num);
-		if(at>0)	memcpy(b.a, d->a,at*nx*ny*sizeof(mreal));
-		if(at<nz)	memcpy(b.a+nx*ny*(at+num), d->a+nx*ny*at,(nz-at)*nx*ny*sizeof(mreal));
+		if(at>0)	memcpy(b.a, d->a,at*nxy*sizeof(mreal));
+		if(at<nz)	memcpy(b.a+nxy*(at+num), d->a+nxy*at,(nz-at)*nxy*sizeof(mreal));
+		if(at<nz)
 #pragma omp parallel for
-		for(long i=0;i<num;i++)	memcpy(b.a+nx*ny*(at+i),d->a+nx*ny*at,nx*ny*sizeof(mreal));
+			for(long i=0;i<num;i++)	memcpy(b.a+nxy*(at+i),d->a+nxy*at,nxy*sizeof(mreal));
+		else
+#pragma omp parallel for
+			for(long i=0;i<num;i++)	memcpy(b.a+nxy*(at+i),d->a+nxy*(nz-1),nxy*sizeof(mreal));
 		d->Set(b);
 	}
 }
@@ -1469,110 +1477,6 @@ void MGL_EXPORT mgl_data_insert_(uintptr_t *d, const char *dir, int *at, int *nu
 void MGL_EXPORT mgl_data_delete_(uintptr_t *d, const char *dir, int *at, int *num, int)
 {	mgl_data_delete(_DT_,*dir,*at,*num);	}
 //-----------------------------------------------------------------------------
-mreal MGL_EXPORT mgl_spline5(mreal y[6], long n, mreal dx, mreal &dy, mreal &d2y)
-{
-	mreal a1[6], a2[6], f0,d0,t0,f1,d1,t1, b[6];
-
-	a1[0] = (12*y[5]-75*y[4]+200*y[3]-300*y[2]+300*y[1]-137*y[0])/60;
-	a1[1] = -(3*y[5]-20*y[4]+60*y[3]-120*y[2]+65*y[1]+12*y[0])/60;
-	a1[2] = (2*y[5]-15*y[4]+60*y[3]-20*y[2]-30*y[1]+3*y[0])/60;
-	a1[3] = -(3*y[5]-30*y[4]-20*y[3]+60*y[2]-15*y[1]+2*y[0])/60;
-	a1[4] = (12*y[5]+65*y[4]-120*y[3]+60*y[2]-20*y[1]+3*y[0])/60;
-	a1[5] = (137*y[5]-300*y[4]+300*y[3]-200*y[2]+75*y[1]-12*y[0])/60;
-
-	a2[0] = -(10*y[5]-61*y[4]+156*y[3]-214*y[2]+154*y[1]-45*y[0])/12;
-	a2[1] = (y[5]-6*y[4]+14*y[3]-4*y[2]-15*y[1]+10*y[0])/12;
-	a2[2] = -(y[4]-16*y[3]+30*y[2]-16*y[1]+y[0])/12;
-	a2[3] = -(y[5]-16*y[4]+30*y[3]-16*y[2]+y[1])/12;
-	a2[4] = (10*y[5]-15*y[4]-4*y[3]+14*y[2]-6*y[1]+y[0])/12;
-	a2[5] = (45*y[5]-154*y[4]+214*y[3]-156*y[2]+61*y[1]-10*y[0])/12;
-
-	f0 = y[n];		d0 = a1[n];		t0 = a1[n];
-	f1 = y[n+1];	d1 = a1[n+1];	t1 = a2[n+1];
-	b[0] = f0;	b[1] = d0;	b[2] = t0;
-	b[3] = 10*(f1-f0)+t1-3*t0-4*d1-6*d0;
-	b[4] = 15*(f0-f1)-2*t1+3*t0+7*d1+8*d0;
-	b[5] = 6*(f1-f0)+t1-t0-3*d1-3*d0;
-	dy = b[1] + dx*(2*b[2]+dx*(3*b[3]+dx*(4*b[4]+dx*5*b[5])));
-	d2y = 2*b[2] + dx*(6*b[3]+dx*(12*b[4]+dx*20*b[5]));
-	return b[0] + dx*(b[1]+dx*(b[2]+dx*(b[3]+dx*(b[4]+dx*b[5]))));
-}
-//-----------------------------------------------------------------------------
-mreal MGL_EXPORT mgl_spline3(mreal y[4], long n, mreal dx, mreal &dy, mreal &d2y)
-{
-	mreal d[4], t0,t1, f0,d0,d1,f1, b[6];
-	d[0] = y[1]-y[0];	//-(y[2]-4*y[1]+3*y[0])/2;
-	d[1] = (y[2]-y[0])/2;
-	d[2] = (y[3]-y[1])/2;
-	d[3] = y[3]-y[2];	//-(y[3]-4*y[2]+3*y[1])/2;
-
-	t0 = (y[2]-2*y[1]+y[0])/2;
-	t1 = (y[3]-2*y[2]+y[1])/2;
-	if(n<1)	t1=t0;
-	if(n>2)	t0=t1;
-
-	f0 = y[n];		d0 = d[n];
-	f1 = y[n+1];	d1 = d[n+1];
-
-	b[0] = f0;	b[1] = d0;	b[2] = t0;
-	b[3] = 10*(f1-f0)+t1-3*t0-4*d1-6*d0;
-	b[4] = 15*(f0-f1)-2*t1+3*t0+7*d1+8*d0;
-	b[5] = 6*(f1-f0)+t1-t0-3*d1-3*d0;
-	dy = b[1] + dx*(2*b[2]+dx*(3*b[3]+dx*(4*b[4]+dx*5*b[5])));
-	d2y = 2*b[2] + dx*(6*b[3]+dx*(12*b[4]+dx*20*b[5]));
-	return b[0] + dx*(b[1]+dx*(b[2]+dx*(b[3]+dx*(b[4]+dx*b[5]))));
-}
-//-----------------------------------------------------------------------------
-mreal MGL_EXPORT mgl_splineS(mreal y[4], long n, mreal dx, mreal &dy, mreal &d2y)
-{
-	mreal d[4], t0,t1, f0,d0,d1,f1, b[4];
-	d[0] = y[1]-y[0];	//-(y[2]-4*y[1]+3*y[0])/2;
-	d[1] = (y[2]-y[0])/2;
-	d[2] = (y[3]-y[1])/2;
-	d[3] = y[3]-y[2];	//-(y[3]-4*y[2]+3*y[1])/2;
-
-	t0 = (y[2]-2*y[1]+y[0])/2;
-	t1 = (y[3]-2*y[2]+y[1])/2;
-	if(n<1)	t1=t0;
-	if(n>2)	t0=t1;
-
-	f0 = y[n];		d0 = d[n];
-	f1 = y[n+1];	d1 = d[n+1];
-	b[0] = f0;	b[1] = d0;
-	b[2] = 3*(f1-f0)-d1-2*d0;
-	b[3] = 2*(f0-f1)+d1+d0;
-	dy = b[1] + dx*(2*b[2]+dx*3*b[3]);
-	d2y = 2*b[2]+dx*6*b[3];
-	return b[0] + dx*(b[1]+dx*(b[2]+dx*b[3]));
-}
-//-----------------------------------------------------------------------------
-/*	// sample code to use mgl_spline*() functions
-	mglData y(10), s(3,100), t(3,100), r(3,100);	gr->Fill(y,"sin(pi*x)");
-	mreal scl = (y.nx-1)/(gr->Self()->Max.x-gr->Self()->Min.x)/M_PI;
-	for(long i=0;i<100;i++)
-	{
-		mreal d1=0,d2=0,x=i*(y.nx-1)/99.;
-		long n = long(x), nn=y.nx;
-
-		if(n>0 && n<nn-2)	r.a[3*i] = mgl_splineS(y.a+n-1, 1, x-n, d1, d2);
-		else if(n<1)		r.a[3*i] = mgl_splineS(y.a, 0, x, d1, d2);
-		else	r.a[3*i] = mgl_splineS(y.a+nn-4, 2, x+2-nn, d1, d2);
-		r.a[3*i+1] = d1*scl;	r.a[3*i+2] = d2*scl*scl;
-
-		if(n>0 && n<nn-2)	t.a[3*i] = mgl_spline3(y.a+n-1, 1, x-n, d1, d2);
-		else if(n<1)		t.a[3*i] = mgl_spline3(y.a, 0, x, d1, d2);
-		else	t.a[3*i] = mgl_spline3(y.a+nn-4, 2, x+2-nn, d1, d2);
-		t.a[3*i+1] = d1*scl;	t.a[3*i+2] = d2*scl*scl;
-
-		if(n>1 && n<nn-3)	s.a[3*i] = mgl_spline5(y.a+n-2, 2, x-n, d1, d2);
-		else if(n==1)		s.a[3*i] = mgl_spline5(y.a, 1, x-1, d1, d2);
-		else if(n<1)		s.a[3*i] = mgl_spline5(y.a, 0, x, d1, d2);
-		else if(n==nn-3)	s.a[3*i] = mgl_spline5(y.a+nn-6, 3, x-n, d1, d2);
-		else	s.a[3*i] = mgl_spline5(y.a+nn-6, 4, x+2-nn, d1, d2);
-
-		s.a[3*i+1] = d1*scl;	s.a[3*i+2] = d2*scl*scl;
-	}
-	s.Save("1.dat");	t.Save("2.dat");	r.Save("3.dat");*/
 #define omod(x,y)	(y)*((x)>0?int((x)/(y)+0.5):int((x)/(y)-0.5))
 void MGL_NO_EXPORT mgl_omod(mreal *a, mreal da, int nx, int n)
 {

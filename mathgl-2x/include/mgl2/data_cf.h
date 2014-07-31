@@ -428,10 +428,6 @@ double MGL_EXPORT mgl_expr_diff_v(HMEX ex, char dir, mreal *vars);
 //-----------------------------------------------------------------------------
 #ifdef __cplusplus
 }
-mreal MGL_EXPORT mgl_spline5(mreal y[6], long n, mreal dx, mreal &dy, mreal &d2y);
-mreal MGL_EXPORT mgl_spline3(mreal y[4], long n, mreal dx, mreal &dy, mreal &d2y);
-mreal MGL_EXPORT mgl_splineS(mreal y[4], long n, mreal dx, mreal &dy, mreal &d2y);
-//-----------------------------------------------------------------------------
+#endif
 #endif
 //-----------------------------------------------------------------------------
-#endif

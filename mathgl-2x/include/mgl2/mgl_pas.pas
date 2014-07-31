@@ -129,8 +129,65 @@ procedure mgl_fltk_run(); cdecl; external libmglfltk;
 function mgl_create_graph_qt(draw: TMglDrawFunction; const title: PChar; par: pointer): HMGL; cdecl; external libmglqt;
 procedure mgl_qt_run(); cdecl; external libmglqt;
 
-{== ../include/mgl2/base_cf.h ==}
+{== ../../include/mgl2/abstract.h ==}
 //-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+/// Set name for data variable (can be used in mgl_formula_calc() or in MGL scripts)
+procedure  mgl_data_set_name( !!! mglDataA *dat;const name: PChar); cdecl; external libmgl;
+procedure  mgl_data_set_name_w( !!! mglDataA *dat;const name: PWideChar); cdecl; external libmgl;
+/// Set callback function which is called at deleting variable
+/// Save whole data array (for ns=-1) or only ns-th slice to text file
+procedure  mgl_data_save(const dat: HMDT;const fname: PChar;ns: integer); cdecl; external libmgl;
+/// Export data array (for ns=-1) or only ns-th slice to PNG file according color scheme
+procedure  mgl_data_export(const dat: HMDT;const fname: PChar;const scheme: PChar;v1: mreal;v2: mreal;ns: integer); cdecl; external libmgl;
+/// Save data to HDF file
+procedure  mgl_data_save_hdf(const d: HMDT;const fname: PChar;const data: PChar;rewrite: integer); cdecl; external libmgl;
+/// Get information about the data (sizes and momentum) to string
+function mgl_data_info(const dat: HMDT): PChar; cdecl; external libmgl;
+/// Put HDF data names into buf as '\t' separated.
+function  mgl_datas_hdf(const fname: PChar;buf: PChar;size: integer): integer; cdecl; external libmgl;
+/// Get maximal value of the data
+function  mgl_data_max(const dat: HMDT): mreal; cdecl; external libmgl;
+/// Get maximal value of the data which is less than 0
+function  mgl_data_neg_max(const dat: HMDT): mreal; cdecl; external libmgl;
+/// Get minimal value of the data
+function  mgl_data_min(const dat: HMDT): mreal; cdecl; external libmgl;
+/// Get minimal value of the data which is larger than 0
+function  mgl_data_pos_min(const dat: HMDT): mreal; cdecl; external libmgl;
+/// Find position (after specified in i,j,k) of first nonzero value of formula
+function  mgl_data_first(const dat: HMDT;const cond: PChar;i: Pint;j: Pint;k: Pint): mreal; cdecl; external libmgl;
+/// Find position (before specified in i,j,k) of last nonzero value of formula
+function  mgl_data_last(const dat: HMDT;const cond: PChar;i: Pint;j: Pint;k: Pint): mreal; cdecl; external libmgl;
+/// Find position of first in direction 'dir' nonzero value of formula
+function  mgl_data_find(const dat: HMDT;const cond: PChar;dir: char;i: integer;j: integer;k: integer): integer; cdecl; external libmgl;
+/// Find if any nonzero value of formula
+function  mgl_data_find_any(const dat: HMDT;const cond: PChar): integer; cdecl; external libmgl;
+/// Get maximal value of the data and its position
+function  mgl_data_max_int(const dat: HMDT;i: Pint;j: Pint;k: Pint): mreal; cdecl; external libmgl;
+/// Get maximal value of the data and its approximated position
+function  mgl_data_max_real(const dat: HMDT;x: Pmreal;y: Pmreal;z: Pmreal): mreal; cdecl; external libmgl;
+/// Get minimal value of the data and its position
+function  mgl_data_min_int(const dat: HMDT;i: Pint;j: Pint;k: Pint): mreal; cdecl; external libmgl;
+/// Get minimal value of the data and its approximated position
+function  mgl_data_min_real(const dat: HMDT;x: Pmreal;y: Pmreal;z: Pmreal): mreal; cdecl; external libmgl;
+/// Get "energy and find 4 momenta of data: median, width, skewness, kurtosis
+function  mgl_data_momentum_val(const d: HMDT;dir: char;m: Pmreal;w: Pmreal;s: Pmreal;k: Pmreal): mreal; cdecl; external libmgl;
+//-----------------------------------------------------------------------------
+/// Callback function for asking user a question. Result shouldn't exceed 1024.
+//-----------------------------------------------------------------------------
+/// Abstract class for data array
+//	{	return i>0 ? (i<GetNx()-1 ? (v(i+1,j,k)-v(i-1,j,k))/2 : v(i,j,k)-v(i-1,j,k)) : v(1,j,k)-v(0,j,k) 	}
+//	{	return j>0 ? (j<GetNy()-1 ? (v(i,j+1,k)-v(i,j-1,k))/2 : v(i,j,k)-v(i,j-1,k)) : v(i,1,k)-v(i,0,k) 	}
+//	{	return k>0 ? (k<GetNz()-1 ? (v(i,j,k+1)-v(i,j,k-1))/2 : v(i,j,k)-v(i,j,k-1)) : v(i,j,1)-v(i,j,0) 	}
+//-----------------------------------------------------------------------------
+/// Structure for color ID
+//-----------------------------------------------------------------------------
+{== ../../include/mgl2/base_cf.h ==}
+//-----------------------------------------------------------------------------
+/// Check if MathGL version is valid
+function  mgl_check_version(const ver: PChar): integer; cdecl; external libmgl;
+/// Suppress printing warnings to stderr
+procedure  mgl_suppress_warn(on: integer); cdecl; external libmgl;
 /// Get last warning code
 function  mgl_get_warn(gr: HMGL): integer; cdecl; external libmgl;
 /// Set warning code ant fill message
@@ -141,13 +198,18 @@ function mgl_get_mess(gr: HMGL): PChar; cdecl; external libmgl;
 procedure  mgl_set_plotid(gr: HMGL;const id: PChar); cdecl; external libmgl;
 /// Get name of plot for saving filename
 function mgl_get_plotid(gr: HMGL): PChar; cdecl; external libmgl;
+/// Ask to stop drawing
+procedure  mgl_ask_stop(gr: HMGL;stop: integer); cdecl; external libmgl;
+/// Check if plot termination is asked
+function  mgl_need_stop(gr: HMGL): integer; cdecl; external libmgl;
+/// Set callback function for event processing
 /// Get plot quality
 function  mgl_get_quality(gr: HMGL): integer; cdecl; external libmgl;
 /// Set plot quality
 procedure  mgl_set_quality(gr: HMGL;qual: integer); cdecl; external libmgl;
 /// Set drawing region for Quality&4
 procedure  mgl_set_draw_reg(gr: HMGL;nx: integer;ny: integer;m: integer); cdecl; external libmgl;
-/// Is frames
+/// Check if support of frames is enabled (i.e. MGL_VECT_FRAME is set and Quality&MGL_DRAW_LMEM==0)
 function  mgl_is_frames(gr: HMGL): integer; cdecl; external libmgl;
 /// Get bit-value flag of HMGL state (for advanced users only)
 function  mgl_get_flag(gr: HMGL;flag: LongWord): integer; cdecl; external libmgl;
@@ -155,6 +217,7 @@ function  mgl_get_flag(gr: HMGL;flag: LongWord): integer; cdecl; external libmgl
 procedure  mgl_set_flag(gr: HMGL;val: integer;flag: LongWord); cdecl; external libmgl;
 /// Change counter of HMGL uses (for advanced users only). Non-zero counter prevent automatic object removing.
 function  mgl_use_graph(gr: HMGL;inc: integer): integer; cdecl; external libmgl;
+procedure  mgl_set_rdc_acc(gr: HMGL;reduce: integer); cdecl; external libmgl;
 /// Start group of objects
 procedure  mgl_start_group(gr: HMGL;const name: PChar); cdecl; external libmgl;
 /// End group of objects
@@ -199,6 +262,8 @@ procedure  mgl_set_cutoff(gr: HMGL;const EqC: PChar); cdecl; external libmgl;
 procedure  mgl_set_ranges(gr: HMGL;x1: double;x2: double;y1: double;y2: double;z1: double;z2: double); cdecl; external libmgl;
 /// Set range in direction dir as [v1, v2]
 procedure  mgl_set_range_val(gr: HMGL;dir: char;v1: double;v2: double); cdecl; external libmgl;
+/// Add [v1, v2] to the current range in direction dir
+procedure  mgl_add_range_val(gr: HMGL;dir: char;v1: double;v2: double); cdecl; external libmgl;
 /// Set range in direction dir as minimal and maximal values of data a
 procedure  mgl_set_range_dat(gr: HMGL;dir: char;const a: HMDT;add: integer); cdecl; external libmgl;
 /// Set ranges for automatic variables
@@ -236,7 +301,7 @@ procedure  mgl_copy_font(gr: HMGL;gr_from: HMGL); cdecl; external libmgl;
 /// Restore font (load default font for new HMGL objects)
 procedure  mgl_restore_font(gr: HMGL); cdecl; external libmgl;
 //-----------------------------------------------------------------------------
-{== ../include/mgl2/data_cf.h ==}
+{== ../../include/mgl2/data_cf.h ==}
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -256,8 +321,6 @@ function  mgl_create_data_size(nx: integer;ny: integer;nz: integer): HMDT; cdecl
 function  mgl_create_data_file(const fname: PChar): HMDT; cdecl; external libmgl;
 /// Delete HMDT object
 procedure  mgl_delete_data(dat: HMDT); cdecl; external libmgl;
-/// Get information about the data (sizes and momentum) to string
-function mgl_data_info(const dat: HMDT): PChar; cdecl; external libmgl;
 /// Rearange data dimensions
 procedure  mgl_data_rearrange(dat: HMDT;mx: integer;my: integer;mz: integer); cdecl; external libmgl;
 /// Link external data array (don't delete it at exit)
@@ -284,10 +347,6 @@ function  mgl_data_get_value(const dat: HMDT;i: integer;j: integer;k: integer): 
 procedure  mgl_data_set_values(dat: HMDT;const val: PChar;nx: integer;ny: integer;nz: integer); cdecl; external libmgl;
 /// Read data array from HDF file (parse HDF4 and HDF5 files)
 function  mgl_data_read_hdf(d: HMDT;const fname: PChar;const data: PChar): integer; cdecl; external libmgl;
-/// Save data to HDF file
-procedure  mgl_data_save_hdf(const d: HMDT;const fname: PChar;const data: PChar;rewrite: integer); cdecl; external libmgl;
-/// Put HDF data names into buf as '\t' separated.
-function  mgl_datas_hdf(const fname: PChar;buf: PChar;size: integer): integer; cdecl; external libmgl;
 /// Read data from tab-separated text file with auto determining size
 function  mgl_data_read(dat: HMDT;const fname: PChar): integer; cdecl; external libmgl;
 /// Read data from text file with size specified at beginning of the file
@@ -298,10 +357,6 @@ function  mgl_data_read_dim(dat: HMDT;const fname: PChar;mx: integer;my: integer
 function  mgl_data_read_range(d: HMDT;const templ: PChar;n1: double;n2: double;step: double;as_slice: integer): integer; cdecl; external libmgl;
 /// Read data from tab-separated text files with auto determining size which filenames are satisfied to template (like "t_*.dat")
 function  mgl_data_read_all(dat: HMDT;const templ: PChar;as_slice: integer): integer; cdecl; external libmgl;
-/// Save whole data array (for ns=-1) or only ns-th slice to text file
-procedure  mgl_data_save(const dat: HMDT;const fname: PChar;ns: integer); cdecl; external libmgl;
-/// Export data array (for ns=-1) or only ns-th slice to PNG file according color scheme
-procedure  mgl_data_export(const dat: HMDT;const fname: PChar;const scheme: PChar;v1: mreal;v2: mreal;ns: integer); cdecl; external libmgl;
 /// Import data array from PNG file according color scheme
 procedure  mgl_data_import(dat: HMDT;const fname: PChar;const scheme: PChar;v1: mreal;v2: mreal); cdecl; external libmgl;
 /// Create or recreate the array with specified size and fill it by zero
@@ -324,6 +379,8 @@ procedure  mgl_data_set_id(d: HMDT;const id: PChar); cdecl; external libmgl;
 procedure  mgl_data_fill(dat: HMDT;x1: mreal;x2: mreal;dir: char); cdecl; external libmgl;
 /// Modify the data by specified formula assuming x,y,z in range [r1,r2]
 procedure  mgl_data_fill_eq(gr: HMGL;dat: HMDT;const eq: PChar;const vdat: HMDT;const wdat: HMDT;const opt: PChar); cdecl; external libmgl;
+/// Fill dat by interpolated values of vdat parametrically depended on xdat for x in range [x1,x2] using global spline
+procedure  mgl_data_refill_gs(dat: HMDT;const xdat: HMDT;const vdat: HMDT;x1: mreal;x2: mreal;sl: integer); cdecl; external libmgl;
 /// Fill dat by interpolated values of vdat parametrically depended on xdat for x in range [x1,x2]
 procedure  mgl_data_refill_x(dat: HMDT;const xdat: HMDT;const vdat: HMDT;x1: mreal;x2: mreal;sl: integer); cdecl; external libmgl;
 /// Fill dat by interpolated values of vdat parametrically depended on xdat,ydat for x,y in range [x1,x2]*[y1,y2]
@@ -346,10 +403,6 @@ procedure  mgl_data_modify(dat: HMDT;const eq: PChar;dim: integer); cdecl; exter
 procedure  mgl_data_modify_vw(dat: HMDT;const eq: PChar;const vdat: HMDT;const wdat: HMDT); cdecl; external libmgl;
 /// Reduce size of the data
 procedure  mgl_data_squeeze(dat: HMDT;rx: integer;ry: integer;rz: integer;smooth: integer); cdecl; external libmgl;
-/// Get maximal value of the data
-function  mgl_data_max(const dat: HMDT): mreal; cdecl; external libmgl;
-/// Get minimal value of the data
-function  mgl_data_min(const dat: HMDT): mreal; cdecl; external libmgl;
 /// Returns pointer to data element [i,j,k]
 function mgl_data_value(dat: HMDT;i: integer;j: integer;k: integer): Pmreal; cdecl; external libmgl;
 /// Returns pointer to internal data array
@@ -360,24 +413,6 @@ function  mgl_data_get_nx(const d: HMDT): integer; cdecl; external libmgl;
 function  mgl_data_get_ny(const d: HMDT): integer; cdecl; external libmgl;
 /// Gets the z-size of the data.
 function  mgl_data_get_nz(const d: HMDT): integer; cdecl; external libmgl;
-/// Find position (after specified in i,j,k) of first nonzero value of formula
-function  mgl_data_first(const dat: HMDT;const cond: PChar;i: Pint;j: Pint;k: Pint): mreal; cdecl; external libmgl;
-/// Find position (before specified in i,j,k) of last nonzero value of formula
-function  mgl_data_last(const dat: HMDT;const cond: PChar;i: Pint;j: Pint;k: Pint): mreal; cdecl; external libmgl;
-/// Find position of first in direction 'dir' nonzero value of formula
-function  mgl_data_find(const dat: HMDT;const cond: PChar;dir: char;i: integer;j: integer;k: integer): integer; cdecl; external libmgl;
-/// Find if any nonzero value of formula
-function  mgl_data_find_any(const dat: HMDT;const cond: PChar): integer; cdecl; external libmgl;
-/// Get maximal value of the data and its position
-function  mgl_data_max_int(const dat: HMDT;i: Pint;j: Pint;k: Pint): mreal; cdecl; external libmgl;
-/// Get maximal value of the data and its approximated position
-function  mgl_data_max_real(const dat: HMDT;x: Pmreal;y: Pmreal;z: Pmreal): mreal; cdecl; external libmgl;
-/// Get minimal value of the data and its position
-function  mgl_data_min_int(const dat: HMDT;i: Pint;j: Pint;k: Pint): mreal; cdecl; external libmgl;
-/// Get minimal value of the data and its approximated position
-function  mgl_data_min_real(const dat: HMDT;x: Pmreal;y: Pmreal;z: Pmreal): mreal; cdecl; external libmgl;
-/// Get "energy and find 4 momenta of data: median, width, skewness, kurtosis
-function  mgl_data_momentum_val(const d: HMDT;dir: char;m: Pmreal;w: Pmreal;s: Pmreal;k: Pmreal): mreal; cdecl; external libmgl;
 /// Get the data which is direct multiplication (like, d[i,j] = this[i]*a[j] and so on)
 function  mgl_data_combine(const dat1: HMDT;const dat2: HMDT): HMDT; cdecl; external libmgl;
 /// Extend data dimensions
@@ -435,6 +470,10 @@ function  mgl_data_spline(const dat: HMDT;x: mreal;y: mreal;z: mreal): mreal; cd
 function  mgl_data_linear(const dat: HMDT;x: mreal;y: mreal;z: mreal): mreal; cdecl; external libmgl;
 /// Interpolate by cubic spline the data and return its derivatives at given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
 function  mgl_data_spline_ext(const dat: HMDT;x: mreal;y: mreal;z: mreal;dx: Pmreal;dy: Pmreal;dz: Pmreal): mreal; cdecl; external libmgl;
+/// Prepare coefficients for global spline interpolation
+function  mgl_gspline_init(const x: HMDT;const v: HMDT): HMDT; cdecl; external libmgl;
+/// Evaluate global spline (and its derivatives d1, d2 if not NULL) using prepared coefficients \a coef
+function  mgl_gspline(const coef: HMDT;dx: mreal;d1: Pmreal;d2: Pmreal): mreal; cdecl; external libmgl;
 /// Interpolate by linear function the data and return its derivatives at given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
 function  mgl_data_linear_ext(const dat: HMDT;x: mreal;y: mreal;z: mreal;dx: Pmreal;dy: Pmreal;dz: Pmreal): mreal; cdecl; external libmgl;
 /// Return an approximated x-value (root) when dat(x) = val
@@ -497,10 +536,34 @@ function  mgl_find_root_txt(const func: PChar;ini: mreal;var_id: char): mreal; c
 /// Find roots for nonlinear equation defined by textual formula
 function  mgl_data_roots(const func: PChar;const ini: HMDT;var_id: char): HMDT; cdecl; external libmgl;
 //-----------------------------------------------------------------------------
-{== ../include/mgl2/datac_cf.h ==}
+/// Create HMEX object for expression evaluating
+function  mgl_create_expr(const expr: PChar): HMEX; cdecl; external libmgl;
+/// Delete HMEX object
+procedure  mgl_delete_expr(ex: HMEX); cdecl; external libmgl;
+/// Return value of expression for given x,y,z variables
+function  mgl_expr_eval(ex: HMEX;x: double;y: double;z: double): double; cdecl; external libmgl;
+/// Return value of expression for given variables
+function  mgl_expr_eval_v(ex: HMEX;vars: Pmreal): double; cdecl; external libmgl;
+/// Return value of expression differentiation over variable dir for given x,y,z variables
+function  mgl_expr_diff(ex: HMEX;dir: char;x: double;y: double;z: double): double; cdecl; external libmgl;
+/// Return value of expression differentiation over variable dir for given variables
+function  mgl_expr_diff_v(ex: HMEX;dir: char;vars: Pmreal): double; cdecl; external libmgl;
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
+{== ../../include/mgl2/datac_cf.h ==}
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+/// Set seed for random numbers
+procedure  mgl_srnd(seed: integer); cdecl; external libmgl;
+/// Get random number
+function  mgl_rnd(): double; cdecl; external libmgl;
+/// Get integer power of x
+function  mgl_ipowc(x: dual;n: integer): dual; cdecl; external libmgl;
+/// Get exp(i*a)
+function  mgl_expi(a: dual): dual; cdecl; external libmgl;
+overload;
 /// Create HMDT object
 function  mgl_create_datac(): HADT; cdecl; external libmgl;
 /// Create HMDT object with specified sizes
@@ -559,6 +622,26 @@ procedure  mgl_datac_save_hdf(const d: HMDT;const fname: PChar;const data: PChar
 procedure  mgl_datac_create(dat: HADT;nx: integer;ny: integer;nz: integer); cdecl; external libmgl;
 /// Transpose dimensions of the data (generalization of Transpose)
 procedure  mgl_datac_transpose(dat: HADT;const dim: PChar); cdecl; external libmgl;
+/// Get sub-array of the data with given fixed indexes
+function  mgl_datac_subdata(const dat: HMDT;xx: integer;yy: integer;zz: integer): HADT; cdecl; external libmgl;
+/// Get sub-array of the data with given fixed indexes (like indirect access)
+function  mgl_datac_subdata_ext(const dat: HMDT;const xx: HMDT;const yy: HMDT;const zz: HMDT): HADT; cdecl; external libmgl;
+/// Get column (or slice) of the data filled by formulas of named columns
+function  mgl_datac_column(const dat: HMDT;const eq: PChar): HADT; cdecl; external libmgl;
+/// Get trace of the data array
+function  mgl_datac_trace(const d: HMDT): HADT; cdecl; external libmgl;
+/// Resize the data to new sizes
+function  mgl_datac_resize(const dat: HMDT;mx: integer;my: integer;mz: integer): HADT; cdecl; external libmgl;
+/// Resize the data to new sizes of box [x1,x2]*[y1,y2]*[z1,z2]
+function  mgl_datac_resize_box(const dat: HMDT;mx: integer;my: integer;mz: integer;x1: mreal;x2: mreal;y1: mreal;y2: mreal;z1: mreal;z2: mreal): HADT; cdecl; external libmgl;
+/// Get momentum (1D-array) of data along direction 'dir'. String looks like "x1" for median in x-direction, "x2" for width in x-dir and so on.
+function  mgl_datac_momentum(const dat: HMDT;dir: char;const how: PChar): HADT; cdecl; external libmgl;
+/// Get array which values is result of interpolation this for coordinates from other arrays
+function  mgl_datac_evaluate(const dat: HMDT;const idat: HMDT;const jdat: HMDT;const kdat: HMDT;norm: integer): HADT; cdecl; external libmgl;
+/// Get array which is result of summation in given direction or directions
+function  mgl_datac_sum(const dat: HMDT;const dir: PChar): HADT; cdecl; external libmgl;
+/// Get the data which is direct multiplication (like, d[i,j] = this[i]*a[j] and so on)
+function  mgl_datac_combine(const dat1: HMDT;const dat2: HMDT): HADT; cdecl; external libmgl;
 /// Set names for columns (slices)
 procedure  mgl_datac_set_id(d: HADT;const id: PChar); cdecl; external libmgl;
 /// Equidistantly fill the data to range [x1,x2] in direction dir
@@ -607,6 +690,8 @@ procedure  mgl_datac_hankel(dat: HADT;const dir: PChar); cdecl; external libmgl;
 procedure  mgl_datac_fft(dat: HADT;const dir: PChar); cdecl; external libmgl;
 /// Find correlation between 2 data arrays
 function  mgl_datac_correl(const dat1: HMDT;const dat2: HMDT;const dir: PChar): HADT; cdecl; external libmgl;
+/// Calculate one step of diffraction by finite-difference method with parameter q
+procedure  mgl_datac_diffr(dat: HADT;const how: PChar;q: mreal); cdecl; external libmgl;
 function  mgl_datac_real(const dat: HMDT): HMDT; cdecl; external libmgl;
 function  mgl_datac_imag(const dat: HMDT): HMDT; cdecl; external libmgl;
 function  mgl_datac_abs(const dat: HMDT): HMDT; cdecl; external libmgl;
@@ -619,8 +704,21 @@ function  mgl_datac_linear_ext(const d: HMDT;x: mreal;y: mreal;z: mreal;dx: Pdua
 function  mgl_datac_spline(const dat: HMDT;x: mreal;y: mreal;z: mreal): dual; cdecl; external libmgl;
 /// Interpolate by cubic spline the data and return its derivatives at given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
 function  mgl_datac_spline_ext(const dat: HMDT;x: mreal;y: mreal;z: mreal;dx: Pdual;dy: Pdual;dz: Pdual): dual; cdecl; external libmgl;
+/// Prepare coefficients for global spline interpolation
+function  mgl_gsplinec_init(const x: HMDT;const v: HMDT): HADT; cdecl; external libmgl;
+/// Evaluate global spline (and its derivatives d1, d2 if not NULL) using prepared coefficients \a coef
+function  mgl_gsplinec(const coef: HMDT;dx: mreal;d1: Pdual;d2: Pdual): dual; cdecl; external libmgl;
 //-----------------------------------------------------------------------------
-{== ../include/mgl2/cont.h ==}
+/// Create HAEX object for expression evaluating
+function  mgl_create_cexpr(const expr: PChar): HAEX; cdecl; external libmgl;
+/// Delete HAEX object
+procedure  mgl_delete_cexpr(ex: HAEX); cdecl; external libmgl;
+/// Return value of expression for given x,y,z variables
+function  mgl_cexpr_eval(ex: HAEX;x: dual;y: dual;z: dual): dual; cdecl; external libmgl;
+/// Return value of expression for given variables
+function  mgl_cexpr_eval_v(ex: HAEX;vars: Pdual): dual; cdecl; external libmgl;
+//-----------------------------------------------------------------------------
+{== ../../include/mgl2/cont.h ==}
 //-----------------------------------------------------------------------------
 /// Print text along the curve in parametric form {x,y,z}
 procedure  mgl_text_xyz(gr: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const text: PChar;const font: PChar;const opt: PChar); cdecl; external libmgl;
@@ -703,7 +801,7 @@ procedure  mgl_contf3_xyz(gr: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;con
 procedure  mgl_contf3(gr: HMGL;const a: HMDT;const sch: PChar;sVal: double;const opt: PChar); cdecl; external libmgl;
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-{== ../include/mgl2/fit.h ==}
+{== ../../include/mgl2/fit.h ==}
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 function  mgl_fit_1(gr: HMGL;const y: HMDT;const eq: PChar;const vars: PChar;ini: HMDT;const opt: PChar): HMDT; cdecl; external libmgl;
@@ -724,7 +822,7 @@ procedure  mgl_puts_fit(gr: HMGL;x: double;y: double;z: double;const prefix: PCh
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-{== ../include/mgl2/plot.h ==}
+{== ../../include/mgl2/plot.h ==}
 //-----------------------------------------------------------------------------
 /// Draw curve for formula with x in x-axis range
 procedure  mgl_fplot(gr: HMGL;const eqY: PChar;const pen: PChar;const opt: PChar); cdecl; external libmgl;
@@ -760,6 +858,8 @@ procedure  mgl_area_xyz(graph: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;co
 procedure  mgl_area_xy(graph: HMGL;const x: HMDT;const y: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
 /// Fill area between curve {x,y} with x in x-axis range and axis plane
 procedure  mgl_area(graph: HMGL;const y: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
+/// Fill area (draw ribbon) between curves {x1,y1,z1} and {x2,y2,z2}
+procedure  mgl_region_3d(graph: HMGL;const x1: HMDT;const y1: HMDT;const z1: HMDT;const x2: HMDT;const y2: HMDT;const z2: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
 /// Fill area between curves {x,y1} and {x,y2}
 procedure  mgl_region_xy(graph: HMGL;const x: HMDT;const y1: HMDT;const y2: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
 /// Fill area between curves {x,y1} and {x,y2} with x in x-axis range
@@ -823,7 +923,7 @@ procedure  mgl_candle_yv(gr: HMGL;const v1: HMDT;const v2: HMDT;const y1: HMDT;c
 /// Draw candle plot with v1=v[i], v2=v[i+1]
 procedure  mgl_candle(gr: HMGL;const v: HMDT;const y1: HMDT;const y2: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
 //-----------------------------------------------------------------------------
-{== ../include/mgl2/surf.h ==}
+{== ../../include/mgl2/surf.h ==}
 //-----------------------------------------------------------------------------
 /// Draw surface by formula with x,y in axis range
 procedure  mgl_fsurf(graph: HMGL;const fz: PChar;const stl: PChar;const opt: PChar); cdecl; external libmgl;
@@ -882,7 +982,7 @@ procedure  mgl_map_xy(graph: HMGL;const x: HMDT;const y: HMDT;const a: HMDT;cons
 /// Color map of matrix a to matrix b
 procedure  mgl_map(graph: HMGL;const a: HMDT;const b: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
 //-----------------------------------------------------------------------------
-{== ../include/mgl2/volume.h ==}
+{== ../../include/mgl2/volume.h ==}
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 /// Draw isosurface for 3d data specified parametrically
@@ -919,7 +1019,7 @@ procedure  mgl_beam_val(graph: HMGL;Val: double;const tr: HMDT;const g1: HMDT;co
 procedure  mgl_beam(graph: HMGL;const tr: HMDT;const g1: HMDT;const g2: HMDT;const a: HMDT;r: double;const stl: PChar;norm: integer;num: integer); cdecl; external libmgl;
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-{== ../include/mgl2/vect.h ==}
+{== ../../include/mgl2/vect.h ==}
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 /// Plot vectors at position {x,y} along {ax,ay} with length/color proportional to |a|
@@ -970,7 +1070,7 @@ procedure  mgl_vect3_xyz(gr: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;cons
 procedure  mgl_vect3(gr: HMGL;const ax: HMDT;const ay: HMDT;const az: HMDT;const sch: PChar;sVal: double;const opt: PChar); cdecl; external libmgl;
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-{== ../include/mgl2/prim.h ==}
+{== ../../include/mgl2/prim.h ==}
 //-----------------------------------------------------------------------------
 /// Draws the mark at position {x,y,z}
 procedure  mgl_mark(gr: HMGL;x: double;y: double;z: double;const mark: PChar); cdecl; external libmgl;
@@ -1000,6 +1100,10 @@ procedure  mgl_cone(gr: HMGL;x1: double;y1: double;z1: double;x2: double;y2: dou
 procedure  mgl_ellipse(gr: HMGL;x1: double;y1: double;z1: double;x2: double;y2: double;z2: double;r: double;const stl: PChar); cdecl; external libmgl;
 /// Draws the rhomb between points p1,p2 with color stl and width r
 procedure  mgl_rhomb(gr: HMGL;x1: double;y1: double;z1: double;x2: double;y2: double;z2: double;r: double;const stl: PChar); cdecl; external libmgl;
+/// Draws the polygon based on points p1,p2 with color stl
+procedure  mgl_polygon(gr: HMGL;x1: double;y1: double;z1: double;x2: double;y2: double;z2: double;n: integer;const stl: PChar); cdecl; external libmgl;
+procedure  mgl_arc_ext(gr: HMGL;x0: double;y0: double;z0: double;xr: double;yr: double;zr: double;x1: double;y1: double;z1: double;a: double; !!! const char* stl); cdecl; external libmgl;
+procedure  mgl_arc(gr: HMGL;x0: double;y0: double;x1: double;y1: double;a: double; !!! const char* stl); cdecl; external libmgl;
 /// Draw cones from points {x,y,z} to axis plane
 procedure  mgl_cones_xyz(graph: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const pen: PChar;const opt: PChar); cdecl; external libmgl;
 /// Draw cones from points {x,z} to axis plane
@@ -1038,7 +1142,7 @@ procedure  mgl_labelw_y(graph: HMGL;const y: HMDT;const text: PWideChar;const fn
 procedure  mgl_table(gr: HMGL;x: double;y: double;const val: HMDT;const text: PChar;const fnt: PChar;const opt: PChar); cdecl; external libmgl;
 procedure  mgl_tablew(gr: HMGL;x: double;y: double;const val: HMDT;const text: PWideChar;const fnt: PChar;const opt: PChar); cdecl; external libmgl;
 //-----------------------------------------------------------------------------
-{== ../include/mgl2/other.h ==}
+{== ../../include/mgl2/other.h ==}
 //-----------------------------------------------------------------------------
 /// Draw triangle mesh for points in arrays {x,y,z} with specified color c.
 procedure  mgl_triplot_xyzc(gr: HMGL;const nums: HMDT;const x: HMDT;const y: HMDT;const z: HMDT;const c: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
@@ -1060,6 +1164,14 @@ procedure  mgl_tricont_xycv(gr: HMGL;const v: HMDT;const nums: HMDT;const x: HMD
 procedure  mgl_tricont_xyzc(gr: HMGL;const nums: HMDT;const x: HMDT;const y: HMDT;const z: HMDT;const c: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
 /// Draw contour lines for triangle mesh for points in arrays {x,y,z}.
 procedure  mgl_tricont_xyc(gr: HMGL;const nums: HMDT;const x: HMDT;const y: HMDT;const z: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw manual contour tubes for triangle mesh for points in arrays {x,y,z} with specified color c.
+procedure  mgl_tricontv_xyzcv(gr: HMGL;const v: HMDT;const nums: HMDT;const x: HMDT;const y: HMDT;const z: HMDT;const c: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw manual contour tubes for triangle mesh for points in arrays {x,y,z}.
+procedure  mgl_tricontv_xycv(gr: HMGL;const v: HMDT;const nums: HMDT;const x: HMDT;const y: HMDT;const z: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw contour tubes for triangle mesh for points in arrays {x,y,z} with specified color c.
+procedure  mgl_tricontv_xyzc(gr: HMGL;const nums: HMDT;const x: HMDT;const y: HMDT;const z: HMDT;const c: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
+/// Draw contour tubes for triangle mesh for points in arrays {x,y,z}.
+procedure  mgl_tricontv_xyc(gr: HMGL;const nums: HMDT;const x: HMDT;const y: HMDT;const z: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
 /// Draw dots in points {x,y,z}.
 procedure  mgl_dots(gr: HMGL;const x: HMDT;const y: HMDT;const z: HMDT;const sch: PChar;const opt: PChar); cdecl; external libmgl;
 /// Draw semitransparent dots in points {x,y,z} with specified alpha a.
@@ -1099,7 +1211,7 @@ procedure  mgl_contf_y_val(graph: HMGL;const v: HMDT;const a: HMDT;const stl: PC
 /// Draw manual solid contours for data at z = sVal
 procedure  mgl_contf_z_val(graph: HMGL;const v: HMDT;const a: HMDT;const stl: PChar;sVal: double;const opt: PChar); cdecl; external libmgl;
 //-----------------------------------------------------------------------------
-{== ../include/mgl2/canvas_cf.h ==}
+{== ../../include/mgl2/canvas_cf.h ==}
 //-----------------------------------------------------------------------------
 /// Create HMGL object with specified sizes
 function  mgl_create_graph(width: integer;height: integer): HMGL; cdecl; external libmgl;
@@ -1113,20 +1225,30 @@ procedure  mgl_set_def_param(gr: HMGL); cdecl; external libmgl;
 procedure  mgl_combine_gr(gr: HMGL;gr2: HMGL); cdecl; external libmgl;
 /// Force preparing the image. It can be useful for OpenGL mode mostly.
 procedure  mgl_finish(gr: HMGL); cdecl; external libmgl;
+/// Force preparing the image and save result into background one.
+procedure  mgl_rasterize(gr: HMGL); cdecl; external libmgl;
 /// Set tick length
 procedure  mgl_set_tick_len(gr: HMGL;len: double;stt: double); cdecl; external libmgl;
 /// Set axis and ticks style
 procedure  mgl_set_axis_stl(gr: HMGL;const stl: PChar;const tck: PChar;const sub: PChar); cdecl; external libmgl;
 /// Auto adjust ticks
 procedure  mgl_adjust_ticks(gr: HMGL;const dir: PChar); cdecl; external libmgl;
+/// Auto adjust ticks and set ticks format ("+E0123456789-fF")
+procedure  mgl_adjust_ticks_ext(gr: HMGL;const dir: PChar;const stl: PChar); cdecl; external libmgl;
 /// Set the ticks parameters
 procedure  mgl_set_ticks(gr: HMGL;dir: char;d: double;ns: integer;org: double); cdecl; external libmgl;
-/// Set ticks text (\n separated). Use "" to disable this feature.
+/// Set the ticks parameters and specify ticks factor string
+procedure  mgl_set_ticks_fact(gr: HMGL;dir: char;d: double;ns: integer;org: double;const fact: PChar); cdecl; external libmgl;
+procedure  mgl_set_ticks_factw(gr: HMGL;dir: char;d: double;ns: integer;org: double;const fact: PWideChar); cdecl; external libmgl;
+/// Set manual ticks text (\n separated). Use "" to disable this feature.
 procedure  mgl_set_ticks_str(gr: HMGL;dir: char;const lbl: PChar;add: integer); cdecl; external libmgl;
 procedure  mgl_set_ticks_wcs(gr: HMGL;dir: char;const lbl: PWideChar;add: integer); cdecl; external libmgl;
-/// Set ticks position and text (\n separated). Use "" to disable this feature.
+/// Set manual ticks position and text (\n separated). Use "" to disable this feature.
 procedure  mgl_set_ticks_val(gr: HMGL;dir: char;const val: HMDT;const lbl: PChar;add: integer); cdecl; external libmgl;
 procedure  mgl_set_ticks_valw(gr: HMGL;dir: char;const val: HMDT;const lbl: PWideChar;add: integer); cdecl; external libmgl;
+/// Add manual tick at given position. Use "" to disable this feature.
+procedure  mgl_add_tick(gr: HMGL;dir: char;val: double;const lbl: PChar); cdecl; external libmgl;
+procedure  mgl_add_tickw(gr: HMGL;dir: char;val: double;const lbl: PWideChar); cdecl; external libmgl;
 /// Tune ticks
 procedure  mgl_tune_ticks(gr: HMGL;tune: integer;fact_pos: double); cdecl; external libmgl;
 /// Set templates for ticks
@@ -1218,6 +1340,8 @@ function mgl_get_json(gr: HMGL): PChar; cdecl; external libmgl;
 function mgl_get_rgb(gr: HMGL): PByte; cdecl; external libmgl;
 /// Get RGBA values of current bitmap
 function mgl_get_rgba(gr: HMGL): PByte; cdecl; external libmgl;
+/// Get RGB values of current bitmap
+function mgl_get_background(gr: HMGL): PByte; cdecl; external libmgl;
 /// Set object/subplot id
 procedure  mgl_set_obj_id(gr: HMGL;id: integer); cdecl; external libmgl;
 /// Get object id
@@ -1276,6 +1400,10 @@ procedure  mgl_clf(gr: HMGL); cdecl; external libmgl;
 procedure  mgl_clf_rgb(gr: HMGL;r: double;g: double;b: double); cdecl; external libmgl;
 /// Clear up the frame and fill background by specified color
 procedure  mgl_clf_chr(gr: HMGL;col: char); cdecl; external libmgl;
+/// Clear up the frame and fill background by specified color with manual transparency
+procedure  mgl_clf_str(gr: HMGL;const col: PChar); cdecl; external libmgl;
+/// Load background image
+procedure  mgl_load_background(gr: HMGL;const fname: PChar;alpha: double); cdecl; external libmgl;
 /// Put further plotting in some region of whole frame.
 procedure  mgl_subplot(gr: HMGL;nx: integer;ny: integer;m: integer;const style: PChar); cdecl; external libmgl;
 /// Put further plotting in some region of whole frame and shift it by distance {dx,dy}.
@@ -1305,6 +1433,8 @@ procedure  mgl_rotate(gr: HMGL;TetX: double;TetZ: double;TetY: double); cdecl; e
 procedure  mgl_rotate_vector(gr: HMGL;Tet: double;x: double;y: double;z: double); cdecl; external libmgl;
 /// Set perspective (in range [0,1)) for plot. Set to zero for switching off.
 procedure  mgl_perspective(gr: HMGL;val: double); cdecl; external libmgl;
+/// Ask to set perspective (in range [0,1)) for plot. Set to zero for switching off.
+procedure  mgl_ask_perspective(gr: HMGL;val: double); cdecl; external libmgl;
 /// Set angle of view independently from Rotate().
 procedure  mgl_view(gr: HMGL;TetX: double;TetZ: double;TetY: double); cdecl; external libmgl;
 /// Zoom in/out a part of picture (use mgl_zoom(0, 0, 1, 1) for restore default)
@@ -1357,8 +1487,10 @@ function  mgl_parser_add_var(p: HMPR;const name: PChar): HMDT; cdecl; external l
 function  mgl_parser_add_varw(p: HMPR;const name: PWideChar): HMDT; cdecl; external libmgl;
 /// Find variable with given name or return NULL if no one
 /// NOTE !!! You must not delete obtained data arrays !!!
-function  mgl_parser_find_var(p: HMPR;const name: PChar): HMDT; cdecl; external libmgl;
-function  mgl_parser_find_varw(p: HMPR;const name: PWideChar): HMDT; cdecl; external libmgl;
+/// Get variable with given id
+/// NOTE !!! You must not delete obtained data arrays !!!
+/// Get number of variables
+function  mgl_parser_num_var(p: HMPR): integer; cdecl; external libmgl;
 /// Delete variable with name
 procedure  mgl_parser_del_var(p: HMPR;const name: PChar); cdecl; external libmgl;
 procedure  mgl_parser_del_varw(p: HMPR;const name: PWideChar); cdecl; external libmgl;
@@ -1396,38 +1528,15 @@ function  mgl_parser_cmd_num(pr: HMPR): integer; cdecl; external libmgl;
 function  mgl_parser_calc(pr: HMPR;const formula: PChar): HMDT; cdecl; external libmgl;
 function  mgl_parser_calcw(pr: HMPR;const formula: PWideChar): HMDT; cdecl; external libmgl;
 //-----------------------------------------------------------------------------
-/// Create HMEX object for expression evaluating
-function  mgl_create_expr(const expr: PChar): HMEX; cdecl; external libmgl;
-function  mgl_create_cexpr(const expr: PChar): HAEX; cdecl; external libmgl;
-/// Delete HMEX object
-procedure  mgl_delete_expr(ex: HMEX); cdecl; external libmgl;
-procedure  mgl_delete_cexpr(ex: HAEX); cdecl; external libmgl;
-/// Return value of expression for given x,y,z variables
-function  mgl_expr_eval(ex: HMEX;x: double;y: double;z: double): double; cdecl; external libmgl;
-function  mgl_cexpr_eval(ex: HAEX;x: dual;y: dual;z: dual): dual; cdecl; external libmgl;
-/// Return value of expression for given variables
-function  mgl_expr_eval_v(ex: HMEX;vars: Pmreal): double; cdecl; external libmgl;
-function  mgl_cexpr_eval_v(ex: HAEX;vars: Pdual): dual; cdecl; external libmgl;
-/// Return value of expression differentiation over variable dir for given x,y,z variables
-function  mgl_expr_diff(ex: HMEX;dir: char;x: double;y: double;z: double): double; cdecl; external libmgl;
-/// Return value of expression differentiation over variable dir for given variables
-function  mgl_expr_diff_v(ex: HMEX;dir: char;vars: Pmreal): double; cdecl; external libmgl;
-//-----------------------------------------------------------------------------
-{== ../include/mgl2/addon.h ==}
+{== ../../include/mgl2/addon.h ==}
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-/// Get integer power of x
-function  mgl_ipowc(x: dual;n: integer): dual; cdecl; external libmgl;
-/// Get exp(i*a)
-function  mgl_expi(a: dual): dual; cdecl; external libmgl;
-overload;
-/// Get exp(i*a)
-function  mgl_expi(a: double): dual; cdecl; external libmgl;
-overload;
 /// Explicit scheme for 1 step of axial diffraction
-function  mgl_difr_axial(a: Pdual;n: integer;q: dual;Border: integer;b: Pdual;d: Pdual;kk: integer;di: double): integer; cdecl; external libmgl;
+procedure  mgl_difr_axial(a: Pdual;n: integer;step: integer;q: dual;Border: integer;tmp: Pdual;kk: integer;di: double); cdecl; external libmgl;
+procedure  mgl_difr_axial_old(a: Pdual;n: integer;step: integer;q: dual;Border: integer;tmp1: Pdual;tmp2: Pdual;kk: integer;di: double); cdecl; external libmgl;
 /// Explicit scheme for 1 step of plane diffraction
-function  mgl_difr_grid(a: Pdual;n: integer;q: dual;Border: integer;b: Pdual;d: Pdual;kk: integer): integer; cdecl; external libmgl;
+procedure  mgl_difr_grid(a: Pdual;n: integer;step: integer;q: dual;Border: integer;tmp: Pdual;kk: integer); cdecl; external libmgl;
+procedure  mgl_difr_grid_old(a: Pdual;n: integer;step: integer;q: dual;Border: integer;tmp1: Pdual;tmp2: Pdual;kk: integer); cdecl; external libmgl;
 //-----------------------------------------------------------------------------
 /// Get random number with Gaussian distribution
 function  mgl_gauss_rnd(): double; cdecl; external libmgl;

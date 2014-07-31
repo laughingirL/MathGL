@@ -68,22 +68,22 @@ HADT MGL_EXPORT mgl_datac_subdata_ext(HCDT d, HCDT xx, HCDT yy, HCDT zz)
 	if(xx->GetNz()>1)	// 3d data
 	{
 		n = xx->GetNx();	m = xx->GetNy();	l = xx->GetNz();
-		j = yy->GetNx()*yy->GetNy()*yy->GetNz();	if(j>1 && j!=n*m*l)	return 0;	// wrong sizes
-		k = zz->GetNx()*zz->GetNy()*zz->GetNz();	if(k>1 && k!=n*m*l)	return 0;	// wrong sizes
+		j = yy->GetNN();	if(j>1 && j!=n*m*l)	return 0;	// wrong sizes
+		k = zz->GetNN();	if(k>1 && k!=n*m*l)	return 0;	// wrong sizes
 		ix = true;	iy = j>1;	iz = k>1;
 	}
 	else if(yy->GetNz()>1)
 	{
 		n = yy->GetNx();	m = yy->GetNy();	l = yy->GetNz();
-		j = xx->GetNx()*xx->GetNy()*xx->GetNz();	if(j>1 && j!=n*m*l)	return 0;	// wrong sizes
-		k = zz->GetNx()*zz->GetNy()*zz->GetNz();	if(k>1 && k!=n*m*l)	return 0;	// wrong sizes
+		j = xx->GetNN();	if(j>1 && j!=n*m*l)	return 0;	// wrong sizes
+		k = zz->GetNN();	if(k>1 && k!=n*m*l)	return 0;	// wrong sizes
 		iy = true;	ix = j>1;	iz = k>1;
 	}
 	else if(zz->GetNz()>1)
 	{
 		n = zz->GetNx();	m = zz->GetNy();	l = zz->GetNz();
-		j = yy->GetNx()*yy->GetNy()*yy->GetNz();	if(j>1 && j!=n*m*l)	return 0;	// wrong sizes
-		k = xx->GetNx()*xx->GetNy()*xx->GetNz();	if(k>1 && k!=n*m*l)	return 0;	// wrong sizes
+		j = yy->GetNN();	if(j>1 && j!=n*m*l)	return 0;	// wrong sizes
+		k = xx->GetNN();	if(k>1 && k!=n*m*l)	return 0;	// wrong sizes
 		iz = true;	iy = j>1;	ix = k>1;
 	}
 	else if(xx->GetNy()>1)	// 2d data

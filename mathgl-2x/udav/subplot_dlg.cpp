@@ -132,7 +132,7 @@ SubplotDialog::SubplotDialog(QWidget *parent) : QDialog(parent)
 	l = new QLabel("ind",this);	g->addWidget(l,4,5);
 	sk = new QSpinBox(this);	g->addWidget(sk,4,6);
 	sk->setMinimum(0);	sk->setToolTip(tr("Cell index"));
-	connect(ck,SIGNAL(valueChanged(QString)),this,SLOT(updatePic()));
+	connect(sk,SIGNAL(valueChanged(QString)),this,SLOT(updatePic()));
 
 	// InPlot section
 	ci = new QRadioButton("InPlot",this);	g->addWidget(ci,5,0);

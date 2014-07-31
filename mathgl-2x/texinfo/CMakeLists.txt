@@ -24,8 +24,8 @@
 	file(COPY ${MGL_TEX}/qt.png ${MGL_TEX}/fltk.png ${MGL_TEX}/classes.png ${MGL_TEX}/emblem_sm.png ${MGL_TEX}/datadvance.png DESTINATION ${MGL_OUT})
 	file(COPY ${MGL_TEX}/index.html ${MGL_TEX}/json.html ${MGL_TEX}/mathgl.js DESTINATION ${MGL_OUT})
 
-	set(UDAV_IMG udav_arg.png udav_calc.png udav_cmd.png udav_data.png
-		udav_gen_set.png udav_help.png udav_light.png udav_main.png udav_opt.png
+	set(UDAV_IMG udav_arg.png udav_calc.png udav_cmd.png udav_data.png udav_mask.png
+		udav_gen_set.png udav_help.png udav_light.png udav_main.png udav_opt.png udav_inplot.png
 		udav_pen.png udav_prop.png udav_sch.png udav_txt.png udav_var.png)
 	foreach(SAMPLE ${UDAV_IMG})
 		file(COPY ${MGL_TEX}/udav/${SAMPLE} DESTINATION ${MGL_OUT}/udav/)
@@ -34,7 +34,7 @@
 	foreach(SAMPLE ${MGL_PNG})
 		set(MGL_PNG_N ${MGL_PNG_N} ${MGL_OUT}/png/${SAMPLE}.png)
 		add_custom_command(OUTPUT ${MGL_OUT}/png/${SAMPLE}.png
-			COMMAND mgl_example -kind=${SAMPLE} -web
+			COMMAND mgl_example -kind=${SAMPLE}
 			DEPENDS mgl_example
 			WORKING_DIRECTORY ${MGL_OUT}/png )
 		set(MGL_PNG_S ${MGL_PNG_S} ${MGL_OUT}/small/${SAMPLE}-sm.png)
@@ -61,7 +61,7 @@ endif(MGL_HAVE_DOC_PRC)
 	foreach(SAMPLE ${MGL_EXTRA})
 		set(MGL_PNG_N ${MGL_PNG_N} ${MGL_OUT}/png/${SAMPLE}.png)
 		add_custom_command(OUTPUT ${MGL_OUT}/png/${SAMPLE}.png
-			COMMAND mgl_example -kind=${SAMPLE} -web
+			COMMAND mgl_example -kind=${SAMPLE}
 			DEPENDS mgl_example
 			WORKING_DIRECTORY ${MGL_OUT}/png )
 		set(MGL_PNG_S ${MGL_PNG_S} ${MGL_OUT}/small/${SAMPLE}-sm.png)

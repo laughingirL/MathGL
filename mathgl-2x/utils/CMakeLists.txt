@@ -1,4 +1,6 @@
 
+add_executable(make_pas make_pas.cpp)
+
 add_executable(mglconv mglconv.cpp)
 target_link_libraries(mglconv mgl)
 install(

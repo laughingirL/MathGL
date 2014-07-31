@@ -35,6 +35,7 @@
 #include "style_dlg.h"
 void fillColors(QComboBox *cb);
 void fillArrows(QComboBox *cb);
+void fillBArrows(QComboBox *cb);
 void fillDashes(QComboBox *cb);
 void fillMarkers(QComboBox *cb);
 void fillMasks(QComboBox *cb);
@@ -61,7 +62,7 @@ StyleDialog::StyleDialog(QWidget *parent) : QDialog(parent)
 	l = new QLabel(tr("Arrow at end"), p);	g->addWidget(l, 0, 2);
 	a1 = new QComboBox(p);	g->addWidget(a1, 1, 0);	fillArrows(a1);
 	dash = new QComboBox(p);	g->addWidget(dash, 1, 1);	fillDashes(dash);
-	a2 = new QComboBox(p);	g->addWidget(a2, 1, 2);	fillArrows(a2);
+	a2 = new QComboBox(p);	g->addWidget(a2, 1, 2);	fillBArrows(a2);
 	l = new QLabel(tr("Color"), p);	g->addWidget(l, 2, 0, Qt::AlignRight);
 	cline=new QComboBox(p);	g->addWidget(cline, 2, 1);	fillColors(cline);
 
@@ -270,6 +271,29 @@ void fillArrows(QComboBox *cb)
 	cb->addItem(QPixmap(arrow_o_xpm), QObject::tr("circle"));
 }
 //-----------------------------------------------------------------------------
+#include "xpm/barrow_n.xpm"
+#include "xpm/barrow_a.xpm"
+#include "xpm/barrow_v.xpm"
+#include "xpm/barrow_i.xpm"
+#include "xpm/barrow_k.xpm"
+#include "xpm/barrow_t.xpm"
+#include "xpm/barrow_s.xpm"
+#include "xpm/barrow_d.xpm"
+#include "xpm/barrow_o.xpm"
+void fillBArrows(QComboBox *cb)
+{
+	// "AVIKTSDO"
+	cb->addItem(QPixmap(barrow_n_xpm), QObject::tr("none"));
+	cb->addItem(QPixmap(barrow_a_xpm), QObject::tr("arrow"));
+	cb->addItem(QPixmap(barrow_v_xpm), QObject::tr("back arrow"));
+	cb->addItem(QPixmap(barrow_i_xpm), QObject::tr("stop"));
+	cb->addItem(QPixmap(barrow_k_xpm), QObject::tr("size"));
+	cb->addItem(QPixmap(barrow_t_xpm), QObject::tr("triangle"));
+	cb->addItem(QPixmap(barrow_s_xpm), QObject::tr("square"));
+	cb->addItem(QPixmap(barrow_d_xpm), QObject::tr("rhomb"));
+	cb->addItem(QPixmap(barrow_o_xpm), QObject::tr("circle"));
+}
+//-----------------------------------------------------------------------------
 #include "xpm/dash_e.xpm"
 #include "xpm/dash_s.xpm"
 #include "xpm/dash_l.xpm"
@@ -392,7 +416,7 @@ void StyleDialog::updatePic()
 	if(f)
 	{
 		gr.SubPlot(1,1,0,"");
-		gr.SetMarkSize(20);
+		gr.SetMarkSize(15);
 		gr.SetArrowSize(20);
 		f = false;
 	}
