@@ -184,6 +184,8 @@ int main(){bool a=mgl_isnum(1);return 0;}" MGL_HAVE_TYPEOF)
 if(NOT MGL_HAVE_TYPEOF)
 	set(MGL_HAVE_TYPEOF 0)
 endif(NOT MGL_HAVE_TYPEOF)
+
+#unset(MGL_HAVE_C99_COMPLEX)
 CHECK_CXX_SOURCE_COMPILES(
 "struct test { test() {} test(test&& a){} };
 int main() { test t;	return 0; }" MGL_HAVE_RVAL)

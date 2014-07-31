@@ -560,13 +560,11 @@ class MGL_EXPORT mglDataV : public mglDataA
 	long nz;	///< number of points in 3d dimensions ('z' dimension)
 	mreal di, dj, dk, a0;
 public:
-
-	mglDataV(const mglDataV &d)	// NOTE: must be constructor for mglDataV& to exclude copy one
-	{	nx=d.nx;	ny=d.ny;	nz=d.nz;	a0=d.a0;	di=d.di;	dj=d.dj;	dk=d.dk;	}
-	mglDataV(long xx=1,long yy=1,long zz=1,mreal x1=0,mreal x2=NaN,char dir='x')
-	{	nx=xx;	ny=yy;	nz=zz;	Fill(x1,x2,dir);	}
+	mglDataV(long xx=1,long yy=1,long zz=1,mreal x1=0,mreal x2=NaN,char dir='x'):nx(xx),ny(yy),nz(zz)
+	{	Fill(x1,x2,dir);	}
+	mglDataV(const mglDataV &d):nx(d.nx),ny(d.ny),nz(d.nz),di(d.di),dj(d.dj),dk(d.dk),a0(d.a0)	{}
 #if MGL_HAVE_RVAL
-	mglDataV(mglDataV &&d):nx(d.nx),ny(d.ny),nz(d.nz),a0(d.a0),di(d.di),dj(d.dj),dk(d.dk)
+	mglDataV(mglDataV &&d):nx(d.nx),ny(d.ny),nz(d.nz),di(d.di),dj(d.dj),dk(d.dk),a0(d.a0)
 	{	s=d.s;	temp=d.temp;	func=d.func;	o=d.o;	d.func=0;	}
 #endif
 	virtual ~mglDataV()	{}
@@ -628,10 +626,9 @@ class MGL_EXPORT mglDataW : public mglDataA
 	mreal di, dj, dk;
 public:
 
-	mglDataW(const mglDataW &d)	// NOTE: must be constructor for mglDataV& to exclude copy one
-	{	nx=d.nx;	ny=d.ny;	nz=d.nz;	di=d.di;	dj=d.dj;	dk=d.dk;	}
-	mglDataW(long xx=1,long yy=1,long zz=1,mreal dp=0,char dir='x')
-	{	nx=xx;	ny=yy;	nz=zz;	Freq(dp,dir);	}
+	mglDataW(long xx=1,long yy=1,long zz=1,mreal dp=0,char dir='x'):nx(xx),ny(yy),nz(zz)
+	{	Freq(dp,dir);	}
+	mglDataW(const mglDataW &d):nx(d.nx),ny(d.ny),nz(d.nz),di(d.di),dj(d.dj),dk(d.dk)	{}
 #if MGL_HAVE_RVAL
 	mglDataW(mglDataW &&d):nx(d.nx),ny(d.ny),nz(d.nz),di(d.di),dj(d.dj),dk(d.dk)
 	{	s=d.s;	temp=d.temp;	func=d.func;	o=d.o;	d.func=0;	}
@@ -695,17 +692,16 @@ class MGL_EXPORT mglDataF : public mglDataA
 		dy = ny>1?(v2.y-v1.y)/(ny-1):0;
 		dz = nz>1?(v2.z-v1.z)/(nz-1):0;
 	}
-	mreal (*func)(mreal i, mreal j, mreal k, void *par);
+	mreal (*dfunc)(mreal i, mreal j, mreal k, void *par);
 	void *par;
 public:
 
-	mglDataF(const mglDataF &d)	// NOTE: must be constructor for mglDataF& to exclude copy one
-	{	nx=d.nx;	ny=d.ny;	nz=d.nz;	v1=d.v1;	v2=d.v2;	func=d.func;	par=d.par;
-		str=d.str;	ex = mgl_create_expr(str.c_str());	setD();	}
-	mglDataF(long xx=1,long yy=1,long zz=1)
-	{	ex=0;	v2=mglPoint(1,1,1);	nx=xx;	ny=yy;	nz=zz;	setD();	func=0;	par=0;	}
+	mglDataF(long xx=1,long yy=1,long zz=1):nx(xx),ny(yy),nz(zz), dfunc(0),par(0)
+	{	ex=0;	v2=mglPoint(1,1,1);	setD();	}
+	mglDataF(const mglDataF &d) : nx(d.nx), ny(d.ny), nz(d.nz), str(d.str), v1(d.v1), v2(d.v2), dx(d.dx),dy(d.dy),dz(d.dz), dfunc(d.dfunc),par(d.par)
+	{	ex = mgl_create_expr(str.c_str());	}
 #if MGL_HAVE_RVAL
-	mglDataF(mglDataF &&d):nx(d.nx),ny(d.ny),nz(d.nz),str(d.str),v1(d.v1),v2(d.v2),ex(d.ex),dx(d.dx),dy(d.dy),dz(d.dz)
+	mglDataF(mglDataF &&d):nx(d.nx),ny(d.ny),nz(d.nz), str(d.str), v1(d.v1),v2(d.v2), ex(d.ex), dx(d.dx),dy(d.dy),dz(d.dz), dfunc(d.dfunc),par(d.par)
 	{	s=d.s;	temp=d.temp;	func=d.func;	o=d.o;	d.ex=0;	d.func=0;	}
 #endif
 	virtual ~mglDataF()	{	mgl_delete_expr(ex);	}
@@ -718,27 +714,27 @@ public:
 	/// Create or recreate the array with specified size and fill it by zero
 	inline void Create(long mx,long my=1,long mz=1)	{	nx=mx;	ny=my;	nz=mz;	setD();	}
 	inline void SetRanges(mglPoint p1, mglPoint p2)	{	v1=p1;	v2=p2;	setD();	}
-	/// Set formula to be used as function
+	/// Set formula to be used as dfunction
 	inline void SetFormula(const char *eq)
 	{
-		mgl_delete_expr(ex);	func=0;	par=0;
+		mgl_delete_expr(ex);	dfunc=0;	par=0;
 		if(eq && *eq)	{	ex = mgl_create_expr(eq);	str=eq;	}
 		else	{	ex=0;	str="";	}
 	}
-	/// Set function and coordinates range [r1,r2]
+	/// Set dfunction and coordinates range [r1,r2]
 	inline void SetFunc(mreal (*f)(mreal,mreal,mreal,void*), void *p=NULL)
-	{	mgl_delete_expr(ex);	ex=0;	func=f;	par=p;	}
+	{	mgl_delete_expr(ex);	ex=0;	dfunc=f;	par=p;	}
 
 	mreal value(mreal i,mreal j=0,mreal k=0, mreal *di=0,mreal *dj=0,mreal *dk=0) const
 	{
 		mreal res=0, x=v1.x+dx*i, y=v1.y+dy*j, z=v1.z+dz*k;
 		if(di)	*di = 0;	if(dj)	*dj = 0;	if(dk)	*dk = 0;
-		if(func)
+		if(dfunc)
 		{
-			res = func(x,y,z, par);
-			if(di)	*di = func(x+dx,y,z, par)-res;
-			if(dj)	*dj = func(x,y+dy,z, par)-res;
-			if(dk)	*dk = func(x,y,z+dz, par)-res;
+			res = dfunc(x,y,z, par);
+			if(di)	*di = dfunc(x+dx,y,z, par)-res;
+			if(dj)	*dj = dfunc(x,y+dy,z, par)-res;
+			if(dk)	*dk = dfunc(x,y,z+dz, par)-res;
 		}
 		else if(ex)
 		{
@@ -752,19 +748,19 @@ public:
 	/// Copy data from other mglDataV variable
 	inline const mglDataF &operator=(const mglDataF &d)
 	{	nx=d.nx;	ny=d.ny;	nz=d.nz;	v1=d.v1;	v2=d.v2;	setD();
-		str=d.str;	ex = mgl_create_expr(str.c_str());	func=d.func;	par=d.par;	return d;	}
+		str=d.str;	ex = mgl_create_expr(str.c_str());	dfunc=d.dfunc;	par=d.par;	return d;	}
 	/// Get the value in given cell of the data without border checking
 	mreal v(long i,long j=0,long k=0) const
 	{
 		mreal res=0, x=v1.x+dx*i, y=v1.y+dy*j, z=v1.z+dz*k;
-		if(func)	res = func(x,y,z, par);
+		if(dfunc)	res = dfunc(x,y,z, par);
 		else if(ex)	res = mgl_expr_eval(ex,x,y,z);
 		return res;
 	}
 	mreal vthr(long i) const
 	{
 		mreal res=0, x=v1.x+dx*(i%nx), y=v1.y+dy*((i/nx)%ny), z=v1.z+dz*(i/(nx*ny));
-		if(func)	res = func(x,y,z, par);
+		if(dfunc)	res = dfunc(x,y,z, par);
 		else if(ex)	res = mgl_expr_eval(ex,x,y,z);
 		return res;
 	}
@@ -772,21 +768,21 @@ public:
 	mreal dvx(long i,long j=0,long k=0) const
 	{
 		mreal res=0, x=v1.x+dx*i, y=v1.y+dy*j, z=v1.z+dz*k;
-		if(func)	res = func(x+dx,y,z, par)-func(x,y,z, par);
+		if(dfunc)	res = dfunc(x+dx,y,z, par)-dfunc(x,y,z, par);
 		else if(ex)	res = mgl_expr_eval(ex,x+dx,y,z)-mgl_expr_eval(ex,x,y,z);
 		return res;
 	}
 	mreal dvy(long i,long j=0,long k=0) const
 	{
 		mreal res=0, x=v1.x+dx*i, y=v1.y+dy*j, z=v1.z+dz*k;
-		if(func)	res = func(x,y+dy,z, par)-func(x,y,z, par);
+		if(dfunc)	res = dfunc(x,y+dy,z, par)-dfunc(x,y,z, par);
 		else if(ex)	res = mgl_expr_eval(ex,x,y+dy,z)-mgl_expr_eval(ex,x,y,z);
 		return res;
 	}
 	mreal dvz(long i,long j=0,long k=0) const
 	{
 		mreal res=0, x=v1.x+dx*i, y=v1.y+dy*j, z=v1.z+dz*k;
-		if(func)	res = func(x,y,z+dz, par)-func(x,y,z, par);
+		if(dfunc)	res = dfunc(x,y,z+dz, par)-dfunc(x,y,z, par);
 		else if(ex)	res = mgl_expr_eval(ex,x,y,z+dz)-mgl_expr_eval(ex,x,y,z);
 		return res;
 	}

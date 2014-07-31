@@ -64,6 +64,7 @@ struct MGL_EXPORT mglAxis
 struct MGL_EXPORT mglLight
 {
 	mglLight():n(false),a(0),b(0)	{}
+	mglLight(const mglLight &aa) : n(aa.n),d(aa.d),r(aa.r),q(aa.q),p(aa.p),a(aa.a),b(aa.b),c(aa.c)	{}
 #if MGL_HAVE_RVAL
 	mglLight(mglLight &&aa) : n(aa.n),d(aa.d),r(aa.r),q(aa.q),p(aa.p),a(aa.a),b(aa.b),c(aa.c)	{}
 #endif
@@ -86,6 +87,8 @@ struct MGL_EXPORT mglDrawReg
 #if MGL_HAVE_RVAL
 	mglDrawReg(mglDrawReg &&aa) : PDef(aa.PDef),angle(aa.angle),ObjId(aa.ObjId),PenWidth(aa.PenWidth),pPos(aa.pPos) ,x1(aa.x1),x2(aa.x2),y1(aa.y1),y2(aa.y2)	{}
 #endif
+	inline const mglDrawReg &operator=(const mglDrawReg &aa)
+	{	memcpy(this,&aa,sizeof(mglDrawReg));	return aa;	}
 	union
 	{
 		uint64_t PDef;
@@ -106,6 +109,8 @@ struct MGL_EXPORT mglDrawDat
 #if MGL_HAVE_RVAL
 	mglDrawDat(mglDrawDat &&aa) : Pnt(aa.Pnt),Prm(aa.Prm),Ptx(aa.Ptx),Glf(aa.Glf),Txt(aa.Txt)	{}
 #endif
+	inline const mglDrawDat&operator=(const mglDrawDat &aa)
+	{	Pnt=aa.Pnt;	Prm=aa.Prm;	Ptx=aa.Ptx;	Glf=aa.Glf;	Txt=aa.Txt;	return aa;	}
 	mglStack<mglPnt>  Pnt;	///< Internal points
 	mglStack<mglPrim> Prm;	///< Primitives (lines, triangles and so on) -- need for export
 	std::vector<mglText> Ptx;	///< Text labels for mglPrim

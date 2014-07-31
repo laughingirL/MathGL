@@ -36,6 +36,10 @@
 #define MGL_LOCAL_CONST		MGL_NO_EXPORT MGL_FUNC_CONST
 #define MGL_LOCAL_PURE		MGL_NO_EXPORT MGL_FUNC_PURE
 
+#if MGL_HAVE_RVAL	// C++11 don't support register keyword
+#define register
+#endif
+
 #if MGL_HAVE_OMP
 #include <omp.h>
 #endif

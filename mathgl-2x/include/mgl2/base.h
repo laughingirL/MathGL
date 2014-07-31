@@ -159,6 +159,7 @@ struct MGL_EXPORT mglPrim	// NOTE: use float for reducing memory size
 #if MGL_HAVE_RVAL
 	mglPrim(mglPrim &&aa) : n1(aa.n1),n2(aa.n2),n3(aa.n3),n4(aa.n4),type(aa.type),angl(aa.angl),id(aa.id),z(aa.z),w(aa.w),m(aa.m) 	{}
 #endif
+	const mglPrim &operator=(const mglPrim &aa)	{	memcpy(this, &aa, sizeof(mglPrim));	return aa;	}
 };
 bool operator<(const mglPrim &a,const mglPrim &b);
 bool operator>(const mglPrim &a,const mglPrim &b);
@@ -174,6 +175,7 @@ struct MGL_EXPORT mglGroup
 #if MGL_HAVE_RVAL
 	mglGroup(mglGroup &&aa) : p(aa.p),Id(aa.Id),Lbl(aa.Lbl)	{}
 #endif
+	inline const mglGroup &operator=(const mglGroup &aa)	{	Lbl = aa.Lbl;	Id = aa.Id;	p = aa.p;	return aa;	}
 };
 //-----------------------------------------------------------------------------
 /// Structure for text label
@@ -188,6 +190,7 @@ struct MGL_EXPORT mglText
 #if MGL_HAVE_RVAL
 	mglText(mglText &&aa) : text(aa.text),stl(aa.stl),val(aa.val)	{}
 #endif
+	const mglText&operator=(const mglText &aa)	{ text=aa.text;	stl=aa.stl;	val=aa.val;	return aa;	}
 };
 //-----------------------------------------------------------------------------
 /// Structure for internal point representation
@@ -204,6 +207,7 @@ struct MGL_EXPORT mglPnt	// NOTE: use float for reducing memory size
 #if MGL_HAVE_RVAL
 	mglPnt(mglPnt &&aa) : xx(aa.xx),yy(aa.yy),zz(aa.zz), x(aa.x),y(aa.y),z(aa.z), c(aa.c),t(aa.t),ta(aa.ta), u(aa.u),v(aa.v),w(aa.w), r(aa.r),g(aa.g),b(aa.b),a(aa.a), sub(aa.sub)	{}
 #endif
+	inline const mglPnt&operator=(const mglPnt &aa)	{	memcpy(this,&aa,sizeof(mglPnt));	return aa;	}
 };
 inline mglPnt operator+(const mglPnt &a, const mglPnt &b)
 {	return mglPnt(a.x+b.x,a.y+b.y,a.z+b.z, a.u+b.u,a.v+b.v,a.w+b.w, a.r+b.r,a.g+b.g,a.b+b.b,a.a+b.a);	}
@@ -250,6 +254,8 @@ struct MGL_EXPORT mglTexture
 	mglTexture():n(0),Smooth(0),Alpha(1)	{}
 	mglTexture(const char *cols, int smooth=0,mreal alpha=1):n(0)
 	{	Set(cols,smooth,alpha);	}
+	mglTexture(const mglTexture &aa) : n(aa.n),Smooth(aa.Smooth),Alpha(aa.Alpha)
+	{	memcpy(col,aa.col,MGL_TEXTURE_COLOURS*sizeof(mglColor));	memcpy(Sch,aa.Sch,260);	}
 #if MGL_HAVE_RVAL
 	mglTexture(mglTexture &&aa) : n(aa.n),Smooth(aa.Smooth),Alpha(aa.Alpha)
 	{	memcpy(col,aa.col,MGL_TEXTURE_COLOURS*sizeof(mglColor));	memcpy(Sch,aa.Sch,260);	}
@@ -264,6 +270,10 @@ struct MGL_EXPORT mglTexture
 	void GetRGBA(unsigned char *f) const;
 	void GetRGBAPRC(unsigned char *f) const;
 	void GetRGBAOBJ(unsigned char *f) const;	// Export repeating border colors, since OBJ by default wraps textures and we need an extra boundary to work around implementation quirks
+	inline const mglTexture &operator=(const mglTexture &aa)
+	{	n=aa.n;	Smooth=aa.Smooth;	Alpha=aa.Alpha;
+		memcpy(col,aa.col,MGL_TEXTURE_COLOURS*sizeof(mglColor));
+		memcpy(Sch,aa.Sch,260);	return aa;	}
 };
 //-----------------------------------------------------------------------------
 const mglColor NC(-1,-1,-1);

@@ -37,6 +37,7 @@ struct MGL_EXPORT mglPoint
 {
 	mreal x,y,z,c;
 	mglPoint(mreal X=0,mreal Y=0,mreal Z=0,mreal C=0):x(X),y(Y),z(Z),c(C) {}
+	mglPoint(const mglPoint &d):x(d.x),y(d.y),z(d.z),c(d.c) {}
 #if MGL_HAVE_RVAL
 	mglPoint(mglPoint &&d):x(d.x),y(d.y),z(d.z),c(d.c)	{}
 #endif
@@ -45,6 +46,8 @@ struct MGL_EXPORT mglPoint
 	inline mreal norm()		{	return sqrt(x*x+y*y+z*z);	}
 	inline void Normalize()	{	mreal v=norm();	x/=v;	y/=v;	z/=v;	}
 
+	inline const mglPoint &operator=(const mglPoint &p)
+	{	x=p.x;	y=p.y;	z=p.z;	c=p.c;	return p;	}
 	inline void operator+=(const mglPoint &a)	{	x+=a.x;	y+=a.y;	z+=a.z;	c+=a.c;	}
 	inline void operator-=(const mglPoint &a)	{	x-=a.x;	y-=a.y;	z-=a.z;	c-=a.c;	}
 	inline void operator+=(mreal a)	{	x+=a;	y+=a;	z+=a;	}
@@ -105,6 +108,8 @@ struct MGL_EXPORT mglColor
 	mglColor():r(0),g(0),b(0),a(1)	{}
 	/// Constructor set color from character id
 	mglColor(char c, float bright=1)		{	Set(c,bright);	}
+	/// Copy constructor
+	mglColor(const mglColor &d):r(d.r),g(d.g),b(d.b),a(d.a)	{}
 #if MGL_HAVE_RVAL
 	mglColor(mglColor &&d):r(d.r),g(d.g),b(d.b),a(d.a)	{}
 #endif
@@ -132,6 +137,8 @@ struct MGL_EXPORT mglColor
 		float rgb[3];	mgl_chrrgb(p,rgb);
 		Set(mglColor(rgb[0],rgb[1],rgb[2]),bright);
 	}
+	inline const mglColor &operator=(const mglColor &p)
+	{	r=p.r;	g=p.g;	b=p.b;	a=p.a;	return p;	}
 	/// Copy color from other one
 	inline bool operator==(const mglColor &c) const
 	{	return (r-c.r)*(r-c.r)+(g-c.g)*(g-c.g)+(b-c.b)*(b-c.b)+(a-c.a)*(a-c.a)==0;	}

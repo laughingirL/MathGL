@@ -921,7 +921,7 @@ void MGL_EXPORT mgl_write_prc(HMGL gr, const char *fname,const char* /*descr*/, 
 //		const HPDF_REAL height = dynamic_cast<mglCanvas *>(gr)->GetHeight();
 //		const HPDF_REAL depth  = sqrt(width*height);
 
-		const HPDF_Rect rect = {0, 0, width, height};
+		const HPDF_Rect rect = {0, 0, HPDF_REAL(width), HPDF_REAL(height)};
 
 		HPDF_Doc	pdf;
 		HPDF_Page page;
