@@ -52,12 +52,9 @@ Generally, MathGL is GPL library. However, you can use LGPL license for MathGL c
 
 @strong{Latest news}
 @itemize
-@item @emph{19 March 2014.}
-New version (v.2.2.2.1) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are compatibility changes for MS VisualStudio 2010 and early, and documentation update.
-@item @emph{10 March 2014.}
-New version (v.@value{VERSION}@value{MINVER}) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are extend of 'region' plot, improve export to TeX, add missing Fortran functions, bugfixes, and other improvements, which denoted @ref{News, here}. Note, this release looks as bug free, but next release (v.2.3) will introduce a set of improvements which may not so stable at first time.
-@item @emph{22 January 2014.}
-New version (v.@value{VERSION}) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are support of Qt5 and Pascal, improvements in JavaScript interface, bugfixes, and other improvements, which denoted @ref{News, here}.
+@item @emph{7 August 2014.}
+New version (v.@value{VERSION}) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are many major improvements for both MathGL core and for UDAV, which denoted @ref{News, here}.
+@comment  New version (v.@value{VERSION}@value{MINVER}) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are extend of 'region' plot, improve export to TeX, add missing Fortran functions, bugfixes, and other improvements, which denoted @ref{News, here}. Note, this release looks as bug free, but next release (v.2.3) will introduce a set of improvements which may not so stable at first time.
 @item @emph{11 November 2013.}
 New version (v.2.2) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are speeding up, new plot kinds and data handling functions, new plot styles, masks for bitmap output, wx-widget, Lua interface, and many other improvements, which denoted @ref{News, here}.
 @end itemize
@@ -78,8 +75,77 @@ Javascript interface was developed with support of @url{http://www.datadvance.ne
 @nav{}
 
 @itemize
-@item
-@strong{19 March 2014.}
+@item @strong{7 August 2014.}
+New version (v.2.3) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are major improvements and speeding up of core MathGL and UDAV.
+@itemize @bullet
+@item Add background image, which allow in particular semi-transparent background color. Correspondingly add function @ref{rasterize} for saving current image as background, and function @ref{background} for loading background image from PNG or JPEG file.
+@item Add primitives to draw @ref{polygon} and angle @ref{arc}.
+@item Allow arbitrary factor for axis ticks (like, @code{gr->SetTicks('x',M_PI,0,NAN,"\\pi");} or @code{@ref{xtick} pi '\pi'}).
+@item Add function @code{AddTick()} for adding manual tick to the list of existed ones.
+
+@item Add new styles and symbols:
+@itemize
+@item arrow style @samp{X} (see @ref{Line styles});
+@item color gradient (color scheme) for text string (see @ref{Color scheme});
+@item manual dash style, like @samp{@{df090@}} (see @ref{Line styles});
+@item manual mask style, like @samp{@{s00ff00182424f800@}} (see @ref{Color scheme});
+@item styles @samp{fFE0123456789+-} for printing numbers in functions @ref{axis}, @ref{colorbar}, @ref{table}, @ref{label};
+@item style @samp{!} to disable ticks tuning in @ref{axis} and @ref{colorbar};
+@item style @samp{!} to draw @ref{grid} lines at subticks coordinates too;
+@item special symbol @samp{\b} which will be ignored at printing;
+@item calligraphic TeX symbols, like @samp{\calB}, @samp{\calE}, @samp{\calF}, @samp{\calH}, @samp{\calI}, @samp{\calL}, @samp{\calM}, @samp{\calR}, @samp{\ell}, @samp{\scrg}, @samp{\scro}.
+@end itemize
+
+@item Add @ref{ode} solving functions for textual formulas.
+@item Add function for global cubic spline interpolation, and function @ref{gspline} to refill data using global spline.
+
+@item Add function @code{random(dat)} to the list of known functions for formula parsing
+@item Add @code{inf} variable to the MGL and formula parsing
+@item Allow reading JPEG files for @ref{import}.
+@item Function @ref{subdata} now can handle NULL argument(s). Add variants of @ref{subdata} with provided 1 and 2 arguments.
+
+@item Warning messages and information are printed to @code{stderr} until call of @code{mgl_suppress_warn(true);} will disable it.
+@item Add function @ref{version} to check if MathGL version is valid.
+
+@item Add move constructor(s) if compiler support C++11 rvalues.
+
+@item Changes in algorithms:
+@itemize
+@item Greatly increase speed of formula parsing (i.e. of functions @ref{modify}, @ref{fill} and similar), and speeding up many other places;
+@item Improve algorithm for contours drawing and filling, taking special attention to quasi-random data;
+@item Function @code{Spline()} now use 5-th order polynomials to keep continuity of 2nd derivative too;
+@item Add function attributes @code{pure} or @ref{const}, which potentially can speed up drawing;
+@item Use spline instead of linear interpolation in functions @ref{flow} and @ref{pipe};
+@item Adjust @ref{columnplot} and @ref{gridplot} positions for non-zero distance between the inplots;
+@item Improve @ref{colorbar} labels drawing for the case of disabled label rotation;
+@item Choose new scales for @ref{perspective};
+@item Allow 'negative' angles for text rotation;
+@item Use new s-hull version for triangulation.
+@end itemize
+
+@item Add @code{ViewAsRotate()} function which handle arguments of @ref{view} by the same way as @ref{rotate} function, i.e @code{View(tetx,tetz,tety)} <=> @code{ViewAsRotate(-tetz,-tetx,-tety)}.
+@item Function @code{mglWindow::Adjust()} for Quality&4==0 now show image in widgets even if draw function is absent (i.e. =NULL).
+@item Make function mgl_get_curvs() to be exported. This function is used internally to connect line segments to a set of curves (in particular, for contour lines).
+
+@item Improvements in UDAV
+@itemize
+@item Rearrange tool buttons;
+@item Add features for manual dashing and manual mask in Style dialog;
+@item Add dialog for new dialog for new inplots (including @ref{subplot}, @ref{multiplot}, @ref{columnplot}, @ref{stickplot}, @ref{gridplot});
+@item Add option to use dots plot at image refreshing (for faster rotation etc);
+@item Add new primitives (@ref{arc}, @ref{polygon}, rotated @ref{text}) as mouse handled ones;
+@item Add close button to data tabs;
+@item Add button to stop script drawing and @code{stop()} slot for QMathGL;
+@item Allow to delete/hide/unhide selected plot;
+@item Allow to move selected plot between inplots;
+@item Improve NewCommand dialog. Now it replace the script command if user change arguments only;
+@item MGL command @{perspective} now work correctly in UDAV;
+@item Update icons to use Oxygen ones.
+@end itemize
+@end itemize
+
+
+@item @strong{19 March 2014.}
 New version (v.2.2.2.1) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are compatibility changes for MS VisualStudio 2010 and early.
 @itemize @bullet
 @item Compatibility changes for MS VisualStudio 2010 and early.
@@ -88,8 +154,7 @@ New version (v.2.2.2.1) of @uref{http://sourceforge.net/projects/mathgl, MathGL}
 @item Update documentation.
 @end itemize
 
-@item
-@strong{10 March 2014.}
+@item @strong{10 March 2014.}
 New version (v.2.2.2) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are minor improvements and bugfixes:
 @itemize @bullet
 @item Add mgl_region_3d() to draw region (or ribbon) between 2 curves. Correspondingly extend mglGraph::Region() function and MGL command 'region'.
@@ -100,8 +165,7 @@ New version (v.2.2.2) of @uref{http://sourceforge.net/projects/mathgl, MathGL} i
 @item Minor bugfixes and memory leaks.
 @end itemize
 
-@item
-@strong{22 January 2014.}
+@item @strong{22 January 2014.}
 New version (v.2.2.1) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are minor improvements and bugfixes:
 @itemize @bullet
 @item Add Qt5 support.
@@ -125,8 +189,7 @@ New version (v.2.2.1) of @uref{http://sourceforge.net/projects/mathgl, MathGL} i
 @item Other minor bugfixes and memory leaks.
 @end itemize
 
-@item
-@strong{11 November 2013.}
+@item @strong{11 November 2013.}
 New version (v.2.2) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are minor bugfixes and improvements:
 @itemize @bullet
 @item Add OpenMP calls mostly everywhere (can work as replacement of pthreads - a bit faster since more loops is parallelized).
@@ -160,212 +223,26 @@ New version (v.2.2) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is 
 @item Update docs.
 @end itemize
 
-@item
-@strong{8 May 2013.}
-New version (v.2.1.3.1) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are minor bugfixes and improvements:
-@itemize @bullet
-@item Compatibility changes for MS VS.
-@item Bugfixes for cmake options @code{enable-double=OFF, enable-zlib=OFF}.
-@item Enable mouse actions for Firefox in JS sample.
-@end itemize
-
-@item
-@strong{2 May 2013.}
-New version (v.2.1.3) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are minor bugfixes and improvements:
-@itemize @bullet
-@item Functions @ref{sinfft}, @ref{cosfft}, @ref{hankel} and so on, become multi-threaded.
-@item Use DFT instead of FFT if GSL support is disabled (much slow!).
-@item Add Join() function for joining mglData arrays (see @ref{join})
-@item Add Roots() function for root finding of nonlinear equation (see @ref{roots})
-@item Add class mglExprC for parsing formula with complex numbers (see @ref{Evaluate expression})
-@item Correctly read #QNAN values in data files
-@item Speed up @ref{dots} drawing
-@item Add flag to disable tick labels at axis origin (see SetOriginTick())
-@item Add MGL commands @ref{origintick}, @ref{tickshift}
-@item WriteJSON now use zlib if filename end at 'z' (like "test.jsonz")
-@item Make separate libmgl-mpi
-@item Add SetAutoRanges() function (duplicate corresponding options)
-@item Add JSON sample usage via QtWebKit (thanks to DATADVANCE)
-@item Bugfixes and memory leaks
-@end itemize
-
-@item
-@strong{28 January 2013.}
-New version (v.2.1.2) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are minor bugfixes and improvements:
-@itemize @bullet
-@item Exclude "local" functions from resulting library.
-@item String in MGL script now can be concatenated with another string or data/numbers (like @samp{'max(u)=',u.max,' a.u.'}).
-@item Bugfix for colors in 3D PDF.
-@item Bugfix for drawing in MPI mode.
-@item If Aspect() function have NAN argument(s) then it try to select optimal aspect ratio.
-@item Option 'size' in Legend() now change only text size (not mark size).
-@item Option 'meshnum' now influence on Boxs() and Belt() functions
-@item Adjust marks drawing (line width and dots).
-@item Minor improvements and bugfixes.
-@end itemize
-
-@item
-@strong{24 December 2012.}
-New version (v.2.1.1) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are minor bugfixes and improvements:
-@itemize @bullet
-@item Bugfix for SetRange(val,val) function
-@item Exclude export MGL to CPP
-@item MGL parsing now produce errors for any wrong list of arguments
-@item Add help message to mgl.cgi
-@item Improve text rotation at View()
-@item Make compatible with GIF library v.5.0.
-@item Bugfix for making MPI interface.
-@item Bugfix for running in Win32 mode.
-@item Update docs and MGL samples
-@end itemize
-
-@item
-@strong{13 December 2012.}
-New version (v.2.1) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are speeding up and many improvements and bugfixes:
-@itemize @bullet
-@item
-Add class mglDataC for complex data arrays.
-@item
-Add Vect3() plot for drawing vectors on slice of 3d vector field. See @ref{Vect3 sample}.
-@item
-Add Table() function for drawing table with data values. See @ref{Table sample}.
-@item
-Add ZoomAxis() for zooming/shifting axis range as whole.
-@item
-Add WriteJSON() function for exporting in JSON format suitable for later drawing by JavaScript
-@item
-Add JavaScript code for visualizing JSON data. See @uref{../json.html, samples}.
-@item
-Add mgl.cgi tool which return PNG image for CGI request in form of MGL script.
-@item
-Add mglData::Solve() for finding x-value where dat(x)=val. See @ref{Solve sample}.
-@item
-Add mglData::Clean() for removing rows with duplicate values for given column.
-@item
-Add MGL commands 'errbox', 'face'
-
-@item
-Color can be specified as its RGB[A] values, i.e. like @samp{@{xFFFFFF@}} or @samp{@{xFFFFFFFF@}}. See @ref{Line styles}.
-@item
-Color in color scheme  may have position in range [0,1]. Format is @samp{@{CN,pos@}} or @samp{@{xFFFFFF,pos@}}. See @ref{Color scheme}.
-@item
-Now pen width for marks is proportional to pen width of line multiplied by size of marks.
-@item
-Now you can use different font-faces in the plot simultaneously. See @ref{Text features}.
-@item
-Now Legend() automatically use several columns if it contain too many legend entries.
-@item
-Add style '-' for legend for drawing them horizontally. See @ref{Legend sample}.
-@item
-Vectors is drawn now even if only starting or ending points are placed in bounding box.
-@item
-Strongly rewrite the algorithm of vector field plotting.
-
-@item
-Grid lines for NAN origin values are always located at far-away edges.
-@item
-Try correctly place axis and tick labels even for axis with inverse range (i.e. for v2<v1). Note, it work well for 2D axis. One should use Aspect() with negative values to do it correctly in general case.
-@item
-Axis style 'XYZ' draw corresponding axis with ticks labels on opposite side. This also influence on following Label() calls.
-@item
-Text is drawn for initially invisible axis (like z-axis) too.
-
-@item
-Frames now save 3D information if MGL_VECT_FRAME is set (by default).
-@item
-Add functions GetFrame(), DelFrame(), SetFrame(), ShowFrame() for replacing or showing data from given frame. It can be use to hide/show a set of plot(s) quickly. Work if MGL_VECT_FRAME is set on (by default is on).
-@item
-CalcXYZ() function now use data from z-buffer for better determining @{x,y,z@} coordinates.
-
-@item
-Add dialog for data arguments in "New command" dialog of UDAV. See @ref{UDAV dialogs}.
-@item
-Value of arguments are saved while the kind of command is changed in "New command" dialog of UDAV.
-@item
-Extend classification of commands in "New command" dialog of UDAV and make it automatic.
-@item
-Mouse position at an object click now is displayed on the image itself.
-@item
-Add zoom in/out by mouse wheel.
-@item
-Add zoom in/out of axis range by mouse wheel, and shift of axis range by middle button.
-@item
-Text editor in UDAV now highlight current line.
-@item
-Completer can be switched off correctly now.
-@item
-Multi-line strings (i.e. separated by "\" symbol) are highlighted correctly now.
-@item
-Add option to enable/disable selected plot in UDAV.
-@item
-Rearrange hot-keys in UDAV and in QMathGL.
-
-@item
-Make code compilable by Borland compiler too.
-@item
-Improve output in OpenGL mode.
-@item
-Add fog at export in EPS/SVG formats.
-@item
-Add mglParse::AllowFileIO() for enable/disable I/O commands in MGL scripts.
-
-@item
-Export functions now can write in stdout if file name is "-".
-@item
-Picture drawing now use multi-threading for each stage.
-
-@item
-Functions mglData::Spline*, mglData::Linear* now can return gradient at the point.
-@item
-mglFourier now make true inverse transform.
-
-@item
-Add annotation for all pure C functions.
-@item
-Update list of built-in glyphs.
-@item
-Update samples.
-@item
-Update documentation.
-@item
-Different bugfixes.
-
-@item
-@strong{INCOMPATIBLE CHANGES:} in the arguments of functions: mgl_axis, mgl_axis_grid, mgl_label, mgl_labelw, mgl_legend_pos, mgl_legend; and in functions for MGL parsing.
-@item
-@strong{MINOR INCOMPATIBLE:} plotting functions now use double argument always.
-@end itemize
-
-@item 
-@strong{23 August 2011.} Version 2.0.beta was released.
-@item 
-@strong{30 May 2011.} Version 1.11.2 was released.
-@item 
-@strong{8 November 2010.} Version 1.11 was released.
-@item 
-@strong{28 December 2009.} Version 1.10 was released.
-@item 
-@strong{8 July 2009.} Version 1.9 was released.
-@item 
-@strong{27 November 2008.} Version 1.8 was released.
-@item 
-@strong{5 June 2008.} Version 1.7 was released.
-@item 
-@strong{17 March 2008.} Version 1.6 was released.
-@item 
-@strong{11 January 2008.} Version 1.5 was released.
-@item 
-@strong{30 October 2007.} Version 1.4 was released.
-@item 
-@strong{15 October 2007.} Version 1.3 was released.
-@item 
-@strong{10 September 2007.} Version 1.2 was released.
-@item 
-@strong{23 May 2007.} Version 1.1 was released.
-@item 
-@strong{2 April 2007.} Version 1.0 was released.
-@item 
-@strong{24 January 2007.} First public release (v.0.8).
+@item @strong{8 May 2013.} Version 2.1.3.1 was released.
+@item @strong{2 May 2013.} Version 2.1.3 was released.
+@item @strong{28 January 2013.} Version 2.1.2 was released.
+@item @strong{24 December 2012.} Version 2.1.1 was released.
+@item @strong{13 December 2012.} Version 2.1 was released.
+@item @strong{23 August 2011.} Version 2.0.beta was released.
+@item @strong{30 May 2011.} Version 1.11.2 was released.
+@item @strong{8 November 2010.} Version 1.11 was released.
+@item @strong{28 December 2009.} Version 1.10 was released.
+@item @strong{8 July 2009.} Version 1.9 was released.
+@item @strong{27 November 2008.} Version 1.8 was released.
+@item @strong{5 June 2008.} Version 1.7 was released.
+@item @strong{17 March 2008.} Version 1.6 was released.
+@item @strong{11 January 2008.} Version 1.5 was released.
+@item @strong{30 October 2007.} Version 1.4 was released.
+@item @strong{15 October 2007.} Version 1.3 was released.
+@item @strong{10 September 2007.} Version 1.2 was released.
+@item @strong{23 May 2007.} Version 1.1 was released.
+@item @strong{2 April 2007.} Version 1.0 was released.
+@item @strong{24 January 2007.} First public release (v.0.8).
 @end itemize
 
 @external{}

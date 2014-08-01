@@ -1,56 +1,57 @@
 2.3 Released ??? 2014
 
-* Add background image, which allow in particular semi-transparent background color.
-* Add function Rasterize() and MGL command 'rasterize' to save current image as background.
-* Add function LoadBackground() and MGL command 'background' to load image for background.
+* Add background image, which allow in particular semi-transparent background color. Correspondingly add function Rasterize() for saving current image as background, and function LoadBackground() for loading background image from PNG or JPEG file.
 * Add primitives to draw polygon and angle arc.
 * Allow arbitrary factor for axis ticks (like, gr->SetTicks('x',M_PI,0,NAN,"\\pi");).
 * Add function AddTick() for adding manual tick to existed ones.
-* Greatly increase speed of formula parsing (i.e. of functions mglData::Modify(), mglData::Fill() and similar).
-* Add arrow style 'X'
-* Add color gradient (color scheme) of glyphs in text.
-* Add manual dash style, like "{df090}"
-* Add manual mask style, like "{s00ff00182424f800}"
+* Add new styles and symbols:
+  - arrow style 'X';
+  - color gradient (color scheme) of glyphs in text;
+  - manual dash style, like "{df090}";
+  - manual mask style, like "{s00ff00182424f800}";
+  - Add styles 'fFE0123456789+-' for printing numbers in functions Axis(), Colorbar(), Table() and Label();
+  - style '!' to disable ticks tuning in Axis() and Colorbar();
+  - special symbol '\b' which will be ignored at printing;
+  - calligraphic TeX symbols, like \calB, \calE, \calF, \calH, \calI, \calL, \calM, \calR, \ell, \scrg, \scro.
+
 * Add ODE solving functions for textual formulas
-* Add styles 'fFE0123456789+-' for printing numbers in functions Axis(), Colorbar(), Table() and Label().
-* Add style '!' to disable ticks tuning in Axis() and Colorbar().
-* Improve and slightly speed up algorithm for contours drawing and filling, taking special attention to quasi-random data.
+* Add function for global cubic spline interpolation, and function to refill using global spline.
 * Add function "random(dat)" to the list of known functions for formula parsing
 * Add 'inf' variable to the MGL and formula parsing
-* Spline() now use 5-th order polynomials to keep continuity of 2nd derivative too.
-* Function mgl_data_subdata_ext() handle NULL argument(s). Add variants of mglData::SubData() with 1 and 2 arguments.
-* Use new s-hull version for triangulation.
-* Warning messages and information are printed to stderr until call of mgl_suppress_warn(true) will disable it.
-* Add function attributes 'pure' or 'const', which potentially can speed up drawing.
-* Add function mgl_check_version() and MGL command 'version' to check if MathGL version is valid.
-* Add special symbol '\b' which will be ignored at printing
-* Allow 'negative' angles for text rotation
-* Common speeding up in many places
-* Use spline instead of linear interpolation in functions Flow() and Pipe().
-* Make function mgl_get_curvs() to be exported. This function is used internally to connect line segments to a set of curves (in particular, for contour lines).
-* Add calligraphic TeX symbols, like \calB, \calE, \calF, \calH, \calI, \calL, \calM, \calR, \ell, \scrg, \scro
-* Improve colorbar labels drawing at SetRotatedText(false)
-* Add move constructor(s) if compiler support C++11 rvalues.
-* Add ViewAsRotate() function which handle arguments of View() by the same way as Rotate() function, i.e View(tetx,tetz,tety) <=> ViewAsRotate(-tetz,-tetx,-tety)
-* Adjust columnplot and gridplot positions for non-zero distance between the inplots.
-* Function Adjust() for Quality&4==0 now show image in widgets even if draw function is absent (i.e. =NULL).
 * Allow reading JPEG files for mglData::Import().
-* Add function for global cubic spline interpolation, and function to refill using global spline.
-* Choose new scales for perspective.
-* General speeding up
+* Function mgl_data_subdata_ext() handle NULL argument(s). Add variants of SubData() with 1 and 2 arguments.
+* Warning messages and information are printed to stderr until call of mgl_suppress_warn(true) will disable it.
+* Add function mgl_check_version() and MGL command 'version' to check if MathGL version is valid.
+* Add move constructor(s) if compiler support C++11 rvalues.
 
-* Rearrange tool buttons in UDAV
-* Add features for manual dashing and manual mask in Style dialog
-* Add dialog for new dialog for new inplots (including subplot, multiplot, columnplot, stickplot, gridplot)
-* Add option to use dots plot at image refreshing (for faster rotation etc)
-* Add new primitives (arc,polygon,rotated text) as mouse handled ones in UDAV
-* Add close button to data tabs in UDAV
-* Add button to stop script drawing in UDAV and stop() slot for QMathGL
-* Allow to delete/hide/unhide selected plot
-* Allow to move selected plot between inplots
-* Improve NewCommand dialog in UDAV. Now it replace the script command if user change arguments only.
-* MGL command 'perspective' now work correctly in UDAV
-* Update UDAV icons to use Oxygen ones
+* Changes in algorithms:
+  - Greatly increase speed of formula parsing (i.e. of functions mglData::Modify(), mglData::Fill() and similar), and speeding up many other places;
+  - Improve algorithm for contours drawing and filling, taking special attention to quasi-random data.
+  - Spline() now use 5-th order polynomials to keep continuity of 2nd derivative too.
+  - Add function attributes 'pure' or 'const', which potentially can speed up drawing.
+  - Use spline instead of linear interpolation in functions Flow() and Pipe().
+  - Adjust columnplot and gridplot positions for non-zero distance between the inplots.
+  - Improve colorbar labels drawing at SetRotatedText(false)
+  - Choose new scales for perspective.
+  - Allow 'negative' angles for text rotation
+  - Use new s-hull version for triangulation.
+* Make function mgl_get_curvs() to be exported. This function is used internally to connect line segments to a set of curves (in particular, for contour lines).
+* Add ViewAsRotate() function which handle arguments of View() by the same way as Rotate() function, i.e View(tetx,tetz,tety) <=> ViewAsRotate(-tetz,-tetx,-tety)
+* Function mglWindow::Adjust() for Quality&4==0 now show image in widgets even if draw function is absent (i.e. =NULL).
+
+* improvements in UDAV:
+  - Rearrange tool buttons;
+  - Add features for manual dashing and manual mask in Style dialog;
+  - Add dialog for new dialog for new inplots (including subplot, multiplot, columnplot, stickplot, gridplot);
+  - Add option to use dots plot at image refreshing (for faster rotation etc);
+  - Add new primitives (arc,polygon,rotated text) as mouse handled ones;
+  - Add close button to data tabs;
+  - Add button to stop script drawing  and stop() slot for QMathGL;
+  - Allow to delete/hide/unhide selected plot;
+  - Allow to move selected plot between inplots;
+  - Improve NewCommand dialog -- now it replace the script command if user change arguments only;
+  - MGL command 'perspective' now work correctly in UDAV;
+  - Update UDAV icons to use Oxygen ones.
 
 2.2.2.1 Released 19 March 2014
 

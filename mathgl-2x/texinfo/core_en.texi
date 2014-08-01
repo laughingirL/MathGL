@@ -281,7 +281,7 @@ Sets size of arrows for @ref{1D plotting}, lines and curves (see @ref{Primitives
 @deftypefnx {Method on @code{mglGraph}} @code{void} SetMeshNum (@code{int} val)
 @deftypefnx {C function} @code{void} mgl_set_meshnum (@code{HMGL} gr, @code{int} num)
 @end ifclear
-Sets approximate number of lines in @ref{mesh}, @ref{fall}, @ref{grid} and also the number of hachures in @ref{vect}, @ref{dew} and the number of cells in @ref{cloud}. By default (=0) it draws all lines/hachures/cells.
+Sets approximate number of lines in @ref{mesh}, @ref{fall}, @ref{grid2} and also the number of hachures in @ref{vect}, @ref{dew} and the number of cells in @ref{cloud}. By default (=0) it draws all lines/hachures/cells.
 @end deftypefn
 
 @anchor{facenum}
@@ -1937,7 +1937,7 @@ The same as previous but with sharp colors @var{sch} (current palette if @code{s
 @deftypefnx {Method on @code{mglGraph}} @code{void} Grid (@code{const char *}dir=@code{"xyz"}, @code{const char *}pen=@code{"B"}, @code{const char *}opt=@code{""})
 @deftypefnx {C function} @code{void} mgl_axis_grid (@code{HMGL} gr, @code{const char *}dir, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-Draws grid lines perpendicular to direction determined by string parameter @var{dir}. The step of grid lines is the same as tick step for @ref{axis}. The style of lines is determined by @var{pen} parameter (default value is dark blue solid line @samp{B-}).
+Draws grid lines perpendicular to direction determined by string parameter @var{dir}. If @var{dir} contain @samp{!} then grid lines will be drawn at coordinates of subticks also. The step of grid lines is the same as tick step for @ref{axis}. The style of lines is determined by @var{pen} parameter (default value is dark blue solid line @samp{B-}).
 @end deftypefn
 
 @anchor{box}
@@ -2671,7 +2671,7 @@ The same as previous with vector @var{v} of @var{num}-th elements equidistantly 
 @deftypefnx {C function} @code{void} mgl_grid (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_grid_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-The function draws grid lines for density plot of surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} at @var{z} equal to minimal z-axis value. See also @ref{dens}, @ref{cont}, @ref{contf}, @ref{meshnum}.
+The function draws grid lines for density plot of surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} at @var{z} equal to minimal z-axis value. See also @ref{dens}, @ref{cont}, @ref{contf}, @ref{grid3}, @ref{meshnum}.
 @end deftypefn
 
 

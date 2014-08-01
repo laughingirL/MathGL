@@ -681,18 +681,41 @@ void mglCanvas::tick_draw(mglPoint o, mglPoint d1, mglPoint d2, int f)
 void mglCanvas::Grid(const char *dir, const char *pen, const char *opt)
 {
 	SaveState(opt);
-	if(!dir || !dir[0])	dir="xyz";
+	bool at_tick=mglchr(dir,'!');
+	if(!mglchrs(dir,"xyz"))	dir="xyz";
 	AdjustTicks(dir,false);
 	SetPenPal(pen);
 
 	static int cgid=1;	StartGroup("AxisGrid",cgid++);
-	if(strchr(dir,'x'))	DrawGrid(ax);
-	if(strchr(dir,'y'))	DrawGrid(ay);
-	if(strchr(dir,'z'))	DrawGrid(az);
+	if(strchr(dir,'x'))	DrawGrid(ax,at_tick);
+	if(strchr(dir,'y'))	DrawGrid(ay,at_tick);
+	if(strchr(dir,'z'))	DrawGrid(az,at_tick);
 	EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::DrawGrid(mglAxis &aa)
+void MGL_NO_EXPORT mgl_drw_grid(HMGL gr, double val, const mglPoint &d, const mglPoint &oa, const mglPoint &ob, const mglPoint &da1, const mglPoint &db1, const mglPoint &da2, const mglPoint &db2)
+{
+	mglPoint q,p;
+	q = oa+d*val;	p = q+da1;	// lines along 'a'
+	long k1 = gr->AddPnt(p), k2;
+	for(long j=1;j<31;j++)
+	{
+		mreal v = j/30.;
+		p = q+da1*(1-v)+da2*v;
+		k2 = k1;	k1 = gr->AddPnt(p);
+		gr->line_plot(k2,k1);
+	}
+	q = ob+d*val;	p = q+db1;	// lines along 'b'
+	k1 = gr->AddPnt(p);
+	for(long j=1;j<31;j++)
+	{
+		mreal v = j/30.;
+		p = q+db1*(1-v)+db2*v;
+		k2 = k1;	k1 = gr->AddPnt(p);
+		gr->line_plot(k2,k1);
+	}
+}
+void mglCanvas::DrawGrid(mglAxis &aa, bool at_tick)
 {
 	mglPoint pp[8]={Min,Min,Min,Min,Max,Max,Max,Max},nan=mglPoint(NAN), oo[8], org=Min;
 	pp[1].x=Max.x;	pp[2].y=Max.y;	pp[3].z=Max.z;
@@ -715,25 +738,29 @@ void mglCanvas::DrawGrid(mglAxis &aa)
 	long n=aa.txt.size();
 
 	Reserve(62*n);
+	if(at_tick && aa.ds>0 && !get(MGL_NOSUBTICKS))
+	{
+		mreal v0 = mgl_isnan(aa.o) ? aa.v0 : aa.o;
+		if(aa.v2>aa.v1)	v0 = v0 - aa.ds*floor((v0-aa.v1)/aa.ds+1e-3);
+		else			v0 = v0 - aa.ds*floor((v0-aa.v2)/aa.ds+1e-3);
+		if(v0+aa.ds!=v0 && aa.v2+aa.ds!=aa.v2)
+			for(mreal v=v0;(v-aa.v2)*(v-aa.v1)<=0;v+=aa.ds)
+				mgl_drw_grid(this, v, d, oa, ob, da1, db1, da2, db2);
+	}
+	if(aa.dv)	at_tick = false;
 	if(n>0)	for(long i=0;i<n;i++)
 	{
-		q = oa+d*aa.txt[i].val;	p = q+da1;	// lines along 'a'
-		long k1 = AddPnt(&B, p,CDef), k2;
-		for(long j=1;j<31;j++)
+		mreal v = aa.txt[i].val;
+		mgl_drw_grid(this, v, d, oa, ob, da1, db1, da2, db2);
+		if(at_tick)
 		{
-			mreal v = j/30.;
-			p = q+da1*(1-v)+da2*v;
-			k2 = k1;	k1 = AddPnt(&B, p,CDef);
-			line_plot(k2,k1);
-		}
-		q = ob+d*aa.txt[i].val;	p = q+db1;	// lines along 'b'
-		k1 = AddPnt(&B, p,CDef);
-		for(long j=1;j<31;j++)
-		{
-			mreal v = j/30.;
-			p = q+db1*(1-v)+db2*v;
-			k2 = k1;	k1 = AddPnt(&B, p,CDef);
-			line_plot(k2,k1);
+			mreal u = fabs(v);
+			if(aa.v2>aa.v1 && fabs(u-exp(M_LN10*floor(0.1+log10(u))))<0.01*u)
+				for(long j=2;j<10 && v*j<aa.v2;j++)
+					mgl_drw_grid(this, v*j, d, oa, ob, da1, db1, da2, db2);
+			if(aa.v2<aa.v1 && fabs(u-exp(M_LN10*floor(0.1+log10(u))))<0.01*u)
+				for(long j=2;j<10 && v*j<aa.v1;j++)
+					mgl_drw_grid(this, v*j, d, oa, ob, da1, db1, da2, db2);
 		}
 	}
 }

@@ -25,7 +25,9 @@ empty color in @ref{chart}.
 @item !
 set to use new color from palette for each point (not for each curve, as default) in @ref{1D plotting};
 
-set to disable ticks tuning in @ref{axis} and @ref{colorbar}.
+set to disable ticks tuning in @ref{axis} and @ref{colorbar};
+
+set to draw @ref{grid} lines at subticks coordinates too.
 
 @item #
 set to use solid marks (see @ref{Line styles}) or solid @ref{error} boxes;

@@ -382,7 +382,7 @@ protected:
 	/// Draw axis
 	void DrawAxis(mglAxis &aa, bool text=true, char arr=0,const char *stl="",const char *opt="");
 	/// Draw axis grid lines
-	void DrawGrid(mglAxis &aa);
+	void DrawGrid(mglAxis &aa, bool at_tick=false);
 	/// Update axis ranges
 	inline void UpdateAxis()
 	{	ax.v0=Org.x;	ay.v0=Org.y;	az.v0=Org.z;	ac.v0=Org.c;
