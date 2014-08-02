@@ -114,7 +114,7 @@ New version (v.2.3) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is 
 @item Greatly increase speed of formula parsing (i.e. of functions @ref{modify}, @ref{fill} and similar), and speeding up many other places;
 @item Improve algorithm for contours drawing and filling, taking special attention to quasi-random data;
 @item Function @code{Spline()} now use 5-th order polynomials to keep continuity of 2nd derivative too;
-@item Add function attributes @code{pure} or @ref{const}, which potentially can speed up drawing;
+@item Add function attributes @code{pure} or @code{const}, which potentially can speed up drawing;
 @item Use spline instead of linear interpolation in functions @ref{flow} and @ref{pipe};
 @item Adjust @ref{columnplot} and @ref{gridplot} positions for non-zero distance between the inplots;
 @item Improve @ref{colorbar} labels drawing for the case of disabled label rotation;
@@ -139,7 +139,7 @@ New version (v.2.3) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is 
 @item Allow to delete/hide/unhide selected plot;
 @item Allow to move selected plot between inplots;
 @item Improve NewCommand dialog. Now it replace the script command if user change arguments only;
-@item MGL command @{perspective} now work correctly in UDAV;
+@item MGL command @ref{perspective} now work correctly in UDAV;
 @item Update icons to use Oxygen ones.
 @end itemize
 @end itemize

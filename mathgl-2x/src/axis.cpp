@@ -695,6 +695,7 @@ void mglCanvas::Grid(const char *dir, const char *pen, const char *opt)
 //-----------------------------------------------------------------------------
 void MGL_NO_EXPORT mgl_drw_grid(HMGL gr, double val, const mglPoint &d, const mglPoint &oa, const mglPoint &ob, const mglPoint &da1, const mglPoint &db1, const mglPoint &da2, const mglPoint &db2)
 {
+	gr->Reserve(62);
 	mglPoint q,p;
 	q = oa+d*val;	p = q+da1;	// lines along 'a'
 	long k1 = gr->AddPnt(p), k2;
@@ -735,9 +736,6 @@ void mglCanvas::DrawGrid(mglAxis &aa, bool at_tick)
 	db1 = aa.b*(aa.b*Min);	db2 = aa.b*(aa.b*Max);
 	oa  = aa.b*(aa.b*org);	ob  = aa.a*(aa.a*org);
 
-	long n=aa.txt.size();
-
-	Reserve(62*n);
 	if(at_tick && aa.ds>0 && !get(MGL_NOSUBTICKS))
 	{
 		mreal v0 = mgl_isnan(aa.o) ? aa.v0 : aa.o;
@@ -748,6 +746,7 @@ void mglCanvas::DrawGrid(mglAxis &aa, bool at_tick)
 				mgl_drw_grid(this, v, d, oa, ob, da1, db1, da2, db2);
 	}
 	if(aa.dv)	at_tick = false;
+	long n=aa.txt.size();
 	if(n>0)	for(long i=0;i<n;i++)
 	{
 		mreal v = aa.txt[i].val;

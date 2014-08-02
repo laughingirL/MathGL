@@ -64,6 +64,7 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
+	gr->Grid("!");	return;
 	mglParse par;
 	par.Execute(gr,"subplot 1 1 0:#rotate 40 60\nperspective 0.9:box:axis\n");
 //	par.Execute(gr,"subplot 1 1 0:#rotate 40 60\nperspective 1.22:box:axis\n");
