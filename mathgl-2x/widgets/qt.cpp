@@ -338,7 +338,7 @@ void QMathGL::afterPlot()
 //-----------------------------------------------------------------------------
 void QMathGL::drawPrim()
 {
-	mgl_clf(gr);
+//	mgl_clf_nfog(gr);
 	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>(gr);
 	mgl_get_frame(gr, g?g->GetCurFig():mgl_get_num_frame(gr)-1);
 	mglParse pr;

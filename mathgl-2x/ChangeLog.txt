@@ -50,7 +50,7 @@
   - Allow to delete/hide/unhide selected plot;
   - Allow to move selected plot between inplots;
   - Improve NewCommand dialog -- now it replace the script command if user change arguments only;
-  - MGL command 'perspective' now work correctly in UDAV;
+  - MGL commands 'perspective' and 'fog' now work correctly in UDAV;
   - Update UDAV icons to use Oxygen ones.
 
 2.2.2.1 Released 19 March 2014

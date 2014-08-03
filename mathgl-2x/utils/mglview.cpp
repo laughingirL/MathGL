@@ -83,9 +83,9 @@ int main(int argc, char **argv)
 	if(mgld)
 	{
 		gr.Setup(false);
-		setlocale(LC_NUMERIC, "C");
+		gr.NewFrame();	setlocale(LC_NUMERIC, "C");
 		gr.ImportMGLD(iname);
-		setlocale(LC_NUMERIC, "");
+		setlocale(LC_NUMERIC, "");	gr.EndFrame();
 		gr.Update();
 	}
 	if(!mglGlobalMess.empty())	printf("%s",mglGlobalMess.c_str());

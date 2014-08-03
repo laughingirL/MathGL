@@ -64,7 +64,7 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	gr->Grid("!");	return;
+	gr->Rotate(40,60);	gr->Fog(1);	gr->Box();	return;
 	mglParse par;
 	par.Execute(gr,"subplot 1 1 0:#rotate 40 60\nperspective 0.9:box:axis\n");
 //	par.Execute(gr,"subplot 1 1 0:#rotate 40 60\nperspective 1.22:box:axis\n");
@@ -418,7 +418,8 @@ int main(int argc,char **argv)
 		mgl_set_test_mode(true);	test(gr);
 		time(&en);	printf("time is %g sec\n",difftime(en,st));
 		gr->WritePNG("test.png","",false);
-//		gr->WriteEPS("test.eps");
+		gr->WriteSVG("test.svg");
+		gr->WriteEPS("test.eps");
 		printf("Messages:%s\n",gr->Message());
 		printf("Global:%s\n",mglGlobalMess.c_str());
 		delete gr;	return 0;

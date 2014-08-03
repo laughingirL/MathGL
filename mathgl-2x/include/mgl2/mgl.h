@@ -406,6 +406,8 @@ public:
 	inline void SetFrame(int i)	{	mgl_set_frame(gr, i);	}
 	/// Append drawing data from i-th frame (work if MGL_VECT_FRAME is set on)
 	inline void ShowFrame(int i){	mgl_show_frame(gr, i);	}
+	/// Clear list of primitives for current drawing
+	inline void ClearFrame()	{	mgl_clear_frame(gr);	}
 
 	/// Start write frames to cinema using GIF format
 	inline void StartGIF(const char *fname, int ms=100)

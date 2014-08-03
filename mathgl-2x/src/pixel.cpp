@@ -645,44 +645,18 @@ void mglCanvas::ClfZB(bool force)
 //-----------------------------------------------------------------------------
 void mglCanvas::Clf(mglColor Back)
 {
-	Fog(0);		PDef = 0xffff;	pPos = 0;	StartAutoGroup(NULL);
-	Pnt.clear();	Prm.clear();	Ptx.clear();	Glf.clear();
-	Sub.clear();	Leg.clear();	Grp.clear();	Act.clear();
-//	pnt_col.clear();	prm_col.clear();
-
-#pragma omp critical(txt)
-	{
-		Txt.clear();	Txt.reserve(3);
-		mglTexture t1(MGL_DEF_PAL,-1), t2(MGL_DEF_SCH,1);
-		MGL_PUSH(Txt,t1,mutexTxt);
-		MGL_PUSH(Txt,t2,mutexTxt);
-	}
-
-//	if(Back==NC)		Back = mglColor(1,1,1);
+	Fog(0);	PDef = 0xffff;	pPos = 0;
+	ClearFrame();
 	if((Flag&3)==2)	Back = mglColor(0,0,0,0);
 	if(Back!=NC)	FillBackground(Back);
-//	{	BDef[0]=Back.r*255;	BDef[1]=Back.g*255;BDef[2]=Back.b*255;	BDef[3]=0;	}
-	ClfZB(true);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::Clf(const char *col)
 {
-	Fog(0);		PDef = 0xffff;	pPos = 0;	StartAutoGroup(NULL);
-	Pnt.clear();	Prm.clear();	Ptx.clear();	Glf.clear();
-	Sub.clear();	Leg.clear();	Grp.clear();	Act.clear();
-//	pnt_col.clear();	prm_col.clear();
-
-#pragma omp critical(txt)
-	{
-		Txt.clear();	Txt.reserve(3);
-		mglTexture t1(MGL_DEF_PAL,-1), t2(MGL_DEF_SCH,1);
-		MGL_PUSH(Txt,t1,mutexTxt);
-		MGL_PUSH(Txt,t2,mutexTxt);
-	}
-
+	Fog(0);	PDef = 0xffff;	pPos = 0;
+	ClearFrame();
 	mglTexture txt(col,0,0);
 	FillBackground(txt.col[1]);
-	ClfZB(true);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::Rasterize()

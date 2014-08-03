@@ -139,7 +139,7 @@ New version (v.2.3) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is 
 @item Allow to delete/hide/unhide selected plot;
 @item Allow to move selected plot between inplots;
 @item Improve NewCommand dialog. Now it replace the script command if user change arguments only;
-@item MGL command @ref{perspective} now work correctly in UDAV;
+@item MGL commands @ref{perspective} and @ref{fog} now work correctly in UDAV;
 @item Update icons to use Oxygen ones.
 @end itemize
 @end itemize

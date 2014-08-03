@@ -236,6 +236,8 @@ using mglBase::Light;
 	virtual void SetFrame(long i);
 	/// Add drawing data from i-th frame to the current drawing
 	void ShowFrame(long i);
+	/// Clear list of primitives for current drawing
+	void ClearFrame();
 
 	/// Start write frames to cinema using GIF format
 	void StartGIF(const char *fname, int ms=100);

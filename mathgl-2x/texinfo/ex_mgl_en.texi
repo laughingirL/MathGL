@@ -275,7 +275,7 @@ xlabel 'x' 0:ylabel 'y = sin 1/x' 0
 
 subplot 2 2 1 '<_':title 'Log-log axis'
 ranges 0.01 100 0.1 100:axis 'lg(x)' 'lg(y)' ''
-axis:fplot 'sqrt(1+x^2)'
+axis:grid '!' 'h=':grid:fplot 'sqrt(1+x^2)'
 xlabel 'x' 0:ylabel 'y = \sqrt{1+x^2}' 0
 
 subplot 2 2 2 '<_':title 'Minus-log axis'

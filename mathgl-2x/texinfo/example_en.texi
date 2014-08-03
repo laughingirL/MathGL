@@ -831,7 +831,8 @@ int sample(mglGraph *gr)
 
   gr->SubPlot(2,2,1,"<_");  gr->Title("Log-log axis");
   gr->SetRanges(0.01,100,0.1,100);  gr->SetFunc("lg(x)","lg(y)");
-  gr->Axis(); gr->FPlot("sqrt(1+x^2)"); gr->Label('x',"x",0);
+  gr->Axis(); gr->Grid("!","h=");   gr->Grid();
+  gr->FPlot("sqrt(1+x^2)"); gr->Label('x',"x",0);
   gr->Label('y', "y = \\sqrt{1+x^2}",0);
 
   gr->SubPlot(2,2,2,"<_");  gr->Title("Minus-log axis");

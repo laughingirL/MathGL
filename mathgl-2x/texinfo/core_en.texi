@@ -1377,6 +1377,11 @@ Deletes drawing data for frame @var{i} and shift all later frame indexes. Functi
 Reset frames counter (start it from zero).
 @end deftypefn
 
+@deftypefn {Method on @code{mglGraph}} @code{void} ClearFrame (@code{int} i)
+@deftypefnx {C function} @code{void} mgl_clear_frame (@code{HMGL} gr, @code{int} i)
+Clear list of primitives for current drawing.
+@end deftypefn
+
 @deftypefn {Method on @code{mglGraph}} @code{void} StartGIF (@code{const char *}fname, @code{int} ms=@code{100})
 @deftypefnx {C function} @code{void} mgl_start_gif (@code{HMGL} gr, @code{const char *}fname, @code{int} ms)
 Start writing frames into animated GIF file @var{fname}. Parameter @var{ms} set the delay between frames in milliseconds. You @strong{should not} change the picture size during writing the cinema. Use @code{CloseGIF()} to finalize writing. Note, that this function is disabled in OpenGL mode.

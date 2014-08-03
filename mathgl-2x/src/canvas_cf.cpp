@@ -77,6 +77,8 @@ void MGL_EXPORT mgl_show_frame(HMGL gr, int i)
 {	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->ShowFrame(i);	}
 void MGL_EXPORT mgl_del_frame(HMGL gr, int i)
 {	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->DelFrame(i);	}
+void MGL_EXPORT mgl_clear_frame(HMGL gr)
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->ClearFrame();	}
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_set_transp_type(HMGL gr, int type)
 {	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->SetTranspType(type);	}
@@ -178,14 +180,15 @@ void MGL_EXPORT mgl_title(HMGL gr, const char *title, const char *stl, double si
 void MGL_EXPORT mgl_titlew(HMGL gr, const wchar_t *title, const char *stl, double size)
 {	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->Title(title,stl,size);	}
 //-----------------------------------------------------------------------------
-int MGL_EXPORT mgl_new_frame_(uintptr_t *gr)		{	return _GR_->NewFrame();	}
-void MGL_EXPORT mgl_end_frame_(uintptr_t *gr)		{	_GR_->EndFrame();	}
+int MGL_EXPORT mgl_new_frame_(uintptr_t *gr)	{	return _GR_->NewFrame();	}
+void MGL_EXPORT mgl_end_frame_(uintptr_t *gr)	{	_GR_->EndFrame();	}
 int MGL_EXPORT_PURE mgl_get_num_frame_(uintptr_t *gr)	{	return _GR_->GetNumFrame();	}
 void MGL_EXPORT mgl_reset_frames_(uintptr_t *gr)	{	_GR_->ResetFrames();	}
 void MGL_EXPORT mgl_get_frame_(uintptr_t *gr, int *i)	{	_GR_->GetFrame(*i);	}
 void MGL_EXPORT mgl_set_frame_(uintptr_t *gr, int *i)	{	_GR_->SetFrame(*i);	}
-void MGL_EXPORT mgl_show_frame_(uintptr_t *gr, int *i)	{	_GR_->ShowFrame(*i);	}
+void MGL_EXPORT mgl_show_frame_(uintptr_t *gr, int *i)	{	_GR_->ShowFrame(*i);}
 void MGL_EXPORT mgl_del_frame_(uintptr_t *gr, int *i)	{	_GR_->DelFrame(*i);	}
+void MGL_EXPORT mgl_clear_frame_(uintptr_t *gr)			{	_GR_->ClearFrame();	}
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_set_transp_type_(uintptr_t *gr, int *type)		{	_GR_->SetTranspType(*type);	}
 void MGL_EXPORT mgl_set_alpha_(uintptr_t *gr, int *enable)			{	_GR_->Alpha(*enable);	}
@@ -202,8 +205,7 @@ void MGL_EXPORT mgl_add_light_loc_(uintptr_t *gr, int *n, mreal *x, mreal *y, mr
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_mat_push_(uintptr_t *gr)	{	_GR_->Push();	}
 void MGL_EXPORT mgl_mat_pop_(uintptr_t *gr)	{	_GR_->Pop();	}
-void MGL_EXPORT mgl_clf_(uintptr_t *gr)
-{	_GR_->Clf();	}
+void MGL_EXPORT mgl_clf_(uintptr_t *gr)		{	_GR_->Clf();	}
 void MGL_EXPORT mgl_clf_chr_(uintptr_t *gr, const char *ch, int)
 {	_GR_->Clf(mglColor(*ch));	}
 void MGL_EXPORT mgl_clf_rgb_(uintptr_t *gr, mreal *r, mreal *g, mreal *b)

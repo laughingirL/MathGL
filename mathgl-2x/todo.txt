@@ -20,6 +20,7 @@
 	A. мысли о frame??? для группы графиков -- не "удалять" их, а запихивать в отдельный кадр -- вопрос что с анимацией???
 	B. как делать анимацию (кадры) для мышиной версии ... список кадров, кнопки добавить в кадры + вставить из кадра
 16. Docs about mgl_datac_diffr
+17. Extend QO + extra docs
 
 
 ============= NEW FEATURES =============
@@ -37,7 +38,6 @@
 	u. Test FlowP + 3d
 
 7. Test OpenGL mode
-9. Extend QO ???
 
 ZZ. Update *.i for new functions {before release!!!}
 

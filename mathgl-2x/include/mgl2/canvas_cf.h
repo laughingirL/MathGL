@@ -280,6 +280,9 @@ void MGL_EXPORT mgl_show_frame_(uintptr_t *gr, int *i);
 /// Delete primitives for i-th frame (work if MGL_VECT_FRAME is set on)
 void MGL_EXPORT mgl_del_frame(HMGL gr, int i);
 void MGL_EXPORT mgl_del_frame_(uintptr_t *gr, int *i);
+/// Clear list of primitives for current drawing
+void MGL_EXPORT mgl_clear_frame(HMGL gr);
+void MGL_EXPORT mgl_clear_frame_(uintptr_t *gr);
 
 /// Set the transparency type (0 - usual, 1 - glass, 2 - lamp)
 void MGL_EXPORT mgl_set_transp_type(HMGL gr, int kind);
@@ -317,6 +320,9 @@ void MGL_EXPORT mgl_mat_push_(uintptr_t *gr);
 /// Clear up the frame
 void MGL_EXPORT mgl_clf(HMGL gr);
 void MGL_EXPORT mgl_clf_(uintptr_t *gr);
+/// Clear up the frame but keep fog settings
+void MGL_EXPORT mgl_clf_nfog(HMGL gr);
+void MGL_EXPORT mgl_clf_nfog_(uintptr_t *gr);
 /// Clear up the frame and fill background by specified color
 void MGL_EXPORT mgl_clf_rgb(HMGL gr, double r, double g, double b);
 void MGL_EXPORT mgl_clf_rgb_(uintptr_t *gr, mreal *r, mreal *g, mreal *b);

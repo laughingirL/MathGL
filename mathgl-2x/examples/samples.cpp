@@ -562,33 +562,33 @@ void smgl_alpha(mglGraph *gr)	// alpha and lighting
 const char *mmgl_schemes="call 'sch' 0 'kw'\ncall 'sch' 1 'wk'\ncall 'sch' 2 'kHCcw'\ncall 'sch' 3 'kBbcw'\n"
 "call 'sch' 4 'kRryw'\ncall 'sch' 5 'kGgew'\ncall 'sch' 6 'BbwrR'\ncall 'sch' 7 'BbwgG'\n"
 "call 'sch' 8 'GgwmM'\ncall 'sch' 9 'UuwqR'\ncall 'sch' 10 'QqwcC'\ncall 'sch' 11 'CcwyY'\n"
-"call 'sch' 12 'bcwyr'\ncall 'sch' 13 'bwr'\ncall 'sch' 14 'BbcyrR'\ncall 'sch' 15 'UbcyqR'\n"
-"call 'sch' 16 'BbcwyrR'\ncall 'sch' 17 'bgr'\ncall 'sch' 18 'BbcyrR|'\ncall 'sch' 19 'b{g,0.3}r'\n"
+"call 'sch' 12 'bcwyr'\ncall 'sch' 13 'bwr'\ncall 'sch' 14 'wUrqy'\ncall 'sch' 15 'UbcyqR'\n"
+"call 'sch' 16 'BbcyrR'\ncall 'sch' 17 'bgr'\ncall 'sch' 18 'BbcyrR|'\ncall 'sch' 19 'b{g,0.3}r'\n"
 "stop\nfunc 'sch' 2\nsubplot 2 10 $1 '<>_^' 0.2 0:fsurf 'x' $2\n"
 "text 0.07+0.5*mod($1,2) 0.92-0.1*int($1/2) $2 'A'\nreturn";
 void smgl_schemes(mglGraph *gr)	// Color table
 {
 	mglData a(256,2);	a.Fill(-1,1);
-	gr->SubPlot(2,10,0,NULL,0.2);	gr->Dens(a,"kw");		gr->Puts(0.07, 0.92, "'kw'", "A");
-	gr->SubPlot(2,10,1,NULL,0.2);	gr->Dens(a,"wk");		gr->Puts(0.57, 0.92, "'wk'", "A");
-	gr->SubPlot(2,10,2,NULL,0.2);	gr->Dens(a,"kHCcw");	gr->Puts(0.07, 0.82, "'kHCcw'", "A");
-	gr->SubPlot(2,10,3,NULL,0.2);	gr->Dens(a,"kBbcw");	gr->Puts(0.57, 0.82, "'kBbcw'", "A");
-	gr->SubPlot(2,10,4,NULL,0.2);	gr->Dens(a,"kRryw");	gr->Puts(0.07, 0.72, "'kRryw'", "A");
-	gr->SubPlot(2,10,5,NULL,0.2);	gr->Dens(a,"kGgew");	gr->Puts(0.57, 0.72, "'kGgew'", "A");
-	gr->SubPlot(2,10,6,NULL,0.2);	gr->Dens(a,"BbwrR");	gr->Puts(0.07, 0.62, "'BbwrR'", "A");
-	gr->SubPlot(2,10,7,NULL,0.2);	gr->Dens(a,"BbwgG");	gr->Puts(0.57, 0.62, "'BbwgG'", "A");
-	gr->SubPlot(2,10,8,NULL,0.2);	gr->Dens(a,"GgwmM");	gr->Puts(0.07, 0.52, "'GgwmM'", "A");
-	gr->SubPlot(2,10,9,NULL,0.2);	gr->Dens(a,"UuwqR");	gr->Puts(0.57, 0.52, "'UuwqR'", "A");
-	gr->SubPlot(2,10,10,NULL,0.2);	gr->Dens(a,"QqwcC");	gr->Puts(0.07, 0.42, "'QqwcC'", "A");
-	gr->SubPlot(2,10,11,NULL,0.2);	gr->Dens(a,"CcwyY");	gr->Puts(0.57, 0.42, "'CcwyY'", "A");
-	gr->SubPlot(2,10,12,NULL,0.2);	gr->Dens(a,"bcwyr");	gr->Puts(0.07, 0.32, "'bcwyr'", "A");
-	gr->SubPlot(2,10,13,NULL,0.2);	gr->Dens(a,"bwr");		gr->Puts(0.57, 0.32, "'bwr'", "A");
-	gr->SubPlot(2,10,14,NULL,0.2);	gr->Dens(a,"BbcyrR");	gr->Puts(0.07, 0.22, "'BbcyrR'", "A");
-	gr->SubPlot(2,10,15,NULL,0.2);	gr->Dens(a,"UbcyqR");	gr->Puts(0.57, 0.22, "'UbcyqR'", "A");
-	gr->SubPlot(2,10,16,NULL,0.2);	gr->Dens(a,"BbcwyrR");	gr->Puts(0.07, 0.12, "'BbcwyrR'", "A");
-	gr->SubPlot(2,10,17,NULL,0.2);	gr->Dens(a,"bgr");		gr->Puts(0.57, 0.12, "'bgr'", "A");
-	gr->SubPlot(2,10,18,NULL,0.2);	gr->Dens(a,"BbcyrR|");	gr->Puts(0.07, 0.02, "'BbcyrR|'", "A");
-	gr->SubPlot(2,10,19,NULL,0.2);	gr->Dens(a,"b{g,0.3}r");		gr->Puts(0.57, 0.02, "'b\\{g,0.3\\}r'", "A");
+	gr->SubPlot(2,10,0,NULL,0.2);	gr->Dens(a,"kw");		gr->Puts(0.07, 0.92, "kw", "A");
+	gr->SubPlot(2,10,1,NULL,0.2);	gr->Dens(a,"wk");		gr->Puts(0.57, 0.92, "wk", "A");
+	gr->SubPlot(2,10,2,NULL,0.2);	gr->Dens(a,"kHCcw");	gr->Puts(0.07, 0.82, "kHCcw", "A");
+	gr->SubPlot(2,10,3,NULL,0.2);	gr->Dens(a,"kBbcw");	gr->Puts(0.57, 0.82, "kBbcw", "A");
+	gr->SubPlot(2,10,4,NULL,0.2);	gr->Dens(a,"kRryw");	gr->Puts(0.07, 0.72, "kRryw", "A");
+	gr->SubPlot(2,10,5,NULL,0.2);	gr->Dens(a,"kGgew");	gr->Puts(0.57, 0.72, "kGgew", "A");
+	gr->SubPlot(2,10,6,NULL,0.2);	gr->Dens(a,"BbwrR");	gr->Puts(0.07, 0.62, "BbwrR", "A");
+	gr->SubPlot(2,10,7,NULL,0.2);	gr->Dens(a,"BbwgG");	gr->Puts(0.57, 0.62, "BbwgG", "A");
+	gr->SubPlot(2,10,8,NULL,0.2);	gr->Dens(a,"GgwmM");	gr->Puts(0.07, 0.52, "GgwmM", "A");
+	gr->SubPlot(2,10,9,NULL,0.2);	gr->Dens(a,"UuwqR");	gr->Puts(0.57, 0.52, "UuwqR", "A");
+	gr->SubPlot(2,10,10,NULL,0.2);	gr->Dens(a,"QqwcC");	gr->Puts(0.07, 0.42, "QqwcC", "A");
+	gr->SubPlot(2,10,11,NULL,0.2);	gr->Dens(a,"CcwyY");	gr->Puts(0.57, 0.42, "CcwyY", "A");
+	gr->SubPlot(2,10,12,NULL,0.2);	gr->Dens(a,"bcwyr");	gr->Puts(0.07, 0.32, "bcwyr", "A");
+	gr->SubPlot(2,10,13,NULL,0.2);	gr->Dens(a,"bwr");		gr->Puts(0.57, 0.32, "bwr", "A");
+	gr->SubPlot(2,10,14,NULL,0.2);	gr->Dens(a,"wUrqy");	gr->Puts(0.07, 0.22, "wUrqy", "A");
+	gr->SubPlot(2,10,15,NULL,0.2);	gr->Dens(a,"UbcyqR");	gr->Puts(0.57, 0.22, "UbcyqR", "A");
+	gr->SubPlot(2,10,16,NULL,0.2);	gr->Dens(a,"BbcyrR");	gr->Puts(0.07, 0.12, "BbcyrR", "A");
+	gr->SubPlot(2,10,17,NULL,0.2);	gr->Dens(a,"bgr");		gr->Puts(0.57, 0.12, "bgr", "A");
+	gr->SubPlot(2,10,18,NULL,0.2);	gr->Dens(a,"BbcyrR|");	gr->Puts(0.07, 0.02, "BbcyrR|", "A");
+	gr->SubPlot(2,10,19,NULL,0.2);	gr->Dens(a,"b{g,0.3}r");		gr->Puts(0.57, 0.02, "b\\{g,0.3\\}r", "A");
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_curvcoor="origin -1 1 -1\nsubplot 2 2 0:title 'Cartesian':rotate 50 60:fplot '2*t-1' '0.5' '0' '2r':axis:grid\n"
@@ -2124,7 +2124,7 @@ void smgl_box(mglGraph *gr)
 const char *mmgl_loglog="subplot 2 2 0 '<_':title 'Semi-log axis':ranges 0.01 100 -1 1:axis 'lg(x)' '' ''\n"
 "axis:grid 'xy' 'g':fplot 'sin(1/x)':xlabel 'x' 0:ylabel 'y = sin 1/x' 0\n"
 "subplot 2 2 1 '<_':title 'Log-log axis':ranges 0.01 100 0.1 100:axis 'lg(x)' 'lg(y)' ''\n"
-"axis:fplot 'sqrt(1+x^2)':xlabel 'x' 0:ylabel 'y = \\sqrt{1+x^2}' 0\n"
+"axis:grid '!' 'h=':grid:fplot 'sqrt(1+x^2)'\nxlabel 'x' 0:ylabel 'y = \\sqrt{1+x^2}' 0\n"
 "subplot 2 2 2 '<_':title 'Minus-log axis':ranges -100 -0.01 -100 -0.1:axis '-lg(-x)' '-lg(-y)' ''\n"
 "axis:fplot '-sqrt(1+x^2)':xlabel 'x' 0:ylabel 'y = -\\sqrt{1+x^2}' 0\n"
 "subplot 2 2 3 '<_':title 'Log-ticks':ranges 0.01 100 0 100:axis 'sqrt(x)' '' ''\n"
@@ -2134,7 +2134,7 @@ void smgl_loglog(mglGraph *gr)	// log-log axis
 	gr->SubPlot(2,2,0,"<_");	gr->Title("Semi-log axis");	gr->SetRanges(0.01,100,-1,1);	gr->SetFunc("lg(x)","");
 	gr->Axis();	gr->Grid("xy","g");	gr->FPlot("sin(1/x)");	gr->Label('x',"x",0); gr->Label('y', "y = sin 1/x",0);
 	gr->SubPlot(2,2,1,"<_");	gr->Title("Log-log axis");	gr->SetRanges(0.01,100,0.1,100);	gr->SetFunc("lg(x)","lg(y)");
-	gr->Axis();	gr->FPlot("sqrt(1+x^2)");	gr->Label('x',"x",0); gr->Label('y', "y = \\sqrt{1+x^2}",0);
+	gr->Axis();	gr->Grid("!","h=");	gr->Grid();	gr->FPlot("sqrt(1+x^2)");	gr->Label('x',"x",0); gr->Label('y', "y = \\sqrt{1+x^2}",0);
 	gr->SubPlot(2,2,2,"<_");	gr->Title("Minus-log axis");	gr->SetRanges(-100,-0.01,-100,-0.1);	gr->SetFunc("-lg(-x)","-lg(-y)");
 	gr->Axis();	gr->FPlot("-sqrt(1+x^2)");	gr->Label('x',"x",0); gr->Label('y', "y = -\\sqrt{1+x^2}",0);
 	gr->SubPlot(2,2,3,"<_");	gr->Title("Log-ticks");	gr->SetRanges(0.1,100,0,100);	gr->SetFunc("sqrt(x)","");

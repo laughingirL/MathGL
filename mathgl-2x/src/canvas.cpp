@@ -80,7 +80,7 @@ void mglCanvas::SetFrame(long i)
 void mglCanvas::GetFrame(long k)
 {
 	if(k<0 || (size_t)k>=DrwDat.size())	return;
-	Clf();
+	ClearFrame();
 	const mglDrawDat &d=DrwDat[k];
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_lock(&mutexPnt);
@@ -98,6 +98,44 @@ void mglCanvas::GetFrame(long k)
 	pthread_mutex_unlock(&mutexPrm);
 	pthread_mutex_unlock(&mutexPnt);
 #endif
+}
+//-----------------------------------------------------------------------------
+void mglCanvas::ClearFrame()
+{
+#if MGL_HAVE_PTHREAD
+	pthread_mutex_lock(&mutexPnt);
+	pthread_mutex_lock(&mutexPrm);
+	pthread_mutex_lock(&mutexGlf);
+	pthread_mutex_lock(&mutexPtx);
+	pthread_mutex_lock(&mutexTxt);
+	pthread_mutex_lock(&mutexSub);
+	pthread_mutex_lock(&mutexLeg);
+	pthread_mutex_lock(&mutexGrp);
+	pthread_mutex_lock(&mutexAct);
+#endif
+
+#pragma omp critical(txt)
+	{
+		StartAutoGroup(NULL);
+		Sub.clear();	Leg.clear();	Grp.clear();	Act.clear();
+		Pnt.clear();	Prm.clear();	Ptx.clear();	Glf.clear();	ClearPrmInd();
+		Txt.clear();	Txt.reserve(3);
+		mglTexture t1(MGL_DEF_PAL,-1), t2(MGL_DEF_SCH,1);
+		MGL_PUSH(Txt,t1,mutexTxt);
+		MGL_PUSH(Txt,t2,mutexTxt);
+	}
+#if MGL_HAVE_PTHREAD
+	pthread_mutex_unlock(&mutexAct);
+	pthread_mutex_unlock(&mutexGrp);
+	pthread_mutex_unlock(&mutexLeg);
+	pthread_mutex_unlock(&mutexSub);
+	pthread_mutex_unlock(&mutexTxt);
+	pthread_mutex_unlock(&mutexPtx);
+	pthread_mutex_unlock(&mutexGlf);
+	pthread_mutex_unlock(&mutexPrm);
+	pthread_mutex_unlock(&mutexPnt);
+#endif
+	ClfZB(true);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::ShowFrame(long k)
