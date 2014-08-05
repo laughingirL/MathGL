@@ -3477,7 +3477,7 @@ int sample(mglGraph *gr)
   mglData a;  mgls_prepare2d(&a);
   gr->Title("Fog sample");
   gr->Light(true);  gr->Rotate(50,60);  gr->Fog(1); gr->Box();
-  gr->Surf(a);
+  gr->Surf(a);  gr->Cont(a,"y");
   return 0;
 }
 @end verbatim

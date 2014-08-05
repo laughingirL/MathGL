@@ -181,7 +181,7 @@ endif(MGL_HAVE_DOC_PRC)
 			DEPENDS ${MGL_OUT}/mgl_en.pdf
 			DEPENDS ${MGL_OUT}/mathgl_en.pdf
 		)
-		install(FILES ${MGL_OUT}/mathgl_en.pdf DESTINATION ${MGL_DOC_PATH})
+		install(FILES ${MGL_OUT}/mathgl_en.pdf ${MGL_OUT}/mgl_en.pdf DESTINATION ${MGL_DOC_PATH})
 	endif(MGL_HAVE_DOC_PDF_EN)
 	
 	if(MGL_HAVE_DOC_PDF_RU)

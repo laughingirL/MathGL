@@ -2375,7 +2375,7 @@ MathGL can add a fog to the image. Its switching on is rather simple -- just use
 call 'prepare2d'
 title 'Fog sample':rotate 50 60:light on
 fog 1
-box:surf a
+box:surf a:cont a 'y'
 @end verbatim
 
 @pfig{fog, Example of @code{Fog()}.}
