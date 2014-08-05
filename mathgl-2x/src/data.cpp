@@ -1883,7 +1883,8 @@ void MGL_EXPORT mgl_data_set_value_(uintptr_t *d, mreal *v, int *i, int *j, int 
 {	mgl_data_set_value(_DT_,*v,*i,*j,*k);	}
 //-----------------------------------------------------------------------------
 mreal MGL_EXPORT mgl_data_get_value(HCDT dat, long i, long j, long k)
-{	return (i>=0 && i<dat->GetNx() && j>=0 && j<dat->GetNy() && k>=0 && k<dat->GetNz()) ? dat->v(i,j,k):NAN;	}
+{	register long nx = dat->GetNx(), ny = dat->GetNy();
+	return (i>=0 && i<nx && j>=0 && j<ny && k>=0 && k<dat->GetNz()) ? dat->vthr(i+nx*(j+ny*k)):NAN;	}
 mreal MGL_EXPORT mgl_data_get_value_(uintptr_t *d, int *i, int *j, int *k)
 {	return mgl_data_get_value(_DA_(d),*i,*j,*k);	}
 //-----------------------------------------------------------------------------
