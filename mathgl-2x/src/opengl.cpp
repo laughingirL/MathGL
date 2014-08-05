@@ -23,15 +23,21 @@ mglCanvasGL::~mglCanvasGL(){}
 //-----------------------------------------------------------------------------
 void mglCanvasGL::Finish()
 {
+#if MGL_USE_DOUBLE
+#define MGL_GL_TYPE	GL_DOUBLE
+#else
+#define MGL_GL_TYPE	GL_FLOAT
+#endif
+
 	if(Prm.size()>0)
 	{
 		PreparePrim(0);
-		glVertexPointer(3, GL_FLOAT, sizeof(mglPnt), &(Pnt[0].x));
-		glNormalPointer(GL_FLOAT, sizeof(mglPnt), &(Pnt[0].u));
-		glColorPointer(4, GL_FLOAT, sizeof(mglPnt), &(Pnt[0].r));
+/*		glVertexPointer(3, MGL_GL_TYPE, sizeof(mglPnt), &(Pnt[0].x));	// something wrong with arrays
+		glNormalPointer(MGL_GL_TYPE, sizeof(mglPnt), &(Pnt[0].u));
+		glColorPointer(4, MGL_GL_TYPE, sizeof(mglPnt), &(Pnt[0].r));
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_NORMAL_ARRAY);
-		glEnableClientState(GL_COLOR_ARRAY);
+		glEnableClientState(GL_COLOR_ARRAY);*/
 
 		int pdef=PDef;
 		mreal ss=pPos, ww=PenWidth;
@@ -39,12 +45,17 @@ void mglCanvasGL::Finish()
 		for(size_t i=0;i<Prm.size();i++)
 		{
 			p=GetPrm(i);	PDef=p.n3;	pPos=p.s;	PenWidth=p.w;
+			register long n1=p.n1, n2=p.n2, n3=p.n3, n4=p.n4;
 			switch(p.type)
 			{
-			case 0:	mark_draw(Pnt[p.n1],p.n4,p.s,0);	break;
-			case 1:	line_draw(p.n1,p.n2);	break;
-			case 2:	trig_draw(p.n1,p.n2,p.n3);	break;
-			case 3:	quad_draw(p.n1,p.n2,p.n3,p.n4);	break;
+/*			case 0:	mark_draw(Pnt[n1],n4,p.s,0);	break;
+			case 1:	line_draw(n1,n2);	break;
+			case 2:	trig_draw(n1,n2,n3);	break;
+			case 3:	quad_draw(n1,n2,n3,n4);	break;*/
+			case 0:	mark_draw(Pnt[n1],n4,p.s,0);	break;
+			case 1:	line_draw(Pnt[n1],Pnt[n2],0);	break;
+			case 2:	trig_draw(Pnt[n1],Pnt[n2],Pnt[n3],true,0);	break;
+			case 3:	quad_draw(Pnt[n1],Pnt[n2],Pnt[n3],Pnt[n4],0);	break;
 			case 4:	glyph_draw(p,0);	break;
 			}
 		}
@@ -191,8 +202,10 @@ void mglCanvasGL::gl_clf(mglColor Back)
 
 	glMatrixMode(GL_MODELVIEW);//GL_MODELVIEW GL_VIEWPORT GL_PROJECTION
 	glLoadIdentity();
-//	glScaled(1.5,1.5,1.5);
-//	glTranslated(-0.5,-0.5,-0.5);
+// 	glScaled(1.5,1.5,1.5);
+// 	glTranslated(-0.5,-0.5,-0.5);
+	glScaled(2,2,2);
+	glTranslated(-0.5,-0.5,-0.5);
 }
 //-----------------------------------------------------------------------------
 void mglCanvasGL::set_pen(unsigned style,mreal width)
@@ -270,8 +283,8 @@ void mglCanvasGL::quad_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3
 	glBegin(GL_QUADS);
 	glNormal3f(p1.u,p1.v,p1.w);	glColor4f(p1.r,p1.g,p1.b,p1.a);	glVertex3f(p1.x,p1.y,p1.z);
 	glNormal3f(p2.u,p2.v,p2.w);	glColor4f(p2.r,p2.g,p2.b,p2.a);	glVertex3f(p2.x,p2.y,p2.z);
-	glNormal3f(p3.u,p3.v,p3.w);	glColor4f(p3.r,p3.g,p3.b,p3.a);	glVertex3f(p3.x,p3.y,p3.z);
 	glNormal3f(p4.u,p4.v,p4.w);	glColor4f(p4.r,p4.g,p4.b,p4.a);	glVertex3f(p4.x,p4.y,p4.z);
+	glNormal3f(p3.u,p3.v,p3.w);	glColor4f(p3.r,p3.g,p3.b,p3.a);	glVertex3f(p3.x,p3.y,p3.z);
 	glEnd();
 }
 //-----------------------------------------------------------------------------

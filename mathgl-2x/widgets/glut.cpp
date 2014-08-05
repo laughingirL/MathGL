@@ -106,7 +106,8 @@ void _mgl_key_up(unsigned char ch,int ,int )
 		printf("Use 'u', 'o' for changing distance to light\n");
 		printf("Use 'r' for switching transparency\n");
 		printf("Use 'f' for switching lightning\n");
-		printf("Use 'T' for exporting to TIFF file\n");
+		printf("Use 'E' for exporting to EPS file\n");
+		printf("Use 'S' for exporting to SVG file\n");
 		printf("Use 'J' for exporting to JPEG file\n");
 		printf("Use 'P' for exporting to PNG file\n");
 		printf("Use ',', '.' for show other frames\n");
@@ -162,6 +163,12 @@ void _mgl_key_up(unsigned char ch,int ,int )
 		char str[128];
 		snprintf(str,128,"%s_%d.eps",_mgl_glwnd->PlotId.c_str(),_mgl_glwnd->curr_fig);
 		mgl_write_eps(_mgl_glwnd, str, "Math GL");
+	}
+	if(ch=='S')
+	{
+		char str[128];
+		snprintf(str,128,"%s_%d.svg",_mgl_glwnd->PlotId.c_str(),_mgl_glwnd->curr_fig);
+		mgl_write_svg(_mgl_glwnd, str, "Math GL");
 	}
 	if(ch==' ')	_mgl_glwnd->Clf();
 	if(ch=='m')	_mgl_glwnd->tt = 1-_mgl_glwnd->tt;
