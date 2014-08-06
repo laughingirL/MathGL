@@ -99,7 +99,7 @@ New version (v.2.3) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is 
 @item Add @ref{ode} solving functions for textual formulas.
 @item Add function for global cubic spline interpolation, and function @ref{gspline} to refill data using global spline.
 
-@item Add function @code{random(dat)} to the list of known functions for formula parsing
+@item Add functions @code{random(dat)} and @code{gamma_inc(a,x)} to the list of known functions for formula parsing
 @item Add @code{inf} variable to the MGL and formula parsing
 @item Allow reading JPEG files for @ref{import}.
 @item Function @ref{subdata} now can handle NULL argument(s). Add variants of @ref{subdata} with provided 1 and 2 arguments.

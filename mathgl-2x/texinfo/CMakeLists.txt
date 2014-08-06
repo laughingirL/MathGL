@@ -155,7 +155,7 @@ endif(MGL_HAVE_DOC_PRC)
 # TODO: try to install all mathgl*.info* in future!!!
 		install(FILES ${MGL_OUT}/mathgl_en.info ${MGL_OUT}/mathgl_en.info-1 ${MGL_OUT}/mathgl_en.info-2 ${MGL_OUT}/mathgl_en.info-3 DESTINATION ${MGL_INFO_PATH})
 	endif(MGL_HAVE_DOC_INFO)
-	
+
 	if(MGL_HAVE_DOC_HTML)
 		add_custom_target(doc_html ALL
 		DEPENDS ${MGL_OUT}/mgl_en.html
@@ -183,7 +183,7 @@ endif(MGL_HAVE_DOC_PRC)
 		)
 		install(FILES ${MGL_OUT}/mathgl_en.pdf ${MGL_OUT}/mgl_en.pdf DESTINATION ${MGL_DOC_PATH})
 	endif(MGL_HAVE_DOC_PDF_EN)
-	
+
 	if(MGL_HAVE_DOC_PDF_RU)
 		add_custom_target(doc_ru ALL
 #			DEPENDS ${MGL_OUT}/mgl_ru.pdf

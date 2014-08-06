@@ -1,4 +1,4 @@
-2.3 Released ??? 2014
+2.3 Released 7 August 2014
 
 * Add background image, which allow in particular semi-transparent background color. Correspondingly add function Rasterize() for saving current image as background, and function LoadBackground() for loading background image from PNG or JPEG file.
 * Add primitives to draw polygon and angle arc.
@@ -16,7 +16,7 @@
 
 * Add ODE solving functions for textual formulas
 * Add function for global cubic spline interpolation, and function to refill using global spline.
-* Add function "random(dat)" to the list of known functions for formula parsing
+* Add functions "random(dat)" and "gamma_inc(a,x)" to the list of known functions for formula parsing
 * Add 'inf' variable to the MGL and formula parsing
 * Allow reading JPEG files for mglData::Import().
 * Function mgl_data_subdata_ext() handle NULL argument(s). Add variants of SubData() with 1 and 2 arguments.

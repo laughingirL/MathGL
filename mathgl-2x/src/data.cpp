@@ -2007,8 +2007,28 @@ void MGL_EXPORT mgl_data_refill_xy(HMDT dat, HCDT xdat, HCDT ydat, HCDT vdat, mr
 	long nx=dat->nx,ny=dat->ny,nz=dat->nz,mx=vdat->GetNx(),my=vdat->GetNy(),nn=nx*ny;
 	bool both=(xdat->GetNN()==vdat->GetNN() && ydat->GetNN()==vdat->GetNN());
 	if(!both && (xdat->GetNx()!=mx || ydat->GetNx()!=my))	return;	// incompatible dimensions
+	const mreal acx=1e-6*fabs(x2-x1), acy=1e-6*fabs(y2-y1);
 	if(both)
 		mgl_data_grid_xy(dat,xdat,ydat,vdat,x1,x2,y1,y2);
+/*#pragma omp parallel for collapse(2)
+		for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
+		{
+			mreal xx = x1+(x2-x1)*i/(nx-1.),dxx,dxy,vx,dx=0,dd;
+			mreal yy = y1+(y2-y1)*j/(ny-1.),dyx,dyy,vy,dy=0;
+			vx = mgl_data_spline_ext(xdat,dx,dy,0,&dxx,&dxy,0);
+			vy = mgl_data_spline_ext(ydat,dx,dy,0,&dyx,&dyy,0);
+			long count=0;
+			do	// use Newton method to find root
+			{
+				if(count>50)	{	dx=NAN;	break;	}	count++;
+				dd = dxy*dyx-dxx*dyy;
+				dx += (dxy*(yy-vy)-dyy*(xx-vx))/dd;
+				dy += (dyx*(xx-vx)-dxx*(yy-vy))/dd;
+				vx = mgl_data_spline_ext(xdat,dx,dy,0,&dxx,&dxy,0);
+				vy = mgl_data_spline_ext(ydat,dx,dy,0,&dyx,&dyy,0);
+			}	while(fabs(xx-vx)>acx && fabs(yy-vy)>acy);	// this valid for linear interpolation
+			dat->a[i+nx*j] = mgl_isnan(dx)?NAN:mgl_data_spline(vdat,dx,dy,0);
+		}*/
 	else
 	{
 		mglData u(nx), v(ny);

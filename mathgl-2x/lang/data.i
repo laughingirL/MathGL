@@ -53,7 +53,8 @@ public:
 	mglData(long xx=1,long yy=1,long zz=1)	{	a=0;	Create(xx,yy,zz);	}
 	/// Delete the array
 	virtual ~mglData()	{	if(!link && a)	delete []a;	}
-	inline mreal GetVal(long i, long j=0, long k=0)
+
+	inline mreal GetVal(long i, long j=0, long k=0) const
 	{	return mgl_data_get_value(this,i,j,k);}
 	inline void SetVal(mreal f, long i, long j=0, long k=0)
 	{	mgl_data_set_value(this,f,i,j,k);	}
@@ -136,15 +137,18 @@ public:
 	inline void Modify(const char *eq,const mglData &vdat)
 	{	mgl_data_modify_vw(this,eq,&vdat,0);	}
 	/// Modify the data by specified formula assuming x,y,z in range [r1,r2]
-	inline void Fill(mglBase *gr, const char *eq, const char *opt="")
+	inline void Fill(HMGL gr, const char *eq, const char *opt="")
 	{	mgl_data_fill_eq(gr,this,eq,0,0,opt);	}
-	inline void Fill(mglBase *gr, const char *eq, const mglData &vdat, const char *opt="")
+	inline void Fill(HMGL gr, const char *eq, const mglData &vdat, const char *opt="")
 	{	mgl_data_fill_eq(gr,this,eq,&vdat,0,opt);	}
-	inline void Fill(mglBase *gr, const char *eq, const mglData &vdat, const mglData &wdat,const char *opt="")
+	inline void Fill(HMGL gr, const char *eq, const mglData &vdat, const mglData &wdat,const char *opt="")
 	{	mgl_data_fill_eq(gr,this,eq,&vdat,&wdat,opt);	}
 	/// Equidistantly fill the data to range [x1,x2] in direction dir
 	inline void Fill(mreal x1,mreal x2=NaN,char dir='x')
-	{	return mgl_data_fill(this,x1,x2,dir);	}
+	{	mgl_data_fill(this,x1,x2,dir);	}
+	/// Fill the data by interpolated values of vdat parametrically depended on xdat,ydat,zdat for x,y,z in range [p1,p2] using global spline
+	inline void RefillGS(const mglData &xdat, const mglData &vdat, mreal x1, mreal x2,long sl=-1)
+	{	mgl_data_refill_gs(this,&xdat,&vdat,x1,x2,sl);	}
 	/// Fill the data by interpolated values of vdat parametrically depended on xdat,ydat,zdat for x,y,z in range [p1,p2]
 	inline void Refill(const mglData &xdat, const mglData &vdat, mreal x1, mreal x2,long sl=-1)
 	{	mgl_data_refill_x(this,&xdat,&vdat,x1,x2,sl);	}
@@ -155,14 +159,14 @@ public:
 	inline void Refill(const mglData &xdat, const mglData &ydat, const mglData &zdat, const mglData &vdat, mglPoint p1, mglPoint p2)
 	{	mgl_data_refill_xyz(this,&xdat,&ydat,&zdat,&vdat,p1.x,p2.x,p1.y,p2.y,p1.z,p2.z);	}
 	/// Fill the data by interpolated values of vdat parametrically depended on xdat,ydat,zdat for x,y,z in axis range of gr
-	inline void Refill(mglBase *gr, const mglData &xdat, const mglData &vdat, long sl=-1, const char *opt="")
+	inline void Refill(HMGL gr, const mglData &xdat, const mglData &vdat, long sl=-1, const char *opt="")
 	{	mgl_data_refill_gr(gr,this,&xdat,0,0,&vdat,sl,opt);	}
-	inline void Refill(mglBase *gr, const mglData &xdat, const mglData &ydat, const mglData &vdat, long sl=-1, const char *opt="")
+	inline void Refill(HMGL gr, const mglData &xdat, const mglData &ydat, const mglData &vdat, long sl=-1, const char *opt="")
 	{	mgl_data_refill_gr(gr,this,&xdat,&ydat,0,&vdat,sl,opt);	}
-	inline void Refill(mglBase *gr, const mglData &xdat, const mglData &ydat, const mglData &zdat, const mglData &vdat, const char *opt="")
+	inline void Refill(HMGL gr, const mglData &xdat, const mglData &ydat, const mglData &zdat, const mglData &vdat, const char *opt="")
 	{	mgl_data_refill_gr(gr,this,&xdat,&ydat,&zdat,&vdat,-1,opt);	}
 	/// Set the data by triangulated surface values assuming x,y,z in axis range of gr
-	inline void Grid(mglBase *gr, const mglData &x, const mglData &y, const mglData &z, const char *opt="")
+	inline void Grid(HMGL gr, const mglData &x, const mglData &y, const mglData &z, const char *opt="")
 	{	mgl_data_grid(gr,this,&x,&y,&z,opt);	}
 	/// Set the data by triangulated surface values assuming x,y,z in range [p1, p2]
 	inline void Grid(const mglData &xdat, const mglData &ydat, const mglData &vdat, mglPoint p1, mglPoint p2)
@@ -319,6 +323,15 @@ public:
 	inline void FillSample(const char *how)
 	{	mgl_data_fill_sample(this,how);	}
 
+	/// Return an approximated x-value (root) when dat(x) = val
+	inline mreal Solve(mreal val, bool use_spline=true, long i0=0) const
+	{	return mgl_data_solve_1d(this, val, use_spline, i0);		}
+	/// Return an approximated value (root) when dat(x) = val
+	inline mglData Solve(mreal val, char dir, bool norm=true) const
+	{	return mglData(true,mgl_data_solve(this, val, dir, 0, norm));	}
+	inline mglData Solve(mreal val, char dir, const mglData &i0, bool norm=true) const
+	{	return mglData(true,mgl_data_solve(this, val, dir, &i0, norm));	}
+
 	/// Interpolate by cubic spline the data to given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
 	inline mreal Spline(mreal x,mreal y=0,mreal z=0) const
 	{	return mgl_data_spline(this, x,y,z);	}
@@ -331,14 +344,6 @@ public:
 	/// Interpolate by line the data to given point x,\a y,\a z which normalized in range [0, 1]
 	inline mreal Linear1(mreal x,mreal y=0,mreal z=0) const
 	{	return mgl_data_linear(this,x*(nx-1),y*(ny-1),z*(nz-1));	}
-	/// Return an approximated x-value (root) when dat(x) = val
-	inline mreal Solve(mreal val, bool use_spline=true, long i0=0) const
-	{	return mgl_data_solve_1d(this, val, use_spline, i0);		}
-	/// Return an approximated value (root) when dat(x) = val
-	inline mglData Solve(mreal val, char dir, bool norm=true) const
-	{	return mglData(true,mgl_data_solve(this, val, dir, 0, norm));	}
-	inline mglData Solve(mreal val, char dir, const mglData &i0, bool norm=true) const
-	{	return mglData(true,mgl_data_solve(this, val, dir, &i0, norm));	}
 
 	/// Interpolate by cubic spline the data and return its derivatives at given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
 	inline mreal Spline(mglPoint &dif, mreal x,mreal y=0,mreal z=0) const
@@ -436,7 +441,7 @@ inline mglData mglSTFA(const mglData &re, const mglData &im, long dn, char dir='
 {	return mglData(true, mgl_data_stfa(&re,&im,dn,dir));	}
 //-----------------------------------------------------------------------------
 /// Saves result of PDE solving (|u|^2) for "Hamiltonian" ham with initial conditions ini
-inline mglData mglPDE(mglBase *gr, const char *ham, const mglData &ini_re, const mglData &ini_im, mreal dz=0.1, mreal k0=100,const char *opt="")
+inline mglData mglPDE(HMGL gr, const char *ham, const mglData &ini_re, const mglData &ini_im, mreal dz=0.1, mreal k0=100,const char *opt="")
 {	return mglData(true, mgl_pde_solve(gr,ham, &ini_re, &ini_im, dz, k0,opt));	}
 /// Saves result of PDE solving for "Hamiltonian" ham with initial conditions ini along a curve ray (must have nx>=7 - x,y,z,px,py,pz,tau or nx=5 - x,y,px,py,tau)
 inline mglData mglQO2d(const char *ham, const mglData &ini_re, const mglData &ini_im, const mglData &ray, mreal r=1, mreal k0=100)
@@ -451,6 +456,9 @@ inline mglData mglQO3d(const char *ham, const mglData &ini_re, const mglData &in
 /// Finds ray with starting point r0, p0 (and prepares ray data for mglQO2d)
 inline mglData mglRay(const char *ham, mglPoint r0, mglPoint p0, mreal dt=0.1, mreal tmax=10)
 {	return mglData(true, mgl_ray_trace(ham, r0.x, r0.y, r0.z, p0.x, p0.y, p0.z, dt, tmax));	}
+/// Saves result of ODE solving (|u|^2) for "Hamiltonian" ham with initial conditions ini
+inline mglData mglODE(const char *df, const char *var, const mglData &ini, mreal dt=0.1, mreal tmax=10)
+{	return mglData(true, mgl_ode_solve_str(df,var, &ini, dt, tmax));	}
 /// Calculate Jacobian determinant for D{x(u,v), y(u,v)} = dx/du*dy/dv-dx/dv*dy/du
 inline mglData mglJacobian(const mglData &x, const mglData &y)
 {	return mglData(true, mgl_jacobian_2d(&x, &y));	}
@@ -462,4 +470,38 @@ inline mglData mglTriangulation(const mglData &x, const mglData &y, const mglDat
 {	return mglData(true,mgl_triangulation_3d(&x,&y,&z));	}
 inline mglData mglTriangulation(const mglData &x, const mglData &y)
 {	return mglData(true,mgl_triangulation_2d(&x,&y));	}
+//-----------------------------------------------------------------------------
+/// Get sub-array of the data with given fixed indexes
+inline mglData mglSubData(const mglData &dat, long xx, long yy=-1, long zz=-1)
+{	return mglData(true,mgl_data_subdata(&dat,xx,yy,zz));	}
+inline mglData mglSubData(const mglData &dat, const mglData &xx, const mglData &yy, const mglData &zz)
+{	return mglData(true,mgl_data_subdata_ext(&dat,&xx,&yy,&zz));	}
+inline mglData mglSubData(const mglData &dat, const mglData &xx, const mglData &yy)
+{	return mglData(true,mgl_data_subdata_ext(&dat,&xx,&yy,0));	}
+inline mglData mglSubData(const mglData &dat, const mglData &xx)
+{	return mglData(true,mgl_data_subdata_ext(&dat,&xx,0,0));	}
+//-----------------------------------------------------------------------------
+/// Prepare coefficients for global spline interpolation
+inline mglData mglGSplineInit(const mglData &xdat, const mglData &ydat)
+{	return mglData(true,mgl_gspline_init(&xdat, &ydat));	}
+/// Evaluate global spline (and its derivatives d1, d2 if not NULL) using prepared coefficients \a coef
+inline mreal mglGSpline(const mglData &coef, mreal dx, mreal *d1=0, mreal *d2=0)
+{	return mgl_gspline(&coef, dx, d1,d2);	}
+//-----------------------------------------------------------------------------
+/// Wrapper class for expression evaluating
+class mglExpr
+{
+	HMEX ex;
+	mglExpr(const mglExpr &){}	// copying is not allowed
+	const mglExpr &operator=(const mglExpr &t){return t;}	// copying is not allowed
+public:
+	mglExpr(const char *expr)		{	ex = mgl_create_expr(expr);	}
+	~mglExpr()	{	mgl_delete_expr(ex);	}
+	/// Return value of expression for given x,y,z variables
+	inline double Eval(double x, double y=0, double z=0)
+	{	return mgl_expr_eval(ex,x,y,z);	}
+	/// Return value of expression differentiation over variable dir for given x,y,z variables
+	inline double Diff(char dir, double x, double y=0, double z=0)
+	{	return mgl_expr_diff(ex,dir, x,y,z);	}
+};
 //-----------------------------------------------------------------------------

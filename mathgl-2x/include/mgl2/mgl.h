@@ -49,7 +49,7 @@ public:
 	{	gr = graph;		mgl_use_graph(gr,1);	}
 	virtual ~mglGraph()
 	{	if(mgl_use_graph(gr,-1)<1)	mgl_delete_graph(gr);	}
-	/// Get pointer to internal HMGL object.
+	/// Get pointer to internal HMGL object
 	inline HMGL Self()	{	return gr;	}
 	/// Set default parameters for plotting
 	inline void DefaultPlotParam()			{	mgl_set_def_param(gr);	}

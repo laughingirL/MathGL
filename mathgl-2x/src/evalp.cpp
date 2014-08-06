@@ -625,6 +625,12 @@ mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std
 		}
 		else if(!nm.compare(L"gamma"))
 		{	res=mglFormulaCalc(str, arg, head);	mglApplyFunc(res,gsl_sf_gamma);	}
+		else if(!nm.compare(L"gamma_inc"))
+		{
+			n=mglFindInText(str,",");
+			if(n<=0)	mglFormulaError=true;
+			else	res = mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, gsl_sf_gamma_inc);
+		}
 		else if(!nm.compare(L"w0"))
 		{	res=mglFormulaCalc(str, arg, head);	mglApplyFunc(res,gsl_sf_lambert_W0);	}
 		else if(!nm.compare(L"w1"))

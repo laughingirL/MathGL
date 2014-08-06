@@ -60,6 +60,7 @@ EQ_ELE,		// elliptic integral E(\phi,k) = \int_0^\phi dt   \sqrt((1 - k^2 \sin^2
 EQ_ELF,		// elliptic integral F(\phi,k) = \int_0^\phi dt 1/\sqrt((1 - k^2 \sin^2(t)))
 EQ_LP,		// Legendre polynomial P_l(x), (|x|<=1, l>=0)
 EQ_BETA,	// beta function B(x,y) = Gamma(x)*Gamma(y)/Gamma(x+y)
+EQ_GAMMA_INC,	// incomplete gamma function Gamma(a,x) = \int_x^\infty dt t^{a-1} \exp(-t) for x>=0.
 // normal functions of 1 argument
 EQ_SIN,		// sine function \sin(x).			!!! MUST BE FIRST 1-PLACE FUNCTION
 EQ_COS,		// cosine function \cos(x).
@@ -378,6 +379,7 @@ mglFormula::mglFormula(const char *string)
 		else if(!strcmp(name,"y"))		Kod=EQ_BESY;
 		else if(!strcmp(name,"f"))		Kod=EQ_ELF;
 		else if(!strcmp(name,"gamma"))	Kod=EQ_GAMMA;
+		else if(!strcmp(name,"gamma_inc"))	Kod=EQ_GAMMA_INC;
 		else if(!strcmp(name,"ns"))		Kod=EQ_NS;
 		else if(!strcmp(name,"nc"))		Kod=EQ_NC;
 		else if(!strcmp(name,"nd"))		Kod=EQ_ND;
@@ -490,8 +492,8 @@ double MGL_LOCAL_CONST gslBi_d(double a)	{return gsl_sf_airy_Bi_deriv(a,GSL_PREC
 double MGL_LOCAL_CONST sgn(double a)	{return a<0 ? -1:(a>0?1:0);}
 double MGL_LOCAL_CONST stp(double a)	{return a>0 ? 1:0;}
 double MGL_LOCAL_CONST arg(double a,double b)	{	return atan2(b,a);	}
-double MGL_LOCAL_CONST mgz1(double)	{return 0;}
-double MGL_LOCAL_CONST mgz2(double,double)	{return 0;}
+double MGL_LOCAL_CONST mgz1(double)			{return NAN;}	// NOTE I think NAN value is more correct here than 0
+double MGL_LOCAL_CONST mgz2(double,double)	{return NAN;}	// NOTE I think NAN value is more correct here than 0
 #ifdef WIN32
 double MGL_LOCAL_CONST asinh(double x)	{	return log(x+sqrt(x*x+1.));	}
 double MGL_LOCAL_CONST acosh(double x)	{	return x>1 ? log(x+sqrt(x*x-1.)) : NAN;	}
@@ -503,18 +505,18 @@ typedef double (*func_2)(double, double);
 //-----------------------------------------------------------------------------
 static const mreal z2[EQ_SIN-EQ_LT] = {3,3,3,3,0,3,3,0,0,0,0,0,NAN,0
 #if MGL_HAVE_GSL
-	,3,NAN, 3,NAN, 0,0,3,1
+	,3,NAN, 3,NAN, 0,0,3,1,3
 #else
-	,0,0,0,0,0,0,0,0
+	,0,0,0,0,0,0,0,0,0
 #endif
 };
 static const func_2 f2[EQ_SIN-EQ_LT] = {clt,cgt,ceq,cor,cand,add,sub,mul,del,ipw,pow,fmod,llg,arg,hypot
 #if MGL_HAVE_GSL
 	,gsl_sf_bessel_Jnu,gsl_sf_bessel_Ynu,
 	gsl_sf_bessel_Inu,gsl_sf_bessel_Knu,
-	gslEllE,gslEllF,gslLegP,gsl_sf_beta
+	gslEllE,gslEllF,gslLegP,gsl_sf_beta,gsl_sf_gamma_inc,
 #else
-	,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2
+	,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2
 #endif
 };
 static const func_1 f1[EQ_SN-EQ_SIN] = {sin,cos,tan,asin,acos,atan,sinh,cosh,tanh,
@@ -624,19 +626,20 @@ double MGL_LOCAL_CONST gslE_d(double a)	{return (gsl_sf_ellint_Ecomp(a,GSL_PREC_
 double MGL_LOCAL_CONST gslK_d(double a)	{return (gsl_sf_ellint_Ecomp(a,GSL_PREC_SINGLE) - (1.-a)*gsl_sf_ellint_Kcomp(a,GSL_PREC_SINGLE))/(2.*a*(1.-a));}
 double MGL_LOCAL_CONST gamma_d(double a)	{return gsl_sf_psi(a)*gsl_sf_gamma(a);}
 #endif
+double MGL_LOCAL_CONST ginc_d(double a, double x)	{return -exp(-x)*pow(x,a-1);}
 //-----------------------------------------------------------------------------
 static const func_2 f21[EQ_SIN-EQ_LT] = {mgz2,mgz2,mgz2, mgz2,mgz2,mgp, mgp,mul1,div1, ipw1,pow1,mgp,llg1, mgz2
 #if MGL_HAVE_GSL
-	,mgz2,mgz2,mgz2, mgz2,gslEllE1,gslEllF1, mgz2,mgz2
+	,mgz2,mgz2,mgz2, mgz2,gslEllE1,gslEllF1, mgz2,mgz2,mgz2
 #else
-	,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2
+	,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2
 #endif
 };
 static const func_2 f22[EQ_SIN-EQ_LT] = {mgz2,mgz2,mgz2,mgz2,mgz2,mgp,mgm,mul2,div2,pow2,pow2,mgz2,llg2, mgz2
 #if MGL_HAVE_GSL
-	,gslJnuD,gslYnuD,gslInuD,gslKnuD,gslEllE2,gslEllF2,mgz2/*gslLegP*/,mgz2
+	,gslJnuD,gslYnuD,gslInuD,gslKnuD,gslEllE2,gslEllF2,mgz2/*gslLegP*/,mgz2,ginc_d
 #else
-	,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2
+	,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2
 #endif
 };
 static const func_1 f11[EQ_SN-EQ_SIN] = {cos,cos_d,tan_d,asin_d,acos_d,atan_d,cosh,sinh,tanh_d,
