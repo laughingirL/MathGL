@@ -67,7 +67,7 @@ const char *mmgl_refill="new x 10 '0.5+rnd':cumsum x 'x':norm x -1 1\ncopy y sin
 "alpha on:light on\n"
 "subplot 2 2 2:title '2d regular':rotate 40 60\nbox:axis:mesh xx yy z 'k'\n"
 "new rr 100 100:refill rr x y z:surf rr\n\n"
-"new xx 10 10 '2*rnd-1':new yy 10 10 '2*rnd-1'\ncopy z sin(pi*xx*yy)/1.5\n"
+"new xx 10 10 '(x+1)/2*cos(y*pi/2-1)':new yy 10 10 '(x+1)/2*sin(y*pi/2-1)'\ncopy z sin(pi*xx*yy)/1.5\n"
 "subplot 2 2 3:title '2d non-regular':rotate 40 60\nbox:axis:plot xx yy z 'ko '\n"
 "new rr 100 100:refill rr xx yy z:surf rr";
 void smgl_refill(mglGraph *gr)
@@ -94,12 +94,10 @@ void smgl_refill(mglGraph *gr)
 	gr->Axis();	gr->Box();	gr->Mesh(x,y,z,"k");
 	gr->Refill(rr,x,y,z);	gr->Surf(rr);
 
+	gr->Fill(xx,"(x+1)/2*cos(y*pi/2-1)");
+	gr->Fill(yy,"(x+1)/2*sin(y*pi/2-1)");
 	for(int i=0;i<10*10;i++)
-	{
-		xx.a[i] = mgl_rnd()*2-1;
-		yy.a[i] = mgl_rnd()*2-1;
 		z.a[i] = sin(M_PI*xx.a[i]*yy.a[i])/1.5;
-	}
 	gr->SubPlot(2,2,3);	gr->Title("2d non-regular");	gr->Rotate(40,60);
 	gr->Axis();	gr->Box();	gr->Plot(xx,yy,z,"ko ");
 	gr->Refill(rr,xx,yy,z);	gr->Surf(rr);

@@ -902,7 +902,7 @@ void mglCanvas::quad_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 	y2 = long(mgl_max(mgl_max(p1.y,p2.y), mgl_max(p3.y,p4.y)));
 	x1=mgl_max(x1,d->x1);	x2=mgl_min(x2,d->x2);
 	y1=mgl_max(y1,d->y1);	y2=mgl_min(y2,d->y2);
-	if(x1>x2 || y1>y2)	return;
+//	if(x1>x2 || y1>y2)	return;
 
 	dd = d1.x*d2.y-d1.y*d2.x;
 	dsx =-4*(d2.y*d3.x - d2.x*d3.y)*d1.y;
@@ -916,7 +916,7 @@ void mglCanvas::quad_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 	int oi = d->ObjId, ang=d->angle;
 	mreal pw = d->PenWidth;
 	uint64_t pd = d->PDef;
-	for(long i=x1;i<=x2;i++)	for(long j=y1;j<=y2;j++)
+	for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
 	{
 		if(pd==MGL_SOLID_MASK || visible(i,j,d->m, pw,ang))
 		{
@@ -925,14 +925,15 @@ void mglCanvas::quad_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 			if(s>=0)
 			{
 				s = sqrt(s);
-				register float qu = d3.x*yy - d3.y*xx + dd + s, u=-1;
-				register float qv = d3.y*xx - d3.x*yy + dd + s, v=-1;
-				u = 2.f*(d2.y*xx - d2.x*yy)/qu;	v = 2.f*(d1.x*yy - d1.y*xx)/qv;
+				register float qu = d3.x*yy - d3.y*xx + dd + s;
+				register float qv = d3.y*xx - d3.x*yy + dd + s;
+				register float u = 2.f*(d2.y*xx - d2.x*yy)/qu;	
+				register float v = 2.f*(d1.x*yy - d1.y*xx)/qv;
 				if(u*(1.f-u)<0.f || v*(1.f-v)<0.f)	// first root bad
 				{
 					qu = d3.x*yy - d3.y*xx + dd - s;
 					qv = d3.y*xx - d3.x*yy + dd - s;
-					u = v = -1.f;
+//					u = v = -1.f;
 					u = 2.f*(d2.y*xx - d2.x*yy)/qu;	v = 2.f*(d1.x*yy - d1.y*xx)/qv;
 					if(u*(1.f-u)<0.f || v*(1.f-v)<0.f)	continue;	// second root bad
 				}
@@ -1011,7 +1012,7 @@ void mglCanvas::trig_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 	y2 = long(mgl_max(p1.y>p2.y?p1.y:p2.y, p3.y));
 	x1=x1>d->x1?x1:d->x1;	x2=x2<d->x2?x2:d->x2;
 	y1=y1>d->y1?y1:d->y1;	y2=y2<d->y2?y2:d->y2;
-	if(x1>x2 || y1>y2)	return;
+//	if(x1>x2 || y1>y2)	return;
 	// default normale
 	mglPoint nr = mglPoint(p2.x-p1.x,p2.y-p1.y,p2.z-p1.z)^mglPoint(p3.x-p1.x,p3.y-p1.y,p3.z-p1.z);
 	float x0 = p1.x, y0 = p1.y;
@@ -1020,7 +1021,7 @@ void mglCanvas::trig_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 	int oi = d->ObjId, ang=d->angle;
 	mreal pw = d->PenWidth;
 	uint64_t pd = d->PDef;
-	if(Quality&MGL_DRAW_NORM)	for(long i=x1;i<=x2;i++)	for(long j=y1;j<=y2;j++)
+	if(Quality&MGL_DRAW_NORM)	for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
 	{
 		if(pd==MGL_SOLID_MASK || visible(i,j,d->m, pw,ang))
 		{
@@ -1037,7 +1038,7 @@ void mglCanvas::trig_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 	{
 		col2int(p1,r,oi);
 		float zz = p1.z+dz;
-		for(long i=x1;i<=x2;i++)	for(long j=y1;j<=y2;j++)
+		for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
 		{
 			if(pd==MGL_SOLID_MASK || visible(i,j,d->m, pw,ang))
 			{
@@ -1091,7 +1092,8 @@ void mglCanvas::line_draw(const mglPnt &p1, const mglPnt &p2, const mglDrawReg *
 	x1=x1>dr->x1?x1:dr->x1;	x2=x2<dr->x2?x2:dr->x2;
 	y1=y1>dr->y1?y1:dr->y1;	y2=y2<dr->y2?y2:dr->y2;
 	dd = hypot(d.x, d.y);
-	if(x1>x2 || y1>y2 || dd<1e-5)	return;
+//	if(x1>x2 || y1>y2 || dd<1e-5)	return;
+	if(dd<1e-5)	return;
 
 	dxv = d.y/dd;	dyv =-d.x/dd;
 	dxu = d.x/dd;	dyu = d.y/dd;

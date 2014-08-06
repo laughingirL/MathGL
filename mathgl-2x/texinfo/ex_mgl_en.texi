@@ -2593,7 +2593,8 @@ subplot 2 2 2:title '2d regular':rotate 40 60
 box:axis:mesh xx yy z 'k'
 new rr 100 100:refill rr x y z:surf rr
 
-new xx 10 10 '2*rnd-1':new yy 10 10 '2*rnd-1'
+new xx 10 10 '(x+1)/2*cos(y*pi/2-1)'
+new yy 10 10 '(x+1)/2*sin(y*pi/2-1)'
 copy z sin(pi*xx*yy)/1.5
 subplot 2 2 3:title '2d non-regular':rotate 40 60
 box:axis:plot xx yy z 'ko '
