@@ -581,6 +581,7 @@ mreal mglFormula::CalcIn(const mreal *a1) const
 	return NAN;
 }
 //-----------------------------------------------------------------------------
+double MGL_LOCAL_CONST mgzz(double,double)	{return 0;}
 double MGL_LOCAL_CONST mgp(double ,double )	{return 1;}
 double MGL_LOCAL_CONST mgm(double ,double )	{return -1;}
 double MGL_LOCAL_CONST mul1(double ,double b)	{return b;}
@@ -628,14 +629,14 @@ double MGL_LOCAL_CONST gamma_d(double a)	{return gsl_sf_psi(a)*gsl_sf_gamma(a);}
 #endif
 double MGL_LOCAL_CONST ginc_d(double a, double x)	{return -exp(-x)*pow(x,a-1);}
 //-----------------------------------------------------------------------------
-static const func_2 f21[EQ_SIN-EQ_LT] = {mgz2,mgz2,mgz2, mgz2,mgz2,mgp, mgp,mul1,div1, ipw1,pow1,mgp,llg1, mgz2
+static const func_2 f21[EQ_SIN-EQ_LT] = {mgzz,mgzz,mgzz, mgzz,mgzz,mgp, mgp,mul1,div1, ipw1,pow1,mgp,llg1, mgz2
 #if MGL_HAVE_GSL
 	,mgz2,mgz2,mgz2, mgz2,gslEllE1,gslEllF1, mgz2,mgz2,mgz2
 #else
 	,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2
 #endif
 };
-static const func_2 f22[EQ_SIN-EQ_LT] = {mgz2,mgz2,mgz2,mgz2,mgz2,mgp,mgm,mul2,div2,pow2,pow2,mgz2,llg2, mgz2
+static const func_2 f22[EQ_SIN-EQ_LT] = {mgzz,mgzz,mgzz,mgzz,mgzz,mgp,mgm,mul2,div2,pow2,pow2,mgz2,llg2, mgz2
 #if MGL_HAVE_GSL
 	,gslJnuD,gslYnuD,gslInuD,gslKnuD,gslEllE2,gslEllF2,mgz2/*gslLegP*/,mgz2,ginc_d
 #else
