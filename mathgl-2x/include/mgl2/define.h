@@ -275,6 +275,7 @@ typedef double _Complex mdual;
 #else
 typedef float _Complex mdual;
 #endif
+#define mgl_abs(x)	cabs(x)
 #endif
 #ifdef __cplusplus
 //-----------------------------------------------------------------------------
@@ -286,6 +287,7 @@ typedef std::complex<double> ddual;
 #if !MGL_HAVE_C99_COMPLEX
 #define mdual dual
 #define _Complex_I dual(0,1)
+#define mgl_abs(x)	abs(x)
 #endif
 //-----------------------------------------------------------------------------
 extern "C" {

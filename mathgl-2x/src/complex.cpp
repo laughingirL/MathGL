@@ -867,10 +867,11 @@ void MGL_EXPORT mgl_datac_set_value_(uintptr_t *d, dual *v, int *i, int *j, int 
 //-----------------------------------------------------------------------------
 mdual MGL_EXPORT mgl_datac_get_value(HCDT dat, long i, long j, long k)
 {
-	if(i<0 || i>=dat->GetNx() || j<0 || j>=dat->GetNy() || k<0 || k>=dat->GetNz())
+	register long nx=dat->GetNx(), ny=dat->GetNy(), i0=i+nx*(j+ny*k);
+	if(i<0 || i>=nx || j<0 || j>=ny || k<0 || k>=dat->GetNz())
 		return NAN;
 	const mglDataC *d = dynamic_cast<const mglDataC*>(dat);
-	dual r = d ? d->a[i+d->nx*(j+d->nz*k)] : dual(dat->v(i,j,k),0);
+	dual r = d ? d->a[i0] : dual(dat->vthr(i0),0);
 	return r.real()+r.imag()*_Complex_I;
 }
 mdual MGL_EXPORT mgl_datac_get_value_(uintptr_t *d, int *i, int *j, int *k)

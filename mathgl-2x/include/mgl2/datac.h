@@ -227,7 +227,7 @@ using mglDataA::Momentum;
 	/// Get argument of data values
 	inline mglData Arg() const
 	{	return mglData(true,mgl_datac_arg(this));	}
-	
+
 	/// Get column (or slice) of the data filled by formulas of named columns
 	inline mglDataC Column(const char *eq) const
 	{	return mglDataC(true,mgl_datac_column(this,eq));	}
@@ -368,7 +368,7 @@ using mglDataA::Momentum;
 	void set_v(mreal val, long i,long j=0,long k=0)	{	a[i+nx*(j+ny*k)]=val;	}
 #else
 	/// Get the value in given cell of the data with border checking
-	mreal v(long i,long j=0,long k=0) const	{	return abs(mgl_datac_get_value(this,i,j,k));	}
+	mreal v(long i,long j=0,long k=0) const	{	return mgl_abs(mgl_datac_get_value(this,i,j,k));	}
 	/// Set the value in given cell of the data
 	void set_v(mreal val, long i,long j=0,long k=0)	{	mgl_datac_set_value(this,val,i,j,k);	}
 #endif
