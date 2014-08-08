@@ -46,7 +46,6 @@
 #define MGL_MAX_LINES	(INT_MAX-1000)
 #if !defined(WIN32) && !defined(__APPLE__)
 #include <X11/Xlib.h>
-#include <qt5/QtCore/QTimer>
 #endif
 //-----------------------------------------------------------------------------
 /// Base class for windows containing MathGL graphics

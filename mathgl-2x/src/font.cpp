@@ -547,7 +547,7 @@ float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,floa
 void mglFont::main_copy()
 {
 #pragma omp parallel for
-	for(size_t i=0;i<glyphs.size();i++)
+	for(long i=0;i<long(glyphs.size());i++)
 	{
 		mglGlyphDescr &g = glyphs[i];
 		g.numl[1] = g.numl[2] = g.numl[3] = g.numl[0];
@@ -732,7 +732,7 @@ bool mglFont::Load(const char *base, const char *path)
 	for(long i=0;i<GetNumGlyph();i++)	if(glyphs[i].ln[1]<0)
 	{	glyphs[i].ln[1] = cur-1-glyphs[i].ln[1];	glyphs[i].tr[1] = cur-1-glyphs[i].tr[1];	}
 #pragma omp parallel for
-	for(size_t i=0;i<ex_b.size();i++)	if(ex_b[i].ln[1]<0)
+	for(long i=0;i<long(ex_b.size());i++)	if(ex_b[i].ln[1]<0)
 	{
 		mglGlyphDescr &g = ex_b[i];
 		g.ln[0] = g.ln[1] = g.ln[2] = g.ln[3] = cur-1-g.ln[1];
@@ -745,7 +745,7 @@ bool mglFont::Load(const char *base, const char *path)
 	for(long i=0;i<GetNumGlyph();i++)	if(glyphs[i].ln[2]<0)
 	{	glyphs[i].ln[2] = cur-1-glyphs[i].ln[2];	glyphs[i].tr[2] = cur-1-glyphs[i].tr[2];	}
 #pragma omp parallel for
-	for(size_t i=0;i<ex_i.size();i++)	if(ex_i[i].ln[2]<0)
+	for(long i=0;i<long(ex_i.size());i++)	if(ex_i[i].ln[2]<0)
 	{
 		mglGlyphDescr &g = ex_i[i];
 		g.ln[0] = g.ln[1] = g.ln[2] = g.ln[3] = cur-1-g.ln[2];
@@ -758,7 +758,7 @@ bool mglFont::Load(const char *base, const char *path)
 	for(long i=0;i<GetNumGlyph();i++)	if(glyphs[i].ln[3]<0)
 	{	glyphs[i].ln[3] = cur-1-glyphs[i].ln[3];	glyphs[i].tr[3] = cur-1-glyphs[i].tr[3];	}
 #pragma omp parallel for
-	for(size_t i=0;i<ex_bi.size();i++)	if(ex_bi[i].ln[3]<0)
+	for(long i=0;i<long(ex_bi.size());i++)	if(ex_bi[i].ln[3]<0)
 	{
 		mglGlyphDescr &g = ex_bi[i];
 		g.ln[0] = g.ln[1] = g.ln[2] = g.ln[3] = cur-1-g.ln[3];
