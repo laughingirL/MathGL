@@ -668,7 +668,6 @@ bool mglFont::read_main(const char *fname, std::vector<short> &buf)
 	return true;
 }
 //-----------------------------------------------------------------------------
-//extern std::string mglGlobalMess;	///< Buffer for receiving global messages
 bool mglFont::Load(const char *base, const char *path)
 {
 //	base = 0;
@@ -696,7 +695,6 @@ bool mglFont::Load(const char *base, const char *path)
 	std::vector<short> norm, bold, ital, both;
 	if(!(base && *base) || !read_main(str,norm))
 	{
-//		mglGlobalMess += "Load built-in font.\n";
 		read_def();	setlocale(LC_NUMERIC,loc.c_str());
 		if(buf)	delete []buf;	return true;
 	}

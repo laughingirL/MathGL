@@ -54,6 +54,8 @@ void MGL_EXPORT mgl_reload_class(void *p);
 /// Abstract class for windows displaying graphics
 class MGL_EXPORT mglWnd : public mglGraph
 {
+	mglWnd(const mglWnd &t) {}	// copying is not allowed
+	const mglWnd &operator=(const mglWnd &t)	{	return t;	}
 public:
 	mglWnd() : mglGraph(-1)	{}
 	virtual int Run()=0;			///< Run main loop for event handling

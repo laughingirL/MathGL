@@ -38,6 +38,8 @@ int MGL_EXPORT mgl_qt_run_();
 /// Wrapper class for windows displaying graphics
 class MGL_EXPORT mglQT : public mglWnd
 {
+	mglQT(const mglQT &t) {}	// copying is not allowed
+	const mglQT &operator=(const mglQT &t)	{	return t;	}
 public:
 	mglQT(const char *title="MathGL") : mglWnd()
 	{	gr = mgl_create_graph_qt(0,title,0,0);	}

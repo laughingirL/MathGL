@@ -42,6 +42,8 @@ int MGL_EXPORT mgl_fltk_thr();
 /// Wrapper class for windows displaying graphics
 class MGL_EXPORT mglFLTK : public mglWnd
 {
+	mglFLTK(const mglFLTK &t) {}	// copying is not allowed
+	const mglFLTK &operator=(const mglFLTK &t)	{	return t;	}
 public:
 	mglFLTK(const char *title="MathGL") : mglWnd()
 	{	gr = mgl_create_graph_fltk(0,title,0,0);	}

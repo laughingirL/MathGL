@@ -27,6 +27,8 @@
 /// Wrapper class for all windows displaying graphics
 class MGL_EXPORT mglWindow : public mglWnd
 {
+	mglWindow(const mglWindow &t) {}	// copying is not allowed
+	const mglWindow &operator=(const mglWindow &t)	{	return t;	}
 	int wnd;	///< Type of window
 public:
 	mglWindow(const char *title="MathGL") : mglWnd()

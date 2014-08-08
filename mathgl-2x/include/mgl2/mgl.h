@@ -24,14 +24,17 @@
 #ifdef __cplusplus
 #include "mgl2/data.h"
 #include "mgl2/datac.h"
+#include <sys/stat.h>
 //-----------------------------------------------------------------------------
 /// Wrapper class for all graphics
 class MGL_EXPORT mglGraph
 {
+	mglGraph(const mglGraph &t) {}	// copying is not allowed
+	const mglGraph &operator=(const mglGraph &t)	{	return t;	}
 protected:
 	HMGL gr;
 public:
-	inline mglGraph(int kind=0, int width=600, int height=400)
+	mglGraph(int kind=0, int width=600, int height=400)
 	{
 		if(kind==-1)	gr=NULL;
 #if MGL_HAVE_OPENGL
@@ -43,9 +46,7 @@ public:
 #endif
 		else	gr=mgl_create_graph(width, height);
 	}
-	inline mglGraph(const mglGraph &graph)
-	{	gr = graph.gr;	mgl_use_graph(gr,1);	}
-	inline mglGraph(HMGL graph)
+	mglGraph(HMGL graph)
 	{	gr = graph;		mgl_use_graph(gr,1);	}
 	virtual ~mglGraph()
 	{	if(mgl_use_graph(gr,-1)<1)	mgl_delete_graph(gr);	}
@@ -129,6 +130,8 @@ public:
 	inline void RestoreFont()				{	mgl_restore_font(gr);	}
 	/// Set to use or not text rotation
 	inline void SetRotatedText(bool rotated)	{	mgl_set_rotated_text(gr, rotated);	}
+	/// Set default font for all new HMGL and mglGraph objects
+	static inline void SetDefFont(const char *name, const char *path=NULL)	{	mgl_def_font(name,path);	}
 
 	/// Set default palette
 	inline void SetPalette(const char *colors)	{	mgl_set_palette(gr, colors);	}
@@ -150,6 +153,10 @@ public:
 	inline void SetWarn(int code, const char *info)	{	mgl_set_warn(gr,code,info);	}
 	/// Set buffer for warning messages
 	inline const char *Message()	{	return mgl_get_mess(gr);	}
+	/// Suppress printing warnings to stderr
+	static inline void SuppressWarn(bool on)	{	mgl_suppress_warn(on);	}
+	/// Check if MathGL version is valid (return false) or not (return true)
+	static inline bool CheckVersion(const char *ver)	{	return mgl_check_version(ver);	}
 
 	/// Set axis range scaling -- simplified way to shift/zoom axis range -- need to replot whole image!
 	inline void ZoomAxis(mglPoint p1=mglPoint(0,0,0,0), mglPoint p2=mglPoint(1,1,1,1))

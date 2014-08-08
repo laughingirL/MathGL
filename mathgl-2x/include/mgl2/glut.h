@@ -51,6 +51,8 @@ void MGL_EXPORT mgl_glut_animation(HMGL gr);
 //-----------------------------------------------------------------------------
 class MGL_EXPORT mglGLUT: public mglGraph
 {
+	mglGLUT(const mglGLUT &t) {}	// copying is not allowed
+	const mglGLUT &operator=(const mglGLUT &t)	{	return t;	}
 public:
 	mglGLUT(int (*draw)(HMGL gr, void *p), const char *title="MathGL", void *par=0, void (*load)(void *p)=0) : mglGraph(-1)
 	{	gr = mgl_create_graph_glut(draw,title,par,load);	}
