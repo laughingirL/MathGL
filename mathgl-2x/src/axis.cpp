@@ -588,6 +588,12 @@ void mglCanvas::DrawLabels(mglAxis &aa, bool inv, const mglMatrix *M)
 	{
 		w[i] = TextWidth(aa.txt[i].text.c_str(),FontDef,-1);
 		kk[i] = AddPnt(M, o+d*aa.txt[i].val,-1,d,0,7);
+		if(kk[i]>=0)
+		{
+			mglPnt &pp = Pnt[kk[i]];
+			if(pp.u<0 || (pp.u==0 && pp.v<0))
+			{	pp.u=-pp.u;	pp.v=-pp.v;	pp.w=-pp.w;	}
+		}
 	}
 
 	for(l=0,c=INFINITY,i=0;i<n-1;i++)
@@ -741,6 +747,7 @@ void mglCanvas::DrawGrid(mglAxis &aa, bool at_tick)
 		mreal v0 = mgl_isnan(aa.o) ? aa.v0 : aa.o;
 		if(aa.v2>aa.v1)	v0 = v0 - aa.ds*floor((v0-aa.v1)/aa.ds+1e-3);
 		else			v0 = v0 - aa.ds*floor((v0-aa.v2)/aa.ds+1e-3);
+		fflush(stdout);		// somehow this help to bypass bug in GCC 32bit
 		if(v0+aa.ds!=v0 && aa.v2+aa.ds!=aa.v2)
 			for(mreal v=v0;(v-aa.v2)*(v-aa.v1)<=0;v+=aa.ds)
 				mgl_drw_grid(this, v, d, oa, ob, da1, db1, da2, db2);
