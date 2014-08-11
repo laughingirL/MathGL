@@ -42,7 +42,7 @@ public:
 #else
 		else if(kind==1)
 		{	gr=mgl_create_graph(width, height);
-			mglGlobalMess += "OpenGL support was disabled. Please, enable it and rebuild MathGL.\n";	}
+			SetGlobalWarn("OpenGL support was disabled. Please, enable it and rebuild MathGL.");	}
 #endif
 		else	gr=mgl_create_graph(width, height);
 	}
@@ -153,6 +153,8 @@ public:
 	inline void SetWarn(int code, const char *info)	{	mgl_set_warn(gr,code,info);	}
 	/// Set buffer for warning messages
 	inline const char *Message()	{	return mgl_get_mess(gr);	}
+	/// Set global warning message
+	static inline void SetGlobalWarn(const char *text)	{	mgl_set_global_warn(text);	}
 	/// Suppress printing warnings to stderr
 	static inline void SuppressWarn(bool on)	{	mgl_suppress_warn(on);	}
 	/// Check if MathGL version is valid (return false) or not (return true)

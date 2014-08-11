@@ -323,6 +323,9 @@ void MGL_EXPORT mgl_wcslwr(wchar_t *str);
 void MGL_EXPORT mgl_wcstombs(char *dst, const wchar_t *src, int size);
 /// Clear internal data for speeding up FFT and Hankel transforms
 void MGL_EXPORT mgl_clear_fft();
+/// Set global warning message
+void MGL_EXPORT mgl_set_global_warn(const char *text);
+void MGL_EXPORT mgl_set_global_warn_(const char *text,int);
 #ifdef __cplusplus
 }
 #endif

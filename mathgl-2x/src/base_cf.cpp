@@ -76,6 +76,18 @@ int MGL_EXPORT mgl_get_mess_(uintptr_t *gr, char *out, int len)
 int MGL_EXPORT_PURE mgl_get_warn(HMGL gr)	{	return gr->GetWarn();	}
 void MGL_EXPORT mgl_set_warn(HMGL gr, int code, const char *txt)
 {	gr->SetWarn(code,txt);	}
+extern bool mglPrintWarn;
+void MGL_EXPORT mgl_set_global_warn(const char *txt)
+{
+	if(txt && *txt)
+	{
+		mglGlobalMess += txt;	mglGlobalMess += '\n';
+		if(mglPrintWarn)	fprintf(stderr,"Global message - %s\n",txt);
+	}
+}
+void MGL_EXPORT mgl_set_global_warn_(const char *txt, int l)
+{	char *s=new char[l+1];	memcpy(s,txt,l);	s[l]=0;	mgl_set_global_warn(s);	delete []s;	}
+//-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_set_origin(HMGL gr, double x0, double y0, double z0)
 {	gr->SetOrigin(x0,y0,z0);	}
 void MGL_EXPORT mgl_set_palette(HMGL gr, const char *colors)

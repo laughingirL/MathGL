@@ -37,9 +37,6 @@ ZZ. Update *.i for new functions {before release!!!}
 	c. Tests for mglDataC arrays (as separate flag)
 	e. Test for Crop, Momentum, NormSl, Sew, DiffParam, Envelope, STFA for all directions "xyz"; Clean, Last, First, Find, Spline3, FindAny, Insert, Delete, Put, SetId/Column, Squeeze, Extend, Trace, Combine, new Max/Min/Momentum, FillSample, Hist, operators, Sort, Roots, Jacobian
 	u. Test FlowP + 3d
-
-7. rotate 60 115:axis
-8. mglGlobalMess as SetGlobalMess() + auto printing
 	
 ============= DOCUMENTATION =============
 
@@ -51,6 +48,7 @@ D. Docs about JS interface
 1. mglGraph::SetDefFont()
 2. mglGraph::SuppressWarn()
 3. mglGraph::CheckVersion()
+4. mglGraph::SetGlobalMess()
 
 
 YY. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using Stem()

@@ -115,7 +115,7 @@ bool MGL_NO_EXPORT mgl_read_image(unsigned char *g, int w, int h, const char *fn
 		png_destroy_read_struct(&png_ptr, &info_ptr,&end_info);
 		fclose(fp);
 #else
-		mglGlobalMess += "PNG support was disabled. Please, enable it and rebuild MathGL.\n";
+		mgl_set_global_warn("PNG support was disabled. Please, enable it and rebuild MathGL.");
 #endif
 	}
 	else if(!strcmp(ext,".jpg") || !strcmp(ext,".jpeg"))
@@ -151,7 +151,7 @@ bool MGL_NO_EXPORT mgl_read_image(unsigned char *g, int w, int h, const char *fn
 		}
 		delete []buf;
 #else
-		mglGlobalMess += "JPEG support was disabled. Please, enable it and rebuild MathGL.\n";
+		mgl_set_global_warn("JPEG support was disabled. Please, enable it and rebuild MathGL.");
 #endif
 	}
 	return true;
@@ -200,7 +200,7 @@ void MGL_EXPORT mgl_data_import(HMDT d, const char *fname, const char *scheme,mr
 	png_destroy_read_struct(&png_ptr, &info_ptr,&end_info);
 	fclose(fp);	delete []c;
 #else
-	mglGlobalMess += "PNG support was disabled. Please, enable it and rebuild MathGL.\n";
+	mgl_set_global_warn("PNG support was disabled. Please, enable it and rebuild MathGL.");
 #endif
 }
 //-----------------------------------------------------------------------------
@@ -252,7 +252,7 @@ void MGL_EXPORT mgl_data_export(HCDT dd, const char *fname, const char *scheme,m
 	png_destroy_write_struct(&png_ptr, &info_ptr);
 	fclose(fp);	delete []p;	delete []d;
 #else
-	mglGlobalMess += "PNG support was disabled. Please, enable it and rebuild MathGL.\n";
+	mgl_set_global_warn("PNG support was disabled. Please, enable it and rebuild MathGL.");
 #endif
 }
 //-----------------------------------------------------------------------------

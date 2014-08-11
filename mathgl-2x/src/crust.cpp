@@ -520,7 +520,7 @@ HMDT MGL_EXPORT mgl_triangulation_2d(HCDT x, HCDT y)
 
 	std::vector<Triad> triads;
 	if(de_duplicate(pts, out))
-		mglGlobalMess += "There are duplicated points for triangulation.\n";
+		mgl_set_global_warn("There are duplicated points for triangulation.");
 	s_hull_pro(pts, triads);
 	long m = triads.size();
 	nums=new mglData(3,m);

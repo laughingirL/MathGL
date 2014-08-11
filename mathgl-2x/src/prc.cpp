@@ -980,7 +980,7 @@ void MGL_EXPORT mgl_write_prc(HMGL gr, const char *fname,const char* /*descr*/, 
 		FILE *fp=fopen(tname,"wt");
 		fputs("Can not produce PDF file, MathGL compiled without PDF output support\n", fp);
 		fclose(fp);
-		mglGlobalMess += "PDF support was disabled. Please, enable it and rebuild MathGL.\n";
+		mgl_set_global_warn("PDF support was disabled. Please, enable it and rebuild MathGL.");
 #endif // MGL_HAVE_PDF
 	}
 	delete []tname;
