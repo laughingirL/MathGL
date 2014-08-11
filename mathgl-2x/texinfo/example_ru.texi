@@ -21,16 +21,9 @@ gr = mglGraph();
 gr.FPlot("sin(pi*x)");
 gr.WriteFrame("test.png");
 @end verbatim
-в Octave он будет почти тем же
+в Octave он будет почти тем же (в новых версиях надо предварительно выполнить @code{mathgl;})
 @verbatim
 gr = mglGraph();
-gr.FPlot("sin(pi*x)");
-gr.WriteFrame("test.png");
-@end verbatim
-или в новых версиях Octave (>3.8)
-@verbatim
-mathgl;
-gr = mathgl.mglGraph();
 gr.FPlot("sin(pi*x)");
 gr.WriteFrame("test.png");
 @end verbatim

@@ -21,16 +21,10 @@ gr = mglGraph();
 gr.FPlot("sin(pi*x)");
 gr.WriteFrame("test.png");
 @end verbatim
-in Octave will be as (you need first install MathGL package by command @code{octave:1> pkg install /usr/share/mathgl/octave/mathgl.tar.gz} from @code{sudo octave})
+in Octave will be as (you need first execute @code{mathgl;} in newer Octave versions)
+@c (install MathGL package by command @code{octave:1> pkg install /usr/share/mathgl/octave/mathgl.tar.gz} from @code{sudo octave})
 @verbatim
 gr = mglGraph();
-gr.FPlot("sin(pi*x)");
-gr.WriteFrame("test.png");
-@end verbatim
-or in novel versions of Octave (>3.8)
-@verbatim
-mathgl;
-gr = mathgl.mglGraph();
 gr.FPlot("sin(pi*x)");
 gr.WriteFrame("test.png");
 @end verbatim
