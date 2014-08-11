@@ -21,6 +21,8 @@
 /// Wrapper class for all graphics
 class mglGraph
 {
+	mglGraph(const mglGraph &t) {}	// copying is not allowed
+	const mglGraph &operator=(const mglGraph &t)	{	return t;	}
 protected:
 	HMGL gr;
 public:
@@ -36,8 +38,6 @@ public:
 #endif
 		else	gr=mgl_create_graph(width, height);
 	}
-	inline mglGraph(const mglGraph &graph)
-	{	gr = graph.gr;	mgl_use_graph(gr,1);	}
 	inline mglGraph(HMGL graph)
 	{	gr = graph;		mgl_use_graph(gr,1);	}
 	virtual ~mglGraph()

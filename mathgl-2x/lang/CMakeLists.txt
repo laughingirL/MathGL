@@ -2,6 +2,9 @@ set(src_imp_dep
 ../include/mgl2/type.h
 ../include/mgl2/data.h
 ../include/mgl2/mgl.h
+mgl.i
+data.i
+type.i
 )
 
 set(mgl_clean_files "")
