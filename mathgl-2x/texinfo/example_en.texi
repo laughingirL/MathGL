@@ -27,6 +27,13 @@ gr = mglGraph();
 gr.FPlot("sin(pi*x)");
 gr.WriteFrame("test.png");
 @end verbatim
+or in novel versions of Octave (>3.8)
+@verbatim
+mathgl;
+gr = mathgl.mglGraph();
+gr.FPlot("sin(pi*x)");
+gr.WriteFrame("test.png");
+@end verbatim
 in C will be as
 @verbatim
 #include <mgl2/mgl_cf.h>

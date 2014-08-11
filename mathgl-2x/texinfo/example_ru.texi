@@ -27,6 +27,13 @@ gr = mglGraph();
 gr.FPlot("sin(pi*x)");
 gr.WriteFrame("test.png");
 @end verbatim
+или в новых версиях Octave (>3.8)
+@verbatim
+mathgl;
+gr = mathgl.mglGraph();
+gr.FPlot("sin(pi*x)");
+gr.WriteFrame("test.png");
+@end verbatim
 в C необходимо будет найти С-ые аналоги функций (из документации) и указать все их аргументы явно
 @verbatim
 #include <mgl2/mgl_cf.h>
