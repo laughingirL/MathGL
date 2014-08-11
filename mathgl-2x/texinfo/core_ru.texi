@@ -15,6 +15,7 @@
 @anchor{version}
 @deftypefn {MGL command} {} version 'ver'
 @ifclear UDAV
+@deftypefnx {Метод класса @code{mglGraph}} @code{bool} CheckVersion (@code{const char *}ver) static
 @deftypefnx {C function} @code{int} mgl_check_version (@code{const char *}ver)
 @end ifclear
 Возвращает ненулевое значение если версия MathGL подходит для требуемой в @var{ver}, т.е. если номер основной версии совпадает и "подверсия" больше или равна указанной в @var{ver}.
@@ -413,7 +414,8 @@ MGL не требует создания данного типа объекто�
 Восстанавливает начертание шрифта по умолчанию.
 @end deftypefn
 
-@deftypefn {Функция С} @code{void} mgl_def_font (@code{const char *}name, @code{const char *}path)
+@deftypefn {Метод класса @code{mglGraph}} @code{void} SetDefFont (@code{const char *}name, @code{const char *}path=@code{""}) static
+@deftypefnx {Функция С} @code{void} mgl_def_font (@code{const char *}name, @code{const char *}path)
 Загружает начертание шрифта по умолчанию (для всех вновь создаваемых HMGL/mglGraph объектов) из файла @var{path}/@var{name}.
 @end deftypefn
 
@@ -552,8 +554,14 @@ Setsize: размер(ы) равны нулю или отрицательны
 @end table
 @end deftypefn
 
-@deftypefn {Функция С} @code{void} mgl_suppress_warn (@code{int} state)
+@deftypefn {Метод класса @code{mglGraph}} @code{void} SuppressWarn (@code{bool} state) static
+@deftypefnx {Функция С} @code{void} mgl_suppress_warn (@code{int} state)
 Выключает вывод предупреждений в @code{stderr} если @var{state} не ноль.
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglGraph}} @code{void} SetGlobalWarn (@code{const char *}info) static
+@deftypefnx {Функция С} @code{void} mgl_set_global_warn (@code{const char *}info)
+Задает предупреждение @var{info}, не привязанное к конкретному объекту рисования.
 @end deftypefn
 
 

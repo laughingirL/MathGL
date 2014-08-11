@@ -15,6 +15,7 @@ Some of MathGL features will appear only in novel versions. To test used MathGL 
 @anchor{version}
 @deftypefn {MGL command} {} version 'ver'
 @ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{bool} CheckVersion (@code{const char *}ver) static
 @deftypefnx {C function} @code{int} mgl_check_version (@code{const char *}ver)
 @end ifclear
 Return nonzero if MathGL version is appropriate for required by @var{ver}, i.e. if major version is the same and minor version is greater or equal to one in @var{ver}.
@@ -427,7 +428,8 @@ Copy font data from another @code{mglGraph} object.
 Restore font data to default typeface.
 @end deftypefn
 
-@deftypefn {C function} @code{void} mgl_def_font (@code{const char *}name, @code{const char *}path)
+@deftypefn {Method on @code{mglGraph}} @code{void} SetDefFont (@code{const char *}name, @code{const char *}path=@code{""}) static
+@deftypefnx {C function} @code{void} mgl_def_font (@code{const char *}name, @code{const char *}path)
 Load default font typeface (for all newly created HMGL/mglGraph objects) from @var{path}/@var{name}.
 @end deftypefn
 
@@ -568,8 +570,14 @@ Unbalanced ' in MGL script
 @end table
 @end deftypefn
 
-@deftypefn {C function} @code{void} mgl_suppress_warn (@code{int} state)
+@deftypefn {Method on @code{mglGraph}} @code{void} SuppressWarn (@code{bool} state) static
+@deftypefnx {C function} @code{void} mgl_suppress_warn (@code{int} state)
 Disable printing warnings to @code{stderr} if @var{state} is nonzero.
+@end deftypefn
+
+@deftypefn {Method on @code{mglGraph}} @code{void} SetGlobalWarn (@code{const char *}info) static
+@deftypefnx {C function} @code{void} mgl_set_global_warn (@code{const char *}info)
+Set warning message @var{info} for global scope.
 @end deftypefn
 
 @end ifclear
