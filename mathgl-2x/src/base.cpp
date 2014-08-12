@@ -310,10 +310,10 @@ long mglBase::CopyNtoC(long from, mreal c)
 	{k=Pnt.size();	MGL_PUSH(Pnt,p,mutexPnt);}	return k;
 }
 //-----------------------------------------------------------------------------
-long mglBase::CopyProj(long from, mglPoint p, mglPoint n)
+long mglBase::CopyProj(long from, mglPoint p, mglPoint n, short sub)
 {
 	if(from<0)	return -1;
-	mglPnt q=Pnt[from];
+	mglPnt q=Pnt[from];	q.sub = sub;
 	q.x=q.xx=p.x;	q.y=q.yy=p.y;	q.z=q.zz=p.z;
 	q.u = n.x;		q.v = n.y;		q.w = n.z;
 	long k;

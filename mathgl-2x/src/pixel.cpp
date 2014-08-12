@@ -108,25 +108,36 @@ bool mglCanvas::ScalePoint(const mglMatrix *M, mglPoint &p, mglPoint &n, bool us
 //-----------------------------------------------------------------------------
 long mglCanvas::ProjScale(int nf, long id, bool text)
 {
-	mglPoint pp = GetPntP(id), nn = GetPntN(id), q, p, n, u;
+	const mglPnt &pi = Pnt[id];
+	mglPoint pp = mglPoint(pi.x,pi.y,pi.z), nn = mglPoint(pi.u,pi.v,pi.w), p, n;
 	if(mgl_isnan(pp.x))	return -1;
-	q = RestorePnt(pp)/(2*B.pf);
-	u = RestorePnt(nn,true);	u.Normalize();
 	mreal w=B1.b[0]/2, h=B1.b[4]/2, d=B1.b[8]/2, xx=B1.x-w/2, yy=B1.y-h/2;
-	if(nf==0)
-	{	p.x = xx + q.x*w;	p.y = yy + q.y*h;	p.z = B1.z + q.z*d;	n = u;	}
-	else if(nf==1)
-	{	p.x = xx + q.x*w;	p.y = yy+h + q.z*h;	p.z = B1.z + q.y*d;	n = mglPoint(u.x,u.z,u.y);	}
-	else if(nf==2)
-	{	p.x = xx+w + q.z*w;	p.y = yy + q.y*h;	p.z = B1.z+ q.x*d;	n = mglPoint(u.z,u.y,u.x);	}
+	if(!pi.sub)
+	{
+		mglPoint q = RestorePnt(pp)/(2*B.pf);
+		mglPoint u = RestorePnt(nn,true);	u.Normalize();
+		if(nf==0)
+		{	p.x = xx + q.x*w;	p.y = yy + q.y*h;	p.z = B1.z + q.z*d;	n = u;	}
+		else if(nf==1)
+		{	p.x = xx + q.x*w;	p.y = yy+h + q.z*h;	p.z = B1.z + q.y*d;	n = mglPoint(u.x,u.z,u.y);	}
+		else if(nf==2)
+		{	p.x = xx+w + q.z*w;	p.y = yy + q.y*h;	p.z = B1.z+ q.x*d;	n = mglPoint(u.z,u.y,u.x);	}
+		else
+		{
+			const mreal *b=B.b;	n = nn;
+			p.x = xx+w + q.x*b[0]/2 + q.y*b[1]/2 + q.z*b[2]/2;
+			p.y = yy+h + q.x*b[3]/2 + q.y*b[4]/2 + q.z*b[5]/2;
+			p.z = B.z + q.x*b[6]/2 + q.y*b[7]/2 + q.z*b[8]/2;
+		}
+	}
 	else
 	{
-		const mreal *b=B.b;	n = nn;
-		p.x = xx+w + q.x*b[0]/2 + q.y*b[1]/2 + q.z*b[2]/2;
-		p.y = yy+h + q.x*b[3]/2 + q.y*b[4]/2 + q.z*b[5]/2;
-		p.z = B.z + q.x*b[6]/2 + q.y*b[7]/2 + q.z*b[8]/2;
+		register mreal W=B1.b[0]/2, H=B1.b[4]/2, D=B1.b[8]/2;
+		p.x = pi.x/2 + w*(nf/2);
+		p.y = pi.y/2 + h*(nf%2);
+		p.z = pi.z;	n=nn;
 	}
-	return CopyProj(id,p,text?n:nn);
+	return CopyProj(id,p,text?n:nn,pi.sub);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::LightScale(const mglMatrix *M)
@@ -927,7 +938,7 @@ void mglCanvas::quad_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 				s = sqrt(s);
 				register float qu = d3.x*yy - d3.y*xx + dd + s;
 				register float qv = d3.y*xx - d3.x*yy + dd + s;
-				register float u = 2.f*(d2.y*xx - d2.x*yy)/qu;	
+				register float u = 2.f*(d2.y*xx - d2.x*yy)/qu;
 				register float v = 2.f*(d1.x*yy - d1.y*xx)/qv;
 				if(u*(1.f-u)<0.f || v*(1.f-v)<0.f)	// first root bad
 				{
