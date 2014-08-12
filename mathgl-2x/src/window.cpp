@@ -117,16 +117,18 @@ void mglCanvasWnd::ReLoad()
 		const std::string loc = setlocale(LC_NUMERIC, NULL);	setlocale(LC_NUMERIC, "C");
 		// use frames for quickly redrawing while adding/changing primitives
 		if(mgl_is_frames(this))	NewFrame();
-		
+
 		int n = DrawFunc ? DrawFunc(this,FuncPar) : 0;
 		if(n<NumFig && n>=0)	NumFig = n;
-		
+
 		if(mgl_is_frames(this))	EndFrame();
 		setlocale(LC_NUMERIC, loc.c_str());
 		Update();
 	}
 }
 //-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_wnd_set_func(HMGL gr, int (*draw)(HMGL gr, void *p), void *par, void (*reload)(void *p))
+{	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>(gr);	if(g)	g->SetDrawFunc(draw, par, reload);	}
 void MGL_EXPORT mgl_wnd_toggle_alpha(HMGL gr)
 {	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>(gr);	if(g)	g->ToggleAlpha();	}
 void MGL_EXPORT mgl_wnd_toggle_light(HMGL gr)

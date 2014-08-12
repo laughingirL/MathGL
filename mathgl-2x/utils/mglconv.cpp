@@ -30,11 +30,23 @@ int main(int argc, char *argv[])
 	mglParse p(true);
 	char ch, buf[2048], iname[256]="", oname[256]="";
 	std::vector<std::wstring> var;
+	std::wstring str;
 
 	while(1)
 	{
-		ch = getopt(argc, argv, "1:2:3:4:5:6:7:8:9:ho:L:C:A:");
+		ch = getopt(argc, argv, "1:2:3:4:5:6:7:8:9:ho:L:C:A:s:");
 		if(ch>='1' && ch<='9')	p.AddParam(ch-'0', optarg);
+		else if(ch=='s')
+		{
+			setlocale(LC_CTYPE, "");
+			FILE *fp = fopen(optarg,"r");
+			if(fp)
+			{
+				wchar_t ch;
+				while((ch=fgetwc(fp))!=WEOF)	str.push_back(ch);
+				fclose(fp);	str += L"\n";
+			}
+		}
 		else if(ch=='L')	setlocale(LC_CTYPE, optarg);
 		else if(ch=='A')
 		{
@@ -63,6 +75,7 @@ int main(int argc, char *argv[])
 				"\t...          ...\n"
 				"\t-9 str       set str as argument $9 for script\n"
 				"\t-L loc       set locale to loc\n"
+				"\t-s opt       set MGL script for setting up the plot\n"
 				"\t-o name      set output file name\n"
 				"\t-            get script from standard input\n"
 				"\t-A val       add animation value val\n"
@@ -78,12 +91,12 @@ int main(int argc, char *argv[])
 	}
 	if(ch=='h')	return 0;
 	if(*oname==0)	{	strncpy(oname,*iname?iname:"out",250);	strcat(oname,".png");	}
-	
+
 	mgl_ask_func = mgl_ask_gets;
 	// prepare for animation
-	std::wstring str;
 	setlocale(LC_CTYPE, "");
 	FILE *fp = *iname?fopen(iname,"r"):stdin;
+	if(!fp)	{	printf("No file for MGL script\n");	return 0;	}
 	wchar_t cw;
 	while((cw=fgetwc(fp))!=WEOF)	str.push_back(cw);
 //	while(!feof(fp))	str.push_back(fgetwc(fp));

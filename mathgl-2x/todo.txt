@@ -45,7 +45,7 @@ B. Add chapter with real samples
 C. Translate to Russian everything
 D. Docs about JS interface
 
-
+1.	inline void SetDrawFunc(int (*draw)(mglBase *gr, void *p), void *par=NULL, void (*reload)(void *p)=NULL)
 
 YY. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using Stem()
 

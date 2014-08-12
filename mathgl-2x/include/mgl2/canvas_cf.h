@@ -80,7 +80,7 @@ void MGL_EXPORT mgl_set_ticks_valw(HMGL gr, char dir, HCDT val, const wchar_t *l
 void MGL_EXPORT mgl_add_tick(HMGL gr, char dir, double val, const char *lbl);
 void MGL_EXPORT mgl_add_tick_(uintptr_t *gr, const char *dir, mreal *val, const char *lbl,int,int);
 void MGL_EXPORT mgl_add_tickw(HMGL gr, char dir, double val, const wchar_t *lbl);
-/// Tune ticks 
+/// Tune ticks
 void MGL_EXPORT mgl_tune_ticks(HMGL gr, int tune, double fact_pos);
 void MGL_EXPORT mgl_tune_ticks_(uintptr_t *gr, int *tune, mreal *fact_pos);
 /// Set templates for ticks
@@ -397,6 +397,8 @@ void MGL_EXPORT mgl_draw_thr(void *);
 /// Callback function for mouse click
 void MGL_EXPORT mgl_set_click_func(HMGL gr, void (*func)(void *p));
 
+/// Set callback functions for drawing and data reloading
+void MGL_EXPORT mgl_wnd_set_func(HMGL gr, int (*draw)(HMGL gr, void *p), void *par, void (*reload)(void *p));
 /// Set delay for animation in seconds
 void MGL_EXPORT mgl_wnd_set_delay(HMGL gr, double dt);
 void MGL_EXPORT mgl_wnd_set_delay_(uintptr_t *gr, mreal *dt);

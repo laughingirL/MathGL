@@ -23,7 +23,7 @@
 #include "mgl2/mgl.h"
 #include "mgl2/qt.h"
 //-----------------------------------------------------------------------------
-std::wstring str;
+std::wstring str, opt;
 mglParse p(true);
 void mgl_error_print(const char *Message, void *par);
 void mgl_ask_fltk(const wchar_t *quest, wchar_t *res);
@@ -43,17 +43,29 @@ int main(int argc, char **argv)
 	mgl_suppress_warn(true);
 	while(1)
 	{
-		ch = getopt(argc, argv, "1:2:3:4:5:6:7:8:9:ho:L:");
+		ch = getopt(argc, argv, "1:2:3:4:5:6:7:8:9:hL:s:");
 		if(ch>='1' && ch<='9')	p.AddParam(ch-'0', optarg);
+		else if(ch=='s')
+		{
+			setlocale(LC_CTYPE, "");
+			FILE *fp = fopen(optarg,"r");
+			if(fp)
+			{
+				wchar_t ch;
+				while((ch=fgetwc(fp))!=WEOF)	opt.push_back(ch);
+				fclose(fp);
+			}
+		}
 		else if(ch=='L')	setlocale(LC_CTYPE, optarg);
 		else if(ch=='h' || (ch==-1 && optind>=argc))
 		{
-			printf("mglconv convert mgl script to bitmap png file.\nCurrent version is 2.%g\n",MGL_VER2);
+			printf("mglview show plot from MGL script or MGLD file.\nCurrent version is 2.%g\n",MGL_VER2);
 			printf("Usage:\tmglview [parameter(s)] scriptfile\n");
 			printf(
 				"\t-1 str       set str as argument $1 for script\n"
 				"\t...          ...\n"
 				"\t-9 str       set str as argument $9 for script\n"
+				"\t-s opt       set MGL script for setting up the plot\n"
 				"\t-L loc       set locale to loc\n"
 				"\t-            get script from standard input\n"
 				"\t-h           print this message\n" );
@@ -67,6 +79,7 @@ int main(int argc, char **argv)
 	bool mgld=(*iname && iname[strlen(iname)-1]=='d');
 	if(!mgld)
 	{
+		str = opt + L"\n";
 		setlocale(LC_CTYPE, "");
 		FILE *fp = *iname?fopen(iname,"r"):stdin;
 		if(fp)
@@ -75,6 +88,7 @@ int main(int argc, char **argv)
 			while((ch=fgetwc(fp))!=WEOF)	str.push_back(ch);
 			fclose(fp);
 		}
+		else	{	printf("No file for MGL script\n");	return 0;	}
 	}
 
 	mgl_ask_func = mgl_ask_gets;
@@ -84,7 +98,13 @@ int main(int argc, char **argv)
 	{
 		gr.Setup(false);
 		gr.NewFrame();	setlocale(LC_NUMERIC, "C");
-		gr.ImportMGLD(iname);
+		if(!opt.empty())
+		{
+			p.Execute(&gr,opt.c_str());
+			printf("Setup script: %s\n",gr.Message());
+			gr.ImportMGLD(iname,true);
+		}
+		else	gr.ImportMGLD(iname);
 		setlocale(LC_NUMERIC, "");	gr.EndFrame();
 		gr.Update();
 	}

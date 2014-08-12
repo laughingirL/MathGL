@@ -840,6 +840,12 @@ void mglCanvas::Labelw(char dir, const wchar_t *text, mreal pos, const char *opt
 		if(pos<-0.2)	ff[1]='L';	if(pos>0.2)	ff[1]='R';
 		strncpy(font,FontDef,63);	strcat(font,ff);
 		long kk = AddPnt(&B, p,-1,q,0,7);	ff[1]=0;
+		if(kk>=0)
+		{
+			mglPnt &pp = Pnt[kk];
+			if(pp.u<0 || (pp.u==0 && pp.v<0))
+			{	pp.u=-pp.u;	pp.v=-pp.v;	pp.w=-pp.w;	}
+		}
 		ff[0] = GetLabelPos(t, kk, *aa);	strcat(font,ff);
 		text_plot(kk,text,font,-1.4,0.35+shift);
 	}
