@@ -119,9 +119,9 @@ long mglCanvas::ProjScale(int nf, long id, bool text)
 		if(nf==0)
 		{	p.x = xx + q.x*w;	p.y = yy + q.y*h;	p.z = B1.z + q.z*d;	n = u;	}
 		else if(nf==1)
-		{	p.x = xx + q.x*w;	p.y = yy+h + q.z*h;	p.z = B1.z + q.y*d;	n = mglPoint(u.x,u.z,u.y);	}
+		{	p.x = xx + q.x*w;	p.y = yy+h + q.z*h;	p.z = B1.z - q.y*d;	n = mglPoint(u.x,u.z,-u.y);	}
 		else if(nf==2)
-		{	p.x = xx+w + q.z*w;	p.y = yy + q.y*h;	p.z = B1.z+ q.x*d;	n = mglPoint(u.z,u.y,u.x);	}
+		{	p.x = xx+w + q.z*w;	p.y = yy + q.y*h;	p.z = B1.z + q.x*d;	n = mglPoint(u.z,u.y,u.x);	}
 		else
 		{
 			const mreal *b=B.b;	n = nn;
