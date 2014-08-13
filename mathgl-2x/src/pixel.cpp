@@ -46,15 +46,31 @@ void mglCanvas::SetSize(int w,int h,bool clf)
 	for(long i=0;i<s;i++)	memcpy(GB+4*i,BDef,4);
 	InPlot(0,1,0,1,false);
 	if(clf || (Quality&4))	Clf();
-	else
+	else	// NOTE: no scaling for text (a bit complicated)
 	{
+		long n = long(Pnt.size());
 #pragma omp parallel for
-		for(long i=0;i<long(Pnt.size());i++)
+		for(long i=0;i<n;i++)
 		{
 			mglPnt &q = Pnt[i];
 			q.x*=dx;	q.y*=dy;	q.z*=dz;
 			q.xx*=dx;	q.yy*=dy;	q.zz*=dz;
-			q.u*=dx;	q.v*=dy;	q.w*=dz;
+			if(mgl_isnum(q.w))
+			{	q.u*=dx;	q.v*=dy;	q.w*=dz;	}
+		}
+		for(size_t k=0;k<DrwDat.size();k++)	// scale frames too
+		{
+			mglStack<mglPnt>  &pnt = DrwDat[k].Pnt;
+			n = long(pnt.size());
+#pragma omp parallel for
+			for(long i=0;i<n;i++)
+			{
+				mglPnt &q = pnt[i];
+				q.x*=dx;	q.y*=dy;	q.z*=dz;
+				q.xx*=dx;	q.yy*=dy;	q.zz*=dz;
+				if(mgl_isnum(q.w))
+				{	q.u*=dx;	q.v*=dy;	q.w*=dz;	}
+			}
 		}
 		ClfZB();	Finish();
 	}
@@ -132,7 +148,6 @@ long mglCanvas::ProjScale(int nf, long id, bool text)
 	}
 	else
 	{
-		register mreal W=B1.b[0]/2, H=B1.b[4]/2, D=B1.b[8]/2;
 		p.x = pi.x/2 + w*(nf/2);
 		p.y = pi.y/2 + h*(nf%2);
 		p.z = pi.z;	n=nn;

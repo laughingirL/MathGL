@@ -700,6 +700,7 @@ bool mglCanvas::ImportMGLD(const char *fname, bool add)
 	const std::string loc = setlocale(LC_NUMERIC, NULL);	setlocale(LC_NUMERIC, "C");
 	if(!add)	{	Clf();	Txt.clear();	}
 	else	{	ClfZB();	npnt=Pnt.size();	nglf=Glf.size();	}
+	LightScale(&B);
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_lock(&mutexGlf);
 	pthread_mutex_lock(&mutexPnt);

@@ -37,6 +37,8 @@ ZZ. Update *.i for new functions {before release!!!}
 	c. Tests for mglDataC arrays (as separate flag)
 	e. Test for Crop, Momentum, NormSl, Sew, DiffParam, Envelope, STFA for all directions "xyz"; Clean, Last, First, Find, Spline3, FindAny, Insert, Delete, Put, SetId/Column, Squeeze, Extend, Trace, Combine, new Max/Min/Momentum, FillSample, Hist, operators, Sort, Roots, Jacobian
 	u. Test FlowP + 3d
+	
+7. Improve z-order for rapidly oscillating surfaces
 
 ============= DOCUMENTATION =============
 
