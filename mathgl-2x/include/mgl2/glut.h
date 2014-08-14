@@ -60,6 +60,7 @@ public:
 	{	gr = mgl_create_graph_glut(draw?mgl_draw_graph:0,title,(void*)draw,0);	}
 	mglGLUT(mglDraw *draw=0, const char *title="MathGL") : mglGraph(-1)
 	{	gr = mgl_create_graph_glut(draw?mgl_draw_class:0,title,draw,mgl_reload_class);	}
+    virtual ~mglGLUT() {}
 
 	inline void ToggleAlpha()	///< Switch on/off transparency (do not overwrite user settings)
 	{	mgl_glut_toggle_alpha(gr);	}

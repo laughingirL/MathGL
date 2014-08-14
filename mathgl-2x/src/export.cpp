@@ -284,7 +284,11 @@ int MGL_NO_EXPORT mgl_gif_save(const char *fname, int w, int h, unsigned char **
 		line[m] = i+6*(j+6*k);
 	}
 	EGifPutLine(fg, line, w*h);
+#if GIFLIB_MAJOR>=5
+	EGifCloseFile(fg,0);
+#else
 	EGifCloseFile(fg);
+#endif
 	delete []line;	return 0;
 #else
 	mgl_set_global_warn("GIF support was disabled. Please, enable it and rebuild MathGL.");
@@ -299,13 +303,14 @@ int MGL_NO_EXPORT mgl_gif_save(const char *fname, int w, int h, unsigned char **
 void mglCanvas::StartGIF(const char *fname, int ms)
 {
 #if MGL_HAVE_GIF
-	if(gif)	EGifCloseFile(gif);
 	std::string fn=fname;
 	if(fn.empty())	{	fn=PlotId+".gif";	fname = fn.c_str();	}
 #if GIFLIB_MAJOR>=5
+	if(gif)	EGifCloseFile(gif,0);
 	gif = EGifOpenFileName(fname, 0, 0);
 	EGifSetGifVersion(gif,true);
 #else
+	if(gif)	EGifCloseFile(gif);
 	EGifSetGifVersion("89a");
 	gif = EGifOpenFileName(fname, 0);
 #endif
@@ -360,7 +365,11 @@ void mglCanvas::StartGIF(const char *fname, int ms)
 void mglCanvas::CloseGIF()
 {
 #if MGL_HAVE_GIF
+#if GIFLIB_MAJOR>=5
+	if(gif)	EGifCloseFile(gif,0);
+#else
 	if(gif)	EGifCloseFile(gif);
+#endif
 #else
 	mgl_set_global_warn("GIF support was disabled. Please, enable it and rebuild MathGL.");
 #endif

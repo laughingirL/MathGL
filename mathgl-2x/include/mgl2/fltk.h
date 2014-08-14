@@ -54,6 +54,7 @@ public:
 	mglFLTK(mglDraw *draw, const char *title="MathGL") : mglWnd()
 	{	gr = mgl_create_graph_fltk(draw?mgl_draw_class:0,title,draw,mgl_reload_class);
 		mgl_set_click_func(gr, mgl_click_class);	}
+    virtual ~mglFLTK() {}
 	int Run()	{	return mgl_fltk_run();	}	///< Run main loop for event handling
 	int RunThr()	{	return mgl_fltk_thr();	}	///< Run main loop for event handling in separate thread
 };

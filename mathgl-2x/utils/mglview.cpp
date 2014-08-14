@@ -109,7 +109,6 @@ int main(int argc, char **argv)
 		gr.Update();
 	}
 	if(!mglGlobalMess.empty())	printf("%s",mglGlobalMess.c_str());
-	gr.Run();
-	return 0;
+	return gr.Run();
 }
 //-----------------------------------------------------------------------------

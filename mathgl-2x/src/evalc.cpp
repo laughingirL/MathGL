@@ -77,7 +77,6 @@ mglFormulaC::mglFormulaC(const char *string)
 	Left=Right=0;
 	Res=0; Kod=0;
 	if(!string)	{	Kod = EQ_NUM;	Res = 0;	return;	}
-//printf("%s\n",string);	fflush(stdout);
 	char *str = new char[strlen(string)+1];
 	strcpy(str,string);
 	long n,len;

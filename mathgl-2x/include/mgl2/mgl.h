@@ -1281,7 +1281,11 @@ public:
 	mglParse(mglParse &p)	{	pr = p.pr;	mgl_use_parser(pr,1);	}
 	mglParse(bool setsize=false)
 	{	pr=mgl_create_parser();	mgl_parser_allow_setsize(pr, setsize);	}
-	virtual ~mglParse()	{	if(mgl_use_parser(pr,-1)<1)	mgl_delete_parser(pr);	}
+	virtual ~mglParse()
+	{
+#pragma omp critical
+		if(mgl_use_parser(pr,-1)<1)	mgl_delete_parser(pr);
+	}
 	/// Get pointer to internal mglParser object
 	inline HMPR Self()	{	return pr;	}
 	/// Parse and draw single line of the MGL script

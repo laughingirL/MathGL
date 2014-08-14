@@ -132,6 +132,8 @@ mglBase::mglBase()
 mglBase::~mglBase()
 {
 	ClearEq();	ClearPrmInd();	delete fnt;
+	Pnt.set_mutex(0);	Prm.set_mutex(0);
+	Sub.set_mutex(0);	Txt.set_mutex(0);
 #if MGL_HAVE_OMP
 	omp_destroy_lock(&lockClf);
 #endif
