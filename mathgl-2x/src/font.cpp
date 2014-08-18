@@ -840,7 +840,7 @@ mglFont::mglFont(const char *name, const char *path)
 		Load(MGL_DEF_FONT_NAME,0);
 	}
 }
-mglFont::~mglFont()	{	Clear();	}
+mglFont::~mglFont()	{	if(Buf)	delete []Buf;	}
 void mglFont::Restore()	{	Copy(&mglDefFont);	}
 //-----------------------------------------------------------------------------
 void mglFont::Clear()

@@ -39,6 +39,7 @@ ZZ. Update *.i for new functions {before release!!!}
 	u. Test FlowP + 3d
 	
 7. Improve z-order for rapidly oscillating surfaces
+8. Occasional seg.fault in mgl_qt_example at exit
 
 ============= DOCUMENTATION =============
 

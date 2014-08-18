@@ -143,6 +143,7 @@ QMathGL::QMathGL(QWidget *parent, Qt::WindowFlags f) : QWidget(parent, f)
 //-----------------------------------------------------------------------------
 QMathGL::~QMathGL()
 {
+	timer->stop();	timerRefr->stop();
 	if(mgl_use_graph(gr,-1)<1)	mgl_delete_graph(gr);
 	if(grBuf)	delete []grBuf;
 	if(draw)	delete draw;
