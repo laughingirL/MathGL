@@ -31,10 +31,11 @@ int main(int argc, char *argv[])
 	char ch, buf[2048], iname[256]="", oname[256]="";
 	std::vector<std::wstring> var;
 	std::wstring str;
+	bool none=false;
 
 	while(1)
 	{
-		ch = getopt(argc, argv, "1:2:3:4:5:6:7:8:9:ho:L:C:A:s:");
+		ch = getopt(argc, argv, "1:2:3:4:5:6:7:8:9:hno:L:C:A:s:");
 		if(ch>='1' && ch<='9')	p.AddParam(ch-'0', optarg);
 		else if(ch=='s')
 		{
@@ -47,6 +48,7 @@ int main(int argc, char *argv[])
 				fclose(fp);	str += L"\n";
 			}
 		}
+		else if(ch=='n')	none = true;
 		else if(ch=='L')	setlocale(LC_CTYPE, optarg);
 		else if(ch=='A')
 		{
@@ -77,7 +79,7 @@ int main(int argc, char *argv[])
 				"\t-L loc       set locale to loc\n"
 				"\t-s opt       set MGL script for setting up the plot\n"
 				"\t-o name      set output file name\n"
-				"\t-            get script from standard input\n"
+				"\t-n           no manual output (script should save results by itself)\n"
 				"\t-A val       add animation value val\n"
 				"\t-C n1:n2:dn  add animation value in range [n1,n2] with step dn\n"
 				"\t-C n1:n2     add animation value in range [n1,n2] with step 1\n"
@@ -91,6 +93,7 @@ int main(int argc, char *argv[])
 	}
 	if(ch=='h')	return 0;
 	if(*oname==0)	{	strncpy(oname,*iname?iname:"out",250);	strcat(oname,".png");	}
+	else	none = false;
 
 	mgl_ask_func = mgl_ask_gets;
 	// prepare for animation
@@ -139,10 +142,10 @@ int main(int argc, char *argv[])
 	{
 		p.Execute(&gr,str.c_str());
 		printf("%s\n",gr.Message());
-		gr.WriteFrame(oname);
+		if(!none)	gr.WriteFrame(oname);
 	}
 	if(!mglGlobalMess.empty())	printf("%s",mglGlobalMess.c_str());
-	printf("Write output to %s\n",oname);
+	if(!none || gif)	printf("Write output to %s\n",oname);
 	return 0;
 }
 //-----------------------------------------------------------------------------

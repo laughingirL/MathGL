@@ -32,8 +32,8 @@
 //-----------------------------------------------------------------------------
 extern unsigned mgl_numg, mgl_cur;
 extern float mgl_fact;
-extern long mgl_gen_fnt[516][6];
-extern short mgl_buf_fnt[246080];
+extern long mgl_gen_fnt[411][6];	// NOTE have to be updated if new glyphs will be added to built-in font
+extern short *mgl_buf_fnt;
 extern mglTeXsymb mgl_tex_symb[];
 extern long mgl_tex_num;
 //mglFont mglDefFont("nofont");

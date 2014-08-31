@@ -275,6 +275,13 @@ int MGL_NO_EXPORT mgls_clf(mglGraph *gr, long , mglArg *a, const char *k, const 
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_reset(mglGraph *gr, long , mglArg *, const char *k, const char *)
+{
+	int res=0;
+	if(!strcmp(k,""))	gr->DefaultPlotParam();
+	else res = 1;	return res;
+}
+//-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_chart(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;
@@ -3066,6 +3073,7 @@ mglCommand mgls_base_cmd[] = {
 	{"rect","Draw rectangle","rect x1 y1 x2 y2 ['fmt']|x1 y1 z1 x2 y2 z2 ['fmt']", mgls_rect ,13},
 	{"refill","Fill data by interpolation of Vdat","refill Dat Xdat Vdat [sl] | Dat Xdat Ydat Vdat [sl] | Dat Xdat Ydat Zdat Vdat", mgls_refill ,3},
 	{"region","Draw filled region (ribbon) between 2 curves","region Ydat1 Ydat2 ['fmt']|Xdat Ydat1 Ydat2 ['fmt']||Xdat1 Ydat1 Xdat2 Ydat2 ['fmt']|Xdat1 Ydat1 Zdat1 Xdat2 Ydat2 Zdat2 ['fmt']", mgls_region ,7},
+	{"reset","Reset settings and clear picture","reset", mgls_reset ,12},
 	{"resize","Resize data","resize Res Dat mx [my mz]", mgls_resize ,4},
 	{"return","Return from function","return", 0, 6},
 	{"rhomb","Draw rhombus","rhomb x1 y1 x2 y2 r ['fmt']|x1 y1 z1 x2 y2 z2 r ['fmt']", mgls_rhomb ,13},

@@ -284,7 +284,7 @@ int MGL_NO_EXPORT mgl_gif_save(const char *fname, int w, int h, unsigned char **
 		line[m] = i+6*(j+6*k);
 	}
 	EGifPutLine(fg, line, w*h);
-#if GIFLIB_MAJOR>=5
+#if GIFLIB_MAJOR>5 || (GIFLIB_MAJOR==5 && GIFLIB_MINOR>0)
 	EGifCloseFile(fg,0);
 #else
 	EGifCloseFile(fg);
@@ -305,12 +305,15 @@ void mglCanvas::StartGIF(const char *fname, int ms)
 #if MGL_HAVE_GIF
 	std::string fn=fname;
 	if(fn.empty())	{	fn=PlotId+".gif";	fname = fn.c_str();	}
-#if GIFLIB_MAJOR>=5
+#if GIFLIB_MAJOR>5 || (GIFLIB_MAJOR==5 && GIFLIB_MINOR>0)
 	if(gif)	EGifCloseFile(gif,0);
+#else
+	if(gif)	EGifCloseFile(gif);
+#endif
+#if GIFLIB_MAJOR>=5
 	gif = EGifOpenFileName(fname, 0, 0);
 	EGifSetGifVersion(gif,true);
 #else
-	if(gif)	EGifCloseFile(gif);
 	EGifSetGifVersion("89a");
 	gif = EGifOpenFileName(fname, 0);
 #endif
@@ -365,7 +368,7 @@ void mglCanvas::StartGIF(const char *fname, int ms)
 void mglCanvas::CloseGIF()
 {
 #if MGL_HAVE_GIF
-#if GIFLIB_MAJOR>=5
+#if GIFLIB_MAJOR>5 || (GIFLIB_MAJOR==5 && GIFLIB_MINOR>0)
 	if(gif)	EGifCloseFile(gif,0);
 #else
 	if(gif)	EGifCloseFile(gif);

@@ -87,6 +87,13 @@ void MGL_EXPORT mgl_set_global_warn(const char *txt)
 }
 void MGL_EXPORT mgl_set_global_warn_(const char *txt, int l)
 {	char *s=new char[l+1];	memcpy(s,txt,l);	s[l]=0;	mgl_set_global_warn(s);	delete []s;	}
+MGL_EXPORT_PURE const char *mgl_get_global_warn()	{	return mglGlobalMess.c_str();	}
+int MGL_EXPORT mgl_get_global_warn_(char *out, int len)
+{
+	const char *res = mgl_get_global_warn();
+	if(out)	strncpy(out,res,len);
+	return strlen(res);
+}
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_set_origin(HMGL gr, double x0, double y0, double z0)
 {	gr->SetOrigin(x0,y0,z0);	}

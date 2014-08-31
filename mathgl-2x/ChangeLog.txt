@@ -1,3 +1,23 @@
+2.3.1 Released 2 September 2014
+
+* Change y coordinate at x-z projection.
+* Improve projection of 'unrotatable' objects (like legend, title, ...).
+* Improve orientation of axis ticks and labels.
+* Add mglWnd::SetDrawFunc().
+* Add mgl_set_global_warn() and mgl_get_global_warn() for set/get messages of global scope.
+* Add MGL command 'reset' which restore default settings and clear image (i.e. call DefaultPlotParam()).
+* Make copying private of mglGraph and derived.
+* Add virtual destructors.
+* Become compatible with giflib 5.1.
+* Add light scaling at MGLD import.
+* Add scaling of frames at Adjust().
+* Possible bugfix for 32bit gcc.
+* Add some static functions for mglGraph.
+* Add option "-n" to mglconv to disable manual saving image.
+* Add option -s to mglview and mglconv to run setup script before the main one.
+* Update docs.
+
+
 2.3 Released 7 August 2014
 
 * Add background image, which allow in particular semi-transparent background color. Correspondingly add function Rasterize() for saving current image as background, and function LoadBackground() for loading background image from PNG or JPEG file.

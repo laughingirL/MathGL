@@ -326,6 +326,9 @@ void MGL_EXPORT mgl_clear_fft();
 /// Set global warning message
 void MGL_EXPORT mgl_set_global_warn(const char *text);
 void MGL_EXPORT mgl_set_global_warn_(const char *text,int);
+/// Get text of global warning message(s)
+MGL_EXPORT_PURE const char *mgl_get_global_warn();
+int MGL_EXPORT mgl_get_global_warn_(char *out, int len);
 #ifdef __cplusplus
 }
 #endif

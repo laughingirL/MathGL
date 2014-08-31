@@ -223,8 +223,7 @@ void MGL_EXPORT mgl_difr_axial_old(dual *a,int n,int step,dual q,int Border,dual
 			register mreal dd = i+di;
 			dd = 1./(sqrt(dd*dd+1.)+dd);	// corrections for "axiality"
 			register mreal gg = 1+dd*dd;
-			d[i] = a[i*step] + adt*( b[i-1]*((gg-dd)/k) -
-			b[i]*(2*gg/k) + b[i+1]*((gg+dd)/k) );
+			d[i] = a[i*step] + adt*( b[i-1]*((gg-dd)/k) - b[i]*(2*gg/k) + b[i+1]*((gg+dd)/k) );
 		}
 		memcpy(b,d,n*sizeof(dual));
 		switch(Border)

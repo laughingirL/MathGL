@@ -37,7 +37,7 @@ int MGL_EXPORT_PURE mgl_get_warn_(uintptr_t *gr);
 /// Set warning code ant fill message
 void MGL_EXPORT mgl_set_warn(HMGL gr, int code, const char *text);
 void MGL_EXPORT mgl_set_warn_(uintptr_t *gr, int *code, const char *text,int);
-/// Set buffer for warning messages
+/// Get text of warning message(s)
 MGL_EXPORT_PURE const char *mgl_get_mess(HMGL gr);
 int MGL_EXPORT mgl_get_mess_(uintptr_t *gr, char *out, int len);
 

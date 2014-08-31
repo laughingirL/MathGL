@@ -424,7 +424,8 @@ int main(int argc,char **argv)
 		printf("Global:%s\n",mglGlobalMess.c_str());
 		delete gr;	return 0;
 	}
-	else if(dotest==2)
+	else if(dotest==2)	// NOTE mgl_gen_fnt[###][6] have to be updated if new glyphs will be added to built-in font
+
 	{	mgl_create_cpp_font(gr->Self(), L"!-~,¡-ÿ,̀-̏,Α-ω,ϑ,ϕ,ϖ,ϰ,ϱ,ϵ,А-я,ℏ,ℑ,ℓ,ℜ,←-↙,∀-∯,≠-≯,⟂");
 		delete gr;	return 0;	}
 	else if(dotest==4)

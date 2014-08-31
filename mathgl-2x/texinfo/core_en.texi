@@ -81,10 +81,12 @@ You don't need to create canvas object in MGL.
 
 Functions and variables in this group influences on overall graphics appearance. So all of them should be placed @emph{before} any actual plotting function calls.
 
+@anchor{reset}
+@deftypefn {MGL command} {} reset
 @ifclear UDAV
-@deftypefn {Method on @code{mglGraph}} @code{void} DefaultPlotParam ()
+@deftypefnx {Method on @code{mglGraph}} @code{void} DefaultPlotParam ()
 @deftypefnx {C function} @code{void} mgl_set_def_param (@code{HMGL} gr)
-Restore initial values for all of parameters.
+Restore initial values for all of parameters and clear the image.
 @end deftypefn
 @end ifclear
 
@@ -578,6 +580,11 @@ Disable printing warnings to @code{stderr} if @var{state} is nonzero.
 @deftypefn {Method on @code{mglGraph}} @code{void} SetGlobalWarn (@code{const char *}info) static
 @deftypefnx {C function} @code{void} mgl_set_global_warn (@code{const char *}info)
 Set warning message @var{info} for global scope.
+@end deftypefn
+
+@deftypefn {Method on @code{mglGraph}} @code{const char *} GlobalWarn () static
+@deftypefnx {C function} @code{const char *} mgl_get_global_warn ()
+Get warning message(s) for global scope.
 @end deftypefn
 
 @end ifclear

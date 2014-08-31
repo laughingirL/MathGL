@@ -151,10 +151,12 @@ public:
 	inline int  GetWarn()	{	return mgl_get_warn(gr);}
 	/// Set warning code ant fill message
 	inline void SetWarn(int code, const char *info)	{	mgl_set_warn(gr,code,info);	}
-	/// Set buffer for warning messages
+	/// Get text of warning message(s)
 	inline const char *Message()	{	return mgl_get_mess(gr);	}
 	/// Set global warning message
 	static inline void SetGlobalWarn(const char *text)	{	mgl_set_global_warn(text);	}
+	/// Get text of global warning message(s)
+	static inline const char *GlobalWarn()	{	return mgl_get_global_warn();	}
 	/// Suppress printing warnings to stderr
 	static inline void SuppressWarn(bool on)	{	mgl_suppress_warn(on);	}
 	/// Check if MathGL version is valid (return false) or not (return true)
