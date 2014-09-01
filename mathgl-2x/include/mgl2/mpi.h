@@ -43,7 +43,6 @@ class MGL_EXPORT mglGraphMPI:public mglGraph
 	const mglGraphMPI &operator=(const mglGraphMPI &t)	{	return t;	}
 public:
 	inline mglGraphMPI(int kind=0, int width=600, int height=400):mglGraph(kind,width,height){}
-	inline mglGraphMPI(const mglGraph &graph):mglGraph(graph){}
 	inline mglGraphMPI(HMGL graph):mglGraph(graph){}
 	virtual ~mglGraphMPI(){}
 
