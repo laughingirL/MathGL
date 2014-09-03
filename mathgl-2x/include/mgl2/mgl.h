@@ -200,7 +200,7 @@ public:
 	/// Set axis origin
 	inline void SetOrigin(mglPoint p)
 	{	mgl_set_origin(gr, p.x, p.y, p.z);	}
-	inline void SetOrigin(double x0, double y0, double z0=NaN)
+	inline void SetOrigin(double x0, double y0, double z0=mglNaN)
 	{	mgl_set_origin(gr, x0, y0, z0);	}
 
 	/// Set the transformation formulas for coordinate
@@ -241,7 +241,7 @@ public:
 	inline void AddTick(char dir, double val, const wchar_t *lbl)
 	{	mgl_add_tickw(gr,dir,val,lbl);	}
 	/// Set the ticks parameters and string for its factor
-	inline void SetTicks(char dir, double d=0, int ns=0, double org=NaN, const char *factor="")
+	inline void SetTicks(char dir, double d=0, int ns=0, double org=mglNaN, const char *factor="")
 	{	mgl_set_ticks_fact(gr, dir, d, ns, org, factor);	}
 	inline void SetTicks(char dir, double d, int ns, double org, const wchar_t *factor)
 	{	mgl_set_ticks_factw(gr, dir, d, ns, org, factor);	}
@@ -1072,43 +1072,43 @@ public:
 	{	mgl_pipe_3d(gr, &ax, &ay, &az, sch, r0, opt);	}
 
 	/// Draw density plot for data at x = sVal
-	inline void DensX(const mglDataA &a, const char *stl="", double sVal=NaN, const char *opt="")
+	inline void DensX(const mglDataA &a, const char *stl="", double sVal=mglNaN, const char *opt="")
 	{	mgl_dens_x(gr, &a, stl, sVal, opt);	}
 	/// Draw density plot for data at y = sVal
-	inline void DensY(const mglDataA &a, const char *stl="", double sVal=NaN, const char *opt="")
+	inline void DensY(const mglDataA &a, const char *stl="", double sVal=mglNaN, const char *opt="")
 	{	mgl_dens_y(gr, &a, stl, sVal, opt);	}
 	/// Draw density plot for data at z = sVal
-	inline void DensZ(const mglDataA &a, const char *stl="", double sVal=NaN, const char *opt="")
+	inline void DensZ(const mglDataA &a, const char *stl="", double sVal=mglNaN, const char *opt="")
 	{	mgl_dens_z(gr, &a, stl, sVal, opt);	}
 	/// Draw contour lines for data at x = sVal
-	inline void ContX(const mglDataA &a, const char *stl="", double sVal=NaN, const char *opt="")
+	inline void ContX(const mglDataA &a, const char *stl="", double sVal=mglNaN, const char *opt="")
 	{	mgl_cont_x(gr, &a, stl, sVal, opt);	}
-	inline void ContX(const mglDataA &v, const mglDataA &a, const char *stl="", double sVal=NaN, const char *opt="")
+	inline void ContX(const mglDataA &v, const mglDataA &a, const char *stl="", double sVal=mglNaN, const char *opt="")
 	{	mgl_cont_x_val(gr, &v, &a, stl, sVal, opt);	}
 	/// Draw contour lines for data at y = sVal
-	inline void ContY(const mglDataA &a, const char *stl="", double sVal=NaN, const char *opt="")
+	inline void ContY(const mglDataA &a, const char *stl="", double sVal=mglNaN, const char *opt="")
 	{	mgl_cont_y(gr, &a, stl, sVal, opt);	}
-	inline void ContY(const mglDataA &v, const mglDataA &a, const char *stl="", double sVal=NaN, const char *opt="")
+	inline void ContY(const mglDataA &v, const mglDataA &a, const char *stl="", double sVal=mglNaN, const char *opt="")
 	{	mgl_cont_y_val(gr, &v, &a, stl, sVal, opt);	}
 	/// Draw contour lines for data at z = sVal
-	inline void ContZ(const mglDataA &a, const char *stl="", double sVal=NaN, const char *opt="")
+	inline void ContZ(const mglDataA &a, const char *stl="", double sVal=mglNaN, const char *opt="")
 	{	mgl_cont_z(gr, &a, stl, sVal, opt);	}
-	inline void ContZ(const mglDataA &v, const mglDataA &a, const char *stl="", double sVal=NaN, const char *opt="")
+	inline void ContZ(const mglDataA &v, const mglDataA &a, const char *stl="", double sVal=mglNaN, const char *opt="")
 	{	mgl_cont_z_val(gr, &v, &a, stl, sVal, opt);	}
 	/// Draw solid contours for data at x = sVal
-	inline void ContFX(const mglDataA &a, const char *stl="", double sVal=NaN, const char *opt="")
+	inline void ContFX(const mglDataA &a, const char *stl="", double sVal=mglNaN, const char *opt="")
 	{	mgl_contf_x(gr, &a, stl, sVal, opt);	}
-	inline void ContFX(const mglDataA &v, const mglDataA &a, const char *stl="", double sVal=NaN, const char *opt="")
+	inline void ContFX(const mglDataA &v, const mglDataA &a, const char *stl="", double sVal=mglNaN, const char *opt="")
 	{	mgl_contf_x_val(gr, &v, &a, stl, sVal, opt);	}
 	/// Draw solid contours for data at y = sVal
-	inline void ContFY(const mglDataA &a, const char *stl="", double sVal=NaN, const char *opt="")
+	inline void ContFY(const mglDataA &a, const char *stl="", double sVal=mglNaN, const char *opt="")
 	{	mgl_contf_y(gr, &a, stl, sVal, opt);	}
-	inline void ContFY(const mglDataA &v, const mglDataA &a, const char *stl="", double sVal=NaN, const char *opt="")
+	inline void ContFY(const mglDataA &v, const mglDataA &a, const char *stl="", double sVal=mglNaN, const char *opt="")
 	{	mgl_contf_y_val(gr, &v, &a, stl, sVal, opt);	}
 	/// Draw solid contours for data at z = sVal
-	inline void ContFZ(const mglDataA &a, const char *stl="", double sVal=NaN, const char *opt="")
+	inline void ContFZ(const mglDataA &a, const char *stl="", double sVal=mglNaN, const char *opt="")
 	{	mgl_contf_z(gr, &a, stl, sVal, opt);	}
-	inline void ContFZ(const mglDataA &v, const mglDataA &a, const char *stl="", double sVal=NaN, const char *opt="")
+	inline void ContFZ(const mglDataA &v, const mglDataA &a, const char *stl="", double sVal=mglNaN, const char *opt="")
 	{	mgl_contf_z_val(gr, &v, &a, stl, sVal, opt);	}
 
 	/// Draw curve for formula with x in x-axis range

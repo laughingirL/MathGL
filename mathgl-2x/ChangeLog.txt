@@ -1,4 +1,4 @@
-2.3.1 Released 2 September 2014
+2.3.1 Released 20 September 2014
 
 * Change y coordinate at x-z projection.
 * Improve projection of 'unrotatable' objects (like legend, title, ...).
@@ -13,7 +13,7 @@
 * Add scaling of frames at Adjust().
 * Possible bugfix for 32bit gcc.
 * Add some static functions for mglGraph.
-* Add option "-n" to mglconv to disable manual saving image.
+* Add option "-n" to mglconv to disable automatic saving of the image.
 * Add option -s to mglview and mglconv to run setup script before the main one.
 * Update docs.
 

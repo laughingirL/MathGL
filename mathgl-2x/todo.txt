@@ -37,9 +37,10 @@ ZZ. Update *.i for new functions {before release!!!}
 	c. Tests for mglDataC arrays (as separate flag)
 	e. Test for Crop, Momentum, NormSl, Sew, DiffParam, Envelope, STFA for all directions "xyz"; Clean, Last, First, Find, Spline3, FindAny, Insert, Delete, Put, SetId/Column, Squeeze, Extend, Trace, Combine, new Max/Min/Momentum, FillSample, Hist, operators, Sort, Roots, Jacobian
 	u. Test FlowP + 3d
-	
+
 7. Improve z-order for rapidly oscillating surfaces
 8. Occasional seg.fault in mgl_qt_example at exit
+9. Buttons in FLTK
 
 ============= DOCUMENTATION =============
 
@@ -49,6 +50,8 @@ C. Translate to Russian everything
 D. Docs about JS interface
 
 1.	inline void SetDrawFunc(int (*draw)(mglBase *gr, void *p), void *par=NULL, void (*reload)(void *p)=NULL)
+
+2. mgltex
 
 YY. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using Stem()
 

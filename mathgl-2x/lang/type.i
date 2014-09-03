@@ -26,6 +26,7 @@ typedef float mreal;
 //-----------------------------------------------------------------------------
 const mreal Pi = M_PI;
 const mreal NaN = NAN;
+const mreal Inf = INFINITY;
 const mreal mgl_min_a = 1./256;
 //-----------------------------------------------------------------------------
 /// Class for point in 3D space

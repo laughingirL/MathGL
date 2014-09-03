@@ -170,7 +170,7 @@ using mglDataA::Momentum;
 	inline void Fill(HMGL gr, const char *eq, const mglDataA &vdat, const mglDataA &wdat,const char *opt="")
 	{	mgl_data_fill_eq(gr,this,eq,&vdat,&wdat,opt);	}
 	/// Equidistantly fill the data to range [x1,x2] in direction dir
-	inline void Fill(mreal x1,mreal x2=NaN,char dir='x')
+	inline void Fill(mreal x1,mreal x2=mglNaN,char dir='x')
 	{	mgl_data_fill(this,x1,x2,dir);	}
 	/// Fill the data by interpolated values of vdat parametrically depended on xdat,ydat,zdat for x,y,z in range [p1,p2] using global spline
 	inline void RefillGS(const mglDataA &xdat, const mglDataA &vdat, mreal x1, mreal x2,long sl=-1)
@@ -315,7 +315,7 @@ using mglDataA::Momentum;
 	inline void Envelop(char dir='x')
 	{	mgl_data_envelop(this,dir);	}
 	/// Remove phase jump
-	inline void Sew(const char *dirs="xyz", mreal da=2*Pi)
+	inline void Sew(const char *dirs="xyz", mreal da=2*mglPi)
 	{	mgl_data_sew(this,dirs,da);	}
 	/// Smooth the data on specified direction or directions
 	inline void Smooth(const char *dirs="xyz",mreal delta=0)
@@ -560,7 +560,7 @@ class MGL_EXPORT mglDataV : public mglDataA
 	long nz;	///< number of points in 3d dimensions ('z' dimension)
 	mreal di, dj, dk, a0;
 public:
-	mglDataV(long xx=1,long yy=1,long zz=1,mreal x1=0,mreal x2=NaN,char dir='x'):nx(xx),ny(yy),nz(zz)
+	mglDataV(long xx=1,long yy=1,long zz=1,mreal x1=0,mreal x2=mglNaN,char dir='x'):nx(xx),ny(yy),nz(zz)
 	{	Fill(x1,x2,dir);	}
 	mglDataV(const mglDataV &d):nx(d.nx),ny(d.ny),nz(d.nz),di(d.di),dj(d.dj),dk(d.dk),a0(d.a0)	{}
 #if MGL_HAVE_RVAL
@@ -581,7 +581,7 @@ public:
 	/// For going throw all elements
 	inline void All()	{	di=dj=dk=1;	a0=0;	}
 	/// Equidistantly fill the data to range [x1,x2] in direction dir
-	inline void Fill(mreal x1,mreal x2=NaN,char dir='x')
+	inline void Fill(mreal x1,mreal x2=mglNaN,char dir='x')
 	{
 		di=dj=dk=0;	a0=x1;
 		if(mgl_isnum(x2))

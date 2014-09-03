@@ -86,9 +86,9 @@ Functions and variables in this group influences on overall graphics appearance.
 @ifclear UDAV
 @deftypefnx {Method on @code{mglGraph}} @code{void} DefaultPlotParam ()
 @deftypefnx {C function} @code{void} mgl_set_def_param (@code{HMGL} gr)
+@end ifclear
 Restore initial values for all of parameters and clear the image.
 @end deftypefn
-@end ifclear
 
 @menu
 * Transparency::

@@ -86,9 +86,9 @@ MGL не требует создания данного типа объекто�
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} DefaultPlotParam ()
 @deftypefnx {Функция С} @code{void} mgl_set_def_param (@code{HMGL} gr)
-Устанавливает все настройки по умолчанию.
-@end deftypefn
 @end ifclear
+Устанавливает все настройки по умолчанию и очищает рисунок.
+@end deftypefn
 
 @menu
 * Transparency::

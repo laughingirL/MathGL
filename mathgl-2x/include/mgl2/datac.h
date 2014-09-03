@@ -173,7 +173,7 @@ using mglDataA::Momentum;
 	inline void Fill(mglBase *gr, const char *eq, const mglDataA &vdat, const mglDataA &wdat,const char *opt="")
 	{	mgl_datac_fill_eq(gr,this,eq,&vdat,&wdat,opt);	}
 	/// Equidistantly fill the data to range [x1,x2] in direction dir
-	inline void Fill(dual x1,dual x2=NaN,char dir='x')
+	inline void Fill(dual x1,dual x2=mglNaN,char dir='x')
 	{	mgl_datac_fill(this,x1,x2,dir);	}
 
 		/// Put value to data element(s)
