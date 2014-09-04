@@ -45,7 +45,7 @@ void MGL_EXPORT mgl_create_cpp_font(HMGL gr, const wchar_t *how)
 		l += 2*f->GetNl(0,ch);
 		n += 6*f->GetNt(0,ch);
 	}
-	printf("unsigned mgl_numg=%lu, mgl_cur=%lu;\n",(unsigned long)s.size(),l+n);
+	printf("const long mgl_numg=%lu, mgl_cur=%lu;\n",(unsigned long)s.size(),l+n);
 	printf("float mgl_fact=%g;\n",f->GetFact(0)/mgl_fgen);
 	printf("long mgl_gen_fnt[%lu][6] = {\n", (unsigned long)s.size());
 	for(i=m=0;i<s.size();i++)	// first write symbols descriptions

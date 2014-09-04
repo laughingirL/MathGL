@@ -29,11 +29,8 @@
 
 #include "mgl2/base.h"
 #include "mgl2/font.h"
+#include "def_font.cpp"
 //-----------------------------------------------------------------------------
-extern unsigned mgl_numg, mgl_cur;
-extern float mgl_fact;
-extern long mgl_gen_fnt[411][6];	// NOTE have to be updated if new glyphs will be added to built-in font
-extern short *mgl_buf_fnt;
 extern mglTeXsymb mgl_tex_symb[];
 extern long mgl_tex_num;
 //mglFont mglDefFont("nofont");
@@ -845,7 +842,7 @@ void mglFont::Restore()	{	Copy(&mglDefFont);	}
 //-----------------------------------------------------------------------------
 void mglFont::Clear()
 {
-#pragma omp critical(font)
+//#pragma omp critical(font)
 	{	if(Buf)	delete []Buf;	Buf=0;	glyphs.clear();	}
 }
 //-----------------------------------------------------------------------------
