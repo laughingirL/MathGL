@@ -1548,6 +1548,7 @@ void MGL_EXPORT mgl_data_put_val(HMDT d, mreal val, long xx, long yy, long zz)
 	register long nx=d->nx, ny=d->ny, nz=d->nz;
 	if(xx>=nx || yy>=ny || zz>=nz)	return;
 	mreal *a=d->a;
+	if(xx>=0 && yy>=0 && zz>=0)	a[xx+nx*(yy+zz*ny)] = val;
 	if(xx<0 && yy<0 && zz<0)
 #pragma omp parallel for
 		for(long i=0;i<nx*ny*nz;i++)	a[i] = val;
@@ -1566,10 +1567,9 @@ void MGL_EXPORT mgl_data_put_val(HMDT d, mreal val, long xx, long yy, long zz)
 	else if(yy<0)
 #pragma omp parallel for
 		for(long i=0;i<ny;i++)	a[xx+nx*(i+zz*ny)] = val;
-	else if(zz<0)
+	else //if(zz<0)
 #pragma omp parallel for
 		for(long i=0;i<nz;i++)	a[xx+nx*(yy+i*ny)] = val;
-	else	a[xx+nx*(yy+zz*ny)] = val;
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_data_put_dat(HMDT d, HCDT v, long xx, long yy, long zz)

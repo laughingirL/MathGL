@@ -37,7 +37,9 @@
 #define MGL_LOCAL_PURE		MGL_NO_EXPORT MGL_FUNC_PURE
 
 #if MGL_HAVE_RVAL	// C++11 don't support register keyword
+#if (!defined(_MSC_VER)) || (defined(_MSC_VER) && (_MSC_VER < 1800))
 #define register
+#endif
 #endif
 
 #if MGL_HAVE_OMP

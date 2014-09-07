@@ -41,6 +41,9 @@ ZZ. Update *.i for new functions {before release!!!}
 7. Improve z-order for rapidly oscillating surfaces
 8. Occasional seg.fault in mgl_qt_example at exit
 9. Buttons in FLTK
+10. Manual rotation angle for axis ticks (as "value" option?!)
+11. Simplified triangle filling for Quality=1 ?!?
+12. MGL command to load commands from *.so or *.dll -- test on win32 && win64!!!
 
 ============= DOCUMENTATION =============
 
