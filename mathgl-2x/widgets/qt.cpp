@@ -58,7 +58,7 @@ using mglCanvasWnd::Window;
 	QMainWindow *Wnd;	///< Pointer to window
 
 	mglCanvasQT();
-    virtual ~mglCanvasQT() {}
+    virtual ~mglCanvasQT() {	if(Wnd)	delete Wnd;	}
 
 	/// Create a window for plotting. Now implemeted only for GLUT.
 	void Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p),const char *title,
@@ -1008,15 +1008,10 @@ void mglCanvasQT::Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p
 		// must be placed before ANY window creation
 		XInitThreads();
 #endif
-		QApplication *a;
-		if(!argv)
-		{
-			static char tmp[2][1];
-			tmp[0][0]=tmp[1][0]=0;
-			static int aa=1;
-			a = new QApplication(aa, (char **)tmp);
-		}
-		else	a = new QApplication(argc, argv);
+//		static char buf=0, *tmp=&buf;
+//		if(!argv)	{	argc = 1;	argv = &tmp;	}
+		if(!argv)	argc = 0;
+		QApplication *a = new QApplication(argc, argv);
 		a->connect(a, SIGNAL(lastWindowClosed()), a, SLOT(quit()));
 	}
 

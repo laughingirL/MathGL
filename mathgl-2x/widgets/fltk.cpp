@@ -571,43 +571,33 @@ Fl_Menu_Item pop_graph[20] = {
 //-----------------------------------------------------------------------------
 Fl_MGLView::Fl_MGLView(int xx, int yy, int ww, int hh, const char *lbl) : Fl_Window(xx,yy,ww,hh,lbl)
 {
+	Fl_Button *o;
 	grid = alpha = light = sshow = 0;	menu = 0;
 	next = prev = reload = NULL;	delay = NULL;
 
-	Fl_Button *o;
-	Fl_Group *g = new Fl_Group(0,30,435,30);
-
+	Fl_Group *g = new Fl_Group(0,0,435,30);
 	alpha_bt = new Fl_Button(0, 1, 25, 25);	alpha_bt->type(FL_TOGGLE_BUTTON);
 	alpha_bt->image(xpm_a1);	alpha_bt->callback(mgl_alpha_cb,this);
 	alpha_bt->tooltip(mgl_gettext("Switch on/off transparency in the picture"));
-//	alpha_bt->box(FL_PLASTIC_UP_BOX);		alpha_bt->down_box(FL_PLASTIC_DOWN_BOX);
 	light_bt = new Fl_Button(25, 1, 25, 25);	light_bt->type(FL_TOGGLE_BUTTON);
 	light_bt->image(xpm_l1);	light_bt->callback(mgl_light_cb,this);
 	light_bt->tooltip(mgl_gettext("Switch on/off lightning in the picture"));
-//	light_bt->box(FL_PLASTIC_UP_BOX);		light_bt->down_box(FL_PLASTIC_DOWN_BOX);
 	grid_bt = new Fl_Button(50, 1, 25, 25);	grid_bt->type(FL_TOGGLE_BUTTON);
 	grid_bt->image(xpm_wire);	grid_bt->callback(mgl_grid_cb,this);
 	grid_bt->tooltip(mgl_gettext("Switch on/off grid drawing"));
-	//	grid_bt->box(FL_PLASTIC_UP_BOX);		grid_bt->down_box(FL_PLASTIC_DOWN_BOX);
 
 	rotate_bt = new Fl_Button(80, 1, 25, 25);rotate_bt->type(FL_TOGGLE_BUTTON);
 	rotate_bt->image(xpm_r1);	rotate_bt->callback(mgl_rotate_cb,this);
 	rotate_bt->tooltip(mgl_gettext("Rotate picture by holding left mouse button"));
-//	rotate_bt->box(FL_PLASTIC_UP_BOX);		rotate_bt->down_box(FL_PLASTIC_DOWN_BOX);
 	zoom_bt = new Fl_Button(105, 1, 25, 25);	zoom_bt->type(FL_TOGGLE_BUTTON);
 	zoom_bt->image(xpm_z1);	zoom_bt->callback(mgl_zoom_cb,this);
 	zoom_bt->tooltip(mgl_gettext("Zoom in selected region of the picture"));
-//	zoom_bt->box(FL_PLASTIC_UP_BOX);			zoom_bt->down_box(FL_PLASTIC_DOWN_BOX);
 	o = new Fl_Button(130, 1, 25, 25);		o->tooltip(mgl_gettext("Return picture to normal zoom"));
 	o->image(new Fl_Pixmap(zoom_out_xpm));	o->callback(mgl_norm_cb,this);
-//	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
-
 	o = new Fl_Button(160, 1, 25, 25);	o->tooltip(mgl_gettext("Stop drawing"));
 	o->image(new Fl_Pixmap(stop_xpm));	o->callback(mgl_stop_cb,this);
-
 	o = new Fl_Button(160, 1, 25, 25);	o->tooltip(mgl_gettext("Refresh the picture"));
 	o->image(new Fl_Pixmap(ok_xpm));	o->callback(mgl_draw_cb,this);
-//	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 
 	Fl_Counter *tet, *phi;
 	tet = new Fl_Counter(195, 1, 90, 25, 0);	tet->callback(mgl_draw_cb,this);
@@ -616,40 +606,30 @@ Fl_MGLView::Fl_MGLView(int xx, int yy, int ww, int hh, const char *lbl) : Fl_Win
 	tet->tooltip(mgl_gettext("Theta angle (tilt z-axis)"));
 	phi->lstep(10);	phi->step(1);	phi->range(-180,180);
 	phi->tooltip(mgl_gettext("Phi angle (rotate in x*y plane)"));
-//	tet->box(FL_PLASTIC_UP_BOX);	phi->box(FL_PLASTIC_UP_BOX);
 	g->end();	g->resizable(0);
 
-	g = new Fl_Group(0,30,30,260);
+	g = new Fl_Group(0,0,30,260);
 	o = new Fl_Button(1, 30, 25, 25);		o->tooltip(mgl_gettext("Shift the picture up"));
 	o->image(new Fl_Pixmap(up_1_xpm));		o->callback(mgl_su_cb,this);
 //	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 	o = new Fl_Button(1, 55, 25, 25);		o->tooltip(mgl_gettext("Shift the picture left"));
 	o->image(new Fl_Pixmap(left_1_xpm));	o->callback(mgl_sl_cb,this);
-//	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 	o = new Fl_Button(1, 80, 25, 25);		o->tooltip(mgl_gettext("Zoom in the picture"));
 	o->image(new Fl_Pixmap(zoom_1_xpm));	o->callback(mgl_sz_cb,this);
-//	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 	o = new Fl_Button(1, 105, 25, 25);		o->tooltip(mgl_gettext("Zoom out the picture"));
 	o->image(new Fl_Pixmap(norm_1_xpm));	o->callback(mgl_so_cb,this);
-//	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 	o = new Fl_Button(1, 130, 25, 25);		o->tooltip(mgl_gettext("Shift the picture right"));
 	o->image(new Fl_Pixmap(right_1_xpm));	o->callback(mgl_sr_cb,this);
-//	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 	o = new Fl_Button(1, 155, 25, 25);		o->tooltip(mgl_gettext("Shift the picture down"));
 	o->image(new Fl_Pixmap(down_1_xpm));	o->callback(mgl_sd_cb,this);
-//	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 
 	o = new Fl_Button(1, 185, 25, 25);		o->tooltip(mgl_gettext("Show previous frame in slideshow"));
 	o->image(new Fl_Pixmap(prev_sl_xpm));	o->callback(mgl_sprev_cb,this);
-//	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 	anim_bt = new Fl_Button(1, 210, 25, 25);	anim_bt->type(FL_TOGGLE_BUTTON);
 	anim_bt->image(xpm_s1);	anim_bt->callback(mgl_sshow_cb,this);
 	anim_bt->tooltip(mgl_gettext("Run/Stop slideshow (graphics animation)"));
-//	anim_bt->box(FL_PLASTIC_UP_BOX);		anim_bt->down_box(FL_PLASTIC_DOWN_BOX);
 	o = new Fl_Button(1, 235, 25, 25);		o->tooltip(mgl_gettext("Show next frame in slideshow"));
 	o->image(new Fl_Pixmap(next_sl_xpm));	o->callback(mgl_snext_cb,this);
-//	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
-
 	g->end();	g->resizable(0);
 
 	scroll = new Fl_Scroll(30, 30, 800, 600);
@@ -658,8 +638,7 @@ Fl_MGLView::Fl_MGLView(int xx, int yy, int ww, int hh, const char *lbl) : Fl_Win
 	FMGL->tet_val = tet;
 	FMGL->phi_val = phi;
 	FMGL->set_popup(pop_graph,FMGL,this);
-	scroll->end();
-	resizable(scroll);	end();
+	scroll->end();	resizable(scroll);	end();
 }
 Fl_MGLView::~Fl_MGLView()	{}
 //-----------------------------------------------------------------------------

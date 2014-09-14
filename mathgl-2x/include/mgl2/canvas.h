@@ -58,6 +58,7 @@ struct MGL_EXPORT mglAxis
 	char pos;		///< Text position ('t' by default, or 'T' for opposite)
 	mreal sh;		///< Extra shift of ticks and axis labels
 	bool inv;		///< Inverse automatic origin position
+	mreal angl;		///< Manual for ticks rotation (if not NAN)
 };
 //-----------------------------------------------------------------------------
 /// Structure for light source
@@ -382,7 +383,7 @@ protected:
 	/// Prepare labels for ticks
 	void LabelTicks(mglAxis &aa);
 	/// Draw axis
-	void DrawAxis(mglAxis &aa, bool text=true, char arr=0,const char *stl="",const char *opt="");
+	void DrawAxis(mglAxis &aa, bool text=true, char arr=0,const char *stl="",mreal angl=NAN);
 	/// Draw axis grid lines
 	void DrawGrid(mglAxis &aa, bool at_tick=false);
 	/// Update axis ranges

@@ -476,7 +476,7 @@ void mglCanvas::Axis(const char *dir, const char *stl, const char *opt)
 		if(strchr(dir,ar[i]))	{	arr=ar[i];	break;	}
 	if(!mglchrs(dir,"xXyYzZ"))	dir="xyz";
 
-	SaveState(opt);
+	mreal angl = SaveState(opt);
 	AdjustTicks(dir,mglchr(stl,'a'),Tstl);
 	LoadState();
 
@@ -486,25 +486,25 @@ void mglCanvas::Axis(const char *dir, const char *stl, const char *opt)
 	ax.inv = ay.inv = az.inv = false;
 
 	if(strchr(dir,'X') || strchr(dir,'x'))
-	{	ax.inv = inv;	DrawAxis(ax, text, arr, stl, opt);	}
+	{	ax.inv = inv;	DrawAxis(ax, text, arr, stl, angl);	}
 	if(strchr(dir,'Z') || strchr(dir,'z'))
-	{	az.inv = inv;	DrawAxis(az, text, arr, stl, opt);	}
+	{	az.inv = inv;	DrawAxis(az, text, arr, stl, angl);	}
 	if((TernAxis&3))
 	{
 		mglAxis ty(ay);		ty.pos='t';	ty.ch='T';
 		ty.dir = mglPoint(-1,1);		ty.org = mglPoint(1,0,ay.org.z);
-		DrawAxis(ty, text, arr, stl, opt);	ty.ch='t';
+		DrawAxis(ty, text, arr, stl, angl);	ty.ch='t';
 		ty.dir = mglPoint(0,-1);		ty.org = mglPoint(0,1,ay.org.z);
-		DrawAxis(ty, text, arr, stl, opt);
+		DrawAxis(ty, text, arr, stl, angl);
 	}
 	else if(strchr(dir,'Y') || strchr(dir,'y'))
-	{	ay.inv = inv;	DrawAxis(ay, text, arr, stl, opt);	}
+	{	ay.inv = inv;	DrawAxis(ay, text, arr, stl, angl);	}
 	set(ret, MGL_ENABLE_RTEXT);
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::DrawAxis(mglAxis &aa, bool text, char arr,const char *stl,const char *opt)
+void mglCanvas::DrawAxis(mglAxis &aa, bool text, char arr,const char *stl,mreal angl)
 {
-	SaveState(opt);
+	aa.angl = angl;
 	if(strchr("xyz",aa.ch))
 		aa.org = mglPoint(GetOrgX(aa.ch,aa.inv), GetOrgY(aa.ch,aa.inv), GetOrgZ(aa.ch,aa.inv));
 	if(aa.ch=='x')	aa.v0 = aa.org.x;
@@ -607,7 +607,18 @@ void mglCanvas::DrawLabels(mglAxis &aa, bool inv, const mglMatrix *M)
 		if(v>0 && l < vv/v)	l = vv/v;
 		if(c>v)	c = v;
 	}
-	if(get(MGL_ENABLE_RTEXT) && get(MGL_TICKS_ROTATE) && l>1 && c>0)	// try rotate first
+	if(mgl_isnum(aa.angl))	// manual rotation
+	{
+		tet = aa.angl*M_PI/180;
+		mreal s = sin(tet);
+		if(s>0)
+		{	pos[2]=(aa.ch=='c' && !inv)?'R':'L';	l=0.99*h/s/c;
+			for(i=0;i<n;i++)	w[i]=l*c;	}
+		else if(s<0)
+		{	pos[2]=(aa.ch=='c' && !inv)?'L':'R';	l=-0.99*h/s/c;
+			for(i=0;i<n;i++)	w[i]=l*c;	}
+	}
+	else if(get(MGL_ENABLE_RTEXT) && get(MGL_TICKS_ROTATE) && l>1 && c>0)	// try rotate first
 	{	tet = c>1.1*h ? asin(1.1*h/c) : M_PI/2;	pos[2]=(aa.ch=='c' && !inv)?'R':'L';
 		l=0.99*h/sin(tet)/c;	for(i=0;i<n;i++)	w[i]=l*c;	}
 	// TODO: do clever points exclusion (i.e. longest and so on)
