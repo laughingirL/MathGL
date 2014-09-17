@@ -137,7 +137,7 @@ long mglCanvas::ProjScale(int nf, long id, bool text)
 		else if(nf==1)
 		{	p.x = xx + q.x*w;	p.y = yy+h + q.z*h;	p.z = B1.z - q.y*d;	n = mglPoint(u.x,u.z,-u.y);	}
 		else if(nf==2)
-		{	p.x = xx+w + q.z*w;	p.y = yy + q.y*h;	p.z = B1.z + q.x*d;	n = mglPoint(u.z,u.y,u.x);	}
+		{	p.x = xx+w + q.z*w;	p.y = yy + q.y*h;	p.z = B1.z - q.x*d;	n = mglPoint(u.z,u.y,-u.x);	}
 		else
 		{
 			const mreal *b=B.b;	n = nn;
@@ -691,10 +691,10 @@ void mglCanvas::Rasterize()
 	memcpy(GB,G4,4*Width*Height);
 }
 //-----------------------------------------------------------------------------
-bool MGL_NO_EXPORT mgl_read_image(unsigned char *g, int w, int h, const char *fname);
+bool MGL_NO_EXPORT mgl_read_image(unsigned char **g, int &w, int &h, const char *fname);
 void mglCanvas::LoadBackground(const char *fname, double alpha)
 {
-	mgl_read_image(GB,Width,Height,fname);
+	mgl_read_image(&GB,Width,Height,fname);
 	if(alpha<1 && alpha>0)
 #pragma omp parallel for
 		for(long i=0;i<Width*Height;i++)	GB[4*i+3] = (unsigned char)(GB[4*i+3]*alpha);

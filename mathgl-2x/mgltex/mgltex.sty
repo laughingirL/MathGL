@@ -1,0 +1,530 @@
+%%
+%% Copyright (C) 2014 Diego Sejas <diego.mathematician@gmail.com>
+%% --------------------------------------------------------------
+%% 
+%% This package may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either
+%% version 1.3c of this license or (at your option) any later
+%% version.  The latest version of this license is in
+%% 
+%%    http://www.latex-project.org/lppl.txt
+%% 
+%% and version 1.3c or later is part of all distributions of
+%% LaTeX version 2006/05/20 or later.
+%% 
+
+\def\mgl@name{mgltex}
+\def\mgl@date{2014/09/02}
+\def\mgl@version{1.0}
+\def\mgl@description{Embed MGL code into LaTeX documents}
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{\mgl@name}[\mgl@date\space v.\mgl@version\space\mgl@description]
+
+\RequirePackage{keyval}
+\RequirePackage{graphicx}
+
+\DeclareOption{draft}{%
+  \PassOptionsToPackage{\CurrentOption}{graphicx}%
+}
+\DeclareOption{final}{%
+  \PassOptionsToPackage{\CurrentOption}{graphicx}%
+}
+\DeclareOption{jpg}{\def\mgl@image@ext{.jpg}}
+\DeclareOption{jpeg}{\def\mgl@image@ext{.jpeg}}
+\DeclareOption{prc}{\def\mgl@image@ext{.prc}}
+\DeclareOption{pdf}{\def\mgl@image@ext{.pdf}}
+\DeclareOption{png}{\def\mgl@image@ext{.png}}
+\DeclareOption{eps}{\def\mgl@image@ext{.eps}}
+\DeclareOption{epsz}{\def\mgl@image@ext{.epsv}}
+\DeclareOption{bps}{\def\mgl@image@ext{.bps}}
+\DeclareOption{bpsz}{\def\mgl@image@ext{.bpsz}}
+\DeclareOption{svg}{\def\mgl@image@ext{.svg}}
+\DeclareOption{svgz}{\def\mgl@image@ext{.svgz}}
+\DeclareOption{gif}{\def\mgl@image@ext{.gif}}
+\DeclareOption{bmp}{\def\mgl@image@ext{.bmp}}
+\DeclareOption{tga}{\def\mgl@image@ext{.tga}}
+\DeclareOption{mgld}{\def\mgl@image@ext{.mgld}}
+\DeclareOption{json}{\def\mgl@image@ext{.json}}
+\DeclareOption{jsonz}{\def\mgl@image@ext{.jsonz}}
+\DeclareOption{obj}{\def\mgl@image@ext{.obj}}
+\DeclareOption{tex}{\def\mgl@image@ext{.tex}}
+\DeclareOption{xyz}{\def\mgl@image@ext{.xyz}}
+\DeclareOption{stl}{\def\mgl@image@ext{.stl}}
+\DeclareOption{off}{\def\mgl@image@ext{.off}}
+
+\ExecuteOptions{final,eps}
+\ProcessOptions*
+
+\define@key{mgl@keys}{bb}{\g@addto@macro{\graph@keys}{bb=#1,}}
+\define@key{mgl@keys}{bbllx}{\g@addto@macro{\graph@keys}{bbllx=#1,}}
+\define@key{mgl@keys}{bblly}{\g@addto@macro{\graph@keys}{bblly=#1,}}
+\define@key{mgl@keys}{bburx}{\g@addto@macro{\graph@keys}{bburx=#1,}}
+\define@key{mgl@keys}{bbury}{\g@addto@macro{\graph@keys}{bbury=#1,}}
+\define@key{mgl@keys}{natwidth}{\g@addto@macro{\graph@keys}{natwidth=#1,}}
+\define@key{mgl@keys}{natheight}{\g@addto@macro{\graph@keys}{natheight=#1,}}
+\define@key{mgl@keys}{hiresbb}{\g@addto@macro{\graph@keys}{hiresbb=#1,}}
+\define@key{mgl@keys}{viewport}{\g@addto@macro{\graph@keys}{viewport=#1,}}
+\define@key{mgl@keys}{trim}{\g@addto@macro{\graph@keys}{trim=#1,}}
+\define@key{mgl@keys}{angle}{\g@addto@macro{\graph@keys}{angle=#1,}}
+\define@key{mgl@keys}{origin}{\g@addto@macro{\graph@keys}{origin=#1,}}
+\define@key{mgl@keys}{width}{\g@addto@macro{\graph@keys}{width=#1,}}
+\define@key{mgl@keys}{height}{\g@addto@macro{\graph@keys}{height=#1,}}
+\define@key{mgl@keys}{totalheight}{\g@addto@macro{\graph@keys}{totalheight=#1,}}
+\define@key{mgl@keys}{keepaspectratio}{\g@addto@macro{\graph@keys}{keepaspectratio=#1,}}
+\define@key{mgl@keys}{scale}{\g@addto@macro{\graph@keys}{scale=#1,}}
+\define@key{mgl@keys}{clip}[true]{\g@addto@macro{\graph@keys}{clip=#1,}}
+\define@key{mgl@keys}{draft}[false]{\g@addto@macro{\graph@keys}{draft=#1,}}
+\define@key{mgl@keys}{type}{\g@addto@macro{\graph@keys}{type=#1,}}
+\define@key{mgl@keys}{ext}{\g@addto@macro{\graph@keys}{ext=#1,}}
+\define@key{mgl@keys}{read}{\g@addto@macro{\graph@keys}{read=#1,}}
+\define@key{mgl@keys}{command}{\g@addto@macro{\graph@keys}{command=#1,}}
+\define@key{mgl@keys}{imgext}{\def\mgl@image@ext{.#1}}
+
+\define@key{mglplot@keys}{bb}{\g@addto@macro{\graph@keys}{bb=#1,}}
+\define@key{mglplot@keys}{bbllx}{\g@addto@macro{\graph@keys}{bbllx=#1,}}
+\define@key{mglplot@keys}{bblly}{\g@addto@macro{\graph@keys}{bblly=#1,}}
+\define@key{mglplot@keys}{bburx}{\g@addto@macro{\graph@keys}{bburx=#1,}}
+\define@key{mglplot@keys}{bbury}{\g@addto@macro{\graph@keys}{bbury=#1,}}
+\define@key{mglplot@keys}{natwidth}{\g@addto@macro{\graph@keys}{natwidth=#1,}}
+\define@key{mglplot@keys}{natheight}{\g@addto@macro{\graph@keys}{natheight=#1,}}
+\define@key{mglplot@keys}{hiresbb}{\g@addto@macro{\graph@keys}{hiresbb=#1,}}
+\define@key{mglplot@keys}{viewport}{\g@addto@macro{\graph@keys}{viewport=#1,}}
+\define@key{mglplot@keys}{trim}{\g@addto@macro{\graph@keys}{trim=#1,}}
+\define@key{mglplot@keys}{angle}{\g@addto@macro{\graph@keys}{angle=#1,}}
+\define@key{mglplot@keys}{origin}{\g@addto@macro{\graph@keys}{origin=#1,}}
+\define@key{mglplot@keys}{width}{\g@addto@macro{\graph@keys}{width=#1,}}
+\define@key{mglplot@keys}{height}{\g@addto@macro{\graph@keys}{height=#1,}}
+\define@key{mglplot@keys}{totalheight}{\g@addto@macro{\graph@keys}{totalheight=#1,}}
+\define@key{mglplot@keys}{keepaspectratio}{\g@addto@macro{\graph@keys}{keepaspectratio=#1,}}
+\define@key{mglplot@keys}{scale}{\g@addto@macro{\graph@keys}{scale=#1,}}
+\define@key{mglplot@keys}{clip}[true]{\g@addto@macro{\graph@keys}{clip=#1,}}
+\define@key{mglplot@keys}{draft}[false]{\g@addto@macro{\graph@keys}{draft=#1,}}
+\define@key{mglplot@keys}{type}{\g@addto@macro{\graph@keys}{type=#1,}}
+\define@key{mglplot@keys}{ext}{\g@addto@macro{\graph@keys}{ext=#1,}}
+\define@key{mglplot@keys}{read}{\g@addto@macro{\graph@keys}{read=#1,}}
+\define@key{mglplot@keys}{command}{\g@addto@macro{\graph@keys}{command=#1,}}
+\define@key{mglplot@keys}{outext}{\def\mglplot@output@ext{.#1}}
+\define@key{mglplot@keys}{setup}{\def\mglplot@setup{#1}}
+
+\def\mgl@dir{}
+\def\mgldir#1{%
+  \def\mgl@dir{#1}%
+}
+\@onlypreamble\mgldir
+
+\newwrite\mgl@script
+\AtBeginDocument{%
+  \immediate\openout\mgl@script=\mgl@dir\jobname.mgl%
+}
+\AtEndDocument{%
+  \immediate\write\mgl@script{}%
+  \immediate\write\mgl@script{stop}%
+  \mgl@func%
+  \immediate\closeout\mgl@script%
+  \immediate\write18{mglconv -n \mgl@dir\jobname.mgl}%
+}
+
+\def\mglsetup@defined{}
+\newcommand\mglsetup[1][generic]{%
+  \test@mglsetup@defined{#1}%
+  \expandafter\def\csname mgl@setup@#1\endcsname{\immediate\write\mgl@script{}}%
+  \g@addto@macro{\mglsetup@defined}{#1,}%
+  \let\do\@makeother \dospecials%
+  \endlinechar`\^^M \catcode`\^^M\active%
+  \catcode`\ =10%
+  \expandafter\mglsetup@write@line%
+}
+\def\test@mglsetup@defined#1{%
+  \def\this@setup{#1}%
+  \@for\mglsetup@name:=\mglsetup@defined\do{%
+    \ifx\this@mglsetup\mglsetup@name%
+      \PackageWarning{\mgl@name}{Redefining "#1" setup for \noexpand\mglplot}%
+    \fi%
+  }%
+}
+\begingroup%
+  \catcode`\^^M\active%
+  \gdef\mglsetup@write@line#1^^M{%
+    \def\next@action{%
+      \expandafter\g@addto@macro\csname mgl@setup@\this@setup\endcsname{\immediate\write\mgl@script{#1}}%
+      \mglsetup@write@line%
+    }%
+    \test@end@mglsetup{#1}%
+    \next@action%
+  }%
+\endgroup
+\begingroup%
+  \escapechar=-1 \relax%
+  \xdef\end@mglsetup{\string\\end\string\{mglsetup\string\}}%
+\endgroup
+\def\test@end@mglsetup#1{%
+  \edef\this@line{#1}%
+  \ifx\this@line\end@mglsetup%
+    \def\next@action{\end{mglsetup}}%
+  \fi%
+}
+\def\endmglsetup{}
+
+\def\TeX@ext{.tex}
+\newcounter{mgl@image@no}
+
+\def\mglplot{%
+  \@ifnextchar[{\@mglplot}{\@mglplot[]}%
+}
+\def\@mglplot[#1]{%
+  \def\mglplot@setup{generic}%
+  \def\graph@keys{}%
+  \setkeys{mglplot@keys}{#1}%
+  \stepcounter{mgl@image@no}%
+  \ifx\csname mgl@setup@\mglplot@setup\endcsname\@undefined%
+    \PackageError{\mgl@name}{Setup "\mglplot@setup" undefined}{}%
+  \else%
+    \csname mgl@setup@\mglplot@setup\endcsname%
+  \fi%
+  \@@mglplot%
+}
+\long\def\@@mglplot#1{%
+  \immediate\write\mgl@script{\detokenize{#1}}%
+  \immediate\write\mgl@script{write '\mgl@dir\jobname-mgl-\arabic{mgl@image@no}\mgl@image@ext'}%
+  \immediate\write\mgl@script{reset}%
+  \mgl@include@image{\mgl@dir\jobname-mgl-\arabic{mgl@image@no}}%
+}
+
+\newcommand\mgl[1][]{%
+  \def\graph@keys{}%
+  \setkeys{mgl@keys}{#1}%
+  \let\do\@makeother \dospecials%
+  \endlinechar`\^^M \catcode`\^^M\active%
+  \catcode`\ =10%
+  \mgl@write@line%
+}
+\begingroup%
+  \escapechar=-1 \relax%
+  \xdef\end@mgl{\string\\end\string\{mgl\string\}}%
+\endgroup
+\begingroup%
+  \catcode`\^^M\active%
+  \gdef\mgl@write@line#1^^M{%
+    \def\next@action{%
+      \immediate\write\mgl@script{#1}%
+      \mgl@write@line%
+    }%
+    \test@end@mgl{#1}%
+    \next@action%
+  }%
+\endgroup
+\def\test@end@mgl#1{%
+  \edef\this@line{#1}%
+  \ifx\this@line\end@mgl%
+    \def\next@action{\end{mgl}}%
+  \fi%
+}
+\def\endmgl{%
+  \stepcounter{mgl@image@no}%
+  \immediate\write\mgl@script{write '\mgl@dir\jobname-mgl-\arabic{mgl@image@no}\mgl@image@ext'}%
+  \immediate\write\mgl@script{reset}%
+  \mgl@include@image{\mgl@dir\jobname-mgl-\arabic{mgl@image@no}}%
+}
+\def\mgl@include@image#1{%
+  \ifx\mgl@image@ext\TeX@ext%
+    \IfFileExists{#1.tex}{%
+      \include{#1}%
+    }{%
+      \mgl@img@not@found%
+    }%
+  \else%
+    \def\next@action{\mgl@img@not@found}%
+    \@for\img@ext:=\Gin@extensions\do{%
+      \IfFileExists{#1\img@ext}{%
+        \def\next@action{%
+          \expandafter\includegraphics\expandafter[\graph@keys]{#1}%
+        }%
+      }{}%
+    }%
+    \next@action%
+  \fi%
+}
+\def\mgl@img@not@found{%
+  \framebox[10em]{%
+    \centering%
+    \bfseries\Huge%
+    \vbox{MGL\\image\\not\\found}%
+  }%
+}
+
+\bgroup%
+  \escapechar=-1\relax%
+  \xdef\end@mgladdon{\string\\end\string\{mgladdon\string\}}%
+\egroup%
+\newenvironment{mgladdon}{%
+  \def\test@end@mgl##1{%
+    \edef\this@line{##1}%
+    \ifx\this@line\end@mgladdon%
+      \def\next@action{\end{mgladdon}}%
+    \fi%
+  }%
+  \mgl[]%
+}{}
+
+\def\mgl@script@written{}
+\newwrite\mgl@out@stream
+\newcommand\mglcode[2][]{%
+  \def\graph@keys{}%
+  \setkeys{mgl@keys}{#1}%
+  \test@mgl@script@written{#2}%
+  \xdef\mgl@script@written{\mgl@script@written#2,}%
+  \def\this@script{#2}%
+  \immediate\openout\mgl@out@stream=\mgl@dir\this@script.mgl%
+  \let\do\@makeother \dospecials%
+  \endlinechar`\^^M \catcode`\^^M\active%
+  \obeyspaces%
+  \mglcode@write@line%
+}
+\def\test@mgl@script@written#1{%
+  \edef\this@script{#1}%
+  \@for\mgl@script@name:=\mgl@script@written\do{%
+    \ifx\this@script\mgl@script@name%
+      \PackageWarning{\mgl@name}{Overwriting MGL script "\this@script.mgl"}%
+    \fi%
+  }%
+}
+\def\mglcode@write@line#1{%
+  \let\next@action\mglcode@write@line%
+  \expandafter\if#1\^^M%
+    \immediate\write\mgl@out@stream{\the\mgl@line}%
+    \mgl@line{}%
+    \mgl@word{}%
+  \else\expandafter\if#1\space%
+    \mgl@word{}%
+    \mgl@line\expandafter{\the\mgl@line#1}%
+  \else%
+    \mgl@word\expandafter{\the\mgl@word#1}%
+    \mgl@line\expandafter{\the\mgl@line#1}%
+    \test@end@mglcode{\the\mgl@word}%
+  \fi\fi%
+  \next@action%
+}
+\begingroup%
+  \escapechar=-1\relax%
+  \xdef\end@mglcode{\string\\end\string\{mglcode\string\}}%
+\endgroup%
+\def\test@end@mglcode#1{%
+  \edef\this@word{#1}%
+  \ifx\this@word\end@mglcode%
+    \def\next@action{\end{mglcode}}%
+  \fi%
+}
+\def\endmglcode{%
+  \immediate\closeout\mgl@out@stream%
+  \immediate\write18{mglconv \mgl@dir\this@script.mgl -o \mgl@dir\this@script\mgl@image@ext}%
+  \mgl@include@image{\mgl@dir\this@script}%
+}
+
+\bgroup%
+  \escapechar=-1\relax%
+  \xdef\end@mglscript{\string\\end\string\{mglscript\string\}}%
+\egroup%
+\newenvironment{mglscript}[1]{%
+  \def\test@end@mglcode##1{%
+    \edef\this@word{##1}%
+    \ifx\this@word\end@mglscript%
+      \def\next@action{\end{mglscript}}%
+    \fi%
+  }%
+  \mglcode{#1}%
+}{%
+  \immediate\closeout\mgl@out@stream%
+}
+
+\def\mglfunc@defined{}
+\def\mgl@func{}
+\newcommand\mglfunc[2][0]{%
+  \test@mglfunc@defined{#2}%
+  \g@addto@macro{\mglfunc@defined}{#2,}%
+  \let\do\@makeother \dospecials%
+  \endlinechar`\^^M \catcode`\^^M\active%
+  \catcode`\ =10%
+  \g@addto@macro{\mgl@func}{\immediate\write\mgl@script{}}%
+  \g@addto@macro{\mgl@func}{\immediate\write\mgl@script{func '#2' #1}}%
+  \expandafter\mglfunc@ignore@line%
+}
+\def\test@mglfunc@defined#1{%
+  \def\this@func{#1}%
+  \@for\mglfunc@name:=\mglfunc@defined\do{%
+    \ifx\this@func\mglfunc@name%
+      \PackageWarning{\mgl@name}{MGL function "#1" has multiple definitions}%
+    \fi%
+  }%
+}
+\begingroup%
+  \catcode`\^^M\active%
+  \gdef\mglfunc@ignore@line#1^^M{%
+    \expandafter\mglfunc@write@line%
+  }
+  \gdef\mglfunc@write@line#1^^M{%
+    \def\next@action{%
+      \g@addto@macro{\mgl@func}{\immediate\write\mgl@script{#1}}%
+      \mglfunc@write@line%
+    }%
+    \test@end@mglfunc{#1}%
+    \next@action%
+  }%
+\endgroup
+\begingroup%
+  \escapechar=-1 \relax%
+  \xdef\end@mglfunc{\string\\end\string\{mglfunc\string\}}%
+\endgroup
+\def\test@end@mglfunc#1{%
+  \edef\this@line{#1}%
+  \ifx\this@line\end@mglfunc%
+    \def\next@action{\end{mglfunc}}%
+  \fi%
+}
+\def\endmglfunc{%
+  \g@addto@macro{\mgl@func}{\immediate\write\mgl@script{return}}%
+}
+
+\def\mglblock#1{%
+  \test@mgl@script@written{#1}%
+  \xdef\mgl@script@written{\mgl@script@written#1,}%
+  \def\this@script{#1}%
+  \let\do\@makeother \dospecials%
+  \endlinechar`\^^M \catcode`\^^M\active%
+  \obeyspaces%
+  \immediate\openout\mgl@out@stream=\mgl@dir\this@script.mgl%
+  \mglblock@ignore@line%
+}
+\def\mglblock@ignore@line#1{%
+  \mglblock@write@line%
+}
+\def\mglblock@write@line#1{%
+  \let\next@action\mglblock@write@line%
+  \expandafter\if#1\^^M%
+    \immediate\write\mgl@out@stream{\the\mgl@line}%
+    \mgl@line{}%
+    \mgl@word{}%
+  \else\expandafter\if#1\space%
+    \mgl@word{}%
+    \mgl@line\expandafter{\the\mgl@line#1}%
+  \else%
+    \mgl@word\expandafter{\the\mgl@word#1}%
+    \mgl@line\expandafter{\the\mgl@line#1}%
+    \test@end@mglblock{\the\mgl@word}%
+  \fi\fi%
+  \next@action%
+}
+\begingroup%
+  \escapechar=-1\relax%
+  \xdef\end@mglblock{\string\\end\string\{mglblock\string\}}%
+\endgroup%
+\def\test@end@mglblock#1{%
+  \edef\this@word{#1}%
+  \ifx\this@word\end@mglblock%
+    \def\next@action{\end{mglblock}}%
+  \fi%
+}
+\newread\mgl@in@stream
+\def\endmglblock{%
+  \immediate\closeout\mgl@out@stream%
+  \immediate\openin\mgl@in@stream=\mgl@dir\this@script.mgl%
+  \begingroup%
+  \list{\itshape\footnotesize\arabic{mgl@verb@line@no}}{}%
+  \setlength{\labelsep}{1em}%
+  \itemsep\z@skip%
+  \leftskip\z@skip\rightskip\z@skip%
+  \verbatim@font%
+  \parindent\z@\parfillskip\@flushglue\parskip\z@skip%
+  \@vobeyspaces%
+  \mglblock@read@line%
+}
+\def\mglblock@read@line{%
+  \stepcounter{mgl@verb@line@no}%
+  \read\mgl@in@stream to \this@line%
+  \ifeof\mgl@in@stream%
+    \def\next@action{%
+      \immediate\closein\mgl@in@stream%
+      \endlist%
+      \endgroup%
+    }%
+  \else%
+    \def\next@action{%
+      \item\mbox{\this@line}%
+      \mglblock@read@line%
+    }%
+  \fi%
+  \next@action%
+}
+
+\newcounter{mgl@verb@line@no}
+\def\mglverbatim{%
+  \setcounter{mgl@verb@line@no}{0}%
+  \list{\itshape\footnotesize\arabic{mgl@verb@line@no}}{}%
+  \setlength{\labelsep}{1em}%
+  \itemsep\z@skip%
+  \leftskip\z@skip\rightskip\z@skip%
+  \verbatim@font%
+  \parindent\z@\parfillskip\@flushglue\parskip\z@skip%
+  \let\do\@makeother \dospecials%
+  \endlinechar`\^^M \catcode`\^^M\active%
+  \obeyspaces%
+  \mglverbatim@ignore@line%
+}
+\def\mglverbatim@ignore@line#1{%
+  \mglverbatim@write@line%
+}
+\newtoks\mgl@word
+\newtoks\mgl@line
+\def\mglverbatim@write@line#1{%
+  \let\next@action\mglverbatim@write@line%
+  \expandafter\if#1\^^M%
+    \stepcounter{mgl@verb@line@no}%
+    \item\mbox{\the\mgl@line}%
+    \mgl@line{}%
+    \mgl@word{}%
+  \else\expandafter\if#1\space%
+    \mgl@word{}%
+    \mgl@line\expandafter{\the\mgl@line#1}%
+  \else%
+    \mgl@word\expandafter{\the\mgl@word#1}%
+    \mgl@line\expandafter{\the\mgl@line#1}%
+    \test@end@mglverbatim{\the\mgl@word}%
+  \fi\fi%
+  \next@action%
+}
+\begingroup%
+  \escapechar=-1\relax%
+  \xdef\end@mglverbatim{\string\\end\string\{mglverbatim\string\}}%
+\endgroup%
+\def\test@end@mglverbatim#1{%
+  \edef\this@word{#1}%
+  \ifx\this@word\end@mglverbatim%
+    \def\next@action{\end{mglverbatim}}%
+  \fi%
+}
+\def\endmglverbatim{\endlist}
+
+\newcommand\mglgraphics[2][]{%
+  \def\graph@keys{}%
+  \setkeys{mgl@keys}{#1}%
+  \immediate\write18{mglconv \mgl@dir#2.mgl -o \mgl@dir#2\mgl@image@ext}
+  \mgl@include@image{\mgl@dir#2}%
+}
+
+\def\mglinclude#1{%
+  \setcounter{mgl@verb@line@no}{0}%
+  \immediate\openin\mgl@in@stream=\mgl@dir#1.mgl%
+  \begingroup%
+  \list{\itshape\footnotesize\arabic{mgl@verb@line@no}}{}%
+  \setlength{\labelsep}{1em}%
+  \itemsep\z@skip%
+  \leftskip\z@skip\rightskip\z@skip%
+  \verbatim@font%
+  \parindent\z@\parfillskip\@flushglue\parskip\z@skip%
+  \let\do\@makeother \dospecials%
+  \endlinechar`\^^M \catcode`\^^M\active%
+  \@vobeyspaces%
+  \mglblock@read@line%
+}
+
+\def\mglTeX{mgl\TeX}

@@ -768,7 +768,7 @@ Ternary plot is special plot for 3 dependent coordinates (components) @var{a}, @
 
 Correspondingly, Quaternary plot is plot for 4 dependent coordinates @var{a}, @var{b}, @var{c} and @var{d} so that @var{a}+@var{b}+@var{c}+@var{d}=1. MathGL uses only 3 independent coordinates @var{a}=x, @var{b}=y and @var{d}=z since it is enough to plot everything.
 
-Projections can be obtained by adding value @code{4} to @var{tern} argument. So, that @var{tern}=@code{4} will draw projections in Cartesian coordinates, @var{tern}=@code{5} will draw projections in Ternary coordinates, @var{tern}=@code{6} will draw projections in Quaternary coordinates.
+Projections can be obtained by adding value @code{4} to @var{tern} argument. So, that @var{tern}=@code{4} will draw projections in Cartesian coordinates, @var{tern}=@code{5} will draw projections in Ternary coordinates, @var{tern}=@code{6} will draw projections in Quaternary coordinates. If you add @code{8} instead of @code{4} then all text labels will not be printed  on projections.
 
 Use @code{Ternary(0)} for returning to usual axis. @sref{Ternary axis} @sref{Axis projection}
 @end deftypefn

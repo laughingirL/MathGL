@@ -67,7 +67,7 @@ MGL_NO_EXPORT unsigned char *mgl_create_scheme(const char *scheme,long &num)
 	return c;
 }
 //-----------------------------------------------------------------------------
-bool MGL_NO_EXPORT mgl_read_image(unsigned char *g, int w, int h, const char *fname)
+bool MGL_NO_EXPORT mgl_read_image(unsigned char **g, int &w, int &h, const char *fname)
 {
 	const char *ext = fname+strlen(fname)-1;	// rindex(fname,'.');
 	while(*ext!='.' && ext!=fname)	ext--;
@@ -92,25 +92,29 @@ bool MGL_NO_EXPORT mgl_read_image(unsigned char *g, int w, int h, const char *fn
 		long wi=png_get_image_width(png_ptr, info_ptr);
 		long hi=png_get_image_height(png_ptr, info_ptr);
 		int type = png_get_color_type(png_ptr, info_ptr);
-		if(w<wi)	wi=w;
-		if(h>hi)	h=hi;
+		if(*g)
+		{
+			if(wi>w)	wi = w;
+			if(hi>h)	hi = h;
+		}
+		else	{	w = wi;	h = hi;	*g = new unsigned char[w*h];	}
 		if(type==PNG_COLOR_TYPE_RGB_ALPHA)
 #pragma omp parallel for
-			for(long i=0;i<h;i++)	memcpy(g+4*w*i,rows[i],4*wi);
+			for(long i=0;i<hi;i++)	memcpy(*g+4*w*i,rows[i],4*wi);
 		else if(type==PNG_COLOR_TYPE_RGB)
 #pragma omp parallel for collapse(2)
-			for(long i=0;i<h;i++)	for(long j=0;j<wi;j++)
-				memcpy(g+4*(w*i+j),rows[i]+3*j,3);
+			for(long i=0;i<hi;i++)	for(long j=0;j<wi;j++)
+				memcpy(*g+4*(w*i+j),rows[i]+3*j,3);
 		else if(type==PNG_COLOR_TYPE_GRAY)
 #pragma omp parallel for collapse(2)
-			for(long i=0;i<h;i++)	for(long j=0;j<wi;j++)
-				g[4*(w*i+j)] = g[4*(w*i+j)+1] = g[4*(w*i+j)+2] = rows[i][j];
+			for(long i=0;i<hi;i++)	for(long j=0;j<wi;j++)
+				(*g)[4*(w*i+j)] = (*g)[4*(w*i+j)+1] = (*g)[4*(w*i+j)+2] = rows[i][j];
 		else if(type==PNG_COLOR_TYPE_GRAY_ALPHA)
 #pragma omp parallel for collapse(2)
-			for(long i=0;i<h;i++)	for(long j=0;j<wi;j++)
+			for(long i=0;i<hi;i++)	for(long j=0;j<wi;j++)
 			{
-				g[4*(w*i+j)] = g[4*(w*i+j)+1] = g[4*(w*i+j)+2] = rows[i][2*j];
-				g[4*(w*i+j)+3] = rows[i][2*j+1];
+				(*g)[4*(w*i+j)] = (*g)[4*(w*i+j)+1] = (*g)[4*(w*i+j)+2] = rows[i][2*j];
+				(*g)[4*(w*i+j)+3] = rows[i][2*j+1];
 			}
 		png_destroy_read_struct(&png_ptr, &info_ptr,&end_info);
 		fclose(fp);
@@ -137,17 +141,21 @@ bool MGL_NO_EXPORT mgl_read_image(unsigned char *g, int w, int h, const char *fn
 		long hi = info.output_height;
 		int channels = info.num_components;	// == 4 for RGBA else for RGB
 		unsigned char *buf = new unsigned char[(channels==4?4:3)*wi];
-		if(hi>h)	hi = h;
-		if(wi>w)	wi = w;
+		if(*g)
+		{
+			if(hi>h)	hi = h;
+			if(wi>w)	wi = w;
+		}
+		else	{	w = wi;	h = hi;	*g = new unsigned char[w*h];	}
 		for(long i=0;i<hi;i++)
 		{
 			jpeg_read_scanlines(&info, &buf, 1);
 			if(channels==4)
-				memcpy(g+4*i*w,buf,4*wi);
+				memcpy(*g+4*i*w,buf,4*wi);
 			else
 #pragma omp parallel for
 				for(long j=0;j<wi;j++)
-					memcpy(g+4*i*w+4*j,buf+3*j,3);
+					memcpy(*g+4*i*w+4*j,buf+3*j,3);
 		}
 		delete []buf;
 #else
@@ -159,54 +167,38 @@ bool MGL_NO_EXPORT mgl_read_image(unsigned char *g, int w, int h, const char *fn
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_data_import(HMDT d, const char *fname, const char *scheme,mreal v1,mreal v2)
 {
-#if MGL_HAVE_PNG
 	if(v1>=v2)	return;
+	unsigned char *g = 0;
+	int w=0, h=0;
+	if(!mgl_read_image(&g,w,h,fname))	return;
 	long num=0;
-	FILE *fp = fopen(fname, "rb");
-	if (!fp)	return;
-	png_structp png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, 0, 0, 0);
-	if (!png_ptr)	{	fclose(fp);	return;	}
-	png_infop info_ptr = png_create_info_struct(png_ptr);
-	if (!info_ptr)
-	{	png_destroy_read_struct(&png_ptr,0,0);	fclose(fp);	return;	}
-	png_infop end_info = png_create_info_struct(png_ptr);
-	if (!end_info)
-	{	png_destroy_read_struct(&png_ptr,&info_ptr,0);	fclose(fp);	return;	}
-
-	png_init_io(png_ptr, fp);
-	png_read_png(png_ptr, info_ptr,
-		PNG_TRANSFORM_STRIP_ALPHA|PNG_TRANSFORM_PACKING|
-		PNG_TRANSFORM_STRIP_16|PNG_TRANSFORM_EXPAND,0);
-	unsigned char **rows = png_get_rows(png_ptr, info_ptr);
 	unsigned char *c = mgl_create_scheme(scheme,num);
 	if(num>1)
 	{
-		long w=png_get_image_width(png_ptr, info_ptr);
-		long h=png_get_image_height(png_ptr, info_ptr);
 		d->Create(w,h,1);
 #pragma omp parallel for collapse(2)
-		for(long i=0;i<d->ny;i++)	for(long j=0;j<d->nx;j++)
+		for(long i=0;i<h;i++)	for(long j=0;j<w;j++)
 		{
 			size_t pos=0,mval=256;
 			for(long k=0;k<num;k++)
 			{
-				size_t val = mgl_col_dif(c+3*k,rows[d->ny-i-1]+3*j,true);
+				size_t val = mgl_col_dif(c+3*k,g+4*w*(d->ny-i-1)+4*j,true);
 				if(val==0)	{	pos=k;	break;	}
 				if(val<mval)	{	pos=k;	mval=val;	}
 			}
 			d->a[j+d->nx*i] = v1 + pos*(v2-v1)/num;
 		}
 	}
-	png_destroy_read_struct(&png_ptr, &info_ptr,&end_info);
-	fclose(fp);	delete []c;
-#else
-	mgl_set_global_warn("PNG support was disabled. Please, enable it and rebuild MathGL.");
-#endif
+	delete []g;	delete []c;
 }
 //-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgl_png_save(const char *fname, int w, int h, unsigned char **p);
+int MGL_NO_EXPORT mgl_bmp_save(const char *fname, int w, int h, unsigned char **p);
+int MGL_NO_EXPORT mgl_tga_save(const char *fname, int w, int h, unsigned char **p);
+int MGL_NO_EXPORT mgl_jpeg_save(const char *fname, int w, int h, unsigned char **p);
+int MGL_NO_EXPORT mgl_bps_save(const char *fname, int w, int h, unsigned char **p);
 void MGL_EXPORT mgl_data_export(HCDT dd, const char *fname, const char *scheme,mreal v1,mreal v2,long ns)
 {
-#if MGL_HAVE_PNG
 	long nx=dd->GetNx(), ny=dd->GetNy(), nz=dd->GetNz();
 	if(v1>v2)	return;
 	if(ns<0 || ns>=nz)	ns=0;
@@ -223,9 +215,9 @@ void MGL_EXPORT mgl_data_export(HCDT dd, const char *fname, const char *scheme,m
 
 	unsigned char **p = new unsigned char*[ny];
 	unsigned char *d = new unsigned char[3*nx*ny];
-#pragma omp parallel for
+	#pragma omp parallel for
 	for(long i=0;i<ny;i++)	p[i] = d+3*nx*(ny-1-i);
-#pragma omp parallel for collapse(2)
+	#pragma omp parallel for collapse(2)
 	for(long i=0;i<ny;i++)	for(long j=0;j<nx;j++)
 	{
 		register long k = long(num*(dd->v(j,i,ns)-v1)/(v2-v1));
@@ -234,40 +226,19 @@ void MGL_EXPORT mgl_data_export(HCDT dd, const char *fname, const char *scheme,m
 	}
 	delete []c;
 
-	FILE *fp = fopen(fname, "wb");
-	if (!fp)	{	delete []p;	delete []d;	return;	}
-	png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, 0, 0, 0);
-	if (!png_ptr)	{	delete []p;	delete []d;	fclose(fp);	return;	}
-	png_infop info_ptr = png_create_info_struct(png_ptr);
-	if (!info_ptr)
-	{	png_destroy_write_struct(&png_ptr,0);	delete []p;	delete []d;	fclose(fp);	return;	}
-	png_init_io(png_ptr, fp);
-	png_set_filter(png_ptr, 0, PNG_ALL_FILTERS);
-	png_set_compression_level(png_ptr, Z_BEST_COMPRESSION);
-	png_set_IHDR(png_ptr, info_ptr, nx, ny, 8, PNG_COLOR_TYPE_RGB,
-			PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
-	png_set_rows(png_ptr, info_ptr, p);
-	png_write_png(png_ptr, info_ptr,  PNG_TRANSFORM_IDENTITY, 0);
-	png_write_end(png_ptr, info_ptr);
-	png_destroy_write_struct(&png_ptr, &info_ptr);
-	fclose(fp);	delete []p;	delete []d;
-#else
-	mgl_set_global_warn("PNG support was disabled. Please, enable it and rebuild MathGL.");
-#endif
+	int len=strlen(fname);
+	if(!strcmp(fname+len-4,".jpg") || !strcmp(fname+len-5,".jpeg"))	mgl_jpeg_save(fname, nx,ny,p);
+	if(!strcmp(fname+len-4,".bmp")) 	mgl_bmp_save(fname, nx,ny,p);
+	if(!strcmp(fname+len-4,".png")) 	mgl_png_save(fname, nx,ny,p);
+	if(!strcmp(fname+len-4,".eps") || !strcmp(fname+len-4,".bps")) 	mgl_bps_save(fname, nx,ny,p);
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_data_export_(uintptr_t *d, const char *fname, const char *scheme,mreal *v1,mreal *v2,int *ns,int l,int n)
-{
-	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
+{	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,scheme,n);	f[n]=0;
-	mgl_data_export(_DT_,s,f,*v1,*v2,*ns);
-	delete []s;		delete []f;
-}
+	mgl_data_export(_DT_,s,f,*v1,*v2,*ns);	delete []s;		delete []f;	}
 void MGL_EXPORT mgl_data_import_(uintptr_t *d, const char *fname, const char *scheme,mreal *v1,mreal *v2,int l,int n)
-{
-	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
+{	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,scheme,n);	f[n]=0;
-	mgl_data_import(_DT_,s,f,*v1,*v2);
-	delete []s;		delete []f;
-}
+	mgl_data_import(_DT_,s,f,*v1,*v2);	delete []s;		delete []f;	}
 //-----------------------------------------------------------------------------

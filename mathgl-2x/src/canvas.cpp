@@ -352,7 +352,7 @@ void mglCanvas::mark_plot(long p, char type, mreal size)
 	size = size?fabs(size):1;
 	size *= MarkSize*0.35*font_factor;
 	if(type=='.')	size = fabs(PenWidth)*sqrt(font_factor/400);
-	if(TernAxis&4) for(int i=0;i<4;i++)
+	if(TernAxis&12) for(int i=0;i<4;i++)
 	{	p = ProjScale(i, pp);	MGL_MARK_PLOT	}
 	else	{	MGL_MARK_PLOT	}
 }
@@ -369,7 +369,7 @@ void mglCanvas::line_plot(long p1, long p2)
 	if(p1>p2)	{	long kk=p1;	p1=p2;	p2=kk;	}	// rearrange start/end for proper dashing
 	long pp1=p1,pp2=p2;
 	mreal pw = fabs(PenWidth)*sqrt(font_factor/400);
-	if(TernAxis&4) for(int i=0;i<4;i++)
+	if(TernAxis&12) for(int i=0;i<4;i++)
 	{	p1 = ProjScale(i, pp1);	p2 = ProjScale(i, pp2);
 		MGL_LINE_PLOT	}
 	else	{	MGL_LINE_PLOT	}
@@ -387,7 +387,7 @@ void mglCanvas::trig_plot(long p1, long p2, long p3)
 	if(p1<0 || p2<0 || p3<0 || mgl_isnan(Pnt[p1].x) || mgl_isnan(Pnt[p2].x) || mgl_isnan(Pnt[p3].x))	return;
 	long pp1=p1,pp2=p2,pp3=p3;
 	mreal pw = fabs(PenWidth)*sqrt(font_factor/400);
-	if(TernAxis&4) for(int i=0;i<4;i++)
+	if(TernAxis&12) for(int i=0;i<4;i++)
 	{	p1 = ProjScale(i, pp1);	p2 = ProjScale(i, pp2);
 		p3 = ProjScale(i, pp3);	MGL_TRIG_PLOT	}
 	else	{	MGL_TRIG_PLOT	}
@@ -406,7 +406,7 @@ void mglCanvas::quad_plot(long p1, long p2, long p3, long p4)
 	if(p4<0 || mgl_isnan(Pnt[p4].x))	{	trig_plot(p1,p2,p3);	return;	}
 	long pp1=p1,pp2=p2,pp3=p3,pp4=p4;
 	mreal pw = fabs(PenWidth)*sqrt(font_factor/400);
-	if(TernAxis&4) for(int i=0;i<4;i++)
+	if(TernAxis&12) for(int i=0;i<4;i++)
 	{	p1 = ProjScale(i, pp1);	p2 = ProjScale(i, pp2);
 		p3 = ProjScale(i, pp3);	p4 = ProjScale(i, pp4);
 		MGL_QUAD_PLOT	}
@@ -428,6 +428,16 @@ mreal mglCanvas::text_plot(long p,const wchar_t *text,const char *font,mreal siz
 		TernAxis = TernAxis|4;
 		return res;
 	}
+	else if(TernAxis&8)	// text at projections
+	{
+		mreal res;
+		TernAxis = TernAxis&(~8);
+//		for(int i=0;i<4;i++)
+			res = text_plot(ProjScale(3,p,true),text,font,size/2,sh,col,rot);
+		TernAxis = TernAxis|8;
+		return res;
+	}
+
 
 	mglPnt q=Pnt[p];
 	mreal ll = q.u*q.u+q.v*q.v;
@@ -798,7 +808,7 @@ std::wstring MGL_EXPORT mgl_ftoa(double v, const char *fmt)
 	// parse -nan numbers
 	if(!strcmp(sf,"-nan"))	memcpy(sf,"nan",4);
 
-	
+
 	// clear exp format
 	int st = se[0]=='-'?1:0;
 	if(plus || se[3+st+dig]=='-')	// first remove zeros after 'e'

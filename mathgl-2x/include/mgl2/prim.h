@@ -146,6 +146,11 @@ void MGL_EXPORT mgl_table(HMGL gr, double x, double y, HCDT val, const char *tex
 void MGL_EXPORT mgl_table_(uintptr_t *gr, mreal *x, mreal *y, uintptr_t *val, const char *text, const char *fnt, const char *opt,int,int,int);
 void MGL_EXPORT mgl_tablew(HMGL gr, double x, double y, HCDT val, const wchar_t *text, const char *fnt, const char *opt);
 
+/// Draws bitmap logo which is stretched along whole axis range
+void MGL_EXPORT mgl_logo(HMGL gr, long w, long h, const unsigned char *rgba, const char *opt);
+void MGL_EXPORT mgl_logo_file(HMGL gr, const char *fname, const char *opt);
+void MGL_EXPORT mgl_logo_file_(uintptr_t *gr, const char *fname, const char *opt,int l,int n);
+
 #ifdef __cplusplus
 }
 #endif

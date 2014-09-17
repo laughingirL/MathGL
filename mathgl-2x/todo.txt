@@ -21,6 +21,10 @@
 	B. как делать анимацию (кадры) для мышиной версии ... список кадров, кнопки добавить в кадры + вставить из кадра
 16. Docs about mgl_datac_diffr
 17. Extend QO + extra docs
+18. Import OBJ ???
+19. Simplified triangle filling for Quality=1 ?!?
+20. Extend 'ask' by adding multiple questions simultaneously (+ set/get default values from file ???)
+21. Occasional seg.fault in mgl_qt_example at exit
 
 ZZ. Update *.i for new functions {before release!!!}
 
@@ -39,15 +43,10 @@ ZZ. Update *.i for new functions {before release!!!}
 	u. Test FlowP + 3d
 
 7. Improve z-order for rapidly oscillating surfaces
-8. Occasional seg.fault in mgl_qt_example at exit
 10. Manual rotation angle for axis ticks (as "value" option?!)
-11. Simplified triangle filling for Quality=1 ?!?
 12. MGL command to load commands from *.so or *.dll -- test on win32 && win64!!!
-13. Bitmap as "bottom" of the subplot (as stretched set of quadrangles for each pixel) ??? -- too many colors require for  3d output
-14. Extend 'ask' by adding multiple questions simultaneously (+ set/get default values from file ???)
-15. Ternary&8 --> no text at projections
-16. Check again axis orientation (left/right) on projections.
-17. Import OBJ ???
+
+14. Check Logo(), Import(), Export()
 
 ============= DOCUMENTATION =============
 
@@ -57,8 +56,8 @@ C. Translate to Russian everything
 D. Docs about JS interface
 
 1.	inline void SetDrawFunc(int (*draw)(mglBase *gr, void *p), void *par=NULL, void (*reload)(void *p)=NULL)
-
 2. mgltex
+3. Text about Logo() -- no export to some 3d formats
 
 YY. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using Stem()
 

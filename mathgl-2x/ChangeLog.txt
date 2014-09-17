@@ -1,5 +1,6 @@
 2.3.1 Released 20 September 2014
 
+* Add Logo() function to draw bitmap (logo), which is stretched along whole axis range
 * Change y coordinate at x-z projection.
 * Improve projection of 'unrotatable' objects (like legend, title, ...).
 * Improve orientation of axis ticks and labels.
@@ -11,6 +12,7 @@
 * Become compatible with giflib 5.1.
 * Add light scaling at MGLD import.
 * Add scaling of frames at Adjust().
+* Add projection (Ternary&8) which is the same as usual (Ternary&4) but don't print text on projections
 * Possible bugfix for 32bit gcc.
 * Add some static functions for mglGraph.
 * Add option "-n" to mglconv to disable automatic saving of the image.

@@ -464,6 +464,8 @@ public:
 	long AddPnt(const mglMatrix *M, mglPoint p, mreal c=-1, mglPoint n=mglPoint(NAN), mreal a=-1, int scl=1);
 	long CopyNtoC(long k, mreal c);
 	long CopyProj(long from, mglPoint p, mglPoint n, short sub=0);
+	void SetRGBA(long k, const mglColor &c)
+	{	mglPnt &p=Pnt[k];	p.r = c.r;	p.g = c.g;	p.b = c.b;	p.a = c.a;	}
 	virtual void Reserve(long n);		///< Allocate n-cells for Pnt and return current position
 	/// Set to reduce accuracy of points (to reduce size of output files)
 	inline void SetReduceAcc(bool val)	{	set(val, MGL_REDUCEACC);	}

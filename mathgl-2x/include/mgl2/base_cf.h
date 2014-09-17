@@ -177,8 +177,8 @@ void MGL_EXPORT mgl_set_func_(uintptr_t *gr, const char *EqX, const char *EqY, c
 void MGL_EXPORT mgl_set_coor(HMGL gr, int how);
 void MGL_EXPORT mgl_set_coor_(uintptr_t *gr, int *how);
 /// Set to draw Ternary axis (triangle like axis, grid and so on)
-void MGL_EXPORT mgl_set_ternary(HMGL gr, int enable);
-void MGL_EXPORT mgl_set_ternary_(uintptr_t *gr, int *enable);
+void MGL_EXPORT mgl_set_ternary(HMGL gr, int kind);
+void MGL_EXPORT mgl_set_ternary_(uintptr_t *gr, int *kind);
 
 /// Set to use or not tick labels rotation
 void MGL_EXPORT mgl_set_tick_rotate(HMGL gr, int enable);

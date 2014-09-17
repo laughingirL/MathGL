@@ -569,6 +569,11 @@ public:
 	/// Draws the arc around axis 'z' with center at p0 and starting from p1, by color stl and angle a (in degrees)
 	inline void Arc(mglPoint p0, mglPoint p1, double a, const char *stl="r")
 	{	mgl_arc_ext(gr, p0.x,p0.y,p0.z, 0,0,1, p1.x,p1.y,p0.z, a,stl);	}
+	/// Draws bitmap logo which is stretched along whole axis range
+	inline void Logo(long w, long h, const unsigned char *rgba, const char *opt="")
+	{	mgl_logo(gr, w, h, rgba, opt);	}
+	inline void Logo(const char *fname, const char *opt="")
+	{	mgl_logo_file(gr, fname, opt);	}
 
 	/// Print text in position p with specified font
 	inline void Putsw(mglPoint p,const wchar_t *text,const char *font=":C",double size=-1)

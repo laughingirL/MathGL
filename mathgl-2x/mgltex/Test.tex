@@ -1,0 +1,301 @@
+\documentclass[letterpaper,10pt]{article}
+
+\setlength\oddsidemargin{-0.05\paperwidth}
+\setlength\evensidemargin{-0.05\paperwidth}
+\setlength\topmargin{0\paperheight}
+\setlength\textwidth{0.88\paperwidth}
+\setlength\textheight{0.82\paperheight}
+\addtolength\topmargin{-\headheight}
+\addtolength\topmargin{-\headsep}
+
+\usepackage[eps]{mgltex}
+
+\title{\mglTeX{} package example}
+\author{Diego Sejas Viscarra}
+\date{\today}
+
+\mgldir{scripts/}
+
+\begin{document}
+  \begin{mglsetup}[2d]
+    box : axis
+    grid 'xy' 'k'
+  \end{mglsetup}
+  
+  \maketitle
+  
+  \begin{mglfunc}{prepare1d}
+    new y 50 3
+    modify y '0.7*sin(2*pi*x)+0.5*cos(3*pi*x)+0.2*sin(pi*x)'
+    modify y 'sin(2*pi*x)' 1
+    modify y 'cos(2*pi*x)' 2
+    new x1 50 'x'
+    new x2 50 '0.05-0.03*cos(pi*x)'
+    new y1 50 '0.5-0.3*cos(pi*x)'
+    new y2 50 '-0.3*sin(pi*x)'
+  \end{mglfunc}
+  
+  \noindent This article is devoted to the study of the wavelet transform and its properties from the point of view of linear algebra.
+  
+  First of all, we introduce some basic concepts from the standard theory of signal analysis with wavelets. Here we define wavelets, the wavelet transform and its inverse, and we study the convergence of the later. Finally, the wavelet transform is discretized and special case of invertibility is considered.
+  
+  The multiresolution analysis is introduced then, and we derive from it the equations that characterize a fast and efficient method to calculate the transform. This will allow us to generalize the concepts and methods to vectors, but we will encounter an information increment problem that arises from the intuitive and ``natural'' approach. However, a simple yet ingenious method will enable us to avoid this problem.
+  
+  After that, the multiresolution analysis is generalized into a bidimensional version (MRA-2D). A tool to induce a MRA-2D from a MRA is presented; it will allow us to reuse the equations and methods of the unidimensional version.
+  
+  Finally, we study the matricial properties of the derived methods. The main result of this work is that the wavelet transform and its inverse (of vectors and matrices) can be written as matrix products. Some important consequences of this fact are linearity, distributivity with respect to matrix multiplication, etc.
+  
+  Some basic knowledge of Fourier Analysis and the concept of frequency content of functions is required for the following.
+  \begin{figure}[!ht]
+    \centering
+    \begin{mgl}[width=0.85\textwidth,height=7.5cm]
+      fog 0.5
+      call 'prepare2d'
+      subplot 2 2 0 : title 'Surf plot (default)' : rotate 50 60 : light on : box : surf a
+      
+      subplot 2 2 1 : title '"\#" style; meshnum 10' : rotate 50 60 : box
+      surf a '#'; meshnum 10
+      
+      subplot 2 2 2 : title 'Mesh plot' : rotate 50 60 : box
+      mesh a
+      
+      new x 50 40 '0.8*sin(pi*x)*sin(pi*(y+1)/2)'
+      new y 50 40 '0.8*cos(pi*x)*sin(pi*(y+1)/2)'
+      new z 50 40 '0.8*cos(pi*(y+1)/2)'
+      subplot 2 2 3 : title 'parametric form' : rotate 50 60 : box
+      surf x y z 'BbwrR'
+    \end{mgl}
+  \end{figure}
+  
+  \noindent This article is devoted to the study of the wavelet transform and its properties from the point of view of linear algebra.
+  
+  First of all, we introduce some basic concepts from the standard theory of signal analysis with wavelets. Here we define wavelets, the wavelet transform and its inverse, and we study the convergence of the later. Finally, the wavelet transform is discretized and special case of invertibility is considered.
+  
+  The multiresolution analysis is introduced then, and we derive from it the equations that characterize a fast and efficient method to calculate the transform. This will allow us to generalize the concepts and methods to vectors, but we will encounter an information increment problem that arises from the intuitive and ``natural'' approach. However, a simple yet ingenious method will enable us to avoid this problem.
+  
+  After that, the multiresolution analysis is generalized into a bidimensional version (MRA-2D). A tool to induce a MRA-2D from a MRA is presented; it will allow us to reuse the equations and methods of the unidimensional version.
+  
+  Finally, we study the matricial properties of the derived methods. The main result of this work is that the wavelet transform and its inverse (of vectors and matrices) can be written as matrix products. Some important consequences of this fact are linearity, distributivity with respect to matrix multiplication, etc.
+  
+  Some basic knowledge of Fourier Analysis and the concept of frequency content of functions is required for the following.
+  \begin{figure}[!ht]
+    \centering
+    \begin{mgl}[scale=0.7]
+      new y 50 3
+      modify y '0.7*sin(2*pi*x)+0.5*cos(3*pi*x)+0.2*sin(pi*x)'
+      modify y 'sin(2*pi*x)' 1
+      modify y 'cos(2*pi*x)' 2
+      new x1 50 'x'
+      new x2 50 '0.05-0.03*cos(pi*x)'
+      new y1 50 '0.5-0.3*cos(pi*x)'
+      new y2 50 '-0.3*sin(pi*x)'
+      
+      subplot 2 2 0 '' : title 'Plot plot (default)' : box
+      plot y
+      
+      subplot 2 2 2 '' : title '"!" style; "rgb" palette' : box
+      plot y 'o!rgb'
+      
+      subplot 2 2 3 '' : title 'just markers' : box
+      plot y ' +'
+      
+      new yc 30 'sin(pi*x)' : new xc 30 'cos(pi*x)' : new z 30 'x'
+      subplot 2 2 1 : title '3d variant' : rotate 50 60 : box
+      plot xc yc z 'rs'
+    \end{mgl}
+  \end{figure}
+  
+  \noindent This article is devoted to the study of the wavelet transform and its properties from the point of view of linear algebra.
+  
+  First of all, we introduce some basic concepts from the standard theory of signal analysis with wavelets. Here we define wavelets, the wavelet transform and its inverse, and we study the convergence of the later. Finally, the wavelet transform is discretized and special case of invertibility is considered.
+  
+  The multiresolution analysis is introduced then, and we derive from it the equations that characterize a fast and efficient method to calculate the transform. This will allow us to generalize the concepts and methods to vectors, but we will encounter an information increment problem that arises from the intuitive and ``natural'' approach. However, a simple yet ingenious method will enable us to avoid this problem.
+  
+  After that, the multiresolution analysis is generalized into a bidimensional version (MRA-2D). A tool to induce a MRA-2D from a MRA is presented; it will allow us to reuse the equations and methods of the unidimensional version.
+  
+  Finally, we study the matricial properties of the derived methods. The main result of this work is that the wavelet transform and its inverse (of vectors and matrices) can be written as matrix products. Some important consequences of this fact are linearity, distributivity with respect to matrix multiplication, etc.
+  
+  Some basic knowledge of Fourier Analysis and the concept of frequency content of functions is required for the following.
+  
+  \begin{mglscript}{Vectorial}
+    call 'prepare2v'
+    subplot 3 2 0 '' : title 'Vect plot (default)' : box
+    vect a b
+    
+    subplot 3 2 1 '' : title '"." style; "=" style' : box
+    vect a b '.='
+    
+    subplot 3 2 2 '' : title '"f" style' : box
+    vect a b 'f'
+    
+    subplot 3 2 3 '' : title '">" style' : box
+    vect a b '>'
+    
+    subplot 3 2 4 '' : title '"<" style' : box
+    vect a b '<'
+    
+    call 'prepare3v'
+    subplot 3 2 5 : title '3d variant' : rotate 50 60 : box
+    vect ex ey ez
+    
+    stop
+    
+func 'prepare2v'
+  new a 20 30 '0.6*sin(pi*(x+1))*sin(1.5*pi*(y+1))+0.4*cos(0.75*pi*(x+1)*(y+1))'
+  new b 20 30 '0.6*cos(pi*(x+1))*cos(1.5*pi*(y+1))+0.4*cos(0.75*pi*(x+1)*(y+1))'
+return
+    
+func 'prepare3v'
+  define $1 pow(x*x+y*y+(z-0.3)*(z-0.3)+0.03,1.5)
+  define $2 pow(x*x+y*y+(z+0.3)*(z+0.3)+0.03,1.5)
+  new ex 10 10 10 '0.2*x/$1-0.2*x/$2'
+  new ey 10 10 10 '0.2*y/$1-0.2*y/$2'
+  new ez 10 10 10 '0.2*(z-0.3)/$1-0.2*(z+0.3)/$2'
+return
+  \end{mglscript}
+  \begin{mglscript}{Vectorial}
+    call 'prepare2v'
+    subplot 3 2 0 '' : title 'lolo' : box
+    vect a b
+    
+    subplot 3 2 1 '' : title '"." style; "=" style' : box
+    vect a b '.='
+    
+    subplot 3 2 2 '' : title '"f" style' : box
+    vect a b 'f'
+    
+    subplot 3 2 3 '' : title '">" style' : box
+    vect a b '>'
+    
+    subplot 3 2 4 '' : title '"<" style' : box
+    vect a b '<'
+    
+    call 'prepare3v'
+    subplot 3 2 5 : title '3d variant' : rotate 50 60 : box
+    vect ex ey ez
+    
+    stop
+    
+func 'prepare2v'
+  new a 20 30 '0.6*sin(pi*(x+1))*sin(1.5*pi*(y+1))+0.4*cos(0.75*pi*(x+1)*(y+1))'
+  new b 20 30 '0.6*cos(pi*(x+1))*cos(1.5*pi*(y+1))+0.4*cos(0.75*pi*(x+1)*(y+1))'
+return
+    
+func 'prepare3v'
+  define $1 pow(x*x+y*y+(z-0.3)*(z-0.3)+0.03,1.5)
+  define $2 pow(x*x+y*y+(z+0.3)*(z+0.3)+0.03,1.5)
+  new ex 10 10 10 '0.2*x/$1-0.2*x/$2'
+  new ey 10 10 10 '0.2*y/$1-0.2*y/$2'
+  new ez 10 10 10 '0.2*(z-0.3)/$1-0.2*(z+0.3)/$2'
+return
+  \end{mglscript}
+  \noindent This article is devoted to the study of the wavelet transform and its properties from the point of view of linear algebra.
+  
+  First of all, we introduce some basic concepts from the standard theory of signal analysis with wavelets. Here we define wavelets, the wavelet transform and its inverse, and we study the convergence of the later. Finally, the wavelet transform is discretized and special case of invertibility is considered.
+  
+  The multiresolution analysis is introduced then, and we derive from it the equations that characterize a fast and efficient method to calculate the transform. This will allow us to generalize the concepts and methods to vectors, but we will encounter an information increment problem that arises from the intuitive and ``natural'' approach. However, a simple yet ingenious method will enable us to avoid this problem.
+  
+  After that, the multiresolution analysis is generalized into a bidimensional version (MRA-2D). A tool to induce a MRA-2D from a MRA is presented; it will allow us to reuse the equations and methods of the unidimensional version.
+  
+  Finally, we study the matricial properties of the derived methods. The main result of this work is that the wavelet transform and its inverse (of vectors and matrices) can be written as matrix products. Some important consequences of this fact are linearity, distributivity with respect to matrix multiplication, etc.
+  
+  Some basic knowledge of Fourier Analysis and the concept of frequency content of functions is required for the following.
+  
+  \begin{figure}[!ht]
+    \centering
+    \mglgraphics[width=40em,height=20em]{Vectorial}
+    \caption{A beautiful example}
+  \end{figure}
+  
+  \noindent This article is devoted to the study of the wavelet transform and its properties from the point of view of linear algebra.
+  
+  First of all, we introduce some basic concepts from the standard theory of signal analysis with wavelets. Here we define wavelets, the wavelet transform and its inverse, and we study the convergence of the later. Finally, the wavelet transform is discretized and special case of invertibility is considered.
+  
+  The multiresolution analysis is introduced then, and we derive from it the equations that characterize a fast and efficient method to calculate the transform. This will allow us to generalize the concepts and methods to vectors, but we will encounter an information increment problem that arises from the intuitive and ``natural'' approach. However, a simple yet ingenious method will enable us to avoid this problem.
+  
+  After that, the multiresolution analysis is generalized into a bidimensional version (MRA-2D). A tool to induce a MRA-2D from a MRA is presented; it will allow us to reuse the equations and methods of the unidimensional version.
+  
+  Finally, we study the matricial properties of the derived methods. The main result of this work is that the wavelet transform and its inverse (of vectors and matrices) can be written as matrix products. Some important consequences of this fact are linearity, distributivity with respect to matrix multiplication, etc.
+  
+  Some basic knowledge of Fourier Analysis and the concept of frequency content of functions is required for the following.
+  
+  \begin{mglblock}{Axis_projection}
+ranges 0 1 0 1 0 1
+new x 50 '0.25*(1+cos(2*pi*x))'
+new y 50 '0.25*(1+sin(2*pi*x))'
+new z 50 'x'
+new a 20 30 '30*x*y*(1-x-y)^2*(x+y<1)'
+new rx 10 'rnd':new ry 10:fill ry '(1-v)*rnd' rx
+light on
+
+title 'Projection sample':ternary 4:rotate 50 60
+box:axis:grid
+plot x y z 'r2':surf a '#'
+xlabel 'X':ylabel 'Y':zlabel 'Z'
+  \end{mglblock}
+  \noindent This article is devoted to the study of the wavelet transform and its properties from the point of view of linear algebra.
+  
+  First of all, we introduce some basic concepts from the standard theory of signal analysis with wavelets. Here we define wavelets, the wavelet transform and its inverse, and we study the convergence of the later. Finally, the wavelet transform is discretized and special case of invertibility is considered.
+  
+  The multiresolution analysis is introduced then, and we derive from it the equations that characterize a fast and efficient method to calculate the transform. This will allow us to generalize the concepts and methods to vectors, but we will encounter an information increment problem that arises from the intuitive and ``natural'' approach. However, a simple yet ingenious method will enable us to avoid this problem.
+  
+  After that, the multiresolution analysis is generalized into a bidimensional version (MRA-2D). A tool to induce a MRA-2D from a MRA is presented; it will allow us to reuse the equations and methods of the unidimensional version.
+  
+  Finally, we study the matricial properties of the derived methods. The main result of this work is that the wavelet transform and its inverse (of vectors and matrices) can be written as matrix products. Some important consequences of this fact are linearity, distributivity with respect to matrix multiplication, etc.
+  
+  Some basic knowledge of Fourier Analysis and the concept of frequency content of functions is required for the following.
+  \begin{figure}[!ht]
+    \centering
+    \mglgraphics[scale=0.5]{Axis_projection}
+    \caption{The image from Axis\_projection.mgl script}
+  \end{figure}
+  
+  \noindent This article is devoted to the study of the wavelet transform and its properties from the point of view of linear algebra.
+  
+  First of all, we introduce some basic concepts from the standard theory of signal analysis with wavelets. Here we define wavelets, the wavelet transform and its inverse, and we study the convergence of the later. Finally, the wavelet transform is discretized and special case of invertibility is considered.
+  
+  The multiresolution analysis is introduced then, and we derive from it the equations that characterize a fast and efficient method to calculate the transform. This will allow us to generalize the concepts and methods to vectors, but we will encounter an information increment problem that arises from the intuitive and ``natural'' approach. However, a simple yet ingenious method will enable us to avoid this problem.
+  
+  After that, the multiresolution analysis is generalized into a bidimensional version (MRA-2D). A tool to induce a MRA-2D from a MRA is presented; it will allow us to reuse the equations and methods of the unidimensional version.
+  
+  Finally, we study the matricial properties of the derived methods. The main result of this work is that the wavelet transform and its inverse (of vectors and matrices) can be written as matrix products. Some important consequences of this fact are linearity, distributivity with respect to matrix multiplication, etc.
+  
+  Some basic knowledge of Fourier Analysis and the concept of frequency content of functions is required for the following.
+  \begin{mglverbatim}
+ranges 0 1 0 1 0 1
+new x 50 '0.25*(1+cos(2*pi*x))'
+new y 50 '0.25*(1+sin(2*pi*x))'
+new z 50 'x'
+new a 20 30 '30*x*y*(1-x-y)^2*(x+y<1)'
+new rx 10 'rnd':new ry 10:fill ry '(1-v)*rnd' rx
+light on
+
+title 'Projection sample':ternary 4:rotate 50 60
+box:axis:grid
+plot x y z 'r2':surf a '#'
+xlabel 'X':ylabel 'Y':zlabel 'Z'
+  \end{mglverbatim}
+  
+  \noindent This article is devoted to the study of the wavelet transform and its properties from the point of view of linear algebra.
+  
+  First of all, we introduce some basic concepts from the standard theory of signal analysis with wavelets. Here we define wavelets, the wavelet transform and its inverse, and we study the convergence of the later. Finally, the wavelet transform is discretized and special case of invertibility is considered.
+  
+  The multiresolution analysis is introduced then, and we derive from it the equations that characterize a fast and efficient method to calculate the transform. This will allow us to generalize the concepts and methods to vectors, but we will encounter an information increment problem that arises from the intuitive and ``natural'' approach. However, a simple yet ingenious method will enable us to avoid this problem.
+  
+  After that, the multiresolution analysis is generalized into a bidimensional version (MRA-2D). A tool to induce a MRA-2D from a MRA is presented; it will allow us to reuse the equations and methods of the unidimensional version.
+  
+  Finally, we study the matricial properties of the derived methods. The main result of this work is that the wavelet transform and its inverse (of vectors and matrices) can be written as matrix products. Some important consequences of this fact are linearity, distributivity with respect to matrix multiplication, etc.
+  \begin{figure}[!ht]
+    \centering
+    \mglgraphics{xyz}
+  \end{figure}
+  
+  Some basic knowledge of Fourier Analysis and the concept of frequency content of functions is required for the following.
+  
+  \mglinclude{Vectorial}
+  
+  \begin{mglfunc}{prepare2d}
+    new a 50 40 '0.6*sin(pi*(x+1))*sin(1.5*pi*(y+1))+0.4*cos(0.75*pi*(x+1)*(y+1))'
+    new b 50 40 '0.6*cos(pi*(x+1))*cos(1.5*pi*(y+1))+0.4*cos(0.75*pi*(x+1)*(y+1))'
+  \end{mglfunc}
+\end{document}
