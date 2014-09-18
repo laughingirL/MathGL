@@ -23,6 +23,9 @@
 #ifdef __cplusplus
 #include "mgl2/mgl.h"
 #include <string>
+#if MGL_HAVE_LTDL
+#include <ltdl.h>
+#endif
 //-----------------------------------------------------------------------------
 /// Structure for the command argument.
 struct mglArg
@@ -86,6 +89,9 @@ class mglParser
 {
 friend void mgl_export(wchar_t *out, const wchar_t *in, int type);
 public:
+#if MGL_HAVE_LTDL
+	std::vector<lt_dlhandle> DllOpened;	///< Opened external DLL (keep )
+#endif
 	std::vector<mglDataA*> DataList;	///< List with data and its names
 	std::vector<mglNum*> NumList;	///< List with numbers and its names
 	bool AllowSetSize;	///< Allow using setsize command

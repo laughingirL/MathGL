@@ -3033,6 +3033,7 @@ mglCommand mgls_base_cmd[] = {
 	{"light","Setup light","light [val] | val num | num xpos ypos zpos ['fmt' br]", mgls_light ,2},
 	{"line","Draw line","line x1 y1 x2 y2 ['fmt']|x1 y1 z1 x2 y2 z2 ['fmt']", mgls_line ,13},
 	{"list","Creates new variable from list of numbers or data","list Var v1 ...|Var D1 ...", 0, 6},
+	{"load","Load commands from external DLL","load 'fname'", 0, 6},
 	{"loadfont","Load fontfaces","loadfont ['face']", mgls_loadfont ,15},
 	{"logo","Draw bitmap (logo) along axis range","logo 'fname' [smooth]", mgls_logo ,13},
 	{"map","Draw mapping plot","map Udat Vdat ['fmt']|Xdat Ydat Udat Vdat ['fmt']", mgls_map ,10},

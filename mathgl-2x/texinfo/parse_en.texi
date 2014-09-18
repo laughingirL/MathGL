@@ -264,7 +264,7 @@ Function delete the variable with given @var{name}.
 
 @deftypefn{Method on @code{mglParse} (C++)} @code{void} DeleteAll ()
 @deftypefnx {C function} @code{void} mgl_parser_del_all (@code{HMPR} p)
-Function delete all variables in this parser.
+Function delete all variables and reset list of commands to default one in this parser.
 @end deftypefn
 
 @deftypefn {Method on @code{mglParse}} @code{void} RestoreOnce ()

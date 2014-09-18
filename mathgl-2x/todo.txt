@@ -44,9 +44,6 @@ ZZ. Update *.i for new functions {before release!!!}
 
 7. Improve z-order for rapidly oscillating surfaces
 10. Manual rotation angle for axis ticks (as "value" option?!)
-12. MGL command to load commands from *.so or *.dll -- test on win32 && win64!!!
-
-14. Check Logo(), Import(), Export()
 
 ============= DOCUMENTATION =============
 
@@ -56,8 +53,9 @@ C. Translate to Russian everything
 D. Docs about JS interface
 
 1.	inline void SetDrawFunc(int (*draw)(mglBase *gr, void *p), void *par=NULL, void (*reload)(void *p)=NULL)
-2. mgltex
+2. mgltex documentation + sample
 3. Text about Logo() -- no export to some 3d formats
+4. MGL command to 'load' commands from *.so or *.dll + sample + must contain "const mglCommand *mgl_cmd_extra" -- test on win32 && win64!!!
 
 YY. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using Stem()
 

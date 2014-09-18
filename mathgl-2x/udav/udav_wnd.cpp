@@ -145,27 +145,6 @@ int main(int argc, char **argv)
 //		mgl addon
 //
 //-----------------------------------------------------------------------------
-/*mglCommand udav_base_cmd[] = {
-	{L"fplot",L"Plot curve by formula",L"fplot 'func' ['stl'='' num=100]", mgls_fplot, mglc_fplot},
-	{L"fsurf",L"Plot surface by formula",L"fsurf 'func' ['stl'='' numx=100 numy=100]", mgls_fsurf, mglc_fsurf},
-	{L"fgets",L"Print string from file",L"fgets x y {z} 'fname' [pos=0 'stl'='' size=-1.4]", mgls_fgets, mglc_fgets},
-{L"",0,0,0,0}};
-//-----------------------------------------------------------------------------
-void udavAddCommands(const mglCommand *cmd)	// NOTE it work but I don't how I can use it
-{
-	int i, mp, mc;
-	// determine the number of symbols
-	for(i=0;parser.Cmd[i].name[0];i++){};	mp = i;
-	for(i=0;cmd[i].name[0];i++){};			mc = i;
-	mglCommand *buf = new mglCommand[mp+mc+1];
-	memcpy(buf, parser.Cmd, mp*sizeof(mglCommand));
-	memcpy(buf+mp, cmd, (mc+1)*sizeof(mglCommand));
-	qsort(buf, mp+mc, sizeof(mglCommand), mgl_cmd_cmp);
-#pragma omp critical(cmd_parser)
-	if(parser.Cmd!=mgls_base_cmd)	delete []parser.Cmd;
-	parser.Cmd = buf;
-}*/
-//-----------------------------------------------------------------------------
 void udavLoadDefCommands()	{}	//{	udavAddCommands(udav_base_cmd);	}
 //-----------------------------------------------------------------------------
 //

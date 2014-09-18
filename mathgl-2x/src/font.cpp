@@ -30,6 +30,9 @@
 #include "mgl2/base.h"
 #include "mgl2/font.h"
 #include "def_font.cpp"
+#if MGL_HAVE_LTDL
+#include <ltdl.h>
+#endif
 //-----------------------------------------------------------------------------
 extern mglTeXsymb mgl_tex_symb[];
 extern long mgl_tex_num;
@@ -686,7 +689,7 @@ bool mglFont::Load(const char *base, const char *path)
 			path = buf;		buf[i]=0;	base = buf+i+1;
 		}
 	}
-	Clear();							// first clear old
+	Clear();	// first clear old
 
 	snprintf(str,256,"%s%c%s.vfm",path,sep,base?base:"");
 	std::vector<short> norm, bold, ital, both;
@@ -816,6 +819,9 @@ extern pthread_mutex_t mutexRnd;
 float mgl_cos[360];
 void MGL_NO_EXPORT mgl_init()
 {
+#if MGL_HAVE_LTDL
+	lt_dlinit();
+#endif
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_init(&mutexRnd,0);
 #endif

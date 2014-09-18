@@ -485,6 +485,10 @@ void MGL_EXPORT mgl_parser_del_varw(HMPR p, const wchar_t *name);
 void MGL_EXPORT mgl_parser_del_all(HMPR p);
 void MGL_EXPORT mgl_parser_del_all_(uintptr_t *p);
 
+/// Load new commands from external dynamic Library (must have "const mglCommand *mgl_cmd_extra" variable)
+void MGL_EXPORT mgl_parser_load(HMPR pr, const char *dll_name);
+void MGL_EXPORT mgl_parser_load_(uintptr_t *pr, const char *dll_name,int);
+
 /// Parse and draw single line of the MGL script
 int MGL_EXPORT mgl_parse_line(HMGL gr, HMPR p, const char *str, int pos);
 int MGL_EXPORT mgl_parse_line_(uintptr_t* gr, uintptr_t* p, const char *str, int *pos, int);

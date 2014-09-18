@@ -154,11 +154,7 @@ mglParser::mglParser(bool setsize)
 	fval = new mglData[40];
 }
 //-----------------------------------------------------------------------------
-mglParser::~mglParser()
-{
-	DeleteAll();	delete []fval;
-	if(Cmd && Cmd!=mgls_base_cmd)	delete []Cmd;
-}
+mglParser::~mglParser()	{	DeleteAll();	delete []fval;	}
 //-----------------------------------------------------------------------------
 void mglParser::DeleteAll()
 {
@@ -168,6 +164,13 @@ void mglParser::DeleteAll()
 	for(size_t i=0;i<NumList.size();i++)
 		if(NumList[i])	delete NumList[i];
 	NumList.clear();
+	if(Cmd && Cmd!=mgls_base_cmd)
+	{	delete []Cmd;	Cmd = mgls_base_cmd;	}
+#if MGL_HAVE_LTDL
+	for(size_t i=0;i<DllOpened.size();i++)
+		lt_dlclose(DllOpened[i]);
+	DllOpened.clear();
+#endif
 }
 //-----------------------------------------------------------------------------
 void mglParser::AddParam(int n, const char *str)
@@ -573,6 +576,13 @@ int mglParser::Parse(mglGraph *gr, std::wstring str, long pos)
 		n = FlowExec(gr, arg[0].c_str(),k-1,a);
 		if(n)		{	delete []a;	return n-1;	}
 		if(skip())	{	delete []a;	return 0;	}
+		if(!arg[0].compare(L"load"))
+		{
+			int n = a[0].type==1?0:1;
+			a[0].s.assign(a[0].w.begin(),a[0].w.end());
+			if(!n)	mgl_parser_load(this,a[0].s.c_str());
+			delete []a;	return n;
+		}
 		if(!arg[0].compare(L"define"))
 		{
 			if(k==3)
@@ -1014,4 +1024,31 @@ uintptr_t MGL_EXPORT mgl_parser_calc_(uintptr_t *p, const char *str,int l)
 //---------------------------------------------------------------------------
 void MGL_EXPORT mgl_parser_del_all(HMPR p)	{	p->DeleteAll();	}
 void MGL_EXPORT mgl_parser_del_all_(uintptr_t *p)	{	_PR_->DeleteAll();	}
+//---------------------------------------------------------------------------
+void MGL_EXPORT mgl_parser_load(HMPR pr, const char *so_name)
+{
+#if MGL_HAVE_LTDL
+	lt_dlhandle so = lt_dlopen(so_name);
+	if(!so)	return;
+	const mglCommand *cmd = (const mglCommand *)lt_dlsym(so,"mgl_cmd_extra");
+
+	int i, mp, mc, exist=true;
+	// determine the number of symbols
+	for(i=0;pr->Cmd[i].name[0];i++){};	mp = i;
+	for(i=0;cmd[i].name[0];i++)
+		if(!pr->FindCommand(cmd[i].name))	exist=false;
+	if(exist)	{	lt_dlclose(so);	return;	}	// all commands already presents
+	else	pr->DllOpened.push_back(so);
+	mc = i;
+	mglCommand *buf = new mglCommand[mp+mc+1];
+	memcpy(buf, pr->Cmd, mp*sizeof(mglCommand));
+	memcpy(buf+mp, cmd, (mc+1)*sizeof(mglCommand));
+	qsort(buf, mp+mc, sizeof(mglCommand), mgl_cmd_cmp);
+	if(pr->Cmd!=mgls_base_cmd)	delete []pr->Cmd;
+	pr->Cmd = buf;
+#endif
+}
+void MGL_EXPORT mgl_parser_load_(uintptr_t *p, const char *dll_name,int l)
+{	char *s=new char[l+1];	memcpy(s,dll_name,l);	s[l]=0;
+	mgl_parser_load(_PR_, s);	delete []s;	}
 //---------------------------------------------------------------------------

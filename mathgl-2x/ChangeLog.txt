@@ -1,22 +1,23 @@
-2.3.1 Released 20 September 2014
+2.3.1 Released 27 September 2014
 
+* Add MGL command 'load' for loading MGL commands from external DLL (or .so) module.
 * Add Logo() function to draw bitmap (logo), which is stretched along whole axis range
+* Add MGL command 'reset' which restore default settings and clear image (i.e. call DefaultPlotParam()).
 * Change y coordinate at x-z projection.
 * Improve projection of 'unrotatable' objects (like legend, title, ...).
+* Add projection (Ternary&8) which is the same as usual (Ternary&4) but don't print text on projections
 * Improve orientation of axis ticks and labels.
 * Add mglWnd::SetDrawFunc().
 * Add mgl_set_global_warn() and mgl_get_global_warn() for set/get messages of global scope.
-* Add MGL command 'reset' which restore default settings and clear image (i.e. call DefaultPlotParam()).
 * Make copying private of mglGraph and derived.
 * Add virtual destructors.
+* Add some static functions for mglGraph.
+* Add option "-n" to mglconv to disable automatic saving of the image.
+* Add option "-s" to mglview and mglconv to run setup script before the main one.
 * Become compatible with giflib 5.1.
 * Add light scaling at MGLD import.
 * Add scaling of frames at Adjust().
-* Add projection (Ternary&8) which is the same as usual (Ternary&4) but don't print text on projections
 * Possible bugfix for 32bit gcc.
-* Add some static functions for mglGraph.
-* Add option "-n" to mglconv to disable automatic saving of the image.
-* Add option -s to mglview and mglconv to run setup script before the main one.
 * Update docs.
 
 

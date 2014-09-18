@@ -569,7 +569,7 @@ public:
 	/// Draws the arc around axis 'z' with center at p0 and starting from p1, by color stl and angle a (in degrees)
 	inline void Arc(mglPoint p0, mglPoint p1, double a, const char *stl="r")
 	{	mgl_arc_ext(gr, p0.x,p0.y,p0.z, 0,0,1, p1.x,p1.y,p0.z, a,stl);	}
-	/// Draws bitmap logo which is stretched along whole axis range
+	/// Draws bitmap (logo) which is stretched along whole axis range
 	inline void Logo(long w, long h, const unsigned char *rgba, bool smooth=false, const char *opt="")
 	{	mgl_logo(gr, w, h, rgba, smooth, opt);	}
 	inline void Logo(const char *fname, bool smooth=false, const char *opt="")
@@ -1327,6 +1327,9 @@ public:
 	/// Get number of defined commands
 	inline long GetCmdNum()
 	{	return mgl_parser_cmd_num(pr);	}
+	/// Load new commands from external dynamic Library (must have "const mglCommand *mgl_cmd_extra" variable)
+	inline void LoadDLL(const char *fname)
+	{	mgl_parser_load(pr, fname);	}
 
 	/// Set value for parameter $N
 	inline void AddParam(int id, const char *str)

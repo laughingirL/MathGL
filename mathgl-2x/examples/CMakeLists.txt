@@ -32,3 +32,9 @@ if(enable-qt)
 		target_link_libraries(mgl_qt_example mgl-qt4)
 	endif(enable-qt5)
 endif(enable-qt)
+
+if(MGL_HAVE_LTDL)
+	include_directories(${LTDL_INCLUDE_DIR})
+	add_library(mgl_module MODULE mgl_module.cpp)
+endif(MGL_HAVE_LTDL)
+

@@ -268,7 +268,7 @@ MathGL имеет встроенный скриптовый язык MGL для 
 
 @deftypefn{Метод класса @code{mglParse} (C++)} @code{void} DeleteAll ()
 @deftypefnx {Функция С} @code{void} mgl_parser_del_all (@code{HMPR} p)
-Удаляет все переменные в данном классе.
+Удаляет все переменные и сбрасывает список команд к списку по умолчанию в данном классе.
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglParse}} @code{void} RestoreOnce ()

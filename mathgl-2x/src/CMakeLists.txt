@@ -1,7 +1,7 @@
 set(mgl_src
 	addon.cpp axis.cpp base_cf.cpp base.cpp canvas_cf.cpp canvas.cpp cont.cpp crust.cpp
 	complex.cpp complex_ex.cpp complex_io.cpp fft.cpp data_gr.cpp
-	data.cpp data_io.cpp data_ex.cpp data_png.cpp 
+	data.cpp data_io.cpp data_ex.cpp data_png.cpp
 	export_2d.cpp export_3d.cpp eval.cpp evalp.cpp exec.cpp export.cpp
 	fit.cpp font.cpp obj.cpp other.cpp parser.cpp pde.cpp pixel.cpp
 	plot.cpp prim.cpp surf.cpp tex_table.cpp vect.cpp volume.cpp evalc.cpp
@@ -87,6 +87,11 @@ if(MGL_HAVE_HDF4)
 	target_link_libraries(mgl ${HDF4MF_LIB} ${HDF4_LIB})
 	include_directories(${HDF4_INCLUDE_DIR})
 endif(MGL_HAVE_HDF4)
+
+if(MGL_HAVE_LTDL)
+	target_link_libraries(mgl ${LTDL_LIB} )
+	include_directories(${LTDL_INCLUDE_DIR})
+endif(MGL_HAVE_LTDL)
 
 if(MGL_HAVE_GSL)
 	target_link_libraries(mgl ${GSL_LIB} ${GSL_CBLAS_LIB} )
