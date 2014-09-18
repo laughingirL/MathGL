@@ -30,9 +30,6 @@
 #include "mgl2/base.h"
 #include "mgl2/font.h"
 #include "def_font.cpp"
-#if MGL_HAVE_LTDL
-#include <ltdl.h>
-#endif
 //-----------------------------------------------------------------------------
 extern mglTeXsymb mgl_tex_symb[];
 extern long mgl_tex_num;
@@ -819,9 +816,6 @@ extern pthread_mutex_t mutexRnd;
 float mgl_cos[360];
 void MGL_NO_EXPORT mgl_init()
 {
-#if MGL_HAVE_LTDL
-	lt_dlinit();
-#endif
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_init(&mutexRnd,0);
 #endif

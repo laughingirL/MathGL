@@ -152,9 +152,18 @@ mglParser::mglParser(bool setsize)
 	AllowSetSize=setsize;	AllowFileIO=true;
 	Once = true;
 	fval = new mglData[40];
+#if MGL_HAVE_LTDL
+	lt_dlinit();
+#endif
 }
 //-----------------------------------------------------------------------------
-mglParser::~mglParser()	{	DeleteAll();	delete []fval;	}
+mglParser::~mglParser()
+{
+	DeleteAll();	delete []fval;
+#if MGL_HAVE_LTDL
+	lt_dlexit();
+#endif
+}
 //-----------------------------------------------------------------------------
 void mglParser::DeleteAll()
 {
