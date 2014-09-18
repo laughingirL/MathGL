@@ -905,40 +905,61 @@ void MGL_EXPORT mgl_table_(uintptr_t *gr, mreal *x, mreal *y, uintptr_t *val, co
 //	Logo series
 //
 //-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_logo(HMGL gr, long w, long h, const unsigned char *rgba, const char *opt)
+void MGL_EXPORT mgl_logo(HMGL gr, long w, long h, const unsigned char *rgba, int smooth, const char *opt)
 {
 	if(w<1 || h<1 || !rgba)	{	gr->SetWarn(mglWarnLow,"Logo");	return;	}
 	static int cgid=1;	gr->StartGroup("Logo",cgid++);
 	mreal z = gr->SaveState(opt);
 	if(mgl_isnan(z))	z = gr->Min.z;
-	mreal x1 = gr->Min.x, y1 = gr->Min.y;
-	mreal dx = (gr->Max.x-x1)/w, dy = (gr->Max.y-y1)/h;
-	gr->Reserve(4*(w+1)*(h+1));
-	for(long j=0;j<h;j++)	for(long i=0;i<w;i++)
+	mreal x1 = gr->Min.x, y1 = gr->Min.y, dx, dy;
+	if(!smooth || w<2 || h<2)
 	{
-		long i0 = 4*(i+w*j), k1,k2,k3,k4;
-		mglColor c(rgba[i0]/255.,rgba[i0+1]/255.,rgba[i0+2]/255.,rgba[i0+3]/255.);
-		k1 = gr->AddPnt(mglPoint(x1+dx*i,y1+dy*j,z),0);	gr->SetRGBA(k1,c);
-		k2 = gr->AddPnt(mglPoint(x1+dx*(i+1),y1+dy*j,z),0);	gr->SetRGBA(k2,c);
-		k3 = gr->AddPnt(mglPoint(x1+dx*i,y1+dy*(j+1),z),0);	gr->SetRGBA(k3,c);
-		k4 = gr->AddPnt(mglPoint(x1+dx*(i+1),y1+dy*(j+1),z),0);	gr->SetRGBA(k4,c);
-		gr->quad_plot(k1,k2,k3,k4);
+		dx = (gr->Max.x-x1)/w;	dy = (gr->Max.y-y1)/h;
+		gr->Reserve(4*(w+1)*(h+1));
+		for(long j=0;j<h;j++)	for(long i=0;i<w;i++)
+		{
+			long i0 = 4*(w-1-i+w*j), k1,k2,k3,k4;
+			mglColor c(rgba[i0]/255.,rgba[i0+1]/255.,rgba[i0+2]/255.);
+			k1 = gr->AddPnt(mglPoint(x1+dx*i,y1+dy*j,z),0);	gr->SetRGBA(k1,c);
+			k2 = gr->AddPnt(mglPoint(x1+dx*(i+1),y1+dy*j,z),0);	gr->SetRGBA(k2,c);
+			k3 = gr->AddPnt(mglPoint(x1+dx*i,y1+dy*(j+1),z),0);	gr->SetRGBA(k3,c);
+			k4 = gr->AddPnt(mglPoint(x1+dx*(i+1),y1+dy*(j+1),z),0);	gr->SetRGBA(k4,c);
+			gr->quad_plot(k1,k2,k3,k4);
+		}
+	}
+	else
+	{
+		dx = (gr->Max.x-x1)/(w-1);	dy = (gr->Max.y-y1)/(h-1);
+		gr->Reserve(w*h);
+		long *pos = new long[w*h];
+		for(long j=0;j<h;j++)	for(long i=0;i<w;i++)
+		{
+			long i0 = 4*(w-1-i+w*j), i1 = i+w*j;
+			pos[i1] = gr->AddPnt(mglPoint(x1+dx*i,y1+dy*j,z),0);
+			gr->SetRGBA(pos[i1],mglColor(rgba[i0]/255.,rgba[i0+1]/255.,rgba[i0+2]/255.));
+		}
+		for(long j=0;j<h-1;j++)	for(long i=0;i<w-1;i++)
+		{
+			long i1 = i+w*j;
+			gr->quad_plot(pos[i1],pos[i1+1],pos[i1+w],pos[i1+1+w]);
+		}
+		delete []pos;
 	}
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
 bool MGL_NO_EXPORT mgl_read_image(unsigned char **g, int &w, int &h, const char *fname);
-void MGL_EXPORT mgl_logo_file(HMGL gr, const char *fname, const char *opt)
+void MGL_EXPORT mgl_logo_file(HMGL gr, const char *fname, int smooth, const char *opt)
 {
 	unsigned char *g = 0;
 	int w=0, h=0;
 	if(!mgl_read_image(&g,w,h,fname))	return;
-	mgl_logo(gr,w,h,g,opt);
+	mgl_logo(gr,w,h,g,smooth,opt);
 	delete []g;
 }
 //-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_logo_file_(uintptr_t *gr, const char *fname, const char *opt,int l,int n)
+void MGL_EXPORT mgl_logo_file_(uintptr_t *gr, const char *fname, int *smooth, const char *opt,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,opt,n);	f[n]=0;
-	mgl_logo_file(_GR_,s,f);	delete []s;		delete []f;	}
+	mgl_logo_file(_GR_,s,*smooth,f);	delete []s;		delete []f;	}
 //-----------------------------------------------------------------------------

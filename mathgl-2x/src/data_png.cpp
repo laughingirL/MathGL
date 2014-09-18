@@ -97,7 +97,7 @@ bool MGL_NO_EXPORT mgl_read_image(unsigned char **g, int &w, int &h, const char 
 			if(wi>w)	wi = w;
 			if(hi>h)	hi = h;
 		}
-		else	{	w = wi;	h = hi;	*g = new unsigned char[w*h];	}
+		else	{	w = wi;	h = hi;	*g = new unsigned char[4*w*h];	}
 		if(type==PNG_COLOR_TYPE_RGB_ALPHA)
 #pragma omp parallel for
 			for(long i=0;i<hi;i++)	memcpy(*g+4*w*i,rows[i],4*wi);
@@ -146,7 +146,7 @@ bool MGL_NO_EXPORT mgl_read_image(unsigned char **g, int &w, int &h, const char 
 			if(hi>h)	hi = h;
 			if(wi>w)	wi = w;
 		}
-		else	{	w = wi;	h = hi;	*g = new unsigned char[w*h];	}
+		else	{	w = wi;	h = hi;	*g = new unsigned char[4*w*h];	}
 		for(long i=0;i<hi;i++)
 		{
 			jpeg_read_scanlines(&info, &buf, 1);
@@ -189,7 +189,8 @@ void MGL_EXPORT mgl_data_import(HMDT d, const char *fname, const char *scheme,mr
 			d->a[j+d->nx*i] = v1 + pos*(v2-v1)/num;
 		}
 	}
-	delete []g;	delete []c;
+	delete []g;
+	delete []c;
 }
 //-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgl_png_save(const char *fname, int w, int h, unsigned char **p);

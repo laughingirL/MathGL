@@ -1249,7 +1249,8 @@ int MGL_NO_EXPORT mgls_face(mglGraph *gr, long , mglArg *a, const char *k, const
 int MGL_NO_EXPORT mgls_logo(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;
-	if(!strcmp(k,"s"))	gr->Logo(a[0].s.c_str(),opt);
+	if(!strcmp(k,"s"))	gr->Logo(a[0].s.c_str(),false,opt);
+	else if(!strcmp(k,"sn"))	gr->Logo(a[0].s.c_str(),iint(a[1].v),opt);
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -3033,7 +3034,7 @@ mglCommand mgls_base_cmd[] = {
 	{"line","Draw line","line x1 y1 x2 y2 ['fmt']|x1 y1 z1 x2 y2 z2 ['fmt']", mgls_line ,13},
 	{"list","Creates new variable from list of numbers or data","list Var v1 ...|Var D1 ...", 0, 6},
 	{"loadfont","Load fontfaces","loadfont ['face']", mgls_loadfont ,15},
-	{"logo","Draw bitmap (logo) along axis range","logo 'fname'", mgls_logo ,13},
+	{"logo","Draw bitmap (logo) along axis range","logo 'fname' [smooth]", mgls_logo ,13},
 	{"map","Draw mapping plot","map Udat Vdat ['fmt']|Xdat Ydat Udat Vdat ['fmt']", mgls_map ,10},
 	{"mark","Draw mark plot for 1D data","mark Ydat Rdat ['fmt']|Xdat Ydat Rdat ['fmt']|Xdat Ydat Zdat Rdat ['fmt']", mgls_mark ,7},
 	{"marksize","Set size of markers","marksize val", mgls_marksize ,2},
