@@ -129,7 +129,7 @@
   \immediate\write\mgl@script{stop}%
   \mgl@func%
   \immediate\closeout\mgl@script%
-  \immediate\write18{\mglconv@dir mglconv -n \mgl@dir\jobname.mgl}%
+  \immediate\write18{\mglconv@dir/mglconv -n \mgl@dir\jobname.mgl}%
 }
 
 \def\mglsetup@defined{}
@@ -325,7 +325,7 @@
 }
 \def\endmglcode{%
   \immediate\closeout\mgl@out@stream%
-  \immediate\write18{\mglconv@dir mglconv \mgl@dir\this@script.mgl -o \mgl@dir\this@script\mgl@image@ext}%
+  \immediate\write18{\mglconv@dir/mglconv \mgl@dir\this@script.mgl -o \mgl@dir\this@script\mgl@image@ext}%
   \mgl@include@image{\mgl@dir\this@script}%
 }
 
@@ -515,7 +515,7 @@
 \newcommand\mglgraphics[2][]{%
   \def\graph@keys{}%
   \setkeys{mgl@keys}{#1}%
-  \immediate\write18{\mglconv@dir mglconv \mgl@dir#2.mgl -o \mgl@dir#2\mgl@image@ext}
+  \immediate\write18{\mglconv@dir/mglconv \mgl@dir#2.mgl -o \mgl@dir#2\mgl@image@ext}
   \mgl@include@image{\mgl@dir#2}%
 }
 
