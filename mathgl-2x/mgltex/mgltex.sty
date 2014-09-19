@@ -115,6 +115,11 @@
 }
 \@onlypreamble\mgldir
 
+\def\mglconv@dir{}
+\def\mglconvdir#1{%
+  \def\mglconv@dir{#1}%
+}
+
 \newwrite\mgl@script
 \AtBeginDocument{%
   \immediate\openout\mgl@script=\mgl@dir\jobname.mgl%
@@ -124,7 +129,7 @@
   \immediate\write\mgl@script{stop}%
   \mgl@func%
   \immediate\closeout\mgl@script%
-  \immediate\write18{mglconv -n \mgl@dir\jobname.mgl}%
+  \immediate\write18{\mglconv@dir mglconv -n \mgl@dir\jobname.mgl}%
 }
 
 \def\mglsetup@defined{}
@@ -233,10 +238,10 @@
     \IfFileExists{#1.tex}{%
       \include{#1}%
     }{%
-      \mgl@img@not@found%
+      \mgl@img@not@found{#1}%
     }%
   \else%
-    \def\next@action{\mgl@img@not@found}%
+  \def\next@action{\mgl@img@not@found{#1}}%
     \@for\img@ext:=\Gin@extensions\do{%
       \IfFileExists{#1\img@ext}{%
         \def\next@action{%
@@ -247,7 +252,8 @@
     \next@action%
   \fi%
 }
-\def\mgl@img@not@found{%
+\def\mgl@img@not@found#1{%
+  \PackageWarning{\mgl@name}{MGL image "#1" not found}%
   \framebox[10em]{%
     \centering%
     \bfseries\Huge%
@@ -319,7 +325,7 @@
 }
 \def\endmglcode{%
   \immediate\closeout\mgl@out@stream%
-  \immediate\write18{mglconv \mgl@dir\this@script.mgl -o \mgl@dir\this@script\mgl@image@ext}%
+  \immediate\write18{\mglconv@dir mglconv \mgl@dir\this@script.mgl -o \mgl@dir\this@script\mgl@image@ext}%
   \mgl@include@image{\mgl@dir\this@script}%
 }
 
@@ -431,7 +437,7 @@
   \immediate\closeout\mgl@out@stream%
   \immediate\openin\mgl@in@stream=\mgl@dir\this@script.mgl%
   \begingroup%
-  \list{\itshape\footnotesize\arabic{mgl@verb@line@no}}{}%
+  \list{\itshape\footnotesize\arabic{mgl@verb@line@no}.}{}%
   \setlength{\labelsep}{1em}%
   \itemsep\z@skip%
   \leftskip\z@skip\rightskip\z@skip%
@@ -461,7 +467,7 @@
 \newcounter{mgl@verb@line@no}
 \def\mglverbatim{%
   \setcounter{mgl@verb@line@no}{0}%
-  \list{\itshape\footnotesize\arabic{mgl@verb@line@no}}{}%
+  \list{\itshape\footnotesize\arabic{mgl@verb@line@no}.}{}%
   \setlength{\labelsep}{1em}%
   \itemsep\z@skip%
   \leftskip\z@skip\rightskip\z@skip%
@@ -509,7 +515,7 @@
 \newcommand\mglgraphics[2][]{%
   \def\graph@keys{}%
   \setkeys{mgl@keys}{#1}%
-  \immediate\write18{mglconv \mgl@dir#2.mgl -o \mgl@dir#2\mgl@image@ext}
+  \immediate\write18{\mglconv@dir mglconv \mgl@dir#2.mgl -o \mgl@dir#2\mgl@image@ext}
   \mgl@include@image{\mgl@dir#2}%
 }
 
@@ -517,7 +523,7 @@
   \setcounter{mgl@verb@line@no}{0}%
   \immediate\openin\mgl@in@stream=\mgl@dir#1.mgl%
   \begingroup%
-  \list{\itshape\footnotesize\arabic{mgl@verb@line@no}}{}%
+  \list{\itshape\footnotesize\arabic{mgl@verb@line@no}.}{}%
   \setlength{\labelsep}{1em}%
   \itemsep\z@skip%
   \leftskip\z@skip\rightskip\z@skip%
@@ -530,3 +536,9 @@
 }
 
 \def\mglTeX{mgl\TeX}
+
+%%%%%%%%%%%%%%%%%%%% TODO: %%%%%%%%%%%%%%%%%%%%
+%% 1. \mglpause and \mglresume commands to pause and resume execution of mgltex
+%% 2. Optional argument in "mglverbatim" and related to activate/deactivate line numbering
+%% 3. Low-lwvwl command to set "mglverbatim" and related numbering style
+%%%%%%%%%%%%%%%%%%%% TODO: %%%%%%%%%%%%%%%%%%%%
