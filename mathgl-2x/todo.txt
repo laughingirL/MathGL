@@ -44,6 +44,9 @@ ZZ. Update *.i for new functions {before release!!!}
 
 7. Improve z-order for rapidly oscillating surfaces
 10. Manual rotation angle for axis ticks (as "value" option?!)
+11. Export to XPM (like GIF)
+12. NAN in Fit()
+13. Title and perspective
 
 ============= DOCUMENTATION =============
 
@@ -56,6 +59,7 @@ D. Docs about JS interface
 2. mgltex documentation + sample
 3. Text about Logo() -- no export to some 3d formats
 4. MGL command to 'load' commands from *.so or *.dll + sample + must contain "const mglCommand *mgl_cmd_extra" -- test on win32 && win64!!!
+5. mgl_get_fit_chi()
 
 YY. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using Stem()
 

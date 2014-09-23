@@ -1230,8 +1230,11 @@ public:
 	inline void PutsFit(mglPoint p, const char *prefix=0, const char *font="", double size=-1)
 	{	mgl_puts_fit(gr, p.x, p.y, p.z, prefix, font, size);	}
 	/// Get last fitted formula
-	inline const char *GetFit()
+	inline const char *GetFit()	const
 	{	return mgl_get_fit(gr);	}
+	/// Get chi for last fitted formula
+	static inline mreal GetFitChi()
+	{	return mgl_get_fit_chi();	}
 
 	/// Solve PDE with x,y,z in range [Min, Max]
 	inline mglData PDE(const char *ham, const mglDataA &ini_re, const mglDataA &ini_im, double dz=0.1, double k0=100, const char *opt="")

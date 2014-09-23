@@ -46,6 +46,7 @@ HMDT MGL_EXPORT mgl_hist_xy(HMGL gr, HCDT x, HCDT y, HCDT a, const char *opt);
 HMDT MGL_EXPORT mgl_hist_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *opt);
 
 void MGL_EXPORT mgl_puts_fit(HMGL gr, double x, double y, double z, const char *prefix, const char *font, double size);
+mreal MGL_EXPORT mgl_get_fit_chi();
 //-----------------------------------------------------------------------------
 uintptr_t MGL_EXPORT mgl_fit_1_(uintptr_t* gr, uintptr_t* y, const char *eq, const char *vars, uintptr_t *ini, const char *opt,int, int l, int n);
 uintptr_t MGL_EXPORT mgl_fit_2_(uintptr_t* gr, uintptr_t* z, const char *eq, const char *vars, uintptr_t *ini, const char *opt,int, int l, int n);
@@ -63,6 +64,7 @@ uintptr_t MGL_EXPORT mgl_hist_xy_(uintptr_t* gr, uintptr_t* x, uintptr_t* y, uin
 uintptr_t MGL_EXPORT mgl_hist_xyz_(uintptr_t* gr, uintptr_t* x, uintptr_t* y, uintptr_t* z, uintptr_t* a, const char *opt,int);
 
 void MGL_EXPORT mgl_puts_fit_(uintptr_t* gr, mreal *x, mreal *y, mreal *z, const char *prefix, const char *font, mreal *size, int l, int n);
+mreal MGL_EXPORT mgl_get_fit_chi_();
 //-----------------------------------------------------------------------------
 #ifdef __cplusplus
 }

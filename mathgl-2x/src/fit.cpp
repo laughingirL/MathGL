@@ -32,6 +32,10 @@ mglData MGL_NO_EXPORT mglFormulaCalc(const char *str, const std::vector<mglDataA
 //-----------------------------------------------------------------------------
 int mglFitPnts=100;		///< Number of output points in fitting
 char mglFitRes[1024];	///< Last fitted formula
+mreal mglFitChi=NAN;	///< Chi value for last fitted formula
+//-----------------------------------------------------------------------------
+mreal MGL_EXPORT mgl_get_fit_chi()	{	return mglFitChi;	}
+mreal MGL_EXPORT mgl_get_fit_chi_()	{	return mglFitChi;	}
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_puts_fit(HMGL gr, double x, double y, double z, const char *pre, const char *font, double size)
 {
@@ -179,6 +183,7 @@ mreal MGL_NO_EXPORT mgl_fit_base(mglFitData &fd, mreal *ini)
 void mglPrepareFitEq(mglBase *gr,mreal chi, const char *eq, const char *var, mreal *par)
 {
 	char buf[32]="";
+	mglFitChi = chi;
 	snprintf(mglFitRes,1024,"chi=%g",chi);
 	size_t i,k,len=strlen(var);
 	for(i=0;i<len;i++)

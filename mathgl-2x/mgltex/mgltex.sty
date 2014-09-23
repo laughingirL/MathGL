@@ -117,14 +117,14 @@
 
 \newwrite\mgl@script
 \AtBeginDocument{%
-  \immediate\openout\mgl@script=\mgl@dir\jobname.mgl%
+  \immediate\openout\mgl@script="\mgl@dir\jobname.mgl"%
 }
 \AtEndDocument{%
   \immediate\write\mgl@script{}%
   \immediate\write\mgl@script{stop}%
   \mgl@func%
   \immediate\closeout\mgl@script%
-  \immediate\write18{mglconv -n \mgl@dir\jobname.mgl}%
+  \immediate\write18{mglconv -n "\mgl@dir\jobname.mgl"}%
 }
 
 \def\mglsetup@defined{}
@@ -320,7 +320,7 @@
 }
 \def\endmglcode{%
   \immediate\closeout\mgl@out@stream%
-  \immediate\write18{mglconv \mgl@dir\this@script.mgl -o \mgl@dir\this@script\mgl@image@ext}%
+  \immediate\write18{mglconv "\mgl@dir\this@script.mgl" -o "\mgl@dir\this@script\mgl@image@ext"}%
   \mgl@include@image{\mgl@dir\this@script}%
 }
 
@@ -395,7 +395,7 @@
   \let\do\@makeother \dospecials%
   \endlinechar`\^^M \catcode`\^^M\active%
   \obeyspaces%
-  \immediate\openout\mgl@out@stream=\mgl@dir\this@script.mgl%
+  \immediate\openout\mgl@out@stream="\mgl@dir\this@script.mgl"%
   \mglblock@ignore@line%
 }
 \def\mglblock@ignore@line#1{%
@@ -430,7 +430,7 @@
 \newread\mgl@in@stream
 \def\endmglblock{%
   \immediate\closeout\mgl@out@stream%
-  \immediate\openin\mgl@in@stream=\mgl@dir\this@script.mgl%
+  \immediate\openin\mgl@in@stream="\mgl@dir\this@script.mgl"%
   \begingroup%
   \list{\itshape\footnotesize\arabic{mgl@verb@line@no}.}{}%
   \setlength{\labelsep}{1em}%
@@ -510,13 +510,13 @@
 \newcommand\mglgraphics[2][]{%
   \def\graph@keys{}%
   \setkeys{mgl@keys}{#1}%
-  \immediate\write18{mglconv \mgl@dir#2.mgl -o \mgl@dir#2\mgl@image@ext}
+  \immediate\write18{mglconv "\mgl@dir#2.mgl" -o "\mgl@dir#2\mgl@image@ext"}
   \mgl@include@image{\mgl@dir#2}%
 }
 
 \def\mglinclude#1{%
   \setcounter{mgl@verb@line@no}{0}%
-  \immediate\openin\mgl@in@stream=\mgl@dir#1.mgl%
+  \immediate\openin\mgl@in@stream="\mgl@dir#1.mgl"%
   \begingroup%
   \list{\itshape\footnotesize\arabic{mgl@verb@line@no}.}{}%
   \setlength{\labelsep}{1em}%
