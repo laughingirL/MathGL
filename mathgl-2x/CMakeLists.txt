@@ -80,6 +80,7 @@ CMAKE_DEPENDENT_OPTION(enable-doc-pdf-en "Enable English PDF documentation" OFF 
 CMAKE_DEPENDENT_OPTION(enable-doc-prc "Enable PDF samples for HTML docs" OFF "NOT enable-all-docs" ON)
 CMAKE_DEPENDENT_OPTION(enable-doc-json "Enable JSON samples for HTML docs" OFF "NOT enable-all-docs" ON)
 option(enable-texi2html "Use texi2html (obsolete package) instead of texi2any" OFF)
+CMAKE_DEPENDENT_OPTION(enable-tex "Enable example of mgl scripting in LATEX docs" OFF "NOT enable-lgpl" ON)
 
 CMAKE_DEPENDENT_OPTION(enable-zlib "Enable zlib support" ON "NOT enable-all" ON)
 CMAKE_DEPENDENT_OPTION(enable-png "Enable png support" ON "NOT enable-all" ON)
@@ -507,3 +508,11 @@ if(NOT MSVC AND NOT BORLAND)
 	endif(MGL_HAVE_DOC_HTML OR MGL_HAVE_DOC_SITE OR MGL_HAVE_DOC_INFO OR MGL_HAVE_DOC_PDF_RU OR MGL_HAVE_DOC_PDF_EN )
 
 endif(NOT MSVC AND NOT BORLAND)
+
+if(NOT enable-lgpl AND enable-tex)
+	find_program(findpdflatex pdflatex)
+	if(NOT findpdflatex)
+		message(SEND_ERROR "Couldn't find pdflatex needed for LATEX example building.")
+	endif(NOT findpdflatex)
+	add_subdirectory( mgltex )
+endif(NOT enable-lgpl AND enable-tex)
