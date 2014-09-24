@@ -1345,6 +1345,8 @@ public:
 	inline void AllowSetSize(bool allow)	{	mgl_parser_allow_setsize(pr, allow);	}
 	/// Allow reading/saving files
 	inline void AllowFileIO(bool allow)		{	mgl_parser_allow_file_io(pr, allow);	}
+	/// Allow loading commands from external libraries
+	inline void AllowDllCall(bool allow)	{	mgl_parser_allow_dll_call(pr, allow);	}
 	/// Set flag to stop script parsing
 	inline void Stop()	{	mgl_parser_stop(pr);	}
 

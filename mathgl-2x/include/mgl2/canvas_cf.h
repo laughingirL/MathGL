@@ -509,6 +509,9 @@ void MGL_EXPORT mgl_parser_allow_setsize_(uintptr_t* p, int *a);
 /// Allow reading/saving files
 void MGL_EXPORT mgl_parser_allow_file_io(HMPR p, int a);
 void MGL_EXPORT mgl_parser_allow_file_io_(uintptr_t* p, int *a);
+/// Allow loading commands from external libraries
+void MGL_EXPORT mgl_parser_allow_dll_call(HMPR p, int a);
+void MGL_EXPORT mgl_parser_allow_dll_call_(uintptr_t* p, int *a);
 /// Set flag to stop script parsing
 void MGL_EXPORT mgl_parser_stop(HMPR p);
 void MGL_EXPORT mgl_parser_stop_(uintptr_t* p);

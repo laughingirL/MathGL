@@ -160,9 +160,9 @@ public:
 	inline void PrintInfo(FILE *fp) const
 	{	if(fp)	{	fprintf(fp,"%s",mgl_data_info(this));	fflush(fp);	}	}
 	/// Get maximal value of the data
-	mreal Maximal() const	{	return mgl_data_max(this);	}
+	virtual mreal Maximal() const	{	return mgl_data_max(this);	}
 	/// Get minimal value of the data
-	mreal Minimal() const	{	return mgl_data_min(this);	}
+	virtual mreal Minimal() const	{	return mgl_data_min(this);	}
 	/// Get maximal value of the data which is less than 0
 	inline mreal MaximalNeg() const	{	return mgl_data_neg_max(this);	}
 	/// Get minimal value of the data which is larger than 0

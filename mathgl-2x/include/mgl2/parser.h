@@ -94,6 +94,7 @@ public:
 #endif
 	std::vector<mglDataA*> DataList;	///< List with data and its names
 	std::vector<mglNum*> NumList;	///< List with numbers and its names
+	bool AllowDllCall;	///< Allow calls from external dynamic libraries
 	bool AllowSetSize;	///< Allow using setsize command
 	bool AllowFileIO;	///< Allow reading/saving files
 	bool Stop;			///< Stop command was. Flag prevent further execution

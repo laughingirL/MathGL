@@ -60,6 +60,7 @@ D. Docs about JS interface
 3. Text about Logo() -- no export to some 3d formats
 4. MGL command to 'load' commands from *.so or *.dll + sample + must contain "const mglCommand *mgl_cmd_extra" -- test on win32 && win64!!!
 5. mgl_get_fit_chi()
+6. AllowDllCall()
 
 YY. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using Stem()
 

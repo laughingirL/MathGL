@@ -149,7 +149,7 @@ mglParser::mglParser(bool setsize)
 	for(long i=0;i<40;i++)	par[i]=L"";
 
 	Cmd = mgls_base_cmd;
-	AllowSetSize=setsize;	AllowFileIO=true;
+	AllowSetSize=setsize;	AllowFileIO=true;	AllowDllCall=true;
 	Once = true;
 	fval = new mglData[40];
 #if MGL_HAVE_LTDL
@@ -951,6 +951,7 @@ void MGL_EXPORT mgl_parser_restore_once(HMPR p)	{	p->RestoreOnce();	}
 void MGL_EXPORT mgl_parser_stop(HMPR p)	{	p->Stop = true;		}
 void MGL_EXPORT mgl_parser_allow_setsize(HMPR p, int a)	{	p->AllowSetSize= a;	}
 void MGL_EXPORT mgl_parser_allow_file_io(HMPR p, int a)	{	p->AllowFileIO = a;	}
+void MGL_EXPORT mgl_parser_allow_dll_call(HMPR p, int a){	p->AllowDllCall = a;	}
 //-----------------------------------------------------------------------------
 #define _PR_	((mglParser *)(*p))
 uintptr_t MGL_EXPORT mgl_create_parser_()	{	return uintptr_t(new mglParser);	}
@@ -978,6 +979,7 @@ void MGL_EXPORT mgl_parse_text_(uintptr_t* gr, uintptr_t* p, const char *str, in
 void MGL_EXPORT mgl_parser_restore_once_(uintptr_t* p)	{	_PR_->RestoreOnce();	}
 void MGL_EXPORT mgl_parser_allow_setsize_(uintptr_t* p, int *a)	{	_PR_->AllowSetSize= *a;	}
 void MGL_EXPORT mgl_parser_allow_file_io_(uintptr_t* p, int *a)	{	_PR_->AllowFileIO = *a;	}
+void MGL_EXPORT mgl_parser_allow_dll_call_(uintptr_t* p, int *a){	_PR_->AllowDllCall= *a;	}
 void MGL_EXPORT mgl_parser_stop_(uintptr_t* p)	{	_PR_->Stop = true;	}
 //-----------------------------------------------------------------------------
 long MGL_EXPORT mgl_use_parser(HMPR pr, int inc)
@@ -1036,10 +1038,12 @@ void MGL_EXPORT mgl_parser_del_all_(uintptr_t *p)	{	_PR_->DeleteAll();	}
 //---------------------------------------------------------------------------
 void MGL_EXPORT mgl_parser_load(HMPR pr, const char *so_name)
 {
+	if(!pr->AllowDllCall)	return;
 #if MGL_HAVE_LTDL
 	lt_dlhandle so = lt_dlopen(so_name);
 	if(!so)	return;
 	const mglCommand *cmd = (const mglCommand *)lt_dlsym(so,"mgl_cmd_extra");
+	if(!cmd)	return;
 
 	int i, mp, mc, exist=true;
 	// determine the number of symbols
