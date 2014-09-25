@@ -11,6 +11,7 @@ MathGL library supports the simplest scripts for data handling and plotting. The
 @menu
 * MGL definition::
 * Program flow commands::
+* LaTeX package::
 @ifclear UDAV
 * mglParse class::
 @end ifclear
@@ -62,12 +63,7 @@ Command may have several set of possible arguments (for example, @code{plot ydat
 
 @c ------------------------------------------------------------------
 @external{}
-@ifclear UDAV
-@node Program flow commands, mglParse class, MGL definition, MGL scripts
-@end ifclear
-@ifset UDAV
-@node Program flow commands, , MGL definition, MGL scripts
-@end ifset
+@node Program flow commands, LaTeX package, MGL definition, MGL scripts
 @section Program flow commands
 @nav{}
 
@@ -111,18 +107,24 @@ Sets @var{N}-th script argument to palette character at position evaluated from 
 
 @cindex call
 @anchor{call}
-@deftypefn {MGL command} {} call 'fname' [ARG1 ARG2 ... ARG9]
+@deftypefn {MGL command} {} call 'funcname' [ARG1 ARG2 ... ARG9]
 Executes function @var{fname} (or script if function is not found). Optional arguments will be passed to functions. See also @ref{func}.
 @end deftypefn
 @cindex func
 @anchor{func}
-@deftypefn {MGL command} {} func 'fname' [narg=0]
+@deftypefn {MGL command} {} func 'funcname' [narg=0]
 Define the function @var{fname} and number of required arguments. The arguments will be placed in script parameters $1, $2, ... $9. Note, you should stop script execution before function definition(s) by command @ref{stop}. See also @ref{return}.
 @end deftypefn
 @cindex return
 @anchor{return}
 @deftypefn {MGL command} {} return
 Return from the function. See also @ref{func}.
+@end deftypefn
+
+@cindex load
+@anchor{load}
+@deftypefn {MGL command} {} load 'filename'
+Load additional MGL command from external module (DLL or .so), located in file @var{filename}. This module have to contain array with name @code{mgl_cmd_extra} of type  @code{mglCommand}, which describe provided commands.
 @end deftypefn
 
 
@@ -178,10 +180,130 @@ The code between @code{once on} and @code{once off} will be executed only once. 
 Terminate execution.
 @end deftypefn
 
+
+
+@c ------------------------------------------------------------------
+@external{}
+@ifclear UDAV
+@node LaTeX package, mglParse class, Program flow commands, MGL scripts
+@end ifclear
+@ifset UDAV
+@node LaTeX package, , Program flow commands, MGL scripts
+@end ifset
+@section LaTeX package
+@nav{}
+
+There is LaTeX package @code{mgltex} which allow one to make figures directly from MGL script located in LaTeX file.
+
+The package defines the following environments:
+@table @samp
+@item mgl
+	It writes its contents to a general script which has the same name as the LaTeX document, but its extension is @emph{.mgl}. The code in this environment is compiled and the image produced is included. It takes exactly the same optional arguments as the @code{\includegraphics} command, plus an additional argument @var{imgext}, which specifies the extension to save the image.
+
+An example of usage of @samp{mgl} environment would be:
+@verbatim
+\begin{mglfunc}{prepare2d}
+  new a 50 40 '0.6*sin(pi*(x+1))*sin(1.5*pi*(y+1))+0.4*cos(0.75*pi*(x+1)*(y+1))'
+  new b 50 40 '0.6*cos(pi*(x+1))*cos(1.5*pi*(y+1))+0.4*cos(0.75*pi*(x+1)*(y+1))'
+\end{mglfunc}
+
+\begin{figure}[!ht]
+  \centering
+  \begin{mgl}[width=0.85\textwidth,height=7.5cm]
+    fog 0.5
+    call 'prepare2d'
+    subplot 2 2 0 : title 'Surf plot (default)' : rotate 50 60 : light on : box : surf a
+
+    subplot 2 2 1 : title '"\#" style; meshnum 10' : rotate 50 60 : box
+    surf a '#'; meshnum 10
+
+    subplot 2 2 2 : title 'Mesh plot' : rotate 50 60 : box
+    mesh a
+
+    new x 50 40 '0.8*sin(pi*x)*sin(pi*(y+1)/2)'
+    new y 50 40 '0.8*cos(pi*x)*sin(pi*(y+1)/2)'
+    new z 50 40 '0.8*cos(pi*(y+1)/2)'
+    subplot 2 2 3 : title 'parametric form' : rotate 50 60 : box
+    surf x y z 'BbwrR'
+  \end{mgl}
+\end{figure}
+@end verbatim
+
+@item mgladdon
+	It adds its contents to the general script, without producing any image.
+@item mglcode
+	Is exactly the same as @samp{mgl}, but it writes its contents verbatim to its own file, whose name is specified as a mandatory argument.
+@item mglscript
+	Is exactly the same as @samp{mglcode}, but it doesn't produce any image, nor accepts optional arguments. It is useful, for example, to create a MGL script, which can later be post processed by another package like "listings".
+@item mglblock
+	It writes its contents verbatim to a file, specified as a mandatory argument, and to the LaTeX document, and numerates each line of code.
+
+@c This last three environments will test if the user is overwriting some file, and will issue a warning in that case.
+@item mglverbatim
+	Exactly the same as @samp{mglblock}, but it doesn't write to a file. This environment doesn't have arguments.
+@item mglfunc
+	Is used to define MGL functions. It takes one mandatory argument, which is the name of the function, plus one additional argument, which specifies the number of arguments of the function. The environment needs to contain only the body of the function, since the first and last lines are appended automatically, and the resulting code is written at the end of the general script, after the @ref{stop} command, which is also written automatically. The warning is produced if 2 or more function with the same name is defined.
+@item mglsetup
+	If many scripts with the same code are to be written, the repetitive code can be written inside this environment only once, then this code will be used automatically every time the @samp{\mglplot} command is used (see below). It takes one optional argument, which is a name to be associated to the corresponding contents of the environment; this name can be passed to the @samp{\mglplot} command to use the corresponding block of code automatically (see below).
+@end table
+
+The package also defines the following commands:
+@table @samp
+@item \mglplot
+	It takes one mandatory argument, which is MGL instructions separated by the symbol @samp{:} this argument can be more than one line long. It takes the same optional arguments as the @samp{mgl} environment, plus an additional argument @var{setup}, which indicates the name associated to a block of code inside a @samp{mglsetup} environment. The code inside the mandatory argument will be appended to the block of code specified, and the resulting code will be written to the general script.
+
+An example of usage of @samp{\mglplot} command would be:
+@verbatim
+\begin{mglsetup}
+    box '@{W9}' : axis
+\end{mglsetup}
+\begin{mglsetup}[2d]
+  box : axis
+  grid 'xy' ';k'
+\end{mglsetup}
+\begin{mglsetup}[3d]
+  rotate 50 60
+  box : axis : grid 'xyz' ';k'
+\end{mglsetup}
+\begin{figure}[!ht]
+  \centering
+  \mglplot[scale=0.5]{new a 200 'sin(pi*x)' : plot a '2B'}
+\end{figure}
+\begin{figure}[!ht]
+  \centering
+  \mglplot[scale=0.5,setup=2d]{
+    fplot 'sin(pi*x)' '2B' :
+    fplot 'cos(pi*x^2)' '2R'
+  }
+\end{figure}
+\begin{figure}[!ht]
+  \centering
+  \mglplot[setup=3d]{fsurf 'sin(pi*x)+cos(pi*y)'}
+\end{figure}
+@end verbatim
+
+@item \mglgraphics
+	This command takes the same optional arguments as the @samp{mgl} environment, and one mandatory argument, which is the name of a MGL script. This command will compile the corresponding script and include the resulting image. It is useful when you have a script outside the LaTeX document, and you want to include the image, but you don't want to type the script again.
+@item \mglinclude
+	This is like @samp{\mglgraphics} but, instead of creating/including the corresponding image, it writes the contents of the MGL script to the LaTeX document, and numerates the lines.
+@item \mgldir
+	This command can be used in the preamble of the document to specify a directory where LaTeX will save the MGL scripts and generate the corresponding images. This directory is also where @samp{\mglgraphics} and @samp{\mglinclude} will look for scripts.
+@item \mglTeX
+	It just pretty prints the name of the package.
+@end table
+
+As an additional feature, when an image is not found or cannot be included, instead of issuing an error, @code{mgltex} prints a box with the word @samp{MGL image not found} in the LaTeX document. I made this because the first LaTeX run creates the images from the general script, but it doesn't includes them, and that used to produce an error message, but now it produces the warning boxes in the document, but no error message.
+
+
+I hope it is ready to be included with the MathGL library.
+Thank you very much, Alexey!!! And sorry for the long mail.
+
+
+
 @ifclear UDAV
 @c ------------------------------------------------------------------
 @external{}
-@node mglParse class, , Program flow commands, MGL scripts
+@node mglParse class, , LaTeX package, MGL scripts
 @section mglParse class
 @nav{}
 @cindex mglParse
@@ -274,12 +396,17 @@ Restore Once flag.
 
 @deftypefn {Method on @code{mglParse}} @code{void} AllowSetSize (@code{bool} a)
 @deftypefnx {C function} @code{void} mgl_parser_allow_setsize (@code{HMPR} p, @code{int} a)
-Allow to parse 'setsize' command or not.
+Allow to parse @ref{setsize} command or not.
 @end deftypefn
 
 @deftypefn {Method on @code{mglParse}} @code{void} AllowFileIO (@code{bool} a)
 @deftypefnx {C function} @code{void} mgl_parser_allow_file_io (@code{HMPR} p, @code{int} a)
 Allow reading/saving files or not.
+@end deftypefn
+
+@deftypefn {Method on @code{mglParse}} @code{void} AllowDllCall (@code{bool} a)
+@deftypefnx {C function} @code{void} mgl_parser_allow_dll_call (@code{HMPR} p, @code{int} a)
+Allow to parse @ref{load} command or not.
 @end deftypefn
 
 @deftypefn {Method on @code{mglParse}} @code{void} Stop ()

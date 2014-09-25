@@ -9,7 +9,7 @@
 @cindex window
 @cindex widgets
 
-There are set of ``window'' classes for making a window with MathGL graphics: @code{mglWindow} and @code{mglGLUT} for whole window, @code{Fl_MathGL} and @code{QMathGL} as widgets. All these classes allow user to show, rotate, export, and change view of the plot using keyboard. Most of them (except @code{mglGLUT}) also have toolbar and menu for simplifying plot manipulation. All window classes have mostly the same set of functions.
+There are set of ``window'' classes for making a window with MathGL graphics: @code{mglWindow}, @code{mglFLTK}, @code{mglQT} and @code{mglGLUT} for whole window, @code{Fl_MathGL} and @code{QMathGL} as widgets. All these classes allow user to show, rotate, export, and change view of the plot using keyboard. Most of them (except @code{mglGLUT}) also have toolbar and menu for simplifying plot manipulation. All window classes have mostly the same set of functions.
 
 For drawing you can use: @code{NULL} pointer if you'll update plot manually, global callback function of type @code{int draw(@code{HMGL} gr, @code{void *}p)} or @code{int draw(@code{mglGraph *}gr)}, or instance of class derived from @code{mglDraw} class. This class is defined in @code{#include <mgl2/window.h>} and have only 2 methods:
 @verbatim
@@ -65,9 +65,16 @@ Run main loop for event handling in separate thread. Note, right now it work for
 Run main loop for event handling. Usually it should be called in a separate thread or as last function call in @code{main()}.
 @end deftypefn
 
+@deftypefn {Method on @code{mglWindow}} @code{void} SetDrawFunc (@code{int} (*draw)(@code{HMGL} gr, @code{void *}p), @code{void *}par=@code{NULL}, @code{void} (*reload)(@code{void *}p)=@code{NULL})
+@deftypefnx {Method on @code{mglWindow}} @code{void} SetDrawFunc (@code{int} (*draw)(@code{mglGraph *}gr))
+@deftypefnx {Method on @code{mglWindow}} @code{void} SetDrawFunc (@code{mglDraw *}obj)
+@deftypefnx {C function} @code{void} mgl_wnd_set_func (@code{HMGL} gr, @code{int} (*draw)(@code{HMGL} gr, @code{void *}p), @code{void *}par, @code{void} (*reload)(@code{void *}p))
+Set callback functions for drawing (@var{draw}) and data reloading (@var{reload}), or instance @var{obj} of a class derived from @code{mglDraw}.
+@end deftypefn
+
 @deftypefn {Method on @code{mglWindow}} @code{void} SetClickFunc (@code{void} (*func)(@code{HMGL} gr, @code{void *}p))
 @deftypefnx {C function} @code{void} mgl_set_click_func (@code{void} (*func)(@code{HMGL} gr, @code{void *}p))
-Set callback function @code{func} which will be called on mouse click.
+Set callback function @var{func} which will be called on mouse click.
 @end deftypefn
 
 @deftypefn {Method on @code{mglWindow}} @code{void} ToggleAlpha ()

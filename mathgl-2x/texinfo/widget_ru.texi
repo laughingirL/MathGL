@@ -65,6 +65,13 @@ public:
 Запускает цикл обработки сообщений. Обычно эта функция должна вызываться в отдельном потоке или последней функцией в @code{main()}.
 @end deftypefn
 
+@deftypefn {Метод класса @code{mglWindow}} @code{void} SetDrawFunc (@code{int} (*draw)(@code{HMGL} gr, @code{void *}p), @code{void *}par=@code{NULL}, @code{void} (*reload)(@code{void *}p)=@code{NULL})
+@deftypefnx {Метод класса @code{mglWindow}} @code{void} SetDrawFunc (@code{int} (*draw)(@code{mglGraph *}gr))
+@deftypefnx {Метод класса @code{mglWindow}} @code{void} SetDrawFunc (@code{mglDraw *}obj)
+@deftypefnx {Функция С} @code{void} mgl_wnd_set_func (@code{HMGL} gr, @code{int} (*draw)(@code{HMGL} gr, @code{void *}p), @code{void *}par, @code{void} (*reload)(@code{void *}p))
+Устанавливает функцию, которая будет вызвана при перерисовке (@var{draw}) и при повторной загрузке данных (@var{reload}), или объект @var{obj} класса, производного от @code{mglDraw}.
+@end deftypefn
+
 @deftypefn {Метод класса @code{mglWindow}} @code{void} SetClickFunc (@code{void} (*func)(@code{HMGL} gr, @code{void *}p))
 @deftypefnx {Функция С} @code{void} mgl_set_click_func (@code{void} (*func)(@code{HMGL} gr, @code{void *}p))
 Устанавливает функцию, которая будет вызвана при щелчке мышью.

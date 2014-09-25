@@ -1791,6 +1791,18 @@ colors for filling and boundary (second one if style @samp{@@} is used, black co
 @end itemize
 @end deftypefn
 
+
+@anchor{logo}
+@deftypefn {MGL command} {} logo 'fname' [smooth=off]
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} Logo (@code{const char *}fname, @code{bool} smooth=@code{false}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Logo (@code{long} w, @code{long} h, @code{const unsigned char *}rgba, @code{bool} smooth=@code{false}, @code{const char *}opt=@code{""})
+@deftypefnx {C function only} @code{void} mgl_logo (@code{HMGL} gr, @code{long} w, @code{long} h, @code{const unsigned char *}rgba, @code{bool} smooth, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_logo_file (@code{HMGL} gr, @code{const char *}fname, @code{bool} smooth, @code{const char *}opt)
+@end ifclear
+Draw bitmap (logo) along whole axis range, which can be changed by @ref{Command options}. Bitmap can be loaded from file or specified as RGBA values for pixels. Parameter @var{smooth} set to draw bitmap without or with color interpolation.
+@end deftypefn
+
 @c ##################################################################
 @external{}
 @node Text printing, Axis and Colorbar, Primitives, MathGL core
@@ -3415,6 +3427,11 @@ Print last fitted formula with found coefficients (as numbers) at position @var{
 @deftypefnx {C function only} @code{const char *} mgl_get_fit (@code{HMGL} gr)
 @deftypefnx {Fortran subroutine} @code{} mgl_get_fit (@code{long} gr, @code{char *}out, @code{int} len)
 Get last fitted formula with found coefficients (as numbers).
+@end deftypefn
+
+@deftypefn {Method on @code{mglGraph}} @code{mreal} GetFitChi ()
+@deftypefnx {C function only} @code{mreal} mgl_get_fit_chi ()
+Get \chi for last fitted formula.
 @end deftypefn
 @end ifclear
 

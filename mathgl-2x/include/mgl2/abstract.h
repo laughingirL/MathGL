@@ -139,7 +139,7 @@ public:
 //	{	return j>0 ? (j<GetNy()-1 ? (v(i,j+1,k)-v(i,j-1,k))/2 : v(i,j,k)-v(i,j-1,k)) : v(i,1,k)-v(i,0,k);	}
 	virtual mreal dvz(long i,long j=0,long k=0) const = 0;
 //	{	return k>0 ? (k<GetNz()-1 ? (v(i,j,k+1)-v(i,j,k-1))/2 : v(i,j,k)-v(i,j,k-1)) : v(i,j,1)-v(i,j,0);	}
-	
+
 	// Now some common function which applicable for most of data types
 	/// Save whole data array (for ns=-1) or only ns-th slice to text file
 	virtual void Save(const char *fname,long ns=-1) const

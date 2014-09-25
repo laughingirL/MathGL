@@ -13,10 +13,10 @@
 
 Некоторые возможности MathGL доступны только в новых версиях библиотеки. Для проверки текущей версии MathGL можно использовать следующую функцию.
 @anchor{version}
-@deftypefn {MGL command} {} version 'ver'
+@deftypefn {Команда MGL} {} version 'ver'
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglGraph}} @code{bool} CheckVersion (@code{const char *}ver) static
-@deftypefnx {C function} @code{int} mgl_check_version (@code{const char *}ver)
+@deftypefnx {Функция С} @code{int} mgl_check_version (@code{const char *}ver)
 @end ifclear
 Возвращает ненулевое значение если версия MathGL подходит для требуемой в @var{ver}, т.е. если номер основной версии совпадает и "подверсия" больше или равна указанной в @var{ver}.
 @end deftypefn
@@ -588,17 +588,17 @@ Setsize: размер(ы) равны нулю или отрицательны
 @cindex SetEventFunc
 
 @deftypefn {Метод класса @code{mglGraph}} @code{void} Stop (@code{bool} stop=@code{true})
-@deftypefnx {C function only} @code{void} mgl_ask_stop (@code{HMGL} gr, @code{int} stop)
+@deftypefnx {Функция С only} @code{void} mgl_ask_stop (@code{HMGL} gr, @code{int} stop)
 Просит остановить рисование если @var{stop} не ноль, иначе сбрасывает флаг остановки.
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph}} @code{bool} NeedStop ()
-@deftypefnx {C function only} @code{void} mgl_need_stop (@code{HMGL} gr)
+@deftypefnx {Функция С only} @code{void} mgl_need_stop (@code{HMGL} gr)
 Возвращает @code{true} если рисование должно быть остановлено. Также запускает обработку всех отложенных событий в GUI. Пользователь должен вызывать эту функцию время от времени внутри долгих вычислений для плавности отклика GUI.
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph}} @code{bool} SetEventFunc (@code{void (*}func@code{)(void *)}, @code{void *}par=@code{NULL})
-@deftypefnx {C function only} @code{void} mgl_set_event_func (@code{HMGL} gr, @code{void (*}func@code{)(void *)}, @code{void *}par)
+@deftypefnx {Функция С only} @code{void} mgl_set_event_func (@code{HMGL} gr, @code{void (*}func@code{)(void *)}, @code{void *}par)
 Задает функцию, которая будет вызвана для обработки событий в GUI библиотеке.
 @end deftypefn
 
@@ -1691,27 +1691,38 @@ These functions change background image.
 @end deftypefn
 
 @anchor{arc}
-@deftypefn {MGL command} {} arc @code{x0 y0 x1 y1 a} ['col'='r']
-@deftypefnx {MGL command} {} arc @code{x0 y0 z0 x1 y1 a} ['col'='r']
-@deftypefnx {MGL command} {} arc @code{x0 y0 z0 xa ya za x1 y1 z1 a} ['col'='r']
+@deftypefn {Команда MGL} {} arc @code{x0 y0 x1 y1 a} ['col'='r']
+@deftypefnx {Команда MGL} {} arc @code{x0 y0 z0 x1 y1 a} ['col'='r']
+@deftypefnx {Команда MGL} {} arc @code{x0 y0 z0 xa ya za x1 y1 z1 a} ['col'='r']
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} Arc (@code{mglPoint} p0, @code{mglPoint} p1, @code{mreal} a, @code{const char *}col=@code{"r"})
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} Arc (@code{mglPoint} p0, @code{mglPoint} pa, @code{mglPoint} p1, @code{mreal} a, @code{const char *}col=@code{"r"})
-@deftypefnx {C function} @code{void} mgl_arc (@code{HMGL} gr, @code{mreal} x0, @code{mreal} y0, @code{mreal} x1, @code{mreal} y1, @code{mreal} a, @code{const char *}col)
-@deftypefnx {C function} @code{void} mgl_arc_ext (@code{HMGL} gr, @code{mreal} x0, @code{mreal} y0, @code{mreal} z0, @code{mreal} xa, @code{mreal} ya, @code{mreal} za, @code{mreal} x1, @code{mreal} y1, @code{mreal} z1, @code{mreal} a, @code{const char *}col)
+@deftypefnx {Функция С} @code{void} mgl_arc (@code{HMGL} gr, @code{mreal} x0, @code{mreal} y0, @code{mreal} x1, @code{mreal} y1, @code{mreal} a, @code{const char *}col)
+@deftypefnx {Функция С} @code{void} mgl_arc_ext (@code{HMGL} gr, @code{mreal} x0, @code{mreal} y0, @code{mreal} z0, @code{mreal} xa, @code{mreal} ya, @code{mreal} za, @code{mreal} x1, @code{mreal} y1, @code{mreal} z1, @code{mreal} a, @code{const char *}col)
 @end ifclear
 Рисует дугу вокруг оси @var{pa} (по умолчанию вокруг оси z @var{pa}=@{0,0,1@}) с центром в @var{p0}, начиная с точки @var{p1}. Параметр @var{a} задает угол дуги в градусах. Строка @var{col} задает цвет дуги и тип стрелок на краях.
 @end deftypefn
 
 @anchor{polygon}
-@deftypefn {MGL command} {} polygon @code{x0 y0 x1 y1 num} ['col'='r']
-@deftypefnx {MGL command} {} polygon @code{x0 y0 z0 x1 y1 z1 num} ['col'='r']
+@deftypefn {Команда MGL} {} polygon @code{x0 y0 x1 y1 num} ['col'='r']
+@deftypefnx {Команда MGL} {} polygon @code{x0 y0 z0 x1 y1 z1 num} ['col'='r']
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglGraph}} @code{void} Polygon (@code{mglPoint} p0, @code{mglPoint} p1, @code{int} num, @code{const char *}col=@code{"r"})
-@deftypefnx {C function} @code{void} mgl_polygon (@code{HMGL} gr, @code{mreal} x0, @code{mreal} y0, @code{mreal} z0, @code{mreal} x1, @code{mreal} y1, @code{mreal} z1, @code{int} num, @code{const char *}col)
+@deftypefnx {Функция С} @code{void} mgl_polygon (@code{HMGL} gr, @code{mreal} x0, @code{mreal} y0, @code{mreal} z0, @code{mreal} x1, @code{mreal} y1, @code{mreal} z1, @code{int} num, @code{const char *}col)
 @end ifclear
 Рисует правильный @var{num}-угольник с центром в @var{p0} с первой вершиной в @var{p1} цветом @var{col}. Если @var{col} содержит: @samp{#} то рисуется только граница, @samp{@@} то рисуется граница (вторым цветом из @var{col} или черными).
 @c Если @var{col} содержит 3 цвета, то используется градиентная заливка.
+@end deftypefn
+
+@anchor{logo}
+@deftypefn {Команда MGL} {} logo 'fname' [smooth=off]
+@ifclear UDAV
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Logo (@code{const char *}fname, @code{bool} smooth=@code{false}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Logo (@code{long} w, @code{long} h, @code{const unsigned char *}rgba, @code{bool} smooth=@code{false}, @code{const char *}opt=@code{""})
+@deftypefnx {Функция С} @code{void} mgl_logo (@code{HMGL} gr, @code{long} w, @code{long} h, @code{const unsigned char *}rgba, @code{bool} smooth, @code{const char *}opt)
+@deftypefnx {Функция С} @code{void} mgl_logo_file (@code{HMGL} gr, @code{const char *}fname, @code{bool} smooth, @code{const char *}opt)
+@end ifclear
+Draw bitmap (logo) along whole axis range, which can be changed by @ref{Command options}. Bitmap can be loaded from file or specified as RGBA values for pixels. Parameter @var{smooth} set to draw bitmap without or with color interpolation.
 @end deftypefn
 
 @c ##################################################################
@@ -3328,6 +3339,11 @@ These functions change background image.
 @deftypefnx {Функция С} @code{const char *} mgl_get_fit (@code{HMGL} gr)
 @deftypefnx {Fortran процедура} @code{} mgl_get_fit (@code{long} gr, @code{char *}out, @code{int} len)
 Возвращает последнюю подобранную формулу с найденными коэффициентами.
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglGraph}} @code{mreal} GetFitChi ()
+@deftypefnx {Функция С} @code{mreal} mgl_get_fit_chi ()
+Возвращает величину \chi для последней подобранной формулы.
 @end deftypefn
 @end ifclear
 
