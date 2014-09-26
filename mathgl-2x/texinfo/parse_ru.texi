@@ -198,7 +198,11 @@ MathGL имеет встроенный скриптовый язык MGL для 
 @section LaTeX package
 @nav{}
 
-There is LaTeX package @code{mgltex} which allow one to make figures directly from MGL script located in LaTeX file.
+There is LaTeX package @code{mgltex} (was made by Diego Sejas Viscarra) which allow one to make figures directly from MGL script located in LaTeX file.
+
+For using this package you need to specify @code{--shell-escape} option for @emph{latex/pdflatex} or manually run @emph{mglconv} tool for produced MGL scripts for generation of images. Don't forgot to run @emph{latex/pdflatex} second time to insert generated images into the output document.
+
+The package may have following options: @code{draft}, @code{final} -- the same as in the @emph{graphicx} package; @code{jpg}, @code{jpeg}, @code{png} -- for export to JPEG/PNG images; @code{eps}, @code{epsz} -- for export to uncompressed/compressed EPS format as primitives; @code{bps}, @code{bpsz} -- for export to uncompressed/compressed EPS format as bitmap, @code{pdf} -- for export to 3D PDF.
 
 The package defines the following environments:
 @table @samp
@@ -297,11 +301,7 @@ An example of usage of @samp{\mglplot} command would be:
 	It just pretty prints the name of the package.
 @end table
 
-As an additional feature, when an image is not found or cannot be included, instead of issuing an error, @code{mgltex} prints a box with the word @samp{MGL image not found} in the LaTeX document. I made this because the first LaTeX run creates the images from the general script, but it doesn't includes them, and that used to produce an error message, but now it produces the warning boxes in the document, but no error message.
-
-
-I hope it is ready to be included with the MathGL library.
-Thank you very much, Alexey!!! And sorry for the long mail.
+As an additional feature, when an image is not found or cannot be included, instead of issuing an error, @code{mgltex} prints a box with the word @samp{MGL image not found} in the LaTeX document.
 
 
 

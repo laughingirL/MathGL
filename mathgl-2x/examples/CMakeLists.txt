@@ -36,5 +36,6 @@ endif(enable-qt)
 if(MGL_HAVE_LTDL)
 	include_directories(${LTDL_INCLUDE_DIR})
 	add_library(mgl_module MODULE mgl_module.cpp)
+	target_link_libraries(mgl_module mgl)	# for compatibility with win32
 endif(MGL_HAVE_LTDL)
 
