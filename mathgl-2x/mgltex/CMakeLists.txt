@@ -1,3 +1,25 @@
+find_program(findpdflatex pdflatex)
+if(NOT findpdflatex)
+	message(SEND_ERROR "Couldn't find pdflatex needed for LATEX example building.")
+endif(NOT findpdflatex)
+find_program(findkpsewhich kpsewhich)
+if(NOT findkpsewhich)
+	message(SEND_ERROR "Couldn't find kpsewhich needed for LATEX example install.")
+endif(NOT findkpsewhich)
+find_program(findmktexlsr mktexlsr)
+if(NOT findmktexlsr)
+	message(SEND_ERROR "Couldn't find mktexlsr needed for LATEX example install.")
+endif(NOT findmktexlsr)
+execute_process(
+	COMMAND ${findkpsewhich} -var-value=TEXMFLOCAL
+	OUTPUT_VARIABLE TEXMFLOCALDIR
+	RESULT_VARIABLE TEXMFLOCAL_ERR
+	OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+if(NOT TEXMFLOCALDIR)
+	message(SEND_ERROR "Couldn't find TEXMFLOCAL directory.")
+endif(NOT TEXMFLOCALDIR)
+
 set(extramgl Axis_projection Vectorial)
 
 add_custom_command(OUTPUT scripts
@@ -29,7 +51,8 @@ get_directory_property(mglconv_clean ADDITIONAL_MAKE_CLEAN_FILES)
 set(mglconv_clean ${mglconv_clean} scripts mgltex.sty mgltex.tex mgltex.aux mgltex.log)
 set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "${mglconv_clean}")
 
-install(FILES mgltex.sty DESTINATION ${CMAKE_INSTALL_PREFIX}/share/texmf/tex/latex/mgltex/)
-install(FILES mgltex.tex DESTINATION ${CMAKE_INSTALL_PREFIX}/share/texmf/doc/latex/mgltex/)
-install(FILES ${MathGL_BINARY_DIR}/mgltex/mgltex.pdf DESTINATION ${CMAKE_INSTALL_PREFIX}/share/texmf/doc/latex/mgltex/)
+install(FILES mgltex.sty DESTINATION ${TEXMFLOCALDIR}/tex/latex/mgltex/)
+install(FILES mgltex.tex ${MathGL_BINARY_DIR}/mgltex/mgltex.pdf DESTINATION ${TEXMFLOCALDIR}/doc/latex/mgltex/)
+install(CODE "execute_process(COMMAND ${findmktexlsr} ${TEXMFLOCALDIR})")
+
 # TODO mktexlsr -- see http://en.wikibooks.org/wiki/LaTeX/Installing_Extra_Packages
