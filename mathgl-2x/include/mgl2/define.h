@@ -37,7 +37,7 @@
 #define MGL_LOCAL_PURE		MGL_NO_EXPORT MGL_FUNC_PURE
 
 #if MGL_HAVE_RVAL	// C++11 don't support register keyword
-#if (!defined(_MSC_VER)) || (defined(_MSC_VER) && (_MSC_VER < 1800))
+#if (!defined(_MSC_VER)) || (defined(_MSC_VER) && (_MSC_VER < 1310))
 #define register
 #endif
 #endif
@@ -48,7 +48,7 @@
 
 #endif
 
-#define MGL_VER2 	3.0	// minor version of MathGL 2.* (like 1.3 for v.2.1.3)
+#define MGL_VER2 	3.1	// minor version of MathGL 2.* (like 1.3 for v.2.1.3)
 //-----------------------------------------------------------------------------
 #ifdef WIN32 //_MSC_VER needs this before math.h
 #define	_USE_MATH_DEFINES

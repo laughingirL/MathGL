@@ -52,11 +52,10 @@ Generally, MathGL is GPL library. However, you can use LGPL license for MathGL c
 
 @strong{Latest news}
 @itemize
+@item @emph{15 October 2014.}
+New version (v.@value{VERSION}@value{MINVER}) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are @ref{LaTeX package}, command to load external DLL file (@ref{load}), new primitive (@ref{logo}), improvements for projections, manual rotation angle in @ref{axis} and other minor improvements, which denoted @ref{News, here}.
 @item @emph{7 August 2014.}
 New version (v.@value{VERSION}) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are many major improvements for both MathGL core and for UDAV, which denoted @ref{News, here}.
-@comment  New version (v.@value{VERSION}@value{MINVER}) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are extend of 'region' plot, improve export to TeX, add missing Fortran functions, bugfixes, and other improvements, which denoted @ref{News, here}. Note, this release looks as bug free, but next release (v.2.3) will introduce a set of improvements which may not so stable at first time.
-@item @emph{11 November 2013.}
-New version (v.2.2) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are speeding up, new plot kinds and data handling functions, new plot styles, masks for bitmap output, wx-widget, Lua interface, and many other improvements, which denoted @ref{News, here}.
 @end itemize
 
 There is detailed @ref{News, news list}. Sourceforge project page @uref{http://sourceforge.net/projects/mathgl/, here}.
@@ -75,6 +74,33 @@ Javascript interface was developed with support of @url{http://www.datadvance.ne
 @nav{}
 
 @itemize
+
+@item @strong{15 October 2014.}
+New version (v.2.3.1) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are minor improvements and bugfixes:
+@itemize @bullet
+@item Add @ref{LaTeX package} @emph{mglTeX} (author Diego Sejas Viscarra) for making figures directly from MGL script located in LaTeX file.
+@item Add MGL command @ref{load} for loading MGL commands from external DLL (or .so) module.
+@item Add @ref{logo} function to draw bitmap (logo), which is stretched along whole axis range.
+@item Add MGL command @ref{reset} which restore default settings and clear image (i.e. call @code{DefaultPlotParam()}).
+@item Add option @code{value} to @ref{axis} function, which allow to set rotation angle for tick labels.
+@item Change y coordinate at x-z projection.
+@item Improve projection of 'unrotatable' objects (like @ref{legend}, @ref{title}, ...).
+@item Add projection (@ref{ternary}&8) which is the same as usual (@ref{ternary}&4) but don't print text on projections
+@item Improve orientation of axis ticks and labels.
+@item Add mglWnd::SetDrawFunc().
+@item Add mgl_set_global_warn() and mgl_get_global_warn() for set/get messages of global scope.
+@item Make copying private of mglGraph and derived.
+@item Add virtual destructors.
+@item Add some static functions for mglGraph.
+@item Add option @samp{-n} to mglconv to disable automatic saving of the image.
+@item Add option @samp{-s} to mglview and mglconv to run setup script before the main one.
+@item Become compatible with giflib 5.1.
+@item Add light scaling at MGLD import.
+@item Add scaling of frames at Adjust().
+@item Possible bugfix for 32bit gcc.
+@item Update documentation and make other minor bugfixes and compatibility changes.
+@end itemize
+
 @item @strong{7 August 2014.}
 New version (v.2.3) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are major improvements and speeding up of core MathGL and UDAV.
 @itemize @bullet
@@ -145,84 +171,10 @@ New version (v.2.3) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is 
 @end itemize
 
 
-@item @strong{19 March 2014.}
-New version (v.2.2.2.1) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are compatibility changes for MS VisualStudio 2010 and early.
-@itemize @bullet
-@item Compatibility changes for MS VisualStudio 2010 and early.
-@item Function SetRange(v1,v2) ignore NAN values now.
-@item Add enable-json-sample for building json-samples on demand only.
-@item Update documentation.
-@end itemize
-
-@item @strong{10 March 2014.}
-New version (v.2.2.2) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are minor improvements and bugfixes:
-@itemize @bullet
-@item Add mgl_region_3d() to draw region (or ribbon) between 2 curves. Correspondingly extend mglGraph::Region() function and MGL command 'region'.
-@item Allow LGPL for MathGL widgets.
-@item Improve export to TeX.
-@item Add missing functions to Fortran interface.
-@item Bugfix for legend with enabled lighting.
-@item Minor bugfixes and memory leaks.
-@end itemize
-
-@item @strong{22 January 2014.}
-New version (v.2.2.1) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are minor improvements and bugfixes:
-@itemize @bullet
-@item Add Qt5 support.
-@item Add Pascal interface.
-@item Improve JavaScript interface.
-@item Add function mglGraph::AddRange(char dir, mreal v1, mreal v2) and extend corresponding MGL commands '[xyzc]range'.
-@item Add 'hypot(x,y)' function for known functions in formula parsing.
-@item Add style '~' to disable colorbar or axis labels. NOTE, axis style '_' is obsolete and should be replaced by '~'.
-@item Change Aspect() if Ax=NAN. Now, Ay and Az set the ratio to optimal aspect (not exact value as previously).
-@item Disable changes by View(),Zoom(),Perspective() for position of Title(), Legend(), Colorbar().
-@item Partial support of perspective in CalcXYZ().
-@item Speed up PDE solving.
-@item Add complex versions of PDE, QO2d, QO3d.
-@item Correct filled background for Box() in curved coordinates.
-@item Allow nx=1 for Stem and Error.
-@item Bugfix for drawing single axis.
-@item Bugfix for missing options parsing for some of MGL commands.
-@item Bugfix for .pmin suffix in MGL. Add mglData::MaximalNeg() and mglData::MinimalPos() functions. Add .nmin and .nmax suffixes.
-@item Bugfix for colorbar labels.
-@item Force using python 2.7 by default due to bug in Ubuntu. Debian sid works well with python 3.* too.
-@item Other minor bugfixes and memory leaks.
-@end itemize
-
-@item @strong{11 November 2013.}
-New version (v.2.2) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are minor bugfixes and improvements:
-@itemize @bullet
-@item Add OpenMP calls mostly everywhere (can work as replacement of pthreads - a bit faster since more loops is parallelized).
-@item Greatly speed up consequent FFT and Hankel transforms. Add mgl_clear_fft() function for manual clearing of saved FFT/Hankel data.
-@item Add @ref{ohlc} plot for drawing Open-High-Low-Close diagram
-@item Add wxMathGL widget. See @ref{wxMathGL class}.
-@item Add interface for Lua v.5.1.
-@item Add @ref{mask} for face drawing if one of symbols @samp{-+=;oOsS~<>jdD*^} is specified in color scheme. This work only for export in bitmap images.
-@item Add @ref{quality}=8 for dots drawing (extremely fast).
-@item Add styles '4','6','8' for @ref{cone} and @ref{cones} to produce square, hex-, octo-prism.
-@item Add style 't' for @ref{cones} to produce tubes (cylinders).
-@item Add style '^' for @ref{legend} to left/right align legend if its coordinates are right/left from the center
-@item Add style '<', '^', '>' for aligning/centering boxes in @ref{bars}, @ref{barh}, @ref{boxplot}, @ref{cones}. Also this plots become centered by default if nx sizes are the same for all data.
-@item Add @ref{dots} function which set independently both color and transparency of dots.
-@item Improve automatic axis position. Add style '^' for inverse automatic axis position.
-@item Improve tick labeling. Add style @ref{tuneticks}&4 for zero filling of tick labels.
-@item Add @ref{refill} for filling by interpolation of parametrically dependent data
-@item Add transparency for @ref{area} and @ref{region} plots.
-@item Add mgl_clf_chr() function and extend @ref{clf} command.
-@item Fourier now perform true inverse Fourier transform (instead of backward one).
-@item Improve/change lighting from local sources. Add @ref{diffuse} function.
-@item C functions now return NULL if HMDT data cannot be created for given input argument(s).
-@item Enable line width for @ref{mesh} and @ref{fall} plots.
-@item Replace +INF and -INF by NAN in textual formula output.
-@item Add manual compression of JSON.
-@item Define WORDS_BIGENDIAN and HAVE_MEMRCHR (thanks to Dinar Valeev).
-@item Bugfix for cleaning unused points.
-@item Fix 'setsize' command at UDAV starting.
-@item Rewrite MGL parsing by using std::wstring for avoiding possible bugs of wcs*() functions.
-@item Minor bugfixes.
-@item Update docs.
-@end itemize
-
+@item @strong{19 March 2014.}Version 2.2.2.1 was released.
+@item @strong{10 March 2014.} Version 2.2.2 was released.
+@item @strong{22 January 2014.} Version 2.2.1 was released.
+@item @strong{11 November 2013.} Version 2.2 was released.
 @item @strong{8 May 2013.} Version 2.1.3.1 was released.
 @item @strong{2 May 2013.} Version 2.1.3 was released.
 @item @strong{28 January 2013.} Version 2.1.2 was released.

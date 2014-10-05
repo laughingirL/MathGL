@@ -32,28 +32,38 @@
 \DeclareOption{final}{%
   \PassOptionsToPackage{\CurrentOption}{graphicx}%
 }
+
+\DeclareGraphicsExtensions{.png,.eps,.jpg,.jpeg,.bps,.pdf,.epsz,.eps.gz,.bpsz,.bps.gz,.gif}
+%\DeclareGraphicsExtensions{.png,.eps,.jpg,.jpeg,.bps,.pdf,.gif}
+%\DeclareGraphicsRule{*}{eps}{*}{}
+%\DeclareGraphicsRule{.eps.gz}{eps}{.eps.bb}{`gunzip -c #1}%   gzipped EPS
+%\DeclareGraphicsRule{.epsz}{eps}{.eps.bb}{`gunzip -c #1}%   gzipped EPS
+%\DeclareGraphicsRule{.bps.gz}{eps}{.bps.bb}{`gunzip -c #1}%   gzipped EPS
+%\DeclareGraphicsRule{.bpsz}{eps}{.bps.bb}{`gunzip -c #1}%   gzipped EPS
+
 \DeclareOption{jpg}{\def\mgl@image@ext{.jpg}}
 \DeclareOption{jpeg}{\def\mgl@image@ext{.jpeg}}
-%\DeclareOption{prc}{\def\mgl@image@ext{.prc}}
 \DeclareOption{pdf}{\def\mgl@image@ext{.pdf}}
 \DeclareOption{png}{\def\mgl@image@ext{.png}}
 \DeclareOption{eps}{\def\mgl@image@ext{.eps}}
-\DeclareOption{epsz}{\def\mgl@image@ext{.epsv}}
+\DeclareOption{epsz}{\def\mgl@image@ext{.eps.gz}}
 \DeclareOption{bps}{\def\mgl@image@ext{.bps}}
-\DeclareOption{bpsz}{\def\mgl@image@ext{.bpsz}}
-\DeclareOption{svg}{\def\mgl@image@ext{.svg}}
-\DeclareOption{svgz}{\def\mgl@image@ext{.svgz}}
-%\DeclareOption{gif}{\def\mgl@image@ext{.gif}}
+\DeclareOption{bpsz}{\def\mgl@image@ext{.bps.gz}}
+\DeclareOption{gif}{\def\mgl@image@ext{.gif}}
+
+\DeclareOption{tex}{\def\mgl@image@ext{.tex}}
+%\DeclareOption{svg}{\def\mgl@image@ext{.svg}}
+%\DeclareOption{svgz}{\def\mgl@image@ext{.svgz}}
 %\DeclareOption{bmp}{\def\mgl@image@ext{.bmp}}
 %\DeclareOption{tga}{\def\mgl@image@ext{.tga}}
 %\DeclareOption{mgld}{\def\mgl@image@ext{.mgld}}
 %\DeclareOption{json}{\def\mgl@image@ext{.json}}
 %\DeclareOption{jsonz}{\def\mgl@image@ext{.jsonz}}
 %\DeclareOption{obj}{\def\mgl@image@ext{.obj}}
-\DeclareOption{tex}{\def\mgl@image@ext{.tex}}
 %\DeclareOption{xyz}{\def\mgl@image@ext{.xyz}}
 %\DeclareOption{stl}{\def\mgl@image@ext{.stl}}
 %\DeclareOption{off}{\def\mgl@image@ext{.off}}
+%\DeclareOption{prc}{\def\mgl@image@ext{.prc}}
 
 \ExecuteOptions{final,eps}
 \ProcessOptions*

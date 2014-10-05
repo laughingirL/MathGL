@@ -180,8 +180,23 @@ void MGL_EXPORT mgl_write_eps(HMGL gr, const char *fname,const char *descr)
 	if(!strcmp(fname,"-"))	fp = stdout;		// allow to write in stdout
 	else		fp = gz ? (void*)gzopen(fname,"wt") : (void*)fopen(fname,"wt");
 	if(!fp)		{	gr->SetWarn(mglWarnOpen,fname);	return;	}
-	const std::string loc = setlocale(LC_NUMERIC, NULL);	setlocale(LC_NUMERIC, "C");
 	int w = _Gr_->GetWidth(), h = _Gr_->GetHeight();
+
+	if(gz)
+	{
+		unsigned len = strlen(fname), pos=0;
+		char *buf = new char[len+4];
+		memcpy(buf,fname,len);
+		if(buf[len-3]=='.')	pos = len-2;
+		else if(buf[len-2]=='.')	pos = len-1;
+		else	{	buf[len-1]='.';	pos = len;	}
+		if(pos)	{	buf[pos]=buf[pos+1]='b';	buf[pos+2]=0;	}
+		FILE *fb = fopen(buf,"w");
+		fprintf(fb, "%%%%BoundingBox: 0 0 %d %d\n", w, h);
+		fclose(fb);
+	}
+	
+	const std::string loc = setlocale(LC_NUMERIC, NULL);	setlocale(LC_NUMERIC, "C");
 	mgl_printf(fp, gz, "%%!PS-Adobe-3.0 EPSF-3.0\n%%%%BoundingBox: 0 0 %d %d\n", w, h);
 	mgl_printf(fp, gz, "%%%%Created by MathGL library\n%%%%Title: %s\n",descr ? descr : fname);
 	mgl_printf(fp, gz, "%%%%CreationDate: %s\n",ctime(&now));

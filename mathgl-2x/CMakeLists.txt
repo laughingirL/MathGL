@@ -10,7 +10,7 @@ endif(NOT CMAKE_BUILD_TYPE)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 #set(MathGL_VERSION_MAJOR 2)
 #set(MathGL_VERSION_MINOR 2.2)
-set(MathGL_SOVERSION 7.3.0)
+set(MathGL_SOVERSION 7.4.0)
 
 
 MACRO(MGL_DEPENDENT_OPTION option doc default depends1 force1 depends2 force2)
@@ -80,7 +80,7 @@ CMAKE_DEPENDENT_OPTION(enable-doc-pdf-en "Enable English PDF documentation" OFF 
 CMAKE_DEPENDENT_OPTION(enable-doc-prc "Enable PDF samples for HTML docs" OFF "NOT enable-all-docs" ON)
 CMAKE_DEPENDENT_OPTION(enable-doc-json "Enable JSON samples for HTML docs" OFF "NOT enable-all-docs" ON)
 option(enable-texi2html "Use texi2html (obsolete package) instead of texi2any" OFF)
-CMAKE_DEPENDENT_OPTION(enable-tex "Enable example of mgl scripting in LATEX docs" OFF "NOT enable-lgpl" ON)
+CMAKE_DEPENDENT_OPTION(enable-mgltex "Enable installation of mgltex package (MGL scripts in LATEX document)" OFF "NOT enable-lgpl" ON)
 
 CMAKE_DEPENDENT_OPTION(enable-zlib "Enable zlib support" ON "NOT enable-all" ON)
 CMAKE_DEPENDENT_OPTION(enable-png "Enable png support" ON "NOT enable-all" ON)
@@ -509,6 +509,6 @@ if(NOT MSVC AND NOT BORLAND)
 
 endif(NOT MSVC AND NOT BORLAND)
 
-if(NOT enable-lgpl AND enable-tex)
+if(NOT enable-lgpl AND enable-mgltex)
 	add_subdirectory( mgltex )
-endif(NOT enable-lgpl AND enable-tex)
+endif(NOT enable-lgpl AND enable-mgltex)

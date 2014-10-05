@@ -228,16 +228,33 @@ int MGL_NO_EXPORT mgl_bps_save(const char *fname, int w, int h, unsigned char **
 
 	void *fp;
 	if(!strcmp(fname,"-"))	fp = stdout;		// allow to write in stdout
-	else		fp = gz ? (void*)gzopen(fname,"wt") : (void*)fopen(fname,"wt");
+	else
+	{
+		fp = gz ? (void*)gzopen(fname,"wt") : (void*)fopen(fname,"wt");
+		if(gz)
+		{
+			unsigned len = strlen(fname), pos=0;
+			char *buf = new char[len+4];
+			memcpy(buf,fname,len);
+			if(buf[len-3]=='.')	pos = len-2;
+			else if(buf[len-2]=='.')	pos = len-1;
+			else	{	buf[len-1]='.';	pos = len;	}
+			if(pos)	{	buf[pos]=buf[pos+1]='b';	buf[pos+2]=0;	}
+			FILE *fb = fopen(buf,"w");
+			fprintf(fb, "%%%%BoundingBox: 0 0 %d %d\n", w, h);
+			fclose(fb);
+		}
+	}
 	mgl_printf(fp, gz, "%%!PS-Adobe-3.0 EPSF-3.0\n%%%%BoundingBox: 0 0 %d %d\n",w,h);
 	mgl_printf(fp, gz, "%%%%Created by MathGL library\n%%%%Title: %s\n", fname);
 	mgl_printf(fp, gz, "%%%%CreationDate: %s\n",ctime(&now));
 	mgl_printf(fp, gz, "%d %d 8 [1 0 0 1 0 0] {currentfile %d string readhexstring pop} false 3 colorimage\n",
-			w,h,1+w*h/40);
-	for(j=h-1;j>=0;j--)	for(i=0;i<w;i++)
+			w,h,w*h/40);
+	for(long j=0;j<h;j++)	for(long i=0;i<w;i++)
 	{
-		if((i+w*(h-j-1))%40==0 && i+j>0)	mgl_printf(fp, gz, "\n");
-		mgl_printf(fp, gz, "%02x%02x%02x",p[j][3*i],p[j][3*i+1],p[j][3*i+2]);
+		if((i+w*j)%40==0 && i+j>0)	mgl_printf(fp, gz, "\n");
+		register long jj=h-1-j;
+		mgl_printf(fp, gz, "%02x%02x%02x",p[jj][3*i],p[jj][3*i+1],p[jj][3*i+2]);
 	}
 	mgl_printf(fp, gz, "\n\nshowpage\n%%%%EOF\n");
 	if(strcmp(fname,"-"))	{	if(gz)	gzclose((gzFile)fp);	else	fclose((FILE *)fp);	}
@@ -569,10 +586,13 @@ void MGL_EXPORT mgl_write_frame(HMGL gr, const char *fname,const char *descr)
 	if(!strcmp(fname+len-4,".png")) 	mgl_write_png(gr,fname,descr);
 	if(!strcmp(fname+len-4,".eps")) 	mgl_write_eps(gr,fname,descr);
 	if(!strcmp(fname+len-5,".epsz"))	mgl_write_eps(gr,fname,descr);
+	if(!strcmp(fname+len-7,".eps.gz"))	mgl_write_eps(gr,fname,descr);
 	if(!strcmp(fname+len-4,".bps")) 	mgl_write_bps(gr,fname,descr);
 	if(!strcmp(fname+len-5,".bpsz"))	mgl_write_bps(gr,fname,descr);
+	if(!strcmp(fname+len-7,".bps.gz"))	mgl_write_bps(gr,fname,descr);
 	if(!strcmp(fname+len-4,".svg")) 	mgl_write_svg(gr,fname,descr);
 	if(!strcmp(fname+len-5,".svgz"))	mgl_write_svg(gr,fname,descr);
+	if(!strcmp(fname+len-7,".svg.gz"))	mgl_write_svg(gr,fname,descr);
 	if(!strcmp(fname+len-4,".gif")) 	mgl_write_gif(gr,fname,descr);
 	if(!strcmp(fname+len-4,".bmp")) 	mgl_write_bmp(gr,fname,descr);
 	if(!strcmp(fname+len-4,".tga")) 	mgl_write_tga(gr,fname,descr);

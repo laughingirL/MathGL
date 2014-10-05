@@ -38,13 +38,13 @@ foreach(mglscr ${extramgl})
 endforeach(mglscr)
 
 add_custom_command(OUTPUT scripts/mgltex.png
-	COMMAND mglconv -o ${mglscr}.png scripts/${mglscr}.mgl
+	COMMAND mglconv -o scripts/mgltex.png scripts/mgltex.mgl
 	DEPENDS mglconv scripts
 )
 
 add_custom_command(OUTPUT mgltex.pdf
 	COMMAND ${findpdflatex} mgltex.tex
-	DEPENDS ${mglpng})
+	DEPENDS mgltex.sty mgltex.tex ${mglpng} scripts/mgltex.png)
 add_custom_target(pdf ALL DEPENDS mgltex.pdf)
 
 get_directory_property(mglconv_clean ADDITIONAL_MAKE_CLEAN_FILES)
@@ -54,5 +54,3 @@ set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "${mglconv_clean
 install(FILES mgltex.sty DESTINATION ${TEXMFLOCALDIR}/tex/latex/mgltex/)
 install(FILES mgltex.tex ${MathGL_BINARY_DIR}/mgltex/mgltex.pdf DESTINATION ${TEXMFLOCALDIR}/doc/latex/mgltex/)
 install(CODE "execute_process(COMMAND ${findmktexlsr} ${TEXMFLOCALDIR})")
-
-# TODO mktexlsr -- see http://en.wikibooks.org/wiki/LaTeX/Installing_Extra_Packages
