@@ -114,7 +114,7 @@ void mglCanvas::ClearFrame()
 	pthread_mutex_lock(&mutexAct);
 #endif
 
-#pragma omp critical(txt)
+#pragma omp critical
 	{
 		StartAutoGroup(NULL);
 		Sub.clear();	Leg.clear();	Grp.clear();	Act.clear();

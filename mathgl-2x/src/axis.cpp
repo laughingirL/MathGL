@@ -1114,7 +1114,7 @@ void mglCanvas::colorbar(HCDT vv, const mreal *c, int where, mreal x, mreal y, m
 	SetPenPal(AxisStl);
 //	bool out = fabs(x)>1 && fabs(y)>1;
 	bool inv = where!=3 && where!=0;
-	ac.ns = where;
+	ac.ns = where;	ac.angl=NAN;
 	if(text)	DrawLabels(ac,inv,&M);	// NOTE ns isn't used for colorbar
 	clr(MGL_DISABLE_SCALE);	EndGroup();
 }
