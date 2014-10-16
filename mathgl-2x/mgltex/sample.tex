@@ -36,14 +36,14 @@ The package defines the following environments:
 	Exactly the same as \texttt{mglblock}, but it doesn't write to a file. This environment doesn't have arguments.
 \item[mglfunc]
 	Is used to define MGL functions. It takes one mandatory argument, which is the name of the function, plus one additional argument, which specifies the number of arguments of the function. The environment needs to contain only the body of the function, since the first and last lines are appended automatically, and the resulting code is written at the end of the general script, which is also written automatically. The warning is produced if 2 or more function with the same name is defined.
-\item[mglsetup]
+\item[mglplotsettings]
 	If many scripts with the same code are to be written, the repetitive code can be written inside this environment only once, then this code will be used automatically every time the \texttt{\textbackslash{}mglplot} command is used (see below). It takes one optional argument, which is a name to be associated to the corresponding contents of the environment; this name can be passed to the \texttt{\textbackslash{}mglplot} command to use the corresponding block of code automatically (see below).
 \end{description}
 
 The package also defines the following commands:
 \begin{description}
 \item[\textbackslash{}mglplot]
-	It takes one mandatory argument, which is MGL instructions separated by the symbol ':' this argument can be more than one line long. It takes the same optional arguments as the \texttt{mgl} environment, plus an additional argument \emph{setup}, which indicates the name associated to a block of code inside a \texttt{mglsetup} environment. The code inside the mandatory argument will be appended to the block of code specified, and the resulting code will be written to the general script.
+	It takes one mandatory argument, which is MGL instructions separated by the symbol ':' this argument can be more than one line long. It takes the same optional arguments as the \texttt{mgl} environment, plus an additional argument \emph{settings}, which indicates the name associated to a block of code inside a \texttt{mglplotsettings} environment. The code inside the mandatory argument will be appended to the block of code specified, and the resulting code will be written to the general script.
 \item[\textbackslash{}mglgraphics]
 	This command takes the same optional arguments as the \texttt{mgl} environment, and one mandatory argument, which is the name of a MGL script. This command will compile the corresponding script and include the resulting image. It is useful when you have a script outside the LaTeX document, and you want to include the image, but you don't want to type the script again.
 \item[\textbackslash{}mglinclude]
@@ -271,60 +271,60 @@ Finally, you can just show MGL script itself
 
 An example of usage of \texttt{\textbackslash{}mglplot} command would be:
 \begin{verbatim}
-\begin{mglsetup}
+\begin{mglplotsettings}
   box '@{W9}' : axis
-\end{mglsetup}
-\begin{mglsetup}[2d]
+\end{mglplotsettings}
+\begin{mglplotsettings}[2d]
   box : axis
   grid 'xy' ';k'
-\end{mglsetup}
-\begin{mglsetup}[3d]
+\end{mglplotsettings}
+\begin{mglplotsettings}[3d]
   rotate 50 60
   box : axis : grid 'xyz' ';k'
-\end{mglsetup}
+\end{mglplotsettings}
 \begin{figure}[!ht]
   \centering
   \mglplot[scale=0.5]{new a 200 'sin(pi*x)':plot a '2B'}
 \end{figure}
 \begin{figure}[!ht]
   \centering
-  \mglplot[scale=0.5,setup=2d]{
+  \mglplot[scale=0.5,settings=2d]{
     fplot 'sin(pi*x)' '2B' :
     fplot 'cos(pi*x^2)' '2R'
   }
 \end{figure}
 \begin{figure}[!ht]
   \centering
-  \mglplot[width=0.5 \textwidth, setup=3d]
+  \mglplot[width=0.5 \textwidth, settings=3d]
   {fsurf 'sin(pi*x)+cos(pi*y)'}
 \end{figure}
 \end{verbatim}
 
-\begin{mglsetup}
+\begin{mglplotsettings}
   box '@{W9}' : axis
-\end{mglsetup}
-\begin{mglsetup}[2d]
+\end{mglplotsettings}
+\begin{mglplotsettings}[2d]
   box : axis
   grid 'xy' ';k'
-\end{mglsetup}
-\begin{mglsetup}[3d]
+\end{mglplotsettings}
+\begin{mglplotsettings}[3d]
   rotate 50 60
   box : axis : grid 'xyz' ';k'
-\end{mglsetup}
+\end{mglplotsettings}
 \begin{figure}[!ht]
   \centering
   \mglplot[scale=0.5]{new a 200 'sin(pi*x)':plot a '2B'}
 \end{figure}
 \begin{figure}[!ht]
   \centering
-  \mglplot[scale=0.5,setup=2d]{
+  \mglplot[scale=0.5,settings=2d]{
     fplot 'sin(pi*x)' '2B' :
     fplot 'cos(pi*x^2)' '2R'
   }
 \end{figure}
 \begin{figure}[!ht]
   \centering
-  \mglplot[width=0.5 \textwidth, setup=3d]
+  \mglplot[width=0.5 \textwidth, settings=3d]
   {fsurf 'sin(pi*x)+cos(pi*y)'}
 \end{figure}
 

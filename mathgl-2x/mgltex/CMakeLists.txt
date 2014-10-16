@@ -24,9 +24,9 @@ set(extramgl Axis_projection Vectorial)
 
 add_custom_command(OUTPUT scripts
     COMMAND ${CMAKE_COMMAND} -E make_directory ${MathGL_BINARY_DIR}/mgltex/scripts
-    COMMAND ${CMAKE_COMMAND} -E copy ${MathGL_SOURCE_DIR}/mgltex/mgltex.tex ${MathGL_BINARY_DIR}/mgltex/
+    COMMAND ${CMAKE_COMMAND} -E copy ${MathGL_SOURCE_DIR}/mgltex/sample.tex ${MathGL_BINARY_DIR}/mgltex/
     COMMAND ${CMAKE_COMMAND} -E copy ${MathGL_SOURCE_DIR}/mgltex/mgltex.sty ${MathGL_BINARY_DIR}/mgltex/
-    COMMAND ${findpdflatex} -draftmode mgltex.tex
+    COMMAND ${findpdflatex} -draftmode sample.tex
 )
 foreach(mglscr ${extramgl})
 	list(APPEND mglpng scripts/${mglscr}.png)
@@ -37,20 +37,20 @@ foreach(mglscr ${extramgl})
 	)
 endforeach(mglscr)
 
-add_custom_command(OUTPUT scripts/mgltex.png
-	COMMAND mglconv -o scripts/mgltex.png scripts/mgltex.mgl
+add_custom_command(OUTPUT scripts/sample.png
+	COMMAND mglconv -o scripts/sample.png scripts/sample.mgl
 	DEPENDS mglconv scripts
 )
 
-add_custom_command(OUTPUT mgltex.pdf
-	COMMAND ${findpdflatex} mgltex.tex
-	DEPENDS mgltex.sty mgltex.tex ${mglpng} scripts/mgltex.png)
-add_custom_target(pdf ALL DEPENDS mgltex.pdf)
+add_custom_command(OUTPUT sample.pdf
+	COMMAND ${findpdflatex} sample.tex
+	DEPENDS mgltex.sty sample.tex ${mglpng} scripts/sample.png)
+add_custom_target(pdf ALL DEPENDS sample.pdf)
 
 get_directory_property(mglconv_clean ADDITIONAL_MAKE_CLEAN_FILES)
-set(mglconv_clean ${mglconv_clean} scripts mgltex.sty mgltex.tex mgltex.aux mgltex.log)
+set(mglconv_clean ${mglconv_clean} scripts sample.sty sample.tex sample.aux sample.log)
 set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "${mglconv_clean}")
 
 install(FILES mgltex.sty DESTINATION ${TEXMFLOCALDIR}/tex/latex/mgltex/)
-install(FILES mgltex.tex ${MathGL_BINARY_DIR}/mgltex/mgltex.pdf DESTINATION ${TEXMFLOCALDIR}/doc/latex/mgltex/)
+install(FILES sample.tex mgltex.pdf ${MathGL_BINARY_DIR}/mgltex/sample.pdf DESTINATION ${TEXMFLOCALDIR}/doc/latex/mgltex/)
 install(CODE "execute_process(COMMAND ${findmktexlsr} ${TEXMFLOCALDIR})")

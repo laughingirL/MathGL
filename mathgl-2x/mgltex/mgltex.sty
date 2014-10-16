@@ -1,4 +1,13 @@
 %%
+%% This is file `mgltex.sty',
+%% generated with the docstrip utility.
+%%
+%% The original source files were:
+%%
+%% mgltex.dtx  (with options: `package')
+%% 
+%% This is a generated file.
+%% 
 %% Copyright (C) 2014 by Diego Sejas <diego.mathematician@gmail.com>
 %% 
 %% This program is free software: you can redistribute it and/or modify it
@@ -14,9 +23,8 @@
 %% You should have received a copy of the GNU General Public License along
 %% with this program.  If not, see <http://www.gnu.org/licenses/>.
 %% 
-
 \def\mgl@name{mgltex}
-\def\mgl@date{2014/09/02}
+\def\mgl@date{2014/09/16}
 \def\mgl@version{1.0}
 \def\mgl@description{Embed MGL code into LaTeX documents}
 
@@ -34,12 +42,6 @@
 }
 
 \DeclareGraphicsExtensions{.png,.eps,.jpg,.jpeg,.bps,.pdf,.epsz,.eps.gz,.bpsz,.bps.gz,.gif}
-%\DeclareGraphicsExtensions{.png,.eps,.jpg,.jpeg,.bps,.pdf,.gif}
-%\DeclareGraphicsRule{*}{eps}{*}{}
-%\DeclareGraphicsRule{.eps.gz}{eps}{.eps.bb}{`gunzip -c #1}%   gzipped EPS
-%\DeclareGraphicsRule{.epsz}{eps}{.eps.bb}{`gunzip -c #1}%   gzipped EPS
-%\DeclareGraphicsRule{.bps.gz}{eps}{.bps.bb}{`gunzip -c #1}%   gzipped EPS
-%\DeclareGraphicsRule{.bpsz}{eps}{.bps.bb}{`gunzip -c #1}%   gzipped EPS
 
 \DeclareOption{jpg}{\def\mgl@image@ext{.jpg}}
 \DeclareOption{jpeg}{\def\mgl@image@ext{.jpeg}}
@@ -52,18 +54,6 @@
 \DeclareOption{gif}{\def\mgl@image@ext{.gif}}
 
 \DeclareOption{tex}{\def\mgl@image@ext{.tex}}
-%\DeclareOption{svg}{\def\mgl@image@ext{.svg}}
-%\DeclareOption{svgz}{\def\mgl@image@ext{.svgz}}
-%\DeclareOption{bmp}{\def\mgl@image@ext{.bmp}}
-%\DeclareOption{tga}{\def\mgl@image@ext{.tga}}
-%\DeclareOption{mgld}{\def\mgl@image@ext{.mgld}}
-%\DeclareOption{json}{\def\mgl@image@ext{.json}}
-%\DeclareOption{jsonz}{\def\mgl@image@ext{.jsonz}}
-%\DeclareOption{obj}{\def\mgl@image@ext{.obj}}
-%\DeclareOption{xyz}{\def\mgl@image@ext{.xyz}}
-%\DeclareOption{stl}{\def\mgl@image@ext{.stl}}
-%\DeclareOption{off}{\def\mgl@image@ext{.off}}
-%\DeclareOption{prc}{\def\mgl@image@ext{.prc}}
 
 \ExecuteOptions{final,eps}
 \ProcessOptions*
@@ -117,7 +107,7 @@
 \define@key{mglplot@keys}{read}{\g@addto@macro{\graph@keys}{read=#1,}}
 \define@key{mglplot@keys}{command}{\g@addto@macro{\graph@keys}{command=#1,}}
 \define@key{mglplot@keys}{outext}{\def\mglplot@output@ext{.#1}}
-\define@key{mglplot@keys}{setup}{\def\mglplot@setup{#1}}
+\define@key{mglplot@keys}{settings}{\def\mglplot@settings{#1}}
 
 \def\mgl@dir{}
 \def\mgldir#1{%
@@ -137,46 +127,46 @@
   \immediate\write18{mglconv -n "\mgl@dir\jobname.mgl"}%
 }
 
-\def\mglsetup@defined{}
-\newcommand\mglsetup[1][generic]{%
-  \test@mglsetup@defined{#1}%
+\def\mglplotsettings@defined{}
+\newcommand\mglplotsettings[1][generic]{%
+  \test@mglplotsettings@defined{#1}%
   \expandafter\def\csname mgl@setup@#1\endcsname{\immediate\write\mgl@script{}}%
-  \g@addto@macro{\mglsetup@defined}{#1,}%
+  \g@addto@macro{\mglplotsettings@defined}{#1,}%
   \let\do\@makeother \dospecials%
   \endlinechar`\^^M \catcode`\^^M\active%
   \catcode`\ =10%
-  \expandafter\mglsetup@write@line%
+  \expandafter\mglplotsettings@write@line%
 }
-\def\test@mglsetup@defined#1{%
+\def\test@mglplotsettings@defined#1{%
   \def\this@setup{#1}%
-  \@for\mglsetup@name:=\mglsetup@defined\do{%
-    \ifx\this@mglsetup\mglsetup@name%
+  \@for\mglplotsettings@name:=\mglplotsettings@defined\do{%
+    \ifx\this@mglplotsettings\mglplotsettings@name%
       \PackageWarning{\mgl@name}{Redefining "#1" setup for \noexpand\mglplot}%
     \fi%
   }%
 }
 \begingroup%
   \catcode`\^^M\active%
-  \gdef\mglsetup@write@line#1^^M{%
+  \gdef\mglplotsettings@write@line#1^^M{%
     \def\next@action{%
       \expandafter\g@addto@macro\csname mgl@setup@\this@setup\endcsname{\immediate\write\mgl@script{#1}}%
-      \mglsetup@write@line%
+      \mglplotsettings@write@line%
     }%
-    \test@end@mglsetup{#1}%
+    \test@end@mglplotsettings{#1}%
     \next@action%
   }%
 \endgroup
 \begingroup%
   \escapechar=-1 \relax%
-  \xdef\end@mglsetup{\string\\end\string\{mglsetup\string\}}%
+  \xdef\end@mglplotsettings{\string\\end\string\{mglplotsettings\string\}}%
 \endgroup
-\def\test@end@mglsetup#1{%
+\def\test@end@mglplotsettings#1{%
   \edef\this@line{#1}%
-  \ifx\this@line\end@mglsetup%
-    \def\next@action{\end{mglsetup}}%
+  \ifx\this@line\end@mglplotsettings%
+    \def\next@action{\end{mglplotsettings}}%
   \fi%
 }
-\def\endmglsetup{}
+\def\endmglplotsettings{}
 
 \def\TeX@ext{.tex}
 \newcounter{mgl@image@no}
@@ -185,14 +175,14 @@
   \@ifnextchar[{\@mglplot}{\@mglplot[]}%
 }
 \def\@mglplot[#1]{%
-  \def\mglplot@setup{generic}%
+  \def\mglplot@settings{generic}%
   \def\graph@keys{}%
   \setkeys{mglplot@keys}{#1}%
   \stepcounter{mgl@image@no}%
-  \ifx\csname mgl@setup@\mglplot@setup\endcsname\@undefined%
-    \PackageError{\mgl@name}{Setup "\mglplot@setup" undefined}{}%
+  \ifx\csname mgl@setup@\mglplot@settings\endcsname\@undefined%
+    \PackageError{\mgl@name}{Setup "\mglplot@settings" undefined}{}%
   \else%
-    \csname mgl@setup@\mglplot@setup\endcsname%
+    \csname mgl@setup@\mglplot@settings\endcsname%
   \fi%
   \@@mglplot%
 }
@@ -541,9 +531,6 @@
 }
 
 \def\mglTeX{mgl\TeX}
-
-%%%%%%%%%%%%%%%%%%%% TODO: %%%%%%%%%%%%%%%%%%%%
-%% 1. \mglpause and \mglresume commands to pause and resume execution of mgltex
-%% 2. Optional argument in "mglverbatim" and related to activate/deactivate line numbering
-%% 3. Low-lwvwl command to set "mglverbatim" and related numbering style
-%%%%%%%%%%%%%%%%%%%% TODO: %%%%%%%%%%%%%%%%%%%%
+\endinput
+%%
+%% End of file `mgltex.sty'.
