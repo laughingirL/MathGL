@@ -52,7 +52,7 @@ Generally, MathGL is GPL library. However, you can use LGPL license for MathGL c
 
 @strong{Latest news}
 @itemize
-@item @emph{20 October 2014.}
+@item @emph{21 October 2014.}
 New version (v.@value{VERSION}@value{MINVER}) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are @ref{LaTeX package}, command to load external DLL file (@ref{load}), new primitive (@ref{logo}), improvements for projections, manual rotation angle in @ref{axis} and other minor improvements, which denoted @ref{News, here}.
 @item @emph{7 August 2014.}
 New version (v.@value{VERSION}) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are many major improvements for both MathGL core and for UDAV, which denoted @ref{News, here}.
@@ -75,14 +75,14 @@ Javascript interface was developed with support of @url{http://www.datadvance.ne
 
 @itemize
 
-@item @strong{20 October 2014.}
+@item @strong{21 October 2014.}
 New version (v.2.3.1) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are minor improvements and bugfixes:
 @itemize @bullet
 @item Add @ref{LaTeX package} @emph{mglTeX} (author Diego Sejas Viscarra) for making figures directly from MGL script located in LaTeX file.
 @item Add MGL command @ref{load} for loading MGL commands from external DLL (or .so) module.
 @item Add @ref{logo} function to draw bitmap (logo), which is stretched along whole axis range.
 @item Add MGL command @ref{reset} which restore default settings and clear image (i.e. call @code{DefaultPlotParam()}).
-@item Add option @code{value} to @ref{axis} function, which allow to set rotation angle for tick labels.
+@c @item Add option @code{value} to @ref{axis} function, which allow to set rotation angle for tick labels.
 @item Change y coordinate at x-z projection.
 @item Improve projection of 'unrotatable' objects (like @ref{legend}, @ref{title}, ...).
 @item Add projection (@ref{ternary}&8) which is the same as usual (@ref{ternary}&4) but don't print text on projections
