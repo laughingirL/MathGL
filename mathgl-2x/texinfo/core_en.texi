@@ -3380,10 +3380,10 @@ Fit data along x-, y- and z-directions for array specified parametrically @var{a
 @end deftypefn
 
 @anchor{fit}
-@deftypefn {MGL command} {} fit res adat sdat 'func' 'var' [ini=0]
-@deftypefnx {MGL command} {} fit res xdat adat sdat 'func' 'var' [ini=0]
-@deftypefnx {MGL command} {} fit res xdat ydat adat sdat 'func' 'var' [ini=0]
-@deftypefnx {MGL command} {} fit res xdat ydat zdat adat sdat 'func' 'var' [ini=0]
+@deftypefn {MGL command} {} fit res adat 'func' 'var' [ini=0]
+@deftypefnx {MGL command} {} fit res xdat adat 'func' 'var' [ini=0]
+@deftypefnx {MGL command} {} fit res xdat ydat adat 'func' 'var' [ini=0]
+@deftypefnx {MGL command} {} fit res xdat ydat zdat adat 'func' 'var' [ini=0]
 @ifclear UDAV
 @deftypefnx {Method on @code{mglGraph}} @code{mglData} Fit (@code{const mglDataA &}a, @code{const char *}func, @code{const char *}var, @code{const char *}opt=@code{""})
 @deftypefnx {Method on @code{mglGraph}} @code{mglData} Fit (@code{const mglDataA &}a, @code{const char *}func, @code{const char *}var, @code{mglData &}ini, @code{const char *}opt=@code{""})

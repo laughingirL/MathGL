@@ -246,6 +246,7 @@ unsigned char **mglCanvasGL::GetRGBLines(long &width, long &height, unsigned cha
 	p = (unsigned char **)malloc(height * sizeof(unsigned char *));
 	f = (unsigned char *) malloc(width*height * sizeof(unsigned char)*d);
 	for(long i=0;i<height;i++)	p[i] = f+d*width*(height-1-i);
+	glReadBuffer(GL_FRONT);
 	glPixelStorei(GL_PACK_ALIGNMENT, 1);
 	glReadPixels(x, y, width, height, alpha ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, f);
 	return p;

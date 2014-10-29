@@ -3292,10 +3292,10 @@ Draw bitmap (logo) along whole axis range, which can be changed by @ref{Command 
 @end deftypefn
 
 @anchor{fit}
-@deftypefn {Команда MGL} {} fit res adat sdat 'func' 'var' [ini=0]
-@deftypefnx {Команда MGL} {} fit res xdat adat sdat 'func' 'var' [ini=0]
-@deftypefnx {Команда MGL} {} fit res xdat ydat adat sdat 'func' 'var' [ini=0]
-@deftypefnx {Команда MGL} {} fit res xdat ydat zdat adat sdat 'func' 'var' [ini=0]
+@deftypefn {Команда MGL} {} fit res adat 'func' 'var' [ini=0]
+@deftypefnx {Команда MGL} {} fit res xdat adat 'func' 'var' [ini=0]
+@deftypefnx {Команда MGL} {} fit res xdat ydat adat 'func' 'var' [ini=0]
+@deftypefnx {Команда MGL} {} fit res xdat ydat zdat adat 'func' 'var' [ini=0]
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglGraph}} @code{mglData} Fit (@code{const mglDataA &}a, @code{const char *}func, @code{const char *}var, @code{const char *}opt=@code{""})
 @deftypefnx {Метод класса @code{mglGraph}} @code{mglData} Fit (@code{const mglDataA &}a, @code{const char *}func, @code{const char *}var, @code{mglData &}ini, @code{const char *}opt=@code{""})
