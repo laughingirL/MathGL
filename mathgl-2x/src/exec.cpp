@@ -1149,11 +1149,25 @@ int MGL_NO_EXPORT mgls_read(mglGraph *gr, long , mglArg *a, const char *k, const
 	int res=0;
 	bool rr=true;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
+	mglData *f = dynamic_cast<mglData *>(a[1].d);
 	if(!d)	return 1;
-	if(!strcmp(k,"ds"))	rr=d->Read(a[1].s.c_str());
-	else if(!strcmp(k,"dsn"))	rr=d->Read(a[1].s.c_str(), iint(a[2].v));
-	else if(!strcmp(k,"dsnn"))	rr=d->Read(a[1].s.c_str(), iint(a[2].v),iint(a[3].v));
-	else if(!strcmp(k,"dsnnn"))	rr=d->Read(a[1].s.c_str(), iint(a[2].v),iint(a[3].v),iint(a[4].v));
+	mglDataC c;
+	if(!strcmp(k,"ds"))
+	{	rr=c.Read(a[1].s.c_str());	*d = c;	}
+	else if(!strcmp(k,"dsn"))
+	{	rr=c.Read(a[1].s.c_str(), iint(a[2].v));	*d = c;	}
+	else if(!strcmp(k,"dsnn"))
+	{	rr=c.Read(a[1].s.c_str(), iint(a[2].v),iint(a[3].v));	*d = c;	}
+	else if(!strcmp(k,"dsnnn"))
+	{	rr=c.Read(a[1].s.c_str(), iint(a[2].v),iint(a[3].v),iint(a[4].v));	*d = c;	}
+	if(!strcmp(k,"dds") && f)
+	{	rr=c.Read(a[2].s.c_str());	*d = c.Real();	*f = c.Imag();	}
+	if(!strcmp(k,"ddsn") && f)
+	{	rr=c.Read(a[2].s.c_str(), iint(a[3].v));	*d = c.Real();	*f = c.Imag();	}
+	if(!strcmp(k,"ddsnn") && f)
+	{	rr=c.Read(a[2].s.c_str(), iint(a[3].v),iint(a[4].v));	*d = c.Real();	*f = c.Imag();	}
+	if(!strcmp(k,"ddsnnn") && f)
+	{	rr=c.Read(a[2].s.c_str(), iint(a[3].v),iint(a[4].v),iint(a[5].v));	*d = c.Real();	*f = c.Imag();	}
 	if(!rr)	gr->SetWarn(mglWarnFile,"Read");
 	return res;
 }
@@ -3075,7 +3089,7 @@ mglCommand mgls_base_cmd[] = {
 	{"ranges","Set axis ranges","ranges x1 x2 y1 y2 [z1 z2]", mgls_ranges ,14},
 	{"rasterize","Rasterize and save to background","rasterize", mgls_rasterize ,12},
 	{"ray","Solve Hamiltonian ODE (find GO ray or trajectory)","ray Res 'ham' x0 y0 z0 px0 py0 pz0 [dz=0.1 tmax=10]", mgls_ray ,4},
-	{"read","Read data from file","read Dat 'file' [nx ny nz]", mgls_read ,4},
+	{"read","Read data from file","read Dat 'file' [nx ny nz] | ReDat ImDat 'file' [nx ny nz]", mgls_read ,4},
 	{"readall","Read and join data from several files","readall Dat 'templ' [slice]", mgls_readall ,4},
 	{"readhdf","Read data from HDF5 file","readhdf Dat 'file' 'id'", mgls_readhdf ,4},
 	{"readmat","Read data from file with sizes specified in first row","readmat Dat 'file' [dim]", mgls_readmat ,4},

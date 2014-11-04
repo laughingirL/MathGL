@@ -168,7 +168,7 @@ MGL_NO_EXPORT void* mgl_ffty(void *par)
 #pragma omp parallel
 #endif
 	{
-		void *w = mgl_fft_alloc_thr(nx);
+		void *w = mgl_fft_alloc_thr(ny);
 #pragma omp for nowait
 		for(long i=t->id;i<t->n;i+=mglNumThr)
 			mgl_fft(t->b+2*(i%nx)+2*nx*ny*(i/nx), nx, ny, t->v, w, t->p[3]);
@@ -184,7 +184,7 @@ MGL_NO_EXPORT void* mgl_fftz(void *par)
 #pragma omp parallel
 #endif
 	{
-		void *w = mgl_fft_alloc_thr(nx);
+		void *w = mgl_fft_alloc_thr(nz);
 #pragma omp for nowait
 		for(long i=t->id;i<t->n;i+=mglNumThr)
 			mgl_fft(t->b+2*i, nx*ny, nz, t->v, w, t->p[3]);
