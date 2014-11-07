@@ -329,7 +329,7 @@ int MGL_EXPORT mgl_data_read(HMDT d, const char *fname)
 	bool first=false;
 	register char ch;
 	for(i=nb-1;i>=0;i--)	if(buf[i]>' ')	break;
-	buf[i+1]=0;	nb = i;		// remove tailing spaces
+	buf[i+1]=0;	nb = i+1;		// remove tailing spaces
 	for(i=0;i<nb-1 && !isn(buf[i]);i++)	// determine nx
 	{
 		while(buf[i]=='#')	{	while(!isn(buf[i]) && i<nb)	i++;	}

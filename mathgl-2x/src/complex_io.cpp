@@ -243,7 +243,7 @@ void MGL_EXPORT mgl_datac_save_(uintptr_t *d, const char *fname,int *ns,int l)
 //-----------------------------------------------------------------------------
 int MGL_EXPORT mgl_datac_read(HADT d, const char *fname)
 {
-	long l=1,m=1,k=1;
+	long l=1,m=1,k=1,sk=0;
 	long nb,i;
 	gzFile fp = gzopen(fname,"r");
 	if(!fp)
@@ -257,13 +257,15 @@ int MGL_EXPORT mgl_datac_read(HADT d, const char *fname)
 	bool first=false;	// space is not allowed delimiter for file with complex numbers
 	register char ch;
 	for(i=nb-1;i>=0;i--)	if(buf[i]>' ')	break;
-	buf[i+1]=0;	nb = i;		// remove tailing spaces
+	buf[i+1]=0;	nb = i+1;		// remove tailing spaces
 	for(i=0;i<nb-1 && !isn(buf[i]);i++)	// determine nx
 	{
 		while(buf[i]=='#')	{	while(!isn(buf[i]) && i<nb)	i++;	}
 		ch = buf[i];
 		if(ch>' ' && !first)	first=true;
-		if(first && (ch=='\t' || ch==';') && buf[i+1]!='\t') k++;	// ',' is not valid delimiter for complex arrays
+		if(strchr("[{(",ch))	sk++;
+		if(strchr("]})",ch))	sk--;
+		if(first && (ch=='\t' || ch==';' || (ch==',' && sk==0)) && buf[i+1]!='\t') k++;	// ',' is not valid delimiter for complex arrays
 	}
 	first = false;
 	for(i=0;i<nb-1;i++)					// determine ny

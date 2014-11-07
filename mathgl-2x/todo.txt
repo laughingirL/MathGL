@@ -43,9 +43,9 @@ ZZ. Update *.i for new functions {before release!!!}
 	u. Test FlowP + 3d
 
 7. Improve z-order for rapidly oscillating surfaces
-10. Manual rotation angle for axis ticks (as "value" option?!)
-11. Export to XPM (like GIF)
-13. Title and perspective
+8. Manual rotation angle for axis ticks (as "value" option?!)
+9. Export to XPM (like GIF)
+10. Title and perspective
 
 ============= DOCUMENTATION =============
 
@@ -57,6 +57,8 @@ D. Docs about JS interface
 YY. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using Stem()
 
 ============= UDAV =============
+
+1. Zoom rectangle after mouse selection
 
 2. Create default plot depending on selected row/column/range in data table ?!?
 

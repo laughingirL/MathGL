@@ -64,23 +64,6 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	mglDataC a(128,128);	gr->Fill(a,"cos(pi*x)*sin(2*pi*y)");
-	mglData f(a.ny);	f.FillSample("kf");
-	gr->SubPlot(2,2,0);	gr->SetRange('c',a);
-	gr->Dens(a);	gr->Colorbar();	//gr->Box();
-	a.FFT("y");
-	gr->SubPlot(2,2,3);	gr->SetRange('c',a);
-	gr->Dens(a);	gr->Colorbar();	gr->Box();
-//	for(long i=0;i<a.nx;i++)	for(long j=0;j<a.ny;j++)
-//		a.a[i+a.nx*j] *= dual(0,f.a[j]);
-	a.FFT("iy");
-	gr->SubPlot(2,2,1);	gr->SetRange('c',a);
-	gr->Dens(a);	gr->Colorbar();	gr->Box();
-	gr->SubPlot(2,2,2);	gr->SetRange('y',f);
-	gr->Plot(f);	gr->Box();	gr->Axis();
-	return;
-
-//	gr->Rotate(40,60);	gr->Fog(1);	gr->Box();	return;
 	mglParse par;
 	par.Execute(gr,"load '/home/balakin/mathgl-code/mathgl-2x/build/examples/libmgl_module.so':baxis\n");
 //	par.Execute(gr,"subplot 1 1 0:#rotate 40 60\nperspective 1.22:box:axis\n");
