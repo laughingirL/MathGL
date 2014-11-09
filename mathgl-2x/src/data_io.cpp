@@ -61,32 +61,52 @@ void mglFromStr(HMDT d,char *buf,long NX,long NY,long NZ)	// TODO: add multithre
 {
 	if(NX<1 || NY <1 || NZ<1)	return;
 	mgl_data_create(d, NX,NY,NZ);
-	long nb = strlen(buf);
-	register long i=0, j=0;
 	const std::string loc = setlocale(LC_NUMERIC, NULL);	setlocale(LC_NUMERIC, "C");
-	while(j<nb)
+	std::vector<char *> lines;
+	std::vector<std::vector<mreal> > numbs;
+	lines.push_back(buf);
+	for(char *s=buf; *s; s++)	if(isn(*s))
+	{	lines.push_back(s+1);	*s = 0;	s++;	}
+	numbs.resize(lines.size());
+	long nl = long(lines.size());
+#pragma omp parallel for
+	for(long k=0;k<nl;k++)
 	{
-		while(j<nb && buf[j]<=' ')	j++;
-		while(buf[j]=='#')		// skip comment
+		char *b = lines[k];
+		long nb = strlen(b);
+		register long i=0, j=0;
+		while(j<nb)
 		{
-			if(i>0 || buf[j+1]!='#')	// this is columns id
-				while(j<nb && !isn(buf[j]))	j++;
-			else
+			while(j<nb && b[j]<=' ')	j++;
+			while(b[j]=='#')		// skip comment
 			{
-				while(j<nb && !isn(buf[j]))
+				if(i>0 || b[j+1]!='#')	// this is columns id
+					while(j<nb && !isn(b[j]))	j++;
+				else	// NOTE I suppose that only single line contain column ids
 				{
-					if(buf[j]>='a' && buf[j]<='z')
-						d->id.push_back(buf[j]);
-					j++;
+					while(j<nb && !isn(b[j]))
+					{
+						if(b[j]>='a' && b[j]<='z')
+							d->id.push_back(b[j]);
+						j++;
+					}
 				}
+				while(j<nb && b[j]<=' ')	j++;
 			}
-			while(j<nb && buf[j]<=' ')	j++;
+			char *s=b+j;
+			while(j<nb && b[j]>' ' && b[j]!=',' && b[j]!=';')	j++;
+			b[j]=0;
+			numbs[k].push_back(strstr(s,"NAN")?NAN:atof(s));
 		}
-		char *s=buf+j;
-		while(j<nb && buf[j]>' ' && buf[j]!=',' && buf[j]!=';')	j++;
-		buf[j]=0;
-		d->a[i] = strstr(s,"NAN")?NAN:atof(s);
-		i++;	if(i>=NX*NY*NZ)	break;
+	}
+	register long i=0, n=NX*NY*NZ;
+	for(long k=0;k<nl && i<n;k++)
+	{
+		std::vector<mreal> &vals = numbs[k];
+		long c = vals.size();
+		if(c>n-i)	c = n-i;
+		memcpy(d->a+i,&(vals[0]),c*sizeof(mreal));
+		i += c;
 	}
 	setlocale(LC_NUMERIC, loc.c_str());
 }

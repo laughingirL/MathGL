@@ -55,52 +55,78 @@ void mglFromStr(HADT d,char *buf,long NX,long NY,long NZ)	// TODO: add multithre
 {
 	if(NX<1 || NY <1 || NZ<1)	return;
 	mgl_datac_create(d, NX,NY,NZ);
-	long nb = strlen(buf);
-	register long i=0, j=0;
 	const std::string loc = setlocale(LC_NUMERIC, NULL);	setlocale(LC_NUMERIC, "C");
-	while(j<nb)
+	std::vector<char *> lines;
+	std::vector<std::vector<dual> > numbs;
+	lines.push_back(buf);
+	for(char *s=buf; *s; s++)	if(isn(*s))
+	{	lines.push_back(s+1);	*s = 0;	s++;	}
+	numbs.resize(lines.size());
+	long nl = long(lines.size());
+#pragma omp parallel for
+	for(long k=0;k<nl;k++)
 	{
-		while(j<nb && buf[j]<=' ')	j++;
-		while(buf[j]=='#')		// skip comment
+		char *b = lines[k];
+		long nb = strlen(b);
+		register long i=0, j=0;
+
+		while(j<nb)
 		{
-			if(i>0 || buf[j+1]!='#')	// this is columns id
-				while(j<nb && !isn(buf[j]))	j++;
+			while(j<nb && b[j]<=' ')	j++;
+			while(b[j]=='#')		// skip comment
+			{
+				if(i>0 || b[j+1]!='#')	// this is columns id
+					while(j<nb && !isn(b[j]))	j++;
+				else	// NOTE I suppose that only single line contain column ids
+				{
+					while(j<nb && !isn(b[j]))
+					{
+						if(b[j]>='a' && b[j]<='z')	d->id.push_back(b[j]);
+						j++;
+					}
+				}
+				while(j<nb && b[j]<=' ')	j++;
+			}
+			char *s=b+j;
+			register long sk=0;
+			while(j<nb && b[j]>=' ' && (b[j]!=',' || sk!=0) &&b[j]!=';')
+			{
+				if(strchr("[{(",b[j]))	sk++;
+				if(strchr("]})",b[j]))	sk--;
+				j++;
+			}
+			b[j]=0;
+			double re=0,im=0;	size_t ll=strlen(s);
+			while(s[ll]<=' ')	ll--;
+			if(*s=='(')		sscanf(s,"(%lg,%lg)",&re,&im);
+			else if(*s=='[')	sscanf(s,"[%lg,%lg]",&re,&im);
+			else if(*s=='{')	sscanf(s,"{%lg,%lg}",&re,&im);
+			else if(s[ll]=='i')
+			{
+				double a,b;	s[ll] = 0;
+				int s1=sscanf(s,"%lg+%lg",&re,&im);
+				int s2=sscanf(s,"%lg-%lg",&a,&b);
+				if(s2==2 && s1<2)	{	re=a;	im=-b;	}
+
+			}
 			else
 			{
-				while(j<nb && !isn(buf[j]))
-				{
-					if(buf[j]>='a' && buf[j]<='z')
-						d->id.push_back(buf[j]);
-					j++;
-				}
+				double a,b;
+				int s1=sscanf(s,"%lg+i%lg",&re,&im);
+				int s2=sscanf(s,"%lg-i%lg",&a,&b);
+				if(s2==2 && s1<2)	{	re=a;	im=-b;	}
 			}
-			while(j<nb && buf[j]<=' ')	j++;
+			numbs[k].push_back(dual(re,im));
 		}
-		char *s=buf+j;
-		while(j<nb && buf[j]>=' ' && buf[j]!=';')	j++;
-		buf[j]=0;
-		double re=0,im=0;	size_t ll=strlen(s);
-		while(s[ll]<=' ')	ll--;
-		if(*s=='(')		sscanf(s,"(%lg,%lg)",&re,&im);
-		else if(*s=='[')	sscanf(s,"[%lg,%lg]",&re,&im);
-		else if(*s=='{')	sscanf(s,"{%lg,%lg}",&re,&im);
-		else if(s[ll]=='i')
-		{
-			double a,b;	s[ll] = 0;
-			int s1=sscanf(s,"%lg+%lg",&re,&im);
-			int s2=sscanf(s,"%lg-%lg",&a,&b);
-			if(s2==2 && s1<2)	{	re=a;	im=-b;	}
-
-		}
-		else
-		{
-			double a,b;
-			int s1=sscanf(s,"%lg+i%lg",&re,&im);
-			int s2=sscanf(s,"%lg-i%lg",&a,&b);
-			if(s2==2 && s1<2)	{	re=a;	im=-b;	}
-		}
-		d->a[i] = dual(re,im);
-		i++;	if(i>=NX*NY*NZ)	break;
+	}
+	register long i=0, n=NX*NY*NZ;
+	for(long k=0;k<nl && i<n;k++)
+	{
+		std::vector<dual> &vals = numbs[k];
+		long c = vals.size();
+		if(c>n-i)	c = n-i;
+		memcpy(d->a+i,&(vals[0]),c*sizeof(dual));
+		i += c;
 	}
 	setlocale(LC_NUMERIC, loc.c_str());
 }
