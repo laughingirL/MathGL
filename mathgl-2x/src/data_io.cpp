@@ -78,6 +78,7 @@ void mglFromStr(HMDT d,char *buf,long NX,long NY,long NZ)	// TODO: add multithre
 		while(j<nb)
 		{
 			while(j<nb && b[j]<=' ')	j++;
+			if(j>=nb)	break;
 			while(b[j]=='#')		// skip comment
 			{
 				if(i>0 || b[j+1]!='#')	// this is columns id

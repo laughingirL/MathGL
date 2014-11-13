@@ -364,7 +364,7 @@ void smgl_fexport(mglGraph *gr)	// test file export
 	gr->WriteOBJ("fexport.obj");
 	gr->WritePRC("fexport.prc");
 	gr->WriteJSON("fexport.json");
-	
+
 	gr->ExportMGLD("fexport.mgld");
 	gr->Clf();
 	gr->ImportMGLD("fexport.mgld");
