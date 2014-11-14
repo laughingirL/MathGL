@@ -856,9 +856,9 @@ void mglCanvas::Labelw(char dir, const wchar_t *text, mreal pos, const char *opt
 			mglPnt &pp = Pnt[kk];
 			if(pp.u<0 || (pp.u==0 && pp.v<0))
 			{	pp.u=-pp.u;	pp.v=-pp.v;	pp.w=-pp.w;	}
+			ff[0] = GetLabelPos(t, kk, *aa);	strcat(font,ff);
+			text_plot(kk,text,font,-1.4,0.35+shift);
 		}
-		ff[0] = GetLabelPos(t, kk, *aa);	strcat(font,ff);
-		text_plot(kk,text,font,-1.4,0.35+shift);
 	}
 	LoadState();
 }
