@@ -3,6 +3,12 @@
 
 #define MGL_USE_DOUBLE	${MGL_USE_DOUBLE}
 
+#ifdef WIN32	// a man ask to use built-in font under Windows
+#define MGL_DEF_FONT_NAME	""
+#else
+#define MGL_DEF_FONT_NAME	"${MGL_DEF_FONT}"
+#endif
+
 #if defined(_MSC_VER) || defined(__BORLANDC__)
 #define MGL_SYS_NAN		0
 #define MGL_HAVE_TYPEOF	0

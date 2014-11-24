@@ -38,12 +38,6 @@
 #define MGL_COLOR_MASK		0xffffff00
 #define MGL_FONT_STYLE		0x3f000000
 //-----------------------------------------------------------------------------
-#ifdef WIN32	// a man ask to use built-in font under Windows
-#define MGL_DEF_FONT_NAME	0
-#else
-#define MGL_DEF_FONT_NAME	"STIX"
-#endif
-//-----------------------------------------------------------------------------
 struct mglGlyphDescr
 {
 	wchar_t id;		///< Unicode ID for glyph

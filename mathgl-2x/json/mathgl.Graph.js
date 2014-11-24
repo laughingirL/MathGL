@@ -25,8 +25,8 @@ mathgl.Graph = function(canvas, backend) {
 	this.__fov = 0;		// perspective
 	this.__x1 = 0;	this.__y1 = 0;	this.__z1 = 0;
 	this.__x2 = 1;	this.__y2 = 1;	this.__z2 = 1;
-}
-
+	this.__activeTimeoutHandlers = [];
+};
 
 /**
  * Initialize current view by given MGL script.
@@ -47,6 +47,28 @@ mathgl.Graph.prototype.init = function(mgl) {
 	this.__view.attachCanvas(this.__canvas);
 }
 
+/**
+ * Method uses to wrap native JS setTimeout function to make possible deactivate active callbacks in destroy method
+ *
+ * @param func {Function} Callback function, will be executed after delay
+ * @param delay {Number} Delay before callback call
+ */
+mathgl.Graph.prototype.__setTimeout = function(func, delay) {
+	var me = this;
+	var timeoutFunc = function() {
+		func.call();
+		var index = me.__activeTimeoutHandlers.indexOf(this.setTimeoutId);
+		if (index > -1) {
+			// remove timeout from activeTimeoutHandlers list
+			me.__activeTimeoutHandlers.splice(index, 1);
+		}
+	}
+
+	var timeoutId = setTimeout(mathgl.bind(timeoutFunc, timeoutFunc), delay);
+	// keep timeout handler inside function
+	timeoutFunc.setTimeoutId = timeoutId;
+	this.__activeTimeoutHandlers.push(timeoutId);
+};
 
 /**
  * Load graph state from JSON string.
@@ -136,7 +158,7 @@ mathgl.Graph.prototype.__renderStart = function() {
 	if (!this.__isDraftRenderingInScheduled) {
 		// enqueue draft rendering step
 		this.__isDraftRenderingInScheduled = true;
-		setTimeout(mathgl.bind(this.__renderDraft, this), 0);
+		this.__setTimeout(mathgl.bind(this.__renderDraft, this), 0);
 	}
 }
 
@@ -149,7 +171,7 @@ mathgl.Graph.prototype.__renderDraft = function() {
 	// enqueue precise rendering step
 	if (!this.__isPreciseRenderingScheduled) {
 		this.__isPreciseRenderingScheduled = true;
-		setTimeout(mathgl.bind(this.__renderPrecise, this), this.__preciseRenderingDelay);
+		this.__setTimeout(mathgl.bind(this.__renderPrecise, this), this.__preciseRenderingDelay);
 	}
 	this.__draftFinishedTimestamp = new Date();
 }
@@ -167,7 +189,7 @@ mathgl.Graph.prototype.__renderPrecise = function() {
 	// rechedule pricese rendering if it is not
 	var current = new Date();
 	if (current - this.__draftFinishedTimestamp < this.__preciseRenderingDelay) {
-		setTimeout(mathgl.bind(this.__renderPrecise, this), this.__preciseRenderingDelay - (current - this.__draftFinishedTimestamp));
+		this.__setTimeout(mathgl.bind(this.__renderPrecise, this), this.__preciseRenderingDelay - (current - this.__draftFinishedTimestamp));
 		return;
 	}
 	this.__drawMesh(true);
@@ -626,6 +648,11 @@ mathgl.Graph.prototype.redraw = function() {
 }
 
 mathgl.Graph.prototype.destroy = function() {
+	// clear active timeouts
+	for (var i = 0, l = this.__activeTimeoutHandlers.length; i<l; i++) {
+		var th = this.__activeTimeoutHandlers.pop();
+		clearTimeout(th);
+	}
 	this.__view.destroy();
 	this.__view = null;
 	this.__backend = null;

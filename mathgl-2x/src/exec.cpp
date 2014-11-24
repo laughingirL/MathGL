@@ -1153,13 +1153,13 @@ int MGL_NO_EXPORT mgls_read(mglGraph *gr, long , mglArg *a, const char *k, const
 	if(!d)	return 1;
 	mglDataC c;
 	if(!strcmp(k,"ds"))
-	{	rr=c.Read(a[1].s.c_str());	*d = c;	}
+	{	rr=c.Read(a[1].s.c_str());	*d = c.Real();	}
 	else if(!strcmp(k,"dsn"))
-	{	rr=c.Read(a[1].s.c_str(), iint(a[2].v));	*d = c;	}
+	{	rr=c.Read(a[1].s.c_str(), iint(a[2].v));	*d = c.Real();	}
 	else if(!strcmp(k,"dsnn"))
-	{	rr=c.Read(a[1].s.c_str(), iint(a[2].v),iint(a[3].v));	*d = c;	}
+	{	rr=c.Read(a[1].s.c_str(), iint(a[2].v),iint(a[3].v));	*d = c.Real();	}
 	else if(!strcmp(k,"dsnnn"))
-	{	rr=c.Read(a[1].s.c_str(), iint(a[2].v),iint(a[3].v),iint(a[4].v));	*d = c;	}
+	{	rr=c.Read(a[1].s.c_str(), iint(a[2].v),iint(a[3].v),iint(a[4].v));	*d = c.Real();	}
 	if(!strcmp(k,"dds") && f)
 	{	rr=c.Read(a[2].s.c_str());	*d = c.Real();	*f = c.Imag();	}
 	if(!strcmp(k,"ddsn") && f)

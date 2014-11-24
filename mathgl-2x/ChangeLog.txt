@@ -1,5 +1,7 @@
 2.3.2 Released ??? 2015
 
+* Update mgltex (thanks to Diego Sejas Viscarra)
+* Add cmake option MGL_DEF_FONT to change default font name or use built-in one (if MGL_DEF_FONT is empty).
 * Add reading files with complex numbers by 'read' command.
 
 2.3.1 Released 21 October 2014
