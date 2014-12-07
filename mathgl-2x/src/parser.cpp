@@ -140,7 +140,7 @@ int mglParser::Exec(mglGraph *gr, const wchar_t *com, long n, mglArg *a, const s
 //-----------------------------------------------------------------------------
 mglParser::mglParser(bool setsize)
 {
-	InUse = 1;
+	InUse = 1;	curGr = 0;
 	Skip=Stop=for_br=false;
 	memset(for_stack,0,40*sizeof(int));
 	memset(if_stack,0,40*sizeof(int));
@@ -532,6 +532,7 @@ int mglParser::ParseDef(std::wstring &str)
 int mglParser::Parse(mglGraph *gr, std::wstring str, long pos)
 {
 	if(Stop || gr->NeedStop())	return 0;
+	curGr = gr->Self();
 	std::wstring arg[1024];
 	str=mgl_trim_ws(str);
 	long n,k=0,m=0,mm=0,res;

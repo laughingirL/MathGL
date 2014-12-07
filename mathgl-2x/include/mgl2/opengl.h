@@ -30,7 +30,7 @@ public:
 
 	void SetQuality(int =0)	{	Quality=2;	}
 	void Finish();
-	void SetSize(int ,int )	{}
+	void SetSize(int ,int ,bool clf=true)	{}
 	void View(mreal tetX,mreal tetY,mreal tetZ);
 	void Zoom(mreal x1, mreal y1, mreal x2, mreal y2);
 /*	int NewFrame();

@@ -92,9 +92,9 @@ void MGL_EXPORT mgl_obj_glyph_old(HMGL gr, const mglPrim &q, const mglPnt &p, FI
 		}
 		else	// glyph_wire(p,f,g, d);
 		{
+			long il=0;
 			for(long ik=0;ik<g.nl;ik++)
 			{
-				long il=0;
 				x = g.line[2*ik];	y = g.line[2*ik+1];
 				if(x==0x3fff && y==0x3fff)	// line breakthrough
 				{	il = ik+1;	continue;	}

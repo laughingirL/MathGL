@@ -223,7 +223,6 @@ std::string MGL_NO_EXPORT mgl_sprintf(const char *str, ...)
 int MGL_NO_EXPORT mgl_bps_save(const char *fname, int w, int h, unsigned char **p)
 {
 	time_t now;	time(&now);
-	register long i,j;
 	bool gz = fname[strlen(fname)-1]=='z';
 
 	void *fp;

@@ -94,7 +94,7 @@ typedef unsigned long uintptr_t;
 #include <wchar.h>
 
 #if defined(_MSC_VER)
-#if (_MSC_VER<1800)
+#if (_MSC_VER<=1800)
 #define collapse(a)	// MSVS don't support OpenMP 3.*
 #define strtoull _strtoui64
 #define hypot	_hypot
@@ -274,8 +274,14 @@ extern uint64_t mgl_mask_val[16];
 #include <complex.h>
 #if MGL_USE_DOUBLE
 typedef double _Complex mdual;
+#ifndef _Complex_I
+#define _Complex_I (double _Complex){0, 1}
+#endif
 #else
 typedef float _Complex mdual;
+#ifndef _Complex_I
+#define _Complex_I (float _Complex){0, 1}
+#endif
 #endif
 #define mgl_abs(x)	cabs(x)
 #endif

@@ -1081,6 +1081,7 @@ void MGL_EXPORT mgl_difr_axial(dual *a,int n,int step,dual q,int Border,dual *tm
 //-----------------------------------------------------------------------------
 MGL_NO_EXPORT void *mgl_difr(void *par)
 {
+#if !defined(_MSC_VER)	// MSVC produce internal compiler error on this code
 	mglThreadC *t=(mglThreadC *)par;
 	long n=t->p[0], st=t->p[1], bord=t->p[3], nn=t->n;
 	dual *b=t->a, q = *(t->b);
@@ -1103,6 +1104,7 @@ MGL_NO_EXPORT void *mgl_difr(void *par)
 				mgl_difr_grid(b + ((i%st)+n*(i/st)), n,st, q, bord,tmp,3);
 		delete []tmp;
 	}
+#endif
 	return 0;
 }
 void MGL_EXPORT mgl_datac_diffr(HADT d, const char *how, mreal q)

@@ -57,7 +57,7 @@ uintptr_t MGL_EXPORT mgl_create_data_file_(const char *fname,int l)
 void MGL_EXPORT mgl_delete_data_(uintptr_t *d)
 {	if(_DT_)	delete _DT_;	}
 //-----------------------------------------------------------------------------
-void mglFromStr(HMDT d,char *buf,long NX,long NY,long NZ)	// TODO: add multithreading read
+void mglFromStr(HMDT d,char *buf,long NX,long NY,long NZ)
 {
 	if(NX<1 || NY <1 || NZ<1)	return;
 	mgl_data_create(d, NX,NY,NZ);

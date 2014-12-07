@@ -19,6 +19,7 @@
  ***************************************************************************/
 #include <time.h>
 #include <ctype.h>
+#include "mgl2/base.h"
 #include "mgl2/parser.h"
 #if MGL_HAVE_GSL
 #include <gsl/gsl_sf.h>
@@ -324,7 +325,7 @@ mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std
 		else if(!str.compare(L":"))		res.a[0] = -1;
 		else
 		{
-			HCDT v=FindVar(head, L"#$mgl");
+			v=FindVar(head, L"#$mgl");
 			if(v)	res.Create(v->GetNx(),v->GetNy(),v->GetNz());
 			if(!str.compare(L"rnd"))	for(long i=0;i<res.GetNN();i++)	res.a[i] = mgl_rnd();
 			else if(!str.compare(L"nan"))	res = NAN;
@@ -332,6 +333,22 @@ mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std
 			else if(!str.compare(L"pi"))	res = M_PI;
 			else if(!str.compare(L"on"))	res = 1;
 			else if(!str.compare(L"off"))	res = 0;
+/*			else if(!str.compare(L"t"))	res.Fill(0,1,'x');
+			else if(!str.compare(L"x") && arg && arg->curGr)
+			{
+				if(res.GetNN()==1)	res.Create(100);
+				res.Fill(arg->curGr->Min.x, arg->curGr->Max.x,'x');
+			}
+			else if(!str.compare(L"y") && arg && arg->curGr)
+			{
+				if(res.GetNN()==1)	res.Create(100);
+				res.Fill(arg->curGr->Min.x, arg->curGr->Max.x,res.ny>1?'y':'x');
+			}
+			else if(!str.compare(L"z") && arg && arg->curGr)
+			{
+				if(res.GetNN()==1)	res.Create(100);
+				res.Fill(arg->curGr->Min.x, arg->curGr->Max.x,res.nz>1?'z':'x');
+			}*/
 			else res = wcstod(str.c_str(),0);	// this is number
 		}
 		return res;
@@ -811,7 +828,7 @@ mglDataC MGL_NO_EXPORT mglFormulaCalcC(std::wstring str, mglParser *arg, const s
 		else if(!str.compare(L":"))		res.a[0] = -1;
 		else
 		{
-			HCDT v=FindVar(head, L"#$mgl");
+			v=FindVar(head, L"#$mgl");
 			if(v)	res.Create(v->GetNx(),v->GetNy(),v->GetNz());
 			if(!str.compare(L"rnd"))	for(long i=0;i<res.GetNN();i++)	res.a[i] = mgl_rnd();
 			else if(!str.compare(L"nan"))	res = mreal(NAN);
@@ -819,6 +836,13 @@ mglDataC MGL_NO_EXPORT mglFormulaCalcC(std::wstring str, mglParser *arg, const s
 			else if(!str.compare(L"pi"))	res = mreal(M_PI);
 			else if(!str.compare(L"on"))	res = mreal(1.);
 			else if(!str.compare(L"off"))	res = mreal(0.);
+/*			else if(!str.compare(L"t"))	res.Fill(0,1,'x');
+			else if(!str.compare(L"x") && arg && arg->curGr)
+				res.Fill(arg->curGr->Min.x, arg->curGr->Max.x,'x');
+			else if(!str.compare(L"y") && arg && arg->curGr)
+				res.Fill(arg->curGr->Min.x, arg->curGr->Max.x,res.ny>1?'y':'x');
+			else if(!str.compare(L"z") && arg && arg->curGr)
+				res.Fill(arg->curGr->Min.x, arg->curGr->Max.x,res.nz>1?'z':'x');*/
 			else if(str[0]=='i')	// this is imaginary number
 				res = dual(0,(str.length()>1 && str[1]>' ')?wcstod(str.c_str(),0):1);
 			else res = mreal(wcstod(str.c_str(),0));	// this is real number

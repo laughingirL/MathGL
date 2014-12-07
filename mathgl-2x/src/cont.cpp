@@ -568,8 +568,8 @@ void MGL_EXPORT mgl_contf_gen(HMGL gr, mreal v1, mreal v2, HCDT a, HCDT x, HCDT 
 			// draw it
 			bool b1d2 = a->v(i+1,j,ak)>v2 && a->v(i,j-1,ak)>v2;
 			bool b2d1 = a->v(i,j,ak)>v2 && a->v(i+1,j-1,ak)>v2;
-			mreal vv = mgl_data_linear(a,i+0.5,j-0.5,ak);
-			vv = (vv-v1)*(vv-v2);
+//			mreal vv = mgl_data_linear(a,i+0.5,j-0.5,ak);
+//			vv = (vv-v1)*(vv-v2);
 			if(num<3)	continue;
 			if(num==4)	gr->quad_plot(p[0],p[1],p[3],p[2]);
 			else if(num==3)	gr->trig_plot(p[0],p[1],p[2]);
