@@ -181,6 +181,7 @@ protected:
 	mglDraw *draw;		///< Class for drawing -- need to call directly due to inheritance mechanism
 	QString mousePos;	///< Last mouse position
 	QPixmap pic;		///< Pixmap for drawing (changed by update)
+	QImage img;			///< Last used HQ image
 	double tet, phi;	///< Rotation angles
 	double per;			///< Value of perspective ( must be in [0,1) )
 	bool alpha;			///< Transparency state
@@ -223,7 +224,7 @@ public:
 };
 //-----------------------------------------------------------------------------
 /// Convert bitmap from mglCanvasWnd to QPixmap
-void mglConvertFromGraph(QPixmap &pic, mglCanvas *gr, uchar **buf);
+void mglConvertFromGraph(QPixmap &pic, mglCanvas *gr, uchar **buf, QImage *out=NULL);
 /// Make menu, toolbars and return popup menu for MainWindow
 MGL_EXPORT QMenu *mglMakeMenu(QMainWindow* Wnd, QMathGL* QMGL, QSpinBox*& tet, QSpinBox*& phi);
 //-----------------------------------------------------------------------------

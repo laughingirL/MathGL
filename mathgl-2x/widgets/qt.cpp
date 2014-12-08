@@ -397,7 +397,7 @@ void QMathGL::refreshHQ()
 			else 		mgl_view(gr,-phi,-tet,0);
 		}
 	}
-	mglConvertFromGraph(pic, gr, &grBuf);
+	mglConvertFromGraph(pic, gr, &grBuf, &img);
 	if(pic.size()!=size())	setSize(pic.width(), pic.height());
 	repaint();
 }
@@ -663,28 +663,48 @@ void QMathGL::exportGIF(QString fname)
 {
 	if(fname.isEmpty())	fname = mgl_get_plotid(gr);
 	if(fname.isEmpty())	QMessageBox::critical(this, appName, tr("No filename."),QMessageBox::Ok,0,0);
-	else	mgl_write_gif(gr,setExtension(fname,"png").toStdString().c_str(), appName.toStdString().c_str());
+	else
+#if MGL_HAVE_GIF
+		mgl_write_gif(gr,setExtension(fname,"png").toStdString().c_str(), appName.toStdString().c_str());
+#else
+		img.save(setExtension(fname,"gif"));
+#endif
 }
 //-----------------------------------------------------------------------------
 void QMathGL::exportPNG(QString fname)
 {
 	if(fname.isEmpty())	fname = mgl_get_plotid(gr);
 	if(fname.isEmpty())	QMessageBox::critical(this, appName, tr("No filename."),QMessageBox::Ok,0,0);
-	else	mgl_write_png(gr,setExtension(fname,"png").toStdString().c_str(), appName.toStdString().c_str());
+	else
+#if MGL_HAVE_PNG
+		mgl_write_png(gr,setExtension(fname,"png").toStdString().c_str(), appName.toStdString().c_str());
+#else
+		img.save(setExtension(fname,"png"));
+#endif
 }
 //-----------------------------------------------------------------------------
 void QMathGL::exportPNGs(QString fname)
 {
 	if(fname.isEmpty())	fname = mgl_get_plotid(gr);
 	if(fname.isEmpty())	QMessageBox::critical(this, appName, tr("No filename."),QMessageBox::Ok,0,0);
-	else	mgl_write_png_solid(gr,setExtension(fname,"png").toStdString().c_str(), appName.toStdString().c_str());
+	else
+#if MGL_HAVE_PNG
+		mgl_write_png_solid(gr,setExtension(fname,"png").toStdString().c_str(), appName.toStdString().c_str());
+#else
+		img.save(setExtension(fname,"png"));
+#endif
 }
 //-----------------------------------------------------------------------------
 void QMathGL::exportJPG(QString fname)
 {
 	if(fname.isEmpty())	fname = mgl_get_plotid(gr);
 	if(fname.isEmpty())	QMessageBox::critical(this, appName, tr("No filename."),QMessageBox::Ok,0,0);
-	else	mgl_write_jpg(gr,setExtension(fname,"jpg").toStdString().c_str(), appName.toStdString().c_str());
+	else
+#if MGL_HAVE_JPEG
+		mgl_write_jpg(gr,setExtension(fname,"jpg").toStdString().c_str(), appName.toStdString().c_str());
+#else
+		img.save(setExtension(fname,"jpg"));
+#endif
 }
 //-----------------------------------------------------------------------------
 void QMathGL::exportBPS(QString fname)
@@ -831,7 +851,7 @@ void QMathGL::exportMGLD(QString fname)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglConvertFromGraph(QPixmap &pic, mglCanvas *gr, uchar **buf)
+void mglConvertFromGraph(QPixmap &pic, mglCanvas *gr, uchar **buf, QImage *out)
 {
 	const uchar *bb = mgl_get_rgb(gr);
 	register long i,w=mgl_get_width(gr), h=mgl_get_height(gr);
@@ -845,6 +865,7 @@ void mglConvertFromGraph(QPixmap &pic, mglCanvas *gr, uchar **buf)
 		(*buf)[4*i+3] = 255;
 	}
 	QImage img(*buf, w, h, QImage::Format_RGB32);
+	if(out)	*out = img;
 	pic = QPixmap::fromImage(img);
 }
 //-----------------------------------------------------------------------------
