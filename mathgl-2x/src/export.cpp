@@ -203,7 +203,7 @@ void MGL_NO_EXPORT mgl_printf(void *fp, bool gz, const char *str, ...)	// NOTE T
 	static char buf[1024];
 	va_list lst;
 	va_start(lst,str);
-	vsnprintf(buf,1023,str,lst);
+	vsnprintf(buf,1023,str,lst);	buf[1023]=0;
 	va_end(lst);
 	if(gz)	gzprintf((gzFile)fp, "%s", buf);
 	else	fprintf((FILE *)fp, "%s", buf);
@@ -214,7 +214,7 @@ std::string MGL_NO_EXPORT mgl_sprintf(const char *str, ...)
 	char *buf=new char[1024];
 	va_list lst;
 	va_start(lst,str);
-	vsnprintf(buf,1023,str,lst);
+	vsnprintf(buf,1023,str,lst);	buf[1023]=0;
 	va_end(lst);
 	std::string res = buf;	delete []buf;
 	return res;
@@ -576,7 +576,7 @@ void MGL_EXPORT mgl_write_frame(HMGL gr, const char *fname,const char *descr)
 {
 	char buf[64];
 	if(!fname || !fname[0])
-	{	snprintf(buf,64,"%s%04d.jpg",_Gr_->PlotId.c_str(),_Gr_->GetNumFrame());	fname = buf;	}
+	{	snprintf(buf,64,"%s%04d.jpg",_Gr_->PlotId.c_str(),_Gr_->GetNumFrame());	buf[63]=0;	fname = buf;	}
 	int len=strlen(fname);
 	if(!strcmp(fname+len-4,".jpg")) 	mgl_write_jpg(gr,fname,descr);
 	if(!strcmp(fname+len-5,".jpeg"))	mgl_write_jpg(gr,fname,descr);
@@ -617,14 +617,14 @@ void MGL_EXPORT mgl_write_frame_(uintptr_t *gr, const char *fname,const char *de
 void MGL_EXPORT mgl_show_image(HMGL gr, const char *viewer, int keep)
 {
 	char fname[128], *cmd = new char [128];
-	snprintf(fname,128,"%s.png", tmpnam(NULL));
+	snprintf(fname,128,"%s.png", tmpnam(NULL));	fname[127]=0;
 	mgl_write_png_solid(gr,fname,"MathGL ShowImage file");
 	if(!viewer || !viewer[0])
 		viewer = MGL_DEF_VIEWER;
 #ifdef WIN32
 		if(keep)
 		{
-			snprintf(cmd,128,"%s %s &", viewer,fname);
+			snprintf(cmd,128,"%s %s &", viewer,fname);	cmd[127]=0;
 			if(system(cmd)==-1)	printf("Error to call external viewer\n");
 			Sleep(2000);
 			snprintf(cmd,128,"del %s", fname);
@@ -633,13 +633,14 @@ void MGL_EXPORT mgl_show_image(HMGL gr, const char *viewer, int keep)
 #else
 		if(keep)
 		{
-			snprintf(cmd,128,"%s %s &", viewer,fname);
+			snprintf(cmd,128,"%s %s &", viewer,fname);	cmd[127]=0;
 			if(system(cmd)==-1)	printf("Error to call external viewer\n");
 			sleep(2);
 			snprintf(cmd,128,"rm %s", fname);
 		}
 		else	snprintf(cmd,128,"%s %s; rm %s", viewer,fname,fname);
 #endif
+		cmd[127] = 0;
 		if(system(cmd)==-1)	printf("Error to call external viewer\n");
 		delete []cmd;
 }

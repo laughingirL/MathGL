@@ -680,7 +680,7 @@ int MGL_EXPORT mgl_datac_read_range(HADT dat, const char *templ, double from, do
 	char *fname = new char[n];
 
 	//read first file
-	do{	snprintf(fname,n,templ,t);	t+= step;	} while(!mgl_datac_read(&d,fname) && t<=to);
+	do{	snprintf(fname,n,templ,t);	fname[n-1]=0;	t+= step;	} while(!mgl_datac_read(&d,fname) && t<=to);
 
 	if(t>to)	{	delete []fname;	return false;	}
 	kx = d.nx;	ky = d.ny;	kz = d.nz;
@@ -690,7 +690,7 @@ int MGL_EXPORT mgl_datac_read_range(HADT dat, const char *templ, double from, do
 	// read other files
 	for(;t<=to;t+=step)
 	{
-		snprintf(fname,n,templ,t);
+		snprintf(fname,n,templ,t);	fname[n-1]=0;
 		if(mgl_datac_read(&d,fname))
 			if(!mgl_add_file(kx,ky,kz,b,&d,as_slice))
 			{	delete []fname;	free(b);	return false;	}

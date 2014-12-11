@@ -2087,7 +2087,7 @@ int MGL_NO_EXPORT mgls_info(mglGraph *gr, long , mglArg *a, const char *k, const
 	if(!strcmp(k,"d"))	gr->SetWarn(-1,a[0].d->PrintInfo());
 	else if(!strcmp(k,"s"))	gr->SetWarn(-1,a[0].s.c_str());
 	else if(!strcmp(k,"n"))
-	{	char buf[128];	snprintf(buf,128,"value = %g",a[0].v);	gr->SetWarn(-1,buf);	}
+	{	char buf[128];	snprintf(buf,128,"value = %g",a[0].v);	buf[127]=0;	gr->SetWarn(-1,buf);	}
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -2469,7 +2469,7 @@ int MGL_NO_EXPORT mgls_fgets(mglGraph *gr, long , mglArg *a, const char *k, cons
 		memset(buf,0,1024);
 		if(!fgets(buf,1024,fp))
 		{
-			char b[32];	snprintf(b,32,"%d",n);
+			char b[32];	snprintf(b,32,"%d",n);	b[31]=0;
 			gr->SetWarn(mglWarnOpen,(a[2].s+" - line "+b).c_str());
 			fclose(fp);	return res;
 		}
@@ -2489,7 +2489,7 @@ int MGL_NO_EXPORT mgls_fgets(mglGraph *gr, long , mglArg *a, const char *k, cons
 		memset(buf,0,1024);
 		if(!fgets(buf,1024,fp))
 		{
-			char b[32];	snprintf(b,32,"%d",n);
+			char b[32];	snprintf(b,32,"%d",n);	b[31]=0;
 			gr->SetWarn(mglWarnOpen,(a[3].s+" - line "+b).c_str());
 			fclose(fp);	return res;
 		}

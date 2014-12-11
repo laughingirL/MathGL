@@ -688,7 +688,7 @@ bool mglFont::Load(const char *base, const char *path)
 	}
 	Clear();	// first clear old
 
-	snprintf(str,256,"%s%c%s.vfm",path,sep,base?base:"");
+	snprintf(str,256,"%s%c%s.vfm",path,sep,base?base:"");	str[255]=0;
 	std::vector<short> norm, bold, ital, both;
 	if(!(base && *base) || !read_main(str,norm))
 	{
@@ -703,17 +703,17 @@ bool mglFont::Load(const char *base, const char *path)
 		//================== bold ===========================================
 #pragma omp section
 		{	char str[256];	snprintf(str,256,"%s%c%s_b.vfm",path,sep,base);	// this file may absent
-		read_data(str, 1, bold, ex_b);	}
+			str[255]=0;	read_data(str, 1, bold, ex_b);	}
 
 		//================== italic =========================================
 #pragma omp section
 		{	char str[256];	snprintf(str,256,"%s%c%s_i.vfm",path,sep,base);
-		read_data(str, 2, ital, ex_i);	}
+			str[255]=0;	read_data(str, 2, ital, ex_i);	}
 
 		//================== bold-italic ====================================
 #pragma omp section
 		{	char str[256];	snprintf(str,256,"%s%c%s_bi.vfm",path,sep,base);
-		read_data(str, 3, both, ex_bi);	}
+			str[255]=0;	read_data(str, 3, both, ex_bi);	}
 	}
 
 	// now collect data

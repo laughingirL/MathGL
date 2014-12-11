@@ -258,7 +258,7 @@ void MGL_EXPORT mgl_test_txt(const char *str, ...)
 		char buf[256];
 		va_list lst;
 		va_start(lst,str);
-		vsnprintf(buf,256,str,lst);
+		vsnprintf(buf,256,str,lst);	buf[255]=0;
 		va_end(lst);
 		printf("TEST: %s\n",buf);
 		fflush(stdout);

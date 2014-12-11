@@ -799,6 +799,7 @@ std::wstring MGL_EXPORT mgl_ftoa(double v, const char *fmt)
 	int fdig = int(log10(v));	fdig = fdig>0?(fdig<dig?dig-fdig:0):dig;
 	ff[2] = fdig+'0';	ee[2] = dig+'0';
 	snprintf(se,64,ee,v);	snprintf(sf,64,ff,v);
+	se[63] = sf[63] = 0;
 	long le=strlen(se), lf=strlen(sf), i;
 
 	// clear fix format
@@ -838,7 +839,7 @@ std::wstring MGL_EXPORT mgl_ftoa(double v, const char *fmt)
 	if(mglchr(fmt,'-') && !(plus||tex))		// replace '-' by "\minus"
 		for(i=0;i<lf;i++)	res += sf[i];
 	else
-		for(i=0;i<lf;i++)	res += sf[i]!='-'?sf[i]:L'−';
+		for(i=0;i<lf;i++)	res += sf[i]!='-'?wchar_t(sf[i]):L'−';
 	if(tex)	// TeX notation: 'e' -> "\cdot 10^{...}"
 	{
 		if(res[0]=='1' && (res[1]=='e' || res[1]=='E'))

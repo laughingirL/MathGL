@@ -470,7 +470,8 @@ int mglParser::ParseDef(std::wstring &str)
 			{
 				res = 0;
 				d = mglFormulaCalc(mgl_trim_ws(s.substr(2)), this, DataList).a[0];
-				char buf[32];	snprintf(buf,32,"%g",d);	AddParam(nn, buf);
+				char buf[32];	snprintf(buf,32,"%g",d);
+				buf[31] = 0;	AddParam(nn, buf);
 			}
 			return res+1;
 		}
@@ -613,9 +614,8 @@ int mglParser::Parse(mglGraph *gr, std::wstring str, long pos)
 				if(n && k!=na+2)
 				{
 					char buf[64];
-					snprintf(buf,64,"Bad arguments for %ls: %ld instead of %d\n",
-							a[0].w.c_str(),k-2,na);
-					gr->SetWarn(-1,buf);	n = 1;
+					snprintf(buf,64,"Bad arguments for %ls: %ld instead of %d\n", a[0].w.c_str(),k-2,na);
+					buf[63]=0;	gr->SetWarn(-1,buf);	n = 1;
 				}
 				else if(n)
 				{
@@ -861,6 +861,7 @@ void mglParser::Execute(mglGraph *gr, int n, const wchar_t **text)
 		else if(r==4)	snprintf(buf,64,"\nUnbalanced ' in line %ld\n", i+1);
 		else if(gr->GetWarn()>0)	snprintf(buf,64," in line %ld\n", i+1);
 		else *buf=0;
+		buf[63] = 0;
 		if(*buf)	gr->SetWarn(-2,buf);
 		if(r>0 && r<5)	res=r;
 	}

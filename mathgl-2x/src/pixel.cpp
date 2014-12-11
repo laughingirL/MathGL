@@ -899,7 +899,7 @@ bool MGL_LOCAL_PURE visible(long i, long j, const unsigned char m[8], mreal pw, 
 //	register int ii = int(0.5+(i*c+j*s)/pw)%8, jj = int(0.5+(j*c-i*s)/pw)%8;
 //	if(ii<0)	ii+=8;	if(jj<0)	jj+=8;
 	register int ii = int(0.5+(i*c+j*s)/pw)&7, jj = int(0.5+(j*c-i*s)/pw)&7;
-	return m[jj] & (1<<ii);
+	return m[jj] & (1L<<ii);
 }
 //-----------------------------------------------------------------------------
 /* Bilinear interpolation r(u,v) = r0 + (r1-r0)*u + (r2-r0)*v + (r3+r0-r1-r2)*u*v
@@ -1139,7 +1139,7 @@ void mglCanvas::line_draw(const mglPnt &p1, const mglPnt &p2, const mglDrawReg *
 			if(u<0)			v += u*u;
 			else if(u>dd)	v += (u-dd)*(u-dd);
 			if(v>pw*pw)		continue;
-			if(!(pd & ( 1<<long(fmod(pp+u/pw/1.5, 16)) ) ))	continue;
+			if(!(pd & ( 1L<<long(fmod(pp+u/pw/1.5, 16)) ) ))	continue;
 			p = p1+d*(u/dd);	col2int(p,r,oi);
 			r[3] = v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
 			pnt_plot(i,j,p.z+dz,r,oi);
@@ -1159,7 +1159,7 @@ void mglCanvas::line_draw(const mglPnt &p1, const mglPnt &p2, const mglDrawReg *
 			if(u<0)			v += u*u;
 			else if(u>dd)	v += (u-dd)*(u-dd);
 			if(v>pw*pw)		continue;
-			if(!(pd & (1<<long(fmod(pp+u/pw/1.5, 16)))))		continue;
+			if(!(pd & (1L<<long(fmod(pp+u/pw/1.5, 16)))))		continue;
 			p = p1+d*(u/dd);	col2int(p,r,oi);
 			r[3] = v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
 			pnt_plot(i,j,p.z+dz,r,oi);
@@ -1216,7 +1216,7 @@ void mglCanvas::line_pix(long i, long j, const mglPnt &p1, const mglPnt &p2, con
 	else if(u>dd)	v += (u-dd)*(u-dd);
 	register float pw=dr->PenWidth, dpw=3;
 	if(dr->ObjId==HighId)	{	pw *= 2;	dpw=2;	}
-	if(v>pw*pw || !(dr->PDef & ( 1<<long(fmod(dr->pPos+u/pw/1.5, 16)) ) ))	return;
+	if(v>pw*pw || !(dr->PDef & ( 1L<<long(fmod(dr->pPos+u/pw/1.5, 16)) ) ))	return;
 	mglPnt p = p1+d*(u/dd);
 	unsigned char r[4];
 	col2int(p,r,dr->ObjId);

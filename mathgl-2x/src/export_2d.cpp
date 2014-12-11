@@ -43,11 +43,11 @@ MGL_NO_EXPORT const char *mgl_get_dash(unsigned short d, mreal w,char dlm)
 		if(((d>>j)&1) == p)	f++;
 		else
 		{
-			snprintf(b,32," %g%c",f*w,dlm);	s += b;
+			snprintf(b,32," %g%c",f*w,dlm);	b[31]=0;	s += b;
 			p = (d>>j)&1;	f = 1;	n++;
 		}
 	}
-	snprintf(b,32,"%g",f*w);	s += b;
+	snprintf(b,32,"%g",f*w);	b[31]=0;	s += b;
 	s += (n%2) ? "" : " 0";
 	return s.c_str();
 }
@@ -288,13 +288,14 @@ void MGL_EXPORT mgl_write_eps(HMGL gr, const char *fname,const char *descr)
 		if(q.type<0)	continue;	// q.n1>=0 always
 		cp.c = _Gr_->GetPrmCol(i);
 		const mglPnt p1 = gr->GetPnt(q.n1);
-		if(q.type>1)	snprintf(str,256,"%.2g %.2g %.2g rgb ", cp.r[0]/255.,cp.r[1]/255.,cp.r[2]/255.);
+		if(q.type>1)
+		{	snprintf(str,256,"%.2g %.2g %.2g rgb ", cp.r[0]/255.,cp.r[1]/255.,cp.r[2]/255.);	str[255]=0;	}
 
 		if(q.type==0)	// mark
 		{
 			mreal x0 = p1.x,y0 = p1.y;
 			snprintf(str,256,"%.2g lw %.2g %.2g %.2g rgb ", 50*q.s*q.w>1?50*q.s*q.w:1, cp.r[0]/255.,cp.r[1]/255.,cp.r[2]/255.);
-			wp=1;	// NOTE: this may renew line style if a mark inside!
+			str[255]=0;	wp=1;	// NOTE: this may renew line style if a mark inside!
 			if(q.s!=qs_old)
 			{
 				mgl_printf(fp, gz, "/ss {%g} def\n",q.s);
@@ -341,7 +342,7 @@ void MGL_EXPORT mgl_write_eps(HMGL gr, const char *fname,const char *descr)
 		else if(q.type==1)	// line
 		{
 			snprintf(str,256,"%.2g lw %.2g %.2g %.2g rgb ", q.w>1 ? q.w:1., cp.r[0]/255.,cp.r[1]/255.,cp.r[2]/255.);
-			wp = q.w>1  ? q.w:1;	st = q.n3;
+			str[255]=0;	wp = q.w>1  ? q.w:1;	st = q.n3;
 			put_line(gr,fp,gz,i,wp,cp.c,st, "np %g %g mt ", "%g %g ll ", false, 1);
 			const char *sd = mgl_get_dash(q.n3,q.w,' ');
 			if(sd && sd[0])	mgl_printf(fp, gz, "%s [%s] %g sd dr\n",str,sd,q.w*q.s);
@@ -610,7 +611,7 @@ void MGL_EXPORT mgl_write_tex(HMGL gr, const char *fname,const char *descr)
 		const mglPrim &q = gr->GetPrm(i);
 		if(q.type<0)	continue;	// q.n1>=0 always
 		cp.c = _Gr_->GetPrmCol(i);
-		snprintf(cname,128,"color={rgb,255:red,%d;green,%d;blue,%d}",cp.r[0],cp.r[1],cp.r[2]);
+		snprintf(cname,128,"color={rgb,255:red,%d;green,%d;blue,%d}",cp.r[0],cp.r[1],cp.r[2]);	cname[127]=0;
 
 		const mglPnt p1=gr->GetPnt(q.n1);
 		mreal x=p1.x/100,y=p1.y/100,s=q.s/100;

@@ -133,7 +133,7 @@ int main(int argc, char *argv[])
 			p.Execute(&gr,str.c_str());
 			if(gr.Message()[0])	printf("%s\n",gr.Message());
 			gr.EndFrame();
-			snprintf(buf,2048,"%s-%ld",oname,i);
+			snprintf(buf,2048,"%s-%ld",oname,i);	buf[2047]=0;
 			if(!gif)	gr.WriteFrame(buf);
 		}
 		if(gif)	gr.CloseGIF();

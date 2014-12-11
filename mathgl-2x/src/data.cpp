@@ -1359,19 +1359,24 @@ MGL_EXPORT const char *mgl_data_info(HCDT d)	// NOTE: Not thread safe function!
 {
 	static char buf[512];
 	char s[128];	buf[0]=0;
-	snprintf(s,128,"nx = %ld\tny = %ld\tnz = %ld\n",d->GetNx(),d->GetNy(),d->GetNz());	strcat(buf,s);
+	snprintf(s,128,"nx = %ld\tny = %ld\tnz = %ld\n",d->GetNx(),d->GetNy(),d->GetNz());
+	s[127]=0;	strcat(buf,s);
 
 	long i=0,j=0,k=0;
 	mreal A=0,Wa=0,X=0,Y=0,Z=0,Wx=0,Wy=0,Wz=0, b;
 	b = mgl_data_max_int(d,&i,&j,&k);
-	snprintf(s,128,"Maximum is %g\t at x = %ld\ty = %ld\tz = %ld\n", b,i,j,k);	strcat(buf,s);
+	snprintf(s,128,"Maximum is %g\t at x = %ld\ty = %ld\tz = %ld\n", b,i,j,k);
+	s[127]=0;	strcat(buf,s);
 	b = mgl_data_min_int(d,&i,&j,&k);
-	snprintf(s,128,"Minimum is %g\t at x = %ld\ty = %ld\tz = %ld\n", b,i,j,k);	strcat(buf,s);
+	snprintf(s,128,"Minimum is %g\t at x = %ld\ty = %ld\tz = %ld\n", b,i,j,k);
+	s[127]=0;	strcat(buf,s);
 
 	mgl_data_momentum_val(d,'a',&A,&Wa,0,0);	mgl_data_momentum_val(d,'x',&X,&Wx,0,0);
 	mgl_data_momentum_val(d,'y',&Y,&Wy,0,0);	mgl_data_momentum_val(d,'z',&Z,&Wz,0,0);
-	snprintf(s,128,"Averages are:\n<a> = %g\t<x> = %g\t<y> = %g\t<z> = %g\n", A,X,Y,Z);	strcat(buf,s);
-	snprintf(s,128,"Widths are:\nWa = %g\tWx = %g\tWy = %g\tWz = %g\n", Wa,Wx,Wy,Wz);	strcat(buf,s);
+	snprintf(s,128,"Averages are:\n<a> = %g\t<x> = %g\t<y> = %g\t<z> = %g\n", A,X,Y,Z);
+	s[127]=0;	strcat(buf,s);
+	snprintf(s,128,"Widths are:\nWa = %g\tWx = %g\tWy = %g\tWz = %g\n", Wa,Wx,Wy,Wz);
+	s[127]=0;	strcat(buf,s);
 	return buf;
 }
 int MGL_EXPORT mgl_data_info_(uintptr_t *d, char *out, int len)

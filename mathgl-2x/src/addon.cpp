@@ -45,22 +45,16 @@ void MGL_EXPORT mgl_strcls(char *str)
 	delete []tmp;
 }
 //-----------------------------------------------------------------------------
-int MGL_EXPORT_PURE mgl_strpos(const char *str,char *fnd)
+long MGL_EXPORT_PURE mgl_strpos(const char *str,char *fnd)
 {
 	const char *p=strstr(str,fnd);
-	int res;
-	if(p)	res = p-str;
-	else	res = -1;
-	return res;
+	return p?p-str:-1L;
 }
 //-----------------------------------------------------------------------------
-int MGL_EXPORT_PURE mgl_chrpos(const char *str,char ch)
+long MGL_EXPORT_PURE mgl_chrpos(const char *str,char ch)
 {
 	const char *p=str?strchr(str,ch):0;
-	int res;
-	if(p)	res = p-str;
-	else	res = -1;
-	return res;
+	return p?p-str:-1L;
 }
 //-----------------------------------------------------------------------------
 MGL_EXPORT char *mgl_fgetstr(FILE *fp)
@@ -112,7 +106,7 @@ void MGL_EXPORT mgl_test(const char *str, ...)
 	char buf[256];
 	va_list lst;
 	va_start(lst,str);
-	vsnprintf(buf,256,str,lst);
+	vsnprintf(buf,256,str,lst);	buf[255]=0;
 	va_end(lst);
 	printf("TEST: %s\n",buf);
 	fflush(stdout);
@@ -123,7 +117,7 @@ void MGL_EXPORT mgl_info(const char *str, ...)
 	char buf[256];
 	va_list lst;
 	va_start(lst,str);
-	vsnprintf(buf,256,str,lst);
+	vsnprintf(buf,256,str,lst);	buf[255]=0;
 	va_end(lst);
 	printf("%s",buf);
 	FILE *fp = fopen("info.txt","at");

@@ -150,25 +150,25 @@ void _mgl_key_up(unsigned char ch,int ,int )
 	{
 		char str[128];
 		snprintf(str,128,"%s_%d.png",_mgl_glwnd->PlotId.c_str(),_mgl_glwnd->curr_fig);
-		mgl_write_png(_mgl_glwnd, str, "Math GL");
+		str[127]=0;	mgl_write_png(_mgl_glwnd, str, "MathGL");
 	}
 	if(ch=='J')
 	{
 		char str[128];
 		snprintf(str,128,"%s_%d.jpg",_mgl_glwnd->PlotId.c_str(),_mgl_glwnd->curr_fig);
-		mgl_write_jpg(_mgl_glwnd, str, "Math GL");
+		str[127]=0;	mgl_write_jpg(_mgl_glwnd, str, "MathGL");
 	}
 	if(ch=='E')
 	{
 		char str[128];
 		snprintf(str,128,"%s_%d.eps",_mgl_glwnd->PlotId.c_str(),_mgl_glwnd->curr_fig);
-		mgl_write_eps(_mgl_glwnd, str, "Math GL");
+		str[127]=0;	mgl_write_eps(_mgl_glwnd, str, "MathGL");
 	}
 	if(ch=='S')
 	{
 		char str[128];
 		snprintf(str,128,"%s_%d.svg",_mgl_glwnd->PlotId.c_str(),_mgl_glwnd->curr_fig);
-		mgl_write_svg(_mgl_glwnd, str, "Math GL");
+		str[127]=0;	mgl_write_svg(_mgl_glwnd, str, "MathGL");
 	}
 	if(ch==' ')	_mgl_glwnd->Clf();
 	if(ch=='m')	_mgl_glwnd->tt = 1-_mgl_glwnd->tt;

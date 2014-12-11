@@ -24,7 +24,7 @@
 char *mgl_strdup(const char *s)
 {
 	char *r = (char *)malloc((strlen(s)+1)*sizeof(char));
-	memcpy(r,s,(strlen(s)+1)*sizeof(char));
+	if(r)	memcpy(r,s,(strlen(s)+1)*sizeof(char));
 	return r;
 }
 //-----------------------------------------------------------------------------
@@ -170,7 +170,7 @@ void mglBase::StartGroup(const char *name, int id)
 {
 	LightScale(&B);
 	char buf[128];
-	snprintf(buf,128,"%s_%d",name,id);
+	snprintf(buf,128,"%s_%d",name,id);	buf[127]=0;
 	StartAutoGroup(buf);
 }
 //-----------------------------------------------------------------------------

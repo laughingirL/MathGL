@@ -44,7 +44,7 @@ mglPoint GetZ(HCDT z, int i, int j, int k=0);
 template <class T> class mglStack
 {
 	T** dat;
-	size_t pb;	///< size of buffer (real size is 2^pb == 1<<pb)
+	size_t pb;	///< size of buffer (real size is 2^pb == 1L<<pb)
 	size_t np;	///< allocated pointers
 	size_t m;	///< used pointers (allocated size is m*nb)
 	size_t n;	///< used cells
@@ -54,12 +54,12 @@ public:
 	{
 		np=st.np;	dat = (T**)malloc(np*sizeof(T*));
 		pb=st.pb;	m=n=0;	reserve(st.n);
-		for(size_t i=0;i<m;i++)	memcpy(dat[i],st.dat[i],(1<<pb)*sizeof(T));
+		for(size_t i=0;i<m;i++)	memcpy(dat[i],st.dat[i],(1L<<pb)*sizeof(T));
 		n=st.n;		mutex = 0;
 	}
 	mglStack(size_t Pbuf=10)
 	{	np=16;	pb=Pbuf;	dat = (T**)malloc(np*sizeof(T*));
-		dat[0] = new T[1<<pb];	n=0;	m=1;	mutex = 0;	}
+		dat[0] = new T[1L<<pb];	n=0;	m=1;	mutex = 0;	}
 	~mglStack()	{	clear();	delete [](dat[0]);	free(dat);	}
 	inline void set_mutex(void *m)	{	mutex = m;	}
 	void reserve(size_t num)
@@ -70,7 +70,7 @@ public:
 			num = 1+ (num>>pb);
 			if(num>np)
 			{	dat = (T**)realloc(dat, num*sizeof(T*));	np=num;	}
-			for(size_t i=m;i<num;i++)	dat[i] = new T[1<<pb];
+			for(size_t i=m;i<num;i++)	dat[i] = new T[1L<<pb];
 			m = num;
 		}
 	}
@@ -85,7 +85,7 @@ public:
 #endif
 		}
 		for(size_t i=0;i<m;i++)	delete [](dat[i]);
-		dat[0] = new T[1<<pb];	n=0;	m=1;
+		dat[0] = new T[1L<<pb];	n=0;	m=1;
 		if(mutex)
 		{
 #if MGL_HAVE_PTHREAD
@@ -107,7 +107,7 @@ public:
 	const mglStack<T> &operator=(const mglStack<T> &st)
 	{
 		pb=st.pb;	clear();	reserve(st.n);
-		for(size_t i=0;i<st.m && i<m;i++)	memcpy(dat[i],st.dat[i],(1<<pb)*sizeof(T));
+		for(size_t i=0;i<st.m && i<m;i++)	memcpy(dat[i],st.dat[i],(1L<<pb)*sizeof(T));
 		n = st.n;	return st;
 	}
 };

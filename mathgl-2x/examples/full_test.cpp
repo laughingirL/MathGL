@@ -416,7 +416,11 @@ int main(int argc,char **argv)
 	{
 		mgl_set_test_mode(true);	test(gr);
 		time(&en);	printf("time is %g sec\n",difftime(en,st));
+#if MGL_HAVE_PNG
 		gr->WritePNG("test.png","",false);
+#else
+		gr->WriteBMP("test.bmp");
+#endif
 		gr->WriteSVG("test.svg");
 		gr->WriteEPS("test.eps");
 		printf("Messages:%s\n",gr->Message());
