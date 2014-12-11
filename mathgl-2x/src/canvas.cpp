@@ -121,8 +121,7 @@ void mglCanvas::ClearFrame()
 		Pnt.clear();	Prm.clear();	Ptx.clear();	Glf.clear();	ClearPrmInd();
 		Txt.clear();	Txt.reserve(3);
 		mglTexture t1(MGL_DEF_PAL,-1), t2(MGL_DEF_SCH,1);
-		MGL_PUSH(Txt,t1,mutexTxt);
-		MGL_PUSH(Txt,t2,mutexTxt);
+		Txt.push_back(t1);	Txt.push_back(t2);	// No extra lock is required
 	}
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_unlock(&mutexAct);

@@ -29,6 +29,7 @@
 23. Use mgltex.dtx (see e-mail 15 November)
 25. Binary font files for particular platform (+ check ARM). Add utility to translate from current (textual) to binary.
 26. Segfault in shull_pro (e-mail 17 November)
+27. Contour lines above under surface (e-mail 11.12.14)
 
 ZZ. Update *.i for new functions {before release!!!}
 

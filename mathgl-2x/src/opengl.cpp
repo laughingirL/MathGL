@@ -17,7 +17,7 @@ HMGL MGL_EXPORT mgl_create_graph_gl()
 uintptr_t MGL_EXPORT mgl_create_graph_gl_()
 {	return uintptr_t(new mglCanvasGL);	}
 //-----------------------------------------------------------------------------
-mglCanvasGL::mglCanvasGL() : mglCanvas(1,1)	{}
+mglCanvasGL::mglCanvasGL() : mglCanvas(1,1)	{	Clf();	Zoom(0,0,1,1);	}
 //-----------------------------------------------------------------------------
 mglCanvasGL::~mglCanvasGL(){}
 //-----------------------------------------------------------------------------
@@ -187,6 +187,12 @@ void mglCanvasGL::Clf(mglColor Back)
 	mglCanvas::Clf(Back);
 	if(Back==NC)	Back = mglColor(BDef[0]/255.,BDef[1]/255.,BDef[2]/255.);
 	gl_clf(Back);
+}
+//-----------------------------------------------------------------------------
+void mglCanvasGL::Clf(const char *col)
+{
+	mglCanvas::Clf(col);
+	gl_clf(mglColor(BDef[0]/255.,BDef[1]/255.,BDef[2]/255.));
 }
 //-----------------------------------------------------------------------------
 void mglCanvasGL::gl_clf(mglColor Back)
