@@ -97,28 +97,19 @@ MGL_NO_EXPORT void *mgl_csmth_x(void *par)
 	long nx=t->p[0], kind=t->p[2];
 	dual *b=t->a;
 	const dual *a=t->b;
-	if(kind==SMOOTH_LINE_3)
+	if(kind>0)
 #if !MGL_HAVE_PTHREAD
 #pragma omp parallel for
 #endif
 		for(long i=t->id;i<t->n;i+=mglNumThr)
 		{
 			register long j = i%nx;
-			if(j>0 && j<nx-1)	b[i] = (a[i-1] + a[i] + a[i+1])/mreal(3);
-			else	b[i] = a[i];
+			if(j-kind<0)	j = i+kind-j;
+			else if(j+kind>nx-1)	j = i+nx-1-j-kind;
+			else	j=i;
+			for(long k=-kind;k<=kind;k++)	b[i] += a[j+k]/mreal(2*kind+1);
 		}
-	else if(kind==SMOOTH_LINE_5)
-#if !MGL_HAVE_PTHREAD
-#pragma omp parallel for
-#endif
-		for(long i=t->id;i<t->n;i+=mglNumThr)
-		{
-			register long j = i%nx;
-			if(j>1 && j<nx-2)	b[i] = (a[i-2] + a[i-1] + a[i] + a[i+1] + a[i+2])/mreal(5);
-			else if(j==1 || j==nx-2)	b[i] = (a[i-1] + a[i] + a[i+1])/mreal(3);
-			else	b[i] = a[i];
-		}
-	else if(kind==SMOOTH_QUAD_5)
+	else
 #if !MGL_HAVE_PTHREAD
 #pragma omp parallel for
 #endif
@@ -137,28 +128,19 @@ MGL_NO_EXPORT void *mgl_csmth_y(void *par)
 	long nx=t->p[0],ny=t->p[1], kind=t->p[2];
 	dual *b=t->a;
 	const dual *a=t->b;
-	if(kind==SMOOTH_LINE_3)
+	if(kind>0)
 #if !MGL_HAVE_PTHREAD
 #pragma omp parallel for
 #endif
 		for(long i=t->id;i<t->n;i+=mglNumThr)
 		{
 			register long j = (i/nx)%ny;
-			if(j>0 && j<ny-1)	b[i] = (a[i-nx] + a[i] + a[i+nx])/mreal(3);
-			else	b[i] = a[i];
+			if(j-kind<0)	j = i+(kind-j)*nx;
+			else if(j+kind>ny-1)	j = i+(ny-1-j-kind)*nx;
+			else	j=i;
+			for(long k=-kind;k<=kind;k++)	b[i] += a[j+k*nx]/mreal(2*kind+1);
 		}
-	else if(kind==SMOOTH_LINE_5)
-#if !MGL_HAVE_PTHREAD
-#pragma omp parallel for
-#endif
-		for(long i=t->id;i<t->n;i+=mglNumThr)
-		{
-			register long j = (i/nx)%ny;
-			if(j>1 && j<ny-2)	b[i] = (a[i-2*nx] + a[i-nx] + a[i] + a[i+nx] + a[i+2*nx])/mreal(5);
-			else if(j==1 || j==ny-2)	b[i] = (a[i-nx] + a[i] + a[i+nx])/mreal(3);
-			else	b[i] = a[i];
-		}
-	else if(kind==SMOOTH_QUAD_5)
+	else
 #if !MGL_HAVE_PTHREAD
 #pragma omp parallel for
 #endif
@@ -177,28 +159,19 @@ MGL_NO_EXPORT void *mgl_csmth_z(void *par)
 	register long nn=t->p[0]*t->p[1], nz=t->n/nn, kind=t->p[2];
 	dual *b=t->a;
 	const dual *a=t->b;
-	if(kind==SMOOTH_LINE_3)
+	if(kind>0)
 #if !MGL_HAVE_PTHREAD
 #pragma omp parallel for
 #endif
 		for(long i=t->id;i<t->n;i+=mglNumThr)
 		{
 			register long j = i/nn;
-			if(j>0 && j<nz-1)	b[i] = (a[i-nn] + a[i] + a[i+nn])/mreal(3);
-			else	b[i] = a[i];
+			if(j-kind<0)	j = i+(kind-j)*nn;
+			else if(j+kind>nz-1)	j = i+(nz-1-j-kind)*nn;
+			else	j=i;
+			for(long k=-kind;k<=kind;k++)	b[i] += a[j+k*nn]/mreal(2*kind+1);
 		}
-	else if(kind==SMOOTH_LINE_5)
-#if !MGL_HAVE_PTHREAD
-#pragma omp parallel for
-#endif
-		for(long i=t->id;i<t->n;i+=mglNumThr)
-		{
-			register long j = i/nn;
-			if(j>1 && j<nz-2)	b[i] = (a[i-2*nn] + a[i-nn] + a[i] + a[i+nn] + a[i+2*nn])/mreal(5);
-			else if(j==1 || j==nz-2)	b[i] = (a[i-nn] + a[i] + a[i+nn])/mreal(3);
-			else	b[i] = a[i];
-		}
-	else if(kind==SMOOTH_QUAD_5)
+	else
 #if !MGL_HAVE_PTHREAD
 #pragma omp parallel for
 #endif
@@ -213,11 +186,27 @@ MGL_NO_EXPORT void *mgl_csmth_z(void *par)
 }
 void MGL_EXPORT mgl_datac_smooth(HADT d, const char *dirs, mreal )
 {
-	long Type = SMOOTH_QUAD_5;
+	long Type = -1;
 	if(!dirs || *dirs==0)	dirs = "xyz";
-	if(strchr(dirs,'0') || strchr(dirs,'1'))	return;
-	if(strchr(dirs,'3'))	Type = SMOOTH_LINE_3;
-	if(strchr(dirs,'5'))	Type = SMOOTH_LINE_5;
+	if(strchr(dirs,'0'))	return;
+	if(strchr(dirs,'d'))
+	{
+		if(strchr(dirs,'1'))	Type = 1;
+		if(strchr(dirs,'2'))	Type = 2;
+		if(strchr(dirs,'3'))	Type = 3;
+		if(strchr(dirs,'4'))	Type = 4;
+		if(strchr(dirs,'5'))	Type = 5;
+		if(strchr(dirs,'6'))	Type = 6;
+		if(strchr(dirs,'7'))	Type = 7;
+		if(strchr(dirs,'8'))	Type = 8;
+		if(strchr(dirs,'9'))	Type = 9;
+	}
+	else
+	{
+		if(strchr(dirs,'1'))	return;
+		if(strchr(dirs,'3'))	Type = 1;
+		if(strchr(dirs,'5'))	Type = 2;
+	}
 	long nx=d->nx,ny=d->ny,nz=d->nz;
 //	if(Type == SMOOTH_NONE)	return;
 	long p[3]={nx,ny,Type};

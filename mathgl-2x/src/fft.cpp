@@ -1071,26 +1071,28 @@ void MGL_EXPORT mgl_data_hankel_(uintptr_t *d, const char *dir,int l)
 void MGL_EXPORT mgl_data_fill_sample(HMDT d, const char *how)
 {
 	if(!how || *how==0)	return;
-	bool xx = strchr(how,'x');
-	long n=d->nx;
+	bool kk = strchr(how,'k');
+	long n=d->nx,dn=1;
 	mreal *aa=d->a;
+	if(strchr(how,'y'))	{	n=d->ny;	dn=d->nx;	}
+	if(strchr(how,'z'))	{	n=d->nz;	dn=d->nx*d->ny;	}
 	if(strchr(how,'h'))	// Hankel
 	{
 #if MGL_HAVE_GSL
 		gsl_dht *dht = gsl_dht_new(n,0,1);
 #pragma omp parallel for
 		for(long i=0;i<n;i++)
-			aa[i] = xx ? gsl_dht_x_sample(dht, i) : gsl_dht_k_sample(dht, i);
+			aa[i*dn] = kk ? gsl_dht_k_sample(dht, i) : gsl_dht_x_sample(dht, i);
 		gsl_dht_free(dht);
 #endif
 	}
 	else	// Fourier
 	{
-		if(xx)	for(long i=0;i<n;i++)	aa[i] = mreal(2*i-n)/n;
-		else	for(long i=0;i<n;i++)	aa[i] = M_PI*(i<n/2 ? i:i-n);
+		if(kk)	for(long i=0;i<n;i++)	aa[i*dn] = M_PI*(i<n/2 ? i:i-n);
+		else	for(long i=0;i<n;i++)	aa[i*dn] = mreal(2*i-n)/n;
 	}
 #pragma omp parallel for
-	for(long i=1;i<d->ny*d->nz;i++)	memcpy(aa+i*n,aa,n*sizeof(mreal));
+	for(long i=0;i<d->GetNN();i++)	aa[i] = aa[((i%(n*dn))/dn)*dn];
 }
 void MGL_EXPORT mgl_data_fill_sample_(uintptr_t *d, const char *how,int l)
 {	char *s=new char[l+1];	memcpy(s,how,l);	s[l]=0;

@@ -59,6 +59,8 @@ B. Add chapter with real samples
 C. Translate to Russian everything
 D. Docs about JS interface
 
+1. Docs about new Smooth() styles
+
 YY. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using Stem()
 
 ============= UDAV =============
