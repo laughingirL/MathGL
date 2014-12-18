@@ -37,7 +37,7 @@ if(enable-python)
 		message(SEND_ERROR "Couldn't find numpy.")
 	endif(NOT NUMPY_INCLUDE_PATH)
 
-	include_directories(${PYTHON_INCLUDE_DIR})
+	include_directories(${PYTHON_INCLUDE_DIR}  ${NUMPY_INCLUDE_PATH})
 	execute_process(
 		COMMAND ${PYTHON_EXECUTABLE} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(prefix='${CMAKE_INSTALL_PREFIX}')"
 		OUTPUT_VARIABLE MGL_PYTHON_SITE_PACKAGES
