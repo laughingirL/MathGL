@@ -292,7 +292,7 @@ int MGL_EXPORT mgl_datac_read(HADT d, const char *fname)
 		if(ch>' ' && !first)	first=true;
 		if(strchr("[{(",ch))	sk++;
 		if(strchr("]})",ch))	sk--;
-		if(first && (ch=='\t' || ch==';' || (ch==',' && sk==0)) && buf[i+1]!='\t') k++;	// ',' is not valid delimiter for complex arrays
+		if(first && buf[i+1]>' ' && (ch=='\t' || ch==';' || ((ch==' '||ch==',') && sk==0) ))	k++;
 	}
 	first = false;
 	for(i=0;i<nb-1;i++)					// determine ny
