@@ -69,6 +69,11 @@ option(enable-all-swig "Enable all SWIG based interfaces")
 option(enable-rvalue "Enable move constructor support (need C++11)" OFF)
 option(enable-pthread "Enable POSIX threads support" OFF)
 option(enable-openmp "Enable OpenMP support" ON)
+
+if(enable-pthread AND enable-openmp)
+	message(SEND_ERROR "You can't enable POSIX threads and OpenMP at the same time!")
+endif(enable-pthread AND enable-openmp)
+
 option(enable-lgpl "Enable only LGPL part of MathGL")
 option(enable-mgl2 "Use names 'libmgl2-*' instead of 'libmgl-*'")
 option(enable-ltdl "Enable loading modules support")
