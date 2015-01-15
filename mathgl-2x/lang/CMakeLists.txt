@@ -98,15 +98,16 @@ if(enable-octave)
 	execute_process(COMMAND ${oct_prog} -p API_VERSION
 	OUTPUT_VARIABLE oct_api
 	OUTPUT_STRIP_TRAILING_WHITESPACE)
-	execute_process(COMMAND ${oct_prog} -p OCTINCLUDEDIR
+	execute_process(COMMAND ${oct_mk} -p INCFLAGS
 	OUTPUT_VARIABLE oct_inc
 	OUTPUT_STRIP_TRAILING_WHITESPACE)
+	separate_arguments(oct_inc)
 message(STATUS "${oct_prog} ${oct_host} ${oct_api}")
 	set(oct_arch ${oct_host}-${oct_api})
 	set(pkg_name mathgl)
 	set(mgl_pkg_dir ${MathGL_BINARY_DIR}/lang/${pkg_name}/inst/${oct_arch})
 
-	include_directories(${oct_inc} ${oct_inc}/..)
+	add_compile_options(${oct_inc})
 	SET(SWIG_MODULE_mgl-oct_EXTRA_DEPS numpy.i ${src_imp_dep})
 	SWIG_ADD_MODULE(mgl-oct octave mathgl.i)
 	SWIG_LINK_LIBRARIES(mgl-oct mgl)
