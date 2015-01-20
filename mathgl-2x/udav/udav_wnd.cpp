@@ -101,6 +101,11 @@ int main(int argc, char **argv)
 	// must be placed before ANY window creation
 	XInitThreads();
 #endif
+#ifdef WIN32
+	char buf[512];	getcwd(buf,500);	strcat(buf,"\\plugins\\");
+	QCoreApplication::addLibraryPath(buf);
+	QCoreApplication::addLibraryPath("c:\\plugins\\");
+#endif
 	mgl_ask_func = mgl_ask_qt;
 	QApplication a(argc, argv);
 	QTranslator translator;

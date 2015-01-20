@@ -1805,7 +1805,7 @@ Command @ref{surf3} is one of most suitable (for my opinion) functions to visual
 @verbatim
 call 'prepare3d'
 light on:alpha on
-subplot 2 2 1:title 'Surf3 plot':rotate 50 60:box
+subplot 2 2 0:title 'Surf3 plot':rotate 50 60:box
 surf3 c
 
 subplot 2 2 1:title '"\#" style':rotate 50 60:box

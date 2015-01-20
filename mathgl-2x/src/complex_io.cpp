@@ -63,7 +63,7 @@ void mglFromStr(HADT d,char *buf,long NX,long NY,long NZ)	// TODO: add multithre
 	{	lines.push_back(s+1);	*s = 0;	s++;	}
 	numbs.resize(lines.size());
 	long nl = long(lines.size());
-#pragma omp parallel for
+//#pragma omp parallel for
 	for(long k=0;k<nl;k++)
 	{
 		char *b = lines[k];
@@ -90,7 +90,7 @@ void mglFromStr(HADT d,char *buf,long NX,long NY,long NZ)	// TODO: add multithre
 			}
 			char *s=b+j;
 			register long sk=0;
-			while(j<nb && b[j]>=' ' && (b[j]!=',' || sk!=0) &&b[j]!=';')
+			while(j<nb && b[j]>' ' && ((b[j]!=',' && b[j]!=' ') || sk!=0) && b[j]!=';')
 			{
 				if(strchr("[{(",b[j]))	sk++;
 				if(strchr("]})",b[j]))	sk--;
@@ -100,6 +100,7 @@ void mglFromStr(HADT d,char *buf,long NX,long NY,long NZ)	// TODO: add multithre
 			double re=0,im=0;	size_t ll=strlen(s);
 			while(s[ll]<=' ')	ll--;
 			if(*s=='(')		sscanf(s,"(%lg,%lg)",&re,&im);
+			else if(*s=='i')	{	re=0;	im=atof(s+1);	}
 			else if(*s=='[')	sscanf(s,"[%lg,%lg]",&re,&im);
 			else if(*s=='{')	sscanf(s,"{%lg,%lg}",&re,&im);
 			else if(s[ll]=='i')
@@ -107,15 +108,22 @@ void mglFromStr(HADT d,char *buf,long NX,long NY,long NZ)	// TODO: add multithre
 				double a,b;	s[ll] = 0;
 				int s1=sscanf(s,"%lg+%lg",&re,&im);
 				int s2=sscanf(s,"%lg-%lg",&a,&b);
-				if(s2==2 && s1<2)	{	re=a;	im=-b;	}
-
+				if(s1<2)
+				{
+				  if(s2==2)	{	re=a;	im=-b;	}
+				  else	{	im=atof(s);	re=0;	}
+				}
 			}
 			else
 			{
 				double a,b;
 				int s1=sscanf(s,"%lg+i%lg",&re,&im);
 				int s2=sscanf(s,"%lg-i%lg",&a,&b);
-				if(s2==2 && s1<2)	{	re=a;	im=-b;	}
+				if(s1<2)
+				{
+				  if(s2==2)	{	re=a;	im=-b;	}
+				  else	{	re=atof(s);	im=0;	}
+				}
 			}
 			numbs[k].push_back(dual(re,im));
 		}
