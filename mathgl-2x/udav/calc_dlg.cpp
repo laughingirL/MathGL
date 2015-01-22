@@ -131,32 +131,32 @@ CalcDialog::CalcDialog(QWidget *parent) : QWidget(parent)
 CalcDialog::~CalcDialog()	{}
 void CalcDialog::foc()	{	text->setFocus(Qt::ActiveWindowFocusReason);	}
 //-----------------------------------------------------------------------------
-void CalcDialog::key1()		{	text->setText("1");	foc();	}
-void CalcDialog::key2()		{	text->setText("2");	foc();	}
-void CalcDialog::key3()		{	text->setText("3");	foc();	}
-void CalcDialog::key4()		{	text->setText("4");	foc();	}
-void CalcDialog::key5()		{	text->setText("5");	foc();	}
-void CalcDialog::key6()		{	text->setText("6");	foc();	}
-void CalcDialog::key7()		{	text->setText("7");	foc();	}
-void CalcDialog::key8()		{	text->setText("8");	foc();	}
-void CalcDialog::key9()		{	text->setText("9");	foc();	}
-void CalcDialog::key0()		{	text->setText("0");	foc();	}
-void CalcDialog::keyE()		{	text->setText("E");	foc();	}
-void CalcDialog::keyPi()	{	text->setText("pi");	foc();	}
-void CalcDialog::keyX2()	{	text->setText("^2");	foc();	}
-void CalcDialog::keyAdd()	{	text->setText("+");	foc();	}
-void CalcDialog::keyMul()	{	text->setText("*");	foc();	}
-void CalcDialog::keySub()	{	text->setText("-");	foc();	}
-void CalcDialog::keyDiv()	{	text->setText("/");	foc();	}
-void CalcDialog::keyBrO()	{	text->setText("(");	foc();	}
-void CalcDialog::keyBrC()	{	text->setText(")");	foc();	}
-void CalcDialog::keyDot()	{	text->setText(".");	foc();	}
+void CalcDialog::key1()		{	text->insert("1");	foc();	}
+void CalcDialog::key2()		{	text->insert("2");	foc();	}
+void CalcDialog::key3()		{	text->insert("3");	foc();	}
+void CalcDialog::key4()		{	text->insert("4");	foc();	}
+void CalcDialog::key5()		{	text->insert("5");	foc();	}
+void CalcDialog::key6()		{	text->insert("6");	foc();	}
+void CalcDialog::key7()		{	text->insert("7");	foc();	}
+void CalcDialog::key8()		{	text->insert("8");	foc();	}
+void CalcDialog::key9()		{	text->insert("9");	foc();	}
+void CalcDialog::key0()		{	text->insert("0");	foc();	}
+void CalcDialog::keyE()		{	text->insert("E");	foc();	}
+void CalcDialog::keyPi()	{	text->insert("pi");	foc();	}
+void CalcDialog::keyX2()	{	text->insert("^2");	foc();	}
+void CalcDialog::keyAdd()	{	text->insert("+");	foc();	}
+void CalcDialog::keyMul()	{	text->insert("*");	foc();	}
+void CalcDialog::keySub()	{	text->insert("-");	foc();	}
+void CalcDialog::keyDiv()	{	text->insert("/");	foc();	}
+void CalcDialog::keyBrO()	{	text->insert("(");	foc();	}
+void CalcDialog::keyBrC()	{	text->insert(")");	foc();	}
+void CalcDialog::keyDot()	{	text->insert(".");	foc();	}
 void CalcDialog::clear()	{	text->clear();	foc();	}
 //-----------------------------------------------------------------------------
 void CalcDialog::keyFnc()
 {
-	text->setText(func->currentText());
-	text->setCursorPosition(func->currentText().length()-1);	foc();
+	text->insert(func->currentText());
+	text->setCursorPosition(text->cursorPosition()-1);	foc();
 }
 //-----------------------------------------------------------------------------
 void CalcDialog::keyPut()	{	emit putNumber(result->text());	}
