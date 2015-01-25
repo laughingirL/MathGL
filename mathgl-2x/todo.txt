@@ -25,7 +25,7 @@
 20. Extend 'ask' by adding multiple questions simultaneously (+ set/get default values from file ???)
 21. Occasional seg.fault in mgl_qt_example at exit
 
-22.  introduce a set of default arrays like "x", "y", "z" and "t" for MGL
+22.  introduce a set of default arrays like "x", "y", "z" and "t" for MGL ???
 23. Use mgltex.dtx (see e-mail 15 November)
 25. Binary font files for particular platform (+ check ARM). Add utility to translate from current (textual) to binary.
 26. Segfault in shull_pro (e-mail 17 November)

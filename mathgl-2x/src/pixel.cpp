@@ -621,6 +621,8 @@ void mglCanvas::Finish()
 	static mglMatrix bp;
 	if(Quality==MGL_DRAW_NONE)	return;
 #if MGL_HAVE_PTHREAD
+	pthread_mutex_lock(&mutexPrm);
+	pthread_mutex_lock(&mutexPnt);
 	pthread_mutex_lock(&mutexClf);
 #elif MGL_HAVE_OMP
 	omp_set_lock(&lockClf);
@@ -654,6 +656,8 @@ void mglCanvas::Finish()
 	}
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_unlock(&mutexClf);
+	pthread_mutex_unlock(&mutexPnt);
+	pthread_mutex_unlock(&mutexPrm);
 #elif MGL_HAVE_OMP
 	omp_unset_lock(&lockClf);
 #endif
