@@ -64,11 +64,15 @@ void MGL_EXPORT mgl_data_fill_eq(HMGL gr, HMDT d, const char *eq, HCDT vdat, HCD
 	mglDataV x(d->nx,d->ny,d->nz, gr->Min.x,gr->Max.x,'x');	x.s=L"x";
 	mglDataV y(d->nx,d->ny,d->nz, gr->Min.y,gr->Max.y,'y');	y.s=L"y";
 	mglDataV z(d->nx,d->ny,d->nz, gr->Min.z,gr->Max.z,'z');	z.s=L"z";
+	mglDataV i(d->nx,d->ny,d->nz, 0,d->nx-1,'x');	i.s=L"i";
+	mglDataV j(d->nx,d->ny,d->nz, 0,d->ny-1,'y');	j.s=L"j";
+	mglDataV k(d->nx,d->ny,d->nz, 0,d->nz-1,'z');	k.s=L"k";
 	mglDataV r(d->nx,d->ny,d->nz);	r.s=L"#$mgl";
 	mglData v(vdat), w(wdat);	v.s = L"v";	w.s = L"w";
 	std::vector<mglDataA*> list;
 	list.push_back(&x);	list.push_back(&y);	list.push_back(&z);	list.push_back(&r);
 	list.push_back(d);	list.push_back(&v);	list.push_back(&w);
+	list.push_back(&i);	list.push_back(&j);	list.push_back(&k);
 	d->Set(mglFormulaCalc(eq,list));	d->s = s;
 	gr->LoadState();
 }
@@ -86,11 +90,15 @@ void MGL_EXPORT mgl_datac_fill_eq(HMGL gr, HADT d, const char *eq, HCDT vdat, HC
 	mglDataV x(d->nx,d->ny,d->nz, gr->Min.x,gr->Max.x,'x');	x.s=L"x";
 	mglDataV y(d->nx,d->ny,d->nz, gr->Min.y,gr->Max.y,'y');	y.s=L"y";
 	mglDataV z(d->nx,d->ny,d->nz, gr->Min.z,gr->Max.z,'z');	z.s=L"z";
+	mglDataV i(d->nx,d->ny,d->nz, 0,d->nx-1,'x');	i.s=L"i";
+	mglDataV j(d->nx,d->ny,d->nz, 0,d->ny-1,'y');	j.s=L"j";
+	mglDataV k(d->nx,d->ny,d->nz, 0,d->nz-1,'z');	k.s=L"k";
 	mglDataV r(d->nx,d->ny,d->nz);	r.s=L"#$mgl";
 	mglData v(vdat), w(wdat);	v.s = L"v";	w.s = L"w";
 	std::vector<mglDataA*> list;
 	list.push_back(&x);	list.push_back(&y);	list.push_back(&z);	list.push_back(&r);
 	list.push_back(d);	list.push_back(&v);	list.push_back(&w);
+	list.push_back(&i);	list.push_back(&j);	list.push_back(&k);
 	d->Set(mglFormulaCalcC(eq,list));	d->s = s;
 	gr->LoadState();
 }

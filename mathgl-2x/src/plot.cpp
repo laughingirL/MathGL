@@ -1127,7 +1127,7 @@ void MGL_EXPORT mgl_ohlc_x(HMGL gr, HCDT x, HCDT open, HCDT high, HCDT low, HCDT
 	{	gr->SetWarn(mglWarnDim,"OHLC");	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("OHLC",cgid++);
-	mreal dv=nx>n?1:0,dd,vv,x1,x2,cc;
+	mreal dv=nx>n?1:0;
 	if(mglchr(pen,'<'))	dv = 1;
 	if(mglchr(pen,'^'))	dv = 0;
 	if(mglchr(pen,'>'))	dv = -1;
@@ -1139,10 +1139,11 @@ void MGL_EXPORT mgl_ohlc_x(HMGL gr, HCDT x, HCDT open, HCDT high, HCDT low, HCDT
 	for(long j=0;j<m;j++)
 	{
 		if(gr->NeedStop())	break;
-		cc=gr->NextColor(pal);
+		mreal cc=gr->NextColor(pal);
 		mx = j<x->GetNy() ? j:0;
 		for(long i=0;i<n;i++)
 		{
+			mreal dd,vv,x1,x2;
 			vv = x->v(i,mx);	dd = i<nx-1 ? x->v(i+1)-vv : vv-x->v(i-1);
 			x1 = vv + dd/2*(dv-gr->BarWidth);	x2 = x1 + gr->BarWidth*dd;
 			x2 = (x2-x1)/m;		x1 += j*x2;		x2 += x1;	vv = (x2+x1)/2;

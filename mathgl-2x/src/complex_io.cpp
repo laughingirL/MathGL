@@ -627,9 +627,9 @@ void MGL_EXPORT mgl_datac_modify_(uintptr_t *d, const char *eq,int *dim,int l)
 void MGL_EXPORT mgl_datac_modify_vw(HADT d, const char *eq,HCDT vdat,HCDT wdat)
 {
 	std::wstring s = d->s;	d->s = L"u";
-	mglDataV x(d->nx,d->ny,d->nz);	x.Fill(0,1,'x');	x.s=L"x";
-	mglDataV y(d->nx,d->ny,d->nz);	y.Fill(0,1,'y');	y.s=L"y";
-	mglDataV z(d->nx,d->ny,d->nz);	z.Fill(0,1,'z');	z.s=L"z";
+	mglDataV x(d->nx,d->ny,d->nz, 0,1,'x');	x.s=L"x";
+	mglDataV y(d->nx,d->ny,d->nz, 0,1,'y');	y.s=L"y";
+	mglDataV z(d->nx,d->ny,d->nz, 0,1,'z');	z.s=L"z";
 	mglDataV r(d->nx,d->ny,d->nz);	r.s=L"#$mgl";
 	mglData v(vdat), w(wdat);	v.s = L"v";	w.s = L"w";
 	std::vector<mglDataA*> list;
