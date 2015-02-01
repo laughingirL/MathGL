@@ -250,5 +250,6 @@ template <class Treal> void mgl_gspline_init(long n, const mreal *x, const Treal
 		c[5*i+3] = (3*h2)*(v[i+1]-v[i]) - (b[i+1]+b[i]+b[i])*h;
 		c[5*i+4] = (2*h2*h)*(v[i]-v[i+1]) + (b[i+1]+b[i])*h2;
 	}
+	delete []a;	delete []b;
 }
 //-----------------------------------------------------------------------------

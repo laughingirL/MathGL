@@ -193,7 +193,7 @@ void MGL_EXPORT mgl_write_eps(HMGL gr, const char *fname,const char *descr)
 		if(pos)	{	buf[pos]=buf[pos+1]='b';	buf[pos+2]=0;	}
 		FILE *fb = fopen(buf,"w");
 		fprintf(fb, "%%%%BoundingBox: 0 0 %d %d\n", w, h);
-		fclose(fb);
+		fclose(fb);	delete []buf;
 	}
 	
 	const std::string loc = setlocale(LC_NUMERIC, NULL);	setlocale(LC_NUMERIC, "C");

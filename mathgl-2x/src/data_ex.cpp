@@ -741,7 +741,7 @@ HMDT MGL_EXPORT mgl_data_hist(HCDT dat, long n, mreal v1, mreal v2, long nsub)
 	mglData *b=new mglData(n);
 	mreal v[2]={v1,v2};
 	long nx=dat->GetNx(), ny=dat->GetNy(), nz=dat->GetNz();
-	long ns=abs(nsub)+1, p[5]={n,ns,nx,ny,nz};
+	long ns=labs(nsub)+1, p[5]={n,ns,nx,ny,nz};
 	if(nsub==0)	mglStartThread(mgl_hist_1,mgl_hist_p, nx*ny*nz, b->a,(const mreal *)dat,0,p,v);
 	else	mglStartThread(mgl_hist_2,mgl_hist_p, nx*ny*nz*ns*ns*ns, b->a,(const mreal *)dat,0,p,v);
 	return b;
@@ -754,7 +754,7 @@ HMDT MGL_EXPORT mgl_data_hist_w(HCDT dat, HCDT weight, long n, mreal v1, mreal v
 	mreal v[2]={v1,v2};
 
 	long nx=dat->GetNx(), ny=dat->GetNy(), nz=dat->GetNz();
-	long ns=abs(nsub)+1, p[5]={n,ns,nx,ny,nz};
+	long ns=labs(nsub)+1, p[5]={n,ns,nx,ny,nz};
 	if(nsub==0)	mglStartThread(mgl_hist_1,mgl_hist_p, nx*ny*nz, b->a,(const mreal *)dat,(const mreal *)weight,p,v);
 	else	mglStartThread(mgl_hist_2,mgl_hist_p, nx*ny*nz*ns*ns*ns, b->a,(const mreal *)dat,(const mreal *)weight,p,v);
 	return b;

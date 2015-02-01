@@ -1259,7 +1259,7 @@ MGL_NO_EXPORT double *mgl_d_correl(HCDT d1, HCDT d2, const char *dir)
 		{	mgl_fft_data.wtz = wt;	clear = false;	mgl_fft_data.wnz=nz;	}
 	}
 	if(clear)	mgl_fft_free(wt,0,0);
-	return a;
+	delete []b;	return a;
 }
 //-----------------------------------------------------------------------------
 HADT MGL_EXPORT mgl_datac_correl(HCDT d1, HCDT d2, const char *dir)

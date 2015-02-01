@@ -241,7 +241,7 @@ int MGL_NO_EXPORT mgl_bps_save(const char *fname, int w, int h, unsigned char **
 			if(pos)	{	buf[pos]=buf[pos+1]='b';	buf[pos+2]=0;	}
 			FILE *fb = fopen(buf,"w");
 			fprintf(fb, "%%%%BoundingBox: 0 0 %d %d\n", w, h);
-			fclose(fb);
+			fclose(fb);	delete []buf;
 		}
 	}
 	mgl_printf(fp, gz, "%%!PS-Adobe-3.0 EPSF-3.0\n%%%%BoundingBox: 0 0 %d %d\n",w,h);

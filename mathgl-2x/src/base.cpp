@@ -990,7 +990,7 @@ mreal mglBase::AddTexture(mglColor c)
 //-----------------------------------------------------------------------------
 mreal mglBase::NextColor(long &id)
 {
-	long i=abs(id)/256, n=Txt[i].n, p=abs(id)&0xff;
+	long i=labs(id)/256, n=Txt[i].n, p=labs(id)&0xff;
 	if(id>=0)	{	p=(p+1)%n;	id = 256*i+p;	}
 	CDef = i + (n>0 ? (p+0.5)/n : 0);	CurrPal++;
 	sprintf(last_style+11,"{&%g}",CDef);
@@ -1001,7 +1001,7 @@ mreal mglBase::NextColor(long &id)
 //-----------------------------------------------------------------------------
 mreal mglBase::NextColor(long id, long sh)
 {
-	long i=abs(id)/256, n=Txt[i].n, p=abs(id)&0xff;
+	long i=labs(id)/256, n=Txt[i].n, p=labs(id)&0xff;
 	if(id>=0)	p=(p+sh)%n;
 	mreal cc = i + (n>0 ? (p+0.5)/n : 0);
 	sprintf(last_style+11,"{&%g}",cc);

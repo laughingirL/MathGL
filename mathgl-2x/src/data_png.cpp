@@ -27,8 +27,8 @@
 //-----------------------------------------------------------------------------
 size_t MGL_LOCAL_PURE mgl_col_dif(unsigned char *c1,unsigned char *c2,bool sum)
 {
-	size_t res,d1=abs(long(c1[0])-long(c2[0])),
-		d2=abs(long(c1[1])-long(c2[1])),d3=abs(long(c1[2])-long(c2[2]));
+	size_t res,d1=labs(long(c1[0])-long(c2[0])),
+		d2=labs(long(c1[1])-long(c2[1])),d3=labs(long(c1[2])-long(c2[2]));
 	if(sum)	res = d1+d2+d3;
 	else	res = mgl_max(d1,mgl_max(d2,d3));
 	return res;
@@ -232,6 +232,7 @@ void MGL_EXPORT mgl_data_export(HCDT dd, const char *fname, const char *scheme,m
 	if(!strcmp(fname+len-4,".bmp")) 	mgl_bmp_save(fname, nx,ny,p);
 	if(!strcmp(fname+len-4,".png")) 	mgl_png_save(fname, nx,ny,p);
 	if(!strcmp(fname+len-4,".eps") || !strcmp(fname+len-4,".bps")) 	mgl_bps_save(fname, nx,ny,p);
+	delete []p;	delete []d;
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_data_export_(uintptr_t *d, const char *fname, const char *scheme,mreal *v1,mreal *v2,int *ns,int l,int n)
