@@ -1,9 +1,12 @@
-2.3.2 Released ??? 2015
+2.3.2 Released 2 February 2015
 
 * Update mgltex (thanks to Diego Sejas Viscarra)
-* Add cmake option MGL_DEF_FONT to change default font name or use built-in one (if MGL_DEF_FONT is empty).
 * Add reading files with complex numbers by 'read' command.
 * Parallelize reading textual data files.
+* Add 'i','j','k' variables for data filling.
+* Add saving images in QMathGL even if corresponding format support is disabled.
+* Add cmake option MGL_DEF_FONT to change default font name or use built-in one (if MGL_DEF_FONT is empty).
+* Compatibility changes and bugfixes.
 
 2.3.1 Released 21 October 2014
 
