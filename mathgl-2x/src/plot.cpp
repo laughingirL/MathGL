@@ -214,8 +214,7 @@ void MGL_EXPORT mgl_candle_xyv(HMGL gr, HCDT x, HCDT v1, HCDT v2, HCDT y1, HCDT 
 	if(y1->GetNx()!=n || y2->GetNx()!=n)
 	{	gr->SetWarn(mglWarnDim,"Candle");	return;	}
 	static int cgid=1;	gr->StartGroup("Candle",cgid++);
-	gr->SaveState(opt);	gr->SetPenPal(pen,&pal);
-	gr->NextColor(pal);	gr->Reserve(8*n);
+	gr->SaveState(opt);	gr->SetPenPal(pen,&pal);	gr->Reserve(8*n);
 	bool sh = mglchr(pen,'!');
 
 	mreal dv=nx>n?1:0;
@@ -223,13 +222,16 @@ void MGL_EXPORT mgl_candle_xyv(HMGL gr, HCDT x, HCDT v1, HCDT v2, HCDT y1, HCDT 
 	if(mglchr(pen,'^'))	dv = 0;
 	if(mglchr(pen,'>'))	dv = -1;
 	mreal zm = gr->AdjustZMin();
+	mreal c1,c2;	c2=c1=gr->NextColor(pal);
+	bool col2 = (gr->GetNumPal(pal)==2 && !sh);
+	if(col2)	c2 = gr->NextColor(pal);
 	for(long i=0;i<n;i++)
 	{
 		mreal m1=v1->v(i),	m2 = v2->v(i),	xx = x->v(i);
 		mreal d = i<nx-1 ? x->v(i+1)-xx : xx-x->v(i-1);
 		mreal x1 = xx + d/2*(dv-gr->BarWidth);
 		mreal x2 = x1 + gr->BarWidth*d;	xx = (x1+x2)/2;
-		mreal c = sh ? gr->NextColor(pal,i):gr->CDef;
+		mreal c = sh ? gr->NextColor(pal,i):((m1>m2)?c1:c2);
 		long n1 = gr->AddPnt(mglPoint(xx,y1->v(i),zm),c);
 		long n2 = gr->AddPnt(mglPoint(xx,m1,zm),c);
 		gr->line_plot(n1,n2);
@@ -243,7 +245,7 @@ void MGL_EXPORT mgl_candle_xyv(HMGL gr, HCDT x, HCDT v1, HCDT v2, HCDT y1, HCDT 
 		n4 = gr->AddPnt(mglPoint(x2,m2,zm),c);
 		gr->line_plot(n1,n2);	gr->line_plot(n1,n3);
 		gr->line_plot(n4,n2);	gr->line_plot(n4,n3);
-		if(m1>m2)	gr->quad_plot(n1,n2,n3,n4);
+		if(m1>m2 || col2)	gr->quad_plot(n1,n2,n3,n4);
 	}
 	if(d1)	delete y1;	if(d2)	delete y2;
 	gr->EndGroup();
@@ -1054,7 +1056,6 @@ void MGL_EXPORT mgl_barh_yx(HMGL gr, HCDT y, HCDT v, const char *pen, const char
 	bool wire = mglchr(pen,'#');
 	bool above = mglchr(pen,'a'), fall = mglchr(pen,'f');
 	if(above)	fall = false;
-	mreal c1,c2;
 	mreal *dd=new mreal[n], x0,xp,dv=ny>n?1:0;
 	if(mglchr(pen,'<'))	dv = 1;
 	if(mglchr(pen,'^'))	dv = 0;
@@ -1067,7 +1068,7 @@ void MGL_EXPORT mgl_barh_yx(HMGL gr, HCDT y, HCDT v, const char *pen, const char
 	for(long j=0;j<m;j++)
 	{
 		if(gr->NeedStop())	break;
-		c2=c1=gr->NextColor(pal);
+		mreal c1,c2;	c2=c1=gr->NextColor(pal);
 		if(gr->GetNumPal(pal)==2*m && !sh)	c2 = gr->NextColor(pal);
 		long mx = j<v->GetNy() ? j:0, my = j<y->GetNy() ? j:0;
 		xp = x0 = gr->GetOrgX('y');
@@ -1139,7 +1140,8 @@ void MGL_EXPORT mgl_ohlc_x(HMGL gr, HCDT x, HCDT open, HCDT high, HCDT low, HCDT
 	for(long j=0;j<m;j++)
 	{
 		if(gr->NeedStop())	break;
-		mreal cc=gr->NextColor(pal);
+		mreal c1,c2;	c2=c1=gr->NextColor(pal);
+		if(gr->GetNumPal(pal)==2*m && !sh)	c2 = gr->NextColor(pal);
 		mx = j<x->GetNy() ? j:0;
 		for(long i=0;i<n;i++)
 		{
@@ -1147,16 +1149,17 @@ void MGL_EXPORT mgl_ohlc_x(HMGL gr, HCDT x, HCDT open, HCDT high, HCDT low, HCDT
 			vv = x->v(i,mx);	dd = i<nx-1 ? x->v(i+1)-vv : vv-x->v(i-1);
 			x1 = vv + dd/2*(dv-gr->BarWidth);	x2 = x1 + gr->BarWidth*dd;
 			x2 = (x2-x1)/m;		x1 += j*x2;		x2 += x1;	vv = (x2+x1)/2;
-			mreal c = sh ? gr->NextColor(pal,i):cc;
+			if(sh)	c1=c2=gr->NextColor(pal,i);
 			register long n1,n2;
 
+			dd = close->v(i,j);
+			mreal c = (i==0 || dd>=close->v(i-1,j)) ? c1:c2;
+			n1=gr->AddPnt(mglPoint(vv,dd,zVal),c);
+			n2=gr->AddPnt(mglPoint(x2,dd,zVal),c);
+			gr->line_plot(n1,n2);
 			dd = open->v(i,j);
 			n1=gr->AddPnt(mglPoint(x1,dd,zVal),c);
 			n2=gr->AddPnt(mglPoint(vv,dd,zVal),c);
-			gr->line_plot(n1,n2);
-			dd = close->v(i,j);
-			n1=gr->AddPnt(mglPoint(vv,dd,zVal),c);
-			n2=gr->AddPnt(mglPoint(x2,dd,zVal),c);
 			gr->line_plot(n1,n2);
 			n1=gr->AddPnt(mglPoint(vv,low->v(i,j),zVal),c);
 			n2=gr->AddPnt(mglPoint(vv,high->v(i,j),zVal),c);

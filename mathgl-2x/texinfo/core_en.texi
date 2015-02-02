@@ -2311,7 +2311,7 @@ These functions draw boxplot (also known as a box-and-whisker diagram) at points
 @deftypefnx {C function} @code{void} mgl_candle_yv (@code{HMGL} gr, @code{HCDT} v1, @code{HCDT} v2, @code{HCDT} y1, @code{HCDT} y2, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_candle_xyv (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} v1, @code{HCDT} v2, @code{HCDT} y1, @code{HCDT} y2, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-These functions draw candlestick chart at points @var{x}[i]. This is a combination of a line-chart and a bar-chart, in that each bar represents the range of price movement over a given time interval. Wire (or white) candle correspond to price growth @var{v1}[i]<@var{v2}[i], opposite case -- solid (or dark) candle. "Shadows" show the minimal @var{y1} and maximal @var{y2} prices. If @var{v2} is absent then it is determined as @var{v2}[i]=@var{v1}[i+1]. See also @ref{plot}, @ref{bars}, @ref{ohlc}, @ref{barwidth}. @sref{Candle sample}
+These functions draw candlestick chart at points @var{x}[i]. This is a combination of a line-chart and a bar-chart, in that each bar represents the range of price movement over a given time interval. Wire (or white) candle correspond to price growth @var{v1}[i]<@var{v2}[i], opposite case -- solid (or dark) candle. You can give different colors for growth and decrease values if number of specified colors is equal to 2. "Shadows" show the minimal @var{y1} and maximal @var{y2} prices. If @var{v2} is absent then it is determined as @var{v2}[i]=@var{v1}[i+1]. See also @ref{plot}, @ref{bars}, @ref{ohlc}, @ref{barwidth}. @sref{Candle sample}
 @end deftypefn
 
 @anchor{ohlc}
@@ -2323,7 +2323,7 @@ These functions draw candlestick chart at points @var{x}[i]. This is a combinati
 @deftypefnx {C function} @code{void} mgl_ohlc (@code{HMGL} gr, @code{HCDT} o, @code{HCDT} h, @code{HCDT} l, @code{HCDT} c, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_ohlc_x (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} o, @code{HCDT} h, @code{HCDT} l, @code{HCDT} c, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-These functions draw Open-High-Low-Close diagram. This diagram show vertical line for between maximal(high @var{h}) and minimal(low @var{l}) values, as well as horizontal lines before/after vertical line for initial(open @var{o})/final(close @var{c}) values of some process (usually price). See also @ref{candle}, @ref{plot}, @ref{barwidth}. @sref{OHLC sample}
+These functions draw Open-High-Low-Close diagram. This diagram show vertical line for between maximal(high @var{h}) and minimal(low @var{l}) values, as well as horizontal lines before/after vertical line for initial(open @var{o})/final(close @var{c}) values of some process (usually price). You can give different colors for up and down values (when closing values higher or not as in previous point) if number of specified colors is equal to 2*number of curves. See also @ref{candle}, @ref{plot}, @ref{barwidth}. @sref{OHLC sample}
 @end deftypefn
 
 
