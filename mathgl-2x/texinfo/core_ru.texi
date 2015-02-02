@@ -2218,7 +2218,7 @@ Draw bitmap (logo) along whole axis range, which can be changed by @ref{Command 
 @deftypefnx {Функция С} @code{void} mgl_candle_yv (@code{HMGL} gr, @code{HCDT} v1, @code{HCDT} v2, @code{HCDT} y1, @code{HCDT} y2, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_candle_xyv (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} v1, @code{HCDT} v2, @code{HCDT} y1, @code{HCDT} y2, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-Функции рисуют candlestick chart в точках @var{x}[i]. Этот график показывает прямоугольником ("свечой") диапазон изменения величины. Прозрачная (белая) свеча соответствует росту величины @var{v1}[i]<@var{v2}[i], чёрная -- уменьшению. "Тени" показывают минимальное @var{y1} и максимальное @var{y2} значения. Если @var{v2} отсутствует, то он определяется как @var{v2}[i]=@var{v1}[i+1]. См. также @ref{plot}, @ref{bars}, @ref{ohlc}, @ref{barwidth}. @sref{Candle sample}
+Функции рисуют candlestick chart в точках @var{x}[i]. Этот график показывает прямоугольником ("свечой") диапазон изменения величины. Прозрачная (белая) свеча соответствует росту величины @var{v1}[i]<@var{v2}[i], чёрная -- уменьшению. "Тени" показывают минимальное @var{y1} и максимальное @var{y2} значения. Если @var{v2} отсутствует, то он определяется как @var{v2}[i]=@var{v1}[i+1]. Можно использовать разные цвета для растущих и падающих дней если число указанных цветов равно удвоенному числу кривых для построения. Если @var{pen} содержит @samp{#}, то прозрачная свеча будет использована и при 2-цветной схеме. См. также @ref{plot}, @ref{bars}, @ref{ohlc}, @ref{barwidth}. @sref{Candle sample}
 @end deftypefn
 
 @anchor{ohlc}
@@ -2230,7 +2230,7 @@ Draw bitmap (logo) along whole axis range, which can be changed by @ref{Command 
 @deftypefnx {Функция С} @code{void} mgl_ohlc (@code{HMGL} gr, @code{HCDT} o, @code{HCDT} h, @code{HCDT} l, @code{HCDT} c, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {Функция С} @code{void} mgl_ohlc_x (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} o, @code{HCDT} h, @code{HCDT} l, @code{HCDT} c, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-Функции рисуют Open-High-Low-Close диаграмму. Этот график содержит вертикальные линии между максимальным @var{h} и минимальным @var{l} значениями, и горизонтальные линии перед/после вертикальной линии для начального @var{o} и конечного @var{c} значений процесса (обычно цены). См. также @ref{candle}, @ref{plot}, @ref{barwidth}. @sref{OHLC sample}
+Функции рисуют Open-High-Low-Close диаграмму. Этот график содержит вертикальные линии между максимальным @var{h} и минимальным @var{l} значениями, и горизонтальные линии перед/после вертикальной линии для начального @var{o} и конечного @var{c} значений процесса (обычно цены). Можно использовать разные цвета для растущих и падающих дней если число указанных цветов равно удвоенному числу кривых для построения. См. также @ref{candle}, @ref{plot}, @ref{barwidth}. @sref{OHLC sample}
 @end deftypefn
 
 

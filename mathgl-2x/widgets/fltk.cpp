@@ -717,10 +717,9 @@ void mglCanvasFL::Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p
 		Adjust();
 	}
 
-	char *tmp[1];	tmp[0]=new char[1];	tmp[0][0]=0;
-	Wnd->show(argv ? argc:0, argv ? argv:tmp);
-	delete []tmp[0];
-}
+	static char ctmp[1];	ctmp[0]=0;
+	static char *tmp[1];	tmp[0]=ctmp;
+	Wnd->show(argv ? argc:0, argv ? argv:tmp);}
 //-----------------------------------------------------------------------------
 HMGL MGL_EXPORT mgl_create_graph_fltk(int (*draw)(HMGL gr, void *p), const char *title, void *par, void (*load)(void *p))
 {

@@ -216,6 +216,7 @@ void MGL_EXPORT mgl_candle_xyv(HMGL gr, HCDT x, HCDT v1, HCDT v2, HCDT y1, HCDT 
 	static int cgid=1;	gr->StartGroup("Candle",cgid++);
 	gr->SaveState(opt);	gr->SetPenPal(pen,&pal);	gr->Reserve(8*n);
 	bool sh = mglchr(pen,'!');
+	bool wire = mglchr(pen,'#');
 
 	mreal dv=nx>n?1:0;
 	if(mglchr(pen,'<'))	dv = 1;
@@ -228,10 +229,12 @@ void MGL_EXPORT mgl_candle_xyv(HMGL gr, HCDT x, HCDT v1, HCDT v2, HCDT y1, HCDT 
 	for(long i=0;i<n;i++)
 	{
 		mreal m1=v1->v(i),	m2 = v2->v(i),	xx = x->v(i);
-		mreal d = i<nx-1 ? x->v(i+1)-xx : xx-x->v(i-1);
+		mreal d = i<nx-1 ? x->v(i+1)-xx : xx-x->v(i-1), c;
 		mreal x1 = xx + d/2*(dv-gr->BarWidth);
 		mreal x2 = x1 + gr->BarWidth*d;	xx = (x1+x2)/2;
-		mreal c = sh ? gr->NextColor(pal,i):((m1>m2)?c1:c2);
+		if(sh)	c = gr->NextColor(pal,i);
+		else if(wire)	c = (i>0 && m2>v2->v(i-1))?c2:c1;
+		else	c = (m1>m2)?c1:c2;
 		long n1 = gr->AddPnt(mglPoint(xx,y1->v(i),zm),c);
 		long n2 = gr->AddPnt(mglPoint(xx,m1,zm),c);
 		gr->line_plot(n1,n2);
@@ -245,7 +248,7 @@ void MGL_EXPORT mgl_candle_xyv(HMGL gr, HCDT x, HCDT v1, HCDT v2, HCDT y1, HCDT 
 		n4 = gr->AddPnt(mglPoint(x2,m2,zm),c);
 		gr->line_plot(n1,n2);	gr->line_plot(n1,n3);
 		gr->line_plot(n4,n2);	gr->line_plot(n4,n3);
-		if(m1>m2 || col2)	gr->quad_plot(n1,n2,n3,n4);
+		if(m1>m2 || (col2 && !wire))	gr->quad_plot(n1,n2,n3,n4);
 	}
 	if(d1)	delete y1;	if(d2)	delete y2;
 	gr->EndGroup();
