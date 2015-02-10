@@ -52,6 +52,7 @@ ZZ. Update *.i for new functions {before release!!!}
 14. Binary font files for particular platform (+ check ARM). Add utility to translate from current (textual) to binary.
 16. Contour lines above/under surface (e-mail 10.12.14)
 17. Iris plot -- https://en.wikipedia.org/wiki/Iris_flower_data_set
+18. Add everywhere mgl_check_version()
 
 ============= DOCUMENTATION =============
 

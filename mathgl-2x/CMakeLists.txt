@@ -165,6 +165,7 @@ if(HAVE_MEMRCHR)
 endif(HAVE_MEMRCHR)
 
 include(CheckCXXSourceCompiles)
+unset(MGL_HAVE_C99_COMPLEX)
 CHECK_CXX_SOURCE_COMPILES(
 "#include <complex>
 #include <complex.h>
@@ -175,12 +176,16 @@ std::complex<double> b(*a);return 0;}" MGL_HAVE_C99_COMPLEX)
 if(NOT MGL_HAVE_C99_COMPLEX)
 	set(MGL_HAVE_C99_COMPLEX 0)
 endif(NOT MGL_HAVE_C99_COMPLEX)
+
+unset(MGL_HAVE_NAN_INF)
 CHECK_CXX_SOURCE_COMPILES(
 "#include <math.h>
 int main(){double a=NAN, b=INFINITY;return 0;}" MGL_HAVE_NAN_INF)
 if(NOT MGL_HAVE_NAN_INF)
 	set(MGL_HAVE_NAN_INF 0)
 endif(NOT MGL_HAVE_NAN_INF)
+
+unset(MGL_HAVE_ATTRIBUTE)
 CHECK_CXX_SOURCE_COMPILES(
 "int __attribute__((pure)) test1() {return 0;}
 int __attribute__((const)) test2(int x) {return x*x;}
@@ -188,6 +193,8 @@ int main(int argc, char* argv[]) {return 0;}" MGL_HAVE_ATTRIBUTE)
 if(NOT MGL_HAVE_ATTRIBUTE)
 	set(MGL_HAVE_ATTRIBUTE 0)
 endif(NOT MGL_HAVE_ATTRIBUTE)
+
+unset(MGL_HAVE_TYPEOF)
 CHECK_CXX_SOURCE_COMPILES(
 "#define mgl_isnum(a)	({typeof (a) _a = (a); _a==_a;})
 int main(){bool a=mgl_isnum(1);return 0;}" MGL_HAVE_TYPEOF)
@@ -195,7 +202,7 @@ if(NOT MGL_HAVE_TYPEOF)
 	set(MGL_HAVE_TYPEOF 0)
 endif(NOT MGL_HAVE_TYPEOF)
 
-#unset(MGL_HAVE_C99_COMPLEX)
+unset(MGL_HAVE_RVAL)
 CHECK_CXX_SOURCE_COMPILES(
 "struct test { test() {} test(test&& a){} };
 int main() { test t;	return 0; }" MGL_HAVE_RVAL)
