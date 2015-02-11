@@ -690,7 +690,8 @@ void MGL_EXPORT mgl_makemenu_fltk(Fl_Menu_ *m, Fl_MGLView *w)
 //-----------------------------------------------------------------------------
 void mglCanvasFL::Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p), const char *title, void *par, void (*reload)(void *p), bool maximize)
 {
-	Fl::lock();
+	Fl::lock();	// NOTE somehow this require for each window, not for initialization only?!?
+
 	SetDrawFunc(draw, par, reload);
 	if(Wnd)	{	Wnd->label(title);	Wnd->show();	return;	}
 
@@ -707,7 +708,7 @@ void mglCanvasFL::Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p
 	mgl->FMGL->set_draw(draw, par);
 
 	Wnd->end();
-	Wnd->resizable(mgl);	//w->graph);
+	Wnd->resizable(mgl);
 
 	if(maximize)
 	{
@@ -720,7 +721,6 @@ void mglCanvasFL::Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p
 	static char ctmp[1];	ctmp[0]=0;
 	static char *tmp[1];	tmp[0]=ctmp;
 	Wnd->show(argv ? argc:0, argv ? argv:tmp);
-	Fl::unlock();
 }
 //-----------------------------------------------------------------------------
 HMGL MGL_EXPORT mgl_create_graph_fltk(int (*draw)(HMGL gr, void *p), const char *title, void *par, void (*load)(void *p))
