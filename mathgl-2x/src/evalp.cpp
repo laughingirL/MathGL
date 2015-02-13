@@ -27,7 +27,6 @@
 #endif
 //-----------------------------------------------------------------------------
 std::wstring mgl_trim_ws(const std::wstring &str);
-int mglFormulaError;
 mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring string, mglParser *arg, const std::vector<mglDataA*> &head);
 mglDataC MGL_NO_EXPORT mglFormulaCalcC(std::wstring string, mglParser *arg, const std::vector<mglDataA*> &head);
 //-----------------------------------------------------------------------------
@@ -199,8 +198,8 @@ mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std
 #if MGL_HAVE_GSL
 	gsl_set_error_handler_off();
 #endif
-	mglData res;
-	if(str.empty() || mglFormulaError)	return res;	// nothing to parse
+	mglData res;	res.a[0]=NAN;
+	if(str.empty())	return res;	// nothing to parse
 //	if(arg)	head = arg->DataList;
 	str = mgl_trim_ws(str);
 	long n,len=str.length();
@@ -333,22 +332,6 @@ mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std
 			else if(!str.compare(L"pi"))	res = M_PI;
 			else if(!str.compare(L"on"))	res = 1;
 			else if(!str.compare(L"off"))	res = 0;
-/*			else if(!str.compare(L"t"))	res.Fill(0,1,'x');
-			else if(!str.compare(L"x") && arg && arg->curGr)
-			{
-				if(res.GetNN()==1)	res.Create(100);
-				res.Fill(arg->curGr->Min.x, arg->curGr->Max.x,'x');
-			}
-			else if(!str.compare(L"y") && arg && arg->curGr)
-			{
-				if(res.GetNN()==1)	res.Create(100);
-				res.Fill(arg->curGr->Min.x, arg->curGr->Max.x,res.ny>1?'y':'x');
-			}
-			else if(!str.compare(L"z") && arg && arg->curGr)
-			{
-				if(res.GetNN()==1)	res.Create(100);
-				res.Fill(arg->curGr->Min.x, arg->curGr->Max.x,res.nz>1?'z':'x');
-			}*/
 			else res = wcstod(str.c_str(),0);	// this is number
 		}
 		return res;
@@ -408,8 +391,7 @@ mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std
 			else if(!nm.compare(L"arg"))
 			{
 				n=mglFindInText(str,",");
-				if(n<=0)	mglFormulaError=true;
-				else	res = mglApplyOper(str.substr(n+1),str.substr(0,n),arg, head, atan2);
+				if(n>0)	res = mglApplyOper(str.substr(n+1),str.substr(0,n),arg, head, atan2);
 			}
 			else if(!nm.compare(L"abs"))
 			{
@@ -444,8 +426,7 @@ mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std
 			if(!nm.compare(L"beta"))
 			{
 				n=mglFindInText(str,",");
-				if(n<=0)	mglFormulaError=true;
-				else	res = mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, gsl_sf_beta);
+				if(n>0)	res = mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, gsl_sf_beta);
 			}
 			else if(!nm.compare(L"bi"))
 			{	res=mglFormulaCalc(str, arg, head);
@@ -455,26 +436,22 @@ mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std
 			else if(!nm.compare(L"bessel_i"))
 			{
 				n=mglFindInText(str,",");
-				if(n<=0)	mglFormulaError=true;
-				else	res = mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, gsl_sf_bessel_Inu);
+				if(n>0)	res = mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, gsl_sf_bessel_Inu);
 			}
 			else if(!nm.compare(L"bessel_j"))
 			{
 				n=mglFindInText(str,",");
-				if(n<=0)	mglFormulaError=true;
-				else	res = mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, gsl_sf_bessel_Jnu);
+				if(n>0)	res = mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, gsl_sf_bessel_Jnu);
 			}
 			else if(!nm.compare(L"bessel_k"))
 			{
 				n=mglFindInText(str,",");
-				if(n<=0)	mglFormulaError=true;
-				else	res = mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, gsl_sf_bessel_Knu);
+				if(n>0)	res = mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, gsl_sf_bessel_Knu);
 			}
 			else if(!nm.compare(L"bessel_y"))
 			{
 				n=mglFindInText(str,",");
-				if(n<=0)	mglFormulaError=true;
-				else	res = mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, gsl_sf_bessel_Ynu);
+				if(n>0)	res = mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, gsl_sf_bessel_Ynu);
 			}
 #endif
 		}
@@ -510,14 +487,12 @@ mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std
 			else if(!nm.compare(L"e") || !nm.compare(L"elliptic_e"))
 			{
 				n=mglFindInText(str,",");
-				if(n<=0)	mglFormulaError=true;
-				else	res = mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, gslEllE);
+				if(n>0)	res = mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, gslEllE);
 			}
 			else if(!nm.compare(L"elliptic_f"))
 			{
 				n=mglFindInText(str,",");
-				if(n<=0)	mglFormulaError=true;
-				else	res = mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, gslEllF);
+				if(n>0)	res = mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, gslEllF);
 			}
 
 			else if(!nm.compare(L"ei"))
@@ -537,8 +512,7 @@ mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std
 			if(!nm.compare(L"log"))
 			{
 				n=mglFindInText(str,",");
-				if(n<=0)	mglFormulaError=true;
-				else	res = mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, llg);
+				if(n>0)	res = mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, llg);
 			}
 			else if(!nm.compare(L"lg"))
 			{	res=mglFormulaCalc(str, arg, head);	mglApplyFunc(res,log10);	}
@@ -550,8 +524,7 @@ mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std
 			else if(!nm.compare(L"legendre"))
 			{
 				n=mglFindInText(str,",");
-				if(n<=0)	mglFormulaError=true;
-				else	res = mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, gslLegP);
+				if(n>0)	res = mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, gslLegP);
 			}
 #endif
 		}
@@ -589,14 +562,12 @@ mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std
 		else if(!nm.compare(L"pow"))
 		{
 			n=mglFindInText(str,",");
-			if(n<=0)	mglFormulaError=true;
-			else	res = mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, pow);
+			if(n>0)	res = mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, pow);
 		}
 		else if(!nm.compare(L"mod"))
 		{
 			n=mglFindInText(str,",");
-			if(n<=0)	mglFormulaError=true;
-			else	res = mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, fmod);
+			if(n>0)	res = mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, fmod);
 		}
 		else if(!nm.compare(L"int"))
 		{	res=mglFormulaCalc(str, arg, head);	mglApplyFunc(res,floor);	}
@@ -607,46 +578,39 @@ mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std
 		else if(!nm.compare(L"i"))
 		{
 			n=mglFindInText(str,",");
-			if(n<=0)	mglFormulaError=true;
-			else	res = mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, gsl_sf_bessel_Inu);
+			if(n>0)	res = mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, gsl_sf_bessel_Inu);
 		}
 		else if(!nm.compare(L"j"))
 		{
 			n=mglFindInText(str,",");
-			if(n<=0)	mglFormulaError=true;
-			else	res = mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, gsl_sf_bessel_Jnu);
+			if(n>0)	res = mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, gsl_sf_bessel_Jnu);
 		}
 		else if(!nm.compare(L"k"))
 		{
 			n=mglFindInText(str,",");
-			if(n<=0)	mglFormulaError=true;
-			else	res = mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, gsl_sf_bessel_Knu);
+			if(n>0)	res = mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, gsl_sf_bessel_Knu);
 		}
 		else if(!nm.compare(L"y"))
 		{
 			n=mglFindInText(str,",");
-			if(n<=0)	mglFormulaError=true;
-			else	res = mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, gsl_sf_bessel_Ynu);
+			if(n>0)	res = mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, gsl_sf_bessel_Ynu);
 		}
 		else if(!nm.compare(L"f"))
 		{
 			n=mglFindInText(str,",");
-			if(n<=0)	mglFormulaError=true;
-			else	res = mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, gslEllF);
+			if(n>0)	res = mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, gslEllF);
 		}
 		else if(!nm.compare(L"hypot"))
 		{
 			n=mglFindInText(str,",");
-			if(n<=0)	mglFormulaError=true;
-			else	res = mglApplyOper(str.substr(n+1),str.substr(0,n),arg, head, hypot);
+			if(n>0)	res = mglApplyOper(str.substr(n+1),str.substr(0,n),arg, head, hypot);
 		}
 		else if(!nm.compare(L"gamma"))
 		{	res=mglFormulaCalc(str, arg, head);	mglApplyFunc(res,gsl_sf_gamma);	}
 		else if(!nm.compare(L"gamma_inc"))
 		{
 			n=mglFindInText(str,",");
-			if(n<=0)	mglFormulaError=true;
-			else	res = mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, gsl_sf_gamma_inc);
+			if(n>0)	res = mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, gsl_sf_gamma_inc);
 		}
 		else if(!nm.compare(L"w0"))
 		{	res=mglFormulaCalc(str, arg, head);	mglApplyFunc(res,gsl_sf_lambert_W0);	}
@@ -704,8 +668,8 @@ mglDataC MGL_NO_EXPORT mglFormulaCalcC(std::wstring str, mglParser *arg, const s
 #if MGL_HAVE_GSL
 	gsl_set_error_handler_off();
 #endif
-	mglDataC res;
-	if(str.empty() || mglFormulaError)	return res;	// nothing to parse
+	mglDataC res;	res.a[0]=NAN;
+	if(str.empty())	return res;	// nothing to parse
 //	if(arg)	head = arg->DataList;
 	str = mgl_trim_ws(str);
 	long n,len=str.length();
@@ -836,13 +800,6 @@ mglDataC MGL_NO_EXPORT mglFormulaCalcC(std::wstring str, mglParser *arg, const s
 			else if(!str.compare(L"pi"))	res = mreal(M_PI);
 			else if(!str.compare(L"on"))	res = mreal(1.);
 			else if(!str.compare(L"off"))	res = mreal(0.);
-/*			else if(!str.compare(L"t"))	res.Fill(0,1,'x');
-			else if(!str.compare(L"x") && arg && arg->curGr)
-				res.Fill(arg->curGr->Min.x, arg->curGr->Max.x,'x');
-			else if(!str.compare(L"y") && arg && arg->curGr)
-				res.Fill(arg->curGr->Min.x, arg->curGr->Max.x,res.ny>1?'y':'x');
-			else if(!str.compare(L"z") && arg && arg->curGr)
-				res.Fill(arg->curGr->Min.x, arg->curGr->Max.x,res.nz>1?'z':'x');*/
 			else if(str[0]=='i')	// this is imaginary number
 				res = dual(0,(str.length()>1 && str[1]>' ')?wcstod(str.c_str(),0):1);
 			else res = mreal(wcstod(str.c_str(),0));	// this is real number
@@ -941,8 +898,7 @@ mglDataC MGL_NO_EXPORT mglFormulaCalcC(std::wstring str, mglParser *arg, const s
 		else if(!nm.compare(L"pow"))
 		{
 			n=mglFindInText(str,",");
-			if(n<=0)	mglFormulaError=true;
-			else	res = mglApplyOperC(str.substr(0,n),str.substr(n+1),arg, head, powc);
+			if(n>0)	res = mglApplyOperC(str.substr(0,n),str.substr(n+1),arg, head, powc);
 		}
 		else if(!nm.compare(L"random"))
 		{	res=mglFormulaCalcC(str, arg, head);	register long n = res.GetNN(), i;

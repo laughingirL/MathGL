@@ -264,15 +264,10 @@ extern uint64_t mgl_mask_val[16];
 #include <complex.h>
 #if MGL_USE_DOUBLE
 typedef double _Complex mdual;
-#ifndef _Complex_I
-#define _Complex_I (double _Complex){0, 1}
-#endif
 #else
 typedef float _Complex mdual;
-#ifndef _Complex_I
-#define _Complex_I (float _Complex){0, 1}
 #endif
-#endif
+const mdual mgl_I=_Complex_I;
 #define mgl_abs(x)	cabs(x)
 #endif
 #ifdef __cplusplus
@@ -284,7 +279,7 @@ typedef std::complex<mreal> dual;
 typedef std::complex<double> ddual;
 #if !MGL_HAVE_C99_COMPLEX
 #define mdual dual
-#define _Complex_I dual(0,1)
+#define mgl_I dual(0,1)
 #define mgl_abs(x)	abs(x)
 #endif
 //-----------------------------------------------------------------------------

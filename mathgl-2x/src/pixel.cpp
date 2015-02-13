@@ -31,10 +31,21 @@ inline mreal get_pfact(float pf, float Depth)
 void mglCanvas::SetSize(int w,int h,bool clf)
 {
 	if(w<=0 || h<=0)	{	SetWarn(mglWarnSize,"SetSize");	return;	}
+	if(Width==w || Height==h)
+	{
+		InPlot(0,1,0,1,false);
+		if(clf || (Quality&4))	Clf();
+		return;
+	}
+
 	double dx = double(w)/Width, dy = double(h)/Height, dz = sqrt(double(w*h))/Depth;
 	Width = w;	Height = h;	Depth = long(sqrt(double(w*h)));
 	long s = long(w)*long(h);
-#pragma omp critical(rgb)
+#if MGL_HAVE_PTHREAD
+	pthread_mutex_lock(&mutexClf);
+#elif MGL_HAVE_OMP
+	omp_set_lock(&lockClf);
+#endif
 	if(G)	{	delete []G;	delete []C;	delete []Z;	delete []G4;delete []GB;delete []OI;	G=0;	}
 	G = new unsigned char[s*3];
 	G4= new unsigned char[s*4];
@@ -44,10 +55,22 @@ void mglCanvas::SetSize(int w,int h,bool clf)
 	OI= new int[s];
 #pragma omp parallel for
 	for(long i=0;i<s;i++)	memcpy(GB+4*i,BDef,4);
+#if MGL_HAVE_PTHREAD
+	pthread_mutex_unlock(&mutexClf);
+#elif MGL_HAVE_OMP
+	omp_unset_lock(&lockClf);
+#endif
+
 	InPlot(0,1,0,1,false);
 	if(clf || (Quality&4))	Clf();
 	else	// NOTE: no scaling for text (a bit complicated)
 	{
+#if MGL_HAVE_PTHREAD
+		pthread_mutex_lock(&mutexPnt);
+		pthread_mutex_lock(&mutexClf);
+#elif MGL_HAVE_OMP
+		omp_set_lock(&lockClf);
+#endif
 		long n = long(Pnt.size());
 #pragma omp parallel for
 		for(long i=0;i<n;i++)
@@ -72,6 +95,12 @@ void mglCanvas::SetSize(int w,int h,bool clf)
 				{	q.u*=dx;	q.v*=dy;	q.w*=dz;	}
 			}
 		}
+#if MGL_HAVE_PTHREAD
+		pthread_mutex_unlock(&mutexClf);
+		pthread_mutex_unlock(&mutexPnt);
+#elif MGL_HAVE_OMP
+		omp_unset_lock(&lockClf);
+#endif
 		ClfZB();	Finish();
 	}
 }

@@ -37,11 +37,6 @@ extern "C" {
 #else
 typedef void *HADT;
 #endif
-
-/// Set seed for random numbers
-void MGL_EXPORT mgl_srnd(long seed);
-/// Get random number
-double MGL_EXPORT mgl_rnd();
 /// Get integer power of x
 mdual MGL_EXPORT_CONST mgl_ipowc(dual x,int n);
 mdual MGL_EXPORT_PURE mgl_ipowc_(dual *x,int *n);

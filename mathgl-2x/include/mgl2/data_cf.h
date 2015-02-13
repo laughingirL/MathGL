@@ -38,13 +38,6 @@ typedef void gsl_matrix;
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-/// Set seed for random numbers
-void MGL_EXPORT mgl_srnd(long seed);
-void MGL_EXPORT mgl_srnd_(int *seed);
-/// Get random number
-double MGL_EXPORT mgl_rnd();
-double MGL_EXPORT mgl_rnd_();
 /// Get integer power of x
 double MGL_EXPORT_CONST mgl_ipow(double x,int n);
 double MGL_EXPORT_PURE mgl_ipow_(mreal *x,int *n);

@@ -4,6 +4,7 @@
 * Add reading files with complex numbers by 'read' command.
 * Parallelize reading textual data files.
 * Add 'i','j','k' variables for data filling.
+* Add 2-color style for candle and ohlc plot.
 * Add saving images in QMathGL even if corresponding format support is disabled.
 * Add cmake option MGL_DEF_FONT to change default font name or use built-in one (if MGL_DEF_FONT is empty).
 * Compatibility changes and bugfixes.

@@ -53,6 +53,8 @@ ZZ. Update *.i for new functions {before release!!!}
 16. Contour lines above/under surface (e-mail 10.12.14)
 17. Iris plot -- https://en.wikipedia.org/wiki/Iris_flower_data_set
 18. Add everywhere mgl_check_version()
+19. Lighting per subplot or per object?!?
+20. Manual line if triangle is too narrow ??? may produce a lot of problems!
 
 ============= DOCUMENTATION =============
 
