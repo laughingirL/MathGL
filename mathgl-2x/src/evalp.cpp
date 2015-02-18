@@ -198,8 +198,9 @@ mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std
 #if MGL_HAVE_GSL
 	gsl_set_error_handler_off();
 #endif
-	mglData res;	res.a[0]=NAN;
+	mglData res;
 	if(str.empty())	return res;	// nothing to parse
+	res.a[0]=NAN;
 //	if(arg)	head = arg->DataList;
 	str = mgl_trim_ws(str);
 	long n,len=str.length();
@@ -668,8 +669,9 @@ mglDataC MGL_NO_EXPORT mglFormulaCalcC(std::wstring str, mglParser *arg, const s
 #if MGL_HAVE_GSL
 	gsl_set_error_handler_off();
 #endif
-	mglDataC res;	res.a[0]=NAN;
+	mglDataC res;
 	if(str.empty())	return res;	// nothing to parse
+	res.a[0]=NAN;
 //	if(arg)	head = arg->DataList;
 	str = mgl_trim_ws(str);
 	long n,len=str.length();
