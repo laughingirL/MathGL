@@ -26,26 +26,17 @@ mathgl.Graph = function(canvas, backend) {
 	this.__x1 = 0;	this.__y1 = 0;	this.__z1 = 0;
 	this.__x2 = 1;	this.__y2 = 1;	this.__z2 = 1;
 	this.__activeTimeoutHandlers = [];
+
+  // create view
+  this.__view = new mathgl.View();
+  // connect method which starts rendering to view object
+  this.__view.setRenderLauncher(mathgl.bind(this.__renderStart, this));
+  // connect pick point handler
+  this.__view.setPickPointHandler(mathgl.bind(this.__pickPointHandler, this));
+  // attach canvas to view
+  this.__view.attachCanvas(this.__canvas);
 };
 
-/**
- * Initialize current view by given MGL script.
- * @param mgl {String} MGL script
- */
-mathgl.Graph.prototype.init = function(mgl) {
-	// request backend for geometry object
-	this.__geometry = this.__backend.geometry(mgl);
-	this.__geometry.mgl = mgl;
-	// construct view according the view type recieved from backend (within geometry object) and initialize it
-
-	this.__view = new mathgl.View();
-	// connect method which starts rendering to view object
-	this.__view.setRenderLauncher(mathgl.bind(this.__renderStart, this));
-	// connect pick point handler
-	this.__view.setPickPointHandler(mathgl.bind(this.__pickPointHandler, this));
-	// attach canvas to view
-	this.__view.attachCanvas(this.__canvas);
-}
 
 /**
  * Method uses to wrap native JS setTimeout function to make possible deactivate active callbacks in destroy method
@@ -125,11 +116,8 @@ mathgl.Graph.prototype.shiftAxis = function(x, y, z) {
 	this.__z1 += dz; this.__z2 += dz;
 	// introduce zoomaxis coomand for server side
 	var zoom = "zoomaxis "+this.__x1+" "+this.__y1+" "+this.__z1+" "+this.__x2+" "+this.__y2+" "+this.__z2+"\n";
-	var mgl = this.__geometry.mgl;
-	// now ask server side for proper coordinates
-	this.__geometry = this.__backend.geometry(zoom+mgl);
-	this.__geometry.mgl = mgl;
-	this.__renderStart();
+
+  this.loadGeometry(zoom + this.__geometry.mgl);
 }
 
 
@@ -144,18 +132,15 @@ mathgl.Graph.prototype.zoomAxis = function(factor) {
 	this.__z1 = c-d; this.__z2 = c+d;
 	// introduce zoomaxis coomand for server side
 	var zoom = "zoomaxis "+this.__x1+" "+this.__y1+" "+this.__z1+" "+this.__x2+" "+this.__y2+" "+this.__z2+"\n";
-	var mgl = this.__geometry.mgl;
-	// now ask server side for proper coordinates
-	this.__geometry = this.__backend.geometry(zoom+this.__geometry.mgl);
-	this.__geometry.mgl = mgl;
-	this.__renderStart();
+
+  this.loadGeometry(zoom + this.__geometry.mgl);
 }
 
 
 /** initiate the chains of rendering the geometry to the canvas */
 mathgl.Graph.prototype.__renderStart = function() {
-	// do nothing if processing is already started
-	if (!this.__isDraftRenderingInScheduled) {
+	// do nothing if processing is already started or no geometry
+	if (!this.__isDraftRenderingInScheduled && this.__geometry) {
 		// enqueue draft rendering step
 		this.__isDraftRenderingInScheduled = true;
 		this.__setTimeout(mathgl.bind(this.__renderDraft, this), 0);
@@ -284,6 +269,7 @@ mathgl.Graph.prototype.__mgl_draw_good = function(obj, ctx, skip) {
 	}
 }
 
+
 /** perform high-quality drawing */
 mathgl.Graph.prototype.__mgl_draw_prim = function(obj, ctx, prim, scl) {
 	var n1 = prim[1], n2 = prim[2];
@@ -381,6 +367,7 @@ mathgl.Graph.prototype.__mgl_prepare = function(obj, skip) {
 	}
 	// now transform points for found transformation matrix
 	var b = obj.b, i;
+  obj.pp = [];
 	for(i=0;i<obj.npnts;i++)
 	{
 		var x = obj.pnts[i][0]-obj.width/2;
@@ -601,52 +588,112 @@ mathgl.Graph.prototype.__mgl_line_glyph = function(ctx, x,y, f,solid,b) {
 }
 
 
+/**
+ * Move Left using MGL 'zoomaxis' with geometry reload
+ */
 mathgl.Graph.prototype.moveLeft = function() {
 	var b = this.__geometry.b;
 	var f = 0.1/Math.sqrt(b[0]*b[0]+b[1]*b[1]+b[2]*b[2]);
 	this.shiftAxis(f*b[0],f*b[1],f*b[2]);
 }
 
+
+/**
+ * Move Right using MGL 'zoomaxis' with geometry reload
+ */
 mathgl.Graph.prototype.moveRight = function() {
 	var b = this.__geometry.b;
 	var f = -0.1/Math.sqrt(b[0]*b[0]+b[1]*b[1]+b[2]*b[2]);
 	this.shiftAxis(f*b[0],f*b[1],f*b[2]);
 }
 
+
+/**
+ * Move Up using MGL 'zoomaxis' with geometry reload
+ */
 mathgl.Graph.prototype.moveUp = function() {
 	var b = this.__geometry.b;
 	var f = -0.1/Math.sqrt(b[3]*b[3]+b[4]*b[4]+b[5]*b[5]);
 	this.shiftAxis(-f*b[3],f*b[4],-f*b[5]);
 }
 
+
+/**
+ * Move Down using MGL 'zoomaxis' with geometry reload
+ */
 mathgl.Graph.prototype.moveDown = function() {
 	var b = this.__geometry.b;
 	var f = 0.1/Math.sqrt(b[3]*b[3]+b[4]*b[4]+b[5]*b[5]);
 	this.shiftAxis(-f*b[3],f*b[4],-f*b[5]);
 }
 
+
+/**
+ * Zoom In using MGL 'zoomaxis' with geometry reload
+ */
 mathgl.Graph.prototype.zoomIn = function() {
 	this.zoomAxis(1.1);
 }
 
+
+/**
+ * Zoom Out using MGL 'zoomaxis' with geometry reload
+ */
 mathgl.Graph.prototype.zoomOut = function() {
 	this.zoomAxis(1./1.1);
 }
 
-mathgl.Graph.prototype.getView = function(mgl) {
+
+/**
+ * @return mathgl.View instance
+ */
+mathgl.Graph.prototype.getView = function() {
 	return this.__view;
 }
 
-mathgl.Graph.prototype.reloadGeometry = function() {
-	var mgl = this.__geometry.mgl;
-	this.__geometry = this.__backend.geometry(mgl);
-	this.__geometry.mgl = mgl;
+
+/**
+ * Build and load geometry into View
+ * @param mgl {String} MGL script
+ * @param completeCallback {Function|null} optional callback to notify completion
+ */
+mathgl.Graph.prototype.loadGeometry = function(mgl, completeCallback) {
+  this.__backend.geometry(mgl, mathgl.bind(function(error, result) {
+    if (!error) {
+      this.__geometry = result;
+      this.__geometry.mgl = mgl;
+      this.redraw();
+
+      if (typeof completeCallback === "function") {
+        completeCallback();
+      }
+    }
+  }, this));
 }
 
+
+/**
+ * Force reload geometry
+ * @param completeCallback {Function|null} optional callback to notify completion
+ */
+mathgl.Graph.prototype.reloadGeometry = function(completeCallback) {
+  var mgl = (this.__geometry && this.__geometry.mgl) ? this.__geometry.mgl : "";
+  this.loadGeometry(mgl, completeCallback);
+}
+
+
+/**
+ * Force redraw view from current geometry
+ */
 mathgl.Graph.prototype.redraw = function() {
 	this.__renderStart();
 }
 
+
+/**
+ * Shutdown graph instance
+ * Destroy view, cleanup all timers and references
+ */
 mathgl.Graph.prototype.destroy = function() {
 	// clear active timeouts
 	for (var i = 0, l = this.__activeTimeoutHandlers.length; i<l; i++) {
@@ -660,21 +707,38 @@ mathgl.Graph.prototype.destroy = function() {
 	this.__geometry = null;
 }
 
-/** @param type {String} data url type (e.g. "image/png") */
+
+/**
+ * Export image
+ * @param type {String} data url type (e.g. "image/png")
+ * @return {String} HTML Data URL containing graph image
+ **/
 mathgl.Graph.prototype.toDataURL = function(type) {
-	this.__canvas.toDataURL(type);
+	return this.__canvas.toDataURL(type);
 }
 
-/** Set perspective angle of view: @param val - degree of perspective in range 0...1 (0 - use default orthogonal projection)  */
+
+/**
+ * Set perspective angle of view
+ * @param val {Number} degree of perspective in range 0...1 (0 - use default orthogonal projection)
+ **/
 mathgl.Graph.prototype.setPerspective = function(val) {
 	this.__fov = val;
 }
 
-/** Set maximal number of drawable points in draft mode */
+
+/**
+ * Set maximal number of drawable points in draft mode
+ **/
 mathgl.Graph.prototype.setMaxDraftPoints = function(count) {
 	this.__maxDraftPoints = count;
 }
 
+
+/**
+ * Set delay between draft and precise rendering
+ * @param delayMillisec {Integer} delay in milliseconds
+ */
 mathgl.Graph.prototype.setPreciseRenderingDelay = function(delayMillisec) {
 	this.__preciseRenderingDelay = delayMillisec;
 }

@@ -33,9 +33,13 @@ mglData MGL_NO_EXPORT mglFormulaCalc(const char *str, const std::vector<mglDataA
 int mglFitPnts=100;		///< Number of output points in fitting
 char mglFitRes[1024];	///< Last fitted formula
 mreal mglFitChi=NAN;	///< Chi value for last fitted formula
+mglData mglFitCovar;	///< Covar matrix for lat fitted formula
 //-----------------------------------------------------------------------------
 mreal MGL_EXPORT mgl_get_fit_chi()	{	return mglFitChi;	}
 mreal MGL_EXPORT mgl_get_fit_chi_()	{	return mglFitChi;	}
+//-----------------------------------------------------------------------------
+HCDT MGL_EXPORT mgl_get_fit_covar()	{	return &mglFitCovar;	}
+uintptr_t MGL_EXPORT mgl_get_fit_covar_()	{	return (uintptr_t)&mglFitCovar;	}
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_puts_fit(HMGL gr, double x, double y, double z, const char *pre, const char *font, double size)
 {
@@ -169,7 +173,6 @@ mreal MGL_NO_EXPORT mgl_fit_base(mglFitData &fd, mreal *ini)
 	double *x_init = new double[fd.m];
 	for(i=0;i<m;i++)	x_init[i] = ini[i];
 	// setup fitting
-	gsl_matrix *covar = gsl_matrix_alloc(m, m);
 	gsl_vector_view vx = gsl_vector_view_array(x_init, m);
 	const gsl_multifit_fdfsolver_type *T = gsl_multifit_fdfsolver_lmsder;
 	gsl_multifit_fdfsolver *s = gsl_multifit_fdfsolver_alloc(T, n, m);
@@ -187,7 +190,9 @@ mreal MGL_NO_EXPORT mgl_fit_base(mglFitData &fd, mreal *ini)
 		status = gsl_multifit_test_delta (s->dx, s->x, 1e-4, 1e-4 );
 	}
 	while ( status == GSL_CONTINUE && iter < 500 );
+	gsl_matrix *covar = gsl_matrix_alloc(m, m);
 	gsl_multifit_covar (s->J, 0.0, covar );
+	mglFitCovar.Set(covar);
 	mreal res = gsl_blas_dnrm2(s->f);
 	for(i=0;i<m;i++)	ini[i] = gsl_vector_get(s->x, i);
 	// free memory

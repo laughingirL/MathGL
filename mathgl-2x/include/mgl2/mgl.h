@@ -1235,6 +1235,9 @@ public:
 	/// Get chi for last fitted formula
 	static inline mreal GetFitChi()
 	{	return mgl_get_fit_chi();	}
+	/// Get covariance matrix for last fitted formula
+	static inline mglData GetFitCovar()
+	{	return mglData(mgl_get_fit_covar());	}
 
 	/// Solve PDE with x,y,z in range [Min, Max]
 	inline mglData PDE(const char *ham, const mglDataA &ini_re, const mglDataA &ini_im, double dz=0.1, double k0=100, const char *opt="")

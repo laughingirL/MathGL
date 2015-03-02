@@ -433,8 +433,9 @@ void mglParser::PutArg(std::wstring &str, bool def)
 	{
 		wchar_t ch = str[pos+1];
 		if(ch>='0' && ch<='9')	str.replace(pos,2,par[ch-'0']);
-		if(ch>='a' && ch<='z')	str.replace(pos,2,par[ch-'a'+10]);
-		if(ch=='$')	str.replace(pos,2,L"\xffff");
+		else if(ch>='a' && ch<='z')	str.replace(pos,2,par[ch-'a'+10]);
+		else if(ch=='$')	str.replace(pos,2,L"\xffff");
+		else str.replace(pos,1,L"\xffff");
 		pos = str.find('$',def?10:0);
 	}
 	while((pos = str.find(L'\xffff'))<str.length())	str[pos]='$';

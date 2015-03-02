@@ -719,10 +719,10 @@ bool mglFont::Load(const char *base, const char *path)
 	// now collect data
 	numb = norm.size()+bold.size()+ital.size()+both.size();
 	Buf = new short[numb];
-	memcpy(Buf,norm.data(),norm.size()*sizeof(short));
+	memcpy(Buf,&norm[0],norm.size()*sizeof(short));
 	long cur = norm.size(), len = long(bold.size());
 	if(bold.size()>0)
-		memcpy(Buf+cur,bold.data(),bold.size()*sizeof(short));
+		memcpy(Buf+cur,&bold[0],bold.size()*sizeof(short));
 #pragma omp parallel for
 	for(long i=0;i<GetNumGlyph();i++)	if(glyphs[i].ln[1]<0)
 	{	glyphs[i].ln[1] = cur-1-glyphs[i].ln[1];	glyphs[i].tr[1] = cur-1-glyphs[i].tr[1];	}
@@ -735,7 +735,7 @@ bool mglFont::Load(const char *base, const char *path)
 	}
 	cur += len;		len = long(ital.size());
 	if(ital.size()>0)
-		memcpy(Buf+cur,ital.data(),ital.size()*sizeof(short));
+		memcpy(Buf+cur,&ital[0],ital.size()*sizeof(short));
 #pragma omp parallel for
 	for(long i=0;i<GetNumGlyph();i++)	if(glyphs[i].ln[2]<0)
 	{	glyphs[i].ln[2] = cur-1-glyphs[i].ln[2];	glyphs[i].tr[2] = cur-1-glyphs[i].tr[2];	}
@@ -748,7 +748,7 @@ bool mglFont::Load(const char *base, const char *path)
 	}
 	cur += len;
 	if(both.size()>0)
-		memcpy(Buf+cur,both.data(),both.size()*sizeof(short));
+		memcpy(Buf+cur,&both[0],both.size()*sizeof(short));
 #pragma omp parallel for
 	for(long i=0;i<GetNumGlyph();i++)	if(glyphs[i].ln[3]<0)
 	{	glyphs[i].ln[3] = cur-1-glyphs[i].ln[3];	glyphs[i].tr[3] = cur-1-glyphs[i].tr[3];	}
@@ -857,6 +857,6 @@ void mglFont::Copy(mglFont *f)
 	numb = f->numb;	Buf = new short[numb];	memcpy(Buf, f->Buf, numb*sizeof(short));
 	// copy symbol parameters
 	glyphs.resize(f->glyphs.size());
-	memcpy(glyphs.data(),f->glyphs.data(),glyphs.size()*sizeof(mglGlyphDescr));
+	memcpy(&glyphs[0],&(f->glyphs)[0],glyphs.size()*sizeof(mglGlyphDescr));
 }
 //-----------------------------------------------------------------------------

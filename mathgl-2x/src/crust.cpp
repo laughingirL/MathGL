@@ -31,7 +31,7 @@
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, const char *opt)
 {
-	long n = x->GetNx(), m = nums->GetNy();
+	long n = x->GetNN(), m = nums->GetNy();
 	if(mgl_check_trig(gr,nums,x,y,z,a,"TriPlot"))	return;
 
 	long ss=gr->AddTexture(sch);
@@ -39,7 +39,7 @@ void MGL_EXPORT mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCD
 	static int cgid=1;	gr->StartGroup("TriPlot",cgid++);
 
 	bool wire = mglchr(sch,'#');
-	long nc = a->GetNx();
+	long nc = a->GetNN();
 	if(nc!=n && nc>=m)	// colors per triangle
 	{
 		mglPoint p1,p2,p3,q;
@@ -133,7 +133,7 @@ void MGL_EXPORT mgl_triplot_xy_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, ui
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, const char *opt)
 {
-	long n = x->GetNx(), m = nums->GetNy();
+	long n = x->GetNN(), m = nums->GetNy();
 	if(mgl_check_trig(gr,nums,x,y,z,a,"QuadPlot",4))	return;
 
 	long ss=gr->AddTexture(sch);
@@ -141,7 +141,7 @@ void MGL_EXPORT mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HC
 	static int cgid=1;	gr->StartGroup("QuadPlot",cgid++);
 	mglPoint p1,p2,p3,p4;
 
-	long nc = a->GetNx();
+	long nc = a->GetNN();
 	bool wire = mglchr(sch,'#');
 	if(nc!=n && nc>=m)	// colors per triangle
 	{

@@ -55,6 +55,7 @@ ZZ. Update *.i for new functions {before release!!!}
 18. Add everywhere mgl_check_version()
 19. Lighting per subplot or per object?!?
 20. Manual line if triangle is too narrow ??? may produce a lot of problems!
+23. Extend 'join' to arbitrary number of datas
 
 ============= DOCUMENTATION =============
 
@@ -64,6 +65,7 @@ C. Translate to Russian everything
 D. Docs about JS interface
 
 1. Docs about new Smooth() styles
+2. Docs about GetFitCovar()
 
 YY. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using Stem()
 

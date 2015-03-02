@@ -163,8 +163,7 @@ mathgl.View.prototype.__onMouseMove = function(e) {
 // 		this.__yaw = Math.min(this.__yaw, Math.PI);
 // 		this.__yaw = Math.max(this.__yaw, -Math.PI);
 
-		if(this.__onCameraChanged)
-			this.__onCameraChanged(this.getViewpoint());
+    this.__notifyCameraChanged();
 		this.__renderLauncherFunc();
 	}
 }
@@ -197,16 +196,15 @@ mathgl.View.prototype.__onMouseWheel = function(e) {
 	this.__distance -= 0.1 * e.wheelDelta / 120;
 	this.__distance = Math.min(this.__distance, 10.0);
 	this.__distance = Math.max(this.__distance, 0.2);
-	if(this.__onCameraChanged)
-		this.__onCameraChanged(this.getViewpoint());
+  this.__notifyCameraChanged();
 	this.__renderLauncherFunc();
 }
 
-mathgl.View.prototype.getViewpoint = function() { 
+mathgl.View.prototype.getViewpoint = function() {
 	return { 
 		distance : this.__distance, 
 		pitch : this.__pitch, 
-		yaw : this.__yaw, 
+		yaw : this.__yaw
 	}; 
 } 
 
@@ -227,5 +225,10 @@ mathgl.View.prototype.setCameraEventHandler = function(handler) {
 	this.__onCameraChanged = handler; 
 }
 
+mathgl.View.prototype.__notifyCameraChanged = function() {
+  if(this.__onCameraChanged) {
+    this.__onCameraChanged(this.getViewpoint());
+  }
+}
 
 
