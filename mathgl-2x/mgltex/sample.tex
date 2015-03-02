@@ -40,7 +40,7 @@ The package defines the following environments:
 \item[mglfunc]
 	Is used to define MGL functions. It takes one mandatory argument, which is the name of the function, plus one additional argument, which specifies the number of arguments of the function. The environment needs to contain only the body of the function, since the first and last lines are appended automatically, and the resulting code is written at the end of the general script, which is also written automatically. The warning is produced if 2 or more function with the same name is defined.
 \item[mglsignature]
-Used to defined a commentary that will be added to every script. It is useful to include signature text or license text. Observe this is a verbatim-like environment, so no \LaTeX{} command will be executed inside it, but will be copied as is.
+	Used to defined a commentary that will be added to every script. It is useful to include signature text or license text. Observe this is a verbatim-like environment, so no \LaTeX{} command will be executed inside it, but will be copied as is.
 
 As an alternative to this method of declaring signatures, the user can manually redefine the signature macro \texttt{\textbackslash{}mgltexsignature}, according to the following rules:
   \begin{itemize}

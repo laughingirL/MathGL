@@ -1908,45 +1908,25 @@ void MGL_EXPORT mgl_data_join(HMDT d, HCDT v)
 {
 	long nx=d->nx, ny=d->ny, nz=d->nz, k=nx*ny*nz;
 	const mglData *mv = dynamic_cast<const mglData *>(v);
-	long vx=v->GetNx(), vy=v->GetNy(), vz=v->GetNz();
+	long vx=v->GetNx(), vy=v->GetNy(), vz=v->GetNz(), m = vx*vy*vz;
 
-	if(nx==vx && ny==vy && (nz>1 || vz>1))
-	{
-		mreal *b = new mreal[nx*ny*(nz+vz)];
-		memcpy(b,d->a,nx*ny*nz*sizeof(mreal));
-		if(mv)	memcpy(b+nx*ny*nz,mv->a,nx*ny*vz*sizeof(mreal));
-		else
-#pragma omp parallel for
-			for(long i=0;i<nx*ny*vz;i++)	b[k+i] = v->vthr(i);
-		if(!d->link)	delete []d->a;	d->nz += vz;
-		d->a = b;	d->link=false;	d->NewId();
-	}
-	else if(nx==vx && (ny>1 || vy>1))
-	{
-		ny *= nz;	vy *= vz;
-		mreal *b = new mreal[nx*(ny+vy)];
-		memcpy(b,d->a,nx*ny*sizeof(mreal));
-		if(mv)	memcpy(b+nx*ny,mv->a,nx*vy*sizeof(mreal));
-		else
-#pragma omp parallel for
-			for(long i=0;i<nx*vy;i++)	b[k+i] = v->vthr(i);
-		if(!d->link)	delete []d->a;
-		d->nz = 1;	d->ny = ny+vy;
-		d->a = b;	d->link=false;	d->NewId();
-	}
+	if(nx==vx && ny==vy && (nz>1 || vz>1))	d->nz += vz;
 	else
 	{
-		nx *= ny*nz;	vx *= vy*vz;
-		mreal *b = new mreal[nx+vx];
-		memcpy(b,d->a,nx*sizeof(mreal));
-		if(mv)	memcpy(b+nx,mv->a,vx*sizeof(mreal));
+		ny *= nz;	vy *= vz;
+		if(nx==vx && (ny>1 || vy>1))
+		{	d->nz = 1;	d->ny = ny+vy;	}
 		else
-#pragma omp parallel for
-			for(long i=0;i<vx;i++)	b[k+i] = v->vthr(i);
-		if(!d->link)	delete []d->a;
-		d->nz = d->ny = 1;	d->nx = nx+vx;
-		d->a = b;	d->link=false;	d->NewId();
+		{	d->ny = d->nz = 1;	d->nx = k+m;	}
 	}
+	mreal *b = new mreal[k+m];
+	memcpy(b,d->a,k*sizeof(mreal));
+	if(mv)	memcpy(b+k,mv->a,m*sizeof(mreal));
+	else
+#pragma omp parallel for
+		for(long i=0;i<m;i++)	b[k+i] = v->vthr(i);
+	if(!d->link)	delete []d->a;
+	d->a = b;	d->link=false;	d->NewId();
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_data_join_(uintptr_t *d, uintptr_t *val)

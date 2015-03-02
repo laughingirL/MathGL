@@ -2064,8 +2064,9 @@ int MGL_NO_EXPORT mgls_join(mglGraph *, long , mglArg *a, const char *k, const c
 {
 	int res=0;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	if(!strcmp(k,"dd") && d)	d->Join(*(a[1].d));
-	else res = 1;	return res;
+	if(k[0]!='d' || k[1]!='d')	res = 1;
+	else	for(long i=1;k[i]=='d';i++)	d->Join(*(a[i].d));
+	return res;
 }
 //-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_datas(mglGraph *gr, long , mglArg *a, const char *k, const char *)

@@ -55,7 +55,11 @@ ZZ. Update *.i for new functions {before release!!!}
 18. Add everywhere mgl_check_version()
 19. Lighting per subplot or per object?!?
 20. Manual line if triangle is too narrow ??? may produce a lot of problems!
-23. Extend 'join' to arbitrary number of datas
+21. Add DWT as transform(s)
+#22. PDE extended as split-step: FFT(as function of p,q,vars), MUL(as function x,y,vars), SET(just copy), STP(like Runge-Kutta step for complex nonlinearity). Here 'dt' is time?!? or name as 'pde_step' (no need time step)
+22. Add command "runge 'var1!expr1' 'var2!expr2' ...; value dt=1" -- level of HMPR
+
+
 
 ============= DOCUMENTATION =============
 
@@ -66,6 +70,9 @@ D. Docs about JS interface
 
 1. Docs about new Smooth() styles
 2. Docs about GetFitCovar()
+3. No 'stop' or 'func' in mgltex !!!
+4. Extend 'join' to arbitrary number of datas
+
 
 YY. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using Stem()
 
