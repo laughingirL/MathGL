@@ -1298,11 +1298,11 @@ void MGL_EXPORT mgl_wavelet(HMDT dat, const char *how, int k)
 #if MGL_HAVE_GSL
 	gsl_wavelet *w=0;
 	if(mglchr(how,'d'))	w = gsl_wavelet_alloc(gsl_wavelet_daubechies, k);
-	if(mglchr(how,'D'))	w = gsl_wavelet_alloc(gsl_wavelet_daubechies_centered, k);
-	if(mglchr(how,'h'))	w = gsl_wavelet_alloc(gsl_wavelet_haar, k);
-	if(mglchr(how,'H'))	w = gsl_wavelet_alloc(gsl_wavelet_haar_centered, k);
-	if(mglchr(how,'b'))	w = gsl_wavelet_alloc(gsl_wavelet_bspline, k);
-	if(mglchr(how,'B'))	w = gsl_wavelet_alloc(gsl_wavelet_bspline_centered, k);
+	else if(mglchr(how,'D'))	w = gsl_wavelet_alloc(gsl_wavelet_daubechies_centered, k);
+	else if(mglchr(how,'h'))	w = gsl_wavelet_alloc(gsl_wavelet_haar, k);
+	else if(mglchr(how,'H'))	w = gsl_wavelet_alloc(gsl_wavelet_haar_centered, k);
+	else if(mglchr(how,'b'))	w = gsl_wavelet_alloc(gsl_wavelet_bspline, k);
+	else if(mglchr(how,'B'))	w = gsl_wavelet_alloc(gsl_wavelet_bspline_centered, k);
 	if(!w)	return;
 
 	double *a;
