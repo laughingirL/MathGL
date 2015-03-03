@@ -336,6 +336,8 @@ using mglDataA::Momentum;
 	/// Fill data by 'x'/'k' samples for Hankel ('h') or Fourier ('f') transform
 	inline void FillSample(const char *how)
 	{	mgl_data_fill_sample(this,how);	}
+	/// Apply wavelet transform
+	inline void Wavelet(const char *how, int k)	{	mgl_wavelet(this, how, k);	}
 
 	/// Return an approximated x-value (root) when dat(x) = val
 	inline mreal Solve(mreal val, bool use_spline=true, long i0=0) const

@@ -72,7 +72,7 @@ D. Docs about JS interface
 2. Docs about GetFitCovar()
 3. No 'stop' or 'func' in mgltex !!!
 4. Extend 'join' to arbitrary number of datas
-
+5. Docs about mgl_wavelet().
 
 YY. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using Stem()
 

@@ -276,6 +276,9 @@ void MGL_EXPORT mgl_data_fill_sample_(uintptr_t *dat, const char *how,int);
 /// Find correlation between 2 data arrays
 HMDT MGL_EXPORT mgl_data_correl(HCDT dat1, HCDT dat2, const char *dir);
 uintptr_t MGL_EXPORT mgl_data_correl_(uintptr_t *dat1, uintptr_t *dat2, const char *dir,int);
+/// Apply wavelet transform
+void MGL_EXPORT mgl_wavelet(HMDT dat, const char *how, int k);
+void MGL_EXPORT mgl_wavelet_(uintptr_t *d, const char *dir, int *k,int);
 
 /// Allocate and prepare data for Fourier transform by nthr threads
 MGL_EXPORT void *mgl_fft_alloc(long n, void **space, long nthr);

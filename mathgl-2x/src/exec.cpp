@@ -2224,6 +2224,14 @@ int MGL_NO_EXPORT mgls_cosfft(mglGraph *, long , mglArg *a, const char *k, const
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_wavelet(mglGraph *, long , mglArg *a, const char *k, const char *)
+{
+	int res=0;
+	mglData *d = dynamic_cast<mglData *>(a[0].d);
+	if(!strcmp(k,"dsn") && d)	d->Wavelet(a[1].s.c_str(), iint(a[2].v));
+	else res = 1;	return res;
+}
+//-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_new(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;
@@ -3164,6 +3172,7 @@ mglCommand mgls_base_cmd[] = {
 	{"vect3","Draw vector field at slices of 3D data","vect Udat Vdat Wdat ['fmt' sval]|Xdat Ydat Zdat Udat Vdat Wdat ['fmt' sval]", mgls_vect3 ,11},
 	{"version","Print MathGL version or check if it is valid","version |'ver'", mgls_version, 2},
 	{"view","Change view angles - use 'rotate' for plot rotation","view tetz tetx [tety]", mgls_view ,5},
+	{"wavelet","Wavelet transform at some direction","wavelet Dat 'dir' k", mgls_wavelet ,16},
 	{"write","Write current image to graphical file","write ['fname']", mgls_write ,2},
 	{"xlabel","Draw label for x-axis","xlabel 'txt' [pos]", mgls_xlabel ,12},
 	{"xrange","Set range for x-axis","xrange Dat [add] | x1 x2 [add]", mgls_xrange ,14},
