@@ -35,6 +35,7 @@ struct mglArg
 	std::wstring w;	///< String with parameters
 	std::string s;	///< String with parameters
 	mreal v;		///< Numerical value (used if type==2)
+	dual c;		///< Numerical complex value (used if type==2)
 	mglArg():type(-1),d(0),v(0)	{}
 };
 //-----------------------------------------------------------------------------
@@ -58,8 +59,9 @@ extern mglCommand mgls_base_cmd[];
 struct mglNum
 {
 	mreal d;		///< Number itself
+	dual c;
 	std::wstring s;	///< Number name
-	mglNum(mreal val=0):d(val)	{}
+	mglNum(mreal val=0):d(val),c(NAN)	{}
 };
 //-----------------------------------------------------------------------------
 /// Structure for function name and position.
@@ -139,8 +141,8 @@ public:
 	mglDataA *FindVar(const char *name) MGL_FUNC_PURE;
 	mglDataA *FindVar(const wchar_t *name) MGL_FUNC_PURE;
 	/// Find variable or create it if absent
-	mglData *AddVar(const char *name);
-	mglData *AddVar(const wchar_t *name);
+	mglDataA *AddVar(const char *name);
+	mglDataA *AddVar(const wchar_t *name);
 	/// Find number or return 0 if absent
 	mglNum *FindNum(const char *name) MGL_FUNC_PURE;
 	mglNum *FindNum(const wchar_t *name) MGL_FUNC_PURE;

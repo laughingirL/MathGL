@@ -874,47 +874,27 @@ MGL_EXPORT dual *mgl_datac_value(HADT dat, long i,long j,long k)
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_datac_join(HADT d, HCDT v)
 {
-	register long nx=d->nx, ny=d->ny, nz=d->nz;
+	long nx=d->nx, ny=d->ny, nz=d->nz, k=nx*ny*nz;
 	const mglDataC *mv = dynamic_cast<const mglDataC *>(v);
-	long vx=v->GetNx(), vy=v->GetNy(), vz=v->GetNz(), k=nx*ny*nz;
+	long vx=v->GetNx(), vy=v->GetNy(), vz=v->GetNz(), m = vx*vy*vz;
 
-	if(nx==vx && ny==vy && (nz>1 || vz>1))
-	{
-		dual *b = new dual[nx*ny*(nz+vz)];
-		memcpy(b,d->a,nx*ny*nz*sizeof(dual));
-		if(mv)	memcpy(b+nx*ny*nz,mv->a,nx*ny*vz*sizeof(dual));
-		else
-#pragma omp parallel for
-			for(long i=0;i<nx*ny*vz;i++)	b[k+i] = v->vthr(i);
-		if(!d->link)	delete []d->a;	d->nz += vz;
-		d->a = b;	d->link=false;	d->NewId();
-	}
-	else if(nx==vx && (ny>1 || vy>1))
-	{
-		ny *= nz;	vy *= vz;
-		dual *b = new dual[nx*(ny+vy)];
-		memcpy(b,d->a,nx*ny*sizeof(dual));
-		if(mv)	memcpy(b+nx*ny,mv->a,nx*vy*sizeof(dual));
-		else
-#pragma omp parallel for
-			for(long i=0;i<nx*vy;i++)	b[k+i] = v->vthr(i);
-		if(!d->link)	delete []d->a;
-		d->nz = 1;	d->ny = ny+vy;
-		d->a = b;	d->link=false;	d->NewId();
-	}
+	if(nx==vx && ny==vy && (nz>1 || vz>1))	d->nz += vz;
 	else
 	{
-		nx *= ny*nz;	vx *= vy*vz;
-		dual *b = new dual[nx+vx];
-		memcpy(b,d->a,nx*sizeof(dual));
-		if(mv)	memcpy(b+nx,mv->a,vx*sizeof(dual));
+		ny *= nz;	vy *= vz;
+		if(nx==vx && (ny>1 || vy>1))
+		{	d->nz = 1;	d->ny = ny+vy;	}
 		else
-#pragma omp parallel for
-			for(long i=0;i<vx;i++)	b[k+i] = v->vthr(i);
-		if(!d->link)	delete []d->a;
-		d->nz = d->ny = 1;	d->nx = nx+vx;
-		d->a = b;	d->link=false;	d->NewId();
+		{	d->ny = d->nz = 1;	d->nx = k+m;	}
 	}
+	dual *b = new dual[k+m];
+	memcpy(b,d->a,k*sizeof(dual));
+	if(mv)	memcpy(b+k,mv->a,m*sizeof(dual));
+	else
+#pragma omp parallel for
+		for(long i=0;i<m;i++)	b[k+i] = v->vthr(i);
+	if(!d->link)	delete []d->a;
+	d->a = b;	d->link=false;	d->NewId();
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_datac_join_(uintptr_t *d, uintptr_t *val)

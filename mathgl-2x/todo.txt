@@ -55,9 +55,8 @@ ZZ. Update *.i for new functions {before release!!!}
 18. Add everywhere mgl_check_version()
 19. Lighting per subplot or per object?!?
 20. Manual line if triangle is too narrow ??? may produce a lot of problems!
-21. Add DWT as transform(s)
 #22. PDE extended as split-step: FFT(as function of p,q,vars), MUL(as function x,y,vars), SET(just copy), STP(like Runge-Kutta step for complex nonlinearity). Here 'dt' is time?!? or name as 'pde_step' (no need time step)
-22. Add command "runge 'var1!expr1' 'var2!expr2' ...; value dt=1" -- level of HMPR
+22. Add command "runge '[var1]expr1' '[var2]expr2' ...; value dt=1" -- level of HMPR
 
 
 
@@ -73,6 +72,9 @@ D. Docs about JS interface
 3. No 'stop' or 'func' in mgltex !!!
 4. Extend 'join' to arbitrary number of datas
 5. Docs about mgl_wavelet().
+6. Docs about mgl_parser_calc_complex()
+7. Symbol '!' before formula denote complex array in MGL
+8. Add function real() and imag() to the list of known functions
 
 YY. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using Stem()
 
@@ -88,6 +90,10 @@ YY. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using St
 	c. Add command to insert as 'list'
 	d. Reset script after saving to HDF5 or putting to main script
 	e. Ask about script changes before closing data tab
+	
+4. Display complex number in table
+5. Correct size of data arrays ... (mglDataC, mglDataV) to be displayed + human form (like 'K','M','G','T' for >2^10,>2^20,>2^30,>2^40)
+6. List of constants into the list of data?!
 
 
 ============= UNSURE ===========

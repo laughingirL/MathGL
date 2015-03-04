@@ -401,8 +401,8 @@ void DatPanel::hist()
 	bool res = d->exec();
 	if(res && !v1->text().isEmpty() && !v2->text().isEmpty() && !id->text().isEmpty())
 	{
-		mglData *vv = parser.AddVar(id->text().toStdString().c_str());
-		vv->Set(mglData(true,mgl_data_hist(var, nm->value(), v1->text().toDouble(), v2->text().toDouble(),0)));
+		mglData *vv = dynamic_cast<mglData*>(parser.AddVar(id->text().toStdString().c_str()));
+		if(vv)	vv->Set(mgl_data_hist(var, nm->value(), v1->text().toDouble(), v2->text().toDouble(),0));
 		updateDataItems();
 	}
 }

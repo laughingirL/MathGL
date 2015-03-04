@@ -98,7 +98,7 @@ void MemPanel::newTable()
 	QString name = QInputDialog::getText(this, tr("UDAV - New variable"),
 				tr("Enter name for new variable"), QLineEdit::Normal, "", &ok);
 	if(!ok || name.isEmpty())	return;
-	mglData *v = parser.AddVar(name.toStdString().c_str());
+	mglDataA *v = parser.AddVar(name.toStdString().c_str());
 	QWidget *t;
 	if(v->o)	t = (QWidget *)v->o;
 	else		t = newDataWnd(infoDlg,wnd,v);

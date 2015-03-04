@@ -1361,9 +1361,9 @@ public:
 
 	/// Find variable with given name or add a new one
 	/// NOTE !!! You must not delete obtained data arrays !!!
-	inline mglData *AddVar(const char *name)
+	inline mglDataA *AddVar(const char *name)
 	{	return mgl_parser_add_var(pr, name);	}
-	inline mglData *AddVar(const wchar_t *name)
+	inline mglDataA *AddVar(const wchar_t *name)
 	{	return mgl_parser_add_varw(pr, name);	}
 	/// Find variable with given name or return NULL if no one
 	/// NOTE !!! You must not delete obtained data arrays !!!

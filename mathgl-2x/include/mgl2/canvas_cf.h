@@ -461,9 +461,9 @@ void MGL_EXPORT mgl_parser_add_paramw(HMPR p, int id, const wchar_t *str);
 
 /// Find variable with given name or add a new one
 /// NOTE !!! You must not delete obtained data arrays !!!
-HMDT MGL_EXPORT mgl_parser_add_var(HMPR p, const char *name);
+MGL_EXPORT mglDataA *mgl_parser_add_var(HMPR p, const char *name);
 uintptr_t MGL_EXPORT mgl_parser_add_var_(uintptr_t* p, const char *name, int);
-HMDT MGL_EXPORT mgl_parser_add_varw(HMPR p, const wchar_t *name);
+MGL_EXPORT mglDataA *mgl_parser_add_varw(HMPR p, const wchar_t *name);
 /// Find variable with given name or return NULL if no one
 /// NOTE !!! You must not delete obtained data arrays !!!
 MGL_EXPORT_PURE mglDataA *mgl_parser_find_var(HMPR p, const char *name);
@@ -535,6 +535,10 @@ long MGL_EXPORT_PURE mgl_parser_cmd_num(HMPR pr);
 HMDT MGL_EXPORT mgl_parser_calc(HMPR pr, const char *formula);
 uintptr_t MGL_EXPORT mgl_parser_calc_(uintptr_t *pr, const char *formula,int);
 HMDT MGL_EXPORT mgl_parser_calcw(HMPR pr, const wchar_t *formula);
+/// Return result of formula evaluation as complex data
+HADT MGL_EXPORT mgl_parser_calc_complex(HMPR pr, const char *formula);
+uintptr_t MGL_EXPORT mgl_parser_calc_complex_(uintptr_t *pr, const char *formula,int);
+HADT MGL_EXPORT mgl_parser_calc_complexw(HMPR pr, const wchar_t *formula);
 
 #ifdef __cplusplus
 }

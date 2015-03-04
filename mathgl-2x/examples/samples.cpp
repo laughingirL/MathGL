@@ -1728,8 +1728,8 @@ void smgl_parser(mglGraph *gr)	// example of MGL parsing
 	double a[100];   // let a_i = sin(4*pi*x), x=0...1
 	for(int i=0;i<100;i++)a[i]=sin(4*M_PI*i/99);
 	mglParse *parser = new mglParse;
-	mglData *d = parser->AddVar("dat");
-	d->Set(a,100); // set data to variable
+	mglData *d = dynamic_cast<mglData*>(parser->AddVar("dat"));
+	if(d)	d->Set(a,100); // set data to variable
 	parser->Execute(gr, "plot dat; xrange 0 1\nbox\naxis");
 	// you may break script at any line do something
 	// and continue after that

@@ -393,11 +393,12 @@ mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std
 			{
 				n=mglFindInText(str,",");
 				if(n>0)	res = mglApplyOper(str.substr(n+1),str.substr(0,n),arg, head, atan2);
+				else	res = mglFormulaCalcC(str, arg, head).Arg();
 			}
 			else if(!nm.compare(L"abs"))
 			{
 				n=mglFindInText(str,",");
-				if(n<=0)	{	res=mglFormulaCalc(str, arg, head);	mglApplyFunc(res,fabs);	}
+				if(n<=0)	res = mglFormulaCalcC(str, arg, head).Abs();
 				else	res = mglApplyOper(str.substr(n+1),str.substr(0,n),arg, head, hypot);
 			}
 #if MGL_HAVE_GSL
@@ -575,6 +576,8 @@ mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std
 		else if(!nm.compare(L"random"))
 		{	res=mglFormulaCalc(str, arg, head);	register long n = res.GetNN(), i;
 			for(i=0;i<n;i++)	res.a[i] = mgl_rnd();	}
+		else if(!nm.compare(L"real"))	res = mglFormulaCalcC(str, arg, head).Real();
+		else if(!nm.compare(L"imag"))	res = mglFormulaCalcC(str, arg, head).Imag();
 #if MGL_HAVE_GSL
 		else if(!nm.compare(L"i"))
 		{
@@ -790,7 +793,7 @@ mglDataC MGL_NO_EXPORT mglFormulaCalcC(std::wstring str, mglParser *arg, const s
 		HCDT v = (str!=L"#$mgl")?FindVar(head, str):0;
 		mglNum *f = arg?arg->FindNum(str.c_str()):0;
 		if(v)	res = v;
-		else if(f)	res.a[0] = f->d;
+		else if(f)	res.a[0] = mgl_isnan(f->d) ? f->c : f->d;
 		else if(!str.compare(L":"))		res.a[0] = -1;
 		else
 		{
@@ -803,7 +806,9 @@ mglDataC MGL_NO_EXPORT mglFormulaCalcC(std::wstring str, mglParser *arg, const s
 			else if(!str.compare(L"on"))	res = mreal(1.);
 			else if(!str.compare(L"off"))	res = mreal(0.);
 			else if(str[0]=='i')	// this is imaginary number
-				res = dual(0,(str.length()>1 && str[1]>' ')?wcstod(str.c_str(),0):1);
+				res = dual(0,(str.length()>1 && str[1]>' ')?wcstod(str.substr(1).c_str(),0):1);
+			else if(str[str.length()-1]=='i')
+				res = dual(0,wcstod(str.c_str(),0));
 			else res = mreal(wcstod(str.c_str(),0));	// this is real number
 		}
 		return res;
@@ -860,10 +865,8 @@ mglDataC MGL_NO_EXPORT mglFormulaCalcC(std::wstring str, mglParser *arg, const s
 			{	res=mglFormulaCalcC(str, arg, head);	mglApplyFuncC(res,acosc);	}
 			else if(!nm.compare(L"atan"))
 			{	res=mglFormulaCalcC(str, arg, head);	mglApplyFuncC(res,atanc);	}
-			else if(!nm.compare(L"arg"))
-			{	res=mglFormulaCalcC(str, arg, head);	mglApplyFuncC(res,argc);	}
-			else if(!nm.compare(L"abs"))
-			{	res=mglFormulaCalcC(str, arg, head);	mglApplyFuncC(res,absc);	}
+			else if(!nm.compare(L"arg"))	res=mglFormulaCalcC(str, arg, head).Arg();
+			else if(!nm.compare(L"abs"))	res=mglFormulaCalcC(str, arg, head).Abs();
 		}
 		else if(nm[0]=='c')
 		{
@@ -905,6 +908,8 @@ mglDataC MGL_NO_EXPORT mglFormulaCalcC(std::wstring str, mglParser *arg, const s
 		else if(!nm.compare(L"random"))
 		{	res=mglFormulaCalcC(str, arg, head);	register long n = res.GetNN(), i;
 			for(i=0;i<n;i++)	res.a[i] = mgl_rnd();	}
+		else if(!nm.compare(L"real"))	res=mglFormulaCalcC(str, arg, head).Real();
+		else if(!nm.compare(L"imag"))	res=mglFormulaCalcC(str, arg, head).Imag();
 	}
 	return res;
 }

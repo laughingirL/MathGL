@@ -323,7 +323,7 @@ void TextPanel::loadHDF5(const QString &fileName)
 		else if(H5Tget_class(ht)==H5T_FLOAT || H5Tget_class(ht)==H5T_INTEGER)
 		{
 			for(int j=0;name[j];j++)	if(!isalnum(name[j]))	name[j]='_';
-			mglData *v = parser.AddVar(name);
+			mglData *v = (mglData*) parser.AddVar(name);
 			nx = ny = nz = 1;
 			if(rank>0 && rank<=3)
 			{

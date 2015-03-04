@@ -406,10 +406,19 @@ int MGL_NO_EXPORT mgls_copy(mglGraph *gr, long , mglArg *a, const char *k, const
 {
 	int res=0;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	if(!d)	return 1;
-	if(!strcmp(k,"dd"))	d->Set(*(a[1].d));
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(c && !strcmp(k,"dd"))	c->Set(a[1].d);
+	else if(!d)	return 1;
+	else if(!strcmp(k,"dd"))	d->Set(a[1].d);
 	else if(!strcmp(k,"dds"))
-	{	d->Set(*(a[1].d));	gr->Fill(*d, a[2].s.c_str());	}
+	{	d->Set(a[1].d);	gr->Fill(*d, a[2].s.c_str());	}
+	else if(!strcmp(k,"ddd"))
+	{
+		mglData *D = dynamic_cast<mglData *>(a[1].d);
+		mglDataC *C = dynamic_cast<mglDataC *>(a[2].d);
+		if(D && C)	{	d->Set(C->Real());	D->Set(C->Imag());	}
+		else	res = 1;		
+	}
 	else if(!strcmp(k,"dn"))	*d = a[1].v;
 	else res = 1;	return res;
 }
