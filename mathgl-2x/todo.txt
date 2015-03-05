@@ -50,11 +50,11 @@ ZZ. Update *.i for new functions {before release!!!}
 12. introduce a set of default arrays like "x", "y", "z" and "t" for MGL ???
 13. Use mgltex.dtx (see e-mail 15 November)
 14. Binary font files for particular platform (+ check ARM). Add utility to translate from current (textual) to binary.
+15. Check TriCont
 16. Contour lines above/under surface (e-mail 10.12.14)
 17. Iris plot -- https://en.wikipedia.org/wiki/Iris_flower_data_set
 18. Add everywhere mgl_check_version()
 19. Lighting per subplot or per object?!?
-20. Manual line if triangle is too narrow ??? may produce a lot of problems!
 #22. PDE extended as split-step: FFT(as function of p,q,vars), MUL(as function x,y,vars), SET(just copy), STP(like Runge-Kutta step for complex nonlinearity). Here 'dt' is time?!? or name as 'pde_step' (no need time step)
 22. Add command "runge '[var1]expr1' '[var2]expr2' ...; value dt=1" -- level of HMPR
 

@@ -267,6 +267,9 @@ typedef double _Complex mdual;
 #else
 typedef float _Complex mdual;
 #endif
+#ifndef _Complex_I
+#define _Complex_I	1.0i
+#endif
 const mdual mgl_I=_Complex_I;
 #define mgl_abs(x)	cabs(x)
 #endif

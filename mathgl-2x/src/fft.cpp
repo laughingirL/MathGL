@@ -1315,43 +1315,46 @@ void MGL_EXPORT mgl_wavelet(HMDT dat, const char *how, int k)
 	for(long i=0;i<nn;i++)	a[i] = dat->a[i];
 #endif
 	if(mglchr(how,'x'))
+#pragma omp parallel
 	{
 		long n = dat->nx;
 		gsl_wavelet_workspace *work = gsl_wavelet_workspace_alloc(n);
 		if(mglchr(how,'i'))
-#pragma omp parallel for
+#pragma omp for
 			for(long i=0;i<dat->ny*dat->nz;i++)
 				gsl_wavelet_transform_inverse(w, a+i*n, 1, n, work);
 		else
-#pragma omp parallel for
+#pragma omp for
 			for(long i=0;i<dat->ny*dat->nz;i++)
 				gsl_wavelet_transform_forward(w, a+i*n, 1, n, work);
 		gsl_wavelet_workspace_free(work);
 	}
 	if(mglchr(how,'y'))
+#pragma omp parallel
 	{
 		long n = dat->ny, s = dat->nx;
 		gsl_wavelet_workspace *work = gsl_wavelet_workspace_alloc(n);
 		if(mglchr(how,'i'))
-#pragma omp parallel for collapse(2)
+#pragma omp for collapse(2)
 			for(long i=0;i<dat->nx;i++)	for(long j=0;j<dat->nz;j++)
 				gsl_wavelet_transform_inverse(w, a+i+n*s*j, s, n, work);
 		else
-#pragma omp parallel for collapse(2)
+#pragma omp for collapse(2)
 			for(long i=0;i<dat->nx;i++)	for(long j=0;j<dat->nz;j++)
 				gsl_wavelet_transform_forward(w, a+i+n*s*j, s, n, work);
 		gsl_wavelet_workspace_free(work);
 	}
 	if(mglchr(how,'z'))
+#pragma omp parallel
 	{
 		long n = dat->nz, s = dat->nx*dat->ny;
 		gsl_wavelet_workspace *work = gsl_wavelet_workspace_alloc(n);
 		if(mglchr(how,'i'))
-#pragma omp parallel for
+#pragma omp for
 			for(long i=0;i<dat->nx*dat->ny;i++)
 				gsl_wavelet_transform_inverse(w, a+i, s, n, work);
 		else
-#pragma omp parallel for
+#pragma omp for
 			for(long i=0;i<dat->nx*dat->ny;i++)
 				gsl_wavelet_transform_forward(w, a+i, s, n, work);
 		gsl_wavelet_workspace_free(work);
