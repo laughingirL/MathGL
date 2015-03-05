@@ -80,9 +80,10 @@ int MGL_LOCAL_PURE mgl_cmd_cmp(const void *a, const void *b)
 	return strcmp(aa->name, bb->name);
 }
 //-----------------------------------------------------------------------------
-bool mgl_check_for_name(const std::wstring &s)
+bool mglParser::CheckForName(const std::wstring &s)
 {
-	return !isalpha(s[0])||s.find_first_of(L".:()")!=std::wstring::npos;
+	return !isalpha(s[0]) || s.find_first_of(L"!@#$%%^&*()-+|,.<>:")!=std::wstring::npos || s==L"rnd" || FindNum(s.c_str());
+//	return !isalpha(s[0])||s.find_first_of(L".:()")!=std::wstring::npos;
 }
 //-----------------------------------------------------------------------------
 const mglCommand *mglParser::FindCommand(const char *com) const
@@ -122,7 +123,7 @@ int mglParser::Exec(mglGraph *gr, const wchar_t *com, long n, mglArg *a, const s
 	if(!rts || rts->type==6)	return 2;
 /*	if(rts->type == 4)
 	{
-		if(n<1 || mgl_check_for_name(var))	return 2;
+		if(n<1 || CheckForName(var))	return 2;
 		a[0].type = 0;	a[0].d = AddVar(var.c_str());
 		a[0].w = var;	k[0] = 'd';
 	}*/
@@ -152,6 +153,12 @@ mglParser::mglParser(bool setsize)
 	AllowSetSize=setsize;	AllowFileIO=true;	AllowDllCall=true;
 	Once = true;
 	fval = new mglData[40];
+	mglNum *v;
+	v = new mglNum(0);	v->s = L"off";	NumList.push_back(v);
+	v = new mglNum(1);	v->s = L"on";	NumList.push_back(v);
+	v = new mglNum(NAN);	v->s = L"nan";	NumList.push_back(v);
+	v = new mglNum(M_PI);	v->s = L"pi";	NumList.push_back(v);
+	v = new mglNum(INFINITY);	v->s = L"inf";	NumList.push_back(v);
 #if MGL_HAVE_LTDL
 	lt_dlinit();
 #endif
@@ -230,6 +237,7 @@ void mglParser::AddParam(int n, const wchar_t *str)
 //-----------------------------------------------------------------------------
 mglDataA *mglParser::FindVar(const wchar_t *name)
 {
+	if(name[0]=='!')	name = name+1;	// ignore complex prefix
  	for(size_t i=0;i<DataList.size();i++)
  		if(DataList[i] && DataList[i]->s==name)	return DataList[i];
 	return 0;
@@ -237,30 +245,12 @@ mglDataA *mglParser::FindVar(const wchar_t *name)
 //-----------------------------------------------------------------------------
 mglDataA *mglParser::AddVar(const wchar_t *name)
 {	// TODO add list of forbidden names (like function names)
-	mglDataA *d=0;
-	if(name[0]=='!')
-	{
-		for(size_t i=0;i<DataList.size();i++)
-			if(DataList[i] && DataList[i]->s==(name+1))
-			{
-				delete (DataList[i]);
-				d = new mglDataC;	d->s = (name+1);
-				DataList[i] = d;	return d;
-			}
-		d = new mglDataC;	d->s = (name+1);
-	}
-	else
-	{
-		for(size_t i=0;i<DataList.size();i++)
-			if(DataList[i] && DataList[i]->s==name)
-			{
-				delete (DataList[i]);
-				d = new mglData;	d->s = name;
-				DataList[i] = d;	return d;
-			}
-		d = new mglData;	d->s = name;
-	}
-	DataList.push_back(d);	return d;
+	mglDataA *d=FindVar(name);
+	if(name[0]=='!' && dynamic_cast<mglDataC*>(d)==0)
+	{	d = new mglDataC;	d->s=(name+1);	DataList.push_back(d);	}
+	else if(!d)
+	{	d = new mglData;	d->s = name;	DataList.push_back(d);	}
+	return d;
 }
 //-----------------------------------------------------------------------------
 mglNum *mglParser::FindNum(const wchar_t *name)
@@ -273,12 +263,7 @@ mglNum *mglParser::FindNum(const wchar_t *name)
 mglNum *mglParser::AddNum(const wchar_t *name)
 {
 	mglNum *v = FindNum(name);
-	if(!v)
-	{
-		mglNum *n=new mglNum;	n->s = name;
-		NumList.push_back(n);
-		v = NumList[NumList.size()-1];
-	}
+	if(!v)	{	v=new mglNum;	v->s = name;	NumList.push_back(v);	}
 	return v;
 }
 //-----------------------------------------------------------------------------
@@ -364,7 +349,7 @@ void mglParser::FillArg(mglGraph *gr, int k, std::wstring *arg, mglArg *a)
 			mglDataC d = mglFormulaCalcC(arg[n].substr(1), this, DataList);
 			if(d.GetNN()==1)
 			{
-				if(arg[n].find_first_of(L"!@#$%%^&*()-+|,.<>:",1)!=std::wstring::npos || strchr("0123456789",arg[n][1]))
+				if(CheckForName(arg[n]))
 				{	a[n-1].type = 2;	a[n-1].v = d.v(0);	}
 				else
 				{	a[n-1].type = 0;	a[n-1].d = AddVar(arg[n].c_str());	}
@@ -382,7 +367,7 @@ void mglParser::FillArg(mglGraph *gr, int k, std::wstring *arg, mglArg *a)
 			mglData d = mglFormulaCalc(arg[n], this, DataList);
 			if(d.GetNN()==1)
 			{
-				if(arg[n].find_first_of(L"!@#$%%^&*()-+|,.<>:")!=std::wstring::npos || strchr("0123456789",arg[n][0]))
+				if(CheckForName(arg[n]))
 				{	a[n-1].type = 2;	a[n-1].v = d.v(0);	}
 				else
 				{	a[n-1].type = 0;	a[n-1].d = AddVar(arg[n].c_str());	}
@@ -406,7 +391,7 @@ int mglParser::PreExec(mglGraph *, long k, std::wstring *arg, mglArg *a)
 	{	DeleteVar(arg[1].c_str());	n=1;	}
 	else if(!arg[0].compare(L"list"))	// parse command "list"
 	{
-		if(k<3 || mgl_check_for_name(arg[1]))	return 2;
+		if(k<3 || CheckForName(arg[1]))	return 2;
 		long nx=0, ny=1,j=0,i,t=0;
 		for(i=2;i<k;i++)
 		{

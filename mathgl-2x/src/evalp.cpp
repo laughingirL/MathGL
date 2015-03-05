@@ -331,8 +331,8 @@ mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std
 			else if(!str.compare(L"nan"))	res = NAN;
 			else if(!str.compare(L"inf"))	res = INFINITY;
 			else if(!str.compare(L"pi"))	res = M_PI;
-			else if(!str.compare(L"on"))	res = 1;
-			else if(!str.compare(L"off"))	res = 0;
+//			else if(!str.compare(L"on"))	res = 1;
+//			else if(!str.compare(L"off"))	res = 0;
 			else res = wcstod(str.c_str(),0);	// this is number
 		}
 		return res;
@@ -803,8 +803,8 @@ mglDataC MGL_NO_EXPORT mglFormulaCalcC(std::wstring str, mglParser *arg, const s
 			else if(!str.compare(L"nan"))	res = mreal(NAN);
 			else if(!str.compare(L"inf"))	res = mreal(INFINITY);
 			else if(!str.compare(L"pi"))	res = mreal(M_PI);
-			else if(!str.compare(L"on"))	res = mreal(1.);
-			else if(!str.compare(L"off"))	res = mreal(0.);
+//			else if(!str.compare(L"on"))	res = mreal(1.);
+//			else if(!str.compare(L"off"))	res = mreal(0.);
 			else if(str[0]=='i')	// this is imaginary number
 				res = dual(0,(str.length()>1 && str[1]>' ')?wcstod(str.substr(1).c_str(),0):1);
 			else if(str[str.length()-1]=='i')

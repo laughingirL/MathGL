@@ -506,15 +506,27 @@ float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,floa
 			if(ss)	// draw symbol (glyph)
 			{
 				long j = Internal('!');
+				float dx=0;
 				if(ss>' ')
 				{
 					j = Internal(ss);
 					if(j==-1)	continue;
-					if(s & MGL_FONT_ZEROW)	yy += 100*ff/fact[a];
+					if(s & MGL_FONT_ZEROW)
+					{
+						long j=1;
+						yy += 100*ff/fact[a];
+						while(str[i+j]>=unsigned(-15))	j++;
+						unsigned sn = str[i+j];
+						if(sn<unsigned(-15) && (sn&MGL_FONT_MASK)>' ')	// specially center
+						{
+							dx = 0.75*ff*(GetWidth(a,Internal(sn&MGL_FONT_MASK))-GetWidth(a,j))/fact[a];
+							if(dx<0)	dx=0;
+						}
+					}
 					if(gr && !(style&0x10))
 					{
-						if(st & MGL_FONT_WIRE)	gr->Glyph(x,yy,ff,a+4,j,ccol);
-						else					gr->Glyph(x,yy,ff,a,j,ccol);
+						if(st & MGL_FONT_WIRE)	gr->Glyph(x+dx,yy,ff,a+4,j,ccol);
+						else					gr->Glyph(x+dx,yy,ff,a,j,ccol);
 					}
 				}
 				ww = ff*GetWidth(a,j)/fact[a];

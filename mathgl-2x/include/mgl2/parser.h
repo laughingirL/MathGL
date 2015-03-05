@@ -194,6 +194,7 @@ private:
 	/// In skip mode
 	bool inline ifskip()	{	return (if_pos>0 && !(if_stack[if_pos-1]&1));	}
 	bool inline skip()		{	return (Skip || ifskip() || for_br);	}
+	bool CheckForName(const std::wstring &s);	// check if name is valid for new data
 };
 //-----------------------------------------------------------------------------
 #endif
