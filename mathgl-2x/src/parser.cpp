@@ -350,7 +350,7 @@ void mglParser::FillArg(mglGraph *gr, int k, std::wstring *arg, mglArg *a)
 			if(d.GetNN()==1)
 			{
 				if(CheckForName(arg[n]))
-				{	a[n-1].type = 2;	a[n-1].v = d.v(0);	}
+				{	a[n-1].type = 2;	a[n-1].v = d.v(0);	a[n-1].c = d.a[0];	}
 				else
 				{	a[n-1].type = 0;	a[n-1].d = AddVar(arg[n].c_str());	}
 			}
@@ -368,7 +368,7 @@ void mglParser::FillArg(mglGraph *gr, int k, std::wstring *arg, mglArg *a)
 			if(d.GetNN()==1)
 			{
 				if(CheckForName(arg[n]))
-				{	a[n-1].type = 2;	a[n-1].v = d.v(0);	}
+				{	a[n-1].type = 2;	a[n-1].c = a[n-1].v = d.v(0);	}
 				else
 				{	a[n-1].type = 0;	a[n-1].d = AddVar(arg[n].c_str());	}
 			}
@@ -635,7 +635,7 @@ int mglParser::Parse(mglGraph *gr, std::wstring str, long pos)
 				if(arg[2][0]=='!')	// complex number is added
 				{	v->d=NAN;	v->c = mglFormulaCalcC(arg[2].substr(1),this, DataList).a[0];	}
 				else
-				{	v->c=NAN;	v->d = mglFormulaCalc(arg[2],this, DataList).a[0];	}
+				{	v->c = v->d = mglFormulaCalc(arg[2],this, DataList).a[0];	}
 			}
 			delete []a;	return k==3?0:1;
 		}

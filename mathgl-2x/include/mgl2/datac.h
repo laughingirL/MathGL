@@ -175,6 +175,27 @@ using mglDataA::Momentum;
 	/// Equidistantly fill the data to range [x1,x2] in direction dir
 	inline void Fill(dual x1,dual x2=mglNaN,char dir='x')
 	{	mgl_datac_fill(this,x1,x2,dir);	}
+	
+		/// Fill the data by interpolated values of vdat parametrically depended on xdat,ydat,zdat for x,y,z in range [p1,p2] using global spline
+	inline void RefillGS(const mglDataA &xdat, const mglDataA &vdat, mreal x1, mreal x2,long sl=-1)
+	{	mgl_datac_refill_gs(this,&xdat,&vdat,x1,x2,sl);	}
+	/// Fill the data by interpolated values of vdat parametrically depended on xdat,ydat,zdat for x,y,z in range [p1,p2]
+	inline void Refill(const mglDataA &xdat, const mglDataA &vdat, mreal x1, mreal x2,long sl=-1)
+	{	mgl_datac_refill_x(this,&xdat,&vdat,x1,x2,sl);	}
+	inline void Refill(const mglDataA &xdat, const mglDataA &vdat, mglPoint p1, mglPoint p2,long sl=-1)
+	{	mgl_datac_refill_x(this,&xdat,&vdat,p1.x,p2.x,sl);	}
+	inline void Refill(const mglDataA &xdat, const mglDataA &ydat, const mglDataA &vdat, mglPoint p1, mglPoint p2,long sl=-1)
+	{	mgl_datac_refill_xy(this,&xdat,&ydat,&vdat,p1.x,p2.x,p1.y,p2.y,sl);	}
+	inline void Refill(const mglDataA &xdat, const mglDataA &ydat, const mglDataA &zdat, const mglDataA &vdat, mglPoint p1, mglPoint p2)
+	{	mgl_datac_refill_xyz(this,&xdat,&ydat,&zdat,&vdat,p1.x,p2.x,p1.y,p2.y,p1.z,p2.z);	}
+	/// Fill the data by interpolated values of vdat parametrically depended on xdat,ydat,zdat for x,y,z in axis range of gr
+	inline void Refill(HMGL gr, const mglDataA &xdat, const mglDataA &vdat, long sl=-1, const char *opt="")
+	{	mgl_datac_refill_gr(gr,this,&xdat,0,0,&vdat,sl,opt);	}
+	inline void Refill(HMGL gr, const mglDataA &xdat, const mglDataA &ydat, const mglDataA &vdat, long sl=-1, const char *opt="")
+	{	mgl_datac_refill_gr(gr,this,&xdat,&ydat,0,&vdat,sl,opt);	}
+	inline void Refill(HMGL gr, const mglDataA &xdat, const mglDataA &ydat, const mglDataA &zdat, const mglDataA &vdat, const char *opt="")
+	{	mgl_datac_refill_gr(gr,this,&xdat,&ydat,&zdat,&vdat,-1,opt);	}
+
 
 		/// Put value to data element(s)
 	inline void Put(dual val, long i=-1, long j=-1, long k=-1)
@@ -355,6 +376,22 @@ using mglDataA::Momentum;
 	{	for(long i=0;i<nx*ny*nz;i++)	a[i]=val;	return val;	}
 	inline dual operator=(mreal val)
 	{	for(long i=0;i<nx*ny*nz;i++)	a[i]=val;	return val;	}
+	/// Multiply the data by other one for each element
+	inline void operator*=(const mglDataA &d)	{	mgl_datac_mul_dat(this,&d);	}
+	/// Divide the data by other one for each element
+	inline void operator/=(const mglDataA &d)	{	mgl_datac_div_dat(this,&d);	}
+	/// Add the other data
+	inline void operator+=(const mglDataA &d)	{	mgl_datac_add_dat(this,&d);	}
+	/// Subtract the other data
+	inline void operator-=(const mglDataA &d)	{	mgl_datac_sub_dat(this,&d);	}
+	/// Multiply each element by the number
+	inline void operator*=(dual d)		{	mgl_datac_mul_num(this,d);	}
+	/// Divide each element by the number
+	inline void operator/=(dual d)		{	mgl_datac_div_num(this,d);	}
+	/// Add the number
+	inline void operator+=(dual d)		{	mgl_datac_add_num(this,d);	}
+	/// Subtract the number
+	inline void operator-=(dual d)		{	mgl_datac_sub_num(this,d);	}
 #ifndef SWIG
 	/// Direct access to the data cell
 	inline dual &operator[](long i)	{	return a[i];	}
@@ -404,6 +441,16 @@ inline mglDataC mglQO3dc(const char *ham, const mglDataA &ini_re, const mglDataA
 {	return mglDataC(true, mgl_qo3d_solve_c(ham, &ini_re, &ini_im, &ray, r, k0, 0, 0, 0));	}
 inline mglDataC mglQO3dc(const char *ham, const mglDataA &ini_re, const mglDataA &ini_im, const mglDataA &ray, mglData &xx, mglData &yy, mglData &zz, mreal r=1, mreal k0=100)
 {	return mglDataC(true, mgl_qo3d_solve_c(ham, &ini_re, &ini_im, &ray, r, k0, &xx, &yy, &zz));	}
+//-----------------------------------------------------------------------------
+/// Get sub-array of the data with given fixed indexes
+inline mglDataC mglSubDataC(const mglDataA &dat, long xx, long yy=-1, long zz=-1)
+{	return mglDataC(true,mgl_datac_subdata(&dat,xx,yy,zz));	}
+inline mglDataC mglSubDataC(const mglDataA &dat, const mglDataA &xx, const mglDataA &yy, const mglDataA &zz)
+{	return mglDataC(true,mgl_datac_subdata_ext(&dat,&xx,&yy,&zz));	}
+inline mglDataC mglSubDataC(const mglDataA &dat, const mglDataA &xx, const mglDataA &yy)
+{	return mglDataC(true,mgl_datac_subdata_ext(&dat,&xx,&yy,0));	}
+inline mglDataC mglSubDataC(const mglDataA &dat, const mglDataA &xx)
+{	return mglDataC(true,mgl_datac_subdata_ext(&dat,&xx,0,0));	}
 //-----------------------------------------------------------------------------
 /// Prepare coefficients for global spline interpolation
 inline mglDataC mglGSplineCInit(const mglDataA &xdat, const mglDataA &ydat)

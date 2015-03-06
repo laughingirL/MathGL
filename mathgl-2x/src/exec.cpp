@@ -40,9 +40,11 @@ int MGL_NO_EXPORT mgls_addto(mglGraph *, long , mglArg *a, const char *k, const 
 {
 	int res=0;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	if(!d)	return 1;
-	if(!strcmp(k,"dd"))		*d += *(a[1].d);
-	else if(!strcmp(k,"dn"))*d += a[1].v;
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(d && !strcmp(k,"dd"))		*d += *(a[1].d);
+	else if(d && !strcmp(k,"dn"))	*d += a[1].v;
+	else if(c && !strcmp(k,"dd"))	*c += *(a[1].d);
+	else if(c && !strcmp(k,"dn"))	*c += a[1].c;
 	else	res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -50,16 +52,15 @@ int MGL_NO_EXPORT mgls_sort(mglGraph *, long , mglArg *a, const char *k, const c
 {
 	int res=0;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	if(!d)	return 1;
-	if(!strcmp(k,"dn"))	d->Sort(a[1].v, -1);
-	else if(!strcmp(k,"dnn"))	d->Sort(a[1].v, a[2].v);
+	if(d && !strcmp(k,"dn"))	d->Sort(a[1].v, -1);
+	else if(d && !strcmp(k,"dnn"))	d->Sort(a[1].v, a[2].v);
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_alpha(mglGraph *gr, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
-	if(!strcmp(k,""))	gr->Alpha(true);
+	if(k[0]==0)	gr->Alpha(true);
 	else if(!strcmp(k,"n"))	gr->Alpha(a[0].v!=0);
 	else res = 1;	return res;
 }
@@ -134,7 +135,7 @@ int MGL_NO_EXPORT mgls_axial(mglGraph *gr, long , mglArg *a, const char *k, cons
 int MGL_NO_EXPORT mgls_axis(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;
-	if(!strcmp(k,""))	gr->Axis("xyz","",opt);
+	if(k[0]==0)	gr->Axis("xyz","",opt);
 	else if(!strcmp(k,"s"))		gr->Axis(a[0].s.c_str(), "",opt);
 	else if(!strcmp(k,"ss"))	gr->Axis(a[0].s.c_str(), a[1].s.c_str(),opt);
 	else if(!strcmp(k,"sss"))	gr->SetFunc(a[0].s.c_str(),a[1].s.c_str(),a[2].s.c_str(),"");
@@ -156,7 +157,7 @@ int MGL_NO_EXPORT mgls_ball(mglGraph *gr, long , mglArg *a, const char *k, const
 int MGL_NO_EXPORT mgls_box(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;	gr->Self()->SaveState(opt);
-	if(!strcmp(k,""))	gr->Box();
+	if(k[0]==0)	gr->Box();
 	else if(!strcmp(k,"s"))		gr->Box(a[0].s.c_str());
 	else if(!strcmp(k,"sn"))	gr->Box(a[0].s.c_str(), a[1].v);
 	else res = 1;	gr->Self()->LoadState();	return res;
@@ -249,7 +250,7 @@ int MGL_NO_EXPORT mgls_beam(mglGraph *gr, long , mglArg *a, const char *k, const
 int MGL_NO_EXPORT mgls_clearlegend(mglGraph *gr, long , mglArg *, const char *k, const char *)
 {
 	int res=0;
-	if(!strcmp(k,""))	gr->ClearLegend();
+	if(k[0]==0)	gr->ClearLegend();
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -269,7 +270,7 @@ int MGL_NO_EXPORT mgls_background(mglGraph *gr, long , mglArg *a, const char *k,
 int MGL_NO_EXPORT mgls_clf(mglGraph *gr, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
-	if(!strcmp(k,""))	gr->Clf();
+	if(k[0]==0)	gr->Clf();
 	else if(!strcmp(k,"s"))	gr->Clf(a[0].s.c_str());
 	else if(!strcmp(k,"nnn"))	gr->Clf(a[0].v,a[1].v,a[2].v);
 	else res = 1;	return res;
@@ -278,7 +279,7 @@ int MGL_NO_EXPORT mgls_clf(mglGraph *gr, long , mglArg *a, const char *k, const 
 int MGL_NO_EXPORT mgls_reset(mglGraph *gr, long , mglArg *, const char *k, const char *)
 {
 	int res=0;
-	if(!strcmp(k,""))	gr->DefaultPlotParam();
+	if(k[0]==0)	gr->DefaultPlotParam();
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -318,8 +319,9 @@ int MGL_NO_EXPORT mgls_crop(mglGraph *, long , mglArg *a, const char *k, const c
 {
 	int res=0;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	if(!d)	return 1;
-	if(!strcmp(k,"dnns"))	d->Crop(iint(a[1].v),iint(a[2].v),a[3].s.c_str()[0]);
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(d && !strcmp(k,"dnns"))	d->Crop(iint(a[1].v),iint(a[2].v),a[3].s.c_str()[0]);
+	else if(c && !strcmp(k,"dnns"))	c->Crop(iint(a[1].v),iint(a[2].v),a[3].s.c_str()[0]);
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -327,8 +329,7 @@ int MGL_NO_EXPORT mgls_clean(mglGraph *, long , mglArg *a, const char *k, const 
 {
 	int res=0;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	if(!d)	return 1;
-	if(!strcmp(k,"dn"))	d->Clean(iint(a[1].v));
+	if(d && !strcmp(k,"dn"))	d->Clean(iint(a[1].v));
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -336,8 +337,9 @@ int MGL_NO_EXPORT mgls_cumsum(mglGraph *, long , mglArg *a, const char *k, const
 {
 	int res=0;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	if(!d)	return 1;
-	if(!strcmp(k,"ds"))	d->CumSum(a[1].s.c_str());
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(d && !strcmp(k,"ds"))	d->CumSum(a[1].s.c_str());
+	else if(c && !strcmp(k,"ds"))	c->CumSum(a[1].s.c_str());
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -388,7 +390,7 @@ int MGL_NO_EXPORT mgls_crust(mglGraph *gr, long , mglArg *a, const char *k, cons
 int MGL_NO_EXPORT mgls_colorbar(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;	gr->Self()->SaveState(opt);
-	if(!strcmp(k,""))	gr->Colorbar();
+	if(k[0]==0)	gr->Colorbar();
 	else if(!strcmp(k,"s"))		gr->Colorbar(a[0].s.c_str());
 	else if(!strcmp(k,"d"))		gr->Colorbar(*(a[0].d));
 	else if(!strcmp(k,"ds"))	gr->Colorbar(*(a[0].d), a[1].s.c_str());
@@ -702,9 +704,11 @@ int MGL_NO_EXPORT mgls_divto(mglGraph *, long , mglArg *a, const char *k, const 
 {
 	int res=0;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	if(!d)	return 1;
-	if(!strcmp(k,"dd"))		*d /= *(a[1].d);
-	else if(!strcmp(k,"dn"))	*d /= a[1].v;
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(d && !strcmp(k,"dd"))		*d /= *(a[1].d);
+	else if(d && !strcmp(k,"dn"))	*d /= a[1].v;
+	else if(c && !strcmp(k,"dd"))	*c /= *(a[1].d);
+	else if(c && !strcmp(k,"dn"))	*c /= a[1].c;
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -712,9 +716,11 @@ int MGL_NO_EXPORT mgls_multo(mglGraph *, long , mglArg *a, const char *k, const 
 {
 	int res=0;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	if(!d)	return 1;
-	if(!strcmp(k,"dd"))		*d *= *(a[1].d);
-	else if(!strcmp(k,"dn"))	*d *= a[1].v;
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(d && !strcmp(k,"dd"))		*d *= *(a[1].d);
+	else if(d && !strcmp(k,"dn"))	*d *= a[1].v;
+	else if(c && !strcmp(k,"dd"))	*c *= *(a[1].d);
+	else if(c && !strcmp(k,"dn"))	*c *= a[1].c;
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -722,9 +728,11 @@ int MGL_NO_EXPORT mgls_subto(mglGraph *, long , mglArg *a, const char *k, const 
 {
 	int res=0;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	if(!d)	return 1;
-	if(!strcmp(k,"dd"))		*d -= *(a[1].d);
-	else if(!strcmp(k,"dn"))	*d -= a[1].v;
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(d && !strcmp(k,"dd"))		*d -= *(a[1].d);
+	else if(d && !strcmp(k,"dn"))	*d -= a[1].v;
+	else if(c && !strcmp(k,"dd"))	*c -= *(a[1].d);
+	else if(c && !strcmp(k,"dn"))	*c -= a[1].c;
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -744,10 +752,13 @@ int MGL_NO_EXPORT mgls_diff(mglGraph *, long , mglArg *a, const char *k, const c
 {
 	int res=0;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	if(!d)	return 1;
-	if(!strcmp(k,"ds"))	d->Diff(a[1].s.c_str());
-	else if(!strcmp(k,"ddd"))	d->Diff(*(a[1].d), *(a[2].d));
-	else if(!strcmp(k,"dddd"))	d->Diff(*(a[1].d), *(a[2].d), *(a[3].d));
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(d && !strcmp(k,"ds"))	d->Diff(a[1].s.c_str());
+	else if(d && !strcmp(k,"ddd"))	d->Diff(*(a[1].d), *(a[2].d));
+	else if(d && !strcmp(k,"dddd"))	d->Diff(*(a[1].d), *(a[2].d), *(a[3].d));
+	else if(c && !strcmp(k,"ds"))	c->Diff(a[1].s.c_str());
+//	else if(c && !strcmp(k,"ddd"))	c->Diff(*(a[1].d), *(a[2].d));	// TODO Add later
+//	else if(c && !strcmp(k,"dddd"))	c->Diff(*(a[1].d), *(a[2].d), *(a[3].d));
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -755,8 +766,9 @@ int MGL_NO_EXPORT mgls_diff2(mglGraph *, long , mglArg *a, const char *k, const 
 {
 	int res=0;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	if(!d)	return 1;
-	if(!strcmp(k,"ds"))	d->Diff2(a[1].s.c_str());
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(d && !strcmp(k,"ds"))	d->Diff2(a[1].s.c_str());
+	else if(c && !strcmp(k,"ds"))	c->Diff2(a[1].s.c_str());
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -891,12 +903,25 @@ int MGL_NO_EXPORT mgls_fill(mglGraph *gr, long , mglArg *a, const char *k, const
 {
 	int res=0;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	if(!d)	return 1;
-	if(!strcmp(k,"dnn"))	d->Fill(a[1].v,a[2].v);
-	else if(!strcmp(k,"dnns"))	d->Fill(a[1].v,a[2].v,a[3].s.c_str()[0]);
-	else if(!strcmp(k,"ds"))	gr->Fill(*d,a[1].s.c_str(),opt);
-	else if(!strcmp(k,"dsd"))	gr->Fill(*d,a[1].s.c_str(), *(a[2].d),opt);
-	else if(!strcmp(k,"dsdd"))	gr->Fill(*d,a[1].s.c_str(), *(a[2].d), *(a[3].d),opt);
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(d && k[0]=='d')
+	{
+		if(!strcmp(k,"dnn"))	d->Fill(a[1].v,a[2].v);
+		else if(!strcmp(k,"dnns"))	d->Fill(a[1].v,a[2].v,a[3].s.c_str()[0]);
+		else if(!strcmp(k,"ds"))	gr->Fill(*d,a[1].s.c_str(),opt);
+		else if(!strcmp(k,"dsd"))	gr->Fill(*d,a[1].s.c_str(), *(a[2].d),opt);
+		else if(!strcmp(k,"dsdd"))	gr->Fill(*d,a[1].s.c_str(), *(a[2].d), *(a[3].d),opt);
+		else res = 1;
+	}
+	else if(c && k[0]=='d')
+	{
+		if(!strcmp(k,"dnn"))	c->Fill(a[1].v,a[2].v);
+		else if(!strcmp(k,"dnns"))	c->Fill(a[1].v,a[2].v,a[3].s.c_str()[0]);
+		else if(!strcmp(k,"ds"))	gr->Fill(*c,a[1].s.c_str(),opt);
+		else if(!strcmp(k,"dsd"))	gr->Fill(*c,a[1].s.c_str(), *(a[2].d),opt);
+		else if(!strcmp(k,"dsdd"))	gr->Fill(*c,a[1].s.c_str(), *(a[2].d), *(a[3].d),opt);
+		else res = 1;
+	}
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -904,12 +929,25 @@ int MGL_NO_EXPORT mgls_refill(mglGraph *gr, long , mglArg *a, const char *k, con
 {
 	int res=0;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	if(!d)	return 1;
-	if(!strcmp(k,"ddd"))	gr->Refill(*d,*(a[1].d),*(a[2].d),-1,opt);
-	else if(!strcmp(k,"dddn"))	gr->Refill(*d,*(a[1].d),*(a[2].d),iint(a[3].v),opt);
-	else if(!strcmp(k,"dddd"))	gr->Refill(*d,*(a[1].d),*(a[2].d),*(a[3].d),-1,opt);
-	else if(!strcmp(k,"ddddn"))	gr->Refill(*d,*(a[1].d),*(a[2].d),*(a[3].d),iint(a[4].v),opt);
-	else if(!strcmp(k,"ddddd"))	gr->Refill(*d,*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),opt);
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(d && k[0]=='d' && k[1]=='d' && k[2]=='d')
+	{
+		if(k[3]==0)	gr->Refill(*d,*(a[1].d),*(a[2].d),-1,opt);
+		else if(!strcmp(k+3,"n"))	gr->Refill(*d,*(a[1].d),*(a[2].d),iint(a[3].v),opt);
+		else if(!strcmp(k+3,"d"))	gr->Refill(*d,*(a[1].d),*(a[2].d),*(a[3].d),-1,opt);
+		else if(!strcmp(k+3,"dn"))	gr->Refill(*d,*(a[1].d),*(a[2].d),*(a[3].d),iint(a[4].v),opt);
+		else if(!strcmp(k+3,"dd"))	gr->Refill(*d,*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),opt);
+		else res = 1;
+	}
+	else if(c && k[0]=='d' && k[1]=='d' && k[2]=='d')
+	{
+		if(k[3]==0)	gr->Refill(*c,*(a[1].d),*(a[2].d),-1,opt);
+		else if(!strcmp(k+3,"n"))	gr->Refill(*c,*(a[1].d),*(a[2].d),iint(a[3].v),opt);
+		else if(!strcmp(k+3,"d"))	gr->Refill(*c,*(a[1].d),*(a[2].d),*(a[3].d),-1,opt);
+		else if(!strcmp(k+3,"dn"))	gr->Refill(*c,*(a[1].d),*(a[2].d),*(a[3].d),iint(a[4].v),opt);
+		else if(!strcmp(k+3,"dd"))	gr->Refill(*c,*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),opt);
+		else res = 1;
+	}
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -917,9 +955,11 @@ int MGL_NO_EXPORT mgls_gspline(mglGraph *gr, long , mglArg *a, const char *k, co
 {
 	int res=0;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	if(!d)	return 1;
-	if(!strcmp(k,"ddd"))	d->RefillGS(*(a[1].d),*(a[2].d),gr->Self()->Min.x,gr->Self()->Max.x,-1);
-	else if(!strcmp(k,"dddn"))	d->RefillGS(*(a[1].d),*(a[2].d),gr->Self()->Min.x,gr->Self()->Max.x,iint(a[3].v));
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(d && !strcmp(k,"ddd"))	d->RefillGS(*(a[1].d),*(a[2].d),gr->Self()->Min.x,gr->Self()->Max.x,-1);
+	else if(d && !strcmp(k,"dddn"))	d->RefillGS(*(a[1].d),*(a[2].d),gr->Self()->Min.x,gr->Self()->Max.x,iint(a[3].v));
+	else if(c && !strcmp(k,"ddd"))	c->RefillGS(*(a[1].d),*(a[2].d),gr->Self()->Min.x,gr->Self()->Max.x,-1);
+	else if(c && !strcmp(k,"dddn"))	c->RefillGS(*(a[1].d),*(a[2].d),gr->Self()->Min.x,gr->Self()->Max.x,iint(a[3].v));
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -927,8 +967,7 @@ int MGL_NO_EXPORT mgls_fillsample(mglGraph *, long , mglArg *a, const char *k, c
 {
 	int res=0;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	if(!d)	return 1;
-	if(!strcmp(k,"ds"))	d->FillSample(a[1].s.c_str());
+	if(d && !strcmp(k,"ds"))	d->FillSample(a[1].s.c_str());
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -952,7 +991,7 @@ int MGL_NO_EXPORT mgls_font(mglGraph *gr, long , mglArg *a, const char *k, const
 int MGL_NO_EXPORT mgls_loadfont(mglGraph *gr, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
-	if(!strcmp(k,"") || (!strcmp(k,"s") && a[0].s[0]==0))	gr->RestoreFont();
+	if(k[0]==0 || (!strcmp(k,"s") && a[0].s[0]==0))	gr->RestoreFont();
 	else if(!strcmp(k,"s"))	gr->LoadFont(a[0].s.c_str());
 	else res = 1;	return res;
 }
@@ -960,7 +999,7 @@ int MGL_NO_EXPORT mgls_loadfont(mglGraph *gr, long , mglArg *a, const char *k, c
 int MGL_NO_EXPORT mgls_grid(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;
-	if(!strcmp(k,""))	gr->Grid("xyzt", "B",opt);
+	if(k[0]==0)	gr->Grid("xyzt", "B",opt);
 	else if(!strcmp(k,"s"))	gr->Grid(a[0].s.c_str(), "B",opt);
 	else if(!strcmp(k,"ss"))gr->Grid(a[0].s.c_str(), a[1].s.c_str(),opt);
 	else res = 1;	return res;
@@ -991,7 +1030,7 @@ int MGL_NO_EXPORT mgls_grid3(mglGraph *gr, long , mglArg *a, const char *k, cons
 int MGL_NO_EXPORT mgls_light(mglGraph *gr, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
-	if(!strcmp(k,""))	gr->Light(true);
+	if(k[0]==0)	gr->Light(true);
 	else if(!strcmp(k,"n"))	gr->Light(a[0].v!=0);
 	else if(!strcmp(k,"nn"))	gr->Light(iint(a[0].v),a[1].v!=0);
 	else if(!strcmp(k,"nnnn"))	gr->AddLight(iint(a[0].v),mglPoint(a[1].v,a[2].v,a[3].v));
@@ -1041,7 +1080,7 @@ int MGL_NO_EXPORT mgls_errbox(mglGraph *gr, long , mglArg *a, const char *k, con
 int MGL_NO_EXPORT mgls_legend(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;
-	if(!strcmp(k,""))	gr->Legend(3, "#", opt);
+	if(k[0]==0)	gr->Legend(3, "#", opt);
 	else if(!strcmp(k,"n"))	gr->Legend(iint(a[0].v), "#", opt);
 	else if(!strcmp(k,"ns"))	gr->Legend(iint(a[0].v), a[1].s.c_str(), opt);
 	else if(!strcmp(k,"nn"))	gr->Legend(a[0].v, a[1].v, "#", opt);
@@ -1067,11 +1106,15 @@ int MGL_NO_EXPORT mgls_modify(mglGraph *, long , mglArg *a, const char *k, const
 {
 	int res=0;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	if(!d)	return 1;
-	if(!strcmp(k,"ds"))	d->Modify(a[1].s.c_str());
-	else if(!strcmp(k,"dsn"))	d->Modify(a[1].s.c_str(), iint(a[2].v));
-	else if(!strcmp(k,"dsd"))	d->Modify(a[1].s.c_str(),*(a[2].d));
-	else if(!strcmp(k,"dsdd"))	d->Modify(a[1].s.c_str(),*(a[2].d),*(a[3].d));
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(d && !strcmp(k,"ds"))	d->Modify(a[1].s.c_str());
+	else if(d && !strcmp(k,"dsn"))	d->Modify(a[1].s.c_str(), iint(a[2].v));
+	else if(d && !strcmp(k,"dsd"))	d->Modify(a[1].s.c_str(),*(a[2].d));
+	else if(d && !strcmp(k,"dsdd"))	d->Modify(a[1].s.c_str(),*(a[2].d),*(a[3].d));
+	else if(c && !strcmp(k,"ds"))	c->Modify(a[1].s.c_str());
+	else if(c && !strcmp(k,"dsn"))	c->Modify(a[1].s.c_str(), iint(a[2].v));
+	else if(c && !strcmp(k,"dsd"))	c->Modify(a[1].s.c_str(),*(a[2].d));
+	else if(c && !strcmp(k,"dsdd"))	c->Modify(a[1].s.c_str(),*(a[2].d),*(a[3].d));
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -1079,8 +1122,7 @@ int MGL_NO_EXPORT mgls_max(mglGraph *, long , mglArg *a, const char *k, const ch
 {
 	int res=0;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	if(!d)	return 1;
-	if(!strcmp(k,"dds"))	*d = mglData(true,mgl_data_max_dir(a[1].d,a[2].s.c_str()));
+	if(d && !strcmp(k,"dds"))	*d = mglData(true,mgl_data_max_dir(a[1].d,a[2].s.c_str()));
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -1088,8 +1130,7 @@ int MGL_NO_EXPORT mgls_min(mglGraph *, long , mglArg *a, const char *k, const ch
 {
 	int res=0;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	if(!d)	return 1;
-	if(!strcmp(k,"dds"))	*d = mglData(true,mgl_data_min_dir(a[1].d,a[2].s.c_str()));
+	if(d && !strcmp(k,"dds"))	*d = mglData(true,mgl_data_min_dir(a[1].d,a[2].s.c_str()));
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -1097,8 +1138,9 @@ int MGL_NO_EXPORT mgls_sum(mglGraph *, long , mglArg *a, const char *k, const ch
 {
 	int res=0;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	if(!d)	return 1;
-	if(!strcmp(k,"dds"))	*d = mglData(true,mgl_data_sum(a[1].d,a[2].s.c_str()));
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(d && !strcmp(k,"dds"))	*d = mglData(true,mgl_data_sum(a[1].d,a[2].s.c_str()));
+	else if(c && !strcmp(k,"dds"))	*c = mglDataC(true,mgl_datac_sum(a[1].d,a[2].s.c_str()));
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -1119,7 +1161,7 @@ int MGL_NO_EXPORT mgls_facenum(mglGraph *gr, long , mglArg *a, const char *k, co
 int MGL_NO_EXPORT mgls_quality(mglGraph *gr, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
-	if(!strcmp(k,""))	gr->SetQuality();
+	if(k[0]==0)	gr->SetQuality();
 	else if(!strcmp(k,"n"))	gr->SetQuality(iint(a[0].v));
 	else res = 1;	return res;
 }
@@ -1159,24 +1201,34 @@ int MGL_NO_EXPORT mgls_read(mglGraph *gr, long , mglArg *a, const char *k, const
 	bool rr=true;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
 	mglData *f = dynamic_cast<mglData *>(a[1].d);
-	if(!d)	return 1;
-	mglDataC c;
-	if(!strcmp(k,"ds"))
-	{	rr=c.Read(a[1].s.c_str());	*d = c.Real();	}
-	else if(!strcmp(k,"dsn"))
-	{	rr=c.Read(a[1].s.c_str(), iint(a[2].v));	*d = c.Real();	}
-	else if(!strcmp(k,"dsnn"))
-	{	rr=c.Read(a[1].s.c_str(), iint(a[2].v),iint(a[3].v));	*d = c.Real();	}
-	else if(!strcmp(k,"dsnnn"))
-	{	rr=c.Read(a[1].s.c_str(), iint(a[2].v),iint(a[3].v),iint(a[4].v));	*d = c.Real();	}
-	if(!strcmp(k,"dds") && f)
-	{	rr=c.Read(a[2].s.c_str());	*d = c.Real();	*f = c.Imag();	}
-	if(!strcmp(k,"ddsn") && f)
-	{	rr=c.Read(a[2].s.c_str(), iint(a[3].v));	*d = c.Real();	*f = c.Imag();	}
-	if(!strcmp(k,"ddsnn") && f)
-	{	rr=c.Read(a[2].s.c_str(), iint(a[3].v),iint(a[4].v));	*d = c.Real();	*f = c.Imag();	}
-	if(!strcmp(k,"ddsnnn") && f)
-	{	rr=c.Read(a[2].s.c_str(), iint(a[3].v),iint(a[4].v),iint(a[5].v));	*d = c.Real();	*f = c.Imag();	}
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(c)
+	{
+		if(!strcmp(k,"ds"))			rr=c->Read(a[1].s.c_str());
+		else if(!strcmp(k,"dsn"))	rr=c->Read(a[1].s.c_str(), iint(a[2].v));
+		else if(!strcmp(k,"dsnn"))	rr=c->Read(a[1].s.c_str(), iint(a[2].v),iint(a[3].v));
+		else if(!strcmp(k,"dsnnn"))	rr=c->Read(a[1].s.c_str(), iint(a[2].v),iint(a[3].v),iint(a[4].v));
+		else res = 1;
+	}
+	else if(d && f && k[0]=='d' && k[1]=='d' && k[2]=='s')
+	{
+		mglDataC r;
+		if(k[3]==0)	rr=r.Read(a[2].s.c_str());
+		else if(!strcmp(k+3,"n"))	rr=r.Read(a[2].s.c_str(), iint(a[3].v));
+		else if(!strcmp(k+3,"nn"))	rr=r.Read(a[2].s.c_str(), iint(a[3].v),iint(a[4].v));
+		else if(!strcmp(k+3,"nnn"))	rr=r.Read(a[2].s.c_str(), iint(a[3].v),iint(a[4].v),iint(a[5].v));
+		else res = 1;
+		if(res==0)	{	*d = r.Real();	*f = r.Imag();	}
+	}
+	else if(d)
+	{
+		if(!strcmp(k,"ds"))	rr=d->Read(a[1].s.c_str());
+		else if(!strcmp(k,"dsn"))	rr=d->Read(a[1].s.c_str(), iint(a[2].v));
+		else if(!strcmp(k,"dsnn"))	rr=d->Read(a[1].s.c_str(), iint(a[2].v),iint(a[3].v));
+		else if(!strcmp(k,"dsnnn"))	rr=d->Read(a[1].s.c_str(), iint(a[2].v),iint(a[3].v),iint(a[4].v));
+		else res = 1;
+	}
+	else res = 1;
 	if(!rr)	gr->SetWarn(mglWarnFile,"Read");
 	return res;
 }
@@ -1186,9 +1238,11 @@ int MGL_NO_EXPORT mgls_readmat(mglGraph *gr, long , mglArg *a, const char *k, co
 	int res=0;
 	bool rr=true;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	if(!d)	return 1;
-	if(!strcmp(k,"ds")) rr=d->ReadMat(a[1].s.c_str());
-	else if(!strcmp(k,"dsn")) rr=d->ReadMat(a[1].s.c_str(), iint(a[2].v));
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(d && !strcmp(k,"ds"))		rr=d->ReadMat(a[1].s.c_str());
+	else if(d && !strcmp(k,"dsn"))	rr=d->ReadMat(a[1].s.c_str(), iint(a[2].v));
+	else if(c && !strcmp(k,"ds"))	rr=c->ReadMat(a[1].s.c_str());
+	else if(c && !strcmp(k,"dsn"))	rr=c->ReadMat(a[1].s.c_str(), iint(a[2].v));
 	else res = 1;
 	if(!rr)	gr->SetWarn(mglWarnFile,"ReadMat");
 	return res;
@@ -1199,14 +1253,19 @@ int MGL_NO_EXPORT mgls_readall(mglGraph *gr, long , mglArg *a, const char *k, co
 	int res=0;
 	bool rr=true;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	if(!d)	return 1;
-	if(!strcmp(k,"ds")) rr=d->ReadAll(a[1].s.c_str());
-	else if(!strcmp(k,"dsn")) rr=d->ReadAll(a[1].s.c_str(), a[2].v);
-	else if(!strcmp(k,"dsnn"))	rr=d->ReadRange(a[1].s.c_str(), a[2].v, a[3].v);
-	else if(!strcmp(k,"dsnnn"))	rr=d->ReadRange(a[1].s.c_str(), a[2].v, a[3].v, a[4].v);
-	else if(!strcmp(k,"dsnnnn"))rr=d->ReadRange(a[1].s.c_str(), a[2].v, a[3].v, a[4].v, a[5].v);
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(d && !strcmp(k,"ds"))	rr=d->ReadAll(a[1].s.c_str());
+	else if(d && !strcmp(k,"dsn"))		rr=d->ReadAll(a[1].s.c_str(), a[2].v);
+	else if(d && !strcmp(k,"dsnn"))		rr=d->ReadRange(a[1].s.c_str(), a[2].v, a[3].v);
+	else if(d && !strcmp(k,"dsnnn"))	rr=d->ReadRange(a[1].s.c_str(), a[2].v, a[3].v, a[4].v);
+	else if(d && !strcmp(k,"dsnnnn"))	rr=d->ReadRange(a[1].s.c_str(), a[2].v, a[3].v, a[4].v, a[5].v);
+	else if(c && !strcmp(k,"ds"))		rr=c->ReadAll(a[1].s.c_str());
+	else if(c && !strcmp(k,"dsn"))		rr=c->ReadAll(a[1].s.c_str(), a[2].v);
+	else if(c && !strcmp(k,"dsnn"))		rr=c->ReadRange(a[1].s.c_str(), a[2].v, a[3].v);
+	else if(c && !strcmp(k,"dsnnn"))	rr=c->ReadRange(a[1].s.c_str(), a[2].v, a[3].v, a[4].v);
+	else if(c && !strcmp(k,"dsnnnn"))	rr=c->ReadRange(a[1].s.c_str(), a[2].v, a[3].v, a[4].v, a[5].v);
 	else res = 1;
-	if(!rr)	gr->SetWarn(mglWarnFile,"ReadMat");
+	if(!rr)	gr->SetWarn(mglWarnFile,"ReadAll");
 	return res;
 }
 //-----------------------------------------------------------------------------
@@ -1214,8 +1273,9 @@ int MGL_NO_EXPORT mgls_readhdf(mglGraph *, long , mglArg *a, const char *k, cons
 {
 	int res=0;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	if(!d)	return 1;
-	if(!strcmp(k,"dss"))	d->ReadHDF(a[1].s.c_str(), a[2].s.c_str());
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(d && !strcmp(k,"dss"))	d->ReadHDF(a[1].s.c_str(), a[2].s.c_str());
+	else if(c && !strcmp(k,"dss"))	c->ReadHDF(a[1].s.c_str(), a[2].s.c_str());
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -1281,10 +1341,13 @@ int MGL_NO_EXPORT mgls_resize(mglGraph *, long , mglArg *a, const char *k, const
 {
 	int res=0;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	if(!d)	return 1;
-	if(!strcmp(k,"ddn"))	*d = mglData(true,mgl_data_resize_box(a[1].d, iint(a[2].v),0,0, 0,1, 0,1, 0,1));
-	else if(!strcmp(k,"ddnn"))	*d = mglData(true,mgl_data_resize_box(a[1].d, iint(a[2].v),iint(a[3].v),0, 0,1, 0,1, 0,1));
-	else if(!strcmp(k,"ddnnn"))	*d = mglData(true,mgl_data_resize_box(a[1].d, iint(a[2].v),iint(a[3].v),iint(a[4].v), 0,1, 0,1, 0,1));
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(d && !strcmp(k,"ddn"))	*d = mglData(true,mgl_data_resize_box(a[1].d, iint(a[2].v),0,0, 0,1, 0,1, 0,1));
+	else if(d && !strcmp(k,"ddnn"))	*d = mglData(true,mgl_data_resize_box(a[1].d, iint(a[2].v),iint(a[3].v),0, 0,1, 0,1, 0,1));
+	else if(d && !strcmp(k,"ddnnn"))*d = mglData(true,mgl_data_resize_box(a[1].d, iint(a[2].v),iint(a[3].v),iint(a[4].v), 0,1, 0,1, 0,1));
+	else if(c && !strcmp(k,"ddn"))	*c = mglDataC(true,mgl_datac_resize_box(a[1].d, iint(a[2].v),0,0, 0,1, 0,1, 0,1));
+	else if(c && !strcmp(k,"ddnn"))	*c = mglDataC(true,mgl_datac_resize_box(a[1].d, iint(a[2].v),iint(a[3].v),0, 0,1, 0,1, 0,1));
+	else if(c && !strcmp(k,"ddnnn"))*c = mglDataC(true,mgl_datac_resize_box(a[1].d, iint(a[2].v),iint(a[3].v),iint(a[4].v), 0,1, 0,1, 0,1));
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -1332,9 +1395,11 @@ int MGL_NO_EXPORT mgls_smooth(mglGraph *, long , mglArg *a, const char *k, const
 {
 	int res=0;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	if(!d)	return 1;
-	if(!strcmp(k,"d"))	d->Smooth();
-	else if(!strcmp(k,"ds"))	d->Smooth(a[1].s.c_str());
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(d && !strcmp(k,"d"))	d->Smooth();
+	else if(d && !strcmp(k,"ds"))	d->Smooth(a[1].s.c_str());
+	else if(c && !strcmp(k,"d"))	c->Smooth();
+	else if(c && !strcmp(k,"ds"))	c->Smooth(a[1].s.c_str());
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -1342,8 +1407,9 @@ int MGL_NO_EXPORT mgls_swap(mglGraph *, long , mglArg *a, const char *k, const c
 {
 	int res=0;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	if(!d)	return 1;
-	if(!strcmp(k,"ds"))	d->Swap(a[1].s.c_str());
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(d && !strcmp(k,"ds"))	d->Swap(a[1].s.c_str());
+	else if(c && !strcmp(k,"ds"))	c->Swap(a[1].s.c_str());
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -1352,8 +1418,8 @@ int MGL_NO_EXPORT mgls_idset(mglGraph *, long , mglArg *a, const char *k, const 
 	int res=0;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
 	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
-	if(!strcmp(k,"ds") && d)	d->SetColumnId(a[1].s.c_str());
-	else if(!strcmp(k,"ds") && c)	c->SetColumnId(a[1].s.c_str());
+	if(d && !strcmp(k,"ds"))	d->SetColumnId(a[1].s.c_str());
+	else if(c && !strcmp(k,"ds"))	c->SetColumnId(a[1].s.c_str());
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -1443,11 +1509,15 @@ int MGL_NO_EXPORT mgls_squeeze(mglGraph *, long , mglArg *a, const char *k, cons
 {
 	int res=0;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	if(!d)	return 1;
-	if(!strcmp(k,"dn"))	d->Squeeze(iint(a[1].v));
-	else if(!strcmp(k,"dnn"))	d->Squeeze(iint(a[1].v), iint(a[2].v));
-	else if(!strcmp(k,"dnnn"))	d->Squeeze(iint(a[1].v), iint(a[2].v),iint(a[3].v));
-	else if(!strcmp(k,"dnnnn"))	d->Squeeze(iint(a[1].v), iint(a[2].v),iint(a[3].v), a[4].v);
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(d && !strcmp(k,"dn"))	d->Squeeze(iint(a[1].v));
+	else if(d && !strcmp(k,"dnn"))	d->Squeeze(iint(a[1].v), iint(a[2].v));
+	else if(d && !strcmp(k,"dnnn"))	d->Squeeze(iint(a[1].v), iint(a[2].v),iint(a[3].v));
+	else if(d && !strcmp(k,"dnnnn"))d->Squeeze(iint(a[1].v), iint(a[2].v),iint(a[3].v), a[4].v);
+	else if(c && !strcmp(k,"dn"))	c->Squeeze(iint(a[1].v));
+	else if(c && !strcmp(k,"dnn"))	c->Squeeze(iint(a[1].v), iint(a[2].v));
+	else if(c && !strcmp(k,"dnnn"))	c->Squeeze(iint(a[1].v), iint(a[2].v),iint(a[3].v));
+	else if(c && !strcmp(k,"dnnnn"))c->Squeeze(iint(a[1].v), iint(a[2].v),iint(a[3].v), a[4].v);
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -1456,10 +1526,8 @@ int MGL_NO_EXPORT mgls_stfad(mglGraph *, long , mglArg *a, const char *k, const 
 	int res=0;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
 	if(!d)	return 1;
-	if(!strcmp(k,"dddn"))
-		*d = mglSTFA(*(a[1].d),*(a[2].d), iint(a[3].v));
-	else if(!strcmp(k,"dddns"))
-		*d = mglSTFA(*(a[1].d),*(a[2].d), iint(a[3].v), a[4].s.c_str()[0]);
+	if(!strcmp(k,"dddn"))		*d = mglSTFA(*(a[1].d),*(a[2].d), iint(a[3].v));
+	else if(!strcmp(k,"dddns"))	*d = mglSTFA(*(a[1].d),*(a[2].d), iint(a[3].v), a[4].s.c_str()[0]);
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -1577,8 +1645,9 @@ int MGL_NO_EXPORT mgls_column(mglGraph *, long , mglArg *a, const char *k, const
 {
 	int res=0;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	if(!d)	return 1;
-	if(!strcmp(k,"dds"))	*d = mglData(true,mgl_data_column(a[1].d,a[2].s.c_str()));
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(d && !strcmp(k,"dds"))	*d = mglData(true,mgl_data_column(a[1].d,a[2].s.c_str()));
+	else if(c && !strcmp(k,"dds"))	*c = mglDataC(true,mgl_datac_column(a[1].d,a[2].s.c_str()));
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -1586,23 +1655,37 @@ int MGL_NO_EXPORT mgls_subdata(mglGraph *, long , mglArg *a, const char *k, cons
 {
 	int res=0;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	if(!d)	return 1;
-	if(!strcmp(k,"ddn"))	*d = mglData(true,mgl_data_subdata(a[1].d, iint(a[2].v), -1, -1));
-	else if(!strcmp(k,"ddnn"))	*d = mglData(true,mgl_data_subdata(a[1].d, iint(a[2].v), iint(a[3].v), -1));
-	else if(!strcmp(k,"ddnnn"))	*d = mglData(true,mgl_data_subdata(a[1].d, iint(a[2].v), iint(a[3].v), iint(a[4].v)));
-	else if(!strcmp(k,"ddd"))	*d = mglSubData(*(a[1].d), *(a[2].d));
-	else if(!strcmp(k,"dddd"))	*d = mglSubData(*(a[1].d), *(a[2].d), *(a[3].d));
-	else if(!strcmp(k,"ddddd"))	*d = mglSubData(*(a[1].d), *(a[2].d), *(a[3].d), *(a[4].d));
-	else res = 1;
-	return res;
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(d)
+	{
+		if(!strcmp(k,"ddn"))		*d = mglData(true,mgl_data_subdata(a[1].d, iint(a[2].v), -1, -1));
+		else if(!strcmp(k,"ddnn"))	*d = mglData(true,mgl_data_subdata(a[1].d, iint(a[2].v), iint(a[3].v), -1));
+		else if(!strcmp(k,"ddnnn"))	*d = mglData(true,mgl_data_subdata(a[1].d, iint(a[2].v), iint(a[3].v), iint(a[4].v)));
+		else if(!strcmp(k,"ddd"))	*d = mglData(true,mgl_data_subdata_ext(a[1].d, a[2].d, 0, 0));
+		else if(!strcmp(k,"dddd"))	*d = mglData(true,mgl_data_subdata_ext(a[1].d, a[2].d, a[3].d, 0));
+		else if(!strcmp(k,"ddddd"))	*d = mglData(true,mgl_data_subdata_ext(a[1].d, a[2].d, a[3].d, a[4].d));
+		else res = 1;
+	}
+	else if(c)
+	{
+		if(!strcmp(k,"ddn"))		*c = mglDataC(true,mgl_datac_subdata(a[1].d, iint(a[2].v), -1, -1));
+		else if(!strcmp(k,"ddnn"))	*c = mglDataC(true,mgl_datac_subdata(a[1].d, iint(a[2].v), iint(a[3].v), -1));
+		else if(!strcmp(k,"ddnnn"))	*c = mglDataC(true,mgl_datac_subdata(a[1].d, iint(a[2].v), iint(a[3].v), iint(a[4].v)));
+		else if(!strcmp(k,"ddd"))	*c = mglDataC(true,mgl_datac_subdata_ext(a[1].d, a[2].d, 0, 0));
+		else if(!strcmp(k,"dddd"))	*c = mglDataC(true,mgl_datac_subdata_ext(a[1].d, a[2].d, a[3].d, 0));
+		else if(!strcmp(k,"ddddd"))	*c = mglDataC(true,mgl_datac_subdata_ext(a[1].d, a[2].d, a[3].d, a[4].d));
+		else res = 1;
+	}
+	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_trace(mglGraph *, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	if(!d)	return 1;
-	if(!strcmp(k,"dd"))	*d = mglData(true,mgl_data_trace(a[1].d));
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(d && !strcmp(k,"dd"))	*d = mglData(true,mgl_data_trace(a[1].d));
+	else if(c && !strcmp(k,"dd"))	*c = mglDataC(true,mgl_datac_trace(a[1].d));
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -1675,7 +1758,9 @@ int MGL_NO_EXPORT mgls_fourier(mglGraph *, long , mglArg *a, const char *k, cons
 {
 	int res=0;
 	mglData *re = dynamic_cast<mglData *>(a[0].d), *im = dynamic_cast<mglData *>(a[1].d);
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
 	if(!strcmp(k,"dds") && re && im)	mglFourier(*re,*im,a[2].s.c_str());
+	else if(!strcmp(k,"ds") && c)		c->FFT(a[1].s.c_str());
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -1810,9 +1895,11 @@ int MGL_NO_EXPORT mgls_transpose(mglGraph *, long , mglArg *a, const char *k, co
 {
 	int res=0;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	if(!d)	return 1;
-	if(!strcmp(k,"d"))	d->Transpose();
-	else if(!strcmp(k,"ds"))	d->Transpose(a[1].s.c_str());
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(d && !strcmp(k,"d"))	d->Transpose();
+	else if(d && !strcmp(k,"ds"))	d->Transpose(a[1].s.c_str());
+	else if(c && !strcmp(k,"d"))	c->Transpose();
+	else if(c && !strcmp(k,"ds"))	c->Transpose(a[1].s.c_str());
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -2063,9 +2150,11 @@ int MGL_NO_EXPORT mgls_extend(mglGraph *, long , mglArg *a, const char *k, const
 {
 	int res=0;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	if(!d)	return 1;
-	if(!strcmp(k,"dn"))	d->Extend(iint(a[1].v));
-	else if(!strcmp(k,"dnn"))	d->Extend(iint(a[1].v),iint(a[2].v));
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(d && !strcmp(k,"dn"))	d->Extend(iint(a[1].v));
+	else if(d && !strcmp(k,"dnn"))	d->Extend(iint(a[1].v),iint(a[2].v));
+	else if(c && !strcmp(k,"dn"))	c->Extend(iint(a[1].v));
+	else if(c && !strcmp(k,"dnn"))	c->Extend(iint(a[1].v),iint(a[2].v));
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -2073,8 +2162,10 @@ int MGL_NO_EXPORT mgls_join(mglGraph *, long , mglArg *a, const char *k, const c
 {
 	int res=0;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
 	if(k[0]!='d' || k[1]!='d')	res = 1;
-	else	for(long i=1;k[i]=='d';i++)	d->Join(*(a[i].d));
+	else if(d)	for(long i=1;k[i]=='d';i++)	d->Join(*(a[i].d));
+	else if(c)	for(long i=1;k[i]=='d';i++)	c->Join(*(a[i].d));
 	return res;
 }
 //-----------------------------------------------------------------------------
@@ -2105,7 +2196,9 @@ int MGL_NO_EXPORT mgls_integrate(mglGraph *, long , mglArg *a, const char *k, co
 {
 	int res=0;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	if(!strcmp(k,"ds") && d)	d->Integral(a[1].s.c_str());
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(d && !strcmp(k,"ds"))	d->Integral(a[1].s.c_str());
+	else if(c && !strcmp(k,"ds"))	c->Integral(a[1].s.c_str());
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -2205,7 +2298,9 @@ int MGL_NO_EXPORT mgls_mirror(mglGraph *, long , mglArg *a, const char *k, const
 {
 	int res=0;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	if(!strcmp(k,"ds") && d)	d->Mirror(a[1].s.c_str());
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(d && !strcmp(k,"ds"))		d->Mirror(a[1].s.c_str());
+	else if(c && !strcmp(k,"ds"))	c->Mirror(a[1].s.c_str());
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -2213,7 +2308,9 @@ int MGL_NO_EXPORT mgls_hankel(mglGraph *, long , mglArg *a, const char *k, const
 {
 	int res=0;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	if(!strcmp(k,"ds") && d)	d->Hankel(a[1].s.c_str());
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(d && !strcmp(k,"ds"))		d->Hankel(a[1].s.c_str());
+	else if(c && !strcmp(k,"ds"))	c->Hankel(a[1].s.c_str());
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -2245,19 +2342,25 @@ int MGL_NO_EXPORT mgls_new(mglGraph *gr, long , mglArg *a, const char *k, const 
 {
 	int res=0;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	if(!d)	return 1;
-	if(!strcmp(k,"dn"))	d->Create(iint(a[1].v));
-	else if(!strcmp(k,"dns"))
-	{	d->Create(iint(a[1].v));
-		d->Fill(gr->Self(),a[2].s.c_str(),opt);	}
-	else if(!strcmp(k,"dnn"))	d->Create(iint(a[1].v),iint(a[2].v));
-	else if(!strcmp(k,"dnns"))
-	{	d->Create(iint(a[1].v),iint(a[2].v));
-		d->Fill(gr->Self(),a[3].s.c_str(),opt);	}
-	else if(!strcmp(k,"dnnn"))	d->Create(iint(a[1].v),iint(a[2].v),iint(a[3].v));
-	else if(!strcmp(k,"dnnns"))
-	{	d->Create(iint(a[1].v),iint(a[2].v),iint(a[3].v));
-		d->Fill(gr->Self(),a[4].s.c_str(),opt);	}
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(d && !strcmp(k,"dn"))	d->Create(iint(a[1].v));
+	else if(d && !strcmp(k,"dns"))
+	{	d->Create(iint(a[1].v));	d->Fill(gr->Self(),a[2].s.c_str(),opt);	}
+	else if(d && !strcmp(k,"dnn"))	d->Create(iint(a[1].v),iint(a[2].v));
+	else if(d && !strcmp(k,"dnns"))
+	{	d->Create(iint(a[1].v),iint(a[2].v));	d->Fill(gr->Self(),a[3].s.c_str(),opt);	}
+	else if(d && !strcmp(k,"dnnn"))	d->Create(iint(a[1].v),iint(a[2].v),iint(a[3].v));
+	else if(d && !strcmp(k,"dnnns"))
+	{	d->Create(iint(a[1].v),iint(a[2].v),iint(a[3].v));	d->Fill(gr->Self(),a[4].s.c_str(),opt);	}
+	else if(c && !strcmp(k,"dn"))	c->Create(iint(a[1].v));
+	else if(c && !strcmp(k,"dns"))
+	{	c->Create(iint(a[1].v));	c->Fill(gr->Self(),a[2].s.c_str(),opt);	}
+	else if(c && !strcmp(k,"dnn"))	c->Create(iint(a[1].v),iint(a[2].v));
+	else if(c && !strcmp(k,"dnns"))
+	{	c->Create(iint(a[1].v),iint(a[2].v));	c->Fill(gr->Self(),a[3].s.c_str(),opt);	}
+	else if(c && !strcmp(k,"dnnn"))	c->Create(iint(a[1].v),iint(a[2].v),iint(a[3].v));
+	else if(c && !strcmp(k,"dnnns"))
+	{	c->Create(iint(a[1].v),iint(a[2].v),iint(a[3].v));	c->Fill(gr->Self(),a[4].s.c_str(),opt);	}
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -2331,9 +2434,11 @@ int MGL_NO_EXPORT mgls_momentum(mglGraph *, long , mglArg *a, const char *k, con
 {
 	int res=0;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	if(!d)	return 1;
-	if(!strcmp(k,"dds"))	*d = mglData(true,mgl_data_momentum(a[1].d,'z', a[2].s.c_str()));
-	else if(!strcmp(k,"ddss"))	*d = mglData(true,mgl_data_momentum(a[1].d,a[3].s.c_str()[0], a[2].s.c_str()));
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(d && !strcmp(k,"dds"))	*d = mglData(true,mgl_data_momentum(a[1].d,'z', a[2].s.c_str()));
+	else if(d && !strcmp(k,"ddss"))	*d = mglData(true,mgl_data_momentum(a[1].d,a[3].s.c_str()[0], a[2].s.c_str()));
+	else if(c && !strcmp(k,"dds"))	*c = mglDataC(true,mgl_datac_momentum(a[1].d,'z', a[2].s.c_str()));
+	else if(c && !strcmp(k,"ddss"))	*c = mglDataC(true,mgl_datac_momentum(a[1].d,a[3].s.c_str()[0], a[2].s.c_str()));
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -2442,10 +2547,13 @@ int MGL_NO_EXPORT mgls_rearrange(mglGraph *, long , mglArg *a, const char *k, co
 {
 	int res=0;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	if(!d)	return 1;
-	if(!strcmp(k,"dn"))	d->Rearrange(iint(a[1].v));
-	else if(!strcmp(k,"dnn"))	d->Rearrange(iint(a[1].v), iint(a[2].v));
-	else if(!strcmp(k,"dnnn"))	d->Rearrange(iint(a[1].v), iint(a[2].v), iint(a[3].v));
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(d && !strcmp(k,"dn"))	d->Rearrange(iint(a[1].v));
+	else if(d && !strcmp(k,"dnn"))	d->Rearrange(iint(a[1].v), iint(a[2].v));
+	else if(d && !strcmp(k,"dnnn"))	d->Rearrange(iint(a[1].v), iint(a[2].v), iint(a[3].v));
+	else if(c && !strcmp(k,"dn"))	c->Rearrange(iint(a[1].v));
+	else if(c && !strcmp(k,"dnn"))	c->Rearrange(iint(a[1].v), iint(a[2].v));
+	else if(c && !strcmp(k,"dnnn"))	c->Rearrange(iint(a[1].v), iint(a[2].v), iint(a[3].v));
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -2538,7 +2646,7 @@ int MGL_NO_EXPORT mgls_export(mglGraph *, long , mglArg *a, const char *k, const
 int MGL_NO_EXPORT mgls_write(mglGraph *gr, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
-	if(!strcmp(k,""))	gr->WriteFrame("", "MathGL");
+	if(k[0]==0)	gr->WriteFrame("", "MathGL");
 	else if(!strcmp(k,"s"))	gr->WriteFrame(a[0].s.c_str(), "MathGL");
 	else res = 1;	return res;
 }
@@ -2582,13 +2690,27 @@ int MGL_NO_EXPORT mgls_evaluate(mglGraph *, long , mglArg *a, const char *k, con
 {
 	int res=0;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	if(!d)	return 1;
-	if(!strcmp(k,"ddd"))	*d = mglData(true,mgl_data_evaluate(a[1].d,a[2].d,0,0,true));
-	else if(!strcmp(k,"dddn"))	*d = mglData(true,mgl_data_evaluate(a[1].d,a[2].d,0,0, a[3].v!=0));
-	else if(!strcmp(k,"dddd"))	*d = mglData(true,mgl_data_evaluate(a[1].d,a[2].d,a[3].d,0,true));
-	else if(!strcmp(k,"ddddn"))	*d = mglData(true,mgl_data_evaluate(a[1].d,a[2].d,a[3].d,0, a[4].v!=0));
-	else if(!strcmp(k,"ddddd"))	*d = mglData(true,mgl_data_evaluate(a[1].d,a[2].d,a[3].d,a[4].d,true));
-	else if(!strcmp(k,"dddddn"))*d = mglData(true,mgl_data_evaluate(a[1].d,a[2].d,a[3].d,a[4].d, a[5].v!=0));
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(d && k[0]=='d' && k[1]=='d' && k[2]=='d')
+	{
+		if(k[3]==0)	*d = mglData(true,mgl_data_evaluate(a[1].d,a[2].d,0,0,true));
+		else if(!strcmp(k+3,"n"))	*d = mglData(true,mgl_data_evaluate(a[1].d,a[2].d,0,0, a[3].v!=0));
+		else if(!strcmp(k+3,"d"))	*d = mglData(true,mgl_data_evaluate(a[1].d,a[2].d,a[3].d,0,true));
+		else if(!strcmp(k+3,"dn"))	*d = mglData(true,mgl_data_evaluate(a[1].d,a[2].d,a[3].d,0, a[4].v!=0));
+		else if(!strcmp(k+3,"dd"))	*d = mglData(true,mgl_data_evaluate(a[1].d,a[2].d,a[3].d,a[4].d,true));
+		else if(!strcmp(k+3,"ddn"))	*d = mglData(true,mgl_data_evaluate(a[1].d,a[2].d,a[3].d,a[4].d, a[5].v!=0));
+		else res = 1;
+	}
+	else if(c && k[0]=='d' && k[1]=='d' && k[2]=='d')
+	{
+		if(k[3]==0)	*c = mglDataC(true,mgl_datac_evaluate(a[1].d,a[2].d,0,0,true));
+		else if(!strcmp(k+3,"n"))	*c = mglDataC(true,mgl_datac_evaluate(a[1].d,a[2].d,0,0, a[3].v!=0));
+		else if(!strcmp(k+3,"d"))	*c = mglDataC(true,mgl_datac_evaluate(a[1].d,a[2].d,a[3].d,0,true));
+		else if(!strcmp(k+3,"dn"))	*c = mglDataC(true,mgl_datac_evaluate(a[1].d,a[2].d,a[3].d,0, a[4].v!=0));
+		else if(!strcmp(k+3,"dd"))	*c = mglDataC(true,mgl_datac_evaluate(a[1].d,a[2].d,a[3].d,a[4].d,true));
+		else if(!strcmp(k+3,"ddn"))	*c = mglDataC(true,mgl_datac_evaluate(a[1].d,a[2].d,a[3].d,a[4].d, a[5].v!=0));
+		else res = 1;
+	}
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -2608,15 +2730,31 @@ int MGL_NO_EXPORT mgls_put(mglGraph *, long , mglArg *a, const char *k, const ch
 {
 	int res=0;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	if(!d)	return 1;
-	if(!strcmp(k,"dn"))	d->Put(a[1].v);
-	else if(!strcmp(k,"dnn"))	d->Put(a[1].v, iint(a[2].v));
-	else if(!strcmp(k,"dnnn"))	d->Put(a[1].v, iint(a[2].v),iint(a[3].v));
-	else if(!strcmp(k,"dnnnn"))	d->Put(a[1].v, iint(a[2].v),iint(a[3].v),iint(a[4].v));
-	else if(!strcmp(k,"dd"))	d->Put(*(a[1].d));
-	else if(!strcmp(k,"ddn"))	d->Put(*(a[1].d), iint(a[2].v));
-	else if(!strcmp(k,"ddnn"))	d->Put(*(a[1].d), iint(a[2].v),iint(a[3].v));
-	else if(!strcmp(k,"ddnnn"))	d->Put(*(a[1].d), iint(a[2].v),iint(a[3].v),iint(a[4].v));
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(d)
+	{
+		if(!strcmp(k,"dn"))	d->Put(a[1].v);
+		else if(!strcmp(k,"dnn"))	d->Put(a[1].v, iint(a[2].v));
+		else if(!strcmp(k,"dnnn"))	d->Put(a[1].v, iint(a[2].v),iint(a[3].v));
+		else if(!strcmp(k,"dnnnn"))	d->Put(a[1].v, iint(a[2].v),iint(a[3].v),iint(a[4].v));
+		else if(!strcmp(k,"dd"))	d->Put(*(a[1].d));
+		else if(!strcmp(k,"ddn"))	d->Put(*(a[1].d), iint(a[2].v));
+		else if(!strcmp(k,"ddnn"))	d->Put(*(a[1].d), iint(a[2].v),iint(a[3].v));
+		else if(!strcmp(k,"ddnnn"))	d->Put(*(a[1].d), iint(a[2].v),iint(a[3].v),iint(a[4].v));
+		else res = 1;
+	}
+	else if(c)
+	{
+		if(!strcmp(k,"dn"))	c->Put(a[1].c);
+		else if(!strcmp(k,"dnn"))	c->Put(a[1].c, iint(a[2].v));
+		else if(!strcmp(k,"dnnn"))	c->Put(a[1].c, iint(a[2].v),iint(a[3].v));
+		else if(!strcmp(k,"dnnnn"))	c->Put(a[1].c, iint(a[2].v),iint(a[3].v),iint(a[4].v));
+		else if(!strcmp(k,"dd"))	c->Put(*(a[1].d));
+		else if(!strcmp(k,"ddn"))	c->Put(*(a[1].d), iint(a[2].v));
+		else if(!strcmp(k,"ddnn"))	c->Put(*(a[1].d), iint(a[2].v),iint(a[3].v));
+		else if(!strcmp(k,"ddnnn"))	c->Put(*(a[1].d), iint(a[2].v),iint(a[3].v),iint(a[4].v));
+		else res = 1;
+	}
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -2631,7 +2769,9 @@ int MGL_NO_EXPORT mgls_combine(mglGraph *, long , mglArg *a, const char *k, cons
 {
 	int res=0;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	if(!strcmp(k,"ddd") && d)	*d = mglData(true,mgl_data_combine(a[1].d, a[2].d));
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(d && !strcmp(k,"ddd"))	*d = mglData(true,mgl_data_combine(a[1].d, a[2].d));
+	else if(c && !strcmp(k,"ddd"))	*c = mglDataC(true,mgl_datac_combine(a[1].d, a[2].d));
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -2639,7 +2779,9 @@ int MGL_NO_EXPORT mgls_correl(mglGraph *, long , mglArg *a, const char *k, const
 {
 	int res=0;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	if(!strcmp(k,"ddds") && d)	*d = mglData(true,mgl_data_correl(a[1].d, a[2].d, a[3].s.c_str()));
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(d && !strcmp(k,"ddds"))	*d = mglData(true,mgl_data_correl(a[1].d, a[2].d, a[3].s.c_str()));
+	else if(c && !strcmp(k,"ddds"))	*c = mglDataC(true,mgl_datac_correl(a[1].d, a[2].d, a[3].s.c_str()));
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -2670,79 +2812,132 @@ int MGL_NO_EXPORT mgls_ode(mglGraph *, long , mglArg *a, const char *k, const ch
 int MGL_NO_EXPORT mgls_pde(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;
-	mglData *d = dynamic_cast<mglData *>(a[0].d), *c = dynamic_cast<mglData *>(a[1].d);
-	if(!d)	return 1;
-	if(!strcmp(k,"dsdd"))	// TODO mglDataC can be used here
-		*d = gr->PDE(a[1].s.c_str(), *(a[2].d), *(a[3].d), 0.1,100,opt);
-	else if(!strcmp(k,"dsddn"))
-		*d = gr->PDE(a[1].s.c_str(), *(a[2].d), *(a[3].d), a[4].v,100,opt);
-	else if(!strcmp(k,"dsddnn"))
-		*d = gr->PDE(a[1].s.c_str(), *(a[2].d), *(a[3].d), a[4].v,a[5].v,opt);
-	else if(!strcmp(k,"ddsdd") && c)
-	{	mglDataC res = mglDataC(true, mgl_pde_solve_c(gr->Self(),a[2].s.c_str(), a[3].d, a[4].d, 0.1,100,opt));
-		*d = res.Abs();	*c = res.Arg();	}
-	else if(!strcmp(k,"ddsddn") && c)
-	{	mglDataC res = mglDataC(true, mgl_pde_solve_c(gr->Self(),a[2].s.c_str(), a[3].d, a[4].d, a[5].v,100,opt));
-		*d = res.Abs();	*c = res.Arg();	}
-	else if(!strcmp(k,"ddsddnn") && c)
-	{	mglDataC res = mglDataC(true, mgl_pde_solve_c(gr->Self(),a[2].s.c_str(), a[3].d, a[4].d, a[5].v,a[6].v,opt));
-		*d = res.Abs();	*c = res.Arg();	}
+	mglData *d = dynamic_cast<mglData *>(a[0].d), *f = dynamic_cast<mglData *>(a[1].d);
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(d && f)
+	{
+		mglDataC r;
+		if(!strcmp(k,"ddsdd"))
+			r = gr->PDEc(a[2].s.c_str(), *(a[3].d), *(a[4].d), 0.1,100,opt);
+		else if(!strcmp(k,"ddsddn"))
+			r = gr->PDEc(a[2].s.c_str(), *(a[3].d), *(a[4].d), a[5].v,100,opt);
+		else if(!strcmp(k,"ddsddnn"))
+			r = gr->PDEc(a[2].s.c_str(), *(a[3].d), *(a[4].d), a[5].v,a[6].v,opt);
+		else res = 1;
+		if(res==0)	{	*d = r.Abs();	*f = r.Arg();	}
+	}
+	else if(d)
+	{
+		if(!strcmp(k,"dsdd"))
+			*d = gr->PDE(a[1].s.c_str(), *(a[2].d), *(a[3].d), 0.1,100,opt);
+		else if(!strcmp(k,"dsddn"))
+			*d = gr->PDE(a[1].s.c_str(), *(a[2].d), *(a[3].d), a[4].v,100,opt);
+		else if(!strcmp(k,"dsddnn"))
+			*d = gr->PDE(a[1].s.c_str(), *(a[2].d), *(a[3].d), a[4].v,a[5].v,opt);
+		else res = 1;
+	}
+	else if(c)
+	{
+		if(!strcmp(k,"dsdd"))
+			*c = gr->PDEc(a[1].s.c_str(), *(a[2].d), *(a[3].d), 0.1,100,opt);
+		else if(!strcmp(k,"dsddn"))
+			*c = gr->PDEc(a[1].s.c_str(), *(a[2].d), *(a[3].d), a[4].v,100,opt);
+		else if(!strcmp(k,"dsddnn"))
+			*c = gr->PDEc(a[1].s.c_str(), *(a[2].d), *(a[3].d), a[4].v,a[5].v,opt);
+		else res = 1;
+	}
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_qo2d(mglGraph *, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
-	mglData *d = dynamic_cast<mglData *>(a[0].d), *c = dynamic_cast<mglData *>(a[1].d);
-	if(!d)	return 1;
-	if(!strcmp(k,"dsddd"))
-		*d = mglData(true, mgl_qo2d_solve(a[1].s.c_str(), a[2].d, a[3].d, a[4].d, 1,100, 0,0));
-	else if(!strcmp(k,"dsdddn"))
-		*d = mglData(true, mgl_qo2d_solve(a[1].s.c_str(), a[2].d, a[3].d, a[4].d, a[5].v,100, 0,0));
-	else if(!strcmp(k,"dsdddnn"))
-		*d = mglData(true, mgl_qo2d_solve(a[1].s.c_str(), a[2].d, a[3].d, a[4].d, a[5].v,a[6].v, 0,0));
-	else if(!strcmp(k,"dsdddnndd"))
-		*d = mglData(true, mgl_qo2d_solve(a[1].s.c_str(), a[2].d, a[3].d, a[4].d, a[5].v,a[6].v, dynamic_cast<mglData *>(a[7].d),dynamic_cast<mglData *>(a[8].d)));
-	else if(!strcmp(k,"ddsddd") && c)
-	{	mglDataC res = mglDataC(true, mgl_qo2d_solve_c(a[2].s.c_str(), a[3].d, a[4].d, a[5].d, 1,100, 0,0));
-		*d = res.Abs();	*c = res.Arg();	}
-	else if(!strcmp(k,"ddsdddn") && c)
-	{	mglDataC res = mglDataC(true, mgl_qo2d_solve_c(a[2].s.c_str(), a[3].d, a[4].d, a[5].d, a[6].v,100, 0,0));
-		*d = res.Abs();	*c = res.Arg();	}
-	else if(!strcmp(k,"ddsdddnn") && c)
-	{	mglDataC res = mglDataC(true, mgl_qo2d_solve_c(a[2].s.c_str(), a[3].d, a[4].d, a[5].d, a[6].v,a[7].v, 0,0));
-		*d = res.Abs();	*c = res.Arg();	}
-	else if(!strcmp(k,"ddsdddnndd") && c)
-	{	mglDataC res = mglDataC(true, mgl_qo2d_solve_c(a[2].s.c_str(), a[3].d, a[4].d, a[5].d, a[6].v,a[7].v, dynamic_cast<mglData *>(a[8].d),dynamic_cast<mglData *>(a[9].d)));
-		*d = res.Abs();	*c = res.Arg();	}
+	mglData *d = dynamic_cast<mglData *>(a[0].d), *f = dynamic_cast<mglData *>(a[1].d);
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(d && f)
+	{
+		mglDataC r;
+		if(!strcmp(k,"ddsddd"))
+			r = mglDataC(true, mgl_qo2d_solve_c(a[2].s.c_str(), a[3].d, a[4].d, a[5].d, 1,100, 0,0));
+		else if(!strcmp(k,"ddsdddn"))
+			r = mglDataC(true, mgl_qo2d_solve_c(a[2].s.c_str(), a[3].d, a[4].d, a[5].d, a[6].v,100, 0,0));
+		else if(!strcmp(k,"ddsdddnn"))
+			r = mglDataC(true, mgl_qo2d_solve_c(a[2].s.c_str(), a[3].d, a[4].d, a[5].d, a[6].v,a[7].v, 0,0));
+		else if(!strcmp(k,"ddsdddnndd"))
+			r = mglDataC(true, mgl_qo2d_solve_c(a[2].s.c_str(), a[3].d, a[4].d, a[5].d, a[6].v,a[7].v, dynamic_cast<mglData *>(a[8].d),dynamic_cast<mglData *>(a[9].d)));
+		else res = 1;
+		if(res==0)	{	*d = r.Abs();	*f = r.Arg();	}
+	}
+	else if(d)
+	{
+		if(!strcmp(k,"dsddd"))
+			*d = mglData(true, mgl_qo2d_solve(a[1].s.c_str(), a[2].d, a[3].d, a[4].d, 1,100, 0,0));
+		else if(!strcmp(k,"dsdddn"))
+			*d = mglData(true, mgl_qo2d_solve(a[1].s.c_str(), a[2].d, a[3].d, a[4].d, a[5].v,100, 0,0));
+		else if(!strcmp(k,"dsdddnn"))
+			*d = mglData(true, mgl_qo2d_solve(a[1].s.c_str(), a[2].d, a[3].d, a[4].d, a[5].v,a[6].v, 0,0));
+		else if(!strcmp(k,"dsdddnndd"))
+			*d = mglData(true, mgl_qo2d_solve(a[1].s.c_str(), a[2].d, a[3].d, a[4].d, a[5].v,a[6].v, dynamic_cast<mglData *>(a[7].d),dynamic_cast<mglData *>(a[8].d)));
+		else res = 1;
+	}
+	else if(c)
+	{
+		if(!strcmp(k,"dsddd"))
+			*c = mglDataC(true, mgl_qo2d_solve_c(a[1].s.c_str(), a[2].d, a[3].d, a[4].d, 1,100, 0,0));
+		else if(!strcmp(k,"dsdddn"))
+			*c = mglDataC(true, mgl_qo2d_solve_c(a[1].s.c_str(), a[2].d, a[3].d, a[4].d, a[5].v,100, 0,0));
+		else if(!strcmp(k,"dsdddnn"))
+			*c = mglDataC(true, mgl_qo2d_solve_c(a[1].s.c_str(), a[2].d, a[3].d, a[4].d, a[5].v,a[6].v, 0,0));
+		else if(!strcmp(k,"dsdddnndd"))
+			*c = mglDataC(true, mgl_qo2d_solve_c(a[1].s.c_str(), a[2].d, a[3].d, a[4].d, a[5].v,a[6].v, dynamic_cast<mglData *>(a[7].d),dynamic_cast<mglData *>(a[8].d)));
+		else res = 1;
+	}
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_qo3d(mglGraph *, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
-	mglData *d = dynamic_cast<mglData *>(a[0].d), *c = dynamic_cast<mglData *>(a[1].d);
-	if(!d)	return 1;
-	if(!strcmp(k,"dsddd"))
-		*d = mglData(true, mgl_qo3d_solve(a[1].s.c_str(), a[2].d, a[3].d, a[4].d, 1,100, 0,0,0));
-	else if(!strcmp(k,"dsdddn"))
-		*d = mglData(true, mgl_qo3d_solve(a[1].s.c_str(), a[2].d, a[3].d, a[4].d, a[5].v,100, 0,0,0));
-	else if(!strcmp(k,"dsdddnn"))
-		*d = mglData(true, mgl_qo3d_solve(a[1].s.c_str(), a[2].d, a[3].d, a[4].d, a[5].v,a[6].v, 0,0,0));
-	else if(!strcmp(k,"dsdddnnddd"))
-		*d = mglData(true, mgl_qo3d_solve(a[1].s.c_str(), a[2].d, a[3].d, a[4].d, a[5].v,a[6].v, dynamic_cast<mglData *>(a[7].d),dynamic_cast<mglData *>(a[8].d),dynamic_cast<mglData *>(a[9].d)));
-	else if(!strcmp(k,"ddsddd") && c)
-	{	mglDataC res = mglDataC(true, mgl_qo3d_solve_c(a[2].s.c_str(), a[3].d, a[4].d, a[5].d, 1,100, 0,0,0));
-		*d = res.Abs();	*c = res.Arg();	}
-	else if(!strcmp(k,"ddsdddn") && c)
-	{	mglDataC res = mglDataC(true, mgl_qo3d_solve_c(a[2].s.c_str(), a[3].d, a[4].d, a[5].d, a[6].v,100, 0,0,0));
-		*d = res.Abs();	*c = res.Arg();	}
-	else if(!strcmp(k,"ddsdddnn") && c)
-	{	mglDataC res = mglDataC(true, mgl_qo3d_solve_c(a[2].s.c_str(), a[3].d, a[4].d, a[5].d, a[6].v,a[7].v, 0,0,0));
-		*d = res.Abs();	*c = res.Arg();	}
-	else if(!strcmp(k,"ddsdddnnddd") && c)
-	{	mglDataC res = mglDataC(true, mgl_qo3d_solve_c(a[2].s.c_str(), a[3].d, a[4].d, a[5].d, a[6].v,a[7].v, dynamic_cast<mglData *>(a[8].d),dynamic_cast<mglData *>(a[9].d),dynamic_cast<mglData *>(a[10].d)));
-		*d = res.Abs();	*c = res.Arg();	}
+	mglData *d = dynamic_cast<mglData *>(a[0].d), *f = dynamic_cast<mglData *>(a[1].d);
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(d && f)
+	{
+		mglDataC r;
+		if(!strcmp(k,"ddsddd"))
+			r = mglDataC(true, mgl_qo3d_solve_c(a[2].s.c_str(), a[3].d, a[4].d, a[5].d, 1,100, 0,0,0));
+		else if(!strcmp(k,"ddsdddn"))
+			r = mglDataC(true, mgl_qo3d_solve_c(a[2].s.c_str(), a[3].d, a[4].d, a[5].d, a[6].v,100, 0,0,0));
+		else if(!strcmp(k,"ddsdddnn"))
+			r = mglDataC(true, mgl_qo3d_solve_c(a[2].s.c_str(), a[3].d, a[4].d, a[5].d, a[6].v,a[7].v, 0,0,0));
+		else if(!strcmp(k,"ddsdddnnddd"))
+			r = mglDataC(true, mgl_qo3d_solve_c(a[2].s.c_str(), a[3].d, a[4].d, a[5].d, a[6].v,a[7].v, dynamic_cast<mglData *>(a[8].d),dynamic_cast<mglData *>(a[9].d),dynamic_cast<mglData *>(a[10].d)));
+		else res = 1;
+		if(res==0)	{	*d = r.Abs();	*f = r.Arg();	}
+	}
+	else if(d)
+	{
+		if(!strcmp(k,"dsddd"))
+			*d = mglData(true, mgl_qo3d_solve(a[1].s.c_str(), a[2].d, a[3].d, a[4].d, 1,100, 0,0,0));
+		else if(!strcmp(k,"dsdddn"))
+			*d = mglData(true, mgl_qo3d_solve(a[1].s.c_str(), a[2].d, a[3].d, a[4].d, a[5].v,100, 0,0,0));
+		else if(!strcmp(k,"dsdddnn"))
+			*d = mglData(true, mgl_qo3d_solve(a[1].s.c_str(), a[2].d, a[3].d, a[4].d, a[5].v,a[6].v, 0,0,0));
+		else if(!strcmp(k,"dsdddnnddd"))
+			*d = mglData(true, mgl_qo3d_solve(a[1].s.c_str(), a[2].d, a[3].d, a[4].d, a[5].v,a[6].v, dynamic_cast<mglData *>(a[7].d),dynamic_cast<mglData *>(a[8].d),dynamic_cast<mglData *>(a[9].d)));
+		else res = 1;
+	}
+	else if(c)
+	{
+		if(!strcmp(k,"dsddd"))
+			*c = mglDataC(true, mgl_qo3d_solve_c(a[1].s.c_str(), a[2].d, a[3].d, a[4].d, 1,100, 0,0,0));
+		else if(!strcmp(k,"dsdddn"))
+			*c = mglDataC(true, mgl_qo3d_solve_c(a[1].s.c_str(), a[2].d, a[3].d, a[4].d, a[5].v,100, 0,0,0));
+		else if(!strcmp(k,"dsdddnn"))
+			*c = mglDataC(true, mgl_qo3d_solve_c(a[1].s.c_str(), a[2].d, a[3].d, a[4].d, a[5].v,a[6].v, 0,0,0));
+		else if(!strcmp(k,"dsdddnnddd"))
+			*c = mglDataC(true, mgl_qo3d_solve_c(a[1].s.c_str(), a[2].d, a[3].d, a[4].d, a[5].v,a[6].v, dynamic_cast<mglData *>(a[7].d),dynamic_cast<mglData *>(a[8].d),dynamic_cast<mglData *>(a[9].d)));
+		else res = 1;
+	}
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -2812,7 +3007,7 @@ int MGL_NO_EXPORT mgls_origintick(mglGraph *gr, long , mglArg *a, const char *k,
 int MGL_NO_EXPORT mgls_axisstl(mglGraph *gr, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
-	if(!strcmp(k,""))	gr->SetAxisStl();
+	if(k[0]==0)	gr->SetAxisStl();
 	else if(!strcmp(k,"s"))	gr->SetAxisStl(a[0].s.c_str());
 	else if(!strcmp(k,"ss"))	gr->SetAxisStl(a[0].s.c_str(), a[1].s.c_str());
 	else if(!strcmp(k,"sss"))	gr->SetAxisStl(a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str());
@@ -2833,7 +3028,7 @@ int MGL_NO_EXPORT mgls_ranges(mglGraph *gr, long , mglArg *a, const char *k, con
 int MGL_NO_EXPORT mgls_adjust(mglGraph *gr, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
-	if(!strcmp(k,""))	gr->Adjust();
+	if(k[0]==0)	gr->Adjust();
 	else if(!strcmp(k,"s"))	gr->Adjust(a[0].s.c_str());
 	else res = 1;	return res;
 }
@@ -2842,10 +3037,13 @@ int MGL_NO_EXPORT mgls_insert(mglGraph *, long , mglArg *a, const char *k, const
 {
 	int res=0;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	if(!d)	return 1;
-	if(!strcmp(k,"ds"))	d->Insert(a[1].s.c_str()[0]);
-	else if(!strcmp(k,"dsn"))	d->Insert(a[1].s.c_str()[0], iint(a[2].v));
-	else if(!strcmp(k,"dsnn"))	d->Insert(a[1].s.c_str()[0], iint(a[2].v), iint(a[3].v));
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(d && !strcmp(k,"ds"))	d->Insert(a[1].s.c_str()[0]);
+	else if(d && !strcmp(k,"dsn"))	d->Insert(a[1].s.c_str()[0], iint(a[2].v));
+	else if(d && !strcmp(k,"dsnn"))	d->Insert(a[1].s.c_str()[0], iint(a[2].v), iint(a[3].v));
+	else if(c && !strcmp(k,"ds"))	c->Insert(a[1].s.c_str()[0]);
+	else if(c && !strcmp(k,"dsn"))	c->Insert(a[1].s.c_str()[0], iint(a[2].v));
+	else if(c && !strcmp(k,"dsnn"))	c->Insert(a[1].s.c_str()[0], iint(a[2].v), iint(a[3].v));
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -2853,10 +3051,13 @@ int MGL_NO_EXPORT mgls_delete(mglGraph *, long , mglArg *a, const char *k, const
 {
 	int res=0;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	if(!d)	return 1;
-	if(!strcmp(k,"ds"))	d->Delete(a[1].s.c_str()[0]);
-	else if(!strcmp(k,"dsn"))	d->Delete(a[1].s.c_str()[0], iint(a[2].v));
-	else if(!strcmp(k,"dsnn"))	d->Delete(a[1].s.c_str()[0], iint(a[2].v), iint(a[3].v));
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(d && !strcmp(k,"ds"))	d->Delete(a[1].s.c_str()[0]);
+	else if(d && !strcmp(k,"dsn"))	d->Delete(a[1].s.c_str()[0], iint(a[2].v));
+	else if(d && !strcmp(k,"dsnn"))	d->Delete(a[1].s.c_str()[0], iint(a[2].v), iint(a[3].v));
+	else if(c && !strcmp(k,"ds"))	c->Delete(a[1].s.c_str()[0]);
+	else if(c && !strcmp(k,"dsn"))	c->Delete(a[1].s.c_str()[0], iint(a[2].v));
+	else if(c && !strcmp(k,"dsnn"))	c->Delete(a[1].s.c_str()[0], iint(a[2].v), iint(a[3].v));
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -2864,7 +3065,9 @@ int MGL_NO_EXPORT mgls_roll(mglGraph *, long , mglArg *a, const char *k, const c
 {
 	int res=0;
 	mglData *d = dynamic_cast<mglData *>(a[0].d);
-	if(!strcmp(k,"dsn") && d)	d->Roll(a[1].s.c_str()[0], iint(a[2].v));
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(d && !strcmp(k,"dsn"))	d->Roll(a[1].s.c_str()[0], iint(a[2].v));
+	else if(c && !strcmp(k,"dsn"))	c->Roll(a[1].s.c_str()[0], iint(a[2].v));
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -2914,7 +3117,7 @@ int MGL_NO_EXPORT mgls_zoomaxis(mglGraph *gr, long , mglArg *a, const char *k, c
 int MGL_NO_EXPORT mgls_drawreg(mglGraph *gr, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
-	if(!strcmp(k,""))	gr->SetDrawReg();
+	if(k[0]==0)	gr->SetDrawReg();
 	else if(!strcmp(k,"nnn"))	gr->SetDrawReg(iint(a[0].v), iint(a[1].v), iint(a[2].v));
 	else res = 1;	return res;
 }
@@ -2923,7 +3126,7 @@ int MGL_NO_EXPORT mgls_version(mglGraph *gr, long , mglArg *a, const char *k, co
 {
 	int res=0;
 	char buf[32];	sprintf(buf,"MathGL version is 2.%g",MGL_VER2);
-	if(!strcmp(k,""))	gr->SetWarn(-1,buf);
+	if(k[0]==0)	gr->SetWarn(-1,buf);
 	else if(!strcmp(k,"s"))	res = mgl_check_version(a[0].s.c_str())?1:0;
 	else res = 1;	return res;
 }
@@ -3038,7 +3241,7 @@ mglCommand mgls_base_cmd[] = {
 	{"fog","Switch on/off fog","fog val [pos]", mgls_fog ,2},
 	{"font","Setup font","font 'fmt' [size]", mgls_font ,15},
 	{"for","For cycle","for $N v1 v2 [dv] | $N Dat", 0, 6},
-	{"fourier","In-place Fourier transform","fourier ReDat ImDat 'dir'", mgls_fourier , 16},
+	{"fourier","In-place Fourier transform","fourier ReDat ImDat 'dir'|Cmplx 'dir'", mgls_fourier , 16},
 	{"fplot","Plot curve by formula","fplot 'y_x' ['fmt']|'x_t' 'y_t' 'z_t' ['fmt']", mgls_fplot ,1},
 	{"fsurf","Plot surface by formula","fsurf 'z_xy' ['fmt']|'x_uv' 'y_uv' 'z_uv' ['fmt']", mgls_fsurf ,1},
 	{"func","Start function definition and stop execution of main script","func 'name' [narg]", 0, 6},

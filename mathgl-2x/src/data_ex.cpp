@@ -541,26 +541,22 @@ void MGL_EXPORT mgl_data_mul_dat(HMDT d, HCDT a)
 		for(long k=0;k<nz;k++)	for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
 			d->a[i+nx*(j+ny*k)] *= v;
 	}
-	else if(mz==1 && my==1 && nx==mx)
-#pragma omp parallel for collapse(3)
-		for(long k=0;k<nz;k++)	for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
-			d->a[i+nx*(j+ny*k)] *= a->v(i);
-	else if(mz==1 && ny==my && nx==mx)
-#pragma omp parallel for collapse(3)
-		for(long k=0;k<nz;k++)	for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
-			d->a[i+nx*(j+ny*k)] *= a->v(i,j);
-	else if(nz==mz && ny==my && nx==mx)
-#pragma omp parallel for collapse(3)
-		for(long k=0;k<nz;k++)	for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
-			d->a[i+nx*(j+ny*k)] *= a->v(i,j,k);
+	else
+	{
+		long n=0, m=0;
+		if(nz*ny*nx==mz*my*mx)	{	n=nx*ny*nz;	m=1;	}
+		else if(ny*nx==my*mx)	{	n=nx*ny;	m=nz;	}
+		else if(nx==mx)			{	n=nx;	m=ny*nz;	}
+#pragma omp parallel for collapse(2)
+		for(long k=0;k<m;k++)	for(long i=0;i<n;i++)	d->a[i+n*k] *= a->vthr(i);
+	}
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_data_mul_num(HMDT d, mreal a)
 {
-	long nx=d->nx, ny=d->ny, nz=d->nz;
-#pragma omp parallel for collapse(3)
-	for(long k=0;k<nz;k++)	for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
-		d->a[i+nx*(j+ny*k)] *= a;
+	long n=d->GetNN();
+#pragma omp parallel for
+	for(long i=0;i<n;i++)	d->a[i] *= a;
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_data_div_dat(HMDT d, HCDT a)
@@ -574,26 +570,22 @@ void MGL_EXPORT mgl_data_div_dat(HMDT d, HCDT a)
 		for(long k=0;k<nz;k++)	for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
 			d->a[i+nx*(j+ny*k)] /= v;
 	}
-	else if(mz==1 && my==1 && nx==mx)
-#pragma omp parallel for collapse(3)
-		for(long k=0;k<nz;k++)	for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
-			d->a[i+nx*(j+ny*k)] /= a->v(i);
-	else if(mz==1 && ny==my && nx==mx)
-#pragma omp parallel for collapse(3)
-		for(long k=0;k<nz;k++)	for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
-			d->a[i+nx*(j+ny*k)] /= a->v(i,j);
-	else if(nz==mz && ny==my && nx==mx)
-#pragma omp parallel for collapse(3)
-		for(long k=0;k<nz;k++)	for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
-			d->a[i+nx*(j+ny*k)] /= a->v(i,j,k);
+	else
+	{
+		long n=0, m=0;
+		if(nz*ny*nx==mz*my*mx)	{	n=nx*ny*nz;	m=1;	}
+		else if(ny*nx==my*mx)	{	n=nx*ny;	m=nz;	}
+		else if(nx==mx)			{	n=nx;	m=ny*nz;	}
+#pragma omp parallel for collapse(2)
+		for(long k=0;k<m;k++)	for(long i=0;i<n;i++)	d->a[i+n*k] /= a->vthr(i);
+	}
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_data_div_num(HMDT d, mreal a)
 {
-	long nx=d->nx, ny=d->ny, nz=d->nz;
-#pragma omp parallel for collapse(3)
-	for(long k=0;k<nz;k++)	for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
-		d->a[i+nx*(j+ny*k)] /= a;
+	long n=d->GetNN();
+#pragma omp parallel for
+	for(long i=0;i<n;i++)	d->a[i] /= a;
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_data_add_dat(HMDT d, HCDT a)
@@ -607,26 +599,22 @@ void MGL_EXPORT mgl_data_add_dat(HMDT d, HCDT a)
 		for(long k=0;k<nz;k++)	for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
 			d->a[i+nx*(j+ny*k)] += v;
 	}
-	else if(mz==1 && my==1 && nx==mx)
-#pragma omp parallel for collapse(3)
-		for(long k=0;k<nz;k++)	for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
-			d->a[i+nx*(j+ny*k)] += a->v(i);
-	else if(mz==1 && ny==my && nx==mx)
-#pragma omp parallel for collapse(3)
-		for(long k=0;k<nz;k++)	for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
-			d->a[i+nx*(j+ny*k)] += a->v(i,j);
-	else if(nz==mz && ny==my && nx==mx)
-#pragma omp parallel for collapse(3)
-		for(long k=0;k<nz;k++)	for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
-			d->a[i+nx*(j+ny*k)] += a->v(i,j,k);
+	else
+	{
+		long n=0, m=0;
+		if(nz*ny*nx==mz*my*mx)	{	n=nx*ny*nz;	m=1;	}
+		else if(ny*nx==my*mx)	{	n=nx*ny;	m=nz;	}
+		else if(nx==mx)			{	n=nx;	m=ny*nz;	}
+#pragma omp parallel for collapse(2)
+		for(long k=0;k<m;k++)	for(long i=0;i<n;i++)	d->a[i+n*k] += a->vthr(i);
+	}
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_data_add_num(HMDT d, mreal a)
 {
-	long nx=d->nx, ny=d->ny, nz=d->nz;
-#pragma omp parallel for collapse(3)
-	for(long k=0;k<nz;k++)	for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
-		d->a[i+nx*(j+ny*k)] += a;
+	long n=d->GetNN();
+#pragma omp parallel for
+	for(long i=0;i<n;i++)	d->a[i] += a;
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_data_sub_dat(HMDT d, HCDT a)
@@ -640,26 +628,22 @@ void MGL_EXPORT mgl_data_sub_dat(HMDT d, HCDT a)
 		for(long k=0;k<nz;k++)	for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
 			d->a[i+nx*(j+ny*k)] -= v;
 	}
-	else if(mz==1 && my==1 && nx==mx)
-#pragma omp parallel for collapse(3)
-		for(long k=0;k<nz;k++)	for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
-			d->a[i+nx*(j+ny*k)] -= a->v(i);
-	else if(mz==1 && ny==my && nx==mx)
-#pragma omp parallel for collapse(3)
-		for(long k=0;k<nz;k++)	for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
-			d->a[i+nx*(j+ny*k)] -= a->v(i,j);
-	else if(nz==mz && ny==my && nx==mx)
-#pragma omp parallel for collapse(3)
-		for(long k=0;k<nz;k++)	for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
-			d->a[i+nx*(j+ny*k)] -= a->v(i,j,k);
+	else
+	{
+		long n=0, m=0;
+		if(nz*ny*nx==mz*my*mx)	{	n=nx*ny*nz;	m=1;	}
+		else if(ny*nx==my*mx)	{	n=nx*ny;	m=nz;	}
+		else if(nx==mx)			{	n=nx;	m=ny*nz;	}
+#pragma omp parallel for collapse(2)
+		for(long k=0;k<m;k++)	for(long i=0;i<n;i++)	d->a[i+n*k] -= a->vthr(i);
+	}
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_data_sub_num(HMDT d, mreal a)
 {
-	long nx=d->nx, ny=d->ny, nz=d->nz;
-#pragma omp parallel for collapse(3)
-	for(long k=0;k<nz;k++)	for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
-		d->a[i+nx*(j+ny*k)] -= a;
+	long n=d->GetNN();
+#pragma omp parallel for
+	for(long i=0;i<n;i++)	d->a[i] -= a;
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_data_mul_dat_(uintptr_t *d, uintptr_t *b)	{	mgl_data_mul_dat(_DT_, _DA_(b));	}

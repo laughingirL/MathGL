@@ -173,6 +173,22 @@ void MGL_EXPORT mgl_datac_fill_(uintptr_t *dat, dual *x1,dual *x2,const char *di
 /// Modify the data by specified formula assuming x,y,z in range [r1,r2]
 void MGL_EXPORT mgl_datac_fill_eq(HMGL gr, HADT dat, const char *eq, HCDT vdat, HCDT wdat,const char *opt);
 void MGL_EXPORT mgl_datac_fill_eq_(uintptr_t *gr, uintptr_t *dat, const char *eq, uintptr_t *vdat, uintptr_t *wdat,const char *opt, int, int);
+/// Fill dat by interpolated values of vdat parametrically depended on xdat for x in range [x1,x2] using global spline
+void MGL_EXPORT mgl_datac_refill_gs(HADT dat, HCDT xdat, HCDT vdat, mreal x1, mreal x2, long sl);
+void MGL_EXPORT mgl_datac_refill_gs_(uintptr_t *dat, uintptr_t *xdat, uintptr_t *vdat, mreal *x1, mreal *x2, long *sl);
+/// Fill dat by interpolated values of vdat parametrically depended on xdat for x in range [x1,x2]
+void MGL_EXPORT mgl_datac_refill_x(HADT dat, HCDT xdat, HCDT vdat, mreal x1, mreal x2, long sl);
+void MGL_EXPORT mgl_datac_refill_x_(uintptr_t *dat, uintptr_t *xdat, uintptr_t *vdat, mreal *x1, mreal *x2, long *sl);
+/// Fill dat by interpolated values of vdat parametrically depended on xdat,ydat for x,y in range [x1,x2]*[y1,y2]
+void MGL_EXPORT mgl_datac_refill_xy(HADT dat, HCDT xdat, HCDT ydat, HCDT vdat, mreal x1, mreal x2, mreal y1, mreal y2, long sl);
+void MGL_EXPORT mgl_datac_refill_xy_(uintptr_t *dat, uintptr_t *xdat, uintptr_t *ydat, uintptr_t *vdat, mreal *x1, mreal *x2, mreal *y1, mreal *y2, long *sl);
+/// Fill dat by interpolated values of vdat parametrically depended on xdat,ydat,zdat for x,y,z in range [x1,x2]*[y1,y2]*[z1,z2]
+void MGL_EXPORT mgl_datac_refill_xyz(HADT dat, HCDT xdat, HCDT ydat, HCDT zdat, HCDT vdat, mreal x1, mreal x2, mreal y1, mreal y2, mreal z1, mreal z2);
+void MGL_EXPORT mgl_datac_refill_xyz_(uintptr_t *dat, uintptr_t *xdat, uintptr_t *ydat, uintptr_t *zdat, uintptr_t *vdat, mreal *x1, mreal *x2, mreal *y1, mreal *y2, mreal *z1, mreal *z2);
+/// Fill dat by interpolated values of vdat parametrically depended on xdat,ydat,zdat for x,y,z in axis range
+void MGL_EXPORT mgl_datac_refill_gr(HMGL gr, HADT dat, HCDT xdat, HCDT ydat, HCDT zdat, HCDT vdat, long sl, const char *opt);
+void MGL_EXPORT mgl_datac_refill_gr_(uintptr_t *gr, uintptr_t *dat, uintptr_t *xdat, uintptr_t *ydat, uintptr_t *zdat, uintptr_t *vdat, long *sl, const char *opt,int);
+
 /// Modify the data by specified formula
 void MGL_EXPORT mgl_datac_modify(HADT dat, const char *eq,long dim);
 void MGL_EXPORT mgl_datac_modify_(uintptr_t *dat, const char *eq,int *dim,int);
@@ -230,6 +246,31 @@ void MGL_EXPORT mgl_datac_mirror_(uintptr_t *dat, const char *dir,int);
 /// Crop the data
 void MGL_EXPORT mgl_datac_crop(HADT dat, long n1, long n2, char dir);
 void MGL_EXPORT mgl_datac_crop_(uintptr_t *dat, int *n1, int *n2, const char *dir,int);
+
+/// Multiply the data by other one for each element
+void MGL_EXPORT mgl_datac_mul_dat(HADT dat, HCDT d);
+void MGL_EXPORT mgl_datac_mul_dat_(uintptr_t *dat, uintptr_t *d);
+/// Divide the data by other one for each element
+void MGL_EXPORT mgl_datac_div_dat(HADT dat, HCDT d);
+void MGL_EXPORT mgl_datac_div_dat_(uintptr_t *dat, uintptr_t *d);
+/// Add the other data
+void MGL_EXPORT mgl_datac_add_dat(HADT dat, HCDT d);
+void MGL_EXPORT mgl_datac_add_dat_(uintptr_t *dat, uintptr_t *d);
+/// Subtract the other data
+void MGL_EXPORT mgl_datac_sub_dat(HADT dat, HCDT d);
+void MGL_EXPORT mgl_datac_sub_dat_(uintptr_t *dat, uintptr_t *d);
+/// Multiply each element by the number
+void MGL_EXPORT mgl_datac_mul_num(HADT dat, dual d);
+void MGL_EXPORT mgl_datac_mul_num_(uintptr_t *dat, dual *d);
+/// Divide each element by the number
+void MGL_EXPORT mgl_datac_div_num(HADT dat, dual d);
+void MGL_EXPORT mgl_datac_div_num_(uintptr_t *dat, dual *d);
+/// Add the number
+void MGL_EXPORT mgl_datac_add_num(HADT dat, dual d);
+void MGL_EXPORT mgl_datac_add_num_(uintptr_t *dat, dual *d);
+/// Subtract the number
+void MGL_EXPORT mgl_datac_sub_num(HADT dat, dual d);
+void MGL_EXPORT mgl_datac_sub_num_(uintptr_t *dat, dual *d);
 
 /// Apply Hankel transform
 void MGL_EXPORT mgl_datac_hankel(HADT dat, const char *dir);

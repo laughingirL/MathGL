@@ -35,8 +35,8 @@ struct mglArg
 	std::wstring w;	///< String with parameters
 	std::string s;	///< String with parameters
 	mreal v;		///< Numerical value (used if type==2)
-	dual c;		///< Numerical complex value (used if type==2)
-	mglArg():type(-1),d(0),v(0)	{}
+	dual c;			///< Numerical complex value (used if type==2)
+	mglArg():type(-1),d(0),v(0),c(0.)	{}
 };
 //-----------------------------------------------------------------------------
 /// Structure for MGL command
@@ -61,7 +61,7 @@ struct mglNum
 	mreal d;		///< Number itself
 	dual c;
 	std::wstring s;	///< Number name
-	mglNum(mreal val=0):d(val),c(NAN)	{}
+	mglNum(mreal val=0):d(val),c(val)	{}
 };
 //-----------------------------------------------------------------------------
 /// Structure for function name and position.
