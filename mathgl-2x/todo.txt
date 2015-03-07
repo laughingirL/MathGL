@@ -91,9 +91,7 @@ YY. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using St
 	d. Reset script after saving to HDF5 or putting to main script
 	e. Ask about script changes before closing data tab
 	
-4. Display complex number in table
-5. Correct size of data arrays ... (mglDataC, mglDataV) to be displayed + human form (like 'K','M','G','T' for >2^10,>2^20,>2^30,>2^40)
-6. List of constants into the list of data?!
+4. List of constants into the list of data?!
 
 
 ============= UNSURE ===========

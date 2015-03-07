@@ -98,22 +98,32 @@ void DatPanel::refresh()
 		}
 		tab->setHorizontalHeaderLabels(head);
 	}
-	register long i,j,m=var->s.length();
-	register mreal f;
+	long m=var->s.length();
 	QString s,d;
 	if(rc)
 	{
 		QStringList sh,sv;
-		for(i=0;i<nx;i++)	sh<<QString::number(i);
+		for(long i=0;i<nx;i++)	sh<<QString::number(i);
 		tab->setHorizontalHeaderLabels(sh);
-		for(i=0;i<ny;i++)	sv<<QString::number(i);
+		for(long i=0;i<ny;i++)	sv<<QString::number(i);
 		tab->setVerticalHeaderLabels(sv);
-		for(i=0;i<nx;i++)	for(j=0;j<ny;j++)
+		for(long i=0;i<nx;i++)	for(long j=0;j<ny;j++)
 			tab->setItem(j,i,new QTableWidgetItem);
 	}
-	for(i=0;i<nx;i++)	for(j=0;j<ny;j++)
+	mglDataC *cc = dynamic_cast<mglDataC*>(var);
+	if(cc)	for(long i=0;i<nx;i++)	for(long j=0;j<ny;j++)
 	{
-		f = var->v(i,j,kz);
+		dual f = cc->a[i+nx*(j+ny*kz)];
+		if(mgl_isnan(f))	s = "nan";
+		else if(mgl_isbad(f))	s="inf";
+		else if(imag(f)>0)	s.sprintf("%g+%gi",real(f),imag(f));
+		else if(imag(f)<0)	s.sprintf("%g-%gi",real(f),-imag(f));
+		else	s.sprintf("%g",real(f));
+		tab->item(j,i)->setText(s);
+	}
+	else	for(long i=0;i<nx;i++)	for(long j=0;j<ny;j++)
+	{
+		mreal f = var->v(i,j,kz);
 		if(mgl_isnan(f))	s = "nan";
 		else if(mgl_isbad(f))	s=f>0?"inf":"-inf";
 		else	s.sprintf("%g",f);
@@ -121,7 +131,7 @@ void DatPanel::refresh()
 	}
 	infoDlg->allowRefresh=true;	infoDlg->refresh();
 	QChar *ss = new QChar[m+1];
-	for(i=0;i<m;i++)	ss[i] = var->s[i];
+	for(long i=0;i<m;i++)	ss[i] = var->s[i];
 	s = QString(ss, m);	delete []ss;
 	d.sprintf("%d * %d * %d", nx, ny, nz);
 	ready = true;
@@ -157,23 +167,75 @@ void DatPanel::setSlice(int k)
 	}
 }
 //-----------------------------------------------------------------------------
+dual mgl_str2dual(const char *s)
+{
+	double re=0,im=0;	size_t ll=strlen(s);
+	while(s[ll]<=' ')	ll--;
+	if(*s=='(')		sscanf(s,"(%lg,%lg)",&re,&im);
+	else if(*s=='i')	{	re=0;	im=atof(s+1);	}
+	else if(*s=='[')	sscanf(s,"[%lg,%lg]",&re,&im);
+	else if(*s=='{')	sscanf(s,"{%lg,%lg}",&re,&im);
+	else if(s[ll]=='i')
+	{
+		double a,b;
+		int s1=sscanf(s,"%lg+%lgi",&re,&im);
+		int s2=sscanf(s,"%lg-%lgi",&a,&b);
+		if(s1<2)
+		{
+		if(s2==2)	{	re=a;	im=-b;	}
+		else	{	im=atof(s);	re=0;	}
+		}
+	}
+	else
+	{
+		double a,b;
+		int s1=sscanf(s,"%lg+i%lg",&re,&im);
+		int s2=sscanf(s,"%lg-i%lg",&a,&b);
+		if(s1<2)
+		{
+		if(s2==2)	{	re=a;	im=-b;	}
+		else	{	re=atof(s);	im=0;	}
+		}
+	}
+	return dual(re,im);
+}
+//-----------------------------------------------------------------------------
 void DatPanel::putValue(int r, int c)
 {
 	if(!var || r<0 || c<0 || r>=ny || c>=nx || !ready)	return;
 	QString s = tab->item(r,c)->text().toLower();
 	mreal f;
+	dual g;
 	if(s=="nan")	f=NAN;
 	else if(s=="inf")	f=INFINITY;
 	else if(s=="-inf")	f=-INFINITY;
-	else	f = s.toDouble();
-	if(f!=var->v(c,r,kz))
+	else	g = mgl_str2dual(s.toStdString().c_str());	//f = s.toDouble();
+	f = real(g);
+	mglDataC *cc = dynamic_cast<mglDataC*>(var);
+	if(cc)
 	{
-		if(mgl_isnan(f))	s="nan";
-		else if(mgl_isbad(f))	s=f>0?"inf":"-inf";
-		else	s.sprintf("%g", f);
-		tab->item(r,c)->setText(s);
+		if(g!=cc->a[c+nx*(r+ny*kz)])
+		{
+			if(mgl_isnan(g))	s="nan";
+			else if(mgl_isbad(g))	s="inf";
+			else if(imag(g)>0)	s.sprintf("%g+%gi",real(g),imag(g));
+			else if(imag(g)<0)	s.sprintf("%g-%gi",real(g),-imag(g));
+			else	s.sprintf("%g",real(g));
+			tab->item(r,c)->setText(s);
+		}
+		cc->a[c+nx*(r+ny*kz)] = g;
 	}
-	var->set_v(f,c,r,kz);
+	else
+	{
+		if(f!=var->v(c,r,kz))
+		{
+			if(mgl_isnan(f))	s="nan";
+			else if(mgl_isbad(f))	s=f>0?"inf":"-inf";
+			else	s.sprintf("%g", f);
+			tab->item(r,c)->setText(s);
+		}
+		var->set_v(f,c,r,kz);
+	}
 	infoDlg->refresh();
 }
 //-----------------------------------------------------------------------------

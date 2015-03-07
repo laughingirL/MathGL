@@ -793,7 +793,7 @@ mglDataC MGL_NO_EXPORT mglFormulaCalcC(std::wstring str, mglParser *arg, const s
 		HCDT v = (str!=L"#$mgl")?FindVar(head, str):0;
 		mglNum *f = arg?arg->FindNum(str.c_str()):0;
 		if(v)	res = v;
-		else if(f)	res.a[0] = mgl_isnan(f->d) ? f->c : f->d;
+		else if(f)	res.a[0] = f->c;
 		else if(!str.compare(L":"))		res.a[0] = -1;
 		else
 		{

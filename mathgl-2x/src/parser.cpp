@@ -349,14 +349,14 @@ void mglParser::FillArg(mglGraph *gr, int k, std::wstring *arg, mglArg *a)
 			mglDataC d = mglFormulaCalcC(arg[n].substr(1), this, DataList);
 			if(d.GetNN()==1)
 			{
-				if(CheckForName(arg[n]))
+				if(CheckForName(arg[n].substr(1)))
 				{	a[n-1].type = 2;	a[n-1].v = d.v(0);	a[n-1].c = d.a[0];	}
 				else
 				{	a[n-1].type = 0;	a[n-1].d = AddVar(arg[n].c_str());	}
 			}
 			else
 			{
-				mglDataC *u=new mglDataC;	u->Set(d);
+				mglDataC *u=new mglDataC(d);
 				a[n-1].w = L"/*"+arg[n]+L"*/";
 				u->temp=true;	DataList.push_back(u);
 				a[n-1].type = 0;	a[n-1].d = u;
@@ -374,7 +374,7 @@ void mglParser::FillArg(mglGraph *gr, int k, std::wstring *arg, mglArg *a)
 			}
 			else
 			{
-				mglData *u=new mglData;	u->Set(d);
+				mglData *u=new mglData(d);
 				a[n-1].w = L"/*"+arg[n]+L"*/";
 				u->temp=true;	DataList.push_back(u);
 				a[n-1].type = 0;	a[n-1].d = u;
