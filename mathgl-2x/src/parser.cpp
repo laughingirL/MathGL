@@ -48,7 +48,7 @@ long mglParser::IsFunc(const std::wstring &name, int *na)
 	{
 		const mglFunc &f = func[i];
 		if(f.func==name)
-		{	if(na)	*na=f.narg;	return f.pos;	}
+		{	if(na)	*na=f.narg;	return f.pos+1;	}
 	}
 	return 0;
 }
@@ -616,7 +616,7 @@ int mglParser::Parse(mglGraph *gr, std::wstring str, long pos)
 		if(!skip() && !arg[0].compare(L"stop"))
 		{	Stop = true;	delete []a;	return 0;	}
 		if(!arg[0].compare(L"func"))
-		{	delete []a;	return 0;	}
+		{	Stop = true;	delete []a;	return 0;	}
 		n = FlowExec(gr, arg[0].c_str(),k-1,a);
 		if(n)		{	delete []a;	return n-1;	}
 		if(skip())	{	delete []a;	return 0;	}
