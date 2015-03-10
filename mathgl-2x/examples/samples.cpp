@@ -1820,21 +1820,21 @@ void smgl_boxs(mglGraph *gr)
 	gr->Rotate(50,60);	gr->Box();	gr->Tile(a);
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_fit="new rnd 100 '0.4*rnd+0.1+sin(2*pi*x)'\nnew in 100 '0.3+sin(2*pi*x)'\n"
-"list ini 1 1 3:fit res rnd 'a+b*sin(c*x)' 'abc' ini\n"
-"title 'Fitting sample':yrange -2 2:box:axis:plot rnd 'k. '\n"
+const char *mmgl_fit="new dat 100 '0.4*rnd+0.1+sin(2*pi*x)'\nnew in 100 '0.3+sin(2*pi*x)'\n"
+"list ini 1 1 3:fit res dat 'a+b*sin(c*x)' 'abc' ini\n"
+"title 'Fitting sample':yrange -2 2:box:axis:plot dat 'k. '\n"
 "plot res 'r':plot in 'b'\ntext -0.9 -1.3 'fitted:' 'r:L'\n"
 "putsfit 0 -1.8 'y = ' 'r':text 0 2.2 'initial: y = 0.3+sin(2\\pi x)' 'b'";
 void smgl_fit(mglGraph *gr)	// nonlinear fitting
 {
-	mglData rnd(100), in(100), res;
-	gr->Fill(rnd,"0.4*rnd+0.1+sin(2*pi*x)");
+	mglData dat(100), in(100), res;
+	gr->Fill(dat,"0.4*rnd+0.1+sin(2*pi*x)");
 	gr->Fill(in,"0.3+sin(2*pi*x)");
 	double ini[3] = {1,1,3};
 	mglData Ini(3,ini);
-	res = gr->Fit(rnd, "a+b*sin(c*x)", "abc", Ini);
+	res = gr->Fit(dat, "a+b*sin(c*x)", "abc", Ini);
 	if(big!=3)	gr->Title("Fitting sample");
-	gr->SetRange('y',-2,2);	gr->Box();	gr->Plot(rnd, "k. ");
+	gr->SetRange('y',-2,2);	gr->Box();	gr->Plot(dat, "k. ");
 	gr->Axis();		gr->Plot(res, "r");	gr->Plot(in, "b");
 	gr->Puts(mglPoint(-0.9, -1.3), "fitted:", "r:L");
 	gr->PutsFit(mglPoint(0, -1.8), "y = ", "r");

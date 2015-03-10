@@ -56,6 +56,8 @@ ZZ. Update *.i for new functions {before release!!!}
 18. Add everywhere mgl_check_version()
 19. Lighting per subplot or per object?!?
 
+20. Check 'text2' samples
+
 23. Check line width and dashing in OpenGL mode.
 
 
@@ -76,6 +78,7 @@ D. Docs about JS interface
 8. Add function real() and imag() to the list of known functions
 9. Add command "runge 'Expr1;Expr2;...' 'Var1;Var2;...' [dt]"
 10. Docs about mgl_set_size_scl()
+11. Name 'rnd' is reserved in MGL scripts now
 
 YY. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using Stem()
 

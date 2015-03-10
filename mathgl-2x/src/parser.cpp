@@ -791,6 +791,7 @@ int mglParser::Parse(mglGraph *gr, std::wstring str, long pos)
 		{
 			if(k==3)
 			{
+				DeleteVar(arg[1].c_str());	// force to delete variable with the same name
 				mglNum *v=AddNum(arg[1].c_str());
 				if(arg[2][0]=='!')	// complex number is added
 				{	v->d=NAN;	v->c = mglFormulaCalcC(arg[2].substr(1),this, DataList).a[0];	}
