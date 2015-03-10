@@ -269,11 +269,17 @@ void MGL_EXPORT mgl_set_obj_id_(uintptr_t *gr, int *id)		{	_GR_->SetObjId(*id);	
 int MGL_EXPORT_PURE mgl_get_obj_id_(uintptr_t *gr, int *x, int *y)	{	return _GR_->GetObjId(*x,*y);	}
 int MGL_EXPORT_PURE mgl_get_spl_id_(uintptr_t *gr, int *x, int *y)	{	return _GR_->GetSplId(*x,*y);	}
 //-----------------------------------------------------------------------------
+double mgl_size_scl = 1;
 HMGL MGL_EXPORT mgl_create_graph(int width, int height)
 {	return new mglCanvas(width,height);	}
 void MGL_EXPORT mgl_delete_graph(HMGL gr)	{	if(gr)	delete gr;	}
+void MGL_EXPORT mgl_set_size_scl(double scl){	if(scl>0)	mgl_size_scl = scl;	}
 void MGL_EXPORT mgl_set_size(HMGL gr, int width, int height)
-{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->SetSize(width, height);	}
+{
+	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);
+	width = int(mgl_size_scl*width);	height = int(mgl_size_scl*height);
+	if(g)	g->SetSize(width, height);
+}
 void MGL_EXPORT mgl_set_def_param(HMGL gr)
 {	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->DefaultPlotParam();	}
 void MGL_EXPORT mgl_combine_gr(HMGL gr, HMGL in)
@@ -353,8 +359,9 @@ void MGL_EXPORT mgl_set_legend_marks(HMGL gr, int num)
 uintptr_t MGL_EXPORT mgl_create_graph_(int *width, int *height)
 {	return uintptr_t(new mglCanvas(*width,*height));	}
 void MGL_EXPORT mgl_delete_graph_(uintptr_t *gr)	{	delete _GR_;	}
+void MGL_EXPORT mgl_set_size_scl_(double *scl)	{	mgl_set_size_scl(*scl);	}
 void MGL_EXPORT mgl_set_size_(uintptr_t *gr, int *width, int *height)
-{	_GR_->SetSize(*width,*height);	}
+{	mgl_set_size(_GR_,*width,*height);	}
 void MGL_EXPORT mgl_set_def_param_(uintptr_t *gr)	{	_GR_->DefaultPlotParam();	}
 void MGL_EXPORT mgl_combine_gr_(uintptr_t *gr, uintptr_t *in)
 {	_GR_->Combine((mglCanvas *)in);	}

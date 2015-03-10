@@ -323,6 +323,8 @@ public:
 
 	/// Set size of frame in pixels. Normally this function is called internally.
 	inline void SetSize(int width, int height)	{	mgl_set_size(gr, width, height);	}
+	/// Scaling for all further set size calls.
+	static inline void SetSizeScl(double scl)	{	mgl_set_size_scl(scl);	}
 	/// Set plot quality
 	inline void SetQuality(int qual=MGL_DRAW_NORM)	{	mgl_set_quality(gr, qual);	}
 	/// Get plot quality

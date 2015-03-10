@@ -34,6 +34,9 @@ void MGL_EXPORT mgl_delete_graph_(uintptr_t *gr);
 /// Set size of frame in pixels. Normally this function is called internally.
 void MGL_EXPORT mgl_set_size(HMGL gr, int width, int height);
 void MGL_EXPORT mgl_set_size_(uintptr_t *gr, int *width, int *height);
+/// Scaling for all further set size calls.
+void MGL_EXPORT mgl_set_size_scl(double scl);
+void MGL_EXPORT mgl_set_size_scl_(double *scl);
 /// Set default parameters for plotting
 void MGL_EXPORT mgl_set_def_param(HMGL gr);
 void MGL_EXPORT mgl_set_def_param_(uintptr_t *gr);

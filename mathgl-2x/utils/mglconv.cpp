@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
 
 	while(1)
 	{
-		ch = getopt(argc, argv, "1:2:3:4:5:6:7:8:9:hno:L:C:A:s:");
+		ch = getopt(argc, argv, "1:2:3:4:5:6:7:8:9:hno:L:C:A:s:S:");
 		if(ch>='1' && ch<='9')	p.AddParam(ch-'0', optarg);
 		else if(ch=='s')
 		{
@@ -50,6 +50,7 @@ int main(int argc, char *argv[])
 		}
 		else if(ch=='n')	none = true;
 		else if(ch=='L')	setlocale(LC_CTYPE, optarg);
+		else if(ch=='S')	mgl_set_size_scl(atof(optarg));
 		else if(ch=='A')
 		{
 			std::wstring str;
@@ -78,6 +79,7 @@ int main(int argc, char *argv[])
 				"\t-9 str       set str as argument $9 for script\n"
 				"\t-L loc       set locale to loc\n"
 				"\t-s opt       set MGL script for setting up the plot\n"
+				"\t-S val       set scaling factor for images\n"
 				"\t-o name      set output file name\n"
 				"\t-n           no manual output (script should save results by itself)\n"
 				"\t-A val       add animation value val\n"

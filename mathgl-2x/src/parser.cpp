@@ -284,9 +284,169 @@ int MGL_LOCAL_PURE mglFindArg(const std::wstring &str)
 	return 0;
 }
 //-----------------------------------------------------------------------------
-// convert substrings to arguments
 mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring string, mglParser *arg, const std::vector<mglDataA*> &head);
 mglDataC MGL_NO_EXPORT mglFormulaCalcC(std::wstring string, mglParser *arg, const std::vector<mglDataA*> &head);
+//-----------------------------------------------------------------------------
+struct mglRKdat
+{
+	mglDataA *v;
+	std::wstring e;
+	bool cmplx;
+	mglDataC cin,c1,c2,c3,c4, *cc;
+	mglData  din,d1,d2,d3,d4, *dd;
+	mglRKdat(mglDataA *var, std::wstring &eq):v(var), e(eq)
+	{	cmplx = dynamic_cast<mglDataC*>(var);	cc=0;	dd=0;	}
+	void allocate()
+	{
+		if(cmplx)
+		{	cc = dynamic_cast<mglDataC*>(v);	cin.Set(v);	}
+		else
+		{	dd = dynamic_cast<mglData*>(v);		din.Set(v);	}
+	}
+};
+void MGL_NO_EXPORT mgl_runge_kutta(HMPR pr, const std::wstring &eqs, const std::wstring &vars, mreal dt)
+{
+	std::vector<mglRKdat> rkv;
+	size_t iv=0,jv=0,ie=0,je=0;
+	while(1)
+	{
+		iv = vars.find(';',jv);	ie = eqs.find(';',je);
+		mglDataA *vv=mgl_parser_find_varw(pr,vars.substr(jv,iv).c_str());
+		std::wstring eq = eqs.substr(je,ie).c_str();
+		if(vv)	rkv.push_back(mglRKdat(vv, eq ));
+		jv = iv+1;	je = ie+1;
+		if(iv==std::wstring::npos || ie==std::wstring::npos)	break;
+	}
+	for(long i=0;i<rkv.size();i++)	rkv[i].allocate();
+	mreal hh = dt/2;
+	for(long i=0;i<rkv.size();i++)
+	{
+		mglRKdat &rk = rkv[i];
+		if(rk.cmplx)	rk.c1 = mglFormulaCalcC(rk.e, pr, pr->DataList);
+		else	rk.d1 = mglFormulaCalc(rk.e, pr, pr->DataList);
+	}
+	for(long i=0;i<rkv.size();i++)
+	{
+		mglRKdat &rk = rkv[i];
+		if(rk.cc)
+		{
+			long n = rk.cc->GetNN();	dual a = hh*rk.c1.a[0];
+			if(rk.c1.GetNN()==n)
+#pragma omp parallel for
+				for(long j=0;j<n;j++)	rk.cc->a[j] = rk.cin.a[j] + hh*rk.c1.a[j];
+			else
+#pragma omp parallel for
+				for(long j=0;j<n;j++)	rk.cc->a[j] = rk.cin.a[j] + a;
+		}
+		if(rk.dd)
+		{
+			long n = rk.dd->GetNN();	mreal a = hh*rk.d1.a[0];
+			if(rk.d1.GetNN()==n)
+#pragma omp parallel for
+				for(long j=0;j<n;j++)	rk.dd->a[j] = rk.din.a[j] + hh*rk.d1.a[j];
+			else
+#pragma omp parallel for
+				for(long j=0;j<n;j++)	rk.dd->a[j] = rk.din.a[j] + a;
+		}
+	}
+
+	for(long i=0;i<rkv.size();i++)
+	{
+		mglRKdat &rk = rkv[i];
+		if(rk.cmplx)	rk.c2 = mglFormulaCalcC(rk.e, pr, pr->DataList);
+		else	rk.d2 = mglFormulaCalc(rk.e, pr, pr->DataList);
+	}
+	for(long i=0;i<rkv.size();i++)
+	{
+		mglRKdat &rk = rkv[i];
+		if(rk.cc)
+		{
+			long n = rk.cc->GetNN();	dual a = hh*rk.c2.a[0];
+			if(rk.c2.GetNN()==n)
+#pragma omp parallel for
+				for(long j=0;j<n;j++)	rk.cc->a[j] = rk.cin.a[j] + hh*rk.c2.a[j];
+			else
+#pragma omp parallel for
+				for(long j=0;j<n;j++)	rk.cc->a[j] = rk.cin.a[j] + a;
+		}
+		if(rk.dd)
+		{
+			long n = rk.dd->GetNN();	mreal a = hh*rk.d2.a[0];
+			if(rk.d2.GetNN()==n)
+#pragma omp parallel for
+				for(long j=0;j<n;j++)	rk.dd->a[j] = rk.din.a[j] + hh*rk.d2.a[j];
+			else
+#pragma omp parallel for
+				for(long j=0;j<n;j++)	rk.dd->a[j] = rk.din.a[j] + a;
+		}
+	}
+
+	for(long i=0;i<rkv.size();i++)
+	{
+		mglRKdat &rk = rkv[i];
+		if(rk.cmplx)	rk.c3 = mglFormulaCalcC(rk.e, pr, pr->DataList);
+		else	rk.d3 = mglFormulaCalc(rk.e, pr, pr->DataList);
+	}
+	for(long i=0;i<rkv.size();i++)
+	{
+		mglRKdat &rk = rkv[i];
+		if(rk.cc)
+		{
+			long n = rk.cc->GetNN();	dual a = dt*rk.c3.a[0];
+			if(rk.c3.GetNN()==n)
+#pragma omp parallel for
+				for(long j=0;j<n;j++)	rk.cc->a[j] = rk.cin.a[j] + dt*rk.c3.a[j];
+			else
+#pragma omp parallel for
+				for(long j=0;j<n;j++)	rk.cc->a[j] = rk.cin.a[j] + a;
+		}
+		if(rk.dd)
+		{
+			long n = rk.dd->GetNN();	mreal a = dt*rk.d3.a[0];
+			if(rk.d3.GetNN()==n)
+#pragma omp parallel for
+				for(long j=0;j<n;j++)	rk.dd->a[j] = rk.din.a[j] + dt*rk.d3.a[j];
+			else
+#pragma omp parallel for
+				for(long j=0;j<n;j++)	rk.dd->a[j] = rk.din.a[j] + a;
+		}
+	}
+
+	for(long i=0;i<rkv.size();i++)
+	{
+		mglRKdat &rk = rkv[i];
+		if(rk.cmplx)	rk.c4 = mglFormulaCalcC(rk.e, pr, pr->DataList);
+		else	rk.d4 = mglFormulaCalc(rk.e, pr, pr->DataList);
+	}
+	for(long i=0;i<rkv.size();i++)
+	{
+		mglRKdat &rk = rkv[i];
+		if(rk.cc)
+		{
+			long n = rk.cc->GetNN();
+			dual a = (rk.c1.a[0]+rk.c2.a[0]+mreal(2)*(rk.c3.a[0]+rk.c4.a[0]))*(dt/6);
+			if(rk.c1.GetNN()==n)
+#pragma omp parallel for
+				for(long j=0;j<n;j++)	rk.cc->a[j] = rk.cin.a[j] + (rk.c1.a[j]+rk.c2.a[j]+mreal(2)*(rk.c3.a[j]+rk.c4.a[j]))*(dt/6);
+			else
+#pragma omp parallel for
+				for(long j=0;j<n;j++)	rk.cc->a[j] = rk.cin.a[j] + a;
+		}
+		if(rk.dd)
+		{
+			long n = rk.dd->GetNN();
+			mreal a = (rk.d1.a[0]+rk.d2.a[0]+2*(rk.d3.a[0]+rk.d4.a[0]))*(dt/6);
+			if(rk.d1.GetNN()==n)
+#pragma omp parallel for
+				for(long j=0;j<n;j++)	rk.dd->a[j] = rk.din.a[j] + (rk.d1.a[j]+rk.d2.a[j]+2*(rk.d3.a[j]+rk.d4.a[j]))*(dt/6);
+			else
+#pragma omp parallel for
+				for(long j=0;j<n;j++)	rk.dd->a[j] = rk.din.a[j] + a;
+		}
+	}
+}
+//---------------------------------------------------------------------------
+// convert substrings to arguments
 void mglParser::FillArg(mglGraph *gr, int k, std::wstring *arg, mglArg *a)
 {
 	register long n;
@@ -639,6 +799,18 @@ int mglParser::Parse(mglGraph *gr, std::wstring str, long pos)
 			}
 			delete []a;	return k==3?0:1;
 		}
+		if(!arg[0].compare(L"rkstep"))
+		{
+			int res=1;
+			if(k>2 && a[0].type==1 && a[1].type==1)
+			{
+				std::wstring a1 = arg[1], a2=arg[2];	res = 0;
+				if(a1[0]=='\'')	a1 = a1.substr(1,a1.length()-2);
+				if(a2[0]=='\'')	a2 = a2.substr(1,a2.length()-2);
+				mgl_runge_kutta(this, a1, a2, (k>=3 && a[2].type==2)?a[2].v:1);
+			}
+			delete []a;	return 0;
+		}
 		if(!arg[0].compare(L"call"))
 		{
 			n = 1;
@@ -895,13 +1067,14 @@ void mglParser::Execute(mglGraph *gr, int n, const wchar_t **text)
 		else if(r==2)	snprintf(buf,64,"\nWrong command in line %ld\n", i+1);
 		else if(r==3)	snprintf(buf,64,"\nString too long in line %ld\n", i+1);
 		else if(r==4)	snprintf(buf,64,"\nUnbalanced ' in line %ld\n", i+1);
+		else if(r==5)	snprintf(buf,64,"\nChange temporary data in line %ld\n", i+1);
 		else if(gr->GetWarn()>0)	snprintf(buf,64," in line %ld\n", i+1);
 		else *buf=0;
 		buf[63] = 0;
 		if(*buf)	gr->SetWarn(-2,buf);
 		if(r>0 && r<5)	res=r;
 	}
-	int code[]={mglScrArg,	mglScrCmd,	mglScrLong,	mglScrStr};
+	int code[]={mglScrArg,	mglScrCmd,	mglScrLong,	mglScrStr, mglScrTemp};
 	if(res>0)	gr->SetWarn(code[res-1],"MGL Parser");
 }
 //-----------------------------------------------------------------------------

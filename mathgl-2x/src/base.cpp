@@ -193,7 +193,8 @@ const char *mglWarn[mglWarnEnd] = {"data dimension(s) is incompatible",	//mglWar
 								"There are wrong argument(s) in script",//mglScrArg
 								"There are wrong command in script",	//mglScrCmd
 								"There are too long string in script",	//mglScrLong
-								"There are unbalanced ' in script"};	//mglScrStr
+								"There are unbalanced ' in script",		//mglScrStr
+								"There are changing temporary data in script"};	//mglScrTemp
 //-----------------------------------------------------------------------------
 extern bool mglPrintWarn;
 void mglBase::SetWarn(int code, const char *who)

@@ -55,9 +55,8 @@ ZZ. Update *.i for new functions {before release!!!}
 17. Iris plot -- https://en.wikipedia.org/wiki/Iris_flower_data_set
 18. Add everywhere mgl_check_version()
 19. Lighting per subplot or per object?!?
-#22. PDE extended as split-step: FFT(as function of p,q,vars), MUL(as function x,y,vars), SET(just copy), STP(like Runge-Kutta step for complex nonlinearity). Here 'dt' is time?!? or name as 'pde_step' (no need time step)
-22. Add command "runge '[var1]expr1' '[var2]expr2' ...; value dt=1" -- level of HMPR
 
+23. Check line width and dashing in OpenGL mode.
 
 
 ============= DOCUMENTATION =============
@@ -75,6 +74,8 @@ D. Docs about JS interface
 6. Docs about mgl_parser_calc_complex()
 7. Symbol '!' before formula denote complex array in MGL
 8. Add function real() and imag() to the list of known functions
+9. Add command "runge 'Expr1;Expr2;...' 'Var1;Var2;...' [dt]"
+10. Docs about mgl_set_size_scl()
 
 YY. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using Stem()
 
