@@ -560,7 +560,7 @@ void MGL_EXPORT mgl_datac_roll(HADT dd, char dir, long num)
 	dual *b,*a=dd->a;
 	if(dir=='z' && nz>1)
 	{
-		d = num>0 ? num%nz : (num+nz*(1+num/nz))%nz;
+		d = num>0 ? num%nz : (num+nz*(1-num/nz))%nz;
 		if(d==0)	return;		// nothing to do
 		b = new dual[nx*ny*nz];
 		memcpy(b,a+nx*ny*d,nx*ny*(nz-d)*sizeof(dual));
@@ -569,7 +569,7 @@ void MGL_EXPORT mgl_datac_roll(HADT dd, char dir, long num)
 	}
 	if(dir=='y' && ny>1)
 	{
-		d = num>0 ? num%ny : (num+ny*(1+num/ny))%ny;
+		d = num>0 ? num%ny : (num+ny*(1-num/ny))%ny;
 		if(d==0)	return;		// nothing to do
 		b = new dual[nx*ny*nz];
 		memcpy(b,a+nx*d,(nx*ny*nz-nx*d)*sizeof(dual));
@@ -580,7 +580,7 @@ void MGL_EXPORT mgl_datac_roll(HADT dd, char dir, long num)
 	}
 	if(dir=='x' && nx>1)
 	{
-		d = num>0 ? num%nx : (num+nx*(1+num/nx))%nx;
+		d = num>0 ? num%nx : (num+nx*(1-num/nx))%nx;
 		if(d==0)	return;		// nothing to do
 		b = new dual[nx*ny*nz];
 		memcpy(b,a+d,(nx*ny*nz-d)*sizeof(dual));

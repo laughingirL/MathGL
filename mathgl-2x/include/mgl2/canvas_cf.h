@@ -492,6 +492,11 @@ void MGL_EXPORT mgl_parser_del_all_(uintptr_t *p);
 void MGL_EXPORT mgl_parser_load(HMPR pr, const char *dll_name);
 void MGL_EXPORT mgl_parser_load_(uintptr_t *pr, const char *dll_name,int);
 
+/// Apply one step for equation d vars[i]/dt = eqs[i] using Runge-Kutta method
+void MGL_EXPORT mgl_rk_step(HMPR pr, const char *eqs, const char *vars, mreal dt);
+void MGL_EXPORT mgl_rk_step_w(HMPR pr, const wchar_t *eqs, const wchar_t *vars, mreal dt);
+void MGL_EXPORT mgl_rk_step_(uintptr_t *p, const char *eqs, const char *vars, double *dt, int,int);
+
 /// Parse and draw single line of the MGL script
 int MGL_EXPORT mgl_parse_line(HMGL gr, HMPR p, const char *str, int pos);
 int MGL_EXPORT mgl_parse_line_(uintptr_t* gr, uintptr_t* p, const char *str, int *pos, int);

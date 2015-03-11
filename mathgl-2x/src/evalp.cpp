@@ -46,81 +46,215 @@ mglDataC MGL_NO_EXPORT mglFormulaCalcC(const char *str, const std::vector<mglDat
 //-----------------------------------------------------------------------------
 void mglApplyFunc(mglData &d, double (*func)(double))
 {
-	long n = d.nx*d.ny*d.nz;
+	long n = d.GetNN();	mreal *dd=d.a;
 #pragma omp parallel for
-	for(long i=0;i<n;i++)	d.a[i] = func(d.a[i]);
+	for(long i=0;i<n;i++)	d.a[i] = func(dd[i]);
 }
 //-----------------------------------------------------------------------------
 mglData mglApplyOper(std::wstring a1, std::wstring a2, mglParser *arg, const std::vector<mglDataA*> &head, double (*func)(double,double))
 {
 	const mglData &a = mglFormulaCalc(a1,arg,head), &b = mglFormulaCalc(a2,arg,head);
-	long n = mgl_max(a.nx,b.nx), m = mgl_max(a.ny,b.ny), l = mgl_max(a.nz,b.nz);
-	mglData r(n, m, l);
-	if(a.nx==b.nx && b.ny==a.ny && b.nz==a.nz)
+	long na = a.GetNN(), nb = b.GetNN(), n,m,l;
+	mglData r;
+	if(na!=1)	r.Create(a.nx,a.ny,a.nz);
+	else		r.Create(b.nx,b.ny,b.nz);
+	mreal va=a.a[0], vb=b.a[0], *aa=a.a, *bb=b.a;
+	if(na==nb)
 #pragma omp parallel for
-		for(long i=0;i<n*m*l;i++)	r.a[i] = func(a.a[i], b.a[i]);
-	else if(b.nx*b.ny*b.nz==1)
+		for(long i=0;i<na;i++)	r.a[i] = func(aa[i], bb[i]);
+	else if(na==1)
 #pragma omp parallel for
-		for(long i=0;i<a.nx*a.ny*a.nz;i++)	r.a[i] = func(a.a[i],b.a[0]);
-	else if(a.nx*a.ny*a.nz==1)
+		for(long i=0;i<nb;i++)	r.a[i] = func(va,bb[i]);
+	else
 #pragma omp parallel for
-		for(long i=0;i<b.nx*b.ny*b.nz;i++)	r.a[i] = func(a.a[0],b.a[i]);
-	else if(a.nx==b.nx && b.ny*b.nz==1)
-#pragma omp parallel for collapse(2)
-		for(long j=0;j<a.ny*a.nz;j++)	for(long i=0;i<n;i++)
-			r.a[i+n*j] = func(a.a[i+n*j], b.a[i]);
-	else if(a.nx==b.nx && a.ny*a.nz==1)
-#pragma omp parallel for collapse(2)
-		for(long i=0;i<n;i++)	for(long j=0;j<b.ny*b.nz;j++)
-			r.a[i+n*j] = func(a.a[i], b.a[i+n*j]);
-	else if(a.nx==b.nx && b.ny==a.ny && b.nz==1)
-#pragma omp parallel for collapse(3)
-		for(long k=0;k<a.nz;k++)	for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
-			r.a[i+n*(j+m*k)] = func(a.a[i+n*(j+m*k)], b.a[i+n*j]);
-	else if(a.nx==b.nx && b.ny==a.ny && a.nz==1)
-#pragma omp parallel for collapse(3)
-		for(long k=0;k<b.nz;k++)	for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
-			r.a[i+n*(j+m*k)] = func(a.a[i+n*j], b.a[i+n*(j+m*k)]);
+		for(long i=0;i<na;i++)	r.a[i] = func(aa[i],vb);
+	return r;
+}
+//-----------------------------------------------------------------------------
+mglData mglApplyOperAdd(std::wstring a1, std::wstring a2, mglParser *arg, const std::vector<mglDataA*> &head)
+{
+	const mglData &a = mglFormulaCalc(a1,arg,head), &b = mglFormulaCalc(a2,arg,head);
+	long na = a.GetNN(), nb = b.GetNN(), n,m,l;
+	mglData r;
+	if(na!=1)	r.Create(a.nx,a.ny,a.nz);
+	else		r.Create(b.nx,b.ny,b.nz);
+	mreal va=a.a[0], vb=b.a[0], *aa=a.a, *bb=b.a;
+	if(na==nb)
+#pragma omp parallel for
+		for(long i=0;i<na;i++)	r.a[i] = aa[i]+bb[i];
+	else if(na==1)
+#pragma omp parallel for
+		for(long i=0;i<nb;i++)	r.a[i] = va+bb[i];
+	else
+#pragma omp parallel for
+		for(long i=0;i<na;i++)	r.a[i] = aa[i]+vb;
+	return r;
+}
+//-----------------------------------------------------------------------------
+mglData mglApplyOperSub(std::wstring a1, std::wstring a2, mglParser *arg, const std::vector<mglDataA*> &head)
+{
+	const mglData &a = mglFormulaCalc(a1,arg,head), &b = mglFormulaCalc(a2,arg,head);
+	long na = a.GetNN(), nb = b.GetNN(), n,m,l;
+	mglData r;
+	if(na!=1)	r.Create(a.nx,a.ny,a.nz);
+	else		r.Create(b.nx,b.ny,b.nz);
+	mreal va=a.a[0], vb=b.a[0], *aa=a.a, *bb=b.a;
+	if(na==nb)
+#pragma omp parallel for
+		for(long i=0;i<na;i++)	r.a[i] = aa[i]-bb[i];
+	else if(na==1)
+#pragma omp parallel for
+		for(long i=0;i<nb;i++)	r.a[i] = va-bb[i];
+	else
+#pragma omp parallel for
+		for(long i=0;i<na;i++)	r.a[i] = aa[i]-vb;
+	return r;
+}
+//-----------------------------------------------------------------------------
+mglData mglApplyOperMul(std::wstring a1, std::wstring a2, mglParser *arg, const std::vector<mglDataA*> &head)
+{
+	const mglData &a = mglFormulaCalc(a1,arg,head), &b = mglFormulaCalc(a2,arg,head);
+	long na = a.GetNN(), nb = b.GetNN(), n,m,l;
+	mglData r;
+	if(na!=1)	r.Create(a.nx,a.ny,a.nz);
+	else		r.Create(b.nx,b.ny,b.nz);
+	mreal va=a.a[0], vb=b.a[0], *aa=a.a, *bb=b.a;
+	if(na==nb)
+#pragma omp parallel for
+		for(long i=0;i<na;i++)	r.a[i] = aa[i]*bb[i];
+	else if(na==1)
+#pragma omp parallel for
+		for(long i=0;i<nb;i++)	r.a[i] = va*bb[i];
+	else
+#pragma omp parallel for
+		for(long i=0;i<na;i++)	r.a[i] = aa[i]*vb;
+	return r;
+}
+//-----------------------------------------------------------------------------
+mglData mglApplyOperDiv(std::wstring a1, std::wstring a2, mglParser *arg, const std::vector<mglDataA*> &head)
+{
+	const mglData &a = mglFormulaCalc(a1,arg,head), &b = mglFormulaCalc(a2,arg,head);
+	long na = a.GetNN(), nb = b.GetNN(), n,m,l;
+	mglData r;
+	if(na!=1)	r.Create(a.nx,a.ny,a.nz);
+	else		r.Create(b.nx,b.ny,b.nz);
+	mreal va=a.a[0], vb=b.a[0], *aa=a.a, *bb=b.a;
+	if(na==nb)
+#pragma omp parallel for
+		for(long i=0;i<na;i++)	r.a[i] = aa[i]/bb[i];
+	else if(na==1)
+#pragma omp parallel for
+		for(long i=0;i<nb;i++)	r.a[i] = va/bb[i];
+	else
+#pragma omp parallel for
+		for(long i=0;i<na;i++)	r.a[i] = aa[i]/vb;
 	return r;
 }
 //-----------------------------------------------------------------------------
 void mglApplyFuncC(mglDataC &d, dual (*func)(dual))
 {
-	long n = d.nx*d.ny*d.nz;
+	long n = d.GetNN();	dual *dd = d.a;
 #pragma omp parallel for
-	for(long i=0;i<n;i++)	d.a[i] = func(d.a[i]);
+	for(long i=0;i<n;i++)	d.a[i] = func(dd[i]);
 }
 //-----------------------------------------------------------------------------
 mglDataC mglApplyOperC(std::wstring a1, std::wstring a2, mglParser *arg, const std::vector<mglDataA*> &head, dual (*func)(dual,dual))
 {
 	const mglDataC &a = mglFormulaCalcC(a1,arg,head), &b = mglFormulaCalcC(a2,arg,head);
-	long n = mgl_max(a.nx,b.nx), m = mgl_max(a.ny,b.ny), l = mgl_max(a.nz,b.nz);
-	mglDataC r(n, m, l);
-	if(b.nx*b.ny*b.nz==1)
+	long na = a.GetNN(), nb = b.GetNN(), n,m,l;
+	mglDataC r;
+	if(na!=1)	r.Create(a.nx,a.ny,a.nz);
+	else		r.Create(b.nx,b.ny,b.nz);
+	dual va=a.a[0], vb=b.a[0], *aa=a.a, *bb=b.a;
+	if(na==nb)
 #pragma omp parallel for
-		for(long i=0;i<a.nx*a.ny*a.nz;i++)	r.a[i] = func(a.a[i],b.a[0]);
-	else if(a.nx*a.ny*a.nz==1)
+		for(long i=0;i<na;i++)	r.a[i] = func(aa[i], bb[i]);
+	else if(na==1)
 #pragma omp parallel for
-		for(long i=0;i<b.nx*b.ny*b.nz;i++)	r.a[i] = func(a.a[0],b.a[i]);
-	else if(a.nx==b.nx && b.ny==a.ny && b.nz==a.nz)
+		for(long i=0;i<nb;i++)	r.a[i] = func(va,bb[i]);
+	else
 #pragma omp parallel for
-		for(long i=0;i<n*m*l;i++)	r.a[i] = func(a.a[i], b.a[i]);
-	else if(a.nx==b.nx && b.ny*b.nz==1)
-#pragma omp parallel for collapse(2)
-		for(long j=0;j<a.ny*a.nz;j++)	for(long i=0;i<n;i++)
-			r.a[i+n*j] = func(a.a[i+n*j], b.a[i]);
-	else if(a.nx==b.nx && a.ny*a.nz==1)
-#pragma omp parallel for collapse(2)
-		for(long i=0;i<n;i++)	for(long j=0;j<b.ny*b.nz;j++)
-			r.a[i+n*j] = func(a.a[i], b.a[i+n*j]);
-	else if(a.nx==b.nx && b.ny==a.ny && b.nz==1)
-#pragma omp parallel for collapse(3)
-		for(long k=0;k<a.nz;k++)	for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
-			r.a[i+n*(j+m*k)] = func(a.a[i+n*(j+m*k)], b.a[i+n*j]);
-	else if(a.nx==b.nx && b.ny==a.ny && a.nz==1)
-#pragma omp parallel for collapse(3)
-		for(long k=0;k<b.nz;k++)	for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
-			r.a[i+n*(j+m*k)] = func(a.a[i+n*j], b.a[i+n*(j+m*k)]);
+		for(long i=0;i<na;i++)	r.a[i] = func(aa[i],vb);
+	return r;
+}
+//-----------------------------------------------------------------------------
+mglDataC mglApplyOperAddC(std::wstring a1, std::wstring a2, mglParser *arg, const std::vector<mglDataA*> &head)
+{
+	const mglDataC &a = mglFormulaCalcC(a1,arg,head), &b = mglFormulaCalcC(a2,arg,head);
+	long na = a.GetNN(), nb = b.GetNN(), n,m,l;
+	mglDataC r;
+	if(na!=1)	r.Create(a.nx,a.ny,a.nz);
+	else		r.Create(b.nx,b.ny,b.nz);
+	dual va=a.a[0], vb=b.a[0], *aa=a.a, *bb=b.a;
+	if(na==nb)
+#pragma omp parallel for
+		for(long i=0;i<na;i++)	r.a[i] = aa[i]+bb[i];
+	else if(na==1)
+#pragma omp parallel for
+		for(long i=0;i<nb;i++)	r.a[i] = va+bb[i];
+	else
+#pragma omp parallel for
+		for(long i=0;i<na;i++)	r.a[i] = aa[i]+vb;
+	return r;
+}
+//-----------------------------------------------------------------------------
+mglDataC mglApplyOperSubC(std::wstring a1, std::wstring a2, mglParser *arg, const std::vector<mglDataA*> &head)
+{
+	const mglDataC &a = mglFormulaCalcC(a1,arg,head), &b = mglFormulaCalcC(a2,arg,head);
+	long na = a.GetNN(), nb = b.GetNN(), n,m,l;
+	mglDataC r;
+	if(na!=1)	r.Create(a.nx,a.ny,a.nz);
+	else		r.Create(b.nx,b.ny,b.nz);
+	dual va=a.a[0], vb=b.a[0], *aa=a.a, *bb=b.a;
+	if(na==nb)
+#pragma omp parallel for
+		for(long i=0;i<na;i++)	r.a[i] = aa[i]-bb[i];
+	else if(na==1)
+#pragma omp parallel for
+		for(long i=0;i<nb;i++)	r.a[i] = va-bb[i];
+	else
+#pragma omp parallel for
+		for(long i=0;i<na;i++)	r.a[i] = aa[i]-vb;
+	return r;
+}
+//-----------------------------------------------------------------------------
+mglDataC mglApplyOperMulC(std::wstring a1, std::wstring a2, mglParser *arg, const std::vector<mglDataA*> &head)
+{
+	const mglDataC &a = mglFormulaCalcC(a1,arg,head), &b = mglFormulaCalcC(a2,arg,head);
+	long na = a.GetNN(), nb = b.GetNN(), n,m,l;
+	mglDataC r;
+	if(na!=1)	r.Create(a.nx,a.ny,a.nz);
+	else		r.Create(b.nx,b.ny,b.nz);
+	dual va=a.a[0], vb=b.a[0], *aa=a.a, *bb=b.a;
+	if(na==nb)
+#pragma omp parallel for
+		for(long i=0;i<na;i++)	r.a[i] = aa[i]*bb[i];
+	else if(na==1)
+#pragma omp parallel for
+		for(long i=0;i<nb;i++)	r.a[i] = va*bb[i];
+	else
+#pragma omp parallel for
+		for(long i=0;i<na;i++)	r.a[i] = aa[i]*vb;
+	return r;
+}
+//-----------------------------------------------------------------------------
+mglDataC mglApplyOperDivC(std::wstring a1, std::wstring a2, mglParser *arg, const std::vector<mglDataA*> &head)
+{
+	const mglDataC &a = mglFormulaCalcC(a1,arg,head), &b = mglFormulaCalcC(a2,arg,head);
+	long na = a.GetNN(), nb = b.GetNN(), n,m,l;
+	mglDataC r;
+	if(na!=1)	r.Create(a.nx,a.ny,a.nz);
+	else		r.Create(b.nx,b.ny,b.nz);
+	dual va=a.a[0], vb=b.a[0], *aa=a.a, *bb=b.a;
+	if(na==nb)
+#pragma omp parallel for
+		for(long i=0;i<na;i++)	r.a[i] = aa[i]/bb[i];
+	else if(na==1)
+#pragma omp parallel for
+		for(long i=0;i<nb;i++)	r.a[i] = va/bb[i];
+	else
+#pragma omp parallel for
+		for(long i=0;i<na;i++)	r.a[i] = aa[i]/vb;
 	return r;
 }
 //-----------------------------------------------------------------------------
@@ -255,10 +389,10 @@ mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std
 		return mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, str[n]=='<'?clt:(str[n]=='>'?cgt:ceq));
 	n=mglFindInText(str,"+-");				// normal priority -- additions
 	if(n>=0 && (n<2 || str[n-1]!='e' || (str[n-2]!='.' && !isdigit(str[n-2]))))
-		return mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, str[n]=='+'?add:sub);
+		return str[n]=='+'? mglApplyOperAdd(str.substr(0,n),str.substr(n+1),arg, head) : mglApplyOperSub(str.substr(0,n),str.substr(n+1),arg, head);
 	n=mglFindInText(str,"*/");				// high priority -- multiplications
 	if(n>=0)
-		return mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, str[n]=='*'?mul:del);
+		return str[n]=='*'? mglApplyOperMul(str.substr(0,n),str.substr(n+1),arg, head) : mglApplyOperDiv(str.substr(0,n),str.substr(n+1),arg, head);
 	n=mglFindInText(str,"@");				// high priority -- combine
 	if(n>=0)
 		return mglFormulaCalc(str.substr(0,n),arg, head).Combine(mglFormulaCalc(str.substr(n+1),arg, head));
@@ -463,6 +597,7 @@ mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std
 			{	res=mglFormulaCalc(str, arg, head);	mglApplyFunc(res,cos);	}
 			else if(!nm.compare(L"cosh") || !nm.compare(L"ch"))
 			{	res=mglFormulaCalc(str, arg, head);	mglApplyFunc(res,cosh);	}
+			else if(!nm.compare(L"conj"))	res = mglFormulaCalcC(str, arg, head).Real();
 #if MGL_HAVE_GSL
 			else if(!nm.compare(L"ci"))
 			{	res=mglFormulaCalc(str, arg, head);	mglApplyFunc(res,gsl_sf_Ci);	}
@@ -647,6 +782,7 @@ dual MGL_LOCAL_CONST expi(double a);	//{	return dual(cos(a),sin(a));	}
 dual MGL_LOCAL_CONST asinhc(dual x);	//{	return log(x+sqrt(x*x+mreal(1)));	}
 dual MGL_LOCAL_CONST acoshc(dual x);	//{	return log(x+sqrt(x*x-mreal(1)));	}
 dual MGL_LOCAL_CONST atanhc(dual x);	//{	return log((mreal(1)+x)/(mreal(1)-x))/mreal(2);	}
+dual MGL_LOCAL_CONST conjc(dual x);	//{	return dual(real(x),-imag(x));	}
 dual MGL_LOCAL_CONST sinc(dual x);	//{	return sin(x);	}
 dual MGL_LOCAL_CONST cosc(dual x);	//{	return cos(x);	}
 dual MGL_LOCAL_CONST tanc(dual x);	//{	return tan(x);	}
@@ -726,10 +862,10 @@ mglDataC MGL_NO_EXPORT mglFormulaCalcC(std::wstring str, mglParser *arg, const s
 		return mglApplyOperC(str.substr(0,n),str.substr(n+1),arg, head, str[n]=='<'?cltc:(str[n]=='>'?cgtc:ceqc));
 	n=mglFindInText(str,"+-");				// normal priority -- additions
 	if(n>=0 && (n<2 || str[n-1]!='e' || (str[n-2]!='.' && !isdigit(str[n-2]))))
-		return mglApplyOperC(str.substr(0,n),str.substr(n+1),arg, head, str[n]=='+'?addc:subc);
+		return str[n]=='+'? mglApplyOperAddC(str.substr(0,n),str.substr(n+1),arg, head) : mglApplyOperSubC(str.substr(0,n),str.substr(n+1),arg, head);
 	n=mglFindInText(str,"*/");				// high priority -- multiplications
 	if(n>=0)
-		return mglApplyOperC(str.substr(0,n),str.substr(n+1),arg, head, str[n]=='*'?mulc:divc);
+		return str[n]=='*'? mglApplyOperMulC(str.substr(0,n),str.substr(n+1),arg, head) : mglApplyOperDivC(str.substr(0,n),str.substr(n+1),arg, head);
 /*	n=mglFindInText(str,"@");				// high priority -- combine	// TODO enable later
 	if(n>=0)
 		return mglFormulaCalcC(str.substr(0,n),arg, head).Combine(mglFormulaCalcC(str.substr(n+1),arg, head));*/
@@ -874,6 +1010,8 @@ mglDataC MGL_NO_EXPORT mglFormulaCalcC(std::wstring str, mglParser *arg, const s
 			{	res=mglFormulaCalcC(str, arg, head);	mglApplyFuncC(res,cosc);	}
 			else if(!nm.compare(L"cosh") || !nm.compare(L"ch"))
 			{	res=mglFormulaCalcC(str, arg, head);	mglApplyFuncC(res,coshc);	}
+			else if(!nm.compare(L"conj"))
+			{	res=mglFormulaCalcC(str, arg, head);	mglApplyFuncC(res,conjc);	}
 		}
 		else if(!nm.compare(L"exp"))
 		{	res=mglFormulaCalcC(str, arg, head);	mglApplyFuncC(res,expc);	}

@@ -287,165 +287,6 @@ int MGL_LOCAL_PURE mglFindArg(const std::wstring &str)
 mglData MGL_NO_EXPORT mglFormulaCalc(std::wstring string, mglParser *arg, const std::vector<mglDataA*> &head);
 mglDataC MGL_NO_EXPORT mglFormulaCalcC(std::wstring string, mglParser *arg, const std::vector<mglDataA*> &head);
 //-----------------------------------------------------------------------------
-struct mglRKdat
-{
-	mglDataA *v;
-	std::wstring e;
-	bool cmplx;
-	mglDataC cin,c1,c2,c3,c4, *cc;
-	mglData  din,d1,d2,d3,d4, *dd;
-	mglRKdat(mglDataA *var, std::wstring &eq):v(var), e(eq)
-	{	cmplx = dynamic_cast<mglDataC*>(var);	cc=0;	dd=0;	}
-	void allocate()
-	{
-		if(cmplx)
-		{	cc = dynamic_cast<mglDataC*>(v);	cin.Set(v);	}
-		else
-		{	dd = dynamic_cast<mglData*>(v);		din.Set(v);	}
-	}
-};
-void MGL_NO_EXPORT mgl_runge_kutta(HMPR pr, const std::wstring &eqs, const std::wstring &vars, mreal dt)
-{
-	std::vector<mglRKdat> rkv;
-	size_t iv=0,jv=0,ie=0,je=0;
-	while(1)
-	{
-		iv = vars.find(';',jv);	ie = eqs.find(';',je);
-		mglDataA *vv=mgl_parser_find_varw(pr,vars.substr(jv,iv).c_str());
-		std::wstring eq = eqs.substr(je,ie).c_str();
-		if(vv)	rkv.push_back(mglRKdat(vv, eq ));
-		jv = iv+1;	je = ie+1;
-		if(iv==std::wstring::npos || ie==std::wstring::npos)	break;
-	}
-	for(long i=0;i<rkv.size();i++)	rkv[i].allocate();
-	mreal hh = dt/2;
-	for(long i=0;i<rkv.size();i++)
-	{
-		mglRKdat &rk = rkv[i];
-		if(rk.cmplx)	rk.c1 = mglFormulaCalcC(rk.e, pr, pr->DataList);
-		else	rk.d1 = mglFormulaCalc(rk.e, pr, pr->DataList);
-	}
-	for(long i=0;i<rkv.size();i++)
-	{
-		mglRKdat &rk = rkv[i];
-		if(rk.cc)
-		{
-			long n = rk.cc->GetNN();	dual a = hh*rk.c1.a[0];
-			if(rk.c1.GetNN()==n)
-#pragma omp parallel for
-				for(long j=0;j<n;j++)	rk.cc->a[j] = rk.cin.a[j] + hh*rk.c1.a[j];
-			else
-#pragma omp parallel for
-				for(long j=0;j<n;j++)	rk.cc->a[j] = rk.cin.a[j] + a;
-		}
-		if(rk.dd)
-		{
-			long n = rk.dd->GetNN();	mreal a = hh*rk.d1.a[0];
-			if(rk.d1.GetNN()==n)
-#pragma omp parallel for
-				for(long j=0;j<n;j++)	rk.dd->a[j] = rk.din.a[j] + hh*rk.d1.a[j];
-			else
-#pragma omp parallel for
-				for(long j=0;j<n;j++)	rk.dd->a[j] = rk.din.a[j] + a;
-		}
-	}
-
-	for(long i=0;i<rkv.size();i++)
-	{
-		mglRKdat &rk = rkv[i];
-		if(rk.cmplx)	rk.c2 = mglFormulaCalcC(rk.e, pr, pr->DataList);
-		else	rk.d2 = mglFormulaCalc(rk.e, pr, pr->DataList);
-	}
-	for(long i=0;i<rkv.size();i++)
-	{
-		mglRKdat &rk = rkv[i];
-		if(rk.cc)
-		{
-			long n = rk.cc->GetNN();	dual a = hh*rk.c2.a[0];
-			if(rk.c2.GetNN()==n)
-#pragma omp parallel for
-				for(long j=0;j<n;j++)	rk.cc->a[j] = rk.cin.a[j] + hh*rk.c2.a[j];
-			else
-#pragma omp parallel for
-				for(long j=0;j<n;j++)	rk.cc->a[j] = rk.cin.a[j] + a;
-		}
-		if(rk.dd)
-		{
-			long n = rk.dd->GetNN();	mreal a = hh*rk.d2.a[0];
-			if(rk.d2.GetNN()==n)
-#pragma omp parallel for
-				for(long j=0;j<n;j++)	rk.dd->a[j] = rk.din.a[j] + hh*rk.d2.a[j];
-			else
-#pragma omp parallel for
-				for(long j=0;j<n;j++)	rk.dd->a[j] = rk.din.a[j] + a;
-		}
-	}
-
-	for(long i=0;i<rkv.size();i++)
-	{
-		mglRKdat &rk = rkv[i];
-		if(rk.cmplx)	rk.c3 = mglFormulaCalcC(rk.e, pr, pr->DataList);
-		else	rk.d3 = mglFormulaCalc(rk.e, pr, pr->DataList);
-	}
-	for(long i=0;i<rkv.size();i++)
-	{
-		mglRKdat &rk = rkv[i];
-		if(rk.cc)
-		{
-			long n = rk.cc->GetNN();	dual a = dt*rk.c3.a[0];
-			if(rk.c3.GetNN()==n)
-#pragma omp parallel for
-				for(long j=0;j<n;j++)	rk.cc->a[j] = rk.cin.a[j] + dt*rk.c3.a[j];
-			else
-#pragma omp parallel for
-				for(long j=0;j<n;j++)	rk.cc->a[j] = rk.cin.a[j] + a;
-		}
-		if(rk.dd)
-		{
-			long n = rk.dd->GetNN();	mreal a = dt*rk.d3.a[0];
-			if(rk.d3.GetNN()==n)
-#pragma omp parallel for
-				for(long j=0;j<n;j++)	rk.dd->a[j] = rk.din.a[j] + dt*rk.d3.a[j];
-			else
-#pragma omp parallel for
-				for(long j=0;j<n;j++)	rk.dd->a[j] = rk.din.a[j] + a;
-		}
-	}
-
-	for(long i=0;i<rkv.size();i++)
-	{
-		mglRKdat &rk = rkv[i];
-		if(rk.cmplx)	rk.c4 = mglFormulaCalcC(rk.e, pr, pr->DataList);
-		else	rk.d4 = mglFormulaCalc(rk.e, pr, pr->DataList);
-	}
-	for(long i=0;i<rkv.size();i++)
-	{
-		mglRKdat &rk = rkv[i];
-		if(rk.cc)
-		{
-			long n = rk.cc->GetNN();
-			dual a = (rk.c1.a[0]+rk.c2.a[0]+mreal(2)*(rk.c3.a[0]+rk.c4.a[0]))*(dt/6);
-			if(rk.c1.GetNN()==n)
-#pragma omp parallel for
-				for(long j=0;j<n;j++)	rk.cc->a[j] = rk.cin.a[j] + (rk.c1.a[j]+rk.c2.a[j]+mreal(2)*(rk.c3.a[j]+rk.c4.a[j]))*(dt/6);
-			else
-#pragma omp parallel for
-				for(long j=0;j<n;j++)	rk.cc->a[j] = rk.cin.a[j] + a;
-		}
-		if(rk.dd)
-		{
-			long n = rk.dd->GetNN();
-			mreal a = (rk.d1.a[0]+rk.d2.a[0]+2*(rk.d3.a[0]+rk.d4.a[0]))*(dt/6);
-			if(rk.d1.GetNN()==n)
-#pragma omp parallel for
-				for(long j=0;j<n;j++)	rk.dd->a[j] = rk.din.a[j] + (rk.d1.a[j]+rk.d2.a[j]+2*(rk.d3.a[j]+rk.d4.a[j]))*(dt/6);
-			else
-#pragma omp parallel for
-				for(long j=0;j<n;j++)	rk.dd->a[j] = rk.din.a[j] + a;
-		}
-	}
-}
-//---------------------------------------------------------------------------
 // convert substrings to arguments
 void mglParser::FillArg(mglGraph *gr, int k, std::wstring *arg, mglArg *a)
 {
@@ -808,7 +649,7 @@ int mglParser::Parse(mglGraph *gr, std::wstring str, long pos)
 				std::wstring a1 = arg[1], a2=arg[2];	res = 0;
 				if(a1[0]=='\'')	a1 = a1.substr(1,a1.length()-2);
 				if(a2[0]=='\'')	a2 = a2.substr(1,a2.length()-2);
-				mgl_runge_kutta(this, a1, a2, (k>=3 && a[2].type==2)?a[2].v:1);
+				mgl_rk_step_w(this, a1.c_str(), a2.c_str(), (k>=3 && a[2].type==2)?a[2].v:1);
 			}
 			delete []a;	return 0;
 		}
@@ -1280,4 +1121,179 @@ void MGL_EXPORT mgl_parser_load(HMPR pr, const char *so_name)
 void MGL_EXPORT mgl_parser_load_(uintptr_t *p, const char *dll_name,int l)
 {	char *s=new char[l+1];	memcpy(s,dll_name,l);	s[l]=0;
 	mgl_parser_load(_PR_, s);	delete []s;	}
+//---------------------------------------------------------------------------
+struct mglRKdat
+{
+	mglDataA *v;
+	std::wstring e;
+	bool cmplx;
+	mglDataC cin,c1,c2,c3,c4, *cc;
+	mglData  din,d1,d2,d3,d4, *dd;
+	mglRKdat(mglDataA *var, std::wstring &eq):v(var), e(eq)
+	{	cmplx = dynamic_cast<mglDataC*>(var);	cc=0;	dd=0;	}
+	void allocate()
+	{
+		if(cmplx)
+		{	cc = dynamic_cast<mglDataC*>(v);	cin.Set(v);	}
+		else
+		{	dd = dynamic_cast<mglData*>(v);		din.Set(v);	}
+	}
+};
+void MGL_EXPORT mgl_rk_step_w(HMPR pr, const wchar_t *Eqs, const wchar_t *Vars, mreal dt)
+{
+	const std::wstring eqs(Eqs);
+	const std::wstring vars(Vars);
+	std::vector<mglRKdat> rkv;
+	size_t iv=0,jv=0,ie=0,je=0;
+	while(1)
+	{
+		iv = vars.find(';',jv);	ie = eqs.find(';',je);
+		mglDataA *vv=mgl_parser_find_varw(pr,vars.substr(jv,iv-jv).c_str());
+		std::wstring eq = eqs.substr(je,ie-je).c_str();
+		if(vv)	rkv.push_back(mglRKdat(vv, eq ));
+		jv = iv+1;	je = ie+1;
+		if(iv==std::wstring::npos || ie==std::wstring::npos)	break;
+	}
+	for(long i=0;i<rkv.size();i++)	rkv[i].allocate();
+	mreal hh = dt/2;
+	for(long i=0;i<rkv.size();i++)
+	{
+		mglRKdat &rk = rkv[i];
+		if(rk.cmplx)	rk.c1 = mglFormulaCalcC(rk.e, pr, pr->DataList);
+		else	rk.d1 = mglFormulaCalc(rk.e, pr, pr->DataList);
+	}
+	for(long i=0;i<rkv.size();i++)
+	{
+		mglRKdat &rk = rkv[i];
+		if(rk.cc)
+		{
+			long n = rk.cc->GetNN();	dual a = hh*rk.c1.a[0];
+			if(rk.c1.GetNN()==n)
+#pragma omp parallel for
+				for(long j=0;j<n;j++)	rk.cc->a[j] = rk.cin.a[j] + hh*rk.c1.a[j];
+			else
+#pragma omp parallel for
+				for(long j=0;j<n;j++)	rk.cc->a[j] = rk.cin.a[j] + a;
+		}
+		if(rk.dd)
+		{
+			long n = rk.dd->GetNN();	mreal a = hh*rk.d1.a[0];
+			if(rk.d1.GetNN()==n)
+#pragma omp parallel for
+				for(long j=0;j<n;j++)	rk.dd->a[j] = rk.din.a[j] + hh*rk.d1.a[j];
+			else
+#pragma omp parallel for
+				for(long j=0;j<n;j++)	rk.dd->a[j] = rk.din.a[j] + a;
+		}
+	}
+
+	for(long i=0;i<rkv.size();i++)
+	{
+		mglRKdat &rk = rkv[i];
+		if(rk.cmplx)	rk.c2 = mglFormulaCalcC(rk.e, pr, pr->DataList);
+		else	rk.d2 = mglFormulaCalc(rk.e, pr, pr->DataList);
+	}
+	for(long i=0;i<rkv.size();i++)
+	{
+		mglRKdat &rk = rkv[i];
+		if(rk.cc)
+		{
+			long n = rk.cc->GetNN();	dual a = hh*rk.c2.a[0];
+			if(rk.c2.GetNN()==n)
+#pragma omp parallel for
+				for(long j=0;j<n;j++)	rk.cc->a[j] = rk.cin.a[j] + hh*rk.c2.a[j];
+			else
+#pragma omp parallel for
+				for(long j=0;j<n;j++)	rk.cc->a[j] = rk.cin.a[j] + a;
+		}
+		if(rk.dd)
+		{
+			long n = rk.dd->GetNN();	mreal a = hh*rk.d2.a[0];
+			if(rk.d2.GetNN()==n)
+#pragma omp parallel for
+				for(long j=0;j<n;j++)	rk.dd->a[j] = rk.din.a[j] + hh*rk.d2.a[j];
+			else
+#pragma omp parallel for
+				for(long j=0;j<n;j++)	rk.dd->a[j] = rk.din.a[j] + a;
+		}
+	}
+
+	for(long i=0;i<rkv.size();i++)
+	{
+		mglRKdat &rk = rkv[i];
+		if(rk.cmplx)	rk.c3 = mglFormulaCalcC(rk.e, pr, pr->DataList);
+		else	rk.d3 = mglFormulaCalc(rk.e, pr, pr->DataList);
+	}
+	for(long i=0;i<rkv.size();i++)
+	{
+		mglRKdat &rk = rkv[i];
+		if(rk.cc)
+		{
+			long n = rk.cc->GetNN();	dual a = dt*rk.c3.a[0];
+			if(rk.c3.GetNN()==n)
+#pragma omp parallel for
+				for(long j=0;j<n;j++)	rk.cc->a[j] = rk.cin.a[j] + dt*rk.c3.a[j];
+			else
+#pragma omp parallel for
+				for(long j=0;j<n;j++)	rk.cc->a[j] = rk.cin.a[j] + a;
+		}
+		if(rk.dd)
+		{
+			long n = rk.dd->GetNN();	mreal a = dt*rk.d3.a[0];
+			if(rk.d3.GetNN()==n)
+#pragma omp parallel for
+				for(long j=0;j<n;j++)	rk.dd->a[j] = rk.din.a[j] + dt*rk.d3.a[j];
+			else
+#pragma omp parallel for
+				for(long j=0;j<n;j++)	rk.dd->a[j] = rk.din.a[j] + a;
+		}
+	}
+
+	for(long i=0;i<rkv.size();i++)
+	{
+		mglRKdat &rk = rkv[i];
+		if(rk.cmplx)	rk.c4 = mglFormulaCalcC(rk.e, pr, pr->DataList);
+		else	rk.d4 = mglFormulaCalc(rk.e, pr, pr->DataList);
+	}
+	for(long i=0;i<rkv.size();i++)
+	{
+		mglRKdat &rk = rkv[i];
+		if(rk.cc)
+		{
+			long n = rk.cc->GetNN();
+			dual a = (rk.c1.a[0]+rk.c2.a[0]+mreal(2)*(rk.c3.a[0]+rk.c4.a[0]))*(dt/6);
+			if(rk.c1.GetNN()==n)
+#pragma omp parallel for
+				for(long j=0;j<n;j++)	rk.cc->a[j] = rk.cin.a[j] + (rk.c1.a[j]+rk.c2.a[j]+mreal(2)*(rk.c3.a[j]+rk.c4.a[j]))*(dt/6);
+			else
+#pragma omp parallel for
+				for(long j=0;j<n;j++)	rk.cc->a[j] = rk.cin.a[j] + a;
+		}
+		if(rk.dd)
+		{
+			long n = rk.dd->GetNN();
+			mreal a = (rk.d1.a[0]+rk.d2.a[0]+2*(rk.d3.a[0]+rk.d4.a[0]))*(dt/6);
+			if(rk.d1.GetNN()==n)
+#pragma omp parallel for
+				for(long j=0;j<n;j++)	rk.dd->a[j] = rk.din.a[j] + (rk.d1.a[j]+rk.d2.a[j]+2*(rk.d3.a[j]+rk.d4.a[j]))*(dt/6);
+			else
+#pragma omp parallel for
+				for(long j=0;j<n;j++)	rk.dd->a[j] = rk.din.a[j] + a;
+		}
+	}
+}
+void MGL_EXPORT mgl_rk_step(HMPR pr, const char *Eqs, const char *Vars, mreal dt)
+{
+	if(Eqs && *Eqs && Vars && *Vars)
+	{
+		size_t s=mbstowcs(0,Eqs,0), w=mbstowcs(0,Vars,0);
+		wchar_t *eqs=new wchar_t[s+1];	mbstowcs(eqs,Eqs ,s);	eqs[s]=0;
+		wchar_t *wcs=new wchar_t[s+1];	mbstowcs(wcs,Vars,s);	wcs[w]=0;
+		mgl_rk_step_w(pr,eqs,wcs,dt);	delete []wcs;	delete []eqs;
+	}
+}
+void MGL_EXPORT mgl_rk_step_(uintptr_t *p, const char *eqs, const char *vars, double *dt,int l,int m)
+{	char *e=new char[l+1];	memcpy(e,eqs,l);	e[l]=0;
+	char *s=new char[m+1];	memcpy(s,vars,m);	s[m]=0;
+	mgl_rk_step(_PR_,e,s,*dt);	delete []e;	delete []s;	}
 //---------------------------------------------------------------------------

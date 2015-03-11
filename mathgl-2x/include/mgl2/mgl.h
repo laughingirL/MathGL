@@ -1349,6 +1349,11 @@ public:
 	/// Load new commands from external dynamic Library (must have "const mglCommand *mgl_cmd_extra" variable)
 	inline void LoadDLL(const char *fname)
 	{	mgl_parser_load(pr, fname);	}
+	/// Apply one step for equation d vars[i]/dt = eqs[i] using Runge-Kutta method
+	inline void RK_Step(const char *eqs, const char *vars, mreal dt=1)
+	{	mgl_rk_step(pr, eqs, vars, dt);	}
+	inline void RK_Step(const wchar_t *eqs, const wchar_t *vars, mreal dt=1)
+	{	mgl_rk_step_w(pr, eqs, vars, dt);	}
 
 	/// Set value for parameter $N
 	inline void AddParam(int id, const char *str)

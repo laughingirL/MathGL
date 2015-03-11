@@ -26,7 +26,7 @@
 
 #include "mgl2/base.h"
 #include "mgl2/parser.h"
-inline long iint(mreal x)	{return long(x+0.5);}
+inline long iint(mreal x)	{return long(x+(x>=0?0.5:-0.5));}
 wchar_t *mgl_str_copy(const char *s);
 //-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_addlegend(mglGraph *gr, long , mglArg *a, const char *k, const char *)
