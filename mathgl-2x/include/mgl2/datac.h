@@ -373,9 +373,13 @@ using mglDataA::Momentum;
 	inline const mglDataC &operator=(const mglDataC &d)
 	{	if(this!=&d)	Set(&d);	return d;	}
 	inline dual operator=(dual val)
-	{	for(long i=0;i<nx*ny*nz;i++)	a[i]=val;	return val;	}
+	{
+#pragma omp parallel for
+		for(long i=0;i<nx*ny*nz;i++)	a[i]=val;	return val;	}
 	inline dual operator=(mreal val)
-	{	for(long i=0;i<nx*ny*nz;i++)	a[i]=val;	return val;	}
+	{
+#pragma omp parallel for
+		for(long i=0;i<nx*ny*nz;i++)	a[i]=val;	return val;	}
 	/// Multiply the data by other one for each element
 	inline void operator*=(const mglDataA &d)	{	mgl_datac_mul_dat(this,&d);	}
 	/// Divide the data by other one for each element
