@@ -23,8 +23,7 @@
 #include "mgl2/thread.h"
 #include "mgl2/base.h"
 const double GAMMA=0.1;	///< value for damping
-mglData MGL_NO_EXPORT mglFormulaCalc(const char *str, const std::vector<mglDataA*> &head);
-mglDataC MGL_NO_EXPORT mglFormulaCalcC(const char *str, const std::vector<mglDataA*> &head);
+HADT MGL_NO_EXPORT mglFormulaCalcC(const char *str, const std::vector<mglDataA*> &head);
 //-----------------------------------------------------------------------------
 struct mgl_pde_ham
 {
@@ -51,27 +50,31 @@ void MGL_NO_EXPORT mgl_pde_hprep(const mgl_pde_ham *f)
 
 	x.Fill(f->xx,f->xx+f->dx*(nx-1),'x');	p.Freq(0,'x');
 	y.Fill(f->yy,f->yy+f->dy*(ny-1),'y');	q.Freq(0,'y');
-	mglDataC res = mglFormulaCalcC(f->eqs, list);
+	HADT res = mglFormulaCalcC(f->eqs, list);
 #pragma omp parallel for
-	for(long i=0;i<nx*ny;i++)	f->hxy[i] = res.a[i]*dd;
+	for(long i=0;i<nx*ny;i++)	f->hxy[i] = res->a[i]*dd;
+	delete res;
 	if(ny>2)
 	{
 		x.Fill(f->xs);	p.Freq(f->dp,'x');
 		res = mglFormulaCalcC(f->eqs, list);
 #pragma omp parallel for
-		for(long i=0;i<nx*ny;i++)	f->huy[i] = res.a[i]*dd;
+		for(long i=0;i<nx*ny;i++)	f->huy[i] = res->a[i]*dd;
+		delete res;
 	}
 	x.Fill(f->xs);	p.Freq(f->dp,'x');
 	y.Fill(f->ys);	q.Freq(f->dq,'y');
 	res = mglFormulaCalcC(f->eqs, list);
 #pragma omp parallel for
-	for(long i=0;i<nx*ny;i++)	f->huv[i] = res.a[i]*dd;
+	for(long i=0;i<nx*ny;i++)	f->huv[i] = res->a[i]*dd;
+	delete res;
 	if(ny>2)
 	{
 		x.Fill(f->xx,f->xx+f->dx*(nx-1),'x');	p.Freq(0,'x');
 		res = mglFormulaCalcC(f->eqs, list);
 #pragma omp parallel for
-		for(long i=0;i<nx*ny;i++)	f->hxv[i] = res.a[i]*dd;
+		for(long i=0;i<nx*ny;i++)	f->hxv[i] = res->a[i]*dd;
+		delete res;
 	}
 }
 //-----------------------------------------------------------------------------

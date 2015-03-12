@@ -66,21 +66,20 @@ void MGL_NO_EXPORT mgl_surf_plot(mglBase *gr, long *pos, long n, long m)
 //	Plot by formulas series
 //
 //-----------------------------------------------------------------------------
-mglData MGL_NO_EXPORT mglFormulaCalc(const char *str, const std::vector<mglDataA*> &head);
+HMDT MGL_NO_EXPORT mglFormulaCalc(const char *str, const std::vector<mglDataA*> &head);
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_fsurf(HMGL gr, const char *eqZ, const char *sch, const char *opt)
 {	// NOTE Strong function variation analysis can be added here
 	if(eqZ==0 || eqZ[0]==0)	return;		// nothing to plot
 	mreal r = gr->SaveState(opt);
 	long n = (mgl_isnan(r) || r<=0) ? 100:long(r+0.5);
-	mglData z(n,n),res;
+	mglData z(n,n);
 	mglDataV x(n,n,1, gr->Min.x,gr->Max.x,'x');	x.s=L"x";
 	mglDataV y(n,n,1, gr->Min.y,gr->Max.y,'y');	y.s=L"y";
 	mglDataV t(n,n);	t.s=L"#$mgl";
 	std::vector<mglDataA*> list;
 	list.push_back(&x);	list.push_back(&y);	list.push_back(&t);
-	res.Set(mglFormulaCalc(eqZ,list));
-	if(res.nx==1 && res.ny==1)	z = res.a[0];	else	z = res;
+	z.Move(mglFormulaCalc(eqZ,list));
 	mgl_surf(gr, &z, sch,0);
 }
 //-----------------------------------------------------------------------------
@@ -89,18 +88,15 @@ void MGL_EXPORT mgl_fsurf_xyz(HMGL gr, const char *eqX, const char *eqY, const c
 	if(eqZ==0 || eqZ[0]==0)	return;		// nothing to plot
 	mreal r = gr->SaveState(opt);
 	long n = (mgl_isnan(r) || r<=0) ? 100:long(r+0.5);
-	mglData z(n,n), x(n,n), y(n,n), res;
+	mglData z(n,n), x(n,n), y(n,n), *res;
 	mglDataV u(n,n,1, 0,1,'x');	u.s=L"u";
 	mglDataV v(n,n,1, 0,1,'y');	v.s=L"v";
 	mglDataV t(n,n);	t.s=L"#$mgl";
 	std::vector<mglDataA*> list;
 	list.push_back(&u);	list.push_back(&v);	list.push_back(&t);
-	res.Set(mglFormulaCalc(eqX,list));
-	if(res.nx==1 && res.ny==1)	x = res.a[0];	else	x = res;
-	res.Set(mglFormulaCalc(eqY,list));
-	if(res.nx==1 && res.ny==1)	y = res.a[0];	else	y = res;
-	res.Set(mglFormulaCalc(eqZ,list));
-	if(res.nx==1 && res.ny==1)	z = res.a[0];	else	z = res;
+	x.Move(mglFormulaCalc(eqX,list));
+	y.Move(mglFormulaCalc(eqY,list));
+	z.Move(mglFormulaCalc(eqZ,list));
 	mgl_surf_xy(gr,&x,&y,&z,sch,0);
 }
 //-----------------------------------------------------------------------------

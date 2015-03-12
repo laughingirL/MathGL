@@ -77,6 +77,17 @@ using mglDataA::Momentum;
 	mglDataC(long xx=1,long yy=1,long zz=1)	{	a=0;	Create(xx,yy,zz);	}
 	/// Delete the array
 	virtual ~mglDataC()	{	if(!link && a)	delete []a;	}
+
+	/// Move all data from variable d, and delete this variable.
+	inline void Move(mglDataC *d)	// NOTE: Variable d will be deleted!!!
+	{	if(d && d->GetNN()>1)
+		{	bool l=link;	dual *b=a;
+			nx=d->nx;	ny=d->ny;	nz=d->nz;	a=d->a;	d->a=b;
+			temp=d->temp;	func=d->func;	o=d->o;	s=d->s;
+			id=d->id;	link=d->link;	d->link=l;	delete d;	}
+		else if(d)	{	*this = d->a[0];	delete d;	}
+	}
+
 	inline dual GetVal(long i, long j=0, long k=0) const
 	{	return mgl_datac_get_value(this,i,j,k);}
 	inline void SetVal(dual f, long i, long j=0, long k=0)

@@ -21,7 +21,7 @@
 #include "mgl2/data.h"
 #include "mgl2/eval.h"
 #include "mgl2/thread.h"
-mglData MGL_NO_EXPORT mglFormulaCalc(const char *str, const std::vector<mglDataA*> &head);
+HMDT MGL_NO_EXPORT mglFormulaCalc(const char *str, const std::vector<mglDataA*> &head);
 //-----------------------------------------------------------------------------
 HMDT MGL_EXPORT mgl_data_trace(HCDT d)
 {
@@ -475,9 +475,8 @@ HMDT MGL_EXPORT mgl_data_momentum(HCDT dat, char dir, const char *how)
 	mglData u(dat);	u.s=L"u";	// NOTE slow !!!
 	std::vector<mglDataA*> list;
 	list.push_back(&x);	list.push_back(&y);	list.push_back(&z);	list.push_back(&u);
-	mglData res=mglFormulaCalc(how,list);
+	HMDT res=mglFormulaCalc(how,list), b=0;
 
-	mglData *b=0;
 	if(dir=='x')
 	{
 		b=new mglData(nx);
@@ -488,7 +487,7 @@ HMDT MGL_EXPORT mgl_data_momentum(HCDT dat, char dir, const char *how)
 			for(long j=0;j<ny*nz;j++)
 			{
 				register mreal u=dat->vthr(i+nx*j);
-				i0 += u;	i1 += u*res.a[i+nx*j];
+				i0 += u;	i1 += u*res->a[i+nx*j];
 			}
 			b->a[i] = i0>0 ? i1/i0 : 0;
 		}
@@ -503,7 +502,7 @@ HMDT MGL_EXPORT mgl_data_momentum(HCDT dat, char dir, const char *how)
 			for(long k=0;k<nz;k++)	for(long j=0;j<nx;j++)
 			{
 				register mreal u=dat->v(j,i,k);
-				i0 += u;	i1 += u*res.a[j+nx*(i+ny*k)];
+				i0 += u;	i1 += u*res->a[j+nx*(i+ny*k)];
 			}
 			b->a[i] = i0>0 ? i1/i0 : 0;
 		}
@@ -519,12 +518,12 @@ HMDT MGL_EXPORT mgl_data_momentum(HCDT dat, char dir, const char *how)
 			for(long j=0;j<nn;j++)
 			{
 				register mreal u=dat->vthr(j+nn*i);
-				i0 += u;	i1 += u*res.a[j+nn*i];
+				i0 += u;	i1 += u*res->a[j+nn*i];
 			}
 			b->a[i] = i0>0 ? i1/i0 : 0;
 		}
 	}
-	return b;
+	mgl_delete_data(res);	return b;
 }
 uintptr_t MGL_EXPORT mgl_data_momentum_(uintptr_t *d, char *dir, const char *how, int,int l)
 {	char *s=new char[l+1];	memcpy(s,how,l);	s[l]=0;

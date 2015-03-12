@@ -28,8 +28,8 @@
 #include "mgl2/thread.h"
 #include "mgl2/base.h"
 //-----------------------------------------------------------------------------
-mglData MGL_NO_EXPORT mglFormulaCalc(const char *str, const std::vector<mglDataA*> &head);
-mglDataC MGL_NO_EXPORT mglFormulaCalcC(const char *str, const std::vector<mglDataA*> &head);
+HMDT MGL_NO_EXPORT mglFormulaCalc(const char *str, const std::vector<mglDataA*> &head);
+HADT MGL_NO_EXPORT mglFormulaCalcC(const char *str, const std::vector<mglDataA*> &head);
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_data_refill_gr(HMGL gr, HMDT dat, HCDT xdat, HCDT ydat, HCDT zdat, HCDT vdat, long sl, const char *opt)
 {
@@ -97,8 +97,7 @@ void MGL_EXPORT mgl_data_fill_eq(HMGL gr, HMDT d, const char *eq, HCDT vdat, HCD
 	list.push_back(&x);	list.push_back(&y);	list.push_back(&z);	list.push_back(&r);
 	list.push_back(d);	list.push_back(&v);	list.push_back(&w);
 	list.push_back(&i);	list.push_back(&j);	list.push_back(&k);
-	d->Set(mglFormulaCalc(eq,list));	d->s = s;
-	gr->LoadState();
+	d->Move(mglFormulaCalc(eq,list));	d->s = s;	gr->LoadState();
 }
 void MGL_EXPORT mgl_data_fill_eq_(uintptr_t *gr, uintptr_t *d, const char *eq, uintptr_t *v, uintptr_t *w, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,eq,l);	s[l]=0;
@@ -123,8 +122,7 @@ void MGL_EXPORT mgl_datac_fill_eq(HMGL gr, HADT d, const char *eq, HCDT vdat, HC
 	list.push_back(&x);	list.push_back(&y);	list.push_back(&z);	list.push_back(&r);
 	list.push_back(d);	list.push_back(&v);	list.push_back(&w);
 	list.push_back(&i);	list.push_back(&j);	list.push_back(&k);
-	d->Set(mglFormulaCalcC(eq,list));	d->s = s;
-	gr->LoadState();
+	d->Move(mglFormulaCalcC(eq,list));	d->s = s;	gr->LoadState();
 }
 void MGL_EXPORT mgl_datac_fill_eq_(uintptr_t *gr, uintptr_t *d, const char *eq, uintptr_t *v, uintptr_t *w, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,eq,l);	s[l]=0;

@@ -28,7 +28,7 @@
 #include <gsl/gsl_multifit_nlin.h>
 #include <gsl/gsl_blas.h>
 #endif
-mglData MGL_NO_EXPORT mglFormulaCalc(const char *str, const std::vector<mglDataA*> &head);
+HMDT MGL_NO_EXPORT mglFormulaCalc(const char *str, const std::vector<mglDataA*> &head);
 //-----------------------------------------------------------------------------
 int mglFitPnts=100;		///< Number of output points in fitting
 char mglFitRes[1024];	///< Last fitted formula
@@ -81,16 +81,16 @@ int	mgl_fit__f (const gsl_vector *x, void *data, gsl_vector *f)
 	if(fd->x)	list.push_back(fd->x);
 	if(fd->y)	list.push_back(fd->y);
 	if(fd->z)	list.push_back(fd->z);
-	mglData res = mglFormulaCalc(fd->eq, list);
+	HMDT res = mglFormulaCalc(fd->eq, list);
 #pragma omp parallel for
 	for(long i=0;i<fd->n;i++)
 	{
 		mreal aa = fd->a[i], ss = fd->s[i];
 		if(mgl_isnum(aa) && ss==ss && ss!=0)
-			gsl_vector_set (f, i, (res.a[i] - aa)/ss);
+			gsl_vector_set (f, i, (res->a[i] - aa)/ss);
 		else	gsl_vector_set (f, i, 0);
 	}
-	delete []var;
+	delete []var;	mgl_delete_data(res);
 	return GSL_SUCCESS;
 }
 //-----------------------------------------------------------------------------
@@ -104,23 +104,24 @@ int MGL_NO_EXPORT mgl_fit__df (const gsl_vector * x, void *data, gsl_matrix * J)
 	if(fd->x)	list.push_back(fd->x);
 	if(fd->y)	list.push_back(fd->y);
 	if(fd->z)	list.push_back(fd->z);
-	mglData res = mglFormulaCalc(fd->eq, list);
+	HMDT res = mglFormulaCalc(fd->eq, list);
 	const mreal eps = 1e-5;
 	for(long j=0;j<fd->m;j++)
 	{
 		var[j].Fill(gsl_vector_get(x,j)+eps);
-		mglData dif = (mglFormulaCalc(fd->eq, list)-res)/eps;
+		HMDT dif = mglFormulaCalc(fd->eq, list);
 		var[j].Fill(gsl_vector_get(x,j));
 #pragma omp parallel for
 		for(long i=0;i<fd->n;i++)
 		{
 			mreal aa = fd->a[i], ss = fd->s[i];
 			if(mgl_isnum(aa) && ss==ss && ss!=0)
-				gsl_matrix_set (J, i, j, dif.a[i]/ss);
+				gsl_matrix_set (J, i, j, (dif->a[i]-res->a[i])/(eps*ss));
 			else	gsl_matrix_set (J, i, j, 0);
 		}
+		mgl_delete_data(dif);
 	}
-	delete []var;
+	delete []var;	mgl_delete_data(res);
 	return GSL_SUCCESS;
 }
 //-----------------------------------------------------------------------------
@@ -134,31 +135,32 @@ int MGL_NO_EXPORT mgl_fit__fdf (const gsl_vector * x, void *data, gsl_vector * f
 	if(fd->x)	list.push_back(fd->x);
 	if(fd->y)	list.push_back(fd->y);
 	if(fd->z)	list.push_back(fd->z);
-	mglData res = mglFormulaCalc(fd->eq, list);
+	HMDT res = mglFormulaCalc(fd->eq, list);
 #pragma omp parallel for
 	for(long i=0;i<fd->n;i++)
 	{
 		mreal aa = fd->a[i], ss = fd->s[i];
 		if(mgl_isnum(aa) && ss==ss && ss!=0)
-			gsl_vector_set (f, i, (res.a[i] - aa)/ss);
+			gsl_vector_set (f, i, (res->a[i] - aa)/ss);
 		else	gsl_vector_set (f, i, 0);
 	}
 	const mreal eps = 1e-5;
 	for(long j=0;j<fd->m;j++)
 	{
 		var[j].Fill(gsl_vector_get(x,j)+eps);
-		mglData dif = (mglFormulaCalc(fd->eq, list)-res)/eps;
+		HMDT dif = mglFormulaCalc(fd->eq, list);
 		var[j].Fill(gsl_vector_get(x,j));
 #pragma omp parallel for
 		for(long i=0;i<fd->n;i++)
 		{
 			mreal aa = fd->a[i], ss = fd->s[i];
 			if(mgl_isnum(aa) && ss==ss && ss!=0)
-				gsl_matrix_set (J, i, j, dif.a[i]/ss);
+				gsl_matrix_set (J, i, j, (dif->a[i]-res->a[i])/(eps*ss));
 			else	gsl_matrix_set (J, i, j, 0);
 		}
+		mgl_delete_data(dif);
 	}
-	delete []var;
+	delete []var;	mgl_delete_data(res);
 	return GSL_SUCCESS;
 }
 #endif
@@ -294,10 +296,10 @@ void MGL_NO_EXPORT mgl_fill_fit(HMGL gr, mglData &fit, mglData &in, mglFitData &
 	mglDataV x(nx,ny,nz, gr->Min.x,gr->Max.x,'x');	x.s = L"x";	list.push_back(&x);
 	mglDataV y(nx,ny,nz, gr->Min.y,gr->Max.y,'y');	y.s = L"y";	list.push_back(&y);
 	mglDataV z(nx,ny,nz, gr->Min.z,gr->Max.z,'z');	z.s = L"z";	list.push_back(&z);
-	mglData res = mglFormulaCalc(fd.eq, list);
+	HMDT res = mglFormulaCalc(fd.eq, list);
 	long nn = nx*ny*nz;
-	memcpy(fit.a+k*nn,res.a,nn*sizeof(mreal));
-	delete []vv;
+	memcpy(fit.a+k*nn,res->a,nn*sizeof(mreal));
+	delete []vv;	mgl_delete_data(res);
 }
 //-----------------------------------------------------------------------------
 HMDT MGL_EXPORT mgl_fit_xys(HMGL gr, HCDT xx, HCDT yy, HCDT ss, const char *eq, const char *var, HMDT ini, const char *opt)

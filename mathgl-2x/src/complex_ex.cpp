@@ -22,7 +22,7 @@
 #include "mgl2/evalc.h"
 #include "mgl2/thread.h"
 #include "interp.hpp"
-mglDataC MGL_NO_EXPORT mglFormulaCalcC(const char *str, const std::vector<mglDataA*> &head);
+HADT MGL_NO_EXPORT mglFormulaCalcC(const char *str, const std::vector<mglDataA*> &head);
 //-----------------------------------------------------------------------------
 HADT MGL_EXPORT mgl_datac_trace(HCDT d)
 {
@@ -360,9 +360,8 @@ HADT MGL_EXPORT mgl_datac_momentum(HCDT dat, char dir, const char *how)
 	mglDataC u(dat);	u.s=L"u";	// NOTE slow !!!
 	std::vector<mglDataA*> list;
 	list.push_back(&x);	list.push_back(&y);	list.push_back(&z);	list.push_back(&u);
-	mglDataC res=mglFormulaCalcC(how,list);
+	HADT res=mglFormulaCalcC(how,list), b=0;
 
-	mglDataC *b=0;
 	if(dir=='x')
 	{
 		b=new mglDataC(nx);
@@ -373,7 +372,7 @@ HADT MGL_EXPORT mgl_datac_momentum(HCDT dat, char dir, const char *how)
 			for(long j=0;j<ny*nz;j++)
 			{
 				register dual u=dat->vthr(i+nx*j);
-				i0 += u;	i1 += u*res.a[i+nx*j];
+				i0 += u;	i1 += u*res->a[i+nx*j];
 			}
 			b->a[i] = i0!=mreal(0) ? i1/i0 : 0;
 		}
@@ -388,7 +387,7 @@ HADT MGL_EXPORT mgl_datac_momentum(HCDT dat, char dir, const char *how)
 			for(long k=0;k<nz;k++)	for(long j=0;j<nx;j++)
 			{
 				register dual u=dat->v(j,i,k);
-				i0 += u;	i1 += u*res.a[j+nx*(i+ny*k)];
+				i0 += u;	i1 += u*res->a[j+nx*(i+ny*k)];
 			}
 			b->a[i] = i0!=mreal(0) ? i1/i0 : 0;
 		}
@@ -404,12 +403,12 @@ HADT MGL_EXPORT mgl_datac_momentum(HCDT dat, char dir, const char *how)
 			for(long j=0;j<nn;j++)
 			{
 				register dual u=dat->vthr(j+nn*i);
-				i0 += u;	i1 += u*res.a[j+nn*i];
+				i0 += u;	i1 += u*res->a[j+nn*i];
 			}
 			b->a[i] = i0!=mreal(0) ? i1/i0 : 0;
 		}
 	}
-	return b;
+	mgl_delete_datac(res);	return b;
 }
 uintptr_t MGL_EXPORT mgl_datac_momentum_(uintptr_t *d, char *dir, const char *how, int,int l)
 {	char *s=new char[l+1];	memcpy(s,how,l);	s[l]=0;
@@ -468,8 +467,7 @@ HADT MGL_EXPORT mgl_datac_column(HCDT dat, const char *eq)
 	if(list.size()==0)	return 0;	// no named columns
 	mglDataV *t = new mglDataV(dat->GetNy(),dat->GetNz());
 	t->s=L"#$mgl";	list.push_back(t);
-	mglDataC *r = new mglDataC;
-	r->Set(mglFormulaCalcC(eq,list));
+	HADT r = mglFormulaCalcC(eq,list);
 	for(size_t i=0;i<list.size();i++)	delete list[i];
 	return r;
 }

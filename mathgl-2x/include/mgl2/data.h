@@ -69,6 +69,16 @@ using mglDataA::Momentum;
 	/// Delete the array
 	virtual ~mglData()	{	if(!link && a)	delete []a;	}
 
+	/// Move all data from variable d, and delete this variable.
+	inline void Move(mglData *d)	// NOTE: Variable d will be deleted!!!
+	{	if(d && d->GetNN()>1)
+		{	bool l=link;	mreal *b=a;
+			nx=d->nx;	ny=d->ny;	nz=d->nz;	a=d->a;	d->a=b;
+			temp=d->temp;	func=d->func;	o=d->o;	s=d->s;
+			id=d->id;	link=d->link;	d->link=l;	delete d;	}
+		else if(d)	{	*this = d->a[0];	delete d;	}
+	}
+
 	inline mreal GetVal(long i, long j=0, long k=0) const
 	{	return mgl_data_get_value(this,i,j,k);}
 	inline void SetVal(mreal f, long i, long j=0, long k=0)
