@@ -405,43 +405,62 @@ HMDT MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std::v
 		return res;
 	}
 	n=mglFindInText(str,".");				// highest priority -- suffixes
-	if(n>=0)
+	wchar_t c0 = str[n+1];
+	if(n>=0  && c0>='a' && c0!='e')
 	{
 		mreal x,y,z,k,v=NAN;
 		HMDT d = mglFormulaCalc(str.substr(0,n), arg, head);
+		long ns[3] = {d->nx, d->ny, d->nz};
 		const std::wstring &p=str.substr(n+1);
-		if(!p.compare(L"a"))			v = d->a[0];
+		wchar_t ch = p[1];
+		if(c0=='a')
+		{
+			if(ch==0)	v = d->a[0];
+			else
+			{
+				d->Momentum(ch,x,y);
+				if(ch=='a')	v = x;
+				else if(ch>='x' && ch<='z')	v = x/ns[ch-'x'];
+			}
+		}
+		else if(c0=='n')
+		{
+			if(ch>='x' && ch<='z')	v = ns[p[1]-'x'];
+			else if(!p.compare(L"nmax"))	{	v=d->MaximalNeg();	}
+			else if(!p.compare(L"nmin"))	{	v=d->Minimal();	v = v<0?v:0;	}
+		}
+		else if(c0=='k')
+		{
+			d->Momentum(ch,x,y,z,k);
+			if(ch=='a')	v = k;
+			else if(ch>='x' && ch<='z')	v = k/ns[ch-'x'];
+		}
+		else if(c0=='w')
+		{
+			d->Momentum(ch,x,y);
+			if(ch=='a')	v = y;
+			else if(ch>='x' && ch<='z')	v = y/ns[ch-'x'];
+		}
+		else if(c0=='m')
+		{
+			if(ch=='a' && p[2]=='x')	v = d->Maximal();
+			else if(ch=='i' && p[2]=='n')	v = d->Minimal();
+			else if(ch=='x')	{	v = d->Maximal(x,y,z);	v = x/ns[0];	}
+			else if(ch=='y')	{	v = d->Maximal(x,y,z);	v = y/ns[1];	}
+			else if(ch=='z')	{	v = d->Maximal(x,y,z);	v = z/ns[2];	}
+		}
+		else if(c0=='s')
+		{
+			if(ch=='u' && p[2]=='m')	v = d->Momentum('x',x,y);
+			else if(ch=='a')
+			{	d->Momentum(ch,x,y,z,k);	v = z;	}
+			else if(ch>='x' && ch<='z')
+			{	d->Momentum(ch,x,y,z,k);	v = z/ns[ch-'x'];	}
+		}
 		else if(!p.compare(L"fst"))	{	long i=-1,j=-1,l=-1;	v = d->Find(0,i,j,l);	}
 		else if(!p.compare(L"lst"))	{	long i=-1,j=-1,l=-1;	v = d->Last(0,i,j,l);	}
-		else if(!p.compare(L"nx"))	v=d->nx;
-		else if(!p.compare(L"ny"))	v=d->ny;
-		else if(!p.compare(L"nz"))	v=d->nz;
-		else if(!p.compare(L"max"))	v=d->Maximal();
-		else if(!p.compare(L"min"))	v=d->Minimal();
 		else if(!p.compare(L"pmax"))	{	v=d->Maximal();	v = v>0?v:0;	}
 		else if(!p.compare(L"pmin"))	{	v=d->MinimalPos();	}
-		else if(!p.compare(L"nmax"))	{	v=d->MaximalNeg();	}
-		else if(!p.compare(L"nmin"))	{	v=d->Minimal();	v = v<0?v:0;	}
-		else if(!p.compare(L"sum"))	v=d->Momentum('x',x,y);
-		else if(!p.compare(L"mx"))	{	d->Maximal(x,y,z);	v=x/d->nx;	}
-		else if(!p.compare(L"my"))	{	d->Maximal(x,y,z);	v=y/d->ny;	}
-		else if(!p.compare(L"mz"))	{	d->Maximal(x,y,z);	v=z/d->nz;	}
-		else if(!p.compare(L"ax"))	{	d->Momentum('x',x,y);	v=x/d->nx;	}
-		else if(!p.compare(L"ay"))	{	d->Momentum('y',x,y);	v=x/d->ny;	}
-		else if(!p.compare(L"az"))	{	d->Momentum('z',x,y);	v=x/d->nz;	}
-		else if(!p.compare(L"wx"))	{	d->Momentum('x',x,y);	v=y/d->nx;	}
-		else if(!p.compare(L"wy"))	{	d->Momentum('y',x,y);	v=y/d->ny;	}
-		else if(!p.compare(L"wz"))	{	d->Momentum('z',x,y);	v=y/d->nz;	}
-		else if(!p.compare(L"sx"))	{	d->Momentum('x',x,y,z,k);	v=z/d->nx;	}
-		else if(!p.compare(L"sy"))	{	d->Momentum('y',x,y,z,k);	v=z/d->ny;	}
-		else if(!p.compare(L"sz"))	{	d->Momentum('z',x,y,z,k);	v=z/d->nz;	}
-		else if(!p.compare(L"kx"))	{	d->Momentum('x',x,y,z,k);	v=k/d->nx;	}
-		else if(!p.compare(L"ky"))	{	d->Momentum('y',x,y,z,k);	v=k/d->ny;	}
-		else if(!p.compare(L"kz"))	{	d->Momentum('z',x,y,z,k);	v=k/d->nz;	}
-		else if(!p.compare(L"aa"))	{	d->Momentum('a',x,y);	v=x;	}
-		else if(!p.compare(L"wa"))	{	d->Momentum('a',x,y);	v=y;	}
-		else if(!p.compare(L"sa"))	{	d->Momentum('a',x,y,z,k);v=z;	}
-		else if(!p.compare(L"ka"))	{	d->Momentum('a',x,y,z,k);v=k;	}
 		// if this is valid suffix when finish parsing (it can be mreal number)
 		if(mgl_isfin(v))
 		{	HMDT res = new mglData;	res->a[0]=v;	return res;	}
@@ -463,11 +482,12 @@ HMDT MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std::v
 		else
 		{
 			HMDT res = new mglData;
-			if(!str.compare(L":"))	res->a[0] = -1;
+			char ch = str[0];
+			if(ch<':') res->a[0] = wcstod(str.c_str(),0);	// this is number
+			else if(!str.compare(L"pi"))	res->a[0] = M_PI;
+			else if(ch==':')	res->a[0] = -1;
 			else if(!str.compare(L"nan"))	res->a[0] = NAN;
 			else if(!str.compare(L"inf"))	res->a[0] = INFINITY;
-			else if(!str.compare(L"pi"))	res->a[0] = M_PI;
-			else res->a[0] = wcstod(str.c_str(),0);	// this is number
 			return res;
 		}
 	}
@@ -794,44 +814,60 @@ HADT MGL_NO_EXPORT mglFormulaCalcC(std::wstring str, mglParser *arg, const std::
 		return res;
 	}
 	n=mglFindInText(str,".");				// highest priority -- suffixes
-	if(n>=0)
+	wchar_t c0 = str[n+1];
+	if(n>=0  && c0>='a' && c0!='e')
 	{
-		mreal x,y,z,k;
 		dual v=NAN;
 		HADT d = mglFormulaCalcC(str.substr(0,n), arg, head);
+		long ns[3] = {d->nx, d->ny, d->nz};
 		const std::wstring &p=str.substr(n+1);
-		if(!p.compare(L"a"))			v = d->a[0];
+		wchar_t ch = p[1];
+		if(c0=='a')
+		{
+			if(ch==0)	v = d->a[0];
+			else
+			{
+				mreal x,y;
+				d->Momentum(ch,x,y);
+				if(ch=='a')	v = x;
+				else if(ch>='x' && ch<='z')	v = x/ns[ch-'x'];
+			}
+		}
+		else if(c0=='n' && ch>='x' && ch<='z')	v = ns[ch-'x'];
+		else if(c0=='k')
+		{
+			mreal x,y,z,k;
+			d->Momentum(ch,x,y,z,k);
+			if(ch=='a')	v = k;
+			else if(ch>='x' && ch<='z')	v = k/ns[ch-'x'];
+		}
+		else if(c0=='w')
+		{
+			mreal x,y;
+			d->Momentum(ch,x,y);
+			if(ch=='a')	v = y;
+			else if(ch>='x' && ch<='z')	v = y/ns[ch-'x'];
+		}
+		else if(c0=='m')
+		{
+			mreal x,y,z;
+			if(ch=='a' && p[2]=='x')	v = d->Maximal();
+			else if(ch=='i' && p[2]=='n')	v = d->Minimal();
+			else if(ch=='x')	{	v = d->Maximal(x,y,z);	v = x/ns[0];	}
+			else if(ch=='y')	{	v = d->Maximal(x,y,z);	v = y/ns[1];	}
+			else if(ch=='z')	{	v = d->Maximal(x,y,z);	v = z/ns[2];	}
+		}
+		else if(c0=='s')
+		{
+			mreal x,y,z,k;
+			if(ch=='u' && p[2]=='m')	v = d->Momentum('x',x,y);
+			else if(ch=='a')
+			{	d->Momentum(ch,x,y,z,k);	v = z;	}
+			else if(ch>='x' && ch<='z')
+			{	d->Momentum(ch,x,y,z,k);	v = z/ns[ch-'x'];	}
+		}
 		else if(!p.compare(L"fst"))	{	long i=-1,j=-1,l=-1;	v = d->Find(0,i,j,l);	}
 		else if(!p.compare(L"lst"))	{	long i=-1,j=-1,l=-1;	v = d->Last(0,i,j,l);	}
-		else if(!p.compare(L"nx"))	v=d->nx;
-		else if(!p.compare(L"ny"))	v=d->ny;
-		else if(!p.compare(L"nz"))	v=d->nz;
-		else if(!p.compare(L"max"))	v=d->Maximal();
-		else if(!p.compare(L"min"))	v=d->Minimal();
-//		else if(!p.compare(L"pmax"))	{	v=d->Maximal();	v = v>0?v:0;	}
-//		else if(!p.compare(L"pmin"))	{	v=d->MinimalPos();	}
-//		else if(!p.compare(L"nmax"))	{	v=d->MaximalNeg();	}
-//		else if(!p.compare(L"nmin"))	{	v=d->Minimal();	v = v<0?v:0;	}
-		else if(!p.compare(L"sum"))	v=d->Momentum('x',x,y);
-		else if(!p.compare(L"mx"))	{	d->Maximal(x,y,z);	v=x/d->nx;	}
-		else if(!p.compare(L"my"))	{	d->Maximal(x,y,z);	v=y/d->ny;	}
-		else if(!p.compare(L"mz"))	{	d->Maximal(x,y,z);	v=z/d->nz;	}
-		else if(!p.compare(L"ax"))	{	d->Momentum('x',x,y);	v=x/d->nx;	}
-		else if(!p.compare(L"ay"))	{	d->Momentum('y',x,y);	v=x/d->ny;	}
-		else if(!p.compare(L"az"))	{	d->Momentum('z',x,y);	v=x/d->nz;	}
-		else if(!p.compare(L"wx"))	{	d->Momentum('x',x,y);	v=y/d->nx;	}
-		else if(!p.compare(L"wy"))	{	d->Momentum('y',x,y);	v=y/d->ny;	}
-		else if(!p.compare(L"wz"))	{	d->Momentum('z',x,y);	v=y/d->nz;	}
-		else if(!p.compare(L"sx"))	{	d->Momentum('x',x,y,z,k);	v=z/d->nx;	}
-		else if(!p.compare(L"sy"))	{	d->Momentum('y',x,y,z,k);	v=z/d->ny;	}
-		else if(!p.compare(L"sz"))	{	d->Momentum('z',x,y,z,k);	v=z/d->nz;	}
-		else if(!p.compare(L"kx"))	{	d->Momentum('x',x,y,z,k);	v=k/d->nx;	}
-		else if(!p.compare(L"ky"))	{	d->Momentum('y',x,y,z,k);	v=k/d->ny;	}
-		else if(!p.compare(L"kz"))	{	d->Momentum('z',x,y,z,k);	v=k/d->nz;	}
-		else if(!p.compare(L"aa"))	{	d->Momentum('a',x,y);	v=x;	}
-		else if(!p.compare(L"wa"))	{	d->Momentum('a',x,y);	v=y;	}
-		else if(!p.compare(L"sa"))	{	d->Momentum('a',x,y,z,k);v=z;	}
-		else if(!p.compare(L"ka"))	{	d->Momentum('a',x,y,z,k);v=k;	}
 		// if this is valid suffix when finish parsing (it can be mreal number)
 		if(mgl_isfin(v))
 		{	HADT res = new mglDataC;	res->a[0]=v;	return res;	}
@@ -854,15 +890,15 @@ HADT MGL_NO_EXPORT mglFormulaCalcC(std::wstring str, mglParser *arg, const std::
 		else
 		{
 			HADT res = new mglDataC;
-			if(!str.compare(L":"))	res->a[0] = -1;
+			char ch = str[0];
+			if(ch<':')	// this is real number
+				res->a[0] = (str[str.length()-1]=='i') ? dual(0,wcstod(str.c_str(),0)) :  mreal(wcstod(str.c_str(),0));
+			else if(ch=='i')	// this is imaginary number
+				res->a[0] = dual(0,str[1]>' '?wcstod(str.c_str()+1,0):1);
+			else if(!str.compare(L"pi"))	res->a[0] = M_PI;
+			else if(ch==':')	res->a[0] = -1;
 			else if(!str.compare(L"nan"))	res->a[0] = NAN;
 			else if(!str.compare(L"inf"))	res->a[0] = INFINITY;
-			else if(!str.compare(L"pi"))	res->a[0] = M_PI;
-			else if(str[0]=='i')	// this is imaginary number
-				res->a[0] = dual(0,(str.length()>1 && str[1]>' ')?wcstod(str.substr(1).c_str(),0):1);
-			else if(str[str.length()-1]=='i')
-				res->a[0] = dual(0,wcstod(str.c_str(),0));
-			else res->a[0] = mreal(wcstod(str.c_str(),0));	// this is real number
 			return res;
 		}
 	}
