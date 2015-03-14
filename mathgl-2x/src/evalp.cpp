@@ -461,6 +461,7 @@ HMDT MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std::v
 		else if(!p.compare(L"lst"))	{	long i=-1,j=-1,l=-1;	v = d->Last(0,i,j,l);	}
 		else if(!p.compare(L"pmax"))	{	v=d->Maximal();	v = v>0?v:0;	}
 		else if(!p.compare(L"pmin"))	{	v=d->MinimalPos();	}
+		delete d;
 		// if this is valid suffix when finish parsing (it can be mreal number)
 		if(mgl_isfin(v))
 		{	HMDT res = new mglData;	res->a[0]=v;	return res;	}
@@ -868,6 +869,7 @@ HADT MGL_NO_EXPORT mglFormulaCalcC(std::wstring str, mglParser *arg, const std::
 		}
 		else if(!p.compare(L"fst"))	{	long i=-1,j=-1,l=-1;	v = d->Find(0,i,j,l);	}
 		else if(!p.compare(L"lst"))	{	long i=-1,j=-1,l=-1;	v = d->Last(0,i,j,l);	}
+		delete d;
 		// if this is valid suffix when finish parsing (it can be mreal number)
 		if(mgl_isfin(v))
 		{	HADT res = new mglDataC;	res->a[0]=v;	return res;	}

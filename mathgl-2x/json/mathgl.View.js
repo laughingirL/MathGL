@@ -208,14 +208,16 @@ mathgl.View.prototype.__onMouseWheel = function(e) {
 	this.__isMouseDown = false;
 //	this.__distance -= 0.1 * e.wheelDelta / 120;
 
-	var scaleWheelDelta = -1/40;
-	var sensivity = 30;
-	if (e.deltaY !== undefined) {
-		// handle standard W3C DOM Level 3 'wheel' event
-		this.__distance += e.deltaY / sensivity;
-	} else if (e.wheelDelta !== undefined) {
+	var wheelSensivity = 0.1;
+	if (e.wheelDelta !== undefined) {
 		// handle deprecated 'mousewheel' event (old webkit in chrome and safari)
-		this.__distance += scaleWheelDelta * e.wheelDelta / sensivity;
+		// wheelDelta is always 120 and inverted to standard deltaY
+		var direction = e.wheelDelta >= 0 ? -1 : 1;
+		this.__distance += -1. * wheelSensivity * direction;
+	} else if (e.deltaY !== undefined) {
+		// handle standard W3C DOM Level 3 'wheel' event
+		var direction = e.deltaY >= 0 ? -1 : 1;
+		this.__distance += wheelSensivity * direction;
 	}
 
 	this.__distance = Math.min(this.__distance, 10.0);
@@ -250,9 +252,9 @@ mathgl.View.prototype.setCameraEventHandler = function(handler) {
 }
 
 mathgl.View.prototype.__notifyCameraChanged = function() {
-  if(this.__onCameraChanged) {
-    this.__onCameraChanged(this.getViewpoint());
-  }
+	if(this.__onCameraChanged) {
+		this.__onCameraChanged(this.getViewpoint());
+	}
 }
 
 /**
