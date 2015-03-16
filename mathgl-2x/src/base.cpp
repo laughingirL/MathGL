@@ -116,7 +116,7 @@ mglBase::mglBase()
 	Txt.set_mutex(&lockClf);
 #endif
 	fnt=0;	*FontDef=0;	fx=fy=fz=fa=fc=0;
-	AMin = mglPoint(0,0,0,0);	AMax = mglPoint(1,1,1,1);
+	AMin.Set(0,0,0,0);	AMax.Set(1,1,1,1);
 
 	InUse = 1;	SetQuality();	FaceNum = 0;
 	// Always create default palette txt[0] and default scheme txt[1]
@@ -126,7 +126,7 @@ mglBase::mglBase()
 	MGL_PUSH(Txt,t2,mutexTxt);
 
 	strcpy(last_style,"__1 {dFFFF}k\0");
-	MinS=mglPoint(-1,-1,-1);	MaxS=mglPoint(1,1,1);
+	MinS.Set(-1,-1,-1);	MaxS.Set(1,1,1);
 	fnt = new mglFont;	fnt->gr = this;	PrevState=NAN;
 }
 mglBase::~mglBase()
@@ -365,8 +365,8 @@ void mglBase::RecalcBorder()
 	{	FMin = Min;	FMax = Max;	}
 	else
 	{
-		FMin = mglPoint( INFINITY, INFINITY, INFINITY);
-		FMax = mglPoint(-INFINITY,-INFINITY,-INFINITY);
+		FMin.Set( INFINITY, INFINITY, INFINITY);
+		FMax.Set(-INFINITY,-INFINITY,-INFINITY);
 		register int i,j;
 		int n=30;
 		for(i=0;i<=n;i++)	for(j=0;j<=n;j++)	// x range
@@ -445,12 +445,12 @@ bool mglBase::ScalePoint(const mglMatrix *, mglPoint &p, mglPoint &n, bool use_n
 	}
 	else
 	{
-		if(x1<Min.x)	{x=Min.x;	n=mglPoint(1,0,0);}
-		if(x2>Max.x)	{x=Max.x;	n=mglPoint(1,0,0);}
-		if(y1<Min.y)	{y=Min.y;	n=mglPoint(0,1,0);}
-		if(y2>Max.y)	{y=Max.y;	n=mglPoint(0,1,0);}
-		if(z1<Min.z)	{z=Min.z;	n=mglPoint(0,0,1);}
-		if(z2>Max.z)	{z=Max.z;	n=mglPoint(0,0,1);}
+		if(x1<Min.x)	{x=Min.x;	n.Set(1,0,0);}
+		if(x2>Max.x)	{x=Max.x;	n.Set(1,0,0);}
+		if(y1<Min.y)	{y=Min.y;	n.Set(0,1,0);}
+		if(y2>Max.y)	{y=Max.y;	n.Set(0,1,0);}
+		if(z1<Min.z)	{z=Min.z;	n.Set(0,0,1);}
+		if(z2>Max.z)	{z=Max.z;	n.Set(0,0,1);}
 	}
 
 	x1=x;	y1=y;	z1=z;
@@ -513,7 +513,7 @@ void mglScaleAxis(mreal &v1, mreal &v2, mreal &v0, mreal x1, mreal x2)
 //-----------------------------------------------------------------------------
 void mglBase::SetOrigin(mreal x0, mreal y0, mreal z0, mreal c0)
 {
-	Org=mglPoint(x0,y0,z0,c0);
+	Org.Set(x0,y0,z0,c0);
 	if((TernAxis&3)==0)
 	{
 		Min = OMin;	Max = OMax;
@@ -548,7 +548,7 @@ void mglBase::SetRanges(mglPoint m1, mglPoint m2)
 		mglScaleAxis(Min.c, Max.c, Org.c, AMin.c, AMax.c);
 	}
 
-	CutMin = mglPoint(0,0,0);	CutMax = mglPoint(0,0,0);
+	CutMin.Set(0,0,0);	CutMax.Set(0,0,0);
 	RecalcBorder();
 }
 //-----------------------------------------------------------------------------
@@ -710,7 +710,7 @@ void mglBase::Ternary(int t)
 	{
 		if(c)	{	x1 = Min;	x2 = Max;	o = Org;	}
 		SetRanges(mglPoint(0,0,0),mglPoint(1,1,(t&3)==1?0:1));
-		Org=mglPoint(0,0,(t&3)==1?NAN:0);	c = false;
+		Org.Set(0,0,(t&3)==1?NAN:0);	c = false;
 	}
 	else if(!c)	{	SetRanges(x1,x2);	Org=o;	c=true;	}
 }
@@ -859,8 +859,8 @@ void mglTexture::Set(const char *s, int smooth, mreal alpha)
 		if(strchr(MGL_COLORS,s[i]) && j<1 && (m==0 || s[i-1]=='{'))	// {CN,val} format, where val in [0,1]
 		{
 			if(m>0 && s[i+1]>'0' && s[i+1]<='9')// ext color
-			{	c[2*n] = mglColor(s[i],(s[i+1]-'0')/5.f);	i++;	}
-			else	c[2*n] = mglColor(s[i]);	// usual color
+			{	c[2*n].Set(s[i],(s[i+1]-'0')/5.f);	i++;	}
+			else	c[2*n].Set(s[i]);	// usual color
 			val[n]=-1;	c[2*n].a = -1;	n++;
 		}
 		if(s[i]=='x' && i>0 && s[i-1]=='{' && j<1)	// {xRRGGBB,val} format, where val in [0,1]

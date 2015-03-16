@@ -34,9 +34,9 @@ mglCanvas::mglCanvas(int w, int h) : mglBase()
 	pnt_col = 0;
 
 	ac.ch='c';
-	ax.dir = mglPoint(1,0,0);	ax.a = mglPoint(0,1,0);	ax.b = mglPoint(0,0,1);	ax.ch='x';
-	ay.dir = mglPoint(0,1,0);	ay.a = mglPoint(1,0,0);	ay.b = mglPoint(0,0,1);	ay.ch='y';
-	az.dir = mglPoint(0,0,1);	az.a = mglPoint(0,1,0);	az.b = mglPoint(1,0,0);	az.ch='z';
+	ax.dir.Set(1,0,0);	ax.a.Set(0,1,0);	ax.b.Set(0,0,1);	ax.ch='x';
+	ay.dir.Set(0,1,0);	ay.a.Set(1,0,0);	ay.b.Set(0,0,1);	ay.ch='y';
+	az.dir.Set(0,0,1);	az.a.Set(0,1,0);	az.b.Set(1,0,0);	az.ch='z';
 
 	SetSize(w,h);	SetQuality(MGL_DRAW_NORM);	DefaultPlotParam();
 }
@@ -503,19 +503,19 @@ pthread_mutex_lock(&mutexPtx);
 			long k1,k2,k3,k4;	mglPnt pt;	mglPoint pp;
 			w = fnt->Width(text,font);	h = fnt->Height(font);
 			mreal d=-w*align/2.-h*0.2;	w+=h*0.4;
-			pt = q;	pp = mglPoint(d,-h*0.4);		PostScale(&Bt,pp);
+			pt = q;	pp.Set(d,-h*0.4);		PostScale(&Bt,pp);
 			pt.x=pt.xx=pp.x;	pt.y=pt.yy=pp.y;
 #pragma omp critical(pnt)
 			{k1=Pnt.size();	MGL_PUSH(Pnt,pt,mutexPnt);}
-			pt = q;	pp = mglPoint(w+d,-h*0.4);		PostScale(&Bt,pp);
+			pt = q;	pp.Set(w+d,-h*0.4);		PostScale(&Bt,pp);
 			pt.x=pt.xx=pp.x;	pt.y=pt.yy=pp.y;
 #pragma omp critical(pnt)
 			{k2=Pnt.size();	MGL_PUSH(Pnt,pt,mutexPnt);}
-			pt = q;	pp = mglPoint(d,h*1.2);			PostScale(&Bt,pp);
+			pt = q;	pp.Set(d,h*1.2);			PostScale(&Bt,pp);
 			pt.x=pt.xx=pp.x;	pt.y=pt.yy=pp.y;
 #pragma omp critical(pnt)
 			{k3=Pnt.size();	MGL_PUSH(Pnt,pt,mutexPnt);}
-			pt = q;	pp = mglPoint(w+d,h*1.2);		PostScale(&Bt,pp);
+			pt = q;	pp.Set(w+d,h*1.2);		PostScale(&Bt,pp);
 			pt.x=pt.xx=pp.x;	pt.y=pt.yy=pp.y;
 #pragma omp critical(pnt)
 			{k4=Pnt.size();	MGL_PUSH(Pnt,pt,mutexPnt);}
@@ -772,7 +772,7 @@ void mglCanvas::AddLight(int n, mglPoint r, mglPoint d, char col, mreal br, mrea
 	if(n<0 || n>9)	{	SetWarn(mglWarnLId,"AddLight");	return;	}
 	light[n].n = true;	light[n].a = ap>0?ap*ap:3;
 	light[n].b = br;	light[n].r = r;
-	light[n].d = d;		light[n].c = mglColor(col);
+	light[n].d = d;		light[n].c.Set(col);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::arrow_plot(long n1, long n2, char st)
@@ -907,7 +907,7 @@ void mglCanvas::Legend(const std::vector<mglText> &leg, mreal x, mreal y, const 
 	}
 	x += B.x-iw/2+dx;	y += B.y-ih/2+dy;
 	// draw it
-	mglPoint p,q=mglPoint(NAN,NAN,NAN);
+	mglPoint p,q(NAN,NAN,NAN);
 
 	mreal cc = AddTexture(font);
 	mreal c1,c2;	//=AddTexture(char(k1?k1:'w')), c2=AddTexture(char(k2?k2:'k'));
@@ -944,10 +944,10 @@ void mglCanvas::Legend(const std::vector<mglText> &leg, mreal x, mreal y, const 
 		if(!leg[i].stl.empty())	line_plot(k1,k2);
 		if(m)	for(j=0;j<LegendMarks;j++)
 		{
-			p = mglPoint(x+ix*w+0.1f*ll + (j+1)*0.8f*ll/(1.+LegendMarks),y+iy*h+0.45*h,Depth);
+			p.Set(x+ix*w+0.1f*ll + (j+1)*0.8f*ll/(1.+LegendMarks),y+iy*h+0.45*h,Depth);
 			mark_plot(AddPnt(&M,p,CDef,q,-1,0),m);
 		}
-		p = mglPoint(x+ix*w+((!leg[i].stl.empty())?ll:0.01*iw), y+iy*h+0.15*h, Depth);
+		p.Set(x+ix*w+((!leg[i].stl.empty())?ll:0.01*iw), y+iy*h+0.15*h, Depth);
 		text_plot(AddPnt(&M,p,-1,q,-1,0), leg[i].text.c_str(), ff, size,0,cc);
 	}
 	Pop();	EndGroup();	delete []ff;
@@ -997,7 +997,7 @@ void mglCanvas::Table(mreal x, mreal y, HCDT val, const wchar_t *text, const cha
 	x = x*(inW-w)+B.x-inW/2;
 	y = y*(inH-h*m)+B.y-inH/2;
 
-	mglPoint p,q=mglPoint(NAN,NAN);
+	mglPoint p,q(NAN,NAN);
 	mreal xx,yy;
 	if(grid)	// draw bounding box
 	{

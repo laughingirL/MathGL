@@ -154,19 +154,19 @@ bool mglCanvas::ScalePoint(const mglMatrix *M, mglPoint &p, mglPoint &n, bool us
 long mglCanvas::ProjScale(int nf, long id, bool text)
 {
 	const mglPnt &pi = Pnt[id];
-	mglPoint pp = mglPoint(pi.x,pi.y,pi.z), nn = mglPoint(pi.u,pi.v,pi.w), p, n;
+	mglPoint pp(pi.x,pi.y,pi.z), nn(pi.u,pi.v,pi.w), p, n;
 	if(mgl_isnan(pp.x))	return -1;
 	mreal w=B1.b[0]/2, h=B1.b[4]/2, d=B1.b[8]/2, xx=B1.x-w/2, yy=B1.y-h/2;
 	if(!pi.sub)
 	{
-		mglPoint q = RestorePnt(pp)/(2*B.pf);
-		mglPoint u = RestorePnt(nn,true);	u.Normalize();
+		mglPoint q(RestorePnt(pp)/(2*B.pf));
+		mglPoint u(RestorePnt(nn,true));	u.Normalize();
 		if(nf==0)
 		{	p.x = xx + q.x*w;	p.y = yy + q.y*h;	p.z = B1.z + q.z*d;	n = u;	}
 		else if(nf==1)
-		{	p.x = xx + q.x*w;	p.y = yy+h + q.z*h;	p.z = B1.z - q.y*d;	n = mglPoint(u.x,u.z,-u.y);	}
+		{	p.x = xx + q.x*w;	p.y = yy+h + q.z*h;	p.z = B1.z - q.y*d;	n.Set(u.x,u.z,-u.y);	}
 		else if(nf==2)
-		{	p.x = xx+w + q.z*w;	p.y = yy + q.y*h;	p.z = B1.z - q.x*d;	n = mglPoint(u.z,u.y,-u.x);	}
+		{	p.x = xx+w + q.z*w;	p.y = yy + q.y*h;	p.z = B1.z - q.x*d;	n.Set(u.z,u.y,-u.x);	}
 		else
 		{
 			const mreal *b=B.b;	n = nn;
@@ -706,7 +706,7 @@ void mglCanvas::Clf(mglColor Back)
 {
 	Fog(0);	PDef = 0xffff;	pPos = 0;
 	ClearFrame();
-	if((Flag&3)==2)	Back = mglColor(0,0,0,0);
+	if((Flag&3)==2)	Back.Set(0,0,0,0);
 	if(Back!=NC)	FillBackground(Back);
 }
 //-----------------------------------------------------------------------------
@@ -950,7 +950,7 @@ void mglCanvas::quad_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 	unsigned char r[4];
 	long y1,x1,y2,x2;
 	float dd,dsx,dsy;
-	mglPnt d1=p2-p1, d2=p3-p1, d3=p4+p1-p2-p3, p;
+	mglPnt d1(p2-p1), d2(p3-p1), d3(p4+p1-p2-p3);
 
 	if((d1.x==0 && d1.y==0) || (d2.x==0 && d2.y==0))
 	{	trig_draw(p1,p2,p4,true,d);	trig_draw(p1,p3,p4,true,d);	return;	}
@@ -967,9 +967,9 @@ void mglCanvas::quad_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 	dsx =-4*(d2.y*d3.x - d2.x*d3.y)*d1.y;
 	dsy = 4*(d2.y*d3.x - d2.x*d3.y)*d1.x;
 
-	mglPoint n1 = mglPoint(p2.x-p1.x,p2.y-p1.y,p2.z-p1.z)^mglPoint(p3.x-p1.x,p3.y-p1.y,p3.z-p1.z);
-	mglPoint n2 = mglPoint(p2.x-p4.x,p2.y-p4.y,p2.z-p4.z)^mglPoint(p3.x-p4.x,p3.y-p4.y,p3.z-p4.z);
-	mglPoint nr = (n1+n2)*0.5;
+	mglPoint n1(mglPoint(p2.x-p1.x,p2.y-p1.y,p2.z-p1.z)^mglPoint(p3.x-p1.x,p3.y-p1.y,p3.z-p1.z));
+	mglPoint n2(mglPoint(p2.x-p4.x,p2.y-p4.y,p2.z-p4.z)^mglPoint(p3.x-p4.x,p3.y-p4.y,p3.z-p4.z));
+	mglPoint nr((n1.x+n2.x)*0.5,(n1.y+n2.y)*0.5,(n1.z+n2.z)*0.5);
 
 	float x0 = p1.x, y0 = p1.y;
 	int oi = d->ObjId, ang=d->angle;
@@ -996,7 +996,7 @@ void mglCanvas::quad_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 					u = 2.f*(d2.y*xx - d2.x*yy)/qu;	v = 2.f*(d1.x*yy - d1.y*xx)/qv;
 					if(u*(1.f-u)<0.f || v*(1.f-v)<0.f)	continue;	// second root bad
 				}
-				p = p1+d1*u+d2*v+d3*(u*v);
+				mglPnt p(p1+d1*u+d2*v+d3*(u*v));
 				if(mgl_isnan(p.u) && mgl_isnum(p.v))
 				{	p.u = nr.x;	p.v = nr.y;	p.w = nr.z;	}
 				pnt_plot(i,j,p.z,col2int(p,r,oi),oi);
@@ -1008,7 +1008,7 @@ void mglCanvas::quad_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 void mglCanvas::quad_pix(long i, long j, const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, const mglPnt &p4, const mglDrawReg *d)
 {
 	if(!visible(i,j,d->m, d->PenWidth,d->angle))	return;
-	mglPnt d1=p2-p1, d2=p3-p1, d3=p4+p1-p2-p3;
+	mglPnt d1(p2-p1), d2(p3-p1), d3(p4+p1-p2-p3);
 	register float dd = d1.x*d2.y-d1.y*d2.x;
 	register float dsx =-4*(d2.y*d3.x - d2.x*d3.y)*d1.y;
 	register float dsy = 4*(d2.y*d3.x - d2.x*d3.y)*d1.x;
@@ -1035,11 +1035,11 @@ void mglCanvas::quad_pix(long i, long j, const mglPnt &p1, const mglPnt &p2, con
 		}
 		if(u*(1.f-u)<0.f || v*(1.f-v)<0.f)	return;	// second root bad
 	}
-	mglPnt p = p1+d1*u+d2*v+d3*(u*v);
+	mglPnt p(p1+d1*u+d2*v+d3*(u*v));
 	if(mgl_isnan(p.u) && mgl_isnum(p.v))
 	{
-		mglPoint n1 = mglPoint(p2.x-p1.x,p2.y-p1.y,p2.z-p1.z)^mglPoint(p3.x-p1.x,p3.y-p1.y,p3.z-p1.z);
-		mglPoint n2 = mglPoint(p2.x-p4.x,p2.y-p4.y,p2.z-p4.z)^mglPoint(p3.x-p4.x,p3.y-p4.y,p3.z-p4.z);
+		mglPoint n1(mglPoint(p2.x-p1.x,p2.y-p1.y,p2.z-p1.z)^mglPoint(p3.x-p1.x,p3.y-p1.y,p3.z-p1.z));
+		mglPoint n2(mglPoint(p2.x-p4.x,p2.y-p4.y,p2.z-p4.z)^mglPoint(p3.x-p4.x,p3.y-p4.y,p3.z-p4.z));
 		p.u = (n1.x+n2.x)*0.5;
 		p.v = (n1.y+n2.y)*0.5;
 		p.w = (n1.z+n2.z)*0.5;
@@ -1058,7 +1058,7 @@ void mglCanvas::trig_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 	unsigned char r[4];
 	long y1,x1,y2,x2;
 	float dxu,dxv,dyu,dyv;
-	mglPnt d1=p2-p1, d2=p3-p1, p;
+	mglPnt d1(p2-p1), d2(p3-p1), p;
 
 	dxu = d2.x*d1.y - d1.x*d2.y;
 	if(fabs(dxu)<1e-5)	return;		// points lies on the same line
@@ -1073,7 +1073,7 @@ void mglCanvas::trig_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 	y1=y1>d->y1?y1:d->y1;	y2=y2<d->y2?y2:d->y2;
 //	if(x1>x2 || y1>y2)	return;
 	// default normale
-	mglPoint nr = mglPoint(p2.x-p1.x,p2.y-p1.y,p2.z-p1.z)^mglPoint(p3.x-p1.x,p3.y-p1.y,p3.z-p1.z);
+	mglPoint nr(mglPoint(p2.x-p1.x,p2.y-p1.y,p2.z-p1.z)^mglPoint(p3.x-p1.x,p3.y-p1.y,p3.z-p1.z));
 	float x0 = p1.x, y0 = p1.y;
 	float dz = Width>2 ? 1 : 1e-5*Width;	// provide additional height to be well visible on the surfaces
 	if(anorm)	dz=0;
@@ -1113,16 +1113,16 @@ void mglCanvas::trig_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 void mglCanvas::trig_pix(long i, long j, const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, bool anorm, const mglDrawReg *d)
 {
 	if(!visible(i,j,d->m, d->PenWidth,d->angle))	return;
-	mglPnt d1=p2-p1, d2=p3-p1;
+	mglPnt d1(p2-p1), d2(p3-p1);
 	register float dd = d2.x*d1.y - d1.x*d2.y;
 	if(fabs(dd)<1e-5)	return;		// points lies on the same line
 	register float dyv =-d1.x/dd, dxv = d1.y/dd, dyu = d2.x/dd, dxu =-d2.y/dd;
 	register float xx = (i-p1.x), yy = (j-p1.y);
 	register float u = dxu*xx+dyu*yy, v = dxv*xx+dyv*yy;
 	if(u<0 || v<0 || u+v>1)	return;
-	mglPnt p = p1+d1*u+d2*v;
+	mglPnt p(p1+d1*u+d2*v);
 	if(mgl_isnan(p.u) && mgl_isnum(p.v) && anorm)
-	{	mglPoint nr = mglPoint(p2.x-p1.x,p2.y-p1.y,p2.z-p1.z)^mglPoint(p3.x-p1.x,p3.y-p1.y,p3.z-p1.z);
+	{	mglPoint nr(mglPoint(p2.x-p1.x,p2.y-p1.y,p2.z-p1.z)^mglPoint(p3.x-p1.x,p3.y-p1.y,p3.z-p1.z));
 		p.u = nr.x;	p.v = nr.y;	p.w = nr.z;	}
 	unsigned char r[4];
 	pnt_plot(i,j,p.z,col2int(p,r,d->ObjId),d->ObjId);
@@ -1141,7 +1141,7 @@ void mglCanvas::line_draw(const mglPnt &p1, const mglPnt &p2, const mglDrawReg *
 	int oi = dr->ObjId;
 
 	if(oi==HighId)	{	pw *= 2;	dpw=2;	}
-	mglPnt d=p2-p1, p;
+	mglPnt d(p2-p1), p;
 	bool hor = fabs(d.x)>fabs(d.y);
 
 	x1 = long(p1.x<p2.x?p1.x:p2.x);	y1 = long(p1.y<p2.y?p1.y:p2.y);	// bounding box
@@ -1210,7 +1210,7 @@ void mglCanvas::pnt_fast(long x,long y,mreal z,const unsigned char ci[4], int ob
 void mglCanvas::fast_draw(const mglPnt &p1, const mglPnt &p2, const mglDrawReg *dr)
 {
 	if(p1.x==p2.x && p1.y==p2.y) return;
-	mglPnt d=p2-p1;
+	mglPnt d(p2-p1);
 	int oi = dr->ObjId;
 	unsigned char r[4];	col2int(p1,r,oi);
 	long y1,x1,y2,x2;
@@ -1241,7 +1241,7 @@ void mglCanvas::fast_draw(const mglPnt &p1, const mglPnt &p2, const mglDrawReg *
 void mglCanvas::line_pix(long i, long j, const mglPnt &p1, const mglPnt &p2, const mglDrawReg *dr)
 {
 	register float xx = (i-p1.x), yy = (j-p1.y);
-	mglPnt d=p2-p1;
+	mglPnt d(p2-p1);
 	register float dd = hypot(d.x, d.y);
 	register float dxv = d.y/dd, dyv =-d.x/dd, dxu = d.x/dd, dyu = d.y/dd;
 	register float u = dxu*xx+dyu*yy, v = dxv*xx+dyv*yy;	v = v*v;
@@ -1250,7 +1250,7 @@ void mglCanvas::line_pix(long i, long j, const mglPnt &p1, const mglPnt &p2, con
 	register float pw=dr->PenWidth, dpw=3;
 	if(dr->ObjId==HighId)	{	pw *= 2;	dpw=2;	}
 	if(v>pw*pw || !(dr->PDef & ( 1L<<long(fmod(dr->pPos+u/pw/1.5, 16)) ) ))	return;
-	mglPnt p = p1+d*(u/dd);
+	mglPnt p(p1+d*(u/dd));
 	unsigned char r[4];
 	col2int(p,r,dr->ObjId);
 	r[3] = v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
@@ -1888,11 +1888,11 @@ void mglCanvas::glyph_fill(const mglMatrix *M, const mglPnt &pp, mreal f, const 
 	for(long ik=0;ik<g.nt;ik++)
 	{
 		register long ii = 6*ik;	mglPoint p;
-		p = mglPoint(f*g.trig[ii]+pp.u,f*g.trig[ii+1]+pp.v,0);
+		p.Set(f*g.trig[ii]+pp.u,f*g.trig[ii+1]+pp.v,0);
 		PostScale(M,p);	q0.x = p.x;	q0.y = p.y;	q0.z = p.z;
-		ii+=2;	p = mglPoint(f*g.trig[ii]+pp.u,f*g.trig[ii+1]+pp.v,0);
+		ii+=2;	p.Set(f*g.trig[ii]+pp.u,f*g.trig[ii+1]+pp.v,0);
 		PostScale(M,p);	q1.x = p.x;	q1.y = p.y;	q1.z = p.z;
-		ii+=2;	p = mglPoint(f*g.trig[ii]+pp.u,f*g.trig[ii+1]+pp.v,0);
+		ii+=2;	p.Set(f*g.trig[ii]+pp.u,f*g.trig[ii+1]+pp.v,0);
 		PostScale(M,p);	q2.x = p.x;	q2.y = p.y;	q2.z = p.z;
 		trig_draw(q0,q1,q2,false,d);
 	}
@@ -1911,13 +1911,13 @@ void mglCanvas::glyph_wire(const mglMatrix *M, const mglPnt &pp, mreal f, const 
 		{	il = ik+1;	continue;	}
 		else if(ik==g.nl-1 || (g.line[ii+2]==0x3fff && g.line[ii+3]==0x3fff))
 		{	// enclose the circle. May be in future this block should be commented
-			p1 = mglPoint(f*g.line[ii]+pp.u,f*g.line[ii+1]+pp.v,0);	ii=2*il;
-			p2 = mglPoint(f*g.line[ii]+pp.u,f*g.line[ii+1]+pp.v,0);
+			p1.Set(f*g.line[ii]+pp.u,f*g.line[ii+1]+pp.v,0);	ii=2*il;
+			p2.Set(f*g.line[ii]+pp.u,f*g.line[ii+1]+pp.v,0);
 		}
 		else
 		{	// normal line
-			p1 = mglPoint(f*g.line[ii]+pp.u,f*g.line[ii+1]+pp.v,0);	ii+=2;
-			p2 = mglPoint(f*g.line[ii]+pp.u,f*g.line[ii+1]+pp.v,0);
+			p1.Set(f*g.line[ii]+pp.u,f*g.line[ii+1]+pp.v,0);	ii+=2;
+			p2.Set(f*g.line[ii]+pp.u,f*g.line[ii+1]+pp.v,0);
 		}
 		PostScale(M,p1);	PostScale(M,p2);
 		q0.x = p1.x;	q0.y = p1.y;	q0.z = p1.z;
@@ -1933,10 +1933,10 @@ void mglCanvas::glyph_line(const mglMatrix *M, const mglPnt &pp, mreal f, bool s
 	mglPoint p1,p2,p3,p4;
 
 	mreal dy = 0.004;
-	p1 = mglPoint(pp.u,pp.v-dy,0);	PostScale(M,p1);
-	p2 = mglPoint(pp.u,pp.v+dy,0);	PostScale(M,p2);
-	p3 = mglPoint(fabs(f)+pp.u,pp.v+dy,0);	PostScale(M,p3);
-	p4 = mglPoint(fabs(f)+pp.u,pp.v-dy,0);	PostScale(M,p4);
+	p1.Set(pp.u,pp.v-dy,0);	PostScale(M,p1);
+	p2.Set(pp.u,pp.v+dy,0);	PostScale(M,p2);
+	p3.Set(fabs(f)+pp.u,pp.v+dy,0);	PostScale(M,p3);
+	p4.Set(fabs(f)+pp.u,pp.v-dy,0);	PostScale(M,p4);
 
 	q0.x = p1.x;	q0.y = p1.y;	q0.z = p1.z;
 	q1.x = p2.x;	q1.y = p2.y;	q1.z = p2.z;
@@ -1987,11 +1987,11 @@ void mglCanvas::glyph_fpix(long i, long j, const mglMatrix *M, const mglPnt &pp,
 	for(long ik=0;ik<g.nt;ik++)
 	{
 		register long ii = 6*ik;	mglPoint p;
-		p = mglPoint(f*g.trig[ii]+pp.u,f*g.trig[ii+1]+pp.v,0);
+		p.Set(f*g.trig[ii]+pp.u,f*g.trig[ii+1]+pp.v,0);
 		PostScale(M,p);	q0.x = p.x;	q0.y = p.y;	q0.z = p.z;
-		ii+=2;	p = mglPoint(f*g.trig[ii]+pp.u,f*g.trig[ii+1]+pp.v,0);
+		ii+=2;	p.Set(f*g.trig[ii]+pp.u,f*g.trig[ii+1]+pp.v,0);
 		PostScale(M,p);	q1.x = p.x;	q1.y = p.y;	q1.z = p.z;
-		ii+=2;	p = mglPoint(f*g.trig[ii]+pp.u,f*g.trig[ii+1]+pp.v,0);
+		ii+=2;	p.Set(f*g.trig[ii]+pp.u,f*g.trig[ii+1]+pp.v,0);
 		PostScale(M,p);	q2.x = p.x;	q2.y = p.y;	q2.z = p.z;
 		trig_pix(i,j,q0,q1,q2,false,d);
 	}
@@ -2010,13 +2010,13 @@ void mglCanvas::glyph_wpix(long i, long j, const mglMatrix *M, const mglPnt &pp,
 		{	il = ik+1;	continue;	}
 		else if(ik==g.nl-1 || (g.line[ii+2]==0x3fff && g.line[ii+3]==0x3fff))
 		{	// enclose the circle. May be in future this block should be commented
-			p1 = mglPoint(f*g.line[ii]+pp.u,f*g.line[ii+1]+pp.v,0);	ii=2*il;
-			p2 = mglPoint(f*g.line[ii]+pp.u,f*g.line[ii+1]+pp.v,0);
+			p1.Set(f*g.line[ii]+pp.u,f*g.line[ii+1]+pp.v,0);	ii=2*il;
+			p2.Set(f*g.line[ii]+pp.u,f*g.line[ii+1]+pp.v,0);
 		}
 		else
 		{	// normal line
-			p1 = mglPoint(f*g.line[ii]+pp.u,f*g.line[ii+1]+pp.v,0);	ii+=2;
-			p2 = mglPoint(f*g.line[ii]+pp.u,f*g.line[ii+1]+pp.v,0);
+			p1.Set(f*g.line[ii]+pp.u,f*g.line[ii+1]+pp.v,0);	ii+=2;
+			p2.Set(f*g.line[ii]+pp.u,f*g.line[ii+1]+pp.v,0);
 		}
 		PostScale(M,p1);	PostScale(M,p2);
 		q0.x = p1.x;	q0.y = p1.y;	q0.z = p1.z;
@@ -2032,10 +2032,10 @@ void mglCanvas::glyph_lpix(long i, long j, const mglMatrix *M, const mglPnt &pp,
 	mglPoint p1,p2,p3,p4;
 
 	mreal dy = 0.004;
-	p1 = mglPoint(pp.u,pp.v-dy,0);	PostScale(M,p1);
-	p2 = mglPoint(pp.u,pp.v+dy,0);	PostScale(M,p2);
-	p3 = mglPoint(fabs(f)+pp.u,pp.v+dy,0);	PostScale(M,p3);
-	p4 = mglPoint(fabs(f)+pp.u,pp.v-dy,0);	PostScale(M,p4);
+	p1.Set(pp.u,pp.v-dy,0);	PostScale(M,p1);
+	p2.Set(pp.u,pp.v+dy,0);	PostScale(M,p2);
+	p3.Set(fabs(f)+pp.u,pp.v+dy,0);	PostScale(M,p3);
+	p4.Set(fabs(f)+pp.u,pp.v-dy,0);	PostScale(M,p4);
 
 	q0.x = p1.x;	q0.y = p1.y;	q0.z = p1.z;
 	q1.x = p2.x;	q1.y = p2.y;	q1.z = p2.z;
@@ -2064,7 +2064,7 @@ void mglCanvas::arrow_draw(long n1, long n2, char st, float ll)
 	const mglPnt &p1=Pnt[n1], &p2=Pnt[n2];
 	mglPnt q=p1; 	//q.u=q.v=q.w=0;
 
-	mglPoint kl=mglPoint(p1.x-p2.x,p1.y-p2.y,p1.z-p2.z), kt, p0=mglPoint(p1.x,p1.y,p1.z), p;
+	mglPoint kl(p1.x-p2.x,p1.y-p2.y,p1.z-p2.z), kt, p0(p1.x,p1.y,p1.z), p;
 	mreal d = hypot(kl.x,kl.y);
 	if(d==0)	return;
 	kl /= d;	kt = !kl;
@@ -2118,7 +2118,7 @@ void mglCanvas::arrow_plot_3d(long n1, long n2, char st, float ll)
 	const mglPnt &p1=Pnt[n1], &p2=Pnt[n2];
 	mglPnt q=p1; 	//q.u=q.v=q.w=0;
 
-	mglPoint kl=mglPoint(p1.x-p2.x,p1.y-p2.y,p1.z-p2.z), kt, kz, p0=mglPoint(p1.x,p1.y,p1.z), p;
+	mglPoint kl(p1.x-p2.x,p1.y-p2.y,p1.z-p2.z), kt, kz, p0(p1.x,p1.y,p1.z), p;
 	if(kl.norm()==0)	return;
 	kl.Normalize();	kt = !kl;	kz = kl^kt;
 	kl *= ll;	kt *= ll;	kz *= ll;

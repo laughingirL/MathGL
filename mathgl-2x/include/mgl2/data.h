@@ -709,7 +709,7 @@ class MGL_EXPORT mglDataF : public mglDataA
 public:
 
 	mglDataF(long xx=1,long yy=1,long zz=1):nx(xx),ny(yy),nz(zz), dfunc(0),par(0)
-	{	ex=0;	v2=mglPoint(1,1,1);	setD();	}
+	{	ex=0;	v2.Set(1,1,1);	setD();	}
 	mglDataF(const mglDataF &d) : nx(d.nx), ny(d.ny), nz(d.nz), str(d.str), v1(d.v1), v2(d.v2), dx(d.dx),dy(d.dy),dz(d.dz), dfunc(d.dfunc),par(d.par)
 	{	ex = mgl_create_expr(str.c_str());	}
 #if MGL_HAVE_RVAL

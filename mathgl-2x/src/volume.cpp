@@ -57,7 +57,7 @@ void MGL_EXPORT mgl_cloud_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const cha
 	n /= tx;	m /= ty;	l /= tz;
 	long *pos=new long[n*m*l];
 	gr->Reserve(n*m*l);
-	mglPoint q=mglPoint(NAN);
+	mglPoint q(NAN);
 	for(long k=0;k<l;k++)
 	{
 		if(gr->NeedStop())	break;
@@ -276,9 +276,9 @@ void MGL_EXPORT mgl_surf3_xyz_val(HMGL gr, double val, HCDT x, HCDT y, HCDT z, H
 				d = mgl_d(val,a0,a->v(i+1,j,k));
 				if(d>=0 && d<1)
 				{
-					if(nboth)	p = mglPoint(p0.x*(1-d)+x->v(i+1)*d, p0.y, p0.z);
-					else	p = mglPoint(p0.x*(1-d)+x->v(i+1,j,k)*d, p0.y*(1-d)+y->v(i+1,j,k)*d, p0.z*(1-d)+z->v(i+1,j,k)*d);
-					u = mglPoint(i+d,j,k);
+					if(nboth)	p.Set(p0.x*(1-d)+x->v(i+1)*d, p0.y, p0.z);
+					else	p.Set(p0.x*(1-d)+x->v(i+1,j,k)*d, p0.y*(1-d)+y->v(i+1,j,k)*d, p0.z*(1-d)+z->v(i+1,j,k)*d);
+					u.Set(i+d,j,k);
 					q = mgl_find_norm(nboth, x,y,z,a, u, inv,n,m,l);
 					pos = gr->AddPnt(p,c,q);	u.c=pos;
 					if(pos<0)	continue;
@@ -290,9 +290,9 @@ void MGL_EXPORT mgl_surf3_xyz_val(HMGL gr, double val, HCDT x, HCDT y, HCDT z, H
 				d = mgl_d(val,a0,a->v(i,j+1,k));
 				if(d>=0 && d<1)
 				{
-					if(nboth)	p = mglPoint(p0.x, p0.y*(1-d)+y->v(j+1)*d, p0.z);
-					else	p = mglPoint(p0.x*(1-d)+x->v(i,j+1,k)*d, p0.y*(1-d)+y->v(i,j+1,k)*d, p0.z*(1-d)+z->v(i,j+1,k)*d);
-					u = mglPoint(i,j+d,k);
+					if(nboth)	p.Set(p0.x, p0.y*(1-d)+y->v(j+1)*d, p0.z);
+					else	p.Set(p0.x*(1-d)+x->v(i,j+1,k)*d, p0.y*(1-d)+y->v(i,j+1,k)*d, p0.z*(1-d)+z->v(i,j+1,k)*d);
+					u.Set(i,j+d,k);
 					q = mgl_find_norm(nboth, x,y,z,a, u, inv,n,m,l);
 					pos = gr->AddPnt(p,c,q);	u.c=pos;
 					if(pos<0)	continue;
@@ -304,9 +304,9 @@ void MGL_EXPORT mgl_surf3_xyz_val(HMGL gr, double val, HCDT x, HCDT y, HCDT z, H
 				d = mgl_d(val,a->v(i,j,k-1),a0);
 				if(d>=0 && d<1)
 				{
-					if(nboth)	p = mglPoint(p0.x, p0.y, z->v(k-1)*(1-d)+p0.z*d);
-					else	p = mglPoint(x->v(i,j,k-1)*(1-d)+p0.x*d, y->v(i,j,k-1)*(1-d)+p0.y*d, z->v(i,j,k-1)*(1-d)+p0.z*d);
-					u = mglPoint(i,j,k+d-1);
+					if(nboth)	p.Set(p0.x, p0.y, z->v(k-1)*(1-d)+p0.z*d);
+					else	p.Set(x->v(i,j,k-1)*(1-d)+p0.x*d, y->v(i,j,k-1)*(1-d)+p0.y*d, z->v(i,j,k-1)*(1-d)+p0.z*d);
+					u.Set(i,j,k+d-1);
 					q = mgl_find_norm(nboth, x,y,z,a, u, inv,n,m,l);
 					pos = gr->AddPnt(p,c,q);	u.c=pos;
 					if(pos<0)	continue;
@@ -418,10 +418,10 @@ void MGL_EXPORT mgl_surf3a_xyz_val(HMGL gr, double val, HCDT x, HCDT y, HCDT z, 
 				d = mgl_d(val,a0,a->v(i+1,j,k));
 				if(d>=0 && d<1)
 				{
-					if(nboth)	p = mglPoint(p0.x*(1-d)+x->v(i+1)*d, p0.y, p0.z);
-					else	p = mglPoint(p0.x*(1-d)+x->v(i+1,j,k)*d, p0.y*(1-d)+y->v(i+1,j,k)*d, p0.z*(1-d)+z->v(i+1,j,k)*d);
+					if(nboth)	p.Set(p0.x*(1-d)+x->v(i+1)*d, p0.y, p0.z);
+					else	p.Set(p0.x*(1-d)+x->v(i+1,j,k)*d, p0.y*(1-d)+y->v(i+1,j,k)*d, p0.z*(1-d)+z->v(i+1,j,k)*d);
 					aa = gr->GetA(b0*(1-d)+b->v(i+1,j,k)*d);
-					u = mglPoint(i+d,j,k);
+					u.Set(i+d,j,k);
 					q = mgl_find_norm(nboth, x,y,z,a, u, inv,n,m,l);
 					pos = gr->AddPnt(p,c,q,aa);	u.c=pos;
 					if(pos<0)	continue;
@@ -433,10 +433,10 @@ void MGL_EXPORT mgl_surf3a_xyz_val(HMGL gr, double val, HCDT x, HCDT y, HCDT z, 
 				d = mgl_d(val,a0,a->v(i,j+1,k));
 				if(d>=0 && d<1)
 				{
-					if(nboth)	p = mglPoint(p0.x, p0.y*(1-d)+y->v(j+1)*d, p0.z);
-					else	p = mglPoint(p0.x*(1-d)+x->v(i,j+1,k)*d, p0.y*(1-d)+y->v(i,j+1,k)*d, p0.z*(1-d)+z->v(i,j+1,k)*d);
+					if(nboth)	p.Set(p0.x, p0.y*(1-d)+y->v(j+1)*d, p0.z);
+					else	p.Set(p0.x*(1-d)+x->v(i,j+1,k)*d, p0.y*(1-d)+y->v(i,j+1,k)*d, p0.z*(1-d)+z->v(i,j+1,k)*d);
 					aa = gr->GetA(b0*(1-d)+b->v(i,j+1,k)*d);
-					u = mglPoint(i,j+d,k);
+					u.Set(i,j+d,k);
 					q = mgl_find_norm(nboth, x,y,z,a, u, inv,n,m,l);
 					pos = gr->AddPnt(p,c,q,aa);	u.c=pos;
 					if(pos<0)	continue;
@@ -448,10 +448,10 @@ void MGL_EXPORT mgl_surf3a_xyz_val(HMGL gr, double val, HCDT x, HCDT y, HCDT z, 
 				d = mgl_d(val,a->v(i,j,k-1),a0);
 				if(d>=0 && d<1)
 				{
-					if(nboth)	p = mglPoint(p0.x, p0.y, z->v(k-1)*(1-d)+p0.z*d);
-					else	p = mglPoint(x->v(i,j,k-1)*(1-d)+p0.x*d, y->v(i,j,k-1)*(1-d)+p0.y*d, z->v(i,j,k-1)*(1-d)+p0.z*d);
+					if(nboth)	p.Set(p0.x, p0.y, z->v(k-1)*(1-d)+p0.z*d);
+					else	p.Set(x->v(i,j,k-1)*(1-d)+p0.x*d, y->v(i,j,k-1)*(1-d)+p0.y*d, z->v(i,j,k-1)*(1-d)+p0.z*d);
 					aa = gr->GetA(b->v(i,j,k-1)*(1-d)+b0*d);
-					u = mglPoint(i,j,k+d-1);
+					u.Set(i,j,k+d-1);
 					q = mgl_find_norm(nboth, x,y,z,a, u, inv,n,m,l);
 					pos = gr->AddPnt(p,c,q,aa);	u.c=pos;
 					if(pos<0)	continue;
@@ -577,10 +577,10 @@ void MGL_EXPORT mgl_surf3c_xyz_val(HMGL gr, double val, HCDT x, HCDT y, HCDT z, 
 				d = mgl_d(val,a0,a->v(i+1,j,k));
 				if(d>=0 && d<1)
 				{
-					if(nboth)	p = mglPoint(p0.x*(1-d)+x->v(i+1)*d, p0.y, p0.z);
-					else	p = mglPoint(p0.x*(1-d)+x->v(i+1,j,k)*d, p0.y*(1-d)+y->v(i+1,j,k)*d, p0.z*(1-d)+z->v(i+1,j,k)*d);
+					if(nboth)	p.Set(p0.x*(1-d)+x->v(i+1)*d, p0.y, p0.z);
+					else	p.Set(p0.x*(1-d)+x->v(i+1,j,k)*d, p0.y*(1-d)+y->v(i+1,j,k)*d, p0.z*(1-d)+z->v(i+1,j,k)*d);
 					c = gr->GetC(ss,b0*(1-d)+b->v(i+1,j,k)*d);
-					u = mglPoint(i+d,j,k);
+					u.Set(i+d,j,k);
 					q = mgl_find_norm(nboth, x,y,z,a, u, inv,n,m,l);
 					pos = gr->AddPnt(p,c,q);	u.c=pos;
 					if(pos<0)	continue;
@@ -592,10 +592,10 @@ void MGL_EXPORT mgl_surf3c_xyz_val(HMGL gr, double val, HCDT x, HCDT y, HCDT z, 
 				d = mgl_d(val,a0,a->v(i,j+1,k));
 				if(d>=0 && d<1)
 				{
-					if(nboth)	p = mglPoint(p0.x, p0.y*(1-d)+y->v(j+1)*d, p0.z);
-					else	p = mglPoint(p0.x*(1-d)+x->v(i,j+1,k)*d, p0.y*(1-d)+y->v(i,j+1,k)*d, p0.z*(1-d)+z->v(i,j+1,k)*d);
+					if(nboth)	p.Set(p0.x, p0.y*(1-d)+y->v(j+1)*d, p0.z);
+					else	p.Set(p0.x*(1-d)+x->v(i,j+1,k)*d, p0.y*(1-d)+y->v(i,j+1,k)*d, p0.z*(1-d)+z->v(i,j+1,k)*d);
 					c = gr->GetC(ss,b0*(1-d)+b->v(i,j+1,k)*d);
-					u = mglPoint(i,j+d,k);
+					u.Set(i,j+d,k);
 					q = mgl_find_norm(nboth, x,y,z,a, u, inv,n,m,l);
 					pos = gr->AddPnt(p,c,q);	u.c=pos;
 					if(pos<0)	continue;
@@ -607,10 +607,10 @@ void MGL_EXPORT mgl_surf3c_xyz_val(HMGL gr, double val, HCDT x, HCDT y, HCDT z, 
 				d = mgl_d(val,a->v(i,j,k-1),a0);
 				if(d>=0 && d<1)
 				{
-					if(nboth)	p = mglPoint(p0.x, p0.y, z->v(k-1)*(1-d)+p0.z*d);
-					else	p = mglPoint(x->v(i,j,k-1)*(1-d)+p0.x*d, y->v(i,j,k-1)*(1-d)+p0.y*d, z->v(i,j,k-1)*(1-d)+p0.z*d);
+					if(nboth)	p.Set(p0.x, p0.y, z->v(k-1)*(1-d)+p0.z*d);
+					else	p.Set(x->v(i,j,k-1)*(1-d)+p0.x*d, y->v(i,j,k-1)*(1-d)+p0.y*d, z->v(i,j,k-1)*(1-d)+p0.z*d);
 					c = gr->GetC(ss,b->v(i,j,k-1)*(1-d)+b0*d);
-					u = mglPoint(i,j,k+d-1);
+					u.Set(i,j,k+d-1);
 					q = mgl_find_norm(nboth, x,y,z,a, u, inv,n,m,l);
 					pos = gr->AddPnt(p,c,q);	u.c=pos;
 					if(pos<0)	continue;

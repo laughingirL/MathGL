@@ -90,8 +90,8 @@ bool mglCanvasGL::Alpha(bool enable)
 void mglCanvasGL::AddLight(int n,mglPoint r,mglPoint d,char cc, mreal br,mreal /*ap*/)
 {
 	mglColor c(cc);
-	mglColor AmbLight = mglColor(AmbBr,AmbBr,AmbBr);
-	mglColor DifLight = mglColor(br,br,br);
+	mglColor AmbLight(AmbBr,AmbBr,AmbBr);
+	mglColor DifLight(br,br,br);
 	GLenum lght[8] = {GL_LIGHT0,GL_LIGHT1,GL_LIGHT2,GL_LIGHT3,GL_LIGHT4,
 			GL_LIGHT5,GL_LIGHT6,GL_LIGHT7};
 	float amb[4], pos[4],dif[4],dir[4];
@@ -185,7 +185,7 @@ void mglCanvasGL::Fog(mreal d, mreal)
 void mglCanvasGL::Clf(mglColor Back)
 {
 	mglCanvas::Clf(Back);
-	if(Back==NC)	Back = mglColor(BDef[0]/255.,BDef[1]/255.,BDef[2]/255.);
+	if(Back==NC)	Back.Set(BDef[0]/255.,BDef[1]/255.,BDef[2]/255.);
 	gl_clf(Back);
 }
 //-----------------------------------------------------------------------------

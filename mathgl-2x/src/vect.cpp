@@ -58,8 +58,8 @@ void MGL_EXPORT mgl_traj_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, 
 		long mx = j<ax->GetNy() ? j:0,my = j<ay->GetNy() ? j:0,mz = j<az->GetNy() ? j:0;
 		for(long i=0;i<n;i++)
 		{
-			p1 = mglPoint(x->v(i,nx), y->v(i,ny), z->v(i,nz));
-			p2 = mglPoint(ax->v(i,mx),ay->v(i,my),az->v(i,mz));
+			p1.Set(x->v(i,nx), y->v(i,ny), z->v(i,nz));
+			p2.Set(ax->v(i,mx),ay->v(i,my),az->v(i,mz));
 			mreal dd = p2.norm();
 			if(len==0)
 			{
@@ -131,8 +131,8 @@ void MGL_EXPORT mgl_vect_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const cha
 #pragma omp for nowait collapse(3) reduction(+:ca)
 		for(long k=0;k<l;k++)	for(long j=0;j<m;j+=ty)	for(long i=0;i<n;i+=tx)
 		{
-			d = mglPoint(GetX(x,i,j,k).x, GetY(y,i,j,k).x);
-			v = mglPoint(ax->v(i,j,k),ay->v(i,j,k));
+			d.Set(GetX(x,i,j,k).x, GetY(y,i,j,k).x);
+			v.Set(ax->v(i,j,k),ay->v(i,j,k));
 			c1 = v.norm();	xm1 = xm1<c1 ? c1:xm1;	// handle NAN values
 			p1 = i<n-1 ? mglPoint(GetX(x,i+tx,j,k).x, GetY(y,i+tx,j,k).x)-d : d-mglPoint(GetX(x,i-tx,j,k).x, GetY(y,i-tx,j,k).x);
 			c1 = fabs(v*p1);	xx = p1.norm();	c1 *= xx?1/(xx*xx):0;
@@ -152,8 +152,8 @@ void MGL_EXPORT mgl_vect_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const cha
 		if(ax->GetNz()>1)	zVal = gr->Min.z+(gr->Max.z-gr->Min.z)*mreal(k)/(ax->GetNz()-1);
 		for(long j=0;j<m;j+=ty)	for(long i=0;i<n;i+=tx)
 		{
-			d = mglPoint(GetX(x,i,j,k).x, GetY(y,i,j,k).x, zVal);
-			v = mglPoint(ax->v(i,j,k),ay->v(i,j,k));
+			d.Set(GetX(x,i,j,k).x, GetY(y,i,j,k).x, zVal);
+			v.Set(ax->v(i,j,k),ay->v(i,j,k));
 			mreal dd = v.norm(), c1, c2;
 			v *= cm*(fix?(dd>dm ? 1./dd : 0) : xm);
 
@@ -228,8 +228,8 @@ void MGL_EXPORT mgl_vect_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, 
 #pragma omp for nowait collapse(3) reduction(+:ca)
 		for(long k=0;k<l;k+=tz)	for(long i=0;i<n;i+=tx)	for(long j=0;j<m;j+=ty)
 		{
-			d = mglPoint(GetX(x,i,j,k).x, GetY(y,i,j,k).x, GetZ(z,i,j,k).x);
-			v = mglPoint(ax->v(i,j,k),ay->v(i,j,k),az->v(i,j,k));
+			d.Set(GetX(x,i,j,k).x, GetY(y,i,j,k).x, GetZ(z,i,j,k).x);
+			v.Set(ax->v(i,j,k),ay->v(i,j,k),az->v(i,j,k));
 			c1 = v.norm();	xm1 = xm1<c1 ? c1:xm1;	// handle NAN values
 			p1 = i<n-1 ? mglPoint(GetX(x,i+tx,j,k).x, GetY(y,i+tx,j,k).x, GetZ(z,i+tx,j,k).x)-d : d-mglPoint(GetX(x,i-tx,j,k).x, GetY(y,i-tx,j,k).x, GetZ(z,i-tx,j,k).x);
 			c1 = fabs(v*p1);	xx = p1.norm();	c1 *= xx?1/(xx*xx):0;
@@ -251,8 +251,8 @@ void MGL_EXPORT mgl_vect_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, 
 		if(gr->NeedStop())	break;
 		for(long i=0;i<n;i+=tx)	for(long j=0;j<m;j+=ty)
 		{
-			d=mglPoint(GetX(x,i,j,k).x, GetY(y,i,j,k).x, GetZ(z,i,j,k).x);
-			v = mglPoint(ax->v(i,j,k),ay->v(i,j,k),az->v(i,j,k));
+			d.Set(GetX(x,i,j,k).x, GetY(y,i,j,k).x, GetZ(z,i,j,k).x);
+			v.Set(ax->v(i,j,k),ay->v(i,j,k),az->v(i,j,k));
 			mreal dd = v.norm(),c1,c2;
 			v *= cm*(fix?(dd>dm ? 1./dd : 0) : xm);
 
@@ -436,7 +436,7 @@ void MGL_EXPORT mgl_vect3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay,
 			xx = s.x.a[i0];	yy = s.y.a[i0];	zz = s.z.a[i0];
 			p1 = i<n-1 ? mglPoint(s.x.a[i0+tx]-xx, s.y.a[i0+tx]-yy, s.z.a[i0+tx]-zz) : mglPoint(xx-s.x.a[i0-tx], yy-s.y.a[i0-tx], zz-s.z.a[i0-tx]);
 			p2 = j<m-1 ? mglPoint(s.x.a[i0+tn]-xx, s.y.a[i0+tn]-yy, s.z.a[i0+tn]-zz) : mglPoint(xx-s.x.a[i0-tn], yy-s.y.a[i0-tn], zz-s.z.a[i0-tn]);
-			v = mglPoint(s.ax.a[i0], s.ay.a[i0], s.az.a[i0]);
+			v.Set(s.ax.a[i0], s.ay.a[i0], s.az.a[i0]);
 			c1 = v.norm();	xm1 = xm1<c1 ? c1:xm1;	// handle NAN values
 			yy = fabs(v*d);	xx = d.norm();	yy *= xx?1/(xx*xx):0;
 			c1 = fabs(v*p1);	xx = p1.norm();	c1 *= xx?1/(xx*xx):0;
@@ -453,8 +453,8 @@ void MGL_EXPORT mgl_vect3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay,
 	for(long i=0;i<n;i+=tx)	for(long j=0;j<m;j+=ty)
 	{
 		register long i0 = i+n*j;
-		d = mglPoint(s.x.a[i0], s.y.a[i0], s.z.a[i0]);
-		v = mglPoint(s.ax.a[i0], s.ay.a[i0], s.az.a[i0]);
+		d.Set(s.x.a[i0], s.y.a[i0], s.z.a[i0]);
+		v.Set(s.ax.a[i0], s.ay.a[i0], s.az.a[i0]);
 		mreal dd = v.norm(),c1,c2;
 		v *= cm*(fix?(dd>dm ? 1./dd : 0) : xm);
 
@@ -740,8 +740,8 @@ void flow(mglBase *gr, double u, double v, double w, const mglData &x, const mgl
 
 		gr->Reserve(4*k);	j = gr->AddPnt(pp[0],pp[0].c);
 		l = pp[1] - pp[0];	l /= mgl_norm(l);
-		q1 = mglPoint(l.y,-l.x,0);	ll = mgl_norm(q1);
-		if(ll)	q1 /= ll;	else	q1 = mglPoint(0,1,0);
+		q1.Set(l.y,-l.x,0);	ll = mgl_norm(q1);
+		if(ll)	q1 /= ll;	else	q1.Set(0,1,0);
 		q2 = q1^l;
 		if(xo)	{	n1 = gr->AddPnt(pp[0],-1,q2);	n2 = gr->AddPnt(pp[0]+rr*q1,-1,q2);	}
 		if(zo)	{	n3 = gr->AddPnt(pp[0],-1,q1);	n4 = gr->AddPnt(pp[0]+rr*q2,-1,q1);	}

@@ -47,11 +47,11 @@ void MGL_EXPORT mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCD
 		for(long i=0;i<m;i++)
 		{
 			register long k1 = long(nums->v(0,i)+0.5);
-			p1 = mglPoint(x->v(k1), y->v(k1), z->v(k1));
+			p1.Set(x->v(k1), y->v(k1), z->v(k1));
 			register long k2 = long(nums->v(1,i)+0.5);
-			p2 = mglPoint(x->v(k2), y->v(k2), z->v(k2));
+			p2.Set(x->v(k2), y->v(k2), z->v(k2));
 			register long k3 = long(nums->v(2,i)+0.5);
-			p3 = mglPoint(x->v(k3), y->v(k3), z->v(k3));
+			p3.Set(x->v(k3), y->v(k3), z->v(k3));
 			q = wire ? mglPoint(NAN,NAN) : (p2-p1) ^ (p3-p1);
 			k1 = gr->AddPnt(p1,gr->GetC(ss,a->v(k1)),q);
 			k2 = gr->AddPnt(p2,gr->GetC(ss,a->v(k2)),q);
@@ -71,8 +71,8 @@ void MGL_EXPORT mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCD
 			register long k3 = long(nums->v(2,i)+0.5);
 			if(!wire)
 			{
-				mglPoint q = mglPoint(x->v(k2)-x->v(k1), y->v(k2)-y->v(k1), z->v(k2)-z->v(k1)) ^
-					mglPoint(x->v(k3)-x->v(k1), y->v(k3)-y->v(k1), z->v(k3)-z->v(k1));
+				mglPoint q(mglPoint(x->v(k2)-x->v(k1), y->v(k2)-y->v(k1), z->v(k2)-z->v(k1)) ^
+					mglPoint(x->v(k3)-x->v(k1), y->v(k3)-y->v(k1), z->v(k3)-z->v(k1)));
 				q.Normalize();
 				// try be sure that in the same direction ...
 				if(q.z<0)	q *= -1;
@@ -149,13 +149,13 @@ void MGL_EXPORT mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HC
 		for(long i=0;i<m;i++)
 		{
 			register long k1 = long(nums->v(0,i)+0.5);
-			p1 = mglPoint(x->v(k1), y->v(k1), z->v(k1));
+			p1.Set(x->v(k1), y->v(k1), z->v(k1));
 			register long k2 = long(nums->v(1,i)+0.5);
-			p2 = mglPoint(x->v(k2), y->v(k2), z->v(k2));
+			p2.Set(x->v(k2), y->v(k2), z->v(k2));
 			register long k3 = long(nums->v(2,i)+0.5);
-			p3 = mglPoint(x->v(k3), y->v(k3), z->v(k3));
+			p3.Set(x->v(k3), y->v(k3), z->v(k3));
 			register long k4 = floor(nums->v(3,i)+0.5);
-			p4 = mglPoint(x->v(k4), y->v(k4), z->v(k4));
+			p4.Set(x->v(k4), y->v(k4), z->v(k4));
 			mglPoint q = wire ? mglPoint(NAN,NAN):(p2-p1) ^ (p3-p1);
 			k1 = gr->AddPnt(p1,gr->GetC(ss,a->v(k1)),q);
 			k2 = gr->AddPnt(p2,gr->GetC(ss,a->v(k2)),q);
@@ -172,13 +172,13 @@ void MGL_EXPORT mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HC
 		for(long i=0;i<m;i++)	// add averaged normales
 		{
 			register long k1 = long(nums->v(0,i)+0.5);
-			p1 = mglPoint(x->v(k1), y->v(k1), z->v(k1));
+			p1.Set(x->v(k1), y->v(k1), z->v(k1));
 			register long k2 = long(nums->v(1,i)+0.5);
-			p2 = mglPoint(x->v(k2), y->v(k2), z->v(k2));
+			p2.Set(x->v(k2), y->v(k2), z->v(k2));
 			register long k3 = long(nums->v(2,i)+0.5);
-			p3 = mglPoint(x->v(k3), y->v(k3), z->v(k3));
+			p3.Set(x->v(k3), y->v(k3), z->v(k3));
 			register long k4 = floor(nums->v(3,i)+0.5);
-			p4 = mglPoint(x->v(k4), y->v(k4), z->v(k4));
+			p4.Set(x->v(k4), y->v(k4), z->v(k4));
 
 			if(wire)	pp[k1]=pp[k2]=pp[k3]=pp[k4]=mglPoint(NAN,NAN);
 			else
@@ -257,18 +257,18 @@ std::vector<mglSegment> MGL_NO_EXPORT mgl_tri_lines(mreal val, HCDT nums, HCDT a
 		mglSegment line;
 		if(d1>=0 && d1<=1 && d2>=0 && d2<=1)
 		{
-			line.p1 = mglPoint(x->v(k1)*(1-d1)+x->v(k2)*d1, y->v(k1)*(1-d1)+y->v(k2)*d1, z->v(k1)*(1-d1)+z->v(k2)*d1);
-			line.p2 = mglPoint(x->v(k1)*(1-d2)+x->v(k3)*d2, y->v(k1)*(1-d2)+y->v(k3)*d2, z->v(k1)*(1-d2)+z->v(k3)*d2);
+			line.p1.Set(x->v(k1)*(1-d1)+x->v(k2)*d1, y->v(k1)*(1-d1)+y->v(k2)*d1, z->v(k1)*(1-d1)+z->v(k2)*d1);
+			line.p2.Set(x->v(k1)*(1-d2)+x->v(k3)*d2, y->v(k1)*(1-d2)+y->v(k3)*d2, z->v(k1)*(1-d2)+z->v(k3)*d2);
 		}
 		else if(d1>=0 && d1<=1 && d3>=0 && d3<=1)
 		{
-			line.p1 = mglPoint(x->v(k1)*(1-d1)+x->v(k2)*d1, y->v(k1)*(1-d1)+y->v(k2)*d1, z->v(k1)*(1-d1)+z->v(k2)*d1);
-			line.p2 = mglPoint(x->v(k2)*(1-d3)+x->v(k3)*d3, y->v(k2)*(1-d3)+y->v(k3)*d3, z->v(k2)*(1-d3)+z->v(k3)*d3);
+			line.p1.Set(x->v(k1)*(1-d1)+x->v(k2)*d1, y->v(k1)*(1-d1)+y->v(k2)*d1, z->v(k1)*(1-d1)+z->v(k2)*d1);
+			line.p2.Set(x->v(k2)*(1-d3)+x->v(k3)*d3, y->v(k2)*(1-d3)+y->v(k3)*d3, z->v(k2)*(1-d3)+z->v(k3)*d3);
 		}
 		else if(d3>=0 && d3<=1 && d2>=0 && d2<=1)
 		{
-			line.p1 = mglPoint(x->v(k1)*(1-d2)+x->v(k3)*d2, y->v(k1)*(1-d2)+y->v(k3)*d2, z->v(k1)*(1-d2)+z->v(k3)*d2);
-			line.p2 = mglPoint(x->v(k2)*(1-d3)+x->v(k3)*d3, y->v(k2)*(1-d3)+y->v(k3)*d3, z->v(k2)*(1-d3)+z->v(k3)*d3);
+			line.p1.Set(x->v(k1)*(1-d2)+x->v(k3)*d2, y->v(k1)*(1-d2)+y->v(k3)*d2, z->v(k1)*(1-d2)+z->v(k3)*d2);
+			line.p2.Set(x->v(k2)*(1-d3)+x->v(k3)*d3, y->v(k2)*(1-d3)+y->v(k3)*d3, z->v(k2)*(1-d3)+z->v(k3)*d3);
 		}
 		if(line.p1!=line.p2)	lines.push_back(line);
 	}
@@ -439,7 +439,7 @@ void MGL_EXPORT mgl_dots_ca(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, HCDT a, con
 
 	for(long i=0;i<n;i+=d)
 	{
-		mglPoint p = mglPoint(x->vthr(i),y->vthr(i),z->vthr(i));
+		mglPoint p(x->vthr(i),y->vthr(i),z->vthr(i));
 		long pp = gr->AddPnt(p,gr->GetC(ss,c->vthr(i)),mglPoint(NAN),a?gr->GetA(a->vthr(i)):-1);
 		gr->mark_plot(pp, mk);
 	}
@@ -479,7 +479,7 @@ HMDT MGL_EXPORT mgl_triangulation_3d(HCDT x, HCDT y, HCDT z)
 	if(y->GetNx()!=n || z->GetNx()!=n)	return nums;
 	mglPoint *pp = new mglPoint[n];
 	long *nn=0;
-	for(long i=0;i<n;i++)	pp[i] = mglPoint(x->v(i), y->v(i), z->v(i));
+	for(long i=0;i<n;i++)	pp[i].Set(x->v(i), y->v(i), z->v(i));
 	m = mgl_crust(n,pp,&nn,0);
 
 	if(m>0)
@@ -557,7 +557,7 @@ MGL_NO_EXPORT void *mgl_grid_t(void *par)
 		register long k1 = long(d[3*i0]+0.5), k2 = long(d[3*i0+1]+0.5), k3 = long(d[3*i0+2]+0.5);
 		mreal dxu,dxv,dyu,dyv;
 		mreal z1=zdat->vthr(k1), z2=zdat->vthr(k2), z3=zdat->vthr(k3);
-		mglPoint d1=mglPoint(x[k2]-x[k1],y[k2]-y[k1],z2-z1), d2=mglPoint(x[k3]-x[k1],y[k3]-y[k1],z3-z1), p;
+		mglPoint d1(x[k2]-x[k1],y[k2]-y[k1],z2-z1), d2(x[k3]-x[k1],y[k3]-y[k1],z3-z1), p;
 
 		dxu = d2.x*d1.y - d1.x*d2.y;
 		if(fabs(dxu)<1e-5) continue; // points lies on the same line
