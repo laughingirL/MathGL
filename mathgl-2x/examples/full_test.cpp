@@ -485,7 +485,7 @@ int main(int argc,char **argv)
 				setlocale(LC_CTYPE, "");
 				char *buf = new char[strlen(s->mgl)+strlen(mmgl_dat_prepare)+1];
 				strcpy(buf,s->mgl);		strcat(buf,mmgl_dat_prepare);
-				printf("\n-------\n%s\n-------\n",verbose?buf:s->mgl);
+				if(type!=7)	printf("\n-------\n%s\n-------\n",verbose?buf:s->mgl);
 				par.Execute(gr,buf);	delete []buf;
 				const char *mess = gr->Message();
 				if(*mess)	printf("Warnings: %s\n-------\n",mess);
@@ -512,7 +512,7 @@ int main(int argc,char **argv)
 				setlocale(LC_CTYPE, "");
 				char *buf = new char[strlen(s->mgl)+strlen(mmgl_dat_prepare)+1];
 				strcpy(buf,s->mgl);		strcat(buf,mmgl_dat_prepare);
-				printf("\n-------\n%s\n-------\n",verbose?buf:s->mgl);
+				if(type!=7)	printf("\n-------\n%s\n-------\n",verbose?buf:s->mgl);
 				par.Execute(gr,buf);	delete []buf;
 				const char *mess = gr->Message();
 				if(*mess)	printf("Warnings: %s\n-------\n",mess);

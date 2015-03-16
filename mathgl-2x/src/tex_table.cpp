@@ -1783,6 +1783,7 @@ MGL_EXPORT mglTeXsymb mgl_tex_symb[] = {
 	{0x2a1b, L"upint"},
 	{0x228e, L"uplus"},
 	{0x2934, L"uprightcurvearrow"},
+	{0x2127, L"upsilon"},
 	{0x21c8, L"upuparrows"},
 	{0x21e7, L"upwhitearrow"},
 	{0x25dd, L"urarc"},

@@ -55,6 +55,7 @@ ZZ. Update *.i for new functions {before release!!!}
 17. Iris plot -- https://en.wikipedia.org/wiki/Iris_flower_data_set
 18. Add everywhere mgl_check_version()
 19. Lighting per subplot or per object?!?
+20. defpal in MGL. Or string variables in MGL ?!?
 
 23. Check line width and dashing in OpenGL mode.
 
@@ -78,6 +79,20 @@ D. Docs about JS interface
 10. Docs about mgl_set_size_scl()
 11. Name 'rnd' is reserved in MGL scripts now
 
+12. Region 3d sample
+new x1 100 'sin(pi*x)'
+new y1 100 'cos(pi*x)'
+new z1 100 'x'
+new x2 100 'sin(pi*x+1)'
+new y2 100 'cos(pi*x+1)'
+new z2 100 'x'
+rotate 40 60:box
+plot x1 y1 z1 'r2'
+plot x2 y2 z2 'b2'
+region x1 y1 z1 x2 y2 z2 'cmy!'
+
+
+
 YY. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using Stem()
 
 ============= UDAV =============
@@ -94,6 +109,7 @@ YY. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using St
 	e. Ask about script changes before closing data tab
 	
 4. List of constants into the list of data?!
+5. Add color cycle
 
 
 ============= UNSURE ===========

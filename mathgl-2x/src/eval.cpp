@@ -503,7 +503,7 @@ double MGL_LOCAL_CONST atanh(double x)	{	return fabs(x)<1 ? log((1.+x)/(1.-x))/2
 typedef double (*func_1)(double);
 typedef double (*func_2)(double, double);
 //-----------------------------------------------------------------------------
-static const mreal z2[EQ_SIN-EQ_LT] = {3,3,3,3,0,3,3,0,0,0,0,0,NAN,0
+static const mreal z2[EQ_SIN-EQ_LT] = {3,3,3,3,0,3,3,0,0,0,0,0,NAN,3,3
 #if MGL_HAVE_GSL
 	,3,NAN, 3,NAN, 0,0,3,1,3
 #else
@@ -514,7 +514,7 @@ static const func_2 f2[EQ_SIN-EQ_LT] = {clt,cgt,ceq,cor,cand,add,sub,mul,del,ipw
 #if MGL_HAVE_GSL
 	,gsl_sf_bessel_Jnu,gsl_sf_bessel_Ynu,
 	gsl_sf_bessel_Inu,gsl_sf_bessel_Knu,
-	gslEllE,gslEllF,gslLegP,gsl_sf_beta,gsl_sf_gamma_inc,
+	gslEllE,gslEllF,gslLegP,gsl_sf_beta,gsl_sf_gamma_inc
 #else
 	,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2
 #endif

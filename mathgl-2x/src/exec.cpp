@@ -143,6 +143,8 @@ int MGL_NO_EXPORT mgls_axis(mglGraph *gr, long , mglArg *a, const char *k, const
 	else if(!strcmp(k,"sss"))	gr->SetFunc(a[0].s.c_str(),a[1].s.c_str(),a[2].s.c_str(),"");
 	else if(!strcmp(k,"ssss"))	gr->SetFunc(a[0].s.c_str(),a[1].s.c_str(),a[2].s.c_str(),a[3].s.c_str());
 	else if(!strcmp(k,"n"))		gr->SetCoor(iint(a[0].v));
+	else if(!strcmp(k,"nnnn"))	gr->SetRanges(a[0].v,a[2].v, a[1].v,a[3].v);
+	else if(!strcmp(k,"nnnnnn"))gr->SetRanges(a[0].v,a[3].v, a[1].v,a[4].v, a[2].v,a[5].v);
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------

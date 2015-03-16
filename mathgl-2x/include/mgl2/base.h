@@ -205,7 +205,7 @@ struct MGL_EXPORT mglPnt	// NOTE: use float for reducing memory size
 	}; };
 	short sub;		// subplot id and rotation information (later will be in subplot)
 	mglPnt(float X, float Y=0, float Z=0, float U=0, float V=0, float W=0, float R=0, float G=0, float B=0, float A=0):x(X),y(Y),z(Z),u(U),v(V),w(W),r(R),g(G),b(B),a(A),xx(X),yy(Y),zz(Z),c(0),t(0),ta(0),sub(0)	{}
-	mglPnt():sub(0)	{	memset(dat,0,16*sizeof(float));	}
+	mglPnt():x(0),y(0),z(0),u(0),v(0),w(0),r(0),g(0),b(0),a(0),xx(0),yy(0),zz(0),c(0),t(0),ta(0),sub(0)	{}
 	mglPnt(const mglPnt &aa) : sub(aa.sub)	{	memcpy(dat,aa.dat,16*sizeof(float));	}
 #if MGL_HAVE_RVAL
 	mglPnt(mglPnt &&aa) : x(aa.x),y(aa.y),z(aa.z), u(aa.u),v(aa.v),w(aa.w), r(aa.r),g(aa.g),b(aa.b),a(aa.a), xx(aa.xx),yy(aa.yy),zz(aa.zz), c(aa.c),t(aa.t),ta(aa.ta), sub(aa.sub)	{}

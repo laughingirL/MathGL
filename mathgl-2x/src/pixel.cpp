@@ -524,12 +524,12 @@ void mglCanvas::pxl_primdr(long id, long , const void *)
 				register long n1=p.n1, n2=p.n2, n3=p.n3, n4=p.n4;
 				switch(p.type)
 				{
-				case 0:	mark_draw(Pnt[n1],n4,p.s,&d);	break;
+				case 3:	fast_draw(Pnt[n1],Pnt[n4],&d);	fast_draw(Pnt[n2],Pnt[n3],&d);	break;
 				case 1:	fast_draw(Pnt[n1],Pnt[n2],&d);	break;
+				case 4:	glyph_draw(p,&d);	break;
+				case 0:	mark_draw(Pnt[n1],n4,p.s,&d);	break;
 				case 2:	fast_draw(Pnt[n1],Pnt[n2],&d);	fast_draw(Pnt[n1],Pnt[n3],&d);
 						fast_draw(Pnt[n2],Pnt[n3],&d);	break;
-				case 3:	fast_draw(Pnt[n1],Pnt[n4],&d);	fast_draw(Pnt[n2],Pnt[n3],&d);	break;
-				case 4:	glyph_draw(p,&d);	break;
 				}
 			}
 		}
@@ -551,12 +551,12 @@ void mglCanvas::pxl_primdr(long id, long , const void *)
 				register long n1=p.n1, n2=p.n2, n3=p.n3, n4=p.n4;
 				switch(p.type)
 				{
-				case 0:	mark_draw(Pnt[n1],n4,p.s,&d);	break;
-				case 1:	line_draw(Pnt[n1],Pnt[n2],&d);	break;
-				case 2:	trig_draw(Pnt[n1],Pnt[n2],Pnt[n3],true,&d);	break;
 				case 3:	trig_draw(Pnt[n1],Pnt[n2],Pnt[n4],true,&d);
 						trig_draw(Pnt[n1],Pnt[n3],Pnt[n4],true,&d);	break;
+				case 1:	line_draw(Pnt[n1],Pnt[n2],&d);	break;
 				case 4:	glyph_draw(p,&d);	break;
+				case 0:	mark_draw(Pnt[n1],n4,p.s,&d);	break;
+				case 2:	trig_draw(Pnt[n1],Pnt[n2],Pnt[n3],true,&d);	break;
 				}
 			}
 		}
@@ -578,11 +578,11 @@ void mglCanvas::pxl_primdr(long id, long , const void *)
 				register long n1=p.n1, n2=p.n2, n3=p.n3, n4=p.n4;
 				switch(p.type)
 				{
-				case 0:	mark_draw(Pnt[n1],n4,p.s,&d);	break;
-				case 1:	line_draw(Pnt[n1],Pnt[n2],&d);	break;
-				case 2:	trig_draw(Pnt[n1],Pnt[n2],Pnt[n3],true,&d);	break;
 				case 3:	quad_draw(Pnt[n1],Pnt[n2],Pnt[n3],Pnt[n4],&d);	break;
+				case 1:	line_draw(Pnt[n1],Pnt[n2],&d);	break;
 				case 4:	glyph_draw(p,&d);	break;
+				case 0:	mark_draw(Pnt[n1],n4,p.s,&d);	break;
+				case 2:	trig_draw(Pnt[n1],Pnt[n2],Pnt[n3],true,&d);	break;
 				}
 			}
 		}
@@ -952,8 +952,8 @@ void mglCanvas::quad_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3, 
 	float dd,dsx,dsy;
 	mglPnt d1(p2-p1), d2(p3-p1), d3(p4+p1-p2-p3);
 
-	if((d1.x==0 && d1.y==0) || (d2.x==0 && d2.y==0))
-	{	trig_draw(p1,p2,p4,true,d);	trig_draw(p1,p3,p4,true,d);	return;	}
+	if(d1.x==0 && d1.y==0)	{	trig_draw(p1,p3,p4,true,d);	return;	}
+	if(d2.x==0 && d2.y==0)	{	trig_draw(p1,p2,p4,true,d);	return;	}
 
 	x1 = long(mgl_min(mgl_min(p1.x,p2.x), mgl_min(p3.x,p4.x)));	// bounding box
 	y1 = long(mgl_min(mgl_min(p1.y,p2.y), mgl_min(p3.y,p4.y)));
