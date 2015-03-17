@@ -68,11 +68,11 @@ void MGL_EXPORT mgl_surf(HMGL graph, HCDT z, const char *sch, const char *opt);
 void MGL_EXPORT mgl_surf_(uintptr_t *graph, uintptr_t *z, const char *sch, const char *opt,int,int);
 
 /// Draw density plot for 2d data specified parametrically
-void MGL_EXPORT mgl_dens_xy(HMGL graph, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt);
-void MGL_EXPORT mgl_dens_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *sch, const char *opt,int,int);
+void MGL_EXPORT mgl_dens_xy(HMGL graph, HCDT x, HCDT y, HCDT c, const char *sch, const char *opt);
+void MGL_EXPORT mgl_dens_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *c, const char *sch, const char *opt,int,int);
 /// Draw density plot for 2d data
-void MGL_EXPORT mgl_dens(HMGL graph, HCDT z, const char *sch, const char *opt);
-void MGL_EXPORT mgl_dens_(uintptr_t *graph, uintptr_t *z, const char *sch, const char *opt,int,int);
+void MGL_EXPORT mgl_dens(HMGL graph, HCDT c, const char *sch, const char *opt);
+void MGL_EXPORT mgl_dens_(uintptr_t *graph, uintptr_t *c, const char *sch, const char *opt,int,int);
 
 /// Draw vertical boxes for 2d data specified parametrically
 void MGL_EXPORT mgl_boxs_xy(HMGL graph, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt);
@@ -108,6 +108,13 @@ void MGL_EXPORT mgl_surfa_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uint
 /// Draw surface for 2d data with alpha proportional to c
 void MGL_EXPORT mgl_surfa(HMGL graph, HCDT z, HCDT c, const char *sch, const char *opt);
 void MGL_EXPORT mgl_surfa_(uintptr_t *graph, uintptr_t *z, uintptr_t *c, const char *sch, const char *opt,int,int);
+
+/// Draw surface for 2d data specified parametrically with  color proportional to c and alpha proportional to a
+void MGL_EXPORT mgl_surfca_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, HCDT a, const char *sch, const char *opt);
+void MGL_EXPORT mgl_surfca_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *c, uintptr_t *a, const char *sch, const char *opt,int,int);
+/// Draw surface for 2d data with  color proportional to c and alpha proportional to a
+void MGL_EXPORT mgl_surfca(HMGL gr, HCDT z, HCDT c, HCDT a, const char *sch, const char *opt);
+void MGL_EXPORT mgl_surfca_(uintptr_t *graph, uintptr_t *z, uintptr_t *c, uintptr_t *a, const char *sch, const char *opt,int,int);
 
 /// Draw density plot for spectra-gramm specified parametrically
 void MGL_EXPORT mgl_stfa_xy(HMGL graph, HCDT x, HCDT y, HCDT re, HCDT im, int dn, const char *sch, const char *opt);

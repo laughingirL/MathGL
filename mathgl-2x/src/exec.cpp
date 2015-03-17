@@ -867,6 +867,16 @@ int MGL_NO_EXPORT mgls_surfa(mglGraph *gr, long , mglArg *a, const char *k, cons
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_surfca(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+{
+	int res=0;
+	if(!strcmp(k,"ddd"))	gr->SurfCA(*(a[0].d),*(a[1].d),*(a[2].d),"",opt);
+	else if(!strcmp(k,"ddds"))	gr->SurfCA(*(a[0].d),*(a[1].d),*(a[2].d),a[3].s.c_str(),opt);
+	else if(!strcmp(k,"ddddd"))	gr->SurfCA(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),"",opt);
+	else if(!strcmp(k,"ddddds"))gr->SurfCA(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),a[5].s.c_str(),opt);
+	else res = 1;	return res;
+}
+//-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_flow(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;
@@ -1642,6 +1652,24 @@ int MGL_NO_EXPORT mgls_surf3a(mglGraph *gr, long , mglArg *a, const char *k, con
 		gr->Surf3A(a[5].v,*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),"",opt);
 	else if(!strcmp(k,"dddddns"))
 		gr->Surf3A(a[5].v,*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),a[6].s.c_str(),opt);
+	else res = 1;	return res;
+}
+//-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_surf3ca(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+{
+	int res=0;
+	if(!strcmp(k,"ddd"))	gr->Surf3CA(*(a[0].d),*(a[1].d),*(a[2].d),"",opt);
+	else if(!strcmp(k,"ddds"))	gr->Surf3CA(*(a[0].d),*(a[1].d),*(a[2].d),a[3].s.c_str(),opt);
+	else if(!strcmp(k,"dddn"))	gr->Surf3CA(a[4].v,*(a[0].d),*(a[1].d),*(a[2].d),"",opt);
+	else if(!strcmp(k,"dddns"))	gr->Surf3CA(a[4].v,*(a[0].d),*(a[1].d),*(a[2].d),a[4].s.c_str(),opt);
+	else if(!strcmp(k,"dddddd"))
+		gr->Surf3CA(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),*(a[5].d), "",opt);
+	else if(!strcmp(k,"dddddds"))
+		gr->Surf3CA(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),*(a[5].d), a[6].s.c_str(),opt);
+	else if(!strcmp(k,"ddddddn"))
+		gr->Surf3CA(a[6].v,*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),*(a[5].d),"",opt);
+	else if(!strcmp(k,"ddddddns"))
+		gr->Surf3CA(a[6].v,*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),*(a[5].d),a[7].s.c_str(),opt);
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -3429,8 +3457,10 @@ mglCommand mgls_base_cmd[] = {
 	{"surf3","Draw isosurface for 3D data","surf3 Adat ['fmt' num]|Xdat Ydat Zdat Adat ['fmt' num]|Adat val ['fmt']|Xdat Ydat Zdat Adat val ['fmt']", mgls_surf3 ,9},
 	{"surf3a","Draw isosurface for 3D data transpared by other data","surf3a Adat Cdat ['fmt' num]|Xdat Ydat Zdat Adat Cdat ['fmt' num]|Adat Cdat val ['fmt']|Xdat Ydat Zdat Adat Cdat val ['fmt']", mgls_surf3a ,10},
 	{"surf3c","Draw isosurface for 3D data colored by other data","surf3c Adat Cdat ['fmt' num]|Xdat Ydat Zdat Adat Cdat ['fmt' num]|Adat Cdat val ['fmt']|Xdat Ydat Zdat Adat Cdat val ['fmt']", mgls_surf3c ,10},
+	{"surf3ca","Draw isosurface for 3D data colored and transpared by other data","surf3c Adat Cdat Bdat ['fmt' num]|Xdat Ydat Zdat Adat Cdat Bdat ['fmt' num]|Adat Cdat Bdat val ['fmt']|Xdat Ydat Zdat Adat Cdat Bdat val ['fmt']", mgls_surf3ca ,10},
 	{"surfa","Draw solid surface transpared by other data","surfa Zdat Cdat ['fmt']|Xdat Ydat Zdat Cdat ['fmt']", mgls_surfa ,10},
 	{"surfc","Draw solid surface colored by other data","surfc Zdat Cdat ['fmt']|Xdat Ydat Zdat Cdat ['fmt']", mgls_surfc ,10},
+	{"surfca","Draw solid surface colored and transpared by other data","surfca Zdat Cdat Adat ['fmt']|Xdat Ydat Zdat Cdat Adat ['fmt']", mgls_surfca ,10},
 	{"swap","Swap data (usefull after Fourier transform)","swap Dat 'dir'", mgls_swap ,16},
 	{"table","Draw table with data values","table Dat ['txt' 'fmt']|x y Dat ['txt' 'fmt']", mgls_table ,7},
 	{"tape","Draw binormales for 1D data","tape Ydat ['fmt']|Xdat Ydat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_tape ,7},

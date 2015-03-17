@@ -2,17 +2,13 @@
 
 ============= FAR FUTURE ================
 
-1. Graph(mreal x, mreal y, names, styles, font, size); -- names = "node1[node2,node3,node4[node5,node6]]", styles -- the same + apply for subnodes if absent. Styles are colors (fill,border,line), dash (to subnodes), marks "dos^v><", arrows.
-2. introduce new primitive type=5 -- arrow for Quality&3!=3. for better drawing in projections + json/view ?!?
-3. GTK window/widgets ???
-4. 2D textures as one of standard way for coloring -- if '%' present in color scheme
+1. GTK window/widgets ???
+2. Export to COLLADA !!!
+3. Export to X3D !!!
 5. Improve fplot, fsurf ???
 6. Get true coordinates in CalcXYZ for curved equations too.
-7. setLineDash in JSON
-8. add real(), imag(), conj() + accurate types in MGL + add 'complex' in MGL ???
 9. Inplot data should have ranges (add mglInPlot{x1,x2,y1,y2,Bp or something like this} which include mglMatrix instead of mglBase::Bp) + calc coor + JS
 10. Test mglDataC::Diffraction() + write sample + add rational function???
-11. Complex (hex) colors in inline text command (like #{b9} or #{x0000ff})
 12. Extra markers for '&' and '&#' signs ?!?
 13. Enable consecutive (as multiplication of matrices instead of single summary one) rotation of axis + the same in JS. Problem with widgets?!?
 14. Export background image to svg ???
@@ -24,20 +20,15 @@
 19. Simplified triangle filling for Quality=1 ?!?
 20. Extend 'ask' by adding multiple questions simultaneously (+ set/get default values from file ???)
 21. Occasional seg.fault in mgl_qt_example at exit
-22. introduce a set of default arrays like "x", "y", "z" and "t" for MGL ???
-
-ZZ. Update *.i for new functions {before release!!!}
 
 
 ============= NEW FEATURES =============
 
-1. Export to COLLADA !!!
 2. 3D text (with depth, for Quality=3)
 3. Text along 3D curve (for Quality=3)
 
 4. Check centered curved text (see text2)
 
-5. Export to X3D
 6. New tests:
 	c. Tests for mglDataC arrays (as separate flag)
 	e. Test for Crop, Momentum, NormSl, Sew, DiffParam, Envelope, STFA for all directions "xyz"; Clean, Last, First, Find, Spline3, FindAny, Insert, Delete, Put, SetId/Column, Squeeze, Extend, Trace, Combine, new Max/Min/Momentum, FillSample, Hist, operators, Sort, Roots, Jacobian
@@ -53,11 +44,13 @@ ZZ. Update *.i for new functions {before release!!!}
 15. Check TriCont
 16. Contour lines above/under surface (e-mail 10.12.14)
 17. Iris plot -- https://en.wikipedia.org/wiki/Iris_flower_data_set
-18. Add everywhere mgl_check_version()
 19. Lighting per subplot or per object?!?
 20. defpal in MGL. Or string variables in MGL ?!?
 
+22. Qt + OpenGL sample
 23. Check line width and dashing in OpenGL mode.
+
+ZZ. Update *.i for new functions {before release!!!}
 
 
 ============= DOCUMENTATION =============
@@ -78,6 +71,9 @@ D. Docs about JS interface
 9. Add command "runge 'Expr1;Expr2;...' 'Var1;Var2;...' [dt]"
 10. Docs about mgl_set_size_scl()
 11. Name 'rnd' is reserved in MGL scripts now
+12. 2D textures as one of standard way for coloring -- if '%' present in color scheme
+13. Docs about SurfCA() + hint about '%' style
+14. Docs about Surf3CA() + hint about '%' style
 
 12. Region 3d sample
 new x1 100 'sin(pi*x)'

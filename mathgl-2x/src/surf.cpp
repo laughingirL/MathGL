@@ -263,29 +263,25 @@ void MGL_EXPORT mgl_grid_(uintptr_t *gr, uintptr_t *a,const char *sch, const cha
 //	Surf series
 //
 //-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_surf_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt)
+void MGL_NO_EXPORT mgl_surf_gen(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, HCDT a, const char *sch)
 {
 	long n=z->GetNx(),m=z->GetNy();
-	if(mgl_check_dim2(gr,x,y,z,0,"Surf"))	return;
-
-	gr->SaveState(opt);
-	static int cgid=1;	gr->StartGroup("Surf",cgid++);
 	long ss = gr->AddTexture(sch);
 	long *pos = new long[n*m];
 	bool wire = (mglchr(sch,'#'));
 	gr->Reserve((n+1)*(m+1)*z->GetNz()*(wire?2:1));
 
-	mglPoint p,q,s,xx,yy;
+	mglPoint q,s,xx,yy;
 	for(long k=0;k<z->GetNz();k++)
 	{
 		if(gr->NeedStop())	break;
 		for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
 		{
 			xx = GetX(x,i,j,k);		yy = GetY(y,i,j,k);
-			p.Set(xx.x, yy.x, z->v(i,j,k));
 			q.Set(xx.y, yy.y, z->dvx(i,j,k));
 			s.Set(xx.z, yy.z, z->dvy(i,j,k));
-			pos[i+n*j] = gr->AddPnt(p,gr->GetC(ss,p.z),q^s);
+			mreal vv = a->v(i,j,k);
+			pos[i+n*j] = gr->AddPnt(mglPoint(xx.x, yy.x, z->v(i,j,k)), gr->GetC(ss,c->v(i,j,k)), q^s, mgl_isnan(vv)?-1: gr->GetA(vv));
 		}
 		if(sch && mglchr(sch,'.'))
 			for(long i=0;i<n*m;i++)	gr->mark_plot(pos[i],'.');
@@ -298,6 +294,15 @@ void MGL_EXPORT mgl_surf_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, co
 		}
 	}
 	delete []pos;	gr->EndGroup();
+}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_surf_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt)
+{
+	if(mgl_check_dim2(gr,x,y,z,0,"Surf"))	return;
+	gr->SaveState(opt);
+	static int cgid=1;	gr->StartGroup("Surf",cgid++);
+	mglDataV a(z->GetNx(),z->GetNy(),z->GetNz());	a.Fill(NAN);
+	mgl_surf_gen(gr, x, y, z, z, &a, sch);
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_surf(HMGL gr, HCDT z, const char *sch, const char *opt)
@@ -318,6 +323,101 @@ void MGL_EXPORT mgl_surf_(uintptr_t *gr, uintptr_t *a, const char *sch, const ch
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];		memcpy(o,opt,lo);	o[lo]=0;
 	mgl_surf(_GR_, _DA_(a), s, o);	delete []o;	delete []s;	}
+//-----------------------------------------------------------------------------
+//
+//	SurfCA series
+//
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_surfca_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, HCDT a, const char *sch, const char *opt)
+{
+	if(mgl_check_dim2(gr,x,y,z,c,"SurfCA"))	return;
+	if(mgl_check_dim2(gr,x,y,z,a,"SurfCA"))	return;
+	gr->SaveState(opt);
+	static int cgid=1;	gr->StartGroup("SurfCA",cgid++);
+	mgl_surf_gen(gr, x, y, z, c, a, sch);
+}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_surfca(HMGL gr, HCDT z, HCDT c, HCDT a, const char *sch, const char *opt)
+{
+	gr->SaveState(opt);
+	mglDataV x(z->GetNx()), y(z->GetNy());
+	x.Fill(gr->Min.x,gr->Max.x);
+	y.Fill(gr->Min.y,gr->Max.y);
+	mgl_surfca_xy(gr,&x,&y,z,c,a,sch,0);
+}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_surfca_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *c, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
+{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	char *o=new char[lo+1];		memcpy(o,opt,lo);	o[lo]=0;
+	mgl_surfca_xy(_GR_, _DA_(x), _DA_(y), _DA_(z), _DA_(c), _DA_(a), s, o);	delete []o;	delete []s;	}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_surfca_(uintptr_t *gr, uintptr_t *z, uintptr_t *c, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
+{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	char *o=new char[lo+1];		memcpy(o,opt,lo);	o[lo]=0;
+	mgl_surfca(_GR_, _DA_(z), _DA_(c), _DA_(a), s, o);	delete []o;	delete []s;	}
+//-----------------------------------------------------------------------------
+//
+//	SurfC series
+//
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_surfc_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char *sch, const char *opt)
+{
+	if(mgl_check_dim2(gr,x,y,z,c,"SurfC"))	return;
+	gr->SaveState(opt);
+	static int cgid=1;	gr->StartGroup("SurfC",cgid++);
+	mglDataV a(z->GetNx(),z->GetNy(),z->GetNz());	a.Fill(NAN);
+	mgl_surf_gen(gr, x, y, z, c, &a, sch);
+}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_surfc(HMGL gr, HCDT z, HCDT c, const char *sch, const char *opt)
+{
+	gr->SaveState(opt);
+	mglDataV x(z->GetNx()), y(z->GetNy());
+	x.Fill(gr->Min.x,gr->Max.x);
+	y.Fill(gr->Min.y,gr->Max.y);
+	mgl_surfc_xy(gr,&x,&y,z,c,sch,0);
+}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_surfc_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
+{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	char *o=new char[lo+1];		memcpy(o,opt,lo);	o[lo]=0;
+	mgl_surfc_xy(_GR_, _DA_(x), _DA_(y), _DA_(z), _DA_(a), s, o);	delete []o;	delete []s;	}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_surfc_(uintptr_t *gr, uintptr_t *z, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
+{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	char *o=new char[lo+1];		memcpy(o,opt,lo);	o[lo]=0;
+	mgl_surfc(_GR_, _DA_(z), _DA_(a), s, o);	delete []o;	delete []s;	}
+//-----------------------------------------------------------------------------
+//
+//	SurfA series
+//
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_surfa_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char *sch, const char *opt)
+{
+	if(mgl_check_dim2(gr,x,y,z,c,"SurfA"))	return;
+	gr->SaveState(opt);
+	static int cgid=1;	gr->StartGroup("SurfA",cgid++);
+	mgl_surf_gen(gr, x, y, z, z, c, sch);
+}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_surfa(HMGL gr, HCDT z, HCDT c, const char *sch, const char *opt)
+{
+	gr->SaveState(opt);
+	mglDataV x(z->GetNx()), y(z->GetNy());
+	x.Fill(gr->Min.x,gr->Max.x);
+	y.Fill(gr->Min.y,gr->Max.y);
+	mgl_surfa_xy(gr,&x,&y,z,c,sch,0);
+}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_surfa_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
+{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	char *o=new char[lo+1];		memcpy(o,opt,lo);	o[lo]=0;
+	mgl_surfa_xy(_GR_, _DA_(x), _DA_(y), _DA_(z), _DA_(a), s, o);	delete []o;	delete []s;	}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_surfa_(uintptr_t *gr, uintptr_t *z, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
+{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	char *o=new char[lo+1];		memcpy(o,opt,lo);	o[lo]=0;
+	mgl_surfa(_GR_, _DA_(z), _DA_(a), s, o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
 //
 //	Belt series
@@ -397,54 +497,27 @@ void MGL_EXPORT mgl_belt_(uintptr_t *gr, uintptr_t *a, const char *sch, const ch
 //	Dens series
 //
 //-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_dens_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt)
+void MGL_EXPORT mgl_dens_xy(HMGL gr, HCDT x, HCDT y, HCDT c, const char *sch, const char *opt)
 {
-	long n=z->GetNx(),m=z->GetNy();
-	if(mgl_check_dim2(gr,x,y,z,0,"Dens"))	return;
-
+	if(mgl_check_dim2(gr,x,y,c,0,"Dens"))	return;
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Dens",cgid++);
 	mreal	zVal = gr->Min.z;
 
-	long ss = gr->AddTexture(sch);
-	long *pos = new long[n*m];
-	bool wire = (mglchr(sch,'#'));
-	gr->Reserve((n+1)*(m+1)*z->GetNz()*(wire?2:1));
-
-	mglPoint p,s(0,0,1);
-	mreal zz, c;
-	for(long k=0;k<z->GetNz();k++)
-	{
-		if(gr->NeedStop())	break;
-		if(z->GetNz()>1)
-			zVal = gr->Min.z+(gr->Max.z-gr->Min.z)*mreal(k)/(z->GetNz()-1);
-		for(long j=0;j<m;j++)	for(long i=0;i<n;i++)	// ñîçäàåì ìàññèâ òî÷åê
-		{
-			p.Set(GetX(x,i,j,k).x, GetY(y,i,j,k).x, zVal);
-			zz = z->v(i,j,k);	c = gr->GetC(ss,zz);
-			if(mgl_isnan(zz))	p.x = NAN;
-			pos[i+n*j] = gr->AddPnt(p,c,s);
-		}
-		if(sch && mglchr(sch,'.'))
-			for(long i=0;i<n*m;i++)	gr->mark_plot(pos[i],'.');
-		else	mgl_surf_plot(gr,pos,n,m);
-		if(wire)
-		{
-			gr->SetPenPal("k-");
-			for(long i=0;i<n*m;i++)	pos[i] = gr->CopyNtoC(pos[i],gr->CDef);
-			mgl_mesh_plot(gr,pos,n,m,3);
-		}
-	}
-	delete []pos;	gr->EndGroup();
+	mglDataV a(c->GetNx(),c->GetNy(),c->GetNz());	a.Fill(NAN);
+	mglDataV z(c->GetNx(),c->GetNy(),c->GetNz());
+	if(z.GetNz()>1)	z.Fill(gr->Min.z,gr->Max.z,'z');
+	else	z.Fill(zVal);
+	mgl_surf_gen(gr, x, y, &z, c, &a, sch);
 }
 //-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_dens(HMGL gr, HCDT z, const char *sch, const char *opt)
+void MGL_EXPORT mgl_dens(HMGL gr, HCDT c, const char *sch, const char *opt)
 {
 	gr->SaveState(opt);
-	mglDataV x(z->GetNx()), y(z->GetNy());
+	mglDataV x(c->GetNx()), y(c->GetNy());
 	x.Fill(gr->Min.x, gr->Max.x);
 	y.Fill(gr->Min.y, gr->Max.y);
-	mgl_dens_xy(gr,&x,&y,z,sch,0);
+	mgl_dens_xy(gr,&x,&y,c,sch,0);
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_dens_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
@@ -476,126 +549,6 @@ void MGL_EXPORT mgl_stfa_(uintptr_t *gr, uintptr_t *re, uintptr_t *im, int *dn, 
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	char *o=new char[lo+1];		memcpy(o,opt,lo);	o[lo]=0;
 	mgl_stfa(_GR_,_DA_(re), _DA_(im), *dn, s, o);	delete []o;	delete []s;	}
-//-----------------------------------------------------------------------------
-//
-//	SurfC series
-//
-//-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_surfc_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char *sch, const char *opt)
-{
-	long n=z->GetNx(),m=z->GetNy();
-	if(mgl_check_dim2(gr,x,y,z,c,"SurfC"))	return;
-
-	gr->SaveState(opt);
-	static int cgid=1;	gr->StartGroup("SurfC",cgid++);
-	long ss = gr->AddTexture(sch);
-	long *pos = new long[n*m];
-	bool wire = (mglchr(sch,'#'));
-	gr->Reserve((n+1)*(m+1)*z->GetNz()*(wire?2:1));
-
-	mglPoint p,q,s,xx,yy;
-	for(long k=0;k<z->GetNz();k++)
-	{
-		if(gr->NeedStop())	break;
-		for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
-		{
-			xx = GetX(x,i,j,k);		yy = GetY(y,i,j,k);
-			p.Set(xx.x, yy.x, z->v(i,j,k));
-			q.Set(xx.y, yy.y, z->dvx(i,j,k));
-			s.Set(xx.z, yy.z, z->dvy(i,j,k));
-			pos[i+n*j] = gr->AddPnt(p,gr->GetC(ss,c->v(i,j,k)),q^s);
-		}
-		if(sch && mglchr(sch,'.'))
-			for(long i=0;i<n*m;i++)	gr->mark_plot(pos[i],'.');
-		else	mgl_surf_plot(gr,pos,n,m);
-		if(wire)
-		{
-			gr->SetPenPal("k-");
-			for(long i=0;i<n*m;i++)	pos[i] = gr->CopyNtoC(pos[i],gr->CDef);
-			mgl_mesh_plot(gr,pos,n,m,3);
-		}
-	}
-	delete []pos;	gr->EndGroup();
-}
-//-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_surfc(HMGL gr, HCDT z, HCDT c, const char *sch, const char *opt)
-{
-	gr->SaveState(opt);
-	mglDataV x(z->GetNx()), y(z->GetNy());
-	x.Fill(gr->Min.x,gr->Max.x);
-	y.Fill(gr->Min.y,gr->Max.y);
-	mgl_surfc_xy(gr,&x,&y,z,c,sch,0);
-}
-//-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_surfc_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
-{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
-	char *o=new char[lo+1];		memcpy(o,opt,lo);	o[lo]=0;
-	mgl_surfc_xy(_GR_, _DA_(x), _DA_(y), _DA_(z), _DA_(a), s, o);	delete []o;	delete []s;	}
-//-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_surfc_(uintptr_t *gr, uintptr_t *z, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
-{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
-	char *o=new char[lo+1];		memcpy(o,opt,lo);	o[lo]=0;
-	mgl_surfc(_GR_, _DA_(z), _DA_(a), s, o);	delete []o;	delete []s;	}
-//-----------------------------------------------------------------------------
-//
-//	SurfA series
-//
-//-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_surfa_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char *sch, const char *opt)
-{
-	long k,n=z->GetNx(),m=z->GetNy();
-	if(mgl_check_dim2(gr,x,y,z,c,"SurfA"))	return;
-
-	gr->SaveState(opt);
-	static int cgid=1;	gr->StartGroup("SurfA",cgid++);
-	long ss = gr->AddTexture(sch);
-	long *pos = new long[n*m];
-	bool wire = (mglchr(sch,'#'));
-	gr->Reserve((n+1)*(m+1)*z->GetNz()*(wire?2:1));
-
-	mglPoint p,q,s,xx,yy;
-	for(k=0;k<z->GetNz();k++)
-	{
-		if(gr->NeedStop())	break;
-		for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
-		{
-			xx = GetX(x,i,j,k);		yy = GetY(y,i,j,k);
-			mreal vv = z->v(i,j,k);	p.Set(xx.x, yy.x, vv);
-			q.Set(xx.y, yy.y, z->dvx(i,j,k));
-			s.Set(xx.z, yy.z, z->dvy(i,j,k));
-			pos[i+n*j] = gr->AddPnt(p,gr->GetC(ss,vv),q^s,gr->GetA(c->v(i,j,k)));
-		}
-		if(sch && mglchr(sch,'.'))
-			for(long i=0;i<n*m;i++)	gr->mark_plot(pos[i],'.');
-		else	mgl_surf_plot(gr,pos,n,m);
-		if(wire)
-		{
-			gr->SetPenPal("k-");
-			for(long i=0;i<n*m;i++)	pos[i] = gr->CopyNtoC(pos[i],gr->CDef);
-			mgl_mesh_plot(gr,pos,n,m,3);
-		}
-	}
-	delete []pos;	gr->EndGroup();
-}
-//-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_surfa(HMGL gr, HCDT z, HCDT c, const char *sch, const char *opt)
-{
-	gr->SaveState(opt);
-	mglDataV x(z->GetNx()), y(z->GetNy());
-	x.Fill(gr->Min.x,gr->Max.x);
-	y.Fill(gr->Min.y,gr->Max.y);
-	mgl_surfa_xy(gr,&x,&y,z,c,sch,0);
-}
-//-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_surfa_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
-{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
-	char *o=new char[lo+1];		memcpy(o,opt,lo);	o[lo]=0;
-	mgl_surfa_xy(_GR_, _DA_(x), _DA_(y), _DA_(z), _DA_(a), s, o);	delete []o;	delete []s;	}
-//-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_surfa_(uintptr_t *gr, uintptr_t *z, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
-{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
-	char *o=new char[lo+1];		memcpy(o,opt,lo);	o[lo]=0;
-	mgl_surfa(_GR_, _DA_(z), _DA_(a), s, o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
 //
 //	Boxs series

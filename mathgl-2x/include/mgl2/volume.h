@@ -64,6 +64,19 @@ void MGL_EXPORT mgl_surf3c_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, ui
 void MGL_EXPORT mgl_surf3c(HMGL graph, HCDT a, HCDT b, const char *stl, const char *opt);
 void MGL_EXPORT mgl_surf3c_(uintptr_t *graph, uintptr_t *a, uintptr_t *b, const char *stl, const char *opt,int,int);
 
+/// Draw isosurface for 3d data specified parametrically with color proportional to c and alpha proportional to b
+void MGL_EXPORT mgl_surf3ca_xyz_val(HMGL graph, double Val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT c, HCDT b, const char *stl, const char *opt);
+void MGL_EXPORT mgl_surf3ca_xyz_val_(uintptr_t *graph, mreal *Val, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, uintptr_t *c, uintptr_t *b, const char *stl, const char *opt,int,int);
+/// Draw isosurface for 3d data with color proportional to c and alpha proportional to b
+void MGL_EXPORT mgl_surf3ca_val(HMGL graph, double Val, HCDT a, HCDT c, HCDT b, const char *stl, const char *opt);
+void MGL_EXPORT mgl_surf3ca_val_(uintptr_t *graph, mreal *Val, uintptr_t *a, uintptr_t *c, uintptr_t *b, const char *stl, const char *opt,int,int);
+/// Draw isosurfaces for 3d data specified parametrically with color proportional to c and alpha proportional to b
+void MGL_EXPORT mgl_surf3ca_xyz(HMGL graph, HCDT x, HCDT y, HCDT z, HCDT a, HCDT c, HCDT b, const char *stl, const char *opt);
+void MGL_EXPORT mgl_surf3ca_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, uintptr_t *c, uintptr_t *b, const char *stl, const char *opt,int,int);
+/// Draw isosurfaces for 3d data with color proportional to c and alpha proportional to b
+void MGL_EXPORT mgl_surf3ca(HMGL graph, HCDT a, HCDT c, HCDT b, const char *stl, const char *opt);
+void MGL_EXPORT mgl_surf3ca_(uintptr_t *graph, uintptr_t *a, uintptr_t *c, uintptr_t *b, const char *stl, const char *opt,int,int);
+
 /// Draw a semi-transparent cloud for 3d data specified parametrically
 void MGL_EXPORT mgl_cloud_xyz(HMGL graph, HCDT x, HCDT y, HCDT z, HCDT a, const char *stl, const char *opt);
 void MGL_EXPORT mgl_cloud_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *stl, const char *opt,int,int);

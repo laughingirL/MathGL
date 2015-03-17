@@ -886,7 +886,7 @@ void mglTexture::Set(const char *s, int smooth, mreal alpha)
 		c[2*i+1]=c[2*i];
 		if(man)	c[2*i].a=0;
 	}
-	if(map && sm)		// map texture
+	if(map && sm && n>1)		// map texture
 	{
 		if(n==2)
 		{	c[1]=c[2];	c[2]=c[0];	c[0]=BC;	c[3]=c[1]+c[2];	}

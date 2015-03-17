@@ -856,10 +856,10 @@ public:
 	inline void Tile(const mglDataA &z, const char *stl="", const char *opt="")
 	{	mgl_tile(gr, &z, stl, opt);	}
 	/// Draw density plot for 2d data specified parametrically
-	inline void Dens(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *stl="", const char *opt="")
-	{	mgl_dens_xy(gr, &x, &y, &z, stl, opt);	}
-	inline void Dens(const mglDataA &z, const char *stl="", const char *opt="")
-	{	mgl_dens(gr, &z, stl, opt);	}
+	inline void Dens(const mglDataA &x, const mglDataA &y, const mglDataA &c, const char *stl="", const char *opt="")
+	{	mgl_dens_xy(gr, &x, &y, &c, stl, opt);	}
+	inline void Dens(const mglDataA &c, const char *stl="", const char *opt="")
+	{	mgl_dens(gr, &c, stl, opt);	}
 	/// Draw vertical boxes for 2d data specified parametrically
 	inline void Boxs(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *stl="", const char *opt="")
 	{	mgl_boxs_xy(gr, &x, &y, &z, stl, opt);	}
@@ -981,6 +981,11 @@ public:
 	{	mgl_surfa_xy(gr, &x, &y, &z, &c, sch,opt);	}
 	inline void SurfA(const mglDataA &z, const mglDataA &c, const char *sch="", const char *opt="")
 	{	mgl_surfa(gr, &z, &c, sch,opt);	}
+	/// Draw surface for 2d data specified parametrically with color proportional to c and alpha proportional to a
+	inline void SurfCA(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &c, const mglDataA &a, const char *sch="", const char *opt="")
+	{	mgl_surfca_xy(gr, &x, &y, &z, &c, &a, sch,opt);	}
+	inline void SurfCA(const mglDataA &z, const mglDataA &c, const mglDataA &a, const char *sch="", const char *opt="")
+	{	mgl_surfca(gr, &z, &c, &a, sch,opt);	}
 
 	/// Color map of matrix a to matrix b, both matrix can parametrically depend on coordinates
 	inline void Map(const mglDataA &x, const mglDataA &y, const mglDataA &a, const mglDataA &b, const char *sch="", const char *opt="")
@@ -1003,15 +1008,25 @@ public:
 	inline void Surf3A(const mglDataA &a, const mglDataA &b, const char *stl="", const char *opt="")
 	{	mgl_surf3a(gr, &a, &b, stl, opt);	}
 
-	/// Draw isosurface(s) for 3d data specified parametrically with color proportional to b
-	inline void Surf3C(double Val, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const mglDataA &b, const char *stl="", const char *opt="")
-	{	mgl_surf3c_xyz_val(gr, Val, &x, &y, &z, &a, &b, stl,opt);	}
-	inline void Surf3C(double Val, const mglDataA &a, const mglDataA &b, const char *stl="", const char *opt="")
-	{	mgl_surf3c_val(gr, Val, &a, &b, stl, opt);	}
-	inline void Surf3C(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const mglDataA &b, const char *stl="", const char *opt="")
-	{	mgl_surf3c_xyz(gr, &x, &y, &z, &a, &b, stl, opt);	}
-	inline void Surf3C(const mglDataA &a, const mglDataA &b, const char *stl="", const char *opt="")
-	{	mgl_surf3c(gr, &a, &b, stl, opt);	}
+	/// Draw isosurface(s) for 3d data specified parametrically with color proportional to c
+	inline void Surf3C(double Val, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const mglDataA &c, const char *stl="", const char *opt="")
+	{	mgl_surf3c_xyz_val(gr, Val, &x, &y, &z, &a, &c, stl,opt);	}
+	inline void Surf3C(double Val, const mglDataA &a, const mglDataA &c, const char *stl="", const char *opt="")
+	{	mgl_surf3c_val(gr, Val, &a, &c, stl, opt);	}
+	inline void Surf3C(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const mglDataA &c, const char *stl="", const char *opt="")
+	{	mgl_surf3c_xyz(gr, &x, &y, &z, &a, &c, stl, opt);	}
+	inline void Surf3C(const mglDataA &a, const mglDataA &c, const char *stl="", const char *opt="")
+	{	mgl_surf3c(gr, &a, &c, stl, opt);	}
+
+	/// Draw isosurface(s) for 3d data specified parametrically with color proportional to c and alpha proportional to b
+	inline void Surf3CA(double Val, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const mglDataA &c, const mglDataA &b, const char *stl="", const char *opt="")
+	{	mgl_surf3ca_xyz_val(gr, Val, &x, &y, &z, &a, &c, &b, stl,opt);	}
+	inline void Surf3CA(double Val, const mglDataA &a, const mglDataA &c, const mglDataA &b, const char *stl="", const char *opt="")
+	{	mgl_surf3ca_val(gr, Val, &a, &c, &b, stl, opt);	}
+	inline void Surf3CA(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const mglDataA &c, const mglDataA &b, const char *stl="", const char *opt="")
+	{	mgl_surf3ca_xyz(gr, &x, &y, &z, &a, &c, &b, stl, opt);	}
+	inline void Surf3CA(const mglDataA &a, const mglDataA &c, const mglDataA &b, const char *stl="", const char *opt="")
+	{	mgl_surf3ca(gr, &a, &c, &b, stl, opt);	}
 
 	/// Plot dew drops for vector field {ax,ay} parametrically depended on coordinate {x,y}
 	inline void Dew(const mglDataA &x, const mglDataA &y, const mglDataA &ax, const mglDataA &ay, const char *sch="", const char *opt="")
