@@ -235,7 +235,7 @@ void MGL_EXPORT mgl_surf3_plot(HMGL gr, long n,long m,long *kx1,long *kx2,long *
 	}
 }
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_surf3ca_gen(HMGL gr, double val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT b, HCDT c, const char *sch)
+void MGL_NO_EXPORT mgl_surf3ca_gen(HMGL gr, double val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT c, HCDT b, const char *sch)
 {
 	long n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
 	bool nboth = mgl_isnboth(x,y,z,a);
@@ -250,7 +250,6 @@ void MGL_NO_EXPORT mgl_surf3ca_gen(HMGL gr, double val, HCDT x, HCDT y, HCDT z, 
 	std::vector<mglPoint> kk;
 	kk.reserve(n*m*l);
 
-	mglPoint p,u, p0;
 	for(long k=0;k<l;k++)
 	{
 		if(gr->NeedStop())	break;
@@ -258,60 +257,64 @@ void MGL_NO_EXPORT mgl_surf3ca_gen(HMGL gr, double val, HCDT x, HCDT y, HCDT z, 
 		memcpy(ky1,ky2,n*m*sizeof(long));	memset(ky2,-1,n*m*sizeof(long));
 		memset(kz ,-1,n*m*sizeof(long));
 		gr->Reserve(n*m);	gr->Reserve(n*m);
+		long kk1 = kk.size();
 		for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
 		{
 			register long i1 = i+n*j;
-			mreal a0 = a->v(i,j,k),	b0 = b->v(i,j,k),	c0 = c->v(i,j,k);
-			p0 = nboth? mglPoint(x->v(i), y->v(j), z->v(k)) : mglPoint(x->v(i,j,k), y->v(i,j,k), z->v(i,j,k));
+			mreal a0 = a->v(i,j,k);
 			if(i<n-1)
 			{
 				mreal d = mgl_d(val,a0,a->v(i+1,j,k));
 				if(d>=0 && d<1)
-				{
-					if(nboth)	p.Set(p0.x*(1-d)+x->v(i+1)*d, p0.y, p0.z);
-					else	p.Set(p0.x*(1-d)+x->v(i+1,j,k)*d, p0.y*(1-d)+y->v(i+1,j,k)*d, p0.z*(1-d)+z->v(i+1,j,k)*d);
-					mreal aa = b0*(1-d)+b->v(i+1,j,k)*d;	aa =  mgl_isnan(aa)?-1:gr->GetA(aa);
-					mreal cc = gr->GetC(ss,c0*(1-d)+c->v(i+1,j,k)*d);
-					u.Set(i+d,j,k);
-					mglPoint q(mgl_find_norm(nboth, x,y,z,a, u, inv,n,m,l));
-					pos = gr->AddPnt(p,cc,q,aa);	u.c=pos;
-					if(pos<0)	continue;
-					kx2[i1] = kk.size();	kk.push_back(u);
-				}
+				{	kx2[i1] = kk.size();	kk.push_back(mglPoint(i+d,j,k));	}
 			}
 			if(j<m-1)
 			{
 				mreal d = mgl_d(val,a0,a->v(i,j+1,k));
 				if(d>=0 && d<1)
-				{
-					if(nboth)	p.Set(p0.x, p0.y*(1-d)+y->v(j+1)*d, p0.z);
-					else	p.Set(p0.x*(1-d)+x->v(i,j+1,k)*d, p0.y*(1-d)+y->v(i,j+1,k)*d, p0.z*(1-d)+z->v(i,j+1,k)*d);
-					mreal aa = b0*(1-d)+b->v(i,j+1,k)*d;	aa =  mgl_isnan(aa)?-1:gr->GetA(aa);
-					mreal cc = gr->GetC(ss,c0*(1-d)+c->v(i,j+1,k)*d);
-					u.Set(i,j+d,k);
-					mglPoint q(mgl_find_norm(nboth, x,y,z,a, u, inv,n,m,l));
-					pos = gr->AddPnt(p,cc,q,aa);	u.c=pos;
-					if(pos<0)	continue;
-					ky2[i1] = kk.size();	kk.push_back(u);
-				}
+				{	ky2[i1] = kk.size();	kk.push_back(mglPoint(i,j+d,k));	}
 			}
 			if(k>0)
-			{
+			{	
 				mreal d = mgl_d(val,a->v(i,j,k-1),a0);
 				if(d>=0 && d<1)
-				{
-					if(nboth)	p.Set(p0.x, p0.y, z->v(k-1)*(1-d)+p0.z*d);
-					else	p.Set(x->v(i,j,k-1)*(1-d)+p0.x*d, y->v(i,j,k-1)*(1-d)+p0.y*d, z->v(i,j,k-1)*(1-d)+p0.z*d);
-					mreal aa = b->v(i,j,k-1)*(1-d)+b0*d;	aa =  mgl_isnan(aa)?-1:gr->GetA(aa);
-					mreal cc = gr->GetC(ss,c->v(i,j,k-1)*(1-d)+c0*d);
-					u.Set(i,j,k+d-1);
-					mglPoint q(mgl_find_norm(nboth, x,y,z,a, u, inv,n,m,l));
-					pos = gr->AddPnt(p,cc,q,aa);	u.c=pos;
-					if(pos<0)	continue;
-					kz[i1] = kk.size();	kk.push_back(u);
-				}
+				{	kz[i1] = kk.size();		kk.push_back(mglPoint(i,j,k+d-1));	}
 			}
 		}
+		mreal cv=gr->GetC(ss,val);
+		if(b && c)	for(long i=kk1;i<kk.size();i++)
+		{
+			mglPoint &u = kk[i];
+			u.c = gr->AddPnt(nboth ? mglPoint(mgl_data_linear(x,u.x,0,0),mgl_data_linear(y,u.y,0,0),mgl_data_linear(z,u.z,0,0)) : 
+							mglPoint(mgl_data_linear(x,u.x,u.y,u.z),mgl_data_linear(y,u.x,u.y,u.z),mgl_data_linear(z,u.x,u.y,u.z)),
+					gr->GetC(ss,mgl_data_linear(c,u.x,u.y,u.z)),
+					mgl_find_norm(nboth, x,y,z,a, u, inv,n,m,l),
+					gr->GetA(mgl_data_linear(b,u.x,u.y,u.z)));
+		}
+		else if(c)	for(long i=kk1;i<kk.size();i++)
+		{
+			mglPoint &u = kk[i];
+			u.c = gr->AddPnt(nboth ? mglPoint(mgl_data_linear(x,u.x,0,0),mgl_data_linear(y,u.y,0,0),mgl_data_linear(z,u.z,0,0)) : 
+							mglPoint(mgl_data_linear(x,u.x,u.y,u.z),mgl_data_linear(y,u.x,u.y,u.z),mgl_data_linear(z,u.x,u.y,u.z)),
+						gr->GetC(ss,mgl_data_linear(c,u.x,u.y,u.z)),
+						mgl_find_norm(nboth, x,y,z,a, u, inv,n,m,l));
+		}
+		else if(b)	for(long i=kk1;i<kk.size();i++)
+		{
+			mglPoint &u = kk[i];
+			u.c = gr->AddPnt(nboth ? mglPoint(mgl_data_linear(x,u.x,0,0),mgl_data_linear(y,u.y,0,0),mgl_data_linear(z,u.z,0,0)) : 
+							mglPoint(mgl_data_linear(x,u.x,u.y,u.z),mgl_data_linear(y,u.x,u.y,u.z),mgl_data_linear(z,u.x,u.y,u.z)),
+					cv, mgl_find_norm(nboth, x,y,z,a, u, inv,n,m,l),
+					gr->GetA(mgl_data_linear(b,u.x,u.y,u.z)));
+		}
+		else	for(long i=kk1;i<kk.size();i++)
+		{
+			mglPoint &u = kk[i];
+			u.c = gr->AddPnt(nboth ? mglPoint(mgl_data_linear(x,u.x,0,0),mgl_data_linear(y,u.y,0,0),mgl_data_linear(z,u.z,0,0)) : 
+							mglPoint(mgl_data_linear(x,u.x,u.y,u.z),mgl_data_linear(y,u.x,u.y,u.z),mgl_data_linear(z,u.x,u.y,u.z)),
+						cv, mgl_find_norm(nboth, x,y,z,a, u, inv,n,m,l));
+		}
+		
 		if(k>0)	mgl_surf3_plot(gr,n,m,kx1,kx2,ky1,ky2,kz,kk,wire);
 	}
 	delete []kx1;	delete []kx2;	delete []ky1;
@@ -323,8 +326,7 @@ void MGL_EXPORT mgl_surf3_xyz_val(HMGL gr, double val, HCDT x, HCDT y, HCDT z, H
 	if(mgl_check_dim3(gr,mgl_isboth(x,y,z,a),x,y,z,a,0,"Surf3"))	return;
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Surf3",cgid++);
-	mglDataV b(a->GetNx(),a->GetNy(),a->GetNz());	b.Fill(NAN);
-	mgl_surf3ca_gen(gr, val, x, y, z, a, &b, a, sch);
+	mgl_surf3ca_gen(gr, val, x, y, z, a, 0, 0, sch);
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_surf3_val(HMGL gr, double val, HCDT a, const char *sch, const char *opt)
@@ -387,7 +389,7 @@ void MGL_EXPORT mgl_surf3a_xyz_val(HMGL gr, double val, HCDT x, HCDT y, HCDT z, 
 	if(mgl_check_dim3(gr,!mgl_isnboth(x,y,z,a),x,y,z,a,b,"Surf3A"))	return;
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Surf3A",cgid++);
-	mgl_surf3ca_gen(gr, val, x, y, z, a, b, a, sch);
+	mgl_surf3ca_gen(gr, val, x, y, z, a, 0, b, sch);
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_surf3a_val(HMGL gr, double val, HCDT a, HCDT b, const char *sch, const char *opt)
@@ -464,8 +466,7 @@ void MGL_EXPORT mgl_surf3c_xyz_val(HMGL gr, double val, HCDT x, HCDT y, HCDT z, 
 	if(mgl_check_dim3(gr,!mgl_isnboth(x,y,z,a),x,y,z,a,c,"Surf3C"))	return;
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Surf3C",cgid++);
-	mglDataV b(a->GetNx(),a->GetNy(),a->GetNz());	b.Fill(NAN);
-	mgl_surf3ca_gen(gr, val, x, y, z, a, &b, c, sch);
+	mgl_surf3ca_gen(gr, val, x, y, z, a, c, 0, sch);
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_surf3c_val(HMGL gr, double val, HCDT a, HCDT b, const char *sch, const char *opt)
@@ -528,10 +529,10 @@ void MGL_EXPORT mgl_surf3c_(uintptr_t *gr, uintptr_t *a, uintptr_t *b, const cha
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_surf3ca_xyz_val(HMGL gr, double val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT c, HCDT b, const char *sch, const char *opt)
 {
-	if(mgl_check_dim3(gr,!mgl_isnboth(x,y,z,a),x,y,z,a,c,"Surf3C"))	return;
+	if(mgl_check_dim3(gr,!mgl_isnboth(x,y,z,a),x,y,z,a,c,"Surf3C") || mgl_check_dim3(gr,!mgl_isnboth(x,y,z,a),x,y,z,a,b,"Surf3C"))	return;
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Surf3C",cgid++);
-	mgl_surf3ca_gen(gr, val, x, y, z, a, b, c, sch);
+	mgl_surf3ca_gen(gr, val, x, y, z, a, c, b, sch);
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_surf3ca_val(HMGL gr, double val, HCDT a, HCDT c, HCDT b, const char *sch, const char *opt)

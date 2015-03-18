@@ -275,13 +275,19 @@ void MGL_NO_EXPORT mgl_surf_gen(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, HCDT a,
 	for(long k=0;k<z->GetNz();k++)
 	{
 		if(gr->NeedStop())	break;
-		for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
+		if(a)	for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
 		{
 			xx = GetX(x,i,j,k);		yy = GetY(y,i,j,k);
 			q.Set(xx.y, yy.y, z->dvx(i,j,k));
 			s.Set(xx.z, yy.z, z->dvy(i,j,k));
-			mreal vv = a->v(i,j,k);
-			pos[i+n*j] = gr->AddPnt(mglPoint(xx.x, yy.x, z->v(i,j,k)), gr->GetC(ss,c->v(i,j,k)), q^s, mgl_isnan(vv)?-1: gr->GetA(vv));
+			pos[i+n*j] = gr->AddPnt(mglPoint(xx.x, yy.x, z->v(i,j,k)), gr->GetC(ss,c->v(i,j,k)), q^s, gr->GetA(a->v(i,j,k)));
+		}
+		else	for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
+		{
+			xx = GetX(x,i,j,k);		yy = GetY(y,i,j,k);
+			q.Set(xx.y, yy.y, z->dvx(i,j,k));
+			s.Set(xx.z, yy.z, z->dvy(i,j,k));
+			pos[i+n*j] = gr->AddPnt(mglPoint(xx.x, yy.x, z->v(i,j,k)), gr->GetC(ss,c->v(i,j,k)), q^s);
 		}
 		if(sch && mglchr(sch,'.'))
 			for(long i=0;i<n*m;i++)	gr->mark_plot(pos[i],'.');
@@ -301,8 +307,7 @@ void MGL_EXPORT mgl_surf_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, co
 	if(mgl_check_dim2(gr,x,y,z,0,"Surf"))	return;
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Surf",cgid++);
-	mglDataV a(z->GetNx(),z->GetNy(),z->GetNz());	a.Fill(NAN);
-	mgl_surf_gen(gr, x, y, z, z, &a, sch);
+	mgl_surf_gen(gr, x, y, z, z, 0, sch);
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_surf(HMGL gr, HCDT z, const char *sch, const char *opt)
@@ -365,8 +370,7 @@ void MGL_EXPORT mgl_surfc_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char
 	if(mgl_check_dim2(gr,x,y,z,c,"SurfC"))	return;
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("SurfC",cgid++);
-	mglDataV a(z->GetNx(),z->GetNy(),z->GetNz());	a.Fill(NAN);
-	mgl_surf_gen(gr, x, y, z, c, &a, sch);
+	mgl_surf_gen(gr, x, y, z, c, 0, sch);
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_surfc(HMGL gr, HCDT z, HCDT c, const char *sch, const char *opt)
@@ -504,11 +508,10 @@ void MGL_EXPORT mgl_dens_xy(HMGL gr, HCDT x, HCDT y, HCDT c, const char *sch, co
 	static int cgid=1;	gr->StartGroup("Dens",cgid++);
 	mreal	zVal = gr->Min.z;
 
-	mglDataV a(c->GetNx(),c->GetNy(),c->GetNz());	a.Fill(NAN);
 	mglDataV z(c->GetNx(),c->GetNy(),c->GetNz());
 	if(z.GetNz()>1)	z.Fill(gr->Min.z,gr->Max.z,'z');
 	else	z.Fill(zVal);
-	mgl_surf_gen(gr, x, y, &z, c, &a, sch);
+	mgl_surf_gen(gr, x, y, &z, c, 0, sch);
 }
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_dens(HMGL gr, HCDT c, const char *sch, const char *opt)

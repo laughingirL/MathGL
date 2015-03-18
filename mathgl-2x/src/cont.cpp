@@ -1134,6 +1134,7 @@ void MGL_EXPORT mgl_cont3_(uintptr_t *gr, uintptr_t *a, const char *sch, mreal *
 //	Dens3 series
 //
 //-----------------------------------------------------------------------------
+void MGL_NO_EXPORT mgl_surf_gen(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, HCDT a, const char *sch);
 void MGL_EXPORT mgl_dens3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, double sVal, const char *opt)
 {
 	bool both = mgl_isboth(x,y,z,a);
@@ -1147,7 +1148,8 @@ void MGL_EXPORT mgl_dens3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const cha
 
 	_mgl_slice s;
 	mgl_get_slice(s,x,y,z,a,dir,sVal,both);
-	mgl_surfc_xy(gr,&s.x,&s.y,&s.z,&s.a,sch,0);
+	mgl_surf_gen(gr, &s.x,&s.y,&s.z,&s.a, 0, sch);
+//	mgl_surfc_xy(gr,&s.x,&s.y,&s.z,&s.a,sch,0);
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
