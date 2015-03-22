@@ -69,6 +69,10 @@ public:
 
 	/// Load font data to memory. Normally used by constructor.
 	bool Load(const char *base, const char *path=0);
+	/// Load binary font data to memory. Normally used by constructor.
+	bool LoadBin(const char *base, const char *path=0);
+	/// Save binary font data
+	size_t SaveBin(const char *fname);
 	/// Free memory
 	void Clear();
 	/// Copy data from other font

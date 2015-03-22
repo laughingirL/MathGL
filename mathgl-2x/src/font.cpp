@@ -677,6 +677,48 @@ bool mglFont::read_main(const char *fname, std::vector<short> &buf)
 	return true;
 }
 //-----------------------------------------------------------------------------
+size_t mglFont::SaveBin(const char *fname)
+{
+	FILE *fp = fopen(fname,"wb");
+	if(!fp)	return 0;
+	size_t sum=0;
+	fwrite(&numb,sizeof(long),1,fp);	sum += sizeof(long);
+	fwrite(fact,sizeof(float),4,fp);	sum += sizeof(float)*4;
+	fwrite(Buf,sizeof(short),numb,fp);	sum += sizeof(short)*numb;
+	size_t len = glyphs.size();
+	fwrite(&len,sizeof(size_t),1,fp);	sum += sizeof(long);
+	fwrite(&(glyphs[0]),sizeof(mglGlyphDescr),len,fp);	sum += sizeof(mglGlyphDescr)*len;
+	fclose(fp);	return sum;
+}
+//-----------------------------------------------------------------------------
+bool mglFont::LoadBin(const char *base, const char *path)
+{
+	Clear();	// first clear old
+	if(!path)	path = MGL_FONT_PATH;
+	char str[256], sep='/';
+	snprintf(str,256,"%s%c%s.vfmb",path,sep,base?base:"");	str[255]=0;
+	FILE *fp = fopen(str,"rb");		if(!fp)	return false;
+	size_t s, len;
+	bool res = true;
+	s = fread(&numb,sizeof(long),1,fp);
+	if(s<1)	res = false;
+	s = fread(fact,sizeof(float),4,fp);
+	if(s<4)	res = false;
+	Buf = new short[numb];
+	s = fread(Buf,sizeof(short),numb,fp);
+	if(s<numb)	res = false;
+	s = fread(&len,sizeof(size_t),1,fp);
+	if(s<1)	res = false;
+	if(res)
+	{
+		glyphs.clear();	glyphs.resize(len);
+		s = fread(&(glyphs[0]),sizeof(mglGlyphDescr),len,fp);
+		if(s<len)	res = false;
+	}
+//	if(!res)	Clear();
+	fclose(fp);		return res;
+}
+//-----------------------------------------------------------------------------
 bool mglFont::Load(const char *base, const char *path)
 {
 //	base = 0;
@@ -697,6 +739,7 @@ bool mglFont::Load(const char *base, const char *path)
 			for(i=strlen(buf);i>=0 && buf[i]!=sep;i--);
 			path = buf;		buf[i]=0;	base = buf+i+1;
 		}
+		if(LoadBin(base,path))	return true;
 	}
 	Clear();	// first clear old
 

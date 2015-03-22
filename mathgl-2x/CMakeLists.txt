@@ -11,8 +11,8 @@ if(NOT CMAKE_BUILD_TYPE)
 endif(NOT CMAKE_BUILD_TYPE)
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
-#set(MathGL_VERSION_MAJOR 2)
-#set(MathGL_VERSION_MINOR 2.2)
+set(MathGL_VERSION_MAJOR 2)
+set(MathGL_VERSION_MINOR 3.3)
 set(MathGL_SOVERSION 7.4.0)
 
 
@@ -133,9 +133,6 @@ if(NOT WIN32)
 	set(MGL_MAN_PATH "${CMAKE_INSTALL_PREFIX}/share/man")
 	set(MGL_INFO_PATH "${CMAKE_INSTALL_PREFIX}/share/info")
 	set(MGL_FONT_PATH "${MGL_DATA_PATH}/fonts")
-	install(DIRECTORY fonts/ DESTINATION ${MGL_FONT_PATH}
-			PATTERN ".svn" EXCLUDE
-			PATTERN "*.vfm")
 endif(NOT WIN32)
 
 include(CheckFunctionExists)
@@ -512,6 +509,7 @@ if(NOT enable-lgpl)
 	endif(enable-python OR enable-lua OR enable-octave)
 	if(NOT MSVC AND NOT BORLAND)
 		add_subdirectory( utils )
+		add_subdirectory( fonts )
 	endif(NOT MSVC AND NOT BORLAND)
 #	add_subdirectory( mgllab )
 endif(NOT enable-lgpl)

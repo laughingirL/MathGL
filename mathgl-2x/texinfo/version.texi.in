@@ -1,0 +1,2 @@
+@set VERSION ${MathGL_VERSION_MAJOR}.${MathGL_VERSION_MINOR}
+@c @set MINVER .1
