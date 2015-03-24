@@ -182,7 +182,7 @@ void MGL_EXPORT mgl_surf3_plot(HMGL gr, long n,long m,long *kx1,long *kx2,long *
 		if(ni<3)	continue;
 
 		for(jj=0;jj<ni;jj++)
-		{	pp[jj]=kk[id[jj]];	pd[jj]=long(pp[jj].c+0.5);	}
+		{	pp[jj]=kk[id[jj]];	pd[jj]=mgl_int(pp[jj].c);	}
 		// remove points which is too close to first one
 		for(jj=1;jj<ni;)
 		{

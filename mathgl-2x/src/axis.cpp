@@ -305,7 +305,7 @@ void mglCanvas::AdjustTicks(mglAxis &aa, bool ff)
 	{
 		d /= -aa.d;
 		long n = floor(log10(d));
-		int k = int(d*pow(10.,-n)+0.5);
+		int k = mgl_int(d*pow(10.,-n));
 		aa.dv = pow(10.,n)*k;
 		aa.o=0;	aa.ds = pow(10.,n);
 	}
@@ -580,6 +580,7 @@ void mglCanvas::DrawLabels(mglAxis &aa, bool inv, const mglMatrix *M)
 	if(strchr("xyz",aa.ch))	o -= d*(o*d);
 	mglPoint s=(Min+Max)/2, dv(mgl_sign(s.x-o.x), mgl_sign(s.y-o.y), mgl_sign(s.z-o.z));
 	mglPoint a = aa.a*(dv*aa.a) + aa.b*(dv*aa.b);
+	if(aa.ch=='c')	a = aa.a;
 
 	long n = aa.txt.size();
 	mreal *w=new mreal[n];
@@ -608,8 +609,9 @@ void mglCanvas::DrawLabels(mglAxis &aa, bool inv, const mglMatrix *M)
 	else if(get(MGL_ENABLE_RTEXT) && get(MGL_TICKS_ROTATE) && l>1)	// try rotate first
 	{
 		mreal t1 = 1.1*h<1 ? asin(1.1*h) : M_PI/2;
-		mreal t2 = -atan(l/h)+asin(1.1/hypot(l,h));
-		tet = (t1<t2 || t2<0) ? t1:t2;
+		mreal r2 = l*l+h*h;
+		mreal t2 = r2*1.21>1 ? asin((l*sqrt(r2-1/1.21)+h/1.1)/r2):M_PI/2;
+		tet = t1<t2 ? t1:t2;
 	}
 	mreal sn = sin(tet);
 	if(sn)
@@ -624,14 +626,19 @@ void mglCanvas::DrawLabels(mglAxis &aa, bool inv, const mglMatrix *M)
 		ScalePoint(M, r, p, false);
 		mglPnt &pp = Pnt[kk[i]];
 		mreal ux=pp.u*cos(tet) + pp.v*sin(tet), uy=pp.v*cos(tet) - pp.u*sin(tet);
-		bool cnt = tet==0;
-		if(!get(MGL_ENABLE_RTEXT) || !get(MGL_TICKS_ROTATE))	{	ux=1;	uy=0;	cnt=false;	}
+		bool algn = tet!=0;
+		if(!get(MGL_ENABLE_RTEXT) || !get(MGL_TICKS_ROTATE))	{	ux=1;	uy=0;	algn=true;	}
 		if(ux<0 || (ux==0 && uy<0))	{	ux=-ux;	uy=-uy;	pp.w=-pp.w;	}
 		pp.u = ux;	pp.v = uy;
 		mreal pu = p.x*ux+p.y*uy, pv = p.y*ux-p.x*uy; /*, su = ps.x*ux+ps.y*uy;*/
-		up[i] = ((pv>0) ^ inv) ? 'T':'t'; 
-		int t= (cnt || pu==0)?0:(pu<0? -1:1);
-		if(aa.ch=='c')	t=-t;
+		if(aa.ch!='c')	up[i] = ((pv>0) ^ inv) ? 'T':'t'; 
+		else		up[i]=(aa.ns==0 || aa.ns==3)?'t':'T';
+		int t=0;
+		if(algn)
+		{
+			if(aa.ch!='c')	t= (pu==0)?0:(pu<0? -1:1);
+			else	t=inv?-1:1;
+		}
 		char val[3]={'L','C','R'};	align[i] = val[t+1];
 	}
 	long k = get(MGL_TICKS_SKIP) ? 1+l : 1;
@@ -1094,20 +1101,19 @@ void mglCanvas::colorbar(HCDT vv, const mreal *c, int where, mreal x, mreal y, m
 		}
 		line_plot(AddPnt(&M, p1), AddPnt(&M, p2));
 	}
-	ac.dir.Set(ss*w,ss*h,0);
-	ac.org.Set(w+x,h+y,s3+1);
+	ac.dir.Set(ss*w,ss*h,0);	ac.a.Set(0,0,0);
+	ac.org.Set(w+x,h+y,s3+1);	ac.b.Set(0,0,0);
 	switch(where)
 	{
-		case 1:	ac.dir.x = 0;	ac.org.x = x+0.1*w-(get(MGL_ENABLE_RTEXT)?0:0.06);	break;
-		case 2:	ac.dir.y = 0;	ac.org.y = y-0.1*h;	break;
-		case 3:	ac.dir.y = 0;	ac.org.y = y+0.1*h;	break;
-		default:ac.dir.x = 0;	ac.org.x = x-0.1*w;	break;
+		case 1:	ac.dir.x = 0;	ac.a.x= 1;	ac.org.x = x+0.1*w-(get(MGL_ENABLE_RTEXT)?0:0.06);	break;
+		case 2:	ac.dir.y = 0;	ac.a.y=-1;	ac.org.y = y-0.1*h;	break;
+		case 3:	ac.dir.y = 0;	ac.a.y= 1;	ac.org.y = y+0.1*h;	break;
+		default:ac.dir.x = 0;	ac.a.x=-1;	ac.org.x = x-0.1*w;	break;
 	}
 	SetPenPal(AxisStl);
-//	bool out = fabs(x)>1 && fabs(y)>1;
 	bool inv = where!=3 && where!=0;
-	ac.ns = where;	ac.angl=NAN;
-	if(text)	DrawLabels(ac,inv,&M);	// NOTE ns isn't used for colorbar
+	ac.ns = where;	ac.angl=NAN;	// NOTE ns isn't used for colorbar
+	if(text)	DrawLabels(ac,inv,&M);
 	clr(MGL_DISABLE_SCALE);	EndGroup();
 }
 //-----------------------------------------------------------------------------

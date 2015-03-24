@@ -44,7 +44,7 @@ void MGL_EXPORT mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCD
 	{
 		mglPoint p1,p2,p3,q;
 		gr->Reserve(m*3);
-		for(long i=0;i<m;i++)
+		for(long i=0;i<m;i++)	if(nums->v(0,i)>=0 && nums->v(1,i)>=0 && nums->v(2,i)>=0) 
 		{
 			register long k1 = long(nums->v(0,i)+0.5);
 			p1.Set(x->v(k1), y->v(k1), z->v(k1));
@@ -64,7 +64,7 @@ void MGL_EXPORT mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCD
 		gr->Reserve(n);
 		long *kk = new long[n];
 		mglPoint *pp = new mglPoint[n];
-		for(long i=0;i<m;i++)	// add averaged normales
+		for(long i=0;i<m;i++)	if(nums->v(0,i)>=0 && nums->v(1,i)>=0 && nums->v(2,i)>=0)	// add averaged normales
 		{
 			register long k1 = long(nums->v(0,i)+0.5);
 			register long k2 = long(nums->v(1,i)+0.5);
@@ -82,7 +82,7 @@ void MGL_EXPORT mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCD
 		}
 		for(long i=0;i<n;i++)	// add points
 			kk[i] = gr->AddPnt(mglPoint(x->v(i), y->v(i), z->v(i)), gr->GetC(ss,a->v(i)), pp[i]);
-		for(long i=0;i<m;i++)	// draw triangles
+		for(long i=0;i<m;i++)	if(nums->v(0,i)>=0 && nums->v(1,i)>=0 && nums->v(2,i)>=0)	// draw triangles
 		{
 			register long k1 = long(nums->v(0,i)+0.5);
 			register long k2 = long(nums->v(1,i)+0.5);
@@ -146,7 +146,7 @@ void MGL_EXPORT mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HC
 	if(nc!=n && nc>=m)	// colors per triangle
 	{
 		gr->Reserve(m*4);
-		for(long i=0;i<m;i++)
+		for(long i=0;i<m;i++)	if(nums->v(0,i)>=0 && nums->v(1,i)>=0 && nums->v(2,i)>=0 && nums->v(3,i)>=0)
 		{
 			register long k1 = long(nums->v(0,i)+0.5);
 			p1.Set(x->v(k1), y->v(k1), z->v(k1));
@@ -154,7 +154,7 @@ void MGL_EXPORT mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HC
 			p2.Set(x->v(k2), y->v(k2), z->v(k2));
 			register long k3 = long(nums->v(2,i)+0.5);
 			p3.Set(x->v(k3), y->v(k3), z->v(k3));
-			register long k4 = floor(nums->v(3,i)+0.5);
+			register long k4 = long(nums->v(3,i)+0.5);
 			p4.Set(x->v(k4), y->v(k4), z->v(k4));
 			mglPoint q = wire ? mglPoint(NAN,NAN):(p2-p1) ^ (p3-p1);
 			k1 = gr->AddPnt(p1,gr->GetC(ss,a->v(k1)),q);
@@ -169,15 +169,15 @@ void MGL_EXPORT mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HC
 		gr->Reserve(n);
 		long *kk = new long[n];
 		mglPoint *pp = new mglPoint[n];
-		for(long i=0;i<m;i++)	// add averaged normales
-		{
+		for(long i=0;i<m;i++)	if(nums->v(0,i)>=0 && nums->v(1,i)>=0 && nums->v(2,i)>=0 && nums->v(3,i)>=0)
+		{	// add averaged normales
 			register long k1 = long(nums->v(0,i)+0.5);
 			p1.Set(x->v(k1), y->v(k1), z->v(k1));
 			register long k2 = long(nums->v(1,i)+0.5);
 			p2.Set(x->v(k2), y->v(k2), z->v(k2));
 			register long k3 = long(nums->v(2,i)+0.5);
 			p3.Set(x->v(k3), y->v(k3), z->v(k3));
-			register long k4 = floor(nums->v(3,i)+0.5);
+			register long k4 = long(nums->v(3,i)+0.5);
 			p4.Set(x->v(k4), y->v(k4), z->v(k4));
 
 			if(wire)	pp[k1]=pp[k2]=pp[k3]=pp[k4]=mglPoint(NAN,NAN);
@@ -192,12 +192,12 @@ void MGL_EXPORT mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HC
 		}
 		for(long i=0;i<n;i++)	// add points
 			kk[i] = gr->AddPnt(mglPoint(x->v(i), y->v(i), z->v(i)),gr->GetC(ss,a->v(i)), pp[i]);
-		for(long i=0;i<m;i++)	// draw quads
-		{
-			register long k1 = floor(nums->v(0,i)+0.5);
-			register long k2 = floor(nums->v(1,i)+0.5);
-			register long k3 = floor(nums->v(2,i)+0.5);
-			register long k4 = floor(nums->v(3,i)+0.5);
+		for(long i=0;i<m;i++)	if(nums->v(0,i)>=0 && nums->v(1,i)>=0 && nums->v(2,i)>=0 && nums->v(3,i)>=0)
+		{	// draw quads
+			register long k1 = long(nums->v(0,i)+0.5);
+			register long k2 = long(nums->v(1,i)+0.5);
+			register long k3 = long(nums->v(2,i)+0.5);
+			register long k4 = long(nums->v(3,i)+0.5);
 			if(wire)
 			{
 				gr->line_plot(kk[k1],kk[k2]);	gr->line_plot(kk[k1],kk[k3]);
@@ -552,7 +552,7 @@ MGL_NO_EXPORT void *mgl_grid_t(void *par)
 #if !MGL_HAVE_PTHREAD
 #pragma omp parallel for
 #endif
-	for(long i0=t->id;i0<t->n;i0+=mglNumThr)
+	for(long i0=t->id;i0<t->n;i0+=mglNumThr)	if(d[3*i0]>=0 && d[3*i0+1]>=0 && d[3*i0+2]>=0)
 	{
 		register long k1 = long(d[3*i0]+0.5), k2 = long(d[3*i0+1]+0.5), k3 = long(d[3*i0+2]+0.5);
 		mreal dxu,dxv,dyu,dyv;

@@ -739,7 +739,8 @@ bool mglFont::Load(const char *base, const char *path)
 			for(i=strlen(buf);i>=0 && buf[i]!=sep;i--);
 			path = buf;		buf[i]=0;	base = buf+i+1;
 		}
-		if(LoadBin(base,path))	return true;
+		if(LoadBin(base,path))
+		{	delete []buf;	return true;	}
 	}
 	Clear();	// first clear old
 

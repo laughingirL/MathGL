@@ -165,6 +165,7 @@ typedef float mreal;
 #define mgl_min(a,b)	({typeof (a) _a = (a); typeof (b) _b = (b); _a > _b ? _b : _a;})
 #define mgl_max(a,b)	({typeof (a) _a = (a); typeof (b) _b = (b); _a > _b ? _a : _b;})
 #define mgl_sign(a)		({typeof (a) _a = (a); _a<0 ? -1:1;})
+#define mgl_int(a)		({typeof (a) _a = (a); long(_a+(_a>=0 ? 0.5:-0.5));})
 #else
 #define mgl_min(a,b)	(((a)>(b)) ? (b) : (a))
 #define mgl_max(a,b)	(((a)>(b)) ? (a) : (b))
@@ -173,6 +174,7 @@ typedef float mreal;
 #define mgl_isfin(a)	((a)-(a)==mreal(0.))
 #define mgl_isbad(a)	((a)-(a)!=mreal(0.))
 #define mgl_sign(a)		((a)<0 ? -1:1)
+#define mgl_int(a)		(long(a+((a)>=0 ? 0.5:-0.5)))
 #endif
 //-----------------------------------------------------------------------------
 enum{	// types of predefined curvelinear coordinate systems
