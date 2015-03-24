@@ -133,6 +133,8 @@ if(NOT WIN32)
 	set(MGL_MAN_PATH "${CMAKE_INSTALL_PREFIX}/share/man")
 	set(MGL_INFO_PATH "${CMAKE_INSTALL_PREFIX}/share/info")
 	set(MGL_FONT_PATH "${MGL_DATA_PATH}/fonts")
+else(NOT WIN32)
+	set(MGL_FONT_PATH "${CMAKE_INSTALL_PREFIX}/fonts")
 endif(NOT WIN32)
 
 include(CheckFunctionExists)

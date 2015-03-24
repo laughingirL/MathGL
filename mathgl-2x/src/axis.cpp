@@ -511,12 +511,11 @@ void mglCanvas::DrawAxis(mglAxis &aa, bool text, char arr,const char *stl,mreal 
 	if(aa.ch=='y')	aa.v0 = aa.org.y;
 	if(aa.ch=='z')	aa.v0 = aa.org.z;
 
-	mglPoint d = aa.dir, o = aa.org, q(NAN);	// "transverse" org
+	mglPoint d(aa.dir), o(aa.org), q(NAN);	// "transverse" org
 	if(strchr("xyz",aa.ch))	o -= d*(o*d);
 	mglPoint av=(Min+Max)/2, dv,da,db, p;
-	dv.Set(mgl_sign((av.x-o.x)*(Max.x-Min.x)), mgl_sign((av.y-o.y)*(Max.y-Min.y)), mgl_sign((av.z-o.z)*(Max.z-Min.z)));
+	dv.Set(mgl_sign(av.x-o.x), mgl_sign(av.y-o.y), mgl_sign(av.z-o.z));
 	da = aa.a*(dv*aa.a);	db = aa.b*(dv*aa.b);
-	if(aa.v2<aa.v1)	{	da *= -1;	db *= -1;	}
 
 	long k1,k2;
 	bool have_color=mgl_have_color(stl);
@@ -570,89 +569,82 @@ void mglCanvas::DrawAxis(mglAxis &aa, bool text, char arr,const char *stl,mreal 
 //-----------------------------------------------------------------------------
 void mglCanvas::DrawLabels(mglAxis &aa, bool inv, const mglMatrix *M)
 {
+	if(M==0)	M=&B;
 	if(strchr("xyz",aa.ch))
 		aa.org.Set(GetOrgX(aa.ch,aa.inv), GetOrgY(aa.ch,aa.inv), GetOrgZ(aa.ch,aa.inv));
-	mglPoint d = aa.dir, o = aa.org;	// "transverse" org
-	if(strchr("xyz",aa.ch))	o -= d*(o*d);
-	mglPoint p,q, s=(Min+Max)/2, nn;
-	s = s - d*(s*d);
-	if(M==0)	M=&B;
+	if(aa.ch=='x')	aa.v0 = aa.org.x;
+	if(aa.ch=='y')	aa.v0 = aa.org.y;
+	if(aa.ch=='z')	aa.v0 = aa.org.z;
 
-	register long i,n = aa.txt.size();
-	char pos[4]="t:C";
-	if(aa.ch=='c')	pos[0]=(aa.ns==0 || aa.ns==3)?'t':'T';
-	if(aa.ch=='T')	pos[0]='T';
-	mreal *w=new mreal[n], h = TextHeight(FontDef,-1), c=NAN, l=NAN, tet=0, v, vv;	// find sizes
+	mglPoint d(aa.dir), o(aa.org), q(NAN);	// "transverse" org
+	if(strchr("xyz",aa.ch))	o -= d*(o*d);
+	mglPoint s=(Min+Max)/2, dv(mgl_sign(s.x-o.x), mgl_sign(s.y-o.y), mgl_sign(s.z-o.z));
+	mglPoint a = aa.a*(dv*aa.a) + aa.b*(dv*aa.b);
+
+	long n = aa.txt.size();
+	mreal *w=new mreal[n];
 	long *kk=new long[n];
-	for(i=0;i<n;i++)
+	for(long i=0;i<n;i++)	// fill base label properties
 	{
 		w[i] = TextWidth(aa.txt[i].text.c_str(),FontDef,-1);
 		kk[i] = AddPnt(M, o+d*aa.txt[i].val,-1,d,0,7);
-		if(kk[i]>=0)
-		{
-			mglPnt &pp = Pnt[kk[i]];
-			if(pp.u<0 || (pp.u==0 && pp.v<0))
-			{	pp.u=-pp.u;	pp.v=-pp.v;	pp.w=-pp.w;	}
-		}
 	}
-
-	for(l=0,c=INFINITY,i=0;i<n-1;i++)
+	mreal c=INFINITY, l=0, h = TextHeight(FontDef,-1);	// find sizes
+	for(long i=0;i<n-1;i++)
 	{
 		// exclude factors
 		if(aa.ch!='c' && (aa.txt[i].val<aa.v1 || aa.txt[i+1].val<aa.v1 || aa.txt[i].val>aa.v2 || aa.txt[i+1].val>aa.v2))
 			continue;
 		if(kk[i]<0 || kk[i+1]<0)	continue;
-		v = (GetPntP(kk[i+1])-GetPntP(kk[i])).norm();	// distance between ticks
-		vv = (w[i]+w[i+1])/2;	// length of labels
+		mreal v = (GetPntP(kk[i+1])-GetPntP(kk[i])).norm();	// distance between ticks
+		mreal vv = (w[i]+w[i+1])/2;	// length of labels
 		if(v>0 && l < vv/v)	l = vv/v;
 		if(c>v)	c = v;
 	}
-	if(mgl_isnum(aa.angl))	// manual rotation
-	{
-		tet = aa.angl*M_PI/180;
-		mreal s = sin(tet);
-		if(s>0)
-		{	pos[2]=(aa.ch=='c' && !inv)?'R':'L';	l=0.99*h/s/c;
-			for(i=0;i<n;i++)	w[i]=l*c;	}
-		else if(s<0)
-		{	pos[2]=(aa.ch=='c' && !inv)?'L':'R';	l=-0.99*h/s/c;
-			for(i=0;i<n;i++)	w[i]=l*c;	}
-	}
-	else if(get(MGL_ENABLE_RTEXT) && get(MGL_TICKS_ROTATE) && l>1 && c>0)	// try rotate first
-	{	tet = c>1.1*h ? asin(1.1*h/c) : M_PI/2;	pos[2]=(aa.ch=='c' && !inv)?'R':'L';
-		l=0.99*h/sin(tet)/c;	for(i=0;i<n;i++)	w[i]=l*c;	}
-	// TODO: do clever points exclusion (i.e. longest and so on)
-	long k = get(MGL_TICKS_SKIP) ? 1+l : 1;
-	if(n>0)	for(i=0;i<n;i++)
-	{
-		if(kk[i]<0)	continue;
-		c = aa.txt[i].val;
-		if(get(MGL_NO_ORIGIN) && c==aa.v0)	continue;
-		if(c>aa.v1 && c<aa.v2 && i%k!=0)	continue;
-		p = o+d*c;	nn = (s-o)/(Max-Min);	ScalePoint(&B,p,nn);
-		mglPnt &qq = Pnt[kk[i]];
-		mreal ux=qq.u*cos(tet) + qq.v*sin(tet), uy=qq.v*cos(tet) - qq.u*sin(tet);
-		if(ux==0)	uy = fabs(uy);
-		qq.u = ux;	qq.v = uy;
+	h /= c;
 
-		if((!get(MGL_ENABLE_RTEXT) || tet) && nn.x!=0)
-		{
-			if(aa.ch!='c') pos[2] = nn.x<0 ? 'L':'R';
-			else	pos[2] = aa.ns==1?'L':'R';//  nn.x<0 ? 'R':'L';
-		}
-//		if((!get(MGL_ENABLE_RTEXT) || tet) && nn.x!=0 && aa.ch=='c')	pos[2] = nn.x<0 ? 'R':'L';
-//		if((!get(MGL_ENABLE_RTEXT) || tet) && nn.x!=0 && aa.ch!='c')	pos[2] = nn.x<0 ? 'L':'R';
-		if(aa.ch=='c' && aa.txt[i].text[0]==' ')	qq.u = qq.v = NAN;
-		int ts = 1;
-		if(!get(MGL_DISABLE_SCALE))	ts = mgl_sign(qq.v*nn.x-qq.u*nn.y)*mgl_sign(aa.v2-aa.v1);
-		if(aa.ch=='c')	ts=inv?-1:1;	// use manual settings by inv argument
-		if(aa.ch=='T')	ts *= -1;
-		if(aa.pos=='T')	ts *= -1;
-		pos[0] = ts>0 ? 't':'T';
-		if(ts>0 && tet && nn.x==0)	pos[2]='R';
-		text_plot(kk[i], aa.txt[i].text.c_str(), pos, -1, aa.sh+0.1,CDef,tet?false:true);
+	mreal tet=0;
+	if(mgl_isnum(aa.angl))	tet = aa.angl*M_PI/180;	// manual rotation
+	else if(get(MGL_ENABLE_RTEXT) && get(MGL_TICKS_ROTATE) && l>1)	// try rotate first
+	{
+		mreal t1 = 1.1*h<1 ? asin(1.1*h) : M_PI/2;
+		mreal t2 = -atan(l/h)+asin(1.1/hypot(l,h));
+		tet = (t1<t2 || t2<0) ? t1:t2;
 	}
-	delete []w;	delete []kk;
+	mreal sn = sin(tet);
+	if(sn)
+	{
+		mreal l1=h/fabs(sn), l2=fabs(l*cos(tet)+h*sn);
+		l = l2>l1?l1:l2;
+	}
+	char *align=new char[n], *up=new char[n];
+	for(long i=0;i<n;i++)	if(kk[i]>=0)	// select proper align
+	{
+		mglPoint p(a),r(o+d*aa.txt[i].val);
+		ScalePoint(M, r, p, false);
+		mglPnt &pp = Pnt[kk[i]];
+		mreal ux=pp.u*cos(tet) + pp.v*sin(tet), uy=pp.v*cos(tet) - pp.u*sin(tet);
+		bool cnt = tet==0;
+		if(!get(MGL_ENABLE_RTEXT) || !get(MGL_TICKS_ROTATE))	{	ux=1;	uy=0;	cnt=false;	}
+		if(ux<0 || (ux==0 && uy<0))	{	ux=-ux;	uy=-uy;	pp.w=-pp.w;	}
+		pp.u = ux;	pp.v = uy;
+		mreal pu = p.x*ux+p.y*uy, pv = p.y*ux-p.x*uy; /*, su = ps.x*ux+ps.y*uy;*/
+		up[i] = ((pv>0) ^ inv) ? 'T':'t'; 
+		int t= (cnt || pu==0)?0:(pu<0? -1:1);
+		if(aa.ch=='c')	t=-t;
+		char val[3]={'L','C','R'};	align[i] = val[t+1];
+	}
+	long k = get(MGL_TICKS_SKIP) ? 1+l : 1;
+
+	for(long i=0;i<n;i++)	if(kk[i]>=0)
+	{
+		mreal v = aa.txt[i].val;
+		if(get(MGL_NO_ORIGIN) && v==aa.v0)	continue;
+		if(v>aa.v1 && v<aa.v2 && i%k!=0)	continue;
+		char pos[4]={up[i],':',align[i],0};
+		text_plot(kk[i], aa.txt[i].text.c_str(), pos, -1, aa.sh+0.1,CDef);
+	}
+	delete []w;	delete []kk;	delete []align;	delete []up;
 }
 //-----------------------------------------------------------------------------
 char mglCanvas::GetLabelPos(mreal c, long kk, mglAxis &aa)
@@ -668,11 +660,11 @@ char mglCanvas::GetLabelPos(mreal c, long kk, mglAxis &aa)
 	if(aa.ch=='c')	ts=(aa.ns==0 || aa.ns==3)?1:-1;
 	if(aa.ch=='T')	ts=-1;
 
-	p = o+d*c;	nn = (s-o)/(Max-Min);	ScalePoint(&B,p,nn);
+	p = o+d*c;	nn = s-o;	ScalePoint(&B,p,nn);
 	mglPnt &qq = Pnt[kk];
 
 	if(aa.ch=='c')	qq.u = qq.v = NAN;
-	if(!get(MGL_DISABLE_SCALE))	ts = mgl_sign(qq.v*nn.x-qq.u*nn.y)*mgl_sign(aa.v2-aa.v1);
+	if(!get(MGL_DISABLE_SCALE))	ts = mgl_sign(qq.v*nn.x-qq.u*nn.y);
 	if(aa.ch=='T')	ts *= -1;
 	if(aa.pos=='T')	ts *= -1;
 	return ts>0 ? 't':'T';

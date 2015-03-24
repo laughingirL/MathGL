@@ -15,5 +15,6 @@ endforeach(SAMPLE)
 add_custom_target(fonts ALL DEPENDS ${MGL_FONTS_BIN})
 
 install(DIRECTORY ${MathGL_BINARY_DIR}/fonts/ DESTINATION ${MGL_FONT_PATH}
+			PATTERN "*[mM]ake*" EXCLUDE
 			PATTERN ".svn" EXCLUDE
 			PATTERN "*.vfmb")
