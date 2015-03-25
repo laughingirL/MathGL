@@ -1012,6 +1012,8 @@ void mglCanvasQT::Adjust()		{	QMGL->adjust();	}
 //-----------------------------------------------------------------------------
 void mglCanvasQT::Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p), const char *title, void *par, void (*reload)(void *p), bool maximize)
 {
+	static char arg=0, *parg=&arg;
+	static int argc_=0;
 	SetDrawFunc(draw, par, reload);
 	if(Wnd)
 	{
@@ -1029,10 +1031,9 @@ void mglCanvasQT::Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p
 		// must be placed before ANY window creation
 		XInitThreads();
 #endif
-//		static char buf=0, *tmp=&buf;
-//		if(!argv)	{	argc = 1;	argv = &tmp;	}
-		if(!argv)	argc = 0;
-		QApplication *a = new QApplication(argc, argv);
+		if(!argv)	{	argc_ = 0;	argv=&parg;	}
+		else	argc_ = argc;
+		QApplication *a = new QApplication(argc_, argv);
 		a->connect(a, SIGNAL(lastWindowClosed()), a, SLOT(quit()));
 	}
 

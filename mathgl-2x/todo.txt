@@ -25,13 +25,12 @@
 ============= NEW FEATURES =============
 
 
-1. Add samples for axis with different rotation angles + check the result
 2. 3D text (with depth, for Quality=3)
 3. Text along 3D curve (for Quality=3)
 
 4. Check centered curved text (see text2)
 
-5. Perspective and axis labels
+5. Perspective and axis labels in JS ?!?
 
 6. New tests:
 	c. Tests for mglDataC arrays (as separate flag)
@@ -39,7 +38,6 @@
 	u. Test FlowP + 3d
 
 7. Improve z-order for rapidly oscillating surfaces
-8. Manual rotation angle for axis ticks (as "value" option?!)
 10. Title and perspective
 11. Adjust BarWidth for proper using previous (i-1) point
 
@@ -77,6 +75,7 @@ D. Docs about JS interface
 12. 2D textures as one of standard way for coloring -- if '%' present in color scheme
 13. Docs about SurfCA() + hint about '%' style
 14. Docs about Surf3CA() + hint about '%' style
+15. Manual rotation angle for axis ticks (as "value" option)
 
 12. Region 3d sample
 new x1 100 'sin(pi*x)'

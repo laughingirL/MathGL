@@ -1,3 +1,21 @@
+2.3.3 Released ?? April 2015
+
+* Manual rotation angle for axis ticks (as "value" option)
+* Add binary font files for speeding up initialization and font loading
+* Add style '%' for color scheme along 2 coordinates (as in Map())
+* Add SurfCA() and Surf3CA() plots
+* Update JS interface
+* Greatly improve the speed of formula parsing for MGL scripts
+* Add 'rkstep' command for Runge-Kutta step in MGL script
+* Add warning about writing to temporary arrays
+* Add mgl_set_size_scl();
+* Add options -S, -q for mglconv
+* Command 'stop' is not required to be placed before 'func'
+* Add complex numbers in MGL -- any expression started with '!'
+* Add missing mglDataC functions
+* Add wavelet transforms
+* Minor improvements, bugfixes and compatibility changes
+
 2.3.2 Released 2 February 2015
 
 * Update mgltex (thanks to Diego Sejas Viscarra)
