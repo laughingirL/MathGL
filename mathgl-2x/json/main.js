@@ -15,7 +15,7 @@ var main = function() {
   graph = new mathgl.Graph(canvas, backend);
   graph.setBackgroundFillStyle("#F0F0F0");
   // initialize it by some sample MGL script
-  graph.init(makeSampleScript());
+  graph.loadGeometry(makeSampleScript(),null);
 }
 
 

@@ -264,7 +264,7 @@ mathgl.Graph.prototype.__mgl_draw_good = function(obj, ctx, skip) {
 	{
 		var prim = obj.prim[i];
 		var scl = s1*this.__mgl_pf(obj, prim[9]);
-		if(obj.pnts[prim[1]][3])	scl = s2;
+		if(obj.pnts[prim[1]][3]<0)	scl = s2;
 		this.__mgl_draw_prim(obj,ctx,prim,scl);
 	}
 }
@@ -373,7 +373,7 @@ mathgl.Graph.prototype.__mgl_prepare = function(obj, skip) {
 		var x = obj.pnts[i][0]-obj.width/2;
 		var y = obj.pnts[i][1]-obj.height/2;
 		var z = obj.pnts[i][2]-obj.depth/2;
-		if(obj.pnts[i][3]==0)	// TODO: check later when mglInPlot will be ready
+		if(obj.pnts[i][3]>=0)	// TODO: check later when mglInPlot will be ready
 			obj.pp[i] = [b[9]  + b[0]*x + b[1]*y + b[2]*z,
 						b[10] + b[3]*x + b[4]*y + b[5]*z,
 						b[11] + b[6]*x + b[7]*y + b[8]*z];
@@ -383,7 +383,7 @@ mathgl.Graph.prototype.__mgl_prepare = function(obj, skip) {
 	if(obj.pf || this.__fov)	for(var i=0;i<obj.npnts;i++)	// perspective
 	{	// NOTE: it is not supported for coordinate determining now
 		var d = this.__mgl_pf(obj, obj.pp[i][2]);
-		if(obj.pnts[i][3]==0)	// TODO: check later when mglInPlot will be ready
+		if(obj.pnts[i][3]>=0)
 		{
 			obj.pp[i][0] = d*obj.pp[i][0] + (1-d)*obj.b[9];
 			obj.pp[i][1] = d*obj.pp[i][1] + (1-d)*obj.b[10];

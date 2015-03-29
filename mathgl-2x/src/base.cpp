@@ -112,7 +112,6 @@ mglBase::mglBase()
 	omp_init_lock(&lockClf);
 	Pnt.set_mutex(&lockClf);
 	Prm.set_mutex(&lockClf);
-	Sub.set_mutex(&lockClf);
 	Txt.set_mutex(&lockClf);
 #endif
 	fnt=0;	*FontDef=0;	fx=fy=fz=fa=fc=0;
@@ -132,8 +131,7 @@ mglBase::mglBase()
 mglBase::~mglBase()
 {
 	ClearEq();	ClearPrmInd();	delete fnt;
-	Pnt.set_mutex(0);	Prm.set_mutex(0);
-	Sub.set_mutex(0);	Txt.set_mutex(0);
+	Pnt.set_mutex(0);	Prm.set_mutex(0);	Txt.set_mutex(0);
 #if MGL_HAVE_OMP
 	omp_destroy_lock(&lockClf);
 #endif
@@ -297,7 +295,7 @@ long mglBase::AddPnt(const mglMatrix *mat, mglPoint p, mreal c, mglPoint n, mrea
 	if(!get(MGL_ENABLE_ALPHA))	{	q.a=1;	if(txt.Smooth!=2)	q.ta=1-gap;	}
 	if(norefr)	q.v=0;
 	if(!get(MGL_ENABLE_LIGHT) && !(scl&4))	q.u=q.v=NAN;
-	if(mat->norot)	q.sub=-1;	// NOTE: temporary -- later should be mglInPlot here
+	q.sub=mat->norot?-Sub.size():Sub.size()-1;
 	long k;
 #pragma omp critical(pnt)
 	{k=Pnt.size();	MGL_PUSH(Pnt,q,mutexPnt);}	return k;
@@ -1210,8 +1208,10 @@ int MGL_LOCAL_PURE mglFindArg(const char *str)
 	return 0;
 }
 //-----------------------------------------------------------------------------
-void mglBase::SetAmbient(mreal bright)	{	AmbBr = bright;	}
-void mglBase::SetDiffuse(mreal bright)	{	DifBr = bright;	}
+void mglBase::SetAmbient(mreal bright)
+{	AmbBr=bright;	size_t n=Sub.size();	if(n>0)	Sub[n-1].AmbBr=bright;	}
+void mglBase::SetDiffuse(mreal bright)
+{	DifBr=bright;	size_t n=Sub.size();	if(n>0)	Sub[n-1].DifBr=bright;	}
 //-----------------------------------------------------------------------------
 mreal mglBase::SaveState(const char *opt)
 {

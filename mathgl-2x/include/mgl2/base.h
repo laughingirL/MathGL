@@ -164,6 +164,39 @@ struct MGL_EXPORT mglPrim	// NOTE: use float for reducing memory size
 bool operator<(const mglPrim &a,const mglPrim &b);
 bool operator>(const mglPrim &a,const mglPrim &b);
 //-----------------------------------------------------------------------------
+/// Structure for light source
+struct MGL_EXPORT mglLight
+{
+	mglLight():n(false),a(0),b(0)	{}
+	mglLight(const mglLight &aa) : n(aa.n),d(aa.d),r(aa.r),q(aa.q),p(aa.p),a(aa.a),b(aa.b),c(aa.c)	{}
+#if MGL_HAVE_RVAL
+	mglLight(mglLight &&aa) : n(aa.n),d(aa.d),r(aa.r),q(aa.q),p(aa.p),a(aa.a),b(aa.b),c(aa.c)	{}
+#endif
+	bool n;			///< Availability of light sources
+	mglPoint d;		///< Direction of light sources
+	mglPoint r;		///< Position of light sources (NAN for infinity)
+	mglPoint q;		///< Actual position of light sources (filled by LightScale() function)
+	mglPoint p;		///< Actual direction of light sources (filled by LightScale() function)
+	mreal a;		///< Aperture of light sources
+	mreal b;		///< Brightness of light sources
+	mglColor c;		///< Color of light sources
+};
+//-----------------------------------------------------------------------------
+/// Structure for inplot
+struct MGL_EXPORT mglBlock
+{
+	int id;		///< object id
+	long n1,n2,n3,n4;	///< coordinates of corners {n1=x1,n2=x2,n3=y1,n4=y2}
+
+	mglLight light[10];	///< Light sources
+	mreal AmbBr;		///< Default ambient light brightness
+	mreal DifBr;		///< Default diffusive light brightness
+
+	mglBlock():n1(0),n2(0),n3(0),n4(0),id(0),AmbBr(0.5),DifBr(0.5)	{}
+	mglBlock(const mglBlock &aa)	{	memcpy(this, &aa, sizeof(mglBlock));	}
+	const mglBlock &operator=(const mglBlock &aa)	{	memcpy(this, &aa, sizeof(mglBlock));	return aa;	}
+};
+//-----------------------------------------------------------------------------
 /// Structure for group of primitives
 struct MGL_EXPORT mglGroup
 {
@@ -568,7 +601,7 @@ protected:
 	long *PrmInd;		///< Indexes of sorted primitives
 	mglStack<mglPnt> Pnt; 	///< Internal points
 	mglStack<mglPrim> Prm;	///< Primitives (lines, triangles and so on) -- need for export
-	mglStack<mglPrim> Sub;	///< InPlot regions {n1=x1,n2=x2,n3=y1,n4=y2,id}
+	std::vector<mglBlock> Sub;	///< InPlot regions
 	std::vector<mglText> Ptx;	///< Text labels for mglPrim
 	std::vector<mglText> Leg;	///< Text labels for legend
 	std::vector<mglGlyph> Glf;	///< Glyphs data
@@ -586,8 +619,8 @@ protected:
 	mreal pPos;			///< Current position in pen mask
 	mreal PenWidth;		///< Pen width for further line plotting (must be >0 !!!)
 //	long numT;			///< Number of textures
-	mreal AmbBr;		///< Default ambient light brightness
-	mreal DifBr;		///< Default diffusive light brightness
+	mreal AmbBr;		///< Default ambient light brightness	// TODO move to mglBlock
+	mreal DifBr;		///< Default diffusive light brightness	// TODO move to mglBlock
 
 	mreal persp;		///< Original value for perspective
 	mglMatrix Bp;		///< Transformation matrix for View() and Zoom()

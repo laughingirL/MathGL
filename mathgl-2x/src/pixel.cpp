@@ -81,6 +81,8 @@ void mglCanvas::SetSize(int w,int h,bool clf)
 			if(mgl_isnum(q.w))
 			{	q.u*=dx;	q.v*=dy;	q.w*=dz;	}
 		}
+		for(size_t i=0;i<Sub.size();i++)
+		{	mglBlock &q = Sub[i];	q.n1*=dx;	q.n2*=dx;	q.n3*=dy;	q.n4*=dy;	}
 		for(size_t k=0;k<DrwDat.size();k++)	// scale frames too
 		{
 			mglStack<mglPnt>  &pnt = DrwDat[k].Pnt;
@@ -94,6 +96,9 @@ void mglCanvas::SetSize(int w,int h,bool clf)
 				if(mgl_isnum(q.w))
 				{	q.u*=dx;	q.v*=dy;	q.w*=dz;	}
 			}
+			std::vector<mglBlock>  &sub = DrwDat[k].Sub;
+			for(size_t i=0;i<sub.size();i++)
+			{	mglBlock &q = sub[i];	q.n1*=dx;	q.n2*=dx;	q.n3*=dy;	q.n4*=dy;	}
 		}
 #if MGL_HAVE_PTHREAD
 		pthread_mutex_unlock(&mutexClf);
@@ -157,7 +162,7 @@ long mglCanvas::ProjScale(int nf, long id, bool text)
 	mglPoint pp(pi.x,pi.y,pi.z), nn(pi.u,pi.v,pi.w), p, n;
 	if(mgl_isnan(pp.x))	return -1;
 	mreal w=B1.b[0]/2, h=B1.b[4]/2, d=B1.b[8]/2, xx=B1.x-w/2, yy=B1.y-h/2;
-	if(!pi.sub)
+	if(pi.sub>=0)
 	{
 		mglPoint q(RestorePnt(pp)/(2*B.pf));
 		mglPoint u(RestorePnt(nn,true));	u.Normalize();
@@ -381,7 +386,7 @@ void mglCanvas::pxl_transform(long id, long n, const void *)
 	for(long i=id;i<n;i+=mglNumThr)
 	{
 		mglPnt &p=Pnt[i];
-		if(!p.sub)
+		if(p.sub>=0)
 		{
 			register float x = p.xx-Width/2., y = p.yy-Height/2., z = p.zz-Depth/2.;
 			p.x = b[0]*x + b[1]*y + b[2]*z + dx;
@@ -628,7 +633,7 @@ void mglCanvas::pxl_dotsdr(long id, long n, const void *)
 	{
 		unsigned char r[4]={0,0,0,255};
 		const mglPnt &p=Pnt[i];
-		if(p.sub)	continue;
+		if(p.sub<0)	continue;
 		register float x = p.xx-Width/2., y = p.yy-Height/2., z = p.zz-Depth/2.,xx,yy,zz;
 		xx = b[0]*x + b[1]*y + b[2]*z + dx;
 		yy = b[3]*x + b[4]*y + b[5]*z + dy;
@@ -1826,7 +1831,7 @@ void mglCanvas::mark_pix(long i, long j, const mglPnt &q, char type, mreal size,
 float mglCanvas::GetGlyphPhi(const mglPnt &q, float phi)
 {
 	float x,y,z,ll;
-	if(q.sub)
+	if(q.sub<0)
 	{	x = q.u;	y = q.v;	z = q.w;	}
 	else
 	{
@@ -1859,7 +1864,7 @@ void mglCanvas::glyph_draw(const mglPrim &P, mglDrawReg *d)
 	mglPnt p=Pnt[P.n1];
 	// NOTE check this later for mglInPlot
 	mreal fact = get_persp(Bp.pf,p.z,Depth);
-	mreal pf=(p.sub<0?1:sqrt((Bp.b[0]*Bp.b[0]+Bp.b[1]*Bp.b[1]+Bp.b[3]*Bp.b[3]+Bp.b[4]*Bp.b[4])/2))*fact, f = P.p*pf;
+	mreal pf=p.sub<0?1:sqrt((Bp.b[0]*Bp.b[0]+Bp.b[1]*Bp.b[1]+Bp.b[3]*Bp.b[3]+Bp.b[4]*Bp.b[4])/2)*fact, f = P.p*pf;
 
 	mglMatrix M;
 	M.b[0] = M.b[4] = M.b[8] = P.s;

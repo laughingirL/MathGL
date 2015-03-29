@@ -50,7 +50,7 @@ mglCanvas::~mglCanvas()
 long mglCanvas::PushDrwDat()
 {
 	mglDrawDat d;
-	d.Pnt=Pnt;	d.Prm=Prm;	d.Glf=Glf;	d.Ptx=Ptx;	d.Txt=Txt;
+	d.Pnt=Pnt;	d.Prm=Prm;	d.Sub=Sub;	d.Glf=Glf;	d.Ptx=Ptx;	d.Txt=Txt;
 #pragma omp critical(drw)
 	MGL_PUSH(DrwDat,d,mutexDrw);
 	return DrwDat.size();
@@ -64,7 +64,7 @@ void mglCanvas::SetFrame(long i)
 	{
 		Finish();	CurFrameId--;
 		mglDrawDat d;
-		d.Pnt=Pnt;	d.Prm=Prm;	d.Glf=Glf;	d.Ptx=Ptx;	d.Txt=Txt;
+		d.Pnt=Pnt;	d.Prm=Prm;	d.Sub=Sub;	d.Glf=Glf;	d.Ptx=Ptx;	d.Txt=Txt;
 #if MGL_HAVE_PTHREAD
 		pthread_mutex_lock(&mutexDrw);
 #pragma omp critical(drw)
@@ -85,16 +85,18 @@ void mglCanvas::GetFrame(long k)
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_lock(&mutexPnt);
 	pthread_mutex_lock(&mutexPrm);
+	pthread_mutex_lock(&mutexSub);
 	pthread_mutex_lock(&mutexGlf);
 	pthread_mutex_lock(&mutexPtx);
 	pthread_mutex_lock(&mutexTxt);
 #endif
 #pragma omp critical
-	{	Pnt=d.Pnt;	Prm=d.Prm;	Glf=d.Glf;	Ptx=d.Ptx;	Txt=d.Txt;	ClearPrmInd();	}
+	{	Pnt=d.Pnt;	Prm=d.Prm;	Sub=d.Sub;	Glf=d.Glf;	Ptx=d.Ptx;	Txt=d.Txt;	ClearPrmInd();	}
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_unlock(&mutexTxt);
 	pthread_mutex_unlock(&mutexPtx);
 	pthread_mutex_unlock(&mutexGlf);
+	pthread_mutex_unlock(&mutexSub);
 	pthread_mutex_unlock(&mutexPrm);
 	pthread_mutex_unlock(&mutexPnt);
 #endif
@@ -141,10 +143,11 @@ void mglCanvas::ShowFrame(long k)
 {
 	if(k<0 || (size_t)k>=DrwDat.size())	return;
 	ClfZB();
-	size_t npnt=Pnt.size(), nglf=Glf.size(), nptx=Ptx.size(), ntxt=Txt.size();
+	size_t npnt=Pnt.size(), nglf=Glf.size(), nptx=Ptx.size(), ntxt=Txt.size(), nsub=Sub.size();
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_lock(&mutexPnt);
 	pthread_mutex_lock(&mutexPrm);
+	pthread_mutex_lock(&mutexSub);
 	pthread_mutex_lock(&mutexGlf);
 	pthread_mutex_lock(&mutexPtx);
 	pthread_mutex_lock(&mutexTxt);
@@ -152,13 +155,16 @@ void mglCanvas::ShowFrame(long k)
 #pragma omp critical
 	{
 		const mglDrawDat &d=DrwDat[k];
-		Glf.reserve(d.Glf.size());	for(size_t i=0;i<d.Glf.size();i++)	Glf.push_back(d.Glf[i]);
-		Ptx.reserve(d.Ptx.size());	for(size_t i=0;i<d.Ptx.size();i++)	Ptx.push_back(d.Ptx[i]);
+		Glf.resize(d.Glf.size());	for(size_t i=0;i<d.Glf.size();i++)	Glf.push_back(d.Glf[i]);
+		Ptx.resize(d.Ptx.size());	for(size_t i=0;i<d.Ptx.size();i++)	Ptx.push_back(d.Ptx[i]);
+		Sub.resize(d.Sub.size());	for(size_t i=0;i<d.Sub.size();i++)	Sub.push_back(d.Sub[i]);
 		Txt.reserve(d.Pnt.size());	for(size_t i=0;i<d.Txt.size();i++)	Txt.push_back(d.Txt[i]);
 		Pnt.reserve(d.Pnt.size());	ClearPrmInd();
 		for(size_t i=0;i<d.Pnt.size();i++)
 		{
 			mglPnt p = d.Pnt[i]; 	p.c += ntxt;
+			if(p.sub>=0)	p.sub += nsub;
+			else	p.sub -= nsub;
 			Pnt.push_back(p);
 		}
 		Prm.reserve(d.Prm.size());
@@ -182,6 +188,7 @@ void mglCanvas::ShowFrame(long k)
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_unlock(&mutexPnt);
 	pthread_mutex_unlock(&mutexPrm);
+	pthread_mutex_unlock(&mutexSub);
 	pthread_mutex_unlock(&mutexGlf);
 	pthread_mutex_unlock(&mutexPtx);
 	pthread_mutex_unlock(&mutexTxt);
@@ -565,10 +572,6 @@ void mglCanvas::InPlot(mreal x1,mreal x2,mreal y1,mreal y2, const char *st)
 	if(!st)		{	InPlot(x1,x2,y1,y2,false);	return;	}
 	inW = Width*(x2-x1);	inH = Height*(y2-y1);
 	inX=Width*x1;	inY=Height*y1;	ZMin=1;
-	mglPrim p;	p.id = ObjId;
-	p.n1=x1*Width;	p.n2=x2*Width;	p.n3=y1*Height;	p.n4=y2*Height;
-#pragma omp critical(sub)
-	MGL_PUSH(Sub,p,mutexSub);
 
 	if(strchr(st,'T'))	{	y1*=0.9;	y2*=0.9;	}	// general title
 	bool r = !(strchr(st,'r') || strchr(st,'R') || strchr(st,'>') || strchr(st,'g'));
@@ -584,6 +587,12 @@ void mglCanvas::InPlot(mreal x1,mreal x2,mreal y1,mreal y2, const char *st)
 	if(a && u)	{	y2=ys+(y2-ys)*f1;	y1=ys+(y1-ys)*f1;	}
 	else if(a)	{	y2=ys+(y2-ys)*f1;	y1=ys+(y1-ys)*f2;	}
 	else if(u)	{	y2=ys+(y2-ys)*f2;	y1=ys+(y1-ys)*f1;	}
+
+	mglBlock p;	p.AmbBr = AmbBr;	p.DifBr = DifBr;
+	for(int i=0;i<10;i++)	p.light[i] = light[i];
+	p.id = ObjId;	p.n1=x1*Width;	p.n2=x2*Width;	p.n3=y1*Height;	p.n4=y2*Height;
+#pragma omp critical(sub)
+	MGL_PUSH(Sub,p,mutexSub);
 
 	B.clear();
 	if(get(MGL_AUTO_FACTOR)) B.pf = 1.55;	// Automatically change plot factor !!!
@@ -620,8 +629,10 @@ void mglCanvas::InPlot(mglMatrix &M,mreal x1,mreal x2,mreal y1,mreal y2, bool re
 	inW=M.b[0];	inH=M.b[4];	ZMin=1;
 	inX=Width*x1;	inY=Height*y1;
 	font_factor = M.b[0] < M.b[4] ? M.b[0] : M.b[4];
-	mglPrim p;	p.id = ObjId;
-	p.n1=x1*Width;	p.n2=x2*Width;	p.n3=y1*Height;	p.n4=y2*Height;
+
+	mglBlock p;	p.AmbBr = AmbBr;	p.DifBr = DifBr;
+	for(int i=0;i<10;i++)	p.light[i] = light[i];
+	p.id = ObjId;	p.n1=x1*Width;	p.n2=x2*Width;	p.n3=y1*Height;	p.n4=y2*Height;
 #pragma omp critical(sub)
 	MGL_PUSH(Sub,p,mutexSub);
 }
@@ -724,10 +735,10 @@ void mglCanvas::Zoom(mreal x1, mreal y1, mreal x2, mreal y2)
 //-----------------------------------------------------------------------------
 int mglCanvas::GetSplId(long x,long y) const
 {
-	register long i,id=-1;
-	for(i=Sub.size()-1;i>=0;i--)
+	long id=-1;
+	for(long i=Sub.size()-1;i>=0;i--)
 	{
-		const mglPrim &p = Sub[i];
+		const mglBlock &p = Sub[i];
 		if(p.n1<=x && p.n2>=x && p.n3<=y && p.n4>=y)
 		{	id=p.id;	break;	}
 	}

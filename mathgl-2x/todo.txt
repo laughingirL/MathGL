@@ -30,7 +30,10 @@
 
 4. Check centered curved text (see text2)
 
-5. Perspective and axis labels in JS ?!?
+5. Perspective in JS for
+	* axis labels
+	* legend (size of box & text)
+	* title
 
 6. New tests:
 	c. Tests for mglDataC arrays (as separate flag)
@@ -38,10 +41,8 @@
 	u. Test FlowP + 3d
 
 7. Improve z-order for rapidly oscillating surfaces
-10. Title and perspective
 11. Adjust BarWidth for proper using previous (i-1) point
 
-13. Use mgltex.dtx (see e-mail 15 November)
 15. Check TriCont
 16. Contour lines above/under surface (e-mail 10.12.14)
 17. Iris plot -- https://en.wikipedia.org/wiki/Iris_flower_data_set

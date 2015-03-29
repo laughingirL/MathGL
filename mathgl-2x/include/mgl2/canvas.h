@@ -61,26 +61,8 @@ struct MGL_EXPORT mglAxis
 	mreal angl;		///< Manual for ticks rotation (if not NAN)
 };
 //-----------------------------------------------------------------------------
-/// Structure for light source
-struct MGL_EXPORT mglLight
-{
-	mglLight():n(false),a(0),b(0)	{}
-	mglLight(const mglLight &aa) : n(aa.n),d(aa.d),r(aa.r),q(aa.q),p(aa.p),a(aa.a),b(aa.b),c(aa.c)	{}
-#if MGL_HAVE_RVAL
-	mglLight(mglLight &&aa) : n(aa.n),d(aa.d),r(aa.r),q(aa.q),p(aa.p),a(aa.a),b(aa.b),c(aa.c)	{}
-#endif
-	bool n;			///< Availability of light sources
-	mglPoint d;		///< Direction of light sources
-	mglPoint r;		///< Position of light sources (NAN for infinity)
-	mglPoint q;		///< Actual position of light sources (filled by LightScale() function)
-	mglPoint p;		///< Actual direction of light sources (filled by LightScale() function)
-	mreal a;		///< Aperture of light sources
-	mreal b;		///< Brightness of light sources
-	mglColor c;		///< Color of light sources
-};
-//-----------------------------------------------------------------------------
 class mglCanvas;
-/// Structure for light source
+/// Structure for drawing region
 struct MGL_EXPORT mglDrawReg
 {
 	mglDrawReg() {}
@@ -106,14 +88,15 @@ struct MGL_EXPORT mglDrawReg
 struct MGL_EXPORT mglDrawDat
 {
 	mglDrawDat() {}
-	mglDrawDat(const mglDrawDat &aa) : Pnt(aa.Pnt),Prm(aa.Prm),Ptx(aa.Ptx),Glf(aa.Glf),Txt(aa.Txt)	{}
+	mglDrawDat(const mglDrawDat &aa) : Pnt(aa.Pnt),Prm(aa.Prm),Sub(aa.Sub),Ptx(aa.Ptx),Glf(aa.Glf),Txt(aa.Txt)	{}
 #if MGL_HAVE_RVAL
-	mglDrawDat(mglDrawDat &&aa) : Pnt(aa.Pnt),Prm(aa.Prm),Ptx(aa.Ptx),Glf(aa.Glf),Txt(aa.Txt)	{}
+	mglDrawDat(mglDrawDat &&aa) : Pnt(aa.Pnt),Prm(aa.Prm),Sub(aa.Sub),Ptx(aa.Ptx),Glf(aa.Glf),Txt(aa.Txt)	{}
 #endif
 	inline const mglDrawDat&operator=(const mglDrawDat &aa)
-	{	Pnt=aa.Pnt;	Prm=aa.Prm;	Ptx=aa.Ptx;	Glf=aa.Glf;	Txt=aa.Txt;	return aa;	}
+	{	Pnt=aa.Pnt;	Prm=aa.Prm;	Ptx=aa.Ptx;	Glf=aa.Glf;	Txt=aa.Txt;	Sub=aa.Sub;	return aa;	}
 	mglStack<mglPnt>  Pnt;	///< Internal points
 	mglStack<mglPrim> Prm;	///< Primitives (lines, triangles and so on) -- need for export
+	std::vector<mglBlock> Sub;	///< InPlot regions
 	std::vector<mglText> Ptx;	///< Text labels for mglPrim
 	std::vector<mglGlyph> Glf;	///< Glyphs data
 	mglStack<mglTexture> Txt;	///< Pointer to textures
@@ -374,7 +357,7 @@ protected:
 	int Depth;			///< Depth of the image
 	mreal inW, inH;		///< Width and height of last InPlot
 	mreal inX, inY;		///< Coordinates of last InPlot
-	mglLight light[10];	///< Light sources
+	mglLight light[10];	///< Light sources	// TODO move to mglBlock
 	mreal FogDist;		///< Inverse fog distance (fog ~ exp(-FogDist*Z))
 	mreal FogDz;		///< Relative shift of fog
 
