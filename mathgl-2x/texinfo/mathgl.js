@@ -286,7 +286,14 @@ var mgl_draw_prim = function(obj, ctx, prim, scl)
 		var xx=obj.coor[n2][2]/100,yy=-obj.coor[n2][3]/100,zz=obj.coor[n2][4]/100;
 		var xc = obj.b[0]*xx + obj.b[1]*yy + obj.b[2]*zz;
 		var yc = obj.b[3]*xx + obj.b[4]*yy + obj.b[5]*zz;
-//			var zc = obj.b[6]*xx + obj.b[7]*yy + obj.b[8]*zz;
+		var zc = obj.b[6]*xx + obj.b[7]*yy + obj.b[8]*zz;
+
+		var dv = (1-obj.pf/1.37)/(1-obj.pf*obj.pp[i][2]/obj.depth);
+		var cv = obj.pf/(1-obj.pf/1.37)/obj.depth;
+		xc += (obj.pp[n1][0]-obj.b[9])*zc*cv;//*dv;
+		yc += (obj.pp[n1][1]-obj.b[10])*zc*cv;//*dv;
+		if(obj.pnts[n1][3]<0)	{	xc=xx;	yc=yy;	}
+
 		var ll = xc*xc+yc*yc;
 		if(ll < 1e-10)	break;
 		if(ll<1e10 && t/deg<1e4)
@@ -347,7 +354,7 @@ var mgl_prepare = function(obj, skip)
 	}
 	if(obj.pf)	for(var i=0;i<obj.npnts;i++)	// perspective
 	{	// NOTE: it is not supported for coordinate determining now
-		var d = (1-obj.pf)/(1-obj.pf*obj.pp[i][2]/obj.depth);
+		var d = (1-obj.pf/1.37)/(1-obj.pf*obj.pp[i][2]/obj.depth);
 		if(obj.pnts[i][3]>=0)	// TODO: check later when mglInPlot will be ready
 		{
 			obj.pp[i][0] = d*obj.pp[i][0] + (1-d)/2*obj.width;

@@ -67,7 +67,6 @@ void mglCanvas::SetFrame(long i)
 		d.Pnt=Pnt;	d.Prm=Prm;	d.Sub=Sub;	d.Glf=Glf;	d.Ptx=Ptx;	d.Txt=Txt;
 #if MGL_HAVE_PTHREAD
 		pthread_mutex_lock(&mutexDrw);
-#pragma omp critical(drw)
 		DrwDat[i] = d;
 		pthread_mutex_unlock(&mutexDrw);
 #else
@@ -119,9 +118,10 @@ void mglCanvas::ClearFrame()
 #pragma omp critical
 	{
 		StartAutoGroup(NULL);
-		Sub.clear();	Leg.clear();	Grp.clear();	Act.clear();
-		Pnt.clear();	Prm.clear();	Ptx.clear();	Glf.clear();	ClearPrmInd();
+		Leg.clear();	Grp.clear();	Act.clear();	Glf.clear();
+		Pnt.clear();	Prm.clear();	Ptx.clear();	ClearPrmInd();
 		Txt.clear();	Txt.reserve(3);
+//		mglBlock inpl = Sub[0];	Sub.clear();	Sub.push_back(inpl);	// NOTE at least one inplot should present!!!
 		mglTexture t1(MGL_DEF_PAL,-1), t2(MGL_DEF_SCH,1);
 		Txt.push_back(t1);	Txt.push_back(t2);	// No extra lock is required
 	}
@@ -246,7 +246,8 @@ GifFileType *gif;*/
 	SetDefScheme(MGL_DEF_SCH);	SetPalette(MGL_DEF_PAL);
 	SetPenPal("k-1");		Alpha(false);
 	stack.clear();	Restore();	DefColor('k');
-	SetPlotFactor(0);	InPlot(0,1,0,1,false);
+	SetPlotFactor(0);	Sub.clear();
+	InPlot(0,1,0,1,false);
 	SetTickLen(0);	SetCut(true);
 	AdjustTicks("xyzc",true);	Clf('w');
 

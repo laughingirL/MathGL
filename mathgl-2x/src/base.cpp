@@ -105,7 +105,6 @@ mglBase::mglBase()
 	pthread_mutex_init(&mutexClf,0);
 	Pnt.set_mutex(&mutexClf);
 	Prm.set_mutex(&mutexClf);
-	Sub.set_mutex(&mutexClf);
 	Txt.set_mutex(&mutexClf);
 #endif
 #if MGL_HAVE_OMP

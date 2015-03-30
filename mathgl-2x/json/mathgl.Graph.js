@@ -270,6 +270,13 @@ mathgl.Graph.prototype.__mgl_draw_good = function(obj, ctx, skip) {
 }
 
 
+mathgl.Graph.prototype.__mgl_pf = function(obj, z) {
+	//	return 1/obj.pf;
+	return (1-this.__fov/1.37)/obj.pf/(1-this.__fov*z/obj.depth);	// TODO: check calc coordinates!!!
+	//	return 1/(1+obj.pf*(1-z/obj.depth));
+}
+
+
 /** perform high-quality drawing */
 mathgl.Graph.prototype.__mgl_draw_prim = function(obj, ctx, prim, scl) {
 	var n1 = prim[1], n2 = prim[2];
@@ -314,7 +321,13 @@ mathgl.Graph.prototype.__mgl_draw_prim = function(obj, ctx, prim, scl) {
 		var xx=obj.coor[n2][2]/100,yy=-obj.coor[n2][3]/100,zz=obj.coor[n2][4]/100;
 		var xc = obj.b[0]*xx + obj.b[1]*yy + obj.b[2]*zz;
 		var yc = obj.b[3]*xx + obj.b[4]*yy + obj.b[5]*zz;
-//		var zc = obj.b[6]*xx + obj.b[7]*yy + obj.b[8]*zz;
+		var zc = obj.b[6]*xx + obj.b[7]*yy + obj.b[8]*zz;
+
+		var dv = this.__mgl_pf(obj, pp[n1][2]);
+		var cv = this.__fov*obj.pf/(1-this.__fov/1.37)/obj.depth;
+		xc += (pp[n1][0]-obj.b[9])*zc*cv;//*dv;
+		yc += (pp[n1][1]-obj.b[10])*zc*cv;//*dv;
+
 		if(obj.pnts[n1][3]<0)	{	xc=xx;	yc=yy;	}
 		var ll = xc*xc+yc*yc;
 		if(ll < 1e-10)	break;
@@ -342,13 +355,6 @@ mathgl.Graph.prototype.__mgl_draw_prim = function(obj, ctx, prim, scl) {
 	}
 }
 
-mathgl.Graph.prototype.__mgl_pf = function(obj, z) {
-//	return 1/obj.pf;
-	return (1-this.__fov/1.37)/obj.pf/(1-this.__fov*z/obj.depth);	// TODO: check calc coordinates!!!
-//	return 1/(1+obj.pf*(1-z/obj.depth));
-}
-
-
 /** change coordinates according current transformations, usually called internally by draw() */
 mathgl.Graph.prototype.__mgl_prepare = function(obj, skip) {
 	// fill transformation matrix
@@ -367,7 +373,7 @@ mathgl.Graph.prototype.__mgl_prepare = function(obj, skip) {
 	}
 	// now transform points for found transformation matrix
 	var b = obj.b, i;
-  obj.pp = [];
+	obj.pp = [];
 	for(i=0;i<obj.npnts;i++)
 	{
 		var x = obj.pnts[i][0]-obj.width/2;
@@ -383,7 +389,7 @@ mathgl.Graph.prototype.__mgl_prepare = function(obj, skip) {
 	if(obj.pf || this.__fov)	for(var i=0;i<obj.npnts;i++)	// perspective
 	{	// NOTE: it is not supported for coordinate determining now
 		var d = this.__mgl_pf(obj, obj.pp[i][2]);
-		if(obj.pnts[i][3]>=0)
+		if(obj.pnts[i][3]>=0)	// TODO: check later when mglInPlot will be ready
 		{
 			obj.pp[i][0] = d*obj.pp[i][0] + (1-d)*obj.b[9];
 			obj.pp[i][1] = d*obj.pp[i][1] + (1-d)*obj.b[10];

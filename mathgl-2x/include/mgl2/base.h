@@ -120,9 +120,6 @@ struct MGL_EXPORT mglMatrix
 	bool norot;	// flag to disable pnts rotation
 	mglMatrix()	{	memset(this,0,sizeof(mglMatrix));	clear();	}
 	mglMatrix(const mglMatrix &aa) : x(aa.x),y(aa.y),z(aa.z),pf(aa.pf),norot(aa.norot) 	{	memcpy(b,aa.b,9*sizeof(mreal));	}
-#if MGL_HAVE_RVAL
-	mglMatrix(mglMatrix &&aa) : x(aa.x),y(aa.y),z(aa.z),pf(aa.pf),norot(aa.norot) 	{	memcpy(b,aa.b,9*sizeof(mreal));	}
-#endif
 	void Rotate(mreal tetz,mreal tetx,mreal tety);
 	void RotateN(mreal Tet,mreal x,mreal y,mreal z);
 	inline void clear()	{	x=y=z=pf=0;	memset(b,0,9*sizeof(mreal));	b[0]=b[4]=b[8]=1;	norot=false;	}
@@ -156,9 +153,6 @@ struct MGL_EXPORT mglPrim	// NOTE: use float for reducing memory size
 	};
 	mglPrim(int t=0):n1(0),n2(0),n3(0),n4(0),type(t),angl(0),id(0),z(0),w(0),m(0)	{}
 	mglPrim(const mglPrim &aa) : n1(aa.n1),n2(aa.n2),n3(aa.n3),n4(aa.n4),type(aa.type),angl(aa.angl),id(aa.id),z(aa.z),w(aa.w),m(aa.m) 	{}
-#if MGL_HAVE_RVAL
-	mglPrim(mglPrim &&aa) : n1(aa.n1),n2(aa.n2),n3(aa.n3),n4(aa.n4),type(aa.type),angl(aa.angl),id(aa.id),z(aa.z),w(aa.w),m(aa.m) 	{}
-#endif
 	const mglPrim &operator=(const mglPrim &aa)	{	memcpy(this, &aa, sizeof(mglPrim));	return aa;	}
 };
 bool operator<(const mglPrim &a,const mglPrim &b);
@@ -169,9 +163,7 @@ struct MGL_EXPORT mglLight
 {
 	mglLight():n(false),a(0),b(0)	{}
 	mglLight(const mglLight &aa) : n(aa.n),d(aa.d),r(aa.r),q(aa.q),p(aa.p),a(aa.a),b(aa.b),c(aa.c)	{}
-#if MGL_HAVE_RVAL
-	mglLight(mglLight &&aa) : n(aa.n),d(aa.d),r(aa.r),q(aa.q),p(aa.p),a(aa.a),b(aa.b),c(aa.c)	{}
-#endif
+
 	bool n;			///< Availability of light sources
 	mglPoint d;		///< Direction of light sources
 	mglPoint r;		///< Position of light sources (NAN for infinity)
@@ -240,9 +232,6 @@ struct MGL_EXPORT mglPnt	// NOTE: use float for reducing memory size
 	mglPnt(float X, float Y=0, float Z=0, float U=0, float V=0, float W=0, float R=0, float G=0, float B=0, float A=0):x(X),y(Y),z(Z),u(U),v(V),w(W),r(R),g(G),b(B),a(A),xx(X),yy(Y),zz(Z),c(0),t(0),ta(0),sub(0)	{}
 	mglPnt():x(0),y(0),z(0),u(0),v(0),w(0),r(0),g(0),b(0),a(0),xx(0),yy(0),zz(0),c(0),t(0),ta(0),sub(0)	{}
 	mglPnt(const mglPnt &aa) : sub(aa.sub)	{	memcpy(dat,aa.dat,16*sizeof(float));	}
-#if MGL_HAVE_RVAL
-	mglPnt(mglPnt &&aa) : x(aa.x),y(aa.y),z(aa.z), u(aa.u),v(aa.v),w(aa.w), r(aa.r),g(aa.g),b(aa.b),a(aa.a), xx(aa.xx),yy(aa.yy),zz(aa.zz), c(aa.c),t(aa.t),ta(aa.ta), sub(aa.sub)	{}
-#endif
 	inline const mglPnt&operator=(const mglPnt &aa)	{ sub=aa.sub;	memcpy(dat,aa.dat,16*sizeof(float));	return aa;	}
 };
 inline mglPnt operator+(const mglPnt &a, const mglPnt &b)
