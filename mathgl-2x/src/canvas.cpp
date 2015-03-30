@@ -777,6 +777,7 @@ void mglCanvas::Light(int n, bool enable)
 {
 	if(n<0 || n>9)	{	SetWarn(mglWarnLId,"Light");	return;	}
 	light[n].n = enable;
+	size_t m=Sub.size();	if(m>0)	Sub[m-1].light[n].n = enable;
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::AddLight(int n, mglPoint r, mglPoint d, char col, mreal br, mreal ap)
@@ -785,6 +786,7 @@ void mglCanvas::AddLight(int n, mglPoint r, mglPoint d, char col, mreal br, mrea
 	light[n].n = true;	light[n].a = ap>0?ap*ap:3;
 	light[n].b = br;	light[n].r = r;
 	light[n].d = d;		light[n].c.Set(col);
+	size_t m=Sub.size();	if(m>0)	Sub[m-1].light[n] = light[n];
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::arrow_plot(long n1, long n2, char st)

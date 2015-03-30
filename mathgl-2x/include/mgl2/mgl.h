@@ -80,6 +80,8 @@ public:
 	inline void Light(int n,bool enable)	{	mgl_set_light_n(gr, n, enable);	}
 	/// Use diffusive light (only for local light sources) -- OBSOLETE
 	inline void SetDifLight(bool dif)		{	mgl_set_light_dif(gr, dif);	}
+	/// Set to use local (per inplot) light sources.
+	inline void LocalLight(bool enable)		{	mgl_set_local_light(gr, enable);	}
 	/// Add a light source.
 	inline void AddLight(int n, mglPoint p, char col='w', double bright=0.5, double ap=0)
 	{	mgl_add_light_ext(gr, n, p.x, p.y, p.z, col, bright, ap);	}

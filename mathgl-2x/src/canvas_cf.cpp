@@ -82,12 +82,11 @@ void MGL_EXPORT mgl_clear_frame(HMGL gr)
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_set_transp_type(HMGL gr, int type)
 {	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->SetTranspType(type);	}
-void MGL_EXPORT mgl_set_alpha(HMGL gr, int enable)
-{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->Alpha(enable);	}
+void MGL_EXPORT mgl_set_alpha(HMGL gr, int enable)	{	gr->Alpha(enable);	}
 void MGL_EXPORT mgl_set_fog(HMGL gr, double d, double dz)
-{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->Fog(d,dz);		}
-void MGL_EXPORT mgl_set_light(HMGL gr, int enable)
-{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->Light(enable);	}
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->Fog(d,dz);	}
+void MGL_EXPORT mgl_set_light(HMGL gr, int enable)	{	gr->Light(enable);	}
+void MGL_EXPORT mgl_set_local_light(HMGL gr, int enable)	{	gr->LocalLight(enable);	}
 void MGL_EXPORT mgl_set_light_n(HMGL gr, int n, int enable)
 {	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->Light(n, enable);	}
 void MGL_EXPORT mgl_add_light_ext(HMGL gr, int n, double x, double y, double z, char c, double br, double ap)
@@ -194,6 +193,7 @@ void MGL_EXPORT mgl_set_transp_type_(uintptr_t *gr, int *type)		{	_GR_->SetTrans
 void MGL_EXPORT mgl_set_alpha_(uintptr_t *gr, int *enable)			{	_GR_->Alpha(*enable);	}
 void MGL_EXPORT mgl_set_fog_(uintptr_t *gr, mreal *d, mreal *dz)	{	_GR_->Fog(*d, *dz);		}
 void MGL_EXPORT mgl_set_light_(uintptr_t *gr, int *enable)			{	_GR_->Light(*enable);	}
+void MGL_EXPORT mgl_set_local_light_(uintptr_t *gr, int *enable)	{	_GR_->LocalLight(*enable);	}
 void MGL_EXPORT mgl_set_light_n_(uintptr_t *gr, int *n, int *enable)
 {	_GR_->Light(*n, *enable);	}
 void MGL_EXPORT mgl_add_light_(uintptr_t *gr, int *n, mreal *x, mreal *y, mreal *z)

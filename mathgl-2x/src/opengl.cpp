@@ -144,7 +144,7 @@ void mglCanvasGL::LightScale(const mglMatrix *M)
 	GLenum ll[8] = {GL_LIGHT0,GL_LIGHT1,GL_LIGHT2,GL_LIGHT3,GL_LIGHT4,
 			GL_LIGHT5,GL_LIGHT6,GL_LIGHT7};
 	float pos[4]={0,0,0,0};
-	for(int i=0;i<8;i++)
+	for(int i=0;i<8;i++)	// NOTE only global light is used in OpenGL mode
 	{
 		pos[0] = light[i].p.x;
 		pos[1] = light[i].p.y;

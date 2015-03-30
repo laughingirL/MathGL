@@ -189,15 +189,18 @@ long mglCanvas::ProjScale(int nf, long id, bool text)
 	return CopyProj(id,p,text?n:nn,pi.sub);
 }
 //-----------------------------------------------------------------------------
+void mglCanvas::LightScale(const mglMatrix *M, mglLight &ls)
+{
+	ls.p=ls.d;	ls.q=ls.r;
+	ScalePoint(M,ls.q,ls.p,false);
+	ls.p /= ls.p.norm();
+}
+//-----------------------------------------------------------------------------
 void mglCanvas::LightScale(const mglMatrix *M)
 {
-	for(long i=0;i<10;i++)
-	{
-		if(!light[i].n)	continue;
-		light[i].p=light[i].d;	light[i].q=light[i].r;
-		ScalePoint(M,light[i].q,light[i].p,false);
-		light[i].p /= light[i].p.norm();
-	}
+	for(long i=0;i<10;i++)	if(light[i].n)	LightScale(M,light[i]);
+	for(size_t j=0;j<Sub.size();j++)
+		for(long i=0;i<10;i++)	if(light[i].n)	LightScale(M,Sub[j].light[i]);
 }
 //-----------------------------------------------------------------------------
 // NOTE: Perspective is not fully supported now !!! Also it use LAST InPlot parameters!!!
@@ -822,8 +825,11 @@ unsigned char* mglCanvas::col2int(const mglPnt &p,unsigned char *r, int obj_id) 
 {
 //	if(!r)	return r;	// NOTE r must be provided!
 	if(p.a<=0)	{	memset(r,0,4);	return r;	}
-	register float b0=0,b1=0,b2=0, ar,ag,ab;
-	ar = ag = ab = AmbBr;
+	register float b0=0,b1=0,b2=0, ar,ag,ab,dif;
+	size_t nl = p.sub>=0?p.sub:1-p.sub;
+	bool glob = !get(MGL_LOCAL_LIGHT);
+	ar = ag = ab = glob?AmbBr:Sub[nl].AmbBr;
+	dif = glob?DifBr:Sub[nl].DifBr;
 
 	if(mgl_isnum(p.u+p.v+p.w))
 	{
@@ -831,7 +837,7 @@ unsigned char* mglCanvas::col2int(const mglPnt &p,unsigned char *r, int obj_id) 
 		register long i;
 		for(i=0;i<10;i++)
 		{
-			const mglLight &ll=light[i];
+			const mglLight &ll=glob?light[i]:Sub[nl].light[i];
 			if(!ll.n)	continue;
 			if(mgl_isnan(ll.q.x))		// source at infinity
 			{
@@ -852,7 +858,7 @@ unsigned char* mglCanvas::col2int(const mglPnt &p,unsigned char *r, int obj_id) 
 				d1 = ll.q.y-p.y;
 				d2 = ll.q.z-p.z;
 				nn = 1+(d0*ll.p.x+d1*ll.p.y+d2*ll.p.z)/sqrt(d0*d0+d1*d1+d2*d2+1e-6);
-				float bb = exp(-3*ll.a*nn);	nn = bb*DifBr*2;
+				float bb = exp(-3*ll.a*nn);	nn = bb*dif*2;
 				ar += nn*ll.c.r;
 				ag += nn*ll.c.g;
 				ab += nn*ll.c.b;

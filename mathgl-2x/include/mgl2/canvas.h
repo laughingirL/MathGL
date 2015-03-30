@@ -380,6 +380,7 @@ protected:
 	/// Scale coordinates and cut off some points
 	bool ScalePoint(const mglMatrix *M, mglPoint &p, mglPoint &n, bool use_nan=true) const;
 	void LightScale(const mglMatrix *M);	///< Additionally scale positions of light sources
+	void LightScale(const mglMatrix *M, mglLight &l);	///< Additionally scale positions of light
 	/// Push drawing data (for frames only). NOTE: can be VERY large
 	long PushDrwDat();
 	/// Retur color for primitive depending lighting

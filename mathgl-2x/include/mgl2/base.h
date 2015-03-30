@@ -235,16 +235,16 @@ struct MGL_EXPORT mglPnt	// NOTE: use float for reducing memory size
 	inline const mglPnt&operator=(const mglPnt &aa)	{ sub=aa.sub;	memcpy(dat,aa.dat,16*sizeof(float));	return aa;	}
 };
 inline mglPnt operator+(const mglPnt &a, const mglPnt &b)
-{	mglPnt p;	for(long i=0;i<10;i++)	p.dat[i] = a.dat[i]+b.dat[i];	return p;	}
+{	mglPnt p;	for(long i=0;i<10;i++)	p.dat[i] = a.dat[i]+b.dat[i];	p.sub=a.sub;	return p;	}
 //{	return mglPnt(a.x+b.x,a.y+b.y,a.z+b.z, a.u+b.u,a.v+b.v,a.w+b.w, a.r+b.r,a.g+b.g,a.b+b.b,a.a+b.a);	}
 inline mglPnt operator-(const mglPnt &a, const mglPnt &b)
-{	mglPnt p;	for(long i=0;i<10;i++)	p.dat[i] = a.dat[i]-b.dat[i];	return p;	}
+{	mglPnt p;	for(long i=0;i<10;i++)	p.dat[i] = a.dat[i]-b.dat[i];	p.sub=a.sub;	return p;	}
 //{	return mglPnt(a.x-b.x,a.y-b.y,a.z-b.z, a.u-b.u,a.v-b.v,a.w-b.w, a.r-b.r,a.g-b.g,a.b-b.b,a.a-b.a);	}
 inline mglPnt operator*(const mglPnt &a, float b)
-{	mglPnt p;	for(long i=0;i<10;i++)	p.dat[i] = a.dat[i]*b;	return p;	}
+{	mglPnt p;	for(long i=0;i<10;i++)	p.dat[i] = a.dat[i]*b;	p.sub=a.sub;	return p;	}
 //{	return mglPnt(a.x*b,a.y*b,a.z*b, a.u*b,a.v*b,a.w*b, a.r*b,a.g*b,a.b*b,a.a*b);	}
 inline mglPnt operator*(float b, const mglPnt &a)
-{	mglPnt p;	for(long i=0;i<10;i++)	p.dat[i] = a.dat[i]*b;	return p;	}
+{	mglPnt p;	for(long i=0;i<10;i++)	p.dat[i] = a.dat[i]*b;	p.sub=a.sub;	return p;	}
 //{	return mglPnt(a.x*b,a.y*b,a.z*b, a.u*b,a.v*b,a.w*b, a.r*b,a.g*b,a.b*b,a.a*b);	}
 //-----------------------------------------------------------------------------
 /// Structure for glyph representation
@@ -401,6 +401,9 @@ public:
 	/// Set the using of light on/off.
 	virtual bool Light(bool enable)
 	{	bool t=get(MGL_ENABLE_LIGHT);	set(enable,MGL_ENABLE_LIGHT);	return t;	}
+	/// Set to use local (per inplot) light sources.
+	virtual bool LocalLight(bool enable)
+	{	bool t=get(MGL_LOCAL_LIGHT);	set(enable,MGL_LOCAL_LIGHT);	return t;	}
 	/// Set ambient light brightness
 	virtual void SetAmbient(mreal bright=0.5);
 	/// Set diffusive light brightness
