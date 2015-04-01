@@ -24,7 +24,7 @@
 
 ============= NEW FEATURES =============
 
-
+1. crange 0 1e-8:colorbar
 2. 3D text (with depth, for Quality=3)
 3. Text along 3D curve (for Quality=3)
 
@@ -70,7 +70,7 @@ D. Docs about JS interface
 13. Docs about SurfCA() + hint about '%' style
 14. Docs about Surf3CA() + hint about '%' style
 15. Manual rotation angle for axis ticks (as "value" option)
-16. Docs + sample about locallight
+16. Docs + sample about AttachLight
 
 
 ZZ. Region 3d sample
@@ -101,7 +101,7 @@ YY. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using St
 	c. Add command to insert as 'list'
 	d. Reset script after saving to HDF5 or putting to main script
 	e. Ask about script changes before closing data tab
-	
+
 4. List of constants into the list of data?!
 5. Add color cycle
 

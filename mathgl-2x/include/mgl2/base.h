@@ -401,8 +401,8 @@ public:
 	/// Set the using of light on/off.
 	virtual bool Light(bool enable)
 	{	bool t=get(MGL_ENABLE_LIGHT);	set(enable,MGL_ENABLE_LIGHT);	return t;	}
-	/// Set to use local (per inplot) light sources.
-	virtual bool LocalLight(bool enable)
+	/// Set to attach light sources to inplot.
+	virtual bool AttachLight(bool enable)
 	{	bool t=get(MGL_LOCAL_LIGHT);	set(enable,MGL_LOCAL_LIGHT);	return t;	}
 	/// Set ambient light brightness
 	virtual void SetAmbient(mreal bright=0.5);

@@ -95,11 +95,14 @@ typedef unsigned long uintptr_t;
 #if (_MSC_VER<=1800)
 #define collapse(a)	// MSVS don't support OpenMP 3.*
 #define strtoull _strtoui64
-#define hypot	_hypot
+//#define hypot	_hypot
 #define getcwd	_getcwd
 #define chdir	_chdir // BORLAND has chdir
 #endif
 #define snprintf _snprintf
+#if (_MSC_VER<1600) // based on https://hg.python.org/cpython/rev/9aedb876c2d7
+#define hypot	_hypot
+#endif
 #endif
 
 #if !MGL_SYS_NAN

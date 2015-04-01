@@ -1075,10 +1075,10 @@ int MGL_NO_EXPORT mgls_light(mglGraph *gr, long , mglArg *a, const char *k, cons
 	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_locallight(mglGraph *gr, long , mglArg *a, const char *k, const char *)
+int MGL_NO_EXPORT mgls_attachlight(mglGraph *gr, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
-	if(!strcmp(k,"n"))	gr->LocalLight(a[0].v!=0);
+	if(!strcmp(k,"n"))	gr->AttachLight(a[0].v!=0);
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -3255,6 +3255,7 @@ mglCommand mgls_base_cmd[] = {
 	{"arrowsize","Set size of arrows","arrowsize val", mgls_arrowsize ,2},
 	{"ask","Define parameter from user input","ask $N 'question'", 0, 6},
 	{"aspect","Set aspect ration","aspect valx valy [valz]", mgls_aspect ,5},
+	{"attachlight","Attach light settings to inplot","attachlight val", mgls_attachlight ,2},
 	{"axial","Draw surfaces of contour lines rotation","axial Zdat ['fmt' num]|Xdat Ydat Zdat ['fmt' num]", mgls_axial ,8},
 	{"axis","Setup or draw axis","axis ['dir' 'fmt']|'fx' 'fy' 'fz' ['fc']|how", mgls_axis ,12},
 	{"axisstl","Set axis and tick style","axisstl 'stl' ['sub']", mgls_axisstl ,14},
@@ -3382,7 +3383,6 @@ mglCommand mgls_base_cmd[] = {
 	{"list","Creates new variable from list of numbers or data","list Var v1 ...|Var D1 ...", 0, 4},
 	{"load","Load commands from external DLL","load 'fname'", 0, 6},
 	{"loadfont","Load fontfaces","loadfont ['face']", mgls_loadfont ,15},
-	{"locallight","Keep light for each inplot","locallight val", mgls_locallight ,2},
 	{"logo","Draw bitmap (logo) along axis range","logo 'fname' [smooth]", mgls_logo ,13},
 	{"map","Draw mapping plot","map Udat Vdat ['fmt']|Xdat Ydat Udat Vdat ['fmt']", mgls_map ,10},
 	{"mark","Draw mark plot for 1D data","mark Ydat Rdat ['fmt']|Xdat Ydat Rdat ['fmt']|Xdat Ydat Zdat Rdat ['fmt']", mgls_mark ,7},

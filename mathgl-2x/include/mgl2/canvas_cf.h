@@ -302,9 +302,9 @@ void MGL_EXPORT mgl_set_light_(uintptr_t *gr, int *enable);
 /// Switch on/off the specified light source.
 void MGL_EXPORT mgl_set_light_n(HMGL gr, int n, int enable);
 void MGL_EXPORT mgl_set_light_n_(uintptr_t *gr, int *n, int *enable);
-/// Set to use local (per inplot) light sources.
-void MGL_EXPORT mgl_set_local_light(HMGL gr, int enable);
-void MGL_EXPORT mgl_set_local_light_(uintptr_t *gr, int *enable);
+/// Set to attach light settings to inplot.
+void MGL_EXPORT mgl_set_attach_light(HMGL gr, int enable);
+void MGL_EXPORT mgl_set_attach_light_(uintptr_t *gr, int *enable);
 
 /// Add white light source at infinity.
 void MGL_EXPORT mgl_add_light(HMGL gr, int n, double x, double y, double z);
