@@ -1363,10 +1363,10 @@ bool MGL_EXPORT mgl_check_dim3(HMGL gr, bool both, HCDT x, HCDT y, HCDT z, HCDT 
 bool MGL_EXPORT mgl_check_trig(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const char *name, int d)
 {
 // 	if(!gr || !x || !y || !z || !a || !nums)	return true;		// if data is absent then should be segfault!!!
-	long n = x->GetNx(), m = nums->GetNy();
+	long n = x->GetNN(), m = nums->GetNy();
 	if(nums->GetNx()<d)	{	gr->SetWarn(mglWarnLow,name);	return true;	}
-	if(y->GetNx()!=n || z->GetNx()!=n)	{	gr->SetWarn(mglWarnDim,name);	return true;	}
-	if(a->GetNx()!=m && a->GetNx()!=n)	{	gr->SetWarn(mglWarnDim,name);	return true;	}
+	if(y->GetNN()!=n || z->GetNN()!=n)	{	gr->SetWarn(mglWarnDim,name);	return true;	}
+	if(a->GetNN()!=m && a->GetNN()!=n)	{	gr->SetWarn(mglWarnDim,name);	return true;	}
 	return false;
 }
 //-----------------------------------------------------------------------------

@@ -22,6 +22,7 @@
 #include "mgl2/data.h"
 #include "mgl2/canvas.h"
 #include "mgl2/prim.h"
+#include "mgl2/eval.h"
 std::wstring MGL_EXPORT mgl_ftoa(double v, const char *fmt);
 //-----------------------------------------------------------------------------
 MGL_NO_EXPORT inline struct tm *mgl_localtime (const time_t *clock, tm *result, bool use_utc)
@@ -1090,7 +1091,10 @@ void mglCanvas::colorbar(HCDT vv, const mreal *c, int where, mreal x, mreal y, m
 	SetPenPal(TickStl);
 	for(size_t i=0;i<ac.txt.size();i++)
 	{
-		mreal d = ac.txt[i].val = GetA(ac.txt[i].val)*2-1;
+		mreal d = fa?fa->Calc(0,0,0,ac.txt[i].val):ac.txt[i].val;
+		ac.txt[i].val = d = 2*(d-FMin.c)/(FMax.c-FMin.c)-1;
+		if(fabs(d)>1)	continue;	// this is factor
+//		mreal d = ac.txt[i].val = GetA(ac.txt[i].val)*2-1;
 		p1 = p2 = mglPoint((ss*d+1)*w+x, (ss*d+1)*h+y, s3);
 		switch(where)
 		{

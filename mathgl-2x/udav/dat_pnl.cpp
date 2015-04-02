@@ -116,17 +116,17 @@ void DatPanel::refresh()
 		dual f = cc->a[i+nx*(j+ny*kz)];
 		if(mgl_isnan(f))	s = "nan";
 		else if(mgl_isbad(f))	s="inf";
-		else if(imag(f)>0)	s.sprintf("%g+%gi",real(f),imag(f));
-		else if(imag(f)<0)	s.sprintf("%g-%gi",real(f),-imag(f));
-		else	s.sprintf("%g",real(f));
+		else if(imag(f)>0)	s.sprintf("%.15g+%.15gi",real(f),imag(f));
+		else if(imag(f)<0)	s.sprintf("%.15g-%.15gi",real(f),-imag(f));
+		else	s.sprintf("%15g",real(f));
 		tab->item(j,i)->setText(s);
 	}
 	else	for(long i=0;i<nx;i++)	for(long j=0;j<ny;j++)
 	{
-		mreal f = var->v(i,j,kz);
+		double f = var->v(i,j,kz);
 		if(mgl_isnan(f))	s = "nan";
 		else if(mgl_isbad(f))	s=f>0?"inf":"-inf";
-		else	s.sprintf("%g",f);
+		else	s.sprintf("%.15g",f);
 		tab->item(j,i)->setText(s);
 	}
 	infoDlg->allowRefresh=true;	infoDlg->refresh();
@@ -169,6 +169,7 @@ void DatPanel::setSlice(int k)
 //-----------------------------------------------------------------------------
 dual mgl_str2dual(const char *s)
 {
+	setlocale(LC_NUMERIC, "C");
 	double re=0,im=0;	size_t ll=strlen(s);
 	while(s[ll]<=' ')	ll--;
 	if(*s=='(')		sscanf(s,"(%lg,%lg)",&re,&im);
@@ -197,6 +198,7 @@ dual mgl_str2dual(const char *s)
 		else	{	re=atof(s);	im=0;	}
 		}
 	}
+	setlocale(LC_NUMERIC, "");
 	return dual(re,im);
 }
 //-----------------------------------------------------------------------------

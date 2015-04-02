@@ -24,21 +24,20 @@
 
 ============= NEW FEATURES =============
 
-1. crange 0 1e-8:colorbar
-2. 3D text (with depth, for Quality=3)
-3. Text along 3D curve (for Quality=3)
-
-4. Check centered curved text (see text2)
-
-6. New tests:
+1. New tests:
 	c. Tests for mglDataC arrays (as separate flag)
 	e. Test for Crop, Momentum, NormSl, Sew, DiffParam, Envelope, STFA for all directions "xyz"; Clean, Last, First, Find, Spline3, FindAny, Insert, Delete, Put, SetId/Column, Squeeze, Extend, Trace, Combine, new Max/Min/Momentum, FillSample, Hist, operators, Sort, Roots, Jacobian
 	u. Test FlowP + 3d
 
+2. 3D text (with depth, for Quality=3)
+3. Text along 3D curve (for Quality=3)
+
+4. Check centered curved text (see text2)
+5. Hex axis labels???
+
 7. Improve z-order for rapidly oscillating surfaces
 11. Adjust BarWidth for proper using previous (i-1) point
 
-15. Check TriCont
 16. Contour lines above/under surface (e-mail 10.12.14)
 17. Iris plot -- https://en.wikipedia.org/wiki/Iris_flower_data_set
 20. defpal in MGL. Or string variables in MGL ?!?

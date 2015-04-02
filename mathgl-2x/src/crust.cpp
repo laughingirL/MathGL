@@ -105,7 +105,7 @@ void MGL_EXPORT mgl_triplot_xyz(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, cons
 void MGL_EXPORT mgl_triplot_xy(HMGL gr, HCDT nums, HCDT x, HCDT y, const char *sch, const char *opt)
 {
 	gr->SaveState(opt);
-	mglData z(x->GetNx());
+	mglData z(x->GetNN());
 	mreal zm = gr->AdjustZMin();	z.Fill(zm,zm);
 	mgl_triplot_xyzc(gr,nums,x,y,&z,&z,sch,0);
 }
@@ -216,7 +216,7 @@ void MGL_EXPORT mgl_quadplot_xyz(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, con
 void MGL_EXPORT mgl_quadplot_xy(HMGL gr, HCDT nums, HCDT x, HCDT y, const char *sch, const char *opt)
 {
 	gr->SaveState(opt);
-	mglData z(x->GetNx());	z.Fill(gr->Min.z,gr->Min.z);
+	mglData z(x->GetNN());	z.Fill(gr->Min.z,gr->Min.z);
 	mgl_quadplot_xyzc(gr,nums,x,y,&z,&z,sch,0);
 }
 //-----------------------------------------------------------------------------
@@ -245,13 +245,12 @@ void MGL_EXPORT mgl_quadplot_xy_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, u
 //-----------------------------------------------------------------------------
 std::vector<mglSegment> MGL_NO_EXPORT mgl_tri_lines(mreal val, HCDT nums, HCDT a, HCDT x, HCDT y, HCDT z)
 {
-	long n = x->GetNx(), m = nums->GetNy();
+	long n = x->GetNN(), m = nums->GetNy();
 	std::vector<mglSegment> lines;
 	for(long i=0;i<m;i++)
 	{
-		register long k1 = long(nums->v(0,i)+0.1);	if(k1<0 || k1>=n)	continue;
-		register long k2 = long(nums->v(1,i)+0.1);	if(k2<0 || k2>=n)	continue;
-		register long k3 = long(nums->v(2,i)+0.1);	if(k3<0 || k3>=n)	continue;
+		long k1 = long(nums->v(0,i)+0.5), k2 = long(nums->v(1,i)+0.5), k3 = long(nums->v(2,i)+0.5);
+		if(k1<0 || k1>=n || k2<0 || k2>=n || k3<0 || k3>=n)	continue;
 		register mreal v1 = a->v(k1), v2 = a->v(k2), v3 = a->v(k3);
 		register mreal d1 = mgl_d(val,v1,v2), d2 = mgl_d(val,v1,v3), d3 = mgl_d(val,v2,v3);
 		mglSegment line;
@@ -277,7 +276,7 @@ std::vector<mglSegment> MGL_NO_EXPORT mgl_tri_lines(mreal val, HCDT nums, HCDT a
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_tricont_xyzcv(HMGL gr, HCDT v, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, const char *opt)
 {
-	mglDataV zz(x->GetNx(),x->GetNy());
+	mglDataV zz(x->GetNN());
 	if(!z)	z = &zz;
 	if(mgl_check_trig(gr,nums,x,y,z,a,"TriCont"))	return;
 
@@ -342,7 +341,7 @@ void MGL_EXPORT mgl_tricont_xyc_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, u
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_tricontv_xyzcv(HMGL gr, HCDT v, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, const char *opt)
 {
-	mglDataV zz(x->GetNx(),x->GetNy());
+	mglDataV zz(x->GetNN());
 	if(!z)	z = &zz;
 	if(mgl_check_trig(gr,nums,x,y,z,a,"TriContV"))	return;
 
@@ -475,8 +474,8 @@ long MGL_NO_EXPORT mgl_crust(long n,mglPoint *pp,long **nn,mreal ff);
 HMDT MGL_EXPORT mgl_triangulation_3d(HCDT x, HCDT y, HCDT z)
 {
 	mglData *nums=0;
-	long n = x->GetNx(), m;
-	if(y->GetNx()!=n || z->GetNx()!=n)	return nums;
+	long n = x->GetNN(), m;
+	if(y->GetNN()!=n || z->GetNN()!=n)	return nums;
 	mglPoint *pp = new mglPoint[n];
 	long *nn=0;
 	for(long i=0;i<n;i++)	pp[i].Set(x->v(i), y->v(i), z->v(i));
@@ -633,7 +632,7 @@ void MGL_EXPORT mgl_data_grid_(uintptr_t *gr, uintptr_t *d, uintptr_t *x, uintpt
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_crust(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt)
 {
-	if(y->GetNx()!=x->GetNx() || z->GetNx()!=x->GetNx())
+	if(y->GetNN()!=x->GetNN() || z->GetNN()!=x->GetNN())
 	{	gr->SetWarn(mglWarnDim,"Crust");	return;	}
 	HMDT nums = mgl_triangulation_3d(x, y, z);
 	mgl_triplot_xyzc(gr,nums,x,y,z,z,sch,opt);
