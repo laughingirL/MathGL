@@ -102,11 +102,12 @@ MathGL имеет встроенный скриптовый язык MGL для 
 @deftypefn {MGL command} {} defnum $N smth
 Задает @var{N}-ый аргумент скрипта равным числовому значению @var{smth}. Здесь @var{N} это цифра (0...9) или буква (a...z).
 @end deftypefn
-@cindex defpal
-@anchor{defpal}
-@deftypefn {MGL command} {} defpal $N smth
-Задает @var{N}-ый аргумент скрипта равным символу палитры с индексом, найденным из @var{smth}. Здесь @var{N} это цифра (0...9) или буква (a...z).
-@end deftypefn
+
+@comment  @cindex defpal
+@comment  @anchor{defpal}
+@comment  @deftypefn {MGL command} {} defpal $N smth
+@comment  Задает @var{N}-ый аргумент скрипта равным символу палитры с индексом, найденным из @var{smth}. Здесь @var{N} это цифра (0...9) или буква (a...z).
+@comment  @end deftypefn
 
 @cindex call
 @anchor{call}

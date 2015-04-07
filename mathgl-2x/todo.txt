@@ -34,13 +34,13 @@
 
 4. Check centered curved text (see text2)
 5. Hex axis labels???
+6. Add string manipulation like {'str',val}=>str[val]; {'str',v1,v2}=>str.substr(v1,v2) [v1,v2 can be -1]; {'ch'+val'}=>char(ch+val)
 
 7. Improve z-order for rapidly oscillating surfaces
+8. Contour lines for bilinear interpolation (strong saddle-like faces)
 11. Adjust BarWidth for proper using previous (i-1) point
 
-16. Contour lines above/under surface (e-mail 10.12.14)
 17. Iris plot -- https://en.wikipedia.org/wiki/Iris_flower_data_set
-20. defpal in MGL. Or string variables in MGL ?!?
 
 22. Qt + OpenGL sample + check line width and dashing in OpenGL mode.
 
@@ -64,13 +64,12 @@ D. Docs about JS interface
 8. Add function real() and imag() to the list of known functions
 9. Add command "runge 'Expr1;Expr2;...' 'Var1;Var2;...' [dt]"
 10. Docs about mgl_set_size_scl()
-11. Name 'rnd' is reserved in MGL scripts now
+11. Names 'rnd','nan','inf' are reserved in MGL scripts now
 12. 2D textures as one of standard way for coloring -- if '%' present in color scheme
 13. Docs about SurfCA() + hint about '%' style
 14. Docs about Surf3CA() + hint about '%' style
 15. Manual rotation angle for axis ticks (as "value" option)
 16. Docs + sample about AttachLight
-
 
 ZZ. Region 3d sample
 new x1 100 'sin(pi*x)'

@@ -99,11 +99,12 @@ Sets @var{N}-th script argument to character with value evaluated from @var{smth
 @deftypefn {MGL command} {} defnum $N smth
 Sets @var{N}-th script argument to number with value evaluated from @var{smth}. Here @var{N} is digit (0...9) or alpha (a...z).
 @end deftypefn
-@cindex defpal
-@anchor{defpal}
-@deftypefn {MGL command} {} defpal $N smth
-Sets @var{N}-th script argument to palette character at position evaluated from @var{smth}. Here @var{N} is digit (0...9) or alpha (a...z).
-@end deftypefn
+
+@comment  @cindex defpal
+@comment  @anchor{defpal}
+@comment  @deftypefn {MGL command} {} defpal $N smth
+@comment  Sets @var{N}-th script argument to palette character at position evaluated from @var{smth}. Here @var{N} is digit (0...9) or alpha (a...z).
+@comment  @end deftypefn
 
 @cindex call
 @anchor{call}

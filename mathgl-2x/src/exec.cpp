@@ -3313,7 +3313,7 @@ mglCommand mgls_base_cmd[] = {
 	{"defchr","Define parameter as character","defchr $N val", 0, 6},
 	{"define","Define constant or parameter","define $N sth | Var val", 0, 6},
 	{"defnum","Define parameter as numerical value","defnum $N val", 0, 6},
-	{"defpal","Define parameter as palette color","defpal $N val", 0, 6},
+//	{"defpal","Define parameter as palette color","defpal $N val", 0, 6},
 	{"delete","Delete slice of data","delete Dat 'dir' [pos=0 num=1]", mgls_delete ,3},
 	{"dens","Draw density plot","dens Zdat ['fmt' zpos]|Xdat Ydat Zdat ['fmt' zpos]", mgls_dens ,8},
 	{"dens3","Draw density plot at slices of 3D data","dens3 Adat 'dir' [pos 'fmt']|Xdat Ydat Zdat Adat 'dir' [pos 'fmt']", mgls_dens3 ,9},

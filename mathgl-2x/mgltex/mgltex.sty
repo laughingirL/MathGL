@@ -40,14 +40,14 @@
   \def\MGL@write#1#2{%
     \immediate\write#1{#2}%
   }%
-  \def\MGL@graphics@not@found@text{MGL\\image\\not\\found}%
-  \def\MGL@graph@not@found@message{MGL image "##1" not found}%
+  \def\MGL@graph@not@found@text{MGL\\image\\not\\found}%
+  \def\MGL@graph@not@found@message{MGL image "\MGL@this@code@label" not found}%
 }
 \DeclareOption{off}{%
   \def\MGL@openout#1#2{}%
   \def\MGL@write#1#2{}%
-  \def\MGL@graphics@not@found@text{\mglTeX\\is off.\\No image\\generated}%
-  \def\MGL@graph@not@found@message{mglTeX is off. MGL image "##1" not generated}%
+  \def\MGL@graph@not@found@text{\mglTeX\\is off,\\no image\\generated}%
+  \def\MGL@graph@not@found@message{mglTeX is off, MGL image "\MGL@this@code@label" not generated}%
 }
 
 \newif\if@MGL@comments@
@@ -176,31 +176,31 @@
 \@onlypreamble\mglbackupsdir
 
 \def\TeX@ext{.tex}
-\def\MGL@include@graphics#1{%
+\def\MGL@include@graphics{%
   \ifx\MGL@graphics@ext\TeX@ext%
-    \IfFileExists{#1.tex}{%
-      \include{\MGL@dir\MGL@graphics@dir#1}%
+    \IfFileExists{\MGL@this@code@label.tex}{%
+      \include{\MGL@dir\MGL@graphics@dir\MGL@this@code@label}%
     }{%
-      \MGL@graph@not@found{#1}%
+      \MGL@graph@not@found%
     }%
   \else%
-  \def\next@action{\MGL@graph@not@found{#1}}%
+  \def\MGL@next@action{\MGL@graph@not@found}%
     \@for\MGL@graph@ext:=\Gin@extensions\do{%b
-      \IfFileExists{\MGL@dir\MGL@graphics@dir#1\MGL@graph@ext}{%
-        \def\next@action{%
-          \expandafter\includegraphics\expandafter[\graph@keys]{\MGL@dir\MGL@graphics@dir#1}%
+      \IfFileExists{\MGL@dir\MGL@graphics@dir\MGL@this@code@label\MGL@graph@ext}{%
+        \def\MGL@next@action{%
+          \expandafter\includegraphics\expandafter[\graph@keys]{\MGL@dir\MGL@graphics@dir\MGL@this@code@label}%
         }%
       }{}%
     }%
-    \next@action%
+    \MGL@next@action%
   \fi%
 }
-\def\MGL@graph@not@found#1{%
+\def\MGL@graph@not@found{%
   \PackageWarning{mgltex}{\MGL@graph@not@found@message}%
-  \framebox[10em]{%
+  \fbox{%
     \centering%
     \bfseries\Huge%
-    \begin{tabular}{c}\MGL@graphics@not@found@text\end{tabular}%
+    \begin{tabular}{c}\MGL@graph@not@found@text\end{tabular}%
   }%
 }
 
@@ -208,7 +208,10 @@
   \immediate\openin#1="#2"%
 }
 \def\MGL@read#1#2{%
-  \immediate\read#1 to #2%
+  \def#2{}%
+  \ifeof#1\else%
+    \immediate\read#1 to #2%
+  \fi%
 }
 \def\MGL@closein#1{%
   \immediate\closein#1%
@@ -277,7 +280,7 @@
 \def\MGL@test@end@env#1{%
   \edef\MGL@this@line{#1}%
   \ifx\MGL@this@line\MGL@end@env@cmd%
-    \def\next@action{\MGL@end@env}%
+    \def\MGL@next@action{\MGL@end@env}%
   \fi%
 }
 
@@ -311,15 +314,15 @@
     \expandafter\MGL@write@line%
   }%
   \gdef\MGL@write@line#1^^M{%
-    \def\next@action{%
+    \def\MGL@next@action{%
       \MGL@write@code@action{#1}%
       \MGL@write@line%
     }%
     \MGL@test@end@env{#1}%
-    \next@action%
+    \MGL@next@action%
   }%
   \gdef\MGL@compare@line#1^^M{%
-    \def\next@action{%
+    \def\MGL@next@action{%
       \def\MGL@this@line{#1^^M}%
       \MGL@read\MGL@in@stream{\MGL@this@code@line}%
       \ifx\MGL@this@code@line\MGL@this@line\else%
@@ -329,13 +332,13 @@
     }%
     \edef\MGL@this@line{#1}%
     \ifx\MGL@this@line\MGL@end@env@cmd%
-      \def\next@action{\MGL@end@env}%
+      \def\MGL@next@action{\MGL@end@env}%
       \MGL@read\MGL@in@stream{\MGL@this@code@line}%
       \ifeof\MGL@in@stream\else%
         \def\MGL@future@action{}%
       \fi%
     \fi%
-    \next@action%
+    \MGL@next@action%
   }%
 \endgroup
 
@@ -359,7 +362,7 @@
 \newtoks\MGL@word
 \newtoks\MGL@line
 \def\MGL@write@verb@line#1{%
-  \let\next@action\MGL@write@verb@line%
+  \let\MGL@next@action\MGL@write@verb@line%
   \expandafter\if#1\^^M%
     \MGL@write@verb@code@action%
     \MGL@word{}%
@@ -372,7 +375,7 @@
     \MGL@line\expandafter{\the\MGL@line#1}%
     \MGL@test@end@env{\the\MGL@word}%
   \fi\fi%
-  \next@action%
+  \MGL@next@action%
 }
 \def\MGL@rewrite@code#1{%
   \MGL@read\MGL@in@stream{\MGL@this@code@line}%
@@ -390,7 +393,7 @@
   }%
 \endgroup
 \def\MGL@compare@verb@line#1{%
-  \let\next@action\MGL@compare@verb@line%
+  \let\MGL@next@action\MGL@compare@verb@line%
   \expandafter\if#1\^^M%
     \MGL@line\expandafter{\the\MGL@line#1}%
     \MGL@read\MGL@in@stream{\MGL@this@code@line}%
@@ -408,14 +411,14 @@
     \MGL@line\expandafter{\the\MGL@line#1}%
     \edef\MGL@this@line{\the\MGL@word}%
     \ifx\MGL@this@line\MGL@end@env@cmd%
-      \def\next@action{\MGL@end@env}%
+      \def\MGL@next@action{\MGL@end@env}%
       \MGL@read\MGL@in@stream{\MGL@this@code@line}%
       \ifeof\MGL@in@stream\else%
         \def\MGL@future@action{}%
       \fi%
     \fi%
   \fi\fi%
-  \next@action%
+  \MGL@next@action%
 }
 \newcounter{MGL@verb@line@no}
 \def\MGL@prepare@verb@env{%
@@ -433,17 +436,17 @@
   \stepcounter{MGL@verb@line@no}%
   \MGL@read\MGL@in@stream{\MGL@this@code@line}%
   \ifeof\MGL@in@stream%
-    \def\next@action{%
+    \def\MGL@next@action{%
       \MGL@closein{\MGL@in@stream}%
       \endlist%
     }%
   \else%
-    \def\next@action{%
+    \def\MGL@next@action{%
       \item\mbox{\MGL@this@code@line}%
       \MGL@rewrite@code@verb%
     }%
   \fi%
-  \next@action%
+  \MGL@next@action%
 }
 %%%%% Anatomy of environments and commands %%%%%
 
@@ -458,16 +461,16 @@
   \MGL@set@write@script@out%
   \@ifundefined{MGL@@@\MGL@this@code@label}{%
     \MGL@write\MGL@script{quality \MGL@quality}%
-    \MGL@write\MGL@script{setsize \MGL@width \MGL@height}%
+    \MGL@write\MGL@script{setsize \MGL@width\space\MGL@height}%
     \MGL@openout{\MGL@out@stream}{\MGL@dir\MGL@backups@dir\MGL@this@code@label.mgl.backup}%
-    \def\save@action{%
+    \def\MGL@save@action{%
       \MGL@write\MGL@script{write '\MGL@dir\MGL@graphics@dir\MGL@this@code@label\MGL@graphics@ext'}%
       \MGL@write\MGL@script{reset}%
       \MGL@write\MGL@script{}%
     }
     \expandafter\MGL@write@line%
   }{%
-    \def\save@action{}%
+    \def\MGL@save@action{}%
     \MGL@openin{\MGL@in@stream}{\MGL@dir\MGL@backups@dir\MGL@this@code@label.mgl.backup}%
     \expandafter\MGL@compare@line%
   }%
@@ -475,9 +478,9 @@
 \def\endmgl{%
   \MGL@closeout{\MGL@out@stream}%
   \MGL@closein{\MGL@in@stream}%
-  \save@action%
+  \MGL@save@action%
   \MGL@future@action%
-  \MGL@include@graphics{\MGL@this@code@label}%
+  \MGL@include@graphics%
 }
 
 \def\mgladdon{%
@@ -527,7 +530,7 @@
     \MGL@closeout{\MGL@out@stream}%
   \egroup%
   \MGL@future@action%
-  \MGL@include@graphics{\MGL@this@code@label}%
+  \MGL@include@graphics%
 }
 
 \def\mglscript#1{%
@@ -597,11 +600,11 @@
 \newcommand\mglgraphics[2][]{%
   \MGL@setkeys{mgl@keys}{#1}%
   \edef\MGL@this@code@label{#2}%
-  \@ifundefined{MGL@@@#2}{%
+  \IfFileExists{\MGL@dir\MGL@graphics@dir\MGL@this@code@label\MGL@graphics@ext}{}{%
     \MGL@write{18}{mglconv -q \MGL@quality\space -S \MGL@scale\space -s "\MGL@dir\MGL@scripts@dir\mglcommonscript.mgl" -o "\MGL@dir\MGL@graphics@dir\MGL@this@code@label\MGL@graphics@ext" "\MGL@dir\MGL@scripts@dir\MGL@this@code@label.mgl"}
-  }{}%
-  \MGL@write{\@auxout}{\string\MGL@unchanged{\MGL@this@code@label}}%
-  \MGL@include@graphics{#2}%
+  }%
+  \MGL@write\@auxout{\string\MGL@unchanged{\MGL@this@code@label}}%
+  \MGL@include@graphics%
 }
 
 \def\mglcommonscript{common_script}
@@ -613,7 +616,7 @@
   \MGL@openout{\MGL@out@stream}{\MGL@dir\MGL@scripts@dir\MGL@this@code@label.mgl}%
   \MGL@write\MGL@out@stream{\MGL@signature}%
   \MGL@write\MGL@out@stream{quality \MGL@quality}%
-  \MGL@write\MGL@out@stream{setsize \MGL@width \MGL@height}%
+  \MGL@write\MGL@out@stream{setsize \MGL@width\space\MGL@height}%
   \expandafter\MGL@ignore@line%
 }
 \@onlypreamble\mglcommon
@@ -669,7 +672,7 @@
     \MGL@create@code@label%
     \@ifundefined{MGL@@@\MGL@this@code@label}{%
       \MGL@write\MGL@script{quality \MGL@quality}%
-      \MGL@write\MGL@script{setsize \MGL@width \MGL@height}%
+      \MGL@write\MGL@script{setsize \MGL@width\space\MGL@height}%
       \MGL@openout{\MGL@out@stream}{\MGL@dir\MGL@backups@dir\MGL@this@code@label.mgl.backup}%
       \mglplot@call@setup%
       \MGL@write\MGL@script{#2}%
@@ -774,14 +777,14 @@
   \def\MGL@write##1##2{%
     \immediate\write##1{##2}%
   }%
-  \def\MGL@graphics@not@found@text{MGL\\image\\not\\found}%
-%   \def\MGL@graph@not@found@message{MGL image "##1" not found}%
+  \def\MGL@graph@not@found@text{MGL\\image\\not\\found}%
+  \def\MGL@graph@not@found@message{MGL image "\MGL@this@code@label" not found}%
 }
 \def\mgltexoff{%
   \def\MGL@openout##1##2{}%
   \def\MGL@write##1##2{}%
-  \def\MGL@graphics@not@found@text{\mglTeX\\is off.\\No image\\generated}%
-%   \def\MGL@graph@not@found@message{mglTeX is off. MGL image "##1" not generated}%
+  \def\MGL@graph@not@found@text{\mglTeX\\is off,\\no image\\generated}%
+  \def\MGL@graph@not@found@message{mglTeX is off, MGL image "\MGL@this@code@label" not generated}%
 }
 
 \def\mglcomments{

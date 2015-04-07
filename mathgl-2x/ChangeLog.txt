@@ -16,6 +16,7 @@
 * Add missing mglDataC functions
 * Add wavelet transforms
 * Minor improvements, bugfixes and compatibility changes
+* Add mglDataS class which is similar to std::vector<double> one.
 
 2.3.2 Released 2 February 2015
 

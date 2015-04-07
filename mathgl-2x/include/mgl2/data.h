@@ -883,5 +883,33 @@ public:
 	{	return 0;	}
 };
 //-----------------------------------------------------------------------------
+/// Class for replacement of std::vector
+class MGL_EXPORT mglDataS : public mglDataA
+{
+public:
+	std::vector<mreal> dat;
+	
+	mglDataS(const mglDataS &st) : dat(st.dat)	{}
+	mglDataS(const std::vector<mreal> &d) : dat(d)	{}
+	mglDataS(size_t s=1)	{	dat.resize(s);	}
+	~mglDataS()	{}
+	inline void reserve(size_t num)	{	dat.reserve(num);	}
+	inline void clear()	{	dat.clear();	}
+	inline double operator[](size_t i)	{	return dat[i];	}
+	inline void push_back(double t)	{	dat.push_back(t);	}
+	inline size_t size() const	{	return dat.size();	}
+	const mglDataS &operator=(const mglDataS &st)	{	dat = st.dat;	}
+
+	mreal v(long i,long j=0,long k=0) const		{	return dat[i];	}
+	mreal vthr(long i) const	{	return dat[i];	};
+	long GetNx() const	{	return dat.size();	}
+	long GetNy() const	{	return 1;	}
+	long GetNz() const	{	return 1;	}
+	mreal dvx(long i,long j=0,long k=0) const
+	{	return i>0? (i<dat.size()-1? (dat[i+1]-dat[i-1])/2:dat[i]-dat[i-1]) : dat[i+1]-dat[i];	}
+	mreal dvy(long i,long j=0,long k=0) const	{	return 1;	}
+	mreal dvz(long i,long j=0,long k=0) const	{	return 1;	}
+};
+//-----------------------------------------------------------------------------
 #endif
 #endif
