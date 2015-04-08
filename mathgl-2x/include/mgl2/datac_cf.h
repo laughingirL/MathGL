@@ -220,6 +220,11 @@ void MGL_EXPORT mgl_datac_join(HADT dat, HCDT d);
 void MGL_EXPORT mgl_datac_join_(uintptr_t *dat, uintptr_t *d);
 
 /// Smooth the data on specified direction or directions
+/** String \a dir may contain:
+ *  ‘x’, ‘y’, ‘z’ for 1st, 2nd or 3d dimension;
+ *  ‘3’ for linear averaging over 3 points;
+ *  ‘5’ for linear averaging over 5 points.
+ *  By default quadratic averaging over 5 points is used. */
 void MGL_EXPORT mgl_datac_smooth(HADT d, const char *dirs, mreal delta);
 void MGL_EXPORT mgl_datac_smooth_(uintptr_t *dat, const char *dirs, mreal *delta,int);
 /// Cumulative summation the data in given direction or directions

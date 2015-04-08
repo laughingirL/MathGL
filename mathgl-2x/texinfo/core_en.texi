@@ -569,6 +569,8 @@ Wrong command in MGL script
 Too long line in MGL script
 @item mglScrStr
 Unbalanced ' in MGL script
+@item mglScrTemp
+Change temporary data in MGL script
 @end table
 @end deftypefn
 
@@ -888,7 +890,7 @@ Gets number of seconds from 1970 year to specified date/time @var{str}. The form
 @deftypefnx {Method on @code{mglGraph}} @code{void} SetTuneTicks (@code{int} tune, @code{mreal} pos=@code{1.15})
 @deftypefnx {C function} @code{void} mgl_tune_ticks (@code{HMGL} gr, @code{int} tune, @code{mreal} pos)
 @end ifclear
-Switch on/off ticks enhancing by factoring common multiplier (for small, like from 0.001 to 0.002, or large, like from 1000 to 2000, coordinate values -- enabled if @var{tune}&1 is nonzero) or common component (for narrow range, like from 0.999 to 1.000 -- enabled if @var{tune}&2 is nonzero). Also set the position @var{pos} of common multiplier/component on the axis: =0 at minimal axis value, =1 at maximal axis value. Default value is 1.15. If @var{tune}&4 is nonzero then zeros will be added to fixed width of all axis labels.
+Switch on/off ticks enhancing by factoring common multiplier (for small, like from 0.001 to 0.002, or large, like from 1000 to 2000, coordinate values -- enabled if @var{tune}&1 is nonzero) or common component (for narrow range, like from 0.999 to 1.000 -- enabled if @var{tune}&2 is nonzero). Also set the position @var{pos} of common multiplier/component on the axis: =0 at minimal axis value, =1 at maximal axis value. Default value is 1.15.
 @end deftypefn
 
 @anchor{tickshift}
@@ -1703,7 +1705,7 @@ Draw tube (or truncated cone if @var{edge}=@code{false}) between points @var{p1}
 @item
 @samp{t} for drawing tubes/cylinder instead of cones/prisms;
 @item
-@samp{4}, @samp{6}, @samp{8}, @samp{t} for drawing square, hex- or octo-prism instead of cones.
+@samp{4}, @samp{6}, @samp{8} for drawing square, hex- or octo-prism instead of cones.
 @end itemize
 @end deftypefn
 
@@ -2021,7 +2023,9 @@ font style for legend text;
 @item
 @samp{#} for drawing box around legend;
 @item
-colors for background (first one) and border (second one) of legend. Note, that last color is always used as color for legend text.
+@samp{-} for arranging legend entries horizontally;
+@item
+colors for face (1st one), for border (2nd one) and for text (last one). If less than 3 colors are specified then the color for border is black (for 2 and less colors), and the color for face is white (for 1 or none colors).
 @end itemize
 @sref{Legend sample}
 
@@ -2031,7 +2035,7 @@ colors for background (first one) and border (second one) of legend. Note, that 
 @deftypefnx {Method on @code{mglGraph}} @code{void} Legend (@code{int} pos=@code{0x3}, @code{const char *}fnt=@code{"#"}, @code{const char *}opt=@code{""})
 @deftypefnx {C function} @code{void} mgl_legend (@code{HMGL} gr, @code{int} pos, @code{const char *}fnt, @code{const char *}opt)
 @end ifclear
-Draws legend of accumulated legend entries by font @var{fnt} with @var{size}. Parameter @var{pos} sets the position of the legend: @samp{0} is bottom left corner, @samp{1} is bottom right corner, @samp{2} is top left corner, @samp{3} is top right corner (is default). Parameter @var{fnt} can contain colors for face (1st one), for border (2nd one) and for text (last one). If less than 3 colors are specified then the color for border is black (for 2 and less colors), and the color for face is white (for 1 or none colors). If string @var{fnt} contain @samp{#} then border around the legend is drawn. If string @var{fnt} contain @samp{-} then legend entries will arranged horizontally. Option @code{value} set the space between line samples and text (default is 0.1).
+Draws legend of accumulated legend entries by font @var{fnt} with @var{size}. Parameter @var{pos} sets the position of the legend: @samp{0} is bottom left corner, @samp{1} is bottom right corner, @samp{2} is top left corner, @samp{3} is top right corner (is default). Option @code{value} set the space between line samples and text (default is 0.1).
 @end deftypefn
 
 @deftypefn {MGL command} {} legend @code{x y} ['fnt'='#']

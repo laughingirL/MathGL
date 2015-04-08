@@ -60,10 +60,16 @@ uintptr_t MGL_EXPORT mgl_fit_xyzas_(uintptr_t* gr, uintptr_t* x, uintptr_t* y, u
 MGL_EXPORT_CONST const char *mgl_get_fit(HMGL gr);
 int MGL_EXPORT mgl_get_fit_(uintptr_t *gr, char *out, int len);
 
+/// Make histogram (distribution) of data. This function do not plot data.
+/** Option "value" sets the size of output array (default is mglFitPnts=100). */
 HMDT MGL_EXPORT mgl_hist_x(HMGL gr, HCDT x, HCDT a, const char *opt);
 uintptr_t MGL_EXPORT mgl_hist_x_(uintptr_t* gr, uintptr_t* x, uintptr_t* a, const char *opt,int);
+/// Make histogram (distribution) of data. This function do not plot data.
+/** Option "value" sets the size of output array (default is mglFitPnts=100). */
 HMDT MGL_EXPORT mgl_hist_xy(HMGL gr, HCDT x, HCDT y, HCDT a, const char *opt);
 uintptr_t MGL_EXPORT mgl_hist_xy_(uintptr_t* gr, uintptr_t* x, uintptr_t* y, uintptr_t* a, const char *opt,int);
+/// Make histogram (distribution) of data. This function do not plot data.
+/** Option "value" sets the size of output array (default is mglFitPnts=100). */
 HMDT MGL_EXPORT mgl_hist_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *opt);
 uintptr_t MGL_EXPORT mgl_hist_xyz_(uintptr_t* gr, uintptr_t* x, uintptr_t* y, uintptr_t* z, uintptr_t* a, const char *opt,int);
 

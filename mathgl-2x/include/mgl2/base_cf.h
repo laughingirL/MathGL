@@ -61,6 +61,11 @@ void MGL_EXPORT mgl_set_event_func(HMGL gr, void (*func)(void *), void *par);
 int MGL_EXPORT_PURE mgl_get_quality(HMGL gr);
 int MGL_EXPORT_PURE mgl_get_quality_(uintptr_t *gr);
 /// Set plot quality
+/** qual=0 -- no face drawing (fastest),
+ *  qual=1 -- no color interpolation (fast),
+ *  qual=2 -- high quality (normal),
+ *  qual|4 -- direct bitmap drawing (low memory usage);
+ *  qual|8 for dots drawing instead of primitives (extremely fast). */
 void MGL_EXPORT mgl_set_quality(HMGL gr, int qual);
 void MGL_EXPORT mgl_set_quality_(uintptr_t *gr, int *qual);
 /// Set drawing region for Quality&4
@@ -115,7 +120,7 @@ void MGL_EXPORT mgl_set_mask_angle_(uintptr_t *gr, int *angle);
 /// Set default value of alpha-channel
 void MGL_EXPORT mgl_set_alpha_default(HMGL gr, double alpha);
 void MGL_EXPORT mgl_set_alpha_default_(uintptr_t *gr, mreal *alpha);
-/// Set relative width of rectangles in Bars, Barh, BoxPlot
+/// Set relative width of rectangles in Bars, Barh, BoxPlot, Candle, OHLC (default is 0.7)
 void MGL_EXPORT mgl_set_bar_width(HMGL gr, double width);
 void MGL_EXPORT mgl_set_bar_width_(uintptr_t *gr, mreal *width);
 /// Set number of mesh lines (use 0 to draw all of them)
@@ -170,13 +175,16 @@ void MGL_EXPORT mgl_zoom_axis_(uintptr_t *gr, mreal *x1, mreal *y1, mreal *z1, m
 /// Set axis origin
 void MGL_EXPORT mgl_set_origin(HMGL gr, double x0, double y0, double z0);
 void MGL_EXPORT mgl_set_origin_(uintptr_t *gr, mreal *x0, mreal *y0, mreal *z0);
-/// Set the transformation formulas for coordinate
+/// Set the transformation formulas for coordinate. Use "" or NULL for built-in ones
 void MGL_EXPORT mgl_set_func(HMGL gr, const char *EqX,const char *EqY,const char *EqZ,const char *EqA);
 void MGL_EXPORT mgl_set_func_(uintptr_t *gr, const char *EqX, const char *EqY, const char *EqZ, const char *EqA, int, int, int, int);
 /// Set one of predefined transformation rule
 void MGL_EXPORT mgl_set_coor(HMGL gr, int how);
 void MGL_EXPORT mgl_set_coor_(uintptr_t *gr, int *how);
 /// Set to draw Ternary axis (triangle like axis, grid and so on)
+/** val=1 for Ternary axis (a+b+c=1, z=z),
+ *  val=2 for Quaternary axis (a+b+c+d=1),
+ *  val|4 for projections. */
 void MGL_EXPORT mgl_set_ternary(HMGL gr, int kind);
 void MGL_EXPORT mgl_set_ternary_(uintptr_t *gr, int *kind);
 

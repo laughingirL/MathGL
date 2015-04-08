@@ -60,6 +60,7 @@ ENDMACRO(MGL_DEPENDENT_OPTION)
 include(CMakeDependentOption)
 
 set(MGL_LIB_INSTALL_DIR "lib" CACHE STRING "Set library install directory")
+string(TIMESTAMP MGL_NIGHT "%d.%m.%y")
 
 option(enable-double "Enable double precision in MathGL library" ON)
 option(enable-mpi "Enable mpi")

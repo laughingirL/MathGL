@@ -83,7 +83,7 @@ void MGL_EXPORT mgl_set_ticks_valw(HMGL gr, char dir, HCDT val, const wchar_t *l
 void MGL_EXPORT mgl_add_tick(HMGL gr, char dir, double val, const char *lbl);
 void MGL_EXPORT mgl_add_tick_(uintptr_t *gr, const char *dir, mreal *val, const char *lbl,int,int);
 void MGL_EXPORT mgl_add_tickw(HMGL gr, char dir, double val, const wchar_t *lbl);
-/// Tune ticks
+/// Tune ticks (tune|1 for common multiplier, tune|2 for common component)
 void MGL_EXPORT mgl_tune_ticks(HMGL gr, int tune, double fact_pos);
 void MGL_EXPORT mgl_tune_ticks_(uintptr_t *gr, int *tune, mreal *fact_pos);
 /// Set templates for ticks
@@ -101,29 +101,96 @@ void MGL_EXPORT mgl_set_tick_shift_(uintptr_t *gr, mreal *sx, mreal *sy, mreal *
 void MGL_EXPORT mgl_box(HMGL gr);
 void MGL_EXPORT mgl_box_(uintptr_t *gr);
 /// Draws bounding box outside the plotting volume with color c
+/** Style ‘@’ produce filled back faces. */
 void MGL_EXPORT mgl_box_str(HMGL gr, const char *col, int ticks);
 void MGL_EXPORT mgl_box_str_(uintptr_t *gr, const char *col, int *ticks, int);
 /// Draw axises with ticks in direction(s) dir.
+/** Parameter \a dir may contain:
+ *	‘xyzt’for drawing axis in corresponding direction;
+ *	‘XYZT’ for drawing axis in corresponding direction but with inverted positions of labels;
+ *	‘~’, ‘_’ for disabling tick labels;
+ *	‘U’ for disabling rotation of tick labels;
+ *	‘^’ for inverting default axis origin;
+ *	‘!’ for disabling ticks tuning;
+ *	‘AKDTVISO’ for drawing arrow at the end of axis;
+ *	‘a’ for forced adjusting of axis ticks;
+ *	‘f’ for printing ticks labels in fixed format;
+ *	‘E’ for using ‘E’ instead of ‘e’ in ticks labels;
+ *	‘F’ for printing ticks labels in LaTeX format;
+ *	‘+’ for printing ‘+’ for positive ticks;
+ *	‘-’ for printing usual ‘-’ in ticks labels;
+ *	‘0123456789’ for precision at printing ticks labels.*/
 void MGL_EXPORT mgl_axis(HMGL gr, const char *dir, const char *stl, const char *opt);
 void MGL_EXPORT mgl_axis_(uintptr_t *gr, const char *dir, const char *stl, const char *opt,int,int,int);
 /// Draw grid lines perpendicular to direction(s) dir.
 void MGL_EXPORT mgl_axis_grid(HMGL gr, const char *dir,const char *pen, const char *opt);
 void MGL_EXPORT mgl_axis_grid_(uintptr_t *gr, const char *dir,const char *pen, const char *opt,int,int,int);
 /// Print the label text for axis dir.
+/** Option "value" set additional shifting of the label. */
 void MGL_EXPORT mgl_label(HMGL gr, char dir, const char *text, double pos, const char *opt);
 void MGL_EXPORT mgl_label_(uintptr_t *gr, const char *dir, const char *text, mreal *pos, const char *opt,int,int,int);
+/// Print the label text for axis dir.
+/** Option "value" set additional shifting of the label. */
 void MGL_EXPORT mgl_labelw(HMGL gr, char dir, const wchar_t *text, double pos, const char *opt);
 
 /// Draw colorbar at edge of axis
+/** Parameter \a sch may contain:
+ *	 ‘<>^_’ for positioning at left, at right, at top or at bottom correspondingly;
+ *	 ‘I’ for positioning near bounding (by default, at edges of subplot);
+ *	 ‘A’ for using absolute coordinates;
+ *	 ‘~’ for disabling tick labels.
+ *	 ‘!’ for disabling ticks tuning;
+ *	 ‘f’ for printing ticks labels in fixed format;
+ *	 ‘E’ for using ‘E’ instead of ‘e’ in ticks labels;
+ *	 ‘F’ for printing ticks labels in LaTeX format;
+ *	 ‘+’ for printing ‘+’ for positive ticks;
+ *	 ‘-’ for printing usual ‘-’ in ticks labels;
+ *	 ‘0123456789’ for precision at printing ticks labels.*/
 void MGL_EXPORT mgl_colorbar(HMGL gr, const char *sch);
 void MGL_EXPORT mgl_colorbar_(uintptr_t *gr, const char *sch,int);
 /// Draw colorbar at manual position
+/** Parameter \a sch may contain:
+ *	 ‘<>^_’ for positioning at left, at right, at top or at bottom correspondingly;
+ *	 ‘I’ for positioning near bounding (by default, at edges of subplot);
+ *	 ‘A’ for using absolute coordinates;
+ *	 ‘~’ for disabling tick labels.
+ *	 ‘!’ for disabling ticks tuning;
+ *	 ‘f’ for printing ticks labels in fixed format;
+ *	 ‘E’ for using ‘E’ instead of ‘e’ in ticks labels;
+ *	 ‘F’ for printing ticks labels in LaTeX format;
+ *	 ‘+’ for printing ‘+’ for positive ticks;
+ *	 ‘-’ for printing usual ‘-’ in ticks labels;
+ *	 ‘0123456789’ for precision at printing ticks labels.*/
 void MGL_EXPORT mgl_colorbar_ext(HMGL gr, const char *sch, double x, double y, double w, double h);
 void MGL_EXPORT mgl_colorbar_ext_(uintptr_t *gr, const char *sch, mreal *x, mreal *y, mreal *w, mreal *h, int);
 /// Draw colorbar with manual colors at edge of axis
+/** Parameter \a sch may contain:
+ *	 ‘<>^_’ for positioning at left, at right, at top or at bottom correspondingly;
+ *	 ‘I’ for positioning near bounding (by default, at edges of subplot);
+ *	 ‘A’ for using absolute coordinates;
+ *	 ‘~’ for disabling tick labels.
+ *	 ‘!’ for disabling ticks tuning;
+ *	 ‘f’ for printing ticks labels in fixed format;
+ *	 ‘E’ for using ‘E’ instead of ‘e’ in ticks labels;
+ *	 ‘F’ for printing ticks labels in LaTeX format;
+ *	 ‘+’ for printing ‘+’ for positive ticks;
+ *	 ‘-’ for printing usual ‘-’ in ticks labels;
+ *	 ‘0123456789’ for precision at printing ticks labels.*/
 void MGL_EXPORT mgl_colorbar_val(HMGL gr, HCDT dat, const char *sch);
 void MGL_EXPORT mgl_colorbar_val_(uintptr_t *gr, uintptr_t *dat, const char *sch,int);
 /// Draw colorbar with manual colors at manual position
+/** Parameter \a sch may contain:
+ *	 ‘<>^_’ for positioning at left, at right, at top or at bottom correspondingly;
+ *	 ‘I’ for positioning near bounding (by default, at edges of subplot);
+ *	 ‘A’ for using absolute coordinates;
+ *	 ‘~’ for disabling tick labels.
+ *	 ‘!’ for disabling ticks tuning;
+ *	 ‘f’ for printing ticks labels in fixed format;
+ *	 ‘E’ for using ‘E’ instead of ‘e’ in ticks labels;
+ *	 ‘F’ for printing ticks labels in LaTeX format;
+ *	 ‘+’ for printing ‘+’ for positive ticks;
+ *	 ‘-’ for printing usual ‘-’ in ticks labels;
+ *	 ‘0123456789’ for precision at printing ticks labels.*/
 void MGL_EXPORT mgl_colorbar_val_ext(HMGL gr, HCDT dat, const char *sch,double x, double y, double w, double h);
 void MGL_EXPORT mgl_colorbar_val_ext_(uintptr_t *gr, uintptr_t *dat, const char *sch, mreal *x, mreal *y, mreal *w, mreal *h, int);
 
@@ -135,9 +202,26 @@ void MGL_EXPORT mgl_add_legendw(HMGL gr, const wchar_t *text,const char *style);
 void MGL_EXPORT mgl_clear_legend(HMGL gr);
 void MGL_EXPORT mgl_clear_legend_(uintptr_t *gr);
 /// Draw legend of accumulated strings at position {x,y}
+/** Parameter fnt may contain:
+ *	 font style for legend text;
+ *	 colors for background (first one), border (second one) and text (last one);
+ *	 ‘A’ for positioning in absolute coordinates;
+ *	 ‘^’ for positioning outside of specified point;
+ *	 ‘-’ for arranging entries horizontally;
+ *	 ‘#’ for drawing box around legend.
+ * Option value set the space between line samples and text (default is 0.1).*/
 void MGL_EXPORT mgl_legend_pos(HMGL gr, double x, double y, const char *font, const char *opt);
 void MGL_EXPORT mgl_legend_pos_(uintptr_t *gr, mreal *x, mreal *y, const char *font, const char *opt,int,int);
 /// Draw legend of accumulated strings
+/** Parameter fnt may contain:
+ *	 font style for legend text;
+ *	 colors for background (first one), border (second one) and text (last one);
+ *	 ‘A’ for positioning in absolute coordinates;
+ *	 ‘^’ for positioning outside of specified point;
+ *	 ‘-’ for arranging entries horizontally;
+ *	 ‘#’ for drawing box around legend.
+ * Option value set the space between line samples and text (default is 0.1).
+ * Parameter \a where sets position: 0 at bottom-left, 1 at bottom-right, 2 at top-left, 3 at top-right (default).*/
 void MGL_EXPORT mgl_legend(HMGL gr, int where, const char *font, const char *opt);
 void MGL_EXPORT mgl_legend_(uintptr_t *gr, int *where, const char *font, const char *opt,int,int);
 /// Set number of marks in legend sample
@@ -226,12 +310,15 @@ void MGL_EXPORT mgl_write_json_z_(uintptr_t *gr, const char *fname,const char *d
 MGL_EXPORT const char *mgl_get_json(HMGL gr);
 
 /// Get RGB values of current bitmap
+/** Position of element {i,j} is [3*i + 3*Width*j]. */
 MGL_EXPORT const unsigned char *mgl_get_rgb(HMGL gr);
 MGL_EXPORT const unsigned char *mgl_get_rgb_(uintptr_t *gr);
 /// Get RGBA values of current bitmap
+/** Position of element {i,j} is [4*i + 4*Width*j]. */
 MGL_EXPORT const unsigned char *mgl_get_rgba(HMGL gr);
 MGL_EXPORT const unsigned char *mgl_get_rgba_(uintptr_t *gr);
-/// Get RGB values of current bitmap
+/// Get RGBA values of background image
+/** Position of element {i,j} is [4*i + 4*Width*j]. */
 MGL_EXPORT const unsigned char *mgl_get_background(HMGL gr);
 MGL_EXPORT const unsigned char *mgl_get_background_(uintptr_t *gr);
 /// Set object/subplot id
@@ -342,19 +429,37 @@ void MGL_EXPORT mgl_clf_str_(uintptr_t *gr, const char *col, int);
 void MGL_EXPORT mgl_load_background(HMGL gr, const char *fname, double alpha);
 void MGL_EXPORT mgl_load_background_(uintptr_t *gr, const char *fname, mreal *alpha, int);
 
-/// Put further plotting in some region of whole frame.
+/// Put further plotting in m-th cell of nx*ny grid of the image.
+/** String \a style may contain:
+ *  '<' for reserving space at left
+ *  '>' for reserving space at right
+ *  '^' for reserving space at top
+ *  '_' for reserving space at bottom
+ *  '#' for using whole region. */
 void MGL_EXPORT mgl_subplot(HMGL gr, int nx,int ny,int m,const char *style);
 void MGL_EXPORT mgl_subplot_(uintptr_t *gr, int *nx,int *ny,int *m, const char *s,int);
-/// Put further plotting in some region of whole frame and shift it by distance {dx,dy}.
+/// Put further plotting in m-th cell of nx*ny grid of the image and shift it by distance {dx,dy}.
+/** String \a style may contain:
+ *  '<' for reserving space at left
+ *  '>' for reserving space at right
+ *  '^' for reserving space at top
+ *  '_' for reserving space at bottom
+ *  '#' for using whole region. */
 void MGL_EXPORT mgl_subplot_d(HMGL gr, int nx,int ny,int m,const char *style, double dx, double dy);
 void MGL_EXPORT mgl_subplot_d_(uintptr_t *gr, int *nx,int *ny,int *m, mreal *dx, mreal *dy);
-/// Like MGL_EXPORT mgl_subplot() but "join" several cells
+/// Put further plotting in rectangle of dx*dy cells starting from m-th cell of nx*ny grid of the image.
+/** String \a style may contain:
+ *  '<' for reserving space at left
+ *  '>' for reserving space at right
+ *  '^' for reserving space at top
+ *  '_' for reserving space at bottom
+ *  '#' for using whole region. */
 void MGL_EXPORT mgl_multiplot(HMGL gr, int nx,int ny,int m,int dx,int dy,const char *style);
 void MGL_EXPORT mgl_multiplot_(uintptr_t *gr, int *nx,int *ny,int *m,int *dx,int *dy, const char *s,int);
-/// Put further plotting in a region of whole frame.
+/// Put further plotting in a region [x1,x2]*[y1,y2] of the image (x1,x2,y1,y2 in range [0, 1]).
 void MGL_EXPORT mgl_inplot(HMGL gr, double x1,double x2,double y1,double y2);
 void MGL_EXPORT mgl_inplot_(uintptr_t *gr, mreal *x1, mreal *x2, mreal *y1, mreal *y2);
-/// Put further plotting in a region of current subplot/inplot.
+/// Put further plotting in a region [x1,x2]*[y1,y2] of the subplot (x1,x2,y1,y2 in range [0, 1]).
 void MGL_EXPORT mgl_relplot(HMGL gr, double x1,double x2,double y1,double y2);
 void MGL_EXPORT mgl_relplot_(uintptr_t *gr, mreal *x1, mreal *x2, mreal *y1, mreal *y2);
 /// Put further plotting in column cell of previous subplot/inplot.
@@ -367,6 +472,7 @@ void MGL_EXPORT mgl_gridplot_(uintptr_t *gr, int *nx, int *ny, int *m, mreal *d)
 void MGL_EXPORT mgl_stickplot(HMGL gr, int num, int ind, double tet, double phi);
 void MGL_EXPORT mgl_stickplot_(uintptr_t *gr, int *num, int *i, mreal *tet, mreal *phi);
 /// Add title for current subplot/inplot.
+/** Style '#' draw box around the title. */
 void MGL_EXPORT mgl_title(HMGL gr, const char *title, const char *stl, double size);
 void MGL_EXPORT mgl_title_(uintptr_t *gr, const char *title, const char *stl, mreal *size, int,int);
 void MGL_EXPORT mgl_titlew(HMGL gr, const wchar_t *title, const char *stl, double size);
