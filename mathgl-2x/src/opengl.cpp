@@ -21,6 +21,23 @@ mglCanvasGL::mglCanvasGL() : mglCanvas(1,1)	{	Clf();	Zoom(0,0,1,1);	}
 //-----------------------------------------------------------------------------
 mglCanvasGL::~mglCanvasGL(){}
 //-----------------------------------------------------------------------------
+void set_pen(unsigned style, mreal width, mreal pos)
+{
+	if(style==0)	return;
+	unsigned long pdef = style*0x100010001;
+	pdef >>= long(32*pos)%32;	// NOTE try to bypass OpenGL limitations
+	style = pdef & 0xffff;
+	width *= 20;
+	if(style!=0xffff)
+	{
+		glEnable(GL_LINE_STIPPLE);
+		glLineStipple(int(width+0.5),style);
+	}
+	else	glDisable(GL_LINE_STIPPLE);
+	if(width>1)	glLineWidth(width);	// NOTE bypass bug on some drivers, where width>1 must be
+	else		glLineWidth(1);
+}
+//-----------------------------------------------------------------------------
 void mglCanvasGL::Finish()
 {
 #if MGL_USE_DOUBLE
@@ -214,19 +231,6 @@ void mglCanvasGL::gl_clf(mglColor Back)
 	glTranslated(-0.5,-0.5,-0.5);
 }
 //-----------------------------------------------------------------------------
-void mglCanvasGL::set_pen(unsigned style,mreal width)
-{
-	if(style==0)	return;
-	if(style!=0xffff)
-	{
-		glEnable(GL_LINE_STIPPLE);
-		glLineStipple(int(width+0.5),style);
-	}
-	else	glDisable(GL_LINE_STIPPLE);
-	if(width>0)		glLineWidth(width);
-	else			glLineWidth(1);
-}
-//-----------------------------------------------------------------------------
 /*void mglCanvasGL::EndFrame()
 {
 //	mglGraph::EndFrame();
@@ -276,10 +280,7 @@ void mglCanvasGL::trig_draw(long k1, long k2, long k3)
 void mglCanvasGL::line_draw(long k1, long k2)
 {
 	if(PDef==0)	return;
-/*	unsigned pdef = PDef*0x10001;
-	pdef = pdef << (int(100*pPos+0.5)%16);
-	set_pen(pdef&0xffff,PenWidth);*/
-	set_pen(PDef,PenWidth);
+	set_pen(PDef,PenWidth, pPos);
 	glBegin(GL_LINES);
 	glArrayElement(k1);	glArrayElement(k2);
 	glEnd();
@@ -307,7 +308,7 @@ void mglCanvasGL::trig_draw(const mglPnt &p1, const mglPnt &p2, const mglPnt &p3
 void mglCanvasGL::line_draw(const mglPnt &p1, const mglPnt &p2, const mglDrawReg *)
 {
 	if(PDef==0)	return;
-	set_pen(PDef,PenWidth);
+	set_pen(PDef,PenWidth, pPos);
 	glBegin(GL_LINES);
 	glColor4f(p1.r,p1.g,p1.b,p1.a);	glVertex3f(p1.x,p1.y,p1.z);
 	glColor4f(p2.r,p2.g,p2.b,p2.a);	glVertex3f(p2.x,p2.y,p2.z);

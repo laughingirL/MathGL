@@ -17,6 +17,7 @@
 * Add wavelet transforms
 * Minor improvements, bugfixes and compatibility changes
 * Add mglDataS class which is similar to std::vector<double> one.
+* Add annotation for plot styles and options into header files.
 
 2.3.2 Released 2 February 2015
 

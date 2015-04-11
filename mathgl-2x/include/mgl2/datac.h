@@ -331,6 +331,11 @@ using mglDataA::Momentum;
 	/// Mirror the data in given direction (useful for fourier spectrums)
 	inline void Mirror(const char *dir)		{	mgl_datac_mirror(this,dir);	}
 	/// Smooth the data on specified direction or directions
+	/** String \a dir may contain:
+	 *  ‘x’, ‘y’, ‘z’ for 1st, 2nd or 3d dimension;
+	 *  ‘3’ for linear averaging over 3 points;
+	 *  ‘5’ for linear averaging over 5 points.
+	 *  By default quadratic averaging over 5 points is used. */
 	inline void Smooth(const char *dirs="xyz",mreal delta=0)
 	{	mgl_datac_smooth(this,dirs,delta);	}
 

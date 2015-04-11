@@ -42,8 +42,6 @@
 
 17. Iris plot -- https://en.wikipedia.org/wiki/Iris_flower_data_set
 
-22. Qt + OpenGL sample + check line width and dashing in OpenGL mode.
-
 ZZ. Update *.i for new functions {before release!!!}
 
 
