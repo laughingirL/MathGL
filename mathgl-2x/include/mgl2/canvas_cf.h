@@ -119,7 +119,8 @@ void MGL_EXPORT mgl_box_str_(uintptr_t *gr, const char *col, int *ticks, int);
  *	‘F’ for printing ticks labels in LaTeX format;
  *	‘+’ for printing ‘+’ for positive ticks;
  *	‘-’ for printing usual ‘-’ in ticks labels;
- *	‘0123456789’ for precision at printing ticks labels.*/
+ *	‘0123456789’ for precision at printing ticks labels.
+ *	 Option "value" set the manual rotation angle for the ticks.*/
 void MGL_EXPORT mgl_axis(HMGL gr, const char *dir, const char *stl, const char *opt);
 void MGL_EXPORT mgl_axis_(uintptr_t *gr, const char *dir, const char *stl, const char *opt,int,int,int);
 /// Draw grid lines perpendicular to direction(s) dir.

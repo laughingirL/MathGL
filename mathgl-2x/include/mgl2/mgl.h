@@ -690,7 +690,8 @@ public:
 	 *	‘F’ for printing ticks labels in LaTeX format;
 	 *	‘+’ for printing ‘+’ for positive ticks;
 	 *	‘-’ for printing usual ‘-’ in ticks labels;
-	 *	‘0123456789’ for precision at printing ticks labels.*/
+	 *	‘0123456789’ for precision at printing ticks labels.
+	 *	 Option "value" set the manual rotation angle for the ticks. */
 	inline void Axis(const char *dir="xyzt", const char *stl="", const char *opt="")
 	{	mgl_axis(gr, dir,stl,opt);	}
 	/// Draw grid lines perpendicular to direction(s) dir.
@@ -2174,6 +2175,12 @@ public:
 	{	return mglData(true,mgl_parser_calc(pr,formula)); 	}
 	inline mglData Calc(const wchar_t *formula)
 	{	return mglData(true,mgl_parser_calcw(pr,formula));	}
+
+	/// Return result of formula evaluation as complex data
+	inline mglDataC CalcComplex(const char *formula)
+	{	return mglDataC(true,mgl_parser_calc_complex(pr,formula)); 	}
+	inline mglDataC CalcComplex(const wchar_t *formula)
+	{	return mglDataC(true,mgl_parser_calc_complexw(pr,formula));	}
 
 	/// Find variable with given name or add a new one
 	/// NOTE !!! You must not delete obtained data arrays !!!

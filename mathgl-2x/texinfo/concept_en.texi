@@ -118,6 +118,8 @@ The color scheme is used for determining the color of surfaces, isolines, isosur
 
 The final color is a linear interpolation of color array. The color array is constructed from the string ids (including ``bright'' colors, see @ref{Color styles}). The argument is the amplitude normalized in color range (see @ref{Axis settings}). For example, string containing 4 characters @samp{bcyr} corresponds to a colorbar from blue (lowest value) through cyan (next value) through yellow (next value) to the red (highest value). String @samp{kw} corresponds to a colorbar from black (lowest value) to white (highest value). String @samp{m} corresponds to a simple magenta color.
 
+The special 2-axis color scheme (like in @ref{map} plot) can be used if it contain symbol @samp{%}. In this case the second direction (alpha channel) is used as second coordinate for colors. At this, up to 4 colors can be specified for corners: @{c1,a1@}, @{c2,a1@}, @{c1,a2@}, @{c2,a2@}. Here color and alpha ranges are @{c1,c2@} and @{a1,a2@} correspondingly. If one specify less than 4 colors then black color is used for corner @{c1,a1@}. If only 2 colors are specified then the color of their sum is used for corner @{c2,a2@}.
+
 There are several useful combinations. String @samp{kw} corresponds to the simplest gray color scheme where higher values are brighter. String @samp{wk} presents the inverse gray color scheme where higher value is darker. Strings @samp{kRryw}, @samp{kGgw}, @samp{kBbcw} present the well-known @emph{hot}, @emph{summer} and @emph{winter} color schemes. Strings @samp{BbwrR} and @samp{bBkRr} allow to view bi-color figure on white or black background, where negative values are blue and positive values are red. String @samp{BbcyrR} gives a color scheme similar to the well-known @emph{jet} color scheme.
 
 For more precise coloring, you can change default (equidistant) position of colors in color scheme. The format is @samp{@{CN,pos@}}, @samp{@{CN,pos@}} or @samp{@{xRRGGBB,pos@}}. The position value @var{pos} should be in range [0, 1]. Note, that alternative method for fine tuning of the color scheme is using the formula for coloring (see @ref{Curved coordinates}).
@@ -201,12 +203,14 @@ MathGL have the fast variant of textual formula evaluation
 The basic functions are: @samp{sqrt(x)} -- square root of @var{x}, @samp{pow(x,y)} -- power @var{x} in @var{y}, @samp{ln(x)} -- natural logarithm of @var{x}, @samp{lg(x)} -- decimal logarithm of @var{x}, @samp{log(a,x)} -- logarithm base @var{a} of @var{x}, @samp{abs(x)} -- absolute value of @var{x}, @samp{sign(x)} -- sign of @var{x}, @samp{mod(x,y)} -- @var{x} modulo @var{y}, @samp{step(x)} -- step function, @samp{int(x)} -- integer part of @var{x}, @samp{rnd} -- random number, @samp{random(x)} -- random data of size as in @var{x}, @samp{pi} -- number
 @ifhtml
 @html
-&pi; = 3.1415926&hellip;
+&pi; = 3.1415926&hellip;, inf=&infin;
 @end html
 @end ifhtml
 @ifnothtml
-@math{\pi=3.1415926...}
+@math{\pi=3.1415926..., inf=\infty}
 @end ifnothtml
+
+Functions for complex numbers @samp{real(x)}, @samp{imag(x)}, @samp{abs(x)}, @samp{arg(x)}, @samp{conj(x)}.
 
 Trigonometric functions are: @samp{sin(x)}, @samp{cos(x)}, @samp{tan(x)} (or @samp{tg(x)}). Inverse trigonometric functions are: @samp{asin(x)}, @samp{acos(x)}, @samp{atan(x)}. Hyperbolic functions are: @samp{sinh(x)} (or @samp{sh(x)}), @samp{cosh(x)} (or @samp{ch(x)}), @samp{tanh(x)} (or @samp{th(x)}). Inverse hyperbolic functions are: @samp{asinh(x)}, @samp{acosh(x)}, @samp{atanh(x)}.
 

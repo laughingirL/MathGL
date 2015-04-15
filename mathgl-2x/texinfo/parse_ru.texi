@@ -34,7 +34,8 @@ MathGL имеет встроенный скриптовый язык MGL для 
 Строка -- произвольный набор символов между метками @samp{'}. Длинные строки могут быть соединены из нескольких линий файла символом @samp{\}. Т.е. строки файла @samp{'a +'\<br>' b'} дадут строку @samp{'a + b'} (здесь @samp{<br>} -- перевод строки). Также можно использовать соединение строк и чисел, используя символ @samp{,} без пробелов (например, @samp{'max(u)=',u.max,' a.u.'}).
 
 @item
-Обычно переменная имеет имя, состоящее из букв и чисел (должно начинаться с буквы и не быть длиннее 64 символов). В качестве переменной можно использовать временные массивы, включающие в себя:
+Обычно переменная имеет имя, состоящее из букв и чисел (должно начинаться с буквы и не быть длиннее 64 символов). Если выражение или переменная начинается с символа @samp{!}, то будут использованы комплексные значения. Например, код @code{new x 100 'x':copy !b !exp(1i*x)} создаст массив действительных чисел @var{x} и массив комплексных чисел @var{b}, который будет равен @math{exp(I*x)}, где @math{I^2=-1}. 
+В качестве переменной можно использовать также и временные массивы, включающие в себя:
 @itemize @bullet
 @item
 срезы (``подмассивы'') массивов данных (подобно команде @ref{subdata}). Например, @code{a(1)} или @code{a(1,:)} или @code{a(1,:,:)} -- вторая строка массива @var{a}, @code{a(:,2)} или @code{a(:,2,:)} -- третий столбец, @code{a(:,:,0)} -- первый срез и т.д. Также можно выделить часть массива с m-го по n-ый элемент @code{a(m:n,:,:)} или просто @code{a(m:n)}.
@@ -54,7 +55,7 @@ MathGL имеет встроенный скриптовый язык MGL для 
 Временные массивы не могут стоять в качестве первого аргумента команд, создающих массивы (например, @samp{new}, @samp{read}, @samp{hist} и т.д.).
 
 @item
-К скалярным переменным, кроме собственно чисел, относятся: специальные переменные @code{nan=#QNAN, pi=3.1415926..., on=1, off=0, :=-1}, переменные с суффиксами (@pxref{Data information}), переменные определенные командой @ref{define}. Также массивы размером 1x1x1 считаются скалярами (например, @samp{pi/dat.nx}).
+К скалярным переменным, кроме собственно чисел, относятся: специальные переменные @code{nan=#QNAN, inf=бесконечность, rnd=случайное число, pi=3.1415926..., on=1, off=0, :=-1}, переменные с суффиксами (@pxref{Data information}), переменные определенные командой @ref{define}. Также массивы размером 1x1x1 считаются скалярами (например, @samp{pi/dat.nx}).
 @end itemize
 Перед первым использованием все переменные должны быть определены с помощью команд, создающих массивы (@ref{new}, @ref{var}, @ref{list}, @ref{copy}, @ref{read}, @ref{hist}, @ref{sum} и др., см. @ref{Data constructor}, @ref{Data filling} и @ref{Make another data}).
 
@@ -114,10 +115,11 @@ MathGL имеет встроенный скриптовый язык MGL для 
 @deftypefn {MGL command} {} call 'fname' [ARG1 ARG2 ... ARG9]
 Переходит к выполнению (вызывает) подпрограммы @var{fname} (или внешнего скрипта, если функция не была найдена). Опциональные аргументы передаются в подпрограмму. См. также @ref{func}.
 @end deftypefn
+
 @cindex func
 @anchor{func}
 @deftypefn {MGL command} {} func 'fname' [narg=0]
-Определяет подпрограмму с именем @var{fname} и задает число требуемых аргументов. Аргументы будут помещены в параметры скрипта $1, $2, ... $9. Отмечу, что выполнение основной программы должно быть остановлено до начала определений подпрограмм. См. также @ref{stop},  @ref{return}.
+Определяет подпрограмму с именем @var{fname} и задает число требуемых аргументов. Аргументы будут помещены в параметры скрипта $1, $2, ... $9. Отмечу, что выполнение основной программы будет остановлено при встрече @code{func} -- действует аналогично комманде @ref{stop}. См. также @ref{return}.
 
 @end deftypefn
 @cindex return
@@ -183,6 +185,12 @@ MathGL имеет встроенный скриптовый язык MGL для 
 @anchor{stop}
 @deftypefn {MGL command} {} stop
 Останавливает выполнение скрипта.
+@end deftypefn
+
+@cindex rkstep
+@anchor{rkstep}
+@deftypefn {MGL command} {} rkstep eq1;... var1;... [@code{dt=1}]
+Выполняет один шаг решения системы обыкновенных дифференциальных уравнений @{var1' = eq1, ... @} с временным шагом @var{dt}. Здесь переменные @samp{var1}, ... -- переменные, определенные в MGL скрипте ранее. При решении используется метод Рунге-Кутта 4-го порядка.
 @end deftypefn
 
 
@@ -362,6 +370,13 @@ As an additional feature, when an image is not found or cannot be included, inst
 Разбирает строку @var{formula} и возвращает полученный массив. В отличие от @code{AddVar()} или @code{FindVar()}, это обычный массив данных, который следует удалить после использования.
 @end deftypefn
 
+@deftypefn {Метод класса @code{mglParse}} @code{mglDataC} CalcComplex (@code{const char *}formula)
+@deftypefnx {Метод класса @code{mglParse}} @code{mglDataC} CalcComplex (@code{const wchar_t *}formula)
+@deftypefnx {Функция С} @code{HADT} mgl_parser_calc_complex (@code{HMPR} p, @code{const char *}formula)
+@deftypefnx {Функция С} @code{HADT} mgl_parser_calc_complexw (@code{HMPR} p, @code{const wchar_t *}formula)
+Разбирает строку @var{formula} и возвращает полученный массив с комплексными значениями. В отличие от @code{AddVar()} или @code{FindVar()}, это обычный массив данных, который следует удалить после использования.
+@end deftypefn
+
 
 @deftypefn {Метод класса @code{mglParse}} @code{void} AddParam (@code{int} n, @code{const char *}str)
 @deftypefnx {Метод класса @code{mglParse}} @code{void} AddParam (@code{int} n, @code{const wchar_t *}str)
@@ -444,6 +459,13 @@ As an additional feature, when an image is not found or cannot be included, inst
 @deftypefn {Метод класса @code{mglParse}} @code{const char *} CmdDesc (@code{const char *}name)
 @deftypefnx {Функция С} @code{const char *} mgl_parser_cmd_desc (@code{HMPR} p, @code{const char *}name)
 Возвращает описание команды MGL с именем @var{name}.
+@end deftypefn
+
+@deftypefn {Method on @code{mglParse}} @code{void} RK_Step (@code{const char *}eqs, @code{const char *}vars, @code{mreal} dt=@code{1})
+@deftypefnx {Method on @code{mglParse}} @code{void} RK_Step (@code{const wchar_t *}eqs, @code{const wchar_t *}vars, @code{mreal} dt=@code{1})
+@deftypefnx {C function} @code{void} mgl_rk_step (@code{HMPR} p, @code{const char *}eqs, @code{const char *}vars, @code{mreal} dt)
+@deftypefnx {C function} @code{void} mgl_rk_step_w (@code{HMPR} p, @code{const wchar_t *}eqs, @code{const wchar_t *}vars, @code{mreal} dt)
+Make one step for ordinary differential equation(s) @{var1' = eq1, ... @} with time-step @var{dt}. Here strings @var{eqs} and @var{vars} contain the equations and variable names separated by symbol @samp{;}. The variable(s) @samp{var1}, ... are the ones, defined in MGL script previously. The Runge-Kutta 4-th order method is used.
 @end deftypefn
 
 @end ifclear

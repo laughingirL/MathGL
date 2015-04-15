@@ -5,6 +5,7 @@
 1. GTK window/widgets ???
 2. Export to COLLADA !!!
 3. Export to X3D !!!
+4. 3D text (with depth), and text along 3D curve (for Quality=3) ???
 5. Improve fplot, fsurf ???
 6. Get true coordinates in CalcXYZ for curved equations too.
 9. Inplot data should have ranges (add mglInPlot{x1,x2,y1,y2,Bp or something like this} which include mglMatrix instead of mglBase::Bp) + calc coor + JS
@@ -29,16 +30,11 @@
 	e. Test for Crop, Momentum, NormSl, Sew, DiffParam, Envelope, STFA for all directions "xyz"; Clean, Last, First, Find, Spline3, FindAny, Insert, Delete, Put, SetId/Column, Squeeze, Extend, Trace, Combine, new Max/Min/Momentum, FillSample, Hist, operators, Sort, Roots, Jacobian
 	u. Test FlowP + 3d
 
-2. 3D text (with depth, for Quality=3)
-3. Text along 3D curve (for Quality=3)
-
 4. Check centered curved text (see text2)
-5. Hex axis labels???
-6. Add string manipulation like {'str',val}=>str[val]; {'str',v1,v2}=>str.substr(v1,v2) [v1,v2 can be -1]; {'ch'+val'}=>char(ch+val)
-
+5. Lighting in OpenGL mode
+6. Add string manipulation -- {'str',val}=>str[val]; {'str',v1,v2}=>str.substr(v1,v2) [v1,v2 can be -1]; {'ch'+val'}=>char(ch+val)
 7. Improve z-order for rapidly oscillating surfaces
 8. Contour lines for bilinear interpolation (strong saddle-like faces)
-11. Adjust BarWidth for proper using previous (i-1) point
 
 17. Iris plot -- https://en.wikipedia.org/wiki/Iris_flower_data_set
 
@@ -52,36 +48,7 @@ B. Add chapter with real samples
 C. Translate to Russian everything
 D. Docs about JS interface
 
-1. Docs about new Smooth() styles
-2. Docs about GetFitCovar()
-3. No 'stop' or 'func' in mgltex !!!
-4. Extend 'join' to arbitrary number of datas
-5. Docs about mgl_wavelet().
-6. Docs about mgl_parser_calc_complex()
-7. Symbol '!' before formula denote complex array in MGL
-8. Add function real() and imag() to the list of known functions
-9. Add command "runge 'Expr1;Expr2;...' 'Var1;Var2;...' [dt]"
-10. Docs about mgl_set_size_scl()
-11. Names 'rnd','nan','inf' are reserved in MGL scripts now
-12. 2D textures as one of standard way for coloring -- if '%' present in color scheme
-13. Docs about SurfCA() + hint about '%' style
-14. Docs about Surf3CA() + hint about '%' style
-15. Manual rotation angle for axis ticks (as "value" option)
-16. Docs + sample about AttachLight
-
-ZZ. Region 3d sample
-new x1 100 'sin(pi*x)'
-new y1 100 'cos(pi*x)'
-new z1 100 'x'
-new x2 100 'sin(pi*x+1)'
-new y2 100 'cos(pi*x+1)'
-new z2 100 'x'
-rotate 40 60:box
-plot x1 y1 z1 'r2'
-plot x2 y2 z2 'b2'
-region x1 y1 z1 x2 y2 z2 'cmy!'
-
-
+1. Update mgltex documentation
 
 YY. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using Stem()
 

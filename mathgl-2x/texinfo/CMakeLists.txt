@@ -7,8 +7,8 @@ set(MGL_PNG alpha area aspect axial axis barh bars belt boxplot
 	dat_extra densa dens dens_xyz dew dots error error2 fall fit flow fonts
 	fog grad hist inplot label legend loglog map mark mesh mirror
 	molecule parser pde pipe plot primitives projection qo2d radar region schemes
-	several_light solve stem step stereo stfa style surf3a surf3c surf3
-	surfa surfc surf table tape tens ternary textmark text ticks tile tiles
+	several_light solve stem step stereo stfa style surf3a surf3c surf3ca surf3
+	surfa surfc surfca surf table tape tens ternary textmark text ticks tile tiles
 	torus traj triangulation triplot tube type0 type1 type2 vect vecta venn
 	projection5 mask correl refill ohlc ode indirect)
 set(MGL_PNG_N )

@@ -200,7 +200,7 @@ void mglCanvas::LightScale(const mglMatrix *M)
 {
 	for(long i=0;i<10;i++)	if(light[i].n)	LightScale(M,light[i]);
 	for(size_t j=0;j<Sub.size();j++)
-		for(long i=0;i<10;i++)	if(light[i].n)	LightScale(M,Sub[j].light[i]);
+		for(long i=0;i<10;i++)	if(light[i].n)	LightScale(&(Sub[j].B),Sub[j].light[i]);
 }
 //-----------------------------------------------------------------------------
 // NOTE: Perspective is not fully supported now !!! Also it use LAST InPlot parameters!!!

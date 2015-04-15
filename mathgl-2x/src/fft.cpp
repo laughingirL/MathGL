@@ -1293,7 +1293,7 @@ uintptr_t MGL_EXPORT mgl_data_correl_(uintptr_t *d1, uintptr_t *d2, const char *
 	uintptr_t res = uintptr_t(mgl_datac_correl(_DA_(d1),_DA_(d2),s));
 	delete []s;		return res;	}
 //-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_wavelet(HMDT dat, const char *how, int k)
+void MGL_EXPORT mgl_data_wavelet(HMDT dat, const char *how, int k)
 {
 #if MGL_HAVE_GSL
 	gsl_wavelet *w=0;
@@ -1367,7 +1367,7 @@ void MGL_EXPORT mgl_wavelet(HMDT dat, const char *how, int k)
 	gsl_wavelet_free (w);
 #endif
 }
-void MGL_EXPORT mgl_wavelet_(uintptr_t *d, const char *dir, int *k,int l)
+void MGL_EXPORT mgl_data_wavelet_(uintptr_t *d, const char *dir, int *k,int l)
 {	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
-	mgl_wavelet(_DT_,s,*k);	delete []s;	}
+	mgl_data_wavelet(_DT_,s,*k);	delete []s;	}
 //-----------------------------------------------------------------------------

@@ -453,7 +453,8 @@ void mglCanvas::LabelTicks(mglAxis &aa)
 				aa.AddLabel(mgl_tick_text(v,v0,aa.dv/100,w,kind,aa.fact,aa.d,aa.stl.c_str()),v);
 			else	for(v=v0;v<=v1;v+=aa.dv)
 			{
-				mglprintf(buf, 64, aa.t.c_str(), fabs(v)<aa.dv/100 ? 0 : v);
+				if(aa.t[0]!='&')	mglprintf(buf, 64, aa.t.c_str(), fabs(v)<aa.dv/100 ? 0 : v);
+				else	mglprintf(buf, 64, aa.t.c_str()+1, mgl_int(fabs(v)<aa.dv/100 ? 0 : v));
 				mgl_wcstrim(buf);	aa.AddLabel(buf,v);
 			}
 		}

@@ -330,6 +330,7 @@ using mglDataA::Momentum;
 	/// Smooth the data on specified direction or directions
 	/** String \a dir may contain:
 	 *  ‘x’, ‘y’, ‘z’ for 1st, 2nd or 3d dimension;
+	 *  ‘dN’ for linear averaging over N points;
 	 *  ‘3’ for linear averaging over 3 points;
 	 *  ‘5’ for linear averaging over 5 points.
 	 *  By default quadratic averaging over 5 points is used. */
@@ -352,7 +353,13 @@ using mglDataA::Momentum;
 	inline void FillSample(const char *how)
 	{	mgl_data_fill_sample(this,how);	}
 	/// Apply wavelet transform
-	inline void Wavelet(const char *how, int k)	{	mgl_wavelet(this, how, k);	}
+	/** Parameter \a dir may contain:
+	 * ‘x‘,‘y‘,‘z‘ for directions,
+	 * ‘d‘ for daubechies, ‘D‘ for centered daubechies,
+	 * ‘h‘ for haar, ‘H‘ for centered haar,
+	 * ‘b‘ for bspline, ‘B‘ for centered bspline,
+	 * ‘i‘ for applying inverse transform. */
+	inline void Wavelet(const char *how, int k)	{	mgl_data_wavelet(this, how, k);	}
 
 	/// Return an approximated x-value (root) when dat(x) = val
 	inline mreal Solve(mreal val, bool use_spline=true, long i0=0) const

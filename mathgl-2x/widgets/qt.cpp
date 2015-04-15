@@ -58,7 +58,7 @@ using mglCanvasWnd::Window;
 	QMainWindow *Wnd;	///< Pointer to window
 
 	mglCanvasQT();
-    virtual ~mglCanvasQT() {	if(Wnd)	delete Wnd;	}
+    virtual ~mglCanvasQT();
 
 	/// Create a window for plotting. Now implemeted only for GLUT.
 	void Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p),const char *title,
@@ -930,7 +930,7 @@ void QMathGL::prevSlide()
 //-----------------------------------------------------------------------------
 void QMathGL::animation(bool st)
 {
-	if(st)	timer->stop();
+	if(!st)	timer->stop();
 	else	timer->start(int(mgl_wnd_get_delay(gr)*1000));
 }
 //-----------------------------------------------------------------------------
@@ -985,6 +985,8 @@ void QMathGL::addText(QString txt)
 //-----------------------------------------------------------------------------
 mglCanvasQT::mglCanvasQT() : mglCanvasWnd()
 {	Wnd = 0;	}
+mglCanvasQT::~mglCanvasQT()
+{	if(Wnd)	delete Wnd;	}
 //-----------------------------------------------------------------------------
 void mglCanvasQT::GotoFrame(int d)
 {
@@ -994,7 +996,12 @@ void mglCanvasQT::GotoFrame(int d)
 	if(GetNumFig()>0 && d)	{	SetCurFig(f);	QMGL->refresh();	}
 }
 //-----------------------------------------------------------------------------
-void mglCanvasQT::Animation()	{	QMGL->animation(true);	}
+void mglCanvasQT::Animation()
+{
+	static bool start=true;
+	QMGL->animation(start);
+	start = !start;
+}
 //-----------------------------------------------------------------------------
 void mglCanvasQT::ToggleAlpha()	{	QMGL->setAlpha(!QMGL->getAlpha());	}
 //-----------------------------------------------------------------------------
@@ -1012,7 +1019,7 @@ void mglCanvasQT::Adjust()		{	QMGL->adjust();	}
 //-----------------------------------------------------------------------------
 void mglCanvasQT::Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p), const char *title, void *par, void (*reload)(void *p), bool maximize)
 {
-	static char arg=0, *parg=&arg;
+	static char arg=0, *parg=&arg, **argv_=&parg;
 	static int argc_=0;
 	SetDrawFunc(draw, par, reload);
 	if(Wnd)
@@ -1031,9 +1038,9 @@ void mglCanvasQT::Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p
 		// must be placed before ANY window creation
 		XInitThreads();
 #endif
-		if(!argv)	{	argc_ = 0;	argv=&parg;	}
-		else	argc_ = argc;
-		QApplication *a = new QApplication(argc_, argv);
+		if(!argv)	{	argc_ = 0;	argv_=&parg;	}
+		else		{	argc_ = argc;	argv_=argv;	}
+		QApplication *a = new QApplication(argc_, argv_);
 		a->connect(a, SIGNAL(lastWindowClosed()), a, SLOT(quit()));
 	}
 

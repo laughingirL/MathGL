@@ -224,6 +224,7 @@ void MGL_EXPORT mgl_data_join_(uintptr_t *dat, uintptr_t *d);
 /// Smooth the data on specified direction or directions
 /** String \a dir may contain:
  *  ‘x’, ‘y’, ‘z’ for 1st, 2nd or 3d dimension;
+ *  ‘dN’ for linear averaging over N points;
  *  ‘3’ for linear averaging over 3 points;
  *  ‘5’ for linear averaging over 5 points.
  *  By default quadratic averaging over 5 points is used. */
@@ -282,8 +283,14 @@ void MGL_EXPORT mgl_data_fill_sample_(uintptr_t *dat, const char *how,int);
 HMDT MGL_EXPORT mgl_data_correl(HCDT dat1, HCDT dat2, const char *dir);
 uintptr_t MGL_EXPORT mgl_data_correl_(uintptr_t *dat1, uintptr_t *dat2, const char *dir,int);
 /// Apply wavelet transform
-void MGL_EXPORT mgl_wavelet(HMDT dat, const char *how, int k);
-void MGL_EXPORT mgl_wavelet_(uintptr_t *d, const char *dir, int *k,int);
+/** Parameter \a dir may contain:
+ * ‘x‘,‘y‘,‘z‘ for directions,
+ * ‘d‘ for daubechies, ‘D‘ for centered daubechies,
+ * ‘h‘ for haar, ‘H‘ for centered haar,
+ * ‘b‘ for bspline, ‘B‘ for centered bspline,
+ * ‘i‘ for applying inverse transform. */
+void MGL_EXPORT mgl_data_wavelet(HMDT dat, const char *how, int k);
+void MGL_EXPORT mgl_data_wavelet_(uintptr_t *d, const char *dir, int *k,int);
 
 /// Allocate and prepare data for Fourier transform by nthr threads
 MGL_EXPORT void *mgl_fft_alloc(long n, void **space, long nthr);

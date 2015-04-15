@@ -159,6 +159,7 @@ Lamp-like transparency (@samp{2}) -- below and upper things are commutable and a
 @node Lighting, Fog, Transparency, Graphics setup
 @subsection Lighting
 @nav{}
+
 @ifclear UDAV
 @cindex SetAmbient
 @cindex AddLight
@@ -166,7 +167,7 @@ Lamp-like transparency (@samp{2}) -- below and upper things are commutable and a
 @cindex Light
 @cindex Ambient
 
-There are several functions for setup lighting. The general function is @ref{light} which switch on/off the lighting for overall plot. It influence only for graphics which created after @ref{light} call (with one exception, OpenGL). Generally MathGL support up to 10 independent light sources. But in OpenGL mode only 8 of light sources is used due to OpenGL limitations. The position, color, brightness of each light source can be set separately. By default only one light source is active. It is source number @code{0} with white color, located at top of the plot.
+There are several functions for setup lighting. The general function is @ref{light} which switch on/off the lighting for overall plot. It influence only for graphics which created after @ref{light} call (with one exception, OpenGL). Generally MathGL support up to 10 independent light sources. But in OpenGL mode only 8 of light sources is used due to OpenGL limitations. The position, color, brightness of each light source can be set separately. By default only one light source is active. It is source number @code{0} with white color, located at top of the plot. @sref{Lighting sample}
 
 @anchor{light}
 @deftypefn {MGL command} {} light @code{[val=on]}
@@ -213,6 +214,15 @@ Set brightness of diffusive light (only for local light sources).
 @deftypefnx {C function} @code{void} mgl_set_ambbr (@code{HMGL} gr, @code{mreal} bright)
 @end ifclear
 Sets the brightness of ambient light. The value should be in range [0,1].
+@end deftypefn
+
+@anchor{attachlight}
+@deftypefn {MGL command} {} attachlight @code{val}
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} AttachLight (@code{bool} val)
+@deftypefnx {C function} @code{void} mgl_set_attach_light (@code{HMGL} gr, @code{int} val)
+@end ifclear
+Set to attach light settings to @ref{inplot}/@ref{subplot}. Note, OpenGL and some output formats don't support this feature.
 @end deftypefn
 
 @c ==================================================================
@@ -866,7 +876,7 @@ The same as previous but add single tick label @var{lbl} at position @var{val} t
 @deftypefnx {C function} @code{void} mgl_set_tick_templ (@code{HMGL} gr, @code{const char *}templ)
 @deftypefnx {C function} @code{void} mgl_set_tick_templw (@code{HMGL} gr, @code{const wchar_t *}templ)
 @end ifclear
-Set template @var{templ} for x-,y-,z-axis ticks or colorbar ticks. It may contain TeX symbols also. If @var{templ}=@code{""} then default template is used (in simplest case it is @samp{%.2g}). Setting on template switch off automatic ticks tuning.
+Set template @var{templ} for x-,y-,z-axis ticks or colorbar ticks. It may contain TeX symbols also. If @var{templ}=@code{""} then default template is used (in simplest case it is @samp{%.2g}). If template start with @samp{&} symbol then @code{long} integer value will be passed instead of default type @code{double}. Setting on template switch off automatic ticks tuning.
 @end deftypefn
 
 @anchor{ticktime}
@@ -1157,6 +1167,13 @@ Functions in this group save or give access to produced picture. So, usually the
 @end ifclear
 Sets size of picture in pixels. This function @strong{must be} called before any other plotting because it completely remove picture contents.
 @end deftypefn
+
+@ifclear UDAV
+@deftypefn {Method on @code{mglGraph}} @code{void} SetSizeScl (@code{double} factor)
+@deftypefnx {C function} @code{void} mgl_set_size_scl (@code{HMGL} gr, @code{double} factor)
+Set factor for width and height in all further calls of @ref{setsize}.
+@end deftypefn
+@end ifclear
 
 @anchor{quality}
 @deftypefn {MGL command} {} quality [@code{val}=2]
@@ -1913,7 +1930,7 @@ Draws axes with ticks (see @ref{Axis settings}). Parameter @var{dir} may contain
 @item @samp{-} for printing usual @samp{-} in ticks labels;
 @item @samp{0123456789} for precision at printing ticks labels.
 @end itemize
-Styles of ticks and axis can be overrided by using @var{stl} string. @sref{Axis and ticks}
+Styles of ticks and axis can be overrided by using @var{stl} string. Option @code{value} set the manual rotation angle for the ticks. @sref{Axis and ticks}
 @end deftypefn
 
 @anchor{colorbar}
@@ -2867,7 +2884,7 @@ These plotting functions draw @emph{two matrix} simultaneously. There are 5 gene
 @deftypefnx {C function} @code{void} mgl_surfc (@code{HMGL} gr, @code{HCDT} z, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_surfc_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-The function draws surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} and color it by matrix @var{c}[i,j]. If string @var{sch} have symbol @samp{#} then grid lines are drawn. If string @var{sch} have symbol @samp{.} then plot by dots is produced. All dimensions of arrays @var{z} and @var{c} must be equal. Surface is plotted for each z slice of the data. See also @ref{surf}, @ref{surfa}, @ref{surf3c}. @sref{SurfC sample}
+The function draws surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} and color it by matrix @var{c}[i,j]. If string @var{sch} have symbol @samp{#} then grid lines are drawn. If string @var{sch} have symbol @samp{.} then plot by dots is produced. All dimensions of arrays @var{z} and @var{c} must be equal. Surface is plotted for each z slice of the data. See also @ref{surf}, @ref{surfa}, @ref{surfca}, @ref{surf3c}. @sref{SurfC sample}
 @end deftypefn
 
 @anchor{surf3c}
@@ -2879,7 +2896,7 @@ The function draws surface specified parametrically @{@var{x}[i,j], @var{y}[i,j]
 @deftypefnx {C function} @code{void} mgl_surf3c_val (@code{HMGL} gr, @code{mreal} val, @code{HCDT} a, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_surf3c_xyz_val (@code{HMGL} gr, @code{mreal} val, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-The function draws isosurface plot for 3d array specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]) at @var{a}(x,y,z)=@var{val}. It is mostly the same as @ref{surf3} function but the color of isosurface depends on values of array @var{c}. If string @var{sch} contain @samp{#} then wire plot is produced. If string @var{sch} have symbol @samp{.} then plot by dots is produced. See also @ref{surf3}, @ref{surfc}, @ref{surf3a}. @sref{Surf3C sample}
+The function draws isosurface plot for 3d array specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]) at @var{a}(x,y,z)=@var{val}. It is mostly the same as @ref{surf3} function but the color of isosurface depends on values of array @var{c}. If string @var{sch} contain @samp{#} then wire plot is produced. If string @var{sch} have symbol @samp{.} then plot by dots is produced. See also @ref{surf3}, @ref{surfc}, @ref{surf3a}, @ref{surf3ca}. @sref{Surf3C sample}
 @end deftypefn
 
 @deftypefn {MGL command} {} surf3c adat cdat ['sch'='']
@@ -2903,7 +2920,7 @@ Draws @var{num}-th uniformly distributed in color range isosurfaces for 3d data.
 @deftypefnx {C function} @code{void} mgl_surfa (@code{HMGL} gr, @code{HCDT} z, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_surfa_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-The function draws surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} and transparent it by matrix @var{c}[i,j]. If string @var{sch} have symbol @samp{#} then grid lines are drawn. If string @var{sch} have symbol @samp{.} then plot by dots is produced. All dimensions of arrays @var{z} and @var{c} must be equal. Surface is plotted for each z slice of the data. See also @ref{surf}, @ref{surfc}, @ref{surf3a}. @sref{SurfA sample}
+The function draws surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} and transparent it by matrix @var{c}[i,j]. If string @var{sch} have symbol @samp{#} then grid lines are drawn. If string @var{sch} have symbol @samp{.} then plot by dots is produced. All dimensions of arrays @var{z} and @var{c} must be equal. Surface is plotted for each z slice of the data. See also @ref{surf}, @ref{surfc}, @ref{surfca}, @ref{surf3a}. @sref{SurfA sample}
 @end deftypefn
 
 @anchor{surf3a}
@@ -2915,7 +2932,7 @@ The function draws surface specified parametrically @{@var{x}[i,j], @var{y}[i,j]
 @deftypefnx {C function} @code{void} mgl_surf3a_val (@code{HMGL} gr, @code{mreal} val, @code{HCDT} a, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_surf3a_xyz_val (@code{HMGL} gr, @code{mreal} val, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-The function draws isosurface plot for 3d array specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]) at @var{a}(x,y,z)=@var{val}. It is mostly the same as @ref{surf3} function but the transparency of isosurface depends on values of array @var{c}. If string @var{sch} contain @samp{#} then wire plot is produced. If string @var{sch} have symbol @samp{.} then plot by dots is produced. See also @ref{surf3}, @ref{surfc}, @ref{surf3a}. @sref{Surf3A sample}
+The function draws isosurface plot for 3d array specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]) at @var{a}(x,y,z)=@var{val}. It is mostly the same as @ref{surf3} function but the transparency of isosurface depends on values of array @var{c}. If string @var{sch} contain @samp{#} then wire plot is produced. If string @var{sch} have symbol @samp{.} then plot by dots is produced. See also @ref{surf3}, @ref{surfc}, @ref{surf3a}, @ref{surf3ca}. @sref{Surf3A sample}
 @end deftypefn
 
 @deftypefn {MGL command} {} surf3a adat cdat ['sch'='']
@@ -2927,6 +2944,43 @@ The function draws isosurface plot for 3d array specified parametrically @var{a}
 @deftypefnx {C function} @code{void} mgl_surf3a_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
 Draws @var{num}-th uniformly distributed in color range isosurfaces for 3d data. At this array @var{c} can be vector with values of transparency and @var{num}=@var{c}.nx. In opposite case @var{num} is equal to parameter @code{value} in options @var{opt} (default is 3).
+@end deftypefn
+
+
+
+@anchor{surfca}
+@deftypefn {MGL command} {} surfca zdat cdat adat ['sch'='']
+@deftypefnx {MGL command} {} surfca xdat ydat zdat cdat adat ['sch'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} SurfCA (@code{const mglDataA &}z, @code{const mglDataA &}c, @code{const mglDataA &}a, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} SurfCA (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}c, @code{const mglDataA &}a, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_surfca (@code{HMGL} gr, @code{HCDT} z, @code{HCDT} c, @code{HCDT} a, @code{const char *}sch, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_surfca_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} c, @code{HCDT} a, @code{const char *}sch, @code{const char *}opt)
+@end ifclear
+The function draws surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}, color it by matrix @var{c}[i,j] and transparent it by matrix @var{a}[i,j]. If string @var{sch} have symbol @samp{#} then grid lines are drawn. If string @var{sch} have symbol @samp{.} then plot by dots is produced. All dimensions of arrays @var{z} and @var{c} must be equal. Surface is plotted for each z slice of the data. Note, you can use @ref{map}-like coloring if use @samp{%} in color scheme. See also @ref{surf}, @ref{surfc}, @ref{surfa}, @ref{surf3ca}. @sref{SurfCA sample}
+@end deftypefn
+
+@anchor{surf3ca}
+@deftypefn {MGL command} {} surf3ca adat cdat bdat @code{val} ['sch'='']
+@deftypefnx {MGL command} {} surf3ca xdat ydat zdat adat cdat bdat @code{val} ['sch'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} Surf3CA (@code{mreal} val, @code{const mglDataA &}a, @code{const mglDataA &}c, @code{const mglDataA &}b, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Surf3CA (@code{mreal} val, @code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}a, @code{const mglDataA &}c, @code{const mglDataA &}b, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_surf3ca_val (@code{HMGL} gr, @code{mreal} val, @code{HCDT} a, @code{HCDT} c, @code{HCDT} b, @code{const char *}sch, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_surf3ca_xyz_val (@code{HMGL} gr, @code{mreal} val, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{HCDT} c, @code{HCDT} b,@code{const char *}sch, @code{const char *}opt)
+@end ifclear
+The function draws isosurface plot for 3d array specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]) at @var{a}(x,y,z)=@var{val}. It is mostly the same as @ref{surf3} function but the color and the transparency of isosurface depends on values of array @var{c} and @var{b} correspondingly. If string @var{sch} contain @samp{#} then wire plot is produced. If string @var{sch} have symbol @samp{.} then plot by dots is produced. Note, you can use @ref{map}-like coloring if use @samp{%} in color scheme. See also @ref{surf3}, @ref{surfca}, @ref{surf3c}, @ref{surf3a}. @sref{Surf3CA sample}
+@end deftypefn
+
+@deftypefn {MGL command} {} surf3ca adat cdat bdat ['sch'='']
+@deftypefnx {MGL command} {} surf3ca xdat ydat zdat adat cdat bdat ['sch'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} Surf3CA (@code{const mglDataA &}a, @code{const mglDataA &}c, @code{const mglDataA &}b, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Surf3CA (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}a, @code{const mglDataA &}c, @code{const mglDataA &}b, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_surf3ca (@code{HMGL} gr, @code{HCDT} a, @code{HCDT} c, @code{HCDT} b, @code{const char *}sch, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_surf3ca_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{HCDT} c, @code{HCDT} b, @code{const char *}sch, @code{const char *}opt)
+@end ifclear
+Draws @var{num}-th uniformly distributed in color range isosurfaces for 3d data. Here parameter @var{num} is equal to parameter @code{value} in options @var{opt} (default is 3).
 @end deftypefn
 
 @anchor{tiles}
@@ -3434,8 +3488,13 @@ Get last fitted formula with found coefficients (as numbers).
 @end deftypefn
 
 @deftypefn {Method on @code{mglGraph}} @code{mreal} GetFitChi ()
-@deftypefnx {C function only} @code{mreal} mgl_get_fit_chi ()
+@deftypefnx {C function} @code{mreal} mgl_get_fit_chi ()
 Get \chi for last fitted formula.
+@end deftypefn
+
+@deftypefn {Method on @code{mglGraph}} @code{mreal} GetFitCovar ()
+@deftypefnx {C function} @code{mreal} mgl_get_fit_covar ()
+Get covariance matrix for last fitted formula.
 @end deftypefn
 @end ifclear
 

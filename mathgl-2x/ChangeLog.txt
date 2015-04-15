@@ -1,6 +1,8 @@
 2.3.3 Released ?? April 2015
 
-* Manual rotation angle for axis ticks (as "value" option)
+* MGL command 'join' now can join arbitrary number of data arrays.
+* Add style "dN" for Smooth() for averaging over (2*N+1)-th points.
+* Add manual rotation angle for axis ticks (by "value" option)
 * Add binary font files for speeding up initialization and font loading
 * Add style '%' for color scheme along 2 coordinates (as in Map())
 * Add SurfCA() and Surf3CA() plots
@@ -9,15 +11,17 @@
 * Greatly improve the speed of formula parsing for MGL scripts
 * Add 'rkstep' command for Runge-Kutta step in MGL script
 * Add warning about writing to temporary arrays
-* Add mgl_set_size_scl();
+* Add mgl_set_size_scl() for additional scaling width and height of the image
 * Add options -S, -q for mglconv
 * Command 'stop' is not required to be placed before 'func'
-* Add complex numbers in MGL -- any expression started with '!'
+* Add complex numbers in MGL -- any expression started with '!' will have complex value(s)
 * Add missing mglDataC functions
 * Add wavelet transforms
 * Minor improvements, bugfixes and compatibility changes
 * Add mglDataS class which is similar to std::vector<double> one.
 * Add annotation for plot styles and options into header files.
+* Names 'rnd','nan','inf' are reserved in MGL scripts now.
+* If tick template start with '&' then long integer is passed instead of double.
 
 2.3.2 Released 2 February 2015
 

@@ -333,6 +333,7 @@ using mglDataA::Momentum;
 	/// Smooth the data on specified direction or directions
 	/** String \a dir may contain:
 	 *  ‘x’, ‘y’, ‘z’ for 1st, 2nd or 3d dimension;
+	 *  ‘dN’ for linear averaging over N points;
 	 *  ‘3’ for linear averaging over 3 points;
 	 *  ‘5’ for linear averaging over 5 points.
 	 *  By default quadratic averaging over 5 points is used. */

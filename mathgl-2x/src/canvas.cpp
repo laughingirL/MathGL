@@ -589,12 +589,6 @@ void mglCanvas::InPlot(mreal x1,mreal x2,mreal y1,mreal y2, const char *st)
 	else if(a)	{	y2=ys+(y2-ys)*f1;	y1=ys+(y1-ys)*f2;	}
 	else if(u)	{	y2=ys+(y2-ys)*f2;	y1=ys+(y1-ys)*f1;	}
 
-	mglBlock p;	p.AmbBr = AmbBr;	p.DifBr = DifBr;
-	for(int i=0;i<10;i++)	p.light[i] = light[i];
-	p.id = ObjId;	p.n1=x1*Width;	p.n2=x2*Width;	p.n3=y1*Height;	p.n4=y2*Height;
-#pragma omp critical(sub)
-	MGL_PUSH(Sub,p,mutexSub);
-
 	B.clear();
 	if(get(MGL_AUTO_FACTOR)) B.pf = 1.55;	// Automatically change plot factor !!!
 	B.x = (x1+x2)/2*Width;
@@ -603,6 +597,12 @@ void mglCanvas::InPlot(mreal x1,mreal x2,mreal y1,mreal y2, const char *st)
 	B.b[8] = sqrt(B.b[0]*B.b[4]);
 	B.z = (1.f-B.b[8]/(2*Depth))*Depth;
 	B1=B;	font_factor = B.b[0] < B.b[4] ? B.b[0] : B.b[4];
+
+	mglBlock p;	p.AmbBr = AmbBr;	p.DifBr = DifBr;	p.B = B;
+	for(int i=0;i<10;i++)	p.light[i] = light[i];
+	p.id = ObjId;	p.n1=x1*Width;	p.n2=x2*Width;	p.n3=y1*Height;	p.n4=y2*Height;
+#pragma omp critical(sub)
+	MGL_PUSH(Sub,p,mutexSub);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::InPlot(mglMatrix &M,mreal x1,mreal x2,mreal y1,mreal y2, bool rel)
@@ -625,13 +625,13 @@ void mglCanvas::InPlot(mglMatrix &M,mreal x1,mreal x2,mreal y1,mreal y2, bool re
 		M.b[0] = Width*(x2-x1);	M.b[4] = Height*(y2-y1);
 		M.b[8] = sqrt(M.b[0]*M.b[4]);
 		M.z = (1.f-M.b[8]/(2*Depth))*Depth;
-		B1=B;
+		B1=M;
 	}
 	inW=M.b[0];	inH=M.b[4];	ZMin=1;
 	inX=Width*x1;	inY=Height*y1;
 	font_factor = M.b[0] < M.b[4] ? M.b[0] : M.b[4];
 
-	mglBlock p;	p.AmbBr = AmbBr;	p.DifBr = DifBr;
+	mglBlock p;	p.AmbBr = AmbBr;	p.DifBr = DifBr;	p.B = M;
 	for(int i=0;i<10;i++)	p.light[i] = light[i];
 	p.id = ObjId;	p.n1=x1*Width;	p.n2=x2*Width;	p.n3=y1*Height;	p.n4=y2*Height;
 #pragma omp critical(sub)
