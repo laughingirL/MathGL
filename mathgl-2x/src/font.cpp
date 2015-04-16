@@ -706,7 +706,7 @@ bool mglFont::LoadBin(const char *base, const char *path)
 	if(s<4)	res = false;
 	Buf = new short[numb];
 	s = fread(Buf,sizeof(short),numb,fp);
-	if(s<numb)	res = false;
+	if(s<size_t(numb))	res = false;
 	s = fread(&len,sizeof(size_t),1,fp);
 	if(s<1)	res = false;
 	if(res)

@@ -44,9 +44,6 @@
 #include "mgl2/qt.h"
 //-----------------------------------------------------------------------------
 #define MGL_MAX_LINES	(INT_MAX-1000)
-#if !defined(WIN32) && !defined(__APPLE__)
-#include <X11/Xlib.h>
-#endif
 //-----------------------------------------------------------------------------
 /// Base class for windows containing MathGL graphics
 class mglCanvasQT : public mglCanvasWnd
@@ -1033,11 +1030,7 @@ void mglCanvasQT::Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p
 
 	if(!qApp)
 	{
-#if !defined(WIN32) && !defined(__APPLE__)
-		// try to fix possible multi-threading errors
-		// must be placed before ANY window creation
-		XInitThreads();
-#endif
+		QCoreApplication::setAttribute(Qt::AA_X11InitThreads);
 		if(!argv)	{	argc_ = 0;	argv_=&parg;	}
 		else		{	argc_ = argc;	argv_=argv;	}
 		QApplication *a = new QApplication(argc_, argv_);

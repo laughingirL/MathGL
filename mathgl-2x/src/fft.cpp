@@ -1306,10 +1306,10 @@ void MGL_EXPORT mgl_data_wavelet(HMDT dat, const char *how, int k)
 	if(!w)	return;
 
 	double *a;
-	long nn = dat->GetNN();
 #if MGL_USE_DOUBLE
 	a = dat->a;
 #else
+	long nn = dat->GetNN();
 	a = new double[nn];
 #pragma omp parallel for
 	for(long i=0;i<nn;i++)	a[i] = dat->a[i];

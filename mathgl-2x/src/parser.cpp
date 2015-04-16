@@ -655,7 +655,7 @@ int mglParser::Parse(mglGraph *gr, std::wstring str, long pos)
 				if(a2[0]=='\'')	a2 = a2.substr(1,a2.length()-2);
 				mgl_rk_step_w(this, a1.c_str(), a2.c_str(), (k>=3 && a[2].type==2)?a[2].v:1);
 			}
-			delete []a;	return 0;
+			delete []a;	return res;
 		}
 		if(!arg[0].compare(L"call"))
 		{
@@ -890,7 +890,7 @@ void mglParser::Execute(mglGraph *gr, FILE *fp, bool print)
 	if(gr==0 || fp==0)	return;
 	std::wstring str;
 	wchar_t ch;
-	while((ch=fgetwc(fp))!=WEOF)	str.push_back(ch);
+	while(long(ch=fgetwc(fp))!=WEOF)	str.push_back(ch);
 //	while(!feof(fp))	str.push_back(fgetwc(fp));
 	Execute(gr,str.c_str());
 	if(print)	printf("%s\n",gr->Message());
@@ -1158,15 +1158,15 @@ void MGL_EXPORT mgl_rk_step_w(HMPR pr, const wchar_t *Eqs, const wchar_t *Vars, 
 		jv = iv+1;	je = ie+1;
 		if(iv==std::wstring::npos || ie==std::wstring::npos)	break;
 	}
-	for(long i=0;i<rkv.size();i++)	rkv[i].allocate();
+	for(size_t i=0;i<rkv.size();i++)	rkv[i].allocate();
 	mreal hh = dt/2;
-	for(long i=0;i<rkv.size();i++)
+	for(size_t i=0;i<rkv.size();i++)
 	{
 		mglRKdat &rk = rkv[i];
 		if(rk.cmplx)	rk.c1.Move(mglFormulaCalcC(rk.e, pr, pr->DataList));
 		else	rk.d1.Move(mglFormulaCalc(rk.e, pr, pr->DataList));
 	}
-	for(long i=0;i<rkv.size();i++)
+	for(size_t i=0;i<rkv.size();i++)
 	{
 		mglRKdat &rk = rkv[i];
 		if(rk.cc)
@@ -1191,13 +1191,13 @@ void MGL_EXPORT mgl_rk_step_w(HMPR pr, const wchar_t *Eqs, const wchar_t *Vars, 
 		}
 	}
 
-	for(long i=0;i<rkv.size();i++)
+	for(size_t i=0;i<rkv.size();i++)
 	{
 		mglRKdat &rk = rkv[i];
 		if(rk.cmplx)	rk.c2.Move(mglFormulaCalcC(rk.e, pr, pr->DataList));
 		else	rk.d2.Move(mglFormulaCalc(rk.e, pr, pr->DataList));
 	}
-	for(long i=0;i<rkv.size();i++)
+	for(size_t i=0;i<rkv.size();i++)
 	{
 		mglRKdat &rk = rkv[i];
 		if(rk.cc)
@@ -1222,13 +1222,13 @@ void MGL_EXPORT mgl_rk_step_w(HMPR pr, const wchar_t *Eqs, const wchar_t *Vars, 
 		}
 	}
 
-	for(long i=0;i<rkv.size();i++)
+	for(size_t i=0;i<rkv.size();i++)
 	{
 		mglRKdat &rk = rkv[i];
 		if(rk.cmplx)	rk.c3.Move(mglFormulaCalcC(rk.e, pr, pr->DataList));
 		else	rk.d3.Move(mglFormulaCalc(rk.e, pr, pr->DataList));
 	}
-	for(long i=0;i<rkv.size();i++)
+	for(size_t i=0;i<rkv.size();i++)
 	{
 		mglRKdat &rk = rkv[i];
 		if(rk.cc)
@@ -1253,13 +1253,13 @@ void MGL_EXPORT mgl_rk_step_w(HMPR pr, const wchar_t *Eqs, const wchar_t *Vars, 
 		}
 	}
 
-	for(long i=0;i<rkv.size();i++)
+	for(size_t i=0;i<rkv.size();i++)
 	{
 		mglRKdat &rk = rkv[i];
 		if(rk.cmplx)	rk.c4.Move(mglFormulaCalcC(rk.e, pr, pr->DataList));
 		else	rk.d4.Move(mglFormulaCalc(rk.e, pr, pr->DataList));
 	}
-	for(long i=0;i<rkv.size();i++)
+	for(size_t i=0;i<rkv.size();i++)
 	{
 		mglRKdat &rk = rkv[i];
 		if(rk.cc)

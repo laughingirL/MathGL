@@ -242,7 +242,7 @@ void MGL_NO_EXPORT mgl_surf3ca_gen(HMGL gr, double val, HCDT x, HCDT y, HCDT z, 
 	int wire = mglchr(sch,'#')?1:0;
 	if(mglchr(sch,'.'))	wire = 2;
 	bool inv = (mglchr(sch,'-'));
-	long ss = gr->AddTexture(sch), pos;
+	long ss = gr->AddTexture(sch);
 
 	long *kx1 = new long[n*m],	*kx2 = new long[n*m];
 	long *ky1 = new long[n*m],	*ky2 = new long[n*m];
@@ -257,7 +257,7 @@ void MGL_NO_EXPORT mgl_surf3ca_gen(HMGL gr, double val, HCDT x, HCDT y, HCDT z, 
 		memcpy(ky1,ky2,n*m*sizeof(long));	memset(ky2,-1,n*m*sizeof(long));
 		memset(kz ,-1,n*m*sizeof(long));
 		gr->Reserve(n*m);	gr->Reserve(n*m);
-		long kk1 = kk.size();
+		size_t kk1 = kk.size();
 		for(long j=0;j<m;j++)	for(long i=0;i<n;i++)
 		{
 			register long i1 = i+n*j;
@@ -282,7 +282,7 @@ void MGL_NO_EXPORT mgl_surf3ca_gen(HMGL gr, double val, HCDT x, HCDT y, HCDT z, 
 			}
 		}
 		mreal cv=gr->GetC(ss,val);
-		if(b && c)	for(long i=kk1;i<kk.size();i++)
+		if(b && c)	for(size_t i=kk1;i<kk.size();i++)
 		{
 			mglPoint &u = kk[i];
 			u.c = gr->AddPnt(nboth ? mglPoint(mgl_data_linear(x,u.x,0,0),mgl_data_linear(y,u.y,0,0),mgl_data_linear(z,u.z,0,0)) : 
@@ -291,7 +291,7 @@ void MGL_NO_EXPORT mgl_surf3ca_gen(HMGL gr, double val, HCDT x, HCDT y, HCDT z, 
 					mgl_find_norm(nboth, x,y,z,a, u, inv,n,m,l),
 					gr->GetA(mgl_data_linear(b,u.x,u.y,u.z)));
 		}
-		else if(c)	for(long i=kk1;i<kk.size();i++)
+		else if(c)	for(size_t i=kk1;i<kk.size();i++)
 		{
 			mglPoint &u = kk[i];
 			u.c = gr->AddPnt(nboth ? mglPoint(mgl_data_linear(x,u.x,0,0),mgl_data_linear(y,u.y,0,0),mgl_data_linear(z,u.z,0,0)) : 
@@ -299,7 +299,7 @@ void MGL_NO_EXPORT mgl_surf3ca_gen(HMGL gr, double val, HCDT x, HCDT y, HCDT z, 
 						gr->GetC(ss,mgl_data_linear(c,u.x,u.y,u.z)),
 						mgl_find_norm(nboth, x,y,z,a, u, inv,n,m,l));
 		}
-		else if(b)	for(long i=kk1;i<kk.size();i++)
+		else if(b)	for(size_t i=kk1;i<kk.size();i++)
 		{
 			mglPoint &u = kk[i];
 			u.c = gr->AddPnt(nboth ? mglPoint(mgl_data_linear(x,u.x,0,0),mgl_data_linear(y,u.y,0,0),mgl_data_linear(z,u.z,0,0)) : 
@@ -307,7 +307,7 @@ void MGL_NO_EXPORT mgl_surf3ca_gen(HMGL gr, double val, HCDT x, HCDT y, HCDT z, 
 					cv, mgl_find_norm(nboth, x,y,z,a, u, inv,n,m,l),
 					gr->GetA(mgl_data_linear(b,u.x,u.y,u.z)));
 		}
-		else	for(long i=kk1;i<kk.size();i++)
+		else	for(size_t i=kk1;i<kk.size();i++)
 		{
 			mglPoint &u = kk[i];
 			u.c = gr->AddPnt(nboth ? mglPoint(mgl_data_linear(x,u.x,0,0),mgl_data_linear(y,u.y,0,0),mgl_data_linear(z,u.z,0,0)) : 

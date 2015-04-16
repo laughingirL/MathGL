@@ -910,7 +910,8 @@ public:
 	inline double operator[](size_t i)	{	return dat[i];	}
 	inline void push_back(double t)	{	dat.push_back(t);	}
 	inline size_t size() const	{	return dat.size();	}
-	const mglDataS &operator=(const mglDataS &st)	{	dat = st.dat;	}
+	const mglDataS &operator=(const mglDataS &st)	{	dat = st.dat;	return st;	}
+	const std::vector<mreal> &operator=(const std::vector<mreal> &st)	{	dat = st;	return st;	}
 
 	mreal v(long i,long j=0,long k=0) const		{	return dat[i];	}
 	mreal vthr(long i) const	{	return dat[i];	};
@@ -918,7 +919,7 @@ public:
 	long GetNy() const	{	return 1;	}
 	long GetNz() const	{	return 1;	}
 	mreal dvx(long i,long j=0,long k=0) const
-	{	return i>0? (i<dat.size()-1? (dat[i+1]-dat[i-1])/2:dat[i]-dat[i-1]) : dat[i+1]-dat[i];	}
+	{	return i>0? (i<long(dat.size()-1)? (dat[i+1]-dat[i-1])/2:dat[i]-dat[i-1]) : dat[i+1]-dat[i];	}
 	mreal dvy(long i,long j=0,long k=0) const	{	return 1;	}
 	mreal dvz(long i,long j=0,long k=0) const	{	return 1;	}
 };

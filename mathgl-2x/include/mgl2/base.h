@@ -185,7 +185,7 @@ struct MGL_EXPORT mglBlock
 	mreal DifBr;		///< Default diffusive light brightness
 	mglMatrix B;		///< Transformation matrix
 
-	mglBlock():n1(0),n2(0),n3(0),n4(0),id(0),AmbBr(0.5),DifBr(0.5)	{}
+	mglBlock():id(0),n1(0),n2(0),n3(0),n4(0),AmbBr(0.5),DifBr(0.5)	{}
 	mglBlock(const mglBlock &aa)	{	memcpy(this, &aa, sizeof(mglBlock));	}
 	const mglBlock &operator=(const mglBlock &aa)	{	memcpy(this, &aa, sizeof(mglBlock));	return aa;	}
 };
