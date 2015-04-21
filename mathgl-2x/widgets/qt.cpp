@@ -649,9 +649,9 @@ void QMathGL::wheelEvent(QWheelEvent *ev)
 void QMathGL::imgSize(int w, int h)
 {	if(w>0 && h>0)	{	mgl_set_size(gr,w,h);	update();	}	}
 //-----------------------------------------------------------------------------
-QString setExtension(QString &fname, const char *ext)
+QString setExtension(const QString &fname, const char *ext)
 {
-	QString oname;
+	QString oname=fname;
 	if(fname.right(4)!="."+QString(ext))	oname = fname+"."+QString(ext);
 	return oname;
 }

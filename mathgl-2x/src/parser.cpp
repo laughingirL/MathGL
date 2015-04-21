@@ -180,6 +180,12 @@ void mglParser::DeleteAll()
 	for(size_t i=0;i<NumList.size();i++)
 		if(NumList[i])	delete NumList[i];
 	NumList.clear();
+	mglNum *v;
+	v = new mglNum(0);	v->s = L"off";	NumList.push_back(v);
+	v = new mglNum(1);	v->s = L"on";	NumList.push_back(v);
+	v = new mglNum(NAN);	v->s = L"nan";	NumList.push_back(v);
+	v = new mglNum(M_PI);	v->s = L"pi";	NumList.push_back(v);
+	v = new mglNum(INFINITY);	v->s = L"inf";	NumList.push_back(v);
 	if(Cmd && Cmd!=mgls_base_cmd)
 	{	delete []Cmd;	Cmd = mgls_base_cmd;	}
 #if MGL_HAVE_LTDL

@@ -1105,6 +1105,7 @@ void MGL_EXPORT mgl_data_crop(HMDT d, long n1, long n2, char dir)
 	switch(dir)
 	{
 	case 'x':
+		if(n1>=nx)	break;
 		n2 = n2>0 ? n2 : nx+n2;
 		if(n2<0 || n2>=nx || n2<n1)	n2 = nx;
 		nn = n2-n1;	b = new mreal[nn*ny*nz];
@@ -1115,6 +1116,7 @@ void MGL_EXPORT mgl_data_crop(HMDT d, long n1, long n2, char dir)
 		d->a = b;	d->link=false;	d->NewId();
 		break;
 	case 'y':
+		if(n1>=ny)	break;
 		n2 = n2>0 ? n2 : ny+n2;
 		if(n2<0 || n2>=ny || n2<n1)	n2 = ny;
 		nn = n2-n1;	b = new mreal[nn*nx*nz];
@@ -1125,6 +1127,7 @@ void MGL_EXPORT mgl_data_crop(HMDT d, long n1, long n2, char dir)
 		d->a = b;	d->link=false;
 		break;
 	case 'z':
+		if(n1>=nz)	break;
 		n2 = n2>0 ? n2 : nz+n2;
 		if(n2<0 || n2>=nz || n2<n1)	n2 = nz;
 		nn = n2-n1;	b = new mreal[nn*nx*ny];
