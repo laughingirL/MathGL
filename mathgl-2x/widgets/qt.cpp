@@ -130,6 +130,7 @@ QMathGL::QMathGL(QWidget *parent, Qt::WindowFlags f) : QWidget(parent, f)
 	enableWheel = enableMouse = true;
 	connect(timer, SIGNAL(timeout()), this, SLOT(nextSlide()));
 	connect(timerRefr, SIGNAL(timeout()), this, SLOT(refreshHQ()));
+	sclS = 0.25;	sclZ = 0.5;
 
 /*	thread = new QThread();
 	task = new mglTask();	task->moveToThread(thread);
@@ -256,31 +257,35 @@ void QMathGL::setCustZoom(bool z)	{	custZoom = z;	}
 //-----------------------------------------------------------------------------
 void QMathGL::setCustDraw(bool z)	{	custDraw = z;	}
 //-----------------------------------------------------------------------------
+void QMathGL::setZoomScl(double s)	{	if(s>0)	sclZ = s;	}
+//-----------------------------------------------------------------------------
+void QMathGL::setShiftScl(double s)	{	if(s)	sclS = s;	}
+//-----------------------------------------------------------------------------
 void QMathGL::shiftDown()
-{	mreal d=(y2-y1)/4;	y1+=d;	y2+=d;	refresh();	}
+{	mreal d=(y2-y1)*sclS;	y1+=d;	y2+=d;	refresh();	}
 //-----------------------------------------------------------------------------
 void QMathGL::shiftUp()
-{	mreal d=(y2-y1)/4;	y1-=d;	y2-=d;	refresh();	}
+{	mreal d=(y2-y1)*sclS;	y1-=d;	y2-=d;	refresh();	}
 //-----------------------------------------------------------------------------
 void QMathGL::shiftRight()
-{	mreal d=(x2-x1)/4;	x1-=d;	x2-=d;	refresh();	}
+{	mreal d=(x2-x1)*sclS;	x1-=d;	x2-=d;	refresh();	}
 //-----------------------------------------------------------------------------
 void QMathGL::shiftLeft()
-{	mreal d=(x2-x1)/4;	x1+=d;	x2+=d;	refresh();	}
+{	mreal d=(x2-x1)*sclS;	x1+=d;	x2+=d;	refresh();	}
 //-----------------------------------------------------------------------------
 void QMathGL::zoomIn()
 {
 	mreal d,c;
-	d = (y2-y1)/4;	c = (y2+y1)/2;	y1 = c-d;	y2 = c+d;
-	d = (x2-x1)/4;	c = (x2+x1)/2;	x1 = c-d;	x2 = c+d;
+	d = (y2-y1)*sclZ/2;	c = (y2+y1)/2;	y1 = c-d;	y2 = c+d;
+	d = (x2-x1)*sclZ/2;	c = (x2+x1)/2;	x1 = c-d;	x2 = c+d;
 	refresh();
 }
 //-----------------------------------------------------------------------------
 void QMathGL::zoomOut()
 {
 	mreal d,c;
-	d = (y2-y1);	c = (y2+y1)/2;	y1 = c-d;	y2 = c+d;
-	d = (x2-x1);	c = (x2+x1)/2;	x1 = c-d;	x2 = c+d;
+	d = (y2-y1)/sclZ/2;	c = (y2+y1)/2;	y1 = c-d;	y2 = c+d;
+	d = (x2-x1)/sclZ/2;	c = (x2+x1)/2;	x1 = c-d;	x2 = c+d;
 	refresh();
 }
 //-----------------------------------------------------------------------------

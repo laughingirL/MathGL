@@ -579,7 +579,7 @@ public:
 	void SetEventFunc(void (*func)(void *), void *par)	{	event_cb=func;	event_par=par;	}
 
 protected:
-	bool Stop;			///< Flag that execution should be terminated.
+	volatile bool Stop;	///< Flag that execution should be terminated.
 	void (*event_cb)(void *);	///< Function to be called for event processing
 	void *event_par;	///< Parameter for event processing function
 

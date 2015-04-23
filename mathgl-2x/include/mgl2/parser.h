@@ -99,7 +99,7 @@ public:
 	bool AllowDllCall;	///< Allow calls from external dynamic libraries
 	bool AllowSetSize;	///< Allow using setsize command
 	bool AllowFileIO;	///< Allow reading/saving files
-	bool Stop;			///< Stop command was. Flag prevent further execution
+	volatile bool Stop;	///< Stop command was. Flag prevent further execution
 	mglCommand *Cmd;	///< Table of MGL commands (can be changed by user). It MUST be sorted by 'name'!!!
 	long InUse;			///< Smart pointer (number of users)
 	const mglBase *curGr;	///< Current grapher

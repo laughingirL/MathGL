@@ -900,7 +900,7 @@ class MGL_EXPORT mglDataS : public mglDataA
 {
 public:
 	std::vector<mreal> dat;
-	
+
 	mglDataS(const mglDataS &st) : dat(st.dat)	{}
 	mglDataS(const std::vector<mreal> &d) : dat(d)	{}
 	mglDataS(size_t s=1)	{	dat.resize(s);	}
