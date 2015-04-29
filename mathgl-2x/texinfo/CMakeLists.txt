@@ -93,7 +93,7 @@ add_custom_command(OUTPUT ${MGL_OUT}/mathgl_en.html
 	WORKING_DIRECTORY ${MGL_OUT}
 )
 add_custom_command(OUTPUT ${MGL_OUT}/mgl_en.html
-	COMMAND ${findth} ${th_opt} -I ${MGL_OUT} --no-split ${MGL_TEX}/mgl_en.texi
+	COMMAND ${findth} ${th_opt} --set-customization-variable 'BODYTEXT ' -I ${MGL_OUT} --no-split ${MGL_TEX}/mgl_en.texi
 	DEPENDS ${list_texi_files_en} mgl_en.texi ${MGL_PNG_N}
 	WORKING_DIRECTORY ${MGL_OUT}
 )
@@ -103,7 +103,7 @@ add_custom_command(OUTPUT ${MGL_OUT}/mathgl_ru.html
 	WORKING_DIRECTORY ${MGL_OUT}
 )
 add_custom_command(OUTPUT ${MGL_OUT}/mgl_ru.html
-	COMMAND ${findth} ${th_opt} -I=${MGL_OUT} --no-split ${MGL_TEX}/mgl_ru.texi
+	COMMAND ${findth} ${th_opt} --set-customization-variable 'BODYTEXT ' -I=${MGL_OUT} --no-split ${MGL_TEX}/mgl_ru.texi
 	DEPENDS ${list_texi_files_ru} mgl_ru.texi ${MGL_PNG_N}
 	WORKING_DIRECTORY ${MGL_OUT}
 )
