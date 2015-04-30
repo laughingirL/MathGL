@@ -668,6 +668,7 @@ void mglCanvas::Rotate(mreal tetz,mreal tetx,mreal tety)
 		mreal h=(fabs(B.b[0])+fabs(B.b[1])+fabs(B.b[2]))/B1.b[0];
 		B.pf = 1.55+0.6147*(w<h ? (h-1):(w-1));
 	}
+	size_t n = Sub.size();	if(n>0)	Sub[n-1].B = B;
 }
 //-----------------------------------------------------------------------------
 void mglMatrix::Rotate(mreal tetz,mreal tetx,mreal tety)
@@ -701,6 +702,7 @@ void mglCanvas::RotateN(mreal Tet,mreal x,mreal y,mreal z)
 		mreal h=(fabs(B.b[0])+fabs(B.b[1])+fabs(B.b[2]))/B1.b[0];
 		B.pf = 1.55+0.6147*(w<h ? (h-1):(w-1));
 	}
+	size_t n = Sub.size();	if(n>0)	Sub[n-1].B = B;
 }
 //-----------------------------------------------------------------------------
 void mglMatrix::RotateN(mreal Tet,mreal x,mreal y,mreal z)
@@ -764,9 +766,10 @@ void mglCanvas::Aspect(mreal Ax,mreal Ay,mreal Az)
 	a = a > fabs(Az) ? a : fabs(Az);
 	if(a==0)	{	SetWarn(mglWarnZero,"Aspect");	return;	}
 	Ax/=a;	Ay/=a;	Az/=a;
-	B.b[0] *= Ax;		B.b[3] *= Ax;		B.b[6] *= Ax;
-	B.b[1] *= Ay;		B.b[4] *= Ay;		B.b[7] *= Ay;
-	B.b[2] *= Az;		B.b[5] *= Az;		B.b[8] *= Az;
+	B.b[0] *= Ax;	B.b[3] *= Ax;	B.b[6] *= Ax;
+	B.b[1] *= Ay;	B.b[4] *= Ay;	B.b[7] *= Ay;
+	B.b[2] *= Az;	B.b[5] *= Az;	B.b[8] *= Az;
+	size_t n = Sub.size();	if(n>0)	Sub[n-1].B = B;
 }
 //-----------------------------------------------------------------------------
 //	Lighting and transparency

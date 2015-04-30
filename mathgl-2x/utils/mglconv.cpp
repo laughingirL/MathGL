@@ -105,7 +105,7 @@ int main(int argc, char *argv[])
 	FILE *fp = *iname?fopen(iname,"r"):stdin;
 	if(!fp)	{	printf("No file for MGL script\n");	return 0;	}
 	wchar_t cw;
-	while(long(cw=fgetwc(fp))!=WEOF)	str.push_back(cw);
+	while(!feof(fp) && long(cw=fgetwc(fp))!=WEOF)	str.push_back(cw);
 //	while(!feof(fp))	str.push_back(fgetwc(fp));
 	if(*iname)	fclose(fp);
 
