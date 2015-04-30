@@ -30,6 +30,7 @@ add_custom_command(OUTPUT sample.pdf
 	COMMAND ${CMAKE_COMMAND} -E copy ${MathGL_SOURCE_DIR}/mgltex/sample.tex ${MathGL_BINARY_DIR}/mgltex/
 	COMMAND ${CMAKE_COMMAND} -E copy ${MathGL_SOURCE_DIR}/mgltex/mgltex.sty ${MathGL_BINARY_DIR}/mgltex/
 	COMMAND ${findpdflatex} --shell-escape -draftmode sample.tex
+	COMMAND ${findpdflatex} --shell-escape -draftmode sample.tex
 	COMMAND ${findpdflatex} --shell-escape sample.tex
 	DEPENDS mgltex.sty sample.tex )
 add_custom_target(pdf ALL DEPENDS sample.pdf)

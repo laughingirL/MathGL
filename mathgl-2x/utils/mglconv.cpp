@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
 			if(fp)
 			{
 				wchar_t ch;
-				while(long(ch=fgetwc(fp))!=WEOF)	str.push_back(ch);
+				while(!feof(fp) && long(ch=fgetwc(fp))!=WEOF)	str.push_back(ch);
 				fclose(fp);	str += L"\n";
 			}
 		}
@@ -105,8 +105,7 @@ int main(int argc, char *argv[])
 	FILE *fp = *iname?fopen(iname,"r"):stdin;
 	if(!fp)	{	printf("No file for MGL script\n");	return 0;	}
 	wchar_t cw;
-	while(!feof(fp) && long(cw=fgetwc(fp))!=WEOF)	str.push_back(cw);
-//	while(!feof(fp))	str.push_back(fgetwc(fp));
+	while(!feof(fp) && size_t(cw=fgetwc(fp))!=WEOF)	str.push_back(cw);
 	if(*iname)	fclose(fp);
 
 	unsigned long n;
@@ -145,7 +144,7 @@ int main(int argc, char *argv[])
 	else
 	{
 		p.Execute(&gr,str.c_str());
-		printf("%s\n",gr.Message());
+		if(gr.Message()[0])	printf("%s\n",gr.Message());
 		if(!none)	gr.WriteFrame(oname);
 	}
 	if(!mglGlobalMess.empty())	printf("%s",mglGlobalMess.c_str());

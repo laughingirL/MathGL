@@ -66,7 +66,7 @@ YY. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using St
 	e. Ask about script changes before closing data tab
 
 4. List of constants into the list of data?!
-5. Add color cycle
+5. Add color cycle ???
 
 
 ============= UNSURE ===========
