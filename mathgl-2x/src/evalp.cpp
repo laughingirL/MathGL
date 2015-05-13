@@ -653,8 +653,15 @@ HMDT MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std::v
 		}
 		else if(!nm.compare(L"pow") && n>0)
 			return mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, pow);
-		else if(!nm.compare(L"mod") && n>0)
-			return mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, fmod);
+		else if(nm[0]=='m')
+		{
+			if(!nm.compare(L"mod") && n>0)
+				return mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, fmod);
+			else if(!nm.compare(L"min") && n>0)
+				return mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, fmin);
+			else if(!nm.compare(L"max") && n>0)
+				return mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, fmax);
+		}
 		else if(!nm.compare(L"int"))	return mglApplyFunc(str, arg, head, floor);
 		else if(!nm.compare(L"random"))
 		{	HMDT res=mglFormulaCalc(str, arg, head);	mreal *a = res->a;

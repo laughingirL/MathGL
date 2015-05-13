@@ -51,6 +51,8 @@ EQ_MOD,		// x modulo y
 EQ_LOG,		// logarithm of x on base a, log_a(x) = ln(x)/ln(a)
 EQ_ARG,		// argument of complex number arg(x,y) = atan2(x,y)
 EQ_HYPOT,	// sqrt(x^2+y^2)=hypot(x,y)
+EQ_MAX,		// maximum of x and y
+EQ_MIN,		// minimum of x and y
 // special functions of 2 arguments
 EQ_BESJ,		// regular cylindrical Bessel function of fractional order
 EQ_BESY,		// irregular cylindrical Bessel function of fractional order
@@ -369,9 +371,14 @@ mglFormula::mglFormula(const char *string)
 			else if(!strcmp(name+1,"anh"))	Kod=EQ_TANH;
 			else if(!strcmp(name+1,"h"))	Kod=EQ_TANH;
 		}
+		else if(name[0]=='m')
+		{
+			if(!strcmp(name+1,"od"))		Kod=EQ_MOD;
+			else if(!strcmp(name+1,"ax"))	Kod=EQ_MAX;
+			else if(!strcmp(name+1,"in"))	Kod=EQ_MIN;
+		}
 		else if(!strcmp(name,"hypot"))	Kod=EQ_HYPOT;
 		else if(!strcmp(name,"pow"))	Kod=EQ_POW;
-		else if(!strcmp(name,"mod"))	Kod=EQ_MOD;
 		else if(!strcmp(name,"i"))		Kod=EQ_BESI;
 		else if(!strcmp(name,"int"))	Kod=EQ_INT;
 		else if(!strcmp(name,"j"))		Kod=EQ_BESJ;
@@ -503,14 +510,14 @@ double MGL_LOCAL_CONST atanh(double x)	{	return fabs(x)<1 ? log((1.+x)/(1.-x))/2
 typedef double (*func_1)(double);
 typedef double (*func_2)(double, double);
 //-----------------------------------------------------------------------------
-static const mreal z2[EQ_SIN-EQ_LT] = {3,3,3,3,0,3,3,0,0,0,0,0,NAN,3,3
+static const mreal z2[EQ_SIN-EQ_LT] = {3,3,3,3,0,3,3,0,0,0,0,0,NAN,3,3,3,3
 #if MGL_HAVE_GSL
 	,3,NAN, 3,NAN, 0,0,3,1,3
 #else
 	,0,0,0,0,0,0,0,0,0
 #endif
 };
-static const func_2 f2[EQ_SIN-EQ_LT] = {clt,cgt,ceq,cor,cand,add,sub,mul,del,ipw,pow,fmod,llg,arg,hypot
+static const func_2 f2[EQ_SIN-EQ_LT] = {clt,cgt,ceq,cor,cand,add,sub,mul,del,ipw,pow,fmod,llg,arg,hypot,fmax,fmin
 #if MGL_HAVE_GSL
 	,gsl_sf_bessel_Jnu,gsl_sf_bessel_Ynu,
 	gsl_sf_bessel_Inu,gsl_sf_bessel_Knu,
@@ -629,14 +636,14 @@ double MGL_LOCAL_CONST gamma_d(double a)	{return gsl_sf_psi(a)*gsl_sf_gamma(a);}
 #endif
 double MGL_LOCAL_CONST ginc_d(double a, double x)	{return -exp(-x)*pow(x,a-1);}
 //-----------------------------------------------------------------------------
-static const func_2 f21[EQ_SIN-EQ_LT] = {mgzz,mgzz,mgzz, mgzz,mgzz,mgp, mgp,mul1,div1, ipw1,pow1,mgp,llg1, mgz2
+static const func_2 f21[EQ_SIN-EQ_LT] = {mgzz,mgzz,mgzz, mgzz,mgzz,mgp, mgp,mul1,div1, ipw1,pow1,mgp,llg1, mgz2,mgzz,mgzz
 #if MGL_HAVE_GSL
 	,mgz2,mgz2,mgz2, mgz2,gslEllE1,gslEllF1, mgz2,mgz2,mgz2
 #else
 	,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2
 #endif
 };
-static const func_2 f22[EQ_SIN-EQ_LT] = {mgzz,mgzz,mgzz,mgzz,mgzz,mgp,mgm,mul2,div2,pow2,pow2,mgz2,llg2, mgz2
+static const func_2 f22[EQ_SIN-EQ_LT] = {mgzz,mgzz,mgzz,mgzz,mgzz,mgp,mgm,mul2,div2,pow2,pow2,mgz2,llg2, mgz2,mgzz,mgzz
 #if MGL_HAVE_GSL
 	,gslJnuD,gslYnuD,gslInuD,gslKnuD,gslEllE2,gslEllF2,mgz2/*gslLegP*/,mgz2,ginc_d
 #else
