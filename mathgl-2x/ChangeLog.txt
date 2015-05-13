@@ -21,6 +21,8 @@
 * Add mglDataS class which is similar to std::vector<double> one.
 * Add annotation for plot styles and options into header files.
 * Names 'rnd','nan','inf' are reserved in MGL scripts now.
+* Add functions 'min()', 'max()' to MGL parser and formula evaluation.
+* Add style 'V' for drawing text centered vertically.
 * If tick template start with '&' then long integer is passed instead of double.
 
 2.3.2 Released 2 February 2015

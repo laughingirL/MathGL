@@ -454,7 +454,9 @@ name of u-axis (one of ternary axis);
 variable in @ref{Textual formulas}, which usually denote array itself.
 
 @item V
-arrow style (see @ref{Line styles}).
+arrow style (see @ref{Line styles});
+
+place text centering on vertical direction for @ref{text}.
 
 @item v
 one of marks (see @ref{Line styles});

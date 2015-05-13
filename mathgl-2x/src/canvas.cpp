@@ -462,9 +462,12 @@ pthread_mutex_lock(&mutexPtx);
 	{
 		Bt = B;	Bt.norot=(q.sub<0);	// NOTE check this later for mglInPlot
 		inv = inv ^ (strchr(font,'T')!=0);
-		if(inv)	shift = 0.2*h-shift;
-		shift += 0.015*h;	// Correction for glyph rotation around proper point
-	//		shift *= h;
+		if(strchr(font,'V'))	shift = 0.1*h;
+		else
+		{
+			if(inv)	shift = 0.2*h-shift;
+			shift += 0.015*h;	// Correction for glyph rotation around proper point
+		}
 
 		int align;
 		mreal col1=col, col2=col;
