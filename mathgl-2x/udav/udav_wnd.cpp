@@ -716,7 +716,7 @@ void MainWindow::updateHidden()
 	do {
 		i++;
 		if(tc.block().text().startsWith("#h "))
-			hidden->append("Line "+QString::number(i)+QString::fromWCharArray(L" → ")+tc.block().text().mid(3)+"\n");
+			hidden->append("Line "+QString::number(i)+QString::fromWCharArray(L" \u2192 ")+tc.block().text().mid(3)+"\n");
 	} while(tc.movePosition(QTextCursor::NextBlock));
 	tc.setPosition(pos);
 }

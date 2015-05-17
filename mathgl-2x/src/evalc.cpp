@@ -281,7 +281,7 @@ mdual MGL_EXPORT_CONST mgl_ipowc(dual x,int n)
 	}
 	return t.real()+t.imag()*mgl_I;
 }
-mdual MGL_EXPORT_PURE mgl_ipowc_(dual *x,int *n)	{	return mgl_ipowc(*x,*n);	}
+mdual MGL_EXPORT mgl_ipowc_(dual *x,int *n)	{	return mgl_ipowc(*x,*n);	}
 //-----------------------------------------------------------------------------
 HAEX MGL_EXPORT mgl_create_cexpr(const char *expr)	{	return new mglFormulaC(expr);	}
 uintptr_t MGL_EXPORT mgl_create_cexpr_(const char *expr, int l)
@@ -290,7 +290,7 @@ uintptr_t MGL_EXPORT mgl_create_cexpr_(const char *expr, int l)
 	delete []s;	return res;	}
 void MGL_EXPORT mgl_delete_cexpr(HAEX ex)	{	if(ex)	delete ex;	}
 void MGL_EXPORT mgl_delete_cexpr_(uintptr_t *ex)	{	mgl_delete_cexpr((HAEX)ex);	}
-mdual MGL_EXPORT_PURE mgl_cexpr_eval(HAEX ex, dual x, dual y,dual z)
+mdual MGL_EXPORT mgl_cexpr_eval(HAEX ex, dual x, dual y,dual z)
 {	dual r = ex->Calc(x,y,z);	return r.real()+r.imag()*mgl_I;	}
 mdual MGL_EXPORT mgl_cexpr_eval_(uintptr_t *ex, dual *x, dual *y, dual *z)
 {	return mgl_cexpr_eval((HAEX) ex, *x,*y,*z);		}

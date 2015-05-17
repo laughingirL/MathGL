@@ -55,7 +55,7 @@ struct MGL_EXPORT mglTeXsymb	{	unsigned kod;	const wchar_t *tex;	};
 const float mgl_fgen = 4*14;
 /// Get font color, style and align for internal parser
 bool MGL_EXPORT mglGetStyle(const char *how, int *font, int *align=0);
-long MGL_EXPORT_PURE mgl_internal_code(unsigned s, const std::vector<mglGlyphDescr> &glyphs);
+long MGL_EXPORT mgl_internal_code(unsigned s, const std::vector<mglGlyphDescr> &glyphs);
 class mglBase;
 //-----------------------------------------------------------------------------
 /// Class for font typeface and text plotting procedures

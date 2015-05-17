@@ -32,20 +32,20 @@ int MGL_EXPORT mgl_check_version_(const char *ver, int);
 void MGL_EXPORT mgl_suppress_warn(int on);
 void MGL_EXPORT mgl_suppress_warn_(int *on);
 /// Get last warning code
-int MGL_EXPORT_PURE mgl_get_warn(HMGL gr);
-int MGL_EXPORT_PURE mgl_get_warn_(uintptr_t *gr);
+int MGL_EXPORT mgl_get_warn(HMGL gr);
+int MGL_EXPORT mgl_get_warn_(uintptr_t *gr);
 /// Set warning code ant fill message
 void MGL_EXPORT mgl_set_warn(HMGL gr, int code, const char *text);
 void MGL_EXPORT mgl_set_warn_(uintptr_t *gr, int *code, const char *text,int);
 /// Get text of warning message(s)
-MGL_EXPORT_PURE const char *mgl_get_mess(HMGL gr);
+MGL_EXPORT const char *mgl_get_mess(HMGL gr);
 int MGL_EXPORT mgl_get_mess_(uintptr_t *gr, char *out, int len);
 
 /// Set name of plot for saving filename
 void MGL_EXPORT mgl_set_plotid(HMGL gr, const char *id);
 void MGL_EXPORT mgl_set_plotid_(uintptr_t *gr, const char *id,int);
 /// Get name of plot for saving filename
-MGL_EXPORT_PURE const char *mgl_get_plotid(HMGL gr);
+MGL_EXPORT const char *mgl_get_plotid(HMGL gr);
 int MGL_EXPORT mgl_get_plotid_(uintptr_t *gr, char *out, int len);
 
 /// Ask to stop drawing
@@ -58,8 +58,8 @@ int MGL_EXPORT mgl_need_stop_(uintptr_t *gr);
 void MGL_EXPORT mgl_set_event_func(HMGL gr, void (*func)(void *), void *par);
 
 /// Get plot quality
-int MGL_EXPORT_PURE mgl_get_quality(HMGL gr);
-int MGL_EXPORT_PURE mgl_get_quality_(uintptr_t *gr);
+int MGL_EXPORT mgl_get_quality(HMGL gr);
+int MGL_EXPORT mgl_get_quality_(uintptr_t *gr);
 /// Set plot quality
 /** qual=0 -- no face drawing (fastest),
  *  qual=1 -- no color interpolation (fast),
@@ -73,10 +73,10 @@ void MGL_EXPORT mgl_set_draw_reg(HMGL gr, long nx, long ny, long m);
 void MGL_EXPORT mgl_set_draw_reg_(uintptr_t *gr, int *nx, int *ny, int *m);
 
 /// Check if support of frames is enabled (i.e. MGL_VECT_FRAME is set and Quality&MGL_DRAW_LMEM==0)
-int MGL_EXPORT_PURE mgl_is_frames(HMGL gr);
+int MGL_EXPORT mgl_is_frames(HMGL gr);
 /// Get bit-value flag of HMGL state (for advanced users only)
-int MGL_EXPORT_PURE mgl_get_flag(HMGL gr, uint32_t flag);
-int MGL_EXPORT_PURE mgl_get_flag_(uintptr_t *gr, unsigned long *flag);
+int MGL_EXPORT mgl_get_flag(HMGL gr, uint32_t flag);
+int MGL_EXPORT mgl_get_flag_(uintptr_t *gr, unsigned long *flag);
 /// Set bit-value flag of HMGL state (for advanced users only)
 void MGL_EXPORT mgl_set_flag(HMGL gr, int val, uint32_t flag);
 void MGL_EXPORT mgl_set_flag_(uintptr_t *gr, int *val, unsigned long *flag);

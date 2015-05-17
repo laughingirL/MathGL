@@ -29,7 +29,7 @@
 
 #include "mgl2/base.h"
 #include "mgl2/font.h"
-#include "def_font.cpp"
+#include "def_font.cc"
 //-----------------------------------------------------------------------------
 extern mglTeXsymb mgl_tex_symb[];
 extern long mgl_tex_num;
@@ -310,6 +310,7 @@ void mglFont::Convert(const wchar_t *str, unsigned *res) const
 				}
 			}
 		}
+		else if(ch=='-' && str[i+1]=='-')	{	res[j++] = 0x2212;	i++;	}
 		else if(ch=='\b'){}
 		else if(ch<=' ' && ch!='\n')	res[j++] = ' ';	// no \t at this moment :(
 		else if(ch=='_')	res[j++] = MGL_FONT_LOWER;

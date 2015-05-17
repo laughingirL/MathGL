@@ -30,7 +30,7 @@ MGL_NO_EXPORT inline struct tm *mgl_localtime (const time_t *clock, tm *result, 
 	const tm *res = use_utc?gmtime(clock):localtime(clock);
 	memcpy(result,res,sizeof(tm));	return result;	}
 //-----------------------------------------------------------------------------
-long MGL_EXPORT_PURE mgl_have_color(const char *stl)
+long MGL_EXPORT mgl_have_color(const char *stl)
 {
 	long j=0;
 	if(stl)	for(long i=0;stl[i];i++)
@@ -51,7 +51,7 @@ void MGL_EXPORT mgl_wcstrim(wchar_t *str)
 	str[i-k]=0;
 }
 //-----------------------------------------------------------------------------
-size_t MGL_EXPORT_PURE mgl_wcslen(const wchar_t *str)
+size_t MGL_EXPORT mgl_wcslen(const wchar_t *str)
 {
 	long i=0;
 	if(str)	while(str[i])	i++;
@@ -380,7 +380,7 @@ std::wstring MGL_NO_EXPORT mgl_tick_text(mreal z, mreal z0, mreal d, mreal v, in
 //	mglprintf(str,64,fmt.c_str(), u);
 	if(ff)
 	{
-		if(str==L"-1" || str==L"+1" || str==L"−1")	str = str[0] + fact;
+		if(str==L"-1" || str==L"+1" || str==L"\u22121")	str = str[0] + fact;
 		else if(str==L"1")	str = fact;
 		else if(str!=L"0")	str += fact;
 	}
@@ -411,7 +411,7 @@ void mglCanvas::LabelTicks(mglAxis &aa)
 			if(d==0)	wcscpy(buf,L"1");
 			else if(d==1)	wcscpy(buf,L"10");
 			else if(d>0)	mglprintf(buf,64,L"10^{%d}",d);
-			else	mglprintf(buf,64,minus?L"10^{-%d}":L"10^{−%d}",-d);
+			else	mglprintf(buf,64,minus?L"10^{-%d}":L"10^{\u2212%d}",-d);
 			if(d%ds!=0)	*buf=0;	//	remove too often log ticks
 			aa.AddLabel(buf,v);
 		}
@@ -423,10 +423,10 @@ void mglCanvas::LabelTicks(mglAxis &aa)
 		for(v=v0;v>=aa.v1*MGL_EPSILON;v*=10)	if(v*MGL_EPSILON<=aa.v2)
 		{
 			d = int(floor(0.1+log10(-v)));
-			if(d==0)	wcscpy(buf,minus?L"-1":L"−1");
-			else if(d==1)	wcscpy(buf,minus?L"-10":L"−10");
-			else if(d>0)	mglprintf(buf,64,minus?L"-10^{%d}":L"−10^{%d}",d);
-			else	mglprintf(buf,64,minus?L"-10^{-%d}":L"−10^{−%d}",-d);
+			if(d==0)	wcscpy(buf,minus?L"-1":L"\u22121");
+			else if(d==1)	wcscpy(buf,minus?L"-10":L"\u221210");
+			else if(d>0)	mglprintf(buf,64,minus?L"-10^{%d}":L"\u221210^{%d}",d);
+			else	mglprintf(buf,64,minus?L"-10^{-%d}":L"\u221210^{\u2212%d}",-d);
 			if(d%ds!=0)	*buf=0;	//	remove too often log ticks
 			aa.AddLabel(buf,v);
 		}

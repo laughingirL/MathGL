@@ -1006,7 +1006,7 @@ mreal mglBase::NextColor(long id, long sh)
 	return cc;
 }
 //-----------------------------------------------------------------------------
-MGL_EXPORT_PURE const char *mglchrs(const char *str, const char *chr)
+MGL_EXPORT const char *mglchrs(const char *str, const char *chr)
 {
 	if(!str || !str[0] || !chr || !chr[0])	return NULL;
 	size_t l=strlen(chr);
@@ -1018,7 +1018,7 @@ MGL_EXPORT_PURE const char *mglchrs(const char *str, const char *chr)
 	return NULL;
 }
 //-----------------------------------------------------------------------------
-MGL_EXPORT_PURE const char *mglchr(const char *str, char ch)
+MGL_EXPORT const char *mglchr(const char *str, char ch)
 {
 	if(!str || !str[0])	return NULL;
 	size_t l=strlen(str),k=0;

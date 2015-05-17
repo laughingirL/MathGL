@@ -299,15 +299,15 @@ typedef double _Complex ddual;
 /// Find length of wchar_t string (bypass standard wcslen bug)
 double MGL_EXPORT_CONST mgl_hypot(double x, double y);
 /// Find length of wchar_t string (bypass standard wcslen bug)
-size_t MGL_EXPORT_PURE mgl_wcslen(const wchar_t *str);
+size_t MGL_EXPORT mgl_wcslen(const wchar_t *str);
 /// Get RGB values for given color id or fill by -1 if no one found
 void MGL_EXPORT mgl_chrrgb(char id, float rgb[3]);
 /// Check if string contain color id and return its number
-long MGL_EXPORT_PURE mgl_have_color(const char *stl);
+long MGL_EXPORT mgl_have_color(const char *stl);
 /// Find symbol in string excluding {} and return its position or NULL
-MGL_EXPORT_PURE const char *mglchr(const char *str, char ch);
+MGL_EXPORT const char *mglchr(const char *str, char ch);
 /// Find any symbol from chr in string excluding {} and return its position or NULL
-MGL_EXPORT_PURE const char *mglchrs(const char *str, const char *chr);
+MGL_EXPORT const char *mglchrs(const char *str, const char *chr);
 /// Set number of thread for plotting and data handling (for pthread version only)
 void MGL_EXPORT mgl_set_num_thr(int n);
 void MGL_EXPORT mgl_set_num_thr_(int *n);
@@ -327,7 +327,7 @@ void MGL_EXPORT mgl_clear_fft();
 void MGL_EXPORT mgl_set_global_warn(const char *text);
 void MGL_EXPORT mgl_set_global_warn_(const char *text,int);
 /// Get text of global warning message(s)
-MGL_EXPORT_PURE const char *mgl_get_global_warn();
+MGL_EXPORT const char *mgl_get_global_warn();
 int MGL_EXPORT mgl_get_global_warn_(char *out, int len);
 #ifdef __cplusplus
 }

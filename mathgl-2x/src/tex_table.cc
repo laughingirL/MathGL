@@ -1187,6 +1187,7 @@ MGL_EXPORT mglTeXsymb mgl_tex_symb[] = {
 	{0x225f, L"questeq"},
 	{0x201e, L"quotdblbase"},
 	{0x201f, L"quotdblright"},
+	{0x27, L"quote"},
 	{0x201a, L"quotsinglbase"},
 	{0x201b, L"quotsinglright"},
 	{0x27eb, L"rAngle"},

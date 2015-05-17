@@ -24,6 +24,10 @@
 * Add functions 'min()', 'max()' to MGL parser and formula evaluation.
 * Add style 'V' for drawing text centered vertically.
 * If tick template start with '&' then long integer is passed instead of double.
+* Add TeX symbols "\quote" and "--".
+* Exclude "pure" attribute for function due to compatibility reasons
+* Bugfix for Flow() and Pipe() functions
+* Rearrange toolbuttons in UDAV.
 
 2.3.2 Released 2 February 2015
 

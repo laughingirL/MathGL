@@ -501,8 +501,12 @@ void TextPanel::toolTop(QBoxLayout *v)
 	// general buttons
 	if(mw)
 	{
-		t->addAction(mw->aload);	t->addAction(mw->asave);
+		t->addAction(mw->aload);	t->addAction(mw->asave);	t->addAction(mw->acalc);
 	}
+	QToolButton *bb = new QToolButton(this);
+	bb->setPopupMode(QToolButton::MenuButtonPopup);
+	t->addWidget(bb);
+
 	// edit menu
 	a = new QAction(QPixmap(":/png/edit-undo.png"), tr("Undo"), this);
 	connect(a, SIGNAL(triggered()), edit, SLOT(undo()));
@@ -582,20 +586,11 @@ void TextPanel::toolTop(QBoxLayout *v)
 	a = new QAction(QPixmap(curve_xpm), tr("Manual primitives"), this);
 	a->setShortcut(Qt::META+Qt::Key_P);	connect(a, SIGNAL(triggered()), this, SLOT(insPrim()));
 	a->setToolTip(tr("Move mouse-handled primitives to script."));
-	oo->addAction(a);
-
-	{
-		QToolButton *bb = new QToolButton(this);
-		bb->setDefaultAction(aa);	bb->setMenu(oo);
-		bb->setPopupMode(QToolButton::MenuButtonPopup);
-		t->addWidget(bb);
-	}
+	oo->addAction(a);	bb->setMenu(oo);	bb->setDefaultAction(aa);
 
 	a = new QAction(QPixmap(":/png/document-properties.png"), tr("Graphics setup"), this);
 	a->setShortcut(Qt::META+Qt::Key_G);	connect(a, SIGNAL(triggered()), this, SLOT(addSetup()));
 	a->setToolTip(tr("Show dialog for plot setup and put code into the script.\nThis dialog setup axis, labels, lighting and other general things."));
 	o->addAction(a);	t->addAction(a);
-
-	if(mw)	t->addAction(mw->acalc);
 }
 //-----------------------------------------------------------------------------

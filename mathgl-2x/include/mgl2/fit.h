@@ -57,7 +57,7 @@ HMDT MGL_EXPORT mgl_fit_xyzas(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, HCDT s, c
 uintptr_t MGL_EXPORT mgl_fit_xyzas_(uintptr_t* gr, uintptr_t* x, uintptr_t* y, uintptr_t* z, uintptr_t* a, uintptr_t* ss, const char *eq, const char *vars, uintptr_t *ini, const char *opt,int, int l, int n);
 
 /// Get last fitted formula
-MGL_EXPORT_CONST const char *mgl_get_fit(HMGL gr);
+MGL_EXPORT const char *mgl_get_fit(HMGL gr);
 int MGL_EXPORT mgl_get_fit_(uintptr_t *gr, char *out, int len);
 
 /// Make histogram (distribution) of data. This function do not plot data.
