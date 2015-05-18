@@ -64,6 +64,12 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
+	gr->Line(mglPoint(-1,-1),mglPoint(1,1));
+	gr->Axis();
+	gr->WriteEPS("1.eps");
+	gr->WriteTEX("1.tex");
+	gr->WriteSVG("1.svg");
+	return;
 	mglParse par;
 	par.Execute(gr,"load '/home/balakin/mathgl-code/mathgl-2x/build/examples/libmgl_module.so':baxis\n");
 //	par.Execute(gr,"subplot 1 1 0:#rotate 40 60\nperspective 1.22:box:axis\n");
