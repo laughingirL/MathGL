@@ -945,10 +945,10 @@ void mglCanvas::Legend(const std::vector<mglText> &leg, mreal x, mreal y, const 
 	if(strchr(font,'#'))	// draw bounding box
 	{
 		SetPenPal("k-");
-		long k1=AddPnt(&M,mglPoint(x,y,Depth/MGL_FEPSILON),c1,q,1,0);
-		long k2=AddPnt(&M,mglPoint(x+w*ncol,y,Depth/MGL_FEPSILON),c1,q,1,0);
-		long k3=AddPnt(&M,mglPoint(x,y+h*nrow,Depth/MGL_FEPSILON),c1,q,1,0);
-		long k4=AddPnt(&M,mglPoint(x+w*ncol,y+h*nrow,Depth/MGL_FEPSILON),c1,q,1,0);
+		long k1=AddPnt(&M,mglPoint(x,y,Depth/1.01),c1,q,1,0);
+		long k2=AddPnt(&M,mglPoint(x+w*ncol,y,Depth/1.01),c1,q,1,0);
+		long k3=AddPnt(&M,mglPoint(x,y+h*nrow,Depth/1.01),c1,q,1,0);
+		long k4=AddPnt(&M,mglPoint(x+w*ncol,y+h*nrow,Depth/1.01),c1,q,1,0);
 		quad_plot(k1,k2,k3,k4);
 		k1=CopyNtoC(k1,c2);	k2=CopyNtoC(k2,c2);
 		k3=CopyNtoC(k3,c2);	k4=CopyNtoC(k4,c2);
