@@ -895,6 +895,8 @@ void mglCanvas::Legend(const std::vector<mglText> &leg, mreal x, mreal y, const 
 	strcpy(ff,fmt?fmt:"");	strcat(ff,":L");	Push();
 	if((pA=strchr(ff,'A')))
 	{	*pA = ' ';	InPlot(0,1,0,1,false);	iw=B1.b[0];	ih=B1.b[4];	}
+	else if(mglchr(font,'A'))
+	{	InPlot(0,1,0,1,false);	iw=B1.b[0];	ih=B1.b[4];	}
 	else	{	iw=B1.b[0]/B1.pf;	ih=B1.b[4]/B1.pf;	}
 	// find sizes
 	mreal h=TextHeight(font,size);
