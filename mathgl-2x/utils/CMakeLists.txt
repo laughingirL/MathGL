@@ -22,13 +22,9 @@ install(
 if(enable-qt)
 	add_executable(mglview mglview.cpp)
 	if(enable-qt5)
-		include(../cmake-qt5.txt)
-		target_link_libraries(mglview mgl-qt5)
-		qt5_use_modules(mglview Core Widgets Gui PrintSupport)
+		target_link_libraries(mglview mgl-qt5 ${MGL_QT5_LIBS})
 	else(enable-qt5)
-		include(../cmake-qt4.txt)
-		target_link_libraries(mglview mgl-qt4)
-		target_link_libraries(mglview ${QT_LIBRARIES})
+		target_link_libraries(mglview mgl-qt4 ${MGL_QT4_LIBS})
 	endif(enable-qt5)
 
 	install(

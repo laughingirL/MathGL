@@ -2,6 +2,10 @@ if(enable-qt)
 
 configure_file(${MathGL_SOURCE_DIR}/udav/mgl.xml.in ${MathGL_BINARY_DIR}/udav/mgl.xml)
 
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
 #set(mgl_wnd_src window.cpp)
 set(udav_src anim_dlg.cpp find_dlg.cpp mem_pnl.cpp prop_dlg.cpp textedit.cpp args_dlg.cpp
 	help_pnl.cpp newcmd_dlg.cpp text_pnl.cpp calc_dlg.cpp hint_dlg.cpp
@@ -28,23 +32,12 @@ if(MGL_HAVE_GSL)
 	include_directories(${GSL_INCLUDE_DIR})
 endif(MGL_HAVE_GSL)
 
-if(enable-qt5)
-	include(../cmake-qt5.txt)
-	qt5_add_resources(udav_rc_src ${udav_rc} )
-	qt5_wrap_cpp(udav_moc_src ${udav_moc_hdr} )
-else(enable-qt5)
-	include(../cmake-qt4.txt)
-	qt4_add_resources(udav_rc_src ${udav_rc} )
-	qt4_wrap_cpp(udav_moc_src ${udav_moc_hdr} )
-endif(enable-qt5)
-add_executable(udav ${udav_src} ${udav_moc_src} ${udav_rc_src})
+add_executable(udav ${udav_src} ${udav_moc_hdr} ${udav_rc})
 #set_target_properties(udav PROPERTIES COMPILE_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 if(enable-qt5)
-	target_link_libraries(udav mgl-qt5)
-	qt5_use_modules(udav Core Widgets Gui PrintSupport)
+	target_link_libraries(udav mgl-qt5 ${MGL_QT5_LIBS})
 else(enable-qt5)
-	target_link_libraries(udav mgl-qt4)
-	target_link_libraries(udav ${QT_LIBRARIES})
+	target_link_libraries(udav mgl-qt4 ${MGL_QT4_LIBS})
 endif(enable-qt5)
 
 if(MGL_HAVE_PTHREAD)
