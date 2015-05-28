@@ -114,7 +114,7 @@ void MGL_NO_EXPORT mgl_string_curve(mglBase *gr,long f,long ,const long *ff,cons
 	for(j=0;j<len;j++)	// draw text
 	{
 		L[0] = text[align!=2?j:len-1-j];	s = pt[j+1]-pt[j];	l = !s;
-		gr->text_plot(gr->AddPnt(pt[j]+(pos*h)*l,c+dc*i,s,-1,-1),L,fnt,size,0.05,c+dc*j);
+		gr->text_plot(gr->AddPnt(pt[j]+(pos*h)*l,c+dc*i,align!=2?s:-s,-1,-1),L,fnt,size,0.05,c+dc*j);
 	}
 	delete []wdt;	delete []pt;	delete []fnt;
 }

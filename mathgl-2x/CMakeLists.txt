@@ -12,8 +12,8 @@ endif(NOT CMAKE_BUILD_TYPE)
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
 set(MathGL_VERSION_MAJOR 2)
-set(MathGL_VERSION_MINOR 3.3)
-set(MathGL_SOVERSION 7.4.0)
+set(MathGL_VERSION_MINOR 3.4)
+set(MathGL_SOVERSION 7.4.1)
 
 function(mgl_add_lib mgl_tmp_lib)
 	if(${mgl_tmp_lib} MATCHES mgl)
