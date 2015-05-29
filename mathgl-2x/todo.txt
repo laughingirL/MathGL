@@ -31,13 +31,13 @@
 	u. Test FlowP + 3d
 
 2. Add manual shift of unrotated axis/tick labels.
-3. Check centered curved text (see text2)
+3. Centered curved text (see text2)
 
 5. Check lighting in OpenGL mode
 6. Add string manipulation -- {'str',val}=>str[val]; {'str',v1,v2}=>str.substr(v1,v2) [v1,v2 can be -1]; {'ch'+val'}=>char(ch+val)
 7. Improve z-order for rapidly oscillating surfaces
 8. Contour lines for bilinear interpolation (strong saddle-like faces)
-9. More accurate face cutting if they out of axis ranges
+9. More accurate face cutting if one partially out of axis ranges
 
 17. Iris plot -- https://en.wikipedia.org/wiki/Iris_flower_data_set
 

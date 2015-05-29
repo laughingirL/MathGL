@@ -82,6 +82,38 @@ void MGL_EXPORT mgl_ask_qt(const wchar_t *quest, wchar_t *res)
 {	QInputDialog::getText(QApplication::activeWindow(), "MathGL",
 						QString::fromWCharArray(quest)).toWCharArray(res);	}
 //-----------------------------------------------------------------------------
+//
+//		class QMathGL
+//
+//-----------------------------------------------------------------------------
+/// Internal class to be used for multi-threading plotting
+/*class mglTask : public QObject
+{
+	Q_OBJECT
+public:
+	mglCanvas *gr;		///< Built-in mglCanvasQT-er instance (used by default)
+	void *draw_par;		///< Parameters for drawing function mglCanvasWnd::DrawFunc.
+	/// Drawing function for window procedure. It should return the number of frames.
+	int (*draw_func)(mglBase *gr, void *par);
+	mglDraw *draw;		///< Class for drawing -- need to call directly due to inheritance mechanism
+public slots:
+	void doWork();
+signals:
+	void plotDone();
+};
+//-----------------------------------------------------------------------------
+void mglTask::doWork()
+{
+	setlocale(LC_NUMERIC, "C");
+	if(mgl_is_frames(gr))	mgl_new_frame(gr);
+	if(draw_func)	draw_func(gr, draw_par);
+	else if(draw)	{	mglGraph g(gr);	draw->Draw(&g);	}
+	if(mgl_is_frames(gr))	mgl_end_frame(gr);
+	setlocale(LC_NUMERIC, "");
+	gr->Finish();
+	emit plotDone();
+}*/
+//-----------------------------------------------------------------------------
 QMathGL::QMathGL(QWidget *parent, Qt::WindowFlags f) : QWidget(parent, f)
 {
 	autoResize = false;	draw_par = 0;	draw_func = 0;

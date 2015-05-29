@@ -40,8 +40,19 @@ endif(MGL_HAVE_OPENGL)
 
 include(GenerateExportHeader)
 add_compiler_export_flags()
-mgl_add_lib(mgl ${mgl_src} ${mgl_hdr})
+add_library(mgl SHARED ${mgl_src} ${mgl_hdr})
+add_library(mgl-static STATIC ${mgl_src} ${mgl_hdr})
+set_target_properties(mgl PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+set_target_properties(mgl-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+target_compile_definitions(mgl-static PUBLIC MGL_STATIC_DEFINE)
 generate_export_header(mgl EXPORT_FILE_NAME ../include/mgl2/dllexport.h)
+
+if(enable-mgl2)
+	set_target_properties(mgl PROPERTIES OUTPUT_NAME "mgl2")
+	set_target_properties(mgl-static PROPERTIES OUTPUT_NAME "mgl2")
+else(enable-mgl2)
+	set_target_properties(mgl-static PROPERTIES OUTPUT_NAME "mgl")
+endif(enable-mgl2)
 
 # if(MGL_HAVE_LTDL)
 # 	target_link_libraries(mgl ${LTDL_LIB})
@@ -102,14 +113,44 @@ if(MGL_HAVE_ZLIB)
 	include_directories(${ZLIB_INCLUDE_DIR})
 endif(MGL_HAVE_ZLIB)
 
+if(MGL_HAVE_MPI)
+	add_library(mgl-mpi SHARED mpi.cpp ../include/mgl2/mpi.h)
+	add_library(mgl-mpi-static STATIC mpi.cpp ../include/mgl2/mpi.h)
+	set_target_properties(mgl-mpi PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+	set_target_properties(mgl-mpi PROPERTIES DEFINE_SYMBOL "mgl_EXPORTS")
+	set_target_properties(mgl-mpi-static PROPERTIES OUTPUT_NAME "mgl-mpi")
+	set_target_properties(mgl-mpi-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+	target_compile_definitions(mgl-mpi-static PUBLIC MGL_STATIC_DEFINE)
+
+	if(enable-mgl2)
+		set_target_properties(mgl-mpi PROPERTIES OUTPUT_NAME "mgl2-mpi")
+		set_target_properties(mgl-mpi-static PROPERTIES OUTPUT_NAME "mgl2-mpi")
+	else(enable-mgl2)
+		set_target_properties(mgl-mpi-static PROPERTIES OUTPUT_NAME "mgl-mpi")
+	endif(enable-mgl2)
+
+	target_link_libraries(mgl-mpi ${MPI_LIBRARIES} )
+#	include_directories(${MPI_C_INCLUDE_PATH})
+	include_directories(${MPI_CXX_INCLUDE_PATH})
+
+	set_target_properties(mgl-mpi PROPERTIES SOVERSION ${MathGL_SOVERSION})
+	install(
+		TARGETS mgl-mpi mgl-mpi-static
+		RUNTIME DESTINATION bin
+		ARCHIVE DESTINATION ${MGL_LIB_INSTALL_DIR}
+		LIBRARY DESTINATION ${MGL_LIB_INSTALL_DIR}
+	)
+endif(MGL_HAVE_MPI)
+
 if(M_LIB)
 	target_link_libraries(mgl ${M_LIB})
 endif(M_LIB)
 
-if(MGL_HAVE_MPI)
-	mgl_add_lib(mpi mpi.cpp ../include/mgl2/mpi.h)
-	target_link_libraries(mgl-mpi ${MPI_LIBRARIES} )
-	target_include_directories(mgl-mpi SYSTEM PUBLIC ${MPI_CXX_INCLUDE_PATH})
-endif(MGL_HAVE_MPI)
-
+set_target_properties(mgl PROPERTIES SOVERSION ${MathGL_SOVERSION})
+install(
+	TARGETS mgl mgl-static
+	RUNTIME DESTINATION bin
+	ARCHIVE DESTINATION ${MGL_LIB_INSTALL_DIR}
+	LIBRARY DESTINATION ${MGL_LIB_INSTALL_DIR}
+)
 install(FILES ${MathGL_BINARY_DIR}/include/mgl2/dllexport.h DESTINATION ${MGL_INCLUDE_PATH})
