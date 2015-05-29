@@ -51,8 +51,6 @@ B. Add chapter with real samples
 C. Translate to Russian everything
 D. Docs about JS interface
 
-1. Update mgltex documentation
-2. Update 'fourier' command
 
 YY. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using Stem()
 

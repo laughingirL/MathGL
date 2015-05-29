@@ -12,8 +12,8 @@ endif(NOT CMAKE_BUILD_TYPE)
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
 set(MathGL_VERSION_MAJOR 2)
-set(MathGL_VERSION_MINOR 3.4)
-set(MathGL_SOVERSION 7.4.1)
+set(MathGL_VERSION_MINOR 3.3)
+set(MathGL_SOVERSION 7.4.0)
 
 
 MACRO(MGL_DEPENDENT_OPTION option doc default depends1 force1 depends2 force2)

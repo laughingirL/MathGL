@@ -25,7 +25,6 @@ int main(int argc, char *argv[])
 	mglFont fnt;
 	std::string path, base, fname;
 	char ch;
-	bool none=false;
 
 	while(1)
 	{
