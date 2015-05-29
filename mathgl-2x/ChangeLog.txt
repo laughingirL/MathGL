@@ -1,4 +1,4 @@
-2.3.3 Released ?? April 2015
+2.3.3 Released 01 June 2015
 
 * MGL command 'join' now can join arbitrary number of data arrays.
 * Add style "dN" for Smooth() for averaging over (2*N+1)-th points.

@@ -2,10 +2,6 @@ if(enable-qt)
 
 configure_file(${MathGL_SOURCE_DIR}/udav/mgl.xml.in ${MathGL_BINARY_DIR}/udav/mgl.xml)
 
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
 #set(mgl_wnd_src window.cpp)
 set(udav_src anim_dlg.cpp find_dlg.cpp mem_pnl.cpp prop_dlg.cpp textedit.cpp args_dlg.cpp
 	help_pnl.cpp newcmd_dlg.cpp text_pnl.cpp calc_dlg.cpp hint_dlg.cpp
@@ -15,8 +11,6 @@ set(udav_src anim_dlg.cpp find_dlg.cpp mem_pnl.cpp prop_dlg.cpp textedit.cpp arg
 set(udav_moc_hdr anim_dlg.h files_dlg.h info_dlg.h opt_dlg.h text_pnl.h args_dlg.h
 	find_dlg.h mem_pnl.h plot_pnl.h setup_dlg.h udav_wnd.h calc_dlg.h help_pnl.h newcmd_dlg.h
 	prop_dlg.h style_dlg.h dat_pnl.h open_dlg.h textedit.h hint_dlg.h data_dlg.h subplot_dlg.h )
-
-set(udav_rc udav.qrc)
 
 if(WIN32)
 	set(udav_src ${udav_src} udav.rc)
@@ -32,11 +26,20 @@ if(MGL_HAVE_GSL)
 	include_directories(${GSL_INCLUDE_DIR})
 endif(MGL_HAVE_GSL)
 
-add_executable(udav ${udav_src} ${udav_moc_hdr} ${udav_rc})
 #set_target_properties(udav PROPERTIES COMPILE_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 if(enable-qt5)
+	include(../cmake-qt5.txt)
+	set(CMAKE_AUTOMOC ON)
+	set(CMAKE_INCLUDE_CURRENT_DIR ON)
+	qt5_add_resources(udav_rc udav.qrc)
+	add_executable(udav ${udav_src} ${udav_moc_hdr} ${udav_rc})
 	target_link_libraries(udav mgl-qt5 ${MGL_QT5_LIBS})
 else(enable-qt5)
+	include(../cmake-qt4.txt)
+	set(CMAKE_AUTOMOC ON)
+	set(CMAKE_INCLUDE_CURRENT_DIR ON)
+	qt4_add_resources(udav_rc udav.qrc)
+	add_executable(udav ${udav_src} ${udav_moc_hdr} ${udav_rc})
 	target_link_libraries(udav mgl-qt4 ${MGL_QT4_LIBS})
 endif(enable-qt5)
 

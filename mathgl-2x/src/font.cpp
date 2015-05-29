@@ -277,6 +277,7 @@ unsigned mglFont::Parse(const wchar_t *s) const
 	else if(!wcscmp(s,L"textbf"))	res = MGL_FONT_BOLD;
 	else if(!wcscmp(s,L"textit"))	res = MGL_FONT_ITAL;
 	else if(!wcscmp(s,L"textrm"))	res = unsigned(-1);
+	else if(!wcscmp(s,L"T2A"))		res = unsigned(-1);
 	else if(!wcscmp(s,L"w"))		res = MGL_FONT_WIRE;
 	else if(!wcscmp(s,L"wire"))		res = MGL_FONT_WIRE;
 	else if(!wcsncmp(s,L"color",5))	res = MGL_COLOR_MASK + (0xff & s[5]);
