@@ -1463,7 +1463,7 @@ These functions change the data in some direction like differentiations, integra
 
 @anchor{fourier}
 @deftypefn {Команда MGL} {} fourier reDat imDat 'dir'
-@deftypefn {Команда MGL} {} fourier complexDat 'dir'
+@deftypefnx {Команда MGL} {} fourier complexDat 'dir'
 @ifclear UDAV
 @deftypefnx {Global function} @code{void} mglFourier @code{const mglDataA &}re, @code{const mglDataA &}im, @code{const char *}dir)
 @deftypefnx {Функция С} @code{void} mgl_data_fourier @code{HCDT} re, @code{HCDT} im, @code{const char *}dir)

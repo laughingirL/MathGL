@@ -1473,7 +1473,7 @@ The same as previous but with specified amplitude @var{ampl} and phase @var{phas
 
 @anchor{fourier}
 @deftypefn {MGL command} {} fourier reDat imDat 'dir'
-@deftypefn {MGL command} {} fourier complexDat 'dir'
+@deftypefnx {MGL command} {} fourier complexDat 'dir'
 @ifclear UDAV
 @deftypefnx {Global function} @code{void} mglFourier @code{const mglDataA &}re, @code{const mglDataA &}im, @code{const char *}dir)
 @deftypefnx {C function} @code{void} mgl_data_fourier @code{HCDT} re, @code{HCDT} im, @code{const char *}dir)

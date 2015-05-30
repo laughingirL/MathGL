@@ -20,7 +20,7 @@
 #include "mgl2/font.h"
 
 /// Table of LaTeX symbols and its UTF8 codes. This array MUST BE sorted!!!
-MGL_EXPORT long mgl_tex_num=1881-24;
+MGL_EXPORT long mgl_tex_num=1924;
 MGL_EXPORT mglTeXsymb mgl_tex_symb[] = {
 	{0x23, L"#"},
 	{0x25, L"%"},
@@ -77,9 +77,9 @@ MGL_EXPORT mglTeXsymb mgl_tex_symb[] = {
 	{0x422, L"CYRT"},
 	{0x423, L"CYRU"},
 	{0x412, L"CYRV"},
-	{0x42e, L"CYRYU"},
 	{0x42f, L"CYRYA"},
 	{0x401, L"CYRYO"},
+	{0x42e, L"CYRYU"},
 	{0x417, L"CYRZ"},
 	{0x416, L"CYRZH"},
 	{0x22d2, L"Cap"},
@@ -577,9 +577,9 @@ MGL_EXPORT mglTeXsymb mgl_tex_symb[] = {
 	{0x442, L"cyrt"},
 	{0x443, L"cyru"},
 	{0x432, L"cyrv"},
-	{0x44e, L"cyryu"},
 	{0x44f, L"cyrya"},
 	{0x451, L"cyryo"},
+	{0x44e, L"cyryu"},
 	{0x437, L"cyrz"},
 	{0x436, L"cyrzh"},
 	{0x2020, L"dag"},
