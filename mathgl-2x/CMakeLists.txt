@@ -164,6 +164,9 @@ if(HAVE_MEMRCHR)
 	ADD_DEFINITIONS(-DHAVE_MEMRCHR)
 endif(HAVE_MEMRCHR)
 
+include(CheckTypeSize)
+check_type_size("long" SIZEOF_LONG)
+
 include(CheckCXXSourceCompiles)
 unset(MGL_HAVE_C99_COMPLEX)
 CHECK_CXX_SOURCE_COMPILES(

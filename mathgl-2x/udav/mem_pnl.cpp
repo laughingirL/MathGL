@@ -165,8 +165,13 @@ void MemPanel::refresh()
 		else if(dynamic_cast<mglDataR*>(v))	sv = sizeof(mglDataR);
 		else if(dynamic_cast<mglDataT*>(v))	sv = sizeof(mglDataT);
 		if(sv==0)	s = tr("unknown");
+#if MGL_SIZEOF_LONG>4
+//		else if((sv>>80L)>0)	s.sprintf("%ld Yb",sv>>80L);
+//		else if((sv>>70L)>0)	s.sprintf("%ld Zb",sv>>70L);
+		else if((sv>>60L)>0)	s.sprintf("%ld Eb",sv>>60L);
 		else if((sv>>50L)>0)	s.sprintf("%ld Pb",sv>>50L);
 		else if((sv>>40L)>0)	s.sprintf("%ld Tb",sv>>40L);
+#endif
 		else if((sv>>30L)>0)	s.sprintf("%ld Gb",sv>>30L);
 		else if((sv>>20L)>0)	s.sprintf("%ld Mb",sv>>20L);
 		else if((sv>>10L)>0)	s.sprintf("%ld Kb",sv>>10L);

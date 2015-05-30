@@ -896,7 +896,7 @@ void mglParser::Execute(mglGraph *gr, FILE *fp, bool print)
 	if(gr==0 || fp==0)	return;
 	std::wstring str;
 	wchar_t ch;
-	while(long(ch=fgetwc(fp))!=WEOF)	str.push_back(ch);
+	while(!feof(fp) && size_t(ch=fgetwc(fp))!=WEOF)	str.push_back(ch);
 //	while(!feof(fp))	str.push_back(fgetwc(fp));
 	Execute(gr,str.c_str());
 	if(print)	printf("%s\n",gr->Message());

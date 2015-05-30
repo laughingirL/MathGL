@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
 	if(fname.empty())	fname = base + ".vfmb";
 	fnt.Load(base.c_str(),path.c_str());
 	size_t size = fnt.SaveBin(fname.c_str());
-	printf("Output size of %s should be %lu\n", fname.c_str(), size);
+	printf("Output size of %s should be %zu\n", fname.c_str(), size);
 	return 0;
 }
 //-----------------------------------------------------------------------------

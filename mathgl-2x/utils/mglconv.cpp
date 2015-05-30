@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
 			if(fp)
 			{
 				wchar_t ch;
-				while(!feof(fp) && long(ch=fgetwc(fp))!=WEOF)	str.push_back(ch);
+				while(!feof(fp) && size_t(ch=fgetwc(fp))!=WEOF)	str.push_back(ch);
 				fclose(fp);	str += L"\n";
 			}
 		}

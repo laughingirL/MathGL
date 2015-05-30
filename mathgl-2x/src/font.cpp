@@ -782,7 +782,7 @@ bool mglFont::Load(const char *base, const char *path)
 	if(bold.size()>0)
 		memcpy(Buf+cur,&bold[0],bold.size()*sizeof(short));
 #pragma omp parallel for
-	for(long i=0;i<GetNumGlyph();i++)	if(glyphs[i].ln[1]<0)
+	for(long i=0;i<long(GetNumGlyph());i++)	if(glyphs[i].ln[1]<0)
 	{	glyphs[i].ln[1] = cur-1-glyphs[i].ln[1];	glyphs[i].tr[1] = cur-1-glyphs[i].tr[1];	}
 #pragma omp parallel for
 	for(long i=0;i<long(ex_b.size());i++)	if(ex_b[i].ln[1]<0)
@@ -795,7 +795,7 @@ bool mglFont::Load(const char *base, const char *path)
 	if(ital.size()>0)
 		memcpy(Buf+cur,&ital[0],ital.size()*sizeof(short));
 #pragma omp parallel for
-	for(long i=0;i<GetNumGlyph();i++)	if(glyphs[i].ln[2]<0)
+	for(long i=0;i<long(GetNumGlyph());i++)	if(glyphs[i].ln[2]<0)
 	{	glyphs[i].ln[2] = cur-1-glyphs[i].ln[2];	glyphs[i].tr[2] = cur-1-glyphs[i].tr[2];	}
 #pragma omp parallel for
 	for(long i=0;i<long(ex_i.size());i++)	if(ex_i[i].ln[2]<0)
@@ -808,7 +808,7 @@ bool mglFont::Load(const char *base, const char *path)
 	if(both.size()>0)
 		memcpy(Buf+cur,&both[0],both.size()*sizeof(short));
 #pragma omp parallel for
-	for(long i=0;i<GetNumGlyph();i++)	if(glyphs[i].ln[3]<0)
+	for(long i=0;i<long(GetNumGlyph());i++)	if(glyphs[i].ln[3]<0)
 	{	glyphs[i].ln[3] = cur-1-glyphs[i].ln[3];	glyphs[i].tr[3] = cur-1-glyphs[i].tr[3];	}
 #pragma omp parallel for
 	for(long i=0;i<long(ex_bi.size());i++)	if(ex_bi[i].ln[3]<0)
