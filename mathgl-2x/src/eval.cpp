@@ -505,6 +505,8 @@ double MGL_LOCAL_CONST mgz2(double,double)	{return NAN;}	// NOTE I think NAN val
 double MGL_LOCAL_CONST asinh(double x)	{	return log(x+sqrt(x*x+1.));	}
 double MGL_LOCAL_CONST acosh(double x)	{	return x>1 ? log(x+sqrt(x*x-1.)) : NAN;	}
 double MGL_LOCAL_CONST atanh(double x)	{	return fabs(x)<1 ? log((1.+x)/(1.-x))/2 : NAN;	}
+double MGL_LOCAL_CONST fmin(double a,double b)	{	return a > b ? b : a;	}
+double MGL_LOCAL_CONST fmax(double a,double b)	{	return a > b ? a : b;	}
 #endif
 //-----------------------------------------------------------------------------
 typedef double (*func_1)(double);

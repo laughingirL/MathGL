@@ -290,6 +290,13 @@ double MGL_LOCAL_CONST llg(double a,double b);//	{return log(a)/log(b);}
 double MGL_LOCAL_CONST gslEllE(double a,double b);//	{return gsl_sf_ellint_E(a,b,GSL_PREC_SINGLE);}
 double MGL_LOCAL_CONST gslEllF(double a,double b);//	{return gsl_sf_ellint_F(a,b,GSL_PREC_SINGLE);}
 double MGL_LOCAL_CONST gslLegP(double a,double b);//	{return gsl_sf_legendre_Pl(int(a),b);}
+#ifdef WIN32
+double MGL_LOCAL_CONST asinh(double x);
+double MGL_LOCAL_CONST acosh(double x);
+double MGL_LOCAL_CONST atanh(double x);
+double MGL_LOCAL_CONST fmin(double a,double b);
+double MGL_LOCAL_CONST fmax(double a,double b);
+#endif
 //-----------------------------------------------------------------------------
 // It seems that standard wcstombs() have a bug. So, I replace by my own.
 void MGL_EXPORT mgl_wcstombs(char *dst, const wchar_t *src, int size)
@@ -332,7 +339,7 @@ HMDT MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std::v
 	{
 		long i, j, br=0,k;
 		bool ar=true,mt=false;
-		HMDT res;
+		HMDT res=0;
 		for(i=1,j=1;i<len-1;i++)
 		{
 			if(str[i]=='[')	br++;
@@ -539,6 +546,9 @@ HMDT MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std::v
 			if(!nm.compare(L"asin"))		return mglApplyFunc(str, arg, head, asin);
 			else if(!nm.compare(L"acos"))	return mglApplyFunc(str, arg, head, acos);
 			else if(!nm.compare(L"atan"))	return mglApplyFunc(str, arg, head, atan);
+			else if(!nm.compare(L"asinh"))	return mglApplyFunc(str, arg, head, asinh);
+			else if(!nm.compare(L"acosh"))	return mglApplyFunc(str, arg, head, acosh);
+			else if(!nm.compare(L"atanh"))	return mglApplyFunc(str, arg, head, atanh);
 			else if(!nm.compare(L"arg"))
 			{
 				if(n>0)	return mglApplyOper(str.substr(n+1),str.substr(0,n),arg, head, atan2);
@@ -753,7 +763,7 @@ HADT MGL_NO_EXPORT mglFormulaCalcC(std::wstring str, mglParser *arg, const std::
 	{
 		long i, j, br=0,k;
 		bool ar=true,mt=false;
-		HADT res;
+		HADT res=0;
 		for(i=1,j=1;i<len-1;i++)
 		{
 			if(str[i]=='[')	br++;
@@ -958,6 +968,9 @@ HADT MGL_NO_EXPORT mglFormulaCalcC(std::wstring str, mglParser *arg, const std::
 			if(!nm.compare(L"asin"))	return mglApplyFuncC(str, arg, head, asinc);
 			else if(!nm.compare(L"acos"))	return mglApplyFuncC(str, arg, head, acosc);
 			else if(!nm.compare(L"atan"))	return mglApplyFuncC(str, arg, head, atanc);
+			else if(!nm.compare(L"asinh"))	return mglApplyFuncC(str, arg, head, asinhc);
+			else if(!nm.compare(L"acosh"))	return mglApplyFuncC(str, arg, head, acoshc);
+			else if(!nm.compare(L"atanh"))	return mglApplyFuncC(str, arg, head, atanhc);
 			else if(!nm.compare(L"arg"))	return mglApplyFuncC(str, arg, head, argc);
 			else if(!nm.compare(L"abs"))		return mglApplyFuncC(str, arg, head, absc);
 		}
