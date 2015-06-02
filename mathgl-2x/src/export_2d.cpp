@@ -190,7 +190,7 @@ void MGL_EXPORT mgl_write_eps(HMGL gr, const char *fname,const char *descr)
 		fprintf(fb, "%%%%BoundingBox: 0 0 %d %d\n", w, h);
 		fclose(fb);	delete []buf;
 	}
-	
+
 	const std::string loc = setlocale(LC_NUMERIC, NULL);	setlocale(LC_NUMERIC, "C");
 	mgl_printf(fp, gz, "%%!PS-Adobe-3.0 EPSF-3.0\n%%%%BoundingBox: 0 0 %d %d\n", w, h);
 	mgl_printf(fp, gz, "%%%%Created by MathGL library\n%%%%Title: %s\n",descr ? descr : fname);
@@ -248,7 +248,7 @@ void MGL_EXPORT mgl_write_eps(HMGL gr, const char *fname,const char *descr)
 	if(m_P)	mgl_printf(fp, gz, "/m_P {m_p 0 sm rm m_s} def\n");
 	if(m_X)	mgl_printf(fp, gz, "/m_X {m_x ss sm rm m_s} def\n");
 	//	if(m_C)	mgl_printf(fp, gz, "/m_C {m_c m_o} def\n");
-	mgl_printf(fp, gz, "\n");
+	mgl_printf(fp, gz, "1 setlinecap\n1 setlinejoin\n\n");	// manual setting round line cap
 
 	// Write background image first
 	const unsigned char *img = mgl_get_background(gr);
@@ -434,7 +434,7 @@ void MGL_EXPORT mgl_write_svg(HMGL gr, const char *fname,const char *descr)
 
 
 	// currentColor -> inherit ???
-	mgl_printf(fp, gz, "<g fill=\"none\" stroke=\"none\" stroke-width=\"0.5\">\n");
+	mgl_printf(fp, gz, "<g fill=\"none\" stroke=\"none\" stroke-width=\"0.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n");
 	// write primitives
 	mreal wp=-1;
 	register long i;
