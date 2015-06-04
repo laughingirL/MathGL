@@ -24,11 +24,11 @@ if(enable-qt)
 	if(enable-qt5)
 		include(../cmake-qt5.txt)
 		target_link_libraries(mglview mgl-qt5)
-		qt5_use_modules(mglview Core Widgets Gui PrintSupport)
+		qt5_use_modules(mglview ${MGL_QT5_LIBS})
 	else(enable-qt5)
 		include(../cmake-qt4.txt)
 		target_link_libraries(mglview mgl-qt4)
-		target_link_libraries(mglview ${QT_LIBRARIES})
+		qt4_use_modules(mglview ${MGL_QT4_LIBS})
 	endif(enable-qt5)
 
 	install(

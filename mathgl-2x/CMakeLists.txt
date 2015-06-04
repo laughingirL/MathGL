@@ -15,6 +15,38 @@ set(MathGL_VERSION_MAJOR 2)
 set(MathGL_VERSION_MINOR 3.3)
 set(MathGL_SOVERSION 7.4.0)
 
+function(mgl_add_lib mgl_tmp_lib)
+       if(${mgl_tmp_lib} MATCHES mgl)
+               set(mgllib mgl)
+               set(mgllib2 mgl2)
+       else(${mgl_tmp_lib} MATCHES mgl)
+               set(mgllib mgl-${mgl_tmp_lib})
+               set(mgllib2 mgl2-${mgl_tmp_lib})
+       endif(${mgl_tmp_lib} MATCHES mgl)
+       set(mgl_src_lst ${ARGV})
+       list(REMOVE_AT mgl_src_lst 0)
+       add_library(${mgllib} SHARED ${mgl_src_lst})
+       add_library(${mgllib}-static STATIC ${mgl_src_lst})
+       set_target_properties(${mgllib} PROPERTIES SOVERSION ${MathGL_SOVERSION})
+       set_target_properties(${mgllib} PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+       set_target_properties(${mgllib} PROPERTIES DEFINE_SYMBOL "mgl_EXPORTS")
+       set_target_properties(${mgllib}-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+       target_compile_definitions(${mgllib}-static PUBLIC MGL_STATIC_DEFINE)
+
+       if(enable-mgl2)
+               set_target_properties(${mgllib} PROPERTIES OUTPUT_NAME "${mgllib2}")
+               set_target_properties(${mgllib}-static PROPERTIES OUTPUT_NAME "${mgllib2}")
+       else(enable-mgl2)
+               set_target_properties(${mgllib}-static PROPERTIES OUTPUT_NAME "${mgllib}")
+       endif(enable-mgl2)
+
+       install(
+               TARGETS ${mgllib} ${mgllib}-static
+               RUNTIME DESTINATION bin
+               ARCHIVE DESTINATION ${MGL_LIB_INSTALL_DIR}
+               LIBRARY DESTINATION ${MGL_LIB_INSTALL_DIR}
+       )
+endfunction(mgl_add_lib mgl_tmp_lib)
 
 MACRO(MGL_DEPENDENT_OPTION option doc default depends1 force1 depends2 force2)
   IF(${option}_ISSET MATCHES "^${option}_ISSET$")
