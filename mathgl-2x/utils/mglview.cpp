@@ -39,11 +39,11 @@ int show(mglGraph *gr)
 //-----------------------------------------------------------------------------
 int main(int argc, char **argv)
 {
-	char ch, iname[256]="";
+	char iname[256]="";
 	mgl_suppress_warn(true);
 	while(1)
 	{
-		ch = getopt(argc, argv, "1:2:3:4:5:6:7:8:9:hL:s:");
+		int ch = getopt(argc, argv, "1:2:3:4:5:6:7:8:9:hL:s:");
 		if(ch>='1' && ch<='9')	p.AddParam(ch-'0', optarg);
 		else if(ch=='s')
 		{
@@ -69,12 +69,11 @@ int main(int argc, char **argv)
 				"\t-L loc       set locale to loc\n"
 				"\t-            get script from standard input\n"
 				"\t-h           print this message\n" );
-			ch = 'h';	break;
+			return 0;
 		}
 		else if(ch==-1 && optind<argc)
 		{	strncpy(iname, argv[optind][0]=='-'?"":argv[optind],256);	break;	}
 	}
-	if(ch=='h')	return 0;
 
 	bool mgld=(*iname && iname[strlen(iname)-1]=='d');
 	if(!mgld)

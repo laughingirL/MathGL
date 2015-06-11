@@ -28,14 +28,14 @@ int main(int argc, char *argv[])
 	mgl_suppress_warn(true);
 	mglGraph gr;
 	mglParse p(true);
-	char ch, buf[2048], iname[256]="", oname[256]="";
+	char buf[2048], iname[256]="", oname[256]="";
 	std::vector<std::wstring> var;
 	std::wstring str;
 	bool none=false;
 
 	while(1)
 	{
-		ch = getopt(argc, argv, "1:2:3:4:5:6:7:8:9:hno:L:C:A:s:S:q:");
+		int ch = getopt(argc, argv, "1:2:3:4:5:6:7:8:9:hno:L:C:A:s:S:q:");
 		if(ch>='1' && ch<='9')	p.AddParam(ch-'0', optarg);
 		else if(ch=='s')
 		{
@@ -89,13 +89,12 @@ int main(int argc, char *argv[])
 				"\t-C n1:n2     add animation value in range [n1,n2] with step 1\n"
 				"\t-            get script from standard input\n"
 				"\t-h           print this message\n" );
-			ch = 'h';	break;
+			return 0;
 		}
 		else if(ch=='o')	strncpy(oname, optarg,256);
 		else if(ch==-1 && optind<argc)
 		{	strncpy(iname, argv[optind][0]=='-'?"":argv[optind],256);	break;	}
 	}
-	if(ch=='h')	return 0;
 	if(*oname==0)	{	strncpy(oname,*iname?iname:"out",250);	strcat(oname,".png");	}
 	else	none = false;
 

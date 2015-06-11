@@ -501,7 +501,7 @@ void MGL_EXPORT mgl_vect3_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintptr_
 //-----------------------------------------------------------------------------
 void MGL_NO_EXPORT flow(mglBase *gr, double zVal, double u, double v, const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, long ss, bool vv)
 {
-	long n=10*(ax.nx+ax.ny);
+	long n=15*(ax.nx+ax.ny);
 	bool nboth = x.nx*x.ny!=ax.nx*ax.ny || y.nx*y.ny!=ax.nx*ax.ny;
 
 	mglPoint *pp = new mglPoint[n], dp;
@@ -730,7 +730,7 @@ void MGL_EXPORT mgl_flowp_2d_(uintptr_t *gr, mreal *x0, mreal *y0, mreal *z0, ui
 //-----------------------------------------------------------------------------
 void flow(mglBase *gr, double u, double v, double w, const mglData &x, const mglData &y, const mglData &z, const mglData &ax, const mglData &ay, const mglData &az,long ss,bool vv, bool xo, bool zo)
 {
-	static long n=10*(ax.nx+ax.ny);
+	static long n=15*(ax.nx+ax.ny+ax.nz);
 	long nn = ax.nx*ax.ny*ax.nz;
 	bool nboth = x.nx*x.ny*x.nz!=nn || y.nx*y.ny*y.nz!=nn || z.nx*z.ny*z.nz!=nn;
 	mglPoint *pp = new mglPoint[n], dp;
@@ -791,7 +791,7 @@ void flow(mglBase *gr, double u, double v, double w, const mglData &x, const mgl
 		f = (xu*yw*zz-xw*yu*zz-xu*yy*zw+xx*yu*zw+xw*yy*zu-xx*yw*zu)/det;
 		g = (-xu*yv*zz+xv*yu*zz+xu*yy*zv-xx*yu*zv-xv*yy*zu+xx*yv*zu)/det;
 		for(m=0;m<k-1;m++)	// determines encircle
-			if(mgl_norm((pp[k]-pp[m])/dx)<dt/10.)	{	end = true;	break;	}
+			if(mgl_norm((pp[k]-pp[m])/dx)<dt*MGL_FLOW_ACC)	{	end = true;	break;	}
 		h = sqrt(e*e+f*f+g*g);	pp[k].c = gr->GetC(ss,s*h);
 		if(h<1e-5)	break;	// stationary point
 		k++;
@@ -1072,7 +1072,7 @@ void MGL_EXPORT mgl_grad_(uintptr_t *gr, uintptr_t *ph, const char *sch, const c
 //-----------------------------------------------------------------------------
 void MGL_NO_EXPORT flowr(mglBase *gr, double zVal, double u, double v, const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, double r0,long sc)
 {
-	long n=10*(ax.nx+ax.ny);
+	long n=15*(ax.nx+ax.ny);
 	bool nboth = x.nx*x.ny!=ax.nx*ax.ny || y.nx*y.ny!=ax.nx*ax.ny;
 
 	mglPoint *pp = new mglPoint[n], dp;
@@ -1260,7 +1260,7 @@ void MGL_EXPORT mgl_pipe_2d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, const 
 //-----------------------------------------------------------------------------
 void flowr(mglBase *gr, double u, double v, double w, const mglData &x, const mglData &y, const mglData &z, const mglData &ax, const mglData &ay, const mglData &az, double r0,long sc)
 {
-	static long n=10*(ax.nx+ax.ny);
+	static long n=15*(ax.nx+ax.ny+ax.nz);
 	long nn = ax.nx*ax.ny*ax.nz;
 	bool nboth = x.nx*x.ny*x.nz!=nn || y.nx*y.ny*y.nz!=nn || z.nx*z.ny*z.nz!=nn;
 	mglPoint *pp = new mglPoint[n], dp;
@@ -1325,7 +1325,7 @@ void flowr(mglBase *gr, double u, double v, double w, const mglData &x, const mg
 		f = (xu*yw*zz-xw*yu*zz-xu*yy*zw+xx*yu*zw+xw*yy*zu-xx*yw*zu)/det;
 		g = (-xu*yv*zz+xv*yu*zz+xu*yy*zv-xx*yu*zv-xv*yy*zu+xx*yv*zu)/det;
 		for(m=0;m<k-1;m++)	// determines encircle
-			if(mgl_norm((pp[k]-pp[m])/dx)<dt/10.)	{	end = true;	break;	}
+			if(mgl_norm((pp[k]-pp[m])/dx)<dt*MGL_FLOW_ACC)	{	end = true;	break;	}
 		h = sqrt(e*e+f*f+g*g);	cc[k] = gr->GetC(sc,s*h);
 		pp[k].c = r0>0 ? r0*sqrt(1e-2+ss*h*h)/2 : -r0/sqrt(1e-2+ss*h*h)/5;
 		if(h<1e-5)	break;	// stationary point

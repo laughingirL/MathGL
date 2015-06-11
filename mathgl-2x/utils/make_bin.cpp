@@ -24,11 +24,10 @@ int main(int argc, char *argv[])
 {
 	mglFont fnt;
 	std::string path, base, fname;
-	char ch;
 
 	while(1)
 	{
-		ch = getopt(argc, argv, "p:o:h");
+		int ch = getopt(argc, argv, "p:o:h");
 		if(ch=='p')	path = optarg;
 		else if(ch=='o')	fname = optarg;
 		else if(ch=='h' || (ch==-1 && optind>=argc))
@@ -39,11 +38,10 @@ int main(int argc, char *argv[])
 				"\t-p path      set specific path for base font files\n"
 				"\t-o fname     set output filename (use ${base}.vfmb by default)\n"
 				"\t-h           print this message\n" );
-			ch = 'h';	break;
+			return 0;
 		}
 		else if(ch==-1 && optind<argc)	{	base = argv[optind];	break;	}
 	}
-	if(ch=='h')	return 0;
 	if(fname.empty())	fname = base + ".vfmb";
 	fnt.Load(base.c_str(),path.c_str());
 	size_t size = fnt.SaveBin(fname.c_str());
