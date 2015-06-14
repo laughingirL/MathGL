@@ -21,7 +21,6 @@
 #include "mgl2/eval.h"
 #include "mgl2/data.h"
 #include "mgl2/base.h"
-#define MGL_FLOW_ACC	0.05	// accuracy of loop detection
 //-----------------------------------------------------------------------------
 //
 //	Traj series
@@ -501,26 +500,28 @@ void MGL_EXPORT mgl_vect3_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintptr_
 //-----------------------------------------------------------------------------
 void MGL_NO_EXPORT flow(mglBase *gr, double zVal, double u, double v, const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, long ss, bool vv)
 {
-	long n=15*(ax.nx+ax.ny);
+	long n=100*(ax.nx+ax.ny);
 	bool nboth = x.nx*x.ny!=ax.nx*ax.ny || y.nx*y.ny!=ax.nx*ax.ny;
 
 	mglPoint *pp = new mglPoint[n], dp;
 	mglPoint dx(1/fabs(gr->Max.x-gr->Min.x),1/fabs(gr->Max.y-gr->Min.y),1/fabs(gr->Max.z-gr->Min.z));
+	mglPoint nx(ax.nx,ax.ny);
 
-	mreal dt = 0.5/(ax.nx > ax.ny ? ax.nx : ax.ny),e,f,g,ff[4],gg[4],h,s=2;
+	mreal dt = 0.5/(ax.nx > ax.ny ? ax.nx : ax.ny),e,f,g,ff[4],gg[4],h,s=2,acc=dt/20;
 	if(u<0 || v<0)	{	dt = -dt;	u = -u;	v = -v;	s *= -1;}
-	register long k=0,m;
+	long k=0;
 	bool end = false;
 	if(nboth) do{
 		mglPoint dif;
 		pp[k].x = x.Spline1(dif,u,0,0);	f = ax.Spline1(u,v,0)/dif.x;
 		pp[k].y = y.Spline1(dif,v,0,0);	g = ay.Spline1(u,v,0)/dif.x;
 		pp[k].z = zVal;
-		for(m=0;m<k-1;m++)	// determines encircle
-			if(mgl_norm((pp[k]-pp[m])/dx)<dt*MGL_FLOW_ACC)	{	end = true;	break;	}
+		for(long m=0;m<k-1;m+=10)	// determines encircle
+			if(mgl_anorm((pp[k]-pp[m])/dx)<acc)	end = true;
+		if(end)	break;
 		h = hypot(f,g);	pp[k].c = gr->GetC(ss,s*h);
 		if(h<1e-5)	break;	// stationary point
-		k++;
+		if(k==0 || mgl_anorm((pp[k]-pp[k-1])/nx)>=1)	k++;
 		// find next point by midpoint method
 		h+=1;	ff[0]=f*dt/h;	gg[0]=g*dt/h;
 		e = u+ff[0]/2;	h = v+gg[0]/2;
@@ -543,16 +544,17 @@ void MGL_NO_EXPORT flow(mglBase *gr, double zVal, double u, double v, const mglD
 	else do{
 		mglPoint dif;
 		register mreal xu,xv,yu,yv,det,xx,yy;
-			pp[k].x = x.Spline1(dif,u,v,0);	xu=dif.x;	xv=dif.y;
-			pp[k].y = y.Spline1(dif,u,v,0);	yu=dif.x;	yv=dif.y;
-			xx = ax.Spline1(u,v,0);	yy = ay.Spline1(u,v,0);
-			det = xv*yu-xu*yv;	f = (yy*xv-xx*yv)/det;	g = (xx*yu-yy*xu)/det;
+		pp[k].x = x.Spline1(dif,u,v,0);	xu=dif.x;	xv=dif.y;
+		pp[k].y = y.Spline1(dif,u,v,0);	yu=dif.x;	yv=dif.y;
+		xx = ax.Spline1(u,v,0);	yy = ay.Spline1(u,v,0);
+		det = xv*yu-xu*yv;	f = (yy*xv-xx*yv)/det;	g = (xx*yu-yy*xu)/det;
 		pp[k].z = zVal;
-		for(m=0;m<k-1;m++)	// determines encircle
-			if(mgl_norm((pp[k]-pp[m])/dx)<dt*MGL_FLOW_ACC)	{	end = true;	break;	}
+		for(long m=0;m<k-1;m+=10)	// determines encircle
+			if(mgl_anorm((pp[k]-pp[m])/dx)<acc)	end = true;
+		if(end)	break;
 		h = hypot(f,g);	pp[k].c = gr->GetC(ss,s*h);
 		if(h<1e-5)	break;	// stationary point
-		k++;
+		if(k==0 || mgl_anorm((pp[k]-pp[k-1])/nx)>=1)	k++;
 		// find next point by midpoint method
 		h+=1;	ff[0]=f*dt/h;	gg[0]=g*dt/h;
 		e = u+ff[0]/2;	h = v+gg[0]/2;
@@ -580,15 +582,15 @@ void MGL_NO_EXPORT flow(mglBase *gr, double zVal, double u, double v, const mglD
 	} while(!end);
 	if(k>1)
 	{
-		long j,a=long(1./fabs(dt));
+		long j,a=long(0.3/fabs(dt));
 		gr->Reserve(k);		j = gr->AddPnt(pp[0],pp[0].c);
 		for(long i=1;i<k;i++)
 		{
 			long jj=j;	j = gr->AddPnt(pp[i],pp[i].c);
 			if(vv && i%a==0)
 			{
-				if(dt<0)	gr->vect_plot(j,jj,a/5);
-				else		gr->vect_plot(jj,j,a/5);
+				if(dt<0)	gr->vect_plot(j,jj,a/3);
+				else		gr->vect_plot(jj,j,a/3);
 			}
 			else	gr->line_plot(jj,j);
 		}
@@ -615,7 +617,6 @@ void MGL_EXPORT mgl_flow_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const cha
 	{
 		if(gr->NeedStop())	break;
 		if(ax->GetNz()>1)	zVal = gr->Min.z+(gr->Max.z-gr->Min.z)*mreal(k)/(ax->GetNz()-1);
-//#pragma omp parallel for collapse(2)
 		for(long i=0;i<num;i++)	for(int s=-1;s<=1;s+=2)
 		{
 			mreal u,v;
@@ -730,29 +731,31 @@ void MGL_EXPORT mgl_flowp_2d_(uintptr_t *gr, mreal *x0, mreal *y0, mreal *z0, ui
 //-----------------------------------------------------------------------------
 void flow(mglBase *gr, double u, double v, double w, const mglData &x, const mglData &y, const mglData &z, const mglData &ax, const mglData &ay, const mglData &az,long ss,bool vv, bool xo, bool zo)
 {
-	static long n=15*(ax.nx+ax.ny+ax.nz);
+	static long n=100*(ax.nx+ax.ny+ax.nz);
 	long nn = ax.nx*ax.ny*ax.nz;
 	bool nboth = x.nx*x.ny*x.nz!=nn || y.nx*y.ny*y.nz!=nn || z.nx*z.ny*z.nz!=nn;
 	mglPoint *pp = new mglPoint[n], dp;
 	mglPoint dx(1/fabs(gr->Max.x-gr->Min.x),1/fabs(gr->Max.y-gr->Min.y),1/fabs(gr->Max.z-gr->Min.z));
+	mglPoint nx(ax.nx,ax.ny,ax.nz);
 
 	nn = (ax.nx > ax.ny ? ax.nx : ax.ny);
 	nn = (nn > ax.nz ? nn : ax.nz);
-	mreal dt = 0.2/nn, e,f,g,ee[4],ff[4],gg[4],h,s=2,u1,v1,w1;
+	mreal dt = 0.2/nn, e,f,g,ee[4],ff[4],gg[4],h,s=2,u1,v1,w1,acc=dt/20;
 	if(u<0 || v<0 || w<0)
 	{	dt = -dt;	u = -u;	v = -v;	w = -w;	s *= -1;}
-	register long k=0,m;
+	long k=0;
 	bool end = false;
 	if(nboth) do{
 		mglPoint dif;
 		pp[k].x = x.Spline1(dif,u,0,0);	e = ax.Spline1(u,v,w)/dif.x;
 		pp[k].y = y.Spline1(dif,v,0,0);	f = ay.Spline1(u,v,w)/dif.x;
 		pp[k].z = z.Spline1(dif,w,0,0);	g = az.Spline1(u,v,w)/dif.x;
-		for(m=0;m<k-1;m++)	// determines encircle
-			if(mgl_norm((pp[k]-pp[m])/dx)<dt*MGL_FLOW_ACC)	{	end = true;	break;	}
+		for(long m=0;m<k-1;m+=10)	// determines encircle
+			if(mgl_anorm((pp[k]-pp[m])/dx)<acc)	end = true;
+		if(end)	break;
 		h = sqrt(e*e+f*f+g*g);	pp[k].c = gr->GetC(ss,s*h);
 		if(h<1e-5)	break;	// stationary point
-		k++;
+		if(k==0 || mgl_anorm((pp[k]-pp[k-1])/nx)>=1)	k++;
 		// find next point by midpoint method
 		h+=1;	ee[0]=e*dt/h;	ff[0]=f*dt/h;	gg[0]=g*dt/h;
 		u1 = u+ee[0]/2;	v1 = v+ff[0]/2;	w1 = w+gg[0]/2;
@@ -790,11 +793,12 @@ void flow(mglBase *gr, double u, double v, double w, const mglData &x, const mgl
 		e = (-xv*yw*zz+xw*yv*zz+xv*yy*zw-xx*yv*zw-xw*yy*zv+xx*yw*zv)/det;
 		f = (xu*yw*zz-xw*yu*zz-xu*yy*zw+xx*yu*zw+xw*yy*zu-xx*yw*zu)/det;
 		g = (-xu*yv*zz+xv*yu*zz+xu*yy*zv-xx*yu*zv-xv*yy*zu+xx*yv*zu)/det;
-		for(m=0;m<k-1;m++)	// determines encircle
-			if(mgl_norm((pp[k]-pp[m])/dx)<dt*MGL_FLOW_ACC)	{	end = true;	break;	}
+		for(long m=0;m<k-1;m+=10)	// determines encircle
+			if(mgl_anorm((pp[k]-pp[m])/dx)<acc)	end = true;
+		if(end)	break;
 		h = sqrt(e*e+f*f+g*g);	pp[k].c = gr->GetC(ss,s*h);
 		if(h<1e-5)	break;	// stationary point
-		k++;
+		if(k==0 || mgl_anorm((pp[k]-pp[k-1])/nx)>=1)	k++;
 		// find next point by midpoint method
 		h+=1;	ee[0]=e*dt/h;	ff[0]=f*dt/h;	gg[0]=g*dt/h;
 		u1 = u+ee[0]/2;	v1 = v+ff[0]/2;	w1 = w+gg[0]/2;
@@ -836,13 +840,13 @@ void flow(mglBase *gr, double u, double v, double w, const mglData &x, const mgl
 	if(k>1)
 	{
 		long j,a=long(1./fabs(dt));
-		mreal rr = mgl_norm(gr->Max-gr->Min)*gr->BarWidth/25, ll;
+		mreal rr = mgl_anorm(gr->Max-gr->Min)*gr->BarWidth/25, ll;
 		mglPoint q1,q2,l;
 		long n1=-1,n2=-1,n3=-1,n4=-1;
 
 		gr->Reserve(4*k);	j = gr->AddPnt(pp[0],pp[0].c);
-		l = pp[1] - pp[0];	l /= mgl_norm(l);
-		q1.Set(l.y,-l.x,0);	ll = mgl_norm(q1);
+		l = pp[1] - pp[0];	l /= mgl_anorm(l);
+		q1.Set(l.y,-l.x,0);	ll = mgl_anorm(q1);
 		if(ll)	q1 /= ll;	else	q1.Set(0,1,0);
 		q2 = q1^l;
 		if(xo)	{	n1 = gr->AddPnt(pp[0],-1,q2);	n2 = gr->AddPnt(pp[0]+rr*q1,-1,q2);	}
@@ -856,8 +860,8 @@ void flow(mglBase *gr, double u, double v, double w, const mglData &x, const mgl
 				else		gr->vect_plot(jj,j,a/5);
 			}
 			else	gr->line_plot(jj,j);
-			l = pp[i]-pp[i-1];		l /= mgl_norm(l);
-			q1 -= l*(l*q1);	q1/= mgl_norm(q1);	q2 = q1^l;
+			l = pp[i]-pp[i-1];		l /= mgl_anorm(l);
+			q1 -= l*(l*q1);	q1/= mgl_anorm(q1);	q2 = q1^l;
 			long m1 = n1, m2 = n2, m3 = n3, m4 = n4;
 			if(xo)
 			{	n1 = gr->AddPnt(pp[i],-1,q2);	n2 = gr->AddPnt(pp[i]+rr*q1,-1,q2);	gr->quad_plot(n1,n2,m1,m2);	}
@@ -880,7 +884,6 @@ void MGL_EXPORT mgl_flow_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, 
 	bool vv = mglchr(sch,'v'), xo = mglchr(sch,'x'), zo = mglchr(sch,'z');
 
 	mglData xx(x), yy(y), zz(z), bx(ax), by(ay), bz(az);
-//#pragma omp parallel for collapse(3)
 	for(long i=0;i<num;i++)	for(long j=0;j<num;j++)	for(int s=-1;s<=1;s+=2)
 	{
 		mreal u,v,w;
@@ -1072,29 +1075,31 @@ void MGL_EXPORT mgl_grad_(uintptr_t *gr, uintptr_t *ph, const char *sch, const c
 //-----------------------------------------------------------------------------
 void MGL_NO_EXPORT flowr(mglBase *gr, double zVal, double u, double v, const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, double r0,long sc)
 {
-	long n=15*(ax.nx+ax.ny);
+	long n=100*(ax.nx+ax.ny);
 	bool nboth = x.nx*x.ny!=ax.nx*ax.ny || y.nx*y.ny!=ax.nx*ax.ny;
 
 	mglPoint *pp = new mglPoint[n], dp;
 	mreal *cc = new mreal[n];
 	mglPoint dx(1/fabs(gr->Max.x-gr->Min.x),1/fabs(gr->Max.y-gr->Min.y),1/fabs(gr->Max.z-gr->Min.z));
+	mglPoint nx(ax.nx,ax.ny);
 
-	mreal dt = 0.5/(ax.nx > ax.ny ? ax.nx : ax.ny),e,f,g,ff[4],gg[4],h,s=2;
+	mreal dt = 0.5/(ax.nx > ax.ny ? ax.nx : ax.ny),e,f,g,ff[4],gg[4],h,s=2,acc=dt/20;
 	mreal ss = 16./mgl_ipow(gr->Max.c - gr->Min.c,2);
 	if(u<0 || v<0)	{	dt = -dt;	u = -u;	v = -v;	s *= -1;}
-	register long k=0,m;
+	long k=0;
 	bool end = false;
 	if(nboth) do{
 		mglPoint dif;
 		pp[k].x = x.Spline1(dif,u,0,0);	f = ax.Spline1(u,v,0)/dif.x;
 		pp[k].y = y.Spline1(dif,v,0,0);	g = ay.Spline1(u,v,0)/dif.x;
 		pp[k].z = zVal;
-		for(m=0;m<k-1;m++)	// determines encircle
-			if(mgl_norm((pp[k]-pp[m])/dx)<dt*MGL_FLOW_ACC)	{	end = true;	break;	}
+		for(long m=0;m<k-1;m+=10)	// determines encircle
+			if(mgl_anorm((pp[k]-pp[m])/dx)<acc)	end = true;
+		if(end)	break;
 		h = hypot(f,g);	cc[k] = gr->GetC(sc,s*h);
 		pp[k].c = r0>0 ? r0*sqrt(1e-2+ss*h*h)/2 : -r0/sqrt(1e-2+ss*h*h)/5;
 		if(h<1e-5)	break;	// stationary point
-		k++;
+		if(k==0 || mgl_anorm((pp[k]-pp[k-1])/nx)>=1)	k++;
 		// find next point by midpoint method
 		h+=1;	ff[0]=f*dt/h;	gg[0]=g*dt/h;
 		e = u+ff[0]/2;	h = v+gg[0]/2;
@@ -1122,12 +1127,13 @@ void MGL_NO_EXPORT flowr(mglBase *gr, double zVal, double u, double v, const mgl
 			xx = ax.Spline1(u,v,0);	yy = ay.Spline1(u,v,0);
 			det = xv*yu-xu*yv;	f = (yy*xv-xx*yv)/det;	g = (xx*yu-yy*xu)/det;
 		pp[k].z = zVal;
-		for(m=0;m<k-1;m++)	// determines encircle
-			if(mgl_norm((pp[k]-pp[m])/dx)<dt*MGL_FLOW_ACC)	{	end = true;	break;	}
+		for(long m=0;m<k-1;m+=10)	// determines encircle
+			if(mgl_anorm((pp[k]-pp[m])/dx)<acc)	end = true;
+		if(end)	break;
 		h = hypot(f,g);	cc[k] = gr->GetC(sc,s*h);
 		pp[k].c = r0>0 ? r0*sqrt(1e-2+ss*h*h)/2 : -r0/sqrt(1e-2+ss*h*h)/5;
 		if(h<1e-5)	break;	// stationary point
-		k++;
+		if(k==0 || mgl_anorm((pp[k]-pp[k-1])/nx)>=1)	k++;
 		// find next point by midpoint method
 		h+=1;	ff[0]=f*dt/h;	gg[0]=g*dt/h;
 		e = u+ff[0]/2;	h = v+gg[0]/2;
@@ -1211,7 +1217,6 @@ void MGL_EXPORT mgl_pipe_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const cha
 	{
 		if(gr->NeedStop())	break;
 		if(ax->GetNz()>1)	zVal = gr->Min.z+(gr->Max.z-gr->Min.z)*mreal(k)/(ax->GetNz()-1);
-//#pragma omp parallel for collapse(2)
 		for(long i=0;i<num;i++)	for(int s=-1;s<=1;s+=2)
 		{
 			mreal u,v;
@@ -1260,33 +1265,35 @@ void MGL_EXPORT mgl_pipe_2d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, const 
 //-----------------------------------------------------------------------------
 void flowr(mglBase *gr, double u, double v, double w, const mglData &x, const mglData &y, const mglData &z, const mglData &ax, const mglData &ay, const mglData &az, double r0,long sc)
 {
-	static long n=15*(ax.nx+ax.ny+ax.nz);
+	static long n=100*(ax.nx+ax.ny+ax.nz);
 	long nn = ax.nx*ax.ny*ax.nz;
 	bool nboth = x.nx*x.ny*x.nz!=nn || y.nx*y.ny*y.nz!=nn || z.nx*z.ny*z.nz!=nn;
 	mglPoint *pp = new mglPoint[n], dp;
 	mreal *cc = new mreal[n];
 	mglPoint dx(1/fabs(gr->Max.x-gr->Min.x),1/fabs(gr->Max.y-gr->Min.y),1/fabs(gr->Max.z-gr->Min.z));
+	mglPoint nx(ax.nx,ax.ny,ax.nz);
 
 	nn = (ax.nx > ax.ny ? ax.nx : ax.ny);
 	nn = (nn > ax.nz ? nn : ax.nz);
-	mreal dt = 0.2/nn, e,f,g,ee[4],ff[4],gg[4],h,s=2,u1,v1,w1;
+	mreal dt = 0.2/nn, e,f,g,ee[4],ff[4],gg[4],h,s=2,u1,v1,w1,acc=dt/20;
 	mreal ss = 16./mgl_ipow(gr->Max.c - gr->Min.c,2);
 
 	if(u<0 || v<0 || w<0)
 	{	dt = -dt;	u = -u;	v = -v;	w = -w;	s *= -1;}
-	register long k=0,m;
+	long k=0;
 	bool end = false;
 	if(nboth) do{
 		mglPoint dif;
 		pp[k].x = x.Spline1(dif,u,0,0);	e = ax.Spline1(u,v,w)/dif.x;
 		pp[k].y = y.Spline1(dif,v,0,0);	f = ay.Spline1(u,v,w)/dif.x;
 		pp[k].z = z.Spline1(dif,w,0,0);	g = az.Spline1(u,v,w)/dif.x;
-		for(m=0;m<k-1;m++)	// determines encircle
-			if(mgl_norm((pp[k]-pp[m])/dx)<dt*MGL_FLOW_ACC)	{	end = true;	break;	}
+		for(long m=0;m<k-1;m+=10)	// determines encircle
+			if(mgl_anorm((pp[k]-pp[m])/dx)<acc)	end = true;
+		if(end)	break;
 		h = sqrt(e*e+f*f+g*g);	cc[k] = gr->GetC(sc,s*h);
 		pp[k].c = r0>0 ? r0*sqrt(1e-2+ss*h*h)/2 : -r0/sqrt(1e-2+ss*h*h)/5;
 		if(h<1e-5)	break;	// stationary point
-		k++;
+		if(k==0 || mgl_anorm((pp[k]-pp[k-1])/nx)>=1)	k++;
 		// find next point by midpoint method
 		h+=1;	ee[0]=e*dt/h;	ff[0]=f*dt/h;	gg[0]=g*dt/h;
 		u1 = u+ee[0]/2;	v1 = v+ff[0]/2;	w1 = w+gg[0]/2;
@@ -1324,12 +1331,13 @@ void flowr(mglBase *gr, double u, double v, double w, const mglData &x, const mg
 		e = (-xv*yw*zz+xw*yv*zz+xv*yy*zw-xx*yv*zw-xw*yy*zv+xx*yw*zv)/det;
 		f = (xu*yw*zz-xw*yu*zz-xu*yy*zw+xx*yu*zw+xw*yy*zu-xx*yw*zu)/det;
 		g = (-xu*yv*zz+xv*yu*zz+xu*yy*zv-xx*yu*zv-xv*yy*zu+xx*yv*zu)/det;
-		for(m=0;m<k-1;m++)	// determines encircle
-			if(mgl_norm((pp[k]-pp[m])/dx)<dt*MGL_FLOW_ACC)	{	end = true;	break;	}
+		for(long m=0;m<k-1;m+=10)	// determines encircle
+			if(mgl_anorm((pp[k]-pp[m])/dx)<acc)	end = true;
+		if(end)	break;
 		h = sqrt(e*e+f*f+g*g);	cc[k] = gr->GetC(sc,s*h);
 		pp[k].c = r0>0 ? r0*sqrt(1e-2+ss*h*h)/2 : -r0/sqrt(1e-2+ss*h*h)/5;
 		if(h<1e-5)	break;	// stationary point
-		k++;
+		if(k==0 || mgl_anorm((pp[k]-pp[k-1])/nx)>=1)	k++;
 		// find next point by midpoint method
 		h+=1;	ee[0]=e*dt/h;	ff[0]=f*dt/h;	gg[0]=g*dt/h;
 		u1 = u+ee[0]/2;	v1 = v+ff[0]/2;	w1 = w+gg[0]/2;
@@ -1420,7 +1428,6 @@ void MGL_EXPORT mgl_pipe_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, 
 	bool cnt=!mglchr(sch,'#');
 
 	mglData xx(x), yy(y), zz(z), bx(ax), by(ay), bz(az);
-//#pragma omp parallel for collapse(3)
 	for(long i=0;i<num;i++)	for(long j=0;j<num;j++)	for(int s=-1;s<=1;s+=2)
 	{
 		mreal u,v,w;

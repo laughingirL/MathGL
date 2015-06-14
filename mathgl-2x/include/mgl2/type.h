@@ -93,6 +93,8 @@ inline bool operator>(const mglPoint &a, const mglPoint &b)
 {	return a.x>=b.x && a.y>=b.y && a.z>=b.z;	}
 inline mreal mgl_norm(const mglPoint &p)
 {	return sqrt(p.x*p.x+p.y*p.y+p.z*p.z);	}
+inline mreal mgl_anorm(const mglPoint &p)
+{	return fabs(p.x)+fabs(p.y)+fabs(p.z);	}
 #endif
 //-----------------------------------------------------------------------------
 /// Class for RGBA color

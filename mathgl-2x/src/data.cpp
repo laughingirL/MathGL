@@ -1053,36 +1053,13 @@ mreal MGL_EXPORT mgl_data_linear(HCDT d, mreal x,mreal y,mreal z)
 mreal MGL_EXPORT mgl_data_spline(HCDT d, mreal x,mreal y,mreal z)
 {
 	if(mgl_isbad(x) || mgl_isbad(y) || mgl_isbad(z))	return NAN;
-	mreal res = 0;
-	const mglData *dd=dynamic_cast<const mglData *>(d);
-	if(dd)	res = dd->ny*dd->nz==1?mglSpline1st<mreal>(dd->a,dd->nx,x):mglSpline3st<mreal>(dd->a,dd->nx,dd->ny,dd->nz,x,y,z);
-	const mglDataC *dc=dynamic_cast<const mglDataC *>(d);
-	if(dc)	res = abs(dc->ny*dc->nz==1?mglSpline1st<dual>(dc->a,dc->nx,x):mglSpline3st<dual>(dc->a,dc->nx,dc->ny,dc->nz,x,y,z));
-	const mglDataV *dv=dynamic_cast<const mglDataV *>(d);
-	if(dv)	res = dv->value(x,y,z);
-	const mglDataF *df=dynamic_cast<const mglDataF *>(d);
-	if(df)	res = df->value(x,y,z);
-	return res;	// TODO non-mglData: spline mglDataT, mglDataR
+	return d->value(x,y,z);
 }
 //-----------------------------------------------------------------------------
 mreal MGL_EXPORT mgl_data_spline_ext(HCDT d, mreal x,mreal y,mreal z, mreal *dx,mreal *dy,mreal *dz)
 {
 	if(mgl_isbad(x) || mgl_isbad(y) || mgl_isbad(z))	return NAN;
-	mreal res = 0;
-	const mglData *dd=dynamic_cast<const mglData *>(d);
-	if(dd)	res = mglSpline3t<mreal>(dd->a,dd->nx,dd->ny,dd->nz,x,y,z,dx,dy,dz);
-	const mglDataC *dc=dynamic_cast<const mglDataC *>(d);
-	if(dc)
-	{	dual a,ax,ay,az;	mreal res;
-		a = mglSpline3t<dual>(dc->a,dc->nx,dc->ny,dc->nz,x,y,z,&ax,&ay,&az);	res = abs(a);
-		if(dx)	*dx = res?(real(a)*real(ax)+imag(a)*imag(ax))/res:0;
-		if(dy)	*dy = res?(real(a)*real(ay)+imag(a)*imag(ay))/res:0;
-		if(dz)	*dz = res?(real(a)*real(az)+imag(a)*imag(az))/res:0;	}
-	const mglDataV *dv=dynamic_cast<const mglDataV *>(d);
-	if(dv)	res = dv->value(x,y,z,dx,dy,dz);
-	const mglDataF *df=dynamic_cast<const mglDataF *>(d);
-	if(df)	res = df->value(x,y,z,dx,dy,dz);
-	return res;	// TODO non-mglData: spline mglDataT, mglDataR
+	return d->valueD(x,y,z,dx,dy,dz);
 }
 //-----------------------------------------------------------------------------
 mreal MGL_EXPORT mgl_data_spline_(uintptr_t *d, mreal *x,mreal *y,mreal *z)

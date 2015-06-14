@@ -27,6 +27,11 @@
 #include <vector>
 #include <string>
 //-----------------------------------------------------------------------------
+mreal MGL_EXPORT mglLinear(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z);
+mreal MGL_EXPORT mglSpline3(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z,mreal *dx=0, mreal *dy=0, mreal *dz=0);
+mreal MGL_EXPORT mglSpline3s(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z);
+#endif
+//-----------------------------------------------------------------------------
 /// Class for working with data array
 class MGL_EXPORT mglData : public mglDataA
 {
@@ -438,6 +443,12 @@ using mglDataA::Momentum;
 	/// Set the value in given cell of the data
 	void set_v(mreal val, long i,long j=0,long k=0)	{	mgl_data_set_value(this,val,i,j,k);	}
 #endif
+	/// Get the interpolated value and its derivatives in given data cell without border checking
+	mreal valueD(mreal x,mreal y=0,mreal z=0,mreal *dx=0,mreal *dy=0,mreal *dz=0) const
+	{	return mglSpline3(a,nx,ny,nz,x,y,z,dx,dy,dz);	}
+	/// Get the interpolated value in given data cell without border checking
+	mreal value(mreal x,mreal y=0,mreal z=0) const
+	{	return mglSpline3s(a,nx,ny,nz,x,y,z);	}
 	mreal vthr(long i) const {	return a[i];	}
 	// add for speeding up !!!
 	mreal dvx(long i,long j=0,long k=0) const
@@ -481,11 +492,6 @@ inline bool operator<(const mglDataA &b, const mglDataA &d)
 {	return b.Maximal()<d.Maximal();	}
 inline bool operator>(const mglDataA &b, const mglDataA &d)
 {	return b.Minimal()>d.Minimal();	}
-//-----------------------------------------------------------------------------
-mreal MGL_EXPORT mglLinear(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z);
-mreal MGL_EXPORT mglSpline3(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z,mreal *dx=0, mreal *dy=0, mreal *dz=0);
-mreal MGL_EXPORT mglSpline3s(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z);
-#endif
 //-----------------------------------------------------------------------------
 /// Integral data transformation (like Fourier 'f' or 'i', Hankel 'h' or None 'n') for amplitude and phase
 inline mglData mglTransformA(const mglDataA &am, const mglDataA &ph, const char *tr)
@@ -626,15 +632,15 @@ public:
 		di=d.di;	dj=d.dj;	dk=d.dk;	return d;	}
 	inline mreal operator=(mreal val)
 	{	di=dj=dk=0;	a0=val;	return val;	}
-	/// Get the value in given cell of the data without border checking
-	mreal value(mreal x,mreal y,mreal z,mreal *dx=0,mreal *dy=0,mreal *dz=0) const
+	/// Get the interpolated value and its derivatives in given data cell without border checking
+	mreal valueD(mreal x,mreal y=0,mreal z=0,mreal *dx=0,mreal *dy=0,mreal *dz=0) const
 	{	if(dx)	*dx=di;	if(dy)	*dy=dj;	if(dz)	*dz=dk;
 		return a0+di*x+dj*y+dk*z;	}
-	mreal v(long i,long j=0,long k=0) const
-	{	return a0+di*i+dj*j+dk*k;	}
+	/// Get the interpolated value in given data cell without border checking
+	mreal value(mreal x,mreal y=0,mreal z=0) const	{	return a0+di*x+dj*y+dk*z;	}
+	mreal v(long i,long j=0,long k=0) const		{	return a0+di*i+dj*j+dk*k;	}
 	mreal vthr(long ii) const
-	{	register long i=ii%nx, j=(ii/nx)%ny, k=ii/(nx*ny);
-		return a0+di*i+dj*j+dk*k;	}
+	{	register long i=ii%nx, j=(ii/nx)%ny, k=ii/(nx*ny);	return a0+di*i+dj*j+dk*k;	}
 	// add for speeding up !!!
 	mreal dvx(long ,long =0,long =0) const	{	return di;	}
 	mreal dvy(long ,long =0,long =0) const	{	return dj;	}
@@ -685,10 +691,13 @@ public:
 	/// Copy data from other mglDataV variable
 	inline const mglDataW &operator=(const mglDataW &d)
 	{	nx=d.nx;	ny=d.ny;	nz=d.nz;	di=d.di;	dj=d.dj;	dk=d.dk;	return d;	}
-	/// Get the value in given cell of the data without border checking
-	mreal value(mreal x,mreal y,mreal z,mreal *dx=0,mreal *dy=0,mreal *dz=0) const
+	/// Get the interpolated value and its derivatives in given data cell without border checking
+	mreal valueD(mreal x,mreal y=0,mreal z=0,mreal *dx=0,mreal *dy=0,mreal *dz=0) const
 	{	if(dx)	*dx=di;	if(dy)	*dy=dj;	if(dz)	*dz=dk;
 		return di*(x<nx/2?x:nx-x)+dj*(y<ny/2?y:ny-y)+dk*(z<nz/2?z:nz-z);	}
+	/// Get the interpolated value in given data cell without border checking
+	mreal value(mreal x,mreal y=0,mreal z=0) const
+	{	return di*(x<nx/2?x:nx-x)+dj*(y<ny/2?y:ny-y)+dk*(z<nz/2?z:nz-z);	}
 	mreal v(long i,long j=0,long k=0) const
 	{	return di*(i<nx/2?i:nx-i)+dj*(j<ny/2?j:ny-j)+dk*(k<nz/2?k:nz-k);	}
 	mreal vthr(long ii) const
@@ -749,7 +758,8 @@ public:
 	inline void SetFunc(mreal (*f)(mreal,mreal,mreal,void*), void *p=NULL)
 	{	mgl_delete_expr(ex);	ex=0;	dfunc=f;	par=p;	}
 
-	mreal value(mreal i,mreal j=0,mreal k=0, mreal *di=0,mreal *dj=0,mreal *dk=0) const
+	/// Get the interpolated value and its derivatives in given data cell without border checking
+	mreal valueD(mreal i,mreal j=0,mreal k=0, mreal *di=0,mreal *dj=0,mreal *dk=0) const
 	{
 		mreal res=0, x=v1.x+dx*i, y=v1.y+dy*j, z=v1.z+dz*k;
 		if(di)	*di = 0;	if(dj)	*dj = 0;	if(dk)	*dk = 0;
@@ -767,6 +777,14 @@ public:
 			if(dk)	*dk = mgl_expr_diff(ex,'z',x,y,z)*dz;
 			res = mgl_expr_eval(ex,x,y,z);
 		}
+		return res;
+	}
+	/// Get the interpolated value in given data cell without border checking
+	mreal value(mreal i,mreal j=0,mreal k=0) const
+	{
+		mreal res=0, x=v1.x+dx*i, y=v1.y+dy*j, z=v1.z+dz*k;
+		if(dfunc)	res = dfunc(x,y,z, par);
+		else if(ex)	res = mgl_expr_eval(ex,x,y,z);
 		return res;
 	}
 	/// Copy data from other mglDataV variable
@@ -840,6 +858,12 @@ public:
 	inline void SetInd(long i, wchar_t name)
 	{	ind = i;	s = name;	}
 
+	/// Get the interpolated value and its derivatives in given data cell without border checking
+	mreal valueD(mreal x,mreal y=0,mreal z=0,mreal *dx=0,mreal *dy=0,mreal *dz=0) const
+	{	if(dz)	*dz=0;	return dat.valueD(ind,x,y,0,dx,dy);	}
+	/// Get the interpolated value in given data cell without border checking
+	mreal value(mreal x,mreal y=0,mreal z=0) const
+	{	return dat.value(ind,x,y);	}
 	/// Get the value in given cell of the data without border checking
 	mreal v(long i,long j=0,long =0) const
 	{	return dat.v(ind,i,j);	}
@@ -881,6 +905,12 @@ public:
 	inline void SetInd(long i, wchar_t name)
 	{	ind = i;	s = name;	}
 
+	/// Get the interpolated value and its derivatives in given data cell without border checking
+	mreal valueD(mreal x,mreal y=0,mreal z=0,mreal *dx=0,mreal *dy=0,mreal *dz=0) const
+	{	if(dy)	*dy=0;	if(dz)	*dz=0;	return dat.valueD(x,ind,0,dx);	}
+	/// Get the interpolated value in given data cell without border checking
+	mreal value(mreal x,mreal y=0,mreal z=0) const
+	{	return dat.value(x,ind,0);	}
 	/// Get the value in given cell of the data without border checking
 	mreal v(long i,long =0,long =0) const
 	{	return dat.v(i,ind,0);	}
@@ -912,6 +942,13 @@ public:
 	inline size_t size() const	{	return dat.size();	}
 	const mglDataS &operator=(const mglDataS &st)	{	dat = st.dat;	return st;	}
 	const std::vector<mreal> &operator=(const std::vector<mreal> &st)	{	dat = st;	return st;	}
+
+	/// Get the interpolated value and its derivatives in given data cell without border checking
+	mreal valueD(mreal x,mreal y=0,mreal z=0,mreal *dx=0,mreal *dy=0,mreal *dz=0) const
+	{	return mglSpline3(dat.data(),dat.size(),1,1,x,0,0,dx,dy,dz);	}
+	/// Get the interpolated value in given data cell without border checking
+	mreal value(mreal x,mreal y=0,mreal z=0) const
+	{	return mglSpline3s(dat.data(),dat.size(),1,1,x,0,0);	}
 
 	mreal v(long i,long j=0,long k=0) const		{	return dat[i];	}
 	mreal vthr(long i) const	{	return dat[i];	};

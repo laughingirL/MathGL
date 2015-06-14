@@ -22,6 +22,9 @@
 #include "mgl2/thread.h"
 
 #include "interp.hpp"
+#define mgl2 	mreal(2)
+#define mgl3 	mreal(3)
+#define mgl4 	mreal(4)
 
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mglStartThreadC(void *(*func)(void *), void (*post)(mglThreadC *,dual *), long n,

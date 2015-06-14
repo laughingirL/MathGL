@@ -682,7 +682,7 @@ long MGL_NO_EXPORT mgl_get_next(long k1,long n,long *,long *set,mglPoint *qq)
 	for(i=0;i<n;i++)
 	{
 		if(i==k1 || set[i]>0)	continue;
-		r = mgl_norm(qq[i]-qq[k1]);
+		r = mgl_anorm(qq[i]-qq[k1]);
 		if(r<rm)	{	rm=r;	j=i;	}
 	}
 	return j;
@@ -698,7 +698,7 @@ long MGL_NO_EXPORT mgl_crust(long n,mglPoint *pp,long **nn,mreal ff)
 		for(rm = FLT_MAX,j=0;j<n;j++)
 		{
 			if(i==j)	continue;
-			r = mgl_norm(pp[i]-pp[j]);
+			r = mgl_anorm(pp[i]-pp[j]);
 			if(rm>r)	rm = r;
 		}
 		rs += sqrt(rm);
@@ -712,7 +712,7 @@ long MGL_NO_EXPORT mgl_crust(long n,mglPoint *pp,long **nn,mreal ff)
 		memset(set,0,100*sizeof(long));
 		for(ii=0,j=0;j<n;j++)	// find close vertexes
 		{
-			r = mgl_norm(pp[i]-pp[j]);
+			r = mgl_anorm(pp[i]-pp[j]);
 			if(r<=rs && j!=i)	{	ind[ii] = j;	ii++;	if(ii==99)	break;}
 		}
 		if(ii<3)	continue;	// nothing to do

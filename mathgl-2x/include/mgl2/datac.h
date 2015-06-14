@@ -26,9 +26,12 @@
 //-----------------------------------------------------------------------------
 #include <vector>
 #include <string>
-#define mgl2 	mreal(2)
-#define mgl3 	mreal(3)
-#define mgl4 	mreal(4)
+//-----------------------------------------------------------------------------
+#ifndef SWIG
+dual MGL_EXPORT mglLinearC(const dual *a, long nx, long ny, long nz, mreal x, mreal y, mreal z);
+dual MGL_EXPORT mglSpline3C(const dual *a, long nx, long ny, long nz, mreal x, mreal y, mreal z,dual *dx=0, dual *dy=0, dual *dz=0);
+dual MGL_EXPORT mglSpline3Cs(const dual *a, long nx, long ny, long nz, mreal x, mreal y, mreal z);
+#endif
 //-----------------------------------------------------------------------------
 /// Class for working with complex data array
 class MGL_EXPORT mglDataC : public mglDataA
@@ -430,24 +433,28 @@ using mglDataA::Momentum;
 	/// Set the value in given cell of the data
 	void set_v(mreal val, long i,long j=0,long k=0)	{	mgl_datac_set_value(this,val,i,j,k);	}
 #endif
+	/// Get the interpolated value and its derivatives in given data cell without border checking
+	mreal valueD(mreal x,mreal y=0,mreal z=0,mreal *dx=0,mreal *dy=0,mreal *dz=0) const
+	{	dual aa,ax,ay,az;	mreal res;
+		aa = mglSpline3C(a,nx,ny,nz,x,y,z,&ax,&ay,&az);	res = abs(aa);
+		if(dx)	*dx = res?(real(aa)*real(ax)+imag(aa)*imag(ax))/res:0;
+		if(dy)	*dy = res?(real(aa)*real(ay)+imag(aa)*imag(ay))/res:0;
+		if(dz)	*dz = res?(real(aa)*real(az)+imag(aa)*imag(az))/res:0;	return res;	}
+	/// Get the interpolated value in given data cell without border checking
+	mreal value(mreal x,mreal y=0,mreal z=0) const
+	{	return abs(mglSpline3Cs(a,nx,ny,nz,x,y,z));	}
 	mreal vthr(long i) const {	return abs(a[i]);	}
 	// add for speeding up !!!
 	mreal dvx(long i,long j=0,long k=0) const
 	{   register long i0=i+nx*(j+ny*k);
-		return i>0? abs(i<nx-1? (a[i0+1]-a[i0-1])/mgl2:a[i0]-a[i0-1]) : abs(a[i0+1]-a[i0]);	}
+		return i>0? abs(i<nx-1? (a[i0+1]-a[i0-1])/mreal(2):a[i0]-a[i0-1]) : abs(a[i0+1]-a[i0]);	}
 	mreal dvy(long i,long j=0,long k=0) const
 	{   register long i0=i+nx*(j+ny*k);
-		return j>0? abs(j<ny-1? (a[i0+nx]-a[i0-nx])/mgl2:a[i0]-a[i0-nx]) : abs(a[i0+nx]-a[i0]);}
+		return j>0? abs(j<ny-1? (a[i0+nx]-a[i0-nx])/mreal(2):a[i0]-a[i0-nx]) : abs(a[i0+nx]-a[i0]);}
 	mreal dvz(long i,long j=0,long k=0) const
 	{   register long i0=i+nx*(j+ny*k), n=nx*ny;
-		return k>0? abs(k<nz-1? (a[i0+n]-a[i0-n])/mgl2:a[i0]-a[i0-n]) : abs(a[i0+n]-a[i0]);	}
+		return k>0? abs(k<nz-1? (a[i0+n]-a[i0-n])/mreal(2):a[i0]-a[i0-n]) : abs(a[i0+n]-a[i0]);	}
 };
-//-----------------------------------------------------------------------------
-#ifndef SWIG
-dual MGL_EXPORT mglLinearC(const dual *a, long nx, long ny, long nz, mreal x, mreal y, mreal z);
-dual MGL_EXPORT mglSpline3C(const dual *a, long nx, long ny, long nz, mreal x, mreal y, mreal z,dual *dx=0, dual *dy=0, dual *dz=0);
-dual MGL_EXPORT mglSpline3Cs(const dual *a, long nx, long ny, long nz, mreal x, mreal y, mreal z);
-#endif
 //-----------------------------------------------------------------------------
 /// Saves result of PDE solving (|u|^2) for "Hamiltonian" ham with initial conditions ini
 inline mglDataC mglPDEc(mglBase *gr, const char *ham, const mglDataA &ini_re, const mglDataA &ini_im, mreal dz=0.1, mreal k0=100,const char *opt="")
