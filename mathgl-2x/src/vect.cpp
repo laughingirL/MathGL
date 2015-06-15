@@ -582,7 +582,7 @@ void MGL_NO_EXPORT flow(mglBase *gr, double zVal, double u, double v, const mglD
 	} while(!end);
 	if(k>1)
 	{
-		long j,a=long(0.3/fabs(dt));
+		long j,a=long(0.3*gr->GetArrowSize()/fabs(dt));
 		gr->Reserve(k);		j = gr->AddPnt(pp[0],pp[0].c);
 		for(long i=1;i<k;i++)
 		{
@@ -839,7 +839,7 @@ void flow(mglBase *gr, double u, double v, double w, const mglData &x, const mgl
 	} while(!end);
 	if(k>1)
 	{
-		long j,a=long(1./fabs(dt));
+		long j,a=long(gr->GetArrowSize()/fabs(dt));
 		mreal rr = mgl_anorm(gr->Max-gr->Min)*gr->BarWidth/25, ll;
 		mglPoint q1,q2,l;
 		long n1=-1,n2=-1,n3=-1,n4=-1;
@@ -856,8 +856,8 @@ void flow(mglBase *gr, double u, double v, double w, const mglData &x, const mgl
 			long jj=j;	j = gr->AddPnt(pp[i],pp[i].c);
 			if(vv && i%a==0)
 			{
-				if(dt<0)	gr->vect_plot(j,jj,a/5);
-				else		gr->vect_plot(jj,j,a/5);
+				if(dt<0)	gr->vect_plot(j,jj,a/3);
+				else		gr->vect_plot(jj,j,a/3);
 			}
 			else	gr->line_plot(jj,j);
 			l = pp[i]-pp[i-1];		l /= mgl_anorm(l);

@@ -432,6 +432,8 @@ public:
 	inline void SetMarkSize(mreal val)	{	MarkSize=0.02*val;	}
 	/// Set size of arrows
 	inline void SetArrowSize(mreal val)	{	ArrowSize=0.03*val;	}
+	/// Get unscaled arrow size 
+	inline mreal GetArrowSize() const	{	return ArrowSize/0.03;	}
 
 	/// Set warning code ant fill Message
 	void SetWarn(int code, const char *who);
