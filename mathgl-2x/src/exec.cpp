@@ -1222,6 +1222,18 @@ int MGL_NO_EXPORT mgls_mark(mglGraph *gr, long , mglArg *a, const char *k, const
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_pmap(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+{
+	int res=0;
+	if(!strcmp(k,"dd"))	gr->Pmap(*(a[0].d), *(a[1].d), "",opt);
+	else if(!strcmp(k,"dds"))	gr->Pmap(*(a[0].d), *(a[1].d), a[2].s.c_str(),opt);
+	else if(!strcmp(k,"ddd")) 	gr->Pmap(*(a[0].d), *(a[1].d), *(a[2].d), "",opt);
+	else if(!strcmp(k,"ddds"))	gr->Pmap(*(a[0].d), *(a[1].d), *(a[2].d), a[3].s.c_str(),opt);
+	else if(!strcmp(k,"dddd")) 	gr->Pmap(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d), "",opt);
+	else if(!strcmp(k,"dddds"))	gr->Pmap(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d), a[4].s.c_str(),opt);
+	else res = 1;	return res;
+}
+//-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_map(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;
@@ -3412,6 +3424,7 @@ mglCommand mgls_base_cmd[] = {
 	{"pipe","Draw flow pipes for vector field","pipe Udat Vdat ['fmt' rad num]|Xdat Ydat Udat Vdat ['fmt' rad num]|Udat Vdat Wdat ['fmt' rad num]|Xdat Ydat Zdat Udat Vdat Wdat ['fmt' rad num]", mgls_pipe ,11},
 	{"plot","Draw usual plot for 1D data","plot Ydat ['fmt']|Xdat Ydat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_plot ,7},
 	{"plotid","Set default filename","plotid 'name'", mgls_plotid ,2},
+	{"pmap","Draw Poincare map","pmap Ydat Rdat ['fmt']|Xdat Ydat Rdat ['fmt']|Xdat Ydat Zdat Rdat ['fmt']", mgls_pmap ,7},
 	{"polygon","Draw polygon","polygon x1 y1 x2 y2 num ['fmt']|x1 y1 z1 x2 y2 z2 num ['fmt']", mgls_polygon ,13},
 	{"put","Put value (numeric or array) to given data element","put Dat val [i j k] | Dat Val [i j k]", mgls_put ,3},
 	{"putsfit","Print fitted formula","putsfit x y ['pre' 'font' size]|x y z ['pre' 'font' size]", mgls_putsfit ,15},

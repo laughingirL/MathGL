@@ -208,6 +208,16 @@ void MGL_EXPORT mgl_mark_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintp
 void MGL_EXPORT mgl_mark_y(HMGL graph, HCDT y, HCDT r, const char *pen, const char *opt);
 void MGL_EXPORT mgl_mark_y_(uintptr_t *graph, uintptr_t *y, uintptr_t *r, const char *pen, const char *opt,int,int);
 
+/// Draw Poincare map at condition r==0 for curve {x,y,z}
+void MGL_EXPORT mgl_pmap_xyz(HMGL graph, HCDT x, HCDT y, HCDT z, HCDT r, const char *pen, const char *opt);
+void MGL_EXPORT mgl_pmap_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *r, const char *pen, const char *opt,int,int);
+/// Draw Poincare map at condition r==0 for curve {x,y}
+void MGL_EXPORT mgl_pmap_xy(HMGL graph, HCDT x, HCDT y, HCDT r, const char *pen, const char *opt);
+void MGL_EXPORT mgl_pmap_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *r, const char *pen, const char *opt,int,int);
+/// Draw Poincare map at condition r==0 for curve {x,y} with x in x-axis range
+void MGL_EXPORT mgl_pmap(HMGL graph, HCDT y, HCDT r, const char *pen, const char *opt);
+void MGL_EXPORT mgl_pmap_(uintptr_t *graph, uintptr_t *y, uintptr_t *r, const char *pen, const char *opt,int,int);
+
 /// Draw tube with variable radius r around curve {x,y,z}
 void MGL_EXPORT mgl_tube_xyzr(HMGL graph, HCDT x, HCDT y, HCDT z, HCDT r, const char *pen, const char *opt);
 void MGL_EXPORT mgl_tube_xyzr_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *r, const char *pen, const char *opt,int,int);

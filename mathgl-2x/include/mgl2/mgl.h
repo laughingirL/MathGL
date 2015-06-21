@@ -1029,6 +1029,16 @@ public:
 	inline void Mark(const mglDataA &y, const mglDataA &r, const char *pen, const char *opt="")
 	{	mgl_mark_y(gr, &y, &r, pen, opt);	}
 
+	/// Draw Poincare map at condition r==0 for curve {x,y,z}
+	inline void Pmap(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &r, const char *pen, const char *opt="")
+	{	mgl_pmap_xyz(gr, &x, &y, &z, &r, pen, opt);	}
+	/// Draw Poincare map at condition r==0 for curve {x,y}
+	inline void Pmap(const mglDataA &x, const mglDataA &y, const mglDataA &r, const char *pen, const char *opt="")
+	{	mgl_pmap_xy(gr, &x, &y, &r, pen, opt);	}
+	/// Draw Poincare map at condition r==0 for curve {x,y} with x in x-axis range
+	inline void Pmap(const mglDataA &y, const mglDataA &r, const char *pen, const char *opt="")
+	{	mgl_pmap(gr, &y, &r, pen, opt);	}
+
 	/// Draw textual marks with size r at points {x,y,z}
 	inline void TextMark(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &r, const char *text, const char *fnt="", const char *opt="")
 	{	mgl_textmark_xyzr(gr, &x, &y, &z, &r, text, fnt, opt);	}

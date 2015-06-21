@@ -1581,7 +1581,7 @@ void MGL_EXPORT mgl_mark_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const char
 	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();
 	m = z->GetNy() > m ? z->GetNy() : m;
 	char mk=gr->SetPenPal(pen,&pal);	gr->Reserve(n*m);
-	if(mk==0)	return;
+	if(mk==0)	mk='.';
 	bool sh = mglchr(pen,'!');
 
 	for(long j=0;j<m;j++)
@@ -1859,4 +1859,73 @@ void MGL_EXPORT mgl_tape_(uintptr_t *gr, uintptr_t *y,	const char *pen, const ch
 {	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	char *o=new char[lo+1];		memcpy(o,opt,lo);	o[lo]=0;
 	mgl_tape(_GR_, _DA_(y),s,o);	delete []s;	delete []o;	}
+//-----------------------------------------------------------------------------
+//
+//	Pmap series
+//
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_pmap_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const char *pen, const char *opt)
+{
+	long m,n=y->GetNx(),pal;
+	if(mgl_check_dim0(gr,x,y,z,r,"Mark"))	return;
+
+	gr->SaveState(opt);
+	static int cgid=1;	gr->StartGroup("Mark",cgid++);
+	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();
+	m = z->GetNy() > m ? z->GetNy() : m;
+	char mk=gr->SetPenPal(pen,&pal);	gr->Reserve(n*m);
+	if(mk==0)	mk='.';
+
+	for(long j=0;j<m;j++)
+	{
+		if(gr->NeedStop())	break;
+		gr->NextColor(pal);
+		long mx = j<x->GetNy() ? j:0, my = j<y->GetNy() ? j:0;
+		long mz = j<z->GetNy() ? j:0, mr = j<r->GetNy() ? j:0;
+		for(long i=0;i<n-1;i++)
+		{
+			mreal r1=r->v(i,mr), r2 = r->v(i+1,mr);
+			if(r1==0)	gr->mark_plot(gr->AddPnt(mglPoint(x->v(i,mx),y->v(i,my),z->v(i,mz))), mk);
+			if(r1*r2<0)
+			{
+				mreal d = r1/(r1-r2);
+				mglPoint p(x->v(i,mx)*(1-d)+x->v(i+1,mx)*d, y->v(i,my)*(1-d)+y->v(i+1,my)*d, z->v(i,mz)*(1-d)+d*z->v(i+1,mz));
+				gr->mark_plot(gr->AddPnt(p), mk);
+			}
+		}
+	}
+	gr->EndGroup();
+}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_pmap_xy(HMGL gr, HCDT x, HCDT y, HCDT r, const char *pen, const char *opt)
+{
+	gr->SaveState(opt);
+	mglDataV z(y->GetNx());	z.Fill(gr->AdjustZMin());
+	mgl_pmap_xyz(gr,x,y,&z,r,pen,0);
+}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_pmap(HMGL gr, HCDT y, HCDT r, const char *pen, const char *opt)
+{
+	register long n=y->GetNx();
+	gr->SaveState(opt);
+	mglDataV x(n), z(n);
+	x.Fill(gr->Min.x,gr->Max.x);	z.Fill(gr->AdjustZMin());
+	mgl_pmap_xyz(gr,&x,y,&z,r,pen,0);
+}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_pmap_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *r, const char *pen, const char *opt,int l,int lo)
+{	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
+	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+	mgl_pmap_xyz(_GR_, _DA_(x), _DA_(y), _DA_(z), _DA_(r),s,o);
+	delete []o;	delete []s;	}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_pmap_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *r, const char *pen, const char *opt,int l,int lo)
+{	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
+	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+	mgl_pmap_xy(_GR_, _DA_(x), _DA_(y), _DA_(r),s,o);	delete []o;	delete []s;	}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_pmap_(uintptr_t *gr, uintptr_t *y, uintptr_t *r, const char *pen, const char *opt,int l,int lo)
+{	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
+	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+	mgl_pmap(_GR_,_DA_(y),_DA_(r),s,o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------

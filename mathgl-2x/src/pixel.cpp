@@ -31,7 +31,7 @@ inline mreal get_pfact(float pf, float Depth)
 void mglCanvas::SetSize(int w,int h,bool clf)
 {
 	if(w<=0 || h<=0)	{	SetWarn(mglWarnSize,"SetSize");	return;	}
-	if(Width==w || Height==h)
+	if(Width==w && Height==h)
 	{
 		InPlot(0,1,0,1,false);
 		if(clf || (Quality&4))	Clf();

@@ -39,6 +39,7 @@
 8. Contour lines for bilinear interpolation (strong saddle-like faces)
 9. More accurate face cutting if one partially out of axis ranges
 10. Lamerey chart 
+11. line style for boxed text should have no dash
 
 17. Iris plot -- https://en.wikipedia.org/wiki/Iris_flower_data_set
 
@@ -51,6 +52,8 @@ A. Paper about MathGL!!!
 B. Add chapter with real samples
 C. Translate to Russian everything
 D. Docs about JS interface
+
+1. Docs about Pmap()
 
 
 YY. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using Stem()
