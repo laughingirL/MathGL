@@ -754,7 +754,7 @@ public:
 		if(eq && *eq)	{	ex = mgl_create_expr(eq);	str=eq;	}
 		else	{	ex=0;	str="";	}
 	}
-	/// Set dfunction and coordinates range [r1,r2]
+	/// Set function and coordinates range [r1,r2]
 	inline void SetFunc(mreal (*f)(mreal,mreal,mreal,void*), void *p=NULL)
 	{	mgl_delete_expr(ex);	ex=0;	dfunc=f;	par=p;	}
 

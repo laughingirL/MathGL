@@ -1096,6 +1096,26 @@ int MGL_NO_EXPORT mgls_line(mglGraph *gr, long , mglArg *a, const char *k, const
 	else res = 1;	gr->Self()->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_lamerey(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+{
+	int res=0;
+	if(!strcmp(k,"nd"))	gr->Lamerey(a[0].v,*(a[1].d),"",opt);
+	else if(!strcmp(k,"nds"))	gr->Lamerey(a[0].v,*(a[1].d),a[2].s.c_str(),opt);
+	else if(!strcmp(k,"ns"))	gr->Lamerey(a[0].v,a[1].s.c_str(),"",opt);
+	else if(!strcmp(k,"nss"))	gr->Lamerey(a[0].v,a[1].s.c_str(),a[2].s.c_str(),opt);
+	else res = 1;	return res;
+}
+//-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_bifurcation(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+{
+	int res=0;
+	if(!strcmp(k,"nd"))	gr->Bifurcation(a[0].v,*(a[1].d),"",opt);
+	else if(!strcmp(k,"nds"))	gr->Bifurcation(a[0].v,*(a[1].d),a[2].s.c_str(),opt);
+	else if(!strcmp(k,"ns"))	gr->Bifurcation(a[0].v,a[1].s.c_str(),"",opt);
+	else if(!strcmp(k,"nss"))	gr->Bifurcation(a[0].v,a[1].s.c_str(),a[2].s.c_str(),opt);
+	else res = 1;	return res;
+}
+//-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_errbox(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;	gr->Self()->SaveState(opt);
@@ -3278,6 +3298,7 @@ mglCommand mgls_base_cmd[] = {
 	{"barwidth","Set default bars width","barwidth val", mgls_barwidth ,2},
 	{"beam","Draw quasioptical beam","beam Tr G1 G2 Adat r ['sch' flag num] ", mgls_beam ,9},
 	{"belt","Draw belts","belt Zdat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_belt ,8},
+	{"bifurcation","Draw Bifurcation diagram","bifurcation dx Func ['fmt']|dx 'func' ['fmt']", mgls_bifurcation,13},
 	{"box","Draw bounding box","box ['fmt' ticks]", mgls_box ,12},
 	{"boxplot","Draw boxplot for 2D data","boxplot Ydat ['fmt']|Xdat Ydat ['fmt']", mgls_boxplot ,7},
 	{"boxs","Draw boxes","boxs Zdat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_boxs ,8},
@@ -3388,6 +3409,7 @@ mglCommand mgls_base_cmd[] = {
 	{"jacobian","Get Jacobian","jacobian Res Xdat Ydat [Zdat]", mgls_jacobian ,4},
 	{"join","Join data arrays","join Dat Add", mgls_join ,3},
 	{"label","Draw label at arbitrary position","label Ydat 'txt' ['fmt'='']|Xdat Ydat 'txt' ['fmt'='']|Xdat Ydat Zdat 'txt' ['fmt'='']", mgls_label ,7},
+	{"lamerey","Draw Lamerey diagram","lamerey x0 Func ['fmt']|x0 'func' ['fmt']", mgls_lamerey ,13},
 	{"legend","Draw legend","legend [pos 'fmt']|x y ['fmt']", mgls_legend ,15},
 	{"legendmarks","Set number of marks in the legend","legendmarks val", mgls_legendmarks ,15},
 	{"light","Setup light","light [val] | val num | num xpos ypos zpos ['fmt' br]", mgls_light ,2},

@@ -71,7 +71,7 @@ void MGL_EXPORT mgl_traj_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, 
 				dd = dd ? sqrt(dx*dx+dy*dy+dz*dz)/dd : 0;
 			}
 			else dd = len;
-			gr->vect_plot(gr->AddPnt(p1), gr->AddPnt(p1+dd*p2,-1,mglPoint(NAN),-1,2));
+			gr->vect_plot(gr->AddPnt(p1), gr->AddPnt(p1+dd*p2,-1,mglPoint(NAN),-1,2),gr->GetArrowSize());
 		}
 	}
 	gr->EndGroup();
@@ -167,7 +167,7 @@ void MGL_EXPORT mgl_vect_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const cha
 			if(n1<0 && n2>=0)	n1=gr->AddPnt(p1,c1,mglPoint(NAN),-1,2);
 			if(n2<0 && n1>=0)	n2=gr->AddPnt(p2,c2,mglPoint(NAN),-1,2);
 			if(dot)	{	gr->line_plot(n1,n2);	gr->mark_plot(n1,'.');	}
-			else	gr->vect_plot(n1,n2);
+			else	gr->vect_plot(n1,n2,gr->GetArrowSize());
 		}
 	}
 	gr->EndGroup();
@@ -266,7 +266,7 @@ void MGL_EXPORT mgl_vect_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, 
 			if(n1<0 && n2>=0)	n1=gr->AddPnt(p1,c1,mglPoint(NAN),-1,2);
 			if(n2<0 && n1>=0)	n2=gr->AddPnt(p2,c2,mglPoint(NAN),-1,2);
 			if(dot)	{	gr->line_plot(n1,n2);	gr->mark_plot(n1,'.');	}
-			else	gr->vect_plot(n1,n2);
+			else	gr->vect_plot(n1,n2,gr->GetArrowSize());
 		}
 	}
 	gr->EndGroup();
@@ -468,7 +468,7 @@ void MGL_EXPORT mgl_vect3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay,
 		if(n1<0 && n2>=0)	n1=gr->AddPnt(p1,c1,mglPoint(NAN),-1,2);
 		if(n2<0 && n1>=0)	n2=gr->AddPnt(p2,c2,mglPoint(NAN),-1,2);
 		if(dot)	{	gr->line_plot(n1,n2);	gr->mark_plot(n1,'.');	}
-		else	gr->vect_plot(n1,n2);
+		else	gr->vect_plot(n1,n2,gr->GetArrowSize());
 	}
 	gr->EndGroup();
 }

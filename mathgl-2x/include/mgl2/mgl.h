@@ -570,6 +570,20 @@ public:
 	inline void Error(mglPoint p, mglPoint e, const char *pen="k")
 	{	mgl_error_box(gr, p.x, p.y, p.z, e.x, e.y, e.z, pen);	}
 
+	/// Draws Lamerey diagram for mapping x_new = f(x_old)
+	/** String \a stl may contain ‘v’ for drawing arrows.
+	 *	Option value set the number of iterations (default is 20).*/
+	inline void Lamerey(double x0, const mglDataA &f, const char *stl="", const char *opt="")
+	{	mgl_lamerey_dat(gr,x0,&f,stl,opt);	}
+	inline void Lamerey(double x0, const char *func, const char *stl="", const char *opt="")
+	{	mgl_lamerey_str(gr,x0,func,stl,opt);	}
+	/// Draws Bifurcation diagram for mapping x_new = f(x_old) in x-axis range
+	/** Option value set the number of stationary points (default is 1024).*/
+	inline void Bifurcation(double dx, const mglDataA &f, const char *stl="", const char *opt="")
+	{	mgl_bifurcation_dat(gr,dx,&f,stl,opt);	}
+	inline void Bifurcation(double dx, const char *func, const char *stl="", const char *opt="")
+	{	mgl_bifurcation_str(gr,dx,func,stl,opt);	}
+	
 	/// Draws the face between points with color stl (include interpolation up to 4 colors).
 	inline void Face(mglPoint p1, mglPoint p2, mglPoint p3, mglPoint p4, const char *stl="r")
 	{	mgl_face(gr, p1.x, p1.y, p1.z, p2.x, p2.y, p2.z, p3.x, p3.y, p3.z, p4.x, p4.y, p4.z, stl);	}

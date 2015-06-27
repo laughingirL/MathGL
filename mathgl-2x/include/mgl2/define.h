@@ -208,7 +208,7 @@ enum{	// types of predefined curvelinear coordinate systems
 enum{	// Codes for warnings/messages
 	mglWarnNone = 0,// Everything OK
 	mglWarnDim,		// Data dimension(s) is incompatible
-	mglWarnLow, 		// Data dimension(s) is too small
+	mglWarnLow,		// Data dimension(s) is too small
 	mglWarnNeg,	 	// Minimal data value is negative
 	mglWarnFile, 	// No file or wrong data dimensions
 	mglWarnMem,		// Not enough memory

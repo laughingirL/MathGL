@@ -963,3 +963,141 @@ void MGL_EXPORT mgl_logo_file_(uintptr_t *gr, const char *fname, int *smooth, co
 	char *f=new char[n+1];	memcpy(f,opt,n);	f[n]=0;
 	mgl_logo_file(_GR_,s,*smooth,f);	delete []s;		delete []f;	}
 //-----------------------------------------------------------------------------
+//
+//	Lamerey series
+//
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_lamerey(HMGL gr, double x0, double (*f)(double,void *), void *par, const char *stl, const char *opt)
+{
+	static int cgid=1;	gr->StartGroup("Lamerey",cgid++);
+	mreal r=gr->SaveState(opt);
+	double x=x0, dx = 1e-5*fabs(gr->Max.x-gr->Min.x);
+	long n = r>2 ? long(r+0.5):20, n1, n2;
+	gr->SetPenPal(stl);	gr->Reserve(6*n+1);
+	bool vect = mglchr(stl,'v');
+	n1 = gr->AddPnt(mglPoint(x,gr->GetOrgY('x'),gr->Max.z));
+	n2 = gr->AddPnt(mglPoint(x,x,gr->Max.z));
+	gr->line_plot(n1,n2);	if(vect)	gr->vect_plot(n1,n2,0.3*gr->GetArrowSize());
+	for(long i=0;i<n;i++)
+	{
+		x0 = x;		x = f(x0,par);
+		if(fabs(x-x0)<dx)	break;
+		n1=n2;	n2 = gr->AddPnt(mglPoint(x,x0,gr->Max.z));
+		gr->line_plot(n1,n2);	if(vect)	gr->vect_plot(n1,n2,0.3*gr->GetArrowSize());
+		n1=n2;	n2 = gr->AddPnt(mglPoint(x,x,gr->Max.z));
+		gr->line_plot(n1,n2);	if(vect)	gr->vect_plot(n1,n2,0.3*gr->GetArrowSize());
+	}
+	gr->EndGroup();
+}
+//-----------------------------------------------------------------------------
+struct mglDatSpl	{	HCDT d;	double x0,dx;	double y0,dy;	};
+double MGL_NO_EXPORT func_dat(double x, void *p)
+{	mglDatSpl *s = (mglDatSpl *)p;	return s->d->value((x-s->x0)*s->dx);	}
+void MGL_EXPORT mgl_lamerey_dat(HMGL gr, double x0, HCDT f, const char *stl, const char *opt)
+{
+	mreal r = gr->SaveState(opt);
+	char buf[64]="";	if(r>2)	sprintf(buf,"value %g",r);
+	mglDatSpl s;	s.d=f;	s.x0=gr->Min.x;	s.dx=f->GetNx()/(gr->Max.x-gr->Min.x);
+	mgl_lamerey(gr,x0,func_dat,&s,stl,buf);
+}
+//-----------------------------------------------------------------------------
+double MGL_NO_EXPORT func_str(double x, void *p)
+{	HMEX s = (HMEX)p;	return mgl_expr_eval(s,x,0,0);	}
+void MGL_EXPORT mgl_lamerey_str(HMGL gr, double x0, const char *f, const char *stl, const char *opt)
+{
+	HMEX eq = mgl_create_expr(f);
+	mgl_lamerey(gr,x0,func_str,eq,stl,opt);
+	mgl_delete_expr(eq);
+}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_lamerey_dat_(uintptr_t *gr, double *x0, uintptr_t *f, const char *stl, const char *opt, int l,int n)
+{	char *s=new char[l+1];	memcpy(s,stl,l);	s[l]=0;
+	char *o=new char[n+1];	memcpy(o,opt,n);	o[n]=0;
+	mgl_lamerey_dat(_GR_,*x0,_DA_(f),s,o);	delete []s;	delete []o;	}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_lamerey_str_(uintptr_t *gr, double *x0, const char *func, const char *stl, const char *opt, int m,int l,int n)
+{	char *s=new char[l+1];	memcpy(s,stl,l);	s[l]=0;
+	char *o=new char[n+1];	memcpy(o,opt,n);	o[n]=0;
+	char *f=new char[m+1];	memcpy(f,func,m);	f[m]=0;
+	mgl_lamerey_str(_GR_,*x0,f,s,o);	delete []f;	delete []s;	delete []o;	}
+//-----------------------------------------------------------------------------
+//
+//	Bifurcation series
+//
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_bifurcation(HMGL gr, double dx, double (*f)(double,double,void *), void *par, const char *stl, const char *opt)
+{
+	if((gr->Max.x-gr->Min.x)*dx<=0)	{	gr->SetWarn(mglWarnSlc,"Bifurcation");	return;	}
+	static int cgid=1;	gr->StartGroup("Bifurcation",cgid++);
+	mreal r=gr->SaveState(opt);
+	long n = r>2 ? long(r+0.5):1024, m=(gr->Max.x-gr->Min.x)/dx, m1=0,m2=0;
+	gr->SetPenPal(stl);	gr->Reserve(2*n*m);
+	double *v1=new double[n], *v2=new double[n], dd=0.1*fabs(gr->Max.y-gr->Min.y)/n;
+	double x = gr->Min.y+mgl_rnd()*(gr->Max.y-gr->Min.y), x0 = x;
+
+	bool fin=false;
+	for(long i=0;i<10*n;i++)	x = f(x,gr->Min.x,par);	// wait for loop stabilization
+	for(m1=0;m1<n;m1++)	// collect period information
+	{
+		x = f(x,gr->Min.x,par);
+		for(long j=0;j<m1;j++)	if(fabs(v1[j]-x)<dd)
+		{	fin=true;	break;	}
+		if(fin)	break;	v1[m1]=x;
+	}
+	for(mreal xx = gr->Min.x+dx;xx<=gr->Max.x;xx+=dx)
+	{
+		m2=m1;	memcpy(v2,v1,n*sizeof(double));	x=x0;
+		for(long i=0;i<10*n;i++)	x = f(x,xx,par);	// wait for loop stabilization
+		for(fin=false,m1=0;m1<n;m1++)	// collect period information
+		{
+			x = f(x,xx,par);
+			for(long j=0;j<m1;j++)	if(fabs(v1[j]-x)<dd)
+			{	fin=true;	break;	}
+			if(fin)	break;	v1[m1]=x;
+		}
+		if(m1>=m2)	for(long i=0;i<m1;i++)
+		{
+			double vv=v2[0], vi=v1[i];
+			for(long j=1;j<m2;j++)	if(fabs(v2[j]-vi)<fabs(vv-vi))	vv = v2[j]; 
+			gr->line_plot(gr->AddPnt(mglPoint(xx-dx,vv,gr->Max.z)), gr->AddPnt(mglPoint(xx,v1[i],gr->Max.z)));
+		}
+		else	for(long i=0;i<m1;i++)
+			gr->line_plot(gr->AddPnt(mglPoint(xx-dx,v1[i],gr->Max.z)), gr->AddPnt(mglPoint(xx,v1[i],gr->Max.z)));
+	}
+	gr->EndGroup();	delete []v1;	delete []v2;
+}
+//-----------------------------------------------------------------------------
+double MGL_NO_EXPORT bif_dat(double x, double y, void *p)
+{	mglDatSpl *s = (mglDatSpl *)p;	return s->d->value((x-s->x0)*s->dx, (y-s->y0)*s->dy);	}
+void MGL_EXPORT mgl_bifurcation_dat(HMGL gr, double dx, HCDT f, const char *stl, const char *opt)
+{
+	if(dx==0 || (gr->Max.x-gr->Min.x)*dx<0)	{	gr->SetWarn(mglWarnSlc,"Bifurcation");	return;	}
+	if(f->GetNy()<2)	{	gr->SetWarn(mglWarnLow,"Bifurcation");	return;	}
+	mreal r = gr->SaveState(opt);
+	char buf[64]="";	if(r>2)	sprintf(buf,"value %g",r);
+	mglDatSpl s;	s.d=f;
+	s.x0=gr->Min.x;	s.dx=f->GetNx()/(gr->Max.x-gr->Min.x);
+	s.y0=gr->Min.y;	s.dy=f->GetNy()/(gr->Max.y-gr->Min.y);
+	mgl_bifurcation(gr,dx,bif_dat,&s,stl,buf);
+}
+//-----------------------------------------------------------------------------
+double MGL_NO_EXPORT bif_str(double x, double y, void *p)
+{	HMEX s = (HMEX)p;	return mgl_expr_eval(s,x,y,0);	}
+void MGL_EXPORT mgl_bifurcation_str(HMGL gr, double dx, const char *f, const char *stl, const char *opt)
+{
+	HMEX eq = mgl_create_expr(f);
+	mgl_bifurcation(gr,dx,bif_str,eq,stl,opt);
+	mgl_delete_expr(eq);
+}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_bifurcation_dat_(uintptr_t *gr, double *dx, uintptr_t *f, const char *stl, const char *opt, int l,int n)
+{	char *s=new char[l+1];	memcpy(s,stl,l);	s[l]=0;
+	char *o=new char[n+1];	memcpy(o,opt,n);	o[n]=0;
+	mgl_bifurcation_dat(_GR_,*dx,_DA_(f),s,o);	delete []s;	delete []o;	}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_bifurcation_str_(uintptr_t *gr, double *dx, const char *func, const char *stl, const char *opt, int m,int l,int n)
+{	char *s=new char[l+1];	memcpy(s,stl,l);	s[l]=0;
+	char *o=new char[n+1];	memcpy(o,opt,n);	o[n]=0;
+	char *f=new char[m+1];	memcpy(f,func,m);	f[m]=0;
+	mgl_bifurcation_str(_GR_,*dx,f,s,o);	delete []f;	delete []s;	delete []o;	}
+//-----------------------------------------------------------------------------

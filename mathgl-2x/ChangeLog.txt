@@ -1,3 +1,9 @@
+2.3.4 Released ?? August 2015
+
+* Add Pmap() plot for Poincare map
+* Add Lamerey() plot for Lamerey diagram
+* Add Bifurcation() plot for Bifurcation diagram
+
 2.3.3 Released 01 June 2015
 
 * Add SurfCA() and Surf3CA() plots

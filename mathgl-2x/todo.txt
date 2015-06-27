@@ -53,7 +53,9 @@ B. Add chapter with real samples
 C. Translate to Russian everything
 D. Docs about JS interface
 
-1. Docs about Pmap()
+1. Docs + sample about Pmap() -- Poincare map
+2. Docs + sample about Lamerey() -- Lamerey diagram
+3. Docs + sample about Bifurcation() -- Bifurcation diagram
 
 
 YY. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using Stem()

@@ -202,7 +202,7 @@ void MGL_EXPORT mgl_label_y_(uintptr_t *graph, uintptr_t *y, const char *text, c
 /// Draw table for values val along given direction with row labels text at position {x,y}
 /** String \a fnt may contain:
  *	 ‘#’ for drawing cell borders;
- *	 ‘|’ for limiting table widh by subplot one (equal to option ‘value 1’);
+ *	 ‘|’ for limiting table width by subplot one (equal to option ‘value 1’);
  *	 ‘=’ for equal width of all cells;
  *	 ‘f’ for fixed format of printed numbers;
  *	 ‘E’ for using ‘E’ instead of ‘e’;
@@ -219,6 +219,23 @@ void MGL_EXPORT mgl_tablew(HMGL gr, double x, double y, HCDT val, const wchar_t 
 void MGL_EXPORT mgl_logo(HMGL gr, long w, long h, const unsigned char *rgba, int smooth, const char *opt);
 void MGL_EXPORT mgl_logo_file(HMGL gr, const char *fname, int smooth, const char *opt);
 void MGL_EXPORT mgl_logo_file_(uintptr_t *gr, const char *fname, int *smooth, const char *opt,int l,int n);
+
+/// Draws Lamerey diagram for mapping x_new = f(x_old)
+/** String \a stl may contain ‘v’ for drawing arrows.
+ *	Option value set the number of iterations (default is 20).*/
+void MGL_EXPORT mgl_lamerey(HMGL gr, double x0, double (*f)(double,void *), void *par, const char *stl, const char *opt);
+void MGL_EXPORT mgl_lamerey_dat(HMGL gr, double x0, HCDT f, const char *stl, const char *opt);
+void MGL_EXPORT mgl_lamerey_str(HMGL gr, double x0, const char *f, const char *stl, const char *opt);
+void MGL_EXPORT mgl_lamerey_dat_(uintptr_t *gr, double *x0, uintptr_t *f, const char *stl, const char *opt, int,int);
+void MGL_EXPORT mgl_lamerey_str_(uintptr_t *gr, double *x0, const char *f, const char *stl, const char *opt, int,int,int);
+
+/// Draws Bifurcation diagram for mapping x_new = f(x_old) in x-axis range
+/** Option value set the number of stationary points (default is 1024).*/
+void MGL_EXPORT mgl_bifurcation(HMGL gr, double dx, double (*f)(double,double,void *), void *par, const char *stl, const char *opt);
+void MGL_EXPORT mgl_bifurcation_dat(HMGL gr, double dx, HCDT f, const char *stl, const char *opt);
+void MGL_EXPORT mgl_bifurcation_str(HMGL gr, double dx, const char *f, const char *stl, const char *opt);
+void MGL_EXPORT mgl_bifurcation_dat_(uintptr_t *gr, double *dx, uintptr_t *f, const char *stl, const char *opt, int,int);
+void MGL_EXPORT mgl_bifurcation_str_(uintptr_t *gr, double *dx, const char *f, const char *stl, const char *opt, int,int,int);
 
 #ifdef __cplusplus
 }
