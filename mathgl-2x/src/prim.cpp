@@ -1029,31 +1029,31 @@ void MGL_EXPORT mgl_bifurcation(HMGL gr, double dx, double (*f)(double,double,vo
 {
 	if((gr->Max.x-gr->Min.x)*dx<=0)	{	gr->SetWarn(mglWarnSlc,"Bifurcation");	return;	}
 	static int cgid=1;	gr->StartGroup("Bifurcation",cgid++);
-	mreal r=gr->SaveState(opt);
-	long n = r>2 ? long(r+0.5):1024, m=(gr->Max.x-gr->Min.x)/dx, m1=0,m2=0;
+	mreal res=gr->SaveState(opt);
+	long n = res>2 ? long(res+0.5):1024, m=(gr->Max.x-gr->Min.x)/dx, m1=0,m2=0;
 	gr->SetPenPal(stl);	gr->Reserve(2*n*m);
 	double *v1=new double[n], *v2=new double[n], dd=0.1*fabs(gr->Max.y-gr->Min.y)/n;
-	double x = gr->Min.y+mgl_rnd()*(gr->Max.y-gr->Min.y), x0 = x;
+	double r = gr->Min.y+mgl_rnd()*(gr->Max.y-gr->Min.y), r0 = r;
 
 	bool fin=false;
-	for(long i=0;i<10*n;i++)	x = f(x,gr->Min.x,par);	// wait for loop stabilization
+	for(long i=0;i<10*n;i++)	r = f(gr->Min.x,r,par);	// wait for loop stabilization
 	for(m1=0;m1<n;m1++)	// collect period information
 	{
-		x = f(x,gr->Min.x,par);
-		for(long j=0;j<m1;j++)	if(fabs(v1[j]-x)<dd)
+		r = f(gr->Min.x,r,par);
+		for(long j=0;j<m1;j++)	if(fabs(v1[j]-r)<dd)
 		{	fin=true;	break;	}
-		if(fin)	break;	v1[m1]=x;
+		if(fin)	break;	v1[m1]=r;
 	}
 	for(mreal xx = gr->Min.x+dx;xx<=gr->Max.x;xx+=dx)
 	{
-		m2=m1;	memcpy(v2,v1,n*sizeof(double));	x=x0;
-		for(long i=0;i<10*n;i++)	x = f(x,xx,par);	// wait for loop stabilization
+		m2=m1;	memcpy(v2,v1,n*sizeof(double));	r=r0;
+		for(long i=0;i<10*n;i++)	r = f(xx,r,par);	// wait for loop stabilization
 		for(fin=false,m1=0;m1<n;m1++)	// collect period information
 		{
-			x = f(x,xx,par);
-			for(long j=0;j<m1;j++)	if(fabs(v1[j]-x)<dd)
+			r = f(xx,r,par);
+			for(long j=0;j<m1;j++)	if(fabs(v1[j]-r)<dd)
 			{	fin=true;	break;	}
-			if(fin)	break;	v1[m1]=x;
+			if(fin)	break;	v1[m1]=r;
 		}
 		if(m1>=m2)	for(long i=0;i<m1;i++)
 		{
