@@ -571,7 +571,7 @@ public:
 	{	mgl_error_box(gr, p.x, p.y, p.z, e.x, e.y, e.z, pen);	}
 
 	/// Draws Lamerey diagram for mapping x_new = f(x_old)
-	/** String \a stl may contain ‘v’ for drawing arrows.
+	/** String \a stl may contain: ‘v’ for drawing arrows; ‘~’ for disable 1st segment.
 	 *	Option value set the number of iterations (default is 20).*/
 	inline void Lamerey(double x0, const mglDataA &f, const char *stl="", const char *opt="")
 	{	mgl_lamerey_dat(gr,x0,&f,stl,opt);	}

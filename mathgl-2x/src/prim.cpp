@@ -975,14 +975,17 @@ void MGL_EXPORT mgl_lamerey(HMGL gr, double x0, double (*f)(double,void *), void
 	long n = r>2 ? long(r+0.5):20, n1, n2;
 	gr->SetPenPal(stl);	gr->Reserve(6*n+1);
 	bool vect = mglchr(stl,'v');
-	n1 = gr->AddPnt(mglPoint(x,gr->GetOrgY('x'),gr->Max.z));
 	n2 = gr->AddPnt(mglPoint(x,x,gr->Max.z));
-	gr->line_plot(n1,n2);	if(vect)	gr->vect_plot(n1,n2,0.3*gr->GetArrowSize());
+	if(!mglchr(stl,'~'))
+	{
+		n1 = gr->AddPnt(mglPoint(x,gr->GetOrgY('x'),gr->Max.z));
+		gr->line_plot(n1,n2);	if(vect)	gr->vect_plot(n1,n2,0.3*gr->GetArrowSize());
+	}
 	for(long i=0;i<n;i++)
 	{
 		x0 = x;		x = f(x0,par);
 		if(fabs(x-x0)<dx)	break;
-		n1=n2;	n2 = gr->AddPnt(mglPoint(x,x0,gr->Max.z));
+		n1=n2;	n2 = gr->AddPnt(mglPoint(x0,x,gr->Max.z));
 		gr->line_plot(n1,n2);	if(vect)	gr->vect_plot(n1,n2,0.3*gr->GetArrowSize());
 		n1=n2;	n2 = gr->AddPnt(mglPoint(x,x,gr->Max.z));
 		gr->line_plot(n1,n2);	if(vect)	gr->vect_plot(n1,n2,0.3*gr->GetArrowSize());
