@@ -251,6 +251,17 @@ long mglBase::AddGlyph(int s, long j)
 //-----------------------------------------------------------------------------
 //		Add points to the buffer
 //-----------------------------------------------------------------------------
+void inline mgl_put_inbox(mreal a1, mreal a2, mreal &a)
+{
+	if(a1<a2)	{	if(a<a1)	a=a1;	if(a>a2)	a=a2;	}
+	else		{	if(a<a2)	a=a2;	if(a>a1)	a=a1;	}
+}
+void MGL_NO_EXPORT mgl_coor_box(HMGL gr, mglPoint &p)
+{
+	mgl_put_inbox(gr->Min.x, gr->Max.x, p.x);
+	mgl_put_inbox(gr->Min.y, gr->Max.y, p.y);
+	mgl_put_inbox(gr->Min.z, gr->Max.z, p.z);
+}
 long mglBase::AddPnt(const mglMatrix *mat, mglPoint p, mreal c, mglPoint n, mreal a, int scl)
 {
 	// scl=0 -- no scaling
@@ -258,9 +269,14 @@ long mglBase::AddPnt(const mglMatrix *mat, mglPoint p, mreal c, mglPoint n, mrea
 	// scl&2 -- disable NAN at scaling
 	// scl&4 -- disable NAN for normales if no light
 	// scl&8 -- bypass palette for enabling alpha
+	// scl&16 -- put points inside axis range
 	if(mgl_isnan(c) || mgl_isnan(a))	return -1;
 	bool norefr = mgl_isnan(n.x) && mgl_isnan(n.y) && !mgl_isnan(n.z);
-	if(scl>0)	ScalePoint(mat,p,n,!(scl&2));
+	if(scl>0)
+	{
+		if(scl&16)	mgl_coor_box(this, p);
+		ScalePoint(mat,p,n,!(scl&2));
+	}
 	if(mgl_isnan(p.x))	return -1;
 	a = (a>=0 && a<=1) ? a : AlphaDef;
 	c = (c>=0) ? c:CDef;
@@ -442,12 +458,36 @@ bool mglBase::ScalePoint(const mglMatrix *, mglPoint &p, mglPoint &n, bool use_n
 	}
 	else
 	{
-		if(x1<Min.x)	{x=Min.x;	n.Set(1,0,0);}
-		if(x2>Max.x)	{x=Max.x;	n.Set(1,0,0);}
-		if(y1<Min.y)	{y=Min.y;	n.Set(0,1,0);}
-		if(y2>Max.y)	{y=Max.y;	n.Set(0,1,0);}
-		if(z1<Min.z)	{z=Min.z;	n.Set(0,0,1);}
-		if(z2>Max.z)	{z=Max.z;	n.Set(0,0,1);}
+		if(Min.x<Max.x)
+		{
+			if(x1<Min.x)	{x=Min.x;	n.Set(1,0,0);}
+			if(x2>Max.x)	{x=Max.x;	n.Set(1,0,0);}
+		}
+		else
+		{
+			if(x1<Max.x)	{x=Max.x;	n.Set(1,0,0);}
+			if(x2>Min.x)	{x=Min.x;	n.Set(1,0,0);}
+		}
+		if(Min.y<Max.y)
+		{
+			if(y1<Min.y)	{y=Min.y;	n.Set(0,1,0);}
+			if(y2>Max.y)	{y=Max.y;	n.Set(0,1,0);}
+		}
+		else
+		{
+			if(y1<Max.y)	{y=Max.y;	n.Set(0,1,0);}
+			if(y2>Min.y)	{y=Min.y;	n.Set(0,1,0);}
+		}
+		if(Min.z<Max.z)
+		{
+			if(z1<Min.z)	{z=Min.z;	n.Set(0,0,1);}
+			if(z2>Max.z)	{z=Max.z;	n.Set(0,0,1);}
+		}
+		else
+		{
+			if(z1<Max.z)	{z=Max.z;	n.Set(0,0,1);}
+			if(z2>Min.z)	{z=Min.z;	n.Set(0,0,1);}
+		}
 	}
 
 	x1=x;	y1=y;	z1=z;

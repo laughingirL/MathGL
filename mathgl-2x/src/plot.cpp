@@ -511,15 +511,15 @@ void MGL_EXPORT mgl_area_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, c
 
 		nn.Set(-y->dvx(0,my),x->dvx(0,mx));
 		mglPoint p(x->v(0,mx),y->v(0,my),z->v(0,mz));
-		long n1 = gr->AddPnt(p,c1,nn,-1,11);	p.z = z0;
-		long n2 = gr->AddPnt(p,c2,nn,-1,11);
+		long n1 = gr->AddPnt(p,c1,nn,-1,27);	p.z = z0;
+		long n2 = gr->AddPnt(p,c2,nn,-1,27);
 		for(long i=1;i<n;i++)
 		{
 			long n3=n1, n4=n2;
 			nn.Set(-y->dvx(i,my),x->dvx(i,mx));
 			p.Set(x->v(i,mx),y->v(i,my),z->v(i,mz));
 			if(sh)	c2=c1=gr->NextColor(pal,i);
-			n1 = gr->AddPnt(p,c1,nn,-1,11);	p.z = z0;	n2 = gr->AddPnt(p,c2,nn,-1,11);
+			n1 = gr->AddPnt(p,c1,nn,-1,27);	p.z = z0;	n2 = gr->AddPnt(p,c2,nn,-1,27);
 			if(wire)
 			{
 				gr->line_plot(n1,n2);	gr->line_plot(n3,n4);
@@ -556,14 +556,14 @@ void MGL_EXPORT mgl_area_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char
 		mreal z0 = zm + (m-1-j)*(gr->Max.z-zm)/m;
 
 		mglPoint p(x->v(0,mx),y->v(0,my),z0);
-		long n1 = gr->AddPnt(p,c1,nn,-1,11);	p.y = y0;
-		long n2 = gr->AddPnt(p,c2,nn,-1,11);
+		long n1 = gr->AddPnt(p,c1,nn,-1,27);	p.y = y0;
+		long n2 = gr->AddPnt(p,c2,nn,-1,27);
 		for(long i=1;i<n;i++)
 		{
 			long n3=n1, n4=n2;
 			p.Set(x->v(i,mx),y->v(i,my),z0);
 			if(sh)	c2=c1=gr->NextColor(pal,i);
-			n1 = gr->AddPnt(p,c1,nn,-1,11);	p.y = y0;	n2 = gr->AddPnt(p,c2,nn,-1,11);
+			n1 = gr->AddPnt(p,c1,nn,-1,27);	p.y = y0;	n2 = gr->AddPnt(p,c2,nn,-1,27);
 			if(wire)
 			{
 				gr->line_plot(n1,n2);	gr->line_plot(n3,n4);
@@ -631,14 +631,14 @@ void MGL_EXPORT mgl_region_3d(HMGL gr, HCDT x1, HCDT y1, HCDT z1, HCDT x2, HCDT 
 		long mz = (zhave && j<z1->GetNy()) ? j:0;
 		mreal z0 = zm + (m-1-j)*(gr->Max.z-zm)/m;
 
-		long n1 = gr->AddPnt(mglPoint(x1->v(0,mx),y1->v(0,my),zhave?z1->v(0,mz):z0),c1,nn,-1,11);
-		long n2 = gr->AddPnt(mglPoint(x2->v(0,mx),y2->v(0,my),zhave?z2->v(0,mz):z0),c2,nn,-1,11);
+		long n1 = gr->AddPnt(mglPoint(x1->v(0,mx),y1->v(0,my),zhave?z1->v(0,mz):z0),c1,nn,-1,27);
+		long n2 = gr->AddPnt(mglPoint(x2->v(0,mx),y2->v(0,my),zhave?z2->v(0,mz):z0),c2,nn,-1,27);
 		for(long i=1;i<n;i++)
 		{
 			long n3=n1, n4=n2;
 			if(sh)	c2=c1=gr->NextColor(pal,i);
-			n1 = gr->AddPnt(mglPoint(x1->v(i,mx),y1->v(i,my),zhave?z1->v(i,mz):z0),c1,nn,-1,11);
-			n2 = gr->AddPnt(mglPoint(x2->v(i,mx),y2->v(i,my),zhave?z2->v(i,mz):z0),c2,nn,-1,11);
+			n1 = gr->AddPnt(mglPoint(x1->v(i,mx),y1->v(i,my),zhave?z1->v(i,mz):z0),c1,nn,-1,27);
+			n2 = gr->AddPnt(mglPoint(x2->v(i,mx),y2->v(i,my),zhave?z2->v(i,mz):z0),c2,nn,-1,27);
 			gr->quad_plot(n1,n2,n3,n4);
 		}
 	}
@@ -670,16 +670,16 @@ void MGL_EXPORT mgl_region_xy(HMGL gr, HCDT x, HCDT y1, HCDT y2, const char *pen
 		mreal z0 = zm + (m-1-j)*(gr->Max.z-zm)/m;
 
 		mreal f1 = y1->v(0,j), f2 = y2->v(0,j), xx = x->v(0,mx);
-		long n1 = gr->AddPnt(mglPoint(xx,f1,z0),c1,nn,-1,11);
-		long n2 = gr->AddPnt(mglPoint(xx,f2,z0),c2,nn,-1,11);
+		long n1 = gr->AddPnt(mglPoint(xx,f1,z0),c1,nn,-1,27);
+		long n2 = gr->AddPnt(mglPoint(xx,f2,z0),c2,nn,-1,27);
 		for(long i=1;i<n;i++)
 		{
 			long n3=n1, n4=n2;
 			mreal f3=f1, f4=f2;
 			f1 = y1->v(i,j);	f2 = y2->v(i,j);	xx = x->v(i,mx);
 			if(sh)	c2=c1=gr->NextColor(pal,i);
-			n1 = gr->AddPnt(mglPoint(xx,f1,z0),c1,nn,-1,11);
-			n2 = gr->AddPnt(mglPoint(xx,f2,z0),c2,nn,-1,11);
+			n1 = gr->AddPnt(mglPoint(xx,f1,z0),c1,nn,-1,27);
+			n2 = gr->AddPnt(mglPoint(xx,f2,z0),c2,nn,-1,27);
 			if(!inside || (f2>f1 && f4>f3))	gr->quad_plot(n1,n2,n3,n4);
 		}
 	}
@@ -1327,10 +1327,10 @@ void MGL_EXPORT mgl_error_exy(HMGL gr, HCDT x, HCDT y, HCDT ex, HCDT ey, const c
 			{
 				mreal vx=x->v(i,mx), ve=ex->v(i,m1), vy=y->v(i,my), vf=ey->v(i,m2);
 				mreal c = sh ? gr->NextColor(pal,i):gr->CDef;
-				long n1 = gr->AddPnt(mglPoint(vx-ve, vy+vf, zVal),c,q,-1,11);
-				long n2 = gr->AddPnt(mglPoint(vx-ve, vy-vf, zVal),c,q,-1,11);
-				long n3 = gr->AddPnt(mglPoint(vx+ve, vy+vf, zVal),c,q,-1,11);
-				long n4 = gr->AddPnt(mglPoint(vx+ve, vy-vf, zVal),c,q,-1,11);
+				long n1 = gr->AddPnt(mglPoint(vx-ve, vy+vf, zVal),c,q,-1,27);
+				long n2 = gr->AddPnt(mglPoint(vx-ve, vy-vf, zVal),c,q,-1,27);
+				long n3 = gr->AddPnt(mglPoint(vx+ve, vy+vf, zVal),c,q,-1,27);
+				long n4 = gr->AddPnt(mglPoint(vx+ve, vy-vf, zVal),c,q,-1,27);
 				gr->line_plot(n1,n2);	gr->line_plot(n1,n3);
 				gr->line_plot(n4,n2);	gr->line_plot(n4,n3);
 			}
@@ -1338,10 +1338,10 @@ void MGL_EXPORT mgl_error_exy(HMGL gr, HCDT x, HCDT y, HCDT ex, HCDT ey, const c
 			{
 				mreal vx=x->v(i,mx), ve=ex->v(i,m1), vy=y->v(i,my), vf=ey->v(i,m2);
 				mreal c = sh ? gr->NextColor(pal,i):gr->CDef;
-				long n1 = gr->AddPnt(mglPoint(vx, vy+vf, zVal),c,q,-1,11);
-				long n2 = gr->AddPnt(mglPoint(vx-ve, vy, zVal),c,q,-1,11);
-				long n3 = gr->AddPnt(mglPoint(vx, vy-vf, zVal),c,q,-1,11);
-				long n4 = gr->AddPnt(mglPoint(vx+ve, vy, zVal),c,q,-1,11);
+				long n1 = gr->AddPnt(mglPoint(vx, vy+vf, zVal),c,q,-1,27);
+				long n2 = gr->AddPnt(mglPoint(vx-ve, vy, zVal),c,q,-1,27);
+				long n3 = gr->AddPnt(mglPoint(vx, vy-vf, zVal),c,q,-1,27);
+				long n4 = gr->AddPnt(mglPoint(vx+ve, vy, zVal),c,q,-1,27);
 				gr->line_plot(n1,n2);	gr->line_plot(n2,n3);
 				gr->line_plot(n3,n4);	gr->line_plot(n4,n1);
 			}
@@ -1354,7 +1354,7 @@ void MGL_EXPORT mgl_error_exy(HMGL gr, HCDT x, HCDT y, HCDT ex, HCDT ey, const c
 				{
 					n1 = n2;
 					n2 = gr->AddPnt(mglPoint(vx+ve*mgl_cos[(18*k)%360],
-							vy+vf*mgl_cos[(270+18*k)%360], zVal),c,q,-1,11);
+							vy+vf*mgl_cos[(270+18*k)%360], zVal),c,q,-1,27);
 					if(k>0)	gr->line_plot(n1,n2);
 				}
 			}
@@ -1365,10 +1365,10 @@ void MGL_EXPORT mgl_error_exy(HMGL gr, HCDT x, HCDT y, HCDT ex, HCDT ey, const c
 				{
 					mreal vx=x->v(i,mx), ve=ex->v(i,m1), vy=y->v(i,my), vf=ey->v(i,m2);
 					mreal c = sh ? gr->NextColor(pal,i):gr->CDef;
-					long n1 = gr->AddPnt(mglPoint(vx, vy+vf, zVal),c,q,-1,11);
-					long n2 = gr->AddPnt(mglPoint(vx-ve, vy, zVal),c,q,-1,11);
-					long n3 = gr->AddPnt(mglPoint(vx, vy-vf, zVal),c,q,-1,11);
-					long n4 = gr->AddPnt(mglPoint(vx+ve, vy, zVal),c,q,-1,11);
+					long n1 = gr->AddPnt(mglPoint(vx, vy+vf, zVal),c,q,-1,27);
+					long n2 = gr->AddPnt(mglPoint(vx-ve, vy, zVal),c,q,-1,27);
+					long n3 = gr->AddPnt(mglPoint(vx, vy-vf, zVal),c,q,-1,27);
+					long n4 = gr->AddPnt(mglPoint(vx+ve, vy, zVal),c,q,-1,27);
 					gr->line_plot(n1,n3);	gr->line_plot(n2,n4);
 				}	break;
 			case 'X':	case 'x':
@@ -1376,10 +1376,10 @@ void MGL_EXPORT mgl_error_exy(HMGL gr, HCDT x, HCDT y, HCDT ex, HCDT ey, const c
 				{
 					mreal vx=x->v(i,mx), ve=ex->v(i,m1), vy=y->v(i,my), vf=ey->v(i,m2);
 					mreal c = sh ? gr->NextColor(pal,i):gr->CDef;
-					long n1 = gr->AddPnt(mglPoint(vx-ve, vy+vf, zVal),c,q,-1,11);
-					long n2 = gr->AddPnt(mglPoint(vx-ve, vy-vf, zVal),c,q,-1,11);
-					long n3 = gr->AddPnt(mglPoint(vx+ve, vy+vf, zVal),c,q,-1,11);
-					long n4 = gr->AddPnt(mglPoint(vx+ve, vy-vf, zVal),c,q,-1,11);
+					long n1 = gr->AddPnt(mglPoint(vx-ve, vy+vf, zVal),c,q,-1,27);
+					long n2 = gr->AddPnt(mglPoint(vx-ve, vy-vf, zVal),c,q,-1,27);
+					long n3 = gr->AddPnt(mglPoint(vx+ve, vy+vf, zVal),c,q,-1,27);
+					long n4 = gr->AddPnt(mglPoint(vx+ve, vy-vf, zVal),c,q,-1,27);
 					gr->line_plot(n1,n4);	gr->line_plot(n2,n3);
 				}	break;
 			case 'S':
@@ -1387,10 +1387,10 @@ void MGL_EXPORT mgl_error_exy(HMGL gr, HCDT x, HCDT y, HCDT ex, HCDT ey, const c
 				{
 					mreal vx=x->v(i,mx), ve=ex->v(i,m1), vy=y->v(i,my), vf=ey->v(i,m2);
 					mreal c = sh ? gr->NextColor(pal,i):gr->CDef;
-					long n1 = gr->AddPnt(mglPoint(vx-ve, vy+vf, zVal),c,q,-1,11);
-					long n2 = gr->AddPnt(mglPoint(vx-ve, vy-vf, zVal),c,q,-1,11);
-					long n3 = gr->AddPnt(mglPoint(vx+ve, vy+vf, zVal),c,q,-1,11);
-					long n4 = gr->AddPnt(mglPoint(vx+ve, vy-vf, zVal),c,q,-1,11);
+					long n1 = gr->AddPnt(mglPoint(vx-ve, vy+vf, zVal),c,q,-1,27);
+					long n2 = gr->AddPnt(mglPoint(vx-ve, vy-vf, zVal),c,q,-1,27);
+					long n3 = gr->AddPnt(mglPoint(vx+ve, vy+vf, zVal),c,q,-1,27);
+					long n4 = gr->AddPnt(mglPoint(vx+ve, vy-vf, zVal),c,q,-1,27);
 					gr->quad_plot(n1,n2,n3,n4);
 				}	break;
 			case 'D':
@@ -1398,10 +1398,10 @@ void MGL_EXPORT mgl_error_exy(HMGL gr, HCDT x, HCDT y, HCDT ex, HCDT ey, const c
 				{
 					mreal vx=x->v(i,mx), ve=ex->v(i,m1), vy=y->v(i,my), vf=ey->v(i,m2);
 					mreal c = sh ? gr->NextColor(pal,i):gr->CDef;
-					long n1 = gr->AddPnt(mglPoint(vx, vy+vf, zVal),c,q,-1,11);
-					long n2 = gr->AddPnt(mglPoint(vx-ve, vy, zVal),c,q,-1,11);
-					long n3 = gr->AddPnt(mglPoint(vx, vy-vf, zVal),c,q,-1,11);
-					long n4 = gr->AddPnt(mglPoint(vx+ve, vy, zVal),c,q,-1,11);
+					long n1 = gr->AddPnt(mglPoint(vx, vy+vf, zVal),c,q,-1,27);
+					long n2 = gr->AddPnt(mglPoint(vx-ve, vy, zVal),c,q,-1,27);
+					long n3 = gr->AddPnt(mglPoint(vx, vy-vf, zVal),c,q,-1,27);
+					long n4 = gr->AddPnt(mglPoint(vx+ve, vy, zVal),c,q,-1,27);
 					gr->quad_plot(n1,n4,n2,n3);
 				}	break;
 			case 'O':
@@ -1414,7 +1414,7 @@ void MGL_EXPORT mgl_error_exy(HMGL gr, HCDT x, HCDT y, HCDT ex, HCDT ey, const c
 					{
 						n1 = n2;
 						n2 = gr->AddPnt(mglPoint(vx+ve*mgl_cos[(18*k)%360],
-								vy+vf*mgl_cos[(270+18*k)%360], zVal),c,q,-1,11);
+								vy+vf*mgl_cos[(270+18*k)%360], zVal),c,q,-1,27);
 						if(k>0)	gr->trig_plot(n1,n2,n3);
 					}
 				}	break;
@@ -1432,12 +1432,12 @@ void MGL_EXPORT mgl_error_exy(HMGL gr, HCDT x, HCDT y, HCDT ex, HCDT ey, const c
 			mreal c = sh ? gr->NextColor(pal,i):gr->CDef;
 			if(mk)	gr->mark_plot(gr->AddPnt(mglPoint(vx,vy,zVal),c), mk);
 
-			long n1 = gr->AddPnt(mglPoint(vx, vy+vf, zVal),c,q,-1,11);
-			long n2 = gr->AddPnt(mglPoint(vx, vy-vf, zVal),c,q,-1,11);
+			long n1 = gr->AddPnt(mglPoint(vx, vy+vf, zVal),c,q,-1,27);
+			long n2 = gr->AddPnt(mglPoint(vx, vy-vf, zVal),c,q,-1,27);
 			gr->line_plot(n1,n2);	gr->arrow_plot(n1,n2,'I');	gr->arrow_plot(n2,n1,'I');
 
-			n1 = gr->AddPnt(mglPoint(vx+ve, vy, zVal),-1,q,c,11);
-			n2 = gr->AddPnt(mglPoint(vx-ve, vy, zVal),-1,q,c,11);
+			n1 = gr->AddPnt(mglPoint(vx+ve, vy, zVal),-1,q,c,27);
+			n2 = gr->AddPnt(mglPoint(vx-ve, vy, zVal),-1,q,c,27);
 			gr->line_plot(n1,n2);	gr->arrow_plot(n1,n2,'I');	gr->arrow_plot(n2,n1,'I');
 		}
 	}

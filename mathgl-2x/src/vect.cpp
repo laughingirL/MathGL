@@ -516,7 +516,8 @@ void MGL_NO_EXPORT flow(mglBase *gr, double zVal, double u, double v, const mglD
 		pp[k].x = x.Spline1(dif,u,0,0);	f = ax.Spline1(u,v,0)/dif.x;
 		pp[k].y = y.Spline1(dif,v,0,0);	g = ay.Spline1(u,v,0)/dif.x;
 		pp[k].z = zVal;
-		for(long m=0;m<k-1;m+=10)	// determines encircle
+		if(mgl_isbad(f+g))	end = true;
+		else	for(long m=0;m<k-1;m+=10)	// determines encircle
 			if(mgl_anorm((pp[k]-pp[m])/dx)<acc)	end = true;
 		if(end)	break;
 		h = hypot(f,g);	pp[k].c = gr->GetC(ss,s*h);
@@ -549,7 +550,8 @@ void MGL_NO_EXPORT flow(mglBase *gr, double zVal, double u, double v, const mglD
 		xx = ax.Spline1(u,v,0);	yy = ay.Spline1(u,v,0);
 		det = xv*yu-xu*yv;	f = (yy*xv-xx*yv)/det;	g = (xx*yu-yy*xu)/det;
 		pp[k].z = zVal;
-		for(long m=0;m<k-1;m+=10)	// determines encircle
+		if(mgl_isbad(f+g))	end = true;
+		else	for(long m=0;m<k-1;m+=10)	// determines encircle
 			if(mgl_anorm((pp[k]-pp[m])/dx)<acc)	end = true;
 		if(end)	break;
 		h = hypot(f,g);	pp[k].c = gr->GetC(ss,s*h);
@@ -750,7 +752,8 @@ void flow(mglBase *gr, double u, double v, double w, const mglData &x, const mgl
 		pp[k].x = x.Spline1(dif,u,0,0);	e = ax.Spline1(u,v,w)/dif.x;
 		pp[k].y = y.Spline1(dif,v,0,0);	f = ay.Spline1(u,v,w)/dif.x;
 		pp[k].z = z.Spline1(dif,w,0,0);	g = az.Spline1(u,v,w)/dif.x;
-		for(long m=0;m<k-1;m+=10)	// determines encircle
+		if(mgl_isbad(e+f+g))	end = true;
+		else	for(long m=0;m<k-1;m+=10)	// determines encircle
 			if(mgl_anorm((pp[k]-pp[m])/dx)<acc)	end = true;
 		if(end)	break;
 		h = sqrt(e*e+f*f+g*g);	pp[k].c = gr->GetC(ss,s*h);
@@ -793,7 +796,8 @@ void flow(mglBase *gr, double u, double v, double w, const mglData &x, const mgl
 		e = (-xv*yw*zz+xw*yv*zz+xv*yy*zw-xx*yv*zw-xw*yy*zv+xx*yw*zv)/det;
 		f = (xu*yw*zz-xw*yu*zz-xu*yy*zw+xx*yu*zw+xw*yy*zu-xx*yw*zu)/det;
 		g = (-xu*yv*zz+xv*yu*zz+xu*yy*zv-xx*yu*zv-xv*yy*zu+xx*yv*zu)/det;
-		for(long m=0;m<k-1;m+=10)	// determines encircle
+		if(mgl_isbad(e+f+g))	end = true;
+		else	for(long m=0;m<k-1;m+=10)	// determines encircle
 			if(mgl_anorm((pp[k]-pp[m])/dx)<acc)	end = true;
 		if(end)	break;
 		h = sqrt(e*e+f*f+g*g);	pp[k].c = gr->GetC(ss,s*h);
@@ -1093,7 +1097,8 @@ void MGL_NO_EXPORT flowr(mglBase *gr, double zVal, double u, double v, const mgl
 		pp[k].x = x.Spline1(dif,u,0,0);	f = ax.Spline1(u,v,0)/dif.x;
 		pp[k].y = y.Spline1(dif,v,0,0);	g = ay.Spline1(u,v,0)/dif.x;
 		pp[k].z = zVal;
-		for(long m=0;m<k-1;m+=10)	// determines encircle
+		if(mgl_isbad(f+g))	end = true;
+		else	for(long m=0;m<k-1;m+=10)	// determines encircle
 			if(mgl_anorm((pp[k]-pp[m])/dx)<acc)	end = true;
 		if(end)	break;
 		h = hypot(f,g);	cc[k] = gr->GetC(sc,s*h);
@@ -1127,7 +1132,8 @@ void MGL_NO_EXPORT flowr(mglBase *gr, double zVal, double u, double v, const mgl
 			xx = ax.Spline1(u,v,0);	yy = ay.Spline1(u,v,0);
 			det = xv*yu-xu*yv;	f = (yy*xv-xx*yv)/det;	g = (xx*yu-yy*xu)/det;
 		pp[k].z = zVal;
-		for(long m=0;m<k-1;m+=10)	// determines encircle
+		if(mgl_isbad(f+g))	end = true;
+		else	for(long m=0;m<k-1;m+=10)	// determines encircle
 			if(mgl_anorm((pp[k]-pp[m])/dx)<acc)	end = true;
 		if(end)	break;
 		h = hypot(f,g);	cc[k] = gr->GetC(sc,s*h);
@@ -1287,7 +1293,8 @@ void flowr(mglBase *gr, double u, double v, double w, const mglData &x, const mg
 		pp[k].x = x.Spline1(dif,u,0,0);	e = ax.Spline1(u,v,w)/dif.x;
 		pp[k].y = y.Spline1(dif,v,0,0);	f = ay.Spline1(u,v,w)/dif.x;
 		pp[k].z = z.Spline1(dif,w,0,0);	g = az.Spline1(u,v,w)/dif.x;
-		for(long m=0;m<k-1;m+=10)	// determines encircle
+		if(mgl_isbad(e+f+g))	end = true;
+		else	for(long m=0;m<k-1;m+=10)	// determines encircle
 			if(mgl_anorm((pp[k]-pp[m])/dx)<acc)	end = true;
 		if(end)	break;
 		h = sqrt(e*e+f*f+g*g);	cc[k] = gr->GetC(sc,s*h);
@@ -1331,7 +1338,8 @@ void flowr(mglBase *gr, double u, double v, double w, const mglData &x, const mg
 		e = (-xv*yw*zz+xw*yv*zz+xv*yy*zw-xx*yv*zw-xw*yy*zv+xx*yw*zv)/det;
 		f = (xu*yw*zz-xw*yu*zz-xu*yy*zw+xx*yu*zw+xw*yy*zu-xx*yw*zu)/det;
 		g = (-xu*yv*zz+xv*yu*zz+xu*yy*zv-xx*yu*zv-xv*yy*zu+xx*yv*zu)/det;
-		for(long m=0;m<k-1;m+=10)	// determines encircle
+		if(mgl_isbad(e+f+g))	end = true;
+		else	for(long m=0;m<k-1;m+=10)	// determines encircle
 			if(mgl_anorm((pp[k]-pp[m])/dx)<acc)	end = true;
 		if(end)	break;
 		h = sqrt(e*e+f*f+g*g);	cc[k] = gr->GetC(sc,s*h);
