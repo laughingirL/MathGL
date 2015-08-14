@@ -607,7 +607,7 @@ MGL_NO_EXPORT void *mgl_cmodify(void *par)
 void MGL_EXPORT mgl_datac_modify(HADT d, const char *eq,long dim)
 {
 	long nx=d->nx, ny=d->ny, nz=d->nz, par[3]={nx,ny,nz};
-	if(dim<=0)	mgl_datac_modify_vw(d,eq,0,0);	// fastes variant for whole array
+	if(dim<=0)	mgl_datac_modify_vw(d,eq,0,0);	// fastest variant for whole array
 	mglFormulaC f(eq);
 	if(nz>1)	// 3D array
 	{
@@ -778,6 +778,22 @@ HMDT MGL_EXPORT mgl_datac_imag(HCDT d)
 }
 uintptr_t MGL_EXPORT mgl_datac_imag_(uintptr_t *d)
 {	return uintptr_t(mgl_datac_imag(_DC_));	}
+//-----------------------------------------------------------------------------
+HMDT MGL_EXPORT mgl_datac_norm(HCDT d)
+{
+	long nx=d->GetNx(),ny=d->GetNy(),nz=d->GetNz();
+	mglData *r=new mglData(nx,ny,nz);
+	const mglDataC *dd = dynamic_cast<const mglDataC*>(d);
+	if(dd)
+#pragma omp parallel for
+		for(long i=0;i<nx*ny*nz;i++)	r->a[i] = norm(dd->a[i]);
+	else
+#pragma omp parallel for
+		for(long i=0;i<nx*ny*nz;i++)	r->a[i] = mgl_ipow(d->vthr(i),2);
+	return r;
+}
+uintptr_t MGL_EXPORT mgl_datac_norm_(uintptr_t *d)
+{	return uintptr_t(mgl_datac_norm(_DC_));	}
 //-----------------------------------------------------------------------------
 HMDT MGL_EXPORT mgl_datac_abs(HCDT d)
 {

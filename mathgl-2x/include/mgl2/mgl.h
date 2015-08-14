@@ -114,11 +114,11 @@ public:
 	inline void CutOff(const char *EqC)		{	mgl_set_cutoff(gr, EqC);	}
 
 	/// Set default font size
-	inline void SetFontSize(double size)		{	mgl_set_font_size(gr, size);	}
+	inline void SetFontSize(double size)	{	mgl_set_font_size(gr, size);}
 	/// Set default font style and color
-	inline void SetFontDef(const char *fnt)		{	mgl_set_font_def(gr, fnt);	}
+	inline void SetFontDef(const char *fnt)	{	mgl_set_font_def(gr, fnt);	}
 	/// Set FontSize by size in pt and picture DPI (default is 16 pt for dpi=72)
-	virtual void SetFontSizePT(double pt, int dpi=72){	SetFontSize(pt*27.f/dpi);	}
+	virtual void SetFontSizePT(double pt, int dpi=72)	{	SetFontSize(pt*27.f/dpi);	}
 	/// Set FontSize by size in centimeters and picture DPI (default is 0.56 cm = 16 pt)
 	inline void SetFontSizeCM(double cm, int dpi=72)	{	SetFontSizePT(cm*28.45f,dpi);	}
 	/// Set FontSize by size in inch and picture DPI (default is 0.22 in = 16 pt)
@@ -583,7 +583,7 @@ public:
 	{	mgl_bifurcation_dat(gr,dx,&f,stl,opt);	}
 	inline void Bifurcation(double dx, const char *func, const char *stl="", const char *opt="")
 	{	mgl_bifurcation_str(gr,dx,func,stl,opt);	}
-	
+
 	/// Draws the face between points with color stl (include interpolation up to 4 colors).
 	inline void Face(mglPoint p1, mglPoint p2, mglPoint p3, mglPoint p4, const char *stl="r")
 	{	mgl_face(gr, p1.x, p1.y, p1.z, p2.x, p2.y, p2.z, p3.x, p3.y, p3.z, p4.x, p4.y, p4.z, stl);	}

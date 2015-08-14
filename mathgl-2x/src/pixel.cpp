@@ -813,6 +813,11 @@ void mglCanvas::pnt_plot(long x,long y,mreal z,const unsigned char ci[4], int ob
 				{	combine(c,cc+8);	memcpy(cc+8,c,4);	}
 			}
 		}
+		if(Quality&MGL_DRAW_FAST)
+		{
+			if(z>=zz[0])	// point upper the background
+			{	zz[0]=z;	combine(cc,c);	OI[i0]=obj_id;	}
+		}
 		else
 		{
 			if(z>=zz[0])	// point upper the background
@@ -1143,7 +1148,7 @@ inline unsigned char mgl_sline(unsigned char c,float x)
 {	x*=x/2;	return (unsigned char)((c)/(1+x+x*x/5));	}
 void mglCanvas::line_draw(const mglPnt &p1, const mglPnt &p2, const mglDrawReg *dr)
 {
-	if((Quality&3)<2)	{	fast_draw(p1,p2,dr);	return;	}
+	if((Quality&3)==MGL_DRAW_WIRE)	{	fast_draw(p1,p2,dr);	return;	}	// previously was <2. This may slightly slow down for Quality=1
 	unsigned char r[4];
 	long y1,x1,y2,x2;
 

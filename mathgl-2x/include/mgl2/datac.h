@@ -189,7 +189,7 @@ using mglDataA::Momentum;
 	/// Equidistantly fill the data to range [x1,x2] in direction dir
 	inline void Fill(dual x1,dual x2=mglNaN,char dir='x')
 	{	mgl_datac_fill(this,x1,x2,dir);	}
-	
+
 		/// Fill the data by interpolated values of vdat parametrically depended on xdat,ydat,zdat for x,y,z in range [p1,p2] using global spline
 	inline void RefillGS(const mglDataA &xdat, const mglDataA &vdat, mreal x1, mreal x2,long sl=-1)
 	{	mgl_datac_refill_gs(this,&xdat,&vdat,x1,x2,sl);	}
@@ -256,9 +256,12 @@ using mglDataA::Momentum;
 	/// Get imaginary part of data values
 	inline mglData Imag() const
 	{	return mglData(true,mgl_datac_imag(this));	}
-	/// Get absolute value of data values
+	/// Get absolute value of data values, i.e. |u|
 	inline mglData Abs() const
 	{	return mglData(true,mgl_datac_abs(this));	}
+	/// Get square of absolute value of data values, i.e. |u|^2
+	inline mglData Norm() const
+	{	return mglData(true,mgl_datac_norm(this));	}
 	/// Get argument of data values
 	inline mglData Arg() const
 	{	return mglData(true,mgl_datac_arg(this));	}

@@ -291,14 +291,21 @@ uintptr_t MGL_EXPORT mgl_datac_correl_(uintptr_t *dat1, uintptr_t *dat2, const c
 void MGL_EXPORT mgl_datac_diffr(HADT dat, const char *how, mreal q);
 void MGL_EXPORT mgl_datac_diffr_(uintptr_t *d, const char *how, double q,int l);
 
+/// Get real part of data values
 HMDT MGL_EXPORT mgl_datac_real(HCDT dat);
 uintptr_t MGL_EXPORT mgl_datac_real_(uintptr_t *dat);
+/// Get imaginary part of data values
 HMDT MGL_EXPORT mgl_datac_imag(HCDT dat);
 uintptr_t MGL_EXPORT mgl_datac_imag_(uintptr_t *dat);
+/// Get absolute value of data values, i.e. |u|
 HMDT MGL_EXPORT mgl_datac_abs(HCDT dat);
 uintptr_t MGL_EXPORT mgl_datac_abs_(uintptr_t *dat);
+/// Get argument of data values
 HMDT MGL_EXPORT mgl_datac_arg(HCDT dat);
 uintptr_t MGL_EXPORT mgl_datac_arg_(uintptr_t *dat);
+/// Get square of absolute value of data values, i.e. |u|^2
+HMDT MGL_EXPORT mgl_datac_norm(HCDT dat);
+uintptr_t MGL_EXPORT mgl_datac_norm_(uintptr_t *dat);
 
 /// Interpolate by linear function the data to given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
 mdual MGL_EXPORT mgl_datac_linear(HCDT d, mreal x,mreal y,mreal z);

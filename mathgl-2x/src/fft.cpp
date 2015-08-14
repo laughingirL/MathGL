@@ -1072,12 +1072,12 @@ void MGL_EXPORT mgl_data_hankel_(uintptr_t *d, const char *dir,int l)
 void MGL_EXPORT mgl_data_fill_sample(HMDT d, const char *how)
 {
 	if(!how || *how==0)	return;
-	bool kk = strchr(how,'k');
+	bool kk = mglchr(how,'k');
 	long n=d->nx,dn=1;
 	mreal *aa=d->a;
-	if(strchr(how,'y'))	{	n=d->ny;	dn=d->nx;	}
-	if(strchr(how,'z'))	{	n=d->nz;	dn=d->nx*d->ny;	}
-	if(strchr(how,'h'))	// Hankel
+	if(mglchr(how,'y'))	{	n=d->ny;	dn=d->nx;	}
+	if(mglchr(how,'z'))	{	n=d->nz;	dn=d->nx*d->ny;	}
+	if(mglchr(how,'h'))	// Hankel
 	{
 #if MGL_HAVE_GSL
 		gsl_dht *dht = gsl_dht_new(n,0,1);
