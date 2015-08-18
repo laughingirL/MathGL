@@ -20,6 +20,7 @@
 #include <float.h>
 #include <math.h>
 #include <list>
+#include <limits>
 #include "mgl2/other.h"
 #include "mgl2/data.h"
 #include "mgl2/thread.h"
@@ -497,30 +498,72 @@ HMDT MGL_EXPORT mgl_triangulation_2d(HCDT x, HCDT y)
 	if(y->GetNN()!=n)	return nums;
 	// use s-hull here
 	std::vector<Shx> pts;
-	std::vector<long> out;
 	Shx pt;
 
-	double mx = 0, my = 0;
-	for(long i=0;i<n;i++)
-	{
-		register double t;
-		t = fabs(x->vthr(i));	if(t>mx)	mx=t;
-		t = fabs(y->vthr(i));	if(t>my)	my=t;
-	}
-	mx *= 1e-15;	my *= 1e-15;
+	// Filter NaNs and Infs and calculate axiswise ranges
+
+	double min_r =  std::numeric_limits<double>::infinity();
+	double max_r = -std::numeric_limits<double>::infinity();
+	double min_c =  std::numeric_limits<double>::infinity();
+	double max_c = -std::numeric_limits<double>::infinity();
+
 	for(long i=0;i<n;i++)
 	{
 		pt.r = x->vthr(i);	pt.c = y->vthr(i);
 		if(mgl_isbad(pt.r) || mgl_isbad(pt.c))	continue;
-		if(fabs(pt.r)<mx)	pt.r=0;
-		if(fabs(pt.c)<my)	pt.c=0;
 		pt.id = i;    pts.push_back(pt);
+
+		min_r = std::min(min_r, pt.r);
+		min_c = std::min(min_c, pt.c);
+		max_r = std::max(max_r, pt.r);
+		max_c = std::max(max_c, pt.c);
 	}
 
 	std::vector<Triad> triads;
-	if(de_duplicate(pts, out))
-		mgl_set_global_warn("There are duplicated points for triangulation.");
-	s_hull_pro(pts, triads);
+
+	static const double float_eps = std::numeric_limits<float>::epsilon();
+	Dupex grid_step(float_eps*std::max((max_r - min_r), std::max(std::abs(max_r), std::abs(min_r))), 
+			float_eps * std::max((max_c - min_c), std::max(std::abs(max_c), std::abs(min_c))));
+
+	const size_t original_size = pts.size();
+
+	if(pts.size() >= 3u && 0. < grid_step.r && 0. < grid_step.c) {
+		std::vector<long> out;
+		de_duplicate(pts, out, grid_step);
+
+		if (pts.size() >= 3u && s_hull_pro(pts, triads) < 0) {
+			// Error occured. It may be caused by degenerated dataset. Well, let's try to increment rounding grid step.
+			// Why 4? Why not. There are no particular reasons for this.
+			grid_step.r *= 4.; 
+			grid_step.c *= 4.;
+
+			out.clear();
+			triads.clear();
+
+			de_duplicate(pts, out, grid_step);
+
+			if (pts.size() >= 3u && s_hull_pro(pts, triads) < 0) {
+				// Last try. Let's assume uniform points distribution and use range / sqrt(pts.size()) * 2 as epsilon. 
+				// It removes a 3/4 of points in optimal case but in the worst case it merges all points to the one.
+				const double density = 1. + floor(0.5 + std::sqrt(static_cast<double>(pts.size())));
+				grid_step.r = (max_r - min_r) / density * 2.;
+				grid_step.c = (max_c - min_c) / density * 2.;
+  				
+				out.clear();
+				de_duplicate(pts, out, grid_step);
+
+				triads.clear();
+				s_hull_pro(pts, triads);
+			}
+		}
+	}
+
+	if (triads.empty()) {
+		mgl_set_global_warn("Cannot triangulate this set!");
+	} else if(original_size > pts.size()) {
+		mgl_set_global_warn("There are duplicated or indistinguishably adjacent points for triangulation.");
+	}
+
 	long m = triads.size();
 	nums=new mglData(3,m);
 	for(long i=0;i<m;i++)
