@@ -306,8 +306,7 @@ void mglCanvas::AdjustTicks(mglAxis &aa, bool ff)
 	{
 		d /= -aa.d;
 		long n = floor(log10(d));
-		int k = mgl_int(d*pow(10.,-n));
-		aa.dv = pow(10.,n)*k;
+		aa.dv = pow(10.,n)*mgl_int(d*pow(10.,-n));
 		aa.o=0;	aa.ds = pow(10.,n);
 	}
 	LabelTicks(aa);

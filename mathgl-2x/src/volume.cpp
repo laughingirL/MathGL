@@ -643,7 +643,11 @@ void MGL_EXPORT mgl_beam_val(HMGL gr, double val, HCDT tr, HCDT g1, HCDT g2, HCD
 			}
 		if(flag & 2)
 #pragma omp parallel for collapse(2)
-			for(j=0;j<m;j++)	for(k=0;k<l;k++)	x.a[i0] = hypot(x.a[i0],y.a[i0]);
+			for(j=0;j<m;j++)	for(k=0;k<l;k++)
+			{
+				long i0 = j+m*(k+l*i);
+				x.a[i0] = hypot(x.a[i0],y.a[i0]);
+			}
 	}
 	mgl_surf3_xyz_val(gr,val,&x,&y,&z,&b,stl,0);
 }

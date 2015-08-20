@@ -79,7 +79,6 @@ void mglCanvasGL::Finish()
 		PDef=pdef;	pPos=ss;	PenWidth=ww;
 	}
 	glFinish();
-//	glBegin(GL_LINES);	glColor3f(0,0,1);	glVertex2f(0.1,0.1);	glVertex2f(0.9,0.9);	glEnd();
 }
 //-----------------------------------------------------------------------------
 bool mglCanvasGL::Alpha(bool enable)
