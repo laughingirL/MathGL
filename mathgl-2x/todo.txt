@@ -41,6 +41,8 @@
 10. Lamerey chart
 11. line style for boxed text should have no dash
 
+12. Spaces before 'func' 
+
 17. Iris plot -- https://en.wikipedia.org/wiki/Iris_flower_data_set
 
 ZZ. Update *.i for new functions {before release!!!}

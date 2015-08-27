@@ -32,6 +32,7 @@
 #include <QSettings>
 #include <QDir>
 //-----------------------------------------------------------------------------
+#include <mgl2/qmathgl.h>
 #include "prop_dlg.h"
 #include "udav_wnd.h"
 #include "plot_pnl.h"
@@ -49,6 +50,7 @@ extern bool editPosBottom;
 extern bool loadInNewWnd;
 extern bool mglHighlight;
 extern bool mglDotsRefr;
+extern bool mglWheelZoom;
 int defWidth, defHeight;
 QString pathFont;
 QString lang[]={"","ru"};
@@ -161,8 +163,10 @@ PropDialog::PropDialog(QWidget *parent) : QDialog(parent)
 	load->setChecked(loadInNewWnd);	v->addWidget(load);
 	save = new QCheckBox(tr("Automatically save before redrawing (F5)"), this);
 	save->setChecked(mglAutoSave);	v->addWidget(save);
-	pure = new QCheckBox(tr("Disable face drawing (faster) for mouse rotation/shift/zoom."), this);
-	pure->setChecked(mglAutoPure);	v->addWidget(pure);	pure->setEnabled(false);
+//	pure = new QCheckBox(tr("Disable face drawing (faster) for mouse rotation/shift/zoom."), this);
+//	pure->setChecked(mglAutoPure);	v->addWidget(pure);	pure->setEnabled(false);
+	wheel = new QCheckBox(tr("Enable mouse wheel for zooming."), this);
+	wheel->setChecked(mglWheelZoom);	v->addWidget(wheel);
 	cmpl = new QCheckBox(tr("Enable keywords completition"), this);
 	cmpl->setChecked(mglCompleter);	v->addWidget(cmpl);
 	high = new QCheckBox(tr("Highlight current object(s)"), this);
@@ -234,6 +238,7 @@ void PropDialog::applyChanges()
 	mglAutoPure = pure->isChecked();
 	mglCompleter = cmpl->isChecked();
 	mglDotsRefr = dots->isChecked();
+	mglWheelZoom = wheel->isChecked();
 
 	// apply changes for all windows
 #ifdef WIN32
@@ -248,6 +253,7 @@ void PropDialog::applyChanges()
 			if(ok)	{	s->writeSettings();	ok = false;	}
 			s->edit->setEditorFont();
 			s->graph->setMGLFont(pathFont);
+			s->graph->mgl->enableWheel = mglWheelZoom;
 			s->setEditPos(editPosBottom);
 			s->edit->setCompleter(mglCompleter);
 			s->update();

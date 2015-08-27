@@ -56,6 +56,7 @@ bool mglDotsRefr = true;
 bool mglAutoPure = true;
 bool mglCompleter = true;
 bool loadInNewWnd = false;
+bool mglWheelZoom = false;
 QString pathHelp;
 extern mglParse parser;
 extern QColor mglColorScheme[10];
@@ -132,6 +133,7 @@ int main(int argc, char **argv)
 		mw->load(codec->toUnicode(argv[1]), true);
 	}
 	mw->show();
+	mw->edit->edit->setFocus();
 	a.connect(&a, SIGNAL(lastWindowClosed()), &a, SLOT(quit()));
 	if(showHint)	udavShowHint(mw);
 	return a.exec();
@@ -477,6 +479,7 @@ void MainWindow::writeSettings()
 	settings.setValue("/fontSize", defFontSize);
 	settings.setValue("/loadInNewWnd", loadInNewWnd);
 	settings.setValue("/completer",  mglCompleter);
+	settings.setValue("/wheelZoom",  mglWheelZoom);
 	settings.endGroup();
 }
 //-----------------------------------------------------------------------------
@@ -506,18 +509,20 @@ void MainWindow::readSettings()
 	mglColorScheme[7] = QColor(settings.value("/colFCKeyword","#007F7F").toString());
 	mglColorScheme[8] = QColor(settings.value("/colReserved", "#0000FF").toString());
 	mglColorScheme[9] = QColor(settings.value("/colCurrLine", "#FFFFCC").toString());
-	mglAutoSave = settings.value("/autoSave",  false).toBool();
-	mglHighlight = settings.value("/highlight",  true).toBool();
-	mglAutoPure = settings.value("/autoPure",  true).toBool();
-	mglAutoExecute = settings.value("/autoExec",  true).toBool();
+	mglAutoSave = settings.value("/autoSave", false).toBool();
+	mglHighlight = settings.value("/highlight", true).toBool();
+	mglAutoPure = settings.value("/autoPure", true).toBool();
+	mglAutoExecute = settings.value("/autoExec", true).toBool();
 	editPosBottom = settings.value("/editAtTop", false).toBool();
-	mglCompleter = settings.value("/completer",  true).toBool();
+	mglCompleter = settings.value("/completer", true).toBool();
+	mglWheelZoom = settings.value("/wheelZoom", false).toBool();
 	loadInNewWnd = settings.value("/loadInNewWnd", false).toBool();
 	mglDotsRefr = settings.value("/dotsRefresh", true).toBool();
 	defFontFamily = settings.value("/fontFamily", "Georgia").toString();
 	defFontSize = settings.value("/fontSize", 10).toInt();
 	edit->setEditorFont();	setEditPos(editPosBottom);
 	graph->setMGLFont(pathFont);
+	graph->mgl->enableWheel = mglWheelZoom;
 
 	defWidth = settings.value("/defWidth", 640).toInt();
 	defHeight = settings.value("/defHeight", 480).toInt();

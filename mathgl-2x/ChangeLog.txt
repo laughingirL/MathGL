@@ -3,6 +3,8 @@
 * Add Pmap() plot for Poincare map
 * Add Lamerey() plot for Lamerey diagram
 * Add Bifurcation() plot for Bifurcation diagram
+* Force set focus for editor in UDAV
+* Disable mouse wheel for zooming in UDAV by default
 
 2.3.3 Released 01 June 2015
 
