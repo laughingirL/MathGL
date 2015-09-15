@@ -1,8 +1,11 @@
 2.3.4 Released ?? August 2015
 
+* Add mglData::Pulse() for determining pulse parameters
+* Add MGL command 'echo' for printing the content of data
 * Add Pmap() plot for Poincare map
 * Add Lamerey() plot for Lamerey diagram
 * Add Bifurcation() plot for Bifurcation diagram
+* Update mgltex (thanks to Diego Sejas Viscarra)
 * Force set focus for editor in UDAV
 * Disable mouse wheel for zooming in UDAV by default
 

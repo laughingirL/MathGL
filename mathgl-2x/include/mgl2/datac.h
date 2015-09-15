@@ -22,7 +22,6 @@
 
 #include "mgl2/data.h"
 #include "mgl2/datac_cf.h"
-#ifdef __cplusplus
 //-----------------------------------------------------------------------------
 #include <vector>
 #include <string>
@@ -31,7 +30,6 @@
 dual MGL_EXPORT mglLinearC(const dual *a, long nx, long ny, long nz, mreal x, mreal y, mreal z);
 dual MGL_EXPORT mglSpline3C(const dual *a, long nx, long ny, long nz, mreal x, mreal y, mreal z,dual *dx=0, dual *dy=0, dual *dz=0);
 dual MGL_EXPORT mglSpline3Cs(const dual *a, long nx, long ny, long nz, mreal x, mreal y, mreal z);
-#endif
 //-----------------------------------------------------------------------------
 /// Class for working with complex data array
 class MGL_EXPORT mglDataC : public mglDataA
@@ -233,6 +231,10 @@ using mglDataA::Momentum;
 	/// Save whole data array (for ns=-1) or only ns-th slice to text file
 	void Save(const char *fname,long ns=-1) const
 	{	mgl_datac_save(this,fname,ns);	}
+	/// Get whole data array (for ns=-1) or only ns-th slice to string
+	std::string Get(long ns=-1) const
+	{	return mgl_datac_to_string(this,ns);	}
+
 	/// Read data from tab-separated text files with auto determining size which filenames are result of sprintf(fname,templ,t) where t=from:step:to
 	inline bool ReadRange(const char *templ, double from, double to, double step=1, bool as_slice=false)
 	{	return mgl_datac_read_range(this,templ,from,to,step,as_slice);	}

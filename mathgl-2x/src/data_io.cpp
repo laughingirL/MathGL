@@ -286,37 +286,45 @@ void MGL_EXPORT mgl_data_set_name_(uintptr_t *d, const char *name,int l)
 void MGL_EXPORT mgl_data_set_func(mglDataA *dat, void (*func)(void *), void *par)
 {	dat->func = func;	dat->o = par;	}
 //-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_data_save(HCDT d, const char *fname,long ns)
+std::string MGL_EXPORT mgl_data_to_string(HCDT d, long ns)
 {
-	FILE *fp = fopen(fname,"w");
-	if(!fp)	return;
 	long nx=d->GetNx(), ny=d->GetNy(), nz=d->GetNz();
 	const std::string loc = setlocale(LC_NUMERIC, NULL);	setlocale(LC_NUMERIC, "C");
+	std::string out;	char buf[512];
 	if(ns<0 || (ns>=nz && nz>1))	for(long k=0;k<nz;k++)
 	{	// save whole data
 		const mglData *dr = dynamic_cast<const mglData *>(d);
-		if(dr && !dr->id.empty())	fprintf(fp,"## %s\n",dr->id.c_str());
+		if(dr && !dr->id.empty())
+		{	snprintf(buf,512,"## %s\n",dr->id.c_str());	out += buf;	}
 		const mglDataC *dc = dynamic_cast<const mglDataC *>(d);
-		if(dc && !dc->id.empty())	fprintf(fp,"## %s\n",dc->id.c_str());
+		if(dc && !dc->id.empty())
+		{	snprintf(buf,512,"## %s\n",dc->id.c_str());	out += buf;	}
 		for(long i=0;i<ny;i++)
 		{
-			for(long j=0;j<nx-1;j++)	fprintf(fp,"%g\t",d->v(j,i,k));
-			fprintf(fp,"%g\n",d->v(nx-1,i,k));
+			for(long j=0;j<nx-1;j++)	
+			{	snprintf(buf,512,"%g\t",d->v(j,i,k));	out += buf;	}
+			snprintf(buf,512,"%g\n",d->v(nx-1,i,k));	out += buf;
 		}
-		fprintf(fp,"\n");
+		out += "\n";
 	}
 	else
 	{	// save selected slice
 		if(nz>1)	for(long i=0;i<ny;i++)
 		{
-			for(long j=0;j<nx-1;j++)	fprintf(fp,"%g\t",d->v(j,i,ns));
-			fprintf(fp,"%g\n",d->v(nx-1,i,ns));
+			for(long j=0;j<nx-1;j++)
+			{	snprintf(buf,512,"%g\t",d->v(j,i,ns));	out += buf;	}
+			snprintf(buf,512,"%g\n",d->v(nx-1,i,ns));	out += buf;
 		}
 		else if(ns<ny)	for(long j=0;j<nx;j++)
-			fprintf(fp,"%g\t",d->v(j,ns));
+		{	snprintf(buf,512,"%g\t",d->v(j,ns));	out += buf;	}
 	}
 	setlocale(LC_NUMERIC, loc.c_str());
-	fclose(fp);
+	return out;
+}
+void MGL_EXPORT mgl_data_save(HCDT d, const char *fname,long ns)
+{
+	FILE *fp = fopen(fname,"w");
+	if(fp)	{	fprintf(fp,"%s",mgl_data_to_string(d,ns).c_str());	fclose(fp);	}
 }
 void MGL_EXPORT mgl_data_save_(uintptr_t *d, const char *fname,int *ns,int l)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;

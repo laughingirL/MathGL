@@ -2299,6 +2299,13 @@ int MGL_NO_EXPORT mgls_info(mglGraph *gr, long , mglArg *a, const char *k, const
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_echo(mglGraph *gr, long , mglArg *a, const char *k, const char *)
+{
+	int res=0;
+	if(!strcmp(k,"d"))	gr->SetWarn(-1,a[0].d->Get().c_str());
+	else res = 1;	return res;
+}
+//-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_integrate(mglGraph *, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
@@ -2558,6 +2565,15 @@ int MGL_NO_EXPORT mgls_momentum(mglGraph *, long , mglArg *a, const char *k, con
 	else if(d && !strcmp(k,"ddss"))	*d = mglData(true,mgl_data_momentum(a[1].d,a[3].s.c_str()[0], a[2].s.c_str()));
 	else if(c && !strcmp(k,"dds"))	*c = mglDataC(true,mgl_datac_momentum(a[1].d,'z', a[2].s.c_str()));
 	else if(c && !strcmp(k,"ddss"))	*c = mglDataC(true,mgl_datac_momentum(a[1].d,a[3].s.c_str()[0], a[2].s.c_str()));
+	else res = 1;	return res;
+}
+//-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_pulse(mglGraph *, long , mglArg *a, const char *k, const char *)
+{
+	int res=0;
+	if(k[0]=='d' && a[0].d->temp)	return 5;
+	mglData *d = dynamic_cast<mglData *>(a[0].d);
+	if(d && !strcmp(k,"dds"))	*d = mglData(true,mgl_data_pulse(a[1].d,a[2].s[0]));
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -3361,6 +3377,7 @@ mglCommand mgls_base_cmd[] = {
 	{"dots","Draw dots for arbitrary data points","dots Xdat Ydat Zdat ['fmt']|Xdat Ydat Zdat Adat ['fmt']|Xdat Ydat Zdat Cdat Adat ['fmt']", mgls_dots ,9},
 	{"drawreg","Set draw region for quality&4","drawreg|nx ny m", mgls_drawreg ,2},
 	{"drop","Draw drop","drop x0 y0 dx dy r ['col' sh asp]|x0 y0 z0 dx dy dz r ['col' sh asp]", mgls_drop ,13},
+	{"echo","Print content of the data","echo Dat", mgls_echo ,3},
 	{"ellipse","Draw ellipse","ellipse x1 y1 x2 y2 r ['fmt']|x1 y1 z1 x2 y2 z2 r ['fmt']", mgls_ellipse ,13},
 	{"else","Execute if condition is false","else", 0, 6},
 	{"elseif","Conditional operator","elseif val|Dat ['cond']", 0, 6},
@@ -3448,6 +3465,7 @@ mglCommand mgls_base_cmd[] = {
 	{"plotid","Set default filename","plotid 'name'", mgls_plotid ,2},
 	{"pmap","Draw Poincare map","pmap Ydat Rdat ['fmt']|Xdat Ydat Rdat ['fmt']|Xdat Ydat Zdat Rdat ['fmt']", mgls_pmap ,7},
 	{"polygon","Draw polygon","polygon x1 y1 x2 y2 num ['fmt']|x1 y1 z1 x2 y2 z2 num ['fmt']", mgls_polygon ,13},
+	{"pulse","Get pulse properties","pulse Res Dat 'dir'", mgls_pulse ,4},
 	{"put","Put value (numeric or array) to given data element","put Dat val [i j k] | Dat Val [i j k]", mgls_put ,3},
 	{"putsfit","Print fitted formula","putsfit x y ['pre' 'font' size]|x y z ['pre' 'font' size]", mgls_putsfit ,15},
 	{"qo2d","Solve PDE in accompanied coordinates for 2d case","qo2d Res 'ham' IniRe IniIm Ray [r k0 Xout Yout]", mgls_qo2d ,4},

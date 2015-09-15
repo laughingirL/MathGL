@@ -346,6 +346,9 @@ uintptr_t MGL_EXPORT mgl_data_hist_w_(uintptr_t *dat, uintptr_t *weight, int *n,
 /// Get momentum (1D-array) of data along direction 'dir'. String looks like "x1" for median in x-direction, "x2" for width in x-dir and so on.
 HMDT MGL_EXPORT mgl_data_momentum(HCDT dat, char dir, const char *how);
 uintptr_t MGL_EXPORT mgl_data_momentum_(uintptr_t *dat, char *dir, const char *how, int,int);
+/// Get pulse properties: pulse maximum and its position, pulse duration near maximum and by half height.
+HMDT MGL_EXPORT mgl_data_pulse(HCDT dat, char dir);
+uintptr_t MGL_EXPORT mgl_data_pulse_(uintptr_t *dat, char *dir,int);
 /// Get array which values is result of interpolation this for coordinates from other arrays
 HMDT MGL_EXPORT mgl_data_evaluate(HCDT dat, HCDT idat, HCDT jdat, HCDT kdat, int norm);
 uintptr_t MGL_EXPORT mgl_data_evaluate_(uintptr_t *dat, uintptr_t *idat, uintptr_t *jdat, uintptr_t *kdat, int *norm);

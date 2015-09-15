@@ -50,7 +50,7 @@ ZZ. Update *.i for new functions {before release!!!}
 
 ============= DOCUMENTATION =============
 
-A. Paper about MathGL!!!
+A. Paper about MathGL!!! 6099610006
 B. Add chapter with real samples
 C. Translate to Russian everything
 D. Docs about JS interface
@@ -58,6 +58,20 @@ D. Docs about JS interface
 1. Docs + sample about Pmap() -- Poincare map
 2. Docs + sample about Lamerey() -- Lamerey diagram
 3. Docs + sample about Bifurcation() -- Bifurcation diagram
+4. Docs + sample about Pulse() -- see pulse.mgl
+	new a 100 'exp(-6*x^2)'
+	xrange 0 a.nx-1:yrange 0 1
+	axis:plot a
+
+	pulse b a 'x'
+
+	line b(1) 0 b(1) 1 'r='
+	line b(1)-b(3)/2 0  b(1)-b(3)/2 1 'm|'
+	line b(1)+b(3)/2 0  b(1)+b(3)/2 1 'm|'
+	line 0 0.5 a.nx-1 0.5 'h'
+	new x 100 'x'
+	plot b(0)*(1-((x-b(1))/b(2))^2) 'g'
+
 
 
 YY. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using Stem()

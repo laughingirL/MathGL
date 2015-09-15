@@ -236,41 +236,49 @@ void MGL_EXPORT mgl_datac_set_id_(uintptr_t *d, const char *eq,int l)
 {	char *s=new char[l+1];	memcpy(s,eq,l);	s[l]=0;
 	mgl_datac_set_id(_DC_, s);	delete []s;	}
 //-----------------------------------------------------------------------------
-void MGL_NO_EXPORT mgl_cprint(FILE *fp, mreal re, mreal im, char ch)
+std::string MGL_NO_EXPORT mgl_cprint(mreal re, mreal im, char ch)
 {
-	if(im>0)	fprintf(fp,"%g+i%g%c",re,im,ch);
-	else if(im<0)	fprintf(fp,"%g-i%g%c",re,-im,ch);
-	else	fprintf(fp,"%g%c",re,ch);
+	char buf[128];
+	if(im>0)	snprintf(buf,128,"%g+i%g%c",re,im,ch);
+	else if(im<0)	snprintf(buf,128,"%g-i%g%c",re,-im,ch);
+	else	snprintf(buf,128,"%g%c",re,ch);
+	return std::string(buf);
 }
-void MGL_EXPORT mgl_datac_save(HCDT d, const char *fname,long ns)
+std::string MGL_EXPORT mgl_datac_to_string(HCDT d, long ns)
 {
+	std::string out;
 	const mglDataC *dd = dynamic_cast<const mglDataC*>(d);
-	if(!dd)	{	mgl_data_save(d,fname,ns);	return;	}
-	FILE *fp = fopen(fname,"w");
-	if(!fp)	return;
+	if(!dd)	{	return	mgl_data_to_string(d,ns);	}
 	long nx=dd->nx, ny=dd->ny, nz=dd->nz;
 	const std::string loc = setlocale(LC_NUMERIC, NULL);	setlocale(LC_NUMERIC, "C");
 	if(ns<0 || (ns>=nz && nz>1))	for(long k=0;k<nz;k++)
 	{	// save whole data
 		for(long i=0;i<ny;i++)
 		{
-			for(long j=0;j<nx-1;j++)	mgl_cprint(fp, real(dd->a[j+nx*(i+ny*k)]), imag(dd->a[j+nx*(i+ny*k)]),'\t');
-			mgl_cprint(fp, real(dd->a[nx-1+nx*(i+ny*k)]), imag(dd->a[nx-1+nx*(i+ny*k)]),'\n');
+			for(long j=0;j<nx-1;j++)
+				out+=mgl_cprint(real(dd->a[j+nx*(i+ny*k)]), imag(dd->a[j+nx*(i+ny*k)]),'\t');
+			out+=mgl_cprint(real(dd->a[nx-1+nx*(i+ny*k)]), imag(dd->a[nx-1+nx*(i+ny*k)]),'\n');
 		}
-		fprintf(fp,"\n");
+		out += "\n";
 	}
 	else
 	{	// save selected slice
 		if(nz>1)	for(long i=0;i<ny;i++)
 		{
-			for(long j=0;j<nx-1;j++)	mgl_cprint(fp, real(dd->a[j+nx*(i+ny*ns)]), imag(dd->a[j+nx*(i+ny*ns)]),'\t');
-			mgl_cprint(fp, real(dd->a[nx-1+nx*(i+ny*ns)]), imag(dd->a[nx-1+nx*(i+ny*ns)]),'\n');
+			for(long j=0;j<nx-1;j++)
+				out+=mgl_cprint(real(dd->a[j+nx*(i+ny*ns)]), imag(dd->a[j+nx*(i+ny*ns)]),'\t');
+			out+=mgl_cprint(real(dd->a[nx-1+nx*(i+ny*ns)]), imag(dd->a[nx-1+nx*(i+ny*ns)]),'\n');
 		}
 		else if(ns<ny)	for(long j=0;j<nx;j++)
-			mgl_cprint(fp, real(dd->a[j+nx*ns]), imag(dd->a[j+nx*ns]),'\t');
+			out+=mgl_cprint(real(dd->a[j+nx*ns]), imag(dd->a[j+nx*ns]),'\t');
 	}
 	setlocale(LC_NUMERIC, loc.c_str());
-	fclose(fp);
+	return out;
+}
+void MGL_EXPORT mgl_datac_save(HCDT d, const char *fname,long ns)
+{
+	FILE *fp = fopen(fname,"w");
+	if(fp)	{	fprintf(fp,"%s",mgl_datac_to_string(d,ns).c_str());	fclose(fp);	}
 }
 void MGL_EXPORT mgl_datac_save_(uintptr_t *d, const char *fname,int *ns,int l)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;

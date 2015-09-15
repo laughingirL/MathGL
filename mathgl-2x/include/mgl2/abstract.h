@@ -43,6 +43,8 @@ typedef mglFormula* HMEX;
 typedef mglFormulaC* HAEX;
 typedef const mglDataA* HCDT;
 #ifdef __cplusplus
+std::string MGL_EXPORT mgl_data_to_string(HCDT d, long ns);
+std::string MGL_EXPORT mgl_datac_to_string(HCDT d, long ns);
 extern "C" {
 #endif
 /// Set seed for random numbers
@@ -155,6 +157,9 @@ public:
 	/// Save whole data array (for ns=-1) or only ns-th slice to text file
 	virtual void Save(const char *fname,long ns=-1) const
 	{	mgl_data_save(this,fname,ns);	}
+	/// Get whole data array (for ns=-1) or only ns-th slice to string
+	virtual std::string Get(long ns=-1)
+	{	return mgl_data_to_string(this,ns);	}
 	/// Export data array (for ns=-1) or only ns-th slice to PNG file according color scheme
 	inline void Export(const char *fname,const char *scheme,mreal v1=0,mreal v2=0,long ns=-1) const
 	{	mgl_data_export(this,fname,scheme,v1,v2,ns);	}

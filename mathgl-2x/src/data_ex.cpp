@@ -826,3 +826,108 @@ mreal MGL_EXPORT mgl_find_root_txt_(const char *func, mreal *ini, const char *va
 	mreal r = mgl_find_root_txt(s,*ini,*var);
 	delete []s;	return r;	}
 //-----------------------------------------------------------------------------
+MGL_NO_EXPORT void *mgl_pulse_z(void *par)
+{
+	mglThreadD *t=(mglThreadD *)par;
+	long nz=t->p[2], nn=t->n;
+	mreal *b=t->a;
+	const mreal *a=t->b;
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel for
+#endif
+	for(long i=t->id;i<nn;i+=mglNumThr)
+	{
+		b[i]=a[i];
+		for(long j=1;j<nz;j++)	if(b[i]<a[i+nn*j]) b[i] = a[i+nn*j];
+	}
+	return 0;
+}
+MGL_NO_EXPORT void *mgl_pulse_y(void *par)
+{
+	mglThreadD *t=(mglThreadD *)par;
+	long nx=t->p[0], ny=t->p[1], nn=t->n;
+	mreal *b=t->a;
+	const mreal *a=t->b;
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel for
+#endif
+	for(long i=t->id;i<nn;i+=mglNumThr)
+	{
+		long k = (i%nx)+nx*ny*(i/nx);	b[i]=a[k];
+		for(long j=1;j<ny;j++)	if(b[i]<a[k+nx*j])	b[i]=a[k+nx*j];
+	}
+	return 0;
+}
+MGL_NO_EXPORT void *mgl_pulse_x(void *par)
+{
+	mglThreadD *t=(mglThreadD *)par;
+	long nx=t->p[0], nn=t->n;
+	mreal *b=t->a;
+	const mreal *a=t->b;
+#if !MGL_HAVE_PTHREAD
+#pragma omp parallel for
+#endif
+	for(long i=t->id;i<nn;i+=mglNumThr)
+	{
+		long k = i*nx, j0=0;	mreal m=a[k];
+		// get maximum
+		for(long j=1;j<nx;j++)	if(m<a[j+k])	{	m=a[j+k];	j0=j;	}
+		if(j0>0 && j0<nx-1)
+		{
+			mreal A = (a[j0-1+k]-2*a[j0+k]+a[j0+1+k])/2;
+			mreal B = (a[j0+1+k]-a[j0-1+k])/2;
+			mreal C = a[j0+k] - B*B/(4*A);
+			b[5*i]=C;	b[5*i+1]=j0-B/(2*A);	b[5*i+2]=sqrt(fabs(C/A));	C /= 2;
+			mreal j1=NAN,j2=NAN;
+			for(long j=j0;j<nx-1;j++)	if((a[j+k]-C)*(a[j+1+k]-C)<0)
+				j2 = j + (a[j+k]-C)/(a[j+k]-a[j+1+k]);
+			for(long j=j0;j>0;j--)	if((a[j+k]-C)*(a[j-1+k]-C)<0)
+				j1 = j - (a[j+k]-C)/(a[j+k]-a[j-1+k]);
+			b[5*i+3]=j2-j1;	b[5*i+4]=0;
+			if(j2>j1)	for(long j = j1;j<=j2;j++)	b[5*i+4] += a[j+k];
+		}
+		else	// maximum at the edges
+		{	b[5*i]=m;	b[5*i+1]=j0;	b[5*i+2]=b[5*i+3]=b[5*i+4]=NAN;	}
+	}
+	return 0;
+}
+HMDT MGL_EXPORT mgl_data_pulse(HCDT dat, char dir)
+{
+//	if(!dir || *dir==0)	return 0;
+	long nx=dat->GetNx(),ny=dat->GetNy(),nz=dat->GetNz();
+	long p[3]={nx,ny,nz};
+	mreal *c = new mreal[nx*ny*nz], *b=0;
+
+	const mglData *d=dynamic_cast<const mglData *>(dat);
+	if(d)	memcpy(c,d->a,nx*ny*nz*sizeof(mreal));
+	else
+#pragma omp parallel for
+		for(long i=0;i<nx*ny*nz;i++)	c[i]=dat->vthr(i);
+
+	if(dir=='z' && nz>1)
+	{
+		b = new mreal[nx*ny*5];
+		mglStartThread(mgl_pulse_z,0,nx*ny,b,c,0,p);	p[2] = 5;
+	}
+	else if(dir=='y' && ny>1)
+	{
+		b = new mreal[5*nx*nz];
+		mglStartThread(mgl_pulse_y,0,nx*p[2],b,c,0,p);	p[1] = 5;
+	}
+	else if(dir=='x' && nx>1)
+	{
+		b = new mreal[5*ny*nz];
+		mglStartThread(mgl_pulse_x,0,p[1]*p[2],b,c,0,p);	p[0] = 5;
+	}
+	mglData *r=0;
+	if(b)
+	{
+		r=new mglData(p[0],p[1],p[2]);
+		memcpy(r->a,b,p[0]*p[1]*p[2]*sizeof(mreal));
+		delete []b;
+	}
+	delete []c;	return r;
+}
+uintptr_t MGL_EXPORT mgl_data_pulse_(uintptr_t *d, const char *dir,int l)
+{	return uintptr_t(mgl_data_pulse(_DT_,dir[0]));	}
+//-----------------------------------------------------------------------------

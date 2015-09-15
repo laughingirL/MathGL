@@ -22,7 +22,6 @@
 
 #include "mgl2/data_cf.h"
 #include "mgl2/pde.h"
-#ifdef __cplusplus
 //-----------------------------------------------------------------------------
 #include <vector>
 #include <string>
@@ -30,7 +29,7 @@
 mreal MGL_EXPORT mglLinear(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z);
 mreal MGL_EXPORT mglSpline3(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z,mreal *dx=0, mreal *dy=0, mreal *dz=0);
 mreal MGL_EXPORT mglSpline3s(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z);
-#endif
+std::string MGL_EXPORT mgl_data_to_string(HCDT d, long ns);
 //-----------------------------------------------------------------------------
 /// Class for working with data array
 class MGL_EXPORT mglData : public mglDataA
@@ -252,6 +251,9 @@ using mglDataA::Momentum;
 	/// Get momentum (1D-array) of data along direction 'dir'. String looks like "x1" for median in x-direction, "x2" for width in x-dir and so on.
 	inline mglData Momentum(char dir, const char *how) const
 	{	return mglData(true,mgl_data_momentum(this,dir,how));	}
+	/// Get pulse properties: pulse maximum and its position, pulse duration near maximum and by half height.
+	inline mglData Pulse(char dir) const
+	{	return mglData(true,mgl_data_pulse(this,dir));	}
 	/// Get sub-array of the data with given fixed indexes
 	inline mglData SubData(long xx,long yy=-1,long zz=-1) const
 	{	return mglData(true,mgl_data_subdata(this,xx,yy,zz));	}
