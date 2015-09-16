@@ -837,8 +837,32 @@ MGL_NO_EXPORT void *mgl_pulse_z(void *par)
 #endif
 	for(long i=t->id;i<nn;i+=mglNumThr)
 	{
-		b[i]=a[i];
-		for(long j=1;j<nz;j++)	if(b[i]<a[i+nn*j]) b[i] = a[i+nn*j];
+		long j0=0;	mreal m=a[i];
+		for(long j=1;j<nz;j++)	// get maximum
+		{	register long i0=i+nn*j;
+			if(m<a[i0])	{	m=a[i0];	j0=j;	}
+		}
+		if(j0>0 && j0<nz-1)
+		{
+			register long i0=i+nn*j0;
+			mreal A = (a[i0-nn]-2*a[i0]+a[i0+nn])/2;
+			mreal B = (a[i0+nn]-a[i0-nn])/2;
+			mreal C = a[i0] - B*B/(4*A);
+			b[i]=C;	b[i+nn]=j0-B/(2*A);	b[i+2*nn]=sqrt(fabs(C/A));	C /= 2;
+			mreal j1=NAN,j2=NAN;
+			for(long j=j0;j<nz-1;j++)
+			{	register long i0 = i+nn*j;
+				if((a[i0]-C)*(a[i0+nn]-C)<0)	j2 = j + (a[i0]-C)/(a[i0]-a[i0+nn]);
+			}
+			for(long j=j0;j>0;j--)
+			{	register long i0=i+nn*j;
+				if((a[i0]-C)*(a[i0-nn]-C)<0)	j1 = j - (a[i0]-C)/(a[i0]-a[i0-nn]);
+			}
+			b[i+3*nn]=j2-j1;	b[i+4*nn]=0;
+			if(j2>j1)	for(long j = j1;j<=j2;j++)	b[i+4*nn] += a[i+nn*j];
+		}
+		else	// maximum at the edges
+		{	b[i]=m;	b[i+nn]=j0;	b[i+2*nn]=b[i+3*nn]=b[i+4*nn]=NAN;	}
 	}
 	return 0;
 }
@@ -853,8 +877,33 @@ MGL_NO_EXPORT void *mgl_pulse_y(void *par)
 #endif
 	for(long i=t->id;i<nn;i+=mglNumThr)
 	{
-		long k = (i%nx)+nx*ny*(i/nx);	b[i]=a[k];
-		for(long j=1;j<ny;j++)	if(b[i]<a[k+nx*j])	b[i]=a[k+nx*j];
+		long k = (i%nx)+nx*ny*(i/nx), j0=0;	mreal m=a[k];
+		long ki = (i%nx)+5*nx*(i/nx);
+		for(long j=1;j<ny;j++)	// get maximum
+		{	register long i0=k+nx*j;
+			if(m<a[i0])	{	m=a[i0];	j0=j;	}
+		}
+		if(j0>0 && j0<ny-1)
+		{
+			register long i0=k+nx*j0;
+			mreal A = (a[i0-nx]-2*a[i0]+a[i0+nx])/2;
+			mreal B = (a[i0+nx]-a[i0-nx])/2;
+			mreal C = a[i0] - B*B/(4*A);
+			b[ki]=C;	b[ki+nx]=j0-B/(2*A);	b[ki+2*nx]=sqrt(fabs(C/A));	C /= 2;
+			mreal j1=NAN,j2=NAN;
+			for(long j=j0;j<ny-1;j++)
+			{	register long i0 = k+nx*j;
+				if((a[i0]-C)*(a[i0+nx]-C)<0)	j2 = j + (a[i0]-C)/(a[i0]-a[i0+nx]);
+			}
+			for(long j=j0;j>0;j--)
+			{	register long i0=k+nx*j;
+				if((a[i0]-C)*(a[i0-nx]-C)<0)	j1 = j - (a[i0]-C)/(a[i0]-a[i0-nx]);
+			}
+			b[ki+3*nx]=j2-j1;	b[ki+4*nx]=0;
+			if(j2>j1)	for(long j = j1;j<=j2;j++)	b[ki+4*nx] += a[k+nx*j];
+		}
+		else	// maximum at the edges
+		{	b[ki]=m;	b[ki+nx]=j0;	b[ki+2*nx]=b[ki+3*nx]=b[ki+4*nx]=NAN;	}
 	}
 	return 0;
 }
@@ -870,19 +919,26 @@ MGL_NO_EXPORT void *mgl_pulse_x(void *par)
 	for(long i=t->id;i<nn;i+=mglNumThr)
 	{
 		long k = i*nx, j0=0;	mreal m=a[k];
-		// get maximum
-		for(long j=1;j<nx;j++)	if(m<a[j+k])	{	m=a[j+k];	j0=j;	}
+		for(long j=1;j<nx;j++)	// get maximum
+		{	register long i0=j+k;
+			if(m<a[i0])	{	m=a[i0];	j0=j;	}
+		}
 		if(j0>0 && j0<nx-1)
 		{
-			mreal A = (a[j0-1+k]-2*a[j0+k]+a[j0+1+k])/2;
-			mreal B = (a[j0+1+k]-a[j0-1+k])/2;
-			mreal C = a[j0+k] - B*B/(4*A);
+			register long i0=j0+k;
+			mreal A = (a[i0-1]-2*a[i0]+a[i0+1])/2;
+			mreal B = (a[i0+1]-a[i0-1])/2;
+			mreal C = a[i0] - B*B/(4*A);
 			b[5*i]=C;	b[5*i+1]=j0-B/(2*A);	b[5*i+2]=sqrt(fabs(C/A));	C /= 2;
 			mreal j1=NAN,j2=NAN;
-			for(long j=j0;j<nx-1;j++)	if((a[j+k]-C)*(a[j+1+k]-C)<0)
-				j2 = j + (a[j+k]-C)/(a[j+k]-a[j+1+k]);
-			for(long j=j0;j>0;j--)	if((a[j+k]-C)*(a[j-1+k]-C)<0)
-				j1 = j - (a[j+k]-C)/(a[j+k]-a[j-1+k]);
+			for(long j=j0;j<nx-1;j++)
+			{	register long i0 = j+k;
+				if((a[i0]-C)*(a[i0+1]-C)<0)	j2 = j + (a[i0]-C)/(a[i0]-a[i0+1]);
+			}
+			for(long j=j0;j>0;j--)
+			{	register long i0=j+k;
+				if((a[i0]-C)*(a[i0-1]-C)<0)	j1 = j - (a[i0]-C)/(a[i0]-a[i0-1]);
+			}
 			b[5*i+3]=j2-j1;	b[5*i+4]=0;
 			if(j2>j1)	for(long j = j1;j<=j2;j++)	b[5*i+4] += a[j+k];
 		}
