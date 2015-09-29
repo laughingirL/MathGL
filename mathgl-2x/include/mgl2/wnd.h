@@ -58,7 +58,7 @@ class MGL_EXPORT mglWnd : public mglGraph
 	const mglWnd &operator=(const mglWnd &t)	{	return t;	}
 public:
 	mglWnd() : mglGraph(-1)	{}
-	virtual ~mglWnd() {}
+	virtual ~mglWnd() {	mgl_use_graph(gr,-255);	}
 	virtual int Run()=0;		///< Run main loop for event handling
 
 	inline void ToggleAlpha()	///< Switch on/off transparency (do not overwrite user settings)

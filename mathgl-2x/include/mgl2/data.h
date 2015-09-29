@@ -251,7 +251,7 @@ using mglDataA::Momentum;
 	/// Get momentum (1D-array) of data along direction 'dir'. String looks like "x1" for median in x-direction, "x2" for width in x-dir and so on.
 	inline mglData Momentum(char dir, const char *how) const
 	{	return mglData(true,mgl_data_momentum(this,dir,how));	}
-	/// Get pulse properties: pulse maximum and its position, pulse duration near maximum and by half height.
+	/// Get pulse properties: pulse maximum and its position, pulse duration near maximum and by half height, energy in first pulse.
 	inline mglData Pulse(char dir) const
 	{	return mglData(true,mgl_data_pulse(this,dir));	}
 	/// Get sub-array of the data with given fixed indexes

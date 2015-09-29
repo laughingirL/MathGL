@@ -77,6 +77,7 @@ class MGL_EXPORT Fl_MathGL : public Fl_Widget
 public:
 	Fl_Valuator	*tet_val;	///< pointer to external tet-angle validator
 	Fl_Valuator	*phi_val;	///< pointer to external phi-angle validator
+	mglCanvas *gr;			///< Built-in mglCanvas instance (mglCanvasFLTK is used by default)
 
 	Fl_MathGL(int x, int y, int w, int h, const char *label=0);
 	virtual ~Fl_MathGL();
@@ -114,7 +115,6 @@ public:
 	void stop(bool stop=true);
 
 protected:
-	mglCanvas *gr;		///< pointer to grapher
 	void *draw_par;		///< Parameters for drawing function mglCanvasWnd::DrawFunc.
 	/// Drawing function for window procedure. It should return the number of frames.
 	int (*draw_func)(mglBase *gr, void *par);

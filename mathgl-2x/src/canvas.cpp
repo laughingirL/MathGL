@@ -497,8 +497,7 @@ pthread_mutex_lock(&mutexPtx);
 			mglColor mc = Txt[long(col1)].GetC(col1);
 			mglPrim a(6);	a.n1 = p;
 			a.n2 = int(255*mc.r) + 256*(int(255*mc.g) + 256*int(255*mc.b));
-			mglText txt(text,font);
-			a.n3 = Ptx.size();	Ptx.push_back(txt);
+			a.n3 = Ptx.size();	Ptx.push_back(mglText(text,font));
 			a.s = size;	a.w = shift;	a.p=ftet;
 			add_prim(a);
 		}

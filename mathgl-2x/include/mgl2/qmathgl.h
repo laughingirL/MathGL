@@ -44,6 +44,7 @@ public:
 	bool enableMouse;	///< Enable mouse handlers
 	bool enableWheel;	///< Enable mouse wheel handlers
 	QString primitives;	///< Manual primitives, defined by user
+	mglCanvas *gr;		///< Built-in mglCanvas instance (mglCanvasQT is used by default)
 
 	QMathGL(QWidget *parent = 0, Qt::WindowFlags f = 0);
 	virtual ~QMathGL();
@@ -176,7 +177,6 @@ protected:
 	void wheelEvent(QWheelEvent *);
 	void mouseDoubleClickEvent(QMouseEvent *);
 
-	mglCanvas *gr;		///< Built-in mglCanvasQT-er instance (used by default)
 	void *draw_par;		///< Parameters for drawing function mglCanvasWnd::DrawFunc.
 	/// Drawing function for window procedure. It should return the number of frames.
 	int (*draw_func)(mglBase *gr, void *par);

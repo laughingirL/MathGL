@@ -127,7 +127,7 @@ void Fl_MathGL::set_graph(HMGL GR)
 {
 	mglCanvas *gg = dynamic_cast<mglCanvas *>(GR);
 	if(!gg)	return;
-	if(mgl_use_graph(gr,-1)<1)	mgl_delete_graph(gr);
+	if(gr && mgl_use_graph(gr,-1)<1)	mgl_delete_graph(gr);
 	gr=gg;	mgl_use_graph(gg,1);
 	gr->SetEventFunc(mgl_fltk_event_func, NULL);
 }
@@ -378,7 +378,7 @@ void Fl_MGLView::update()
 }
 void MGL_NO_EXPORT mgl_draw_cb(Fl_Widget*, void* v)
 {	if(v)	((Fl_MGLView*)v)->update();	}
-void mglCanvasFL::Update()		{	mgl->update();	}
+void mglCanvasFL::Update()		{	mgl->update();	Wnd->show();	}
 //-----------------------------------------------------------------------------
 void MGL_NO_EXPORT mgl_export_png_cb(Fl_Widget*, void* v)
 {
@@ -649,7 +649,7 @@ Fl_MGLView::~Fl_MGLView()	{}
 //
 //-----------------------------------------------------------------------------
 mglCanvasFL::mglCanvasFL() : mglCanvasWnd()	{	Wnd=0;	}
-mglCanvasFL::~mglCanvasFL()		{	if(Wnd)	delete Wnd;	}
+mglCanvasFL::~mglCanvasFL()		{	if(Wnd)	{	mgl->FMGL->gr=0;	delete Wnd;	}	}
 //-----------------------------------------------------------------------------
 void mglCanvasFL::GotoFrame(int d)
 {

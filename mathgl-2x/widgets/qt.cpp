@@ -122,7 +122,7 @@ QMathGL::QMathGL(QWidget *parent, Qt::WindowFlags f) : QWidget(parent, f)
 QMathGL::~QMathGL()
 {
 	timer->stop();	timerRefr->stop();
-	if(mgl_use_graph(gr,-1)<1)	mgl_delete_graph(gr);
+	if(gr && mgl_use_graph(gr,-1)<1)	mgl_delete_graph(gr);
 	if(grBuf)	delete []grBuf;
 	if(draw)	delete draw;
 }
@@ -968,7 +968,7 @@ void QMathGL::addText(QString txt)
 mglCanvasQT::mglCanvasQT() : mglCanvasWnd()
 {	Wnd = 0;	}
 mglCanvasQT::~mglCanvasQT()
-{	if(Wnd)	delete Wnd;	}
+{	if(Wnd)	{	QMGL->gr=0;	delete Wnd;	}	}
 //-----------------------------------------------------------------------------
 void mglCanvasQT::GotoFrame(int d)
 {
@@ -989,13 +989,13 @@ void mglCanvasQT::ToggleAlpha()	{	QMGL->setAlpha(!QMGL->getAlpha());	}
 //-----------------------------------------------------------------------------
 void mglCanvasQT::ToggleLight()	{	QMGL->setLight(!QMGL->getLight());	}
 //-----------------------------------------------------------------------------
-void mglCanvasQT::ToggleNo()		{	QMGL->restore();	}
+void mglCanvasQT::ToggleNo()	{	QMGL->restore();	}
 //-----------------------------------------------------------------------------
 void mglCanvasQT::ToggleZoom()	{	QMGL->setZoom(!QMGL->getZoom());	}
 //-----------------------------------------------------------------------------
 void mglCanvasQT::ToggleRotate(){	QMGL->setRotate(!QMGL->getRotate());}
 //-----------------------------------------------------------------------------
-void mglCanvasQT::Update()		{	SetCurFig(0);	QMGL->update();	}
+void mglCanvasQT::Update()		{	SetCurFig(0);	QMGL->update();	Wnd->show();	}
 //-----------------------------------------------------------------------------
 void mglCanvasQT::Adjust()		{	QMGL->adjust();	}
 //-----------------------------------------------------------------------------

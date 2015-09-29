@@ -167,6 +167,9 @@ mglParser::mglParser(bool setsize)
 mglParser::~mglParser()
 {
 	DeleteAll();	delete []fval;
+	for(size_t i=0;i<NumList.size();i++)	// force delete built-in variables
+		if(NumList[i])	delete NumList[i];
+	NumList.clear();
 #if MGL_HAVE_LTDL
 	lt_dlexit();
 #endif
