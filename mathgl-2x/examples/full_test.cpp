@@ -65,7 +65,8 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	gr->Line(mglPoint(-1,-1),mglPoint(1,1));
+	gr->SetRanges(-9.9998886718268301e-320,9.9998886718268301e-320,-9.9998886718268301e-320,9.9998886718268301e-320);
+	gr->Line(mglPoint(9.9998886718268301e-320, 9.9998886718268301e-320, 9.9998886718268301e-320),mglPoint(0,0));
 	gr->Axis();
 	gr->WriteEPS("1.eps");
 	gr->WriteTEX("1.tex");

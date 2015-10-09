@@ -32,9 +32,9 @@ struct MGL_EXPORT mglAxis
 	mglAxis(mglAxis &&aa) : dv(aa.dv),ds(aa.ds),d(aa.d),ns(aa.ns),	t(aa.t),fact(aa.fact),stl(aa.stl),	dir(aa.dir),a(aa.a),b(aa.b),org(aa.org), v0(aa.v0),v1(aa.v1),v2(aa.v2),o(aa.o),	f(aa.f),txt(aa.txt),	ch(aa.ch),	pos(aa.pos),sh(aa.sh),inv(aa.inv)	{}
 #endif
 	inline void AddLabel(const wchar_t *lbl, mreal v)
-	{	txt.push_back(mglText(lbl,"",v));	}
+	{	if(mgl_isfin(v))	txt.push_back(mglText(lbl,"",v));	}
 	inline void AddLabel(const std::wstring &lbl, mreal v)
-	{	txt.push_back(mglText(lbl,v));	}
+	{	if(mgl_isfin(v))	txt.push_back(mglText(lbl,v));	}
 	inline void Clear()
 	{	dv=ds=d=v0=v1=v2=sh=0;	o=NAN;	ns=f=0;	pos = 't';	inv=false;
 		fact.clear();	stl.clear();	t.clear();	txt.clear();	}
@@ -198,7 +198,7 @@ using mglBase::Light;
 	/// Set object/subplot id
 	inline void SetObjId(long id)	{	ObjId = id;	}
 	/// Get object id
-	inline int GetObjId(long xs,long ys) const	
+	inline int GetObjId(long xs,long ys) const
 	{	register long i=xs+Width*ys;	return (i>=0 && i<Width*Height)?OI[i]:-1;	}
 	/// Get subplot id
 	int GetSplId(long xs,long ys) const MGL_FUNC_PURE;

@@ -830,15 +830,18 @@ std::wstring MGL_EXPORT mgl_ftoa(double v, const char *fmt)
 
 	// clear exp format
 	int st = se[0]=='-'?1:0;
-	if(plus || se[3+st+dig]=='-')	// first remove zeros after 'e'
+	if(strcmp(sf,"nan"))
 	{
-		for(i=(dig>0?4:3)+st+dig;i<le && se[i]=='0';i++);
-		memmove(se+(dig>0?4:3)+st+dig,se+i,le-i+1);
-	}
-	else
-	{
-		for(i=(dig>0?3:2)+st+dig;i<le && (se[i]=='0' || se[i]=='+');i++);
-		memmove(se+(dig>0?3:2)+st+dig,se+i,le-i+1);
+		if(plus || se[3+st+dig]=='-')	// first remove zeros after 'e'
+		{
+			for(i=(dig>0?4:3)+st+dig;i<le && se[i]=='0';i++);
+			memmove(se+(dig>0?4:3)+st+dig,se+i,le-i+1);
+		}
+		else
+		{
+			for(i=(dig>0?3:2)+st+dig;i<le && (se[i]=='0' || se[i]=='+');i++);
+			memmove(se+(dig>0?3:2)+st+dig,se+i,le-i+1);
+		}
 	}
 	le=strlen(se);
 	// don't allow '+' at the end

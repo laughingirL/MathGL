@@ -534,7 +534,7 @@ bool mglBase::ScalePoint(const mglMatrix *, mglPoint &p, mglPoint &n, bool use_n
 //-----------------------------------------------------------------------------
 void mglScaleAxis(mreal &v1, mreal &v2, mreal &v0, mreal x1, mreal x2)
 {
-	if(x1==x2 || v1==v2)	return;
+	if(!mgl_isrange(x1,x2) || !mgl_isrange(v1,v2))	return;
 	mreal dv,d0;	x2-=1;
 	if(v1*v2>0 && (v2/v1>=100 || v2/v1<=0.01))	// log scale
 	{
@@ -563,11 +563,11 @@ void mglBase::SetOrigin(mreal x0, mreal y0, mreal z0, mreal c0)
 //-----------------------------------------------------------------------------
 void mglBase::SetRanges(mglPoint m1, mglPoint m2)
 {
-	if(m1.x!=m2.x)	{	Min.x=m1.x;	Max.x=m2.x;	}
-	if(m1.y!=m2.y)	{	Min.y=m1.y;	Max.y=m2.y;	}
-	if(m1.z!=m2.z)	{	Min.z=m1.z;	Max.z=m2.z;	}
-	if(m1.c!=m2.c)	{	Min.c=m1.c;	Max.c=m2.c;	}
-	else			{	Min.c=Min.z;Max.c=Max.z;}
+	if(mgl_isrange(m1.x, m2.x))	{	Min.x=m1.x;	Max.x=m2.x;	}
+	if(mgl_isrange(m1.y, m2.y))	{	Min.y=m1.y;	Max.y=m2.y;	}
+	if(mgl_isrange(m1.z, m2.z))	{	Min.z=m1.z;	Max.z=m2.z;	}
+	if(mgl_isrange(m1.c, m2.c))	{	Min.c=m1.c;	Max.c=m2.c;	}
+	else	{	Min.c=Min.z;Max.c=Max.z;}
 
 	if(Org.x<Min.x && mgl_isnum(Org.x))	Org.x = Min.x;
 	if(Org.x>Max.x && mgl_isnum(Org.x))	Org.x = Max.x;
@@ -597,7 +597,7 @@ void mglBase::CRange(HCDT a,bool add, mreal fact)
 }
 void mglBase::CRange(mreal v1,mreal v2,bool add)
 {
-	if(v1==v2 && !add)	return;
+	if(!mgl_isrange(v1,v2) && !add)	return;
 	if(!add)
 	{
 		if(mgl_isnum(v1))	Min.c = v1;
@@ -632,7 +632,7 @@ void mglBase::XRange(HCDT a,bool add,mreal fact)
 }
 void mglBase::XRange(mreal v1,mreal v2,bool add)
 {
-	if(v1==v2 && !add)	return;
+	if(!mgl_isrange(v1,v2) && !add)	return;
 	if(!add)
 	{
 		if(mgl_isnum(v1))	Min.x = v1;
@@ -667,7 +667,7 @@ void mglBase::YRange(HCDT a,bool add,mreal fact)
 }
 void mglBase::YRange(mreal v1,mreal v2,bool add)
 {
-	if(v1==v2 && !add)	return;
+	if(!mgl_isrange(v1,v2) && !add)	return;
 	if(!add)
 	{
 		if(mgl_isnum(v1))	Min.y = v1;
@@ -703,7 +703,7 @@ void mglBase::ZRange(HCDT a,bool add,mreal fact)
 }
 void mglBase::ZRange(mreal v1,mreal v2,bool add)
 {
-	if(v1==v2 && !add)	return;
+	if(!mgl_isrange(v1,v2) && !add)	return;
 	if(!add)
 	{
 		if(mgl_isnum(v1))	Min.z = v1;
@@ -732,10 +732,10 @@ void mglBase::ZRange(mreal v1,mreal v2,bool add)
 //-----------------------------------------------------------------------------
 void mglBase::SetAutoRanges(mreal x1, mreal x2, mreal y1, mreal y2, mreal z1, mreal z2, mreal c1, mreal c2)
 {
-	if(x1!=x2)	{	Min.x = x1;	Max.x = x2;	}
-	if(y1!=y2)	{	Min.y = y1;	Max.y = y2;	}
-	if(z1!=z2)	{	Min.z = z1;	Max.z = z2;	}
-	if(c1!=c2)	{	Min.c = c1;	Max.c = c2;	}
+	if(mgl_isrange(x1,x2))	{	Min.x = x1;	Max.x = x2;	}
+	if(mgl_isrange(y1,y2))	{	Min.y = y1;	Max.y = y2;	}
+	if(mgl_isrange(z1,z2))	{	Min.z = z1;	Max.z = z2;	}
+	if(mgl_isrange(c1,c2))	{	Min.c = c1;	Max.c = c2;	}
 }
 //-----------------------------------------------------------------------------
 void mglBase::Ternary(int t)

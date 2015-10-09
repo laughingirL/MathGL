@@ -146,9 +146,11 @@ const unsigned long long mgl_inf[2] = {0x7ff0000000000000, 0x7f800000};
 #if MGL_USE_DOUBLE
 typedef double mreal;
 #define MGL_EPSILON	(1.+1e-10)
+#define MGL_MIN_VAL 1e-307
 #else
 typedef float mreal;
 #define MGL_EPSILON	(1.+1e-5)
+#define MGL_MIN_VAL 1e-37
 #endif
 #define MGL_FEPSILON	(1.+1e-5)
 //-----------------------------------------------------------------------------
@@ -161,6 +163,7 @@ typedef float mreal;
 #endif
 //-----------------------------------------------------------------------------
 #if MGL_HAVE_TYPEOF
+#define mgl_isrange(a,b)	({typeof (a) _a = (a); typeof (b) _b = (b); fabs(_a-_b)>MGL_MIN_VAL && _a-_a==mreal(0.) && _b-_b==mreal(0.);})
 #define mgl_isbad(a)	({typeof (a) _a = (a); _a-_a!=mreal(0.);})
 #define mgl_isfin(a)	({typeof (a) _a = (a); _a-_a==mreal(0.);})
 #define mgl_isnum(a)	({typeof (a) _a = (a); _a==_a;})
@@ -170,6 +173,7 @@ typedef float mreal;
 #define mgl_sign(a)		({typeof (a) _a = (a); _a<0 ? -1:1;})
 #define mgl_int(a)		({typeof (a) _a = (a); long(_a+(_a>=0 ? 0.5:-0.5));})
 #else
+#define mgl_isrange(a,b)	(fabs((a)-(b))>MGL_EPSILON && (a)-(a)==mreal(0.) && (b)-(b)==mreal(0.))
 #define mgl_min(a,b)	(((a)>(b)) ? (b) : (a))
 #define mgl_max(a,b)	(((a)>(b)) ? (a) : (b))
 #define mgl_isnan(a)	((a)!=(a))
