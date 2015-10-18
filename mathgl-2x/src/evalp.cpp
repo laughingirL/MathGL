@@ -714,9 +714,9 @@ HMDT MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std::v
 	HMDT res = new mglData;	res->a[0]=NAN;	return res;
 }
 //-----------------------------------------------------------------------------
-dual MGL_LOCAL_CONST ceqc(dual a,dual b)	{return a==b?1:0;}
-dual MGL_LOCAL_CONST cltc(dual a,dual b)	{return real(a-b)<0?1:0;}
-dual MGL_LOCAL_CONST cgtc(dual a,dual b)	{return real(a-b)>0?1:0;}
+dual MGL_LOCAL_CONST ceqc(dual a,dual b);	//{return a==b?1:0;}
+dual MGL_LOCAL_CONST cltc(dual a,dual b);	//{return real(a-b)<0?1:0;}
+dual MGL_LOCAL_CONST cgtc(dual a,dual b);	//{return real(a-b)>0?1:0;}
 dual MGL_LOCAL_CONST ipwc(dual a,dual b);	//{return mgl_ipowc(a,int(b.real()));}
 dual MGL_LOCAL_CONST powc(dual a,dual b);	//{return exp(b*log(a));	}
 dual MGL_LOCAL_CONST llgc(dual a,dual b);	//{return log(a)/log(b);	}

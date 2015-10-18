@@ -72,6 +72,12 @@ using mglDataA::Momentum;
 	mglDataC(const double *d, int rows, int cols)	{	a=0;	Set(d,cols,rows);	}
 	mglDataC(const float *d, int size)	{	a=0;	Set(d,size);	}
 	mglDataC(const float *d, int rows, int cols)	{	a=0;	Set(d,cols,rows);	}
+	/// Allocate memory and copy data from std::vector<T>
+	mglDataC(const std::vector<int> &d)		{	a=0;	Set(d);	}
+	mglDataC(const std::vector<float> &d)	{	a=0;	Set(d);	}
+	mglDataC(const std::vector<double> &d)	{	a=0;	Set(d);	}
+	mglDataC(const std::vector<std::complex<double> > &d)	{	a=0;	Set(d);	}
+	mglDataC(const std::vector<std::complex<float> > &d)	{	a=0;	Set(d);	}
 	/// Read data from file
 	mglDataC(const char *fname)			{	a=0;	Read(fname);	}
 	/// Allocate the memory for data array and initialize it zero
@@ -128,17 +134,18 @@ using mglDataA::Momentum;
 	{	mgl_datac_set_ap(this, &ampl, &phase);	}
 	/// Allocate memory and copy data from std::vector<T>
 	inline void Set(const std::vector<int> &d)
-	{	if(d.size()<1)	return;
-		Create(d.size());	for(long i=0;i<nx;i++)	a[i] = d[i];	}
+	{	if(d.size()>0)	{	Create(d.size());	for(long i=0;i<nx;i++)	a[i] = d[i];	}
+		else	Create(1);	}
 	inline void Set(const std::vector<float> &d)
-	{	if(d.size()<1)	return;
-		Create(d.size());	for(long i=0;i<nx;i++)	a[i] = d[i];	}
+	{	if(d.size()>0)	Set(&(a[0]),d.size());	else	Create(1);	}
 	inline void Set(const std::vector<double> &d)
-	{	if(d.size()<1)	return;
-		Create(d.size());	for(long i=0;i<nx;i++)	a[i] = d[i];	}
-	inline void Set(const std::vector<dual> &d)
-	{	if(d.size()<1)	return;
-		Create(d.size());	for(long i=0;i<nx;i++)	a[i] = d[i];	}
+	{	if(d.size()>0)	Set(&(a[0]),d.size());	else	Create(1);	}
+	inline void Set(const std::vector<std::complex<double> > &d)
+	{	if(d.size()>0)	{	Create(d.size());	for(long i=0;i<nx;i++)	a[i] = d[i];	}
+		else	Create(1);	}
+	inline void Set(const std::vector<std::complex<float> > &d)
+	{	if(d.size()>0)	{	Create(d.size());	for(long i=0;i<nx;i++)	a[i] = d[i];	}
+		else	Create(1);	}
 
 	/// Create or recreate the array with specified size and fill it by zero
 	inline void Create(long mx,long my=1,long mz=1)

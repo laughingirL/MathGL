@@ -66,6 +66,10 @@ using mglDataA::Momentum;
 	mglData(const double *d, int rows, int cols)	{	a=0;	Set(d,cols,rows);	}
 	mglData(const float *d, int size)	{	a=0;	Set(d,size);	}
 	mglData(const float *d, int rows, int cols)	{	a=0;	Set(d,cols,rows);	}
+	/// Allocate memory and copy data from std::vector<T>
+	mglData(const std::vector<int> &d)		{	a=0;	Set(d);	}
+	mglData(const std::vector<float> &d)	{	a=0;	Set(d);	}
+	mglData(const std::vector<double> &d)	{	a=0;	Set(d);	}
 	/// Read data from file
 	mglData(const char *fname)			{	a=0;	Read(fname);	}
 	/// Allocate the memory for data array and initialize it zero
@@ -127,14 +131,12 @@ using mglDataA::Momentum;
 	inline void Set(const mglDataA &dat)	{	mgl_data_set(this, &dat);	}
 	/// Allocate memory and copy data from std::vector<T>
 	inline void Set(const std::vector<int> &d)
-	{	if(d.size()<1)	return;
-		Create(d.size());	for(long i=0;i<nx;i++)	a[i] = d[i];	}
+	{	if(d.size()>0)	{	Create(d.size());	for(long i=0;i<nx;i++)	a[i] = d[i];	}
+		else	Create(1);	}
 	inline void Set(const std::vector<float> &d)
-	{	if(d.size()<1)	return;
-		Create(d.size());	for(long i=0;i<nx;i++)	a[i] = d[i];	}
+	{	if(d.size()>0)	Set(&(a[0]),d.size());	else	Create(1);	}
 	inline void Set(const std::vector<double> &d)
-	{	if(d.size()<1)	return;
-		Create(d.size());	for(long i=0;i<nx;i++)	a[i] = d[i];	}
+	{	if(d.size()>0)	Set(&(a[0]),d.size());	else	Create(1);	}
 
 	/// Create or recreate the array with specified size and fill it by zero
 	inline void Create(long mx,long my=1,long mz=1)

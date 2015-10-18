@@ -30,6 +30,9 @@ EQ_NUM=0,	// a variable substitution
 EQ_RND,		// random number
 EQ_A,		// numeric constant
 // normal functions of 2 arguments
+EQ_LT,		// comparison x<y			!!! MUST BE FIRST 2-PLACE FUNCTION
+EQ_GT,		// comparison x>y
+EQ_EQ,		// comparison x=y
 EQ_ADD,		// addition x+y
 EQ_SUB,		// substraction x-y
 EQ_MUL,		// multiplication x*y
@@ -91,6 +94,17 @@ mglFormulaC::mglFormulaC(const char *string)
 		len-=2;	str[len]=0;
 	}
 	len=strlen(str);
+	n=mglFindInText(str,"<>=");				// low priority -- conditions
+	if(n>=0)
+	{
+		if(str[n]=='<') Kod=EQ_LT;
+		else if(str[n]=='>') Kod=EQ_GT;
+		else Kod=EQ_EQ;
+		str[n]=0;
+		Left=new mglFormulaC(str);
+		Right=new mglFormulaC(str+n+1);
+		delete []str;	return;
+	}
 	n=mglFindInText(str,"+-");				// normal priority -- additions
 	if(n>=0 && (n<2 || str[n-1]!='e' || (str[n-2]!='.' && !isdigit(str[n-2]))))
 	{
@@ -208,6 +222,9 @@ dual mglFormulaC::Calc(const dual var[MGL_VS]) const
 	return CalcIn(var);
 }
 //-----------------------------------------------------------------------------
+dual MGL_LOCAL_CONST ceqc(dual a,dual b)	{return a==b?1:0;}
+dual MGL_LOCAL_CONST cltc(dual a,dual b)	{return real(a-b)<0?1:0;}
+dual MGL_LOCAL_CONST cgtc(dual a,dual b)	{return real(a-b)>0?1:0;}
 dual MGL_LOCAL_CONST addc(dual a,dual b)	{return a+b;}
 dual MGL_LOCAL_CONST subc(dual a,dual b)	{return a-b;}
 dual MGL_LOCAL_CONST mulc(dual a,dual b)	{return a*b;}
@@ -241,12 +258,12 @@ dual MGL_LOCAL_CONST lgc(dual x)	{	return log10(x);}
 //-----------------------------------------------------------------------------
 typedef dual (*func_1)(dual);
 typedef dual (*func_2)(dual, dual);
+static const func_2 f2[EQ_SIN-EQ_LT] = {cltc,cgtc,ceqc,addc,subc,mulc,divc,ipwc,powc,llgc};
+static const func_1 f1[EQ_LAST-EQ_SIN] = {sinc,cosc,tanc,asinc,acosc,atanc,sinhc,coshc,tanhc,
+					asinhc,acoshc,atanhc,sqrtc,expc,expi,logc,lgc,absc,argc,conjc};
 // evaluation of embedded (included) expressions
 dual mglFormulaC::CalcIn(const dual *a1) const
 {
-	func_2 f2[EQ_SIN-EQ_ADD] = {addc,subc,mulc,divc,ipwc,powc,llgc};
-	func_1 f1[EQ_LAST-EQ_SIN] = {sinc,cosc,tanc,asinc,acosc,atanc,sinhc,coshc,tanhc,
-					asinhc,acoshc,atanhc,sqrtc,expc,expi,logc,lgc,absc,argc,conjc};
 //	if(Error)	return 0;
 	if(Kod==EQ_A)	return a1[(int)Res.real()];
 	if(Kod==EQ_RND)	return mgl_rnd();
@@ -258,7 +275,7 @@ dual mglFormulaC::CalcIn(const dual *a1) const
 		if(Kod<EQ_SIN)
 		{
 			dual b = Right->CalcIn(a1);
-			b = mgl_isfin(b)?f2[Kod-EQ_ADD](a,b):NAN;
+			b = mgl_isfin(b)?f2[Kod-EQ_LT](a,b):NAN;
 			return mgl_isfin(b)?b:NAN;
 		}
 		else

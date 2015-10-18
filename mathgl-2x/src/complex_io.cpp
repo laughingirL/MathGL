@@ -895,18 +895,36 @@ int MGL_EXPORT mgl_datac_read_hdf(HADT d,const char *fname,const char *data)
 	if(hd<0)	return false;
 	hs = H5Dget_space(hd);
 	rank = H5Sget_simple_extent_ndims(hs);
-	if(rank>0 && rank<=3)
+	if(rank>0 && rank<=4)
 	{
 		H5Sget_simple_extent_dims(hs,dims,0);
-		if(rank==2)			{	dims[2]=dims[0];	dims[0]=dims[1]=1;	}
-		else if(rank==3)	{	dims[2]=dims[1];	dims[1]=dims[0];	dims[0]=1;	}
-//		else if(rank>3)		continue;
-		mgl_datac_create(d,dims[2],dims[1],dims[0]);
+		if(dims[rank-1]==2)
+		{
+			if(rank==1)			{	dims[2]=dims[0]=dims[1]=1;	}
+			else if(rank==2)	{	dims[2]=dims[0];	dims[0]=dims[1]=1;	}
+			else if(rank==3)	{	dims[2]=dims[1];	dims[1]=dims[0];	dims[0]=1;	}
+			mgl_datac_create(d,dims[2],dims[1],dims[0]);
 #if MGL_USE_DOUBLE
-		H5Dread(hd, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, d->a);
+			H5Dread(hd, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, d->a);
 #else
-		H5Dread(hd, H5T_NATIVE_FLOAT, H5S_ALL, H5S_ALL, H5P_DEFAULT, d->a);
+			H5Dread(hd, H5T_NATIVE_FLOAT, H5S_ALL, H5S_ALL, H5P_DEFAULT, d->a);
 #endif
+		}
+		else if(rank<=3)
+		{
+			if(rank==1)			{	dims[2]=dims[0];	dims[0]=dims[1]=1;	}
+			else if(rank==2)	{	dims[2]=dims[1];	dims[1]=dims[0];	dims[0]=1;	}
+			mgl_datac_create(d,dims[2],dims[1],dims[0]);
+			long nn = dims[2]*dims[1]*dims[0];
+			mreal *a = new mreal[nn];
+#if MGL_USE_DOUBLE
+			H5Dread(hd, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, a);
+#else
+			H5Dread(hd, H5T_NATIVE_FLOAT, H5S_ALL, H5S_ALL, H5P_DEFAULT, a);
+#endif
+			for(long i=0;i<nn;i++)	d->a[i] = a[i];
+			delete []a;
+		}
 	}
 	H5Sclose(hs);	H5Dclose(hd);	H5Fclose(hf);	return true;
 }
