@@ -552,7 +552,7 @@ void mglCanvas::DrawAxis(mglAxis &aa, bool text, char arr,const char *stl,mreal 
 			for(long j=2;j<10 && v*j<aa.v1;j++)	tick_draw(o+d*(v*j),da,db,1);
 		if(dif_color)	SetPenPal(TickStl);
 	}
-	if(aa.ds>0 && !get(MGL_NOSUBTICKS))
+	if(aa.ds>0 && !get(MGL_NOSUBTICKS) && (fabs(aa.v1)>1e-150 || fabs(aa.v2)>1e-150))
 	{
 		if(aa.v2>aa.v1)	v0 = v0 - aa.ds*floor((v0-aa.v1)/aa.ds+1e-3);
 		else			v0 = v0 - aa.ds*floor((v0-aa.v2)/aa.ds+1e-3);
@@ -632,7 +632,7 @@ void mglCanvas::DrawLabels(mglAxis &aa, bool inv, const mglMatrix *M)
 		if(ux<0 || (ux==0 && uy<0))	{	ux=-ux;	uy=-uy;	pp.w=-pp.w;	}
 		pp.u = ux;	pp.v = uy;
 		mreal pu = p.x*ux+p.y*uy, pv = p.y*ux-p.x*uy; /*, su = ps.x*ux+ps.y*uy;*/
-		if(aa.ch!='c')	up[i] = ((pv>0) ^ inv) ? 'T':'t'; 
+		if(aa.ch!='c')	up[i] = ((pv>0) ^ inv) ? 'T':'t';
 		else		up[i]=(aa.ns==0 || aa.ns==3)?'t':'T';
 		int t=0;
 		if(algn)

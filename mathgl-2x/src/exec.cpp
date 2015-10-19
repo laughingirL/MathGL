@@ -426,7 +426,7 @@ int MGL_NO_EXPORT mgls_copy(mglGraph *gr, long , mglArg *a, const char *k, const
 		mglData *D = dynamic_cast<mglData *>(a[1].d);
 		mglDataC *C = dynamic_cast<mglDataC *>(a[2].d);
 		if(D && C)	{	d->Set(C->Real());	D->Set(C->Imag());	}
-		else	res = 1;		
+		else	res = 1;
 	}
 	else if(!strcmp(k,"dn"))	*d = a[1].v;
 	else res = 1;	return res;
@@ -2299,6 +2299,15 @@ int MGL_NO_EXPORT mgls_info(mglGraph *gr, long , mglArg *a, const char *k, const
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_print(mglGraph *gr, long , mglArg *a, const char *k, const char *)
+{
+	int res=0;
+	if(!strcmp(k,"d"))	printf("%s\n",a[0].d->PrintInfo());
+	else if(!strcmp(k,"s"))	printf("%s\n",a[0].s.c_str());
+	else if(!strcmp(k,"n"))	printf("value = %g\n",a[0].v);
+	else res = 1;	fflush(stdout);	return res;
+}
+//-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_echo(mglGraph *gr, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
@@ -3419,7 +3428,7 @@ mglCommand mgls_base_cmd[] = {
 	{"idset","Set column id for data","idset Dat 'ids'", mgls_idset ,3},
 	{"if","Conditional operator","if val|Dat ['cond']", 0, 6},
 	{"import","Import data from PNG picture","import Dat 'fname' 'scheme' [v1 v2]", mgls_import ,4},
-	{"info","Print information about data","info Dat [detail]|'message'", mgls_info ,3},
+	{"info","Print message or information about the data","info Dat [detail]|'message'|const", mgls_info ,3},
 	{"inplot","Set position of plot in picture","x1 x2 y1 y2 [rel]", mgls_inplot ,5},
 	{"insert","Insert slice of data","insert Dat 'dir' [pos=0 num=1]", mgls_insert ,3},
 	{"integrate","Integrate data","integrate Dat 'dir'", mgls_integrate ,16},
@@ -3465,6 +3474,7 @@ mglCommand mgls_base_cmd[] = {
 	{"plotid","Set default filename","plotid 'name'", mgls_plotid ,2},
 	{"pmap","Draw Poincare map","pmap Ydat Rdat ['fmt']|Xdat Ydat Rdat ['fmt']|Xdat Ydat Zdat Rdat ['fmt']", mgls_pmap ,7},
 	{"polygon","Draw polygon","polygon x1 y1 x2 y2 num ['fmt']|x1 y1 z1 x2 y2 z2 num ['fmt']", mgls_polygon ,13},
+	{"print","Immediately print the message","info 'message'|Dat [detail]|const", mgls_print ,3},
 	{"pulse","Get pulse properties","pulse Res Dat 'dir'", mgls_pulse ,4},
 	{"put","Put value (numeric or array) to given data element","put Dat val [i j k] | Dat Val [i j k]", mgls_put ,3},
 	{"putsfit","Print fitted formula","putsfit x y ['pre' 'font' size]|x y z ['pre' 'font' size]", mgls_putsfit ,15},
