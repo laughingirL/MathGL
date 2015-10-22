@@ -483,3 +483,7 @@ void MGL_EXPORT mgl_rasterize(HMGL gr)
 {	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->Rasterize();	}
 void MGL_EXPORT mgl_rasterize_(uintptr_t *gr)	{	_GR_->Rasterize();	}
 //-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_pen_delta(HMGL gr, double d)
+{	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);	if(g)	g->SetPenDelta(d);	}
+void MGL_EXPORT mgl_pen_delta_(uintptr_t *gr, double *d)	{	_GR_->SetPenDelta(*d);	}
+//-----------------------------------------------------------------------------

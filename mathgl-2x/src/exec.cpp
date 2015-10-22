@@ -66,6 +66,13 @@ int MGL_NO_EXPORT mgls_alpha(mglGraph *gr, long , mglArg *a, const char *k, cons
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_pen_delta(mglGraph *gr, long , mglArg *a, const char *k, const char *)
+{
+	int res=0;
+	if(!strcmp(k,"n"))	gr->SetPenDelta(a[0].v);
+	else res = 1;	return res;
+}
+//-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_plotid(mglGraph *gr, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
@@ -3468,6 +3475,7 @@ mglCommand mgls_base_cmd[] = {
 	{"origintick","Set tick labels drawing at origin","origintick val", mgls_origintick ,14},
 	{"palette","Set palette for 1D plots","palette 'colors'", mgls_palette ,2},
 	{"pde","Solve PDE","pde Res 'ham' IniRe IniIm [dz k0]", mgls_pde ,4},
+	{"pen_delta","Set size of semi-transparent area","pen_delta val", mgls_pen_delta ,2},
 	{"perspective","Set perspective","perspective val", mgls_perspective ,2},
 	{"pipe","Draw flow pipes for vector field","pipe Udat Vdat ['fmt' rad num]|Xdat Ydat Udat Vdat ['fmt' rad num]|Udat Vdat Wdat ['fmt' rad num]|Xdat Ydat Zdat Udat Vdat Wdat ['fmt' rad num]", mgls_pipe ,11},
 	{"plot","Draw usual plot for 1D data","plot Ydat ['fmt']|Xdat Ydat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_plot ,7},

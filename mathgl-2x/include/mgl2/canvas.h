@@ -331,6 +331,8 @@ using mglBase::Light;
 	void PreparePrim(int fast);
 	inline uint32_t GetPntCol(long i) const	{	return pnt_col[i];	}
 	inline uint32_t GetPrmCol(long i, bool sort=true) const	{	return GetColor(GetPrm(i, sort));	}
+	/// Set the size of semi-transparent area around lines, marks, ...
+	inline void SetPenDelta(float d)	{	pen_delta = 1.5*fabs(d);	}
 
 protected:
 	mreal Delay;		///< Delay for animation in seconds
@@ -438,9 +440,10 @@ private:
 	std::vector<mglMatrix> stack;	///< stack for transformation matrices
 	GifFileType *gif;
 	mreal fscl,ftet;	///< last scale and rotation for glyphs
-	long forg;		///< original point (for directions)
+	long forg;			///< original point (for directions)
 	size_t grp_counter;	///< Counter for StartGroup(); EndGroup();
-	mglMatrix Bt;	///< temporary matrix for text
+	mglMatrix Bt;		///< temporary matrix for text
+	float pen_delta;	///< delta pen width (dpw) -- the size of semi-transparent region for lines, marks, ...
 
 	/// Draw generic colorbar
 	void colorbar(HCDT v, const mreal *s, int where, mreal x, mreal y, mreal w, mreal h, bool text);
@@ -481,8 +484,6 @@ private:
 	void glyph_fpix(long i,long j,const mglMatrix *M, const mglPnt &p, mreal f, const mglGlyph &g, const mglDrawReg *d);
 	void glyph_wpix(long i,long j,const mglMatrix *M, const mglPnt &p, mreal f, const mglGlyph &g, const mglDrawReg *d);
 	void glyph_lpix(long i,long j,const mglMatrix *M, const mglPnt &p, mreal f, bool solid, const mglDrawReg *d);
-
-
 };
 //-----------------------------------------------------------------------------
 struct mglThreadG

@@ -41,7 +41,7 @@
 10. Lamerey chart
 11. line style for boxed text should have no dash
 
-12. Spaces before 'func' 
+12. Spaces before 'func'
 
 17. Iris plot -- https://en.wikipedia.org/wiki/Iris_flower_data_set
 
@@ -71,7 +71,8 @@ D. Docs about JS interface
 	line 0 0.5 a.nx-1 0.5 'h'
 	new x 100 'x'
 	plot b(0)*(1-((x-b(1))/b(2))^2) 'g'
-
+5. Docs about MGL commands: 'print' and 'echo'
+6. Docs about mgl_pen_delta(), SetPenDelta(), 'pen_delta'
 
 
 YY. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using Stem()

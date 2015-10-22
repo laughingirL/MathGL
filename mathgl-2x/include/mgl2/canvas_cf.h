@@ -50,6 +50,10 @@ void MGL_EXPORT mgl_finish_(uintptr_t *gr);
 void MGL_EXPORT mgl_rasterize(HMGL gr);
 void MGL_EXPORT mgl_rasterize_(uintptr_t *gr);
 
+/// Set the size of semi-transparent area around lines, marks, glyphs, ... Default is 1.
+void MGL_EXPORT mgl_pen_delta(HMGL gr, double d);
+void MGL_EXPORT mgl_pen_delta_(uintptr_t *gr, double *d);
+
 /// Set tick length
 void MGL_EXPORT mgl_set_tick_len(HMGL gr, double len, double stt);
 void MGL_EXPORT mgl_set_tick_len_(uintptr_t *gr, mreal *len, mreal *stt);

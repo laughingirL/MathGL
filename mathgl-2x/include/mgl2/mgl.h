@@ -73,6 +73,8 @@ public:
 	inline void SetAlphaDef(double alpha)	{	mgl_set_alpha_default(gr, alpha);	}
 	/// Set the transparency type (0 - usual, 1 - glass, 2 - lamp)
 	inline void SetTranspType(int type)		{	mgl_set_transp_type(gr, type);	}
+	/// Set the size of semi-transparent area around lines, marks, glyphs, ... Default is 1.
+	inline void SetPenDelta(double d)	{	mgl_pen_delta(gr,d);	}
 
 	/// Set the using of light on/off.
 	inline void Light(bool enable)			{	mgl_set_light(gr, enable);	}

@@ -6,6 +6,7 @@
 * Add Pmap() plot for Poincare map
 * Add Lamerey() plot for Lamerey diagram
 * Add Bifurcation() plot for Bifurcation diagram
+* Add mglGraph::SetPenDelta() for changing size of semi-transparent area around lines, marks, glyphs, ...
 * Update mgltex (thanks to Diego Sejas Viscarra)
 * Force set focus for editor in UDAV
 * Disable mouse wheel for zooming in UDAV by default
