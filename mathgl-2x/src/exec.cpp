@@ -1364,6 +1364,7 @@ int MGL_NO_EXPORT mgls_savehdf(mglGraph *, long , mglArg *a, const char *k, cons
 {
 	int res=0;
 	if(!strcmp(k,"dss"))	a[0].d->SaveHDF(a[1].s.c_str(), a[2].s.c_str());
+	else if(!strcmp(k,"dssn"))	a[0].d->SaveHDF(a[1].s.c_str(), a[2].s.c_str(),mgl_int(a[3].v));
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------

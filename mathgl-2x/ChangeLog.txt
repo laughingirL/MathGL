@@ -10,6 +10,7 @@
 * Update mgltex (thanks to Diego Sejas Viscarra)
 * Force set focus for editor in UDAV
 * Disable mouse wheel for zooming in UDAV by default
+* Add option to rewrite file in 'savehdf'
 
 2.3.3 Released 01 June 2015
 
