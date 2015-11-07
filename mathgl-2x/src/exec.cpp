@@ -1471,6 +1471,24 @@ int MGL_NO_EXPORT mgls_save(mglGraph *, long , mglArg *a, const char *k, const c
 {
 	int res=0;
 	if(!strcmp(k,"ds"))	a[0].d->Save(a[1].s.c_str());
+	else if(!strcmp(k,"ss"))
+	{
+		FILE *fp = fopen(a[1].s.c_str(),"a");
+		size_t pos;	std::string s=a[0].s;
+		while((pos=s.find("\\n"))!=std::string::npos)
+		{	s[pos]=' ';	s[pos+1]='\n';	}
+		while((pos=s.find("\b\b"))!=std::string::npos)	s.erase(pos,2);
+		fprintf(fp,"%s\n",s.c_str());	fclose(fp);
+	}
+	else if(!strcmp(k,"sss"))
+	{
+		FILE *fp = fopen(a[1].s.c_str(),a[2].s.c_str());
+		size_t pos;	std::string s=a[0].s;
+		while((pos=s.find("\\n"))!=std::string::npos)
+		{	s[pos]=' ';	s[pos+1]='\n';	}
+		while((pos=s.find("\b\b"))!=std::string::npos)	s.erase(pos,2);
+		fprintf(fp,"%s\n",s.c_str());	fclose(fp);
+	}
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
@@ -3512,7 +3530,7 @@ mglCommand mgls_base_cmd[] = {
 	{"roots", "Find roots using data as initial values", "roots Res 'func' Ini ['var']|Res 'func' ini ['var']", mgls_roots ,4},
 	{"rotate","Rotate plot","rotate tetz tetx [tety] | tet x y z", mgls_rotate ,5},
 	{"rotatetext","Set to auto rotate text or not","rotatetext val", mgls_rotatetext ,15},
-	{"save","Save data to file","save Dat 'file'", mgls_save ,3},
+	{"save","Save data to file","save Dat 'file'|'str' 'file'|'str' 'file' 'how'", mgls_save ,3},
 	{"savehdf","Save data to HDF5 file","savehdf Dat 'file' 'id'", mgls_savehdf ,3},
 	{"setsize","Set picture size","setsize width height", mgls_setsize ,2},
 	{"sew","Remove jump into the data, like phase jumps","sew Dat ['dir' da]", mgls_sew ,16},

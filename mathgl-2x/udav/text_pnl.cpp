@@ -78,6 +78,8 @@ TextPanel::TextPanel(QWidget *parent) : QWidget(parent)
 	defFontSize = int(edit->fontPointSize());
 	edit->setLineWrapMode(QTextEdit::NoWrap);
 	setCompleter(mglCompleter);
+	QFontMetrics metrics(edit->currentFont());
+	edit->setTabStopWidth(4 * metrics.width(' '));
 
 	menu = new QMenu(tr("Edit"),this);
 	QBoxLayout *v = new QVBoxLayout(this);
@@ -256,7 +258,12 @@ void TextPanel::addStyle()
 }
 //-----------------------------------------------------------------------------
 void TextPanel::setEditorFont(QFont *f)
-{	edit->setFont(f ? *f : QFont(defFontFamily, defFontSize));	}
+{
+	QFont d(defFontFamily, defFontSize);
+	edit->setFont(f ? *f : d);
+	QFontMetrics metrics(f ? *f : d);
+	edit->setTabStopWidth(4 * metrics.width(' '));
+}
 //-----------------------------------------------------------------------------
 QString TextPanel::selection()
 {	return edit->textCursor().block().text();	}
@@ -453,7 +460,7 @@ void TextPanel::load(const QString &fileName)
 			graph->mgl->primitives = str.section("#----- End of QMathGL block -----\n",0,0);
 			str = str.section("#----- End of QMathGL block -----\n",1);
 		}
-		
+
 		if(narg>0)	setCurrentFile(fileName.left(fileName.length()-3)+"mgl");
 		edit->setText(str);
 		graph->animParseText(edit->toPlainText());
