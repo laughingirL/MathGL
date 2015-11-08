@@ -1,6 +1,7 @@
 2.3.4 Released ?? August 2015
 
 * Add mglData::Pulse() for determining pulse parameters
+* Add MGL command 'fscanf' for getting formated data from textual file
 * Add MGL command 'echo' for printing the content of data
 * Add MGL command 'print' -- like 'info' but print immediately in stdout
 * Add Pmap() plot for Poincare map

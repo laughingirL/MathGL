@@ -74,6 +74,7 @@ D. Docs about JS interface
 5. Docs about MGL commands: 'print' and 'echo'
 6. Docs about mgl_pen_delta(), SetPenDelta(), 'pen_delta'
 7. Option to rewrite in 'savehdf'
+8. Docs about MGL command 'fscanf'
 
 YY. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using Stem()
 

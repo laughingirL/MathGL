@@ -14,7 +14,7 @@
 % Public License for more details.
 % 
 % You should have received a copy of the GNU General Public License along
-% with this program.  If not, see <http://www.gnu.org/licenses/>.
+% with this program. If not, see <http://www.gnu.org/licenses/>.
 %
 % \fi
 %
@@ -22,7 +22,7 @@
 %
 %<package>
 %<package>\NeedsTeXFormat{LaTeX2e}
-%<package>\ProvidesPackage{mgltex}[2015/11/02 v4.0 Embed MGL scripts into LaTeX documents]
+%<package>\ProvidesPackage{mgltex}[2015/11/07 v4.0 Embed MGL scripts into LaTeX documents]
 %<package>
 %
 %<*driver>
@@ -41,7 +41,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{1516}
+% \CheckSum{1520}
 %
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -251,17 +251,17 @@
 % \begin{center}
 %   \begin{tabular}{l}
 %     \hline\\[-0.75em]
-%     |\mgldir|\marg{\mglTeX{} main directory}|/|\\[0.25em]
+%     |\mgldir|\marg{\mglTeX{} main directory}\\[0.25em]
 %     \hline
 %   \end{tabular}
 % \end{center}
-% \meta{\mglTeX{} main directory}|/| can be in the form of an absolute path or a relative path, and should be an existing location, since it won't be created automatically.
+% \meta{\mglTeX{} main directory} can be in the form of an absolute path or a relative path, and should be an existing location, since it won't be created automatically.
 %
 % \DescribeMacro{\mglscriptsdir} It specifies the subdirectory inside \meta{\mglTeX{} main directory} where the MGL scripts will be created.
 % \begin{center}
 %   \begin{tabular}{l}
 %     \hline\\[-0.75em]
-%     |\mglscriptsdir|\marg{MGL scripts subdirectory}|/|\\[0.25em]
+%     |\mglscriptsdir|\marg{MGL scripts subdirectory}\\[0.25em]
 %     \hline
 %   \end{tabular}
 % \end{center}
@@ -270,7 +270,7 @@
 % \begin{center}
 %   \begin{tabular}{l}
 %     \hline\\[-0.75em]
-%     |\mglgraphicsdir|\marg{MGL graphics subdirectory}|/|\\[0.25em]
+%     |\mglgraphicsdir|\marg{MGL graphics subdirectory}\\[0.25em]
 %     \hline
 %   \end{tabular}
 % \end{center}
@@ -279,12 +279,12 @@
 % \begin{center}
 %   \begin{tabular}{l}
 %     \hline\\[-0.75em]
-%     |\mglbackupsdir|\marg{MGL backups subdirectory}|/|\\[0.25em]
+%     |\mglbackupsdir|\marg{MGL backups subdirectory}\\[0.25em]
 %     \hline
 %   \end{tabular}
 % \end{center}
 %
-% The above commands can be used in various combinations. For example, if none of them is used, the scripts, graphics and backups will be created inside the same path where the \LaTeX{} document is being compiled; if only |\mgldir| is used, they will be created inside \meta{\mglTeX{} main directory}; if only |\mgldir| and |\mglscriptsdir| are used, the scripts will be created inside \meta{\mglTeX{} main directory}|/|\meta{MGL scripts directory}|/|, while the graphics and backups will be inside \meta{\mglTeX{} main directory} only; if |\mgldir| isn't used, but the other commands are, the \meta{MGL scripts subdirectory}, \meta{MGL graphics subdirectory} and \meta{MGL backups subdirectory} paths will be inside the the folder where the \LaTeX{} document is being compiled.
+% The above commands can be used in various combinations. For example, if none of them is used, the scripts, graphics and backups will be created inside the same path where the \LaTeX{} document is being compiled; if only |\mgldir| is used, they will be created inside \meta{\mglTeX{} main directory}; if only |\mgldir| and |\mglscriptsdir| are used, the scripts will be created inside \meta{\mglTeX{} main directory}\meta{MGL scripts directory}, while the graphics and backups will be inside \meta{\mglTeX{} main directory} only; if |\mgldir| isn't used, but the other commands are, the \meta{MGL scripts subdirectory}, \meta{MGL graphics subdirectory} and \meta{MGL backups subdirectory} paths will be inside the the folder where the \LaTeX{} document is being compiled.
 %
 % \DescribeMacro{\mglpaths} In case of having external MGL scripts, it is not recommended to place them inside the same location as where the embedded scripts are extracted, since they could be accidentally overwritten or deleted by the user; they should be separated in a folder which can be specified in the form of an absolute or relative path using this command.
 % \begin{center}
@@ -583,7 +583,7 @@
 %   \end{tabular}
 % \end{center}
 %
-% \DescribeMacro{\mgltexoff} This command has the same effect as the package option |off|, i.e., DO NOT create the scripts and corresponding graphics, and try to include images anyway, but its effect is local.
+% \DescribeMacro{\mgltexoff} This command has the same effect as the package option |off|, i.e., DO NOT create the scripts and corresponding graphics, but its effect is local.
 % \begin{center}
 %   \begin{tabular}{l}
 %     \hline\\[-0.75em]
@@ -619,11 +619,20 @@
 %   \end{minipage}
 % \end{center}
 %
-% \DescribeMacro{\mglTeX} This command just pretty-prints the name of the package
+% \DescribeMacro{\mglTeX} This command just pretty-prints the name of the package.
 % \begin{center}
 %   \begin{tabular}{l}
 %     \hline\\[-0.75em]
 %     |\mglTeX|\\[0.25em]
+%     \hline
+%   \end{tabular}
+% \end{center}
+%
+% \DescribeMacro{\mglTeXwVer} This command just pretty-prints the name of the package with its version in a coherent manner, separated by a an unbreakable space.
+% \begin{center}
+%   \begin{tabular}{l}
+%     \hline\\[-0.75em]
+%     |\mglTeXwVer|\\[0.25em]
 %     \hline
 %   \end{tabular}
 % \end{center}
@@ -702,7 +711,7 @@
 %    \caption{This box is shown by \textsf{\mglTeX} instead of a script that should be included, but can't be found.}\label{fig: MGL script not found box}
 % \end{figure}
 %
-% When \textsf{\mglTeX} is |off| no MGL graphics will be generated no will be included, but instead, a box like the one of figure~\ref{fig: mglTeX is off box} will be shown.
+% When \textsf{\mglTeX} is |off| no MGL graphics will be generated nor will be included, but instead, a box like the one of figure~\ref{fig: mglTeX is off box} will be shown.
 % \begin{figure}[!ht]
 %   \centering
 %   \fbox{%
@@ -720,7 +729,7 @@
 %
 % \begin{figure}[ht!]
 %   \centering
-%   \includegraphics[scale=0.3]{Recompilation_decision}
+%   \includegraphics[scale=0.35]{Recompilation_decision}
 %   \caption{The algorithm used by \textsf{\mglTeX} to decide which scripts recereate/recompile.}\label{fig: recompilation decision}
 % \end{figure}
 %
@@ -729,6 +738,12 @@
 % There are two ways to avoid this problem: The first one is to use the |label| option on the newly arrived; the second is to wrap a complete block of the document with the |\mgltexoff| and |\mgltexon| commands, avoiding recompilation and saving time. This last option will avoid the inclusion of the MGL graphics, so it is only recommended in case of the wrapped scripts being in their final version (not needing further modification), so there is no need of updating the corresponding graphics; then, when the document is compiled in its final version, the |\mgltexoff| and |\mgltexon| can be removed. However, the most recommended way of proceeding is to use the |\mglname| command to create a separated main script per document block (section, chapter, part, etc.), so that, if a new script disrupts the original numbering, \textsf{\mglTeX} will recompile only the scripts of the current block.
 %
 % There are situations when recompilation of a script has to be forced. For example, if the default quality has changed, but the script hasn't, \textsf{\mglTeX} won't recreate the corresponding graphic by its own initiative, because it won't detect any changes in the code. In order to force recompilation, the image of the corresponding script can be deleted: \textsf{\mglTeX} will detect this abscence in the next \LaTeX{} run and recompile.
+%
+% \section{Acknowledgements}
+% \noindent \textsf{\mglTeX} was born as a small personal project. It has grown and mature under the constant suggestions and requests from Prof. Alexey Balakin.
+%
+% \section{Redistributing and modifying}
+% \noindent The \emph{source code} of \textsf{\mglTeX} (.sty, .dtx, and .ins files) can be redistributed and/or modified under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. The \emph{documentation} of \textsf{\mglTeX} (.dvi, .ps, .pdf and other files) is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License. 
 %
 % \StopEventually{\PrintChanges\PrintIndex}
 %
@@ -1433,16 +1448,24 @@
 % \end{macro}
 %
 % \begin{macro}{\MGL@line@sep}
-% This is the separator displayed at the beginning and ending of the |mglblock| and |mglverbatim| environments, to distinguish the MGL code from the normal text. Its definition is similar to the one of the |\dotfill| command, which can be found in \emph{The \LaTeXe{} Sources} document.
+% This is the separator displayed at the beginning and ending of the |mglblock| and |mglverbatim| environments, to distinguish the MGL code from the normal text. Its definition is similar to the one of the |\dotfill| command, which can be found in \emph{The \LaTeXe{} Sources} document, but |\nopagebreak| commands have been added to avoid unaesthetic page breaking before and after the separators.
 %    \begin{macrocode}
 
-\def\MGL@line@sep{\leavevmode\cleaders\hrule height\mgllinethickness\hfill\kern\z@}
+\def\MGL@line@sep{%
+  \nopagebreak%
+  \leavevmode\cleaders\hrule height\mgllinethickness\hfill\kern\z@%
+  \nopagebreak%
+}
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\MGL@dash@sep}
 % This is the separator displayed at the begginning and ending of the |mglcomments| environment, when it is allowed to be displayed.
 %    \begin{macrocode}
-\def\MGL@dash@sep{\leavevmode\cleaders\hb@xt@\mgldashwidth{\hss-\hss}\hfill\kern\z@}
+\def\MGL@dash@sep{%
+  \nopagebreak%
+  \leavevmode\cleaders\hb@xt@\mgldashwidth{\hss-\hss}\hfill\kern\z@%
+  \nopagebreak%
+}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -2600,4 +2623,5 @@
   }%
 }
 %    \end{macrocode}
+%
 % \Finale

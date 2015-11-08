@@ -2749,10 +2749,10 @@ int MGL_NO_EXPORT mgls_fsurf(mglGraph *gr, long , mglArg *a, const char *k, cons
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_fgets(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)		// NOTE don't use options -- Puts can be part of group
+int MGL_NO_EXPORT mgls_fgets(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;	gr->Self()->SaveState(opt);
-	char buf[1024];
+	char buf[4096];
 	FILE *fp;
 	if(!strncmp(k,"nns",3))
 	{
@@ -2763,9 +2763,9 @@ int MGL_NO_EXPORT mgls_fgets(mglGraph *gr, long , mglArg *a, const char *k, cons
 			gr->SetWarn(mglWarnOpen,a[2].s.c_str());
 			return res;
 }
-		for(i=0;i<n;i++)	if(!fgets(buf,1024,fp))	continue;
-		memset(buf,0,1024);
-		if(!fgets(buf,1024,fp))
+		for(i=0;i<n;i++)	if(!fgets(buf,4096,fp))	continue;
+		memset(buf,0,4096);
+		if(!fgets(buf,4096,fp))
 		{
 			char b[32];	snprintf(b,32,"%d",n);	b[31]=0;
 			gr->SetWarn(mglWarnOpen,(a[2].s+" - line "+b).c_str());
@@ -2783,9 +2783,9 @@ int MGL_NO_EXPORT mgls_fgets(mglGraph *gr, long , mglArg *a, const char *k, cons
 			gr->SetWarn(mglWarnOpen,a[3].s.c_str());
 			return res;
 		}
-		for(i=0;i<n;i++)	if(!fgets(buf,1024,fp))	continue;
-		memset(buf,0,1024);
-		if(!fgets(buf,1024,fp))
+		for(i=0;i<n;i++)	if(!fgets(buf,4096,fp))	continue;
+		memset(buf,0,4096);
+		if(!fgets(buf,4096,fp))
 		{
 			char b[32];	snprintf(b,32,"%d",n);	b[31]=0;
 			gr->SetWarn(mglWarnOpen,(a[3].s+" - line "+b).c_str());
@@ -2795,6 +2795,59 @@ int MGL_NO_EXPORT mgls_fgets(mglGraph *gr, long , mglArg *a, const char *k, cons
 		gr->Puts(mglPoint(a[0].v,a[1].v,a[2].v),buf, (k[5]=='s')?a[5].s.c_str():"", k[6]=='n'?a[6].v:-1);
 	}
 	else res = 1;	gr->Self()->LoadState();	return res;
+}
+//-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_fscanf(mglGraph *gr, long , mglArg *a, const char *k, const char *)
+{
+	int res=0;
+	if(!strcmp(k,"dss"))
+	{
+		mglData *d = dynamic_cast<mglData *>(a[0].d);
+		if(!d)	return 1;
+		// first scan for all "%g"
+		char *buf=new char[a[2].s.length()],*s=buf;
+		strcpy(buf,a[2].s.c_str());
+		std::vector<std::string> strs;
+		for(size_t i=0;buf[i];i++)
+		{
+			if(buf[i]=='%' && buf[i+1]=='%')	i++;
+			else if(buf[i]=='%' && buf[i+1]=='g')
+			{	buf[i]=0;	strs.push_back(s);	s = buf+i+2;	}
+		}
+		delete []buf;
+		if(strs.size()<1)	return 0;
+		// read proper lines from file
+		std::vector<std::string> bufs;
+		FILE *fp=fopen(a[1].s.c_str(),"r");
+		if(!fp)
+		{
+			gr->SetWarn(mglWarnOpen,a[3].s.c_str());
+			return res;
+		}
+		while(!feof(fp))
+		{
+			s = mgl_fgetstr(fp);
+			if(!strncmp(s,strs[0].c_str(),strs[0].length()))
+				bufs.push_back(s);
+		}
+		fclose(fp);
+		// parse lines and collect data
+		const size_t nx=strs.size(), ny=bufs.size();
+		if(ny<1)	return 0;
+		d->Create(nx,ny);
+		for(size_t j=0;j<ny;j++)
+		{
+			const char *c = bufs[j].c_str();
+			for(size_t i=0;i<nx;i++)
+			{
+				const char *p = strstr(c,strs[i].c_str());
+				if(!p)	break;
+				p += strs[i].length();	c=p;
+				d->a[i+nx*j] = atof(p);
+			}
+		}
+	}
+	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_import(mglGraph *, long , mglArg *a, const char *k, const char *)
@@ -3441,6 +3494,7 @@ mglCommand mgls_base_cmd[] = {
 	{"for","For cycle","for $N v1 v2 [dv] | $N Dat", 0, 6},
 	{"fourier","In-place Fourier transform","fourier ReDat ImDat 'dir'|Cmplx 'dir'", mgls_fourier , 16},
 	{"fplot","Plot curve by formula","fplot 'y_x' ['fmt']|'x_t' 'y_t' 'z_t' ['fmt']", mgls_fplot ,1},
+	{"fscanf","Get fromated data from file","fscanf Dat 'fname 'templ'", mgls_fscanf ,4},
 	{"fsurf","Plot surface by formula","fsurf 'z_xy' ['fmt']|'x_uv' 'y_uv' 'z_uv' ['fmt']", mgls_fsurf ,1},
 	{"func","Start function definition and stop execution of main script","func 'name' [narg]", 0, 6},
 	{"grad","Draw gradient lines for scalar field","grad Phi ['fmt' num]|Xdat Ydat Phi ['fmt' num]|Xdat Ydat Zdat Phi ['fmt' num]", mgls_grad ,8},
