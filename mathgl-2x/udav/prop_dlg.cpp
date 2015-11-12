@@ -44,7 +44,7 @@ extern int defFontSize;
 extern QString pathHelp;
 extern bool mglAutoExecute;
 extern bool mglAutoSave;
-extern bool mglAutoPure;
+// extern bool mglAutoPure;
 extern bool mglCompleter;
 extern bool editPosBottom;
 extern bool loadInNewWnd;
@@ -235,7 +235,7 @@ void PropDialog::applyChanges()
 	loadInNewWnd = load->isChecked();
 	mglAutoSave = save->isChecked();
 	mglHighlight = high->isChecked();
-	mglAutoPure = pure->isChecked();
+// 	mglAutoPure = pure->isChecked();
 	mglCompleter = cmpl->isChecked();
 	mglDotsRefr = dots->isChecked();
 	mglWheelZoom = wheel->isChecked();

@@ -66,7 +66,7 @@ int MGL_NO_EXPORT mgls_alpha(mglGraph *gr, long , mglArg *a, const char *k, cons
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_pen_delta(mglGraph *gr, long , mglArg *a, const char *k, const char *)
+int MGL_NO_EXPORT mgls_pendelta(mglGraph *gr, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
 	if(!strcmp(k,"n"))	gr->SetPenDelta(a[0].v);
@@ -3493,9 +3493,9 @@ mglCommand mgls_base_cmd[] = {
 	{"font","Setup font","font 'fmt' [size]", mgls_font ,15},
 	{"for","For cycle","for $N v1 v2 [dv] | $N Dat", 0, 6},
 	{"fourier","In-place Fourier transform","fourier ReDat ImDat 'dir'|Cmplx 'dir'", mgls_fourier , 16},
-	{"fplot","Plot curve by formula","fplot 'y_x' ['fmt']|'x_t' 'y_t' 'z_t' ['fmt']", mgls_fplot ,1},
+	{"fplot","Plot curve by formula","fplot 'y(x)' ['fmt']|'x(t)' 'y(t)' 'z(t)' ['fmt']", mgls_fplot ,1},
 	{"fscanf","Get fromated data from file","fscanf Dat 'fname 'templ'", mgls_fscanf ,4},
-	{"fsurf","Plot surface by formula","fsurf 'z_xy' ['fmt']|'x_uv' 'y_uv' 'z_uv' ['fmt']", mgls_fsurf ,1},
+	{"fsurf","Plot surface by formula","fsurf 'z(x,y)' ['fmt']|'x(u,v)' 'y(u,v)' 'z(u,v)' ['fmt']", mgls_fsurf ,1},
 	{"func","Start function definition and stop execution of main script","func 'name' [narg]", 0, 6},
 	{"grad","Draw gradient lines for scalar field","grad Phi ['fmt' num]|Xdat Ydat Phi ['fmt' num]|Xdat Ydat Zdat Phi ['fmt' num]", mgls_grad ,8},
 	{"grid","Draw grid","grid ['dir' 'fmt']", mgls_grid ,12},
@@ -3548,7 +3548,7 @@ mglCommand mgls_base_cmd[] = {
 	{"origintick","Set tick labels drawing at origin","origintick val", mgls_origintick ,14},
 	{"palette","Set palette for 1D plots","palette 'colors'", mgls_palette ,2},
 	{"pde","Solve PDE","pde Res 'ham' IniRe IniIm [dz k0]", mgls_pde ,4},
-	{"pen_delta","Set size of semi-transparent area","pen_delta val", mgls_pen_delta ,2},
+	{"pendelta","Set size of semi-transparent area","pen_delta val", mgls_pendelta ,2},
 	{"perspective","Set perspective","perspective val", mgls_perspective ,2},
 	{"pipe","Draw flow pipes for vector field","pipe Udat Vdat ['fmt' rad num]|Xdat Ydat Udat Vdat ['fmt' rad num]|Udat Vdat Wdat ['fmt' rad num]|Xdat Ydat Zdat Udat Vdat Wdat ['fmt' rad num]", mgls_pipe ,11},
 	{"plot","Draw usual plot for 1D data","plot Ydat ['fmt']|Xdat Ydat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_plot ,7},

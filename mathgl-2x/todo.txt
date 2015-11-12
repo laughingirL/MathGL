@@ -43,6 +43,10 @@
 
 12. Spaces before 'func'
 
+13. Read LibreOfficeCalc ?!?
+14. \overline{\overline{a}}
+15. Direct export to MP4 ?!!
+
 17. Iris plot -- https://en.wikipedia.org/wiki/Iris_flower_data_set
 
 ZZ. Update *.i for new functions {before release!!!}
@@ -93,6 +97,7 @@ YY. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using St
 
 4. List of constants into the list of data?!
 5. Add color cycle ???
+6. Color position in color scheme dialog
 
 
 ============= UNSURE ===========

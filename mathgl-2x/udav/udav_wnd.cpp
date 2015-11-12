@@ -53,7 +53,7 @@ bool editPosBottom = false;
 bool mglAutoSave = false;
 bool mglHighlight = true;
 bool mglDotsRefr = true;
-bool mglAutoPure = true;
+// bool mglAutoPure = true;
 bool mglCompleter = true;
 bool loadInNewWnd = false;
 bool mglWheelZoom = false;
@@ -473,7 +473,7 @@ void MainWindow::writeSettings()
 	settings.setValue("/autoSave",  mglAutoSave);
 	settings.setValue("/highlight",  mglHighlight);
 	settings.setValue("/dotsRefresh", mglDotsRefr);
-	settings.setValue("/autoPure",  mglAutoPure);
+// 	settings.setValue("/autoPure",  mglAutoPure);
 	settings.setValue("/editAtTop", editPosBottom);
 	settings.setValue("/fontFamily", defFontFamily);
 	settings.setValue("/fontSize", defFontSize);
@@ -511,7 +511,7 @@ void MainWindow::readSettings()
 	mglColorScheme[9] = QColor(settings.value("/colCurrLine", "#FFFFCC").toString());
 	mglAutoSave = settings.value("/autoSave", false).toBool();
 	mglHighlight = settings.value("/highlight", true).toBool();
-	mglAutoPure = settings.value("/autoPure", true).toBool();
+// 	mglAutoPure = settings.value("/autoPure", true).toBool();
 	mglAutoExecute = settings.value("/autoExec", true).toBool();
 	editPosBottom = settings.value("/editAtTop", false).toBool();
 	mglCompleter = settings.value("/completer", true).toBool();
