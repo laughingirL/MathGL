@@ -65,15 +65,9 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	std::vector<float> t;	t.push_back(0);	t.push_back(0);	t.push_back(1);
-	gr->Plot(mglData(t),"r");
-	gr->Axis();
-	gr->WriteEPS("1.eps");
-	gr->WriteTEX("1.tex");
-	gr->WriteSVG("1.svg");
-	return;
 	mglParse par;
-	par.Execute(gr,"load '/home/balakin/mathgl-code/mathgl-2x/build/examples/libmgl_module.so':baxis\n");
+	par.Execute(gr,"call 'test' -1\n func 'test' 1\nline $1 0 1 1 'b'\nreturn\n");
+//	par.Execute(gr,"load '/home/balakin/mathgl-code/mathgl-2x/build/examples/libmgl_module.so':baxis\n");
 //	par.Execute(gr,"subplot 1 1 0:#rotate 40 60\nperspective 1.22:box:axis\n");
 	return;
 }

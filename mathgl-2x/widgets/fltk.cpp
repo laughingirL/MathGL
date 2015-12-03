@@ -34,7 +34,7 @@
 #endif
 //-----------------------------------------------------------------------------
 #include "mgl2/canvas_wnd.h"
-#include "mgl2/fltk.h"
+#include "mgl2/Fl_MathGL.h"
 //-----------------------------------------------------------------------------
 #include "xpm/show_sl.xpm"
 #include "xpm/next_sl.xpm"

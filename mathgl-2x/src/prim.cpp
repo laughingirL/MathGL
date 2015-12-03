@@ -918,7 +918,7 @@ void MGL_EXPORT mgl_logo(HMGL gr, long w, long h, const unsigned char *rgba, int
 		gr->Reserve(4*(w+1)*(h+1));
 		for(long j=0;j<h;j++)	for(long i=0;i<w;i++)
 		{
-			long i0 = 4*(w-1-i+w*j), k1,k2,k3,k4;
+			long i0 = 4*(i+w*(h-1-j)), k1,k2,k3,k4;
 			mglColor c(rgba[i0]/255.,rgba[i0+1]/255.,rgba[i0+2]/255.);
 			k1 = gr->AddPnt(mglPoint(x1+dx*i,y1+dy*j,z),0);	gr->SetRGBA(k1,c);
 			k2 = gr->AddPnt(mglPoint(x1+dx*(i+1),y1+dy*j,z),0);	gr->SetRGBA(k2,c);
@@ -934,7 +934,7 @@ void MGL_EXPORT mgl_logo(HMGL gr, long w, long h, const unsigned char *rgba, int
 		long *pos = new long[w*h];
 		for(long j=0;j<h;j++)	for(long i=0;i<w;i++)
 		{
-			long i0 = 4*(w-1-i+w*j), i1 = i+w*j;
+			long i0 = 4*(i+w*(h-1-j)), i1 = i+w*j;
 			pos[i1] = gr->AddPnt(mglPoint(x1+dx*i,y1+dy*j,z),0);
 			gr->SetRGBA(pos[i1],mglColor(rgba[i0]/255.,rgba[i0+1]/255.,rgba[i0+2]/255.));
 		}
@@ -1061,7 +1061,7 @@ void MGL_EXPORT mgl_bifurcation(HMGL gr, double dx, double (*f)(double,double,vo
 		if(m1>=m2)	for(long i=0;i<m1;i++)
 		{
 			double vv=v2[0], vi=v1[i];
-			for(long j=1;j<m2;j++)	if(fabs(v2[j]-vi)<fabs(vv-vi))	vv = v2[j]; 
+			for(long j=1;j<m2;j++)	if(fabs(v2[j]-vi)<fabs(vv-vi))	vv = v2[j];
 			gr->line_plot(gr->AddPnt(mglPoint(xx-dx,vv,gr->Max.z)), gr->AddPnt(mglPoint(xx,v1[i],gr->Max.z)));
 		}
 		else	for(long i=0;i<m1;i++)

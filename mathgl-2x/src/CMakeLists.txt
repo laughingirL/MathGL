@@ -23,6 +23,9 @@ ${MathGL_BINARY_DIR}/include/mgl2/dllexport.h	cont.hpp
 )
 
 add_definitions(-DMGL_SRC)
+if(MGL_HAVE_GSL2)
+	add_definitions(-DMGL_HAVE_GSL2)
+endif(MGL_HAVE_GSL2)
 
 if(MGL_HAVE_PNG)
 	set(prc_src prc/PRCbitStream.cc prc/PRCdouble.cc prc/oPRCFile.cc prc/writePRC.cc prc.cpp )

@@ -42,10 +42,6 @@
 #endif
 #endif
 
-#if MGL_HAVE_OMP
-#include <omp.h>
-#endif
-
 #endif
 //-----------------------------------------------------------------------------
 #ifdef WIN32 //_MSC_VER needs this before math.h

@@ -32,6 +32,9 @@
 #else
 #define MGL_PUSH(a,v,m)	a.push_back(v);
 #endif
+#if MGL_HAVE_OMP
+#include <omp.h>
+#endif
 //-----------------------------------------------------------------------------
 inline mreal mgl_d(mreal v,mreal v1,mreal v2) { return v2!=v1?(v-v1)/(v2-v1):NAN; }
 //-----------------------------------------------------------------------------
@@ -51,12 +54,10 @@ template <class T> class mglStack
 	void *mutex;
 public:
 	mglStack(const mglStack<T> &st)
-	{
-		np=st.np;	dat = (T**)malloc(np*sizeof(T*));
+	{	np=st.np;	dat = (T**)malloc(np*sizeof(T*));
 		pb=st.pb;	m=n=0;	reserve(st.n);
 		for(size_t i=0;i<m;i++)	memcpy(dat[i],st.dat[i],(1L<<pb)*sizeof(T));
-		n=st.n;		mutex = 0;
-	}
+		n=st.n;		mutex = 0;	}
 	mglStack(size_t Pbuf=10)
 	{	np=16;	pb=Pbuf;	dat = (T**)malloc(np*sizeof(T*));
 		dat[0] = new T[1L<<pb];	n=0;	m=1;	mutex = 0;	}
@@ -432,7 +433,7 @@ public:
 	inline void SetMarkSize(mreal val)	{	MarkSize=0.02*val;	}
 	/// Set size of arrows
 	inline void SetArrowSize(mreal val)	{	ArrowSize=0.03*val;	}
-	/// Get unscaled arrow size 
+	/// Get unscaled arrow size
 	inline mreal GetArrowSize() const	{	return ArrowSize/0.03;	}
 
 	/// Set warning code ant fill Message

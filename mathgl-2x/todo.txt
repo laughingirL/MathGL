@@ -21,6 +21,7 @@
 19. Simplified triangle filling for Quality=1 ?!?
 20. Extend 'ask' by adding multiple questions simultaneously (+ set/get default values from file ???)
 21. Occasional seg.fault in mgl_qt_example at exit
+22. \overline{\overline{a}} ???
 
 
 ============= NEW FEATURES =============
@@ -38,16 +39,12 @@
 7. Improve z-order for rapidly oscillating surfaces
 8. Contour lines for bilinear interpolation (strong saddle-like faces)
 9. More accurate face cutting if one partially out of axis ranges
-10. Lamerey chart
-11. line style for boxed text should have no dash
 
-12. Spaces before 'func'
-
-13. Read LibreOfficeCalc ?!?
-14. \overline{\overline{a}}
-15. Direct export to MP4 ?!!
-
-17. Iris plot -- https://en.wikipedia.org/wiki/Iris_flower_data_set
+10. Direct export to MP4 ?!!
+11. Iris plot -- https://en.wikipedia.org/wiki/Iris_flower_data_set
+12. Parallel drawing in QMathGL.
+13. CMAKE + COMPONENTS ???
+14. mglQt, nglFLTK -- add 2-3 callback functions+toolbuttons+hotkeys for user(s)
 
 ZZ. Update *.i for new functions {before release!!!}
 
@@ -79,6 +76,7 @@ D. Docs about JS interface
 6. Docs about mgl_pen_delta(), SetPenDelta(), 'pen_delta'
 7. Option to rewrite in 'savehdf'
 8. Docs about MGL command 'fscanf'
+9. About "#undef I"
 
 YY. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using Stem()
 
@@ -98,6 +96,8 @@ YY. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using St
 4. List of constants into the list of data?!
 5. Add color cycle ???
 6. Color position in color scheme dialog
+7. QML ???
+8, Changable panels???
 
 
 ============= UNSURE ===========

@@ -75,12 +75,12 @@ MGL_EXPORT char *mgl_fgetstr(FILE *fp)
 void MGL_EXPORT mgl_fgetpar(FILE *fp, const char *str, ...)
 {
 	if(!str || !str[0])	return;
-	long len=strlen(str);
+	const size_t len=strlen(str);
 	char *s, *t;
 	va_list lst;
 	va_start(lst,str);
 	t = mgl_fgetstr(fp);
-	for(long i=0;i<len;i++)
+	for(size_t i=0;i<len;i++)
 	{
 		if(str[i]=='%')
 		{

@@ -529,6 +529,7 @@ pthread_mutex_lock(&mutexPtx);
 			pt.x=pt.xx=pp.x;	pt.y=pt.yy=pp.y;
 #pragma omp critical(pnt)
 			{k4=Pnt.size();	MGL_PUSH(Pnt,pt,mutexPnt);}
+			PDef = 0xffff;	// reset to solid line
 			line_plot(k1,k2);	line_plot(k1,k3);
 			line_plot(k4,k2);	line_plot(k4,k3);
 			mreal bl = AddTexture('w');

@@ -163,7 +163,7 @@ MainWindow::MainWindow(QWidget *wp) : QMainWindow(wp)
 	rtab->setMovable(true);	rtab->setTabPosition(QTabWidget::South);
 
 	messWnd = new QDockWidget(tr("Messages and warnings"),this);
-	mess = new TextEdit(this);	messWnd->setWidget(mess);
+	mess = new QTextEdit(this);	messWnd->setWidget(mess);
 	messWnd->setAllowedAreas(Qt::TopDockWidgetArea | Qt::BottomDockWidgetArea);
 	addDockWidget(Qt::BottomDockWidgetArea, messWnd);
 	messWnd->resize(size().width(), 0);	new MessSyntax(mess);
@@ -219,6 +219,7 @@ MainWindow::MainWindow(QWidget *wp) : QMainWindow(wp)
 	edit = new TextPanel(this);	edit->graph = graph;
 	graph->textMGL = edit->edit;
 	connect(graph->mgl,SIGNAL(showWarn(QString)),mess,SLOT(setText(QString)));
+	connect(graph->mgl,SIGNAL(showWarn(QString)),edit->edit,SLOT(setErrMessage(QString)));
 	connect(graph,SIGNAL(clearWarn()),mess,SLOT(clear()));
 	ltab->addTab(edit,QPixmap(":/png/text-plain.png"),tr("Script"));
 

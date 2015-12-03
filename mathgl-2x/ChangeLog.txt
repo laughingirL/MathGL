@@ -1,17 +1,23 @@
-2.3.4 Released ?? August 2015
+2.3.4 Released ?? December 2015
 
 * Add mglData::Pulse() for determining pulse parameters
-* Add MGL command 'fscanf' for getting formated data from textual file
-* Add MGL command 'echo' for printing the content of data
-* Add MGL command 'print' -- like 'info' but print immediately in stdout
 * Add Pmap() plot for Poincare map
 * Add Lamerey() plot for Lamerey diagram
 * Add Bifurcation() plot for Bifurcation diagram
 * Add mglGraph::SetPenDelta() for changing size of semi-transparent area around lines, marks, glyphs, ...
-* Update mgltex (thanks to Diego Sejas Viscarra)
-* Force set focus for editor in UDAV
-* Disable mouse wheel for zooming in UDAV by default
+
+* Add MGL command 'fscanf' for getting formated data from textual file
+* Add MGL command 'echo' for printing the content of data
+* Add MGL command 'print' -- like 'info' but print immediately in stdout
 * Add option to rewrite file in 'savehdf'
+
+* Force set focus for editor in UDAV
+* Add line numbers to UDAV editor. Cyan number denote current line, red numbers denote lines with errors.
+* Disable mouse wheel for zooming in UDAV by default
+
+* Update mgltex (thanks to Diego Sejas Viscarra)
+
+* Bugfixes
 
 2.3.3 Released 01 June 2015
 

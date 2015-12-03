@@ -114,7 +114,7 @@ MessSyntax::MessSyntax(QTextEdit *textEdit) : QSyntaxHighlighter(textEdit)	{}
 //-----------------------------------------------------------------------------
 void MessSyntax::highlightBlock(const QString &text)
 {
-	if(text.left(7) == ("In line"))
+	if(text.contains("in line "))
 		setFormat(0, text.length(), QColor(255,0,0));
 }
 //-----------------------------------------------------------------------------

@@ -39,6 +39,7 @@
  ****************************************************************************/
 
 #include "textedit.h"
+#include <string.h>
 #include <QCompleter>
 #include <QKeyEvent>
 #include <QAbstractItemView>
@@ -49,12 +50,22 @@
 #include <QScrollBar>
 #include <QPainter>
 #include <QTextBlock>
+#include <QAbstractTextDocumentLayout>
+
 extern QColor mglColorScheme[10];
 //-----------------------------------------------------------------------------
 TextEdit::TextEdit(QWidget *parent) : QTextEdit(parent)
 {
 	c=0;
 	connect(this, SIGNAL(cursorPositionChanged()), this, SLOT(highlight()));
+	// Line numbers
+	lineNumberArea = new LineNumberArea(this);
+	connect(document(), SIGNAL(blockCountChanged(int)), this, SLOT(updateLineNumberAreaWidth(int)));
+	connect(document(), SIGNAL(blockCountChanged(int)), this, SLOT(updateLineNumberArea(int)));
+	connect(verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(updateLineNumberArea(int)));
+	connect(this, SIGNAL(textChanged()), this, SLOT(updateLineNumberArea()));
+	connect(this, SIGNAL(cursorPositionChanged()), this, SLOT(updateLineNumberArea()));
+	updateLineNumberAreaWidth(0);
 }
 //-----------------------------------------------------------------------------
 void TextEdit::highlight()
@@ -148,4 +159,167 @@ void TextEdit::keyPressEvent(QKeyEvent *e)
 	cr.setWidth(c->popup()->sizeHintForColumn(0) + c->popup()->verticalScrollBar()->sizeHint().width());
 	c->complete(cr); // popup it up!
 }
+//-----------------------------------------------------------------------------
+//
+//	Line numbering (slightly modified code of Gauthier Boaglio)
+//	Original: https://stackoverflow.com/questions/2443358/how-to-add-lines-numbers-to-qtextedit/
+//
+//-----------------------------------------------------------------------------
+int TextEdit::lineNumberAreaWidth()
+{
+	int digits = 1;
+	int max = qMax(1, document()->blockCount());
+	while (max >= 10)	{	max /= 10;	++digits;	}
+	int space = 13 +  fontMetrics().width(QLatin1Char('9')) * (digits);
+	return space;
+}
+//-----------------------------------------------------------------------------
+void TextEdit::updateLineNumberAreaWidth(int /* newBlockCount */)
+{	setViewportMargins(lineNumberAreaWidth(), 0, 0, 0);	}
+//-----------------------------------------------------------------------------
+void TextEdit::updateLineNumberArea(QRectF /*rect_f*/)
+{	TextEdit::updateLineNumberArea();	}
+//-----------------------------------------------------------------------------
+void TextEdit::updateLineNumberArea(int /*slider_pos*/)
+{	TextEdit::updateLineNumberArea();	}
+//-----------------------------------------------------------------------------
+void TextEdit::updateLineNumberArea()
+{
+	/* When the signal is emitted, the sliderPosition has been adjusted according to the action,
+	 * but the value has not yet been propagated (meaning the valueChanged() signal was not yet emitted),
+	 * and the visual display has not been updated. In slots connected to this signal you can thus safely
+	 * adjust any action by calling setSliderPosition() yourself, based on both the action and the
+	 * slider's value. */
+	// Make sure the sliderPosition triggers one last time the valueChanged() signal with the actual value !!!!
+	verticalScrollBar()->setSliderPosition(verticalScrollBar()->sliderPosition());
+
+	// Since "QTextEdit" does not have an "updateRequest(...)" signal, we chose
+	// to grab the imformations from "sliderPosition()" and "contentsRect()".
+	// See the necessary connections used (Class constructor implementation part).
+
+	QRect rect =  contentsRect();
+	lineNumberArea->update(0, rect.y(), lineNumberArea->width(), rect.height());
+	updateLineNumberAreaWidth(0);
+	//----------
+	int dy = verticalScrollBar()->sliderPosition();
+	if (dy > -1) {
+		lineNumberArea->scroll(0, dy);
+	}
+
+	// Addjust slider to alway see the number of the currently being edited line...
+	int first_block_id = getFirstVisibleBlockId();
+	if (first_block_id == 0 || textCursor().block().blockNumber() == first_block_id-1)
+		verticalScrollBar()->setSliderPosition(dy-document()->documentMargin());
+}
+//-----------------------------------------------------------------------------
+void TextEdit::resizeEvent(QResizeEvent *e)
+{
+	QTextEdit::resizeEvent(e);
+	QRect cr = contentsRect();
+	lineNumberArea->setGeometry(QRect(cr.left(), cr.top(), lineNumberAreaWidth(), cr.height()));
+}
+//-----------------------------------------------------------------------------
+int TextEdit::getFirstVisibleBlockId()
+{
+	// Detect the first block for which bounding rect - once translated
+	// in absolute coordinated - is contained by the editor's text area
+
+	// Costly way of doing but since "blockBoundingGeometry(...)" doesn't
+	// exists for "QTextEdit"...
+
+	QTextCursor curs = QTextCursor(document());
+	curs.movePosition(QTextCursor::Start);
+	for(int i=0; i < document()->blockCount(); ++i)
+	{
+		QTextBlock block = curs.block();
+
+		QRect r1 = viewport()->geometry();
+		QRect r2 = document()->documentLayout()->blockBoundingRect(block).translated(
+					viewport()->geometry().x(), viewport()->geometry().y() - (
+						verticalScrollBar()->sliderPosition()
+						) ).toRect();
+
+		if (r1.contains(r2, true)) { return i; }
+
+		curs.movePosition(QTextCursor::NextBlock);
+	}
+
+	return 0;
+}
+//-----------------------------------------------------------------------------
+void TextEdit::lineNumberAreaPaintEvent(QPaintEvent *event)
+{
+	verticalScrollBar()->setSliderPosition(verticalScrollBar()->sliderPosition());
+
+	QPainter painter(lineNumberArea);
+	painter.fillRect(event->rect(), Qt::lightGray);
+	int blockNumber = getFirstVisibleBlockId();
+
+	QTextBlock block = document()->findBlockByNumber(blockNumber);
+	QTextBlock prev_block = (blockNumber > 0) ? document()->findBlockByNumber(blockNumber-1) : block;
+	int translate_y = (blockNumber > 0) ? -verticalScrollBar()->sliderPosition() : 0;
+
+	int top = viewport()->geometry().top();
+
+	// Adjust text position according to the previous "non entirely visible" block
+	// if applicable. Also takes in consideration the document's margin offset.
+	int additional_margin;
+	if (blockNumber == 0)	// Simply adjust to document's margin
+		additional_margin = (int) document()->documentMargin() -1 - verticalScrollBar()->sliderPosition();
+	else	// Getting the height of the visible part of the previous "non entirely visible" block
+		additional_margin = (int) document()->documentLayout()->blockBoundingRect(prev_block)
+				.translated(0, translate_y).intersected(viewport()->geometry()).height();
+	top += additional_margin;	// Shift the starting point
+
+	int bottom = top + (int) document()->documentLayout()->blockBoundingRect(block).height();
+
+	QColor colErr(255, 0, 0);	// Error line
+	QColor colCur(0, 128, 255);	// Current line
+	QColor colDef(0,0,0);		// Other lines
+
+	// Draw the numbers (displaying the current line number in green)
+	while (block.isValid() && top <= event->rect().bottom())
+	{
+		if (block.isVisible() && bottom >= event->rect().top())
+		{
+			QString number = QString::number(blockNumber + 1);
+			painter.setPen(QColor(120, 120, 120));
+			painter.setPen((textCursor().blockNumber() == blockNumber) ? colCur :
+										(isErrLine(blockNumber+1)?colErr:colDef) );
+			painter.drawText(-5, top, lineNumberArea->width(), fontMetrics().height(), Qt::AlignRight, number);
+		}
+
+		block = block.next();
+		top = bottom;
+		bottom = top + (int) document()->documentLayout()->blockBoundingRect(block).height();
+		blockNumber++;
+	}
+}
+//-----------------------------------------------------------------------------
+bool TextEdit::isErrLine(int line) const
+{
+	for(size_t i=0;i<err.size();i++)	if(err[i]==line)	return true;
+	return false;
+}
+//-----------------------------------------------------------------------------
+void TextEdit::setErrMessage(const QString &mess)
+{
+	err.clear();
+	const char *s = mess.toStdString().c_str();
+	s = strstr(s,"in line ");
+	while(s)
+	{
+		err.push_back(atoi(s+8));
+		s = strstr(s+8,"in line ");
+	}
+}
+//-----------------------------------------------------------------------------
+LineNumberArea::LineNumberArea(TextEdit *editor) : QWidget(editor)
+{	codeEditor = editor;	}
+//-----------------------------------------------------------------------------
+QSize LineNumberArea::sizeHint() const
+{	return QSize(codeEditor->lineNumberAreaWidth(), 0);	}
+//-----------------------------------------------------------------------------
+void LineNumberArea::paintEvent(QPaintEvent *event)
+{	codeEditor->lineNumberAreaPaintEvent(event);	}
 //-----------------------------------------------------------------------------

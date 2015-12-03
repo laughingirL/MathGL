@@ -187,11 +187,11 @@ const char *mglWarn[mglWarnEnd] = {"data dimension(s) is incompatible",	//mglWar
 								"axis ranges are incompatible",			//mglWarnTern
 								"pointer is NULL",						//mglWarnNull
 								"not enough space for plot",			//mglWarnSpc
-								"There are wrong argument(s) in script",//mglScrArg
-								"There are wrong command in script",	//mglScrCmd
-								"There are too long string in script",	//mglScrLong
-								"There are unbalanced ' in script",		//mglScrStr
-								"There are changing temporary data in script"};	//mglScrTemp
+								"There is wrong argument(s) in script",	//mglScrArg
+								"There is wrong command(s) in script",	//mglScrCmd
+								"There is too long string(s) in script",	//mglScrLong
+								"There is unbalanced ' in script",		//mglScrStr
+								"There is changing temporary data in script"};	//mglScrTemp
 //-----------------------------------------------------------------------------
 extern bool mglPrintWarn;
 void mglBase::SetWarn(int code, const char *who)

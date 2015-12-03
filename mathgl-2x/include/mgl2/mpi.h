@@ -1,5 +1,5 @@
 /***************************************************************************
- * mgl.h is part of Math Graphic Library
+ * mpi.h is part of Math Graphic Library
  * Copyright (C) 2007-2014 Alexey Balakin <mathgl.abalakin@gmail.ru>       *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -50,7 +50,7 @@ public:
 	inline void MPI_Send(int id)	{	mgl_mpi_send(gr,id);	}
 	/// Receive graphical information from node id using MPI
 	inline void MPI_Recv(int id)	{	mgl_mpi_recv(gr,id);	}
-	
+
 };
 #endif
 //-----------------------------------------------------------------------------

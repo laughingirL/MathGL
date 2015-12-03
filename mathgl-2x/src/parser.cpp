@@ -59,6 +59,7 @@ void mglParser::ScanFunc(const wchar_t *line)
 	if(!line)
 	{	func.clear();	num=0;	return;	}
 	num++;
+	while(*line<=' ' && *line!=0)	line++;
 	if(wcsncmp(line,L"func",4) || line[4]>' ')	return;
 	register long i;
 	for(i=4;line[i]<=' ' || line[i]=='\'';i++);

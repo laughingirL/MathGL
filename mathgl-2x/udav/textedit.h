@@ -52,19 +52,46 @@ public:
 	TextEdit(QWidget *parent = 0);
 	void setCompleter(QCompleter *c);
 	QCompleter *completer() const {	return c;	}
-	
+	int getFirstVisibleBlockId();
+	void lineNumberAreaPaintEvent(QPaintEvent *event);
+	int lineNumberAreaWidth();
+
+public slots:
+	void resizeEvent(QResizeEvent *e);
+	void setErrMessage(const QString &s);
+
 protected:
 	void keyPressEvent(QKeyEvent *e);
 	void focusInEvent(QFocusEvent *e);
-	
+	bool isErrLine(int line) const;
+
 private slots:
 	void insertCompletion(const QString &completion);
 	void highlight();
+	void updateLineNumberAreaWidth(int newBlockCount);
+	void updateLineNumberArea(QRectF /*rect_f*/);
+	void updateLineNumberArea(int /*slider_pos*/);
+	void updateLineNumberArea();
 
 private:
 	QString textUnderCursor() const;
 	QCompleter *c;
+	QWidget *lineNumberArea;
+	std::vector<int> err;
 };
+//-----------------------------------------------------------------------------
+class LineNumberArea : public QWidget
+{
+	Q_OBJECT
+public:
+	LineNumberArea(TextEdit *editor);
+	QSize sizeHint() const;
+protected:
+	void paintEvent(QPaintEvent *event);
+private:
+	TextEdit *codeEditor;
+};
+
 //-----------------------------------------------------------------------------
 #endif // TEXTEDIT_H
 //-----------------------------------------------------------------------------
