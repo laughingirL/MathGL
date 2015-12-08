@@ -111,7 +111,15 @@ public:
 	{	mgl_wnd_set_func(gr,draw?mgl_draw_graph:0,(void*)draw,0);	}
 	inline void SetDrawFunc(mglDraw *draw)
 	{	mgl_wnd_set_func(gr,draw?mgl_draw_class:0,draw,mgl_reload_class);
+#if MGL_HAVE_PTHREAD_FLTK
+		mgl_wnd_set_mutex(gr, &(draw->mutex));
+#endif
 		mgl_set_click_func(gr, mgl_click_class);	}
+#if MGL_HAVE_PTHREAD_FLTK
+	/// Mutex for lock/unlock by widget
+	inline void SetMutex(pthread_mutex_t *mutex)
+	{	mgl_wnd_set_mutex(gr, mutex);	}
+#endif
 
 	inline void SetDelay(double dt)	///< Set delay for animation in seconds
 	{	mgl_wnd_set_delay(gr, dt);	}

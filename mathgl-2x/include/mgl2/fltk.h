@@ -54,6 +54,9 @@ public:
 	{	gr = mgl_create_graph_fltk(draw?mgl_draw_graph:0,title,(void*)draw,0);	}
 	mglFLTK(mglDraw *draw, const char *title="MathGL") : mglWnd()
 	{	gr = mgl_create_graph_fltk(draw?mgl_draw_class:0,title,draw,mgl_reload_class);
+#if MGL_HAVE_PTHREAD_FLTK
+		mgl_wnd_set_mutex(gr, &(draw->mutex));
+#endif
 		mgl_set_click_func(gr, mgl_click_class);	}
     virtual ~mglFLTK() {}
 	int Run()	{	return mgl_fltk_run();	}	///< Run main loop for event handling

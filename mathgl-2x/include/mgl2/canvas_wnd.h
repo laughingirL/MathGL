@@ -29,6 +29,9 @@ class MGL_EXPORT mglCanvasWnd : public mglCanvas
 public:
 	mglPoint LastMousePos;			///< Last mouse position
 	void (*ClickFunc)(void *par);	///< Callback function on click
+#if MGL_HAVE_PTHREAD_FLTK
+	pthread_mutex_t *mutex;
+#endif
 
 	mglCanvasWnd();
 	virtual ~mglCanvasWnd();

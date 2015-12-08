@@ -339,12 +339,21 @@ void Fl_MGLView::setoff(int &val, Fl_Button *b, const char *txt)
 //-----------------------------------------------------------------------------
 void Fl_MGLView::exec_pause()
 {
-	mglDraw *d=FMGL->get_class();
-	if(d)
+#if MGL_HAVE_PTHREAD_FLTK
+	pthread_mutex_t *mutex=0;
+	mglCanvasWnd *g=dynamic_cast<mglCanvasWnd *>(FMGL->gr);
+	if(g && g->mutex)	mutex = g->mutex;
+	else
 	{
-		if(pauseC)	d->Pause();
-		else	d->Continue();
+		mglDraw *d=FMGL->get_class();
+		if(d)	mutex = &(d->mutex);
 	}
+	if(mutex)
+	{
+		if(pauseC)	pthread_mutex_lock(mutex);
+		else	pthread_mutex_unlock(mutex);
+	}
+#endif
 }
 //-----------------------------------------------------------------------------
 void MGL_NO_EXPORT mgl_pause_cb(Fl_Widget*, void* v)
