@@ -22,24 +22,43 @@
 
 #include "mgl2/mgl.h"
 //-----------------------------------------------------------------------------
+MGL_EXPORT void *mgl_draw_calc(void *p);
+//-----------------------------------------------------------------------------
 /// Class for drawing in windows (like, mglCanvasFL, mglCanvasQT and so on)
 /// Make inherited class and redefine Draw() function if you don't want to use function pointers.
 class MGL_EXPORT mglDraw
 {
 public:
 	virtual int Draw(mglGraph *)=0;	///< Function for drawing
-	virtual void Reload()	{}		///< Function for reloading data
-	virtual void Click()	{}		///< Callback function on mouse click
-	virtual ~mglDraw()	{}
-#if MGL_HAVE_PTHREAD
+	virtual void Reload(){}		///< Function for reloading data
+	virtual void Click() {}		///< Callback function on mouse click
+#if MGL_HAVE_PTHREAD_FLTK
 	pthread_t thr;
 	bool running;
-	mglDraw()	{	running=false;	}
-	virtual void Calc()	{}			///< Function for calculations
-	inline void Run()				///< Run calculations in other thread
-	{	mgl_draw_thr(this);	}
+	pthread_mutex_t mutex;
+
+	mglDraw()	{	running=false;	pthread_mutex_init(&mutex,NULL);	}
+	virtual ~mglDraw()	{	pthread_mutex_destroy(&mutex);	}
+
+	virtual void Calc()	{}		///< Function for calculations
+	inline void Run()			///< Run/resume calculation in other thread
+	{
+		if(!running)
+		{	pthread_mutex_trylock(&mutex);	pthread_mutex_unlock(&mutex);
+			pthread_create(&thr,0,mgl_draw_calc,this);
+			pthread_detach(thr);	running = true;	}
+	}
+	inline void Cancel()		///< Cancel thread with calculations
+	{	pthread_cancel(thr);	running = false;	}
+	inline void Pause()			///< Pause calculation
+	{	pthread_mutex_lock(&mutex);	}
+	inline void Continue()		///< Continue calculation
+	{	pthread_mutex_trylock(&mutex);	pthread_mutex_unlock(&mutex);	}
+	inline void Check()			///< Check if calculation can be continued (should be called inside Calc() )
+	{	pthread_mutex_lock(&mutex);	pthread_mutex_unlock(&mutex);	}
 #else
-	mglDraw(){}
+	mglDraw() {}
+	virtual ~mglDraw() {}
 #endif
 };
 //-----------------------------------------------------------------------------

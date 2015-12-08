@@ -83,7 +83,9 @@ void MGL_EXPORT mgl_curve(HMGL gr, double x1, double y1, double z1, double dx1, 
 {
 	static int cgid=1;	gr->StartGroup("Curve",cgid++);
 	if(mgl_isnan(z1) || mgl_isnan(z2))	z1=z2=2*gr->Max.z-gr->Min.z;
-	mglPoint p1(x1,y1,z1), p2(x2,y2,z2), d1(dx1,dy1,dz1), d2(dx2,dy2,dz2), a,b,p=p1,nn(NAN);
+	const mglPoint p1(x1,y1,z1), p2(x2,y2,z2),nn(NAN);
+	const mglPoint d1(3*dx1,3*dy1,3*dz1), d2(3*dx2,3*dy2,3*dz2);	// NOTE use d->3*d to be exact as Bezier curve
+	mglPoint a,b,p=p1;
 	a = 3*(p2-p1)-d2-2*d1;	b = d1+d2-2*(p2-p1);
 	n = (n<2) ? 2 : n;
 	gr->SetPenPal(pen);
@@ -99,8 +101,8 @@ void MGL_EXPORT mgl_curve(HMGL gr, double x1, double y1, double z1, double dx1, 
 		if(i==1)	gr->arrow_plot(k2,k1,gr->Arrow1);
 		if(i==n-1)	gr->arrow_plot(k1,k2,gr->Arrow2);
 	}
-	gr->AddActive(gr->AddPnt(p1+d1,gr->CDef,nn,-1,3),1);
-	gr->AddActive(gr->AddPnt(p2-d2,gr->CDef,nn,-1,3),3);
+	gr->AddActive(gr->AddPnt(p1+d1/3,gr->CDef,nn,-1,3),1);
+	gr->AddActive(gr->AddPnt(p2-d2/3,gr->CDef,nn,-1,3),3);
 	gr->AddActive(k1,2);	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------

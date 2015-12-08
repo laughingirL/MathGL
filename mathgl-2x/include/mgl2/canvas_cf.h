@@ -508,9 +508,6 @@ void MGL_EXPORT mgl_zoom(HMGL gr, double x1, double y1, double x2, double y2);
 void MGL_EXPORT mgl_zoom_(uintptr_t *gr, mreal *x1, mreal *y1, mreal *x2, mreal *y2);
 
 //-----------------------------------------------------------------------------
-#if MGL_HAVE_PTHREAD
-void MGL_EXPORT mgl_draw_thr(void *);
-#endif
 /// Callback function for mouse click
 void MGL_EXPORT mgl_set_click_func(HMGL gr, void (*func)(void *p));
 

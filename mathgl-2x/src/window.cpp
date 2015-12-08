@@ -229,18 +229,10 @@ int MGL_EXPORT mgl_draw_graph(HMGL gr, void *p)
 	return func ? func(&g) : 0;
 }
 //-----------------------------------------------------------------------------
-#if MGL_HAVE_PTHREAD
-MGL_NO_EXPORT void *mgl_draw_calc(void *p)
-{
-	((mglDraw *)p)->Calc();	return 0;
-}
-//-----------------------------------------------------------------------------
-void MGL_EXPORT mgl_draw_thr(void *p)
+MGL_EXPORT void *mgl_draw_calc(void *p)
 {
 	mglDraw *d = (mglDraw *)p;
-	if(!d || d->running)	return;
-	pthread_create(&(d->thr),0,mgl_draw_calc,d);
-	pthread_detach(d->thr);
+	d->Calc();	d->running = false;
+	return 0;
 }
-#endif
 //-----------------------------------------------------------------------------

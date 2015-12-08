@@ -26,8 +26,11 @@
 #include <vector>
 #include <string>
 
-#if MGL_HAVE_PTHREAD
+#if MGL_HAVE_PTHREAD|MGL_HAVE_PTHREAD_FLTK
 #include <pthread.h>
+#endif
+
+#if MGL_HAVE_PTHREAD
 #define MGL_PUSH(a,v,m)	{pthread_mutex_lock(&m);	a.push_back(v);	pthread_mutex_unlock(&m);}
 #else
 #define MGL_PUSH(a,v,m)	a.push_back(v);

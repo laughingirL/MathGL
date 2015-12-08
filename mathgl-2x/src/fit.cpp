@@ -194,7 +194,7 @@ mreal MGL_NO_EXPORT mgl_fit_base(mglFitData &fd, mreal *ini)
 	while ( status == GSL_CONTINUE && iter < 500 );
 
 	gsl_matrix *covar = gsl_matrix_alloc(m, m);
-#ifdef HAVE_GSL_2
+#ifdef MGL_HAVE_GSL2
 	gsl_matrix *J = gsl_matrix_alloc(s->fdf->n, s->fdf->p);
 	gsl_multifit_fdfsolver_jac(s, J);
 	gsl_multifit_covar (J, 0.0, covar);

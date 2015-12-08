@@ -17,7 +17,6 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-//-----------------------------------------------------------------------------
 #ifndef _MGL_FL_MATHGL_H_
 #define _MGL_FL_MATHGL_H_
 
@@ -37,6 +36,7 @@ class mglCanvas;
 /// Class is FLTK widget which display MathGL graphics
 class MGL_EXPORT Fl_MathGL : public Fl_Widget
 {
+	friend class Fl_MGLView;
 public:
 	Fl_Valuator	*tet_val;	///< pointer to external tet-angle validator
 	Fl_Valuator	*phi_val;	///< pointer to external phi-angle validator
@@ -57,6 +57,11 @@ public:
 	{	set_graph(Gr->Self());	}
 	/// Get pointer to grapher
 	inline HMGL get_graph()	{	return (HMGL)gr;	}
+	/// Get mglDraw pointer or NULL
+	inline mglDraw *get_class()
+	{	mglDraw *d=0;
+		if(draw_func==mgl_draw_class)	d = (mglDraw*)draw_par;
+		if(draw_cl)	d = draw_cl;	return d;	}
 	/// Set drawing functions and its parameter
 	inline void set_draw(int (*func)(mglBase *gr, void *par), void *par)
 	{	if(draw_cl)	delete draw_cl;	draw_cl=0;	draw_func=func;	draw_par=par;	}
@@ -122,6 +127,7 @@ public:
 	void setoff_zoom()	{	setoff(zoom, zoom_bt);	}
 	void setoff_rotate(){	setoff(rotate, rotate_bt);	}
 	bool is_sshow()		{	return sshow;	}
+	void toggle_pause()	{	toggle(pauseC, pause_bt, "Graphics/Pause calc");	exec_pause();	}
 	void adjust()
 	{	mgl_set_size(FMGL->get_graph(),scroll->w(),scroll->h());	FMGL->size(scroll->w(),scroll->h());	update();	}
 
@@ -129,14 +135,16 @@ public:
 	virtual ~Fl_MGLView();
 	void update();			///< Update picture by calling user drawing function
 protected:
-	Fl_Button *alpha_bt, *light_bt, *rotate_bt, *anim_bt, *zoom_bt, *grid_bt;
+	Fl_Button *alpha_bt, *light_bt, *rotate_bt, *anim_bt, *zoom_bt, *grid_bt, *pause_bt;
 //	Fl_Counter *tet, *phi;
 
 	int grid, alpha, light;	///< Current states of wire, alpha, light switches (toggle buttons)
 	int sshow, rotate, zoom;///< Current states of slideshow, rotate, zoom switches (toggle buttons)
+	int pauseC;	///< Current state of pause for calculations
 
 	void toggle(int &val, Fl_Button *b, const char *txt=NULL);
 	void setoff(int &val, Fl_Button *b, const char *txt=NULL);
+	void exec_pause();
 };
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_makemenu_fltk(Fl_Menu_ *m, Fl_MGLView *w);

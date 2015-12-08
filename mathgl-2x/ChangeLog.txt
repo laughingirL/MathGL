@@ -1,45 +1,47 @@
 2.3.4 Released ?? December 2015
 
-* Add mglData::Pulse() for determining pulse parameters
-* Add Pmap() plot for Poincare map
-* Add Lamerey() plot for Lamerey diagram
-* Add Bifurcation() plot for Bifurcation diagram
+* Add mglData::Pulse() for determining pulse parameters.
+* Add Pmap() plot for Poincare map.
+* Add Lamerey() plot for Lamerey diagram.
+* Add Bifurcation() plot for Bifurcation diagram.
 * Add mglGraph::SetPenDelta() for changing size of semi-transparent area around lines, marks, glyphs, ...
 
-* Add MGL command 'fscanf' for getting formated data from textual file
-* Add MGL command 'echo' for printing the content of data
-* Add MGL command 'print' -- like 'info' but print immediately in stdout
-* Add option to rewrite file in 'savehdf'
+* Add MGL command 'fscanf' for getting formated data from textual file.
+* Add MGL command 'echo' for printing the content of data.
+* Add MGL command 'print' -- like 'info' but print immediately in stdout.
+* Add option to rewrite file in 'savehdf'.
 
-* Force set focus for editor in UDAV
+* Force set focus for editor in UDAV.
 * Add line numbers to UDAV editor. Cyan number denote current line, red numbers denote lines with errors.
-* Disable mouse wheel for zooming in UDAV by default
+* Disable mouse wheel for zooming in UDAV by default.
 
-* Update mgltex (thanks to Diego Sejas Viscarra)
+* Update mgltex (thanks to Diego Sejas Viscarra).
 
-* Bugfixes
+* INCOMPATIBLE: Scale internally d1,d2 arguments in Curve() to be exactly the same as Bezier curve (P0=p1, P1=d1+p1, P2=p2-d2, P3=p2).
+
+* Bugfixes.
 
 2.3.3 Released 01 June 2015
 
-* Add SurfCA() and Surf3CA() plots
-* Add wavelet transforms
-* Add AttachLight() for attaching light settings to inplots
-* Add manual rotation angle for axis ticks (by "value" option)
+* Add SurfCA() and Surf3CA() plots.
+* Add wavelet transforms.
+* Add AttachLight() for attaching light settings to inplots.
+* Add manual rotation angle for axis ticks (by "value" option).
 * Add mglDataS class which is similar to std::vector<double> one.
-* Add missing mglDataC functions
+* Add missing mglDataC functions.
 
-* Add style '%' for color scheme along 2 coordinates (as in Map())
+* Add style '%' for color scheme along 2 coordinates (as in Map()).
 * If tick template start with '&' then long integer is passed instead of double.
 * Add style 'V' for drawing text centered vertically.
 * Add style "dN" in Smooth() for averaging over (2*N+1)-th points.
 * Add TeX symbols "\quote", "--" and Cyrillic ones.
 
-* Add complex numbers in MGL -- any expression started with '!' will have complex value(s)
-* Add 'rkstep' command for Runge-Kutta step in MGL script
+* Add complex numbers in MGL -- any expression started with '!' will have complex value(s).
+* Add 'rkstep' command for Runge-Kutta step in MGL script.
 * Add functions 'min()', 'max()' to MGL parser and formula evaluation.
 * MGL command 'join' now can join arbitrary number of data arrays.
-* Command 'stop' is not required to be placed before 'func'
-* Add warning about writing to temporary arrays in MGL scripts
+* Command 'stop' is not required to be placed before 'func'.
+* Add warning about writing to temporary arrays in MGL scripts.
 * Names 'rnd','nan','inf' are reserved in MGL scripts now.
 
 * Add annotation for plot styles and options into header files.

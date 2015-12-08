@@ -53,6 +53,7 @@
 #include "xpm/ok.xpm"
 #include "xpm/wire.xpm"
 #include "xpm/stop.xpm"
+#include "xpm/pause.xpm"
 //-----------------------------------------------------------------------------
 Fl_Pixmap xpm_a1(alpha_xpm);
 Fl_Pixmap xpm_l1(light_xpm);
@@ -60,6 +61,7 @@ Fl_Pixmap xpm_z1(zoom_in_xpm);
 Fl_Pixmap xpm_s1(show_sl_xpm);
 Fl_Pixmap xpm_r1(rotate_xpm);
 Fl_Pixmap xpm_wire(wire_xpm);
+Fl_Pixmap xpm_pause(pause_xpm);
 //-----------------------------------------------------------------------------
 /// Class allows the window creation for displaying plot bitmap with the help of FLTK library
 /** NOTE!!! All frames are saved in memory. So animation with many frames require a lot memory and CPU time (for example, for mouse rotation).*/
@@ -335,9 +337,22 @@ void Fl_MGLView::setoff(int &val, Fl_Button *b, const char *txt)
 	//update();
 }
 //-----------------------------------------------------------------------------
+void Fl_MGLView::exec_pause()
+{
+	mglDraw *d=FMGL->get_class();
+	if(d)
+	{
+		if(pauseC)	d->Pause();
+		else	d->Continue();
+	}
+}
+//-----------------------------------------------------------------------------
+void MGL_NO_EXPORT mgl_pause_cb(Fl_Widget*, void* v)
+{	if(v)	((Fl_MGLView*)v)->toggle_pause();	}
+//-----------------------------------------------------------------------------
 void MGL_NO_EXPORT mgl_grid_cb(Fl_Widget*, void* v)
 {	if(v)	((Fl_MGLView*)v)->toggle_grid();	}
-//-------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void MGL_NO_EXPORT mgl_alpha_cb(Fl_Widget*, void* v)
 {	if(v)	((Fl_MGLView*)v)->toggle_alpha();	}
 void mglCanvasFL::ToggleAlpha()	{	mgl->toggle_alpha();	}
@@ -574,7 +589,7 @@ Fl_Menu_Item pop_graph[20] = {
 Fl_MGLView::Fl_MGLView(int xx, int yy, int ww, int hh, const char *lbl) : Fl_Window(xx,yy,ww,hh,lbl)
 {
 	Fl_Button *o;
-	grid = alpha = light = sshow = 0;	menu = 0;
+	grid = alpha = light = sshow = pauseC = 0;	menu = 0;
 	next = prev = reload = NULL;	delay = NULL;
 
 	Fl_Group *g = new Fl_Group(0,0,435,30);
@@ -610,7 +625,7 @@ Fl_MGLView::Fl_MGLView(int xx, int yy, int ww, int hh, const char *lbl) : Fl_Win
 	phi->tooltip(mgl_gettext("Phi angle (rotate in x*y plane)"));
 	g->end();	g->resizable(0);
 
-	g = new Fl_Group(0,0,30,260);
+	g = new Fl_Group(0,0,30,285);
 	o = new Fl_Button(1, 30, 25, 25);		o->tooltip(mgl_gettext("Shift the picture up"));
 	o->image(new Fl_Pixmap(up_1_xpm));		o->callback(mgl_su_cb,this);
 //	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
@@ -625,6 +640,7 @@ Fl_MGLView::Fl_MGLView(int xx, int yy, int ww, int hh, const char *lbl) : Fl_Win
 	o = new Fl_Button(1, 155, 25, 25);		o->tooltip(mgl_gettext("Shift the picture down"));
 	o->image(new Fl_Pixmap(down_1_xpm));	o->callback(mgl_sd_cb,this);
 
+
 	o = new Fl_Button(1, 185, 25, 25);		o->tooltip(mgl_gettext("Show previous frame in slideshow"));
 	o->image(new Fl_Pixmap(prev_sl_xpm));	o->callback(mgl_sprev_cb,this);
 	anim_bt = new Fl_Button(1, 210, 25, 25);	anim_bt->type(FL_TOGGLE_BUTTON);
@@ -632,6 +648,11 @@ Fl_MGLView::Fl_MGLView(int xx, int yy, int ww, int hh, const char *lbl) : Fl_Win
 	anim_bt->tooltip(mgl_gettext("Run/Stop slideshow (graphics animation)"));
 	o = new Fl_Button(1, 235, 25, 25);		o->tooltip(mgl_gettext("Show next frame in slideshow"));
 	o->image(new Fl_Pixmap(next_sl_xpm));	o->callback(mgl_snext_cb,this);
+
+	pause_bt = new Fl_Button(1, 260, 25, 25);	pause_bt->type(FL_TOGGLE_BUTTON);
+	pause_bt->image(xpm_pause);	pause_bt->callback(mgl_pause_cb,this);
+	pause_bt->tooltip(mgl_gettext("Pause on/off calculations"));
+
 	g->end();	g->resizable(0);
 
 	scroll = new Fl_Scroll(30, 30, 800, 600);
@@ -676,6 +697,7 @@ void MGL_EXPORT mgl_makemenu_fltk(Fl_Menu_ *m, Fl_MGLView *w)
 	m->add("Graphics/Reload data", "f9", mgl_oncemore_cb, w);
 	m->add("Graphics/Stop", "f7", mgl_stop_cb, w);
 	//TODO	m->add("Graphics/Copy graphics","+^c", mgl_copyimg_cb, w);
+	m->add("Graphics/Pause calc", "^t", mgl_pause_cb, w, FL_MENU_TOGGLE);
 
 	m->add("Graphics/Export/as PNG", "#p", mgl_export_png_cb, w);
 	m->add("Graphics/Export/as solid PNG", "#f", mgl_export_pngn_cb, w);
@@ -747,7 +769,7 @@ MGL_NO_EXPORT void *mgl_fltk_tmp(void *)
 //-----------------------------------------------------------------------------
 int MGL_EXPORT mgl_fltk_thr()		// NOTE: Qt couldn't be running in non-primary thread
 {
-#if MGL_HAVE_PTHREAD
+#if MGL_HAVE_PTHREAD_FLTK
 	static pthread_t thr;
 	pthread_create(&thr,0,mgl_fltk_tmp,0);
 	pthread_detach(thr);
