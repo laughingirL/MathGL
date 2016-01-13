@@ -77,6 +77,7 @@ D. Docs about JS interface
 7. Option to rewrite in 'savehdf'
 8. Docs about MGL command 'fscanf'
 9. About "#undef I"
+10. Docs about mgl_check_version() look as inverted?!?
 
 YY. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using Stem()
 

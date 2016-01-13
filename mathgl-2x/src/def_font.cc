@@ -1,4 +1,4 @@
-const long mgl_numg=411, mgl_cur=243136;
+const unsigned long mgl_numg=411, mgl_cur=243136;
 const float mgl_fact=35.7143;
 long mgl_gen_fnt[411][6] = {
 	{0x21,166,41,0,39,164},

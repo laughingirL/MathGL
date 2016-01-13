@@ -111,7 +111,7 @@ protected:
 	std::vector<mglGlyphDescr> glyphs;	///< information about know glyphs
 	float fact[4];	///< Divider for width of glyph
 	short *Buf;		///< Buffer for glyph descriptions
-	long numb;		///< Buffer size
+	size_t numb;		///< Buffer size
 
 	/// Print text string for font specified by integer constant
 	float Puts(const wchar_t *str,int font,int align, float c1,float c2) const;

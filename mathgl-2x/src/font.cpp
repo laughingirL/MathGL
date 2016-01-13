@@ -684,7 +684,7 @@ size_t mglFont::SaveBin(const char *fname)
 	FILE *fp = fopen(fname,"wb");
 	if(!fp)	return 0;
 	size_t sum=0;
-	fwrite(&numb,sizeof(long),1,fp);	sum += sizeof(long);
+	fwrite(&numb,sizeof(size_t),1,fp);	sum += sizeof(size_t);
 	fwrite(fact,sizeof(float),4,fp);	sum += sizeof(float)*4;
 	fwrite(Buf,sizeof(short),numb,fp);	sum += sizeof(short)*numb;
 	size_t len = glyphs.size();
@@ -702,13 +702,13 @@ bool mglFont::LoadBin(const char *base, const char *path)
 	FILE *fp = fopen(str,"rb");		if(!fp)	return false;
 	size_t s, len;
 	bool res = true;
-	s = fread(&numb,sizeof(long),1,fp);
+	s = fread(&numb,sizeof(size_t),1,fp);
 	if(s<1)	res = false;
 	s = fread(fact,sizeof(float),4,fp);
 	if(s<4)	res = false;
 	Buf = new short[numb];
 	s = fread(Buf,sizeof(short),numb,fp);
-	if(s<size_t(numb))	res = false;
+	if(s<numb)	res = false;
 	s = fread(&len,sizeof(size_t),1,fp);
 	if(s<1)	res = false;
 	if(res)
