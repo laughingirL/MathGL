@@ -3086,6 +3086,48 @@ int MGL_NO_EXPORT mgls_pde(mglGraph *gr, long , mglArg *a, const char *k, const 
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
+int MGL_NO_EXPORT mgls_pde_adv(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+{
+	int res=0;
+	if(k[0]=='d' && a[0].d->temp)	return 5;
+	if(k[1]=='d' && a[1].d->temp)	return 5;
+	mglData *d = dynamic_cast<mglData *>(a[0].d), *f = dynamic_cast<mglData *>(a[1].d);
+	mglDataC *c = dynamic_cast<mglDataC *>(a[0].d);
+	if(d && f)
+	{
+		mglDataC r;
+		if(!strcmp(k,"ddsdd"))
+			r = gr->APDEc(a[2].s.c_str(), *(a[3].d), *(a[4].d), 0.1,100,opt);
+		else if(!strcmp(k,"ddsddn"))
+			r = gr->APDEc(a[2].s.c_str(), *(a[3].d), *(a[4].d), a[5].v,100,opt);
+		else if(!strcmp(k,"ddsddnn"))
+			r = gr->APDEc(a[2].s.c_str(), *(a[3].d), *(a[4].d), a[5].v,a[6].v,opt);
+		else res = 1;
+		if(res==0)	{	*d = r.Abs();	*f = r.Arg();	}
+	}
+	else if(d)
+	{
+		if(!strcmp(k,"dsdd"))
+			*d = gr->APDE(a[1].s.c_str(), *(a[2].d), *(a[3].d), 0.1,100,opt);
+		else if(!strcmp(k,"dsddn"))
+			*d = gr->APDE(a[1].s.c_str(), *(a[2].d), *(a[3].d), a[4].v,100,opt);
+		else if(!strcmp(k,"dsddnn"))
+			*d = gr->APDE(a[1].s.c_str(), *(a[2].d), *(a[3].d), a[4].v,a[5].v,opt);
+		else res = 1;
+	}
+	else if(c)
+	{
+		if(!strcmp(k,"dsdd"))
+			*c = gr->APDEc(a[1].s.c_str(), *(a[2].d), *(a[3].d), 0.1,100,opt);
+		else if(!strcmp(k,"dsddn"))
+			*c = gr->APDEc(a[1].s.c_str(), *(a[2].d), *(a[3].d), a[4].v,100,opt);
+		else if(!strcmp(k,"dsddnn"))
+			*c = gr->APDEc(a[1].s.c_str(), *(a[2].d), *(a[3].d), a[4].v,a[5].v,opt);
+		else res = 1;
+	}
+	else res = 1;	return res;
+}
+//-----------------------------------------------------------------------------
 int MGL_NO_EXPORT mgls_qo2d(mglGraph *, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
@@ -3386,6 +3428,7 @@ mglCommand mgls_base_cmd[] = {
 	{"alpha","Switch on/off transparency","alpha [val]", mgls_alpha ,2},
 	{"alphadef","Set default transparency","alphadef val", mgls_alphadef ,2},
 	{"ambient","Set ambient light brightness","ambient val", mgls_ambient ,2},
+	{"apde","Solve PDE using advanced method (X-Y only)","apde Res 'ham' IniRe IniIm [dz k0]", mgls_pde_adv ,4},
 	{"arc","Draw angle arc","arc x0 y0 x1 y1 a ['fmt']|x0 y0 z0 x1 y1 a ['fmt']|x0 y0 z0 xr yr zr x1 y1 z1 a ['fmt']", mgls_arc ,13},
 	{"area","Draw area plot for 1D data","area Ydat ['fmt']|Xdat Ydat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_area ,7},
 	{"arrowsize","Set size of arrows","arrowsize val", mgls_arrowsize ,2},

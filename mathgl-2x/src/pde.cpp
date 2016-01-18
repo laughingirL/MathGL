@@ -25,6 +25,167 @@
 const double GAMMA=0.1;	///< value for damping
 HADT MGL_NO_EXPORT mglFormulaCalcC(const char *str, const std::vector<mglDataA*> &head);
 //-----------------------------------------------------------------------------
+//
+//		Advanced PDE series in 2D case
+//
+//-----------------------------------------------------------------------------
+// Solve equation dx/dy = func(p,x,y,|u|)[u] where p=d/dx. There are no assumptions about form of func().
+HADT MGL_EXPORT mgl_pde_adv_c(HMGL gr, const char *func, HCDT ini_re, HCDT ini_im, mreal dt, mreal k0, const char *opt)
+{
+	mreal gamma = gr->SaveState(opt);	if(mgl_isnan(gamma))	gamma = 10;
+	mglPoint Min=gr->Min, Max=gr->Max;
+	long nx=ini_re->GetNx(), nt = long((Max.y-Min.y)/dt)+1;
+	if(nx<2 || nt<2 || Max.x==Min.x){	gr->SetWarn(mglWarnLow,"PDE");	return 0;	}	// Too small data
+	if(ini_im->GetNx() != nx)		{	gr->SetWarn(mglWarnDim,"PDE");	return 0;	}	// Wrong dimensions
+
+	mglDataC *res=new mglDataC(nx, nt);
+	mglDataC u(nx);	u.s = L"u";
+	mglDataV x(nx,nx), y(nx,nx), r(nx,nx);
+	mglDataW p(nx,nx);	p.s = L"p";
+	x.s = L"x";	y.s = L"y";	r.s=L"#$mgl";
+	const mreal dp = 2*M_PI/(Max.x-Min.x), dd = k0*dt/2;
+	x.Fill(Min.x,Max.x,'x');	p.Freq(dp/k0,'y');
+	std::vector<mglDataA*> list;
+	list.push_back(&x);	list.push_back(&y);	list.push_back(&p);	list.push_back(&r);	list.push_back(&u);
+
+	dual *a = new dual[2*nx];	memset(a,0,2*nx*sizeof(dual));	// Add "damping" area
+	dual *f = new dual[2*nx];	memset(f,0,2*nx*sizeof(dual));	// Effective "spectrum"
+#pragma omp parallel for
+	for(long i=0;i<nx;i++)	// Initial conditions
+		a[i+nx/2] = dual(ini_re->v(i), ini_im->v(i));
+	double *dmp = new double[2*nx];	memset(dmp,0,2*nx*sizeof(double));
+#pragma omp parallel for
+	for(long i=0;i<2*nx;i++)	// dumping
+	{
+		if(i<nx/2)		dmp[i] += gamma*mgl_ipow((nx/2-i)/mreal(nx/2),2);
+		if(i>3*nx/2)	dmp[i] += gamma*mgl_ipow((i-3*nx/2-1)/mreal(nx/2),2);
+	}
+	HADT ham;
+	for(long k=0;k<nt;k++)
+	{
+		y.Fill(k*dt);
+		memcpy(u.a,a+nx/2,nx*sizeof(dual));
+		memcpy(res->a+k*nx,a+nx/2,nx*sizeof(dual));
+		ham = mglFormulaCalcC(func, list);
+		ham->Save("/home/balakin/1.dat");
+		memset(f,0,2*nx*sizeof(dual));
+		const long i1=nx/2, i2=3*nx/2-1;
+#pragma omp parallel for
+		for(long j=0;j<nx;j++)
+		{
+			long jp = j<nx-1?j+1:0;
+			dual h1=dual(0,dd)*ham->a[nx*j], h2=dual(0,dd)*ham->a[nx-1+nx*j];
+			dual g1=(h1+dual(0,dd)*ham->a[nx*jp])/mreal(2), g2=(h2+dual(0,dd)*ham->a[nx-1+nx*jp])/mreal(2);
+			mreal k1=M_PI*2*j/nx, k2 = M_PI*(2*j+1)/nx;
+			for(long i=0;i<i1;i++)
+			{
+				f[2*j] += a[i]*exp(h1+dual(0,i*k1));
+				f[2*j+1] += a[i]*exp(g1+dual(0,i*k2));
+			}
+			for(long i=i1;i<i2;i++)
+			{
+				dual hh = ham->a[i-i1+nx*j];
+				f[2*j] += a[i]*exp(dual(0,dd)*hh+dual(0,i*k1));
+				f[2*j+1] += a[i]*exp(dual(0,dd)*(hh+ham->a[i-i1+nx*jp])/mreal(2)+dual(0,i*k2));
+			}
+			for(long i=i2;i<2*nx;i++)
+			{
+				f[2*j] += a[i]*exp(h2+dual(0,i*k1));
+				f[2*j+1] += a[i]*exp(g2+dual(0,i*k2));
+			}
+		}
+		memset(a,0,2*nx*sizeof(dual));
+#pragma omp parallel for
+		for(long i=0;i<2*nx;i++)
+		{
+			register long ii=i-i1;
+			if(ii<0)	ii=0;	if(ii>nx-1)	ii=nx-1;
+			double kk=M_PI*2*i/nx;
+			for(long j=0;j<nx;j++)
+			{
+				dual h1 = ham->a[ii+nx*j], g1 = (h1+ham->a[ii+nx*(j<nx-1?j+1:0)])/mreal(2);
+				a[i] += f[2*j]*exp(dual(0,dd)*h1-dual(0,kk*j));
+				a[i] += f[2*j+1]*exp(dual(0,dd)*g1-dual(0,kk*(j+0.5)));
+			}
+			a[i] *= exp(-dmp[i]*dt)/mreal(2*nx);
+		}
+		delete ham;
+	}
+	delete []a;	delete []f;	delete []dmp;
+	gr->LoadState();	return res;
+}
+//-----------------------------------------------------------------------------
+HMDT MGL_EXPORT mgl_pde_adv(HMGL gr, const char *ham, HCDT ini_re, HCDT ini_im, mreal dz, mreal k0, const char *opt)
+{
+	HADT res = mgl_pde_adv_c(gr,ham,ini_re,ini_im,dz,k0,opt);
+	HMDT out = mgl_datac_abs(res);	delete res;	return out;
+}
+//-----------------------------------------------------------------------------
+uintptr_t MGL_EXPORT mgl_pde_adv_c_(uintptr_t* gr, const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, mreal *dz, mreal *k0, const char *opt, int l, int lo)
+{	char *s=new char[l+1];	memcpy(s,ham,l);	s[l]=0;
+	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+	uintptr_t res = uintptr_t(mgl_pde_adv_c(_GR_, s, _DA_(ini_re), _DA_(ini_im), *dz, *k0, o));
+	delete []o;	delete []s;	return res;	}
+//-----------------------------------------------------------------------------
+uintptr_t MGL_EXPORT mgl_pde_adv_(uintptr_t* gr, const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, mreal *dz, mreal *k0, const char *opt, int l, int lo)
+{	char *s=new char[l+1];	memcpy(s,ham,l);	s[l]=0;
+	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+	uintptr_t res = uintptr_t(mgl_pde_adv(_GR_, s, _DA_(ini_re), _DA_(ini_im), *dz, *k0, o));
+	delete []o;	delete []s;	return res;	}
+//-----------------------------------------------------------------------------
+/*HADT MGL_EXPORT mgl_pde_adv_3d_c(HMGL gr, const char *ham, HCDT ini_re, HCDT ini_im, mreal dz, mreal k0, const char *opt)
+{
+	mreal gamma = gr->SaveState(opt);	if(mgl_isnan(gamma))	gamma = GAMMA;
+	mglPoint Min=gr->Min, Max=gr->Max;
+	long nx=ini_re->GetNx(), ny=ini_re->GetNy(), nz = long((Max.z-Min.z)/dz)+1;
+	if(nx<2 || nz<2 || Max.x==Min.x)			// Too small data
+	{	gr->SetWarn(mglWarnLow,"PDE");	return 0;	}
+	if(ini_im->GetNx()*ini_im->GetNy() != nx*ny)// Wrong dimensions
+	{	gr->SetWarn(mglWarnDim,"PDE");	return 0;	}
+	mglDataC *res=new mglDataC(nz, nx, ny);
+
+	mglDataV x(nx,ny), y(nx,ny), z, r(nx,ny);
+	mglDataW p(nx,ny), q(nx,ny);
+	x.s = L"x";	y.s = L"y";	p.s = L"p";	q.s = L"q";	z.s = L"z";	r.s=L"#$mgl";
+	//z.Fill(f->zz);
+	mreal dx = (Max.x-Min.x)/(nx-1), dy = ny>1?(Max.y-Min.y)/(ny-1):0;
+	mreal dp = M_PI/(Max.x-Min.x), dq = M_PI/(Max.y-Min.y);
+	double dd = k0*dz;
+	x.Fill(Min.x,Max.x,'x');	p.Freq(dp/k0,'x');
+	y.Fill(Min.y,Max.y,'y');	q.Freq(dq/k0,'y');
+
+	ddual *a = new ddual[4*nx*ny];	// Add "damping" area
+	ddual *f = new ddual[4*nx*ny];	// Effective "spectrum"
+	memset(a,0,4*nx*ny*sizeof(ddual));
+	memset(f,0,4*nx*ny*sizeof(ddual));
+#pragma omp parallel for collapse(2)
+	for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)	// Initial conditions
+	{
+		register long i0 = i+nx/2+2*nx*(j+ny/2);
+		a[i0] = dual(ini_re->v(i,j), ini_im->v(i,j));
+		res->a[nz*(i+nx*j)] = a[i0];
+	}
+	double *dmp = new double[4*nx*ny];
+	memset(dmp,0,4*nx*ny*sizeof(double));
+#pragma omp parallel for collapse(2)
+	for(long j=0;j<2*ny;j++)	for(long i=0;i<2*nx;i++)	// step 1
+	{
+		register long i0 = i+2*nx*j;
+		if(i<nx/2)		dmp[i0] += gamma*mgl_ipow((nx/2-i)/(nx/2.),2);
+		if(i>3*nx/2)	dmp[i0] += gamma*mgl_ipow((i-3*nx/2-1)/(nx/2.),2);
+		if(j<ny/2)		dmp[i0] += gamma*mgl_ipow((ny/2-j)/(ny/2.),2);
+		if(j>3*ny/2)	dmp[i0] += gamma*mgl_ipow((j-3*ny/2-1)/(ny/2.),2);
+	}
+	ddual *Hdat = new ddual[nx*nx*ny*ny];
+	for(long k=1;k<nz;k++)
+	{
+	}
+}*/
+//-----------------------------------------------------------------------------
+//
+//		Simplified PDE series
+//
+//-----------------------------------------------------------------------------
 struct mgl_pde_ham
 {
 	ddual *a,*hxy,*hxv,*huv,*huy;
@@ -205,6 +366,22 @@ HMDT MGL_EXPORT mgl_pde_solve(HMGL gr, const char *ham, HCDT ini_re, HCDT ini_im
 	HMDT out = mgl_datac_abs(res);	delete res;	return out;
 }
 //-----------------------------------------------------------------------------
+uintptr_t MGL_EXPORT mgl_pde_solve_c_(uintptr_t* gr, const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, mreal *dz, mreal *k0, const char *opt, int l, int lo)
+{	char *s=new char[l+1];	memcpy(s,ham,l);	s[l]=0;
+	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+	uintptr_t res = uintptr_t(mgl_pde_solve_c(_GR_, s, _DA_(ini_re), _DA_(ini_im), *dz, *k0, o));
+	delete []o;	delete []s;	return res;	}
+//-----------------------------------------------------------------------------
+uintptr_t MGL_EXPORT mgl_pde_solve_(uintptr_t* gr, const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, mreal *dz, mreal *k0, const char *opt, int l, int lo)
+{	char *s=new char[l+1];	memcpy(s,ham,l);	s[l]=0;
+	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+	uintptr_t res = uintptr_t(mgl_pde_solve(_GR_, s, _DA_(ini_re), _DA_(ini_im), *dz, *k0, o));
+	delete []o;	delete []s;	return res;	}
+//-----------------------------------------------------------------------------
+//
+//		ODE series
+//
+//-----------------------------------------------------------------------------
 struct mglOdeTxt	{	long n;	HMEX *eq;	const char *var;	};
 void MGL_NO_EXPORT mgl_txt_func(const mreal *x, mreal *dx, void *par)
 {
@@ -268,6 +445,10 @@ HMDT MGL_EXPORT mgl_ode_solve_ex(void (*func)(const mreal *x, mreal *dx, void *p
 	return res;
 }
 //-----------------------------------------------------------------------------
+//
+//		Common functions for quasioptical calculations
+//
+//-----------------------------------------------------------------------------
 void MGL_NO_EXPORT mgl_ray3d(const mreal *in, mreal *out, void *par)
 {
 	mglFormula *eqs = (mglFormula *)par;
@@ -288,6 +469,11 @@ HMDT MGL_EXPORT mgl_ray_trace(const char *ham, mreal x0, mreal y0, mreal z0, mre
 	mgl_data_set_id(res,"xyzpqvti");
 	return res;
 }
+//-----------------------------------------------------------------------------
+uintptr_t MGL_EXPORT mgl_ray_trace_(const char *ham, mreal *x0, mreal *y0, mreal *z0, mreal *px, mreal *py, mreal *pz, mreal *dt, mreal *tmax,int l)
+{	char *s=new char[l+1];	memcpy(s,ham,l);	s[l]=0;
+	uintptr_t res = uintptr_t(mgl_ray_trace(s, *x0,*y0,*z0, *px,*py,*pz, *dt,*tmax));
+	delete []s;	return res;	}
 //-----------------------------------------------------------------------------
 struct mgl_ap
 {
@@ -495,8 +681,13 @@ HMDT MGL_EXPORT mgl_qo2d_solve(const char *ham, HCDT ini_re, HCDT ini_im, HCDT r
 	HMDT out = mgl_datac_abs(res);	delete res;	return out;
 }
 //-----------------------------------------------------------------------------
+uintptr_t MGL_EXPORT mgl_qo2d_solve_(const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, uintptr_t* ray, mreal *r, mreal *k0, uintptr_t* xx, uintptr_t* yy, int l)
+{	char *s=new char[l+1];	memcpy(s,ham,l);	s[l]=0;
+	uintptr_t res = uintptr_t(mgl_qo2d_solve(s, _DA_(ini_re), _DA_(ini_im), _DA_(ray), *r, *k0, _DM_(xx), _DM_(yy)));
+	delete []s;	return res;	}
+//-----------------------------------------------------------------------------
 //
-//		QO2d series
+//		QO3d series
 //
 //-----------------------------------------------------------------------------
 struct mgl_qo3d_ham
@@ -713,6 +904,15 @@ HMDT MGL_EXPORT mgl_qo3d_solve(const char *ham, HCDT ini_re, HCDT ini_im, HCDT r
 	HMDT out = mgl_datac_abs(res);	delete res;	return out;
 }
 //-----------------------------------------------------------------------------
+uintptr_t MGL_EXPORT mgl_qo3d_solve_(const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, uintptr_t* ray, mreal *r, mreal *k0, uintptr_t* xx, uintptr_t* yy, uintptr_t* zz, int l)
+{	char *s=new char[l+1];	memcpy(s,ham,l);	s[l]=0;
+	uintptr_t res = uintptr_t(mgl_qo3d_solve(s, _DA_(ini_re), _DA_(ini_im), _DA_(ray), *r, *k0, _DM_(xx), _DM_(yy), _DM_(zz)));
+	delete []s;	return res;	}
+//-----------------------------------------------------------------------------
+//
+//		mglJacobian series
+//
+//-----------------------------------------------------------------------------
 MGL_NO_EXPORT void *mgl_jacob2(void *par)
 {
 	mglThreadD *t=(mglThreadD *)par;
@@ -820,28 +1020,6 @@ HMDT MGL_EXPORT mgl_jacobian_3d(HCDT x, HCDT y, HCDT z)
 	return r;
 }
 //-----------------------------------------------------------------------------
-uintptr_t MGL_EXPORT mgl_pde_solve_c_(uintptr_t* gr, const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, mreal *dz, mreal *k0, const char *opt, int l, int lo)
-{	char *s=new char[l+1];	memcpy(s,ham,l);	s[l]=0;
-	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
-	uintptr_t res = uintptr_t(mgl_pde_solve_c(_GR_, s, _DA_(ini_re), _DA_(ini_im), *dz, *k0, o));
-	delete []o;	delete []s;	return res;	}
-uintptr_t MGL_EXPORT mgl_pde_solve_(uintptr_t* gr, const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, mreal *dz, mreal *k0, const char *opt, int l, int lo)
-{	char *s=new char[l+1];	memcpy(s,ham,l);	s[l]=0;
-	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
-	uintptr_t res = uintptr_t(mgl_pde_solve(_GR_, s, _DA_(ini_re), _DA_(ini_im), *dz, *k0, o));
-	delete []o;	delete []s;	return res;	}
-uintptr_t MGL_EXPORT mgl_ray_trace_(const char *ham, mreal *x0, mreal *y0, mreal *z0, mreal *px, mreal *py, mreal *pz, mreal *dt, mreal *tmax,int l)
-{	char *s=new char[l+1];	memcpy(s,ham,l);	s[l]=0;
-	uintptr_t res = uintptr_t(mgl_ray_trace(s, *x0,*y0,*z0, *px,*py,*pz, *dt,*tmax));
-	delete []s;	return res;	}
-uintptr_t MGL_EXPORT mgl_qo2d_solve_(const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, uintptr_t* ray, mreal *r, mreal *k0, uintptr_t* xx, uintptr_t* yy, int l)
-{	char *s=new char[l+1];	memcpy(s,ham,l);	s[l]=0;
-	uintptr_t res = uintptr_t(mgl_qo2d_solve(s, _DA_(ini_re), _DA_(ini_im), _DA_(ray), *r, *k0, _DM_(xx), _DM_(yy)));
-	delete []s;	return res;	}
-uintptr_t MGL_EXPORT mgl_qo3d_solve_(const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, uintptr_t* ray, mreal *r, mreal *k0, uintptr_t* xx, uintptr_t* yy, uintptr_t* zz, int l)
-{	char *s=new char[l+1];	memcpy(s,ham,l);	s[l]=0;
-	uintptr_t res = uintptr_t(mgl_qo3d_solve(s, _DA_(ini_re), _DA_(ini_im), _DA_(ray), *r, *k0, _DM_(xx), _DM_(yy), _DM_(zz)));
-	delete []s;	return res;	}
 uintptr_t MGL_EXPORT mgl_jacobian_2d_(uintptr_t* x, uintptr_t* y)
 {	return uintptr_t(mgl_jacobian_2d(_DA_(x), _DA_(y)));	}
 uintptr_t MGL_EXPORT mgl_jacobian_3d_(uintptr_t* x, uintptr_t* y, uintptr_t* z)

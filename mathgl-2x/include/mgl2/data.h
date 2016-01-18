@@ -698,15 +698,15 @@ public:
 	/// Get the interpolated value and its derivatives in given data cell without border checking
 	mreal valueD(mreal x,mreal y=0,mreal z=0,mreal *dx=0,mreal *dy=0,mreal *dz=0) const
 	{	if(dx)	*dx=di;	if(dy)	*dy=dj;	if(dz)	*dz=dk;
-		return di*(x<nx/2?x:nx-x)+dj*(y<ny/2?y:ny-y)+dk*(z<nz/2?z:nz-z);	}
+		return di*(x<nx/2?x:x-nx)+dj*(y<ny/2?y:y-ny)+dk*(z<nz/2?z:z-nz);	}
 	/// Get the interpolated value in given data cell without border checking
 	mreal value(mreal x,mreal y=0,mreal z=0) const
-	{	return di*(x<nx/2?x:nx-x)+dj*(y<ny/2?y:ny-y)+dk*(z<nz/2?z:nz-z);	}
+	{	return di*(x<nx/2?x:x-nx)+dj*(y<ny/2?y:y-ny)+dk*(z<nz/2?z:z-nz);	}
 	mreal v(long i,long j=0,long k=0) const
-	{	return di*(i<nx/2?i:nx-i)+dj*(j<ny/2?j:ny-j)+dk*(k<nz/2?k:nz-k);	}
+	{	return di*(i<nx/2?i:i-nx)+dj*(j<ny/2?j:j-ny)+dk*(k<nz/2?k:k-nz);	}
 	mreal vthr(long ii) const
 	{	register long i=ii%nx, j=(ii/nx)%ny, k=ii/(nx*ny);
-		return di*(i<nx/2?i:nx-i)+dj*(j<ny/2?j:ny-j)+dk*(k<nz/2?k:nz-k);	}
+		return di*(i<nx/2?i:i-nx)+dj*(j<ny/2?j:j-ny)+dk*(k<nz/2?k:k-nz);	}
 	// add for speeding up !!!
 	mreal dvx(long ,long =0,long =0) const	{	return di;	}
 	mreal dvy(long ,long =0,long =0) const	{	return dj;	}

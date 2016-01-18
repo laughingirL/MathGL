@@ -2063,6 +2063,13 @@ public:
 	inline mglDataC PDEc(const char *ham, const mglDataA &ini_re, const mglDataA &ini_im, double dz=0.1, double k0=100, const char *opt="")
 	{	return mglDataC(true,mgl_pde_solve_c(gr,ham,&ini_re,&ini_im,dz,k0, opt));	}
 
+	/// Solve PDE with x,y,z in range axis range using advanced (slow!!!) method (2d only)
+	inline mglData APDE(const char *ham, const mglDataA &ini_re, const mglDataA &ini_im, double dz=0.1, double k0=100, const char *opt="")
+	{	return mglData(true,mgl_pde_adv(gr,ham,&ini_re,&ini_im,dz,k0, opt));	}
+	/// Solve PDE with x,y,z in range axis range using advanced (slow!!!) method (2d only)
+	inline mglDataC APDEc(const char *ham, const mglDataA &ini_re, const mglDataA &ini_im, double dz=0.1, double k0=100, const char *opt="")
+	{	return mglDataC(true,mgl_pde_adv_c(gr,ham,&ini_re,&ini_im,dz,k0, opt));	}
+
 	/// Fill data by formula with x,y,z in range axis range
 	inline void Fill(mglData &u, const char *eq, const char *opt="")
 	{	mgl_data_fill_eq(gr, &u, eq, 0, 0, opt);	}
