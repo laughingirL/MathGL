@@ -125,7 +125,7 @@ mglBase::mglBase()
 
 	strcpy(last_style,"__1 {dFFFF}k\0");
 	MinS.Set(-1,-1,-1);	MaxS.Set(1,1,1);
-	fnt = new mglFont;	fnt->gr = this;	PrevState=NAN;
+	fnt = new mglFont;	fnt->gr = this;	PrevState=NAN;	size_opt=NAN;
 }
 mglBase::~mglBase()
 {
@@ -1277,6 +1277,7 @@ mreal mglBase::SaveState(const char *opt)
 		mgl_strtrim(b);
 
 		mreal ff=atof(b),ss;
+		size_opt = NAN;
 		if(!strcmp(b,"on"))	ff=1;
 		if(!strcmp(a+1,"range"))
 		{
@@ -1295,7 +1296,7 @@ mreal mglBase::SaveState(const char *opt)
 		else if(!strcmp(a,"ambient"))	SetAmbient(ff);
 		else if(!strcmp(a,"diffuse"))	SetDifLight(ff);
 		else if(!strcmp(a,"size"))
-		{	SetMarkSize(ff);	SetFontSize(ff);	SetArrowSize(ff);	}
+		{	SetMarkSize(ff);	SetFontSize(ff);	SetArrowSize(ff);	size_opt=ff;	}
 		else if(!strcmp(a,"num") || !strcmp(a,"number") || !strcmp(a,"value"))	res=ff;
 		else if(!strcmp(a,"legend"))
 		{	if(*b=='\'')	{	b++;	b[strlen(b)-1]=0;	}	leg_str = b;	}

@@ -32,7 +32,7 @@ HADT MGL_NO_EXPORT mglFormulaCalcC(const char *str, const std::vector<mglDataA*>
 // Solve equation dx/dy = func(p,x,y,|u|)[u] where p=d/dx. There are no assumptions about form of func().
 HADT MGL_EXPORT mgl_pde_adv_c(HMGL gr, const char *func, HCDT ini_re, HCDT ini_im, mreal dt, mreal k0, const char *opt)
 {
-	mreal gamma = gr->SaveState(opt);	if(mgl_isnan(gamma))	gamma = 10;
+	mreal gamma = gr->SaveState(opt);	if(mgl_isnan(gamma))	gamma = 20;
 	mglPoint Min=gr->Min, Max=gr->Max;
 	long nx=ini_re->GetNx(), nt = long((Max.y-Min.y)/dt)+1;
 	if(nx<2 || nt<2 || Max.x==Min.x){	gr->SetWarn(mglWarnLow,"PDE");	return 0;	}	// Too small data
@@ -67,7 +67,6 @@ HADT MGL_EXPORT mgl_pde_adv_c(HMGL gr, const char *func, HCDT ini_re, HCDT ini_i
 		memcpy(u.a,a+nx/2,nx*sizeof(dual));
 		memcpy(res->a+k*nx,a+nx/2,nx*sizeof(dual));
 		ham = mglFormulaCalcC(func, list);
-		ham->Save("/home/balakin/1.dat");
 		memset(f,0,2*nx*sizeof(dual));
 		const long i1=nx/2, i2=3*nx/2-1;
 #pragma omp parallel for

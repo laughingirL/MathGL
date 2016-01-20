@@ -347,7 +347,8 @@ public:
 	int FaceNum;		///< Set approximate number of visible faces and lines. By default (=0) it draw everything.
 	char Arrow1, Arrow2;///< Style of arrows at end and at start of curve
 	long InUse;			///< Smart pointer (number of users)
-	uint32_t Flag;			///< Flags for controlling drawing
+	uint32_t Flag;		///< Flags for controlling drawing
+	mreal size_opt;		///< Value of size option (or NAN if not specified)
 
 	inline bool get(uint32_t fl) const	{	return Flag&fl;	}
 	inline void set(uint32_t fl)	{	Flag |= fl;	}
