@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QObject>
 #include <QStringList>
 
 class Backend : public QObject

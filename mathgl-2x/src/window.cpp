@@ -240,8 +240,10 @@ int MGL_EXPORT mgl_draw_graph(HMGL gr, void *p)
 //-----------------------------------------------------------------------------
 MGL_EXPORT void *mgl_draw_calc(void *p)
 {
+#if MGL_HAVE_PTHREAD_FLTK
 	mglDraw *d = (mglDraw *)p;
 	d->Calc();	d->running = false;
+#endif
 	return 0;
 }
 //-----------------------------------------------------------------------------
