@@ -45,7 +45,7 @@ void MGL_EXPORT mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCD
 	{
 		mglPoint p1,p2,p3,q;
 		gr->Reserve(m*3);
-		for(long i=0;i<m;i++)	if(nums->v(0,i)>=0 && nums->v(1,i)>=0 && nums->v(2,i)>=0) 
+		for(long i=0;i<m;i++)	if(nums->v(0,i)>=0 && nums->v(1,i)>=0 && nums->v(2,i)>=0)
 		{
 			register long k1 = long(nums->v(0,i)+0.5);
 			p1.Set(x->v(k1), y->v(k1), z->v(k1));
@@ -500,31 +500,25 @@ HMDT MGL_EXPORT mgl_triangulation_2d(HCDT x, HCDT y)
 	std::vector<Shx> pts;
 	Shx pt;
 
-	// Filter NaNs and Infs and calculate axiswise ranges
-
-	double min_r =  std::numeric_limits<double>::infinity();
-	double max_r = -std::numeric_limits<double>::infinity();
-	double min_c =  std::numeric_limits<double>::infinity();
-	double max_c = -std::numeric_limits<double>::infinity();
-
+	double x1=mglInf, x2=-mglInf, y1=mglInf, y2=-mglInf;
 	for(long i=0;i<n;i++)
 	{
-		pt.r = x->vthr(i);	pt.c = y->vthr(i);
+		register mreal xx=x->vthr(i), yy = y->vthr(i);
+		if(xx<x1)	x1=xx;	if(xx>x2)	x2=xx;
+		if(yy<y1)	y1=yy;	if(yy>y2)	y2=yy;
+	}
+	const double dx=x2-x1, dy=y2-y1;
+	if(dx==0 || dy==0)	return nums;
+	for(long i=0;i<n;i++)	// Filter NaNs and Infs
+	{
+		pt.r = (x->vthr(i)-x1)/dx;	pt.c = (y->vthr(i)-y1)/dy;
 		if(mgl_isbad(pt.r) || mgl_isbad(pt.c))	continue;
 		pt.id = i;    pts.push_back(pt);
-
-		min_r = std::min(min_r, pt.r);
-		min_c = std::min(min_c, pt.c);
-		max_r = std::max(max_r, pt.r);
-		max_c = std::max(max_c, pt.c);
 	}
 
 	std::vector<Triad> triads;
-
 	static const double float_eps = std::numeric_limits<float>::epsilon();
-	Dupex grid_step(float_eps*std::max((max_r - min_r), std::max(std::abs(max_r), std::abs(min_r))), 
-			float_eps * std::max((max_c - min_c), std::max(std::abs(max_c), std::abs(min_c))));
-
+	Dupex grid_step(float_eps, float_eps);
 	const size_t original_size = pts.size();
 
 	if(pts.size() >= 3u && 0. < grid_step.r && 0. < grid_step.c) {
@@ -534,7 +528,7 @@ HMDT MGL_EXPORT mgl_triangulation_2d(HCDT x, HCDT y)
 		if (pts.size() >= 3u && s_hull_pro(pts, triads) < 0) {
 			// Error occured. It may be caused by degenerated dataset. Well, let's try to increment rounding grid step.
 			// Why 4? Why not. There are no particular reasons for this.
-			grid_step.r *= 4.; 
+			grid_step.r *= 4.;
 			grid_step.c *= 4.;
 
 			out.clear();
@@ -543,12 +537,11 @@ HMDT MGL_EXPORT mgl_triangulation_2d(HCDT x, HCDT y)
 			de_duplicate(pts, out, grid_step);
 
 			if (pts.size() >= 3u && s_hull_pro(pts, triads) < 0) {
-				// Last try. Let's assume uniform points distribution and use range / sqrt(pts.size()) * 2 as epsilon. 
+				// Last try. Let's assume uniform points distribution and use range / sqrt(pts.size()) * 2 as epsilon.
 				// It removes a 3/4 of points in optimal case but in the worst case it merges all points to the one.
 				const double density = 1. + floor(0.5 + std::sqrt(static_cast<double>(pts.size())));
-				grid_step.r = (max_r - min_r) / density * 2.;
-				grid_step.c = (max_c - min_c) / density * 2.;
-  				
+				grid_step.r = grid_step.c = 2/density;
+
 				out.clear();
 				de_duplicate(pts, out, grid_step);
 
