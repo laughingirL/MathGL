@@ -77,12 +77,10 @@ D. Docs about JS interface
 	plot b(0)*(1-((x-b(1))/b(2))^2) 'g'
 5. Docs about MGL commands: 'print' and 'echo'
 6. Docs about mgl_pen_delta(), SetPenDelta(), 'pen_delta'
-7. Option to rewrite in 'savehdf'
 8. Docs about MGL command 'fscanf'
 9. About "#undef I"
-10. Docs about mgl_check_version() look as inverted?!?
-11. Replace 'rnd' -> 'dat' in samples
 12. mglQt, nglFLTK -- add 2-3 callback functions+toolbuttons+hotkeys for user(s) + update mglDraw documentation
+14. Docs about 'apde' ???
 
 YY. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using Stem()
 

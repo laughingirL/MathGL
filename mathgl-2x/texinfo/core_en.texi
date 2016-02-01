@@ -18,7 +18,7 @@ Some of MathGL features will appear only in novel versions. To test used MathGL 
 @deftypefnx {Method on @code{mglGraph}} @code{bool} CheckVersion (@code{const char *}ver) static
 @deftypefnx {C function} @code{int} mgl_check_version (@code{const char *}ver)
 @end ifclear
-Return nonzero if MathGL version is appropriate for required by @var{ver}, i.e. if major version is the same and minor version is greater or equal to one in @var{ver}.
+Return zero if MathGL version is appropriate for required by @var{ver}, i.e. if major version is the same and minor version is greater or equal to one in @var{ver}.
 @end deftypefn
 
 @menu

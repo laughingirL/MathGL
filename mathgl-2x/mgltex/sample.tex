@@ -75,7 +75,7 @@ As an alternative to this method of declaring signatures, the user can manually 
     }
   \end{verbatim}
 \item[mglcomment]
-  Used to contain multiline commentaries. This commentaries will be visible/invisible in the output document, depending on the use of the package options \texttt{comments} and \texttt{nocomments} (see above), or the \texttt{\mglcomments} and \texttt{\mglnocomments} commands (see bellow).
+  Used to contain multiline commentaries. This commentaries will be visible/invisible in the output document, depending on the use of the package options \texttt{comments} and \texttt{nocomments} (see above), or the \texttt{\mglcomments{on}} and \texttt{\mglcomments{off}} commands (see bellow).
   
   When, visible, the comment will appear like this:
   \begin{center}
@@ -128,9 +128,9 @@ The package also defines the following commands:
       \hline
     \end{tabular}
   \end{center}
-\item[\textbackslash{}mgltexon, \textbackslash{}mgltexoff]
+\item[\textbackslash{}mglswitch\{on\}, \textbackslash{}mglswitch\{off\}]
   To activate/deactivate the creation of MGL scripts and images. Notice these commands have local behavior in the sense that their effect is from the point they are called on.
-\item[\textbackslash{}mglcomment, \textbackslash{}mglnocomment]
+\item[\textbackslash{}mglcomment\{on\}, \textbackslash{}mglnocomment\{off\}]
   To make visible/invisible the contents of the \texttt{mglcomment} environments. These commands have local effect too.
 \item[\textbackslash{}mglTeX]
 	It just pretty prints the name of the package ``\mglTeX''.
@@ -431,25 +431,25 @@ The result is:
   that can have multiple lines
 \end{mglcomment}
 
-The following commentary won't be visible, since it is wrapped by \texttt{\textbackslash{}mglnocomments} and \texttt{\textbackslash{}mglcomments}.
+The following commentary won't be visible, since it is wrapped by \texttt{\textbackslash{}mglnocomments\{off\}} and \texttt{\textbackslash{}mglcomments\{on\}}.
 \begin{verbatim}
-  \mglnocomments
+  \mglcomments{off}
   \begin{mglcomment}
     This is an invisible commentary
     that can have multiple lines
   \end{mglcomment}
-  \mglcomments
+  \mglcomments{on}
 \end{verbatim}
-\mglnocomments
+\mglcomments{off}
 \begin{mglcomment}
   This is an invisible commentary
   that can have multiple lines
 \end{mglcomment}
-\mglcomments
+\mglcomments{on}
 
-The last example is the use of the \texttt{\textbackslash{}mgltexon} and \texttt{\textbackslash{}mgltexoff} commands. For example, the following image won't be generated:
+The last example is the use of the \texttt{\textbackslash{}mglswitch\{on\}} and \texttt{\textbackslash{}mglswitch\{off\}} commands. For example, the following image won't be generated:
 \begin{verbatim}
-  \mgltexoff
+  \mglswitch{off}
   \begin{figure}[!ht]
     \centering
     \begin{mgl}
@@ -457,10 +457,10 @@ The last example is the use of the \texttt{\textbackslash{}mgltexon} and \texttt
       fplot 'sin(pi*x)' '2B'
     \end{mgl}
   \end{figure}
-  \mgltexon
+  \mglswitch{on}
 \end{verbatim}
 The result is:
-\mgltexoff
+\mglswitch{off}
 \begin{figure}[!ht]
   \centering
   \begin{mgl}
@@ -468,5 +468,5 @@ The result is:
     fplot 'sin(pi*x)' '2B'
   \end{mgl}
 \end{figure}
-\mgltexon
+\mglswitch{on}
 \end{document}

@@ -648,8 +648,13 @@ Join data arrays from several text files which filenames satisfied the template 
 @deftypefnx {C function} @code{void} mgl_data_save (@code{HCDT} dat, @code{const char *}fname, @code{int} ns)
 @deftypefnx {C function} @code{void} mgl_datac_save (@code{HCDT} dat, @code{const char *}fname, @code{int} ns)
 @end ifclear
-Saves the whole data array (for @var{ns}=@code{-1}) or only @var{ns}-th slice to text file.
+Saves the whole data array (for @var{ns}=@code{-1}) or only @var{ns}-th slice to the text file @var{fname}.
 @end deftypefn
+
+@deftypefn {MGL command} {} save 'str' 'fname' ['mode'='a']
+Saves the string @var{str} to the text file @var{fname}. For parameter @var{mode}=@samp{a} will append string to the file (default); for @var{mode}=@samp{w} will overwrite the file.
+@end deftypefn
+
 
 @anchor{readhdf}
 @deftypefn {MGL command} {} readhdf @sc{dat} 'fname' 'dname'
@@ -663,7 +668,7 @@ Reads data array named @var{dname} from HDF5 or HDF4 file. This function does no
 @end deftypefn
 
 @anchor{savehdf}
-@deftypefn {MGL command} {} savehdf dat 'fname' 'dname'
+@deftypefn {MGL command} {} savehdf dat 'fname' 'dname' [@code{rewrite}=@code{off}]
 @ifclear UDAV
 @deftypefnx {Method on @code{mglDataA}} @code{void} SaveHDF (@code{const char *}fname, @code{const char *}dname, @code{bool} rewrite=@code{false}) @code{const}
 @deftypefnx {C function} @code{void} mgl_data_save_hdf (@code{HCDT} dat, @code{const char *}fname, @code{const char *}dname, @code{int} rewrite)

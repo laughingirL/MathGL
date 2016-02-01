@@ -18,7 +18,7 @@
 @deftypefnx {Метод класса @code{mglGraph}} @code{bool} CheckVersion (@code{const char *}ver) static
 @deftypefnx {Функция С} @code{int} mgl_check_version (@code{const char *}ver)
 @end ifclear
-Возвращает ненулевое значение если версия MathGL подходит для требуемой в @var{ver}, т.е. если номер основной версии совпадает и "подверсия" больше или равна указанной в @var{ver}.
+Возвращает нулевое значение если версия MathGL подходит для требуемой в @var{ver}, т.е. если номер основной версии совпадает и "подверсия" больше или равна указанной в @var{ver}.
 @end deftypefn
 
 @menu

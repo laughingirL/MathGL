@@ -9,7 +9,10 @@
 * Add MGL command 'fscanf' for getting formated data from textual file.
 * Add MGL command 'echo' for printing the content of data.
 * Add MGL command 'print' -- like 'info' but print immediately in stdout.
+* Allow MGL command 'save' append textual strings to a file.
 * Add option to rewrite file in 'savehdf'.
+
+* Add callback functions to mglQt, nglFLTK, and extend mglDraw class for easy multi-threading calculation.
 
 * Force set focus for editor in UDAV.
 * Add line numbers to UDAV editor. Cyan number denote current line, red numbers denote lines with errors.
@@ -19,7 +22,7 @@
 
 * INCOMPATIBLE: Scale internally d1,d2 arguments in Curve() to be exactly the same as Bezier curve (P0=p1, P1=d1+p1, P2=p2-d2, P3=p2).
 
-* Bugfixes.
+* Minor bugfixes and improvements.
 
 2.3.3 Released 01 June 2015
 

@@ -3880,14 +3880,14 @@ int sample(mglGraph *gr)
 
 Nonlinear fitting is rather simple. All that you need is the data to fit, the approximation formula and the list of coefficients to fit (better with its initial guess values). Let me demonstrate it on the following simple example. First, let us use sin function with some random noise:
 @verbatim
-  mglData rnd(100), in(100); //data to be fitted and ideal data
-  gr->Fill(rnd,"0.4*rnd+0.1+sin(2*pi*x)");
+  mglData dat(100), in(100); //data to be fitted and ideal data
+  gr->Fill(dat,"0.4*rnd+0.1+sin(2*pi*x)");
   gr->Fill(in,"0.3+sin(2*pi*x)");
 @end verbatim
 and plot it to see that data we will fit
 @verbatim
   gr->Title("Fitting sample");
-  gr->SetRange('y',-2,2); gr->Box();  gr->Plot(rnd, "k. ");
+  gr->SetRange('y',-2,2); gr->Box();  gr->Plot(dat, "k. ");
   gr->Axis(); gr->Plot(in, "b");
   gr->Puts(mglPoint(0, 2.2), "initial: y = 0.3+sin(2\\pi x)", "b");
 @end verbatim
@@ -3896,7 +3896,7 @@ The next step is the fitting itself. For that let me specify an initial values @
 @verbatim
   mreal ini[3] = {1,1,3};
   mglData Ini(3,ini);
-  mglData res = gr->Fit(rnd, "a+b*sin(c*x)", "abc", Ini);
+  mglData res = gr->Fit(dat, "a+b*sin(c*x)", "abc", Ini);
 @end verbatim
 Now display it
 @verbatim
@@ -3911,16 +3911,16 @@ The full sample code for nonlinear fitting is:
 @verbatim
 int sample(mglGraph *gr)
 {
-  mglData rnd(100), in(100);
-  gr->Fill(rnd,"0.4*rnd+0.1+sin(2*pi*x)");
+  mglData dat(100), in(100);
+  gr->Fill(dat,"0.4*rnd+0.1+sin(2*pi*x)");
   gr->Fill(in,"0.3+sin(2*pi*x)");
   mreal ini[3] = {1,1,3};
   mglData Ini(3,ini);
 
-  mglData res = gr->Fit(rnd, "a+b*sin(c*x)", "abc", Ini);
+  mglData res = gr->Fit(dat, "a+b*sin(c*x)", "abc", Ini);
 
   gr->Title("Fitting sample");
-  gr->SetRange('y',-2,2); gr->Box();  gr->Plot(rnd, "k. ");
+  gr->SetRange('y',-2,2); gr->Box();  gr->Plot(dat, "k. ");
   gr->Axis();   gr->Plot(res, "r"); gr->Plot(in, "b");
   gr->Puts(mglPoint(-0.9, -1.3), "fitted:", "r:L");
   gr->PutsFit(mglPoint(0, -1.8), "y = ", "r");

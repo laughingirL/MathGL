@@ -22,13 +22,21 @@ endif(NOT TEXMFLOCALDIR)
 
 # set(extramgl Axis_projection Vectorial)
 
+add_custom_command(OUTPUT mgltex.sty
+	COMMAND ${CMAKE_COMMAND} -E copy ${MathGL_SOURCE_DIR}/mgltex/mgltex.dtx ${MathGL_BINARY_DIR}/mgltex/
+	COMMAND ${CMAKE_COMMAND} -E copy ${MathGL_SOURCE_DIR}/mgltex/Recompilation_decision.pdf ${MathGL_BINARY_DIR}/mgltex/
+	${findpdflatex} mgltex.dtx
+	${findpdflatex} mgltex.dtx
+	${findpdflatex} mgltex.dtx
+	DEPENDS mgltex.dtx Recompilation_decision.pdf )
+
 add_custom_command(OUTPUT sample.pdf
 	COMMAND ${CMAKE_COMMAND} -E make_directory ${MathGL_BINARY_DIR}/mgltex/MGL
 	COMMAND ${CMAKE_COMMAND} -E make_directory ${MathGL_BINARY_DIR}/mgltex/MGL/scripts
 	COMMAND ${CMAKE_COMMAND} -E make_directory ${MathGL_BINARY_DIR}/mgltex/MGL/backups
 	COMMAND ${CMAKE_COMMAND} -E make_directory ${MathGL_BINARY_DIR}/mgltex/MGL/graphics
 	COMMAND ${CMAKE_COMMAND} -E copy ${MathGL_SOURCE_DIR}/mgltex/sample.tex ${MathGL_BINARY_DIR}/mgltex/
-	COMMAND ${CMAKE_COMMAND} -E copy ${MathGL_SOURCE_DIR}/mgltex/mgltex.sty ${MathGL_BINARY_DIR}/mgltex/
+# 	COMMAND ${CMAKE_COMMAND} -E copy ${MathGL_SOURCE_DIR}/mgltex/mgltex.sty ${MathGL_BINARY_DIR}/mgltex/
 	COMMAND PATH=$<TARGET_FILE_DIR:mglconv> ${findpdflatex} --shell-escape -draftmode sample.tex
 	COMMAND PATH=$<TARGET_FILE_DIR:mglconv> ${findpdflatex} --shell-escape -draftmode sample.tex
 	COMMAND PATH=$<TARGET_FILE_DIR:mglconv> ${findpdflatex} --shell-escape sample.tex
@@ -39,6 +47,6 @@ get_directory_property(mglconv_clean ADDITIONAL_MAKE_CLEAN_FILES)
 set(mglconv_clean ${mglconv_clean} scripts mgltex.sty sample.tex sample.aux sample.log)
 set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "${mglconv_clean}")
 
-install(FILES mgltex.sty DESTINATION ${TEXMFLOCALDIR}/tex/latex/mgltex/)
+install(FILES ${MathGL_BINARY_DIR}/mgltex/mgltex.sty DESTINATION ${TEXMFLOCALDIR}/tex/latex/mgltex/)
 install(FILES sample.tex mgltex.pdf ${MathGL_BINARY_DIR}/mgltex/sample.pdf DESTINATION ${TEXMFLOCALDIR}/doc/latex/mgltex/)
 install(CODE "execute_process(COMMAND ${findmktexlsr} ${TEXMFLOCALDIR})")

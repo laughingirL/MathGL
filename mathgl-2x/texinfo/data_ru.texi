@@ -647,6 +647,10 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 Сохраняет весь массив данных при @var{ns}=@code{-1} или только @var{ns}-ый срез в текстовый файл.
 @end deftypefn
 
+@deftypefn {MGL command} {} save 'str' 'fname' ['mode'='a']
+Сохраняет строку @var{str} в файл @var{fname}. Для параметра @var{mode}=@samp{a} происходит добавление строки (по умолчанию): для  @var{mode}=@samp{w} файл будет перезаписан.
+@end deftypefn
+
 @anchor{readhdf}
 @deftypefn {Команда MGL} {} readhdf @sc{dat} 'fname' 'dname'
 @ifclear UDAV
@@ -659,7 +663,7 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @end deftypefn
 
 @anchor{savehdf}
-@deftypefn {Команда MGL} {} savehdf dat 'fname' 'dname'
+@deftypefn {Команда MGL} {} savehdf dat 'fname' 'dname' [@code{rewrite}=@code{off}]
 @ifclear UDAV
 @deftypefnx {Метод класса @code{mglDataA}} @code{void} SaveHDF (@code{const char *}fname, @code{const char *}dname, @code{bool} rewrite=@code{false}) @code{const}
 @deftypefnx {Функция С} @code{void} mgl_data_save_hdf (@code{HCDT} dat, @code{const char *}fname, @code{const char *}dname, @code{int} rewrite)

@@ -1,7 +1,7 @@
 % \iffalse meta-comment
 %
-% Copyright (C) 2014--2015 by Diego Sejas Viscarra <diego.mathematician@gmail.com>
-% Copyright (C) 2014--2015 by Alexey Balakin <mathgl.abalakin@gmail.com>
+% Copyright (C) 2014--2016 by Diego Sejas Viscarra <dsejas.mathematics@gmail.com>
+% Copyright (C) 2014--2016 by Alexey Balakin <mathgl.abalakin@gmail.com>
 %
 % This program is free software: you can redistribute it and/or modify it
 % under the terms of the GNU General Public License as published by the
@@ -22,14 +22,17 @@
 %
 %<package>
 %<package>\NeedsTeXFormat{LaTeX2e}
-%<package>\ProvidesPackage{mgltex}[2015/11/07 v4.0 Embed MGL scripts into LaTeX documents]
+%<package>\ProvidesPackage{mgltex}[2016/01/28 v4.1 Embed MGL scripts into LaTeX documents]
 %<package>
 %
 %<*driver>
 \documentclass[10pt]{ltxdoc}
 \usepackage{color}
-\IfFileExists{hyperref.sty}{\usepackage{hyperref}}{}
+\IfFileExists{hyperref.sty}{%
+	\usepackage[hidelinks=true]{hyperref}%
+}{}
 \usepackage{mgltex}
+\def\mglTeX{mgl\TeX} % Otherwise, incompatibility with \CharacterTable
 \EnableCrossrefs
 \CodelineIndex
 \RecordChanges
@@ -41,7 +44,8 @@
 %</driver>
 % \fi
 %
-% \CheckSum{1520}
+% \CheckSum{0}
+%
 %
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -97,7 +101,7 @@
 % \changes{v4.0}{/2015/08/17}{Completely rewrite of \textsf{\mglTeX}}
 % \changes{v4.0}{/2015/08/17}{\textsf{\mglTeX} now depends of the \textsf{verbatim} package}
 % \changes{v4.0}{/2015/08/17}{All environments write their contents \emph{verbatim}}
-% \changes{v4.0}{/2015/08/17}{Remove \texttt{\textbackslash mglquality} command. Instead, add package options \texttt{0q}, \ldots, \texttt{8q} to specify quality}
+% \changes{v4.0}{/2015/08/17}{Add package options \texttt{0q}, \ldots, \texttt{8q} to specify quality}
 % \changes{v4.0}{/2015/08/17}{Add the \texttt{\textbackslash mglpaths} command to add directories to the search paths for MGL scripts}
 % \changes{v4.0}{/2015/08/17}{Add the \texttt{\textbackslash mglname} command to force clousure of the current main script, its compilation, and the opening of a new main script}
 % \changes{v4.0}{/2015/08/17}{Add the option \texttt{label} to the \texttt{mgl} environment in order to override the automatic naming of the script and corresponding image}
@@ -111,16 +115,26 @@
 % \changes{v4.0}{/2015/08/17}{Verbatim-like environments and the \texttt{\textbackslash mglinclude} command have starred versions wich prevent the command \texttt{\textbackslash listofmglscripts} to list them}
 % \changes{v4.0}{/2015/08/17}{Remove \texttt{mglsignature} environment for being considered useless, and to avoid interference with the detection of changes in MGL scripts, to speed up script writing and to make the package less resource-consuming}
 % \changes{v4.0}{/2015/08/17}{Remove the \texttt{\textbackslash mglwidth} and \texttt{\textbackslash mglheight} commands for being considered useless}
-% \changes{v4.0}{/2015/08/17}{Remove the \texttt{\textbackslash MGL@setkeys} command since it isn't needed as first thought}
-% \changes{v4.0}{/2015/08/17}{\textsf{\mglTeX} is more customizable now}
+% \changes{v4.0}{/2015/08/17}{Remove the \texttt{\textbackslash MGL@setkeys} command, since it isn't needed as first thought}
 % \changes{v4.0}{/2015/08/17}{Many improvements, including, but not limited to, speed up, increased coherence and cleanness of the code, less resource consumption}
 % \changes{v4.0}{/2015/08/17}{Many bugfixes}
+%
+% \changes{v4.1}{/2016/01/28}{Add the command \texttt{\textbackslash mglimgext} to specify locally the extension to save the generated graphics}
+% \changes{v4.1}{/2016/01/28}{Add the command \texttt{\textbackslash mglswitch}, which replaces \texttt{\textbackslash mgltexon} and \texttt{\textbackslash mgltexoff}}
+% \changes{v4.1}{/2016/01/28}{Rename the commands \texttt{\textbackslash mgltexon} as \texttt{\textbackslash MGL@switch@on} and \texttt{\textbackslash mgltexoff} as \texttt{\textbackslash MGL@switch@off} in order to avoid the user from unpurposely overwriting them}
+% \changes{v4.1}{/2016/01/28}{The command \texttt{\textbackslash mglcomments} has been reimplemented to accept one mandatory argument: \texttt{\textbackslash mglcomments\{on\}} replaces the old \texttt{\textbackslash mglcomments}, while \texttt{\textbackslash mglcomments\{off\}} replaces the old \texttt{\textbackslash mglnocomments}}
+% \changes{v4.1}{/2016/01/28}{Remove the command \texttt{\textbackslash mglnocomments} (rendered useless by the new implementation of \texttt{\textbackslash mglcomments})}
+% \changes{v4.1}{/2016/01/28}{Remove the command \texttt{\textbackslash mglTeXwVer} (rendered useless by the implementation of the starred version of \texttt{\textbackslash mglTeX})}
+% \changes{v4.1}{/2016/01/28}{Restore the command \texttt{\textbackslash mglsettings}, which was unintentionally deleted in version~4.0}
+% \changes{v4.1}{/2016/01/28}{Expand the key-val list family for the command \texttt{\textbackslash mglsettings}}
+% \changes{v4.1}{/2016/01/28}{Reimplement the \texttt{\textbackslash @MGL@comments@} switch}
+% \changes{v4.1}{/2016/01/28}{A starred version of the command \texttt{\textbackslash mglTeX} has been implemented, which prints the version of the package besides its name}
 %
 % \GetFileInfo{mgltex.sty}
 %
 % \DoNotIndex{\def,\bgroup,\egroup,\newcommand,\newenvironment,\\,\@onlypreamble,\@undefined,\@vobeyspaces,\list}
 % \DoNotIndex{\if,\else,\fi,\begingroup,\endgroup,\end,\edef,\xdef,\gdef,\scapechar,\active,\arabic,\catcode,\bfseries}
-% \DoNotIndex{\@flushglue,\@for,\@ifnextchar,\@makeother,\{,\},\^,\ ,\AtBeginDocument,\AtEndDocument,\centering}
+% \DoNotIndex{\@flushglue,\@for,\@ifnextchar,\@makeother,\{,\},\ ,\AtBeginDocument,\AtEndDocument,\centering}
 % \DoNotIndex{\closein,\closeout,\csname,\endcsname,\CurrentOption,\DeclareGraphicsExtensions,\define@key,\DeclareOption}
 % \DoNotIndex{\detokenize,\do,\dospecials,\endlinechar,\endlist,\escapechar,\ExecuteOptions,\expandafter,\footnotesize}
 % \DoNotIndex{\framebox,\Gin@extensions,\Huge,\ifeof,\IfFileExists,\ifx,\immediate,\include,\includegraphics,\item,\itemsep}
@@ -128,10 +142,18 @@
 % \DoNotIndex{\obeyspaces,\openin,\openout,\PackageError,\PackageWarning,\parfillskip,\parindent,\parskip}
 % \DoNotIndex{\PassOptionsToPackage,\ProcessOptions,\read,\relax,\RequirePackage,\rightskip,\setcounter,\setkeys,\setlength}
 % \DoNotIndex{\space,\stepcounter,\string,\TeX,\the,\vbox,\verbatim@font,\write,\z@,\z@skip,\newif,\PackageInfo,\today}
-% \DoNotIndex{\obeylines,\or\ifcase,\small}
+% \DoNotIndex{\obeylines,\or,\ifcase,\small,\vskip,\section,\refstepcounter,\protect,\pretolerance,\penalty,\ttfamily}
+% \DoNotIndex{\@@par,\@@,\@M,\@addtofilelist,\@auxout,\@bsphack,\@dottedtocline,\@empty,\@esphack,\@fornoop,\@fortmp}
+% \DoNotIndex{\@gobble,\@ifundefined,\@mkboth,\@namedef,\@nil,\@nnil,\@noitemerr,\@plus,\@pnumwidth,\@secpenalty}
+% \DoNotIndex{\@startsection,\@starttoc,\@tempdima,\@tempswatrue,\@totalleftmargin,\@unknownoptionerror,\@xobeysp}
+% \DoNotIndex{\^,\addcontentsline,\addpenalty,\addvspace,\advance,\begin,\c@tocdepth,\center,\chapter,\cleaders}
+% \DoNotIndex{\endcenter,\everypar,\fbox,\fboxrule,\frenchspacing,\g@addto@macro,\global,\hb@xt@,\hbadness,\hfil,\hfill}
+% \DoNotIndex{\hrule,\hskip,\hss,\if@minipage,\if@tempswa,\ifhmode,\ifnum,\interlinepenalty,\itemindent,\kern,\l@chapter}
+% \DoNotIndex{\l@section,\large,\leavevmode,\MakeUppercase,\newdimen,\nobreak,\nopagebreak,\normalfont,\null,\numberline}
+% \DoNotIndex{\p@,\par,\unpenalty,\usecounter,\@ifstar,\^}
 %
 % \title{The \textsf{\mglTeX} package\thanks{This document corresponds to \textsf{\mglTeX}~\fileversion, dated \filedate.}}
-% \author{Diego Sejas Viscarra\\\texttt{diego.mathematician@gmail.com}}
+% \author{Diego Sejas Viscarra\\\texttt{dsejas.mathematics@gmail.com}}
 %
 % \maketitle
 %
@@ -150,6 +172,21 @@
 %
 % Besides the obvious advantage of having available all the useful features of MathGL, \textsf{\mglTeX} facilitates the maintenance of your document, since both code for text and code for graphics are contained in a single file.
 %
+% \subsection{Conventions and notations}
+% \noindent For what's left of this manual, the symbols ``$\langle$'' and ``$\rangle$'' will enclose the description of an object that should be placed in that location; this is called a \emph{meta-variable}. For example, $\meta{text}$ is a meta-variable that indicates that in that location should be placed any form of text.
+%
+% In order to save space and time, some special conventions should be applied to meta-variables:
+% \begin{enumerate}
+%   \item Any meta-variable that contain the word \emph{directory} indicates the name of a directory, in the form of an absolute or relative path, ending with the slash (``/'') character.
+%   \item Any meta-variable that contain the word \emph{subdirectory} indicates a relative path ending with the slash (``/'') character.
+%   \item \meta{$x_1\vert x_2\vert\ldots\vert x_n$} indicates that any of the values $x_1$, $x_2$, \ldots, $x_n$ can be placed there.
+%   \item A meta-variable of the form \meta{list of something} or \meta{something list} indicate a comma-separated list of values of type $\meta{something}$; if only one value is used, no comma is needed.
+% \item A meta-variable with underscores (``\_'') in its description indicate that spaces should not be used in that location.
+% \item \meta{key-val list} refers to a list of \meta{key}=\meta{value} pairs of options, where \meta{key} is a keyword name for an option and \meta{value} is a value assigned to it.
+% \end{enumerate}
+%
+% As is conventional for \LaTeX{} packages, the commands and environments of \textsf{\mglTeX{}} accept optional commands inside brackets and mandatory arguments inside curly braces.
+%
 % \section{Usage}
 % \noindent The simplest way to load \textsf{\mglTeX} to a \LaTeX{} document is to write the command
 % \begin{center}
@@ -159,7 +196,7 @@
 % \begin{center}
 % |\usepackage|\oarg{options list}|{mgltex}|,  
 % \end{center}
-% where \meta{options list} is a comma-separated list that can contain one or more of the following options:
+% where \meta{options list} can contain one or more of the following options:
 % \begin{itemize}
 %   \item |draft|: The generated images won't be included in the document. This option is useful when fast compilation of the document is needed.
 %   \item |final|: Overrides the |draft| option.
@@ -206,7 +243,7 @@
 % \end{itemize}
 % If two or more mutually exclusive options are specified, only the last one will be used by \textsf{\mglTeX}. For example, if one specifies the options |0q|, |3q| and |8q|---in that order---, then the quality will be set to $8$.
 %
-% Observe the |off| option is similar to the |draft| option, with the exception that |draft| deactivates inclusion of graphics for the \textsf{\mglTeX} and \textsf{graphicx} packages, while the |off| option only deactivates \textsf{\mglTeX} functionalities (creation and/or inclusion of scripts and graphics), not affecting \textsf{graphicx}. This could be useful to recognize which images are created with MGL, and which are only included. Another possible use for this option is to avoid recompilation of scripts when they must be constantly changed until their final version.\footnote{\textsf{\mglTeX} has a convinient recompilation-decision algorithm that enables recompilation for changed scripts only (see subsection \ref{subsection: recompilation decision}).}
+% Observe the |off| option is similar to the |draft| option, with the exception that |draft| deactivates inclusion of graphics for the \textsf{\mglTeX} and \textsf{graphicx} packages simultaneously, while the |off| option only deactivates \textsf{\mglTeX} functionalities (creation and/or inclusion of scripts and graphics), not affecting \textsf{graphicx}. This could be useful to recognize which images are created with MGL, and which are only included. Another possible use for this option is to avoid recompilation of scripts when they must be constantly changed until their final version.\footnote{\textsf{\mglTeX} has a convinient recompilation-decision algorithm that enables recompilation for changed scripts only (see subsection \ref{subsection: recompilation decision}).}
 %
 % There are two ways to compile a document with \textsf{\mglTeX}: The first way is to run
 % \begin{center}
@@ -244,60 +281,8 @@
 %|\end{|\meta{MGL environment}|}|\meta{text}
 % \end{quote}
 %
-% \subsection{Setting up \textsf{\mglTeX} for use}
-% \noindent Although \textsf{\mglTeX} is completely functional without any further set up, there are some parameters of its behavior that could be useful to modify. The following commands must be used in the preamble of the document only, since the first MGL script is created at the moment of the |\begin{document}| command, and otherwise they could create weird errors during compilation; trying to use them somewhere else will produce an error. 
-%
-% \DescribeMacro{\mgldir} This command can be used to specify the main working directory for \textsf{\mglTeX}. Inside it, the scripts, backup files and graphics will be created, or can be separated inside subdirectories. This is useful, for example, to avoid many scripts and graphics from polluting the directory where the \LaTeX{} document is.
-% \begin{center}
-%   \begin{tabular}{l}
-%     \hline\\[-0.75em]
-%     |\mgldir|\marg{\mglTeX{} main directory}\\[0.25em]
-%     \hline
-%   \end{tabular}
-% \end{center}
-% \meta{\mglTeX{} main directory} can be in the form of an absolute path or a relative path, and should be an existing location, since it won't be created automatically.
-%
-% \DescribeMacro{\mglscriptsdir} It specifies the subdirectory inside \meta{\mglTeX{} main directory} where the MGL scripts will be created.
-% \begin{center}
-%   \begin{tabular}{l}
-%     \hline\\[-0.75em]
-%     |\mglscriptsdir|\marg{MGL scripts subdirectory}\\[0.25em]
-%     \hline
-%   \end{tabular}
-% \end{center}
-%
-% \DescribeMacro{\mglgraphicsdir} It specifies the subdirectory inside \meta{\mglTeX{} main directory} where the MGL graphics will be created, including the ones from external scripts (not embedded inside the \LaTeX{} document).
-% \begin{center}
-%   \begin{tabular}{l}
-%     \hline\\[-0.75em]
-%     |\mglgraphicsdir|\marg{MGL graphics subdirectory}\\[0.25em]
-%     \hline
-%   \end{tabular}
-% \end{center}
-%
-% \DescribeMacro{\mglbackupsdir} It specifies the subdirectory inside \meta{\mglTeX{} main directory} where backups for the MGL scripts will be created.
-% \begin{center}
-%   \begin{tabular}{l}
-%     \hline\\[-0.75em]
-%     |\mglbackupsdir|\marg{MGL backups subdirectory}\\[0.25em]
-%     \hline
-%   \end{tabular}
-% \end{center}
-%
-% The above commands can be used in various combinations. For example, if none of them is used, the scripts, graphics and backups will be created inside the same path where the \LaTeX{} document is being compiled; if only |\mgldir| is used, they will be created inside \meta{\mglTeX{} main directory}; if only |\mgldir| and |\mglscriptsdir| are used, the scripts will be created inside \meta{\mglTeX{} main directory}\meta{MGL scripts directory}, while the graphics and backups will be inside \meta{\mglTeX{} main directory} only; if |\mgldir| isn't used, but the other commands are, the \meta{MGL scripts subdirectory}, \meta{MGL graphics subdirectory} and \meta{MGL backups subdirectory} paths will be inside the the folder where the \LaTeX{} document is being compiled.
-%
-% \DescribeMacro{\mglpaths} In case of having external MGL scripts, it is not recommended to place them inside the same location as where the embedded scripts are extracted, since they could be accidentally overwritten or deleted by the user; they should be separated in a folder which can be specified in the form of an absolute or relative path using this command.
-% \begin{center}
-%   \begin{tabular}{l}
-%     \hline\\[-0.75em]
-%     |\mglpaths|\marg{List of external MGL scripts paths/}\\[0.25em]
-%     \hline
-%   \end{tabular}
-% \end{center}
-% This command can be used many times or can be used to specify many paths at once. In the case of using it many times, each call will add the new directory to the list of searching paths; if it is used to specify many paths at once, they must be separated by commas.
-%
 % \subsection{Environments for MGL code embedding}
-% \DescribeEnv{mgl}\noindent The main environment defined by \textsf{\mglTeX} is |mgl|. It extracts its contents to a main script, called \meta{name}.mgl, where \meta{name} stands for a name specified by the user with the |\mglname| command (see below), or the name of the \LaTeX{} document being executed otherwise; this script is compiled, and the corresponding image is included.
+% \DescribeEnv{mgl}\noindent The main environment defined by \textsf{\mglTeX} is |mgl|. It extracts its contents to a main script, called \meta{main\_script\_name}.mgl, where \meta{main\_script\_name} stands for a name specified by the user with the |\mglname| command (see below), or the name of the \LaTeX{} document being executed otherwise; this script is compiled, and the corresponding image is included.
 % \begin{center}
 %   \begin{tabular}{l}
 %     \hline\\[-0.75em]
@@ -380,7 +365,7 @@
 % \begin{center}
 %   \begin{tabular}{l}
 %     \hline\\[-0.75em]
-%     |\begin{mglsetup}|\marg{keyword}\\[0.5em]
+%     |\begin{mglsetup}|\marg{key\_word}\\[0.5em]
 %       \hss\meta{MGL code}\hss\\[0.5em]
 %     |\end{mglsetup}|\\[0.25em]
 %     \hline
@@ -405,9 +390,18 @@
 % \begin{center}
 %   \begin{tabular}{l}
 %     \hline\\[-0.75em]
-%     |\begin{mglblock}|\oarg{lineno value}\marg{script\_name}\\[0.5em]
+%     |\begin{mglblock}|\oarg{key-val list}\marg{script\_name}\\[0.5em]
 %       \hss\meta{MGL code}\hss\\[0.5em]
 %     |\end{mglblock}|\\[0.25em]
+%     \hline
+%   \end{tabular}
+% \end{center}
+% \begin{center}
+%   \begin{tabular}{l}
+%     \hline\\[-0.75em]
+%     |\begin{mglblock*}|\oarg{key-val list}\marg{script\_name}\\[0.5em]
+%       \hss\meta{MGL code}\hss\\[0.5em]
+%     |\end{mglblock*}|\\[0.25em]
 %     \hline
 %   \end{tabular}
 % \end{center}
@@ -443,6 +437,15 @@
 %     |\begin{mglverbatim}|\oarg{key-val list}\\[0.5em]
 %       \hss\meta{MGL code}\hss\\[0.5em]
 %     |\end{mglverbatim}|\\[0.25em]
+%     \hline
+%   \end{tabular}
+% \end{center}
+% \begin{center}
+%   \begin{tabular}{l}
+%     \hline\\[-0.75em]
+%     |\begin{mglverbatim*}|\oarg{key-val list}\\[0.5em]
+%       \hss\meta{MGL code}\hss\\[0.5em]
+%     |\end{mglverbatim*}|\\[0.25em]
 %     \hline
 %   \end{tabular}
 % \end{center}
@@ -500,7 +503,14 @@
 % \begin{center}
 %   \begin{tabular}{l}
 %     \hline\\[-0.75em]
-%     |\mglinclude|\marg{script\_name}\oarg{lineno boolean value}\\[0.25em]
+%     |\mglinclude|\marg{script\_name}\oarg{key-val list}\\[0.25em]
+%     \hline
+%   \end{tabular}
+% \end{center}
+% \begin{center}
+%   \begin{tabular}{l}
+%     \hline\\[-0.75em]
+%     |\mglinclude*|\marg{script\_name}\oarg{key-val list}\\[0.25em]
 %     \hline
 %   \end{tabular}
 % \end{center}
@@ -524,9 +534,18 @@
 %   \end{tabular}
 % \end{center}
 %
-% The use of this command is encourage when writing large documents, like books or thesis, to create a main script per document block (section, chapter, part, etc.). Since the |mgl| environment and the |\mglplot| command use an internal counter to automatically name scripts, unless the |label| option is used; if a new script is added this way to the document, it will alter the original numbering, causing \textsf{\mglTeX} to recompile the scripts from that point on (for more details, read subsection \ref{subsection: recompilation decision}). If the |\mglname| command is used, only the scripts of the current document block will be recompiled.
+% The use of this command is encouraged when writing large documents, like books or thesis, to create a main script per document block (section, chapter, part, etc.). Since the |mgl| environment and the |\mglplot| command use an internal counter to automatically name scripts, unless the |label| option is used; if a new script is added this way to the document, it will alter the original numbering, causing \textsf{\mglTeX} to recompile the scripts from that point on (for more details, read subsection \ref{subsection: recompilation decision}). If the |\mglname| command is used, only the scripts of the current document block will be recompiled.
 %
-% \DescribeMacro{\mglquality} The default quality for the creation of MGL graphics can be specified with this command. Its effect is local, meaning that the new quality will be applied from the point this command is used on. An info message will be printed in the |.log| file indicating the characteristics of the chosen value, according to the following table:
+% \DescribeMacro{\mglimgext} Can be used to specify the extension to save graphics. Its effect is local, meaning that the new quality will be applied from the point this command is used~on.
+% \begin{center}
+%   \begin{tabular}{l}
+%     \hline\\[-0.75em]
+%     |\mglimgext|\marg{image extension}\\[0.25em]
+%     \hline
+%   \end{tabular}
+% \end{center}
+%
+% \DescribeMacro{\mglquality} The default quality for the creation of MGL graphics can be specified locally with this command. An info message will be printed in the |.log| file indicating the characteristics of the chosen value, according to the following table:
 % \begin{center}
 %   \DeleteShortVerb{\|}
 %   \begin{tabular}{|c|l|}
@@ -560,7 +579,7 @@
 % \begin{center}
 %   \begin{tabular}{l}
 %     \hline\\[-0.75em]
-%     |\mglquality|\marg{quality value}\\[0.25em]
+%     |\mglquality|\marg{0$\vert$1$\vert$\ldots$\vert$8}\\[0.25em]
 %     \hline
 %   \end{tabular}
 % \end{center}
@@ -569,57 +588,47 @@
 % \begin{center}
 %   \begin{tabular}{l}
 %     \hline\\[-0.75em]
-%     |\mglscale|\marg{scale value}\\[0.25em]
+%     |\mglscale|\marg{1$\vert$2$\vert$\ldots$\vert$9}\\[0.25em]
 %     \hline
 %   \end{tabular}
 % \end{center}
 %
-% \DescribeMacro{\mgltexon} This command has the same effect as the package option |on|, i.e., create all the scripts and corresponding graphics, but its effect is local.
+% \DescribeMacro{\mglswitch} This command is equivalent to the package options |on| and |off|, depending on the argument passed, but it's effect is local.
 % \begin{center}
 %   \begin{tabular}{l}
 %     \hline\\[-0.75em]
-%     |\mgltexon|\\[0.25em]
+%     |\mglswitch{|\meta{on$\vert$off}|}|\\[0.25em]
 %     \hline
 %   \end{tabular}
 % \end{center}
 %
-% \DescribeMacro{\mgltexoff} This command has the same effect as the package option |off|, i.e., DO NOT create the scripts and corresponding graphics, but its effect is local.
+% Observe that |\mglswitch{on}| and |\mglswitch{off}| can be used to save time when writing a document, wrapping a section with them, avoiding recompilation of the corresponding scripts.
+%
+% \DescribeMacro{\mglcomments} This command is equivalent to the package options |comments| and |nocomments|, depending on the argument passed, but its effect is local.
 % \begin{center}
 %   \begin{tabular}{l}
 %     \hline\\[-0.75em]
-%     |\mgltexoff|\\[0.25em]
+%     |\mglcomments{|\meta{on$\vert$off$\vert$true$\vert$false}|}|\\[0.25em]
 %     \hline
 %   \end{tabular}
 % \end{center}
 %
-% Observe that |\mgltexon| and |\mgltexoff| can be used to save time when writing a document, wrapping a section with them, avoiding recompilation of the corresponding scripts.
-%
-% \DescribeMacro{\mglcomments} This command has the same effect as the package option |comments|, i.e., show all the commentaries contained within |mglcomment| environments, but its effect is local.
+% \DescribeMacro{\listofmglscripts} Opens a new section or chapter---depending on the \LaTeX{} class used---, where all the scripts that have been transcript in the document with the unstarred versions of the |mglblock| and |mglverbatim| environments, and the |\mglinclude| command, are listed. In case a |mglverbatim| is used, but no |label| is specified, the default name to display is specified by the |\mglverbatimname| macro (see below), otherwise, the corresponding label is typeset.
 % \begin{center}
 %   \begin{tabular}{l}
 %     \hline\\[-0.75em]
-%     |\mglcomments|\\[0.25em]
+%     |\listofmglscripts|\\[0.25em]
 %     \hline
 %   \end{tabular}
 % \end{center}
-%
-% \DescribeMacro{\mglnocomments} This command has the same effect as the package option |nocomments|, i.e., DO~NOT show the contents of |mglcomment| environments, but its effect is also local.
-% \begin{center}
-%   \begin{tabular}{l}
-%     \hline\\[-0.75em]
-%     |\mglnocomments|\\[0.25em]
-%     \hline
-%   \end{tabular}
-% \end{center}
-%
-% \DescribeMacro{\listofmglscripts} Opens a new section or chapter---depending on the \LaTeX{} class used---, where all the scripts that have been transcript in the document with the unstarred versions of the |mglblock| and |mglverbatim| environments, and the |\mglinclude| command, are listed. In case a |mglverbatim| is used, but no |label| is specified, the default name to display is specified by the |\mglverbatimname| macro (see below), otherwise, the corresponding label is typeset. The output is like this:
+% The output is like this:
 % \begin{center}
 %   \begin{minipage}{0.9\textwidth}
 %     \listofmglscripts
 %   \end{minipage}
 % \end{center}
 %
-% \DescribeMacro{\mglTeX} This command just pretty-prints the name of the package.
+% \DescribeMacro{\mglTeX}\DescribeMacro{\mglTeX*} This command just pretty-prints the name of the package; if followed by an asterisk, it will also print the version, separated with an unbreakable space.
 % \begin{center}
 %   \begin{tabular}{l}
 %     \hline\\[-0.75em]
@@ -627,12 +636,96 @@
 %     \hline
 %   \end{tabular}
 % \end{center}
-%
-% \DescribeMacro{\mglTeXwVer} This command just pretty-prints the name of the package with its version in a coherent manner, separated by a an unbreakable space.
 % \begin{center}
 %   \begin{tabular}{l}
 %     \hline\\[-0.75em]
-%     |\mglTeXwVer|\\[0.25em]
+%     |\mglTeX*|\\[0.25em]
+%     \hline
+%   \end{tabular}
+% \end{center}
+%
+% \subsection{Advanced setup commands}
+% \noindent Although \textsf{\mglTeX} is completely functional without any further set up, there are some parameters of its behavior that could be useful to modify. The following commands must be used in the preamble of the document only, since the first MGL script is created at the moment of the |\begin{document}| command, and otherwise they could create weird errors during compilation; trying to use them somewhere else will produce an error. 
+%
+% \DescribeMacro{\mgldir} This command can be used to specify the main working directory for \textsf{\mglTeX}. Inside it, the scripts, backup files and graphics will be created, or can be separated inside subdirectories. This is useful, for example, to avoid many scripts and graphics from polluting the directory where the \LaTeX{} document is.
+% \begin{center}
+%   \begin{tabular}{l}
+%     \hline\\[-0.75em]
+%     |\mgldir|\marg{main\_directory}\\[0.25em]
+%     \hline
+%   \end{tabular}
+% \end{center}
+%
+% \DescribeMacro{\mglscriptsdir} It specifies the subdirectory inside \mglTeX's \meta{main\_directory} where the MGL scripts will be created.
+% \begin{center}
+%   \begin{tabular}{l}
+%     \hline\\[-0.75em]
+%     |\mglscriptsdir|\marg{scripts\_subdirectory}\\[0.25em]
+%     \hline
+%   \end{tabular}
+% \end{center}
+%
+% \DescribeMacro{\mglgraphicsdir} It specifies the subdirectory inside \mglTeX's \meta{main\_directory} where the MGL graphics will be created, including the ones from external scripts (not embedded inside the \LaTeX{} document).
+% \begin{center}
+%   \begin{tabular}{l}
+%     \hline\\[-0.75em]
+%     |\mglgraphicsdir|\marg{graphics\_subdirectory}\\[0.25em]
+%     \hline
+%   \end{tabular}
+% \end{center}
+%
+% \DescribeMacro{\mglbackupsdir} It specifies the subdirectory inside \mglTeX's \meta{main\_directory} where backups for the MGL scripts will be created.
+% \begin{center}
+%   \begin{tabular}{l}
+%     \hline\\[-0.75em]
+%     |\mglbackupsdir|\marg{backups\_subdirectory}\\[0.25em]
+%     \hline
+%   \end{tabular}
+% \end{center}
+%
+% The above commands can be used in various combinations. For example, if none of them is used, the scripts, graphics and backups will be created inside the same path where the \LaTeX{} document is being compiled; if only |\mgldir| is used, they will be created inside \meta{main\_directory}; if only |\mgldir| and |\mglscriptsdir| are used, the scripts will be created inside \meta{main\_directory}\meta{scripts\_subdirectory}, while the graphics and backups will be inside \meta{main\_directory} only; if |\mgldir| isn't used, but the other commands are, the \meta{scripts\_subdirectory}, \meta{graphics\_subdirectory} and \meta{backups\_subdirectory} folders will be inside the folder where the \LaTeX{} document is being compiled.
+%
+% \DescribeMacro{\mglpaths} In case of having external MGL scripts, it is not recommended to place them inside the same location as where the embedded scripts are extracted, since they could be accidentally overwritten or deleted by the user; they should be separated in a folder which can be specified in the form of an absolute or relative path using this command.
+% \begin{center}
+%   \begin{tabular}{l}
+%     \hline\\[-0.75em]
+%     |\mglpaths|\marg{directory list}\\[0.25em]
+%     \hline
+%   \end{tabular}
+% \end{center}
+% This command can be used many times or can be used to specify many paths at once. In the case of using it many times, each call will add the new directory or directories to the list of searching paths.
+%
+% \DescribeMacro{mglsettings} This command has been added for the confort of the user, since it handles all of the basic and advanced settings of \textsf{\mglTeX}, as an alternative to some package options and commands. It takes one mandatory argument which should be a list of \meta{key}=\meta{value} pairs, according to the following table:
+% \begin{center}
+%   \DeleteShortVerb{\|}
+%   \begin{tabular}{|l|l|l|}
+%     \hline
+%     \textbf{Key} & \textbf{Value} & \textbf{Description}\\
+%     \hline
+%     \hline
+%     dir & \meta{main\_directory} & The main working directory\\
+%     \hline
+%     scriptsdir & \meta{scripts\_subdirectory} & The subdirectory for scripts creation\\
+%     \hline
+%     graphicsdir & \meta{graphics\_subdirectory} & The subdirectory for graphics creation\\
+%     \hline
+%     backupsdir & \meta{backups\_subdirectory} & The subdirectory for backups creation\\
+%     \hline
+%     paths & \meta{directory list} & Paths to external scripts\\
+%     \hline
+%     quality & \meta{0$\vert$1$\vert$\ldots$\vert$8} & Quality for creation of graphics\\
+%     \hline
+%     scale & \meta{1$\vert$2$\vert$\ldots$\vert$9} & Scale for creation of graphics\\
+%     \hline
+%     imgext & \meta{image extension} & Extension for creation of graphics\\
+%     \hline
+%   \end{tabular}
+%   \MakeShortVerb{\|}
+% \end{center}
+% \begin{center}
+%   \begin{tabular}{l}
+%     \hline\\[-0.75em]
+%     |\mglsettings|\marg{key-val list}\\[0.25em]
 %     \hline
 %   \end{tabular}
 % \end{center}
@@ -725,7 +818,7 @@
 % \subsection{Recompilation-decision algorithm}\label{subsection: recompilation decision}
 % \noindent \textsf{\mglTeX} has the builtin capacity of detecting changes in MGL scripts, so that a script is recompiled only when it has changed, not every time \LaTeX{} is executed. This saves a lot of time, since most of the compilation time of a document is spent on the creation (and conversion to another format, if necessary) of the graphics.
 %
-% This is how the recompilation-decision is performed: When \textsf{\mglTeX} finds an environment or command meant to create a graphic, it checks if the command |\MGL@@@|\meta{script} is defined, where \meta{script} is the name of the current script. If the command is undefined, this means the script has changed, so the corresponding code is transcript to the file \meta{script}.mgl, and the command |\MGL@@@|\meta{script} is defined. If the command is already defined, this means the script has been created on a previous \LaTeX{} run, so this time the embedded code is compared against the contents of the script; if they are equal, then |\MGL@@@|\meta{script} is defined again, otherwise, it is undefined, so the next \LaTeX{} run will rewrite/recompile the code. This process is schematically represented in figure~\ref{fig: recompilation decision}.
+% This is how the recompilation-decision is performed: When \textsf{\mglTeX} finds an environment or command meant to create a script/graphic, it checks if the command |\MGL@@@|\meta{script} is defined, where \meta{script} is the name of the script. If the command is undefined, this means the script has changed, so the corresponding code is transcript to the file \meta{script}.mgl, and the command |\MGL@@@|\meta{script} is defined. If the command is already defined, this means the script has been created on a previous \LaTeX{} run, so this time the embedded code is compared against the contents of the script; if they are equal, then |\MGL@@@|\meta{script} is defined again, otherwise, it is undefined, so the next \LaTeX{} run will rewrite/recompile the code. This process is schematically represented in figure~\ref{fig: recompilation decision}.
 %
 % \begin{figure}[ht!]
 %   \centering
@@ -735,7 +828,7 @@
 %
 % The recompilation-decision mechanism can be fooled, however. The |mgl| environment and |\mglplot| command have the ability to automatically name scripts by means of the use of an internal counter, unless the |label| option is specified. Suppose the user wants to add a new |mgl| environment or |\mglplot| command exactly after the $(n-1)$th script, so the $n$th script will be the newly added, while the old $n$th will be the new $(n+1)$th, and so on, altering the original numbering. This will cause \textsf{\mglTeX} to compare the old $n$th script with the old $(n+1)$th, and so on, deciding they are different, so they will be recompiled.
 %
-% There are two ways to avoid this problem: The first one is to use the |label| option on the newly arrived; the second is to wrap a complete block of the document with the |\mgltexoff| and |\mgltexon| commands, avoiding recompilation and saving time. This last option will avoid the inclusion of the MGL graphics, so it is only recommended in case of the wrapped scripts being in their final version (not needing further modification), so there is no need of updating the corresponding graphics; then, when the document is compiled in its final version, the |\mgltexoff| and |\mgltexon| can be removed. However, the most recommended way of proceeding is to use the |\mglname| command to create a separated main script per document block (section, chapter, part, etc.), so that, if a new script disrupts the original numbering, \textsf{\mglTeX} will recompile only the scripts of the current block.
+% There are two ways to avoid this problem: The first one is to use the |label| option on the newly arrived; the second is to wrap a complete block of the document with the |\mglswitch{off}| and |\mglswitch{on}| commands, avoiding recompilation and saving time. This last option will avoid the inclusion of the MGL graphics, so it is only recommended in case of the wrapped scripts being in their final version (not needing further modification), so there is no need of updating the corresponding graphics; then, when the document is compiled in its final version, the |\mglswitch{off}| and |\mglswitch{on}| can be removed. However, the most recommended way of proceeding is to use the |\mglname| command to create a separated main script per document block (section, chapter, part, etc.), so that, if a new script disrupts the original numbering, \textsf{\mglTeX} will recompile only the scripts of the current block.
 %
 % There are situations when recompilation of a script has to be forced. For example, if the default quality has changed, but the script hasn't, \textsf{\mglTeX} won't recreate the corresponding graphic by its own initiative, because it won't detect any changes in the code. In order to force recompilation, the image of the corresponding script can be deleted: \textsf{\mglTeX} will detect this abscence in the next \LaTeX{} run and recompile.
 %
@@ -759,23 +852,12 @@
 %    \end{macrocode}
 % \end{macro}
 %
-% Now we declare the options |final| and |draft|, which are simply passed to the \textsf{graphicx} package.
-%    \begin{macrocode}
-
-\DeclareOption{draft}{%
-  \PassOptionsToPackage{\CurrentOption}{graphicx}%
-}
-\DeclareOption{final}{%
-  \PassOptionsToPackage{\CurrentOption}{graphicx}%
-}
-%    \end{macrocode}
-%
-% The next options are |on| and |off|. Since they are equivalent to the commands |\mgltexon| and |\mgltexoff|, respectively, instead of writing the same code twice (one time for the options and one time for the commands), we first define the commands and then make the options execute them. 
-% \begin{macro}{\mgltexon}
+% The macros |\MGL@switch@on| and |\MGL@switch@off| are called when the package options |on| and |off| are passed, respectively.
+% \begin{macro}{\MGL@switch@on}
 % (Re)defines the commands to open, read, write and close scripts, and the command that includes MGL graphics.
 %    \begin{macrocode}
 
-\def\mgltexon{%
+\def\MGL@switch@on{%
 %    \end{macrocode}
 % \begin{macro}{\MGL@openout}
 % Opens a script for writing. It takes two arguments, the first being an output stream number, allocate by |\newwrite| (\TeX{} command), and the second being the path to the script.
@@ -866,16 +948,16 @@
   }%
 %    \end{macrocode}
 % \end{macro}
-% And here ends the |\mgltexon| command.
+% And here ends the |\MGL@switch@on| command.
 %    \begin{macrocode}
 }
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\mgltexoff}
-% (Re)defines the same commands as |\mgltexon| in such a way they accept the same arguments, but do nothing. The exception is |\MGL@includegraphics| which, instead of doing nothing, prints a warning framed box (``\textbf{\mglTeX{} is off; no image included}'').
+% \begin{macro}{\MGL@switch@off}
+% (Re)defines the same commands as |\MGL@switch@on| in such a way they accept the same arguments, but do nothing. The exception is |\MGL@includegraphics| which, instead of doing nothing, prints a warning framed box (``\textbf{\mglTeX{} is off; no image included}'').
 %    \begin{macrocode}
-\def\mgltexoff{%
+\def\MGL@switch@off{%
   \PackageWarning{mgltex}{mglTeX is off}%
   \def\MGL@openout##1##2{}%
   \def\MGL@openin##1##2{}%
@@ -893,35 +975,15 @@
 }
 %    \end{macrocode}
 % \end{macro}
-% Now we can declare the package options |on| and |off| so that they execute |\mgltexon| and |\mgltexoff|, respectively.
-%    \begin{macrocode}
-\DeclareOption{on}{\mgltexon}
-\DeclareOption{off}{\mgltexoff}
-%    \end{macrocode}
 %
-% The options |nocomments| and |comments| are equivalent to the commands |\mglnocomments| and |\mglcomments|, respectively, so, following the same logic as before, we first define the commands and make the options execute them.
-% \begin{macro}{\@MGL@comments@}
+% \begin{macro}{\@MGL@comments@on}\begin{macro}{\@MGL@comments@off}
 % We will need a boolean switch to activate/deactivate commentaries later.
 %    \begin{macrocode}
 
-\newif\if@MGL@comments@
+\def\@MGL@comments@on{\let\if@MGL@comments@\iftrue}
+\def\@MGL@comments@off{\let\if@mglcomments@\iffalse}
 %    \end{macrocode}
-% \end{macro}
-% \begin{macro}{\mglnocomments} Declares |\@MGL@comments@| as false.
-%    \begin{macrocode}
-\def\mglnocomments{\@MGL@comments@false}
-%    \end{macrocode}
-% \end{macro}
-% \begin{macro}{\mglcomments} Declares |\@MGL@comments@| as true.
-%    \begin{macrocode}
-\def\mglcomments{\@MGL@comments@true}
-%    \end{macrocode}
-% \end{macro}
-% Now, the options call the respective commands.
-%    \begin{macrocode}
-\DeclareOption{nocomments}{\mglnocomments}
-\DeclareOption{comments}{\mglcomments}
-%    \end{macrocode}
+% \end{macro}\end{macro}
 %
 % \begin{macro}{\mglscale}\begin{macro}{\MGL@scale}
 % |\mglscale| sets the value of the |\MGL@scale| macro, which is used later to specify the default scaling for graphics. It only accepts integer values from $1$ to $9$, otherwise it issues a warning and restarts the scaling to $1$. In order to be able to check the validity of the value passed by the user, we first set the |\MGL@scale| macro to that value and test it with the |\ifcase| conditional; if the value is valid, we do nothing, but if it is invalid, we issue a warning and overwrite |\MGL@scale| to $1$.
@@ -938,18 +1000,6 @@
 }
 %    \end{macrocode}
 % \end{macro}\end{macro}
-% The pacakage options |1x|, \ldots, |9x| just call |\mglscale| with the appropiate value.
-%    \begin{macrocode}
-\DeclareOption{1x}{\mglscale{1}}
-\DeclareOption{2x}{\mglscale{2}}
-\DeclareOption{3x}{\mglscale{3}}
-\DeclareOption{4x}{\mglscale{4}}
-\DeclareOption{5x}{\mglscale{5}}
-\DeclareOption{6x}{\mglscale{6}}
-\DeclareOption{7x}{\mglscale{7}}
-\DeclareOption{8x}{\mglscale{8}}
-\DeclareOption{9x}{\mglscale{9}}
-%    \end{macrocode}
 %
 % \begin{macro}{\mglquality}\begin{macro}{\MGL@quality}
 % |\mglquality| sets the value of the |\MGL@quality| macro, which is used later to specify the default quality for graphics. It only accepts integer values from $0$ to $8$ (the only ones defined by |MathGL|), otherwise it issues a warning and restarts to $2$ (the default for |MathGL|). In order to be able to check the validity of the value passed by the user, we first set the |\MGL@quality| macro to that value and test it with the |\ifcase| conditional; if the value is valid, we print an info message to the |.log| file about the characteristics of the chosen quality, but if it is invalid, we issue a warning and overwrite |\MGL@scale| to $2$.
@@ -1001,6 +1051,39 @@
     \def\MGL@quality{2}%
   \fi%
 }
+%    \end{macrocode}
+%
+% Now we declare the options |final| and |draft|, which are simply passed to the \textsf{graphicx} package.
+%    \begin{macrocode}
+
+\DeclareOption{draft}{%
+  \PassOptionsToPackage{\CurrentOption}{graphicx}%
+}
+\DeclareOption{final}{%
+  \PassOptionsToPackage{\CurrentOption}{graphicx}%
+}
+%    \end{macrocode}
+% Now we can declare the package options |on| and |off| so that they execute |\MGL@switch@on| and |\MGL@switch@off|, respectively.
+%    \begin{macrocode}
+\DeclareOption{on}{\MGL@switch@on}
+\DeclareOption{off}{\MGL@switch@off}
+%    \end{macrocode}
+% Now, the options call the respective commands.
+%    \begin{macrocode}
+\DeclareOption{nocomments}{\@MGL@comments@off}
+\DeclareOption{comments}{\@MGL@comments@on}
+%    \end{macrocode}
+% The pacakage options |1x|, \ldots, |9x| just call |\mglscale| with the appropiate value.
+%    \begin{macrocode}
+\DeclareOption{1x}{\mglscale{1}}
+\DeclareOption{2x}{\mglscale{2}}
+\DeclareOption{3x}{\mglscale{3}}
+\DeclareOption{4x}{\mglscale{4}}
+\DeclareOption{5x}{\mglscale{5}}
+\DeclareOption{6x}{\mglscale{6}}
+\DeclareOption{7x}{\mglscale{7}}
+\DeclareOption{8x}{\mglscale{8}}
+\DeclareOption{9x}{\mglscale{9}}
 %    \end{macrocode}
 % The package options |0q|, \ldots, |8q| just call |\mglquality| with the appropiate value.
 %    \begin{macrocode}
@@ -1054,13 +1137,6 @@
 \RequirePackage{graphicx}
 \RequirePackage{verbatim}
 %    \end{macrocode}
-% The supported graphic formats are declared, and the |\verbatim@finish| command from the \textsf{verbatim} package is disabled to avoid it from writing a blank line at the end of every script (see subsection~\ref{subsection: warning}).
-%    \begin{macrocode}
-\DeclareGraphicsExtensions{%
-  .eps,.epsz,.eps.gz,.bps,.bpsz,.bps.gz,.pdf,.png,.jpg,.jpeg,.gif%
-}
-\let\verbatim@finish\relax
-%    \end{macrocode}
 %
 % \begin{macro}{\MGL@graph@keys}
 % The main family of \meta{key}=\meta{value} pairs is defined. These pairs are common to every environment or command that produces graphics. Most of the \meta{key}'s are redefinitions of the optional arguments for the |\includegraphics| commands, so they are stored inside the |\MGL@graph@keys| macro, which is later passed to that command as optional argument by |\MGL@includegraphics|.
@@ -1109,14 +1185,6 @@
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\MGL@main@script@name}
-% \noindent This macro stores the name of the of the document's main script. It is initialized to the name of the \LaTeX{} document.
-%    \begin{macrocode}
-
-\edef\MGL@main@script@name{\jobname}
-%    \end{macrocode}
-% \end{macro}
-%
 % \begin{macro}{\MGL@dir}
 % This is the \textsf{\mglTeX} main working directory. By default, it is defined to empty, so it points to the path of the \LaTeX{} document.
 %    \begin{macrocode}
@@ -1146,6 +1214,32 @@
 % This is a list of paths where extracted and external scripts will be searched for by the |\mglgraphics| and |\mglinclude| commands. Since extracted scripts are created inside |\MGL@dir\MGL@scripts@dir| and |\MGL@dir\MGL@backups@dir|, this directories are included.
 %    \begin{macrocode}
 \def\MGL@paths{\MGL@dir\MGL@scripts@dir,\MGL@dir\MGL@backups@dir}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\mglsettings}
+% First, we define a \meta{key}=\meta{value} family, |MGL@sett@keys|, for the |\mglsettings| command.
+%    \begin{macrocode}
+\define@key{MGL@sett@keys}{dir}{\def\MGL@dir{#1}}
+\define@key{MGL@sett@keys}{scriptsdir}{\def\MGL@scripts@dir{#1}}
+\define@key{MGL@sett@keys}{graphicsdir}{\def\MGL@graphics@dir{#1}}
+\define@key{MGL@sett@keys}{backupsdir}{\def\MGL@backups@dir{#1}}
+\define@key{MGL@sett@keys}{paths}{\g@addto@macro\MGL@paths{,#1}}
+\define@key{MGL@sett@keys}{quality}{\mglquality{#1}}
+\define@key{MGL@sett@keys}{scale}{\mglscale{#1}}
+\define@key{MGL@sett@keys}{imgext}{\def\MGL@graph@ext{.#1}}
+%    \end{macrocode}
+% The command receives and executes the \meta{key}=\meta{value} pairs for |MGL@sett@keys|. This is an only-preamble command.
+%    \begin{macrocode}
+\def\mglsettings#1{\setkeys{MGL@sett@keys}{#1}}
+\@onlypreamble\mglsettings
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\MGL@main@script@name}
+% \noindent This macro stores the name of the of the document's main script. It is initialized to the name of the \LaTeX{} document.
+%    \begin{macrocode}
+
+\edef\MGL@main@script@name{\jobname}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -1194,17 +1288,24 @@
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\l@MGL@script}
-% Finally, the style for the leaders associating script name and page number in the \emph{list of MGL scripts}.
+% The style for the leaders associating script name and page number in the \emph{list of MGL scripts}.
 %    \begin{macrocode}
 \def\l@MGL@script{\@dottedtocline{1}{0em}{1.5em}}
 %    \end{macrocode}
 % \end{macro}
+% Finally, the supported graphic formats are declared, and the |\verbatim@finish| command from the \textsf{verbatim} package is disabled to avoid it from writing a blank line at the end of every script (see subsection~\ref{subsection: warning}).
+%    \begin{macrocode}
+\DeclareGraphicsExtensions{%
+  .eps,.epsz,.eps.gz,.bps,.bpsz,.bps.gz,.pdf,.png,.jpg,.jpeg,.gif%
+}
+\let\verbatim@finish\relax
+%    \end{macrocode}
 %
 % \subsection{Anatomy of environments and commands}\label{subsection: anatomy}
 % \noindent Many of the environments and commands defined by \textsf{\mglTeX} are based on the same pieces of code. So, in order to avoid repetition of commands, we use the concept of \emph{anatomy of environments and commands}, which is basically the idea of taking repetitive pieces of code and enclose them into macros which can later be used.
 %
 % \begin{macro}{\MGL@setkeys}
-% This command recieves two arguments: a family of \meta{key}=\meta{value} pairs, like |MGL@keys|, and a list of such pairs. It first cleans the |\MGL@graph@keys| macro, and the process the list of pairs.
+% This command receives two arguments: a family of \meta{key}=\meta{value} pairs, like |MGL@keys|, and a list of such pairs. It first cleans the |\MGL@graph@keys| macro, and the process the list of pairs.
 %    \begin{macrocode}
 
 \def\MGL@setkeys#1#2{%
@@ -1233,7 +1334,7 @@
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\MGL@set@script@name}\begin{macro}{\MGL@script@name}
-% |\MGL@set@script@name| recieves the name of a script without extension as argument, defines |\MGL@script@name| as that name, and checks if it has already been created or compiled, by comparing it with the names already stored in |\MGL@document@scripts|; if it's there already, warns the user. Finally, adds the name of the script to |\MGL@document@scripts|.
+% |\MGL@set@script@name| receives the name of a script without extension as argument, defines |\MGL@script@name| as that name, and checks if it has already been created or compiled, by comparing it with the names already stored in |\MGL@document@scripts|; if it's there already, warns the user. Finally, adds the name of the script to |\MGL@document@scripts|.
 %    \begin{macrocode}
 \def\MGL@set@script@name#1{%
   \edef\MGL@script@name{#1}%
@@ -1459,7 +1560,7 @@
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\MGL@dash@sep}
-% This is the separator displayed at the begginning and ending of the |mglcomments| environment, when it is allowed to be displayed.
+% This is the separator displayed at the beginning and ending of the |mglcomments| environment, when it is allowed to be displayed.
 %    \begin{macrocode}
 \def\MGL@dash@sep{%
   \nopagebreak%
@@ -1503,23 +1604,23 @@
 %    \begin{macrocode}
   \MGL@codes%
 %    \end{macrocode}
-% |\MGL@process@script| is used to test whether the code has changed or not the last time \LaTeX{} has been executed. If it has changed, we call the |\mgl@write@script| command to (re)write the code; otherwise, the code is scanned again by asking |\MGL@compare@code| to perform a comparison on the backup file, in order to determine whether the code has changed now.
+% |\MGL@process@script| is used to test whether the code has changed or not the last time \LaTeX{} has been executed. If it has changed, we call the |\MGL@write@script| command to (re)write the code; otherwise, the code is scanned again by asking |\MGL@compare@code| to perform a comparison on the backup file, in order to determine whether the code has changed now.
 %    \begin{macrocode}
   \MGL@process@script{%
-    \mgl@write@script%
+    \MGL@write@script%
   }{%
     \MGL@compare@code{\MGL@dir\MGL@backups@dir\MGL@script@name.mgl}%
   }%
 }
 %    \end{macrocode}
 % \end{macro}
-% \begin{macro}{\mgl@write@script}
+% \begin{macro}{\MGL@write@script}
 % (Re)writes the contents of the |mgl| environment.
 %    \begin{macrocode}
-\def\mgl@write@script{%
+\def\MGL@write@script{%
 %    \end{macrocode}
 % \begin{macro}{\MGL@next}
-% It contains the actions to perform immediately after the end of |\mgl@write@script|. They are close the output stream; write in the main script the commands to save the image, and to reset the initial values for all MGL parameters and clear the image; finally, write |\MGL@unchanged{\MGL@script@name}| in the |.aux| file.
+% It contains the actions to perform immediately after the end of |\MGL@write@script|. They are close the output stream; write in the main script the commands to save the image, and to reset the initial values for all MGL parameters and clear the image; finally, write |\MGL@unchanged{\MGL@script@name}| in the |.aux| file.
 %    \begin{macrocode}
   \def\MGL@next{%
     \MGL@closeout\MGL@out@stream%
@@ -1553,7 +1654,7 @@
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\endmgl}
-% The command that ends the |mgl| evironment. It is called by the |\end{mgl}| command. It simply calls |\MGL@next| to execute the final actions, and |\MGL@includegraphics| to insert the corresponding image. Note that |\MGL@next| performs different actions depending on whether |\MGL@process@script| calls |\mgl@write@script| or |\MGL@compare@code|, both of which define |\MGL@next| differently.
+% The command that ends the |mgl| evironment. It is called by the |\end{mgl}| command. It simply calls |\MGL@next| to execute the final actions, and |\MGL@includegraphics| to insert the corresponding image. Note that |\MGL@next| performs different actions depending on whether |\MGL@process@script| calls |\MGL@write@script| or |\MGL@compare@code|, both of which define |\MGL@next| differently.
 %    \begin{macrocode}
 \def\endmgl{%
   \MGL@next%
@@ -2449,6 +2550,58 @@
 %    \end{macrocode}
 % \end{macro}
 %
+% \begin{macro}{\mglswitch}
+% This command turns |on| and |off| the package according to its argument; it is just a call to the commands |\MGL@switch@on| or |\MGL@switch@off|.
+%    \begin{macrocode}
+\def\mglswitch#1{\csname MGL@switch@#1\endcsname}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\mglcomments} Depending on the option passed by the user, it calls |\@MGL@comments@on| or |\@MGL@comments@off|.
+%    \begin{macrocode}
+\def\mglcomments#1{\csname @MGL@comments@#1\endcsname}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\mgldir}
+% This command is the interface for the user to change the value of |\MGL@dir|. It is an only-preamble macro, since using it elsewhere would cause faulty behavior.
+%    \begin{macrocode}
+
+\def\mgldir#1{\def\MGL@dir{#1}}\@onlypreamble\mgldir
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\mglscriptsdir}
+% This command modifies the value of |\MGL@scripts@dir|. It is also an only-preamble macro.
+%    \begin{macrocode}
+\def\mglscriptsdir#1{\def\MGL@scripts@dir{#1}}\@onlypreamble\mglscriptsdir
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\mglgraphicsdir}
+% Modifies the value of |\MGL@graphics@dir|. It is an only-preamble macro.
+%    \begin{macrocode}
+\def\mglgraphicsdir#1{\def\MGL@graphics@dir{#1}}\@onlypreamble\mglgraphicsdir
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\mglbackupsdir}
+% Modifies the value of |\MGL@backups@dir|. It is an only-preamble macro.
+%    \begin{macrocode}
+\def\mglbackupsdir#1{\def\MGL@backups@dir{#1}}\@onlypreamble\mglbackupsdir
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\mglpaths}
+% This command adds a list of search paths for scripts to the existing one (|\MGL@paths|).
+%    \begin{macrocode}
+\def\mglpaths#1{\g@addto@macro\MGL@paths{,#1}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\mglimgext}
+% This command changes the value of |\MGL@graph@ext|.
+%    \begin{macrocode}
+\def\mglimgext#1{\def\MGL@graph@ext{#1}}
+%    \end{macrocode}
+% \end{macro}
+%
 % \begin{macro}{\listofmglscripts}
 % This command creates the \emph{list of MGL scripts} section. It has to be defined differently depending on whether the used document class defines the |\l@chapter| command or it only the |\l@section| command, which set the style for making a table of contents entry for the |\chapter| command and the |\section| command, respectively. If none of them are defined, we define our own style based on the latter.
 %    \begin{macrocode}
@@ -2471,7 +2624,7 @@
 % We use the |\@mkboth| command to set the page marks according to the current page style.
 %    \begin{macrocode}
       \@mkboth{%
-        \MakeUpperCase\listofmglscriptsname%
+        \MakeUppercase\listofmglscriptsname%
       }{%
         \MakeUppercase\listofmglscriptsname%
       }%
@@ -2519,60 +2672,13 @@
   \def\listofmglscripts{%
     \chapter*{\listofmglscriptsname}%
     \@mkboth{%
-      \MakeUpperCase\listofmglscriptsname%
+      \MakeUppercase\listofmglscriptsname%
     }{%
       \MakeUppercase\listofmglscriptsname%
     }%
     \@starttoc{lms}%
   }%
 \fi%
-%    \end{macrocode}
-% \end{macro}
-%
-% \begin{macro}{\mglTeX}
-% This macro pretty-prints the name of the package.
-%    \begin{macrocode}
-
-\def\mglTeX{mgl\TeX}
-%    \end{macrocode}
-% \end{macro}
-% \begin{macro}{\mglTeXwVersion}
-% This macro pretty-prints the name of the package with its version in a coherent manner, and separated with an unbreakable space.
-%    \begin{macrocode}
-
-\def\mglTeXwVer{\mglTeX~v4.0}
-%    \end{macrocode}
-% \end{macro}
-%
-% \begin{macro}{\mgldir}
-% This command is the interface for the user to change the value of |\MGL@dir|. It is an only-preamble macro, since using it elsewhere would cause faulty behavior.
-%    \begin{macrocode}
-
-\def\mgldir#1{\def\MGL@dir{#1}}\@onlypreamble\mgldir
-%    \end{macrocode}
-% \end{macro}
-% \begin{macro}{\mglscriptsdir}
-% This command modifies the value of |\MGL@scripts@dir|. It is also an only-preamble macro.
-%    \begin{macrocode}
-\def\mglscriptsdir#1{\def\MGL@scripts@dir{#1}}\@onlypreamble\mglscriptsdir
-%    \end{macrocode}
-% \end{macro}
-% \begin{macro}{\mglgraphicsdir}
-% Modifies the value of |\MGL@graphics@dir|. It is an only-preamble macro.
-%    \begin{macrocode}
-\def\mglgraphicsdir#1{\def\MGL@graphics@dir{#1}}\@onlypreamble\mglgraphicsdir
-%    \end{macrocode}
-% \end{macro}
-% \begin{macro}{\mglbackupsdir}
-% Modifies the value of |\MGL@backups@dir|. It is an only-preamble macro.
-%    \begin{macrocode}
-\def\mglbackupsdir#1{\def\MGL@backups@dir{#1}}\@onlypreamble\mglbackupsdir
-%    \end{macrocode}
-% \end{macro}
-% \begin{macro}{\mglpaths}
-% This command adds a list of search paths for scripts to the existing one (|\MGL@paths|).
-%    \begin{macrocode}
-\def\mglpaths#1{\g@addto@macro\MGL@paths{,#1}}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -2589,6 +2695,16 @@
 \newdimen\mglbreakindent\mglbreakindent=1em
 %    \end{macrocode}
 % \end{macro}\end{macro}\end{macro}\end{macro}\end{macro}\end{macro}\end{macro}\end{macro}
+%
+% \begin{macro}{\mglTeX}
+% This macro pretty-prints the name of the package. It has a starred version, which also prints the version.
+%    \begin{macrocode}
+
+\def\mglTeX{%
+  mgl\TeX\@ifstar{~v4.1}{}%
+}
+%    \end{macrocode}
+% \end{macro}
 %
 % \subsection{Final adjustments}
 % To finish the code of \textsf{\mglTeX}, we set the behavior of the package at the call of the |\begin{document}| and |\end{document}| commands.
