@@ -912,11 +912,11 @@ void mglCanvas::Legend(const std::vector<mglText> &leg, mreal x, mreal y, const 
 		w = w>t ? w:t;
 	}
 	w += ll+0.01*iw;	// add space for lines
-	j = long((ih*0.95)/h);
+	j = long((ih*0.95)/h);	if(j<1)	j=1;
 	long ncol = 1+(n-1)/j, nrow = (n+ncol-1)/ncol;
 	if(strchr(font,'-'))	// horizontal legend
 	{
-		j = long((iw*0.95)/w);
+		j = long((iw*0.95)/w);	if(j<1)	j=1;
 		nrow = 1+(n-1)/j;
 		ncol = (n+nrow-1)/nrow;
 	}

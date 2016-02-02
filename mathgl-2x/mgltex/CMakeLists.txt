@@ -23,11 +23,13 @@ endif(NOT TEXMFLOCALDIR)
 # set(extramgl Axis_projection Vectorial)
 
 add_custom_command(OUTPUT mgltex.sty
+	COMMAND ${CMAKE_COMMAND} -E copy ${MathGL_SOURCE_DIR}/mgltex/mgltex.ins ${MathGL_BINARY_DIR}/mgltex/
 	COMMAND ${CMAKE_COMMAND} -E copy ${MathGL_SOURCE_DIR}/mgltex/mgltex.dtx ${MathGL_BINARY_DIR}/mgltex/
 	COMMAND ${CMAKE_COMMAND} -E copy ${MathGL_SOURCE_DIR}/mgltex/Recompilation_decision.pdf ${MathGL_BINARY_DIR}/mgltex/
-	${findpdflatex} mgltex.dtx
-	${findpdflatex} mgltex.dtx
-	${findpdflatex} mgltex.dtx
+	COMMAND ${findpdflatex} mgltex.ins
+	COMMAND ${findpdflatex} mgltex.dtx
+	COMMAND ${findpdflatex} mgltex.dtx
+	COMMAND ${findpdflatex} mgltex.dtx
 	DEPENDS mgltex.dtx Recompilation_decision.pdf )
 
 add_custom_command(OUTPUT sample.pdf
