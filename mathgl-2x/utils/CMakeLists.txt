@@ -19,7 +19,7 @@ install(
 	RUNTIME DESTINATION ${MGL_CGI_PATH}
 )
 
-if(enable-qt)
+if(QT_ENABLED)
 	add_executable(mglview mglview.cpp)
 	if(enable-qt5)
 		include(../cmake-qt5.txt)
@@ -35,4 +35,4 @@ if(enable-qt)
 		TARGETS mglview
 		RUNTIME DESTINATION bin
 	)
-endif(enable-qt)
+endif(QT_ENABLED)

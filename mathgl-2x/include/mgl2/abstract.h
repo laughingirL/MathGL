@@ -42,11 +42,22 @@ typedef mglParser* HMPR;
 typedef mglFormula* HMEX;
 typedef mglFormulaC* HAEX;
 typedef const mglDataA* HCDT;
-#ifdef __cplusplus
+
 std::string MGL_EXPORT mgl_data_to_string(HCDT d, long ns);
 std::string MGL_EXPORT mgl_datac_to_string(HCDT d, long ns);
 extern "C" {
+
+#else
+#define mglDataA void
+typedef void *HMGL;
+typedef void *HMDT;
+typedef void *HADT;
+typedef void *HMEX;
+typedef void *HAEX;
+typedef void *HMPR;
+typedef const void *HCDT;
 #endif
+
 /// Set seed for random numbers
 void MGL_EXPORT mgl_srnd(long seed);
 void MGL_EXPORT mgl_srnd_(int *seed);
@@ -124,13 +135,12 @@ mreal MGL_EXPORT mgl_data_linear_(uintptr_t *dat, mreal *x,mreal *y,mreal *z);
 mreal MGL_EXPORT mgl_data_linear_ext(HCDT dat, mreal x,mreal y,mreal z, mreal *dx,mreal *dy,mreal *dz);
 mreal MGL_EXPORT mgl_data_linear_ext_(uintptr_t *dat, mreal *x,mreal *y,mreal *z, mreal *dx,mreal *dy,mreal *dz);
 
-#ifdef __cplusplus
-}
-#endif
 //-----------------------------------------------------------------------------
 /// Callback function for asking user a question. Result shouldn't exceed 1024.
 extern MGL_EXPORT void (*mgl_ask_func)(const wchar_t *quest, wchar_t *res);
 //-----------------------------------------------------------------------------
+#ifdef __cplusplus
+}
 /// Abstract class for data array
 class MGL_EXPORT mglDataA
 {
@@ -237,15 +247,6 @@ struct MGL_EXPORT mglColorID
 MGL_EXPORT extern mglColorID mglColorIds[31];
 MGL_EXPORT extern std::string mglGlobalMess;	///< Buffer for receiving global messages
 //-----------------------------------------------------------------------------
-#else
-#define mglDataA void
-typedef void *HMGL;
-typedef void *HMDT;
-typedef void *HADT;
-typedef void *HMEX;
-typedef void *HAEX;
-typedef void *HMPR;
-typedef const void *HCDT;
 #endif
 
 #ifdef MGL_SRC

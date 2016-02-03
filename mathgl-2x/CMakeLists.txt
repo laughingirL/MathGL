@@ -146,10 +146,10 @@ endif(UNIX AND enable-rvalue)
 # MSVC does not require any special flags
 
 if(enable-qt4 OR enable-qt5)
-set(enable-qt ON)
+set(QT_ENABLED ON)
 endif(enable-qt4 OR enable-qt5)
 
-CMAKE_DEPENDENT_OPTION(enable-json-sample "Enable JSON sample" ON "enable-qt" OFF)
+CMAKE_DEPENDENT_OPTION(enable-json-sample "Enable JSON sample" ON "QT_ENABLED" OFF)
 MGL_DEPENDENT_OPTION(enable-python "Enable python interface" OFF "NOT enable-lgpl" ON "NOT enable-all-swig" ON)
 MGL_DEPENDENT_OPTION(enable-lua "Enable Lua (v.5.1) interface" OFF "NOT enable-lgpl" ON "NOT enable-all-swig" ON)
 MGL_DEPENDENT_OPTION(enable-octave "Enable octave interface" OFF "NOT enable-lgpl" ON "NOT enable-all-swig" ON)

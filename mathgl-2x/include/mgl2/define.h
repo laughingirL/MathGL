@@ -23,6 +23,12 @@
 #include "mgl2/config.h"
 #ifndef SWIG
 
+#if MGL_HAVE_PTHREAD | MGL_HAVE_PTHREAD_FLTK
+#include <pthread.h>
+#else
+#define pthread_mutex_t void
+#endif
+
 #include "mgl2/dllexport.h"
 #if MGL_HAVE_ATTRIBUTE
 #define MGL_FUNC_CONST	__attribute__((const))

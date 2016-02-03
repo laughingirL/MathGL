@@ -22,7 +22,7 @@ if(MGL_HAVE_WX)
 	target_link_libraries(mgl_wx_example mgl-wx)
 endif(MGL_HAVE_WX)
 
-if(enable-qt)
+if(QT_ENABLED)
 	add_executable(mgl_qt_example wnd_samples.cpp qt_example.cpp)
 	if(enable-qt5)
 		include(../cmake-qt5.txt)
@@ -40,7 +40,7 @@ if(enable-qt)
 		qt4_use_modules(mgl_qgl_example ${MGL_QT4_LIBS})
 	endif(enable-qt5)
 
-endif(enable-qt)
+endif(QT_ENABLED)
 
 if(MGL_HAVE_LTDL)
 	include_directories(${LTDL_INCLUDE_DIR})

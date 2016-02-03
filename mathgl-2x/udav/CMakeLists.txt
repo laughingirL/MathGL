@@ -1,4 +1,4 @@
-if(enable-qt)
+if(QT_ENABLED)
 
 configure_file(${MathGL_SOURCE_DIR}/udav/mgl.xml.in ${MathGL_BINARY_DIR}/udav/mgl.xml)
 
@@ -65,4 +65,4 @@ if(findupmdb)
 	install(FILES ${CMAKE_BINARY_DIR}/udav/mgl.xml DESTINATION ${CMAKE_INSTALL_PREFIX}/share/mime/packages/)
 	install(CODE "execute_process(COMMAND \"${findupmdb}\" \"${CMAKE_INSTALL_PREFIX}/share/mime\")")
 endif(findupmdb)
-endif(enable-qt)
+endif(QT_ENABLED)
