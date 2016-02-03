@@ -516,12 +516,11 @@ void MGL_NO_EXPORT flow(mglBase *gr, double zVal, double u, double v, const mglD
 		pp[k].x = x.Spline1(dif,u,0,0);	f = ax.Spline1(u,v,0)/dif.x;
 		pp[k].y = y.Spline1(dif,v,0,0);	g = ay.Spline1(u,v,0)/dif.x;
 		pp[k].z = zVal;
-		if(mgl_isbad(f+g))	end = true;
+		if(mgl_isbad(f+g))	break;
 		else	for(long m=0;m<k-1;m+=10)	// determines encircle
 			if(mgl_anorm((pp[k]-pp[m])/dx)<acc)	end = true;
-		if(end)	break;
 		h = hypot(f,g);	pp[k].c = gr->GetC(ss,s*h);
-		if(h<1e-5)	break;	// stationary point
+		if(end || h<1e-5)	break;	// stationary point
 		if(k==0 || mgl_anorm((pp[k]-pp[k-1])/nx)>=1)	k++;
 		// find next point by midpoint method
 		h+=1;	ff[0]=f*dt/h;	gg[0]=g*dt/h;
@@ -550,12 +549,11 @@ void MGL_NO_EXPORT flow(mglBase *gr, double zVal, double u, double v, const mglD
 		xx = ax.Spline1(u,v,0);	yy = ay.Spline1(u,v,0);
 		det = xv*yu-xu*yv;	f = (yy*xv-xx*yv)/det;	g = (xx*yu-yy*xu)/det;
 		pp[k].z = zVal;
-		if(mgl_isbad(f+g))	end = true;
+		if(mgl_isbad(f+g))	break;
 		else	for(long m=0;m<k-1;m+=10)	// determines encircle
 			if(mgl_anorm((pp[k]-pp[m])/dx)<acc)	end = true;
-		if(end)	break;
 		h = hypot(f,g);	pp[k].c = gr->GetC(ss,s*h);
-		if(h<1e-5)	break;	// stationary point
+		if(end || h<1e-5)	break;	// stationary point
 		if(k==0 || mgl_anorm((pp[k]-pp[k-1])/nx)>=1)	k++;
 		// find next point by midpoint method
 		h+=1;	ff[0]=f*dt/h;	gg[0]=g*dt/h;

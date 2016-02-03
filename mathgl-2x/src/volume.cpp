@@ -285,34 +285,34 @@ void MGL_NO_EXPORT mgl_surf3ca_gen(HMGL gr, double val, HCDT x, HCDT y, HCDT z, 
 		if(b && c)	for(size_t i=kk1;i<kk.size();i++)
 		{
 			mglPoint &u = kk[i];
-			u.c = gr->AddPnt(nboth ? mglPoint(mgl_data_linear(x,u.x,0,0),mgl_data_linear(y,u.y,0,0),mgl_data_linear(z,u.z,0,0)) : 
-							mglPoint(mgl_data_linear(x,u.x,u.y,u.z),mgl_data_linear(y,u.x,u.y,u.z),mgl_data_linear(z,u.x,u.y,u.z)),
-					gr->GetC(ss,mgl_data_linear(c,u.x,u.y,u.z)),
+			u.c = gr->AddPnt(nboth ? mglPoint(x->linear(u.x,0,0),y->linear(u.y,0,0),z->linear(u.z,0,0)) : 
+					mglPoint(x->linear(u.x,u.y,u.z),y->linear(u.x,u.y,u.z),z->linear(u.x,u.y,u.z)),
+					gr->GetC(ss,c->linear(u.x,u.y,u.z)),
 					mgl_find_norm(nboth, x,y,z,a, u, inv,n,m,l),
-					gr->GetA(mgl_data_linear(b,u.x,u.y,u.z)));
+					gr->GetA(b->linear(u.x,u.y,u.z)));
 		}
 		else if(c)	for(size_t i=kk1;i<kk.size();i++)
 		{
 			mglPoint &u = kk[i];
-			u.c = gr->AddPnt(nboth ? mglPoint(mgl_data_linear(x,u.x,0,0),mgl_data_linear(y,u.y,0,0),mgl_data_linear(z,u.z,0,0)) : 
-							mglPoint(mgl_data_linear(x,u.x,u.y,u.z),mgl_data_linear(y,u.x,u.y,u.z),mgl_data_linear(z,u.x,u.y,u.z)),
-						gr->GetC(ss,mgl_data_linear(c,u.x,u.y,u.z)),
-						mgl_find_norm(nboth, x,y,z,a, u, inv,n,m,l));
+			u.c = gr->AddPnt(nboth ? mglPoint(x->linear(u.x,0,0),y->linear(u.y,0,0),z->linear(u.z,0,0)) : 
+					mglPoint(x->linear(u.x,u.y,u.z),y->linear(u.x,u.y,u.z),z->linear(u.x,u.y,u.z)),
+					gr->GetC(ss,c->linear(u.x,u.y,u.z)),
+					mgl_find_norm(nboth, x,y,z,a, u, inv,n,m,l));
 		}
 		else if(b)	for(size_t i=kk1;i<kk.size();i++)
 		{
 			mglPoint &u = kk[i];
-			u.c = gr->AddPnt(nboth ? mglPoint(mgl_data_linear(x,u.x,0,0),mgl_data_linear(y,u.y,0,0),mgl_data_linear(z,u.z,0,0)) : 
-							mglPoint(mgl_data_linear(x,u.x,u.y,u.z),mgl_data_linear(y,u.x,u.y,u.z),mgl_data_linear(z,u.x,u.y,u.z)),
+			u.c = gr->AddPnt(nboth ? mglPoint(x->linear(u.x,0,0),y->linear(u.y,0,0),z->linear(u.z,0,0)) : 
+					mglPoint(x->linear(u.x,u.y,u.z),y->linear(u.x,u.y,u.z),z->linear(u.x,u.y,u.z)),
 					cv, mgl_find_norm(nboth, x,y,z,a, u, inv,n,m,l),
-					gr->GetA(mgl_data_linear(b,u.x,u.y,u.z)));
+					gr->GetA(b->linear(u.x,u.y,u.z)));
 		}
 		else	for(size_t i=kk1;i<kk.size();i++)
 		{
 			mglPoint &u = kk[i];
-			u.c = gr->AddPnt(nboth ? mglPoint(mgl_data_linear(x,u.x,0,0),mgl_data_linear(y,u.y,0,0),mgl_data_linear(z,u.z,0,0)) : 
-							mglPoint(mgl_data_linear(x,u.x,u.y,u.z),mgl_data_linear(y,u.x,u.y,u.z),mgl_data_linear(z,u.x,u.y,u.z)),
-						cv, mgl_find_norm(nboth, x,y,z,a, u, inv,n,m,l));
+			u.c = gr->AddPnt(nboth ? mglPoint(x->linear(u.x,0,0),y->linear(u.y,0,0),z->linear(u.z,0,0)) : 
+					mglPoint(x->linear(u.x,u.y,u.z),y->linear(u.x,u.y,u.z),z->linear(u.x,u.y,u.z)),
+					cv, mgl_find_norm(nboth, x,y,z,a, u, inv,n,m,l));
 		}
 		
 		if(k>0)	mgl_surf3_plot(gr,n,m,kx1,kx2,ky1,ky2,kz,kk,wire);

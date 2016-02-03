@@ -645,7 +645,7 @@ dual MGL_EXPORT mglLinearC(const dual *a, long nx, long ny, long nz, mreal x, mr
 mdual MGL_EXPORT mgl_datac_spline(HCDT d, mreal x,mreal y,mreal z)
 {
 	const mglDataC *dd=dynamic_cast<const mglDataC *>(d);
-	dual r = dd ? mglSpline3st<dual>(dd->a,dd->nx,dd->ny,dd->nz,x,y,z) : mgl_data_spline(d,x,y,z);
+	dual r = dd ? mglSpline3st<dual>(dd->a,dd->nx,dd->ny,dd->nz,x,y,z) : d->value(x,y,z);
 	return r.real()+r.imag()*mgl_I;
 }
 //-----------------------------------------------------------------------------
@@ -655,7 +655,7 @@ mdual MGL_EXPORT mgl_datac_spline_ext(HCDT d, mreal x,mreal y,mreal z, dual *dx,
 	if(!dd)
 	{
 		mreal rx=0,ry=0,rz=0,res;
-		res=mgl_data_spline_ext(d,x,y,z,&rx,&ry,&rz);
+		res=d->valueD(x,y,z,&rx,&ry,&rz);
 		if(dx)	*dx=rx;	if(dy)	*dy=ry;	if(dz)	*dz=rz;
 		return res;
 	}
@@ -1246,7 +1246,7 @@ void MGL_EXPORT mgl_datac_refill_xy(HADT dat, HCDT xdat, HCDT ydat, HCDT vdat, m
 						v = 2.f*(d1x*yy - d1y*xx)/qv;
 						if(u*(1.f-u)<0.f || v*(1.f-v)<0.f)	continue;	// second root bad
 					}
-					i0 = ii+nx*jj;	s = mgl_data_spline(vdat,i+u,j+v,0);
+					i0 = ii+nx*jj;	s = vdat->value(i+u,j+v,0);
 					if(sl<0)	for(long k=0;k<nz;k++)	dat->a[i0+k*nn] = s;
 					else	dat->a[i0+sl*nn] = s;
 				}
@@ -1284,9 +1284,9 @@ void MGL_EXPORT mgl_datac_refill_xyz(HADT dat, HCDT xdat, HCDT ydat, HCDT zdat, 
 			mreal xx = x1+(x2-x1)*i/(nx-1.),dxx,dxy,dxz,vx,dx=0,dd;
 			mreal yy = y1+(y2-y1)*j/(ny-1.),dyx,dyy,dyz,vy,dy=0;
 			mreal zz = z1+(z2-z1)*k/(nz-1.),dzx,dzy,dzz,vz,dz=0;
-			vx = mgl_data_spline_ext(xdat,dx,dy,dz,&dxx,&dxy,&dxz);
-			vy = mgl_data_spline_ext(ydat,dx,dy,dz,&dyx,&dyy,&dyz);
-			vz = mgl_data_spline_ext(zdat,dx,dy,dz,&dzx,&dzy,&dzz);
+			vx = xdat->valueD(dx,dy,dz,&dxx,&dxy,&dxz);
+			vy = ydat->valueD(dx,dy,dz,&dyx,&dyy,&dyz);
+			vz = zdat->valueD(dx,dy,dz,&dzx,&dzy,&dzz);
 			long count=0;
 			do	// use Newton method to find root
 			{
@@ -1295,11 +1295,11 @@ void MGL_EXPORT mgl_datac_refill_xyz(HADT dat, HCDT xdat, HCDT ydat, HCDT zdat, 
 				dx += ((dyz*dzy-dyy*dzz)*(xx-vx)+(dxy*dzz-dxz*dzy)*(yy-vy)+(dxz*dyy-dxy*dyz)*(zz-vz))/dd;
 				dy += ((dyx*dzz-dyz*dzx)*(xx-vx)+(dxz*dzx-dxx*dzz)*(yy-vy)+(dxx*dyz-dxz*dyx)*(zz-vz))/dd;
 				dz += ((dyy*dzx-dyx*dzy)*(xx-vx)+(dxx*dzy-dxy*dzx)*(yy-vy)+(dxy*dyx-dxx*dyy)*(zz-vz))/dd;
-				vx = mgl_data_spline_ext(xdat,dx,dy,dz,&dxx,&dxy,&dxz);
-				vy = mgl_data_spline_ext(ydat,dx,dy,dz,&dyx,&dyy,&dyz);
-				vz = mgl_data_spline_ext(zdat,dx,dy,dz,&dzx,&dzy,&dzz);
+				vx = xdat->valueD(dx,dy,dz,&dxx,&dxy,&dxz);
+				vy = ydat->valueD(dx,dy,dz,&dyx,&dyy,&dyz);
+				vz = zdat->valueD(dx,dy,dz,&dzx,&dzy,&dzz);
 			}	while(fabs(xx-vx)>acx && fabs(yy-vy)>acy && fabs(zz-vz)>acz);	// this valid for linear interpolation
-			dat->a[i+nx*(j+ny*k)] = mgl_isnan(dx)?NAN:mgl_data_spline(vdat,dx,dy,dz);
+			dat->a[i+nx*(j+ny*k)] = mgl_isnan(dx)?NAN:vdat->value(dx,dy,dz);
 		}
 	else
 	{

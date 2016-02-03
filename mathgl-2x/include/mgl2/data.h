@@ -381,23 +381,23 @@ using mglDataA::Momentum;
 
 	/// Interpolate by cubic spline the data to given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
 	inline mreal Spline(mreal x,mreal y=0,mreal z=0) const
-	{	return mgl_data_spline(this, x,y,z);	}
+	{	return value(x,y,z);	}
 	/// Interpolate by cubic spline the data to given point x,\a y,\a z which normalized in range [0, 1]
 	inline mreal Spline1(mreal x,mreal y=0,mreal z=0) const
-	{	return mgl_data_spline(this, x*(nx-1),y*(ny-1),z*(nz-1));	}
+	{	return value(x*(nx-1),y*(ny-1),z*(nz-1));	}
 	/// Interpolate by linear function the data to given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
 	inline mreal Linear(mreal x,mreal y=0,mreal z=0)	const
-	{	return mgl_data_linear(this,x,y,z);	}
+	{	return mgl_data_linear_ext(this,x,y,z,0,0,0);	}
 	/// Interpolate by line the data to given point x,\a y,\a z which normalized in range [0, 1]
 	inline mreal Linear1(mreal x,mreal y=0,mreal z=0) const
-	{	return mgl_data_linear(this,x*(nx-1),y*(ny-1),z*(nz-1));	}
+	{	return mgl_data_linear_ext(this,x*(nx-1),y*(ny-1),z*(nz-1),0,0,0);	}
 
 	/// Interpolate by cubic spline the data and return its derivatives at given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
 	inline mreal Spline(mglPoint &dif, mreal x,mreal y=0,mreal z=0) const
-	{	return mgl_data_spline_ext(this, x,y,z, &(dif.x),&(dif.y), &(dif.z));	}
+	{	return valueD(x,y,z, &(dif.x),&(dif.y), &(dif.z));	}
 	/// Interpolate by cubic spline the data and return its derivatives at given point x,\a y,\a z which normalized in range [0, 1]
 	inline mreal Spline1(mglPoint &dif, mreal x,mreal y=0,mreal z=0) const
-	{	mreal res=mgl_data_spline_ext(this, x*(nx-1),y*(ny-1),z*(nz-1), &(dif.x),&(dif.y), &(dif.z));
+	{	mreal res=valueD(x*(nx-1),y*(ny-1),z*(nz-1), &(dif.x),&(dif.y), &(dif.z));
 		dif.x*=nx>1?nx-1:1;	dif.y*=ny>1?ny-1:1;	dif.z*=nz>1?nz-1:1;	return res;	}
 	/// Interpolate by linear function the data and return its derivatives at given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
 	inline mreal Linear(mglPoint &dif, mreal x,mreal y=0,mreal z=0)	const

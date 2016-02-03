@@ -117,6 +117,13 @@ mreal MGL_EXPORT mgl_data_min_real_(uintptr_t *dat, mreal *x, mreal *y, mreal *z
 mreal MGL_EXPORT mgl_data_momentum_val(HCDT d, char dir, mreal *m, mreal *w, mreal *s, mreal *k);
 mreal MGL_EXPORT mgl_data_momentum_val_(uintptr_t *dat, char *dir, mreal *m, mreal *w, mreal *s, mreal *k,int);
 
+/// Interpolate by linear function the data to given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
+mreal MGL_EXPORT mgl_data_linear(HCDT dat, mreal x,mreal y,mreal z);
+mreal MGL_EXPORT mgl_data_linear_(uintptr_t *dat, mreal *x,mreal *y,mreal *z);
+/// Interpolate by linear function the data and return its derivatives at given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
+mreal MGL_EXPORT mgl_data_linear_ext(HCDT dat, mreal x,mreal y,mreal z, mreal *dx,mreal *dy,mreal *dz);
+mreal MGL_EXPORT mgl_data_linear_ext_(uintptr_t *dat, mreal *x,mreal *y,mreal *z, mreal *dx,mreal *dy,mreal *dz);
+
 #ifdef __cplusplus
 }
 #endif
@@ -140,6 +147,12 @@ public:
 	virtual mreal valueD(mreal x,mreal y=0,mreal z=0,mreal *dx=0,mreal *dy=0,mreal *dz=0) const =0;
 	/// Get the interpolated value in given data cell without border checking
 	virtual mreal value(mreal x,mreal y=0,mreal z=0) const =0;
+	/// Interpolate by linear function the data to given point
+	inline mreal linear(mreal x,mreal y=0,mreal z=0)	const
+	{	return mgl_data_linear_ext(this,x,y,z,0,0,0);	}	
+	/// Interpolate by linear function the data to given point and get the gradient
+	inline mreal linearD(mreal x,mreal y=0,mreal z=0,mreal *dx=0,mreal *dy=0,mreal *dz=0)	const
+	{	return mgl_data_linear_ext(this,x,y,z,dx,dy,dz);	}	
 	virtual mreal v(long i,long j=0,long k=0) const = 0;
 	virtual mreal vthr(long i) const = 0;
 	virtual long GetNx() const = 0;

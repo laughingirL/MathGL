@@ -165,7 +165,7 @@ MGL_NO_EXPORT void *mgl_resize(void *par)
 	for(long i0=t->id;i0<t->n;i0+=mglNumThr)
 	{
 		register long i=i0%nx, j=((i0/nx)%ny), k=i0/(nx*ny);
-		b[i0] = mgl_data_spline(dat, c[0]+i*c[1], c[2]+j*c[3], c[4]+k*c[5]);
+		b[i0] = dat->value(c[0]+i*c[1], c[2]+j*c[3], c[4]+k*c[5]);
 	}
 	return 0;
 }
@@ -706,8 +706,8 @@ MGL_NO_EXPORT void *mgl_hist_2(void *par)
 	for(long i=t->id;i<nn;i+=mglNumThr)
 	{
 		register mreal x = d*(i%(nx*ns)), y = d*((i/(nx*ns))%(ny*ns)), z = d*(i/(nx*ny*ns*ns));
-		register mreal f = sp ? mgl_data_spline(a,x,y,z) : mgl_data_linear(a,x,y,z), w=1;
-		if(c)	w = sp ? mgl_data_spline(c,x,y,z) : mgl_data_linear(c,x,y,z);
+		register mreal f = sp ? a->value(x,y,z) : a->linear(x,y,z), w=1;
+		if(c)	w = sp ? c->value(x,y,z) : c->linear(x,y,z);
 		if(mgl_isnan(f) || mgl_isnan(w))	continue;
 		register long k = long(n*(f-v[0])/(v[1]-v[0]));
 		if(k>=0 && k<n)

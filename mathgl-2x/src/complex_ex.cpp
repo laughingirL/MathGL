@@ -440,7 +440,7 @@ HADT MGL_EXPORT mgl_datac_evaluate(HCDT dat, HCDT idat, HCDT jdat, HCDT kdat, in
 		for(long i=0;i<idat->GetNN();i++)
 		{
 			mreal x=idat->vthr(i), y=jdat?jdat->vthr(i):0, z=kdat?kdat->vthr(i):0;
-			r->a[i] = mgl_isnum(x*y*z)?mgl_data_linear(dat, x,y,z):NAN;;
+			r->a[i] = mgl_isnum(x*y*z)?dat->linear(x,y,z):NAN;;
 		}
 	return r;
 }
