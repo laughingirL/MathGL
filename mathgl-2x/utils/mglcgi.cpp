@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include <locale.h>
-#include <unistd.h>
 #include "mgl2/mgl.h"
 //-----------------------------------------------------------------------------
 int MGL_LOCAL_CONST mgl_hex(char ch)

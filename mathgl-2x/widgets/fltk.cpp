@@ -22,7 +22,6 @@
 #include <FL/Fl_Double_Window.H>
 #include <FL/fl_draw.H>
 #include <FL/Fl_File_Chooser.H>
-//#include <unistd.h>
 //-----------------------------------------------------------------------------
 #ifdef USE_GETTEXT
 #include <libintl.h>

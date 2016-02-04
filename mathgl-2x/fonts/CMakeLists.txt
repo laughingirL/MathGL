@@ -1,3 +1,7 @@
+
+add_executable(make_bin make_bin.cpp)
+target_link_libraries(make_bin mgl)
+
 configure_file(${MathGL_SOURCE_DIR}/texinfo/version.texi.in ${MathGL_BINARY_DIR}/texinfo/version.texi)
 
 set(MGL_FONTS STIX adventor  bonum  cursor  heroscn  heros  pagella  schola  termes)
@@ -8,7 +12,7 @@ foreach(SAMPLE ${MGL_FONTS})
 	set(MGL_FONTS_BIN ${MGL_FONTS_BIN} ${MathGL_BINARY_DIR}/fonts/${SAMPLE}.vfmb)
 	add_custom_command(OUTPUT ${MathGL_BINARY_DIR}/fonts/${SAMPLE}.vfmb
 		COMMAND make_bin -p ${MathGL_SOURCE_DIR}/fonts/ -o ${MathGL_BINARY_DIR}/fonts/${SAMPLE}.vfmb ${SAMPLE}
-		DEPENDS ${SAMPLE}.vfm
+		DEPENDS ${SAMPLE}.vfm make_bin
 		WORKING_DIRECTORY ${MGL_OUT} )
 endforeach(SAMPLE)
 

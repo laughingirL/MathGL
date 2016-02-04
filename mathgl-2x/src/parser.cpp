@@ -22,13 +22,6 @@
 #include "mgl2/canvas_cf.h"
 #include "mgl2/base.h"
 //-----------------------------------------------------------------------------
-#ifdef WIN32
-#include <io.h>
-wchar_t *wcstokw32(wchar_t *wcs, const wchar_t *delim)	{	return wcstok(wcs,delim);	}
-#define wcstok(a,b,c) wcstokw32(a,b)
-#else
-#include <unistd.h>
-#endif
 MGL_EXPORT void (*mgl_ask_func)(const wchar_t *, wchar_t *)=0;
 void MGL_EXPORT mgl_ask_gets(const wchar_t *quest, wchar_t *res)
 {	printf("%ls\n",quest);	if(!fgetws(res,1024,stdin))	*res=0;	}
