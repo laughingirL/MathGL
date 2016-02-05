@@ -122,6 +122,9 @@ int MGL_EXPORT mgl_data_read_all_(uintptr_t *d, const char *fname, int *as_slice
 /// Import data array from PNG file according color scheme
 void MGL_EXPORT mgl_data_import(HMDT dat, const char *fname, const char *scheme,mreal v1,mreal v2);
 void MGL_EXPORT mgl_data_import_(uintptr_t *dat, const char *fname, const char *scheme,mreal *v1,mreal *v2,int,int);
+/// Scan textual file for template and fill data array
+int MGL_EXPORT mgl_data_scan_file(HMDT dat,const char *fname, const char *templ);
+int MGL_EXPORT mgl_data_scan_file_(uintptr_t *dat,const char *fname, const char *templ,int,int);
 
 /// Create or recreate the array with specified size and fill it by zero
 void MGL_EXPORT mgl_data_create(HMDT dat, long nx,long ny,long nz);

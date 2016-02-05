@@ -246,6 +246,10 @@ using mglDataA::Momentum;
 	/// Read data array from HDF file (parse HDF4 and HDF5 files)
 	inline int ReadHDF(const char *fname,const char *data)
 	{	return mgl_data_read_hdf(this,fname,data);	}
+	/// Scan textual file for template and fill data array
+	inline int ScanFile(const char *fname, const char *templ)
+	{	return mgl_data_scan_file(this,fname, templ);	}
+
 
 	/// Get column (or slice) of the data filled by formulas of named columns
 	inline mglData Column(const char *eq) const

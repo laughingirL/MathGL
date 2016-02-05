@@ -2616,15 +2616,144 @@ void smgl_mirror(mglGraph *gr)	// flag #
 	gr->Box();	gr->Axis();	gr->Legend(2,"");
 }
 //-----------------------------------------------------------------------------
+const char *mmgl_pulse="subplot 1 1 0 '<_':title 'Pulse sample'\n"
+"new a 100 'exp(-6*x^2)':ranges 0 a.nx-1 0 1\naxis:plot a\n\n"
+"pulse b a 'x'\n\ndefine m a.max\n\nline b(1) 0 b(1) m 'r='\n"
+"line b(1)-b(3)/2 0  b(1)-b(3)/2 m 'm|'\nline b(1)+b(3)/2 0  b(1)+b(3)/2 m 'm|'\n"
+"line 0 0.5*m a.nx-1 0.5*m 'h'\nnew x 100 'x'\nplot b(0)*(1-((x-b(1))/b(2))^2) 'g'";
+void smgl_pulse(mglGraph *gr)
+{
+	gr->SubPlot(1,1,0,"<_");
+	if(big!=3)	gr->Title("Pulse sample");
+	mglData a(100);	gr->Fill(a,"exp(-6*x^2)");
+	gr->SetRanges(0, a.nx-1, 0, 1);
+	gr->Axis();	gr->Plot(a);
+	mglData b(a.Pulse('x'));
+	double m = b[0];
+	gr->Line(mglPoint(b[1],0), mglPoint(b[1],m),"r=");
+	gr->Line(mglPoint(b[1]-b[3]/2,0), mglPoint(b[1]-b[3]/2,m),"m|");
+	gr->Line(mglPoint(b[1]+b[3]/2,0), mglPoint(b[1]+b[3]/2,m),"m|");
+	gr->Line(mglPoint(0,m/2), mglPoint(a.nx-1,m/2),"h");
+	char func[128];	sprintf(func,"%g*(1-((x-%g)/%g)^2)",b[0],b[1],b[2]);
+	gr->FPlot(func,"g");
+}
+//-----------------------------------------------------------------------------
+const char *mmgl_scanfile="subplot 1 1 0 '<_':title 'Save and scanfile sample'\n"
+"save 'This test 0 -> 1' 'test.txt' 'w'\nsave 'This test 1 -> -1' 'test.txt'\n"
+"save 'This test 2 -> 0' 'test.txt'\nscanfile a 'test.txt' 'This test %g -> %g'\n"
+"ranges a(0) a(1):axis\nplot a(0) a(1) 'o'";
+void smgl_scanfile(mglGraph *gr)
+{
+	gr->SubPlot(1,1,0,"<_");
+	if(big!=3)	gr->Title("Save and scanfile sample");
+	FILE *fp=fopen("test.txt","r");
+	fprintf(fp,"This test 0 -> 1");
+	fprintf(fp,"This test 1 -> -1");
+	fprintf(fp,"This test 2 -> 0");
+	fclose(fp);
+
+	mglData a;
+	a.ScanFile("test.txt","This test %g -> %g");
+	gr->SetRanges(a.SubData(0), a.SubData(1));
+	gr->Axis();	gr->Plot(a.SubData(0),a.SubData(1),"o");
+}
+//-----------------------------------------------------------------------------
+const char *mmgl_pendelta="quality 6\nlist a 0.25 0.5 1 2 4\nfor $0 0 4\n"
+"pendelta a($0)\ndefine $1 0.5*$0-1\nline -1 $1 1 $1 'r'\ntext 0 $1 'delta=',a($0)\nnext";
+void smgl_pendelta(mglGraph *gr)
+{
+	double a[5]={0.25,0.5,1,2,4};
+	gr->SetQuality(6);
+	char buf[64];
+	for(int i=0;i<5;i++)
+	{
+		gr->SetPenDelta(a[i]);
+		gr->Line(mglPoint(-1,0.5*i-1), mglPoint(1,0.5*i-1),"r");
+		sprintf(buf,"delta=%g",a[i]);
+		gr->Puts(mglPoint(0,0.5*i-1),buf);
+	}
+}
+//-----------------------------------------------------------------------------
+const char *mmgl_bifurcation="subplot 1 1 0 '<_':title 'Bifurcation sample'\n"
+"ranges 0 4 0 1:axis\nbifurcation 0.005 'x*y*(1-y)' 'r'";
+void smgl_bifurcation(mglGraph *gr)
+{
+	gr->SubPlot(1,1,0,"<_");
+	if(big!=3)	gr->Title("Bifurcation sample");
+	gr->SetRanges(0,4,0,1);	gr->Axis();
+	gr->Bifurcation(0.005,"x*y*(1-y)","r");
+}
+//-----------------------------------------------------------------------------
+const char *mmgl_lamerey="subplot 1 1 0 '<_':title 'Lamerey sample'\n"
+"axis:xlabel '\\i x':ylabel '\\bar{\\i x} = 2 \\i{x}'\nfplot 'x' 'k='\nfplot '2*x' 'b'\n"
+"lamerey 0.00097 '2*x' 'rv~';size 2\nlamerey -0.00097 '2*x' 'rv~';size 2";
+void smgl_lamerey(mglGraph *gr)
+{
+	gr->SubPlot(1,1,0,"<_");
+	if(big!=3)	gr->Title("Lamerey sample");
+	gr->Axis();	gr->Label('x',"\\i x");	gr->Label('y',"\\bar{\\i x} = 2 \\i{x}");
+	gr->FPlot("x","k=");	gr->FPlot("2*x","b");
+	gr->Lamerey( 0.00097,"2*x","rv~");
+	gr->Lamerey(-0.00097,"2*x","rv~");
+}
+//-----------------------------------------------------------------------------
+const char *mmgl_pmap="subplot 1 1 0 '<_^':title 'Poincare map sample'\n"
+"ode r 'cos(y)+sin(z);cos(z)+sin(x);cos(x)+sin(y)' 'xyz' [0.1,0,0] 0.1 100\n"
+"rotate 40 60:copy x r(0):copy y r(1):copy z r(2)\nranges x y z\naxis:plot x y z 'b'\n"
+"xlabel '\\i x' 0:ylabel '\\i y' 0:zlabel '\\i z'\n"
+"pmap x y z z 'b#o'\nfsurf '0'";
+void smgl_pmap(mglGraph *gr)
+{
+	gr->SubPlot(1,1,0,"<_^");
+	if(big!=3)	gr->Title("Poincare map sample");
+	mglData ini(3);	ini[0]=0.1;
+	mglData r(mglODE("cos(y)+sin(z);cos(z)+sin(x);cos(x)+sin(y)","xyz",ini,0.1,100));
+	mglData x(r.SubData(0)),y(r.SubData(1)), z(r.SubData(2));
+	gr->Rotate(40,60);	gr->SetRanges(x,y,z);
+	gr->Axis();	gr->FSurf("0");	gr->Plot(x,y,z,"b");
+	gr->Label('x',"\\i x",0);	gr->Label('y',"\\i y",0);	gr->Label('z',"\\i z",0);
+	gr->Pmap(x,y,z,z, "b#o");
+}
+//-----------------------------------------------------------------------------
+const char *mmgl_apde="ranges -1 1 0 2 0 2\nnew ar 256 'exp(-2*(x+0.0)^2)'\nnew ai 256\n\n"
+"apde res1 'exp(-x^2-p^2)' ar ai 0.01:transpose res1\npde res2 'exp(-x^2-p^2)' ar ai 0.01\n\n"
+"subplot 1 2 0 '_':title 'Advanced PDE solver'\nranges 0 2 -1 1:crange res1\ndens res1:box\n"
+"axis:xlabel '\\i z':ylabel '\\i x'\n"
+"text -0.5 0.2 'i\\partial_z\\i u = exp(-\\i x^2+\\partial_x^2)[\\i u]' 'y'\n\n"
+"subplot 1 2 1 '_':title 'Simplified PDE solver'\n"
+"dens res2:box\naxis:xlabel '\\i z':ylabel '\\i x'\n"
+"text -0.5 0.2 'i\\partial_z\\i u \\approx\\ exp(-\\i x^2)\\i u+exp(\\partial_x^2)[\\i u]' 'y'";
+void smgl_apde(mglGraph *gr)
+{
+	gr->SetRanges(-1,1,0,2,0,2);
+	mglData ar(256), ai(256);	gr->Fill(ar,"exp(-2*(x+0.0)^2)");
+
+	mglData res1(gr->APDE("exp(-x^2-p^2)",ar,ai,0.01));	res1.Transpose();
+	mglData res2(gr->PDE("exp(-x^2-p^2)",ar,ai,0.01));
+
+	gr->SubPlot(1,2,0,"_");	gr->Title("Advanced PDE solver");
+	gr->SetRanges(0,2,-1,1);	gr->SetRange('c',res1);
+	gr->Dens(res1);	gr->Axis();	gr->Box();
+	gr->Label('x',"\\i z");	gr->Label('y',"\\i x");
+	gr->Puts(mglPoint(-0.5,0.2),"i\\partial_z\\i u = exp(-\\i x^2+\\partial_x^2)[\\i u]","y");
+
+	gr->SubPlot(1,2,1,"_");	gr->Title("Simplified PDE solver");
+	gr->Dens(res2);	gr->Axis();	gr->Box();
+	gr->Label('x',"\\i z");	gr->Label('y',"\\i x");
+	gr->Puts(mglPoint(-0.5,0.2),"i\\partial_z\\i u \\approx\\ exp(-\\i x^2)\\i u+exp(\\partial_x^2)[\\i u]","y");
+}
+//-----------------------------------------------------------------------------
 mglSample samp[] = {
-	{"alpha", smgl_alpha, mmgl_alpha },
+	{"alpha", smgl_alpha, mmgl_alpha},
+	{"apde", smgl_apde, mmgl_apde},
 	{"area", smgl_area, mmgl_area},
-	{"aspect", smgl_aspect, mmgl_aspect },
-	{"axial", smgl_axial, mmgl_axial },
+	{"aspect", smgl_aspect, mmgl_aspect},
+	{"axial", smgl_axial, mmgl_axial},
 	{"axis", smgl_axis, mmgl_axis},
 	{"barh", smgl_barh, mmgl_barh},
 	{"bars", smgl_bars, mmgl_bars},
 	{"belt", smgl_belt, mmgl_belt},
+	{"bifurcation", smgl_bifurcation, mmgl_bifurcation},
 	{"box", smgl_box, mmgl_box},
 	{"boxplot", smgl_boxplot, mmgl_boxplot},
 	{"boxs", smgl_boxs, mmgl_boxs},
@@ -2668,6 +2797,7 @@ mglSample samp[] = {
 	{"indirect",smgl_indirect,mmgl_indirect},
 	{"inplot", smgl_inplot, mmgl_inplot},
 	{"label", smgl_label, mmgl_label},
+	{"lamerey", smgl_lamerey, mmgl_lamerey},
 	{"legend", smgl_legend, mmgl_legend },
 	{"light", smgl_light, mmgl_light},
 	{"loglog", smgl_loglog, mmgl_loglog},
@@ -2685,15 +2815,19 @@ mglSample samp[] = {
 	{"paramv", smgl_paramv, mmgl_paramv},
 	{"parser", smgl_parser, mmgl_parser},
 	{"pde", smgl_pde, mmgl_pde},
+	{"pendelta", smgl_pendelta, mmgl_pendelta},
 	{"pipe", smgl_pipe, mmgl_pipe},
 	{"plot", smgl_plot, mmgl_plot},
+	{"pmap", smgl_pmap, mmgl_pmap},
 	{"primitives", smgl_primitives, mmgl_primitives },
 	{"projection", smgl_projection, mmgl_projection },
 	{"projection5", smgl_projection5, mmgl_projection5 },
+	{"pulse", smgl_pulse, mmgl_pulse },
 	{"qo2d", smgl_qo2d, mmgl_qo2d},
 	{"radar", smgl_radar, mmgl_radar},
 	{"refill", smgl_refill, mmgl_refill},
 	{"region", smgl_region, mmgl_region},
+	{"scanfile", smgl_scanfile, mmgl_scanfile },
 	{"schemes", smgl_schemes, mmgl_schemes },
 	{"several_light", smgl_several_light, mmgl_several_light },
 	{"solve", smgl_solve, mmgl_solve},
