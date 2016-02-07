@@ -33,10 +33,6 @@ public:
 	virtual void Reload(){}		///< Function for reloading data
 	virtual void Click() {}		///< Callback function on mouse click
 #if MGL_HAVE_PTHREAD_FLTK
-	pthread_t thr;
-	bool running;
-	pthread_mutex_t mutex;
-
 	mglDraw()	{	running=false;	pthread_mutex_init(&mutex,NULL);	}
 	virtual ~mglDraw()	{	pthread_mutex_destroy(&mutex);	}
 
@@ -56,6 +52,11 @@ public:
 	{	pthread_mutex_trylock(&mutex);	pthread_mutex_unlock(&mutex);	}
 	inline void Check()			///< Check if calculation can be continued (should be called inside Calc() )
 	{	pthread_mutex_lock(&mutex);	pthread_mutex_unlock(&mutex);	}
+//protected:
+	pthread_t thr;
+	bool running;
+	pthread_mutex_t mutex;
+	
 #else
 	mglDraw() {}
 	virtual ~mglDraw() {}

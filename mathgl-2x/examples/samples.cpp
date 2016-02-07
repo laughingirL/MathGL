@@ -2646,7 +2646,7 @@ void smgl_scanfile(mglGraph *gr)
 {
 	gr->SubPlot(1,1,0,"<_");
 	if(big!=3)	gr->Title("Save and scanfile sample");
-	FILE *fp=fopen("test.txt","r");
+	FILE *fp=fopen("test.txt","w");
 	fprintf(fp,"This test 0 -> 1");
 	fprintf(fp,"This test 1 -> -1");
 	fprintf(fp,"This test 2 -> 0");

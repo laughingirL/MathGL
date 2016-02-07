@@ -66,8 +66,8 @@ D. Docs about JS interface
 5. Docs about MGL commands: 'print' and 'echo'
 6. Docs about mgl_pen_delta(), SetPenDelta(), 'pen_delta' --> Font settings
 8. Docs about MGL command 'scanfile' and ScanFile()
-9. About "#undef I"
-12. mglQt, mglFLTK -- add 2-3 callback functions+toolbuttons+hotkeys for user(s) + update mglDraw documentation
+10. Update FLTK. Qt and UDAV figures
+12. Example of mglDraw and multi-threading (--> Basic usage) + correct links to @ref{mglDraw class}
 14. Docs about 'apde' ???
 
 YY. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using Stem()

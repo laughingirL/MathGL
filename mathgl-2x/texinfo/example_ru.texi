@@ -4311,6 +4311,13 @@ gr->Axis();
 gr->WriteFrame("fname.eps");
 @end verbatim
 
+@item Why I couldn't use name @samp{I} for variable?
+MathGL support C99 standard, where @samp{I} is reserved for imaginary unit. If you still need this name, then just use 
+@verbatim
+#undef I
+@end verbatim
+after including MathGL header files.
+
 @end table
 
 @external{}

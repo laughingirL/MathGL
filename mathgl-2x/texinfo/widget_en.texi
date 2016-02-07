@@ -2,16 +2,16 @@
 @c ------------------------------------------------------------------
 @chapter Widget classes
 @nav{}
-@cindex mglWindow
+@cindex mglWnd
 @cindex mglGLUT
 @cindex Fl_MathGL
 @cindex QMathGL
 @cindex window
 @cindex widgets
 
-There are set of ``window'' classes for making a window with MathGL graphics: @code{mglWindow}, @code{mglFLTK}, @code{mglQT} and @code{mglGLUT} for whole window, @code{Fl_MathGL} and @code{QMathGL} as widgets. All these classes allow user to show, rotate, export, and change view of the plot using keyboard. Most of them (except @code{mglGLUT}) also have toolbar and menu for simplifying plot manipulation. All window classes have mostly the same set of functions.
+There are set of ``window'' classes for making a window with MathGL graphics: @code{mglWindow}, @code{mglFLTK}, @code{mglQT} and @code{mglGLUT} for whole window, @code{Fl_MathGL} and @code{QMathGL} as widgets. All these classes allow user to show, rotate, export, and change view of the plot using keyboard. Most of them (except @code{mglGLUT}) also have toolbar and menu for simplifying plot manipulation. All window classes have mostly the same set of functions derived from @ref{mglWnd class}.
 
-For drawing you can use: @code{NULL} pointer if you'll update plot manually, global callback function of type @code{int draw(@code{HMGL} gr, @code{void *}p)} or @code{int draw(@code{mglGraph *}gr)}, or instance of class derived from @code{mglDraw} class. This class is defined in @code{#include <mgl2/window.h>} and have only 2 methods:
+For drawing you can use: @code{NULL} pointer if you'll update plot manually, global callback function of type @code{int draw(@code{HMGL} gr, @code{void *}p)} or @code{int draw(@code{mglGraph *}gr)}, or instance of class derived from @ref{mglDraw class}. Basically, this class have 2 main virtual methods:
 @verbatim
 class mglDraw
 {
@@ -22,8 +22,47 @@ public:
 @end verbatim
 You should inherit yours class from @code{mglDraw} and re-implement one or both functions for drawing.
 
+The window can be constructed using one of following classes (see @ref{Using MathGL window} for examples).
+
+@deftypefn {Constructor on @code{mglFLTK}} {} mglFLTK (@code{const char *}title=@code{"MathGL"})
+@deftypefnx {Constructor on @code{mglFLTK}} {} mglFLTK (@code{int} (*draw)(@code{HMGL} gr, @code{void *}p), @code{const char *}title=@code{"MathGL"}, @code{void *}par=@code{NULL}, @code{void} (*reload)(@code{HMGL} gr, @code{void *}p)=0)
+@deftypefnx {Constructor on @code{mglFLTK}} {} mglFLTK (@code{int} (*draw)(@code{mglGraph *}gr), @code{const char *}title=@code{"MathGL"})
+@deftypefnx {Constructor on @code{mglFLTK}} {} mglFLTK (@code{mglDraw *}draw, @code{const char *}title=@code{"MathGL"})
+@deftypefnx {C function} @code{HMGL} mgl_create_graph_fltk (@code{int} (*draw)(@code{HMGL} gr, @code{void *}p), @code{const char *}title, @code{void *}par, @code{void} (*reload)(@code{HMGL} gr, @code{void *}p))
+
+Creates a FLTK-based window for plotting. Parameter @var{draw} sets a pointer to drawing function (this is the name of function) or instance of @ref{mglDraw class}. There is support of a list of plots (frames). So as one can prepare a set of frames at first and redraw it fast later (but it requires more memory). Function should return positive number of frames for the list or zero if it will plot directly. Note, that @var{draw} can be @code{NULL} for displaying static bitmaps only (no animation or slides). Parameter @var{title} sets the title of the window. Parameter @var{par} contains pointer to data for the plotting function @var{draw}. FLTK-based windows is a bit faster than Qt ones, and provide better support of multi-threading.
+@end deftypefn
+
+@deftypefn {Method on @code{mglFLTK}} @code{int} RunThr ()
+@deftypefnx {C function} @code{int} mgl_fltk_thr ()
+Run main loop for event handling in separate thread. Note, right now it work for FLTK windows only.
+@end deftypefn
+
+
+@deftypefn {Constructor on @code{mglQT}} {} mglQT (@code{const char *}title=@code{"MathGL"})
+@deftypefnx {Constructor on @code{mglQT}} {} mglQT (@code{int} (*draw)(@code{HMGL} gr, @code{void *}p), @code{const char *}title=@code{"MathGL"}, @code{void *}par=@code{NULL}, @code{void} (*reload)(@code{HMGL} gr, @code{void *}p)=0)
+@deftypefnx {Constructor on @code{mglQT}} {} mglQT (@code{int} (*draw)(@code{mglGraph *}gr), @code{const char *}title=@code{"MathGL"})
+@deftypefnx {Constructor on @code{mglQT}} {} mglQT (@code{mglDraw *}draw, @code{const char *}title=@code{"MathGL"})
+@deftypefnx {C function} @code{HMGL} mgl_create_graph_qt (@code{int} (*draw)(@code{HMGL} gr, @code{void *}p), @code{const char *}title, @code{void *}par, @code{void} (*reload)(@code{HMGL} gr, @code{void *}p))
+
+Creates a FLTK-based window for plotting. Parameter @var{draw} sets a pointer to drawing function (this is the name of function) or instance of @ref{mglDraw class}. There is support of a list of plots (frames). So as one can prepare a set of frames at first and redraw it fast later (but it requires more memory). Function should return positive number of frames for the list or zero if it will plot directly. Note, that @var{draw} can be @code{NULL} for displaying static bitmaps only (no animation or slides). Parameter @var{title} sets the title of the window. Parameter @var{par} contains pointer to data for the plotting function @var{draw}.
+@end deftypefn
+
+
+@deftypefn {Constructor on @code{mglGLUT}} {} mglGLUT (@code{const char *}title=@code{"MathGL"})
+@deftypefnx {Constructor on @code{mglGLUT}} {} mglGLUT (@code{int} (*draw)(@code{HMGL} gr, @code{void *}p), @code{const char *}title=@code{"MathGL"}, @code{void *}par=@code{NULL}, @code{void} (*reload)(@code{HMGL} gr, @code{void *}p)=0)
+@deftypefnx {Constructor on @code{mglGLUT}} {} mglGLUT (@code{int} (*draw)(@code{mglGraph *}gr), @code{const char *}title=@code{"MathGL"})
+@deftypefnx {Constructor on @code{mglGLUT}} {} mglGLUT (@code{mglDraw *}draw, @code{const char *}title=@code{"MathGL"})
+@deftypefnx {C function} @code{HMGL} mgl_create_graph_glut (@code{int} (*draw)(@code{HMGL} gr, @code{void *}p), @code{const char *}title, @code{void *}par, @code{void} (*reload)(@code{HMGL} gr, @code{void *}p))
+
+Creates a GLUT-based window for plotting. Parameter @var{draw} sets a pointer to drawing function (this is the name of function) or instance of @code{mglDraw} class. There is support of a list of plots (frames). So as one can prepare a set of frames at first and redraw it fast later (but it requires more memory). Function should return positive number of frames for the list or zero if it will plot directly. Note, that @var{draw} can be @code{NULL} for displaying static bitmaps only (no animation or slides). Parameter @var{title} sets the title of the window. Parameter @var{par} contains pointer to data for the plotting function @var{draw}. GLUT-based windows are fastest one but there is no toolbar, and plot have some issues due to OpenGL limitations.
+
+There are some keys handles for manipulating by the plot: 'a', 'd', 'w', 's' for the rotating; ',', '.' for viewing of the previous or next frames in the list; 'r' for the switching of transparency; 'f' for the switching of lightning; 'x' for hiding (closing) the window.
+@end deftypefn
+
 @menu
-* mglWindow class::
+* mglWnd class::
+* mglDraw class::
 * Fl_MathGL class::
 * QMathGL class::
 * wxMathGL class::
@@ -32,107 +71,96 @@ You should inherit yours class from @code{mglDraw} and re-implement one or both 
 
 @c ------------------------------------------------------------------
 @external{}
-@node mglWindow class, Fl_MathGL class, , Widget classes
-@section mglWindow class
+@node mglWnd class, mglDraw class, , Widget classes
+@section mglWnd class
 @nav{}
-@cindex mglWindow
+@cindex mglWnd
 @cindex window
 @c @cindex mglDraw
 
-This class is derived from mglGraph class (see @ref{MathGL core}). It is defined in @code{#include <mgl2/window.h>} and provide methods for handling window with MathGL graphics. Similar classes are exist for QT and FLTK widget libraries: @code{mglQT} in @code{#include <mgl2/qt.h>}, @code{mglFLTK} in @code{#include <mgl2/fltk.h>}.
+This class is abstract class derived from mglGraph class (see @ref{MathGL core}). It is defined in @code{#include <mgl2/wnd.h>} and provide base methods for handling window with MathGL graphics. Inherited classes are exist for QT and FLTK widget libraries: @code{mglQT} in @code{#include <mgl2/qt.h>}, @code{mglFLTK} in @code{#include <mgl2/fltk.h>}.
 
-@deftypefn {Constructor on @code{mglWindow}} {} mglWindow (@code{const char *}title=@code{"MathGL"})
-@deftypefnx {Constructor on @code{mglWindow}} {} mglWindow (@code{int} (*draw)(@code{HMGL} gr, @code{void *}p), @code{const char *}title=@code{"MathGL"}, @code{void *}par=@code{NULL}, @code{int} kind=@code{0}, @code{void} (*reload)(@code{HMGL} gr, @code{void *}p)=0)
-@deftypefnx {Constructor on @code{mglWindow}} {} mglWindow (@code{int} (*draw)(@code{mglGraph *}gr), @code{const char *}title=@code{"MathGL"}, @code{int} kind=@code{0})
-@deftypefnx {Constructor on @code{mglWindow}} {} mglWindow (@code{mglDraw *}draw, @code{const char *}title=@code{"MathGL"}, @code{int} kind=@code{0})
-@deftypefnx {C function} @code{HMGL} mgl_create_graph_qt (@code{int} (*draw)(@code{HMGL} gr, @code{void *}p), @code{const char *}title, @code{void *}par, @code{void} (*reload)(@code{HMGL} gr, @code{void *}p))
-@deftypefnx {C function} @code{HMGL} mgl_create_graph_fltk (@code{int} (*draw)(@code{HMGL} gr, @code{void *}p), @code{const char *}title, @code{void *}par, @code{void} (*reload)(@code{HMGL} gr, @code{void *}p))
-@deftypefnx {C function} @code{HMGL} mgl_create_graph_glut (@code{int} (*draw)(@code{HMGL} gr, @code{void *}p), @code{const char *}title, @code{void *}par, @code{void} (*reload)(@code{HMGL} gr, @code{void *}p))
 
-Creates a window for plotting. Parameter @var{draw} sets a pointer to drawing function (this is the name of function) or instance of @code{mglDraw} class. There is support of a list of plots (frames). So as one can prepare a set of frames at first and redraw it fast later (but it requires more memory). Function should return positive number of frames for the list or zero if it will plot directly. Note, that @var{draw} can be @code{NULL} for displaying static bitmaps only (no animation or slides). Parameter @var{title} sets the title of the window. Parameter @var{par} contains pointer to data for the plotting function @var{draw}. Parameter @var{kind} may have following values: @samp{0} -- use FLTK window, @samp{1} -- use Qt window.
-
-There are some keys handles for manipulating by the plot: 'a', 'd', 'w', 's' for the rotating; ',', '.' for viewing of the previous or next frames in the list; 'r' for the switching of transparency; 'f' for the switching of lightning; 'x' for hiding (closing) the window.
-@end deftypefn
-
-@deftypefn {Method on @code{mglWindow}} @code{int} RunThr ()
-@deftypefnx {C function} @code{int} mgl_fltk_thr ()
-Run main loop for event handling in separate thread. Note, right now it work for FLTK windows only.
-@end deftypefn
-
-@deftypefn {Method on @code{mglWindow}} @code{int} Run ()
+@deftypefn {Method on @code{mglWnd}} @code{int} Run ()
 @deftypefnx {C function} @code{int} mgl_qt_run ()
 @deftypefnx {C function} @code{int} mgl_fltk_run ()
 Run main loop for event handling. Usually it should be called in a separate thread or as last function call in @code{main()}.
 @end deftypefn
 
-@deftypefn {Method on @code{mglWindow}} @code{void} SetDrawFunc (@code{int} (*draw)(@code{HMGL} gr, @code{void *}p), @code{void *}par=@code{NULL}, @code{void} (*reload)(@code{void *}p)=@code{NULL})
-@deftypefnx {Method on @code{mglWindow}} @code{void} SetDrawFunc (@code{int} (*draw)(@code{mglGraph *}gr))
-@deftypefnx {Method on @code{mglWindow}} @code{void} SetDrawFunc (@code{mglDraw *}obj)
+@deftypefn {Method on @code{mglWnd}} @code{void} SetDrawFunc (@code{int} (*draw)(@code{HMGL} gr, @code{void *}p), @code{void *}par=@code{NULL}, @code{void} (*reload)(@code{void *}p)=@code{NULL})
+@deftypefnx {Method on @code{mglWnd}} @code{void} SetDrawFunc (@code{int} (*draw)(@code{mglGraph *}gr))
+@deftypefnx {Method on @code{mglWnd}} @code{void} SetDrawFunc (@code{mglDraw *}obj)
 @deftypefnx {C function} @code{void} mgl_wnd_set_func (@code{HMGL} gr, @code{int} (*draw)(@code{HMGL} gr, @code{void *}p), @code{void *}par, @code{void} (*reload)(@code{void *}p))
 Set callback functions for drawing (@var{draw}) and data reloading (@var{reload}), or instance @var{obj} of a class derived from @code{mglDraw}.
 @end deftypefn
 
-@deftypefn {Method on @code{mglWindow}} @code{void} SetClickFunc (@code{void} (*func)(@code{HMGL} gr, @code{void *}p))
+@deftypefn {Method on @code{mglWnd}} @code{void} SetClickFunc (@code{void} (*func)(@code{HMGL} gr, @code{void *}p))
 @deftypefnx {C function} @code{void} mgl_set_click_func (@code{void} (*func)(@code{HMGL} gr, @code{void *}p))
 Set callback function @var{func} which will be called on mouse click.
 @end deftypefn
 
-@deftypefn {Method on @code{mglWindow}} @code{void} ToggleAlpha ()
+@deftypefn {Method on @code{mglWnd}} @code{void} SetMutex(@code{pthread_mutex_t *}mutex)
+@deftypefnx {C function} @code{void} mgl_wnd_set_mutex(@code{HMGL} gr, @code{pthread_mutex_t *}mutex)
+Set external mutex for lock/unlock external calculations by widget. This functions is called automatically at using @ref{mglDraw class}.
+@end deftypefn
+
+
+@deftypefn {Method on @code{mglWnd}} @code{void} ToggleAlpha ()
 @deftypefnx {C function} @code{void} mgl_wnd_toggle_alpha (@code{HMGL} gr)
 Switch on/off transparency but do not overwrite switches in user drawing function.
 @end deftypefn
-@deftypefn {Method on @code{mglWindow}} @code{void} ToggleLight ()
+@deftypefn {Method on @code{mglWnd}} @code{void} ToggleLight ()
 @deftypefnx {C function} @code{void} mgl_wnd_toggle_light (@code{HMGL} gr)
 Switch on/off lighting but do not overwrite switches in user drawing function.
 @end deftypefn
-@deftypefn {Method on @code{mglWindow}} @code{void} ToggleRotate ()
+@deftypefn {Method on @code{mglWnd}} @code{void} ToggleRotate ()
 @deftypefnx {C function} @code{void} mgl_wnd_toggle_rotate (@code{HMGL} gr)
 Switch on/off rotation by mouse. Usually, left button is used for rotation, middle button for shift, right button for zoom/perspective.
 @end deftypefn
-@deftypefn {Method on @code{mglWindow}} @code{void} ToggleZoom ()
+@deftypefn {Method on @code{mglWnd}} @code{void} ToggleZoom ()
 @deftypefnx {C function} @code{void} mgl_wnd_toggle_zoom (@code{HMGL} gr)
 Switch on/off zooming by mouse. Just select rectangular region by mouse and it will be zoomed in.
 @end deftypefn
-@deftypefn {Method on @code{mglWindow}} @code{void} ToggleNo ()
+@deftypefn {Method on @code{mglWnd}} @code{void} ToggleNo ()
 @deftypefnx {C function} @code{void} mgl_wnd_toggle_no (@code{HMGL} gr)
 Switch off all zooming and rotation and restore initial state.
 @end deftypefn
-@deftypefn {Method on @code{mglWindow}} @code{void} Update ()
+@deftypefn {Method on @code{mglWnd}} @code{void} Update ()
 @deftypefnx {C function} @code{void} mgl_wnd_update (@code{HMGL} gr)
 Update window contents. This is very useful function for manual updating the plot while long calculation was running in parallel thread.
 @end deftypefn
-@deftypefn {Method on @code{mglWindow}} @code{void} ReLoad ()
+@deftypefn {Method on @code{mglWnd}} @code{void} ReLoad ()
 @deftypefnx {C function} @code{void} mgl_wnd_reload (@code{HMGL} gr)
 Reload user data and update picture. This function also update number of frames which drawing function can create.
 @end deftypefn
-@deftypefn {Method on @code{mglWindow}} @code{void} Adjust ()
+@deftypefn {Method on @code{mglWnd}} @code{void} Adjust ()
 @deftypefnx {C function} @code{void} mgl_wnd_adjust (@code{HMGL} gr)
 Adjust size of bitmap to window size.
 @end deftypefn
-@deftypefn {Method on @code{mglWindow}} @code{void} NextFrame ()
+@deftypefn {Method on @code{mglWnd}} @code{void} NextFrame ()
 @deftypefnx {C function} @code{void} mgl_wnd_next_frame (@code{HMGL} gr)
 Show next frame if one.
 @end deftypefn
-@deftypefn {Method on @code{mglWindow}} @code{void} PrevFrame ()
+@deftypefn {Method on @code{mglWnd}} @code{void} PrevFrame ()
 @deftypefnx {C function} @code{void} mgl_wnd_prev_frame (@code{HMGL} gr)
 Show previous frame if one.
 @end deftypefn
-@deftypefn {Method on @code{mglWindow}} @code{void} Animation ()
+@deftypefn {Method on @code{mglWnd}} @code{void} Animation ()
 @deftypefnx {C function} @code{void} mgl_wnd_animation (@code{HMGL} gr)
 Run/stop slideshow (animation) of frames.
 @end deftypefn
 
-@deftypefn {Method on @code{mglWindow}} @code{void} SetDelay (@code{double} dt)
+@deftypefn {Method on @code{mglWnd}} @code{void} SetDelay (@code{double} dt)
 @deftypefnx {C function} @code{void} mgl_wnd_set_delay (@code{HMGL} gr, @code{double} dt)
 Sets delay for animation in seconds. Default value is 1 sec.
 @end deftypefn
 
-@deftypefn {Method on @code{mglWindow}} @code{double} GetDelay ()
+@deftypefn {Method on @code{mglWnd}} @code{double} GetDelay ()
 @deftypefnx {C function} @code{double} mgl_wnd_get_delay (@code{HMGL} gr)
 Gets delay for animation in seconds.
 @end deftypefn
 
-@deftypefn {Method on @code{mglWindow}} @code{void} Setup (@code{bool} clfupd=@code{true}, @code{bool} showpos=@code{false})
+@deftypefn {Method on @code{mglWnd}} @code{void} Setup (@code{bool} clfupd=@code{true}, @code{bool} showpos=@code{false})
 @deftypefnx {C function} @code{void} mgl_setup_window (@code{HMGL} gr, @code{bool} clfupd, @code{bool} showpos)
 Enable/disable flags for:
 @itemize @bullet
@@ -143,14 +171,60 @@ showing the last mouse click position in the widget.
 @end itemize
 @end deftypefn
 
-@deftypefn {Method on @code{mglWindow}} @code{mglPoint} LastMousePos ()
+@deftypefn {Method on @code{mglWnd}} @code{mglPoint} LastMousePos ()
 @deftypefnx {C function} @code{void} mgl_get_last_mouse_pos (@code{HMGL} gr, @code{mreal *}x, @code{mreal *}y, @code{mreal *}z)
 Gets last position of mouse click.
 @end deftypefn
 
+
 @c ------------------------------------------------------------------
 @external{}
-@node Fl_MathGL class, QMathGL class, mglWindow class, Widget classes
+@node mglDraw class, Fl_MathGL class, mglWnd class, Widget classes
+@section mglDraw class
+@nav{}
+@cindex mglDraw
+
+This class provide base functionality for callback drawing and running calculation in separate thread. It is defined in @code{#include <mgl2/wnd.h>}. You should make inherited class and implement virtual functions if you need it.
+
+@deftypefn {Virtual method on @code{mglDraw}} @code{int} Draw (@code{mglGraph *}gr)
+This is callback drawing function, which will be called when any redrawing is required for the window. There is support of a list of plots (frames). So as one can prepare a set of frames at first and redraw it fast later (but it requires more memory). Function should return positive number of frames for the list or zero if it will plot directly. 
+@end deftypefn
+
+@deftypefn {Virtual method on @code{mglDraw}} @code{void} Reload ()
+This is callback function, which will be called if user press menu or toolbutton to reload data. 
+@end deftypefn
+
+@deftypefn {Virtual method on @code{mglDraw}} @code{void} Click ()
+This is callback function, which will be called if user click mouse. 
+@end deftypefn
+
+@deftypefn {Virtual method on @code{mglDraw}} @code{void} Calc ()
+This is callback function, which will be called if user start calculations in separate thread by calling @code{mglDraw::Run()} function. It should periodically call @code{mglDraw::Check()} function to check if calculations should be paused. 
+@end deftypefn
+
+@deftypefn {Method on @code{mglDraw}} @code{void} Run ()
+Runs @code{mglDraw::Calc()} function in separate thread. It also initialize @code{mglDraw::thr} variable and unlock @code{mglDraw::mutex}. Function is present only if FLTK support for widgets was enabled.
+@end deftypefn
+
+@deftypefn {Method on @code{mglDraw}} @code{void} Cancel ()
+Cancels thread with calculations. Function is present only if FLTK support for widgets was enabled.
+@end deftypefn
+
+@deftypefn {Method on @code{mglDraw}} @code{void} Pause ()
+Pauses thread with calculations by locking @code{mglDraw::mutex}. You should call @code{mglDraw::Continue()} to continue calculations. Function is present only if FLTK support for widgets was enabled.
+@end deftypefn
+
+@deftypefn {Method on @code{mglDraw}} @code{void} Continue ()
+Continues calculations by unlocking @code{mglDraw::mutex}. Function is present only if FLTK support for widgets was enabled.
+@end deftypefn
+
+@deftypefn {Method on @code{mglDraw}} @code{void} Continue ()
+Checks if calculations should be paused and pause it. Function is present only if FLTK support for widgets was enabled.
+@end deftypefn
+
+@c ------------------------------------------------------------------
+@external{}
+@node Fl_MathGL class, QMathGL class, mglDraw class, Widget classes
 @section Fl_MathGL class
 @nav{}
 @cindex Fl_MathGL
