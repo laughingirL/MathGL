@@ -657,9 +657,11 @@ Fl_MGLView::Fl_MGLView(int xx, int yy, int ww, int hh, const char *lbl) : Fl_Win
 	o = new Fl_Button(1, 235, 25, 25);		o->tooltip(mgl_gettext("Show next frame in slideshow"));
 	o->image(new Fl_Pixmap(next_sl_xpm));	o->callback(mgl_snext_cb,this);
 
+#if MGL_HAVE_PTHREAD_FLTK
 	pause_bt = new Fl_Button(1, 260, 25, 25);	pause_bt->type(FL_TOGGLE_BUTTON);
 	pause_bt->image(xpm_pause);	pause_bt->callback(mgl_pause_cb,this);
 	pause_bt->tooltip(mgl_gettext("Pause on/off calculations"));
+#endif
 
 	g->end();	g->resizable(0);
 

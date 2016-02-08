@@ -94,6 +94,7 @@ int main(int argc,char **argv)
 	return gr.Run();
 }
 #else		// just default samples
+//-----------------------------------------------------------------------------
 int test_wnd(mglGraph *gr);
 int sample(mglGraph *gr);
 int sample_1(mglGraph *gr);
@@ -101,12 +102,41 @@ int sample_2(mglGraph *gr);
 int sample_3(mglGraph *gr);
 int sample_d(mglGraph *gr);
 //-----------------------------------------------------------------------------
+#if MGL_HAVE_PTHREAD_FLTK
+class myDraw : public mglDraw
+{
+	mglPoint pnt;	// some variable for changeable data
+	long i;			// another variable to be shown
+	mglWnd *wnd;	// external window for plotting
+public:
+	myDraw(mglWnd *w=0) : mglDraw()	{	wnd=w;	}
+	void SetWnd(mglWnd *w)	{	wnd=w;	}
+	int Draw(mglGraph *gr)
+	{
+		gr->Line(mglPoint(),pnt,"Ar2");
+		char str[16];	snprintf(str,15,"i=%ld",i);
+		gr->Puts(mglPoint(),str);
+		return 0;
+	}
+	void Calc()
+	{
+		for(i=0;;i++)	// do calculation
+		{
+			Check();	// check if need pause
+			long_calculations();// which can be very long
+			pnt.Set(2*mgl_rnd()-1,2*mgl_rnd()-1);
+			if(wnd)	wnd->Update();
+		}
+	}
+} dr;
+#endif
+//-----------------------------------------------------------------------------
 int main(int argc,char **argv)
 {
 	mglQT *gr;
 	char key = 0;
 	if(argc>1)	key = argv[1][0]!='-' ? argv[1][0]:argv[1][1];
-	else	printf("You may specify argument '1', '2', '3' or 'd' for viewing examples of 1d, 2d, 3d or dual plotting\n");
+	else	printf("You may specify argument '1', '2', '3', 'd' for viewing examples of 1d, 2d, 3d, dual plotting,\nor 'm' for multi-threading sample.\n");
 	switch(key)
 	{
 	case '0':	gr = new mglQT((mglDraw *)NULL,"1D plots");	break;
@@ -115,6 +145,10 @@ int main(int argc,char **argv)
 	case '3':	gr = new mglQT(sample_3,"3D plots");	break;
 	case 'd':	gr = new mglQT(sample_d,"Dual plots");	break;
 	case 't':	gr = new mglQT(test_wnd,"Testing");	break;
+#if MGL_HAVE_PTHREAD_FLTK
+	case 'm':	gr = new mglQT(&dr,"Multi-threading test");
+	dr.SetWnd(gr);	dr.Run();	break;
+#endif
 	default: 	gr = new mglQT(sample,"Drop and waves");	break;
 	}
 	if(key=='0')

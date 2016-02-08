@@ -62,6 +62,11 @@ public:
 	{	setDraw(func?mgl_draw_graph:0,(void*)func);	}
 	inline void zoomRegion(mreal xx1,mreal xx2,mreal yy1, mreal yy2)
 	{	x1=xx1;	y1=yy1;	x2=xx2;	y2=yy2;	}
+	/// Get mglDraw pointer or NULL
+	inline mglDraw *getClass()
+	{	mglDraw *d=0;
+		if(draw_func==mgl_draw_class)	d = (mglDraw*)draw_par;
+		if(draw)	d = draw;	return d;	}
 
 	int getPer() const	{return int(per);}	///< Get perspective value
 	int getPhi() const	{return int(phi);}	///< Get Phi-angle value
@@ -71,6 +76,7 @@ public:
 	bool getZoom() const	{return zoom;}	///< Get mouse zooming state
 	bool getRotate() const	{return rotate;}///< Get mouse rotation state
 	bool getViewYZ() const	{return viewYZ;}///< Get mouse rotation axis
+	bool getPause() const	{return pause;}	///< Get calculation pause state
 	bool isActive(int xs,int ys);	///< Check if active point is pressed
 
 public slots:
@@ -95,6 +101,7 @@ public slots:
 	void setCustDraw(bool a);	///< Switch on/off using custom draw
 	void setZoom(bool z);	///< Switch on/off mouse zooming
 	void setRotate(bool r);	///< Switch on/off mouse rotation
+	void setPause(bool p);	///< Switch on/off calculation pause
 	void zoomIn();			///< Zoom in graphics
 	void zoomOut();			///< Zoom out graphics
 	void restore();			///< Restore zoom and rotation to default values
@@ -153,6 +160,7 @@ signals:
 	void lightChanged(bool);	///< Lighting changed (by toolbar)
 	void zoomChanged(bool);		///< Zooming changed (by toolbar)
 	void rotateChanged(bool);	///< Rotation changed (by toolbar)
+	void pauseChanged(bool);	///< Pause changed (by toolbar)
 	void usePrimChanged(bool);	///< Use primitive changed (i.e. have or not drawing function)
 	void viewYZChanged(bool);	///< Rotation axis changed (by toolbar)
 	void mouseClick(mreal,mreal,mreal);	///< Position of mouse click
@@ -188,6 +196,7 @@ protected:
 	double per;			///< Value of perspective ( must be in [0,1) )
 	bool alpha;			///< Transparency state
 	bool light;			///< Lightning state
+	bool pause;			///< Pause state
 	bool custZoom;		///< Use custom zoom instead of built in
 	bool custDraw;		///< Use custom draw before main drawing
 	bool zoom;			///< Mouse zoom state

@@ -102,7 +102,7 @@ QMathGL::QMathGL(QWidget *parent, Qt::WindowFlags f) : QWidget(parent, f)
 	popup = 0;	grBuf = 0;	draw = 0;
 	phi = tet = per = 0;
 	x1 = y1 = ax1 = ay1 = 0;	x2 = y2 = ax2 = ay2 = 1;
-	alpha = light = zoom = rotate = grid = viewYZ = custZoom = custDraw = false;
+	alpha = light = zoom = rotate = grid = viewYZ = custZoom = custDraw = pause = false;
 	resize(600, 400);	mgl_set_flag(gr, true, MGL_CLF_ON_UPD);
 	timer = new QTimer(this);
 	timerRefr = new QTimer(this);	timerRefr->setInterval(100);
@@ -219,6 +219,30 @@ void QMathGL::setGrid(bool g)
 //-----------------------------------------------------------------------------
 void QMathGL::setViewYZ(bool a)
 {	if(viewYZ!=a)	{	viewYZ = a;	emit viewYZChanged(a);	refresh();	}	}
+//-----------------------------------------------------------------------------
+void QMathGL::setPause(bool p)
+{
+#if MGL_HAVE_PTHREAD_FLTK
+	if(pause!=p)
+	{
+		pthread_mutex_t *mutex=0;
+		mglCanvasWnd *g=dynamic_cast<mglCanvasWnd *>(gr);
+		if(g && g->mutex)	mutex = g->mutex;
+		else
+		{
+			mglDraw *d=getClass();
+			if(d)	mutex = &(d->mutex);
+		}
+		if(mutex)
+		{
+			if(p)	pthread_mutex_lock(mutex);
+			else	pthread_mutex_unlock(mutex);
+		}
+		pause=p;
+		emit pauseChanged(p);
+	}
+#endif
+}
 //-----------------------------------------------------------------------------
 void QMathGL::setRotate(bool r)
 {
@@ -1066,18 +1090,19 @@ void mglCanvasQT::Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p
 #include "xpm/zoom_out.xpm"
 #include "xpm/up_1.xpm"
 #include "xpm/stop.xpm"
+#include "xpm/pause.xpm"
 //-----------------------------------------------------------------------------
 #define TR	QObject::tr
 MGL_EXPORT QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *&tet, QSpinBox *&phi)
 {
 	QAction *a;
-	QMenu *o, *oo;
+	QMenu *o, *oo, *f;
 	QToolBar *bb;
 
 	QMenu *popup = new QMenu(Wnd);
 	// file menu
 	{
-		o = Wnd->menuBar()->addMenu(TR("&File"));
+		f = o = Wnd->menuBar()->addMenu(TR("&File"));
 		oo = new QMenu(TR("&Export as 2D ..."),Wnd);
 		oo->addAction(TR("PNG"), QMGL, SLOT(exportPNG()),Qt::ALT+Qt::Key_P);
 		oo->addAction(TR("solid PNG"), QMGL, SLOT(exportPNGs()),Qt::ALT+Qt::Key_F);
@@ -1272,6 +1297,19 @@ MGL_EXPORT QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *&tet, Q
 		a->setToolTip(TR("Show previous slide (Ctrl+,)."));
 		a->setShortcut(Qt::CTRL+Qt::Key_Comma);	o->addAction(a);		bb->addAction(a);
 	}
+#if MGL_HAVE_PTHREAD_FLTK
+	{
+		bb = new QToolBar(TR("Calculations"),Wnd);
+		Wnd->addToolBar(Qt::LeftToolBarArea, bb);
+		a = new QAction(QPixmap(pause_xpm), TR("Pause calculation"), Wnd);
+		a->setCheckable(true);
+		Wnd->connect(a, SIGNAL(toggled(bool)), QMGL, SLOT(setPause(bool)));
+		Wnd->connect(QMGL, SIGNAL(pauseChanged(bool)), a, SLOT(setChecked(bool)));
+//		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(setPause()));
+		a->setToolTip(TR("Pause on/off calculations."));
+		f->addSeparator();	f->addAction(a);	bb->addAction(a);
+	}
+#endif
 
 	Wnd->menuBar()->addSeparator();
 	o = Wnd->menuBar()->addMenu(TR("&Help"));
