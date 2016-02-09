@@ -65,7 +65,7 @@ void mglCanvas::SetSize(int w,int h,bool clf)
 
 	InPlot(0,1,0,1,false);
 	if(clf || (Quality&4))	Clf();
-	else	// NOTE: no scaling for text (a bit complicated)
+	else	// No clearing. So, need to scale
 	{
 #if MGL_HAVE_PTHREAD
 		pthread_mutex_lock(&mutexPnt);
@@ -73,8 +73,17 @@ void mglCanvas::SetSize(int w,int h,bool clf)
 #elif MGL_HAVE_OMP
 		omp_set_lock(&lockClf);
 #endif
+		const long m = long(Prm.size());
+		double dd = dx>dy?dy:dx;
+#pragma omp parallel for	// Scale text
+		for(long i=0;i<m;i++)	if(Prm[i].type==4)
+		{
+			mglPnt &q = Pnt[Prm[i].n1];
+			Prm[i].p *=dd;
+			q.u *= dd;	q.v *= dd;
+		}
 		const long n = long(Pnt.size());
-#pragma omp parallel for
+#pragma omp parallel for	// Scale coordinates
 		for(long i=0;i<n;i++)
 		{
 			mglPnt &q = Pnt[i];

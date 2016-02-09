@@ -344,7 +344,9 @@ public:
 	{	mgl_zoom(gr, x1, y1, x2, y2);	}
 
 	/// Set size of frame in pixels. Normally this function is called internally.
-	inline void SetSize(int width, int height)	{	mgl_set_size(gr, width, height);	}
+	inline void SetSize(int width, int height, bool clf=true)
+	{	if(clf)	mgl_set_size(gr, width, height);
+		else	mgl_scale_size(gr, width, height);	}
 	/// Scaling for all further set size calls.
 	static inline void SetSizeScl(double scl)	{	mgl_set_size_scl(scl);	}
 	/// Set plot quality

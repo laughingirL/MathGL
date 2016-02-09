@@ -78,37 +78,41 @@ void test(mglGraph *gr)
 #if !defined(_MSC_VER) && !defined(__BORLANDC__)
 static struct option longopts[] =
 {
-	{ "mini",	no_argument,	&big,	3 },
 	{ "big",	no_argument,	&big,		1 },
 	{ "web",	no_argument,	&big,		2 },
-	{ "bps",	no_argument,	&type,		8 },
+	{ "mini",	no_argument,	&big,		3 },
 	{ "help",	no_argument,	NULL,		'?' },
 	{ "height",	required_argument,	NULL,	'h' },
-	{ "png",	no_argument,	&type,		0 },
-	{ "eps",	no_argument,	&type,		1 },
-	{ "gif",	no_argument,	&type,		6 },
-	{ "jpeg",	no_argument,	&type,		4 },
 	{ "kind",	required_argument,	NULL,	'k' },
 	{ "list",	no_argument,	NULL,		'l' },
 	{ "mgl",	no_argument,	&use_mgl,	1 },
-	{ "none",	no_argument,	&type,		7 },
-	{ "obj",	no_argument,	&type,		11 },
-	{ "obj_old",no_argument,	&type,		10 },
-	{ "off",	no_argument,	&type,		12 },
-	{ "prc",	no_argument,	&type,		5 },
-	{ "pdf",	no_argument,	&type,		9 },
-	{ "solid",	no_argument,	&type,		3 },
 	{ "srnd",	no_argument,	&srnd,		1 },
+
+	{ "png",	no_argument,	&type,		0 },
+	{ "eps",	no_argument,	&type,		1 },
 	{ "svg",	no_argument,	&type,		2 },
+	{ "solid",	no_argument,	&type,		3 },
+	{ "jpeg",	no_argument,	&type,		4 },
+	{ "prc",	no_argument,	&type,		5 },
+	{ "gif",	no_argument,	&type,		6 },
+	{ "none",	no_argument,	&type,		7 },
+	{ "bps",	no_argument,	&type,		8 },
+	{ "pdf",	no_argument,	&type,		9 },
+	{ "obj_old",no_argument,	&type,		10 },
+	{ "obj",	no_argument,	&type,		11 },
+	{ "off",	no_argument,	&type,		12 },
 	{ "stl",	no_argument,	&type,		13 },
 	{ "tex",	no_argument,	&type,		14 },
 	{ "json",	no_argument,	&type,		15 },
 	{ "jsonz",	no_argument,	&type,		16 },
+	{ "docs",	no_argument,	&type,		17 },
+
 	{ "test",	no_argument,	&dotest,	1 },
 	{ "font",	no_argument,	&dotest,	2 },
 	{ "time",	no_argument,	&dotest,	3 },
 	{ "fexport",no_argument,	&dotest,	4 },
 	{ "textbl",	no_argument,	&dotest,	5 },
+
 	{ "thread",	required_argument,	NULL,	't' },
 	{ "verbose",no_argument,	&verbose,	1 },
 	{ "width",	required_argument,	NULL,	'w' },
@@ -138,6 +142,7 @@ void usage()
 		"--obj_old	- output obj/mtl in old way\n"
 		"--off		- output off\n"
 		"--stl		- output stl\n"
+		"--docs		- output in png, prc/pdf and json\n"
 		"--none		- none output\n"
 		"--srnd		- use the same random numbers in any run\n"
 		"--list		- print list of sample names\n"
@@ -208,6 +213,14 @@ void save(mglGraph *gr,const char *name,const char *suf="")
 		case 16:	// JSON
 			snprintf(buf,128,"%s%s.jsonz",name,suf);
 			gr->WriteJSON(buf,"",true);	break;
+		case 17:	// PNG + JSON + PDF
+			snprintf(buf,128,"%s%s.png",name,suf);
+			gr->WritePNG(buf,0,true);
+			snprintf(buf,128,"%s%s.json",name,suf);
+			gr->WriteJSON(buf);
+			gr->SetSize(height,height,false);
+			snprintf(buf,128,"%s%s.prc",name,suf);
+			gr->WritePRC(buf);	remove(buf);	break;
 		default:// PNG (no alpha)
 #if MGL_HAVE_PNG
 			snprintf(buf,128,"%s%s.png",name,suf);

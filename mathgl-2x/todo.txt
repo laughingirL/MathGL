@@ -65,6 +65,7 @@ D. Docs about JS interface
 4. Docs about Pulse()
 5. Docs about MGL commands: 'print' and 'echo'
 6. Docs about mgl_pen_delta(), SetPenDelta(), 'pen_delta' --> Font settings
+7. Docs about mgl_scale_size() and changes in SetSize()
 8. Docs about MGL command 'scanfile' and ScanFile()
 9. Docs about 	inline void SetList(long n, ...) -- NOTE about '.'
 10. Update FLTK. Qt and UDAV figures

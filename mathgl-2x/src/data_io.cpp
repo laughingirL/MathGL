@@ -401,7 +401,7 @@ int MGL_EXPORT mgl_data_read_(uintptr_t *d, const char *fname,int l)
 int MGL_EXPORT mgl_data_scan_file(HMDT d,const char *fname, const char *templ)
 {
 	// first scan for all "%g"
-	char *buf=new char[strlen(templ)],*s=buf;
+	char *buf=new char[strlen(templ)+1],*s=buf;
 	strcpy(buf,templ);
 	std::vector<std::string> strs;
 	for(size_t i=0;buf[i];i++)
