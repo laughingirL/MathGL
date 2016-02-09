@@ -1,6 +1,6 @@
 configure_file(${MathGL_SOURCE_DIR}/texinfo/version.texi.in ${MathGL_BINARY_DIR}/texinfo/version.texi)
 
-set(MGL_EXTRA light)
+set(MGL_EXTRA light pendelta)
 set(MGL_PNG alpha area aspect axial axis barh bars belt boxplot
 	box boxs candle chart cloud colorbar combined cones conta contd
 	contfa contf contf_xyz cont contv cont_xyz curvcoor cut dat_diff
@@ -11,7 +11,7 @@ set(MGL_PNG alpha area aspect axial axis barh bars belt boxplot
 	surfa surfc surfca surf table tape tens ternary textmark text ticks tile tiles
 	torus traj triangulation triplot tube type0 type1 type2 vect vecta venn
 	projection5 mask correl refill ohlc ode indirect
-	pulse scanfile pendelta bifurcation lamerey pmap apde )
+	pulse scanfile bifurcation lamerey pmap apde )
 set(MGL_PNG_N )
 set(MGL_PNG_S )
 set(MGL_PNG_J )

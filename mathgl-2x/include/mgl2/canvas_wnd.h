@@ -29,7 +29,7 @@ class MGL_EXPORT mglCanvasWnd : public mglCanvas
 public:
 	mglPoint LastMousePos;			///< Last mouse position
 	void (*ClickFunc)(void *par);	///< Callback function on click
-#if MGL_HAVE_PTHREAD_FLTK
+#if MGL_HAVE_PTHR_WIDGET
 	pthread_mutex_t *mutex;
 #endif
 

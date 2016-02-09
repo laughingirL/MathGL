@@ -338,7 +338,7 @@ void Fl_MGLView::setoff(int &val, Fl_Button *b, const char *txt)
 //-----------------------------------------------------------------------------
 void Fl_MGLView::exec_pause()
 {
-#if MGL_HAVE_PTHREAD_FLTK
+#if MGL_HAVE_PTHR_WIDGET
 	pthread_mutex_t *mutex=0;
 	mglCanvasWnd *g=dynamic_cast<mglCanvasWnd *>(FMGL->gr);
 	if(g && g->mutex)	mutex = g->mutex;
@@ -657,7 +657,7 @@ Fl_MGLView::Fl_MGLView(int xx, int yy, int ww, int hh, const char *lbl) : Fl_Win
 	o = new Fl_Button(1, 235, 25, 25);		o->tooltip(mgl_gettext("Show next frame in slideshow"));
 	o->image(new Fl_Pixmap(next_sl_xpm));	o->callback(mgl_snext_cb,this);
 
-#if MGL_HAVE_PTHREAD_FLTK
+#if MGL_HAVE_PTHR_WIDGET
 	pause_bt = new Fl_Button(1, 260, 25, 25);	pause_bt->type(FL_TOGGLE_BUTTON);
 	pause_bt->image(xpm_pause);	pause_bt->callback(mgl_pause_cb,this);
 	pause_bt->tooltip(mgl_gettext("Pause on/off calculations"));
@@ -779,7 +779,7 @@ MGL_NO_EXPORT void *mgl_fltk_tmp(void *)
 //-----------------------------------------------------------------------------
 int MGL_EXPORT mgl_fltk_thr()		// NOTE: Qt couldn't be running in non-primary thread
 {
-#if MGL_HAVE_PTHREAD_FLTK
+#if MGL_HAVE_PTHR_WIDGET
 	static pthread_t thr;
 	pthread_create(&thr,0,mgl_fltk_tmp,0);
 	pthread_detach(thr);

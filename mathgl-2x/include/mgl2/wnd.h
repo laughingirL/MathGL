@@ -32,7 +32,7 @@ public:
 	virtual int Draw(mglGraph *)=0;	///< Function for drawing
 	virtual void Reload(){}		///< Function for reloading data
 	virtual void Click() {}		///< Callback function on mouse click
-#if MGL_HAVE_PTHREAD_FLTK
+#if MGL_HAVE_PTHR_WIDGET
 	mglDraw()	{	running=false;	pthread_mutex_init(&mutex,NULL);	}
 	virtual ~mglDraw()	{	pthread_mutex_destroy(&mutex);	}
 
@@ -112,11 +112,11 @@ public:
 	{	mgl_wnd_set_func(gr,draw?mgl_draw_graph:0,(void*)draw,0);	}
 	inline void SetDrawFunc(mglDraw *draw)
 	{	mgl_wnd_set_func(gr,draw?mgl_draw_class:0,draw,mgl_reload_class);
-#if MGL_HAVE_PTHREAD_FLTK
+#if MGL_HAVE_PTHR_WIDGET
 		mgl_wnd_set_mutex(gr, &(draw->mutex));
 #endif
 		mgl_set_click_func(gr, mgl_click_class);	}
-#if MGL_HAVE_PTHREAD_FLTK
+#if MGL_HAVE_PTHR_WIDGET
 	/// Mutex for lock/unlock by widget
 	inline void SetMutex(pthread_mutex_t *mutex)
 	{	mgl_wnd_set_mutex(gr, mutex);	}

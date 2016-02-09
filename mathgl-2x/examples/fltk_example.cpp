@@ -88,7 +88,7 @@ int sample_2(mglGraph *gr);
 int sample_3(mglGraph *gr);
 int sample_d(mglGraph *gr);
 //-----------------------------------------------------------------------------
-#if MGL_HAVE_PTHREAD_FLTK
+#if MGL_HAVE_PTHR_WIDGET
 class myDraw : public mglDraw
 {
 	mglPoint pnt;	// some variable for changeable data
@@ -131,7 +131,7 @@ int main(int argc,char **argv)
 	case '3':	gr = new mglFLTK(sample_3,"3D plots");	break;
 	case 'd':	gr = new mglFLTK(sample_d,"Dual plots");break;
 	case 't':	gr = new mglFLTK(test_wnd,"Testing");	break;
-#if MGL_HAVE_PTHREAD_FLTK
+#if MGL_HAVE_PTHR_WIDGET
 	case 'm':	gr = new mglFLTK(&dr,"Multi-threading test");
 	dr.SetWnd(gr);	dr.Run();	break;
 #endif

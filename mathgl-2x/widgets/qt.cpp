@@ -222,7 +222,7 @@ void QMathGL::setViewYZ(bool a)
 //-----------------------------------------------------------------------------
 void QMathGL::setPause(bool p)
 {
-#if MGL_HAVE_PTHREAD_FLTK
+#if MGL_HAVE_PTHR_WIDGET
 	if(pause!=p)
 	{
 		pthread_mutex_t *mutex=0;
@@ -1297,7 +1297,7 @@ MGL_EXPORT QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *&tet, Q
 		a->setToolTip(TR("Show previous slide (Ctrl+,)."));
 		a->setShortcut(Qt::CTRL+Qt::Key_Comma);	o->addAction(a);		bb->addAction(a);
 	}
-#if MGL_HAVE_PTHREAD_FLTK
+#if MGL_HAVE_PTHR_WIDGET
 	{
 		bb = new QToolBar(TR("Calculations"),Wnd);
 		Wnd->addToolBar(Qt::LeftToolBarArea, bb);

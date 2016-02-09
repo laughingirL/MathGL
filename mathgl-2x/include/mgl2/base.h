@@ -26,7 +26,7 @@
 #include <vector>
 #include <string>
 
-#if MGL_HAVE_PTHREAD|MGL_HAVE_PTHREAD_FLTK
+#if (MGL_HAVE_PTHREAD|MGL_HAVE_PTHR_WIDGET)
 #include <pthread.h>
 #endif
 

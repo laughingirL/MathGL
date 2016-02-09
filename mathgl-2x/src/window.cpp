@@ -23,7 +23,7 @@ mglCanvasWnd::mglCanvasWnd() : mglCanvas()
 {
 	Setup();	LoadFunc=0;	FuncPar=0;	DrawFunc=0;	ClickFunc=0;
 	GG = 0;		NumFig = 0;	CurFig = -1;
-#if MGL_HAVE_PTHREAD_FLTK
+#if MGL_HAVE_PTHR_WIDGET
 	mutex=0;
 #endif
 }
@@ -204,7 +204,7 @@ void MGL_EXPORT mgl_get_last_mouse_pos_(uintptr_t *gr, mreal *x, mreal *y, mreal
 	mglPoint p;	if(g)	p=g->GetMousePos();
 	*x=p.x;	*y=p.y;	*z=p.z;	}
 //-----------------------------------------------------------------------------
-#if MGL_HAVE_PTHREAD_FLTK
+#if MGL_HAVE_PTHR_WIDGET
 void MGL_EXPORT mgl_wnd_set_mutex(HMGL gr, pthread_mutex_t *mutex)
 {	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>(gr);
 	if(g)	g->mutex = mutex;	}
@@ -240,7 +240,7 @@ int MGL_EXPORT mgl_draw_graph(HMGL gr, void *p)
 //-----------------------------------------------------------------------------
 MGL_EXPORT void *mgl_draw_calc(void *p)
 {
-#if MGL_HAVE_PTHREAD_FLTK
+#if MGL_HAVE_PTHR_WIDGET
 	mglDraw *d = (mglDraw *)p;
 	d->Calc();	d->running = false;
 #endif

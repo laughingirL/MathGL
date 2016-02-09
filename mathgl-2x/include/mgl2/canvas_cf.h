@@ -510,7 +510,7 @@ void MGL_EXPORT mgl_zoom_(uintptr_t *gr, mreal *x1, mreal *y1, mreal *x2, mreal 
 //-----------------------------------------------------------------------------
 /// Callback function for mouse click
 void MGL_EXPORT mgl_set_click_func(HMGL gr, void (*func)(void *p));
-#if MGL_HAVE_PTHREAD_FLTK
+#if MGL_HAVE_PTHR_WIDGET
 /// Mutex for lock/unlock by widget
 void MGL_EXPORT mgl_wnd_set_mutex(HMGL gr, pthread_mutex_t *mutex);
 #endif
