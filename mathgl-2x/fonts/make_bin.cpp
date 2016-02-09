@@ -17,7 +17,7 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include <unistd.h>
+#include <getopt.h>
 #include "mgl2/font.h"
 //-----------------------------------------------------------------------------
 int main(int argc, char *argv[])
