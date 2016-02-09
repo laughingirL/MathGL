@@ -2743,6 +2743,21 @@ void smgl_apde(mglGraph *gr)
 	gr->Puts(mglPoint(-0.5,0.2),"i\\partial_z\\i u \\approx\\ exp(-\\i x^2)\\i u+exp(\\partial_x^2)[\\i u]","y");
 }
 //-----------------------------------------------------------------------------
+const char *mmgl_ifs="list A [0.33,0,0,0.33,0,0,0.2] [0.33,0,0,0.33,0.67,0,0.2] [0.33,0,0,0.33,0.33,0.33,0.2]\\\n"
+"[0.33,0,0,0.33,0,0.67,0.2] [0.33,0,0,0.33,0.67,0.67,0.2]\nifs2d fx fy A 100000\n"
+"subplot 1 1 0 '<_':title 'IFS sample'\nranges fx fy:axis\nplot fx fy 'r#o ';size 0.05";
+void smgl_ifs(mglGraph *gr)
+{
+	mglData A;
+	A.SetList(35, 0.33,0.,0.,0.33,0.,0.,0.2, 0.33,0.,0.,0.33,0.67,0.,0.2, 0.33,0.,0.,0.33,0.33,0.33,0.2, 0.33,0.,0.,0.33,0.,0.67,0.2, 0.33,0.,0.,0.33,0.67,0.67,0.2);
+	A.Rearrange(7);
+	mglData f(mglIFS(A,100000));
+	gr->SubPlot(1,1,0,"<_");
+	if(big!=3)	gr->Title("IFS sample");
+	gr->SetRanges(f.SubData(0), f.SubData(1));
+	gr->Axis();	gr->Plot(f.SubData(0), f.SubData(1),"r#o ","size 0.05");
+}
+//-----------------------------------------------------------------------------
 mglSample samp[] = {
 	{"alpha", smgl_alpha, mmgl_alpha},
 	{"apde", smgl_apde, mmgl_apde},
@@ -2794,6 +2809,7 @@ mglSample samp[] = {
 	{"fonts", smgl_fonts, mmgl_fonts},
 	{"grad", smgl_grad, mmgl_grad},
 	{"hist", smgl_hist, mmgl_hist},
+	{"ifs", smgl_ifs, mmgl_ifs},
 	{"indirect",smgl_indirect,mmgl_indirect},
 	{"inplot", smgl_inplot, mmgl_inplot},
 	{"label", smgl_label, mmgl_label},

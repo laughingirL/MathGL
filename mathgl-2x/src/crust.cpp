@@ -770,3 +770,35 @@ long MGL_NO_EXPORT mgl_crust(long n,mglPoint *pp,long **nn,mreal ff)
 	return m;
 }
 //-----------------------------------------------------------------------------
+void MGL_NO_EXPORT mgl_ifs_2d_point(HCDT A, mreal& x, mreal& y, mreal amax)
+{
+	long i, n=A->GetNy();
+	mreal r = amax*mgl_rnd(), sum_prob = 0, x1;
+	for(i=0;i<n;i++)
+	{
+		sum_prob += A->v(6,i);
+		if(r<sum_prob)	break;
+	}
+	x1= A->v(0,i)*x + A->v(1,i)*y + A->v(4,i);
+	y = A->v(2,i)*x + A->v(3,i)*y + A->v(5,i);	x = x1;
+}
+HMDT MGL_EXPORT mgl_data_ifs_2d(HCDT A, long n, long skip)
+{
+	if(!A || A->GetNx()<7 || n<1)	return 0;	// incompatible dimensions
+	mreal amax=0;
+	for(long i=0; i<A->GetNy(); i++)	amax += A->v(6,i);
+	if(amax<=0)	return 0;
+
+	mglData *f = new mglData(2,n);
+	mreal x = 0, y = 0;
+	for(long i=0; i<skip; i++)	mgl_ifs_2d_point(A, x, y,amax);
+	for(long i=0; i<n; i++)
+	{
+		mgl_ifs_2d_point(A, x, y, amax);
+		f->a[2*i] = x;	f->a[2*i+1] = y;
+	}
+	return f;
+}
+uintptr_t MGL_EXPORT mgl_data_ifs_2d_(uintptr_t *d, long *n, long *skip)
+{	return uintptr_t(mgl_data_ifs_2d(_DT_,*n,*skip));	}
+//-----------------------------------------------------------------------------

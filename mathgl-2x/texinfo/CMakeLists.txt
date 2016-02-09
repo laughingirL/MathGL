@@ -79,12 +79,12 @@ set(list_texi_files_ru overview_ru.texi example_ru.texi ex_mgl_ru.texi parse_ru.
 
 add_custom_command(OUTPUT ${MGL_OUT}/mathgl_en.info
 	COMMAND ${findmi} ${MGL_TEX}/mathgl_en.texi
-	DEPENDS ${list_texi_files_en} mathgl_en.texi ${MGL_PNG_N}
+	DEPENDS ${list_texi_files_en} mathgl_en.texi #${MGL_PNG_N}
 	WORKING_DIRECTORY ${MGL_OUT}
 )
 add_custom_command(OUTPUT ${MGL_OUT}/mathgl_ru.info
 	COMMAND ${findmi} ${MGL_TEX}/mathgl_ru.texi
-	DEPENDS ${list_texi_files_ru} mathgl_ru.texi ${MGL_PNG_N}
+	DEPENDS ${list_texi_files_ru} mathgl_ru.texi #${MGL_PNG_N}
 	WORKING_DIRECTORY ${MGL_OUT}
 )
 

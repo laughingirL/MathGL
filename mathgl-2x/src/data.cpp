@@ -1887,15 +1887,16 @@ long MGL_EXPORT mgl_data_get_nz_(uintptr_t *d)	{	return _DA_(d)->GetNz();	}
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_data_join(HMDT d, HCDT v)
 {
+	if(!d || !v)	return;
 	long nx=d->nx, ny=d->ny, nz=d->nz, k=nx*ny*nz;
 	const mglData *mv = dynamic_cast<const mglData *>(v);
 	long vx=v->GetNx(), vy=v->GetNy(), vz=v->GetNz(), m = vx*vy*vz;
 
-	if(nx==vx && ny==vy && (nz>1 || vz>1))	d->nz += vz;
+	if(nx==vx && ny==vy && ny>1)	d->nz += vz;
 	else
 	{
 		ny *= nz;	vy *= vz;
-		if(nx==vx && (ny>1 || vy>1))
+		if(nx==vx && nx>1)
 		{	d->nz = 1;	d->ny = ny+vy;	}
 		else
 		{	d->ny = d->nz = 1;	d->nx = k+m;	}

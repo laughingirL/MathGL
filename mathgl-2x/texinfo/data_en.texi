@@ -329,7 +329,7 @@ Delete rows which values are equal to next row for given column @var{idx}.
 @deftypefnx {C function} @code{void} mgl_data_join (@code{HMDT} dat, @code{HCDT} vdat)
 @deftypefnx {C function} @code{void} mgl_datac_join (@code{HADT} dat, @code{HCDT} vdat)
 @end ifclear
-Join data cells from @var{vdat} to @var{dat}. At this, function increase @var{dat} sizes according following: z-size for 3D data arrays arrays with equal x-,y-sizes; or y-size for 2D data arrays with equal x-sizes; or x-size otherwise.
+Join data cells from @var{vdat} to @var{dat}. At this, function increase @var{dat} sizes according following: z-size for data arrays arrays with equal x-,y-sizes; or y-size for data arrays with equal x-sizes; or x-size otherwise.
 @end deftypefn
 
 
@@ -1594,7 +1594,7 @@ Prepare coefficients for global cubic spline interpolation.
 @deftypefnx {Global function} @code{dual} mglGSplineC (@code{const mglDataA &}coef, @code{mreal} dx, @code{dual *}d1=@code{0}, @code{dual *}d2=@code{0})
 @deftypefnx {C function} @code{mreal} mgl_gspline (@code{HCDT} coef, @code{mreal} dx, @code{mreal *}d1, @code{mreal *}d2)
 @deftypefnx {C function} @code{dual} mgl_gsplinec (@code{HCDT} coef, @code{mreal} dx, @code{dual *}d1, @code{dual *}d2)
-Evaluate global cubic spline (and its 1st and 2nd derivatives @var{d1}, @var{d2} if they are not @code{NULL}) using prepared coefficients @var{coef} at point @var{dx}+@var{x0} (where @var{x0} is 1st element of data @var{x} provided to @code{mglGSpline*Init()} function). 
+Evaluate global cubic spline (and its 1st and 2nd derivatives @var{d1}, @var{d2} if they are not @code{NULL}) using prepared coefficients @var{coef} at point @var{dx}+@var{x0} (where @var{x0} is 1st element of data @var{x} provided to @code{mglGSpline*Init()} function).
 @end deftypefn
 
 @end ifclear

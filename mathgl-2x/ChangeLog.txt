@@ -1,12 +1,14 @@
 2.3.4 Released ?? December 2015
 
 * Add mglData::Pulse() for determining pulse parameters.
+* Add mglData::ScanFile() for getting formated data from textual file.
+* Add mglData::SetList() for setting data from variable argument list of double values.
+* Add IFS() for fractal generation using iterated function systems
 * Add Pmap() plot for Poincare map.
 * Add Lamerey() plot for Lamerey diagram.
 * Add Bifurcation() plot for Bifurcation diagram.
 * Add mglGraph::SetPenDelta() for changing size of semi-transparent area around lines, marks, glyphs, ...
 
-* Add MGL command 'fscanf' for getting formated data from textual file.
 * Add MGL command 'echo' for printing the content of data.
 * Add MGL command 'print' -- like 'info' but print immediately in stdout.
 * Allow MGL command 'save' append textual strings to a file.

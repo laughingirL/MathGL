@@ -3380,6 +3380,27 @@ int MGL_NO_EXPORT mgls_version(mglGraph *gr, long , mglArg *a, const char *k, co
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
+int mgls_ifs2d(mglGraph *, long, mglArg *a, const char *k, const char *)
+{
+	mglData *fx = dynamic_cast<mglData*>(a[0].d);
+	mglData *fy = dynamic_cast<mglData*>(a[1].d);
+	if(!fx)	return 1;
+	int res = 0;
+	if (!strcmp(k, "ddn"))	fx->Set(mglIFS(*(a[1].d), mgl_int(a[2].v)));
+	else if (!strcmp(k, "dddn") && fy)
+	{
+		mglData f(mglIFS(*(a[2].d), mgl_int(a[3].v)));
+		fx->Set(f.SubData(0));	fy->Set(f.SubData(1));
+	}
+	else if (!strcmp(k, "ddnn"))	fx->Set(mglIFS(*(a[1].d), mgl_int(a[2].v), mgl_int(a[3].v)));
+	else if (!strcmp(k, "dddnn") && fy)
+	{
+		mglData f(mglIFS(*(a[2].d), mgl_int(a[3].v), mgl_int(a[4].v)));
+		fx->Set(f.SubData(0));	fy->Set(f.SubData(1));
+	}
+	else res = 1;	return res;
+}
+//-----------------------------------------------------------------------------
 mglCommand mgls_base_cmd[] = {
 	{"addlegend","Add legend entry","addlegend 'txt' 'fmt'", mgls_addlegend,15},
 	{"addto","Add data or number","addto Var Dat|Var num", mgls_addto ,3},
@@ -3508,6 +3529,7 @@ mglCommand mgls_base_cmd[] = {
 	{"hist","Create histogram (distribution) of data values","hist Res Dat num v1 v2 [nsub]|Res Dat Wdat num v1 v2 [nsub]", mgls_hist ,4},
 	{"idset","Set column id for data","idset Dat 'ids'", mgls_idset ,3},
 	{"if","Conditional operator","if val|Dat ['cond']", 0, 6},
+	{"ifs2d", "Computes the attractor of an IFS", "ifs2d F A n [skip]|Fx Fy A n [skip]", mgls_ifs2d, 4},
 	{"import","Import data from PNG picture","import Dat 'fname' 'scheme' [v1 v2]", mgls_import ,4},
 	{"info","Print message or information about the data","info Dat [detail]|'message'|const", mgls_info ,3},
 	{"inplot","Set position of plot in picture","x1 x2 y1 y2 [rel]", mgls_inplot ,5},

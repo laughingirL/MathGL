@@ -65,6 +65,9 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
+	mglData a;	a.SetList(5,0.,1.,0.,1.,-1.,2.);
+	gr->Plot(a);
+	return;
 	mglParse par;
 	par.Execute(gr,"call 'test' -1\n func 'test' 1\nline $1 0 1 1 'b'\nreturn\n");
 //	par.Execute(gr,"load '/home/balakin/mathgl-code/mathgl-2x/build/examples/libmgl_module.so':baxis\n");
@@ -482,9 +485,9 @@ int main(int argc,char **argv)
 	{	smgl_fexport(gr);	delete gr;	return 0;	}
 	else if(dotest==5)
 	{
-		size_t i=0;	while(mgl_tex_symb[i].tex[0])	i++;
+		long i=0;	while(mgl_tex_symb[i].tex[0])	i++;
 		if(mgl_tex_num!=i)	printf("real=%lu, set=%ld\n",i,mgl_tex_num);
-		for(size_t i=0;mgl_tex_symb[i].tex[0];i++)
+		for(long i=0;mgl_tex_symb[i].tex[0];i++)
 		{
 				mglTeXsymb tst, *rts;	tst.tex = mgl_tex_symb[i].tex;
 				rts = (mglTeXsymb *) bsearch(&tst, mgl_tex_symb, mgl_tex_num, sizeof(mglTeXsymb), mgl_tex_symb_cmp);

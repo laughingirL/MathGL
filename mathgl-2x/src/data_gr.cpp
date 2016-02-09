@@ -81,7 +81,7 @@ void MGL_EXPORT mgl_datac_refill_gr_(uintptr_t *gr, uintptr_t *d, uintptr_t *xda
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_data_fill_eq(HMGL gr, HMDT d, const char *eq, HCDT vdat, HCDT wdat, const char *opt)
 {
-	if(vdat && vdat->GetNN()!=d->GetNN())	return;	// incompatible dimesions
+	if(vdat && vdat->GetNN()!=d->GetNN())	return;	// incompatible dimensions
 	if(wdat && wdat->GetNN()!=d->GetNN())	return;
 	gr->SaveState(opt);
 	std::wstring s = d->s;	d->s = L"u";
@@ -106,7 +106,7 @@ void MGL_EXPORT mgl_data_fill_eq_(uintptr_t *gr, uintptr_t *d, const char *eq, u
 //-----------------------------------------------------------------------------
 void MGL_EXPORT mgl_datac_fill_eq(HMGL gr, HADT d, const char *eq, HCDT vdat, HCDT wdat, const char *opt)
 {
-	if(vdat && vdat->GetNN()!=d->GetNN())	return;	// incompatible dimesions
+	if(vdat && vdat->GetNN()!=d->GetNN())	return;	// incompatible dimensions
 	if(wdat && wdat->GetNN()!=d->GetNN())	return;
 	gr->SaveState(opt);
 	std::wstring s = d->s;	d->s = L"u";
