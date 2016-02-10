@@ -883,6 +883,9 @@ Basically, you can put this text after the script. Note, that you need to termin
 * Tube sample::
 * Tape sample::
 * Torus sample::
+* Lamerey sample::
+* Bifurcation sample::
+* Pmap sample::
 @end menu
 
 
@@ -1384,7 +1387,7 @@ plot xc yc z 'k':tape xc yc z 'zg':tape xc yc z 'zg#'
 
 @c ------------------------------------------------------------------
 @external{}
-@node Torus sample, , Tape sample, 1D samples
+@node Torus sample, Lamerey sample, Tape sample, 1D samples
 @subsection Torus sample
 @nav{}
 
@@ -1405,6 +1408,61 @@ torus y1 y2 '#'
 @end verbatim
 
 @pfig{torus, Example of Torus()}
+
+@c ------------------------------------------------------------------
+@external{}
+@node Lamerey sample, Bifurcation sample, Torus sample, 1D samples
+@subsection Lamerey sample
+@nav{}
+
+Function @ref{lamerey} draw Lamerey diagram. The sample code is:
+@verbatim
+subplot 1 1 0 '<_':title 'Lamerey sample'
+axis:xlabel '\i x':ylabel '\bar{\i x} = 2 \i{x}'
+fplot 'x' 'k='
+fplot '2*x' 'b'
+
+lamerey 0.00097 '2*x' 'rv~';size 2
+lamerey -0.00097 '2*x' 'rv~';size 2
+@end verbatim
+
+@pfig{lamerey, Example of Lamerey()}
+
+@c ------------------------------------------------------------------
+@external{}
+@node Bifurcation sample, Pmap sample, Lamerey sample, 1D samples
+@subsection Bifurcation sample
+@nav{}
+
+Function @ref{bifurcation} draw Bifurcation diagram for logistic map. The sample code is:
+@verbatim
+subplot 1 1 0 '<_':title 'Bifurcation sample'
+ranges 0 4 0 1:axis
+bifurcation 0.005 'x*y*(1-y)' 'r'
+@end verbatim
+
+@pfig{bifurcation, Example of Bifurcation()}
+
+
+@c ------------------------------------------------------------------
+@external{}
+@node Pmap sample, , Bifurcation sample, 1D samples
+@subsection Pmap sample
+@nav{}
+
+Function @ref{pmap} draw Poincare map -- show intersections of the curve and the surface. The sample code is:
+@verbatim
+subplot 1 1 0 '<_^':title 'Poincare map sample'
+ode r 'cos(y)+sin(z);cos(z)+sin(x);cos(x)+sin(y)' 'xyz' [0.1,0,0] 0.1 100
+rotate 40 60:copy x r(0):copy y r(1):copy z r(2)
+ranges x y z
+axis:plot x y z 'b':fsurf '0'
+xlabel '\i x' 0:ylabel '\i y' 0:zlabel '\i z'
+
+pmap x y z z 'b#o'
+@end verbatim
+
+@pfig{pmap, Example of Pmap()}
 
 
 @c ------------------------------------------------------------------
@@ -2261,7 +2319,7 @@ In this section I've included some small hints and advices for the improving of 
 * Nonlinear fitting hints::
 * PDE solving hints::
 * Drawing phase plain::
-* MGL parser using::
+* Using MGL parser::
 * Using options::
 * ``Templates''::
 * Stereo image::
@@ -2781,7 +2839,7 @@ text 0.7 -0.05 'central ray'
 
 @c ------------------------------------------------------------------
 @external{}
-@node Drawing phase plain, MGL parser using, PDE solving hints, Hints
+@node Drawing phase plain, Using MGL parser, PDE solving hints, Hints
 @subsection Drawing phase plain
 @nav{}
 
@@ -2818,8 +2876,8 @@ next
 
 @c ------------------------------------------------------------------
 @external{}
-@node MGL parser using, Using options, Drawing phase plain, Hints
-@subsection MGL parser using
+@node Using MGL parser, Using options, Drawing phase plain, Hints
+@subsection Using MGL parser
 @nav{}
 
 MGL scripts can contain loops, conditions and user-defined functions. Below I show very simple example of its usage:
@@ -2845,7 +2903,7 @@ next
 
 @c ------------------------------------------------------------------
 @external{}
-@node Using options, ``Templates'', MGL parser using, Hints
+@node Using options, ``Templates'', Using MGL parser, Hints
 @subsection Using options
 @nav{}
 

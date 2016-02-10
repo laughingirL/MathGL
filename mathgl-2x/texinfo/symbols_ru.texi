@@ -237,6 +237,8 @@ string continuation symbol on next line for @ref{MGL scripts}.
 @item ~
 disable drawing of tick labels for @ref{axis} and @ref{colorbar};
 
+disable first segment in @ref{lamerey};
+
 one of mask for face filling (see @ref{Color scheme}).
 
 @item 0,1,2,3,4,5,6,7,8,9
@@ -461,7 +463,7 @@ place text centering on vertical direction for @ref{text}.
 @item v
 one of marks (see @ref{Line styles});
 
-set to draw vectors on flow threads for @ref{flow}.
+set to draw vectors on flow threads for @ref{flow} and on segments for @ref{lamerey}.
 
 @item W
 bright gray color (see @ref{Color styles}).

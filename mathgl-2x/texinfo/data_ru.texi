@@ -424,6 +424,12 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 Выделяет память и сканирует массив данных из строки.
 @end deftypefn
 
+
+@deftypefn {Method on @code{mglData}} @code{void} SetList (@code{long} n, ...)
+Allocate memory and set data from variable argument list of @emph{double} values. Note, you need to specify decimal point @samp{.} for integer values! For example, the code @code{SetList(2,0.,1.);} is correct, but the code @code{SetList(2,0,1);} is incorrect.
+@end deftypefn
+
+
 @deftypefn {Метод класса @code{mglData}} @code{void} Link (@code{mglData &}from)
 @deftypefnx {Метод класса @code{mglData}} @code{void} Link (@code{mreal *}A, @code{int} NX, @code{int} NY=@code{1}, @code{int} NZ=@code{1})
 @deftypefnx {Функция С} @code{void} mgl_data_link (@code{HMDT} dat, @code{const mreal *}A, @code{int} NX, @code{int} NY, @code{int} NZ)
@@ -549,7 +555,7 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @end deftypefn
 
 @anchor{gspline}
-@deftypefn {MGL command} {} gspline dat xdat vdat [sl=-1]
+@deftypefn {Команда MGL} {} gspline dat xdat vdat [sl=-1]
 @ifclear UDAV
 @deftypefnx {Method on @code{mglData}} @code{void} RefillGS (@code{const mglDataA &}x, @code{const mglDataA &}v, @code{mreal} x1, @code{mreal} x2, @code{long} sl=@code{-1})
 @deftypefnx {C function} @code{void} mgl_data_refill_gs (@code{HMDT} a, @code{HCDT} x, @code{HCDT} v, @code{mreal} x1, @code{mreal} x2, @code{long} sl)
@@ -647,7 +653,7 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 Сохраняет весь массив данных при @var{ns}=@code{-1} или только @var{ns}-ый срез в текстовый файл.
 @end deftypefn
 
-@deftypefn {MGL command} {} save 'str' 'fname' ['mode'='a']
+@deftypefn {Команда MGL} {} save 'str' 'fname' ['mode'='a']
 Сохраняет строку @var{str} в файл @var{fname}. Для параметра @var{mode}=@samp{a} происходит добавление строки (по умолчанию): для  @var{mode}=@samp{w} файл будет перезаписан.
 @end deftypefn
 
@@ -1209,6 +1215,19 @@ These functions change the data in some direction like differentiations, integra
 Печатает значение числа @var{val} как сообщение.
 @end deftypefn
 
+@anchor{print}
+@deftypefn {Команда MGL} {} print dat
+@deftypefnx {Команда MGL} {} print 'txt'
+@deftypefnx {Команда MGL} {} print val
+Аналогично @ref{info}, но сразу выводит в stdout.
+@end deftypefn
+
+@anchor{echo}
+@deftypefn {Команда MGL} {} echo dat
+Печатает все значения массива @var{dat} как сообщение.
+@end deftypefn
+
+
 @cindex GetNx
 @cindex GetNy
 @cindex GetNz
@@ -1503,7 +1522,7 @@ These functions change the data in some direction like differentiations, integra
 @end deftypefn
 
 @anchor{ode}
-@deftypefn {MGL command} {} ode @sc{res} 'df' 'var' ini [@code{dt=0.1 tmax=10}]
+@deftypefn {Команда MGL} {} ode @sc{res} 'df' 'var' ini [@code{dt=0.1 tmax=10}]
 @ifclear UDAV
 @deftypefnx {Global function} @code{mglData} mglODE (@code{const char *}df, @code{const char *}var, @code{const mglDataA &}ini, @code{mreal} dt=@code{0.1}, @code{mreal} tmax=@code{10})
 @deftypefnx {C function} @code{HMDT} mgl_ode_solve_str (@code{const char *}df, @code{const char *}var, @code{HCDT} ini, @code{mreal} dt, @code{mreal} tmax)

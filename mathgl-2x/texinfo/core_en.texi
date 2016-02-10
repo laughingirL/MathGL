@@ -323,6 +323,15 @@ Gets default name @var{id} as filename for saving (in FLTK window for example).
 @end deftypefn
 @end ifclear
 
+@anchor{pendelta}
+@deftypefn {MGL command} {} pendelta @code{val}
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} SetPenDelta (@code{double} val)
+@deftypefnx {C function} @code{void} mgl_pen_delta (@code{HMGL} gr, @code{double} val)
+@end ifclear
+Changes the blur around lines and text (default is 1). For @var{val}>1 the text and lines are more sharped. For @var{val}<1 the text and lines are more blurred.
+@end deftypefn
+
 @c ==================================================================
 @external{}
 @node Cutting, Font settings, Default sizes, Graphics setup
@@ -1162,10 +1171,11 @@ Functions in this group save or give access to produced picture. So, usually the
 @anchor{setsize}
 @deftypefn {MGL command} {} setsize @code{w h}
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} SetSize (@code{int} width, @code{int} height)
+@deftypefnx {Method on @code{mglGraph}} @code{void} SetSize (@code{int} width, @code{int} height, @code{bool} clear=@code{true})
 @deftypefnx {C function} @code{void} mgl_set_size (@code{HMGL} gr, @code{int} width, @code{int} height)
+@deftypefnx {C function} @code{void} mgl_scale_size (@code{HMGL} gr, @code{int} width, @code{int} height)
 @end ifclear
-Sets size of picture in pixels. This function @strong{must be} called before any other plotting because it completely remove picture contents.
+Sets size of picture in pixels. This function @strong{should be} called before any other plotting because it completely remove picture contents if @var{clear}=@code{true}. Function just clear pixels and scale all primitives if @var{clear}=@code{false}.
 @end deftypefn
 
 @ifclear UDAV
@@ -2494,6 +2504,46 @@ These functions draw the tube with variable radius @var{r}[i] along the curve be
 @end ifclear
 These functions draw surface which is result of curve @{@var{r}, @var{z}@} rotation around axis. If string @var{pen} contain symbols @samp{x} or @samp{z} then rotation axis will be set to specified direction (default is @samp{y}). If string @var{pen} have symbol @samp{#} then wire plot is produced. If string @var{pen} have symbol @samp{.} then plot by dots is produced. See also @ref{plot}, @ref{axial}. @sref{Torus sample}
 @end deftypefn
+
+@anchor{lamerey}
+@deftypefn {MGL command} {} lamerey @code{x0} ydat ['stl'='']
+@deftypefnx {MGL command} {} lamerey @code{x0} 'y(x)' ['stl'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} Lamerey (@code{double} x0, @code{const mglDataA &}y, @code{const char *}stl=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Lamerey (@code{double} x0, @code{const char *}y, @code{const char *}stl=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_lamerey_dat (@code{HMGL} gr, @code{double} x0, @code{HCDT} y, @code{const char *}stl, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_lamerey_str (@code{HMGL} gr, @code{double} x0, @code{const char *}y, @code{const char *}stl, @code{const char *}opt)
+@end ifclear
+These functions draw Lamerey diagram for mapping x_new = y(x_old) starting from point @var{x0}. String @var{stl} may contain line style, symbol @samp{v} for drawing arrows, symbol @samp{~} for disabling first segment. Option @code{value} set the number of segments to be drawn (default is 20). See also @ref{plot}, @ref{fplot}, @ref{bifurcation}, @ref{pmap}. @sref{Lamerey sample}
+@end deftypefn
+
+@anchor{bifurcation}
+@deftypefn {MGL command} {} bifurcation @code{dx} ydat ['stl'='']
+@deftypefnx {MGL command} {} bifurcation @code{dx} 'y(x)' ['stl'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} Bifurcation (@code{double} dx, @code{const mglDataA &}y, @code{const char *}stl=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Bifurcation (@code{double} dx, @code{const char *}y, @code{const char *}stl=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_bifurcation_dat (@code{HMGL} gr, @code{double} dx, @code{HCDT} y, @code{const char *}stl, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_bifurcation_str (@code{HMGL} gr, @code{double} dx, @code{const char *}y, @code{const char *}stl, @code{const char *}opt)
+@end ifclear
+These functions draw bifurcation diagram for mapping x_new = y(x_old). Parameter @var{dx} set the accuracy along x-direction. String @var{stl} set color. Option @code{value} set the number of stationary points (default is 1024). See also @ref{plot}, @ref{fplot}, @ref{lamerey}. @sref{Bifurcation sample}
+@end deftypefn
+
+@anchor{pmap}
+@deftypefn {MGL command} {} pmap ydat sdat ['stl'='']
+@deftypefnx {MGL command} {} pmap xdat ydat sdat ['stl'='']
+@deftypefnx {MGL command} {} pmap xdat ydat zdat sdat ['stl'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} Pmap (@code{const mglDataA &}y, @code{const mglDataA &}s, @code{const char *}stl=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Pmap (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}s, @code{const char *}stl=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Pmap (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}s, @code{const char *}stl=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_pmap (@code{HMGL} gr, @code{HMDT} y, @code{HCDT} s, @code{const char *}stl, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_pmap_xy (@code{HMGL} gr, @code{HCDT} x, @code{HMDT} y, @code{HCDT} s, @code{const char *}stl, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_pmap_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HMDT} y, @code{HCDT} z, @code{HCDT} s, @code{const char *}stl, @code{const char *}opt)
+@end ifclear
+These functions draw Poincare map for curve @{@var{x}, @var{y}, @var{z}@} at surface @var{s}=0. Basically, it show intersections of the curve and the surface. String @var{stl} set the style of marks. See also @ref{plot}, @ref{mark}, @ref{lamerey}. @sref{Pmap sample}
+@end deftypefn
+
 
 @c ##################################################################
 @external{}

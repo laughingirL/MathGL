@@ -428,6 +428,13 @@ Allocates memory and copies the data from the @code{std::vector<T>} array.
 Allocates memory and scanf the data from the string.
 @end deftypefn
 
+
+@deftypefn {Method on @code{mglData}} @code{void} SetList (@code{long} n, ...)
+Allocate memory and set data from variable argument list of @emph{double} values. Note, you need to specify decimal point @samp{.} for integer values! For example, the code @code{SetList(2,0.,1.);} is correct, but the code @code{SetList(2,0,1);} is incorrect.
+@end deftypefn
+
+
+
 @deftypefn {Method on @code{mglData}} @code{void} Link (@code{mglData &}from)
 @deftypefnx {Method on @code{mglData}} @code{void} Link (@code{mreal *}A, @code{int} NX, @code{int} NY=@code{1}, @code{int} NZ=@code{1})
 @deftypefnx {C function} @code{void} mgl_data_link (@code{HMDT} dat, @code{mreal *}A, @code{int} NX, @code{int} NY, @code{int} NZ)
@@ -1219,6 +1226,19 @@ Prints string @var{txt} as message.
 @deftypefn {MGL command} {} info val
 Prints value of number @var{val} as message.
 @end deftypefn
+
+@anchor{print}
+@deftypefn {MGL command} {} print dat
+@deftypefnx {MGL command} {} print 'txt'
+@deftypefnx {MGL command} {} print val
+The same as @ref{info} but immediately print to stdout.
+@end deftypefn
+
+@anchor{echo}
+@deftypefn {MGL command} {} echo dat
+Prints all values of the data array @var{dat} as message.
+@end deftypefn
+
 
 @cindex GetNx
 @cindex GetNy

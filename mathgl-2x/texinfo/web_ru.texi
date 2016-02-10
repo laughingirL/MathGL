@@ -405,7 +405,7 @@ There are samples for @ref{1D data plotting, 1D arrays}, @ref{2D data plotting, 
 @sfig{hist, Making histogram}
 @sfig{fit, Nonlinear fitting hints}
 @sfig{pde, PDE solving hints}
-@sfig{parser, MGL parser using}
+@sfig{parser, Using MGL parser}
 
 @external{}
 

@@ -101,6 +101,7 @@ call mgl_delete_graph(gr);
 * Drawing to file::
 * Animation::
 * Drawing in memory::
+* Draw and calculate::
 * Using QMathGL::
 * MathGL and PyQt::
 * MathGL and MPI::
@@ -256,98 +257,7 @@ int sample(mglGraph *gr)
 @end verbatim
 First, the function creates a frame by calling @code{NewFrame()} for rotated axes and draws the bounding box.  The function @code{EndFrame()} @strong{must be} called after the frame drawing! The second frame contains the bounding box and axes @code{Axis("xy")} in the initial (unrotated) coordinates. Function @code{sample} returns the number of created frames @code{GetNumFrame()}.
 
-Note, that such kind of animation is rather slow and not well suitable for visualization of running calculations. For the last case one can use @code{Update()} function. The most simple case for doing this is running yours calculations firstly in separate thread and later start MathGL window (QT or FLTK) creation.
-@verbatim
-#include <mgl2/window.h>
-mglWindow *gr=NULL;
-void *calc(void *)
-{
-  mglPoint pnt;
-  for(int i=0;i<10;i++)   // do calculation
-  {
-    sleep(2);             // which can be very long
-    pnt = mglPoint(2*mgl_rnd()-1,2*mgl_rnd()-1);
-    if(gr)            // be sure that window is ready
-    {
-      gr->Clf();      // make new drawing
-      gr->Line(mglPoint(),pnt,"Ar2");
-      char str[10] = "i=0";  str[2] = '0'+i;
-      gr->Puts(mglPoint(),str);
-      gr->Update();   // update window
-    }
-  }
-  exit(0);
-}
-int main(int argc,char **argv)
-{
-  static pthread_t thr;
-  // first run yours routine in separate thread
-  pthread_create(&thr,0,calc,0);
-  pthread_detach(thr);
-  gr = new mglWindow;
-  gr->Run();  return 0;
-}
-@end verbatim
-Note, that such method looks as not working for GLUT windows due to limitation of @code{glutMainLoop()} function.
-
-Another ways use built-in MathGL feature to run a member function @code{mglDraw::Calc()} separate thread, which work only if pthread support is enabled. For this, you just need to use @code{mglDraw} class and reimplement its @code{Calc()} method.
-@verbatim
-#include <mgl2/window.h>
-class Foo : public mglDraw
-{
-  mglPoint pnt;  // some result of calculation
-public:
-  mglWindow *Gr;  // graphics to be updated
-  int Draw(mglGraph *gr);
-  void Calc();
-} foo;
-//-----------------------------------------------------
-void Foo::Calc()
-{
-  for(int i=0;i<30;i++)   // do calculation
-  {
-    sleep(2);             // which can be very long
-    pnt = mglPoint(2*mgl_rnd()-1,2*mgl_rnd()-1);
-    Gr->Update();         // update window
-  }
-}
-//-----------------------------------------------------
-int Foo::Draw(mglGraph *gr)
-{
-  gr->Line(mglPoint(),pnt,"Ar2");
-  gr->Box();
-  return 0;
-}
-//-----------------------------------------------------
-int main(int argc,char **argv)
-{
-  mglWindow gr(&foo,"MathGL examples");
-  foo.Gr = &gr;   foo.Run();
-  return gr.Run();
-}
-@end verbatim
-
-Finally, you can put the event-handling loop in separate instead of yours code by using @code{RunThr()} function instead of @code{Run()} one. Unfortunately, such method work well only for FLTK windows and only if pthread support was enabled. Such limitation come from the Qt requirement to be run in the primary thread only. The sample code will be:
-@verbatim
-#include <mgl2/fltk.h>
-int main(int argc,char **argv)
-{
-  mglFLTK gr("test");     // create window
-  gr.RunThr();            // run event loop in separate thread
-  for(int i=0;i<10;i++)   // do calculation
-  {
-    sleep(1);             // which can be very long
-    pnt = mglPoint(2*mgl_rnd()-1,2*mgl_rnd()-1);
-    gr.Clf();             // make new drawing
-    gr.Line(mglPoint(),pnt,"Ar2");
-    char str[10] = "i=0"; str[2] = '0'+i;
-    gr.Puts(mglPoint(),str);
-    gr.Update();          // update window when you need it
-  }
-  return 0;   // finish calculations and close the window
-}
-@end verbatim
-
+Note, that animation can be also done as visualization of running calculations (see @ref{Draw and calculate}).
 
 Pictures with @strong{animation can be saved in file(s)} as well. You can: export in animated GIF, or save each frame in separate file (usually JPEG) and convert these files into the movie (for example, by help of ImageMagic). Let me show both methods.
 
@@ -404,7 +314,7 @@ Finally, you can use @code{mglconv} tool for doing the same with MGL scripts (@p
 
 @c ------------------------------------------------------------------
 @external{}
-@node Drawing in memory, Using QMathGL, Animation, Basic usage
+@node Drawing in memory, Draw and calculate, Animation, Basic usage
 @subsection Drawing in memory
 @nav{}
 
@@ -463,7 +373,112 @@ void MyWidget::paintEvent(QPaintEvent *)
 
 @c ------------------------------------------------------------------
 @external{}
-@node Using QMathGL, MathGL and PyQt, Drawing in memory, Basic usage
+@node Draw and calculate, Using QMathGL, Drawing in memory, Basic usage
+@subsection Draw and calculate
+@nav{}
+
+MathGL can be used to draw plots in parallel with some external calculations. The simplest way for this is the usage of @ref{mglDraw class}. At this you should enable pthread for widgets by setting @code{enable-pthr-widget=ON} at configure stage (it is set by default).
+First, you need to inherit you class from @code{mglDraw} class, define virtual members @code{Draw()} and @code{Calc()} which will draw the plot and proceed calculations. You may want to add the pointer @code{mglWnd *wnd;} to window with plot for interacting with them. Finally, you may add any other data or member functions. The sample class is shown below
+@verbatim
+class myDraw : public mglDraw
+{
+	mglPoint pnt;	// some variable for changeable data
+	long i;			// another variable to be shown
+	mglWnd *wnd;	// external window for plotting
+public:
+	myDraw(mglWnd *w=0) : mglDraw()	{	wnd=w;	}
+	void SetWnd(mglWnd *w)	{	wnd=w;	}
+	int Draw(mglGraph *gr)
+	{
+		gr->Line(mglPoint(),pnt,"Ar2");
+		char str[16];	snprintf(str,15,"i=%ld",i);
+		gr->Puts(mglPoint(),str);
+		return 0;
+	}
+	void Calc()
+	{
+		for(i=0;;i++)	// do calculation
+		{
+			long_calculations();// which can be very long
+			Check();	// check if need pause
+			pnt.Set(2*mgl_rnd()-1,2*mgl_rnd()-1);
+			if(wnd)	wnd->Update();
+		}
+	}
+} dr;
+@end verbatim
+There is only one issue here. Sometimes you may want to pause calculations to view result carefully, or save state, or change something. So, you need to provide a mechanism for pausing. Class @code{mglDraw} provide function @code{Check();} which check if toolbutton with pause is pressed and wait until it will be released. This function should be called in a "safety" places, where you can pause the calculation (for example, at the end of time step). Also you may add call @code{exit(0);} at the end of @code{Calc();} function for closing window and exit after finishing calculations.
+Finally, you need to create a window itself and run calculations.
+@verbatim
+int main(int argc,char **argv)
+{
+	mglFLTK gr(&dr,"Multi-threading test");	// create window
+	dr.SetWnd(&gr);	// pass window pointer to yours class
+	dr.Run();	// run calculations
+	gr.Run();	// run event loop for window
+	return 0;
+}
+@end verbatim
+
+Note, that you can reach the similar functionality without using @code{mglDraw} class (i.e. even for pure C code).
+@verbatim
+mglFLTK *gr=NULL;	// pointer to window
+void *calc(void *)	// function with calculations
+{
+	mglPoint pnt;	// some data for plot
+	for(long i=0;;i++)		// do calculation
+	{
+		long_calculations();	// which can be very long
+		pnt.Set(2*mgl_rnd()-1,2*mgl_rnd()-1);
+		if(gr)
+		{
+			gr->Clf();			// make new drawing
+			// draw something
+			gr->Line(mglPoint(),pnt,"Ar2");
+			char str[16];	snprintf(str,15,"i=%ld",i);
+			gr->Puts(mglPoint(),str);
+			// don't forgot to update window
+			gr->Update();
+		}
+	}
+}
+int main(int argc,char **argv)
+{
+	static pthread_t thr;
+	pthread_create(&thr,0,calc,0);	// create separate thread for calculations
+	pthread_detach(thr);			// and detach it
+	gr = new mglFLTK;	// now create window
+	gr->Run();			// and run event loop
+	return 0;
+}
+@end verbatim
+This sample is exactly the same as one with @code{mglDraw} class, but it don't have functionality for pausing calculations. If you need it then you have to create global mutex (like @code{pthread_mutex_t *mutex = pthread_mutex_init(&mutex,NULL);}), set it to window (like @code{gr->SetMutex(mutex);}) and periodically check it at calculations (like @code{pthread_mutex_lock(&mutex); pthread_mutex_unlock(&mutex);}).
+
+Finally, you can put the event-handling loop in separate instead of yours code by using @code{RunThr()} function instead of @code{Run()} one. Unfortunately, such method work well only for FLTK windows and only if pthread support was enabled. Such limitation come from the Qt requirement to be run in the primary thread only. The sample code will be:
+@verbatim
+int main(int argc,char **argv)
+{
+	mglFLTK gr("test");
+	gr.RunThr();	// <-- need MathGL version which use pthread for widgets
+	mglPoint pnt;	// some data
+	for(int i=0;i<10;i++)	// do calculation
+	{
+		long_calculations();// which can be very long
+		pnt.Set(2*mgl_rnd()-1,2*mgl_rnd()-1);
+		gr.Clf();			// make new drawing
+		gr.Line(mglPoint(),pnt,"Ar2");
+		char str[10] = "i=0";	str[3] = '0'+i;
+		gr->Puts(mglPoint(),str);
+		gr.Update();		// update window
+	}
+	return 0;	// finish calculations and close the window
+}
+@end verbatim
+
+
+@c ------------------------------------------------------------------
+@external{}
+@node Using QMathGL, MathGL and PyQt, Draw and calculate, Basic usage
 @subsection Using QMathGL
 @nav{}
 
@@ -1600,6 +1615,9 @@ void mgls_prepare1d(HMDT y, HMDT y1=0, HMDT y2=0, HMDT x1=0, HMDT x2=0)
 * Tube sample::
 * Tape sample::
 * Torus sample::
+* Lamerey sample::
+* Bifurcation sample::
+* Pmap sample::
 @end menu
 
 
@@ -2215,7 +2233,7 @@ int sample(mglGraph *gr)
 
 @c ------------------------------------------------------------------
 @external{}
-@node Torus sample, , Tape sample, 1D samples
+@node Torus sample, Lamerey sample, Tape sample, 1D samples
 @subsection Torus sample
 @nav{}
 
@@ -2241,6 +2259,72 @@ int sample(mglGraph *gr)
 @end verbatim
 
 @pfig{torus, Example of Torus()}
+
+@c ------------------------------------------------------------------
+@external{}
+@node Lamerey sample, Bifurcation sample, Torus sample, 1D samples
+@subsection Lamerey sample
+@nav{}
+
+Function @ref{lamerey} draw Lamerey diagram. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  gr->SubPlot(1,1,0,"<_");
+  gr->Title("Lamerey sample");
+  gr->Axis(); gr->Label('x',"\\i x");
+  gr->Label('y',"\\bar{\\i x} = 2 \\i{x}");
+  gr->FPlot("x","k=");  gr->FPlot("2*x","b");
+  gr->Lamerey( 0.00097,"2*x","rv~");
+  gr->Lamerey(-0.00097,"2*x","rv~");
+}
+@end verbatim
+
+@pfig{lamerey, Example of Lamerey()}
+
+@c ------------------------------------------------------------------
+@external{}
+@node Bifurcation sample, Pmap sample, Lamerey sample, 1D samples
+@subsection Bifurcation sample
+@nav{}
+
+Function @ref{bifurcation} draw Bifurcation diagram for logistic map. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  gr->SubPlot(1,1,0,"<_");
+  gr->Title("Bifurcation sample");
+  gr->SetRanges(0,4,0,1);   gr->Axis();
+  gr->Bifurcation(0.005,"x*y*(1-y)","r");
+}
+@end verbatim
+
+@pfig{bifurcation, Example of Bifurcation()}
+
+
+@c ------------------------------------------------------------------
+@external{}
+@node Pmap sample, , Bifurcation sample, 1D samples
+@subsection Pmap sample
+@nav{}
+
+Function @ref{pmap} draw Poincare map -- show intersections of the curve and the surface. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  gr->SubPlot(1,1,0,"<_^");
+  gr->Title("Poincare map sample");
+  mglData ini(3);	ini[0]=0.1;
+  mglData r(mglODE("cos(y)+sin(z);cos(z)+sin(x);cos(x)+sin(y)","xyz",ini,0.1,100));
+  mglData x(r.SubData(0)),y(r.SubData(1)), z(r.SubData(2));
+  gr->Rotate(40,60);  gr->SetRanges(x,y,z);
+  gr->Axis(); gr->FSurf("0"); gr->Plot(x,y,z,"b");
+  gr->Label('x',"\\i x",0);   gr->Label('y',"\\i y",0);   gr->Label('z',"\\i z",0);
+  gr->Pmap(x,y,z,z, "b#o");
+}
+@end verbatim
+
+@pfig{pmap, Example of Pmap()}
 
 
 @c ------------------------------------------------------------------
@@ -3351,7 +3435,7 @@ In this section I've included some small hints and advices for the improving of 
 * Nonlinear fitting hints::
 * PDE solving hints::
 * Drawing phase plain::
-* MGL parser using::
+* Using MGL parser::
 * Using options::
 * ``Templates''::
 * Stereo image::
@@ -4002,7 +4086,7 @@ int sample(mglGraph *gr)
 
 @c ------------------------------------------------------------------
 @external{}
-@node Drawing phase plain, MGL parser using, PDE solving hints, Hints
+@node Drawing phase plain, Using MGL parser, PDE solving hints, Hints
 @subsection Drawing phase plain
 @nav{}
 
@@ -4043,8 +4127,8 @@ int sample(mglGraph *gr)
 
 @c ------------------------------------------------------------------
 @external{}
-@node MGL parser using, Using options, Drawing phase plain, Hints
-@subsection MGL parser using
+@node Using MGL parser, Using options, Drawing phase plain, Hints
+@subsection Using MGL parser
 @nav{}
 
 Sometimes you may prefer to use MGL scripts in yours code. It is simpler (especially in comparison with C/Fortran interfaces) and provide faster way to plot the data with annotations, labels and so on. Class @code{mglParse} (@pxref{mglParse class} parse MGL scripts in C++. It have also the corresponding interface for C/Fortran.
@@ -4101,7 +4185,7 @@ int sample(HMGL gr)
 
 @c ------------------------------------------------------------------
 @external{}
-@node Using options, ``Templates'', MGL parser using, Hints
+@node Using options, ``Templates'', Using MGL parser, Hints
 @subsection Using options
 @nav{}
 
@@ -4312,7 +4396,7 @@ gr->WriteFrame("fname.eps");
 @end verbatim
 
 @item Why I couldn't use name @samp{I} for variable?
-MathGL support C99 standard, where @samp{I} is reserved for imaginary unit. If you still need this name, then just use 
+MathGL support C99 standard, where @samp{I} is reserved for imaginary unit. If you still need this name, then just use
 @verbatim
 #undef I
 @end verbatim

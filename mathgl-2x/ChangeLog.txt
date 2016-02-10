@@ -3,7 +3,8 @@
 * Add mglData::Pulse() for determining pulse parameters.
 * Add mglData::ScanFile() for getting formated data from textual file.
 * Add mglData::SetList() for setting data from variable argument list of double values.
-* Add IFS() for fractal generation using iterated function systems
+* Add mglIFS() for fractal generation using iterated function systems.
+* Add option to SetSize() for scaling only primitives but don't erase it.
 * Add Pmap() plot for Poincare map.
 * Add Lamerey() plot for Lamerey diagram.
 * Add Bifurcation() plot for Bifurcation diagram.
@@ -14,7 +15,7 @@
 * Allow MGL command 'save' append textual strings to a file.
 * Add option to rewrite file in 'savehdf'.
 
-* Add callback functions to mglQt, nglFLTK, and extend mglDraw class for easy multi-threading calculation.
+* Add callback functions to mglQt, nglFLTK, and extend mglDraw class for easy multi-threading calculation (see @ref{Draw and calculate}).
 
 * Force set focus for editor in UDAV.
 * Add line numbers to UDAV editor. Cyan number denote current line, red numbers denote lines with errors.

@@ -576,7 +576,7 @@ public:
 
 	/// Draws Lamerey diagram for mapping x_new = f(x_old)
 	/** String \a stl may contain: ‘v’ for drawing arrows; ‘~’ for disable 1st segment.
-	 *	Option value set the number of iterations (default is 20).*/
+	 *	Option value set the number of segments (default is 20).*/
 	inline void Lamerey(double x0, const mglDataA &f, const char *stl="", const char *opt="")
 	{	mgl_lamerey_dat(gr,x0,&f,stl,opt);	}
 	inline void Lamerey(double x0, const char *func, const char *stl="", const char *opt="")
@@ -1047,15 +1047,15 @@ public:
 	inline void Mark(const mglDataA &y, const mglDataA &r, const char *pen, const char *opt="")
 	{	mgl_mark_y(gr, &y, &r, pen, opt);	}
 
-	/// Draw Poincare map at condition r==0 for curve {x,y,z}
-	inline void Pmap(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &r, const char *pen, const char *opt="")
-	{	mgl_pmap_xyz(gr, &x, &y, &z, &r, pen, opt);	}
-	/// Draw Poincare map at condition r==0 for curve {x,y}
-	inline void Pmap(const mglDataA &x, const mglDataA &y, const mglDataA &r, const char *pen, const char *opt="")
-	{	mgl_pmap_xy(gr, &x, &y, &r, pen, opt);	}
-	/// Draw Poincare map at condition r==0 for curve {x,y} with x in x-axis range
-	inline void Pmap(const mglDataA &y, const mglDataA &r, const char *pen, const char *opt="")
-	{	mgl_pmap(gr, &y, &r, pen, opt);	}
+	/// Draw Poincare map at condition s==0 for curve {x,y,z}
+	inline void Pmap(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &s, const char *pen, const char *opt="")
+	{	mgl_pmap_xyz(gr, &x, &y, &z, &s, pen, opt);	}
+	/// Draw Poincare map at condition s==0 for curve {x,y}
+	inline void Pmap(const mglDataA &x, const mglDataA &y, const mglDataA &s, const char *pen, const char *opt="")
+	{	mgl_pmap_xy(gr, &x, &y, &s, pen, opt);	}
+	/// Draw Poincare map at condition s==0 for curve {x,y} with x in x-axis range
+	inline void Pmap(const mglDataA &y, const mglDataA &s, const char *pen, const char *opt="")
+	{	mgl_pmap(gr, &y, &s, pen, opt);	}
 
 	/// Draw textual marks with size r at points {x,y,z}
 	inline void TextMark(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &r, const char *text, const char *fnt="", const char *opt="")

@@ -314,6 +314,15 @@ MGL не требует создания данного типа объекто�
 @end deftypefn
 @end ifclear
 
+@anchor{pendelta}
+@deftypefn {Команда MGL} {} pendelta @code{val}
+@ifclear UDAV
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} SetPenDelta (@code{double} val)
+@deftypefnx {Функция С} @code{void} mgl_pen_delta (@code{HMGL} gr, @code{double} val)
+@end ifclear
+Изменяет размытие около линий и текста (по умолчанию 1). Для @var{val}>1 текст и линии более резкие. Для @var{val}<1 текст и линии более размытые.
+@end deftypefn
+
 @c ==================================================================
 @external{}
 @node Cutting, Font settings, Default sizes, Graphics setup
@@ -1115,10 +1124,11 @@ Ternary -- специальный тип графика для 3 зависим�
 @anchor{setsize}
 @deftypefn {Команда MGL} {} setsize @code{w h}
 @ifclear UDAV
-@deftypefnx {Метод класса @code{mglGraph}} @code{void} SetSize (@code{int} width, @code{int} height)
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} SetSize (@code{int} width, @code{int} height, @code{bool} clear=@code{true})
 @deftypefnx {Функция С} @code{void} mgl_set_size (@code{HMGL} gr, @code{int} width, @code{int} height)
+@deftypefnx {Функция С} @code{void} mgl_scale_size (@code{HMGL} gr, @code{int} width, @code{int} height)
 @end ifclear
-Изменяет размер картинки в пикселях. Функция должна вызываться @strong{перед} любыми функциями построения потому что полностью очищает содержимое рисунка.
+Изменяет размер картинки в пикселях. Функция должна вызываться @strong{перед} любыми функциями построения потому что полностью очищает содержимое рисунка при @var{clear}=@code{true}. Функция только очищает растровый рисунок и масштабирует примитивы при @var{clear}=@code{false}.
 @end deftypefn
 
 
@@ -2403,6 +2413,45 @@ Draw bitmap (logo) along whole axis range, which can be changed by @ref{Command 
 @end deftypefn
 
 
+
+@anchor{lamerey}
+@deftypefn {Команда MGL} {} lamerey @code{x0} ydat ['stl'='']
+@deftypefnx {Команда MGL} {} lamerey @code{x0} 'y(x)' ['stl'='']
+@ifclear UDAV
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Lamerey (@code{double} x0, @code{const mglDataA &}y, @code{const char *}stl=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Lamerey (@code{double} x0, @code{const char *}y, @code{const char *}stl=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Функция С} @code{void} mgl_lamerey_dat (@code{HMGL} gr, @code{double} x0, @code{HCDT} y, @code{const char *}stl, @code{const char *}opt)
+@deftypefnx {Функция С} @code{void} mgl_lamerey_str (@code{HMGL} gr, @code{double} x0, @code{const char *}y, @code{const char *}stl, @code{const char *}opt)
+@end ifclear
+Функции рисуют диаграмму Ламерея для точечного отображения x_new = y(x_old) начиная с точки @var{x0}. Строка @var{stl} может содержать стиль линии, символ @samp{v} для стрелок, символ @samp{~} для исключения первого сегмента. Опция @code{value} задает число сегментов для рисования (по умолчанию 20). См. также @ref{plot}, @ref{fplot}, @ref{bifurcation}, @ref{pmap}. @sref{Lamerey sample}
+@end deftypefn
+
+@anchor{bifurcation}
+@deftypefn {Команда MGL} {} bifurcation @code{dx} ydat ['stl'='']
+@deftypefnx {Команда MGL} {} bifurcation @code{dx} 'y(x)' ['stl'='']
+@ifclear UDAV
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Bifurcation (@code{double} dx, @code{const mglDataA &}y, @code{const char *}stl=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Bifurcation (@code{double} dx, @code{const char *}y, @code{const char *}stl=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Функция С} @code{void} mgl_bifurcation_dat (@code{HMGL} gr, @code{double} dx, @code{HCDT} y, @code{const char *}stl, @code{const char *}opt)
+@deftypefnx {Функция С} @code{void} mgl_bifurcation_str (@code{HMGL} gr, @code{double} dx, @code{const char *}y, @code{const char *}stl, @code{const char *}opt)
+@end ifclear
+Функции рисуют бифуркационную диаграмму (диаграмму удвоения периода) для точечного отображения x_new = y(x_old). Параметр @var{dx} задает точность по оси x. Строка @var{stl} задает цвет. Опция @code{value} задает число учитываемых стационарных точек (по умолчанию 1024). См. также @ref{plot}, @ref{fplot}, @ref{lamerey}. @sref{Bifurcation sample}
+@end deftypefn
+
+@anchor{pmap}
+@deftypefn {Команда MGL} {} pmap ydat sdat ['stl'='']
+@deftypefnx {Команда MGL} {} pmap xdat ydat sdat ['stl'='']
+@deftypefnx {Команда MGL} {} pmap xdat ydat zdat sdat ['stl'='']
+@ifclear UDAV
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Pmap (@code{const mglDataA &}y, @code{const mglDataA &}s, @code{const char *}stl=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Pmap (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}s, @code{const char *}stl=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Метод класса @code{mglGraph}} @code{void} Pmap (@code{const mglDataA &}x, @code{const mglDataA &}y, @code{const mglDataA &}z, @code{const mglDataA &}s, @code{const char *}stl=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Функция С} @code{void} mgl_pmap (@code{HMGL} gr, @code{HMDT} y, @code{HCDT} s, @code{const char *}stl, @code{const char *}opt)
+@deftypefnx {Функция С} @code{void} mgl_pmap_xy (@code{HMGL} gr, @code{HCDT} x, @code{HMDT} y, @code{HCDT} s, @code{const char *}stl, @code{const char *}opt)
+@deftypefnx {Функция С} @code{void} mgl_pmap_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HMDT} y, @code{HCDT} z, @code{HCDT} s, @code{const char *}stl, @code{const char *}opt)
+@end ifclear
+Функции рисуют отображение Пуанкаре для кривой @{@var{x}, @var{y}, @var{z}@} при условии @var{s}=0. Проще говоря, рисуются точки пересечения кривой и поверхности. Строка @var{stl} задает стиль маркеров. См. также @ref{plot}, @ref{mark}, @ref{lamerey}. @sref{Pmap sample}
+@end deftypefn
 
 
 @c ##################################################################

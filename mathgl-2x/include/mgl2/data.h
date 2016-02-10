@@ -138,6 +138,7 @@ using mglDataA::Momentum;
 	{	if(d.size()>0)	Set(&(a[0]),d.size());	else	Create(1);	}
 	inline void Set(const std::vector<double> &d)
 	{	if(d.size()>0)	Set(&(a[0]),d.size());	else	Create(1);	}
+	/// Allocate memory and set data from variable argument list of double values
 	inline void SetList(long n, ...)
 	{
 		if(n<1)	return;
