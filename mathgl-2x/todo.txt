@@ -59,7 +59,6 @@ C. Translate to Russian everything
 D. Docs about JS interface
 
 2. Update news
-4. Docs about Pulse()
 6. Update Qt and UDAV figures
 
 YY. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using Stem()

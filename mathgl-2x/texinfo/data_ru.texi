@@ -925,6 +925,15 @@ res_k = \sum_ij how(x_i,y_j,z_k) a_ij/ \sum_ij a_ij
 @end deftypefn
 @end ifclear
 
+@anchor{pulse}
+@deftypefn {Команда MGL} {} pulse @sc{res} dat 'dir'
+@ifclear UDAV
+@deftypefnx {Метод класса @code{mglData}} @code{mglData} Pulse (@code{const char *}dir) @code{const}
+@deftypefnx {Функция С} @code{HMDT} mgl_data_pulse (@code{HCDT} dat, @code{const char *}dir)
+@end ifclear
+Находит параметры импульса вдоль направления @var{dir}: максимальное значение (в колонке 0), его положение (в колонке 1), ширина по параболлической аппроксимации (в колонке 3) и по полувысоте (в колонке 2), энергию около максимума (в колонке 4). NAN значения используются для ширин если максимум расположен вблизи границ массива. Отмечу, что для комплексных массивов есть неопределенность определения параметров. Обычно следует использовать квадрат абсолютного значения амплитуды (т.е. |dat[i]|^2). Поэтому MathGL не включает эту функцию в @code{mglDataC}, хотя формально C функция будет работать и для них, но будет использовать абсолютное значение амплитуды (т.е. |dat[i]|). Функция возвращает NULL или пустой массив если данные не могут быть созданы при данных значениях аргументов. См. также @ref{max}, @ref{min}, @ref{momentum}, @ref{sum}. @sref{Pulse properties}
+@end deftypefn
+
 @c ------------------------------------------------------------------
 @external{}
 @node Data changing, Interpolation, Make another data, Data processing

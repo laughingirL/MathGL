@@ -194,19 +194,30 @@ set @var{str} as argument $1 for script;
 ...
 @item @strong{-9} @var{str}
 set @var{str} as argument $9 for script;
+@item @strong{-L} @var{loc}
+set locale to @var{loc};
+@item @strong{-s} @var{fname}
+set MGL script for setting up the plot;
+@item @strong{-h}
+print help message.
+@end itemize
+Additionally @code{mglconv} have following options:
+@itemize
 @item @strong{-A} @var{val}
 add @var{val} into the list of animation parameters;
 @item @strong{-C} @var{v1}:@var{v2}[:@var{dv}]
 add values from @var{v1} ot @var{v2} with step @var{dv} (default is 1) into the list of animation parameters;
-@item @strong{-L} @var{loc}
-set locale to @var{loc};
 @item @strong{-o} @var{name}
 set output file name;
-@item @strong{-h}
-print help message.
+@item @strong{-n}
+disable default output (script should save results by itself);
+@item @strong{-S} @var{val}
+set set scaling factor for @ref{setsize};
+@item @strong{-q} @var{val}
+set @ref{quality} for output (val=0...9).
 @end itemize
 
-Additionally you can create animated GIF file or a set of JPEG files with names @samp{frameNNNN.jpg} (here @samp{NNNN} is frame index). Values of the parameter @code{$0} for making animation can be specified inside the script by comment @code{##a val} for each value @code{val} (one comment for one value) or by option(s) @samp{-A val}. Also you can specify a cycle for animation by comment @code{##c v1 v2 dv} or by option @code{-C v1:v2:dv}. In the case of found/specified animation parameters, tool will execute script several times -- once for each value of @code{$0}.
+Also you can create animated GIF file or a set of JPEG files with names @samp{frameNNNN.jpg} (here @samp{NNNN} is frame index). Values of the parameter @code{$0} for making animation can be specified inside the script by comment @code{##a val} for each value @code{val} (one comment for one value) or by option(s) @samp{-A val}. Also you can specify a cycle for animation by comment @code{##c v1 v2 dv} or by option @code{-C v1:v2:dv}. In the case of found/specified animation parameters, tool will execute script several times -- once for each value of @code{$0}.
 
 
 MathGL also provide another simple tool @code{mgl.cgi} which parse MGL script from CGI request and send back produced PNG file. Usually this program should be placed in @code{/usr/lib/cgi-bin/}. But you need to put this program by yourself due to possible security issues and difference of Apache server settings.

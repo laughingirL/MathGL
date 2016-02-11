@@ -2353,6 +2353,7 @@ In this section I've included some small hints and advices for the improving of 
 * Nonlinear fitting hints::
 * PDE solving hints::
 * Drawing phase plain::
+* Pulse properties::
 * Using MGL parser::
 * Using options::
 * ``Templates''::
@@ -2874,7 +2875,7 @@ text 0.7 -0.05 'central ray'
 
 @c ------------------------------------------------------------------
 @external{}
-@node Drawing phase plain, Using MGL parser, PDE solving hints, Hints
+@node Drawing phase plain, Pulse properties, PDE solving hints, Hints
 @subsection Drawing phase plain
 @nav{}
 
@@ -2909,9 +2910,46 @@ next
 @pfig{ode, Example of ODE solving and phase plain drawing.}
 
 
+
 @c ------------------------------------------------------------------
 @external{}
-@node Using MGL parser, Using options, Drawing phase plain, Hints
+@node Pulse properties, Using MGL parser, Drawing phase plain, Hints
+@subsection Pulse properties
+@nav{}
+
+There is common task in optics to determine properties of wave pulses or wave beams. MathGL provide special function @ref{pulse} which return the pulse properties (maximal value, center of mass, width and so on). Its usage is rather simple. Here I just illustrate it on the example of Gaussian pulse, where all parameters are obvious.
+@verbatim
+subplot 1 1 0 '<_':title 'Pulse sample'
+# first prepare pulse itself
+new a 100 'exp(-6*x^2)'
+
+# get pulse parameters
+pulse b a 'x'
+
+# positions and widths are normalized on the number of points. So, set proper axis scale.
+ranges 0 a.nx-1 0 1
+axis:plot a # draw pulse and axis
+
+# now visualize found pulse properties
+define m a.max # maximal amplitude
+# approximate position of maximum
+line b(1) 0 b(1) m 'r='
+# width at half-maximum (so called FWHM)
+line b(1)-b(3)/2 0  b(1)-b(3)/2 m 'm|'
+line b(1)+b(3)/2 0  b(1)+b(3)/2 m 'm|'
+line 0 0.5*m a.nx-1 0.5*m 'h'
+# parabolic approximation near maximum
+new x 100 'x'
+plot b(0)*(1-((x-b(1))/b(2))^2) 'g'
+@end verbatim
+
+@pfig{pulse, Example of determining of pulse properties.}
+
+
+
+@c ------------------------------------------------------------------
+@external{}
+@node Using MGL parser, Using options, Pulse properties, Hints
 @subsection Using MGL parser
 @nav{}
 

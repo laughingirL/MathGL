@@ -937,6 +937,16 @@ Gets array of arguments of the data.
 @end deftypefn
 @end ifclear
 
+@anchor{pulse}
+@deftypefn {MGL command} {} pulse @sc{res} dat 'dir'
+@ifclear UDAV
+@deftypefnx {Method on @code{mglData}} @code{mglData} Pulse (@code{const char *}dir) @code{const}
+@deftypefnx {C function} @code{HMDT} mgl_data_pulse (@code{HCDT} dat, @code{const char *}dir)
+@end ifclear
+Find pulse properties along direction @var{dir}: pulse maximum (in column 0) and its position (in column 1), pulse width near maximum (in column 3) and by half height (in column 2), energy in first pulse (in column 4). NAN values are used for widths if maximum is located near the edges. Note, that there is uncertainty for complex data. Usually one should use square of absolute value (i.e. |dat[i]|^2) for them. So, MathGL don't provide this function for complex data arrays. However, C function will work even in this case but use absolute value (i.e. |dat[i]|). Function return NULL or create empty data if data cannot be created for given arguments. See also @ref{max}, @ref{min}, @ref{momentum}, @ref{sum}. @sref{Pulse properties}
+@end deftypefn
+
+
 @c ------------------------------------------------------------------
 @external{}
 @node Data changing, Interpolation, Make another data, Data processing
