@@ -58,11 +58,8 @@ B. Add chapter with real samples
 C. Translate to Russian everything
 D. Docs about JS interface
 
-1. Docs about mglIFS()
 2. Update news
-3. Direct export to MP4 in Hint
 4. Docs about Pulse()
-5. Docs about MGL command 'scanfile' and ScanFile()
 6. Update Qt and UDAV figures
 
 YY. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using Stem()

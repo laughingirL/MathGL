@@ -2639,21 +2639,21 @@ void smgl_pulse(mglGraph *gr)
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_scanfile="subplot 1 1 0 '<_':title 'Save and scanfile sample'\n"
-"save 'This test 0 -> 1' 'test.txt' 'w'\nsave 'This test 1 -> -1' 'test.txt'\n"
-"save 'This test 2 -> 0' 'test.txt'\nscanfile a 'test.txt' 'This test %g -> %g'\n"
-"ranges a(0) a(1):axis\nplot a(0) a(1) 'o'";
+"list a 1 -1 0\nsave 'This is test: 0 -> ',a(0),' q' 'test.txt' 'w'\n"
+"save 'This is test: 1 -> ',a(1),' q' 'test.txt'\nsave 'This is test: 2 -> ',a(2),' q' 'test.txt'\n"
+"\nscanfile a 'test.txt' 'This is test: %g -> %g'\nranges a(0) a(1):axis:plot a(0) a(1) 'o'";
 void smgl_scanfile(mglGraph *gr)
 {
 	gr->SubPlot(1,1,0,"<_");
 	if(big!=3)	gr->Title("Save and scanfile sample");
 	FILE *fp=fopen("test.txt","w");
-	fprintf(fp,"This test 0 -> 1");
-	fprintf(fp,"This test 1 -> -1");
-	fprintf(fp,"This test 2 -> 0");
+	fprintf(fp,"This is test: 0 -> 1 q\n");
+	fprintf(fp,"This is test: 1 -> -1 q\n");
+	fprintf(fp,"This is test: 2 -> 0 q\n");
 	fclose(fp);
 
 	mglData a;
-	a.ScanFile("test.txt","This test %g -> %g");
+	a.ScanFile("test.txt","This is test: %g -> %g");
 	gr->SetRanges(a.SubData(0), a.SubData(1));
 	gr->Axis();	gr->Plot(a.SubData(0),a.SubData(1),"o");
 }
@@ -2743,19 +2743,36 @@ void smgl_apde(mglGraph *gr)
 	gr->Puts(mglPoint(-0.5,0.2),"i\\partial_z\\i u \\approx\\ exp(-\\i x^2)\\i u+exp(\\partial_x^2)[\\i u]","y");
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_ifs="list A [0.33,0,0,0.33,0,0,0.2] [0.33,0,0,0.33,0.67,0,0.2] [0.33,0,0,0.33,0.33,0.33,0.2]\\\n"
+const char *mmgl_ifs2d="list A [0.33,0,0,0.33,0,0,0.2] [0.33,0,0,0.33,0.67,0,0.2] [0.33,0,0,0.33,0.33,0.33,0.2]\\\n\t"
 "[0.33,0,0,0.33,0,0.67,0.2] [0.33,0,0,0.33,0.67,0.67,0.2]\nifs2d fx fy A 100000\n"
-"subplot 1 1 0 '<_':title 'IFS sample'\nranges fx fy:axis\nplot fx fy 'r#o ';size 0.05";
-void smgl_ifs(mglGraph *gr)
+"subplot 1 1 0 '<_':title 'IFS 2d sample'\nranges fx fy:axis\nplot fx fy 'r#o ';size 0.05";
+void smgl_ifs2d(mglGraph *gr)
 {
 	mglData A;
 	A.SetList(35, 0.33,0.,0.,0.33,0.,0.,0.2, 0.33,0.,0.,0.33,0.67,0.,0.2, 0.33,0.,0.,0.33,0.33,0.33,0.2, 0.33,0.,0.,0.33,0.,0.67,0.2, 0.33,0.,0.,0.33,0.67,0.67,0.2);
 	A.Rearrange(7);
-	mglData f(mglIFS(A,100000));
+	mglData f(mglIFS2d(A,100000));
 	gr->SubPlot(1,1,0,"<_");
-	if(big!=3)	gr->Title("IFS sample");
+	if(big!=3)	gr->Title("IFS 2d sample");
 	gr->SetRanges(f.SubData(0), f.SubData(1));
 	gr->Axis();	gr->Plot(f.SubData(0), f.SubData(1),"r#o ","size 0.05");
+}
+//-----------------------------------------------------------------------------
+const char *mmgl_ifs3d="list A [0,0,0,0,.18,0,0,0,0,0,0,0,.01] [.85,0,0,0,.85,.1,0,-0.1,0.85,0,1.6,0,.85]\\\n"
+"\t[.2,-.2,0,.2,.2,0,0,0,0.3,0,0.8,0,.07] [-.2,.2,0,.2,.2,0,0,0,0.3,0,0.8,0,.07]\n"
+"ifs3d f A 100000\ntitle 'IFS 3d sample':rotate 50 60\n"
+"ranges f(0) f(1) f(2):axis:box\ndots f(0) f(1) f(2) 'G#o';size 0.05";
+void smgl_ifs3d(mglGraph *gr)
+{
+	mglData A;
+	A.SetList(52, 0.,0.,0.,0.,.18,0.,0.,0.,0.,0.,0.,0.,.01, .85,0.,0.,0.,.85,.1,0.,-0.1,0.85,0.,1.6,0.,.85,
+			.2,-.2,0.,.2,.2,0.,0.,0.,0.3,0.,0.8,0.,.07, -.2,.2,0.,.2,.2,0.,0.,0.,0.3,0.,0.8,0.,.07);
+	A.Rearrange(13);
+	mglData f(mglIFS3d(A,100000));
+	if(big!=3)	gr->Title("IFS 3d sample");
+	gr->SetRanges(f.SubData(0), f.SubData(1), f.SubData(2));
+	gr->Rotate(50,60);	gr->Axis();	gr->Box();
+	gr->Dots(f.SubData(0), f.SubData(1), f.SubData(2),"G#o","size 0.05");
 }
 //-----------------------------------------------------------------------------
 mglSample samp[] = {
@@ -2809,7 +2826,8 @@ mglSample samp[] = {
 	{"fonts", smgl_fonts, mmgl_fonts},
 	{"grad", smgl_grad, mmgl_grad},
 	{"hist", smgl_hist, mmgl_hist},
-	{"ifs", smgl_ifs, mmgl_ifs},
+	{"ifs2d", smgl_ifs2d, mmgl_ifs2d},
+	{"ifs3d", smgl_ifs3d, mmgl_ifs3d},
 	{"indirect",smgl_indirect,mmgl_indirect},
 	{"inplot", smgl_inplot, mmgl_inplot},
 	{"label", smgl_label, mmgl_label},

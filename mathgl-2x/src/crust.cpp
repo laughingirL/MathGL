@@ -802,3 +802,37 @@ HMDT MGL_EXPORT mgl_data_ifs_2d(HCDT A, long n, long skip)
 uintptr_t MGL_EXPORT mgl_data_ifs_2d_(uintptr_t *d, long *n, long *skip)
 {	return uintptr_t(mgl_data_ifs_2d(_DT_,*n,*skip));	}
 //-----------------------------------------------------------------------------
+void MGL_NO_EXPORT mgl_ifs_3d_point(HCDT A, mreal& x, mreal& y, mreal& z, mreal amax)
+{
+	int i, n=A->GetNy();
+	mreal r = amax*mgl_rnd(), sum_prob = 0, x1, y1;
+	for (i=0; i<n; i++)
+	{
+		sum_prob += A->v(12,i);
+		if(r < sum_prob)  break;
+	}
+	x1= A->v(0,i)*x + A->v(1,i)*y + A->v(2,i)*z + A->v(9,i);
+	y1= A->v(3,i)*x + A->v(4,i)*y + A->v(5,i)*z + A->v(10,i);
+	z = A->v(6,i)*x + A->v(7,i)*y + A->v(8,i)*z + A->v(11,i);
+	x = x1;	y = y1;
+}
+HMDT MGL_EXPORT mgl_data_ifs_3d(HCDT A, long n, long skip)
+{
+	if(!A || A->GetNx()<13 || n<1)	return 0;   // incompatible dimensions
+	mreal amax = 0;
+	for(int i=0; i<A->GetNy(); i++)	amax += A->v(12,i);
+	if(amax <= 0) return 0;
+
+	mglData *f = new mglData(3,n);
+	mreal x = 0, y = 0, z = 0;
+	for(long i=0; i<skip; i++)	mgl_ifs_3d_point(A, x, y, z, amax);
+	for(long i=0; i<n; i++)
+	{
+		mgl_ifs_3d_point(A, x, y, z, amax);
+		f->a[3*i] = x;	f->a[3*i+1] = y;	f->a[3*i+2] = z;
+	}
+	return f;
+}
+uintptr_t MGL_EXPORT mgl_data_ifs_3d_(uintptr_t *d, long *n, long *skip)
+{   return uintptr_t(mgl_data_ifs_3d(_DT_,*n,*skip));   }
+//-----------------------------------------------------------------------------

@@ -558,7 +558,7 @@ Allocate memory and set data from variable argument list of @emph{double} values
 @deftypefn {Команда MGL} {} gspline dat xdat vdat [sl=-1]
 @ifclear UDAV
 @deftypefnx {Method on @code{mglData}} @code{void} RefillGS (@code{const mglDataA &}x, @code{const mglDataA &}v, @code{mreal} x1, @code{mreal} x2, @code{long} sl=@code{-1})
-@deftypefnx {C function} @code{void} mgl_data_refill_gs (@code{HMDT} a, @code{HCDT} x, @code{HCDT} v, @code{mreal} x1, @code{mreal} x2, @code{long} sl)
+@deftypefnx {Функция С} @code{void} mgl_data_refill_gs (@code{HMDT} a, @code{HCDT} x, @code{HCDT} v, @code{mreal} x1, @code{mreal} x2, @code{long} sl)
 @end ifclear
 Заполняет значениями глобального кубического сплайна для массива @var{v} в точках @var{x}=@code{X[i]}, где @code{X} равномерно распределен в диапазоне [@var{x1},@var{x2}] и имеет такой же размер как и заполняемый массив. Если параметр @var{sl} равен 0 или положительный, то изменятся будет только @var{sl}-ый срез.
 @end deftypefn
@@ -643,6 +643,15 @@ Allocate memory and set data from variable argument list of @emph{double} values
 Объединяет данные из нескольких текстовых файлов, чьи имена удовлетворяют шаблону @var{templ} (например, @var{templ}=@code{"t_*.dat"}). Данные загружаются один за другим в один и тот же срез данных (при @var{as_slice}=@code{false}) или срез-за-срезом (при @var{as_slice}=@code{true}).
 @end deftypefn
 
+@anchor{scanfile}
+@deftypefn {Команда MGL} {} scanfile @sc{dat} 'fname' 'templ'
+@ifclear UDAV
+@deftypefnx {Метод класса @code{mglData}} @code{bool} ScanFile (@code{const char *}fname, @code{const char *}templ)
+@deftypefnx {Функция С} @code{int} mgl_data_scan_file (@code{HMDT} dat, @code{const char *}fname, @code{const char *}templ)
+@end ifclear
+Читает файл @var{fname} построчно и каждую строку сканирует на соответствие шаблону @var{templ}. Полученные числа (обозначаются как @samp{%g} в шаблоне) сохраняются. @sref{Saving and scanning file}
+@end deftypefn
+
 @anchor{save}
 @deftypefn {Команда MGL} {} save dat 'fname'
 @ifclear UDAV
@@ -654,7 +663,7 @@ Allocate memory and set data from variable argument list of @emph{double} values
 @end deftypefn
 
 @deftypefn {Команда MGL} {} save 'str' 'fname' ['mode'='a']
-Сохраняет строку @var{str} в файл @var{fname}. Для параметра @var{mode}=@samp{a} происходит добавление строки (по умолчанию): для  @var{mode}=@samp{w} файл будет перезаписан.
+Сохраняет строку @var{str} в файл @var{fname}. Для параметра @var{mode}=@samp{a} происходит добавление строки (по умолчанию): для  @var{mode}=@samp{w} файл будет перезаписан. @sref{Saving and scanning file}
 @end deftypefn
 
 @anchor{readhdf}
@@ -1525,9 +1534,9 @@ These functions change the data in some direction like differentiations, integra
 @deftypefn {Команда MGL} {} ode @sc{res} 'df' 'var' ini [@code{dt=0.1 tmax=10}]
 @ifclear UDAV
 @deftypefnx {Global function} @code{mglData} mglODE (@code{const char *}df, @code{const char *}var, @code{const mglDataA &}ini, @code{mreal} dt=@code{0.1}, @code{mreal} tmax=@code{10})
-@deftypefnx {C function} @code{HMDT} mgl_ode_solve_str (@code{const char *}df, @code{const char *}var, @code{HCDT} ini, @code{mreal} dt, @code{mreal} tmax)
-@deftypefnx {C function} @code{HMDT} mgl_ode_solve (@code{void (*}df@code{)(const mreal *x, mreal *dx, void *par)}, @code{int} n, @code{const mreal *}ini, @code{mreal} dt, @code{mreal} tmax)
-@deftypefnx {C function} @code{HMDT} mgl_ode_solve_ex (@code{void (*}df@code{)(const mreal *x, mreal *dx, void *par)}, @code{int} n, @code{const mreal *}ini, @code{mreal} dt, @code{mreal} tmax, @code{void (*}bord@code{)(mreal *x, const mreal *xprev, void *par)})
+@deftypefnx {Функция С} @code{HMDT} mgl_ode_solve_str (@code{const char *}df, @code{const char *}var, @code{HCDT} ini, @code{mreal} dt, @code{mreal} tmax)
+@deftypefnx {Функция С} @code{HMDT} mgl_ode_solve (@code{void (*}df@code{)(const mreal *x, mreal *dx, void *par)}, @code{int} n, @code{const mreal *}ini, @code{mreal} dt, @code{mreal} tmax)
+@deftypefnx {Функция С} @code{HMDT} mgl_ode_solve_ex (@code{void (*}df@code{)(const mreal *x, mreal *dx, void *par)}, @code{int} n, @code{const mreal *}ini, @code{mreal} dt, @code{mreal} tmax, @code{void (*}bord@code{)(mreal *x, const mreal *xprev, void *par)})
 @end ifclear
 Решает систему обыкновенных дифференциальных уравнений dx/dt = df(x). Функции @var{df} могут быть заданны строкой с разделенными ';' формулами (аргумент @var{var} задает символы для переменных x[i]) или указателем на функцию, которая заполняет @code{dx} по заданным значениям @code{x}. Параметры @var{ini}, @var{dt}, @var{tmax} задают начальные значения, шаг и максимальное время интегрирования. Результат -- массив с размером @{@var{n} * int(@var{tmax}/@var{dt}+1)@}.
 @end deftypefn
@@ -1603,6 +1612,35 @@ These functions change the data in some direction like differentiations, integra
 @end deftypefn
 
 @end ifclear
+
+@anchor{ifs2d}
+@deftypefn {Команда MGL} {} ifs2d @sc{res} dat @code{num} [@code{skip=20}]
+@ifclear UDAV
+@deftypefnx {Global function} @code{mglData} mglIFS2d (@code{const mglDataA &}dat, @code{long} num, @code{long} skip=@code{20})
+@deftypefnx {Функция С} @code{HMDT} mgl_data_ifs_2d (@code{HCDT} dat, @code{long} num, @code{long} skip)
+@end ifclear
+Находит @var{num} точек @{x[i]=res[0,i], y[i]=res[1,i]@} фрактала с использованием итерационной системы функций (IFS). Матрица @var{dat} используется для генерации в соответствии с формулами
+@verbatim
+x[i+1] = dat[0,i]*x[i] + dat[1,i]*y[i] + dat[4,i];
+y[i+1] = dat[2,i]*x[i] + dat[3,i]*y[i] + dat[5,i];
+@end verbatim
+Значение @code{dat[6,i]} -- весовой коэффициент для i-ой строки матрицы @var{dat}. Первые @var{skip} итераций будут опущены. Массив @var{dat} должен иметь размер по x больше или равный 7. @sref{IFS sample}
+@end deftypefn
+
+@anchor{ifs3d}
+@deftypefn {Команда MGL} {} ifs3d @sc{res} dat @code{num} [@code{skip=20}]
+@ifclear UDAV
+@deftypefnx {Global function} @code{mglData} mglIFS3d (@code{const mglDataA &}dat, @code{long} num, @code{long} skip=@code{20})
+@deftypefnx {Функция С} @code{HMDT} mgl_data_ifs_3d (@code{HCDT} dat, @code{long} num, @code{long} skip)
+@end ifclear
+Находит @var{num} точек @{x[i]=res[0,i], y[i]=res[1,i], z[i]=res[2,i]@} фрактала с использованием итерационной системы функций (IFS). Матрица @var{dat} используется для генерации в соответствии с формулами
+@verbatim
+x[i+1] = dat[0,i]*x[i] + dat[1,i]*y[i] + dat[2,i]*z[i] + dat[9,i];
+y[i+1] = dat[3,i]*x[i] + dat[4,i]*y[i] + dat[5,i]*z[i] + dat[10,i];
+z[i+1] = dat[6,i]*x[i] + dat[7,i]*y[i] + dat[8,i]*z[i] + dat[10,i];
+@end verbatim
+Значение @code{dat[6,i]} -- весовой коэффициент для i-ой строки матрицы @var{dat}. Первые @var{skip} итераций будут опущены. Массив @var{dat} должен иметь размер по x больше или равный 13. @sref{IFS sample}
+@end deftypefn
 
 @c ------------------------------------------------------------------
 @external{}

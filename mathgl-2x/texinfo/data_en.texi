@@ -648,6 +648,15 @@ Join data arrays from several text files. The file names are determined by funct
 Join data arrays from several text files which filenames satisfied the template @var{templ} (for example, @var{templ}=@code{"t_*.dat"}). The data load one-by-one in the same slice if @var{as_slice}=@code{false} or as slice-by-slice if @var{as_slice}=@code{true}.
 @end deftypefn
 
+@anchor{scanfile}
+@deftypefn {MGL command} {} scanfile @sc{dat} 'fname' 'templ'
+@ifclear UDAV
+@deftypefnx {Method on @code{mglData}} @code{bool} ScanFile (@code{const char *}fname, @code{const char *}templ)
+@deftypefnx {C function} @code{int} mgl_data_scan_file (@code{HMDT} dat, @code{const char *}fname, @code{const char *}templ)
+@end ifclear
+Read file @var{fname} line-by-line and scan each line for numbers according the template @var{templ}. The numbers denoted as @samp{%g} in the template. @sref{Saving and scanning file}
+@end deftypefn
+
 @anchor{save}
 @deftypefn {MGL command} {} save dat 'fname'
 @ifclear UDAV
@@ -659,7 +668,7 @@ Saves the whole data array (for @var{ns}=@code{-1}) or only @var{ns}-th slice to
 @end deftypefn
 
 @deftypefn {MGL command} {} save 'str' 'fname' ['mode'='a']
-Saves the string @var{str} to the text file @var{fname}. For parameter @var{mode}=@samp{a} will append string to the file (default); for @var{mode}=@samp{w} will overwrite the file.
+Saves the string @var{str} to the text file @var{fname}. For parameter @var{mode}=@samp{a} will append string to the file (default); for @var{mode}=@samp{w} will overwrite the file. @sref{Saving and scanning file}
 @end deftypefn
 
 
@@ -1618,6 +1627,38 @@ Evaluate global cubic spline (and its 1st and 2nd derivatives @var{d1}, @var{d2}
 @end deftypefn
 
 @end ifclear
+
+
+@anchor{ifs2d}
+@deftypefn {MGL command} {} ifs2d @sc{res} dat @code{num} [@code{skip=20}]
+@ifclear UDAV
+@deftypefnx {Global function} @code{mglData} mglIFS2d (@code{const mglDataA &}dat, @code{long} num, @code{long} skip=@code{20})
+@deftypefnx {C function} @code{HMDT} mgl_data_ifs_2d (@code{HCDT} dat, @code{long} num, @code{long} skip)
+@end ifclear
+Computes @var{num} points @{x[i]=res[0,i], y[i]=res[1,i]@} for fractal using iterated function system. Matrix @var{dat} is used for generation according the formulas
+@verbatim
+x[i+1] = dat[0,i]*x[i] + dat[1,i]*y[i] + dat[4,i];
+y[i+1] = dat[2,i]*x[i] + dat[3,i]*y[i] + dat[5,i];
+@end verbatim
+Value @code{dat[6,i]} is used as weight factor for i-th row of matrix @var{dat}. At this first @var{skip} iterations will be omitted. Data array @var{dat} must have x-size greater or equal to 7. @sref{IFS sample}
+@end deftypefn
+
+@anchor{ifs3d}
+@deftypefn {MGL command} {} ifs3d @sc{res} dat @code{num} [@code{skip=20}]
+@ifclear UDAV
+@deftypefnx {Global function} @code{mglData} mglIFS3d (@code{const mglDataA &}dat, @code{long} num, @code{long} skip=@code{20})
+@deftypefnx {C function} @code{HMDT} mgl_data_ifs_3d (@code{HCDT} dat, @code{long} num, @code{long} skip)
+@end ifclear
+Computes @var{num} points @{x[i]=res[0,i], y[i]=res[1,i], z[i]=res[2,i]@} for fractal using iterated function system. Matrix @var{dat} is used for generation according the formulas
+@verbatim
+x[i+1] = dat[0,i]*x[i] + dat[1,i]*y[i] + dat[2,i]*z[i] + dat[9,i];
+y[i+1] = dat[3,i]*x[i] + dat[4,i]*y[i] + dat[5,i]*z[i] + dat[10,i];
+z[i+1] = dat[6,i]*x[i] + dat[7,i]*y[i] + dat[8,i]*z[i] + dat[10,i];
+@end verbatim
+Value @code{dat[12,i]} is used as weight factor for i-th row of matrix @var{dat}. At this first @var{skip} iterations will be omitted. Data array @var{dat} must have x-size greater or equal to 13. @sref{IFS sample}
+@end deftypefn
+
+
 
 @c ------------------------------------------------------------------
 @external{}

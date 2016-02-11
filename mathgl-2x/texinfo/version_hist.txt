@@ -1,3 +1,5 @@
+2.3.4 Released 11 February 2015
+2.3.3 Released 01 June 2015
 2.3.2 Released 2 February 2015
 2.3.1 Released 21 October 2014
 2.3 Released 7 August 2014
@@ -45,5 +47,5 @@
 1.0 	Released 2 April 2007
 
 0.9		Last beta version of the MathGL library. Released 2 March 2007
-0.8.1	Released 19 Febriary 2007
+0.8.1	Released 19 February 2007
 0.8.0	First public release (24 January 2007)

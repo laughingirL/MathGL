@@ -1,9 +1,9 @@
-2.3.4 Released ?? December 2015
+2.3.4 Released 12 February 2015
 
 * Add mglData::Pulse() for determining pulse parameters.
 * Add mglData::ScanFile() for getting formated data from textual file.
 * Add mglData::SetList() for setting data from variable argument list of double values.
-* Add mglIFS() for fractal generation using iterated function systems.
+* Add mglIFS2d() and mglIFS3d() for fractal generation using iterated function system (thanks to Diego Sejas Viscarra).
 * Add option to SetSize() for scaling only primitives but don't erase it.
 * Add Pmap() plot for Poincare map.
 * Add Lamerey() plot for Lamerey diagram.
