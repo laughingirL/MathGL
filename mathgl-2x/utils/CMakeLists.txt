@@ -1,4 +1,4 @@
-
+include_directories(${GSL_INCLUDE_DIR})
 add_executable(make_pas make_pas.cpp)
 
 add_executable(mglconv mglconv.cpp)

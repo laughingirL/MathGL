@@ -71,7 +71,7 @@ if(MGL_HAVE_GIF)
 endif(MGL_HAVE_GIF)
 
 if(MGL_HAVE_HDF5)
-	target_link_libraries(mgl ${HDF5_LIBRARIES})
+	target_link_libraries(mgl ${HDF5_LIBRARIES} ${HDF5_C_SHARED_LIBRARY})
 	include_directories(${HDF5_INCLUDE_DIR})
 endif(MGL_HAVE_HDF5)
 
