@@ -501,13 +501,11 @@ double MGL_LOCAL_CONST stp(double a)	{return a>0 ? 1:0;}
 double MGL_LOCAL_CONST arg(double a,double b)	{	return atan2(b,a);	}
 double MGL_LOCAL_CONST mgz1(double)			{return NAN;}	// NOTE I think NAN value is more correct here than 0
 double MGL_LOCAL_CONST mgz2(double,double)	{return NAN;}	// NOTE I think NAN value is more correct here than 0
-#ifdef WIN32
-double MGL_LOCAL_CONST asinh(double x)	{	return log(x+sqrt(x*x+1.));	}
-double MGL_LOCAL_CONST acosh(double x)	{	return x>1 ? log(x+sqrt(x*x-1.)) : NAN;	}
-double MGL_LOCAL_CONST atanh(double x)	{	return fabs(x)<1 ? log((1.+x)/(1.-x))/2 : NAN;	}
-double MGL_LOCAL_CONST fmin(double a,double b)	{	return a > b ? b : a;	}
-double MGL_LOCAL_CONST fmax(double a,double b)	{	return a > b ? a : b;	}
-#endif
+double MGL_LOCAL_CONST mgl_asinh(double x)	{	return log(x+sqrt(x*x+1.));	}
+double MGL_LOCAL_CONST mgl_acosh(double x)	{	return x>1 ? log(x+sqrt(x*x-1.)) : NAN;	}
+double MGL_LOCAL_CONST mgl_atanh(double x)	{	return fabs(x)<1 ? log((1.+x)/(1.-x))/2 : NAN;	}
+double MGL_LOCAL_CONST mgl_fmin(double a,double b)	{	return a > b ? b : a;	}
+double MGL_LOCAL_CONST mgl_fmax(double a,double b)	{	return a > b ? a : b;	}
 //-----------------------------------------------------------------------------
 typedef double (*func_1)(double);
 typedef double (*func_2)(double, double);
@@ -519,7 +517,7 @@ static const mreal z2[EQ_SIN-EQ_LT] = {3,3,3,3,0,3,3,0,0,0,0,0,NAN,3,3,3,3
 	,0,0,0,0,0,0,0,0,0
 #endif
 };
-static const func_2 f2[EQ_SIN-EQ_LT] = {clt,cgt,ceq,cor,cand,add,sub,mul,del,ipw,pow,fmod,llg,arg,hypot,fmax,fmin
+static const func_2 f2[EQ_SIN-EQ_LT] = {clt,cgt,ceq,cor,cand,add,sub,mul,del,ipw,pow,fmod,llg,arg,hypot,mgl_fmax,mgl_fmin
 #if MGL_HAVE_GSL
 	,gsl_sf_bessel_Jnu,gsl_sf_bessel_Ynu,
 	gsl_sf_bessel_Inu,gsl_sf_bessel_Knu,
@@ -529,7 +527,7 @@ static const func_2 f2[EQ_SIN-EQ_LT] = {clt,cgt,ceq,cor,cand,add,sub,mul,del,ipw
 #endif
 };
 static const func_1 f1[EQ_SN-EQ_SIN] = {sin,cos,tan,asin,acos,atan,sinh,cosh,tanh,
-			asinh,acosh,atanh,sqrt,exp,log,log10,sgn,stp,floor,fabs
+			mgl_asinh,mgl_acosh,mgl_atanh,sqrt,exp,log,log10,sgn,stp,floor,fabs
 #if MGL_HAVE_GSL
 	,gsl_sf_dilog,gslEllEc,gslEllFc,gslAi,gslBi,gsl_sf_erf,
 	gsl_sf_expint_3,gsl_sf_expint_Ei,gsl_sf_expint_E1,gsl_sf_expint_E2,

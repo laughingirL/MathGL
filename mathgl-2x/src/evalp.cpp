@@ -290,13 +290,11 @@ double MGL_LOCAL_CONST llg(double a,double b);//	{return log(a)/log(b);}
 double MGL_LOCAL_CONST gslEllE(double a,double b);//	{return gsl_sf_ellint_E(a,b,GSL_PREC_SINGLE);}
 double MGL_LOCAL_CONST gslEllF(double a,double b);//	{return gsl_sf_ellint_F(a,b,GSL_PREC_SINGLE);}
 double MGL_LOCAL_CONST gslLegP(double a,double b);//	{return gsl_sf_legendre_Pl(int(a),b);}
-#ifdef WIN32
-double MGL_LOCAL_CONST asinh(double x);
-double MGL_LOCAL_CONST acosh(double x);
-double MGL_LOCAL_CONST atanh(double x);
-double MGL_LOCAL_CONST fmin(double a,double b);
-double MGL_LOCAL_CONST fmax(double a,double b);
-#endif
+double MGL_LOCAL_CONST mgl_asinh(double x);
+double MGL_LOCAL_CONST mgl_acosh(double x);
+double MGL_LOCAL_CONST mgl_atanh(double x);
+double MGL_LOCAL_CONST mgl_fmin(double a,double b);
+double MGL_LOCAL_CONST mgl_fmax(double a,double b);
 //-----------------------------------------------------------------------------
 // It seems that standard wcstombs() have a bug. So, I replace by my own.
 void MGL_EXPORT mgl_wcstombs(char *dst, const wchar_t *src, int size)
@@ -546,9 +544,9 @@ HMDT MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std::v
 			if(!nm.compare(L"asin"))		return mglApplyFunc(str, arg, head, asin);
 			else if(!nm.compare(L"acos"))	return mglApplyFunc(str, arg, head, acos);
 			else if(!nm.compare(L"atan"))	return mglApplyFunc(str, arg, head, atan);
-			else if(!nm.compare(L"asinh"))	return mglApplyFunc(str, arg, head, asinh);
-			else if(!nm.compare(L"acosh"))	return mglApplyFunc(str, arg, head, acosh);
-			else if(!nm.compare(L"atanh"))	return mglApplyFunc(str, arg, head, atanh);
+			else if(!nm.compare(L"asinh"))	return mglApplyFunc(str, arg, head, mgl_asinh);
+			else if(!nm.compare(L"acosh"))	return mglApplyFunc(str, arg, head, mgl_acosh);
+			else if(!nm.compare(L"atanh"))	return mglApplyFunc(str, arg, head, mgl_atanh);
 			else if(!nm.compare(L"arg"))
 			{
 				if(n>0)	return mglApplyOper(str.substr(n+1),str.substr(0,n),arg, head, atan2);
@@ -668,9 +666,9 @@ HMDT MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std::v
 			if(!nm.compare(L"mod") && n>0)
 				return mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, fmod);
 			else if(!nm.compare(L"min") && n>0)
-				return mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, fmin);
+				return mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, mgl_fmin);
 			else if(!nm.compare(L"max") && n>0)
-				return mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, fmax);
+				return mglApplyOper(str.substr(0,n),str.substr(n+1),arg, head, mgl_fmax);
 		}
 		else if(!nm.compare(L"int"))	return mglApplyFunc(str, arg, head, floor);
 		else if(!nm.compare(L"random"))
