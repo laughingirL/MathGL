@@ -1335,11 +1335,12 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 		x1=x1>d->x1?x1:d->x1;	x2=x2<d->x2?x2:d->x2;
 		y1=y1>d->y1?y1:d->y1;	y2=y2<d->y2?y2:d->y2;
 		if(x1>x2 || y1>y2)	return;
-
+		const float V=(pw-1)*(pw-1)/4,S=(1-pw)/2;
+		
 		for(long j=y1;j<=y2;j++)	for(long i=x1;i<=x2;i++)
 		{
 			register float dx=i-q.x, dy=j-q.y, v=dx*dx+dy*dy;
-			register int sum = v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+			register int sum = v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 			cs[3] = ca*sum/255;
 			pnt_plot(i,j,q.z+1,cs,oi);
 		}
@@ -1361,6 +1362,7 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 		x1=x1>d->x1?x1:d->x1;	x2=x2<d->x2?x2:d->x2;
 		y1=y1>d->y1?y1:d->y1;	y2=y2<d->y2?y2:d->y2;
 		if(x1>x2 || y1>y2)	return;
+		const float V=(pw-1)*(pw-1)/4,S=(1-pw)/2;
 
 		switch(type)
 		{
@@ -1370,17 +1372,17 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 				register float dx=i-q.x, dy=j-q.y, v,u;
 				register int sum=0;
 				u = fabs(dy)-ss;	v = (dx-ss)*(dx-ss)+(u<0?0:u*u);
-				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				u = fabs(dy)-ss;	v = (dx+ss)*(dx+ss)+(u<0?0:u*u);
-				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				u = fabs(dy)-ss;	v = dx*dx+(u<0?0:u*u);
-				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				u = fabs(dx)-ss;	v = (dy-ss)*(dy-ss)+(u<0?0:u*u);
-				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				u = fabs(dx)-ss;	v = (dy+ss)*(dy+ss)+(u<0?0:u*u);
-				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				u = fabs(dx)-ss;	v = dy*dy+(u<0?0:u*u);
-				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				sum = sum>255?255:sum;	cs[3] = ca*sum/255;
 				pnt_plot(i,j,q.z+1,cs,oi);
 			}
@@ -1391,9 +1393,9 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 				register float dx=i-q.x, dy=j-q.y, v,u;
 				register int sum=0;
 				u = fabs(dy)-ss;	v = dx*dx+(u<0?0:u*u);
-				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				u = fabs(dx)-ss;	v = dy*dy+(u<0?0:u*u);
-				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				sum = sum>255?255:sum;	cs[3] = ca*sum/255;
 				pnt_plot(i,j,q.z+1,cs,oi);
 			}
@@ -1404,18 +1406,18 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 				register float dx=i-q.x, dy=j-q.y, v,u;
 				register int sum=0;
 				u = fabs(dy)-ss;	v = (dx-ss)*(dx-ss)+(u<0?0:u*u);
-				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				u = fabs(dy)-ss;	v = (dx+ss)*(dx+ss)+(u<0?0:u*u);
-				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				u = fabs(dx)-ss;	v = (dy-ss)*(dy-ss)+(u<0?0:u*u);
-				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				u = fabs(dx)-ss;	v = (dy+ss)*(dy+ss)+(u<0?0:u*u);
-				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 
 				u = fabs(dx+dy)-2*ss;	v = dx-dy;	v = v*v+(u<0?0:u*u);
-				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				u = fabs(dx-dy)-2*ss;	v = dx+dy;	v = v*v+(u<0?0:u*u);
-				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 
 				sum = sum>255?255:sum;	cs[3] = ca*sum/255;
 				pnt_plot(i,j,q.z+1,cs,oi);
@@ -1427,9 +1429,9 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 				register float dx=i-q.x, dy=j-q.y, v,u;
 				register int sum=0;
 				u = fabs(dx+dy)-2*ss;	v = dx-dy;	v = v*v+(u<0?0:u*u);
-				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				u = fabs(dx-dy)-2*ss;	v = dx+dy;	v = v*v+(u<0?0:u*u);
-				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				sum = sum>255?255:sum;	cs[3] = ca*sum/255;
 				pnt_plot(i,j,q.z+1,cs,oi);
 			}
@@ -1440,7 +1442,7 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 				register float dx=i-q.x, dy=j-q.y, v,u;
 				u = fabs(dy)-ss;	if(u<0)	u=0;
 				v = fabs(dx)-ss;	if(v<0)	v=0;	v = u*u+v*v;
-				register int sum = v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				register int sum = v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				cs[3] = ca*sum/255;
 				pnt_plot(i,j,q.z+1,cs,oi);
 			}
@@ -1451,13 +1453,13 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 				register float dx=i-q.x, dy=j-q.y, v,u;
 				register int sum=0;
 				u = fabs(dy)-ss;	v = (dx-ss)*(dx-ss)+(u<0?0:u*u);
-				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				u = fabs(dy)-ss;	v = (dx+ss)*(dx+ss)+(u<0?0:u*u);
-				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				u = fabs(dx)-ss;	v = (dy-ss)*(dy-ss)+(u<0?0:u*u);
-				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				u = fabs(dx)-ss;	v = (dy+ss)*(dy+ss)+(u<0?0:u*u);
-				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				sum = sum>255?255:sum;	cs[3] = ca*sum/255;
 				pnt_plot(i,j,q.z+1,cs,oi);
 			}
@@ -1468,7 +1470,7 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 				register float dx=i-q.x, dy=j-q.y, v,u;
 				u = fabs(dx-dy)-ss;	if(u<0)	u=0;
 				v = fabs(dx+dy)-ss;	if(v<0)	v=0;	v = u*u+v*v;
-				register int sum = v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				register int sum = v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				cs[3] = ca*sum/255;
 				pnt_plot(i,j,q.z+1,cs,oi);
 			}
@@ -1479,13 +1481,13 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 				register float dx=i-q.x, dy=j-q.y, v,u;
 				register int sum=0;
 				u = fabs(dx+dy)-ss;	v = (dx-dy-ss)*(dx-dy-ss)+(u<0?0:u*u);
-				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				u = fabs(dx+dy)-ss;	v = (dx-dy+ss)*(dx-dy+ss)+(u<0?0:u*u);
-				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				u = fabs(dx-dy)-ss;	v = (dx+dy-ss)*(dx+dy-ss)+(u<0?0:u*u);
-				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				u = fabs(dx-dy)-ss;	v = (dx+dy+ss)*(dx+dy+ss)+(u<0?0:u*u);
-				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				sum = sum>255?255:sum;	cs[3] = ca*sum/255;
 				pnt_plot(i,j,q.z+1,cs,oi);
 			}
@@ -1496,11 +1498,11 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 				register float dx=i-q.x, dy=j-q.y, v,u;
 				register int sum=0;
 				u = fabs(dy+ss/2)-ss/2;	v = dx*dx+(u<0?0:u*u);
-				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				u = fabs(0.87*dx+0.5*dy-ss/2)-ss/2;	v = (0.5*dx-0.87*dy)*(0.5*dx-0.87*dy)+(u<0?0:u*u);
-				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				u = fabs(-0.87*dx+0.5*dy-ss/2)-ss/2;	v = (0.5*dx+0.87*dy)*(0.5*dx+0.87*dy)+(u<0?0:u*u);
-				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				sum = sum>255?255:sum;	cs[3] = ca*sum/255;
 				pnt_plot(i,j,q.z+1,cs,oi);
 			}
@@ -1511,11 +1513,11 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 				register float dx=i-q.x, dy=j-q.y, v,u;
 				register int sum=0;
 				u = fabs(dy)-ss;	v = dx*dx+(u<0?0:u*u);
-				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				u = fabs(0.87*dx+0.5*dy)-ss;	v = (0.5*dx-0.87*dy)*(0.5*dx-0.87*dy)+(u<0?0:u*u);
-				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				u = fabs(-0.87*dx+0.5*dy)-ss;	v = (0.5*dx+0.87*dy)*(0.5*dx+0.87*dy)+(u<0?0:u*u);
-				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				sum = sum>255?255:sum;	cs[3] = ca*sum/255;
 				pnt_plot(i,j,q.z+1,cs,oi);
 			}
@@ -1530,11 +1532,11 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 				{
 					register int sum=0;
 					u = fabs(dx)-ss;	v = dy+ss/2;	v = v*v+(u<0?0:u*u);
-					sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+					sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 					u = fabs(0.55*dx+0.83*dy)-0.9*ss;	v = 0.83*dx-0.55*dy+0.55*ss;	v = v*v+(u<0?0:u*u);
-					sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+					sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 					u = fabs(0.55*dx-0.83*dy)-0.9*ss;	v = 0.83*dx+0.55*dy-0.55*ss;	v = v*v+(u<0?0:u*u);
-					sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+					sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 					sum = sum>255?255:sum;	cs[3] = ca*sum/255;
 				}
 				pnt_plot(i,j,q.z+1,cs,oi);
@@ -1546,11 +1548,11 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 				register float dx=i-q.x, dy=j-q.y, v,u;
 				register int sum=0;
 				u = fabs(dx)-ss;	v = dy+ss/2;	v = v*v+(u<0?0:u*u);
-				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				u = fabs(0.55*dx+0.83*dy)-0.9*ss;	v = 0.83*dx-0.55*dy+0.55*ss;	v = v*v+(u<0?0:u*u);
-				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				u = fabs(0.55*dx-0.83*dy)-0.9*ss;	v = 0.83*dx+0.55*dy-0.55*ss;	v = v*v+(u<0?0:u*u);
-				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				sum = sum>255?255:sum;	cs[3] = ca*sum/255;
 				pnt_plot(i,j,q.z+1,cs,oi);
 			}
@@ -1565,11 +1567,11 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 				{
 					register int sum=0;
 					u = fabs(dx)-ss;	v = dy-ss/2;	v = v*v+(u<0?0:u*u);
-					sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+					sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 					u = fabs(0.55*dx+0.83*dy)-0.9*ss;	v = 0.83*dx-0.55*dy-0.55*ss;	v = v*v+(u<0?0:u*u);
-					sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+					sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 					u = fabs(0.55*dx-0.83*dy)-0.9*ss;	v = 0.83*dx+0.55*dy+0.55*ss;	v = v*v+(u<0?0:u*u);
-					sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+					sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 					sum = sum>255?255:sum;	cs[3] = ca*sum/255;
 				}
 				pnt_plot(i,j,q.z+1,cs,oi);
@@ -1581,11 +1583,11 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 				register float dx=i-q.x, dy=j-q.y, v,u;
 				register int sum=0;
 				u = fabs(dx)-ss;	v = dy-ss/2;	v = v*v+(u<0?0:u*u);
-				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				u = fabs(0.55*dx+0.83*dy)-0.9*ss;	v = 0.83*dx-0.55*dy-0.55*ss;	v = v*v+(u<0?0:u*u);
-				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				u = fabs(0.55*dx-0.83*dy)-0.9*ss;	v = 0.83*dx+0.55*dy+0.55*ss;	v = v*v+(u<0?0:u*u);
-				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				sum = sum>255?255:sum;	cs[3] = ca*sum/255;
 				pnt_plot(i,j,q.z+1,cs,oi);
 			}
@@ -1600,11 +1602,11 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 				{
 					register int sum=0;
 					u = fabs(dy)-ss;	v = dx-ss/2;	v = v*v+(u<0?0:u*u);
-					sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+					sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 					u = fabs(0.55*dy+0.83*dx)-0.9*ss;	v = 0.83*dy-0.55*dx-0.55*ss;	v = v*v+(u<0?0:u*u);
-					sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+					sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 					u = fabs(0.55*dy-0.83*dx)-0.9*ss;	v = 0.83*dy+0.55*dx+0.55*ss;	v = v*v+(u<0?0:u*u);
-					sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+					sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 					sum = sum>255?255:sum;	cs[3] = ca*sum/255;
 				}
 				pnt_plot(i,j,q.z+1,cs,oi);
@@ -1616,11 +1618,11 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 				register float dx=i-q.x, dy=j-q.y, v,u;
 				register int sum=0;
 				u = fabs(dy)-ss;	v = dx-ss/2;	v = v*v+(u<0?0:u*u);
-				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				u = fabs(0.55*dy+0.83*dx)-0.9*ss;	v = 0.83*dy-0.55*dx-0.55*ss;	v = v*v+(u<0?0:u*u);
-				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				u = fabs(0.55*dy-0.83*dx)-0.9*ss;	v = 0.83*dy+0.55*dx+0.55*ss;	v = v*v+(u<0?0:u*u);
-				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				sum = sum>255?255:sum;	cs[3] = ca*sum/255;
 				pnt_plot(i,j,q.z+1,cs,oi);
 			}
@@ -1635,11 +1637,11 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 				{
 					register int sum=0;
 					u = fabs(dy)-ss;	v = dx+ss/2;	v = v*v+(u<0?0:u*u);
-					sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+					sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 					u = fabs(0.55*dy+0.83*dx)-0.9*ss;	v = 0.83*dy-0.55*dx+0.55*ss;	v = v*v+(u<0?0:u*u);
-					sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+					sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 					u = fabs(0.55*dy-0.83*dx)-0.9*ss;	v = 0.83*dy+0.55*dx-0.55*ss;	v = v*v+(u<0?0:u*u);
-					sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+					sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 					sum = sum>255?255:sum;	cs[3] = ca*sum/255;
 				}
 				pnt_plot(i,j,q.z+1,cs,oi);
@@ -1651,11 +1653,11 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 				register float dx=i-q.x, dy=j-q.y, v,u;
 				register int sum=0;
 				u = fabs(dy)-ss;	v = dx+ss/2;	v = v*v+(u<0?0:u*u);
-				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				u = fabs(0.55*dy+0.83*dx)-0.9*ss;	v = 0.83*dy-0.55*dx+0.55*ss;	v = v*v+(u<0?0:u*u);
-				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				u = fabs(0.55*dy-0.83*dx)-0.9*ss;	v = 0.83*dy+0.55*dx-0.55*ss;	v = v*v+(u<0?0:u*u);
-				sum += v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				sum += v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				sum = sum>255?255:sum;	cs[3] = ca*sum/255;
 				pnt_plot(i,j,q.z+1,cs,oi);
 			}
@@ -1665,7 +1667,7 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 			{
 				register float dx=i-q.x, dy=j-q.y, v;
 				v = hypot(dx,dy)-ss;	v=v<0?0:v*v;
-				register int sum = v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				register int sum = v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				cs[3] = ca*sum/255;
 				pnt_plot(i,j,q.z+1,cs,oi);
 			}
@@ -1675,7 +1677,7 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 			{
 				register float dx=i-q.x, dy=j-q.y, v;
 				v = hypot(dx,dy)-ss;	v=v*v;
-				register int sum = v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				register int sum = v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				cs[3] = ca*sum/255;
 				pnt_plot(i,j,q.z+1,cs,oi);
 			}
@@ -1685,7 +1687,7 @@ void mglCanvas::mark_draw(const mglPnt &q, char type, mreal size, mglDrawReg *d)
 			{
 				register float dx=i-q.x, dy=j-q.y, v;
 				v = hypot(dx,dy)-ss;	v=v*v;
-				register int sum = v<(pw-1)*(pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-pw)/2));
+				register int sum = v<V ? 255 : mgl_sline(255,dpw*(sqrt(v)+S));
 				v = dx*dx+dy*dy;
 				sum += v<(2*pw-1)*(2*pw-1)/4 ? 255 : mgl_sline(255,dpw*(sqrt(v)+(1-2*pw)/2));
 				sum = sum>255?255:sum;	cs[3] = ca*sum/255;
