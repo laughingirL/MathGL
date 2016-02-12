@@ -420,13 +420,14 @@ int MGL_EXPORT mgl_data_scan_file(HMDT d,const char *fname, const char *templ)
 		if(!d->a)	mgl_data_create(d, 1,1,1);
 		return	false;
 	}
-	s = buf = mgl_read_gz(fp);	gzclose(fp);
+	s = mgl_read_gz(fp);	gzclose(fp);
 	if(*s)	bufs.push_back(s);
 	for(long i=0;s[i];i++)	if(s[i]=='\n')
 	{
 		while(s[i+1]=='\n')	i++;
-		s[i]=0;	s=s+i+1;
-		if(*s)	bufs.push_back(s);
+		s[i]=0;	i++;
+		if(s[i])	bufs.push_back(s+i);
+		else	break;
 	}
 	// parse lines and collect data
 	size_t nx=strs.size(), ny=bufs.size();
@@ -447,7 +448,7 @@ int MGL_EXPORT mgl_data_scan_file(HMDT d,const char *fname, const char *templ)
 			d->a[i+nx*j] = atof(p);
 		}
 	}
-	free(buf);	return true;
+	free(s);	return true;
 }
 int MGL_EXPORT mgl_data_scan_file_(uintptr_t *d,const char *fname, const char *templ,int l,int m)
 {	char *s=new char[l+1];		memcpy(s,fname,l);	s[l]=0;

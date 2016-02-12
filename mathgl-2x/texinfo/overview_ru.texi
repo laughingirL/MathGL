@@ -131,7 +131,7 @@ Basically plot is done. But I decide to add yellow (@samp{y} color, see @ref{Col
 @verbatim
         gr.Cont(dat,"y");	// plot yellow contour lines
 @end verbatim
-This demonstrate one of base MathGL concept (see, @ref{General concepts}) -- ``new drawing never clears things drawn already''. So, you can just consequently call different plotting functions to obtain ``combined'' plot. For example, if one need to draw axis then he can just call one more plotting function 
+This demonstrate one of base MathGL concept (see, @ref{General concepts}) -- ``new drawing never clears things drawn already''. So, you can just consequently call different plotting functions to obtain ``combined'' plot. For example, if one need to draw axis then he can just call one more plotting function
 @verbatim
         gr.Axis();			// draw axis
 @end verbatim
@@ -237,7 +237,9 @@ MathGL also provide another simple tool @code{mgl.cgi} which parse MGL script fr
 @item
 Я благодарен моим соавторам Д. Кулагину и М. Видассову за помощь в разработке MathGL.
 @item
-Я благодарен D. Eftaxiopoulos, В. Липатову и С. Плису за создание бинарных пакетов для Linux.
+Я благодарен Diego Sejas Viscarra за разработку mgltex, вклад в генерацию фракталов и продуктивные предложения и обсуждения.
+@item
+Я благодарен D. Eftaxiopoulos, D. Haley, В. Липатову и С. Плису за создание бинарных пакетов для Linux.
 @item
 Я благодарен С. Скобелеву, К. Михайленко, М. Вейсману, A. Прохорову, A. Короткевичу, В. Онучину, С. Плису, Р. Киселеву, A. Иванову, Н. Троицкому and В. Липатову за продуктивные предложения и обсуждения.
 @item

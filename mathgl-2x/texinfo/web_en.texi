@@ -52,8 +52,8 @@ Generally, MathGL is GPL library. However, you can use LGPL license for MathGL c
 
 @strong{Latest news}
 @itemize
-@item @emph{1 June 2015.}
-New version (v.@value{VERSION}@value{MINVER}) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are new functions, plot types and styles, improvement in MGL scripts and in mgltex, speeding up and bugfixes, which denoted @ref{News, here}.
+@item @emph{13 February 2016.}
+New version (v.@value{VERSION}@value{MINVER}) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are new functions, plot types and styles, improvement in MGL scripts and in mgltex, some speeding up and bugfixes, which denoted @ref{News, here}.
 @item @emph{7 August 2014.}
 New version (v.2.3) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are many major improvements for both MathGL core and for UDAV, which denoted @ref{News, here}.
 @end itemize
@@ -74,6 +74,36 @@ Javascript interface was developed with support of @url{http://www.datadvance.ne
 @nav{}
 
 @itemize
+
+@item @strong{13 February 2016.}
+New version (v.2.3.4) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are new functions, plot types and styles, improvement in MGL scripts and in mgltex, some speeding up and bugfixes:
+@itemize @bullet
+@item Update @ref{LaTeX package} (thanks to Diego Sejas Viscarra)
+
+@item Add @ref{pmap} plot for Poincare map.
+@item Add @ref{lamerey} plot for Lamerey diagram.
+@item Add @ref{bifurcation} plot for Bifurcation diagram.
+@item Add @ref{ifs2d} and @ref{ifs3d} functions for fractal generation using iterated function system (thanks to Diego Sejas Viscarra).
+
+@item Add @ref{pulse} function for determining pulse parameters.
+@item Add @ref{scanfile} function for getting formated data from textual file.
+@item Add mglData::SetList() function for setting data from variable argument list of double values.
+@item Add @ref{echo} command for printing the content of data.
+@item Add @ref{print} command for print messages to stdout immediately.
+@item Add @ref{pendelta} function for changing size of blur area around lines, marks, glyphs, ...
+
+@item Allow MGL command @ref{save} to write/append strings to a file.
+@item Add option to rewrite file in @ref{savehdf} command.
+@item Add option to @ref{setsize} for scaling primitives without its erasing.
+
+@item Add callback functions to mglQt, mglFLTK, and extend @ref{mglDraw class} for simpler drawing in parallel with calculation (see @ref{Draw and calculate}).
+@item Force set focus for editor in UDAV.
+@item Add line numbers to UDAV editor. Cyan number denote current line, red numbers denote lines with errors.
+@item Disable mouse wheel for zooming in UDAV by default.
+
+@item @strong{INCOMPATIBLE} Scale internally d1,d2 arguments in @ref{curve} to be exactly the same as Bezier curve (P0=p1, P1=d1+p1, P2=p2-d2, P3=p2).
+@item Other minor improvements, bugfixes and compatibility changes
+@end itemize
 
 @item @strong{1 June 2015.}
 New version (v.2.3.3) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are new functions, plot types and styles, improvement in MGL scripts and in mgltex, speeding up and bugfixes:
@@ -111,7 +141,6 @@ New version (v.2.3.3) of @uref{http://sourceforge.net/projects/mathgl, MathGL} i
 @item Bugfix for @ref{flow} and @ref{pipe} functions
 @item Other minor improvements, bugfixes and compatibility changes
 @end itemize
-
 
 @item @strong{2 February 2015.}
 New version (v.2.3.2) of @uref{http://sourceforge.net/projects/mathgl, MathGL} is released. There are minor improvements and bugfixes:

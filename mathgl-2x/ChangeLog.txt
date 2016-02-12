@@ -1,4 +1,4 @@
-2.3.4 Released 12 February 2015
+2.3.4 Released 13 February 2016
 
 * Add mglData::Pulse() for determining pulse parameters.
 * Add mglData::ScanFile() for getting formated data from textual file.
@@ -15,7 +15,7 @@
 * Allow MGL command 'save' append textual strings to a file.
 * Add option to rewrite file in 'savehdf'.
 
-* Add callback functions to mglQt, nglFLTK, and extend mglDraw class for easy multi-threading calculation (see @ref{Draw and calculate}).
+* Add callback functions to mglQt, mglFLTK, and extend mglDraw class for simpler drawing in parallel with calculation (see @ref{Draw and calculate}).
 
 * Force set focus for editor in UDAV.
 * Add line numbers to UDAV editor. Cyan number denote current line, red numbers denote lines with errors.

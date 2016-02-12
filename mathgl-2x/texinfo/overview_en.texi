@@ -88,7 +88,7 @@ Use a precompiled binary. There are binaries for MinGW (platform Win32). For a p
 Install precompiled versions from standard packages (RPM, deb, DevPak and so on).
 @end enumerate
 
-Note, you can download the latest sources (which can be not stable) from sourceforge.net SVN by command 
+Note, you can download the latest sources (which can be not stable) from sourceforge.net SVN by command
 @verbatim
 svn checkout http://svn.code.sf.net/p/mathgl/code/mathgl-2x mathgl-code
 @end verbatim
@@ -129,7 +129,7 @@ Basically plot is done. But I decide to add yellow (@samp{y} color, see @ref{Col
 @verbatim
         gr.Cont(dat,"y");	// plot yellow contour lines
 @end verbatim
-This demonstrate one of base MathGL concept (see, @ref{General concepts}) -- ``new drawing never clears things drawn already''. So, you can just consequently call different plotting functions to obtain ``combined'' plot. For example, if one need to draw axis then he can just call one more plotting function 
+This demonstrate one of base MathGL concept (see, @ref{General concepts}) -- ``new drawing never clears things drawn already''. So, you can just consequently call different plotting functions to obtain ``combined'' plot. For example, if one need to draw axis then he can just call one more plotting function
 @verbatim
         gr.Axis();			// draw axis
 @end verbatim
@@ -234,7 +234,9 @@ My special thanks to my wife for the patience during the writing of this library
 @item
 I'm thankful to my coauthors D. Kulagin and M. Vidassov for help in developing MathGL.
 @item
-I'm thankful to D. Eftaxiopoulos, V. Lipatov and S.M. Plis for making binary packages for Linux.
+I'm thankful to Diego Sejas Viscarra for developing mgltex, contribution to fractal generation and fruitful suggestions.
+@item
+I'm thankful to D. Eftaxiopoulos, D. Haley, V. Lipatov and S.M. Plis for making binary packages for Linux.
 @item
 I'm thankful to S. Skobelev, C. Mikhailenko, M. Veysman, A. Prokhorov, A. Korotkevich, V. Onuchin, S.M. Plis, R. Kiselev, A. Ivanov, N. Troickiy and V. Lipatov for fruitful comments.
 @item

@@ -1,0 +1,57 @@
+#!/bin/bash
+# Make releases
+
+VER=2.3.4
+LVER=${VER}.LGPL
+BIN=MathGL
+LBIN=MathGL-LGPL
+SRC=/home/balakin/mathgl-code/mathgl-2x
+BSRC=${SRC}/build
+
+mkdir mathgl-${VER}-mingw.i686
+mkdir mathgl-${VER}-mingw.i686/bin/
+cp -p ${BIN}/bin/* mathgl-${VER}-mingw.i686/bin/
+mkdir mathgl-${VER}-mingw.i686/lib/
+cp -p ${BIN}/lib/* mathgl-${VER}-mingw.i686/lib/
+mkdir mathgl-${VER}-mingw.i686/include/
+mkdir mathgl-${VER}-mingw.i686/include/mgl2/
+cp -p ${BIN}/include/mgl2/* mathgl-${VER}-mingw.i686/include/mgl2/
+cp -p ${SRC}/ChangeLog.txt mathgl-${VER}-mingw.i686/
+cp -p ${SRC}/FindMathGL2.cmake mathgl-${VER}-mingw.i686/mathgl2-config.cmake
+7z a mathgl-${VER}-mingw.i686.7z mathgl-${VER}-mingw.i686/
+rm -R mathgl-${VER}-mingw.i686
+
+mkdir mathgl-${LVER}-mingw.i686
+mkdir mathgl-${LVER}-mingw.i686/bin/
+cp -p ${LBIN}/bin/* mathgl-${LVER}-mingw.i686/bin/
+mkdir mathgl-${VER}-mingw.i686/lib/
+cp -p ${LBIN}/lib/* mathgl-${LVER}-mingw.i686/lib/
+mkdir mathgl-${LVER}-mingw.i686/include/
+mkdir mathgl-${LVER}-mingw.i686/include/mgl2/
+cp -p ${LBIN}/include/mgl2/* mathgl-${LVER}-mingw.i686/include/mgl2/
+cp -p ${SRC}/ChangeLog.txt mathgl-${LVER}-mingw.i686/
+cp -p ${SRC}/FindMathGL2.cmake mathgl-${LVER}-mingw.i686/mathgl2-config.cmake
+7z a mathgl-${LVER}-mingw.i686.7z mathgl-${LVER}-mingw.i686/
+rm -R mathgl-${LVER}-mingw.i686
+
+mkdir mgl_scripts-${VER}
+cp -pR ${BIN}/extra/* mgl_scripts-${VER}/
+cp -p ${BIN}/bin/* mgl_scripts-${VER}/
+cp -p ${BIN}/share/mathgl/mgl.cgi.exe mgl_scripts-${VER}/
+cp -p ${BIN}/share/udav/*.qm mgl_scripts-${VER}/
+cp -p ${BSRC}/texinfo/mgl_??.html mgl_scripts-${VER}/
+cp -p ${SRC}/ChangeLog.txt mgl_scripts-${VER}/
+7z a mgl_scripts-${VER}.7z mgl_scripts-${VER}/
+rm -R mgl_scripts-${VER}
+
+cp -p ${BSRC}/texinfo/mathgl_en.pdf mathgl-${VER}.eng.pdf
+cp -p ${BSRC}/texinfo/mgl_en.pdf mgl-${VER}.eng.pdf
+cp -p ${SRC}/ChangeLog.txt ChangeLog-${VER}.txt
+7z a mathgl-doc-html-${VER}.7z ${BSRC}/texinfo/m*html ${BSRC}/texinfo/png/
+
+svn checkout svn://svn.code.sf.net/p/mathgl/code/mathgl-2x/ mathgl-${VER}
+cd mathgl-${VER}
+./clean-svn
+cd ..
+tar -zcf mathgl-${VER}.tar.gz mathgl-${VER}/
+rm -R mathgl-${VER}
