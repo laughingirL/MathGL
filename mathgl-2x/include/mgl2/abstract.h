@@ -159,10 +159,10 @@ public:
 	virtual mreal value(mreal x,mreal y=0,mreal z=0) const =0;
 	/// Interpolate by linear function the data to given point
 	inline mreal linear(mreal x,mreal y=0,mreal z=0)	const
-	{	return mgl_data_linear_ext(this,x,y,z,0,0,0);	}	
+	{	return mgl_data_linear_ext(this,x,y,z,0,0,0);	}
 	/// Interpolate by linear function the data to given point and get the gradient
 	inline mreal linearD(mreal x,mreal y=0,mreal z=0,mreal *dx=0,mreal *dy=0,mreal *dz=0)	const
-	{	return mgl_data_linear_ext(this,x,y,z,dx,dy,dz);	}	
+	{	return mgl_data_linear_ext(this,x,y,z,dx,dy,dz);	}
 	virtual mreal v(long i,long j=0,long k=0) const = 0;
 	virtual mreal vthr(long i) const = 0;
 	virtual long GetNx() const = 0;
@@ -181,7 +181,7 @@ public:
 	virtual void Save(const char *fname,long ns=-1) const
 	{	mgl_data_save(this,fname,ns);	}
 	/// Get whole data array (for ns=-1) or only ns-th slice to string
-	virtual std::string Get(long ns=-1)
+	virtual std::string Get(long ns=-1) const
 	{	return mgl_data_to_string(this,ns);	}
 	/// Export data array (for ns=-1) or only ns-th slice to PNG file according color scheme
 	inline void Export(const char *fname,const char *scheme,mreal v1=0,mreal v2=0,long ns=-1) const
