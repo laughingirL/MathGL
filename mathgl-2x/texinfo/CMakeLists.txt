@@ -37,7 +37,7 @@ endforeach(SAMPLE)
 foreach(SAMPLE ${MGL_PNG})
 	set(MGL_PNG_N ${MGL_PNG_N} ${MGL_OUT}/png/${SAMPLE}.png)
 	add_custom_command(OUTPUT ${MGL_OUT}/png/${SAMPLE}.png
-		COMMAND mgl_example -kind=${SAMPLE} -docs
+		COMMAND mgl_example -kind=${SAMPLE}
 		DEPENDS mgl_example
 		WORKING_DIRECTORY ${MGL_OUT}/png )
 	set(MGL_PNG_S ${MGL_PNG_S} ${MGL_OUT}/small/${SAMPLE}-sm.png)
@@ -45,21 +45,21 @@ foreach(SAMPLE ${MGL_PNG})
 		COMMAND mgl_example -kind=${SAMPLE} -mini
 		DEPENDS mgl_example
 		WORKING_DIRECTORY ${MGL_OUT}/small )
+		
+		
 if(MGL_HAVE_DOC_JSON)
 	set(MGL_PNG_J ${MGL_PNG_J} ${MGL_OUT}/json/${SAMPLE}.json)
 	add_custom_command(OUTPUT ${MGL_OUT}/json/${SAMPLE}.json
-		COMMAND mv ${MGL_OUT}/png/${SAMPLE}.json ${MGL_OUT}/json/
-		DEPENDS ${MGL_OUT}/png/${SAMPLE}.png )
+		COMMAND mgl_example -json -kind=${SAMPLE}
+		DEPENDS mgl_example
+		WORKING_DIRECTORY ${MGL_OUT}/json )
 endif(MGL_HAVE_DOC_JSON)
 if(MGL_HAVE_DOC_PRC)
 	set(MGL_PNG_D ${MGL_PNG_D} ${MGL_OUT}/pdf/${SAMPLE}.pdf)
 	add_custom_command(OUTPUT ${MGL_OUT}/pdf/${SAMPLE}.pdf
-		COMMAND mv ${MGL_OUT}/png/${SAMPLE}.pdf ${MGL_OUT}/pdf/
-		DEPENDS ${MGL_OUT}/png/${SAMPLE}.png )
-# 	add_custom_command(OUTPUT ${MGL_OUT}/pdf/${SAMPLE}.pdf
-# 		COMMAND mgl_example -pdf -kind=${SAMPLE}
-# 		DEPENDS mgl_example
-# 		WORKING_DIRECTORY ${MGL_OUT}/pdf )
+		COMMAND mgl_example -pdf -kind=${SAMPLE}
+		DEPENDS mgl_example
+		WORKING_DIRECTORY ${MGL_OUT}/pdf )
 endif(MGL_HAVE_DOC_PRC)
 endforeach(SAMPLE)
 
