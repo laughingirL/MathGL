@@ -448,19 +448,23 @@ There are samples for @ref{1D data plotting, 1D arrays}, @ref{2D data plotting, 
 You may download current version of MathGL for following configurations:
 @itemize @bullet
 @item
-@uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}@value{MINVER}.tar.gz,source} file with cmake build system.
+@uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}@value{MINVER}.tar.gz, Source} file with cmake build system.
 @item
-@uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}@value{MINVER}-mingw.i686.7z,Win32 GPL} binaries for MinGW (build for i686)
+@uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}@value{MINVER}-mingw.i686.7z,Win32 GPL} binaries for MinGW (build for i686).
 @item
-@uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}@value{MINVER}.LGPL-mingw.i686.7z,Win32 LGPL} binaries for MinGW (build for i686, no GSL and HDF5 support)
+@uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}@value{MINVER}.LGPL-mingw.i386.7z,Win32 LGPL} binaries for MinGW (build for i386, no GSL and HDF5 support).
+@item
+@uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}@value{MINVER}.Win10-mingw.i386.7z,Win32 GPL} binaries for MinGW (build for i386). This should work on Windows 8 and Windows 10.
 @c @item
 @c @uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}@value{MINVER}.LGPL-win64.7z,Win64 LGPL} binaries for MSVS 2010 (no GSL and HDF5 support)
 @item
-@uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}@value{MINVER}.eng.pdf,PDF} documentation in English
+@uref{http://downloads.sourceforge.net/mathgl/mathgl-@value{VERSION}@value{MINVER}.eng.pdf,PDF} documentation in English.
 @item
-@uref{http://downloads.sourceforge.net/mathgl/mgl_scripts-@value{VERSION}@value{MINVER}.7z, UDAV and utilities} with all required DLL files (build for i686)
-@c HTML documentation in English
-@c HTML documentation in Russian
+@uref{http://downloads.sourceforge.net/mathgl/mgl_scripts-@value{VERSION}@value{MINVER}.7z, UDAV and utilities} with all required DLL files (build for i686).
+@item
+@uref{http://downloads.sourceforge.net/mathgl/mgl_scripts-@value{VERSION}@value{MINVER}.Win10.7z, UDAV and utilities} with all required DLL files (build for i386). This should work on Windows 8 and Windows 10.
+@item
+@uref{http://downloads.sourceforge.net/mathgl/mathgl-doc-html-@value{VERSION}@value{MINVER}.7z, Archive} with HTML documentation and figures.
 @c @item
 @c @uref{http://downloads.sourceforge.net/mathgl/mathgl_slides-1.9.pdf,PDF} slideshow of main features
 @end itemize
