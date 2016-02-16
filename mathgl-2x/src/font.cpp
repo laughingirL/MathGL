@@ -32,7 +32,7 @@
 #include "def_font.cc"
 //-----------------------------------------------------------------------------
 extern mglTeXsymb mgl_tex_symb[];
-extern long mgl_tex_num;
+extern size_t mgl_tex_num;
 //mglFont mglDefFont("nofont");
 mglFont mglDefFont;
 //-----------------------------------------------------------------------------

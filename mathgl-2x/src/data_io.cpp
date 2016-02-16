@@ -421,13 +421,15 @@ int MGL_EXPORT mgl_data_scan_file(HMDT d,const char *fname, const char *templ)
 		return	false;
 	}
 	s = mgl_read_gz(fp);	gzclose(fp);
-	if(*s)	bufs.push_back(s);
+	size_t len = strs[0].length();
+	const char *s0 = strs[0].c_str();
+	if(!strncmp(s, s0, len))	bufs.push_back(s);
 	for(long i=0;s[i];i++)	if(s[i]=='\n')
 	{
 		while(s[i+1]=='\n')	i++;
 		s[i]=0;	i++;
-		if(s[i])	bufs.push_back(s+i);
-		else	break;
+		if(!strncmp(s+i, s0, len))	bufs.push_back(s+i);
+		if(!s[i])	break;
 	}
 	// parse lines and collect data
 	size_t nx=strs.size(), ny=bufs.size();
