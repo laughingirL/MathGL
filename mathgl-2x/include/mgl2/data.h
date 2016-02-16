@@ -949,6 +949,9 @@ public:
 };
 //-----------------------------------------------------------------------------
 /// Class for replacement of std::vector
+#if defined(_MSC_VER)
+MGL_EXPORT_TEMPLATE template class MGL_EXPORT std::vector<mreal>;
+#endif
 class MGL_EXPORT mglDataS : public mglDataA
 {
 public:

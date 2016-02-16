@@ -28,6 +28,16 @@
 #endif
 
 #include "mgl2/dllexport.h"
+
+// MSVC compatibility for export and import stl templates from and to dll.
+#    ifdef mgl_EXPORTS
+        /* We are building this library */
+#      define MGL_EXPORT_TEMPLATE
+#    else
+        /* We are using this library */
+#      define MGL_EXPORT_TEMPLATE extern
+#    endif
+
 #if MGL_HAVE_ATTRIBUTE
 #define MGL_FUNC_CONST	__attribute__((const))
 #define MGL_FUNC_PURE	__attribute__((pure))
