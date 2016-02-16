@@ -488,7 +488,7 @@ HMDT MGL_NO_EXPORT mglFormulaCalc(std::wstring str, mglParser *arg, const std::v
 		else
 		{
 			HMDT res = new mglData;
-			char ch = str[0];
+			wchar_t ch = str[0];
 			if(ch<':') res->a[0] = wcstod(str.c_str(),0);	// this is number
 			else if(!str.compare(L"pi"))	res->a[0] = M_PI;
 			else if(ch==':')	res->a[0] = -1;
@@ -907,7 +907,7 @@ HADT MGL_NO_EXPORT mglFormulaCalcC(std::wstring str, mglParser *arg, const std::
 		else
 		{
 			HADT res = new mglDataC;
-			char ch = str[0];
+			wchar_t ch = str[0];
 			if(ch<':')	// this is real number
 				res->a[0] = (str[str.length()-1]=='i') ? dual(0,wcstod(str.c_str(),0)) :  mreal(wcstod(str.c_str(),0));
 			else if(ch=='i')	// this is imaginary number

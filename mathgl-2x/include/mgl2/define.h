@@ -20,7 +20,9 @@
 #ifndef _MGL_DEFINE_H_
 #define _MGL_DEFINE_H_
 //-----------------------------------------------------------------------------
+#if defined(_MSC_VER)
 #pragma warning(disable: 4996)
+#endif
 
 #include "mgl2/config.h"
 #ifndef SWIG
