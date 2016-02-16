@@ -23,8 +23,6 @@
 #include "mgl2/data_cf.h"
 #include "mgl2/pde.h"
 //-----------------------------------------------------------------------------
-#include <vector>
-#include <string>
 #include <stdarg.h>
 //-----------------------------------------------------------------------------
 mreal MGL_EXPORT mglLinear(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z);
@@ -949,9 +947,6 @@ public:
 };
 //-----------------------------------------------------------------------------
 /// Class for replacement of std::vector
-#if defined(_MSC_VER)
-MGL_EXPORT_TEMPLATE template class MGL_EXPORT std::vector<mreal>;
-#endif
 class MGL_EXPORT mglDataS : public mglDataA
 {
 public:

@@ -20,6 +20,8 @@
 #ifndef _MGL_DEFINE_H_
 #define _MGL_DEFINE_H_
 //-----------------------------------------------------------------------------
+#pragma warning(disable: 4996)
+
 #include "mgl2/config.h"
 #ifndef SWIG
 
@@ -292,10 +294,23 @@ const mdual mgl_I=_Complex_I;
 #define mgl_abs(x)	cabs(x)
 #endif
 #ifdef __cplusplus
+#include <string>
+#include <vector>
+#if defined(_MSC_VER)
+MGL_EXPORT_TEMPLATE template class MGL_EXPORT std::allocator<char>;
+MGL_EXPORT_TEMPLATE template class MGL_EXPORT std::basic_string< char, std::char_traits<char>, std::allocator<char> >;
+MGL_EXPORT_TEMPLATE template class MGL_EXPORT std::basic_string< wchar_t, std::char_traits<wchar_t>, std::allocator<wchar_t> >;
+MGL_EXPORT_TEMPLATE template class MGL_EXPORT std::vector<long>;
+MGL_EXPORT_TEMPLATE template class MGL_EXPORT std::vector<mreal>;
+#endif
 //-----------------------------------------------------------------------------
 extern float mgl_cos[360];	///< contain cosine with step 1 degree
 //-----------------------------------------------------------------------------
 #include <complex>
+#if defined(_MSC_VER)
+MGL_EXPORT_TEMPLATE template class MGL_EXPORT std::complex<float>;
+MGL_EXPORT_TEMPLATE template class MGL_EXPORT std::complex<double>;
+#endif
 typedef std::complex<mreal> dual;
 typedef std::complex<double> ddual;
 #if !MGL_HAVE_C99_COMPLEX

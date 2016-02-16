@@ -32,8 +32,6 @@ void MGL_NO_EXPORT mgl_printf(void *fp, bool gz, const char *str, ...);
 #include <float.h>
 #include <math.h>
 
-#include <string>
-#include <vector>
 #include <deque>
 #include <map>
 #include <iostream>

@@ -22,8 +22,6 @@
 #include "mgl2/font.h"
 #include <time.h>
 #include <algorithm>
-#include <vector>
-#include <string>
 #include <sys/stat.h>
 #undef _GR_
 #define _GR_	((mglCanvas *)(*gr))

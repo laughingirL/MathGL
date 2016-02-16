@@ -22,7 +22,6 @@
 #define _MGL_FONT_H_
 
 #include "mgl2/define.h"
-#include <vector>
 //-----------------------------------------------------------------------------
 #define MGL_FONT_BOLD		0x01000000	// This value is used binary
 #define MGL_FONT_ITAL		0x02000000	// This value is used binary
@@ -50,6 +49,9 @@ struct mglGlyphDescr
 };
 inline bool operator<(const mglGlyphDescr &a,const mglGlyphDescr &b)	{	return a.id<b.id;	}
 inline bool operator>(const mglGlyphDescr &a,const mglGlyphDescr &b)	{	return a.id>b.id;	}
+#if defined(_MSC_VER)
+MGL_EXPORT_TEMPLATE template class MGL_EXPORT std::vector<mglGlyphDescr>;
+#endif
 //-----------------------------------------------------------------------------
 struct MGL_EXPORT mglTeXsymb	{	unsigned kod;	const wchar_t *tex;	};
 const float mgl_fgen = 4*14;

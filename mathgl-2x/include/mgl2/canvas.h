@@ -101,6 +101,9 @@ struct MGL_EXPORT mglDrawDat
 	std::vector<mglGlyph> Glf;	///< Glyphs data
 	mglStack<mglTexture> Txt;	///< Pointer to textures
 };
+#if defined(_MSC_VER)
+MGL_EXPORT_TEMPLATE template class MGL_EXPORT std::vector<mglDrawDat>;
+#endif
 //-----------------------------------------------------------------------------
 union mglRGBA	{	uint32_t c; unsigned char r[4];	};
 //-----------------------------------------------------------------------------

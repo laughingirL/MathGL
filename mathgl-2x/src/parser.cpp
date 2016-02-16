@@ -887,7 +887,6 @@ int mglParser::FlowExec(mglGraph *, const std::wstring &com, long m, mglArg *a)
 	return n+1;
 }
 //-----------------------------------------------------------------------------
-#include <string>
 void mglParser::Execute(mglGraph *gr, FILE *fp, bool print)
 {
 	if(gr==0 || fp==0)	return;

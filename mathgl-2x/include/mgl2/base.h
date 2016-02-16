@@ -23,8 +23,6 @@
 #include "mgl2/abstract.h"
 
 #ifdef __cplusplus
-#include <vector>
-#include <string>
 
 #if (MGL_HAVE_PTHREAD|MGL_HAVE_PTHR_WIDGET)
 #include <pthread.h>
@@ -59,11 +57,11 @@ public:
 	mglStack(const mglStack<T> &st)
 	{	np=st.np;	dat = (T**)malloc(np*sizeof(T*));
 		pb=st.pb;	m=n=0;	reserve(st.n);
-		for(size_t i=0;i<m;i++)	memcpy(dat[i],st.dat[i],(1L<<pb)*sizeof(T));
+		for(size_t i=0;i<m;i++)	memcpy(dat[i],st.dat[i],((size_t)1<<pb)*sizeof(T));
 		n=st.n;		mutex = 0;	}
 	mglStack(size_t Pbuf=10)
 	{	np=16;	pb=Pbuf;	dat = (T**)malloc(np*sizeof(T*));
-		dat[0] = new T[1L<<pb];	n=0;	m=1;	mutex = 0;	}
+		dat[0] = new T[(size_t)1<<pb];	n=0;	m=1;	mutex = 0;	}
 	~mglStack()	{	clear();	delete [](dat[0]);	free(dat);	}
 	inline void set_mutex(void *m)	{	mutex = m;	}
 	void reserve(size_t num)
@@ -74,7 +72,7 @@ public:
 			num = 1+ (num>>pb);
 			if(num>np)
 			{	dat = (T**)realloc(dat, num*sizeof(T*));	np=num;	}
-			for(size_t i=m;i<num;i++)	dat[i] = new T[1L<<pb];
+			for(size_t i=m;i<num;i++)	dat[i] = new T[(size_t)1<<pb];
 			m = num;
 		}
 	}
@@ -89,7 +87,7 @@ public:
 #endif
 		}
 		for(size_t i=0;i<m;i++)	delete [](dat[i]);
-		dat[0] = new T[1L<<pb];	n=0;	m=1;
+		dat[0] = new T[(size_t)1<<pb];	n=0;	m=1;
 		if(mutex)
 		{
 #if MGL_HAVE_PTHREAD
@@ -111,7 +109,7 @@ public:
 	const mglStack<T> &operator=(const mglStack<T> &st)
 	{
 		pb=st.pb;	clear();	reserve(st.n);
-		for(size_t i=0;i<st.m && i<m;i++)	memcpy(dat[i],st.dat[i],(1L<<pb)*sizeof(T));
+		for(size_t i=0;i<st.m && i<m;i++)	memcpy(dat[i],st.dat[i],((size_t)1<<pb)*sizeof(T));
 		n = st.n;	return st;
 	}
 };
@@ -134,6 +132,9 @@ inline bool operator==(const mglMatrix &a, const mglMatrix &b)
 {	return ((a.x-b.x)*(a.x-b.x)+(a.y-b.y)*(a.y-b.y)+(a.z-b.z)*(a.z-b.z)+(a.pf-b.pf)*(a.pf-b.pf)==0)&&!memcmp(b.b,a.b,9*sizeof(mreal));}
 inline bool operator!=(const mglMatrix &a, const mglMatrix &b)
 {	return ((a.x-b.x)*(a.x-b.x)+(a.y-b.y)*(a.y-b.y)+(a.z-b.z)*(a.z-b.z)+(a.pf-b.pf)*(a.pf-b.pf)!=0)||memcmp(b.b,a.b,9*sizeof(mreal));	}
+#if defined(_MSC_VER)
+MGL_EXPORT_TEMPLATE template class MGL_EXPORT std::vector<mglMatrix>;
+#endif
 //-----------------------------------------------------------------------------
 /// Structure for simplest primitives
 struct MGL_EXPORT mglPrim	// NOTE: use float for reducing memory size
@@ -161,6 +162,9 @@ struct MGL_EXPORT mglPrim	// NOTE: use float for reducing memory size
 };
 bool operator<(const mglPrim &a,const mglPrim &b);
 bool operator>(const mglPrim &a,const mglPrim &b);
+#if defined(_MSC_VER)
+MGL_EXPORT_TEMPLATE template class MGL_EXPORT mglStack<mglPrim>;
+#endif
 //-----------------------------------------------------------------------------
 /// Structure for light source
 struct MGL_EXPORT mglLight
@@ -193,6 +197,9 @@ struct MGL_EXPORT mglBlock
 	mglBlock(const mglBlock &aa)	{	memcpy(this, &aa, sizeof(mglBlock));	}
 	const mglBlock &operator=(const mglBlock &aa)	{	memcpy(this, &aa, sizeof(mglBlock));	return aa;	}
 };
+#if defined(_MSC_VER)
+MGL_EXPORT_TEMPLATE template class MGL_EXPORT std::vector<mglBlock>;
+#endif
 //-----------------------------------------------------------------------------
 /// Structure for group of primitives
 struct MGL_EXPORT mglGroup
@@ -207,6 +214,9 @@ struct MGL_EXPORT mglGroup
 #endif
 	inline const mglGroup &operator=(const mglGroup &aa)	{	Lbl = aa.Lbl;	Id = aa.Id;	p = aa.p;	return aa;	}
 };
+#if defined(_MSC_VER)
+MGL_EXPORT_TEMPLATE template class MGL_EXPORT mglStack<mglGroup>;
+#endif
 //-----------------------------------------------------------------------------
 /// Structure for text label
 struct MGL_EXPORT mglText
@@ -222,6 +232,9 @@ struct MGL_EXPORT mglText
 #endif
 	const mglText&operator=(const mglText &aa)	{ text=aa.text;	stl=aa.stl;	val=aa.val;	return aa;	}
 };
+#if defined(_MSC_VER)
+MGL_EXPORT_TEMPLATE template class MGL_EXPORT std::vector<mglText>;
+#endif
 //-----------------------------------------------------------------------------
 /// Structure for internal point representation
 struct MGL_EXPORT mglPnt	// NOTE: use float for reducing memory size
@@ -251,6 +264,9 @@ inline mglPnt operator*(const mglPnt &a, float b)
 inline mglPnt operator*(float b, const mglPnt &a)
 {	mglPnt p;	for(long i=0;i<10;i++)	p.dat[i] = a.dat[i]*b;	p.sub=a.sub;	return p;	}
 //{	return mglPnt(a.x*b,a.y*b,a.z*b, a.u*b,a.v*b,a.w*b, a.r*b,a.g*b,a.b*b,a.a*b);	}
+#if defined(_MSC_VER)
+MGL_EXPORT_TEMPLATE template class MGL_EXPORT mglStack<mglPnt>;
+#endif
 //-----------------------------------------------------------------------------
 /// Structure for glyph representation
 struct MGL_EXPORT mglGlyph
@@ -273,6 +289,9 @@ struct MGL_EXPORT mglGlyph
 	{	Create(a.nt, a.nl);	memcpy(trig, a.trig, 6*nt*sizeof(short));
 		memcpy(line, a.line, 2*nl*sizeof(short));	return a;	}
 };
+#if defined(_MSC_VER)
+MGL_EXPORT_TEMPLATE template class MGL_EXPORT std::vector<mglGlyph>;
+#endif
 //-----------------------------------------------------------------------------
 #define MGL_TEXTURE_COLOURS 512
 /// Structure for texture (color scheme + palette) representation
@@ -309,6 +328,9 @@ struct MGL_EXPORT mglTexture
 		memcpy(col,aa.col,MGL_TEXTURE_COLOURS*sizeof(mglColor));
 		memcpy(Sch,aa.Sch,260);	return aa;	}
 };
+#if defined(_MSC_VER)
+MGL_EXPORT_TEMPLATE template class MGL_EXPORT mglStack<mglTexture>;
+#endif
 //-----------------------------------------------------------------------------
 const mglColor NC(-1,-1,-1);
 const mglColor BC( 0, 0, 0);
@@ -322,6 +344,10 @@ struct MGL_EXPORT mglActivePos
 	int id;		///< object id for active point
 	int n;		///< position of active point in command (object id)
 };
+#if defined(_MSC_VER)
+MGL_EXPORT_TEMPLATE template class MGL_EXPORT mglStack<mglActivePos>;
+#endif
+
 //-----------------------------------------------------------------------------
 /// Base class for canvas which handle all basic drawing
 class MGL_EXPORT mglBase

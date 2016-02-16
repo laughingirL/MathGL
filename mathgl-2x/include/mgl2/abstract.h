@@ -23,7 +23,6 @@
 #include "mgl2/define.h"
 //-----------------------------------------------------------------------------
 #ifdef __cplusplus
-#include <string>
 #include "mgl2/type.h"
 #define MGL_TO_WCS(str,code)	if(str && *str){size_t s=mbstowcs(0,str,0); wchar_t *wcs=new wchar_t[s+1]; mbstowcs(wcs,str,s); wcs[s]=0; code; delete []wcs;}else{const wchar_t *wcs=L""; code;}
 //-----------------------------------------------------------------------------

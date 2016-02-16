@@ -22,7 +22,6 @@
 
 #ifdef __cplusplus
 #include "mgl2/mgl.h"
-#include <string>
 #if MGL_HAVE_LTDL
 #include <ltdl.h>
 #endif
