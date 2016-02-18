@@ -1,7 +1,3 @@
-if(MGL_HAVE_GSL)
-	include_directories(${GSL_INCLUDE_DIR})
-endif(MGL_HAVE_GSL)
-
 add_executable(mgl_example wnd_samples.cpp full_test.cpp samples.cpp)
 target_link_libraries(mgl_example mgl ${getopt_lib})
 
@@ -43,7 +39,6 @@ if(QT_ENABLED)
 endif(QT_ENABLED)
 
 if(MGL_HAVE_LTDL)
-	include_directories(${LTDL_INCLUDE_DIR})
 	add_library(mgl_module MODULE mgl_module.cpp)
 	target_link_libraries(mgl_module mgl)	# for compatibility with win32
 endif(MGL_HAVE_LTDL)
