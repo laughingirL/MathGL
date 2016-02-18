@@ -4,7 +4,7 @@ set(mgl_src
 	data.cpp data_io.cpp data_ex.cpp data_png.cpp
 	export_2d.cpp export_3d.cpp eval.cpp evalp.cpp exec.cpp export.cpp
 	fit.cpp font.cpp obj.cpp other.cpp parser.cpp pde.cpp pixel.cpp
-	plot.cpp prim.cpp surf.cpp tex_table.cc vect.cpp volume.cpp evalc.cpp
+	plot.cpp prim.cpp surf.cpp vect.cpp volume.cpp evalc.cpp
 	s_hull/s_hull_pro.cpp window.cpp
 )
 
@@ -20,6 +20,7 @@ ${MathGL_BINARY_DIR}/include/mgl2/dllexport.h	cont.hpp
 	../include/mgl2/parser.h	../include/mgl2/addon.h		../include/mgl2/evalc.h
 	s_hull/s_hull_pro.h			../include/mgl2/wnd.h		../include/mgl2/canvas_wnd.h
 	../include/mgl2/thread.h	../include/mgl2/abstract.h	../include/mgl2/pde.h
+#	tex_table.cc	 def_font.cc
 )
 
 add_definitions(-DMGL_SRC)

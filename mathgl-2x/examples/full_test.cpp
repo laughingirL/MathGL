@@ -26,7 +26,8 @@
 #include "mgl2/font.h"
 #include "mgl2/eval.h"
 //-----------------------------------------------------------------------------
-void mgl_create_cpp_font(HMGL gr, const wchar_t *how);
+void MGL_EXPORT mgl_create_cpp_font(HMGL gr, const wchar_t *how);
+long MGL_EXPORT mgl_check_tex_table();
 //-----------------------------------------------------------------------------
 struct mglSample	/// Structure for list of samples
 {
@@ -385,13 +386,6 @@ void smgl_fexport(mglGraph *gr)	// test file export
 	gr->ImportMGLD("fexport.mgld");
 }
 //-----------------------------------------------------------------------------
-int MGL_LOCAL_PURE tex_symb_cmp(const void *a, const void *b)
-{
-	const mglTeXsymb *aa = (const mglTeXsymb *)a;
-	const mglTeXsymb *bb = (const mglTeXsymb *)b;
-	return wcscmp(aa->tex, bb->tex);
-}
-//-----------------------------------------------------------------------------
 int main(int argc,char **argv)
 {
 	mgl_suppress_warn(true);
@@ -492,14 +486,7 @@ int main(int argc,char **argv)
 	{	smgl_fexport(gr);	delete gr;	return 0;	}
 	else if(dotest==5)
 	{
-		size_t i=0;	while(mgl_tex_symb[i].tex[0])	i++;
-		if(mgl_tex_num!=i)	printf("real=%lu, set=%lu\n",i,mgl_tex_num);
-		for(i=0;mgl_tex_symb[i].tex[0];i++)
-		{
-				mglTeXsymb tst, *rts;	tst.tex = mgl_tex_symb[i].tex;
-				rts = (mglTeXsymb *) bsearch(&tst, mgl_tex_symb, mgl_tex_num, sizeof(mglTeXsymb), tex_symb_cmp);
-				if(!rts)	printf("Bad '%ls' at %lu\n",mgl_tex_symb[i].tex,i);
-		}
+		mgl_check_tex_table();
 		delete gr;	return 0;
 	}
 

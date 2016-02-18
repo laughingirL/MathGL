@@ -30,6 +30,7 @@
 #include "mgl2/base.h"
 #include "mgl2/font.h"
 #include "def_font.cc"
+#include "tex_table.cc"
 //-----------------------------------------------------------------------------
 //mglFont mglDefFont("nofont");
 mglFont mglDefFont;
@@ -916,3 +917,18 @@ void mglFont::Copy(mglFont *f)
 	memcpy(&glyphs[0],&(f->glyphs)[0],glyphs.size()*sizeof(mglGlyphDescr));
 }
 //-----------------------------------------------------------------------------
+long MGL_EXPORT mgl_check_tex_table()
+{
+	size_t i=0;	while(mgl_tex_symb[i].tex[0])	i++;
+	long res = 0;
+	if(mgl_tex_num!=i)
+	{	printf("real=%lu, set=%lu\n",i,mgl_tex_num);	res = -1;	}
+	for(i=0;mgl_tex_symb[i].tex[0];i++)
+	{
+		mglTeXsymb tst, *rts;	tst.tex = mgl_tex_symb[i].tex;
+		rts = (mglTeXsymb *) bsearch(&tst, mgl_tex_symb, mgl_tex_num, sizeof(mglTeXsymb), mgl_tex_symb_cmp);
+		if(!rts)
+		{	printf("Bad '%ls' at %lu\n",mgl_tex_symb[i].tex,i);	res = 1+i;	}
+	}
+	return res;
+}
