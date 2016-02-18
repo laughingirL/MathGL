@@ -1,14 +1,5 @@
 add_executable(make_bin make_bin.cpp)
 target_link_libraries(make_bin mgl-static ${getopt_lib})
-if(MGL_HAVE_PNG)
-        target_link_libraries(make_bin ${PNG_LIBRARIES} )
-        include_directories(${PNG_INCLUDE_DIR})
-endif(MGL_HAVE_PNG)
-
-if(MGL_HAVE_ZLIB)
-        target_link_libraries(make_bin ${ZLIB_LIBRARIES} )
-        include_directories(${ZLIB_INCLUDE_DIR})
-endif(MGL_HAVE_ZLIB)
 
 set(MGL_FONTS STIX adventor  bonum  cursor  heroscn  heros  pagella  schola  termes)
 set(MGL_FONTS_BIN )
