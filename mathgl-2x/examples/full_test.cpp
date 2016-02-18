@@ -385,7 +385,7 @@ void smgl_fexport(mglGraph *gr)	// test file export
 	gr->ImportMGLD("fexport.mgld");
 }
 //-----------------------------------------------------------------------------
-int MGL_LOCAL_PURE mgl_tex_symb_cmp(const void *a, const void *b)
+int MGL_LOCAL_PURE tex_symb_cmp(const void *a, const void *b)
 {
 	const mglTeXsymb *aa = (const mglTeXsymb *)a;
 	const mglTeXsymb *bb = (const mglTeXsymb *)b;
@@ -497,7 +497,7 @@ int main(int argc,char **argv)
 		for(i=0;mgl_tex_symb[i].tex[0];i++)
 		{
 				mglTeXsymb tst, *rts;	tst.tex = mgl_tex_symb[i].tex;
-				rts = (mglTeXsymb *) bsearch(&tst, mgl_tex_symb, mgl_tex_num, sizeof(mglTeXsymb), mgl_tex_symb_cmp);
+				rts = (mglTeXsymb *) bsearch(&tst, mgl_tex_symb, mgl_tex_num, sizeof(mglTeXsymb), tex_symb_cmp);
 				if(!rts)	printf("Bad '%ls' at %lu\n",mgl_tex_symb[i].tex,i);
 		}
 		delete gr;	return 0;

@@ -52,14 +52,12 @@ ZZ. Update *.i for new functions {before release!!!}
 
 ============= DOCUMENTATION =============
 
-A. Paper about MathGL!!! 6099610006
+A. Paper about MathGL!!!
 B. Add chapter with real samples
 C. Translate to Russian everything
 D. Docs about JS interface
 
 6. Update Qt and UDAV figures
-
-YY. Sample like http://pyxplot.org.uk/examples/05ap/02hlines/index.html using Stem()
 
 ============= UDAV =============
 
