@@ -20,6 +20,12 @@
 #include <locale.h>
 #include <getopt.h>
 #include "mgl2/mgl.h"
+
+#ifdef _MSC_VER
+#define mnpos (std::basic_string<wchar_t>::size_type)-1
+#else
+#define mnpos std::wstring::npos
+#endif
 void mgl_error_print(const char *Message, void *par);
 void mgl_ask_gets(const wchar_t *quest, wchar_t *res);
 //-----------------------------------------------------------------------------
@@ -111,12 +117,12 @@ int main(int argc, char *argv[])
 	for(long i=0;;)	// collect exact values
 	{
 		n = str.find(L"##a ",i);
-		if(n==std::string::npos)	break;
+		if (n == mnpos)	break;
 		i = n+4;	var.push_back(str.substr(i,str.find('\n',i)));
 	}
 	n = str.find(L"##c ");
-	if(n!=std::string::npos)
-	{
+	if (n != mnpos)
+		{
 		double v1,v2,dv,v;
 		wscanf(str.c_str()+n+4,L"%lg%lg%lg",&v1,&v2,&dv);
 		wchar_t ss[64];

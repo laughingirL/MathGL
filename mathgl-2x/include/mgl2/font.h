@@ -54,6 +54,10 @@ MGL_EXPORT_TEMPLATE template class MGL_EXPORT std::vector<mglGlyphDescr>;
 #endif
 //-----------------------------------------------------------------------------
 struct MGL_EXPORT mglTeXsymb	{	unsigned kod;	const wchar_t *tex;	};
+#ifndef MGL_TEX_TABLE
+extern MGL_EXPORT mglTeXsymb mgl_tex_symb[];
+extern MGL_EXPORT size_t mgl_tex_num;
+#endif
 const float mgl_fgen = 4*14;
 /// Get font color, style and align for internal parser
 bool MGL_EXPORT mglGetStyle(const char *how, int *font, int *align=0);

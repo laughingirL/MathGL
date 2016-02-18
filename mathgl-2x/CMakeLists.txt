@@ -247,6 +247,15 @@ if(NOT MGL_HAVE_RVAL)
 	set(MGL_HAVE_RVAL 0)
 endif(NOT MGL_HAVE_RVAL)
 
+CHECK_CXX_SOURCE_COMPILES(
+"#include <getopt.h>
+int main(int argc, char *args[]) {
+int ch = getopt(argc, args, \"1:2:3:4:5:6:7:8:9:hno:L:C:A:s:S:q:\"); return 0; }" MGL_HAVE_GETOPT)
+if(NOT MGL_HAVE_GETOPT)
+	include_directories(${MathGL_SOURCE_DIR}/addons/getopt)
+	set(getopt_lib getopt)
+endif(NOT MGL_HAVE_GETOPT)
+
 if(enable-double)
 	set(MGL_USE_DOUBLE 1)
 else(enable-double)
@@ -557,6 +566,10 @@ if(WIN32)
 	add_definitions(-DWIN32)
 endif(WIN32)
 
+if(NOT MGL_HAVE_GETOPT)
+	add_subdirectory( addons/getopt )
+endif(NOT MGL_HAVE_GETOPT)
+
 add_subdirectory( src )
 add_subdirectory( widgets )
 add_subdirectory( include )
@@ -566,9 +579,8 @@ if(NOT enable-lgpl)
 	if(enable-python OR enable-lua OR enable-octave)
 		add_subdirectory( lang )
 	endif(enable-python OR enable-lua OR enable-octave)
-	if(NOT MSVC AND NOT BORLAND)
-		add_subdirectory( utils )
-	endif(NOT MSVC AND NOT BORLAND)
+add_subdirectory( utils )
+add_subdirectory( examples )
 	if(NOT WIN32)
 		add_subdirectory( fonts )
 	endif(NOT WIN32)
@@ -576,7 +588,6 @@ if(NOT enable-lgpl)
 endif(NOT enable-lgpl)
 
 if(NOT MSVC AND NOT BORLAND)
-	add_subdirectory( examples )
 
 	if(MGL_HAVE_DOC_HTML OR MGL_HAVE_DOC_SITE OR MGL_HAVE_DOC_INFO OR MGL_HAVE_DOC_PDF_RU OR MGL_HAVE_DOC_PDF_EN )
 		add_subdirectory( texinfo )

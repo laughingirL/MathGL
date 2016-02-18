@@ -31,8 +31,6 @@
 #include "mgl2/font.h"
 #include "def_font.cc"
 //-----------------------------------------------------------------------------
-extern mglTeXsymb mgl_tex_symb[];
-extern size_t mgl_tex_num;
 //mglFont mglDefFont("nofont");
 mglFont mglDefFont;
 //-----------------------------------------------------------------------------

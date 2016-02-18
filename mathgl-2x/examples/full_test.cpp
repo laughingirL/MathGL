@@ -20,9 +20,7 @@
 #include <time.h>
 #include <locale.h>
 #include <time.h>
-#if !defined(_MSC_VER) && !defined(__BORLANDC__)
 #include <getopt.h>
-#endif
 
 #include "mgl2/mgl.h"
 #include "mgl2/font.h"
@@ -75,7 +73,6 @@ void test(mglGraph *gr)
 	return;
 }
 //-----------------------------------------------------------------------------
-#if !defined(_MSC_VER) && !defined(__BORLANDC__)
 static struct option longopts[] =
 {
 	{ "big",	no_argument,	&big,		1 },
@@ -156,7 +153,6 @@ void usage()
 		"--fexport	- test most of output formats\n"
 	);
 }
-#endif
 //-----------------------------------------------------------------------------
 void save(mglGraph *gr,const char *name,const char *suf="")
 {
@@ -389,8 +385,6 @@ void smgl_fexport(mglGraph *gr)	// test file export
 	gr->ImportMGLD("fexport.mgld");
 }
 //-----------------------------------------------------------------------------
-extern mglTeXsymb mgl_tex_symb[];
-extern size_t mgl_tex_num;
 int MGL_LOCAL_PURE mgl_tex_symb_cmp(const void *a, const void *b)
 {
 	const mglTeXsymb *aa = (const mglTeXsymb *)a;

@@ -34,7 +34,7 @@
 #include "mgl2/dllexport.h"
 
 // MSVC compatibility for export and import stl templates from and to dll.
-#    ifdef mgl_EXPORTS
+#    ifdef MGL_SRC
         /* We are building this library */
 #      define MGL_EXPORT_TEMPLATE
 #    else
@@ -300,6 +300,9 @@ const mdual mgl_I=_Complex_I;
 #include <vector>
 #if defined(_MSC_VER)
 MGL_EXPORT_TEMPLATE template class MGL_EXPORT std::allocator<char>;
+MGL_EXPORT_TEMPLATE template class MGL_EXPORT std::allocator<wchar_t>;
+MGL_EXPORT_TEMPLATE template struct MGL_EXPORT std::char_traits<char>;
+MGL_EXPORT_TEMPLATE template struct MGL_EXPORT std::char_traits<wchar_t>;
 MGL_EXPORT_TEMPLATE template class MGL_EXPORT std::basic_string< char, std::char_traits<char>, std::allocator<char> >;
 MGL_EXPORT_TEMPLATE template class MGL_EXPORT std::basic_string< wchar_t, std::char_traits<wchar_t>, std::allocator<wchar_t> >;
 MGL_EXPORT_TEMPLATE template class MGL_EXPORT std::vector<long>;

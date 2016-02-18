@@ -3,7 +3,7 @@ if(MGL_HAVE_GSL)
 endif(MGL_HAVE_GSL)
 
 add_executable(mgl_example wnd_samples.cpp full_test.cpp samples.cpp)
-target_link_libraries(mgl_example mgl)
+target_link_libraries(mgl_example mgl ${getopt_lib})
 
 if(MGL_HAVE_FLTK)
 	include_directories(${FLTK_INCLUDE_DIR})

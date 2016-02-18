@@ -2,7 +2,7 @@ include_directories(${GSL_INCLUDE_DIR})
 add_executable(make_pas make_pas.cpp)
 
 add_executable(mglconv mglconv.cpp)
-target_link_libraries(mglconv mgl)
+target_link_libraries(mglconv mgl ${getopt_lib})
 install(
 	TARGETS mglconv
 	RUNTIME DESTINATION bin
