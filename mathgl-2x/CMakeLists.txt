@@ -148,7 +148,10 @@ endif(UNIX AND enable-rvalue)
 # MSVC does not require any special flags
 
 if(enable-qt4 OR enable-qt5)
-set(QT_ENABLED ON)
+	set(QT_ENABLED ON)
+	if(NOT enable-opengl)
+		message(SEND_ERROR "You cannot build MathGL with Qt4 or Qt5 without OpenGL enabled.")
+	endif(NOT enable-opengl)
 endif(enable-qt4 OR enable-qt5)
 
 CMAKE_DEPENDENT_OPTION(enable-json-sample "Enable JSON sample" ON "QT_ENABLED" OFF)
