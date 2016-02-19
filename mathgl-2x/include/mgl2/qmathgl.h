@@ -20,7 +20,7 @@
 #ifndef _MGL_QMATHGL_H_
 #define _MGL_QMATHGL_H_
 //-----------------------------------------------------------------------------
-#include <string>
+#include <mgl2/define.h>
 #include <QWidget>
 #include <QPixmap>
 #include <mgl2/wnd.h>

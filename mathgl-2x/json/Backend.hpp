@@ -2,6 +2,7 @@
 
 #include <QObject>
 #include <QStringList>
+#include <mgl2/define.h>
 
 class Backend : public QObject
 {

@@ -50,7 +50,7 @@ struct mglGlyphDescr
 inline bool operator<(const mglGlyphDescr &a,const mglGlyphDescr &b)	{	return a.id<b.id;	}
 inline bool operator>(const mglGlyphDescr &a,const mglGlyphDescr &b)	{	return a.id>b.id;	}
 #if defined(_MSC_VER)
-MGL_EXPORT_TEMPLATE template class MGL_EXPORT std::vector<mglGlyphDescr>;
+template class MGL_EXPORT std::vector<mglGlyphDescr>;
 #endif
 //-----------------------------------------------------------------------------
 struct MGL_EXPORT mglTeXsymb	{	unsigned kod;	const wchar_t *tex;	};

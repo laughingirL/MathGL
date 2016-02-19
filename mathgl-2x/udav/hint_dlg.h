@@ -23,7 +23,6 @@
 #include <QTextEdit>
 #include <QDialog>
 class QCheckBox;
-extern QString hints[];
 //-----------------------------------------------------------------------------
 /// Dialog for showing hints
 class HintDialog : public QDialog
@@ -42,6 +41,7 @@ private slots:
 private:
 	int cur;
 	int numHints;
+	QVector<QString> hints;
 	QTextEdit *text;
 	QCheckBox *start;
 };

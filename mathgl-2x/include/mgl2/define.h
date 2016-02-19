@@ -33,15 +33,6 @@
 
 #include "mgl2/dllexport.h"
 
-// MSVC compatibility for export and import stl templates from and to dll.
-#    ifdef MGL_SRC
-        /* We are building this library */
-#      define MGL_EXPORT_TEMPLATE
-#    else
-        /* We are using this library */
-#      define MGL_EXPORT_TEMPLATE extern
-#    endif
-
 #if MGL_HAVE_ATTRIBUTE
 #define MGL_FUNC_CONST	__attribute__((const))
 #define MGL_FUNC_PURE	__attribute__((pure))
@@ -299,22 +290,22 @@ const mdual mgl_I=_Complex_I;
 #include <string>
 #include <vector>
 #if defined(_MSC_VER)
-MGL_EXPORT_TEMPLATE template class MGL_EXPORT std::allocator<char>;
-MGL_EXPORT_TEMPLATE template class MGL_EXPORT std::allocator<wchar_t>;
-MGL_EXPORT_TEMPLATE template struct MGL_EXPORT std::char_traits<char>;
-MGL_EXPORT_TEMPLATE template struct MGL_EXPORT std::char_traits<wchar_t>;
-MGL_EXPORT_TEMPLATE template class MGL_EXPORT std::basic_string< char, std::char_traits<char>, std::allocator<char> >;
-MGL_EXPORT_TEMPLATE template class MGL_EXPORT std::basic_string< wchar_t, std::char_traits<wchar_t>, std::allocator<wchar_t> >;
-MGL_EXPORT_TEMPLATE template class MGL_EXPORT std::vector<long>;
-MGL_EXPORT_TEMPLATE template class MGL_EXPORT std::vector<mreal>;
+template class MGL_EXPORT std::allocator<char>;
+template class MGL_EXPORT std::allocator<wchar_t>;
+template struct MGL_EXPORT std::char_traits<char>;
+template struct MGL_EXPORT std::char_traits<wchar_t>;
+template class MGL_EXPORT std::basic_string< char, std::char_traits<char>, std::allocator<char> >;
+template class MGL_EXPORT std::basic_string< wchar_t, std::char_traits<wchar_t>, std::allocator<wchar_t> >;
+template class MGL_EXPORT std::vector<long>;
+template class MGL_EXPORT std::vector<mreal>;
 #endif
 //-----------------------------------------------------------------------------
 extern float mgl_cos[360];	///< contain cosine with step 1 degree
 //-----------------------------------------------------------------------------
 #include <complex>
 #if defined(_MSC_VER)
-MGL_EXPORT_TEMPLATE template class MGL_EXPORT std::complex<float>;
-MGL_EXPORT_TEMPLATE template class MGL_EXPORT std::complex<double>;
+template class MGL_EXPORT std::complex<float>;
+template class MGL_EXPORT std::complex<double>;
 #endif
 typedef std::complex<mreal> dual;
 typedef std::complex<double> ddual;

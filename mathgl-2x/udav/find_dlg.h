@@ -24,6 +24,7 @@
 class QCheckBox;
 class QLineEdit;
 class QPushButton;
+#include <mgl2/define.h>
 //-----------------------------------------------------------------------------
 /// Dialog for finding something in text
 class FindDialog : public QDialog

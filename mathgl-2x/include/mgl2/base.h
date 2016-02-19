@@ -133,7 +133,7 @@ inline bool operator==(const mglMatrix &a, const mglMatrix &b)
 inline bool operator!=(const mglMatrix &a, const mglMatrix &b)
 {	return ((a.x-b.x)*(a.x-b.x)+(a.y-b.y)*(a.y-b.y)+(a.z-b.z)*(a.z-b.z)+(a.pf-b.pf)*(a.pf-b.pf)!=0)||memcmp(b.b,a.b,9*sizeof(mreal));	}
 #if defined(_MSC_VER)
-MGL_EXPORT_TEMPLATE template class MGL_EXPORT std::vector<mglMatrix>;
+template class MGL_EXPORT std::vector<mglMatrix>;
 #endif
 //-----------------------------------------------------------------------------
 /// Structure for simplest primitives
@@ -163,7 +163,7 @@ struct MGL_EXPORT mglPrim	// NOTE: use float for reducing memory size
 bool operator<(const mglPrim &a,const mglPrim &b);
 bool operator>(const mglPrim &a,const mglPrim &b);
 #if defined(_MSC_VER)
-MGL_EXPORT_TEMPLATE template class MGL_EXPORT mglStack<mglPrim>;
+template class MGL_EXPORT mglStack<mglPrim>;
 #endif
 //-----------------------------------------------------------------------------
 /// Structure for light source
@@ -198,7 +198,7 @@ struct MGL_EXPORT mglBlock
 	const mglBlock &operator=(const mglBlock &aa)	{	memcpy(this, &aa, sizeof(mglBlock));	return aa;	}
 };
 #if defined(_MSC_VER)
-MGL_EXPORT_TEMPLATE template class MGL_EXPORT std::vector<mglBlock>;
+template class MGL_EXPORT std::vector<mglBlock>;
 #endif
 //-----------------------------------------------------------------------------
 /// Structure for group of primitives
@@ -215,7 +215,7 @@ struct MGL_EXPORT mglGroup
 	inline const mglGroup &operator=(const mglGroup &aa)	{	Lbl = aa.Lbl;	Id = aa.Id;	p = aa.p;	return aa;	}
 };
 #if defined(_MSC_VER)
-MGL_EXPORT_TEMPLATE template class MGL_EXPORT mglStack<mglGroup>;
+template class MGL_EXPORT mglStack<mglGroup>;
 #endif
 //-----------------------------------------------------------------------------
 /// Structure for text label
@@ -233,7 +233,7 @@ struct MGL_EXPORT mglText
 	const mglText&operator=(const mglText &aa)	{ text=aa.text;	stl=aa.stl;	val=aa.val;	return aa;	}
 };
 #if defined(_MSC_VER)
-MGL_EXPORT_TEMPLATE template class MGL_EXPORT std::vector<mglText>;
+template class MGL_EXPORT std::vector<mglText>;
 #endif
 //-----------------------------------------------------------------------------
 /// Structure for internal point representation
@@ -265,7 +265,7 @@ inline mglPnt operator*(float b, const mglPnt &a)
 {	mglPnt p;	for(long i=0;i<10;i++)	p.dat[i] = a.dat[i]*b;	p.sub=a.sub;	return p;	}
 //{	return mglPnt(a.x*b,a.y*b,a.z*b, a.u*b,a.v*b,a.w*b, a.r*b,a.g*b,a.b*b,a.a*b);	}
 #if defined(_MSC_VER)
-MGL_EXPORT_TEMPLATE template class MGL_EXPORT mglStack<mglPnt>;
+template class MGL_EXPORT mglStack<mglPnt>;
 #endif
 //-----------------------------------------------------------------------------
 /// Structure for glyph representation
@@ -290,7 +290,7 @@ struct MGL_EXPORT mglGlyph
 		memcpy(line, a.line, 2*nl*sizeof(short));	return a;	}
 };
 #if defined(_MSC_VER)
-MGL_EXPORT_TEMPLATE template class MGL_EXPORT std::vector<mglGlyph>;
+template class MGL_EXPORT std::vector<mglGlyph>;
 #endif
 //-----------------------------------------------------------------------------
 #define MGL_TEXTURE_COLOURS 512
@@ -329,7 +329,7 @@ struct MGL_EXPORT mglTexture
 		memcpy(Sch,aa.Sch,260);	return aa;	}
 };
 #if defined(_MSC_VER)
-MGL_EXPORT_TEMPLATE template class MGL_EXPORT mglStack<mglTexture>;
+template class MGL_EXPORT mglStack<mglTexture>;
 #endif
 //-----------------------------------------------------------------------------
 const mglColor NC(-1,-1,-1);
@@ -345,7 +345,7 @@ struct MGL_EXPORT mglActivePos
 	int n;		///< position of active point in command (object id)
 };
 #if defined(_MSC_VER)
-MGL_EXPORT_TEMPLATE template class MGL_EXPORT mglStack<mglActivePos>;
+template class MGL_EXPORT mglStack<mglActivePos>;
 #endif
 
 //-----------------------------------------------------------------------------

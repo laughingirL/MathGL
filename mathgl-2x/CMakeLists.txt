@@ -30,10 +30,11 @@ function(mgl_add_lib mgl_tmp_lib)
        add_library(${mgllib} SHARED ${mgl_src_lst})
        add_library(${mgllib}-static STATIC ${mgl_src_lst})
        set_target_properties(${mgllib} PROPERTIES SOVERSION ${MathGL_SOVERSION})
-       set_target_properties(${mgllib} PROPERTIES CLEAN_DIRECT_OUTPUT 1)
        set_target_properties(${mgllib} PROPERTIES DEFINE_SYMBOL "mgl_EXPORTS")
-       set_target_properties(${mgllib}-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
        target_compile_definitions(${mgllib}-static PUBLIC MGL_STATIC_DEFINE)
+       if(NOT MSVC)
+       set_target_properties(${mgllib} PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+       set_target_properties(${mgllib}-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
 
        if(enable-mgl2)
                set_target_properties(${mgllib} PROPERTIES OUTPUT_NAME "${mgllib2}")
@@ -41,6 +42,7 @@ function(mgl_add_lib mgl_tmp_lib)
        else(enable-mgl2)
                set_target_properties(${mgllib}-static PROPERTIES OUTPUT_NAME "${mgllib}")
        endif(enable-mgl2)
+       endif(NOT MSVC)
 
        install(
                TARGETS ${mgllib} ${mgllib}-static
