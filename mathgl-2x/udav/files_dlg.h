@@ -21,7 +21,9 @@
 #define FILES_DLG_H
 //-----------------------------------------------------------------------------
 #include <QDialog>
+#if defined(_MSC_VER)
 #include <mgl2/define.h>
+#endif
 class QLineEdit;
 class QComboBox;
 class QRadioButton;

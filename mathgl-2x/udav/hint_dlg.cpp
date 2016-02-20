@@ -24,33 +24,31 @@
 #include "hint_dlg.h"
 #include "mgl2/data_cf.h"
 //-----------------------------------------------------------------------------
-#define qtr	HintDialog::tr
-//-----------------------------------------------------------------------------
 //
 //	Hint dialog
 //
 //-----------------------------------------------------------------------------
 HintDialog::HintDialog(QWidget *parent) : QDialog(parent)
 {
-	hints.append(QString(qtr("You can shift axis range by pressing middle button and moving mouse. Also, you can zoom in/out axis range by using mouse wheel.")));
-	hints.append(QString(qtr("You can rotate/shift/zoom whole plot by mouse. Just press 'Rotate' toolbutton, click image and hold a mouse button: left button for rotation, right button for zoom/perspective, middle button for shift.")));
-	hints.append(QString(qtr("You may quickly draw the data from file. Just use: udav 'filename.dat' in command line.")));
-	hints.append(QString(qtr("You can copy the current image to clipboard by pressing Ctrl-Shift-C. Later you can paste it directly into yours document or presentation.")));
-	hints.append(QString(qtr("You can export image into a set of format (EPS, SVG, PNG, JPEG) by pressing right mouse button inside image and selecting 'Export as ...'.")));
-	hints.append(QString(qtr("You can setup colors for script highlighting in Property dialog. Just select menu item 'Settings/Properties'.")));
-	hints.append(QString(qtr("You can save the parameter of animation inside MGL script by using comment started from '##a ' or '##c ' for loops.")));
-	hints.append(QString(qtr("New drawing never clears things drawn already. For example, you can make a surface with contour lines by calling commands 'surf' and 'cont' one after another (in any order). ")));
-	hints.append(QString(qtr("You can put several plots in the same image by help of commands 'subplot' or 'inplot'.")));
-	hints.append(QString(qtr("All indexes (of data arrays, subplots and so on) are always start from 0.")));
-	hints.append(QString(qtr("You can edit MGL file in any text editor. Also you can run it in console by help of commands: mglconv, mglview.")));
-	hints.append(QString(qtr("You can use command 'once on|off' for marking the block which should be executed only once. For example, this can be the block of large data reading/creating/handling. Press F9 (or menu item 'Graphics/Reload') to re-execute this block.")));
-	hints.append(QString(qtr("You can use command 'stop' for terminating script parsing. It is useful if you don't want to execute a part of script.")));
-	hints.append(QString(qtr("You can type arbitrary expression as input argument for data or number. In last case (for numbers), the first value of data array is used.")));
-	hints.append(QString(qtr("There is powerful calculator with a lot of special functions. You can use buttons or keyboard to type the expression. Also you can use existed variables in the expression.")));
-	hints.append(QString(qtr("The calculator can help you to put complex expression in the script. Just type the expression (which may depend on coordinates x,y,z and so on) and put it into the script.")));
-	hints.append(QString(qtr("You can easily insert file or folder names, last fitted formula or numerical value of selection by using menu Edit|Insert.")));
-	hints.append(QString(qtr("The special dialog (Edit|Insert|New Command) help you select the command, fill its arguments and put it into the script.")));
-	hints.append(QString(qtr("You can put several plotting commands in the same line or in separate function, for highlighting all of them simultaneously.")));
+	hints.append(tr("You can shift axis range by pressing middle button and moving mouse. Also, you can zoom in/out axis range by using mouse wheel."));
+	hints.append(tr("You can rotate/shift/zoom whole plot by mouse. Just press 'Rotate' toolbutton, click image and hold a mouse button: left button for rotation, right button for zoom/perspective, middle button for shift."));
+	hints.append(tr("You may quickly draw the data from file. Just use: udav 'filename.dat' in command line."));
+	hints.append(tr("You can copy the current image to clipboard by pressing Ctrl-Shift-C. Later you can paste it directly into yours document or presentation."));
+	hints.append(tr("You can export image into a set of format (EPS, SVG, PNG, JPEG) by pressing right mouse button inside image and selecting 'Export as ...'."));
+	hints.append(tr("You can setup colors for script highlighting in Property dialog. Just select menu item 'Settings/Properties'."));
+	hints.append(tr("You can save the parameter of animation inside MGL script by using comment started from '##a ' or '##c ' for loops."));
+	hints.append(tr("New drawing never clears things drawn already. For example, you can make a surface with contour lines by calling commands 'surf' and 'cont' one after another (in any order). "));
+	hints.append(tr("You can put several plots in the same image by help of commands 'subplot' or 'inplot'."));
+	hints.append(tr("All indexes (of data arrays, subplots and so on) are always start from 0."));
+	hints.append(tr("You can edit MGL file in any text editor. Also you can run it in console by help of commands: mglconv, mglview."));
+	hints.append(tr("You can use command 'once on|off' for marking the block which should be executed only once. For example, this can be the block of large data reading/creating/handling. Press F9 (or menu item 'Graphics/Reload') to re-execute this block."));
+	hints.append(tr("You can use command 'stop' for terminating script parsing. It is useful if you don't want to execute a part of script."));
+	hints.append(tr("You can type arbitrary expression as input argument for data or number. In last case (for numbers), the first value of data array is used."));
+	hints.append(tr("There is powerful calculator with a lot of special functions. You can use buttons or keyboard to type the expression. Also you can use existed variables in the expression."));
+	hints.append(tr("The calculator can help you to put complex expression in the script. Just type the expression (which may depend on coordinates x,y,z and so on) and put it into the script."));
+	hints.append(tr("You can easily insert file or folder names, last fitted formula or numerical value of selection by using menu Edit|Insert."));
+	hints.append(tr("The special dialog (Edit|Insert|New Command) help you select the command, fill its arguments and put it into the script."));
+	hints.append(tr("You can put several plotting commands in the same line or in separate function, for highlighting all of them simultaneously."));
 
 	numHints=hints.size();
 	cur = int(mgl_rnd()*numHints);

@@ -21,7 +21,9 @@
 #define SETUPDIALOG_H
 //-----------------------------------------------------------------------------
 #include <qdialog.h>
+#if defined(_MSC_VER)
 #include <mgl2/define.h>
+#endif
 class QLineEdit;
 class QCheckBox;
 class QComboBox;

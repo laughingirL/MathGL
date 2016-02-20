@@ -41,7 +41,9 @@
 #define TEXTEDIT_H
 //-----------------------------------------------------------------------------
 #include <QTextEdit>
+#if defined(_MSC_VER)
 #include <mgl2/define.h>
+#endif
 //-----------------------------------------------------------------------------
 class QCompleter;
 class Numb;

@@ -2,7 +2,9 @@
 
 #include <QObject>
 #include <QStringList>
+#if defined(_MSC_VER)
 #include <mgl2/define.h>
+#endif
 
 class Backend : public QObject
 {
