@@ -43,7 +43,7 @@ void MGL_EXPORT mgl_ask_fltk(const wchar_t *quest, wchar_t *res);
 /// Wrapper class for windows displaying graphics
 class MGL_EXPORT mglFLTK : public mglWnd
 {
-	mglFLTK(const mglFLTK &t) {}	// copying is not allowed
+	mglFLTK(const mglFLTK &) {}	// copying is not allowed
 	const mglFLTK &operator=(const mglFLTK &t)	{	return t;	}
 public:
 	mglFLTK(const char *title="MathGL") : mglWnd()

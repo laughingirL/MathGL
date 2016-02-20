@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
 		else if(ch=='A')
 		{
 			std::wstring str;
-			for(long i=0;optarg[i];i++)	str.push_back(optarg[i]);
+			for(size_t i=0;optarg[i];i++)	str.push_back(optarg[i]);
 			var.push_back(str);
 		}
 		else if(ch=='C')
@@ -113,8 +113,8 @@ int main(int argc, char *argv[])
 	while(!feof(fp) && size_t(cw=fgetwc(fp))!=WEOF)	str.push_back(cw);
 	if(*iname)	fclose(fp);
 
-	unsigned long n;
-	for(long i=0;;)	// collect exact values
+	size_t n;
+	for(size_t i=0;;)	// collect exact values
 	{
 		n = str.find(L"##a ",i);
 		if (n == mnpos)	break;
@@ -133,7 +133,7 @@ int main(int argc, char *argv[])
 	if(var.size()>1)	// there is animation
 	{
 		if(gif)	gr.StartGIF(oname);
-		for(unsigned long i=0;i<var.size();i++)
+		for(size_t i=0;i<var.size();i++)
 		{
 			gr.NewFrame();
 			printf("frame %ld for $0 = \"%ls\"\n",i,var[i].c_str());

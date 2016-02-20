@@ -38,7 +38,7 @@ int MGL_EXPORT mgl_qt_run_();
 /// Wrapper class for windows displaying graphics
 class MGL_EXPORT mglQT : public mglWnd
 {
-	mglQT(const mglQT &t) {}	// copying is not allowed
+	mglQT(const mglQT &) {}	// copying is not allowed
 	const mglQT &operator=(const mglQT &t)	{	return t;	}
 public:
 	mglQT(const char *title="MathGL") : mglWnd()

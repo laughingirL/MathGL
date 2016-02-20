@@ -2097,18 +2097,20 @@ HMDT MGL_EXPORT mgl_data_evaluate(HCDT dat, HCDT idat, HCDT jdat, HCDT kdat, int
 	const mglData *dd=dynamic_cast<const mglData *>(dat);
 	long nx=dat->GetNx(), ny=dat->GetNy(), nz=dat->GetNz();
 	mglData *r=new mglData(idat->GetNx(),idat->GetNy(),idat->GetNz());
+	mreal dx = nx-1, dy = ny-1, dz = nz-1;
+	if(!norm)	dx=dy=dz=1;
 	if(dd)
 #pragma omp parallel for
 		for(long i=0;i<idat->GetNN();i++)
 		{
-			mreal x=idat->vthr(i), y=jdat?jdat->vthr(i):0, z=kdat?kdat->vthr(i):0;
+			mreal x=dx*idat->vthr(i), y=jdat?dy*jdat->vthr(i):0, z=kdat?dz*kdat->vthr(i):0;
 			r->a[i] = mgl_isnum(x*y*z)?mglSpline3st<mreal>(dd->a,nx,ny,nz, x,y,z):NAN;
 		}
 	else
 #pragma omp parallel for
 		for(long i=0;i<idat->GetNN();i++)
 		{
-			mreal x=idat->vthr(i), y=jdat?jdat->vthr(i):0, z=kdat?kdat->vthr(i):0;
+			mreal x=dx*idat->vthr(i), y=jdat?dy*jdat->vthr(i):0, z=kdat?dz*kdat->vthr(i):0;
 			r->a[i] = mgl_isnum(x*y*z)?dat->linear(x,y,z):NAN;;
 		}
 	return r;

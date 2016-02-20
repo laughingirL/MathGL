@@ -48,7 +48,7 @@ HMDT MGL_EXPORT mgl_data_subdata_ext(HCDT d, HCDT xx, HCDT yy, HCDT zz)
 		mglData tmp;	tmp.a[0]=-1;
 		return mgl_data_subdata_ext(d,xx?xx:&tmp,yy?yy:&tmp,zz?zz:&tmp);
 	}
-	
+
 	long n=0,m=0,l=0,j,k;
 	bool ix=false, iy=false, iz=false;
 	if(xx->GetNz()>1)	// 3d data
@@ -984,6 +984,6 @@ HMDT MGL_EXPORT mgl_data_pulse(HCDT dat, char dir)
 	}
 	delete []c;	return r;
 }
-uintptr_t MGL_EXPORT mgl_data_pulse_(uintptr_t *d, const char *dir,int l)
+uintptr_t MGL_EXPORT mgl_data_pulse_(uintptr_t *d, const char *dir,int)
 {	return uintptr_t(mgl_data_pulse(_DT_,dir[0]));	}
 //-----------------------------------------------------------------------------

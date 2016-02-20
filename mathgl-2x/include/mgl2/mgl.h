@@ -29,7 +29,7 @@
 /// Wrapper class for all graphics
 class MGL_EXPORT mglGraph
 {
-	mglGraph(const mglGraph &t) {}	// copying is not allowed
+	mglGraph(const mglGraph &) {}	// copying is not allowed
 	const mglGraph &operator=(const mglGraph &t)	{	return t;	}
 protected:
 	HMGL gr;

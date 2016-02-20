@@ -740,12 +740,14 @@ long MGL_NO_EXPORT mgl_crust(long n,mglPoint *pp,long **nn,mreal ff)
 		rs += sqrt(rm);
 	}
 	rs *= ff/n;	rs = rs*rs;		// "average" distance
-	long ind[100], set[100], ii;	// indexes of "close" points, flag that it was added and its number
-	mglPoint qq[100];	// normalized point coordinates
+	const int nnum=100;
+	long *ind, *set, ii;	// indexes of "close" points, flag that it was added and its number
+	mglPoint *qq;	// normalized point coordinates
+	ind = new long[nnum];	set = new long[nnum];	qq = new mglPoint[nnum];
 	long k1,k2,k3,m=0;
 	for(i=0;i<n;i++)	// now the triangles will be found
 	{
-		memset(set,0,100*sizeof(long));
+		memset(set,0,nnum*sizeof(long));
 		for(ii=0,j=0;j<n;j++)	// find close vertexes
 		{
 			r = mgl_anorm(pp[i]-pp[j]);
@@ -767,7 +769,7 @@ long MGL_NO_EXPORT mgl_crust(long n,mglPoint *pp,long **nn,mreal ff)
 		}
 		m = mgl_insert_trig(i,ind[k1],ind[0],nn);
 	}
-	return m;
+	delete []set;	delete []ind;	delete []qq;	return m;
 }
 //-----------------------------------------------------------------------------
 void MGL_NO_EXPORT mgl_ifs_2d_point(HCDT A, mreal& x, mreal& y, mreal amax)

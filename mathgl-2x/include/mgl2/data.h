@@ -880,10 +880,10 @@ public:
 	{	ind = i;	s = name;	}
 
 	/// Get the interpolated value and its derivatives in given data cell without border checking
-	mreal valueD(mreal x,mreal y=0,mreal z=0,mreal *dx=0,mreal *dy=0,mreal *dz=0) const
+	mreal valueD(mreal x,mreal y=0,mreal =0,mreal *dx=0,mreal *dy=0,mreal *dz=0) const
 	{	if(dz)	*dz=0;	return dat.valueD(ind,x,y,0,dx,dy);	}
 	/// Get the interpolated value in given data cell without border checking
-	mreal value(mreal x,mreal y=0,mreal z=0) const
+	mreal value(mreal x,mreal y=0,mreal =0) const
 	{	return dat.value(ind,x,y);	}
 	/// Get the value in given cell of the data without border checking
 	mreal v(long i,long j=0,long =0) const
@@ -927,10 +927,10 @@ public:
 	{	ind = i;	s = name;	}
 
 	/// Get the interpolated value and its derivatives in given data cell without border checking
-	mreal valueD(mreal x,mreal y=0,mreal z=0,mreal *dx=0,mreal *dy=0,mreal *dz=0) const
+	mreal valueD(mreal x,mreal =0,mreal =0,mreal *dx=0,mreal *dy=0,mreal *dz=0) const
 	{	if(dy)	*dy=0;	if(dz)	*dz=0;	return dat.valueD(x,ind,0,dx);	}
 	/// Get the interpolated value in given data cell without border checking
-	mreal value(mreal x,mreal y=0,mreal z=0) const
+	mreal value(mreal x,mreal =0,mreal =0) const
 	{	return dat.value(x,ind,0);	}
 	/// Get the value in given cell of the data without border checking
 	mreal v(long i,long =0,long =0) const
@@ -938,9 +938,9 @@ public:
 	mreal vthr(long i) const
 	{	return dat.vthr(i+dat.GetNx()*ind);	}
 	// add for speeding up !!!
-	mreal dvx(long i,long j=0,long =0) const
+	mreal dvx(long i,long =0,long =0) const
 	{	return	dat.dvx(i,ind,0);	}
-	mreal dvy(long i,long j=0,long =0) const
+	mreal dvy(long ,long =0,long =0) const
 	{	return 0;	}
 	mreal dvz(long ,long =0,long =0) const
 	{	return 0;	}
@@ -965,21 +965,21 @@ public:
 	const std::vector<mreal> &operator=(const std::vector<mreal> &st)	{	dat = st;	return st;	}
 
 	/// Get the interpolated value and its derivatives in given data cell without border checking
-	mreal valueD(mreal x,mreal y=0,mreal z=0,mreal *dx=0,mreal *dy=0,mreal *dz=0) const
+	mreal valueD(mreal x,mreal =0,mreal =0,mreal *dx=0,mreal *dy=0,mreal *dz=0) const
 	{	return mglSpline3(dat.data(),dat.size(),1,1,x,0,0,dx,dy,dz);	}
 	/// Get the interpolated value in given data cell without border checking
-	mreal value(mreal x,mreal y=0,mreal z=0) const
+	mreal value(mreal x,mreal =0,mreal =0) const
 	{	return mglSpline3s(dat.data(),dat.size(),1,1,x,0,0);	}
 
-	mreal v(long i,long j=0,long k=0) const		{	return dat[i];	}
+	mreal v(long i,long =0,long =0) const		{	return dat[i];	}
 	mreal vthr(long i) const	{	return dat[i];	};
 	long GetNx() const	{	return dat.size();	}
 	long GetNy() const	{	return 1;	}
 	long GetNz() const	{	return 1;	}
-	mreal dvx(long i,long j=0,long k=0) const
+	mreal dvx(long i,long =0,long =0) const
 	{	return i>0? (i<long(dat.size()-1)? (dat[i+1]-dat[i-1])/2:dat[i]-dat[i-1]) : dat[i+1]-dat[i];	}
-	mreal dvy(long i,long j=0,long k=0) const	{	return 1;	}
-	mreal dvz(long i,long j=0,long k=0) const	{	return 1;	}
+	mreal dvy(long ,long =0,long =0) const	{	return 1;	}
+	mreal dvz(long ,long =0,long =0) const	{	return 1;	}
 };
 //-----------------------------------------------------------------------------
 #endif

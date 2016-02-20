@@ -100,7 +100,7 @@ const mglCommand *mglParser::FindCommand(const wchar_t *com) const
 }
 //-----------------------------------------------------------------------------
 // return values : 0 -- OK, 1 -- wrong arguments, 2 -- wrong command, 3 -- unclosed string
-int mglParser::Exec(mglGraph *gr, const wchar_t *com, long n, mglArg *a, const std::wstring &var, const wchar_t *opt)
+int mglParser::Exec(mglGraph *gr, const wchar_t *com, long n, mglArg *a, const std::wstring &/*var*/, const wchar_t *opt)
 {
 	int i;
 	const char *id="dsn";
@@ -573,7 +573,6 @@ int mglParser::Parse(mglGraph *gr, std::wstring str, long pos)
 {
 	if(Stop || gr->NeedStop())	return 0;
 	curGr = gr->Self();
-	std::wstring arg[1024];
 	str=mgl_trim_ws(str);
 	long n,k=0,m=0,mm=0,res;
 	// try parse ':' -- several commands in line
@@ -597,7 +596,7 @@ int mglParser::Parse(mglGraph *gr, std::wstring str, long pos)
 	// parse arguments (parameters $1, ..., $9)
 	PutArg(str,false);	str=mgl_trim_ws(str);
 
-	std::wstring opt;
+	std::wstring opt, *arg;	arg = new std::wstring[1024];
 	for(k=0;k<1024;k++)	// parse string to substrings (by spaces)
 	{
 		n = mglFindArg(str);
@@ -620,18 +619,18 @@ int mglParser::Parse(mglGraph *gr, std::wstring str, long pos)
 		FillArg(gr, k, arg, a);
 		// execute first special (program-flow-control) commands
 		if(!skip() && !arg[0].compare(L"stop"))
-		{	Stop = true;	delete []a;	return 0;	}
+		{	Stop = true;	delete []a;	delete []arg;	return 0;	}
 		if(!arg[0].compare(L"func"))
-		{	Stop = true;	delete []a;	return 0;	}
+		{	Stop = true;	delete []a;	delete []arg;	return 0;	}
 		n = FlowExec(gr, arg[0].c_str(),k-1,a);
-		if(n)		{	delete []a;	return n-1;	}
-		if(skip())	{	delete []a;	return 0;	}
+		if(n)		{	delete []a;	delete []arg;	return n-1;	}
+		if(skip())	{	delete []a;	delete []arg;	return 0;	}
 		if(!arg[0].compare(L"load"))
 		{
 			int n = a[0].type==1?0:1;
 			a[0].s.assign(a[0].w.begin(),a[0].w.end());
 			if(!n)	mgl_parser_load(this,a[0].s.c_str());
-			delete []a;	return n;
+			delete []a;	delete []arg;	return n;
 		}
 		if(!arg[0].compare(L"define"))
 		{
@@ -646,7 +645,7 @@ int mglParser::Parse(mglGraph *gr, std::wstring str, long pos)
 				{	HMDT dd = mglFormulaCalc(arg[2],this, DataList);
 					v->c = v->d = dd->a[0];	delete dd;	}
 			}
-			delete []a;	return k==3?0:1;
+			delete []a;	delete []arg;	return k==3?0:1;
 		}
 		if(!arg[0].compare(L"rkstep"))
 		{
@@ -658,7 +657,7 @@ int mglParser::Parse(mglGraph *gr, std::wstring str, long pos)
 				if(a2[0]=='\'')	a2 = a2.substr(1,a2.length()-2);
 				mgl_rk_step_w(this, a1.c_str(), a2.c_str(), (k>=3 && a[2].type==2)?a[2].v:1);
 			}
-			delete []a;	return res;
+			delete []a;	delete []arg;	return res;
 		}
 		if(!arg[0].compare(L"call"))
 		{
@@ -698,7 +697,7 @@ int mglParser::Parse(mglGraph *gr, std::wstring str, long pos)
 					else	n=1;
 				}
 			}
-			delete []a;	return n;
+			delete []a;	delete []arg;	return n;
 		}
 		if(!arg[0].compare(L"for"))
 		{
@@ -734,7 +733,7 @@ int mglParser::Parse(mglGraph *gr, std::wstring str, long pos)
 					AddParam(r, buf);	fval[r].ny = 1;
 				}
 			}
-			delete []a;	return n;
+			delete []a;	delete []arg;	return n;
 		}
 		// alocate new arrays and execute the command itself
 		n = PreExec(gr, k, arg, a);
@@ -746,7 +745,7 @@ int mglParser::Parse(mglGraph *gr, std::wstring str, long pos)
 	// delete temporary data arrays
 	for(size_t i=0;i<DataList.size();i++)	if(DataList[i] && DataList[i]->temp)
 	{	mglDataA *u=DataList[i];	DataList[i]=0;	delete u;	}
-	return n;
+	delete []arg;	return n;
 }
 //-----------------------------------------------------------------------------
 // return values: 0 - OK, 1 - wrong arguments, 2 - wrong command, 3 - string too long, 4 -- unclosed string

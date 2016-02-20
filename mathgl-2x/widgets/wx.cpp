@@ -313,7 +313,7 @@ const char *mglw_str(const wxString &str)
 {
 	static char *buf=0;
 	if(buf)	delete []buf;
-	long i, n=str.Len();
+	size_t i, n=str.Len();
 	buf = new char[n+1];	buf[n]=0;
 	for(i=0;i<n;i++)	buf[i] = str.GetChar(i);
 	return buf;

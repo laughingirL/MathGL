@@ -1171,7 +1171,7 @@ void MGL_EXPORT mgl_datac_refill_gs(HADT dat, HCDT xdat, HCDT vdat, mreal x1, mr
 #pragma omp parallel for
 	for(long i=0;i<nx;i++)
 	{
-		register dual d = mgl_gsplinec(coef,x0+dx*i,0,0);
+		dual d = mgl_gsplinec(coef,x0+dx*i,0,0);
 		if(sl<0)	for(long j=0;j<nn;j++)	dat->a[i+j*nx] = d;
 		else	dat->a[i+sl*nx] = d;
 	}
@@ -1188,7 +1188,7 @@ void MGL_EXPORT mgl_datac_refill_x(HADT dat, HCDT xdat, HCDT vdat, mreal x1, mre
 	for(long i=0;i<nx;i++)
 	{
 		register mreal u = mgl_index_1(x1+dx*i,xdat);
-		register dual d = mgl_datac_spline(vdat,u,0,0);
+		dual d = mgl_datac_spline(vdat,u,0,0);
 		if(sl<0)	for(long j=0;j<nn;j++)	dat->a[i+j*nx] = d;
 		else	dat->a[i+sl*nx] = d;
 	}
@@ -1263,7 +1263,7 @@ void MGL_EXPORT mgl_datac_refill_xy(HADT dat, HCDT xdat, HCDT ydat, HCDT vdat, m
 #pragma omp parallel for collapse(2)
 		for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
 		{
-			register dual d = mgl_datac_spline(vdat,u.a[i],v.a[j],0);
+			dual d = mgl_datac_spline(vdat,u.a[i],v.a[j],0);
 			register long i0=i+nx*j;
 			if(sl<0)	for(long k=0;k<nz;k++)	dat->a[i0+k*nn] = d;
 			else	dat->a[i0+sl*nn] = d;

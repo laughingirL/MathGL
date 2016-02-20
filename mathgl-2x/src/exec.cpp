@@ -982,7 +982,7 @@ int MGL_NO_EXPORT mgls_refill(mglGraph *gr, long , mglArg *a, const char *k, con
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_gspline(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
+int MGL_NO_EXPORT mgls_gspline(mglGraph *gr, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
 	if(k[0]=='d' && a[0].d->temp)	return 5;
@@ -2325,7 +2325,7 @@ int MGL_NO_EXPORT mgls_info(mglGraph *gr, long , mglArg *a, const char *k, const
 	else res = 1;	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_print(mglGraph *gr, long , mglArg *a, const char *k, const char *)
+int MGL_NO_EXPORT mgls_print(mglGraph *, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
 	if(!strcmp(k,"d"))	printf("%s\n",a[0].d->PrintInfo());
@@ -2752,7 +2752,7 @@ int MGL_NO_EXPORT mgls_fsurf(mglGraph *gr, long , mglArg *a, const char *k, cons
 int MGL_NO_EXPORT mgls_fgets(mglGraph *gr, long , mglArg *a, const char *k, const char *opt)
 {
 	int res=0;	gr->Self()->SaveState(opt);
-	char buf[4096];
+	char *buf;	buf = new char[4096];
 	FILE *fp;
 	if(!strncmp(k,"nns",3))
 	{
@@ -2761,7 +2761,7 @@ int MGL_NO_EXPORT mgls_fgets(mglGraph *gr, long , mglArg *a, const char *k, cons
 		if(!fp)
 		{
 			gr->SetWarn(mglWarnOpen,a[2].s.c_str());
-			return res;
+			delete []buf;	return res;
 }
 		for(i=0;i<n;i++)	if(!fgets(buf,4096,fp))	continue;
 		memset(buf,0,4096);
@@ -2769,7 +2769,7 @@ int MGL_NO_EXPORT mgls_fgets(mglGraph *gr, long , mglArg *a, const char *k, cons
 		{
 			char b[32];	snprintf(b,32,"%d",n);	b[31]=0;
 			gr->SetWarn(mglWarnOpen,(a[2].s+" - line "+b).c_str());
-			fclose(fp);	return res;
+			fclose(fp);	delete []buf;	return res;
 		}
 		fclose(fp);
 		gr->Puts(mglPoint(a[0].v,a[1].v,NAN),buf, (k[4]=='s')?a[4].s.c_str():"", k[5]=='n'?a[5].v:-1);
@@ -2781,7 +2781,7 @@ int MGL_NO_EXPORT mgls_fgets(mglGraph *gr, long , mglArg *a, const char *k, cons
 		if(!fp)
 		{
 			gr->SetWarn(mglWarnOpen,a[3].s.c_str());
-			return res;
+			delete []buf;	return res;
 		}
 		for(i=0;i<n;i++)	if(!fgets(buf,4096,fp))	continue;
 		memset(buf,0,4096);
@@ -2789,15 +2789,15 @@ int MGL_NO_EXPORT mgls_fgets(mglGraph *gr, long , mglArg *a, const char *k, cons
 		{
 			char b[32];	snprintf(b,32,"%d",n);	b[31]=0;
 			gr->SetWarn(mglWarnOpen,(a[3].s+" - line "+b).c_str());
-			fclose(fp);	return res;
+			fclose(fp);	delete []buf;	return res;
 		}
 		fclose(fp);
 		gr->Puts(mglPoint(a[0].v,a[1].v,a[2].v),buf, (k[5]=='s')?a[5].s.c_str():"", k[6]=='n'?a[6].v:-1);
 	}
-	else res = 1;	gr->Self()->LoadState();	return res;
+	else res = 1;	gr->Self()->LoadState();	delete []buf;	return res;
 }
 //-----------------------------------------------------------------------------
-int MGL_NO_EXPORT mgls_scanfile(mglGraph *gr, long , mglArg *a, const char *k, const char *)
+int MGL_NO_EXPORT mgls_scanfile(mglGraph *, long , mglArg *a, const char *k, const char *)
 {
 	int res=0;
 	if(!strcmp(k,"dss"))

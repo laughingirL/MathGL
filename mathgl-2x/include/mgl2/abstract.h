@@ -151,7 +151,7 @@ public:
 
 	mglDataA()	{	temp=false;	func=0;	o=0;	}
 	virtual ~mglDataA()	{	if(func)	func(o);	}
-	virtual void set_v(mreal val, long i,long j=0,long k=0)	{}
+	virtual void set_v(mreal /*val*/, long /*i*/,long /*j*/=0,long /*k*/=0)	{}
 	/// Get the interpolated value and its derivatives in given data cell without border checking
 	virtual mreal valueD(mreal x,mreal y=0,mreal z=0,mreal *dx=0,mreal *dy=0,mreal *dz=0) const =0;
 	/// Get the interpolated value in given data cell without border checking

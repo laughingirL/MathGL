@@ -62,7 +62,7 @@ HADT MGL_EXPORT mgl_datac_subdata_ext(HCDT d, HCDT xx, HCDT yy, HCDT zz)
 		mglData tmp;	tmp.a[0]=-1;
 		return mgl_datac_subdata_ext(d,xx?xx:&tmp,yy?yy:&tmp,zz?zz:&tmp);
 	}
-	
+
 	long n=0,m=0,l=0,j,k;
 	bool ix=false, iy=false, iz=false;
 	if(xx->GetNz()>1)	// 3d data
@@ -368,10 +368,10 @@ HADT MGL_EXPORT mgl_datac_momentum(HCDT dat, char dir, const char *how)
 #pragma omp parallel for
 		for(long i=0;i<nx;i++)
 		{
-			register dual i1=0,i0=0;
+			dual i1=0,i0=0;
 			for(long j=0;j<ny*nz;j++)
 			{
-				register dual u=dat->vthr(i+nx*j);
+				dual u=dat->vthr(i+nx*j);
 				i0 += u;	i1 += u*res->a[i+nx*j];
 			}
 			b->a[i] = i0!=mreal(0) ? i1/i0 : 0;
@@ -383,10 +383,10 @@ HADT MGL_EXPORT mgl_datac_momentum(HCDT dat, char dir, const char *how)
 #pragma omp parallel for
 		for(long i=0;i<ny;i++)
 		{
-			register dual i1=0,i0=0;
+			dual i1=0,i0=0;
 			for(long k=0;k<nz;k++)	for(long j=0;j<nx;j++)
 			{
-				register dual u=dat->v(j,i,k);
+				dual u=dat->v(j,i,k);
 				i0 += u;	i1 += u*res->a[j+nx*(i+ny*k)];
 			}
 			b->a[i] = i0!=mreal(0) ? i1/i0 : 0;
@@ -399,10 +399,10 @@ HADT MGL_EXPORT mgl_datac_momentum(HCDT dat, char dir, const char *how)
 #pragma omp parallel for
 		for(long i=0;i<nz;i++)
 		{
-			register dual i1=0,i0=0;
+			dual i1=0,i0=0;
 			for(long j=0;j<nn;j++)
 			{
-				register dual u=dat->vthr(j+nn*i);
+				dual u=dat->vthr(j+nn*i);
 				i0 += u;	i1 += u*res->a[j+nn*i];
 			}
 			b->a[i] = i0!=mreal(0) ? i1/i0 : 0;
@@ -421,25 +421,27 @@ HADT MGL_EXPORT mgl_datac_evaluate(HCDT dat, HCDT idat, HCDT jdat, HCDT kdat, in
 	const mglDataC *dc=dynamic_cast<const mglDataC *>(dat);
 	long nx=dat->GetNx(), ny=dat->GetNy(), nz=dat->GetNz();
 	mglDataC *r=new mglDataC(idat->GetNx(),idat->GetNy(),idat->GetNz());
+	mreal dx = nx-1, dy = ny-1, dz = nz-1;
+	if(!norm)	dx=dy=dz=1;
 	if(dd)
 #pragma omp parallel for
 		for(long i=0;i<idat->GetNN();i++)
 		{
-			mreal x=idat->vthr(i), y=jdat?jdat->vthr(i):0, z=kdat?kdat->vthr(i):0;
+			mreal x=dx*idat->vthr(i), y=jdat?dy*jdat->vthr(i):0, z=kdat?dz*kdat->vthr(i):0;
 			r->a[i] = mgl_isnum(x*y*z)?mglSpline3st<mreal>(dd->a,nx,ny,nz, x,y,z):NAN;
 		}
 	else if(dc)
 #pragma omp parallel for
 		for(long i=0;i<idat->GetNN();i++)
 		{
-			mreal x=idat->vthr(i), y=jdat?jdat->vthr(i):0, z=kdat?kdat->vthr(i):0;
+			mreal x=dx*idat->vthr(i), y=jdat?dy*jdat->vthr(i):0, z=kdat?dz*kdat->vthr(i):0;
 			r->a[i] = mgl_isnum(x*y*z)?mglSpline3st<dual>(dc->a,nx,ny,nz, x,y,z):NAN;
 		}
 	else
 #pragma omp parallel for
 		for(long i=0;i<idat->GetNN();i++)
 		{
-			mreal x=idat->vthr(i), y=jdat?jdat->vthr(i):0, z=kdat?kdat->vthr(i):0;
+			mreal x=dx*idat->vthr(i), y=jdat?dy*jdat->vthr(i):0, z=kdat?dz*kdat->vthr(i):0;
 			r->a[i] = mgl_isnum(x*y*z)?dat->linear(x,y,z):NAN;;
 		}
 	return r;
@@ -481,7 +483,7 @@ void MGL_EXPORT mgl_datac_mul_dat(HADT d, HCDT a)
 	long nx=d->nx, ny=d->ny, nz=d->nz;
 	long mx=a->GetNx(), my=a->GetNy(), mz=a->GetNz();
 	const mglDataC *c = dynamic_cast<const mglDataC*>(a);
-	
+
 	if(mz*my*mx==1)
 	{
 		dual v=c?c->a[0]:a->v(0);
@@ -515,7 +517,7 @@ void MGL_EXPORT mgl_datac_div_dat(HADT d, HCDT a)
 	long nx=d->nx, ny=d->ny, nz=d->nz;
 	long mx=a->GetNx(), my=a->GetNy(), mz=a->GetNz();
 	const mglDataC *c = dynamic_cast<const mglDataC*>(a);
-	
+
 	if(mz*my*mx==1)
 	{
 		dual v=c?c->a[0]:a->v(0);
@@ -549,7 +551,7 @@ void MGL_EXPORT mgl_datac_add_dat(HADT d, HCDT a)
 	long nx=d->nx, ny=d->ny, nz=d->nz;
 	long mx=a->GetNx(), my=a->GetNy(), mz=a->GetNz();
 	const mglDataC *c = dynamic_cast<const mglDataC*>(a);
-	
+
 	if(mz*my*mx==1)
 	{
 		dual v=c?c->a[0]:a->v(0);
@@ -583,7 +585,7 @@ void MGL_EXPORT mgl_datac_sub_dat(HADT d, HCDT a)
 	long nx=d->nx, ny=d->ny, nz=d->nz;
 	long mx=a->GetNx(), my=a->GetNy(), mz=a->GetNz();
 	const mglDataC *c = dynamic_cast<const mglDataC*>(a);
-	
+
 	if(mz*my*mx==1)
 	{
 		dual v=c?c->a[0]:a->v(0);

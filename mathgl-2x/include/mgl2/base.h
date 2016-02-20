@@ -276,22 +276,25 @@ struct MGL_EXPORT mglGlyph
 /// Structure for texture (color scheme + palette) representation
 struct MGL_EXPORT mglTexture
 {
-	mglColor col[MGL_TEXTURE_COLOURS];	///< Colors itself
+	mglColor *col;	///< Colors itself
 	long n;				///< Number of initial colors along u
 
 	char Sch[260];		///< Color scheme used
 	int Smooth;			///< Type of texture (smoothing and so on)
 	mreal Alpha;			///< Transparency
 
-	mglTexture():n(0),Smooth(0),Alpha(1)	{}
+	mglTexture():n(0),Smooth(0),Alpha(1)
+	{	col = new mglColor[MGL_TEXTURE_COLOURS];	}
 	mglTexture(const char *cols, int smooth=0,mreal alpha=1):n(0)
-	{	Set(cols,smooth,alpha);	}
+	{	col = new mglColor[MGL_TEXTURE_COLOURS];	Set(cols,smooth,alpha);	}
 	mglTexture(const mglTexture &aa) : n(aa.n),Smooth(aa.Smooth),Alpha(aa.Alpha)
-	{	memcpy(col,aa.col,MGL_TEXTURE_COLOURS*sizeof(mglColor));	memcpy(Sch,aa.Sch,260);	}
+	{	col = new mglColor[MGL_TEXTURE_COLOURS];	memcpy(Sch,aa.Sch,260);
+		memcpy(col,aa.col,MGL_TEXTURE_COLOURS*sizeof(mglColor));	}
 #if MGL_HAVE_RVAL
 	mglTexture(mglTexture &&aa) : n(aa.n),Smooth(aa.Smooth),Alpha(aa.Alpha)
-	{	memcpy(col,aa.col,MGL_TEXTURE_COLOURS*sizeof(mglColor));	memcpy(Sch,aa.Sch,260);	}
+	{	col = aa.col;	memcpy(Sch,aa.Sch,260);	aa.col=0;	}
 #endif
+	~mglTexture()	{	if(col)	delete []col;	}
 	void Clear()	{	n=0;	}
 	void Set(const char *cols, int smooth=0,mreal alpha=1);
 	void Set(HCDT val, const char *cols);

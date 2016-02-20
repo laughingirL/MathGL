@@ -399,7 +399,7 @@ void MGL_EXPORT mgl_set_ticks_str_(uintptr_t *gr, const char *dir, const char *l
 void MGL_EXPORT mgl_set_ticks_val_(uintptr_t *gr, const char *dir, uintptr_t *val, const char *lbl, int *add,int,int l)
 {	char *s=new char[l+1];	memcpy(s,lbl,l);	s[l]=0;
 	_GR_->SetTicksVal(*dir,_DA_(val),s,*add);	delete []s;	}
-void MGL_EXPORT mgl_add_tick_(uintptr_t *gr, const char *dir, mreal *val, const char *lbl, int *add,int,int l)
+void MGL_EXPORT mgl_add_tick_(uintptr_t *gr, const char *dir, mreal *val, const char *lbl, int,int l)
 {	char *s=new char[l+1];	memcpy(s,lbl,l);	s[l]=0;
 	mgl_add_tick(_GR_,*dir,*val,s);	delete []s;	}
 void MGL_EXPORT mgl_tune_ticks_(uintptr_t *gr, int *tune, mreal *fact_pos)
