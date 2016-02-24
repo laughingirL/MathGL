@@ -143,13 +143,16 @@ HMDT mglApplyOperDiv(std::wstring a1, std::wstring a2, mglParser *arg, const std
 	mreal va=a->a[0], vb=b->a[0], *aa=a->a, *bb=b->a, *cc=r->a;
 	if(na==nb)
 #pragma omp parallel for
-		for(long i=0;i<nn;i++)	cc[i] = aa[i]/bb[i];
+		for(long i=0;i<nn;i++)	cc[i] = bb[i]!=0?aa[i]/bb[i]:NAN;
 	else if(na==1)
 #pragma omp parallel for
-		for(long i=0;i<nn;i++)	cc[i] = va/bb[i];
-	else
+		for(long i=0;i<nn;i++)	cc[i] = bb[i]!=0?va/bb[i]:NAN;
+	else if(vb!=0)
 #pragma omp parallel for
 		for(long i=0;i<nn;i++)	cc[i] = aa[i]/vb;
+	else
+#pragma omp parallel for
+		for(long i=0;i<nn;i++)	cc[i] = NAN;
 	mgl_delete_data(d);	return r;
 }
 //-----------------------------------------------------------------------------
@@ -241,13 +244,16 @@ HADT mglApplyOperDivC(std::wstring a1, std::wstring a2, mglParser *arg, const st
 	dual va=a->a[0], vb=b->a[0], *aa=a->a, *bb=b->a, *cc=r->a;
 	if(na==nb)
 #pragma omp parallel for
-		for(long i=0;i<nn;i++)	cc[i] = aa[i]/bb[i];
+		for(long i=0;i<nn;i++)	cc[i] = bb[i]!=mreal(0)?aa[i]/bb[i]:NAN;
 	else if(na==1)
 #pragma omp parallel for
-		for(long i=0;i<nn;i++)	cc[i] = va/bb[i];
-	else
+		for(long i=0;i<nn;i++)	cc[i] = bb[i]!=mreal(0)?va/bb[i]:NAN;
+	else if(vb!=mreal(0))
 #pragma omp parallel for
 		for(long i=0;i<nn;i++)	cc[i] = aa[i]/vb;
+	else
+#pragma omp parallel for
+		for(long i=0;i<nn;i++)	cc[i] = NAN;
 	mgl_delete_datac(d);	return r;
 }
 //-----------------------------------------------------------------------------

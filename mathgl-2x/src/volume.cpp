@@ -107,6 +107,21 @@ void MGL_EXPORT mgl_cloud_(uintptr_t *gr, uintptr_t *a, const char *sch, const c
 //	Surf3 series
 //
 //-----------------------------------------------------------------------------
+mreal MGL_NO_EXPORT mgl_get_norm(mreal x, mreal d1, mreal d2, mreal d3)
+{
+	mreal nx = d1*(1-x) + d2*x;
+	if(mgl_isbad(nx))
+	{
+		nx = d1*(1+x) - d3*x;
+		if(mgl_isbad(nx))
+		{
+			if(mgl_isfin(d1))	nx = d1;
+			if(mgl_isfin(d2))	nx = d2;
+			if(mgl_isfin(d3))	nx = d3;
+		}
+	}
+	return nx;
+}
 mglPoint MGL_NO_EXPORT mgl_normal_3d(HCDT a, mglPoint p, bool inv, long n,long m,long l)
 {
 	register long i,j,k;
@@ -116,18 +131,17 @@ mglPoint MGL_NO_EXPORT mgl_normal_3d(HCDT a, mglPoint p, bool inv, long n,long m
 	i = i<n-1 ? i:n-2;	j = j<m-1 ? j:m-2;	k = k<l-1 ? k:l-2;
 	x-=i;	y-=j;	z-=k;
 
-	nx = a->dvx(i,j,k)*(1-x) + a->dvx(i+1,j,k)*x;
-	ny = a->dvy(i,j,k)*(1-y) + a->dvy(i,j+1,k)*y;
-	nz = a->dvz(i,j,k)*(1-z) + a->dvz(i,j,k+1)*z;
+	nx = mgl_get_norm(x, a->dvx(i,j,k), a->dvx(i+1,j,k), i>0?a->dvx(i-1,j,k):NAN);
+	ny = mgl_get_norm(x, a->dvy(i,j,k), a->dvy(i,j+1,k), j>0?a->dvy(i,j-1,k):NAN);
+	nz = mgl_get_norm(x, a->dvz(i,j,k), a->dvz(i,j,k+1), k>0?a->dvz(i,j,k-1):NAN);
 	return inv ? mglPoint(nx,ny,nz) : mglPoint(-nx,-ny,-nz);
 }
 //-----------------------------------------------------------------------------
-mreal MGL_NO_EXPORT mgl_normal_1d(HCDT a, mreal x, bool inv, long n)
+mreal MGL_NO_EXPORT mgl_normal_1d(HCDT a, mreal x, long n)
 {
-	register long i=long(x);	x-=i;
-	mreal nx = a->dvx(i);
-	if(i<n-1)	nx = nx*(1-x) + a->dvx(i+1)*x;
-	return inv ? nx : -nx;
+	register long i=long(x);
+	i = i<n-1 ? i:n-2;	x-=i;
+	return mgl_get_norm(x, a->dvx(i), a->dvx(i+1), i>0?a->dvx(i-1):NAN);
 }
 //-----------------------------------------------------------------------------
 mglPoint MGL_NO_EXPORT mgl_find_norm(bool nboth, HCDT x, HCDT y, HCDT z, HCDT a, mglPoint u, bool inv, long n,long m,long l)
@@ -135,9 +149,9 @@ mglPoint MGL_NO_EXPORT mgl_find_norm(bool nboth, HCDT x, HCDT y, HCDT z, HCDT a,
 	mglPoint s = mgl_normal_3d(a,u,inv,n,m,l), t, q;
 	if(nboth)
 	{
-		q.x = s.x/mgl_normal_1d(x,u.x,true,n);
-		q.y = s.y/mgl_normal_1d(y,u.y,true,m);
-		q.z = s.z/mgl_normal_1d(z,u.z,true,l);
+		q.x = s.x/mgl_normal_1d(x,u.x,n);
+		q.y = s.y/mgl_normal_1d(y,u.y,m);
+		q.z = s.z/mgl_normal_1d(z,u.z,l);
 	}
 	else
 	{
@@ -188,7 +202,7 @@ void MGL_EXPORT mgl_surf3_plot(HMGL gr, long n,long m,long *kx1,long *kx2,long *
 			register mreal d = mgl_norm(pp[jj] - pp[0]);
 			if(d>1e-5)	jj++;
 			else
-			{	ni--;	for(ii=jj;ii<ni;ii++)	id[ii]=id[ii+1];	}
+			{	ni--;	if(jj<ni)	for(ii=jj;ii<ni;ii++)	id[ii]=id[ii+1];	}
 		}
 		// continue if number of points <3 i.e. there is no triangle
 		if(ni<3)	continue;
@@ -261,6 +275,7 @@ void MGL_NO_EXPORT mgl_surf3ca_gen(HMGL gr, double val, HCDT x, HCDT y, HCDT z, 
 		{
 			register long i1 = i+n*j;
 			mreal a0 = a->v(i,j,k);
+			if(mgl_isnan(a0))	continue;
 			if(i<n-1)
 			{
 				mreal d = mgl_d(val,a0,a->v(i+1,j,k));
@@ -284,27 +299,29 @@ void MGL_NO_EXPORT mgl_surf3ca_gen(HMGL gr, double val, HCDT x, HCDT y, HCDT z, 
 		if(b && c)	for(size_t i=kk1;i<kk.size();i++)
 		{
 			mglPoint &u = kk[i];
+			mreal cc = c->linear(u.x,u.y,u.z), bb = b->linear(u.x,u.y,u.z);
+			if(mgl_isnan(cc) || mgl_isnan(bb))	u.c = -1;	else
 			u.c = gr->AddPnt(nboth ? mglPoint(x->linear(u.x,0,0),y->linear(u.y,0,0),z->linear(u.z,0,0)) : 
 					mglPoint(x->linear(u.x,u.y,u.z),y->linear(u.x,u.y,u.z),z->linear(u.x,u.y,u.z)),
-					gr->GetC(ss,c->linear(u.x,u.y,u.z)),
-					mgl_find_norm(nboth, x,y,z,a, u, inv,n,m,l),
-					gr->GetA(b->linear(u.x,u.y,u.z)));
+					gr->GetC(ss,cc), mgl_find_norm(nboth, x,y,z,a, u, inv,n,m,l), gr->GetA(bb));
 		}
 		else if(c)	for(size_t i=kk1;i<kk.size();i++)
 		{
 			mglPoint &u = kk[i];
+			mreal cc = c->linear(u.x,u.y,u.z);
+			if(mgl_isnan(cc))	u.c = -1;	else
 			u.c = gr->AddPnt(nboth ? mglPoint(x->linear(u.x,0,0),y->linear(u.y,0,0),z->linear(u.z,0,0)) : 
 					mglPoint(x->linear(u.x,u.y,u.z),y->linear(u.x,u.y,u.z),z->linear(u.x,u.y,u.z)),
-					gr->GetC(ss,c->linear(u.x,u.y,u.z)),
-					mgl_find_norm(nboth, x,y,z,a, u, inv,n,m,l));
+					gr->GetC(ss,cc), mgl_find_norm(nboth, x,y,z,a, u, inv,n,m,l));
 		}
 		else if(b)	for(size_t i=kk1;i<kk.size();i++)
 		{
 			mglPoint &u = kk[i];
+			mreal bb = b->linear(u.x,u.y,u.z);
+			if(mgl_isnan(bb))	u.c = -1;	else
 			u.c = gr->AddPnt(nboth ? mglPoint(x->linear(u.x,0,0),y->linear(u.y,0,0),z->linear(u.z,0,0)) : 
 					mglPoint(x->linear(u.x,u.y,u.z),y->linear(u.x,u.y,u.z),z->linear(u.x,u.y,u.z)),
-					cv, mgl_find_norm(nboth, x,y,z,a, u, inv,n,m,l),
-					gr->GetA(b->linear(u.x,u.y,u.z)));
+					cv, mgl_find_norm(nboth, x,y,z,a, u, inv,n,m,l), gr->GetA(bb));
 		}
 		else	for(size_t i=kk1;i<kk.size();i++)
 		{

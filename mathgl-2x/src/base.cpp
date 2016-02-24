@@ -105,13 +105,13 @@ mglBase::mglBase()
 	pthread_mutex_init(&mutexClf,0);
 	Pnt.set_mutex(&mutexClf);
 	Prm.set_mutex(&mutexClf);
-	Txt.set_mutex(&mutexClf);
+//	Txt.set_mutex(&mutexClf);
 #endif
 #if MGL_HAVE_OMP
 	omp_init_lock(&lockClf);
 	Pnt.set_mutex(&lockClf);
 	Prm.set_mutex(&lockClf);
-	Txt.set_mutex(&lockClf);
+//	Txt.set_mutex(&lockClf);
 #endif
 	fnt=0;	*FontDef=0;	fx=fy=fz=fa=fc=0;
 	AMin.Set(0,0,0,0);	AMax.Set(1,1,1,1);
@@ -130,7 +130,21 @@ mglBase::mglBase()
 mglBase::~mglBase()
 {
 	ClearEq();	ClearPrmInd();	delete fnt;
-	Pnt.set_mutex(0);	Prm.set_mutex(0);	Txt.set_mutex(0);
+	Pnt.set_mutex(0);	Prm.set_mutex(0);	//Txt.set_mutex(0);
+#if MGL_HAVE_PTHREAD
+	pthread_mutex_destroy(&mutexPnt,0);
+	pthread_mutex_destroy(&mutexTxt,0);
+	pthread_mutex_destroy(&mutexSub,0);
+	pthread_mutex_destroy(&mutexLeg,0);
+	pthread_mutex_destroy(&mutexPrm,0);
+	pthread_mutex_destroy(&mutexPtx,0);
+	pthread_mutex_destroy(&mutexStk,0);
+	pthread_mutex_destroy(&mutexGrp,0);
+	pthread_mutex_destroy(&mutexGlf,0);
+	pthread_mutex_destroy(&mutexAct,0);
+	pthread_mutex_destroy(&mutexDrw,0);
+	pthread_mutex_destroy(&mutexClf,0);
+#endif
 #if MGL_HAVE_OMP
 	omp_destroy_lock(&lockClf);
 #endif

@@ -99,7 +99,7 @@ struct MGL_EXPORT mglDrawDat
 	std::vector<mglBlock> Sub;	///< InPlot regions
 	std::vector<mglText> Ptx;	///< Text labels for mglPrim
 	std::vector<mglGlyph> Glf;	///< Glyphs data
-	mglStack<mglTexture> Txt;	///< Pointer to textures
+	std::vector<mglTexture> Txt;	///< Pointer to textures
 };
 #if defined(_MSC_VER)
 template class MGL_EXPORT std::vector<mglDrawDat>;

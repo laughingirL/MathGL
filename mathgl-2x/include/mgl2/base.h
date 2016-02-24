@@ -327,9 +327,9 @@ struct MGL_EXPORT mglActivePos
 #if defined(_MSC_VER)
 template class MGL_EXPORT mglStack<mglPnt>;
 template class MGL_EXPORT mglStack<mglPrim>;
-template class MGL_EXPORT mglStack<mglGroup>;
+template class MGL_EXPORT std::vector<mglGroup>;
 template class MGL_EXPORT std::vector<mglText>;
-template class MGL_EXPORT mglStack<mglTexture>;
+template class MGL_EXPORT std::vector<mglTexture>;
 template class MGL_EXPORT std::vector<mglGlyph>;
 template class MGL_EXPORT std::vector<mglBlock>;
 template class MGL_EXPORT std::vector<mglMatrix>;
@@ -349,7 +349,7 @@ public:
 	std::string Mess;	///< Buffer for receiving messages
 	int ObjId;			///< object id for mglPrim
 	int HighId;			///< object id to be highlited
-	mglStack<mglGroup> Grp;		///< List of groups with names -- need for export
+	std::vector<mglGroup> Grp;	///< List of groups with names -- need for export
 	mglStack<mglActivePos> Act;	///< Position of active points
 	std::string PlotId;	///< Id of plot for saving filename (in GLUT window for example)
 
@@ -618,7 +618,7 @@ protected:
 	std::vector<mglText> Ptx;	///< Text labels for mglPrim
 	std::vector<mglText> Leg;	///< Text labels for legend
 	std::vector<mglGlyph> Glf;	///< Glyphs data
-	mglStack<mglTexture> Txt;	///< Pointer to textures
+	std::vector<mglTexture> Txt;	///< Pointer to textures
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_t mutexPnt, mutexTxt, mutexLeg, mutexGlf, mutexAct, mutexDrw;
 	pthread_mutex_t mutexSub, mutexPrm, mutexPtx, mutexStk, mutexGrp, mutexClf;
