@@ -132,8 +132,8 @@ mglPoint MGL_NO_EXPORT mgl_normal_3d(HCDT a, mglPoint p, bool inv, long n,long m
 	x-=i;	y-=j;	z-=k;
 
 	nx = mgl_get_norm(x, a->dvx(i,j,k), a->dvx(i+1,j,k), i>0?a->dvx(i-1,j,k):NAN);
-	ny = mgl_get_norm(x, a->dvy(i,j,k), a->dvy(i,j+1,k), j>0?a->dvy(i,j-1,k):NAN);
-	nz = mgl_get_norm(x, a->dvz(i,j,k), a->dvz(i,j,k+1), k>0?a->dvz(i,j,k-1):NAN);
+	ny = mgl_get_norm(y, a->dvy(i,j,k), a->dvy(i,j+1,k), j>0?a->dvy(i,j-1,k):NAN);
+	nz = mgl_get_norm(z, a->dvz(i,j,k), a->dvz(i,j,k+1), k>0?a->dvz(i,j,k-1):NAN);
 	return inv ? mglPoint(nx,ny,nz) : mglPoint(-nx,-ny,-nz);
 }
 //-----------------------------------------------------------------------------
@@ -202,7 +202,7 @@ void MGL_EXPORT mgl_surf3_plot(HMGL gr, long n,long m,long *kx1,long *kx2,long *
 			register mreal d = mgl_norm(pp[jj] - pp[0]);
 			if(d>1e-5)	jj++;
 			else
-			{	ni--;	if(jj<ni)	for(ii=jj;ii<ni;ii++)	id[ii]=id[ii+1];	}
+			{	ni--;	for(ii=jj;ii<ni;ii++)	id[ii]=id[ii+1];	}
 		}
 		// continue if number of points <3 i.e. there is no triangle
 		if(ni<3)	continue;
