@@ -1,5 +1,5 @@
 add_executable(make_bin make_bin.cpp)
-target_link_libraries(make_bin mgl-static ${getopt_lib})
+target_link_libraries(make_bin mgl-static ${getopt_lib-static})
 
 set(MGL_FONTS STIX adventor  bonum  cursor  heroscn  heros  pagella  schola  termes)
 set(MGL_FONTS_BIN )
