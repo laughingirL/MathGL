@@ -33,9 +33,6 @@
 #else
 #define MGL_PUSH(a,v,m)	a.push_back(v);
 #endif
-#if MGL_HAVE_OMP
-#include <omp.h>
-#endif
 //-----------------------------------------------------------------------------
 inline mreal mgl_d(mreal v,mreal v1,mreal v2) { return v2!=v1?(v-v1)/(v2-v1):NAN; }
 //-----------------------------------------------------------------------------
@@ -78,24 +75,10 @@ public:
 	}
 	void clear()
 	{
-		if(mutex)
-		{
-#if MGL_HAVE_PTHREAD
-			pthread_mutex_lock((pthread_mutex_t *)mutex);
-#elif MGL_HAVE_OMP
-			omp_set_lock((omp_lock_t *)mutex);
-#endif
-		}
+		if(mutex)	mgl_mutex_lock(mutex);
 		for(size_t i=0;i<m;i++)	delete [](dat[i]);
 		dat[0] = new T[(size_t)1<<pb];	n=0;	m=1;
-		if(mutex)
-		{
-#if MGL_HAVE_PTHREAD
-			pthread_mutex_unlock((pthread_mutex_t *)mutex);
-#elif MGL_HAVE_OMP
-			omp_unset_lock((omp_lock_t *)mutex);
-#endif
-		}
+		if(mutex)	mgl_mutex_unlock(mutex);
 	}
 	T &operator[](size_t i)	{	register size_t d=i>>pb;	return dat[d][i-(d<<pb)];	}
 	const T &operator[](size_t i)	const	{	register size_t d=i>>pb;	return dat[d][i-(d<<pb)];	}
@@ -623,9 +606,7 @@ protected:
 	pthread_mutex_t mutexPnt, mutexTxt, mutexLeg, mutexGlf, mutexAct, mutexDrw;
 	pthread_mutex_t mutexSub, mutexPrm, mutexPtx, mutexStk, mutexGrp, mutexClf;
 #endif
-#if MGL_HAVE_OMP
-	omp_lock_t lockClf;
-#endif
+	void *lockClf;		///< pointer to mutex for mglStack
 
 	int TernAxis;		///< Flag that Ternary axis is used
 	unsigned PDef;		///< Pen bit mask

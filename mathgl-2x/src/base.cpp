@@ -20,6 +20,28 @@
 #include "mgl2/font.h"
 #include "mgl2/base.h"
 #include "mgl2/eval.h"
+#if MGL_HAVE_OMP
+#include <omp.h>
+#endif
+
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_mutex_unlock(void *mutex)
+{
+#if MGL_HAVE_PTHREAD
+	pthread_mutex_unlock((pthread_mutex_t *)mutex);
+#elif MGL_HAVE_OMP
+	omp_unset_lock((omp_lock_t *)mutex);
+#endif
+}
+//-----------------------------------------------------------------------------
+void MGL_EXPORT mgl_mutex_lock(void *mutex)
+{
+#if MGL_HAVE_PTHREAD
+	pthread_mutex_lock((pthread_mutex_t *)mutex);
+#elif MGL_HAVE_OMP
+	omp_set_lock((omp_lock_t *)mutex);
+#endif
+}
 //-----------------------------------------------------------------------------
 char *mgl_strdup(const char *s)
 {
@@ -108,9 +130,10 @@ mglBase::mglBase()
 //	Txt.set_mutex(&mutexClf);
 #endif
 #if MGL_HAVE_OMP
-	omp_init_lock(&lockClf);
-	Pnt.set_mutex(&lockClf);
-	Prm.set_mutex(&lockClf);
+	lockClf = new omp_lock_t;	
+	omp_init_lock((omp_lock_t*)lockClf);
+	Pnt.set_mutex(lockClf);
+	Prm.set_mutex(lockClf);
 //	Txt.set_mutex(&lockClf);
 #endif
 	fnt=0;	*FontDef=0;	fx=fy=fz=fa=fc=0;
@@ -127,6 +150,7 @@ mglBase::mglBase()
 	MinS.Set(-1,-1,-1);	MaxS.Set(1,1,1);
 	fnt = new mglFont;	fnt->gr = this;	PrevState=NAN;	size_opt=NAN;
 }
+//-----------------------------------------------------------------------------
 mglBase::~mglBase()
 {
 	ClearEq();	ClearPrmInd();	delete fnt;
@@ -146,7 +170,8 @@ mglBase::~mglBase()
 	pthread_mutex_destroy(&mutexClf,0);
 #endif
 #if MGL_HAVE_OMP
-	omp_destroy_lock(&lockClf);
+	omp_destroy_lock((omp_lock_t*)lockClf);
+	delete ((omp_lock_t*)lockClf);
 #endif
 }
 //-----------------------------------------------------------------------------

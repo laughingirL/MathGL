@@ -20,6 +20,9 @@
 #include <algorithm>
 #include "mgl2/canvas.h"
 #include "mgl2/thread.h"
+#if MGL_HAVE_OMP
+#include <omp.h>
+#endif
 
 inline mreal get_persp(float pf, float z, float Depth)
 //{	return (1-pf)/(1-pf*z/Depth);	}
@@ -46,7 +49,7 @@ void mglCanvas::SetSize(int w,int h,bool clf)
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_lock(&mutexClf);
 #elif MGL_HAVE_OMP
-	omp_set_lock(&lockClf);
+	omp_set_lock((omp_lock_t*)lockClf);
 #endif
 	if(G)	{	delete []G;	delete []C;	delete []Z;	delete []G4;delete []GB;delete []OI;	G=0;	}
 	G = new unsigned char[s*3];
@@ -60,7 +63,7 @@ void mglCanvas::SetSize(int w,int h,bool clf)
 #if MGL_HAVE_PTHREAD
 	pthread_mutex_unlock(&mutexClf);
 #elif MGL_HAVE_OMP
-	omp_unset_lock(&lockClf);
+	omp_unset_lock((omp_lock_t*)lockClf);
 #endif
 
 	InPlot(0,1,0,1,false);
@@ -71,7 +74,7 @@ void mglCanvas::SetSize(int w,int h,bool clf)
 		pthread_mutex_lock(&mutexPnt);
 		pthread_mutex_lock(&mutexClf);
 #elif MGL_HAVE_OMP
-		omp_set_lock(&lockClf);
+		omp_set_lock((omp_lock_t*)lockClf);
 #endif
 		const long m = long(Prm.size());
 		double dd = dx>dy?dy:dx;
@@ -115,7 +118,7 @@ void mglCanvas::SetSize(int w,int h,bool clf)
 		pthread_mutex_unlock(&mutexClf);
 		pthread_mutex_unlock(&mutexPnt);
 #elif MGL_HAVE_OMP
-		omp_unset_lock(&lockClf);
+		omp_unset_lock((omp_lock_t*)lockClf);
 #endif
 		ClfZB();	Finish();
 	}
@@ -672,7 +675,7 @@ void mglCanvas::Finish()
 	pthread_mutex_lock(&mutexPnt);
 	pthread_mutex_lock(&mutexClf);
 #elif MGL_HAVE_OMP
-	omp_set_lock(&lockClf);
+	omp_set_lock((omp_lock_t*)lockClf);
 #endif
 	if(Quality==MGL_DRAW_DOTS)
 	{
@@ -706,7 +709,7 @@ void mglCanvas::Finish()
 	pthread_mutex_unlock(&mutexPnt);
 	pthread_mutex_unlock(&mutexPrm);
 #elif MGL_HAVE_OMP
-	omp_unset_lock(&lockClf);
+	omp_unset_lock((omp_lock_t*)lockClf);
 #endif
 }
 //-----------------------------------------------------------------------------
